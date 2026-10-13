@@ -1,0 +1,77 @@
+[
+  {
+    "op": "add",
+    "id": "silent-proposal-d3ce9b2cd72006a5",
+    "ts": "2026-10-13T07:59:21+08:00",
+    "character": "silent",
+    "ledger": [
+      "silent-0297"
+    ],
+    "runs": [
+      "D9XJAX5KCSU2"
+    ],
+    "source_task": "postmortem",
+    "target_task": "strategy-proposal",
+    "domains": [
+      "combat"
+    ],
+    "summary": "同步本角色可见牌堆已显示的凋萎伤害，修复0297复发的低报3",
+    "proposal": "/home/dw/Projects/agent-sts2/learner/runs/20261013-074302-postmortem/proposal-wither-cache.md",
+    "rule_changes": false,
+    "proposal_sha256": "bcc08c92d2ad62ede2fcf76b10bd04e894d52b56639b1dac23ef2b7ea5b949f8",
+    "state": "pending"
+  },
+  {
+    "op": "add",
+    "id": "silent-proposal-c010d069b568d556",
+    "ts": "2026-10-13T07:59:22+08:00",
+    "character": "silent",
+    "ledger": [
+      "silent-0079",
+      "silent-0297"
+    ],
+    "runs": [
+      "D9XJAX5KCSU2"
+    ],
+    "source_task": "postmortem",
+    "target_task": "strategy-proposal",
+    "domains": [
+      "combat",
+      "sl",
+      "terminal"
+    ],
+    "summary": "全败SL候选仍须核新增持牌伤及实际血价，保留同盘配对验证",
+    "proposal": "/home/dw/Projects/agent-sts2/learner/runs/20261013-074302-postmortem/proposal-sl-held-cost.md",
+    "rule_changes": true,
+    "authorization": "Roy-2026-10-07-learning",
+    "proposal_sha256": "b6c7e3d7d3a419cfeebb0c67858fe7c2b8c1fdda35e3ea94fbba03374174a92c",
+    "state": "pending"
+  },
+  {
+    "op": "add",
+    "id": "silent-proposal-dbf38703a0025417",
+    "ts": "2026-10-13T07:59:22+08:00",
+    "character": "silent",
+    "ledger": [
+      "silent-0385",
+      "silent-0027",
+      "silent-0011",
+      "silent-0037"
+    ],
+    "runs": [
+      "D9XJAX5KCSU2"
+    ],
+    "source_task": "postmortem",
+    "target_task": "strategy-proposal",
+    "domains": [
+      "combat",
+      "terminal"
+    ],
+    "summary": "按真实全弃后继核毒组件兑现及防御窗口，不把到手或建立当赢局",
+    "proposal": "/home/dw/Projects/agent-sts2/learner/runs/20261013-074302-postmortem/proposal-setup-window.md",
+    "rule_changes": true,
+    "authorization": "Roy-2026-10-07-learning",
+    "proposal_sha256": "b67723e37d96f0238a3b1240a4424724dc6c31161451b3797a23d766c5a01cfa",
+    "state": "pending"
+  }
+]

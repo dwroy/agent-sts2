@@ -1,0 +1,62 @@
+{
+  "at": "2026-10-13 08:16:38 CST",
+  "request_id": "roy-20261013-isolated-character-climb",
+  "character_id": "REGENT",
+  "status": "help_completed_no_verified_isolated_gameplay_launcher",
+  "engine_banner": "MegaDot v4.5.1.m.14.mono.custom_build - https://godotengine.org",
+  "executable": "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Slay the Spire 2\\SlayTheSpire2.exe",
+  "actual_help_arguments": [
+    "--help"
+  ],
+  "actual_help_pid": 20372,
+  "exit": 0,
+  "completed_within_8_seconds": true,
+  "original_game_pid": 34676,
+  "original_process_start_identity_preserved": true,
+  "process_ids_before": [
+    34676
+  ],
+  "process_ids_after": [
+    34676
+  ],
+  "help_output_path": "paper/materials/20261013-0810-ops/launcher-help.stdout.txt",
+  "help_output_sha256": "0d7944c5af6336f59437018c5e9e2dacda40a090212a73fb73fa8b00616fdb0c",
+  "help_output_bytes": 8630,
+  "installed_help_relevant_lines": [
+    "-h, --help                        R  Display this help message.",
+    "--, ++                            R  Separator for user-provided arguments. Following arguments are not used by the engine, but can be read from `OS.get_cmdline_user_args()`.",
+    "--path <directory>                R  Path to a project (<directory> must contain a \"project.godot\" file).",
+    "--main-pack <file>                R  Path to a pack (.pck) file to load.",
+    "--log-file <file>                 R  Write output/error log to the specified path instead of the default location defined by the project."
+  ],
+  "independent_userdata_argument_listed": false,
+  "mod_load_argument_listed": false,
+  "safe_verified_gameplay_launch_arguments": null,
+  "only_verified_command": {
+    "executable": "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Slay the Spire 2\\SlayTheSpire2.exe",
+    "args": [
+      "--help"
+    ],
+    "purpose": "help only, never climb startup"
+  },
+  "gaps": [
+    "Engine --path names a project containing project.godot, not a save/settings user root.",
+    "Engine --main-pack selects a resource pack, not an installed mod profile; pack contents were not read.",
+    "The -- separator permits application arguments but the installed readable documents/help do not verify game-specific isolation arguments.",
+    "Installed README requires Steam Play with Mods and describes AI teammate/co-op, not a distinct single-player save/settings identity.",
+    "No independent native user root/profile or endpoint/PID binding is yet verified; no guessing or new gameplay window launch."
+  ],
+  "required_runtime_receipt_fields": [
+    "exact_executable_and_child_pid_and_start_identity",
+    "native_user_data_root_and_profile_identity_resolved_by_runtime",
+    "settings_root_separate_from_original",
+    "solo_session_mode",
+    "mod_version_and_own_endpoint",
+    "health_pid_equal_to_selected_process",
+    "state_character_id_REGENT",
+    "strict_no_primary_8080_fallback"
+  ],
+  "no_original_save_access_or_Steam_operation": true,
+  "no_dll_pck_contents_credentials_external_search": true,
+  "second_gameplay_window_or_controller_started": false
+}

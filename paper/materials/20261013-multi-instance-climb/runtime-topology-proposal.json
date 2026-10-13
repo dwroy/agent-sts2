@@ -1,0 +1,77 @@
+{
+  "at": "2026-10-13 08:16:38 CST",
+  "request_id": "roy-20261013-isolated-character-climb",
+  "character_id": "REGENT",
+  "status": "topology_proposal_not_created_or_started",
+  "choice": "independent complete snapshot repository under this project; no shared parent git worktree",
+  "runtime_root": "/home/dw/Projects/agent-sts2/.instances/regent",
+  "runtime_live": "/home/dw/Projects/agent-sts2/.instances/regent/.worktrees/live",
+  "source_baseline_main": "3f08dfb9b720deb61e2d6070dceb8f8caf5bd9fb",
+  "source_baseline_release": "V4-R320",
+  "source_isolation_code": "existing developer owner .worktrees/multi-instance-climb-20261013; await tested delivery, then update pinned source manifest before import",
+  "initial_repo_provenance": "create its own .git and import only approved tracked generic architecture/common snapshot bytes; retain source commit/per-file hashes, not the original role histories or full object database",
+  "generic_import_roots": [
+    "AGENTS.md",
+    "README.md",
+    "docs",
+    "agent",
+    "learner",
+    "ops",
+    "eval",
+    "knowledge/builders",
+    "knowledge/common",
+    ".gitignore",
+    ".gitleaks.toml"
+  ],
+  "exclude_before_import": [
+    "all .env/auth/key/runtime account files",
+    "ops/codex-ops runtime and execution-mode=host",
+    "logs/data/current-run/STOP/queues/locks/PIDs from primary",
+    "notes/lessons and experience changelogs, learning ledger and per-run paper datasets from primary",
+    "knowledge/characters/silent and ironclad (and other existing role experience/records)",
+    "tracked historical experiments and native game saves/settings"
+  ],
+  "own_regent_knowledge_initial": "empty; generic/common facts allowed, role experience/hints/SL/fight statistics only from this lane REGENT runs",
+  "own_paths": {
+    ".git": "/home/dw/Projects/agent-sts2/.instances/regent/.git",
+    "logs": "/home/dw/Projects/agent-sts2/.instances/regent/logs",
+    "data": "/home/dw/Projects/agent-sts2/.instances/regent/data",
+    "notes": "/home/dw/Projects/agent-sts2/.instances/regent/notes",
+    "ops": "/home/dw/Projects/agent-sts2/.instances/regent/ops",
+    "ops/codex-ops": "/home/dw/Projects/agent-sts2/.instances/regent/ops/codex-ops",
+    "ops/live-merge.lock": "/home/dw/Projects/agent-sts2/.instances/regent/ops/live-merge.lock",
+    "paper/materials/learning/ledger.jsonl": "/home/dw/Projects/agent-sts2/.instances/regent/paper/materials/learning/ledger.jsonl"
+  },
+  "live_links": "logs/data symlinks may point only to this new lane own root logs/data, never primary root; only node dependencies may link to existing installation",
+  "branches": "new lane main and live belong to its own .git; learner merge_dir must be its own .worktrees/live, no parent git merge/push",
+  "scheduler_leases": "own state/queue/wake.lock/learn.lock/two strategy slots/leases/worker identifiers; original parent scheduler untouched",
+  "broker": "new lane original broker rooted in this lane, strict own URL/PID/native_profile binding, no scan or fallback to primary8080; no broker starts before tested isolation receipt",
+  "ops_permissions": "default original sandbox + broker, model gpt-6.1-sol/xhigh/default; no inherited host execution-mode; same already authorized account, no credential copying or expanded permissions",
+  "other_roles": "all new brain/learner cwd, logs, sources, reporting and storage pointers bind to this lane; existing isolation/key preflight remains",
+  "ops_startup_task": "REGENT-specific task identity required from tested delivered launcher; do not activate the Silent initial prompt or modify primary ops-session prompts",
+  "native_profile_proposal": {
+    "user_root": "/home/dw/Projects/agent-sts2/.instances/regent/native-userdata",
+    "profile_identity": "own unique request/REGENT identity; not assigned until real runtime readback",
+    "verified_launch_args": null,
+    "original_pid_34676_and_save": "untouched, never cloned/switched/deleted"
+  },
+  "Herdr": {
+    "workspace_id": "wV",
+    "pane_id": "wV:p1",
+    "actual_current_cwd": "/home/dw/Projects/agent-sts2",
+    "future_cwd": "/home/dw/Projects/agent-sts2/.instances/regent",
+    "no_new_space_or_agent_started": true
+  },
+  "acceptance_gates": [
+    "tested developer isolation guard delivery is actually integrated",
+    "documented and validated solo mod-loaded independent user/settings root startup",
+    "frozen generic import manifest excludes all primary role knowledge and runtime state",
+    "own main/live merge_dir/root/locks/leases verified on fixed data without executing primary play",
+    "actual native_profile/health PID+endpoint/REGENT character and own save identity matched; mismatch refuses actions",
+    "new ops actual sandbox and native Sol/xhigh identity verified in second pane",
+    "new REGENT run-config/knowledge prefix/own logs actual readback; only then count climb startup"
+  ],
+  "shared_git_worktree_rejected_reason": "shared .git/main refs, defaults and root notes/ops/data links would need extra cross-lane lease and merge isolation; this proposal avoids importing those shared mutable namespaces",
+  "second_runtime_repository_created": false,
+  "no_new_source_tests_or_research_or_play_restart": true
+}
