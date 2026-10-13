@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261013-071303-experience-update/proof.py", line 46, in <module>
+    check('既有手牌归零', all(c['cost'] == 0 for c in b['combat']['hand'] if c['card_id'] in ['PIERCING_WAIL', 'DEFEND_SILENT', 'PINPOINT']), True)
+                          ^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261013-071303-experience-update/proof.py", line 46, in <genexpr>
+    check('既有手牌归零', all(c['cost'] == 0 for c in b['combat']['hand'] if c['card_id'] in ['PIERCING_WAIL', 'DEFEND_SILENT', 'PINPOINT']), True)
+                              ~^^^^^^^^
+KeyError: 'cost'

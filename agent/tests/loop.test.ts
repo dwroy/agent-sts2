@@ -17,6 +17,7 @@ import type { JevAskResult, JevClient } from "../src/reflex/jev/client.js";
 import { runLoop, type LoopEvent } from "./legacy-brain.js";
 import { ModClient } from "../src/hand/mod/client.js";
 import { envelope, errorEnvelope, sendJson, startTestServer, type TestServer } from "./support.js";
+import { runTimeCapFixture } from "./loop-time-cap-fixture.js";
 import {
   afterRunPayload,
   combatPayload,
@@ -556,25 +557,10 @@ describe("runLoop", () => {
   });
 
   it("the time cap waits for the fight to end, up to a grace period (TQX5: stopped before the boss's turn)", async () => {
-    const run = async (payload: Record<string, unknown>) => {
-      const { server } = await scriptedMod({ sequence: [payload] });
-      const started = Date.now();
-      const stats = await runLoop({
-        config: testConfig(),
-        mode: "shadow",
-        client: new ModClient({ baseUrl: server.url }),
-        jev: null,
-        knowledge: testKnowledge,
-        maxMinutes: 0.005, // 0.3 s
-        combatGraceMinutes: 0.01, // 0.6 s more
-        pollIntervalMs: 2,
-      });
-      return { stats, elapsed: Date.now() - started };
-    };
-    const map = await run(mapPayload());
+    const map = await runTimeCapFixture(mapPayload());
     expect(map.stats.stoppedBecause).toBe("time cap reached (0.005 min)");
     expect(map.elapsed).toBeLessThan(850);
-    const fight = await run(combatPayload());
+    const fight = await runTimeCapFixture(combatPayload());
     expect(fight.stats.stoppedBecause).toContain("still in combat after the grace period");
     expect(fight.elapsed).toBeGreaterThanOrEqual(850);
   });

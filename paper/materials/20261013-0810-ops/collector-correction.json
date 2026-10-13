@@ -1,0 +1,9 @@
+{
+  "at": "2026-10-13 08:21:32 CST",
+  "phase": "own read-only postmortem evidence collector",
+  "original_exit": 1,
+  "reason": "first payload digest assertion included JSONL newline; learner verify.py hashes readline().rstrip(newline)",
+  "evidence": "all six first original rows parsed equal, payload digest matches after newline removal; original source code explicitly confirms convention",
+  "correction": "verify original payload digest and separately retain full JSONL bytes/SHA including newline in own pointer receipt",
+  "original_learning_and_source_unmodified": true
+}

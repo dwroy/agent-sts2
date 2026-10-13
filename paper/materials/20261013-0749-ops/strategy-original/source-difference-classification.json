@@ -1,0 +1,204 @@
+[
+  {
+    "path": "agent/src/reflex/card-model.ts",
+    "equal": false,
+    "only_comment_author_difference": true,
+    "changed_lines": [
+      "-  * (potion-mc.ts, Roy 2026-09-28) this turn's option never uses it: only the rollout's later turns (the",
+      "+  * (potion-mc.ts, Dai 2026-09-28) this turn's option never uses it: only the rollout's later turns (the",
+      "-  * Random potions (Roy 2026-09-28): simulated by Monte Carlo every turn (potion-mc.ts) and offered to Jev as",
+      "+  * Random potions (Dai 2026-09-28): simulated by Monte Carlo every turn (potion-mc.ts) and offered to Jev as"
+    ]
+  },
+  {
+    "path": "agent/src/reflex/turn-solver.ts",
+    "equal": false,
+    "only_comment_author_difference": true,
+    "changed_lines": [
+      "-  * Kept (Roy 2026-09-28 review) for what the score still decides: code's own lines (lethal among lethal",
+      "+  * Kept (Dai 2026-09-28 review) for what the score still decides: code's own lines (lethal among lethal",
+      "-   // A potion drunk is HP paid later (potion-cost.ts, Roy 2026-09-30): its held value, at the HP weight. Until batch K a",
+      "+   // A potion drunk is HP paid later (potion-cost.ts, Dai 2026-09-30): its held value, at the HP weight. Until batch K a"
+    ]
+  },
+  {
+    "path": "agent/src/reflex/combat-plan.ts",
+    "equal": false,
+    "only_comment_author_difference": true,
+    "changed_lines": [
+      "-  * Potions are Jev's call (Roy 2026-09-28): the solver prices a potion line on its simulated outcome",
+      "+  * Potions are Jev's call (Dai 2026-09-28): the solver prices a potion line on its simulated outcome",
+      "-  * less the potion's cost (Roy 2026-09-30, potion-cost.ts: its held value in the potion table, 0 in a boss",
+      "+  * less the potion's cost (Dai 2026-09-30, potion-cost.ts: its held value in the potion table, 0 in a boss",
+      "-  * Every modelled potion in the belt on at least one shown line (Roy 2026-09-28: Jev always has the",
+      "+  * Every modelled potion in the belt on at least one shown line (Dai 2026-09-28: Jev always has the",
+      "-  * The enemies a turn can be aimed at, one group per enemy id (Roy 2026-09-28: identical enemies are not",
+      "+  * The enemies a turn can be aimed at, one group per enemy id (Dai 2026-09-28: identical enemies are not",
+      "-  * Per-target options (Roy 2026-09-28: which enemy to kill is Jev's call, not the score's): for every group,",
+      "+  * Per-target options (Dai 2026-09-28: which enemy to kill is Jev's call, not the score's): for every group,",
+      "-  * Roy 2026-09-29: where hand-written advice (the guides behind the run plan, the fight hints) disagrees with the",
+      "+  * Dai 2026-09-29: where hand-written advice (the guides behind the run plan, the fight hints) disagrees with the",
+      "-  * DeepSeek's run plan, whole and on one line (Roy 2026-09-28: Jev sees the plan's strategy and boss prep,",
+      "+  * DeepSeek's run plan, whole and on one line (Dai 2026-09-28: Jev sees the plan's strategy and boss prep,",
+      "-   // Each held potion's worth in this act's boss fight (potion-equivalents.json; Roy 2026-09-30): a fact, no rule.",
+      "+   // Each held potion's worth in this act's boss fight (potion-equivalents.json; Dai 2026-09-30): a fact, no rule.",
+      "-  * What a drink costs on this question (potion-cost.ts, Roy 2026-09-30), for potion_context: where the options'",
+      "+  * What a drink costs on this question (potion-cost.ts, Dai 2026-09-30), for potion_context: where the options'",
+      "- // CLOSE_CALL (code played its top line when it led by 6+ score points) is gone (Roy 2026-09-28: card",
+      "+ // CLOSE_CALL (code played its top line when it led by 6+ score points) is gone (Dai 2026-09-28: card",
+      "- /** Distinct lines shown to Jev (Roy 2026-09-28: 10, was 4; the rollout covers every shown line). */",
+      "+ /** Distinct lines shown to Jev (Dai 2026-09-28: 10, was 4; the rollout covers every shown line). */",
+      "-  * Boss and elite fights get the tighter bound, max(8, 10% HP); hallway fights max(8, 20% HP) (Roy",
+      "+  * Boss and elite fights get the tighter bound, max(8, 10% HP); hallway fights max(8, 20% HP) (Dai",
+      "- /** Extra HP (over the cheapest line) a fight may accept (Roy 2026-09-28: 24, was 12, with the per-turn slack 4 -> 8). */",
+      "+ /** Extra HP (over the cheapest line) a fight may accept (Dai 2026-09-28: 24, was 12, with the per-turn slack 4 -> 8). */",
+      "-  * The least-loss verdict's facts for the SL judge (src/sl/judge.ts LeastLossFacts; Roy 2026-10-02: certain death, never",
+      "+  * The least-loss verdict's facts for the SL judge (src/sl/judge.ts LeastLossFacts; Dai 2026-10-02: certain death, never",
+      "-   // us in hp_lost (card-model FOUL_POTION selfDamage), and drinking it is Jev's call (Roy 2026-09-28).",
+      "+   // us in hp_lost (card-model FOUL_POTION selfDamage), and drinking it is Jev's call (Dai 2026-09-28).",
+      "-   // What each potion held costs to drink here (potion-cost.ts, Roy 2026-09-30): its held value in the potion table for",
+      "+   // What each potion held costs to drink here (potion-cost.ts, Dai 2026-09-30): its held value in the potion table for",
+      "-   // A potion line is scored on its simulated outcome less the potion's cost (potion-cost.ts, Roy 2026-09-30:",
+      "+   // A potion line is scored on its simulated outcome less the potion's cost (potion-cost.ts, Dai 2026-09-30:",
+      "-   // potion (Roy: a potion is a 0-cost one-shot card, never filtered or vetoed), with no invented numbers; a fight",
+      "+   // potion (Dai: a potion is a 0-cost one-shot card, never filtered or vetoed), with no invented numbers; a fight",
+      "-   // is Jev's call (Roy 2026-09-28): those lines are shown, flagged as winning and naming the potion spent.",
+      "+   // is Jev's call (Dai 2026-09-28): those lines are shown, flagged as winning and naming the potion spent.",
+      "-   // Per-target options (Roy 2026-09-28): with two or more kinds of enemy, the line putting the most damage",
+      "+   // Per-target options (Dai 2026-09-28): with two or more kinds of enemy, the line putting the most damage",
+      "-   // The \"no potion this fight\" line (Roy 2026-09-30), on every question with a potion to drink outside a boss fight",
+      "+   // The \"no potion this fight\" line (Dai 2026-09-30), on every question with a potion to drink outside a boss fight",
+      "-   // decision log (V4.2, Roy 2026-10-01: its question is the pre-B2 one). Out of a boss fight, no pool is kept.",
+      "+   // decision log (V4.2, Dai 2026-10-01: its question is the pre-B2 one). Out of a boss fight, no pool is kept.",
+      "-   // Every option's potion cost fact (Roy 2026-09-30), when a potion can be drunk on this board.",
+      "+   // Every option's potion cost fact (Dai 2026-09-30), when a potion can be drunk on this board.",
+      "-   // Random potions: always an option (Roy 2026-09-28), \"drink now, then re-plan\", with the Monte Carlo",
+      "+   // Random potions: always an option (Dai 2026-09-28), \"drink now, then re-plan\", with the Monte Carlo",
+      "-       // dry-line veto and the attack-potion veto are gone, Roy 2026-09-28).",
+      "+       // dry-line veto and the attack-potion veto are gone, Dai 2026-09-28).",
+      "-     // No DeepSeek escalation in combat (Roy 2026-09-28): the turn's line is Jev's call.",
+      "+     // No DeepSeek escalation in combat (Dai 2026-09-28): the turn's line is Jev's call.",
+      "-  * Why an unsimulated potion is on the question: always (Roy: potions are 0-cost one-shot cards, no filter, no",
+      "+  * Why an unsimulated potion is on the question: always (Dai: potions are 0-cost one-shot cards, no filter, no",
+      "-  * veto). It replaced T1 (Roy 2026-09-28: the cheapest potion-free option losing 12% of HP), the old gate.",
+      "+  * veto). It replaced T1 (Dai 2026-09-28: the cheapest potion-free option losing 12% of HP), the old gate.",
+      "-  * gone, Roy 2026-09-28).",
+      "+  * gone, Dai 2026-09-28)."
+    ]
+  },
+  {
+    "path": "agent/src/reflex/rollout.ts",
+    "equal": false,
+    "only_comment_author_difference": true,
+    "changed_lines": [
+      "-  *          (potion-cost.ts, Roy 2026-09-30: its held value in the potion table, taken off the solver's score):",
+      "+  *          (potion-cost.ts, Dai 2026-09-30: its held value in the potion table, taken off the solver's score):",
+      "-    * The \"no potion this fight\" line (Roy 2026-09-30): a potion-free line (its own Plan object, a copy of a shown",
+      "+    * The \"no potion this fight\" line (Dai 2026-09-30): a potion-free line (its own Plan object, a copy of a shown"
+    ]
+  },
+  {
+    "path": "agent/src/reflex/rollout-live.ts",
+    "equal": false,
+    "only_comment_author_difference": true,
+    "changed_lines": [
+      "-    * The \"no potion this fight\" line (Roy 2026-09-30): `line` a copy of the potion-free `base` (a shown line), rolled",
+      "+    * The \"no potion this fight\" line (Dai 2026-09-30): `line` a copy of the potion-free `base` (a shown line), rolled",
+      "-  * line stays an option (Roy: potions are never filtered); it is only told apart.",
+      "+  * line stays an option (Dai: potions are never filtered); it is only told apart.",
+      "-  * Potion costs (potion-cost.ts, Roy 2026-09-30): the value has each line's drinks taken off at their cost; when some",
+      "+  * Potion costs (potion-cost.ts, Dai 2026-09-30): the value has each line's drinks taken off at their cost; when some",
+      "-   // then the value (it has the cost taken off): a cost never makes a line that dies more often the best (Roy",
+      "+   // then the value (it has the cost taken off): a cost never makes a line that dies more often the best (Dai",
+      "-  * The rollout's best among the shown options, or the shown options tied for it (Roy 2026-09-29; consistency",
+      "+  * The rollout's best among the shown options, or the shown options tied for it (Dai 2026-09-29; consistency"
+    ]
+  },
+  {
+    "path": "agent/src/reflex/passive-pieces.ts",
+    "equal": false,
+    "only_comment_author_difference": true,
+    "changed_lines": [
+      "-  * Passive damage and passive block (PASSIVE_PIECES, Roy 2026-10-03; experience 2026-10-03.3 deck-passive-engine, the",
+      "+  * Passive damage and passive block (PASSIVE_PIECES, Dai 2026-10-03; experience 2026-10-03.3 deck-passive-engine, the",
+      "-  * follow-up (2026-10-03, Roy via the dev session) the live solver's current turn has the five relic pieces too",
+      "+  * follow-up (2026-10-03, Dai via the dev session) the live solver's current turn has the five relic pieces too"
+    ]
+  },
+  {
+    "path": "agent/src/reflex/silent-crusher-facing.ts",
+    "equal": true,
+    "only_comment_author_difference": false,
+    "changed_lines": []
+  },
+  {
+    "path": "agent/src/reflex/silent-sl-comparison.ts",
+    "equal": true,
+    "only_comment_author_difference": false,
+    "changed_lines": []
+  },
+  {
+    "path": "agent/src/reflex/silent-sl-resource-comparison.ts",
+    "equal": true,
+    "only_comment_author_difference": false,
+    "changed_lines": []
+  },
+  {
+    "path": "agent/src/reflex/silent-selection-audit.ts",
+    "equal": true,
+    "only_comment_author_difference": false,
+    "changed_lines": []
+  },
+  {
+    "path": "agent/src/reflex/silent-selection-dispatch.ts",
+    "equal": true,
+    "only_comment_author_difference": false,
+    "changed_lines": []
+  },
+  {
+    "path": "agent/src/reflex/silent-hp-guard-audit.ts",
+    "equal": true,
+    "only_comment_author_difference": false,
+    "changed_lines": []
+  },
+  {
+    "path": "agent/src/sl/explore.ts",
+    "equal": false,
+    "only_comment_author_difference": true,
+    "changed_lines": [
+      "-  * SL_RETRY_EXPLORE (docs/sl.md §11, Roy 2026-10-02: \"retries must try different play\"): a retried fight's attempts 3 and",
+      "+  * SL_RETRY_EXPLORE (docs/sl.md §11, Dai 2026-10-02: \"retries must try different play\"): a retried fight's attempts 3 and",
+      "-    * SL_RETRY_EXPLORE_B2 (Roy 2026-10-02): on a boss B2 is trusted on, B2's win rate is the gate (\"not worse than the line",
+      "+    * SL_RETRY_EXPLORE_B2 (Dai 2026-10-02): on a boss B2 is trusted on, B2's win rate is the gate (\"not worse than the line",
+      "-    * SL_RETRY_EXPLORE_BOSS_POTIONS (Roy 2026-10-02): in a boss fight a line drinking a potion the line replaced does not is an",
+      "+    * SL_RETRY_EXPLORE_BOSS_POTIONS (Dai 2026-10-02): in a boss fight a line drinking a potion the line replaced does not is an"
+    ]
+  },
+  {
+    "path": "agent/src/sim/silent-opening.ts",
+    "equal": true,
+    "only_comment_author_difference": false,
+    "changed_lines": []
+  },
+  {
+    "path": "agent/src/sim/boss-start.ts",
+    "equal": false,
+    "only_comment_author_difference": true,
+    "changed_lines": [
+      "-  * The act boss's opening built from outside a fight (milestone B3, Roy 2026-09-30): a deck-building question (card",
+      "+  * The act boss's opening built from outside a fight (milestone B3, Dai 2026-09-30): a deck-building question (card"
+    ]
+  },
+  {
+    "path": "agent/src/sim/double-boss-start.ts",
+    "equal": true,
+    "only_comment_author_difference": false,
+    "changed_lines": []
+  },
+  {
+    "path": "agent/src/knowledge/boss-phase.ts",
+    "equal": true,
+    "only_comment_author_difference": false,
+    "changed_lines": []
+  }
+]

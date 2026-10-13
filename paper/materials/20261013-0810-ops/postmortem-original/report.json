@@ -1,0 +1,45 @@
+{
+  "task": "postmortem",
+  "appended": [
+    "D9XJAX5KCSU2"
+  ],
+  "skipped": [],
+  "bugs": [
+    {
+      "run": "D9XJAX5KCSU2",
+      "where": "agent/src/reflex/combat-plan.ts:1558",
+      "what": "手空时凋萎缓存漏读可见弃牌区6伤，预测失血低报3；silent-0297复发，fix-queue-v4已有",
+      "new": false
+    }
+  ],
+  "ledger": {
+    "added": [],
+    "updated": [
+      "silent-0297",
+      "silent-0079",
+      "silent-0385",
+      "silent-0024",
+      "silent-0027",
+      "silent-0011",
+      "silent-0025",
+      "silent-0037"
+    ],
+    "repeats": [
+      "silent-0297",
+      "silent-0079",
+      "silent-0385"
+    ],
+    "check": 0
+  },
+  "code_proposals": [
+    "silent-proposal-d3ce9b2cd72006a5",
+    "silent-proposal-c010d069b568d556",
+    "silent-proposal-dbf38703a0025417"
+  ],
+  "implementation_domains": [
+    "combat",
+    "sl",
+    "terminal"
+  ],
+  "report": "/home/dw/Projects/agent-sts2/learner/runs/20261013-074302-postmortem/report.md"
+}

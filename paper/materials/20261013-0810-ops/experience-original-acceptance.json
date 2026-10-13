@@ -1,0 +1,114 @@
+{
+  "at": "2026-10-13 08:21:32 CST",
+  "source": "cd46f4282ad892cf86e57e7790eb7512f839ca0c",
+  "original_raw_records": 1052,
+  "original_cli_rows": 52,
+  "original_full_tests": {
+    "tsc": 0,
+    "vitest": 0,
+    "files": 345,
+    "cases": 3414,
+    "exit": 0,
+    "rerun": true,
+    "entry": "原test-sandbox.sh；1427跟踪源码/任务文件逐SHA一致的隔离副本，知识同一文件，原排除/预算/超时未改；副本3线程加直接检查1线程共不超过4",
+    "log": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261013-071303-experience-update/test-source-copy.log",
+    "sha256": "57454d9f13470393f37cdee3c016842ed3bb8e1a9bd6699d2f5cb81fca743d1c",
+    "direct_check": "已完成，退出1；历史learner/runs符号链接/失效临时目录导致check-imports扫描失败，原件保留；同SHA跟踪源码/知识隔离副本原全套退出0。",
+    "host_full_suite": "本批未合入，合后测试未运行；实际合入后由调度器沿experience-done/learner-checks补完整宿主检查",
+    "phases": [
+      {
+        "name": "test-source-direct",
+        "tsc": 0,
+        "exit": 1,
+        "files_passed": 343,
+        "cases_passed": 3402,
+        "log": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261013-071303-experience-update/test-source-direct.log",
+        "sha256": "94b0f2454f318c97947160de4770bc881d7a7689d60deef3e4c85219ab015521"
+      },
+      {
+        "name": "test-source-copy",
+        "tsc": 0,
+        "exit": 0,
+        "files": 345,
+        "cases": 3414,
+        "workers": 3,
+        "log": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261013-071303-experience-update/test-source-copy.log",
+        "sha256": "57454d9f13470393f37cdee3c016842ed3bb8e1a9bd6699d2f5cb81fca743d1c"
+      }
+    ]
+  },
+  "original_live_block": {
+    "source": "cd46f4282ad892cf86e57e7790eb7512f839ca0c",
+    "branch": "exp-merge-recovery-20261013-000402",
+    "merged": null,
+    "tests": null,
+    "initial": "79ae8287baef2892db9f1c69b8f8ce144286ee03",
+    "initial_status": " M knowledge/characters/silent/fight-value.json\n M notes/fight-value-backtest-silent.md\n M notes/monster-db-check.md\n",
+    "refresh_paths": [
+      "knowledge/characters/silent/fight-value.json"
+    ],
+    "pre": "4192688e8f9edc9eaa3c37a7928ec951216ccc6e",
+    "live_experience_sha256": "e5f07b6acb0d4d6c7473a2851af0a248739d5b1f378549cfa623eabc3176cfa9",
+    "base": "b90539daed10fb1f61ffbcf83c94515e5e9061c7",
+    "source_knowledge_paths": [
+      "knowledge/characters/silent/experience.json"
+    ],
+    "live_knowledge_paths": [
+      "knowledge/builders/build-monster-db.py",
+      "knowledge/builders/build-outcome-stats.py",
+      "knowledge/builders/build-potion-equivalents.py",
+      "knowledge/builders/characters.py",
+      "knowledge/builders/refresh-potion-equivalents.sh",
+      "knowledge/characters/ironclad/potion-equivalents.json",
+      "knowledge/characters/ironclad/sl-elites.json",
+      "knowledge/characters/silent/boss-damage.json",
+      "knowledge/characters/silent/fight-value-gates.json",
+      "knowledge/characters/silent/fight-value.json",
+      "knowledge/characters/silent/monster-records.json",
+      "knowledge/characters/silent/outcome-stats.json",
+      "knowledge/characters/silent/potion-equivalents.json",
+      "knowledge/characters/silent/room-costs.json",
+      "knowledge/common/card-upgrades.json",
+      "knowledge/common/monster-db.json",
+      "knowledge/common/move-model.json"
+    ],
+    "knowledge_overlap": [],
+    "knowledge_overlap_conflicts": [],
+    "preview_exit": 1,
+    "conflicts": [
+      "CONFLICT (content): Merge conflict in eval/versions.json",
+      "CONFLICT (content): Merge conflict in notes/for-roy.md",
+      "CONFLICT (content): Merge conflict in notes/lessons.md",
+      "CONFLICT (content): Merge conflict in ops/inbox-dev.md",
+      "CONFLICT (content): Merge conflict in paper/data/README.md",
+      "CONFLICT (content): Merge conflict in paper/data/commits.csv",
+      "CONFLICT (content): Merge conflict in paper/data/cost-curve-silent.csv",
+      "CONFLICT (content): Merge conflict in paper/data/cost-silent.csv",
+      "CONFLICT (content): Merge conflict in paper/data/cost-sources.json",
+      "CONFLICT (content): Merge conflict in paper/data/cost-unattributed.csv",
+      "CONFLICT (content): Merge conflict in paper/data/decisions_by_label.csv",
+      "CONFLICT (content): Merge conflict in paper/data/learning-curve-silent.csv",
+      "CONFLICT (content): Merge conflict in paper/data/runs.csv",
+      "CONFLICT (content): Merge conflict in paper/data/summary.json",
+      "CONFLICT (content): Merge conflict in paper/data/verification.json",
+      "CONFLICT (content): Merge conflict in paper/materials/decision-log.md",
+      "CONFLICT (content): Merge conflict in paper/materials/experience-changelog-silent.md",
+      "CONFLICT (content): Merge conflict in paper/materials/learning/ledger.jsonl",
+      "CONFLICT (content): Merge conflict in paper/materials/silent/cost.md"
+    ],
+    "result": "整分支合入预演冲突；按任务停止，不应用索引、不硬解",
+    "final_live_head": "4192688e8f9edc9eaa3c37a7928ec951216ccc6e"
+  },
+  "original_test_count_correction": {
+    "recorded_at": "2026-10-13 07:51:58 CST",
+    "old": 3745,
+    "new": 3402,
+    "reason": "误将文件343与用例3402相加，原日志及最终通过计数正确",
+    "changelog_before_bytes": 9375923,
+    "changelog_before_sha256": "c278e6a9f9b3407c3704a778e1579ac5579558795a118564ceb8975078a116cc",
+    "append_sha256": "e36cdea487cd5d39ee4369f060c63d04960a79b277ac11b7961dbfae0f16a948",
+    "source_code_unchanged": true
+  },
+  "original_report_sha256": "2c58194243fde63d80e883a806532cc23cc28221c37672bc912759329a8d0eaf",
+  "no_parent_request_closed": true
+}

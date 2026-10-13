@@ -1,0 +1,137 @@
+{
+  "raw_records_verified": 6995,
+  "evidence_arithmetic_checks": [
+    "all dispatched runs are Silent A10",
+    "all six historical runs retain dirty startup identity",
+    "F35 Apotheosis costs two energy",
+    "DEFEND_SILENT observed upgrade pair",
+    "STRIKE_SILENT observed upgrade pair",
+    "DAGGER_SPRAY observed upgrade pair",
+    "F43 exact forecast deltas eight damage and one HP",
+    "F43 observed turn matches 51 damage and 13 HP",
+    "combat upgrade does not change deck upgrade count",
+    "F45 first question is one-turn degraded, no best",
+    "F45 potion MC has one of twelve samples, 707ms",
+    "F45 later question has twelve local potion samples",
+    "F45 T4 turn cost difference, no played alternate",
+    "F45 T5 four attack segments sum to 59",
+    "F45 full loss 39 exceeds HP32 by seven",
+    "F45 final three enemies survive",
+    "8JRE first and third T2 have identical fingerprints",
+    "SL replacement records twelve HP for seven damage",
+    "SL zero and five deaths retain 24 denominators",
+    "clam weak does not erase strength-eight growth",
+    "clam full loss four and HP truncation two remain separate",
+    "Siphon lowers player STR2 to0 and DEX0 to-2",
+    "negative Dexterity two Defends each realize three",
+    "T6 poison17 plus16 realizes33 on same enemy",
+    "zero-poison Bubble spends one energy without enemy HP change",
+    "Obscura T4 loses15, deals47, illusion remains2",
+    "beetle last attempt requires six HP, has one"
+  ],
+  "source_comparison": [
+    {
+      "path": "agent/src/reflex/card-model.ts",
+      "same_bytes": false,
+      "comment_name_pairs": 2,
+      "live_ancestor": true
+    },
+    {
+      "path": "agent/src/reflex/turn-solver.ts",
+      "same_bytes": false,
+      "comment_name_pairs": 2,
+      "live_ancestor": true
+    },
+    {
+      "path": "agent/src/reflex/rollout.ts",
+      "same_bytes": false,
+      "comment_name_pairs": 2,
+      "live_ancestor": true
+    },
+    {
+      "path": "agent/src/reflex/combat-plan.ts",
+      "same_bytes": false,
+      "comment_name_pairs": 29,
+      "live_ancestor": true
+    },
+    {
+      "path": "agent/src/reflex/rollout-live.ts",
+      "same_bytes": false,
+      "comment_name_pairs": 5,
+      "live_ancestor": true
+    },
+    {
+      "path": "agent/src/sl/explore.ts",
+      "same_bytes": false,
+      "comment_name_pairs": 3,
+      "live_ancestor": true
+    },
+    {
+      "path": "agent/src/sl/judge.ts",
+      "same_bytes": false,
+      "comment_name_pairs": 10,
+      "live_ancestor": true
+    },
+    {
+      "path": "agent/src/reflex/silent-apotheosis.ts",
+      "same_bytes": true,
+      "comment_name_pairs": 0,
+      "live_ancestor": true
+    },
+    {
+      "path": "agent/src/reflex/silent-apotheosis-reference.ts",
+      "same_bytes": true,
+      "comment_name_pairs": 0,
+      "live_ancestor": true
+    },
+    {
+      "path": "agent/src/reflex/silent-simulation-reference.ts",
+      "same_bytes": true,
+      "comment_name_pairs": 0,
+      "live_ancestor": true
+    },
+    {
+      "path": "agent/src/reflex/silent-selection-audit.ts",
+      "same_bytes": true,
+      "comment_name_pairs": 0,
+      "live_ancestor": true
+    },
+    {
+      "path": "agent/src/reflex/silent-selection-dispatch.ts",
+      "same_bytes": true,
+      "comment_name_pairs": 0,
+      "live_ancestor": true
+    },
+    {
+      "path": "agent/src/reflex/silent-hp-guard-audit.ts",
+      "same_bytes": true,
+      "comment_name_pairs": 0,
+      "live_ancestor": true
+    },
+    {
+      "path": "agent/src/reflex/silent-sl-comparison.ts",
+      "same_bytes": true,
+      "comment_name_pairs": 0,
+      "live_ancestor": true
+    },
+    {
+      "path": "agent/src/reflex/silent-sl-resource-comparison.ts",
+      "same_bytes": true,
+      "comment_name_pairs": 0,
+      "live_ancestor": true
+    },
+    {
+      "path": "agent/src/reflex/silent-phase-current.ts",
+      "same_bytes": true,
+      "comment_name_pairs": 0,
+      "live_ancestor": true
+    },
+    {
+      "path": "agent/src/reflex/silent-summon-coverage.ts",
+      "same_bytes": true,
+      "comment_name_pairs": 0,
+      "live_ancestor": true
+    }
+  ],
+  "production_tests_run": false
+}

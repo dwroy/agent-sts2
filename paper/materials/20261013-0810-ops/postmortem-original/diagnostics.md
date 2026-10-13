@@ -1,0 +1,1 @@
+初稿及抽取中间件全部保留。首次工具名试探中的logs/brain-calls.jsonl、brain-reasoning.jsonl与codex-reasoning.jsonl不存在；已改核实际brain.jsonl、codex-calls.jsonl。第一次猜测memory/fight-plays.ts路径不存在，rg后按reflex/fight-plays.ts定位。标题未存在时rg退出1是预期。首个摘要输出过大，原summary-initial.txt保留，后改用字段摘要。毒性爆发即时31来源在追加前依原牌文与31→30确认，旧草稿保留。追加后发现HP护栏段F14T1/T4实伤误写8/13，依资源原帧确认6/15，追加带date的勘误；旧文不改。没有把诊断错误当生产bug；本任务只写授权记录，没有代码测试、提交、推送、play或上线。

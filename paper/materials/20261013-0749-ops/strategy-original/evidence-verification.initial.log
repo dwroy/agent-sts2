@@ -1,0 +1,11 @@
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261013-070543-s2/learner/runs/20261013-070601-strategy-proposal/verify_evidence.py", line 50, in <module>
+    check('TXZ T6已兑现损血/扣敌血',delta('TXZ6RVMQA09D',48,attempt,6),expected,[])
+                                    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261013-070543-s2/learner/runs/20261013-070601-strategy-proposal/verify_evidence.py", line 46, in delta
+    a=turn(r,floor,attempt,t);b=turn(r,floor,attempt,t+1)
+                                ~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261013-070543-s2/learner/runs/20261013-070601-strategy-proposal/verify_evidence.py", line 44, in turn
+    return next(x for x in endpoints if (x['run'],x['floor'],x['attempt'],x['turn'])==(r,floor,attempt,t))['first']
+           ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+StopIteration

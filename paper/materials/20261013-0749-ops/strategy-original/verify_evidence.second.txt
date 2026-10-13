@@ -1,0 +1,111 @@
+import difflib
+import hashlib
+import json
+from collections import Counter, defaultdict
+from pathlib import Path
+
+S = Path(__file__).resolve().parent
+proofs = []
+indices = defaultdict(list)
+for raw in (S / 'states.jsonl.index.jsonl').open():
+    x = json.loads(raw); indices[x['run']].append(x)
+states = {}
+for run, rows in indices.items():
+    local = (S / (run + '-states.jsonl')).read_bytes().splitlines(keepends=True)
+    assert len(local) == len(rows)
+    attempts = {}; previous = {}
+    for raw, ix in zip(local, rows):
+        assert hashlib.sha256(raw).hexdigest() == ix['sha256'] and len(raw) == ix['bytes']
+        x = json.loads(raw);st=x['state'];f=st['run']['floor'];t=st.get('turn')
+        if st.get('combat') and isinstance(t,int) and t>0:
+            if f not in attempts: attempts[f]=1
+            elif t==1 and previous.get(f,0)>1: attempts[f]+=1
+            previous[f]=t
+        x['_attempt']=attempts.get(f,0)
+        states[ix['line']] = x
+
+def check(name, actual, expected, lines):
+    assert actual == expected, (name, actual, expected)
+    proofs.append({'claim': name, 'actual': actual, 'expected': expected, 'state_lines': lines})
+
+def hp(line):
+    return states[line]['state']['run']['current_hp']
+
+def enemy_hp(line):
+    return sum(e['current_hp'] for e in states[line]['state']['combat']['enemies'])
+
+check('TXZ第二/三次T6同指纹', states[281479]['fingerprint'] == states[281535]['fingerprint'], True, [281479,281535])
+check('WQ第二/三次T9同指纹', states[282075]['fingerprint'] == states[282144]['fingerprint'], True, [282075,282144])
+check('WQ第二/末次T7同指纹', states[282066]['fingerprint'] == states[282330]['fingerprint'], True, [282066,282330])
+for before, after, expected in [(281312,281313,[70,66]),(281338,281339,[52,48]),(281367,281368,[62,58]),
+                                 (281399,281400,[60,56]),(281565,281566,[4,0])]:
+    check('TXZ新战斗开场HP', [hp(before),hp(after)], expected, [before,after])
+    check('TXZ开场未出牌', states[after]['state']['combat']['player']['cards_played_this_turn'], 0, [after])
+    assert not any(r['relic_id']=='BLOOD_VIAL' for r in states[after]['state']['run']['relics'])
+check('TXZ第二boss本体未受伤',enemy_hp(281566),111,[281566])
+check('普通紧勒与后续完成牌实扣', [enemy_hp(n) for n in [282887,282888,282889,282891,282892]],
+      [103,95,85,83,80], [282887,282888,282889,282891,282892])
+
+def turn(r, floor, attempt, t):
+    st = next(x['state'] for x in states.values() if x['state']['run_id']==r and x['state']['run']['floor']==floor
+              and x['_attempt']==attempt and x['state'].get('turn')==t and x['state']['screen']=='COMBAT'
+              and (x['state'].get('combat') or {}).get('hand'))
+    return {'hp':st['run']['current_hp'], 'enemies':[{'hp':e['current_hp']} for e in st['combat']['enemies']]}
+def delta(r, floor, attempt, t):
+    a=turn(r,floor,attempt,t);b=turn(r,floor,attempt,t+1)
+    return [a['hp']-b['hp'],sum(e['hp'] for e in a['enemies'])-sum(e['hp'] for e in b['enemies'])]
+
+for attempt, expected in [(2,[3,36]),(3,[0,27])]:
+    check('TXZ T6已兑现损血/扣敌血',delta('TXZ6RVMQA09D',48,attempt,6),expected,[])
+for attempt, expected in [(2,[13,24]),(3,[22,39])]:
+    check('WQ T9已兑现损血/扣敌血',delta('WQZVENQ7DTRP',33,attempt,9),expected,[])
+for attempt, expected in [(1,[1,8]),(5,[7,24]),(6,[7,24])]:
+    check('NHA T1已兑现损血/跨轮净扣',delta('NHA2KW0RB7VP',33,attempt,1),expected,[])
+
+potions = json.loads((S / 'potion-actions.json').read_text())
+cunning = [p for p in potions if p.get('potion')=='CUNNING_POTION']
+counts=Counter()
+for p in cunning:
+    b=p['before'];a=p['after'];generated=len(a['hand'])-len(b['hand']);expected=min(3,10-len(b['hand']))
+    assert generated==expected
+    assert len(b['potions'])-len(a['potions'])==1
+    raw_before=states[b['line']]['state']['combat']['hand'];raw_after=states[a['line']]['state']['combat']['hand']
+    before_shivs=sum(h['card_id']=='SHIV' and h['upgraded'] for h in raw_before)
+    after_shivs=[h for h in raw_after if h['card_id']=='SHIV' and h['upgraded']]
+    assert len(after_shivs)-before_shivs==generated
+    assert all(next(v for v in h['dynamic_values'] if v['name']=='Damage')['base_value']==6 for h in after_shivs)
+    if generated==0:
+        assert (b['hp'],b['energy'],[(e['id'],e['hp']) for e in b['enemies']])==(a['hp'],a['energy'],[(e['id'],e['hp']) for e in a['enemies']])
+    counts[generated]+=1
+check('九局42次狡诈新增容量分布',dict(counts),{3:37,2:2,0:3},[])
+check('狡诈独立局分母',len({p['run'] for p in cunning}),9,[])
+
+ken=[p for p in potions if p['run']=='KEN58SH9SLZ6']
+check('KEN七次实饮药',[(p['floor'],p['turn'],p['potion']) for p in ken],
+      [(3,2,'ATTACK_POTION'),(4,1,'STABLE_SERUM'),(5,2,'SPEED_POTION'),(11,1,'WEAK_POTION'),(11,2,'ATTACK_POTION'),(15,1,'GLOWWATER_POTION'),(15,1,'SKILL_POTION')],[])
+resources=json.loads((S/'fight-resources.json').read_text())
+ken_fights=[x for x in resources if x['run']=='KEN58SH9SLZ6' and x['floor']<17]
+check('KEN六胜战净损分布',[x['first']['hp']-x['last_room']['hp'] for x in ken_fights],[0,3,0,37,6,0],[])
+q6=[x for x in resources if x['run']=='Q6M2Y34MWKRE']
+check('Q6骇鳗胜后后继2血',[x['last_room']['hp'] for x in q6 if x['floor'] in [8,9]],[2,0],[])
+nineteen=[x for x in resources if x['run']=='1913SE84AXQF']
+check('1913后半入口/退出资源',[(x['floor'],x['first']['hp'],x['last_room']['hp']) for x in nineteen if x['floor']>=17],
+      [(17,58,14),(19,58,44),(23,44,40),(29,61,46),(31,46,0)],[])
+
+check('NHA首毒10层',next(e for e in states[283147]['state']['combat']['enemies'] if e['enemy_id']=='CEREMONIAL_BEAST')['powers'][0]['amount'],10,[283147])
+lamp_states=[x['state']['run']['relics'] for x in states.values() if x['state']['run_id']=='NHA2KW0RB7VP']
+lamp_objects=[r for xs in lamp_states for r in xs if r['relic_id']=='UNSETTLING_LAMP']
+check('油灯本批可读对象无使用计数',all(r.get('stack') is None for r in lamp_objects),True,[])
+
+classification=[]
+for row in json.loads((S/'source-manifest.json').read_text()):
+    stem=Path(row['path']).stem;a=(S/(stem+'-base.txt')).read_text().splitlines();b=(S/(stem+'-live.txt')).read_text().splitlines()
+    changed=[line for line in difflib.ndiff(a,b) if line[:2] in ['- ','+ ']]
+    minus=[x[2:] for x in changed if x.startswith('- ')];plus=[x[2:] for x in changed if x.startswith('+ ')]
+    comment_only=not changed or len(minus)==len(plus) and all(x.lstrip().startswith(('*','//')) and x.replace('Roy','Dai')==y for x,y in zip(minus,plus))
+    assert comment_only,row['path']
+    classification.append({'path':row['path'],'equal':a==b,'only_comment_author_difference':bool(changed),'changed_lines':changed})
+
+(S/'source-difference-classification.json').write_text(json.dumps(classification,ensure_ascii=False,indent=2)+'\n')
+(S/'evidence-verification.json').write_text(json.dumps({'scope':'原日志证据算术与来源核验，不是生产源码测试','claims':proofs,'source_rows_verified':len(states),'cunning_actions_verified':len(cunning),'source_comparisons':len(classification)},ensure_ascii=False,indent=2)+'\n')
+print('证据核验完成',len(proofs),'项；来源状态',len(states),'帧；狡诈实饮',len(cunning),'次。生产测试未运行。')
