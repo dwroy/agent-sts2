@@ -1,0 +1,41 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-041302/agent
+
+ ❯ tests/build-sim-cancellation.test.ts (7 tests | 1 failed | 6 skipped) 17ms
+     × does not claim simulation cores or start workers for an expired request 14ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/build-sim-cancellation.test.ts > cancelled build simulation batches > does not claim simulation cores or start workers for an expired request
+AssertionError: expected { outcomes: [ [ [ …(8) ] ] ], …(5) } to match object { complete: [], timedOut: true, …(3) }
+(1 matching property omitted from actual)
+
+- Expected
++ Received
+
+@@ -6,7 +6,7 @@
+      "firstReplyMs": null,
+      "outcomesCompleted": 0,
+    },
+    "elapsedMs": 5,
+    "timedOut": true,
+-   "workers": 0,
++   "workers": 1,
+  }
+
+ ❯ tests/build-sim-cancellation.test.ts:63:20
+     61|     const result = await pool.run({ base: input, decks: [{}], orders: …
+     62|       deadlineMs: 5, now, diagnostics: true });
+     63|     expect(result).toMatchObject({ complete: [], timedOut: true, elaps…
+       |                    ^
+     64|       diagnostics: { firstReplyMs: null, chunksDispatched: 0, chunksCo…
+     65|     expect(fixed.workers).toHaveLength(0);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 6 skipped (7)
+   Start at  04:29:28
+   Duration  702ms (transform 419ms, setup 459ms, import 56ms, tests 17ms, environment 0ms)
+

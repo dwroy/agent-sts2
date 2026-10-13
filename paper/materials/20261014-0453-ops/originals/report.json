@@ -1,0 +1,63 @@
+{
+  "task": "fix-batch",
+  "base": "4454bd24d1331c7eca756d302e5686a2d023f6f7",
+  "fixes": [
+    {
+      "item": "v5-dpr-health-20261013：模拟排队等待未计入调用方期限",
+      "commit": "c60407481a415f84efe608ad44b590b616275bc7",
+      "test": "agent/tests/build-sim-cancellation.test.ts",
+      "fails_without_fix": true
+    },
+    {
+      "item": "v5-dpr-health-20261013：过期请求仍启动worker并抢占模拟池",
+      "commit": "dc606a59adbeb4f7efe141a9aa022641275275c5",
+      "test": "agent/tests/build-sim-cancellation.test.ts",
+      "fails_without_fix": true
+    },
+    {
+      "item": "v5-dpr-health-20261013：准备阶段耗尽期限后仍补给200ms",
+      "commit": "c5e68dcf9d7d9e288b44ba59104596234d7433be",
+      "test": "agent/tests/build-health.test.ts",
+      "fails_without_fix": true
+    }
+  ],
+  "skipped": [
+    {
+      "item": "v5-dpr-health-20261013暖池配对样本不足与完整DPR性能父项",
+      "reason": "证据不足：已核8AGEGLG40SV3 F2/T6、F3/F4三原行queueMs均0；本批只关闭三处执行期限漏洞，没有自然性能/胜率验证，不改300/1000/11000ms/24线程。"
+    },
+    {
+      "item": "sandbox-glob-startup-race上游目录生命周期与自然恢复",
+      "reason": "证据不足：有界恢复和复盘租约已修；本批工具启动再次遇到历史目录ENOENT，只能确认启动前拒绝，不能确定删除者或绕过deny/租约。"
+    },
+    {
+      "item": "core-build-notify-222802-rc2旧通知安全恢复",
+      "reason": "证据不足：失败诊断子项已修；旧无stderr失败是否实际送达未知，不能安全重放外部通知。"
+    },
+    {
+      "item": "调度公平性核查",
+      "reason": "证据不足：仍是待核架构项，原插入序观察不足以证明永久饥饿；不在普通修复中改并发/排序/租约。"
+    },
+    {
+      "item": "named-card-facts-transport其他入口与P1/P2消费者验收",
+      "reason": "策略类/独立功能：事件资料漏传子项已修，其余由原具名卡学习/消费者任务接续，不关闭父项。"
+    },
+    {
+      "item": "出牌/药水/SL/终局/路线/休息与机制宽提案（含silent-0446/0459）",
+      "reason": "策略类：沿队列已登记的独立strategy-proposal；不抢原实现任务、不新增游戏事实、不重复派发。"
+    },
+    {
+      "item": "缓存实测、B4/B5校准、量化/核心、漏斗归因和统一资源价值父要求",
+      "reason": "策略类/独立功能：保留原owner及缺证范围；本批不调用LLM或网络，不将已上线子项当父成果完成。"
+    }
+  ],
+  "merged": null,
+  "tests": {
+    "tsc": 0,
+    "vitest": 0,
+    "cases": 3619
+  },
+  "code_proposals": [],
+  "implementation_domains": [],
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-041302/learner/runs/20261014-041324-fix-batch/report.md"
+}

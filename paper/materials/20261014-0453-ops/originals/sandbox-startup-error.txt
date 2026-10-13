@@ -1,0 +1,8 @@
+The first corrected preparation-budget positive check did not execute its shell command.
+The exec session returned exit 1 during bubblewrap construction, before the test log was created:
+error building bubblewrap command: Fatal error: ripgrep unreadable glob scan failed for /home/dw/Projects/agent-sts2:
+rg: /home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-031301/paper/materials/20261012-0758-postmortem: No such file or directory (os error 2)
+rg: /home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-031301/paper/materials/20261013-0253-ops: No such file or directory (os error 2)
+rg: /home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-031301/paper/materials/20261010-docs-sync: No such file or directory (os error 2)
+The same sandbox permissions and fixed test input are retained for the subsequent positive check.
+No process owner, deletion cause, production failure, or successful test result is inferred from this pre-execution error.

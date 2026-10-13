@@ -1,0 +1,38 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-041302/agent
+
+ ❯ tests/build-sim-cancellation.test.ts (6 tests | 1 failed | 5 skipped) 21ms
+     × counts queue wait against the caller's deadline and keeps the following run usable 19ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/build-sim-cancellation.test.ts > cancelled build simulation batches > counts queue wait against the caller's deadline and keeps the following run usable
+AssertionError: expected { outcomes: [ [ [ …(8) ] ] ], …(4) } to match object { complete: [], timedOut: true, …(1) }
+(2 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+    "complete": [],
+-   "elapsedMs": 10,
++   "elapsedMs": 0,
+    "timedOut": true,
+  }
+
+ ❯ tests/build-sim-cancellation.test.ts:69:20
+     67|     expect(await first).toMatchObject({ complete: [], timedOut: true }…
+     68|     const result = await queued;
+     69|     expect(result).toMatchObject({ complete: [], timedOut: true, elaps…
+       |                    ^
+     70|     expect(worker.messages.filter((message) => message.type === "run")…
+     71|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 5 skipped (6)
+   Start at  04:19:20
+   Duration  784ms (transform 482ms, setup 528ms, import 52ms, tests 21ms, environment 0ms)
+

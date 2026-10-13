@@ -1,0 +1,90 @@
+{
+  "base": "4454bd24d1331c7eca756d302e5686a2d023f6f7",
+  "source": "c5e68dcf9d7d9e288b44ba59104596234d7433be",
+  "live_refresh_commit": "040a5fab25314f9001948e79ea78088d1a46f401",
+  "merge_preflight_exit": 1,
+  "conflicts": [
+    "notes/fix-queue-v4.md",
+    "notes/for-roy.md",
+    "notes/lessons.md",
+    "ops/inbox-dev.md",
+    "paper/data/README.md",
+    "paper/data/commits.csv",
+    "paper/data/cost-curve-silent.csv",
+    "paper/data/cost-silent.csv",
+    "paper/data/cost-sources.json",
+    "paper/data/cost-unattributed.csv",
+    "paper/data/decisions_by_label.csv",
+    "paper/data/learning-curve-silent.csv",
+    "paper/data/runs.csv",
+    "paper/data/summary.json",
+    "paper/data/verification.json",
+    "paper/materials/decision-log.md",
+    "paper/materials/learning/ledger.jsonl",
+    "paper/materials/silent/20261010-224307-boss-calibration-closeout/postcommit-cleanup.json"
+  ],
+  "new_fix_paths": [
+    "agent/src/sim/build-sim-facts.ts",
+    "agent/src/sim/build-sim-pool.ts",
+    "agent/tests/build-health.test.ts",
+    "agent/tests/build-sim-cancellation.test.ts"
+  ],
+  "new_fix_refresh_overlap": [],
+  "merged": null,
+  "live_code_modified": false,
+  "release_registered": false,
+  "ledger_matches": [],
+  "ledger_updated": false,
+  "source_worktree_clean": true,
+  "precommit_checks": [
+    {
+      "item": "queue-deadline",
+      "tsc": 0,
+      "vitest": 0,
+      "files": 378,
+      "cases": 3615,
+      "log": "queue-deadline-sandbox.log"
+    },
+    {
+      "item": "expired-start",
+      "tsc": 0,
+      "vitest": 0,
+      "files": 378,
+      "cases": 3616,
+      "log": "expired-start-sandbox.log"
+    },
+    {
+      "item": "preparation-budget",
+      "tsc": 0,
+      "vitest": 0,
+      "files": 378,
+      "cases": 3619,
+      "log": "preparation-budget-sandbox.log"
+    }
+  ],
+  "negative_checks": {
+    "queue-deadline": {
+      "exit": 1,
+      "failed": 1,
+      "restored": 6
+    },
+    "expired-start": {
+      "exit": 1,
+      "failed": 1,
+      "restored": 7
+    },
+    "preparation-budget-corrected": {
+      "exit": 1,
+      "failed": 3,
+      "restored_combined": 13
+    }
+  },
+  "ironclad_equivalence": {
+    "file": "agent/tests/boss-sim-build.test.ts",
+    "exit": 0,
+    "passed": 1,
+    "not_selected": 13,
+    "log": "ironclad-worker-equivalence-corrected.log"
+  },
+  "limits": "暖池性能、自然消费与胜率父项仍未验；不把固定预算反例当自然告警因果。"
+}

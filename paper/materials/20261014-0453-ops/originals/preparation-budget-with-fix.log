@@ -1,0 +1,30 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-041302/agent
+
+ ❯ tests/build-health.test.ts (6 tests | 3 failed) 231ms
+     × does not replenish the question deadline after 10950 ms of preparation 142ms
+     × does not replenish the question deadline after 11000 ms of preparation 18ms
+     × does not replenish the question deadline after 12000 ms of preparation 16ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/build-health.test.ts > B3 service diagnostics > does not replenish the question deadline after 10950 ms of preparation
+ FAIL  tests/build-health.test.ts > B3 service diagnostics > does not replenish the question deadline after 11000 ms of preparation
+ FAIL  tests/build-health.test.ts > B3 service diagnostics > does not replenish the question deadline after 12000 ms of preparation
+AssertionError: expected "vi.fn()" to be called 2 times, but got 1 times
+ ❯ tests/build-health.test.ts:25:17
+     23|     const result = await withBossSim(decide(e), e, { ...deps, runner: …
+     24|     const remaining = Math.max(0, 11_000 - elapsed);
+     25|     expect(run).toHaveBeenCalledTimes(2);
+       |                 ^
+     26|     expect(run.mock.calls.map(([req]) => req.deadlineMs)).toEqual([rem…
+     27|     expect(run.mock.calls.every(([req]) => req.samples === 100 || req.…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+
+ Test Files  1 failed | 1 passed (2)
+      Tests  3 failed | 10 passed (13)
+   Start at  04:37:43
+   Duration  2.61s (transform 1.69s, setup 363ms, import 1.75s, tests 245ms, environment 0ms)
+

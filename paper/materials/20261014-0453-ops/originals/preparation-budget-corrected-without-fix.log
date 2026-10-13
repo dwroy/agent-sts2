@@ -1,0 +1,63 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-041302/agent
+
+ ❯ tests/build-health.test.ts (6 tests | 3 failed | 3 skipped) 201ms
+     × does not replenish the question deadline after 10950 ms of preparation 163ms
+     × does not replenish the question deadline after 11000 ms of preparation 17ms
+     × does not replenish the question deadline after 12000 ms of preparation 17ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/build-health.test.ts > B3 service diagnostics > does not replenish the question deadline after 10950 ms of preparation
+AssertionError: expected { base: { …(15) }, …(7) } to match object { deadlineMs: 50, samples: 1000 }
+(21 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "deadlineMs": 50,
++   "deadlineMs": 200,
+    "samples": 1000,
+  }
+
+ ❯ tests/build-health.test.ts:26:35
+     24|     const remaining = Math.max(0, 11_000 - elapsed);
+     25|     expect(run).toHaveBeenCalledTimes(1);
+     26|     expect(run.mock.calls[0]![0]).toMatchObject({ deadlineMs: remainin…
+       |                                   ^
+     27|     expect(result.record?.error).toContain("没有跑完一个样本");
+     28|     expect(JSON.stringify(result.decision)).not.toContain('effective_d…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  tests/build-health.test.ts > B3 service diagnostics > does not replenish the question deadline after 11000 ms of preparation
+ FAIL  tests/build-health.test.ts > B3 service diagnostics > does not replenish the question deadline after 12000 ms of preparation
+AssertionError: expected { base: { …(15) }, …(7) } to match object { deadlineMs: +0, samples: 1000 }
+(21 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "deadlineMs": 0,
++   "deadlineMs": 200,
+    "samples": 1000,
+  }
+
+ ❯ tests/build-health.test.ts:26:35
+     24|     const remaining = Math.max(0, 11_000 - elapsed);
+     25|     expect(run).toHaveBeenCalledTimes(1);
+     26|     expect(run.mock.calls[0]![0]).toMatchObject({ deadlineMs: remainin…
+       |                                   ^
+     27|     expect(result.record?.error).toContain("没有跑完一个样本");
+     28|     expect(JSON.stringify(result.decision)).not.toContain('effective_d…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  3 failed | 3 skipped (6)
+   Start at  04:39:09
+   Duration  2.62s (transform 1.87s, setup 363ms, import 1.92s, tests 201ms, environment 0ms)
+
