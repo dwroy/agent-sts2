@@ -17,7 +17,8 @@ import { board, card } from "./boss-sim-fixture.js";
 
 vi.hoisted(() => vi.resetModules());
 vi.mock("node:fs", async (original) => {
-  const fs = await original<typeof import("node:fs")>();
+  const { historicalKnowledgeFs } = await import("./historical-knowledge-fs.js");
+  const fs = historicalKnowledgeFs(await original<typeof import("node:fs")>());
   const { KNOWLEDGE_DIR } = await import("../src/knowledge/files.js");
   const read = ((path: Parameters<typeof fs.readFileSync>[0], ...args: unknown[]) => {
     if (typeof path === "string" && resolve(path).startsWith(resolve(KNOWLEDGE_DIR) + "/")) {
