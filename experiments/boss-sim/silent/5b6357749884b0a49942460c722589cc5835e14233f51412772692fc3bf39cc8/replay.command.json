@@ -1,0 +1,27 @@
+{
+ "cwd": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261014-061307-silent-boss-calibration/.pinned-model/agent",
+ "command": [
+  "nice",
+  "-n",
+  "19",
+  "/home/dw/.local/node/bin/node",
+  "--import",
+  "tsx",
+  "tools/boss-sim/backtest.ts",
+  "--character",
+  "silent",
+  "--game-data",
+  "/home/dw/Projects/agent-sts2/data/game-data.json",
+  "--in",
+  "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261014-061307-silent-boss-calibration/dataset/fights.jsonl",
+  "--keys",
+  "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261014-061307-silent-boss-calibration/replay-identifiers.json",
+  "--out-dir",
+  "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261014-061307-silent-boss-calibration/pinned-results",
+  "--samples",
+  "200",
+  "--starts",
+  "t1,pre",
+  "--no-rollout"
+ ]
+}
