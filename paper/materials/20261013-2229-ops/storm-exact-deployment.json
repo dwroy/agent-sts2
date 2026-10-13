@@ -1,0 +1,88 @@
+{
+  "recorded_at": "2026-10-13 22:38:27 CST",
+  "original_source": "b5d893ef2d55b50b268fd29ad94f0d3b54fca016",
+  "integration_source": "60e284175de6efe6dfda12cdf9c1ccdbcec32756",
+  "before": {
+    "main": "a00e7af9ffa64f160cd5eb568de71c68a2a1cb73",
+    "live": "51b8db5556d0168ba538a2feb8cdae4a2757bd7b"
+  },
+  "paths": [
+    "agent/src/reflex/card-model.ts",
+    "agent/src/reflex/combat-plan.ts",
+    "agent/src/reflex/turn-solver.ts",
+    "agent/tests/silent-storm-hand-boundary-evidence.json",
+    "agent/tests/silent-storm-hand-boundary.test.ts"
+  ],
+  "checkouts": {
+    "main": {
+      "actual_leaves": "e94c677b18aaa5d2f8ff86120b3fc535a32cce48",
+      "ancestry_bound": "a4de13e2e3e6fd393f6180ea05aaa8fc23429f5b",
+      "tree": "0c8afbdeedd2a335c481fdf517277f857d417a8c",
+      "leaf_sha256": {
+        "agent/src/reflex/card-model.ts": "6cbea34c2397db17e49a4251614aa225ffaa7215ad8d3dbb3ff9ca0905bc6623",
+        "agent/src/reflex/combat-plan.ts": "03e71b277f59a44fff5df35f3f91111e42b49715257f53f693c55bd465974ce2",
+        "agent/src/reflex/turn-solver.ts": "e80d2359736f1328ffe0a44cd8e35245b364d7ffb52642781ecdaebbfbf86686",
+        "agent/tests/silent-storm-hand-boundary-evidence.json": "8e4f2bc2e15ce0dac2cd1a5ad99692d01afabb648f0416594c27b3a4172f9b0f",
+        "agent/tests/silent-storm-hand-boundary.test.ts": "cc3b6ee9e24ab68ee3ef8c90131f9778dcaf6fe165c8ab70006b4a01d2972e6e"
+      },
+      "metadata_commit": "b85432e091d1ef152ed633303bfee1a38e1dd024"
+    },
+    "live": {
+      "actual_leaves": "ba2d865123473dab7ca5e50f9be3d20a2296fbdf",
+      "ancestry_bound": "f4bf65ff9de90de290a84d9dc2bca022062a5199",
+      "tree": "c2cb1fef62f23328739a7ed1f4973fe30b503b61",
+      "leaf_sha256": {
+        "agent/src/reflex/card-model.ts": "d5f2bf3206e068b017d210c1e4366b73ee3c17b80eb1750a62a83f36d10fc1d6",
+        "agent/src/reflex/combat-plan.ts": "3911044b1787287f28fb9dcba659f7f58310837feb12d2dbc43f1970e65ba239",
+        "agent/src/reflex/turn-solver.ts": "e664f0dd4cba20140c9d373909e4adb42b5d65432200d2885f6e1f916f9a597e",
+        "agent/tests/silent-storm-hand-boundary-evidence.json": "8e4f2bc2e15ce0dac2cd1a5ad99692d01afabb648f0416594c27b3a4172f9b0f",
+        "agent/tests/silent-storm-hand-boundary.test.ts": "cc3b6ee9e24ab68ee3ef8c90131f9778dcaf6fe165c8ab70006b4a01d2972e6e"
+      },
+      "metadata_commit": "0b07f43b3bdf54138e922cb84f2fd41dce9db139"
+    }
+  },
+  "refreshes": {},
+  "source_sandbox": {
+    "tsc": 0,
+    "vitest": 0,
+    "files": 372,
+    "tests": 3570,
+    "paths_tests": 11
+  },
+  "integration_checks": {
+    "tsc": 0,
+    "focused_tests": 21,
+    "gitleaks": 0
+  },
+  "old_record_conflicts_preserved": 20,
+  "original_batch_failure_preserved": true,
+  "unobserved_roles_and_templates_unchanged": true,
+  "natural_consumption": "pending next natural run",
+  "release_id": "V5-R332",
+  "alias": "V5.storm-hand-boundary1",
+  "behavior_commit": "ba2d865123473dab7ca5e50f9be3d20a2296fbdf",
+  "unchanged_health_leaves": [
+    "agent/src/sim/build-sim-facts.ts",
+    "agent/src/sim/build-sim-pool.ts",
+    "agent/src/sim/build-sim.ts",
+    "ops/codex-ops.sh",
+    "ops/report.py",
+    "agent/tests/build-health.test.ts",
+    "agent/tests/module-health.test.ts",
+    "agent/tests/module_health_test.py",
+    "agent/tools/profile-build-health.ts",
+    "ops/module_health.py"
+  ],
+  "root_notifications": "None under Roy 21:42 autonomy; concrete rules/evidence/rollback recorded here",
+  "old_rule": "Old discarded cards could remain planned after the observed hand replacement",
+  "new_rule": "Stop the candidate at the verified unknown hand boundary; clear stale memo and replan actual post-cast hand",
+  "evidence": {
+    "run": "32VSST9UX7MN",
+    "ledger": [
+      "silent-0455"
+    ],
+    "proposal": "silent-proposal-71e742c6453608bf"
+  },
+  "expected": "Remove infeasible old-hand continuations within the observed template; complete generation/automatic effects and win-rate impact remain unknown",
+  "rollback": "Revert only live behavior commit ba2d865123473dab7ca5e50f9be3d20a2296fbdf and register a later release, preserving refreshes and history"
+}

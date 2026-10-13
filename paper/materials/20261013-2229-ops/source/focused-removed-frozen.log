@@ -1,0 +1,330 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261013-210730/agent
+
+ ❯ tests/silent-storm-hand-boundary.test.ts (21 tests | 6 failed) 323ms
+   × rejects F29's recorded continuation through three discarded cards 143ms
+   × rejects the F30 third-attempt SL continuation through the discarded Dagger Spray 11ms
+   × ends the 390550 prefix at an explicitly unknown replacement boundary 50ms
+   × ends the 390614 prefix at an explicitly unknown replacement boundary 10ms
+   × keeps unobserved discard relic effects unknown instead of crediting their Block 43ms
+   × clears a continuing Jev memo when its final step replaces the hand 45ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 6 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/silent-storm-hand-boundary.test.ts > rejects F29's recorded continuation through three discarded cards
+AssertionError: expected { steps: [ { …(7) }, …(3) ], …(2) } to be null
+
+- Expected:
+null
+
++ Received:
+{
+  "outcome": {
+    "attackPlays": 1,
+    "blockGained": 4,
+    "blockWasted": 0,
+    "cardsDrawn": 0,
+    "damageDealt": 4,
+    "dies": false,
+    "enemyHpAfter": [
+      {
+        "artifact": 0,
+        "block": 0,
+        "curlUp": 0,
+        "flutter": 0,
+        "hp": 68,
+        "index": 0,
+        "name": "异螨 #1",
+        "shrink": 0,
+        "slippery": 0,
+        "strengthGained": 0,
+        "vulnerable": 0,
+        "weak": 0,
+      },
+      {
+        "artifact": 0,
+        "block": 0,
+        "curlUp": 0,
+        "flutter": 0,
+        "hp": 61,
+        "index": 1,
+        "name": "异螨 #2",
+        "shrink": 0,
+        "slippery": 0,
+        "strengthGained": 0,
+        "vulnerable": 0,
+        "weak": 2,
+      },
+    ],
+    "energyLeft": 0,
+    "hpAfter": 41,
+    "hpLoss": 0,
+    "incomingAfterBlock": 0,
+    "kills": [],
+    "lasting": 13,
+    "restocked": [],
+    "sandpitAfter": null,
+    "serpentFormAfter": 0,
+    "sleepCost": 0,
+    "startTurnKills": [],
+    "strengthGained": 0,
+    "unknownCards": [
+      "钢铁风暴+",
+    ],
+    "vulnerableApplied": 0,
+    "weakApplied": 2,
+    "winsFight": false,
+    "withersAdded": 0,
+  },
+  "score": 16.55,
+  "steps": [
+    {
+      "cardId": "STORM_OF_STEEL",
+      "cardIndex": 0,
+      "cost": 1,
+      "name": "钢铁风暴+",
+      "target": null,
+      "targetName": null,
+      "upgraded": true,
+    },
+    {
+      "cardId": "DODGE_AND_ROLL",
+      "cardIndex": 2,
+      "cost": 1,
+      "name": "闪躲翻滚",
+      "target": null,
+      "targetName": null,
+      "upgraded": false,
+    },
+    {
+      "cardId": "FOOTWORK",
+      "cardIndex": 3,
+      "cost": 1,
+      "name": "灵动步法",
+      "target": null,
+      "targetName": null,
+      "upgraded": false,
+    },
+    {
+      "cardId": "NEUTRALIZE",
+      "cardIndex": 6,
+      "cost": 0,
+      "name": "中和+",
+      "target": 1,
+      "targetName": "异螨 #2",
+      "upgraded": true,
+    },
+  ],
+}
+
+ ❯ tests/silent-storm-hand-boundary.test.ts:58:121
+     56| it("rejects F29's recorded continuation through three discarded cards"…
+     57|   const { input, step } = observed(390550);
+     58|   expect(replaySteps(input, [step("STORM_OF_STEEL"), step("DODGE_AND_R…
+       |                                                                                                                         ^
+     59| });
+     60|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/6]⎯
+
+ FAIL  tests/silent-storm-hand-boundary.test.ts > rejects the F30 third-attempt SL continuation through the discarded Dagger Spray
+AssertionError: expected { steps: [ { …(7) }, { …(7) } ], …(2) } to be null
+
+- Expected:
+null
+
++ Received:
+{
+  "outcome": {
+    "attackPlays": 1,
+    "blockGained": 0,
+    "blockWasted": 5,
+    "cardsDrawn": 0,
+    "damageDealt": 8,
+    "dies": false,
+    "enemyHpAfter": [
+      {
+        "artifact": 0,
+        "block": 0,
+        "curlUp": 0,
+        "flutter": 0,
+        "hp": 118,
+        "index": 0,
+        "name": "猎人杀手",
+        "shrink": 0,
+        "slippery": 0,
+        "strengthGained": 0,
+        "vulnerable": 0,
+        "weak": 0,
+      },
+    ],
+    "energyLeft": 0,
+    "hpAfter": 11,
+    "hpLoss": 0,
+    "incomingAfterBlock": 0,
+    "kills": [],
+    "lasting": 5,
+    "restocked": [],
+    "sandpitAfter": null,
+    "serpentFormAfter": 0,
+    "sleepCost": 0,
+    "startTurnKills": [],
+    "strengthGained": 0,
+    "unknownCards": [
+      "钢铁风暴+",
+    ],
+    "vulnerableApplied": 0,
+    "weakApplied": 0,
+    "winsFight": false,
+    "withersAdded": 0,
+  },
+  "score": 7.6,
+  "steps": [
+    {
+      "cardId": "STORM_OF_STEEL",
+      "cardIndex": 4,
+      "cost": 1,
+      "name": "钢铁风暴+",
+      "target": null,
+      "targetName": null,
+      "upgraded": true,
+    },
+    {
+      "cardId": "DAGGER_SPRAY",
+      "cardIndex": 5,
+      "cost": 1,
+      "name": "匕首雨",
+      "target": null,
+      "targetName": null,
+      "upgraded": false,
+    },
+  ],
+}
+
+ ❯ tests/silent-storm-hand-boundary.test.ts:63:78
+     61| it("rejects the F30 third-attempt SL continuation through the discarde…
+     62|   const { input, step } = observed(390614);
+     63|   expect(replaySteps(input, [step("STORM_OF_STEEL"), step("DAGGER_SPRA…
+       |                                                                              ^
+     64| });
+     65|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/6]⎯
+
+ FAIL  tests/silent-storm-hand-boundary.test.ts > ends the 390550 prefix at an explicitly unknown replacement boundary
+AssertionError: expected { energy: 2, hp: 41, block: +0, …(14) } to match object { hand: [], …(3) }
+(13 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+    "damage": 0,
+    "drawn": 0,
+-   "hand": [],
+-   "pendingSelection": true,
++   "hand": [
++     "SURVIVOR",
++     "DODGE_AND_ROLL",
++     "FOOTWORK",
++     "DEFEND_SILENT",
++     "NEUTRALIZE",
++     "GREED",
++   ],
++   "pendingSelection": false,
+  }
+
+ ❯ tests/silent-storm-hand-boundary.test.ts:70:39
+     68|   const trace = traceSteps(input, [step("STORM_OF_STEEL")]);
+     69|   expect(trace.complete).toBe(true);
+     70|   expect(trace.transitions[0]!.after).toMatchObject({ hand: [], pendin…
+       |                                       ^
+     71|   expect(trace.transitions[0]!.after.energy).toBe(input.player.energy …
+     72|   expect(trace.plan!.steps[0]!.discards).toHaveLength(6);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/6]⎯
+
+ FAIL  tests/silent-storm-hand-boundary.test.ts > ends the 390614 prefix at an explicitly unknown replacement boundary
+AssertionError: expected { energy: 1, hp: 11, block: 5, …(14) } to match object { hand: [], …(3) }
+(13 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+    "damage": 0,
+    "drawn": 0,
+-   "hand": [],
+-   "pendingSelection": true,
++   "hand": [
++     "UNTOUCHABLE",
++     "DEFEND_SILENT",
++     "DEFEND_SILENT",
++     "DEADLY_POISON",
++     "DAGGER_SPRAY",
++     "SPEEDSTER",
++   ],
++   "pendingSelection": false,
+  }
+
+ ❯ tests/silent-storm-hand-boundary.test.ts:70:39
+     68|   const trace = traceSteps(input, [step("STORM_OF_STEEL")]);
+     69|   expect(trace.complete).toBe(true);
+     70|   expect(trace.transitions[0]!.after).toMatchObject({ hand: [], pendin…
+       |                                       ^
+     71|   expect(trace.transitions[0]!.after.energy).toBe(input.player.energy …
+     72|   expect(trace.plan!.steps[0]!.discards).toHaveLength(6);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/6]⎯
+
+ FAIL  tests/silent-storm-hand-boundary.test.ts > keeps unobserved discard relic effects unknown instead of crediting their Block
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ tests/silent-storm-hand-boundary.test.ts:97:56
+     95|   const trace = traceSteps(input, [step("STORM_OF_STEEL")]);
+     96|   expect(trace.transitions[0]!.after.blockGained).toBe(0);
+     97|   expect(trace.transitions[0]!.after.pendingSelection).toBe(true);
+       |                                                        ^
+     98| });
+     99|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/6]⎯
+
+ FAIL  tests/silent-storm-hand-boundary.test.ts > clears a continuing Jev memo when its final step replaces the hand
+AssertionError: expected { turn: 1, lethal: false, …(4) } to be null
+
+- Expected:
+null
+
++ Received:
+{
+  "expectedHand": "DEFEND_SILENT,DODGE_AND_ROLL,FOOTWORK,GREED,NEUTRALIZE+,SURVIVOR",
+  "handLen": 6,
+  "lethal": false,
+  "remaining": [],
+  "turn": 1,
+  "via": "jev",
+}
+
+ ❯ tests/silent-storm-hand-boundary.test.ts:110:39
+    108|   const decision = planCombatTurn(env);
+    109|   expect(decision).toMatchObject({ kind: "act", label: "combat/plan-co…
+    110|   expect(env.screenMemory.combatPlan).toBeNull();
+       |                                       ^
+    111| });
+    112|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/6]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  6 failed | 15 passed (21)
+   Start at  21:55:53
+   Duration  1.97s (transform 1.24s, setup 338ms, import 1.17s, tests 323ms, environment 0ms)
+

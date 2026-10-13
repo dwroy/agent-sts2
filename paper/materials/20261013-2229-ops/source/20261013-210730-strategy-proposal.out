@@ -1,0 +1,68 @@
+已提交修复 `b5d893ef2d55b50b268fd29ad94f0d3b54fca016`，证据为 `32VSST9UX7MN` F29T1、F30第三试T1，账本 `silent-0455`。
+
+撤码6项失败，恢复后21项通过；tsc及沙箱3570项通过。live预检有20处历史记录冲突，**未合入、无正式版本**。资源兑现和自动挡两项缺证保留。
+
+[提案](/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261013-210730/learner/runs/20261013-210744-strategy-proposal/proposal.md) · [完整报告](/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261013-210730/learner/runs/20261013-210744-strategy-proposal/report.md)
+
+```json
+{
+  "task": "strategy-proposal",
+  "character": "silent",
+  "batch": "20261013-210730-strategy-proposal",
+  "status": "blocked",
+  "base": "2a92800f92b4954b15f6cd08ce2a0baddb22426b",
+  "runs": ["32VSST9UX7MN"],
+  "fixes": [{
+    "id": "silent-storm-hand-boundary",
+    "proposal_id": "silent-proposal-71e742c6453608bf",
+    "ledger": ["silent-0455"],
+    "commit": "b5d893ef2d55b50b268fd29ad94f0d3b54fca016",
+    "scope": "静默实际A10升级钢铁风暴的旧手牌后继与实际刷新记忆，生成和自动弃牌效果保持未知"
+  }],
+  "skipped": [
+    {"id": "silent-proposal-2a5cd153841551ac", "reason": "缺完整受控后继及独立新局，不修改资源或终局阈值。"},
+    {"id": "silent-proposal-c1dd614cdf7bfc37", "reason": "缺自动效果内部时序、费用、名额及力敏/重放交互证据。"}
+  ],
+  "merged": null,
+  "version": null,
+  "tests": {"tsc": 0, "vitest": 0, "cases": 0},
+  "test_counts": {"files": 372, "passed": 3570, "fixed_cases": 21},
+  "code_proposals": [
+    "silent-proposal-71e742c6453608bf",
+    "silent-proposal-2a5cd153841551ac",
+    "silent-proposal-c1dd614cdf7bfc37"
+  ],
+  "implementation_domains": ["combat"],
+  "proposal_results": [
+    {
+      "id": "silent-proposal-71e742c6453608bf",
+      "state": "waiting",
+      "source_commit": "b5d893ef2d55b50b268fd29ad94f0d3b54fca016",
+      "reason": "源码已测，但live整分支预检20处历史记录冲突，尚无实际live祖先源码及消费者回执，待ops接续。"
+    },
+    {
+      "id": "silent-proposal-2a5cd153841551ac",
+      "state": "waiting",
+      "reason": "缺相同进场资源下的完整候选后继、受控换线/持药对照及独立新局。"
+    },
+    {
+      "id": "silent-proposal-c1dd614cdf7bfc37",
+      "state": "waiting",
+      "reason": "仅有一次组合前后净6挡，内部自动顺序及交互缺证。"
+    }
+  ],
+  "live_refresh_commit": "f130f71521ab1d4bf25735abb9506d04f07fb2f9",
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261013-210730/learner/runs/20261013-210744-strategy-proposal/report.md"
+}
+```
+
+== 学习者 codex / strategy-proposal ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a13560-512f-7c93-829b-e9f2db715fe3
+轮数：1；工具调用：command_execution×66 file_change×5
+token：输入 338.5k、输出 89.9k（其中推理 58.2k）、cache 读 13534.5k、cache 写 0（命中 97.6%）
+成本：未提供
+耗时：4356.8 s（墙钟）
+时间：首个事件 20.5 s、模型首个输出 27.1 s、首次工具 35.8 s、末次工具结束 4173.8 s；工具内共 2517.3 s，其余（模型生成、推理、网络）1819.1 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261013-210730）；模型的工具调用 exec×83 wait×3；/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/learner/sessions/2026/10/13/rollout-2026-10-13T21-07-47-01a13560-512f-7c93-829b-e9f2db715fe3.jsonl
+日志：/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261013-210730/learner/runs/20261013-210744-strategy-proposal.jsonl
