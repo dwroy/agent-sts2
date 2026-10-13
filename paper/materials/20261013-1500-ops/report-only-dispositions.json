@@ -1,0 +1,111 @@
+{
+  "task": "strategy-proposal",
+  "character": "silent",
+  "batch": "20261013-141302-s2-strategy-proposal",
+  "base": "a123464605c79af2770e6c11181d33ec3b3c9138",
+  "runs": [
+    "RC61MFQM63Y6",
+    "XTSV1U9JD34T",
+    "BTSRF7JL1W1Y",
+    "9Z9H2EXKLF3T",
+    "HMVJKM56S4Q8",
+    "F4QKG4J1AJJZ",
+    "G403VCZ3BH1B",
+    "25226ZFLNR1J",
+    "JLN5SK17W4FQ",
+    "JMH5C51RLN4E"
+  ],
+  "fixes": [],
+  "skipped": [
+    "silent-proposal-03754e1265894000",
+    "silent-proposal-e5ea36df117ca9b7",
+    "silent-proposal-ab055ef7dfbb44e5",
+    "silent-proposal-0129c465c6f5bd79",
+    "silent-proposal-abe9d5d0be109a9f",
+    "silent-proposal-f16527e59b5cc1e0",
+    "silent-proposal-8f62129d7da70b94",
+    "silent-proposal-7a8e9ccb7e646538",
+    "silent-proposal-cd9f76184de6e29a"
+  ],
+  "merged": null,
+  "tests": {
+    "tsc": null,
+    "vitest": 0,
+    "cases": null
+  },
+  "test_scope": "仅既有固定夹具：main基线及实际live各3文件24项；未跑完整tsc/vitest，未做新源码撤除实验。",
+  "code_proposals": [
+    "silent-proposal-03754e1265894000",
+    "silent-proposal-d60691b060dfc40a",
+    "silent-proposal-e5ea36df117ca9b7",
+    "silent-proposal-ab055ef7dfbb44e5",
+    "silent-proposal-0129c465c6f5bd79",
+    "silent-proposal-abe9d5d0be109a9f",
+    "silent-proposal-f16527e59b5cc1e0",
+    "silent-proposal-8f62129d7da70b94",
+    "silent-proposal-7a8e9ccb7e646538",
+    "silent-proposal-cd9f76184de6e29a"
+  ],
+  "implementation_domains": [
+    "combat",
+    "potion",
+    "sl",
+    "terminal",
+    "structure"
+  ],
+  "proposal_results": [
+    {
+      "id": "silent-proposal-03754e1265894000",
+      "state": "waiting",
+      "reason": "RC61MFQM63Y6 F23 T3/T4组合实线已核；八组件联合生产回放未完整覆盖，临时敏捷清退与首次小刀/被动挡的叠加事件归属不全。"
+    },
+    {
+      "id": "silent-proposal-d60691b060dfc40a",
+      "state": "duplicate",
+      "commit": "222445a9bb6bf56cb4f3ceea2cc8b20fba54128f",
+      "reason": "XTSV1U9JD34T F48 T8原32→23已核，关联silent-0271/0228；该源码为实际live祖先，毒胜前合法无药保血搜索及固定消费者回放通过。模型保32不冒称实盘保血或F49获胜。"
+    },
+    {
+      "id": "silent-proposal-e5ea36df117ca9b7",
+      "state": "waiting",
+      "reason": "XTSV1U9JD34T F49 T1首可行动帧已核；缺耳环接管内部动作、顺序和耗能轨迹，未发现当前题面把接管说成自主启动的确定错误。"
+    },
+    {
+      "id": "silent-proposal-ab055ef7dfbb44e5",
+      "state": "waiting",
+      "reason": "幽灵单层子项已为live祖先且固定回放通过；缺夜魇复制收益存活窗口的完整可执行回放及延后饮药整场对照，不能以子项关闭复合提案。"
+    },
+    {
+      "id": "silent-proposal-0129c465c6f5bd79",
+      "state": "waiting",
+      "reason": "普通生存者单弃与毒胜保血子项均已为live祖先；接管内部动作、复制次轮兑现及同条件SL整战后继缺失，复合项保持等待。"
+    },
+    {
+      "id": "silent-proposal-abe9d5d0be109a9f",
+      "state": "waiting",
+      "reason": "连续双boss资源子项已上线；缺同资源改线、留药、锻造的完整后继及路线/休息/SL分源联合消费者验收，不拟新安全血线。"
+    },
+    {
+      "id": "silent-proposal-f16527e59b5cc1e0",
+      "state": "waiting",
+      "reason": "敏捷/脆弱/覆甲、临时减力和钳子留挡的联合完整消费回放未齐；六次T1喝幽灵没有延后同条件实战对照，不校准时机或持有价。"
+    },
+    {
+      "id": "silent-proposal-8f62129d7da70b94",
+      "state": "waiting",
+      "reason": "候选及预测资源审计子项已为live祖先；9Z9H2EXKLF3T T7预测与实轮已分账，但生产actual_turn仍为空，缺整轮执行闭环及T10差12的历史dirty源码/逐事件账。"
+    },
+    {
+      "id": "silent-proposal-7a8e9ccb7e646538",
+      "state": "waiting",
+      "reason": "9Z9H2EXKLF3T T10预计余血−9而实18→3；缺历史dirty完整源码及逐击毛伤事件归属，截断和复活结算未联合验证，不以24/24全败认定必死。"
+    },
+    {
+      "id": "silent-proposal-cd9f76184de6e29a",
+      "state": "waiting",
+      "reason": "十局16对跨幕实回复全部支持既有缺血80%公式；缺跨幕、营火、赢战消耗、上限变化和SL复药的联合消费者验收及同条件路线后继。"
+    }
+  ],
+  "verified_live_head": "ffeab7d4253cf09639be6805bb1ecb94606ce12f",
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261013-141302-s2/learner/runs/20261013-141319-strategy-proposal/report.md"
+}
