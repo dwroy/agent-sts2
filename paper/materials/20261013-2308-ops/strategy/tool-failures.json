@@ -1,0 +1,30 @@
+[
+  {
+    "kind": "sandbox_preflight",
+    "exit": 1,
+    "reason": "bubblewrap preflight rg worktree/.codex ENOENT",
+    "retry": "same original-proposal reads exit0",
+    "source_changed": false
+  },
+  {
+    "kind": "temporary_audit_serialization",
+    "exit": 1,
+    "reason": "TypeError: '<' not supported between instances of 'NoneType' and 'str'",
+    "retry": "audit-evidence.py exit0",
+    "source_changed": false
+  },
+  {
+    "kind": "temporary_report_builder",
+    "exit": 1,
+    "reason": "TypeError: can only concatenate tuple (not list) to tuple; trailing comma",
+    "retry": "write-reports.py corrected",
+    "source_changed": false
+  },
+  {
+    "kind": "temporary_apply_patch",
+    "exit": 1,
+    "reason": "Failed to write file scratch/write-reports.py",
+    "retry": "shell heredoc writes allowed scratch path",
+    "source_changed": false
+  }
+]
