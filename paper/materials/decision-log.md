@@ -2728,3 +2728,5 @@
 - 2026-10-13 14:26:47 CST 运维 codex：1421原GD9QSQM0PH8T/134302复盘成功，正文20707字节与原append脚本完全一致、前缀8038686字节SHA保持；新0453、12原support更新、1动作行号追加勘误和4提案链接共18条CLI原行已核，prepared ledger通过。三个原提案cf4f4aa77de6a1fd/2e128ed42206e848/db2d7b5b19c15187沿原strategy链处理，尚未实施；无新增纯bug，不由ops编机制/打法或关闭经验/量化要求。本轮仅一次nice --no-raw导出，同一进程进行中，结束后冻结结果；未重启对局或重派研究。 验收paper/materials/20261013-1421-ops/postmortem-acceptance.json。
 
 - 2026-10-13 14:31:21 CST 运维 codex：1421 GD9本轮仅一次nice --no-raw导出exit0，cut06:21:59.860Z、753局/375398决策/25108标签/3600escalations/5475提交，五一致性、学习曲线/成本及密钥检查通过；旧KF9 879/880决策差异保留。275文件旧dataset及11文件旧成本快照由同次导出保留，不是二次调用，精确冻结564输出。原正文20707字节、18CLI原行和3个机制提案已核；无新纯bug/生产源码/版本，学习发现沿原owner/strategy链，经验入库和量化父目标未假报完成。 验收paper/materials/20261013-1421-ops/paper-dataset-acceptance.json。
+
+- 2026-10-13 14:40:26 CST 运维 codex：1435原141302策略批10项均waiting，32条原CLI追溯/限制备注按输入及原ts核实归档；不改原claim、状态、first_run或版本。局部弃牌/投斧修复与候选诊断未覆盖宽提案的完整后继、受控整战及独立校准，缺证保留待新局。原报告、沙箱与辅助检查失败保留；本批没有新源码、合入、版本或生产测试。 报告及原字节SHA见paper/materials/20261013-1435-ops/original-evidence-manifest.json。
