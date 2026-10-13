@@ -10,7 +10,7 @@ export interface CoreTemplate {
 }
 export interface BuildState {
   cards: { id: string; upgraded: boolean }[]; relics: string[];
-  hp: number; maxHp: number; gold: number; floor: number; cap: number;
+  hp: number; maxHp: number; gold: number; floor: number; cap: number | null;
   combatResources?: { revives: import("../reflex/turn-solver.js").Revive[]; drunkKeys: string[] };
 }
 export type BuildAction =

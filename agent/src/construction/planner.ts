@@ -19,7 +19,7 @@ export function applyBuildAction(state: BuildState, action: BuildAction): BuildS
   next.gold -= action.price;
   if (action.kind === "add") {
     const copies = action.copies ?? 1;
-    if (!Number.isInteger(copies) || copies < 1 || next.cards.length + copies > next.cap) return null;
+    if (!Number.isInteger(copies) || copies < 1 || (next.cap !== null && next.cards.length + copies > next.cap)) return null;
     for (let i = 0; i < copies; i++) next.cards.push({ ...action.card });
   } else if (action.kind === "relic") {
     if (next.relics.includes(action.id)) return null;

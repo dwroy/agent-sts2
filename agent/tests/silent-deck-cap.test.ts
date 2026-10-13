@@ -4,15 +4,16 @@ import { gate } from "../src/hand/act/gate.js";
 import { buildFacts } from "../src/brain/build-facts.js";
 import { buildRunBrief } from "../src/memory/run-brief.js";
 import { createScreenMemory, type DecisionEnv } from "../src/memory/types.js";
-import { budgetedState, deckBudget, deckBudgetProblem, declaredCardGain } from "../src/memory/run-constraints.js";
+import { budgetedState, deckBudget, deckBudgetProblem, declaredCardGain, SILENT_DECK_CONSTRAINT } from "../src/memory/run-constraints.js";
 import { planDecision } from "../src/hand/screens/index.js";
 import { parseShopPlan } from "../src/hand/screens/shop.js";
 import { baseState, testKnowledge } from "./scenarios.js";
 import { knowledgeCharacter, setKnowledgeCharacter } from "../src/knowledge/files.js";
 
 let previousCharacter: string;
-beforeEach(() => { previousCharacter = knowledgeCharacter(); setKnowledgeCharacter("silent"); });
-afterEach(() => setKnowledgeCharacter(previousCharacter));
+// Replay the superseded V4 experiment explicitly; production V5 leaves it inactive.
+beforeEach(() => { previousCharacter = knowledgeCharacter(); setKnowledgeCharacter("silent"); Object.defineProperty(SILENT_DECK_CONSTRAINT, "active", { value: true }); });
+afterEach(() => { setKnowledgeCharacter(previousCharacter); Object.defineProperty(SILENT_DECK_CONSTRAINT, "active", { value: false }); });
 
 function env(size: number, screen = "REWARD", extra: Record<string, unknown> = {}, character = "SILENT", runId = "CAPFIXTURE01"): DecisionEnv {
   const raw = baseState(screen, extra);
