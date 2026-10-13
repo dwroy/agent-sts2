@@ -7,12 +7,21 @@ import { silentRewardAdditionFacts } from "../hand/screens/silent-reward-additio
 
 export const SILENT_DECK_CONSTRAINT = {
   id: "roy-20261013-silent-deck-cap30",
+  // Retained for historical V4 fixtures; Roy removed this constraint for V5.
+  active: false,
   maximum: 30,
   // This already-running game keeps its old rules, including a resumed controller.
   exemptRunIds: ["Y82C2NV7WM2M"],
 } as const;
 
+export const V5_DECK_POLICY = {
+  id: "roy-20261013-v5-no-deck-cap",
+  max_permanent_cards: null,
+  activation: "V5: Roy removed the fixed permanent deck-size limit",
+} as const;
+
 export function deckBudget(state: GameState): { maximum: number; current: number | null; remaining: number | null } | null {
+  if (!SILENT_DECK_CONSTRAINT.active) return null;
   const run = asRecord(state.run?.raw);
   if (str(run["character_id"]).toLowerCase() !== "silent"
       || SILENT_DECK_CONSTRAINT.exemptRunIds.some((id) => id === str(state.raw["run_id"]))) return null;
@@ -21,6 +30,10 @@ export function deckBudget(state: GameState): { maximum: number; current: number
 }
 
 export function deckBudgetFacts(state: GameState): Record<string, JsonValue> {
+  if (!SILENT_DECK_CONSTRAINT.active && str(asRecord(state.run?.raw)["character_id"]).toLowerCase() === "silent") {
+    return { run_constraints: { ...V5_DECK_POLICY,
+      requirement: "V5没有固定牌数上限。按核心兑现、稀释、伤害/回合、升级替代及过渡存活权衡拿牌、跳牌和删牌；牌数不是目标，也不因达到30张而禁止获取。" } };
+  }
   const budget = deckBudget(state);
   if (!budget) return {};
   return { run_constraints: {

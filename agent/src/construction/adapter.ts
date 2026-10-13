@@ -23,7 +23,7 @@ export function constructionState(env: DecisionEnv): BuildState {
   return { cards: deckEntries(env.state, env.knowledge).map((c) => ({ id: c.card_id, upgraded: c.upgraded })),
     relics: asArray(raw["relics"]).map((r) => str(asRecord(r)["relic_id"])),
     hp: env.state.run?.current_hp ?? 0, maxHp: env.state.run?.max_hp ?? 0,
-    gold: env.state.run?.gold ?? 0, floor: env.state.run?.floor ?? 0, cap: deckBudget(env.state)?.maximum ?? Number.MAX_SAFE_INTEGER };
+    gold: env.state.run?.gold ?? 0, floor: env.state.run?.floor ?? 0, cap: deckBudget(env.state)?.maximum ?? null };
 }
 
 /** Project only actions whose inventory/resource effects are present in the actual question. */

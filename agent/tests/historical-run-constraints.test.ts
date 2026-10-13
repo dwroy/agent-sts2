@@ -1,10 +1,14 @@
 import { readFileSync } from "node:fs";
-import { expect, it } from "vitest";
+import { afterEach, beforeEach, expect, it } from "vitest";
 import * as runConstraints from "../src/memory/run-constraints.js";
 import { parseGameState } from "../src/hand/mod/schema.js";
 import { planDecision } from "../src/hand/screens/index.js";
 import { historicalRunConstraints } from "./historical-run-constraints-fixture.js";
 import type { DecisionEnv } from "../src/memory/types.js";
+
+// Verify the historical fixture boundary under the original V4 experiment.
+beforeEach(() => Object.defineProperty(runConstraints.SILENT_DECK_CONSTRAINT, "active", { value: true }));
+afterEach(() => Object.defineProperty(runConstraints.SILENT_DECK_CONSTRAINT, "active", { value: false }));
 
 it.each([
   ["silent-route-relic-evidence.json", "map_before", 31],
