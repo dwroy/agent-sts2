@@ -1,0 +1,59 @@
+{
+  "at": "2026-10-13T14:16:23.654986+08:00",
+  "notice_id": "b07c96b10b1facb9f887a710",
+  "watcher_authored_registration": {
+    "path": "paper/materials/20261013-1324-ops/canonical-actor-receipts-registration.json",
+    "sha256": "da2ce7bf89f257193cf399484ddfa229e6d666ba19f35b89415907e1aa5726de"
+  },
+  "stages": [
+    {
+      "stage": "watcher_received",
+      "actor": "watcher",
+      "actor_confirmation_preexisted": true,
+      "receipt_path": "paper/materials/20261013-1324-ops/canonical-watcher-received-receipt-v2.json",
+      "receipt_sha256": "f52fc77de683a09ec7f0fc8ab0c0ab5b35388094745846a67b2e7f17d8f51d9f",
+      "evidence": {
+        "path": "paper/materials/20261013-1324-ops/watcher-visible-reply.jsonl",
+        "sha256": "c213203348a06df6ee4b911d3943986289e49b5d927ba83ecdc6a6d541b5035f"
+      },
+      "contents_not_modified": true,
+      "cli_rc": 1,
+      "persisted_actor_receipt_pointer_verified": true
+    },
+    {
+      "stage": "roy_notified",
+      "actor": "watcher",
+      "actor_confirmation_preexisted": true,
+      "receipt_path": "paper/materials/20261013-1324-ops/canonical-roy-notified-receipt.json",
+      "receipt_sha256": "5adbc4cbfab60da4c2e17886c8dccacc214abb106615c6f8401bf812389b7df5",
+      "evidence": {
+        "path": "paper/materials/20261013-1324-ops/watcher-visible-reply.jsonl",
+        "sha256": "c213203348a06df6ee4b911d3943986289e49b5d927ba83ecdc6a6d541b5035f"
+      },
+      "contents_not_modified": true,
+      "cli_rc": 1,
+      "persisted_actor_receipt_pointer_verified": true
+    }
+  ],
+  "all_notice_delivery_stages_persisted": true,
+  "no_actor_confirmation_created_or_edited_by_ops": true,
+  "ordinary_parent_registry_cli_failure_preserved": true,
+  "new_parent_or_research_registered": false,
+  "related_parent_learning_goals_marked_complete": false,
+  "original_cli_failures": [
+    {
+      "stage": "watcher_received",
+      "rc": 1,
+      "path": "ops/codex-ops/record-staging/20261013-1413/watcher_received.ack.log",
+      "sha256": "1accaa24aaaea0a133b129ae13d99fd6e2f3db6bc1aa2bd27a39bc9136a97ea8",
+      "post_persistence_failure_retained": true
+    },
+    {
+      "stage": "roy_notified",
+      "rc": 1,
+      "path": "ops/codex-ops/record-staging/20261013-1413/roy_notified.ack.log",
+      "sha256": "1accaa24aaaea0a133b129ae13d99fd6e2f3db6bc1aa2bd27a39bc9136a97ea8",
+      "post_persistence_failure_retained": true
+    }
+  ]
+}

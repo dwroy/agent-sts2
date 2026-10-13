@@ -1575,3 +1575,5 @@ tsc及2673例沙箱测试通过，推送动作专项2例/Python4例通过。当�
 - 2026-10-13 14:05:46 CST [ops，134302策略报告归档] 134302策略批10项均waiting，30条原CLI链接及限制备注按输入/原ts核实归档，claim/status/version保持；现有联合实盘转换与离线消费者读回只证明已记录/可读取，完整候选兑现及最优归属仍未知，原宽提案/量化父要求不关闭。金刚杵/覆甲错链沿既有正式notice b07c96b10b1facb9f887a710接续，不另造通知或研究。无新源码/合入/版本/生产测试，原三项离线audit exit0不作完整tsc/vitest通过；无复盘事件，不重复论文导出或重派旧任务。 验收paper/materials/20261013-1404-ops/report-only-dispositions.json。
 
 - 2026-10-13 14:08:38 CST [ops，134302-s2报告归档] 134302-s2策略批10项均waiting，16条原CLI链接/限制备注按输入及原ts核实归档，claim/status/version保持。原六局的当轮差额/耗药事实不等于其余后继一致的整战、持药净收益或后期独立验证；既有局部诊断不关宽提案/量化父项，缺证待新局。无新增源码/合入/版本/测试；本轮无复盘，不重复论文导出、不重派旧任务或修改对局。 验收paper/materials/20261013-1407-ops/report-only-dispositions.json。
+
+- 2026-10-13 14:19:08 CST [ops→watcher/Roy，同异议通知闭环] 1413同一notice b07c96b10b1facb9f887a710去重。watcher亲自提供registration记录、接收v2和Roy告知两份delivered回执，逐文件/冻结原生可见回复SHA核实，旧可变引用失配已由watcher修复。ops仅按原CLI登记这两份既有确认，未新写或改确认内容；canonical notice三个投递阶段实存指向原文件/SHA，通知闭环。原CLI持久化后仍因普通proposal无父registry各exit1，原失败/普通fix项保持，不假报CLI通过、不造学习父任务或关闭原提案/量化/经验目标。无新研究、重复用户告知、对局/知识/prompt改动或论文导出。 仅通知闭环，原金刚杵/覆甲来源关联仍由原owner接续。验收paper/materials/20261013-1413-ops/actor-receipts-registration-verification.json。

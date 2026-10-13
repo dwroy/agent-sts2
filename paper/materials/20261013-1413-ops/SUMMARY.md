@@ -1,0 +1,1 @@
+1413同一notice b07c96b10b1facb9f887a710去重。watcher亲自提供registration记录、接收v2和Roy告知两份delivered回执，逐文件/冻结原生可见回复SHA核实，旧可变引用失配已由watcher修复。ops仅按原CLI登记这两份既有确认，未新写或改确认内容；canonical notice三个投递阶段实存指向原文件/SHA，通知闭环。原CLI持久化后仍因普通proposal无父registry各exit1，原失败/普通fix项保持，不假报CLI通过、不造学习父任务或关闭原提案/量化/经验目标。无新研究、重复用户告知、对局/知识/prompt改动或论文导出。
