@@ -53,6 +53,7 @@ import { LEAST_LOSS_LABEL } from "../sl/judge.js";
 import { asArray, asRecord, bool, num, str, toJsonValue, type JsonValue } from "../core/util/json.js";
 import { OUTCOME_BASIS_KEY } from "../knowledge/outcome-facts.js";
 import { withBossSim, type BuildSimSetup } from "../sim/build-sim-facts.js";
+import { withConstruction } from "../construction/adapter.js";
 import { passivePiecesOptions } from "../reflex/passive-pieces.js";
 import { cardConditionOptions } from "../reflex/card-model.js";
 import { ensureThiefCardValue, type ThiefCardSetup, type ThiefCardValue } from "../sim/thief-card-value.js";
@@ -911,6 +912,16 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
             const r = simmed.record;
             onEvent({ type: "note", message: `boss sim on ${decision.label}: ${r["error"] ? `failed (${String(r["error"])}), clock kept` : r["skipped"] ? `not run (${String(r["skipped"])})` : `${String(r["samples"])} samples per option, ${String(r["ms"])} ms`}` });
           }
+        }
+        // V5 runs through the actual consumer in shadow mode before its predictions may guide choices.
+        try {
+          const construction = withConstruction(decision, env);
+          decision = construction.decision;
+          if (construction.record) bossSimRecord = { ...asRecord(bossSimRecord), construction: construction.record } as JsonValue;
+          if (construction.record) onEvent({ type: "note", message: `V5 construction ${String(construction.record["mode"])}: ${String(construction.record["status"])}, ${String(construction.record["ms"] ?? 0)} ms` });
+          question = decision.kind === "ask" ? decision.questions[spec.question] : question;
+        } catch (error) {
+          bossSimRecord = { ...asRecord(bossSimRecord), construction: { status: "error", reason: String(error).slice(0, 180) } } as JsonValue;
         }
         if (question?.type !== "choice" || decision.kind !== "ask") throw new Error("unreachable: the boss simulation keeps the question");
         // RUN_PLAN_MERGE: a due run plan rides on this question (state.run_plan_task and the answer's run_plan) instead of

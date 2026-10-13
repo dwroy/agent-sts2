@@ -46,6 +46,9 @@ python3 "$B/build-card-upgrades.py" >/dev/null 2>&1
 nice -n 10 "$ROOT/data/logdb-venv/bin/python" "$ROOT/agent/tools/logdb/sync.py" >/dev/null 2>&1
 for c in $characters; do
   python3 "$B/build-outcome-stats.py" --character "$c" >/dev/null 2>&1
+  if [[ "$c" == "silent" ]]; then
+    nice -n 19 "$ROOT/data/logdb-venv/bin/python" "$B/build-construction-opportunities.py" --character "$c" || echo "construction opportunity refresh failed: $c" >&2
+  fi
   python3 "$B/build-room-costs.py" --character "$c" >/dev/null 2>&1
   python3 "$B/build-boss-damage.py" --character "$c" >/dev/null 2>&1
   "$B/refresh-potion-equivalents.sh" --character "$c" >/dev/null 2>&1
