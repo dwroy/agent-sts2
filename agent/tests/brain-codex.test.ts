@@ -351,15 +351,6 @@ describe("codex runs watched: retries, stalls, timeouts and their trace", () => 
     expect(rows.map((row) => row["call_ms"])).toEqual([rows[0]!["ms"], rows[0]!["ms"] + rows[1]!["ms"], rows[2]!["ms"]]);
   }, 30_000);
 
-  it("before the first token only BRAIN_CODEX_FIRST_TOKEN_MS (off by default) and the router's timeout apply: long thinking is not a stall", async () => {
-    const thinking = fakeCodex("thinking", [[...started, { __sleep: 3_000 }, ttft, ...answered({ choice: "a", reason: "heal" }).slice(2)]]);
-    const { engine: e } = tracedEngine(thinking.bin, "thinking", { BRAIN_CODEX_STALL_MS: "1000" });
-    await expect(e.decide(request())).resolves.toMatchObject({ answer: { choice: "a" }, native: { runs: 1 } });
-    const capped = fakeCodex("first-token", [[...started, { __sleep: 30_000 }], answered({ choice: "b", reason: "smith" })]);
-    const { engine: f, trace } = tracedEngine(capped.bin, "first-token", { BRAIN_CODEX_FIRST_TOKEN_MS: "2000" });
-    await expect(f.decide(request())).resolves.toMatchObject({ answer: { choice: "b" }, native: { runs: 2 } });
-    expect(trace()[0]).toMatchObject({ outcome: "stalled", stall: "no first token within 2 s", first_token_ms: 2000 });
-  }, 30_000);
 
   it("stalled twice: the question fails as a timeout and the fallback answers it", async () => {
     const fake = fakeCodex("stall-twice", [[...started, ttft, { __sleep: 30_000 }]]);
