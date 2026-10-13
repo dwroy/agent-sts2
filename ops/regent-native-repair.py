@@ -61,14 +61,19 @@ def main():
     command=r'''
 $ErrorActionPreference='Stop';$ProgressPreference='SilentlyContinue'
 $p=Get-CimInstance Win32_Process -Filter 'ProcessId=PID_VALUE'
-if (-not $p -or $p.Name -ne 'SlayTheSpire2.exe' -or $p.ExecutablePath -ne 'C:\Users\XD\AppData\Local\Temp\agent-sts2-regent-20261013\SlayTheSpire2.exe' -or $p.SessionId -ne 1) { throw 'Not the owned window.' }
-$expected=[DateTime]::Parse('CREATION_VALUE').ToUniversalTime()
-if ([Math]::Abs(($p.CreationDate.ToUniversalTime()-$expected).TotalMilliseconds) -gt 1) { throw 'Reused PID.' }
-if ($p.CommandLine -notmatch '--clientId\s+2026101302(?:\s|$)') { throw 'Wrong account.' }
+if ($p) {
+  if ($p.Name -ne 'SlayTheSpire2.exe' -or $p.ExecutablePath -ne 'C:\Users\XD\AppData\Local\Temp\agent-sts2-regent-20261013\SlayTheSpire2.exe' -or $p.SessionId -ne 1) { throw 'Not the owned window.' }
+  $expected=[DateTime]::Parse('CREATION_VALUE').ToUniversalTime()
+  if ([Math]::Abs(($p.CreationDate.ToUniversalTime()-$expected).TotalMilliseconds) -gt 1) { throw 'Reused PID.' }
+  if ($p.CommandLine -notmatch '--clientId\s+2026101302(?:\s|$)') { throw 'Wrong account.' }
+} else {
+  $others=@(Get-CimInstance Win32_Process -Filter "Name='SlayTheSpire2.exe'" | Where-Object {$_.ProcessId -ne 34676})
+  if ($others.Count -gt 0) { throw 'Another game exists; do not recreate an ambiguous window.' }
+}
 $old=Invoke-RestMethod 'http://127.0.0.1:8080/health' -TimeoutSec 5
 if (-not $old.ok -or $old.data.process_id -ne 34676) { throw 'Original identity differs.' }
 if (@(Get-ChildItem -LiteralPath 'C:\Users\XD\AppData\Roaming\SlayTheSpire2\default\2026101302' -Recurse -File -Filter '*run*').Count -gt 0) { throw 'Existing run.' }
-Stop-Process -Id PID_VALUE -Force
+if ($p) { Stop-Process -Id PID_VALUE -Force }
 for ($i=0;$i -lt 20;$i++) { if (-not (Get-Process -Id PID_VALUE -ErrorAction SilentlyContinue)) { exit 0 };Start-Sleep -Milliseconds 100 }
 throw 'Owned process did not stop.'
 '''.replace('PID_VALUE',str(pid)).replace('CREATION_VALUE',creation)
