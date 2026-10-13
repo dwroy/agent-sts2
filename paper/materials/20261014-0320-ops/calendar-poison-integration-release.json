@@ -1,0 +1,100 @@
+{
+  "at": "2026-10-14 03:24:27 CST",
+  "original_batch": "20261014-014302-s2-strategy-proposal",
+  "source": "838111dea1e4b506bf462b26f9e982563d452743",
+  "actual_live_behavior_commit": "f91082e1db41114f5d3afe8d2b77ca85caa2d7ad",
+  "release_id": "V5-R333",
+  "name": "V5.silent-calendar-poison1",
+  "source_leaf_sha256": {
+    "agent/src/sl/judge.ts": "82e14372b7022ec2e1d75e09602f6d41f07293e7fc75f0c8aa16ff8462aef4b6",
+    "agent/tests/silent-sl-calendar-poison.test.ts": "1b29d2dd67e265f905249ad6064391f17dc57a5fb96601a4bc88d35f4cce6fba",
+    "agent/tests/silent-sl-calendar-poison-evidence.json": "470ee4f6f91b6f2bf4333b40e6bc50750f956e85a91bc5467a47ecbe53491172"
+  },
+  "before": {
+    "main": "6df988138077ec8ce31b13fde280bbedef20e127",
+    "live": "bc8ac5b44a6acae03dec148f552790009df3a4c2"
+  },
+  "checkouts": {
+    "main": {
+      "commit": "e272b965478d261a826913cbb5f7f9e7cb81fd7e",
+      "tree": "1c3d221abd0d2a7eab11446ae46573f1d7aaa25b",
+      "versions_sha256": "9db1040c1e591842fc3adcb98642e6b5572105dc8f51cdb63dcbca33cdff33cc",
+      "old_entries_preserved": true,
+      "full_registry_max": 333
+    },
+    "live": {
+      "commit": "1d408747e5242049feb15f87282d9283f7183f8f",
+      "tree": "871fb71ba1fe3521c1d04b20d62a3b4ab1342b04",
+      "versions_sha256": "93d3a4b823bbd52f3df0348701817ac49a7b912dd89f64896c4fc745c20db2d2",
+      "old_entries_preserved": true,
+      "full_registry_max": 333
+    }
+  },
+  "source_checks": {
+    "source": {
+      "files": [
+        376,
+        1
+      ],
+      "cases": [
+        3597,
+        11
+      ],
+      "total_files": 377,
+      "total_cases": 3608
+    },
+    "live": {
+      "files": [
+        376,
+        1
+      ],
+      "cases": [
+        3598,
+        11
+      ],
+      "total_files": 377,
+      "total_cases": 3609
+    }
+  },
+  "source_red_restored": {
+    "withdrawn": 1,
+    "restored": 0,
+    "before_sha256": "47fc514882216dbb2aaa6447f19d87b5745ce9c6f48fbc2a5f347ef8fde304e9",
+    "restored_sha256": "82e14372b7022ec2e1d75e09602f6d41f07293e7fc75f0c8aa16ff8462aef4b6",
+    "restored_bytes_exact": true
+  },
+  "report_cases_zero_is_not_actual_log_count": true,
+  "original_initial_29_conflicts_and_failed_probes_preserved": true,
+  "source_scope": "Silent actual A10, Stone Calendar existing T7 window; combine existing hit and poison positive upper bounds only.",
+  "unchanged_other_characters_ascensions_defenses_constants_and_weights": true,
+  "existing_rule_change_notification_written_once_by_learner": true,
+  "no_routine_watcher_or_Roy_send": true,
+  "no_game_or_controller_restart": true,
+  "knowledge_dirty_paths_preserved": {
+    "main": [],
+    "live": [
+      "knowledge/characters/silent/boss-damage.json",
+      "knowledge/characters/silent/construction-opportunities.json",
+      "knowledge/characters/silent/fight-value-gates.json",
+      "knowledge/characters/silent/fight-value.json",
+      "knowledge/characters/silent/monster-records.json",
+      "knowledge/characters/silent/outcome-stats.json",
+      "knowledge/characters/silent/room-costs.json",
+      "knowledge/common/card-upgrades.json",
+      "knowledge/common/monster-db.json",
+      "knowledge/common/move-model.json"
+    ]
+  },
+  "source_complete_self_and_live_sandbox_checks_reused_no_duplicate_suite": true,
+  "host_full_check": {
+    "rc": 0,
+    "tested_tree": "17f249ec97296fcf4c32a517395dca74ff4656d2",
+    "tested_commit": "bc8ac5b44a6acae03dec148f552790009df3a4c2",
+    "files": 428,
+    "passed": 4417,
+    "skipped": 2,
+    "registry_commit_is_metadata_only": true
+  },
+  "legacy_live_judge_comment_names_preserved": "Live historical Roy to Dai comment spelling differs from signed source; source logic and both test files equivalent, main exact signed source.",
+  "main_exact_source_commit": "000b2ed3fd989dd6b85450adde6dca083b279844"
+}

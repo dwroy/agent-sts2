@@ -1,0 +1,199 @@
+## 修 bug 回报
+
+- 合并基线：main → 179205a84dd5a10e63b5f332b0a680d339d7e8a9（开工干净，先git merge --no-edit main，已是最新）。
+- 修复（每条一行）：v5-dpr-health-20261013：超时样本块取消及零预算清理 — a7959132235badc87e669241c13dddf95510bfc5 — 测试 agent/tests/build-sim-cancellation.test.ts:cancelled build simulation batches（5例） — 去掉修复时失败：是（4失败/1通过；恢复5通过，与build-health共8通过）。
+- 已被别人修掉的：旧V4.1纯bug批次 — 531d15444f5e9c29d85d36ff098f3fbf33e647af（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：fight-value wrapper — aba384cc503e53001933fceb688e9d2c24442b19（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：旧大脑失败日志及JSON解析 — 6d2ce32a6bf3b7771d93355d7a55eff634785870（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：旧大脑解析补项 — 81de842c8459b425059cf8bc7c1df920d0164ef9（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：执迷锁牌 — 8f1106a122c871d28b038fe464f9d9a2f2b106d8（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：波纹水盆 — d561ecde5ed8e537653ef544c8c9fd44f8cba37e（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：Codex完整剪裁答案 — a296b309fe28e189bc925c8c5472616ec29fe37d（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：SL统计及状态闭合 — af6f07adfee1ad62ec85d613ab36a7b11857ce89（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：沙坑连续斩杀 — 85d1e70744489411a597b0b2b6710a45fbe52aa1（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：刀刃陷阱 — 066f91599bc45161acd0b741a2d3fd8e39af8bfc（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：boss时钟角色隔离 — 8948a2fb87ab90949b2464c59bf6569bd5f3931d（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：fix-batch任务模板 — 5805dd187b7913a53b9e2645f40db1657eb5213c（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：经验模板及默认live — 16ebc4aecb12a1d4b2f34ee767bb2816a3a0b466（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：角色中性前缀 — 6d2de57ceae3def4caf073951ed9d2f9d1544cd7（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：流式大日志prompt dump — 6ee8e2a2c1edc31492962137b96af8c6e1d12093（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：自动经验派发 — 32c3f998bd3dc218f3fcafce5e48ced986445b7e（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：沙箱测试/完成事件及Inferno夹具 — 5c307224cd7ca34b249acd24f5c050a418a32c6f（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：eval-metrics动作 — ef46d720c74909aecff9a09ff7e6d443e06cd9d7（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：暴露易伤 — 62e1166475a715f84c4bfe8acd102762b5a3e50e（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：boss跨SL统计 — 3f40af6fffbb37a06e258c0e4b314a9fe8faaede（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：融入暗影 — 82c50cc0e41d4206ae272c76a97fbcbe783827a9（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：腐蚀波 — 53cc31f453ef441d3770dd7598e3b7f071ea14c5（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：悔恨 — 3fcb1f5f0c373a04feb807aa9b2bedebe403edcc（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：灵动步法 — d8a2b0090ba8145c0b6d20bcae700006f01e2c79（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：余像 — e0541ebc4a8786250d08869731fa07d303c0c8b8（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：暗影步 — 90b1fbebf38f9896ad14ffa1ace80ce9e3feb013（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：胧光怪召唤 — 1e076b173c6874cef4bf90fd13cd3eb33355827a（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：毒模型 — f6c5504a73b2ee3702812a5217dfcda8b14e18aa（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：跨SL实验体阶段 — 4ed3c72df30f27b881da637aebf528b97440e0bb（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：tsc运行归档排除 — 7bc835803f2efd44a5cc6f2009933f3c3bee7653（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：outcome-stats刷新缓存 — 2650aed8baa84b8cf26e1e98b975582a6d5ab537（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：萎靡X减益 — 0d7465a0962f4e0234530bb390da6ab0fcd5f8e2（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：首次开局时间判断重犯 — 2610945b6a2f9ea02cf3a7cd4b5980d24814ac39（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：撕咬共享成长 — 8ffd62ef082e59d53440ca9f9eb34184df832157（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：风的女儿 — 907a19f8d03ede74ed135c0395d120ed84232358（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：奖励屏较低终帧 — 098a54719bae87b909b25174a73ccebd68a17a61（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：策略任务及派发 — afd652a3f75df6e7403439f01c565220327884da（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：兜底完整补测 — f670884a188a047bbd3f7f007c260ade62fae36a（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：单次超时卡死误报 — a4f4ec868d122dc92af510862c6240cf2eaff2b6（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：学习状态锁 — 233ede56047274ba53a4e1191a245fac816c37a8（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：账本来源更正接口 — 87c89b7aea90c7275e0fbb04b1e4148a4209630c（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：预判临时敏捷 — cd55a88517ed1d44c3f8bf64e0c9f2ab14ccb2e2（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：计算下注 — 3cd9fc6c6b6bfa378508f7bd5ca2219c1088ad39（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：涂毒 — e3e7068b028e9d9bb75441b99a973161e9d90f4d（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：动作说明与静态回归 — ed86d537bc1d6f91364abb77156060edb13ab4ba（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：药水测试数据隔离 — e78352f784d39cf25671446348daaada6ef2060b（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：异蛇头骨毒雾触发 — 166594ed6b0a0fb206a6cee40bfb208da142d5f1（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：脆弱下新增敏捷格挡取整 — 71af970600794f87a993df428cdde14dd7809dd7（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：Codex会话模式隔离误拒子项 — 35565208b4eaae0039daa30abd964c8ef8b0d66a（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：boss后构筑模拟与低胜率题面 — de5dd9f17b9bec09934fc3ed2b63082f5d520b5d（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：钢笔尖 — 26c1e77269e098f52e215b98f5d4127d17c4fc95（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：魂缚锁牌 — 2864d3612722571bfaf69382435acc4c8800f8c3（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：X费串刺零能量 — 7e69e6731b2e66268991b6cd82928a165139bc56（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：滚石回合开始稳定等待 — c301574ee9cfb2018a39b6a15692efb2948241b4（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：SL重载接受战中选牌屏 — 0660f9972e2edce46b637713863acb62a3400f20（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：SL敌人分节名字 — 7564be3661d759ddb6c0595dc940f57567f32807（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：无惧疼痛判官虚无格挡 — a677f159027f3d761067d07d5fe6f41f23e1a70b（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：果汁持有时B3合成开局 — 7f4759dd3f863ab989ad25f1e6c35699a3979c60（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：蜥蜴尾巴首次路径 — 8c93fa43927760be3088e1e7fc7dbdd7c0851edf（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：SL手牌回合末伤害 — 491eaeb5bfb6e779cfe853e1e0e5faddf9f29ef3（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：SL已知抽牌与随机目标 — 3c95965ce77827b5864254ea46dc25275dff5810（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：SL下回合自身失血判官 — fcc89d85209f7855845fc99f315fa1d08cbfd2f7（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：SL探寻打击与回放 — 914515cf46390020ff8da4c8a2f1bc50ef0e4652（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：抽牌自身失血/上限判官 — 79ef4eb0446ef3c15d65689c3de756261da19456（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：least-loss回合内自杀 — 08ec8f98fcd9a43df332a5d858c50faf9e9d214a（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：SL抽牌换线与首战去重 — cab3c3f4f4b9d669a091ed7581c34299e2e92b52（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：缩小伤害 — b0e96183a8798c77676fe83f386042abf2851254（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：SL整回合去重与护手药水费用 — f4f4b0d3b666b3802114380bf3a7a4ca6df7cb70（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：尾巴复活后继续受伤 — 91e2219b47f9fc57cede5bf6465111e27a192319（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：巨兽自爆与沙坑判官 — 0727c1cd2d44801b02ed82a36056e166d2ef200f（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：SL药水位置去重 — 61d236ceeb38a0752da47e15a9d35bd7fc0cf12f（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：小刀出牌目标 — 7023574b375743bb02ff8150952ac9ee5904723b（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：SL重放/混沌牌堆顶 — 554951daa4908ad2a0116fa9ac928cfbc82a8508（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：狱火判官多层失血 — 3dfc2af7438ce075d80044a7ce4f2675193dab7f（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：狱火求解器多层失血与开局稳定 — 03eedec0b340e6f67363f59d14e3342811af53ff（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：SL剑柄打击断序与引擎题面 — ed03f4cee65e1ace987b0aa772b503180b90cabd（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：SL换线执行/最佳参照 — 8939eb0e7511559a765f393a3adf8cc7512d5492（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：乱码路线字段与换线实际一致性 — 0b12aa1a34c6403cdf64e9f92ac7f09c2617ab0f（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：进程扫描竞态假stall — 9692ea6d632162edbd674fa6d83344e380d15e1b（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：知识前缀变化误判配置变化 — d6af9894e4d990db6bbffe08ab4e01044605c52c（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：旧事件选项屏重问 — 25ce09bee5576b1adff8baf196fbe8b197a5ef11（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：未校准静默时钟事实子项 — 79f7579e29e39e1dcae9e1ea3bdceb53bf9a734b（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：CARDS_VIEW覆盖层重复决策 — 518b6880b46db88752f3666ff8471267c3f6638d（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：静默阶段结束事实子项 — 1d57f9d0dbbb63603e9ce9768e74cb2021478464（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：幻影之刃同方案首刀增伤 — d65609ff2bc98ec5ec2e06b558159aba89d93032（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：音叉技能计数漏算7挡（6EV5V6PJJS9D F39 T3；T082DRCUHRRD F12 T7；silent-0108/0072） — dba8d7caf9f2b44dd2fd11fd8861ecc14be4c09b（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：融入暗影+升级分支 — 2184caaab265ebf86c0627aaef39c2e7a170a990（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：预判+升级分支 — d91f9600286a67480b5044e019dbb1041e2239af（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：策略任务xhigh测试契约 — d73a29ad5185ae2669260f3e4b1b9e693a122e97（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：爆发增益未进入后续技能推演（silent-0114） — dce7dc19c15f8cd1de57a5fffb2011ca1aac2187（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：持续安全订阅额度采样及周/五小时窗口映射（Roy批准架构） — bd41843192173de8344e805de45bfde74b9cfa5c（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：五组件token与成本归集、论文表和累计曲线（Roy批准架构） — 637ed9dc0ef71177cdb480eceacbf7ab2c8988e4（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：升级爆发2层技能重复漏入推演；VN7RQJMJEFMX A6 F27 T6、机制silent-0115 — dafd280bc04f10573cf4205d55e5b80e1400be03（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：额度/成本测试在未设置TMPDIR时失败 — 6bfbe3d2e2aa6e5e8c1969d5ee1cca08671ae02a（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：补齐成本分层：日志库组件用量/规范额度日志/每局刷新/未归属学习批次（Roy批准架构） — 83b73312a420f4aff612f017a95dfebace562a4d（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：旧血量护栏 setup 例外失效子项 — 984b950b3a1f8e099f4a199041eb49635f210a0d（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：钗 SAI 格挡漏建模 — 16e0b16a3f0c11f6837e02cd9b8e22be841af19b（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：迷失鬼火逐能力伤害漏建模 — c68bf255a5ca8da5806ec89f6f4f1e704590d3f4（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：尾巴回合末复活追踪与 GAME_OVER 虚假 SL 记录 — e32c8b7584181486ffcf3b70c0ec4f9a5608c17d（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：Jev计价及TypeSafe全部角色日志核对 — 80199dcc3f7a66bfceeb7d8c028c6c3bad935b7c（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：缺眩晕后继/伤害预测标未知（silent-0127） — 631f94856702772a4bc5e27d38ddfc140fb0d714（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：Inferno测试首次读取/真实时间竞态 — 195869aa77dc216de08e6d1c5842782b239cb670（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：单行动重复扣挡 — 779c954876d56d08dab92f89f27345c9788e3d87（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：herdr关闭注册表竞态 — 526b71cc316bc1824b76500b7003a9c02a725b60（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：02:40/03:00预算硬截止与单调时钟传播 — 9889436c3b332a3984cdb7f850a1349f464182d1（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：升级腐蚀波3层抽牌施毒（2PVLGRBGUX9S F48首T11；silent-0076/0137） — a62cf381f26435693ce30548c9433d219f750b02（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：静默专长科学2力2敏捷（2PVLGRBGUX9S F48首T2/T4；silent-0136/0138） — 32daefc69239c5d23741f35e2f5ce71bef25ebce（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：升级萎靡X+1（LLYSRQQ35AVW F33 T3/F38 T1/F48 T2；silent-0144） — d48d16129b10e5060dc9d33a1b96e3340c7b82b8（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：空批次被误标失败 — 01b560ef4966da945511bfccd41abd09440fb0e9（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：再次上线后的重犯统计 — af5c0fa041fbc5b97174490137301a6f6291d92d（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：隐秘匕首弃牌/小刀语义 — b7f081fcc26da4506cb775739bb118cb6cbe4ecc（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：连续Boss后场血量投影 — 3fe6251b746cebe816b9db3c0d8aa9d6090bec0a（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：精确切击五/六手 — 8b9bacbebb20eaaa1133a9945da6c7abfcda745d（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：launch-game成功判读 — db388125843120321c420cc001503928e17cb5da（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：mod-state截断及broker UTF8 — 61a921844ff5eb6c08c2e209b9f39ef42cc0d9d3（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：余毒支配比较 — c9aef94df27d100a7e3d32e100d555248dd6be97（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：精确切击已观测力量范围 — 995a345f935efd6d8ae9f67d16bd2653833344d0（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：毒结算9点上限 — 084815374e747cccb3e74bb39002beb1be6ca9f6（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：钨合金棍逐次减损 — 4367250b5fbf1484ca7ea8f312d13e4ce9d327a2（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：士兵翻倍预览消费 — 19e41a26648542b7ad0bce4e70b55f30be532d49（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：飞镖方案内技能离手计数 — 72c1640b3271352e1a744d3997ede4c5fe10e2bd（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：boss-clock历史测试输入隔离 — 38e95b24efafb862fc09b1fd026626acf481c47d（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：silent-0254 无动作开场死亡战斗统计 — 3b48088dec5fc6eafe576a1296bbdadde43432ee（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：silent-0272 商店移除预览不能以牌组顺序代替现场名单 — db20ec3cc6cd0e47ac014d0c523dd4ed1c781d26（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：silent-0338 末挡诊断漏列奥利哈钢 — c1d84804956bedbd29a7f0e81294114e18415b9d（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：silent-0367 构筑题传递已消耗尾巴事实 — 5baf663d7e6678efa3690e5a48329c4f8baee109（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：core-build-notify-222802-rc2 保存原生失败 stdout/stderr 子项 — 5c92f2aaf0b758a1a5e7d591745694004664f83a（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：codex-usage-credit-baseline-recovery 有证窗口恢复与双读余额基线 — e5e2995d659d15af79ec8bba67a4a25c1cb7295f（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：ascension-up 使用实际观察级别而非请求目标 — 8045d9fbf0a12523b1dbe39bbed8af06c7497b09（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：host-checks-session-exit-fixture 固定子进程模型 — 874ae603b3927173f805e0b2fe789330bab710c7（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：host-checks-broker-push-registration 原授权动作注册 — c519952b31e3a0bb3acdd2115883ae8671b8a090（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：host-targeted-check-continuation 精确身份/树/原日志 SHA 续验入口 — 24c2e3a75b5db6bac76d6c924f86b7fcd9438316（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：host-targeted-check-continuation 派发夹具既有 guard 适配 — 2b09c47d431a580e9955d157f4dfb0e576186206（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：sandbox-glob-startup-race 会话前有界恢复子项 — bc2c40e313cc36682196277c53c50e30744b88c5（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：sandbox-glob-startup-race 纯时间戳复盘租约 ID 子项 — d9983263ffecea1bed4e29d65e7f854a3d2e33d7（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：blocked-experience-proposal-repair-dispatch 空产出受阻分类 — 84366ad06ee4f978394c1b9489a82c83ea12bd36（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：multi-character-potion-table-fixture-isolation 固定角色药水表 — 5ef3c4612bd2673c19968c5a2d24bf62af519ee1（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：compute-memo-worker-data-signature 固定数据签名夹具 — 8fbb441eb61eef226eb7366f9612003480c83988（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：rollout-live-best-test-determinism 最佳线固定时钟 — bbc5b993a7524bbb8e80a975f204f8d193657b46（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：rollout addedSomewhere 固定模型与时钟 — 366917d1eea93383bf4d1a0a8b68f5a920e2c9d3（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：unassigned-strategy-proposal-resolution 普通策略回报解析 — 3a98e213a826e94f9708af4b1a265e1892659f4e（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：ops-stall-recovery-test-subprocess-timeout 异步测试执行器 — 95e7f050ef2abe5c85a0367555392652ad73fbfe（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：batch-c-fixed-fixture-timeout 固定模拟夹具 — 5dd8a20c9d2dd4ed43120b1684e5577b993ac2ff（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：host-fixed-test-timeouts-010547 评估版本表固定夹具 — d9881ba593b0b8d701ebbe1c95626c0ebdd554c7（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：host-fixed-test-timeouts-010547 神化药水固定时钟/采样夹具 — 9e8c93555131c3347f9e809d9722a848a75c2692（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：paper-dataset-git-consistency-race 同一 refs/HEAD 导出与验计数 — 16bfe0bd6ecaa91d04a91c01edc94cecc781f71f（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：boss-sim-codex-home-preflight report-hook 隔离 home 透传 — 5921f8cd045853182c867a6430e75c3fcde00a87（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：host-loop-time-cap-wall-clock-061301 固定 runLoop 时钟 — b3c6dd700b00d0d8b17d5d2efe6fe9aa353618fa（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：host-loop-time-cap-wall-clock-061301 宿主拒绝明确 JSON 诊断 — 63f656fb07a21a7496353234269901a832eae497（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：ops-worktree-history-disk-pressure 工作树容量预检 — c9b8a13c9e1cd96bfe3213e48263cbbcee92e069（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：ops-worktree-history-disk-pressure 论文历史共享/容量预留 — 0cf2528c1a1c48339b26404f80c2661ded8ae815（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：ops-worktree-history-disk-pressure 请求写失败立即返回 — eaa118c1d72f11b2b6b68c98c1d7bab10d138f5b（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：ops-worktree-history-disk-pressure 入库后有界回收 — 40d74e82c60805bc33213c338dd95650c2c45384（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：ops-worktree-history-disk-pressure broker 容量/结果失败隔离 — a136ddc4b5b0a8696f10b2fae3073322d57e724c（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：ops-worktree-history-disk-pressure autoplay 缺标记显式退出 — db072ddab47ba94efb46dce2913927f936ecb97e（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：ops-worktree-history-disk-pressure JSONL 截断追加边界 — 9b07240b18f862efdbe630889ade04e8976eaace（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：learning-notice-ordinary-ack-registry 普通通知合法 ACK — 672e198a4730012330f599068a0ef1efadb02002（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：learning-notice-ordinary-ack-registry ACK 前阶段证据 SHA 补强 — 1594def2e1b65b665d3b345f31444194eb4d09e6（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：postmortem-capacity-failure-proposal-repair 空失败不造补链 — 3fdcd77927f01b35c20c6c5c1fcfd790676032d2（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：silent-deck-cap-consumer-fixture-isolation 历史牌组固定夹具（原三消费者叶保持，约束测试随 fa557ebdc 更新） — ec8c578b66bf5498372f1b779ae58a766dff8112（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：shared-experience-fixed-filesystem-snapshot 31 叶固定 FS 兼容 — 8390c62d76fc8c7d7b6b7292121a621f4666d39c（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：持药文字固定时钟/知识隔离 — 8867041f57f0e511606127e568603510af59a0e7（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：学习状态锁异步有界测试夹具 — e770a6d09a8398aee4126f1b7ea37fc70687989f（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：F22明确不支持候选的DPR误报限定子项 — 9b87d54f097d84521152e6cca8d6072af8140394（已修；原提交祖先核验：{"base": false, "main": false, "live": true}；不同集成链的差异保留，近期8个工具源码/测试blob与已核live完全相同，详queue-review.json）。
+- 已被别人修掉的：第二策略槽真实批号普通通知ACK校验 — 15eb85e2934e428c5e299fc4a1aba456d92fd685（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：DPR候选缺失分类与明确不支持/采样失败分列 — 9e6dd82a34fb8c14e012be68fd0b632544f1459f（已修；原提交祖先核验：{"base": true, "main": true, "live": true}）。
+- 已被别人修掉的：ACK二槽与DPR分类实际集成 — aa26e95c10765bdca051b77f060e91c0681f5454（已修；原提交祖先核验：{"base": true, "main": true, "live": false}；不同集成链的差异保留，近期8个工具源码/测试blob与已核live完全相同，详queue-review.json）。
+- 已被别人修掉的：卡死测试确定性启动及退出/信号/stderr/超时诊断 — b1ae8470a703b15d8c61d94e149d469eea30e8ab（已修；原提交祖先核验：{"base": true, "main": true, "live": false}；不同集成链的差异保留，近期8个工具源码/测试blob与已核live完全相同，详queue-review.json）。
+- 没修的：V5 DPR完整性能达标 — 证据不足：本轮只修可确定复现的旧批次取消/零预算清理；1269八条均低于300，单个完整样本成本和宿主负载未隔离，不降低300/1000/11000ms/24限制，不宣称服务或胜率改善。
+- 没修的：sandbox-glob-startup-race 上游目录生命周期 — 证据不足：会话前有界恢复/租约已有实现；本轮仍遇并行目录ENOENT，未定位创建/删除者，不扩大沙箱或凭据权限。
+- 没修的：core-build-notify-222802-rc2 历史通知恢复 — 证据不足：后续失败诊断已修，旧rc2没有stderr且未证明未发送，不重投。
+- 没修的：mod单次超时、Codex缓存实测 — 证据不足：缺服务端或受控在线取证；本轮不调用模型或网络。
+- 没修的：其余未闭环出牌/药水/SL/终局/路线及双boss接续提案 — 策略类：保留48项原队列处置及当前原提案ID/元数据，沿既有strategy-proposal链，不重复派发、不以已实现子项关闭宽父项。
+- 没修的：rest-timeout-accepted-route-not-committed / silent-0446 — 策略类/structure专用：原silent-proposal-2d3aa8dfb27dbe3f保留，待确认事务/同房动作核实/重启回放沿原独立实现任务。
+- 没修的：arch-funnel-guard / arch-learning-priority / arch-unified-resource-value / inv-f33-regression — 太大/策略类：继续原授权专用功能及归因任务，不混入普通纯bug批。
+- 没修的：named-card-facts-transport 其他入口/P1/P2、boss校准 — 太大/独立功能：事件资料子项与校准入口已有实现，其他父范围沿原owner。
+- 没修的：调度公平性/旧包装器/历史宿主时序归因 — 证据不足：定向宿主续验、固定夹具和卡死退出诊断已修；旧因果未证明，不修改原队列/并发或倒填历史成功。
+- 没修的：WA7普通0费钢铁风暴旧手牌后继 / silent-0455/0458 — 策略类：已有silent-proposal-69776c308a3b298e原链，本轮不新增机制或实施普通策略代码。
+- 没修的：独立run-plan整局成本漏计 / silent-0459 — 策略/独立实现链：原队列明确沿silent-proposal-6a39ea0a435755c5接续、不另派普通修复；不在本轮重复领取或改变历史费用值。
+- 测试：tsc退出码0；固定沙箱vitest 377文件 / 3599用例 / 退出码0（376文件3588例+paths 1文件11例）。没有高负载超时重跑；首轮为补旧父进程兼容回归主动停止130，最终源码完整重验0，原日志保留。初始10文件60例及最终8例/铁甲实际worker1例为定向验证，不相加冒报独立用例数。
+- 测试：最终暂存源码gitleaks退出码0；最终源码SHA核验通过；Ironclad固定夹具真实2-worker样本与串行结果逐项一致，其余13例是过滤未运行。
+- 合入：未合入。flock锁内预检前后live均为bc8ac5b44a6acae03dec148f552790009df3a4c2；无待提交的指定知识刷新，无knowledge重叠或冲突。实际git merge未启动，3处历史记录冲突为notes/fix-queue-v4.md、paper/materials/decision-log.md、paper/materials/learning/ledger.jsonl。原notes/fight-value-backtest-silent.md及notes/monster-db-check.md并行脏记录逐项保持；未登记上线/版本/shipped。详live-preflight.json。
+- 需要 Roy 定的事：无。属于原授权通用执行修复，未新增游戏规则/知识、模型或权限；DPR/1269 bug-infra查询无匹配，build-sim命中的silent-0332是资源契约另一项，不冒用、不新建或修改账本。
+
+证据与范围：1269Y20SKHUM A10 F35/F37/F38 reward/card，回合不适用；8条原始决策offset/length/SHA均由本人核实，冻结材料dpr-cancellation-evidence.json。F37 warm orderSearch在2514ms内0回复/24块已派，随后comparison仅128配对、firstReply2926ms。旧worker同步map在父线程超时后仍完成整8个样本，drop消息只能等块末处理；固定测试证明这条废计算/清理缺陷，不把全部自然DPR缺口归因于它。
+
+新行为：每批独立共享取消位，在完成/超时/失败清理时置位；worker在完整样本之间检查，停止余下旧任务，不抢占正在计算的完整样本、不伪造结果。先注册所有worker处理器再派样本，0ms阶段预算不再清理未注册handler。旧运行父进程无取消位的消息保持原协议，当前对局无需重启。
+
+其他角色与限制：完整样本算法、参数、种子、结果和判定规则保持等价，真实铁甲固定样本已验证。减少废计算可能改变后续时钟截止前可完成的样本数量，不承诺任何角色任意wall-clock截点的动作逐字相同；这是共享执行修复，不含角色游戏知识。300最低/1000目标/11000ms期限/24线程上限均未改变，单个完整fightSample仍不可抢占，DPR完整性能、实际自然消费者与胜率收益未验证，父项继续保留。
+
+来源/回退：原v5-dpr-health-20261013普通修复链；未产生新策略经验或代码提案。实际集成受阻，交运维按本源码3叶接续原完成事件并核正式行为编号；若后续实际部署后需要回退，revert本源码提交a7959132235badc87e669241c13dddf95510bfc5，保留刷新/日志/历史失败。未修改队列、运维prompt，未推送或运行play。
+
+```json
+{"task": "fix-batch", "base": "179205a84dd5a10e63b5f332b0a680d339d7e8a9", "fixes": [{"item": "v5-dpr-health-20261013：超时样本块取消及零预算清理", "commit": "a7959132235badc87e669241c13dddf95510bfc5", "test": "agent/tests/build-sim-cancellation.test.ts", "fails_without_fix": true}], "skipped": [{"item": "V5 DPR完整性能达标", "reason": "证据不足：本轮只修可确定复现的旧批次取消/零预算清理；1269八条均低于300，单个完整样本成本和宿主负载未隔离，不降低300/1000/11000ms/24限制，不宣称服务或胜率改善。"}, {"item": "sandbox-glob-startup-race 上游目录生命周期", "reason": "证据不足：会话前有界恢复/租约已有实现；本轮仍遇并行目录ENOENT，未定位创建/删除者，不扩大沙箱或凭据权限。"}, {"item": "core-build-notify-222802-rc2 历史通知恢复", "reason": "证据不足：后续失败诊断已修，旧rc2没有stderr且未证明未发送，不重投。"}, {"item": "mod单次超时、Codex缓存实测", "reason": "证据不足：缺服务端或受控在线取证；本轮不调用模型或网络。"}, {"item": "其余未闭环出牌/药水/SL/终局/路线及双boss接续提案", "reason": "策略类：保留48项原队列处置及当前原提案ID/元数据，沿既有strategy-proposal链，不重复派发、不以已实现子项关闭宽父项。"}, {"item": "rest-timeout-accepted-route-not-committed / silent-0446", "reason": "策略类/structure专用：原silent-proposal-2d3aa8dfb27dbe3f保留，待确认事务/同房动作核实/重启回放沿原独立实现任务。"}, {"item": "arch-funnel-guard / arch-learning-priority / arch-unified-resource-value / inv-f33-regression", "reason": "太大/策略类：继续原授权专用功能及归因任务，不混入普通纯bug批。"}, {"item": "named-card-facts-transport 其他入口/P1/P2、boss校准", "reason": "太大/独立功能：事件资料子项与校准入口已有实现，其他父范围沿原owner。"}, {"item": "调度公平性/旧包装器/历史宿主时序归因", "reason": "证据不足：定向宿主续验、固定夹具和卡死退出诊断已修；旧因果未证明，不修改原队列/并发或倒填历史成功。"}, {"item": "WA7普通0费钢铁风暴旧手牌后继 / silent-0455/0458", "reason": "策略类：已有silent-proposal-69776c308a3b298e原链，本轮不新增机制或实施普通策略代码。"}, {"item": "独立run-plan整局成本漏计 / silent-0459", "reason": "策略/独立实现链：原队列明确沿silent-proposal-6a39ea0a435755c5接续、不另派普通修复；不在本轮重复领取或改变历史费用值。"}], "merged": null, "tests": {"tsc": 0, "vitest": 0, "cases": 3599}, "code_proposals": [], "implementation_domains": [], "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-021302/learner/runs/20261014-021332-fix-batch/report.md"}
+```

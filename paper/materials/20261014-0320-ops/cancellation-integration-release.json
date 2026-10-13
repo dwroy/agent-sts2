@@ -1,0 +1,69 @@
+{
+  "at": "2026-10-14 03:25:35 CST",
+  "batch": "20261014-021302-fix-batch",
+  "source": "a7959132235badc87e669241c13dddf95510bfc5",
+  "behavior_commit": "20e6260fd4abe8eb3d938aaba52a1a88fa8c1a12",
+  "release_id": "V5-R334",
+  "before": {
+    "main": "e272b965478d261a826913cbb5f7f9e7cb81fd7e",
+    "live": "1d408747e5242049feb15f87282d9283f7183f8f"
+  },
+  "checkouts": {
+    "main": {
+      "exact_source_commit": "92af2a9d29553a191b894660873ce652999cf4dd",
+      "source_bound_commit": "a7e0f7659d9279edb1a45b663231f34bf83208a1",
+      "registry_commit": "87310fcd058e88bee4c0df33d3ad3414316ce06a",
+      "tree": "882897ba903f98b819c91088bde572a834a6fdc4"
+    },
+    "live": {
+      "exact_source_commit": "20e6260fd4abe8eb3d938aaba52a1a88fa8c1a12",
+      "source_bound_commit": "a8237a7312b336548fc9322c02abae9871b5ca93",
+      "registry_commit": "60d5206de96389c3430370c0dbb8704f32714d7a",
+      "tree": "3822e868c017be4182da8ea8d418a17fc5ee5796"
+    }
+  },
+  "leaf_sha256": {
+    "agent/src/sim/build-sim-pool.ts": "e71b84f3b871c296eb64edc5bbda093f9708df56044719bbc421777cb5370cf9",
+    "agent/src/sim/build-sim-worker.ts": "25ffd4f6d7d254339f8f5a838ccff54866fc53ea5af66a711df8d2377ed85789",
+    "agent/tests/build-sim-cancellation.test.ts": "9476c96c024460e0f6d5944d73c8a6ff3b8c87dc3bfb476350af4a89519b9ef6"
+  },
+  "original_preflight_conflicts": [
+    "notes/fix-queue-v4.md",
+    "paper/materials/decision-log.md",
+    "paper/materials/learning/ledger.jsonl"
+  ],
+  "parallel_dirty_records_preserved": {
+    "main": [
+      "notes/fix-queue-v4.md",
+      "notes/for-roy.md",
+      "notes/lessons.md",
+      "notes/monster-db-check.md",
+      "notes/strategy-research-core-output-silent.json",
+      "notes/strategy-research-core-reuse-silent.json"
+    ],
+    "live": [
+      "knowledge/characters/silent/boss-damage.json",
+      "knowledge/characters/silent/construction-opportunities.json",
+      "knowledge/characters/silent/fight-value-gates.json",
+      "knowledge/characters/silent/fight-value.json",
+      "knowledge/characters/silent/monster-records.json",
+      "knowledge/characters/silent/outcome-stats.json",
+      "knowledge/characters/silent/room-costs.json",
+      "knowledge/common/card-upgrades.json",
+      "knowledge/common/monster-db.json",
+      "knowledge/common/move-model.json",
+      "notes/fight-value-backtest-silent.md",
+      "notes/monster-db-check.md"
+    ]
+  },
+  "source_self_tests": {
+    "tsc": 0,
+    "vitest": 0,
+    "cases": 3599,
+    "files": 377,
+    "gitleaks": 0
+  },
+  "full_host_checks": "pending one original-batch check on final live deployment tree",
+  "DPR_performance_parent_remains_pending": true,
+  "no_restart_duplicate_learning_or_permission_change": true
+}

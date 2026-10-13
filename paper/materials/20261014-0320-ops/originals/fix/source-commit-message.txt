@@ -1,0 +1,17 @@
+Stop expired build simulation batches between samples
+
+Use a per-batch shared cancellation flag so expired synchronous sample
+blocks stop before the next whole sample. Initialize every worker handler
+before dispatch so a zero remaining phase budget cleans up safely.
+Accept the previous batch protocol from parents already running at deploy.
+
+Evidence: 1269Y20SKHUM, floors 35/37/38, reward/card, turn N/A.
+F37 warm order search timed out with 24 dispatched chunks and no replies;
+the following comparison produced 128 paired samples, first reply 2926ms.
+Eight immutable source rows were verified by offset, length and SHA256.
+This repairs stale chunk execution, not the whole DPR performance gap.
+
+Fixed regressions: 4 fail / 1 pass without source, 5 pass restored.
+Ironclad fixed worker outcomes remain equal to the serial runner.
+
+Co-Authored-By: Codex gpt-6.1-sol <noreply@openai.com>

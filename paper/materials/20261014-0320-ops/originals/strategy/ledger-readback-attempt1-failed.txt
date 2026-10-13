@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "<stdin>", line 4, in <module>
+AssertionError
+
+原因：误把CLI单行空格分隔的30个id按行解析。CLI自身exit0、stderr空；改为按空白split后30项全部读回且旧claim/status/version保持。没有重复执行update。

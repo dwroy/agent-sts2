@@ -1,0 +1,67 @@
+{
+  "task": "fix-batch",
+  "base": "179205a84dd5a10e63b5f332b0a680d339d7e8a9",
+  "fixes": [
+    {
+      "item": "v5-dpr-health-20261013：超时样本块取消及零预算清理",
+      "commit": "a7959132235badc87e669241c13dddf95510bfc5",
+      "test": "agent/tests/build-sim-cancellation.test.ts",
+      "fails_without_fix": true
+    }
+  ],
+  "skipped": [
+    {
+      "item": "V5 DPR完整性能达标",
+      "reason": "证据不足：本轮只修可确定复现的旧批次取消/零预算清理；1269八条均低于300，单个完整样本成本和宿主负载未隔离，不降低300/1000/11000ms/24限制，不宣称服务或胜率改善。"
+    },
+    {
+      "item": "sandbox-glob-startup-race 上游目录生命周期",
+      "reason": "证据不足：会话前有界恢复/租约已有实现；本轮仍遇并行目录ENOENT，未定位创建/删除者，不扩大沙箱或凭据权限。"
+    },
+    {
+      "item": "core-build-notify-222802-rc2 历史通知恢复",
+      "reason": "证据不足：后续失败诊断已修，旧rc2没有stderr且未证明未发送，不重投。"
+    },
+    {
+      "item": "mod单次超时、Codex缓存实测",
+      "reason": "证据不足：缺服务端或受控在线取证；本轮不调用模型或网络。"
+    },
+    {
+      "item": "其余未闭环出牌/药水/SL/终局/路线及双boss接续提案",
+      "reason": "策略类：保留48项原队列处置及当前原提案ID/元数据，沿既有strategy-proposal链，不重复派发、不以已实现子项关闭宽父项。"
+    },
+    {
+      "item": "rest-timeout-accepted-route-not-committed / silent-0446",
+      "reason": "策略类/structure专用：原silent-proposal-2d3aa8dfb27dbe3f保留，待确认事务/同房动作核实/重启回放沿原独立实现任务。"
+    },
+    {
+      "item": "arch-funnel-guard / arch-learning-priority / arch-unified-resource-value / inv-f33-regression",
+      "reason": "太大/策略类：继续原授权专用功能及归因任务，不混入普通纯bug批。"
+    },
+    {
+      "item": "named-card-facts-transport 其他入口/P1/P2、boss校准",
+      "reason": "太大/独立功能：事件资料子项与校准入口已有实现，其他父范围沿原owner。"
+    },
+    {
+      "item": "调度公平性/旧包装器/历史宿主时序归因",
+      "reason": "证据不足：定向宿主续验、固定夹具和卡死退出诊断已修；旧因果未证明，不修改原队列/并发或倒填历史成功。"
+    },
+    {
+      "item": "WA7普通0费钢铁风暴旧手牌后继 / silent-0455/0458",
+      "reason": "策略类：已有silent-proposal-69776c308a3b298e原链，本轮不新增机制或实施普通策略代码。"
+    },
+    {
+      "item": "独立run-plan整局成本漏计 / silent-0459",
+      "reason": "策略/独立实现链：原队列明确沿silent-proposal-6a39ea0a435755c5接续、不另派普通修复；不在本轮重复领取或改变历史费用值。"
+    }
+  ],
+  "merged": null,
+  "tests": {
+    "tsc": 0,
+    "vitest": 0,
+    "cases": 3599
+  },
+  "code_proposals": [],
+  "implementation_domains": [],
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-021302/learner/runs/20261014-021332-fix-batch/report.md"
+}
