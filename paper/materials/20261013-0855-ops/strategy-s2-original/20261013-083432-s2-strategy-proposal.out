@@ -1,0 +1,109 @@
+10 项均保留 `waiting`：已有局部实现已核实，其余仍缺完整执行链或受控后继证据。32 项证据算术核验通过，31 个账本链接已追加，gitleaks 通过。未改源码、未运行生产测试、未合入；工作树干净。
+
+已保存[逐项提案](/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261013-083432-s2/learner/runs/20261013-083450-strategy-proposal/proposal.md)和[完整报告](/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261013-083432-s2/learner/runs/20261013-083450-strategy-proposal/report.md)，包含局号、层、回合、账本、源码祖先和缺数据理由。
+
+```json
+{
+  "task": "strategy-proposal",
+  "character": "silent",
+  "batch": "20261013-083432-s2-strategy-proposal",
+  "base": "a004ba332951bac7e846d78293fd359771550238",
+  "runs": [
+    "KEN58SH9SLZ6",
+    "TXZ6RVMQA09D",
+    "WQZVENQ7DTRP",
+    "02HB4L0C3C67",
+    "4D4J8USKCPAV",
+    "F4QKG4J1AJJZ",
+    "JLN5SK17W4FQ",
+    "LS8035TB32P3",
+    "NB8KCF6HRGVF",
+    "S9UZAK0JP0C0"
+  ],
+  "fixes": [],
+  "skipped": [],
+  "merged": null,
+  "tests": {
+    "tsc": null,
+    "vitest": null,
+    "cases": null
+  },
+  "code_proposals": [
+    "silent-proposal-08eaa60bcc449852",
+    "silent-proposal-92920295a648b540",
+    "silent-proposal-a327449c331efbc1",
+    "silent-proposal-a099e89437e942bb",
+    "silent-proposal-47910f82a1fdd98f",
+    "silent-proposal-f1374df72d8e6a25",
+    "silent-proposal-38a49e6c97f31eea",
+    "silent-proposal-ef0e38a5dbd3bc07",
+    "silent-proposal-7f820c02d39bfaea",
+    "silent-proposal-04b6b430759815ed"
+  ],
+  "implementation_domains": ["combat", "potion", "sl", "terminal"],
+  "proposal_results": [
+    {
+      "id": "silent-proposal-08eaa60bcc449852",
+      "state": "waiting",
+      "reason": "同入口、同牌组和路线下不饮/早饮/留到boss的完整后继没有实打记录，不能校准持药价值。"
+    },
+    {
+      "id": "silent-proposal-92920295a648b540",
+      "state": "waiting",
+      "reason": "后轮抽牌/生成与动作变动，缺相同牌序下F48至F49完整通关对照；首胜不足以校准SL/终局权重。"
+    },
+    {
+      "id": "silent-proposal-a327449c331efbc1",
+      "state": "waiting",
+      "reason": "缺同抽序完整后继及独立后移验证；多花4血换沙坑是反例，不能拟固定血价或沙坑阈值。"
+    },
+    {
+      "id": "silent-proposal-a099e89437e942bb",
+      "state": "waiting",
+      "reason": "缺计划妥当主动保留跨轮的完整消费者链、复合饮药触发与后继收益验证；容量实现只覆盖子项。"
+    },
+    {
+      "id": "silent-proposal-47910f82a1fdd98f",
+      "state": "waiting",
+      "reason": "未知回血/复活组合结算相位、留药与SL血价缺完整后继对照，不能把有限开场公式记整包完成。"
+    },
+    {
+      "id": "silent-proposal-f1374df72d8e6a25",
+      "state": "waiting",
+      "reason": "缺同入口、相同休息/锻造及后继动作的早饮/留药整战对照；F5/F6零损留药是边界，不能改护栏/药价/终局权重。"
+    },
+    {
+      "id": "silent-proposal-38a49e6c97f31eea",
+      "state": "waiting",
+      "reason": "整包缺升级/叠层/重放紧勒、致死逐击/反伤复活中间帧，以及能力/阈值/SL联合验证；有限公式不足以关闭整包。"
+    },
+    {
+      "id": "silent-proposal-ef0e38a5dbd3bc07",
+      "state": "waiting",
+      "reason": "缺相同入口换线/休息/锻造/用药的完整后继，以及能力提前建立的收益归属；不拟统一血价或改线收益。"
+    },
+    {
+      "id": "silent-proposal-7f820c02d39bfaea",
+      "state": "waiting",
+      "reason": "缺跨重规划完整计划的执行归属、受控后继及独立存活验证；首动作回执不足以证明整线执行或改变SL门槛。"
+    },
+    {
+      "id": "silent-proposal-04b6b430759815ed",
+      "state": "waiting",
+      "reason": "缺油灯首次吸收/前序负面/重规划/SL的完整消费链和未观察负面组合；不能从持有或null计数推定仍可翻倍，能力组合未整体验证。"
+    }
+  ],
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261013-083432-s2/learner/runs/20261013-083450-strategy-proposal/report.md"
+}
+```
+
+== 学习者 codex / strategy-proposal ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a132af-845f-7030-acb1-e8e58dc98487
+轮数：1；工具调用：command_execution×45 file_change×7
+token：输入 191.7k、输出 35.8k（其中推理 11.5k）、cache 读 5251.8k、cache 写 0（命中 96.5%）
+成本：未提供
+耗时：1200.1 s（墙钟）
+时间：首个事件 56.7 s、模型首个输出 61.2 s、首次工具 63.5 s、末次工具结束 1162.6 s；工具内共 410.3 s，其余（模型生成、推理、网络）733.1 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261013-083432-s2）；模型的工具调用 exec×41 wait×3；/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/learner/sessions/2026/10/13/rollout-2026-10-13T08-35-25-01a132af-845f-7030-acb1-e8e58dc98487.jsonl
+日志：/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261013-083432-s2/learner/runs/20261013-083450-strategy-proposal.jsonl

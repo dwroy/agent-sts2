@@ -1,0 +1,249 @@
+[
+  {
+    "path": "agent/src/sl/explore.ts",
+    "kind": "comment_attribution_only",
+    "changed_lines": 3,
+    "changes": [
+      {
+        "line": 2,
+        "old": " * SL_RETRY_EXPLORE (docs/sl.md §11, Roy 2026-10-02: \"retries must try different play\"): a retried fight's attempts 3 and",
+        "new": " * SL_RETRY_EXPLORE (docs/sl.md §11, Dai 2026-10-02: \"retries must try different play\"): a retried fight's attempts 3 and"
+      },
+      {
+        "line": 319,
+        "old": "   * SL_RETRY_EXPLORE_B2 (Roy 2026-10-02): on a boss B2 is trusted on, B2's win rate is the gate (\"not worse than the line",
+        "new": "   * SL_RETRY_EXPLORE_B2 (Dai 2026-10-02): on a boss B2 is trusted on, B2's win rate is the gate (\"not worse than the line"
+      },
+      {
+        "line": 325,
+        "old": "   * SL_RETRY_EXPLORE_BOSS_POTIONS (Roy 2026-10-02): in a boss fight a line drinking a potion the line replaced does not is an",
+        "new": "   * SL_RETRY_EXPLORE_BOSS_POTIONS (Dai 2026-10-02): in a boss fight a line drinking a potion the line replaced does not is an"
+      }
+    ]
+  },
+  {
+    "path": "agent/src/sl/controller.ts",
+    "kind": "comment_attribution_only",
+    "changed_lines": 2,
+    "changes": [
+      {
+        "line": 61,
+        "old": " * SL_RETRY_COMPUTE (docs/sl.md §10.3, Roy 2026-10-02: \"compute more on retries\"; +20-30 s a boss turn accepted earlier): the",
+        "new": " * SL_RETRY_COMPUTE (docs/sl.md §10.3, Dai 2026-10-02: \"compute more on retries\"; +20-30 s a boss turn accepted earlier): the"
+      },
+      {
+        "line": 221,
+        "old": "/** SL_ACT2_LOW_HP's gate (Roy 2026-10-04): an act-2 fight with no boss entered below the line, as act 3's. */",
+        "new": "/** SL_ACT2_LOW_HP's gate (Dai 2026-10-04): an act-2 fight with no boss entered below the line, as act 3's. */"
+      }
+    ]
+  },
+  {
+    "path": "agent/src/reflex/combat-plan.ts",
+    "kind": "comment_attribution_only",
+    "changed_lines": 29,
+    "changes": [
+      {
+        "line": 84,
+        "old": " * Potions are Jev's call (Roy 2026-09-28): the solver prices a potion line on its simulated outcome",
+        "new": " * Potions are Jev's call (Dai 2026-09-28): the solver prices a potion line on its simulated outcome"
+      },
+      {
+        "line": 85,
+        "old": " * less the potion's cost (Roy 2026-09-30, potion-cost.ts: its held value in the potion table, 0 in a boss",
+        "new": " * less the potion's cost (Dai 2026-09-30, potion-cost.ts: its held value in the potion table, 0 in a boss"
+      },
+      {
+        "line": 222,
+        "old": " * Every modelled potion in the belt on at least one shown line (Roy 2026-09-28: Jev always has the",
+        "new": " * Every modelled potion in the belt on at least one shown line (Dai 2026-09-28: Jev always has the"
+      },
+      {
+        "line": 352,
+        "old": " * The enemies a turn can be aimed at, one group per enemy id (Roy 2026-09-28: identical enemies are not",
+        "new": " * The enemies a turn can be aimed at, one group per enemy id (Dai 2026-09-28: identical enemies are not"
+      },
+      {
+        "line": 407,
+        "old": " * Per-target options (Roy 2026-09-28: which enemy to kill is Jev's call, not the score's): for every group,",
+        "new": " * Per-target options (Dai 2026-09-28: which enemy to kill is Jev's call, not the score's): for every group,"
+      },
+      {
+        "line": 442,
+        "old": " * Roy 2026-09-29: where hand-written advice (the guides behind the run plan, the fight hints) disagrees with the",
+        "new": " * Dai 2026-09-29: where hand-written advice (the guides behind the run plan, the fight hints) disagrees with the"
+      },
+      {
+        "line": 492,
+        "old": " * DeepSeek's run plan, whole and on one line (Roy 2026-09-28: Jev sees the plan's strategy and boss prep,",
+        "new": " * DeepSeek's run plan, whole and on one line (Dai 2026-09-28: Jev sees the plan's strategy and boss prep,"
+      },
+      {
+        "line": 530,
+        "old": "  // Each held potion's worth in this act's boss fight (potion-equivalents.json; Roy 2026-09-30): a fact, no rule.",
+        "new": "  // Each held potion's worth in this act's boss fight (potion-equivalents.json; Dai 2026-09-30): a fact, no rule."
+      },
+      {
+        "line": 539,
+        "old": " * What a drink costs on this question (potion-cost.ts, Roy 2026-09-30), for potion_context: where the options'",
+        "new": " * What a drink costs on this question (potion-cost.ts, Dai 2026-09-30), for potion_context: where the options'"
+      },
+      {
+        "line": 578,
+        "old": "// CLOSE_CALL (code played its top line when it led by 6+ score points) is gone (Roy 2026-09-28: card",
+        "new": "// CLOSE_CALL (code played its top line when it led by 6+ score points) is gone (Dai 2026-09-28: card"
+      },
+      {
+        "line": 581,
+        "old": "/** Distinct lines shown to Jev (Roy 2026-09-28: 10, was 4; the rollout covers every shown line). */",
+        "new": "/** Distinct lines shown to Jev (Dai 2026-09-28: 10, was 4; the rollout covers every shown line). */"
+      },
+      {
+        "line": 589,
+        "old": " * Boss and elite fights get the tighter bound, max(8, 10% HP); hallway fights max(8, 20% HP) (Roy",
+        "new": " * Boss and elite fights get the tighter bound, max(8, 10% HP); hallway fights max(8, 20% HP) (Dai"
+      },
+      {
+        "line": 595,
+        "old": "/** Extra HP (over the cheapest line) a fight may accept (Roy 2026-09-28: 24, was 12, with the per-turn slack 4 -> 8). */",
+        "new": "/** Extra HP (over the cheapest line) a fight may accept (Dai 2026-09-28: 24, was 12, with the per-turn slack 4 -> 8). */"
+      },
+      {
+        "line": 2348,
+        "old": " * The least-loss verdict's facts for the SL judge (src/sl/judge.ts LeastLossFacts; Roy 2026-10-02: certain death, never",
+        "new": " * The least-loss verdict's facts for the SL judge (src/sl/judge.ts LeastLossFacts; Dai 2026-10-02: certain death, never"
+      },
+      {
+        "line": 3092,
+        "old": "  // us in hp_lost (card-model FOUL_POTION selfDamage), and drinking it is Jev's call (Roy 2026-09-28).",
+        "new": "  // us in hp_lost (card-model FOUL_POTION selfDamage), and drinking it is Jev's call (Dai 2026-09-28)."
+      },
+      {
+        "line": 3094,
+        "old": "  // What each potion held costs to drink here (potion-cost.ts, Roy 2026-09-30): its held value in the potion table for",
+        "new": "  // What each potion held costs to drink here (potion-cost.ts, Dai 2026-09-30): its held value in the potion table for"
+      },
+      {
+        "line": 3125,
+        "old": "  // A potion line is scored on its simulated outcome less the potion's cost (potion-cost.ts, Roy 2026-09-30:",
+        "new": "  // A potion line is scored on its simulated outcome less the potion's cost (potion-cost.ts, Dai 2026-09-30:"
+      },
+      {
+        "line": 3341,
+        "old": "  // potion (Roy: a potion is a 0-cost one-shot card, never filtered or vetoed), with no invented numbers; a fight",
+        "new": "  // potion (Dai: a potion is a 0-cost one-shot card, never filtered or vetoed), with no invented numbers; a fight"
+      },
+      {
+        "line": 3353,
+        "old": "  // is Jev's call (Roy 2026-09-28): those lines are shown, flagged as winning and naming the potion spent.",
+        "new": "  // is Jev's call (Dai 2026-09-28): those lines are shown, flagged as winning and naming the potion spent."
+      },
+      {
+        "line": 3512,
+        "old": "  // Per-target options (Roy 2026-09-28): with two or more kinds of enemy, the line putting the most damage",
+        "new": "  // Per-target options (Dai 2026-09-28): with two or more kinds of enemy, the line putting the most damage"
+      },
+      {
+        "line": 3689,
+        "old": "  // The \"no potion this fight\" line (Roy 2026-09-30), on every question with a potion to drink outside a boss fight",
+        "new": "  // The \"no potion this fight\" line (Dai 2026-09-30), on every question with a potion to drink outside a boss fight"
+      },
+      {
+        "line": 3790,
+        "old": "  // decision log (V4.2, Roy 2026-10-01: its question is the pre-B2 one). Out of a boss fight, no pool is kept.",
+        "new": "  // decision log (V4.2, Dai 2026-10-01: its question is the pre-B2 one). Out of a boss fight, no pool is kept."
+      },
+      {
+        "line": 3825,
+        "old": "  // Every option's potion cost fact (Roy 2026-09-30), when a potion can be drunk on this board.",
+        "new": "  // Every option's potion cost fact (Dai 2026-09-30), when a potion can be drunk on this board."
+      },
+      {
+        "line": 3886,
+        "old": "  // Random potions: always an option (Roy 2026-09-28), \"drink now, then re-plan\", with the Monte Carlo",
+        "new": "  // Random potions: always an option (Dai 2026-09-28), \"drink now, then re-plan\", with the Monte Carlo"
+      },
+      {
+        "line": 4365,
+        "old": "      // dry-line veto and the attack-potion veto are gone, Roy 2026-09-28).",
+        "new": "      // dry-line veto and the attack-potion veto are gone, Dai 2026-09-28)."
+      },
+      {
+        "line": 4451,
+        "old": "    // No DeepSeek escalation in combat (Roy 2026-09-28): the turn's line is Jev's call.",
+        "new": "    // No DeepSeek escalation in combat (Dai 2026-09-28): the turn's line is Jev's call."
+      },
+      {
+        "line": 4576,
+        "old": " * Why an unsimulated potion is on the question: always (Roy: potions are 0-cost one-shot cards, no filter, no",
+        "new": " * Why an unsimulated potion is on the question: always (Dai: potions are 0-cost one-shot cards, no filter, no"
+      },
+      {
+        "line": 4577,
+        "old": " * veto). It replaced T1 (Roy 2026-09-28: the cheapest potion-free option losing 12% of HP), the old gate.",
+        "new": " * veto). It replaced T1 (Dai 2026-09-28: the cheapest potion-free option losing 12% of HP), the old gate."
+      },
+      {
+        "line": 4889,
+        "old": " * gone, Roy 2026-09-28).",
+        "new": " * gone, Dai 2026-09-28)."
+      }
+    ]
+  },
+  {
+    "path": "agent/src/hand/loop.ts",
+    "kind": "comment_attribution_only",
+    "changed_lines": 2,
+    "changes": [
+      {
+        "line": 785,
+        "old": "    // fight before the question that needs it (up to ~15 s, Roy 2026-10-02); kept in screen memory. Never throws: no",
+        "new": "    // fight before the question that needs it (up to ~15 s, Dai 2026-10-02); kept in screen memory. Never throws: no"
+      },
+      {
+        "line": 1949,
+        "old": "  // From A8 hallway fights kill runs too (棘刺蟾蜍, 地道虫, 啃咬机, 胧光怪, 青蛙骑士): Roy asked for a",
+        "new": "  // From A8 hallway fights kill runs too (棘刺蟾蜍, 地道虫, 啃咬机, 胧光怪, 青蛙骑士): Dai asked for a"
+      }
+    ]
+  },
+  {
+    "path": "agent/src/reflex/turn-solver.ts",
+    "kind": "comment_attribution_only",
+    "changed_lines": 2,
+    "changes": [
+      {
+        "line": 2890,
+        "old": " * Kept (Roy 2026-09-28 review) for what the score still decides: code's own lines (lethal among lethal",
+        "new": " * Kept (Dai 2026-09-28 review) for what the score still decides: code's own lines (lethal among lethal"
+      },
+      {
+        "line": 3354,
+        "old": "  // A potion drunk is HP paid later (potion-cost.ts, Roy 2026-09-30): its held value, at the HP weight. Until batch K a",
+        "new": "  // A potion drunk is HP paid later (potion-cost.ts, Dai 2026-09-30): its held value, at the HP weight. Until batch K a"
+      }
+    ]
+  },
+  {
+    "path": "agent/src/reflex/potion-cost.ts",
+    "kind": "comment_attribution_only",
+    "changed_lines": 3,
+    "changes": [
+      {
+        "line": 2,
+        "old": " * Potion cost (Roy 2026-09-30): a potion drunk before the act boss is HP paid later. What a drink costs is the",
+        "new": " * Potion cost (Dai 2026-09-30): a potion drunk before the act boss is HP paid later. What a drink costs is the"
+      },
+      {
+        "line": 4,
+        "old": " * HP worth in this act's boss fight at this ascension; the formula values as the table has them). Roy's rules:",
+        "new": " * HP worth in this act's boss fight at this ascension; the formula values as the table has them). Dai's rules:"
+      },
+      {
+        "line": 145,
+        "old": " * Jev's option fact (Roy 2026-09-30): 「fight HP loss X; potions used N (names); potion cost Y HP (potion table: held",
+        "new": " * Jev's option fact (Dai 2026-09-30): 「fight HP loss X; potions used N (names); potion cost Y HP (potion table: held"
+      }
+    ]
+  }
+]

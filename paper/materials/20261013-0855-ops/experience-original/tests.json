@@ -1,0 +1,30 @@
+{
+  "tsc": 0,
+  "vitest": 0,
+  "files": 345,
+  "cases": 3414,
+  "workers": 3,
+  "phases": [
+    {
+      "name": "test-source-direct",
+      "tsc": 0,
+      "exit": 1,
+      "files_passed": 343,
+      "cases_passed": 3402,
+      "log": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261013-080222-experience-update/test-source-direct.log",
+      "sha256": "26b04785f06194a9d70661ef0200bc7a921ce0ea336c283b29d60166a8ac7a12"
+    },
+    {
+      "name": "test-source-copy",
+      "tsc": 0,
+      "exit": 0,
+      "files_passed": 345,
+      "cases_passed": 3414,
+      "log": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261013-080222-experience-update/test-source-copy.log",
+      "sha256": "358959dac86acd3bd64684c4b5858db5dc2379bc7ef95efbc6e1db9ea5389622"
+    }
+  ],
+  "direct_check": "首轮tsc0；vitest3402通过/1失败，唯一check-imports扫描旧任务失效临时目录ENOENT。失败原件保留，跟踪源码/知识逐SHA等价隔离副本原沙箱套件通过；没有改测试/排除名单/预算。",
+  "host_full_suite": "实际live合入后由调度器沿experience-done/learner-checks补完整宿主检查；未合入时不冒报合后验证",
+  "test_copy_manifest": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261013-080222-experience-update/test-copy-manifest.json"
+}

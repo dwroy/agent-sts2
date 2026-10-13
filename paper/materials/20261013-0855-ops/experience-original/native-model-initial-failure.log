@@ -1,0 +1,6 @@
+2026-10-13T08:37:38+08:00
+Traceback (most recent call last):
+  File "<stdin>", line 6, in <module>
+AssertionError
+
+初核把换行包含在SHA中；原postmortem/extract.py去掉换行后哈希，故哈希失败，不是日志内容或模型不符。原verify.py同样按去换行核验。额外一次同权限启动预检ENOENT原件见native-model-launch-failure.log。

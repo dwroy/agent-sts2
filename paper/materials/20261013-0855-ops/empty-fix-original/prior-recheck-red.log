@@ -1,0 +1,166 @@
+............EEEEEEEE.......
+======================================================================
+ERROR: test_scheduler_reports_busy_check_lock_without_starting_or_rewriting (__main__.Continuation.test_scheduler_reports_busy_check_lock_without_starting_or_rewriting)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-080052/ops/tests/test_learner_check_continuation.py", line 360, in test_scheduler_reports_busy_check_lock_without_starting_or_rewriting
+    self.assertEqual(json.loads(output.getvalue())["reason"], "checks-lock-busy")
+                     ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/json/__init__.py", line 352, in loads
+    return _default_decoder.decode(s)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^
+  File "/usr/lib/python3.14/json/decoder.py", line 345, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/json/decoder.py", line 363, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+======================================================================
+ERROR: test_scheduler_reports_each_preflight_refusal_without_mutation_or_checks (__main__.Continuation.test_scheduler_reports_each_preflight_refusal_without_mutation_or_checks) (reason='invalid-continuation')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-080052/ops/tests/test_learner_check_continuation.py", line 344, in test_scheduler_reports_each_preflight_refusal_without_mutation_or_checks
+    receipt = json.loads(output.getvalue())
+  File "/usr/lib/python3.14/json/__init__.py", line 352, in loads
+    return _default_decoder.decode(s)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^
+  File "/usr/lib/python3.14/json/decoder.py", line 345, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/json/decoder.py", line 363, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+======================================================================
+ERROR: test_scheduler_reports_each_preflight_refusal_without_mutation_or_checks (__main__.Continuation.test_scheduler_reports_each_preflight_refusal_without_mutation_or_checks) (reason='invalid-batch')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-080052/ops/tests/test_learner_check_continuation.py", line 344, in test_scheduler_reports_each_preflight_refusal_without_mutation_or_checks
+    receipt = json.loads(output.getvalue())
+  File "/usr/lib/python3.14/json/__init__.py", line 352, in loads
+    return _default_decoder.decode(s)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^
+  File "/usr/lib/python3.14/json/decoder.py", line 345, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/json/decoder.py", line 363, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+======================================================================
+ERROR: test_scheduler_reports_each_preflight_refusal_without_mutation_or_checks (__main__.Continuation.test_scheduler_reports_each_preflight_refusal_without_mutation_or_checks) (reason='unknown-batch')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-080052/ops/tests/test_learner_check_continuation.py", line 344, in test_scheduler_reports_each_preflight_refusal_without_mutation_or_checks
+    receipt = json.loads(output.getvalue())
+  File "/usr/lib/python3.14/json/__init__.py", line 352, in loads
+    return _default_decoder.decode(s)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^
+  File "/usr/lib/python3.14/json/decoder.py", line 345, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/json/decoder.py", line 363, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+======================================================================
+ERROR: test_scheduler_reports_each_preflight_refusal_without_mutation_or_checks (__main__.Continuation.test_scheduler_reports_each_preflight_refusal_without_mutation_or_checks) (reason='batch-running')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-080052/ops/tests/test_learner_check_continuation.py", line 344, in test_scheduler_reports_each_preflight_refusal_without_mutation_or_checks
+    receipt = json.loads(output.getvalue())
+  File "/usr/lib/python3.14/json/__init__.py", line 352, in loads
+    return _default_decoder.decode(s)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^
+  File "/usr/lib/python3.14/json/decoder.py", line 345, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/json/decoder.py", line 363, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+======================================================================
+ERROR: test_scheduler_reports_each_preflight_refusal_without_mutation_or_checks (__main__.Continuation.test_scheduler_reports_each_preflight_refusal_without_mutation_or_checks) (reason='active-worktree-owner')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-080052/ops/tests/test_learner_check_continuation.py", line 344, in test_scheduler_reports_each_preflight_refusal_without_mutation_or_checks
+    receipt = json.loads(output.getvalue())
+  File "/usr/lib/python3.14/json/__init__.py", line 352, in loads
+    return _default_decoder.decode(s)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^
+  File "/usr/lib/python3.14/json/decoder.py", line 345, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/json/decoder.py", line 363, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+======================================================================
+ERROR: test_scheduler_reports_postcheck_identity_races_without_overwriting_concurrent_state (__main__.Continuation.test_scheduler_reports_postcheck_identity_races_without_overwriting_concurrent_state) (reason='batch-disappeared')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-080052/ops/tests/test_learner_check_continuation.py", line 378, in test_scheduler_reports_postcheck_identity_races_without_overwriting_concurrent_state
+    self.assertEqual(json.loads(output.getvalue())["reason"], reason)
+                     ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/json/__init__.py", line 352, in loads
+    return _default_decoder.decode(s)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^
+  File "/usr/lib/python3.14/json/decoder.py", line 345, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/json/decoder.py", line 363, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+======================================================================
+ERROR: test_scheduler_reports_postcheck_identity_races_without_overwriting_concurrent_state (__main__.Continuation.test_scheduler_reports_postcheck_identity_races_without_overwriting_concurrent_state) (reason='batch-identity-changed')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-080052/ops/tests/test_learner_check_continuation.py", line 378, in test_scheduler_reports_postcheck_identity_races_without_overwriting_concurrent_state
+    self.assertEqual(json.loads(output.getvalue())["reason"], reason)
+                     ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/json/__init__.py", line 352, in loads
+    return _default_decoder.decode(s)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^
+  File "/usr/lib/python3.14/json/decoder.py", line 345, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/json/decoder.py", line 363, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+----------------------------------------------------------------------
+Ran 22 tests in 0.388s
+
+FAILED (errors=8)
+定向补验拒绝：registered source was changed or reverted
+定向补验拒绝：selection repeats a passed supplement on this tree
+定向补验拒绝：evidence SHA mismatch
+定向补验拒绝：invalid evidence path
+定向补验拒绝：continuation already claimed; preserve incomplete receipt
+定向补验拒绝：test was already run or intentionally skipped
+定向补验拒绝：no changed test or mapped dependency
+定向补验拒绝：original caller identity mismatch
+定向补验拒绝：original caller identity mismatch
+定向补验拒绝：original caller identity mismatch
+定向补验拒绝：unknown manifest fields
+定向补验拒绝：original log SHA mismatch
+定向补验拒绝：original full check is not registered
+定向补验拒绝：original coverage mismatch or unreadable
+定向补验拒绝：missing original source identity
+定向补验拒绝：invalid source commits
+定向补验拒绝：invalid or repeated test path
+定向补验拒绝：invalid or repeated test path
+定向补验拒绝：unknown selection fields
+定向补验拒绝：failed selection includes previously passed tests
+定向补验拒绝：manifest SHA mismatch
+定向补验拒绝：invalid continuation request
+{"batch": "20261011-181302-fix-batch", "rc": 0, "check_supplements": [{"rc": 0, "scope": "selected tests only"}]}
+定向补验拒绝：original log cannot prove the file was unrun
+定向补验拒绝：stale live source/tree
+定向补验拒绝：live validation inputs are dirty
+定向补验拒绝：original owner is still active
+定向补验拒绝：source absent
+定向补验拒绝：path escapes its registered directory
+定向补验拒绝：invalid original log path

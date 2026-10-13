@@ -1,0 +1,2 @@
+取证初稿与纠正保留：inspect.txt、facts.txt、compact.txt、quant.txt及lesson-draft-initial.md均保留。早期一次交互式摘字段对代码自主题直接访问questions发生KeyError；随后改为get，未影响原日志或正式数字。早期将手上技法选择泛称抽弃，经s382908确认是添加奇巧；正式复盘未写成弃牌。初稿F29误把已有碎石钻当事件名称，核s382863为永恒之石STONE_OF_ALL_TIME，追加前已纠正；三轮0/2获胜没有当作整场必死。没有生产代码故障据此登记。后续随机群蛇目标、旧脏树、替线胜负及缓冲逐击结算均保留未知。
+另一次只读定位误试不存在的agent/src/brain/event.ts，随后用rg --files确认实际入口是agent/src/hand/screens/event.ts和rest.ts；未因此修改代码或登记bug。原初稿、核对稿、解析输出、CLI输入/回执和缺数据范围均保留。

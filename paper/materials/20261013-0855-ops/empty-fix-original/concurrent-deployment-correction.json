@@ -1,0 +1,94 @@
+{
+  "initial_capture": {
+    "base": "a004ba332951bac7e846d78293fd359771550238",
+    "live": "cea987c0d8ebbe13b15d92cf37bb58ad2c496455",
+    "source_batch": "20261013-080052-fix-batch",
+    "fixes": [
+      {
+        "item": "host-loop-time-cap-wall-clock-061301：固定时钟隔离时间上限测试",
+        "commit": "b3c6dd700b00d0d8b17d5d2efe6fe9aa353618fa",
+        "test": "agent/tests/loop-time-cap.test.ts",
+        "fails_without_fix": true,
+        "base_ancestor": false,
+        "live_ancestor": true,
+        "paths": [
+          "agent/tests/loop-time-cap-fixture.ts",
+          "agent/tests/loop-time-cap.test.ts",
+          "agent/tests/loop.test.ts"
+        ],
+        "patch_sha256": "4da09438cc86d4361d1a5c79f9635501151f1b429f035f41fc78c67dafdf4809",
+        "patch": "prior-fix-b3c6dd700b.patch.txt"
+      },
+      {
+        "item": "host-loop-time-cap-wall-clock-061301：补验入口静默 exit2 的拒绝诊断",
+        "commit": "63f656fb07a21a7496353234269901a832eae497",
+        "test": "agent/tests/learner-check-continuation.test.ts",
+        "fails_without_fix": true,
+        "base_ancestor": false,
+        "live_ancestor": true,
+        "paths": [
+          "ops/codex-ops-learn.py",
+          "ops/tests/test_learner_check_continuation.py"
+        ],
+        "patch_sha256": "af913af56b9758d57cf03562bda51dc39d0e3563ea3b974ca447b26aeb5a623f",
+        "patch": "prior-fix-63f656fb07.patch.txt"
+      }
+    ],
+    "deployed": false
+  },
+  "final_base": "888eea283e8a206850b562f21be103ab565a558a",
+  "final_live": "cea987c0d8ebbe13b15d92cf37bb58ad2c496455",
+  "deployed": true,
+  "fixes": [
+    {
+      "commit": "b3c6dd700b00d0d8b17d5d2efe6fe9aa353618fa",
+      "base_ancestor": true,
+      "live_ancestor": true,
+      "paths": [
+        {
+          "path": "agent/tests/loop-time-cap-fixture.ts",
+          "source_blob": "072b8721b375b3cdb96061de245d5c87b15adfb0",
+          "base_blob": "072b8721b375b3cdb96061de245d5c87b15adfb0",
+          "live_blob": "072b8721b375b3cdb96061de245d5c87b15adfb0",
+          "identical": true
+        },
+        {
+          "path": "agent/tests/loop-time-cap.test.ts",
+          "source_blob": "bcd0b73e14b2e96c8bcf348acef26b642ce5ffc3",
+          "base_blob": "bcd0b73e14b2e96c8bcf348acef26b642ce5ffc3",
+          "live_blob": "bcd0b73e14b2e96c8bcf348acef26b642ce5ffc3",
+          "identical": true
+        },
+        {
+          "path": "agent/tests/loop.test.ts",
+          "source_blob": "7f629b4db77820006a6f80c6076dc964acb9f2ae",
+          "base_blob": "7f629b4db77820006a6f80c6076dc964acb9f2ae",
+          "live_blob": "7f629b4db77820006a6f80c6076dc964acb9f2ae",
+          "identical": true
+        }
+      ]
+    },
+    {
+      "commit": "63f656fb07a21a7496353234269901a832eae497",
+      "base_ancestor": true,
+      "live_ancestor": true,
+      "paths": [
+        {
+          "path": "ops/codex-ops-learn.py",
+          "source_blob": "2a07145e18cb4b1ff8c9f10494462b35e31d13a7",
+          "base_blob": "2a07145e18cb4b1ff8c9f10494462b35e31d13a7",
+          "live_blob": "2a07145e18cb4b1ff8c9f10494462b35e31d13a7",
+          "identical": true
+        },
+        {
+          "path": "ops/tests/test_learner_check_continuation.py",
+          "source_blob": "a2baefb7a78c0b7ec83d8078b5154bf30c927dd9",
+          "base_blob": "a2baefb7a78c0b7ec83d8078b5154bf30c927dd9",
+          "live_blob": "a2baefb7a78c0b7ec83d8078b5154bf30c927dd9",
+          "identical": true
+        }
+      ]
+    }
+  ],
+  "note": "早先记录deployed=false未随并行部署更新；初稿保留，现按真实祖先及五个源码blob更正。"
+}

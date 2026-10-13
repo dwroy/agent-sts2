@@ -1,0 +1,27 @@
+## 复盘回报
+
+- 已追加：VGNDNGPFYRE3（A10，第31层，残杀千足虫战T6以3血0挡对合18攻击阵亡，无读档）。
+- 新的纯 bug：无。
+- 写成「未记录」的项：VGNDNGPFYRE3：完整历史脏树、部分逐击伤害及多体击杀顺序、最终实线最优率、boss时钟和F33实盘、随机群蛇分布与替线／路线／药水反事实、缓冲及终轮毒逐击帧、Jev缓存命中。
+- 学习账本：VGNDNGPFYRE3：新增无；更新 silent-0079、silent-0064、silent-0019、silent-0005、silent-0016、silent-0027、silent-0132、silent-0184（老错 silent-0079）；`ledger.py check` 退出码0。
+- 代码提案：均关联本局证据和独立 `strategy-proposal` 实现任务，状态pending，未实现或上线。
+
+  - F31T4血价／后缀兑现：silent-0079 → silent-proposal-468a024ca209882d；小样本及未执行替线不能证明转胜。
+  - F31T4—T6前段接续：silent-0064 → silent-proposal-8cb038e09b7b1b52；限定已观察前段及清层时点。
+  - F22—F31资源／续火：silent-0019、silent-0184 → silent-proposal-545506df5fc7f859；无另路线或添火胜负对照。
+  - F31T2—T5群蛇附伤：silent-0132 → silent-proposal-a5206b407dd98cbe；随机概率、叠层及自动重放保持未知。
+
+```json
+{"task":"postmortem","appended":["VGNDNGPFYRE3"],"skipped":[],"bugs":[],"ledger":{"added":[],"updated":["silent-0079","silent-0064","silent-0019","silent-0005","silent-0016","silent-0027","silent-0132","silent-0184"],"repeats":["silent-0079"],"check":0},"code_proposals":["silent-proposal-468a024ca209882d","silent-proposal-8cb038e09b7b1b52","silent-proposal-545506df5fc7f859","silent-proposal-a5206b407dd98cbe"],"implementation_domains":["combat","terminal","structure"],"report":"/home/dw/Projects/agent-sts2/learner/runs/20261013-081301-postmortem/report.md"}
+```
+
+== 学习者 codex / postmortem ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a1329b-368f-7092-aaa7-8dd147de3284
+轮数：1；工具调用：command_execution×58
+token：输入 203.6k、输出 44.9k（其中推理 13.6k）、cache 读 6115.8k、cache 写 0（命中 96.8%）
+成本：未提供
+耗时：1275.1 s（墙钟）
+时间：首个事件 16.0 s、模型首个输出 21.7 s、首次工具 25.4 s、末次工具结束 1248.9 s；工具内共 270.9 s，其余（模型生成、推理、网络）988.3 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2）；模型的工具调用 exec×43；/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/learner/sessions/2026/10/13/rollout-2026-10-13T08-13-15-01a1329b-368f-7092-aaa7-8dd147de3284.jsonl
+日志：/home/dw/Projects/agent-sts2/learner/runs/20261013-081301-postmortem.jsonl

@@ -1,0 +1,149 @@
+commit b3c6dd700b00d0d8b17d5d2efe6fe9aa353618fa
+Author:     Roy <me@dwroy.com>
+AuthorDate: Tue Oct 13 08:13:19 2026 +0800
+Commit:     Roy <me@dwroy.com>
+CommitDate: Tue Oct 13 08:13:19 2026 +0800
+
+    Isolate loop time-cap tests from host scheduling
+    
+    Evidence: 20261013-061301-experience-update host checks on live 79ae8287/tree 2615269a reported 1072 ms against the unchanged 850 ms map deadline assertion. No new game run, floor, or turn is attributed to this infrastructure failure. Keep production deadlines and the original assertions; use fixed states, in-memory reads, and a restored fixture clock. Removing Date isolation fails all four regressions.
+    
+    Co-Authored-By: Codex gpt-6.1-sol <noreply@openai.com>
+    Agent: codex@xdwin1
+
+diff --git a/agent/tests/loop-time-cap-fixture.ts b/agent/tests/loop-time-cap-fixture.ts
+new file mode 100644
+index 000000000..072b8721b
+--- /dev/null
++++ b/agent/tests/loop-time-cap-fixture.ts
+@@ -0,0 +1,46 @@
++import { mkdtempSync, rmSync } from "node:fs";
++import { tmpdir } from "node:os";
++import { join } from "node:path";
++import { vi } from "vitest";
++import { loadConfig } from "../src/core/config.js";
++import { runLoop, type LoopEvent, type LoopStats } from "../src/hand/loop.js";
++import type { ModClient } from "../src/hand/mod/client.js";
++import { parseGameState } from "../src/hand/mod/schema.js";
++import { testKnowledge } from "./scenarios.js";
++
++/** Exercise real loop deadlines with fixed states and time, without HTTP or a model. */
++export async function runTimeCapFixture(
++  payload: Record<string, unknown>,
++  after?: { atMs: number; payload: Record<string, unknown> },
++): Promise<{ stats: LoopStats; elapsed: number; events: LoopEvent[] }> {
++  const directory = mkdtempSync(join(tmpdir(), "loop-time-cap-"));
++  const controller = new AbortController();
++  const events: LoopEvent[] = [];
++  vi.useFakeTimers({ toFake: ["Date", "setTimeout", "clearTimeout"] });
++  vi.setSystemTime(0);
++  const started = Date.now();
++  const initial = parseGameState(payload);
++  const next = after ? parseGameState(after.payload) : null;
++  const client = {
++    state: async () => after && Date.now() - started >= after.atMs ? next! : initial,
++    action: async () => { throw new Error("time-cap fixture must not dispatch actions"); },
++  } as unknown as ModClient;
++  const config = loadConfig({} as NodeJS.ProcessEnv);
++  const pending = runLoop({
++    config: { ...config, combatPlanner: "card", log: { ...config.log, decisionLog: join(directory, "decisions.jsonl") } },
++    mode: "shadow", client, jev: null, brain: null, knowledge: testKnowledge,
++    restoreRun: false, maxMinutes: 0.005, combatGraceMinutes: 0.01, pollIntervalMs: 2,
++    signal: controller.signal, onEvent: (event) => events.push(event),
++  });
++  try {
++    await vi.advanceTimersByTimeAsync(1_000);
++    // Bound the fixture even if a regression stops the deadline from advancing.
++    controller.abort();
++    await vi.advanceTimersByTimeAsync(2);
++    const stats = await pending;
++    return { stats, elapsed: stats.elapsedMs, events };
++  } finally {
++    vi.useRealTimers();
++    rmSync(directory, { recursive: true, force: true });
++  }
++}
+diff --git a/agent/tests/loop-time-cap.test.ts b/agent/tests/loop-time-cap.test.ts
+new file mode 100644
+index 000000000..bcd0b73e1
+--- /dev/null
++++ b/agent/tests/loop-time-cap.test.ts
+@@ -0,0 +1,38 @@
++import { afterEach, expect, it, vi } from "vitest";
++import { runTimeCapFixture } from "./loop-time-cap-fixture.js";
++import { combatPayload, gameOverPayload, mapPayload } from "./scenarios.js";
++
++afterEach(() => vi.restoreAllMocks());
++
++it.each([0, 10_000])("keeps map and combat deadline assertions independent of a %ims host pause", async (pause) => {
++  let wall = 0;
++  vi.spyOn(Date, "now").mockImplementation(() => (wall += pause));
++  const map = await runTimeCapFixture(mapPayload());
++  expect(map.stats.stoppedBecause).toBe("time cap reached (0.005 min)");
++  expect(map.elapsed).toBeLessThan(850);
++  expect(map.elapsed).toBeGreaterThan(300);
++  const fight = await runTimeCapFixture(combatPayload());
++  expect(fight.stats.stoppedBecause).toContain("still in combat after the grace period");
++  expect(fight.elapsed).toBeGreaterThanOrEqual(850);
++  expect(fight.elapsed).toBeLessThanOrEqual(902);
++  expect(map.stats.errors + fight.stats.errors).toBe(0);
++  expect(map.stats.acts + fight.stats.acts).toBe(0);
++});
++
++it("stops at a safe point when the fight ends during the grace period", async () => {
++  const result = await runTimeCapFixture(combatPayload(), { atMs: 500, payload: mapPayload() });
++  expect(result.events.some((event) => event.type === "combat_end")).toBe(true);
++  expect(result.stats.stoppedBecause).toBe("time cap reached (0.005 min)");
++  expect(result.elapsed).toBeGreaterThanOrEqual(500);
++  expect(result.elapsed).toBeLessThan(850);
++});
++
++it("bounds score-screen finalization by the same grace deadline", async () => {
++  const ending = gameOverPayload();
++  ending["available_actions"] = [];
++  ending["game_over"] = { phase: "summary_animating", is_victory: false };
++  const result = await runTimeCapFixture(combatPayload(), { atMs: 200, payload: ending });
++  expect(result.stats.stoppedBecause).toContain("still finishing the run after the grace period");
++  expect(result.elapsed).toBeGreaterThanOrEqual(850);
++  expect(result.elapsed).toBeLessThanOrEqual(902);
++});
+diff --git a/agent/tests/loop.test.ts b/agent/tests/loop.test.ts
+index bc21e9c06..7f629b4db 100644
+--- a/agent/tests/loop.test.ts
++++ b/agent/tests/loop.test.ts
+@@ -17,6 +17,7 @@ import type { JevAskResult, JevClient } from "../src/reflex/jev/client.js";
+ import { runLoop, type LoopEvent } from "./legacy-brain.js";
+ import { ModClient } from "../src/hand/mod/client.js";
+ import { envelope, errorEnvelope, sendJson, startTestServer, type TestServer } from "./support.js";
++import { runTimeCapFixture } from "./loop-time-cap-fixture.js";
+ import {
+   afterRunPayload,
+   combatPayload,
+@@ -556,25 +557,10 @@ describe("runLoop", () => {
+   });
+ 
+   it("the time cap waits for the fight to end, up to a grace period (TQX5: stopped before the boss's turn)", async () => {
+-    const run = async (payload: Record<string, unknown>) => {
+-      const { server } = await scriptedMod({ sequence: [payload] });
+-      const started = Date.now();
+-      const stats = await runLoop({
+-        config: testConfig(),
+-        mode: "shadow",
+-        client: new ModClient({ baseUrl: server.url }),
+-        jev: null,
+-        knowledge: testKnowledge,
+-        maxMinutes: 0.005, // 0.3 s
+-        combatGraceMinutes: 0.01, // 0.6 s more
+-        pollIntervalMs: 2,
+-      });
+-      return { stats, elapsed: Date.now() - started };
+-    };
+-    const map = await run(mapPayload());
++    const map = await runTimeCapFixture(mapPayload());
+     expect(map.stats.stoppedBecause).toBe("time cap reached (0.005 min)");
+     expect(map.elapsed).toBeLessThan(850);
+-    const fight = await run(combatPayload());
++    const fight = await runTimeCapFixture(combatPayload());
+     expect(fight.stats.stoppedBecause).toContain("still in combat after the grace period");
+     expect(fight.elapsed).toBeGreaterThanOrEqual(850);
+   });

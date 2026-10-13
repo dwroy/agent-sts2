@@ -1,0 +1,16 @@
+fatal: path 'agent/src/sim/boss-value.ts' does not exist in 'a004ba332951bac7e846d78293fd359771550238'
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/ops/codex-ops/record-staging/20261013-0855/collect.py", line 33, in <module>
+    rawbase=git('show',src['base']+':'+f['path']);rawlive=git('show',live+':'+f['path']);assert sha(rawbase)==f['base_sha256'] and sha(rawlive)==f['live_sha256']
+  File "/home/dw/Projects/agent-sts2/ops/codex-ops/record-staging/20261013-0855/collect.py", line 5, in git
+    def git(*a):return subprocess.check_output(['git',*a])
+                       ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+  File "/usr/lib/python3.14/subprocess.py", line 473, in check_output
+    return run(*popenargs, stdout=PIPE, timeout=timeout, check=True,
+           ~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+               **kwargs).stdout
+               ^^^^^^^^^
+  File "/usr/lib/python3.14/subprocess.py", line 578, in run
+    raise CalledProcessError(retcode, process.args,
+                             output=stdout, stderr=stderr)
+subprocess.CalledProcessError: Command '['git', 'show', 'a004ba332951bac7e846d78293fd359771550238:agent/src/sim/boss-value.ts']' returned non-zero exit status 128.

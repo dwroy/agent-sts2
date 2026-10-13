@@ -1,0 +1,37 @@
+{
+  "base": "a004ba332951bac7e846d78293fd359771550238",
+  "live": "cea987c0d8ebbe13b15d92cf37bb58ad2c496455",
+  "source_batch": "20261013-080052-fix-batch",
+  "fixes": [
+    {
+      "item": "host-loop-time-cap-wall-clock-061301：固定时钟隔离时间上限测试",
+      "commit": "b3c6dd700b00d0d8b17d5d2efe6fe9aa353618fa",
+      "test": "agent/tests/loop-time-cap.test.ts",
+      "fails_without_fix": true,
+      "base_ancestor": false,
+      "live_ancestor": true,
+      "paths": [
+        "agent/tests/loop-time-cap-fixture.ts",
+        "agent/tests/loop-time-cap.test.ts",
+        "agent/tests/loop.test.ts"
+      ],
+      "patch_sha256": "4da09438cc86d4361d1a5c79f9635501151f1b429f035f41fc78c67dafdf4809",
+      "patch": "prior-fix-b3c6dd700b.patch.txt"
+    },
+    {
+      "item": "host-loop-time-cap-wall-clock-061301：补验入口静默 exit2 的拒绝诊断",
+      "commit": "63f656fb07a21a7496353234269901a832eae497",
+      "test": "agent/tests/learner-check-continuation.test.ts",
+      "fails_without_fix": true,
+      "base_ancestor": false,
+      "live_ancestor": true,
+      "paths": [
+        "ops/codex-ops-learn.py",
+        "ops/tests/test_learner_check_continuation.py"
+      ],
+      "patch_sha256": "af913af56b9758d57cf03562bda51dc39d0e3563ea3b974ca447b26aeb5a623f",
+      "patch": "prior-fix-63f656fb07.patch.txt"
+    }
+  ],
+  "deployed": false
+}

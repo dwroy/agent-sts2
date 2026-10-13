@@ -1,0 +1,316 @@
+{
+  "decision_line": 272361,
+  "run": "751FN9QM9MHQ",
+  "floor": 13,
+  "turn": 3,
+  "attempt": null,
+  "answer": {
+    "plan": {
+      "type": "choice",
+      "choice": "plan2",
+      "probabilities": {
+        "plan2": 0.39,
+        "plan5": 0.26,
+        "plan4": 0.02,
+        "plan3": 0.22,
+        "plan1": 0.11
+      },
+      "confidence": 0.24,
+      "raw": {
+        "type": "choice",
+        "choice": "plan2",
+        "confidence": 0.24,
+        "probabilities": {
+          "plan2": 0.39,
+          "plan5": 0.26,
+          "plan4": 0.02,
+          "plan3": 0.22,
+          "plan1": 0.11
+        }
+      }
+    }
+  },
+  "chosen": {
+    "action": "play_card",
+    "card_index": 0
+  },
+  "before": {
+    "line": 278402,
+    "ts": "2026-10-07T10:22:47.168Z",
+    "floor": 13,
+    "turn": 3,
+    "screen": "COMBAT",
+    "hp": 58,
+    "block": 0,
+    "player_powers": [
+      {
+        "index": 0,
+        "power_id": "THORNS_POWER",
+        "name": "荆棘",
+        "amount": 3,
+        "is_debuff": false
+      },
+      {
+        "index": 1,
+        "power_id": "DEXTERITY_POWER",
+        "name": "敏捷",
+        "amount": 2,
+        "is_debuff": false
+      }
+    ],
+    "hand": [
+      "DEFEND_SILENT",
+      "SLICE",
+      "PREDATOR",
+      "ASCENDERS_BANE",
+      "STRIKE_SILENT"
+    ],
+    "potions": [
+      {
+        "slot": 0,
+        "id": "FLEX_POTION"
+      }
+    ],
+    "enemies": [
+      {
+        "enemy_id": "SEWER_CLAM",
+        "current_hp": 40,
+        "max_hp": 58,
+        "move_id": "JET_MOVE",
+        "is_alive": true,
+        "powers": [
+          {
+            "index": 0,
+            "power_id": "PLATING_POWER",
+            "name": "覆甲",
+            "amount": 8,
+            "is_debuff": false
+          },
+          {
+            "index": 1,
+            "power_id": "POISON_POWER",
+            "name": "中毒",
+            "amount": 3,
+            "is_debuff": true
+          },
+          {
+            "index": 2,
+            "power_id": "STRENGTH_POWER",
+            "name": "力量",
+            "amount": 4,
+            "is_debuff": false
+          }
+        ],
+        "intents": [
+          {
+            "index": 0,
+            "intent_type": "Attack",
+            "label": "15",
+            "damage": 15,
+            "hits": 1,
+            "total_damage": 15,
+            "status_card_count": null
+          }
+        ]
+      }
+    ]
+  },
+  "next_turn": {
+    "line": 278407,
+    "ts": "2026-10-07T10:22:57.820Z",
+    "floor": 13,
+    "turn": 4,
+    "screen": "COMBAT",
+    "hp": 50,
+    "block": 0,
+    "player_powers": [
+      {
+        "index": 0,
+        "power_id": "THORNS_POWER",
+        "name": "荆棘",
+        "amount": 3,
+        "is_debuff": false
+      },
+      {
+        "index": 1,
+        "power_id": "DEXTERITY_POWER",
+        "name": "敏捷",
+        "amount": 2,
+        "is_debuff": false
+      }
+    ],
+    "hand": [
+      "STRIKE_SILENT",
+      "DAGGER_SPRAY",
+      "INJURY",
+      "STRIKE_SILENT",
+      "PREDATOR",
+      "PIERCING_WAIL",
+      "STRIKE_SILENT"
+    ],
+    "potions": [],
+    "enemies": [
+      {
+        "enemy_id": "SEWER_CLAM",
+        "current_hp": 11,
+        "max_hp": 58,
+        "move_id": "PRESSURIZE_MOVE",
+        "is_alive": true,
+        "powers": [
+          {
+            "index": 0,
+            "power_id": "PLATING_POWER",
+            "name": "覆甲",
+            "amount": 7,
+            "is_debuff": false
+          },
+          {
+            "index": 1,
+            "power_id": "POISON_POWER",
+            "name": "中毒",
+            "amount": 2,
+            "is_debuff": true
+          },
+          {
+            "index": 2,
+            "power_id": "STRENGTH_POWER",
+            "name": "力量",
+            "amount": 4,
+            "is_debuff": false
+          }
+        ],
+        "intents": [
+          {
+            "index": 0,
+            "intent_type": "Buff",
+            "label": null,
+            "damage": null,
+            "hits": null,
+            "total_damage": null,
+            "status_card_count": null
+          }
+        ]
+      }
+    ]
+  },
+  "options": {
+    "plan1": {
+      "plays": "potion 肌肉药水, then 切割 -> 下水道蚌, then 猎杀者 -> 下水道蚌, then 打击 -> 下水道蚌",
+      "result": "survives with 43/76 HP before healing",
+      "hp_lost": 15,
+      "damage_dealt": 37,
+      "enemies_after": "下水道蚌 3 HP, 中毒 2",
+      "hp_after": 43,
+      "hp_after_pct": 57,
+      "dmg": 37,
+      "lethal_now": "no",
+      "enemy_threat_next": 0,
+      "setup_turn": false,
+      "scaling_gained": "none",
+      "block_wasted": 0,
+      "potions_used": "肌肉药水",
+      "rollout": "5-turn rollout (8 samples) (later turns may use the potions still held): expected further HP loss 15, fight over within 5 turns in 8/8, expected turns to the end (surviving samples) ~1; ranked on -(further loss) - 40 x (1 - win chance): win chance ~100% (fights won in the samples, the others by the end-of-horizon estimate), value -15",
+      "rollout_turns": "T1 exact: hp -15, dmg 37; T2: over (alive 8/8, won 8/8); T3: over (alive 8/8, won 8/8); T4: over (alive 8/8, won 8/8); T5: over (alive 8/8, won 8/8)",
+      "history_estimate": "further HP loss 15, win 100% (this encounter n=13; estimate from act-1 hallway fights n=827, typical error ±5.5; few similar states for this encounter)",
+      "potion_cost": "fight HP loss 15; potions used 1 (this turn: FLEX_POTION 0 (potion table did not load)); potion cost 0 HP (potion table, this act's held value); total 15"
+    },
+    "plan2": {
+      "plays": "防御, then potion 肌肉药水, then 切割 -> 下水道蚌, then 猎杀者 -> 下水道蚌",
+      "result": "survives with 50/76 HP before healing",
+      "hp_lost": 8,
+      "damage_dealt": 26,
+      "enemies_after": "下水道蚌 14 HP, 中毒 2",
+      "block_gained": 7,
+      "hp_after": 50,
+      "hp_after_pct": 66,
+      "dmg": 26,
+      "lethal_now": "no",
+      "enemy_threat_next": 0,
+      "setup_turn": false,
+      "scaling_gained": "none",
+      "block_wasted": 0,
+      "potions_used": "肌肉药水",
+      "rollout": "5-turn rollout (8 samples) (later turns may use the potions still held): expected further HP loss 8, fight over within 5 turns in 8/8, expected turns to the end (surviving samples) ~2.3; ranked on -(further loss) - 40 x (1 - win chance): win chance ~100% (fights won in the samples, the others by the end-of-horizon estimate), value -8",
+      "rollout_turns": "T1 exact: hp -8, dmg 26; T2: hp -0 [0-0], dmg 10.5 [9-11], alive 8/8, won 6/8; T3: hp -0 [0-0], dmg 2 [2-2], alive 8/8, won 8/8; T4: over (alive 8/8, won 8/8); T5: over (alive 8/8, won 8/8)",
+      "history_estimate": "further HP loss 8, win 100% (this encounter n=13; estimate from act-1 hallway fights n=827, typical error ±5.5; few similar states for this encounter)",
+      "rollout_tied": "tied for the best rollout numbers with plan3, plan5 (the same expected further HP loss, deaths and win chance); the rollout picks none of them",
+      "tied_hp_loss_rank": 1,
+      "tied_hp_loss_extra": 0,
+      "tied_hp_loss_reference": "长程推演并列组的即时损血参考：plan2、plan3、plan5，单回合模型净损血8；本线多损0。最低损血参考在该指标上并列；只比较已列出且无未知牌或待抽牌、不花复活的当轮存活线。即时损血不同不代表整场胜率不同；输出、成长及长程并列仍一起交由Jev判断。",
+      "potion_cost": "fight HP loss 8; potions used 1 (this turn: FLEX_POTION 0 (potion table did not load)); potion cost 0 HP (potion table, this act's held value); total 8"
+    },
+    "plan3": {
+      "plays": "防御, then 切割 -> 下水道蚌, then 猎杀者 -> 下水道蚌",
+      "result": "survives with 50/76 HP before healing",
+      "hp_lost": 8,
+      "damage_dealt": 16,
+      "enemies_after": "下水道蚌 24 HP, 中毒 2",
+      "block_gained": 7,
+      "hp_after": 50,
+      "hp_after_pct": 66,
+      "dmg": 16,
+      "lethal_now": "no",
+      "enemy_threat_next": 0,
+      "setup_turn": false,
+      "scaling_gained": "none",
+      "block_wasted": 0,
+      "potions_used": "none",
+      "rollout": "5-turn rollout (8 samples) (later turns may use the potions still held): expected further HP loss 8, fight over within 5 turns in 8/8, expected turns to the end (surviving samples) ~2; ranked on -(further loss) - 40 x (1 - win chance): win chance ~100% (fights won in the samples, the others by the end-of-horizon estimate), value -8",
+      "rollout_turns": "T1 exact: hp -8, dmg 16; T2: hp -0 [0-0], dmg 21 [21-21], alive 8/8, won 8/8; T3: over (alive 8/8, won 8/8); T4: over (alive 8/8, won 8/8); T5: over (alive 8/8, won 8/8)",
+      "history_estimate": "further HP loss 8, win 100% (this encounter n=13; estimate from act-1 hallway fights n=827, typical error ±5.5; few similar states for this encounter)",
+      "rollout_tied": "tied for the best rollout numbers with plan2, plan5 (the same expected further HP loss, deaths and win chance); the rollout picks none of them",
+      "tied_hp_loss_rank": 1,
+      "tied_hp_loss_extra": 0,
+      "tied_hp_loss_reference": "长程推演并列组的即时损血参考：plan2、plan3、plan5，单回合模型净损血8；本线多损0。最低损血参考在该指标上并列；只比较已列出且无未知牌或待抽牌、不花复活的当轮存活线。即时损血不同不代表整场胜率不同；输出、成长及长程并列仍一起交由Jev判断。",
+      "potion_cost": "fight HP loss 8; potions used 0.9 (later turns: FLEX_POTION in 7/8 samples); potion cost 0 HP (potion table, this act's held value, later turns' drinks averaged over the samples); total 8"
+    },
+    "plan4": {
+      "plays": "切割 -> 下水道蚌, then 猎杀者 -> 下水道蚌, then 打击 -> 下水道蚌",
+      "result": "survives with 43/76 HP before healing",
+      "hp_lost": 15,
+      "damage_dealt": 22,
+      "enemies_after": "下水道蚌 18 HP, 中毒 2",
+      "hp_after": 43,
+      "hp_after_pct": 57,
+      "dmg": 22,
+      "lethal_now": "no",
+      "enemy_threat_next": 0,
+      "setup_turn": false,
+      "scaling_gained": "none",
+      "block_wasted": 0,
+      "potions_used": "none",
+      "rollout": "5-turn rollout (8 samples) (later turns may use the potions still held): expected further HP loss 15, fight over within 5 turns in 8/8, expected turns to the end (surviving samples) ~2; ranked on -(further loss) - 40 x (1 - win chance): win chance ~100% (fights won in the samples, the others by the end-of-horizon estimate), value -15",
+      "rollout_turns": "T1 exact: hp -15, dmg 22; T2: hp -0 [0-0], dmg 15 [15-15], alive 8/8, won 8/8; T3: over (alive 8/8, won 8/8); T4: over (alive 8/8, won 8/8); T5: over (alive 8/8, won 8/8)",
+      "history_estimate": "further HP loss 15, win 100% (this encounter n=13; estimate from act-1 hallway fights n=827, typical error ±5.5; few similar states for this encounter)",
+      "potion_cost": "fight HP loss 15; potions used 0.3 (later turns: FLEX_POTION in 2/8 samples); potion cost 0 HP (potion table, this act's held value, later turns' drinks averaged over the samples); total 15"
+    },
+    "plan5": {
+      "plays": "防御, then 切割 -> 下水道蚌, then 猎杀者 -> 下水道蚌",
+      "result": "survives with 50/76 HP before healing",
+      "hp_lost": 8,
+      "damage_dealt": 16,
+      "enemies_after": "下水道蚌 24 HP, 中毒 2",
+      "block_gained": 7,
+      "no_potion_fight": "the no-potion line: the same turn as plan3, and no potion for the rest of this fight (its rollout's later turns drink none; plan3's may)",
+      "hp_after": 50,
+      "hp_after_pct": 66,
+      "dmg": 16,
+      "lethal_now": "no",
+      "enemy_threat_next": 0,
+      "setup_turn": false,
+      "scaling_gained": "none",
+      "block_wasted": 0,
+      "potions_used": "none",
+      "rollout": "5-turn rollout (8 samples) (the no-potion line: its later turns drink no potion): expected further HP loss 8, fight over within 5 turns in 8/8, expected turns to the end (surviving samples) ~2.9; ranked on -(further loss) - 40 x (1 - win chance): win chance ~100% (fights won in the samples, the others by the end-of-horizon estimate), value -8",
+      "rollout_turns": "T1 exact: hp -8, dmg 16; T2: hp -0 [0-0], dmg 15 [9-21], alive 8/8, won 1/8; T3: hp -0 [0-0], dmg 6.9 [3-12], alive 8/8, won 8/8; T4: over (alive 8/8, won 8/8); T5: over (alive 8/8, won 8/8)",
+      "history_estimate": "further HP loss 8, win 100% (this encounter n=13; estimate from act-1 hallway fights n=827, typical error ±5.5; few similar states for this encounter)",
+      "rollout_tied": "tied for the best rollout numbers with plan2, plan3 (the same expected further HP loss, deaths and win chance); the rollout picks none of them",
+      "tied_hp_loss_rank": 1,
+      "tied_hp_loss_extra": 0,
+      "tied_hp_loss_reference": "长程推演并列组的即时损血参考：plan2、plan3、plan5，单回合模型净损血8；本线多损0。最低损血参考在该指标上并列；只比较已列出且无未知牌或待抽牌、不花复活的当轮存活线。即时损血不同不代表整场胜率不同；输出、成长及长程并列仍一起交由Jev判断。",
+      "potion_cost": "fight HP loss 8; potions used 0; potion cost 0 HP (potion table, this act's held value); total 8"
+    }
+  },
+  "sl_explore": null,
+  "caveat": "同题至下一轮为实际净变化；续问动作/敌回血另核，不是原答单步或受控整战因果。"
+}

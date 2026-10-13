@@ -1,0 +1,82 @@
+import collections
+import hashlib
+import json
+import pathlib
+
+OUT = pathlib.Path(__file__).parent
+states = [json.loads(line) for line in (OUT / 'compact-states.jsonl').open()]
+by_line = {row['line']: row for row in states}
+by_run = collections.defaultdict(list)
+for row in states:
+    by_run[row['run']].append(row)
+checks = []
+def check(name, actual, expected, lines):
+    checks.append({'name': name, 'actual': actual, 'expected': expected, 'lines': lines, 'passed': actual == expected})
+def enemy_hp(line):
+    return sum(e['hp'] for e in by_line[line]['enemies'])
+def difference(first, after):
+    return [by_line[first]['hp'] - by_line[after]['hp'], enemy_hp(first) - enemy_hp(after)]
+check('TXZ第二试T6损血/敌净扣', difference(281479, 281484), [3, 36], [281479, 281484])
+check('TXZ第三试T6损血/敌净扣', difference(281535, 281539), [0, 27], [281535, 281539])
+check('WQ第二试T9损血/敌净扣', difference(282075, 282079), [13, 24], [282075, 282079])
+check('WQ第三试T9损血/敌净扣', difference(282144, 282148), [22, 39], [282144, 282148])
+check('WQ第二试T7损血/敌净扣', difference(282066, 282072), [0, 24], [282066, 282072])
+check('WQ末试T7损血/敌净扣', difference(282330, 282336), [4, 24], [282330, 282336])
+check('NHA原线T1损血/含次轮自动伤净扣', difference(283391, 283397), [1, 8], [283391, 283397])
+check('NHA第五试T1损血/含次轮自动伤净扣', difference(283478, 283483), [7, 24], [283478, 283483])
+check('NHA第六试T1损血/含次轮自动伤净扣', difference(283502, 283507), [7, 24], [283502, 283507])
+check('TXZ后boss开场HP/出牌数/敌HP', [by_line[281565]['hp'], by_line[281566]['hp'], by_line[281566]['player']['cards_played_this_turn'], enemy_hp(281566)], [4, 0, 0, 111], [281565, 281566])
+check('Q6普通紧勒逐牌及毒后敌HP', [enemy_hp(n) for n in range(282887, 282893)], [103, 95, 85, 85, 83, 80], list(range(282887, 282893)))
+check('Q6紧勒次轮消失', by_line[282892]['enemies'][0]['powers'].get('STRANGLE_POWER'), None, [282892])
+check('NHA精确切击当前手数/牌面', [[len(by_line[n]['hand']), next(c['values']['CalculatedDamage'][1] for c in by_line[n]['hand'] if c['id'] == 'PRECISE_CUT')] for n in [283142, 283143, 283144]], [[7, 1], [6, 3], [5, 5]], [283142, 283143, 283144])
+check('NHA精确切击实扣', enemy_hp(283144) - enemy_hp(283145), 5, [283144, 283145])
+for run, floor, first, after, expected in [
+    ('KEN58SH9SLZ6', 12, 280336, 280337, [26, 76, 53, 81]),
+    ('KEN58SH9SLZ6', 16, 280382, 280383, [46, 81, 75, 86]),
+]:
+    check(run + '实际回复F' + str(floor), [by_line[first]['hp'], by_line[first]['max_hp'], by_line[after]['hp'], by_line[after]['max_hp']], expected, [first, after])
+cunning = []
+for run, rows in by_run.items():
+    for before, after in zip(rows, rows[1:]):
+        if before['floor'] != after['floor'] or before['turn'] != after['turn'] or before['screen'] != 'COMBAT' or after['screen'] != 'COMBAT':
+            continue
+        old = {p['index']: p for p in before['potions']}
+        new = {p['index']: p for p in after['potions']}
+        for slot, potion in old.items():
+            if potion.get('potion_id') != 'CUNNING_POTION' or new.get(slot, {}).get('potion_id') == 'CUNNING_POTION':
+                continue
+            shivs = [c for c in after['hand'] if c['id'] == 'SHIV']
+            added = len(shivs) - sum(c['id'] == 'SHIV' for c in before['hand'])
+            observed = {'run': run, 'floor': before['floor'], 'turn': before['turn'], 'before_line': before['line'], 'after_line': after['line'], 'slot': slot, 'hand_before': len(before['hand']), 'hand_after': len(after['hand']), 'added': added, 'hp_change': after['hp'] - before['hp'], 'energy_change': after['player']['energy'] - before['player']['energy'], 'enemy_hp_change': enemy_hp(after['line']) - enemy_hp(before['line']), 'all_shivs_upgraded_base_six': all(c['upgraded'] is True and c['values']['Damage'][0] == 6 for c in shivs)}
+            cunning.append(observed)
+check('狡诈九局42饮', [len({v['run'] for v in cunning}), len(cunning)], [9, 42], [])
+check('狡诈生成分布3/2/0', dict(collections.Counter(v['added'] for v in cunning)), {3: 37, 2: 2, 0: 3}, [])
+check('狡诈剩余手位逐饮相符', all(v['added'] == min(3, max(0, 10 - v['hand_before'])) for v in cunning), True, [])
+check('狡诈刀升级及基础6', all(v['all_shivs_upgraded_base_six'] for v in cunning), True, [])
+check('狡诈本步HP/能量/敌血不变', all(v['hp_change'] == v['energy_change'] == v['enemy_hp_change'] == 0 for v in cunning), True, [])
+ken_potions = []
+fingerprints = {}
+wanted_lines = {281479, 281535, 282075, 282144, 283391, 283478, 283502}
+index = json.loads((OUT / 'states-index.json').read_text())
+for meta, line in zip(index, (OUT / 'states.jsonl').open()):
+    if meta['line'] in wanted_lines:
+        fingerprints[meta['line']] = json.loads(line)['fingerprint']
+for a, b in [(281479, 281535), (282075, 282144), (283391, 283478), (283478, 283502)]:
+    check('同盘指纹' + str(a) + '/' + str(b), fingerprints[a] == fingerprints[b], True, [a, b])
+decision_index = json.loads((OUT / 'decisions-index.json').read_text())
+for meta, line in zip(decision_index, (OUT / 'decisions.jsonl').open()):
+    row = json.loads(line)
+    if row['run_id'] == 'KEN58SH9SLZ6' and row['chosen']['action'] == 'use_potion':
+        ken_potions.append({'line': meta['line'], 'floor': row['floor'], 'turn': row['turn'], 'action': row['chosen']})
+check('KEN七次实际饮用', len(ken_potions), 7, [r['line'] for r in ken_potions])
+check('NHA替线未击杀两侧', all(e['hp'] > 0 for n in [283483, 283507] for e in by_line[n]['enemies']), True, [283483, 283507])
+for run, floor, expected in [('1913SE84AXQF', 31, 46), ('Q6M2Y34MWKRE', 9, 2)]:
+    row = next(r for r in by_run[run] if r['floor'] == floor and r['screen'] == 'COMBAT' and r['ready'])
+    check(run + '后战入口', row['hp'], expected, [row['line']])
+result = {'scope': '原始证据算术核验，不是生产tsc/vitest或撤源码红绿测试', 'checks': checks, 'cunning': cunning, 'ken_potions': ken_potions, 'passed': all(c['passed'] for c in checks), 'counts': {'checks': len(checks), 'passed': sum(c['passed'] for c in checks)}}
+(OUT / 'evidence-proof.json').write_text(json.dumps(result, ensure_ascii=False, indent=2) + '\n')
+print(result['counts'], 'passed', result['passed'])
+for row in checks:
+    if not row['passed']:
+        print(json.dumps(row, ensure_ascii=False))
+raise SystemExit(0 if result['passed'] else 1)

@@ -1,0 +1,1256 @@
+[
+  {
+    "same_fingerprint": true,
+    "sides": [
+      {
+        "decision_line": 273400,
+        "run": "KV0JHNJCKXLS",
+        "floor": 33,
+        "turn": 5,
+        "attempt": 4,
+        "answer": {
+          "plan": {
+            "type": "choice",
+            "choice": "plan1",
+            "probabilities": {
+              "plan3": 0.22,
+              "plan1": 0.71,
+              "plan2": 0.07
+            },
+            "confidence": 0.56,
+            "raw": {
+              "type": "choice",
+              "choice": "plan1",
+              "confidence": 0.56,
+              "probabilities": {
+                "plan3": 0.22,
+                "plan1": 0.71,
+                "plan2": 0.07
+              }
+            }
+          }
+        },
+        "chosen": {
+          "action": "play_card",
+          "card_index": 0,
+          "target_index": 0
+        },
+        "before": {
+          "line": 279460,
+          "ts": "2026-10-07T11:16:39.397Z",
+          "floor": 33,
+          "turn": 5,
+          "screen": "COMBAT",
+          "hp": 30,
+          "block": 0,
+          "player_powers": [
+            {
+              "index": 0,
+              "power_id": "MIND_ROT_POWER",
+              "name": "心灵腐化",
+              "amount": 1,
+              "is_debuff": true
+            },
+            {
+              "index": 1,
+              "power_id": "DEXTERITY_POWER",
+              "name": "敏捷",
+              "amount": 4,
+              "is_debuff": false
+            }
+          ],
+          "hand": [
+            "PREDATOR",
+            "SURVIVOR",
+            "DEADLY_POISON",
+            "BULLET_TIME"
+          ],
+          "potions": [],
+          "enemies": [
+            {
+              "enemy_id": "KNOWLEDGE_DEMON",
+              "current_hp": 334,
+              "max_hp": 399,
+              "move_id": "CURSE_OF_KNOWLEDGE_MOVE",
+              "is_alive": true,
+              "powers": [
+                {
+                  "index": 0,
+                  "power_id": "POISON_POWER",
+                  "name": "中毒",
+                  "amount": 14,
+                  "is_debuff": true
+                },
+                {
+                  "index": 1,
+                  "power_id": "STRENGTH_POWER",
+                  "name": "力量",
+                  "amount": 3,
+                  "is_debuff": false
+                }
+              ],
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Debuff",
+                  "label": null,
+                  "damage": null,
+                  "hits": null,
+                  "total_damage": null,
+                  "status_card_count": null
+                }
+              ]
+            }
+          ]
+        },
+        "next_turn": {
+          "line": 279465,
+          "ts": "2026-10-07T11:17:01.729Z",
+          "floor": 33,
+          "turn": 6,
+          "screen": "COMBAT",
+          "hp": 30,
+          "block": 0,
+          "player_powers": [
+            {
+              "index": 0,
+              "power_id": "MIND_ROT_POWER",
+              "name": "心灵腐化",
+              "amount": 1,
+              "is_debuff": true
+            },
+            {
+              "index": 1,
+              "power_id": "DEXTERITY_POWER",
+              "name": "敏捷",
+              "amount": 4,
+              "is_debuff": false
+            },
+            {
+              "index": 2,
+              "power_id": "SLOTH_POWER",
+              "name": "懒惰",
+              "amount": 3,
+              "is_debuff": true
+            }
+          ],
+          "hand": [
+            "STRIKE_SILENT",
+            "POISONED_STAB",
+            "ANTICIPATE",
+            "SLICE",
+            "SNAKEBITE",
+            "DEFEND_SILENT"
+          ],
+          "potions": [],
+          "enemies": [
+            {
+              "enemy_id": "KNOWLEDGE_DEMON",
+              "current_hp": 298,
+              "max_hp": 399,
+              "move_id": "SLAP_MOVE",
+              "is_alive": true,
+              "powers": [
+                {
+                  "index": 0,
+                  "power_id": "POISON_POWER",
+                  "name": "中毒",
+                  "amount": 20,
+                  "is_debuff": true
+                },
+                {
+                  "index": 1,
+                  "power_id": "STRENGTH_POWER",
+                  "name": "力量",
+                  "amount": 3,
+                  "is_debuff": false
+                }
+              ],
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Attack",
+                  "label": "21",
+                  "damage": 21,
+                  "hits": 1,
+                  "total_damage": 21,
+                  "status_card_count": null
+                }
+              ]
+            }
+          ]
+        },
+        "options": {
+          "plan1": {
+            "plays": "猎杀者 -> 知识恶魔, then 致命毒药+ -> 知识恶魔",
+            "result": "survives with 30/70 HP before healing",
+            "hp_lost": 0,
+            "damage_dealt": 36,
+            "enemies_after": "知识恶魔 298 HP, 中毒 20",
+            "hp_after": 30,
+            "hp_after_pct": 43,
+            "dmg": 36,
+            "lethal_now": "no",
+            "enemy_threat_next": 21,
+            "setup_turn": false,
+            "scaling_gained": "none",
+            "block_wasted": 0,
+            "potions_used": "none",
+            "rollout": "5-turn rollout (24 samples): expected further HP loss 30, fight over within 5 turns in 0/24, expected turns to the end (surviving samples) ~9.7, dead within 5 turns in 10/24 (~turn 3.2); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 10/24), then the fight's progress: least enemy HP left (this line ~204, at T5 or at our death), then most turns alive (this line ~4.3), then least HP lost this turn (this line 0)",
+            "rollout_turns": "T1 exact: hp -0, dmg 36; T2: hp -5.1 [0-21], dmg 37.8 [26-56], alive 24/24, won 0/24; T3: hp -16.3 [0-36], dmg 36.1 [22-53], alive 16/24, won 0/24; T4: hp -4.3 [0-16], dmg 39.9 [30-50], alive 14/24, won 0/24; T5: hp -0 [0-0], dmg 45 [35-55], alive 14/24, won 0/24",
+            "history_estimate": "further HP loss 26, win 39% (this encounter n=23; estimate from boss fights n=316, typical error ±9.9; few similar states for this encounter)",
+            "rollout_tied": "tied for the best whole-fight simulation numbers with plan2, plan3 (the same simulated win rate and HP lost when won); the ranking picks none of them",
+            "whole_fight_sim": "win 0% (the best line), no winning sample; the losing samples die most often on T11 (dead in 100%); 1200 samples",
+            "tied_hp_loss_rank": 1,
+            "tied_hp_loss_extra": 0,
+            "tied_hp_loss_reference": "长程推演并列组的即时损血参考：plan1、plan2，单回合模型净损血0；本线多损0。最低损血参考在该指标上并列；只比较已列出且无未知牌或待抽牌、不花复活的当轮存活线。即时损血不同不代表整场胜率不同；输出、成长及长程并列仍一起交由Jev判断。"
+          },
+          "plan2": {
+            "plays": "猎杀者 -> 知识恶魔",
+            "result": "survives with 30/70 HP before healing",
+            "hp_lost": 0,
+            "damage_dealt": 29,
+            "enemies_after": "知识恶魔 305 HP, 中毒 13",
+            "energy_unused": 1,
+            "hp_after": 30,
+            "hp_after_pct": 43,
+            "dmg": 29,
+            "lethal_now": "no",
+            "enemy_threat_next": 21,
+            "setup_turn": false,
+            "scaling_gained": "none",
+            "block_wasted": 0,
+            "potions_used": "none",
+            "rollout": "5-turn rollout (24 samples): expected further HP loss 30, fight over within 5 turns in 0/24, expected turns to the end (surviving samples) ~10.2, dead within 5 turns in 10/24 (~turn 3.2); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 10/24), then the fight's progress: least enemy HP left (this line ~234, at T5 or at our death), then most turns alive (this line ~4.3), then least HP lost this turn (this line 0)",
+            "rollout_turns": "T1 exact: hp -0, dmg 29; T2: hp -5.1 [0-21], dmg 30.8 [19-49], alive 24/24, won 0/24; T3: hp -16.3 [0-36], dmg 29.1 [15-46], alive 16/24, won 0/24; T4: hp -4.3 [0-16], dmg 32.9 [23-43], alive 14/24, won 0/24; T5: hp -0 [0-0], dmg 38 [28-48], alive 14/24, won 0/24",
+            "history_estimate": "further HP loss 27, win 37% (this encounter n=23; estimate from boss fights n=316, typical error ±9.9; few similar states for this encounter)",
+            "rollout_tied": "tied for the best whole-fight simulation numbers with plan1, plan3 (the same simulated win rate and HP lost when won); the ranking picks none of them",
+            "whole_fight_sim": "win 0% (vs the best line ±0 ± 1 pts, tied on win rate), no winning sample; the losing samples die most often on T11 (dead in 100%); 1200 samples",
+            "tied_hp_loss_rank": 1,
+            "tied_hp_loss_extra": 0,
+            "tied_hp_loss_reference": "长程推演并列组的即时损血参考：plan1、plan2，单回合模型净损血0；本线多损0。最低损血参考在该指标上并列；只比较已列出且无未知牌或待抽牌、不花复活的当轮存活线。即时损血不同不代表整场胜率不同；输出、成长及长程并列仍一起交由Jev判断。"
+          },
+          "plan3": {
+            "plays": "子弹时间",
+            "result": "survives with 30/70 HP before healing",
+            "hp_lost": 0,
+            "damage_dealt": 14,
+            "enemies_after": "知识恶魔 320 HP, 中毒 13",
+            "lasting_value": "sets up a power worth about 9 score over the fight (a few HP now is often worth it in a long fight)",
+            "unmodelled_cards": "子弹时间",
+            "hp_after": 30,
+            "hp_after_pct": 43,
+            "dmg": 14,
+            "lethal_now": "no",
+            "enemy_threat_next": 21,
+            "setup_turn": false,
+            "scaling_gained": "lasting value 9",
+            "block_wasted": 0,
+            "potions_used": "none",
+            "rollout": "5-turn rollout (24 samples): expected further HP loss 30, fight over within 5 turns in 0/24, expected turns to the end (surviving samples) ~10.4, dead within 5 turns in 10/24 (~turn 3.2); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 10/24), then the fight's progress: least enemy HP left (this line ~249, at T5 or at our death), then most turns alive (this line ~4.3), then least HP lost this turn (this line 0)",
+            "rollout_turns": "T1 exact: hp -0, dmg 14; T2: hp -5.1 [0-21], dmg 30.8 [19-49], alive 24/24, won 0/24; T3: hp -16.3 [0-36], dmg 29.1 [15-46], alive 16/24, won 0/24; T4: hp -4.3 [0-16], dmg 32.9 [23-43], alive 14/24, won 0/24; T5: hp -0 [0-0], dmg 38 [28-48], alive 14/24, won 0/24",
+            "history_estimate": "further HP loss 27, win 36% (this encounter n=23; estimate from boss fights n=316, typical error ±9.9; few similar states for this encounter)",
+            "rollout_tied": "tied for the best whole-fight simulation numbers with plan1, plan2 (the same simulated win rate and HP lost when won); the ranking picks none of them",
+            "whole_fight_sim": "win 0% (vs the best line ±0 ± 1 pts, tied on win rate), no winning sample; the losing samples die most often on T11 (dead in 100%); 1200 samples"
+          }
+        },
+        "sl_explore": {
+          "replay": {
+            "point": "T6, the 3rd latest question before attempt 1's death on T10",
+            "reference": 1,
+            "line": "猎杀者 -> 知识恶魔, 致命毒药+ -> 知识恶魔",
+            "original": "猎杀者 -> 知识恶魔, 致命毒药+ -> 知识恶魔",
+            "overridden": false,
+            "reason": "the answer is attempt 1's line"
+          }
+        },
+        "caveat": "同题至下一轮为实际净变化；续问动作/敌回血另核，不是原答单步或受控整战因果。"
+      },
+      {
+        "decision_line": 273450,
+        "run": "KV0JHNJCKXLS",
+        "floor": 33,
+        "turn": 5,
+        "attempt": 5,
+        "answer": {
+          "plan": {
+            "type": "choice",
+            "choice": "plan1",
+            "probabilities": {
+              "plan1": 0.71,
+              "plan2": 0.07,
+              "plan3": 0.22
+            },
+            "confidence": 0.56,
+            "raw": {
+              "type": "choice",
+              "choice": "plan1",
+              "confidence": 0.56,
+              "probabilities": {
+                "plan1": 0.71,
+                "plan2": 0.07,
+                "plan3": 0.22
+              }
+            }
+          }
+        },
+        "chosen": {
+          "action": "play_card",
+          "card_index": 0,
+          "target_index": 0
+        },
+        "before": {
+          "line": 279511,
+          "ts": "2026-10-07T11:19:00.789Z",
+          "floor": 33,
+          "turn": 5,
+          "screen": "COMBAT",
+          "hp": 30,
+          "block": 0,
+          "player_powers": [
+            {
+              "index": 0,
+              "power_id": "MIND_ROT_POWER",
+              "name": "心灵腐化",
+              "amount": 1,
+              "is_debuff": true
+            },
+            {
+              "index": 1,
+              "power_id": "DEXTERITY_POWER",
+              "name": "敏捷",
+              "amount": 4,
+              "is_debuff": false
+            }
+          ],
+          "hand": [
+            "PREDATOR",
+            "SURVIVOR",
+            "DEADLY_POISON",
+            "BULLET_TIME"
+          ],
+          "potions": [],
+          "enemies": [
+            {
+              "enemy_id": "KNOWLEDGE_DEMON",
+              "current_hp": 334,
+              "max_hp": 399,
+              "move_id": "CURSE_OF_KNOWLEDGE_MOVE",
+              "is_alive": true,
+              "powers": [
+                {
+                  "index": 0,
+                  "power_id": "POISON_POWER",
+                  "name": "中毒",
+                  "amount": 14,
+                  "is_debuff": true
+                },
+                {
+                  "index": 1,
+                  "power_id": "STRENGTH_POWER",
+                  "name": "力量",
+                  "amount": 3,
+                  "is_debuff": false
+                }
+              ],
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Debuff",
+                  "label": null,
+                  "damage": null,
+                  "hits": null,
+                  "total_damage": null,
+                  "status_card_count": null
+                }
+              ]
+            }
+          ]
+        },
+        "next_turn": {
+          "line": 279515,
+          "ts": "2026-10-07T11:19:23.835Z",
+          "floor": 33,
+          "turn": 6,
+          "screen": "COMBAT",
+          "hp": 30,
+          "block": 0,
+          "player_powers": [
+            {
+              "index": 0,
+              "power_id": "MIND_ROT_POWER",
+              "name": "心灵腐化",
+              "amount": 1,
+              "is_debuff": true
+            },
+            {
+              "index": 1,
+              "power_id": "DEXTERITY_POWER",
+              "name": "敏捷",
+              "amount": 4,
+              "is_debuff": false
+            },
+            {
+              "index": 2,
+              "power_id": "SLOTH_POWER",
+              "name": "懒惰",
+              "amount": 3,
+              "is_debuff": true
+            }
+          ],
+          "hand": [
+            "STRIKE_SILENT",
+            "POISONED_STAB",
+            "ANTICIPATE",
+            "SLICE",
+            "SNAKEBITE",
+            "DEFEND_SILENT"
+          ],
+          "potions": [],
+          "enemies": [
+            {
+              "enemy_id": "KNOWLEDGE_DEMON",
+              "current_hp": 305,
+              "max_hp": 399,
+              "move_id": "SLAP_MOVE",
+              "is_alive": true,
+              "powers": [
+                {
+                  "index": 0,
+                  "power_id": "POISON_POWER",
+                  "name": "中毒",
+                  "amount": 13,
+                  "is_debuff": true
+                },
+                {
+                  "index": 1,
+                  "power_id": "STRENGTH_POWER",
+                  "name": "力量",
+                  "amount": 3,
+                  "is_debuff": false
+                }
+              ],
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Attack",
+                  "label": "21",
+                  "damage": 21,
+                  "hits": 1,
+                  "total_damage": 21,
+                  "status_card_count": null
+                }
+              ]
+            }
+          ]
+        },
+        "options": {
+          "plan1": {
+            "plays": "猎杀者 -> 知识恶魔, then 致命毒药+ -> 知识恶魔",
+            "result": "survives with 30/70 HP before healing",
+            "hp_lost": 0,
+            "damage_dealt": 36,
+            "enemies_after": "知识恶魔 298 HP, 中毒 20",
+            "hp_after": 30,
+            "hp_after_pct": 43,
+            "dmg": 36,
+            "lethal_now": "no",
+            "enemy_threat_next": 21,
+            "setup_turn": false,
+            "scaling_gained": "none",
+            "block_wasted": 0,
+            "potions_used": "none",
+            "rollout": "5-turn rollout (24 samples): expected further HP loss 30, fight over within 5 turns in 0/24, expected turns to the end (surviving samples) ~9.7, dead within 5 turns in 10/24 (~turn 3.2); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 10/24), then the fight's progress: least enemy HP left (this line ~204, at T5 or at our death), then most turns alive (this line ~4.3), then least HP lost this turn (this line 0)",
+            "rollout_turns": "T1 exact: hp -0, dmg 36; T2: hp -5.1 [0-21], dmg 37.8 [26-56], alive 24/24, won 0/24; T3: hp -16.3 [0-36], dmg 36.1 [22-53], alive 16/24, won 0/24; T4: hp -4.3 [0-16], dmg 39.9 [30-50], alive 14/24, won 0/24; T5: hp -0 [0-0], dmg 45 [35-55], alive 14/24, won 0/24",
+            "history_estimate": "further HP loss 26, win 39% (this encounter n=23; estimate from boss fights n=316, typical error ±9.9; few similar states for this encounter)",
+            "rollout_tied": "tied for the best whole-fight simulation numbers with plan2, plan3 (the same simulated win rate and HP lost when won); the ranking picks none of them",
+            "whole_fight_sim": "win 0% (the best line), no winning sample; the losing samples die most often on T11 (dead in 100%); 1200 samples",
+            "tied_hp_loss_rank": 1,
+            "tied_hp_loss_extra": 0,
+            "tied_hp_loss_reference": "长程推演并列组的即时损血参考：plan1、plan2，单回合模型净损血0；本线多损0。最低损血参考在该指标上并列；只比较已列出且无未知牌或待抽牌、不花复活的当轮存活线。即时损血不同不代表整场胜率不同；输出、成长及长程并列仍一起交由Jev判断。"
+          },
+          "plan2": {
+            "plays": "猎杀者 -> 知识恶魔",
+            "result": "survives with 30/70 HP before healing",
+            "hp_lost": 0,
+            "damage_dealt": 29,
+            "enemies_after": "知识恶魔 305 HP, 中毒 13",
+            "energy_unused": 1,
+            "hp_after": 30,
+            "hp_after_pct": 43,
+            "dmg": 29,
+            "lethal_now": "no",
+            "enemy_threat_next": 21,
+            "setup_turn": false,
+            "scaling_gained": "none",
+            "block_wasted": 0,
+            "potions_used": "none",
+            "rollout": "5-turn rollout (24 samples): expected further HP loss 30, fight over within 5 turns in 0/24, expected turns to the end (surviving samples) ~10.2, dead within 5 turns in 10/24 (~turn 3.2); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 10/24), then the fight's progress: least enemy HP left (this line ~234, at T5 or at our death), then most turns alive (this line ~4.3), then least HP lost this turn (this line 0)",
+            "rollout_turns": "T1 exact: hp -0, dmg 29; T2: hp -5.1 [0-21], dmg 30.8 [19-49], alive 24/24, won 0/24; T3: hp -16.3 [0-36], dmg 29.1 [15-46], alive 16/24, won 0/24; T4: hp -4.3 [0-16], dmg 32.9 [23-43], alive 14/24, won 0/24; T5: hp -0 [0-0], dmg 38 [28-48], alive 14/24, won 0/24",
+            "history_estimate": "further HP loss 27, win 37% (this encounter n=23; estimate from boss fights n=316, typical error ±9.9; few similar states for this encounter)",
+            "rollout_tied": "tied for the best whole-fight simulation numbers with plan1, plan3 (the same simulated win rate and HP lost when won); the ranking picks none of them",
+            "whole_fight_sim": "win 0% (vs the best line ±0 ± 1 pts, tied on win rate), no winning sample; the losing samples die most often on T11 (dead in 100%); 1200 samples",
+            "tied_hp_loss_rank": 1,
+            "tied_hp_loss_extra": 0,
+            "tied_hp_loss_reference": "长程推演并列组的即时损血参考：plan1、plan2，单回合模型净损血0；本线多损0。最低损血参考在该指标上并列；只比较已列出且无未知牌或待抽牌、不花复活的当轮存活线。即时损血不同不代表整场胜率不同；输出、成长及长程并列仍一起交由Jev判断。"
+          },
+          "plan3": {
+            "plays": "子弹时间",
+            "result": "survives with 30/70 HP before healing",
+            "hp_lost": 0,
+            "damage_dealt": 14,
+            "enemies_after": "知识恶魔 320 HP, 中毒 13",
+            "lasting_value": "sets up a power worth about 9 score over the fight (a few HP now is often worth it in a long fight)",
+            "unmodelled_cards": "子弹时间",
+            "hp_after": 30,
+            "hp_after_pct": 43,
+            "dmg": 14,
+            "lethal_now": "no",
+            "enemy_threat_next": 21,
+            "setup_turn": false,
+            "scaling_gained": "lasting value 9",
+            "block_wasted": 0,
+            "potions_used": "none",
+            "rollout": "5-turn rollout (24 samples): expected further HP loss 30, fight over within 5 turns in 0/24, expected turns to the end (surviving samples) ~10.4, dead within 5 turns in 10/24 (~turn 3.2); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 10/24), then the fight's progress: least enemy HP left (this line ~249, at T5 or at our death), then most turns alive (this line ~4.3), then least HP lost this turn (this line 0)",
+            "rollout_turns": "T1 exact: hp -0, dmg 14; T2: hp -5.1 [0-21], dmg 30.8 [19-49], alive 24/24, won 0/24; T3: hp -16.3 [0-36], dmg 29.1 [15-46], alive 16/24, won 0/24; T4: hp -4.3 [0-16], dmg 32.9 [23-43], alive 14/24, won 0/24; T5: hp -0 [0-0], dmg 38 [28-48], alive 14/24, won 0/24",
+            "history_estimate": "further HP loss 27, win 36% (this encounter n=23; estimate from boss fights n=316, typical error ±9.9; few similar states for this encounter)",
+            "rollout_tied": "tied for the best whole-fight simulation numbers with plan1, plan2 (the same simulated win rate and HP lost when won); the ranking picks none of them",
+            "whole_fight_sim": "win 0% (vs the best line ±0 ± 1 pts, tied on win rate), no winning sample; the losing samples die most often on T11 (dead in 100%); 1200 samples"
+          }
+        },
+        "sl_explore": {
+          "point": "T5, the 4th latest question before attempt 4's death on T10",
+          "original": "猎杀者 -> 知识恶魔, 致命毒药+ -> 知识恶魔",
+          "replacement": "猎杀者 -> 知识恶魔",
+          "reason": "the best untried line by the question's ranking, among those B2 rates no worse (win rate at most 2 paired standard errors below the pick's)",
+          "played_in": [
+            1,
+            4
+          ],
+          "replayed": 8,
+          "numbers": {
+            "original": "rollout dead 10/24, further loss 30, win ~28%; whole-fight sim win 0%; this turn hp -0, dmg 36",
+            "replacement": "rollout dead 10/24, further loss 30, win ~27%; whole-fight sim win 0%; this turn hp -0, dmg 29"
+          },
+          "gate": "b2",
+          "b2": {
+            "original": 0,
+            "replacement": 0,
+            "diff": 0,
+            "se": 0
+          },
+          "turn": "DEADLY_POISON+>知识恶魔, PREDATOR>知识恶魔",
+          "turn_instead": "PREDATOR>知识恶魔"
+        },
+        "caveat": "同题至下一轮为实际净变化；续问动作/敌回血另核，不是原答单步或受控整战因果。"
+      }
+    ],
+    "actual_net": [
+      [
+        0,
+        36
+      ],
+      [
+        0,
+        29
+      ]
+    ]
+  },
+  {
+    "same_fingerprint": true,
+    "sides": [
+      {
+        "decision_line": 273242,
+        "run": "KV0JHNJCKXLS",
+        "floor": 33,
+        "turn": 1,
+        "attempt": 1,
+        "answer": {
+          "plan": {
+            "type": "choice",
+            "choice": "plan1",
+            "probabilities": {
+              "plan5": 0.01,
+              "plan4": 0.01,
+              "plan3": 0.01,
+              "plan6": 0.12,
+              "plan1": 0.84,
+              "plan2": 0.01
+            },
+            "confidence": 0.81,
+            "raw": {
+              "type": "choice",
+              "choice": "plan1",
+              "confidence": 0.81,
+              "probabilities": {
+                "plan5": 0.01,
+                "plan4": 0.01,
+                "plan3": 0.01,
+                "plan6": 0.12,
+                "plan1": 0.84,
+                "plan2": 0.01
+              }
+            }
+          }
+        },
+        "chosen": {
+          "action": "play_card",
+          "card_index": 1,
+          "target_index": 0
+        },
+        "before": {
+          "line": 279298,
+          "ts": "2026-10-07T11:09:15.438Z",
+          "floor": 33,
+          "turn": 1,
+          "screen": "COMBAT",
+          "hp": 46,
+          "block": 0,
+          "player_powers": [
+            {
+              "index": 0,
+              "power_id": "PLATING_POWER",
+              "name": "覆甲",
+              "amount": 4,
+              "is_debuff": false
+            }
+          ],
+          "hand": [
+            "DEFEND_SILENT",
+            "DEADLY_POISON",
+            "BULLET_TIME",
+            "ULTIMATE_STRIKE",
+            "ASCENDERS_BANE",
+            "SNAKEBITE",
+            "BACKFLIP",
+            "ADRENALINE"
+          ],
+          "potions": [
+            {
+              "slot": 0,
+              "id": "RADIANT_TINCTURE"
+            }
+          ],
+          "enemies": [
+            {
+              "enemy_id": "KNOWLEDGE_DEMON",
+              "current_hp": 399,
+              "max_hp": 399,
+              "move_id": "CURSE_OF_KNOWLEDGE_MOVE",
+              "is_alive": true,
+              "powers": [],
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Debuff",
+                  "label": null,
+                  "damage": null,
+                  "hits": null,
+                  "total_damage": null,
+                  "status_card_count": null
+                }
+              ]
+            }
+          ]
+        },
+        "next_turn": {
+          "line": 279309,
+          "ts": "2026-10-07T11:09:40.989Z",
+          "floor": 33,
+          "turn": 2,
+          "screen": "COMBAT",
+          "hp": 46,
+          "block": 0,
+          "player_powers": [
+            {
+              "index": 0,
+              "power_id": "PLATING_POWER",
+              "name": "覆甲",
+              "amount": 3,
+              "is_debuff": false
+            },
+            {
+              "index": 1,
+              "power_id": "RADIANCE_POWER",
+              "name": "明耀",
+              "amount": 2,
+              "is_debuff": false
+            },
+            {
+              "index": 2,
+              "power_id": "MIND_ROT_POWER",
+              "name": "心灵腐化",
+              "amount": 1,
+              "is_debuff": true
+            }
+          ],
+          "hand": [
+            "SURVIVOR",
+            "FOOTWORK",
+            "DEFEND_SILENT",
+            "MIRAGE"
+          ],
+          "potions": [],
+          "enemies": [
+            {
+              "enemy_id": "KNOWLEDGE_DEMON",
+              "current_hp": 371,
+              "max_hp": 399,
+              "move_id": "SLAP_MOVE",
+              "is_alive": true,
+              "powers": [
+                {
+                  "index": 0,
+                  "power_id": "POISON_POWER",
+                  "name": "中毒",
+                  "amount": 13,
+                  "is_debuff": true
+                }
+              ],
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Attack",
+                  "label": "18",
+                  "damage": 18,
+                  "hits": 1,
+                  "total_damage": 18,
+                  "status_card_count": null
+                }
+              ]
+            }
+          ]
+        },
+        "options": {
+          "plan1": {
+            "plays": "致命毒药+ -> 知识恶魔, then 子弹时间, then 究极打击 -> 知识恶魔, then 蛇咬 -> 知识恶魔, then 后空翻, then 肾上腺素, then potion 明耀酊剂",
+            "result": "survives with 46/70 HP before healing",
+            "hp_lost": 0,
+            "damage_dealt": 28,
+            "enemies_after": "知识恶魔 371 HP, 中毒 13",
+            "block_gained": 5,
+            "cards_drawn": 4,
+            "energy_unused": 3,
+            "lasting_value": "sets up a power worth about 21 score over the fight (a few HP now is often worth it in a long fight)",
+            "unmodelled_cards": "子弹时间",
+            "hp_after": 46,
+            "hp_after_pct": 66,
+            "dmg": 28,
+            "lethal_now": "no",
+            "enemy_threat_next": 18,
+            "setup_turn": false,
+            "scaling_gained": "lasting value 21",
+            "block_wasted": 9,
+            "potions_used": "明耀酊剂",
+            "rollout": "5-turn rollout (8 samples) (later turns may use the potions still held): expected further HP loss 46, fight over within 5 turns in 0/8, expected turns to the end (surviving samples) ~12.5; every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 0/8), then the fight's progress: least enemy HP left (this line ~302, at T5 or at our death), then most turns alive (this line ~5), then least HP lost this turn (this line 0)",
+            "rollout_turns": "T1 exact: hp -0, dmg 28; T2: hp -2 [0-10], dmg 26.1 [16-40], alive 8/8, won 0/8; T3: hp -14 [6-25], dmg 34.3 [22-43], alive 8/8, won 0/8; T4: hp -2 [0-12], dmg 31.4 [18-48], alive 8/8, won 0/8; T5: hp -0.9 [0-7], dmg 33.3 [20-44], alive 8/8, won 0/8",
+            "history_estimate": "further HP loss 35, win 73% (this encounter n=23; estimate from boss fights n=316, typical error ±9.9; few similar states for this encounter)",
+            "rollout_tied": "tied for the best whole-fight simulation numbers with plan2, plan3, plan4, plan5, plan6 (the same simulated win rate and HP lost when won); the ranking picks none of them",
+            "whole_fight_sim": "win 0% (the best line), no winning sample; the losing samples die most often on T7 (dead in 100%); 600 samples",
+            "potion_cost": "fight HP loss 46; potions used 1 (this turn: RADIANT_TINCTURE 0 (potion table did not load)); potion cost 0 HP (potion table, this act's held value); total 46"
+          },
+          "plan2": {
+            "plays": "致命毒药+ -> 知识恶魔, then 子弹时间, then 究极打击 -> 知识恶魔, then 后空翻, then 肾上腺素, then potion 明耀酊剂",
+            "result": "survives with 46/70 HP before healing",
+            "hp_lost": 0,
+            "damage_dealt": 21,
+            "enemies_after": "知识恶魔 378 HP, 中毒 6",
+            "block_gained": 5,
+            "cards_drawn": 4,
+            "energy_unused": 5,
+            "lasting_value": "sets up a power worth about 21 score over the fight (a few HP now is often worth it in a long fight)",
+            "unmodelled_cards": "子弹时间",
+            "hp_after": 46,
+            "hp_after_pct": 66,
+            "dmg": 21,
+            "lethal_now": "no",
+            "enemy_threat_next": 18,
+            "setup_turn": false,
+            "scaling_gained": "lasting value 21",
+            "block_wasted": 9,
+            "potions_used": "明耀酊剂",
+            "rollout": "5-turn rollout (8 samples) (later turns may use the potions still held): expected further HP loss 46, fight over within 5 turns in 0/8, expected turns to the end (surviving samples) ~12.8; every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 0/8), then the fight's progress: least enemy HP left (this line ~337, at T5 or at our death), then most turns alive (this line ~5), then least HP lost this turn (this line 0)",
+            "rollout_turns": "T1 exact: hp -0, dmg 21; T2: hp -2 [0-10], dmg 19.1 [9-33], alive 8/8, won 0/8; T3: hp -14 [6-25], dmg 27.3 [15-36], alive 8/8, won 0/8; T4: hp -2 [0-12], dmg 24.4 [11-41], alive 8/8, won 0/8; T5: hp -0.9 [0-7], dmg 26.3 [13-37], alive 8/8, won 0/8",
+            "history_estimate": "further HP loss 35, win 73% (this encounter n=23; estimate from boss fights n=316, typical error ±9.9; few similar states for this encounter)",
+            "rollout_tied": "tied for the best whole-fight simulation numbers with plan1, plan3, plan4, plan5, plan6 (the same simulated win rate and HP lost when won); the ranking picks none of them",
+            "whole_fight_sim": "win 0% (vs the best line ±0 ± 1 pts, tied on win rate), no winning sample; the losing samples die most often on T7 (dead in 100%); 600 samples",
+            "potion_cost": "fight HP loss 46; potions used 1 (this turn: RADIANT_TINCTURE 0 (potion table did not load)); potion cost 0 HP (potion table, this act's held value); total 46"
+          },
+          "plan3": {
+            "plays": "子弹时间, then 究极打击 -> 知识恶魔, then 后空翻, then 肾上腺素, then potion 明耀酊剂",
+            "result": "survives with 46/70 HP before healing",
+            "hp_lost": 0,
+            "damage_dealt": 14,
+            "enemies_after": "知识恶魔 385 HP",
+            "block_gained": 5,
+            "cards_drawn": 4,
+            "energy_unused": 6,
+            "lasting_value": "sets up a power worth about 21 score over the fight (a few HP now is often worth it in a long fight)",
+            "unmodelled_cards": "子弹时间",
+            "hp_after": 46,
+            "hp_after_pct": 66,
+            "dmg": 14,
+            "lethal_now": "no",
+            "enemy_threat_next": 18,
+            "setup_turn": false,
+            "scaling_gained": "lasting value 21",
+            "block_wasted": 9,
+            "potions_used": "明耀酊剂",
+            "rollout": "5-turn rollout (8 samples) (later turns may use the potions still held): expected further HP loss 46, fight over within 5 turns in 0/8, expected turns to the end (surviving samples) ~12.7; every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 0/8), then the fight's progress: least enemy HP left (this line ~366, at T5 or at our death), then most turns alive (this line ~5), then least HP lost this turn (this line 0)",
+            "rollout_turns": "T1 exact: hp -0, dmg 14; T2: hp -2 [0-10], dmg 13.1 [3-27], alive 8/8, won 0/8; T3: hp -14 [6-25], dmg 21.6 [9-30], alive 8/8, won 0/8; T4: hp -2 [0-12], dmg 18.8 [6-36], alive 8/8, won 0/8; T5: hp -0.9 [0-7], dmg 20.6 [7-32], alive 8/8, won 0/8",
+            "history_estimate": "further HP loss 34, win 73% (this encounter n=23; estimate from boss fights n=316, typical error ±9.9; few similar states for this encounter)",
+            "rollout_tied": "tied for the best whole-fight simulation numbers with plan1, plan2, plan4, plan5, plan6 (the same simulated win rate and HP lost when won); the ranking picks none of them",
+            "whole_fight_sim": "win 0% (vs the best line ±0 ± 1 pts, tied on win rate), no winning sample; the losing samples die most often on T7 (dead in 100%); 600 samples",
+            "potion_cost": "fight HP loss 46; potions used 1 (this turn: RADIANT_TINCTURE 0 (potion table did not load)); potion cost 0 HP (potion table, this act's held value); total 46"
+          },
+          "plan4": {
+            "plays": "致命毒药+ -> 知识恶魔, then 子弹时间, then 后空翻, then 肾上腺素, then potion 明耀酊剂",
+            "result": "survives with 46/70 HP before healing",
+            "hp_lost": 0,
+            "damage_dealt": 7,
+            "enemies_after": "知识恶魔 392 HP, 中毒 6",
+            "block_gained": 5,
+            "cards_drawn": 4,
+            "energy_unused": 6,
+            "lasting_value": "sets up a power worth about 21 score over the fight (a few HP now is often worth it in a long fight)",
+            "unmodelled_cards": "子弹时间",
+            "hp_after": 46,
+            "hp_after_pct": 66,
+            "dmg": 7,
+            "lethal_now": "no",
+            "enemy_threat_next": 18,
+            "setup_turn": false,
+            "scaling_gained": "lasting value 21",
+            "block_wasted": 9,
+            "potions_used": "明耀酊剂",
+            "rollout": "5-turn rollout (8 samples) (later turns may use the potions still held): expected further HP loss 46, fight over within 5 turns in 0/8, expected turns to the end (surviving samples) ~12.8; every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 0/8), then the fight's progress: least enemy HP left (this line ~351, at T5 or at our death), then most turns alive (this line ~5), then least HP lost this turn (this line 0)",
+            "rollout_turns": "T1 exact: hp -0, dmg 7; T2: hp -2 [0-10], dmg 19.1 [9-33], alive 8/8, won 0/8; T3: hp -14 [6-25], dmg 27.3 [15-36], alive 8/8, won 0/8; T4: hp -2 [0-12], dmg 24.4 [11-41], alive 8/8, won 0/8; T5: hp -0.9 [0-7], dmg 26.3 [13-37], alive 8/8, won 0/8",
+            "history_estimate": "further HP loss 35, win 73% (this encounter n=23; estimate from boss fights n=316, typical error ±9.9; few similar states for this encounter)",
+            "rollout_tied": "tied for the best whole-fight simulation numbers with plan1, plan2, plan3, plan5, plan6 (the same simulated win rate and HP lost when won); the ranking picks none of them",
+            "whole_fight_sim": "win 0% (vs the best line ±0 ± 1 pts, tied on win rate), no winning sample; the losing samples die most often on T7 (dead in 100%); 600 samples",
+            "potion_cost": "fight HP loss 46; potions used 1 (this turn: RADIANT_TINCTURE 0 (potion table did not load)); potion cost 0 HP (potion table, this act's held value); total 46"
+          },
+          "plan5": {
+            "plays": "子弹时间, then 后空翻, then 肾上腺素, then potion 明耀酊剂",
+            "result": "survives with 46/70 HP before healing",
+            "hp_lost": 0,
+            "damage_dealt": 0,
+            "enemies_after": "知识恶魔 399 HP",
+            "block_gained": 5,
+            "cards_drawn": 4,
+            "energy_unused": 7,
+            "lasting_value": "sets up a power worth about 21 score over the fight (a few HP now is often worth it in a long fight)",
+            "unmodelled_cards": "子弹时间",
+            "hp_after": 46,
+            "hp_after_pct": 66,
+            "dmg": 0,
+            "lethal_now": "no",
+            "enemy_threat_next": 18,
+            "setup_turn": false,
+            "scaling_gained": "lasting value 21",
+            "block_wasted": 9,
+            "potions_used": "明耀酊剂",
+            "rollout": "5-turn rollout (8 samples) (later turns may use the potions still held): expected further HP loss 46, fight over within 5 turns in 0/8, expected turns to the end (surviving samples) ~12.7; every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 0/8), then the fight's progress: least enemy HP left (this line ~374, at T5 or at our death), then most turns alive (this line ~5), then least HP lost this turn (this line 0)",
+            "rollout_turns": "T1 exact: hp -0, dmg 0; T2: hp -2 [0-10], dmg 13.1 [3-27], alive 8/8, won 0/8; T3: hp -14 [6-25], dmg 21.6 [9-30], alive 8/8, won 0/8; T4: hp -2 [0-12], dmg 18.8 [6-36], alive 8/8, won 0/8; T5: hp -0.9 [0-7], dmg 20.6 [7-32], alive 8/8, won 0/8",
+            "history_estimate": "further HP loss 34, win 73% (this encounter n=23; estimate from boss fights n=316, typical error ±9.9; few similar states for this encounter)",
+            "rollout_tied": "tied for the best whole-fight simulation numbers with plan1, plan2, plan3, plan4, plan6 (the same simulated win rate and HP lost when won); the ranking picks none of them",
+            "whole_fight_sim": "win 0% (vs the best line ±0 ± 1 pts, tied on win rate), no winning sample; the losing samples die most often on T7 (dead in 100%); 600 samples",
+            "potion_cost": "fight HP loss 46; potions used 1 (this turn: RADIANT_TINCTURE 0 (potion table did not load)); potion cost 0 HP (potion table, this act's held value); total 46"
+          },
+          "plan6": {
+            "plays": "肾上腺素, then 致命毒药+ -> 知识恶魔, then 子弹时间, then 究极打击 -> 知识恶魔, then 蛇咬 -> 知识恶魔",
+            "result": "survives with 46/70 HP before healing",
+            "hp_lost": 0,
+            "damage_dealt": 28,
+            "enemies_after": "知识恶魔 371 HP, 中毒 13",
+            "cards_drawn": 2,
+            "energy_unused": 3,
+            "lasting_value": "sets up a power worth about 9 score over the fight (a few HP now is often worth it in a long fight)",
+            "unmodelled_cards": "子弹时间",
+            "hp_after": 46,
+            "hp_after_pct": 66,
+            "dmg": 28,
+            "lethal_now": "no",
+            "enemy_threat_next": 18,
+            "setup_turn": false,
+            "scaling_gained": "lasting value 9",
+            "block_wasted": 4,
+            "potions_used": "none",
+            "rollout": "5-turn rollout (8 samples) (later turns may use the potions still held): expected further HP loss 46, fight over within 5 turns in 0/8, expected turns to the end (surviving samples) ~12.6; every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 0/8), then the fight's progress: least enemy HP left (this line ~308, at T5 or at our death), then most turns alive (this line ~5), then least HP lost this turn (this line 0)",
+            "rollout_turns": "T1 exact: hp -0, dmg 28; T2: hp -4.9 [0-15], dmg 24 [13-37], alive 8/8, won 0/8; T3: hp -9.9 [0-25], dmg 31 [21-42], alive 8/8, won 0/8; T4: hp -3.5 [0-12], dmg 30.3 [21-39], alive 8/8, won 0/8; T5: hp -2.6 [0-21], dmg 33.4 [19-51], alive 8/8, won 0/8",
+            "history_estimate": "further HP loss 35, win 72% (this encounter n=23; estimate from boss fights n=316, typical error ±9.9; few similar states for this encounter)",
+            "rollout_tied": "tied for the best whole-fight simulation numbers with plan1, plan2, plan3, plan4, plan5 (the same simulated win rate and HP lost when won); the ranking picks none of them",
+            "whole_fight_sim": "win 0% (vs the best line ±0 ± 1 pts, tied on win rate), no winning sample; the losing samples die most often on T7 (dead in 100%); 600 samples",
+            "potion_cost": "fight HP loss 46; potions used 1 (later turns: RADIANT_TINCTURE in 8/8 samples); potion cost 0 HP (potion table, this act's held value, later turns' drinks averaged over the samples); total 46"
+          }
+        },
+        "sl_explore": null,
+        "caveat": "同题至下一轮为实际净变化；续问动作/敌回血另核，不是原答单步或受控整战因果。"
+      },
+      {
+        "decision_line": 273474,
+        "run": "KV0JHNJCKXLS",
+        "floor": 33,
+        "turn": 1,
+        "attempt": 6,
+        "answer": {
+          "plan": {
+            "type": "choice",
+            "choice": "plan1",
+            "probabilities": {
+              "plan6": 0.2,
+              "plan4": 0.02,
+              "plan3": 0.01,
+              "plan2": 0.04,
+              "plan1": 0.71,
+              "plan5": 0.02
+            },
+            "confidence": 0.65,
+            "raw": {
+              "type": "choice",
+              "choice": "plan1",
+              "confidence": 0.65,
+              "probabilities": {
+                "plan6": 0.2,
+                "plan4": 0.02,
+                "plan3": 0.01,
+                "plan2": 0.04,
+                "plan1": 0.71,
+                "plan5": 0.02
+              }
+            }
+          }
+        },
+        "chosen": {
+          "action": "play_card",
+          "card_index": 1,
+          "target_index": 0
+        },
+        "before": {
+          "line": 279535,
+          "ts": "2026-10-07T11:20:23.439Z",
+          "floor": 33,
+          "turn": 1,
+          "screen": "COMBAT",
+          "hp": 46,
+          "block": 0,
+          "player_powers": [
+            {
+              "index": 0,
+              "power_id": "PLATING_POWER",
+              "name": "覆甲",
+              "amount": 4,
+              "is_debuff": false
+            }
+          ],
+          "hand": [
+            "DEFEND_SILENT",
+            "DEADLY_POISON",
+            "BULLET_TIME",
+            "ULTIMATE_STRIKE",
+            "ASCENDERS_BANE",
+            "SNAKEBITE",
+            "BACKFLIP",
+            "ADRENALINE"
+          ],
+          "potions": [
+            {
+              "slot": 0,
+              "id": "RADIANT_TINCTURE"
+            }
+          ],
+          "enemies": [
+            {
+              "enemy_id": "KNOWLEDGE_DEMON",
+              "current_hp": 399,
+              "max_hp": 399,
+              "move_id": "CURSE_OF_KNOWLEDGE_MOVE",
+              "is_alive": true,
+              "powers": [],
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Debuff",
+                  "label": null,
+                  "damage": null,
+                  "hits": null,
+                  "total_damage": null,
+                  "status_card_count": null
+                }
+              ]
+            }
+          ]
+        },
+        "next_turn": {
+          "line": 279545,
+          "ts": "2026-10-07T11:20:50.402Z",
+          "floor": 33,
+          "turn": 2,
+          "screen": "COMBAT",
+          "hp": 46,
+          "block": 0,
+          "player_powers": [
+            {
+              "index": 0,
+              "power_id": "PLATING_POWER",
+              "name": "覆甲",
+              "amount": 3,
+              "is_debuff": false
+            },
+            {
+              "index": 1,
+              "power_id": "RADIANCE_POWER",
+              "name": "明耀",
+              "amount": 2,
+              "is_debuff": false
+            },
+            {
+              "index": 2,
+              "power_id": "MIND_ROT_POWER",
+              "name": "心灵腐化",
+              "amount": 1,
+              "is_debuff": true
+            }
+          ],
+          "hand": [
+            "SURVIVOR",
+            "FOOTWORK",
+            "DEFEND_SILENT",
+            "MIRAGE"
+          ],
+          "potions": [],
+          "enemies": [
+            {
+              "enemy_id": "KNOWLEDGE_DEMON",
+              "current_hp": 385,
+              "max_hp": 399,
+              "move_id": "SLAP_MOVE",
+              "is_alive": true,
+              "powers": [
+                {
+                  "index": 0,
+                  "power_id": "POISON_POWER",
+                  "name": "中毒",
+                  "amount": 13,
+                  "is_debuff": true
+                }
+              ],
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Attack",
+                  "label": "18",
+                  "damage": 18,
+                  "hits": 1,
+                  "total_damage": 18,
+                  "status_card_count": null
+                }
+              ]
+            }
+          ]
+        },
+        "options": {
+          "plan1": {
+            "plays": "致命毒药+ -> 知识恶魔, then 子弹时间, then 究极打击 -> 知识恶魔, then 蛇咬 -> 知识恶魔, then 后空翻, then 肾上腺素, then potion 明耀酊剂, then 灵动步法, then 蜃景",
+            "result": "survives with 46/70 HP before healing",
+            "hp_lost": 0,
+            "damage_dealt": 28,
+            "enemies_after": "知识恶魔 371 HP, 中毒 13",
+            "block_gained": 5,
+            "cards_drawn": 4,
+            "energy_unused": 1,
+            "lasting_value": "sets up a power worth about 34 score over the fight (a few HP now is often worth it in a long fight)",
+            "unmodelled_cards": "子弹时间, 蜃景",
+            "hp_after": 46,
+            "hp_after_pct": 66,
+            "dmg": 28,
+            "lethal_now": "no",
+            "enemy_threat_next": 18,
+            "setup_turn": false,
+            "scaling_gained": "lasting value 34",
+            "block_wasted": 9,
+            "potions_used": "明耀酊剂",
+            "rollout": "5-turn rollout (24 samples) (later turns may use the potions still held): expected further HP loss 46, fight over within 5 turns in 0/24, expected turns to the end (surviving samples) ~12; every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 0/24), then the fight's progress: least enemy HP left (this line ~290, at T5 or at our death), then most turns alive (this line ~5), then least HP lost this turn (this line 0)",
+            "rollout_turns": "T1 exact: hp -0, dmg 28; T2: hp -1 [1-1], dmg 31 [31-31], alive 24/24, won 0/24; T3: hp -5 [5-5], dmg 28 [28-28], alive 24/24, won 0/24; T4: hp -12 [12-12], dmg 43 [43-43], alive 24/24, won 0/24; T5: hp -0.6 [0-5], dmg 35 [35-35], alive 24/24, won 0/24",
+            "history_estimate": "further HP loss 36, win 64% (this encounter n=23; estimate from boss fights n=316, typical error ±9.9; few similar states for this encounter)",
+            "rollout_tied": "tied for the best whole-fight simulation numbers with plan2, plan3, plan4, plan5, plan6 (the same simulated win rate and HP lost when won); the ranking picks none of them",
+            "whole_fight_sim": "win 0% (the best line), no winning sample; the losing samples die most often on T7 (dead in 100%); 1200 samples",
+            "potion_cost": "fight HP loss 46; potions used 1 (this turn: RADIANT_TINCTURE 0 (potion table did not load)); potion cost 0 HP (potion table, this act's held value); total 46"
+          },
+          "plan2": {
+            "plays": "致命毒药+ -> 知识恶魔, then 子弹时间, then 究极打击 -> 知识恶魔, then 后空翻, then 肾上腺素, then potion 明耀酊剂, then 灵动步法, then 蜃景",
+            "result": "survives with 46/70 HP before healing",
+            "hp_lost": 0,
+            "damage_dealt": 21,
+            "enemies_after": "知识恶魔 378 HP, 中毒 6",
+            "block_gained": 5,
+            "cards_drawn": 4,
+            "energy_unused": 3,
+            "lasting_value": "sets up a power worth about 34 score over the fight (a few HP now is often worth it in a long fight)",
+            "unmodelled_cards": "子弹时间, 蜃景",
+            "hp_after": 46,
+            "hp_after_pct": 66,
+            "dmg": 21,
+            "lethal_now": "no",
+            "enemy_threat_next": 18,
+            "setup_turn": false,
+            "scaling_gained": "lasting value 34",
+            "block_wasted": 9,
+            "potions_used": "明耀酊剂",
+            "rollout": "5-turn rollout (24 samples) (later turns may use the potions still held): expected further HP loss 46, fight over within 5 turns in 0/24, expected turns to the end (surviving samples) ~12.4; every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 0/24), then the fight's progress: least enemy HP left (this line ~325, at T5 or at our death), then most turns alive (this line ~5), then least HP lost this turn (this line 0)",
+            "rollout_turns": "T1 exact: hp -0, dmg 21; T2: hp -1 [1-1], dmg 24 [24-24], alive 24/24, won 0/24; T3: hp -5 [5-5], dmg 21 [21-21], alive 24/24, won 0/24; T4: hp -12 [12-12], dmg 36 [36-36], alive 24/24, won 0/24; T5: hp -0.6 [0-5], dmg 28 [28-28], alive 24/24, won 0/24",
+            "history_estimate": "further HP loss 36, win 64% (this encounter n=23; estimate from boss fights n=316, typical error ±9.9; few similar states for this encounter)",
+            "rollout_tied": "tied for the best whole-fight simulation numbers with plan1, plan3, plan4, plan5, plan6 (the same simulated win rate and HP lost when won); the ranking picks none of them",
+            "whole_fight_sim": "win 0% (vs the best line ±0 ± 1 pts, tied on win rate), no winning sample; the losing samples die most often on T7 (dead in 100%); 1200 samples",
+            "potion_cost": "fight HP loss 46; potions used 1 (this turn: RADIANT_TINCTURE 0 (potion table did not load)); potion cost 0 HP (potion table, this act's held value); total 46"
+          },
+          "plan3": {
+            "plays": "致命毒药+ -> 知识恶魔, then 子弹时间, then 蛇咬 -> 知识恶魔, then 后空翻, then 肾上腺素, then potion 明耀酊剂, then 灵动步法, then 蜃景",
+            "result": "survives with 46/70 HP before healing",
+            "hp_lost": 0,
+            "damage_dealt": 14,
+            "enemies_after": "知识恶魔 385 HP, 中毒 13",
+            "block_gained": 5,
+            "cards_drawn": 4,
+            "energy_unused": 2,
+            "lasting_value": "sets up a power worth about 34 score over the fight (a few HP now is often worth it in a long fight)",
+            "unmodelled_cards": "子弹时间, 蜃景",
+            "hp_after": 46,
+            "hp_after_pct": 66,
+            "dmg": 14,
+            "lethal_now": "no",
+            "enemy_threat_next": 18,
+            "setup_turn": false,
+            "scaling_gained": "lasting value 34",
+            "block_wasted": 9,
+            "potions_used": "明耀酊剂",
+            "rollout": "5-turn rollout (24 samples) (later turns may use the potions still held): expected further HP loss 46, fight over within 5 turns in 0/24, expected turns to the end (surviving samples) ~12.3; every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 0/24), then the fight's progress: least enemy HP left (this line ~304, at T5 or at our death), then most turns alive (this line ~5), then least HP lost this turn (this line 0)",
+            "rollout_turns": "T1 exact: hp -0, dmg 14; T2: hp -1 [1-1], dmg 31 [31-31], alive 24/24, won 0/24; T3: hp -5 [5-5], dmg 28 [28-28], alive 24/24, won 0/24; T4: hp -12 [12-12], dmg 43 [43-43], alive 24/24, won 0/24; T5: hp -0.6 [0-5], dmg 35 [35-35], alive 24/24, won 0/24",
+            "history_estimate": "further HP loss 36, win 64% (this encounter n=23; estimate from boss fights n=316, typical error ±9.9; few similar states for this encounter)",
+            "rollout_tied": "tied for the best whole-fight simulation numbers with plan1, plan2, plan4, plan5, plan6 (the same simulated win rate and HP lost when won); the ranking picks none of them",
+            "whole_fight_sim": "win 0% (vs the best line ±0 ± 1 pts, tied on win rate), no winning sample; the losing samples die most often on T7 (dead in 100%); 1200 samples",
+            "potion_cost": "fight HP loss 46; potions used 1 (this turn: RADIANT_TINCTURE 0 (potion table did not load)); potion cost 0 HP (potion table, this act's held value); total 46"
+          },
+          "plan4": {
+            "plays": "致命毒药+ -> 知识恶魔, then 子弹时间, then 后空翻, then 肾上腺素, then potion 明耀酊剂, then 灵动步法, then 蜃景",
+            "result": "survives with 46/70 HP before healing",
+            "hp_lost": 0,
+            "damage_dealt": 7,
+            "enemies_after": "知识恶魔 392 HP, 中毒 6",
+            "block_gained": 5,
+            "cards_drawn": 4,
+            "energy_unused": 4,
+            "lasting_value": "sets up a power worth about 34 score over the fight (a few HP now is often worth it in a long fight)",
+            "unmodelled_cards": "子弹时间, 蜃景",
+            "hp_after": 46,
+            "hp_after_pct": 66,
+            "dmg": 7,
+            "lethal_now": "no",
+            "enemy_threat_next": 18,
+            "setup_turn": false,
+            "scaling_gained": "lasting value 34",
+            "block_wasted": 9,
+            "potions_used": "明耀酊剂",
+            "rollout": "5-turn rollout (24 samples) (later turns may use the potions still held): expected further HP loss 46, fight over within 5 turns in 0/24, expected turns to the end (surviving samples) ~12.4; every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 0/24), then the fight's progress: least enemy HP left (this line ~339, at T5 or at our death), then most turns alive (this line ~5), then least HP lost this turn (this line 0)",
+            "rollout_turns": "T1 exact: hp -0, dmg 7; T2: hp -1 [1-1], dmg 24 [24-24], alive 24/24, won 0/24; T3: hp -5 [5-5], dmg 21 [21-21], alive 24/24, won 0/24; T4: hp -12 [12-12], dmg 36 [36-36], alive 24/24, won 0/24; T5: hp -0.6 [0-5], dmg 28 [28-28], alive 24/24, won 0/24",
+            "history_estimate": "further HP loss 36, win 63% (this encounter n=23; estimate from boss fights n=316, typical error ±9.9; few similar states for this encounter)",
+            "rollout_tied": "tied for the best whole-fight simulation numbers with plan1, plan2, plan3, plan5, plan6 (the same simulated win rate and HP lost when won); the ranking picks none of them",
+            "whole_fight_sim": "win 0% (vs the best line ±0 ± 1 pts, tied on win rate), no winning sample; the losing samples die most often on T7 (dead in 100%); 1200 samples",
+            "potion_cost": "fight HP loss 46; potions used 1 (this turn: RADIANT_TINCTURE 0 (potion table did not load)); potion cost 0 HP (potion table, this act's held value); total 46"
+          },
+          "plan5": {
+            "plays": "子弹时间, then 后空翻, then 肾上腺素, then potion 明耀酊剂, then 灵动步法, then 蜃景",
+            "result": "survives with 46/70 HP before healing",
+            "hp_lost": 0,
+            "damage_dealt": 0,
+            "enemies_after": "知识恶魔 399 HP",
+            "block_gained": 5,
+            "cards_drawn": 4,
+            "energy_unused": 5,
+            "lasting_value": "sets up a power worth about 34 score over the fight (a few HP now is often worth it in a long fight)",
+            "unmodelled_cards": "子弹时间, 蜃景",
+            "hp_after": 46,
+            "hp_after_pct": 66,
+            "dmg": 0,
+            "lethal_now": "no",
+            "enemy_threat_next": 18,
+            "setup_turn": false,
+            "scaling_gained": "lasting value 34",
+            "block_wasted": 9,
+            "potions_used": "明耀酊剂",
+            "rollout": "5-turn rollout (24 samples) (later turns may use the potions still held): expected further HP loss 46, fight over within 5 turns in 0/24, expected turns to the end (surviving samples) ~12.3; every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 0/24), then the fight's progress: least enemy HP left (this line ~370, at T5 or at our death), then most turns alive (this line ~5), then least HP lost this turn (this line 0)",
+            "rollout_turns": "T1 exact: hp -0, dmg 0; T2: hp -1 [1-1], dmg 18 [18-18], alive 24/24, won 0/24; T3: hp -5 [5-5], dmg 15 [15-15], alive 24/24, won 0/24; T4: hp -12 [12-12], dmg 30 [30-30], alive 24/24, won 0/24; T5: hp -0.6 [0-5], dmg 22 [22-22], alive 24/24, won 0/24",
+            "history_estimate": "further HP loss 36, win 63% (this encounter n=23; estimate from boss fights n=316, typical error ±9.9; few similar states for this encounter)",
+            "rollout_tied": "tied for the best whole-fight simulation numbers with plan1, plan2, plan3, plan4, plan6 (the same simulated win rate and HP lost when won); the ranking picks none of them",
+            "whole_fight_sim": "win 0% (vs the best line ±0 ± 1 pts, tied on win rate), no winning sample; the losing samples die most often on T7 (dead in 100%); 1200 samples",
+            "potion_cost": "fight HP loss 46; potions used 1 (this turn: RADIANT_TINCTURE 0 (potion table did not load)); potion cost 0 HP (potion table, this act's held value); total 46"
+          },
+          "plan6": {
+            "plays": "致命毒药+ -> 知识恶魔, then 子弹时间, then 究极打击 -> 知识恶魔, then 蛇咬 -> 知识恶魔, then 后空翻, then 肾上腺素, then 灵动步法, then 蜃景",
+            "result": "survives with 46/70 HP before healing",
+            "hp_lost": 0,
+            "damage_dealt": 28,
+            "enemies_after": "知识恶魔 371 HP, 中毒 13",
+            "block_gained": 5,
+            "cards_drawn": 4,
+            "lasting_value": "sets up a power worth about 22 score over the fight (a few HP now is often worth it in a long fight)",
+            "unmodelled_cards": "子弹时间, 蜃景",
+            "hp_after": 46,
+            "hp_after_pct": 66,
+            "dmg": 28,
+            "lethal_now": "no",
+            "enemy_threat_next": 18,
+            "setup_turn": false,
+            "scaling_gained": "lasting value 22",
+            "block_wasted": 9,
+            "potions_used": "none",
+            "rollout": "5-turn rollout (24 samples) (later turns may use the potions still held): expected further HP loss 46, fight over within 5 turns in 0/24, expected turns to the end (surviving samples) ~12; every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 0/24), then the fight's progress: least enemy HP left (this line ~290, at T5 or at our death), then most turns alive (this line ~5), then least HP lost this turn (this line 0)",
+            "rollout_turns": "T1 exact: hp -0, dmg 28; T2: hp -1 [1-1], dmg 31 [31-31], alive 24/24, won 0/24; T3: hp -5 [5-5], dmg 28 [28-28], alive 24/24, won 0/24; T4: hp -12 [12-12], dmg 43 [43-43], alive 24/24, won 0/24; T5: hp -0.6 [0-5], dmg 35 [35-35], alive 24/24, won 0/24",
+            "history_estimate": "further HP loss 36, win 64% (this encounter n=23; estimate from boss fights n=316, typical error ±9.9; few similar states for this encounter)",
+            "rollout_tied": "tied for the best whole-fight simulation numbers with plan1, plan2, plan3, plan4, plan5 (the same simulated win rate and HP lost when won); the ranking picks none of them",
+            "whole_fight_sim": "win 0% (vs the best line ±0 ± 1 pts, tied on win rate), no winning sample; the losing samples die most often on T7 (dead in 100%); 1200 samples",
+            "potion_cost": "fight HP loss 46; potions used 1 (later turns: RADIANT_TINCTURE in 24/24 samples); potion cost 0 HP (potion table, this act's held value, later turns' drinks averaged over the samples); total 46"
+          }
+        },
+        "sl_explore": {
+          "point": "T1, the 8th latest question before attempt 4's death on T10",
+          "original": "致命毒药+ -> 知识恶魔, 子弹时间, 究极打击 -> 知识恶魔, 蛇咬 -> 知识恶魔, 后空翻, 肾上腺素, potion 明耀酊剂, 灵动步法, 蜃景",
+          "replacement": "致命毒药+ -> 知识恶魔, 子弹时间, 蛇咬 -> 知识恶魔, 后空翻, 肾上腺素, potion 明耀酊剂, 灵动步法, 蜃景",
+          "reason": "the best untried line by the question's ranking, among those B2 rates no worse (win rate at most 2 paired standard errors below the pick's)",
+          "played_in": [
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "replayed": 0,
+          "numbers": {
+            "original": "rollout dead 0/24, further loss 46, win ~46%; whole-fight sim win 0%; this turn hp -0, dmg 28",
+            "replacement": "rollout dead 0/24, further loss 46, win ~46%; whole-fight sim win 0%; this turn hp -0, dmg 14"
+          },
+          "gate": "b2",
+          "b2": {
+            "original": 0,
+            "replacement": 0,
+            "diff": 0,
+            "se": 0
+          },
+          "turn": "ADRENALINE, BACKFLIP, BULLET_TIME, DEADLY_POISON+>知识恶魔, FOOTWORK, MIRAGE, SNAKEBITE>知识恶魔, ULTIMATE_STRIKE>知识恶魔, potion:RADIANT_TINCTURE",
+          "turn_instead": "ADRENALINE, BACKFLIP, BULLET_TIME, DEADLY_POISON+>知识恶魔, FOOTWORK, MIRAGE, SNAKEBITE>知识恶魔, potion:RADIANT_TINCTURE"
+        },
+        "caveat": "同题至下一轮为实际净变化；续问动作/敌回血另核，不是原答单步或受控整战因果。"
+      }
+    ],
+    "actual_net": [
+      [
+        0,
+        28
+      ],
+      [
+        0,
+        14
+      ]
+    ]
+  }
+]

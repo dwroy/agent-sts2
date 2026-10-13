@@ -1,0 +1,330 @@
+diff --git a/agent/src/reflex/card-model.ts b/agent/src/reflex/card-model.ts
+index 4b109ea78..47715f1f0 100644
+--- a/agent/src/reflex/card-model.ts
++++ b/agent/src/reflex/card-model.ts
+@@ -1467,5 +1467,5 @@ const POTION_EFFECTS: Record<string, Partial<CardModel> & { target: TargetMode }
+  * The card a card potion adds (「从3张随机攻击牌中选择1张加入你的手牌。这张牌在本回合可以免费打出。」): a 0-cost
+  * card of that type, at a conservative value for the best of three offered. Since the Monte Carlo
+- * (potion-mc.ts, Roy 2026-09-28) this turn's option never uses it: only the rollout's later turns (the
++ * (potion-mc.ts, Dai 2026-09-28) this turn's option never uses it: only the rollout's later turns (the
+  * potions still held, at their expected value) and the solver-level tests do. Ironclad's pool (game
+  * data, 36 attacks / 30 skills): best-of-3 total damage ~17-18.6, best-of-3 block ~8.3; picks logged
+@@ -1821,5 +1821,5 @@ export function potionEffect(potionId: string): (Partial<CardModel> & { target:
+ 
+ /**
+- * Random potions (Roy 2026-09-28): simulated by Monte Carlo every turn (potion-mc.ts) and offered to Jev as
++ * Random potions (Dai 2026-09-28): simulated by Monte Carlo every turn (potion-mc.ts) and offered to Jev as
+  * "drink now, then re-plan with the real cards", never as a fixed-value line.
+  *
+diff --git a/agent/src/reflex/combat-plan.ts b/agent/src/reflex/combat-plan.ts
+index 748e3e6ac..b16d3e6e0 100644
+--- a/agent/src/reflex/combat-plan.ts
++++ b/agent/src/reflex/combat-plan.ts
+@@ -82,6 +82,6 @@ import { randomTargetOnly, randomTargets } from "../sl/random-target.js";
+ 
+ /**
+- * Potions are Jev's call (Roy 2026-09-28): the solver prices a potion line on its simulated outcome
+- * less the potion's cost (Roy 2026-09-30, potion-cost.ts: its held value in the potion table, 0 in a boss
++ * Potions are Jev's call (Dai 2026-09-28): the solver prices a potion line on its simulated outcome
++ * less the potion's cost (Dai 2026-09-30, potion-cost.ts: its held value in the potion table, 0 in a boss
+  * fight; the rollout ranks lines by deaths, then HP lost plus that cost), every modelled potion in the belt is
+  * on at least one shown line beside a "no potion this fight" line, and Jev gets the facts to judge keeping it
+@@ -220,5 +220,5 @@ function potionIdsOf(plan: Plan): string[] {
+ 
+ /**
+- * Every modelled potion in the belt on at least one shown line (Roy 2026-09-28: Jev always has the
++ * Every modelled potion in the belt on at least one shown line (Dai 2026-09-28: Jev always has the
+  * choice): for a potion no option drinks, the best-ranked line of `plans` that drinks it is added. Past
+  * `limit`, it takes the place of the lowest-ranked option that is not code's first, not the only
+@@ -350,5 +350,5 @@ export const thiefTrace: {
+ 
+ /**
+- * The enemies a turn can be aimed at, one group per enemy id (Roy 2026-09-28: identical enemies are not
++ * The enemies a turn can be aimed at, one group per enemy id (Dai 2026-09-28: identical enemies are not
+  * ordered among themselves), in board order: every living enemy but a Waterfall Giant husk, and an
+  * illusion only while it attacks (whether hitting it is worth anything is the rollout's and Jev's call).
+@@ -405,5 +405,5 @@ export function damageInto(plan: Plan, indices: number[], enemies: EnemySim[]):
+ 
+ /**
+- * Per-target options (Roy 2026-09-28: which enemy to kill is Jev's call, not the score's): for every group,
++ * Per-target options (Dai 2026-09-28: which enemy to kill is Jev's call, not the score's): for every group,
+  * the line that puts the most damage into it, then the higher solver score, then the less HP lost. Lines
+  * drinking no potion first (potions have their own slots); none when no line reaches the group. Several
+@@ -440,5 +440,5 @@ export function groupName(group: KillGroup): string {
+ 
+ /**
+- * Roy 2026-09-29: where hand-written advice (the guides behind the run plan, the fight hints) disagrees with the
++ * Dai 2026-09-29: where hand-written advice (the guides behind the run plan, the fight hints) disagrees with the
+  * experience base or measured data, the data wins. Jev has no system prompt: this rides at the head of the
+  * advice in every combat plan question.
+@@ -490,5 +490,5 @@ export function currentRunPlan(env: DecisionEnv): RunPlan | null {
+ 
+ /**
+- * DeepSeek's run plan, whole and on one line (Roy 2026-09-28: Jev sees the plan's strategy and boss prep,
++ * DeepSeek's run plan, whole and on one line (Dai 2026-09-28: Jev sees the plan's strategy and boss prep,
+  * kill-order advice included, on every combat question; advice, not orders).
+  */
+@@ -528,5 +528,5 @@ export function potionContextJson(env: DecisionEnv, kind: SolverInput["fightKind
+     if (gap) out["act_boss_clock"] = `needs ~${gap.need} damage a turn, deck ~${gap.deck}${gap.gap > 0 ? ` (short ${gap.gap})` : " (enough)"}`;
+   }
+-  // Each held potion's worth in this act's boss fight (potion-equivalents.json; Roy 2026-09-30): a fact, no rule.
++  // Each held potion's worth in this act's boss fight (potion-equivalents.json; Dai 2026-09-30): a fact, no rule.
+   const actId = str(run["act_id"]);
+   const held = belt.filter((slot) => bool(slot["occupied"])).map((slot) => str(slot["potion_id"])).filter(Boolean);
+@@ -537,5 +537,5 @@ export function potionContextJson(env: DecisionEnv, kind: SolverInput["fightKind
+ 
+ /**
+- * What a drink costs on this question (potion-cost.ts, Roy 2026-09-30), for potion_context: where the options'
++ * What a drink costs on this question (potion-cost.ts, Dai 2026-09-30), for potion_context: where the options'
+  * potion_cost numbers come from, each usable potion's cost, and, when every potion-free line dies this turn, that
+  * there is no no-potion option. Empty without a potion to drink.
+@@ -576,8 +576,8 @@ function eliteAhead(env: DecisionEnv): string | null {
+ }
+ 
+-// CLOSE_CALL (code played its top line when it led by 6+ score points) is gone (Roy 2026-09-28: card
++// CLOSE_CALL (code played its top line when it led by 6+ score points) is gone (Dai 2026-09-28: card
+ // play is Jev's): with two or more distinct lines Jev is asked, unless code's line dominates every other
+ // on every axis.
+-/** Distinct lines shown to Jev (Roy 2026-09-28: 10, was 4; the rollout covers every shown line). */
++/** Distinct lines shown to Jev (Dai 2026-09-28: 10, was 4; the rollout covers every shown line). */
+ export const MAX_OPTIONS = 10;
+ 
+@@ -587,5 +587,5 @@ export const MAX_OPTIONS = 10;
+  * it). A non-winning plan may lose at most this much more than the cheapest plan offered.
+  *
+- * Boss and elite fights get the tighter bound, max(8, 10% HP); hallway fights max(8, 20% HP) (Roy
++ * Boss and elite fights get the tighter bound, max(8, 10% HP); hallway fights max(8, 20% HP) (Dai
+  * 2026-09-28: loosened from max(4, 10%) / max(6, 20%) so that more of the trade-off is Jev's call).
+  * Z2H3 T7/T8 DeepSeek split a trade across re-plans and died with the boss at 33: once a fight's
+@@ -593,5 +593,5 @@ export const MAX_OPTIONS = 10;
+  * choice wins the fight.
+  */
+-/** Extra HP (over the cheapest line) a fight may accept (Roy 2026-09-28: 24, was 12, with the per-turn slack 4 -> 8). */
++/** Extra HP (over the cheapest line) a fight may accept (Dai 2026-09-28: 24, was 12, with the per-turn slack 4 -> 8). */
+ export const HP_GUARD_FIGHT_BUDGET = 24;
+ /** The per-turn slack is never below this (any fight kind). */
+@@ -2346,5 +2346,5 @@ function cardChance(card: CardModel, targets: number): string | null {
+ 
+ /**
+- * The least-loss verdict's facts for the SL judge (src/sl/judge.ts LeastLossFacts; Roy 2026-10-02: certain death, never
++ * The least-loss verdict's facts for the SL judge (src/sl/judge.ts LeastLossFacts; Dai 2026-10-02: certain death, never
+  * a prediction, so anything left to chance this turn keeps the end_turn judgment):
+  * - drawsKnown (SL_JUDGE_KNOWN_DRAWS): every card any simulated line could draw is exactly known: the solver drew the
+@@ -3090,7 +3090,7 @@ function planTurn(env: DecisionEnv): Decision | null {
+ 
+   // Foul Potion hits us too (39J9: two drunk at 22 HP): no longer banned, its lines carry the damage to
+-  // us in hp_lost (card-model FOUL_POTION selfDamage), and drinking it is Jev's call (Roy 2026-09-28).
++  // us in hp_lost (card-model FOUL_POTION selfDamage), and drinking it is Jev's call (Dai 2026-09-28).
+   const potionsAll = potionViews({ raw: asRecord(state.run?.raw) }, env.knowledge).filter((potion) => potion.can_use);
+-  // What each potion held costs to drink here (potion-cost.ts, Roy 2026-09-30): its held value in the potion table for
++  // What each potion held costs to drink here (potion-cost.ts, Dai 2026-09-30): its held value in the potion table for
+   // this act and ascension; 0 in a boss fight. Carried by the potion cards (the solver's score, the rollout's later
+   // turns, the random potions' samples) and shown on every option.
+@@ -3123,5 +3123,5 @@ function planTurn(env: DecisionEnv): Decision | null {
+   const pressed =
+     playerSim.maxHp > 0 && playerSim.hp < playerSim.maxHp * 0.4 && (kind === "elite" || (kind !== "boss" && attackers >= 2));
+-  // A potion line is scored on its simulated outcome less the potion's cost (potion-cost.ts, Roy 2026-09-30:
++  // A potion line is scored on its simulated outcome less the potion's cost (potion-cost.ts, Dai 2026-09-30:
+   // the table's held value, 0 in a boss fight); whether it is worth spending is Jev's call, with potion_context
+   // and each option's potion_cost as its facts.
+@@ -3339,5 +3339,5 @@ function planTurn(env: DecisionEnv): Decision | null {
+   const planOffer = (potionId: string) => planOffersPotion(fightPlan, potionId, { turn: state.turn ?? 1, bigHit, pressed, costly, offensive: notBlunting(potionId) });
+   // Unsimulated potions (neither modelled nor random): every one that can be drunk is an option, like a random
+-  // potion (Roy: a potion is a 0-cost one-shot card, never filtered or vetoed), with no invented numbers; a fight
++  // potion (Dai: a potion is a 0-cost one-shot card, never filtered or vetoed), with no invented numbers; a fight
+   // plan's keep is noted. (Until batch K only under T1: the cheapest potion-free option losing 12% of HP this turn,
+   // a dying rollout sample or the fight plan's moment; CJ88/VSRG Entropic Brew, DHGT Stable Serum sat unoffered.)
+@@ -3351,5 +3351,5 @@ function planTurn(env: DecisionEnv): Decision | null {
+   // 3. Code-decided cases. Code drinks on its own only when no potion-free line does the job: a lethal
+   // is played by code only potion-free. When only lines that drink win the fight this turn, the lethal
+-  // is Jev's call (Roy 2026-09-28): those lines are shown, flagged as winning and naming the potion spent.
++  // is Jev's call (Dai 2026-09-28): those lines are shown, flagged as winning and naming the potion spent.
+   const lethalLines = best.outcome.winsFight ? solved.plans.filter((plan) => plan.outcome.winsFight) : [];
+   const dryLethal = lethalLines.find((plan) => !drinksPotion(plan));
+@@ -3510,5 +3510,5 @@ function planTurn(env: DecisionEnv): Decision | null {
+   if (thiefKill && !options.includes(thiefKill)) options.push(thiefKill);
+   const second = options.find((plan) => plan !== top);
+-  // Per-target options (Roy 2026-09-28): with two or more kinds of enemy, the line putting the most damage
++  // Per-target options (Dai 2026-09-28): with two or more kinds of enemy, the line putting the most damage
+   // into each kind is shown, labelled "focus: <enemy>". The score's tactical weights (minion chip,
+   // concentration, the fight plan's focus) rank code's own lines; they no longer decide which enemy Jev can
+@@ -3687,5 +3687,5 @@ function planTurn(env: DecisionEnv): Decision | null {
+           ],
+         };
+-  // The "no potion this fight" line (Roy 2026-09-30), on every question with a potion to drink outside a boss fight
++  // The "no potion this fight" line (Dai 2026-09-30), on every question with a potion to drink outside a boss fight
+   // (there potions cost 0: nothing to keep them for): code's best potion-free option this turn, rolled out with no
+   // potion in its later turns either, as an option beside the others. Its own copy of the Plan; when the option's
+@@ -3788,5 +3788,5 @@ function planTurn(env: DecisionEnv): Decision | null {
+   // fight's end on the same samples. A boss the simulator is trusted on ranks the lines by it (simRanks: rollout_best,
+   // ties, the HP guard, code's fallback) and shows its numbers; a low-trust boss's numbers and plan only go to the
+-  // decision log (V4.2, Roy 2026-10-01: its question is the pre-B2 one). Out of a boss fight, no pool is kept.
++  // decision log (V4.2, Dai 2026-10-01: its question is the pre-B2 one). Out of a boss fight, no pool is kept.
+   if (kind !== "boss") releaseBossLinesPool();
+   // BOSS_SIM_LOW_TRUST=retry (default): a low-trust boss is simulated only on an SL retry, where its numbers are shown; on
+@@ -3823,5 +3823,5 @@ function planTurn(env: DecisionEnv): Decision | null {
+     return line ? { whole_fight_sim: line.text } : {};
+   };
+-  // Every option's potion cost fact (Roy 2026-09-30), when a potion can be drunk on this board.
++  // Every option's potion cost fact (Dai 2026-09-30), when a potion can be drunk on this board.
+   const costNote = (plan: Plan): Record<string, JsonValue> =>
+     costsOn ? { potion_cost: potionCostFact(plan, rollout?.available ? (rollout.byPlan.get(plan) ?? null) : null, costs) } : {};
+@@ -3884,5 +3884,5 @@ function planTurn(env: DecisionEnv): Decision | null {
+     ? rolloutLog(rollout, bestShown ? keyOfShown(bestShown) : null, bestShown !== null && !bestShownIsPotion && !options.includes(bestShown) && bestShown !== noPotionOwn, tiedKeys, noPotionRolled ? (shown.includes(noPotionOwn ?? noPotionRolled.base) ? keyOfShown(noPotionOwn ?? noPotionRolled.base) : null) : null)
+     : null;
+-  // Random potions: always an option (Roy 2026-09-28), "drink now, then re-plan", with the Monte Carlo
++  // Random potions: always an option (Dai 2026-09-28), "drink now, then re-plan", with the Monte Carlo
+   // distribution; the rollout facts are the median sample's line's.
+   const othersHeld = potionsAll.length > 1;
+@@ -4363,5 +4363,5 @@ function planTurn(env: DecisionEnv): Decision | null {
+       const fromJev = answer.raw !== undefined && !escalatedBy;
+       // Potions are Jev's call: no potion pick is vetoed (the hallway confidence bar, the elite/boss
+-      // dry-line veto and the attack-potion veto are gone, Roy 2026-09-28).
++      // dry-line veto and the attack-potion veto are gone, Dai 2026-09-28).
+       if (chosen.potion) {
+         const drink = chosen.potion;
+@@ -4449,5 +4449,5 @@ function planTurn(env: DecisionEnv): Decision | null {
+     questions: { plan: choiceQ("Which plan should I play this turn?", criteria) },
+     ...(jevView ? { jevView } : {}),
+-    // No DeepSeek escalation in combat (Roy 2026-09-28): the turn's line is Jev's call.
++    // No DeepSeek escalation in combat (Dai 2026-09-28): the turn's line is Jev's call.
+     resolve(answers): ResolvedAction {
+       // SL_RETRY_EXPLORE: the resolution as played (a line failed attempts played on the deviation point's board replaced),
+@@ -4574,6 +4574,6 @@ function planTurn(env: DecisionEnv): Decision | null {
+ 
+ /**
+- * Why an unsimulated potion is on the question: always (Roy: potions are 0-cost one-shot cards, no filter, no
+- * veto). It replaced T1 (Roy 2026-09-28: the cheapest potion-free option losing 12% of HP), the old gate.
++ * Why an unsimulated potion is on the question: always (Dai: potions are 0-cost one-shot cards, no filter, no
++ * veto). It replaced T1 (Dai 2026-09-28: the cheapest potion-free option losing 12% of HP), the old gate.
+  */
+ export const UNSIMULATED_OFFERED = "always: every potion that can be drunk is an option (a 0-cost one-shot card); its effect is not in the numbers";
+@@ -4887,5 +4887,5 @@ function startFacing(combat: Record<string, unknown>): number | null {
+  * drawing one before any other; then the turn re-plans. Only into a lethal hit (the only potion-free
+  * line, ending the turn, dies); any other turn's potion is Jev's call (the elite/boss 30%-of-HP rule is
+- * gone, Roy 2026-09-28).
++ * gone, Dai 2026-09-28).
+  */
+ export function noPlayRescuePotion(env: DecisionEnv, enemies: EnemySim[], player: PlayerSim): Decision | null {
+diff --git a/agent/src/reflex/potion-cost.ts b/agent/src/reflex/potion-cost.ts
+index 0ea38ebad..3949dd140 100644
+--- a/agent/src/reflex/potion-cost.ts
++++ b/agent/src/reflex/potion-cost.ts
+@@ -1,6 +1,6 @@
+ /**
+- * Potion cost (Roy 2026-09-30): a potion drunk before the act boss is HP paid later. What a drink costs is the
++ * Potion cost (Dai 2026-09-30): a potion drunk before the act boss is HP paid later. What a drink costs is the
+  * potion's held value in the potion table (knowledge/characters/ironclad/potion-equivalents.json, docs/potion-equivalents.md: its
+- * HP worth in this act's boss fight at this ascension; the formula values as the table has them). Roy's rules:
++ * HP worth in this act's boss fight at this ascension; the formula values as the table has them). Dai's rules:
+  *   - the cost is the held value, nothing else: no "a full belt makes the cheapest potion free" or other special
+  *     case (a low-value potion costs little anyway), and an elite costs the same as a hallway fight;
+@@ -143,5 +143,5 @@ function nameOf(id: string, costs: Map<string, PotionCost>, plan?: Pick<Plan, "s
+ 
+ /**
+- * Jev's option fact (Roy 2026-09-30): 「fight HP loss X; potions used N (names); potion cost Y HP (potion table: held
++ * Jev's option fact (Dai 2026-09-30): 「fight HP loss X; potions used N (names); potion cost Y HP (potion table: held
+  * value in this act); total Z」. X is the rollout's expected HP lost to the fight's end (this turn's exact loss when
+  * there is no rollout: said so), N the potions this turn drinks plus the later turns' expected drinks, Y their expected
+diff --git a/agent/src/reflex/turn-solver.ts b/agent/src/reflex/turn-solver.ts
+index 4022b7f44..f09ca8058 100644
+--- a/agent/src/reflex/turn-solver.ts
++++ b/agent/src/reflex/turn-solver.ts
+@@ -2888,5 +2888,5 @@ export const FOCUS_BONUS = 0.5;
+ /**
+  * Share of damage into a surviving minion that counts while its summoner lives (it leaves with it).
+- * Kept (Roy 2026-09-28 review) for what the score still decides: code's own lines (lethal among lethal
++ * Kept (Dai 2026-09-28 review) for what the score still decides: code's own lines (lethal among lethal
+  * lines, the dominance and HP-guard picks, the fallback) and the rollout's own later turns, where it is
+  * the QE4K rule (turn-solver.test "chips the summoner"). It no longer decides what Jev sees: every kind of
+@@ -3352,5 +3352,5 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
+   // through a fresh hand's block is HP the next turn cannot spare, as the Giant's eruption rule below counts it.
+   if (input.nextHit && !winsFight && !dies && hpLoss > 0) score -= weights.hp * input.nextHit.weight * nextHitShortfall(input.nextHit, living, hpAfter, hpLoss);
+-  // A potion drunk is HP paid later (potion-cost.ts, Roy 2026-09-30): its held value, at the HP weight. Until batch K a
++  // A potion drunk is HP paid later (potion-cost.ts, Dai 2026-09-30): its held value, at the HP weight. Until batch K a
+   // hallway potion's lasting part counted 25% (a guessed number); since then potions were free; now the table's value.
+   score -= weights.hp * sim.potionCost;
+diff --git a/agent/src/sim/boss-sim.ts b/agent/src/sim/boss-sim.ts
+index bb66c955c..56cab40ef 100644
+--- a/agent/src/sim/boss-sim.ts
++++ b/agent/src/sim/boss-sim.ts
+@@ -1,5 +1,5 @@
+ import { coreWindow } from "./core-window.js";
+ /**
+- * Whole boss fight simulator (milestone B1, Roy 2026-09-30): from a fight state, every sample plays the fight to its
++ * Whole boss fight simulator (milestone B1, Dai 2026-09-30): from a fight state, every sample plays the fight to its
+  * end (the boss dead or we are) instead of the rollout's 5-turn window, so what decides a boss fight (a dozen turns of
+  * play, whether the deck out-damages the boss) is simulated rather than extrapolated by the rollout's terminal estimate
+@@ -82,5 +82,5 @@ export function bossPolicyThreat(input: Pick<RolloutInput, "enemies">): number {
+  */
+ export const BOSS_SIM_POTION_HOLD = 0.5;
+-/** Worker threads at most: the machine has 32 cores and the live runs keep some (Roy: at most 24). */
++/** Worker threads at most: the machine has 32 cores and the live runs keep some (Dai: at most 24). */
+ export const BOSS_SIM_MAX_WORKERS = 24;
+ 
+diff --git a/agent/src/sim/boss-start.ts b/agent/src/sim/boss-start.ts
+index 25a8413bc..1a7d14b71 100644
+--- a/agent/src/sim/boss-start.ts
++++ b/agent/src/sim/boss-start.ts
+@@ -1,4 +1,4 @@
+ /**
+- * The act boss's opening built from outside a fight (milestone B3, Roy 2026-09-30): a deck-building question (card
++ * The act boss's opening built from outside a fight (milestone B3, Dai 2026-09-30): a deck-building question (card
+  * reward, shop, rest site, deck selection, event) has no combat state, so the whole boss fight simulator's pre-fight
+  * start (boss-sim redealInput fresh: the deck shuffled, the hand empty, the entry HP) is built here from the run as it
+diff --git a/agent/src/sim/route-map.ts b/agent/src/sim/route-map.ts
+index 3422df2ed..4bc1d2b38 100644
+--- a/agent/src/sim/route-map.ts
++++ b/agent/src/sim/route-map.ts
+@@ -4,5 +4,5 @@
+  * boss node(s) (A10: two). The brain plans any route on it and answers a node sequence; code checks the route
+  * (lines, boots, boss, ids) and works out the chosen route's facts with the route projection (no scores, no
+- * ranking; the projection itself is route-projection.ts, unchanged). A route review also gets next_rest (Roy
++ * ranking; the projection itself is route-projection.ts, unchanged). A route review also gets next_rest (Dai
+  * 2026-10-03): the plan's stretch to its next rest site and, from each next node, the stretch with the most HP on
+  * arriving at each of its nearest rest floors, each with its rooms, projected HP there and on entering the route's next
+@@ -417,5 +417,5 @@ export function routeFacts(map: RouteMap, ids: string[], start: RouteStart, cost
+ }
+ 
+-/* ---- each route's stretch to the next rest site (Roy 2026-10-03) --------------------------------- */
++/* ---- each route's stretch to the next rest site (Dai 2026-10-03) --------------------------------- */
+ 
+ /*
+@@ -506,5 +506,5 @@ function betterStretch(a: Stretch, b: Stretch): number {
+  * When an alternative is clearly worse than the kept route: the median lower by at least this share of max HP, or the
+  * p75 line lower by at least NEXT_REST_CLEAR_P75 (9175 F37: one hallway more, 7 and 16 of 80 lower), or it runs out
+- * where the kept route does not (Roy 2026-10-03). Compared at the later of the two routes' next rest floors, each
++ * where the kept route does not (Dai 2026-10-03). Compared at the later of the two routes' next rest floors, each
+  * route's HP on arriving there, and said only for a line with no more elites than the kept stretch (an extra elite's
+  * cost is already in its counts: 62% of the lines flagged without this rule); and, when both routes meet an elite
+@@ -815,5 +815,5 @@ export function nextRestVersus(map: RouteMap, kept: string[], changed: string[],
+ }
+ 
+-/* ---- candidate routes to the boss for the act's plan (Roy 2026-10-04) ------------------------------ */
++/* ---- candidate routes to the boss for the act's plan (Dai 2026-10-04) ------------------------------ */
+ 
+ /*
+diff --git a/agent/src/sl/explore.ts b/agent/src/sl/explore.ts
+index 72054748b..ddaacde8e 100644
+--- a/agent/src/sl/explore.ts
++++ b/agent/src/sl/explore.ts
+@@ -1,4 +1,4 @@
+ /**
+- * SL_RETRY_EXPLORE (docs/sl.md §11, Roy 2026-10-02: "retries must try different play"): a retried fight's attempts 3 and
++ * SL_RETRY_EXPLORE (docs/sl.md §11, Dai 2026-10-02: "retries must try different play"): a retried fight's attempts 3 and
+  * later change the line at one decision point of the failed attempts, so that a retry does not replay the death.
+  *
+@@ -317,5 +317,5 @@ export interface SlExploreEnv {
+   };
+   /**
+-   * SL_RETRY_EXPLORE_B2 (Roy 2026-10-02): on a boss B2 is trusted on, B2's win rate is the gate ("not worse than the line
++   * SL_RETRY_EXPLORE_B2 (Dai 2026-10-02): on a boss B2 is trusted on, B2's win rate is the gate ("not worse than the line
+    * replaced": ExploreB2.notWorse) instead of the rollout's share of samples dead, in the replacement and the record (the
+    * deviation point is still chosen by the rollout's: exploreTarget).
+@@ -323,5 +323,5 @@ export interface SlExploreEnv {
+   b2Gate?: boolean;
+   /**
+-   * SL_RETRY_EXPLORE_BOSS_POTIONS (Roy 2026-10-02): in a boss fight a line drinking a potion the line replaced does not is an
++   * SL_RETRY_EXPLORE_BOSS_POTIONS (Dai 2026-10-02): in a boss fight a line drinking a potion the line replaced does not is an
+    * alternative too (potions cost 0 there, and the line replaced is known to lose): the shown potion lines and the random
+    * potions' Monte Carlo lines. Out of a boss fight never (a listed elite's potion costs HP-equivalents).

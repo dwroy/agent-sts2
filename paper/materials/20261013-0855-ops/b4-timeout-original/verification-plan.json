@@ -1,0 +1,11 @@
+{
+ "character": "silent", "boss": "THE_INSATIABLE", "mode": "b4",
+ "dispatch_base": "2ccc01768229b0735ebb255abbbbbc7f4f337fd3",
+ "candidate_source": null,
+ "correction_policy": "No source change without a demonstrated Silent log discrepancy in the permitted fullFight scope.",
+ "before": {"fights": 464, "starts": ["t1", "pre"], "samples": 200, "original_row_seed": true},
+ "after": {"source": "same immutable dispatch_base if no proven correction", "target_independent_replay": true, "other_boss_reuse_requires_source_input_and_key_equality": true},
+ "criteria": "Unmodified baseline acceptance.py and isolation.ts; no weakened tests or thresholds.",
+ "history": ["prepare-initial-failure.txt", "before-replay-initial.log", "before-replay-initial.exit", "serial-replay-history.json", "raw-audit-initial.json", "raw-audit-v2.json", "mechanism-audit.json"],
+ "tests": "Original agent/tools/test-sandbox.sh with nice, frozen inputs, TMPDIR=task scratch, SANDBOX_WORKERS=1; run after replay workers finish."
+}

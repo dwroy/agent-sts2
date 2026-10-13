@@ -1,0 +1,1653 @@
+[
+  {
+    "line": 371395,
+    "floor": 8,
+    "turn": 1,
+    "choice": "plan1",
+    "best": true,
+    "criteria": {
+      "plan1": {
+        "plays": "背刺 -> 异蛙寄生虫, then 打击 -> 异蛙寄生虫, then 打击 -> 异蛙寄生虫, then 中和+ -> 异蛙寄生虫",
+        "hp_lost": 0,
+        "dmg": 27,
+        "enemies_after": "异蛙寄生虫 40 HP, Weak 2",
+        "rollout": "3-turn rollout (4 samples) (later turns may drink the potions still held, each when its turn gains more than the potion's cost): expected further HP loss 7, fight over within 3 turns in 0/4, expected turns to the end (surviving samples) ~3; ranked on fewest dead first (some line pays a potion cost), then -(further loss) - 40 x (1 - win chance): win chance ~100% (fights won in the samples, the others by the end-of-horizon estimate), value -7 [cut to fit the time budget: horizon 3, samples 4]",
+        "rollout_turns": "T1 exact: hp -0, dmg 27; T2: hp -7 [7-7], dmg 15 [15-15], alive 4/4, won 0/4; T3: hp -0.8 [0-3], dmg 14.8 [12-21], alive 4/4, won 0/4"
+      },
+      "plan2": {
+        "plays": "背刺 -> 异蛙寄生虫, then 打击 -> 异蛙寄生虫, then 打击 -> 异蛙寄生虫, then 中和+ -> 异蛙寄生虫, then potion 虚弱药水 -> 异蛙寄生虫",
+        "hp_lost": 0,
+        "dmg": 27,
+        "enemies_after": "异蛙寄生虫 40 HP, Weak 5",
+        "rollout": "3-turn rollout (4 samples) (later turns may drink the potions still held, each when its turn gains more than the potion's cost): expected further HP loss 7, fight over within 3 turns in 0/4, expected turns to the end (surviving samples) ~3; ranked on fewest dead first (some line pays a potion cost), then -(further loss + potion cost) - 40 x (1 - win chance): win chance ~100% (fights won in the samples, the others by the end-of-horizon estimate), value -12.3 [cut to fit the time budget: horizon 3, samples 4]",
+        "rollout_turns": "T1 exact: hp -0, dmg 27; T2: hp -7 [7-7], dmg 15 [15-15], alive 4/4, won 0/4; T3: hp -0.8 [0-3], dmg 14.8 [12-21], alive 4/4, won 0/4"
+      }
+    }
+  },
+  {
+    "line": 371399,
+    "floor": 8,
+    "turn": 1,
+    "choice": "plan3",
+    "best": true,
+    "criteria": {
+      "plan1": {
+        "plays": "nothing (end the turn now)",
+        "hp_lost": 0,
+        "dmg": 0,
+        "enemies_after": "异蛙寄生虫 40 HP, Weak 2",
+        "rollout": "5-turn rollout (8 samples) (later turns may drink the potions still held, each when its turn gains more than the potion's cost): expected further HP loss 41.9, fight over within 5 turns in 0/8, expected turns to the end (surviving samples) ~7.1; ranked on fewest dead first (some line pays a potion cost), then -(further loss + potion cost) - 40 x (1 - win chance): win chance ~71% (fights won in the samples, the others by the end-of-horizon estimate), value -57.7",
+        "rollout_turns": "T1 exact: hp -0, dmg 0; T2: hp -4.4 [0-7], dmg 11.6 [6-15], alive 8/8, won 0/8; T3: hp -0.4 [0-3], dmg 15.4 [12-21], alive 8/8, won 0/8; T4: hp -4.3 [0-9], dmg 8.6 [0-15], alive 8/8, won 0/8; T5: hp -2.9 [0-20], dmg 6.4 [0-21], alive 8/8, won 0/8"
+      },
+      "plan2": {
+        "plays": "potion 虚弱药水 -> 异蛙寄生虫",
+        "hp_lost": 0,
+        "dmg": 0,
+        "enemies_after": "异蛙寄生虫 40 HP, Weak 5",
+        "rollout": "5-turn rollout (8 samples) (later turns may drink the potions still held, each when its turn gains more than the potion's cost): expected further HP loss 41.9, fight over within 5 turns in 0/8, expected turns to the end (surviving samples) ~7.1; ranked on fewest dead first (some line pays a potion cost), then -(further loss + potion cost) - 40 x (1 - win chance): win chance ~71% (fights won in the samples, the others by the end-of-horizon estimate), value -58.6",
+        "rollout_turns": "T1 exact: hp -0, dmg 0; T2: hp -4.4 [0-7], dmg 11.6 [6-15], alive 8/8, won 0/8; T3: hp -0.4 [0-3], dmg 15.4 [12-21], alive 8/8, won 0/8; T4: hp -4.3 [0-9], dmg 8.6 [0-15], alive 8/8, won 0/8; T5: hp -3.4 [0-22], dmg 6.4 [0-21], alive 8/8, won 0/8"
+      },
+      "plan3": {
+        "plays": "nothing (end the turn now)",
+        "hp_lost": 0,
+        "dmg": 0,
+        "enemies_after": "异蛙寄生虫 40 HP, Weak 2",
+        "rollout": "5-turn rollout (8 samples) (the no-potion line: its later turns drink no potion): expected further HP loss 43.9, fight over within 5 turns in 0/8, expected turns to the end (surviving samples) ~7.1; ranked on fewest dead first (some line pays a potion cost), then -(further loss) - 40 x (1 - win chance): win chance ~71% (fights won in the samples, the others by the end-of-horizon estimate), value -55.4",
+        "rollout_turns": "T1 exact: hp -0, dmg 0; T2: hp -4.4 [0-7], dmg 11.6 [6-15], alive 8/8, won 0/8; T3: hp -0.4 [0-3], dmg 15.4 [12-21], alive 8/8, won 0/8; T4: hp -6.3 [0-16], dmg 8.6 [0-15], alive 8/8, won 0/8; T5: hp -3.4 [0-22], dmg 6.4 [0-21], alive 8/8, won 0/8"
+      }
+    }
+  },
+  {
+    "line": 371400,
+    "floor": 8,
+    "turn": 2,
+    "choice": "plan2",
+    "best": true,
+    "criteria": {
+      "plan1": {
+        "plays": "打击 -> 异蛙寄生虫, then 后空翻, then 防御",
+        "hp_lost": 2,
+        "dmg": 6,
+        "enemies_after": "异蛙寄生虫 34 HP, Weak 1",
+        "rollout": "3-turn rollout (8 samples) (later turns may drink the potions still held, each when its turn gains more than the potion's cost): expected further HP loss 25.7, fight over within 3 turns in 0/8, expected turns to the end (surviving samples) ~4.1; ranked on fewest dead first (some line pays a potion cost), then -(further loss + potion cost) - 40 x (1 - win chance): win chance ~98% (fights won in the samples, the others by the end-of-horizon estimate), value -28.6 [cut to fit the time budget: horizon 3]",
+        "rollout_turns": "T1 exact: hp -2, dmg 6; T2: hp -0.4 [0-3], dmg 16.5 [6-21], alive 8/8, won 0/8; T3: hp -6.4 [0-18], dmg 13 [6-21], alive 8/8, won 0/8"
+      },
+      "plan2": {
+        "plays": "后空翻, then 防御",
+        "hp_lost": 2,
+        "dmg": 0,
+        "enemies_after": "异蛙寄生虫 40 HP, Weak 1",
+        "rollout": "3-turn rollout (8 samples) (later turns may drink the potions still held, each when its turn gains more than the potion's cost): expected further HP loss 12.6, fight over within 3 turns in 0/8, expected turns to the end (surviving samples) ~3; ranked on fewest dead first (some line pays a potion cost), then -(further loss + potion cost) - 40 x (1 - win chance): win chance ~100% (fights won in the samples, the others by the end-of-horizon estimate), value -16 [cut to fit the time budget: horizon 3]",
+        "rollout_turns": "T1 exact: hp -2, dmg 0; T2: hp -0.4 [0-3], dmg 17.3 [12-21], alive 8/8, won 0/8; T3: hp -7.1 [2-13], dmg 9.9 [6-18], alive 8/8, won 0/8"
+      },
+      "plan3": {
+        "plays": "打击 -> 异蛙寄生虫, then 后空翻",
+        "hp_lost": 7,
+        "dmg": 6,
+        "enemies_after": "异蛙寄生虫 34 HP, Weak 1",
+        "rollout": "3-turn rollout (8 samples) (later turns may drink the potions still held, each when its turn gains more than the potion's cost): expected further HP loss 30.7, fight over within 3 turns in 0/8, expected turns to the end (surviving samples) ~4.1; ranked on fewest dead first (some line pays a potion cost), then -(further loss + potion cost) - 40 x (1 - win chance): win chance ~95% (fights won in the samples, the others by the end-of-horizon estimate), value -35.3 [cut to fit the time budget: horizon 3]",
+        "rollout_turns": "T1 exact: hp -7, dmg 6; T2: hp -0.4 [0-3], dmg 17.3 [12-21], alive 8/8, won 0/8; T3: hp -6.8 [0-18], dmg 12.3 [6-18], alive 8/8, won 0/8"
+      },
+      "plan4": {
+        "plays": "蛇咬 -> 异蛙寄生虫, then 打击 -> 异蛙寄生虫",
+        "hp_lost": 12,
+        "dmg": 13,
+        "enemies_after": "异蛙寄生虫 27 HP, Weak 1, 中毒 6",
+        "rollout": "3-turn rollout (8 samples) (later turns may drink the potions still held, each when its turn gains more than the potion's cost): expected further HP loss 47.2, fight over within 3 turns in 0/8, expected turns to the end (surviving samples) ~5.6; ranked on fewest dead first (some line pays a potion cost), then -(further loss + potion cost) - 40 x (1 - win chance): win chance ~79% (fights won in the samples, the others by the end-of-horizon estimate), value -58.8 [cut to fit the time budget: horizon 3]",
+        "rollout_turns": "T1 exact: hp -12, dmg 13; T2: hp -0 [0-0], dmg 24.8 [18-27], alive 8/8, won 0/8; T3: hp -4.5 [0-19], dmg 10.5 [4-20], alive 8/8, won 0/8"
+      },
+      "plan5": {
+        "plays": "打击 -> 异蛙寄生虫, then 后空翻, then 防御, then potion 虚弱药水 -> 异蛙寄生虫",
+        "hp_lost": 2,
+        "dmg": 6,
+        "enemies_after": "异蛙寄生虫 34 HP, Weak 4",
+        "rollout": "3-turn rollout (8 samples) (later turns may drink the potions still held, each when its turn gains more than the potion's cost): expected further HP loss 21.7, fight over within 3 turns in 0/8, expected turns to the end (surviving samples) ~4.1; ranked on fewest dead first (some line pays a potion cost), then -(further loss + potion cost) - 40 x (1 - win chance): win chance ~98% (fights won in the samples, the others by the end-of-horizon estimate), value -27.9 [cut to fit the time budget: horizon 3]",
+        "rollout_turns": "T1 exact: hp -2, dmg 6; T2: hp -0.4 [0-3], dmg 16.5 [6-21], alive 8/8, won 0/8; T3: hp -6.4 [0-18], dmg 13 [6-21], alive 8/8, won 0/8"
+      },
+      "plan6": {
+        "plays": "打击 -> 异蛙寄生虫, then 后空翻, then 防御",
+        "hp_lost": 2,
+        "dmg": 6,
+        "enemies_after": "异蛙寄生虫 34 HP, Weak 1",
+        "rollout": "3-turn rollout (8 samples) (the no-potion line: its later turns drink no potion): expected further HP loss 25.7, fight over within 3 turns in 0/8, expected turns to the end (surviving samples) ~4.1; ranked on fewest dead first (some line pays a potion cost), then -(further loss) - 40 x (1 - win chance): win chance ~98% (fights won in the samples, the others by the end-of-horizon estimate), value -26.7 [cut to fit the time budget: horizon 3]",
+        "rollout_turns": "T1 exact: hp -2, dmg 6; T2: hp -0.4 [0-3], dmg 16.5 [6-21], alive 8/8, won 0/8; T3: hp -9.4 [0-18], dmg 13 [6-21], alive 8/8, won 0/8"
+      }
+    }
+  },
+  {
+    "line": 371401,
+    "floor": 8,
+    "turn": 2,
+    "choice": "plan2",
+    "best": true,
+    "criteria": {
+      "plan1": {
+        "plays": "猎杀者 -> 异蛙寄生虫",
+        "hp_lost": 7,
+        "dmg": 15,
+        "enemies_after": "异蛙寄生虫 25 HP, Weak 1",
+        "rollout": "3-turn rollout (8 samples) (later turns may drink the potions still held, each when its turn gains more than the potion's cost): expected further HP loss 36.6, fight over within 3 turns in 0/8, expected turns to the end (surviving samples) ~4.9; ranked on fewest dead first (some line pays a potion cost), then -(further loss + potion cost) - 40 x (1 - win chance): win chance ~93% (fights won in the samples, the others by the end-of-horizon estimate), value -41.5 [cut to fit the time budget: horizon 3]",
+        "rollout_turns": "T1 exact: hp -7, dmg 15; T2: hp -0 [0-0], dmg 8 [6-12], alive 8/8, won 0/8; T3: hp -2.6 [0-11], dmg 11.4 [0-19], alive 8/8, won 0/8"
+      },
+      "plan2": {
+        "plays": "打击 -> 异蛙寄生虫, then 防御",
+        "hp_lost": 2,
+        "dmg": 6,
+        "enemies_after": "异蛙寄生虫 34 HP, Weak 1",
+        "rollout": "3-turn rollout (8 samples) (later turns may drink the potions still held, each when its turn gains more than the potion's cost): expected further HP loss 18.1, fight over within 3 turns in 0/8, expected turns to the end (surviving samples) ~3.5; ranked on fewest dead first (some line pays a potion cost), then -(further loss + potion cost) - 40 x (1 - win chance): win chance ~99% (fights won in the samples, the others by the end-of-horizon estimate), value -21.8 [cut to fit the time budget: horizon 3]",
+        "rollout_turns": "T1 exact: hp -2, dmg 6; T2: hp -0 [0-0], dmg 8 [6-12], alive 8/8, won 0/8; T3: hp -7.5 [0-13], dmg 12.8 [0-23], alive 8/8, won 0/8"
+      },
+      "plan3": {
+        "plays": "蛇咬 -> 异蛙寄生虫",
+        "hp_lost": 7,
+        "dmg": 7,
+        "enemies_after": "异蛙寄生虫 33 HP, Weak 1, 中毒 6",
+        "rollout": "3-turn rollout (8 samples) (later turns may drink the potions still held, each when its turn gains more than the potion's cost): expected further HP loss 41.2, fight over within 3 turns in 0/8, expected turns to the end (surviving samples) ~5.3; ranked on fewest dead first (some line pays a potion cost), then -(further loss + potion cost) - 40 x (1 - win chance): win chance ~92% (fights won in the samples, the others by the end-of-horizon estimate), value -45.9 [cut to fit the time budget: horizon 3]",
+        "rollout_turns": "T1 exact: hp -7, dmg 7; T2: hp -0 [0-0], dmg 14 [12-18], alive 8/8, won 0/8; T3: hp -3.4 [0-13], dmg 16.9 [5-21], alive 8/8, won 0/8"
+      },
+      "plan4": {
+        "plays": "猎杀者 -> 异蛙寄生虫, then potion 虚弱药水 -> 异蛙寄生虫",
+        "hp_lost": 7,
+        "dmg": 15,
+        "enemies_after": "异蛙寄生虫 25 HP, Weak 4",
+        "rollout": "3-turn rollout (8 samples) (later turns may drink the potions still held, each when its turn gains more than the potion's cost): expected further HP loss 33.6, fight over within 3 turns in 0/8, expected turns to the end (surviving samples) ~4.9; ranked on fewest dead first (some line pays a potion cost), then -(further loss + potion cost) - 40 x (1 - win chance): win chance ~93% (fights won in the samples, the others by the end-of-horizon estimate), value -41.7 [cut to fit the time budget: horizon 3]",
+        "rollout_turns": "T1 exact: hp -7, dmg 15; T2: hp -0 [0-0], dmg 8 [6-12], alive 8/8, won 0/8; T3: hp -2.6 [0-11], dmg 11.4 [0-19], alive 8/8, won 0/8"
+      },
+      "plan5": {
+        "plays": "猎杀者 -> 异蛙寄生虫",
+        "hp_lost": 7,
+        "dmg": 15,
+        "enemies_after": "异蛙寄生虫 25 HP, Weak 1",
+        "rollout": "3-turn rollout (8 samples) (the no-potion line: its later turns drink no potion): expected further HP loss 36.6, fight over within 3 turns in 0/8, expected turns to the end (surviving samples) ~4.9; ranked on fewest dead first (some line pays a potion cost), then -(further loss) - 40 x (1 - win chance): win chance ~93% (fights won in the samples, the others by the end-of-horizon estimate), value -39.5 [cut to fit the time budget: horizon 3]",
+        "rollout_turns": "T1 exact: hp -7, dmg 15; T2: hp -0 [0-0], dmg 8 [6-12], alive 8/8, won 0/8; T3: hp -5.6 [0-19], dmg 11.4 [0-19], alive 8/8, won 0/8"
+      }
+    }
+  },
+  {
+    "line": 371403,
+    "floor": 8,
+    "turn": 2,
+    "choice": "plan1",
+    "best": true,
+    "criteria": {
+      "plan1": {
+        "plays": "nothing (end the turn now)",
+        "hp_lost": 2,
+        "dmg": 0,
+        "enemies_after": "异蛙寄生虫 34 HP, Weak 1",
+        "rollout": "5-turn rollout (8 samples) (later turns may drink the potions still held, each when its turn gains more than the potion's cost): expected further HP loss 47.5, fight over within 5 turns in 0/8, expected turns to the end (surviving samples) ~7.5; ranked on fewest dead first (some line pays a potion cost), then -(further loss + potion cost) - 40 x (1 - win chance): win chance ~74% (fights won in the samples, the others by the end-of-horizon estimate), value -63",
+        "rollout_turns": "T1 exact: hp -2, dmg 0; T2: hp -0 [0-0], dmg 8 [6-12], alive 8/8, won 0/8; T3: hp -8.8 [0-18], dmg 14.3 [6-23], alive 8/8, won 0/8; T4: hp -1.6 [0-6], dmg 12.8 [5-22], alive 8/8, won 0/8; T5: hp -13.3 [0-22], dmg 9.4 [4-20], alive 8/8, won 0/8"
+      },
+      "plan2": {
+        "plays": "potion 虚弱药水 -> 异蛙寄生虫",
+        "hp_lost": 2,
+        "dmg": 0,
+        "enemies_after": "异蛙寄生虫 34 HP, Weak 4",
+        "rollout": "5-turn rollout (8 samples) (later turns may drink the potions still held, each when its turn gains more than the potion's cost): expected further HP loss 47.5, fight over within 5 turns in 0/8, expected turns to the end (surviving samples) ~7.5; ranked on fewest dead first (some line pays a potion cost), then -(further loss + potion cost) - 40 x (1 - win chance): win chance ~74% (fights won in the samples, the others by the end-of-horizon estimate), value -63",
+        "rollout_turns": "T1 exact: hp -2, dmg 0; T2: hp -0 [0-0], dmg 8 [6-12], alive 8/8, won 0/8; T3: hp -8.8 [0-18], dmg 14.3 [6-23], alive 8/8, won 0/8; T4: hp -1.6 [0-6], dmg 12.8 [5-22], alive 8/8, won 0/8; T5: hp -14.1 [0-24], dmg 9.4 [4-20], alive 8/8, won 0/8"
+      },
+      "plan3": {
+        "plays": "nothing (end the turn now)",
+        "hp_lost": 2,
+        "dmg": 0,
+        "enemies_after": "异蛙寄生虫 34 HP, Weak 1",
+        "rollout": "5-turn rollout (8 samples) (the no-potion line: its later turns drink no potion): expected further HP loss 50.3, fight over within 5 turns in 0/8, expected turns to the end (surviving samples) ~7.5; ranked on fewest dead first (some line pays a potion cost), then -(further loss) - 40 x (1 - win chance): win chance ~64% (fights won in the samples, the others by the end-of-horizon estimate), value -64.5",
+        "rollout_turns": "T1 exact: hp -2, dmg 0; T2: hp -0 [0-0], dmg 8 [6-12], alive 8/8, won 0/8; T3: hp -13.8 [0-26], dmg 14.3 [6-23], alive 8/8, won 0/8; T4: hp -1.6 [0-6], dmg 12.8 [5-22], alive 8/8, won 0/8; T5: hp -14.1 [0-24], dmg 9.4 [4-20], alive 8/8, won 0/8"
+      }
+    }
+  },
+  {
+    "line": 371404,
+    "floor": 8,
+    "turn": 3,
+    "choice": "plan3",
+    "best": true,
+    "criteria": {
+      "plan1": {
+        "plays": "蛇咬 -> 异蛙寄生虫, then 打击 -> 异蛙寄生虫",
+        "hp_lost": 0,
+        "dmg": 13,
+        "enemies_after": "异蛙寄生虫 21 HP, 中毒 6",
+        "rollout": "3-turn rollout (8 samples) (later turns may drink the potions still held, each when its turn gains more than the potion's cost): expected further HP loss 41.5, fight over within 3 turns in 0/8, expected turns to the end (surviving samples) ~5.5; ranked on fewest dead first (some line pays a potion cost), then -(further loss + potion cost) - 40 x (1 - win chance): win chance ~91% (fights won in the samples, the others by the end-of-horizon estimate), value -48.4 [cut to fit the time budget: horizon 3]",
+        "rollout_turns": "T1 exact: hp -0, dmg 13; T2: hp -2.3 [0-8], dmg 18.6 [10-21], alive 8/8, won 0/8; T3: hp -7.3 [0-25], dmg 11.1 [3-20], alive 8/8, won 0/8"
+      },
+      "plan2": {
+        "plays": "蛇咬 -> 异蛙寄生虫, then 生存者",
+        "hp_lost": 0,
+        "dmg": 7,
+        "enemies_after": "异蛙寄生虫 27 HP, 中毒 6",
+        "rollout": "3-turn rollout (8 samples) (later turns may drink the potions still held, each when its turn gains more than the potion's cost): expected further HP loss 42.6, fight over within 3 turns in 0/8, expected turns to the end (surviving samples) ~5.5; ranked on fewest dead first (some line pays a potion cost), then -(further loss + potion cost) - 40 x (1 - win chance): win chance ~90% (fights won in the samples, the others by the end-of-horizon estimate), value -50 [cut to fit the time budget: horizon 3]",
+        "rollout_turns": "T1 exact: hp -0, dmg 7; T2: hp -3.4 [0-8], dmg 22.4 [10-27], alive 8/8, won 0/8; T3: hp -7.6 [0-25], dmg 13.4 [4-20], alive 8/8, won 0/8"
+      },
+      "plan3": {
+        "plays": "生存者",
+        "hp_lost": 0,
+        "dmg": 0,
+        "enemies_after": "异蛙寄生虫 34 HP",
+        "rollout": "3-turn rollout (8 samples) (later turns may drink the potions still held, each when its turn gains more than the potion's cost): expected further HP loss 7.9, fight over within 3 turns in 0/8, expected turns to the end (surviving samples) ~3; ranked on fewest dead first (some line pays a potion cost), then -(further loss + potion cost) - 40 x (1 - win chance): win chance ~100% (fights won in the samples, the others by the end-of-horizon estimate), value -10.6 [cut to fit the time budget: horizon 3]",
+        "rollout_turns": "T1 exact: hp -0, dmg 0; T2: hp -7.9 [0-10], dmg 9.9 [0-15], alive 8/8, won 0/8; T3: hp -1.8 [0-3], dmg 16.6 [4-25], alive 8/8, won 0/8"
+      },
+      "plan4": {
+        "plays": "蛇咬 -> 异蛙寄生虫, then 打击 -> 异蛙寄生虫, then potion 虚弱药水 -> 异蛙寄生虫",
+        "hp_lost": 0,
+        "dmg": 13,
+        "enemies_after": "异蛙寄生虫 21 HP, Weak 3, 中毒 6",
+        "rollout": "3-turn rollout (8 samples) (later turns may drink the potions still held, each when its turn gains more than the potion's cost): expected further HP loss 41.5, fight over within 3 turns in 0/8, expected turns to the end (surviving samples) ~5.5; ranked on fewest dead first (some line pays a potion cost), then -(further loss + potion cost) - 40 x (1 - win chance): win chance ~91% (fights won in the samples, the others by the end-of-horizon estimate), value -50.4 [cut to fit the time budget: horizon 3]",
+        "rollout_turns": "T1 exact: hp -0, dmg 13; T2: hp -2.3 [0-8], dmg 18.6 [10-21], alive 8/8, won 0/8; T3: hp -8.3 [0-27], dmg 11.1 [3-20], alive 8/8, won 0/8"
+      },
+      "plan5": {
+        "plays": "蛇咬 -> 异蛙寄生虫, then 打击 -> 异蛙寄生虫",
+        "hp_lost": 0,
+        "dmg": 13,
+        "enemies_after": "异蛙寄生虫 21 HP, 中毒 6",
+        "rollout": "3-turn rollout (8 samples) (the no-potion line: its later turns drink no potion): expected further HP loss 42.5, fight over within 3 turns in 0/8, expected turns to the end (surviving samples) ~5.5; ranked on fewest dead first (some line pays a potion cost), then -(further loss) - 40 x (1 - win chance): win chance ~89% (fights won in the samples, the others by the end-of-horizon estimate), value -46.8 [cut to fit the time budget: horizon 3]",
+        "rollout_turns": "T1 exact: hp -0, dmg 13; T2: hp -3.3 [0-13], dmg 18.6 [10-21], alive 8/8, won 0/8; T3: hp -8.3 [0-27], dmg 11.1 [3-20], alive 8/8, won 0/8"
+      }
+    }
+  },
+  {
+    "line": 371406,
+    "floor": 8,
+    "turn": 3,
+    "choice": "plan3",
+    "best": true,
+    "criteria": {
+      "plan1": {
+        "plays": "蛇咬 -> 异蛙寄生虫",
+        "hp_lost": 0,
+        "dmg": 7,
+        "enemies_after": "异蛙寄生虫 27 HP, 中毒 6",
+        "rollout": "5-turn rollout (8 samples) (later turns may drink the potions still held, each when its turn gains more than the potion's cost): expected further HP loss 48.3, fight over within 5 turns in 0/8, expected turns to the end (surviving samples) ~6.5; ranked on fewest dead first (some line pays a potion cost), then -(further loss + potion cost) - 40 x (1 - win chance): win chance ~78% (fights won in the samples, the others by the end-of-horizon estimate), value -62.4",
+        "rollout_turns": "T1 exact: hp -0, dmg 7; T2: hp -3.4 [0-8], dmg 22.4 [10-27], alive 8/8, won 0/8; T3: hp -7.6 [0-25], dmg 13.4 [4-20], alive 8/8, won 0/8; T4: hp -9.9 [0-17], dmg 7.5 [0-15], alive 8/8, won 0/8; T5: hp -10.8 [0-34], dmg 14.9 [8-26], alive 8/8, won 0/8"
+      },
+      "plan2": {
+        "plays": "蛇咬 -> 异蛙寄生虫, then potion 虚弱药水 -> 异蛙寄生虫",
+        "hp_lost": 0,
+        "dmg": 7,
+        "enemies_after": "异蛙寄生虫 27 HP, Weak 3, 中毒 6",
+        "rollout": "5-turn rollout (8 samples) (later turns may drink the potions still held, each when its turn gains more than the potion's cost): expected further HP loss 49.5, fight over within 5 turns in 0/8, expected turns to the end (surviving samples) ~6.6; ranked on fewest dead first (some line pays a potion cost), then -(further loss + potion cost) - 40 x (1 - win chance): win chance ~73% (fights won in the samples, the others by the end-of-horizon estimate), value -65.5",
+        "rollout_turns": "T1 exact: hp -0, dmg 7; T2: hp -3.4 [0-8], dmg 22.4 [10-27], alive 8/8, won 0/8; T3: hp -8.6 [0-27], dmg 13.4 [4-20], alive 8/8, won 0/8; T4: hp -10.8 [0-19], dmg 7.5 [0-15], alive 8/8, won 0/8; T5: hp -10.3 [0-34], dmg 13 [7-20], alive 8/8, won 0/8"
+      },
+      "plan3": {
+        "plays": "蛇咬 -> 异蛙寄生虫",
+        "hp_lost": 0,
+        "dmg": 7,
+        "enemies_after": "异蛙寄生虫 27 HP, 中毒 6",
+        "rollout": "5-turn rollout (8 samples) (the no-potion line: its later turns drink no potion): expected further HP loss 50.5, fight over within 5 turns in 0/8, expected turns to the end (surviving samples) ~6.6; ranked on fewest dead first (some line pays a potion cost), then -(further loss) - 40 x (1 - win chance): win chance ~72% (fights won in the samples, the others by the end-of-horizon estimate), value -61.6",
+        "rollout_turns": "T1 exact: hp -0, dmg 7; T2: hp -4.4 [0-13], dmg 22.4 [10-27], alive 8/8, won 0/8; T3: hp -8.6 [0-27], dmg 13.4 [4-20], alive 8/8, won 0/8; T4: hp -10.8 [0-19], dmg 7.5 [0-15], alive 8/8, won 0/8; T5: hp -10.3 [0-34], dmg 13 [7-20], alive 8/8, won 0/8"
+      }
+    }
+  },
+  {
+    "line": 371407,
+    "floor": 8,
+    "turn": 3,
+    "choice": "plan3",
+    "best": true,
+    "criteria": {
+      "plan1": {
+        "plays": "nothing (end the turn now)",
+        "hp_lost": 0,
+        "dmg": 7,
+        "enemies_after": "异蛙寄生虫 27 HP, 中毒 6",
+        "rollout": "5-turn rollout (8 samples) (later turns may drink the potions still held, each when its turn gains more than the potion's cost): expected further HP loss 48.3, fight over within 5 turns in 0/8, expected turns to the end (surviving samples) ~6.5; ranked on fewest dead first (some line pays a potion cost), then -(further loss + potion cost) - 40 x (1 - win chance): win chance ~78% (fights won in the samples, the others by the end-of-horizon estimate), value -62.4",
+        "rollout_turns": "T1 exact: hp -0, dmg 7; T2: hp -3.4 [0-8], dmg 22.4 [10-27], alive 8/8, won 0/8; T3: hp -7.6 [0-25], dmg 13.4 [4-20], alive 8/8, won 0/8; T4: hp -9.9 [0-17], dmg 7.5 [0-15], alive 8/8, won 0/8; T5: hp -10.8 [0-34], dmg 14.9 [8-26], alive 8/8, won 0/8"
+      },
+      "plan2": {
+        "plays": "potion 虚弱药水 -> 异蛙寄生虫",
+        "hp_lost": 0,
+        "dmg": 7,
+        "enemies_after": "异蛙寄生虫 27 HP, Weak 3, 中毒 6",
+        "rollout": "5-turn rollout (8 samples) (later turns may drink the potions still held, each when its turn gains more than the potion's cost): expected further HP loss 49.5, fight over within 5 turns in 0/8, expected turns to the end (surviving samples) ~6.6; ranked on fewest dead first (some line pays a potion cost), then -(further loss + potion cost) - 40 x (1 - win chance): win chance ~73% (fights won in the samples, the others by the end-of-horizon estimate), value -65.5",
+        "rollout_turns": "T1 exact: hp -0, dmg 7; T2: hp -3.4 [0-8], dmg 22.4 [10-27], alive 8/8, won 0/8; T3: hp -8.6 [0-27], dmg 13.4 [4-20], alive 8/8, won 0/8; T4: hp -10.8 [0-19], dmg 7.5 [0-15], alive 8/8, won 0/8; T5: hp -10.3 [0-34], dmg 13 [7-20], alive 8/8, won 0/8"
+      },
+      "plan3": {
+        "plays": "nothing (end the turn now)",
+        "hp_lost": 0,
+        "dmg": 7,
+        "enemies_after": "异蛙寄生虫 27 HP, 中毒 6",
+        "rollout": "5-turn rollout (8 samples) (the no-potion line: its later turns drink no potion): expected further HP loss 50.5, fight over within 5 turns in 0/8, expected turns to the end (surviving samples) ~6.6; ranked on fewest dead first (some line pays a potion cost), then -(further loss) - 40 x (1 - win chance): win chance ~72% (fights won in the samples, the others by the end-of-horizon estimate), value -61.6",
+        "rollout_turns": "T1 exact: hp -0, dmg 7; T2: hp -4.4 [0-13], dmg 22.4 [10-27], alive 8/8, won 0/8; T3: hp -8.6 [0-27], dmg 13.4 [4-20], alive 8/8, won 0/8; T4: hp -10.8 [0-19], dmg 7.5 [0-15], alive 8/8, won 0/8; T5: hp -10.3 [0-34], dmg 13 [7-20], alive 8/8, won 0/8"
+      }
+    }
+  },
+  {
+    "line": 371408,
+    "floor": 8,
+    "turn": 4,
+    "choice": "plan2",
+    "best": true,
+    "criteria": {
+      "plan1": {
+        "plays": "中和+ -> 异蛙寄生虫, then 打击 -> 异蛙寄生虫, then 后空翻, then 防御",
+        "hp_lost": 5,
+        "dmg": 16,
+        "enemies_after": "异蛙寄生虫 11 HP, Weak 2, 中毒 5",
+        "rollout": "3-turn rollout (4 samples) (later turns may drink the potions still held, each when its turn gains more than the potion's cost): expected further HP loss 44.9, fight over within 3 turns in 0/4, expected turns to the end (surviving samples) ~5.5; ranked on fewest dead first (some line pays a potion cost), then -(further loss + potion cost) - 40 x (1 - win chance): win chance ~72% (fights won in the samples, the others by the end-of-horizon estimate), value -59.8 [cut to fit the time budget: horizon 3, samples 4]",
+        "rollout_turns": "T1 exact: hp -5, dmg 16; T2: hp -2.3 [0-6], dmg 11 [11-11], alive 4/4, won 0/4; T3: hp -8 [0-25], dmg 7 [0-12], alive 4/4, won 0/4"
+      },
+      "plan2": {
+        "plays": "中和+ -> 异蛙寄生虫, then 后空翻, then 防御",
+        "hp_lost": 5,
+        "dmg": 10,
+        "enemies_after": "异蛙寄生虫 17 HP, Weak 2, 中毒 5",
+        "rollout": "3-turn rollout (4 samples) (later turns may drink the potions still held, each when its turn gains more than the potion's cost): expected further HP loss 43.9, fight over within 3 turns in 0/4, expected turns to the end (surviving samples) ~5.3; ranked on fewest dead first (some line pays a potion cost), then -(further loss + potion cost) - 40 x (1 - win chance): win chance ~87% (fights won in the samples, the others by the end-of-horizon estimate), value -53.3 [cut to fit the time budget: horizon 3, samples 4]",
+        "rollout_turns": "T1 exact: hp -5, dmg 10; T2: hp -2.3 [0-6], dmg 17 [17-17], alive 4/4, won 0/4; T3: hp -11.3 [0-30], dmg 13.5 [6-20], alive 4/4, won 0/4"
+      },
+      "plan3": {
+        "plays": "中和+ -> 异蛙寄生虫, then 打击 -> 异蛙寄生虫, then 后空翻",
+        "hp_lost": 10,
+        "dmg": 16,
+        "enemies_after": "异蛙寄生虫 11 HP, Weak 2, 中毒 5",
+        "rollout": "3-turn rollout (4 samples) (later turns may drink the potions still held, each when its turn gains more than the potion's cost): expected further HP loss 48.6, fight over within 3 turns in 0/4, expected turns to the end (surviving samples) ~5.5; ranked on fewest dead first (some line pays a potion cost), then -(further loss + potion cost) - 40 x (1 - win chance): win chance ~66% (fights won in the samples, the others by the end-of-horizon estimate), value -66.4 [cut to fit the time budget: horizon 3, samples 4]",
+        "rollout_turns": "T1 exact: hp -10, dmg 16; T2: hp -2.3 [0-6], dmg 11 [11-11], alive 4/4, won 0/4; T3: hp -8 [0-25], dmg 7 [0-12], alive 4/4, won 0/4"
+      },
+      "plan4": {
+        "plays": "中和+ -> 异蛙寄生虫, then 打击 -> 异蛙寄生虫, then 后空翻, then 防御, then potion 虚弱药水 -> 异蛙寄生虫",
+        "hp_lost": 5,
+        "dmg": 16,
+        "enemies_after": "异蛙寄生虫 11 HP, Weak 5, 中毒 5",
+        "rollout": "3-turn rollout (4 samples) (later turns may drink the potions still held, each when its turn gains more than the potion's cost): expected further HP loss 44.9, fight over within 3 turns in 0/4, expected turns to the end (surviving samples) ~5.5; ranked on fewest dead first (some line pays a potion cost), then -(further loss + potion cost) - 40 x (1 - win chance): win chance ~72% (fights won in the samples, the others by the end-of-horizon estimate), value -61.2 [cut to fit the time budget: horizon 3, samples 4]",
+        "rollout_turns": "T1 exact: hp -5, dmg 16; T2: hp -2.3 [0-6], dmg 11 [11-11], alive 4/4, won 0/4; T3: hp -9.5 [0-27], dmg 7 [0-12], alive 4/4, won 0/4"
+      },
+      "plan5": {
+        "plays": "中和+ -> 异蛙寄生虫, then 打击 -> 异蛙寄生虫, then 后空翻, then 防御",
+        "hp_lost": 5,
+        "dmg": 16,
+        "enemies_after": "异蛙寄生虫 11 HP, Weak 2, 中毒 5",
+        "rollout": "3-turn rollout (4 samples) (the no-potion line: its later turns drink no potion): expected further HP loss 44.9, fight over within 3 turns in 0/4, expected turns to the end (surviving samples) ~5.5; ranked on fewest dead first (some line pays a potion cost), then -(further loss) - 40 x (1 - win chance): win chance ~72% (fights won in the samples, the others by the end-of-horizon estimate), value -55.9 [cut to fit the time budget: horizon 3, samples 4]",
+        "rollout_turns": "T1 exact: hp -5, dmg 16; T2: hp -2.3 [0-6], dmg 11 [11-11], alive 4/4, won 0/4; T3: hp -9.5 [0-27], dmg 7 [0-12], alive 4/4, won 0/4"
+      }
+    }
+  },
+  {
+    "line": 371410,
+    "floor": 8,
+    "turn": 4,
+    "choice": "plan2",
+    "best": true,
+    "criteria": {
+      "plan1": {
+        "plays": "打击 -> 异蛙寄生虫, then 咕嘟冒泡+ -> 异蛙寄生虫",
+        "hp_lost": 0,
+        "dmg": 23,
+        "enemies_after": "",
+        "rollout": "3-turn rollout (8 samples) (later turns may drink the potions still held, each when its turn gains more than the potion's cost): expected further HP loss 46.2, fight over within 3 turns in 0/8, expected turns to the end (surviving samples) ~5.1; ranked on fewest dead first (some line pays a potion cost), then -(further loss + potion cost) - 40 x (1 - win chance): win chance ~74% (fights won in the samples, the others by the end-of-horizon estimate), value -61.9 [cut to fit the time budget: horizon 3]",
+        "rollout_turns": "T1 exact: hp -0, dmg 23; T2: hp -9 [1-15], dmg 9.8 [6-12], alive 8/8, won 0/8; T3: hp -14.8 [0-37], dmg 5.3 [0-24], alive 8/8, won 0/8"
+      },
+      "plan2": {
+        "plays": "防御, then 咕嘟冒泡+ -> 异蛙寄生虫",
+        "hp_lost": 5,
+        "dmg": 18,
+        "enemies_after": "异蛙寄生虫 5 HP, Weak 2, 中毒 17",
+        "rollout": "3-turn rollout (8 samples) (later turns may drink the potions still held, each when its turn gains more than the potion's cost): expected further HP loss 45.8, fight over within 3 turns in 0/8, expected turns to the end (surviving samples) ~5.4; ranked on fewest dead first (some line pays a potion cost), then -(further loss + potion cost) - 40 x (1 - win chance): win chance ~80% (fights won in the samples, the others by the end-of-horizon estimate), value -57.6 [cut to fit the time budget: horizon 3]",
+        "rollout_turns": "T1 exact: hp -5, dmg 18; T2: hp -0.4 [0-1], dmg 5 [5-5], alive 8/8, won 0/8; T3: hp -8.4 [0-22], dmg 12.1 [4-20], alive 8/8, won 0/8"
+      },
+      "plan3": {
+        "plays": "猎杀者 -> 异蛙寄生虫",
+        "hp_lost": 10,
+        "dmg": 21,
+        "enemies_after": "异蛙寄生虫 2 HP, Weak 2, 中毒 5",
+        "rollout": "3-turn rollout (8 samples) (later turns may drink the potions still held, each when its turn gains more than the potion's cost): expected further HP loss 50.6, fight over within 3 turns in 0/8, expected turns to the end (surviving samples) ~5.4; ranked on fewest dead first (some line pays a potion cost), then -(further loss + potion cost) - 40 x (1 - win chance): win chance ~73% (fights won in the samples, the others by the end-of-horizon estimate), value -65.4 [cut to fit the time budget: horizon 3]",
+        "rollout_turns": "T1 exact: hp -10, dmg 21; T2: hp -0.4 [0-1], dmg 2 [2-2], alive 8/8, won 0/8; T3: hp -8.6 [0-24], dmg 10.4 [4-15], alive 8/8, won 0/8"
+      },
+      "plan4": {
+        "plays": "打击 -> 异蛙寄生虫, then 防御",
+        "hp_lost": 5,
+        "dmg": 12,
+        "enemies_after": "异蛙寄生虫 11 HP, Weak 2, 中毒 5",
+        "rollout": "3-turn rollout (8 samples) (later turns may drink the potions still held, each when its turn gains more than the potion's cost): expected further HP loss 46.3, fight over within 3 turns in 0/8, expected turns to the end (surviving samples) ~5.4; ranked on fewest dead first (some line pays a potion cost), then -(further loss + potion cost) - 40 x (1 - win chance): win chance ~78% (fights won in the samples, the others by the end-of-horizon estimate), value -59 [cut to fit the time budget: horizon 3]",
+        "rollout_turns": "T1 exact: hp -5, dmg 12; T2: hp -0.4 [0-1], dmg 11 [11-11], alive 8/8, won 0/8; T3: hp -10.5 [0-21], dmg 10.9 [6-19], alive 8/8, won 0/8"
+      },
+      "plan5": {
+        "plays": "打击 -> 异蛙寄生虫, then 咕嘟冒泡+ -> 异蛙寄生虫, then potion 虚弱药水 -> 异蛙寄生虫",
+        "hp_lost": 0,
+        "dmg": 23,
+        "enemies_after": "",
+        "rollout": "3-turn rollout (8 samples) (later turns may drink the potions still held, each when its turn gains more than the potion's cost): expected further HP loss 47.6, fight over within 3 turns in 0/8, expected turns to the end (surviving samples) ~5.3; ranked on fewest dead first (some line pays a potion cost), then -(further loss + potion cost) - 40 x (1 - win chance): win chance ~71% (fights won in the samples, the others by the end-of-horizon estimate), value -64.3 [cut to fit the time budget: horizon 3]",
+        "rollout_turns": "T1 exact: hp -0, dmg 23; T2: hp -9.5 [0-17], dmg 8.3 [6-12], alive 8/8, won 0/8; T3: hp -15.8 [0-40], dmg 6 [0-24], alive 8/8, won 0/8"
+      },
+      "plan6": {
+        "plays": "打击 -> 异蛙寄生虫, then 咕嘟冒泡+ -> 异蛙寄生虫",
+        "hp_lost": 0,
+        "dmg": 23,
+        "enemies_after": "",
+        "rollout": "3-turn rollout (8 samples) (the no-potion line: its later turns drink no potion): expected further HP loss 47.6, fight over within 3 turns in 0/8, expected turns to the end (surviving samples) ~5.3; ranked on fewest dead first (some line pays a potion cost), then -(further loss) - 40 x (1 - win chance): win chance ~71% (fights won in the samples, the others by the end-of-horizon estimate), value -59 [cut to fit the time budget: horizon 3]",
+        "rollout_turns": "T1 exact: hp -0, dmg 23; T2: hp -9.5 [0-17], dmg 8.3 [6-12], alive 8/8, won 0/8; T3: hp -15.8 [0-40], dmg 6 [0-24], alive 8/8, won 0/8"
+      }
+    }
+  },
+  {
+    "line": 371412,
+    "floor": 8,
+    "turn": 4,
+    "choice": "plan3",
+    "best": true,
+    "criteria": {
+      "plan1": {
+        "plays": "nothing (end the turn now)",
+        "hp_lost": 5,
+        "dmg": 18,
+        "enemies_after": "异蛙寄生虫 5 HP, Weak 2, 中毒 17",
+        "rollout": "5-turn rollout (8 samples) (later turns may drink the potions still held, each when its turn gains more than the potion's cost): expected further HP loss 50, fight over within 5 turns in 0/8, expected turns to the end (surviving samples) ~6.5; ranked on fewest dead first (some line pays a potion cost), then -(further loss + potion cost) - 40 x (1 - win chance): win chance ~80% (fights won in the samples, the others by the end-of-horizon estimate), value -63.4",
+        "rollout_turns": "T1 exact: hp -5, dmg 18; T2: hp -0.4 [0-1], dmg 5 [5-5], alive 8/8, won 0/8; T3: hp -9.4 [0-22], dmg 11.9 [0-20], alive 8/8, won 0/8; T4: hp -13.1 [0-33], dmg 11.6 [0-24], alive 8/8, won 0/8; T5: hp -7.8 [0-25], dmg 9.4 [6-20], alive 8/8, won 0/8"
+      },
+      "plan2": {
+        "plays": "potion 虚弱药水 -> 异蛙寄生虫",
+        "hp_lost": 5,
+        "dmg": 18,
+        "enemies_after": "异蛙寄生虫 5 HP, Weak 5, 中毒 17",
+        "rollout": "5-turn rollout (8 samples) (later turns may drink the potions still held, each when its turn gains more than the potion's cost): expected further HP loss 52.7, fight over within 5 turns in 0/8, expected turns to the end (surviving samples) ~6.5; ranked on fewest dead first (some line pays a potion cost), then -(further loss + potion cost) - 40 x (1 - win chance): win chance ~74% (fights won in the samples, the others by the end-of-horizon estimate), value -68.5",
+        "rollout_turns": "T1 exact: hp -5, dmg 18; T2: hp -0.4 [0-1], dmg 5 [5-5], alive 8/8, won 0/8; T3: hp -10.9 [0-24], dmg 11.9 [0-20], alive 8/8, won 0/8; T4: hp -13.4 [0-36], dmg 10.9 [0-24], alive 8/8, won 0/8; T5: hp -8.5 [0-28], dmg 9.4 [6-20], alive 8/8, won 0/8"
+      },
+      "plan3": {
+        "plays": "nothing (end the turn now)",
+        "hp_lost": 5,
+        "dmg": 18,
+        "enemies_after": "异蛙寄生虫 5 HP, Weak 2, 中毒 17",
+        "rollout": "5-turn rollout (8 samples) (the no-potion line: its later turns drink no potion): expected further HP loss 52.7, fight over within 5 turns in 0/8, expected turns to the end (surviving samples) ~6.5; ranked on fewest dead first (some line pays a potion cost), then -(further loss) - 40 x (1 - win chance): win chance ~74% (fights won in the samples, the others by the end-of-horizon estimate), value -63.2",
+        "rollout_turns": "T1 exact: hp -5, dmg 18; T2: hp -0.4 [0-1], dmg 5 [5-5], alive 8/8, won 0/8; T3: hp -10.9 [0-24], dmg 11.9 [0-20], alive 8/8, won 0/8; T4: hp -13.4 [0-36], dmg 10.9 [0-24], alive 8/8, won 0/8; T5: hp -8.5 [0-28], dmg 9.4 [6-20], alive 8/8, won 0/8"
+      }
+    }
+  },
+  {
+    "line": 371415,
+    "floor": 8,
+    "turn": 6,
+    "choice": "plan4",
+    "best": true,
+    "criteria": {
+      "plan1": {
+        "plays": "打击 -> 扭动虫 #1, then 防御",
+        "hp_lost": 1,
+        "dmg": 6,
+        "enemies_after": "扭动虫 #1 15 HP; 扭动虫 #2 22 HP; 扭动虫 #3 19 HP; 扭动虫 #4 20 HP",
+        "rollout": "3-turn rollout (2 samples) (later turns may drink the potions still held, each when its turn gains more than the potion's cost): expected further HP loss 38.4, fight over within 3 turns in 0/2, expected turns to the end (surviving samples) ~5; ranked on fewest dead first (some line pays a potion cost), then -(further loss + potion cost) - 40 x (1 - win chance): win chance ~92% (fights won in the samples, the others by the end-of-horizon estimate), value -46.8 [cut to fit the time budget: horizon 3, samples 2]",
+        "rollout_turns": "T1 exact: hp -1, dmg 6; T2: hp -7.5 [5-10], dmg 10.5 [6-15], alive 2/2, won 0/2; T3: hp -2 [0-4], dmg 4.5 [0-9], alive 2/2, won 0/2"
+      },
+      "plan2": {
+        "plays": "打击 -> 扭动虫 #1, then 防御, then potion 虚弱药水 -> 扭动虫 #1",
+        "hp_lost": 1,
+        "dmg": 6,
+        "enemies_after": "扭动虫 #1 15 HP, Weak 3; 扭动虫 #2 22 HP; 扭动虫 #3 19 HP; 扭动虫 #4 20 HP",
+        "rollout": "3-turn rollout (2 samples) (later turns may drink the potions still held, each when its turn gains more than the potion's cost): expected further HP loss 40.4, fight over within 3 turns in 0/2, expected turns to the end (surviving samples) ~5; ranked on fewest dead first (some line pays a potion cost), then -(further loss + potion cost) - 40 x (1 - win chance): win chance ~90% (fights won in the samples, the others by the end-of-horizon estimate), value -49.7 [cut to fit the time budget: horizon 3, samples 2]",
+        "rollout_turns": "T1 exact: hp -1, dmg 6; T2: hp -9.5 [7-12], dmg 10.5 [6-15], alive 2/2, won 0/2; T3: hp -2 [0-4], dmg 4.5 [0-9], alive 2/2, won 0/2"
+      },
+      "plan3": {
+        "plays": "打击 -> 扭动虫 #1, then 防御",
+        "hp_lost": 1,
+        "dmg": 6,
+        "enemies_after": "扭动虫 #1 15 HP; 扭动虫 #2 22 HP; 扭动虫 #3 19 HP; 扭动虫 #4 20 HP",
+        "rollout": "3-turn rollout (2 samples) (the no-potion line: its later turns drink no potion): expected further HP loss 40.4, fight over within 3 turns in 0/2, expected turns to the end (surviving samples) ~5; ranked on fewest dead first (some line pays a potion cost), then -(further loss) - 40 x (1 - win chance): win chance ~90% (fights won in the samples, the others by the end-of-horizon estimate), value -44.4 [cut to fit the time budget: horizon 3, samples 2]",
+        "rollout_turns": "T1 exact: hp -1, dmg 6; T2: hp -9.5 [7-12], dmg 10.5 [6-15], alive 2/2, won 0/2; T3: hp -2 [0-4], dmg 4.5 [0-9], alive 2/2, won 0/2"
+      },
+      "plan4": {
+        "plays": "打击 -> 扭动虫 #3, then 防御",
+        "hp_lost": 1,
+        "dmg": 6,
+        "enemies_after": "扭动虫 #1 21 HP; 扭动虫 #2 22 HP; 扭动虫 #3 13 HP; 扭动虫 #4 20 HP",
+        "rollout": "3-turn rollout (2 samples) (later turns may drink the potions still held, each when its turn gains more than the potion's cost): expected further HP loss 27, fight over within 3 turns in 0/2, expected turns to the end (surviving samples) ~5; ranked on fewest dead first (some line pays a potion cost), then -(further loss + potion cost) - 40 x (1 - win chance): win chance ~97% (fights won in the samples, the others by the end-of-horizon estimate), value -33.5 [cut to fit the time budget: horizon 3, samples 2]",
+        "rollout_turns": "T1 exact: hp -1, dmg 6; T2: hp -4 [3-5], dmg 9.5 [6-13], alive 2/2, won 0/2; T3: hp -12 [6-18], dmg 6.5 [0-13], alive 2/2, won 0/2"
+      }
+    }
+  },
+  {
+    "line": 371417,
+    "floor": 8,
+    "turn": 6,
+    "choice": "plan3",
+    "best": true,
+    "criteria": {
+      "plan1": {
+        "plays": "nothing (end the turn now)",
+        "hp_lost": 1,
+        "dmg": 0,
+        "enemies_after": "扭动虫 #1 21 HP; 扭动虫 #2 22 HP; 扭动虫 #3 13 HP; 扭动虫 #4 20 HP",
+        "rollout": "3-turn rollout (4 samples) (later turns may drink the potions still held, each when its turn gains more than the potion's cost): expected further HP loss 28.3, fight over within 3 turns in 0/4, expected turns to the end (surviving samples) ~4.8; ranked on fewest dead first (some line pays a potion cost), then -(further loss + potion cost) - 40 x (1 - win chance): win chance ~97% (fights won in the samples, the others by the end-of-horizon estimate), value -34.8 [cut to fit the time budget: horizon 3, samples 4]",
+        "rollout_turns": "T1 exact: hp -1, dmg 0; T2: hp -3.5 [1-5], dmg 7.3 [4-13], alive 4/4, won 0/4; T3: hp -12.5 [6-18], dmg 10.8 [0-24], alive 4/4, won 0/4"
+      },
+      "plan2": {
+        "plays": "potion 虚弱药水 -> 扭动虫 #1",
+        "hp_lost": 1,
+        "dmg": 0,
+        "enemies_after": "扭动虫 #1 21 HP, Weak 3; 扭动虫 #2 22 HP; 扭动虫 #3 13 HP; 扭动虫 #4 20 HP",
+        "rollout": "3-turn rollout (4 samples) (later turns may drink the potions still held, each when its turn gains more than the potion's cost): expected further HP loss 27.1, fight over within 3 turns in 0/4, expected turns to the end (surviving samples) ~4.8; ranked on fewest dead first (some line pays a potion cost), then -(further loss + potion cost) - 40 x (1 - win chance): win chance ~97% (fights won in the samples, the others by the end-of-horizon estimate), value -33.4 [cut to fit the time budget: horizon 3, samples 4]",
+        "rollout_turns": "T1 exact: hp -1, dmg 0; T2: hp -4.5 [1-7], dmg 7.3 [4-13], alive 4/4, won 0/4; T3: hp -11 [3-17], dmg 10.8 [0-24], alive 4/4, won 0/4"
+      },
+      "plan3": {
+        "plays": "nothing (end the turn now)",
+        "hp_lost": 1,
+        "dmg": 0,
+        "enemies_after": "扭动虫 #1 21 HP; 扭动虫 #2 22 HP; 扭动虫 #3 13 HP; 扭动虫 #4 20 HP",
+        "rollout": "3-turn rollout (4 samples) (the no-potion line: its later turns drink no potion): expected further HP loss 29.8, fight over within 3 turns in 0/4, expected turns to the end (surviving samples) ~4.8; ranked on fewest dead first (some line pays a potion cost), then -(further loss) - 40 x (1 - win chance): win chance ~96% (fights won in the samples, the others by the end-of-horizon estimate), value -31.3 [cut to fit the time budget: horizon 3, samples 4]",
+        "rollout_turns": "T1 exact: hp -1, dmg 0; T2: hp -5 [1-7], dmg 7.3 [4-13], alive 4/4, won 0/4; T3: hp -13.3 [6-20], dmg 10.8 [0-24], alive 4/4, won 0/4"
+      }
+    }
+  },
+  {
+    "line": 371418,
+    "floor": 8,
+    "turn": 7,
+    "choice": "plan8",
+    "best": true,
+    "criteria": {
+      "plan1": {
+        "plays": "打击 -> 扭动虫 #1, then 猎杀者 -> 扭动虫 #1, then potion 虚弱药水 -> 扭动虫 #3",
+        "hp_lost": 5,
+        "dmg": 21,
+        "enemies_after": "扭动虫 #2 22 HP; 扭动虫 #3 13 HP, Weak 3; 扭动虫 #4 20 HP",
+        "rollout": "3-turn rollout (7 samples) (later turns may drink the potions still held, each when its turn gains more than the potion's cost): expected further HP loss 33.2, fight over within 3 turns in 0/7, expected turns to the end (surviving samples) ~4; ranked on fewest dead first (some line pays a potion cost), then -(further loss + potion cost) - 40 x (1 - win chance): win chance ~94% (fights won in the samples, the others by the end-of-horizon estimate), value -40.9 [cut to fit the time budget: horizon 3, samples 7 (clock)]",
+        "rollout_turns": "T1 exact: hp -5, dmg 21; T2: hp -16.4 [3-24], dmg 10.4 [4-18], alive 7/7, won 0/7; T3: hp -3.4 [0-7], dmg 13.9 [4-19], alive 7/7, won 0/7"
+      },
+      "plan2": {
+        "plays": "猎杀者 -> 扭动虫 #3, then 生存者",
+        "hp_lost": 0,
+        "dmg": 13,
+        "enemies_after": "扭动虫 #1 21 HP; 扭动虫 #2 22 HP; 扭动虫 #4 20 HP",
+        "rollout": "3-turn rollout (7 samples) (later turns may drink the potions still held, each when its turn gains more than the potion's cost): expected further HP loss 25.9, fight over within 3 turns in 0/7, expected turns to the end (surviving samples) ~4; ranked on fewest dead first (some line pays a potion cost), then -(further loss + potion cost) - 40 x (1 - win chance): win chance ~98% (fights won in the samples, the others by the end-of-horizon estimate), value -32.2 [cut to fit the time budget: horizon 3, samples 7 (clock)]",
+        "rollout_turns": "T1 exact: hp -0, dmg 13; T2: hp -13.4 [0-21], dmg 10.4 [4-18], alive 7/7, won 0/7; T3: hp -9.3 [4-15], dmg 14.9 [4-23], alive 7/7, won 0/7"
+      },
+      "plan3": {
+        "plays": "猎杀者 -> 扭动虫 #2, then potion 虚弱药水 -> 扭动虫 #1, then 生存者",
+        "hp_lost": 4,
+        "dmg": 15,
+        "enemies_after": "扭动虫 #1 21 HP, Weak 3; 扭动虫 #2 7 HP; 扭动虫 #3 13 HP; 扭动虫 #4 20 HP",
+        "rollout": "3-turn rollout (7 samples) (later turns may drink the potions still held, each when its turn gains more than the potion's cost): expected further HP loss 25.8, fight over within 3 turns in 0/7, expected turns to the end (surviving samples) ~4; ranked on fewest dead first (some line pays a potion cost), then -(further loss + potion cost) - 40 x (1 - win chance): win chance ~98% (fights won in the samples, the others by the end-of-horizon estimate), value -31.9 [cut to fit the time budget: horizon 3, samples 7 (clock)]",
+        "rollout_turns": "T1 exact: hp -4, dmg 15; T2: hp -9.1 [3-15], dmg 8.6 [4-13], alive 7/7, won 0/7; T3: hp -9.1 [4-13], dmg 11.3 [4-13], alive 7/7, won 0/7"
+      },
+      "plan4": {
+        "plays": "防御, then 打击 -> 扭动虫 #2, then potion 虚弱药水 -> 扭动虫 #1, then 生存者",
+        "hp_lost": 0,
+        "dmg": 6,
+        "enemies_after": "扭动虫 #1 21 HP, Weak 3; 扭动虫 #2 16 HP; 扭动虫 #3 13 HP; 扭动虫 #4 20 HP",
+        "rollout": "3-turn rollout (7 samples) (later turns may drink the potions still held, each when its turn gains more than the potion's cost): expected further HP loss 33.7, fight over within 3 turns in 0/7, expected turns to the end (surviving samples) ~4.4; ranked on fewest dead first (some line pays a potion cost), then -(further loss + potion cost) - 40 x (1 - win chance): win chance ~94% (fights won in the samples, the others by the end-of-horizon estimate), value -41.4 [cut to fit the time budget: horizon 3, samples 7 (clock)]",
+        "rollout_turns": "T1 exact: hp -0, dmg 6; T2: hp -15.1 [3-24], dmg 10.1 [4-16], alive 7/7, won 0/7; T3: hp -9.1 [4-13], dmg 13.3 [4-19], alive 7/7, won 0/7"
+      },
+      "plan5": {
+        "plays": "打击 -> 扭动虫 #2, then potion 虚弱药水 -> 扭动虫 #1, then 生存者",
+        "hp_lost": 4,
+        "dmg": 6,
+        "enemies_after": "扭动虫 #1 21 HP, Weak 3; 扭动虫 #2 16 HP; 扭动虫 #3 13 HP; 扭动虫 #4 20 HP",
+        "rollout": "3-turn rollout (7 samples) (later turns may drink the potions still held, each when its turn gains more than the potion's cost): expected further HP loss 37.7, fight over within 3 turns in 0/7, expected turns to the end (surviving samples) ~4.4; ranked on fewest dead first (some line pays a potion cost), then -(further loss + potion cost) - 40 x (1 - win chance): win chance ~91% (fights won in the samples, the others by the end-of-horizon estimate), value -46.8 [cut to fit the time budget: horizon 3, samples 7 (clock)]",
+        "rollout_turns": "T1 exact: hp -4, dmg 6; T2: hp -15.1 [3-24], dmg 10.1 [4-16], alive 7/7, won 0/7; T3: hp -9.1 [4-13], dmg 13.3 [4-19], alive 7/7, won 0/7"
+      },
+      "plan6": {
+        "plays": "防御, then 防御, then 生存者",
+        "hp_lost": 0,
+        "dmg": 0,
+        "enemies_after": "扭动虫 #1 21 HP; 扭动虫 #2 22 HP; 扭动虫 #3 13 HP; 扭动虫 #4 20 HP",
+        "rollout": "3-turn rollout (7 samples) (later turns may drink the potions still held, each when its turn gains more than the potion's cost): expected further HP loss 41.3, fight over within 3 turns in 0/7, expected turns to the end (surviving samples) ~4.7; ranked on fewest dead first (some line pays a potion cost), then -(further loss + potion cost) - 40 x (1 - win chance): win chance ~86% (fights won in the samples, the others by the end-of-horizon estimate), value -52.4 [cut to fit the time budget: horizon 3, samples 7 (clock)]",
+        "rollout_turns": "T1 exact: hp -0, dmg 0; T2: hp -13.4 [0-21], dmg 10.4 [4-18], alive 7/7, won 0/7; T3: hp -13 [7-19], dmg 13.9 [4-19], alive 7/7, won 0/7"
+      },
+      "plan7": {
+        "plays": "potion 虚弱药水 -> 扭动虫 #1, then 生存者",
+        "hp_lost": 4,
+        "dmg": 0,
+        "enemies_after": "扭动虫 #1 21 HP, Weak 3; 扭动虫 #2 22 HP; 扭动虫 #3 13 HP; 扭动虫 #4 20 HP",
+        "rollout": "3-turn rollout (7 samples) (later turns may drink the potions still held, each when its turn gains more than the potion's cost): expected further HP loss 45.3, fight over within 3 turns in 0/7, expected turns to the end (surviving samples) ~4.7; ranked on fewest dead first (some line pays a potion cost), then -(further loss + potion cost) - 40 x (1 - win chance): win chance ~79% (fights won in the samples, the others by the end-of-horizon estimate), value -59.1 [cut to fit the time budget: horizon 3, samples 7 (clock)]",
+        "rollout_turns": "T1 exact: hp -4, dmg 0; T2: hp -16.4 [3-24], dmg 10.4 [4-18], alive 7/7, won 0/7; T3: hp -10 [4-16], dmg 13.9 [4-19], alive 7/7, won 0/7"
+      },
+      "plan8": {
+        "plays": "猎杀者 -> 扭动虫 #3, then 生存者",
+        "hp_lost": 0,
+        "dmg": 13,
+        "enemies_after": "扭动虫 #1 21 HP; 扭动虫 #2 22 HP; 扭动虫 #4 20 HP",
+        "rollout": "3-turn rollout (7 samples) (the no-potion line: its later turns drink no potion): expected further HP loss 28.9, fight over within 3 turns in 0/7, expected turns to the end (surviving samples) ~4; ranked on fewest dead first (some line pays a potion cost), then -(further loss) - 40 x (1 - win chance): win chance ~97% (fights won in the samples, the others by the end-of-horizon estimate), value -30.3 [cut to fit the time budget: horizon 3, samples 7 (clock)]",
+        "rollout_turns": "T1 exact: hp -0, dmg 13; T2: hp -16.4 [3-24], dmg 10.4 [4-18], alive 7/7, won 0/7; T3: hp -9.3 [4-15], dmg 14.9 [4-23], alive 7/7, won 0/7"
+      }
+    }
+  },
+  {
+    "line": 371419,
+    "floor": 8,
+    "turn": 7,
+    "choice": "plan1",
+    "best": true,
+    "criteria": {
+      "plan1": {
+        "plays": "打击 -> 扭动虫 #2, then potion 虚弱药水 -> 扭动虫 #1",
+        "hp_lost": 5,
+        "dmg": 6,
+        "enemies_after": "扭动虫 #1 21 HP, Weak 3; 扭动虫 #2 16 HP; 扭动虫 #3 20 HP",
+        "rollout": "5-turn rollout (8 samples) (later turns may drink the potions still held, each when its turn gains more than the potion's cost): expected further HP loss 34.6, fight over within 5 turns in 0/8, expected turns to the end (surviving samples) ~5.1; ranked on fewest dead first (some line pays a potion cost), then -(further loss + potion cost) - 40 x (1 - win chance): win chance ~93% (fights won in the samples, the others by the end-of-horizon estimate), value -42.6",
+        "rollout_turns": "T1 exact: hp -5, dmg 6; T2: hp -14.8 [3-24], dmg 10.9 [4-16], alive 8/8, won 0/8; T3: hp -5.8 [1-12], dmg 13.4 [4-23], alive 8/8, won 0/8; T4: hp -3.9 [0-10], dmg 8 [0-14], alive 8/8, won 0/8; T5: hp -8.8 [1-17], dmg 11.3 [6-25], alive 8/8, won 0/8"
+      },
+      "plan2": {
+        "plays": "生存者",
+        "hp_lost": 0,
+        "dmg": 0,
+        "enemies_after": "扭动虫 #1 21 HP; 扭动虫 #2 22 HP; 扭动虫 #3 20 HP",
+        "rollout": "5-turn rollout (8 samples) (later turns may drink the potions still held, each when its turn gains more than the potion's cost): expected further HP loss 34.5, fight over within 5 turns in 1/8, expected turns to the end (surviving samples) ~5.5; ranked on fewest dead first (some line pays a potion cost), then -(further loss + potion cost) - 40 x (1 - win chance): win chance ~92% (fights won in the samples, the others by the end-of-horizon estimate), value -42.9",
+        "rollout_turns": "T1 exact: hp -0, dmg 0; T2: hp -13.6 [0-21], dmg 11.3 [4-18], alive 8/8, won 0/8; T3: hp -9 [4-15], dmg 15.1 [4-23], alive 8/8, won 0/8; T4: hp -7.3 [1-23], dmg 5.6 [0-12], alive 8/8, won 0/8; T5: hp -4.6 [0-9], dmg 9.8 [2-17], alive 8/8, won 1/8"
+      },
+      "plan3": {
+        "plays": "生存者",
+        "hp_lost": 0,
+        "dmg": 0,
+        "enemies_after": "扭动虫 #1 21 HP; 扭动虫 #2 22 HP; 扭动虫 #3 20 HP",
+        "rollout": "5-turn rollout (8 samples) (the no-potion line: its later turns drink no potion): expected further HP loss 38.5, fight over within 5 turns in 1/8, expected turns to the end (surviving samples) ~5.5; ranked on fewest dead first (some line pays a potion cost), then -(further loss) - 40 x (1 - win chance): win chance ~88% (fights won in the samples, the others by the end-of-horizon estimate), value -43.4",
+        "rollout_turns": "T1 exact: hp -0, dmg 0; T2: hp -16.6 [3-24], dmg 11.3 [4-18], alive 8/8, won 0/8; T3: hp -9 [4-15], dmg 15.1 [4-23], alive 8/8, won 0/8; T4: hp -8.4 [1-26], dmg 5.6 [0-12], alive 8/8, won 0/8; T5: hp -4.1 [0-9], dmg 9 [0-17], alive 8/8, won 1/8"
+      }
+    }
+  },
+  {
+    "line": 371422,
+    "floor": 8,
+    "turn": 8,
+    "choice": "plan5",
+    "best": true,
+    "criteria": {
+      "plan1": {
+        "plays": "蛇咬 -> 扭动虫 #2, then 打击 -> 扭动虫 #2, then 中和+ -> 扭动虫 #2",
+        "hp_lost": 12,
+        "dmg": 16,
+        "enemies_after": "扭动虫 #1 21 HP, Weak 2; 扭动虫 #3 20 HP",
+        "rollout": "5-turn rollout (8 samples): expected further HP loss 46.4, fight over within 5 turns in 2/8, expected turns to the end (surviving samples) ~5, dead within 5 turns in 3/8 (~turn 4.7); ranked on -(further loss) - 40 x (1 - win chance): win chance ~55% (fights won in the samples, the others by the end-of-horizon estimate), value -64.5",
+        "rollout_turns": "T1 exact: hp -12, dmg 16; T2: hp -15 [15-15], dmg 12 [12-12], alive 8/8, won 0/8; T3: hp -11.4 [0-18], dmg 3.1 [0-7], alive 8/8, won 0/8; T4: hp -6.9 [0-18], dmg 8.6 [0-17], alive 7/8, won 0/8; T5: hp -7.3 [0-22], dmg 7.9 [4-13], alive 5/8, won 2/8"
+      },
+      "plan2": {
+        "plays": "打击 -> 扭动虫 #2, then 中和+ -> 扭动虫 #2, then 防御, then 防御",
+        "hp_lost": 8,
+        "dmg": 10,
+        "enemies_after": "扭动虫 #1 21 HP, Weak 2; 扭动虫 #2 6 HP, Weak 2; 扭动虫 #3 20 HP",
+        "rollout": "5-turn rollout (8 samples): expected further HP loss 42.6, fight over within 5 turns in 1/8, expected turns to the end (surviving samples) ~5, dead within 5 turns in 1/8 (~turn 4); ranked on -(further loss) - 40 x (1 - win chance): win chance ~71% (fights won in the samples, the others by the end-of-horizon estimate), value -54.1",
+        "rollout_turns": "T1 exact: hp -8, dmg 10; T2: hp -15 [15-15], dmg 12 [12-12], alive 8/8, won 0/8; T3: hp -9.9 [3-15], dmg 5.5 [0-20], alive 8/8, won 0/8; T4: hp -7.9 [0-20], dmg 9.1 [0-21], alive 7/8, won 0/8; T5: hp -4.1 [0-12], dmg 11.4 [4-23], alive 7/8, won 1/8"
+      },
+      "plan3": {
+        "plays": "蛇咬 -> 扭动虫 #3, then 打击 -> 扭动虫 #3, then 中和+ -> 扭动虫 #3",
+        "hp_lost": 18,
+        "dmg": 17,
+        "enemies_after": "扭动虫 #1 21 HP, Weak 2; 扭动虫 #2 16 HP; 扭动虫 #3 3 HP, Weak 2, 中毒 6",
+        "rollout": "5-turn rollout (8 samples): expected further HP loss 50, fight over within 5 turns in 2/8, expected turns to the end (surviving samples) ~5, dead within 5 turns in 6/8 (~turn 4); ranked on -(further loss) - 40 x (1 - win chance): win chance ~25% (fights won in the samples, the others by the end-of-horizon estimate), value -80",
+        "rollout_turns": "T1 exact: hp -18, dmg 17; T2: hp -15 [15-15], dmg 15 [15-15], alive 8/8, won 0/8; T3: hp -12.3 [3-23], dmg 4.6 [0-15], alive 6/8, won 0/8; T4: hp -9.5 [3-23], dmg 9.7 [4-18], alive 4/8, won 0/8; T5: hp -2.3 [0-6], dmg 6.3 [1-12], alive 2/8, won 2/8"
+      },
+      "plan4": {
+        "plays": "蛇咬 -> 扭动虫 #2, then 中和+ -> 扭动虫 #2, then 防御",
+        "hp_lost": 13,
+        "dmg": 11,
+        "enemies_after": "扭动虫 #1 21 HP, Weak 2; 扭动虫 #2 5 HP, Weak 2, 中毒 6; 扭动虫 #3 20 HP",
+        "rollout": "5-turn rollout (8 samples): expected further HP loss 46.3, fight over within 5 turns in 3/8, expected turns to the end (surviving samples) ~4.8, dead within 5 turns in 2/8 (~turn 4.5); ranked on -(further loss) - 40 x (1 - win chance): win chance ~61% (fights won in the samples, the others by the end-of-horizon estimate), value -61.9",
+        "rollout_turns": "T1 exact: hp -13, dmg 11; T2: hp -15 [15-15], dmg 17 [17-17], alive 8/8, won 0/8; T3: hp -14.1 [3-23], dmg 6.9 [0-15], alive 8/8, won 0/8; T4: hp -4 [0-12], dmg 8 [0-23], alive 7/8, won 1/8; T5: hp -3 [0-11], dmg 10.2 [4-20], alive 6/8, won 3/8"
+      },
+      "plan5": {
+        "plays": "中和+ -> 扭动虫 #2, then 防御, then 后空翻, then 防御",
+        "hp_lost": 3,
+        "dmg": 4,
+        "enemies_after": "扭动虫 #1 21 HP, Weak 2; 扭动虫 #2 12 HP, Weak 2; 扭动虫 #3 20 HP",
+        "rollout": "5-turn rollout (8 samples): expected further HP loss 35.3, fight over within 5 turns in 1/8, expected turns to the end (surviving samples) ~5.1, dead within 5 turns in 1/8 (~turn 5); ranked on -(further loss) - 40 x (1 - win chance): win chance ~77% (fights won in the samples, the others by the end-of-horizon estimate), value -44.5",
+        "rollout_turns": "T1 exact: hp -3, dmg 4; T2: hp -13.1 [9-18], dmg 6.8 [0-18], alive 8/8, won 0/8; T3: hp -13.3 [3-26], dmg 14.6 [0-24], alive 8/8, won 0/8; T4: hp -2.9 [0-10], dmg 6.1 [0-15], alive 8/8, won 0/8; T5: hp -5.5 [0-12], dmg 12.3 [6-24], alive 7/8, won 1/8"
+      },
+      "plan6": {
+        "plays": "中和+ -> 扭动虫 #2, then 防御, then 后空翻",
+        "hp_lost": 8,
+        "dmg": 4,
+        "enemies_after": "扭动虫 #1 21 HP, Weak 2; 扭动虫 #2 12 HP, Weak 2; 扭动虫 #3 20 HP",
+        "rollout": "5-turn rollout (8 samples): expected further HP loss 40.6, fight over within 5 turns in 0/8, expected turns to the end (surviving samples) ~5, dead within 5 turns in 2/8 (~turn 5); ranked on -(further loss) - 40 x (1 - win chance): win chance ~62% (fights won in the samples, the others by the end-of-horizon estimate), value -55.8",
+        "rollout_turns": "T1 exact: hp -8, dmg 4; T2: hp -12.5 [4-18], dmg 6.8 [0-18], alive 8/8, won 0/8; T3: hp -11.9 [1-26], dmg 15.4 [6-24], alive 8/8, won 0/8; T4: hp -5 [0-18], dmg 7.3 [0-15], alive 8/8, won 0/8; T5: hp -6 [0-17], dmg 7.8 [0-16], alive 6/8, won 0/8"
+      }
+    }
+  },
+  {
+    "line": 371425,
+    "floor": 8,
+    "turn": 8,
+    "choice": "plan3",
+    "best": true,
+    "criteria": {
+      "plan1": {
+        "plays": "打击 -> 扭动虫 #1",
+        "hp_lost": 11,
+        "dmg": 6,
+        "enemies_after": "扭动虫 #1 15 HP, Weak 2; 扭动虫 #2 12 HP, Weak 2; 扭动虫 #3 20 HP",
+        "rollout": "5-turn rollout (8 samples): expected further HP loss 44.8, fight over within 5 turns in 1/8, expected turns to the end (surviving samples) ~5, dead within 5 turns in 1/8 (~turn 4); ranked on -(further loss) - 40 x (1 - win chance): win chance ~66% (fights won in the samples, the others by the end-of-horizon estimate), value -58.3",
+        "rollout_turns": "T1 exact: hp -11, dmg 6; T2: hp -12.6 [0-18], dmg 8.3 [6-12], alive 8/8, won 0/8; T3: hp -12.9 [1-23], dmg 8 [0-16], alive 8/8, won 0/8; T4: hp -5.6 [0-15], dmg 8.4 [0-15], alive 7/8, won 0/8; T5: hp -5.7 [0-17], dmg 11 [4-16], alive 7/8, won 1/8"
+      },
+      "plan2": {
+        "plays": "防御",
+        "hp_lost": 6,
+        "dmg": 0,
+        "enemies_after": "扭动虫 #1 21 HP, Weak 2; 扭动虫 #2 12 HP, Weak 2; 扭动虫 #3 20 HP",
+        "rollout": "5-turn rollout (8 samples): expected further HP loss 44.3, fight over within 5 turns in 2/8, expected turns to the end (surviving samples) ~5.1, dead within 5 turns in 1/8 (~turn 5); ranked on -(further loss) - 40 x (1 - win chance): win chance ~69% (fights won in the samples, the others by the end-of-horizon estimate), value -56.6",
+        "rollout_turns": "T1 exact: hp -6, dmg 0; T2: hp -12.6 [0-18], dmg 8.3 [6-12], alive 8/8, won 0/8; T3: hp -13.6 [4-20], dmg 7.4 [0-12], alive 8/8, won 0/8; T4: hp -8 [0-15], dmg 10.5 [0-21], alive 8/8, won 0/8; T5: hp -5.1 [0-17], dmg 14.9 [6-24], alive 7/8, won 2/8"
+      },
+      "plan3": {
+        "plays": "打击 -> 扭动虫 #2",
+        "hp_lost": 11,
+        "dmg": 6,
+        "enemies_after": "扭动虫 #1 21 HP, Weak 2; 扭动虫 #2 6 HP, Weak 2; 扭动虫 #3 20 HP",
+        "rollout": "5-turn rollout (8 samples): expected further HP loss 40.1, fight over within 5 turns in 4/8, expected turns to the end (surviving samples) ~4.9; ranked on -(further loss) - 40 x (1 - win chance): win chance ~89% (fights won in the samples, the others by the end-of-horizon estimate), value -44.6",
+        "rollout_turns": "T1 exact: hp -11, dmg 6; T2: hp -12.6 [0-18], dmg 8.4 [6-13], alive 8/8, won 0/8; T3: hp -9.6 [0-17], dmg 11.5 [6-19], alive 8/8, won 0/8; T4: hp -6.5 [0-20], dmg 12.3 [0-29], alive 8/8, won 1/8; T5: hp -1.1 [0-3], dmg 10.3 [4-24], alive 8/8, won 4/8"
+      }
+    }
+  },
+  {
+    "line": 371427,
+    "floor": 8,
+    "turn": 9,
+    "choice": "plan9",
+    "best": true,
+    "criteria": {
+      "plan1": {
+        "plays": "蛇咬 -> 扭动虫 #1, then 打击 -> 扭动虫 #2, then 中和+ -> 扭动虫 #1",
+        "hp_lost": 12,
+        "dmg": 17,
+        "enemies_after": "扭动虫 #1 10 HP, Weak 3, 中毒 6; 扭动虫 #3 20 HP",
+        "rollout": "5-turn rollout (8 samples): expected further HP loss 24, fight over within 5 turns in 8/8, expected turns to the end (surviving samples) ~3.3; ranked on -(further loss) - 40 x (1 - win chance): win chance ~100% (fights won in the samples, the others by the end-of-horizon estimate), value -24",
+        "rollout_turns": "T1 exact: hp -12, dmg 17; T2: hp -11.1 [1-20], dmg 18.6 [10-26], alive 8/8, won 0/8; T3: hp -0.9 [0-6], dmg 10.1 [4-20], alive 8/8, won 6/8; T4: hp -0 [0-0], dmg 5 [2-8], alive 8/8, won 8/8; T5: over (alive 8/8, won 8/8)"
+      },
+      "plan2": {
+        "plays": "蛇咬 -> 扭动虫 #2, then 中和+ -> 扭动虫 #1, then 生存者",
+        "hp_lost": 4,
+        "dmg": 10,
+        "enemies_after": "扭动虫 #1 17 HP, Weak 3; 扭动虫 #3 20 HP",
+        "rollout": "5-turn rollout (8 samples): expected further HP loss 21.3, fight over within 5 turns in 3/8, expected turns to the end (surviving samples) ~4.8; ranked on -(further loss) - 40 x (1 - win chance): win chance ~93% (fights won in the samples, the others by the end-of-horizon estimate), value -24.2",
+        "rollout_turns": "T1 exact: hp -4, dmg 10; T2: hp -11.1 [3-20], dmg 12.5 [0-20], alive 8/8, won 0/8; T3: hp -1.3 [0-4], dmg 7.1 [2-17], alive 8/8, won 0/8; T4: hp -4.9 [0-14], dmg 9.5 [0-20], alive 8/8, won 2/8; T5: hp -5.3 [0-12], dmg 5.3 [0-15], alive 8/8, won 3/8"
+      },
+      "plan3": {
+        "plays": "蛇咬 -> 扭动虫 #1, then 中和+ -> 扭动虫 #1, then 生存者",
+        "hp_lost": 4,
+        "dmg": 11,
+        "enemies_after": "扭动虫 #1 10 HP, Weak 3, 中毒 6; 扭动虫 #2 6 HP, Weak 1; 扭动虫 #3 20 HP",
+        "rollout": "5-turn rollout (8 samples): expected further HP loss 21.5, fight over within 5 turns in 6/8, expected turns to the end (surviving samples) ~4.1; ranked on -(further loss) - 40 x (1 - win chance): win chance ~95% (fights won in the samples, the others by the end-of-horizon estimate), value -23.3",
+        "rollout_turns": "T1 exact: hp -4, dmg 11; T2: hp -14.5 [6-20], dmg 16.1 [10-27], alive 8/8, won 0/8; T3: hp -0.8 [0-3], dmg 12 [6-21], alive 8/8, won 2/8; T4: hp -3 [0-14], dmg 7.5 [0-14], alive 8/8, won 5/8; T5: hp -6.3 [0-12], dmg 4.7 [0-8], alive 8/8, won 6/8"
+      },
+      "plan4": {
+        "plays": "蛇咬 -> 扭动虫 #1, then 打击 -> 扭动虫 #1, then 中和+ -> 扭动虫 #1",
+        "hp_lost": 12,
+        "dmg": 17,
+        "enemies_after": "扭动虫 #1 4 HP, Weak 3, 中毒 6; 扭动虫 #2 6 HP, Weak 1; 扭动虫 #3 20 HP",
+        "rollout": "5-turn rollout (8 samples): expected further HP loss 27.6, fight over within 5 turns in 6/8, expected turns to the end (surviving samples) ~4.1; ranked on -(further loss) - 40 x (1 - win chance): win chance ~94% (fights won in the samples, the others by the end-of-horizon estimate), value -30.1",
+        "rollout_turns": "T1 exact: hp -12, dmg 17; T2: hp -12.6 [1-20], dmg 11.9 [4-25], alive 8/8, won 0/8; T3: hp -0.8 [0-3], dmg 11 [5-21], alive 8/8, won 2/8; T4: hp -3 [0-14], dmg 6.5 [0-12], alive 8/8, won 5/8; T5: hp -0.3 [0-1], dmg 4.7 [0-8], alive 8/8, won 6/8"
+      },
+      "plan5": {
+        "plays": "蛇咬 -> 扭动虫 #2, then 中和+ -> 扭动虫 #2, then 生存者",
+        "hp_lost": 4,
+        "dmg": 6,
+        "enemies_after": "扭动虫 #1 21 HP, Weak 1; 扭动虫 #3 20 HP",
+        "rollout": "5-turn rollout (8 samples): expected further HP loss 26.8, fight over within 5 turns in 2/8, expected turns to the end (surviving samples) ~5; ranked on -(further loss) - 40 x (1 - win chance): win chance ~90% (fights won in the samples, the others by the end-of-horizon estimate), value -30.8",
+        "rollout_turns": "T1 exact: hp -4, dmg 6; T2: hp -10.5 [3-20], dmg 11.9 [0-20], alive 8/8, won 0/8; T3: hp -3.5 [0-12], dmg 10.5 [6-21], alive 8/8, won 0/8; T4: hp -7.8 [1-20], dmg 7.8 [0-20], alive 8/8, won 0/8; T5: hp -6.8 [0-17], dmg 6.6 [0-18], alive 8/8, won 2/8"
+      },
+      "plan6": {
+        "plays": "蛇咬 -> 扭动虫 #1, then 生存者",
+        "hp_lost": 4,
+        "dmg": 7,
+        "enemies_after": "扭动虫 #1 14 HP, Weak 1, 中毒 6; 扭动虫 #2 6 HP, Weak 1; 扭动虫 #3 20 HP",
+        "rollout": "5-turn rollout (8 samples): expected further HP loss 23.5, fight over within 5 turns in 7/8, expected turns to the end (surviving samples) ~4.5; ranked on -(further loss) - 40 x (1 - win chance): win chance ~97% (fights won in the samples, the others by the end-of-horizon estimate), value -24.6",
+        "rollout_turns": "T1 exact: hp -4, dmg 7; T2: hp -15.1 [11-20], dmg 18.9 [12-27], alive 8/8, won 0/8; T3: hp -0.8 [0-3], dmg 10.1 [6-21], alive 8/8, won 0/8; T4: hp -3.6 [0-14], dmg 8.5 [0-14], alive 8/8, won 4/8; T5: hp -0 [0-0], dmg 4.5 [0-8], alive 8/8, won 7/8"
+      },
+      "plan7": {
+        "plays": "打击 -> 扭动虫 #1, then 中和+ -> 扭动虫 #1",
+        "hp_lost": 12,
+        "dmg": 10,
+        "enemies_after": "扭动虫 #1 11 HP, Weak 3; 扭动虫 #2 6 HP, Weak 1; 扭动虫 #3 20 HP",
+        "rollout": "5-turn rollout (8 samples): expected further HP loss 34.3, fight over within 5 turns in 2/8, expected turns to the end (surviving samples) ~4.6, dead within 5 turns in 3/8 (~turn 4.7); ranked on -(further loss) - 40 x (1 - win chance): win chance ~53% (fights won in the samples, the others by the end-of-horizon estimate), value -53.2",
+        "rollout_turns": "T1 exact: hp -12, dmg 10; T2: hp -13.9 [9-20], dmg 8.8 [0-17], alive 8/8, won 0/8; T3: hp -1.6 [0-4], dmg 8.5 [5-17], alive 8/8, won 0/8; T4: hp -6.5 [0-14], dmg 9.3 [0-20], alive 7/8, won 2/8; T5: hp -1.4 [0-4], dmg 6.6 [0-15], alive 5/8, won 2/8"
+      },
+      "plan8": {
+        "plays": "生存者",
+        "hp_lost": 4,
+        "dmg": 0,
+        "enemies_after": "扭动虫 #1 21 HP, Weak 1; 扭动虫 #2 6 HP, Weak 1; 扭动虫 #3 20 HP",
+        "rollout": "5-turn rollout (8 samples): expected further HP loss 34.4, fight over within 5 turns in 0/8, expected turns to the end (surviving samples) ~5, dead within 5 turns in 2/8 (~turn 4.5); ranked on -(further loss) - 40 x (1 - win chance): win chance ~56% (fights won in the samples, the others by the end-of-horizon estimate), value -51.9",
+        "rollout_turns": "T1 exact: hp -4, dmg 0; T2: hp -13.3 [6-20], dmg 8.6 [0-21], alive 8/8, won 0/8; T3: hp -5.6 [0-12], dmg 11.3 [6-21], alive 8/8, won 0/8; T4: hp -9.4 [1-20], dmg 7.4 [0-20], alive 7/8, won 0/8; T5: hp -7.1 [0-25], dmg 5.7 [0-9], alive 6/8, won 0/8"
+      },
+      "plan9": {
+        "plays": "蛇咬 -> 扭动虫 #3, then 打击 -> 扭动虫 #2, then 中和+ -> 扭动虫 #3",
+        "hp_lost": 12,
+        "dmg": 17,
+        "enemies_after": "扭动虫 #1 21 HP, Weak 1; 扭动虫 #3 9 HP, Weak 2, 中毒 6",
+        "rollout": "5-turn rollout (8 samples): expected further HP loss 19, fight over within 5 turns in 8/8, expected turns to the end (surviving samples) ~3.5; ranked on -(further loss) - 40 x (1 - win chance): win chance ~100% (fights won in the samples, the others by the end-of-horizon estimate), value -19",
+        "rollout_turns": "T1 exact: hp -12, dmg 17; T2: hp -3.4 [0-9], dmg 17.6 [9-24], alive 8/8, won 0/8; T3: hp -3.6 [0-12], dmg 9.4 [6-21], alive 8/8, won 4/8; T4: hp -0 [0-0], dmg 6 [3-9], alive 8/8, won 8/8; T5: over (alive 8/8, won 8/8)"
+      }
+    }
+  },
+  {
+    "line": 371431,
+    "floor": 8,
+    "turn": 10,
+    "choice": "plan1",
+    "best": true,
+    "criteria": {
+      "plan1": {
+        "plays": "猎杀者 -> 扭动虫 #1, then 打击 -> 扭动虫 #2",
+        "hp_lost": 3,
+        "dmg": 24,
+        "enemies_after": "扭动虫 #1 6 HP",
+        "rollout": "5-turn rollout (8 samples): expected further HP loss 9.5, fight over within 5 turns in 8/8, expected turns to the end (surviving samples) ~2.8; ranked on -(further loss) - 40 x (1 - win chance): win chance ~100% (fights won in the samples, the others by the end-of-horizon estimate), value -9.5",
+        "rollout_turns": "T1 exact: hp -3, dmg 24; T2: hp -6.5 [0-23], dmg 2.3 [0-6], alive 8/8, won 3/8; T3: hp -0 [0-0], dmg 4.8 [0-6], alive 8/8, won 7/8; T4: hp -0 [0-0], dmg 6 [6-6], alive 8/8, won 8/8; T5: over (alive 8/8, won 8/8)"
+      },
+      "plan2": {
+        "plays": "打击 -> 扭动虫 #1, then 打击 -> 扭动虫 #2, then 防御",
+        "hp_lost": 0,
+        "dmg": 15,
+        "enemies_after": "扭动虫 #1 15 HP",
+        "rollout": "5-turn rollout (8 samples): expected further HP loss 14.9, fight over within 5 turns in 8/8, expected turns to the end (surviving samples) ~4.4; ranked on -(further loss) - 40 x (1 - win chance): win chance ~100% (fights won in the samples, the others by the end-of-horizon estimate), value -14.9",
+        "rollout_turns": "T1 exact: hp -0, dmg 15; T2: hp -9.8 [2-23], dmg 3 [0-12], alive 8/8, won 0/8; T3: hp -0.3 [0-1], dmg 6 [0-12], alive 8/8, won 0/8; T4: hp -4.9 [0-20], dmg 4.1 [0-15], alive 8/8, won 5/8; T5: hp -0 [0-0], dmg 5 [3-9], alive 8/8, won 8/8"
+      },
+      "plan3": {
+        "plays": "猎杀者 -> 扭动虫 #1, then 打击 -> 扭动虫 #1",
+        "hp_lost": 11,
+        "dmg": 27,
+        "enemies_after": "扭动虫 #2 3 HP, Weak 1, 中毒 5",
+        "rollout": "5-turn rollout (8 samples): expected further HP loss 18.5, fight over within 5 turns in 8/8, expected turns to the end (surviving samples) ~2; ranked on -(further loss) - 40 x (1 - win chance): win chance ~100% (fights won in the samples, the others by the end-of-horizon estimate), value -18.5",
+        "rollout_turns": "T1 exact: hp -11, dmg 27; T2: hp -7.5 [6-12], dmg 3 [3-3], alive 8/8, won 8/8; T3: over (alive 8/8, won 8/8); T4: over (alive 8/8, won 8/8); T5: over (alive 8/8, won 8/8)"
+      },
+      "plan4": {
+        "plays": "猎杀者 -> 扭动虫 #1, then 防御",
+        "hp_lost": 6,
+        "dmg": 21,
+        "enemies_after": "扭动虫 #1 6 HP; 扭动虫 #2 3 HP, Weak 1, 中毒 5",
+        "rollout": "5-turn rollout (8 samples): expected further HP loss 12.5, fight over within 5 turns in 7/8, expected turns to the end (surviving samples) ~2.6, dead within 5 turns in 1/8 (~turn 2); ranked on -(further loss) - 40 x (1 - win chance): win chance ~88% (fights won in the samples, the others by the end-of-horizon estimate), value -17.5",
+        "rollout_turns": "T1 exact: hp -6, dmg 21; T2: hp -6.5 [0-23], dmg 5.3 [3-9], alive 7/8, won 3/8; T3: hp -0 [0-0], dmg 6 [6-6], alive 7/8, won 7/8; T4: over (alive 7/8, won 7/8); T5: over (alive 7/8, won 7/8)"
+      }
+    }
+  },
+  {
+    "line": 371538,
+    "floor": 17,
+    "turn": 1,
+    "choice": "plan2",
+    "best": false,
+    "criteria": {
+      "plan1": {
+        "plays": "背刺 -> 墨影幻灵, then 尖啸, then 蛇咬+ -> 墨影幻灵, then potion 能量药水, then 触媒",
+        "hp_lost": 0,
+        "dmg": 3,
+        "enemies_after": "墨影幻灵 180 HP, Weak 1, 中毒 8",
+        "rollout": "5-turn rollout (8 samples) (later turns may use the potions still held): expected further HP loss 51.1, fight over within 5 turns in 0/8, expected turns to the end (surviving samples) ~7.5; ranked on -(further loss) - 40 x (1 - win chance): win chance ~44% (fights won in the samples, the others by the end-of-horizon estimate), value -73.5",
+        "rollout_turns": "T1 exact: hp -0, dmg 3; T2: hp -7.4 [0-14], dmg 7.3 [2-16], alive 8/8, won 0/8; T3: hp -16.6 [12-25], dmg 20.5 [3-37], alive 8/8, won 0/8; T4: hp -0 [0-0], dmg 43.8 [19-58], alive 8/8, won 0/8; T5: hp -2.6 [0-10], dmg 43.3 [21-63], alive 8/8, won 0/8"
+      },
+      "plan2": {
+        "plays": "背刺 -> 墨影幻灵, then 蛇咬+ -> 墨影幻灵, then 触媒",
+        "hp_lost": 6,
+        "dmg": 3,
+        "enemies_after": "墨影幻灵 180 HP, Weak 1, 中毒 8",
+        "rollout": "5-turn rollout (8 samples) (later turns may use the potions still held): expected further HP loss 49.2, fight over within 5 turns in 2/8, expected turns to the end (surviving samples) ~6.9; ranked on -(further loss) - 40 x (1 - win chance): win chance ~46% (fights won in the samples, the others by the end-of-horizon estimate), value -70.8",
+        "rollout_turns": "T1 exact: hp -6, dmg 3; T2: hp -6.1 [0-14], dmg 13.3 [3-51], alive 8/8, won 0/8; T3: hp -16 [9-25], dmg 25.4 [3-48], alive 8/8, won 0/8; T4: hp -0 [0-0], dmg 45.9 [19-64], alive 8/8, won 0/8; T5: hp -3 [0-10], dmg 46.6 [26-63], alive 8/8, won 2/8"
+      }
+    }
+  },
+  {
+    "line": 371541,
+    "floor": 17,
+    "turn": 1,
+    "choice": "plan2",
+    "best": false,
+    "criteria": {
+      "plan1": {
+        "plays": "potion 能量药水, then 尖啸",
+        "hp_lost": 0,
+        "dmg": 2,
+        "enemies_after": "墨影幻灵 180 HP, Weak 1, 中毒 8",
+        "rollout": "5-turn rollout (8 samples) (later turns may use the potions still held): expected further HP loss 51.1, fight over within 5 turns in 0/8, expected turns to the end (surviving samples) ~7.5; ranked on -(further loss) - 40 x (1 - win chance): win chance ~44% (fights won in the samples, the others by the end-of-horizon estimate), value -73.5",
+        "rollout_turns": "T1 exact: hp -0, dmg 2; T2: hp -7.4 [0-14], dmg 7.3 [2-16], alive 8/8, won 0/8; T3: hp -16.6 [12-25], dmg 20.5 [3-37], alive 8/8, won 0/8; T4: hp -0 [0-0], dmg 43.8 [19-58], alive 8/8, won 0/8; T5: hp -2.6 [0-10], dmg 43.3 [21-63], alive 8/8, won 0/8"
+      },
+      "plan2": {
+        "plays": "nothing (end the turn now)",
+        "hp_lost": 6,
+        "dmg": 2,
+        "enemies_after": "墨影幻灵 180 HP, Weak 1, 中毒 8",
+        "rollout": "5-turn rollout (8 samples) (later turns may use the potions still held): expected further HP loss 49.2, fight over within 5 turns in 2/8, expected turns to the end (surviving samples) ~6.9; ranked on -(further loss) - 40 x (1 - win chance): win chance ~46% (fights won in the samples, the others by the end-of-horizon estimate), value -70.8",
+        "rollout_turns": "T1 exact: hp -6, dmg 2; T2: hp -6.1 [0-14], dmg 13.3 [3-51], alive 8/8, won 0/8; T3: hp -16 [9-25], dmg 25.4 [3-48], alive 8/8, won 0/8; T4: hp -0 [0-0], dmg 45.9 [19-64], alive 8/8, won 0/8; T5: hp -3 [0-10], dmg 46.6 [26-63], alive 8/8, won 2/8"
+      }
+    }
+  },
+  {
+    "line": 371542,
+    "floor": 17,
+    "turn": 2,
+    "choice": "plan3",
+    "best": true,
+    "criteria": {
+      "plan1": {
+        "plays": "防御, then 防御, then 带毒刺击 -> 墨影幻灵, then potion 能量药水, then 打击 -> 墨影幻灵",
+        "hp_lost": 4,
+        "dmg": 4,
+        "enemies_after": "墨影幻灵 176 HP, 中毒 9",
+        "rollout": "5-turn rollout (8 samples) (later turns may use the potions still held): expected further HP loss 26.9, fight over within 5 turns in 6/8, expected turns to the end (surviving samples) ~5; ranked on -(further loss) - 40 x (1 - win chance): win chance ~98% (fights won in the samples, the others by the end-of-horizon estimate), value -27.7",
+        "rollout_turns": "T1 exact: hp -4, dmg 4; T2: hp -20.8 [14-30], dmg 39.4 [23-51], alive 8/8, won 0/8; T3: hp -0 [0-0], dmg 55 [38-65], alive 8/8, won 0/8; T4: hp -0.9 [0-7], dmg 46.4 [39-57], alive 8/8, won 0/8; T5: hp -1.3 [0-7], dmg 33.5 [11-49], alive 8/8, won 6/8"
+      },
+      "plan2": {
+        "plays": "防御, then 带毒刺击 -> 墨影幻灵, then 打击 -> 墨影幻灵",
+        "hp_lost": 9,
+        "dmg": 4,
+        "enemies_after": "墨影幻灵 176 HP, 中毒 9",
+        "rollout": "5-turn rollout (8 samples) (later turns may use the potions still held): expected further HP loss 30.8, fight over within 5 turns in 8/8, expected turns to the end (surviving samples) ~4.9; ranked on -(further loss) - 40 x (1 - win chance): win chance ~100% (fights won in the samples, the others by the end-of-horizon estimate), value -30.7",
+        "rollout_turns": "T1 exact: hp -9, dmg 4; T2: hp -20.8 [14-30], dmg 51 [35-62], alive 8/8, won 0/8; T3: hp -0 [0-0], dmg 55 [38-65], alive 8/8, won 0/8; T4: hp -1 [0-7], dmg 47.4 [39-53], alive 8/8, won 1/8; T5: hp -0 [0-0], dmg 25.9 [7-50], alive 8/8, won 8/8"
+      },
+      "plan3": {
+        "plays": "防御, then 防御, then 带毒刺击 -> 墨影幻灵",
+        "hp_lost": 4,
+        "dmg": 3,
+        "enemies_after": "墨影幻灵 177 HP, 中毒 9",
+        "rollout": "5-turn rollout (8 samples) (later turns may use the potions still held): expected further HP loss 25.6, fight over within 5 turns in 8/8, expected turns to the end (surviving samples) ~5; ranked on -(further loss) - 40 x (1 - win chance): win chance ~100% (fights won in the samples, the others by the end-of-horizon estimate), value -25.6",
+        "rollout_turns": "T1 exact: hp -4, dmg 3; T2: hp -20.8 [14-30], dmg 46.6 [32-59], alive 8/8, won 0/8; T3: hp -0 [0-0], dmg 55 [38-65], alive 8/8, won 0/8; T4: hp -0.9 [0-7], dmg 44.1 [39-53], alive 8/8, won 0/8; T5: hp -0 [0-0], dmg 31.3 [11-54], alive 8/8, won 8/8"
+      }
+    }
+  },
+  {
+    "line": 371545,
+    "floor": 17,
+    "turn": 2,
+    "choice": "plan2",
+    "best": true,
+    "criteria": {
+      "plan1": {
+        "plays": "potion 能量药水, then 打击 -> 墨影幻灵",
+        "hp_lost": 4,
+        "dmg": 3,
+        "enemies_after": "墨影幻灵 176 HP, 中毒 9",
+        "rollout": "5-turn rollout (8 samples) (later turns may use the potions still held): expected further HP loss 28.6, fight over within 5 turns in 7/8, expected turns to the end (surviving samples) ~5.1; ranked on -(further loss) - 40 x (1 - win chance): win chance ~90% (fights won in the samples, the others by the end-of-horizon estimate), value -32.6",
+        "rollout_turns": "T1 exact: hp -4, dmg 3; T2: hp -20.8 [14-30], dmg 39.4 [23-51], alive 8/8, won 0/8; T3: hp -0 [0-0], dmg 55 [38-65], alive 8/8, won 0/8; T4: hp -0.4 [0-2], dmg 49 [39-57], alive 8/8, won 0/8; T5: hp -1.6 [0-13], dmg 29.3 [11-49], alive 8/8, won 7/8"
+      },
+      "plan2": {
+        "plays": "nothing (end the turn now)",
+        "hp_lost": 4,
+        "dmg": 2,
+        "enemies_after": "墨影幻灵 177 HP, 中毒 9",
+        "rollout": "5-turn rollout (8 samples) (later turns may use the potions still held): expected further HP loss 26.5, fight over within 5 turns in 7/8, expected turns to the end (surviving samples) ~4.9; ranked on -(further loss) - 40 x (1 - win chance): win chance ~98% (fights won in the samples, the others by the end-of-horizon estimate), value -27.2",
+        "rollout_turns": "T1 exact: hp -4, dmg 2; T2: hp -20.8 [14-30], dmg 46.6 [32-59], alive 8/8, won 0/8; T3: hp -0 [0-0], dmg 55 [38-65], alive 8/8, won 0/8; T4: hp -0.1 [0-1], dmg 47.8 [39-59], alive 8/8, won 1/8; T5: hp -1.9 [0-13], dmg 28.9 [8-49], alive 8/8, won 7/8"
+      }
+    }
+  },
+  {
+    "line": 371546,
+    "floor": 17,
+    "turn": 3,
+    "choice": "plan2",
+    "best": true,
+    "criteria": {
+      "plan1": {
+        "plays": "打击 -> 墨影幻灵, then 咕嘟冒泡+ -> 墨影幻灵, then 打击 -> 墨影幻灵, then potion 能量药水, then 猎杀者 -> 墨影幻灵",
+        "hp_lost": 30,
+        "dmg": 44,
+        "enemies_after": "墨影幻灵 133 HP, 中毒 19",
+        "rollout": "5-turn rollout (8 samples) (later turns may use the potions still held): expected further HP loss 31.8, fight over within 5 turns in 8/8, expected turns to the end (surviving samples) ~3.9; ranked on -(further loss) - 40 x (1 - win chance): win chance ~100% (fights won in the samples, the others by the end-of-horizon estimate), value -31.7",
+        "rollout_turns": "T1 exact: hp -30, dmg 44; T2: hp -0 [0-0], dmg 65 [65-65], alive 8/8, won 0/8; T3: hp -1.8 [0-7], dmg 51.8 [39-68], alive 8/8, won 1/8; T4: hp -0 [0-0], dmg 18.6 [5-29], alive 8/8, won 8/8; T5: over (alive 8/8, won 8/8)"
+      },
+      "plan2": {
+        "plays": "打击 -> 墨影幻灵, then 咕嘟冒泡+ -> 墨影幻灵, then 打击 -> 墨影幻灵, then potion 能量药水, then 后空翻",
+        "hp_lost": 25,
+        "dmg": 23,
+        "enemies_after": "墨影幻灵 154 HP, 中毒 19",
+        "rollout": "5-turn rollout (8 samples) (later turns may use the potions still held): expected further HP loss 26.5, fight over within 5 turns in 8/8, expected turns to the end (surviving samples) ~3.9; ranked on -(further loss) - 40 x (1 - win chance): win chance ~100% (fights won in the samples, the others by the end-of-horizon estimate), value -26.5",
+        "rollout_turns": "T1 exact: hp -25, dmg 23; T2: hp -0 [0-0], dmg 62.4 [47-73], alive 8/8, won 0/8; T3: hp -1.5 [0-7], dmg 54.5 [39-81], alive 8/8, won 1/8; T4: hp -0 [0-0], dmg 42.4 [24-56], alive 8/8, won 8/8; T5: over (alive 8/8, won 8/8)"
+      },
+      "plan3": {
+        "plays": "打击 -> 墨影幻灵, then 打击 -> 墨影幻灵, then 后空翻, then potion 能量药水",
+        "hp_lost": 25,
+        "dmg": 11,
+        "enemies_after": "墨影幻灵 166 HP, 中毒 7",
+        "rollout": "5-turn rollout (8 samples) (later turns may use the potions still held): expected further HP loss 35.5, fight over within 5 turns in 5/8, expected turns to the end (surviving samples) ~5.3, dead within 5 turns in 2/8 (~turn 4.5); ranked on -(further loss) - 40 x (1 - win chance): win chance ~65% (fights won in the samples, the others by the end-of-horizon estimate), value -49.6",
+        "rollout_turns": "T1 exact: hp -25, dmg 11; T2: hp -0 [0-0], dmg 43.6 [23-61], alive 8/8, won 0/8; T3: hp -2.4 [0-7], dmg 39.5 [21-53], alive 8/8, won 0/8; T4: hp -3.9 [0-13], dmg 39.6 [17-67], alive 7/8, won 0/8; T5: hp -5.9 [0-27], dmg 35.3 [12-54], alive 6/8, won 5/8"
+      },
+      "plan4": {
+        "plays": "打击 -> 墨影幻灵, then 咕嘟冒泡+ -> 墨影幻灵, then 打击 -> 墨影幻灵",
+        "hp_lost": 30,
+        "dmg": 23,
+        "enemies_after": "墨影幻灵 154 HP, 中毒 19",
+        "rollout": "5-turn rollout (8 samples) (later turns may use the potions still held): expected further HP loss 33.5, fight over within 5 turns in 8/8, expected turns to the end (surviving samples) ~4.3; ranked on -(further loss) - 40 x (1 - win chance): win chance ~100% (fights won in the samples, the others by the end-of-horizon estimate), value -33.5",
+        "rollout_turns": "T1 exact: hp -30, dmg 23; T2: hp -0 [0-0], dmg 65 [65-65], alive 8/8, won 0/8; T3: hp -2.6 [0-7], dmg 51.9 [39-69], alive 8/8, won 0/8; T4: hp -0.9 [0-5], dmg 34.6 [20-44], alive 8/8, won 6/8; T5: hp -0 [0-0], dmg 10 [9-11], alive 8/8, won 8/8"
+      },
+      "plan5": {
+        "plays": "打击 -> 墨影幻灵, then 后空翻",
+        "hp_lost": 25,
+        "dmg": 3,
+        "enemies_after": "墨影幻灵 174 HP, 中毒 7",
+        "rollout": "5-turn rollout (8 samples) (later turns may use the potions still held): expected further HP loss 39.5, fight over within 5 turns in 2/8, expected turns to the end (surviving samples) ~5.7, dead within 5 turns in 5/8 (~turn 5); ranked on -(further loss) - 40 x (1 - win chance): win chance ~33% (fights won in the samples, the others by the end-of-horizon estimate), value -66.2",
+        "rollout_turns": "T1 exact: hp -25, dmg 3; T2: hp -0 [0-0], dmg 42.1 [23-61], alive 8/8, won 0/8; T3: hp -2.1 [0-7], dmg 31.3 [15-45], alive 8/8, won 0/8; T4: hp -3.8 [0-13], dmg 31 [5-44], alive 8/8, won 0/8; T5: hp -12.9 [0-26], dmg 35.1 [13-61], alive 3/8, won 2/8"
+      }
+    }
+  },
+  {
+    "line": 371560,
+    "floor": 17,
+    "turn": 5,
+    "choice": "plan2",
+    "best": true,
+    "criteria": {
+      "plan1": {
+        "plays": "咕嘟冒泡+ -> 墨影幻灵, then 猎杀者 -> 墨影幻灵",
+        "hp_lost": 7,
+        "dmg": 72,
+        "enemies_after": "墨影幻灵 2 HP, Weak 1, 中毒 27",
+        "rollout": "5-turn rollout (8 samples): expected further HP loss 7, fight over within 5 turns in 8/8, expected turns to the end (surviving samples) ~2; ranked on -(further loss) - 40 x (1 - win chance): win chance ~100% (fights won in the samples, the others by the end-of-horizon estimate), value -7",
+        "rollout_turns": "T1 exact: hp -7, dmg 72; T2: hp -0 [0-0], dmg 2 [2-2], alive 8/8, won 8/8; T3: over (alive 8/8, won 8/8); T4: over (alive 8/8, won 8/8); T5: over (alive 8/8, won 8/8)"
+      },
+      "plan2": {
+        "plays": "咕嘟冒泡+ -> 墨影幻灵, then 打击 -> 墨影幻灵, then 尖啸",
+        "hp_lost": 1,
+        "dmg": 63,
+        "enemies_after": "墨影幻灵 11 HP, Weak 1, 中毒 27",
+        "rollout": "5-turn rollout (8 samples): expected further HP loss 1, fight over within 5 turns in 8/8, expected turns to the end (surviving samples) ~2; ranked on -(further loss) - 40 x (1 - win chance): win chance ~100% (fights won in the samples, the others by the end-of-horizon estimate), value -1",
+        "rollout_turns": "T1 exact: hp -1, dmg 63; T2: hp -0 [0-0], dmg 11 [11-11], alive 8/8, won 8/8; T3: over (alive 8/8, won 8/8); T4: over (alive 8/8, won 8/8); T5: over (alive 8/8, won 8/8)"
+      },
+      "plan3": {
+        "plays": "猎杀者 -> 墨影幻灵, then 尖啸",
+        "hp_lost": 1,
+        "dmg": 48,
+        "enemies_after": "墨影幻灵 26 HP, Weak 1, 中毒 15",
+        "rollout": "5-turn rollout (8 samples): expected further HP loss 1, fight over within 5 turns in 8/8, expected turns to the end (surviving samples) ~2; ranked on -(further loss) - 40 x (1 - win chance): win chance ~100% (fights won in the samples, the others by the end-of-horizon estimate), value -1",
+        "rollout_turns": "T1 exact: hp -1, dmg 48; T2: hp -0 [0-0], dmg 26 [26-26], alive 8/8, won 8/8; T3: over (alive 8/8, won 8/8); T4: over (alive 8/8, won 8/8); T5: over (alive 8/8, won 8/8)"
+      },
+      "plan4": {
+        "plays": "猎杀者 -> 墨影幻灵, then 打击 -> 墨影幻灵",
+        "hp_lost": 7,
+        "dmg": 54,
+        "enemies_after": "墨影幻灵 20 HP, Weak 1, 中毒 15",
+        "rollout": "5-turn rollout (8 samples): expected further HP loss 7, fight over within 5 turns in 8/8, expected turns to the end (surviving samples) ~2; ranked on -(further loss) - 40 x (1 - win chance): win chance ~100% (fights won in the samples, the others by the end-of-horizon estimate), value -7",
+        "rollout_turns": "T1 exact: hp -7, dmg 54; T2: hp -0 [0-0], dmg 20 [20-20], alive 8/8, won 8/8; T3: over (alive 8/8, won 8/8); T4: over (alive 8/8, won 8/8); T5: over (alive 8/8, won 8/8)"
+      }
+    }
+  },
+  {
+    "line": 371721,
+    "floor": 31,
+    "turn": 1,
+    "choice": "plan3",
+    "best": null,
+    "criteria": {
+      "plan1": {
+        "plays": "背刺 -> 残杀千足虫 (FRONT), then 带毒刺击 -> 残杀千足虫 (FRONT), then 猎杀者 -> 残杀千足虫 (FRONT)",
+        "hp_lost": 15,
+        "dmg": 35,
+        "enemies_after": "残杀千足虫 (FRONT) 17 HP, Weak 1, 中毒 2; 残杀千足虫 (MIDDLE) 48 HP, Weak 1; 残杀千足虫 (BACK) 46 HP, Weak 1",
+        "rollout": "no rollout (it ran past its time budget, 245 ms of it taken by the random potions' Monte Carlo; a fallback, not a forecast): this turn as shown, then a rough clock estimate of the rest of the fight, further HP loss ~45 (the estimate's cap, our HP now: it does not mean this line dies, and does not tell the lines apart)",
+        "rollout_turns": "T1 exact: hp -15, dmg 35"
+      },
+      "plan2": {
+        "plays": "背刺 -> 残杀千足虫 (FRONT), then 防御+, then 猎杀者 -> 残杀千足虫 (FRONT)",
+        "hp_lost": 7,
+        "dmg": 26,
+        "enemies_after": "残杀千足虫 (FRONT) 26 HP, Weak 1; 残杀千足虫 (MIDDLE) 48 HP, Weak 1; 残杀千足虫 (BACK) 46 HP, Weak 1",
+        "rollout": "no rollout (it ran past its time budget, 245 ms of it taken by the random potions' Monte Carlo; a fallback, not a forecast): this turn as shown, then a rough clock estimate of the rest of the fight, further HP loss ~45 (the estimate's cap, our HP now: it does not mean this line dies, and does not tell the lines apart)",
+        "rollout_turns": "T1 exact: hp -7, dmg 26"
+      },
+      "plan3": {
+        "plays": "背刺 -> 残杀千足虫 (FRONT), then 带毒刺击 -> 残杀千足虫 (FRONT), then 防御+, then 生存者",
+        "hp_lost": 0,
+        "dmg": 20,
+        "enemies_after": "残杀千足虫 (FRONT) 32 HP, Weak 1, 中毒 2; 残杀千足虫 (MIDDLE) 48 HP, Weak 1; 残杀千足虫 (BACK) 46 HP, Weak 1",
+        "rollout": "no rollout (it ran past its time budget, 245 ms of it taken by the random potions' Monte Carlo; a fallback, not a forecast): this turn as shown, then a rough clock estimate of the rest of the fight, further HP loss ~45 (the estimate's cap, our HP now: it does not mean this line dies, and does not tell the lines apart)",
+        "rollout_turns": "T1 exact: hp -0, dmg 20"
+      },
+      "plan4": {
+        "plays": "背刺 -> 残杀千足虫 (FRONT), then 带毒刺击 -> 残杀千足虫 (FRONT), then 蛇咬+ -> 残杀千足虫 (FRONT)",
+        "hp_lost": 15,
+        "dmg": 30,
+        "enemies_after": "残杀千足虫 (FRONT) 22 HP, Weak 1, 中毒 12; 残杀千足虫 (MIDDLE) 48 HP, Weak 1; 残杀千足虫 (BACK) 46 HP, Weak 1",
+        "rollout": "no rollout (it ran past its time budget, 245 ms of it taken by the random potions' Monte Carlo; a fallback, not a forecast): this turn as shown, then a rough clock estimate of the rest of the fight, further HP loss ~45 (the estimate's cap, our HP now: it does not mean this line dies, and does not tell the lines apart)",
+        "rollout_turns": "T1 exact: hp -15, dmg 30"
+      },
+      "plan5": {
+        "plays": "背刺 -> 残杀千足虫 (FRONT), then 防御+, then 蛇咬+ -> 残杀千足虫 (FRONT)",
+        "hp_lost": 7,
+        "dmg": 21,
+        "enemies_after": "残杀千足虫 (FRONT) 31 HP, Weak 1, 中毒 9; 残杀千足虫 (MIDDLE) 48 HP, Weak 1; 残杀千足虫 (BACK) 46 HP, Weak 1",
+        "rollout": "no rollout (it ran past its time budget, 245 ms of it taken by the random potions' Monte Carlo; a fallback, not a forecast): this turn as shown, then a rough clock estimate of the rest of the fight, further HP loss ~45 (the estimate's cap, our HP now: it does not mean this line dies, and does not tell the lines apart)",
+        "rollout_turns": "T1 exact: hp -7, dmg 21"
+      },
+      "plan6": {
+        "plays": "背刺 -> 残杀千足虫 (FRONT), then 防御+, then 猎杀者 -> 残杀千足虫 (FRONT), then potion 幸运补剂",
+        "hp_lost": 4,
+        "dmg": 26,
+        "enemies_after": "残杀千足虫 (FRONT) 26 HP, Weak 1; 残杀千足虫 (MIDDLE) 48 HP, Weak 1; 残杀千足虫 (BACK) 46 HP, Weak 1",
+        "rollout": "no rollout (it ran past its time budget, 245 ms of it taken by the random potions' Monte Carlo; a fallback, not a forecast): this turn as shown, then a rough clock estimate of the rest of the fight, further HP loss ~45 (the estimate's cap, our HP now: it does not mean this line dies, and does not tell the lines apart)",
+        "rollout_turns": "T1 exact: hp -4, dmg 26"
+      },
+      "plan7": {
+        "plays": "背刺 -> 残杀千足虫 (FRONT), then 防御+, then 生存者",
+        "hp_lost": 0,
+        "dmg": 11,
+        "enemies_after": "残杀千足虫 (FRONT) 41 HP, Weak 1; 残杀千足虫 (MIDDLE) 48 HP, Weak 1; 残杀千足虫 (BACK) 46 HP, Weak 1",
+        "rollout": "no rollout (it ran past its time budget, 245 ms of it taken by the random potions' Monte Carlo; a fallback, not a forecast): this turn as shown, then a rough clock estimate of the rest of the fight, further HP loss ~45 (the estimate's cap, our HP now: it does not mean this line dies, and does not tell the lines apart)",
+        "rollout_turns": "T1 exact: hp -0, dmg 11"
+      },
+      "plan8": {
+        "plays": "背刺 -> 残杀千足虫 (MIDDLE), then 带毒刺击 -> 残杀千足虫 (MIDDLE), then 猎杀者 -> 残杀千足虫 (MIDDLE)",
+        "hp_lost": 15,
+        "dmg": 35,
+        "enemies_after": "残杀千足虫 (FRONT) 52 HP, Weak 1; 残杀千足虫 (MIDDLE) 13 HP, Weak 1, 中毒 2; 残杀千足虫 (BACK) 46 HP, Weak 1",
+        "rollout": "no rollout (it ran past its time budget, 245 ms of it taken by the random potions' Monte Carlo; a fallback, not a forecast): this turn as shown, then a rough clock estimate of the rest of the fight, further HP loss ~45 (the estimate's cap, our HP now: it does not mean this line dies, and does not tell the lines apart)",
+        "rollout_turns": "T1 exact: hp -15, dmg 35"
+      },
+      "plan9": {
+        "plays": "背刺 -> 残杀千足虫 (BACK), then 带毒刺击 -> 残杀千足虫 (BACK), then 猎杀者 -> 残杀千足虫 (BACK)",
+        "hp_lost": 15,
+        "dmg": 35,
+        "enemies_after": "残杀千足虫 (FRONT) 52 HP, Weak 1; 残杀千足虫 (MIDDLE) 48 HP, Weak 1; 残杀千足虫 (BACK) 11 HP, Weak 1, 中毒 2",
+        "rollout": "no rollout (it ran past its time budget, 245 ms of it taken by the random potions' Monte Carlo; a fallback, not a forecast): this turn as shown, then a rough clock estimate of the rest of the fight, further HP loss ~45 (the estimate's cap, our HP now: it does not mean this line dies, and does not tell the lines apart)",
+        "rollout_turns": "T1 exact: hp -15, dmg 35"
+      },
+      "p1": {
+        "plays": "drink 能力药水 now (offers 3 random Power cards, take 1, free this turn), then re-plan the turn with the real cards; example, the median of 1 samples: potion 能力药水 (take 群蛇形态), 背刺 -> 残杀千足虫 (FRONT), 带毒刺击 -> 残杀千足虫 (FRONT), 猎杀者 -> 残杀千足虫 (FRONT), 群蛇形态",
+        "hp_lost": "mean 15 [15-15]",
+        "dmg": null,
+        "enemies_after": null,
+        "rollout": "the median sample's line: no rollout (it ran past its time budget, 245 ms of it taken by the random potions' Monte Carlo; a fallback, not a forecast): this turn as shown, then a rough clock estimate of the rest of the fight, further HP loss ~45 (the estimate's cap, our HP now: it does not mean this line dies, and does not tell the lines apart)",
+        "rollout_turns": "T1 exact: hp -15, dmg 35"
+      }
+    }
+  },
+  {
+    "line": 371726,
+    "floor": 31,
+    "turn": 1,
+    "choice": "plan3",
+    "best": true,
+    "criteria": {
+      "plan1": {
+        "plays": "nothing (end the turn now)",
+        "hp_lost": 0,
+        "dmg": 3,
+        "enemies_after": "残杀千足虫 (FRONT) 32 HP, Weak 1, 中毒 2; 残杀千足虫 (MIDDLE) 48 HP, Weak 1; 残杀千足虫 (BACK) 46 HP, Weak 1",
+        "rollout": "3-turn rollout (1 sample) (later turns may drink the potions still held, each when its turn gains more than the potion's cost): expected further HP loss 45, fight over within 3 turns in 0/1, expected turns to the end (surviving samples) ~8; ranked on fewest dead first (some line pays a potion cost), then -(further loss + potion cost) - 40 x (1 - win chance): win chance ~0% (fights won in the samples, the others by the end-of-horizon estimate), value -92.7 [cut to fit the time budget: first wave at 3 turns, horizon 3, samples 2 per kill order, samples 1 (clock)]",
+        "rollout_turns": "T1 exact: hp -0, dmg 3; T2: hp -3 [3-3], dmg 12 [12-12], alive 1/1, won 0/1; T3: hp -19 [19-19], dmg 1 [1-1], alive 1/1, won 0/1"
+      },
+      "plan2": {
+        "plays": "potion 幸运补剂",
+        "hp_lost": 0,
+        "dmg": 3,
+        "enemies_after": "残杀千足虫 (FRONT) 32 HP, Weak 1, 中毒 2; 残杀千足虫 (MIDDLE) 48 HP, Weak 1; 残杀千足虫 (BACK) 46 HP, Weak 1",
+        "rollout": "3-turn rollout (1 sample) (later turns may drink the potions still held, each when its turn gains more than the potion's cost): expected further HP loss 45, fight over within 3 turns in 0/1, expected turns to the end (surviving samples) ~8; ranked on fewest dead first (some line pays a potion cost), then -(further loss + potion cost) - 40 x (1 - win chance): win chance ~0% (fights won in the samples, the others by the end-of-horizon estimate), value -104.5 [cut to fit the time budget: first wave at 3 turns, horizon 3, samples 2 per kill order, samples 1 (clock)]",
+        "rollout_turns": "T1 exact: hp -0, dmg 3; T2: hp -3 [3-3], dmg 12 [12-12], alive 1/1, won 0/1; T3: hp -19 [19-19], dmg 1 [1-1], alive 1/1, won 0/1"
+      },
+      "plan3": {
+        "plays": "nothing (end the turn now)",
+        "hp_lost": 0,
+        "dmg": 3,
+        "enemies_after": "残杀千足虫 (FRONT) 32 HP, Weak 1, 中毒 2; 残杀千足虫 (MIDDLE) 48 HP, Weak 1; 残杀千足虫 (BACK) 46 HP, Weak 1",
+        "rollout": "3-turn rollout (1 sample) (the no-potion line: its later turns drink no potion): expected further HP loss 45, fight over within 3 turns in 0/1, expected turns to the end (surviving samples) ~8; ranked on fewest dead first (some line pays a potion cost), then -(further loss) - 40 x (1 - win chance): win chance ~0% (fights won in the samples, the others by the end-of-horizon estimate), value -85 [cut to fit the time budget: first wave at 3 turns, horizon 3, samples 2 per kill order, samples 1 (clock)]",
+        "rollout_turns": "T1 exact: hp -0, dmg 3; T2: hp -3 [3-3], dmg 12 [12-12], alive 1/1, won 0/1; T3: hp -19 [19-19], dmg 1 [1-1], alive 1/1, won 0/1"
+      },
+      "p1": {
+        "plays": "drink 能力药水 now (offers 3 random Power cards, take 1, free this turn), then re-plan the turn with the real cards; example, the median of 12 samples: potion 能力药水 (take 幻影之刃), 幻影之刃",
+        "hp_lost": "mean 0 [0-0]",
+        "dmg": null,
+        "enemies_after": null,
+        "rollout": "the median sample's line: 3-turn rollout (1 sample) (later turns may drink the potions still held, each when its turn gains more than the potion's cost): expected further HP loss 45, fight over within 3 turns in 0/1, expected turns to the end (surviving samples) ~8; ranked on fewest dead first (some line pays a potion cost), then -(further loss + potion cost) - 40 x (1 - win chance): win chance ~0% (fights won in the samples, the others by the end-of-horizon estimate), value -92.7 [cut to fit the time budget: first wave at 3 turns, horizon 3, samples 2 per kill order, samples 1 (clock)]",
+        "rollout_turns": "T1 exact: hp -0, dmg 3; T2: hp -3 [3-3], dmg 12 [12-12], alive 1/1, won 0/1; T3: hp -19 [19-19], dmg 1 [1-1], alive 1/1, won 0/1"
+      }
+    }
+  },
+  {
+    "line": 371727,
+    "floor": 31,
+    "turn": 2,
+    "choice": "p1",
+    "best": null,
+    "criteria": {
+      "plan1": {
+        "plays": "突然一拳+ -> 残杀千足虫 (FRONT), then 致命毒药+ -> 残杀千足虫 (FRONT), then 防御+",
+        "hp_lost": 17,
+        "dmg": 16,
+        "enemies_after": "残杀千足虫 (FRONT) 16 HP, Weak 2, 中毒 8; 残杀千足虫 (MIDDLE) 48 HP; 残杀千足虫 (BACK) 46 HP",
+        "rollout": "no rollout (it ran past its time budget, 392 ms of it taken by the random potions' Monte Carlo; a fallback, not a forecast): this turn as shown, then a rough clock estimate of the rest of the fight, further HP loss ~45 (the estimate's cap, our HP now: it does not mean this line dies, and does not tell the lines apart)",
+        "rollout_turns": "T1 exact: hp -17, dmg 16"
+      },
+      "plan2": {
+        "plays": "突然一拳+ -> 残杀千足虫 (FRONT), then 防御, then 防御+",
+        "hp_lost": 12,
+        "dmg": 9,
+        "enemies_after": "残杀千足虫 (FRONT) 23 HP, Weak 2, 中毒 1; 残杀千足虫 (MIDDLE) 48 HP; 残杀千足虫 (BACK) 46 HP",
+        "rollout": "no rollout (it ran past its time budget, 392 ms of it taken by the random potions' Monte Carlo; a fallback, not a forecast): this turn as shown, then a rough clock estimate of the rest of the fight, further HP loss ~45 (the estimate's cap, our HP now: it does not mean this line dies, and does not tell the lines apart)",
+        "rollout_turns": "T1 exact: hp -12, dmg 9"
+      },
+      "plan3": {
+        "plays": "蛇咬+ -> 残杀千足虫 (FRONT), then 突然一拳+ -> 残杀千足虫 (FRONT)",
+        "hp_lost": 25,
+        "dmg": 19,
+        "enemies_after": "残杀千足虫 (FRONT) 13 HP, Weak 2, 中毒 11; 残杀千足虫 (MIDDLE) 48 HP; 残杀千足虫 (BACK) 46 HP",
+        "rollout": "no rollout (it ran past its time budget, 392 ms of it taken by the random potions' Monte Carlo; a fallback, not a forecast): this turn as shown, then a rough clock estimate of the rest of the fight, further HP loss ~45 (the estimate's cap, our HP now: it does not mean this line dies, and does not tell the lines apart)",
+        "rollout_turns": "T1 exact: hp -25, dmg 19"
+      },
+      "plan4": {
+        "plays": "防御, then 致命毒药+ -> 残杀千足虫 (FRONT), then 防御+",
+        "hp_lost": 16,
+        "dmg": 9,
+        "enemies_after": "残杀千足虫 (FRONT) 23 HP, 中毒 8; 残杀千足虫 (MIDDLE) 48 HP; 残杀千足虫 (BACK) 46 HP",
+        "rollout": "no rollout (it ran past its time budget, 392 ms of it taken by the random potions' Monte Carlo; a fallback, not a forecast): this turn as shown, then a rough clock estimate of the rest of the fight, further HP loss ~45 (the estimate's cap, our HP now: it does not mean this line dies, and does not tell the lines apart)",
+        "rollout_turns": "T1 exact: hp -16, dmg 9"
+      },
+      "plan5": {
+        "plays": "蛇咬+ -> 残杀千足虫 (FRONT), then 致命毒药+ -> 残杀千足虫 (FRONT)",
+        "hp_lost": 29,
+        "dmg": 19,
+        "enemies_after": "残杀千足虫 (FRONT) 13 HP, 中毒 18; 残杀千足虫 (MIDDLE) 48 HP; 残杀千足虫 (BACK) 46 HP",
+        "rollout": "no rollout (it ran past its time budget, 392 ms of it taken by the random potions' Monte Carlo; a fallback, not a forecast): this turn as shown, then a rough clock estimate of the rest of the fight, further HP loss ~45 (the estimate's cap, our HP now: it does not mean this line dies, and does not tell the lines apart)",
+        "rollout_turns": "T1 exact: hp -29, dmg 19"
+      },
+      "plan6": {
+        "plays": "突然一拳+ -> 残杀千足虫 (BACK), then 防御, then 致命毒药+ -> 残杀千足虫 (FRONT), then potion 幸运补剂",
+        "hp_lost": 13,
+        "dmg": 16,
+        "enemies_after": "残杀千足虫 (FRONT) 23 HP, 中毒 8; 残杀千足虫 (MIDDLE) 48 HP; 残杀千足虫 (BACK) 39 HP, Weak 2",
+        "rollout": "no rollout (it ran past its time budget, 392 ms of it taken by the random potions' Monte Carlo; a fallback, not a forecast): this turn as shown, then a rough clock estimate of the rest of the fight, further HP loss ~45 (the estimate's cap, our HP now: it does not mean this line dies, and does not tell the lines apart)",
+        "rollout_turns": "T1 exact: hp -13, dmg 16"
+      },
+      "plan7": {
+        "plays": "蛇咬+ -> 残杀千足虫 (FRONT), then 防御+",
+        "hp_lost": 21,
+        "dmg": 12,
+        "enemies_after": "残杀千足虫 (FRONT) 20 HP, 中毒 11; 残杀千足虫 (MIDDLE) 48 HP; 残杀千足虫 (BACK) 46 HP",
+        "rollout": "no rollout (it ran past its time budget, 392 ms of it taken by the random potions' Monte Carlo; a fallback, not a forecast): this turn as shown, then a rough clock estimate of the rest of the fight, further HP loss ~45 (the estimate's cap, our HP now: it does not mean this line dies, and does not tell the lines apart)",
+        "rollout_turns": "T1 exact: hp -21, dmg 12"
+      },
+      "plan8": {
+        "plays": "蛇咬+ -> 残杀千足虫 (MIDDLE), then 突然一拳+ -> 残杀千足虫 (MIDDLE)",
+        "hp_lost": 27,
+        "dmg": 19,
+        "enemies_after": "残杀千足虫 (FRONT) 30 HP, 中毒 1; 残杀千足虫 (MIDDLE) 31 HP, Weak 2, 中毒 9; 残杀千足虫 (BACK) 46 HP",
+        "rollout": "no rollout (it ran past its time budget, 392 ms of it taken by the random potions' Monte Carlo; a fallback, not a forecast): this turn as shown, then a rough clock estimate of the rest of the fight, further HP loss ~45 (the estimate's cap, our HP now: it does not mean this line dies, and does not tell the lines apart)",
+        "rollout_turns": "T1 exact: hp -27, dmg 19"
+      },
+      "plan9": {
+        "plays": "蛇咬+ -> 残杀千足虫 (BACK), then 突然一拳+ -> 残杀千足虫 (BACK)",
+        "hp_lost": 26,
+        "dmg": 19,
+        "enemies_after": "残杀千足虫 (FRONT) 30 HP, 中毒 1; 残杀千足虫 (MIDDLE) 48 HP; 残杀千足虫 (BACK) 29 HP, Weak 2, 中毒 9",
+        "rollout": "no rollout (it ran past its time budget, 392 ms of it taken by the random potions' Monte Carlo; a fallback, not a forecast): this turn as shown, then a rough clock estimate of the rest of the fight, further HP loss ~45 (the estimate's cap, our HP now: it does not mean this line dies, and does not tell the lines apart)",
+        "rollout_turns": "T1 exact: hp -26, dmg 19"
+      },
+      "p1": {
+        "plays": "drink 能力药水 now (offers 3 random Power cards, take 1, free this turn), then re-plan the turn with the real cards; example, the median of 9 samples: potion 能力药水 (take 毒雾), 突然一拳+ -> 残杀千足虫 (FRONT), 致命毒药+ -> 残杀千足虫 (FRONT), 防御+, 毒雾",
+        "hp_lost": "mean 16.7 [14-17]",
+        "dmg": null,
+        "enemies_after": null,
+        "rollout": "the median sample's line: no rollout (it ran past its time budget, 392 ms of it taken by the random potions' Monte Carlo; a fallback, not a forecast): this turn as shown, then a rough clock estimate of the rest of the fight, further HP loss ~45 (the estimate's cap, our HP now: it does not mean this line dies, and does not tell the lines apart)",
+        "rollout_turns": "T1 exact: hp -17, dmg 16"
+      }
+    }
+  },
+  {
+    "line": 371729,
+    "floor": 31,
+    "turn": 2,
+    "choice": "plan4",
+    "best": true,
+    "criteria": {
+      "plan1": {
+        "plays": "突然一拳+ -> 残杀千足虫 (FRONT), then 致命毒药+ -> 残杀千足虫 (FRONT), then 防御+, then 群蛇形态",
+        "hp_lost": 17,
+        "dmg": 16,
+        "enemies_after": "残杀千足虫 (FRONT) 16 HP, Weak 2, 中毒 8; 残杀千足虫 (MIDDLE) 48 HP; 残杀千足虫 (BACK) 46 HP",
+        "rollout": "3-turn rollout (1 sample) (later turns may drink the potions still held, each when its turn gains more than the potion's cost): expected further HP loss 45, fight over within 3 turns in 0/1, expected turns to the end (surviving samples) ~7; ranked on fewest dead first (some line pays a potion cost), then -(further loss) - 40 x (1 - win chance): win chance ~3% (fights won in the samples, the others by the end-of-horizon estimate), value -83.7 [cut to fit the time budget: first wave at 3 turns, horizon 3, samples 1 per kill order]",
+        "rollout_turns": "T1 exact: hp -17, dmg 16; T2: hp -0 [0-0], dmg 15 [15-15], alive 1/1, won 0/1; T3: hp -16 [16-16], dmg 1 [1-1], alive 1/1, won 0/1"
+      },
+      "plan2": {
+        "plays": "突然一拳+ -> 残杀千足虫 (FRONT), then 防御, then 防御+, then 群蛇形态",
+        "hp_lost": 12,
+        "dmg": 9,
+        "enemies_after": "残杀千足虫 (FRONT) 23 HP, Weak 2, 中毒 1; 残杀千足虫 (MIDDLE) 48 HP; 残杀千足虫 (BACK) 46 HP",
+        "rollout": "3-turn rollout (1 sample) (later turns may drink the potions still held, each when its turn gains more than the potion's cost): expected further HP loss 45, fight over within 3 turns in 0/1, expected turns to the end (surviving samples) ~8; ranked on fewest dead first (some line pays a potion cost), then -(further loss) - 40 x (1 - win chance): win chance ~0% (fights won in the samples, the others by the end-of-horizon estimate), value -85 [cut to fit the time budget: first wave at 3 turns, horizon 3, samples 1 per kill order]",
+        "rollout_turns": "T1 exact: hp -12, dmg 9; T2: hp -0 [0-0], dmg 8 [8-8], alive 1/1, won 0/1; T3: hp -22 [22-22], dmg 0 [0-0], alive 1/1, won 0/1"
+      },
+      "plan3": {
+        "plays": "蛇咬+ -> 残杀千足虫 (FRONT), then 突然一拳+ -> 残杀千足虫 (FRONT), then 群蛇形态",
+        "hp_lost": 25,
+        "dmg": 19,
+        "enemies_after": "残杀千足虫 (FRONT) 13 HP, Weak 2, 中毒 11; 残杀千足虫 (MIDDLE) 48 HP; 残杀千足虫 (BACK) 46 HP",
+        "rollout": "3-turn rollout (1 sample) (later turns may drink the potions still held, each when its turn gains more than the potion's cost): expected further HP loss 45, fight over within 3 turns in 0/1, expected turns to the end (surviving samples) ~7; ranked on fewest dead first (some line pays a potion cost), then -(further loss) - 40 x (1 - win chance): win chance ~2% (fights won in the samples, the others by the end-of-horizon estimate), value -84.3 [cut to fit the time budget: first wave at 3 turns, horizon 3, samples 1 per kill order]",
+        "rollout_turns": "T1 exact: hp -25, dmg 19; T2: hp -0 [0-0], dmg 18 [18-18], alive 1/1, won 0/1; T3: hp -13 [13-13], dmg 2 [2-2], alive 1/1, won 0/1"
+      },
+      "plan4": {
+        "plays": "防御, then 致命毒药+ -> 残杀千足虫 (FRONT), then 防御+, then 群蛇形态",
+        "hp_lost": 16,
+        "dmg": 9,
+        "enemies_after": "残杀千足虫 (FRONT) 23 HP, 中毒 8; 残杀千足虫 (MIDDLE) 48 HP; 残杀千足虫 (BACK) 46 HP",
+        "rollout": "3-turn rollout (1 sample) (later turns may drink the potions still held, each when its turn gains more than the potion's cost): expected further HP loss 45, fight over within 3 turns in 0/1, expected turns to the end (surviving samples) ~7; ranked on fewest dead first (some line pays a potion cost), then -(further loss) - 40 x (1 - win chance): win chance ~4% (fights won in the samples, the others by the end-of-horizon estimate), value -83.5 [cut to fit the time budget: first wave at 3 turns, horizon 3, samples 1 per kill order]",
+        "rollout_turns": "T1 exact: hp -16, dmg 9; T2: hp -0 [0-0], dmg 15 [15-15], alive 1/1, won 0/1; T3: hp -16 [16-16], dmg 8 [8-8], alive 1/1, won 0/1"
+      },
+      "plan5": {
+        "plays": "蛇咬+ -> 残杀千足虫 (FRONT), then 致命毒药+ -> 残杀千足虫 (FRONT), then 群蛇形态",
+        "hp_lost": 29,
+        "dmg": 19,
+        "enemies_after": "残杀千足虫 (FRONT) 13 HP, 中毒 18; 残杀千足虫 (MIDDLE) 48 HP; 残杀千足虫 (BACK) 46 HP",
+        "rollout": "3-turn rollout (1 sample) (later turns may drink the potions still held, each when its turn gains more than the potion's cost): expected further HP loss 45, fight over within 3 turns in 0/1, expected turns to the end (surviving samples) ~7; ranked on fewest dead first (some line pays a potion cost), then -(further loss) - 40 x (1 - win chance): win chance ~1% (fights won in the samples, the others by the end-of-horizon estimate), value -84.6 [cut to fit the time budget: first wave at 3 turns, horizon 3, samples 1 per kill order]",
+        "rollout_turns": "T1 exact: hp -29, dmg 19; T2: hp -0 [0-0], dmg 20 [20-20], alive 1/1, won 0/1; T3: hp -13 [13-13], dmg 0 [0-0], alive 1/1, won 0/1"
+      },
+      "plan6": {
+        "plays": "突然一拳+ -> 残杀千足虫 (BACK), then 防御, then 致命毒药+ -> 残杀千足虫 (FRONT), then 群蛇形态, then potion 幸运补剂",
+        "hp_lost": 13,
+        "dmg": 16,
+        "enemies_after": "残杀千足虫 (FRONT) 23 HP, 中毒 8; 残杀千足虫 (MIDDLE) 48 HP; 残杀千足虫 (BACK) 39 HP, Weak 2",
+        "rollout": "3-turn rollout (1 sample) (later turns may drink the potions still held, each when its turn gains more than the potion's cost): expected further HP loss 45, fight over within 3 turns in 0/1, expected turns to the end (surviving samples) ~7; ranked on fewest dead first (some line pays a potion cost), then -(further loss + potion cost) - 40 x (1 - win chance): win chance ~5% (fights won in the samples, the others by the end-of-horizon estimate), value -94.6 [cut to fit the time budget: first wave at 3 turns, horizon 3, samples 1 per kill order]",
+        "rollout_turns": "T1 exact: hp -13, dmg 16; T2: hp -0 [0-0], dmg 15 [15-15], alive 1/1, won 0/1; T3: hp -16 [16-16], dmg 8 [8-8], alive 1/1, won 0/1"
+      },
+      "plan7": {
+        "plays": "蛇咬+ -> 残杀千足虫 (FRONT), then 防御+, then 群蛇形态",
+        "hp_lost": 21,
+        "dmg": 12,
+        "enemies_after": "残杀千足虫 (FRONT) 20 HP, 中毒 11; 残杀千足虫 (MIDDLE) 48 HP; 残杀千足虫 (BACK) 46 HP",
+        "rollout": "3-turn rollout (1 sample) (later turns may drink the potions still held, each when its turn gains more than the potion's cost): expected further HP loss 45, fight over within 3 turns in 0/1, expected turns to the end (surviving samples) ~7; ranked on fewest dead first (some line pays a potion cost), then -(further loss) - 40 x (1 - win chance): win chance ~2% (fights won in the samples, the others by the end-of-horizon estimate), value -84.2 [cut to fit the time budget: first wave at 3 turns, horizon 3, samples 1 per kill order]",
+        "rollout_turns": "T1 exact: hp -21, dmg 12; T2: hp -0 [0-0], dmg 18 [18-18], alive 1/1, won 0/1; T3: hp -16 [16-16], dmg 2 [2-2], alive 1/1, won 0/1"
+      },
+      "plan8": {
+        "plays": "突然一拳+ -> 残杀千足虫 (BACK), then 防御, then 防御+, then 群蛇形态, then potion 幸运补剂",
+        "hp_lost": 6,
+        "dmg": 9,
+        "enemies_after": "残杀千足虫 (FRONT) 30 HP, 中毒 1; 残杀千足虫 (MIDDLE) 48 HP; 残杀千足虫 (BACK) 39 HP, Weak 2",
+        "rollout": "3-turn rollout (1 sample) (later turns may drink the potions still held, each when its turn gains more than the potion's cost): expected further HP loss 45, fight over within 3 turns in 0/1, expected turns to the end (surviving samples) ~8; ranked on fewest dead first (some line pays a potion cost), then -(further loss + potion cost) - 40 x (1 - win chance): win chance ~0% (fights won in the samples, the others by the end-of-horizon estimate), value -96.8 [cut to fit the time budget: first wave at 3 turns, horizon 3, samples 1 per kill order]",
+        "rollout_turns": "T1 exact: hp -6, dmg 9; T2: hp -0 [0-0], dmg 8 [8-8], alive 1/1, won 0/1; T3: hp -22 [22-22], dmg 0 [0-0], alive 1/1, won 0/1"
+      },
+      "plan9": {
+        "plays": "蛇咬+ -> 残杀千足虫 (MIDDLE), then 突然一拳+ -> 残杀千足虫 (MIDDLE), then 群蛇形态",
+        "hp_lost": 27,
+        "dmg": 19,
+        "enemies_after": "残杀千足虫 (FRONT) 30 HP, 中毒 1; 残杀千足虫 (MIDDLE) 31 HP, Weak 2, 中毒 9; 残杀千足虫 (BACK) 46 HP",
+        "rollout": "3-turn rollout (1 sample) (later turns may drink the potions still held, each when its turn gains more than the potion's cost): expected further HP loss 45, fight over within 3 turns in 0/1, expected turns to the end (surviving samples) ~6; ranked on fewest dead first (some line pays a potion cost), then -(further loss) - 40 x (1 - win chance): win chance ~0% (fights won in the samples, the others by the end-of-horizon estimate), value -84.8 [cut to fit the time budget: first wave at 3 turns, horizon 3, samples 1 per kill order]",
+        "rollout_turns": "T1 exact: hp -27, dmg 19; T2: hp -0 [0-0], dmg 17 [17-17], alive 1/1, won 0/1; T3: hp -14 [14-14], dmg 15 [15-15], alive 1/1, won 0/1"
+      },
+      "plan10": {
+        "plays": "蛇咬+ -> 残杀千足虫 (BACK), then 突然一拳+ -> 残杀千足虫 (BACK), then 群蛇形态",
+        "hp_lost": 26,
+        "dmg": 19,
+        "enemies_after": "残杀千足虫 (FRONT) 30 HP, 中毒 1; 残杀千足虫 (MIDDLE) 48 HP; 残杀千足虫 (BACK) 29 HP, Weak 2, 中毒 9",
+        "rollout": "3-turn rollout (1 sample) (later turns may drink the potions still held, each when its turn gains more than the potion's cost): expected further HP loss 45, fight over within 3 turns in 0/1, expected turns to the end (surviving samples) ~6; ranked on fewest dead first (some line pays a potion cost), then -(further loss) - 40 x (1 - win chance): win chance ~1% (fights won in the samples, the others by the end-of-horizon estimate), value -84.4 [cut to fit the time budget: first wave at 3 turns, horizon 3, samples 1 per kill order]",
+        "rollout_turns": "T1 exact: hp -26, dmg 19; T2: hp -0 [0-0], dmg 17 [17-17], alive 1/1, won 0/1; T3: hp -6 [6-6], dmg 20 [20-20], alive 1/1, won 0/1"
+      }
+    }
+  },
+  {
+    "line": 371733,
+    "floor": 31,
+    "turn": 2,
+    "choice": "plan1",
+    "best": true,
+    "criteria": {
+      "plan1": {
+        "plays": "nothing (end the turn now)",
+        "hp_lost": 16,
+        "dmg": 9,
+        "enemies_after": "残杀千足虫 (FRONT) 23 HP, 中毒 8; 残杀千足虫 (MIDDLE) 48 HP; 残杀千足虫 (BACK) 46 HP",
+        "rollout": "3-turn rollout (1 sample) (later turns may drink the potions still held, each when its turn gains more than the potion's cost): expected further HP loss 45, fight over within 3 turns in 0/1, expected turns to the end (surviving samples) ~7; ranked on fewest dead first (some line pays a potion cost), then -(further loss) - 40 x (1 - win chance): win chance ~4% (fights won in the samples, the others by the end-of-horizon estimate), value -83.5 [cut to fit the time budget: first wave at 3 turns, horizon 3, samples 4 per kill order, samples 1 (clock)]",
+        "rollout_turns": "T1 exact: hp -16, dmg 9; T2: hp -0 [0-0], dmg 15 [15-15], alive 1/1, won 0/1; T3: hp -16 [16-16], dmg 8 [8-8], alive 1/1, won 0/1"
+      },
+      "plan2": {
+        "plays": "potion 幸运补剂",
+        "hp_lost": 9,
+        "dmg": 9,
+        "enemies_after": "残杀千足虫 (FRONT) 23 HP, 中毒 8; 残杀千足虫 (MIDDLE) 48 HP; 残杀千足虫 (BACK) 46 HP",
+        "rollout": "3-turn rollout (1 sample) (later turns may drink the potions still held, each when its turn gains more than the potion's cost): expected further HP loss 45, fight over within 3 turns in 0/1, expected turns to the end (surviving samples) ~7; ranked on fewest dead first (some line pays a potion cost), then -(further loss + potion cost) - 40 x (1 - win chance): win chance ~9% (fights won in the samples, the others by the end-of-horizon estimate), value -93.3 [cut to fit the time budget: first wave at 3 turns, horizon 3, samples 4 per kill order, samples 1 (clock)]",
+        "rollout_turns": "T1 exact: hp -9, dmg 9; T2: hp -0 [0-0], dmg 15 [15-15], alive 1/1, won 0/1; T3: hp -16 [16-16], dmg 8 [8-8], alive 1/1, won 0/1"
+      }
+    }
+  },
+  {
+    "line": 371734,
+    "floor": 31,
+    "turn": 3,
+    "choice": "plan3",
+    "best": true,
+    "criteria": {
+      "plan1": {
+        "plays": "打击 -> 残杀千足虫 (FRONT), then 灵动步法, then 中和+ -> 残杀千足虫 (MIDDLE), then 飞镖 -> 残杀千足虫 (FRONT)",
+        "hp_lost": 28,
+        "dmg": 24,
+        "enemies_after": "残杀千足虫 (FRONT) 2 HP, 中毒 7; 残杀千足虫 (MIDDLE) 45 HP, Weak 2; 残杀千足虫 (BACK) 46 HP",
+        "rollout": "3-turn rollout (1 sample) (later turns may drink the potions still held, each when its turn gains more than the potion's cost): expected further HP loss 29, fight over within 3 turns in 0/1, dead within 3 turns in 1/1 (~turn 3); ranked on fewest dead first (some line pays a potion cost), then -(further loss) - 40 x (1 - win chance): win chance ~0% (fights won in the samples, the others by the end-of-horizon estimate), value -69 [cut to fit the time budget: first wave at 3 turns, horizon 3, samples 2 per kill order, samples 1 (clock)]",
+        "rollout_turns": "T1 exact: hp -28, dmg 24; T2: hp -0 [0-0], dmg 2 [2-2], alive 1/1, won 0/1; T3: hp -8 [8-8], dmg 19 [19-19], alive 0/1, won 0/1"
+      },
+      "plan2": {
+        "plays": "中和+ -> 残杀千足虫 (MIDDLE), then 飞镖 -> 残杀千足虫 (MIDDLE), then 蛇咬+ -> 残杀千足虫 (MIDDLE)",
+        "hp_lost": 28,
+        "dmg": 30,
+        "enemies_after": "残杀千足虫 (FRONT) 15 HP, 中毒 7; 残杀千足虫 (MIDDLE) 26 HP, Weak 2, 中毒 9; 残杀千足虫 (BACK) 46 HP",
+        "rollout": "3-turn rollout (1 sample) (later turns may drink the potions still held, each when its turn gains more than the potion's cost): expected further HP loss 29, fight over within 3 turns in 0/1, dead within 3 turns in 1/1 (~turn 2); ranked on fewest dead first (some line pays a potion cost), then -(further loss) - 40 x (1 - win chance): win chance ~0% (fights won in the samples, the others by the end-of-horizon estimate), value -69 [cut to fit the time budget: first wave at 3 turns, horizon 3, samples 2 per kill order, samples 1 (clock)]",
+        "rollout_turns": "T1 exact: hp -28, dmg 30; T2: hp -20 [20-20], dmg 30 [30-30], alive 0/1, won 0/1; T3: over (alive 0/1, won 0/1)"
+      },
+      "plan3": {
+        "plays": "打击 -> 残杀千足虫 (FRONT), then 灵动步法, then 中和+ -> 残杀千足虫 (MIDDLE), then 飞镖 -> 残杀千足虫 (FRONT), then potion 幸运补剂",
+        "hp_lost": 19,
+        "dmg": 24,
+        "enemies_after": "残杀千足虫 (FRONT) 2 HP, 中毒 7; 残杀千足虫 (MIDDLE) 45 HP, Weak 2; 残杀千足虫 (BACK) 46 HP",
+        "rollout": "3-turn rollout (1 sample) (later turns may drink the potions still held, each when its turn gains more than the potion's cost): expected further HP loss 29, fight over within 3 turns in 0/1, expected turns to the end (surviving samples) ~6; ranked on fewest dead first (some line pays a potion cost), then -(further loss + potion cost) - 40 x (1 - win chance): win chance ~0% (fights won in the samples, the others by the end-of-horizon estimate), value -80.8 [cut to fit the time budget: first wave at 3 turns, horizon 3, samples 2 per kill order, samples 1 (clock)]",
+        "rollout_turns": "T1 exact: hp -19, dmg 24; T2: hp -0 [0-0], dmg 2 [2-2], alive 1/1, won 0/1; T3: hp -8 [8-8], dmg 19 [19-19], alive 1/1, won 0/1"
+      },
+      "plan4": {
+        "plays": "灵动步法, then 中和+ -> 残杀千足虫 (MIDDLE), then 飞镖 -> 残杀千足虫 (FRONT)",
+        "hp_lost": 28,
+        "dmg": 20,
+        "enemies_after": "残杀千足虫 (FRONT) 6 HP, 中毒 7; 残杀千足虫 (MIDDLE) 45 HP, Weak 2; 残杀千足虫 (BACK) 46 HP",
+        "rollout": "3-turn rollout (1 sample) (later turns may drink the potions still held, each when its turn gains more than the potion's cost): expected further HP loss 29, fight over within 3 turns in 0/1, dead within 3 turns in 1/1 (~turn 3); ranked on fewest dead first (some line pays a potion cost), then -(further loss) - 40 x (1 - win chance): win chance ~0% (fights won in the samples, the others by the end-of-horizon estimate), value -69 [cut to fit the time budget: first wave at 3 turns, horizon 3, samples 2 per kill order, samples 1 (clock)]",
+        "rollout_turns": "T1 exact: hp -28, dmg 20; T2: hp -0 [0-0], dmg 6 [6-6], alive 1/1, won 0/1; T3: hp -8 [8-8], dmg 19 [19-19], alive 0/1, won 0/1"
+      },
+      "plan5": {
+        "plays": "中和+ -> 残杀千足虫 (MIDDLE), then 飞镖 -> 残杀千足虫 (MIDDLE), then 蛇咬+ -> 残杀千足虫 (MIDDLE), then potion 幸运补剂",
+        "hp_lost": 19,
+        "dmg": 30,
+        "enemies_after": "残杀千足虫 (FRONT) 15 HP, 中毒 7; 残杀千足虫 (MIDDLE) 26 HP, Weak 2, 中毒 9; 残杀千足虫 (BACK) 46 HP",
+        "rollout": "3-turn rollout (1 sample) (later turns may drink the potions still held, each when its turn gains more than the potion's cost): expected further HP loss 29, fight over within 3 turns in 0/1, dead within 3 turns in 1/1 (~turn 2); ranked on fewest dead first (some line pays a potion cost), then -(further loss) - 40 x (1 - win chance): win chance ~0% (fights won in the samples, the others by the end-of-horizon estimate), value -69 [cut to fit the time budget: first wave at 3 turns, horizon 3, samples 2 per kill order, samples 1 (clock)]",
+        "rollout_turns": "T1 exact: hp -19, dmg 30; T2: hp -20 [20-20], dmg 30 [30-30], alive 0/1, won 0/1; T3: over (alive 0/1, won 0/1)"
+      },
+      "plan6": {
+        "plays": "灵动步法, then 中和+ -> 残杀千足虫 (MIDDLE), then 飞镖 -> 残杀千足虫 (FRONT), then potion 幸运补剂",
+        "hp_lost": 19,
+        "dmg": 20,
+        "enemies_after": "残杀千足虫 (FRONT) 6 HP, 中毒 7; 残杀千足虫 (MIDDLE) 45 HP, Weak 2; 残杀千足虫 (BACK) 46 HP",
+        "rollout": "3-turn rollout (1 sample) (later turns may drink the potions still held, each when its turn gains more than the potion's cost): expected further HP loss 29, fight over within 3 turns in 0/1, expected turns to the end (surviving samples) ~6; ranked on fewest dead first (some line pays a potion cost), then -(further loss + potion cost) - 40 x (1 - win chance): win chance ~0% (fights won in the samples, the others by the end-of-horizon estimate), value -80.8 [cut to fit the time budget: first wave at 3 turns, horizon 3, samples 2 per kill order, samples 1 (clock)]",
+        "rollout_turns": "T1 exact: hp -19, dmg 20; T2: hp -0 [0-0], dmg 6 [6-6], alive 1/1, won 0/1; T3: hp -8 [8-8], dmg 19 [19-19], alive 1/1, won 0/1"
+      },
+      "plan7": {
+        "plays": "打击 -> 残杀千足虫 (MIDDLE), then 灵动步法, then 中和+ -> 残杀千足虫 (FRONT), then 飞镖 -> 残杀千足虫 (FRONT), then potion 幸运补剂",
+        "hp_lost": 23,
+        "dmg": 24,
+        "enemies_after": "残杀千足虫 (FRONT) 3 HP, Weak 2, 中毒 7; 残杀千足虫 (MIDDLE) 44 HP; 残杀千足虫 (BACK) 46 HP",
+        "rollout": "3-turn rollout (1 sample) (later turns may drink the potions still held, each when its turn gains more than the potion's cost): expected further HP loss 29, fight over within 3 turns in 0/1, dead within 3 turns in 1/1 (~turn 3); ranked on fewest dead first (some line pays a potion cost), then -(further loss) - 40 x (1 - win chance): win chance ~0% (fights won in the samples, the others by the end-of-horizon estimate), value -69 [cut to fit the time budget: first wave at 3 turns, horizon 3, samples 2 per kill order, samples 1 (clock)]",
+        "rollout_turns": "T1 exact: hp -23, dmg 24; T2: hp -3 [3-3], dmg 3 [3-3], alive 1/1, won 0/1; T3: hp -8 [8-8], dmg 19 [19-19], alive 0/1, won 0/1"
+      },
+      "plan8": {
+        "plays": "打击 -> 残杀千足虫 (FRONT), then 灵动步法, then 中和+ -> 残杀千足虫 (MIDDLE)",
+        "hp_lost": 28,
+        "dmg": 15,
+        "enemies_after": "残杀千足虫 (FRONT) 11 HP, 中毒 7; 残杀千足虫 (MIDDLE) 45 HP, Weak 2; 残杀千足虫 (BACK) 46 HP",
+        "rollout": "3-turn rollout (1 sample) (later turns may drink the potions still held, each when its turn gains more than the potion's cost): expected further HP loss 29, fight over within 3 turns in 0/1, dead within 3 turns in 1/1 (~turn 3); ranked on fewest dead first (some line pays a potion cost), then -(further loss) - 40 x (1 - win chance): win chance ~0% (fights won in the samples, the others by the end-of-horizon estimate), value -69 [cut to fit the time budget: first wave at 3 turns, horizon 3, samples 2 per kill order, samples 1 (clock)]",
+        "rollout_turns": "T1 exact: hp -28, dmg 15; T2: hp -0 [0-0], dmg 11 [11-11], alive 1/1, won 0/1; T3: hp -8 [8-8], dmg 37 [37-37], alive 0/1, won 0/1"
+      },
+      "plan9": {
+        "plays": "打击 -> 残杀千足虫 (FRONT), then 中和+ -> 残杀千足虫 (MIDDLE), then 打击 -> 残杀千足虫 (FRONT), then 飞镖 -> 残杀千足虫 (FRONT)",
+        "hp_lost": 17,
+        "dmg": 26,
+        "enemies_after": "残杀千足虫 (MIDDLE) 45 HP, Weak 2; 残杀千足虫 (BACK) 46 HP",
+        "rollout": "3-turn rollout (1 sample) (later turns may drink the potions still held, each when its turn gains more than the potion's cost): expected further HP loss 29, fight over within 3 turns in 0/1, expected turns to the end (surviving samples) ~7; ranked on fewest dead first (some line pays a potion cost), then -(further loss + potion cost) - 40 x (1 - win chance): win chance ~0% (fights won in the samples, the others by the end-of-horizon estimate), value -80.8 [cut to fit the time budget: first wave at 3 turns, horizon 3, samples 2 per kill order, samples 1 (clock)]",
+        "rollout_turns": "T1 exact: hp -17, dmg 26; T2: hp -6 [6-6], dmg 0 [0-0], alive 1/1, won 0/1; T3: hp -5 [5-5], dmg 25 [25-25], alive 1/1, won 0/1"
+      },
+      "plan10": {
+        "plays": "中和+ -> 残杀千足虫 (MIDDLE), then 飞镖 -> 残杀千足虫 (BACK), then 蛇咬+ -> 残杀千足虫 (BACK)",
+        "hp_lost": 28,
+        "dmg": 30,
+        "enemies_after": "残杀千足虫 (FRONT) 15 HP, 中毒 7; 残杀千足虫 (MIDDLE) 45 HP, Weak 2; 残杀千足虫 (BACK) 27 HP, 中毒 9",
+        "rollout": "3-turn rollout (1 sample) (later turns may drink the potions still held, each when its turn gains more than the potion's cost): expected further HP loss 29, fight over within 3 turns in 0/1, dead within 3 turns in 1/1 (~turn 2); ranked on fewest dead first (some line pays a potion cost), then -(further loss) - 40 x (1 - win chance): win chance ~0% (fights won in the samples, the others by the end-of-horizon estimate), value -69 [cut to fit the time budget: first wave at 3 turns, horizon 3, samples 2 per kill order, samples 1 (clock)]",
+        "rollout_turns": "T1 exact: hp -28, dmg 30; T2: hp -20 [20-20], dmg 30 [30-30], alive 0/1, won 0/1; T3: over (alive 0/1, won 0/1)"
+      }
+    }
+  },
+  {
+    "line": 371740,
+    "floor": 31,
+    "turn": 4,
+    "choice": "plan1",
+    "best": true,
+    "criteria": {
+      "plan1": {
+        "plays": "手上技法, then 刀刃之舞, then 尖啸, then 小刀 -> 残杀千足虫 (MIDDLE), then 小刀 -> 残杀千足虫 (MIDDLE), then 小刀 -> 残杀千足虫 (MIDDLE)",
+        "hp_lost": 0,
+        "dmg": 11,
+        "enemies_after": "残杀千足虫 (MIDDLE) 28 HP, Weak 1; 残杀千足虫 (BACK) 38 HP",
+        "rollout": "5-turn rollout (3 samples): expected further HP loss 10, fight over within 5 turns in 0/3, dead within 5 turns in 3/3 (~turn 3); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 3/3), then the fight's progress: least enemy HP left (this line ~73, at T5 or at our death), then most turns alive (this line ~3), then least HP lost this turn (this line 0) [cut to fit the time budget: samples 4 per kill order, samples 3 (clock)]",
+        "rollout_turns": "T1 exact: hp -0, dmg 11; T2: hp -2 [0-6], dmg 2.7 [0-4], alive 3/3, won 0/3; T3: hp -23.7 [22-25], dmg 15 [13-19], alive 0/3, won 0/3; T4: over (alive 0/3, won 0/3); T5: over (alive 0/3, won 0/3)"
+      },
+      "plan2": {
+        "plays": "刀刃之舞, then 触媒, then 尖啸, then 小刀 -> 残杀千足虫 (MIDDLE), then 小刀 -> 残杀千足虫 (MIDDLE), then 小刀 -> 残杀千足虫 (MIDDLE)",
+        "hp_lost": 5,
+        "dmg": 11,
+        "enemies_after": "残杀千足虫 (MIDDLE) 28 HP, Weak 1; 残杀千足虫 (BACK) 38 HP",
+        "rollout": "5-turn rollout (3 samples): expected further HP loss 10, fight over within 5 turns in 0/3, dead within 5 turns in 3/3 (~turn 2.3); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 3/3), then the fight's progress: least enemy HP left (this line ~82, at T5 or at our death), then most turns alive (this line ~2.3), then least HP lost this turn (this line 5) [cut to fit the time budget: samples 4 per kill order, samples 3 (clock)]",
+        "rollout_turns": "T1 exact: hp -5, dmg 11; T2: hp -4 [0-6], dmg 4 [4-4], alive 1/3, won 0/3; T3: hp -24 [24-24], dmg 15 [15-15], alive 0/3, won 0/3; T4: over (alive 0/3, won 0/3); T5: over (alive 0/3, won 0/3)"
+      },
+      "plan3": {
+        "plays": "手上技法, then 触媒, then 尖啸",
+        "hp_lost": 0,
+        "dmg": 2,
+        "enemies_after": "残杀千足虫 (MIDDLE) 37 HP, Weak 1; 残杀千足虫 (BACK) 38 HP",
+        "rollout": "5-turn rollout (3 samples): expected further HP loss 10, fight over within 5 turns in 0/3, dead within 5 turns in 3/3 (~turn 3); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 3/3), then the fight's progress: least enemy HP left (this line ~92, at T5 or at our death), then most turns alive (this line ~3), then least HP lost this turn (this line 0) [cut to fit the time budget: samples 4 per kill order, samples 3 (clock)]",
+        "rollout_turns": "T1 exact: hp -0, dmg 2; T2: hp -2 [0-6], dmg 2.7 [0-4], alive 3/3, won 0/3; T3: hp -17 [13-23], dmg 30 [25-40], alive 0/3, won 0/3; T4: over (alive 0/3, won 0/3); T5: over (alive 0/3, won 0/3)"
+      },
+      "plan4": {
+        "plays": "刀刃之舞, then 打击 -> 残杀千足虫 (MIDDLE), then 尖啸, then 小刀 -> 残杀千足虫 (MIDDLE), then 小刀 -> 残杀千足虫 (MIDDLE), then 小刀 -> 残杀千足虫 (MIDDLE)",
+        "hp_lost": 5,
+        "dmg": 15,
+        "enemies_after": "残杀千足虫 (MIDDLE) 24 HP, Weak 1; 残杀千足虫 (BACK) 38 HP",
+        "rollout": "5-turn rollout (3 samples): expected further HP loss 10, fight over within 5 turns in 0/3, dead within 5 turns in 3/3 (~turn 2.3); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 3/3), then the fight's progress: least enemy HP left (this line ~77, at T5 or at our death), then most turns alive (this line ~2.3), then least HP lost this turn (this line 5) [cut to fit the time budget: samples 4 per kill order, samples 3 (clock)]",
+        "rollout_turns": "T1 exact: hp -5, dmg 15; T2: hp -4 [0-6], dmg 4 [4-4], alive 1/3, won 0/3; T3: hp -31 [31-31], dmg 17 [17-17], alive 0/3, won 0/3; T4: over (alive 0/3, won 0/3); T5: over (alive 0/3, won 0/3)"
+      },
+      "plan5": {
+        "plays": "手上技法, then 打击 -> 残杀千足虫 (MIDDLE), then 尖啸",
+        "hp_lost": 0,
+        "dmg": 6,
+        "enemies_after": "残杀千足虫 (MIDDLE) 33 HP, Weak 1; 残杀千足虫 (BACK) 38 HP",
+        "rollout": "5-turn rollout (3 samples): expected further HP loss 10, fight over within 5 turns in 0/3, dead within 5 turns in 3/3 (~turn 3); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 3/3), then the fight's progress: least enemy HP left (this line ~84, at T5 or at our death), then most turns alive (this line ~3), then least HP lost this turn (this line 0) [cut to fit the time budget: samples 4 per kill order, samples 3 (clock)]",
+        "rollout_turns": "T1 exact: hp -0, dmg 6; T2: hp -4 [0-6], dmg 4 [4-4], alive 3/3, won 0/3; T3: hp -17.3 [12-21], dmg 16.7 [12-25], alive 0/3, won 0/3; T4: over (alive 0/3, won 0/3); T5: over (alive 0/3, won 0/3)"
+      },
+      "plan6": {
+        "plays": "触媒, then 打击 -> 残杀千足虫 (MIDDLE), then 尖啸",
+        "hp_lost": 5,
+        "dmg": 6,
+        "enemies_after": "残杀千足虫 (MIDDLE) 33 HP, Weak 1; 残杀千足虫 (BACK) 38 HP",
+        "rollout": "5-turn rollout (3 samples): expected further HP loss 10, fight over within 5 turns in 0/3, dead within 5 turns in 3/3 (~turn 2.3); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 3/3), then the fight's progress: least enemy HP left (this line ~91, at T5 or at our death), then most turns alive (this line ~2.3), then least HP lost this turn (this line 5) [cut to fit the time budget: samples 4 per kill order, samples 3 (clock)]",
+        "rollout_turns": "T1 exact: hp -5, dmg 6; T2: hp -4 [0-6], dmg 4 [4-4], alive 1/3, won 0/3; T3: hp -22 [22-22], dmg 29 [29-29], alive 0/3, won 0/3; T4: over (alive 0/3, won 0/3); T5: over (alive 0/3, won 0/3)"
+      },
+      "plan7": {
+        "plays": "触媒, then 尖啸",
+        "hp_lost": 5,
+        "dmg": 2,
+        "enemies_after": "残杀千足虫 (MIDDLE) 37 HP, Weak 1; 残杀千足虫 (BACK) 38 HP",
+        "rollout": "5-turn rollout (3 samples): expected further HP loss 10, fight over within 5 turns in 0/3, dead within 5 turns in 3/3 (~turn 2.3); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 3/3), then the fight's progress: least enemy HP left (this line ~87, at T5 or at our death), then most turns alive (this line ~2.3), then least HP lost this turn (this line 5) [cut to fit the time budget: samples 4 per kill order, samples 3 (clock)]",
+        "rollout_turns": "T1 exact: hp -5, dmg 2; T2: hp -5 [0-9], dmg 15.3 [4-38], alive 1/3, won 0/3; T3: hp -18 [18-18], dmg 44 [44-44], alive 0/3, won 0/3; T4: over (alive 0/3, won 0/3); T5: over (alive 0/3, won 0/3)"
+      },
+      "plan8": {
+        "plays": "刀刃之舞, then 打击 -> 残杀千足虫 (BACK), then 尖啸, then 小刀 -> 残杀千足虫 (BACK), then 小刀 -> 残杀千足虫 (BACK), then 小刀 -> 残杀千足虫 (BACK)",
+        "hp_lost": 5,
+        "dmg": 15,
+        "enemies_after": "残杀千足虫 (MIDDLE) 37 HP, Weak 1; 残杀千足虫 (BACK) 25 HP",
+        "rollout": "5-turn rollout (3 samples): expected further HP loss 10, fight over within 5 turns in 0/3, dead within 5 turns in 3/3 (~turn 2.3); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 3/3), then the fight's progress: least enemy HP left (this line ~77, at T5 or at our death), then most turns alive (this line ~2.3), then least HP lost this turn (this line 5) [cut to fit the time budget: samples 4 per kill order, samples 3 (clock)]",
+        "rollout_turns": "T1 exact: hp -5, dmg 15; T2: hp -4 [0-6], dmg 4 [4-4], alive 1/3, won 0/3; T3: hp -31 [31-31], dmg 17 [17-17], alive 0/3, won 0/3; T4: over (alive 0/3, won 0/3); T5: over (alive 0/3, won 0/3)"
+      }
+    }
+  },
+  {
+    "line": 371743,
+    "floor": 31,
+    "turn": 4,
+    "choice": "plan3",
+    "best": true,
+    "criteria": {
+      "plan1": {
+        "plays": "尖啸, then 小刀 -> 残杀千足虫 (MIDDLE), then 小刀 -> 残杀千足虫 (MIDDLE), then 小刀 -> 残杀千足虫 (MIDDLE)",
+        "hp_lost": 0,
+        "dmg": 11,
+        "enemies_after": "残杀千足虫 (MIDDLE) 24 HP, Weak 1; 残杀千足虫 (BACK) 34 HP",
+        "rollout": "3-turn rollout (2 samples): expected further HP loss 10, fight over within 3 turns in 0/2, dead within 3 turns in 2/2 (~turn 3); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 3 turns (this line 2/2), then the fight's progress: least enemy HP left (this line ~62, at T3 or at our death), then most turns alive (this line ~3), then least HP lost this turn (this line 0) [cut to fit the time budget: first wave at 3 turns, horizon 3, samples 2 per kill order]",
+        "rollout_turns": "T1 exact: hp -0, dmg 11; T2: hp -3 [0-6], dmg 2 [0-4], alive 2/2, won 0/2; T3: hp -23.5 [22-25], dmg 19 [19-19], alive 0/2, won 0/2"
+      },
+      "plan2": {
+        "plays": "尖啸, then 小刀 -> 残杀千足虫 (FRONT), then 小刀 -> 残杀千足虫 (MIDDLE)",
+        "hp_lost": 0,
+        "dmg": 5,
+        "enemies_after": "残杀千足虫 (MIDDLE) 30 HP, Weak 1; 残杀千足虫 (BACK) 34 HP",
+        "rollout": "3-turn rollout (2 samples): expected further HP loss 10, fight over within 3 turns in 0/2, dead within 3 turns in 2/2 (~turn 3); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 3 turns (this line 2/2), then the fight's progress: least enemy HP left (this line ~72, at T3 or at our death), then most turns alive (this line ~3), then least HP lost this turn (this line 0) [cut to fit the time budget: first wave at 3 turns, horizon 3, samples 2 per kill order]",
+        "rollout_turns": "T1 exact: hp -0, dmg 5; T2: hp -3 [0-6], dmg 4 [4-4], alive 2/2, won 0/2; T3: hp -24 [17-31], dmg 13 [9-17], alive 0/2, won 0/2"
+      },
+      "plan3": {
+        "plays": "防御, then 小刀 -> 残杀千足虫 (MIDDLE), then 小刀 -> 残杀千足虫 (MIDDLE), then 小刀 -> 残杀千足虫 (MIDDLE)",
+        "hp_lost": 7,
+        "dmg": 11,
+        "enemies_after": "残杀千足虫 (MIDDLE) 24 HP, Weak 1; 残杀千足虫 (BACK) 34 HP",
+        "rollout": "3-turn rollout (2 samples): expected further HP loss 10, fight over within 3 turns in 0/2, expected turns to the end (surviving samples) ~6, dead within 3 turns in 1/2 (~turn 3); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 3 turns (this line 1/2), then the fight's progress: least enemy HP left (this line ~73, at T3 or at our death), then most turns alive (this line ~3), then least HP lost this turn (this line 7) [cut to fit the time budget: first wave at 3 turns, horizon 3, samples 2 per kill order]",
+        "rollout_turns": "T1 exact: hp -7, dmg 11; T2: hp -0 [0-0], dmg 2 [0-4], alive 2/2, won 0/2; T3: hp -12 [0-24], dmg 8 [6-10], alive 1/2, won 0/2"
+      },
+      "plan4": {
+        "plays": "防御, then 小刀 -> 残杀千足虫 (FRONT), then 小刀 -> 残杀千足虫 (MIDDLE)",
+        "hp_lost": 7,
+        "dmg": 5,
+        "enemies_after": "残杀千足虫 (MIDDLE) 30 HP, Weak 1; 残杀千足虫 (BACK) 34 HP",
+        "rollout": "3-turn rollout (2 samples): expected further HP loss 10, fight over within 3 turns in 0/2, dead within 3 turns in 2/2 (~turn 2.5); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 3 turns (this line 2/2), then the fight's progress: least enemy HP left (this line ~76, at T3 or at our death), then most turns alive (this line ~2.5), then least HP lost this turn (this line 7) [cut to fit the time budget: first wave at 3 turns, horizon 3, samples 2 per kill order]",
+        "rollout_turns": "T1 exact: hp -7, dmg 5; T2: hp -3 [0-6], dmg 4 [4-4], alive 1/2, won 0/2; T3: hp -31 [31-31], dmg 18 [18-18], alive 0/2, won 0/2"
+      },
+      "plan5": {
+        "plays": "尖啸, then 小刀 -> 残杀千足虫 (BACK), then 小刀 -> 残杀千足虫 (BACK), then 小刀 -> 残杀千足虫 (BACK)",
+        "hp_lost": 0,
+        "dmg": 11,
+        "enemies_after": "残杀千足虫 (MIDDLE) 33 HP, Weak 1; 残杀千足虫 (BACK) 25 HP",
+        "rollout": "3-turn rollout (2 samples): expected further HP loss 10, fight over within 3 turns in 0/2, dead within 3 turns in 2/2 (~turn 3); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 3 turns (this line 2/2), then the fight's progress: least enemy HP left (this line ~62, at T3 or at our death), then most turns alive (this line ~3), then least HP lost this turn (this line 0) [cut to fit the time budget: first wave at 3 turns, horizon 3, samples 2 per kill order]",
+        "rollout_turns": "T1 exact: hp -0, dmg 11; T2: hp -3 [0-6], dmg 2 [0-4], alive 2/2, won 0/2; T3: hp -23.5 [22-25], dmg 19 [19-19], alive 0/2, won 0/2"
+      }
+    }
+  },
+  {
+    "line": 371745,
+    "floor": 31,
+    "turn": 4,
+    "choice": "plan2",
+    "best": false,
+    "criteria": {
+      "plan1": {
+        "plays": "小刀 -> 残杀千足虫 (MIDDLE), then 小刀 -> 残杀千足虫 (MIDDLE)",
+        "hp_lost": 7,
+        "dmg": 6,
+        "enemies_after": "残杀千足虫 (MIDDLE) 24 HP, Weak 1; 残杀千足虫 (BACK) 30 HP",
+        "rollout": "5-turn rollout (6 samples): expected further HP loss 10, fight over within 5 turns in 0/6, dead within 5 turns in 6/6 (~turn 2.5); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 6/6), then the fight's progress: least enemy HP left (this line ~73, at T5 or at our death), then most turns alive (this line ~2.5), then least HP lost this turn (this line 7) [cut to fit the time budget: samples 6 per kill order]",
+        "rollout_turns": "T1 exact: hp -7, dmg 6; T2: hp -3 [0-6], dmg 2.7 [0-4], alive 3/6, won 0/6; T3: hp -11 [3-22], dmg 7.7 [3-13], alive 0/6, won 0/6; T4: over (alive 0/6, won 0/6); T5: over (alive 0/6, won 0/6)"
+      },
+      "plan2": {
+        "plays": "nothing (end the turn now)",
+        "hp_lost": 7,
+        "dmg": 0,
+        "enemies_after": "残杀千足虫 (MIDDLE) 30 HP, Weak 1; 残杀千足虫 (BACK) 30 HP",
+        "rollout": "5-turn rollout (6 samples): expected further HP loss 10, fight over within 5 turns in 0/6, dead within 5 turns in 6/6 (~turn 2.5); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 6/6), then the fight's progress: least enemy HP left (this line ~75, at T5 or at our death), then most turns alive (this line ~2.5), then least HP lost this turn (this line 7) [cut to fit the time budget: samples 6 per kill order]",
+        "rollout_turns": "T1 exact: hp -7, dmg 0; T2: hp -3 [0-6], dmg 3.3 [0-4], alive 3/6, won 0/6; T3: hp -27.7 [8-41], dmg 12.7 [3-20], alive 0/6, won 0/6; T4: over (alive 0/6, won 0/6); T5: over (alive 0/6, won 0/6)"
+      },
+      "plan3": {
+        "plays": "小刀 -> 残杀千足虫 (BACK), then 小刀 -> 残杀千足虫 (BACK)",
+        "hp_lost": 7,
+        "dmg": 6,
+        "enemies_after": "残杀千足虫 (MIDDLE) 30 HP, Weak 1; 残杀千足虫 (BACK) 24 HP",
+        "rollout": "5-turn rollout (6 samples): expected further HP loss 10, fight over within 5 turns in 0/6, dead within 5 turns in 6/6 (~turn 2.5); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 6/6), then the fight's progress: least enemy HP left (this line ~73, at T5 or at our death), then most turns alive (this line ~2.5), then least HP lost this turn (this line 7) [cut to fit the time budget: samples 6 per kill order]",
+        "rollout_turns": "T1 exact: hp -7, dmg 6; T2: hp -3 [0-6], dmg 2.7 [0-4], alive 3/6, won 0/6; T3: hp -11 [3-22], dmg 7.7 [3-13], alive 0/6, won 0/6; T4: over (alive 0/6, won 0/6); T5: over (alive 0/6, won 0/6)"
+      }
+    }
+  },
+  {
+    "line": 371747,
+    "floor": 31,
+    "turn": 5,
+    "choice": "plan2",
+    "best": false,
+    "criteria": {
+      "plan1": {
+        "plays": "打击 -> 残杀千足虫 (MIDDLE), then 尖啸",
+        "hp_lost": 1,
+        "dmg": 4,
+        "enemies_after": "残杀千足虫 (MIDDLE) 26 HP; 残杀千足虫 (BACK) 26 HP",
+        "rollout": "5-turn rollout (5 samples): expected further HP loss 3, fight over within 5 turns in 0/5, dead within 5 turns in 5/5 (~turn 2); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 5/5), then the fight's progress: least enemy HP left (this line ~69, at T5 or at our death), then most turns alive (this line ~2), then least HP lost this turn (this line 1) [cut to fit the time budget: samples 5 (clock)]",
+        "rollout_turns": "T1 exact: hp -1, dmg 4; T2: hp -18 [12-21], dmg 7.8 [0-16], alive 0/5, won 0/5; T3: over (alive 0/5, won 0/5); T4: over (alive 0/5, won 0/5); T5: over (alive 0/5, won 0/5)"
+      },
+      "plan2": {
+        "plays": "融入暗影, then 防御+",
+        "hp_lost": 0,
+        "dmg": 0,
+        "enemies_after": "残杀千足虫 (MIDDLE) 30 HP; 残杀千足虫 (BACK) 26 HP",
+        "rollout": "5-turn rollout (5 samples): expected further HP loss 3, fight over within 5 turns in 0/5, dead within 5 turns in 5/5 (~turn 2); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 5/5), then the fight's progress: least enemy HP left (this line ~73, at T5 or at our death), then most turns alive (this line ~2), then least HP lost this turn (this line 0) [cut to fit the time budget: samples 5 (clock)]",
+        "rollout_turns": "T1 exact: hp -0, dmg 0; T2: hp -18 [12-21], dmg 7.8 [0-16], alive 0/5, won 0/5; T3: over (alive 0/5, won 0/5); T4: over (alive 0/5, won 0/5); T5: over (alive 0/5, won 0/5)"
+      },
+      "plan3": {
+        "plays": "打击 -> 残杀千足虫 (BACK), then 尖啸",
+        "hp_lost": 1,
+        "dmg": 4,
+        "enemies_after": "残杀千足虫 (MIDDLE) 30 HP; 残杀千足虫 (BACK) 22 HP",
+        "rollout": "5-turn rollout (5 samples): expected further HP loss 3, fight over within 5 turns in 0/5, dead within 5 turns in 5/5 (~turn 2); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 5/5), then the fight's progress: least enemy HP left (this line ~69, at T5 or at our death), then most turns alive (this line ~2), then least HP lost this turn (this line 1) [cut to fit the time budget: samples 5 (clock)]",
+        "rollout_turns": "T1 exact: hp -1, dmg 4; T2: hp -18 [12-21], dmg 7.8 [0-16], alive 0/5, won 0/5; T3: over (alive 0/5, won 0/5); T4: over (alive 0/5, won 0/5); T5: over (alive 0/5, won 0/5)"
+      }
+    }
+  }
+]

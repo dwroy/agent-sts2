@@ -1,0 +1,83 @@
+## 经验库更新回报
+
+- 版本：2026-10-13.6 → 2026-10-13.7；提交：`0fb7ed6a8723aad604bc1f066c670e45ef6e8b53`（分支 exp-merge-recovery-20261013-000402）；合入：未合入，锁内预演发现28处冲突，按要求停止。
+- 条数：新增0、更新16（加证据16、只改数字0）、退役0；active 231 → 231。正文53963字符；high/med/low＝159/51/21；A8适用209条/48258字符，A9适用210条/48542字符。
+- 机制推理（支持/反例为主题证据局数）：
+  - 覆甲 — 按实际剩层核挡 — 22/0局 — D9XJAX5KCSU2 F48 T4。
+  - 力量与制品 — 成长、逐段攻击和减益拦截分账 — 253/0局 — D9XJAX5KCSU2 F48。
+  - 核心兑现观察 — 双组件到手不等同窗实建或可活 — 255/0局 — D9XJAX5KCSU2 F48 T5。
+  - 毒雾 — 轮初补毒，未结毒不预支 — 118/0局 — D9XJAX5KCSU2 F48 T6。
+  - 触媒 — 各次结毒减1 — 88/0局 — D9XJAX5KCSU2 第5试T6。
+  - 毒性爆发 — 即时触毒与轮末毒另账 — 13/0局 — D9XJAX5KCSU2 F48 T6。
+  - 磨蚀 — 弃牌实建1敏捷、4荆棘 — 14/0局 — D9XJAX5KCSU2 末试T5。
+  - 凋萎 — 持牌伤可先于毒兑现致死 — 34/0局 — D9XJAX5KCSU2 末试T7。
+  - 沙漏SL观察 — 多9伤也实多付6血，未证胜线 — 34/0局 — D9XJAX5KCSU2 第2/3试T4。
+  - 头冠 — 开场保护不等持续格挡 — 2/0局 — D9XJAX5KCSU2 F48。
+  - 光滑石头 — 初敏由后继牌挡兑现 — 18/0局 — D9XJAX5KCSU2 末试T5。
+  - 船夹板 — T2赠14挡，不每轮重复 — 11/0局 — D9XJAX5KCSU2 F48 T2。
+  - 跨幕回复 — 101回复与营火、SL分账 — 91/0局 — D9XJAX5KCSU2 F18/F34。
+  - 毒药水 — 实施毒与SL恢复分账 — 64/0局 — D9XJAX5KCSU2 F48。
+- 改了的手写知识：无。
+- 测试：tsc退出0；vitest 345文件/3414用例/退出0。首轮3402项通过、导入检查因旧临时路径ENOENT失败；同SHA源码隔离副本重跑通过。gitleaks退出0。
+- 切片大小：总体中位减少20字；最大8252字，比改前增加8字。
+- 学习账本：新增无；改成 proposed：silent-0011、0016、0019、0020、0021、0024、0025、0027、0037、0044、0079、0131、0158、0242、0243、0278、0385；退役无；`ledger.py check`退出0。
+- 需要 Roy 定的事：无。合入冲突交运维兜底；变更记录已追加。详情见[报告](/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261013-080222-experience-update/report.md)与[逐项映射](/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261013-080222-experience-update/experience-integration.json)。离线读回通过，真实采用待观察。
+
+```json
+{
+  "task": "experience-update",
+  "version": "2026-10-13.7",
+  "commit": "0fb7ed6a8723aad604bc1f066c670e45ef6e8b53",
+  "merged": null,
+  "added": 0,
+  "updated": 16,
+  "retired": 0,
+  "active": 231,
+  "mechanisms": [
+    "覆甲有限缓冲",
+    "力量/虚弱与人工制品",
+    "核心同窗兑现观察",
+    "毒雾轮初补毒",
+    "触媒逐次结毒",
+    "毒性爆发即时触毒",
+    "弃磨蚀建立敏捷/荆棘",
+    "凋萎持牌血价",
+    "沙漏同盘SL血价观察",
+    "头冠开场保挡",
+    "石头初敏与后继牌挡",
+    "船夹板T2赠挡",
+    "跨幕回复分账",
+    "毒药水施毒/恢复分账"
+  ],
+  "tests": {"tsc": 0, "vitest": 0, "cases": 3414},
+  "ledger": {
+    "added": [],
+    "proposed": [
+      "silent-0011", "silent-0016", "silent-0019", "silent-0020",
+      "silent-0021", "silent-0024", "silent-0025", "silent-0027",
+      "silent-0037", "silent-0044", "silent-0079", "silent-0131",
+      "silent-0158", "silent-0242", "silent-0243", "silent-0278",
+      "silent-0385"
+    ],
+    "retired": [],
+    "check": 0
+  },
+  "code_proposals": [
+    "silent-proposal-51faa0592aa409b5",
+    "silent-proposal-fd554faaa1c47835"
+  ],
+  "implementation_domains": ["combat", "potion", "sl", "terminal"],
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261013-080222-experience-update/report.md"
+}
+```
+
+== 学习者 codex / experience-update ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a13291-4fa7-7f53-8e2f-c4ac53aa7202
+轮数：1；工具调用：command_execution×82 file_change×7
+token：输入 271.8k、输出 59.2k（其中推理 23.3k）、cache 读 16407.3k、cache 写 0（命中 98.4%）
+成本：未提供
+耗时：2287.0 s（墙钟）
+时间：首个事件 17.6 s、模型首个输出 23.5 s、首次工具 25.7 s、末次工具结束 2220.9 s；工具内共 2777.3 s，其余（模型生成、推理、网络）-507.9 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/exp）；模型的工具调用 exec×91 wait×6；/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/learner/sessions/2026/10/13/rollout-2026-10-13T08-02-26-01a13291-4fa7-7f53-8e2f-c4ac53aa7202.jsonl
+日志：/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261013-080222-experience-update.jsonl

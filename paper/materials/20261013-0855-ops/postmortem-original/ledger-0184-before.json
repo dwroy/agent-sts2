@@ -1,0 +1,98 @@
+{
+ "id": "silent-0184",
+ "ts": "2026-10-06T17:24:42+08:00",
+ "character": "silent",
+ "kind": "card",
+ "claim": "南瓜蜡烛的续火计划与实际营火动作须分账。本局计划依靠三营火续燃，但实际一锻造两回血、没有添火；五场战后充能耗尽，沙虫仅3能量，不能把已经熄灭的额外1能量计入毒雾、步法与攻击的支付预算。2血时选择回血不因此被证明错误，没有续火后的受控胜负。",
+ "evidence": [
+  {
+   "run": "XBD8Z9XLPCPN",
+   "floor": 18,
+   "note": "08:30:56.827Z大脑原话“额外能量强化攻防，三营火路线便于续燃。”；F24锻造、F28和F32回血，添火0次，F31后蜡烛充能0。",
+   "role": "support",
+   "added": "2026-10-06T17:24:42+08:00"
+  },
+  {
+   "run": "XBD8Z9XLPCPN",
+   "floor": 33,
+   "turn": 1,
+   "note": "六次均23/70进场、能量3；先前F19/23/27/30/31 T2能量均4。F32只有2血，休息实到23，没有添火后的实打对照。",
+   "role": "support",
+   "added": "2026-10-06T17:24:42+08:00"
+  },
+  {
+   "run": "ZVYUL2YP3518",
+   "role": "support",
+   "note": "ZVYUL2YP3518  A10实际F32添火0→5、F42正1→6，各+5而HP不变；九火其余三锻造四回血不续火，正充能仍可续加已验证，仅此数值与时点。末实验体3充能、T2能量4，六次0赢非遗物单因。",
+   "added": "2026-10-07T00:26:40+08:00"
+  }
+ ],
+ "first_run": "XBD8Z9XLPCPN",
+ "prior": "yes",
+ "prior_runs": [
+  "UJ0K3G10609Y"
+ ],
+ "prior_note": "此前同角色UJ0K3G10609Y F29已主动添火，理由明确保住4能量，状态04:43:49.920Z至04:43:50.118Z实充能0→5、77血不变；登记本项前已经做对过续燃。更早静默复盘按蜡烛/PUMPKIN_CANDLE检索只有该旧局的添火记录；本局首次记录续燃承诺未兑现，不声称首次接触遗物。",
+ "status": "shipped",
+ "by": "learner:postmortem",
+ "where": {
+  "lessons": [
+   "XBD8Z9XLPCPN"
+  ],
+  "experience": [
+   "silent-pumpkin-candle-charge-energy"
+  ],
+  "commits": [
+   "620513afddeae6cf3cfc14cf0adabce4be7f9e40",
+   "0723092c1d575122896945935e5b55d89983c57d",
+   "a95d92ecee0152abcb433b00b3aa0305d3fa2e43",
+   "0020f8f5e720b274069e0102814ad45056e883fb",
+   "6fb21697765cc012c44ee1d13dc75045e8a340fd",
+   "7c37095a2c77d579210790fe2c735e78f708a1e6",
+   "113c82ecfb44d1becbcd9a3f87529738cd287b8d",
+   "884c9f337d4300fb0bbae53d1764950a8f2c6ffc",
+   "3bca10b88a9abacf7370660e2695a0f820bd5c53"
+  ],
+  "changelog": [
+   "2026-10-06 静默猎手 第四十六次增量：1 局 A10（version 2026-10-06.21，分支 exp-silent，620513af）",
+   "2026-10-07 静默猎手 第五十五次增量：1 局 A10（version 2026-10-07.1，分支 exp-silent，7c37095a）"
+  ]
+ },
+ "asc": 10,
+ "history": [
+  {
+   "ts": "2026-10-06T17:24:42+08:00",
+   "by": "learner:postmortem",
+   "status": "observed"
+  },
+  {
+   "ts": "2026-10-06T17:54:49+08:00",
+   "by": "learner:experience-update",
+   "status": "proposed"
+  },
+  {
+   "ts": "2026-10-06T18:50:08+08:00",
+   "by": "ops",
+   "status": "shipped"
+  },
+  {
+   "ts": "2026-10-07T00:26:40+08:00",
+   "by": "learner:experience-update",
+   "status": "proposed"
+  },
+  {
+   "ts": "2026-10-07T00:43:20+08:00",
+   "by": "ops",
+   "status": "shipped"
+  }
+ ],
+ "version": "S1.exp55",
+ "effect": null,
+ "notes": [
+  "静默经验2026-10-06.21，XBD8Z9XLPCPN A10及本角色历史；旧57局逐行一致、新58局928房48实死。蜡烛机制两局/原已会续火，承诺与执行合一条；SL六次同初15抽序及到手回合零赢，舍挡多8血不推胜线；敏捷/毒雾/临时减力分账。仅proposed，实际合入交运维登记shipped；first_run/prior/旧version/repeat保持，无新喝药规则/纯bug源码变更/未选因果。",
+  "本项来自原46批proposed；机械核实原映射及最终条目id/证据/支持数保持，按本次实际S1.exp47登记，不追记此前失败为成功。18:43 experience-done机械确认静默第47批2026-10-06.22实际合入live并同步main，唯一S1.exp47；源0723092c→实际a95d92ec→固定发布0020f8f5。源初轮和最终沙箱tsc0/vitest0、203文件2194例，合后首轮tsc0/vitest0、204文件2203例；原日志保留。合前live .20、本次实际同时带入原46源码620513af/.21，原46失败/回退/基线复现历史保留，无独立exp46。CLI/by=ops仅本批20项加继承3项共23项shipped，first_run/prior/claim/证据/repeat和旧上线历史保持，无额外支持或repeat；无生成器/源码/其他角色变更，不另审、不提供游戏规则，完整外部等本批learner-checks。",
+  "静默经验2026-10-07.1：ZVYUL2YP3518 A10及本角色历史，技能激怒/能力、阶段清毒/能力保留、敏捷与被动挡、施毒/结算、路线/回复/SL观察分账；无新用药规则、无源码改动，仅proposed。首证/先验/claim/旧version/repeat保持，交运维核实际合入后CLI登记shipped。",
+  "00:40 experience-done机械确认20261007-000343-experience-update：源7c37095a→实际live113c82ec→固定发布884c9f33/唯一S1.exp55，main已同步经验2026-10-07.1及七份已测合前自动刷新。学习者依ZVYUL2YP3518 SILENT A10、敌人ID勘误及本角色历史更新21均补证，新增0退役0，active126/56138字，无新用药规则。源初轮及女王首试赢例四→五校正后定稿重跑、合后首轮均tsc0/vitest0、209文件2245例，非失败或超时重跑；预合并rc0、知识重叠/冲突0，其他知识blob保持。原临时机制抽数StopIteration、completed过滤丢pending及稳定帧修正、原第55节/22行proposed/回报/全部自测与旧压缩原文保存。仅CLI/by=ops登记本批22项shipped，首证/先验/claim/全部证据/repeat与旧上线历史保持。0196首证LRN0HPZ0FZS1/A0、prior=yes及既有shipped/exp54保持；0193 shipped/fix36、0195 shipped/fix37、0194 shipped/exp52及0172旧待修项保持。完整外部待本批learner-checks；无新纯bug或Roy待定，后台成本/收件箱/复盘与对局继续。"
+ ],
+ "shipped_at": "2026-10-07T00:43:20+08:00"
+}

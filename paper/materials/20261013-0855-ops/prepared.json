@@ -1,0 +1,47 @@
+{
+  "at": "2026-10-13 08:57:41 CST",
+  "worktree": "/home/dw/Projects/agent-sts2/.worktrees/ops-experience-080221-20261013",
+  "live_base": "cea987c0d8ebbe13b15d92cf37bb58ad2c496455",
+  "main_before": "9b6d4aa69bce046c2a726dd52cc4cc33b9ba0b85",
+  "source": "0fb7ed6a8723aad604bc1f066c670e45ef6e8b53",
+  "old_sha256": "5cef64d0fa9abe7e9eb67babc5eb2c55ce7b538c69fbbf1ae9cce2dd4116d629",
+  "new_sha256": "549448cfde316633b0438e788ea6d3380a36698e1e670d3e857b4b58d96a8546",
+  "active": 231,
+  "total": 232,
+  "changed": 16,
+  "unchanged": 216,
+  "source_full_345_files_3414_reused": true,
+  "source_original_failures_and_twenty_eight_record_conflicts_retained": true,
+  "only_one_original_experience_file_staged": true,
+  "checks": [
+    {
+      "command": [
+        "nice",
+        "-n",
+        "19",
+        "npx",
+        "tsc",
+        "-p",
+        "tsconfig.json",
+        "--noEmit"
+      ],
+      "exit": 0
+    },
+    {
+      "command": [
+        "nice",
+        "-n",
+        "19",
+        "npx",
+        "vitest",
+        "run",
+        "tests/experience.test.ts",
+        "tests/deepseek-cache-layout.test.ts",
+        "--pool=forks",
+        "--maxWorkers=1"
+      ],
+      "exit": 0
+    }
+  ],
+  "no_actual_live_merge_or_release_or_shipped_yet": true
+}
