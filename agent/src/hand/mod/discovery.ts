@@ -8,6 +8,7 @@
 
 import { ModClient } from "./client.js";
 import { PayloadShapeError, type Health } from "./schema.js";
+import { assertInstanceHealth, type InstanceBinding } from "./instance.js";
 
 export interface DiscoveryAttempt {
   url: string;
@@ -46,6 +47,7 @@ export interface DiscoverOptions {
   baseUrl: string;
   portScan: { from: number; to: number };
   timeoutMs: number;
+  instance?: InstanceBinding | undefined;
   /** Per-probe timeout; deliberately short so a full scan stays tolerable. */
   probeTimeoutMs?: number;
   /** Injectable for tests. */
@@ -66,6 +68,7 @@ export function reportedUrlFrom(health: Health): string {
 function candidateUrls(options: DiscoverOptions): { url: string; source: "configured" | "scan" }[] {
   const configured = options.baseUrl.replace(/\/+$/, "");
   const candidates: { url: string; source: "configured" | "scan" }[] = [{ url: configured, source: "configured" }];
+  if (options.instance) return candidates;
 
   let host = "127.0.0.1";
   let configuredPort: number | null = null;
@@ -87,12 +90,13 @@ function candidateUrls(options: DiscoverOptions): { url: string; source: "config
 
 export async function discoverMod(options: DiscoverOptions): Promise<DiscoveryResult> {
   const probeTimeoutMs = options.probeTimeoutMs ?? Math.min(1_500, options.timeoutMs);
-  const makeClient = options.makeClient ?? ((baseUrl, timeoutMs) => new ModClient({ baseUrl, timeoutMs }));
+  const makeClient = options.makeClient ?? ((baseUrl, timeoutMs) => new ModClient({ baseUrl, timeoutMs, instance: options.instance }));
   const attempts: DiscoveryAttempt[] = [];
 
   for (const candidate of candidateUrls(options)) {
     try {
       const health = await makeClient(candidate.url, probeTimeoutMs).health({ timeoutMs: probeTimeoutMs });
+      if (options.instance) assertInstanceHealth(health, options.instance, candidate.url);
       if (health.service !== "sts2-ai-agent") {
         attempts.push({
           url: candidate.url,
@@ -105,7 +109,7 @@ export async function discoverMod(options: DiscoverOptions): Promise<DiscoveryRe
       attempts.push({ url: candidate.url, source: candidate.source, ok: true, reason: null });
       const reportedUrl = reportedUrlFrom(health);
       return {
-        url: reportedUrl === candidate.url ? candidate.url : reportedUrl,
+        url: options.instance || reportedUrl === candidate.url ? candidate.url : reportedUrl,
         health,
         reportedUrl,
         attempts,

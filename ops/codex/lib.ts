@@ -300,6 +300,7 @@ export const ACTIONS: Record<string, { args: number; ms: number }> = {
   "learner-status": { args: 0, ms: 30_000 },
   "scheduler-status": { args: 0, ms: 30_000 },
   "git-push-main": { args: 1, ms: 500_000 },
+  "regent-launch-inspect": { args: 0, ms: 30_000 },
 };
 
 /** An argument: a PID or a comma-separated list of run ids (no spaces, no shell characters, no leading dash). */

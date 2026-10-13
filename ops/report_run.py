@@ -13,6 +13,8 @@ import time
 from urllib.request import urlopen
 
 from llm_handoff import atomic_json, locked, stamp
+from instance_gate import validate_health, validate_profile
+from process_scope import belongs
 
 
 def digest(path):
@@ -21,11 +23,23 @@ def digest(path):
 
 
 def mod_state():
-    url = os.environ.get("CODEX_OPS_MOD_URL", "http://127.0.0.1:8080").rstrip("/") + "/state"
+    base = os.environ.get("CODEX_OPS_MOD_URL", os.environ.get("STS2_BASE_URL", "http://127.0.0.1:8080")).rstrip("/")
+    expected_pid = os.environ.get("STS2_EXPECTED_PROCESS_ID")
+    profile = os.environ.get("STS2_EXPECTED_NATIVE_PROFILE_ID")
+    if profile is not None and expected_pid is None:
+        raise ValueError("profile binding requires an expected process ID")
+    if expected_pid is not None:
+        with urlopen(base + "/health", timeout=5) as response:
+            envelope = json.load(response)
+        if envelope.get("ok") is not True or not isinstance(envelope.get("data"), dict):
+            raise ValueError("mod health unavailable")
+        validate_health(envelope["data"], base, int(expected_pid))
+    url = base + "/state"
     with urlopen(url, timeout=15) as response:
         envelope = json.load(response)
     if envelope.get("ok") is not True or not isinstance(envelope.get("data"), dict):
         raise ValueError("mod state unavailable")
+    validate_profile(envelope["data"], profile)
     return envelope["data"]
 
 
@@ -37,7 +51,8 @@ def active_processes(root):
             argv = (entry / "cmdline").read_bytes().split(b"\0")
             paths = {Path(x.decode(errors="replace")).name for x in argv if x}
             relevant = bool(paths & {"autoplay.sh", "report.py", "report_run.py"}) or b"play" in argv and "index.ts" in paths
-            if relevant and (entry / "cwd").resolve().is_relative_to(root): active.append(int(entry.name))
+            live = os.environ.get("STS2_LIVE", str(root / ".worktrees/live"))
+            if relevant and belongs(int(entry.name), root, live): active.append(int(entry.name))
         except FileNotFoundError:
             continue
         except PermissionError:
@@ -145,7 +160,7 @@ class Recovery:
         report = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(report)
         report.ROOT = str(self.root)
-        report.LIVE = str(self.root / ".worktrees/live")
+        report.LIVE = os.environ.get("STS2_LIVE", str(self.root / ".worktrees/live"))
         report.DEC = str(attempt / "decisions.jsonl")
         report.STATES = str(attempt / "states.jsonl")
         report.RUNS = str(self.root / "logs/runs.jsonl")

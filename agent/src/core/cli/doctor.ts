@@ -142,6 +142,7 @@ export async function runDoctor(options: DoctorOptions): Promise<number> {
       baseUrl: config.sts2.baseUrl,
       portScan: config.sts2.portScan,
       timeoutMs: config.sts2.timeoutMs,
+      instance: config.sts2.instance,
     });
     health = discovery.health;
     discoveryUrl = discovery.url;
@@ -187,7 +188,7 @@ export async function runDoctor(options: DoctorOptions): Promise<number> {
   }
 
   if (discoveryUrl) {
-    const client = new ModClient({ baseUrl: discoveryUrl, timeoutMs: config.sts2.timeoutMs });
+    const client = new ModClient({ baseUrl: discoveryUrl, timeoutMs: config.sts2.timeoutMs, instance: config.sts2.instance });
     try {
       actions = await client.availableActions();
       add(

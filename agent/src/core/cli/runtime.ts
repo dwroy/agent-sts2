@@ -31,8 +31,9 @@ export async function buildRuntime(options: BuildRuntimeOptions): Promise<Runtim
     baseUrl: config.sts2.baseUrl,
     portScan: config.sts2.portScan,
     timeoutMs: config.sts2.timeoutMs,
+    instance: config.sts2.instance,
   });
-  const client = new ModClient({ baseUrl: discovery.url, timeoutMs: config.sts2.timeoutMs });
+  const client = new ModClient({ baseUrl: discovery.url, timeoutMs: config.sts2.timeoutMs, instance: config.sts2.instance });
   onEvent(
     `mod ${discovery.health.mod_version} at ${discovery.url} (protocol ${discovery.health.protocol_version}, status ${discovery.health.status})`,
   );
