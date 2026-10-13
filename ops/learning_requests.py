@@ -46,6 +46,40 @@ def artifact(root, ref):
     return raw
 
 
+def ack_request(root, state, notice, payload):
+    """Resolve delivery ownership before writing any ACK; ordinary notices have no learning parent."""
+    token = digest(canonical([notice.get("request_sha256"), notice.get("kind"), notice.get("message")]))[:24]
+    if notice.get("id") != payload.get("notice_id") or notice.get("id") != token:
+        raise ValueError("notice identity or frozen content mismatch")
+    request_id = notice.get("request_id")
+    record = state.get("learning_requests", {}).get(request_id)
+    if record is not None:
+        if notice.get("notification_only") is True or notice.get("registered_learning_request") is False:
+            raise ValueError("ordinary notification scope conflicts with a registered learning request")
+        return record
+    if notice.get("notification_only") is not True or notice.get("registered_learning_request") is not False:
+        raise ValueError("unknown learning request; ordinary notification scope must be explicit")
+    match = re.fullmatch(r"([a-z][a-z0-9_]*)-proposal-[0-9a-f]{16}", request_id or "")
+    if not match or not re.fullmatch(r"[0-9a-f]{64}", notice.get("request_sha256", "")):
+        raise ValueError("ordinary notice must identify an existing character proposal")
+    source = json.loads(artifact(root, notice["source_evidence"]))
+    if (source.get("proposal_id") != request_id or source.get("batch") != notice.get("source_batch")
+            or not re.fullmatch(r"\d{8}-\d{6}-(?:postmortem|experience-update|strategy-proposal)(?:-s2)?",
+                                notice.get("source_batch", ""))
+            or source.get("original_proposal_sha256") != notice.get("request_sha256")):
+        raise ValueError("ordinary notice source identity or SHA mismatch")
+    from proposal_dispatch import library
+    proposals = library(Path(root) / "ops")
+    proposal = proposals.fold(Path(root) / proposals.QUEUE).get(request_id)
+    character = match.group(1)
+    if (not proposal or proposal.get("character") != character
+            or proposal.get("proposal_sha256") != notice.get("request_sha256")
+            or notice.get("character", character) != character
+            or payload.get("character", character) != character):
+        raise ValueError("unknown proposal or mismatched character/proposal SHA")
+    return None
+
+
 def read_request(root, path):
     raw = Path(path).read_bytes()
     req = json.loads(raw)
@@ -428,12 +462,18 @@ def main():
             previous = {"watcher_received": "ops_forwarded", "roy_notified": "watcher_received"}.get(args.stage)
             if previous and not notice.get(previous):
                 parser.error("previous delivery stage has no receipt")
+            try:
+                rec = ack_request(root, state, notice, payload)
+                # Read completion dependencies before persisting the current stage, so rejection is atomic.
+                complete = rec is not None and rec["state"] == "awaiting_delivery" and all(
+                    (args.stage == "roy_notified" or notice.get("roy_notified")) if ident == args.notice else
+                    json.loads((state_dir / "learning-notices" / (ident + ".json")).read_bytes()).get("roy_notified")
+                    for ident in set(rec.get("notices", [])))
+            except (ValueError, KeyError, OSError, ImportError) as error:
+                parser.error(str(error))
             notice[args.stage] = proof
             atomic(path, notice)
-            rec = state["learning_requests"][notice["request_id"]]
-            if rec["state"] == "awaiting_delivery" and all(
-                    json.loads((state_dir / "learning-notices" / (ident + ".json")).read_bytes()).get("roy_notified")
-                    for ident in set(rec.get("notices", []))):
+            if complete:
                 rec["state"] = "completed"
     return 0
 
