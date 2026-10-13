@@ -30,6 +30,8 @@ import tarfile
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from paths import LOGS, ROOT  # noqa: E402
+from disk_capacity import require_capacity  # noqa: E402
+from paper_snapshots import preserve_snapshot  # noqa: E402
 sys.path.insert(0, os.path.join(ROOT, "knowledge", "builders"))
 from characters import run_character  # noqa: E402
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "eval"))
@@ -437,15 +439,7 @@ def act_from_floor(f):
 
 def preserve_previous():
     """Never silently replace a published snapshot when changing the performance cohort."""
-    files = [os.path.join(DATA, n) for n in os.listdir(DATA) if os.path.isfile(os.path.join(DATA, n))] if os.path.isdir(DATA) else []
-    if not files:
-        return None
-    stamp = dt.datetime.now(dt.timezone.utc).strftime("%Y%m%dT%H%M%S%fZ")
-    target = os.path.join(DATA, "history", stamp)
-    os.makedirs(target)
-    for path in files:
-        shutil.copy2(path, target)
-    return target
+    return preserve_snapshot(DATA)
 
 
 def performance_group(rows, include_non_codex=False):
@@ -468,6 +462,7 @@ def performance_group(rows, include_non_codex=False):
 
 
 def build():
+    require_capacity(DATA, 0)
     os.makedirs(DATA, exist_ok=True)
     limits = snapshot_limits()
     cut_time = dt.datetime.now(dt.timezone.utc)

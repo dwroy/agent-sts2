@@ -2,11 +2,12 @@ import { spawnSync } from "node:child_process";
 import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
-import { afterAll, describe, expect, it } from "vitest";
+import { afterAll, afterEach, describe, expect, it, vi } from "vitest";
 
 const ops = resolve("../ops");
 const scratch = mkdtempSync(join(tmpdir(), "ops-mod-state-"));
 afterAll(() => rmSync(scratch, { recursive: true, force: true }));
+afterEach(() => vi.unstubAllEnvs());
 const ready = { ok: true, data: { screen: "CARD_SELECTION", turn: 6 } };
 
 // Exercise the production polling block without desktop commands, sleeps or network access.
@@ -32,6 +33,13 @@ function runBlock(block: string, body: string, http: number, curlExit: number, n
   writeFileSync(calls, "");
   const result = spawnSync("bash", ["-c", `
 OPS="$1"; MOD=http://unused.invalid; fixture_response="$2"; fixture_calls="$3"; fixture_http="$4"; fixture_curl_exit="$5"; fixture_next="$6"
+python3() {
+  if [ "$1" = "$OPS/instance_gate.py" ]; then
+    printf 'fixed fixture refused a real instance check\\n' >&2
+    return 78
+  fi
+  command python3 "$@"
+}
 curl() {
   printf '%s\\n' "$*" >> "$fixture_calls"
   for arg in "$@"; do
@@ -52,7 +60,10 @@ seq() { printf '1\\n2\\n'; }
 sleep() { :; }
 tasklist() { :; }
 ${block}
-`, "mod-test", ops, response, calls, String(http), String(curlExit), next], { cwd: scratch, encoding: "utf8", timeout: 5000 });
+`, "mod-test", ops, response, calls, String(http), String(curlExit), next], {
+    cwd: scratch, encoding: "utf8", timeout: 5000,
+    env: { PATH: process.env.PATH ?? "/usr/bin:/bin", TMPDIR: process.env.TMPDIR ?? "/tmp" },
+  });
   return { ...result, calls: readFileSync(calls, "utf8").trim().split("\n") };
 }
 
@@ -96,6 +107,15 @@ describe("launch-game mod readiness", () => {
 });
 
 describe("mod-state complete response", () => {
+  it("keeps fixed HTTP responses independent of inherited game instance bindings", () => {
+    vi.stubEnv("STS2_EXPECTED_PROCESS_ID", "123");
+    vi.stubEnv("STS2_EXPECTED_NATIVE_PROFILE_ID", "fixed-profile");
+    const result = modState(JSON.stringify(ready));
+    expect(result.status, result.stderr).toBe(0);
+    expect(JSON.parse(result.stdout)).toEqual(ready);
+    expect(result.calls).toHaveLength(1);
+  });
+
   it.each(["COMBAT", "CARD_SELECTION", "MAP"])("preserves a small %s state envelope", (screen) => {
     const envelope = { ok: true, data: { screen, turn: 6, available_actions: [] } };
     const result = modState(JSON.stringify(envelope));
