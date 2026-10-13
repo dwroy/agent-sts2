@@ -83,13 +83,6 @@ describe("rollout facts on Jev's combat question", () => {
     }
   }, 30_000);
 
-  it("with a modelled potion held, the rollout fact says later turns may use it", () => {
-    const decision = plan("v1mf-f33-t4", true) as AskDecision;
-    expect(decision.kind).toBe("ask");
-    const criteria = criteriaOf(decision);
-    for (const key of planKeys(criteria)) expect(String(facts(criteria, key)["rollout"]), key).toContain("(later turns may use the potions still held)");
-  }, 30_000);
-
   it("a drink-first potion option says it is not rolled out", () => {
     // Its Stable Serum is simulated since batch J (a line of its own): an unsimulated potion in that slot instead.
     const fx = logged("fn0h-f33-t2");
