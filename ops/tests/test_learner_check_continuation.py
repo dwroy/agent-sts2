@@ -4,6 +4,7 @@ import contextlib
 import copy
 import fcntl
 import importlib.util
+import io
 import json
 from pathlib import Path
 import subprocess
@@ -304,7 +305,7 @@ class Continuation(unittest.TestCase):
         self.assertEqual(self.run_check(), 2)
         self.assertFalse(self.calls)
 
-    def scheduler(self, state):
+    def scheduler(self, state, after_check=None):
         source = ast.parse((SOURCE / "codex-ops-learn.py").read_text())
         function = next(node for node in source.body if isinstance(node, ast.FunctionDef) and node.name == "cmd_recheck")
         namespace = {"re": m.re, "os": m.os, "fcntl": fcntl, "json": json, "DIR": str(self.out.parent), "ROOT": str(self.root),
@@ -314,10 +315,74 @@ class Continuation(unittest.TestCase):
         def recheck(*args, **kwargs):
             calls.append((args, kwargs))
             args[1]["check_supplements"] = [{"rc": 0, "scope": "selected tests only"}]
+            if after_check:
+                after_check(state)
             return 0
         namespace["recheck_write_batch"] = recheck
         exec(compile(ast.Module(body=[function], type_ignores=[]), "scheduler-fixture", "exec"), namespace)
         return namespace["cmd_recheck"], calls
+
+    def test_scheduler_reports_each_preflight_refusal_without_mutation_or_checks(self):
+        token = self.batch_id + ":" + "a" * 64
+        cases = [
+            (self.batch_id + ":bad", {"batches": {self.batch_id: self.batch}}, "invalid-continuation", {}),
+            ("bad-batch:" + "a" * 64, {"batches": {}}, "invalid-batch", {}),
+            (token, {"batches": {}}, "unknown-batch", {}),
+            (token, {"batches": {self.batch_id: {**self.batch, "state": "running"}}}, "batch-running", {}),
+            (token, {"batches": {self.batch_id: self.batch,
+                                "owner": {"state": "running", "worktree": str(self.owner)}}},
+             "active-worktree-owner", {"owners": ["owner"]}),
+        ]
+        for request, state, reason, details in cases:
+            with self.subTest(reason=reason):
+                state = copy.deepcopy(state)
+                before = copy.deepcopy(state)
+                call, calls = self.scheduler(state)
+                output = io.StringIO()
+                with contextlib.redirect_stdout(output):
+                    self.assertEqual(call(SimpleNamespace(batch=request)), 2)
+                receipt = json.loads(output.getvalue())
+                self.assertEqual(receipt, {"batch": request.partition(":")[0],
+                                          "continuation": request.partition(":")[2],
+                                          "rc": 2, "state": "refused", "reason": reason, **details})
+                self.assertEqual(state, before)
+                self.assertFalse(calls)
+
+    def test_scheduler_reports_busy_check_lock_without_starting_or_rewriting(self):
+        state = {"batches": {self.batch_id: copy.deepcopy(self.batch)}}
+        before = copy.deepcopy(state)
+        call, calls = self.scheduler(state)
+        output = io.StringIO()
+        with open(self.out.parent / (self.batch_id + ".checks.lock"), "a") as lock:
+            fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+            with contextlib.redirect_stdout(output):
+                self.assertEqual(call(SimpleNamespace(batch=self.batch_id + ":" + "a" * 64)), 2)
+        self.assertEqual(json.loads(output.getvalue())["reason"], "checks-lock-busy")
+        self.assertEqual(state, before)
+        self.assertFalse(calls)
+
+    def test_scheduler_reports_postcheck_identity_races_without_overwriting_concurrent_state(self):
+        for reason in ("batch-disappeared", "batch-identity-changed"):
+            with self.subTest(reason=reason):
+                state = {"batches": {self.batch_id: copy.deepcopy(self.batch)}}
+                def mutate(current):
+                    if reason == "batch-disappeared":
+                        current["batches"].pop(self.batch_id)
+                    else:
+                        current["batches"][self.batch_id]["state"] = "running"
+                    current["concurrent"] = 99
+                call, calls = self.scheduler(state, mutate)
+                output = io.StringIO()
+                with contextlib.redirect_stdout(output):
+                    self.assertEqual(call(SimpleNamespace(batch=self.batch_id + ":" + "a" * 64)), 2)
+                self.assertEqual(json.loads(output.getvalue())["reason"], reason)
+                self.assertEqual(len(calls), 1)
+                self.assertEqual(state["concurrent"], 99)
+                if reason == "batch-disappeared":
+                    self.assertNotIn(self.batch_id, state["batches"])
+                else:
+                    self.assertEqual(state["batches"][self.batch_id]["state"], "running")
+                    self.assertNotIn("check_supplements", state["batches"][self.batch_id])
 
     def test_scheduler_rejects_active_owner_and_keeps_original_checks_pending(self):
         state = {"batches": {self.batch_id: self.batch, "new-owner": {"state": "running", "worktree": str(self.owner)}}}
