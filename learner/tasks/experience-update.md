@@ -50,6 +50,16 @@ default.merge_dir: {{project_root}}/.worktrees/live
 在 `{{scratch}}/report.md` 及独立 `experience-integration.json` 保存请求号、来源 batch/report SHA、逐项映射、旧新 diff、测试/失败原件与上线事实。在固定本角色/进阶上下文调用现有知识渲染器，保存大脑知识前缀实际包含新条目的结果和 SHA。渲染验证与后续真实对局采用分开：没有真实问答记录时，实际采用仍待观察；不为验证运行 play 或发在线大脑题。最终回报关联这些文件，完成事件仍走原 `experience-done` / `learner-checks`，入队和自测都不等于已上线。
 {{/is_ironclad}}
 
+## 通用经验共享（Roy 2026-10-13）
+
+先读 docs/shared-experience.md。每批同时检查新结论和相关旧条目是否包含角色无关的通用部分；具体结论由你核实实盘证据，不用预训练知识补齐。
+
+通用条目写 knowledge/common/shared-experience.json，格式见 agent/src/knowledge/shared-experience.ts。保留原角色条目/账本、来源角色/证据局、原经验 ID、冻结证据路径/SHA、通用性理由、条件、进阶范围、支持/反例和置信度。scope=general 不证明通用性；不搬整库、不使用源角色统计占位符。缺证保存候选和原因，不静默遗漏。
+
+根目录 notes/shared-experience-request.json 若 authorized_by=Roy、request_id=roy-20261013-shared-general-experience、state=pending/running，核 spec/input_manifest SHA 后承接首次回填。仅公共经验核证可读取清单中其他角色的冻结经验和证据，不修改其原始文件，不混统计；此授权优先于本模板旧的全面禁止跨角色证据表述。
+
+公共与角色专属条目分别去重并保留原来源映射。共享变更走固定自测/live/账本与提案 CLI/版本登记；独立通道候选交主 ops 精确集成，再同步已发布文件，不合整个通道分支。根请求由 ops 维护，学习者不能关闭。回报列 shared_entries/shared_candidates、来源、实际发布及消费者材料；报告完成不表示要求完成，固定读取与自然采用分开。
+
 ## 2. 方法（照变更记录）
 - **来源**：这几局的复盘，加上日志里重新抽出来的数字。日志文件很大，只能按 run id grep 或按字节偏移 seek 流式读；`deepseek-reasoning.jsonl`、`states.jsonl` 没有 run id，按时间窗定位。可以沿用变更记录里写过的抽取脚本和工具（`agent/tools/boss-fights-extract.py`、`agent/tools/boss-clock-calibrate.ts --rows`、`agent/tools/knowledge-slice.ts` 等），在 {{worktree}} 里跑。
 - **口径**沿用上一节（「战内掉血」= 第一帧 HP − 最后一帧 HP，死亡单独计；走廊只算 Monster 房，问号另算；汇总截至哪个时间、哪些局只进数字，都写明）。用同样的口径把上一节的数字重算一遍，对上了再加新局；对不上的，先找原因并写进本节。

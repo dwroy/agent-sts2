@@ -9,6 +9,7 @@
 import { existsSync, readFileSync, statSync } from "node:fs";
 import { join, resolve } from "node:path";
 
+import { loadSharedExperience, SHARED_EXPERIENCE_FILE, type SharedExperienceFile } from "../shared-experience.js";
 import type { ExperienceEntry, OutcomeStats } from "../experience.js";
 import type { JevHint } from "../jev-hints.js";
 import type { MonsterDb } from "../monster-db.js";
@@ -68,6 +69,7 @@ export interface KnowledgeData {
   dir: string;
   monsterDb: MonsterDbFile;
   experience: ExperienceFile;
+  sharedExperience: SharedExperienceFile;
   roomCosts: RoomCostsFile;
   outcomeStats: OutcomeStats & { generated?: string; _about?: string };
   /**
@@ -93,6 +95,7 @@ export const KNOWLEDGE_FILES = {
   /** The run's character's fight records, merged into the monster DB (knowledge/monster-db.ts mergeMonsterRecords). */
   monsterRecords: MONSTER_RECORDS_FILE,
   experience: "experience.json",
+  sharedExperience: SHARED_EXPERIENCE_FILE,
   roomCosts: "room-costs.json",
   outcomeStats: "outcome-stats.json",
   /** The run's character's guide (guideFileName). */
@@ -181,6 +184,10 @@ function parseAll(dir: string): KnowledgeData {
     if (!ok) throw new KnowledgeLoadError(`${KNOWLEDGE_FILES.experience} 第 ${index} 条缺少 id/scope/lesson/asc/evidence`);
   }
 
+  const sharedExperience = loadSharedExperience(dir);
+  const privateIds = new Set((experience["entries"] as ExperienceEntry[]).map(e => e.id));
+  if (sharedExperience.entries.some(e => privateIds.has(e.id))) throw new KnowledgeLoadError("公共经验和角色经验 id 重复，须由学习者去重");
+
   const rooms = readCharacterJson(dir, KNOWLEDGE_FILES.roomCosts) ?? { by_asc: {} };
   requireRecord(KNOWLEDGE_FILES.roomCosts, rooms["by_asc"], "by_asc", strict);
 
@@ -201,6 +208,7 @@ function parseAll(dir: string): KnowledgeData {
     dir,
     monsterDb: db as unknown as MonsterDbFile,
     experience: { version: String(experience["version"] ?? "?"), entries: experience["entries"] as ExperienceEntry[] },
+    sharedExperience,
     roomCosts: rooms as unknown as RoomCostsFile,
     outcomeStats: outcome as unknown as KnowledgeData["outcomeStats"],
     // The guides' data facts ({GIANT_BLOCK_RECORD}) are filled here, once, as v3 fills them in its prompt (no
