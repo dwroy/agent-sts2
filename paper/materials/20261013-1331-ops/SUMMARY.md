@@ -1,0 +1,3 @@
+同一b07c96b10b1facb9f887a710异议去重，无重复研究/重派/知识修改。watcher实际用户可见回复已经核原样SHA，事实通知Roy有证；其接收回执原引用的可变notice需要原角色补稳定引用。ops仅反转自己两个别名字段并要求与watcher保存SHA完全相等，冻结精确旧字节，已发原watcher作补证，不猜补原件或代填角色ACK。
+
+本角色按原CLI重新登记ops_forwarded，出现普通proposal无学习父registry的KeyError/exit1，原失败保持、纯工具问题入普通fix队列；不为ACK创建新学习父要求。事实通知与形式登记分开，具体未完成的角色/CLI登记保持，不称完整闭环。全部材料原件/失败/旧receipt保留，后续沿原通知和owner处理。

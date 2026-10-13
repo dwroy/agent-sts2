@@ -1,0 +1,9 @@
+Original failure retained at ops/codex-ops/record-staging/20261013-1331/ops-ack.log; exact SHA in observer-verification.json.
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/ops/learning_requests.py", line 442, in <module>
+    raise SystemExit(main())
+                     ~~~~^^
+  File "/home/dw/Projects/agent-sts2/ops/learning_requests.py", line 433, in main
+    rec = state["learning_requests"][notice["request_id"]]
+          ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+KeyError (ordinary proposal parent is absent; notice ID and source proposal are in observer-verification.json).
