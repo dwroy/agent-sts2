@@ -180,3 +180,15 @@ Roy 2026-10-09 授权策略提案先开两路：一个正常派发回调可领�
 
 `regent-launch-inspect` 只读原登记游戏身份；`regent-launch-solo <manifest-sha256>` 仅启动固定独立 clientId/端口的储君窗口，持久回执防止重复启动。`regent-native-repair` 仅修复本请求已证 API 未加载、没有对局存档的自有启动窗口；核 PID、创建时间、原生路径和 clientId 后停止该 PID，保留新窗口的失败和原生默认设置。`regent-startup-check` 先核自己的 PID/profile 与实际 modded 保存根，仅执行已广告的启动弹窗或打开选角菜单，不选其他角色、不出发、不启动自动游玩。四个动作不接受任意 URL、PID、shell 或游戏参数；不读取凭据或游戏二进制内容，不控制原 Silent。见 `docs/multi-instance.md`。
 
+
+## Silent V5 模块健康验收（2026-10-13）
+
+Roy要求将DPR供给检查固定到框架。现有五分钟 `tick stall` 在卡死检查后调用 `ops/module_health.py`；每局 `report.py` 复用已经读入的该局全部决策，补最终验收。不增会话、定时器或对局操作。
+
+- 以本局 `run-config.jsonl` 的 Silent/V5 和 `boss_sim_build=on` 确定适用范围；后继执行动作、战斗题、模拟明确跳过的已过boss不计失败。构筑shadow、模拟成功、大脑实际收到指标分别统计，收到指标不证明采用或存在固定权重。
+- 记录B3配对样本数、门槛、耗时、候选牌组数、选击杀顺序/正式比较两阶段、工作线程数、冷启动、排队和首批返回时间、派出/完成工作量。首批返回包含启动、排队及计算，不能单凭它断言CPU争用；负载只是当时观测，不倒填历史原因。
+- 连续3道适用题没有完整DPR时，向原ops队列发送一次 `module-health` 异常；同局重复tick和最终报告去重，异常原件不覆盖，恢复情况写最新快照。ops沿已有owner自主排查，不自动重派学习、不重启游戏、不降低300样本门槛，不因正常运行向Roy逐项回报。
+- 每次最多读每个决策/脑日志末32MiB，保留字节位置/SHA并标完整性。每局报告补全决策分母；脑日志若仅覆盖部分，则只报告已观察题数。完整报告不被后来的部分窗口覆盖。
+- 快照和唯一异常证据在 `ops/codex-ops/module-health/`，属于小型正式验收记录；不复制全量日志，不创建学习WT。离线性能探针 `agent/tools/profile-build-health.ts` 只读冻结输入，最多4线程，须 `nice`；显式HP/当前模型重算不能称原历史胜率重放。开发WT按标准验收、合入及回收流程处理。
+
+只读手工核查（不投递异常）：`python3 ops/module_health.py --run <局号> --no-notify`。

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# The scheduler of the codex ops session (Dai 2026-10-04 21:00; docs/codex-ops.md). Cron runs the mechanical work; the
+# The scheduler of the codex ops session (Roy 2026-10-04 21:00; docs/codex-ops.md). Cron runs the mechanical work; the
 # codex session (one session, resumed per wake) is woken with event messages only when something needs judgment.
 #
 #   bash ops/codex-ops.sh start            pre-check, install the cron block, create the session (first wake, in the background)
@@ -240,7 +240,11 @@ case "$cmd" in
       ) > /dev/null 2>&1 &
     fi
     case "$job" in
-      stall) tick_stall ;;
+      stall)
+        tick_stall
+        # Read-only module checks share the existing cadence; no extra daemon or game action.
+        nice -n 19 timeout 30s python3 "$OPS/module_health.py" --root "$ROOT" --directory "$DIR" >> "$DIR/module-health.log" 2>&1 || log "module health check failed (see module-health.log)"
+        ;;
       learn) python3 "$OPS/codex-ops-learn.py" tick >> "$DIR/learn.out" 2>&1 || log "learn tick failed (see learn.out)" ;;
       snapshot) tick_snapshot ;;
       *) echo "unknown job: $job" >&2; exit 2 ;;

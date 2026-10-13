@@ -1,5 +1,6 @@
+import { availableParallelism, loadavg } from "node:os";
 /**
- * B3 (Dai 2026-09-30): a deck-building question's options, each with the act boss fought to the end in simulation with
+ * B3 (Roy 2026-09-30): a deck-building question's options, each with the act boss fought to the end in simulation with
  * the deck (and HP) that option leaves. Added to DeepSeek's question after the screen builds it (the loop awaits it;
  * BOSS_SIM_BUILD=on, the default): one `boss_sim` line per option, and facts.act_boss_sim in place of the act boss
  * clock (the clock stays, marked, when the simulation fails or finishes no sample). Code gives facts: no option is
@@ -48,7 +49,7 @@ export const BUILD_SIM_LABELS = new Set([
   "selection/upgrade", "selection/remove", "selection/transform", "selection/add", "event/plan", "event/choose",
 ]);
 
-/** Fewer samples than this (cut short by the time budget) and the options' numbers are not shown (Dai 2026-10-02). */
+/** Fewer samples than this (cut short by the time budget) and the options' numbers are not shown (Roy 2026-10-02). */
 export const BUILD_SIM_MIN_SHOWN = 300;
 
 /** A transform's outcome: this many random cards of the character, each on 1/n of the samples. */
@@ -465,12 +466,17 @@ export async function withBossSim(decision: Decision, env: DecisionEnv, setup: B
   const facts = asRecord(ask.state["facts"]) as Record<string, JsonValue>;
   const { state, knowledge } = env;
   const bossId = bossIdForFacts(state) ?? (actBossDefeated(state) ? str(asRecord(state.run?.raw)["boss_id"]) : "");
-  const fail = (why: string): BossSimOutcome => ({
+  const diagnosticEnabled = quantitativeEnabled(state);
+  let diagnostics: Record<string, JsonValue> | undefined = diagnosticEnabled ? {
+    schema: "build-sim-health-v1", status: "preparing", availableCpus: availableParallelism(), loadAverage: loadavg(),
+  } : undefined;
+  const fail = (why: string, code = "simulation_error"): BossSimOutcome => ({
     decision: { ...ask, state: { ...ask.state, facts: withSimFacts(facts, `boss 模拟没有结果（${why}）：act_boss_clock 仍是 boss 时钟的估计`, true) } },
-    record: { error: why, ms: Math.round(now() - started) },
+    record: { error: why, ms: Math.round(now() - started),
+      ...(diagnostics ? { diagnostics: { ...diagnostics, status: "failed", reason: code } } : {}) },
   });
   try {
-    if (!bossId) return fail("不知道本幕 boss");
+    if (!bossId) return fail("不知道本幕 boss", "unknown_boss");
     // Right after the boss fight boss_id is still the boss just killed (fix-queue-v4: the card reward after every act
     // boss was simulated against it, 7PWU4CD3QCP3 F17 and 5DFX/VNKN/THR/GBBB F17; the brain quoted those deltas), and the
     // next act's boss is not known before its act starts: no simulation. The clock stays (bossClockJson marks it stale).
@@ -507,13 +513,16 @@ export async function withBossSim(decision: Decision, env: DecisionEnv, setup: B
       else if (plan.change !== undefined || plan.mixture) deckOptions.push({ key: plan.key, change: plan.change ?? null, ...(plan.mixture ? { mixture: plan.mixture } : {}) });
     }
     const budget = (setup.deadlineMs ?? BUILD_SIM_DEADLINE_MS) - (now() - started);
-    const result: CompareResult = await compareOptions(setup.runner, start.input, deckOptions, { samples: setup.samples ?? BUILD_SIM_SAMPLES, seed: setup.seed ?? BUILD_SIM_SEED, deadlineMs: Math.max(200, budget), ...(setup.now ? { now: setup.now } : {}), ...(quantitativeEnabled(state) ? { quantitative: true } : {}) });
-    if (result.samples === 0) return fail(`${Math.round(now() - started)} ms 内没有跑完一个样本`);
-    // Too few samples to tell the options apart (Dai 2026-10-02): R6V3 F22 n=24 and 5DFX F27-F29 n=24 put "+11.6" style
+    const result: CompareResult = await compareOptions(setup.runner, start.input, deckOptions, { samples: setup.samples ?? BUILD_SIM_SAMPLES, seed: setup.seed ?? BUILD_SIM_SEED, deadlineMs: Math.max(200, budget), ...(setup.now ? { now: setup.now } : {}), ...(diagnosticEnabled ? { quantitative: true, diagnostics: true } : {}) });
+    if (diagnostics) diagnostics = { ...diagnostics, ...result.diagnostics, boss: bossKey(bossId),
+      samples: result.samples, requested: result.requested, minimumShown: Math.min(BUILD_SIM_MIN_SHOWN, result.requested),
+      timedOut: result.timedOut, simMs: result.elapsedMs, workers: result.workers };
+    if (result.samples === 0) return fail(`${Math.round(now() - started)} ms 内没有跑完一个样本`, "zero_paired_samples");
+    // Too few samples to tell the options apart (Roy 2026-10-02): R6V3 F22 n=24 and 5DFX F27-F29 n=24 put "+11.6" style
     // deltas in front of the brain, which quoted them. Cut short by the clock under BUILD_SIM_MIN_SHOWN (or under what was
     // asked for, when less), no numbers, as a failed simulation.
     const minShown = Math.min(BUILD_SIM_MIN_SHOWN, result.requested);
-    if (result.samples < minShown) return fail(`只跑完 ${result.samples} 次模拟（不足 ${minShown} 次），选项之间的差噪声太大，不给数字`);
+    if (result.samples < minShown) return fail(`只跑完 ${result.samples} 次模拟（不足 ${minShown} 次），选项之间的差噪声太大，不给数字`, "below_minimum_samples");
     const sims = new Map(result.options.map((sim) => [sim.key, sim]));
     const key = bossKey(bossId);
     const low = continuation?.limitation ?? bossTrustReason(key, "b3", state.run?.ascension, state.run?.floor);
@@ -590,6 +599,7 @@ export async function withBossSim(decision: Decision, env: DecisionEnv, setup: B
       ...(lowWin ? { low_win_rate: `当前牌组在模拟里多半打不过（原始胜率 ${pct(b.win)}，校准后的数不会低于 ${(calibratedFloor(state.run?.ascension ?? 0) * 100).toFixed(1)}%，0 胜的读数）：胜率的差信息少，各选项另给 boss 平均剩血（赢的样本算 0）和它的配对差；离 boss 还远时现在的牌组和到 boss 时的牌组差得多` } : {}),
     };
     const record: Record<string, JsonValue> = {
+      ...(diagnostics ? { diagnostics: { ...diagnostics, status: "produced" } } : {}),
       ...(quantitativeEnabled(state) ? { quantitative: { base: b.quantitative ?? null,
         options: Object.fromEntries(result.options.map((sim) => [sim.key, sim.quantitative ?? null])) } } : {}),
       boss: key,
