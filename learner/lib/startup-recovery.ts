@@ -52,7 +52,7 @@ export interface StartupLease {
 export function captureStartupLease(env: NodeJS.ProcessEnv, root: string, cwd: string): StartupLease | undefined {
   const batch = env["LEARNER_BATCH_ID"];
   const file = env["LEARNER_STATE_FILE"];
-  if (!batch || !/^[0-9]{8}-[0-9]{6}-(?:s2-)?[a-z-]+$/.test(batch) || !file || !isAbsolute(file)) return undefined;
+  if (!batch || !/^[0-9]{8}-[0-9]{6}(?:-(?:s2-)?[a-z-]+)?$/.test(batch) || !file || !isAbsolute(file)) return undefined;
   const rel = relative(resolve(root, "ops"), resolve(file));
   if (rel.startsWith("..") || isAbsolute(rel) || !rel.endsWith("/learn.json")) return undefined;
   const snapshot = (): string | undefined => {
