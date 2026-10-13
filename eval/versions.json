@@ -2350,6 +2350,13 @@
       "commit": "20e6260fd4abe8eb3d938aaba52a1a88fa8c1a12",
       "release_id": "V5-R334",
       "source": "2026-10-14 03:25:35 CST 原021302-fix source a7959132235badc87e669241c13dddf95510bfc5，1269Y20SKHUM A10 F35/F37/F38 reward/card八原行offset/length/SHA；每批共享取消位在完成/超时/失败清理时置位，完整样本之间停止过期余块，所有worker先登记handler再派发，零阶段预算安全清理；兼容原运行父消息。完整样本算法/参数/种子保持，300最低/1000目标/11000ms/24线程不改，铁甲真实worker串行固定结果等价；时钟截止前完成样本数可能变化，不称动作逐字等价或自然DPR性能/胜率已修。源tsc0/完整沙箱377文件3599项/gitleaks0；撤码4败1过，恢复取消与健康8过；原3共享记录冲突和failed/rc0/merged-null保留。实际精确三叶祖先核；新部署树完整宿主沿原批一次，下一自然进程加载不重启对局。回退逆向本source三叶并登记后续编号，保留原刷新/失败/台账；宽DPR性能父项保持。"
+    },
+    {
+      "name": "V5.sim-deadline1",
+      "family": "V5",
+      "commit": "d9d3c96f503f005feebb411bae107f16be921dc5",
+      "release_id": "V5-R335",
+      "source": "2026-10-14 04:56:03 CST 原041302-fix source c5e68dcf9d7d9e288b44ba59104596234d7433be（含c60407481/dc606a59a）：调用方期限从入队计时，已过期请求不抢占模拟池或启动worker，准备耗尽预算不再补200ms。保留300最低/1000目标/11000ms/24线程、固定完整样本算法/种子及既有取消协议；铁甲真实worker固定样本串行等价，时限完成数可能变化，不称各角色动作逐字等价。源tsc0/378文件3619沙箱通过，撤码1/1/3败、恢复6/7/13过、gitleaks0，原测试初稿/目录ENOENT/铁甲补验cwd错误与18历史记录冲突保持。实际精确四叶及三源祖先已核，部署树完整宿主检查沿原批一次；下一自然进程加载，不重启对局。8AGE原告警queueMs均0，三执行漏洞不作为暖池低样本的因果证明，DPR自然供给/性能/胜率父项未闭合。回退逆向本source四叶并登记新发布号，保留知识刷新、旧失败和版本历史。"
     }
   ],
   "release_numbering": {
@@ -4722,6 +4729,13 @@
         "commit": "20e6260fd4abe8eb3d938aaba52a1a88fa8c1a12",
         "aliases": [
           "V5.sim-cancellation1"
+        ]
+      },
+      {
+        "release_id": "V5-R335",
+        "commit": "d9d3c96f503f005feebb411bae107f16be921dc5",
+        "aliases": [
+          "V5.sim-deadline1"
         ]
       }
     ],
