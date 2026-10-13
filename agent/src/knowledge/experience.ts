@@ -19,7 +19,8 @@ import { asArray, asRecord, num, str, type JsonValue } from "../core/util/json.j
 import { actThreatIds, bossOnBoard } from "./monster-db.js";
 import { outcomeView, pairHelps, pairThin, referenceNote, referenceRow, rowHelps, rowThin } from "./outcome-tables.js";
 import { bumpDataVersion } from "../core/util/data-version.js";
-import { KNOWLEDGE_DIR, knowledgeFile } from "./files.js";
+import { KNOWLEDGE_DIR, knowledgeFile, knowledgeCharacter } from "./files.js";
+import { loadSharedExperience, sharedExperienceNote, SHARED_EXPERIENCE_FILE } from "./shared-experience.js";
 
 export type Confidence = "low" | "med" | "high";
 
@@ -78,6 +79,8 @@ export interface OutcomeStats {
 }
 
 let experienceCache: ExperienceEntry[] | null = null;
+let experienceStamp: string | null = null;
+let experienceOverride: ExperienceEntry[] | null = null;
 let statsCache: OutcomeStats | null = null;
 let statsStamp: string | null = null;
 let statsOverride: OutcomeStats | null = null;
@@ -86,14 +89,22 @@ function here(file: string): string {
   return knowledgeFile(KNOWLEDGE_DIR, file);
 }
 
-export function loadExperience(): ExperienceEntry[] {
-  if (experienceCache) return experienceCache;
+export function loadExperience(dir: string = KNOWLEDGE_DIR): ExperienceEntry[] {
+  if (experienceOverride !== null) return experienceOverride;
+  const stamp = ["experience.json", SHARED_EXPERIENCE_FILE].map(name => {
+    const path = knowledgeFile(dir, name);
+    try { const info = statSync(path); return `${path}:${info.mtimeMs}:${info.size}`; }
+    catch { return `${path}:missing`; }
+  }).join("|") + `|${knowledgeCharacter()}`;
+  if (experienceCache && experienceStamp === stamp) return experienceCache;
   try {
-    const parsed = JSON.parse(readFileSync(here("experience.json"), "utf8")) as ExperienceFile;
+    const parsed = JSON.parse(readFileSync(knowledgeFile(dir, "experience.json"), "utf8")) as ExperienceFile;
     experienceCache = Array.isArray(parsed.entries) ? parsed.entries : [];
   } catch {
     experienceCache = [];
   }
+  experienceCache = [...experienceCache, ...loadSharedExperience(dir).entries];
+  experienceStamp = stamp;
   return experienceCache;
 }
 
@@ -120,7 +131,9 @@ export function loadOutcomeStats(): OutcomeStats {
 /** For tests: use these instead of the files (null reloads the file). */
 export function setExperienceForTests(entries: ExperienceEntry[] | null, stats: OutcomeStats | null = null): void {
   bumpDataVersion();
-  experienceCache = entries;
+  experienceOverride = entries;
+  experienceCache = null;
+  experienceStamp = null;
   statsOverride = stats;
   statsCache = null;
   statsStamp = null;
@@ -323,7 +336,9 @@ const CONFIDENCE_ZH: Record<Confidence, string> = { high: "高", med: "中", low
  * over several ascensions are then read by its band (boss-clock recordBand: from A8 up A8 and A9 apart).
  */
 export function lessonText(entry: Pick<ExperienceEntry, "lesson">, ascension?: number): string {
-  return entry.lesson.includes("{") ? fillGuideFacts(entry.lesson, ascension) : entry.lesson;
+  const text = entry.lesson.includes("{") ? fillGuideFacts(entry.lesson, ascension) : entry.lesson;
+  const shared = sharedExperienceNote(entry as ExperienceEntry);
+  return shared ? `${text}（${shared}）` : text;
 }
 
 function lessonLine(entry: ExperienceEntry, ascension: number): string {

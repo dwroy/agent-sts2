@@ -38,7 +38,7 @@
 | 目录 | 内容 |
 |---|---|
 | `agent/` | TypeScript 包，也就是控制器。`src/` 按模块分为 hand、eye、reflex、brain、sim、memory、sl、knowledge、core |
-| `knowledge/` | 知识数据。`common/` 放和角色无关的游戏事实，`characters/<角色>/` 放各角色的打法结果和经验，`builders/` 放从日志重建这些数据的脚本 |
+| `knowledge/` | 知识数据。`common/` 放和角色无关的游戏事实及已核实通用经验，`characters/<角色>/` 放各角色的打法结果和经验，`builders/` 放从日志重建这些数据的脚本 |
 | `learner/` | 离线学习者：启动器加上与引擎无关的任务说明（`tasks/*.md`） |
 | `eval/` | 版本表 `versions.json` 和指标脚本 |
 | `ops/` | 运维：一局接一局的循环、卡死检查、报告、运维会话的 prompt |

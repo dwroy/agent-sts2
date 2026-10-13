@@ -39,7 +39,8 @@ function header(ctx: RenderContext): string {
 function dataVersions(ctx: RenderContext): string {
   const data = loadKnowledgeData(ctx.knowledgeDir);
   const db = data.monsterDb.meta?.generated_from;
-  return `## 数据版本\n怪物数据库 ${db?.fights ?? "?"} 场战斗（最后 ${db?.last_seen ?? "?"}），经验库 ${data.experience.version}，房间代价 ${data.roomCosts.meta?.runs ?? "?"} 局，结果统计生成于 ${data.outcomeStats.generated ?? "?"}。`;
+  const shared = data.sharedExperience.entries.length ? `，公共经验库 ${data.sharedExperience.version}` : "";
+  return `## 数据版本\n怪物数据库 ${db?.fights ?? "?"} 场战斗（最后 ${db?.last_seen ?? "?"}），经验库 ${data.experience.version}${shared}，房间代价 ${data.roomCosts.meta?.runs ?? "?"} 局，结果统计生成于 ${data.outcomeStats.generated ?? "?"}。`;
 }
 
 /** Every block of the prefix, in order. */

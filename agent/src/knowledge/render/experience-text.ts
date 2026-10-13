@@ -6,6 +6,7 @@
  * ids and the text says the case notes are missing.
  */
 
+import { sharedExperienceNote } from "../shared-experience.js";
 import type { Confidence, ExperienceEntry } from "../experience.js";
 import { KnowledgeLookupError, loadKnowledgeData, loadPostmortems, lessonsPath, type KnowledgeData, type Postmortems, type RenderContext } from "./data.js";
 import { factsAtAscension, fillGuideFacts } from "../../sim/boss-clock.js";
@@ -83,7 +84,7 @@ function entryOrder(a: ExperienceEntry, b: ExperienceEntry): number {
 
 /** The lessons that apply at `asc`, in a stable order (scope, confidence, support, id). */
 export function activeLessons(data: KnowledgeData, asc: number): ExperienceEntry[] {
-  return data.experience.entries.filter((entry) => appliesAt(entry, asc)).sort(entryOrder);
+  return [...data.experience.entries, ...data.sharedExperience.entries].filter((entry) => appliesAt(entry, asc)).sort(entryOrder);
 }
 
 /** The one-line summary of a post-mortem heading ("A9，第17层，死于一幕 boss 墨影幻灵 VANTOM"). */
@@ -119,12 +120,13 @@ function caseText(item: Case, postmortems: Postmortems): string {
 
 export function lessonText(entry: ExperienceEntry, postmortems: Postmortems, asc: number, facts: FactFiller = freshFacts): string {
   const [lo, hi] = entry.asc ?? [0, 20];
-  const cases = pickCases(entry, postmortems, asc).map((item) => caseText(item, postmortems));
+  const shared = sharedExperienceNote(entry);
+  const cases = shared ? [] : pickCases(entry, postmortems, asc).map((item) => caseText(item, postmortems));
   // The lesson's data placeholders filled as the guides' are (v3 b5e1f44: one count of the same fights in both), the
   // records by the run's ascension band (factsAtAscension).
   const head = `- [${entry.id}｜${entry.scope}${entry.name ? ` ${entry.name}` : ""}｜适用 A${lo}–${hi}] ${facts(factsAtAscension(entry.lesson, asc), fillGuideFacts)}`;
   const tail = `  支持 ${entry.n_support} 局，反对 ${entry.n_contradict} 局，置信 ${CONFIDENCE_ZH[entry.confidence] ?? entry.confidence}${cases.length > 0 ? `；案例: ${cases.join("；")}` : ""}`;
-  return `${head}\n${tail}`;
+  return `${head}\n${tail}${shared ? `；${shared}` : ""}`;
 }
 
 export const EXPERIENCE_LEGEND =
@@ -152,7 +154,7 @@ export function renderExperience(ctx: RenderContext, postmortems: Postmortems = 
   const data = loadKnowledgeData(ctx.knowledgeDir);
   const lessons = activeLessons(data, ctx.ascension);
   const note = missingNote(postmortems);
-  const head = `经验库 ${data.experience.version}：A${ctx.ascension} 适用的有效条目 ${lessons.length} 条（共 ${data.experience.entries.length} 条）。${EXPERIENCE_LEGEND}${note ? `\n${note}` : ""}`;
+  const head = `经验库 ${data.experience.version}：A${ctx.ascension} 适用的有效条目 ${lessons.length} 条（共 ${data.experience.entries.length + data.sharedExperience.entries.length} 条）。${EXPERIENCE_LEGEND}${note ? `\n${note}` : ""}`;
   return [head, ...THEME_KEYS.map((theme) => renderTheme(theme, lessons, postmortems, ctx.ascension, ctx.facts)).filter(Boolean)].join("\n\n");
 }
 
@@ -168,7 +170,7 @@ export function queryExperience(ctx: RenderContext, filter: ExperienceFilter, po
   if (filter.ids && filter.ids.length > 0) {
     for (const id of filter.ids) {
       if (lessons.some((entry) => entry.id === id)) continue;
-      const entry = data.experience.entries.find((item) => item.id === id);
+      const entry = [...data.experience.entries, ...data.sharedExperience.entries].find((item) => item.id === id);
       if (!entry) throw new KnowledgeLookupError(`没有经验条目「${id}」。A${asc} 适用的 id: ${lessons.map((item) => item.id).join(", ")}`);
       if (entry.status !== "active") throw new KnowledgeLookupError(`经验条目「${id}」已退役（${entry.retired_reason ?? "无说明"}），不再使用`);
       throw new KnowledgeLookupError(`经验条目「${id}」适用 A${entry.asc[0]}–${entry.asc[1]}，不含当前 A${asc}`);

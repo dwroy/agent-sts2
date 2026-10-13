@@ -84,7 +84,7 @@ export function onKnowledgeCharacterChange(listener: (character: string) => void
  * (encounters, bosses, each monster's threat_by_asc) are a character's: characters/<id>/monster-records.json, merged
  * into the monster DB by its loaders (knowledge/monster-db.ts mergeMonsterRecords).
  */
-export const COMMON_FILES: ReadonlySet<string> = new Set(["monster-db.json", "move-model.json", "event-pages.json", "card-upgrades.json"]);
+export const COMMON_FILES: ReadonlySet<string> = new Set(["monster-db.json", "move-model.json", "event-pages.json", "card-upgrades.json", "shared-experience.json"]);
 
 /** A character's own monster records, beside the common monster DB. */
 export const MONSTER_RECORDS_FILE = "monster-records.json";
