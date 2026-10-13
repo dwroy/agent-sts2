@@ -1,0 +1,585 @@
+#!/usr/bin/env python3
+"""Reclaim settled learner copies after preserving a verified, restorable evidence archive."""
+import argparse
+from contextlib import contextmanager
+import datetime as dt
+import fcntl
+import fnmatch
+from functools import lru_cache
+import hashlib
+import json
+import os
+from pathlib import Path
+import re
+import shutil
+import subprocess
+import sys
+import tarfile
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from learner_checks import read_report
+
+BATCH = re.compile(r"[0-9]{8}-[0-9]{6}(?:-(?:s2-)?(?:experience-update|fix-batch|strategy-proposal))?")
+SCRATCH = re.compile(r"[0-9]{8}-[0-9]{6}-[a-z][a-z0-9-]*")
+SHA = re.compile(r"[0-9a-f]{40}")
+SMALL = 128 * 1024
+
+
+def stamp():
+    return dt.datetime.now().astimezone().isoformat(timespec="seconds")
+
+
+def load(path):
+    return json.loads(Path(path).read_bytes())
+
+
+def atomic(path, data):
+    path = Path(path)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    tmp = path.with_name(path.name + ".tmp")
+    with tmp.open("w") as handle:
+        json.dump(data, handle, ensure_ascii=False, indent=2)
+        handle.write("\n")
+        handle.flush()
+        os.fsync(handle.fileno())
+    os.replace(tmp, path)
+
+
+def git(root, *args):
+    result = subprocess.run(["git", "-C", str(root), *args], capture_output=True, timeout=60)
+    if result.returncode:
+        raise ValueError("git " + args[0] + " refused")
+    return result.stdout
+
+
+def ancestor(repo, commit):
+    return bool(SHA.fullmatch(commit or "")) and subprocess.run(
+        ["git", "-C", str(repo), "merge-base", "--is-ancestor", commit, "HEAD"],
+        capture_output=True, timeout=20).returncode == 0
+
+
+def safe_path(root, path):
+    path = Path(path)
+    path = path if path.is_absolute() else root / path
+    if not path.is_relative_to(root) or ".." in path.parts:
+        raise ValueError("path outside this runtime")
+    current = root
+    for part in path.relative_to(root).parts:
+        current /= part
+        if current.is_symlink():
+            raise ValueError("symlink path retained")
+    return path
+
+
+def secret_name(path):
+    return any(fnmatch.fnmatch(part.lower(), pattern) for part in Path(path).parts
+               for pattern in [".env", ".env.*", "*.env", "auth.json", ".jev_api_keys", ".deepseek_api_key",
+                               ".sts2-jev-env*", "*.pem", "*.key"])
+
+
+@contextmanager
+def locks(paths):
+    handles = []
+    try:
+        for path in sorted(set(Path(p) for p in paths)):
+            path.parent.mkdir(parents=True, exist_ok=True)
+            handle = path.open("a")
+            handles.append(handle)
+            fcntl.flock(handle, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        yield
+    finally:
+        for handle in reversed(handles):
+            handle.close()
+
+
+def request_guard(root, state, tree, batch_id):
+    for rec in state.get("learning_requests", {}).values():
+        if batch_id in [rec.get("original_batch"), rec.get("batch"), rec.get("verified_batch")] or batch_id in rec.get("attempts", []):
+            return True
+    # Even completed requests retain their original thread/cwd for later revisions.
+    paths = list((root / "notes/learning-requests").glob("*.json"))
+    paths += list((root / "notes").glob("strategy-*.json"))
+    paths += list((root / "notes").glob("*dispatch*.json"))
+    for path in paths:
+        if secret_name(path):
+            continue
+        value = load(path)
+        def bound(item):
+            if isinstance(item, dict):
+                return item.get("original_batch") == batch_id or any(bound(v) for v in item.values())
+            if isinstance(item, list):
+                return any(bound(v) for v in item)
+            return False
+        def tree_bound(item):
+            if isinstance(item, dict):
+                return any(k in ("worktree", "cwd", "source_worktree") and v in (str(tree), str(tree.relative_to(root)))
+                           for k, v in item.items() if isinstance(v, str)) or any(tree_bound(v) for v in item.values())
+            return isinstance(item, list) and any(tree_bound(v) for v in item)
+        if bound(value) or tree_bound(value):
+            return True
+    return False
+
+
+def successful_checks(batch):
+    records = list(batch.get("fallback_checks", []))
+    if not records and isinstance(batch.get("checks"), dict):
+        records = [batch["checks"]]
+    return records[-1] if records and records[-1].get("rc") == 0 else None
+
+
+def evidence_runs(exp):
+    runs = set(exp.get("source", {}).get("runs", [])) if isinstance(exp.get("source"), dict) else set()
+    for entry in exp.get("entries", []):
+        for evidence in entry.get("evidence", []):
+            run = evidence.get("run") if isinstance(evidence, dict) else evidence
+            if isinstance(run, str) and re.fullmatch("[0-9A-Z]{12}", run):
+                runs.add(run)
+    return runs
+
+
+@lru_cache(maxsize=2048)
+def checked_experience(live, commit, character):
+    if not ancestor(live, commit):
+        return None
+    try:
+        return json.loads(git(live, "show", commit + ":knowledge/characters/" + character + "/experience.json"))
+    except (ValueError, json.JSONDecodeError):
+        return None
+
+
+def admission(root, state_dir, state, batch_id):
+    if not BATCH.fullmatch(batch_id):
+        raise ValueError("invalid batch identity")
+    batch = state.get("batches", {}).get(batch_id, {})
+    task = batch.get("task", "postmortem")
+    if batch.get("rc") != 0 or batch.get("state") not in ("done", "failed"):
+        raise ValueError("running, failed exit, lost or rejected batch retained")
+    if batch.get("proposal_audit_errors") or batch.get("proposal_repair_needed") or batch.get("checks_pending"):
+        raise ValueError("unfinished verification retained")
+    if batch.get("learning_request") or batch.get("research_request") or batch.get("implementation_request") or batch.get("feature_request") or batch.get("boss_sim"):
+        raise ValueError("continuation/research owner retained")
+    if batch.get("learner_task", task) != task:
+        raise ValueError("specialized owner retained")
+    tree = safe_path(root, batch.get("worktree") or root)
+    if request_guard(root, state, tree, batch_id):
+        raise ValueError("original request/thread retained")
+    if any(b.get("state") == "running" and Path(b.get("worktree") or root) == tree
+           for b in state.get("batches", {}).values()):
+        raise ValueError("active shared owner retained")
+    live = safe_path(root, os.environ.get("STS2_LIVE") or root / ".worktrees/live")
+    report = read_report(str(state_dir / "learner" / (batch_id + ".out")))
+    if not report or report.get("task") != task:
+        raise ValueError("original final report missing")
+    scratch = safe_path(root, report.get("report", ""))
+    scratch = scratch.parent
+    if scratch.parent != tree / "learner/runs" or not SCRATCH.fullmatch(scratch.name) or not scratch.is_dir():
+        raise ValueError("scratch ownership not bound to original report")
+    character = batch.get("character")
+    if not re.fullmatch("[a-z][a-z0-9_]*", character or ""):
+        raise ValueError("character binding missing")
+    proof = {"task": task, "character": character, "original_batch_state": batch["state"]}
+    fixes = report.get("fixes", [])
+    if not isinstance(fixes, list) or any(not isinstance(fix, dict) for fix in fixes):
+        raise ValueError("legacy/malformed fixes report retained")
+    sources = [report["commit"]] if report.get("commit") else []
+    sources += [fix.get("commit") for fix in fixes]
+    if sources:
+        check = successful_checks(batch)
+        if not check or not ancestor(live, check.get("merged")) or not all(ancestor(live, s) and ancestor(root, s) for s in sources):
+            raise ValueError("source not published in main/live with passing full checks")
+        check_log = safe_path(root, check.get("log", ""))
+        if not check_log.is_file() or secret_name(check_log):
+            raise ValueError("original full-check log missing")
+        text = re.sub(rb"\x1b\[[0-9;]*m", b"", check_log.read_bytes())
+        if not re.search(rb"Test Files\s+\d+ passed", text):
+            raise ValueError("full-check log has no completion summary")
+        if not all(subprocess.run(["git", "-C", str(live), "merge-base", "--is-ancestor", s, check["merged"]],
+                                  capture_output=True, timeout=20).returncode == 0 for s in sources):
+            raise ValueError("checked publication does not include every source")
+        proof.update(kind="published-source", sources=sources, full_check=check)
+        if task == "experience-update":
+            exp = checked_experience(str(live), check["merged"], character)
+            if exp is None or not batch.get("runs") or not set(batch["runs"]) <= evidence_runs(exp):
+                raise ValueError("reported runs missing from published experience")
+            proof.update(experience_version=exp["version"], runs=batch["runs"])
+    elif task == "postmortem":
+        runs = report.get("appended", [])
+        if batch.get("state") != "done" or not runs or report.get("bugs") or batch.get("missing"):
+            raise ValueError("postmortem not settled")
+        lessons = git(root, "show", "HEAD:notes/lessons.md")
+        if not all(re.search(rb"^## " + run.encode(), lessons, re.M) for run in runs):
+            raise ValueError("postmortem not recorded in main")
+        # A written postmortem is not yet an experience ingestion. Bind it to a tested publication containing its runs.
+        for other in reversed(list(state.get("batches", {}).values())):
+            check = successful_checks(other)
+            if other.get("task") != "experience-update" or other.get("character") != character or not check:
+                continue
+            exp = checked_experience(str(live), check.get("merged"), character)
+            if exp is None:
+                continue
+            if set(runs) <= evidence_runs(exp):
+                proof.update(kind="experience-ingested-postmortem", runs=runs, experience_version=exp["version"], full_check=check)
+                break
+        else:
+            raise ValueError("postmortem has not entered tested live experience")
+    elif task in ("strategy-proposal", "fix-batch") and batch.get("state") == "done" and not report.get("merged") and not report.get("fixes"):
+        proof.update(kind="settled-report-only", no_experience_claim=True)
+    else:
+        raise ValueError("no verified ingestion or settled outcome")
+    retired = tree.parent == root / ".worktrees" and tree.name in (
+        "codex-fix-" + character + "-" + batch_id.removesuffix("-fix-batch"),
+        "codex-strategy-" + character + "-" + batch_id.removesuffix("-strategy-proposal"))
+    if tree != root and tree.parent != root / ".worktrees":
+        raise ValueError("foreign runtime/worktree retained")
+    if tree != root and not retired and tree.name not in ("exp", "exp-" + character):
+        raise ValueError("unregistered or other-character worktree retained")
+    if retired:
+        if git(tree, "status", "--porcelain", "--untracked-files=all"):
+            raise ValueError("dirty/uncommitted worktree retained")
+        head = git(tree, "rev-parse", "HEAD").decode().strip()
+        if not ancestor(root, head) or not ancestor(live, head):
+            raise ValueError("unpublished worktree HEAD retained")
+        # Other ignored files are not part of this batch's scratch. Never delete them accidentally.
+        for name in git(tree, "ls-files", "--others", "--ignored", "--exclude-standard", "-z").split(b"\0"):
+            if not name:
+                continue
+            path = tree / os.fsdecode(name)
+            if secret_name(path):
+                raise ValueError("credential-named path retained without reading")
+            if (not path.is_symlink() and path.is_file() and not path.is_relative_to(scratch)
+                    and path != scratch.with_name(scratch.name + ".jsonl")):
+                raise ValueError("ignored files outside bound scratch retained")
+        proof.update(worktree_head=head, worktree_branch=git(tree, "symbolic-ref", "HEAD").decode().strip())
+    # Checkouts of report-only batches are redundant, but their still-pending research data remains untouched.
+    proof["retire_checkout"] = retired
+    proof["compact_scratch"] = proof["kind"] != "settled-report-only"
+    return batch, tree, scratch, proof
+
+
+def active_cwd(path):
+    for process in Path("/proc").iterdir():
+        if not process.name.isdigit():
+            continue
+        try:
+            cwd = (process / "cwd").resolve()
+            if cwd == path or path in cwd.parents:
+                return True
+        except OSError:
+            continue
+    return False
+
+
+def files_under(root, scratch):
+    files = []
+    for parent, directories, names in os.walk(scratch, followlinks=False):
+        if any((Path(parent) / name).is_symlink() for name in directories + names):
+            raise ValueError("scratch symlink retained")
+        for name in names:
+            path = safe_path(root, Path(parent) / name)
+            if secret_name(path) or not path.is_file():
+                raise ValueError("credential-named or non-regular scratch path retained")
+            files.append(path)
+    return sorted(files)
+
+
+def sha_file(path):
+    h = hashlib.sha256()
+    with Path(path).open("rb") as f:
+        for block in iter(lambda: f.read(1024 * 1024), b""):
+            h.update(block)
+    return h.hexdigest()
+
+
+def archive(root, base, scratch, files, proof):
+    archive_path = base.with_suffix(".tar.gz")
+    manifest_path = base.with_suffix(".manifest.json")
+    if archive_path.exists() or manifest_path.exists():
+        raise ValueError("existing archive retained; use explicit recovery")
+    base.parent.mkdir(parents=True, exist_ok=True)
+    if shutil.disk_usage(base.parent).free < sum(p.stat().st_size for p in files) + 1024 * 1024:
+        raise ValueError("insufficient archive staging capacity; no deletion")
+    records = []
+    tmp = archive_path.with_name(archive_path.name + ".tmp")
+    with tarfile.open(tmp, "w:gz", compresslevel=1, dereference=False) as tar:
+        for path in files:
+            before = path.stat()
+            digest = sha_file(path)
+            name = str(path.relative_to(root))
+            tar.add(path, arcname=name, recursive=False)
+            after = path.stat()
+            if (before.st_size, before.st_mtime_ns, before.st_ino) != (after.st_size, after.st_mtime_ns, after.st_ino):
+                raise ValueError("scratch changed during archival; no deletion")
+            records.append({"path": name, "bytes": before.st_size, "sha256": digest, "mode": before.st_mode & 0o777})
+    with tmp.open("rb") as handle:
+        os.fsync(handle.fileno())
+    with tarfile.open(tmp, "r:gz") as tar:
+        members = tar.getmembers()
+        if [m.name for m in members] != [r["path"] for r in records] or not all(m.isfile() for m in members):
+            raise ValueError("archive member mismatch")
+        for member, record in zip(members, records):
+            h = hashlib.sha256()
+            with tar.extractfile(member) as handle:
+                for block in iter(lambda: handle.read(1024 * 1024), b""):
+                    h.update(block)
+            if h.hexdigest() != record["sha256"] or sha_file(root / record["path"]) != record["sha256"]:
+                raise ValueError("archive verification failed; no deletion")
+    os.replace(tmp, archive_path)
+    manifest = {"schema": "learner-retention-v1", "at": stamp(), "root": str(root), "scratch": str(scratch.relative_to(root)),
+                "proof": proof, "archive": str(archive_path.relative_to(root)), "archive_sha256": sha_file(archive_path),
+                "archive_bytes": archive_path.stat().st_size, "files": records, "state": "archived_not_reclaimed"}
+    atomic(manifest_path, manifest)
+    return manifest, manifest_path
+
+
+def project_small(root, manifest, destination):
+    for record in manifest["files"]:
+        path = Path(record["path"])
+        if path.suffix not in (".md", ".json", ".py", ".ts", ".sh") or record["bytes"] > SMALL:
+            continue
+        target = destination / path
+        target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copyfile(root / path, target)
+
+
+def remove_checkout(root, state_dir, batch_id, tree, scratch, keep_scratch):
+    """Leave the original launcher stream at its path, without archiving or deleting it."""
+    staging = state_dir / "retention/staging" / (batch_id + "-checkout")
+    if staging.exists():
+        raise ValueError("prior interrupted checkout staging retained")
+    staging.mkdir(parents=True)
+    event = scratch.with_name(scratch.name + ".jsonl")
+    if event.is_symlink():
+        raise ValueError("original event symlink retained")
+    if keep_scratch:
+        os.rename(scratch, staging / "scratch")
+    if event.exists():
+        os.rename(event, staging / "events.jsonl")
+    try:
+        git(root, "worktree", "remove", str(tree))
+    finally:
+        scratch.parent.mkdir(parents=True, exist_ok=True)
+        if (staging / "scratch").exists():
+            os.rename(staging / "scratch", scratch)
+        if (staging / "events.jsonl").exists():
+            os.rename(staging / "events.jsonl", event)
+        if not list(staging.iterdir()):
+            staging.rmdir()
+
+
+def reclaim(root, state_dir, batch_id, apply=False, state=None):
+    previous = state_dir / "retention/archives" / (batch_id + ".manifest.json")
+    if not BATCH.fullmatch(batch_id):
+        raise ValueError("invalid batch identity")
+    if previous.exists():
+        receipt = load(previous)
+        if receipt.get("state") in ("reclaimed", "checkout_reclaimed"):
+            return {"batch": batch_id, "state": "already_reclaimed"}
+        raise ValueError("interrupted archive retained; inspect or restore explicitly")
+    state = state or load(state_dir / "learn.json")
+    batch, tree, scratch, proof = admission(root, state_dir, state, batch_id)
+    target = tree if proof["retire_checkout"] else scratch
+    if active_cwd(target):
+        raise ValueError("active process cwd retained")
+    files = files_under(root, scratch)
+    estimate = {"batch": batch_id, "worktree": str(tree.relative_to(root)), "scratch": str(scratch.relative_to(root)),
+                "proof": proof, "scratch_bytes": sum(p.stat().st_size for p in files), "scratch_files": len(files)}
+    if not apply or not (proof["retire_checkout"] or proof["compact_scratch"]):
+        return dict(estimate, state="eligible" if proof["retire_checkout"] or proof["compact_scratch"] else "retained-report")
+    related = [ident for ident, b in state["batches"].items() if Path(b.get("worktree") or root) == tree]
+    leases = [state_dir / "learner" / (tree.name + ".lock")]
+    leases += [state_dir / (ident + ".checks.lock") for ident in related]
+    with locks(leases):
+        with locks([state_dir / "learn.lock"]):
+            _, _, _, current_proof = admission(root, state_dir, load(state_dir / "learn.json"), batch_id)
+            if current_proof != proof or active_cwd(target):
+                raise ValueError("owner/proof changed; retained")
+        base = state_dir / "retention" / "archives" / batch_id
+        before_space = shutil.disk_usage(root).free
+        if proof["kind"] == "settled-report-only":
+            # The checkout is reproducible from its branch; pending scratch stays at the exact original paths.
+            remove_checkout(root, state_dir, batch_id, tree, scratch, True)
+            manifest = dict(estimate, schema="learner-retention-v1", root=str(root), at=stamp(),
+                            state="checkout_reclaimed", branch_retained=True, pending_scratch_preserved=True)
+            atomic(base.with_suffix(".manifest.json"), manifest)
+        else:
+            manifest, manifest_path = archive(root, base, scratch, files, proof)
+            staging = state_dir / "retention" / "staging" / batch_id
+            if staging.exists():
+                raise ValueError("prior interrupted projection retained")
+            staging.mkdir(parents=True)
+            project_small(root, manifest, staging)
+            with locks([state_dir / "learn.lock"]):
+                _, _, _, current_proof = admission(root, state_dir, load(state_dir / "learn.json"), batch_id)
+                if current_proof != proof or active_cwd(target):
+                    raise ValueError("owner changed before deletion; archive retained")
+                # Original root logs, native sessions, out/err, checks and learned knowledge are outside scratch.
+                shutil.rmtree(scratch)
+                if proof["retire_checkout"]:
+                    remove_checkout(root, state_dir, batch_id, tree, scratch, False)
+                if staging.exists():
+                    for parent, _, names in os.walk(staging):
+                        for name in names:
+                            source = Path(parent) / name
+                            destination = root / source.relative_to(staging)
+                            destination.parent.mkdir(parents=True, exist_ok=True)
+                            os.replace(source, destination)
+                    shutil.rmtree(staging)
+            manifest.update(state="reclaimed", completed_at=stamp(), branch_retained=True,
+                            process_files_restorable=True, original_paths_for_compact_reports_preserved=True)
+            atomic(manifest_path, manifest)
+        manifest["available_bytes_delta"] = shutil.disk_usage(root).free - before_space
+        atomic(base.with_suffix(".manifest.json"), manifest)
+        return {k: manifest[k] for k in ["state", "available_bytes_delta"]} | {"batch": batch_id}
+
+
+def sweep(root, state_dir, apply, limit):
+    state = load(state_dir / "learn.json")
+    result = {"at": stamp(), "apply": apply, "results": [], "retained": {}, "limit": limit}
+    batches = sorted(state.get("batches", {}), reverse=True)
+    batches.sort(key=lambda ident: state["batches"][ident].get("task", "postmortem") == "postmortem")
+    for batch_id in batches:
+        if (state_dir / "retention/archives" / (batch_id + ".manifest.json")).exists():
+            continue
+        try:
+            item = reclaim(root, state_dir, batch_id, apply, state)
+        except (OSError, ValueError, KeyError, TypeError, subprocess.SubprocessError) as error:
+            reason = str(error)
+            result["retained"][reason] = result["retained"].get(reason, 0) + 1
+            continue
+        result["results"].append(item)
+        if len(result["results"]) >= limit:
+            break
+    atomic(state_dir / "retention/last-sweep.json", result)
+    return result
+
+
+def restore(root, state_dir, batch_id):
+    manifest = load(state_dir / "retention/archives" / (batch_id + ".manifest.json"))
+    if manifest.get("root") != str(root) or manifest.get("state") not in ("reclaimed", "archived_not_reclaimed", "checkout_reclaimed"):
+        raise ValueError("only this runtime's verified archives are restorable")
+    path = safe_path(root, manifest["archive"]) if manifest.get("archive") else None
+    if path is not None and sha_file(path) != manifest["archive_sha256"]:
+        raise ValueError("archive hash mismatch")
+    with locks([state_dir / "retention.lock", state_dir / "learn.lock"]):
+        state = load(state_dir / "learn.json")
+        batch = state["batches"][batch_id]
+        tree = safe_path(root, batch.get("worktree") or root)
+        target = tree if manifest["proof"]["retire_checkout"] else safe_path(root, manifest["scratch"])
+        if active_cwd(target) or any(b.get("state") == "running" and Path(b.get("worktree") or root) == tree for b in state["batches"].values()):
+            raise ValueError("active owner retained")
+        if manifest["proof"]["retire_checkout"] and not (tree / ".git").exists():
+            branch = manifest["proof"]["worktree_branch"]
+            if git(root, "rev-parse", branch).decode().strip() != manifest["proof"]["worktree_head"]:
+                raise ValueError("archived branch changed; existing evidence retained")
+            staging = state_dir / "retention/staging" / ("restore-" + batch_id)
+            if staging.exists():
+                raise ValueError("prior restore staging retained")
+            staging.parent.mkdir(parents=True, exist_ok=True)
+            if tree.exists():
+                os.rename(tree, staging)
+            try:
+                git(root, "worktree", "add", str(tree), branch.removeprefix("refs/heads/"))
+            except Exception:
+                if not tree.exists() and staging.exists():
+                    os.rename(staging, tree)
+                raise
+            if staging.exists():
+                for parent, directories, names in os.walk(staging, followlinks=False):
+                    if any((Path(parent) / n).is_symlink() for n in directories + names):
+                        raise ValueError("changed projection symlink retained")
+                    for name in names:
+                        src = Path(parent) / name
+                        dst = tree / src.relative_to(staging)
+                        if dst.exists():
+                            raise ValueError("checkout would overwrite retained projection")
+                        dst.parent.mkdir(parents=True, exist_ok=True)
+                        os.replace(src, dst)
+                shutil.rmtree(staging)
+        if path is None:
+            return {"batch": batch_id, "state": "checkout_restored", "original_scratch_preserved": True}
+        with tarfile.open(path, "r:gz") as tar:
+            if [m.name for m in tar.getmembers()] != [r["path"] for r in manifest["files"]]:
+                raise ValueError("archive members differ")
+            for member, record in zip(tar.getmembers(), manifest["files"]):
+                dest = safe_path(root, record["path"])
+                if not member.isfile() or secret_name(dest):
+                    raise ValueError("unsafe archive member")
+                if dest.exists() and sha_file(dest) != record["sha256"]:
+                    raise ValueError("existing changed artifact retained")
+            for member, record in zip(tar.getmembers(), manifest["files"]):
+                dest = safe_path(root, record["path"])
+                if dest.exists():
+                    continue
+                dest.parent.mkdir(parents=True, exist_ok=True)
+                with tar.extractfile(member) as source, dest.open("xb") as target:
+                    shutil.copyfileobj(source, target)
+                if sha_file(dest) != record["sha256"]:
+                    raise ValueError("restored hash mismatch")
+                dest.chmod(record["mode"])
+    return {"batch": batch_id, "state": "scratch_restored", "checkout_branch": manifest["proof"].get("worktree_branch")}
+
+
+def kick(root, state_dir, scripts):
+    """Reuse the existing tick, with one low-priority worker and no new timer/model call."""
+    script = Path(scripts) / "learner_retention.py"
+    if (os.environ.get("CODEX_OPS_RETENTION") == "off" or not script.is_file()
+            or not (Path(root) / "ops/learner_retention.py").is_file()
+            or any(name in os.environ for name in ("LEARNER_CMD", "CODEX_OPS_PENDING_CMD", "CODEX_OPS_LEARNER_CMD"))
+            or not (Path(state_dir) / "learn.json").is_file()):
+        return "disabled"
+    directory = Path(state_dir)
+    try:
+        with locks([directory / "retention-launch.lock"]):
+            pidfile = directory / "retention-worker.json"
+            if pidfile.exists():
+                pid = load(pidfile).get("pid")
+                try:
+                    args = Path(f"/proc/{int(pid)}/cmdline").read_bytes().split(b"\0")
+                    if os.fsencode(script) in args:
+                        return "running"
+                except (OSError, TypeError, ValueError):
+                    pass
+            with (directory / "retention-worker.log").open("ab") as handle:
+                proc = subprocess.Popen(["nice", "-n", "19", sys.executable, str(script), "sweep", "--root", str(root),
+                                         "--state-dir", str(directory), "--apply", "--limit", "4"], cwd=root,
+                                        stdin=subprocess.DEVNULL, stdout=handle, stderr=subprocess.STDOUT, start_new_session=True)
+            atomic(pidfile, {"at": stamp(), "pid": proc.pid})
+            return "started"
+    except (OSError, ValueError, subprocess.SubprocessError):
+        return "deferred"
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("command", choices=["plan", "sweep", "restore"])
+    parser.add_argument("--root", default=os.environ.get("CODEX_OPS_ROOT") or Path(__file__).resolve().parents[1])
+    parser.add_argument("--state-dir", default=os.environ.get("CODEX_OPS_DIR"))
+    parser.add_argument("--batch")
+    parser.add_argument("--apply", action="store_true")
+    parser.add_argument("--limit", type=int, default=4)
+    args = parser.parse_args()
+    if args.command == "plan" and args.apply:
+        parser.error("plan never deletes; use sweep --apply")
+    root = Path(args.root).resolve()
+    directory = safe_path(root, args.state_dir or root / "ops/codex-ops")
+    if args.batch and not BATCH.fullmatch(args.batch):
+        parser.error("invalid batch")
+    if not 1 <= args.limit <= 32 or not (root / ".git").exists():
+        parser.error("invalid project or bounded limit")
+    try:
+        if args.command == "restore":
+            if not args.batch:
+                parser.error("restore requires exact batch")
+            result = restore(root, directory, args.batch)
+        else:
+            with locks([directory / "retention.lock"]):
+                result = reclaim(root, directory, args.batch, args.apply) if args.batch else sweep(root, directory, args.apply, args.limit)
+        print(json.dumps(result, ensure_ascii=False))
+        return 0
+    except (OSError, ValueError, KeyError, subprocess.SubprocessError) as error:
+        print(json.dumps({"state": "retained", "reason": str(error)}, ensure_ascii=False))
+        return 1
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
