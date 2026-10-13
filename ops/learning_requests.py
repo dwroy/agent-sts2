@@ -464,12 +464,21 @@ def main():
                 parser.error("previous delivery stage has no receipt")
             try:
                 rec = ack_request(root, state, notice, payload)
+                # A truthy pointer is not a verified delivery. Recheck the entire preceding chain.
+                stages = ("ops_forwarded", "watcher_received", "roy_notified")
+                for stage in stages[:stages.index(args.stage)]:
+                    prior = json.loads(artifact(root, notice[stage]))
+                    prior_actor = "ops" if stage == "ops_forwarded" else "watcher"
+                    if (prior.get("notice_id") != args.notice or prior.get("stage") != stage
+                            or prior.get("actor") != prior_actor or prior.get("status") != "delivered"):
+                        raise ValueError("previous delivery receipt identity mismatch")
+                    artifact(root, prior["evidence"])
                 # Read completion dependencies before persisting the current stage, so rejection is atomic.
                 complete = rec is not None and rec["state"] == "awaiting_delivery" and all(
                     (args.stage == "roy_notified" or notice.get("roy_notified")) if ident == args.notice else
                     json.loads((state_dir / "learning-notices" / (ident + ".json")).read_bytes()).get("roy_notified")
                     for ident in set(rec.get("notices", [])))
-            except (ValueError, KeyError, OSError, ImportError) as error:
+            except (ValueError, KeyError, TypeError, OSError, ImportError) as error:
                 parser.error(str(error))
             notice[args.stage] = proof
             atomic(path, notice)
