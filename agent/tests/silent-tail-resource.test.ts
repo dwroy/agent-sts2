@@ -21,6 +21,10 @@ vi.mock("../src/sim/boss-clock.js", async (original) => ({
   ...await original<typeof import("../src/sim/boss-clock.js")>(),
   bossClockJson: () => null,
 }));
+vi.mock("../src/memory/run-constraints.js", async (original) => {
+  const { historicalRunConstraints } = await import("./historical-run-constraints-fixture.js");
+  return historicalRunConstraints(await original<typeof import("../src/memory/run-constraints.js")>());
+});
 
 const fixture = JSON.parse(readFileSync(new URL("./silent-tail-resource-evidence.json", import.meta.url), "utf8"));
 const knowledge = makeKnowledge({}, "cache");
