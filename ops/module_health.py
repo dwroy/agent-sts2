@@ -101,13 +101,26 @@ def failure(sim):
     return None
 
 
+def unsupported_candidates(options, sim):
+    """Require explicit exclusions for every offered candidate, not just a label."""
+    offered = {key for key, value in obj(options).items() if value is not None}
+    excluded = obj(sim.get('not_simulated'))
+    simulated = obj(sim.get('options'))
+    samples = obj(sim.get('diagnostics')).get('samples', sim.get('samples'))
+    return (isinstance(samples, (int, float)) and not isinstance(samples, bool)
+            and math.isfinite(samples) and samples > 0 and bool(offered)) and all(
+        isinstance(excluded.get(key), str) and excluded[key].strip()
+        and not any(result == key or result.startswith(key + '|') for result in simulated)
+        for key in offered)
+
+
 def summarize(config, decisions, brains, coverage):
     if str(config.get('character', '')).upper() != 'SILENT' or obj(config.get('construction')).get('architecture') != 'V5':
         return None
     rid = config['run_id']
     enabled = obj(config.get('loop')).get('boss_sim_build') == 'on'
     records = sorted((r for r in decisions if run_of(r) == rid and r.get('mode') == 'play'), key=lambda r: r.get('ts', ''))
-    faults, samples, times, evidence, phases = Counter(), [], [], [], []
+    faults, samples, times, evidence, phases, unsupported = Counter(), [], [], [], [], []
     produced = attempts = skipped = streak = longest = 0
     seen = set()
     construction = Counter()
@@ -134,7 +147,14 @@ def summarize(config, decisions, brains, coverage):
         if not sim or not any(k in sim for k in ('samples', 'error', 'diagnostics')):
             reason = 'missing_simulation_record'
         elif not reason and not metrics:
-            reason = 'no_complete_dpr'
+            if unsupported_candidates(options, sim):
+                # Retain the observed attempt and its samples, but do not count an
+                # explicitly unsupported choice as a missing service result.
+                unsupported.append({'ts': row.get('ts'), 'decision': row.get('decision_id'),
+                                    'floor': row.get('floor'), 'label': row.get('label'),
+                                    'source': row.get('_source'), 'not_simulated': sim['not_simulated']})
+            else:
+                reason = 'no_complete_dpr'
         if reason:
             faults[reason] += 1
             streak += 1
@@ -142,7 +162,7 @@ def summarize(config, decisions, brains, coverage):
             evidence.append({'ts': row.get('ts'), 'decision': row.get('decision_id'), 'floor': row.get('floor'),
                              'label': row.get('label'), 'reason': reason, 'source': row.get('_source'),
                              'diagnostics': sim.get('diagnostics'), 'error': sim.get('error')})
-        else:
+        elif metrics:
             produced += 1
             streak = 0
         diagnostic = obj(sim.get('diagnostics'))
@@ -165,6 +185,8 @@ def summarize(config, decisions, brains, coverage):
             'simulation_enabled': enabled, 'coverage': coverage, 'complete': complete,
             'construction': dict(construction), 'b3': {'attempts': attempts, 'skipped': skipped, 'produced_dpr': produced,
               'coverage': produced / attempts if attempts else None, 'failures': dict(faults),
+              'unsupported': len(unsupported), 'applicable_attempts': attempts - len(unsupported),
+              'applicable_coverage': produced / (attempts - len(unsupported)) if attempts > len(unsupported) else None,
               'longest_failure_streak': longest, 'trailing_failure_streak': streak,
               'paired_samples_min': min(samples) if samples else None,
               'ms_max': max(times) if times else None},
@@ -172,6 +194,7 @@ def summarize(config, decisions, brains, coverage):
                       'accepted_with_dpr': sum(r.get('accepted') is True and dpr_count(r.get('options')) > 0 for r in brain_rows),
                       'decision_use': 'unknown; delivery is not evidence of reasoning or a fixed DPR weight'},
             'alert': enabled and longest >= FAIL_STREAK, 'failures': evidence, 'diagnostics': phases,
+            'unsupported': unsupported,
             'scope': 'Service availability only; sample threshold, simulator validity and game policy unchanged.'}
 
 
