@@ -19,6 +19,32 @@ opportunities = module('construction_opportunities', ROOT / 'knowledge/builders/
 
 
 class ConstructionChecks(unittest.TestCase):
+    def test_observation_time_precedes_the_answer_even_when_log_write_is_later(self):
+        try:
+            import duckdb
+        except ImportError:
+            self.skipTest('run with the existing logdb venv for this fixed Parquet fixture')
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / 'data/logdb/frames').mkdir(parents=True)
+            (root / 'logs').mkdir()
+            (root / 'data/game-data.json').write_text(json.dumps({'collections': {'cards': [dict(id='A', name='Alpha')]}}))
+            (root / 'logs/runs.jsonl').write_text(json.dumps(dict(run_id='r', character='SILENT', ascension=10))+'\n')
+            frame = json.dumps({'state': {'reward': {'card_options': [dict(index=0, card_id='A', upgraded=True)]}}})+'\n'
+            (root / 'logs/states.jsonl').write_text(frame)
+            db = duckdb.connect(config={'threads': 1})
+            db.execute('CREATE TABLE frame(run_id VARCHAR,floor INT,ts TIMESTAMP,observed_ts TIMESTAMP,off BIGINT,len INT,character VARCHAR,screen VARCHAR)')
+            db.execute("INSERT INTO frame VALUES ('r',5,'2026-01-01 00:00:21','2026-01-01 00:00:00',0,?,'SILENT','REWARD')", [len(frame.encode())])
+            db.execute('COPY frame TO ? (FORMAT PARQUET)', [str(root/'data/logdb/frames/fixed.parquet')])
+            db.close()
+            brain = dict(run_id='r',ts='2026-01-01T00:00:20.000Z',engine='codex',accepted=True,label='reward/card',
+                         payload={'facts': {'act': 1,'floor': 5}},options={'card0':json.dumps({'card':'Alpha'})})
+            (root/'logs/brain.jsonl').write_text(json.dumps(brain)+'\n')
+            result=opportunities.extract(root,root/'logs','silent')
+            self.assertEqual(len(result['rows']),1)
+            self.assertTrue(result['rows'][0]['offers'][0]['upgraded'])
+            self.assertIsNotNone(result['rows'][0]['state_source'])
+
     def test_only_matched_prospective_policy_results_count(self):
         identity = dict(character='silent', run='r', decision='d', core='c', metric='signature', horizon=17,
                         model='m', policy='p', attempt=1)
