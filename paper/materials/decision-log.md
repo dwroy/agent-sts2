@@ -2718,3 +2718,5 @@
 - 2026-10-13 13:36:17 CST 运维 codex：1331是cf468c9e已转达的同一异议/正式notice b07c96b10b1facb9f887a710，不重派研究或改旧提案/claim。watcher可见原生回复已明确向Roy展示0016覆甲与0049金刚杵的来源错连，导出的watcher-visible-reply.jsonl SHA核实。其接收回执引用的可变旧notice后来被ops加别名字段而SHA失配；只移除自身两字段，精确匹配watcher记录SHA 5abb7f04…，冻结原样字节notice-as-watcher-read.json并发原wJ:pJT请原角色另补稳定证据回执，旧receipt保持，不代填后续角色。按事件运行本角色ops_forwarded ACK，真实exit1：learning_requests.py:433普通proposal ID无learning_requests父注册，notice本身已持久化；不为ACK造新父任务。工具缺陷追加普通fix队列，原错误保留，形式登记尚待闭环，不拿已排队当用户已知。
 
 - 2026-10-13 13:39:17 CST 运维 codex：1338两批131301主/s2完成，原各10项提案继续waiting；57条原CLI链接/限制备注按输入及原时间核对归档，原claim/status/version保持。现有局部实现不算宽提案完成，缺完整后继/施放归属、受控同起点与独立验证的限制保留，原等待/新局冷却和父请求不关闭。无新增源码/合入/版本/补测；本轮无复盘，不重复论文导出，不重派旧研究或改对局。 原报告及字节SHA见paper/materials/20261013-1338-ops/original-evidence-manifest.json。
+
+- 2026-10-13 14:05:46 CST 运维 codex：1404原134302策略批10项均waiting，30条原CLI链接及限制备注按输入/原ts核实归档，claim/status/version保持；现有联合实盘转换与离线消费者读回只证明已记录/可读取，完整候选兑现及最优归属仍未知，原宽提案/量化父要求不关闭。金刚杵/覆甲错链沿既有正式notice b07c96b10b1facb9f887a710接续，不另造通知或研究。无新源码/合入/版本/生产测试，原三项离线audit exit0不作完整tsc/vitest通过；无复盘事件，不重复论文导出或重派旧任务。 原证据/验证SHA见paper/materials/20261013-1404-ops/original-evidence-manifest.json。
