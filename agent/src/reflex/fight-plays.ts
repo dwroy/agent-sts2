@@ -13,6 +13,32 @@ function observedWither(state: GameState): boolean {
     });
 }
 
+/** D9XJAX5KCSU2 A10 F48 T4, silent-0297: the visible discarded Wither and its new copy both show six. */
+function visibleWitherDamage(state: GameState): number | undefined {
+  if (!observedWither(state) || num(asRecord(state.run?.raw)["ascension"]) !== 10) return undefined;
+  const view = asRecord(asRecord(state.raw["agent_view"])["combat"]);
+  const texts: string[] = [];
+  for (const pile of ["draw", "discard", "exhaust"]) {
+    for (const raw of asArray(view[pile])) {
+      const entry = asRecord(raw);
+      const ids = asArray(entry["card_ids"]);
+      if (!ids.includes("WITHER")) continue;
+      if (ids.some((id) => id !== "WITHER")) return undefined;
+      texts.push(str(entry["line"]));
+    }
+  }
+  if (texts.length === 0) return undefined;
+  for (const raw of asArray(asRecord(state.raw["combat"])["hand"])) {
+    const card = asRecord(raw);
+    if (str(card["card_id"]) === "WITHER") texts.push(str(card["resolved_rules_text"]));
+  }
+  const values = texts.map(heldPenaltyOf);
+  // Unknown, conflicting, or HP-loss text provides no new damage evidence. Counts and upgrade suffixes do not.
+  if (values.some((value) => !Number.isSafeInteger(value.heldPenalty) || value.heldPenalty <= 0 || value.heldHpLoss !== 0)) return undefined;
+  const damage = values[0]!.heldPenalty;
+  return values.every((value) => value.heldPenalty === damage) ? damage : undefined;
+}
+
 /** KV0JHNJCKXLS A10 F33 T8, silent-0245/0247: only the observed three-play Sloth scope. */
 export function observedSlothReplay(state: GameState): boolean {
   const run = asRecord(state.run?.raw);
@@ -51,6 +77,8 @@ export function recordStateFightPlays(memory: ScreenMemory, state: GameState, pl
         memo.witherDamage = Math.max(memo.witherDamage, heldPenaltyOf(str(card["resolved_rules_text"])).heldPenalty);
       }
     }
+    const visible = visibleWitherDamage(state);
+    if (visible !== undefined) memo.witherDamage = Math.max(memo.witherDamage, visible);
   }
   return memo;
 }
