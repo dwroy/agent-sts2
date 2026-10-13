@@ -76,13 +76,6 @@ function ratesLine(file: PotionEquivalentsFile, asc: number): string {
   return `换算率（boss 战实测）：${parts.join("；")}`;
 }
 
-/** The ascension the table answers for, or a lookup error naming the ascensions it has. */
-function ascOf(file: PotionEquivalentsFile, ascension: number): number {
-  const asc = tableAscension(file, ascension);
-  if (asc === null) throw new KnowledgeLookupError("药水换算表没有任何进阶的数据");
-  return asc;
-}
-
 function heldOrder(file: PotionEquivalentsFile, asc: number): string[] {
   const first = (id: string) => potionEquivalentFrom(file, id, 1, asc)?.holdHp ?? -1;
   return Object.keys(file.potions).sort((a, b) => first(b) - first(a) || cmp(a, b));
@@ -96,7 +89,8 @@ export function renderPotionTable(ctx: RenderContext): string {
   const file = loaded;
   // The flag of the pools this character's runs draw from is named after it ("ironclad": the Ironclad's file).
   const inPool = (id: string): boolean => (file.potions[id] as unknown as Record<string, unknown>)[character] === true;
-  const asc = ascOf(file, ctx.ascension);
+  const asc = tableAscension(file, ctx.ascension);
+  if (asc === null) return `## 药水换算表\n${characterName(character)}尚无可用的药水换算样本；持有价值未知，未借用其他角色数据。`;
   const note = asc === ctx.ascension ? `A${asc}` : `A${asc}（本表没有 A${ctx.ascension}，用最近的 A${asc}）`;
   const generated = `生成于 ${file.meta.generated.slice(0, 10)}，boss 战 ${file.meta.logs?.boss_fights ?? "?"} 场`;
   const lines = [`## 药水换算表（${note}：每瓶药留到本幕 boss 战值多少，血/伤害/格挡）`, `${POTION_TABLE_LEGEND}（${generated}；公式见 docs/potion-equivalents.md）`, ratesLine(file, asc), "按一幕持有价值从高到低："];
@@ -135,7 +129,7 @@ export function renderPotion(query: string, ctx: RenderContext, act?: number): s
   const file = loadPotionEquivalents(ctx.knowledgeDir);
   const id = findPotion(file, query);
   const entry = file.potions[id]!;
-  const asc = ascOf(file, ctx.ascension);
+  const asc = tableAscension(file, ctx.ascension);
   const boss = Object.entries(entry.log.boss_drinks)
     .sort((a, b) => cmp(a[0], b[0]))
     .map(([a, n]) => `A${a} ${n} 次`)
@@ -145,6 +139,7 @@ export function renderPotion(query: string, ctx: RenderContext, act?: number): s
     `效果：${potionText(id, entry)}`,
     `日志：出现在 ${entry.log.runs_seen} 局，喝了 ${entry.log.drinks} 次${boss ? `；boss 战喝 ${boss}` : ""}`,
   ];
+  if (asc === null) return [...lines, "没有数值：本角色尚无可用的药水换算样本，持有价值未知。"].join("\n");
   const eqs = worths(file, id, asc).filter((eq): eq is PotionEquivalent => eq !== null && (act === undefined || eq.act === act));
   if (eqs.length === 0) {
     lines.push(`没有数值：${entry.note ?? `A${asc}${act !== undefined ? ` ${ACT_ZH[act] ?? `第 ${act} 幕`}` : ""} 没有记录`}`);
