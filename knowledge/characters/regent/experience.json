@@ -1,0 +1,148 @@
+{
+  "version": "2026-10-13.1",
+  "_about": "储君实盘经验首次构建：D1JAKWWDL38W复盘及勘误；5GP8NKP3VEVJ仅用于本角色机制复核与截至D1的统计。没有混入其他角色经验。机制适用0–20，直接数值标明A0；观察/构筑策略限0–7，A8+未验证。",
+  "entries": [
+    {
+      "id": "regent-black-hole-events",
+      "scope": "card:BLACK_HOLE",
+      "name": "黑洞",
+      "asc": [
+        0,
+        20
+      ],
+      "lesson": "黑洞按星资源变动事件触发，不能按星数倍乘伤害。机制：本局两张升级及一张未升级叠成11；一次崇拜得2星只触发11，胜券在王花5星、得9星分别触发，每张22。搭配：星界脉冲与群星斗篷分别花星，各加一次触发；先核实际星预算与能力启动。决定胜负的战斗：知识恶魔三黑洞已启动仍败，伤害兑现不保证通关（n=2，反例0，均A0）。典型案例：D1JAKWWDL38W F33末次T7同线预计14、实扣36，差22；5GP8NKP3VEVJ F14 T4崇拜得2星、黑洞3只扣3。",
+      "evidence": [
+        "5GP8NKP3VEVJ",
+        "D1JAKWWDL38W"
+      ],
+      "n_support": 2,
+      "n_contradict": 0,
+      "confidence": "med",
+      "last_seen": "2026-10-13",
+      "status": "active"
+    },
+    {
+      "id": "regent-bombardment-startup",
+      "scope": "card:BOMBARDMENT",
+      "name": "轰击",
+      "asc": [
+        0,
+        7
+      ],
+      "lesson": "观察：轰击的持续收益要区分牌组持有与实际启动；没有证据证明提前启动就能赢。机制：打出轰击+进入消耗堆后，已见下回合额外扣25；未打出时不能计自动伤害。搭配：能力启动与当前格挡共同占能量、抽牌及懒惰名额，不能只比较单张面板伤害。决定胜负的战斗：知识恶魔1场6试0胜，T2先轰击的尝试2仍T8判死，末次优先三黑洞、T11仍未启动（n=1，反例0，A0）。典型案例：D1JAKWWDL38W F33尝试2 T2敌328→303，T3首278；末次T8陨星与两防御占满3张。未控制整场后续顺序，不据此指定必胜出牌。",
+      "evidence": [
+        "D1JAKWWDL38W"
+      ],
+      "n_support": 1,
+      "n_contradict": 0,
+      "confidence": "low",
+      "last_seen": "2026-10-13",
+      "status": "active"
+    },
+    {
+      "id": "regent-knowledge-demon-strength",
+      "scope": "boss:KNOWLEDGE_DEMON",
+      "asc": [
+        0,
+        20
+      ],
+      "lesson": "知识恶魔的力量加到多段攻击每段，不能把拖长回合只当多活。机制：本局A0基础8×3；力量0/2/4时来袭24/30/36，增长4力量使总伤多12；下砸临时减1力量使24→21。陨星施虚弱已见19→14、13→9，不额外推定未观察的叠加顺序。搭配：弱化和当前格挡能缓解本回合，敌方治疗与加力量仍增加后续压力。决定胜负的战斗：1场6试0胜，末次T11敌仍102HP，5HP＋12格挡＋7覆甲挡不住36（n=1，反例0，A0；其他进阶数值未核）。典型案例：D1JAKWWDL38W末次T6虚弱后14来袭、10格挡只损4；T11至少还缺13格挡才能留1HP。",
+      "evidence": [
+        "D1JAKWWDL38W"
+      ],
+      "n_support": 1,
+      "n_contradict": 0,
+      "confidence": "low",
+      "last_seen": "2026-10-13",
+      "status": "active"
+    },
+    {
+      "id": "regent-knowledge-demon-curse-limits",
+      "scope": "boss:KNOWLEDGE_DEMON",
+      "asc": [
+        0,
+        20
+      ],
+      "lesson": "知识恶魔的诅咒限制要按实际资源分别记，不能用剩余能量推定仍可出牌。机制：本局心灵腐化少抽1张，懒惰限制每回合3张，衰朽少1能量；末次T1/T5/T9依次取得，随后状态确认。搭配：未启动的持续输出同样需要可用牌名额；已启动与未启动不能用同一平均出牌数替代。决定胜负的战斗：1场6试0胜，末次轰击到T11仍在未启动状态（n=1，反例0，A0）。典型案例：D1JAKWWDL38W末次T8陨星与两防御用满3张，轰击留手；T5代码按少0.5张/回合折懒惰24HP，却没有计入启动状态差别。没有替代诅咒的胜利对照，不指定另一诅咒最优。",
+      "evidence": [
+        "D1JAKWWDL38W"
+      ],
+      "n_support": 1,
+      "n_contradict": 0,
+      "confidence": "low",
+      "last_seen": "2026-10-13",
+      "status": "active"
+    },
+    {
+      "id": "regent-neutron-aegis-plating",
+      "scope": "card:NEUTRON_AEGIS",
+      "name": "中子护盾",
+      "asc": [
+        0,
+        20
+      ],
+      "lesson": "中子护盾的覆甲是会消耗的防护资源，不能把初始8层当永久8格挡。机制：本局生成覆甲8，千足虫相邻回合首帧已见8→7→6→5→4→3；这里只确认实盘递减，不由相邻帧推定具体扣层触发时机。搭配：与当前卡牌格挡分别相加核本回合可承伤，之后按剩余层重估。决定胜负的战斗：千足虫虽有17当前格挡及8覆甲仍T6触发精灵；知识恶魔末次T10重上8、T11剩7仍死亡（n=1，反例0，A0）。典型案例：D1JAKWWDL38W F33 T11坚韧之环5＋群星斗篷7＋覆甲7＝19，对36来袭且仅5HP。未验证覆甲永续收益。",
+      "evidence": [
+        "D1JAKWWDL38W"
+      ],
+      "n_support": 1,
+      "n_contradict": 0,
+      "confidence": "low",
+      "last_seen": "2026-10-13",
+      "status": "active"
+    },
+    {
+      "id": "regent-fairy-consumed-resource",
+      "scope": "potion:FAIRY_IN_A_BOTTLE",
+      "name": "瓶中精灵",
+      "asc": [
+        0,
+        20
+      ],
+      "lesson": "瓶中精灵的被动复活与主动饮药、净HP损失分账。机制：本局HP降至0后消耗药槽、回到24；最大HP82，符合30%向下取整，仅此最大HP的直接数值已核。搭配：后续路线按实际HP及空药槽计算，不能因赢战仍把复活保障保留。决定胜负的战斗：千足虫76→0→24通关，净损52掩盖了先触底及精灵已耗尽；后续知识恶魔无复活药而败（n=1，反例0，A0）。典型案例：D1JAKWWDL38W F24 T6帧1056–1058为11→0→24；T7尾节0HP奖励帧确认通关。没有留药或主动饮药时机的胜局对照，不据此定新喝药阈值。",
+      "evidence": [
+        "D1JAKWWDL38W"
+      ],
+      "n_support": 1,
+      "n_contradict": 0,
+      "confidence": "low",
+      "last_seen": "2026-10-13",
+      "status": "active"
+    },
+    {
+      "id": "regent-route-resource-chain",
+      "scope": "general:route",
+      "asc": [
+        0,
+        7
+      ],
+      "lesson": "观察：精英通关后的药带、事件付血与休息必须沿整段路线追踪，赢战不等于保留资源。数据：D1JAKWWDL38W A0 F24千足虫76/82→24/82，技能药、能力药及精灵全部耗尽；F25锻造、F27休息24→48、F28连续付5＋6＋7＝18HP、F29休息30→54、F30问号异螨54→36、F32休息36→60。F25/F27按已选路线投影boss74/82，实际60/82，高14；F29更新64仍高4，F32按实际休息60则吻合（n=1，反例0）。典型案例：D1JAKWWDL38W F24后实际绕掉第二精英，却仍有事件和问号耗血。休息每次恢复24不能抹去药水消耗；没有换路/留药/F25休息的胜利反事实，不声称另一条路线必胜。",
+      "evidence": [
+        "D1JAKWWDL38W"
+      ],
+      "n_support": 1,
+      "n_contradict": 0,
+      "confidence": "low",
+      "last_seen": "2026-10-13",
+      "status": "active"
+    },
+    {
+      "id": "regent-route-hp-bands-a0",
+      "scope": "general:route",
+      "asc": [
+        0,
+        7
+      ],
+      "lesson": "观察：储君A0路线代价按房型、血量分档分别看，样本不足以给死亡阈值。数据截至D1JAKWWDL38W结束，2局；>60%HP进场：一幕Monster 9场0死、赢战净损中位1，精英3场0死、中位13，问号战1场0死、净损1；二幕Monster 6场0死、中位0，精英2场0死、中位27.5（D1含复活），问号战1场0死、净损18。40–60%一幕Monster 2场0死、中位7；二幕boss >60%共2场1死，不把它归走廊。低于40%的已确认Monster/Elite/Unknown房暂无样本；缺房型的死亡单列，不填零死亡率（n=2，反例0）。典型案例：D1JAKWWDL38W F23走廊零损，紧接F24精英净损52并耗三药；这是观察，不能推出早先低损会延续或安全节点因果收益。A8+未观察。",
+      "evidence": [
+        "5GP8NKP3VEVJ",
+        "D1JAKWWDL38W"
+      ],
+      "n_support": 2,
+      "n_contradict": 0,
+      "confidence": "med",
+      "last_seen": "2026-10-13",
+      "status": "active"
+    }
+  ]
+}
