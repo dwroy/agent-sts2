@@ -1970,6 +1970,13 @@
       "release_id": "V4-R270"
     },
     {
+      "name": "S1.exp150",
+      "family": "Silent",
+      "commit": "944810a51e1fb86468f2cbb1d7e9e57caf105af4",
+      "source": "- 2026-10-10 14:38 静默经验150实际上线：源93206c273d98836153c0317240193cf2042581c2（exp-silent，2026-10-10.7→2026-10-10.8，新增0/更新18/退役0、208 active），实际live 944810a51e1fb86468f2cbb1d7e9e57caf105af4；来源49HL2N70CHMU A10、18条经验silent-route-hp-observation,silent-rest-buffer-observation,silent-deck-burst-observation,silent-strength-weak-observation,silent-footwork-block,silent-frail-card-block,silent-noxious-fumes-growth,silent-accelerant-triggers,silent-bouncing-flask-poison,silent-queen-poison-main-target,silent-queen-poison-window-sl-observation,silent-piercing-wail-temporary-strength,silent-ripple-basin-no-attack-block,silent-wither-end-turn-loss,silent-aeonglass-artifact-growth-sl,silent-double-boss-resource-handoff,silent-act-transition-missing-hp-heal,silent-survivor-neutralize-discard、账本silent-0005,silent-0011,silent-0012,silent-0019,silent-0020,silent-0021,silent-0024,silent-0025,silent-0027,silent-0046,silent-0048,silent-0069,silent-0079,silent-0201,silent-0205,silent-0228,silent-0243，提案仍沿独立strategy-proposal，未标源码implemented/shipped。原沙箱源tsc0/vitest263文件2674例0（保留旧忽略软链接失败及隔离重跑）、合后原入口0；不等外部完整检查或真实采用，后续由experience-done/learner-checks核实。唯一版本S1.exp150，不改对局参数/推理强度，不停局或运行play。",
+      "release_id": "V4-R271"
+    },
+    {
       "name": "S1.fix47",
       "family": "Silent",
       "commit": "b8cd47484f99da517faf6e873984512c5055cac0",
@@ -2427,6 +2434,13 @@
       "commit": "b6894f9d161424dc678a428df3e4e8f50e3d3221",
       "release_id": "V4-R324",
       "source": "2026-10-13 15:43:07 CST 原strategy151303源9b65f1bee0f26ced606ec256fc3d173db48caa3e，silent-0297/提案silent-proposal-d3ce9b2cd72006a5；D9XJAX5KCSU2 A10 F48第3试T4可见弃牌区与新生WITHER均6伤，原同四步43伤需损18低报，固定生产读回校正为21。仅实际Silent/A10、可操作且有凋萎活敌、当前牌堆/手牌文本可解析一致时补缓存；不据数量/升级后缀/回合猜值，缺失/冲突/混合ID/HP-loss、原手牌与SL回T1重置、其他角色及未观察进阶保持。源撤码6败11过、恢复27过，源沙箱362文件3497项/tsc/gitleaks0。20份整枝记录预检冲突原件保留，ops只取三个已测源码/测试路径main/live并保留刷新。宿主完整检查沿原learner-recheck单次接续；完整dirty历史树、新自然局/整战/收益未证，不关闭量化父项。回退仅revert实际live叶子b6894f9d161424dc678a428df3e4e8f50e3d3221，不覆盖原证据/知识刷新/学习成果。"
+    },
+    {
+      "name": "S1.operator-deck-cap30",
+      "family": "Silent",
+      "commit": "11deed8421f292696dce1a4d7e85aff873262299",
+      "source": "2026-10-13 17:29:18 CST Roy明确指定仅Silent、从下一局起永久牌组不得超过30；是实验约束而非学习者发现或已证胜率结论。当前Y82C2NV7WM2M保持旧规则，包括恢复控制器。新增牌总数/未知上界、奖励、商店和事件检查；多步购物先真实移除腾位，模型看到名额、核心兑现/稀释/DPR/升级/最终boss权衡要求；已有两张奖励只复用原silent-0190证据模型。源2b8b35ac0205f096aec8dfe1ed7bef75536e9936，实际live 11deed8421f292696dce1a4d7e85aff873262299；tsc、沙箱14+25、宿主8文件137项和源码gitleaks0。其他角色不启用，无对局重启。回退revert该实际live叶子并登记新编号，保留本次原始数据和版本。",
+      "release_id": "V4-R325"
     }
   ],
   "release_numbering": {
@@ -4729,6 +4743,13 @@
         "commit": "b6894f9d161424dc678a428df3e4e8f50e3d3221",
         "aliases": [
           "S1.visible-wither-damage1"
+        ]
+      },
+      {
+        "release_id": "V4-R325",
+        "commit": "11deed8421f292696dce1a4d7e85aff873262299",
+        "aliases": [
+          "S1.operator-deck-cap30"
         ]
       }
     ],
