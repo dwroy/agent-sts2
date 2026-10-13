@@ -1,0 +1,59 @@
+{
+  "at": "2026-10-13 23:37:43 CST",
+  "batch": "20261013-204302-fix-batch",
+  "original_sources": [
+    "8867041f57f0e511606127e568603510af59a0e7",
+    "e770a6d09a8398aee4126f1b7ea37fc70687989f"
+  ],
+  "integration_source": "4d7aab308232d9818974343f2333cc50706cf6af",
+  "before": {
+    "main": "8fad341c5954a9cc5bfe830b1c1a70ea1e8b62b8",
+    "live": "b09d60f57917dc51261e8e0c01e03ddc82128c04"
+  },
+  "paths": [
+    "agent/tests/learner-check-locks.test.ts",
+    "agent/tests/learner-lock-fixture.ts",
+    "agent/tests/rollout-held-potion-fixture.ts",
+    "agent/tests/rollout-held-potion.test.ts",
+    "agent/tests/rollout-live.test.ts"
+  ],
+  "leaf_sha256": {
+    "agent/tests/rollout-held-potion-fixture.ts": "b52021374e1eda93940b47993a4dfb7b3829a3ff9fa50605f85f8de2e5efef08",
+    "agent/tests/rollout-held-potion.test.ts": "9132f232d1699b6c93b7063da7aed981223225b94395197f9cacd61a8c5f1e51",
+    "agent/tests/rollout-live.test.ts": "8390ad5c565f144dc56886204089f65d7a33f28227755c7dbabbae857da03c66",
+    "agent/tests/learner-check-locks.test.ts": "63936be2b820137ad804ebeff2e6207803c2958a9d9ded41c6994238d5a72479",
+    "agent/tests/learner-lock-fixture.ts": "cc50813b4cdfd1773cffe6b38a899b76895ed9ca0a6f4280cb0785bfbe84fc3a"
+  },
+  "checkouts": {
+    "main": {
+      "actual_leaves": "dbe7cb82147aad08ba1dd3200feb2244bc07f04b",
+      "ancestry_bound": "c7eadc85af2208afb209fc6d55a42af9c397aef4",
+      "tree": "7ac65c72b640aedac42b78c224cbda736de89012",
+      "unchanged_versions_blob": "a66d01cf7b47629ba842ea178bd6f06b596ebfa3"
+    },
+    "live": {
+      "actual_leaves": "dd74240a478eaa2290737b35be1530e41e0d2150",
+      "ancestry_bound": "e0b125153bc08d324f67622153b06fe06a8428cd",
+      "tree": "e335e15247474c2060c36ad8e1f11f0c340664ef",
+      "unchanged_versions_blob": "b44f76f29aacb532e86b6ffd5ddb50138e7b53cc"
+    }
+  },
+  "refreshes": {},
+  "source_sandbox": {
+    "tsc": 0,
+    "vitest": 0,
+    "files": 371,
+    "tests": 3546
+  },
+  "integration_checks": {
+    "tsc": 0,
+    "focused_files": 3,
+    "gitleaks": 0,
+    "stdout": "ops/codex-ops/record-staging/20261013-2327/integration-focused.log"
+  },
+  "new_behavior_or_release": false,
+  "production_or_knowledge_changes": false,
+  "original_failed_rc0_merged_null_and_test_failures_preserved": true,
+  "host_complete_checks": "pending original learner-recheck on exact deployed tree",
+  "game_or_controller_actions": false
+}

@@ -1,0 +1,75 @@
+{
+  "at": "2026-10-13 23:34:47 CST",
+  "notice_id": "abf63faa41b6266a0da0be24",
+  "original_source_batch": "20261013-224302-s2-strategy-proposal",
+  "role_facts": {
+    "watcher_received": {
+      "receipt": "paper/materials/20261013-watcher-abf63faa41b6266a0da0be24/watcher_received-receipt.json",
+      "sha256": "c7b4f30121739798b884acc24853a0c22b43a27e8993d80ef414786e7b15d868",
+      "bytes": 363,
+      "evidence": {
+        "path": "paper/materials/20261013-watcher-abf63faa41b6266a0da0be24/notice-as-read.json",
+        "sha256": "cf5410ea14ebdc24d6b048347e229ea4eb161a7a394e24094f4c3d719610d6fd"
+      }
+    },
+    "roy_notified": {
+      "receipt": "paper/materials/20261013-watcher-abf63faa41b6266a0da0be24/roy_notified-receipt.json",
+      "sha256": "eceae9a312bcdebe97877be3150e9070d8b7c0d9f6f735dd9884606a75154a6a",
+      "bytes": 363,
+      "evidence": {
+        "path": "paper/materials/20261013-watcher-abf63faa41b6266a0da0be24/roy-visible-reply.jsonl",
+        "sha256": "1a9648c00240797329b1460c176df9c087cf88fe784220b0da436524ae643d3b"
+      }
+    }
+  },
+  "roy_visible_reply_timestamp": "2026-10-13T15:17:53.842Z",
+  "frozen_native_fragment_sha256": "1a9648c00240797329b1460c176df9c087cf88fe784220b0da436524ae643d3b",
+  "sources_verified": {
+    ".worktrees/codex-strategy-silent-20261013-224302-s2/learner/runs/20261013-224325-strategy-proposal/report.md": "3c315ba0382bc91a1b81a1e5873b88a45105f40e8373bbec0531f12597413448",
+    ".worktrees/codex-strategy-silent-20261013-224302-s2/learner/runs/20261013-224325-strategy-proposal/proposal.md": "dd8c127fdbfc413074ba19fca795f8c6ce2afb12c37b5f72d3a8c40ca73b46c4"
+  },
+  "canonical_stages_at_cut": {
+    "ops_forwarded": {
+      "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/learning-notices/receipts/abf63faa41b6266a0da0be24.ops-forwarded.json",
+      "sha256": "31371ce9ffbf04f79e380f9873f179a1d9b0ebd0fbcb5586cccc140828723d1a",
+      "at": 1791904606.523727
+    },
+    "watcher_received": false,
+    "roy_notified": false
+  },
+  "ack_failure": {
+    "exit": 2,
+    "reason": "ordinary notice source identity or SHA mismatch",
+    "receipt": "paper/materials/20261013-watcher-abf63faa41b6266a0da0be24/watcher-ack-attempt-r1.json"
+  },
+  "next_step": "Same ordinary ACK safety-validation chain: accept the scheduler real S2 batch grammar, then watcher registers their two original real receipts. Ops does not register watcher/Roy ACK or send a duplicate notice.",
+  "new_request_or_research": false,
+  "duplicate_delivery_sent": false,
+  "full_native_or_credentials_read": false,
+  "files": {
+    "paper/materials/20261013-watcher-abf63faa41b6266a0da0be24/watcher_received-receipt.json": {
+      "sha256": "c7b4f30121739798b884acc24853a0c22b43a27e8993d80ef414786e7b15d868",
+      "bytes": 363
+    },
+    "paper/materials/20261013-watcher-abf63faa41b6266a0da0be24/notice-as-read.json": {
+      "sha256": "cf5410ea14ebdc24d6b048347e229ea4eb161a7a394e24094f4c3d719610d6fd",
+      "bytes": 3242
+    },
+    "paper/materials/20261013-watcher-abf63faa41b6266a0da0be24/roy_notified-receipt.json": {
+      "sha256": "eceae9a312bcdebe97877be3150e9070d8b7c0d9f6f735dd9884606a75154a6a",
+      "bytes": 363
+    },
+    "paper/materials/20261013-watcher-abf63faa41b6266a0da0be24/roy-visible-reply.jsonl": {
+      "sha256": "1a9648c00240797329b1460c176df9c087cf88fe784220b0da436524ae643d3b",
+      "bytes": 1329
+    },
+    "paper/materials/20261013-watcher-abf63faa41b6266a0da0be24/native-message-binding.json": {
+      "sha256": "213e45955465692bb83841fc501a429fee48d907826fcb25e780382faa89f73f",
+      "bytes": 409
+    },
+    "paper/materials/20261013-watcher-abf63faa41b6266a0da0be24/watcher-ack-attempt-r1.json": {
+      "sha256": "fc5ad274787f32a4a2707b48fb994bb2722201a0bbefcd072f0da1c216ecc5a5",
+      "bytes": 713
+    }
+  }
+}

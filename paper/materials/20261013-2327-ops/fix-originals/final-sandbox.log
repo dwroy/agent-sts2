@@ -1,0 +1,40 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-204302/agent
+
+ ❯ tests/ops-stall-recovery.test.ts (6 tests | 1 failed) 16014ms
+     × checks the real script after shell startup exceeds the former five-second limit 10211ms
+ ❯ tests/unassigned-proposal-resolution.test.ts (9 tests | 1 failed) 15674ms
+   × unassigned proposal: resolves_original_id_and_preserves_active_lease_watermark_and_reason 10314ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/ops-stall-recovery.test.ts > stall check mod request recovery > checks the real script after shell startup exceeds the former five-second limit
+Error: Command failed: bash /home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-204302/learner/runs/20261013-204339-fix-batch/stall-fixed-MXLeRm/ops/stall-check.sh
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/unassigned-proposal-resolution.test.ts > unassigned proposal: resolves_original_id_and_preserves_active_lease_watermark_and_reason
+AssertionError: expected null to be +0 // Object.is equality
+
+- Expected:
+0
+
++ Received:
+null
+
+ ❯ tests/unassigned-proposal-resolution.test.ts:18:56
+     16|   const result = spawnSync("python3", ["-B", "../ops/tests/test_unassi…
+     17|     `Resolution.test_${name}`], { encoding: "utf8", timeout: 10_000 });
+     18|   expect(result.status, result.stdout + result.stderr).toBe(0);
+       |                                                        ^
+     19|   expect(result.stderr).toContain("OK");
+     20| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  2 failed | 368 passed (370)
+      Tests  2 failed | 3530 passed (3532)
+   Start at  21:12:12
+   Duration  823.41s (transform 21.42s, setup 38.84s, import 101.75s, tests 1416.40s, environment 58ms)
+

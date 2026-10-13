@@ -1,0 +1,12 @@
+{
+  "merged": null,
+  "pre_merge": "0b07f43b3bdf54138e922cb84f2fd41dce9db139",
+  "merge_tree_exit": 0,
+  "conflicts": [],
+  "knowledge_conflicts": [],
+  "pid1": "codex",
+  "live_mutated": false,
+  "refresh_committed": false,
+  "summary": "未合入；最终锁内 merge-tree 退出码 0、无冲突，live 为 0b07f43b3bdf54138e922cb84f2fd41dce9db139。live 仍有未提交刷新数据；PID1=codex 的隔离视图无法核实宿主后台刷新已结束，未提交刷新或修改 live。交原调用方/运维在宿主视图按原流程接续。",
+  "refresh_visibility_note": "约定 pgrep 循环已执行，但 /proc 只见本调用，空扫描不能证明宿主刷新结束。早期冻结 83ef/main 基线 19 冲突保留；最终 0b07 锁内预检已无冲突，两个结果分列，不把历史预检当当前阻塞。"
+}

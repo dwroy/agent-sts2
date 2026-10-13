@@ -1,0 +1,77 @@
+## 修 bug 回报
+
+- 合并基线：main → `76d76fc2ae0e537d1579ad2934bd9b462d48d357`
+- 修复：rollout-live 持药文字夹具遗漏时钟隔离 — `8867041f57f0e511606127e568603510af59a0e7` — 测试 `agent/tests/rollout-held-potion.test.ts:preserves later-use facts with 10000 ms host pauses` — 去掉修复时失败：是
+- 修复：学习状态锁夹具的同步五秒启动时限 — `e770a6d09a8398aee4126f1b7ea37fc70687989f` — 测试 `agent/tests/learner-check-locks.test.ts:preserves real lock assertions after a six-second launcher delay` — 去掉修复时失败：是
+- 已被别人修掉的：161 项及对应提交见[核对清单](/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-204302/learner/runs/20261013-204339-fix-batch/already-fixed.md)。
+- 没修的：游戏模型、路线及独立架构项 — 策略类／太大；目录扫描竞态上游原因、旧通知送达状态及缺样本问题 — 证据不足，详见[报告](/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-204302/learner/runs/20261013-204339-fix-batch/report.md)。
+- 测试：每次提交前 tsc 退出码 0；vitest 371 文件／3546 用例／退出码 0。持药、strategy-research-scheduling、ops-stall-recovery、unassigned-proposal-resolution、learner-check-locks 均有隔离重跑记录；原失败保留。两次密钥扫描通过。
+- 合入：未合入。最终锁内预检无冲突，但 PID 沙箱无法核实宿主后台刷新结束；live 数据未修改，交调用方／运维接续。
+- 需要 Roy 定的事：无。
+
+```json
+{
+  "task": "fix-batch",
+  "base": "76d76fc2ae0e537d1579ad2934bd9b462d48d357",
+  "fixes": [
+    {
+      "item": "rollout-live 时钟隔离遗漏持药文字夹具",
+      "commit": "8867041f57f0e511606127e568603510af59a0e7",
+      "test": "agent/tests/rollout-held-potion.test.ts",
+      "fails_without_fix": true
+    },
+    {
+      "item": "学习状态锁固定夹具仍以同步五秒子进程限时验证",
+      "commit": "e770a6d09a8398aee4126f1b7ea37fc70687989f",
+      "test": "agent/tests/learner-check-locks.test.ts",
+      "fails_without_fix": true
+    }
+  ],
+  "skipped": [
+    {
+      "item": "sandbox-glob-startup-race 上游目录生命周期根因",
+      "reason": "证据不足；既有恢复子项已实现，上游删除者及竞态原因未证。"
+    },
+    {
+      "item": "core-build-notify-222802-rc2 历史通知恢复",
+      "reason": "证据不足；失败诊断已修，旧送达状态未知，未重发。"
+    },
+    {
+      "item": "mod 超时与 Codex 缓存实测",
+      "reason": "证据不足；缺受控在线观测。"
+    },
+    {
+      "item": "boss 模拟性能、校准及 silent-0332 接续资源",
+      "reason": "太大／策略类／缺触发样本，沿原独立任务。"
+    },
+    {
+      "item": "路线结构及其余游戏模型提案",
+      "reason": "策略类，保留已有提案链和待证范围。"
+    },
+    {
+      "item": "独立架构、具名卡其他入口及调度公平性",
+      "reason": "太大／证据不足，不属于本普通纯 bug 批次。"
+    }
+  ],
+  "merged": null,
+  "tests": {
+    "tsc": 0,
+    "vitest": 0,
+    "cases": 3546
+  },
+  "code_proposals": [],
+  "implementation_domains": [],
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-204302/learner/runs/20261013-204339-fix-batch/report.md"
+}
+```
+
+== 学习者 codex / fix-batch ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a1354a-7412-7aa1-88c7-90a8145477cf
+轮数：1；工具调用：command_execution×148 file_change×7
+token：输入 369.0k、输出 146.1k（其中推理 111.6k）、cache 读 33621.9k、cache 写 0（命中 98.9%）
+成本：未提供
+耗时：8789.1 s（墙钟）
+时间：首个事件 28.3 s、模型首个输出 38.2 s、首次工具 42.9 s、末次工具结束 8703.0 s；工具内共 7073.7 s，其余（模型生成、推理、网络）1687.1 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-204302）；模型的工具调用 exec×113 wait×24；/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/learner/sessions/2026/10/13/rollout-2026-10-13T20-43-54-01a1354a-7412-7aa1-88c7-90a8145477cf.jsonl
+日志：/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-204302/learner/runs/20261013-204339-fix-batch.jsonl

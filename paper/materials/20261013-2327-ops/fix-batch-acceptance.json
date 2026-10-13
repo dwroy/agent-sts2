@@ -1,0 +1,147 @@
+{
+  "at": "2026-10-13 23:40:25 CST",
+  "batch": "20261013-204302-fix-batch",
+  "original_completion": {
+    "state": "failed",
+    "rc": 0,
+    "merged": null,
+    "worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-204302",
+    "report": {
+      "task": "fix-batch",
+      "base": "76d76fc2ae0e537d1579ad2934bd9b462d48d357",
+      "fixes": [
+        {
+          "item": "rollout-live 时钟隔离遗漏持药文字夹具",
+          "commit": "8867041f57f0e511606127e568603510af59a0e7",
+          "test": "agent/tests/rollout-held-potion.test.ts",
+          "fails_without_fix": true
+        },
+        {
+          "item": "学习状态锁固定夹具仍以同步五秒子进程限时验证",
+          "commit": "e770a6d09a8398aee4126f1b7ea37fc70687989f",
+          "test": "agent/tests/learner-check-locks.test.ts",
+          "fails_without_fix": true
+        }
+      ],
+      "skipped": [
+        {
+          "item": "sandbox-glob-startup-race 上游目录生命周期根因",
+          "reason": "证据不足；既有恢复子项已实现，上游删除者及竞态原因未证。"
+        },
+        {
+          "item": "core-build-notify-222802-rc2 历史通知恢复",
+          "reason": "证据不足；失败诊断已修，旧送达状态未知，未重发。"
+        },
+        {
+          "item": "mod 超时与 Codex 缓存实测",
+          "reason": "证据不足；缺受控在线观测。"
+        },
+        {
+          "item": "boss 模拟性能、校准及 silent-0332 接续资源",
+          "reason": "太大／策略类／缺触发样本，沿原独立任务。"
+        },
+        {
+          "item": "路线结构及其余游戏模型提案",
+          "reason": "策略类，保留已有提案链和待证范围。"
+        },
+        {
+          "item": "独立架构、具名卡其他入口及调度公平性",
+          "reason": "太大／证据不足，不属于本普通纯 bug 批次。"
+        }
+      ],
+      "merged": null,
+      "tests": {
+        "tsc": 0,
+        "vitest": 0,
+        "cases": 3546
+      },
+      "code_proposals": [],
+      "implementation_domains": [],
+      "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-204302/learner/runs/20261013-204339-fix-batch/report.md"
+    }
+  },
+  "original_source_report": {
+    "task": "fix-batch",
+    "base": "76d76fc2ae0e537d1579ad2934bd9b462d48d357",
+    "fixes": [
+      {
+        "item": "rollout-live 时钟隔离遗漏持药文字夹具",
+        "commit": "8867041f57f0e511606127e568603510af59a0e7",
+        "test": "agent/tests/rollout-held-potion.test.ts",
+        "fails_without_fix": true
+      },
+      {
+        "item": "学习状态锁固定夹具仍以同步五秒子进程限时验证",
+        "commit": "e770a6d09a8398aee4126f1b7ea37fc70687989f",
+        "test": "agent/tests/learner-check-locks.test.ts",
+        "fails_without_fix": true
+      }
+    ],
+    "skipped": [
+      {
+        "item": "sandbox-glob-startup-race 上游目录生命周期根因",
+        "reason": "证据不足；既有恢复子项已实现，上游删除者及竞态原因未证。"
+      },
+      {
+        "item": "core-build-notify-222802-rc2 历史通知恢复",
+        "reason": "证据不足；失败诊断已修，旧送达状态未知，未重发。"
+      },
+      {
+        "item": "mod 超时与 Codex 缓存实测",
+        "reason": "证据不足；缺受控在线观测。"
+      },
+      {
+        "item": "boss 模拟性能、校准及 silent-0332 接续资源",
+        "reason": "太大／策略类／缺触发样本，沿原独立任务。"
+      },
+      {
+        "item": "路线结构及其余游戏模型提案",
+        "reason": "策略类，保留已有提案链和待证范围。"
+      },
+      {
+        "item": "独立架构、具名卡其他入口及调度公平性",
+        "reason": "太大／证据不足，不属于本普通纯 bug 批次。"
+      }
+    ],
+    "merged": null,
+    "tests": {
+      "tsc": 0,
+      "vitest": 0,
+      "cases": 3546
+    },
+    "code_proposals": [],
+    "implementation_domains": [],
+    "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-204302/learner/runs/20261013-204339-fix-batch/report.md"
+  },
+  "exact_deployment": "paper/materials/20261013-2327-ops/test-fixture-exact-deployment.json",
+  "current_tsc": 0,
+  "current_fixed_tests": {
+    "files": 3,
+    "cases": 18,
+    "rc": 0
+  },
+  "source_two_precommit_sandbox_checks": {
+    "each_files": 371,
+    "each_cases": 3546,
+    "each_tsc": 0,
+    "each_vitest": 0
+  },
+  "two_negative_controls_failed_as_expected": true,
+  "new_behavior_or_release": false,
+  "no_game_knowledge_ledger_rows_added": true,
+  "remaining_performance_ack_and_broad_parent_scopes": "Keep the original pending chains; this batch only fixes five test leaves.",
+  "host_recheck": {
+    "status": "started",
+    "action": [
+      "bash",
+      "ops/codex-ops-do.sh",
+      "learner-recheck",
+      "20261013-204302-fix-batch"
+    ],
+    "live_commit": "e0b125153bc08d324f67622153b06fe06a8428cd",
+    "tree": "e335e15247474c2060c36ad8e1f11f0c340664ef",
+    "log": "ops/codex-ops/learner/20261013-204302-fix-batch.fallback-e335e15247474c2060c36ad8e1f11f0c340664ef.checks.log",
+    "full_suite_passed": null,
+    "deduplicated_once_for_this_tree": true
+  }
+}

@@ -1,0 +1,30 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-204302/agent
+
+ ❯ tests/rollout-held-potion.test.ts (2 tests | 1 failed) 1080ms
+     × preserves later-use facts with 10000 ms host pauses 33ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/rollout-held-potion.test.ts > fixed held-potion rollout facts > preserves later-use facts with 10000 ms host pauses
+AssertionError: plan1: expected 'no rollout (it ran past its time budg…' to contain '(later turns may use the potions stil…'
+
+Expected: "(later turns may use the potions still held)"
+Received: "no rollout (it ran past its time budget; a fallback, not a forecast): this turn as shown, then a rough clock estimate of the rest of the fight, further HP loss ~49 (the estimate's cap, our HP now: it does not mean this line dies, and does not tell the lines apart)"
+
+ ❯ tests/rollout-held-potion.test.ts:41:45
+     39|     for (const key of keys) {
+     40|       const facts = JSON.parse(criteria[key]!) as Record<string, unkno…
+     41|       expect(String(facts["rollout"]), key).toContain("(later turns ma…
+       |                                             ^
+     42|     }
+     43|     expect(rolloutLiveOptions.budgetMs).toBe(ROLLOUT_BUDGET_MS);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 1 passed (2)
+   Start at  22:02:09
+   Duration  3.21s (transform 1.61s, setup 456ms, import 1.53s, tests 1.08s, environment 0ms)
+

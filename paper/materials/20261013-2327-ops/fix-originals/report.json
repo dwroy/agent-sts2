@@ -1,0 +1,69 @@
+{
+  "task": "fix-batch",
+  "base": "76d76fc2ae0e537d1579ad2934bd9b462d48d357",
+  "fixes": [
+    {
+      "item": "rollout-live 时钟隔离遗漏持药文字夹具",
+      "commit": "8867041f57f0e511606127e568603510af59a0e7",
+      "test": "agent/tests/rollout-held-potion.test.ts",
+      "fails_without_fix": true
+    },
+    {
+      "item": "学习状态锁固定夹具仍以同步五秒子进程限时验证",
+      "commit": "e770a6d09a8398aee4126f1b7ea37fc70687989f",
+      "test": "agent/tests/learner-check-locks.test.ts",
+      "fails_without_fix": true
+    }
+  ],
+  "skipped": [
+    {
+      "item": "sandbox-glob-startup-race 上游目录生命周期根因",
+      "reason": "证据不足：既有会话前恢复与复盘租约修复已在本树/live；本次两次工具构造沙箱仍遇并行工作树目录 ENOENT，不能归定删除者或扩大权限。"
+    },
+    {
+      "item": "core-build-notify-222802-rc2 原历史通知恢复",
+      "reason": "证据不足：5c92f2aaf 已保存新失败诊断并维持幂等；旧 rc2 回执无 stderr，未证明通知未送达，未重发。"
+    },
+    {
+      "item": "mod 单次请求超时与 Codex 缓存实测",
+      "reason": "证据不足：需要服务端/受控在线观测；本批离线、不调用 LLM 或网络。"
+    },
+    {
+      "item": "boss 整场模拟性能与校准",
+      "reason": "太大/策略类：已有预算与测试时钟修复分别核实，剩余沿独立性能/校准任务，不添加机制。"
+    },
+    {
+      "item": "silent-0332 双 boss 首战接续资源契约",
+      "reason": "证据不足：现有源码保留拒绝及种子/资源诊断；缺原触发样本，不编造 HP/药水，沿既有 5aa2672bd7cd1bf4 提案。"
+    },
+    {
+      "item": "rest-timeout-accepted-route-not-committed（silent-0446）",
+      "reason": "策略类/结构专用：当前超时分支仍未调用 applyResolved，沿既有 silent-proposal-2d3aa8dfb27dbe3f 独立 structure 任务；普通批不混入路线行为调整。"
+    },
+    {
+      "item": "仍未闭环的出牌/药水/SL/终局/路线模型提案",
+      "reason": "策略类：原未划掉条目和既有提案状态逐项保存在 audit.json；不因局部实现或账本 shipped 关闭宽提案，不重复登记/派发。"
+    },
+    {
+      "item": "arch-funnel-guard / arch-learning-priority / arch-unified-resource-value / inv-f33-regression",
+      "reason": "太大/策略类：获准独立功能与归因任务，不属于本普通纯 bug 批。"
+    },
+    {
+      "item": "named-card-facts-transport 其他入口及 P1/P2",
+      "reason": "太大：事件资料透传子项 42c920f34 已实现；其余父范围沿原拥有者，不能把独立功能补完塞入本批或关闭父要求。"
+    },
+    {
+      "item": "调度公平性及旧包装器收尾归因",
+      "reason": "证据不足：现有源码已有严格宿主定向续验入口，旧 waiting 排序观察未证明永久饥饿；不调整并发、任务状态或恢复历史动作。"
+    }
+  ],
+  "merged": null,
+  "tests": {
+    "tsc": 0,
+    "vitest": 0,
+    "cases": 3546
+  },
+  "code_proposals": [],
+  "implementation_domains": [],
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-204302/learner/runs/20261013-204339-fix-batch/report.md"
+}

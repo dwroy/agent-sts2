@@ -1,0 +1,33 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-204302/agent
+
+ ❯ tests/learner-check-locks.test.ts (1 test | 1 failed) 5189ms
+     × releases the state lock for full checks and preserves concurrent updates when recording results 5187ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/learner-check-locks.test.ts > learner state lock lifetime > releases the state lock for full checks and preserves concurrent updates when recording results
+AssertionError: expected null to be +0 // Object.is equality
+
+- Expected:
+0
+
++ Received:
+null
+
+ ❯ tests/learner-check-locks.test.ts:44:42
+     42| `;
+     43|     const result = spawnSync("python3", ["-B", "-c", script], { encodi…
+     44|     expect(result.status, result.stderr).toBe(0);
+       |                                          ^
+     45|     expect(result.stdout).toContain('"preserved": 99');
+     46|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 369 passed (370)
+      Tests  1 failed | 3531 passed (3532)
+   Start at  21:27:25
+   Duration  1313.37s (transform 20.25s, setup 19.46s, import 70.35s, tests 1167.05s, environment 41ms)
+
