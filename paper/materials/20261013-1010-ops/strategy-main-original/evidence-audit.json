@@ -1,0 +1,5354 @@
+{
+  "checks": [
+    "751FN9QM9MHQ:T2:same_fingerprint",
+    "751FN9QM9MHQ:T2:observed_difference",
+    "751FN9QM9MHQ:T7:same_fingerprint",
+    "751FN9QM9MHQ:T7:observed_difference",
+    "KEN58SH9SLZ6:T10:same_fingerprint",
+    "KEN58SH9SLZ6:T10:observed_difference",
+    "KEN58SH9SLZ6:T5:same_fingerprint",
+    "KEN58SH9SLZ6:T5:observed_difference",
+    "KV0JHNJCKXLS:T5:same_fingerprint",
+    "KV0JHNJCKXLS:T5:observed_difference",
+    "KEN:ability_established_T5_vs_T9",
+    "YQL:husk_potion_keeps_HP_block_incoming",
+    "YQL:poison_2_to_8",
+    "YQL:husk_not_body",
+    "KEN:consumed:274131",
+    "KEN:consumed:274156",
+    "KEN:consumed:274185",
+    "KEN:consumed:274235",
+    "KEN:consumed:274237",
+    "KEN:consumed:274267",
+    "KEN:consumed:274272",
+    "three_giant_runs_have_husk_evidence"
+  ],
+  "check_count": 22,
+  "pairs": [
+    {
+      "run_id": "751FN9QM9MHQ",
+      "floor": 17,
+      "turn": 2,
+      "decision_lines": [
+        272434,
+        272575
+      ],
+      "actual": [
+        {
+          "attempt": 1,
+          "sl_line": 945,
+          "hp_before": 63,
+          "hp_after": 50,
+          "hp_loss": 13,
+          "enemy_hp_before": 186,
+          "enemy_hp_after": 177,
+          "net_enemy_hp_loss": 9,
+          "plays": [
+            "打击 -> 灵魂异鱼",
+            "呼唤",
+            "防御"
+          ],
+          "later_plays": [
+            "生存者",
+            "灵动步法",
+            "切割 -> 灵魂异鱼"
+          ],
+          "result": "predicted_death",
+          "last_turn": 17
+        },
+        {
+          "attempt": 3,
+          "sl_line": 947,
+          "hp_before": 63,
+          "hp_after": 45,
+          "hp_loss": 18,
+          "enemy_hp_before": 186,
+          "enemy_hp_after": 168,
+          "net_enemy_hp_loss": 18,
+          "plays": [
+            "呼唤",
+            "猎杀者 -> 灵魂异鱼"
+          ],
+          "later_plays": [
+            "生存者",
+            "灵动步法",
+            "切割 -> 灵魂异鱼",
+            "带毒刺击+ -> 灵魂异鱼",
+            "中和 -> 灵魂异鱼"
+          ],
+          "result": "predicted_death",
+          "last_turn": 13
+        }
+      ],
+      "sl_candidate": {
+        "point": "T2, the 14th latest question before attempt 1's death on T17",
+        "original": "打击 -> 灵魂异鱼, 呼唤, 防御",
+        "replacement": "呼唤, 猎杀者 -> 灵魂异鱼",
+        "reason": "the best untried line by the question's ranking, among those B2 rates no worse (win rate at most 2 paired standard errors below the pick's)",
+        "played_in": [
+          1,
+          2
+        ],
+        "replayed": 2,
+        "numbers": {
+          "original": "rollout dead 0/24, further loss 62.8, win ~35%; whole-fight sim win 19.5%; this turn hp -13, dmg 6",
+          "replacement": "rollout dead 0/24, further loss 63, win ~36%; whole-fight sim win 19.3%; this turn hp -18, dmg 15"
+        },
+        "gate": "b2",
+        "b2": {
+          "original": 0.195,
+          "replacement": 0.193,
+          "diff": -0.0025,
+          "se": 0.0135
+        },
+        "turn": "BECKON, DEFEND_SILENT, STRIKE_SILENT>灵魂异鱼",
+        "turn_instead": "BECKON, PREDATOR>灵魂异鱼"
+      },
+      "limitation": "同指纹只控制入口；后继出牌、抽序及其他动作未保持相同。净敌血变化不是通用毛伤害。"
+    },
+    {
+      "run_id": "751FN9QM9MHQ",
+      "floor": 17,
+      "turn": 7,
+      "decision_lines": [
+        272531,
+        272652
+      ],
+      "actual": [
+        {
+          "attempt": 2,
+          "sl_line": 946,
+          "hp_before": 45,
+          "hp_after": 32,
+          "hp_loss": 13,
+          "enemy_hp_before": 121,
+          "enemy_hp_after": 109,
+          "net_enemy_hp_loss": 12,
+          "plays": [
+            "匕首雨",
+            "生存者",
+            "防御+"
+          ],
+          "later_plays": [
+            "尖啸",
+            "防御+",
+            "投掷匕首 -> 灵魂异鱼"
+          ],
+          "result": "predicted_death",
+          "last_turn": 15
+        },
+        {
+          "attempt": 4,
+          "sl_line": 948,
+          "hp_before": 45,
+          "hp_after": 22,
+          "hp_loss": 23,
+          "enemy_hp_before": 121,
+          "enemy_hp_after": 103,
+          "net_enemy_hp_loss": 18,
+          "plays": [
+            "匕首雨",
+            "生存者",
+            "打击 -> 灵魂异鱼"
+          ],
+          "later_plays": [
+            "尖啸",
+            "防御+",
+            "投掷匕首 -> 灵魂异鱼"
+          ],
+          "result": "predicted_death",
+          "last_turn": 15
+        }
+      ],
+      "sl_candidate": {
+        "point": "T7, the 10th latest question before attempt 1's death on T17",
+        "original": "匕首雨, 生存者, 防御+",
+        "replacement": "匕首雨, 生存者, 打击 -> 灵魂异鱼",
+        "reason": "the best untried line by the question's ranking (B2 rates every untried line worse: win rate more than 2 paired standard errors below the pick's; the pick is known to fail)",
+        "played_in": [
+          1,
+          2
+        ],
+        "replayed": 13,
+        "numbers": {
+          "original": "rollout dead 0/24, further loss 44.5, win ~41%; whole-fight sim win 10.3%; this turn hp -19, dmg 9",
+          "replacement": "rollout dead 2/24, further loss 44.9, win ~36%; whole-fight sim win 1.3%; this turn hp -29, dmg 15"
+        },
+        "gate": "b2",
+        "b2": {
+          "original": 0.103,
+          "replacement": 0.013,
+          "diff": -0.09,
+          "se": 0.0088
+        },
+        "turn": "DAGGER_SPRAY, DEFEND_SILENT+, SURVIVOR",
+        "turn_instead": "DAGGER_SPRAY, STRIKE_SILENT>灵魂异鱼, SURVIVOR"
+      },
+      "limitation": "同指纹只控制入口；后继出牌、抽序及其他动作未保持相同。净敌血变化不是通用毛伤害。"
+    },
+    {
+      "run_id": "KEN58SH9SLZ6",
+      "floor": 17,
+      "turn": 10,
+      "decision_lines": [
+        274505,
+        274568
+      ],
+      "actual": [
+        {
+          "attempt": 4,
+          "sl_line": 967,
+          "hp_before": 37,
+          "hp_after": 22,
+          "hp_loss": 15,
+          "enemy_hp_before": 82,
+          "enemy_hp_after": 80,
+          "net_enemy_hp_loss": 2,
+          "plays": [
+            "呼唤",
+            "带毒刺击 -> 灵魂异鱼",
+            "呼唤"
+          ],
+          "later_plays": [
+            "打击 -> 灵魂异鱼",
+            "打击 -> 灵魂异鱼",
+            "呼唤"
+          ],
+          "result": "predicted_death",
+          "last_turn": 15
+        },
+        {
+          "attempt": 5,
+          "sl_line": 968,
+          "hp_before": 37,
+          "hp_after": 16,
+          "hp_loss": 21,
+          "enemy_hp_before": 82,
+          "enemy_hp_after": 78,
+          "net_enemy_hp_loss": 4,
+          "plays": [
+            "呼唤",
+            "带毒刺击 -> 灵魂异鱼",
+            "匕首雨"
+          ],
+          "later_plays": [
+            "打击 -> 灵魂异鱼",
+            "打击 -> 灵魂异鱼",
+            "呼唤"
+          ],
+          "result": "predicted_death",
+          "last_turn": 13
+        }
+      ],
+      "sl_candidate": {
+        "point": "T10, the 4th latest question before attempt 4's death on T15",
+        "original": "呼唤, 带毒刺击 -> 灵魂异鱼, 呼唤",
+        "replacement": "呼唤, 带毒刺击 -> 灵魂异鱼, 匕首雨",
+        "reason": "the best untried line by the question's ranking (B2 rates every untried line worse: win rate more than 2 paired standard errors below the pick's; the pick is known to fail)",
+        "played_in": [
+          4
+        ],
+        "replayed": 20,
+        "numbers": {
+          "original": "rollout dead 6/24, further loss 32.5, win ~46%; whole-fight sim win 38.5%; this turn hp -15, dmg 2",
+          "replacement": "rollout dead 12/24, further loss 35.3, win ~28%; whole-fight sim win 12.7%; this turn hp -21, dmg 4"
+        },
+        "gate": "b2",
+        "b2": {
+          "original": 0.385,
+          "replacement": 0.127,
+          "diff": -0.2583,
+          "se": 0.0132
+        },
+        "turn": "BECKON, BECKON, POISONED_STAB>灵魂异鱼",
+        "turn_instead": "BECKON, DAGGER_SPRAY, POISONED_STAB>灵魂异鱼"
+      },
+      "limitation": "同指纹只控制入口；后继出牌、抽序及其他动作未保持相同。净敌血变化不是通用毛伤害。"
+    },
+    {
+      "run_id": "KEN58SH9SLZ6",
+      "floor": 17,
+      "turn": 5,
+      "decision_lines": [
+        274484,
+        274601
+      ],
+      "actual": [
+        {
+          "attempt": 4,
+          "sl_line": 967,
+          "hp_before": 66,
+          "hp_after": 59,
+          "hp_loss": 7,
+          "enemy_hp_before": 136,
+          "enemy_hp_after": 135,
+          "net_enemy_hp_loss": 1,
+          "plays": [
+            "呼唤",
+            "灵动步法",
+            "斗篷与匕首",
+            "小刀 -> 灵魂异鱼"
+          ],
+          "later_plays": [
+            "呼唤",
+            "迷雾"
+          ],
+          "result": "predicted_death",
+          "last_turn": 15
+        },
+        {
+          "attempt": 6,
+          "sl_line": 969,
+          "hp_before": 66,
+          "hp_after": 61,
+          "hp_loss": 5,
+          "enemy_hp_before": 136,
+          "enemy_hp_after": 134,
+          "net_enemy_hp_loss": 2,
+          "plays": [
+            "呼唤",
+            "斗篷与匕首",
+            "突然一拳 -> 灵魂异鱼",
+            "小刀 -> 灵魂异鱼"
+          ],
+          "later_plays": [
+            "匕首雨",
+            "迷雾"
+          ],
+          "result": "died",
+          "last_turn": 13
+        }
+      ],
+      "sl_candidate": {
+        "point": "T5, the 9th latest question before attempt 4's death on T15",
+        "original": "呼唤, 灵动步法, 斗篷与匕首",
+        "replacement": "呼唤, 斗篷与匕首, 突然一拳 -> 灵魂异鱼",
+        "reason": "the best untried line by the question's ranking, among those B2 rates no worse (win rate at most 2 paired standard errors below the pick's)",
+        "played_in": [
+          2,
+          3,
+          4,
+          5
+        ],
+        "replayed": 9,
+        "numbers": {
+          "original": "rollout dead 0/24, further loss 58, win ~60%; whole-fight sim win 4.2%; this turn hp -7, dmg 0",
+          "replacement": "rollout dead 0/24, further loss 60.7, win ~50%; whole-fight sim win 3.3%; this turn hp -5, dmg 1"
+        },
+        "gate": "b2",
+        "b2": {
+          "original": 0.042,
+          "replacement": 0.033,
+          "diff": -0.0083,
+          "se": 0.0068
+        },
+        "turn": "BECKON, CLOAK_AND_DAGGER, FOOTWORK",
+        "turn_instead": "BECKON, CLOAK_AND_DAGGER, SUCKER_PUNCH>灵魂异鱼"
+      },
+      "limitation": "同指纹只控制入口；后继出牌、抽序及其他动作未保持相同。净敌血变化不是通用毛伤害。"
+    },
+    {
+      "run_id": "KV0JHNJCKXLS",
+      "floor": 33,
+      "turn": 5,
+      "decision_lines": [
+        273400,
+        273450
+      ],
+      "actual": [
+        {
+          "attempt": 4,
+          "sl_line": 955,
+          "hp_before": 30,
+          "hp_after": 30,
+          "hp_loss": 0,
+          "enemy_hp_before": 334,
+          "enemy_hp_after": 298,
+          "net_enemy_hp_loss": 36,
+          "plays": [
+            "猎杀者 -> 知识恶魔",
+            "致命毒药+ -> 知识恶魔"
+          ],
+          "later_plays": [
+            "带毒刺击+ -> 知识恶魔",
+            "预判",
+            "防御"
+          ],
+          "result": "predicted_death",
+          "last_turn": 10
+        },
+        {
+          "attempt": 5,
+          "sl_line": 956,
+          "hp_before": 30,
+          "hp_after": 30,
+          "hp_loss": 0,
+          "enemy_hp_before": 334,
+          "enemy_hp_after": 305,
+          "net_enemy_hp_loss": 29,
+          "plays": [
+            "猎杀者 -> 知识恶魔"
+          ],
+          "later_plays": [
+            "预判",
+            "蛇咬 -> 知识恶魔",
+            "防御"
+          ],
+          "result": "predicted_death",
+          "last_turn": 10
+        }
+      ],
+      "sl_candidate": {
+        "point": "T5, the 4th latest question before attempt 4's death on T10",
+        "original": "猎杀者 -> 知识恶魔, 致命毒药+ -> 知识恶魔",
+        "replacement": "猎杀者 -> 知识恶魔",
+        "reason": "the best untried line by the question's ranking, among those B2 rates no worse (win rate at most 2 paired standard errors below the pick's)",
+        "played_in": [
+          1,
+          4
+        ],
+        "replayed": 8,
+        "numbers": {
+          "original": "rollout dead 10/24, further loss 30, win ~28%; whole-fight sim win 0%; this turn hp -0, dmg 36",
+          "replacement": "rollout dead 10/24, further loss 30, win ~27%; whole-fight sim win 0%; this turn hp -0, dmg 29"
+        },
+        "gate": "b2",
+        "b2": {
+          "original": 0,
+          "replacement": 0,
+          "diff": 0,
+          "se": 0
+        },
+        "turn": "DEADLY_POISON+>知识恶魔, PREDATOR>知识恶魔",
+        "turn_instead": "PREDATOR>知识恶魔"
+      },
+      "limitation": "同指纹只控制入口；后继出牌、抽序及其他动作未保持相同。净敌血变化不是通用毛伤害。"
+    }
+  ],
+  "ability_delay": {
+    "4": {
+      "first_turn_with_2_dexterity": 5,
+      "turn_8": [
+        {
+          "line": 280580,
+          "dexterity": 2
+        },
+        {
+          "line": 280581,
+          "dexterity": 2
+        },
+        {
+          "line": 280582,
+          "dexterity": 2
+        },
+        {
+          "line": 280583,
+          "dexterity": 2
+        },
+        {
+          "line": 280584,
+          "dexterity": 2
+        }
+      ]
+    },
+    "6": {
+      "first_turn_with_2_dexterity": 9,
+      "turn_8": [
+        {
+          "line": 280697,
+          "dexterity": 0
+        },
+        {
+          "line": 280698,
+          "dexterity": 0
+        },
+        {
+          "line": 280699,
+          "dexterity": 0
+        },
+        {
+          "line": 280700,
+          "dexterity": 0
+        }
+      ]
+    }
+  },
+  "giant_potion": [
+    {
+      "line": 280160,
+      "run_id": "YQL8RZ8BWN1E",
+      "floor": 17,
+      "turn": 10,
+      "hp": 26,
+      "block": 13,
+      "hand": [
+        {
+          "index": 0,
+          "card_id": "BOUNCING_FLASK",
+          "name": "弹跳药瓶",
+          "upgraded": false,
+          "target_type": "RandomEnemy",
+          "requires_target": false,
+          "target_index_space": null,
+          "valid_target_indices": [],
+          "costs_x": false,
+          "star_costs_x": false,
+          "energy_cost": 2,
+          "star_cost": 0,
+          "rules_text": "随机给予敌人{PoisonPower:diff()}层中毒{Repeat:diff()}次。",
+          "resolved_rules_text": "随机给予敌人3层中毒3次。",
+          "dynamic_values": [
+            {
+              "name": "PoisonPower",
+              "base_value": 3,
+              "current_value": 3,
+              "enchanted_value": 3,
+              "is_modified": false,
+              "was_just_upgraded": false
+            },
+            {
+              "name": "Repeat",
+              "base_value": 3,
+              "current_value": 3,
+              "enchanted_value": 3,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ],
+          "playable": false,
+          "can_play_result": false,
+          "unplayable_reason": "not_enough_energy",
+          "unplayable_reason_raw": "EnergyCostTooHigh",
+          "unplayable_preventer_id": null,
+          "unplayable_preventer_type": null
+        },
+        {
+          "index": 1,
+          "card_id": "SLICE",
+          "name": "切割",
+          "upgraded": false,
+          "target_type": "AnyEnemy",
+          "requires_target": true,
+          "target_index_space": "enemies",
+          "valid_target_indices": [
+            0
+          ],
+          "costs_x": false,
+          "star_costs_x": false,
+          "energy_cost": 0,
+          "star_cost": 0,
+          "rules_text": "造成{Damage:diff()}点伤害。",
+          "resolved_rules_text": "造成6点伤害。",
+          "dynamic_values": [
+            {
+              "name": "Damage",
+              "base_value": 6,
+              "current_value": 6,
+              "enchanted_value": 6,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ],
+          "playable": true,
+          "can_play_result": true,
+          "unplayable_reason": null,
+          "unplayable_reason_raw": null,
+          "unplayable_preventer_id": null,
+          "unplayable_preventer_type": null
+        }
+      ],
+      "powers": [
+        {
+          "index": 0,
+          "power_id": "ACCELERANT_POWER",
+          "name": "触媒",
+          "amount": 2,
+          "is_debuff": false
+        },
+        {
+          "index": 1,
+          "power_id": "NOXIOUS_FUMES_POWER",
+          "name": "毒雾",
+          "amount": 2,
+          "is_debuff": false
+        }
+      ],
+      "potions": [
+        {
+          "index": 0,
+          "potion_id": "POISON_POTION",
+          "name": "毒药水",
+          "description": "给予[blue]{PoisonPower}[/blue]层[gold]中毒[/gold]。",
+          "rarity": "Common",
+          "occupied": true,
+          "usage": "CombatOnly",
+          "target_type": "AnyEnemy",
+          "is_queued": false,
+          "requires_target": true,
+          "target_index_space": "enemies",
+          "valid_target_indices": [
+            0
+          ],
+          "can_use": true,
+          "can_discard": true
+        },
+        {
+          "index": 1,
+          "potion_id": null,
+          "name": null,
+          "description": null,
+          "rarity": null,
+          "occupied": false,
+          "usage": null,
+          "target_type": null,
+          "is_queued": false,
+          "requires_target": false,
+          "target_index_space": null,
+          "valid_target_indices": [],
+          "can_use": false,
+          "can_discard": false
+        }
+      ],
+      "enemies": [
+        {
+          "enemy_id": "WATERFALL_GIANT",
+          "current_hp": 999999999,
+          "max_hp": 999999999,
+          "move_id": "EXPLODE_MOVE",
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "DeathBlow",
+              "label": "41",
+              "damage": 41,
+              "hits": 1,
+              "total_damage": 41,
+              "status_card_count": null
+            }
+          ],
+          "powers": [
+            {
+              "index": 0,
+              "power_id": "POISON_POWER",
+              "name": "中毒",
+              "amount": 2,
+              "is_debuff": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "line": 280161,
+      "run_id": "YQL8RZ8BWN1E",
+      "floor": 17,
+      "turn": 10,
+      "hp": 26,
+      "block": 13,
+      "hand": [
+        {
+          "index": 0,
+          "card_id": "BOUNCING_FLASK",
+          "name": "弹跳药瓶",
+          "upgraded": false,
+          "target_type": "RandomEnemy",
+          "requires_target": false,
+          "target_index_space": null,
+          "valid_target_indices": [],
+          "costs_x": false,
+          "star_costs_x": false,
+          "energy_cost": 2,
+          "star_cost": 0,
+          "rules_text": "随机给予敌人{PoisonPower:diff()}层中毒{Repeat:diff()}次。",
+          "resolved_rules_text": "随机给予敌人3层中毒3次。",
+          "dynamic_values": [
+            {
+              "name": "PoisonPower",
+              "base_value": 3,
+              "current_value": 3,
+              "enchanted_value": 3,
+              "is_modified": false,
+              "was_just_upgraded": false
+            },
+            {
+              "name": "Repeat",
+              "base_value": 3,
+              "current_value": 3,
+              "enchanted_value": 3,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ],
+          "playable": false,
+          "can_play_result": false,
+          "unplayable_reason": "not_enough_energy",
+          "unplayable_reason_raw": "EnergyCostTooHigh",
+          "unplayable_preventer_id": null,
+          "unplayable_preventer_type": null
+        },
+        {
+          "index": 1,
+          "card_id": "SLICE",
+          "name": "切割",
+          "upgraded": false,
+          "target_type": "AnyEnemy",
+          "requires_target": true,
+          "target_index_space": "enemies",
+          "valid_target_indices": [
+            0
+          ],
+          "costs_x": false,
+          "star_costs_x": false,
+          "energy_cost": 0,
+          "star_cost": 0,
+          "rules_text": "造成{Damage:diff()}点伤害。",
+          "resolved_rules_text": "造成6点伤害。",
+          "dynamic_values": [
+            {
+              "name": "Damage",
+              "base_value": 6,
+              "current_value": 6,
+              "enchanted_value": 6,
+              "is_modified": false,
+              "was_just_upgraded": false
+            }
+          ],
+          "playable": true,
+          "can_play_result": true,
+          "unplayable_reason": null,
+          "unplayable_reason_raw": null,
+          "unplayable_preventer_id": null,
+          "unplayable_preventer_type": null
+        }
+      ],
+      "powers": [
+        {
+          "index": 0,
+          "power_id": "ACCELERANT_POWER",
+          "name": "触媒",
+          "amount": 2,
+          "is_debuff": false
+        },
+        {
+          "index": 1,
+          "power_id": "NOXIOUS_FUMES_POWER",
+          "name": "毒雾",
+          "amount": 2,
+          "is_debuff": false
+        }
+      ],
+      "potions": [
+        {
+          "index": 0,
+          "potion_id": null,
+          "name": null,
+          "description": null,
+          "rarity": null,
+          "occupied": false,
+          "usage": null,
+          "target_type": null,
+          "is_queued": false,
+          "requires_target": false,
+          "target_index_space": null,
+          "valid_target_indices": [],
+          "can_use": false,
+          "can_discard": false
+        },
+        {
+          "index": 1,
+          "potion_id": null,
+          "name": null,
+          "description": null,
+          "rarity": null,
+          "occupied": false,
+          "usage": null,
+          "target_type": null,
+          "is_queued": false,
+          "requires_target": false,
+          "target_index_space": null,
+          "valid_target_indices": [],
+          "can_use": false,
+          "can_discard": false
+        }
+      ],
+      "enemies": [
+        {
+          "enemy_id": "WATERFALL_GIANT",
+          "current_hp": 999999999,
+          "max_hp": 999999999,
+          "move_id": "EXPLODE_MOVE",
+          "intents": [
+            {
+              "index": 0,
+              "intent_type": "DeathBlow",
+              "label": "41",
+              "damage": 41,
+              "hits": 1,
+              "total_damage": 41,
+              "status_card_count": null
+            }
+          ],
+          "powers": [
+            {
+              "index": 0,
+              "power_id": "POISON_POWER",
+              "name": "中毒",
+              "amount": 8,
+              "is_debuff": true
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "potion_consumptions": [
+    {
+      "decision_line": 274131,
+      "before": {
+        "line": 280206,
+        "run_id": "KEN58SH9SLZ6",
+        "floor": 3,
+        "turn": 2,
+        "hp": 56,
+        "block": 8,
+        "hand": [
+          {
+            "index": 0,
+            "card_id": "STRIKE_SILENT",
+            "name": "打击",
+            "upgraded": false,
+            "target_type": "AnyEnemy",
+            "requires_target": true,
+            "target_index_space": "enemies",
+            "valid_target_indices": [
+              0
+            ],
+            "costs_x": false,
+            "star_costs_x": false,
+            "energy_cost": 1,
+            "star_cost": 0,
+            "rules_text": "造成{Damage:diff()}点伤害。",
+            "resolved_rules_text": "造成6点伤害。",
+            "dynamic_values": [
+              {
+                "name": "Damage",
+                "base_value": 6,
+                "current_value": 6,
+                "enchanted_value": 6,
+                "is_modified": false,
+                "was_just_upgraded": false
+              }
+            ],
+            "playable": true,
+            "can_play_result": true,
+            "unplayable_reason": null,
+            "unplayable_reason_raw": null,
+            "unplayable_preventer_id": null,
+            "unplayable_preventer_type": null
+          },
+          {
+            "index": 1,
+            "card_id": "DEFEND_SILENT",
+            "name": "防御",
+            "upgraded": false,
+            "target_type": "Self",
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "costs_x": false,
+            "star_costs_x": false,
+            "energy_cost": 1,
+            "star_cost": 0,
+            "rules_text": "获得{Block:diff()}点格挡。",
+            "resolved_rules_text": "获得5点格挡。",
+            "dynamic_values": [
+              {
+                "name": "Block",
+                "base_value": 5,
+                "current_value": 5,
+                "enchanted_value": 5,
+                "is_modified": false,
+                "was_just_upgraded": false
+              }
+            ],
+            "playable": true,
+            "can_play_result": true,
+            "unplayable_reason": null,
+            "unplayable_reason_raw": null,
+            "unplayable_preventer_id": null,
+            "unplayable_preventer_type": null
+          },
+          {
+            "index": 2,
+            "card_id": "DEFEND_SILENT",
+            "name": "防御",
+            "upgraded": false,
+            "target_type": "Self",
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "costs_x": false,
+            "star_costs_x": false,
+            "energy_cost": 1,
+            "star_cost": 0,
+            "rules_text": "获得{Block:diff()}点格挡。",
+            "resolved_rules_text": "获得5点格挡。",
+            "dynamic_values": [
+              {
+                "name": "Block",
+                "base_value": 5,
+                "current_value": 5,
+                "enchanted_value": 5,
+                "is_modified": false,
+                "was_just_upgraded": false
+              }
+            ],
+            "playable": true,
+            "can_play_result": true,
+            "unplayable_reason": null,
+            "unplayable_reason_raw": null,
+            "unplayable_preventer_id": null,
+            "unplayable_preventer_type": null
+          }
+        ],
+        "powers": [],
+        "potions": [
+          {
+            "index": 0,
+            "potion_id": "ATTACK_POTION",
+            "name": "攻击药水",
+            "description": "从[blue]3[/blue]张随机攻击牌中选择[blue]1[/blue]张加入你的[gold]手牌[/gold]。这张牌在本回合可以免费打出。",
+            "rarity": "Common",
+            "occupied": true,
+            "usage": "CombatOnly",
+            "target_type": "AnyPlayer",
+            "is_queued": false,
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "can_use": true,
+            "can_discard": true
+          },
+          {
+            "index": 1,
+            "potion_id": null,
+            "name": null,
+            "description": null,
+            "rarity": null,
+            "occupied": false,
+            "usage": null,
+            "target_type": null,
+            "is_queued": false,
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "can_use": false,
+            "can_discard": false
+          }
+        ],
+        "enemies": [
+          {
+            "enemy_id": "SEAPUNK",
+            "current_hp": 40,
+            "max_hp": 49,
+            "move_id": "SPINNING_KICK_MOVE",
+            "intents": [
+              {
+                "index": 0,
+                "intent_type": "Attack",
+                "label": "2[font_size=18]×4[/font_size]",
+                "damage": 2,
+                "hits": 4,
+                "total_damage": 8,
+                "status_card_count": null
+              }
+            ],
+            "powers": []
+          }
+        ]
+      },
+      "after": {
+        "line": 280207,
+        "run_id": "KEN58SH9SLZ6",
+        "floor": 3,
+        "turn": 2,
+        "hp": 56,
+        "block": 8,
+        "hand": [
+          {
+            "index": 0,
+            "card_id": "STRIKE_SILENT",
+            "name": "打击",
+            "upgraded": false,
+            "target_type": "AnyEnemy",
+            "requires_target": true,
+            "target_index_space": "enemies",
+            "valid_target_indices": [
+              0
+            ],
+            "costs_x": false,
+            "star_costs_x": false,
+            "energy_cost": 1,
+            "star_cost": 0,
+            "rules_text": "造成{Damage:diff()}点伤害。",
+            "resolved_rules_text": "造成6点伤害。",
+            "dynamic_values": [
+              {
+                "name": "Damage",
+                "base_value": 6,
+                "current_value": 6,
+                "enchanted_value": 6,
+                "is_modified": false,
+                "was_just_upgraded": false
+              }
+            ],
+            "playable": true,
+            "can_play_result": true,
+            "unplayable_reason": null,
+            "unplayable_reason_raw": null,
+            "unplayable_preventer_id": null,
+            "unplayable_preventer_type": null
+          },
+          {
+            "index": 1,
+            "card_id": "DEFEND_SILENT",
+            "name": "防御",
+            "upgraded": false,
+            "target_type": "Self",
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "costs_x": false,
+            "star_costs_x": false,
+            "energy_cost": 1,
+            "star_cost": 0,
+            "rules_text": "获得{Block:diff()}点格挡。",
+            "resolved_rules_text": "获得5点格挡。",
+            "dynamic_values": [
+              {
+                "name": "Block",
+                "base_value": 5,
+                "current_value": 5,
+                "enchanted_value": 5,
+                "is_modified": false,
+                "was_just_upgraded": false
+              }
+            ],
+            "playable": true,
+            "can_play_result": true,
+            "unplayable_reason": null,
+            "unplayable_reason_raw": null,
+            "unplayable_preventer_id": null,
+            "unplayable_preventer_type": null
+          },
+          {
+            "index": 2,
+            "card_id": "DEFEND_SILENT",
+            "name": "防御",
+            "upgraded": false,
+            "target_type": "Self",
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "costs_x": false,
+            "star_costs_x": false,
+            "energy_cost": 1,
+            "star_cost": 0,
+            "rules_text": "获得{Block:diff()}点格挡。",
+            "resolved_rules_text": "获得5点格挡。",
+            "dynamic_values": [
+              {
+                "name": "Block",
+                "base_value": 5,
+                "current_value": 5,
+                "enchanted_value": 5,
+                "is_modified": false,
+                "was_just_upgraded": false
+              }
+            ],
+            "playable": true,
+            "can_play_result": true,
+            "unplayable_reason": null,
+            "unplayable_reason_raw": null,
+            "unplayable_preventer_id": null,
+            "unplayable_preventer_type": null
+          }
+        ],
+        "powers": [],
+        "potions": [
+          {
+            "index": 0,
+            "potion_id": null,
+            "name": null,
+            "description": null,
+            "rarity": null,
+            "occupied": false,
+            "usage": null,
+            "target_type": null,
+            "is_queued": false,
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "can_use": false,
+            "can_discard": false
+          },
+          {
+            "index": 1,
+            "potion_id": null,
+            "name": null,
+            "description": null,
+            "rarity": null,
+            "occupied": false,
+            "usage": null,
+            "target_type": null,
+            "is_queued": false,
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "can_use": false,
+            "can_discard": false
+          }
+        ],
+        "enemies": [
+          {
+            "enemy_id": "SEAPUNK",
+            "current_hp": 40,
+            "max_hp": 49,
+            "move_id": "SPINNING_KICK_MOVE",
+            "intents": [
+              {
+                "index": 0,
+                "intent_type": "Attack",
+                "label": "2[font_size=18]×4[/font_size]",
+                "damage": 2,
+                "hits": 4,
+                "total_damage": 8,
+                "status_card_count": null
+              }
+            ],
+            "powers": []
+          }
+        ]
+      },
+      "potion": "ATTACK_POTION",
+      "limitation": "确认实际耗药，不将饮用后的整个回合伤挡净变化独归该瓶；无未饮用/留药整战对照。"
+    },
+    {
+      "decision_line": 274156,
+      "before": {
+        "line": 280232,
+        "run_id": "KEN58SH9SLZ6",
+        "floor": 4,
+        "turn": 1,
+        "hp": 53,
+        "block": 13,
+        "hand": [
+          {
+            "index": 0,
+            "card_id": "STRIKE_SILENT",
+            "name": "打击",
+            "upgraded": false,
+            "target_type": "AnyEnemy",
+            "requires_target": true,
+            "target_index_space": "enemies",
+            "valid_target_indices": [
+              0,
+              1
+            ],
+            "costs_x": false,
+            "star_costs_x": false,
+            "energy_cost": 1,
+            "star_cost": 0,
+            "rules_text": "造成{Damage:diff()}点伤害。",
+            "resolved_rules_text": "造成6点伤害。",
+            "dynamic_values": [
+              {
+                "name": "Damage",
+                "base_value": 6,
+                "current_value": 6,
+                "enchanted_value": 6,
+                "is_modified": false,
+                "was_just_upgraded": false
+              }
+            ],
+            "playable": false,
+            "can_play_result": false,
+            "unplayable_reason": "not_enough_energy",
+            "unplayable_reason_raw": "EnergyCostTooHigh",
+            "unplayable_preventer_id": null,
+            "unplayable_preventer_type": null
+          },
+          {
+            "index": 1,
+            "card_id": "DEFEND_SILENT",
+            "name": "防御",
+            "upgraded": false,
+            "target_type": "Self",
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "costs_x": false,
+            "star_costs_x": false,
+            "energy_cost": 1,
+            "star_cost": 0,
+            "rules_text": "获得{Block:diff()}点格挡。",
+            "resolved_rules_text": "获得5点格挡。",
+            "dynamic_values": [
+              {
+                "name": "Block",
+                "base_value": 5,
+                "current_value": 5,
+                "enchanted_value": 5,
+                "is_modified": false,
+                "was_just_upgraded": false
+              }
+            ],
+            "playable": false,
+            "can_play_result": false,
+            "unplayable_reason": "not_enough_energy",
+            "unplayable_reason_raw": "EnergyCostTooHigh",
+            "unplayable_preventer_id": null,
+            "unplayable_preventer_type": null
+          }
+        ],
+        "powers": [],
+        "potions": [
+          {
+            "index": 0,
+            "potion_id": "STABLE_SERUM",
+            "name": "稳定血清",
+            "description": "[gold]保留[/gold]你的[gold]手牌[/gold][blue]{Repeat}[/blue]回合。",
+            "rarity": "Uncommon",
+            "occupied": true,
+            "usage": "CombatOnly",
+            "target_type": "AnyPlayer",
+            "is_queued": false,
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "can_use": true,
+            "can_discard": true
+          },
+          {
+            "index": 1,
+            "potion_id": null,
+            "name": null,
+            "description": null,
+            "rarity": null,
+            "occupied": false,
+            "usage": null,
+            "target_type": null,
+            "is_queued": false,
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "can_use": false,
+            "can_discard": false
+          }
+        ],
+        "enemies": [
+          {
+            "enemy_id": "CORPSE_SLUG",
+            "current_hp": 19,
+            "max_hp": 28,
+            "move_id": "WHIP_SLAP_MOVE",
+            "intents": [
+              {
+                "index": 0,
+                "intent_type": "Attack",
+                "label": "2[font_size=18]×2[/font_size]",
+                "damage": 2,
+                "hits": 2,
+                "total_damage": 4,
+                "status_card_count": null
+              }
+            ],
+            "powers": [
+              {
+                "index": 0,
+                "power_id": "RAVENOUS_POWER",
+                "name": "饥饿",
+                "amount": 5,
+                "is_debuff": false
+              },
+              {
+                "index": 1,
+                "power_id": "WEAK_POWER",
+                "name": "虚弱",
+                "amount": 1,
+                "is_debuff": true
+              }
+            ]
+          },
+          {
+            "enemy_id": "CORPSE_SLUG",
+            "current_hp": 29,
+            "max_hp": 29,
+            "move_id": "GLOMP_MOVE",
+            "intents": [
+              {
+                "index": 0,
+                "intent_type": "Attack",
+                "label": "9",
+                "damage": 9,
+                "hits": 1,
+                "total_damage": 9,
+                "status_card_count": null
+              }
+            ],
+            "powers": [
+              {
+                "index": 0,
+                "power_id": "RAVENOUS_POWER",
+                "name": "饥饿",
+                "amount": 5,
+                "is_debuff": false
+              }
+            ]
+          }
+        ]
+      },
+      "after": {
+        "line": 280233,
+        "run_id": "KEN58SH9SLZ6",
+        "floor": 4,
+        "turn": 1,
+        "hp": 53,
+        "block": 13,
+        "hand": [
+          {
+            "index": 0,
+            "card_id": "STRIKE_SILENT",
+            "name": "打击",
+            "upgraded": false,
+            "target_type": "AnyEnemy",
+            "requires_target": true,
+            "target_index_space": "enemies",
+            "valid_target_indices": [
+              0,
+              1
+            ],
+            "costs_x": false,
+            "star_costs_x": false,
+            "energy_cost": 1,
+            "star_cost": 0,
+            "rules_text": "造成{Damage:diff()}点伤害。",
+            "resolved_rules_text": "造成6点伤害。",
+            "dynamic_values": [
+              {
+                "name": "Damage",
+                "base_value": 6,
+                "current_value": 6,
+                "enchanted_value": 6,
+                "is_modified": false,
+                "was_just_upgraded": false
+              }
+            ],
+            "playable": false,
+            "can_play_result": false,
+            "unplayable_reason": "not_enough_energy",
+            "unplayable_reason_raw": "EnergyCostTooHigh",
+            "unplayable_preventer_id": null,
+            "unplayable_preventer_type": null
+          },
+          {
+            "index": 1,
+            "card_id": "DEFEND_SILENT",
+            "name": "防御",
+            "upgraded": false,
+            "target_type": "Self",
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "costs_x": false,
+            "star_costs_x": false,
+            "energy_cost": 1,
+            "star_cost": 0,
+            "rules_text": "获得{Block:diff()}点格挡。",
+            "resolved_rules_text": "获得5点格挡。",
+            "dynamic_values": [
+              {
+                "name": "Block",
+                "base_value": 5,
+                "current_value": 5,
+                "enchanted_value": 5,
+                "is_modified": false,
+                "was_just_upgraded": false
+              }
+            ],
+            "playable": false,
+            "can_play_result": false,
+            "unplayable_reason": "not_enough_energy",
+            "unplayable_reason_raw": "EnergyCostTooHigh",
+            "unplayable_preventer_id": null,
+            "unplayable_preventer_type": null
+          }
+        ],
+        "powers": [
+          {
+            "index": 0,
+            "power_id": "RETAIN_HAND_POWER",
+            "name": "保留手牌",
+            "amount": 2,
+            "is_debuff": false
+          }
+        ],
+        "potions": [
+          {
+            "index": 0,
+            "potion_id": null,
+            "name": null,
+            "description": null,
+            "rarity": null,
+            "occupied": false,
+            "usage": null,
+            "target_type": null,
+            "is_queued": false,
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "can_use": false,
+            "can_discard": false
+          },
+          {
+            "index": 1,
+            "potion_id": null,
+            "name": null,
+            "description": null,
+            "rarity": null,
+            "occupied": false,
+            "usage": null,
+            "target_type": null,
+            "is_queued": false,
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "can_use": false,
+            "can_discard": false
+          }
+        ],
+        "enemies": [
+          {
+            "enemy_id": "CORPSE_SLUG",
+            "current_hp": 19,
+            "max_hp": 28,
+            "move_id": "WHIP_SLAP_MOVE",
+            "intents": [
+              {
+                "index": 0,
+                "intent_type": "Attack",
+                "label": "2[font_size=18]×2[/font_size]",
+                "damage": 2,
+                "hits": 2,
+                "total_damage": 4,
+                "status_card_count": null
+              }
+            ],
+            "powers": [
+              {
+                "index": 0,
+                "power_id": "RAVENOUS_POWER",
+                "name": "饥饿",
+                "amount": 5,
+                "is_debuff": false
+              },
+              {
+                "index": 1,
+                "power_id": "WEAK_POWER",
+                "name": "虚弱",
+                "amount": 1,
+                "is_debuff": true
+              }
+            ]
+          },
+          {
+            "enemy_id": "CORPSE_SLUG",
+            "current_hp": 29,
+            "max_hp": 29,
+            "move_id": "GLOMP_MOVE",
+            "intents": [
+              {
+                "index": 0,
+                "intent_type": "Attack",
+                "label": "9",
+                "damage": 9,
+                "hits": 1,
+                "total_damage": 9,
+                "status_card_count": null
+              }
+            ],
+            "powers": [
+              {
+                "index": 0,
+                "power_id": "RAVENOUS_POWER",
+                "name": "饥饿",
+                "amount": 5,
+                "is_debuff": false
+              }
+            ]
+          }
+        ]
+      },
+      "potion": "STABLE_SERUM",
+      "limitation": "确认实际耗药，不将饮用后的整个回合伤挡净变化独归该瓶；无未饮用/留药整战对照。"
+    },
+    {
+      "decision_line": 274185,
+      "before": {
+        "line": 280262,
+        "run_id": "KEN58SH9SLZ6",
+        "floor": 5,
+        "turn": 2,
+        "hp": 49,
+        "block": 0,
+        "hand": [
+          {
+            "index": 0,
+            "card_id": "STRIKE_SILENT",
+            "name": "打击",
+            "upgraded": false,
+            "target_type": "AnyEnemy",
+            "requires_target": true,
+            "target_index_space": "enemies",
+            "valid_target_indices": [
+              0,
+              1
+            ],
+            "costs_x": false,
+            "star_costs_x": false,
+            "energy_cost": 1,
+            "star_cost": 0,
+            "rules_text": "造成{Damage:diff()}点伤害。",
+            "resolved_rules_text": "造成6点伤害。",
+            "dynamic_values": [
+              {
+                "name": "Damage",
+                "base_value": 6,
+                "current_value": 6,
+                "enchanted_value": 6,
+                "is_modified": false,
+                "was_just_upgraded": false
+              }
+            ],
+            "playable": true,
+            "can_play_result": true,
+            "unplayable_reason": null,
+            "unplayable_reason_raw": null,
+            "unplayable_preventer_id": null,
+            "unplayable_preventer_type": null
+          },
+          {
+            "index": 1,
+            "card_id": "STRIKE_SILENT",
+            "name": "打击",
+            "upgraded": false,
+            "target_type": "AnyEnemy",
+            "requires_target": true,
+            "target_index_space": "enemies",
+            "valid_target_indices": [
+              0,
+              1
+            ],
+            "costs_x": false,
+            "star_costs_x": false,
+            "energy_cost": 1,
+            "star_cost": 0,
+            "rules_text": "造成{Damage:diff()}点伤害。",
+            "resolved_rules_text": "造成6点伤害。",
+            "dynamic_values": [
+              {
+                "name": "Damage",
+                "base_value": 6,
+                "current_value": 6,
+                "enchanted_value": 6,
+                "is_modified": false,
+                "was_just_upgraded": false
+              }
+            ],
+            "playable": true,
+            "can_play_result": true,
+            "unplayable_reason": null,
+            "unplayable_reason_raw": null,
+            "unplayable_preventer_id": null,
+            "unplayable_preventer_type": null
+          },
+          {
+            "index": 2,
+            "card_id": "CLOAK_AND_DAGGER",
+            "name": "斗篷与匕首",
+            "upgraded": false,
+            "target_type": "Self",
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "costs_x": false,
+            "star_costs_x": false,
+            "energy_cost": 1,
+            "star_cost": 0,
+            "rules_text": "获得{Block:diff()}点格挡。 将{Cards:diff()}张小刀添加到你的手牌。",
+            "resolved_rules_text": "获得6点格挡。 将1张小刀添加到你的手牌。",
+            "dynamic_values": [
+              {
+                "name": "Block",
+                "base_value": 6,
+                "current_value": 6,
+                "enchanted_value": 6,
+                "is_modified": false,
+                "was_just_upgraded": false
+              },
+              {
+                "name": "Cards",
+                "base_value": 1,
+                "current_value": 1,
+                "enchanted_value": 1,
+                "is_modified": false,
+                "was_just_upgraded": false
+              }
+            ],
+            "playable": true,
+            "can_play_result": true,
+            "unplayable_reason": null,
+            "unplayable_reason_raw": null,
+            "unplayable_preventer_id": null,
+            "unplayable_preventer_type": null
+          },
+          {
+            "index": 3,
+            "card_id": "DEFEND_SILENT",
+            "name": "防御",
+            "upgraded": false,
+            "target_type": "Self",
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "costs_x": false,
+            "star_costs_x": false,
+            "energy_cost": 1,
+            "star_cost": 0,
+            "rules_text": "获得{Block:diff()}点格挡。",
+            "resolved_rules_text": "获得5点格挡。",
+            "dynamic_values": [
+              {
+                "name": "Block",
+                "base_value": 5,
+                "current_value": 5,
+                "enchanted_value": 5,
+                "is_modified": false,
+                "was_just_upgraded": false
+              }
+            ],
+            "playable": true,
+            "can_play_result": true,
+            "unplayable_reason": null,
+            "unplayable_reason_raw": null,
+            "unplayable_preventer_id": null,
+            "unplayable_preventer_type": null
+          }
+        ],
+        "powers": [],
+        "potions": [
+          {
+            "index": 0,
+            "potion_id": "SPEED_POTION",
+            "name": "速度药水",
+            "description": "获得[blue]{DexterityPower}[/blue]点[gold]敏捷[/gold]。在你的这个回合结束时，失去[blue]{DexterityPower}[/blue]点[gold]敏捷[/gold]。",
+            "rarity": "Common",
+            "occupied": true,
+            "usage": "CombatOnly",
+            "target_type": "AnyPlayer",
+            "is_queued": false,
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "can_use": true,
+            "can_discard": true
+          },
+          {
+            "index": 1,
+            "potion_id": null,
+            "name": null,
+            "description": null,
+            "rarity": null,
+            "occupied": false,
+            "usage": null,
+            "target_type": null,
+            "is_queued": false,
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "can_use": false,
+            "can_discard": false
+          }
+        ],
+        "enemies": [
+          {
+            "enemy_id": "CALCIFIED_CULTIST",
+            "current_hp": 28,
+            "max_hp": 42,
+            "move_id": "DARK_STRIKE_MOVE",
+            "intents": [
+              {
+                "index": 0,
+                "intent_type": "Attack",
+                "label": "8",
+                "damage": 8,
+                "hits": 1,
+                "total_damage": 8,
+                "status_card_count": null
+              }
+            ],
+            "powers": [
+              {
+                "index": 0,
+                "power_id": "RITUAL_POWER",
+                "name": "仪式",
+                "amount": 2,
+                "is_debuff": false
+              },
+              {
+                "index": 1,
+                "power_id": "POISON_POWER",
+                "name": "中毒",
+                "amount": 4,
+                "is_debuff": true
+              },
+              {
+                "index": 2,
+                "power_id": "WEAK_POWER",
+                "name": "虚弱",
+                "amount": 1,
+                "is_debuff": true
+              }
+            ]
+          },
+          {
+            "enemy_id": "SEAPUNK",
+            "current_hp": 38,
+            "max_hp": 49,
+            "move_id": "SPINNING_KICK_MOVE",
+            "intents": [
+              {
+                "index": 0,
+                "intent_type": "Attack",
+                "label": "1[font_size=18]×4[/font_size]",
+                "damage": 1,
+                "hits": 4,
+                "total_damage": 4,
+                "status_card_count": null
+              }
+            ],
+            "powers": [
+              {
+                "index": 0,
+                "power_id": "POISON_POWER",
+                "name": "中毒",
+                "amount": 4,
+                "is_debuff": true
+              },
+              {
+                "index": 1,
+                "power_id": "WEAK_POWER",
+                "name": "虚弱",
+                "amount": 1,
+                "is_debuff": true
+              }
+            ]
+          }
+        ]
+      },
+      "after": {
+        "line": 280263,
+        "run_id": "KEN58SH9SLZ6",
+        "floor": 5,
+        "turn": 2,
+        "hp": 49,
+        "block": 0,
+        "hand": [
+          {
+            "index": 0,
+            "card_id": "STRIKE_SILENT",
+            "name": "打击",
+            "upgraded": false,
+            "target_type": "AnyEnemy",
+            "requires_target": true,
+            "target_index_space": "enemies",
+            "valid_target_indices": [
+              0,
+              1
+            ],
+            "costs_x": false,
+            "star_costs_x": false,
+            "energy_cost": 1,
+            "star_cost": 0,
+            "rules_text": "造成{Damage:diff()}点伤害。",
+            "resolved_rules_text": "造成6点伤害。",
+            "dynamic_values": [
+              {
+                "name": "Damage",
+                "base_value": 6,
+                "current_value": 6,
+                "enchanted_value": 6,
+                "is_modified": false,
+                "was_just_upgraded": false
+              }
+            ],
+            "playable": true,
+            "can_play_result": true,
+            "unplayable_reason": null,
+            "unplayable_reason_raw": null,
+            "unplayable_preventer_id": null,
+            "unplayable_preventer_type": null
+          },
+          {
+            "index": 1,
+            "card_id": "STRIKE_SILENT",
+            "name": "打击",
+            "upgraded": false,
+            "target_type": "AnyEnemy",
+            "requires_target": true,
+            "target_index_space": "enemies",
+            "valid_target_indices": [
+              0,
+              1
+            ],
+            "costs_x": false,
+            "star_costs_x": false,
+            "energy_cost": 1,
+            "star_cost": 0,
+            "rules_text": "造成{Damage:diff()}点伤害。",
+            "resolved_rules_text": "造成6点伤害。",
+            "dynamic_values": [
+              {
+                "name": "Damage",
+                "base_value": 6,
+                "current_value": 6,
+                "enchanted_value": 6,
+                "is_modified": false,
+                "was_just_upgraded": false
+              }
+            ],
+            "playable": true,
+            "can_play_result": true,
+            "unplayable_reason": null,
+            "unplayable_reason_raw": null,
+            "unplayable_preventer_id": null,
+            "unplayable_preventer_type": null
+          },
+          {
+            "index": 2,
+            "card_id": "CLOAK_AND_DAGGER",
+            "name": "斗篷与匕首",
+            "upgraded": false,
+            "target_type": "Self",
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "costs_x": false,
+            "star_costs_x": false,
+            "energy_cost": 1,
+            "star_cost": 0,
+            "rules_text": "获得{Block:diff()}点格挡。 将{Cards:diff()}张小刀添加到你的手牌。",
+            "resolved_rules_text": "获得11点格挡。 将1张小刀添加到你的手牌。",
+            "dynamic_values": [
+              {
+                "name": "Block",
+                "base_value": 6,
+                "current_value": 11,
+                "enchanted_value": 6,
+                "is_modified": true,
+                "was_just_upgraded": false
+              },
+              {
+                "name": "Cards",
+                "base_value": 1,
+                "current_value": 1,
+                "enchanted_value": 1,
+                "is_modified": false,
+                "was_just_upgraded": false
+              }
+            ],
+            "playable": true,
+            "can_play_result": true,
+            "unplayable_reason": null,
+            "unplayable_reason_raw": null,
+            "unplayable_preventer_id": null,
+            "unplayable_preventer_type": null
+          },
+          {
+            "index": 3,
+            "card_id": "DEFEND_SILENT",
+            "name": "防御",
+            "upgraded": false,
+            "target_type": "Self",
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "costs_x": false,
+            "star_costs_x": false,
+            "energy_cost": 1,
+            "star_cost": 0,
+            "rules_text": "获得{Block:diff()}点格挡。",
+            "resolved_rules_text": "获得10点格挡。",
+            "dynamic_values": [
+              {
+                "name": "Block",
+                "base_value": 5,
+                "current_value": 10,
+                "enchanted_value": 5,
+                "is_modified": true,
+                "was_just_upgraded": false
+              }
+            ],
+            "playable": true,
+            "can_play_result": true,
+            "unplayable_reason": null,
+            "unplayable_reason_raw": null,
+            "unplayable_preventer_id": null,
+            "unplayable_preventer_type": null
+          }
+        ],
+        "powers": [
+          {
+            "index": 0,
+            "power_id": "DEXTERITY_POWER",
+            "name": "敏捷",
+            "amount": 5,
+            "is_debuff": false
+          },
+          {
+            "index": 1,
+            "power_id": "SPEED_POTION_POWER",
+            "name": "速度药水",
+            "amount": 5,
+            "is_debuff": false
+          }
+        ],
+        "potions": [
+          {
+            "index": 0,
+            "potion_id": null,
+            "name": null,
+            "description": null,
+            "rarity": null,
+            "occupied": false,
+            "usage": null,
+            "target_type": null,
+            "is_queued": false,
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "can_use": false,
+            "can_discard": false
+          },
+          {
+            "index": 1,
+            "potion_id": null,
+            "name": null,
+            "description": null,
+            "rarity": null,
+            "occupied": false,
+            "usage": null,
+            "target_type": null,
+            "is_queued": false,
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "can_use": false,
+            "can_discard": false
+          }
+        ],
+        "enemies": [
+          {
+            "enemy_id": "CALCIFIED_CULTIST",
+            "current_hp": 28,
+            "max_hp": 42,
+            "move_id": "DARK_STRIKE_MOVE",
+            "intents": [
+              {
+                "index": 0,
+                "intent_type": "Attack",
+                "label": "8",
+                "damage": 8,
+                "hits": 1,
+                "total_damage": 8,
+                "status_card_count": null
+              }
+            ],
+            "powers": [
+              {
+                "index": 0,
+                "power_id": "RITUAL_POWER",
+                "name": "仪式",
+                "amount": 2,
+                "is_debuff": false
+              },
+              {
+                "index": 1,
+                "power_id": "POISON_POWER",
+                "name": "中毒",
+                "amount": 4,
+                "is_debuff": true
+              },
+              {
+                "index": 2,
+                "power_id": "WEAK_POWER",
+                "name": "虚弱",
+                "amount": 1,
+                "is_debuff": true
+              }
+            ]
+          },
+          {
+            "enemy_id": "SEAPUNK",
+            "current_hp": 38,
+            "max_hp": 49,
+            "move_id": "SPINNING_KICK_MOVE",
+            "intents": [
+              {
+                "index": 0,
+                "intent_type": "Attack",
+                "label": "1[font_size=18]×4[/font_size]",
+                "damage": 1,
+                "hits": 4,
+                "total_damage": 4,
+                "status_card_count": null
+              }
+            ],
+            "powers": [
+              {
+                "index": 0,
+                "power_id": "POISON_POWER",
+                "name": "中毒",
+                "amount": 4,
+                "is_debuff": true
+              },
+              {
+                "index": 1,
+                "power_id": "WEAK_POWER",
+                "name": "虚弱",
+                "amount": 1,
+                "is_debuff": true
+              }
+            ]
+          }
+        ]
+      },
+      "potion": "SPEED_POTION",
+      "limitation": "确认实际耗药，不将饮用后的整个回合伤挡净变化独归该瓶；无未饮用/留药整战对照。"
+    },
+    {
+      "decision_line": 274235,
+      "before": {
+        "line": 280313,
+        "run_id": "KEN58SH9SLZ6",
+        "floor": 11,
+        "turn": 1,
+        "hp": 32,
+        "block": 13,
+        "hand": [
+          {
+            "index": 0,
+            "card_id": "DEFEND_SILENT",
+            "name": "防御",
+            "upgraded": false,
+            "target_type": "Self",
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "costs_x": false,
+            "star_costs_x": false,
+            "energy_cost": 1,
+            "star_cost": 0,
+            "rules_text": "获得{Block:diff()}点格挡。",
+            "resolved_rules_text": "获得5点格挡。",
+            "dynamic_values": [
+              {
+                "name": "Block",
+                "base_value": 5,
+                "current_value": 5,
+                "enchanted_value": 5,
+                "is_modified": false,
+                "was_just_upgraded": false
+              }
+            ],
+            "playable": false,
+            "can_play_result": false,
+            "unplayable_reason": "not_enough_energy",
+            "unplayable_reason_raw": "EnergyCostTooHigh",
+            "unplayable_preventer_id": null,
+            "unplayable_preventer_type": null
+          },
+          {
+            "index": 1,
+            "card_id": "DEFEND_SILENT",
+            "name": "防御",
+            "upgraded": false,
+            "target_type": "Self",
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "costs_x": false,
+            "star_costs_x": false,
+            "energy_cost": 1,
+            "star_cost": 0,
+            "rules_text": "获得{Block:diff()}点格挡。",
+            "resolved_rules_text": "获得5点格挡。",
+            "dynamic_values": [
+              {
+                "name": "Block",
+                "base_value": 5,
+                "current_value": 5,
+                "enchanted_value": 5,
+                "is_modified": false,
+                "was_just_upgraded": false
+              }
+            ],
+            "playable": false,
+            "can_play_result": false,
+            "unplayable_reason": "not_enough_energy",
+            "unplayable_reason_raw": "EnergyCostTooHigh",
+            "unplayable_preventer_id": null,
+            "unplayable_preventer_type": null
+          },
+          {
+            "index": 2,
+            "card_id": "DEFEND_SILENT",
+            "name": "防御",
+            "upgraded": false,
+            "target_type": "Self",
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "costs_x": false,
+            "star_costs_x": false,
+            "energy_cost": 1,
+            "star_cost": 0,
+            "rules_text": "获得{Block:diff()}点格挡。",
+            "resolved_rules_text": "获得5点格挡。",
+            "dynamic_values": [
+              {
+                "name": "Block",
+                "base_value": 5,
+                "current_value": 5,
+                "enchanted_value": 5,
+                "is_modified": false,
+                "was_just_upgraded": false
+              }
+            ],
+            "playable": false,
+            "can_play_result": false,
+            "unplayable_reason": "not_enough_energy",
+            "unplayable_reason_raw": "EnergyCostTooHigh",
+            "unplayable_preventer_id": null,
+            "unplayable_preventer_type": null
+          }
+        ],
+        "powers": [],
+        "potions": [
+          {
+            "index": 0,
+            "potion_id": "ATTACK_POTION",
+            "name": "攻击药水",
+            "description": "从[blue]3[/blue]张随机攻击牌中选择[blue]1[/blue]张加入你的[gold]手牌[/gold]。这张牌在本回合可以免费打出。",
+            "rarity": "Common",
+            "occupied": true,
+            "usage": "CombatOnly",
+            "target_type": "AnyPlayer",
+            "is_queued": false,
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "can_use": true,
+            "can_discard": true
+          },
+          {
+            "index": 1,
+            "potion_id": "WEAK_POTION",
+            "name": "虚弱药水",
+            "description": "给予[blue]{WeakPower}[/blue]层[gold]虚弱[/gold]。",
+            "rarity": "Common",
+            "occupied": true,
+            "usage": "CombatOnly",
+            "target_type": "AnyEnemy",
+            "is_queued": false,
+            "requires_target": true,
+            "target_index_space": "enemies",
+            "valid_target_indices": [
+              0
+            ],
+            "can_use": true,
+            "can_discard": true
+          }
+        ],
+        "enemies": [
+          {
+            "enemy_id": "GREMLIN_MERC",
+            "current_hp": 44,
+            "max_hp": 52,
+            "move_id": "GIMME_MOVE",
+            "intents": [
+              {
+                "index": 0,
+                "intent_type": "Attack",
+                "label": "6[font_size=18]×2[/font_size]",
+                "damage": 6,
+                "hits": 2,
+                "total_damage": 12,
+                "status_card_count": null
+              }
+            ],
+            "powers": [
+              {
+                "index": 0,
+                "power_id": "SURPRISE_POWER",
+                "name": "意外",
+                "amount": 1,
+                "is_debuff": false
+              },
+              {
+                "index": 1,
+                "power_id": "THIEVERY_POWER",
+                "name": "偷窃",
+                "amount": 20,
+                "is_debuff": false
+              },
+              {
+                "index": 2,
+                "power_id": "WEAK_POWER",
+                "name": "虚弱",
+                "amount": 1,
+                "is_debuff": true
+              }
+            ]
+          }
+        ]
+      },
+      "after": {
+        "line": 280314,
+        "run_id": "KEN58SH9SLZ6",
+        "floor": 11,
+        "turn": 1,
+        "hp": 32,
+        "block": 13,
+        "hand": [
+          {
+            "index": 0,
+            "card_id": "DEFEND_SILENT",
+            "name": "防御",
+            "upgraded": false,
+            "target_type": "Self",
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "costs_x": false,
+            "star_costs_x": false,
+            "energy_cost": 1,
+            "star_cost": 0,
+            "rules_text": "获得{Block:diff()}点格挡。",
+            "resolved_rules_text": "获得5点格挡。",
+            "dynamic_values": [
+              {
+                "name": "Block",
+                "base_value": 5,
+                "current_value": 5,
+                "enchanted_value": 5,
+                "is_modified": false,
+                "was_just_upgraded": false
+              }
+            ],
+            "playable": false,
+            "can_play_result": false,
+            "unplayable_reason": "not_enough_energy",
+            "unplayable_reason_raw": "EnergyCostTooHigh",
+            "unplayable_preventer_id": null,
+            "unplayable_preventer_type": null
+          },
+          {
+            "index": 1,
+            "card_id": "DEFEND_SILENT",
+            "name": "防御",
+            "upgraded": false,
+            "target_type": "Self",
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "costs_x": false,
+            "star_costs_x": false,
+            "energy_cost": 1,
+            "star_cost": 0,
+            "rules_text": "获得{Block:diff()}点格挡。",
+            "resolved_rules_text": "获得5点格挡。",
+            "dynamic_values": [
+              {
+                "name": "Block",
+                "base_value": 5,
+                "current_value": 5,
+                "enchanted_value": 5,
+                "is_modified": false,
+                "was_just_upgraded": false
+              }
+            ],
+            "playable": false,
+            "can_play_result": false,
+            "unplayable_reason": "not_enough_energy",
+            "unplayable_reason_raw": "EnergyCostTooHigh",
+            "unplayable_preventer_id": null,
+            "unplayable_preventer_type": null
+          },
+          {
+            "index": 2,
+            "card_id": "DEFEND_SILENT",
+            "name": "防御",
+            "upgraded": false,
+            "target_type": "Self",
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "costs_x": false,
+            "star_costs_x": false,
+            "energy_cost": 1,
+            "star_cost": 0,
+            "rules_text": "获得{Block:diff()}点格挡。",
+            "resolved_rules_text": "获得5点格挡。",
+            "dynamic_values": [
+              {
+                "name": "Block",
+                "base_value": 5,
+                "current_value": 5,
+                "enchanted_value": 5,
+                "is_modified": false,
+                "was_just_upgraded": false
+              }
+            ],
+            "playable": false,
+            "can_play_result": false,
+            "unplayable_reason": "not_enough_energy",
+            "unplayable_reason_raw": "EnergyCostTooHigh",
+            "unplayable_preventer_id": null,
+            "unplayable_preventer_type": null
+          }
+        ],
+        "powers": [],
+        "potions": [
+          {
+            "index": 0,
+            "potion_id": "ATTACK_POTION",
+            "name": "攻击药水",
+            "description": "从[blue]3[/blue]张随机攻击牌中选择[blue]1[/blue]张加入你的[gold]手牌[/gold]。这张牌在本回合可以免费打出。",
+            "rarity": "Common",
+            "occupied": true,
+            "usage": "CombatOnly",
+            "target_type": "AnyPlayer",
+            "is_queued": false,
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "can_use": true,
+            "can_discard": true
+          },
+          {
+            "index": 1,
+            "potion_id": null,
+            "name": null,
+            "description": null,
+            "rarity": null,
+            "occupied": false,
+            "usage": null,
+            "target_type": null,
+            "is_queued": false,
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "can_use": false,
+            "can_discard": false
+          }
+        ],
+        "enemies": [
+          {
+            "enemy_id": "GREMLIN_MERC",
+            "current_hp": 44,
+            "max_hp": 52,
+            "move_id": "GIMME_MOVE",
+            "intents": [
+              {
+                "index": 0,
+                "intent_type": "Attack",
+                "label": "6[font_size=18]×2[/font_size]",
+                "damage": 6,
+                "hits": 2,
+                "total_damage": 12,
+                "status_card_count": null
+              }
+            ],
+            "powers": [
+              {
+                "index": 0,
+                "power_id": "SURPRISE_POWER",
+                "name": "意外",
+                "amount": 1,
+                "is_debuff": false
+              },
+              {
+                "index": 1,
+                "power_id": "THIEVERY_POWER",
+                "name": "偷窃",
+                "amount": 20,
+                "is_debuff": false
+              },
+              {
+                "index": 2,
+                "power_id": "WEAK_POWER",
+                "name": "虚弱",
+                "amount": 4,
+                "is_debuff": true
+              }
+            ]
+          }
+        ]
+      },
+      "potion": "WEAK_POTION",
+      "limitation": "确认实际耗药，不将饮用后的整个回合伤挡净变化独归该瓶；无未饮用/留药整战对照。"
+    },
+    {
+      "decision_line": 274237,
+      "before": {
+        "line": 280315,
+        "run_id": "KEN58SH9SLZ6",
+        "floor": 11,
+        "turn": 2,
+        "hp": 32,
+        "block": 0,
+        "hand": [
+          {
+            "index": 0,
+            "card_id": "FOOTWORK",
+            "name": "灵动步法",
+            "upgraded": false,
+            "target_type": "Self",
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "costs_x": false,
+            "star_costs_x": false,
+            "energy_cost": 1,
+            "star_cost": 0,
+            "rules_text": "获得{DexterityPower:diff()}点敏捷。",
+            "resolved_rules_text": "获得2点敏捷。",
+            "dynamic_values": [
+              {
+                "name": "DexterityPower",
+                "base_value": 2,
+                "current_value": 2,
+                "enchanted_value": 2,
+                "is_modified": false,
+                "was_just_upgraded": false
+              }
+            ],
+            "playable": true,
+            "can_play_result": true,
+            "unplayable_reason": null,
+            "unplayable_reason_raw": null,
+            "unplayable_preventer_id": null,
+            "unplayable_preventer_type": null
+          },
+          {
+            "index": 1,
+            "card_id": "DAGGER_SPRAY",
+            "name": "匕首雨",
+            "upgraded": false,
+            "target_type": "AllEnemies",
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "costs_x": false,
+            "star_costs_x": false,
+            "energy_cost": 1,
+            "star_cost": 0,
+            "rules_text": "对所有敌人造成{Damage:diff()}点伤害两次。",
+            "resolved_rules_text": "对所有敌人造成4点伤害两次。",
+            "dynamic_values": [
+              {
+                "name": "Damage",
+                "base_value": 4,
+                "current_value": 4,
+                "enchanted_value": 4,
+                "is_modified": false,
+                "was_just_upgraded": false
+              }
+            ],
+            "playable": true,
+            "can_play_result": true,
+            "unplayable_reason": null,
+            "unplayable_reason_raw": null,
+            "unplayable_preventer_id": null,
+            "unplayable_preventer_type": null
+          },
+          {
+            "index": 2,
+            "card_id": "ASCENDERS_BANE",
+            "name": "进阶之灾",
+            "upgraded": false,
+            "target_type": "None",
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "costs_x": false,
+            "star_costs_x": false,
+            "energy_cost": -1,
+            "star_cost": 0,
+            "rules_text": "",
+            "resolved_rules_text": "不能被打出。 虚无。 永恒。",
+            "dynamic_values": [],
+            "playable": false,
+            "can_play_result": false,
+            "unplayable_reason": "unplayable",
+            "unplayable_reason_raw": "HasUnplayableKeyword",
+            "unplayable_preventer_id": null,
+            "unplayable_preventer_type": null
+          },
+          {
+            "index": 3,
+            "card_id": "STRIKE_SILENT",
+            "name": "打击",
+            "upgraded": false,
+            "target_type": "AnyEnemy",
+            "requires_target": true,
+            "target_index_space": "enemies",
+            "valid_target_indices": [
+              0
+            ],
+            "costs_x": false,
+            "star_costs_x": false,
+            "energy_cost": 1,
+            "star_cost": 0,
+            "rules_text": "造成{Damage:diff()}点伤害。",
+            "resolved_rules_text": "造成6点伤害。",
+            "dynamic_values": [
+              {
+                "name": "Damage",
+                "base_value": 6,
+                "current_value": 6,
+                "enchanted_value": 6,
+                "is_modified": false,
+                "was_just_upgraded": false
+              }
+            ],
+            "playable": true,
+            "can_play_result": true,
+            "unplayable_reason": null,
+            "unplayable_reason_raw": null,
+            "unplayable_preventer_id": null,
+            "unplayable_preventer_type": null
+          },
+          {
+            "index": 4,
+            "card_id": "PREDATOR",
+            "name": "猎杀者",
+            "upgraded": false,
+            "target_type": "AnyEnemy",
+            "requires_target": true,
+            "target_index_space": "enemies",
+            "valid_target_indices": [
+              0
+            ],
+            "costs_x": false,
+            "star_costs_x": false,
+            "energy_cost": 2,
+            "star_cost": 0,
+            "rules_text": "造成{Damage:diff()}点伤害。 在下个回合抽2张牌。",
+            "resolved_rules_text": "造成15点伤害。 在下个回合抽2张牌。",
+            "dynamic_values": [
+              {
+                "name": "Damage",
+                "base_value": 15,
+                "current_value": 15,
+                "enchanted_value": 15,
+                "is_modified": false,
+                "was_just_upgraded": false
+              }
+            ],
+            "playable": true,
+            "can_play_result": true,
+            "unplayable_reason": null,
+            "unplayable_reason_raw": null,
+            "unplayable_preventer_id": null,
+            "unplayable_preventer_type": null
+          }
+        ],
+        "powers": [],
+        "potions": [
+          {
+            "index": 0,
+            "potion_id": "ATTACK_POTION",
+            "name": "攻击药水",
+            "description": "从[blue]3[/blue]张随机攻击牌中选择[blue]1[/blue]张加入你的[gold]手牌[/gold]。这张牌在本回合可以免费打出。",
+            "rarity": "Common",
+            "occupied": true,
+            "usage": "CombatOnly",
+            "target_type": "AnyPlayer",
+            "is_queued": false,
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "can_use": true,
+            "can_discard": true
+          },
+          {
+            "index": 1,
+            "potion_id": null,
+            "name": null,
+            "description": null,
+            "rarity": null,
+            "occupied": false,
+            "usage": null,
+            "target_type": null,
+            "is_queued": false,
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "can_use": false,
+            "can_discard": false
+          }
+        ],
+        "enemies": [
+          {
+            "enemy_id": "GREMLIN_MERC",
+            "current_hp": 44,
+            "max_hp": 52,
+            "move_id": "DOUBLE_SMASH_MOVE",
+            "intents": [
+              {
+                "index": 0,
+                "intent_type": "Attack",
+                "label": "5[font_size=18]×2[/font_size]",
+                "damage": 5,
+                "hits": 2,
+                "total_damage": 10,
+                "status_card_count": null
+              },
+              {
+                "index": 1,
+                "intent_type": "Debuff",
+                "label": null,
+                "damage": null,
+                "hits": null,
+                "total_damage": null,
+                "status_card_count": null
+              }
+            ],
+            "powers": [
+              {
+                "index": 0,
+                "power_id": "SURPRISE_POWER",
+                "name": "意外",
+                "amount": 1,
+                "is_debuff": false
+              },
+              {
+                "index": 1,
+                "power_id": "THIEVERY_POWER",
+                "name": "偷窃",
+                "amount": 20,
+                "is_debuff": false
+              },
+              {
+                "index": 2,
+                "power_id": "WEAK_POWER",
+                "name": "虚弱",
+                "amount": 3,
+                "is_debuff": true
+              }
+            ]
+          }
+        ]
+      },
+      "after": {
+        "line": 280316,
+        "run_id": "KEN58SH9SLZ6",
+        "floor": 11,
+        "turn": 2,
+        "hp": 32,
+        "block": 0,
+        "hand": [
+          {
+            "index": 0,
+            "card_id": "FOOTWORK",
+            "name": "灵动步法",
+            "upgraded": false,
+            "target_type": "Self",
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "costs_x": false,
+            "star_costs_x": false,
+            "energy_cost": 1,
+            "star_cost": 0,
+            "rules_text": "获得{DexterityPower:diff()}点敏捷。",
+            "resolved_rules_text": "获得2点敏捷。",
+            "dynamic_values": [
+              {
+                "name": "DexterityPower",
+                "base_value": 2,
+                "current_value": 2,
+                "enchanted_value": 2,
+                "is_modified": false,
+                "was_just_upgraded": false
+              }
+            ],
+            "playable": true,
+            "can_play_result": true,
+            "unplayable_reason": null,
+            "unplayable_reason_raw": null,
+            "unplayable_preventer_id": null,
+            "unplayable_preventer_type": null
+          },
+          {
+            "index": 1,
+            "card_id": "DAGGER_SPRAY",
+            "name": "匕首雨",
+            "upgraded": false,
+            "target_type": "AllEnemies",
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "costs_x": false,
+            "star_costs_x": false,
+            "energy_cost": 1,
+            "star_cost": 0,
+            "rules_text": "对所有敌人造成{Damage:diff()}点伤害两次。",
+            "resolved_rules_text": "对所有敌人造成4点伤害两次。",
+            "dynamic_values": [
+              {
+                "name": "Damage",
+                "base_value": 4,
+                "current_value": 4,
+                "enchanted_value": 4,
+                "is_modified": false,
+                "was_just_upgraded": false
+              }
+            ],
+            "playable": true,
+            "can_play_result": true,
+            "unplayable_reason": null,
+            "unplayable_reason_raw": null,
+            "unplayable_preventer_id": null,
+            "unplayable_preventer_type": null
+          },
+          {
+            "index": 2,
+            "card_id": "ASCENDERS_BANE",
+            "name": "进阶之灾",
+            "upgraded": false,
+            "target_type": "None",
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "costs_x": false,
+            "star_costs_x": false,
+            "energy_cost": -1,
+            "star_cost": 0,
+            "rules_text": "",
+            "resolved_rules_text": "不能被打出。 虚无。 永恒。",
+            "dynamic_values": [],
+            "playable": false,
+            "can_play_result": false,
+            "unplayable_reason": "unplayable",
+            "unplayable_reason_raw": "HasUnplayableKeyword",
+            "unplayable_preventer_id": null,
+            "unplayable_preventer_type": null
+          },
+          {
+            "index": 3,
+            "card_id": "STRIKE_SILENT",
+            "name": "打击",
+            "upgraded": false,
+            "target_type": "AnyEnemy",
+            "requires_target": true,
+            "target_index_space": "enemies",
+            "valid_target_indices": [
+              0
+            ],
+            "costs_x": false,
+            "star_costs_x": false,
+            "energy_cost": 1,
+            "star_cost": 0,
+            "rules_text": "造成{Damage:diff()}点伤害。",
+            "resolved_rules_text": "造成6点伤害。",
+            "dynamic_values": [
+              {
+                "name": "Damage",
+                "base_value": 6,
+                "current_value": 6,
+                "enchanted_value": 6,
+                "is_modified": false,
+                "was_just_upgraded": false
+              }
+            ],
+            "playable": true,
+            "can_play_result": true,
+            "unplayable_reason": null,
+            "unplayable_reason_raw": null,
+            "unplayable_preventer_id": null,
+            "unplayable_preventer_type": null
+          },
+          {
+            "index": 4,
+            "card_id": "PREDATOR",
+            "name": "猎杀者",
+            "upgraded": false,
+            "target_type": "AnyEnemy",
+            "requires_target": true,
+            "target_index_space": "enemies",
+            "valid_target_indices": [
+              0
+            ],
+            "costs_x": false,
+            "star_costs_x": false,
+            "energy_cost": 2,
+            "star_cost": 0,
+            "rules_text": "造成{Damage:diff()}点伤害。 在下个回合抽2张牌。",
+            "resolved_rules_text": "造成15点伤害。 在下个回合抽2张牌。",
+            "dynamic_values": [
+              {
+                "name": "Damage",
+                "base_value": 15,
+                "current_value": 15,
+                "enchanted_value": 15,
+                "is_modified": false,
+                "was_just_upgraded": false
+              }
+            ],
+            "playable": true,
+            "can_play_result": true,
+            "unplayable_reason": null,
+            "unplayable_reason_raw": null,
+            "unplayable_preventer_id": null,
+            "unplayable_preventer_type": null
+          }
+        ],
+        "powers": [],
+        "potions": [
+          {
+            "index": 0,
+            "potion_id": null,
+            "name": null,
+            "description": null,
+            "rarity": null,
+            "occupied": false,
+            "usage": null,
+            "target_type": null,
+            "is_queued": false,
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "can_use": false,
+            "can_discard": false
+          },
+          {
+            "index": 1,
+            "potion_id": null,
+            "name": null,
+            "description": null,
+            "rarity": null,
+            "occupied": false,
+            "usage": null,
+            "target_type": null,
+            "is_queued": false,
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "can_use": false,
+            "can_discard": false
+          }
+        ],
+        "enemies": [
+          {
+            "enemy_id": "GREMLIN_MERC",
+            "current_hp": 44,
+            "max_hp": 52,
+            "move_id": "DOUBLE_SMASH_MOVE",
+            "intents": [
+              {
+                "index": 0,
+                "intent_type": "Attack",
+                "label": "5[font_size=18]×2[/font_size]",
+                "damage": 5,
+                "hits": 2,
+                "total_damage": 10,
+                "status_card_count": null
+              },
+              {
+                "index": 1,
+                "intent_type": "Debuff",
+                "label": null,
+                "damage": null,
+                "hits": null,
+                "total_damage": null,
+                "status_card_count": null
+              }
+            ],
+            "powers": [
+              {
+                "index": 0,
+                "power_id": "SURPRISE_POWER",
+                "name": "意外",
+                "amount": 1,
+                "is_debuff": false
+              },
+              {
+                "index": 1,
+                "power_id": "THIEVERY_POWER",
+                "name": "偷窃",
+                "amount": 20,
+                "is_debuff": false
+              },
+              {
+                "index": 2,
+                "power_id": "WEAK_POWER",
+                "name": "虚弱",
+                "amount": 3,
+                "is_debuff": true
+              }
+            ]
+          }
+        ]
+      },
+      "potion": "ATTACK_POTION",
+      "limitation": "确认实际耗药，不将饮用后的整个回合伤挡净变化独归该瓶；无未饮用/留药整战对照。"
+    },
+    {
+      "decision_line": 274267,
+      "before": {
+        "line": 280348,
+        "run_id": "KEN58SH9SLZ6",
+        "floor": 15,
+        "turn": 1,
+        "hp": 46,
+        "block": 0,
+        "hand": [
+          {
+            "index": 0,
+            "card_id": "SUCKER_PUNCH",
+            "name": "突然一拳",
+            "upgraded": false,
+            "target_type": "AnyEnemy",
+            "requires_target": true,
+            "target_index_space": "enemies",
+            "valid_target_indices": [
+              0
+            ],
+            "costs_x": false,
+            "star_costs_x": false,
+            "energy_cost": 1,
+            "star_cost": 0,
+            "rules_text": "造成{Damage:diff()}点伤害。 给予{WeakPower:diff()}层虚弱。",
+            "resolved_rules_text": "造成8点伤害。 给予1层虚弱。",
+            "dynamic_values": [
+              {
+                "name": "Damage",
+                "base_value": 8,
+                "current_value": 8,
+                "enchanted_value": 8,
+                "is_modified": false,
+                "was_just_upgraded": false
+              },
+              {
+                "name": "WeakPower",
+                "base_value": 1,
+                "current_value": 1,
+                "enchanted_value": 1,
+                "is_modified": false,
+                "was_just_upgraded": false
+              }
+            ],
+            "playable": true,
+            "can_play_result": true,
+            "unplayable_reason": null,
+            "unplayable_reason_raw": null,
+            "unplayable_preventer_id": null,
+            "unplayable_preventer_type": null
+          },
+          {
+            "index": 1,
+            "card_id": "DEFEND_SILENT",
+            "name": "防御",
+            "upgraded": false,
+            "target_type": "Self",
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "costs_x": false,
+            "star_costs_x": false,
+            "energy_cost": 1,
+            "star_cost": 0,
+            "rules_text": "获得{Block:diff()}点格挡。",
+            "resolved_rules_text": "获得5点格挡。",
+            "dynamic_values": [
+              {
+                "name": "Block",
+                "base_value": 5,
+                "current_value": 5,
+                "enchanted_value": 5,
+                "is_modified": false,
+                "was_just_upgraded": false
+              }
+            ],
+            "playable": true,
+            "can_play_result": true,
+            "unplayable_reason": null,
+            "unplayable_reason_raw": null,
+            "unplayable_preventer_id": null,
+            "unplayable_preventer_type": null
+          },
+          {
+            "index": 2,
+            "card_id": "DEFEND_SILENT",
+            "name": "防御",
+            "upgraded": false,
+            "target_type": "Self",
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "costs_x": false,
+            "star_costs_x": false,
+            "energy_cost": 1,
+            "star_cost": 0,
+            "rules_text": "获得{Block:diff()}点格挡。",
+            "resolved_rules_text": "获得5点格挡。",
+            "dynamic_values": [
+              {
+                "name": "Block",
+                "base_value": 5,
+                "current_value": 5,
+                "enchanted_value": 5,
+                "is_modified": false,
+                "was_just_upgraded": false
+              }
+            ],
+            "playable": true,
+            "can_play_result": true,
+            "unplayable_reason": null,
+            "unplayable_reason_raw": null,
+            "unplayable_preventer_id": null,
+            "unplayable_preventer_type": null
+          },
+          {
+            "index": 3,
+            "card_id": "STRIKE_SILENT",
+            "name": "打击",
+            "upgraded": false,
+            "target_type": "AnyEnemy",
+            "requires_target": true,
+            "target_index_space": "enemies",
+            "valid_target_indices": [
+              0
+            ],
+            "costs_x": false,
+            "star_costs_x": false,
+            "energy_cost": 1,
+            "star_cost": 0,
+            "rules_text": "造成{Damage:diff()}点伤害。",
+            "resolved_rules_text": "造成6点伤害。",
+            "dynamic_values": [
+              {
+                "name": "Damage",
+                "base_value": 6,
+                "current_value": 6,
+                "enchanted_value": 6,
+                "is_modified": false,
+                "was_just_upgraded": false
+              }
+            ],
+            "playable": true,
+            "can_play_result": true,
+            "unplayable_reason": null,
+            "unplayable_reason_raw": null,
+            "unplayable_preventer_id": null,
+            "unplayable_preventer_type": null
+          },
+          {
+            "index": 4,
+            "card_id": "PREDATOR",
+            "name": "猎杀者",
+            "upgraded": false,
+            "target_type": "AnyEnemy",
+            "requires_target": true,
+            "target_index_space": "enemies",
+            "valid_target_indices": [
+              0
+            ],
+            "costs_x": false,
+            "star_costs_x": false,
+            "energy_cost": 2,
+            "star_cost": 0,
+            "rules_text": "造成{Damage:diff()}点伤害。 在下个回合抽2张牌。",
+            "resolved_rules_text": "造成15点伤害。 在下个回合抽2张牌。",
+            "dynamic_values": [
+              {
+                "name": "Damage",
+                "base_value": 15,
+                "current_value": 15,
+                "enchanted_value": 15,
+                "is_modified": false,
+                "was_just_upgraded": false
+              }
+            ],
+            "playable": true,
+            "can_play_result": true,
+            "unplayable_reason": null,
+            "unplayable_reason_raw": null,
+            "unplayable_preventer_id": null,
+            "unplayable_preventer_type": null
+          },
+          {
+            "index": 5,
+            "card_id": "STRIKE_SILENT",
+            "name": "打击",
+            "upgraded": false,
+            "target_type": "AnyEnemy",
+            "requires_target": true,
+            "target_index_space": "enemies",
+            "valid_target_indices": [
+              0
+            ],
+            "costs_x": false,
+            "star_costs_x": false,
+            "energy_cost": 1,
+            "star_cost": 0,
+            "rules_text": "造成{Damage:diff()}点伤害。",
+            "resolved_rules_text": "造成6点伤害。",
+            "dynamic_values": [
+              {
+                "name": "Damage",
+                "base_value": 6,
+                "current_value": 6,
+                "enchanted_value": 6,
+                "is_modified": false,
+                "was_just_upgraded": false
+              }
+            ],
+            "playable": true,
+            "can_play_result": true,
+            "unplayable_reason": null,
+            "unplayable_reason_raw": null,
+            "unplayable_preventer_id": null,
+            "unplayable_preventer_type": null
+          },
+          {
+            "index": 6,
+            "card_id": "SURVIVOR",
+            "name": "生存者",
+            "upgraded": false,
+            "target_type": "Self",
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "costs_x": false,
+            "star_costs_x": false,
+            "energy_cost": 1,
+            "star_cost": 0,
+            "rules_text": "获得{Block:diff()}点格挡。 丢弃1张牌。",
+            "resolved_rules_text": "获得8点格挡。 丢弃1张牌。",
+            "dynamic_values": [
+              {
+                "name": "Block",
+                "base_value": 8,
+                "current_value": 8,
+                "enchanted_value": 8,
+                "is_modified": false,
+                "was_just_upgraded": false
+              }
+            ],
+            "playable": true,
+            "can_play_result": true,
+            "unplayable_reason": null,
+            "unplayable_reason_raw": null,
+            "unplayable_preventer_id": null,
+            "unplayable_preventer_type": null
+          }
+        ],
+        "powers": [],
+        "potions": [
+          {
+            "index": 0,
+            "potion_id": "SKILL_POTION",
+            "name": "技能药水",
+            "description": "从[blue]3[/blue]张随机技能牌中选择[blue]1[/blue]张加入你的[gold]手牌[/gold]。这张牌在本回合可以免费打出。",
+            "rarity": "Common",
+            "occupied": true,
+            "usage": "CombatOnly",
+            "target_type": "AnyPlayer",
+            "is_queued": false,
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "can_use": true,
+            "can_discard": true
+          },
+          {
+            "index": 1,
+            "potion_id": "GLOWWATER_POTION",
+            "name": "发光水",
+            "description": "[gold]消耗[/gold]你的[gold]手牌[/gold]。抽[blue]{Cards}[/blue]张牌。",
+            "rarity": "Event",
+            "occupied": true,
+            "usage": "CombatOnly",
+            "target_type": "AnyPlayer",
+            "is_queued": false,
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "can_use": true,
+            "can_discard": true
+          }
+        ],
+        "enemies": [
+          {
+            "enemy_id": "SEWER_CLAM",
+            "current_hp": 58,
+            "max_hp": 58,
+            "move_id": "JET_MOVE",
+            "intents": [
+              {
+                "index": 0,
+                "intent_type": "Attack",
+                "label": "11",
+                "damage": 11,
+                "hits": 1,
+                "total_damage": 11,
+                "status_card_count": null
+              }
+            ],
+            "powers": [
+              {
+                "index": 0,
+                "power_id": "PLATING_POWER",
+                "name": "覆甲",
+                "amount": 9,
+                "is_debuff": false
+              }
+            ]
+          }
+        ]
+      },
+      "after": {
+        "line": 280349,
+        "run_id": "KEN58SH9SLZ6",
+        "floor": 15,
+        "turn": 1,
+        "hp": 46,
+        "block": 0,
+        "hand": [
+          {
+            "index": 0,
+            "card_id": "ASCENDERS_BANE",
+            "name": "进阶之灾",
+            "upgraded": false,
+            "target_type": "None",
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "costs_x": false,
+            "star_costs_x": false,
+            "energy_cost": -1,
+            "star_cost": 0,
+            "rules_text": "",
+            "resolved_rules_text": "不能被打出。 虚无。 永恒。",
+            "dynamic_values": [],
+            "playable": false,
+            "can_play_result": false,
+            "unplayable_reason": "unplayable",
+            "unplayable_reason_raw": "HasUnplayableKeyword",
+            "unplayable_preventer_id": null,
+            "unplayable_preventer_type": null
+          },
+          {
+            "index": 1,
+            "card_id": "NEUTRALIZE",
+            "name": "中和",
+            "upgraded": false,
+            "target_type": "AnyEnemy",
+            "requires_target": true,
+            "target_index_space": "enemies",
+            "valid_target_indices": [
+              0
+            ],
+            "costs_x": false,
+            "star_costs_x": false,
+            "energy_cost": 0,
+            "star_cost": 0,
+            "rules_text": "造成{Damage:diff()}点伤害。 给予{WeakPower:diff()}层虚弱。",
+            "resolved_rules_text": "造成3点伤害。 给予1层虚弱。",
+            "dynamic_values": [
+              {
+                "name": "Damage",
+                "base_value": 3,
+                "current_value": 3,
+                "enchanted_value": 3,
+                "is_modified": false,
+                "was_just_upgraded": false
+              },
+              {
+                "name": "WeakPower",
+                "base_value": 1,
+                "current_value": 1,
+                "enchanted_value": 1,
+                "is_modified": false,
+                "was_just_upgraded": false
+              }
+            ],
+            "playable": true,
+            "can_play_result": true,
+            "unplayable_reason": null,
+            "unplayable_reason_raw": null,
+            "unplayable_preventer_id": null,
+            "unplayable_preventer_type": null
+          },
+          {
+            "index": 2,
+            "card_id": "STRIKE_SILENT",
+            "name": "打击",
+            "upgraded": false,
+            "target_type": "AnyEnemy",
+            "requires_target": true,
+            "target_index_space": "enemies",
+            "valid_target_indices": [
+              0
+            ],
+            "costs_x": false,
+            "star_costs_x": false,
+            "energy_cost": 1,
+            "star_cost": 0,
+            "rules_text": "造成{Damage:diff()}点伤害。",
+            "resolved_rules_text": "造成6点伤害。",
+            "dynamic_values": [
+              {
+                "name": "Damage",
+                "base_value": 6,
+                "current_value": 6,
+                "enchanted_value": 6,
+                "is_modified": false,
+                "was_just_upgraded": false
+              }
+            ],
+            "playable": true,
+            "can_play_result": true,
+            "unplayable_reason": null,
+            "unplayable_reason_raw": null,
+            "unplayable_preventer_id": null,
+            "unplayable_preventer_type": null
+          },
+          {
+            "index": 3,
+            "card_id": "STRIKE_SILENT",
+            "name": "打击",
+            "upgraded": false,
+            "target_type": "AnyEnemy",
+            "requires_target": true,
+            "target_index_space": "enemies",
+            "valid_target_indices": [
+              0
+            ],
+            "costs_x": false,
+            "star_costs_x": false,
+            "energy_cost": 1,
+            "star_cost": 0,
+            "rules_text": "造成{Damage:diff()}点伤害。",
+            "resolved_rules_text": "造成6点伤害。",
+            "dynamic_values": [
+              {
+                "name": "Damage",
+                "base_value": 6,
+                "current_value": 6,
+                "enchanted_value": 6,
+                "is_modified": false,
+                "was_just_upgraded": false
+              }
+            ],
+            "playable": true,
+            "can_play_result": true,
+            "unplayable_reason": null,
+            "unplayable_reason_raw": null,
+            "unplayable_preventer_id": null,
+            "unplayable_preventer_type": null
+          },
+          {
+            "index": 4,
+            "card_id": "FOOTWORK",
+            "name": "灵动步法",
+            "upgraded": false,
+            "target_type": "Self",
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "costs_x": false,
+            "star_costs_x": false,
+            "energy_cost": 1,
+            "star_cost": 0,
+            "rules_text": "获得{DexterityPower:diff()}点敏捷。",
+            "resolved_rules_text": "获得2点敏捷。",
+            "dynamic_values": [
+              {
+                "name": "DexterityPower",
+                "base_value": 2,
+                "current_value": 2,
+                "enchanted_value": 2,
+                "is_modified": false,
+                "was_just_upgraded": false
+              }
+            ],
+            "playable": true,
+            "can_play_result": true,
+            "unplayable_reason": null,
+            "unplayable_reason_raw": null,
+            "unplayable_preventer_id": null,
+            "unplayable_preventer_type": null
+          },
+          {
+            "index": 5,
+            "card_id": "POISONED_STAB",
+            "name": "带毒刺击",
+            "upgraded": false,
+            "target_type": "AnyEnemy",
+            "requires_target": true,
+            "target_index_space": "enemies",
+            "valid_target_indices": [
+              0
+            ],
+            "costs_x": false,
+            "star_costs_x": false,
+            "energy_cost": 1,
+            "star_cost": 0,
+            "rules_text": "造成{Damage:diff()}点伤害。 给予{PoisonPower:diff()}层中毒。",
+            "resolved_rules_text": "造成6点伤害。 给予3层中毒。",
+            "dynamic_values": [
+              {
+                "name": "Damage",
+                "base_value": 6,
+                "current_value": 6,
+                "enchanted_value": 6,
+                "is_modified": false,
+                "was_just_upgraded": false
+              },
+              {
+                "name": "PoisonPower",
+                "base_value": 3,
+                "current_value": 3,
+                "enchanted_value": 3,
+                "is_modified": false,
+                "was_just_upgraded": false
+              }
+            ],
+            "playable": true,
+            "can_play_result": true,
+            "unplayable_reason": null,
+            "unplayable_reason_raw": null,
+            "unplayable_preventer_id": null,
+            "unplayable_preventer_type": null
+          },
+          {
+            "index": 6,
+            "card_id": "DEFEND_SILENT",
+            "name": "防御",
+            "upgraded": false,
+            "target_type": "Self",
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "costs_x": false,
+            "star_costs_x": false,
+            "energy_cost": 1,
+            "star_cost": 0,
+            "rules_text": "获得{Block:diff()}点格挡。",
+            "resolved_rules_text": "获得5点格挡。",
+            "dynamic_values": [
+              {
+                "name": "Block",
+                "base_value": 5,
+                "current_value": 5,
+                "enchanted_value": 5,
+                "is_modified": false,
+                "was_just_upgraded": false
+              }
+            ],
+            "playable": true,
+            "can_play_result": true,
+            "unplayable_reason": null,
+            "unplayable_reason_raw": null,
+            "unplayable_preventer_id": null,
+            "unplayable_preventer_type": null
+          },
+          {
+            "index": 7,
+            "card_id": "DEFEND_SILENT",
+            "name": "防御",
+            "upgraded": false,
+            "target_type": "Self",
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "costs_x": false,
+            "star_costs_x": false,
+            "energy_cost": 1,
+            "star_cost": 0,
+            "rules_text": "获得{Block:diff()}点格挡。",
+            "resolved_rules_text": "获得5点格挡。",
+            "dynamic_values": [
+              {
+                "name": "Block",
+                "base_value": 5,
+                "current_value": 5,
+                "enchanted_value": 5,
+                "is_modified": false,
+                "was_just_upgraded": false
+              }
+            ],
+            "playable": true,
+            "can_play_result": true,
+            "unplayable_reason": null,
+            "unplayable_reason_raw": null,
+            "unplayable_preventer_id": null,
+            "unplayable_preventer_type": null
+          },
+          {
+            "index": 8,
+            "card_id": "CLOAK_AND_DAGGER",
+            "name": "斗篷与匕首",
+            "upgraded": false,
+            "target_type": "Self",
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "costs_x": false,
+            "star_costs_x": false,
+            "energy_cost": 1,
+            "star_cost": 0,
+            "rules_text": "获得{Block:diff()}点格挡。 将{Cards:diff()}张小刀添加到你的手牌。",
+            "resolved_rules_text": "获得6点格挡。 将1张小刀添加到你的手牌。",
+            "dynamic_values": [
+              {
+                "name": "Block",
+                "base_value": 6,
+                "current_value": 6,
+                "enchanted_value": 6,
+                "is_modified": false,
+                "was_just_upgraded": false
+              },
+              {
+                "name": "Cards",
+                "base_value": 1,
+                "current_value": 1,
+                "enchanted_value": 1,
+                "is_modified": false,
+                "was_just_upgraded": false
+              }
+            ],
+            "playable": true,
+            "can_play_result": true,
+            "unplayable_reason": null,
+            "unplayable_reason_raw": null,
+            "unplayable_preventer_id": null,
+            "unplayable_preventer_type": null
+          },
+          {
+            "index": 9,
+            "card_id": "HAZE",
+            "name": "迷雾",
+            "upgraded": false,
+            "target_type": "AllEnemies",
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "costs_x": false,
+            "star_costs_x": false,
+            "energy_cost": 2,
+            "star_cost": 0,
+            "rules_text": "给予所有敌人{PoisonPower:diff()}层中毒和{WeakPower:diff()}层虚弱。",
+            "resolved_rules_text": "给予所有敌人4层中毒和1层虚弱。",
+            "dynamic_values": [
+              {
+                "name": "PoisonPower",
+                "base_value": 4,
+                "current_value": 4,
+                "enchanted_value": 4,
+                "is_modified": false,
+                "was_just_upgraded": false
+              },
+              {
+                "name": "WeakPower",
+                "base_value": 1,
+                "current_value": 1,
+                "enchanted_value": 1,
+                "is_modified": false,
+                "was_just_upgraded": false
+              }
+            ],
+            "playable": true,
+            "can_play_result": true,
+            "unplayable_reason": null,
+            "unplayable_reason_raw": null,
+            "unplayable_preventer_id": null,
+            "unplayable_preventer_type": null
+          }
+        ],
+        "powers": [],
+        "potions": [
+          {
+            "index": 0,
+            "potion_id": "SKILL_POTION",
+            "name": "技能药水",
+            "description": "从[blue]3[/blue]张随机技能牌中选择[blue]1[/blue]张加入你的[gold]手牌[/gold]。这张牌在本回合可以免费打出。",
+            "rarity": "Common",
+            "occupied": true,
+            "usage": "CombatOnly",
+            "target_type": "AnyPlayer",
+            "is_queued": false,
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "can_use": false,
+            "can_discard": true
+          },
+          {
+            "index": 1,
+            "potion_id": null,
+            "name": null,
+            "description": null,
+            "rarity": null,
+            "occupied": false,
+            "usage": null,
+            "target_type": null,
+            "is_queued": false,
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "can_use": false,
+            "can_discard": false
+          }
+        ],
+        "enemies": [
+          {
+            "enemy_id": "SEWER_CLAM",
+            "current_hp": 58,
+            "max_hp": 58,
+            "move_id": "JET_MOVE",
+            "intents": [
+              {
+                "index": 0,
+                "intent_type": "Attack",
+                "label": "11",
+                "damage": 11,
+                "hits": 1,
+                "total_damage": 11,
+                "status_card_count": null
+              }
+            ],
+            "powers": [
+              {
+                "index": 0,
+                "power_id": "PLATING_POWER",
+                "name": "覆甲",
+                "amount": 9,
+                "is_debuff": false
+              }
+            ]
+          }
+        ]
+      },
+      "potion": "GLOWWATER_POTION",
+      "limitation": "确认实际耗药，不将饮用后的整个回合伤挡净变化独归该瓶；无未饮用/留药整战对照。"
+    },
+    {
+      "decision_line": 274272,
+      "before": {
+        "line": 280354,
+        "run_id": "KEN58SH9SLZ6",
+        "floor": 15,
+        "turn": 1,
+        "hp": 46,
+        "block": 4,
+        "hand": [
+          {
+            "index": 0,
+            "card_id": "ASCENDERS_BANE",
+            "name": "进阶之灾",
+            "upgraded": false,
+            "target_type": "None",
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "costs_x": false,
+            "star_costs_x": false,
+            "energy_cost": -1,
+            "star_cost": 0,
+            "rules_text": "",
+            "resolved_rules_text": "不能被打出。 虚无。 永恒。",
+            "dynamic_values": [],
+            "playable": false,
+            "can_play_result": false,
+            "unplayable_reason": "unplayable",
+            "unplayable_reason_raw": "HasUnplayableKeyword",
+            "unplayable_preventer_id": null,
+            "unplayable_preventer_type": null
+          },
+          {
+            "index": 1,
+            "card_id": "STRIKE_SILENT",
+            "name": "打击",
+            "upgraded": false,
+            "target_type": "AnyEnemy",
+            "requires_target": true,
+            "target_index_space": "enemies",
+            "valid_target_indices": [
+              0
+            ],
+            "costs_x": false,
+            "star_costs_x": false,
+            "energy_cost": 1,
+            "star_cost": 0,
+            "rules_text": "造成{Damage:diff()}点伤害。",
+            "resolved_rules_text": "造成6点伤害。",
+            "dynamic_values": [
+              {
+                "name": "Damage",
+                "base_value": 6,
+                "current_value": 6,
+                "enchanted_value": 6,
+                "is_modified": false,
+                "was_just_upgraded": false
+              }
+            ],
+            "playable": false,
+            "can_play_result": false,
+            "unplayable_reason": "not_enough_energy",
+            "unplayable_reason_raw": "EnergyCostTooHigh",
+            "unplayable_preventer_id": null,
+            "unplayable_preventer_type": null
+          },
+          {
+            "index": 2,
+            "card_id": "DEFEND_SILENT",
+            "name": "防御",
+            "upgraded": false,
+            "target_type": "Self",
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "costs_x": false,
+            "star_costs_x": false,
+            "energy_cost": 1,
+            "star_cost": 0,
+            "rules_text": "获得{Block:diff()}点格挡。",
+            "resolved_rules_text": "获得7点格挡。",
+            "dynamic_values": [
+              {
+                "name": "Block",
+                "base_value": 5,
+                "current_value": 7,
+                "enchanted_value": 5,
+                "is_modified": true,
+                "was_just_upgraded": false
+              }
+            ],
+            "playable": false,
+            "can_play_result": false,
+            "unplayable_reason": "not_enough_energy",
+            "unplayable_reason_raw": "EnergyCostTooHigh",
+            "unplayable_preventer_id": null,
+            "unplayable_preventer_type": null
+          },
+          {
+            "index": 3,
+            "card_id": "DEFEND_SILENT",
+            "name": "防御",
+            "upgraded": false,
+            "target_type": "Self",
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "costs_x": false,
+            "star_costs_x": false,
+            "energy_cost": 1,
+            "star_cost": 0,
+            "rules_text": "获得{Block:diff()}点格挡。",
+            "resolved_rules_text": "获得7点格挡。",
+            "dynamic_values": [
+              {
+                "name": "Block",
+                "base_value": 5,
+                "current_value": 7,
+                "enchanted_value": 5,
+                "is_modified": true,
+                "was_just_upgraded": false
+              }
+            ],
+            "playable": false,
+            "can_play_result": false,
+            "unplayable_reason": "not_enough_energy",
+            "unplayable_reason_raw": "EnergyCostTooHigh",
+            "unplayable_preventer_id": null,
+            "unplayable_preventer_type": null
+          },
+          {
+            "index": 4,
+            "card_id": "CLOAK_AND_DAGGER",
+            "name": "斗篷与匕首",
+            "upgraded": false,
+            "target_type": "Self",
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "costs_x": false,
+            "star_costs_x": false,
+            "energy_cost": 1,
+            "star_cost": 0,
+            "rules_text": "获得{Block:diff()}点格挡。 将{Cards:diff()}张小刀添加到你的手牌。",
+            "resolved_rules_text": "获得8点格挡。 将1张小刀添加到你的手牌。",
+            "dynamic_values": [
+              {
+                "name": "Block",
+                "base_value": 6,
+                "current_value": 8,
+                "enchanted_value": 6,
+                "is_modified": true,
+                "was_just_upgraded": false
+              },
+              {
+                "name": "Cards",
+                "base_value": 1,
+                "current_value": 1,
+                "enchanted_value": 1,
+                "is_modified": false,
+                "was_just_upgraded": false
+              }
+            ],
+            "playable": false,
+            "can_play_result": false,
+            "unplayable_reason": "not_enough_energy",
+            "unplayable_reason_raw": "EnergyCostTooHigh",
+            "unplayable_preventer_id": null,
+            "unplayable_preventer_type": null
+          },
+          {
+            "index": 5,
+            "card_id": "HAZE",
+            "name": "迷雾",
+            "upgraded": false,
+            "target_type": "AllEnemies",
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "costs_x": false,
+            "star_costs_x": false,
+            "energy_cost": 2,
+            "star_cost": 0,
+            "rules_text": "给予所有敌人{PoisonPower:diff()}层中毒和{WeakPower:diff()}层虚弱。",
+            "resolved_rules_text": "给予所有敌人4层中毒和1层虚弱。",
+            "dynamic_values": [
+              {
+                "name": "PoisonPower",
+                "base_value": 4,
+                "current_value": 4,
+                "enchanted_value": 4,
+                "is_modified": false,
+                "was_just_upgraded": false
+              },
+              {
+                "name": "WeakPower",
+                "base_value": 1,
+                "current_value": 1,
+                "enchanted_value": 1,
+                "is_modified": false,
+                "was_just_upgraded": false
+              }
+            ],
+            "playable": false,
+            "can_play_result": false,
+            "unplayable_reason": "not_enough_energy",
+            "unplayable_reason_raw": "EnergyCostTooHigh",
+            "unplayable_preventer_id": null,
+            "unplayable_preventer_type": null
+          }
+        ],
+        "powers": [
+          {
+            "index": 0,
+            "power_id": "DEXTERITY_POWER",
+            "name": "敏捷",
+            "amount": 2,
+            "is_debuff": false
+          }
+        ],
+        "potions": [
+          {
+            "index": 0,
+            "potion_id": "SKILL_POTION",
+            "name": "技能药水",
+            "description": "从[blue]3[/blue]张随机技能牌中选择[blue]1[/blue]张加入你的[gold]手牌[/gold]。这张牌在本回合可以免费打出。",
+            "rarity": "Common",
+            "occupied": true,
+            "usage": "CombatOnly",
+            "target_type": "AnyPlayer",
+            "is_queued": false,
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "can_use": true,
+            "can_discard": true
+          },
+          {
+            "index": 1,
+            "potion_id": null,
+            "name": null,
+            "description": null,
+            "rarity": null,
+            "occupied": false,
+            "usage": null,
+            "target_type": null,
+            "is_queued": false,
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "can_use": false,
+            "can_discard": false
+          }
+        ],
+        "enemies": [
+          {
+            "enemy_id": "SEWER_CLAM",
+            "current_hp": 52,
+            "max_hp": 58,
+            "move_id": "JET_MOVE",
+            "intents": [
+              {
+                "index": 0,
+                "intent_type": "Attack",
+                "label": "8",
+                "damage": 8,
+                "hits": 1,
+                "total_damage": 8,
+                "status_card_count": null
+              }
+            ],
+            "powers": [
+              {
+                "index": 0,
+                "power_id": "PLATING_POWER",
+                "name": "覆甲",
+                "amount": 9,
+                "is_debuff": false
+              },
+              {
+                "index": 1,
+                "power_id": "WEAK_POWER",
+                "name": "虚弱",
+                "amount": 1,
+                "is_debuff": true
+              },
+              {
+                "index": 2,
+                "power_id": "POISON_POWER",
+                "name": "中毒",
+                "amount": 3,
+                "is_debuff": true
+              }
+            ]
+          }
+        ]
+      },
+      "after": {
+        "line": 280355,
+        "run_id": "KEN58SH9SLZ6",
+        "floor": 15,
+        "turn": 1,
+        "hp": 46,
+        "block": 4,
+        "hand": [
+          {
+            "index": 0,
+            "card_id": "ASCENDERS_BANE",
+            "name": "进阶之灾",
+            "upgraded": false,
+            "target_type": "None",
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "costs_x": false,
+            "star_costs_x": false,
+            "energy_cost": -1,
+            "star_cost": 0,
+            "rules_text": "",
+            "resolved_rules_text": "不能被打出。 虚无。 永恒。",
+            "dynamic_values": [],
+            "playable": false,
+            "can_play_result": false,
+            "unplayable_reason": "unplayable",
+            "unplayable_reason_raw": "HasUnplayableKeyword",
+            "unplayable_preventer_id": null,
+            "unplayable_preventer_type": null
+          },
+          {
+            "index": 1,
+            "card_id": "STRIKE_SILENT",
+            "name": "打击",
+            "upgraded": false,
+            "target_type": "AnyEnemy",
+            "requires_target": true,
+            "target_index_space": "enemies",
+            "valid_target_indices": [
+              0
+            ],
+            "costs_x": false,
+            "star_costs_x": false,
+            "energy_cost": 1,
+            "star_cost": 0,
+            "rules_text": "造成{Damage:diff()}点伤害。",
+            "resolved_rules_text": "造成6点伤害。",
+            "dynamic_values": [
+              {
+                "name": "Damage",
+                "base_value": 6,
+                "current_value": 6,
+                "enchanted_value": 6,
+                "is_modified": false,
+                "was_just_upgraded": false
+              }
+            ],
+            "playable": false,
+            "can_play_result": false,
+            "unplayable_reason": "not_enough_energy",
+            "unplayable_reason_raw": "EnergyCostTooHigh",
+            "unplayable_preventer_id": null,
+            "unplayable_preventer_type": null
+          },
+          {
+            "index": 2,
+            "card_id": "DEFEND_SILENT",
+            "name": "防御",
+            "upgraded": false,
+            "target_type": "Self",
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "costs_x": false,
+            "star_costs_x": false,
+            "energy_cost": 1,
+            "star_cost": 0,
+            "rules_text": "获得{Block:diff()}点格挡。",
+            "resolved_rules_text": "获得7点格挡。",
+            "dynamic_values": [
+              {
+                "name": "Block",
+                "base_value": 5,
+                "current_value": 7,
+                "enchanted_value": 5,
+                "is_modified": true,
+                "was_just_upgraded": false
+              }
+            ],
+            "playable": false,
+            "can_play_result": false,
+            "unplayable_reason": "not_enough_energy",
+            "unplayable_reason_raw": "EnergyCostTooHigh",
+            "unplayable_preventer_id": null,
+            "unplayable_preventer_type": null
+          },
+          {
+            "index": 3,
+            "card_id": "DEFEND_SILENT",
+            "name": "防御",
+            "upgraded": false,
+            "target_type": "Self",
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "costs_x": false,
+            "star_costs_x": false,
+            "energy_cost": 1,
+            "star_cost": 0,
+            "rules_text": "获得{Block:diff()}点格挡。",
+            "resolved_rules_text": "获得7点格挡。",
+            "dynamic_values": [
+              {
+                "name": "Block",
+                "base_value": 5,
+                "current_value": 7,
+                "enchanted_value": 5,
+                "is_modified": true,
+                "was_just_upgraded": false
+              }
+            ],
+            "playable": false,
+            "can_play_result": false,
+            "unplayable_reason": "not_enough_energy",
+            "unplayable_reason_raw": "EnergyCostTooHigh",
+            "unplayable_preventer_id": null,
+            "unplayable_preventer_type": null
+          },
+          {
+            "index": 4,
+            "card_id": "CLOAK_AND_DAGGER",
+            "name": "斗篷与匕首",
+            "upgraded": false,
+            "target_type": "Self",
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "costs_x": false,
+            "star_costs_x": false,
+            "energy_cost": 1,
+            "star_cost": 0,
+            "rules_text": "获得{Block:diff()}点格挡。 将{Cards:diff()}张小刀添加到你的手牌。",
+            "resolved_rules_text": "获得8点格挡。 将1张小刀添加到你的手牌。",
+            "dynamic_values": [
+              {
+                "name": "Block",
+                "base_value": 6,
+                "current_value": 8,
+                "enchanted_value": 6,
+                "is_modified": true,
+                "was_just_upgraded": false
+              },
+              {
+                "name": "Cards",
+                "base_value": 1,
+                "current_value": 1,
+                "enchanted_value": 1,
+                "is_modified": false,
+                "was_just_upgraded": false
+              }
+            ],
+            "playable": false,
+            "can_play_result": false,
+            "unplayable_reason": "not_enough_energy",
+            "unplayable_reason_raw": "EnergyCostTooHigh",
+            "unplayable_preventer_id": null,
+            "unplayable_preventer_type": null
+          },
+          {
+            "index": 5,
+            "card_id": "HAZE",
+            "name": "迷雾",
+            "upgraded": false,
+            "target_type": "AllEnemies",
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "costs_x": false,
+            "star_costs_x": false,
+            "energy_cost": 2,
+            "star_cost": 0,
+            "rules_text": "给予所有敌人{PoisonPower:diff()}层中毒和{WeakPower:diff()}层虚弱。",
+            "resolved_rules_text": "给予所有敌人4层中毒和1层虚弱。",
+            "dynamic_values": [
+              {
+                "name": "PoisonPower",
+                "base_value": 4,
+                "current_value": 4,
+                "enchanted_value": 4,
+                "is_modified": false,
+                "was_just_upgraded": false
+              },
+              {
+                "name": "WeakPower",
+                "base_value": 1,
+                "current_value": 1,
+                "enchanted_value": 1,
+                "is_modified": false,
+                "was_just_upgraded": false
+              }
+            ],
+            "playable": false,
+            "can_play_result": false,
+            "unplayable_reason": "not_enough_energy",
+            "unplayable_reason_raw": "EnergyCostTooHigh",
+            "unplayable_preventer_id": null,
+            "unplayable_preventer_type": null
+          }
+        ],
+        "powers": [
+          {
+            "index": 0,
+            "power_id": "DEXTERITY_POWER",
+            "name": "敏捷",
+            "amount": 2,
+            "is_debuff": false
+          }
+        ],
+        "potions": [
+          {
+            "index": 0,
+            "potion_id": null,
+            "name": null,
+            "description": null,
+            "rarity": null,
+            "occupied": false,
+            "usage": null,
+            "target_type": null,
+            "is_queued": false,
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "can_use": false,
+            "can_discard": false
+          },
+          {
+            "index": 1,
+            "potion_id": null,
+            "name": null,
+            "description": null,
+            "rarity": null,
+            "occupied": false,
+            "usage": null,
+            "target_type": null,
+            "is_queued": false,
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "can_use": false,
+            "can_discard": false
+          }
+        ],
+        "enemies": [
+          {
+            "enemy_id": "SEWER_CLAM",
+            "current_hp": 52,
+            "max_hp": 58,
+            "move_id": "JET_MOVE",
+            "intents": [
+              {
+                "index": 0,
+                "intent_type": "Attack",
+                "label": "8",
+                "damage": 8,
+                "hits": 1,
+                "total_damage": 8,
+                "status_card_count": null
+              }
+            ],
+            "powers": [
+              {
+                "index": 0,
+                "power_id": "PLATING_POWER",
+                "name": "覆甲",
+                "amount": 9,
+                "is_debuff": false
+              },
+              {
+                "index": 1,
+                "power_id": "WEAK_POWER",
+                "name": "虚弱",
+                "amount": 1,
+                "is_debuff": true
+              },
+              {
+                "index": 2,
+                "power_id": "POISON_POWER",
+                "name": "中毒",
+                "amount": 3,
+                "is_debuff": true
+              }
+            ]
+          }
+        ]
+      },
+      "potion": "SKILL_POTION",
+      "limitation": "确认实际耗药，不将饮用后的整个回合伤挡净变化独归该瓶；无未饮用/留药整战对照。"
+    }
+  ],
+  "giant_husk_summaries": [
+    {
+      "line": 679,
+      "run_id": "L9SGRBB5R698",
+      "attempt": 1,
+      "result": "predicted_death",
+      "last": {
+        "turn": 14,
+        "hp": 1,
+        "block": 0,
+        "enemies": "瀑布巨兽 999999999/999999999",
+        "plays": [
+          "防御",
+          "小刀 -> 瀑布巨兽",
+          "中和 -> 瀑布巨兽",
+          "防御",
+          "防御"
+        ]
+      },
+      "reference": null
+    },
+    {
+      "line": 682,
+      "run_id": "L9SGRBB5R698",
+      "attempt": 4,
+      "result": "predicted_death",
+      "last": {
+        "turn": 14,
+        "hp": 1,
+        "block": 0,
+        "enemies": "瀑布巨兽 999999999/999999999",
+        "plays": [
+          "斗篷与匕首",
+          "中和 -> 瀑布巨兽",
+          "防御"
+        ]
+      },
+      "reference": {
+        "board": "e75d3b6399d8de1b",
+        "turn": 10,
+        "reference": 1,
+        "back": 8,
+        "round": 0,
+        "excluded": [
+          "中和 -> 瀑布巨兽, 带毒刺击 -> 瀑布巨兽, 防御, 逃脱计划, 斗篷与匕首"
+        ],
+        "attempts": [
+          1
+        ],
+        "point": "T10, the 8th latest question before attempt 1's death on T14",
+        "tried": {
+          "canon": [
+            "CLOAK_AND_DAGGER, DEFEND_SILENT, ESCAPE_PLAN, NEUTRALIZE>瀑布巨兽, POISONED_STAB>瀑布巨兽"
+          ],
+          "loose": [],
+          "cards": [
+            {
+              "cards": "CLOAK_AND_DAGGER, DEFEND_SILENT, ESCAPE_PLAN, NEUTRALIZE>瀑布巨兽, POISONED_STAB>瀑布巨兽",
+              "drunk": [
+                "POISON_POTION"
+              ]
+            }
+          ]
+        },
+        "where": {
+          "weight": 10.7,
+          "turnRound": 0,
+          "lost": {
+            "T1": 0,
+            "T2": 1.3,
+            "T3": 0,
+            "T4": 0,
+            "T5": 12,
+            "T6": 9,
+            "T7": 2,
+            "T8": 0.3,
+            "T9": 0,
+            "T10": 10,
+            "T11": 0,
+            "T12": 2,
+            "T13": 1,
+            "T14": 1
+          },
+          "weights": {
+            "T1": 1.8,
+            "T2": 3.5,
+            "T3": 4.3,
+            "T4": 8.7,
+            "T5": 17.4,
+            "T7": 3.5,
+            "T8": 3,
+            "T9": 5.3,
+            "T10": 10.7,
+            "T13": 1.5
+          }
+        },
+        "anchor": {
+          "why": "attempt 1's path, not attempt 2's: it lived longest (attempt 1 T14 (enemy HP 999999999), attempt 3 T13 (enemy HP 28), attempt 2 T10 (enemy HP 58))",
+          "ranked": [
+            {
+              "attempt": 1,
+              "turns": 14,
+              "enemyHp": 999999999
+            },
+            {
+              "attempt": 3,
+              "turns": 13,
+              "enemyHp": 28
+            },
+            {
+              "attempt": 2,
+              "turns": 10,
+              "enemyHp": 58
+            }
+          ]
+        }
+      }
+    },
+    {
+      "line": 683,
+      "run_id": "L9SGRBB5R698",
+      "attempt": 5,
+      "result": "predicted_death",
+      "last": {
+        "turn": 13,
+        "hp": 4,
+        "block": 0,
+        "enemies": "瀑布巨兽 999999993/999999999",
+        "plays": [
+          "斗篷与匕首",
+          "致命毒药 -> 瀑布巨兽",
+          "突然一拳 -> 瀑布巨兽"
+        ]
+      },
+      "reference": {
+        "board": "883d77db62ae8bee",
+        "turn": 4,
+        "reference": 4,
+        "back": 20,
+        "round": 0,
+        "excluded": [
+          "drink 迅捷药水, then re-plan"
+        ],
+        "attempts": [
+          1,
+          3,
+          4
+        ],
+        "point": "T4, the 20th latest question before attempt 4's death on T14",
+        "tried": {
+          "canon": [
+            "potion:SWIFT_POTION",
+            "NEUTRALIZE>瀑布巨兽, POISONED_STAB>瀑布巨兽, STRIKE_SILENT>瀑布巨兽, potion:SWIFT_POTION"
+          ],
+          "loose": [],
+          "cards": [
+            {
+              "cards": "nothing",
+              "drunk": [
+                "POISON_POTION",
+                "SWIFT_POTION"
+              ]
+            },
+            {
+              "cards": "NEUTRALIZE>瀑布巨兽, POISONED_STAB>瀑布巨兽, STRIKE_SILENT>瀑布巨兽",
+              "drunk": [
+                "POISON_POTION",
+                "SWIFT_POTION"
+              ]
+            }
+          ]
+        },
+        "where": {
+          "weight": 8.7,
+          "turnRound": 0,
+          "lost": {
+            "T1": 0,
+            "T2": 1.3,
+            "T3": 0,
+            "T4": 0,
+            "T5": 12,
+            "T6": 9,
+            "T7": 2.3,
+            "T8": 0.5,
+            "T9": 0,
+            "T10": 9.5,
+            "T11": 0,
+            "T12": 2,
+            "T13": 0.7,
+            "T14": 1
+          },
+          "weights": {
+            "T1": 1.7,
+            "T2": 3.4,
+            "T3": 4.4,
+            "T4": 8.7,
+            "T5": 17.4,
+            "T7": 3.8,
+            "T8": 3,
+            "T9": 5.1,
+            "T10": 10.1,
+            "T12": 2.6
+          }
+        },
+        "anchor": {
+          "why": "attempt 4's path, not attempt 2's: it lived longest (attempt 4 T14 (enemy HP 999999999), attempt 1 T14 (enemy HP 999999999), attempt 3 T13 (enemy HP 28), attempt 2 T10 (enemy HP 58))",
+          "ranked": [
+            {
+              "attempt": 4,
+              "turns": 14,
+              "enemyHp": 999999999
+            },
+            {
+              "attempt": 1,
+              "turns": 14,
+              "enemyHp": 999999999
+            },
+            {
+              "attempt": 3,
+              "turns": 13,
+              "enemyHp": 28
+            },
+            {
+              "attempt": 2,
+              "turns": 10,
+              "enemyHp": 58
+            }
+          ]
+        }
+      }
+    },
+    {
+      "line": 684,
+      "run_id": "L9SGRBB5R698",
+      "attempt": 6,
+      "result": "died",
+      "last": {
+        "turn": 13,
+        "hp": 3,
+        "block": 0,
+        "enemies": "瀑布巨兽 999999999/999999999",
+        "plays": [
+          "打击 -> 瀑布巨兽",
+          "致命毒药 -> 瀑布巨兽",
+          "逃脱计划",
+          "防御",
+          "中和 -> 瀑布巨兽"
+        ]
+      },
+      "reference": {
+        "board": "f6d2410dc5d94841",
+        "turn": 9,
+        "reference": 4,
+        "back": 8,
+        "round": 0,
+        "excluded": [
+          "打击 -> 瀑布巨兽, 防御, 串刺 -> 瀑布巨兽"
+        ],
+        "attempts": [
+          1,
+          4
+        ],
+        "point": "T9, the 8th latest question before attempt 4's death on T14",
+        "tried": {
+          "canon": [
+            "DEFEND_SILENT, SKEWER>瀑布巨兽, STRIKE_SILENT>瀑布巨兽"
+          ],
+          "loose": [],
+          "cards": [
+            {
+              "cards": "DEFEND_SILENT, SKEWER>瀑布巨兽, STRIKE_SILENT>瀑布巨兽",
+              "drunk": [
+                "POISON_POTION"
+              ]
+            }
+          ]
+        },
+        "where": {
+          "weight": 4.9,
+          "turnRound": 0,
+          "lost": {
+            "T1": 0,
+            "T2": 1.2,
+            "T3": 0,
+            "T4": 0,
+            "T5": 12,
+            "T6": 9,
+            "T7": 2.4,
+            "T8": 0.4,
+            "T9": 0,
+            "T10": 9.2,
+            "T11": 0,
+            "T12": 1.5,
+            "T13": 1.5,
+            "T14": 1
+          },
+          "weights": {
+            "T1": 1.7,
+            "T2": 3.4,
+            "T3": 4.4,
+            "T4": 8.7,
+            "T5": 17.5,
+            "T7": 3.8,
+            "T8": 2.9,
+            "T9": 4.9,
+            "T10": 9.8,
+            "T12": 2.5
+          }
+        },
+        "anchor": {
+          "why": "attempt 4's path, not attempt 2's: it lived longest (attempt 4 T14 (enemy HP 999999999), attempt 1 T14 (enemy HP 999999999), attempt 3 T13 (enemy HP 28), attempt 5 T13 (enemy HP 999999993), attempt 2 T10 (enemy HP 58))",
+          "ranked": [
+            {
+              "attempt": 4,
+              "turns": 14,
+              "enemyHp": 999999999
+            },
+            {
+              "attempt": 1,
+              "turns": 14,
+              "enemyHp": 999999999
+            },
+            {
+              "attempt": 3,
+              "turns": 13,
+              "enemyHp": 28
+            },
+            {
+              "attempt": 5,
+              "turns": 13,
+              "enemyHp": 999999993
+            },
+            {
+              "attempt": 2,
+              "turns": 10,
+              "enemyHp": 58
+            }
+          ]
+        }
+      }
+    },
+    {
+      "line": 715,
+      "run_id": "PU80F84P6HPN",
+      "attempt": 1,
+      "result": "predicted_death",
+      "last": {
+        "turn": 17,
+        "hp": 20,
+        "block": 0,
+        "enemies": "瀑布巨兽 999999989/999999999",
+        "plays": []
+      },
+      "reference": null
+    },
+    {
+      "line": 716,
+      "run_id": "PU80F84P6HPN",
+      "attempt": 2,
+      "result": "predicted_death",
+      "last": {
+        "turn": 17,
+        "hp": 27,
+        "block": 0,
+        "enemies": "瀑布巨兽 999999981/999999999",
+        "plays": []
+      },
+      "reference": null
+    },
+    {
+      "line": 717,
+      "run_id": "PU80F84P6HPN",
+      "attempt": 3,
+      "result": "predicted_death",
+      "last": {
+        "turn": 19,
+        "hp": 33,
+        "block": 0,
+        "enemies": "瀑布巨兽 999999999/999999999",
+        "plays": []
+      },
+      "reference": {
+        "board": "089a455e048b5d14",
+        "turn": 5,
+        "reference": 2,
+        "back": 3,
+        "round": 0,
+        "excluded": [
+          "小刀 -> 瀑布巨兽, 触媒, 匕首雨+, 突然一拳 -> 瀑布巨兽, 逃脱计划"
+        ],
+        "attempts": [
+          2
+        ],
+        "point": "T5, the 3rd latest question before attempt 2's death on T17",
+        "tried": {
+          "canon": [
+            "ACCELERANT, DAGGER_SPRAY+, ESCAPE_PLAN, SHIV>瀑布巨兽, SUCKER_PUNCH>瀑布巨兽"
+          ],
+          "loose": [],
+          "cards": [
+            {
+              "cards": "ACCELERANT, DAGGER_SPRAY+, ESCAPE_PLAN, SHIV>瀑布巨兽, SUCKER_PUNCH>瀑布巨兽",
+              "drunk": []
+            }
+          ]
+        },
+        "where": {
+          "weight": 17.5,
+          "turnRound": 0,
+          "lost": {
+            "T1": 0,
+            "T2": 5,
+            "T3": 0,
+            "T4": 0,
+            "T5": 17,
+            "T6": 0,
+            "T7": 1,
+            "T8": 0,
+            "T9": 0,
+            "T10": 5.5,
+            "T11": 2,
+            "T12": 1,
+            "T13": 0,
+            "T14": 0,
+            "T15": 2,
+            "T16": 0,
+            "T17": 23.5
+          },
+          "weights": {
+            "T1": 3.6,
+            "T2": 7.2,
+            "T5": 17.5,
+            "T12": 2,
+            "T15": 7.9
+          }
+        },
+        "anchor": {
+          "why": "attempt 2's path, the failed attempt that lived longest (attempt 2 T17 (enemy HP 999999981), attempt 1 T17 (enemy HP 999999989))",
+          "ranked": [
+            {
+              "attempt": 2,
+              "turns": 17,
+              "enemyHp": 999999981
+            },
+            {
+              "attempt": 1,
+              "turns": 17,
+              "enemyHp": 999999989
+            }
+          ]
+        }
+      }
+    },
+    {
+      "line": 718,
+      "run_id": "PU80F84P6HPN",
+      "attempt": 4,
+      "result": "predicted_death",
+      "last": {
+        "turn": 18,
+        "hp": 33,
+        "block": 0,
+        "enemies": "瀑布巨兽 999999999/999999999",
+        "plays": []
+      },
+      "reference": {
+        "board": "b0feb3544f19241f",
+        "turn": 17,
+        "reference": 3,
+        "back": 2,
+        "round": 0,
+        "excluded": [
+          "小刀 -> 瀑布巨兽, 防御, 生存者"
+        ],
+        "attempts": [
+          3
+        ],
+        "point": "T17, the 2nd latest question before attempt 3's death on T19",
+        "tried": {
+          "canon": [
+            "DEFEND_SILENT, SHIV>瀑布巨兽, SURVIVOR"
+          ],
+          "loose": [],
+          "cards": [
+            {
+              "cards": "DEFEND_SILENT, SHIV>瀑布巨兽, SURVIVOR",
+              "drunk": []
+            }
+          ]
+        },
+        "where": {
+          "weight": 23.9,
+          "turnRound": 0,
+          "lost": {
+            "T1": 0,
+            "T2": 5,
+            "T3": 0,
+            "T4": 0,
+            "T5": 17,
+            "T6": 0,
+            "T7": 0.7,
+            "T8": 0,
+            "T9": 0,
+            "T10": 3.7,
+            "T11": 1.3,
+            "T12": 1.3,
+            "T13": 0,
+            "T14": 0,
+            "T15": 1.3,
+            "T16": 0,
+            "T17": 15.7,
+            "T18": 0,
+            "T19": 33
+          },
+          "weights": {
+            "T1": 3.6,
+            "T2": 7.2,
+            "T5": 17.3,
+            "T8": 1.2,
+            "T11": 2.5,
+            "T12": 2.2,
+            "T15": 7.3,
+            "T16": 12,
+            "T17": 23.9
+          }
+        },
+        "anchor": {
+          "why": "attempt 3's path, not attempt 2's: it lived longest (attempt 3 T19 (enemy HP 999999999), attempt 2 T17 (enemy HP 999999981), attempt 1 T17 (enemy HP 999999989))",
+          "ranked": [
+            {
+              "attempt": 3,
+              "turns": 19,
+              "enemyHp": 999999999
+            },
+            {
+              "attempt": 2,
+              "turns": 17,
+              "enemyHp": 999999981
+            },
+            {
+              "attempt": 1,
+              "turns": 17,
+              "enemyHp": 999999989
+            }
+          ]
+        }
+      }
+    },
+    {
+      "line": 719,
+      "run_id": "PU80F84P6HPN",
+      "attempt": 5,
+      "result": "won",
+      "last": {
+        "turn": 15,
+        "hp": 24,
+        "block": 0,
+        "enemies": "瀑布巨兽 999999999/999999999",
+        "plays": [
+          "小刀 -> 瀑布巨兽",
+          "打击 -> 瀑布巨兽",
+          "防御",
+          "逃脱计划",
+          "中和 -> 瀑布巨兽",
+          "防御"
+        ]
+      },
+      "reference": {
+        "board": "e2bc6d27f41a5d2a",
+        "turn": 2,
+        "reference": 3,
+        "back": 11,
+        "round": 0,
+        "excluded": [
+          "突然一拳 -> 瀑布巨兽, 匕首雨+, 防御"
+        ],
+        "attempts": [
+          2,
+          3,
+          4
+        ],
+        "point": "T2, the 11th latest question before attempt 3's death on T19",
+        "tried": {
+          "canon": [
+            "DAGGER_SPRAY+, DEFEND_SILENT, SUCKER_PUNCH>瀑布巨兽"
+          ],
+          "loose": [],
+          "cards": [
+            {
+              "cards": "DAGGER_SPRAY+, DEFEND_SILENT, SUCKER_PUNCH>瀑布巨兽",
+              "drunk": []
+            }
+          ]
+        },
+        "where": {
+          "weight": 7.2,
+          "turnRound": 0,
+          "lost": {
+            "T1": 0,
+            "T2": 5,
+            "T3": 0,
+            "T4": 0,
+            "T5": 17,
+            "T6": 0,
+            "T7": 0.5,
+            "T8": 0,
+            "T9": 0,
+            "T10": 2.8,
+            "T11": 1,
+            "T12": 1.5,
+            "T13": 0,
+            "T14": 0,
+            "T15": 1,
+            "T16": 0,
+            "T17": 11.8,
+            "T18": 16.5,
+            "T19": 33
+          },
+          "weights": {
+            "T1": 3.6,
+            "T2": 7.2,
+            "T5": 17.2,
+            "T8": 1,
+            "T11": 2.3,
+            "T12": 2.5,
+            "T15": 8.1,
+            "T16": 14.1,
+            "T17": 28.3
+          }
+        },
+        "anchor": {
+          "why": "attempt 3's path, not attempt 2's: it lived longest (attempt 3 T19 (enemy HP 999999999), attempt 4 T18 (enemy HP 999999999), attempt 2 T17 (enemy HP 999999981), attempt 1 T17 (enemy HP 999999989))",
+          "ranked": [
+            {
+              "attempt": 3,
+              "turns": 19,
+              "enemyHp": 999999999
+            },
+            {
+              "attempt": 4,
+              "turns": 18,
+              "enemyHp": 999999999
+            },
+            {
+              "attempt": 2,
+              "turns": 17,
+              "enemyHp": 999999981
+            },
+            {
+              "attempt": 1,
+              "turns": 17,
+              "enemyHp": 999999989
+            }
+          ]
+        }
+      }
+    },
+    {
+      "line": 958,
+      "run_id": "YQL8RZ8BWN1E",
+      "attempt": 1,
+      "result": "predicted_death",
+      "last": {
+        "turn": 13,
+        "hp": 10,
+        "block": 0,
+        "enemies": "瀑布巨兽 999999990/999999999",
+        "plays": [
+          "防御",
+          "防御"
+        ]
+      },
+      "reference": null
+    },
+    {
+      "line": 959,
+      "run_id": "YQL8RZ8BWN1E",
+      "attempt": 2,
+      "result": "predicted_death",
+      "last": {
+        "turn": 13,
+        "hp": 6,
+        "block": 0,
+        "enemies": "瀑布巨兽 999999999/999999999",
+        "plays": [
+          "打击 -> 瀑布巨兽",
+          "防御",
+          "切割 -> 瀑布巨兽",
+          "防御"
+        ]
+      },
+      "reference": null
+    },
+    {
+      "line": 960,
+      "run_id": "YQL8RZ8BWN1E",
+      "attempt": 3,
+      "result": "predicted_death",
+      "last": {
+        "turn": 12,
+        "hp": 10,
+        "block": 0,
+        "enemies": "瀑布巨兽 999999971/999999999",
+        "plays": [
+          "斗篷与匕首"
+        ]
+      },
+      "reference": {
+        "board": "effd4f4fdfe5f2d7",
+        "turn": 10,
+        "reference": 1,
+        "back": 5,
+        "round": 0,
+        "excluded": [
+          "触媒, 防御, 防御"
+        ],
+        "attempts": [
+          1
+        ],
+        "point": "T10, the 5th latest question before attempt 1's death on T13",
+        "tried": {
+          "canon": [
+            "ACCELERANT, DEFEND_SILENT, DEFEND_SILENT"
+          ],
+          "loose": [],
+          "cards": [
+            {
+              "cards": "ACCELERANT, DEFEND_SILENT, DEFEND_SILENT",
+              "drunk": [
+                "POISON_POTION"
+              ]
+            }
+          ]
+        },
+        "where": {
+          "weight": 20,
+          "turnRound": 0,
+          "lost": {
+            "T1": 0,
+            "T2": 11,
+            "T3": 0,
+            "T4": 0,
+            "T5": 5,
+            "T6": 0,
+            "T7": 7,
+            "T8": 6,
+            "T9": 0,
+            "T10": 18,
+            "T11": 2,
+            "T12": 0,
+            "T13": 8
+          },
+          "weights": {
+            "T1": 6,
+            "T5": 8.1,
+            "T6": 6.3,
+            "T7": 12.5,
+            "T8": 11,
+            "T9": 10,
+            "T10": 20,
+            "T11": 4,
+            "T12": 4
+          }
+        },
+        "anchor": {
+          "why": "attempt 1's path, not attempt 2's: it lived longest (attempt 1 T13 (enemy HP 999999990), attempt 2 T13 (enemy HP 999999999))",
+          "ranked": [
+            {
+              "attempt": 1,
+              "turns": 13,
+              "enemyHp": 999999990
+            },
+            {
+              "attempt": 2,
+              "turns": 13,
+              "enemyHp": 999999999
+            }
+          ]
+        }
+      }
+    },
+    {
+      "line": 961,
+      "run_id": "YQL8RZ8BWN1E",
+      "attempt": 4,
+      "result": "predicted_death",
+      "last": {
+        "turn": 13,
+        "hp": 10,
+        "block": 0,
+        "enemies": "瀑布巨兽 999999996/999999999",
+        "plays": [
+          "防御",
+          "防御",
+          "切割 -> 瀑布巨兽",
+          "触媒"
+        ]
+      },
+      "reference": {
+        "board": "a2e304809334cb84",
+        "turn": 9,
+        "reference": 1,
+        "back": 7,
+        "round": 0,
+        "excluded": [
+          "投掷匕首 -> 瀑布巨兽, 斗篷与匕首"
+        ],
+        "attempts": [
+          1,
+          3
+        ],
+        "point": "T9, the 7th latest question before attempt 1's death on T13",
+        "tried": {
+          "canon": [
+            "CLOAK_AND_DAGGER, DAGGER_THROW>瀑布巨兽"
+          ],
+          "loose": [],
+          "cards": [
+            {
+              "cards": "CLOAK_AND_DAGGER, DAGGER_THROW>瀑布巨兽",
+              "drunk": [
+                "POISON_POTION"
+              ]
+            }
+          ]
+        },
+        "where": {
+          "weight": 10.3,
+          "turnRound": 0,
+          "lost": {
+            "T1": 0,
+            "T2": 11,
+            "T3": 0,
+            "T4": 0,
+            "T5": 5,
+            "T6": 0,
+            "T7": 7,
+            "T8": 6,
+            "T9": 0,
+            "T10": 18,
+            "T11": 1.3,
+            "T12": 3.3,
+            "T13": 8
+          },
+          "weights": {
+            "T1": 6,
+            "T5": 8.1,
+            "T6": 6.3,
+            "T7": 12.6,
+            "T8": 11.1,
+            "T9": 10.3,
+            "T10": 20.5,
+            "T11": 5,
+            "T12": 7.3
+          }
+        },
+        "anchor": {
+          "why": "attempt 1's path, not attempt 2's: it lived longest (attempt 1 T13 (enemy HP 999999990), attempt 2 T13 (enemy HP 999999999), attempt 3 T12 (enemy HP 999999971))",
+          "ranked": [
+            {
+              "attempt": 1,
+              "turns": 13,
+              "enemyHp": 999999990
+            },
+            {
+              "attempt": 2,
+              "turns": 13,
+              "enemyHp": 999999999
+            },
+            {
+              "attempt": 3,
+              "turns": 12,
+              "enemyHp": 999999971
+            }
+          ]
+        }
+      }
+    },
+    {
+      "line": 962,
+      "run_id": "YQL8RZ8BWN1E",
+      "attempt": 5,
+      "result": "predicted_death",
+      "last": {
+        "turn": 13,
+        "hp": 10,
+        "block": 0,
+        "enemies": "瀑布巨兽 999999990/999999999",
+        "plays": [
+          "防御",
+          "防御",
+          "切割 -> 瀑布巨兽",
+          "防御"
+        ]
+      },
+      "reference": {
+        "board": "fd3efa458da21651",
+        "turn": 12,
+        "reference": 1,
+        "back": 1,
+        "round": 0,
+        "excluded": [
+          "drink 毒药水"
+        ],
+        "attempts": [
+          1
+        ],
+        "point": "T12, the latest question before attempt 1's death on T13",
+        "tried": {
+          "canon": [
+            "potion:POISON_POTION>瀑布巨兽",
+            "CLOAK_AND_DAGGER, DAGGER_THROW>瀑布巨兽, STRIKE_SILENT>瀑布巨兽, potion:POISON_POTION>瀑布巨兽"
+          ],
+          "loose": [],
+          "cards": [
+            {
+              "cards": "nothing",
+              "drunk": [
+                "POISON_POTION"
+              ]
+            },
+            {
+              "cards": "CLOAK_AND_DAGGER, DAGGER_THROW>瀑布巨兽, STRIKE_SILENT>瀑布巨兽",
+              "drunk": [
+                "POISON_POTION"
+              ]
+            }
+          ]
+        },
+        "where": {
+          "weight": 6.8,
+          "turnRound": 0,
+          "lost": {
+            "T1": 0,
+            "T2": 11,
+            "T3": 0,
+            "T4": 0,
+            "T5": 5,
+            "T6": 0,
+            "T7": 7,
+            "T8": 6,
+            "T9": 0,
+            "T10": 18,
+            "T11": 1,
+            "T12": 2.5,
+            "T13": 8.7
+          },
+          "weights": {
+            "T1": 6,
+            "T5": 8.1,
+            "T6": 6.3,
+            "T7": 12.5,
+            "T8": 11.1,
+            "T9": 10.1,
+            "T10": 20.2,
+            "T11": 4.4,
+            "T12": 6.8
+          }
+        },
+        "anchor": {
+          "why": "attempt 1's path, not attempt 2's: it lived longest (attempt 1 T13 (enemy HP 999999990), attempt 4 T13 (enemy HP 999999996), attempt 2 T13 (enemy HP 999999999), attempt 3 T12 (enemy HP 999999971))",
+          "ranked": [
+            {
+              "attempt": 1,
+              "turns": 13,
+              "enemyHp": 999999990
+            },
+            {
+              "attempt": 4,
+              "turns": 13,
+              "enemyHp": 999999996
+            },
+            {
+              "attempt": 2,
+              "turns": 13,
+              "enemyHp": 999999999
+            },
+            {
+              "attempt": 3,
+              "turns": 12,
+              "enemyHp": 999999971
+            }
+          ]
+        }
+      }
+    },
+    {
+      "line": 963,
+      "run_id": "YQL8RZ8BWN1E",
+      "attempt": 6,
+      "result": "died",
+      "last": {
+        "turn": 10,
+        "hp": 26,
+        "block": 0,
+        "enemies": "瀑布巨兽 999999999/999999999",
+        "plays": [
+          "生存者",
+          "防御",
+          "potion 毒药水"
+        ]
+      },
+      "reference": {
+        "board": "fee81c9bbdeebe5b",
+        "turn": 6,
+        "reference": 5,
+        "back": 14,
+        "round": 0,
+        "excluded": [
+          "防御, 尖啸, 小刀 -> 瀑布巨兽"
+        ],
+        "attempts": [
+          1,
+          3,
+          4,
+          5
+        ],
+        "point": "T6, the 14th latest question before attempt 5's death on T13",
+        "tried": {
+          "canon": [
+            "CLOAK_AND_DAGGER, DEFEND_SILENT, PIERCING_WAIL, SHIV>瀑布巨兽"
+          ],
+          "loose": [],
+          "cards": [
+            {
+              "cards": "CLOAK_AND_DAGGER, DEFEND_SILENT, PIERCING_WAIL, SHIV>瀑布巨兽",
+              "drunk": [
+                "POISON_POTION"
+              ]
+            }
+          ]
+        },
+        "where": {
+          "weight": 6.3,
+          "turnRound": 0,
+          "lost": {
+            "T1": 0,
+            "T2": 11,
+            "T3": 0,
+            "T4": 0,
+            "T5": 5,
+            "T6": 0,
+            "T7": 7,
+            "T8": 6,
+            "T9": 0,
+            "T10": 18,
+            "T11": 0.8,
+            "T12": 2,
+            "T13": 9
+          },
+          "weights": {
+            "T1": 6,
+            "T5": 8.1,
+            "T6": 6.3,
+            "T7": 12.5,
+            "T8": 11,
+            "T9": 10,
+            "T10": 20,
+            "T11": 4.1
+          }
+        },
+        "anchor": {
+          "why": "attempt 5's path, not attempt 2's: it lived longest (attempt 5 T13 (enemy HP 999999990), attempt 1 T13 (enemy HP 999999990), attempt 4 T13 (enemy HP 999999996), attempt 2 T13 (enemy HP 999999999), attempt 3 T12 (enemy HP 999999971))",
+          "ranked": [
+            {
+              "attempt": 5,
+              "turns": 13,
+              "enemyHp": 999999990
+            },
+            {
+              "attempt": 1,
+              "turns": 13,
+              "enemyHp": 999999990
+            },
+            {
+              "attempt": 4,
+              "turns": 13,
+              "enemyHp": 999999996
+            },
+            {
+              "attempt": 2,
+              "turns": 13,
+              "enemyHp": 999999999
+            },
+            {
+              "attempt": 3,
+              "turns": 12,
+              "enemyHp": 999999971
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "scope": "原始日志与既有summary的证据核验，不是生产代码测试或受控整战重放。"
+}

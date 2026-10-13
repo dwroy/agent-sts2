@@ -1,0 +1,56 @@
+{
+  "tsc": 0,
+  "vitest": 0,
+  "files": 346,
+  "cases": 3418,
+  "workers": 1,
+  "phases": [
+    {
+      "name": "test-source-direct",
+      "exit": 1,
+      "tsc": 0,
+      "files_passed": 304,
+      "cases_passed": 3273,
+      "log": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261013-084306-experience-update/test-source-direct.log",
+      "sha256": "7210c244c16b07653eb968b70cf610c14bb38920186ff07b49adda93fecd4598"
+    },
+    {
+      "name": "test-source-copy",
+      "exit": 1,
+      "tsc": 0,
+      "files_passed": 305,
+      "cases_passed": 3274,
+      "log": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261013-084306-experience-update/test-source-copy.log",
+      "sha256": "650bfc34e0d7683a9d7778b1bd7a2891ed36cf1a520d5f407bd1d3c595a0faa7"
+    },
+    {
+      "name": "test-source-copy-corrected-first-immutable",
+      "exit": 1,
+      "tsc": 0,
+      "files_passed": 343,
+      "cases_passed": 3405,
+      "log": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261013-084306-experience-update/test-source-copy-corrected-first-immutable.log",
+      "sha256": "f3af45371680846f74fe1e06d451a18c0e1c704e696b497814b9b01745f743d3"
+    },
+    {
+      "name": "test-source-retry-corrected",
+      "exit": 1,
+      "tsc": 0,
+      "files_passed": 344,
+      "cases_passed": 3406,
+      "log": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261013-084306-experience-update/test-source-retry-corrected.log",
+      "sha256": "a91e674820216392afc291978531d20c2682bca21c0c7e5dd6e44bd43974e3c1"
+    },
+    {
+      "name": "test-source-low-workers",
+      "exit": 0,
+      "tsc": 0,
+      "files_passed": 346,
+      "cases_passed": 3418,
+      "log": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261013-084306-experience-update/test-source-low-workers.log",
+      "sha256": "08b8f6a215df3bd89ae72a0c0c55d8a788d81f4c609ef4db2c17dcacd00db874"
+    }
+  ],
+  "note": "前两次误将CHARACTER=silent应用整套跨角色夹具；纠正后两项失败是Herdr窗口等待断言与目标选线20秒超时，降低worker后按同一固定完整沙箱入口验证，不改测试/预算/排除。所有失败日志保留。",
+  "host_full_suite": "实际live合入后沿原experience-done/learner-checks，由调度器补完整宿主套件；此处未冒报宿主全套。"
+}

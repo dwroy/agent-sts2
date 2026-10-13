@@ -1,0 +1,428 @@
+{
+  "at": "2026-10-13T10:23:16+08:00",
+  "batches": [
+    {
+      "batch": "20261013-094149-strategy-proposal",
+      "proof": {
+        "base": "3b8e42b099c13017d5cdb48da41aba9338b8b097",
+        "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261013-094149/learner/runs/20261013-094202-strategy-proposal/report.md",
+        "dispositions": [
+          {
+            "id": "silent-proposal-366288801d9150d9",
+            "state": "waiting",
+            "reason": "缺抽弃续问后的完整实际回合归属、同后继整战及独立验证，局部5/10血成本不足制定门槛。"
+          },
+          {
+            "id": "silent-proposal-85929bdfc8a3fc1b",
+            "state": "waiting",
+            "reason": "缺F13实际不喝或留药的完整分支及重问后联合收益归属，持有价值不能校准。"
+          },
+          {
+            "id": "silent-proposal-efd9f83ee9e1a6dc",
+            "state": "waiting",
+            "reason": "现有预测与单步回执不覆盖完整actual_turn；缺同后继整战及独立时间留出验证。"
+          },
+          {
+            "id": "silent-proposal-131042659448ae74",
+            "state": "waiting",
+            "reason": "已有机制诊断子项；缺实际无药或留药完整对照及抽弃重问后联合兑现归属。"
+          },
+          {
+            "id": "silent-proposal-990f054036609447",
+            "state": "waiting",
+            "reason": "缺回血、毒和攻击的完整事件归属、同后继整战及实际路线反事实。"
+          },
+          {
+            "id": "silent-proposal-e18d3f18e6cac2a0",
+            "state": "waiting",
+            "reason": "阶段说明已有，参考排序仍使用原始占位血；缺改排序后的完整受控后继及独立验证。"
+          },
+          {
+            "id": "silent-proposal-9733bb80f445aeae",
+            "state": "waiting",
+            "reason": "缺提前喝、整战不喝、留药及阶段排序改动的完整对照，不能拟药水或终局权重。"
+          },
+          {
+            "id": "silent-proposal-c51468c5e8ba6668",
+            "state": "waiting",
+            "reason": "七次耗药已核；缺随机选牌和发光水重问后的整轮收益归属，以及不喝或留到boss的完整支线。"
+          },
+          {
+            "id": "silent-proposal-86a7db08d1a31976",
+            "state": "waiting",
+            "reason": "局部6血换2伤与步法延迟已核；缺受控能力后继及后期独立验证，不能制定统一准入值。"
+          },
+          {
+            "id": "silent-proposal-e282a9131b99129a",
+            "state": "waiting",
+            "reason": "缺续问执行链、同后继整战及独立后期验证，既有子项不足登记整项duplicate或implemented。"
+          }
+        ]
+      },
+      "source_records": 8308,
+      "counts": {
+        "runs.jsonl": 6,
+        "states.jsonl": 4167,
+        "decisions.jsonl": 4071,
+        "sl-attempts.jsonl": 43,
+        "run-plans.jsonl": 21
+      },
+      "source_manifest": {
+        "base": "3b8e42b099c13017d5cdb48da41aba9338b8b097",
+        "live": "e8773abf3a4dcf395eab3f9495dac045ae819eaa",
+        "files": [
+          {
+            "path": "agent/src/sl/explore.ts",
+            "base_sha256": "2f37e85cc1c1c31e96a0d1b90db850893ec75b6cf5b4b84bf07bbb8de4e3ec43",
+            "live_sha256": "89875b8d7fa6470bf2fea69188c16125992f9736a6fa048123c26f7ae6c0d312",
+            "same_bytes": false,
+            "live_last_source_commit": "0d092f6b928a6221eabf3516abad25c48ceaac9c",
+            "live_ancestor": true,
+            "equal_after_Roy_Dai_comment_spelling": true
+          },
+          {
+            "path": "agent/src/sl/attempts.ts",
+            "base_sha256": "f3f785f18c77ccc482a58b236d168780c8e010fb0bec12ec3e14ab61a8aca415",
+            "live_sha256": "f3f785f18c77ccc482a58b236d168780c8e010fb0bec12ec3e14ab61a8aca415",
+            "same_bytes": true,
+            "live_last_source_commit": "0d092f6b928a6221eabf3516abad25c48ceaac9c",
+            "live_ancestor": true,
+            "equal_after_Roy_Dai_comment_spelling": true
+          },
+          {
+            "path": "agent/src/reflex/silent-held-loss.ts",
+            "base_sha256": "c60884d37a5386e21ea357cb6b0942bcc3c098366167dcde4506ae79541e9022",
+            "live_sha256": "c60884d37a5386e21ea357cb6b0942bcc3c098366167dcde4506ae79541e9022",
+            "same_bytes": true,
+            "live_last_source_commit": "05cd292c6f01bb31e406473d3a9843e659d62b93",
+            "live_ancestor": true,
+            "equal_after_Roy_Dai_comment_spelling": true
+          },
+          {
+            "path": "agent/src/reflex/silent-potion-reference.ts",
+            "base_sha256": "94399dd7279d6eaed91d139507baf6936a161cd61a792644a4ab7c5d9102a360",
+            "live_sha256": "94399dd7279d6eaed91d139507baf6936a161cd61a792644a4ab7c5d9102a360",
+            "same_bytes": true,
+            "live_last_source_commit": "04921bd785ac6838066522f91ea0bb6ab95cb6a1",
+            "live_ancestor": true,
+            "equal_after_Roy_Dai_comment_spelling": true
+          },
+          {
+            "path": "agent/src/reflex/silent-giant-potion.ts",
+            "base_sha256": "4f032ab6458326668c37361d33b7882e7f922bf07ad3f995abb6b5085de5a5d6",
+            "live_sha256": "4f032ab6458326668c37361d33b7882e7f922bf07ad3f995abb6b5085de5a5d6",
+            "same_bytes": true,
+            "live_last_source_commit": "d5e20aa4dd44168ce30944dfcce74f8322144953",
+            "live_ancestor": true,
+            "equal_after_Roy_Dai_comment_spelling": true
+          },
+          {
+            "path": "agent/src/reflex/silent-sl-comparison.ts",
+            "base_sha256": "2fbb427662af78dd5428c70e0af9bb82dfe312d4ccffb33201da3c26dfdfc760",
+            "live_sha256": "2fbb427662af78dd5428c70e0af9bb82dfe312d4ccffb33201da3c26dfdfc760",
+            "same_bytes": true,
+            "live_last_source_commit": "a8b1f8be153fe4f3a34146117546c2178f2e446b",
+            "live_ancestor": true,
+            "equal_after_Roy_Dai_comment_spelling": true
+          },
+          {
+            "path": "agent/src/reflex/silent-selection-audit.ts",
+            "base_sha256": "2de2533b477546682ef601d0613bd1adb805e03b894f64347475bfa4e222e4db",
+            "live_sha256": "2de2533b477546682ef601d0613bd1adb805e03b894f64347475bfa4e222e4db",
+            "same_bytes": true,
+            "live_last_source_commit": "05cd292c6f01bb31e406473d3a9843e659d62b93",
+            "live_ancestor": true,
+            "equal_after_Roy_Dai_comment_spelling": true
+          },
+          {
+            "path": "agent/src/reflex/silent-selection-dispatch.ts",
+            "base_sha256": "9301b47f0f6a2589ce210d7f3b9fd232854575154e1f77e471d164070003e6d6",
+            "live_sha256": "9301b47f0f6a2589ce210d7f3b9fd232854575154e1f77e471d164070003e6d6",
+            "same_bytes": true,
+            "live_last_source_commit": "bade647f9fe4c9103b40e2f26b26296692ad24b7",
+            "live_ancestor": true,
+            "equal_after_Roy_Dai_comment_spelling": true
+          },
+          {
+            "path": "agent/src/reflex/potion-cost.ts",
+            "base_sha256": "b0a952df65e6af5ddd99742b9894367dff086052ef810865e85fe73c0c06c0b2",
+            "live_sha256": "cc09b1012495d6ed582c2566d6a1096343a1820f22e0306ada2e75878d14e01e",
+            "same_bytes": false,
+            "live_last_source_commit": "e1a467e18a0dfa8d99046a24ff4c0e1af59278c8",
+            "live_ancestor": true,
+            "equal_after_Roy_Dai_comment_spelling": true
+          },
+          {
+            "path": "agent/src/reflex/combat-plan.ts",
+            "base_sha256": "50ca5db4da8a73874b8fb802c186be53a4fc2f2e05937baba91f7f21e335551c",
+            "live_sha256": "f87dfd27fcd1dfa344b736649d51256c9dc4d2b4ba76339aaca0eaea1ba32a4a",
+            "same_bytes": false,
+            "live_last_source_commit": "f2c7cc1a7288893bceae0f0b20304a2b1fae5f57",
+            "live_ancestor": true,
+            "equal_after_Roy_Dai_comment_spelling": true
+          },
+          {
+            "path": "agent/src/hand/loop.ts",
+            "base_sha256": "facf16c848c8a04c477fc8759dbaf5f747be96390b213ccdd6700b549c8efbae",
+            "live_sha256": "fcbe28445e3f0a6622a64d7eb5c382cd8edafce71610631e0b2ac5c945c4e46b",
+            "same_bytes": false,
+            "live_last_source_commit": "bade647f9fe4c9103b40e2f26b26296692ad24b7",
+            "live_ancestor": true,
+            "equal_after_Roy_Dai_comment_spelling": true
+          },
+          {
+            "path": "agent/src/eye/decision-log.ts",
+            "base_sha256": "a736ed001e37f4b70bd87cea73ce274a9dbc0453b425a0cf0300c2272cb81ea6",
+            "live_sha256": "a736ed001e37f4b70bd87cea73ce274a9dbc0453b425a0cf0300c2272cb81ea6",
+            "same_bytes": true,
+            "live_last_source_commit": "bade647f9fe4c9103b40e2f26b26296692ad24b7",
+            "live_ancestor": true,
+            "equal_after_Roy_Dai_comment_spelling": true
+          },
+          {
+            "path": "agent/src/reflex/silent-phase-reference.ts",
+            "base_sha256": "529b07f58c1934e1e36e99d4c5888183f01109f60684513d7446b49c06e769e1",
+            "live_sha256": "529b07f58c1934e1e36e99d4c5888183f01109f60684513d7446b49c06e769e1",
+            "same_bytes": true,
+            "equal_after_Roy_Dai_comment_spelling": true,
+            "live_last_source_commit": "1d57f9d0dbbb63603e9ce9768e74cb2021478464",
+            "live_ancestor": true
+          },
+          {
+            "path": "agent/src/reflex/silent-phase-current.ts",
+            "base_sha256": "cd4499e87f7b660bcc549330164391b9252388a55124ac202dfbae3715b1f74f",
+            "live_sha256": "cd4499e87f7b660bcc549330164391b9252388a55124ac202dfbae3715b1f74f",
+            "same_bytes": true,
+            "equal_after_Roy_Dai_comment_spelling": true,
+            "live_last_source_commit": "8698c581dac6c7e957f50a381586960a6d0c9b57",
+            "live_ancestor": true
+          },
+          {
+            "path": "agent/src/reflex/turn-solver.ts",
+            "base_sha256": "cf9930aa1e5b6484790411b725f68b43ec4d8e5f0f2745a0fc8259d8d8c7297f",
+            "live_sha256": "bf13016c1b2ba9f96da321dbd2cca87a8053821c53934890549b5b274d1571e0",
+            "same_bytes": false,
+            "equal_after_Roy_Dai_comment_spelling": true,
+            "live_last_source_commit": "f2c7cc1a7288893bceae0f0b20304a2b1fae5f57",
+            "live_ancestor": true
+          }
+        ]
+      },
+      "original_cli_links": 16,
+      "no_source_tests_merge_release_ship_or_parent_completion": true
+    },
+    {
+      "batch": "20261013-094149-s2-strategy-proposal",
+      "proof": {
+        "base": "3b8e42b099c13017d5cdb48da41aba9338b8b097",
+        "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261013-094149-s2/learner/runs/20261013-094202-strategy-proposal/report.md",
+        "dispositions": [
+          {
+            "id": "silent-proposal-08eaa60bcc449852",
+            "state": "waiting",
+            "reason": "七饮、两次真实回复与六次空药入口已核；缺同入口/牌组/路线的不饮、早饮、留boss完整后继，不能校准持药价值。"
+          },
+          {
+            "id": "silent-proposal-92920295a648b540",
+            "state": "waiting",
+            "reason": "T6实损3/扣36与0/扣27、首胜4血接F49开场0已核；缺同牌序完整通关对照及SL重规划执行归属，不能校准SL/终局权重。"
+          },
+          {
+            "id": "silent-proposal-a327449c331efbc1",
+            "state": "waiting",
+            "reason": "T9同指纹多15伤付9血和T7多4血换沙坑一轮均核；缺同抽序完整后继及独立存活验证，不拟血价/沙坑阈值。"
+          },
+          {
+            "id": "silent-proposal-a099e89437e942bb",
+            "state": "waiting",
+            "reason": "九局42饮与3/2/0容量已核且生成子项已有live；缺计划妥当主动保留跨轮、复合饮药触发及完整消费者后继收益。"
+          },
+          {
+            "id": "silent-proposal-47910f82a1fdd98f",
+            "state": "waiting",
+            "reason": "限定四血开场与连战接续已有live子项；缺未知回血/复活组合相位和留药/SL完整后继，不认证整包或拟阈值。"
+          },
+          {
+            "id": "silent-proposal-f1374df72d8e6a25",
+            "state": "waiting",
+            "reason": "1913入口46与Q6胜后2接走廊死已核；缺同入口、休息/锻造、后继动作下早饮/留药整战对照，不改护栏/药价/终局值。"
+          },
+          {
+            "id": "silent-proposal-38a49e6c97f31eea",
+            "state": "waiting",
+            "reason": "普通无挡紧勒与部分药效公式已有live；缺升级/叠层/重放、致死逐击/反伤复活中间帧及能力/阈值/SL联合消费者验收。"
+          },
+          {
+            "id": "silent-proposal-ef0e38a5dbd3bc07",
+            "state": "waiting",
+            "reason": "实际休息/锻造、胜战退出与已建但未兑现毒雾均核；缺受控换线/用药/休息完整后继及能力收益归属，不拟统一血价。"
+          },
+          {
+            "id": "silent-proposal-7f820c02d39bfaea",
+            "state": "waiting",
+            "reason": "T1旧线14挡损1净扣8、替线8挡损7净扣24已核；候选快照不等完整执行，缺跨重规划归属、受控后继和独立存活验证。"
+          },
+          {
+            "id": "silent-proposal-04b6b430759815ed",
+            "state": "waiting",
+            "reason": "精确切击七手/限定蟹朝向已有live子项；缺油灯首次吸收/前序负面/重规划/SL完整链及未观察负面组合，null计数不代表可翻倍。"
+          }
+        ]
+      },
+      "source_records": 21758,
+      "counts": {
+        "states.jsonl": 9815,
+        "decisions.jsonl": 9448,
+        "sl-attempts.jsonl": 78,
+        "jev-prompts.jsonl": 2325,
+        "fight-plans.jsonl": 0,
+        "run-plans.jsonl": 77,
+        "run-config.jsonl": 15
+      },
+      "source_manifest": {
+        "base": "3b8e42b099c13017d5cdb48da41aba9338b8b097",
+        "live_capture": "5e85bbf9ad04b8e864c0a7eca0b7061250dbbb08",
+        "items": [
+          {
+            "feature": "cunning",
+            "path": "agent/src/reflex/card-model.ts",
+            "search": "silent-0256/0257/0258",
+            "live_source_history": [
+              {
+                "commit": "c09762601e54bfc1ef7a1a8ee50e3285a4fd1e5c",
+                "subject": "Integrate scoped Silent mechanisms and restore checked infrastructure fixes",
+                "actual_live_ancestor": true
+              }
+            ],
+            "base_blob": "4b109ea781972f95ce98b5d6b651e181edabe554",
+            "live_blob": "47715f1f047e1aaa53568ca70c7ccd8182c286d2",
+            "base_sha256": "a4f848f7003b765586428382995bb71ffacb7def0cb8947da7fcb6b07b768ff8",
+            "live_sha256": "d71762da6c3a57c70fd032c0ad2f2ea8936b21a284c6ef5b894934f9eb32fc0c",
+            "same_bytes": false
+          },
+          {
+            "feature": "strangle",
+            "path": "agent/src/reflex/turn-solver.ts",
+            "search": "Q6/Y6",
+            "live_source_history": [
+              {
+                "commit": "a8b1f8be153fe4f3a34146117546c2178f2e446b",
+                "subject": "Integrate repaired legacy learning deltas and bounded continuation adapter",
+                "actual_live_ancestor": true
+              }
+            ],
+            "base_blob": "4022b7f4473dad6c0dc08600ffc829b441caba41",
+            "live_blob": "f09ca80588cfdf5d815a274e912bb7bd0e629759",
+            "base_sha256": "cf9930aa1e5b6484790411b725f68b43ec4d8e5f0f2745a0fc8259d8d8c7297f",
+            "live_sha256": "bf13016c1b2ba9f96da321dbd2cca87a8053821c53934890549b5b274d1571e0",
+            "same_bytes": false
+          },
+          {
+            "feature": "royal-opening",
+            "path": "agent/src/sim/silent-opening.ts",
+            "search": "observedRoyalPoisonOpeningLoss",
+            "live_source_history": [
+              {
+                "commit": "c09762601e54bfc1ef7a1a8ee50e3285a4fd1e5c",
+                "subject": "Integrate scoped Silent mechanisms and restore checked infrastructure fixes",
+                "actual_live_ancestor": true
+              }
+            ],
+            "base_blob": "94257a518041cf60b42a76d4da7836477c550fbe",
+            "live_blob": "94257a518041cf60b42a76d4da7836477c550fbe",
+            "base_sha256": "9d235d423d46513236caef9442e6aa275fa6444cd09db25a5408c42c0a6a2401",
+            "live_sha256": "9d235d423d46513236caef9442e6aa275fa6444cd09db25a5408c42c0a6a2401",
+            "same_bytes": true
+          },
+          {
+            "feature": "crusher-facing",
+            "path": "agent/src/reflex/silent-crusher-facing.ts",
+            "search": "observedCrusherWeakFacing",
+            "live_source_history": [
+              {
+                "commit": "f2c7cc1a7288893bceae0f0b20304a2b1fae5f57",
+                "subject": "Replay tested Silent Crusher facing rounding on current live",
+                "actual_live_ancestor": true
+              }
+            ],
+            "base_blob": "255b8b94b02085043de90233d3cc8dd7f36a6952",
+            "live_blob": "255b8b94b02085043de90233d3cc8dd7f36a6952",
+            "base_sha256": "78a90e120c688a8bae4ed80077ef12a862efa29b1d423160cca4cf72a13eed8e",
+            "live_sha256": "78a90e120c688a8bae4ed80077ef12a862efa29b1d423160cca4cf72a13eed8e",
+            "same_bytes": true
+          },
+          {
+            "feature": "seven-hand",
+            "path": "agent/src/reflex/card-model.ts",
+            "search": "preciseCutSevenHand",
+            "live_source_history": [
+              {
+                "commit": "a8b1f8be153fe4f3a34146117546c2178f2e446b",
+                "subject": "Integrate repaired legacy learning deltas and bounded continuation adapter",
+                "actual_live_ancestor": true
+              }
+            ],
+            "base_blob": "4b109ea781972f95ce98b5d6b651e181edabe554",
+            "live_blob": "47715f1f047e1aaa53568ca70c7ccd8182c286d2",
+            "base_sha256": "a4f848f7003b765586428382995bb71ffacb7def0cb8947da7fcb6b07b768ff8",
+            "live_sha256": "d71762da6c3a57c70fd032c0ad2f2ea8936b21a284c6ef5b894934f9eb32fc0c",
+            "same_bytes": false
+          },
+          {
+            "feature": "sl-resource",
+            "path": "agent/src/reflex/silent-sl-resource-comparison.ts",
+            "search": "silentSlResourceComparison",
+            "live_source_history": [
+              {
+                "commit": "a8b1f8be153fe4f3a34146117546c2178f2e446b",
+                "subject": "Integrate repaired legacy learning deltas and bounded continuation adapter",
+                "actual_live_ancestor": true
+              }
+            ],
+            "base_blob": "d5ac326551cdcf6aeefc22972faa5ac45e91a1f6",
+            "live_blob": "d5ac326551cdcf6aeefc22972faa5ac45e91a1f6",
+            "base_sha256": "30da6d7d0c065957c118b211d53ac40360bcf93c05861be3dd811da78f8a8c21",
+            "live_sha256": "30da6d7d0c065957c118b211d53ac40360bcf93c05861be3dd811da78f8a8c21",
+            "same_bytes": true
+          },
+          {
+            "feature": "sl-comparison",
+            "path": "agent/src/reflex/silent-sl-comparison.ts",
+            "search": "silentSlComparison",
+            "live_source_history": [
+              {
+                "commit": "a8b1f8be153fe4f3a34146117546c2178f2e446b",
+                "subject": "Integrate repaired legacy learning deltas and bounded continuation adapter",
+                "actual_live_ancestor": true
+              }
+            ],
+            "base_blob": "df4382a6414fc29d1f8db1e061281be4607d311d",
+            "live_blob": "df4382a6414fc29d1f8db1e061281be4607d311d",
+            "base_sha256": "2fbb427662af78dd5428c70e0af9bb82dfe312d4ccffb33201da3c26dfdfc760",
+            "live_sha256": "2fbb427662af78dd5428c70e0af9bb82dfe312d4ccffb33201da3c26dfdfc760",
+            "same_bytes": true
+          },
+          {
+            "feature": "double-boss",
+            "path": "agent/src/sim/double-boss-start.ts",
+            "search": "withDoubleBossStart",
+            "live_source_history": [
+              {
+                "commit": "e1a467e18a0dfa8d99046a24ff4c0e1af59278c8",
+                "subject": "feat(silent): value resources and simulate continuous A10 bosses",
+                "actual_live_ancestor": true
+              }
+            ],
+            "base_blob": "d19985fbb77244b8e80d3716a8f775c85ced8d68",
+            "live_blob": "d19985fbb77244b8e80d3716a8f775c85ced8d68",
+            "base_sha256": "725cceb3f76da9192c575705cb21645784eeb4a268f498a49d4d6e5984b2f30c",
+            "live_sha256": "725cceb3f76da9192c575705cb21645784eeb4a268f498a49d4d6e5984b2f30c",
+            "same_bytes": true
+          }
+        ]
+      },
+      "original_cli_links": 31,
+      "no_source_tests_merge_release_ship_or_parent_completion": true
+    }
+  ]
+}

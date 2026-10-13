@@ -1,0 +1,208 @@
+{
+  "at": "2026-10-13T10:23:16+08:00",
+  "report": {
+    "task": "experience-update",
+    "version": "2026-10-13.8",
+    "commit": "43f631e77616ff346bb0ee38109ce5a2df59c824",
+    "merged": null,
+    "added": 0,
+    "updated": 17,
+    "retired": 0,
+    "active": 231,
+    "mechanisms": [
+      "敏捷逐张牌挡兑现",
+      "覆甲有限缓冲",
+      "力量逐段与虚弱分源",
+      "能力/资源同窗兑现观察",
+      "施毒与结毒分账",
+      "触媒逐次结毒",
+      "刺击直伤与施毒分源",
+      "千足虫接续重置与需伤",
+      "融入暗影只翻新增挡",
+      "群蛇后继附伤及随机落点",
+      "蜡烛充能/续火/回血分账",
+      "墨影耗层与实伤窗口观察",
+      "跨幕缺血回复分账",
+      "奇巧选中不等实际出牌",
+      "肌肉临时力量与实际后继"
+    ],
+    "tests": {
+      "tsc": 0,
+      "vitest": 0,
+      "cases": 3418
+    },
+    "ledger": {
+      "added": [],
+      "proposed": [
+        "silent-0005",
+        "silent-0007",
+        "silent-0016",
+        "silent-0019",
+        "silent-0020",
+        "silent-0021",
+        "silent-0025",
+        "silent-0027",
+        "silent-0064",
+        "silent-0077",
+        "silent-0079",
+        "silent-0132",
+        "silent-0184",
+        "silent-0224",
+        "silent-0243",
+        "silent-0274",
+        "silent-0330",
+        "silent-0385"
+      ],
+      "retired": [],
+      "check": 0
+    },
+    "code_proposals": [
+      "silent-proposal-da995758e59ce4c2",
+      "silent-proposal-ed233ed5dca5111f"
+    ],
+    "implementation_domains": [
+      "combat",
+      "potion",
+      "sl",
+      "terminal"
+    ],
+    "report": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261013-084306-experience-update/report.md"
+  },
+  "original_source_records": 987,
+  "tests": {
+    "tsc": 0,
+    "vitest": 0,
+    "files": 346,
+    "cases": 3418,
+    "workers": 1,
+    "phases": [
+      {
+        "name": "test-source-direct",
+        "exit": 1,
+        "tsc": 0,
+        "files_passed": 304,
+        "cases_passed": 3273,
+        "log": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261013-084306-experience-update/test-source-direct.log",
+        "sha256": "7210c244c16b07653eb968b70cf610c14bb38920186ff07b49adda93fecd4598"
+      },
+      {
+        "name": "test-source-copy",
+        "exit": 1,
+        "tsc": 0,
+        "files_passed": 305,
+        "cases_passed": 3274,
+        "log": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261013-084306-experience-update/test-source-copy.log",
+        "sha256": "650bfc34e0d7683a9d7778b1bd7a2891ed36cf1a520d5f407bd1d3c595a0faa7"
+      },
+      {
+        "name": "test-source-copy-corrected-first-immutable",
+        "exit": 1,
+        "tsc": 0,
+        "files_passed": 343,
+        "cases_passed": 3405,
+        "log": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261013-084306-experience-update/test-source-copy-corrected-first-immutable.log",
+        "sha256": "f3af45371680846f74fe1e06d451a18c0e1c704e696b497814b9b01745f743d3"
+      },
+      {
+        "name": "test-source-retry-corrected",
+        "exit": 1,
+        "tsc": 0,
+        "files_passed": 344,
+        "cases_passed": 3406,
+        "log": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261013-084306-experience-update/test-source-retry-corrected.log",
+        "sha256": "a91e674820216392afc291978531d20c2682bca21c0c7e5dd6e44bd43974e3c1"
+      },
+      {
+        "name": "test-source-low-workers",
+        "exit": 0,
+        "tsc": 0,
+        "files_passed": 346,
+        "cases_passed": 3418,
+        "log": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261013-084306-experience-update/test-source-low-workers.log",
+        "sha256": "08b8f6a215df3bd89ae72a0c0c55d8a788d81f4c609ef4db2c17dcacd00db874"
+      }
+    ],
+    "note": "前两次误将CHARACTER=silent应用整套跨角色夹具；纠正后两项失败是Herdr窗口等待断言与目标选线20秒超时，降低worker后按同一固定完整沙箱入口验证，不改测试/预算/排除。所有失败日志保留。",
+    "host_full_suite": "实际live合入后沿原experience-done/learner-checks，由调度器补完整宿主套件；此处未冒报宿主全套。"
+  },
+  "merge_conflict": {
+    "source": "43f631e77616ff346bb0ee38109ce5a2df59c824",
+    "branch": "exp-merge-recovery-20261013-000402",
+    "merged": null,
+    "tests": null,
+    "initial": "e8773abf3a4dcf395eab3f9495dac045ae819eaa",
+    "initial_status": " M knowledge/characters/silent/boss-damage.json\n M knowledge/characters/silent/fight-value-gates.json\n M knowledge/characters/silent/fight-value.json\n M knowledge/characters/silent/monster-records.json\n M knowledge/characters/silent/outcome-stats.json\n M knowledge/characters/silent/room-costs.json\n M knowledge/common/card-upgrades.json\n M knowledge/common/monster-db.json\n M knowledge/common/move-model.json\n M notes/fight-value-backtest-silent.md\n M notes/monster-db-check.md\n",
+    "refresh_paths": [
+      "knowledge/characters/silent/boss-damage.json",
+      "knowledge/characters/silent/fight-value-gates.json",
+      "knowledge/characters/silent/fight-value.json",
+      "knowledge/characters/silent/monster-records.json",
+      "knowledge/characters/silent/outcome-stats.json",
+      "knowledge/characters/silent/room-costs.json",
+      "knowledge/common/card-upgrades.json",
+      "knowledge/common/monster-db.json",
+      "knowledge/common/move-model.json"
+    ],
+    "pre": "5e85bbf9ad04b8e864c0a7eca0b7061250dbbb08",
+    "live_experience_sha256": "549448cfde316633b0438e788ea6d3380a36698e1e670d3e857b4b58d96a8546",
+    "base": "cea987c0d8ebbe13b15d92cf37bb58ad2c496455",
+    "source_knowledge_paths": [
+      "knowledge/builders/build-monster-db.py",
+      "knowledge/builders/build-outcome-stats.py",
+      "knowledge/builders/build-potion-equivalents.py",
+      "knowledge/builders/characters.py",
+      "knowledge/builders/refresh-potion-equivalents.sh",
+      "knowledge/characters/ironclad/potion-equivalents.json",
+      "knowledge/characters/ironclad/sl-elites.json",
+      "knowledge/characters/silent/boss-damage.json",
+      "knowledge/characters/silent/experience.json",
+      "knowledge/characters/silent/fight-value-gates.json",
+      "knowledge/characters/silent/fight-value.json",
+      "knowledge/characters/silent/monster-records.json",
+      "knowledge/characters/silent/outcome-stats.json",
+      "knowledge/characters/silent/potion-equivalents.json",
+      "knowledge/characters/silent/room-costs.json",
+      "knowledge/common/card-upgrades.json",
+      "knowledge/common/monster-db.json",
+      "knowledge/common/move-model.json"
+    ],
+    "live_knowledge_paths": [
+      "knowledge/characters/silent/boss-damage.json",
+      "knowledge/characters/silent/experience.json",
+      "knowledge/characters/silent/fight-value-gates.json",
+      "knowledge/characters/silent/fight-value.json",
+      "knowledge/characters/silent/monster-records.json",
+      "knowledge/characters/silent/outcome-stats.json",
+      "knowledge/characters/silent/room-costs.json",
+      "knowledge/common/card-upgrades.json",
+      "knowledge/common/monster-db.json",
+      "knowledge/common/move-model.json"
+    ],
+    "knowledge_overlap": [
+      "knowledge/characters/silent/boss-damage.json",
+      "knowledge/characters/silent/experience.json",
+      "knowledge/characters/silent/fight-value-gates.json",
+      "knowledge/characters/silent/fight-value.json",
+      "knowledge/characters/silent/monster-records.json",
+      "knowledge/characters/silent/outcome-stats.json",
+      "knowledge/characters/silent/room-costs.json",
+      "knowledge/common/card-upgrades.json",
+      "knowledge/common/monster-db.json",
+      "knowledge/common/move-model.json"
+    ],
+    "knowledge_overlap_conflicts": [
+      "knowledge/characters/silent/boss-damage.json",
+      "knowledge/characters/silent/fight-value-gates.json",
+      "knowledge/characters/silent/fight-value.json",
+      "knowledge/characters/silent/monster-records.json",
+      "knowledge/characters/silent/outcome-stats.json",
+      "knowledge/characters/silent/room-costs.json",
+      "knowledge/common/card-upgrades.json",
+      "knowledge/common/monster-db.json",
+      "knowledge/common/move-model.json"
+    ],
+    "result": "其他并行知识数据与整分支不同内容重叠；按任务停止，不覆盖刷新数据",
+    "final_live_head": "5e85bbf9ad04b8e864c0a7eca0b7061250dbbb08"
+  },
+  "original_failed_scheduler_state_retained": "failed"
+}

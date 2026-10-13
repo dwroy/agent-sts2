@@ -1,0 +1,62 @@
+{
+  "at": "2026-10-13 10:13:36 CST",
+  "worktree": "/home/dw/Projects/agent-sts2/.worktrees/ops-experience-084302-20261013",
+  "live_base": "e4a23553fd3642bd5a4479b82805c650b252fd7d",
+  "main_before": "65cfd8380c56ce4567153c17330ac7f060f1d914",
+  "source": "43f631e77616ff346bb0ee38109ce5a2df59c824",
+  "old_sha256": "549448cfde316633b0438e788ea6d3380a36698e1e670d3e857b4b58d96a8546",
+  "new_sha256": "1a0cb351730679b2e0a41cb7557e1ec825773f321e3c1a55f739015897c75c4c",
+  "active": 231,
+  "total": 232,
+  "changed": 17,
+  "unchanged": 215,
+  "source_full_346_files_3418_reused": true,
+  "source_original_failures_and_nine_refresh_conflicts_retained": true,
+  "only_one_original_experience_file_staged": true,
+  "checks": [
+    {
+      "command": [
+        "nice",
+        "-n",
+        "19",
+        "npx",
+        "tsc",
+        "-p",
+        "tsconfig.json",
+        "--noEmit"
+      ],
+      "exit": 0
+    },
+    {
+      "command": [
+        "nice",
+        "-n",
+        "19",
+        "npx",
+        "vitest",
+        "run",
+        "tests/experience.test.ts",
+        "tests/deepseek-cache-layout.test.ts",
+        "--pool=forks",
+        "--maxWorkers=1"
+      ],
+      "exit": 0
+    }
+  ],
+  "no_actual_live_merge_or_release_or_shipped_yet": true,
+  "guard_rebound_at": "2026-10-13T10:28:38+08:00",
+  "original_main_before": "4457488c49de0b85d2c0d3b92fe544f8799f13bb",
+  "parallel_source_paths_preserved": [
+    "agent/tests/regent-startup-check.test.ts",
+    "docs/codex-ops.md",
+    "ops/codex-ops-actions.sh",
+    "ops/codex-ops-do.sh",
+    "ops/codex/lib.ts",
+    "ops/regent-launch-solo.ps1",
+    "ops/regent-native-repair.py",
+    "ops/regent-startup-check.py",
+    "ops/tests/test_regent_native_repair.py",
+    "ops/tests/test_regent_startup_check.py"
+  ],
+  "targeted_checks_still_scoped_to_original_live_base": true
+}

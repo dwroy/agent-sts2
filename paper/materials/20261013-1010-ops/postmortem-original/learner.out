@@ -1,0 +1,44 @@
+## 复盘回报
+
+- 已追加：QU61RVKHPTZS（A10，第13层，钙化邪教徒／海洋混混战，T2以19血0挡承受19攻击阵亡）。
+- 新的纯 bug：
+  - 无。
+- 写成「未记录」的项：QU61RVKHPTZS：完整脏运行树、完整逐击伤害、同ID永久身份、替代选择的整场实打与因果收益、最终执行线最优率、boss时钟与实打／估值比、Jev缓存命中。
+- 学习账本：QU61RVKHPTZS：新增无；更新 silent-0209、silent-0418、silent-0125、silent-0019、silent-0020、silent-0054、silent-0211、silent-0294；本局均为支持证据，无老错复发登记；`ledger.py check` 退出码0。
+- 代码提案：均关联独立 `strategy-proposal` 实现任务，状态 pending；缺受控整战对照，保持现有行为。
+  - F12T1—T5／账本0209、0019、0211、0054／`silent-proposal-718450001d2b4420`：退场进度与小样本终局估值核验。
+  - F13T1—T2／账本0418／`silent-proposal-1f6b82727fe43415`：弃牌后条件预测核验。
+  - F6T1、F7T5／账本0125、0294、0020／`silent-proposal-e7e521dcfda7e251`：护栏、补药与终局取舍核验。
+
+```json
+{
+  "task": "postmortem",
+  "appended": ["QU61RVKHPTZS"],
+  "skipped": [],
+  "bugs": [],
+  "ledger": {
+    "added": [],
+    "updated": ["silent-0209", "silent-0418", "silent-0125", "silent-0019", "silent-0020", "silent-0054", "silent-0211", "silent-0294"],
+    "repeats": [],
+    "check": 0
+  },
+  "code_proposals": [
+    "silent-proposal-718450001d2b4420",
+    "silent-proposal-1f6b82727fe43415",
+    "silent-proposal-e7e521dcfda7e251"
+  ],
+  "implementation_domains": ["combat", "potion", "terminal"],
+  "report": "/home/dw/Projects/agent-sts2/learner/runs/20261013-094306-postmortem/report.md"
+}
+```
+
+== 学习者 codex / postmortem ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a132ed-8f2c-7b31-8a94-588278a757d6
+轮数：1；工具调用：command_execution×44
+token：输入 218.6k、输出 35.8k（其中推理 9011）、cache 读 4224.4k、cache 写 0（命中 95.1%）
+成本：未提供
+耗时：1486.2 s（墙钟）
+时间：首个事件 13.5 s、模型首个输出 25.9 s、首次工具 31.6 s、末次工具结束 1441.9 s；工具内共 224.9 s，其余（模型生成、推理、网络）1247.8 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2）；模型的工具调用 exec×33；/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/learner/sessions/2026/10/13/rollout-2026-10-13T09-43-11-01a132ed-8f2c-7b31-8a94-588278a757d6.jsonl
+日志：/home/dw/Projects/agent-sts2/learner/runs/20261013-094306-postmortem.jsonl

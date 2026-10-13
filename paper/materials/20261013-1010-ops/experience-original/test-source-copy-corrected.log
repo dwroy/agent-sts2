@@ -1,0 +1,48 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261013-084306-experience-update/.test-checkout/agent
+
+ ❯ tests/ops-herdr.test.ts (27 tests | 1 failed) 95008ms
+     × shows verified live learner 20261010-164301 beside ops and closes its reused viewer on exit 27007ms
+ ❯ tests/target-options.test.ts (22 tests | 1 failed) 113085ms
+     × Jev's picking an Amalgam-focus line plays it (no swap to a Queen line with more damage) 29422ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/ops-herdr.test.ts > ops/herdr-host.sh (fake herdr) > shows verified live learner 20261010-164301 beside ops and closes its reused viewer on exit
+AssertionError: expected [ 'w1:p1', 'w1:p2', 'w1:p4' ] to have a length of 4 but got 3
+
+- Expected
++ Received
+
+- 4
++ 3
+
+ ❯ tests/ops-herdr.test.ts:232:44
+    230|       writeRecord(state, id);
+    231|       expect(runner(batch).status).toBe(1);
+    232|       expect(Object.keys(w.state().panes)).toHaveLength(paneCount);
+       |                                            ^
+    233|     }
+    234|     writeRecord("running", pid);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/target-options.test.ts > per-target options (EZ2L F48 T2: Queen + Torch Head Amalgam) > Jev's picking an Amalgam-focus line plays it (no swap to a Queen line with more damage)
+Error: Test timed out in 20000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/target-options.test.ts:106:3
+    104|   }, 30_000);
+    105|
+    106|   it("Jev's picking an Amalgam-focus line plays it (no swap to a Queen…
+       |   ^
+    107|     const decision = ez2l() as AskDecision;
+    108|     const criteria = criteriaOf(decision);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  2 failed | 343 passed (345)
+      Tests  2 failed | 3405 passed (3407)
+   Start at  09:09:47
+   Duration  476.82s (transform 18.83s, setup 31.21s, import 86.18s, tests 1241.85s, environment 60ms)
+

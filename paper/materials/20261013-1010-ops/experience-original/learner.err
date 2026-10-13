@@ -1,0 +1,185 @@
+学习者 codex / experience-update 已启动（尝试 1，PID 1745497），日志 /home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261013-084306-experience-update.jsonl
+[00:21] 说：我先核对仓库方法、VGNDNGPFYRE3 的角色和证据范围，再更新静默猎手经验库、登记账本与提案，完成自测后按流程合入 live。全程独立处理，不运行对局。 
+[00:27] 命令 /bin/bash -c pwd（退出码 0）
+[00:37] 命令 /bin/bash -c "date '+%Y-%m-%d %H:%M:%S %z'"（退出码 0）
+[00:42] 命令 /bin/bash -c 'git status --short --branch'（退出码 0）
+[00:45] 命令 /bin/bash -c "sed -n '1,220p' README.md"（退出码 0）
+[00:48] 命令 /bin/bash -c 'ls -t paper/materials/STATE-*.md'（退出码 0）
+[00:51] 命令 /bin/bash -c 'tail -n 65 paper/materials/decision-log.md'（退出码 0）
+[00:54] 命令 /bin/bash -c "sed -n '1,240p' docs/learning-protocol.md"（退出码 0）
+[00:57] 命令 /bin/bash -c "sed -n '1,240p' docs/learning-code-proposals.md"（退出码 0）
+[01:24] 命令 /bin/bash -c "sed -n '1,200p' /home/dw/Projects/agent-sts2/paper/materials/learning/README.md"（退出码 0）
+[01:25] 命令 /bin/bash -c "if test -f /home/dw/Projects/agent-sts2/notes/experience-integration-silent.json; then sed -n '1,180p' /ho（退出码 0）
+[01:25] 命令 /bin/bash -c "rg -n '"'^## '"' /home/dw/Projects/agent-sts2/paper/materials/experience-changelog.md | tail -n 5"（退出码 0）
+[01:25] 命令 /bin/bash -c 'git log -1 --oneline; git -C /home/dw/Projects/agent-sts2/.worktrees/live log -1 --oneline; ls knowledge/c（退出码 2）
+[01:25] 命令 /bin/bash -c "sed -n '1,200p' paper/materials/STATE-2026-10-12.md"（退出码 0）
+[01:26] 命令 /bin/bash -c "rg -n '"'^## VGNDNGPFYRE3|VGNDNGPFYRE3.*勘误|''^## '"' /home/dw/Projects/agent-sts2/notes/lessons.md | tail （退出码 0）
+[01:26] 命令 /bin/bash -c "sed -n '1,180p' agent/tools/knowledge-slice.ts"（退出码 0）
+[01:26] 命令 /bin/bash -c "rg -n '"'^## '"' /home/dw/Projects/agent-sts2/paper/materials/experience-changelog-silent.md | tail -n 4"（退出码 0）
+[01:30] 命令 /bin/bash -c 'git merge --no-edit main'（退出码 0）
+[01:35] 说：已确认全历史入库请求已完成且局号不匹配，本批按普通增量处理。基线已合并；接下来核对千足虫终战、途中血量和药水消耗，并复算上一批的统计口径。 
+[01:49] 命令 /bin/bash -c "nice -n 19 sed -n '1,170p' /home/dw/Projects/agent-sts2/paper/materials/experience-changelog.md"（退出码 0）
+[01:49] 命令 /bin/bash -c "nice -n 19 sed -n '2158,2215p' /home/dw/Projects/agent-sts2/paper/materials/experience-changelog.md"（退出码 0）
+[01:50] 命令 /bin/bash -c "nice -n 19 sed -n '14675,14775p' /home/dw/Projects/agent-sts2/notes/lessons.md"（退出码 0）
+[01:55] 命令 /bin/bash -c "nice -n 19 bash -c 'sed -n \"1,165p\" agent/tools/knowledge-slice.ts; git status --short --branch; git log（退出码 2）
+[02:09] 命令 /bin/bash -c "nice -n 19 sed -n '93522,93588p' /home/dw/Projects/agent-sts2/paper/materials/experience-changelog-silent.（退出码 0）
+[02:09] 命令 /bin/bash -c "nice -n 19 sed -n '94238,94312p' /home/dw/Projects/agent-sts2/paper/materials/experience-changelog-silent.（退出码 0）
+[02:10] 命令 /bin/bash -c "nice -n 19 bash -c 'mkdir -p learner/runs/20261013-084306-experience-update; cp knowledge/characters/silen（退出码 0）
+[02:10] 命令 /bin/bash -c "nice -n 19 bash -c 'rg --files learner/runs | rg \"20261013-.*experience-update/(report.md|.*py|.*ts|.*jso（退出码 0）
+[02:20] 命令 /bin/bash -c "nice -n 19 bash -c 'ls -d learner/runs/20261013-*experience-update; sed -n \"1,80p\" learner/runs/20261013（退出码 0）
+[02:27] 说：本局是静默猎手 A10：14 场战斗，终战无读档。复盘显示，千足虫前段归零后恢复 25 血；群蛇随机附伤、敏捷与融入暗影的格挡收益都有实帧支持。我会并入已有条目
+[02:32] 命令 /bin/bash -c "nice -n 19 bash -c 'ls learner/runs/20261013-080222-experience-update | head -n 75; sed -n \"1,200p\" lear（退出码 0）
+[02:41] 命令 /bin/bash -c "nice -n 19 bash -c 'find learner/runs/20261013-080222-experience-update -maxdepth 1 -type f -name \"*.py\"（退出码 0）
+[02:50] 命令 /bin/bash -c "nice -n 19 bash -c 'sed -n \"1,200p\" learner/runs/20261013-080222-experience-update/summarize.py; sed -n （退出码 0）
+[03:07] 命令 /bin/bash -c "nice -n 19 python3 - <<'PY'
+[03:07] import json,hashlib,pathlib
+[03:07] O=pathlib.Path('learner/runs/20261013-084306-exper（退出码 0）
+[03:21] 命令 /bin/bash -c "nice -n 19 bash -c 'sed -n \"1,170p\" learner/runs/20261013-084306-experience-update/verify-source.py; sed（退出码 0）
+[03:42] 命令 /bin/bash -c "nice -n 19 bash -c 'tail -n 8 learner/runs/20261013-084306-experience-update/prepare.log; test "'! -f lear（退出码 0）
+[03:58] 命令 /bin/bash -c "nice -n 19 python3 - <<'PY'
+[03:58] import json,pathlib
+[03:58] O=pathlib.Path('learner/runs/20261013-084306-experience-up（退出码 0）
+[04:01] 说：当前分支经验为 `.7`，live 为 `.6`；已保存两份原件，并确认分支保留了 live 的全部条目和证据。统计正在按上一批口径复算；事件付血、营火回血和跨
+[04:16] 命令 /bin/bash -c "nice -n 19 python3 - <<'PY'
+[04:16] import json
+[04:16] A=json.load(open('knowledge/characters/silent/experience.json'))
+[04:16] f（退出码 0）
+[04:22] 命令 /bin/bash -c "nice -n 19 python3 - <<'PY'
+[04:22] import json,pathlib
+[04:22] O=pathlib.Path('learner/runs/20261013-084306-experience-up（退出码 0）
+[05:47] 改文件 [{"path":"/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261013-084306-experience-update/update.py","kind":"
+[06:14] 命令 /bin/bash -c "nice -n 19 bash -c 'tail -n 10 learner/runs/20261013-084306-experience-update/prepare.log; test "'! -f lea（退出码 0）
+[06:21] 命令 /bin/bash -c "nice -n 19 bash -c 'cp learner/runs/20261013-084306-experience-update/update.py learner/runs/20261013-0843（退出码 0）
+[06:38] 改文件 [{"path":"/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261013-084306-experience-update/update.py","kind":"
+[06:42] 命令 /bin/bash -c "nice -n 19 bash -c 'python3 /home/dw/Projects/agent-sts2/learner/ledger.py fold > learner/runs/20261013-08（退出码 0）
+[07:02] 改文件 [{"path":"/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261013-084306-experience-update/update.py","kind":"
+[07:05] 命令 /bin/bash -c "nice -n 19 bash -c 'tail -n 8 learner/runs/20261013-084306-experience-update/prepare.log; ls -t learner/ru（退出码 0）
+[07:19] 命令 /bin/bash -c "nice -n 19 python3 - <<'PY'
+[07:19] import json,pathlib
+[07:19] O=pathlib.Path('learner/runs/20261013-084306-experience-up（退出码 0）
+[09:02] 改文件 [{"path":"/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261013-084306-experience-update/proof.py","kind":"a
+[09:07] 说：逐帧核对发现，终战“换尖啸”是候选后缀，实际没有施放，不能记作尖啸证据；已在写入前纠正初稿。最终计划更新 17 个既有条目，不新增或退役，并为相关结论登记独立策
+[09:13] 命令 /bin/bash -c 'nice -n 19 python3 learner/runs/20261013-084306-experience-update/proof.py'（退出码 0）
+[09:19] 命令 /bin/bash -c "nice -n 19 bash -c 'tail -n 8 learner/runs/20261013-084306-experience-update/prepare.log; ls -t learner/ru（退出码 0）
+[09:41] 改文件 [{"path":"/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261013-084306-experience-update/register.py","kind"
+[09:44] 命令 /bin/bash -c "nice -n 19 python3 - <<'PY'
+[09:44] import json,pathlib
+[09:44] O=pathlib.Path('learner/runs/20261013-084306-experience-up（退出码 0）
+[09:57] 命令 /bin/bash -c "nice -n 19 bash -c 'tail -n 8 learner/runs/20261013-084306-experience-update/prepare.log; tail -n 5 learne（退出码 0）
+[10:19] 命令 /bin/bash -c "nice -n 19 bash -c 'test "'! -f learner/runs/20261013-084306-experience-update/audit.log || tail -n 3 lear（退出码 0）
+[10:30] 命令 /bin/bash -c "nice -n 19 bash -c 'ls -l learner/runs/20261013-084306-experience-update/audit*; rg -n \"clearPoison|reatt（退出码 0）
+[10:46] 命令 /bin/bash -c "nice -n 19 python3 - <<'PY'
+[10:46] from pathlib import Path
+[10:46] O=Path('learner/runs/20261013-084306-experience-updat（退出码 0）
+[11:43] 命令 /bin/bash -c "nice -n 19 bash -c 'export TMPDIR=\""'$PWD/learner/runs/20261013-084306-experience-update"; export PATH="$（退出码 0）
+[12:52] 改文件 [{"path":"/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261013-084306-experience-update/report.py","kind":"
+[13:09] 命令 /bin/bash -c "nice -n 19 bash -c 'tail -n 4 learner/runs/20261013-084306-experience-update/prepare.log; tail -n 4 learne（退出码 0）
+[13:14] 说：旧 260 局已完成复算，与上一批口径一致；本批将增至 261 局。17 条更新保留了旧证据、反例和进阶范围，接下来检查提案链、固定样本切片及大脑前缀，再跑沙箱
+[13:31] 命令 /bin/bash -c "nice -n 19 bash -c 'cp learner/runs/20261013-080222-experience-update/test-copy.py learner/runs/20261013-0（退出码 0）
+[13:44] 命令 /bin/bash -c "nice -n 19 bash -c 'export TMPDIR=\""'$PWD/learner/runs/20261013-084306-experience-update"; export PATH="$（退出码 0）
+[13:53] 命令 /bin/bash -c "nice -n 19 bash -c 'export TMPDIR=\""'$PWD/learner/runs/20261013-084306-experience-update"; export PATH="$（退出码 0）
+[13:55] 命令 /bin/bash -c "nice -n 19 bash -c 'export TMPDIR=\""'$PWD/learner/runs/20261013-084306-experience-update"; export PATH="$（退出码 0）
+[14:02] 命令 /bin/bash -c "nice -n 19 sed -n '2215,2430p' /home/dw/Projects/agent-sts2/paper/materials/experience-changelog.md"（退出码 0）
+[14:03] 命令 /bin/bash -c "nice -n 19 bash -c 'tail -n 8 learner/runs/20261013-084306-experience-update/register.log; tail -n 8 learn（退出码 0）
+[14:28] 命令 /bin/bash -c "nice -n 19 bash -c 'export TMPDIR=\""'$PWD/learner/runs/20261013-084306-experience-update"; export PATH="$（退出码 0）
+[14:36] 命令 /bin/bash -c "nice -n 19 bash -c 'tail -n 6 learner/runs/20261013-084306-experience-update/history.log; tail -n 6 learne（退出码 0）
+[15:00] 命令 /bin/bash -c "nice -n 19 python3 - <<'PY'
+[15:00] import pathlib,json
+[15:00] O=pathlib.Path('learner/runs/20261013-084306-experience-up（退出码 0）
+[15:19] 说：17 条经验的提案链检查通过，261 节本角色复盘和 46 个历史机制原帧已核对。240 个固定切片的总体中位增加 54 字，最大为 8275 字；完整前缀渲染
+[15:25] 命令 /bin/bash -c "nice -n 19 bash -c 'tail -n 14 learner/runs/20261013-084306-experience-update/test-source-direct.log; tail（退出码 0）
+[15:59] 命令 /bin/bash -c "nice -n 19 python3 - <<'PY'
+[15:59] import json,pathlib,collections
+[15:59] O=pathlib.Path('learner/runs/20261013-084306-e（退出码 0）
+[16:23] 命令 /bin/bash -c "nice -n 19 bash -c 'tail -n 14 learner/runs/20261013-084306-experience-update/test-source-direct.log; tail（退出码 0）
+[16:54] 说：tsc 已通过。首轮 vitest 有两项战斗规划测试失败，其他测试仍在运行；我会保留完整日志，核清失败原因后按任务要求重跑，不修改测试或预算。 
+[17:02] 命令 /bin/bash -c "nice -n 19 bash -c 'tail -n 18 learner/runs/20261013-084306-experience-update/test-source-direct.log; tail（退出码 0）
+[17:02] 命令 /bin/bash -c "nice -n 19 sed -n '1,125p' agent/tests/sl-explore-b2.test.ts"（退出码 0）
+[17:02] 命令 /bin/bash -c "nice -n 19 sed -n '1,145p' agent/tests/boss-lines-planner.test.ts"（退出码 0）
+[17:47] 命令 /bin/bash -c "nice -n 19 bash -c 'pgrep -f \"084306-experience-update/run-test[s].py\" | xargs -r ps -o pid,ppid,etime,%（退出码 0）
+[17:57] 改文件 [{"path":"/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261013-084306-experience-update/run-tests.py","kind
+[19:21] 改文件 [{"path":"/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261013-084306-experience-update/live-merge.py","kin
+[19:51] 说：发现自测入口误把 `CHARACTER=silent` 加给了整套跨角色测试，会影响旧夹具的固定基线。我已纠正测试入口，保留首轮日志，随后去除角色覆盖并用单 w
+[20:02] 命令 /bin/bash -c "nice -n 19 bash -c 'tail -n 12 learner/runs/20261013-084306-experience-update/test-source-direct.log; tail（退出码 0）
+[20:03] 命令 /bin/bash -c "nice -n 19 python3 - <<'PY'
+[20:03] import collections,hashlib,json,pathlib,subprocess
+[20:03] O=pathlib.Path('learner/run（退出码 0）
+[21:22] 命令 /bin/bash -c "nice -n 19 bash -c 'tail -n 6 learner/runs/20261013-084306-experience-update/test-source-copy.log; rg -n \（退出码 0）
+[21:24] 命令 /bin/bash -c "nice -n 19 python3 - <<'PY'
+[21:24] import json,pathlib
+[21:24] O=pathlib.Path('learner/runs/20261013-084306-experience-up（退出码 0）
+[21:59] 改文件 [{"path":"/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261013-084306-experience-update/run-tests.py","kind
+[22:56] 命令 /bin/bash -c "nice -n 19 bash -c 'tail -n 10 learner/runs/20261013-084306-experience-update/test-source-copy.log; tail -（退出码 0）
+[23:03] 命令 /bin/bash -c "nice -n 19 python3 - <<'PY'
+[23:03] import json,pathlib,subprocess
+[23:03] O=pathlib.Path('learner/runs/20261013-084306-ex（退出码 0）
+[23:51] 命令 /bin/bash -c "nice -n 19 bash -c 'tail -n 8 learner/runs/20261013-084306-experience-update/test-source-copy.log; tail -n（退出码 0）
+[23:58] 说：经验库现有 231 条 active、54032 字；A8 适用 209 条／48328 字，A9 适用 210 条／48612 字。两项策略提案已登记，18 
+[24:10] 命令 /bin/bash -c "nice -n 19 bash -c 'sed -n \"1,75p\" learner/runs/20261013-084306-experience-update/run-tests.py; tail -n （退出码 0）
+[24:59] 改文件 [{"path":"/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261013-084306-experience-update/run-tests.py","kind
+[25:18] 命令 /bin/bash -c "nice -n 19 bash -c 'export TMPDIR=\""'$PWD/learner/runs/20261013-084306-experience-update"; export PATH="$（退出码 1）
+[25:32] 命令 /bin/bash -c "nice -n 19 bash -c 'tail -n 8 learner/runs/20261013-084306-experience-update/test-source-copy.log; tail -n（退出码 0）
+[25:33] 命令 /bin/bash -c "nice -n 19 python3 - <<'PY'
+[25:33] import os,pathlib,subprocess
+[25:33] O=pathlib.Path('learner/runs/20261013-084306-expe（退出码 0）
+[26:04] 改文件 [{"path":"/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261013-084306-experience-update/run-tests.py","kind
+[26:12] 说：去除角色覆盖后，原先失败的药水固定基线测试已通过。现在按原套件的 3 worker 参数重跑完整沙箱检查；原入口日志和自动复验失败日志都已保留，未改测试、排除名
+[26:31] 命令 /bin/bash -c "nice -n 19 python3 - <<'PY'
+[26:31] import hashlib,json,pathlib,subprocess
+[26:31] O=pathlib.Path('learner/runs/20261013-0（退出码 0）
+[27:06] 命令 /bin/bash -c "nice -n 19 bash -c 'tail -n 6 learner/runs/20261013-084306-experience-update/run-tests-corrected.log; tail（退出码 0）
+[27:06] 命令 /bin/bash -c "nice -n 19 python3 - <<'PY'
+[27:06] import json,pathlib
+[27:06] O=pathlib.Path('learner/runs/20261013-084306-experience-up（退出码 0）
+[27:30] 命令 /bin/bash -c "nice -n 19 sed -n '1,230p' learner/runs/20261013-080222-experience-update/publish.py"（退出码 0）
+[27:30] 命令 /bin/bash -c "nice -n 19 bash -c 'rg -n \"统一发布编号|release_id|S1.exp\" docs/eval.md | head -n 20; tail -n 100 /home/dw/Pro（退出码 0）
+[28:56] 命令 /bin/bash -c "nice -n 19 python3 - <<'PY'
+[28:56] from pathlib import Path
+[28:56] O=Path('learner/runs/20261013-084306-experience-updat（退出码 0）
+[28:57] 命令 /bin/bash -c "nice -n 19 bash -c 'sed -n \"54,74p\" docs/eval.md; rg -n \"release_id.*every|release_id.*each|release_id.（退出码 0）
+[29:24] 说：只读合入预演显示，当前 live 与本分支基线没有冲突。自测通过后，我会在 live 锁内重新核对实际源提交和知识刷新；正式发布编号与账本 shipped 状态
+[29:34] 命令 /bin/bash -c "nice -n 19 bash -c 'tail -n 7 learner/runs/20261013-084306-experience-update/run-tests-corrected.log; tail（退出码 0）
+[31:00] 命令 /bin/bash -c "nice -n 19 python3 - <<'PY'
+[31:00] from pathlib import Path
+[31:00] O=Path('learner/runs/20261013-084306-experience-updat（退出码 0）
+[31:54] 改文件 [{"path":"/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261013-084306-experience-update/deploy.py","kind":"
+[31:57] 命令 /bin/bash -c "nice -n 19 bash -c 'tail -n 5 learner/runs/20261013-084306-experience-update/test-source-copy-corrected.lo（退出码 0）
+[33:02] 说：纠正后的完整自测尚未出现失败输出。上线记录、版本追加、双通知和实际 live 前缀读回脚本已准备好；待自测完成后执行锁内合入与合后检查，真实对局采用继续保留为待
+[33:13] 命令 /bin/bash -c "nice -n 19 bash -c 'tail -n 8 learner/runs/20261013-084306-experience-update/test-source-copy-corrected.lo（退出码 0）
+[33:52] 命令 /bin/bash -c "nice -n 19 bash -c 'rg -n \"FAIL|Error:|AssertionError|Test Files|Tests |test-source-copy\" learner/runs/2（退出码 1）
+[34:44] 命令 /bin/bash -c "nice -n 19 python3 - <<'PY'
+[34:44] import json,pathlib,shutil,time
+[34:44] O=pathlib.Path('learner/runs/20261013-084306-e（退出码 0）
+[35:52] 说：角色覆盖已纠正；当前完整检查出现两项超时：Herdr 查看器测试和目标选线测试。它们不涉及本批经验内容，我会保留回执并降低并行度复验，仍须取得沙箱套件退出码 0
+[36:03] 命令 /bin/bash -c "nice -n 19 bash -c 'tail -n 10 learner/runs/20261013-084306-experience-update/test-source-copy-corrected.l（退出码 0）
+[36:13] 命令 /bin/bash -c "nice -n 19 bash -c 'rg -n \"FAIL|Error:|Test Files|Tests \" learner/runs/20261013-084306-experience-update（退出码 0）
+[38:08] 命令 /bin/bash -c "nice -n 19 bash -c 'tail -n 8 learner/runs/20261013-084306-experience-update/run-tests-corrected.log; tail（退出码 0）
+[39:00] 改文件 [{"path":"/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261013-084306-experience-update/live-merge.py","kin
+[40:28] 命令 /bin/bash -c "nice -n 19 bash -c 'tail -n 8 learner/runs/20261013-084306-experience-update/test-source-retry-corrected.l（退出码 0）
+[40:29] 命令 /bin/bash -c "nice -n 19 python3 - <<'PY'
+[40:29] from pathlib import Path
+[40:29] import subprocess
+[40:29] O=Path('learner/runs/20261013-08430（退出码 0）
+[41:45] 命令 /bin/bash -c "nice -n 19 bash -c 'export TMPDIR=\""'$PWD/learner/runs/20261013-084306-experience-update"; export PATH="$（退出码 1）
+[42:07] 改文件 [{"path":"/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261013-084306-experience-update/test-low-workers.py
+[47:41] 说：17 条经验更新和切片、前缀检查均已完成，提交等待自测结果。报告会分别保留角色覆盖误设、Herdr 窗口等待断言和目标选线超时，不把这些记录合并成“通过”。 
+[47:50] 命令 /bin/bash -c "nice -n 19 bash -c 'tail -n 8 learner/runs/20261013-084306-experience-update/test-source-low-workers.log; （退出码 0）
+[50:38] 命令 /bin/bash -c "nice -n 19 bash -c 'tail -n 7 learner/runs/20261013-084306-experience-update/test-source-low-workers.log; （退出码 0）
+[54:46] 命令 /bin/bash -c "nice -n 19 bash -c 'tail -n 10 learner/runs/20261013-084306-experience-update/test-source-low-workers.log;（退出码 0）
+[59:21] 命令 /bin/bash -c "nice -n 19 bash -c 'tail -n 32 learner/runs/20261013-084306-experience-update/run-tests-corrected.log; tai（退出码 0）
+[64:25] 说：单 worker 的完整复验仍在运行。上一轮原目录检查已通过 344 个文件、3406 个用例，仅因旧任务失效路径使导入扫描失败；本轮使用源码逐 SHA 相同的
+[64:34] 命令 /bin/bash -c "nice -n 19 bash -c 'tail -n 10 learner/runs/20261013-084306-experience-update/test-source-low-workers.log;（退出码 0）
+[64:59] 命令 /bin/bash -c "nice -n 19 python3 - <<'PY'
+[64:59] import json,pathlib,subprocess
+[64:59] O=pathlib.Path('learner/runs/20261013-084306-ex（退出码 0）
+[65:04] 说：自测通过：tsc 退出 0，vitest 共 346 个文件、3418 个用例，退出 0。固定套件、预算和生产代码均未改；现在提交经验文件，随后登记账本并执行 
+[65:17] 命令 /bin/bash -c "nice -n 19 bash -c 'export TMPDIR=\""'$PWD/learner/runs/20261013-084306-experience-update"; export PATH="$（退出码 0）
+[65:49] 命令 /bin/bash -c "nice -n 19 bash -c 'export TMPDIR=\""'$PWD/learner/runs/20261013-084306-experience-update"; export PATH="$（退出码 0）
+[65:56] 命令 /bin/bash -c "nice -n 19 bash -c 'tail -n 12 learner/runs/20261013-084306-experience-update/deploy.log; tail -n 5 learne（退出码 0）
+[66:24] 命令 /bin/bash -c "nice -n 19 bash -c 'python3 learner/runs/20261013-084306-experience-update/report.py > learner/runs/202610（退出码 0）
+[66:41] 说：经验已提交为 `43f631e77`，18 个账本条目标为 proposed，校验通过。live 锁内已保存知识刷新，但整分支与刷新后的 9 个知识文件内容重叠
+[66:54] 命令 /bin/bash -c "nice -n 19 python3 - <<'PY'
+[66:54] import hashlib,json,pathlib,subprocess
+[66:54] O=pathlib.Path('learner/runs/20261013-0（退出码 0）
+[69:02] 命令 /bin/bash -c "nice -n 19 bash -c 'tail -n 18 learner/runs/20261013-084306-experience-update/report.md; sed -n \"1,18p\" （退出码 0）
+[70:17] 说：## 经验库更新回报 - 版本：2026-10-13.7 → 2026-10-13.8；提交：43f631e77（分支 exp-merge-recovery-2

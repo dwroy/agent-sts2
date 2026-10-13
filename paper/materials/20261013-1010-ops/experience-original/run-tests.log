@@ -1,0 +1,8 @@
+{'name': 'test-source-direct', 'exit': 1, 'tsc': 0, 'files_passed': 304, 'cases_passed': 3273, 'log': '/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261013-084306-experience-update/test-source-direct.log', 'sha256': '7210c244c16b07653eb968b70cf610c14bb38920186ff07b49adda93fecd4598'}
+隔离测试副本 1429 跟踪源码/任务文件SHA一致，原排除脚本字节一致
+{'name': 'test-source-copy', 'exit': 1, 'tsc': 0, 'files_passed': 305, 'cases_passed': 3274, 'log': '/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261013-084306-experience-update/test-source-copy.log', 'sha256': '650bfc34e0d7683a9d7778b1bd7a2891ed36cf1a520d5f407bd1d3c595a0faa7'}
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261013-084306-experience-update/run-tests.py", line 23, in <module>
+    elif code and ('timed out' in s.lower() or 'timeout' in s.lower()):
+           ^^^^^^^
+AssertionError: (1, [{'name': 'test-source-direct', 'exit': 1, 'tsc': 0, 'files_passed': 304, 'cases_passed': 3273, 'log': '/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261013-084306-experience-update/test-source-direct.log', 'sha256': '7210c244c16b07653eb968b70cf610c14bb38920186ff07b49adda93fecd4598'}, {'name': 'test-source-copy', 'exit': 1, 'tsc': 0, 'files_passed': 305, 'cases_passed': 3274, 'log': '/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261013-084306-experience-update/test-source-copy.log', 'sha256': '650bfc34e0d7683a9d7778b1bd7a2891ed36cf1a520d5f407bd1d3c595a0faa7'}])
