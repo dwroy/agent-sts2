@@ -2,7 +2,7 @@
  * A BuildSimPool worker (src/sim/build-sim-pool.ts, milestone B3): keeps each batch's base input and its decks (each a
  * few top-level fields over the base: the draw pile, the solver's HP or potions, relic fields) and the kill orders,
  * runs the (deck, order, sample, seed) tasks it is sent with boss-sim fightSample and posts the results back.
- * Nothing else: no clock, no files, no model calls.
+ * Checks the parent's cancellation flag between samples: no clock, files, or model calls.
  */
 
 import { parentPort } from "node:worker_threads";
@@ -18,6 +18,7 @@ interface Batch {
   orders: (KillOrder | null)[];
   maxTurns: number;
   scripts: boolean;
+  cancelled?: Int32Array;
 }
 
 const batches = new Map<number, Batch>();
@@ -33,7 +34,8 @@ function inputOf(batch: Batch, deck: number): RolloutInput {
 
 parentPort!.on("message", (msg: BuildWorkerRequest) => {
   if (msg.type === "batch") {
-    batches.set(msg.batch, { base: msg.base, decks: msg.decks, inputs: new Map(), orders: msg.orders, maxTurns: msg.maxTurns, scripts: msg.scripts });
+    // A running pre-deployment parent may create a fresh worker from the updated file.
+    batches.set(msg.batch, { base: msg.base, decks: msg.decks, inputs: new Map(), orders: msg.orders, maxTurns: msg.maxTurns, scripts: msg.scripts, ...(msg.cancelled ? { cancelled: new Int32Array(msg.cancelled) } : {}) });
     return;
   }
   if (msg.type === "drop") {
@@ -44,10 +46,13 @@ parentPort!.on("message", (msg: BuildWorkerRequest) => {
   let reply: BuildWorkerReply;
   try {
     if (!batch) throw new Error(`no input for batch ${msg.batch}`);
-    reply = {
-      batch: msg.batch,
-      results: msg.tasks.map(([deck, order, i, seed]) => [deck, order, i, fightSample(inputOf(batch, deck), null, seed, batch.maxTurns, batch.scripts, batch.orders[order] ?? null)]),
-    };
+    const results: Extract<BuildWorkerReply, { results: unknown }>["results"] = [];
+    for (const [deck, order, i, seed] of msg.tasks) {
+      // A sample already running stays whole; cancelled work produces no synthetic outcome.
+      if (batch.cancelled && Atomics.load(batch.cancelled, 0)) break;
+      results.push([deck, order, i, fightSample(inputOf(batch, deck), null, seed, batch.maxTurns, batch.scripts, batch.orders[order] ?? null)]);
+    }
+    reply = { batch: msg.batch, results };
   } catch (error) {
     reply = { batch: msg.batch, error: String(error instanceof Error ? error.stack ?? error.message : error).slice(0, 2000) };
   }
