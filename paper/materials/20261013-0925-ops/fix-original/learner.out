@@ -1,0 +1,44 @@
+## 修 bug 回报
+
+- 合并基线：main → 0c020b7cedfb9290cabe91bedb1038afdcacbd53
+- 修复（每条一行）：无新增纯 bug 修复；撤掉修复时失败验证不适用。
+- 已被别人修掉的：时间上限固定夹具 — b3c6dd700；补验拒绝诊断 — 63f656fb0；论文 Git 快照一致性 — 16bfe0bd6；Codex home 透传 — 5921f8cd0。169 条历史修复记录的逐项提交见[回报](/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-091302/learner/runs/20261013-091322-fix-batch/report.md)，本批已重新核实祖先及相关源码。
+- 没修的：药水目标覆盖、休息超时路线提交及其他机制提案 — 独立策略/结构任务；双 boss 资源异常、历史通知失败及目录竞态根因 — 证据不足；具名卡、量化消费者等专项 — 独立功能，沿原任务继续。
+- 测试：tsc 退出码 0；定向 vitest 4 文件 / 8 用例 / 退出码 0，无重跑；未运行整套。Gitleaks 退出码 0。
+- 合入：未合入（本批无新增提交，历史修复已在 live）。
+- 需要 Roy 定的事：无。
+
+```json
+{
+  "task": "fix-batch",
+  "base": "0c020b7cedfb9290cabe91bedb1038afdcacbd53",
+  "fixes": [],
+  "skipped": [
+    {"item": "其余机制、出牌、药水、SL、终局、路线及休息提案", "reason": "策略类，沿既有 strategy-proposal；有限子项不关闭宽提案。"},
+    {"item": "silent-0365：未建模定向药水目标截成前两个", "reason": "独立药水/结构提案，原合法目标及题目容量契约尚待实现。"},
+    {"item": "rest-timeout-accepted-route-not-committed（silent-0446）", "reason": "独立结构提案，需动作确认、事务去重及重启回放，不能无条件提交路线。"},
+    {"item": "silent-0332：双boss接续资源异常根因", "reason": "证据不足，缺可重放触发样本，保留原诊断及提案链。"},
+    {"item": "core-build-notify-222802-rc2历史失败恢复", "reason": "证据不足，旧失败无stderr，不能证明未发送，不重发。"},
+    {"item": "sandbox-glob-startup-race上游目录竞态", "reason": "有界恢复已实现，上游目录生命周期根因未证。"},
+    {"item": "调度公平性、mod短暂超时、既有测试超时的精确宿主时序", "reason": "证据不足，尚未证明永久饥饿或历史负载因果。"},
+    {"item": "具名卡全入口、量化消费者、全漏斗、学习优先级、统一资源价值及其他专项", "reason": "独立功能或策略研究，继续原专用任务，不关闭父要求。"},
+    {"item": "host-loop-time-cap-wall-clock-061301历史时序及旧补验拒绝根因", "reason": "夹具及诊断已修、原宿主检查已通过；历史1072ms时序及旧exit2具体拒绝阶段仍未知。"}
+  ],
+  "merged": null,
+  "tests": {"tsc": 0, "vitest": 0, "cases": 8},
+  "code_proposals": [],
+  "implementation_domains": [],
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-091302/learner/runs/20261013-091322-fix-batch/report.md"
+}
+```
+
+== 学习者 codex / fix-batch ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a132d2-5653-7c73-ba89-3b37ae5b2610
+轮数：1；工具调用：command_execution×67 file_change×1
+token：输入 154.6k、输出 14.7k（其中推理 4534）、cache 读 2735.2k、cache 写 0（命中 94.6%）
+成本：未提供
+耗时：665.2 s（墙钟）
+时间：首个事件 34.0 s、模型首个输出 38.8 s、首次工具 41.4 s、末次工具结束 632.0 s；工具内共 336.8 s，其余（模型生成、推理、网络）294.4 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-091302）；模型的工具调用 exec×26；/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/learner/sessions/2026/10/13/rollout-2026-10-13T09-13-27-01a132d2-5653-7c73-ba89-3b37ae5b2610.jsonl
+日志：/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-091302/learner/runs/20261013-091322-fix-batch.jsonl
