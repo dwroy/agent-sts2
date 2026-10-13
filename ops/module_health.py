@@ -85,6 +85,23 @@ def dpr_count(options):
     return count
 
 
+def candidate_dpr_coverage(options, not_simulated):
+    """Only explicit per-option exclusions justify absent DPR; labels are insufficient."""
+    counts = Counter(observed=0, unsupported=0, with_dpr=0, missing_dpr=0)
+    exclusions = obj(not_simulated)
+    for key, value in obj(options).items():
+        if value is None:
+            continue
+        counts['observed'] += 1
+        if dpr_count({key: value}):
+            counts['with_dpr'] += 1
+        elif isinstance(exclusions.get(key), str) and exclusions[key].strip():
+            counts['unsupported'] += 1
+        else:
+            counts['missing_dpr'] += 1
+    return dict(counts)
+
+
 def failure(sim):
     if sim.get('skipped'):
         return None
@@ -108,7 +125,8 @@ def summarize(config, decisions, brains, coverage):
     enabled = obj(config.get('loop')).get('boss_sim_build') == 'on'
     records = sorted((r for r in decisions if run_of(r) == rid and r.get('mode') == 'play'), key=lambda r: r.get('ts', ''))
     faults, samples, times, evidence, phases = Counter(), [], [], [], []
-    produced = attempts = skipped = streak = longest = 0
+    produced = attempts = skipped = streak = longest = unsupported_only = 0
+    candidates = Counter(observed=0, unsupported=0, with_dpr=0, missing_dpr=0)
     seen = set()
     construction = Counter()
     for row in records:
@@ -130,20 +148,33 @@ def summarize(config, decisions, brains, coverage):
         reason = failure(sim)
         options = obj(obj(obj(row.get('questions')).get('pick')).get('criteria'))
         metrics = dpr_count(options)
+        candidate_counts = candidate_dpr_coverage(options, sim.get('not_simulated'))
+        candidates.update(candidate_counts)
+        reported_samples = obj(sim.get('diagnostics')).get('samples', sim.get('samples'))
+        completed = (type(reported_samples) in (int, float)
+                     and math.isfinite(reported_samples) and reported_samples > 0)
         # A finished decision with no B3 record is a pipeline gap, not a game result.
         if not sim or not any(k in sim for k in ('samples', 'error', 'diagnostics')):
             reason = 'missing_simulation_record'
+        elif not reason and candidate_counts['missing_dpr']:
+            reason = 'incomplete_candidate_dpr' if metrics else 'no_complete_dpr'
         elif not reason and not metrics:
-            reason = 'no_complete_dpr'
+            if (completed and candidate_counts['observed'] > 0
+                    and candidate_counts['unsupported'] == candidate_counts['observed']):
+                unsupported_only += 1
+            else:
+                reason = 'no_complete_dpr'
         if reason:
             faults[reason] += 1
             streak += 1
             longest = max(longest, streak)
             evidence.append({'ts': row.get('ts'), 'decision': row.get('decision_id'), 'floor': row.get('floor'),
                              'label': row.get('label'), 'reason': reason, 'source': row.get('_source'),
-                             'diagnostics': sim.get('diagnostics'), 'error': sim.get('error')})
+                             'diagnostics': sim.get('diagnostics'), 'error': sim.get('error'),
+                             'candidates': candidate_counts})
         else:
-            produced += 1
+            if metrics:
+                produced += 1
             streak = 0
         diagnostic = obj(sim.get('diagnostics'))
         n = diagnostic.get('samples', sim.get('samples'))
@@ -165,6 +196,7 @@ def summarize(config, decisions, brains, coverage):
             'simulation_enabled': enabled, 'coverage': coverage, 'complete': complete,
             'construction': dict(construction), 'b3': {'attempts': attempts, 'skipped': skipped, 'produced_dpr': produced,
               'coverage': produced / attempts if attempts else None, 'failures': dict(faults),
+              'unsupported_only': unsupported_only, 'candidates': dict(candidates),
               'longest_failure_streak': longest, 'trailing_failure_streak': streak,
               'paired_samples_min': min(samples) if samples else None,
               'ms_max': max(times) if times else None},

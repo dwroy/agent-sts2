@@ -57,6 +57,65 @@ class Health(unittest.TestCase):
         self.assertEqual(r['b3']['failures'], {'zero_paired_samples': 1, 'no_complete_dpr': 1, 'below_minimum_samples': 1})
         self.assertEqual(h.dpr_count({'x': {'quantitative_fight': {'effective_damage_per_turn': {'n': 0, 'mean': None}}}}), 0)
 
+    def test_explicit_unsupported_candidates_are_separate_from_missing_dpr(self):
+        # WA7FRJ7UABCV F22: 1000 paired samples, both actual candidates explicitly unsupported.
+        reason = '这个选项的效果没有换算成牌组或血量的变化：不模拟'
+        criteria = {'o0': json.dumps({'boss_sim': reason}), 'o1': {'boss_sim': reason}}
+        unsupported = row(1, None, floor=22, label='event/choose',
+                          questions={'pick': {'type': 'choice', 'criteria': criteria}},
+                          boss_sim={'samples': 1000, 'requested': 1000, 'not_simulated': dict.fromkeys(criteria, reason)})
+        r = self.summary([unsupported])
+        self.assertEqual(r['b3']['failures'], {})
+        self.assertEqual(r['b3']['unsupported_only'], 1)
+        self.assertEqual(r['b3']['attempts'], 1)
+        self.assertEqual(r['b3']['produced_dpr'], 0)
+        self.assertEqual(r['b3']['coverage'], 0)
+        self.assertEqual(r['b3']['paired_samples_min'], 1000)
+        self.assertEqual(r['b3']['candidates'], {'observed': 2, 'unsupported': 2, 'with_dpr': 0, 'missing_dpr': 0})
+        self.assertFalse(r['alert'])
+        # An intentional absence breaks a consecutive service-failure streak without erasing failures.
+        r = self.summary([row(0), unsupported, row(2), row(3)])
+        self.assertEqual(r['b3']['failures'], {'below_minimum_samples': 3})
+        self.assertEqual(r['b3']['longest_failure_streak'], 2)
+        self.assertFalse(r['alert'])
+
+    def test_missing_candidate_dpr_is_not_hidden_by_another_candidate_or_exclusion(self):
+        def candidate(criteria, exclusions):
+            return row(1, None, questions={'pick': {'type': 'choice', 'criteria': criteria}},
+                       boss_sim={'samples': 1000, 'not_simulated': exclusions})
+        r = self.summary([candidate({'o0': METRIC, 'o1': {}}, {'o1': 'not supported'})])
+        self.assertEqual(r['b3']['failures'], {})
+        self.assertEqual(r['b3']['produced_dpr'], 1)
+        self.assertEqual(r['b3']['unsupported_only'], 0)
+        self.assertEqual(r['b3']['candidates']['unsupported'], 1)
+        r = self.summary([candidate({'o0': METRIC, 'o1': {}}, {'other': 'not supported'})])
+        self.assertEqual(r['b3']['failures'], {'incomplete_candidate_dpr': 1})
+        self.assertEqual(r['failures'][0]['candidates']['missing_dpr'], 1)
+        for exclusions in ({}, {'o0': True}, {'o0': ''}, {'other': 'not supported'}):
+            with self.subTest(exclusions=exclusions):
+                r = self.summary([candidate({'o0': {}}, exclusions)])
+                self.assertEqual(r['b3']['failures'], {'no_complete_dpr': 1})
+        grouped = {'quantitative_fight_by_card': {'card': METRIC['quantitative_fight']}}
+        r = self.summary([candidate({'o0': grouped, 'unavailable': None}, {})])
+        self.assertEqual(r['b3']['candidates']['with_dpr'], 1)
+        self.assertEqual(r['b3']['candidates']['observed'], 1)
+        self.assertEqual(r['b3']['produced_dpr'], 1)
+
+    def test_unsupported_metadata_never_masks_failed_or_absent_sampling(self):
+        question = {'pick': {'type': 'choice', 'criteria': {'o0': {}}}}
+        exclusion = {'not_simulated': {'o0': 'not supported'}}
+        cases = [(dict(exclusion, error='只跑完 16 次模拟（不足 300 次）'), 'below_minimum_samples'),
+                 (dict(exclusion, error='11000 ms 内没有跑完一个样本'), 'zero_paired_samples'),
+                 (dict(exclusion, samples=0), 'no_complete_dpr'),
+                 (dict(exclusion, samples=True), 'no_complete_dpr'),
+                 (exclusion, 'missing_simulation_record')]
+        for sim, reason in cases:
+            with self.subTest(reason=reason):
+                r = self.summary([row(1, boss_sim=sim, questions=question)])
+                self.assertEqual(r['b3']['failures'], {reason: 1})
+                self.assertEqual(r['b3']['unsupported_only'], 0)
+                self.assertEqual(r['b3']['produced_dpr'], 0)
+
     def test_queue_dedup_crash_retry_and_immutable_evidence(self):
         with tempfile.TemporaryDirectory() as d:
             directory = Path(d)
