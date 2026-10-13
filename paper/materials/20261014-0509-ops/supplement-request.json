@@ -1,0 +1,32 @@
+{
+  "at": "2026-10-14 05:11:52 CST",
+  "batch": "20261014-041302-fix-batch",
+  "manifest_sha256": "0c3ba40eacf9b8965f35c987f4da3e7710d9198bc222b81a52ae0e2faefb24b9",
+  "manifest": "ops/codex-ops/learner/20261014-041302-fix-batch.continuation-0c3ba40eacf9b8965f35c987f4da3e7710d9198bc222b81a52ae0e2faefb24b9.json",
+  "launcher_pid": 2338356,
+  "original_full_rc": 1,
+  "selection": [
+    {
+      "file": "tests/brain-codex.test.ts",
+      "tests": [
+        "codex runs watched: retries, stalls, timeouts and their trace before the first token only BRAIN_CODEX_FIRST_TOKEN_MS (off by default) and the router's timeout apply: long thinking is not a stall"
+      ],
+      "reason": "failed"
+    },
+    {
+      "file": "tests/strategy-no-change-path.test.ts",
+      "tests": [
+        "registered no-change strategy report directory retains the outside rejection"
+      ],
+      "reason": "failed"
+    }
+  ],
+  "status": "one scoped launcher started; result pending",
+  "full_suite": false,
+  "live": {
+    "commit": "26bb0f07b6e72394e09b08dfb15f51a6c2d0fe86",
+    "tree": "4c937f62b5d9fbeac051dce2ffdc1863765fd72a"
+  },
+  "failed_test_files_unchanged_from_original_fix_baseline": true,
+  "decision": "Keep R335 and preserve the two unrelated failed fixed-process fixtures for the existing fix queue. Do not reinterpret a scoped pass as full-suite success."
+}

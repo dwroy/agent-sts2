@@ -1,0 +1,3 @@
+第一次最终读回把ledger.py update的文本stdout按JSONL解析，出现JSONDecodeError: Expecting value: line 1 column 1 (char 0)。
+该CLI实际返回空格分隔的30个账本ID，写入退出码0已经独立核实；本次是只读回执解析失败，没有重复调用update。
+原stdout仍保存在ledger-update-receipt.jsonl，另存真实文本扩展名ledger-update-receipt.txt，修正为split解析并核对30个ID及实际物理行。

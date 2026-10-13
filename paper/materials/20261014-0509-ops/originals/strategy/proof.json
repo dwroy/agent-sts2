@@ -1,0 +1,729 @@
+{
+  "scope": "原始证据与观测端点核验；不是新生产实现测试或候选完整执行认证",
+  "checks": [
+    {
+      "name": "原决策总数",
+      "actual": 3306,
+      "expected": 3306,
+      "passed": true,
+      "refs": []
+    },
+    {
+      "name": "原状态总数",
+      "actual": 3432,
+      "expected": 3432,
+      "passed": true,
+      "refs": []
+    },
+    {
+      "name": "所有状态只含静默A10",
+      "actual": true,
+      "expected": true,
+      "passed": true,
+      "refs": []
+    },
+    {
+      "name": "F43神化派发身份",
+      "actual": "APOTHEOSIS",
+      "expected": "APOTHEOSIS",
+      "passed": true,
+      "refs": [
+        {
+          "source": "decisions.jsonl",
+          "line": 269706,
+          "sha256": "9838ff71466dc84384d713dc1796a442ce83cd5c3d5e138bcfd18960bc838f85"
+        }
+      ]
+    },
+    {
+      "name": "F43神化前后能量",
+      "actual": [
+        7,
+        5
+      ],
+      "expected": [
+        7,
+        5
+      ],
+      "passed": true,
+      "refs": [
+        {
+          "source": "states.jsonl",
+          "line": 275679,
+          "sha256": "2d985d82dc59aba760930a3d049ac32962eeabe948d8fcd82781f43ea07a3873"
+        },
+        {
+          "source": "states.jsonl",
+          "line": 275680,
+          "sha256": "9f8c87643f4f738ce5828b3b1c350ebaf13b81b85a3ef985cda8259db81af5a1"
+        }
+      ]
+    },
+    {
+      "name": "F43升级后的已观察手牌",
+      "actual": [
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "expected": [
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "passed": true,
+      "refs": [
+        {
+          "source": "states.jsonl",
+          "line": 275680,
+          "sha256": "9f8c87643f4f738ce5828b3b1c350ebaf13b81b85a3ef985cda8259db81af5a1"
+        }
+      ]
+    },
+    {
+      "name": "F43原预测与重问伤损",
+      "actual": [
+        [
+          43,
+          14
+        ],
+        [
+          51,
+          13
+        ]
+      ],
+      "expected": [
+        [
+          43,
+          14
+        ],
+        [
+          51,
+          13
+        ]
+      ],
+      "passed": true,
+      "refs": [
+        {
+          "source": "decisions.jsonl",
+          "line": 269706,
+          "sha256": "9838ff71466dc84384d713dc1796a442ce83cd5c3d5e138bcfd18960bc838f85"
+        },
+        {
+          "source": "decisions.jsonl",
+          "line": 269707,
+          "sha256": "7647c72c7057fb5c4a4c467769fa817f2befb07a9fc583f7f925b612ac8b855a"
+        }
+      ]
+    },
+    {
+      "name": "F43观测轮端点",
+      "actual": [
+        51,
+        13
+      ],
+      "expected": [
+        51,
+        13
+      ],
+      "passed": true,
+      "refs": [
+        {
+          "source": "states.jsonl",
+          "line": 275679,
+          "sha256": "2d985d82dc59aba760930a3d049ac32962eeabe948d8fcd82781f43ea07a3873"
+        },
+        {
+          "source": "states.jsonl",
+          "line": 275687,
+          "sha256": "103e80d5394dc75726db1420e44627125ae8be5b8643c97cc7b89693d71786a0"
+        }
+      ]
+    },
+    {
+      "name": "F43后续抽牌毒雾已升级",
+      "actual": true,
+      "expected": true,
+      "passed": true,
+      "refs": [
+        {
+          "source": "states.jsonl",
+          "line": 275687,
+          "sha256": "103e80d5394dc75726db1420e44627125ae8be5b8643c97cc7b89693d71786a0"
+        }
+      ]
+    },
+    {
+      "name": "F45首题退化范围",
+      "actual": [
+        1,
+        1,
+        null
+      ],
+      "expected": [
+        1,
+        1,
+        null
+      ],
+      "passed": true,
+      "refs": [
+        {
+          "source": "decisions.jsonl",
+          "line": 269748,
+          "sha256": "1afeb12e4372c954f4767aaa09b48f86f4707dd7bb8a69bda4a8f5abaf7ad1ed"
+        }
+      ]
+    },
+    {
+      "name": "F45首题药水预算",
+      "actual": 707,
+      "expected": 707,
+      "passed": true,
+      "refs": [
+        {
+          "source": "decisions.jsonl",
+          "line": 269748,
+          "sha256": "1afeb12e4372c954f4767aaa09b48f86f4707dd7bb8a69bda4a8f5abaf7ad1ed"
+        }
+      ]
+    },
+    {
+      "name": "F45药水派发身份",
+      "actual": "CURE_ALL",
+      "expected": "CURE_ALL",
+      "passed": true,
+      "refs": [
+        {
+          "source": "decisions.jsonl",
+          "line": 269754,
+          "sha256": "cc4ffbe6dfa57a182fc9134ceef2a15c3dc898a357e0ea354e965787cf392193"
+        }
+      ]
+    },
+    {
+      "name": "F45持有神化后续空手",
+      "actual": [
+        2,
+        0
+      ],
+      "expected": [
+        2,
+        0
+      ],
+      "passed": true,
+      "refs": [
+        {
+          "source": "states.jsonl",
+          "line": 275731,
+          "sha256": "ed566027fabefd08e64d650e81ca31a836f94d808e893d6fd1cf235ec2463cdd"
+        },
+        {
+          "source": "states.jsonl",
+          "line": 275732,
+          "sha256": "51f101bd9f489886033b3848e2a3ca58f98907e5724e9ed220b685c67ed39d88"
+        }
+      ]
+    },
+    {
+      "name": "F45 T4所选伤损",
+      "actual": [
+        24,
+        13
+      ],
+      "expected": [
+        24,
+        13
+      ],
+      "passed": true,
+      "refs": [
+        {
+          "source": "decisions.jsonl",
+          "line": 269770,
+          "sha256": "baedc62762afc25738c4246e55e6f44f22dda7a17e3649d794784bcde3dc26d2"
+        }
+      ]
+    },
+    {
+      "name": "F45 T5当前HP和挡",
+      "actual": [
+        32,
+        20
+      ],
+      "expected": [
+        32,
+        20
+      ],
+      "passed": true,
+      "refs": [
+        {
+          "source": "states.jsonl",
+          "line": 275754,
+          "sha256": "cfbad1a9564471f060da3b3c960340e4417866635a0450e602e04b685a67a803"
+        }
+      ]
+    },
+    {
+      "name": "F45 T5减力后各敌攻击",
+      "actual": [
+        14,
+        11,
+        34
+      ],
+      "expected": [
+        14,
+        11,
+        34
+      ],
+      "passed": true,
+      "refs": [
+        {
+          "source": "states.jsonl",
+          "line": 275754,
+          "sha256": "cfbad1a9564471f060da3b3c960340e4417866635a0450e602e04b685a67a803"
+        }
+      ]
+    },
+    {
+      "name": "F45终局各敌剩血",
+      "actual": [
+        21,
+        80,
+        77
+      ],
+      "expected": [
+        21,
+        80,
+        77
+      ],
+      "passed": true,
+      "refs": [
+        {
+          "source": "states.jsonl",
+          "line": 275755,
+          "sha256": "e78f6120603dfd8561f9ae858a422bdea9c20e943aa292e7d5788161e9be4ac7"
+        }
+      ]
+    },
+    {
+      "name": "沙虫首试与第三次同指纹",
+      "actual": true,
+      "expected": true,
+      "passed": true,
+      "refs": [
+        {
+          "source": "decisions.jsonl",
+          "line": 270216,
+          "sha256": "0082da04fe05a5d3b8bfbb3e590dc2288fe41c8e6f70e4be643b95aa082d582e"
+        },
+        {
+          "source": "decisions.jsonl",
+          "line": 270282,
+          "sha256": "721f1ef7b80a307741e97b8cf9ab47d6ef03330053a3d1e9051127cc2108f5df"
+        }
+      ]
+    },
+    {
+      "name": "沙虫尝试1T2观测伤损",
+      "actual": [
+        3,
+        10
+      ],
+      "expected": [
+        3,
+        10
+      ],
+      "passed": true,
+      "refs": [
+        {
+          "source": "states.jsonl",
+          "line": 276208,
+          "sha256": "01b59ee58a8c711859a1eac3e1442fc5237fc568dfe7000d5d583fd401852498"
+        },
+        {
+          "source": "states.jsonl",
+          "line": 276212,
+          "sha256": "c93c7aed040f7a3d5f5c0e38539610a8866ab411009120be55cd2fb0ef064c77"
+        }
+      ]
+    },
+    {
+      "name": "沙虫尝试3T2观测伤损",
+      "actual": [
+        15,
+        17
+      ],
+      "expected": [
+        15,
+        17
+      ],
+      "passed": true,
+      "refs": [
+        {
+          "source": "states.jsonl",
+          "line": 276274,
+          "sha256": "9389d2981b41fccc8f052aff0bd483f8219b7642ff521fa98260211cb0c820dc"
+        },
+        {
+          "source": "states.jsonl",
+          "line": 276278,
+          "sha256": "f8bd4c3c3ee4c0fc87c19d363eceb7a930dacfda54808ea94c7abc4378f3bd38"
+        }
+      ]
+    },
+    {
+      "name": "沙虫末试T2保血反例",
+      "actual": [
+        0,
+        0
+      ],
+      "expected": [
+        0,
+        0
+      ],
+      "passed": true,
+      "refs": [
+        {
+          "source": "states.jsonl",
+          "line": 276386,
+          "sha256": "fea1c9eb323d73f572cc70e429f12645f89910822608a06a9505e75bc860ae03"
+        },
+        {
+          "source": "states.jsonl",
+          "line": 276390,
+          "sha256": "1904f3b6c2e5c638d58a8fc0407c0439b4fe750909c7def67f5f60559c399109"
+        }
+      ]
+    },
+    {
+      "name": "蚌末轮弱后攻击与挡",
+      "actual": [
+        14,
+        10
+      ],
+      "expected": [
+        14,
+        10
+      ],
+      "passed": true,
+      "refs": [
+        {
+          "source": "states.jsonl",
+          "line": 273268,
+          "sha256": "33bf3096a1ed09716ad05804825e9a9e43faf274163d96ac73dd673153882e02"
+        }
+      ]
+    },
+    {
+      "name": "蚌末轮当前力量",
+      "actual": 8,
+      "expected": 8,
+      "passed": true,
+      "refs": [
+        {
+          "source": "states.jsonl",
+          "line": 273268,
+          "sha256": "33bf3096a1ed09716ad05804825e9a9e43faf274163d96ac73dd673153882e02"
+        }
+      ]
+    },
+    {
+      "name": "无毒冒泡前后能量",
+      "actual": [
+        5,
+        4
+      ],
+      "expected": [
+        5,
+        4
+      ],
+      "passed": true,
+      "refs": [
+        {
+          "source": "states.jsonl",
+          "line": 274379,
+          "sha256": "339930f8e12551606adebfd1276a363770defb524bbb995add9792d897fccd99"
+        },
+        {
+          "source": "states.jsonl",
+          "line": 274380,
+          "sha256": "e90ebf658ca70e7039dff4c7c9c5a248614698afcd8cfda99939d421f52634f0"
+        }
+      ]
+    },
+    {
+      "name": "无毒冒泡目标端点",
+      "actual": [
+        [
+          35,
+          0,
+          0
+        ],
+        [
+          35,
+          0,
+          0
+        ]
+      ],
+      "expected": [
+        [
+          35,
+          0,
+          0
+        ],
+        [
+          35,
+          0,
+          0
+        ]
+      ],
+      "passed": true,
+      "refs": [
+        {
+          "source": "states.jsonl",
+          "line": 274379,
+          "sha256": "339930f8e12551606adebfd1276a363770defb524bbb995add9792d897fccd99"
+        },
+        {
+          "source": "states.jsonl",
+          "line": 274380,
+          "sha256": "e90ebf658ca70e7039dff4c7c9c5a248614698afcd8cfda99939d421f52634f0"
+        },
+        {
+          "source": "decisions.jsonl",
+          "line": 268455,
+          "sha256": "923863cea64a0ee51b98521063af1fa88ab21cf5d04fc7000067996a29c001e9"
+        }
+      ]
+    },
+    {
+      "name": "族母T6负敏捷",
+      "actual": -2,
+      "expected": -2,
+      "passed": true,
+      "refs": [
+        {
+          "source": "states.jsonl",
+          "line": 273504,
+          "sha256": "589dcbec3df0d64238badc1a9b60803c2aa73e99c672d4202731c1b22bf90c28"
+        }
+      ]
+    },
+    {
+      "name": "族母T6毒17与16结算净扣",
+      "actual": 33,
+      "expected": 33,
+      "passed": true,
+      "refs": [
+        {
+          "source": "states.jsonl",
+          "line": 273504,
+          "sha256": "589dcbec3df0d64238badc1a9b60803c2aa73e99c672d4202731c1b22bf90c28"
+        },
+        {
+          "source": "states.jsonl",
+          "line": 273508,
+          "sha256": "db2d4507be25ea62558e11f8ca0c48bff7507e0c22351ef9397372108d49d116"
+        }
+      ]
+    },
+    {
+      "name": "胧光怪T4观测伤损",
+      "actual": [
+        47,
+        15
+      ],
+      "expected": [
+        47,
+        15
+      ],
+      "passed": true,
+      "refs": [
+        {
+          "source": "states.jsonl",
+          "line": 273593,
+          "sha256": "3cf5b90f94b99a39f05650e8888a9e8a3c07a6a57f30812c19dcf289af4854b7"
+        },
+        {
+          "source": "states.jsonl",
+          "line": 273596,
+          "sha256": "12864df19fb9f80a803101606d4e72129b628aceccc5e245bdc3408ee1c52b7f"
+        }
+      ]
+    },
+    {
+      "name": "幻象T4后仍未退场",
+      "actual": 2,
+      "expected": 2,
+      "passed": true,
+      "refs": [
+        {
+          "source": "states.jsonl",
+          "line": 273596,
+          "sha256": "12864df19fb9f80a803101606d4e72129b628aceccc5e245bdc3408ee1c52b7f"
+        }
+      ]
+    },
+    {
+      "name": "航行前后两实体力量",
+      "actual": [
+        [
+          3,
+          3
+        ],
+        [
+          6,
+          6
+        ]
+      ],
+      "expected": [
+        [
+          3,
+          3
+        ],
+        [
+          6,
+          6
+        ]
+      ],
+      "passed": true,
+      "refs": [
+        {
+          "source": "states.jsonl",
+          "line": 273593,
+          "sha256": "3cf5b90f94b99a39f05650e8888a9e8a3c07a6a57f30812c19dcf289af4854b7"
+        },
+        {
+          "source": "states.jsonl",
+          "line": 273596,
+          "sha256": "12864df19fb9f80a803101606d4e72129b628aceccc5e245bdc3408ee1c52b7f"
+        }
+      ]
+    },
+    {
+      "name": "甲虫末试当前HP挡攻击",
+      "actual": [
+        1,
+        16,
+        22
+      ],
+      "expected": [
+        1,
+        16,
+        22
+      ],
+      "passed": true,
+      "refs": [
+        {
+          "source": "states.jsonl",
+          "line": 275022,
+          "sha256": "062fe7b40241c9dee81ecd14fed93a7b57d3cc94294f7bd0e400389ab4bcc87b"
+        }
+      ]
+    },
+    {
+      "name": "甲虫终态剩血",
+      "actual": 32,
+      "expected": 32,
+      "passed": true,
+      "refs": [
+        {
+          "source": "states.jsonl",
+          "line": 275023,
+          "sha256": "87a72100ab44f07e0849bcc3db4df7926a9a9437b0b13f18df2394d3378aabcf"
+        }
+      ]
+    },
+    {
+      "name": "唯一状态匹配决策数",
+      "actual": 3301,
+      "expected": 3301,
+      "passed": true,
+      "refs": []
+    },
+    {
+      "name": "可观察整轮端点数",
+      "actual": 121,
+      "expected": 121,
+      "passed": true,
+      "refs": []
+    },
+    {
+      "name": "原候选片段数",
+      "actual": 476,
+      "expected": 476,
+      "passed": true,
+      "refs": []
+    },
+    {
+      "name": "已有消费者不由当前升级牌反推实际施放",
+      "actual": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "expected": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "passed": true,
+      "refs": []
+    },
+    {
+      "name": "已有整轮消费者没有完整候选认证",
+      "actual": 0,
+      "expected": 0,
+      "passed": true,
+      "refs": []
+    },
+    {
+      "name": "缺身份的原路线元数据保持五条排除记录",
+      "actual": [
+        267143,
+        267517,
+        268789,
+        268818,
+        268864
+      ],
+      "expected": [
+        267143,
+        267517,
+        268789,
+        268818,
+        268864
+      ],
+      "passed": true,
+      "refs": []
+    }
+  ],
+  "passed": 38,
+  "failed": 0,
+  "raw_byte_rechecks": {
+    "states.jsonl": 3432,
+    "decisions.jsonl": 3306
+  },
+  "decision_counts": {
+    "CA5KE8GFJ9X2": 265,
+    "61E2QS63Y9WU": 443,
+    "5PM6JAQG6FNQ": 638,
+    "DUZUBAJ3A8GP": 602,
+    "VLZ6CCT8AQ0A": 699,
+    "8JRE1C4H4Z2W": 659
+  },
+  "state_counts": {
+    "CA5KE8GFJ9X2": 282,
+    "61E2QS63Y9WU": 462,
+    "5PM6JAQG6FNQ": 660,
+    "DUZUBAJ3A8GP": 623,
+    "VLZ6CCT8AQ0A": 729,
+    "8JRE1C4H4Z2W": 676
+  }
+}

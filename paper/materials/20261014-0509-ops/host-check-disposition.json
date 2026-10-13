@@ -1,0 +1,39 @@
+{
+  "original_full_check": {
+    "rc": 1,
+    "log": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261014-041302-fix-batch.fallback-4c937f62b5d9fbeac051dce2ffdc1863765fd72a.checks.log",
+    "merged": "26bb0f07b6e72394e09b08dfb15f51a6c2d0fe86",
+    "tree": "4c937f62b5d9fbeac051dce2ffdc1863765fd72a",
+    "commits": [
+      "c60407481a415f84efe608ad44b590b616275bc7",
+      "dc606a59adbeb4f7efe141a9aa022641275275c5",
+      "c5e68dcf9d7d9e288b44ba59104596234d7433be"
+    ]
+  },
+  "full_original_result_preserved": true,
+  "source_unchanged_for_failed_files": true,
+  "two_failed_exact_test_names_retested_once": true,
+  "supplement_rc": 0,
+  "supplement_full_suite": false,
+  "supplement_counts": [
+    {
+      "numTotalTests": 32,
+      "numPassedTests": 1,
+      "numFailedTests": 0,
+      "numPendingTests": 31
+    },
+    {
+      "numTotalTests": 24,
+      "numPassedTests": 1,
+      "numFailedTests": 0,
+      "numPendingTests": 23
+    }
+  ],
+  "decision": "Keep the original R335 deadline fixes. Preserve and repair the nondeterministic fixed-process fixtures through the existing ordinary fix queue. No causal attribution to the deadline patch or blanket full-suite success.",
+  "existing_fix_owner_snapshot": {
+    "batch": "20261014-050124-fix-batch",
+    "worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-050124"
+  },
+  "no_duplicate_fix_or_rollback_or_release": true,
+  "source_checkout_reclaim_gate_still_waits_for_full_checks": true
+}

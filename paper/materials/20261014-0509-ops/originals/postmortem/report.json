@@ -1,0 +1,41 @@
+{
+  "task": "postmortem",
+  "appended": [
+    "8AGEGLG40SV3"
+  ],
+  "skipped": [],
+  "bugs": [
+    {
+      "run": "8AGEGLG40SV3",
+      "where": "agent/src/reflex/combat-plan.ts:3909",
+      "what": "整回合未建模毒药水选项截断合法目标，漏千足虫后段槽2；容量预留同样截到2。",
+      "new": false
+    }
+  ],
+  "ledger": {
+    "added": [],
+    "updated": [
+      "silent-0020",
+      "silent-0011",
+      "silent-0365",
+      "silent-0064",
+      "silent-0080",
+      "silent-0401",
+      "silent-0142",
+      "silent-0278"
+    ],
+    "repeats": [
+      "silent-0365"
+    ],
+    "check": 0
+  },
+  "code_proposals": [
+    "silent-proposal-6d24408d60c084b4",
+    "silent-proposal-30478bb43931506e"
+  ],
+  "implementation_domains": [
+    "combat",
+    "potion"
+  ],
+  "report": "/home/dw/Projects/agent-sts2/learner/runs/20261014-044302-postmortem/report.md"
+}

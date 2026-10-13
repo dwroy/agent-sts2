@@ -1,0 +1,89 @@
+{
+  "live_head": "26bb0f07b6e72394e09b08dfb15f51a6c2d0fe86",
+  "snippets": {
+    "agent/src/reflex/combat-plan.ts:3777": {
+      "lines": [
+        [
+          3777,
+          "  const rolloutTiedAll = rollout?.available ? rollout.tied : [];"
+        ],
+        [
+          3778,
+          "  const rolloutBest = rollout?.available ? rollout.best : null;"
+        ],
+        [
+          3779,
+          "  const rolloutBestIsPotion = rolloutBest !== null && mcMedians.includes(rolloutBest);"
+        ],
+        [
+          3780,
+          "  const offerPotions = potions.length > 0;"
+        ],
+        [
+          3781,
+          "  const unsimulatedKeys = offerPotions ? potions.reduce((sum, potion) => sum + (potion.requires_target ? Math.min(2, potion.valid_targets.length) : 1), 0) : 0;"
+        ],
+        [
+          3782,
+          "  // The 10-option cap holds a slot for every random potion and unsimulated drink shown: plan lines make room."
+        ],
+        [
+          3783,
+          "  const keep = new Set<Plan>([top, ...potionLethal, ...(setupClose && setupLine ? [setupLine] : []), ...focusOf.keys(), ...(noPotionBase ? [noPotionBase] : []), ...thiefKept]);"
+        ],
+        [
+          3784,
+          "  const planOptions = trimForPotionOptions(options, mcShown.length + unsimulatedKeys + (noPotionOwn ? 1 : 0), keep);"
+        ]
+      ]
+    },
+    "agent/src/reflex/combat-plan.ts:3904": {
+      "lines": [
+        [
+          3904,
+          "  }"
+        ],
+        [
+          3905,
+          "  // Unsimulated potions: always an option, with no invented numbers."
+        ],
+        [
+          3906,
+          "  if (offerPotions) {"
+        ],
+        [
+          3907,
+          "    for (const potion of potions) {"
+        ],
+        [
+          3908,
+          "      const targets: (number | null)[] = potion.requires_target ? potion.valid_targets : [null];"
+        ],
+        [
+          3909,
+          "      for (const target of targets.slice(0, 2)) {"
+        ],
+        [
+          3910,
+          "        const key = target === null ? potion.key : `${potion.key}->e${target}`;"
+        ],
+        [
+          3911,
+          "        const enemyName = target === null ? null : enemies.find((enemy) => enemy.index === target)?.name ?? `enemy ${target}`;"
+        ],
+        [
+          3912,
+          "        const keptBy = planOffer(potion.potion_id) === false ? fightPlan?.potions[potion.potion_id] : undefined;"
+        ],
+        [
+          3913,
+          "        // Entropic Brew: its effect is known (random potions into its own slot and every empty one), only which potions"
+        ],
+        [
+          3914,
+          "        // is not; the turn is re-planned with them."
+        ]
+      ]
+    }
+  }
+}
