@@ -34,14 +34,16 @@ afterEach(() => {
   for (const dir of dirs.splice(0)) rmSync(dir, { recursive: true, force: true });
 });
 
-function fixture() {
+function fixture(postmortem = false) {
   const root = mkdtempSync(join(tmpdir(), "startup-recovery-")); dirs.push(root);
   for (const dir of ["tasks", "work", "ops/state", "runs"]) mkdirSync(join(root, dir), { recursive: true });
   writeFileSync(join(root, "tasks/t.md"), "---\ntools: Read\n---\n固定输入 {{scratch}}。\n");
-  const batch = "20261011-224302-fix-batch";
+  const batch = postmortem ? "20261013-154301" : "20261011-224302-fix-batch";
   const file = join(root, "ops/state/learn.json");
-  const cwd = join(root, "work");
-  const registration = { state: "running", pid: process.pid, worktree: cwd, task: "fix-batch" };
+  const cwd = postmortem ? root : join(root, "work");
+  // Postmortems use a timestamp-only ID and run at the root without explicit task/worktree fields.
+  const registration = postmortem ? { state: "running", pid: process.pid }
+    : { state: "running", pid: process.pid, worktree: cwd, task: "fix-batch" };
   const save = (changes: object = {}) => writeFileSync(file, JSON.stringify({ batches: { [batch]: { ...registration, ...changes } } }));
   save();
   const env = { HOME: root, LEARNER_BATCH_ID: batch, LEARNER_STATE_FILE: file };
@@ -94,6 +96,23 @@ function children(attempts: Attempt[]) {
 }
 
 describe("bounded learner startup recovery", () => {
+  it("retries a registered timestamp-only postmortem with the original lease and input", async () => {
+    const f = fixture(true);
+    const fake = children([{ stderr: failure }, { code: 0 }]);
+    expect(await f.run()).toBe(0);
+    expect(fake.inputs).toHaveLength(2);
+    expect(fake.inputs[0]).toBe(fake.inputs[1]);
+    expect(fake.order).toEqual(["spawn0", "close0", "spawn1", "close1"]);
+    const rows = f.records();
+    const starts = rows.filter((r) => r.type === "learner_startup_attempt");
+    expect(starts.map((r) => r.batch)).toEqual(["20261013-154301", "20261013-154301"]);
+    expect(starts[0].lease).toMatch(/^[a-f0-9]{64}$/);
+    expect(starts[1].lease).toBe(starts[0].lease);
+    expect(starts[1].input_sha256).toBe(starts[0].input_sha256);
+    expect(rows.filter((r) => r.type === "learner_summary")).toHaveLength(1);
+    expect(vi.mocked(spawn).mock.calls[0]).toEqual(vi.mocked(spawn).mock.calls[1]);
+  });
+
   it("retries exact pre-session ENOENT after close with identical input and one final completion", async () => {
     const f = fixture();
     const fake = children([{ stderr: failure, closeDelay: 10 }, { code: 0 }]);
@@ -196,4 +215,18 @@ it("binds lease identity to the registered live owner and rejects paths outside 
   f.save({ state: "failed" });
   expect(lease?.current()).toBe(false);
   expect(captureStartupLease({ ...f.env, LEARNER_STATE_FILE: "/fixture/learn.json" }, f.root, f.cwd)).toBeUndefined();
+});
+
+it("requires a live registration for timestamp-only postmortem leases", () => {
+  const f = fixture(true);
+  expect(captureStartupLease(f.env, f.root, f.cwd)?.current()).toBe(true);
+  for (const change of [{ state: "lost" }, { cancelled: true }, { pid: 99999999 }, { rc: 1 }]) {
+    f.save(change);
+    expect(captureStartupLease(f.env, f.root, f.cwd)).toBeUndefined();
+  }
+  f.save();
+  const lease = captureStartupLease(f.env, f.root, f.cwd)!;
+  rmSync(f.env.LEARNER_STATE_FILE);
+  expect(lease.current()).toBe(false);
+  expect(captureStartupLease(f.env, f.root, f.cwd)).toBeUndefined();
 });
