@@ -1,0 +1,105 @@
+{
+  "at": "2026-10-14 02:31:03 CST",
+  "batch": "20261014-021301",
+  "run": "1269Y20SKHUM",
+  "failure_kind": "pre-session filesystem glob ENOENT, not quota/login, completed research or a game stall",
+  "original_stream": {
+    "path": "learner/runs/20261014-021302-postmortem.jsonl",
+    "bytes": 20843,
+    "sha256": "7ffb0939b39be750d4f6b02a4fc06518e2baef214e2645b52541792235d0d79c"
+  },
+  "original_startup_exits": [
+    {
+      "type": "learner_startup_exit",
+      "ts": "2026-10-13T18:13:17.956Z",
+      "pid": 1480192,
+      "attempt": 1,
+      "batch": null,
+      "lease": null,
+      "input_sha256": "d016647bee95e339562b1a0205a9ba1917fe316098dfbfc63b74e9b0aaa40fda",
+      "command_sha256": "e7da836ee0d84dfb1ee178923973e4724b6c0998804eafe1ce19c43c6fad7018",
+      "exit_code": 1,
+      "signal": null,
+      "timed_out": false,
+      "cancelled": false,
+      "retryable": true
+    }
+  ],
+  "original_diagnostics": [
+    {
+      "type": "learner_stderr",
+      "attempt": 1,
+      "t_ms": 13071,
+      "text": "2026-10-13T18:13:17.932690Z ERROR codex_core::session: Failed to create session: failed to load AGENTS.md instructions for environment `local`: fs sandbox helper failed with status exit status: 1: error building bubblewrap command: Fatal error: ripgrep unreadable glob scan failed for /home/dw/Projects/agent-sts2: rg: /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261014-011301-s2/paper/materials/silent/20261008-1940-events: No such file or directory (os error 2)"
+    },
+    {
+      "type": "learner_stderr",
+      "attempt": 1,
+      "t_ms": 13071,
+      "text": "rg: /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261014-011301-s2/paper/materials/silent/20261008-1640-events: No such file or directory (os error 2)"
+    },
+    {
+      "type": "learner_stderr",
+      "attempt": 1,
+      "t_ms": 13071,
+      "text": "rg: /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261014-011301-s2/paper/materials/silent/20261008-1823-experience104: No such file or directory (os error 2)"
+    },
+    {
+      "type": "learner_stderr",
+      "attempt": 1,
+      "t_ms": 13071,
+      "text": "rg: /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261014-011301-s2/paper/materials/silent/20261008-0452-events: No such file or directory (os error 2)"
+    },
+    {
+      "type": "learner_stderr",
+      "attempt": 1,
+      "t_ms": 13071,
+      "text": "rg: /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261014-011301-s2/paper/materials/silent/20261008-0349-events: No such file or directory (os error 2)"
+    },
+    {
+      "type": "learner_stderr",
+      "attempt": 1,
+      "t_ms": 13078,
+      "text": "Error: thread/start: thread/start failed: error creating thread: failed to load AGENTS.md instructions for environment `local`: fs sandbox helper failed with status exit status: 1: error building bubblewrap command: Fatal error: ripgrep unreadable glob scan failed for /home/dw/Projects/agent-sts2: rg: /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261014-011301-s2/paper/materials/silent/20261008-1940-events: No such file or directory (os error 2)"
+    },
+    {
+      "type": "learner_stderr",
+      "attempt": 1,
+      "t_ms": 13078,
+      "text": "rg: /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261014-011301-s2/paper/materials/silent/20261008-1640-events: No such file or directory (os error 2)"
+    },
+    {
+      "type": "learner_stderr",
+      "attempt": 1,
+      "t_ms": 13078,
+      "text": "rg: /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261014-011301-s2/paper/materials/silent/20261008-1823-experience104: No such file or directory (os error 2)"
+    },
+    {
+      "type": "learner_stderr",
+      "attempt": 1,
+      "t_ms": 13078,
+      "text": "rg: /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261014-011301-s2/paper/materials/silent/20261008-0452-events: No such file or directory (os error 2)"
+    },
+    {
+      "type": "learner_stderr",
+      "attempt": 1,
+      "t_ms": 13078,
+      "text": "rg: /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261014-011301-s2/paper/materials/silent/20261008-0349-events: No such file or directory (os error 2) (code -32603)"
+    }
+  ],
+  "model": "gpt-6.1-sol",
+  "effort": "xhigh",
+  "sandbox": "workspace-write with original credential denies",
+  "token_input": 0,
+  "tool_calls": {},
+  "actual_thread_or_model_turn_started": false,
+  "completed_postmortem_or_new_ledger_entries": false,
+  "original_deployed_lease_fix": "d9983263ffecea1bed4e29d65e7f854a3d2e33d7",
+  "lease_source_unchanged": true,
+  "why_no_extra_startup_attempt": "Actual capture returned batch=null/lease=null; a valid current owner lease remains required. Which guard failed is not established by this trace.",
+  "existing_queue_item": "sandbox-glob-startup-race / existing bounded recovery and directory lifecycle chain",
+  "active_original_fix_owner": "20261014-021302-fix-batch",
+  "retry_policy_unchanged": "Original scheduler one-hour retry, at most three per run; no manual reset or duplicate dispatch.",
+  "original_failed_batch_preserved": true,
+  "no_sandbox_expansion_game_restart_or_credentials_read": true
+}
