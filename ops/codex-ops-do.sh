@@ -36,10 +36,18 @@ WAIT="${CODEX_OPS_DO_WAIT:-$default_wait}"
 for a in "$@"; do
   [[ "$a" =~ ^[A-Za-z0-9][A-Za-z0-9,._:-]{0,199}$ ]] || { echo "bad argument: $a" >&2; exit 2; }
 done
-mkdir -p "$BROKER"
+mkdir -p "$BROKER" || { echo "cannot prepare broker request directory" >&2; exit 1; }
 id="$(date +%s%N)-$$"
-json=$(python3 -c 'import json,sys; print(json.dumps({"action": sys.argv[1], "args": sys.argv[2:]}))' "$@")
-printf '%s\n' "$json" > "$BROKER/$id.tmp" && mv "$BROKER/$id.tmp" "$BROKER/$id.req"
+json=$(python3 -c 'import json,sys; print(json.dumps({"action": sys.argv[1], "args": sys.argv[2:]}))' "$@") \
+  || { echo "cannot encode broker request" >&2; exit 1; }
+if ! printf '%s\n' "$json" > "$BROKER/$id.tmp"; then
+  echo "broker request write failed; temporary evidence retained, request not published" >&2
+  exit 1
+fi
+if ! mv "$BROKER/$id.tmp" "$BROKER/$id.req"; then
+  echo "broker request publication failed; inspect temporary/request files before retrying" >&2
+  exit 1
+fi
 # launch-game waits for the mod for up to ~3 min; eval-metrics has a 10 min broker limit.
 end=$(( $(date +%s) + WAIT ))
 while [ ! -f "$BROKER/$id.res" ]; do
