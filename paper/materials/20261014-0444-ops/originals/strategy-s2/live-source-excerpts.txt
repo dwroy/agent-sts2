@@ -1,0 +1,91 @@
+agent/src/reflex/card-model.ts
+匹配 const snakebite = L1020
+1019:     ["base_value", "current_value", "enchanted_value"].every((field) => snakebiteValues[0]?.[field] === 10);
+1020:   const snakebite = character.toLowerCase() === "silent" && cardId === "SNAKEBITE" &&
+1021:     ((!bool(card["upgraded"]) && dyn(card, "PoisonPower") === 7) || upgradedSnakebite);
+1022:   // DUZUBAJ3A8GP F6 T1 / F27 T4-T5, silent-0234: only the observed plain/upgraded Haze values are wired.
+1023:   const haze = character.toLowerCase() === "silent" && cardId === "HAZE" &&
+1024:     (bool(card["upgraded"]) ? dyn(card, "PoisonPower") === 6 : dyn(card, "PoisonPower") === 4);
+1025:   const poison = ["DEADLY_POISON", "POISONED_STAB", "BOUNCING_FLASK", "BUBBLE_BUBBLE", "OUTBREAK"].includes(cardId) || snakebite || haze ? dyn(card, "PoisonPower") ?? 0 : 0;
+匹配 const poison = L1025
+1024:     (bool(card["upgraded"]) ? dyn(card, "PoisonPower") === 6 : dyn(card, "PoisonPower") === 4);
+1025:   const poison = ["DEADLY_POISON", "POISONED_STAB", "BOUNCING_FLASK", "BUBBLE_BUBBLE", "OUTBREAK"].includes(cardId) || snakebite || haze ? dyn(card, "PoisonPower") ?? 0 : 0;
+1026:   // 2L1BNN9ZJEFU F48 attempt 6 T8, silent-0112: the upgraded zero-cost card also has Power=1.
+1027:   const shadowmeld = cardId === "SHADOWMELD" && dyn(card, "Power") === 1;
+1028:   // VN7RQJMJEFMX F27 T6, silent-0115: the upgrade arms two Skills, not two extra plays of one Skill.
+1029:   const burstSkills = dyn(card, "Skills");
+1030:   const burst = cardId === "BURST" && (bool(card["upgraded"]) ? burstSkills === 2 : burstSkills === 1);
+匹配 potionId === "POISON_POTION" L1735
+1734:   }
+1735:   const effect: (Partial<CardModel> & { target: TargetMode }) | undefined = POTION_EFFECTS[potionId] ?? (potionId === "POISON_POTION" && (ctx?.observedPoison ?? 0) > 0
+1736:     ? { target: "single" as const, poison: ctx!.observedPoison } : undefined)
+1737:     ?? (potionId === "GHOST_IN_A_JAR" && ctx?.observedGhostInAJar === true
+1738:       ? { target: "self" as const, special: "intangible" as const } : undefined);
+1739:   if (!effect) return null;
+1740:   // Distilled Chaos, Glowwater, Bottled Potential and Gambler's Brew: their cards are priced by the expected draw
+agent/src/reflex/combat-plan.ts
+匹配 const demonPoison = L3181
+3180:   const drawSlot = potionsAll.find((potion) => potion.potion_id === "GAMBLERS_BREW" || potion.potion_id === "DISTILLED_CHAOS" || potion.potion_id === "GLOWWATER_POTION" || potion.potion_id === "BOTTLED_POTENTIAL")?.slot;
+3181:   const demonPoison = observedDemonPoison(state);
+3182:   const potionContext: PotionContext = {
+3183:     ...pileContext,
+3184:     character: str(asRecord(state.run?.raw)["character_id"]),
+3185:     ascension: state.run?.ascension ?? -1,
+3186:     // XTSV1U9JD34T F49 T1, silent-0206: a new layer caps the observed incoming attack.
+匹配 observedPoison: L3190
+3189:       ? { observedGhostInAJar: true } : {}),
+3190:     ...(demonPoison === null ? {} : { observedPoison: demonPoison }),
+3191:     ...(observedDouble && (state.run?.floor === observedDouble.firstFloor || state.run?.floor === observedDouble.secondFloor) ? { observedPoison: observedDouble.poisonPotionAmount } : {}),
+3192:     ...(powerExtraCost > 0 ? { powerExtraCost } : {}),
+3193:     ...(beltIds.has("BLESSING_OF_THE_FORGE") ? { upgrades: forgeUpgrades(state, env.knowledge) } : {}),
+3194:     ...(beltIds.has("SOLDIERS_STEW")
+3195:       ? { strikePileDamage: [...pileCardModels(state, env.knowledge, "draw", pileContext), ...pileCardModels(state, env.knowledge, "discard", pileContext)].filter(isStrikeCard).reduce((sum, card) => sum + (card.damage ?? 0) * Math.max(1, card.hits), 0) }
+匹配 observedPoison: L3191
+3190:     ...(demonPoison === null ? {} : { observedPoison: demonPoison }),
+3191:     ...(observedDouble && (state.run?.floor === observedDouble.firstFloor || state.run?.floor === observedDouble.secondFloor) ? { observedPoison: observedDouble.poisonPotionAmount } : {}),
+3192:     ...(powerExtraCost > 0 ? { powerExtraCost } : {}),
+3193:     ...(beltIds.has("BLESSING_OF_THE_FORGE") ? { upgrades: forgeUpgrades(state, env.knowledge) } : {}),
+3194:     ...(beltIds.has("SOLDIERS_STEW")
+3195:       ? { strikePileDamage: [...pileCardModels(state, env.knowledge, "draw", pileContext), ...pileCardModels(state, env.knowledge, "discard", pileContext)].filter(isStrikeCard).reduce((sum, card) => sum + (card.damage ?? 0) * Math.max(1, card.hits), 0) }
+3196:       : {}),
+匹配 observedGhostInAJar: L3189
+3188:     ...(str(asRecord(state.run?.raw)["character_id"]).toLowerCase() === "silent" && ascension === 10 && !playerSim.intangible
+3189:       ? { observedGhostInAJar: true } : {}),
+3190:     ...(demonPoison === null ? {} : { observedPoison: demonPoison }),
+3191:     ...(observedDouble && (state.run?.floor === observedDouble.firstFloor || state.run?.floor === observedDouble.secondFloor) ? { observedPoison: observedDouble.poisonPotionAmount } : {}),
+3192:     ...(powerExtraCost > 0 ? { powerExtraCost } : {}),
+3193:     ...(beltIds.has("BLESSING_OF_THE_FORGE") ? { upgrades: forgeUpgrades(state, env.knowledge) } : {}),
+3194:     ...(beltIds.has("SOLDIERS_STEW")
+匹配 crabPoisonFacts L32
+31: import { observedDemonPoison } from "./silent-demon-potion.js";
+32: import { crabPoisonFacts } from "./silent-crab-potion.js";
+33: import { carrySilentSkittish } from "./silent-skittish.js";
+34: import { silentLossReference } from "./silent-loss-reference.js";
+35: import { silentSimulationReference } from "./silent-simulation-reference.js";
+36: import { silentSelectionAudit, type SelectionCandidate } from "./silent-selection-audit.js";
+37: import { silentApotheosisReference } from "./silent-apotheosis-reference.js";
+匹配 crabPoisonFacts L3926
+3925:           offered: UNSIMULATED_OFFERED,
+3926:           ...crabPoisonFacts(state, potion.potion_id, target),
+3927:           ...silentApotheosisReference(state, null, "unsimulated"),
+3928:           note: `the cheapest card plan alone: ${hpText(Math.min(...options.map((plan) => plan.outcome.hpLoss)))} this turn`,
+3929:           ...(keptBy ? { fight_plan: `keeps it (${keptBy})` } : planOffer(potion.potion_id) === true ? { fight_plan: "says now" } : {}),
+3930:           ...(costsOn ? { potion_cost: `drinking it costs ${costs.get(potion.potion_id) ? potionCostText(costs.get(potion.potion_id)!) : "0 (no conversion value in the potion table)"}` } : {}),
+3931:           ...(rollout ? { rollout: brewGives !== null ? "not rolled out: the potions it gives are random; the turn is re-planned with them after drinking" : DRINK_FIRST_ROLLOUT } : {}),
+agent/src/reflex/silent-demon-potion.ts
+匹配 export function observedDemonPoison L11
+10: /** KFRDELW2TH2P F33 T7, silent-0278: six related drinks each add six, without immediate HP damage. */
+11: export function observedDemonPoison(state: GameState): number | null {
+12:   if (!state.in_combat || state.run?.ascension !== 10 ||
+13:       str(asRecord(state.run.raw)["character_id"]).toUpperCase() !== "SILENT") return null;
+14:   const run = asRecord(state.run.raw);
+15:   const relics = asArray(run["relics"]).map((r) => str(asRecord(r)["relic_id"])).sort();
+16:   // Keep the complete observed modifier combination; missing or new relics are not assumed neutral.
+匹配 const OBSERVED_RELICS L4
+3: 
+4: const OBSERVED_RELICS = ["BLOOD_VIAL", "CENTENNIAL_PUZZLE", "JUZU_BRACELET", "LOST_COFFER",
+5:   "PAELS_FLESH", "RING_OF_THE_SNAKE", "SWORD_OF_STONE"];
+6: const OBSERVED_POWERS = new Map<string, number>([
+7:   ["MIND_ROT_POWER", 1], ["PLATING_POWER", 2], ["ACCELERANT_POWER", 1], ["SLOTH_POWER", 3],
+8: ]);
+9: 

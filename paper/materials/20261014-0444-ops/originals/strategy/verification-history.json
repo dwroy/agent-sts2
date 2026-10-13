@@ -1,0 +1,50 @@
+{
+  "说明": "均为本批临时抽取/读回辅助的失败与修正，不是生产代码或源码测试失败。",
+  "记录": [
+    {
+      "步骤": "tsx CLI冻结消费者读回",
+      "退出码": 1,
+      "原因": "沙箱IPC listen EPERM",
+      "原日志": "consumer-readback.first.log"
+    },
+    {
+      "步骤": "node --import首次读回",
+      "退出码": 1,
+      "原因": "临时数据屏蔽匹配过宽，误屏蔽src/knowledge源码；修正为仅屏蔽JSON/JSONL数据",
+      "原稿": "consumer-readback.initial.mjs.txt"
+    },
+    {
+      "步骤": "修正后node --import读回",
+      "退出码": 0,
+      "日志": "consumer-readback.restored.log"
+    },
+    {
+      "步骤": "首次源码同字节核验",
+      "退出码": 1,
+      "原因": "main/live保留的Roy/Dai历史注释不同，严格字节相等检查拒绝",
+      "原日志": "verification.initial.log",
+      "原稿": "verify_evidence.initial.py.txt"
+    },
+    {
+      "步骤": "首次转译比对",
+      "退出码": 1,
+      "原因": "已安装TypeScript 7不提供旧require/transpileModule入口；改用本项目已有esbuild TypeScript转译，不安装依赖",
+      "原日志": "verification.compiler-failed.log"
+    },
+    {
+      "步骤": "初次报告准备",
+      "退出码": 1,
+      "原因": "前序核验尚未成功生成verification.json，读取缺文件停止；未生成报告或写根记录"
+    },
+    {
+      "步骤": "独立记录原字节并核移除注释的转译输出",
+      "退出码": 0,
+      "日志": "verification.restored.log"
+    },
+    {
+      "步骤": "初稿战斗窗口",
+      "原因": "combat残留在奖励屏，改用原始in_combat标志；初稿保留",
+      "原稿": "combat-windows.initial.json"
+    }
+  ]
+}

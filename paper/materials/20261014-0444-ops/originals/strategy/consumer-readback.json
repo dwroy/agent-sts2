@@ -1,0 +1,84 @@
+{
+  "basis": "实际基线源码入口＋本角色冻结实帧；未调用LLM或知识数据库，没有源码测试或自然消费者收益验收",
+  "discard": {
+    "source_line": 284817,
+    "after_line": 284818,
+    "candidate_count": 4,
+    "chosen_action": {
+      "action": "select_deck_card",
+      "option_index": 2
+    },
+    "actual_selected_hand_matches_projection": true,
+    "current_resources": {
+      "hp": 1,
+      "block": 16,
+      "energy": 2
+    },
+    "retained_cards": [
+      {
+        "hand_index_before_discard": 0,
+        "card_id": "STRANGLE",
+        "name": "紧勒",
+        "upgraded": false,
+        "energy_cost_now": 1,
+        "playable_before_discard": true,
+        "unplayable_reason": null,
+        "energy_sufficient_for_this_card_alone": true,
+        "energy_after_this_card_alone": 1,
+        "text_now": "造成8点伤害。 你在这个回合内每出一张牌，该名敌人都会失去2点生命。"
+      },
+      {
+        "hand_index_before_discard": 1,
+        "card_id": "NOXIOUS_FUMES",
+        "name": "毒雾+",
+        "upgraded": true,
+        "energy_cost_now": 1,
+        "playable_before_discard": true,
+        "unplayable_reason": null,
+        "energy_sufficient_for_this_card_alone": true,
+        "energy_after_this_card_alone": 1,
+        "text_now": "在你的回合开始时，给予所有敌人3层中毒。"
+      },
+      {
+        "hand_index_before_discard": 3,
+        "card_id": "GREED",
+        "name": "贪婪",
+        "upgraded": false,
+        "energy_cost_now": -1,
+        "playable_before_discard": false,
+        "unplayable_reason": "unplayable",
+        "energy_sufficient_for_this_card_alone": null,
+        "energy_after_this_card_alone": null,
+        "text_now": "不能被打出。 永恒。"
+      }
+    ],
+    "all_legal_options_preserved": true,
+    "missing_branch_outcomes": true,
+    "plan_without_unlogged_memory": {
+      "status": "unknown",
+      "reason": "没有本回合可核对的已选方案"
+    },
+    "limitation": "只验证实际弃精确切击的副本投影与全部合法选项；没有逐弃牌触发、动态伤害、格挡或生存分支。历史计划内存未记录，未伪造其实际快照。"
+  },
+  "sl_comparison_missing_plans": {
+    "resource_comparison": {
+      "scope": "current_turn_prediction",
+      "original_stage": "after_plan_guards_before_sl",
+      "original": null,
+      "replacement": null,
+      "delta": {
+        "hp_loss": null,
+        "damage_dealt": null,
+        "block_gained": null,
+        "strength_gained": null
+      },
+      "note": "同一观测盘面的模型预测，差值为替线减原线；不是实际扣血、保血或胜率收益。抽牌、选择、生成与用药后必须按实际状态核验续步；列出的步骤未证完整派发。随机药水中位线不作成对差值，缺线或非有限值记未知。"
+    }
+  },
+  "axe": {
+    "first_afterimage": "@axe:AFTERIMAGE%2B|AFTERIMAGE+, DRAMATIC_ENTRANCE+",
+    "first_entrance": "@axe:DRAMATIC_ENTRANCE%2B|AFTERIMAGE+, DRAMATIC_ENTRANCE+",
+    "different": true,
+    "limitation": "只读回已实现身份函数，不声称宽提案的能力支付/实建层数/可活窗口全部闭环。"
+  }
+}
