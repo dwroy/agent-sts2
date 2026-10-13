@@ -94,6 +94,9 @@ export interface KnowledgeNote {
   /** Hash and size of the rendered prefix (the same on every question while the data holds). */
   prefix_sha?: string;
   prefix_chars?: number;
+  /** Published shared lesson identities actually included in this prompt. */
+  shared_experience_version?: string;
+  shared_experience_ids?: string[];
   /** Why v3's prompt went out instead of the full knowledge. */
   error?: string;
 }

@@ -26,6 +26,7 @@ afterEach(() => process.chdir(cwd));
 
 /** Every knowledge data file a loader reads (src/knowledge/*.ts, sim/boss-trust.ts, sl/elites.ts, strategy/*). */
 const DATA_FILES = [
+  "shared-experience.json",
   "monster-db.json", "move-model.json", "event-pages.json", "card-upgrades.json",
   "experience.json", "ironclad-guide.md", "ds-handbook.md", "jev-hints.json", "outcome-stats.json", "room-costs.json",
   "boss-damage.json", "potion-equivalents.json", "fight-value.json", "fight-value-gates.json", "boss-trust.json", "sl-elites.json", "monster-records.json",

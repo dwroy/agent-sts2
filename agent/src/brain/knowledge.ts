@@ -147,7 +147,9 @@ export class KnowledgePrompt {
     const prefix = render({ ascension: ctx.ascension, knowledgeDir: ctx.knowledgeDir, ...(this.opts.facts ? { facts: this.opts.facts } : {}), ...(this.opts.mechanics === false ? { mechanics: false } : {}), ...(this.opts.moveRules === false ? { moveRules: false } : {}) }, postmortems);
     const system = fullSystemPrompt(prefix);
     this.renders += 1;
-    const note: KnowledgeNote = { mode: "full", ascension: ctx.ascension, prefix_sha: sha(prefix), prefix_chars: prefix.length };
+    const shared = data.sharedExperience.entries.filter(e => e.status === "active" && ctx.ascension >= e.asc[0] && ctx.ascension <= e.asc[1]);
+    const note: KnowledgeNote = { mode: "full", ascension: ctx.ascension, prefix_sha: sha(prefix), prefix_chars: prefix.length,
+      ...(shared.length ? { shared_experience_version: data.sharedExperience.version, shared_experience_ids: shared.map(e => e.id).sort() } : {}) };
     this.cached = { key, data, potions, postmortems, system, note };
     return { system, note };
   }

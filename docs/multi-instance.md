@@ -4,11 +4,11 @@
 
 ## 分支与目录
 
-独立角色可以使用独立分支 WT。储君运行目录为 `.worktrees/regent-climb`，分支 `regent-climb`。其 `STS2_WORKSPACE`、`CODEX_OPS_ROOT`、`STS2_LIVE` 指向这个目录，`CODEX_OPS_DIR` 指向其私有 `ops/codex-ops`，`LEARNER_BASE_REF=regent-climb`。logs、data、notes、当前局、STOP、脑等待、队列、锁、复盘和账本必须是本通道实际私有文件；不链接原通道。依赖可以复用。通用数据缓存可以复制，角色经验不能搬用。
+独立角色可以使用独立分支 WT。储君运行目录为 `.worktrees/regent-climb`，分支 `regent-climb`。其 `STS2_WORKSPACE`、`CODEX_OPS_ROOT`、`STS2_LIVE` 指向这个目录，`CODEX_OPS_DIR` 指向其私有 `ops/codex-ops`，`LEARNER_BASE_REF=regent-climb`。logs、data、notes、当前局、STOP、脑等待、队列、锁、复盘和账本必须是本通道实际私有文件；不链接原通道。依赖可以复用。通用数据缓存和已发布公共经验可精确同步，角色专属经验不能整库搬用。
 
 学习者渲染模板时从 `LEARNER_BASE_REF` 和 `STS2_LIVE` 取得基线及合入目录；显式冻结的 `--set base_branch/merge_dir` 优先。未设置这些变量时仍使用原模板默认值。新经验树可使用通道内 `.worktrees/exp`，但共享 Git 下分支名必须唯一，例如 `exp-regent`。新修复/策略树原有角色和批次命名继续适用。
 
-角色知识只消费 `knowledge/characters/<角色>/`；储君没有本角色经验时从空开始。保留仓库历史不等于允许把历史中的其他角色知识提供给储君。
+角色专属知识只消费 `knowledge/characters/<角色>/`；储君专属经验从空开始，同时读取 `knowledge/common/shared-experience.json` 的已发布通用经验。继承 Git 历史不等于允许直接加载未经通用性核实的其他角色私有经验。
 
 ## 游戏身份
 
@@ -27,6 +27,8 @@ profile 编号可能在不同 userdata 根下重复，所以 PID/profile 绑定�
 进程查询和停止以实际 `/proc` 的 cwd 与脚本路径判定通道归属。`index.ts play` 必须从该通道 live/agent 启动；其他 ops/learner/刷新脚本必须属于该通道，避免原运维误判第二个控制器或按 PID 停错进程。
 
 ## 合并知识与共享代码
+
+公共经验按 [共享流程](shared-experience.md) 以主 live 已发布版本为统一来源，各通道精确同步独立叶子并核消费者读回。每局事实重建不得覆盖公共经验，不能整目录覆盖。本角色统计仍各自刷新。
 
 各通道刷新和学习合入自己的运行分支，锁与租约独立。中央集成必须使用原主通道 live 锁，先保存正在刷新的知识与并行记录，再取本角色文件的精确增量。禁止把带有旧 Silent/common 数据及记录的整个实验分支合到 main/live。不同角色目录自然分离；同角色同文件的内容冲突交回原学习者按证据整理，不能整文件 ours/theirs 覆盖。
 
