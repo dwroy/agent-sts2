@@ -22,14 +22,17 @@ class SoloTests(unittest.TestCase):
     def test_actual_fresh_shell_consumes_own_lane_then_bound_game(self):
         with tempfile.TemporaryDirectory() as path:
             root=Path(path)/'.worktrees/regent-climb';ops=root/'ops';ops.mkdir(parents=True)
+            shared_env = Path(path) / '.worktrees/live/agent/.env'
+            shared_env.parent.mkdir(parents=True)
+            shared_env.write_text('# Fixed metadata-only fixture; no credentials.\n')
             for name in ['paths.sh','instance_env.py','regent_lane_env.py']:
                 (ops/name).write_bytes((OPS/name).read_bytes())
             (ops/'regent-lane.json').write_text(json.dumps({'request_id':'roy-20261013-isolated-character-climb','character':'REGENT'}))
             (ops/'instance-binding.json').write_text(json.dumps({'process_id':20,'base_url':'http://127.0.0.1:18181','native_profile_id':1}))
-            command='. "$FIXTURE_PATH"; printf "%s\\n" "$LIVE" "$CHARACTER" "$STS2_BASE_URL" "$STS2_EXPECTED_PROCESS_ID"'
+            command='. "$FIXTURE_PATH"; test -r "$JEV_SHARED_ENV_FILE" || exit 1; printf "%s\\n" "$LIVE" "$CHARACTER" "$STS2_BASE_URL" "$STS2_EXPECTED_PROCESS_ID" "$KNOWLEDGE_PREFIX"'
             child=subprocess.run(['bash','-c',command],capture_output=True,text=True,env={'PATH':os.environ['PATH'],'FIXTURE_PATH':str(ops/'paths.sh')})
             self.assertEqual(child.returncode,0,child.stderr)
-            self.assertEqual(child.stdout.splitlines(),[str(root),'REGENT','http://127.0.0.1:18181','20'])
+            self.assertEqual(child.stdout.splitlines(),[str(root),'REGENT','http://127.0.0.1:18181','20','full'])
 
     def test_fresh_shell_restores_own_live_role_and_credential_references_without_keys(self):
         value=lane_env('/project/.worktrees/regent-climb', {'request_id':'roy-20261013-isolated-character-climb','character':'REGENT'})
