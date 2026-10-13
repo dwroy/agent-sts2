@@ -9,6 +9,8 @@ set -eu
 cd "$(dirname "${BASH_SOURCE[0]}")/.."
 export PATH="$HOME/.local/node/bin:$PATH"
 export npm_config_offline=true
+# Fixed fixtures choose their own roles; a live lane character must not change test defaults.
+unset CHARACTER
 workers="${SANDBOX_WORKERS:-4}"
 case "$workers" in 1|2|3|4) ;; *) echo "SANDBOX_WORKERS must be 1, 2, 3 or 4" >&2; exit 2 ;; esac
 nice -n 19 npx tsc -p tsconfig.json --noEmit

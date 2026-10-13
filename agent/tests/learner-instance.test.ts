@@ -17,9 +17,11 @@ writeFileSync(join(lane, "tasks/lane.md"), `---
 tools: Read, Bash, Edit, Write
 default.base_branch: main
 default.merge_dir: {{project_root}}/.worktrees/live
+default.code_dir: {{project_root}}/.worktrees/live
 ---
 BASE={{base_branch}}
 MERGE={{merge_dir}}
+CODE={{code_dir}}
 ROLE={{character}}
 `);
 
@@ -39,21 +41,24 @@ describe("learner targets for an independent worktree lane", () => {
     const text = await preview({ PATH: "" });
     expect(text).toContain("BASE=main");
     expect(text).toContain(`MERGE=${lane}/.worktrees/live`);
+    expect(text).toContain(`CODE=${lane}/.worktrees/live`);
   });
 
   it("renders the lane baseline and own live checkout without borrowing primary live", async () => {
     const text = await preview({ PATH: "", STS2_LIVE: lane, LEARNER_BASE_REF: "regent-climb" });
     expect(text).toContain("BASE=regent-climb");
     expect(text).toContain(`MERGE=${lane}\n`);
+    expect(text).toContain(`CODE=${lane}\n`);
     expect(text).toContain("ROLE=regent");
     expect(text).not.toContain(`MERGE=${root}/.worktrees/live`);
   });
 
   it("honors explicitly frozen task targets before environment defaults", async () => {
     const text = await preview({ PATH: "", STS2_LIVE: lane, LEARNER_BASE_REF: "regent-climb" },
-      ["--set", "base_branch=frozen-source", "--set", `merge_dir=${lane}/review`]);
+      ["--set", "base_branch=frozen-source", "--set", `merge_dir=${lane}/review`, "--set", `code_dir=${lane}/frozen-code`]);
     expect(text).toContain("BASE=frozen-source");
     expect(text).toContain(`MERGE=${lane}/review`);
+    expect(text).toContain(`CODE=${lane}/frozen-code`);
   });
 
   it("grants the shared git metadata needed by a lane learner but protects hooks and config", () => {

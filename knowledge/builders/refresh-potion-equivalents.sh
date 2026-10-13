@@ -37,9 +37,9 @@ if [[ ! "$character" =~ ^[a-z0-9_]+$ ]]; then
 fi
 TABLE="${POTION_TABLE:-$ROOT/knowledge/characters/$character/potion-equivalents.json}"
 
-# TARGET_ASCENSION from the env file (the last assignment; quotes and spaces dropped). Empty: not set.
-target=""
-if [[ -f "$ENV_FILE" ]]; then
+# Prefer the lane environment; fall back to its env file (last assignment, quotes and spaces dropped).
+target="${TARGET_ASCENSION:-}"
+if [[ -z "$target" && -f "$ENV_FILE" ]]; then
   target="$(grep -E '^[[:space:]]*(export[[:space:]]+)?TARGET_ASCENSION=' "$ENV_FILE" | tail -1 | sed -E 's/^[^=]*=//; s/[[:space:]"'"'"']//g; s/#.*$//' || true)"
 fi
 if [[ "$target" = climb ]]; then
