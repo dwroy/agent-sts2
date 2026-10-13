@@ -1327,10 +1327,19 @@ export function judgeEndTurn(state: GameState, context: JudgeContext): DeathVerd
       return counter ? { i, why: `its ${counter} going may stun it` } : null;
     })
     .filter((entry): entry is { i: number; why: string } => entry !== null);
+  // silent-0287/0288, NEWRFAYKTQHR A10 F28 T7: 52 + 13/22 may kill before the attack.
+  // Combine the existing upper bounds only in the observed Calendar window; this is not a win verdict.
+  const jointCalendarPoison = silentPoison && numOrNull(run["ascension"]) === 10
+    && state.turn === STONE_CALENDAR.turn && relics.has("STONE_CALENDAR");
   const mayDie = living
     .map((enemy, i) => {
       const { hit, poison, hp: hpLeft } = before[i]!;
-      return { i, enemy, dies: (hit > 0 && hit >= hpLeft) || (poison > 0 && poison >= hpLeft), why: poison > 0 && poison >= hpLeft ? `its poison (${poison})` : ends.sources.map((source) => source.name).join(" + ") };
+      const joint = jointCalendarPoison && hit > 0 && poison > 0 && hit + poison >= hpLeft;
+      const sources = ends.sources.map((source) => source.name).join(" + ");
+      const why = joint && hit < hpLeft && poison < hpLeft
+        ? `${sources} + its poison (${poison}); combined upper bound ${hit + poison}`
+        : poison > 0 && poison >= hpLeft ? `its poison (${poison})` : sources;
+      return { i, enemy, dies: joint || (hit > 0 && hit >= hpLeft) || (poison > 0 && poison >= hpLeft), why };
     })
     .filter((entry) => entry.dies);
   // Our loss at the next turn's start comes only if an enemy lives to see that turn's start: not if every enemy (every one
