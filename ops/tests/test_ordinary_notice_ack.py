@@ -96,6 +96,38 @@ class OrdinaryNoticeAck(unittest.TestCase):
                 self.reject_without_writes()
                 self.notice = original; self.registry = original_registry
 
+    def test_second_strategy_slot_preserves_batch_identity_and_delivery_guards(self):
+        before = self.state_path.read_bytes()
+        for batch in ('20261013-224302-s2-strategy-proposal', '20261013-224302-strategy-proposal-s2'):
+            with self.subTest(batch=batch):
+                self.source['batch'] = batch
+                self.notice['source_batch'] = batch
+                self.notice['source_evidence'] = self.artifact('source.json', self.source)
+                for stage in ('ops_forwarded', 'watcher_received', 'roy_notified'):
+                    self.notice[stage] = False
+                self.reject_without_writes(stage='watcher_received')
+                for stage in ('ops_forwarded', 'watcher_received', 'roy_notified'):
+                    self.assertEqual(self.ack(stage), 0)
+                saved = json.loads(self.notice_path.read_bytes())
+                self.assertEqual(saved['source_batch'], batch)
+                self.assertEqual(saved['source_evidence'], self.notice['source_evidence'])
+                self.assertEqual(self.state_path.read_bytes(), before)
+
+        for batch in ('20261013-224302-s3-strategy-proposal', '20261013-224302-s2-postmortem',
+                      '20261013-224302-s2-experience-update', '20261013-224302-s2-strategy-proposal-s2',
+                      '20261013-224302-s2-strategy-proposal-extra', 'prefix-20261013-224302-s2-strategy-proposal'):
+            with self.subTest(invalid_batch=batch):
+                self.source['batch'] = batch
+                self.notice['source_batch'] = batch
+                self.notice['source_evidence'] = self.artifact('source.json', self.source)
+                self.reject_without_writes()
+
+        # A valid shape must still match the exact frozen source batch.
+        self.notice['source_batch'] = '20261013-224302-s2-strategy-proposal'
+        self.source['batch'] = '20261013-224303-s2-strategy-proposal'
+        self.notice['source_evidence'] = self.artifact('source.json', self.source)
+        self.reject_without_writes()
+
     def test_wrong_actor_and_character_and_missing_stage_and_bad_evidence_sha_are_rejected(self):
         self.reject_without_writes(payload_changes={'actor': 'watcher'})
         self.reject_without_writes(payload_changes={'character': 'other'})
