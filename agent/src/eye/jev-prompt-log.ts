@@ -9,8 +9,9 @@
  * `error` and no answers; a retried request is one row per attempt.
  */
 
-import { appendFileSync, mkdirSync } from "node:fs";
+import { mkdirSync } from "node:fs";
 import { basename, dirname, join } from "node:path";
+import { appendJsonLine } from "../core/util/jsonl.js";
 
 import type { AnswerSet } from "../reflex/jev/answers.js";
 import { classifyJevError, type JevAskResult } from "../reflex/jev/client.js";
@@ -86,7 +87,7 @@ export function createJevPromptLog(path: string): JevPromptLog {
           mkdirSync(dirname(path), { recursive: true });
           ready = true;
         }
-        appendFileSync(path, `${JSON.stringify(record)}\n`, "utf8");
+        appendJsonLine(path, record);
       } catch {
         // Losing a log line must never stop a run (decision-log.ts).
       }

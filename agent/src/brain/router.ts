@@ -43,8 +43,9 @@
  *   own trace rows (codex-calls.jsonl) carry it.
  */
 import { createHash } from "node:crypto";
-import { appendFileSync, mkdirSync } from "node:fs";
+import { mkdirSync } from "node:fs";
 import { dirname } from "node:path";
+import { appendJsonLine } from "../core/util/jsonl.js";
 
 import type { BrainConfig } from "../core/config.js";
 import type { BrainAnswer, BrainEngine, BrainRequest, BrainUsage, EngineName, KnowledgeNote } from "./types.js";
@@ -705,7 +706,7 @@ export class BrainRouter {
       if (this.deps.log) this.deps.log(row);
       else if (this.deps.config.log) {
         mkdirSync(dirname(this.deps.config.log), { recursive: true });
-        appendFileSync(this.deps.config.log, `${JSON.stringify(row)}\n`, "utf8");
+        appendJsonLine(this.deps.config.log, row);
       }
     } catch (error) {
       if (this.codexOnly) throw error;
