@@ -1,0 +1,15 @@
+[
+ {
+  "claim": "上一批知识恶魔B3通过四项准入、列为可信，打穿比1.297。",
+  "finding": "新增独立验证后n=36、打穿比1.306，超过预先固定的1.3上限；场数不足为0，仍必须撤回B3可信。B2打穿比1.281且全部达标。",
+  "evidence": [
+   "WCDTYJKUDS4T A10 F33尝试6 T1–7 died",
+   "D9XJAX5KCSU2 A10 F33尝试1 T1–10 won",
+   "固定107调参keys/原Platt/7e1193cef模型；完整sources/results与逐回合记录随新指纹留存"
+  ],
+  "knowledge": [
+   "knowledge/characters/silent/boss-trust.json"
+  ],
+  "recommendation": "按已有授权规则撤回B3可信；保持原阈值与B2结果，继续同模型定期扩验证。实际上线后双通知写入并交ops→watcher→Roy；不代填确认。"
+ }
+]
