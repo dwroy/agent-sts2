@@ -114,6 +114,22 @@ def unsupported_candidates(options, sim):
         for key in offered)
 
 
+def candidate_dpr_coverage(options, sim):
+    """Retain strict exclusion proof while checking every offered candidate."""
+    counts = Counter(observed=0, unsupported=0, with_dpr=0, missing_dpr=0)
+    for key, value in obj(options).items():
+        if value is None:
+            continue
+        counts['observed'] += 1
+        if dpr_count({key: value}):
+            counts['with_dpr'] += 1
+        elif unsupported_candidates({key: value}, sim):
+            counts['unsupported'] += 1
+        else:
+            counts['missing_dpr'] += 1
+    return dict(counts)
+
+
 def summarize(config, decisions, brains, coverage):
     if str(config.get('character', '')).upper() != 'SILENT' or obj(config.get('construction')).get('architecture') != 'V5':
         return None
@@ -122,6 +138,7 @@ def summarize(config, decisions, brains, coverage):
     records = sorted((r for r in decisions if run_of(r) == rid and r.get('mode') == 'play'), key=lambda r: r.get('ts', ''))
     faults, samples, times, evidence, phases, unsupported = Counter(), [], [], [], [], []
     produced = attempts = skipped = streak = longest = 0
+    candidates = Counter(observed=0, unsupported=0, with_dpr=0, missing_dpr=0)
     seen = set()
     construction = Counter()
     for row in records:
@@ -143,9 +160,13 @@ def summarize(config, decisions, brains, coverage):
         reason = failure(sim)
         options = obj(obj(obj(row.get('questions')).get('pick')).get('criteria'))
         metrics = dpr_count(options)
+        candidate_counts = candidate_dpr_coverage(options, sim)
+        candidates.update(candidate_counts)
         # A finished decision with no B3 record is a pipeline gap, not a game result.
         if not sim or not any(k in sim for k in ('samples', 'error', 'diagnostics')):
             reason = 'missing_simulation_record'
+        elif not reason and candidate_counts['missing_dpr']:
+            reason = 'incomplete_candidate_dpr' if metrics else 'no_complete_dpr'
         elif not reason and not metrics:
             if unsupported_candidates(options, sim):
                 # Retain the observed attempt and its samples, but do not count an
@@ -161,7 +182,8 @@ def summarize(config, decisions, brains, coverage):
             longest = max(longest, streak)
             evidence.append({'ts': row.get('ts'), 'decision': row.get('decision_id'), 'floor': row.get('floor'),
                              'label': row.get('label'), 'reason': reason, 'source': row.get('_source'),
-                             'diagnostics': sim.get('diagnostics'), 'error': sim.get('error')})
+                             'diagnostics': sim.get('diagnostics'), 'error': sim.get('error'),
+                             'candidates': candidate_counts})
         elif metrics:
             produced += 1
             streak = 0
@@ -186,6 +208,7 @@ def summarize(config, decisions, brains, coverage):
             'construction': dict(construction), 'b3': {'attempts': attempts, 'skipped': skipped, 'produced_dpr': produced,
               'coverage': produced / attempts if attempts else None, 'failures': dict(faults),
               'unsupported': len(unsupported), 'applicable_attempts': attempts - len(unsupported),
+              'unsupported_only': len(unsupported), 'candidates': dict(candidates),
               'applicable_coverage': produced / (attempts - len(unsupported)) if attempts > len(unsupported) else None,
               'longest_failure_streak': longest, 'trailing_failure_streak': streak,
               'paired_samples_min': min(samples) if samples else None,
