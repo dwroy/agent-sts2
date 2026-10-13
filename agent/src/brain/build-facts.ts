@@ -17,6 +17,7 @@ import { bossIdForFacts, observedBossPhase } from "../knowledge/boss-phase.js";
 import { fightPlanInput } from "../memory/fight-plan.js";
 import { actOf } from "../memory/run-plan.js";
 import { lizardTailResourceState } from "../memory/relic-resources.js";
+import { deckBudgetFacts } from "../memory/run-constraints.js";
 
 /** Act boss floors (acts are 17, 16 and 15 floors). */
 const BOSS_FLOORS = [17, 33, 48];
@@ -78,6 +79,7 @@ export function buildFacts(env: DecisionEnv, extra: Record<string, JsonValue> = 
         }
       : null,
     ...extra,
+    ...deckBudgetFacts(state),
   };
   const continuation = doubleBossPreparation(state);
   const tail = lizardTailResourceState(state, env.screenMemory);

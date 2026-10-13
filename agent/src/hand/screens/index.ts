@@ -12,6 +12,7 @@ import { planRest } from "./rest.js";
 import { planReward } from "./reward.js";
 import { planSelection } from "./selection.js";
 import { planShop } from "./shop.js";
+import { budgetedState, deckBudget, requiredSelectionProblem } from "../../memory/run-constraints.js";
 
 const PAUSE_PAGES = new Set([
   "PAUSE_MENU",
@@ -44,6 +45,13 @@ export type PlanOutcome =
 export const SETTING_CHANGING_MODAL = /tutorial/i;
 
 export function planDecision(env: DecisionEnv): PlanOutcome {
+  const budget = deckBudget(env.state);
+  if (budget?.current !== null && budget && budget.current > budget.maximum) {
+    return { kind: "blocked", reason: `Silent permanent deck ${budget.current} exceeds operator cap ${budget.maximum}; preserve the state and notify ops` };
+  }
+  const selectionProblem = requiredSelectionProblem(env.state);
+  if (selectionProblem) return { kind: "blocked", reason: selectionProblem };
+  env = { ...env, state: budgetedState(env.state) };
   const { screen, session } = env.state;
 
   // Single-player only (decision #1 in PLAN.md). Never guess at co-op semantics.

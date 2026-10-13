@@ -8,6 +8,7 @@ import type { ActionRequest } from "../mod/client.js";
 import type { GameState } from "../mod/schema.js";
 import { asArray, asRecord, bool, num, numOrNull, stableStringify } from "../../core/util/json.js";
 import { checkIdentity, type ActionExpect } from "./identity.js";
+import { deckBudgetProblem } from "../../memory/run-constraints.js";
 
 export interface GateResult {
   ok: boolean;
@@ -42,6 +43,8 @@ const INDEX_ACTIONS = new Set([
 ]);
 
 export function gate(state: GameState, intent: ActionRequest): GateResult {
+  const constraint = deckBudgetProblem(state, intent);
+  if (constraint) return { ok: false, kind: "legality", reason: constraint };
   const legal = legality(state, intent);
   if (!legal.ok && legal.stage === "action") return { ok: false, kind: "legality", reason: legal.reason };
   // Identity before the index checks: "card 3 is now a Defend" says more than "card 3 is not playable".
