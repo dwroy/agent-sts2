@@ -1,0 +1,2 @@
+V4-R324/S1.visible-wither-damage1原151303凋萎可见文本输入修复完整宿主tsc+vitest exit0（Test Files  413 passed (413); Tests  4305 passed | 2 skipped (4307)），精确live树41be83f171aeee988469a3e0e648da6a821359d1；源9b65f1bee0f26ced606ec256fc3d173db48caa3e实际main/live祖先，原提案d3ce9b2cd72006a5沿已登记来源implemented，仅silent-0297 CLI实际shipped。原blocked/failed/rc0与20记录冲突、假投影schema失败、源撤码失败及所有原件保持；固定读回同四步43伤/需损18→21只限Silent实际A10可见一致文本，其他角色/进阶、未知/冲突与SL重置保持。自然新局/整战/胜率及原量化父项不作完成，不重启对局/改账号模型权限prompt，不推送。
+旧source-only/blocked回报与待检查发布回执保持，后补验收单独记录；原量化研究不关闭。
