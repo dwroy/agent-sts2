@@ -18,6 +18,8 @@
 # eval-metrics <character> <ascension> (writes a new Markdown report under paper/materials/<character>/).
 # git-push-main <sha> (push the current main SHA to origin through Windows SSH and verify the remote).
 # report-run <run-id> (recover an ended run once, including its character refresh; never start play).
+# regent-launch-inspect (fixed original launch metadata, read-only); regent-launch-solo <manifest-sha256> (private solo window).
+# regent-native-repair (owned, API-less startup settings only); regent-startup-check (private save and startup menu only).
 # The broker only runs while a wake runs: outside a wake this times out (exit 124).
 set -u
 . "$(dirname "$0")/paths.sh"
