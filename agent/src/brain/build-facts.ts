@@ -76,6 +76,7 @@ export function buildFacts(env: DecisionEnv, extra: Record<string, JsonValue> = 
           rest: plan.rest,
           boss_prep: plan.bossPrep,
           summary: plan.summary,
+          ...(plan.construction ? { construction: plan.construction } : {}),
         }
       : null,
     ...extra,

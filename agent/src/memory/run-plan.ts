@@ -26,6 +26,7 @@ import { deckProfileLine } from "./deck-profile.js";
 import { bossClockJson } from "../sim/boss-clock.js";
 import { bossIdForFacts, observedBossPhase } from "../knowledge/boss-phase.js";
 import { asArray, asRecord, str, type JsonValue } from "../core/util/json.js";
+import { loadConstructionData } from "../construction/data.js";
 
 export type RunPlanTrigger = "start" | "act" | "hp_drop" | "review";
 export type EliteAppetite = "seek" | "normal" | "avoid";
@@ -52,6 +53,7 @@ export interface RunPlan {
   rest: RestPolicy;
   bossPrep: string;
   summary: string;
+  construction?: { primary: string; alternatives: string[]; checkpoint: number; reason: string; pivot_if: string };
 }
 
 /** A plan older than this many floors is reviewed at the next map. */
@@ -184,6 +186,12 @@ export function parseRunPlan(json: Record<string, unknown>, state: GameState, kn
   const elites = typeof json["elites"] === "string" && ["seek", "normal", "avoid"].includes(json["elites"]) ? (json["elites"] as EliteAppetite) : "normal";
   const rest = typeof json["rest"] === "string" && ["heal", "smith", "auto"].includes(json["rest"]) ? (json["rest"] as RestPolicy) : "auto";
   const blockTarget = typeof json["block_target"] === "number" && Number.isFinite(json["block_target"]) ? Math.max(0, Math.min(20, Math.round(json["block_target"]))) : null;
+  const construction = asRecord(json["construction"]);
+  const allowedCores = str(asRecord(state.run?.raw)["character_id"]).toLowerCase() === "silent"
+    ? new Set(loadConstructionData("silent")?.templates.map((c) => c.id) ?? []) : new Set<string>();
+  const primary = str(construction["primary"]), checkpoint = construction["checkpoint"];
+  const validConstruction = allowedCores.has(primary) && typeof checkpoint === "number" && Number.isInteger(checkpoint)
+    && checkpoint >= (state.run?.floor ?? 0) && checkpoint <= 100 && str(construction["reason"]).length > 0 && str(construction["pivot_if"]).length > 0;
   return {
     runId: str(state.raw["run_id"]),
     act: actOf(state),
@@ -199,6 +207,8 @@ export function parseRunPlan(json: Record<string, unknown>, state: GameState, kn
     rest,
     bossPrep: typeof json["boss_prep"] === "string" ? json["boss_prep"].trim() : "",
     summary: typeof json["summary"] === "string" ? json["summary"].trim() : "",
+    ...(validConstruction ? { construction: { primary, alternatives: [...new Set(asArray(construction["alternatives"]).map((v) => str(v)).filter((id) => id !== primary && allowedCores.has(id)))].slice(0, 3),
+      checkpoint, reason: str(construction["reason"]).slice(0, 500), pivot_if: str(construction["pivot_if"]).slice(0, 500) } } : {}),
   };
 }
 
