@@ -16,6 +16,18 @@ const empty = (req: DeckRunRequest): DeckRunResult => ({ outcomes: req.decks.map
     chunksPlanned: 100, chunksDispatched: 2, chunksCompleted: 0, outcomesCompleted: 0 } } : {}) });
 
 describe("B3 service diagnostics", () => {
+  it.each([10_950, 11_000, 12_000])("does not replenish the question deadline after %i ms of preparation", async (elapsed) => {
+    const e = env(raw());
+    const now = vi.fn().mockReturnValueOnce(0).mockReturnValue(elapsed);
+    const run = vi.fn(async (req: DeckRunRequest) => empty(req));
+    const result = await withBossSim(decide(e), e, { ...deps, runner: { run }, deadlineMs: 11_000, now });
+    const remaining = Math.max(0, 11_000 - elapsed);
+    expect(run).toHaveBeenCalledTimes(1);
+    expect(run.mock.calls[0]![0]).toMatchObject({ deadlineMs: remaining, samples: 1000 });
+    expect(result.record?.error).toContain("没有跑完一个样本");
+    expect(JSON.stringify(result.decision)).not.toContain('effective_damage_per_turn');
+  });
+
   it("keeps order search and paired comparison failures separate, without modifying the budget", async () => {
     const start = syntheticBossStart(parseGameState(raw()), loggedKnowledge, "THE_KIN_BOSS", 40, deps).input;
     const run = vi.fn(async (req: DeckRunRequest) => empty(req));
