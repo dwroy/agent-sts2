@@ -1,0 +1,105 @@
+已核查六局、十项提案，均保留 `waiting`，具体缺口已逐项记录。未改源码、未合入；30条账本追溯已追加并通过校验，工作树干净。
+
+材料见[报告](/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261013-234152/learner/runs/20261013-234207-strategy-proposal/report.md)和[提案](/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261013-234152/learner/runs/20261013-234207-strategy-proposal/proposal.md)。未运行生产测试；材料扫描命中一条已核实的公开标签误报，原回执保留。
+
+```json
+{
+  "task": "strategy-proposal",
+  "character": "silent",
+  "batch": "20261013-234152-strategy-proposal",
+  "base": "1ed5e441700b5ceaa3c1f9bc9f27a3b62fe9f082",
+  "runs": [
+    "DUZUBAJ3A8GP",
+    "5PM6JAQG6FNQ",
+    "CA5KE8GFJ9X2",
+    "8JRE1C4H4Z2W",
+    "YF0LXT1QSTGG",
+    "XP2SL33HT0D9"
+  ],
+  "fixes": [],
+  "skipped": [],
+  "merged": null,
+  "tests": {
+    "tsc": null,
+    "vitest": null,
+    "cases": null
+  },
+  "code_proposals": [
+    "silent-proposal-c20b5139dd0dff71",
+    "silent-proposal-ae9e692d680e3819",
+    "silent-proposal-52f1e1bd2e7db0ed",
+    "silent-proposal-6dd8bbff876be528",
+    "silent-proposal-578e415a259e6835",
+    "silent-proposal-c0767768bf6a7ab1",
+    "silent-proposal-a46bdb7fe711d79a",
+    "silent-proposal-1044224808015e5c",
+    "silent-proposal-7cbc6005db712ba9",
+    "silent-proposal-c59f592f1427a67e"
+  ],
+  "implementation_domains": [],
+  "proposal_results": [
+    {
+      "id": "silent-proposal-c20b5139dd0dff71",
+      "state": "waiting",
+      "reason": "缺该局实际使用的冻结A10移动表及污染、毒、挡联合生产回放；本批只核实实际技能线，未执行技能替线的后继未知。"
+    },
+    {
+      "id": "silent-proposal-ae9e692d680e3819",
+      "state": "waiting",
+      "reason": "缺遗忘死亡返敏的战内连续帧，以及混合来源返还后同轮继续出牌的证据；失落返力的回合端点不足证明双属性、同轮归源。"
+    },
+    {
+      "id": "silent-proposal-52f1e1bd2e7db0ed",
+      "state": "waiting",
+      "reason": "首样本HP/攻击读取已有；缺历史A10移动表及加压、虚弱、覆甲来源隔离的联合生产回放，未观察的覆甲减层条件不能补成规则。"
+    },
+    {
+      "id": "silent-proposal-6dd8bbff876be528",
+      "state": "waiting",
+      "reason": "缺同类型新旧召唤者的连续身份隔离及历史召唤模板/移动表输入；现有高电压growth路径不足验证替换实体不继承旧成长。"
+    },
+    {
+      "id": "silent-proposal-578e415a259e6835",
+      "state": "waiting",
+      "reason": "缺跨抽弃牌重规划的完整候选执行归属、逐来源累计兑现及SL恢复资源联合分账；候选/首次派发子项已有，不能据此关闭宽审计请求。"
+    },
+    {
+      "id": "silent-proposal-c0767768bf6a7ab1",
+      "state": "waiting",
+      "reason": "缺完整候选执行归属，以及相同起点、抽序和资源预算的独立完整尝试对照；候选预测与单动作回执已覆盖部分事实，不足证明整条候选已完成或新探索规则有效。"
+    },
+    {
+      "id": "silent-proposal-a46bdb7fe711d79a",
+      "state": "waiting",
+      "reason": "当前阶段与零毒触媒已有事实消费者；缺逐来源累计毒伤/格挡兑现及跨重规划候选归属，不能用本帧零毒关闭整阶段请求。"
+    },
+    {
+      "id": "silent-proposal-1044224808015e5c",
+      "state": "waiting",
+      "reason": "当轮两组血价已核；缺整线执行、成长净贡献和独立后置A10双蟹整战对照，不能从零胜/零差拟定新的排序或血价权重。"
+    },
+    {
+      "id": "silent-proposal-7cbc6005db712ba9",
+      "state": "waiting",
+      "reason": "局部机制已有模型；缺额外格挡来源隔离以及混合意图/未知条件下的联合候选消费者验收，不能把几个单项公式等同完整提案实现。"
+    },
+    {
+      "id": "silent-proposal-c59f592f1427a67e",
+      "state": "waiting",
+      "reason": "缺全部组件的联合消费者验收、跨续问整线归属、逐来源累计收益及SL恢复资源分账；局部阶段/派发/终态字段不关闭综合父项。"
+    }
+  ],
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261013-234152/learner/runs/20261013-234207-strategy-proposal/report.md"
+}
+```
+
+== 学习者 codex / strategy-proposal ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a135ed-a85f-7260-9bb8-6caed431a399
+轮数：1；工具调用：command_execution×56 file_change×5
+token：输入 178.8k、输出 40.8k（其中推理 12.5k）、cache 读 3900.4k、cache 写 0（命中 95.6%）
+成本：未提供
+耗时：1499.1 s（墙钟）
+时间：首个事件 18.4 s、模型首个输出 26.6 s、首次工具 29.5 s、末次工具结束 1445.6 s；工具内共 280.6 s，其余（模型生成、推理、网络）1200.0 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261013-234152）；模型的工具调用 exec×35；/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/learner/sessions/2026/10/13/rollout-2026-10-13T23-42-10-01a135ed-a85f-7260-9bb8-6caed431a399.jsonl
+日志：/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261013-234152/learner/runs/20261013-234207-strategy-proposal.jsonl

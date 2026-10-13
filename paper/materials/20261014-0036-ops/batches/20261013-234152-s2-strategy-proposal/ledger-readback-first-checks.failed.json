@@ -1,0 +1,15 @@
+{
+  "failures": [
+    {
+      "expected": "一ID一行",
+      "actual": "CLI输出空格分隔ID",
+      "error": "AssertionError"
+    },
+    {
+      "expected": "JSON列表",
+      "actual": "CLI输出空格分隔ID",
+      "error": "JSONDecodeError"
+    }
+  ],
+  "correction": "按已读实际CLI输出split空白，随后与16个目标ID逐项校验；不重复CLI写入。"
+}

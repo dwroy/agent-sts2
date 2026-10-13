@@ -1,0 +1,1047 @@
+{
+  "kind": "固定证据算术与原字节读回，不是源码测试",
+  "returncode": 0,
+  "checks": [
+    {
+      "name": "狡诈容量观测数",
+      "actual": 42,
+      "expected": 42
+    },
+    {
+      "name": "狡诈实际添刀分布",
+      "actual": {
+        "3": 37,
+        "2": 2,
+        "0": 3
+      },
+      "expected": {
+        "3": 37,
+        "2": 2,
+        "0": 3
+      }
+    },
+    {
+      "name": "狡诈逐次容量吻合",
+      "actual": true,
+      "expected": true
+    },
+    {
+      "name": "狡诈未直接扣敌血或回复玩家",
+      "actual": true,
+      "expected": true
+    },
+    {
+      "name": "生成小刀升级状态",
+      "actual": true,
+      "expected": true
+    },
+    {
+      "name": "KEN七次槽位消耗含选牌屏幕",
+      "actual": [
+        [
+          3,
+          2,
+          "ATTACK_POTION"
+        ],
+        [
+          4,
+          1,
+          "STABLE_SERUM"
+        ],
+        [
+          5,
+          2,
+          "SPEED_POTION"
+        ],
+        [
+          11,
+          1,
+          "WEAK_POTION"
+        ],
+        [
+          11,
+          2,
+          "ATTACK_POTION"
+        ],
+        [
+          15,
+          1,
+          "GLOWWATER_POTION"
+        ],
+        [
+          15,
+          1,
+          "SKILL_POTION"
+        ]
+      ],
+      "expected": [
+        [
+          3,
+          2,
+          "ATTACK_POTION"
+        ],
+        [
+          4,
+          1,
+          "STABLE_SERUM"
+        ],
+        [
+          5,
+          2,
+          "SPEED_POTION"
+        ],
+        [
+          11,
+          1,
+          "WEAK_POTION"
+        ],
+        [
+          11,
+          2,
+          "ATTACK_POTION"
+        ],
+        [
+          15,
+          1,
+          "GLOWWATER_POTION"
+        ],
+        [
+          15,
+          1,
+          "SKILL_POTION"
+        ]
+      ]
+    },
+    {
+      "name": "KEN两次真实休息回复",
+      "actual": [
+        [
+          26,
+          53
+        ],
+        [
+          46,
+          75
+        ]
+      ],
+      "expected": [
+        [
+          26,
+          53
+        ],
+        [
+          46,
+          75
+        ]
+      ]
+    },
+    {
+      "name": "TXZ F43出牌前扣血",
+      "actual": [
+        70,
+        66,
+        0
+      ],
+      "expected": [
+        70,
+        66,
+        0
+      ]
+    },
+    {
+      "name": "TXZ F45出牌前扣血",
+      "actual": [
+        52,
+        48,
+        0
+      ],
+      "expected": [
+        52,
+        48,
+        0
+      ]
+    },
+    {
+      "name": "TXZ F46出牌前扣血",
+      "actual": [
+        62,
+        58,
+        0
+      ],
+      "expected": [
+        62,
+        58,
+        0
+      ]
+    },
+    {
+      "name": "TXZ F48出牌前扣血",
+      "actual": [
+        60,
+        56,
+        0
+      ],
+      "expected": [
+        60,
+        56,
+        0
+      ]
+    },
+    {
+      "name": "TXZ F49出牌前扣血",
+      "actual": [
+        4,
+        0,
+        0
+      ],
+      "expected": [
+        4,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "TXZ首boss末剩四血",
+      "actual": 4,
+      "expected": 4
+    },
+    {
+      "name": "TXZ6RVMQA09D尝试2端点覆盖",
+      "actual": "observed_turn_endpoints",
+      "expected": "observed_turn_endpoints"
+    },
+    {
+      "name": "TXZ6RVMQA09D尝试2完整候选因果未知",
+      "actual": null,
+      "expected": null
+    },
+    {
+      "name": "TXZ6RVMQA09D尝试3端点覆盖",
+      "actual": "observed_turn_endpoints",
+      "expected": "observed_turn_endpoints"
+    },
+    {
+      "name": "TXZ6RVMQA09D尝试3完整候选因果未知",
+      "actual": null,
+      "expected": null
+    },
+    {
+      "name": "TXZ6RVMQA09D同起点两次整轮资源差",
+      "actual": [
+        [
+          2,
+          -3,
+          -36
+        ],
+        [
+          3,
+          0,
+          -27
+        ]
+      ],
+      "expected": [
+        [
+          2,
+          -3,
+          -36
+        ],
+        [
+          3,
+          0,
+          -27
+        ]
+      ]
+    },
+    {
+      "name": "WQZVENQ7DTRP尝试2端点覆盖",
+      "actual": "observed_turn_endpoints",
+      "expected": "observed_turn_endpoints"
+    },
+    {
+      "name": "WQZVENQ7DTRP尝试2完整候选因果未知",
+      "actual": null,
+      "expected": null
+    },
+    {
+      "name": "WQZVENQ7DTRP尝试3端点覆盖",
+      "actual": "observed_turn_endpoints",
+      "expected": "observed_turn_endpoints"
+    },
+    {
+      "name": "WQZVENQ7DTRP尝试3完整候选因果未知",
+      "actual": null,
+      "expected": null
+    },
+    {
+      "name": "WQZVENQ7DTRP同起点两次整轮资源差",
+      "actual": [
+        [
+          2,
+          -13,
+          -24
+        ],
+        [
+          3,
+          -22,
+          -39
+        ]
+      ],
+      "expected": [
+        [
+          2,
+          -13,
+          -24
+        ],
+        [
+          3,
+          -22,
+          -39
+        ]
+      ]
+    },
+    {
+      "name": "WQ尝试数量",
+      "actual": 6,
+      "expected": 6
+    },
+    {
+      "name": "WQ尝试2T7血价沙坑与净扣",
+      "actual": [
+        0,
+        4,
+        24
+      ],
+      "expected": [
+        0,
+        4,
+        24
+      ]
+    },
+    {
+      "name": "WQ尝试6T7血价沙坑与净扣",
+      "actual": [
+        4,
+        5,
+        24
+      ],
+      "expected": [
+        4,
+        5,
+        24
+      ]
+    },
+    {
+      "name": "WQ第5次末轮三瓶新增刀",
+      "actual": [
+        2,
+        0,
+        0
+      ],
+      "expected": [
+        2,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "WQ第6次末轮三瓶新增刀",
+      "actual": [
+        3,
+        2,
+        0
+      ],
+      "expected": [
+        3,
+        2,
+        0
+      ]
+    },
+    {
+      "name": "NHA尝试数量",
+      "actual": 6,
+      "expected": 6
+    },
+    {
+      "name": "NHA T1至T2血价与净扣包含轮初遗物",
+      "actual": [
+        [
+          1,
+          8
+        ],
+        [
+          1,
+          8
+        ],
+        [
+          1,
+          8
+        ],
+        [
+          1,
+          8
+        ],
+        [
+          7,
+          24
+        ],
+        [
+          7,
+          24
+        ]
+      ],
+      "expected": [
+        [
+          1,
+          8
+        ],
+        [
+          1,
+          8
+        ],
+        [
+          1,
+          8
+        ],
+        [
+          1,
+          8
+        ],
+        [
+          7,
+          24
+        ],
+        [
+          7,
+          24
+        ]
+      ]
+    },
+    {
+      "name": "Q6胜后次战资源链",
+      "actual": [
+        [
+          7,
+          36,
+          57
+        ],
+        [
+          8,
+          57,
+          2
+        ],
+        [
+          9,
+          2,
+          0
+        ]
+      ],
+      "expected": [
+        [
+          7,
+          36,
+          57
+        ],
+        [
+          8,
+          57,
+          2
+        ],
+        [
+          9,
+          2,
+          0
+        ]
+      ]
+    },
+    {
+      "name": "1913锻造休息与次战资源链",
+      "actual": [
+        [
+          24,
+          40,
+          40
+        ],
+        [
+          28,
+          40,
+          61
+        ],
+        [
+          29,
+          61,
+          46
+        ],
+        [
+          31,
+          46,
+          0
+        ]
+      ],
+      "expected": [
+        [
+          24,
+          40,
+          40
+        ],
+        [
+          28,
+          40,
+          61
+        ],
+        [
+          29,
+          61,
+          46
+        ],
+        [
+          31,
+          46,
+          0
+        ]
+      ]
+    },
+    {
+      "name": "原状态字节读回7029892205",
+      "actual": "12892ad6b434c6aa4d316e170d051a6145c2fdd4b7f4f70229755885bc055217",
+      "expected": "12892ad6b434c6aa4d316e170d051a6145c2fdd4b7f4f70229755885bc055217"
+    },
+    {
+      "name": "原状态字节读回7029917148",
+      "actual": "5400f9f2036921436331f9b14e256f046cf678238500d79743dffb75556ca790",
+      "expected": "5400f9f2036921436331f9b14e256f046cf678238500d79743dffb75556ca790"
+    },
+    {
+      "name": "原状态字节读回7305075771",
+      "actual": "e432d4d74d16d8b74606f1092629837f8fd34a471609d2693c24b1da8135098d",
+      "expected": "e432d4d74d16d8b74606f1092629837f8fd34a471609d2693c24b1da8135098d"
+    },
+    {
+      "name": "原状态字节读回7305114566",
+      "actual": "fc2cc21663bd2caac629a920ff543f9286f925df4c82f5f616f90d44e629d091",
+      "expected": "fc2cc21663bd2caac629a920ff543f9286f925df4c82f5f616f90d44e629d091"
+    },
+    {
+      "name": "原状态字节读回7307853715",
+      "actual": "c2d31620c944f1c6688a25b6597f7ce95730b795068c4659f306a1f0ac48a370",
+      "expected": "c2d31620c944f1c6688a25b6597f7ce95730b795068c4659f306a1f0ac48a370"
+    },
+    {
+      "name": "原状态字节读回7307894044",
+      "actual": "766493f004e1ee3d18a5c550652ce01836af7f2df1dd85786588a6e11938950a",
+      "expected": "766493f004e1ee3d18a5c550652ce01836af7f2df1dd85786588a6e11938950a"
+    },
+    {
+      "name": "原状态字节读回7401960992",
+      "actual": "0f357c5d1152fe178c5c55e34e091ce39f2897b235b69abda30cd95beafb9291",
+      "expected": "0f357c5d1152fe178c5c55e34e091ce39f2897b235b69abda30cd95beafb9291"
+    },
+    {
+      "name": "原状态字节读回7402005622",
+      "actual": "1d3a1bb13f155f219e05e696fe902ccfe8b91f34261351a7a1390847838efdc5",
+      "expected": "1d3a1bb13f155f219e05e696fe902ccfe8b91f34261351a7a1390847838efdc5"
+    },
+    {
+      "name": "原状态字节读回7403664148",
+      "actual": "1b44f5f1453ecf5a7c2b96fec71e5cc656881506570ffaf6394eb6b049cd0325",
+      "expected": "1b44f5f1453ecf5a7c2b96fec71e5cc656881506570ffaf6394eb6b049cd0325"
+    },
+    {
+      "name": "原状态字节读回7403710063",
+      "actual": "2cc1e4093642e48ba2067b591120ec34dc9c06ccfda6834dd8c74adbc6008268",
+      "expected": "2cc1e4093642e48ba2067b591120ec34dc9c06ccfda6834dd8c74adbc6008268"
+    },
+    {
+      "name": "原状态字节读回7405484505",
+      "actual": "7f6f1b6f1a4f4e9d2f6ed5765743d53cdfd28299c533469463a2efecfe3d75a3",
+      "expected": "7f6f1b6f1a4f4e9d2f6ed5765743d53cdfd28299c533469463a2efecfe3d75a3"
+    },
+    {
+      "name": "原状态字节读回7405529135",
+      "actual": "0eced586871fb19cd79f7bf45eb6e422344957c0cdbd169a53dd414dadc2c2b9",
+      "expected": "0eced586871fb19cd79f7bf45eb6e422344957c0cdbd169a53dd414dadc2c2b9"
+    },
+    {
+      "name": "原状态字节读回7407324890",
+      "actual": "ca4e99da9f29c6fd67ed78ca041d766f11442b762c1581772201ac3a4ce620a1",
+      "expected": "ca4e99da9f29c6fd67ed78ca041d766f11442b762c1581772201ac3a4ce620a1"
+    },
+    {
+      "name": "原状态字节读回7407369520",
+      "actual": "05714a4c3021776cb280462f92986d5556fb50264136b359efc433c4fc66b727",
+      "expected": "05714a4c3021776cb280462f92986d5556fb50264136b359efc433c4fc66b727"
+    },
+    {
+      "name": "原状态字节读回7409207851",
+      "actual": "b4446608672ee5169576ba374834a40b66e7192adf620ab97f84c5a85dc313b2",
+      "expected": "b4446608672ee5169576ba374834a40b66e7192adf620ab97f84c5a85dc313b2"
+    },
+    {
+      "name": "原状态字节读回7409250736",
+      "actual": "43d3ada186378021ad25063cf9e445182583df73bc05f3c125df9009da47ef13",
+      "expected": "43d3ada186378021ad25063cf9e445182583df73bc05f3c125df9009da47ef13"
+    },
+    {
+      "name": "原状态字节读回7410924740",
+      "actual": "14f02b84177d1742c1787b7b9a7f1c91c6b349704c3bd6103b0403114ab9950d",
+      "expected": "14f02b84177d1742c1787b7b9a7f1c91c6b349704c3bd6103b0403114ab9950d"
+    },
+    {
+      "name": "原状态字节读回7410969370",
+      "actual": "c76808f26e2ba5eef4bac44c7e1d951b18798df54f21b714c757804e239dc1be",
+      "expected": "c76808f26e2ba5eef4bac44c7e1d951b18798df54f21b714c757804e239dc1be"
+    },
+    {
+      "name": "原状态字节读回7502858934",
+      "actual": "362ec87c79f2944ac42e2cbc7df218a43777fad457474bbfa0246eca6ba50a6c",
+      "expected": "362ec87c79f2944ac42e2cbc7df218a43777fad457474bbfa0246eca6ba50a6c"
+    },
+    {
+      "name": "原状态字节读回7502890806",
+      "actual": "a8f7fd6722a3ef88f3f2109e3cf37c90ce91190ccaaa1b72899a722ecc97ab0f",
+      "expected": "a8f7fd6722a3ef88f3f2109e3cf37c90ce91190ccaaa1b72899a722ecc97ab0f"
+    },
+    {
+      "name": "原状态字节读回7503819653",
+      "actual": "2372534787d26ce2857e2f913a7aea7a5b803d9ac8b54a7dc5220ac1d593f7fd",
+      "expected": "2372534787d26ce2857e2f913a7aea7a5b803d9ac8b54a7dc5220ac1d593f7fd"
+    },
+    {
+      "name": "原状态字节读回7503852351",
+      "actual": "4bc7f3e494879b8974cd462aa7e5ce734c06a0dd08a09ed8b864ccb78f35d917",
+      "expected": "4bc7f3e494879b8974cd462aa7e5ce734c06a0dd08a09ed8b864ccb78f35d917"
+    },
+    {
+      "name": "原状态字节读回7505157179",
+      "actual": "23c43747994140a5ab8294987c99e5cb33230445ae992e1cb705ee28ab38ad2c",
+      "expected": "23c43747994140a5ab8294987c99e5cb33230445ae992e1cb705ee28ab38ad2c"
+    },
+    {
+      "name": "原状态字节读回7505189051",
+      "actual": "45c297801e9810f93052209b0af0daf0902cbd5156d65e67fa6ce9ec3ca75781",
+      "expected": "45c297801e9810f93052209b0af0daf0902cbd5156d65e67fa6ce9ec3ca75781"
+    },
+    {
+      "name": "原状态字节读回7506247118",
+      "actual": "b3125a3ce9b4aa7670969fc1c3358e75c5d5a0016080859f88259557e5850d42",
+      "expected": "b3125a3ce9b4aa7670969fc1c3358e75c5d5a0016080859f88259557e5850d42"
+    },
+    {
+      "name": "原状态字节读回7506278990",
+      "actual": "e4f266331ba5086af3199fe867c75b755d604601b43ae977881e91c902b818bd",
+      "expected": "e4f266331ba5086af3199fe867c75b755d604601b43ae977881e91c902b818bd"
+    },
+    {
+      "name": "原状态字节读回7507378564",
+      "actual": "84c41b239e08ca252055abed79807998f7df8ef2bb9a5e5a16bb7bf818ed8549",
+      "expected": "84c41b239e08ca252055abed79807998f7df8ef2bb9a5e5a16bb7bf818ed8549"
+    },
+    {
+      "name": "原状态字节读回7507411338",
+      "actual": "6a70bc68ab0b12861c056b8c389cba605894117228008312124120a8cdd6c616",
+      "expected": "6a70bc68ab0b12861c056b8c389cba605894117228008312124120a8cdd6c616"
+    },
+    {
+      "name": "原状态字节读回7508416060",
+      "actual": "82b3a300e8365595971bc06e828ffb1de0e77bfef79a55717501018f0caf1011",
+      "expected": "82b3a300e8365595971bc06e828ffb1de0e77bfef79a55717501018f0caf1011"
+    },
+    {
+      "name": "原状态字节读回7508447932",
+      "actual": "ddb96deb760ae5cb676be861b39d8677b4506f28a4df14018ab6fb03c4a832b6",
+      "expected": "ddb96deb760ae5cb676be861b39d8677b4506f28a4df14018ab6fb03c4a832b6"
+    },
+    {
+      "name": "原状态字节读回7555331308",
+      "actual": "0a0ddb338782e04155f8ff77ab36b9c6ab2eef9549e21e104ab0e79df48718a3",
+      "expected": "0a0ddb338782e04155f8ff77ab36b9c6ab2eef9549e21e104ab0e79df48718a3"
+    },
+    {
+      "name": "原状态字节读回7555374355",
+      "actual": "a444fbba81c05414cde2c520aeaee839cf09ab7ed992883123d6e9a05be4d42e",
+      "expected": "a444fbba81c05414cde2c520aeaee839cf09ab7ed992883123d6e9a05be4d42e"
+    },
+    {
+      "name": "原状态字节读回7557700619",
+      "actual": "00147b9e6eb93aeb15d5438fdd501f45550904e2ea281a0090d2ff749724fe45",
+      "expected": "00147b9e6eb93aeb15d5438fdd501f45550904e2ea281a0090d2ff749724fe45"
+    },
+    {
+      "name": "原状态字节读回7557743666",
+      "actual": "d3ea2db58416325c81ec1c58c7f049000b67ba07df3cc2f9c4fd86cfa667c094",
+      "expected": "d3ea2db58416325c81ec1c58c7f049000b67ba07df3cc2f9c4fd86cfa667c094"
+    },
+    {
+      "name": "原状态字节读回7560072470",
+      "actual": "be7bab807da91cbc179841fbd483e1d0de115810b42ba8a6e3a46540705a1121",
+      "expected": "be7bab807da91cbc179841fbd483e1d0de115810b42ba8a6e3a46540705a1121"
+    },
+    {
+      "name": "原状态字节读回7560115517",
+      "actual": "5153d8bb9f4b33758d4e6a01408781b8b5859b1e490645c2fd3e88dc63ddebec",
+      "expected": "5153d8bb9f4b33758d4e6a01408781b8b5859b1e490645c2fd3e88dc63ddebec"
+    },
+    {
+      "name": "原状态字节读回7562374270",
+      "actual": "4203767174201e141fe07e71c54fab9c66aa3c81a54cb0a3167fc450c249af46",
+      "expected": "4203767174201e141fe07e71c54fab9c66aa3c81a54cb0a3167fc450c249af46"
+    },
+    {
+      "name": "原状态字节读回7562417364",
+      "actual": "07d9f531085e72811c066feec3913ee1236963c2f5acc18ef6e5a08d276696fd",
+      "expected": "07d9f531085e72811c066feec3913ee1236963c2f5acc18ef6e5a08d276696fd"
+    },
+    {
+      "name": "原状态字节读回7564213520",
+      "actual": "67be0080291bab42c225aea4abd26ac9212b165e4e059262e4ccbb591cfa38f2",
+      "expected": "67be0080291bab42c225aea4abd26ac9212b165e4e059262e4ccbb591cfa38f2"
+    },
+    {
+      "name": "原状态字节读回7564256567",
+      "actual": "a07903b2c5c9bbfeb631894e2d0812ef9014da9b1ade842ebd3666b3c2b7603b",
+      "expected": "a07903b2c5c9bbfeb631894e2d0812ef9014da9b1ade842ebd3666b3c2b7603b"
+    },
+    {
+      "name": "原状态字节读回7566055286",
+      "actual": "ce777cee3d8147e15c56f10c5317d409fb4ef5789ea9011912b50ccb9194c062",
+      "expected": "ce777cee3d8147e15c56f10c5317d409fb4ef5789ea9011912b50ccb9194c062"
+    },
+    {
+      "name": "原状态字节读回7566098333",
+      "actual": "845896722cc91b7dcafbdbfe12ba787fde4373cd0ce84762fc0311fa1277a666",
+      "expected": "845896722cc91b7dcafbdbfe12ba787fde4373cd0ce84762fc0311fa1277a666"
+    },
+    {
+      "name": "原状态字节读回7745913370",
+      "actual": "add1ed951473cead64df21795d546b19a2bc089a3e86f7c48826a6de70ba6077",
+      "expected": "add1ed951473cead64df21795d546b19a2bc089a3e86f7c48826a6de70ba6077"
+    },
+    {
+      "name": "原状态字节读回7745947562",
+      "actual": "4a1fa7465227be885855854e68d76063dac188d85f8d9383919b492c496769ad",
+      "expected": "4a1fa7465227be885855854e68d76063dac188d85f8d9383919b492c496769ad"
+    },
+    {
+      "name": "原状态字节读回7810918755",
+      "actual": "adb2ea23f776c09f3b73f193507ee263c87731695f282c227f98db25a22f0641",
+      "expected": "adb2ea23f776c09f3b73f193507ee263c87731695f282c227f98db25a22f0641"
+    },
+    {
+      "name": "原状态字节读回7810960358",
+      "actual": "eb2e43955deebcf7f0e54cb8bd88b1097a2f93da4120d08b9597310fb18a2f52",
+      "expected": "eb2e43955deebcf7f0e54cb8bd88b1097a2f93da4120d08b9597310fb18a2f52"
+    },
+    {
+      "name": "原状态字节读回8198159553",
+      "actual": "8de550c97a02366ae8c890236cece43851f826cee126fb9b226c50607c080185",
+      "expected": "8de550c97a02366ae8c890236cece43851f826cee126fb9b226c50607c080185"
+    },
+    {
+      "name": "原状态字节读回8198179202",
+      "actual": "e7d75e60bfae4eb0ed4d05ea7026720b44be85693aa201847b8e922624022f74",
+      "expected": "e7d75e60bfae4eb0ed4d05ea7026720b44be85693aa201847b8e922624022f74"
+    },
+    {
+      "name": "原状态字节读回8641790297",
+      "actual": "0a2eb18343e403ee372d2af79cd1a98cae1152981dd730b1a434cf0082933dff",
+      "expected": "0a2eb18343e403ee372d2af79cd1a98cae1152981dd730b1a434cf0082933dff"
+    },
+    {
+      "name": "原状态字节读回8641811613",
+      "actual": "d6f34f46dfa1e425fecc7fa6fa4783602811831be9b20f5eb13ec824014204d0",
+      "expected": "d6f34f46dfa1e425fecc7fa6fa4783602811831be9b20f5eb13ec824014204d0"
+    },
+    {
+      "name": "原状态字节读回8642355660",
+      "actual": "6fa548ecade604451b3ec5cd6cd9a1cd4feed88f950a4df952c7b6e12b20c94d",
+      "expected": "6fa548ecade604451b3ec5cd6cd9a1cd4feed88f950a4df952c7b6e12b20c94d"
+    },
+    {
+      "name": "原状态字节读回8642377748",
+      "actual": "913a61ecd8bf1eef21687782789d96de834217c06143d9d83ab0a0ff4f663880",
+      "expected": "913a61ecd8bf1eef21687782789d96de834217c06143d9d83ab0a0ff4f663880"
+    },
+    {
+      "name": "原状态字节读回8643067335",
+      "actual": "b3ddd330f974e2aa430507f92ef3f746e4aa10782e2be8ced71c6196e25a597d",
+      "expected": "b3ddd330f974e2aa430507f92ef3f746e4aa10782e2be8ced71c6196e25a597d"
+    },
+    {
+      "name": "原状态字节读回8643092564",
+      "actual": "531b153d43f0fe81a38da22fdff61540bdcec28694c71c824fdcee80ee825cec",
+      "expected": "531b153d43f0fe81a38da22fdff61540bdcec28694c71c824fdcee80ee825cec"
+    },
+    {
+      "name": "原状态字节读回8644296091",
+      "actual": "97cc180cbed972e382f0b6ab47cc0dcc5e596ba8b3538539926d32f060898bcd",
+      "expected": "97cc180cbed972e382f0b6ab47cc0dcc5e596ba8b3538539926d32f060898bcd"
+    },
+    {
+      "name": "原状态字节读回8644322838",
+      "actual": "9ea0111725b8a7dcd75035cf595b5d0d6ff62595a8a3870b018a20a96d409ed3",
+      "expected": "9ea0111725b8a7dcd75035cf595b5d0d6ff62595a8a3870b018a20a96d409ed3"
+    },
+    {
+      "name": "原状态字节读回8644349398",
+      "actual": "a98885d5929c3cbec0a7028df35675d76d7ba634ffcbcd632a49a4dcaf33fe4a",
+      "expected": "a98885d5929c3cbec0a7028df35675d76d7ba634ffcbcd632a49a4dcaf33fe4a"
+    },
+    {
+      "name": "原状态字节读回8644377145",
+      "actual": "17fce32f2df3d18cfb66d6db89fa0b4034a5d64f9985074111bc694274b0339e",
+      "expected": "17fce32f2df3d18cfb66d6db89fa0b4034a5d64f9985074111bc694274b0339e"
+    },
+    {
+      "name": "原状态字节读回8645211225",
+      "actual": "250c736eb95fbc28a29f5a4d808eb33aa488781d21e564c81f5f113010352b5f",
+      "expected": "250c736eb95fbc28a29f5a4d808eb33aa488781d21e564c81f5f113010352b5f"
+    },
+    {
+      "name": "原状态字节读回8645241906",
+      "actual": "6f32bba4ea8fc908e788306fcb93674ce55506e99df10937af101959873afeac",
+      "expected": "6f32bba4ea8fc908e788306fcb93674ce55506e99df10937af101959873afeac"
+    },
+    {
+      "name": "原状态字节读回8645404575",
+      "actual": "982a03a150dfa4a417be9900ae348aec21e06f14b358566a40a46b3a1efb1c5a",
+      "expected": "982a03a150dfa4a417be9900ae348aec21e06f14b358566a40a46b3a1efb1c5a"
+    },
+    {
+      "name": "原状态字节读回8645435086",
+      "actual": "2e5538967cd92a03982e92ea4560a99036c3805c90ce88edf9c8656db096ca90",
+      "expected": "2e5538967cd92a03982e92ea4560a99036c3805c90ce88edf9c8656db096ca90"
+    },
+    {
+      "name": "原状态字节读回8699048023",
+      "actual": "be76b3fd23e5b2556f4f471fac7474e75208d56da23c986586e0462ebe2cb2bd",
+      "expected": "be76b3fd23e5b2556f4f471fac7474e75208d56da23c986586e0462ebe2cb2bd"
+    },
+    {
+      "name": "原状态字节读回8699088980",
+      "actual": "2bf5e918575709454baf714d378fbe691a90f1316f94bc98c59426c8451a12fc",
+      "expected": "2bf5e918575709454baf714d378fbe691a90f1316f94bc98c59426c8451a12fc"
+    },
+    {
+      "name": "原状态字节读回8699261943",
+      "actual": "240e0572fd01beabc67fae577e11845a47a786c0307cfd99f19ec2b13d77eb63",
+      "expected": "240e0572fd01beabc67fae577e11845a47a786c0307cfd99f19ec2b13d77eb63"
+    },
+    {
+      "name": "原状态字节读回8699302895",
+      "actual": "d4f00670dad949faa8c4f401cc90ab15a6a71ca53c594ae88d0e742270047ad8",
+      "expected": "d4f00670dad949faa8c4f401cc90ab15a6a71ca53c594ae88d0e742270047ad8"
+    },
+    {
+      "name": "原状态字节读回8699433552",
+      "actual": "a6b817f746c22e7afdfe0aededa37b42072828ab4a55e22e08b47ec38024d636",
+      "expected": "a6b817f746c22e7afdfe0aededa37b42072828ab4a55e22e08b47ec38024d636"
+    },
+    {
+      "name": "原状态字节读回8699475358",
+      "actual": "f3681914a0f0d9d301b8af22e30b646b31fadc7a512aa6fc521ca7f3cb269160",
+      "expected": "f3681914a0f0d9d301b8af22e30b646b31fadc7a512aa6fc521ca7f3cb269160"
+    },
+    {
+      "name": "原状态字节读回8701936898",
+      "actual": "add0b009c3e675d15ba4524c447c6d74aa15d808ced3d0caf53c4346d15a7d81",
+      "expected": "add0b009c3e675d15ba4524c447c6d74aa15d808ced3d0caf53c4346d15a7d81"
+    },
+    {
+      "name": "原状态字节读回8701977799",
+      "actual": "2e145943dc0668827450239e28f93d3d538fb5fdf76d7b12bcd5935477dd985e",
+      "expected": "2e145943dc0668827450239e28f93d3d538fb5fdf76d7b12bcd5935477dd985e"
+    },
+    {
+      "name": "原状态字节读回8702150541",
+      "actual": "f080946ca4e2cb9b37e4dd3e210c9870df5232f68d5572077579d74ee4ff1280",
+      "expected": "f080946ca4e2cb9b37e4dd3e210c9870df5232f68d5572077579d74ee4ff1280"
+    },
+    {
+      "name": "原状态字节读回8702191437",
+      "actual": "ecd8d843b6ad51ff0abbc9b05cdcbcfcce460eb14fbf3083fbe78b303e793463",
+      "expected": "ecd8d843b6ad51ff0abbc9b05cdcbcfcce460eb14fbf3083fbe78b303e793463"
+    },
+    {
+      "name": "原状态字节读回8702235246",
+      "actual": "415abe680bb534ea6282edbdd38d870b4142fab27b4dc717c358709f525145af",
+      "expected": "415abe680bb534ea6282edbdd38d870b4142fab27b4dc717c358709f525145af"
+    },
+    {
+      "name": "原状态字节读回8702279116",
+      "actual": "b2f9b07d2c2a9f7ce9357191ec7ff167745db5f22596f077e925f0047be54653",
+      "expected": "b2f9b07d2c2a9f7ce9357191ec7ff167745db5f22596f077e925f0047be54653"
+    },
+    {
+      "name": "原状态字节读回8704833711",
+      "actual": "f4a015a418716ac7030665be777b331cc8925a29c0274c04d7f081f66d761ccd",
+      "expected": "f4a015a418716ac7030665be777b331cc8925a29c0274c04d7f081f66d761ccd"
+    },
+    {
+      "name": "原状态字节读回8704874598",
+      "actual": "92620e619abbb375ed0028d76c98c08c7879b59188727311187a34feb74305f1",
+      "expected": "92620e619abbb375ed0028d76c98c08c7879b59188727311187a34feb74305f1"
+    },
+    {
+      "name": "原状态字节读回8705047284",
+      "actual": "2bc7fdc7deab72b2ec36016b4778b52d5e8f46351f83841bcdd4105c18cba280",
+      "expected": "2bc7fdc7deab72b2ec36016b4778b52d5e8f46351f83841bcdd4105c18cba280"
+    },
+    {
+      "name": "原状态字节读回8705088169",
+      "actual": "9cafa8f0b4b43cf134022d1448f20968c7e9b379353371f5fc8609ad76b45026",
+      "expected": "9cafa8f0b4b43cf134022d1448f20968c7e9b379353371f5fc8609ad76b45026"
+    },
+    {
+      "name": "原状态字节读回8705260364",
+      "actual": "f25c15ec0655fe8d7035175ee4e01da392f9428374f7b72b7bc35294c309ef1b",
+      "expected": "f25c15ec0655fe8d7035175ee4e01da392f9428374f7b72b7bc35294c309ef1b"
+    },
+    {
+      "name": "原状态字节读回8705301005",
+      "actual": "5eb1b4ec8fb7c9f63575ce0ea0012daed442ba66cd0fe8f076926d764c4e20bb",
+      "expected": "5eb1b4ec8fb7c9f63575ce0ea0012daed442ba66cd0fe8f076926d764c4e20bb"
+    },
+    {
+      "name": "原状态字节读回8707677559",
+      "actual": "e61df8b315d2f75e74a11227faf38205969cf9ee04611587778523e3815e27f5",
+      "expected": "e61df8b315d2f75e74a11227faf38205969cf9ee04611587778523e3815e27f5"
+    },
+    {
+      "name": "原状态字节读回8707718460",
+      "actual": "5b5119b679f9a00976e37feec43556fcb3e7c0400b3c5e3be1a69f5e29608d32",
+      "expected": "5b5119b679f9a00976e37feec43556fcb3e7c0400b3c5e3be1a69f5e29608d32"
+    },
+    {
+      "name": "原状态字节读回8707891202",
+      "actual": "17dfa11d2c6ff6da8ad9d34979d35a46ea38a3c0d8c9ab168257cc28a454a437",
+      "expected": "17dfa11d2c6ff6da8ad9d34979d35a46ea38a3c0d8c9ab168257cc28a454a437"
+    },
+    {
+      "name": "原状态字节读回8707932101",
+      "actual": "8bc0366d7acae51cab87636d403025f316b97787804f7eec7a9a89bfb1d0ac57",
+      "expected": "8bc0366d7acae51cab87636d403025f316b97787804f7eec7a9a89bfb1d0ac57"
+    },
+    {
+      "name": "原状态字节读回8707975913",
+      "actual": "10e9ce8849965867820b8e56b91acb92ef0578157610c0010376507b2dfda8be",
+      "expected": "10e9ce8849965867820b8e56b91acb92ef0578157610c0010376507b2dfda8be"
+    },
+    {
+      "name": "原状态字节读回8708019786",
+      "actual": "051d198e156e0637b86f6a24494cdf04549bbfba08e8ce80fa230ad60fabd800",
+      "expected": "051d198e156e0637b86f6a24494cdf04549bbfba08e8ce80fa230ad60fabd800"
+    },
+    {
+      "name": "原状态字节读回8710497667",
+      "actual": "43d833f95dc9d7e7cd134ee0f865eb1f0ab8aedbde8ba5316a716a76cb54cffc",
+      "expected": "43d833f95dc9d7e7cd134ee0f865eb1f0ab8aedbde8ba5316a716a76cb54cffc"
+    },
+    {
+      "name": "原状态字节读回8710542566",
+      "actual": "3d553a0e4ce000967ee92c879a9dfa1470585eaa43158a5c00875071a5a19955",
+      "expected": "3d553a0e4ce000967ee92c879a9dfa1470585eaa43158a5c00875071a5a19955"
+    },
+    {
+      "name": "原状态字节读回8710589521",
+      "actual": "3ec9367cc54c2a4630d182b971c1f76044e8f4c64b8d55b079546131a600cbac",
+      "expected": "3ec9367cc54c2a4630d182b971c1f76044e8f4c64b8d55b079546131a600cbac"
+    },
+    {
+      "name": "原状态字节读回8710636534",
+      "actual": "3c8f0effb670486fca0c6af630af39480703914c45d516e4ef7a4c0931e6b116",
+      "expected": "3c8f0effb670486fca0c6af630af39480703914c45d516e4ef7a4c0931e6b116"
+    },
+    {
+      "name": "原状态字节读回8710683307",
+      "actual": "a766ecf347a7c262c9a107be2c5d9e2d42aed65e2e60d4e6b8c7855dba3769de",
+      "expected": "a766ecf347a7c262c9a107be2c5d9e2d42aed65e2e60d4e6b8c7855dba3769de"
+    },
+    {
+      "name": "原状态字节读回8713031354",
+      "actual": "a8267238a73caf032edd719f0ee338d989ca3b1790d24ef140a77e586053fa1b",
+      "expected": "a8267238a73caf032edd719f0ee338d989ca3b1790d24ef140a77e586053fa1b"
+    },
+    {
+      "name": "原状态字节读回8713072982",
+      "actual": "d086dfab3389406b06ddbcf5335de65bd207189cb4b6fcb0bf425a435400d383",
+      "expected": "d086dfab3389406b06ddbcf5335de65bd207189cb4b6fcb0bf425a435400d383"
+    },
+    {
+      "name": "原状态字节读回8713117488",
+      "actual": "5b64b517e336b0966fd0659bf13ef2e44d9f2932e954c56ad7cfea9c858fbff5",
+      "expected": "5b64b517e336b0966fd0659bf13ef2e44d9f2932e954c56ad7cfea9c858fbff5"
+    },
+    {
+      "name": "原状态字节读回8713162052",
+      "actual": "bd3f5c78dbf70208d11893bd371e641f095d0bba96ee330b53310fc6feb6f7ab",
+      "expected": "bd3f5c78dbf70208d11893bd371e641f095d0bba96ee330b53310fc6feb6f7ab"
+    },
+    {
+      "name": "原状态字节读回8713208669",
+      "actual": "a1b6c7825b70898a80d98fb73c584aada680ac73677b3c7218cb640006f7b34f",
+      "expected": "a1b6c7825b70898a80d98fb73c584aada680ac73677b3c7218cb640006f7b34f"
+    },
+    {
+      "name": "原状态字节读回8713255347",
+      "actual": "aea5d41e81403adf7659ba54ee0be79e20db631239d63c0e272b91d4f6ac8e8d",
+      "expected": "aea5d41e81403adf7659ba54ee0be79e20db631239d63c0e272b91d4f6ac8e8d"
+    }
+  ],
+  "ken_slot_consumptions": [
+    {
+      "floor": 3,
+      "turn": 2,
+      "potion": "ATTACK_POTION",
+      "before": 8641790297,
+      "after": 8641811613,
+      "after_screen": "CARD_SELECTION"
+    },
+    {
+      "floor": 4,
+      "turn": 1,
+      "potion": "STABLE_SERUM",
+      "before": 8642355660,
+      "after": 8642377748,
+      "after_screen": "COMBAT"
+    },
+    {
+      "floor": 5,
+      "turn": 2,
+      "potion": "SPEED_POTION",
+      "before": 8643067335,
+      "after": 8643092564,
+      "after_screen": "COMBAT"
+    },
+    {
+      "floor": 11,
+      "turn": 1,
+      "potion": "WEAK_POTION",
+      "before": 8644296091,
+      "after": 8644322838,
+      "after_screen": "COMBAT"
+    },
+    {
+      "floor": 11,
+      "turn": 2,
+      "potion": "ATTACK_POTION",
+      "before": 8644349398,
+      "after": 8644377145,
+      "after_screen": "CARD_SELECTION"
+    },
+    {
+      "floor": 15,
+      "turn": 1,
+      "potion": "GLOWWATER_POTION",
+      "before": 8645211225,
+      "after": 8645241906,
+      "after_screen": "COMBAT"
+    },
+    {
+      "floor": 15,
+      "turn": 1,
+      "potion": "SKILL_POTION",
+      "before": 8645404575,
+      "after": 8645435086,
+      "after_screen": "CARD_SELECTION"
+    }
+  ]
+}
