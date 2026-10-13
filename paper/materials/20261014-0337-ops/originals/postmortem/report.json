@@ -1,0 +1,46 @@
+{
+  "task": "postmortem",
+  "appended": [
+    "E5L15SK6ZHZB"
+  ],
+  "skipped": [],
+  "bugs": [
+    {
+      "run": "E5L15SK6ZHZB",
+      "where": "agent/src/reflex/rollout.ts:1716",
+      "what": "巨斧库存后续恢复沿用旧血量上限，已有silent-0311，本局三台274而旧口径228。",
+      "new": false
+    }
+  ],
+  "ledger": {
+    "added": [],
+    "updated": [
+      "silent-0311",
+      "silent-0125",
+      "silent-0019",
+      "silent-0312",
+      "silent-0005",
+      "silent-0045",
+      "silent-0119",
+      "silent-0087",
+      "silent-0046",
+      "silent-0116"
+    ],
+    "repeats": [
+      "silent-0311"
+    ],
+    "check": 0
+  },
+  "code_proposals": [
+    "silent-proposal-ee5c8b197b4136f3",
+    "silent-proposal-82bcf5fb2c4cb5c9",
+    "silent-proposal-e562e315e4bfd4ba"
+  ],
+  "implementation_domains": [
+    "combat",
+    "potion",
+    "terminal",
+    "structure"
+  ],
+  "report": "/home/dw/Projects/agent-sts2/learner/runs/20261014-031301-postmortem/report.md"
+}
