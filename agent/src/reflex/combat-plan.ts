@@ -3066,7 +3066,7 @@ function planTurn(env: DecisionEnv): Decision | null {
       const { potions: _checked, afterSelection: _resumed, upgradeAll: _forged, take: _taken, ...kept } = memo;
       const potions = beltAfter(next, state.raw);
       env.screenMemory.combatPlan =
-        (memo.remaining.length > 1 || memo.via !== "code") && (nextCard?.draw ?? 0) === 0 && nextCard?.discardCount === undefined && !nextCard?.bladeDance
+        (memo.remaining.length > 1 || memo.via !== "code") && (nextCard?.draw ?? 0) === 0 && nextCard?.discardCount === undefined && !nextCard?.bladeDance && !nextCard?.handReplacement
           ? {
               ...kept,
               remaining: memo.remaining.slice(1),
