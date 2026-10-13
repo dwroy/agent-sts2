@@ -30,12 +30,11 @@ import { codexChildEnv, codexKeyCheck, codexProfileOverrides, engineBinary, lear
 import { collectSecrets, redactSecrets, secretFilesOf, stamp } from "../../learner/lib/launcher.js";
 import { SummaryTracker, findRollout } from "../../learner/lib/summary.js";
 import { archiveCodexTranscripts } from "./archive.js";
+import { durableBroker, type BrokerAction } from "./broker.js";
 import { herdrWake, prepareHerdrPrompt, runCommand, tuiStateFile } from "./herdr.js";
 import { readRolloutMetadata } from "./rollout-file.js";
 import {
-  ACTIONS,
   DEFAULT_WAKE_TIMEOUT_MIN,
-  REQUEST_ID,
   hostingMode,
   initCommand,
   initMessage,
@@ -46,7 +45,6 @@ import {
   readQueue,
   readSessionId,
   resumeCommand,
-  validateRequest,
   wakeMessage,
   type OpsPaths,
   type QueuedEvent,
@@ -75,59 +73,8 @@ function log(text: string): void {
  * <id>.req, claims it (rename to .run), validates it (lib.ts validateRequest), runs ops/codex-ops-actions.sh with the
  * action's time limit, and answers <id>.res (written to a temporary name, then renamed). One request at a time.
  */
-export function startBroker(p: OpsPaths, root: string, onLog: (text: string) => void): () => Promise<void> {
-  mkdirSync(p.broker, { recursive: true });
-  let busy: Promise<void> = Promise.resolve();
-  let stopped = false;
-  const answer = (id: string, body: { code: number; out: string }): void => {
-    const tmp = join(p.broker, `${id}.res.tmp`);
-    writeFileSync(tmp, JSON.stringify(body));
-    renameSync(tmp, join(p.broker, `${id}.res`));
-  };
-  const handle = async (id: string): Promise<void> => {
-    const claimed = join(p.broker, `${id}.run`);
-    try {
-      renameSync(join(p.broker, `${id}.req`), claimed);
-    } catch {
-      return;
-    }
-    let raw: unknown;
-    try {
-      raw = JSON.parse(readFileSync(claimed, "utf8"));
-    } catch {
-      raw = undefined;
-    }
-    rmSync(claimed, { force: true });
-    const request = validateRequest(raw);
-    if (!request.ok) {
-      onLog(`broker refused ${id}: ${request.error}`);
-      answer(id, { code: 2, out: `拒绝：${request.error}\n` });
-      return;
-    }
-    onLog(`broker ${request.action} ${request.args.join(" ")}`.trim());
-    const result = await runAction(root, request.action, request.args, ACTIONS[request.action]!.ms);
-    onLog(`broker ${request.action} exit ${result.code}`);
-    answer(id, result);
-  };
-  const poll = (): void => {
-    if (stopped) return;
-    let names: string[] = [];
-    try {
-      names = readdirSync(p.broker);
-    } catch {
-      // recreated below
-    }
-    for (const name of names.sort()) {
-      const id = name.endsWith(".req") ? name.slice(0, -4) : "";
-      if (REQUEST_ID.test(id)) busy = busy.then(() => handle(id));
-    }
-  };
-  const timer = setInterval(poll, 500);
-  return async () => {
-    stopped = true;
-    clearInterval(timer);
-    await busy;
-  };
+export function startBroker(p: OpsPaths, root: string, onLog: (text: string) => void, run: BrokerAction = runAction): () => Promise<void> {
+  return durableBroker(p, root, onLog, run);
 }
 
 const OUT_MAX = 64 * 1024;
