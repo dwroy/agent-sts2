@@ -1,0 +1,189 @@
+{
+  "items": [
+    {
+      "batch": "20261013-210730-s2-strategy-proposal",
+      "state": "done",
+      "rc": 0,
+      "report": {
+        "task": "strategy-proposal",
+        "character": "silent",
+        "batch": "20261013-210730-s2-strategy-proposal",
+        "base": "2a92800f92b4954b15f6cd08ce2a0baddb22426b",
+        "runs": [
+          "751FN9QM9MHQ",
+          "KV0JHNJCKXLS",
+          "YQL8RZ8BWN1E",
+          "L9SGRBB5R698",
+          "PU80F84P6HPN",
+          "KEN58SH9SLZ6"
+        ],
+        "fixes": [],
+        "skipped": [],
+        "merged": null,
+        "tests": {
+          "tsc": null,
+          "vitest": null,
+          "cases": null
+        },
+        "code_proposals": [
+          "silent-proposal-366288801d9150d9",
+          "silent-proposal-85929bdfc8a3fc1b",
+          "silent-proposal-efd9f83ee9e1a6dc",
+          "silent-proposal-131042659448ae74",
+          "silent-proposal-990f054036609447",
+          "silent-proposal-e18d3f18e6cac2a0",
+          "silent-proposal-9733bb80f445aeae",
+          "silent-proposal-c51468c5e8ba6668",
+          "silent-proposal-86a7db08d1a31976",
+          "silent-proposal-e282a9131b99129a"
+        ],
+        "implementation_domains": [],
+        "proposal_results": [
+          {
+            "id": "silent-proposal-366288801d9150d9",
+            "state": "waiting",
+            "reason": "缺跨抽弃牌重问后的完整执行归属及保持后继一致的整战对照；现有候选对照不覆盖实际整线血价，不能拟SL额外失血门槛。"
+          },
+          {
+            "id": "silent-proposal-85929bdfc8a3fc1b",
+            "state": "waiting",
+            "reason": "缺F13无药实打或受控完整回放、留药至F17的后场结果，以及未决弃牌续问后的实际损血归属；不能把缺表0或8/8样本当留药价值。"
+          },
+          {
+            "id": "silent-proposal-efd9f83ee9e1a6dc",
+            "state": "waiting",
+            "reason": "缺六次相关失败之外的独立验证、单一改线且后继受控的完整结果及实际持牌归属；不能设固定血价阈值或关闭更差线探索。"
+          },
+          {
+            "id": "silent-proposal-131042659448ae74",
+            "state": "waiting",
+            "reason": "缺跨续问整线执行、能力逐轮兑现与无药/留药完整支线的联合验收；局部公式和来源提示不能关闭组合提案。"
+          },
+          {
+            "id": "silent-proposal-990f054036609447",
+            "state": "waiting",
+            "reason": "缺毛伤、回血与净伤的完整执行归属、保持其余后继一致的整战对照及路线休息反事实；删毒同零损少7净伤不是已证保血收益。"
+          },
+          {
+            "id": "silent-proposal-e18d3f18e6cac2a0",
+            "state": "waiting",
+            "reason": "SL同轮平局仍使用原始占位血；缺新参考目标的完整受控后继、最终资源校准和独立验证，阶段提示已有不等于指标/排序整项已修复。"
+          },
+          {
+            "id": "silent-proposal-9733bb80f445aeae",
+            "state": "waiting",
+            "reason": "缺阶段参考路径改序的完整对照、提前用药/留药整战结果及独立验证；当前提示和原胜线不能证明新排序或药时有效。"
+          },
+          {
+            "id": "silent-proposal-c51468c5e8ba6668",
+            "state": "waiting",
+            "reason": "七次真实耗药已核；缺重问/随机选牌后完整候选收益归属，以及不饮用或留至boss的受控整战支线，不能校准跨战持有价。"
+          },
+          {
+            "id": "silent-proposal-86a7db08d1a31976",
+            "state": "waiting",
+            "reason": "T10多损6仅多2实伤、T5省2却延迟步法均已核；缺保持其余后继一致的整战重放、完整能力收益归属和独立后期验证，不能制定统一门槛。"
+          },
+          {
+            "id": "silent-proposal-e282a9131b99129a",
+            "state": "waiting",
+            "reason": "原经验和局部成本已核，但六试相关且后继动作同变；缺完整兑现归属、受控整战后继和独立后期样本，不能将局部拆项作宽提案完成。"
+          }
+        ],
+        "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261013-210730-s2/learner/runs/20261013-210744-strategy-proposal/report.md"
+      }
+    },
+    {
+      "batch": "20261013-211302",
+      "state": "done",
+      "rc": 0,
+      "report": {
+        "task": "postmortem",
+        "appended": [
+          "YP428GT9ZLL3"
+        ],
+        "skipped": [],
+        "bugs": [
+          {
+            "run": "YP428GT9ZLL3",
+            "where": "agent/src/reflex/turn-solver.ts:4030",
+            "what": "精英毒胜早停遗漏保血候选；silent-0271已有，双boss修复范围未覆盖本场。",
+            "new": false
+          }
+        ],
+        "ledger": {
+          "added": [
+            "silent-0457"
+          ],
+          "updated": [
+            "silent-0443",
+            "silent-0271",
+            "silent-0020",
+            "silent-0286",
+            "silent-0333",
+            "silent-0204"
+          ],
+          "repeats": [
+            "silent-0443",
+            "silent-0271"
+          ],
+          "check": 0
+        },
+        "code_proposals": [
+          "silent-proposal-6ac260dec4a3f502",
+          "silent-proposal-cc785dbbff13f4bd",
+          "silent-proposal-67a41642acf9c655"
+        ],
+        "implementation_domains": [
+          "combat",
+          "terminal"
+        ],
+        "report": "/home/dw/Projects/agent-sts2/learner/runs/20261013-211304-postmortem/report.md"
+      }
+    }
+  ],
+  "source_manifest": [
+    {
+      "source": "ops/codex-ops/learner/20261013-210730-s2-strategy-proposal.out",
+      "sha256": "ecc9660b43898c9a7f58887b126a607e62a247907f9d02775b527ac12e95be2d",
+      "bytes": 5370
+    },
+    {
+      "source": "ops/codex-ops/learner/20261013-210730-s2-strategy-proposal.err",
+      "sha256": "085debe767edc2dbc558ad3a262d65786b1fee465d5748a1f8af4be1e484e8d9",
+      "bytes": 9213
+    },
+    {
+      "source": ".worktrees/codex-strategy-silent-20261013-210730-s2/learner/runs/20261013-210744-strategy-proposal/report.md",
+      "sha256": "24bd5de80b4d1cf8de74c67a24fc5f223fb543576828a3c3b5dd8be681cf6b3f",
+      "bytes": 8178
+    },
+    {
+      "source": "ops/codex-ops/learner/20261013-211302.out",
+      "sha256": "0e8bf4a60223b72fca2377da925f53946c51b629217c4fde7bce79eb54422220",
+      "bytes": 2442
+    },
+    {
+      "source": "ops/codex-ops/learner/20261013-211302.err",
+      "sha256": "a80f69a6c22acef9a87a5e46f1677ef0ea88dc61a7f47cef2b6b210ff3853bf4",
+      "bytes": 9780
+    },
+    {
+      "source": "learner/runs/20261013-211304-postmortem/report.md",
+      "sha256": "d203cc591515044e7d174ceb2c80bf6d75e78b8b24400a68a6a5fcb554c770e7",
+      "bytes": 2133
+    }
+  ],
+  "owned_physical_cli_rows": 28,
+  "new_infrastructure_bugs": [],
+  "old_silent0271_uncovered_elite_scope_preserved": true,
+  "gameplay_findings_remain_original_learner_owned": true,
+  "source_code_changed": false,
+  "new_behavior_release_allocated": false,
+  "routine_notification_sent": false,
+  "lesson_signed_body_bytes": 17585,
+  "lesson_signed_body_sha256": "d124c81ef03f7341703becd762ecbecedb14e4c93070766537e3b93042f13ece",
+  "lesson_append_bytes": 17586,
+  "lesson_original_separator_lf_preserved": true,
+  "all_original_proposal_association_rows_included": true
+}

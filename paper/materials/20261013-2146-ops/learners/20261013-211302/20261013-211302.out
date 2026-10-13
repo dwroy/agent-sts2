@@ -1,0 +1,22 @@
+## 复盘回报
+
+- 已追加：YP428GT9ZLL3（A10，第15层，藤蔓蹒跚者T4：2血0挡对10攻击阵亡，敌剩30血）。
+- 新的纯 bug：无；旧项 silent-0271 补记精英战未覆盖范围。
+- 写成「未记录」的项：完整源码脏树、部分逐击／退场帧、完整执行率／杀序、替线整战收益、缠结其他交互、boss时钟／实打比、未到层资源、Jev缓存／实付账单。
+- 学习账本：新增 silent-0457；更新 silent-0443、silent-0271、silent-0020、silent-0286、silent-0333、silent-0204；老错 silent-0443、silent-0271。`ledger.py check` 退出码0。
+- 代码提案：F14T1／T6、0443／0333 → 6ac260dec4a3f502；F14T11、0271／0286 → cc785dbbff13f4bd；F15T3、0457 → 67a41642acf9c655。均关联 `strategy-proposal`；替线收益未证，未实现或上线。
+
+```json
+{"task":"postmortem","appended":["YP428GT9ZLL3"],"skipped":[],"bugs":[{"run":"YP428GT9ZLL3","where":"agent/src/reflex/turn-solver.ts:4030","what":"精英毒胜早停遗漏保血候选；silent-0271已有，双boss修复范围未覆盖本场。","new":false}],"ledger":{"added":["silent-0457"],"updated":["silent-0443","silent-0271","silent-0020","silent-0286","silent-0333","silent-0204"],"repeats":["silent-0443","silent-0271"],"check":0},"code_proposals":["silent-proposal-6ac260dec4a3f502","silent-proposal-cc785dbbff13f4bd","silent-proposal-67a41642acf9c655"],"implementation_domains":["combat","terminal"],"report":"/home/dw/Projects/agent-sts2/learner/runs/20261013-211304-postmortem/report.md"}
+```
+
+== 学习者 codex / postmortem ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a13565-482a-70f0-a280-f5c19dc9d6b1
+轮数：1；工具调用：command_execution×48
+token：输入 218.0k、输出 37.9k（其中推理 11.4k）、cache 读 5529.2k、cache 写 0（命中 96.2%）
+成本：未提供
+耗时：1542.0 s（墙钟）
+时间：首个事件 10.2 s、模型首个输出 16.8 s、首次工具 21.8 s、末次工具结束 1491.4 s；工具内共 166.2 s，其余（模型生成、推理、网络）1365.6 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2）；模型的工具调用 exec×38；/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/learner/sessions/2026/10/13/rollout-2026-10-13T21-13-12-01a13565-482a-70f0-a280-f5c19dc9d6b1.jsonl
+日志：/home/dw/Projects/agent-sts2/learner/runs/20261013-211304-postmortem.jsonl

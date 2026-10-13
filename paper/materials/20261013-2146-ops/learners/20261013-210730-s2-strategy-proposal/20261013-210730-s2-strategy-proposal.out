@@ -1,0 +1,105 @@
+十项提案均保留 `waiting`，缺少完整执行归属、受控整战对照或独立验证。81 项只读证据核验通过，16 条账本追溯已读回。未改源码、未提交或合入；tsc/vitest 未运行，工作树干净。
+
+材料：[提案](/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261013-210730-s2/learner/runs/20261013-210744-strategy-proposal/proposal.md)、[报告](/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261013-210730-s2/learner/runs/20261013-210744-strategy-proposal/report.md)。
+
+```json
+{
+  "task": "strategy-proposal",
+  "character": "silent",
+  "batch": "20261013-210730-s2-strategy-proposal",
+  "base": "2a92800f92b4954b15f6cd08ce2a0baddb22426b",
+  "runs": [
+    "751FN9QM9MHQ",
+    "KV0JHNJCKXLS",
+    "YQL8RZ8BWN1E",
+    "L9SGRBB5R698",
+    "PU80F84P6HPN",
+    "KEN58SH9SLZ6"
+  ],
+  "fixes": [],
+  "skipped": [],
+  "merged": null,
+  "tests": {
+    "tsc": null,
+    "vitest": null,
+    "cases": null
+  },
+  "code_proposals": [
+    "silent-proposal-366288801d9150d9",
+    "silent-proposal-85929bdfc8a3fc1b",
+    "silent-proposal-efd9f83ee9e1a6dc",
+    "silent-proposal-131042659448ae74",
+    "silent-proposal-990f054036609447",
+    "silent-proposal-e18d3f18e6cac2a0",
+    "silent-proposal-9733bb80f445aeae",
+    "silent-proposal-c51468c5e8ba6668",
+    "silent-proposal-86a7db08d1a31976",
+    "silent-proposal-e282a9131b99129a"
+  ],
+  "implementation_domains": [],
+  "proposal_results": [
+    {
+      "id": "silent-proposal-366288801d9150d9",
+      "state": "waiting",
+      "reason": "缺跨抽弃牌重问后的完整执行归属及保持后继一致的整战对照；现有候选对照不覆盖实际整线血价，不能拟SL额外失血门槛。"
+    },
+    {
+      "id": "silent-proposal-85929bdfc8a3fc1b",
+      "state": "waiting",
+      "reason": "缺F13无药实打或受控完整回放、留药至F17的后场结果，以及未决弃牌续问后的实际损血归属；不能把缺表0或8/8样本当留药价值。"
+    },
+    {
+      "id": "silent-proposal-efd9f83ee9e1a6dc",
+      "state": "waiting",
+      "reason": "缺六次相关失败之外的独立验证、单一改线且后继受控的完整结果及实际持牌归属；不能设固定血价阈值或关闭更差线探索。"
+    },
+    {
+      "id": "silent-proposal-131042659448ae74",
+      "state": "waiting",
+      "reason": "缺跨续问整线执行、能力逐轮兑现与无药/留药完整支线的联合验收；局部公式和来源提示不能关闭组合提案。"
+    },
+    {
+      "id": "silent-proposal-990f054036609447",
+      "state": "waiting",
+      "reason": "缺毛伤、回血与净伤的完整执行归属、保持其余后继一致的整战对照及路线休息反事实；删毒同零损少7净伤不是已证保血收益。"
+    },
+    {
+      "id": "silent-proposal-e18d3f18e6cac2a0",
+      "state": "waiting",
+      "reason": "SL同轮平局仍使用原始占位血；缺新参考目标的完整受控后继、最终资源校准和独立验证，阶段提示已有不等于指标/排序整项已修复。"
+    },
+    {
+      "id": "silent-proposal-9733bb80f445aeae",
+      "state": "waiting",
+      "reason": "缺阶段参考路径改序的完整对照、提前用药/留药整战结果及独立验证；当前提示和原胜线不能证明新排序或药时有效。"
+    },
+    {
+      "id": "silent-proposal-c51468c5e8ba6668",
+      "state": "waiting",
+      "reason": "七次真实耗药已核；缺重问/随机选牌后完整候选收益归属，以及不饮用或留至boss的受控整战支线，不能校准跨战持有价。"
+    },
+    {
+      "id": "silent-proposal-86a7db08d1a31976",
+      "state": "waiting",
+      "reason": "T10多损6仅多2实伤、T5省2却延迟步法均已核；缺保持其余后继一致的整战重放、完整能力收益归属和独立后期验证，不能制定统一门槛。"
+    },
+    {
+      "id": "silent-proposal-e282a9131b99129a",
+      "state": "waiting",
+      "reason": "原经验和局部成本已核，但六试相关且后继动作同变；缺完整兑现归属、受控整战后继和独立后期样本，不能将局部拆项作宽提案完成。"
+    }
+  ],
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261013-210730-s2/learner/runs/20261013-210744-strategy-proposal/report.md"
+}
+```
+
+== 学习者 codex / strategy-proposal ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a13560-5234-7a20-be75-6207e4f742a8
+轮数：1；工具调用：command_execution×47 file_change×2
+token：输入 312.8k、输出 36.6k（其中推理 11.5k）、cache 读 3879.6k、cache 写 0（命中 92.5%）
+成本：未提供
+耗时：1409.6 s（墙钟）
+时间：首个事件 20.4 s、模型首个输出 28.0 s、首次工具 36.7 s、末次工具结束 1348.9 s；工具内共 177.5 s，其余（模型生成、推理、网络）1211.8 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261013-210730-s2）；模型的工具调用 exec×37；/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/learner/sessions/2026/10/13/rollout-2026-10-13T21-07-47-01a13560-5234-7a20-be75-6207e4f742a8.jsonl
+日志：/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261013-210730-s2/learner/runs/20261013-210744-strategy-proposal.jsonl

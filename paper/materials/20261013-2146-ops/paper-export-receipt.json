@@ -1,0 +1,39 @@
+{
+  "cut": "2026-10-13T13:48:37.545Z",
+  "verification": {
+    "checks": {
+      "decisions attributed + unattributed == play records": true,
+      "decisions_by_label sum == attributed decisions": true,
+      "escalations rows == records with escalation": true,
+      "every runs.jsonl id present in runs.csv": true,
+      "commits == git rev-list --all --count": true,
+      "runs.jsonl decision-count mismatches": [
+        [
+          "KF9HMZKTFC3V",
+          879,
+          880
+        ]
+      ]
+    },
+    "row_counts": {
+      "runs.csv": 763,
+      "decisions_by_label.csv": 25439,
+      "escalations.csv": 3600,
+      "fight_plans.csv": 1461,
+      "commits.csv": 5606
+    }
+  },
+  "output_files": 325,
+  "output_bytes": 32821751,
+  "history": [
+    "paper/data/history/20261013T134837675577Z",
+    "paper/data/history/20261013T135133871760Z"
+  ],
+  "command": "nice -n 19 python3 ops/paper_dataset.py --no-raw",
+  "rc": 0,
+  "keyscan": "CLEAN",
+  "source_checks_passed": true,
+  "raw_logs_snapshotted": false,
+  "original_KF9_879_880_difference_preserved": true,
+  "learning_curves": "two 11-row curves, exit0"
+}

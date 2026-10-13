@@ -1,0 +1,38 @@
+{
+  "agent/src/reflex/turn-solver.ts:4026": {
+    "sha256": "f64513c8c3261db2e9455b48b203a53f86f5a0abe1d5529c31d7d28259556b47",
+    "lines": [
+      "4026:     // XTSV1U9JD34T F48 T8, silent-0271: ending now wins but pays nine held damage.",
+      "4027:     // Keep the existing evaluation and budgets; only extend a surviving poison win",
+      "4028:     // while there is HP to preserve for the observed next boss.",
+      "4029:     const preservePoisonHp = input.preservePoisonWinHp === true && o.winsAfterPoison === true && !o.dies && o.hpLoss > 0;",
+      "4030:     if (sim.enemies.every((enemy) => !enemy.alive) || (o.winsFight && !preservePoisonHp)) return;"
+    ]
+  },
+  "agent/src/reflex/combat-plan.ts:3097": {
+    "sha256": "f87dfd27fcd1dfa344b736649d51256c9dc4d2b4ba76339aaca0eaea1ba32a4a",
+    "lines": [
+      "3097:   const continuation = kind === \"boss\" ? firstDoubleBoss(state) : null;",
+      "3098:   const observedDouble = kind === \"boss\" ? doubleBossFor(state) : null;"
+    ]
+  },
+  "agent/src/reflex/combat-plan.ts:3244": {
+    "sha256": "f87dfd27fcd1dfa344b736649d51256c9dc4d2b4ba76339aaca0eaea1ba32a4a",
+    "lines": [
+      "3244:       player: playerSim,",
+      "3245:       enemies,",
+      "3246:       fightKind: kind,",
+      "3247:       ...(continuation ? { continuationValue: continuation.value, preservePoisonWinHp: true } : {}),"
+    ]
+  },
+  "agent/src/reflex/combat-plan.ts:3354": {
+    "sha256": "f87dfd27fcd1dfa344b736649d51256c9dc4d2b4ba76339aaca0eaea1ba32a4a",
+    "lines": [
+      "3354:   const lethalLines = best.outcome.winsFight ? solved.plans.filter((plan) => plan.outcome.winsFight) : [];",
+      "3355:   const dryLethal = lethalLines.find((plan) => !drinksPotion(plan));",
+      "3356:   if (dryLethal) {",
+      "3357:     commit(env, state.turn, dryLethal, hand, \"code\");",
+      "3358:     return { kind: \"act\", label: \"combat/lethal\", intent: firstIntent(dryLethal, hand, env), rationale: `lethal: ${dryLethal.steps.map(stepText).join(\", \")}${calcNote}` };"
+    ]
+  }
+}
