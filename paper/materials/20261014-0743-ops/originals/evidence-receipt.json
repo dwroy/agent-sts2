@@ -1,0 +1,570 @@
+{
+  "source_counts": {
+    "CA5KE8GFJ9X2": 282,
+    "5PM6JAQG6FNQ": 660,
+    "DUZUBAJ3A8GP": 623,
+    "8JRE1C4H4Z2W": 676,
+    "YF0LXT1QSTGG": 1091,
+    "XP2SL33HT0D9": 730
+  },
+  "state_start": 8403755994,
+  "state_end": 8582340906,
+  "state_rows": 1062,
+  "decision_rows": 1043,
+  "selected_decision_rows": 13,
+  "configs": [
+    {
+      "run_id": "CA5KE8GFJ9X2",
+      "sha256": "a1c7d1b760f5d69b5f3011f6d43dd2bdcc8dc049a88d55521f1070254d65c7d2",
+      "keys": [
+        "arm",
+        "ascension",
+        "brain",
+        "character",
+        "code",
+        "codex_check",
+        "codex_usage",
+        "config_sha",
+        "deepseek",
+        "floor",
+        "jev",
+        "knowledge",
+        "loop",
+        "process",
+        "restart",
+        "run_id",
+        "sl",
+        "target_ascension",
+        "target_ascension_mode",
+        "ts"
+      ],
+      "code": {
+        "commit": "33f02a6f37dc8dd820cd9d8cbc1ec207cb49624f",
+        "code": "33f02a6+dirty",
+        "dirty": true,
+        "dirty_files": [
+          "knowledge/characters/silent/boss-damage.json",
+          "knowledge/characters/silent/fight-value-gates.json",
+          "knowledge/characters/silent/fight-value.json",
+          "knowledge/characters/silent/monster-records.json",
+          "knowledge/characters/silent/outcome-stats.json",
+          "knowledge/characters/silent/room-costs.json",
+          "knowledge/common/card-upgrades.json",
+          "knowledge/common/monster-db.json",
+          "knowledge/common/move-model.json",
+          "notes/fight-value-backtest-silent.md",
+          "notes/monster-db-check.md"
+        ],
+        "branch": "live",
+        "worktree": "live"
+      },
+      "knowledge": {
+        "prefix": "full",
+        "ascension": 10,
+        "prefix_sha": "0db8e7fa2932",
+        "prefix_chars": 146090,
+        "prefix_tokens_est": {
+          "deepseek": 102263,
+          "claude": 141707
+        },
+        "system_sha": "3a9c706ac537",
+        "system_chars": 148374,
+        "experience_version": "2026-10-07.17",
+        "prefix_note": "the prefix at this run's start; the brain re-renders it when the knowledge files or notes/lessons.md change (brain/knowledge.ts), so the prefix each call used is its brain.jsonl row's knowledge.prefix_sha"
+      },
+      "brain": {
+        "active": true,
+        "engine": "codex",
+        "by_prefix": {},
+        "fallback": null,
+        "reask": null,
+        "tools": null,
+        "log": "/home/dw/Projects/agent-sts2/.worktrees/live/logs/brain.jsonl",
+        "engines": {
+          "codex": {
+            "model": "gpt-6.1-sol",
+            "model_by_prefix": {},
+            "timeout_ms": 600000,
+            "effort": "high",
+            "reask": null,
+            "tools": false,
+            "max_calls": null
+          }
+        },
+        "codex": {
+          "mode": "session",
+          "service_tier": null,
+          "summary": "auto",
+          "stall_ms": 120000,
+          "first_token_ms": null,
+          "stall_retries": 1,
+          "schema_fields": "used",
+          "route_reason": "drop",
+          "route_pattern": true,
+          "accept_cut": true,
+          "max_field_chars": 600,
+          "max_answer_blanks": 100
+        }
+      }
+    },
+    {
+      "run_id": "5PM6JAQG6FNQ",
+      "sha256": "117118e5552359a00ddff247083548296ce0963043c409bfa85101b07fb6bb5f",
+      "keys": [
+        "arm",
+        "ascension",
+        "brain",
+        "character",
+        "code",
+        "codex_check",
+        "codex_usage",
+        "config_sha",
+        "deepseek",
+        "floor",
+        "jev",
+        "knowledge",
+        "loop",
+        "process",
+        "restart",
+        "run_id",
+        "sl",
+        "target_ascension",
+        "target_ascension_mode",
+        "ts"
+      ],
+      "code": {
+        "commit": "f56da22bda53151e052bb64d0a3339139c4dd550",
+        "code": "f56da22+dirty",
+        "dirty": true,
+        "dirty_files": [
+          "knowledge/characters/silent/boss-damage.json",
+          "knowledge/characters/silent/fight-value-gates.json",
+          "knowledge/characters/silent/fight-value.json",
+          "knowledge/characters/silent/monster-records.json",
+          "knowledge/characters/silent/outcome-stats.json",
+          "knowledge/characters/silent/room-costs.json",
+          "knowledge/common/card-upgrades.json",
+          "knowledge/common/monster-db.json",
+          "knowledge/common/move-model.json",
+          "notes/fight-value-backtest-silent.md",
+          "notes/monster-db-check.md"
+        ],
+        "branch": "live",
+        "worktree": "live"
+      },
+      "knowledge": {
+        "prefix": "full",
+        "ascension": 10,
+        "prefix_sha": "8d91db1404f5",
+        "prefix_chars": 146176,
+        "prefix_tokens_est": {
+          "deepseek": 102323,
+          "claude": 141791
+        },
+        "system_sha": "512580248b82",
+        "system_chars": 148460,
+        "experience_version": "2026-10-07.18",
+        "prefix_note": "the prefix at this run's start; the brain re-renders it when the knowledge files or notes/lessons.md change (brain/knowledge.ts), so the prefix each call used is its brain.jsonl row's knowledge.prefix_sha"
+      },
+      "brain": {
+        "active": true,
+        "engine": "codex",
+        "by_prefix": {},
+        "fallback": null,
+        "reask": null,
+        "tools": null,
+        "log": "/home/dw/Projects/agent-sts2/.worktrees/live/logs/brain.jsonl",
+        "engines": {
+          "codex": {
+            "model": "gpt-6.1-sol",
+            "model_by_prefix": {},
+            "timeout_ms": 600000,
+            "effort": "high",
+            "reask": null,
+            "tools": false,
+            "max_calls": null
+          }
+        },
+        "codex": {
+          "mode": "session",
+          "service_tier": null,
+          "summary": "auto",
+          "stall_ms": 120000,
+          "first_token_ms": null,
+          "stall_retries": 1,
+          "schema_fields": "used",
+          "route_reason": "drop",
+          "route_pattern": true,
+          "accept_cut": true,
+          "max_field_chars": 600,
+          "max_answer_blanks": 100
+        }
+      }
+    },
+    {
+      "run_id": "DUZUBAJ3A8GP",
+      "sha256": "328a28322789987e6491aac86caea4f746739bcc2211c1bd9922a87335b43204",
+      "keys": [
+        "arm",
+        "ascension",
+        "brain",
+        "character",
+        "code",
+        "codex_check",
+        "codex_usage",
+        "config_sha",
+        "deepseek",
+        "floor",
+        "jev",
+        "knowledge",
+        "loop",
+        "process",
+        "restart",
+        "run_id",
+        "sl",
+        "target_ascension",
+        "target_ascension_mode",
+        "ts"
+      ],
+      "code": {
+        "commit": "93298980fd59963328e824286d1c3cf277c78e4b",
+        "code": "9329898+dirty",
+        "dirty": true,
+        "dirty_files": [
+          "knowledge/characters/silent/boss-damage.json",
+          "knowledge/characters/silent/fight-value-gates.json",
+          "knowledge/characters/silent/fight-value.json",
+          "knowledge/characters/silent/monster-records.json",
+          "knowledge/characters/silent/outcome-stats.json",
+          "knowledge/characters/silent/room-costs.json",
+          "knowledge/common/card-upgrades.json",
+          "knowledge/common/monster-db.json",
+          "knowledge/common/move-model.json",
+          "notes/fight-value-backtest-silent.md"
+        ],
+        "branch": "live",
+        "worktree": "live"
+      },
+      "knowledge": {
+        "prefix": "full",
+        "ascension": 10,
+        "prefix_sha": "b6e050f218ae",
+        "prefix_chars": 146163,
+        "prefix_tokens_est": {
+          "deepseek": 102314,
+          "claude": 141778
+        },
+        "system_sha": "558f9ac9a142",
+        "system_chars": 148447,
+        "experience_version": "2026-10-07.18",
+        "prefix_note": "the prefix at this run's start; the brain re-renders it when the knowledge files or notes/lessons.md change (brain/knowledge.ts), so the prefix each call used is its brain.jsonl row's knowledge.prefix_sha"
+      },
+      "brain": {
+        "active": true,
+        "engine": "codex",
+        "by_prefix": {},
+        "fallback": null,
+        "reask": null,
+        "tools": null,
+        "log": "/home/dw/Projects/agent-sts2/.worktrees/live/logs/brain.jsonl",
+        "engines": {
+          "codex": {
+            "model": "gpt-6.1-sol",
+            "model_by_prefix": {},
+            "timeout_ms": 600000,
+            "effort": "high",
+            "reask": null,
+            "tools": false,
+            "max_calls": null
+          }
+        },
+        "codex": {
+          "mode": "session",
+          "service_tier": null,
+          "summary": "auto",
+          "stall_ms": 120000,
+          "first_token_ms": null,
+          "stall_retries": 1,
+          "schema_fields": "used",
+          "route_reason": "drop",
+          "route_pattern": true,
+          "accept_cut": true,
+          "max_field_chars": 600,
+          "max_answer_blanks": 100
+        }
+      }
+    },
+    {
+      "run_id": "8JRE1C4H4Z2W",
+      "sha256": "d40b8f2b63eea59fcb4b240a249a0f09c693865ec08316d7115ace376af37192",
+      "keys": [
+        "arm",
+        "ascension",
+        "brain",
+        "character",
+        "code",
+        "codex_check",
+        "codex_usage",
+        "config_sha",
+        "deepseek",
+        "floor",
+        "jev",
+        "knowledge",
+        "loop",
+        "process",
+        "restart",
+        "run_id",
+        "sl",
+        "target_ascension",
+        "target_ascension_mode",
+        "ts"
+      ],
+      "code": {
+        "commit": "b0f41f039b136e69485027ecbf9042c23170b4ab",
+        "code": "b0f41f0+dirty",
+        "dirty": true,
+        "dirty_files": [
+          "knowledge/characters/silent/boss-damage.json",
+          "knowledge/characters/silent/monster-records.json",
+          "knowledge/characters/silent/outcome-stats.json",
+          "knowledge/characters/silent/room-costs.json",
+          "knowledge/common/card-upgrades.json",
+          "knowledge/common/monster-db.json",
+          "knowledge/common/move-model.json"
+        ],
+        "branch": "live",
+        "worktree": "live"
+      },
+      "knowledge": {
+        "prefix": "full",
+        "ascension": 10,
+        "prefix_sha": "f95692cd0e50",
+        "prefix_chars": 147146,
+        "prefix_tokens_est": {
+          "deepseek": 103002,
+          "claude": 142732
+        },
+        "system_sha": "7a404b7d012e",
+        "system_chars": 149430,
+        "experience_version": "2026-10-07.19",
+        "prefix_note": "the prefix at this run's start; the brain re-renders it when the knowledge files or notes/lessons.md change (brain/knowledge.ts), so the prefix each call used is its brain.jsonl row's knowledge.prefix_sha"
+      },
+      "brain": {
+        "active": true,
+        "engine": "codex",
+        "by_prefix": {},
+        "fallback": null,
+        "reask": null,
+        "tools": null,
+        "log": "/home/dw/Projects/agent-sts2/.worktrees/live/logs/brain.jsonl",
+        "engines": {
+          "codex": {
+            "model": "gpt-6.1-sol",
+            "model_by_prefix": {},
+            "timeout_ms": 600000,
+            "effort": "high",
+            "reask": null,
+            "tools": false,
+            "max_calls": null
+          }
+        },
+        "codex": {
+          "mode": "session",
+          "service_tier": null,
+          "summary": "auto",
+          "stall_ms": 120000,
+          "first_token_ms": null,
+          "stall_retries": 1,
+          "schema_fields": "used",
+          "route_reason": "drop",
+          "route_pattern": true,
+          "accept_cut": true,
+          "max_field_chars": 600,
+          "max_answer_blanks": 100
+        }
+      }
+    },
+    {
+      "run_id": "YF0LXT1QSTGG",
+      "sha256": "4f3b799ed6d3be336e83f9a4114f4f440783a6356085d0e91e00faba72e5d8e9",
+      "keys": [
+        "arm",
+        "ascension",
+        "brain",
+        "character",
+        "code",
+        "codex_check",
+        "codex_usage",
+        "config_sha",
+        "deepseek",
+        "floor",
+        "jev",
+        "knowledge",
+        "loop",
+        "process",
+        "restart",
+        "run_id",
+        "sl",
+        "target_ascension",
+        "target_ascension_mode",
+        "ts"
+      ],
+      "code": {
+        "commit": "91c1db906d74457da9a93fb8e99e7e0394406b4e",
+        "code": "91c1db9+dirty",
+        "dirty": true,
+        "dirty_files": [
+          "knowledge/characters/silent/boss-damage.json",
+          "knowledge/characters/silent/fight-value-gates.json",
+          "knowledge/characters/silent/monster-records.json",
+          "knowledge/characters/silent/outcome-stats.json",
+          "knowledge/characters/silent/room-costs.json",
+          "knowledge/common/card-upgrades.json",
+          "knowledge/common/monster-db.json",
+          "knowledge/common/move-model.json"
+        ],
+        "branch": "live",
+        "worktree": "live"
+      },
+      "knowledge": {
+        "prefix": "full",
+        "ascension": 10,
+        "prefix_sha": "6c9b47965f21",
+        "prefix_chars": 147155,
+        "prefix_tokens_est": {
+          "deepseek": 103009,
+          "claude": 142740
+        },
+        "system_sha": "ca66aa139e1f",
+        "system_chars": 149439,
+        "experience_version": "2026-10-07.19",
+        "prefix_note": "the prefix at this run's start; the brain re-renders it when the knowledge files or notes/lessons.md change (brain/knowledge.ts), so the prefix each call used is its brain.jsonl row's knowledge.prefix_sha"
+      },
+      "brain": {
+        "active": true,
+        "engine": "codex",
+        "by_prefix": {},
+        "fallback": null,
+        "reask": null,
+        "tools": null,
+        "log": "/home/dw/Projects/agent-sts2/.worktrees/live/logs/brain.jsonl",
+        "engines": {
+          "codex": {
+            "model": "gpt-6.1-sol",
+            "model_by_prefix": {},
+            "timeout_ms": 600000,
+            "effort": "high",
+            "reask": null,
+            "tools": false,
+            "max_calls": null
+          }
+        },
+        "codex": {
+          "mode": "session",
+          "service_tier": null,
+          "summary": "auto",
+          "stall_ms": 120000,
+          "first_token_ms": null,
+          "stall_retries": 1,
+          "schema_fields": "used",
+          "route_reason": "drop",
+          "route_pattern": true,
+          "accept_cut": true,
+          "max_field_chars": 600,
+          "max_answer_blanks": 100
+        }
+      }
+    },
+    {
+      "run_id": "XP2SL33HT0D9",
+      "sha256": "3834076f7b2ab0d2226c2b6ae7075eeeab27b60de09dbd5786ad1fe1593da641",
+      "keys": [
+        "arm",
+        "ascension",
+        "brain",
+        "character",
+        "code",
+        "codex_check",
+        "codex_usage",
+        "config_sha",
+        "deepseek",
+        "floor",
+        "jev",
+        "knowledge",
+        "loop",
+        "process",
+        "restart",
+        "run_id",
+        "sl",
+        "target_ascension",
+        "target_ascension_mode",
+        "ts"
+      ],
+      "code": {
+        "commit": "606855106dfb90ca8ffe27b985ed3c3b3f2424a2",
+        "code": "6068551+dirty",
+        "dirty": true,
+        "dirty_files": [
+          "knowledge/characters/silent/boss-damage.json",
+          "knowledge/characters/silent/monster-records.json",
+          "knowledge/characters/silent/outcome-stats.json",
+          "knowledge/characters/silent/room-costs.json",
+          "knowledge/common/card-upgrades.json",
+          "knowledge/common/monster-db.json",
+          "knowledge/common/move-model.json"
+        ],
+        "branch": "live",
+        "worktree": "live"
+      },
+      "knowledge": {
+        "prefix": "full",
+        "ascension": 10,
+        "prefix_sha": "9c70078acad4",
+        "prefix_chars": 147224,
+        "prefix_tokens_est": {
+          "deepseek": 103057,
+          "claude": 142807
+        },
+        "system_sha": "2a6e2eb372d1",
+        "system_chars": 149508,
+        "experience_version": "2026-10-07.19",
+        "prefix_note": "the prefix at this run's start; the brain re-renders it when the knowledge files or notes/lessons.md change (brain/knowledge.ts), so the prefix each call used is its brain.jsonl row's knowledge.prefix_sha"
+      },
+      "brain": {
+        "active": true,
+        "engine": "codex",
+        "by_prefix": {},
+        "fallback": null,
+        "reask": null,
+        "tools": null,
+        "log": "/home/dw/Projects/agent-sts2/.worktrees/live/logs/brain.jsonl",
+        "engines": {
+          "codex": {
+            "model": "gpt-6.1-sol",
+            "model_by_prefix": {},
+            "timeout_ms": 600000,
+            "effort": "high",
+            "reask": null,
+            "tools": false,
+            "max_calls": null
+          }
+        },
+        "codex": {
+          "mode": "session",
+          "service_tier": null,
+          "summary": "auto",
+          "stall_ms": 120000,
+          "first_token_ms": null,
+          "stall_retries": 1,
+          "schema_fields": "used",
+          "route_reason": "drop",
+          "route_pattern": true,
+          "accept_cut": true,
+          "max_field_chars": 600,
+          "max_answer_blanks": 100
+        }
+      }
+    }
+  ],
+  "missing_selected_decisions": []
+}

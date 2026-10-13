@@ -1,0 +1,27 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261014-054301-s2/agent
+
+ ❯ tests/rollout-live.test.ts (12 tests | 1 failed) 198303ms
+     × code's ranking, options and auto-acts are unchanged by the rollout 122913ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/rollout-live.test.ts > rollout facts on Jev's combat question > code's ranking, options and auto-acts are unchanged by the rollout
+Error: Test timed out in 120000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/rollout-live.test.ts:179:3
+    177|   }), 120_000);
+    178|
+    179|   it("code's ranking, options and auto-acts are unchanged by the rollo…
+       |   ^
+    180|     for (const name of BOARDS) {
+    181|       for (const context of ["v1", "off"] as const) {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 379 passed (380)
+      Tests  1 failed | 3656 passed (3657)
+   Start at  07:22:56
+   Duration  900.96s (transform 23.43s, setup 45.22s, import 121.58s, tests 1516.97s, environment 63ms)
+

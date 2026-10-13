@@ -1,0 +1,45 @@
+{
+  "at": "2026-10-14 07:48:00 CST",
+  "batch": "20261014-054301-s2-strategy-proposal",
+  "original_thread": "01a13738-9390-7d51-a912-4d002ca54431",
+  "original_result_sha256": "7c844379b6f07cb987b5986481b2ba82d39f9335aaf206a99f8dde06fa834a67",
+  "original_log_sha256": "3d66f588ce7880e56966356abf92aae3e9beeff3d44c06220ac2dc96f8819665",
+  "tsc_phase": "exit 0 inferred from the unchanged set-e gate reaching Vitest",
+  "vitest": 1,
+  "files_passed": 379,
+  "files_failed": 1,
+  "tests_passed": 3656,
+  "tests_failed": 1,
+  "paths_phase_ran": false,
+  "failed_test": "rollout facts on Jev's combat question > code's ranking, options and auto-acts are unchanged by the rollout",
+  "timeout_ms": 120000,
+  "measured_test_ms": 122913,
+  "suite_duration_s": 900.96,
+  "file_duration_ms": 198303,
+  "failure_kind": "fixed test timeout; no numeric/ranking assertion difference reported",
+  "cause": "unknown; no load or source causality inferred",
+  "fixture_same_blob_in_source_main_live": "8390ad5c565f144dc56886204089f65d7a33f28227755c7dbabbae857da03c66",
+  "three_staged_source_fingerprints_kept": [
+    {
+      "path": "agent/src/reflex/card-model.ts",
+      "sha256": "df10de26c8e9d39e41b149bc4c34e43bb2ebd10c74ab8cd4bbf3d7ce8eb13021",
+      "bytes": 116079
+    },
+    {
+      "path": "agent/tests/silent-snakebite-preview.test.ts",
+      "sha256": "4acf83d84936b5add263c27a7df3c48f13314b5dbd0629a0b44968afb14e3018",
+      "bytes": 6023
+    },
+    {
+      "path": "agent/tests/silent-snakebite-preview-evidence.json",
+      "sha256": "3e607c7a85cc4c46d0e767673ead6beb9857c6944895e2315d6d81866b4ef14f",
+      "bytes": 648667
+    }
+  ],
+  "original_result_empty_passed_arrays_preserved": true,
+  "parser_limit": "The original success-only regex did not parse mixed failed/passed summary rows. The exact original result stays unchanged; counts here are read from its original log.",
+  "decision": "Keep unpublished source and original failed gate. Continue the existing fixed rollout/process-fixture chain, without unchanged full reruns, larger timeouts, removed assertions, new research or gameplay rollback. The submitted a748/b2 overlap guard remains authoritative before any later source publication.",
+  "game_source_commit": null,
+  "game_source_deployed": false,
+  "release_id": null
+}
