@@ -1,0 +1,60 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261014-014302-s2/agent
+
+ ❯ tests/silent-sl-calendar-poison.test.ts (15 tests | 3 failed) 29ms
+   × F28 first: existing Calendar and poison bounds jointly veto certain death 15ms
+   × F28 second: existing Calendar and poison bounds jointly veto certain death 2ms
+   × uses an inclusive bound without claiming an unexecuted victory 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/silent-sl-calendar-poison.test.ts > F28 first: existing Calendar and poison bounds jointly veto certain death
+ FAIL  tests/silent-sl-calendar-poison.test.ts > F28 second: existing Calendar and poison bounds jointly veto certain death
+AssertionError: expected { certain: true, tier: 'rules', …(7) } to match object { certain: false, tier: null }
+(7 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "certain": false,
+-   "tier": null,
++   "certain": true,
++   "tier": "rules",
+  }
+
+ ❯ tests/silent-sl-calendar-poison.test.ts:21:20
+     19|     expect(raw.combat.end_turn_will_kill_player).toBe(true);
+     20|     const result = judge(raw, key === "second" ? "combat/least-loss" :…
+     21|     expect(result).toMatchObject({ certain: false, tier: null });
+       |                    ^
+     22|     expect(result.reason).toContain(`combined upper bound ${combined}`…
+     23|     expect(result.reason).toContain(`its poison (${poison})`);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  tests/silent-sl-calendar-poison.test.ts > uses an inclusive bound without claiming an unexecuted victory
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ tests/silent-sl-calendar-poison.test.ts:40:30
+     38|   const raw = board();
+     39|   raw.combat.enemies[0]!.current_hp = 65;
+     40|   expect(judge(raw).certain).toBe(false);
+       |                              ^
+     41|   raw.combat.enemies[0]!.current_hp = 66;
+     42|   expect(judge(raw).certain).toBe(true);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  3 failed | 12 passed (15)
+   Start at  01:51:25
+   Duration  1.87s (transform 1.41s, setup 447ms, import 1.24s, tests 29ms, environment 0ms)
+

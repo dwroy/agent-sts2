@@ -1,0 +1,381 @@
+{
+  "at": "2026-10-14 03:02:41 CST",
+  "run_id": "E5L15SK6ZHZB",
+  "alert_source": "ops/codex-ops/module-health/E5L15SK6ZHZB-alert.json",
+  "alert_sha256": "5aacef9df51e78db660543e84b1ddd5da0dcd4fd6962ba4f4ad11b6251a1a013",
+  "all_five_original_offset_length_SHA_verified": true,
+  "original_failure_rows": [
+    {
+      "ts": "2026-10-13T18:16:21.555Z",
+      "decision": "547853e2-6a9d-4dad-9987-5309787f07ab",
+      "floor": 16,
+      "label": "rest/plan",
+      "reason": "below_minimum_samples",
+      "source": {
+        "offset": 1277720906,
+        "length": 100315,
+        "sha256": "42d6812450b77f6ce24e241b6a0e7f13580008bfe835343aa41eb1bf0fd38dd4"
+      },
+      "diagnostics": {
+        "schema": "build-sim-health-v1",
+        "status": "failed",
+        "availableCpus": 32,
+        "loadAverage": [
+          39.26,
+          29.47,
+          20.6
+        ],
+        "decks": 15,
+        "options": 14,
+        "deckCards": 23,
+        "deadlineMs": 10768.350918999873,
+        "orderSearch": null,
+        "comparison": {
+          "samples": 216,
+          "elapsedMs": 10770,
+          "timedOut": true,
+          "workers": 24,
+          "deadlineMs": 10768.267144999932,
+          "pool": {
+            "queueMs": 0,
+            "coldStart": false,
+            "preparationMs": 5,
+            "firstReplyMs": 793,
+            "chunksPlanned": 1875,
+            "chunksDispatched": 443,
+            "chunksCompleted": 419,
+            "outcomesCompleted": 3352
+          }
+        },
+        "boss": "SOUL_FYSH",
+        "samples": 216,
+        "requested": 1000,
+        "minimumShown": 300,
+        "timedOut": true,
+        "simMs": 10924,
+        "workers": 24,
+        "reason": "below_minimum_samples"
+      },
+      "error": "只跑完 216 次模拟（不足 300 次），选项之间的差噪声太大，不给数字",
+      "candidates": {
+        "observed": 14,
+        "unsupported": 0,
+        "with_dpr": 0,
+        "missing_dpr": 14
+      }
+    },
+    {
+      "ts": "2026-10-13T18:29:19.099Z",
+      "decision": "5bce00d0-5462-4ee0-aa96-490f3022155b",
+      "floor": 21,
+      "label": "shop/plan",
+      "reason": "below_minimum_samples",
+      "source": {
+        "offset": 1278831739,
+        "length": 155970,
+        "sha256": "401b20770a7297af41035f6efa2beb65bff300a03b9b09cce8383fb17bc166f5"
+      },
+      "diagnostics": {
+        "schema": "build-sim-health-v1",
+        "status": "failed",
+        "availableCpus": 32,
+        "loadAverage": [
+          16.56,
+          19.76,
+          20.65
+        ],
+        "decks": 26,
+        "options": 26,
+        "deckCards": 25,
+        "deadlineMs": 10850.10713899997,
+        "orderSearch": null,
+        "comparison": {
+          "samples": 264,
+          "elapsedMs": 10851,
+          "timedOut": true,
+          "workers": 24,
+          "deadlineMs": 10850.085669999942,
+          "pool": {
+            "queueMs": 0,
+            "coldStart": false,
+            "preparationMs": 1,
+            "firstReplyMs": 286,
+            "chunksPlanned": 3250,
+            "chunksDispatched": 900,
+            "chunksCompleted": 876,
+            "outcomesCompleted": 7008
+          }
+        },
+        "boss": "THE_INSATIABLE",
+        "samples": 264,
+        "requested": 1000,
+        "minimumShown": 300,
+        "timedOut": true,
+        "simMs": 11214,
+        "workers": 24,
+        "reason": "below_minimum_samples"
+      },
+      "error": "只跑完 264 次模拟（不足 300 次），选项之间的差噪声太大，不给数字",
+      "candidates": {
+        "observed": 15,
+        "unsupported": 0,
+        "with_dpr": 0,
+        "missing_dpr": 15
+      }
+    },
+    {
+      "ts": "2026-10-13T18:44:32.941Z",
+      "decision": "e5b1c402-bab3-4f7a-b518-eedfd5512975",
+      "floor": 32,
+      "label": "rest/plan",
+      "reason": "below_minimum_samples",
+      "source": {
+        "offset": 1281627117,
+        "length": 132903,
+        "sha256": "49956cb96aeb01a1665b140e62a299315b932b029efddea1e0b5e27174905cd1"
+      },
+      "diagnostics": {
+        "schema": "build-sim-health-v1",
+        "status": "failed",
+        "availableCpus": 32,
+        "loadAverage": [
+          22.16,
+          17.74,
+          17.79
+        ],
+        "decks": 21,
+        "options": 20,
+        "deckCards": 32,
+        "deadlineMs": 10981.00526499981,
+        "orderSearch": null,
+        "comparison": {
+          "samples": 136,
+          "elapsedMs": 10992,
+          "timedOut": true,
+          "workers": 24,
+          "deadlineMs": 10980.977426999714,
+          "pool": {
+            "queueMs": 0,
+            "coldStart": false,
+            "preparationMs": 4,
+            "firstReplyMs": 510,
+            "chunksPlanned": 2625,
+            "chunksDispatched": 390,
+            "chunksCompleted": 366,
+            "outcomesCompleted": 2928
+          }
+        },
+        "boss": "THE_INSATIABLE",
+        "samples": 136,
+        "requested": 1000,
+        "minimumShown": 300,
+        "timedOut": true,
+        "simMs": 11141,
+        "workers": 24,
+        "reason": "below_minimum_samples"
+      },
+      "error": "只跑完 136 次模拟（不足 300 次），选项之间的差噪声太大，不给数字",
+      "candidates": {
+        "observed": 20,
+        "unsupported": 0,
+        "with_dpr": 0,
+        "missing_dpr": 20
+      }
+    },
+    {
+      "ts": "2026-10-13T18:51:10.383Z",
+      "decision": "e76fe23a-fc90-4c1d-84df-d55fba0c1413",
+      "floor": 35,
+      "label": "reward/card",
+      "reason": "below_minimum_samples",
+      "source": {
+        "offset": 1282408149,
+        "length": 36787,
+        "sha256": "065321d9db069c0b6bac45f59bce148bba4803d63f9f00fed2fb2ea033254fbb"
+      },
+      "diagnostics": {
+        "schema": "build-sim-health-v1",
+        "status": "failed",
+        "availableCpus": 32,
+        "loadAverage": [
+          7.3,
+          13.47,
+          16.17
+        ],
+        "decks": 4,
+        "options": 4,
+        "deckCards": 33,
+        "deadlineMs": 10855.795266999863,
+        "orderSearch": {
+          "samples": 56,
+          "elapsedMs": 2714,
+          "timedOut": true,
+          "workers": 24,
+          "deadlineMs": 2713.9488167499658,
+          "pool": {
+            "queueMs": 0,
+            "coldStart": false,
+            "preparationMs": 0,
+            "firstReplyMs": 1277,
+            "chunksPlanned": 39,
+            "chunksDispatched": 39,
+            "chunksCompleted": 23,
+            "outcomesCompleted": 184
+          }
+        },
+        "comparison": {
+          "samples": 192,
+          "elapsedMs": 8140,
+          "timedOut": true,
+          "workers": 24,
+          "deadlineMs": 8139.010345999617,
+          "pool": {
+            "queueMs": 0,
+            "coldStart": false,
+            "preparationMs": 2,
+            "firstReplyMs": 1519,
+            "chunksPlanned": 500,
+            "chunksDispatched": 120,
+            "chunksCompleted": 96,
+            "outcomesCompleted": 768
+          }
+        },
+        "boss": "QUEEN",
+        "samples": 192,
+        "requested": 1000,
+        "minimumShown": 300,
+        "timedOut": true,
+        "simMs": 10950,
+        "workers": 24,
+        "reason": "below_minimum_samples"
+      },
+      "error": "只跑完 192 次模拟（不足 300 次），选项之间的差噪声太大，不给数字",
+      "candidates": {
+        "observed": 4,
+        "unsupported": 0,
+        "with_dpr": 0,
+        "missing_dpr": 4
+      }
+    },
+    {
+      "ts": "2026-10-13T18:52:58.134Z",
+      "decision": "e0c55e3e-5bdb-459b-9a42-3249788133e5",
+      "floor": 36,
+      "label": "reward/card",
+      "reason": "below_minimum_samples",
+      "source": {
+        "offset": 1282559823,
+        "length": 36728,
+        "sha256": "d74bcb0d8d4fa90adfc41ccd89b7b09079484bc2c64e5e958ef316cc50239575"
+      },
+      "diagnostics": {
+        "schema": "build-sim-health-v1",
+        "status": "failed",
+        "availableCpus": 32,
+        "loadAverage": [
+          5.66,
+          11.6,
+          15.17
+        ],
+        "decks": 4,
+        "options": 4,
+        "deckCards": 34,
+        "deadlineMs": 10894.786890000105,
+        "orderSearch": {
+          "samples": 68,
+          "elapsedMs": 2723,
+          "timedOut": true,
+          "workers": 24,
+          "deadlineMs": 2723.696722500026,
+          "pool": {
+            "queueMs": 0,
+            "coldStart": false,
+            "preparationMs": 0,
+            "firstReplyMs": 1170,
+            "chunksPlanned": 39,
+            "chunksDispatched": 39,
+            "chunksCompleted": 29,
+            "outcomesCompleted": 220
+          }
+        },
+        "comparison": {
+          "samples": 224,
+          "elapsedMs": 8170,
+          "timedOut": true,
+          "workers": 24,
+          "deadlineMs": 8170.084027000237,
+          "pool": {
+            "queueMs": 0,
+            "coldStart": false,
+            "preparationMs": 1,
+            "firstReplyMs": 665,
+            "chunksPlanned": 500,
+            "chunksDispatched": 138,
+            "chunksCompleted": 114,
+            "outcomesCompleted": 912
+          }
+        },
+        "boss": "QUEEN",
+        "samples": 224,
+        "requested": 1000,
+        "minimumShown": 300,
+        "timedOut": true,
+        "simMs": 10979,
+        "workers": 24,
+        "reason": "below_minimum_samples"
+      },
+      "error": "只跑完 224 次模拟（不足 300 次），选项之间的差噪声太大，不给数字",
+      "candidates": {
+        "observed": 4,
+        "unsupported": 0,
+        "with_dpr": 0,
+        "missing_dpr": 4
+      }
+    }
+  ],
+  "original_b3": {
+    "attempts": 30,
+    "skipped": 2,
+    "produced_dpr": 24,
+    "coverage": 0.8,
+    "failures": {
+      "below_minimum_samples": 5
+    },
+    "unsupported": 1,
+    "applicable_attempts": 29,
+    "unsupported_only": 1,
+    "candidates": {
+      "observed": 246,
+      "unsupported": 47,
+      "with_dpr": 142,
+      "missing_dpr": 57
+    },
+    "applicable_coverage": 0.8275862068965517,
+    "longest_failure_streak": 3,
+    "trailing_failure_streak": 3,
+    "paired_samples_min": 136,
+    "ms_max": 11377
+  },
+  "original_brain": {
+    "observed_questions": 32,
+    "questions_with_dpr": 24,
+    "accepted_with_dpr": 24,
+    "decision_use": "unknown; delivery is not evidence of reasoning or a fixed DPR weight"
+  },
+  "phase_summary": "Five warm comparison phases timed out with 216/264/136/192/224 paired samples; last three applicable questions remain below 300. Last two order search phases also time out at 56/68 samples.",
+  "new_deployed_candidate_diagnostics_actual": true,
+  "decision_vs_candidate_denominators_distinct": true,
+  "candidate_missing_57_does_not_mean_57_failed_questions": true,
+  "whole_historical_log_coverage_complete": false,
+  "per_run_decision_complete": true,
+  "existing_chain": "v5-dpr-health-20261013 / c4c79ad26 / ordinary fix queue",
+  "current_original_owner": "20261014-021302-fix-batch PID1479897; frozen original input not hot-replaced",
+  "budgets_unchanged": {
+    "minimum": 300,
+    "requested": 1000,
+    "deadline_ms": 11000,
+    "maximum_workers": 24
+  },
+  "performance_not_fixed_or_new_learning_dispatched": true,
+  "no_game_restart_or_rule_change_for_health": true
+}
