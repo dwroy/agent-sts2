@@ -476,25 +476,35 @@ def cmd_request_merge(args):
 
 def cmd_recheck(args):
     batch_id, separator, continuation = args.batch.partition(":")
-    if separator and not re.fullmatch(r"[0-9a-f]{64}", continuation):
+
+    def refused(reason, **details):
+        # Preserve the refusal and its binding without changing ownership or starting checks.
+        print(json.dumps({"batch": batch_id, "continuation": continuation if separator else None,
+                          "rc": 2, "state": "refused", "reason": reason, **details}, ensure_ascii=False))
         return 2
+
+    if separator and not re.fullmatch(r"[0-9a-f]{64}", continuation):
+        return refused("invalid-continuation")
     args.batch = batch_id
     if not re.fullmatch(r"[0-9]{8}-[0-9]{6}-(experience-update|fix-batch|strategy-proposal)|[0-9]{8}-[0-9]{6}-s2-strategy-proposal", args.batch):
-        return 2
+        return refused("invalid-batch")
     # Per-batch checks serialize duplicate requests without blocking unrelated dispatch or completion.
     with open(os.path.join(DIR, args.batch + ".checks.lock"), "a") as checks_lock:
         try:
             fcntl.flock(checks_lock, fcntl.LOCK_EX | (fcntl.LOCK_NB if separator else 0))
         except BlockingIOError:
-            return 2
+            return refused("checks-lock-busy")
         with state_lock():
             state = load_state()
             batch = state["batches"].get(args.batch)
-            if not batch or batch.get("state") == "running":
-                return 2
-            if separator and any(other.get("state") == "running" and other.get("worktree") == batch.get("worktree")
-                                 for other in state["batches"].values()):
-                return 2
+            if not batch:
+                return refused("unknown-batch")
+            if batch.get("state") == "running":
+                return refused("batch-running")
+            owners = sorted(ident for ident, other in state["batches"].items()
+                            if other.get("state") == "running" and other.get("worktree") == batch.get("worktree")) if separator else []
+            if separator and owners:
+                return refused("active-worktree-owner", owners=owners)
         result = recheck_write_batch(args.batch, batch, ROOT, os.path.join(DIR, "learner"), enqueue, inbox,
                                     **({"continuation": continuation} if separator else {}))
         # Reload after the expensive checks: other jobs may have updated the scheduler meanwhile.
@@ -502,10 +512,10 @@ def cmd_recheck(args):
             state = load_state()
             current = state["batches"].get(args.batch)
             if current is None:
-                return 2
+                return refused("batch-disappeared")
             if separator:
                 if any(current.get(key) != batch.get(key) for key in ("task", "worktree", "state")):
-                    return 2
+                    return refused("batch-identity-changed")
                 if "check_supplements" in batch:
                     current["check_supplements"] = batch["check_supplements"]
                 save_state(state)
