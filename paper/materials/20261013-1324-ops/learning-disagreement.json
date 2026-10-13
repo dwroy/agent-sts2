@@ -1,0 +1,33 @@
+{
+  "batch": "20261013-123857-strategy-proposal",
+  "proposal_id": "silent-proposal-578e415a259e6835",
+  "original_proposal": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261007-173847-experience-update/proposal-mechanisms-sl-resources.md",
+  "original_proposal_sha256": "e13a77ede19196a05647125bcb3c4481ed36ddf98e9e7e2889817f10c9fa190a",
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261013-123857/learner/runs/20261013-123911-strategy-proposal/report.md",
+  "question": {
+    "topic": "原提案金刚杵经验与覆甲账本链接冲突",
+    "proposal_id": "silent-proposal-578e415a259e6835",
+    "original_view": "原Markdown将silent-vajra-opening-strength映射到silent-0016，并有8JRE F33 T11力量补证。",
+    "different_conclusion": "silent-0016当前claim是护喉甲覆甲，不能把金刚杵力量帧算成该claim的支持；静默金刚杵对应的既有claim为silent-0049。",
+    "evidence": "原提案SHA e13a77ede19196a05647125bcb3c4481ed36ddf98e9e7e2889817f10c9fa190a；ledger-before.json的0016及vajra-ledger-lookup.json的0049；8JRE states 276433力量1。",
+    "affected_experience_ids": [
+      "silent-vajra-opening-strength"
+    ],
+    "next_step": "请ops沿原链核实关联并转交watcher→Roy；保留0016的覆甲claim、原提案及原历史，不能由本批改写或代填通知ACK。",
+    "delivery_status": "报告与CLI账本备注待ops处理；未声称ops_forwarded/watcher_received/roy_notified。"
+  },
+  "current_claims": {
+    "silent-0016": {
+      "claim": "护喉甲的开场覆甲不能当作整场固定格挡。机制：本局开场PLATING_POWER=4，后段已无覆甲；只观察到层数耗尽，未验证完整减层条件。搭配：覆甲层数、灵动步法的敏捷与卡牌格挡分别记录，后段使用实际层数。决定胜负的战斗：A0沙虫末回合已无覆甲，仍缺生存量（n=1）。典型案例：C48LLXBGKXQ9 F33第6次T1覆甲4、T5已消失，T11只有卡牌格挡26，2血对32伤害死亡。",
+      "kind": "mechanic",
+      "first_run": "C48LLXBGKXQ9"
+    },
+    "silent-0049": {
+      "claim": "金刚杵在已观察战斗开场提供1力量，增伤按随后实际攻击段数兑现，不提供格挡。机制：无其他修正时打击6→7、冲刺10→11；力量可被族母每次削2，初始1不足抵消两次灵魂吸取。搭配：多段放大每点力量，持续毒与防御独立计算，不能把增伤来源等同整战战力。决定胜负的战斗：A0/A1各一局见开场1力，实验体与族母均有败线，未隔离遗物胜因（n=2）。典型案例：R0HEV5E3QT6G F12开场1力，F48/2非凡技艺再1→3；E6AVMMVCSRPC F13 T3打击实7、冲刺实11，F17 T6/T10后1→−1→−3，末线仍败。",
+      "kind": "mechanic",
+      "first_run": "R0HEV5E3QT6G"
+    }
+  },
+  "confirmed_scope": "provenance link discrepancy; no new gameplay conclusion",
+  "suggested_next_step": "Original experience/proposal chain should reconcile the link using own role evidence, retaining both claims, old Markdown/SHA and history. No duplicate study or current batch redispatch."
+}

@@ -1,0 +1,3 @@
+1324四事件闭环：两项完整检查按上一轮精确树和原日志SHA去重；123857主/s2各10项waiting，原46条CLI备注归档，无新源码/合入/版本/补测/论文导出。
+
+主批学习者质疑原金刚杵力量经验误连silent-0016覆甲；ops核原Markdown SHA未变及0016/0049两claim确有差异，仅核来源关联、不编机制或覆写旧知识。原notify将异议原文、证据、差异和下一步真实转发双inbox，并已向原watcher wJ:pJT提交。正式notice b07c96b10b1facb9f887a710，前一手工通知ID只是同内容别名；不新增学习父要求或重派当前批。watcher_received/roy_notified等待实际角色回执，不拿Herdr已提交当用户已知。普通提案未注册experience-live父要求，现learning_requests.py ack的父registry限制已明示watcher，后续用真实分角色回执归档，不能为通知伪造研究注册。原调度器按同通知重提，原学习/对局保持。
