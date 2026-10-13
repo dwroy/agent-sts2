@@ -1,0 +1,9 @@
+First folded before/after assertion failed:
+AssertionError: ('silent-0020', 'evidence')
+
+Correction: concurrent learner evidence appends are retained. Verify this batch's physical CLI rows and record concurrent folded differences separately.
+
+First physical-row assertion failed:
+AssertionError
+
+Correction: note-only indexing collided across ledger IDs with the same linked proposals. Use (id, note). The existing 30 CLI rows were verified; the mutation was not repeated.

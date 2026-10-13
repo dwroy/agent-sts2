@@ -1,0 +1,381 @@
+{
+  "at": "2026-10-13T09:51:57+08:00",
+  "run_id": "YZQEEDWQ6AY6",
+  "result": {
+    "task": "postmortem",
+    "appended": [
+      "YZQEEDWQ6AY6"
+    ],
+    "skipped": [],
+    "bugs": [],
+    "ledger": {
+      "added": [],
+      "updated": [
+        "silent-0021",
+        "silent-0062",
+        "silent-0161",
+        "silent-0031",
+        "silent-0017",
+        "silent-0276",
+        "silent-0046",
+        "silent-0065",
+        "silent-0115",
+        "silent-0020"
+      ],
+      "repeats": [],
+      "check": 0
+    },
+    "code_proposals": [
+      "silent-proposal-76b458a98c278ddd",
+      "silent-proposal-dca9c86c7b27cfff"
+    ],
+    "implementation_domains": [
+      "combat",
+      "potion",
+      "sl",
+      "terminal"
+    ],
+    "report": "/home/dw/Projects/agent-sts2/learner/runs/20261013-091302-postmortem/report.md"
+  },
+  "source_records": 2191,
+  "counts": {
+    "decisions": 953,
+    "states": 971,
+    "run-plans": 5,
+    "sl-attempts": 7,
+    "brain": 33,
+    "jev-prompts": 220,
+    "run-config": 1,
+    "runs": 1
+  },
+  "append_receipt": {
+    "old_prefix_bytes": 7959508,
+    "old_prefix_sha256": "6545495d1783e3786f1bfd14e2b8c3869902049a631e54700af7ac0d609eb90b",
+    "appended_bytes": 21073,
+    "appended_sha256": "7d3d32fe4e5d430a8a5e109a848e2be658c8d08507112431f869d544b1942ca8",
+    "title_count": 1
+  },
+  "draft_bytes": 21073,
+  "draft_sha256": "7d3d32fe4e5d430a8a5e109a848e2be658c8d08507112431f869d544b1942ca8",
+  "erratum_sha256": "03a336264a7e5ce9278e57ae0c73142a91ee5173674769ed18f8c54d5da8d578",
+  "old_prefix_unchanged_and_unique_title": true,
+  "run": {
+    "run_id": "YZQEEDWQ6AY6",
+    "ended": "2026-10-13T01:09:40.803Z",
+    "victory": false,
+    "floor": 33,
+    "character": "SILENT",
+    "ascension": 10,
+    "code": "current",
+    "decisions": 953,
+    "jev_calls": 220,
+    "deepseek_calls": 33,
+    "claude_calls": 0,
+    "tokens": 2417584,
+    "ds_tokens_in": 4876553,
+    "ds_tokens_out": 30952,
+    "ds_cache_hit": 2859648,
+    "deciders": {
+      "codex": 43,
+      "code": 370,
+      "jev": 220,
+      "jev-plan": 320
+    },
+    "death_fight": [
+      "火箭",
+      "碾碎爪"
+    ],
+    "death_fight_floor": 33,
+    "death_enemy_ids": [
+      "CRUSHER",
+      "ROCKET"
+    ]
+  },
+  "config_identity": {
+    "run_id": "YZQEEDWQ6AY6",
+    "character": "SILENT",
+    "ascension": 10,
+    "code": {
+      "commit": "4192688e8f9edc9eaa3c37a7928ec951216ccc6e",
+      "code": "4192688+dirty",
+      "dirty": true,
+      "dirty_files": [
+        "knowledge/characters/silent/boss-damage.json",
+        "knowledge/characters/silent/monster-records.json",
+        "knowledge/characters/silent/outcome-stats.json",
+        "knowledge/characters/silent/room-costs.json",
+        "knowledge/common/card-upgrades.json",
+        "knowledge/common/monster-db.json",
+        "knowledge/common/move-model.json",
+        "notes/fight-value-backtest-silent.md",
+        "notes/monster-db-check.md"
+      ],
+      "branch": "live",
+      "worktree": "live"
+    },
+    "target_ascension": 11,
+    "target_ascension_mode": "climb",
+    "ts": "2026-10-13T00:07:58.802Z"
+  },
+  "native_answer_identity": [
+    {
+      "engine": "codex",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "accepted": true
+    },
+    {
+      "engine": "codex",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "accepted": true
+    },
+    {
+      "engine": "codex",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "accepted": true
+    },
+    {
+      "engine": "codex",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "accepted": true
+    },
+    {
+      "engine": "codex",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "accepted": true
+    },
+    {
+      "engine": "codex",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "accepted": true
+    },
+    {
+      "engine": "codex",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "accepted": true
+    },
+    {
+      "engine": "codex",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "accepted": true
+    },
+    {
+      "engine": "codex",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "accepted": true
+    },
+    {
+      "engine": "codex",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "accepted": true
+    },
+    {
+      "engine": "codex",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "accepted": true
+    },
+    {
+      "engine": "codex",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "accepted": true
+    },
+    {
+      "engine": "codex",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "accepted": true
+    },
+    {
+      "engine": "codex",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "accepted": true
+    },
+    {
+      "engine": "codex",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "accepted": true
+    },
+    {
+      "engine": "codex",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "accepted": true
+    },
+    {
+      "engine": "codex",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "accepted": true
+    },
+    {
+      "engine": "codex",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "accepted": true
+    },
+    {
+      "engine": "codex",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "accepted": true
+    },
+    {
+      "engine": "codex",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "accepted": true
+    },
+    {
+      "engine": "codex",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "accepted": true
+    },
+    {
+      "engine": "codex",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "accepted": true
+    },
+    {
+      "engine": "codex",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "accepted": true
+    },
+    {
+      "engine": "codex",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "accepted": true
+    },
+    {
+      "engine": "codex",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "accepted": true
+    },
+    {
+      "engine": "codex",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "accepted": true
+    },
+    {
+      "engine": "codex",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "accepted": true
+    },
+    {
+      "engine": "codex",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "accepted": true
+    },
+    {
+      "engine": "codex",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "accepted": true
+    },
+    {
+      "engine": "codex",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "accepted": true
+    },
+    {
+      "engine": "codex",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "accepted": true
+    },
+    {
+      "engine": "codex",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "accepted": true
+    },
+    {
+      "engine": "codex",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "accepted": true
+    }
+  ],
+  "proposal_bindings": [
+    {
+      "op": "add",
+      "id": "silent-proposal-76b458a98c278ddd",
+      "ts": "2026-10-13T09:36:49+08:00",
+      "character": "silent",
+      "ledger": [
+        "silent-0021",
+        "silent-0161",
+        "silent-0031",
+        "silent-0046",
+        "silent-0065",
+        "silent-0020"
+      ],
+      "runs": [
+        "YZQEEDWQ6AY6"
+      ],
+      "source_task": "postmortem",
+      "target_task": "strategy-proposal",
+      "domains": [
+        "combat",
+        "terminal"
+      ],
+      "summary": "核验A10帝王蟹双体退场、蟹之怒、临时减力恢复与低血限损；失败不证明新终局排序能赢，缺对照保留现行行为。",
+      "proposal": "/home/dw/Projects/agent-sts2/learner/runs/20261013-091302-postmortem/proposal-crab-terminal.md",
+      "rule_changes": true,
+      "authorization": "Roy-2026-10-07-learning",
+      "proposal_sha256": "61f8b10c7d01beba95ebefe4538754a5a757c0389d129b7b9b00e978a8188f78",
+      "state": "pending"
+    },
+    {
+      "op": "add",
+      "id": "silent-proposal-dca9c86c7b27cfff",
+      "ts": "2026-10-13T09:38:09+08:00",
+      "character": "silent",
+      "ledger": [
+        "silent-0062",
+        "silent-0115",
+        "silent-0276",
+        "silent-0017"
+      ],
+      "runs": [
+        "YZQEEDWQ6AY6"
+      ],
+      "source_task": "postmortem",
+      "target_task": "strategy-proposal",
+      "domains": [
+        "combat",
+        "potion",
+        "sl"
+      ],
+      "summary": "核验A10 SL省防御的当轮血价和佩尔之泪后继能量，读回癫狂免费冲刺及技能重放真实前缀；不据单局改饮药阈值。",
+      "proposal": "/home/dw/Projects/agent-sts2/learner/runs/20261013-091302-postmortem/proposal-sl-energy-potion.md",
+      "rule_changes": true,
+      "authorization": "Roy-2026-10-07-learning",
+      "proposal_sha256": "e75a9178cce9588f92e64ca5598bbc334f3bed359622707dcf3a93a66aa14a90",
+      "state": "pending"
+    }
+  ],
+  "no_new_pure_bug_or_ops_game_knowledge": true,
+  "no_implemented_or_live_claim": true
+}

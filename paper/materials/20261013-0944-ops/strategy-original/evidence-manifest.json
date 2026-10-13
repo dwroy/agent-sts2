@@ -1,0 +1,104 @@
+{
+  "decisions": {
+    "source": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+    "initial_size": 1168595370,
+    "start_offset": 0,
+    "stop_offset": 1168595370,
+    "counts": {
+      "CA5KE8GFJ9X2": 265,
+      "5PM6JAQG6FNQ": 638,
+      "DUZUBAJ3A8GP": 602,
+      "8JRE1C4H4Z2W": 659,
+      "YF0LXT1QSTGG": 1065,
+      "XP2SL33HT0D9": 712
+    }
+  },
+  "states": {
+    "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+    "initial_size": 12123668041,
+    "start_offset": 8401613734,
+    "stop_offset": 12123668041,
+    "counts": {
+      "CA5KE8GFJ9X2": 282,
+      "5PM6JAQG6FNQ": 660,
+      "DUZUBAJ3A8GP": 623,
+      "8JRE1C4H4Z2W": 676,
+      "YF0LXT1QSTGG": 1091,
+      "XP2SL33HT0D9": 730
+    }
+  },
+  "sl-attempts": {
+    "source": "/home/dw/Projects/agent-sts2/logs/sl-attempts.jsonl",
+    "initial_size": 35663684,
+    "start_offset": 0,
+    "stop_offset": 35663684,
+    "counts": {
+      "5PM6JAQG6FNQ": 7,
+      "DUZUBAJ3A8GP": 6,
+      "8JRE1C4H4Z2W": 7,
+      "YF0LXT1QSTGG": 11,
+      "XP2SL33HT0D9": 7
+    }
+  },
+  "run-config": {
+    "source": "/home/dw/Projects/agent-sts2/logs/run-config.jsonl",
+    "initial_size": 1530401,
+    "start_offset": 0,
+    "stop_offset": 1530401,
+    "counts": {
+      "CA5KE8GFJ9X2": 1,
+      "5PM6JAQG6FNQ": 1,
+      "DUZUBAJ3A8GP": 1,
+      "8JRE1C4H4Z2W": 1,
+      "YF0LXT1QSTGG": 1,
+      "XP2SL33HT0D9": 1
+    }
+  },
+  "run-plans": {
+    "source": "/home/dw/Projects/agent-sts2/logs/run-plans.jsonl",
+    "initial_size": 7370488,
+    "start_offset": 0,
+    "stop_offset": 7370488,
+    "counts": {
+      "CA5KE8GFJ9X2": 2,
+      "5PM6JAQG6FNQ": 7,
+      "DUZUBAJ3A8GP": 6,
+      "8JRE1C4H4Z2W": 6,
+      "YF0LXT1QSTGG": 7,
+      "XP2SL33HT0D9": 5
+    }
+  },
+  "observation_coverage": {
+    "DUZUBAJ3A8GP": {
+      "decisions": 602,
+      "states": 623,
+      "unmatched_observed_ts": []
+    },
+    "5PM6JAQG6FNQ": {
+      "decisions": 638,
+      "states": 660,
+      "unmatched_observed_ts": []
+    },
+    "CA5KE8GFJ9X2": {
+      "decisions": 265,
+      "states": 282,
+      "unmatched_observed_ts": []
+    },
+    "8JRE1C4H4Z2W": {
+      "decisions": 659,
+      "states": 676,
+      "unmatched_observed_ts": []
+    },
+    "YF0LXT1QSTGG": {
+      "decisions": 1065,
+      "states": 1091,
+      "unmatched_observed_ts": []
+    },
+    "XP2SL33HT0D9": {
+      "decisions": 712,
+      "states": 730,
+      "unmatched_observed_ts": []
+    }
+  },
+  "collection_correction": "初稿按states.ts对决策observed_ts产生误报；正式按states.observed_ts回连，六局全部决策观测匹配。原初稿保留，不作为游戏缺帧或代码bug。"
+}

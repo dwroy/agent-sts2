@@ -1,0 +1,28 @@
+{
+  "at": "2026-10-13 09:54:03 CST",
+  "batch": "20261013-091302-s2-strategy-proposal",
+  "proposal_id": "silent-proposal-578e415a259e6835",
+  "learner_original_finding": "已有候选阶段快照与单动作回执；缺跨抽弃牌/生成/护栏/SL续问完整执行、能力逐来源兑现和资源恢复链，原金刚杵→0016与现覆甲claim不一致，保留待厘清。",
+  "original_proposal_lines": [
+    "- silent-vajra-opening-strength → silent-0016；支持10局、反例0，适用[0, 20]。"
+  ],
+  "original_ledger_0016_claim": "护喉甲的开场覆甲不能当作整场固定格挡。机制：本局开场PLATING_POWER=4，后段已无覆甲；只观察到层数耗尽，未验证完整减层条件。搭配：覆甲层数、灵动步法的敏捷与卡牌格挡分别记录，后段使用实际层数。决定胜负的战斗：A0沙虫末回合已无覆甲，仍缺生存量（n=1）。典型案例：C48LLXBGKXQ9 F33第6次T1覆甲4、T5已消失，T11只有卡牌格挡26，2血对32伤害死亡。",
+  "evidence": [
+    {
+      "path": ".worktrees/codex-strategy-silent-20261013-091302-s2/learner/runs/20261013-091321-strategy-proposal/report.md",
+      "sha256": "58c64653e3a49ab0657ebb4ddbb9bc549199a609f9c441f106d6b47cdecc963a"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261013-091302-s2/learner/runs/20261013-091321-strategy-proposal/silent-proposal-578e415a259e6835.original.md",
+      "sha256": "e13a77ede19196a05647125bcb3c4481ed36ddf98e9e7e2889817f10c9fa190a"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261013-091302-s2/learner/runs/20261013-091321-strategy-proposal/ledger-before.json",
+      "sha256": "1f55d721b12a848819d58f1b3f19700e7c164f2a7425de9cdd22402670a27c4b"
+    }
+  ],
+  "next_step": "由原提案学习者核旧引用与实际条目身份，保留原文/差异，不由ops修改游戏知识；提案继续waiting。请watcher告知Roy。",
+  "watcher_received": false,
+  "roy_notified": false,
+  "not_new_learning_request_or_dispatch": true
+}
