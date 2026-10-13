@@ -1,0 +1,67 @@
+{
+  "at": "2026-10-13 16:20:03 CST",
+  "batch": "20261013-161302",
+  "original_state": {
+    "runs": [
+      "V4BTVFPS9XHV",
+      "3DW2DM7EY22W",
+      "A4VWQKBVBBMP"
+    ],
+    "pid": 2835041,
+    "started": "2026-10-13 16:13",
+    "state": "failed",
+    "reason": "tick",
+    "character": "silent",
+    "proposal_policy": "Roy-2026-10-07-learning",
+    "pane": "wJ:pV7",
+    "rc": 1,
+    "finished": "2026-10-13 16:13",
+    "done": [],
+    "missing": [
+      "V4BTVFPS9XHV",
+      "3DW2DM7EY22W",
+      "A4VWQKBVBBMP"
+    ],
+    "proposal_audit_errors": [
+      "missing string code_proposals array"
+    ]
+  },
+  "original_run_retry_states": {
+    "V4BTVFPS9XHV": {
+      "attempts": 3,
+      "batch": "20261013-161302"
+    },
+    "3DW2DM7EY22W": {
+      "attempts": 2,
+      "batch": "20261013-161302",
+      "retry_at": 1791882804.107869
+    },
+    "A4VWQKBVBBMP": {
+      "attempts": 1,
+      "batch": "20261013-161302",
+      "retry_at": 1791882804.1078737
+    }
+  },
+  "native_thread": "01a13452-8659-75b3-a90c-153f78cdabe2",
+  "phase": "thread started; turn failed at selected model capacity before tools",
+  "original_error": "Selected model is at capacity. Please try a different model.",
+  "original_exit": 1,
+  "tool_calls": {},
+  "no_complete_result_or_postmortem": true,
+  "not_account_quota_or_login_error": true,
+  "original_pending_empty_repair": {
+    "character": "silent",
+    "runs": [],
+    "state": "pending",
+    "reason": "postmortem proposal link audit failed"
+  },
+  "empty_runs_repair_dispatch_skipped": true,
+  "exhausted_automatic_max_3_runs": [
+    "V4BTVFPS9XHV"
+  ],
+  "remaining_original_cooldown_runs": [
+    "3DW2DM7EY22W",
+    "A4VWQKBVBBMP"
+  ],
+  "no_attempt_reset_manual_redispatch_model_or_account_change": true
+}
