@@ -1,0 +1,182 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-154301/agent
+
+ ❯ tests/prior-delivery-proofs.test.ts (1 test | 1 failed) 179ms
+   × rechecks immutable prior delivery proofs before ordinary ACKs and registered completion 178ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/prior-delivery-proofs.test.ts > rechecks immutable prior delivery proofs before ordinary ACKs and registered completion
+AssertionError: FFFFFFFFFFFF.
+======================================================================
+FAIL: test_changed_previous_receipt_or_delivery_bytes_are_rejected_before_persistence (__main__.PriorDeliveryProofs.test_changed_previous_receipt_or_delivery_bytes_are_rejected_before_persistence) (registered=False, filename='ops_forwarded.receipt.json')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-154301/agent/../ops/tests/test_prior_delivery_proofs.py", line 41, in test_changed_previous_receipt_or_delivery_bytes_are_rejected_before_persistence
+    self.reject_unchanged('watcher_received')
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-154301/agent/../ops/tests/test_prior_delivery_proofs.py", line 31, in reject_unchanged
+    with self.assertRaises(SystemExit):
+         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+AssertionError: SystemExit not raised
+
+======================================================================
+FAIL: test_changed_previous_receipt_or_delivery_bytes_are_rejected_before_persistence (__main__.PriorDeliveryProofs.test_changed_previous_receipt_or_delivery_bytes_are_rejected_before_persistence) (registered=False, filename='ops_forwarded.delivery.json')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-154301/agent/../ops/tests/test_prior_delivery_proofs.py", line 41, in test_changed_previous_receipt_or_delivery_bytes_are_rejected_before_persistence
+    self.reject_unchanged('watcher_received')
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-154301/agent/../ops/tests/test_prior_delivery_proofs.py", line 31, in reject_unchanged
+    with self.assertRaises(SystemExit):
+         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+AssertionError: SystemExit not raised
+
+======================================================================
+FAIL: test_changed_previous_receipt_or_delivery_bytes_are_rejected_before_persistence (__main__.PriorDeliveryProofs.test_changed_previous_receipt_or_delivery_bytes_are_rejected_before_persistence) (registered=True, filename='ops_forwarded.receipt.json')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-154301/agent/../ops/tests/test_prior_delivery_proofs.py", line 41, in test_changed_previous_receipt_or_delivery_bytes_are_rejected_before_persistence
+    self.reject_unchanged('watcher_received')
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-154301/agent/../ops/tests/test_prior_delivery_proofs.py", line 31, in reject_unchanged
+    with self.assertRaises(SystemExit):
+         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+AssertionError: SystemExit not raised
+
+======================================================================
+FAIL: test_changed_previous_receipt_or_delivery_bytes_are_rejected_before_persistence (__main__.PriorDeliveryProofs.test_changed_previous_receipt_or_delivery_bytes_are_rejected_before_persistence) (registered=True, filename='ops_forwarded.delivery.json')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-154301/agent/../ops/tests/test_prior_delivery_proofs.py", line 41, in test_changed_previous_receipt_or_delivery_bytes_are_rejected_before_persistence
+    self.reject_unchanged('watcher_received')
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-154301/agent/../ops/tests/test_prior_delivery_proofs.py", line 31, in reject_unchanged
+    with self.assertRaises(SystemExit):
+         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+AssertionError: SystemExit not raised
+
+======================================================================
+FAIL: test_correct_sha_does_not_authorize_a_forged_previous_actor_or_stage (__main__.PriorDeliveryProofs.test_correct_sha_does_not_authorize_a_forged_previous_actor_or_stage) (key='actor')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-154301/agent/../ops/tests/test_prior_delivery_proofs.py", line 55, in test_correct_sha_does_not_authorize_a_forged_previous_actor_or_stage
+    self.reject_unchanged('watcher_received')
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-154301/agent/../ops/tests/test_prior_delivery_proofs.py", line 31, in reject_unchanged
+    with self.assertRaises(SystemExit):
+         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+AssertionError: SystemExit not raised
+
+======================================================================
+FAIL: test_correct_sha_does_not_authorize_a_forged_previous_actor_or_stage (__main__.PriorDeliveryProofs.test_correct_sha_does_not_authorize_a_forged_previous_actor_or_stage) (key='stage')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-154301/agent/../ops/tests/test_prior_delivery_proofs.py", line 55, in test_correct_sha_does_not_authorize_a_forged_previous_actor_or_stage
+    self.reject_unchanged('watcher_received')
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-154301/agent/../ops/tests/test_prior_delivery_proofs.py", line 31, in reject_unchanged
+    with self.assertRaises(SystemExit):
+         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+AssertionError: SystemExit not raised
+
+======================================================================
+FAIL: test_correct_sha_does_not_authorize_a_forged_previous_actor_or_stage (__main__.PriorDeliveryProofs.test_correct_sha_does_not_authorize_a_forged_previous_actor_or_stage) (key='notice_id')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-154301/agent/../ops/tests/test_prior_delivery_proofs.py", line 55, in test_correct_sha_does_not_authorize_a_forged_previous_actor_or_stage
+    self.reject_unchanged('watcher_received')
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-154301/agent/../ops/tests/test_prior_delivery_proofs.py", line 31, in reject_unchanged
+    with self.assertRaises(SystemExit):
+         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+AssertionError: SystemExit not raised
+
+======================================================================
+FAIL: test_correct_sha_does_not_authorize_a_forged_previous_actor_or_stage (__main__.PriorDeliveryProofs.test_correct_sha_does_not_authorize_a_forged_previous_actor_or_stage) (key='status')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-154301/agent/../ops/tests/test_prior_delivery_proofs.py", line 55, in test_correct_sha_does_not_authorize_a_forged_previous_actor_or_stage
+    self.reject_unchanged('watcher_received')
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-154301/agent/../ops/tests/test_prior_delivery_proofs.py", line 31, in reject_unchanged
+    with self.assertRaises(SystemExit):
+         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+AssertionError: SystemExit not raised
+
+======================================================================
+FAIL: test_missing_or_malformed_previous_reference_is_rejected_without_writes (__main__.PriorDeliveryProofs.test_missing_or_malformed_previous_reference_is_rejected_without_writes) (ref=True)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-154301/agent/../ops/tests/test_prior_delivery_proofs.py", line 71, in test_missing_or_malformed_previous_reference_is_rejected_without_writes
+    self.reject_unchanged('watcher_received')
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-154301/agent/../ops/tests/test_prior_delivery_proofs.py", line 31, in reject_unchanged
+    with self.assertRaises(SystemExit):
+         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+AssertionError: SystemExit not raised
+
+======================================================================
+FAIL: test_missing_or_malformed_previous_reference_is_rejected_without_writes (__main__.PriorDeliveryProofs.test_missing_or_malformed_previous_reference_is_rejected_without_writes) (ref={'path': 'missing.json', 'sha256': 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'})
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-154301/agent/../ops/tests/test_prior_delivery_proofs.py", line 71, in test_missing_or_malformed_previous_reference_is_rejected_without_writes
+    self.reject_unchanged('watcher_received')
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-154301/agent/../ops/tests/test_prior_delivery_proofs.py", line 31, in reject_unchanged
+    with self.assertRaises(SystemExit):
+         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+AssertionError: SystemExit not raised
+
+======================================================================
+FAIL: test_roy_delivery_rechecks_ops_proof_after_watcher_confirmation (__main__.PriorDeliveryProofs.test_roy_delivery_rechecks_ops_proof_after_watcher_confirmation) (registered=False)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-154301/agent/../ops/tests/test_prior_delivery_proofs.py", line 62, in test_roy_delivery_rechecks_ops_proof_after_watcher_confirmation
+    self.reject_unchanged('roy_notified')
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-154301/agent/../ops/tests/test_prior_delivery_proofs.py", line 31, in reject_unchanged
+    with self.assertRaises(SystemExit):
+         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+AssertionError: SystemExit not raised
+
+======================================================================
+FAIL: test_roy_delivery_rechecks_ops_proof_after_watcher_confirmation (__main__.PriorDeliveryProofs.test_roy_delivery_rechecks_ops_proof_after_watcher_confirmation) (registered=True)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-154301/agent/../ops/tests/test_prior_delivery_proofs.py", line 62, in test_roy_delivery_rechecks_ops_proof_after_watcher_confirmation
+    self.reject_unchanged('roy_notified')
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-154301/agent/../ops/tests/test_prior_delivery_proofs.py", line 31, in reject_unchanged
+    with self.assertRaises(SystemExit):
+         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+AssertionError: SystemExit not raised
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.065s
+
+FAILED (failures=12)
+: expected 1 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 1
+
+ ❯ tests/prior-delivery-proofs.test.ts:8:56
+      6|     encoding: "utf8", timeout: 15_000,
+      7|   });
+      8|   expect(result.status, result.stdout + result.stderr).toBe(0);
+       |                                                        ^
+      9|   expect(result.stderr).toContain("Ran 5 tests");
+     10| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed (1)
+   Start at  16:12:16
+   Duration  603ms (transform 252ms, setup 298ms, import 8ms, tests 179ms, environment 0ms)
+

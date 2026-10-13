@@ -1,0 +1,41 @@
+{
+  "at": "2026-10-13 16:42:50 CST",
+  "batch": "20261013-154301-fix-batch",
+  "sources": [
+    "3fdcd77927f01b35c20c6c5c1fcfd790676032d2",
+    "1594def2e1b65b665d3b345f31444194eb4d09e6"
+  ],
+  "scope": "Only operations classification and notification delivery-proof validation; no gameplay rule/knowledge/model/permission/prompt change",
+  "postmortem_before": "Nonzero failed attempts without a report or written lesson were audited as missing code_proposals and created a pending repair with empty runs.",
+  "postmortem_after": "Skip only absent output on a nonzero failed attempt with no preserved postmortem; retain failed state, each run retry count/cooldown, and audit partial lessons, nonempty reports, and successful output.",
+  "prior_delivery_before": "A stored previous-stage pointer could satisfy ordering without rechecking the immutable previous receipt and its delivery evidence.",
+  "prior_delivery_after": "Before any ACK persistence or registered completion, verify every preceding receipt SHA, notice, stage, delivered status, actor and evidence SHA; malformed types remain rejected without writes.",
+  "source_controls": {
+    "postmortem_withdrawal": "original six-case fixture produced four failures and four errors; original restoration passed six",
+    "prior_delivery_withdrawal": "original five-case fixture produced twelve subtest failures; original restoration passed five"
+  },
+  "source_checks": {
+    "first_tsc": 0,
+    "first_sandbox_files": 363,
+    "first_sandbox_cases": 3498,
+    "second_tsc": 0,
+    "second_sandbox_files": 364,
+    "second_sandbox_cases": 3499,
+    "gitleaks": 0
+  },
+  "main_targeted": {
+    "files": 2,
+    "tests": 2,
+    "rc": 0,
+    "log": "ops/codex-ops/record-staging/20261013-1629/main-targeted.log",
+    "sha256": "a330df3687de28cae57501f83af33ff54fd8752ce7bb29976ca0f68d8a93e333"
+  },
+  "host_full_checks_pending": true,
+  "original_rc0_failed_report_merge_null_and_19_conflicts_preserved": true,
+  "old_capacity_startup_failures_and_attempt_caps_not_rewritten": true,
+  "original_closed_notices_not_resent_or_acknowledgments_invented": true,
+  "existing_b07_ordinary_keyerror_fix_672e198a4_kept": true,
+  "original0230cee37d30ea520a77ec9943ad0e47c0ebdd08_is_reused_content_source": true,
+  "no_release_id_increment": true,
+  "rollback": "Revert the seven-path deployed infrastructure leaf, preserving the original source branches, recorded failures, refresh commit and existing notice delivery receipts."
+}

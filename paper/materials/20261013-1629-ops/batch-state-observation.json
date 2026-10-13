@@ -1,0 +1,87 @@
+{
+  "task": "fix-batch",
+  "character": "silent",
+  "runs": [],
+  "pid": 2750067,
+  "state": "failed",
+  "reason": "tick",
+  "worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-154301",
+  "proposal_policy": "Roy-2026-10-07-learning",
+  "pane": "wJ:pV5",
+  "finished": "2026-10-13 16:20",
+  "rc": 0,
+  "merged": null,
+  "proposal_audit_errors": [],
+  "report": {
+    "task": "fix-batch",
+    "base": "2682b763ac0781302c53502a4ec53042774a7fde",
+    "fixes": [
+      {
+        "item": "postmortem-capacity-failure-proposal-repair-20261013：无回报/无复盘的非零失败不误报缺提案或创建空补链",
+        "commit": "3fdcd77927f01b35c20c6c5c1fcfd790676032d2",
+        "test": "agent/tests/postmortem-failure-audit.test.ts",
+        "fails_without_fix": true
+      },
+      {
+        "item": "learning-notice-ordinary-ack-registry-20261013：复用原补强，核前阶段实际回执与投递证据后再ACK",
+        "commit": "1594def2e1b65b665d3b345f31444194eb4d09e6",
+        "test": "agent/tests/prior-delivery-proofs.test.ts",
+        "fails_without_fix": true
+      }
+    ],
+    "skipped": [
+      {
+        "item": "其余机制、出牌、药水、SL、终局、路线及休息提案",
+        "reason": "策略类，沿既有 strategy-proposal 处理。"
+      },
+      {
+        "item": "silent-0365：未建模定向药水目标截成前两个",
+        "reason": "独立药水/结构提案，已有实现任务承接。"
+      },
+      {
+        "item": "rest-timeout-accepted-route-not-committed（silent-0446，MEXYTC0Z2MQQ F12）",
+        "reason": "太大，原独立结构提案需实现动作确认与一次性提交。"
+      },
+      {
+        "item": "silent-0332：双boss接续资源异常根因",
+        "reason": "证据不足，缺可重放触发样本。"
+      },
+      {
+        "item": "core-build-notify-222802-rc2历史失败恢复",
+        "reason": "证据不足，旧失败无stderr，不能确认未发送。"
+      },
+      {
+        "item": "sandbox-glob-startup-race上游目录竞态",
+        "reason": "证据不足，有界恢复已实现，上游目录创建/删除者未证。"
+      },
+      {
+        "item": "调度公平性、mod短暂超时、既有测试超时的精确宿主时序",
+        "reason": "证据不足，历史因果未核实。"
+      },
+      {
+        "item": "具名卡全入口/未知派发/量化消费者、全漏斗/学习优先级/统一资源价值/F33归因/B4-B5/缓存性能专项",
+        "reason": "太大或独立功能/策略研究，继续原专用任务。"
+      },
+      {
+        "item": "host-loop-time-cap-wall-clock-061301：历史宿主时序及旧补验拒绝根因",
+        "reason": "证据不足；确定性夹具与拒绝诊断已修，历史原因仍未知。"
+      }
+    ],
+    "merged": null,
+    "tests": {
+      "tsc": 0,
+      "vitest": 0,
+      "cases": 3499
+    },
+    "code_proposals": [],
+    "implementation_domains": [],
+    "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-154301/learner/runs/20261013-154336-fix-batch/report.md"
+  },
+  "retry_at": 1791883256.2171376,
+  "dispatch_identity_sha256": "bbf8f551cb1769cf0b65381249b3cf5fd5a361fd59a0760f2218b19c69334034",
+  "raw_original_observation": {
+    "path": "ops/codex-ops/record-staging/20261013-1629/original-batch-state.json",
+    "bytes": 3231,
+    "sha256": "adf5e65f2988f7f2bdd9b044897596ca98fb88d6af69a25afa4aaaa577cf1207"
+  }
+}

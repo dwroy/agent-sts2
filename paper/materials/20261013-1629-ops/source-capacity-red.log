@@ -1,0 +1,131 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-154301/agent
+
+ ❯ tests/postmortem-failure-audit.test.ts (1 test | 1 failed) 187ms
+     × skips absent failure output while auditing preserved lessons and keeping retry limits 186ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/postmortem-failure-audit.test.ts > postmortem failure proposal audit > skips absent failure output while auditing preserved lessons and keeping retry limits
+AssertionError: EFEFFFEE
+======================================================================
+ERROR: test_complete_report_with_valid_empty_links_is_done (__main__.PostmortemCompletionTests.test_complete_report_with_valid_empty_links_is_done)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-154301/agent/../ops/tests/test_postmortem_completion.py", line 100, in test_complete_report_with_valid_empty_links_is_done
+    self.assertFalse(batch["proposal_audit_skipped"])
+                     ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+KeyError: 'proposal_audit_skipped'
+
+======================================================================
+ERROR: test_failed_attempt_with_preserved_partial_postmortem_still_repairs_links (__main__.PostmortemCompletionTests.test_failed_attempt_with_preserved_partial_postmortem_still_repairs_links)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-154301/agent/../ops/tests/test_postmortem_completion.py", line 72, in test_failed_attempt_with_preserved_partial_postmortem_still_repairs_links
+    self.assertFalse(batch["proposal_audit_skipped"])
+                     ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+KeyError: 'proposal_audit_skipped'
+
+======================================================================
+ERROR: test_nonzero_attempt_with_report_still_checks_proposal_contract (__main__.PostmortemCompletionTests.test_nonzero_attempt_with_report_still_checks_proposal_contract)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-154301/agent/../ops/tests/test_postmortem_completion.py", line 83, in test_nonzero_attempt_with_report_still_checks_proposal_contract
+    self.assertFalse(batch["proposal_audit_skipped"])
+                     ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+KeyError: 'proposal_audit_skipped'
+
+======================================================================
+ERROR: test_zero_exit_without_report_does_not_bypass_audit (__main__.PostmortemCompletionTests.test_zero_exit_without_report_does_not_bypass_audit)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-154301/agent/../ops/tests/test_postmortem_completion.py", line 91, in test_zero_exit_without_report_does_not_bypass_audit
+    self.assertFalse(batch["proposal_audit_skipped"])
+                     ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+KeyError: 'proposal_audit_skipped'
+
+======================================================================
+FAIL: test_exhausted_failed_attempt_keeps_original_retry_limit (__main__.PostmortemCompletionTests.test_exhausted_failed_attempt_keeps_original_retry_limit)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-154301/agent/../ops/tests/test_postmortem_completion.py", line 66, in test_exhausted_failed_attempt_keeps_original_retry_limit
+    self.assertNotIn("proposal_repairs", state)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'proposal_repairs' unexpectedly found in {'batches': {'20261013-144301': {'state': 'failed', 'character': 'silent', 'runs': ['V4BTVFPS9XHV', '3DW2DM7EY22W'], 'proposal_policy': 'Roy-2026-10-07-learning', 'rc': 1, 'finished': 'fixed-completion', 'done': [], 'missing': ['V4BTVFPS9XHV', '3DW2DM7EY22W'], 'proposal_audit_errors': ['missing string code_proposals array']}, 'old-failure': {'state': 'failed', 'rc': 1, 'proposal_audit_errors': ['missing string code_proposals array']}}, 'runs': {'V4BTVFPS9XHV': {'attempts': 3}, '3DW2DM7EY22W': {'attempts': 3}}, 'proposal_repairs': {'20261013-144301': {'character': 'silent', 'runs': [], 'state': 'pending', 'reason': 'postmortem proposal link audit failed'}}}
+
+======================================================================
+FAIL: test_failed_attempt_without_output_does_not_create_proposal_repair (__main__.PostmortemCompletionTests.test_failed_attempt_without_output_does_not_create_proposal_repair) (rc=1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-154301/agent/../ops/tests/test_postmortem_completion.py", line 54, in test_failed_attempt_without_output_does_not_create_proposal_repair
+    self.assertEqual(batch["proposal_audit_errors"], [])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: ['missing string code_proposals array'] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+'missing string code_proposals array'
+
+- ['missing string code_proposals array']
++ []
+
+======================================================================
+FAIL: test_failed_attempt_without_output_does_not_create_proposal_repair (__main__.PostmortemCompletionTests.test_failed_attempt_without_output_does_not_create_proposal_repair) (rc=3)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-154301/agent/../ops/tests/test_postmortem_completion.py", line 54, in test_failed_attempt_without_output_does_not_create_proposal_repair
+    self.assertEqual(batch["proposal_audit_errors"], [])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: ['missing string code_proposals array'] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+'missing string code_proposals array'
+
+- ['missing string code_proposals array']
++ []
+
+======================================================================
+FAIL: test_failed_attempt_without_output_does_not_create_proposal_repair (__main__.PostmortemCompletionTests.test_failed_attempt_without_output_does_not_create_proposal_repair) (rc=124)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-154301/agent/../ops/tests/test_postmortem_completion.py", line 54, in test_failed_attempt_without_output_does_not_create_proposal_repair
+    self.assertEqual(batch["proposal_audit_errors"], [])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: ['missing string code_proposals array'] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+'missing string code_proposals array'
+
+- ['missing string code_proposals array']
++ []
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.025s
+
+FAILED (failures=4, errors=4)
+: expected 1 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 1
+
+ ❯ tests/postmortem-failure-audit.test.ts:9:58
+      7|       encoding: "utf8", timeout: 15000,
+      8|     });
+      9|     expect(result.status, result.stdout + result.stderr).toBe(0);
+       |                                                          ^
+     10|     expect(result.stderr).toContain("Ran 6 tests");
+     11|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed (1)
+   Start at  15:51:37
+   Duration  632ms (transform 261ms, setup 305ms, import 10ms, tests 187ms, environment 0ms)
+
