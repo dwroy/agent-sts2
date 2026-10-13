@@ -1,0 +1,41 @@
+[
+  {
+    "stage": "queue-initial",
+    "reason": "初次仅保留末行update而非原生fold，完整proposals.json已更正；不得用初读字段判断原提案身份。"
+  },
+  {
+    "stage": "source-locator-initial",
+    "exit": 2,
+    "reason": "尝试agent/src/sim/rollout.ts与rollout-live.ts不存在；后续须按rg --files定位，不把定位失败视为生产缺陷。"
+  },
+  {
+    "stage": "source-locator-loop",
+    "exit": 2,
+    "reason": "agent/src/loop.ts不存在；调用实际在agent/src/hand/loop.ts。"
+  },
+  {
+    "stage": "evidence-validator-1",
+    "exit": 1,
+    "reason": "端点切片未含TXZ T7，改从完整冻结状态找下一轮，原脚本/日志保留。"
+  },
+  {
+    "stage": "evidence-validator-2",
+    "exit": 1,
+    "reason": "注释分类漏行末注释，原脚本/日志保留。"
+  },
+  {
+    "stage": "evidence-validator-3",
+    "exit": 1,
+    "reason": "注释分类漏单行块注释，原脚本/日志保留。"
+  },
+  {
+    "stage": "evidence-validator-final",
+    "exit": 0,
+    "reason": "30项证据算术与17相关文件逐改行注释判别通过，不计生产测试。"
+  },
+  {
+    "stage": "final-receipt-initial",
+    "exit": 1,
+    "reason": "误要求CLI输出31物理行；实际原CLI一行返回31个id，随后按原31追加行与id逐项核验，不重复CLI。"
+  }
+]
