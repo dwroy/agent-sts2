@@ -1,6 +1,7 @@
 /** A model outage suspends the current question, never the game's saved run. */
 import { appendFileSync, existsSync, mkdirSync, renameSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
+import { appendJsonLine } from "../core/util/jsonl.js";
 import type { BrainRequest } from "./types.js";
 
 export type WaitState = "paused" | "heartbeat" | "resumed" | "cancelled" | "fault";
@@ -141,7 +142,7 @@ export function fileBrainWait(logDir: string, opsDir: string, options: BrainWait
       const temp = `${marker}.${process.pid}.tmp`;
       writeFileSync(temp, JSON.stringify(event) + "\n");
       renameSync(temp, marker);
-      appendFileSync(timeline, JSON.stringify(event) + "\n");
+      appendJsonLine(timeline, event);
       options.event?.(event);
     },
     notify: (event) => {

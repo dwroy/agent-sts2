@@ -27,8 +27,9 @@
 
 import { execFileSync } from "node:child_process";
 import { createHash } from "node:crypto";
-import { appendFileSync, closeSync, existsSync, mkdirSync, openSync, readSync, statSync } from "node:fs";
+import { closeSync, existsSync, mkdirSync, openSync, readSync, statSync } from "node:fs";
 import { basename, dirname, join } from "node:path";
+import { appendJsonLine } from "../core/util/jsonl.js";
 
 import type { Brain } from "../brain/brain.js";
 import { KNOWLEDGE_DIR } from "../brain/brain.js";
@@ -566,7 +567,7 @@ export class RunConfigLog {
         mkdirSync(dirname(this.path), { recursive: true });
         this.ready = true;
       }
-      appendFileSync(this.path, `${text}\n`, "utf8");
+      appendJsonLine(this.path, row);
       return row;
     } catch (error) {
       this.opts.note?.(`run ${runId}: run configuration not written: ${error instanceof Error ? error.message : String(error)}`.slice(0, 300));
