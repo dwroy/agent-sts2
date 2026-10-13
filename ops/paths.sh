@@ -6,3 +6,9 @@ LOGS="$ROOT/logs"
 DATA="$ROOT/data"
 NOTES="$ROOT/notes"
 LIVE="${STS2_LIVE:-$ROOT/.worktrees/live}"
+# Reload at each action/run boundary; an existing controller keeps its original environment.
+if [ -f "$ROOT/ops/instance-binding.json" ]; then
+  instance_exports=$(python3 "$OPS/instance_env.py" "$ROOT/ops/instance-binding.json") || exit 78
+  eval "$instance_exports"
+  unset instance_exports
+fi

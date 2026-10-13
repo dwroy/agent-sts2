@@ -5,6 +5,7 @@ import type { Effort, EngineName } from "../brain/types.js";
 import { fromRoot } from "./paths.js";
 import { characterKey, DEFAULT_CHARACTER, KNOWLEDGE_DIR, knowledgeFile } from "../knowledge/files.js";
 import type { InstanceBinding } from "../hand/mod/instance.js";
+import { sharedJevSettings } from "./jev-settings.js";
 /**
  * Configuration: environment variables overridden by CLI flags (PLAN.md §9).
  *
@@ -1029,6 +1030,13 @@ function pick(overrides: ConfigOverrides, env: NodeJS.ProcessEnv, key: keyof Con
 export function loadConfig(env: NodeJS.ProcessEnv = process.env, overrides: ConfigOverrides = {}): AppConfig {
   const problems: ConfigProblem[] = [];
   const warnings: string[] = [];
+  if (env["JEV_SHARED_ENV_FILE"]) {
+    try {
+      env = { ...sharedJevSettings(env["JEV_SHARED_ENV_FILE"]), ...env };
+    } catch {
+      problems.push({ field: "JEV_SHARED_ENV_FILE", message: "shared Jev credential reference is unreadable" });
+    }
+  }
 
   const baseUrl = parseUrl(
     pick(overrides, env, "sts2BaseUrl", "STS2_BASE_URL") ?? DEFAULTS.sts2BaseUrl,
