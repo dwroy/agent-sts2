@@ -2724,3 +2724,7 @@
 - 2026-10-13 14:08:38 CST 运维 codex：1407原134302-s2策略批10项均waiting，16条原CLI链接/限制备注按输入及原ts核实归档，claim/status/version保持。原六局的当轮差额/耗药事实不等于其余后继一致的整战、持药净收益或后期独立验证；既有局部诊断不关宽提案/量化父项，缺证待新局。无新增源码/合入/版本/测试；本轮无复盘，不重复论文导出、不重派旧任务或修改对局。 报告及原字节SHA见paper/materials/20261013-1407-ops/original-evidence-manifest.json。
 
 - 2026-10-13 14:19:08 CST 运维 codex：1413同一notice b07c96b10b1facb9f887a710去重。watcher亲自提供registration记录、接收v2和Roy告知两份delivered回执，逐文件/冻结原生可见回复SHA核实，旧可变引用失配已由watcher修复。ops仅按原CLI登记这两份既有确认，未新写或改确认内容；canonical notice三个投递阶段实存指向原文件/SHA，通知闭环。原CLI持久化后仍因普通proposal无父registry各exit1，原失败/普通fix项保持，不假报CLI通过、不造学习父任务或关闭原提案/量化/经验目标。无新研究、重复用户告知、对局/知识/prompt改动或论文导出。 验收paper/materials/20261013-1413-ops/actor-receipts-registration-verification.json。
+
+- 2026-10-13 14:26:47 CST 运维 codex：1421原GD9QSQM0PH8T/134302复盘成功，正文20707字节与原append脚本完全一致、前缀8038686字节SHA保持；新0453、12原support更新、1动作行号追加勘误和4提案链接共18条CLI原行已核，prepared ledger通过。三个原提案cf4f4aa77de6a1fd/2e128ed42206e848/db2d7b5b19c15187沿原strategy链处理，尚未实施；无新增纯bug，不由ops编机制/打法或关闭经验/量化要求。本轮仅一次nice --no-raw导出，同一进程进行中，结束后冻结结果；未重启对局或重派研究。 验收paper/materials/20261013-1421-ops/postmortem-acceptance.json。
+
+- 2026-10-13 14:31:21 CST 运维 codex：1421 GD9本轮仅一次nice --no-raw导出exit0，cut06:21:59.860Z、753局/375398决策/25108标签/3600escalations/5475提交，五一致性、学习曲线/成本及密钥检查通过；旧KF9 879/880决策差异保留。275文件旧dataset及11文件旧成本快照由同次导出保留，不是二次调用，精确冻结564输出。原正文20707字节、18CLI原行和3个机制提案已核；无新纯bug/生产源码/版本，学习发现沿原owner/strategy链，经验入库和量化父目标未假报完成。 验收paper/materials/20261013-1421-ops/paper-dataset-acceptance.json。

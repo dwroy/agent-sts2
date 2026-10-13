@@ -1,0 +1,77 @@
+[
+  {
+    "name": "replan-potion",
+    "exit": 0,
+    "stdout": "silent-proposal-cf4f4aa77de6a1fd\n",
+    "stderr": "",
+    "item": {
+      "character": "silent",
+      "ledger": [
+        "silent-0418"
+      ],
+      "runs": [
+        "GD9QSQM0PH8T"
+      ],
+      "source_task": "postmortem",
+      "target_task": "strategy-proposal",
+      "domains": [
+        "combat",
+        "potion"
+      ],
+      "summary": "静默A10抽牌后撤销原药线须分账实际HP/药栏，并以同起点后继核验用药取舍；本局不足以规定早喝。",
+      "proposal": "/home/dw/Projects/agent-sts2/learner/runs/20261013-134302-postmortem/proposal-replan-potion.md",
+      "rule_changes": true,
+      "authorization": "Roy-2026-10-07-learning"
+    }
+  },
+  {
+    "name": "finite-poison-sl",
+    "exit": 0,
+    "stdout": "silent-proposal-2e128ed42206e848\n",
+    "stderr": "",
+    "item": {
+      "character": "silent",
+      "ledger": [
+        "silent-0385"
+      ],
+      "runs": [
+        "GD9QSQM0PH8T"
+      ],
+      "source_task": "postmortem",
+      "target_task": "strategy-proposal",
+      "domains": [
+        "combat",
+        "sl"
+      ],
+      "summary": "静默A10零毒触媒的可兑现伤害、佩尔之眼额外起始及代码独立回合重复SL边界核验；缺活线不改必死/重试。",
+      "proposal": "/home/dw/Projects/agent-sts2/learner/runs/20261013-134302-postmortem/proposal-finite-poison-sl.md",
+      "rule_changes": true,
+      "authorization": "Roy-2026-10-07-learning"
+    }
+  },
+  {
+    "name": "fan-multitarget",
+    "exit": 0,
+    "stdout": "silent-proposal-db2d7b5b19c15187\n",
+    "stderr": "",
+    "item": {
+      "character": "silent",
+      "ledger": [
+        "silent-0453",
+        "silent-0149"
+      ],
+      "runs": [
+        "GD9QSQM0PH8T"
+      ],
+      "source_task": "postmortem",
+      "target_task": "strategy-proposal",
+      "domains": [
+        "combat"
+      ],
+      "summary": "静默A10刀扇建立后的四小刀三敌各4共48，已有后继预测相符；核模型覆盖并保留未知条件，不冒造bug/发布。",
+      "proposal": "/home/dw/Projects/agent-sts2/learner/runs/20261013-134302-postmortem/proposal-fan-multitarget.md",
+      "rule_changes": false,
+      "authorization": "Roy-2026-10-07-learning"
+    }
+  }
+]
