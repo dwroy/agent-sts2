@@ -38,6 +38,7 @@ import boss_sim_jobs  # noqa: E402
 import ascension_audit  # noqa: E402
 import proposal_dispatch  # noqa: E402
 import core_build_jobs  # noqa: E402
+import learner_retention  # noqa: E402
 from learner_checks import read_report  # noqa: E402
 
 ROOT = os.environ.get("CODEX_OPS_ROOT") or paths.ROOT
@@ -281,6 +282,7 @@ def cmd_tick(args):
     report["write_jobs"] = check_jobs(state, ROOT, SCRIPTS, character, alive, dt.datetime.now().strftime("%Y%m%d-%H%M%S"))
     report["ascension_audit"] = check_ascension_audits(state, character)
     save_state(state)
+    report["retention"] = learner_retention.kick(ROOT, DIR, SCRIPTS)
     print(json.dumps(report, ensure_ascii=False))
 
 
@@ -529,6 +531,7 @@ def cmd_recheck(args):
                     current["checks"] = batch["fallback_checks"][-1]
             save_state(state)
         print(json.dumps({"batch": args.batch, "rc": result, "fallback_checks": batch.get("fallback_checks", [])}, ensure_ascii=False))
+        learner_retention.kick(ROOT, DIR, SCRIPTS)
         return result
 
 

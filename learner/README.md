@@ -112,4 +112,8 @@ Codex 使用登录态；程序由 LEARNER_CODEX_BIN 覆盖，登录目录由 LEA
 
 每次运行写 learner/runs/<时间>-<任务>.jsonl：learner_launch（命令、参数、完整任务提示）、引擎事件流及 stderr、learner_summary（退出码、超时、耗时、用量与摘要）。失败原件保留，修复与复验另存；摘要和自然语言回报都要核对实际产物。
 
+学习入库并验收后，调度器自动回收过程副本和可重建的独立工作树；必要复查材料先压缩留档并核 SHA，原经验、账本、对局日志、事件流和失败原件保留。报告型待证批次只回收 checkout，过程材料仍在原路径；原线程接续要求不受回收影响。见 [学习者产物回收](../docs/learner-retention.md)。
+
+普通学习批次成功结束后，启动器会自动申请本批回收并释放 checkout 租约；回收结果或暂缓原因写入 `ops/codex-ops/retention/requests/<batch>.json`。学习者无需在仍运行时删除自己的工作树，入库和完整检查门禁始终生效。
+
 早期 Claude/Codex 冒烟和 v3 迁移过程保留在 Git 历史及 paper 材料中，只证明当时测试场景；当前生产流程见 [codex-ops.md](../docs/codex-ops.md)。
