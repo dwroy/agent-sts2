@@ -55,6 +55,70 @@ function block(batch: number) {
 }
 
 describe("cancelled build simulation batches", () => {
+  // 8AGEGLG40SV3 F2-F4: timed-out blocks hide whole outcomes until all eight samples return.
+  it("retains whole samples delivered before the deadline while their block is still running", async () => {
+    vi.useFakeTimers();
+    const pool = new BuildSimPool(1); pools.push(pool);
+    const pending = pool.run({ base: input, decks: [{}], orders: [null], samples: 8, seed: 100,
+      deadlineMs: 10, diagnostics: true });
+    await Promise.resolve();
+    const worker = fixed.workers[0]!;
+    const batch = worker.messages.find((message) => message.type === "batch")!;
+    if (batch.type !== "batch") throw new Error("missing streaming batch");
+    fixed.handle!(batch);
+    fixed.reply.mockImplementation((reply: BuildWorkerReply) => worker.emit("message", reply));
+    fixed.sample.mockImplementationOnce(() => outcome).mockImplementation(() => {
+      vi.advanceTimersByTime(10);
+      return outcome;
+    });
+    block(batch.batch);
+    const result = await pending;
+    expect(result).toMatchObject({ complete: [0], timedOut: true,
+      diagnostics: { chunksDispatched: 1, chunksCompleted: 0, outcomesCompleted: 1 } });
+    expect(result.outcomes[0]![0]![0]).toEqual(outcome);
+    expect(result.outcomes[0]![0]![1]).toBeUndefined();
+    expect(fixed.sample).toHaveBeenCalledTimes(2);
+    fixed.handle!({ type: "drop", batch: batch.batch });
+  });
+
+  it("counts only fully paired samples and dispatches the next block only after completion", async () => {
+    vi.useFakeTimers();
+    const pool = new BuildSimPool(2); pools.push(pool);
+    const pending = pool.run({ base: input, decks: [{}, {}], orders: [null], samples: 16, seed: 100,
+      deadlineMs: 10, diagnostics: true });
+    await Promise.resolve();
+    const [first, second] = fixed.workers;
+    const batch = first!.messages.find((message) => message.type === "batch")!;
+    if (batch.type !== "batch") throw new Error("missing paired batch");
+    first!.emit("message", { batch: batch.batch, results: [[0, 0, 0, outcome as never], [0, 0, 1, outcome as never]], partial: true });
+    second!.emit("message", { batch: batch.batch, results: [[1, 0, 0, outcome as never]], partial: true });
+    expect(fixed.workers.map((worker) => worker.messages.filter((message) => message.type === "run").length)).toEqual([1, 1]);
+    first!.emit("message", { batch: batch.batch, results: [] });
+    expect(first!.messages.filter((message) => message.type === "run")).toHaveLength(2);
+    await vi.advanceTimersByTimeAsync(10);
+    expect(await pending).toMatchObject({ complete: [0], timedOut: true,
+      diagnostics: { chunksDispatched: 3, chunksCompleted: 1, outcomesCompleted: 3 } });
+  });
+
+  it("streams every whole outcome once and retains the unlimited batch's seeds and order", async () => {
+    const pool = new BuildSimPool(1); pools.push(pool);
+    const pending = pool.run({ base: input, decks: [{}], orders: [null], samples: 8, seed: 100, diagnostics: true });
+    await Promise.resolve();
+    const worker = fixed.workers[0]!;
+    const batch = worker.messages.find((message) => message.type === "batch")!;
+    if (batch.type !== "batch") throw new Error("missing unlimited batch");
+    fixed.handle!(batch);
+    fixed.reply.mockImplementation((reply: BuildWorkerReply) => worker.emit("message", reply));
+    fixed.sample.mockReturnValue(outcome);
+    block(batch.batch);
+    expect(await pending).toMatchObject({ complete: [0, 1, 2, 3, 4, 5, 6, 7], timedOut: false,
+      diagnostics: { chunksCompleted: 1, outcomesCompleted: 8 } });
+    expect(fixed.sample.mock.calls.map((call) => call[2])).toEqual([100, 101, 102, 103, 104, 105, 106, 107]);
+    expect(fixed.reply).toHaveBeenCalledTimes(9);
+    expect(fixed.reply).toHaveBeenLastCalledWith({ batch: batch.batch, results: [] });
+    fixed.handle!({ type: "drop", batch: batch.batch });
+  });
+
   it("does not claim simulation cores or start workers for an expired request", async () => {
     const pool = new BuildSimPool(2); pools.push(pool);
     const now = vi.fn().mockReturnValueOnce(0).mockReturnValue(5);
