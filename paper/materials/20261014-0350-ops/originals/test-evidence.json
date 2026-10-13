@@ -1,0 +1,49 @@
+{
+  "source_commit": "a7959132235badc87e669241c13dddf95510bfc5",
+  "without_fix": {
+    "exit_code": 1,
+    "files_failed": 1,
+    "failed": 4,
+    "passed": 1,
+    "log": "cancellation-without-fix.log"
+  },
+  "restored": {
+    "exit_code": 0,
+    "files": 2,
+    "cases": 8,
+    "log": "cancellation-restored.log"
+  },
+  "ironclad_real_workers": {
+    "exit_code": 0,
+    "files": 1,
+    "cases": 1,
+    "unselected": 13,
+    "log": "ironclad-worker-equivalence.log"
+  },
+  "gitleaks": {
+    "exit_code": 0,
+    "commits_scanned": 1,
+    "report": "source-gitleaks.json"
+  },
+  "ledger_find": {
+    "DPR": [],
+    "1269Y20SKHUM": [],
+    "build-sim": [
+      "silent-0332 (different resource-contract issue, unchanged)"
+    ]
+  },
+  "sandbox": {
+    "state": "passed",
+    "tsc": 0,
+    "vitest": 0,
+    "files": 377,
+    "cases": 3599,
+    "workers": 1,
+    "log": "source-sandbox.log",
+    "retried": false
+  },
+  "final_gitleaks": {
+    "exit_code": 0,
+    "report": "final-gitleaks.json"
+  }
+}

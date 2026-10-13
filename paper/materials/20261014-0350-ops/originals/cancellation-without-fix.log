@@ -1,0 +1,163 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-031301/agent
+
+ ❯ tests/build-sim-cancellation.test.ts (5 tests | 4 failed) 15ms
+     × signals cancellation at the deadline, ignores late replies and gives the next batch its own flag 6ms
+     × stops the old block after its current sample and leaves the next batch's seeds and results intact 2ms
+     × does no sample work when cancellation arrives before the queued run starts 2ms
+     × finishes a zero remaining phase budget before dispatching samples to any worker 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/build-sim-cancellation.test.ts > cancelled build simulation batches > signals cancellation at the deadline, ignores late replies and gives the next batch its own flag
+AssertionError: expected undefined to be an instance of SharedArrayBuffer
+ ❯ tests/build-sim-cancellation.test.ts:67:29
+     65|     expect(batch.type).toBe("batch");
+     66|     if (batch.type !== "batch") throw new Error("missing fixed batch");
+     67|     expect(batch.cancelled).toBeInstanceOf(SharedArrayBuffer);
+       |                             ^
+     68|     const firstFlag = new Int32Array(batch.cancelled);
+     69|     expect(Atomics.load(firstFlag, 0)).toBe(0);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  tests/build-sim-cancellation.test.ts > cancelled build simulation batches > stops the old block after its current sample and leaves the next batch's seeds and results intact
+AssertionError: expected "vi.fn()" to be called 1 times, but got 8 times
+ ❯ tests/build-sim-cancellation.test.ts:94:26
+     92|     fixed.sample.mockReturnValue(outcome);
+     93|     block(101);
+     94|     expect(fixed.sample).toHaveBeenCalledTimes(1);
+       |                          ^
+     95|     expect(fixed.reply).toHaveBeenLastCalledWith({ batch: 101, results…
+     96|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  tests/build-sim-cancellation.test.ts > cancelled build simulation batches > does no sample work when cancellation arrives before the queued run starts
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 8 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array [
+      Object {},
+      null,
+      100,
+      30,
+      true,
+      null,
+    ]
+
+  2nd vi.fn() call:
+
+    Array [
+      Object {},
+      null,
+      101,
+      30,
+      true,
+      null,
+    ]
+
+  3rd vi.fn() call:
+
+    Array [
+      Object {},
+      null,
+      102,
+      30,
+      true,
+      null,
+    ]
+
+  4th vi.fn() call:
+
+    Array [
+      Object {},
+      null,
+      103,
+      30,
+      true,
+      null,
+    ]
+
+  5th vi.fn() call:
+
+    Array [
+      Object {},
+      null,
+      104,
+      30,
+      true,
+      null,
+    ]
+
+  6th vi.fn() call:
+
+    Array [
+      Object {},
+      null,
+      105,
+      30,
+      true,
+      null,
+    ]
+
+  7th vi.fn() call:
+
+    Array [
+      Object {},
+      null,
+      106,
+      30,
+      true,
+      null,
+    ]
+
+  8th vi.fn() call:
+
+    Array [
+      Object {},
+      null,
+      107,
+      30,
+      true,
+      null,
+    ]
+
+
+Number of calls: 8
+
+ ❯ tests/build-sim-cancellation.test.ts:113:30
+    111|     fixed.sample.mockReturnValue(outcome);
+    112|     block(103);
+    113|     expect(fixed.sample).not.toHaveBeenCalled();
+       |                              ^
+    114|     expect(fixed.reply).toHaveBeenLastCalledWith({ batch: 103, results…
+    115|     fixed.handle!({ type: "drop", batch: 103 });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+ FAIL  tests/build-sim-cancellation.test.ts > cancelled build simulation batches > finishes a zero remaining phase budget before dispatching samples to any worker
+TypeError: Cannot read properties of undefined (reading 'message')
+ ❯ finish src/sim/build-sim-pool.ts:219:35
+    217|         for (const worker of used) {
+    218|           const h = handlers.get(worker)!;
+    219|           worker.off("message", h.message);
+       |                                   ^
+    220|           worker.off("error", h.error);
+    221|           worker.postMessage({ type: "drop", batch } satisfies BuildWo…
+ ❯ give src/sim/build-sim-pool.ts:230:11
+ ❯ outcomes.outcomes src/sim/build-sim-pool.ts:264:9
+ ❯ BuildSimPool.runNow src/sim/build-sim-pool.ts:207:11
+ ❯ src/sim/build-sim-pool.ts:187:45
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  4 failed | 1 passed (5)
+   Start at  03:20:05
+   Duration  441ms (transform 247ms, setup 278ms, import 33ms, tests 15ms, environment 0ms)
+

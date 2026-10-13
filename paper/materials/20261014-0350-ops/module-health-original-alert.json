@@ -1,0 +1,547 @@
+{
+  "schema": "module-health-v1",
+  "at": "2026-10-13T19:40:03.886670+00:00",
+  "run_id": "8AGEGLG40SV3",
+  "character": "SILENT",
+  "architecture": "V5",
+  "construction_mode": "shadow",
+  "simulation_enabled": true,
+  "coverage": {
+    "decisions_complete": true,
+    "decisions": {
+      "path": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+      "start": 1253272598,
+      "end": 1286727551,
+      "complete": false,
+      "malformed": 0,
+      "first_ts": "2026-10-13T15:16:24.956Z"
+    },
+    "brain": {
+      "path": "/home/dw/Projects/agent-sts2/logs/brain.jsonl",
+      "start": 449260297,
+      "end": 482733370,
+      "complete": false,
+      "malformed": 1,
+      "first_ts": "2026-10-12T19:51:28.847Z"
+    },
+    "config": {
+      "path": "/home/dw/Projects/agent-sts2/logs/run-config.jsonl",
+      "start": 0,
+      "end": 1635335,
+      "complete": true,
+      "malformed": 0,
+      "first_ts": "2026-09-30T00:10:45.685Z"
+    }
+  },
+  "complete": true,
+  "construction": {
+    "missing_route": 2,
+    "predicted": 3
+  },
+  "b3": {
+    "attempts": 4,
+    "skipped": 0,
+    "produced_dpr": 0,
+    "coverage": 0.0,
+    "failures": {
+      "below_minimum_samples": 3
+    },
+    "unsupported": 1,
+    "applicable_attempts": 3,
+    "unsupported_only": 1,
+    "candidates": {
+      "observed": 25,
+      "unsupported": 3,
+      "with_dpr": 0,
+      "missing_dpr": 22
+    },
+    "applicable_coverage": 0.0,
+    "longest_failure_streak": 3,
+    "trailing_failure_streak": 3,
+    "paired_samples_min": 16,
+    "ms_max": 11052
+  },
+  "brain": {
+    "observed_questions": 4,
+    "questions_with_dpr": 0,
+    "accepted_with_dpr": 0,
+    "decision_use": "unknown; delivery is not evidence of reasoning or a fixed DPR weight"
+  },
+  "alert": true,
+  "failures": [
+    {
+      "ts": "2026-10-13T19:37:29.104Z",
+      "decision": "c496f8db-2a9d-476a-9e3d-0d4b1f4f9a48",
+      "floor": 2,
+      "label": "reward/card",
+      "reason": "below_minimum_samples",
+      "source": {
+        "offset": 1286320496,
+        "length": 38192,
+        "sha256": "232b3483f45cb71c062e98d0fdea0db0602801833576c507484eed143f21d519"
+      },
+      "diagnostics": {
+        "schema": "build-sim-health-v1",
+        "status": "failed",
+        "availableCpus": 32,
+        "loadAverage": [
+          22.62,
+          16.56,
+          13.53
+        ],
+        "decks": 4,
+        "options": 4,
+        "deckCards": 16,
+        "deadlineMs": 10968.33370899997,
+        "orderSearch": {
+          "samples": 0,
+          "elapsedMs": 2748,
+          "timedOut": true,
+          "workers": 24,
+          "deadlineMs": 2742.0834272499924,
+          "pool": {
+            "queueMs": 0,
+            "coldStart": false,
+            "preparationMs": 0,
+            "firstReplyMs": null,
+            "chunksPlanned": 39,
+            "chunksDispatched": 24,
+            "chunksCompleted": 0,
+            "outcomesCompleted": 0
+          }
+        },
+        "comparison": {
+          "samples": 48,
+          "elapsedMs": 8224,
+          "timedOut": true,
+          "workers": 24,
+          "deadlineMs": 8220.382994999993,
+          "pool": {
+            "queueMs": 0,
+            "coldStart": false,
+            "preparationMs": 2,
+            "firstReplyMs": 2820,
+            "chunksPlanned": 500,
+            "chunksDispatched": 65,
+            "chunksCompleted": 41,
+            "outcomesCompleted": 328
+          }
+        },
+        "boss": "THE_KIN",
+        "samples": 48,
+        "requested": 1000,
+        "minimumShown": 300,
+        "timedOut": true,
+        "simMs": 11020,
+        "workers": 24,
+        "reason": "below_minimum_samples"
+      },
+      "error": "只跑完 48 次模拟（不足 300 次），选项之间的差噪声太大，不给数字",
+      "candidates": {
+        "observed": 4,
+        "unsupported": 0,
+        "with_dpr": 0,
+        "missing_dpr": 4
+      }
+    },
+    {
+      "ts": "2026-10-13T19:38:28.622Z",
+      "decision": "f3ec0999-b972-46d0-a96f-4cc51937f30b",
+      "floor": 3,
+      "label": "shop/plan",
+      "reason": "below_minimum_samples",
+      "source": {
+        "offset": 1286367532,
+        "length": 108237,
+        "sha256": "d3f90eb4511799be28f8f2cd570c922330a2d66718c6279dbce0b003923646fd"
+      },
+      "diagnostics": {
+        "schema": "build-sim-health-v1",
+        "status": "failed",
+        "availableCpus": 32,
+        "loadAverage": [
+          30.91,
+          22.32,
+          15.89
+        ],
+        "decks": 17,
+        "options": 17,
+        "deckCards": 17,
+        "deadlineMs": 10542.626509000023,
+        "orderSearch": {
+          "samples": 0,
+          "elapsedMs": 2640,
+          "timedOut": true,
+          "workers": 24,
+          "deadlineMs": 2635.656627250006,
+          "pool": {
+            "queueMs": 0,
+            "coldStart": false,
+            "preparationMs": 0,
+            "firstReplyMs": 2452,
+            "chunksPlanned": 39,
+            "chunksDispatched": 27,
+            "chunksCompleted": 3,
+            "outcomesCompleted": 24
+          }
+        },
+        "comparison": {
+          "samples": 16,
+          "elapsedMs": 7902,
+          "timedOut": true,
+          "workers": 24,
+          "deadlineMs": 7901.739923000045,
+          "pool": {
+            "queueMs": 0,
+            "coldStart": false,
+            "preparationMs": 2,
+            "firstReplyMs": 1764,
+            "chunksPlanned": 2125,
+            "chunksDispatched": 71,
+            "chunksCompleted": 47,
+            "outcomesCompleted": 376
+          }
+        },
+        "boss": "THE_KIN",
+        "samples": 16,
+        "requested": 1000,
+        "minimumShown": 300,
+        "timedOut": true,
+        "simMs": 10585,
+        "workers": 24,
+        "reason": "below_minimum_samples"
+      },
+      "error": "只跑完 16 次模拟（不足 300 次），选项之间的差噪声太大，不给数字",
+      "candidates": {
+        "observed": 16,
+        "unsupported": 0,
+        "with_dpr": 0,
+        "missing_dpr": 16
+      }
+    },
+    {
+      "ts": "2026-10-13T19:39:17.244Z",
+      "decision": "9ac4786a-08cd-4715-9272-73b801f1bdb8",
+      "floor": 4,
+      "label": "event/choose",
+      "reason": "below_minimum_samples",
+      "source": {
+        "offset": 1286481815,
+        "length": 11996,
+        "sha256": "b48a21c20733d7f8c2e1327528204ceca9a7a8ea8eca1d77ea9405becd29970e"
+      },
+      "diagnostics": {
+        "schema": "build-sim-health-v1",
+        "status": "failed",
+        "availableCpus": 32,
+        "loadAverage": [
+          23.91,
+          22.12,
+          16.25
+        ],
+        "decks": 2,
+        "options": 1,
+        "deckCards": 18,
+        "deadlineMs": 10534.221768999996,
+        "orderSearch": {
+          "samples": 0,
+          "elapsedMs": 2637,
+          "timedOut": true,
+          "workers": 24,
+          "deadlineMs": 2633.555442249999,
+          "pool": {
+            "queueMs": 0,
+            "coldStart": false,
+            "preparationMs": 0,
+            "firstReplyMs": null,
+            "chunksPlanned": 39,
+            "chunksDispatched": 24,
+            "chunksCompleted": 0,
+            "outcomesCompleted": 0
+          }
+        },
+        "comparison": {
+          "samples": 112,
+          "elapsedMs": 7898,
+          "timedOut": true,
+          "workers": 24,
+          "deadlineMs": 7897.127686000022,
+          "pool": {
+            "queueMs": 0,
+            "coldStart": false,
+            "preparationMs": 1,
+            "firstReplyMs": 3407,
+            "chunksPlanned": 250,
+            "chunksDispatched": 54,
+            "chunksCompleted": 30,
+            "outcomesCompleted": 240
+          }
+        },
+        "boss": "THE_KIN",
+        "samples": 112,
+        "requested": 1000,
+        "minimumShown": 300,
+        "timedOut": true,
+        "simMs": 10551,
+        "workers": 24,
+        "reason": "below_minimum_samples"
+      },
+      "error": "只跑完 112 次模拟（不足 300 次），选项之间的差噪声太大，不给数字",
+      "candidates": {
+        "observed": 2,
+        "unsupported": 0,
+        "with_dpr": 0,
+        "missing_dpr": 2
+      }
+    }
+  ],
+  "diagnostics": [
+    {
+      "ts": "2026-10-13T19:32:37.489Z",
+      "schema": "build-sim-health-v1",
+      "status": "produced",
+      "availableCpus": 32,
+      "loadAverage": [
+        13.84,
+        12.46,
+        11.99
+      ],
+      "decks": 1,
+      "options": 0,
+      "deckCards": 13,
+      "deadlineMs": 10891.458905,
+      "orderSearch": {
+        "samples": 84,
+        "elapsedMs": 2724,
+        "timedOut": true,
+        "workers": 24,
+        "deadlineMs": 2722.86472625,
+        "pool": {
+          "queueMs": 0,
+          "coldStart": true,
+          "preparationMs": 8,
+          "firstReplyMs": 1680,
+          "chunksPlanned": 39,
+          "chunksDispatched": 39,
+          "chunksCompleted": 35,
+          "outcomesCompleted": 268
+        }
+      },
+      "comparison": {
+        "samples": 1000,
+        "elapsedMs": 4498,
+        "timedOut": false,
+        "workers": 24,
+        "deadlineMs": 8162.218831,
+        "pool": {
+          "queueMs": 0,
+          "coldStart": false,
+          "preparationMs": 0,
+          "firstReplyMs": 653,
+          "chunksPlanned": 125,
+          "chunksDispatched": 125,
+          "chunksCompleted": 125,
+          "outcomesCompleted": 1000
+        }
+      },
+      "boss": "THE_KIN",
+      "samples": 1000,
+      "requested": 1000,
+      "minimumShown": 300,
+      "timedOut": false,
+      "simMs": 7263,
+      "workers": 24
+    },
+    {
+      "ts": "2026-10-13T19:37:29.104Z",
+      "schema": "build-sim-health-v1",
+      "status": "failed",
+      "availableCpus": 32,
+      "loadAverage": [
+        22.62,
+        16.56,
+        13.53
+      ],
+      "decks": 4,
+      "options": 4,
+      "deckCards": 16,
+      "deadlineMs": 10968.33370899997,
+      "orderSearch": {
+        "samples": 0,
+        "elapsedMs": 2748,
+        "timedOut": true,
+        "workers": 24,
+        "deadlineMs": 2742.0834272499924,
+        "pool": {
+          "queueMs": 0,
+          "coldStart": false,
+          "preparationMs": 0,
+          "firstReplyMs": null,
+          "chunksPlanned": 39,
+          "chunksDispatched": 24,
+          "chunksCompleted": 0,
+          "outcomesCompleted": 0
+        }
+      },
+      "comparison": {
+        "samples": 48,
+        "elapsedMs": 8224,
+        "timedOut": true,
+        "workers": 24,
+        "deadlineMs": 8220.382994999993,
+        "pool": {
+          "queueMs": 0,
+          "coldStart": false,
+          "preparationMs": 2,
+          "firstReplyMs": 2820,
+          "chunksPlanned": 500,
+          "chunksDispatched": 65,
+          "chunksCompleted": 41,
+          "outcomesCompleted": 328
+        }
+      },
+      "boss": "THE_KIN",
+      "samples": 48,
+      "requested": 1000,
+      "minimumShown": 300,
+      "timedOut": true,
+      "simMs": 11020,
+      "workers": 24,
+      "reason": "below_minimum_samples"
+    },
+    {
+      "ts": "2026-10-13T19:38:28.622Z",
+      "schema": "build-sim-health-v1",
+      "status": "failed",
+      "availableCpus": 32,
+      "loadAverage": [
+        30.91,
+        22.32,
+        15.89
+      ],
+      "decks": 17,
+      "options": 17,
+      "deckCards": 17,
+      "deadlineMs": 10542.626509000023,
+      "orderSearch": {
+        "samples": 0,
+        "elapsedMs": 2640,
+        "timedOut": true,
+        "workers": 24,
+        "deadlineMs": 2635.656627250006,
+        "pool": {
+          "queueMs": 0,
+          "coldStart": false,
+          "preparationMs": 0,
+          "firstReplyMs": 2452,
+          "chunksPlanned": 39,
+          "chunksDispatched": 27,
+          "chunksCompleted": 3,
+          "outcomesCompleted": 24
+        }
+      },
+      "comparison": {
+        "samples": 16,
+        "elapsedMs": 7902,
+        "timedOut": true,
+        "workers": 24,
+        "deadlineMs": 7901.739923000045,
+        "pool": {
+          "queueMs": 0,
+          "coldStart": false,
+          "preparationMs": 2,
+          "firstReplyMs": 1764,
+          "chunksPlanned": 2125,
+          "chunksDispatched": 71,
+          "chunksCompleted": 47,
+          "outcomesCompleted": 376
+        }
+      },
+      "boss": "THE_KIN",
+      "samples": 16,
+      "requested": 1000,
+      "minimumShown": 300,
+      "timedOut": true,
+      "simMs": 10585,
+      "workers": 24,
+      "reason": "below_minimum_samples"
+    },
+    {
+      "ts": "2026-10-13T19:39:17.244Z",
+      "schema": "build-sim-health-v1",
+      "status": "failed",
+      "availableCpus": 32,
+      "loadAverage": [
+        23.91,
+        22.12,
+        16.25
+      ],
+      "decks": 2,
+      "options": 1,
+      "deckCards": 18,
+      "deadlineMs": 10534.221768999996,
+      "orderSearch": {
+        "samples": 0,
+        "elapsedMs": 2637,
+        "timedOut": true,
+        "workers": 24,
+        "deadlineMs": 2633.555442249999,
+        "pool": {
+          "queueMs": 0,
+          "coldStart": false,
+          "preparationMs": 0,
+          "firstReplyMs": null,
+          "chunksPlanned": 39,
+          "chunksDispatched": 24,
+          "chunksCompleted": 0,
+          "outcomesCompleted": 0
+        }
+      },
+      "comparison": {
+        "samples": 112,
+        "elapsedMs": 7898,
+        "timedOut": true,
+        "workers": 24,
+        "deadlineMs": 7897.127686000022,
+        "pool": {
+          "queueMs": 0,
+          "coldStart": false,
+          "preparationMs": 1,
+          "firstReplyMs": 3407,
+          "chunksPlanned": 250,
+          "chunksDispatched": 54,
+          "chunksCompleted": 30,
+          "outcomesCompleted": 240
+        }
+      },
+      "boss": "THE_KIN",
+      "samples": 112,
+      "requested": 1000,
+      "minimumShown": 300,
+      "timedOut": true,
+      "simMs": 10551,
+      "workers": 24,
+      "reason": "below_minimum_samples"
+    }
+  ],
+  "unsupported": [
+    {
+      "ts": "2026-10-13T19:32:37.489Z",
+      "decision": "fcab7f6b-4506-4213-86c5-8d26a5e7d416",
+      "floor": 1,
+      "label": "event/choose",
+      "source": {
+        "offset": 1286220406,
+        "length": 15721,
+        "sha256": "3f12482d894ac1410caec650c29a81634d40a29987405960cacb7749da16695a"
+      },
+      "not_simulated": {
+        "o0": "这个选项的效果没有换算成牌组或血量的变化：不模拟",
+        "o1": "这个选项的效果没有换算成牌组或血量的变化：不模拟",
+        "o2": "这个选项的效果没有换算成牌组或血量的变化：不模拟"
+      }
+    }
+  ],
+  "scope": "Service availability only; sample threshold, simulator validity and game policy unchanged.",
+  "queue_name": "1791920403886670080-module-health.md"
+}

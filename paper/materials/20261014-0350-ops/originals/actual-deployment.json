@@ -1,0 +1,41 @@
+{
+  "source": "a7959132235badc87e669241c13dddf95510bfc5",
+  "integration": "f6c9df51f89754bb614d08db4738a5d207b9dbfd",
+  "live": "60d5206de96389c3430370c0dbb8704f32714d7a",
+  "source_is_actual_live_ancestor": true,
+  "leaves": [
+    {
+      "path": "agent/src/sim/build-sim-pool.ts",
+      "blobs": {
+        "source": "3312ea2c58c373d4ac053e7c40d52c6c8247935f",
+        "task": "3312ea2c58c373d4ac053e7c40d52c6c8247935f",
+        "live": "3312ea2c58c373d4ac053e7c40d52c6c8247935f"
+      }
+    },
+    {
+      "path": "agent/src/sim/build-sim-worker.ts",
+      "blobs": {
+        "source": "5fe61c857f8318c96e8013c87f60b05d87fa5534",
+        "task": "5fe61c857f8318c96e8013c87f60b05d87fa5534",
+        "live": "5fe61c857f8318c96e8013c87f60b05d87fa5534"
+      }
+    },
+    {
+      "path": "agent/tests/build-sim-cancellation.test.ts",
+      "blobs": {
+        "source": "25f314451df481baced132e4f41f0fa682aeeab6",
+        "task": "25f314451df481baced132e4f41f0fa682aeeab6",
+        "live": "25f314451df481baced132e4f41f0fa682aeeab6"
+      }
+    }
+  ],
+  "release": {
+    "name": "V5.sim-cancellation1",
+    "family": "V5",
+    "commit": "20e6260fd4abe8eb3d938aaba52a1a88fa8c1a12",
+    "release_id": "V5-R334",
+    "source": "2026-10-14 03:25:35 CST 原021302-fix source a7959132235badc87e669241c13dddf95510bfc5，1269Y20SKHUM A10 F35/F37/F38 reward/card八原行offset/length/SHA；每批共享取消位在完成/超时/失败清理时置位，完整样本之间停止过期余块，所有worker先登记handler再派发，零阶段预算安全清理；兼容原运行父消息。完整样本算法/参数/种子保持，300最低/1000目标/11000ms/24线程不改，铁甲真实worker串行固定结果等价；时钟截止前完成样本数可能变化，不称动作逐字等价或自然DPR性能/胜率已修。源tsc0/完整沙箱377文件3599项/gitleaks0；撤码4败1过，恢复取消与健康8过；原3共享记录冲突和failed/rc0/merged-null保留。实际精确三叶祖先核；新部署树完整宿主沿原批一次，下一自然进程加载不重启对局。回退逆向本source三叶并登记后续编号，保留原刷新/失败/台账；宽DPR性能父项保持。"
+  },
+  "actor": "原021302运维兜底集成链，本批未重复发布",
+  "full_branch_merge": null
+}
