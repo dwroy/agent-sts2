@@ -6,6 +6,7 @@ const fixed = vi.hoisted(() => ({
   handle: null as ((message: BuildWorkerRequest) => void) | null,
   reply: vi.fn(),
   sample: vi.fn(),
+  claim: vi.fn(),
   workers: [] as Array<{ messages: BuildWorkerRequest[]; emit: (event: string, reply: BuildWorkerReply) => void }>,
 }));
 
@@ -27,7 +28,7 @@ vi.mock("../src/sim/boss-sim.js", () => ({
   fightSample: fixed.sample, sampleSeed: (seed: number, i: number) => seed + i,
   slimInput: (input: RolloutInput) => input,
 }));
-vi.mock("../src/sim/sim-pools.js", () => ({ claimSimCores: vi.fn(), leaveSimCores: vi.fn() }));
+vi.mock("../src/sim/sim-pools.js", () => ({ claimSimCores: fixed.claim, leaveSimCores: vi.fn() }));
 
 const { BuildSimPool } = await import("../src/sim/build-sim-pool.js");
 await import("../src/sim/build-sim-worker.js");
@@ -40,6 +41,7 @@ afterEach(async () => {
   vi.useRealTimers();
   fixed.sample.mockReset();
   fixed.reply.mockReset();
+  fixed.claim.mockClear();
   fixed.workers.splice(0);
 });
 
@@ -53,6 +55,43 @@ function block(batch: number) {
 }
 
 describe("cancelled build simulation batches", () => {
+  it("does not claim simulation cores or start workers for an expired request", async () => {
+    const pool = new BuildSimPool(2); pools.push(pool);
+    const now = vi.fn().mockReturnValueOnce(0).mockReturnValue(5);
+    const result = await pool.run({ base: input, decks: [{}], orders: [null], samples: 8, seed: 100,
+      deadlineMs: 5, now, diagnostics: true });
+    expect(result).toMatchObject({ complete: [], timedOut: true, elapsedMs: 5, workers: 0,
+      diagnostics: { firstReplyMs: null, chunksDispatched: 0, chunksCompleted: 0, outcomesCompleted: 0 } });
+    expect(fixed.workers).toHaveLength(0);
+    expect(fixed.claim).not.toHaveBeenCalled();
+    expect(pool.live).toBe(0);
+  });
+
+  it("counts queue wait against the caller's deadline and keeps the following run usable", async () => {
+    vi.useFakeTimers();
+    const pool = new BuildSimPool(1); pools.push(pool);
+    let time = 0;
+    const request = { base: input, decks: [{}], orders: [null], samples: 8, seed: 100, now: () => time };
+    const first = pool.run({ ...request, deadlineMs: 10 });
+    const queued = pool.run({ ...request, deadlineMs: 5 });
+    await Promise.resolve();
+    const worker = fixed.workers[0]!;
+    time = 10;
+    await vi.advanceTimersByTimeAsync(15);
+    expect(await first).toMatchObject({ complete: [], timedOut: true });
+    const result = await queued;
+    expect(result).toMatchObject({ complete: [], timedOut: true, elapsedMs: 10 });
+    expect(worker.messages.filter((message) => message.type === "run")).toHaveLength(1);
+
+    const next = pool.run({ ...request, deadlineMs: 5 });
+    await Promise.resolve();
+    const batch = worker.messages.filter((message) => message.type === "batch").at(-1)!;
+    if (batch.type !== "batch") throw new Error("missing following fixed batch");
+    worker.emit("message", { batch: batch.batch,
+      results: Array.from({ length: 8 }, (_, i) => [0, 0, i, outcome as never]) });
+    expect(await next).toMatchObject({ complete: [0, 1, 2, 3, 4, 5, 6, 7], timedOut: false });
+  });
+
   // 1269Y20SKHUM F37: warm order search timed out without a reply; comparison reused the same workers.
   it("signals cancellation at the deadline, ignores late replies and gives the next batch its own flag", async () => {
     vi.useFakeTimers();

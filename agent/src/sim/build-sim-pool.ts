@@ -184,16 +184,23 @@ export class BuildSimPool implements DeckSimRunner {
 
   run(req: DeckRunRequest): Promise<DeckRunResult> {
     const queued = performance.now();
-    const next = this.queue.then(() => this.runNow(req, performance.now() - queued));
+    const started = (req.now ?? (() => performance.now()))();
+    const next = this.queue.then(() => this.runNow(req, started, performance.now() - queued));
     this.queue = next.catch(() => undefined);
     return next;
   }
 
-  private async runNow(req: DeckRunRequest, queueMs: number): Promise<DeckRunResult> {
+  private async runNow(req: DeckRunRequest, started: number, queueMs: number): Promise<DeckRunResult> {
     const diagnosticStart = performance.now();
     const coldStart = this.workers.length === 0;
     const now = req.now ?? (() => performance.now());
-    const started = now();
+    // Expired requests must not evict another pool or launch workers with no sample work to do.
+    if (req.deadlineMs !== undefined && now() - started >= req.deadlineMs) {
+      return { outcomes: emptyOutcomes(req), complete: [], timedOut: true, elapsedMs: Math.round(now() - started), workers: 0,
+        ...(req.diagnostics ? { diagnostics: { queueMs: Math.round(queueMs), coldStart,
+          preparationMs: Math.round(performance.now() - diagnosticStart), firstReplyMs: null,
+          chunksPlanned: taskChunks(req).length, chunksDispatched: 0, chunksCompleted: 0, outcomesCompleted: 0 } } : {}) };
+    }
     const workers = this.start();
     const batch = (this.batch += 1);
     // A queued drop cannot interrupt a worker's synchronous sample block.

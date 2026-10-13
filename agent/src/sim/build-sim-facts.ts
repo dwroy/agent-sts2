@@ -513,7 +513,7 @@ export async function withBossSim(decision: Decision, env: DecisionEnv, setup: B
       else if (plan.change !== undefined || plan.mixture) deckOptions.push({ key: plan.key, change: plan.change ?? null, ...(plan.mixture ? { mixture: plan.mixture } : {}) });
     }
     const budget = (setup.deadlineMs ?? BUILD_SIM_DEADLINE_MS) - (now() - started);
-    const result: CompareResult = await compareOptions(setup.runner, start.input, deckOptions, { samples: setup.samples ?? BUILD_SIM_SAMPLES, seed: setup.seed ?? BUILD_SIM_SEED, deadlineMs: Math.max(200, budget), ...(setup.now ? { now: setup.now } : {}), ...(diagnosticEnabled ? { quantitative: true, diagnostics: true } : {}) });
+    const result: CompareResult = await compareOptions(setup.runner, start.input, deckOptions, { samples: setup.samples ?? BUILD_SIM_SAMPLES, seed: setup.seed ?? BUILD_SIM_SEED, deadlineMs: Math.max(0, budget), ...(setup.now ? { now: setup.now } : {}), ...(diagnosticEnabled ? { quantitative: true, diagnostics: true } : {}) });
     if (diagnostics) diagnostics = { ...diagnostics, ...result.diagnostics, boss: bossKey(bossId),
       samples: result.samples, requested: result.requested, minimumShown: Math.min(BUILD_SIM_MIN_SHOWN, result.requested),
       timedOut: result.timedOut, simMs: result.elapsedMs, workers: result.workers };
