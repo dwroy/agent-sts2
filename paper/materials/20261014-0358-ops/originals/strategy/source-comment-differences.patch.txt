@@ -1,0 +1,66 @@
+diff --git a/agent/src/reflex/turn-solver.ts b/home/dw/Projects/agent-sts2/.worktrees/live/agent/src/reflex/turn-solver.ts
+index 54cff396f..f44cdcc64 100644
+--- a/agent/src/reflex/turn-solver.ts
++++ b/home/dw/Projects/agent-sts2/.worktrees/live/agent/src/reflex/turn-solver.ts
+@@ -2896,7 +2896,7 @@ export const CONCENTRATION_BONUS = 0.15;
+ export const FOCUS_BONUS = 0.5;
+ /**
+  * Share of damage into a surviving minion that counts while its summoner lives (it leaves with it).
+- * Kept (Roy 2026-09-28 review) for what the score still decides: code's own lines (lethal among lethal
++ * Kept (Dai 2026-09-28 review) for what the score still decides: code's own lines (lethal among lethal
+  * lines, the dominance and HP-guard picks, the fallback) and the rollout's own later turns, where it is
+  * the QE4K rule (turn-solver.test "chips the summoner"). It no longer decides what Jev sees: every kind of
+  * enemy has its own "focus" option (combat-plan.ts focusLines) and every shown line is rolled out under
+@@ -3360,7 +3360,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
+   // Rocket's Laser after Charge Up, the Torch Head's Beam). HP lost now that leaves us below what the next hit takes
+   // through a fresh hand's block is HP the next turn cannot spare, as the Giant's eruption rule below counts it.
+   if (input.nextHit && !winsFight && !dies && hpLoss > 0) score -= weights.hp * input.nextHit.weight * nextHitShortfall(input.nextHit, living, hpAfter, hpLoss);
+-  // A potion drunk is HP paid later (potion-cost.ts, Roy 2026-09-30): its held value, at the HP weight. Until batch K a
++  // A potion drunk is HP paid later (potion-cost.ts, Dai 2026-09-30): its held value, at the HP weight. Until batch K a
+   // hallway potion's lasting part counted 25% (a guessed number); since then potions were free; now the table's value.
+   score -= weights.hp * sim.potionCost;
+   // A Wither stays in the deck and comes back bigger (+3 each Increasing Intensity): price one more
+
+diff --git a/agent/src/reflex/rollout.ts b/home/dw/Projects/agent-sts2/.worktrees/live/agent/src/reflex/rollout.ts
+index b2abbeba8..128dd0a29 100644
+--- a/agent/src/reflex/rollout.ts
++++ b/home/dw/Projects/agent-sts2/.worktrees/live/agent/src/reflex/rollout.ts
+@@ -17,7 +17,7 @@
+  *        - our draws come from the shuffled draw pile (the discard pile reshuffled in when it runs out);
+  *        - our turns are played by the solver itself with a small node cap (the fast policy); the modelled
+  *          potions still held are in its hand like 0-energy cards that exist once, each with its cost
+- *          (potion-cost.ts, Roy 2026-09-30: its held value in the potion table, taken off the solver's score):
++ *          (potion-cost.ts, Dai 2026-09-30: its held value in the potion table, taken off the solver's score):
+  *          drunk when its best line drinks one, gone for the rest of that sample.
+  *        - the "no potion this fight" line (options.noPotionLine) holds none in its later turns.
+  *   3. At the horizon (or the fight's end) the terminal estimate of the end-of-our-turn state is added:
+@@ -608,7 +608,7 @@ export interface RolloutOptions {
+   /** The kill-order policy's extra damage weight on its target (default ORDER_FOCUS_BONUS). */
+   orderFocusBonus?: number;
+   /**
+-   * The "no potion this fight" line (Roy 2026-09-30): a potion-free line (its own Plan object, a copy of a shown
++   * The "no potion this fight" line (Dai 2026-09-30): a potion-free line (its own Plan object, a copy of a shown
+    * one) rolled out with no potion in its later turns either. Tagged "offered" and "no-potion".
+    */
+   noPotionLine?: Plan;
+
+diff --git a/agent/src/reflex/passive-pieces.ts b/home/dw/Projects/agent-sts2/.worktrees/live/agent/src/reflex/passive-pieces.ts
+index ca8afc76d..640763007 100644
+--- a/agent/src/reflex/passive-pieces.ts
++++ b/home/dw/Projects/agent-sts2/.worktrees/live/agent/src/reflex/passive-pieces.ts
+@@ -1,5 +1,5 @@
+ /**
+- * Passive damage and passive block (PASSIVE_PIECES, Roy 2026-10-03; experience 2026-10-03.3 deck-passive-engine, the
++ * Passive damage and passive block (PASSIVE_PIECES, Dai 2026-10-03; experience 2026-10-03.3 deck-passive-engine, the
+  * Queen section of knowledge/ironclad-guide.md): the damage and block that come from relics and powers, not from the
+  * cards' own numbers. Weak and Frail on us cut our attack cards (their Strength too) and our card block by 25%; these do
+  * not move. The one place their numbers and their rules live, for the rollout's later turns (rollout.ts), the whole-fight
+@@ -56,7 +56,7 @@
+  * the boss clock counts Thorns per boss hit, Flame Barrier, Mercury Hourglass, Letter Opener and Parrying Shield as
+  * damage the Queen's Weak does not cut (with Inferno and Juggernaut), and Crimson Mantle, Plating, Orichalcum, Ornamental
+  * Fan, Ripple Basin and the one-turn block relics with Sai as block a turn (at CLOCK_PASSIVE_BLOCK_SHARE). Since the
+- * follow-up (2026-10-03, Roy via the dev session) the live solver's current turn has the five relic pieces too
++ * follow-up (2026-10-03, Dai via the dev session) the live solver's current turn has the five relic pieces too
+  * (liveSolverFields, combat-plan), and Plating no longer stops Orichalcum (orichalcumPlating). Replayed on the logged turns'
+  * first planning decisions (tools/passive-pieces-planner-replay.ts compare, v4 cd31bfe against this, the switch on both
+  * times; 113 A8+ boss/elite fights holding one of the five relics, 60 hallway ones, 40 holding none): the 238 turns holding
