@@ -194,6 +194,13 @@ export class BuildSimPool implements DeckSimRunner {
     const diagnosticStart = performance.now();
     const coldStart = this.workers.length === 0;
     const now = req.now ?? (() => performance.now());
+    // Expired requests must not evict another pool or launch workers with no sample work to do.
+    if (req.deadlineMs !== undefined && now() - started >= req.deadlineMs) {
+      return { outcomes: emptyOutcomes(req), complete: [], timedOut: true, elapsedMs: Math.round(now() - started), workers: 0,
+        ...(req.diagnostics ? { diagnostics: { queueMs: Math.round(queueMs), coldStart,
+          preparationMs: Math.round(performance.now() - diagnosticStart), firstReplyMs: null,
+          chunksPlanned: taskChunks(req).length, chunksDispatched: 0, chunksCompleted: 0, outcomesCompleted: 0 } } : {}) };
+    }
     const workers = this.start();
     const batch = (this.batch += 1);
     // A queued drop cannot interrupt a worker's synchronous sample block.

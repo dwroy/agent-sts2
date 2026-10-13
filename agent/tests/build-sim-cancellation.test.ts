@@ -6,6 +6,7 @@ const fixed = vi.hoisted(() => ({
   handle: null as ((message: BuildWorkerRequest) => void) | null,
   reply: vi.fn(),
   sample: vi.fn(),
+  claim: vi.fn(),
   workers: [] as Array<{ messages: BuildWorkerRequest[]; emit: (event: string, reply: BuildWorkerReply) => void }>,
 }));
 
@@ -27,7 +28,7 @@ vi.mock("../src/sim/boss-sim.js", () => ({
   fightSample: fixed.sample, sampleSeed: (seed: number, i: number) => seed + i,
   slimInput: (input: RolloutInput) => input,
 }));
-vi.mock("../src/sim/sim-pools.js", () => ({ claimSimCores: vi.fn(), leaveSimCores: vi.fn() }));
+vi.mock("../src/sim/sim-pools.js", () => ({ claimSimCores: fixed.claim, leaveSimCores: vi.fn() }));
 
 const { BuildSimPool } = await import("../src/sim/build-sim-pool.js");
 await import("../src/sim/build-sim-worker.js");
@@ -40,6 +41,7 @@ afterEach(async () => {
   vi.useRealTimers();
   fixed.sample.mockReset();
   fixed.reply.mockReset();
+  fixed.claim.mockClear();
   fixed.workers.splice(0);
 });
 
@@ -53,6 +55,18 @@ function block(batch: number) {
 }
 
 describe("cancelled build simulation batches", () => {
+  it("does not claim simulation cores or start workers for an expired request", async () => {
+    const pool = new BuildSimPool(2); pools.push(pool);
+    const now = vi.fn().mockReturnValueOnce(0).mockReturnValue(5);
+    const result = await pool.run({ base: input, decks: [{}], orders: [null], samples: 8, seed: 100,
+      deadlineMs: 5, now, diagnostics: true });
+    expect(result).toMatchObject({ complete: [], timedOut: true, elapsedMs: 5, workers: 0,
+      diagnostics: { firstReplyMs: null, chunksDispatched: 0, chunksCompleted: 0, outcomesCompleted: 0 } });
+    expect(fixed.workers).toHaveLength(0);
+    expect(fixed.claim).not.toHaveBeenCalled();
+    expect(pool.live).toBe(0);
+  });
+
   it("counts queue wait against the caller's deadline and keeps the following run usable", async () => {
     vi.useFakeTimers();
     const pool = new BuildSimPool(1); pools.push(pool);
