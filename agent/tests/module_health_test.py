@@ -57,6 +57,64 @@ class Health(unittest.TestCase):
         self.assertEqual(r['b3']['failures'], {'zero_paired_samples': 1, 'no_complete_dpr': 1, 'below_minimum_samples': 1})
         self.assertEqual(h.dpr_count({'x': {'quantitative_fight': {'effective_damage_per_turn': {'n': 0, 'mean': None}}}}), 0)
 
+    def test_explicit_unsupported_candidates_preserve_observed_denominator(self):
+        # WA7FRJ7UABCV F22 event/choose: 1000 samples, both options excluded.
+        options = {'o0': json.dumps({'option': '学习杀灭的技巧'}),
+                   'o1': json.dumps({'option': '学习压扁的技巧'}), 'inactive': None}
+        sim = {'samples': 1000, 'ms': 10801, 'options': {},
+               'not_simulated': {'o0': '效果没有换算：不模拟', 'o1': '效果没有换算：不模拟'}}
+        unsupported = row(2, None, label='event/choose', floor=22, boss_sim=sim,
+                          questions={'pick': {'type': 'choice', 'criteria': options}})
+        report = self.summary([row(1), unsupported, row(3), row(4, None)])
+        self.assertEqual(report['b3']['attempts'], 4)
+        self.assertEqual(report['b3']['failures'], {'below_minimum_samples': 2})
+        self.assertEqual(report['b3']['unsupported'], 1)
+        self.assertEqual(report['b3']['applicable_attempts'], 3)
+        self.assertEqual(report['b3']['coverage'], 1 / 4)
+        self.assertEqual(report['b3']['applicable_coverage'], 1 / 3)
+        self.assertEqual(report['b3']['produced_dpr'], 1)
+        self.assertEqual(report['b3']['longest_failure_streak'], 2)
+        self.assertFalse(report['alert'])
+        self.assertEqual(report['b3']['ms_max'], 11000)
+        self.assertEqual(report['unsupported'][0]['not_simulated'], sim['not_simulated'])
+        alone = self.summary([unsupported])
+        self.assertIsNone(alone['b3']['applicable_coverage'])
+        self.assertEqual(alone['b3']['paired_samples_min'], 1000)
+        self.assertEqual(alone['b3']['produced_dpr'], 0)
+
+    def test_unsupported_labels_do_not_hide_missing_supported_candidates(self):
+        options = {'o0': '{}', 'o1': '{}'}
+        sim = {'samples': 1000, 'options': {}, 'not_simulated': {'o0': '不模拟', 'o1': '不模拟'}}
+        for change in ({'not_simulated': {'o0': '不模拟'}},
+                       {'not_simulated': {'o0': '', 'o1': '不模拟'}},
+                       {'samples': 0}, {'samples': None},
+                       {'options': {'o1': {'win': 0}}},
+                       {'options': {'o1|card': {'win': 0}}}):
+            with self.subTest(change=change):
+                report = self.summary([row(1, None, label='event/choose', boss_sim={**sim, **change},
+                    questions={'pick': {'type': 'choice', 'criteria': options}})])
+                self.assertEqual(report['b3']['unsupported'], 0)
+                self.assertEqual(report['b3']['failures'], {'no_complete_dpr': 1})
+        for criteria in ({}, {'o0': None}, {'o2': '{}'}, {'o0': 'invalid-json', 'o2': '{}'}):
+            with self.subTest(criteria=criteria):
+                report = self.summary([row(1, None, boss_sim=sim,
+                    questions={'pick': {'type': 'choice', 'criteria': criteria}})])
+                self.assertEqual(report['b3']['failures'], {'no_complete_dpr': 1})
+
+    def test_unsupported_choices_keep_sampling_and_transport_failures(self):
+        options = {'o0': '{}'}
+        for sim, reason in (
+                ({'not_simulated': {'o0': '不模拟'}}, 'missing_simulation_record'),
+                ({'samples': 0, 'error': '11000 ms 内没有跑完一个样本',
+                  'not_simulated': {'o0': '不模拟'}}, 'zero_paired_samples'),
+                ({'diagnostics': {'reason': 'below_minimum_samples', 'samples': 16},
+                  'not_simulated': {'o0': '不模拟'}}, 'below_minimum_samples')):
+            with self.subTest(reason=reason):
+                report = self.summary([row(1, None, boss_sim=sim,
+                    questions={'pick': {'type': 'choice', 'criteria': options}})])
+                self.assertEqual(report['b3']['unsupported'], 0)
+                self.assertEqual(report['b3']['failures'], {reason: 1})
+
     def test_queue_dedup_crash_retry_and_immutable_evidence(self):
         with tempfile.TemporaryDirectory() as d:
             directory = Path(d)
