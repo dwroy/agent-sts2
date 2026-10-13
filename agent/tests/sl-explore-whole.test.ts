@@ -26,7 +26,8 @@ const KNOWLEDGE = join(ROOT, "..", "knowledge");
 const touched = new Set<string>();
 
 vi.mock("node:fs", async (importOriginal) => {
-  const fs = await importOriginal<typeof import("node:fs")>();
+  const { historicalKnowledgeFs } = await import("./historical-knowledge-fs.js");
+  const fs = historicalKnowledgeFs(await importOriginal<typeof import("node:fs")>());
   const pinned = JSON.parse(fs.readFileSync(join(HERE, "sl-explore-whole-data", "pinned-knowledge.json"), "utf8")) as Record<string, unknown>;
   const shared = [join(ROOT, "..", "logs"), join(ROOT, "..", "data")];
   const watch = (name: string) => {

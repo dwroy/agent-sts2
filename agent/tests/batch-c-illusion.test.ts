@@ -4,7 +4,8 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 
 vi.hoisted(() => vi.resetModules());
 vi.mock("node:fs", async (original) => {
-  const fs = await original<typeof import("node:fs")>();
+  const { historicalKnowledgeFs } = await import("./historical-knowledge-fs.js");
+  const fs = historicalKnowledgeFs(await original<typeof import("node:fs")>());
   const { KNOWLEDGE_DIR } = await import("../src/knowledge/files.js");
   // Reuse committed test references; never snapshot a refreshing character knowledge directory.
   const pinned = JSON.parse(fs.readFileSync(new URL("./potion-cost-knowledge.json", import.meta.url), "utf8"));
