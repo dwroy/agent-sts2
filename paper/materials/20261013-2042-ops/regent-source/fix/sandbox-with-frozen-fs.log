@@ -1,0 +1,49 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/regent-climb/.worktrees/codex-fix-regent-20261013-163750/agent
+
+ ❯ tests/ops-herdr.test.ts (27 tests | 2 failed) 57242ms
+     × a post-mortem batch runs in its own pane, reports as before, and the pane closes 139ms
+     × herdr unavailable: the batch starts with setsid as before 132ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/ops-herdr.test.ts > hosted learner batch and the scheduler > a post-mortem batch runs in its own pane, reports as before, and the pane closes
+AssertionError: 这些局不在 runs.jsonl 里（或不是这个角色的）：SILENT000007
+: expected 1 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 1
+
+ ❯ tests/ops-herdr.test.ts:453:49
+    451|     };
+    452|     const run = spawnSync("python3", [join(REPO, "ops", "codex-ops-lea…
+    453|     expect(run.status, run.stderr + run.stdout).toBe(0);
+       |                                                 ^
+    454|     const batch = Object.entries(JSON.parse(readFileSync(join(dir, "le…
+    455|     expect(batch[1].pane).toMatch(/^w1:p\d+$/);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/ops-herdr.test.ts > hosted learner batch and the scheduler > herdr unavailable: the batch starts with setsid as before
+AssertionError: expected 1 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 1
+
+ ❯ tests/ops-herdr.test.ts:474:36
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed | 354 passed (355)
+      Tests  2 failed | 3443 passed (3445)
+   Start at  19:46:25
+   Duration  359.60s (transform 14.52s, setup 24.88s, import 60.64s, tests 1290.65s, environment 45ms)
+

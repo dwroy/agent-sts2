@@ -1,0 +1,27 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/regent-climb/.worktrees/exp/agent
+
+ ❯ tests/potions-jev-call.test.ts (14 tests | 1 failed) 65112ms
+     × logged boards: an auto-act that drinks is a lethal, a pending drink of Jev's line, or a turn where every potion-free line dies 63021ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/potions-jev-call.test.ts > code's own auto-acts never drink while a potion-free line survives > logged boards: an auto-act that drinks is a lethal, a pending drink of Jev's line, or a turn where every potion-free line dies
+Error: Test timed out in 60000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/potions-jev-call.test.ts:185:3
+    183|   });
+    184|
+    185|   it("logged boards: an auto-act that drinks is a lethal, a pending dr…
+       |   ^
+    186|     const DIR = join(dirname(fileURLToPath(import.meta.url)), "logged-…
+    187|     const boards = readdirSync(DIR)
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 354 passed (355)
+      Tests  1 failed | 3444 passed (3445)
+   Start at  20:11:20
+   Duration  408.63s (transform 16.75s, setup 26.31s, import 72.20s, tests 1406.10s, environment 47ms)
+

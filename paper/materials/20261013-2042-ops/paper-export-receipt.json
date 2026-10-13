@@ -1,0 +1,59 @@
+{
+  "command": "nice -n 19 python3 ops/paper_dataset.py --no-raw",
+  "rc": 0,
+  "cut": "2026-10-13T12:49:22.916Z",
+  "summary_counts": {
+    "runs_total": 762,
+    "decisions": {
+      "play_total": 379336,
+      "attributed_to_runs": 376316,
+      "unattributed_menu_timeline": 3020,
+      "shadow": 20,
+      "by_layer": {
+        "code": 198426,
+        "jev": 74724,
+        "deepseek": 12400,
+        "claude": 186,
+        "code-fallback": 1729,
+        "jev-plan": 75072,
+        "deepseek-plan": 847,
+        "claude-plan": 73
+      },
+      "decider_inferred": 342
+    },
+    "source_checks_passed": true
+  },
+  "verification": {
+    "checks": {
+      "decisions attributed + unattributed == play records": true,
+      "decisions_by_label sum == attributed decisions": true,
+      "escalations rows == records with escalation": true,
+      "every runs.jsonl id present in runs.csv": true,
+      "commits == git rev-list --all --count": true,
+      "runs.jsonl decision-count mismatches": [
+        [
+          "KF9HMZKTFC3V",
+          879,
+          880
+        ]
+      ]
+    },
+    "row_counts": {
+      "runs.csv": 762,
+      "decisions_by_label.csv": 25406,
+      "escalations.csv": 3600,
+      "fight_plans.csv": 1461,
+      "commits.csv": 5592
+    }
+  },
+  "owned_history": [
+    "paper/data/history/20261013T124923058763Z",
+    "paper/data/history/20261013T125259201563Z"
+  ],
+  "owned_output_files": 321,
+  "owned_output_bytes": 32471481,
+  "learning_curves": "both 11 ascension rows; exit0",
+  "key_scan": "CLEAN",
+  "original_KF9_879_880_mismatch_preserved": true,
+  "raw_logs_snapshotted": false
+}

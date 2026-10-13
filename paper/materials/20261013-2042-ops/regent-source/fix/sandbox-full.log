@@ -1,0 +1,728 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/regent-climb/.worktrees/codex-fix-regent-20261013-163750/agent
+
+ ❯ tests/sl-explore-gaps.test.ts (22 tests | 11 failed) 621ms
+     × off: as live, the first shown line with the turn's plays (another order) is taken for attempt 2's 156ms
+     × SL_RETRY_EXPLORE_REPLAY_ORDER: attempt 2's plays in their order (Iron Wave first), counted as its line 82ms
+     × the answer itself with attempt 2's turn in another order: kept off (as live), its plays in their order on 85ms
+     × SL_RETRY_EXPLORE_TARGET_TURN: the point's lines and turns kept off on this board too 32ms
+     × the same question and resolution; the point recorded 31ms
+     × attempt 1 records its decision points (the same decisions as without); attempt 3 anchors to it when it lived longest 24ms
+     × SL_RETRY_EXPLORE_SECOND with it: attempt 2 still deviates on attempt 1's path; attempt 1's point adds its planned turn to the tried 18ms
+     × a deviation whose turn ended as a failed attempt's: a later point of the path in the same attempt 16ms
+     × a deviation whose next turn began on a failed attempt's board is wasted (differs false, repeats), and re-armed 20ms
+     × re-armed off the reference path too: the replay stopped, the next point's turn deviates on the attempt's own board 17ms
+     × off the path before the point, on a board no failed attempt decided on: the point's turn still deviates 25ms
+ ❯ tests/sl-explore-potion.test.ts (18 tests | 2 failed) 2132ms
+     × attempt 4 T1: off, Powdered Demise added to attempt 2's cards (as live); on, a line with other cards 1297ms
+     × attempt 3 T2: off, the same cards without the potion (as live); on, no other line there (the target never comes here) 676ms
+ ❯ tests/sl-explore-canon.test.ts (14 tests | 8 failed) 7630ms
+     × every answer's resolution and point, recording and with a deviation, as 08ec8f9 2960ms
+     × Hemokinesis -> Crusher, attempt 1's, gives way to Hemokinesis -> Rocket (the same card on the other enemy: untried) 64ms
+     × on the deviation point the replacement's turn is no failed attempt's; it opens with Shrug It Off, which draws 1972ms
+     × the re-plan after the draw: Jev's Defend, Defend would end the turn as attempts 2-3's; it gives way, the turn differs 1728ms
+     × code's own line ending the turn as a failed attempt's becomes Jev's question (JSA5K8YZ9RXV F48 T1: Demon Form) 817ms
+     × attempt 1's row has its turns (each action's board and play); attempt 3's point has the turns through it, attempt 1's among them 29ms
+     × a restarted process deviates at the same point with the same turns; the deviation's turn carries `avoid` on its later boards only 21ms
+     × both off: attempt 1 unrecorded, no turn record, the target and env.sl.explore as 08ec8f9 20ms
+ ❯ tests/sl-explore-whole.test.ts (17 tests | 8 failed) 5563ms
+     × every answer's resolution and point, recording, deviating and avoiding, as e0fa69b 2362ms
+     × pw7y-a3-t1-replan: code's "only distinct line" ended the turn as a failed one; now Jev's question, the answer kept off 1338ms
+     × pw7y-a4-t2-replan: code's "only distinct line" ended the turn as a failed one; now Jev's question, the answer kept off 1368ms
+     × pw7y-a3-t1-deviation as a later board of the turn: a question whose every line ends as a failed turn says so 152ms
+     × Blood Wall, Pommel Strike+, Stomp: may end as attempts 1-2's after Pommel Strike+'s draw; not 'not played here' 139ms
+     × turnOpen: the sure plays of a line stop at its first card that draws; a potion option is open with its drink 121ms
+     × tells the planner (`whole`), says so in the run config; off: nothing new 20ms
+     × an avoid that cannot act later in the deviation's turn is on the row's deviation, and said 15ms
+ ❯ tests/sl-explore.test.ts (33 tests | 13 failed) 12751ms
+     × recording (env.sl.explore without a deviation): every logged board's decision is 3488dc5's, byte for byte 10624ms
+     × VNKN F25 T1: Jev's pick, played there in attempt 2, gives way to the rollout's best untried line; the row says so 149ms
+     × on the deviation point's board a pick no failed attempt played there is played as answered (logged, not changed) 115ms
+     × every answer's point and, with a deviation, every answer's resolution, log and point: bc8c9bc's 204ms
+     × the Decimillipede (a listed elite): every point and deviation is bc8c9bc's; never a line drinking the Speed Potion the pick does not 171ms
+     × SL_RETRY_EXPLORE_REPLAY on the Decimillipede T1: attempt 2's line is played instead of Jev's answer, as if Jev had picked it 158ms
+     × the Test Subject (a boss; low trust, B2 off here: the rollout's gate): with every dry line played, a line drinking the Weak Potion 1140ms
+     × deviation at the latest point, then backtracking; every other board plays as answered; the rows keep it all 27ms
+     × SL_RETRY_EXPLORE_REPLAY: Jev answers T1 otherwise in attempt 3 (R1QJUBVBSSB2 F33); attempt 2's line is played there, so the attempt reaches its T2 point 15ms
+     × no deviation when the board differs from the failed attempts': played as answered, the point kept for the next attempt 17ms
+     × a restarted process reads the points back from the log and deviates at the same point 14ms
+     × the sub-switches: on by default in env.sl.explore on every board; off, absent (the planner then as at bc8c9bc) 12ms
+     × switch off: nothing recorded, no env.sl.explore, the same plays in every attempt (as before the switch) 14ms
+ ❯ tests/potion-cost.test.ts (26 tests | 4 failed) 4426ms
+     × hallway (N95W F19 T3, Block Potion 8 HP in act 2): every option states HP loss, potions, cost and total; one option is the no-potion line 1457ms
+     × merged when the base line's own rollout drinks nothing later; its own option when it does (ETYC F19 T1: Blood Potion, no conversion value) 1052ms
+     × rollout off: the base line is tagged, the fact says there is no rollout 18ms
+     × the switch off: the question is the one before the costs (no cost facts, no no-potion line) 722ms
+ ❯ tests/sl-replay-plays.test.ts (9 tests | 7 failed) 5183ms
+     × the cause: attempt 3 knows 烙印+ is Pommel Strike's draw, and attempt 2's line with it played beats attempt 2's line 1887ms
+     × off (no plays): as live, the answer kept and the replay stops (the logged decision's sl_explore) 1426ms
+     × SL_RETRY_EXPLORE_REPLAY_PLAYS: attempt 2's plays are played as a line (防御 first, 剑柄打击 -> 火箭 next) 937ms
+     × SL_RETRY_EXPLORE_REPLAY_DEVIATE: neither its line nor its plays can be played: the deviation is made here 853ms
+     × gives the reference's plays and the board's fallback with the replay; says the switches in the run config 29ms
+     × a reference line not among the options: its plays are played, the board counts as replayed (logged) 18ms
+     × neither can be played: the attempt deviates there, not at its point; the next attempt aims at the same point again 17ms
+ ❯ tests/thief-cost.test.ts (11 tests | 6 failed) 8640ms
+     × every logged thief board's decision is ffed0d4's, byte for byte (the switch absent, and false) 2502ms
+     × T2: thief_context gives the card's HP and its derivation; each option's loot cost is its value x the samples losing it 1646ms
+     × its Escape turn (8V0HD9Y207WY F19 T5): the line stunning it, killed next turn 8/8, is the rollout's best and code's fallback 323ms
+     × no value computed for this fight (another fight's, or none): no cost, the facts say why, every choice as with the switch off 1016ms
+     × fail safe: a value that throws when read leaves the decision exactly as with THIEF_COST off 778ms
+     × the Merc's take so far at the potion table's gold rate, and the Fat Gremlin's on its Flee turn 2364ms
+ ❯ tests/sl-early-planner.test.ts (15 tests | 2 failed) 9463ms
+     × the known order rides with the added cards: the question says so, the log counts them, the solver draws as without them 1399ms
+     × an `exact` count alone (what the tracker gives without the switch after a status drawn at once) changes no decision 66ms
+ ❯ tests/ops-herdr.test.ts (27 tests | 2 failed) 49197ms
+     × a post-mortem batch runs in its own pane, reports as before, and the pane closes 282ms
+     × herdr unavailable: the batch starts with setsid as before 167ms
+ ❯ tests/thief.test.ts (11 tests | 9 failed) 11120ms
+     × every logged thief board's decision is the pre-change one, byte for byte 2991ms
+     × T2: what it carries (the card missing since the fight's first frame), turns left, HP; every option's thief fact 1614ms
+     × its Escape turn: this turn is the last; the lines that leave it alive say it leaves with the card 61ms
+     × a line stripping its last Flutter on the Escape turn: stunned, one more turn (8V0HD9Y207WY F19 T5) 316ms
+     × the fight's first frame not seen (a restart with no logged frame): one card, unknown which 972ms
+     × the Merc: gold stolen so far (the fight's first frame's gold less now), where it goes on death 2352ms
+     × the Fat Gremlin on its Flee turn: no line kills it (14 HP), none added; killable, a line killing it is among the options 1012ms
+     × no thief_context, no thief fact, no thief log 653ms
+     × a thief step that throws (a broken first-frame note) leaves the decision exactly as with the switch off 1136ms
+ ❯ tests/template-target.test.ts (12 tests | 5 failed) 7756ms
+     × rntv-f30-t1-shiv: every line names Shiv's target, no option's first action is refused, nor code's 2508ms
+     × rntv-f33-t1-shiv: every line names Shiv's target, no option's first action is refused, nor code's 766ms
+     × rntv-f38-t1-defend-shiv: every line names Shiv's target, no option's first action is refused, nor code's 1274ms
+     × F30 T1: Jev's line (小刀, 欺凌, potion, 防御, potion) starts with Shiv at the Mother Louse, as the gate wants it 1421ms
+     × the same run before the Shiv, True Grit's and Primal Force's conditional templates in hand: byte for byte 1751ms
+ ❯ tests/boss-lines-planner.test.ts (7 tests | 7 failed) 77949ms
+     × BOSS_SIM_LINES=off: every logged boss board's decision is the pre-B2 one, byte for byte 2151ms
+     × a fight that is not a boss fight: the same decision with B2 on 791ms
+     × a boss it is trusted on (The Kin, turn 5): every line's whole-fight numbers, rollout_best by the simulated win rate, the log 21270ms
+     × BOSS_SIM_LOW_TRUST=retry (default): a low-trust boss's first attempt is not simulated at all; the question and every answer as with B2 off, the log says why 18598ms
+     × BOSS_SIM_LOW_TRUST=always: a low-trust boss (the Queen, V4.2): no whole-fight number or plan in Jev's question, the question and ranking as with B2 off; the log keeps the numbers 12427ms
+     × an SL retry of a low-trust boss (SL_RETRY_SHOW_SIM on): the numbers shown and labelled 低可信, the ranking unchanged; the previous attempts in the question 11371ms
+     × turn 1: the fight plan from the best line's samples 11338ms
+ ❯ tests/mech-move-planner.test.ts (8 tests | 8 failed) 11108ms
+     × MECH_MOVE_RULES off: every logged board's decision is the pre-change one (MECH_RULES on), byte for byte 3003ms
+     × MECH_RULES off (MECH_MOVE_RULES on): the pre-change one with MECH_RULES off 705ms
+     × on, reading the rules fails: the switch off (fail safe), the Crab's back attack included 1303ms
+     × on, a monster DB without the per-monster data: the Axebot boards as before (the Crab's back attack is no data rule) 1362ms
+     × NX48MBG3SPRJ F33 T7: a line killing the Rocket counts the Crusher's Enlarging Strike faced (6 + Crab Rage's 6), not from behind 2216ms
+     × 8L29N792FA45 F33 T5: the Crusher alone, the noted facing the dead Rocket's: its Guarded Strike lands as shown 455ms
+     × Y3XT9EBS7U8B F45 T5 (Stock 1): a killing line says the Axebot is back in Boot Up; its Stock carries the observation; the log records it 1146ms
+     × 8L29N792FA45 F39 T3 (Stock 2, 1 HP): the kill takes a stack, the lowered rule 915ms
+ ❯ tests/mech-rules-planner.test.ts (5 tests | 5 failed) 2374ms
+     × with the observed data in the monster DB, every logged Hopper board's decision is the pre-change one, byte for byte 378ms
+     × on, but a monster DB without the observed data: the same 880ms
+     × on, and reading the rules fails: the same (fail safe) 708ms
+     × RPC6X61N9FQ0 F20 T3 (Flutter 5, Hat Trick 21): the line with five hits leaves the attack out of hp_lost and says so 173ms
+     × 8V0HD9Y207WY F19 T5 (its Escape turn, Flutter 2): the stripping line cancels its move, the Escape a turn later 233ms
+ ❯ tests/death-move-planner.test.ts (8 tests | 8 failed) 22409ms
+     × MECH_DEATH_MOVE off: every logged board's decision is the pre-change one, byte for byte 883ms
+     × MECH_RULES off (MECH_DEATH_MOVE on): the pre-change one with MECH_RULES off 216ms
+     × on, the rule-free board (the Kaiser Crab, its ally-death counts in the DB): as before 3769ms
+     × on, a monster DB without the ally-death counters (built before them): as before 655ms
+     × on, reading the rules fails: the switch off (fail safe) 381ms
+     × 0U96U4D9Z3PP F48 T5: the killing lines say Enrage now and Off With Your Head next; hp_lost as without the rule; the Queen carries it; the log records it 382ms
+     × 5GKAR00L5AYV F48 T2 (You Are Mine): no change this turn, the head-chop next 4058ms
+     × Y3XT9EBS7U8B F37 T1: a line killing the Turret Operator says the Shield's Smash comes next 12064ms
+ ❯ tests/silent-bullet-time.test.ts (12 tests | 11 failed) 1232ms
+   × the final T1 prefix pays three, draws zero and preserves five Block plus both energy gains 256ms
+   × three starting energy can pay Bullet Time and then the formerly unaffordable hand 152ms
+   × known pile cards cannot be borrowed after the lock, while a draw made before it remains 144ms
+   × a replan on the actual locked frame retains energy and never invents draws 31ms
+   × the draw lock also stops an existing expected-draw adapter without granting new cards a free cost 131ms
+   × false fullFight: free costs and the lock expire, Radiance adds energy for exactly three later turns 120ms
+   × true fullFight: free costs and the lock expire, Radiance adds energy for exactly three later turns 97ms
+   × IRONCLAD A10 upgrade=undefined keeps the old unobserved model 62ms
+   × SILENT A9 upgrade=undefined keeps the old unobserved model 55ms
+   × SILENT A10 upgrade=true keeps the old unobserved model 58ms
+   × without Bullet Time the original Backflip and Adrenaline draws remain unchanged 124ms
+ ❯ tests/inferno-planner.test.ts (5 tests | 2 failed) 717ms
+     × attempt 1 T6 (17 HP): every line's HP lost carries both copies; one copy (INFERNO_POWER 9) takes one less 254ms
+     × more of the rollout's samples die than at 1 a turn, and its best line moves to Blood Wall+, Uppercut+ 413ms
+ ❯ tests/silent-serpent-form.test.ts (18 tests | 12 failed) 329ms
+   × T1 establishes four points without attributing damage to the power itself or a held second copy 93ms
+   × frame 274202: 274203 separates the card's damage and four-point trigger 31ms
+   × frame 274203: 274204 separates the card's damage and four-point trigger 24ms
+   × frame 274207: 274208 separates the card's damage and four-point trigger 26ms
+   × frame 274208: 274209 separates the card's damage and four-point trigger 16ms
+   × frame 274209: 274210 separates the card's damage and four-point trigger 8ms
+   × a complete fixed defense prefix keeps poison settlement separate from the two card triggers 17ms
+   × IRONCLAD A10 preserves the old outcome on the identical evidence frame 17ms
+   × SILENT A9 preserves the old outcome on the identical evidence frame 18ms
+   × unobserved two-enemies keeps the option and marks its extra damage unknown 17ms
+   × unobserved replay keeps the option and marks its extra damage unknown 19ms
+   × unobserved stacking keeps the option and marks its extra damage unknown 20ms
+ ❯ tests/silent-sloth-replay.test.ts (14 tests | 4 failed) 176ms
+   × final T8: rejects Defend replay, Strike, Neutralize and preserves the actually executed prefix 74ms
+   × the observed cap still allows Neutralize before the replay, without claiming an actual winning line 18ms
+   × later turns, same-turn SL counter regression and a new room do not inherit the extra slot 20ms
+   × a last-slot replay remains offered with an explicit unverified boundary 10ms
+ ❯ tests/silent-selection-audit.test.ts (8 tests | 8 failed) 278ms
+   × the recorded Sandworm pair separates 12 predicted HP from 7 damage and 0/24 from 5/24 deaths 92ms
+   × the frozen candidate pair at decision 271348 retains growth and does not claim actual damage 36ms
+   × the frozen candidate pair at decision 272040 retains growth and does not claim actual damage 24ms
+   × the frozen candidate pair at decision 272195 retains growth and does not claim actual damage 26ms
+   × the real question resolution records the original, pre-SL and replacement with the requested first action 24ms
+   × the original Jev answer stays separate when the HP guard replaces it before SL 25ms
+   × other characters and unobserved ascensions have no audit fields 19ms
+   × a missing plan, random-potion median and clock fallback retain their distinct uncertainty 30ms
+ ❯ tests/passive-pieces-planner.test.ts (1 test | 1 failed) 1004ms
+     × boards without any relic piece: the same question, view and resolutions on and off; the Fan board's question counts the Fan 1003ms
+ ❯ tests/sl-retry-planner.test.ts (9 tests | 8 failed) 92197ms
+     × every logged retry board's decision is 3488dc5's, byte for byte 10583ms
+     × VNKN F25 T3: Burning Pact draws the known Bash+ and Strike; the question says the next 10 cards; the log has sl_retry 6671ms
+     × JW92 F48 T3: Offering draws the known Defend, Twin Strike and Shrug It Off+ 1889ms
+     × known draws the pile does not hold: none used, the decision as with the switch off 7932ms
+     × the rollout runs 24 samples (frozen clock: the whole schedule); the log says so 21695ms
+     × a question's rollout budget is at most what is left of the turn's (re-plans after a draw), never below the usual 7915ms
+     × B2 on a retried boss fight runs the compute's samples a line 27315ms
+     × a retry step that throws leaves the decision exactly as with both switches off 8165ms
+ ❯ tests/silent-potion-reference.test.ts (12 tests | 1 failed) 207ms
+   × the real consumer shows unknown value with valid option keys and preserves choices and ranks (v1=true) 66ms
+ ❯ tests/rollout-best-added.test.ts (4 tests | 1 failed) 599ms
+     × the rollout's best line is added, last and marked, when code did not show it 180ms
+ ❯ tests/silent-dodge-roll.test.ts (14 tests | 9 failed) 216ms
+   × frame 273712 captures the observed amount before Tender reduces Dexterity 68ms
+   × frame 273725 captures the observed amount before Tender reduces Dexterity 23ms
+   × a card played earlier in the same plan reduces the captured amount, rather than using entry Dexterity 18ms
+   × newly captured Block from 273712 is paid once after attribute reset 23ms
+   × newly captured Block from 273725 is paid once after attribute reset 13ms
+   × unobserved frail keeps the option and marks delayed Block unknown 13ms
+   × unobserved replay keeps the option and marks delayed Block unknown 12ms
+   × unobserved duplicate keeps the option and marks delayed Block unknown 13ms
+   × unobserved unknown-amount keeps the option and marks delayed Block unknown 14ms
+ ❯ tests/silent-shackling-weak.test.ts (10 tests | 10 failed) 191ms
+   × the observed potion-only line predicts the actual one HP loss before drinking 72ms
+   × the complete observed Strike/Defend/Backflip/potion prefix keeps seven damage and predicts one loss 39ms
+   × the observed no-drink and post-drink reread keep the shown intent without double reduction 13ms
+   × does not carry the observed move's scope into later simulated turns 15ms
+   × keeps the existing path for character IRONCLAD / A10 8ms
+   × keeps the existing path for character SILENT / A9 6ms
+   × keeps the existing path for character SILENT / A11 6ms
+   × keeps the existing path for character  / A10 10ms
+   × keeps other enemies, moves and unknown powers outside the observed scope 10ms
+   × keeps ambiguous inversion and unobserved modifiers or loss amounts on their existing path 8ms
+ ❯ tests/silent-kusarigama.test.ts (8 tests | 8 failed) 1101ms
+   × does not pre-credit a random kill that the recorded complete line failed to deliver 265ms
+   × retains the playable suffix and labels the reference result instead of presenting an exact rollout 164ms
+   × untriggered relic leaves the original modeled outcome intact 125ms
+   × absent relic leaves the original modeled outcome intact 104ms
+   × a sole remaining target keeps the old raw-damage and per-hit-cap path 104ms
+   × IRONCLAD A10 does not opt into the observed A10 change 140ms
+   × SILENT A9 does not opt into the observed A10 change 114ms
+   × SILENT A11 does not opt into the observed A10 change 83ms
+ ❯ tests/sl-explore-b2.test.ts (5 tests | 5 failed) 38532ms
+     × a trusted boss (The Kin, Ceremonial Beast) and a low-trust one (the Queen): every point and deviated resolution is bc8c9bc's 7380ms
+     × Ceremonial Beast T1: the pick (Mazaleth's Gift) played there; the rollout's gate takes the dry line, B2's the other Gift line the rollout sees dying more often 4577ms
+     × a low-trust boss (the Queen, simulated on an SL retry): the rollout's gate, as without the sub-switch 15838ms
+     × Ceremonial Beast T1, the dry line played there: off nothing is left; on, a Gift line or Gambler's Brew are alternatives, and B2's pick drinks 4167ms
+     × The Kin T5: B2 ranks Snecko Oil (a random potion) first; the replacement drinks it, then re-plans, as Jev's pick of it would 6568ms
+ ❯ tests/batch-c-illusion.test.ts (2 tests | 2 failed) 3413ms
+     × the logged T3 board: the rollout's best is no longer the Parafright line, with 0 ms host pauses 2233ms
+     × the logged T3 board: the rollout's best is no longer the Parafright line, with 10000 ms host pauses 1178ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 187 ⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/batch-c-illusion.test.ts > a line aiming only at the illusion keeps that target on later turns (ZY3992X5VEVS F23 T3-T5) > the logged T3 board: the rollout's best is no longer the Parafright line, with 0 ms host pauses
+ FAIL  tests/batch-c-illusion.test.ts > a line aiming only at the illusion keeps that target on later turns (ZY3992X5VEVS F23 T3-T5) > the logged T3 board: the rollout's best is no longer the Parafright line, with 10000 ms host pauses
+Error: 公共经验文件 /home/dw/Projects/agent-sts2/.worktrees/regent-climb/.worktrees/codex-fix-regent-20261013-163750/knowledge/common/shared-experience.json: 读取失败: ENOENT: fixed illusion rollout references, shared-experience.json
+ ❯ fail src/knowledge/shared-experience.ts:33:63
+     31| const text = (v: unknown): v is string => typeof v === "string" && v.t…
+     32| const count = (v: unknown): v is number => typeof v === "number" && Nu…
+     33| const fail = (path: string, detail: string): never => { throw new Erro…
+       |                                                               ^
+     34|
+     35| /** Schema checks cannot establish generality; that decision belongs t…
+ ❯ loadSharedExperience src/knowledge/shared-experience.ts:77:26
+ ❯ loadExperience src/knowledge/experience.ts:106:45
+ ❯ selectLessons src/knowledge/experience.ts:309:79
+ ❯ fightLessons src/reflex/combat-plan.ts:482:10
+ ❯ planTurn src/reflex/combat-plan.ts:3943:19
+ ❯ src/reflex/combat-plan.ts:2102:117
+ ❯ withSlRetryFallback src/reflex/combat-plan.ts:2281:80
+ ❯ src/reflex/combat-plan.ts:2102:53
+ ❯ withMechFallback src/reflex/combat-plan.ts:2808:12
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/187]⎯
+
+ FAIL  tests/boss-lines-planner.test.ts > B2 off: the boss question as before > BOSS_SIM_LINES=off: every logged boss board's decision is the pre-B2 one, byte for byte
+ FAIL  tests/boss-lines-planner.test.ts > B2 off: the boss question as before > a fight that is not a boss fight: the same decision with B2 on
+ FAIL  tests/boss-lines-planner.test.ts > B2 on: the boss question > a boss it is trusted on (The Kin, turn 5): every line's whole-fight numbers, rollout_best by the simulated win rate, the log
+ FAIL  tests/boss-lines-planner.test.ts > B2 on: the boss question > BOSS_SIM_LOW_TRUST=retry (default): a low-trust boss's first attempt is not simulated at all; the question and every answer as with B2 off, the log says why
+ FAIL  tests/boss-lines-planner.test.ts > B2 on: the boss question > BOSS_SIM_LOW_TRUST=always: a low-trust boss (the Queen, V4.2): no whole-fight number or plan in Jev's question, the question and ranking as with B2 off; the log keeps the numbers
+ FAIL  tests/boss-lines-planner.test.ts > B2 on: the boss question > an SL retry of a low-trust boss (SL_RETRY_SHOW_SIM on): the numbers shown and labelled 低可信, the ranking unchanged; the previous attempts in the question
+ FAIL  tests/boss-lines-planner.test.ts > B2 on: the boss question > turn 1: the fight plan from the best line's samples
+ FAIL  tests/death-move-planner.test.ts > MECH_DEATH_MOVE off, MECH_RULES off, no data, no rule: the combat question as at v4 0f63d28 > MECH_DEATH_MOVE off: every logged board's decision is the pre-change one, byte for byte
+ FAIL  tests/death-move-planner.test.ts > MECH_DEATH_MOVE off, MECH_RULES off, no data, no rule: the combat question as at v4 0f63d28 > on, the rule-free board (the Kaiser Crab, its ally-death counts in the DB): as before
+ FAIL  tests/death-move-planner.test.ts > MECH_DEATH_MOVE off, MECH_RULES off, no data, no rule: the combat question as at v4 0f63d28 > on, a monster DB without the ally-death counters (built before them): as before
+ FAIL  tests/death-move-planner.test.ts > MECH_DEATH_MOVE off, MECH_RULES off, no data, no rule: the combat question as at v4 0f63d28 > on, reading the rules fails: the switch off (fail safe)
+ FAIL  tests/death-move-planner.test.ts > MECH_DEATH_MOVE on: the Queen and the Torch Head Amalgam > 0U96U4D9Z3PP F48 T5: the killing lines say Enrage now and Off With Your Head next; hp_lost as without the rule; the Queen carries it; the log records it
+ FAIL  tests/death-move-planner.test.ts > MECH_DEATH_MOVE on: the Queen and the Torch Head Amalgam > 5GKAR00L5AYV F48 T2 (You Are Mine): no change this turn, the head-chop next
+ FAIL  tests/death-move-planner.test.ts > MECH_DEATH_MOVE on: the Living Shield and the Turret Operator > Y3XT9EBS7U8B F37 T1: a line killing the Turret Operator says the Shield's Smash comes next
+ FAIL  tests/inferno-planner.test.ts > C4F14F3XPN0N F33 (A9, the Knowledge Demon): two Inferno+ up take 2 at the next turn's start > attempt 1 T6 (17 HP): every line's HP lost carries both copies; one copy (INFERNO_POWER 9) takes one less
+ FAIL  tests/inferno-planner.test.ts > A8ENYFR4ZWKG F33 T6 (34 HP, two Infernos up, won): the rollout's later turns lose 2 a turn > more of the rollout's samples die than at 1 a turn, and its best line moves to Blood Wall+, Uppercut+
+ FAIL  tests/mech-move-planner.test.ts > MECH_MOVE_RULES off, or MECH_RULES off: the combat question as at v4 3488dc5 > MECH_MOVE_RULES off: every logged board's decision is the pre-change one (MECH_RULES on), byte for byte
+ FAIL  tests/mech-move-planner.test.ts > MECH_MOVE_RULES off, or MECH_RULES off: the combat question as at v4 3488dc5 > on, reading the rules fails: the switch off (fail safe), the Crab's back attack included
+ FAIL  tests/mech-move-planner.test.ts > MECH_MOVE_RULES off, or MECH_RULES off: the combat question as at v4 3488dc5 > on, a monster DB without the per-monster data: the Axebot boards as before (the Crab's back attack is no data rule)
+ FAIL  tests/mech-move-planner.test.ts > MECH_MOVE_RULES on: the Kaiser Crab > NX48MBG3SPRJ F33 T7: a line killing the Rocket counts the Crusher's Enlarging Strike faced (6 + Crab Rage's 6), not from behind
+ FAIL  tests/mech-move-planner.test.ts > MECH_MOVE_RULES on: the Kaiser Crab > 8L29N792FA45 F33 T5: the Crusher alone, the noted facing the dead Rocket's: its Guarded Strike lands as shown
+ FAIL  tests/mech-move-planner.test.ts > MECH_MOVE_RULES on: the Axebot's Stock > Y3XT9EBS7U8B F45 T5 (Stock 1): a killing line says the Axebot is back in Boot Up; its Stock carries the observation; the log records it
+ FAIL  tests/mech-move-planner.test.ts > MECH_MOVE_RULES on: the Axebot's Stock > 8L29N792FA45 F39 T3 (Stock 2, 1 HP): the kill takes a stack, the lowered rule
+ FAIL  tests/mech-rules-planner.test.ts > MECH_RULES off: the combat question as at v4 ffed0d4 > on, but a monster DB without the observed data: the same
+ FAIL  tests/mech-rules-planner.test.ts > MECH_RULES off: the combat question as at v4 ffed0d4 > on, and reading the rules fails: the same (fail safe)
+ FAIL  tests/mech-rules-planner.test.ts > MECH_RULES on: the Hopper's last Flutter > 8V0HD9Y207WY F19 T5 (its Escape turn, Flutter 2): the stripping line cancels its move, the Escape a turn later
+ FAIL  tests/passive-pieces-planner.test.ts > PASSIVE_PIECES on the combat question > boards without any relic piece: the same question, view and resolutions on and off; the Fan board's question counts the Fan
+ FAIL  tests/sl-explore-b2.test.ts > the sub-switches off: the explore part as at bc8c9bc, B2 on > a trusted boss (The Kin, Ceremonial Beast) and a low-trust one (the Queen): every point and deviated resolution is bc8c9bc's
+ FAIL  tests/sl-explore-b2.test.ts > SL_RETRY_EXPLORE_B2: on a boss B2 is trusted on, B2's win rate gates the replacement > Ceremonial Beast T1: the pick (Mazaleth's Gift) played there; the rollout's gate takes the dry line, B2's the other Gift line the rollout sees dying more often
+ FAIL  tests/sl-explore-b2.test.ts > SL_RETRY_EXPLORE_B2: on a boss B2 is trusted on, B2's win rate gates the replacement > a low-trust boss (the Queen, simulated on an SL retry): the rollout's gate, as without the sub-switch
+ FAIL  tests/sl-explore-b2.test.ts > SL_RETRY_EXPLORE_BOSS_POTIONS: in a boss fight the replacement may drink a potion the pick does not > Ceremonial Beast T1, the dry line played there: off nothing is left; on, a Gift line or Gambler's Brew are alternatives, and B2's pick drinks
+ FAIL  tests/sl-explore-b2.test.ts > SL_RETRY_EXPLORE_BOSS_POTIONS: in a boss fight the replacement may drink a potion the pick does not > The Kin T5: B2 ranks Snecko Oil (a random potion) first; the replacement drinks it, then re-plans, as Jev's pick of it would
+ FAIL  tests/sl-explore-canon.test.ts > SL_RETRY_EXPLORE_TURN on the planner: the deviation holds for its turn (UK7R9A0NMCXL F33 attempt 4 T2) > code's own line ending the turn as a failed attempt's becomes Jev's question (JSA5K8YZ9RXV F48 T1: Demon Form)
+ FAIL  tests/sl-explore-canon.test.ts > the controller: attempt 1 recorded, tried by the turn's plays, the deviation's turn kept > attempt 1's row has its turns (each action's board and play); attempt 3's point has the turns through it, attempt 1's among them
+ FAIL  tests/sl-explore-canon.test.ts > the controller: attempt 1 recorded, tried by the turn's plays, the deviation's turn kept > a restarted process deviates at the same point with the same turns; the deviation's turn carries `avoid` on its later boards only
+ FAIL  tests/sl-explore-canon.test.ts > the controller: attempt 1 recorded, tried by the turn's plays, the deviation's turn kept > both off: attempt 1 unrecorded, no turn record, the target and env.sl.explore as 08ec8f9
+ FAIL  tests/sl-explore-gaps.test.ts > ABCJ0TZ6MD06 F48 attempt 4, T5 off the path: the point's turn > SL_RETRY_EXPLORE_TARGET_TURN: the point's lines and turns kept off on this board too
+ FAIL  tests/sl-explore-gaps.test.ts > SL_RETRY_EXPLORE_ANCHOR's recording on a first attempt (env.slRecord): no decision changes > the same question and resolution; the point recorded
+ FAIL  tests/sl-explore-gaps.test.ts > the controller with SL_RETRY_EXPLORE_ANCHOR > attempt 1 records its decision points (the same decisions as without); attempt 3 anchors to it when it lived longest
+ FAIL  tests/sl-explore-gaps.test.ts > the controller with SL_RETRY_EXPLORE_ANCHOR > SL_RETRY_EXPLORE_SECOND with it: attempt 2 still deviates on attempt 1's path; attempt 1's point adds its planned turn to the tried
+ FAIL  tests/sl-explore-gaps.test.ts > the controller with SL_RETRY_EXPLORE_REARM > a deviation whose turn ended as a failed attempt's: a later point of the path in the same attempt
+ FAIL  tests/sl-explore-gaps.test.ts > the controller with SL_RETRY_EXPLORE_WASTED > a deviation whose next turn began on a failed attempt's board is wasted (differs false, repeats), and re-armed
+ FAIL  tests/sl-explore-gaps.test.ts > the controller with SL_RETRY_EXPLORE_WASTED > re-armed off the reference path too: the replay stopped, the next point's turn deviates on the attempt's own board
+ FAIL  tests/sl-explore-gaps.test.ts > the controller with SL_RETRY_EXPLORE_TARGET_TURN > off the path before the point, on a board no failed attempt decided on: the point's turn still deviates
+ FAIL  tests/sl-explore-whole.test.ts > the controller with SL_RETRY_EXPLORE_WHOLE > tells the planner (`whole`), says so in the run config; off: nothing new
+ FAIL  tests/sl-explore-whole.test.ts > the controller with SL_RETRY_EXPLORE_WHOLE > an avoid that cannot act later in the deviation's turn is on the row's deviation, and said
+ FAIL  tests/sl-explore.test.ts > the planner: the switch recording changes nothing; on the deviation point's board the failed line gives way > recording (env.sl.explore without a deviation): every logged board's decision is 3488dc5's, byte for byte
+ FAIL  tests/sl-explore.test.ts > the planner: the switch recording changes nothing; on the deviation point's board the failed line gives way > VNKN F25 T1: Jev's pick, played there in attempt 2, gives way to the rollout's best untried line; the row says so
+ FAIL  tests/sl-explore.test.ts > the planner: the switch recording changes nothing; on the deviation point's board the failed line gives way > on the deviation point's board a pick no failed attempt played there is played as answered (logged, not changed)
+ FAIL  tests/sl-explore.test.ts > the sub-switches off: the explore part as at bc8c9bc > every answer's point and, with a deviation, every answer's resolution, log and point: bc8c9bc's
+ FAIL  tests/sl-explore.test.ts > the sub-switches on: a listed elite as before (no added drink); a boss fight's replacement may drink > the Decimillipede (a listed elite): every point and deviation is bc8c9bc's; never a line drinking the Speed Potion the pick does not
+ FAIL  tests/sl-explore.test.ts > the sub-switches on: a listed elite as before (no added drink); a boss fight's replacement may drink > SL_RETRY_EXPLORE_REPLAY on the Decimillipede T1: attempt 2's line is played instead of Jev's answer, as if Jev had picked it
+ FAIL  tests/sl-explore.test.ts > the sub-switches on: a listed elite as before (no added drink); a boss fight's replacement may drink > the Test Subject (a boss; low trust, B2 off here: the rollout's gate): with every dry line played, a line drinking the Weak Potion
+ FAIL  tests/sl-explore.test.ts > the controller: attempts record their lines, attempt 3 changes the latest question, attempt 4 the one before > deviation at the latest point, then backtracking; every other board plays as answered; the rows keep it all
+ FAIL  tests/sl-explore.test.ts > the controller: attempts record their lines, attempt 3 changes the latest question, attempt 4 the one before > SL_RETRY_EXPLORE_REPLAY: Jev answers T1 otherwise in attempt 3 (R1QJUBVBSSB2 F33); attempt 2's line is played there, so the attempt reaches its T2 point
+ FAIL  tests/sl-explore.test.ts > the controller: attempts record their lines, attempt 3 changes the latest question, attempt 4 the one before > no deviation when the board differs from the failed attempts': played as answered, the point kept for the next attempt
+ FAIL  tests/sl-explore.test.ts > the controller: attempts record their lines, attempt 3 changes the latest question, attempt 4 the one before > a restarted process reads the points back from the log and deviates at the same point
+ FAIL  tests/sl-explore.test.ts > the controller: attempts record their lines, attempt 3 changes the latest question, attempt 4 the one before > the sub-switches: on by default in env.sl.explore on every board; off, absent (the planner then as at bc8c9bc)
+ FAIL  tests/sl-explore.test.ts > the controller: attempts record their lines, attempt 3 changes the latest question, attempt 4 the one before > switch off: nothing recorded, no env.sl.explore, the same plays in every attempt (as before the switch)
+ FAIL  tests/sl-replay-plays.test.ts > the controller with SL_RETRY_EXPLORE_REPLAY_PLAYS and _DEVIATE > gives the reference's plays and the board's fallback with the replay; says the switches in the run config
+ FAIL  tests/sl-replay-plays.test.ts > the controller with SL_RETRY_EXPLORE_REPLAY_PLAYS and _DEVIATE > a reference line not among the options: its plays are played, the board counts as replayed (logged)
+ FAIL  tests/sl-replay-plays.test.ts > the controller with SL_RETRY_EXPLORE_REPLAY_PLAYS and _DEVIATE > neither can be played: the attempt deviates there, not at its point; the next attempt aims at the same point again
+ FAIL  tests/sl-retry-planner.test.ts > SL retry switches off: the combat question as v4 3488dc5 asked it > every logged retry board's decision is 3488dc5's, byte for byte
+ FAIL  tests/sl-retry-planner.test.ts > SL_RETRY_KNOWN_DRAWS on: the lines draw the cards the earlier attempt drew > VNKN F25 T3: Burning Pact draws the known Bash+ and Strike; the question says the next 10 cards; the log has sl_retry
+ FAIL  tests/template-target.test.ts > the logged Shiv boards (RNTVAT76BPV0): Shiv is played at its target > rntv-f30-t1-shiv: every line names Shiv's target, no option's first action is refused, nor code's
+ FAIL  tests/template-target.test.ts > the logged Shiv boards (RNTVAT76BPV0): Shiv is played at its target > rntv-f33-t1-shiv: every line names Shiv's target, no option's first action is refused, nor code's
+ FAIL  tests/template-target.test.ts > the logged Shiv boards (RNTVAT76BPV0): Shiv is played at its target > rntv-f38-t1-defend-shiv: every line names Shiv's target, no option's first action is refused, nor code's
+ FAIL  tests/template-target.test.ts > the logged Shiv boards (RNTVAT76BPV0): Shiv is played at its target > F30 T1: Jev's line (小刀, 欺凌, potion, 防御, potion) starts with Shiv at the Mother Louse, as the gate wants it
+ FAIL  tests/template-target.test.ts > control boards: no changed card, the question as on v4 without the fix (6bd48a9; b9473ed for True Grit) > the same run before the Shiv, True Grit's and Primal Force's conditional templates in hand: byte for byte
+ FAIL  tests/thief-cost.test.ts > THIEF_COST off: the combat question as with THIEF_FACTS alone (ffed0d4) > every logged thief board's decision is ffed0d4's, byte for byte (the switch absent, and false)
+ FAIL  tests/thief-cost.test.ts > THIEF_COST on: the Hopper's card > T2: thief_context gives the card's HP and its derivation; each option's loot cost is its value x the samples losing it
+ FAIL  tests/thief-cost.test.ts > THIEF_COST on: the Hopper's card > its Escape turn (8V0HD9Y207WY F19 T5): the line stunning it, killed next turn 8/8, is the rollout's best and code's fallback
+ FAIL  tests/thief-cost.test.ts > THIEF_COST on: the Hopper's card > no value computed for this fight (another fight's, or none): no cost, the facts say why, every choice as with the switch off
+ FAIL  tests/thief-cost.test.ts > THIEF_COST on: the Hopper's card > fail safe: a value that throws when read leaves the decision exactly as with THIEF_COST off
+ FAIL  tests/thief-cost.test.ts > THIEF_COST on: the gold > the Merc's take so far at the potion table's gold rate, and the Fat Gremlin's on its Flee turn
+ FAIL  tests/thief.test.ts > THIEF_FACTS off: the combat question as before > every logged thief board's decision is the pre-change one, byte for byte
+ FAIL  tests/thief.test.ts > THIEF_FACTS on: the Thieving Hopper > T2: what it carries (the card missing since the fight's first frame), turns left, HP; every option's thief fact
+ FAIL  tests/thief.test.ts > THIEF_FACTS on: the Thieving Hopper > its Escape turn: this turn is the last; the lines that leave it alive say it leaves with the card
+ FAIL  tests/thief.test.ts > THIEF_FACTS on: the Thieving Hopper > a line stripping its last Flutter on the Escape turn: stunned, one more turn (8V0HD9Y207WY F19 T5)
+ FAIL  tests/thief.test.ts > THIEF_FACTS on: the Thieving Hopper > the fight's first frame not seen (a restart with no logged frame): one card, unknown which
+ FAIL  tests/thief.test.ts > THIEF_FACTS on: the Gremlin Merc and the Fat Gremlin > the Merc: gold stolen so far (the fight's first frame's gold less now), where it goes on death
+ FAIL  tests/thief.test.ts > THIEF_FACTS on: the Gremlin Merc and the Fat Gremlin > the Fat Gremlin on its Flee turn: no line kills it (14 HP), none added; killable, a line killing it is among the options
+ FAIL  tests/thief.test.ts > THIEF_FACTS off > no thief_context, no thief fact, no thief log
+ FAIL  tests/thief.test.ts > THIEF_FACTS fail safe (live play) > a thief step that throws (a broken first-frame note) leaves the decision exactly as with the switch off
+Error: 公共经验文件 /home/dw/Projects/agent-sts2/.worktrees/regent-climb/.worktrees/codex-fix-regent-20261013-163750/knowledge/common/shared-experience.json: 读取失败: ENOENT: pinned test, shared-experience.json
+ ❯ fail src/knowledge/shared-experience.ts:33:63
+     31| const text = (v: unknown): v is string => typeof v === "string" && v.t…
+     32| const count = (v: unknown): v is number => typeof v === "number" && Nu…
+     33| const fail = (path: string, detail: string): never => { throw new Erro…
+       |                                                               ^
+     34|
+     35| /** Schema checks cannot establish generality; that decision belongs t…
+ ❯ loadSharedExperience src/knowledge/shared-experience.ts:77:26
+ ❯ loadExperience src/knowledge/experience.ts:106:45
+ ❯ selectLessons src/knowledge/experience.ts:309:79
+ ❯ fightLessons src/reflex/combat-plan.ts:482:10
+ ❯ planTurn src/reflex/combat-plan.ts:3943:19
+ ❯ src/reflex/combat-plan.ts:2102:117
+ ❯ withSlRetryFallback src/reflex/combat-plan.ts:2281:80
+ ❯ src/reflex/combat-plan.ts:2102:53
+ ❯ withMechFallback src/reflex/combat-plan.ts:2808:12
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/187]⎯
+
+ FAIL  tests/death-move-planner.test.ts > MECH_DEATH_MOVE off, MECH_RULES off, no data, no rule: the combat question as at v4 0f63d28 > MECH_RULES off (MECH_DEATH_MOVE on): the pre-change one with MECH_RULES off
+ FAIL  tests/mech-move-planner.test.ts > MECH_MOVE_RULES off, or MECH_RULES off: the combat question as at v4 3488dc5 > MECH_RULES off (MECH_MOVE_RULES on): the pre-change one with MECH_RULES off
+ FAIL  tests/mech-rules-planner.test.ts > MECH_RULES off: the combat question as at v4 ffed0d4 > with the observed data in the monster DB, every logged Hopper board's decision is the pre-change one, byte for byte
+ FAIL  tests/mech-rules-planner.test.ts > MECH_RULES on: the Hopper's last Flutter > RPC6X61N9FQ0 F20 T3 (Flutter 5, Hat Trick 21): the line with five hits leaves the attack out of hp_lost and says so
+Error: 公共经验文件 /home/dw/Projects/agent-sts2/.worktrees/regent-climb/.worktrees/codex-fix-regent-20261013-163750/knowledge/common/shared-experience.json: 读取失败: ENOENT: pinned test, shared-experience.json
+ ❯ fail src/knowledge/shared-experience.ts:33:63
+     31| const text = (v: unknown): v is string => typeof v === "string" && v.t…
+     32| const count = (v: unknown): v is number => typeof v === "number" && Nu…
+     33| const fail = (path: string, detail: string): never => { throw new Erro…
+       |                                                               ^
+     34|
+     35| /** Schema checks cannot establish generality; that decision belongs t…
+ ❯ loadSharedExperience src/knowledge/shared-experience.ts:77:26
+ ❯ loadExperience src/knowledge/experience.ts:106:45
+ ❯ selectLessons src/knowledge/experience.ts:309:79
+ ❯ fightLessons src/reflex/combat-plan.ts:482:10
+ ❯ planTurn src/reflex/combat-plan.ts:3943:19
+ ❯ src/reflex/combat-plan.ts:2102:117
+ ❯ withSlRetryFallback src/reflex/combat-plan.ts:2281:80
+ ❯ src/reflex/combat-plan.ts:2102:53
+ ❯ withMechFallback src/reflex/combat-plan.ts:2789:39
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/187]⎯
+
+ FAIL  tests/ops-herdr.test.ts > hosted learner batch and the scheduler > a post-mortem batch runs in its own pane, reports as before, and the pane closes
+AssertionError: 这些局不在 runs.jsonl 里（或不是这个角色的）：SILENT000007
+: expected 1 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 1
+
+ ❯ tests/ops-herdr.test.ts:453:49
+    451|     };
+    452|     const run = spawnSync("python3", [join(REPO, "ops", "codex-ops-lea…
+    453|     expect(run.status, run.stderr + run.stdout).toBe(0);
+       |                                                 ^
+    454|     const batch = Object.entries(JSON.parse(readFileSync(join(dir, "le…
+    455|     expect(batch[1].pane).toMatch(/^w1:p\d+$/);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/187]⎯
+
+ FAIL  tests/ops-herdr.test.ts > hosted learner batch and the scheduler > herdr unavailable: the batch starts with setsid as before
+AssertionError: expected 1 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 1
+
+ ❯ tests/ops-herdr.test.ts:474:36
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/187]⎯
+
+ FAIL  tests/potion-cost.test.ts > Jev's question: every option's potion cost, and the no-potion line > hallway (N95W F19 T3, Block Potion 8 HP in act 2): every option states HP loss, potions, cost and total; one option is the no-potion line
+ FAIL  tests/potion-cost.test.ts > Jev's question: every option's potion cost, and the no-potion line > merged when the base line's own rollout drinks nothing later; its own option when it does (ETYC F19 T1: Blood Potion, no conversion value)
+ FAIL  tests/potion-cost.test.ts > Jev's question: every option's potion cost, and the no-potion line > rollout off: the base line is tagged, the fact says there is no rollout
+ FAIL  tests/potion-cost.test.ts > Jev's question: every option's potion cost, and the no-potion line > the switch off: the question is the one before the costs (no cost facts, no no-potion line)
+Error: 公共经验文件 /home/dw/Projects/agent-sts2/.worktrees/regent-climb/.worktrees/codex-fix-regent-20261013-163750/knowledge/common/shared-experience.json: 读取失败: ENOENT: pinned potion-cost fixture, shared-experience.json
+ ❯ fail src/knowledge/shared-experience.ts:33:63
+     31| const text = (v: unknown): v is string => typeof v === "string" && v.t…
+     32| const count = (v: unknown): v is number => typeof v === "number" && Nu…
+     33| const fail = (path: string, detail: string): never => { throw new Erro…
+       |                                                               ^
+     34|
+     35| /** Schema checks cannot establish generality; that decision belongs t…
+ ❯ loadSharedExperience src/knowledge/shared-experience.ts:77:26
+ ❯ loadExperience src/knowledge/experience.ts:106:45
+ ❯ selectLessons src/knowledge/experience.ts:309:79
+ ❯ fightLessons src/reflex/combat-plan.ts:482:10
+ ❯ planTurn src/reflex/combat-plan.ts:3943:19
+ ❯ src/reflex/combat-plan.ts:2102:117
+ ❯ withSlRetryFallback src/reflex/combat-plan.ts:2281:80
+ ❯ src/reflex/combat-plan.ts:2102:53
+ ❯ withMechFallback src/reflex/combat-plan.ts:2808:12
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/187]⎯
+
+ FAIL  tests/rollout-best-added.test.ts > fixed omitted rollout best > the rollout's best line is added, last and marked, when code did not show it
+Error: 公共经验文件 /home/dw/Projects/agent-sts2/.worktrees/regent-climb/.worktrees/codex-fix-regent-20261013-163750/knowledge/common/shared-experience.json: 读取失败: ENOENT: fixed rollout references, shared-experience.json
+ ❯ fail src/knowledge/shared-experience.ts:33:63
+     31| const text = (v: unknown): v is string => typeof v === "string" && v.t…
+     32| const count = (v: unknown): v is number => typeof v === "number" && Nu…
+     33| const fail = (path: string, detail: string): never => { throw new Erro…
+       |                                                               ^
+     34|
+     35| /** Schema checks cannot establish generality; that decision belongs t…
+ ❯ loadSharedExperience src/knowledge/shared-experience.ts:77:26
+ ❯ loadExperience src/knowledge/experience.ts:106:45
+ ❯ selectLessons src/knowledge/experience.ts:309:79
+ ❯ fightLessons src/reflex/combat-plan.ts:482:10
+ ❯ planTurn src/reflex/combat-plan.ts:3943:19
+ ❯ src/reflex/combat-plan.ts:2102:117
+ ❯ withSlRetryFallback src/reflex/combat-plan.ts:2281:80
+ ❯ src/reflex/combat-plan.ts:2102:53
+ ❯ withMechFallback src/reflex/combat-plan.ts:2808:12
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/187]⎯
+
+ FAIL  tests/silent-bullet-time.test.ts > the final T1 prefix pays three, draws zero and preserves five Block plus both energy gains
+ FAIL  tests/silent-bullet-time.test.ts > three starting energy can pay Bullet Time and then the formerly unaffordable hand
+ FAIL  tests/silent-bullet-time.test.ts > known pile cards cannot be borrowed after the lock, while a draw made before it remains
+ FAIL  tests/silent-bullet-time.test.ts > a replan on the actual locked frame retains energy and never invents draws
+ FAIL  tests/silent-bullet-time.test.ts > the draw lock also stops an existing expected-draw adapter without granting new cards a free cost
+ FAIL  tests/silent-bullet-time.test.ts > false fullFight: free costs and the lock expire, Radiance adds energy for exactly three later turns
+ FAIL  tests/silent-bullet-time.test.ts > true fullFight: free costs and the lock expire, Radiance adds energy for exactly three later turns
+ FAIL  tests/silent-bullet-time.test.ts > IRONCLAD A10 upgrade=undefined keeps the old unobserved model
+ FAIL  tests/silent-bullet-time.test.ts > SILENT A9 upgrade=undefined keeps the old unobserved model
+ FAIL  tests/silent-bullet-time.test.ts > SILENT A10 upgrade=true keeps the old unobserved model
+ FAIL  tests/silent-bullet-time.test.ts > without Bullet Time the original Backflip and Adrenaline draws remain unchanged
+Error: 公共经验文件 /home/dw/Projects/agent-sts2/.worktrees/regent-climb/.worktrees/codex-fix-regent-20261013-163750/knowledge/common/shared-experience.json: 读取失败: ENOENT: fixed Bullet Time evidence
+ ❯ fail src/knowledge/shared-experience.ts:33:63
+     31| const text = (v: unknown): v is string => typeof v === "string" && v.t…
+     32| const count = (v: unknown): v is number => typeof v === "number" && Nu…
+     33| const fail = (path: string, detail: string): never => { throw new Erro…
+       |                                                               ^
+     34|
+     35| /** Schema checks cannot establish generality; that decision belongs t…
+ ❯ loadSharedExperience src/knowledge/shared-experience.ts:77:26
+ ❯ loadExperience src/knowledge/experience.ts:106:45
+ ❯ selectLessons src/knowledge/experience.ts:309:79
+ ❯ fightLessons src/reflex/combat-plan.ts:482:10
+ ❯ planTurn src/reflex/combat-plan.ts:3943:19
+ ❯ src/reflex/combat-plan.ts:2102:117
+ ❯ withSlRetryFallback src/reflex/combat-plan.ts:2281:80
+ ❯ src/reflex/combat-plan.ts:2102:53
+ ❯ withMechFallback src/reflex/combat-plan.ts:2808:12
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/187]⎯
+
+ FAIL  tests/silent-dodge-roll.test.ts > frame 273712 captures the observed amount before Tender reduces Dexterity
+ FAIL  tests/silent-dodge-roll.test.ts > frame 273725 captures the observed amount before Tender reduces Dexterity
+ FAIL  tests/silent-dodge-roll.test.ts > a card played earlier in the same plan reduces the captured amount, rather than using entry Dexterity
+ FAIL  tests/silent-dodge-roll.test.ts > newly captured Block from 273712 is paid once after attribute reset
+ FAIL  tests/silent-dodge-roll.test.ts > newly captured Block from 273725 is paid once after attribute reset
+ FAIL  tests/silent-dodge-roll.test.ts > unobserved frail keeps the option and marks delayed Block unknown
+ FAIL  tests/silent-dodge-roll.test.ts > unobserved replay keeps the option and marks delayed Block unknown
+ FAIL  tests/silent-dodge-roll.test.ts > unobserved duplicate keeps the option and marks delayed Block unknown
+ FAIL  tests/silent-dodge-roll.test.ts > unobserved unknown-amount keeps the option and marks delayed Block unknown
+Error: 公共经验文件 /home/dw/Projects/agent-sts2/.worktrees/regent-climb/.worktrees/codex-fix-regent-20261013-163750/knowledge/common/shared-experience.json: 读取失败: ENOENT: fixed delayed-Block test
+ ❯ fail src/knowledge/shared-experience.ts:33:63
+     31| const text = (v: unknown): v is string => typeof v === "string" && v.t…
+     32| const count = (v: unknown): v is number => typeof v === "number" && Nu…
+     33| const fail = (path: string, detail: string): never => { throw new Erro…
+       |                                                               ^
+     34|
+     35| /** Schema checks cannot establish generality; that decision belongs t…
+ ❯ loadSharedExperience src/knowledge/shared-experience.ts:77:26
+ ❯ loadExperience src/knowledge/experience.ts:106:45
+ ❯ selectLessons src/knowledge/experience.ts:309:79
+ ❯ fightLessons src/reflex/combat-plan.ts:482:10
+ ❯ planTurn src/reflex/combat-plan.ts:3943:19
+ ❯ src/reflex/combat-plan.ts:2102:117
+ ❯ withSlRetryFallback src/reflex/combat-plan.ts:2281:80
+ ❯ src/reflex/combat-plan.ts:2102:53
+ ❯ withMechFallback src/reflex/combat-plan.ts:2808:12
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/187]⎯
+
+ FAIL  tests/silent-kusarigama.test.ts > does not pre-credit a random kill that the recorded complete line failed to deliver
+ FAIL  tests/silent-kusarigama.test.ts > retains the playable suffix and labels the reference result instead of presenting an exact rollout
+ FAIL  tests/silent-kusarigama.test.ts > untriggered relic leaves the original modeled outcome intact
+ FAIL  tests/silent-kusarigama.test.ts > absent relic leaves the original modeled outcome intact
+ FAIL  tests/silent-kusarigama.test.ts > a sole remaining target keeps the old raw-damage and per-hit-cap path
+ FAIL  tests/silent-kusarigama.test.ts > IRONCLAD A10 does not opt into the observed A10 change
+ FAIL  tests/silent-kusarigama.test.ts > SILENT A9 does not opt into the observed A10 change
+ FAIL  tests/silent-kusarigama.test.ts > SILENT A11 does not opt into the observed A10 change
+Error: 公共经验文件 /home/dw/Projects/agent-sts2/.worktrees/regent-climb/.worktrees/codex-fix-regent-20261013-163750/knowledge/common/shared-experience.json: 读取失败: ENOENT: fixed Kusarigama evidence
+ ❯ fail src/knowledge/shared-experience.ts:33:63
+     31| const text = (v: unknown): v is string => typeof v === "string" && v.t…
+     32| const count = (v: unknown): v is number => typeof v === "number" && Nu…
+     33| const fail = (path: string, detail: string): never => { throw new Erro…
+       |                                                               ^
+     34|
+     35| /** Schema checks cannot establish generality; that decision belongs t…
+ ❯ loadSharedExperience src/knowledge/shared-experience.ts:77:26
+ ❯ loadExperience src/knowledge/experience.ts:106:45
+ ❯ selectLessons src/knowledge/experience.ts:309:79
+ ❯ fightLessons src/reflex/combat-plan.ts:482:10
+ ❯ planTurn src/reflex/combat-plan.ts:3943:19
+ ❯ src/reflex/combat-plan.ts:2102:117
+ ❯ withSlRetryFallback src/reflex/combat-plan.ts:2281:80
+ ❯ src/reflex/combat-plan.ts:2102:53
+ ❯ withMechFallback src/reflex/combat-plan.ts:2808:12
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/187]⎯
+
+ FAIL  tests/silent-potion-reference.test.ts > the real consumer shows unknown value with valid option keys and preserves choices and ranks (v1=true)
+Error: 公共经验文件 /home/dw/Projects/agent-sts2/.worktrees/regent-climb/.worktrees/codex-fix-regent-20261013-163750/knowledge/common/shared-experience.json: 读取失败: ENOENT: frozen Silent evidence only
+ ❯ fail src/knowledge/shared-experience.ts:33:63
+     31| const text = (v: unknown): v is string => typeof v === "string" && v.t…
+     32| const count = (v: unknown): v is number => typeof v === "number" && Nu…
+     33| const fail = (path: string, detail: string): never => { throw new Erro…
+       |                                                               ^
+     34|
+     35| /** Schema checks cannot establish generality; that decision belongs t…
+ ❯ loadSharedExperience src/knowledge/shared-experience.ts:77:26
+ ❯ loadExperience src/knowledge/experience.ts:72:90
+ ❯ potionLessons src/reflex/jev-experience.ts:313:37
+ ❯ jevExperience src/reflex/jev-experience.ts:374:18
+ ❯ planTurn src/reflex/combat-plan.ts:4059:19
+ ❯ src/reflex/combat-plan.ts:2102:117
+ ❯ withSlRetryFallback src/reflex/combat-plan.ts:2281:80
+ ❯ src/reflex/combat-plan.ts:2102:53
+ ❯ withMechFallback src/reflex/combat-plan.ts:2808:12
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/187]⎯
+
+ FAIL  tests/silent-selection-audit.test.ts > the recorded Sandworm pair separates 12 predicted HP from 7 damage and 0/24 from 5/24 deaths
+ FAIL  tests/silent-selection-audit.test.ts > the frozen candidate pair at decision 271348 retains growth and does not claim actual damage
+ FAIL  tests/silent-selection-audit.test.ts > the frozen candidate pair at decision 272040 retains growth and does not claim actual damage
+ FAIL  tests/silent-selection-audit.test.ts > the frozen candidate pair at decision 272195 retains growth and does not claim actual damage
+ FAIL  tests/silent-selection-audit.test.ts > the real question resolution records the original, pre-SL and replacement with the requested first action
+ FAIL  tests/silent-selection-audit.test.ts > the original Jev answer stays separate when the HP guard replaces it before SL
+ FAIL  tests/silent-selection-audit.test.ts > other characters and unobserved ascensions have no audit fields
+ FAIL  tests/silent-selection-audit.test.ts > a missing plan, random-potion median and clock fallback retain their distinct uncertainty
+Error: 公共经验文件 /home/dw/Projects/agent-sts2/.worktrees/regent-climb/.worktrees/codex-fix-regent-20261013-163750/knowledge/common/shared-experience.json: 读取失败: ENOENT: fixed selection evidence
+ ❯ fail src/knowledge/shared-experience.ts:33:63
+     31| const text = (v: unknown): v is string => typeof v === "string" && v.t…
+     32| const count = (v: unknown): v is number => typeof v === "number" && Nu…
+     33| const fail = (path: string, detail: string): never => { throw new Erro…
+       |                                                               ^
+     34|
+     35| /** Schema checks cannot establish generality; that decision belongs t…
+ ❯ loadSharedExperience src/knowledge/shared-experience.ts:77:26
+ ❯ loadExperience src/knowledge/experience.ts:106:45
+ ❯ selectLessons src/knowledge/experience.ts:309:79
+ ❯ fightLessons src/reflex/combat-plan.ts:482:10
+ ❯ planTurn src/reflex/combat-plan.ts:3943:19
+ ❯ src/reflex/combat-plan.ts:2102:117
+ ❯ withSlRetryFallback src/reflex/combat-plan.ts:2281:80
+ ❯ src/reflex/combat-plan.ts:2102:53
+ ❯ withMechFallback src/reflex/combat-plan.ts:2808:12
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/187]⎯
+
+ FAIL  tests/silent-serpent-form.test.ts > T1 establishes four points without attributing damage to the power itself or a held second copy
+ FAIL  tests/silent-serpent-form.test.ts > frame 274202: 274203 separates the card's damage and four-point trigger
+ FAIL  tests/silent-serpent-form.test.ts > frame 274203: 274204 separates the card's damage and four-point trigger
+ FAIL  tests/silent-serpent-form.test.ts > frame 274207: 274208 separates the card's damage and four-point trigger
+ FAIL  tests/silent-serpent-form.test.ts > frame 274208: 274209 separates the card's damage and four-point trigger
+ FAIL  tests/silent-serpent-form.test.ts > frame 274209: 274210 separates the card's damage and four-point trigger
+ FAIL  tests/silent-serpent-form.test.ts > a complete fixed defense prefix keeps poison settlement separate from the two card triggers
+ FAIL  tests/silent-serpent-form.test.ts > IRONCLAD A10 preserves the old outcome on the identical evidence frame
+ FAIL  tests/silent-serpent-form.test.ts > SILENT A9 preserves the old outcome on the identical evidence frame
+ FAIL  tests/silent-serpent-form.test.ts > unobserved two-enemies keeps the option and marks its extra damage unknown
+ FAIL  tests/silent-serpent-form.test.ts > unobserved replay keeps the option and marks its extra damage unknown
+ FAIL  tests/silent-serpent-form.test.ts > unobserved stacking keeps the option and marks its extra damage unknown
+Error: 公共经验文件 /home/dw/Projects/agent-sts2/.worktrees/regent-climb/.worktrees/codex-fix-regent-20261013-163750/knowledge/common/shared-experience.json: 读取失败: ENOENT: fixed Serpent Form evidence
+ ❯ fail src/knowledge/shared-experience.ts:33:63
+     31| const text = (v: unknown): v is string => typeof v === "string" && v.t…
+     32| const count = (v: unknown): v is number => typeof v === "number" && Nu…
+     33| const fail = (path: string, detail: string): never => { throw new Erro…
+       |                                                               ^
+     34|
+     35| /** Schema checks cannot establish generality; that decision belongs t…
+ ❯ loadSharedExperience src/knowledge/shared-experience.ts:77:26
+ ❯ loadExperience src/knowledge/experience.ts:106:45
+ ❯ selectLessons src/knowledge/experience.ts:309:79
+ ❯ fightLessons src/reflex/combat-plan.ts:482:10
+ ❯ planTurn src/reflex/combat-plan.ts:3943:19
+ ❯ src/reflex/combat-plan.ts:2102:117
+ ❯ withSlRetryFallback src/reflex/combat-plan.ts:2281:80
+ ❯ src/reflex/combat-plan.ts:2102:53
+ ❯ withMechFallback src/reflex/combat-plan.ts:2808:12
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/187]⎯
+
+ FAIL  tests/silent-shackling-weak.test.ts > the observed potion-only line predicts the actual one HP loss before drinking
+ FAIL  tests/silent-shackling-weak.test.ts > the complete observed Strike/Defend/Backflip/potion prefix keeps seven damage and predicts one loss
+ FAIL  tests/silent-shackling-weak.test.ts > the observed no-drink and post-drink reread keep the shown intent without double reduction
+ FAIL  tests/silent-shackling-weak.test.ts > does not carry the observed move's scope into later simulated turns
+ FAIL  tests/silent-shackling-weak.test.ts > keeps the existing path for character IRONCLAD / A10
+ FAIL  tests/silent-shackling-weak.test.ts > keeps the existing path for character SILENT / A9
+ FAIL  tests/silent-shackling-weak.test.ts > keeps the existing path for character SILENT / A11
+ FAIL  tests/silent-shackling-weak.test.ts > keeps the existing path for character  / A10
+ FAIL  tests/silent-shackling-weak.test.ts > keeps other enemies, moves and unknown powers outside the observed scope
+ FAIL  tests/silent-shackling-weak.test.ts > keeps ambiguous inversion and unobserved modifiers or loss amounts on their existing path
+Error: 公共经验文件 /home/dw/Projects/agent-sts2/.worktrees/regent-climb/.worktrees/codex-fix-regent-20261013-163750/knowledge/common/shared-experience.json: 读取失败: ENOENT: fixed Shackling evidence
+ ❯ fail src/knowledge/shared-experience.ts:33:63
+     31| const text = (v: unknown): v is string => typeof v === "string" && v.t…
+     32| const count = (v: unknown): v is number => typeof v === "number" && Nu…
+     33| const fail = (path: string, detail: string): never => { throw new Erro…
+       |                                                               ^
+     34|
+     35| /** Schema checks cannot establish generality; that decision belongs t…
+ ❯ loadSharedExperience src/knowledge/shared-experience.ts:77:26
+ ❯ loadExperience src/knowledge/experience.ts:106:45
+ ❯ selectLessons src/knowledge/experience.ts:309:79
+ ❯ fightLessons src/reflex/combat-plan.ts:482:10
+ ❯ planTurn src/reflex/combat-plan.ts:3943:19
+ ❯ src/reflex/combat-plan.ts:2102:117
+ ❯ withSlRetryFallback src/reflex/combat-plan.ts:2281:80
+ ❯ src/reflex/combat-plan.ts:2102:53
+ ❯ withMechFallback src/reflex/combat-plan.ts:2808:12
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[14/187]⎯
+
+ FAIL  tests/silent-sloth-replay.test.ts > final T8: rejects Defend replay, Strike, Neutralize and preserves the actually executed prefix
+ FAIL  tests/silent-sloth-replay.test.ts > the observed cap still allows Neutralize before the replay, without claiming an actual winning line
+ FAIL  tests/silent-sloth-replay.test.ts > later turns, same-turn SL counter regression and a new room do not inherit the extra slot
+ FAIL  tests/silent-sloth-replay.test.ts > a last-slot replay remains offered with an explicit unverified boundary
+Error: 公共经验文件 /home/dw/Projects/agent-sts2/.worktrees/regent-climb/.worktrees/codex-fix-regent-20261013-163750/knowledge/common/shared-experience.json: 读取失败: ENOENT: fixed Sloth test has no generated references
+ ❯ fail src/knowledge/shared-experience.ts:33:63
+     31| const text = (v: unknown): v is string => typeof v === "string" && v.t…
+     32| const count = (v: unknown): v is number => typeof v === "number" && Nu…
+     33| const fail = (path: string, detail: string): never => { throw new Erro…
+       |                                                               ^
+     34|
+     35| /** Schema checks cannot establish generality; that decision belongs t…
+ ❯ loadSharedExperience src/knowledge/shared-experience.ts:77:26
+ ❯ loadExperience src/knowledge/experience.ts:106:45
+ ❯ selectLessons src/knowledge/experience.ts:309:79
+ ❯ fightLessons src/reflex/combat-plan.ts:482:10
+ ❯ planTurn src/reflex/combat-plan.ts:3943:19
+ ❯ src/reflex/combat-plan.ts:2102:117
+ ❯ withSlRetryFallback src/reflex/combat-plan.ts:2281:80
+ ❯ src/reflex/combat-plan.ts:2102:53
+ ❯ withMechFallback src/reflex/combat-plan.ts:2808:12
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[15/187]⎯
+
+ FAIL  tests/sl-early-planner.test.ts > SL_RETRY_KNOWN_INSERTS: the Insatiable's Frantic Escape added at random places (EJXC F33 T2, the fight as its own retry) > the known order rides with the added cards: the question says so, the log counts them, the solver draws as without them
+ FAIL  tests/sl-early-planner.test.ts > SL_RETRY_KNOWN_INSERTS: the Insatiable's Frantic Escape added at random places (EJXC F33 T2, the fight as its own retry) > an `exact` count alone (what the tracker gives without the switch after a status drawn at once) changes no decision
+ FAIL  tests/sl-explore-canon.test.ts > the planner, both switches off: 08ec8f9's decisions on the logged boards > every answer's resolution and point, recording and with a deviation, as 08ec8f9
+ FAIL  tests/sl-explore-canon.test.ts > SL_RETRY_EXPLORE_CANON on the planner: attempt 1's play counts as tried (UK7R9A0NMCXL F33 attempt 5 T1) > Hemokinesis -> Crusher, attempt 1's, gives way to Hemokinesis -> Rocket (the same card on the other enemy: untried)
+ FAIL  tests/sl-explore-canon.test.ts > SL_RETRY_EXPLORE_TURN on the planner: the deviation holds for its turn (UK7R9A0NMCXL F33 attempt 4 T2) > on the deviation point the replacement's turn is no failed attempt's; it opens with Shrug It Off, which draws
+ FAIL  tests/sl-explore-canon.test.ts > SL_RETRY_EXPLORE_TURN on the planner: the deviation holds for its turn (UK7R9A0NMCXL F33 attempt 4 T2) > the re-plan after the draw: Jev's Defend, Defend would end the turn as attempts 2-3's; it gives way, the turn differs
+ FAIL  tests/sl-explore-gaps.test.ts > ABCJ0TZ6MD06 F48 attempt 4, T4's first board: attempt 2's turn in another order > off: as live, the first shown line with the turn's plays (another order) is taken for attempt 2's
+ FAIL  tests/sl-explore-gaps.test.ts > ABCJ0TZ6MD06 F48 attempt 4, T4's first board: attempt 2's turn in another order > SL_RETRY_EXPLORE_REPLAY_ORDER: attempt 2's plays in their order (Iron Wave first), counted as its line
+ FAIL  tests/sl-explore-gaps.test.ts > ABCJ0TZ6MD06 F48 attempt 4, T4's first board: attempt 2's turn in another order > the answer itself with attempt 2's turn in another order: kept off (as live), its plays in their order on
+ FAIL  tests/sl-explore-potion.test.ts > the planner on P68P F48's logged deviation boards (Jev answering as logged) > attempt 4 T1: off, Powdered Demise added to attempt 2's cards (as live); on, a line with other cards
+ FAIL  tests/sl-explore-potion.test.ts > the planner on P68P F48's logged deviation boards (Jev answering as logged) > attempt 3 T2: off, the same cards without the potion (as live); on, no other line there (the target never comes here)
+ FAIL  tests/sl-explore-whole.test.ts > the planner without `whole`: e0fa69b's decisions on the logged boards > every answer's resolution and point, recording, deviating and avoiding, as e0fa69b
+ FAIL  tests/sl-explore-whole.test.ts > the avoid reaches every surviving line: the re-plans after the draw (PW7Y F48 attempts 3 and 4) > pw7y-a3-t1-replan: code's "only distinct line" ended the turn as a failed one; now Jev's question, the answer kept off
+ FAIL  tests/sl-explore-whole.test.ts > the avoid reaches every surviving line: the re-plans after the draw (PW7Y F48 attempts 3 and 4) > pw7y-a4-t2-replan: code's "only distinct line" ended the turn as a failed one; now Jev's question, the answer kept off
+ FAIL  tests/sl-explore-whole.test.ts > the avoid reaches every surviving line: the re-plans after the draw (PW7Y F48 attempts 3 and 4) > pw7y-a3-t1-deviation as a later board of the turn: a question whose every line ends as a failed turn says so
+ FAIL  tests/sl-explore-whole.test.ts > the deviation point judged by the whole turn (PW7Y F48 attempt 3 T1) > Blood Wall, Pommel Strike+, Stomp: may end as attempts 1-2's after Pommel Strike+'s draw; not 'not played here'
+ FAIL  tests/sl-explore-whole.test.ts > the deviation point judged by the whole turn (PW7Y F48 attempt 3 T1) > turnOpen: the sure plays of a line stop at its first card that draws; a potion option is open with its drink
+ FAIL  tests/sl-replay-plays.test.ts > J4S28FRQKD7G F33 attempt 3, T2's first board: attempt 2's line is not among the options > the cause: attempt 3 knows 烙印+ is Pommel Strike's draw, and attempt 2's line with it played beats attempt 2's line
+ FAIL  tests/sl-replay-plays.test.ts > J4S28FRQKD7G F33 attempt 3, T2's first board: attempt 2's line is not among the options > off (no plays): as live, the answer kept and the replay stops (the logged decision's sl_explore)
+ FAIL  tests/sl-replay-plays.test.ts > J4S28FRQKD7G F33 attempt 3, T2's first board: attempt 2's line is not among the options > SL_RETRY_EXPLORE_REPLAY_PLAYS: attempt 2's plays are played as a line (防御 first, 剑柄打击 -> 火箭 next)
+ FAIL  tests/sl-replay-plays.test.ts > J4S28FRQKD7G F33 attempt 3, T2's first board: attempt 2's line is not among the options > SL_RETRY_EXPLORE_REPLAY_DEVIATE: neither its line nor its plays can be played: the deviation is made here
+ FAIL  tests/sl-retry-planner.test.ts > SL_RETRY_KNOWN_DRAWS on: the lines draw the cards the earlier attempt drew > JW92 F48 T3: Offering draws the known Defend, Twin Strike and Shrug It Off+
+ FAIL  tests/sl-retry-planner.test.ts > SL_RETRY_KNOWN_DRAWS on: the lines draw the cards the earlier attempt drew > known draws the pile does not hold: none used, the decision as with the switch off
+ FAIL  tests/sl-retry-planner.test.ts > SL_RETRY_COMPUTE on: more samples on a retry > the rollout runs 24 samples (frozen clock: the whole schedule); the log says so
+ FAIL  tests/sl-retry-planner.test.ts > SL_RETRY_COMPUTE on: more samples on a retry > a question's rollout budget is at most what is left of the turn's (re-plans after a draw), never below the usual
+ FAIL  tests/sl-retry-planner.test.ts > SL_RETRY_COMPUTE on: more samples on a retry > B2 on a retried boss fight runs the compute's samples a line
+ FAIL  tests/sl-retry-planner.test.ts > SL retry fail safe (live play) > a retry step that throws leaves the decision exactly as with both switches off
+Error: 公共经验文件 /home/dw/Projects/agent-sts2/.worktrees/regent-climb/.worktrees/codex-fix-regent-20261013-163750/knowledge/common/shared-experience.json: 读取失败: ENOENT: pinned test, shared-experience.json
+ ❯ fail src/knowledge/shared-experience.ts:33:63
+     31| const text = (v: unknown): v is string => typeof v === "string" && v.t…
+     32| const count = (v: unknown): v is number => typeof v === "number" && Nu…
+     33| const fail = (path: string, detail: string): never => { throw new Erro…
+       |                                                               ^
+     34|
+     35| /** Schema checks cannot establish generality; that decision belongs t…
+ ❯ loadSharedExperience src/knowledge/shared-experience.ts:77:26
+ ❯ loadExperience src/knowledge/experience.ts:106:45
+ ❯ selectLessons src/knowledge/experience.ts:309:79
+ ❯ fightLessons src/reflex/combat-plan.ts:482:10
+ ❯ planTurn src/reflex/combat-plan.ts:3943:19
+ ❯ src/reflex/combat-plan.ts:2102:117
+ ❯ withSlRetryFallback src/reflex/combat-plan.ts:2286:12
+ ❯ src/reflex/combat-plan.ts:2102:53
+ ❯ withMechFallback src/reflex/combat-plan.ts:2808:12
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[16/187]⎯
+
+
+ Test Files  30 failed | 324 passed (354)
+      Tests  187 failed | 3256 passed (3443)
+   Start at  19:28:18
+   Duration  257.89s (transform 14.50s, setup 22.09s, import 61.69s, tests 882.48s, environment 41ms)
+

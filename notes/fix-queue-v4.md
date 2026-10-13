@@ -1177,3 +1177,5 @@ Roy：「上线后进 F48 反而降低一半，这才是关键，要找问题。
 - 2026-10-13 20:04:36 CST 运维 codex：[silent-0308原非阻塞题面项重复证据，不新建任务] 学习者191301核DWW8GX3UQCQM F33T7 d378193—196/s389625—626，combat.ts:100单动作末题只攻击HP口径而漏既有沙坑1截止；其report明确new=false、原fix-queue-v4:912已有。仅关联原回报/账本repeat及pending silent-proposal-a234d05e459d0cc0，不由ops添加药水价值、强喝/无条件SL规则或重复派学习。
 
 - 2026-10-13 20:18:54 CST 运维 codex：[shared-experience-fixed-filesystem-snapshot-20261013关闭固定测试项] 原source8390c62d7真实31叶已主main/live，原184302 batch宿主tree25e961完整421文件4350项过/2skip/tsc0/vitest0；185原错误已消失，原缺失/空/损坏公共库、历史快照、所有候选/预算/负断言保持。储君lane31同source实际同步；只关闭原FS固定测试兼容项，通用池内容/稀疏加载实际消费与原EXP8/3仍原owner待闭环，保留旧失败，不删未知/降低断言或重复研究。
+
+- 2026-10-13 20:55:40 CST [运维 codex/2042去重] D2JR3FN0VYH5复盘仅补既有silent-0295多敌随机施毒伪确定斩杀证据，没有新的阻塞纯bug；沿原队列和silent-proposal-d9712a0e7c616f76，不另派同题。201242-fix-batch fixes=[]，373项为定向自测，无新源可兜底合入，原failed/rc0/merged=null保留；已上线限定子项不关闭宽提案。原R329树4c1c72的185 FS失败已由184302源8390/部署树25e961完整421文件4350项过2skip关闭FS子项，不回滚V5，不重复原树完整补测。

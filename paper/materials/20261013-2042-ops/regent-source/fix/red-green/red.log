@@ -1,0 +1,109 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/regent-climb/.worktrees/codex-fix-regent-20261013-163750/agent
+
+ ❯ tests/potion-refresh-climb.test.ts (5 tests | 1 failed) 276ms
+   × uses the exported lane target ahead of the shared env file 60ms
+ ❯ tests/learner-instance.test.ts (4 tests | 1 failed) 116ms
+     × renders the lane baseline and own live checkout without borrowing primary live 42ms
+ ❯ tests/potion-unmeasured.test.ts (6 tests | 3 failed) 28ms
+     × preserves both empty buckets and loads the whole Regent knowledge 11ms
+     × reports unknown worth in the table and single-potion query without inventing zero 4ms
+     × selects measured buckets while retaining empty ones 3ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/learner-instance.test.ts > learner targets for an independent worktree lane > renders the lane baseline and own live checkout without borrowing primary live
+AssertionError: expected '===== 最终提示（lane，163 字）=====\nBASE=reg…' to contain 'CODE=/tmp/learner-instance-1zYapt/.wo…'
+
+- Expected
++ Received
+
+- CODE=/tmp/learner-instance-1zYapt/.worktrees/regent-climb
++ ===== 最终提示（lane，163 字）=====
++ BASE=regent-climb
++ MERGE=/tmp/learner-instance-1zYapt/.worktrees/regent-climb
++ CODE=/tmp/learner-instance-1zYapt/.worktrees/regent-climb/.worktrees/live
++ ROLE=regent
++
++ ===== 命令行（工作目录 /tmp/learner-instance-1zYapt/.worktrees/regent-climb；提示从 stdin 传入）=====
++ codex exec --json --ignore-user-config --ignore-rules --cd /tmp/learner-instance-1zYapt/.worktrees/regent-climb -c 'default_permissions="learner"' -c 'permissions.learner.filesystem={ ":root" = "read", "glob_scan_max_depth" = 8, ":project_roots" = { "." = "write" }, ":tmpdir" = "write", ":slash_tmp" = "write", "/tmp/learner-instance-1zYapt/.worktrees/regent-climb" = { "." = "write", "**/.env" = "none", "**/*.env" = "none" }, "/tmp/learner-instance-1zYapt" = { "**/.env" = "none", "**/*.env" = "none" }, "/home/dw/Projects/agent-sts2" = { "**/.env" = "none", "**/*.env" = "none" }, "/tmp/learner-instance-1zYapt/.git" = "write", "/tmp/learner-instance-1zYapt/.git/hooks" = "read", "/tmp/learner-instance-1zYapt/.git/config" = "read", "/home/dw" = { ".sts2-jev-env*" = "none", ".jev_api_keys" = "none", ".deepseek_api_key" = "none" }, "/home/dw/.codex/auth.json" = "none", "/home/dw/.jev_api_keys" = "none", "/home/dw/.deepseek_api_key" = "none", "/home/dw/.sts2-jev-env-m1" = "none", "/home/dw/.sts2-jev-env-v3" = "none", "/home/dw/.sts2-jev-env.m1-0925.bak" = "none", "/home/dw/.sts2-jev-env.openrouter.bak" = "none", "/home/dw/Projects/agent-sts2/.worktrees/live/agent/.env" = "none" }' --model gpt-6.1-sol -c 'approval_policy="never"' -c 'web_search="disabled"' -c 'model_reasoning_effort="xhigh"' -c 'service_tier="default"' -c model_context_window=512000 -c model_auto_compact_token_limit=460800 -c allow_login_shell=false -c skills.include_instructions=false -c skills.bundled.enabled=false -c check_for_update_on_startup=false -c 'history.persistence="none"' -c analytics.enabled=false --disable hooks --disable memories --disable plugins --disable apps --disable multi_agent --disable image_generation --disable browser_use --disable computer_use --disable goals --disable view_image --disable skill_search --disable tool_suggest --disable sleep_tool --disable shell_snapshot --disable workspace_dependencies --disable in_app_browser --disable daemon_auto_start --disable unbounded_connection_retries -
++ ===== 子进程环境去掉的变量（0 个，只列名字）=====
++ （无）
++ 超时：无 分钟；日志将写到 /tmp/learner-instance-1zYapt/.worktrees/regent-climb/runs/20261013-195914-lane.jsonl
+
+
+ ❯ tests/learner-instance.test.ts:46:18
+     44|     expect(text).toContain("BASE=regent-climb");
+     45|     expect(text).toContain(`MERGE=${lane}\n`);
+     46|     expect(text).toContain(`CODE=${lane}\n`);
+       |                  ^
+     47|     expect(text).toContain("ROLE=regent");
+     48|     expect(text).not.toContain(`MERGE=${root}/.worktrees/live`);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  tests/potion-refresh-climb.test.ts > uses the exported lane target ahead of the shared env file
+Error: ENOENT: no such file or directory, open '/tmp/potion-refresh-climb-d1QUHl/5/args'
+ ❯ tests/potion-refresh-climb.test.ts:60:10
+     58|   const result = await run("8", [{ character: "SILENT", ascension: 0 }…
+     59|   expect(result.code, result.out).toBe(0);
+     60|   expect(readFileSync(join(result.root, "args"), "utf8")).toContain("-…
+       |          ^
+     61| });
+     62|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+ FAIL  tests/potion-unmeasured.test.ts > unmeasured potion rates > preserves both empty buckets and loads the whole Regent knowledge
+KnowledgeLoadError: 药水换算表 /tmp/potion-unmeasured-1kvel2/characters/regent/potion-equivalents.json rates.8 为空
+ ❯ fail src/knowledge/potion-equivalents.ts:146:11
+    144|   }
+    145|   const fail = (what: string): never => {
+    146|     throw new KnowledgeLoadError(`药水换算表 ${path} ${what}`);
+       |           ^
+    147|   };
+    148|   if (!isRecord(parsed)) return fail("顶层不是对象");
+ ❯ parsePotionEquivalents src/knowledge/potion-equivalents.ts:154:60
+ ❯ loadPotionEquivalents src/knowledge/potion-equivalents.ts:206:16
+ ❯ tests/potion-unmeasured.test.ts:31:41
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯
+
+ FAIL  tests/potion-unmeasured.test.ts > unmeasured potion rates > reports unknown worth in the table and single-potion query without inventing zero
+KnowledgeLoadError: 药水换算表 /tmp/potion-unmeasured-RkCmrP/characters/regent/potion-equivalents.json rates.8 为空
+ ❯ fail src/knowledge/potion-equivalents.ts:146:11
+    144|   }
+    145|   const fail = (what: string): never => {
+    146|     throw new KnowledgeLoadError(`药水换算表 ${path} ${what}`);
+       |           ^
+    147|   };
+    148|   if (!isRecord(parsed)) return fail("顶层不是对象");
+ ❯ parsePotionEquivalents src/knowledge/potion-equivalents.ts:154:60
+ ❯ loadPotionEquivalents src/knowledge/potion-equivalents.ts:206:16
+ ❯ loadPotionEquivalentsOrNull src/knowledge/potion-equivalents.ts:217:10
+ ❯ renderPotionTable src/knowledge/render/potion-text.ts:94:18
+ ❯ tests/potion-unmeasured.test.ts:43:12
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/5]⎯
+
+ FAIL  tests/potion-unmeasured.test.ts > unmeasured potion rates > selects measured buckets while retaining empty ones
+KnowledgeLoadError: 药水换算表 /tmp/potion-unmeasured-Y1IVi4/characters/regent/potion-equivalents.json rates.8 为空
+ ❯ fail src/knowledge/potion-equivalents.ts:146:11
+    144|   }
+    145|   const fail = (what: string): never => {
+    146|     throw new KnowledgeLoadError(`药水换算表 ${path} ${what}`);
+       |           ^
+    147|   };
+    148|   if (!isRecord(parsed)) return fail("顶层不是对象");
+ ❯ parsePotionEquivalents src/knowledge/potion-equivalents.ts:154:60
+ ❯ loadPotionEquivalents src/knowledge/potion-equivalents.ts:206:16
+ ❯ tests/potion-unmeasured.test.ts:50:18
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/5]⎯
+
+
+ Test Files  3 failed (3)
+      Tests  5 failed | 10 passed (15)
+   Start at  19:59:12
+   Duration  2.06s (transform 833ms, setup 510ms, import 675ms, tests 420ms, environment 0ms)
+
