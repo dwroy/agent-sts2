@@ -146,7 +146,7 @@ export class SerialDeckRunner implements DeckSimRunner {
 
 /** Messages to a worker (build-sim-worker.ts). */
 export type BuildWorkerRequest =
-  | { type: "batch"; batch: number; base: RolloutInput; decks: Partial<RolloutInput>[]; orders: (KillOrder | null)[]; maxTurns: number; scripts: boolean }
+  | { type: "batch"; batch: number; base: RolloutInput; decks: Partial<RolloutInput>[]; orders: (KillOrder | null)[]; maxTurns: number; scripts: boolean; cancelled?: SharedArrayBuffer }
   | { type: "run"; batch: number; tasks: Task[] }
   | { type: "drop"; batch: number };
 export type BuildWorkerReply = { batch: number; results: [deck: number, order: number, sample: number, result: FightSampleResult][] } | { batch: number; error: string };
@@ -196,6 +196,8 @@ export class BuildSimPool implements DeckSimRunner {
     const started = now();
     const workers = this.start();
     const batch = (this.batch += 1);
+    // A queued drop cannot interrupt a worker's synchronous sample block.
+    const cancelled = new Int32Array(new SharedArrayBuffer(Int32Array.BYTES_PER_ELEMENT));
     const chunks = taskChunks(req);
     const outcomes = emptyOutcomes(req);
     const { base, decks } = slimDecks(req.base, req.decks);
@@ -212,6 +214,7 @@ export class BuildSimPool implements DeckSimRunner {
       const finish = (error?: Error) => {
         if (finished) return;
         finished = true;
+        Atomics.store(cancelled, 0, 1);
         this.abort = null;
         if (timer) clearTimeout(timer);
         for (const worker of used) {
@@ -260,10 +263,11 @@ export class BuildSimPool implements DeckSimRunner {
         handlers.set(worker, { message, error });
         worker.on("message", message);
         worker.on("error", error);
-        worker.postMessage({ type: "batch", batch, base, decks, orders: req.orders, maxTurns: req.maxTurns ?? BOSS_SIM_MAX_TURNS, scripts: req.scripts ?? true } satisfies BuildWorkerRequest);
-        give(worker);
+        worker.postMessage({ type: "batch", batch, base, decks, orders: req.orders, maxTurns: req.maxTurns ?? BOSS_SIM_MAX_TURNS, scripts: req.scripts ?? true, cancelled: cancelled.buffer as SharedArrayBuffer } satisfies BuildWorkerRequest);
       }
-      if (req.deadlineMs !== undefined) {
+      // Attach every handler before a zero remaining budget can finish the batch.
+      for (const worker of used) give(worker);
+      if (req.deadlineMs !== undefined && !finished) {
         timer = setTimeout(() => {
           timedOut = true;
           finish();
