@@ -242,8 +242,10 @@ export interface CardModel {
   choices?: CardModel[];
   drawn?: CardModel[];
   adds?: CardModel[];
-  /** Silent A10 plain Blade Dance: three observed Shivs, with fresh identities at play time. */
+  /** Observed Silent Blade Dance generation, with fresh identities at play time. */
   bladeDance?: boolean;
+  /** Preview-certified count; an in-line numeric upgrade cannot inherit four-Shiv coverage. */
+  bladeDanceShivs?: 3 | 4;
   sneckoCosts?: Record<string, number>;
   /** Demise applied to the target: it loses this much HP at the end of each of its turns (a debuff). */
   demise?: number;
@@ -967,10 +969,21 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
   const hiddenDaggers = character.toLowerCase() === "silent" && cardId === "HIDDEN_DAGGERS" && !bool(card["upgraded"]) &&
     dyn(card, "Cards") === 2 && dyn(card, "Shivs") === 2;
   // YBRA3EJ94GBR F30 T3 / F33 T10, silent-0324: Cards=3 makes Shivs; it never draws from the pile.
-  const bladeDance = character.toLowerCase() === "silent" && ascension === 10 && cardId === "BLADE_DANCE" &&
+  const plainBladeDance = character.toLowerCase() === "silent" && ascension === 10 && cardId === "BLADE_DANCE" &&
     !bool(card["upgraded"]) && dyn(card, "Cards") === 3 &&
     template.replace(/\s+/g, "") === "添加{Cards:diff()}张小刀到你的手牌。" &&
     renderedText.replace(/\s+/g, "") === "添加3张小刀到你的手牌。消耗。";
+  // C48LLXBGKXQ9 A0 F12 T5 generates four; 4ATPGGUBWG8L A10 F28 T3 exposes the same preview (silent-0450).
+  const danceValues = asArray(card["dynamic_values"]).map(asRecord);
+  const upgradedBladeDance = character.toLowerCase() === "silent" && (ascension === 0 || ascension === 10) &&
+    cardId === "BLADE_DANCE" && bool(card["upgraded"]) && num(card["energy_cost"]) === 1 &&
+    !bool(card["costs_x"]) && card["enchantment"] == null &&
+    template.replace(/\s+/g, "") === "添加{Cards:diff()}张小刀到你的手牌。" &&
+    renderedText.replace(/\s+/g, "") === "添加4张小刀到你的手牌。消耗。" &&
+    danceValues.length === 1 && danceValues[0]?.["name"] === "Cards" &&
+    ["base_value", "current_value", "enchanted_value"].every((field) => danceValues[0]?.[field] === 4);
+  const bladeDance = plainBladeDance || upgradedBladeDance;
+  const bladeDanceShivs = upgradedBladeDance ? 4 : 3;
   // C48LLXBGKXQ9 F24 T1 / HUVEPWQAHWFU F35 T2, silent-0202: Cards=3 adds random attacks
   // to the draw pile; none enter the hand now. Their unknown future value remains unmodelled.
   const metamorphosis = character.toLowerCase() === "silent" && cardId === "METAMORPHOSIS" &&
@@ -1030,7 +1043,7 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
     const shiv = knowledge.card("SHIV");
     const base = shiv ? (bladeDance ? dynBase({ dynamic_values: shiv.vars }, "Damage") : dyn({ dynamic_values: shiv.vars }, "Damage")) ?? shiv.damage : null;
     known = shiv !== null && base !== null;
-    if (shiv && base !== null) adds = Array.from({ length: bladeDance ? 3 : 2 }, (_, i) => modelHandCard({
+    if (shiv && base !== null) adds = Array.from({ length: bladeDance ? bladeDanceShivs : 2 }, (_, i) => modelHandCard({
       index: i, card_id: "SHIV", name: shiv.name, upgraded: false, energy_cost: 0, playable: true,
       requires_target: true, target_type: "AnyEnemy", rules_text: shiv.descriptionRaw, resolved_rules_text: shiv.description,
       dynamic_values: [{ name: "Damage", base_value: base, current_value: base }],
@@ -1175,7 +1188,7 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
     ...(shadowStep ? { discardsHand: true, doubleDamageNext: true } : {}),
     ...(calculatedGamble ? { discardsHand: true, drawDiscardedHand: true } : {}),
     ...(hiddenDaggers ? { discardCount: 2, ...(adds ? { adds } : {}) } : {}),
-    ...(bladeDance ? { bladeDance: true, ...(adds ? { adds } : {}) } : {}),
+    ...(bladeDance ? { bladeDance: true, bladeDanceShivs, ...(adds ? { adds } : {}) } : {}),
     ...(character.toLowerCase() === "silent" && !bool(card["upgraded"]) && ["SURVIVOR", "DAGGER_THROW", "ACROBATICS"].includes(cardId) &&
       /(?:丢弃|弃掉)1张牌/.test(rendered.replace(/\s+/g, "")) ? { discardAfterDraw: true, ...(daggerDraw > 0 ? { discardDraw: daggerDraw } : {}) } : {}),
     ...(character.toLowerCase() === "silent" && (ascension === 6 || ascension === 10) && cardId === "SURVIVOR" &&
