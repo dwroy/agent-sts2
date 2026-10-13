@@ -1,0 +1,314 @@
+[
+  {
+    "name": "神化后重问的同序列差值",
+    "run": "VLZ6CCT8AQ0A",
+    "references": [
+      {
+        "decision_line": 269706,
+        "state_line": 275679,
+        "floor": 43,
+        "turn": 1,
+        "attempt": null
+      },
+      {
+        "decision_line": 269707,
+        "state_line": 275680,
+        "floor": 43,
+        "turn": 1,
+        "attempt": null
+      }
+    ],
+    "observation": "7→5能量；同序列模型43伤/14损→51伤/13损。",
+    "limitation": "这是已知同局发现帧，不是整战获胜或未施放反事实；现有有限升级实现不代表完整施放审计。"
+  },
+  {
+    "name": "药水预算退化",
+    "run": "VLZ6CCT8AQ0A",
+    "references": [
+      {
+        "decision_line": 269748,
+        "state_line": 275722,
+        "floor": 45,
+        "turn": 1,
+        "attempt": null
+      }
+    ],
+    "observation": "药水MC 707ms、1/12；rollout 1轮1样本，best=null。",
+    "limitation": "第二问牌面已改变，不能把不同重问当同盘同种子同预算实验。"
+  },
+  {
+    "name": "三骑士末轮需求",
+    "run": "VLZ6CCT8AQ0A",
+    "references": [
+      {
+        "decision_line": 269779,
+        "state_line": 275754,
+        "floor": 45,
+        "turn": 5,
+        "attempt": null
+      }
+    ],
+    "observation": "32血、20挡对59攻击，完整需损39，差7；末次结束请求前敌HP80/24/77，后毒扣连枷3至21。",
+    "limitation": "完整需求不能按仅剩32血截断；三敌未退场，未选focus和留药支线未知。"
+  },
+  {
+    "name": "宽机制项的现场分项",
+    "run": "VLZ6CCT8AQ0A",
+    "references": [
+      {
+        "decision_line": 269777,
+        "state_line": 275752,
+        "floor": 45,
+        "turn": 5,
+        "attempt": null
+      },
+      {
+        "decision_line": 269779,
+        "state_line": 275754,
+        "floor": 45,
+        "turn": 5,
+        "attempt": null
+      },
+      {
+        "decision_line": 269726,
+        "state_line": 275699,
+        "floor": 43,
+        "turn": 4,
+        "attempt": null
+      },
+      {
+        "decision_line": 269732,
+        "state_line": 275705,
+        "floor": 43,
+        "turn": 5,
+        "attempt": null
+      }
+    ],
+    "observation": "F45 T5四段攻击83→59；现场2力/3敏/勒紧4、覆甲耗尽，20挡。F43 T4/T5触媒2、毒12/16；T4后毒33与T5行动23合观测扣56。",
+    "limitation": "本批仅核现场部分；不宣称15条机制、被动期限和资源消费者已逐路验收，更不把当前层数当整场收益。"
+  },
+  {
+    "name": "同盘SL血价",
+    "run": "8JRE1C4H4Z2W",
+    "references": [
+      {
+        "decision_line": 270216,
+        "state_line": 276208,
+        "floor": 33,
+        "turn": 2,
+        "attempt": 1
+      },
+      {
+        "decision_line": 270282,
+        "state_line": 276274,
+        "floor": 33,
+        "turn": 2,
+        "attempt": 3
+      },
+      {
+        "decision_line": 270220,
+        "state_line": 276212,
+        "floor": 33,
+        "turn": 3,
+        "attempt": 1
+      },
+      {
+        "decision_line": 270286,
+        "state_line": 276278,
+        "floor": 33,
+        "turn": 3,
+        "attempt": 3
+      }
+    ],
+    "observation": "首/三试T2指纹相同；记录内本轮实损3/15、净扣10/17。第三试题面原线0/24死、替换5/24死。",
+    "limitation": "首试原题是8样本且原线1/8死；0/24属于第三试同题原/替换对照，不倒写首试原题。六试均未胜，不能拟合统一血价。"
+  },
+  {
+    "name": "历史护栏字段边界",
+    "run": "8JRE1C4H4Z2W",
+    "references": [
+      {
+        "decision_line": 270264,
+        "state_line": 276256,
+        "floor": 33,
+        "turn": 5,
+        "attempt": 2
+      }
+    ],
+    "observation": "原答plan4预测16损/43伤；journal最终线plan6预测4损/25伤；旧日志在rationale记录护栏，没有hp_guard结构字段。",
+    "limitation": "候选差值是省12血/少18伤；不能补写旧结构字段或认作完整因果保血收益。"
+  },
+  {
+    "name": "下水道蚌成长与虚弱",
+    "run": "CA5KE8GFJ9X2",
+    "references": [
+      {
+        "decision_line": 267361,
+        "state_line": 273239,
+        "floor": 13,
+        "turn": 1,
+        "attempt": null
+      },
+      {
+        "decision_line": 267372,
+        "state_line": 273253,
+        "floor": 13,
+        "turn": 3,
+        "attempt": null
+      },
+      {
+        "decision_line": 267381,
+        "state_line": 273264,
+        "floor": 13,
+        "turn": 5,
+        "attempt": null
+      },
+      {
+        "decision_line": 267385,
+        "state_line": 273268,
+        "floor": 13,
+        "turn": 5,
+        "attempt": null
+      }
+    ],
+    "observation": "力0/4/8与攻击11/15/19分别存在；末轮弱后14、2血10挡，完整需损4。",
+    "limitation": "本局未取得计划步法，不能用本局校正正敏捷或建立统一成长权重。"
+  },
+  {
+    "name": "零毒冒泡的观测代价",
+    "run": "5PM6JAQG6FNQ",
+    "references": [
+      {
+        "decision_line": 268455,
+        "state_line": 274379,
+        "floor": 39,
+        "turn": 2,
+        "attempt": 2
+      },
+      {
+        "decision_line": 268456,
+        "state_line": 274380,
+        "floor": 39,
+        "turn": 2,
+        "attempt": 2
+      }
+    ],
+    "observation": "末试T2玩家29血不变、能量5→4；两敌35/72血、零毒且血量不变。",
+    "limitation": "35是失落敌血，不是玩家血；F33建立组件并赢与死亡战不是受控启动顺序对照。"
+  },
+  {
+    "name": "吸取负敏捷与毒分账",
+    "run": "61E2QS63Y9WU",
+    "references": [
+      {
+        "decision_line": 267610,
+        "state_line": 273502,
+        "floor": 17,
+        "turn": 5,
+        "attempt": 1
+      },
+      {
+        "decision_line": 267612,
+        "state_line": 273504,
+        "floor": 17,
+        "turn": 6,
+        "attempt": 1
+      },
+      {
+        "decision_line": 267616,
+        "state_line": 273508,
+        "floor": 17,
+        "turn": 7,
+        "attempt": 1
+      }
+    ],
+    "observation": "T5吸取后玩家力2→0、敏捷0→−2，敌力0→2；T6轮初17毒，下一轮敌67→34，净扣33。",
+    "limitation": "首试获胜不验证另一SL线路，33对应本次记录内17+16毒，不泛化其他组合。"
+  },
+  {
+    "name": "召唤与各实体航行成长",
+    "run": "61E2QS63Y9WU",
+    "references": [
+      {
+        "decision_line": 267686,
+        "state_line": 273583,
+        "floor": 23,
+        "turn": 2,
+        "attempt": null
+      },
+      {
+        "decision_line": 267696,
+        "state_line": 273593,
+        "floor": 23,
+        "turn": 4,
+        "attempt": null
+      },
+      {
+        "decision_line": 267699,
+        "state_line": 273596,
+        "floor": 23,
+        "turn": 5,
+        "attempt": null
+      }
+    ],
+    "observation": "幻象21血实召；T4/T5两个实体各力3/6，幻象14→2仍未退场、本体76→41。",
+    "limitation": "未实打另一focus；旧召唤实现不证明A10完整成长或目标排序收益。"
+  },
+  {
+    "name": "甲虫睡眠醒来成长",
+    "run": "DUZUBAJ3A8GP",
+    "references": [
+      {
+        "decision_line": 269048,
+        "state_line": 274993,
+        "floor": 30,
+        "turn": 1,
+        "attempt": 4
+      },
+      {
+        "decision_line": 269053,
+        "state_line": 274998,
+        "floor": 30,
+        "turn": 2,
+        "attempt": 4
+      },
+      {
+        "decision_line": 269058,
+        "state_line": 275003,
+        "floor": 30,
+        "turn": 3,
+        "attempt": 4
+      },
+      {
+        "decision_line": 269062,
+        "state_line": 275007,
+        "floor": 30,
+        "turn": 4,
+        "attempt": 4
+      },
+      {
+        "decision_line": 269068,
+        "state_line": 275013,
+        "floor": 30,
+        "turn": 5,
+        "attempt": 4
+      },
+      {
+        "decision_line": 269073,
+        "state_line": 275018,
+        "floor": 30,
+        "turn": 6,
+        "attempt": 4
+      },
+      {
+        "decision_line": 269077,
+        "state_line": 275022,
+        "floor": 30,
+        "turn": 6,
+        "attempt": 4
+      }
+    ],
+    "observation": "末试睡3/2/1、T4醒来，T4—6力量0/2/4与攻击18/20/22；末轮1血16挡完整需损6。",
+    "limitation": "四试均败，缺醒来/眩晕接续的历史移动模型与受控后续线路；不推固定杀序。"
+  }
+]

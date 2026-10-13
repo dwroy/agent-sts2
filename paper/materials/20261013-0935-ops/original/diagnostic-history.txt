@@ -1,0 +1,5 @@
+原诊断1：EVENT的state.combat=null，首次查看键名调用list(None)返回TypeError，随后采集/分析按非战斗帧处理。
+原诊断2：rg查询agent/test目录不存在；实际目录为agent/tests，后续只在实际路径只读查询。
+原诊断3：silent-selection-execution/observation/terminal是测试名，误当作agent/src/reflex源码路径，sed返回No such file；随后从测试import定位learner/lib/selection-*.ts。
+原诊断4：tsx CLI六次均在IPC管道listen报EPERM，原err保留；同权限node导入相同tsx loader直接入口成功，不改变权限/源码/输入。
+原诊断5：初次批量账本展示含重复历史commit导致工具截断；完整原行保存，之后限范围展示。不据诊断改生产程序。
