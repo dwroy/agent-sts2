@@ -1,7 +1,7 @@
 {
   "performance_policy": "codex-successful-brain-v1",
   "include_non_codex": false,
-  "previous_snapshot": "/home/dw/Projects/agent-sts2/paper/data/history/20261013T024416990927Z",
+  "previous_snapshot": "/home/dw/Projects/agent-sts2/paper/data/history/20261013T032702025420Z",
   "performance": {
     "runs": 263,
     "finished": 261,
@@ -2332,17 +2332,17 @@
       "run_ids": []
     }
   },
-  "generated_at": "2026-10-13T02:44:16.988Z",
+  "generated_at": "2026-10-13T03:27:02.023Z",
   "source_cut_bytes": {
-    "decisions.jsonl": 1175711744,
+    "decisions.jsonl": 1175862874,
     "deepseek-reasoning.jsonl": 377746518,
     "runs.jsonl": 314106,
-    "states.jsonl": 12147507200,
+    "states.jsonl": 12148073085,
     "fight-plans.jsonl": 2233957,
-    "run-plans.jsonl": 7383450,
-    "brain.jsonl": 459886592,
+    "run-plans.jsonl": 7385288,
+    "brain.jsonl": 459958873,
     "sl-attempts.jsonl": 35744773,
-    "run-config.jsonl": 1544116
+    "run-config.jsonl": 1548455
   },
   "runs_total": 750,
   "runs_by_outcome": {
@@ -2605,9 +2605,9 @@
     "6": 1,
     "7": 8,
     "8": 8,
-    "9": 11,
+    "9": 10,
     "11": 6,
-    "12": 3,
+    "12": 4,
     "13": 5,
     "14": 4,
     "15": 4,
@@ -2649,9 +2649,9 @@
       "5": 1,
       "6": 1,
       "8": 3,
-      "9": 7,
+      "9": 6,
       "11": 2,
-      "12": 3,
+      "12": 4,
       "13": 2,
       "14": 4,
       "15": 2,
@@ -10434,10 +10434,10 @@
   },
   "api": {
     "jev": {
-      "calls": 93685,
-      "in_tokens": 2068604752,
-      "out_tokens": 40502783,
-      "cost_usd": 88.5825,
+      "calls": 93687,
+      "in_tokens": 2068772430,
+      "out_tokens": 40506206,
+      "cost_usd": 88.5897,
       "price_per_m_tokens_usd": 0.042
     },
     "deepseek": {
@@ -10463,19 +10463,19 @@
       "note": "answered by the interactive Claude Code session via file escalation; no per-call token accounting"
     }
   },
-  "api_cost_total_usd": 103.8483,
+  "api_cost_total_usd": 103.8555,
   "decisions": {
-    "play_total": 373483,
-    "attributed_to_runs": 370499,
+    "play_total": 373503,
+    "attributed_to_runs": 370519,
     "unattributed_menu_timeline": 2984,
     "shadow": 20,
     "by_layer": {
-      "code": 196027,
-      "jev": 73292,
+      "code": 196037,
+      "jev": 73293,
       "deepseek": 12400,
       "claude": 186,
       "code-fallback": 1729,
-      "jev-plan": 73532,
+      "jev-plan": 73535,
       "deepseek-plan": 847,
       "claude-plan": 73
     },
@@ -10497,12 +10497,12 @@
       "deepseek-flash": 13468
     }
   },
-  "states_lines_scanned": 384744,
-  "console_logs": 1191,
+  "states_lines_scanned": 384764,
+  "console_logs": 1192,
   "commits": {
-    "total": 5424,
+    "total": 5430,
     "ref_snapshot": {
-      "HEAD": "c9f886c961c2ea02025fbd9d138c06dd5bffd509",
+      "HEAD": "248689476f2506773595d406a54aeeb67cdd4a42",
       "refs/heads/ascension-audit-silent-a10-1": "4c691142c099ac0e3505abbec5d04afec9ee796c",
       "refs/heads/ascension-audit-silent-a10-2": "5e2a52ed08499e109c12e21eddfbee1ba63f1f1c",
       "refs/heads/ascension-audit-silent-a10-3": "4fb90cc25e68e3e804ad15fa4b3931e8a606678f",
@@ -10575,7 +10575,7 @@
       "refs/heads/codex-fix-silent-20261013-080052": "63f656fb07a21a7496353234269901a832eae497",
       "refs/heads/codex-fix-silent-20261013-083432": "888eea283e8a206850b562f21be103ab565a558a",
       "refs/heads/codex-fix-silent-20261013-091302": "0c020b7cedfb9290cabe91bedb1038afdcacbd53",
-      "refs/heads/codex-fix-silent-20261013-104302": "c9f886c961c2ea02025fbd9d138c06dd5bffd509",
+      "refs/heads/codex-fix-silent-20261013-104302": "2f73df2e57256169e6a8cc5b88b5709a41b5f90d",
       "refs/heads/codex-strategy-silent-20261009-221053": "f516592fff557ef02c8ece43433706358c3f7fe6",
       "refs/heads/codex-strategy-silent-20261009-231302": "be69855995737d6f381adb10bf248964832da24b",
       "refs/heads/codex-strategy-silent-20261009-234302": "f34700874c9f48b614991f769532115a0f24f27b",
@@ -10832,6 +10832,8 @@
       "refs/heads/codex-strategy-silent-20261013-100759-s2": "4457488c49de0b85d2c0d3b92fe544f8799f13bb",
       "refs/heads/codex-strategy-silent-20261013-104302": "c9f886c961c2ea02025fbd9d138c06dd5bffd509",
       "refs/heads/codex-strategy-silent-20261013-104302-s2": "c9f886c961c2ea02025fbd9d138c06dd5bffd509",
+      "refs/heads/codex-strategy-silent-20261013-110835": "c9f886c961c2ea02025fbd9d138c06dd5bffd509",
+      "refs/heads/codex-strategy-silent-20261013-111302": "c9f886c961c2ea02025fbd9d138c06dd5bffd509",
       "refs/heads/core-decklists-entry-20261012": "d1bcd028d05f022f51c0d3b71cbff62a1d3f51ad",
       "refs/heads/exp-merge-recovery-20261013-000402": "fd3cffcbe4d29aeea4fb354641a5b4ff365da673",
       "refs/heads/exp-silent": "aa27705f654a102944b7aac1294107269c4b8aa7",
@@ -10856,10 +10858,10 @@
       "refs/heads/integrate-codex-only-brain": "910604a4471ad4470e563d6d4e16d05bdcb78758",
       "refs/heads/learner-astra-xhigh-20261010": "57a4c35a78a0eaf2ad5e0aeadea76d3703b38b69",
       "refs/heads/learning-continuity-20261012": "bb25df38fe110eb70268c00aa5414da69aa9afe2",
-      "refs/heads/live": "c8c75dd3ae139a9f408e446aa184169faa85d2d4",
-      "refs/heads/main": "c9f886c961c2ea02025fbd9d138c06dd5bffd509",
+      "refs/heads/live": "ad95ba0f842eb4b73847bf01a143be54802c2bd3",
+      "refs/heads/main": "248689476f2506773595d406a54aeeb67cdd4a42",
       "refs/heads/model-sol61-20261012": "c06d1019b8dee0110c3627a012bdb865bd7e7a80",
-      "refs/heads/multi-instance-climb-20261013": "47e5a0539340d37476c6025a2fd078a329d9c66d",
+      "refs/heads/multi-instance-climb-20261013": "84300293795474c4ea3b13e210d2a1222854d115",
       "refs/heads/ops-0010-experience111": "7954390da3772efc72b159173f6be81f7c89e5cd",
       "refs/heads/ops-0024-experience": "c47fbe453b373e65a396a1c801e0d0f51722935b",
       "refs/heads/ops-0038-strategy-experience": "a4f2b6454285760da7277b70d18b1fe8407d5cb1",
@@ -11027,7 +11029,7 @@
       "refs/heads/publish-silent-boss-calibration-20261008-204304": "f4454686dde188eb7f1e4416a26842afde9dd38d",
       "refs/heads/publish-silent-boss-calibration-20261009-033011": "473a38a1a8d133f0a811f8a3c8ff454ae6363984",
       "refs/heads/quantitative-play-framework-20261011": "3ee649f69260309677ad075cac726d705a66e6ef",
-      "refs/heads/regent-climb": "9d941da11ff24a28281058902eef47c75d3eaf6a",
+      "refs/heads/regent-climb": "e78066cdd82d9cb4d47e60e14c26841b93d011de",
       "refs/heads/release-numbering-20261012": "cc10a335b6d34235894d8cfddbf547af7c47a870",
       "refs/heads/report-run-recovery-20261012": "02725b673b336acc7b2e91bc596fd591ad1de6db",
       "refs/heads/silent-a10-regression": "693318efb3a72061c53ccdc06802c380ed3ff54a",
@@ -11143,7 +11145,7 @@
       "all-tip:63f656fb07a21a7496353234269901a832eae497": "63f656fb07a21a7496353234269901a832eae497",
       "all-tip:888eea283e8a206850b562f21be103ab565a558a": "888eea283e8a206850b562f21be103ab565a558a",
       "all-tip:0c020b7cedfb9290cabe91bedb1038afdcacbd53": "0c020b7cedfb9290cabe91bedb1038afdcacbd53",
-      "all-tip:c9f886c961c2ea02025fbd9d138c06dd5bffd509": "c9f886c961c2ea02025fbd9d138c06dd5bffd509",
+      "all-tip:2f73df2e57256169e6a8cc5b88b5709a41b5f90d": "2f73df2e57256169e6a8cc5b88b5709a41b5f90d",
       "all-tip:f516592fff557ef02c8ece43433706358c3f7fe6": "f516592fff557ef02c8ece43433706358c3f7fe6",
       "all-tip:be69855995737d6f381adb10bf248964832da24b": "be69855995737d6f381adb10bf248964832da24b",
       "all-tip:f34700874c9f48b614991f769532115a0f24f27b": "f34700874c9f48b614991f769532115a0f24f27b",
@@ -11271,6 +11273,7 @@
       "all-tip:a004ba332951bac7e846d78293fd359771550238": "a004ba332951bac7e846d78293fd359771550238",
       "all-tip:3b8e42b099c13017d5cdb48da41aba9338b8b097": "3b8e42b099c13017d5cdb48da41aba9338b8b097",
       "all-tip:4457488c49de0b85d2c0d3b92fe544f8799f13bb": "4457488c49de0b85d2c0d3b92fe544f8799f13bb",
+      "all-tip:c9f886c961c2ea02025fbd9d138c06dd5bffd509": "c9f886c961c2ea02025fbd9d138c06dd5bffd509",
       "all-tip:d1bcd028d05f022f51c0d3b71cbff62a1d3f51ad": "d1bcd028d05f022f51c0d3b71cbff62a1d3f51ad",
       "all-tip:fd3cffcbe4d29aeea4fb354641a5b4ff365da673": "fd3cffcbe4d29aeea4fb354641a5b4ff365da673",
       "all-tip:aa27705f654a102944b7aac1294107269c4b8aa7": "aa27705f654a102944b7aac1294107269c4b8aa7",
@@ -11294,9 +11297,10 @@
       "all-tip:910604a4471ad4470e563d6d4e16d05bdcb78758": "910604a4471ad4470e563d6d4e16d05bdcb78758",
       "all-tip:57a4c35a78a0eaf2ad5e0aeadea76d3703b38b69": "57a4c35a78a0eaf2ad5e0aeadea76d3703b38b69",
       "all-tip:bb25df38fe110eb70268c00aa5414da69aa9afe2": "bb25df38fe110eb70268c00aa5414da69aa9afe2",
-      "all-tip:c8c75dd3ae139a9f408e446aa184169faa85d2d4": "c8c75dd3ae139a9f408e446aa184169faa85d2d4",
+      "all-tip:ad95ba0f842eb4b73847bf01a143be54802c2bd3": "ad95ba0f842eb4b73847bf01a143be54802c2bd3",
+      "all-tip:248689476f2506773595d406a54aeeb67cdd4a42": "248689476f2506773595d406a54aeeb67cdd4a42",
       "all-tip:c06d1019b8dee0110c3627a012bdb865bd7e7a80": "c06d1019b8dee0110c3627a012bdb865bd7e7a80",
-      "all-tip:47e5a0539340d37476c6025a2fd078a329d9c66d": "47e5a0539340d37476c6025a2fd078a329d9c66d",
+      "all-tip:84300293795474c4ea3b13e210d2a1222854d115": "84300293795474c4ea3b13e210d2a1222854d115",
       "all-tip:7954390da3772efc72b159173f6be81f7c89e5cd": "7954390da3772efc72b159173f6be81f7c89e5cd",
       "all-tip:c47fbe453b373e65a396a1c801e0d0f51722935b": "c47fbe453b373e65a396a1c801e0d0f51722935b",
       "all-tip:a4f2b6454285760da7277b70d18b1fe8407d5cb1": "a4f2b6454285760da7277b70d18b1fe8407d5cb1",
@@ -11462,7 +11466,7 @@
       "all-tip:f4454686dde188eb7f1e4416a26842afde9dd38d": "f4454686dde188eb7f1e4416a26842afde9dd38d",
       "all-tip:473a38a1a8d133f0a811f8a3c8ff454ae6363984": "473a38a1a8d133f0a811f8a3c8ff454ae6363984",
       "all-tip:3ee649f69260309677ad075cac726d705a66e6ef": "3ee649f69260309677ad075cac726d705a66e6ef",
-      "all-tip:9d941da11ff24a28281058902eef47c75d3eaf6a": "9d941da11ff24a28281058902eef47c75d3eaf6a",
+      "all-tip:e78066cdd82d9cb4d47e60e14c26841b93d011de": "e78066cdd82d9cb4d47e60e14c26841b93d011de",
       "all-tip:cc10a335b6d34235894d8cfddbf547af7c47a870": "cc10a335b6d34235894d8cfddbf547af7c47a870",
       "all-tip:02725b673b336acc7b2e91bc596fd591ad1de6db": "02725b673b336acc7b2e91bc596fd591ad1de6db",
       "all-tip:693318efb3a72061c53ccdc06802c380ed3ff54a": "693318efb3a72061c53ccdc06802c380ed3ff54a",
@@ -11511,10 +11515,10 @@
       "all-tip:03d50f0b2ae81f6f1b8800c6471c145580eb4668": "03d50f0b2ae81f6f1b8800c6471c145580eb4668"
     },
     "upstream": 19,
-    "experiment": 5405
+    "experiment": 5411
   },
   "postmortems": {
-    "runs_with_heading": 724,
+    "runs_with_heading": 725,
     "preloop_listed": 13
   },
   "source_checks_passed": true

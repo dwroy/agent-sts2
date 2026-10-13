@@ -1,0 +1,219 @@
+{
+  "postmortem": {
+    "task": "postmortem",
+    "appended": [
+      "TGTXN42TE0X4"
+    ],
+    "skipped": [],
+    "bugs": [],
+    "ledger": {
+      "added": [],
+      "updated": [
+        "silent-0019",
+        "silent-0418",
+        "silent-0278",
+        "silent-0316",
+        "silent-0046",
+        "silent-0049",
+        "silent-0276",
+        "silent-0204",
+        "silent-0020"
+      ],
+      "repeats": [],
+      "check": 0
+    },
+    "code_proposals": [
+      "silent-proposal-9f6b0e752977fae6",
+      "silent-proposal-c8b6b0c8ec6ec9a8"
+    ],
+    "implementation_domains": [
+      "combat",
+      "potion",
+      "sl",
+      "terminal",
+      "structure"
+    ],
+    "report": "/home/dw/Projects/agent-sts2/learner/runs/20261013-104302-postmortem/report.md",
+    "original_bug_list_verified_empty": true
+  },
+  "strategy": {
+    "task": "strategy-proposal",
+    "character": "silent",
+    "batch": "20261013-104302-strategy-proposal",
+    "base": "c9f886c961c2ea02025fbd9d138c06dd5bffd509",
+    "runs": [
+      "VLZ6CCT8AQ0A",
+      "8JRE1C4H4Z2W",
+      "CA5KE8GFJ9X2",
+      "5PM6JAQG6FNQ",
+      "61E2QS63Y9WU",
+      "DUZUBAJ3A8GP"
+    ],
+    "fixes": [],
+    "skipped": [],
+    "merged": null,
+    "tests": {
+      "tsc": null,
+      "vitest": null,
+      "cases": null
+    },
+    "code_proposals": [
+      "silent-proposal-89354805ee4d7e77",
+      "silent-proposal-f2bfceddb1898dca",
+      "silent-proposal-283a164780d11e69",
+      "silent-proposal-ebbfe3b97548756d",
+      "silent-proposal-e5b87be50f28f311",
+      "silent-proposal-49632bc4878fb597",
+      "silent-proposal-66532328a585941f",
+      "silent-proposal-43a76a31ba7bdcfa",
+      "silent-proposal-5264153a4a4b0e5c",
+      "silent-proposal-bddfa690a84e03d0"
+    ],
+    "implementation_domains": [],
+    "proposal_results": [
+      {
+        "id": "silent-proposal-89354805ee4d7e77",
+        "state": "waiting",
+        "reason": "已观察升级传播已有；actual_cast_this_fight仍null，缺成功施放在抽牌、药水、选择中断和换战/SL重置后的完整消费者追踪。"
+      },
+      {
+        "id": "silent-proposal-f2bfceddb1898dca",
+        "state": "waiting",
+        "reason": "707ms的1/12与后续12/12题面起点不同；缺同起点、同种子/模型/抽牌池、同总预算的分阶段MC对照和样本稳定性曲线。"
+      },
+      {
+        "id": "silent-proposal-283a164780d11e69",
+        "state": "waiting",
+        "reason": "与原神化问题同源，保留经验来源链；完整施放追踪未覆盖，不能仅凭语义重复或局部升级代码记duplicate。"
+      },
+      {
+        "id": "silent-proposal-ebbfe3b97548756d",
+        "state": "waiting",
+        "reason": "现场属性、毒及83→59四段临减已核；缺十五机制的逐路历史输入、期限与资源消费者全链，不能用局部公式关闭整组。"
+      },
+      {
+        "id": "silent-proposal-e5b87be50f28f311",
+        "state": "waiting",
+        "reason": "原答、护栏、SL差值与首请求已有；actual_turn仍null，缺抽牌/选择/药水/SL中断后全部续步身份、成功派发和实际端点链。"
+      },
+      {
+        "id": "silent-proposal-49632bc4878fb597",
+        "state": "waiting",
+        "reason": "蚌0/4/8力和弱后意图已核，本局未取得步法；缺力量、正负敏捷、逐击弱及独立成长四路统一固定消费者验证。"
+      },
+      {
+        "id": "silent-proposal-66532328a585941f",
+        "state": "waiting",
+        "reason": "无毒冒泡耗1能且零效果已核、条件毒已建模；缺同起始资源和抽序的完整启动/构筑对照及可复现收益函数。"
+      },
+      {
+        "id": "silent-proposal-43a76a31ba7bdcfa",
+        "state": "waiting",
+        "reason": "吸取、负敏捷双防御和17+16毒已核；缺完整历史移动/抽牌模型及SL偏好所需同HP/构筑/抽序的完整对照。"
+      },
+      {
+        "id": "silent-proposal-5264153a4a4b0e5c",
+        "state": "waiting",
+        "reason": "A10召唤和各实体成长已核；缺航行/复生联动历史输入和另一focus完整后续对照，旧A0夹具不代本批A10验证。"
+      },
+      {
+        "id": "silent-proposal-bddfa690a84e03d0",
+        "state": "waiting",
+        "reason": "睡3/2/1与醒后力2/4已核；缺SLUMBER醒来/眩晕接续历史全链及同抽不同排序稳定完整路线，四败不足定杀序。"
+      }
+    ],
+    "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261013-104302/learner/runs/20261013-104319-strategy-proposal/report.md",
+    "source_head_verified": "c9f886c961c2ea02025fbd9d138c06dd5bffd509",
+    "no_source_change_verified": true
+  },
+  "strategy-s2": {
+    "task": "strategy-proposal",
+    "character": "silent",
+    "batch": "20261013-104302-s2-strategy-proposal",
+    "base": "c9f886c961c2ea02025fbd9d138c06dd5bffd509",
+    "runs": [
+      "DUZUBAJ3A8GP",
+      "5PM6JAQG6FNQ",
+      "CA5KE8GFJ9X2",
+      "8JRE1C4H4Z2W",
+      "YF0LXT1QSTGG",
+      "XP2SL33HT0D9"
+    ],
+    "fixes": [],
+    "skipped": [],
+    "merged": null,
+    "tests": {
+      "tsc": null,
+      "vitest": null,
+      "cases": null
+    },
+    "code_proposals": [
+      "silent-proposal-c20b5139dd0dff71",
+      "silent-proposal-ae9e692d680e3819",
+      "silent-proposal-52f1e1bd2e7db0ed",
+      "silent-proposal-6dd8bbff876be528",
+      "silent-proposal-578e415a259e6835",
+      "silent-proposal-c0767768bf6a7ab1",
+      "silent-proposal-a46bdb7fe711d79a",
+      "silent-proposal-1044224808015e5c",
+      "silent-proposal-7cbc6005db712ba9",
+      "silent-proposal-c59f592f1427a67e"
+    ],
+    "implementation_domains": [],
+    "proposal_results": [
+      {
+        "id": "silent-proposal-c20b5139dd0dff71",
+        "state": "waiting",
+        "reason": "缺历史实际A10移动表和火花成长、撤污染、弱毒挡联合生产回放；实损9不足拟统一技能惩罚。"
+      },
+      {
+        "id": "silent-proposal-ae9e692d680e3819",
+        "state": "waiting",
+        "reason": "缺遗忘死亡返敏、混合来源返还和稳定实例标识；失落退场返力不能推广通用返还或击杀顺序。"
+      },
+      {
+        "id": "silent-proposal-52f1e1bd2e7db0ed",
+        "state": "waiting",
+        "reason": "首观测读取与五样本门槛已有子项；缺历史移动表、加压虚弱联合回放和覆甲减层来源隔离。"
+      },
+      {
+        "id": "silent-proposal-6dd8bbff876be528",
+        "state": "waiting",
+        "reason": "缺新旧同种召唤实例的连续身份和计数证据；局部增长不能认证新实体计数隔离。"
+      },
+      {
+        "id": "silent-proposal-578e415a259e6835",
+        "state": "waiting",
+        "reason": "缺跨重规划整候选归属、逐来源收益和恢复分账；原金刚杵指向0016与覆甲claim冲突仍待厘清。"
+      },
+      {
+        "id": "silent-proposal-c0767768bf6a7ab1",
+        "state": "waiting",
+        "reason": "缺跨续问完整执行归属、消费者回读、受控获胜线及独立后置验证；当轮血价不足拟系数或禁探索。"
+      },
+      {
+        "id": "silent-proposal-a46bdb7fe711d79a",
+        "state": "waiting",
+        "reason": "当前阶段快照已有子项；缺持有、候选、施放、结算全链和累计归源，本批无第三阶段或独立整战对照。"
+      },
+      {
+        "id": "silent-proposal-1044224808015e5c",
+        "state": "waiting",
+        "reason": "两组血价及力量收益已核；缺完整收益、成长净贡献和独立后续双蟹整战对照，不启用新探索规则。"
+      },
+      {
+        "id": "silent-proposal-7cbc6005db712ba9",
+        "state": "waiting",
+        "reason": "已有朝向、临时减力和船夹板子项；缺额外格挡来源隔离、混合意图缺值语义及联合消费者验证。"
+      },
+      {
+        "id": "silent-proposal-c59f592f1427a67e",
+        "state": "waiting",
+        "reason": "缺逐来源累计收益、跨续问完整执行、SL恢复分账与二十经验逐项消费者验收；父要求保持开放。"
+      }
+    ],
+    "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261013-104302-s2/learner/runs/20261013-104319-strategy-proposal/report.md",
+    "source_head_verified": "c9f886c961c2ea02025fbd9d138c06dd5bffd509",
+    "no_source_change_verified": true
+  }
+}
