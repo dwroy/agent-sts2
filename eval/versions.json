@@ -2295,7 +2295,19 @@
       "release_id": "V4-R324",
       "source": "2026-10-13 15:43:07 CST 原strategy151303源9b65f1bee0f26ced606ec256fc3d173db48caa3e，silent-0297/提案silent-proposal-d3ce9b2cd72006a5；D9XJAX5KCSU2 A10 F48第3试T4可见弃牌区与新生WITHER均6伤，原同四步43伤需损18低报，固定生产读回校正为21。仅实际Silent/A10、可操作且有凋萎活敌、当前牌堆/手牌文本可解析一致时补缓存；不据数量/升级后缀/回合猜值，缺失/冲突/混合ID/HP-loss、原手牌与SL回T1重置、其他角色及未观察进阶保持。源撤码6败11过、恢复27过，源沙箱362文件3497项/tsc/gitleaks0。20份整枝记录预检冲突原件保留，ops只取三个已测源码/测试路径main/live并保留刷新。宿主完整检查沿原learner-recheck单次接续；完整dirty历史树、新自然局/整战/收益未证，不关闭量化父项。回退仅revert实际live叶子b6894f9d161424dc678a428df3e4e8f50e3d3221，不覆盖原证据/知识刷新/学习成果。"
     },
-    {"name": "S1.boss-calibration16", "family": "Silent", "commit": "890cc50eb1726b54e99047638a326eb76e69e2f7", "source": "2026-10-13 17:27:39 CST: Roy授权静默boss校准刷新；21新实际结局，270完局/1193尝试/481可用，固定107调参/374验证；源5a710a1196b06fa4357377ed1a33618c3750a8b6；silent-0454；固定模型/Platt/切点不变；paper/materials/silent/boss-sim-calibration.md"}
+    {
+      "name": "S1.boss-calibration16",
+      "family": "Silent",
+      "commit": "890cc50eb1726b54e99047638a326eb76e69e2f7",
+      "source": "2026-10-13 17:27:39 CST: Roy授权静默boss校准刷新；21新实际结局，270完局/1193尝试/481可用，固定107调参/374验证；源5a710a1196b06fa4357377ed1a33618c3750a8b6；silent-0454；固定模型/Platt/切点不变；paper/materials/silent/boss-sim-calibration.md"
+    },
+    {
+      "name": "S1.operator-deck-cap30",
+      "family": "Silent",
+      "commit": "11deed8421f292696dce1a4d7e85aff873262299",
+      "source": "2026-10-13 17:29:18 CST Roy明确指定仅Silent、从下一局起永久牌组不得超过30；是实验约束而非学习者发现或已证胜率结论。当前Y82C2NV7WM2M保持旧规则，包括恢复控制器。新增牌总数/未知上界、奖励、商店和事件检查；多步购物先真实移除腾位，模型看到名额、核心兑现/稀释/DPR/升级/最终boss权衡要求；已有两张奖励只复用原silent-0190证据模型。源2b8b35ac0205f096aec8dfe1ed7bef75536e9936，实际live 11deed8421f292696dce1a4d7e85aff873262299；tsc、沙箱14+25、宿主8文件137项和源码gitleaks0。其他角色不启用，无对局重启。回退revert该实际live叶子并登记新编号，保留本次原始数据和版本。",
+      "release_id": "V4-R325"
+    }
   ],
   "release_numbering": {
     "schema_version": 1,
@@ -4597,6 +4609,13 @@
         "commit": "b6894f9d161424dc678a428df3e4e8f50e3d3221",
         "aliases": [
           "S1.visible-wither-damage1"
+        ]
+      },
+      {
+        "release_id": "V4-R325",
+        "commit": "11deed8421f292696dce1a4d7e85aff873262299",
+        "aliases": [
+          "S1.operator-deck-cap30"
         ]
       }
     ],
