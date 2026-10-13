@@ -45,6 +45,7 @@ import { resolveJevPromptLog } from "./jev-prompt-log.js";
 import { PROJECT_ROOT } from "../core/paths.js";
 import { characterKey, knowledgeFile } from "../knowledge/files.js";
 import { ascensionMode, resolveTargetAscension } from "../memory/ascension-target.js";
+import { SILENT_DECK_CONSTRAINT } from "../memory/run-constraints.js";
 
 /** The repository this module runs from (core/paths.ts PROJECT_ROOT: the checkout's root). */
 export const REPO_ROOT = PROJECT_ROOT;
@@ -92,6 +93,7 @@ export interface EngineSnapshot {
 }
 
 export interface RunConfigRow {
+  operator_constraints?: { id: string; max_permanent_cards: number; activation: string };
   ts: string;
   run_id: string;
   ascension: number | null;
@@ -488,6 +490,8 @@ export function runConfigRow(
       character: config.run.character,
     },
     // TARGET_ASCENSION=climb: the level it resolved to for this run's character (memory/ascension-target.ts), and the mode.
+    ...(characterKey(run.character) === "silent" && !SILENT_DECK_CONSTRAINT.exemptRunIds.some((id) => id === run.runId)
+      ? { operator_constraints: { id: SILENT_DECK_CONSTRAINT.id, max_permanent_cards: SILENT_DECK_CONSTRAINT.maximum, activation: "next run after Y82C2NV7WM2M; original run exempt" } } : {}),
     ...climbSetup(env["TARGET_ASCENSION"], characterKey(run.character) ?? config.run.characterId),
     arm: str(env["ARM"]) || null,
     // SL_ENABLED only (docs/sl.md): with SL off the row is exactly as before.

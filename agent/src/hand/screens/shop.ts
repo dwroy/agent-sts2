@@ -24,6 +24,7 @@ import type { ActionRequest } from "../mod/client.js";
 import type { GameState } from "../mod/schema.js";
 import type { ResolvedAction } from "../../memory/types.js";
 import { cardLine, deckCards, nextPlanRef, oneshotFailedHere, oneshotOn, planMakerOf, sameCard, selectableCards, unlistedNote, unverifiedRemovalPreview, usePlanRef, visitKey, type CardIdentity, type DeckFollowUp } from "./oneshot.js";
+import { deckBudget, deckBudgetProblem, permanentCardGain } from "../../memory/run-constraints.js";
 
 /** The shop removal's selection screen, as a one-shot follow-up (which cards it lists: selectableCards). */
 const REMOVAL_FOLLOW: DeckFollowUp = { task: "remove", count: 1, upTo: false, text: "" };
@@ -158,7 +159,7 @@ export function planShop(env: DecisionEnv): Decision | null {
         } satisfies JsonValue,
       };
       everything.push({ option, affordable: enough, id, price });
-      if (enough) options.push(option);
+      if (enough && !deckBudgetProblem(state, option.intent)) options.push(option);
     }
   };
 
@@ -370,6 +371,19 @@ export function parseShopPlan(json: Record<string, unknown>, env: DecisionEnv): 
     return { invalid: `unknown step ${key}` };
   }
   steps.push({ kind: "leave", key: "leave", name: "leave" });
+  const budget = deckBudget(env.state);
+  if (budget) {
+    let size = budget.current;
+    for (const step of steps) {
+      if (step.kind === "remove" && size !== null) size -= 1;
+      if (step.kind !== "buy") continue;
+      const intent = { action: step.action!, option_index: step.index! };
+      const problem = deckBudgetProblem(env.state, intent, size ?? undefined);
+      if (problem) return { invalid: problem };
+      const gain = permanentCardGain(env.state, intent);
+      if (size !== null && gain !== null) size += gain;
+    }
+  }
   // The first step is played at once: it must be possible now (the later ones are checked when they come).
   const first = stepProblem(steps[0]!, env);
   if (first) return { invalid: `first step ${steps[0]!.key}: ${first}` };
@@ -379,6 +393,10 @@ export function parseShopPlan(json: Record<string, unknown>, env: DecisionEnv): 
 /** Why a step cannot be played on the live shop now, or null. */
 function stepProblem(step: ShopPlanStep, env: DecisionEnv): string | null {
   const { state } = env;
+  if (step.kind === "buy") {
+    const problem = deckBudgetProblem(state, { action: step.action!, option_index: step.index! });
+    if (problem) return problem;
+  }
   const shop = asRecord(state.raw["shop"]);
   const actions = state.available_actions;
   if (step.kind === "leave") return null;
