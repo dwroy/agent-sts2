@@ -65,9 +65,14 @@ while [ ! -f "$OPS/STOP" ]; do
     play_exit=$?
     [ "$play_exit" -eq 76 ] && break
     if [ "$play_exit" -eq 75 ] || [ "$play_exit" -eq 78 ]; then
-      echo "$(date '+%F %T') brain blocked (exit $play_exit); saved run retained; awaiting explicit recovery" >> "$OPS/autoplay.log"
-      # The marker is normally present. A missing marker must not cause a restart storm either.
-      while [ ! -f "$OPS/STOP" ] && ! python3 "$OPS/brain_wait.py" "$LOGS" --hold 2>/dev/null; do sleep 5; done
+      brain_blocked_note="$(date '+%F %T') brain blocked (exit $play_exit); saved run retained; awaiting explicit recovery"
+      printf '%s\n' "$brain_blocked_note" >&2
+      printf '%s\n' "$brain_blocked_note" >> "$OPS/autoplay.log" || true
+      # A failed terminal-marker write must not strand the loop or restart the controller.
+      if ! python3 "$OPS/brain_wait.py" "$LOGS" --hold 2>/dev/null; then
+        printf '%s\n' 'terminal brain marker missing or stale; autoplay exits with the fault status; repair storage and explicitly resume the saved run' >&2
+        exit "$play_exit"
+      fi
       continue
     fi
   fi
