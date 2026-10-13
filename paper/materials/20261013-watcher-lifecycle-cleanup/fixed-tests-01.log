@@ -1,0 +1,17 @@
+.F.........
+======================================================================
+FAIL: test_explicit_acceptance_handles_leaf_integration_without_source_ancestry (__main__.WorkspaceRetention.test_explicit_acceptance_handles_leaf_integration_without_source_ancestry)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/lifecycle-cleanup-20261013/ops/tests/test_worktree_retention.py", line 123, in test_explicit_acceptance_handles_leaf_integration_without_source_ancestry
+    self.assertEqual(resource.reclaim(self.root, self.directory, tree.name)['state'], 'reclaimed')
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'eligible' != 'reclaimed'
+- eligible
++ reclaimed
+
+
+----------------------------------------------------------------------
+Ran 11 tests in 1.755s
+
+FAILED (failures=1)

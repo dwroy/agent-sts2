@@ -1,0 +1,7 @@
+Traceback (most recent call last):
+  File "/tmp/sts2-lifecycle-integrate.py", line 64, in <module>
+    prepared={p:replacement(tree,p) for p in paths}
+                ~~~~~~~~~~~^^^^^^^^
+  File "/tmp/sts2-lifecycle-integrate.py", line 53, in replacement
+    raise RuntimeError('concurrent source edit retained: '+path)
+RuntimeError: concurrent source edit retained: ops/tests/test_disk_capacity.py

@@ -1,0 +1,188 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/lifecycle-cleanup-20261013/agent
+
+ ❯ tests/strategy-research-scheduling.test.ts (1 test | 1 failed) 2999ms
+   × frozen research takes the next slot and starts only after its actual registration is saved 2998ms
+ ❯ tests/strategy-implementation.test.ts (1 test | 1 failed) 1171ms
+   × binds the approved implementation through the existing broker and host before model start 1170ms
+ ❯ tests/strategy-concurrency.test.ts (2 tests | 1 failed) 200ms
+     × claims disjoint inputs, retains active ownership and bootstraps the second slot 195ms
+ ❯ tests/strategy-implementation-continuation.test.ts (1 test | 1 failed) 794ms
+   × resumes the frozen implementation once while preserving waiting proposals and bounded failure history 793ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/strategy-concurrency.test.ts > two proposal workers > claims disjoint inputs, retains active ownership and bootstraps the second slot
+AssertionError: ....F.
+======================================================================
+FAIL: test_second_slot_wrapper_links_existing_python_environment (__main__.StrategyConcurrency.test_second_slot_wrapper_links_existing_python_environment)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/lifecycle-cleanup-20261013/agent/../ops/tests/test_strategy_concurrency.py", line 121, in test_second_slot_wrapper_links_existing_python_environment
+    self.assertEqual(result.returncode, 0, result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0 : b''
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.079s
+
+FAILED (failures=1)
+: expected 1 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 1
+
+ ❯ tests/strategy-concurrency.test.ts:9:42
+      7|   it("claims disjoint inputs, retains active ownership and bootstraps …
+      8|     const result = spawnSync("python3", ["-B", "../ops/tests/test_stra…
+      9|     expect(result.status, result.stderr).toBe(0);
+       |                                          ^
+     10|     expect(result.stderr).toContain("Ran 6 tests");
+     11|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  tests/strategy-implementation-continuation.test.ts > resumes the frozen implementation once while preserving waiting proposals and bounded failure history
+AssertionError: ...F...
+======================================================================
+FAIL: test_host_wrapper_delivers_the_continuation_to_a_fixed_launcher (__main__.Continuation.test_host_wrapper_delivers_the_continuation_to_a_fixed_launcher)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/lifecycle-cleanup-20261013/agent/../ops/tests/test_strategy_implementation_continuation.py", line 200, in test_host_wrapper_delivers_the_continuation_to_a_fixed_launcher
+    self.assertEqual(result.returncode, 0, result.stderr + (errors.read_text() if errors.exists() else ""))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0 : python3: can't open file '/tmp/tmpvovpijm3/ops/worktree_checkout.py': [Errno 2] No such file or directory
+
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.659s
+
+FAILED (failures=1)
+: expected 1 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 1
+
+ ❯ tests/strategy-implementation-continuation.test.ts:11:56
+      9|     encoding: "utf8", timeout: 60_000,
+     10|   });
+     11|   expect(result.status, result.stdout + result.stderr).toBe(0);
+       |                                                        ^
+     12|   expect(result.stderr).toMatch(/Ran [1-9]\d* tests/);
+     13| }, 65_000);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  tests/strategy-implementation.test.ts > binds the approved implementation through the existing broker and host before model start
+AssertionError: {"dispatched": ["20261013-150433-strategy-proposal", 101]}
+{"dispatched": null, "status": "blocked", "error": "implementation request already registered or proposals leased"}
+{"dispatched": null, "status": "blocked", "error": "unknown implementation request"}
+....F../home/dw/Projects/agent-sts2/.worktrees/lifecycle-cleanup-20261013/ops/learner_checks.py:30: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpbx1h0psr/ops/codex-ops/learner/20260101-010101-strategy-proposal.out' mode='r' encoding='utf8'>
+  text = open(path, encoding="utf8").read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+....
+======================================================================
+FAIL: test_host_wrapper_supplies_bound_task_to_fake_launcher_and_finishes_normally (__main__.ImplementationBinding.test_host_wrapper_supplies_bound_task_to_fake_launcher_and_finishes_normally)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/lifecycle-cleanup-20261013/agent/../ops/tests/test_strategy_implementation.py", line 297, in test_host_wrapper_supplies_bound_task_to_fake_launcher_and_finishes_normally
+    self.assertEqual(result.returncode, 0, result.stderr + (errors.read_text() if errors.exists() else ""))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0 : python3: can't open file '/tmp/tmp5jkvhyf0/ops/worktree_checkout.py': [Errno 2] No such file or directory
+
+
+----------------------------------------------------------------------
+Ran 11 tests in 1.021s
+
+FAILED (failures=1)
+: expected 1 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 1
+
+ ❯ tests/strategy-implementation.test.ts:11:56
+      9|     encoding: "utf8", timeout: 60_000,
+     10|   });
+     11|   expect(result.status, result.stdout + result.stderr).toBe(0);
+       |                                                        ^
+     12|   expect(result.stderr).toMatch(/Ran [1-9]\d* tests/);
+     13| }, 65_000);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+ FAIL  tests/strategy-research-scheduling.test.ts > frozen research takes the next slot and starts only after its actual registration is saved
+AssertionError: .....F....F......F....research dispatch receipt could not be saved; actual batch remains registered
+.......
+======================================================================
+FAIL: test_decklist_host_wrapper_requires_the_saved_registration_and_pinned_baseline (__main__.ResearchScheduling.test_decklist_host_wrapper_requires_the_saved_registration_and_pinned_baseline)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/lifecycle-cleanup-20261013/agent/../ops/tests/test_strategy_research_scheduling.py", line 612, in test_decklist_host_wrapper_requires_the_saved_registration_and_pinned_baseline
+    self.assert_host_wrapper_registration(DECKLIST_IDENT)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/lifecycle-cleanup-20261013/agent/../ops/tests/test_strategy_research_scheduling.py", line 557, in assert_host_wrapper_registration
+    self.assertEqual(proc.returncode, 0, stdout + stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0 : 
+
+======================================================================
+FAIL: test_host_wrapper_waits_for_registration_before_model_and_finishes_only_registered (__main__.ResearchScheduling.test_host_wrapper_waits_for_registration_before_model_and_finishes_only_registered)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/lifecycle-cleanup-20261013/agent/../ops/tests/test_strategy_research_scheduling.py", line 574, in test_host_wrapper_waits_for_registration_before_model_and_finishes_only_registered
+    self.assert_host_wrapper_registration()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/lifecycle-cleanup-20261013/agent/../ops/tests/test_strategy_research_scheduling.py", line 557, in assert_host_wrapper_registration
+    self.assertEqual(proc.returncode, 0, stdout + stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0 : 
+
+======================================================================
+FAIL: test_output_host_wrapper_accepts_only_its_saved_registration_and_pinned_baseline (__main__.ResearchScheduling.test_output_host_wrapper_accepts_only_its_saved_registration_and_pinned_baseline)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/lifecycle-cleanup-20261013/agent/../ops/tests/test_strategy_research_scheduling.py", line 579, in test_output_host_wrapper_accepts_only_its_saved_registration_and_pinned_baseline
+    self.assert_host_wrapper_registration(OUTPUT_IDENT)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/lifecycle-cleanup-20261013/agent/../ops/tests/test_strategy_research_scheduling.py", line 557, in assert_host_wrapper_registration
+    self.assertEqual(proc.returncode, 0, stdout + stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0 : 
+
+----------------------------------------------------------------------
+Ran 29 tests in 2.858s
+
+FAILED (failures=3)
+: expected 1 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 1
+
+ ❯ tests/strategy-research-scheduling.test.ts:8:40
+      6|     encoding: "utf8", timeout: 30_000,
+      7|   });
+      8|   expect(result.status, result.stderr).toBe(0);
+       |                                        ^
+      9|   expect(result.stderr).toMatch(/Ran [1-9]\d* tests/);
+     10| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯
+
+
+ Test Files  4 failed | 352 passed (356)
+      Tests  4 failed | 3434 passed (3438)
+   Start at  14:48:47
+   Duration  1078.26s (transform 8.90s, setup 16.11s, import 43.51s, tests 972.12s, environment 37ms)
+

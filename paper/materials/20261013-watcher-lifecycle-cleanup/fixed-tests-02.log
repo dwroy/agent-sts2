@@ -1,0 +1,24 @@
+.........E...
+======================================================================
+ERROR: test_retry_reuses_verified_archive_after_removal_failure (__main__.WorkspaceRetention.test_retry_reuses_verified_archive_after_removal_failure)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/lifecycle-cleanup-20261013/ops/tests/test_worktree_retention.py", line 144, in test_retry_reuses_verified_archive_after_removal_failure
+    self.assertEqual(self.reclaim()['state'], 'reclaimed')
+                     ~~~~~~~~~~~~^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/lifecycle-cleanup-20261013/ops/tests/test_worktree_retention.py", line 58, in reclaim
+    return resource.reclaim(self.root, self.directory, self.tree.name, apply)
+           ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/lifecycle-cleanup-20261013/ops/worktree_retention.py", line 281, in reclaim
+    verified_archive(root, manifest)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/lifecycle-cleanup-20261013/ops/worktree_retention.py", line 245, in verified_archive
+    dest = retention.safe_path(root, link["path"])
+  File "/home/dw/Projects/agent-sts2/.worktrees/lifecycle-cleanup-20261013/ops/learner_retention.py", line 70, in safe_path
+    raise ValueError("symlink path retained")
+ValueError: symlink path retained
+
+----------------------------------------------------------------------
+Ran 13 tests in 1.841s
+
+FAILED (errors=1)
