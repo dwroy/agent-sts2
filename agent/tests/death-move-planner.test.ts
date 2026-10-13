@@ -25,7 +25,8 @@ const DATA = join(HERE, "death-move-data");
 const touched = new Set<string>();
 
 vi.mock("node:fs", async (importOriginal) => {
-  const fs = await importOriginal<typeof import("node:fs")>();
+  const { historicalKnowledgeFs } = await import("./historical-knowledge-fs.js");
+  const fs = historicalKnowledgeFs(await importOriginal<typeof import("node:fs")>());
   const pinned = JSON.parse(fs.readFileSync(join(DATA, "pinned-knowledge.json"), "utf8")) as Record<string, Record<string, unknown>>;
   const shared = [join(ROOT, "..", "logs"), join(ROOT, "..", "data")];
   const watch = (name: string, write: boolean) => {
@@ -129,7 +130,7 @@ const RULED = BOARDS.filter((name) => name !== "nx48-f33-t7-crab");
  * re-pinned at v4-inferno-planner: its draw pile holds both Infernos (none up), and the rollout's later turns now lose 1 HP
  * per Inferno played at each turn's start (strategy/start-loss.ts; a second one had looked free): its numbers moved and the
  * rollout's best (all three lines 5-8/8 dead) became Blood Wall, then Uppercut+; the rest of the question as at 0f63d28.
- * 2026-10-04 (v4-asc-facts, Dai: experience by ascension): the boards at A8 and up whose question carries a counted record
+ * 2026-10-04 (v4-asc-facts, Roy: experience by ascension): the boards at A8 and up whose question carries a counted record
  * (a Jev hint's or a lesson's {CRAB_KILLS_EN}, {QUEEN_AMALGAM_EN}, {CRAB_KILL_ORDER}, …) re-pinned: those records now give A8's fights
  * and A9's apart (boss-clock recordBand). With the band switched off (RECORD_BAND_FROM above every ascension) every
  * earlier digest held: nothing else in the decision moved.

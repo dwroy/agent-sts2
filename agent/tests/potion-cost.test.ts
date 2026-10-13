@@ -1,5 +1,5 @@
 /**
- * Potion cost (Dai 2026-09-30; src/reflex/potion-cost.ts): a potion drunk before the act boss is HP paid later, at
+ * Potion cost (Roy 2026-09-30; src/reflex/potion-cost.ts): a potion drunk before the act boss is HP paid later, at
  * its held value in the potion table; 0 in a boss fight; deaths first, then the effective loss (HP + potions); a
  * "no potion this fight" line on every question with a potion to drink (not in a boss fight).
  * Fixed data only: the hand-written table tests/gkb-data/knowledge/characters/ironclad/potion-equivalents.json (A8/A9: Block Potion 7/8/9,
@@ -19,7 +19,8 @@ vi.hoisted(() => vi.resetModules());
 
 // Replay the historical Ironclad contracts against committed fixtures, never a refreshed database.
 vi.mock("node:fs", async (importOriginal) => {
-  const fs = await importOriginal<typeof import("node:fs")>();
+  const { historicalKnowledgeFs } = await import("./historical-knowledge-fs.js");
+  const fs = historicalKnowledgeFs(await importOriginal<typeof import("node:fs")>());
   const { KNOWLEDGE_DIR } = await import("../src/knowledge/files.js");
   const pinned = JSON.parse(fs.readFileSync(new URL("./potion-cost-knowledge.json", import.meta.url), "utf8")) as Record<string, unknown>;
   const readFileSync = ((path: Parameters<typeof fs.readFileSync>[0], ...args: unknown[]) => {

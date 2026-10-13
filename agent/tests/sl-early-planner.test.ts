@@ -2,7 +2,7 @@
  * The turn planner's least-loss facts for the SL judge (combat-plan leastLossFactsOf; SL_RELOAD_EARLY and
  * SL_JUDGE_KNOWN_DRAWS, docs/sl.md §2) and the known draws with cards added at random places (SL_RETRY_KNOWN_INSERTS,
  * §10), on logged boards (tests/sl-early-data, make-fixtures.ts), with the knowledge data the planner reads pinned from
- * v4 26a50b1 (pinned-knowledge.json) and fake clocks, as tests/sl-retry-planner.test.ts does. Dai 2026-10-02: an early
+ * v4 26a50b1 (pinned-knowledge.json) and fake clocks, as tests/sl-retry-planner.test.ts does. Roy 2026-10-02: an early
  * reload only on a verdict with nothing left to chance, so each random case here must carry its chance (and the judge
  * then keeps the end_turn timing); a clean one carries none and the judge reloads early. The facts sit beside the
  * decision: the decision itself (and so the question, the log, the digests) is as before. Nothing under logs/ or .cache
@@ -22,7 +22,8 @@ const DATA = join(HERE, "sl-early-data");
 const touched = new Set<string>();
 
 vi.mock("node:fs", async (importOriginal) => {
-  const fs = await importOriginal<typeof import("node:fs")>();
+  const { historicalKnowledgeFs } = await import("./historical-knowledge-fs.js");
+  const fs = historicalKnowledgeFs(await importOriginal<typeof import("node:fs")>());
   const pinned = JSON.parse(fs.readFileSync(join(DATA, "pinned-knowledge.json"), "utf8")) as Record<string, unknown>;
   const shared = [join(ROOT, "..", "logs"), join(ROOT, "..", "data")];
   const watch = (name: string, write: boolean) => {
@@ -278,7 +279,7 @@ describe("the judge counts held cards' end-of-turn damage (TMNFVW6DRQ20 F48 T8, 
   });
 });
 
-describe("the judge: end-of-turn hits and Beating Remnant, exactly or not at all (Dai 2026-10-02)", () => {
+describe("the judge: end-of-turn hits and Beating Remnant, exactly or not at all (Roy 2026-10-02)", () => {
   type Raw = Record<string, unknown>;
   const fx = (name: string) => structuredClone(board(name).state) as Raw;
   const judge = (raw: Raw, extra: { lostSoFar?: number } = {}) => judgeEndTurn(parseGameState(raw), { label: "combat/least-loss", revives: [], knowledge, ...extra });

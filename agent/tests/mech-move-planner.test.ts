@@ -24,7 +24,8 @@ const DATA = join(HERE, "mech-move-data");
 const touched = new Set<string>();
 
 vi.mock("node:fs", async (importOriginal) => {
-  const fs = await importOriginal<typeof import("node:fs")>();
+  const { historicalKnowledgeFs } = await import("./historical-knowledge-fs.js");
+  const fs = historicalKnowledgeFs(await importOriginal<typeof import("node:fs")>());
   const pinned = JSON.parse(fs.readFileSync(join(DATA, "pinned-knowledge.json"), "utf8")) as Record<string, Record<string, unknown>>;
   const shared = [join(ROOT, "..", "logs"), join(ROOT, "..", "data")];
   const watch = (name: string, write: boolean) => {
@@ -126,7 +127,7 @@ const BOARDS = ["nx48-f33-t7-crab-death", "8l29-f33-t5-crab-alone", "y3xt-f45-t5
  * Digests of v4 3488dc5's planner on the boards above (JEV_CONTEXT off and v1), MECH_RULES on (its default). The 8L29
  * run held Lost Wisp, which the solver models since (fix-queue-v4 fix2: 8 to every enemy per Power): its two boards
  * are 3488dc5's plus that (with the relic's lines off they read 3488dc5's bc13d834…, f69d22f6…, 21324a53…, e1f0817c…).
- * 2026-10-04 (v4-asc-facts, Dai: experience by ascension): the boards at A8 and up whose question carries a counted record
+ * 2026-10-04 (v4-asc-facts, Roy: experience by ascension): the boards at A8 and up whose question carries a counted record
  * (a Jev hint's or a lesson's {CRAB_KILLS_EN}, {QUEEN_AMALGAM_EN}, {CRAB_KILL_ORDER}, …) re-pinned: those records now give A8's fights
  * and A9's apart (boss-clock recordBand). With the band switched off (RECORD_BAND_FROM above every ascension) every
  * earlier digest held: nothing else in the decision moved.

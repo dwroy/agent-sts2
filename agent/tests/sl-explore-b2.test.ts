@@ -1,5 +1,5 @@
 /**
- * SL_RETRY_EXPLORE in boss fights (docs/sl.md §11.3, Dai 2026-10-02), with B2 on: logged boss boards (tests/logged-states,
+ * SL_RETRY_EXPLORE in boss fights (docs/sl.md §11.3, Roy 2026-10-02), with B2 on: logged boss boards (tests/logged-states,
  * the knowledge pinned as tests/boss-lines-planner.test.ts pins it), B2's samples in this thread, few of them, the fake
  * clocks of the other planner tests (B2's too: its times are in the question and the log).
  *
@@ -26,7 +26,8 @@ const KNOWLEDGE = join(ROOT, "..", "knowledge");
 const touched = new Set<string>();
 
 vi.mock("node:fs", async (importOriginal) => {
-  const fs = await importOriginal<typeof import("node:fs")>();
+  const { historicalKnowledgeFs } = await import("./historical-knowledge-fs.js");
+  const fs = historicalKnowledgeFs(await importOriginal<typeof import("node:fs")>());
   const pinned = JSON.parse(fs.readFileSync(join(HERE, "boss-lines-data", "pinned-knowledge.json"), "utf8")) as Record<string, unknown>;
   const shared = [join(ROOT, "..", "logs"), join(ROOT, "..", "data")];
   const watch = (name: string, write: boolean) => {

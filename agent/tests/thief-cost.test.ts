@@ -1,5 +1,5 @@
 /**
- * THIEF_COST (docs/thief.md §7, Dai 2026-10-02): the thieves' loot as HP in the rollout's ranking, like a potion's cost.
+ * THIEF_COST (docs/thief.md §7, Roy 2026-10-02): the thieves' loot as HP in the rollout's ranking, like a potion's cost.
  * With the switch off (THIEF_FACTS on) every logged thief board's question, Jev's view and every answer's resolution are
  * byte for byte the planner of ffed0d4 (the commit this branch started from; digests computed there with this file's
  * harness, CAPTURE=1 -t "THIEF_COST off"), on the boards and pinned knowledge of tests/thief.test.ts. With it on: the
@@ -32,7 +32,8 @@ const GOLD_HP = {
 };
 
 vi.mock("node:fs", async (importOriginal) => {
-  const fs = await importOriginal<typeof import("node:fs")>();
+  const { historicalKnowledgeFs } = await import("./historical-knowledge-fs.js");
+  const fs = historicalKnowledgeFs(await importOriginal<typeof import("node:fs")>());
   const pinned = JSON.parse(fs.readFileSync(join(DATA, "pinned-knowledge.json"), "utf8")) as Record<string, Record<string, Record<string, unknown>>>;
   // The pinned potion table (894f245's) with a gold rate: read only with THIEF_COST on (ffed0d4 never reads it).
   pinned["potion-equivalents.json"]!["meta"]!["gold_hp"] = GOLD_HP;
