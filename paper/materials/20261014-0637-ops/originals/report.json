@@ -1,0 +1,39 @@
+{
+  "task": "postmortem",
+  "appended": [
+    "EEVP0QTLMSX9"
+  ],
+  "skipped": [],
+  "bugs": [
+    {
+      "run": "EEVP0QTLMSX9",
+      "where": "agent/src/reflex/card-model.ts:1004",
+      "what": "斗篷的小刀生成被算作抽牌，SL预支未到手的毒雾",
+      "new": true
+    }
+  ],
+  "ledger": {
+    "added": [
+      "silent-0461",
+      "silent-0462"
+    ],
+    "updated": [
+      "silent-0079",
+      "silent-0352"
+    ],
+    "repeats": [
+      "silent-0079"
+    ],
+    "check": 0
+  },
+  "code_proposals": [
+    "silent-proposal-f4eb0efba2594252",
+    "silent-proposal-2d82d540ce5194af",
+    "silent-proposal-41cac3cac7d36154"
+  ],
+  "implementation_domains": [
+    "combat",
+    "sl"
+  ],
+  "report": "/home/dw/Projects/agent-sts2/learner/runs/20261014-061302-postmortem/report.md"
+}

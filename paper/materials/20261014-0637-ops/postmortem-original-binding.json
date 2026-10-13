@@ -1,0 +1,78 @@
+{
+  "at": "2026-10-14 06:40:29 CST",
+  "batch": "20261014-061301",
+  "run": "EEVP0QTLMSX9",
+  "lesson_bytes": 28164,
+  "lesson_sha256": "46a91e9d0e8610e23a2dd4d363395a8e9da2a8c2000f3e3599efc0b1934c43df",
+  "original_prefix_sha256_verified": {
+    "bytes": 8366346,
+    "sha256": "bfd411f404b3ac73ac6739ed8aea868658b54184c0b7a78147d356215133b5d9"
+  },
+  "original_append_and_draft_body_equal_except_outer_newlines": true,
+  "original_cli_rows": 8,
+  "proposal_original_rows": 3,
+  "source_evidence_checks_passed": 45,
+  "verification_scope": "original learner fixed data and source trace checks, not implementation tests",
+  "new_bug": {
+    "run": "EEVP0QTLMSX9",
+    "where": "agent/src/reflex/card-model.ts:1004",
+    "what": "斗篷的小刀生成被算作抽牌，SL预支未到手的毒雾",
+    "new": true
+  },
+  "source_proposals": [
+    {
+      "id": "silent-proposal-f4eb0efba2594252",
+      "sha256": "ebc21f45e11e509fcd1cc25ebe7bd0d51d9344d9f4a34e60adfa634099fd8c2a",
+      "state": "pending",
+      "ledger": [
+        "silent-0461",
+        "silent-0462"
+      ],
+      "runs": [
+        "EEVP0QTLMSX9",
+        "LRN0HPZ0FZS1",
+        "T082DRCUHRRD"
+      ],
+      "target_task": "strategy-proposal"
+    },
+    {
+      "id": "silent-proposal-2d82d540ce5194af",
+      "sha256": "53c912a8ef00b92a4a1efd81dd21a07ccb4144d0bfaead2ef7f6d924230f037e",
+      "state": "pending",
+      "ledger": [
+        "silent-0079"
+      ],
+      "runs": [
+        "EEVP0QTLMSX9"
+      ],
+      "target_task": "strategy-proposal"
+    },
+    {
+      "id": "silent-proposal-41cac3cac7d36154",
+      "sha256": "91d356b85af8270c264bd15dd61a3e8c523a79a55e37863c32a10bdc11eafd9e",
+      "state": "pending",
+      "ledger": [
+        "silent-0352"
+      ],
+      "runs": [
+        "EEVP0QTLMSX9"
+      ],
+      "target_task": "strategy-proposal"
+    }
+  ],
+  "new_findings_are_not_live_experience_or_shipped": true,
+  "no_game_knowledge_invented_by_ops": true,
+  "native_runtime": {
+    "source": "ops/codex-ops/accounts/codex1/learner/sessions/2026/10/14/rollout-2026-10-14T06-13-05-01a13753-8f25-7441-b372-986fa1d2699c.jsonl",
+    "offset": 49154,
+    "bytes": 4620,
+    "row_sha256": "f561313a4e76cd711cceafd1b104f08f7e5d2560d6f8f0d60784f636a4adc9ad",
+    "model": "gpt-6.1-sol",
+    "effort": "xhigh",
+    "sandbox_type": "workspace-write",
+    "approval_policy": "never",
+    "thread": "01a13753-8f25-7441-b372-986fa1d2699c"
+  },
+  "unknown_whole_fight_counterfactuals_and_dirty_tree_preserved": true,
+  "raw_inputs_originals_and_pending_mechanic_evidence_not_reclaimed": true
+}
