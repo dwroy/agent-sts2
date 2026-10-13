@@ -23,7 +23,8 @@ class Capacity(unittest.TestCase):
             ops.mkdir()
             for name in ("paths.sh", "codex-ops-learner.sh"):
                 shutil.copy2(REPO / "ops" / name, ops / name)
-            (ops / "disk_capacity.py").write_text("import sys\nprint('fixed insufficient disk capacity', file=sys.stderr)\nsys.exit(1)\n")
+            # Allocation now owns the capacity preflight, before any checkout or model launch.
+            (ops / "worktree_checkout.py").write_text("import sys\nprint('fixed insufficient disk capacity', file=sys.stderr)\nsys.exit(1)\n")
             (ops / "codex-ops-learn.py").write_text("# Fixed finish stub.\n")
             bindir = root / "home/.local/node/bin"
             bindir.mkdir(parents=True)
