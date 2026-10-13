@@ -1,0 +1,9 @@
+仅诊断命令失败，未改生产源码：
+1. 读取 silent-apotheosis-evidence.json 时将 frames 字典误作列表，AttributeError: str object has no attribute get；已按字典结构修正。
+2. 搜索猜测的 ops/silent_selection*.py 与 learner/*selection*.py 路径不存在，rg exit 2；随后用 rg --files 定位实际消费者。
+原命令输出留在本会话，以上为本批落盘记录；不冒称测试失败或通过。
+3. 原8JRE派生states-lines副本已不存在，FileNotFoundError；未重写历史，改从VLZ已核末偏移向后有界抽取原日志，获得676 states/659 decisions。
+4. rg中猜测的agent/src/knowledge/monster-moves.ts不存在；未修改源码，不将该检索失败记作测试结果。
+5. 首份临时证据核验脚本用expect全文查找冒泡，误选手牌里含冒泡的防御/匕首雨动作，导致StopIteration；初稿.txt与原stderr保留，改为expect.card.id精确匹配后重新核验通过。
+6. 首次apply_patch被沙箱构建期跨树回收的ENOENT阻断：其他工作树paper/materials目录消失；同权限同补丁重试成功，不扩大权限，不当源码失败。
+7. VLZ核验元数据最初将JSON本体相等误命名all_original_bytes_match；初稿保留，现纠正all_original_json_rows_match并注明范围。四局manifest/566目标帧的真正原字节SHA匹配保持，不扩大VLZ字节对照结论。

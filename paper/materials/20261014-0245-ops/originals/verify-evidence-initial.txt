@@ -1,0 +1,98 @@
+import collections
+import hashlib
+import json
+from pathlib import Path
+
+scratch = Path(__file__).resolve().parent
+root = Path('/home/dw/Projects/agent-sts2')
+dispatch = json.loads((scratch / 'dispatch.json').read_text())
+runs = {}
+for line in (root / 'logs/runs.jsonl').open():
+    row = json.loads(line)
+    if row.get('run_id') in dispatch['runs']:
+        assert row['character'] == 'SILENT' and row['ascension'] == 10
+        runs[row['run_id']] = row
+assert set(runs) == set(dispatch['runs'])
+
+states, decisions = {}, {}
+for run in runs:
+    if run == 'VLZ6CCT8AQ0A':
+        original = root / 'learner/runs/20261007-154302-postmortem'
+        states[run] = [json.loads(line) for line in (original / 'states.jsonl').open()]
+        decisions[run] = [json.loads(line) for line in (original / 'decisions.jsonl').open()]
+    elif run == '8JRE1C4H4Z2W':
+        states[run] = [json.loads(line) for line in (scratch / (run + '-states.jsonl')).open()]
+        decisions[run] = [json.loads(line) for line in (scratch / (run + '-decisions.jsonl')).open()]
+    else:
+        states[run] = [json.loads(line) for line in (scratch / (run + '-all-states.jsonl')).open()]
+        decisions[run] = []
+for line in (scratch / 'four-runs-original-decisions.jsonl').open():
+    number, raw = line.split(':', 1)
+    row = json.loads(raw)
+    assert row['run_id'] in decisions and row['run_id'] not in ['VLZ6CCT8AQ0A', '8JRE1C4H4Z2W']
+    row['_line'] = int(number)
+    row['_source_sha256'] = hashlib.sha256(raw.encode()).hexdigest()
+    decisions[row['run_id']].append(row)
+for run in runs:
+    assert len(decisions[run]) == runs[run]['decisions']
+    assert all(row['state']['run_id'] == run for row in states[run])
+
+vlz_states = {row['_line']: row['state'] for row in states['VLZ6CCT8AQ0A']}
+vlz_decisions = {row['_line']: row for row in decisions['VLZ6CCT8AQ0A']}
+before = json.loads(vlz_decisions[269706]['questions']['plan']['criteria']['plan1'])
+after = json.loads(vlz_decisions[269707]['questions']['plan']['criteria']['plan1'])
+assert (before['damage_dealt'], before['hp_lost'], after['damage_dealt'], after['hp_lost']) == (43, 14, 51, 13)
+assert before['plays'].removeprefix('神化, then ').replace('+', '') == after['plays'].replace('+', '')
+assert (vlz_states[275564]['combat']['player']['energy'], vlz_states[275565]['combat']['player']['energy']) == (7, 5)
+assert (vlz_states[275728]['run']['current_hp'], vlz_states[275729]['run']['current_hp']) == (67, 67)
+assert (vlz_states[275728]['combat']['player']['energy'], vlz_states[275729]['combat']['player']['energy']) == (1, 2)
+last = vlz_states[275754]
+attack = sum(intent.get('total_damage') or 0 for enemy in last['combat']['enemies'] for intent in enemy['intents'])
+assert (last['run']['current_hp'], last['combat']['player']['block'], attack) == (32, 20, 59)
+assert [enemy['current_hp'] for enemy in vlz_states[275755]['combat']['enemies']] == [21, 80, 77]
+
+sand_decisions = {row['_line']: row for row in decisions['8JRE1C4H4Z2W']}
+assert sand_decisions[270216]['fingerprint'] == sand_decisions[270282]['fingerprint']
+audit = json.loads((scratch / '8JRE1C4H4Z2W-audit-output.json').read_text())
+assert len(audit['segments']) == 113
+assert all(row['actual_full_candidate_result'] is None for row in audit['segments'])
+assert sum(row['status'] == 'observed_turn_endpoints' for row in audit['observed_turns']) == 44
+terminal = next(row for row in audit['observed_actions'] if row['source_line'] == 270441)['terminal_observation']
+assert terminal['facts']['player_hp_delta'] == -5
+assert terminal['facts']['displayed_attack_reference']['attack_minus_block'] == 15
+assert terminal['facts']['enemy_hp_changes'][0]['hp_delta'] == -24
+assert terminal['facts']['actual_uncapped_damage'] is None
+
+bubbles = [row for row in decisions['5PM6JAQG6FNQ'] if row.get('floor') == 39 and row.get('turn') == 2
+           and row.get('chosen', {}).get('action') == 'play_card' and row.get('expect', {}).get('card_id') == 'BUBBLE_BUBBLE']
+# Older expect payloads may store identity inside a card record.
+if not bubbles:
+    bubbles = [row for row in decisions['5PM6JAQG6FNQ'] if row.get('floor') == 39 and row.get('turn') == 2
+               and row.get('chosen', {}).get('action') == 'play_card' and 'BUBBLE_BUBBLE' in json.dumps(row.get('expect', {}))]
+assert bubbles
+facts = []
+for row in bubbles:
+    matches = [frame for frame in states['5PM6JAQG6FNQ'] if frame.get('observed_ts') == row.get('observed_ts')
+               and frame.get('fingerprint') == row.get('fingerprint')]
+    assert len(matches) == 1
+    state = matches[0]['state']
+    target = row['chosen'].get('target_index')
+    enemy = next(enemy for enemy in state['combat']['enemies'] if enemy['index'] == target)
+    poison = next((power['amount'] for power in enemy['powers'] if power['power_id'] == 'POISON_POWER'), 0)
+    facts.append({'decision_line': row['_line'], 'target': enemy['enemy_id'], 'poison_before': poison})
+assert any(row['target'] == 'THE_LOST' and row['poison_before'] == 0 for row in facts)
+
+summary = {
+    'character': 'silent', 'ascension': 10,
+    'counts': {run: {'states': len(states[run]), 'decisions': len(decisions[run]), 'code': runs[run]['code']} for run in dispatch['runs']},
+    'total_states': sum(map(len, states.values())), 'total_decisions': sum(map(len, decisions.values())),
+    'apotheosis_same_sequence': {'old_damage': 43, 'old_hp_loss': 14, 'after_cast_damage': 51, 'after_cast_hp_loss': 13},
+    'knights_terminal': {'hp': 32, 'block': 20, 'attack': 59, 'displayed_loss': 39, 'displayed_shortfall': 7},
+    'sandworm_audit': {'segments': 113, 'observed_turn_endpoints': 44, 'full_candidate_results_known': 0,
+                      'terminal_net_hp': -5, 'displayed_attack_minus_block': 15, 'terminal_enemy_net_hp': -24},
+    'bubble_targets': facts,
+    'limitations': ['历史运行源码均带dirty，不等于当前源码。', '44个整轮端点不是44个完整候选结果。',
+                    '没有未选完整线路、同预算随机输入池对照或独立策略效果验证。'],
+}
+(scratch / 'evidence-checks.json').write_text(json.dumps(summary, ensure_ascii=False, indent=2) + '\n')
+print(json.dumps(summary, ensure_ascii=False))
