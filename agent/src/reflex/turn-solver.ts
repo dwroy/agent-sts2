@@ -1707,12 +1707,18 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
   if (card.discardsHand) {
     discarded.push(...[...next.hand, ...next.held, ...next.locked].filter((entry) => entry.type !== "Potion").map((entry) => entry.cardId));
     // The played card and potion slots are not discarded; unknown drawn cards are actual hand slots.
-    if ((player.toughBandagesBlock ?? 0) > 0) gainBlock(next, (discarded.length + next.drawnInHand) * player.toughBandagesBlock!, player);
+    if (!card.handReplacement && (player.toughBandagesBlock ?? 0) > 0) gainBlock(next, (discarded.length + next.drawnInHand) * player.toughBandagesBlock!, player);
     if (card.drawDiscardedHand) redraw = discarded.length + next.drawnInHand;
     next.hand = next.hand.filter((entry) => entry.type === "Potion");
     next.held = [];
     next.locked = [];
     next.drawnInHand = 0;
+  }
+  if (card.handReplacement) {
+    // Do not score the discarded cards as a continuation or invent the replacement/automatic effects.
+    // The actual post-cast frame supplies both the generated hand and any automatic Block.
+    next.pendingSelection = true;
+    next.unknown = [...next.unknown, `${card.name}（生成与自动弃牌效果待实际手牌刷新）`];
   }
   // Chains of Binding: playing one Soulbound card locks the others for the turn (88HN T5: Bash+ then
   // Flame Barrier in one plan; the Barrier was locked, 7 block against 24).
