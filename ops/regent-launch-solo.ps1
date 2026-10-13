@@ -21,16 +21,54 @@ try {
   }
   $oldHealth = Invoke-RestMethod 'http://127.0.0.1:8080/health' -TimeoutSec 5
   if (-not $oldHealth.ok -or $oldHealth.data.process_id -ne 34676) { throw 'Original health differs.' }
+  $others = @(Get-CimInstance Win32_Process -Filter "Name='SlayTheSpire2.exe'" | Where-Object {$_.ProcessId -ne 34676})
+  if ($others.Count -gt 0) { throw 'Another game exists; inspect before a new launch.' }
   $listener = New-Object System.Net.Sockets.TcpListener([System.Net.IPAddress]::Loopback,18181)
   try { $listener.Start() } finally { $listener.Stop() }
   $clientRoot = Join-Path (Join-Path $env:APPDATA 'SlayTheSpire2\default') '2026101302'
-  if (Test-Path -LiteralPath $clientRoot) { throw 'New client root already exists; inspect instead of overwriting.' }
+  $reusePreparedSettings = $false
+  if (Test-Path -LiteralPath $clientRoot) {
+    $entries = @(Get-ChildItem -LiteralPath $clientRoot -Force)
+    if ($entries.Count -ne 1 -or $entries[0].Name -ne 'settings.save' -or
+        -not $m.prepared_settings_sha256 -or (Get-FileHash -LiteralPath $entries[0].FullName -Algorithm SHA256).Hash.ToLower() -ne $m.prepared_settings_sha256) {
+      throw 'Client root differs from the exact failed attempt; do not overwrite.'
+    }
+    $reusePreparedSettings = $true
+  }
+  # Native NTFS links avoid CreateProcess failing on WSL-server symlink targets. No binary is read or changed.
+  $native = 'C:\Users\XD\AppData\Local\Temp\agent-sts2-regent-20261013'
+  if ($m.native_directory -ne $native) { throw 'Unexpected private native directory.' }
+  $owner = Join-Path $native 'regent-owner.json'
+  if (Test-Path -LiteralPath $native) {
+    if (-not (Test-Path -LiteralPath $owner) -or (Get-Content -LiteralPath $owner -Raw | ConvertFrom-Json).request_id -ne $m.request_id) {
+      throw 'Private native directory belongs to another task.'
+    }
+  } else {
+    New-Item -ItemType Directory -Path $native | Out-Null
+    @{request_id=$m.request_id} | ConvertTo-Json | Set-Content -LiteralPath $owner -Encoding UTF8
+  }
+  $installed = 'C:\Program Files (x86)\Steam\steamapps\common\Slay the Spire 2'
+  Get-ChildItem -LiteralPath $installed | Where-Object {$_.Name -ne 'mods'} | ForEach-Object {
+    $target = Join-Path $native $_.Name
+    if (-not (Test-Path -LiteralPath $target)) {
+      if ($_.PSIsContainer) { New-Item -ItemType Junction -Path $target -Value $_.FullName | Out-Null }
+      else { New-Item -ItemType HardLink -Path $target -Value $_.FullName | Out-Null }
+    }
+  }
+  $modDir = Join-Path $native 'mods\STS2AIAgent'
+  New-Item -ItemType Directory -Force -Path $modDir | Out-Null
+  $workshop = 'C:\Program Files (x86)\Steam\steamapps\workshop\content\2868840\3796486050'
+  foreach ($name in @('STS2AIAgent.dll','STS2AIAgent.pck','STS2AIAgent.json')) {
+    $target = Join-Path $modDir $name
+    if (-not (Test-Path -LiteralPath $target)) { New-Item -ItemType HardLink -Path $target -Value (Join-Path $workshop $name) | Out-Null }
+  }
+  [System.IO.File]::WriteAllText((Join-Path $native 'steam_appid.txt'),'2868840',(New-Object System.Text.UTF8Encoding $false))
   $game = Join-Path $m.native_directory 'SlayTheSpire2.exe'
   foreach ($relative in @('SlayTheSpire2.exe','data_sts2_windows_x86_64','mods\STS2AIAgent\STS2AIAgent.dll','mods\STS2AIAgent\STS2AIAgent.pck')) {
     if (-not (Test-Path -LiteralPath (Join-Path $m.native_directory $relative))) { throw 'Native link is unavailable.' }
   }
   # This is the official v0.16.2 launcher's fresh-client settings schema. No progression or run is seeded.
-  New-Item -ItemType Directory -Path $clientRoot | Out-Null
+  if (-not $reusePreparedSettings) { New-Item -ItemType Directory -Path $clientRoot | Out-Null }
   $settings = @{
     schema_version=8; mod_settings=@{mods_enabled=$true;mod_list=@(@{id='STS2AIAgent';is_enabled=$true;source='mods_directory'})}
     seen_ea_disclaimer=$true;skip_intro_logo=$true;fullscreen=$false;limit_fps_in_background=$true
@@ -39,7 +77,9 @@ try {
     volume_ambience=0.0;volume_bgm=0.0;volume_master=0.0;volume_sfx=0.0
     controller_mapping_type='default';controller_mapping=@{};keyboard_mapping=@{};keyboard_only_mapping=@{}
   }
-  [System.IO.File]::WriteAllText((Join-Path $clientRoot 'settings.save'),($settings | ConvertTo-Json -Depth 8), (New-Object System.Text.UTF8Encoding $false))
+  if (-not $reusePreparedSettings) {
+    [System.IO.File]::WriteAllText((Join-Path $clientRoot 'settings.save'),($settings | ConvertTo-Json -Depth 8), (New-Object System.Text.UTF8Encoding $false))
+  }
   $result.status='launching';$result.client_root=$clientRoot;$result.game_settings=(Join-Path $clientRoot 'settings.save')
   $result.mod_settings=$m.mod_settings;$result.game_executable=$game
   Write-Receipt $result
