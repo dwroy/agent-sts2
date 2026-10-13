@@ -1,0 +1,68 @@
+{
+  "cut_at": "2026-10-13T10:22:31.822Z",
+  "source_cut_bytes": {
+    "decisions.jsonl": 1216660298,
+    "deepseek-reasoning.jsonl": 377746518,
+    "runs.jsonl": 318873,
+    "states.jsonl": 12283800471,
+    "fight-plans.jsonl": 2233957,
+    "run-plans.jsonl": 7460737,
+    "brain.jsonl": 469138930,
+    "sl-attempts.jsonl": 36424751,
+    "run-config.jsonl": 1590237
+  },
+  "runs": 759,
+  "decisions": {
+    "play_total": 377937,
+    "attributed_to_runs": 374926,
+    "unattributed_menu_timeline": 3011,
+    "shadow": 20,
+    "by_layer": {
+      "code": 197848,
+      "jev": 74410,
+      "deepseek": 12400,
+      "claude": 186,
+      "code-fallback": 1729,
+      "jev-plan": 74699,
+      "deepseek-plan": 847,
+      "claude-plan": 73
+    },
+    "decider_inferred": 342
+  },
+  "table_rows": {
+    "runs.csv": 759,
+    "decisions_by_label.csv": 25306,
+    "escalations.csv": 3600,
+    "fight_plans.csv": 1461,
+    "commits.csv": 5552
+  },
+  "checks": {
+    "decisions attributed + unattributed == play records": true,
+    "decisions_by_label sum == attributed decisions": true,
+    "escalations rows == records with escalation": true,
+    "every runs.jsonl id present in runs.csv": true,
+    "commits == git rev-list --all --count": true,
+    "runs.jsonl decision-count mismatches": [
+      [
+        "KF9HMZKTFC3V",
+        879,
+        880
+      ]
+    ]
+  },
+  "exporter_rc": 0,
+  "exporter_invocations": 1,
+  "key_scan_clean": true,
+  "both_learning_curves_generated": true,
+  "component_costs_generated": true,
+  "own_history_dirs": [
+    "paper/data/history/20261013T102232001871Z",
+    "paper/data/history/20261013T102539180069Z"
+  ],
+  "frozen_outputs": 315,
+  "frozen_bytes": 31927679,
+  "snapshot_topology": "Both dataset and cost preserve prior material under the same paper/data/history folder; nonexistent cost-history path was read only, never created.",
+  "performance_policy": "codex-successful-brain-v1",
+  "source_checks_passed": true,
+  "live_check_is_separate": true
+}

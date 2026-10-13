@@ -1,0 +1,91 @@
+{
+  "request_id": "roy-20261013-shared-general-experience",
+  "at": "2026-10-13T17:37:50.864766+08:00",
+  "source_commit": "6b749b05e471cba4a31455e52c8d85daa3ff81bd",
+  "regent_live_commit": "a7cd765a44f07ea8d07895a8e12eba1b3c837df9",
+  "source_files_equal": [
+    "AGENTS.md",
+    "README.md",
+    "agent/src/brain/knowledge.ts",
+    "agent/src/brain/types.ts",
+    "agent/src/knowledge/experience.ts",
+    "agent/src/knowledge/files.ts",
+    "agent/src/knowledge/render/data.ts",
+    "agent/src/knowledge/render/experience-text.ts",
+    "agent/src/knowledge/render/knowledge-prefix.ts",
+    "agent/src/knowledge/shared-experience.ts",
+    "agent/tests/paths.test.ts",
+    "agent/tests/shared-experience.test.ts",
+    "docs/learning-protocol.md",
+    "docs/multi-instance.md",
+    "docs/shared-experience.md",
+    "knowledge/common/shared-experience.json",
+    "learner/tasks/experience-update.md"
+  ],
+  "tests": {
+    "tsc": 0,
+    "initial_full": {
+      "files": 353,
+      "passed_files": 350,
+      "failed_files": 3,
+      "passed_cases": 3433,
+      "failed_cases": 3
+    },
+    "initial_failures": [
+      "component-usage: Python venv absent in isolated checkout",
+      "learning-ledger: committed paper material outside initial sparse checkout",
+      "sandbox-entry: Vite temporary write to read-only shared node_modules"
+    ],
+    "resolved_same_source": {
+      "component_usage": "passed",
+      "learning_ledger": "passed",
+      "sandbox_entry": "passed"
+    },
+    "new_shared_file_map_check": "initial absent shared pool and file inventory count were repaired; final paths passed",
+    "red_green": {
+      "baseline_failed_cases": 6,
+      "candidate_shared_cases_passed": 8
+    },
+    "final_sandbox": "tsc 0; shared 8 passed; paths and shared 19 passed"
+  },
+  "gitleaks": 0,
+  "public_entries": 0,
+  "common_experience_publication": "pending learner evidence review and primary ops integration",
+  "natural_shared_consumer": "not observed",
+  "existing_prefix_load_failure": "separate existing fix batch, still mode off in latest checked request",
+  "central_main_live": "not merged by this development turn",
+  "artifacts": [
+    {
+      "path": "paper/materials/shared-experience/architecture-6b749b05/sandbox-test.log",
+      "sha256": "21e2b38a7cd708361b6de747f4b058a28f31d46f27ad372c20bbef62648458ec"
+    },
+    {
+      "path": "paper/materials/shared-experience/architecture-6b749b05/environment-recheck.log",
+      "sha256": "6cba038c2c5284635e589aef2fca8b789ac127bc9d0b002cd0c8e349ad4ed77b"
+    },
+    {
+      "path": "paper/materials/shared-experience/architecture-6b749b05/environment-recheck-agent-cwd.log",
+      "sha256": "1de1f815130bd1d9786f50c570e89d00b26e32c71f324f6a96f99089a66a5de1"
+    },
+    {
+      "path": "paper/materials/shared-experience/architecture-6b749b05/final-sandbox-recheck.log",
+      "sha256": "39199e0287bcd8543e77144274ea42ebe79f67f37058f17803094a5090efb176"
+    },
+    {
+      "path": "paper/materials/shared-experience/architecture-6b749b05/final-sandbox-passed.log",
+      "sha256": "d66e4f04235421b29261a8f95b31d8063dc10447c9b7f9f978af12eed092eedb"
+    },
+    {
+      "path": "paper/materials/shared-experience/architecture-6b749b05/gitleaks.log",
+      "sha256": "e48c8c14a709474924d425cd0388d46611e5aa428e534e781f5e2b4e5fcadac9"
+    },
+    {
+      "path": "paper/materials/shared-experience/architecture-6b749b05/red-green/red.log",
+      "sha256": "d6edc835c450d5e1c3a9e1c4085d4d496d4256b75d1aeb422040dbf0c2c74f31"
+    },
+    {
+      "path": "paper/materials/shared-experience/architecture-6b749b05/red-green/files.json",
+      "sha256": "88c11f335f38db382d203f4095bf3130a0b034874b6fe542703c34b3a0eba230"
+    }
+  ]
+}

@@ -1,0 +1,193 @@
+{
+  "schema": "shared-experience-ownership-read-receipt-v1",
+  "at": "2026-10-13T18:14:51.964591+08:00",
+  "request_id": "roy-20261013-shared-general-experience",
+  "owner": "ops",
+  "parent_revision": 1,
+  "parent_state": "pending",
+  "parent_completion": null,
+  "parent_sha256": "cdafd1384349c901f3fea3157d9ced96a204781e3aa38e063f42dbc1c98435f5",
+  "spec": {
+    "path": "paper/materials/shared-experience/20261013-172557/work-spec.md",
+    "sha256": "53c747870070109b2b61ea49a4d16446c4fcc97fb8aa42185e53425880a894cb"
+  },
+  "input_manifest": {
+    "path": "paper/materials/shared-experience/20261013-172557/input-manifest.json",
+    "sha256": "c598242d83ff849731b72de290131bb43931d95837a3ed245949b7317ebe2353"
+  },
+  "frozen_source_fingerprints": [
+    {
+      "path": "paper/materials/shared-experience/20261013-172557/ironclad-experience.json",
+      "sha256": "0049b5295a42b787d9b8cba9eeb81e42e9c2e20bbf92d08e458f4832a02fa63e",
+      "actual_sha256": "0049b5295a42b787d9b8cba9eeb81e42e9c2e20bbf92d08e458f4832a02fa63e",
+      "sha256_matches": true
+    },
+    {
+      "path": "paper/materials/shared-experience/20261013-172557/silent-experience.json",
+      "sha256": "1a0cb351730679b2e0a41cb7557e1ec825773f321e3c1a55f739015897c75c4c",
+      "actual_sha256": "1a0cb351730679b2e0a41cb7557e1ec825773f321e3c1a55f739015897c75c4c",
+      "sha256_matches": true
+    },
+    {
+      "path": "paper/materials/shared-experience/20261013-172557/source-runs.jsonl",
+      "sha256": "38977fb777e8d601eb34b696163038301b7a7f99ef5380083562a4b636e96429",
+      "actual_sha256": "38977fb777e8d601eb34b696163038301b7a7f99ef5380083562a4b636e96429",
+      "sha256_matches": true
+    }
+  ],
+  "unique_existing_batch": "20261013-180435-experience-update",
+  "registered_active_experience_batches": [
+    "20261013-180435-experience-update"
+  ],
+  "batch": {
+    "task": "experience-update",
+    "character": "regent",
+    "runs": [
+      "D1JAKWWDL38W"
+    ],
+    "pid": 3281029,
+    "pane": "wV:pJ",
+    "state": "running",
+    "worktree": "/home/dw/Projects/agent-sts2/.worktrees/regent-climb/.worktrees/exp"
+  },
+  "thread_ids": [
+    "01a134b8-a5e3-7c63-83a0-51743aaa99d5"
+  ],
+  "startup_identity": [
+    {
+      "batch": "20261013-180435-experience-update",
+      "attempt": 1,
+      "input_sha256": "ca2227de89786bd7a47e3c936ae379786a9e0a67447620f74f71deda20fdac13",
+      "command_sha256": "78824ae77e700c5bb05a5bda9478d786bebb8220a666ae14183d504813fea718",
+      "pid": 3281307
+    }
+  ],
+  "scope": "原experience-update：REGENT证据增量及原父首次冻结铁甲/静默来源通用性、条件和反例筛选；不另建同输入研究。",
+  "trace_prefix_bytes": 1103739,
+  "trace_prefix_sha256": "25c17a9c6c96bfc9f7e7f114822faf75171cb1a4bbbf3be83c1dc6243a65e710",
+  "actual_completed_input_read_evidence": [
+    {
+      "trace": ".worktrees/exp/learner/runs/20261013-180436-experience-update.jsonl",
+      "line": 49,
+      "item_id": "item_3",
+      "exit_code": 2,
+      "status": "failed",
+      "command_sha256": "46d31be5db6d89fd4052ef78db5b912f7bfad881179b9b9a7f8308356a5898a6",
+      "read_primitive_present": false,
+      "references": [
+        {
+          "path": "notes/shared-experience-request.json",
+          "sha256": "cdafd1384349c901f3fea3157d9ced96a204781e3aa38e063f42dbc1c98435f5",
+          "command_mentions_path": true,
+          "output_contains_frozen_sha": false
+        }
+      ]
+    },
+    {
+      "trace": ".worktrees/exp/learner/runs/20261013-180436-experience-update.jsonl",
+      "line": 84,
+      "item_id": "item_9",
+      "exit_code": 0,
+      "status": "completed",
+      "command_sha256": "63744055b5e0eed3104a7c25284786d008fb4e5259f4e790b1e7693d9a975946",
+      "read_primitive_present": true,
+      "references": [
+        {
+          "path": "notes/shared-experience-request.json",
+          "sha256": "cdafd1384349c901f3fea3157d9ced96a204781e3aa38e063f42dbc1c98435f5",
+          "command_mentions_path": true,
+          "output_contains_frozen_sha": false
+        },
+        {
+          "path": "paper/materials/shared-experience/20261013-172557/work-spec.md",
+          "sha256": "53c747870070109b2b61ea49a4d16446c4fcc97fb8aa42185e53425880a894cb",
+          "command_mentions_path": false,
+          "output_contains_frozen_sha": true
+        },
+        {
+          "path": "paper/materials/shared-experience/20261013-172557/input-manifest.json",
+          "sha256": "c598242d83ff849731b72de290131bb43931d95837a3ed245949b7317ebe2353",
+          "command_mentions_path": false,
+          "output_contains_frozen_sha": true
+        }
+      ]
+    },
+    {
+      "trace": ".worktrees/exp/learner/runs/20261013-180436-experience-update.jsonl",
+      "line": 107,
+      "item_id": "item_11",
+      "exit_code": 0,
+      "status": "completed",
+      "command_sha256": "2d20dff31f508349a95b729bc6ba170321577414fcd7fb5c525242a6f80439a1",
+      "read_primitive_present": true,
+      "references": [
+        {
+          "path": "notes/shared-experience-request.json",
+          "sha256": "cdafd1384349c901f3fea3157d9ced96a204781e3aa38e063f42dbc1c98435f5",
+          "command_mentions_path": true,
+          "output_contains_frozen_sha": false
+        },
+        {
+          "path": "paper/materials/shared-experience/20261013-172557/work-spec.md",
+          "sha256": "53c747870070109b2b61ea49a4d16446c4fcc97fb8aa42185e53425880a894cb",
+          "command_mentions_path": false,
+          "output_contains_frozen_sha": true
+        },
+        {
+          "path": "paper/materials/shared-experience/20261013-172557/input-manifest.json",
+          "sha256": "c598242d83ff849731b72de290131bb43931d95837a3ed245949b7317ebe2353",
+          "command_mentions_path": false,
+          "output_contains_frozen_sha": true
+        }
+      ]
+    },
+    {
+      "trace": ".worktrees/exp/learner/runs/20261013-180436-experience-update.jsonl",
+      "line": 134,
+      "item_id": "item_17",
+      "exit_code": 0,
+      "status": "completed",
+      "command_sha256": "7ed7a9ad42ed74a2687c760620bf01d9176db2fb15722c3920818656956317a2",
+      "read_primitive_present": true,
+      "references": [
+        {
+          "path": "paper/materials/shared-experience/20261013-172557/work-spec.md",
+          "sha256": "53c747870070109b2b61ea49a4d16446c4fcc97fb8aa42185e53425880a894cb",
+          "command_mentions_path": true,
+          "output_contains_frozen_sha": true
+        },
+        {
+          "path": "paper/materials/shared-experience/20261013-172557/input-manifest.json",
+          "sha256": "c598242d83ff849731b72de290131bb43931d95837a3ed245949b7317ebe2353",
+          "command_mentions_path": true,
+          "output_contains_frozen_sha": true
+        },
+        {
+          "path": "paper/materials/shared-experience/20261013-172557/ironclad-experience.json",
+          "sha256": "0049b5295a42b787d9b8cba9eeb81e42e9c2e20bbf92d08e458f4832a02fa63e",
+          "command_mentions_path": false,
+          "output_contains_frozen_sha": true
+        },
+        {
+          "path": "paper/materials/shared-experience/20261013-172557/silent-experience.json",
+          "sha256": "1a0cb351730679b2e0a41cb7557e1ec825773f321e3c1a55f739015897c75c4c",
+          "command_mentions_path": false,
+          "output_contains_frozen_sha": true
+        },
+        {
+          "path": "paper/materials/shared-experience/20261013-172557/source-runs.jsonl",
+          "sha256": "38977fb777e8d601eb34b696163038301b7a7f99ef5380083562a4b636e96429",
+          "command_mentions_path": false,
+          "output_contains_frozen_sha": true
+        }
+      ]
+    }
+  ],
+  "screening_completed": false,
+  "public_entries": 0,
+  "central_publication": "主ops已收到源码并在原锁内集成；正式回执待原paper/materials/20261013-1806-ops",
+  "all_active_lanes_consumed": false,
+  "new_batch_created_this_wake": false,
+  "watcher_ack": null,
+  "roy_ack": null
+}

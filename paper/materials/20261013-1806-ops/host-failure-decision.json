@@ -1,0 +1,1016 @@
+{
+  "at": "2026-10-13 18:46:12 CST",
+  "batch": "20261013-161302-fix-batch",
+  "live": "efe099dd297f188197c27623970cdf36d76c6bba",
+  "tree": "a8375e5f328ba368ad03ac03d4ad389932750793",
+  "complete_host": {
+    "rc": 1,
+    "log": "ops/codex-ops/learner/20261013-161302-fix-batch.fallback-a8375e5f328ba368ad03ac03d4ad389932750793.checks.log",
+    "sha256": "bf0401333044c77f2d54561ac8e9f6247b923532ba057aaa2441e183406a553a",
+    "files_failed": 31,
+    "files_passed": 386,
+    "tests_failed": 189,
+    "tests_passed": 4137,
+    "tests_skipped": 2,
+    "duration_seconds": 608.79,
+    "full_suite_passed": false
+  },
+  "old_cap_fixture_cases": 4,
+  "new_shared_fixed_reader_cases": 185,
+  "new_failed_files": 29,
+  "new_failed_test_blobs_unchanged": {
+    "tests/batch-c-illusion.test.ts": {
+      "1cbae1c1e8054fb104174ca31bc0ee7d6ae62f95": "55425365fbdda385ef403ce4c3246bc461d9435f",
+      "a8375e5f328ba368ad03ac03d4ad389932750793": "55425365fbdda385ef403ce4c3246bc461d9435f"
+    },
+    "tests/boss-lines-planner.test.ts": {
+      "1cbae1c1e8054fb104174ca31bc0ee7d6ae62f95": "e22dd8e2dc218a8959be291c37a8377189c63568",
+      "a8375e5f328ba368ad03ac03d4ad389932750793": "e22dd8e2dc218a8959be291c37a8377189c63568"
+    },
+    "tests/death-move-planner.test.ts": {
+      "1cbae1c1e8054fb104174ca31bc0ee7d6ae62f95": "81f0d8a573ad13d9c1698ca4c6de694008cc82a0",
+      "a8375e5f328ba368ad03ac03d4ad389932750793": "81f0d8a573ad13d9c1698ca4c6de694008cc82a0"
+    },
+    "tests/inferno-planner.test.ts": {
+      "1cbae1c1e8054fb104174ca31bc0ee7d6ae62f95": "d4464b771b4826b2f238d55d2d1c351c733ff56b",
+      "a8375e5f328ba368ad03ac03d4ad389932750793": "d4464b771b4826b2f238d55d2d1c351c733ff56b"
+    },
+    "tests/mech-move-planner.test.ts": {
+      "1cbae1c1e8054fb104174ca31bc0ee7d6ae62f95": "2a968e039fa175a183aa4faff1c9caf90e958c3d",
+      "a8375e5f328ba368ad03ac03d4ad389932750793": "2a968e039fa175a183aa4faff1c9caf90e958c3d"
+    },
+    "tests/mech-rules-planner.test.ts": {
+      "1cbae1c1e8054fb104174ca31bc0ee7d6ae62f95": "44d317ecfc0af636debb636799bddf15bcbe709d",
+      "a8375e5f328ba368ad03ac03d4ad389932750793": "44d317ecfc0af636debb636799bddf15bcbe709d"
+    },
+    "tests/passive-pieces-planner.test.ts": {
+      "1cbae1c1e8054fb104174ca31bc0ee7d6ae62f95": "1e2f2bda796096df8c6f09d57d531f7b019259ba",
+      "a8375e5f328ba368ad03ac03d4ad389932750793": "1e2f2bda796096df8c6f09d57d531f7b019259ba"
+    },
+    "tests/sl-explore-b2.test.ts": {
+      "1cbae1c1e8054fb104174ca31bc0ee7d6ae62f95": "089e1166da99d170a92604a8b7e9126f9b380a89",
+      "a8375e5f328ba368ad03ac03d4ad389932750793": "089e1166da99d170a92604a8b7e9126f9b380a89"
+    },
+    "tests/sl-explore-canon.test.ts": {
+      "1cbae1c1e8054fb104174ca31bc0ee7d6ae62f95": "453ad2c0a58b3915eab908ee783feed600167a90",
+      "a8375e5f328ba368ad03ac03d4ad389932750793": "453ad2c0a58b3915eab908ee783feed600167a90"
+    },
+    "tests/sl-explore-gaps.test.ts": {
+      "1cbae1c1e8054fb104174ca31bc0ee7d6ae62f95": "f89467e1df28ca5977d2bb933a1684dad0da78f0",
+      "a8375e5f328ba368ad03ac03d4ad389932750793": "f89467e1df28ca5977d2bb933a1684dad0da78f0"
+    },
+    "tests/sl-explore-whole.test.ts": {
+      "1cbae1c1e8054fb104174ca31bc0ee7d6ae62f95": "516b9abb8c3abdfde23183af48d3900dc842b83c",
+      "a8375e5f328ba368ad03ac03d4ad389932750793": "516b9abb8c3abdfde23183af48d3900dc842b83c"
+    },
+    "tests/sl-explore.test.ts": {
+      "1cbae1c1e8054fb104174ca31bc0ee7d6ae62f95": "3a0c2d80b89492be589802f8233aa6a61e96294f",
+      "a8375e5f328ba368ad03ac03d4ad389932750793": "3a0c2d80b89492be589802f8233aa6a61e96294f"
+    },
+    "tests/sl-replay-plays.test.ts": {
+      "1cbae1c1e8054fb104174ca31bc0ee7d6ae62f95": "2c0f5a0b0ae8a37e1994e8381a5b27de15683dcb",
+      "a8375e5f328ba368ad03ac03d4ad389932750793": "2c0f5a0b0ae8a37e1994e8381a5b27de15683dcb"
+    },
+    "tests/sl-retry-planner.test.ts": {
+      "1cbae1c1e8054fb104174ca31bc0ee7d6ae62f95": "f1c2b919ee92234a214cb8edeb1e0770f81568a2",
+      "a8375e5f328ba368ad03ac03d4ad389932750793": "f1c2b919ee92234a214cb8edeb1e0770f81568a2"
+    },
+    "tests/template-target.test.ts": {
+      "1cbae1c1e8054fb104174ca31bc0ee7d6ae62f95": "c776018ebd5d482a164b9ef82a60935c2dfc9600",
+      "a8375e5f328ba368ad03ac03d4ad389932750793": "c776018ebd5d482a164b9ef82a60935c2dfc9600"
+    },
+    "tests/thief-cost.test.ts": {
+      "1cbae1c1e8054fb104174ca31bc0ee7d6ae62f95": "bc2d5765222e6b75774667c8e3fcbcfa2cb80c32",
+      "a8375e5f328ba368ad03ac03d4ad389932750793": "bc2d5765222e6b75774667c8e3fcbcfa2cb80c32"
+    },
+    "tests/thief.test.ts": {
+      "1cbae1c1e8054fb104174ca31bc0ee7d6ae62f95": "0e6eb9244651a1db506f3bd8f259a3f3ee5e00c4",
+      "a8375e5f328ba368ad03ac03d4ad389932750793": "0e6eb9244651a1db506f3bd8f259a3f3ee5e00c4"
+    },
+    "tests/potion-cost.test.ts": {
+      "1cbae1c1e8054fb104174ca31bc0ee7d6ae62f95": "478f4815a47bc6e0d60e5afc8a0e35d500201bed",
+      "a8375e5f328ba368ad03ac03d4ad389932750793": "478f4815a47bc6e0d60e5afc8a0e35d500201bed"
+    },
+    "tests/rollout-best-added.test.ts": {
+      "1cbae1c1e8054fb104174ca31bc0ee7d6ae62f95": "eaf55c408e4b228df8e56343932fefb137eb08e3",
+      "a8375e5f328ba368ad03ac03d4ad389932750793": "eaf55c408e4b228df8e56343932fefb137eb08e3"
+    },
+    "tests/silent-bullet-time.test.ts": {
+      "1cbae1c1e8054fb104174ca31bc0ee7d6ae62f95": "223c02947a946b524f4d313a5fecda5e26b14b50",
+      "a8375e5f328ba368ad03ac03d4ad389932750793": "223c02947a946b524f4d313a5fecda5e26b14b50"
+    },
+    "tests/silent-dodge-roll.test.ts": {
+      "1cbae1c1e8054fb104174ca31bc0ee7d6ae62f95": "90cb6ad0dc1fa59854bae45c3e1c01b1c75ae740",
+      "a8375e5f328ba368ad03ac03d4ad389932750793": "90cb6ad0dc1fa59854bae45c3e1c01b1c75ae740"
+    },
+    "tests/silent-kusarigama.test.ts": {
+      "1cbae1c1e8054fb104174ca31bc0ee7d6ae62f95": "122ddf9a96839e45a5ee8761f3d9bd50b4cbca15",
+      "a8375e5f328ba368ad03ac03d4ad389932750793": "122ddf9a96839e45a5ee8761f3d9bd50b4cbca15"
+    },
+    "tests/silent-potion-reference.test.ts": {
+      "1cbae1c1e8054fb104174ca31bc0ee7d6ae62f95": "0afd30368303c874ddaa4ed1774b9e2147f3a087",
+      "a8375e5f328ba368ad03ac03d4ad389932750793": "0afd30368303c874ddaa4ed1774b9e2147f3a087"
+    },
+    "tests/silent-selection-audit.test.ts": {
+      "1cbae1c1e8054fb104174ca31bc0ee7d6ae62f95": "138546c6afeb719ef962c69bb6992d31cb96810c",
+      "a8375e5f328ba368ad03ac03d4ad389932750793": "138546c6afeb719ef962c69bb6992d31cb96810c"
+    },
+    "tests/silent-serpent-form.test.ts": {
+      "1cbae1c1e8054fb104174ca31bc0ee7d6ae62f95": "029a750b82fa2990d38fca10e17bf0f99ce33dbf",
+      "a8375e5f328ba368ad03ac03d4ad389932750793": "029a750b82fa2990d38fca10e17bf0f99ce33dbf"
+    },
+    "tests/silent-shackling-weak.test.ts": {
+      "1cbae1c1e8054fb104174ca31bc0ee7d6ae62f95": "9e7100d6fc8784ea9e05498b9b6ebcca6723fed7",
+      "a8375e5f328ba368ad03ac03d4ad389932750793": "9e7100d6fc8784ea9e05498b9b6ebcca6723fed7"
+    },
+    "tests/silent-sloth-replay.test.ts": {
+      "1cbae1c1e8054fb104174ca31bc0ee7d6ae62f95": "6f310bde6e17a90e2f17e750cb5c0eae102f3da9",
+      "a8375e5f328ba368ad03ac03d4ad389932750793": "6f310bde6e17a90e2f17e750cb5c0eae102f3da9"
+    },
+    "tests/sl-early-planner.test.ts": {
+      "1cbae1c1e8054fb104174ca31bc0ee7d6ae62f95": "1f12075577f83a0103e559e75fce0e009852c17e",
+      "a8375e5f328ba368ad03ac03d4ad389932750793": "1f12075577f83a0103e559e75fce0e009852c17e"
+    },
+    "tests/sl-explore-potion.test.ts": {
+      "1cbae1c1e8054fb104174ca31bc0ee7d6ae62f95": "da0fe48b3ea9cd4495be45a9ac58faafda08be45",
+      "a8375e5f328ba368ad03ac03d4ad389932750793": "da0fe48b3ea9cd4495be45a9ac58faafda08be45"
+    }
+  },
+  "failure_grouping": [
+    {
+      "cause": "Error: 公共经验文件 /home/dw/Projects/agent-sts2/.worktrees/live/knowledge/common/shared-experience.json: 读取失败: ENOENT: fixed illusion rollout references, shared-experience.json",
+      "category": "shared_fixed_reader",
+      "cases": [
+        {
+          "file": "tests/batch-c-illusion.test.ts",
+          "title": "a line aiming only at the illusion keeps that target on later turns (ZY3992X5VEVS F23 T3-T5) > the logged T3 board: the rollout's best is no longer the Parafright line, with 0 ms host pauses"
+        },
+        {
+          "file": "tests/batch-c-illusion.test.ts",
+          "title": "a line aiming only at the illusion keeps that target on later turns (ZY3992X5VEVS F23 T3-T5) > the logged T3 board: the rollout's best is no longer the Parafright line, with 10000 ms host pauses"
+        }
+      ]
+    },
+    {
+      "cause": "Error: 公共经验文件 /home/dw/Projects/agent-sts2/.worktrees/live/knowledge/common/shared-experience.json: 读取失败: ENOENT: pinned test, shared-experience.json",
+      "category": "shared_fixed_reader",
+      "cases": [
+        {
+          "file": "tests/boss-lines-planner.test.ts",
+          "title": "B2 off: the boss question as before > BOSS_SIM_LINES=off: every logged boss board's decision is the pre-B2 one, byte for byte"
+        },
+        {
+          "file": "tests/boss-lines-planner.test.ts",
+          "title": "B2 off: the boss question as before > a fight that is not a boss fight: the same decision with B2 on"
+        },
+        {
+          "file": "tests/boss-lines-planner.test.ts",
+          "title": "B2 on: the boss question > a boss it is trusted on (The Kin, turn 5): every line's whole-fight numbers, rollout_best by the simulated win rate, the log"
+        },
+        {
+          "file": "tests/boss-lines-planner.test.ts",
+          "title": "B2 on: the boss question > BOSS_SIM_LOW_TRUST=retry (default): a low-trust boss's first attempt is not simulated at all; the question and every answer as with B2 off, the log says why"
+        },
+        {
+          "file": "tests/boss-lines-planner.test.ts",
+          "title": "B2 on: the boss question > BOSS_SIM_LOW_TRUST=always: a low-trust boss (the Queen, V4.2): no whole-fight number or plan in Jev's question, the question and ranking as with B2 off; the log keeps the numbers"
+        },
+        {
+          "file": "tests/boss-lines-planner.test.ts",
+          "title": "B2 on: the boss question > an SL retry of a low-trust boss (SL_RETRY_SHOW_SIM on): the numbers shown and labelled 低可信, the ranking unchanged; the previous attempts in the question"
+        },
+        {
+          "file": "tests/boss-lines-planner.test.ts",
+          "title": "B2 on: the boss question > turn 1: the fight plan from the best line's samples"
+        },
+        {
+          "file": "tests/death-move-planner.test.ts",
+          "title": "MECH_DEATH_MOVE off, MECH_RULES off, no data, no rule: the combat question as at v4 0f63d28 > MECH_DEATH_MOVE off: every logged board's decision is the pre-change one, byte for byte"
+        },
+        {
+          "file": "tests/death-move-planner.test.ts",
+          "title": "MECH_DEATH_MOVE off, MECH_RULES off, no data, no rule: the combat question as at v4 0f63d28 > on, the rule-free board (the Kaiser Crab, its ally-death counts in the DB): as before"
+        },
+        {
+          "file": "tests/death-move-planner.test.ts",
+          "title": "MECH_DEATH_MOVE off, MECH_RULES off, no data, no rule: the combat question as at v4 0f63d28 > on, a monster DB without the ally-death counters (built before them): as before"
+        },
+        {
+          "file": "tests/death-move-planner.test.ts",
+          "title": "MECH_DEATH_MOVE off, MECH_RULES off, no data, no rule: the combat question as at v4 0f63d28 > on, reading the rules fails: the switch off (fail safe)"
+        },
+        {
+          "file": "tests/death-move-planner.test.ts",
+          "title": "MECH_DEATH_MOVE on: the Queen and the Torch Head Amalgam > 0U96U4D9Z3PP F48 T5: the killing lines say Enrage now and Off With Your Head next; hp_lost as without the rule; the Queen carries it; the log records it"
+        },
+        {
+          "file": "tests/death-move-planner.test.ts",
+          "title": "MECH_DEATH_MOVE on: the Queen and the Torch Head Amalgam > 5GKAR00L5AYV F48 T2 (You Are Mine): no change this turn, the head-chop next"
+        },
+        {
+          "file": "tests/death-move-planner.test.ts",
+          "title": "MECH_DEATH_MOVE on: the Living Shield and the Turret Operator > Y3XT9EBS7U8B F37 T1: a line killing the Turret Operator says the Shield's Smash comes next"
+        },
+        {
+          "file": "tests/inferno-planner.test.ts",
+          "title": "C4F14F3XPN0N F33 (A9, the Knowledge Demon): two Inferno+ up take 2 at the next turn's start > attempt 1 T6 (17 HP): every line's HP lost carries both copies; one copy (INFERNO_POWER 9) takes one less"
+        },
+        {
+          "file": "tests/inferno-planner.test.ts",
+          "title": "A8ENYFR4ZWKG F33 T6 (34 HP, two Infernos up, won): the rollout's later turns lose 2 a turn > more of the rollout's samples die than at 1 a turn, and its best line moves to Blood Wall+, Uppercut+"
+        },
+        {
+          "file": "tests/mech-move-planner.test.ts",
+          "title": "MECH_MOVE_RULES off, or MECH_RULES off: the combat question as at v4 3488dc5 > MECH_MOVE_RULES off: every logged board's decision is the pre-change one (MECH_RULES on), byte for byte"
+        },
+        {
+          "file": "tests/mech-move-planner.test.ts",
+          "title": "MECH_MOVE_RULES off, or MECH_RULES off: the combat question as at v4 3488dc5 > on, reading the rules fails: the switch off (fail safe), the Crab's back attack included"
+        },
+        {
+          "file": "tests/mech-move-planner.test.ts",
+          "title": "MECH_MOVE_RULES off, or MECH_RULES off: the combat question as at v4 3488dc5 > on, a monster DB without the per-monster data: the Axebot boards as before (the Crab's back attack is no data rule)"
+        },
+        {
+          "file": "tests/mech-move-planner.test.ts",
+          "title": "MECH_MOVE_RULES on: the Kaiser Crab > NX48MBG3SPRJ F33 T7: a line killing the Rocket counts the Crusher's Enlarging Strike faced (6 + Crab Rage's 6), not from behind"
+        },
+        {
+          "file": "tests/mech-move-planner.test.ts",
+          "title": "MECH_MOVE_RULES on: the Kaiser Crab > 8L29N792FA45 F33 T5: the Crusher alone, the noted facing the dead Rocket's: its Guarded Strike lands as shown"
+        },
+        {
+          "file": "tests/mech-move-planner.test.ts",
+          "title": "MECH_MOVE_RULES on: the Axebot's Stock > Y3XT9EBS7U8B F45 T5 (Stock 1): a killing line says the Axebot is back in Boot Up; its Stock carries the observation; the log records it"
+        },
+        {
+          "file": "tests/mech-move-planner.test.ts",
+          "title": "MECH_MOVE_RULES on: the Axebot's Stock > 8L29N792FA45 F39 T3 (Stock 2, 1 HP): the kill takes a stack, the lowered rule"
+        },
+        {
+          "file": "tests/mech-rules-planner.test.ts",
+          "title": "MECH_RULES off: the combat question as at v4 ffed0d4 > on, but a monster DB without the observed data: the same"
+        },
+        {
+          "file": "tests/mech-rules-planner.test.ts",
+          "title": "MECH_RULES off: the combat question as at v4 ffed0d4 > on, and reading the rules fails: the same (fail safe)"
+        },
+        {
+          "file": "tests/mech-rules-planner.test.ts",
+          "title": "MECH_RULES on: the Hopper's last Flutter > 8V0HD9Y207WY F19 T5 (its Escape turn, Flutter 2): the stripping line cancels its move, the Escape a turn later"
+        },
+        {
+          "file": "tests/passive-pieces-planner.test.ts",
+          "title": "PASSIVE_PIECES on the combat question > boards without any relic piece: the same question, view and resolutions on and off; the Fan board's question counts the Fan"
+        },
+        {
+          "file": "tests/sl-explore-b2.test.ts",
+          "title": "the sub-switches off: the explore part as at bc8c9bc, B2 on > a trusted boss (The Kin, Ceremonial Beast) and a low-trust one (the Queen): every point and deviated resolution is bc8c9bc's"
+        },
+        {
+          "file": "tests/sl-explore-b2.test.ts",
+          "title": "SL_RETRY_EXPLORE_B2: on a boss B2 is trusted on, B2's win rate gates the replacement > Ceremonial Beast T1: the pick (Mazaleth's Gift) played there; the rollout's gate takes the dry line, B2's the other Gift line the rollout sees dying more often"
+        },
+        {
+          "file": "tests/sl-explore-b2.test.ts",
+          "title": "SL_RETRY_EXPLORE_B2: on a boss B2 is trusted on, B2's win rate gates the replacement > a low-trust boss (the Queen, simulated on an SL retry): the rollout's gate, as without the sub-switch"
+        },
+        {
+          "file": "tests/sl-explore-b2.test.ts",
+          "title": "SL_RETRY_EXPLORE_BOSS_POTIONS: in a boss fight the replacement may drink a potion the pick does not > Ceremonial Beast T1, the dry line played there: off nothing is left; on, a Gift line or Gambler's Brew are alternatives, and B2's pick drinks"
+        },
+        {
+          "file": "tests/sl-explore-b2.test.ts",
+          "title": "SL_RETRY_EXPLORE_BOSS_POTIONS: in a boss fight the replacement may drink a potion the pick does not > The Kin T5: B2 ranks Snecko Oil (a random potion) first; the replacement drinks it, then re-plans, as Jev's pick of it would"
+        },
+        {
+          "file": "tests/sl-explore-canon.test.ts",
+          "title": "SL_RETRY_EXPLORE_TURN on the planner: the deviation holds for its turn (UK7R9A0NMCXL F33 attempt 4 T2) > code's own line ending the turn as a failed attempt's becomes Jev's question (JSA5K8YZ9RXV F48 T1: Demon Form)"
+        },
+        {
+          "file": "tests/sl-explore-canon.test.ts",
+          "title": "the controller: attempt 1 recorded, tried by the turn's plays, the deviation's turn kept > attempt 1's row has its turns (each action's board and play); attempt 3's point has the turns through it, attempt 1's among them"
+        },
+        {
+          "file": "tests/sl-explore-canon.test.ts",
+          "title": "the controller: attempt 1 recorded, tried by the turn's plays, the deviation's turn kept > a restarted process deviates at the same point with the same turns; the deviation's turn carries `avoid` on its later boards only"
+        },
+        {
+          "file": "tests/sl-explore-canon.test.ts",
+          "title": "the controller: attempt 1 recorded, tried by the turn's plays, the deviation's turn kept > both off: attempt 1 unrecorded, no turn record, the target and env.sl.explore as 08ec8f9"
+        },
+        {
+          "file": "tests/sl-explore-gaps.test.ts",
+          "title": "ABCJ0TZ6MD06 F48 attempt 4, T5 off the path: the point's turn > SL_RETRY_EXPLORE_TARGET_TURN: the point's lines and turns kept off on this board too"
+        },
+        {
+          "file": "tests/sl-explore-gaps.test.ts",
+          "title": "SL_RETRY_EXPLORE_ANCHOR's recording on a first attempt (env.slRecord): no decision changes > the same question and resolution; the point recorded"
+        },
+        {
+          "file": "tests/sl-explore-gaps.test.ts",
+          "title": "the controller with SL_RETRY_EXPLORE_ANCHOR > attempt 1 records its decision points (the same decisions as without); attempt 3 anchors to it when it lived longest"
+        },
+        {
+          "file": "tests/sl-explore-gaps.test.ts",
+          "title": "the controller with SL_RETRY_EXPLORE_ANCHOR > SL_RETRY_EXPLORE_SECOND with it: attempt 2 still deviates on attempt 1's path; attempt 1's point adds its planned turn to the tried"
+        },
+        {
+          "file": "tests/sl-explore-gaps.test.ts",
+          "title": "the controller with SL_RETRY_EXPLORE_REARM > a deviation whose turn ended as a failed attempt's: a later point of the path in the same attempt"
+        },
+        {
+          "file": "tests/sl-explore-gaps.test.ts",
+          "title": "the controller with SL_RETRY_EXPLORE_WASTED > a deviation whose next turn began on a failed attempt's board is wasted (differs false, repeats), and re-armed"
+        },
+        {
+          "file": "tests/sl-explore-gaps.test.ts",
+          "title": "the controller with SL_RETRY_EXPLORE_WASTED > re-armed off the reference path too: the replay stopped, the next point's turn deviates on the attempt's own board"
+        },
+        {
+          "file": "tests/sl-explore-gaps.test.ts",
+          "title": "the controller with SL_RETRY_EXPLORE_TARGET_TURN > off the path before the point, on a board no failed attempt decided on: the point's turn still deviates"
+        },
+        {
+          "file": "tests/sl-explore-whole.test.ts",
+          "title": "the controller with SL_RETRY_EXPLORE_WHOLE > tells the planner (`whole`), says so in the run config; off: nothing new"
+        },
+        {
+          "file": "tests/sl-explore-whole.test.ts",
+          "title": "the controller with SL_RETRY_EXPLORE_WHOLE > an avoid that cannot act later in the deviation's turn is on the row's deviation, and said"
+        },
+        {
+          "file": "tests/sl-explore.test.ts",
+          "title": "the planner: the switch recording changes nothing; on the deviation point's board the failed line gives way > recording (env.sl.explore without a deviation): every logged board's decision is 3488dc5's, byte for byte"
+        },
+        {
+          "file": "tests/sl-explore.test.ts",
+          "title": "the planner: the switch recording changes nothing; on the deviation point's board the failed line gives way > VNKN F25 T1: Jev's pick, played there in attempt 2, gives way to the rollout's best untried line; the row says so"
+        },
+        {
+          "file": "tests/sl-explore.test.ts",
+          "title": "the planner: the switch recording changes nothing; on the deviation point's board the failed line gives way > on the deviation point's board a pick no failed attempt played there is played as answered (logged, not changed)"
+        },
+        {
+          "file": "tests/sl-explore.test.ts",
+          "title": "the sub-switches off: the explore part as at bc8c9bc > every answer's point and, with a deviation, every answer's resolution, log and point: bc8c9bc's"
+        },
+        {
+          "file": "tests/sl-explore.test.ts",
+          "title": "the sub-switches on: a listed elite as before (no added drink); a boss fight's replacement may drink > the Decimillipede (a listed elite): every point and deviation is bc8c9bc's; never a line drinking the Speed Potion the pick does not"
+        },
+        {
+          "file": "tests/sl-explore.test.ts",
+          "title": "the sub-switches on: a listed elite as before (no added drink); a boss fight's replacement may drink > SL_RETRY_EXPLORE_REPLAY on the Decimillipede T1: attempt 2's line is played instead of Jev's answer, as if Jev had picked it"
+        },
+        {
+          "file": "tests/sl-explore.test.ts",
+          "title": "the sub-switches on: a listed elite as before (no added drink); a boss fight's replacement may drink > the Test Subject (a boss; low trust, B2 off here: the rollout's gate): with every dry line played, a line drinking the Weak Potion"
+        },
+        {
+          "file": "tests/sl-explore.test.ts",
+          "title": "the controller: attempts record their lines, attempt 3 changes the latest question, attempt 4 the one before > deviation at the latest point, then backtracking; every other board plays as answered; the rows keep it all"
+        },
+        {
+          "file": "tests/sl-explore.test.ts",
+          "title": "the controller: attempts record their lines, attempt 3 changes the latest question, attempt 4 the one before > SL_RETRY_EXPLORE_REPLAY: Jev answers T1 otherwise in attempt 3 (R1QJUBVBSSB2 F33); attempt 2's line is played there, so the attempt reaches its T2 point"
+        },
+        {
+          "file": "tests/sl-explore.test.ts",
+          "title": "the controller: attempts record their lines, attempt 3 changes the latest question, attempt 4 the one before > no deviation when the board differs from the failed attempts': played as answered, the point kept for the next attempt"
+        },
+        {
+          "file": "tests/sl-explore.test.ts",
+          "title": "the controller: attempts record their lines, attempt 3 changes the latest question, attempt 4 the one before > a restarted process reads the points back from the log and deviates at the same point"
+        },
+        {
+          "file": "tests/sl-explore.test.ts",
+          "title": "the controller: attempts record their lines, attempt 3 changes the latest question, attempt 4 the one before > the sub-switches: on by default in env.sl.explore on every board; off, absent (the planner then as at bc8c9bc)"
+        },
+        {
+          "file": "tests/sl-explore.test.ts",
+          "title": "the controller: attempts record their lines, attempt 3 changes the latest question, attempt 4 the one before > switch off: nothing recorded, no env.sl.explore, the same plays in every attempt (as before the switch)"
+        },
+        {
+          "file": "tests/sl-replay-plays.test.ts",
+          "title": "the controller with SL_RETRY_EXPLORE_REPLAY_PLAYS and _DEVIATE > gives the reference's plays and the board's fallback with the replay; says the switches in the run config"
+        },
+        {
+          "file": "tests/sl-replay-plays.test.ts",
+          "title": "the controller with SL_RETRY_EXPLORE_REPLAY_PLAYS and _DEVIATE > a reference line not among the options: its plays are played, the board counts as replayed (logged)"
+        },
+        {
+          "file": "tests/sl-replay-plays.test.ts",
+          "title": "the controller with SL_RETRY_EXPLORE_REPLAY_PLAYS and _DEVIATE > neither can be played: the attempt deviates there, not at its point; the next attempt aims at the same point again"
+        },
+        {
+          "file": "tests/sl-retry-planner.test.ts",
+          "title": "SL retry switches off: the combat question as v4 3488dc5 asked it > every logged retry board's decision is 3488dc5's, byte for byte"
+        },
+        {
+          "file": "tests/sl-retry-planner.test.ts",
+          "title": "SL_RETRY_KNOWN_DRAWS on: the lines draw the cards the earlier attempt drew > VNKN F25 T3: Burning Pact draws the known Bash+ and Strike; the question says the next 10 cards; the log has sl_retry"
+        },
+        {
+          "file": "tests/template-target.test.ts",
+          "title": "the logged Shiv boards (RNTVAT76BPV0): Shiv is played at its target > rntv-f30-t1-shiv: every line names Shiv's target, no option's first action is refused, nor code's"
+        },
+        {
+          "file": "tests/template-target.test.ts",
+          "title": "the logged Shiv boards (RNTVAT76BPV0): Shiv is played at its target > rntv-f33-t1-shiv: every line names Shiv's target, no option's first action is refused, nor code's"
+        },
+        {
+          "file": "tests/template-target.test.ts",
+          "title": "the logged Shiv boards (RNTVAT76BPV0): Shiv is played at its target > rntv-f38-t1-defend-shiv: every line names Shiv's target, no option's first action is refused, nor code's"
+        },
+        {
+          "file": "tests/template-target.test.ts",
+          "title": "the logged Shiv boards (RNTVAT76BPV0): Shiv is played at its target > F30 T1: Jev's line (小刀, 欺凌, potion, 防御, potion) starts with Shiv at the Mother Louse, as the gate wants it"
+        },
+        {
+          "file": "tests/template-target.test.ts",
+          "title": "control boards: no changed card, the question as on v4 without the fix (6bd48a9; b9473ed for True Grit) > the same run before the Shiv, True Grit's and Primal Force's conditional templates in hand: byte for byte"
+        },
+        {
+          "file": "tests/thief-cost.test.ts",
+          "title": "THIEF_COST off: the combat question as with THIEF_FACTS alone (ffed0d4) > every logged thief board's decision is ffed0d4's, byte for byte (the switch absent, and false)"
+        },
+        {
+          "file": "tests/thief-cost.test.ts",
+          "title": "THIEF_COST on: the Hopper's card > T2: thief_context gives the card's HP and its derivation; each option's loot cost is its value x the samples losing it"
+        },
+        {
+          "file": "tests/thief-cost.test.ts",
+          "title": "THIEF_COST on: the Hopper's card > its Escape turn (8V0HD9Y207WY F19 T5): the line stunning it, killed next turn 8/8, is the rollout's best and code's fallback"
+        },
+        {
+          "file": "tests/thief-cost.test.ts",
+          "title": "THIEF_COST on: the Hopper's card > no value computed for this fight (another fight's, or none): no cost, the facts say why, every choice as with the switch off"
+        },
+        {
+          "file": "tests/thief-cost.test.ts",
+          "title": "THIEF_COST on: the Hopper's card > fail safe: a value that throws when read leaves the decision exactly as with THIEF_COST off"
+        },
+        {
+          "file": "tests/thief-cost.test.ts",
+          "title": "THIEF_COST on: the gold > the Merc's take so far at the potion table's gold rate, and the Fat Gremlin's on its Flee turn"
+        },
+        {
+          "file": "tests/thief.test.ts",
+          "title": "THIEF_FACTS off: the combat question as before > every logged thief board's decision is the pre-change one, byte for byte"
+        },
+        {
+          "file": "tests/thief.test.ts",
+          "title": "THIEF_FACTS on: the Thieving Hopper > T2: what it carries (the card missing since the fight's first frame), turns left, HP; every option's thief fact"
+        },
+        {
+          "file": "tests/thief.test.ts",
+          "title": "THIEF_FACTS on: the Thieving Hopper > its Escape turn: this turn is the last; the lines that leave it alive say it leaves with the card"
+        },
+        {
+          "file": "tests/thief.test.ts",
+          "title": "THIEF_FACTS on: the Thieving Hopper > a line stripping its last Flutter on the Escape turn: stunned, one more turn (8V0HD9Y207WY F19 T5)"
+        },
+        {
+          "file": "tests/thief.test.ts",
+          "title": "THIEF_FACTS on: the Thieving Hopper > the fight's first frame not seen (a restart with no logged frame): one card, unknown which"
+        },
+        {
+          "file": "tests/thief.test.ts",
+          "title": "THIEF_FACTS on: the Gremlin Merc and the Fat Gremlin > the Merc: gold stolen so far (the fight's first frame's gold less now), where it goes on death"
+        },
+        {
+          "file": "tests/thief.test.ts",
+          "title": "THIEF_FACTS on: the Gremlin Merc and the Fat Gremlin > the Fat Gremlin on its Flee turn: no line kills it (14 HP), none added; killable, a line killing it is among the options"
+        },
+        {
+          "file": "tests/thief.test.ts",
+          "title": "THIEF_FACTS off > no thief_context, no thief fact, no thief log"
+        },
+        {
+          "file": "tests/thief.test.ts",
+          "title": "THIEF_FACTS fail safe (live play) > a thief step that throws (a broken first-frame note) leaves the decision exactly as with the switch off"
+        }
+      ]
+    },
+    {
+      "cause": "Error: 公共经验文件 /home/dw/Projects/agent-sts2/.worktrees/live/knowledge/common/shared-experience.json: 读取失败: ENOENT: pinned test, shared-experience.json",
+      "category": "shared_fixed_reader",
+      "cases": [
+        {
+          "file": "tests/death-move-planner.test.ts",
+          "title": "MECH_DEATH_MOVE off, MECH_RULES off, no data, no rule: the combat question as at v4 0f63d28 > MECH_RULES off (MECH_DEATH_MOVE on): the pre-change one with MECH_RULES off"
+        },
+        {
+          "file": "tests/mech-move-planner.test.ts",
+          "title": "MECH_MOVE_RULES off, or MECH_RULES off: the combat question as at v4 3488dc5 > MECH_RULES off (MECH_MOVE_RULES on): the pre-change one with MECH_RULES off"
+        },
+        {
+          "file": "tests/mech-rules-planner.test.ts",
+          "title": "MECH_RULES off: the combat question as at v4 ffed0d4 > with the observed data in the monster DB, every logged Hopper board's decision is the pre-change one, byte for byte"
+        },
+        {
+          "file": "tests/mech-rules-planner.test.ts",
+          "title": "MECH_RULES on: the Hopper's last Flutter > RPC6X61N9FQ0 F20 T3 (Flutter 5, Hat Trick 21): the line with five hits leaves the attack out of hp_lost and says so"
+        }
+      ]
+    },
+    {
+      "cause": "Error: 公共经验文件 /home/dw/Projects/agent-sts2/.worktrees/live/knowledge/common/shared-experience.json: 读取失败: ENOENT: pinned potion-cost fixture, shared-experience.json",
+      "category": "shared_fixed_reader",
+      "cases": [
+        {
+          "file": "tests/potion-cost.test.ts",
+          "title": "Jev's question: every option's potion cost, and the no-potion line > hallway (N95W F19 T3, Block Potion 8 HP in act 2): every option states HP loss, potions, cost and total; one option is the no-potion line"
+        },
+        {
+          "file": "tests/potion-cost.test.ts",
+          "title": "Jev's question: every option's potion cost, and the no-potion line > merged when the base line's own rollout drinks nothing later; its own option when it does (ETYC F19 T1: Blood Potion, no conversion value)"
+        },
+        {
+          "file": "tests/potion-cost.test.ts",
+          "title": "Jev's question: every option's potion cost, and the no-potion line > rollout off: the base line is tagged, the fact says there is no rollout"
+        },
+        {
+          "file": "tests/potion-cost.test.ts",
+          "title": "Jev's question: every option's potion cost, and the no-potion line > the switch off: the question is the one before the costs (no cost facts, no no-potion line)"
+        }
+      ]
+    },
+    {
+      "cause": "Error: 公共经验文件 /home/dw/Projects/agent-sts2/.worktrees/live/knowledge/common/shared-experience.json: 读取失败: ENOENT: fixed rollout references, shared-experience.json",
+      "category": "shared_fixed_reader",
+      "cases": [
+        {
+          "file": "tests/rollout-best-added.test.ts",
+          "title": "fixed omitted rollout best > the rollout's best line is added, last and marked, when code did not show it"
+        }
+      ]
+    },
+    {
+      "cause": "Error: 公共经验文件 /home/dw/Projects/agent-sts2/.worktrees/live/knowledge/common/shared-experience.json: 读取失败: ENOENT: fixed Bullet Time evidence",
+      "category": "shared_fixed_reader",
+      "cases": [
+        {
+          "file": "tests/silent-bullet-time.test.ts",
+          "title": "the final T1 prefix pays three, draws zero and preserves five Block plus both energy gains"
+        },
+        {
+          "file": "tests/silent-bullet-time.test.ts",
+          "title": "three starting energy can pay Bullet Time and then the formerly unaffordable hand"
+        },
+        {
+          "file": "tests/silent-bullet-time.test.ts",
+          "title": "known pile cards cannot be borrowed after the lock, while a draw made before it remains"
+        },
+        {
+          "file": "tests/silent-bullet-time.test.ts",
+          "title": "a replan on the actual locked frame retains energy and never invents draws"
+        },
+        {
+          "file": "tests/silent-bullet-time.test.ts",
+          "title": "the draw lock also stops an existing expected-draw adapter without granting new cards a free cost"
+        },
+        {
+          "file": "tests/silent-bullet-time.test.ts",
+          "title": "false fullFight: free costs and the lock expire, Radiance adds energy for exactly three later turns"
+        },
+        {
+          "file": "tests/silent-bullet-time.test.ts",
+          "title": "true fullFight: free costs and the lock expire, Radiance adds energy for exactly three later turns"
+        },
+        {
+          "file": "tests/silent-bullet-time.test.ts",
+          "title": "IRONCLAD A10 upgrade=undefined keeps the old unobserved model"
+        },
+        {
+          "file": "tests/silent-bullet-time.test.ts",
+          "title": "SILENT A9 upgrade=undefined keeps the old unobserved model"
+        },
+        {
+          "file": "tests/silent-bullet-time.test.ts",
+          "title": "SILENT A10 upgrade=true keeps the old unobserved model"
+        },
+        {
+          "file": "tests/silent-bullet-time.test.ts",
+          "title": "without Bullet Time the original Backflip and Adrenaline draws remain unchanged"
+        }
+      ]
+    },
+    {
+      "cause": "Error: 公共经验文件 /home/dw/Projects/agent-sts2/.worktrees/live/knowledge/common/shared-experience.json: 读取失败: ENOENT: fixed delayed-Block test",
+      "category": "shared_fixed_reader",
+      "cases": [
+        {
+          "file": "tests/silent-dodge-roll.test.ts",
+          "title": "frame 273712 captures the observed amount before Tender reduces Dexterity"
+        },
+        {
+          "file": "tests/silent-dodge-roll.test.ts",
+          "title": "frame 273725 captures the observed amount before Tender reduces Dexterity"
+        },
+        {
+          "file": "tests/silent-dodge-roll.test.ts",
+          "title": "a card played earlier in the same plan reduces the captured amount, rather than using entry Dexterity"
+        },
+        {
+          "file": "tests/silent-dodge-roll.test.ts",
+          "title": "newly captured Block from 273712 is paid once after attribute reset"
+        },
+        {
+          "file": "tests/silent-dodge-roll.test.ts",
+          "title": "newly captured Block from 273725 is paid once after attribute reset"
+        },
+        {
+          "file": "tests/silent-dodge-roll.test.ts",
+          "title": "unobserved frail keeps the option and marks delayed Block unknown"
+        },
+        {
+          "file": "tests/silent-dodge-roll.test.ts",
+          "title": "unobserved replay keeps the option and marks delayed Block unknown"
+        },
+        {
+          "file": "tests/silent-dodge-roll.test.ts",
+          "title": "unobserved duplicate keeps the option and marks delayed Block unknown"
+        },
+        {
+          "file": "tests/silent-dodge-roll.test.ts",
+          "title": "unobserved unknown-amount keeps the option and marks delayed Block unknown"
+        }
+      ]
+    },
+    {
+      "cause": "Error: 公共经验文件 /home/dw/Projects/agent-sts2/.worktrees/live/knowledge/common/shared-experience.json: 读取失败: ENOENT: fixed Kusarigama evidence",
+      "category": "shared_fixed_reader",
+      "cases": [
+        {
+          "file": "tests/silent-kusarigama.test.ts",
+          "title": "does not pre-credit a random kill that the recorded complete line failed to deliver"
+        },
+        {
+          "file": "tests/silent-kusarigama.test.ts",
+          "title": "retains the playable suffix and labels the reference result instead of presenting an exact rollout"
+        },
+        {
+          "file": "tests/silent-kusarigama.test.ts",
+          "title": "untriggered relic leaves the original modeled outcome intact"
+        },
+        {
+          "file": "tests/silent-kusarigama.test.ts",
+          "title": "absent relic leaves the original modeled outcome intact"
+        },
+        {
+          "file": "tests/silent-kusarigama.test.ts",
+          "title": "a sole remaining target keeps the old raw-damage and per-hit-cap path"
+        },
+        {
+          "file": "tests/silent-kusarigama.test.ts",
+          "title": "IRONCLAD A10 does not opt into the observed A10 change"
+        },
+        {
+          "file": "tests/silent-kusarigama.test.ts",
+          "title": "SILENT A9 does not opt into the observed A10 change"
+        },
+        {
+          "file": "tests/silent-kusarigama.test.ts",
+          "title": "SILENT A11 does not opt into the observed A10 change"
+        }
+      ]
+    },
+    {
+      "cause": "Error: 公共经验文件 /home/dw/Projects/agent-sts2/.worktrees/live/knowledge/common/shared-experience.json: 读取失败: ENOENT: frozen Silent evidence only",
+      "category": "shared_fixed_reader",
+      "cases": [
+        {
+          "file": "tests/silent-potion-reference.test.ts",
+          "title": "the real consumer shows unknown value with valid option keys and preserves choices and ranks (v1=true)"
+        }
+      ]
+    },
+    {
+      "cause": "Error: Expected a build question, got {\"kind\":\"blocked\",\"reason\":\"Silent permanent deck 31 exceeds operator cap 30; preserve the state and notify ops\"}",
+      "category": "existing_deck_cap_fixture",
+      "cases": [
+        {
+          "file": "tests/silent-route-relic.test.ts",
+          "title": "delivers the observation in the production map_before question, keeping all original options"
+        },
+        {
+          "file": "tests/silent-route-relic.test.ts",
+          "title": "delivers the observation in the production reward question, keeping all original options"
+        }
+      ]
+    },
+    {
+      "cause": "Error: Expected a build question, got {\"kind\":\"blocked\",\"reason\":\"Silent permanent deck 32 exceeds operator cap 30; preserve the state and notify ops\"}",
+      "category": "existing_deck_cap_fixture",
+      "cases": [
+        {
+          "file": "tests/silent-route-relic.test.ts",
+          "title": "delivers the observation in the production rest question, keeping all original options"
+        }
+      ]
+    },
+    {
+      "cause": "Error: 公共经验文件 /home/dw/Projects/agent-sts2/.worktrees/live/knowledge/common/shared-experience.json: 读取失败: ENOENT: fixed selection evidence",
+      "category": "shared_fixed_reader",
+      "cases": [
+        {
+          "file": "tests/silent-selection-audit.test.ts",
+          "title": "the recorded Sandworm pair separates 12 predicted HP from 7 damage and 0/24 from 5/24 deaths"
+        },
+        {
+          "file": "tests/silent-selection-audit.test.ts",
+          "title": "the frozen candidate pair at decision 271348 retains growth and does not claim actual damage"
+        },
+        {
+          "file": "tests/silent-selection-audit.test.ts",
+          "title": "the frozen candidate pair at decision 272040 retains growth and does not claim actual damage"
+        },
+        {
+          "file": "tests/silent-selection-audit.test.ts",
+          "title": "the frozen candidate pair at decision 272195 retains growth and does not claim actual damage"
+        },
+        {
+          "file": "tests/silent-selection-audit.test.ts",
+          "title": "the real question resolution records the original, pre-SL and replacement with the requested first action"
+        },
+        {
+          "file": "tests/silent-selection-audit.test.ts",
+          "title": "the original Jev answer stays separate when the HP guard replaces it before SL"
+        },
+        {
+          "file": "tests/silent-selection-audit.test.ts",
+          "title": "other characters and unobserved ascensions have no audit fields"
+        },
+        {
+          "file": "tests/silent-selection-audit.test.ts",
+          "title": "a missing plan, random-potion median and clock fallback retain their distinct uncertainty"
+        }
+      ]
+    },
+    {
+      "cause": "Error: 公共经验文件 /home/dw/Projects/agent-sts2/.worktrees/live/knowledge/common/shared-experience.json: 读取失败: ENOENT: fixed Serpent Form evidence",
+      "category": "shared_fixed_reader",
+      "cases": [
+        {
+          "file": "tests/silent-serpent-form.test.ts",
+          "title": "T1 establishes four points without attributing damage to the power itself or a held second copy"
+        },
+        {
+          "file": "tests/silent-serpent-form.test.ts",
+          "title": "frame 274202: 274203 separates the card's damage and four-point trigger"
+        },
+        {
+          "file": "tests/silent-serpent-form.test.ts",
+          "title": "frame 274203: 274204 separates the card's damage and four-point trigger"
+        },
+        {
+          "file": "tests/silent-serpent-form.test.ts",
+          "title": "frame 274207: 274208 separates the card's damage and four-point trigger"
+        },
+        {
+          "file": "tests/silent-serpent-form.test.ts",
+          "title": "frame 274208: 274209 separates the card's damage and four-point trigger"
+        },
+        {
+          "file": "tests/silent-serpent-form.test.ts",
+          "title": "frame 274209: 274210 separates the card's damage and four-point trigger"
+        },
+        {
+          "file": "tests/silent-serpent-form.test.ts",
+          "title": "a complete fixed defense prefix keeps poison settlement separate from the two card triggers"
+        },
+        {
+          "file": "tests/silent-serpent-form.test.ts",
+          "title": "IRONCLAD A10 preserves the old outcome on the identical evidence frame"
+        },
+        {
+          "file": "tests/silent-serpent-form.test.ts",
+          "title": "SILENT A9 preserves the old outcome on the identical evidence frame"
+        },
+        {
+          "file": "tests/silent-serpent-form.test.ts",
+          "title": "unobserved two-enemies keeps the option and marks its extra damage unknown"
+        },
+        {
+          "file": "tests/silent-serpent-form.test.ts",
+          "title": "unobserved replay keeps the option and marks its extra damage unknown"
+        },
+        {
+          "file": "tests/silent-serpent-form.test.ts",
+          "title": "unobserved stacking keeps the option and marks its extra damage unknown"
+        }
+      ]
+    },
+    {
+      "cause": "Error: 公共经验文件 /home/dw/Projects/agent-sts2/.worktrees/live/knowledge/common/shared-experience.json: 读取失败: ENOENT: fixed Shackling evidence",
+      "category": "shared_fixed_reader",
+      "cases": [
+        {
+          "file": "tests/silent-shackling-weak.test.ts",
+          "title": "the observed potion-only line predicts the actual one HP loss before drinking"
+        },
+        {
+          "file": "tests/silent-shackling-weak.test.ts",
+          "title": "the complete observed Strike/Defend/Backflip/potion prefix keeps seven damage and predicts one loss"
+        },
+        {
+          "file": "tests/silent-shackling-weak.test.ts",
+          "title": "the observed no-drink and post-drink reread keep the shown intent without double reduction"
+        },
+        {
+          "file": "tests/silent-shackling-weak.test.ts",
+          "title": "does not carry the observed move's scope into later simulated turns"
+        },
+        {
+          "file": "tests/silent-shackling-weak.test.ts",
+          "title": "keeps the existing path for character IRONCLAD / A10"
+        },
+        {
+          "file": "tests/silent-shackling-weak.test.ts",
+          "title": "keeps the existing path for character SILENT / A9"
+        },
+        {
+          "file": "tests/silent-shackling-weak.test.ts",
+          "title": "keeps the existing path for character SILENT / A11"
+        },
+        {
+          "file": "tests/silent-shackling-weak.test.ts",
+          "title": "keeps the existing path for character  / A10"
+        },
+        {
+          "file": "tests/silent-shackling-weak.test.ts",
+          "title": "keeps other enemies, moves and unknown powers outside the observed scope"
+        },
+        {
+          "file": "tests/silent-shackling-weak.test.ts",
+          "title": "keeps ambiguous inversion and unobserved modifiers or loss amounts on their existing path"
+        }
+      ]
+    },
+    {
+      "cause": "Error: 公共经验文件 /home/dw/Projects/agent-sts2/.worktrees/live/knowledge/common/shared-experience.json: 读取失败: ENOENT: fixed Sloth test has no generated references",
+      "category": "shared_fixed_reader",
+      "cases": [
+        {
+          "file": "tests/silent-sloth-replay.test.ts",
+          "title": "final T8: rejects Defend replay, Strike, Neutralize and preserves the actually executed prefix"
+        },
+        {
+          "file": "tests/silent-sloth-replay.test.ts",
+          "title": "the observed cap still allows Neutralize before the replay, without claiming an actual winning line"
+        },
+        {
+          "file": "tests/silent-sloth-replay.test.ts",
+          "title": "later turns, same-turn SL counter regression and a new room do not inherit the extra slot"
+        },
+        {
+          "file": "tests/silent-sloth-replay.test.ts",
+          "title": "a last-slot replay remains offered with an explicit unverified boundary"
+        }
+      ]
+    },
+    {
+      "cause": "Error: Expected rest questions",
+      "category": "existing_deck_cap_fixture",
+      "cases": [
+        {
+          "file": "tests/silent-tail-resource.test.ts",
+          "title": "delivers the state to a production rest question while keeping every choice"
+        }
+      ]
+    },
+    {
+      "cause": "Error: 公共经验文件 /home/dw/Projects/agent-sts2/.worktrees/live/knowledge/common/shared-experience.json: 读取失败: ENOENT: pinned test, shared-experience.json",
+      "category": "shared_fixed_reader",
+      "cases": [
+        {
+          "file": "tests/sl-early-planner.test.ts",
+          "title": "SL_RETRY_KNOWN_INSERTS: the Insatiable's Frantic Escape added at random places (EJXC F33 T2, the fight as its own retry) > the known order rides with the added cards: the question says so, the log counts them, the solver draws as without them"
+        },
+        {
+          "file": "tests/sl-early-planner.test.ts",
+          "title": "SL_RETRY_KNOWN_INSERTS: the Insatiable's Frantic Escape added at random places (EJXC F33 T2, the fight as its own retry) > an `exact` count alone (what the tracker gives without the switch after a status drawn at once) changes no decision"
+        },
+        {
+          "file": "tests/sl-explore-canon.test.ts",
+          "title": "the planner, both switches off: 08ec8f9's decisions on the logged boards > every answer's resolution and point, recording and with a deviation, as 08ec8f9"
+        },
+        {
+          "file": "tests/sl-explore-canon.test.ts",
+          "title": "SL_RETRY_EXPLORE_CANON on the planner: attempt 1's play counts as tried (UK7R9A0NMCXL F33 attempt 5 T1) > Hemokinesis -> Crusher, attempt 1's, gives way to Hemokinesis -> Rocket (the same card on the other enemy: untried)"
+        },
+        {
+          "file": "tests/sl-explore-canon.test.ts",
+          "title": "SL_RETRY_EXPLORE_TURN on the planner: the deviation holds for its turn (UK7R9A0NMCXL F33 attempt 4 T2) > on the deviation point the replacement's turn is no failed attempt's; it opens with Shrug It Off, which draws"
+        },
+        {
+          "file": "tests/sl-explore-canon.test.ts",
+          "title": "SL_RETRY_EXPLORE_TURN on the planner: the deviation holds for its turn (UK7R9A0NMCXL F33 attempt 4 T2) > the re-plan after the draw: Jev's Defend, Defend would end the turn as attempts 2-3's; it gives way, the turn differs"
+        },
+        {
+          "file": "tests/sl-explore-gaps.test.ts",
+          "title": "ABCJ0TZ6MD06 F48 attempt 4, T4's first board: attempt 2's turn in another order > off: as live, the first shown line with the turn's plays (another order) is taken for attempt 2's"
+        },
+        {
+          "file": "tests/sl-explore-gaps.test.ts",
+          "title": "ABCJ0TZ6MD06 F48 attempt 4, T4's first board: attempt 2's turn in another order > SL_RETRY_EXPLORE_REPLAY_ORDER: attempt 2's plays in their order (Iron Wave first), counted as its line"
+        },
+        {
+          "file": "tests/sl-explore-gaps.test.ts",
+          "title": "ABCJ0TZ6MD06 F48 attempt 4, T4's first board: attempt 2's turn in another order > the answer itself with attempt 2's turn in another order: kept off (as live), its plays in their order on"
+        },
+        {
+          "file": "tests/sl-explore-potion.test.ts",
+          "title": "the planner on P68P F48's logged deviation boards (Jev answering as logged) > attempt 4 T1: off, Powdered Demise added to attempt 2's cards (as live); on, a line with other cards"
+        },
+        {
+          "file": "tests/sl-explore-potion.test.ts",
+          "title": "the planner on P68P F48's logged deviation boards (Jev answering as logged) > attempt 3 T2: off, the same cards without the potion (as live); on, no other line there (the target never comes here)"
+        },
+        {
+          "file": "tests/sl-explore-whole.test.ts",
+          "title": "the planner without `whole`: e0fa69b's decisions on the logged boards > every answer's resolution and point, recording, deviating and avoiding, as e0fa69b"
+        },
+        {
+          "file": "tests/sl-explore-whole.test.ts",
+          "title": "the avoid reaches every surviving line: the re-plans after the draw (PW7Y F48 attempts 3 and 4) > pw7y-a3-t1-replan: code's \"only distinct line\" ended the turn as a failed one; now Jev's question, the answer kept off"
+        },
+        {
+          "file": "tests/sl-explore-whole.test.ts",
+          "title": "the avoid reaches every surviving line: the re-plans after the draw (PW7Y F48 attempts 3 and 4) > pw7y-a4-t2-replan: code's \"only distinct line\" ended the turn as a failed one; now Jev's question, the answer kept off"
+        },
+        {
+          "file": "tests/sl-explore-whole.test.ts",
+          "title": "the avoid reaches every surviving line: the re-plans after the draw (PW7Y F48 attempts 3 and 4) > pw7y-a3-t1-deviation as a later board of the turn: a question whose every line ends as a failed turn says so"
+        },
+        {
+          "file": "tests/sl-explore-whole.test.ts",
+          "title": "the deviation point judged by the whole turn (PW7Y F48 attempt 3 T1) > Blood Wall, Pommel Strike+, Stomp: may end as attempts 1-2's after Pommel Strike+'s draw; not 'not played here'"
+        },
+        {
+          "file": "tests/sl-explore-whole.test.ts",
+          "title": "the deviation point judged by the whole turn (PW7Y F48 attempt 3 T1) > turnOpen: the sure plays of a line stop at its first card that draws; a potion option is open with its drink"
+        },
+        {
+          "file": "tests/sl-replay-plays.test.ts",
+          "title": "J4S28FRQKD7G F33 attempt 3, T2's first board: attempt 2's line is not among the options > the cause: attempt 3 knows 烙印+ is Pommel Strike's draw, and attempt 2's line with it played beats attempt 2's line"
+        },
+        {
+          "file": "tests/sl-replay-plays.test.ts",
+          "title": "J4S28FRQKD7G F33 attempt 3, T2's first board: attempt 2's line is not among the options > off (no plays): as live, the answer kept and the replay stops (the logged decision's sl_explore)"
+        },
+        {
+          "file": "tests/sl-replay-plays.test.ts",
+          "title": "J4S28FRQKD7G F33 attempt 3, T2's first board: attempt 2's line is not among the options > SL_RETRY_EXPLORE_REPLAY_PLAYS: attempt 2's plays are played as a line (防御 first, 剑柄打击 -> 火箭 next)"
+        },
+        {
+          "file": "tests/sl-replay-plays.test.ts",
+          "title": "J4S28FRQKD7G F33 attempt 3, T2's first board: attempt 2's line is not among the options > SL_RETRY_EXPLORE_REPLAY_DEVIATE: neither its line nor its plays can be played: the deviation is made here"
+        },
+        {
+          "file": "tests/sl-retry-planner.test.ts",
+          "title": "SL_RETRY_KNOWN_DRAWS on: the lines draw the cards the earlier attempt drew > JW92 F48 T3: Offering draws the known Defend, Twin Strike and Shrug It Off+"
+        },
+        {
+          "file": "tests/sl-retry-planner.test.ts",
+          "title": "SL_RETRY_KNOWN_DRAWS on: the lines draw the cards the earlier attempt drew > known draws the pile does not hold: none used, the decision as with the switch off"
+        },
+        {
+          "file": "tests/sl-retry-planner.test.ts",
+          "title": "SL_RETRY_COMPUTE on: more samples on a retry > the rollout runs 24 samples (frozen clock: the whole schedule); the log says so"
+        },
+        {
+          "file": "tests/sl-retry-planner.test.ts",
+          "title": "SL_RETRY_COMPUTE on: more samples on a retry > a question's rollout budget is at most what is left of the turn's (re-plans after a draw), never below the usual"
+        },
+        {
+          "file": "tests/sl-retry-planner.test.ts",
+          "title": "SL_RETRY_COMPUTE on: more samples on a retry > B2 on a retried boss fight runs the compute's samples a line"
+        },
+        {
+          "file": "tests/sl-retry-planner.test.ts",
+          "title": "SL retry fail safe (live play) > a retry step that throws leaves the decision exactly as with both switches off"
+        }
+      ]
+    }
+  ],
+  "passing_scope": {
+    "shared": 8,
+    "paths": 11,
+    "startup_recovery": 25,
+    "boss_calibration": 5
+  },
+  "unmocked_production_readback": "paper/materials/20261013-1806-ops/real-reader-readback.json",
+  "decision": "Retain the empty shared reader and published calibration/lease/cap. Real unmocked shared/private readers work in all three roles; primary full prefixes work. Current fixed tests mock readFileSync but retain real file existence/stamp, so they reject the newly present public file as pinned/fixed ENOENT. Do not hide the189 failed cases, weaken malformed-data failure, remove the public pool, or rerun unchanged full suites.",
+  "repair": {
+    "id": "shared-experience-fixed-filesystem-snapshot-20261013",
+    "state": "pending_not_implemented",
+    "owner": "primary ordinary fix scheduler next available original lease; Regent continues existing180435 screening only",
+    "scope": "Consistency of fixed filesystem/knowledge snapshots in the29 identified tests and their existing shared helpers; explicitly freeze absent/empty public experience for historical fixtures.",
+    "acceptance": "No future real public/private data in fixed snapshots. Preserve all original private knowledge, choices, SL lines, randomness/clock budgets, negative assertions, malformed-public fail-closed behavior and8 shared-reader cases. Implement/test under normal sandbox then publish exact repair and new-tree host checks."
+  },
+  "regent_existing_prefix_failure": "rates.8 empty in original potion-equivalents table, original Regent owner scope; no new duplicate repair or dataset/parameter invention",
+  "original_full_logs_and_source_checks_retained": true
+}
