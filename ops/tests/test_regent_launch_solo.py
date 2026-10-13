@@ -46,7 +46,7 @@ class SoloTests(unittest.TestCase):
         own = root / 'ops/codex-ops/regent-native'
         value = {'request_id': 'roy-20261013-isolated-character-climb', 'client_id': '2026101302', 'api_port': 18181,
                  'runtime_root': str(root), 'original_creation_time': '2026-10-13T00:00:00Z',
-                 'native_directory': str(root / 'ops/codex-ops/native-game'),
+                 'native_directory': solo.NATIVE_WINDOWS_DIR,
                  'mod_settings': str(own / 'settings-regent.json'), 'native_log': str(own / 'game.log')}
         with patch.object(solo, 'windows_path', side_effect=str):
             solo.validate_manifest(value, root)

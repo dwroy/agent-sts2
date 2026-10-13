@@ -20,6 +20,7 @@ lane_guard = _probe.lane_guard
 
 TASK = 'sts2-regent-roy20261013'
 WIN = '/mnt/c/Windows/System32/'
+NATIVE_WINDOWS_DIR = r'C:\Users\XD\AppData\Local\Temp\agent-sts2-regent-20261013'
 
 
 def windows_path(path):
@@ -31,9 +32,8 @@ def validate_manifest(m, root):
             or m.get('api_port') != 18181 or not isinstance(m.get('original_creation_time'), str)
             or m.get('runtime_root') != str(root)):
         raise ValueError('manifest is outside the fixed Regent lane')
-    native = root / 'ops/codex-ops/native-game'
     own = root / 'ops/codex-ops/regent-native'
-    if (m.get('native_directory') != windows_path(native) or m.get('mod_settings') != windows_path(own / 'settings-regent.json')
+    if (m.get('native_directory') != NATIVE_WINDOWS_DIR or m.get('mod_settings') != windows_path(own / 'settings-regent.json')
             or m.get('native_log') != windows_path(own / 'game.log')):
         raise ValueError('native paths differ from the fixed private workspace')
 
