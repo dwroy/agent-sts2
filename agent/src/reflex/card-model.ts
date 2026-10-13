@@ -104,8 +104,10 @@ export interface CardModel {
   afterImage?: number;
   /** Silent A10 plain Serpent Form: observed four-point power, not damage on establishment. */
   serpentForm?: number;
-  /** Observed whole-hand discard (Shadow Step or Calculated Gamble). */
+  /** Observed whole-hand discard. */
   discardsHand?: boolean;
+  /** 32VSST9UX7MN A10, silent-0455: replace the hand; replan from the actual generated cards. */
+  handReplacement?: boolean;
   /** Calculated Gamble draws as many cards as it actually discarded (silent-0081). */
   drawDiscardedHand?: boolean;
   /** Observed plain Silent Hidden Daggers: discard two before adding two Shivs (silent-0153/0154). */
@@ -966,6 +968,15 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
   const upgradedGamble = character.toLowerCase() === "silent" && ascension === 10 && bool(card["upgraded"]) &&
     str(card["resolved_rules_text"]).replace(/\s+/g, "") === "保留。丢弃你的所有手牌,然后抽相同数量的牌。消耗。";
   const calculatedGamble = cardId === "CALCULATED_GAMBLE" && (!bool(card["upgraded"]) || upgradedGamble);
+  // F29 T1 / F30 attempt 3 T1: old hand cards cannot follow this observed upgraded cast.
+  // Generation and automatic discard effects remain unknown until the next live hand is read.
+  const stormReplacement = character.toLowerCase() === "silent" && ascension === 10 &&
+    cardId === "STORM_OF_STEEL" && bool(card["upgraded"]) && type === "Skill" &&
+    card["target_type"] === "Self" && !requiresTarget && numOrNull(card["energy_cost"]) === 1 &&
+    !bool(card["costs_x"]) && card["enchantment"] == null &&
+    Array.isArray(card["dynamic_values"]) && card["dynamic_values"].length === 0 &&
+    str(card["rules_text"]).replace(/\s+/g, "") === "丢弃所有手牌。每丢弃一张牌，就将一张{IfUpgraded:show:小刀+|小刀}添加至你的手牌。" &&
+    renderedText.replace(/\s+/g, "") === "丢弃所有手牌。每丢弃一张牌，就将一张小刀+添加至你的手牌。";
   const hiddenDaggers = character.toLowerCase() === "silent" && cardId === "HIDDEN_DAGGERS" && !bool(card["upgraded"]) &&
     dyn(card, "Cards") === 2 && dyn(card, "Shivs") === 2;
   // YBRA3EJ94GBR F30 T3 / F33 T10, silent-0324: Cards=3 makes Shivs; it never draws from the pile.
@@ -1187,6 +1198,7 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
     special,
     ...(shadowStep ? { discardsHand: true, doubleDamageNext: true } : {}),
     ...(calculatedGamble ? { discardsHand: true, drawDiscardedHand: true } : {}),
+    ...(stormReplacement ? { discardsHand: true, handReplacement: true } : {}),
     ...(hiddenDaggers ? { discardCount: 2, ...(adds ? { adds } : {}) } : {}),
     ...(bladeDance ? { bladeDance: true, bladeDanceShivs, ...(adds ? { adds } : {}) } : {}),
     ...(character.toLowerCase() === "silent" && !bool(card["upgraded"]) && ["SURVIVOR", "DAGGER_THROW", "ACROBATICS"].includes(cardId) &&
