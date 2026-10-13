@@ -382,6 +382,9 @@ export async function main(argv: string[], overrides: Partial<LauncherDeps> = {}
     if (spec.defaults.merge_dir !== undefined && deps.env.STS2_LIVE && sets.merge_dir === undefined) {
       sets.merge_dir = resolve(deps.env.STS2_LIVE);
     }
+    if (spec.defaults.code_dir !== undefined && deps.env.STS2_LIVE && sets.code_dir === undefined) {
+      sets.code_dir = resolve(deps.env.STS2_LIVE);
+    }
     checkRunCharacters(sets, character, join(deps.projectRoot, "logs", "runs.jsonl"));
     const rendered = renderTask(spec, sets, builtins);
     const model = options.model ?? spec.models[options.engine] ?? engineDefaults(options.engine).model;
