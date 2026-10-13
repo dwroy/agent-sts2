@@ -1,0 +1,93 @@
+{
+  "at": "2026-10-14 05:56:23 CST",
+  "batch": "20261014-050124-fix-batch",
+  "manifest_sha256": "e623a2c8822b52e642bdc932e6368bbe981f7ea03c80b5f8656dd82ad0fcc915",
+  "receipt": "ops/codex-ops/learner/20261014-050124-fix-batch.supplement-e623a2c8822b52e642bdc932e6368bbe981f7ea03c80b5f8656dd82ad0fcc915.json",
+  "receipt_sha256": "c05aacf7074552fac37114bfa422276946c357d366bc4a5a7b02eef7f9e57845",
+  "tsc_rc": 0,
+  "scoped_supplement_rc": 1,
+  "selected_cases_passed": 2,
+  "selected_cases_failed": 1,
+  "assertion_readback": [
+    {
+      "file": "tests/ops-stall-recovery.test.ts",
+      "exact_selected_name": "stall check mod request recovery keeps real stuck-loop, gate and silence alerts",
+      "status": "passed",
+      "report": "ops/codex-ops/learner/20261014-050124-fix-batch.supplement-e623a2c8822b52e642bdc932e6368bbe981f7ea03c80b5f8656dd82ad0fcc915.0.vitest.json",
+      "report_sha256": "76d05178f4c5606152601683998fd22524e0005617874bcfcf19d0af46b0433c",
+      "counts": {
+        "numTotalTests": 7,
+        "numPassedTests": 1,
+        "numFailedTests": 0,
+        "numPendingTests": 6
+      },
+      "duration_ms": 1541.059176,
+      "failure_messages": []
+    },
+    {
+      "file": "tests/potion-mc.test.ts",
+      "exact_selected_name": "determinism and the time budget logged boards: the combat question is the same twice (the samples are seeded per board)",
+      "status": "passed",
+      "report": "ops/codex-ops/learner/20261014-050124-fix-batch.supplement-e623a2c8822b52e642bdc932e6368bbe981f7ea03c80b5f8656dd82ad0fcc915.1.vitest.json",
+      "report_sha256": "f175b90773da1b7efca773d4a56b9f4b6985872e010362fc14d4b88aa38a76a9",
+      "counts": {
+        "numTotalTests": 17,
+        "numPassedTests": 1,
+        "numFailedTests": 0,
+        "numPendingTests": 16
+      },
+      "duration_ms": 4921.552449999999,
+      "failure_messages": []
+    },
+    {
+      "file": "tests/strategy-research-scheduling.test.ts",
+      "exact_selected_name": "frozen research takes the next slot and starts only after its actual registration is saved",
+      "status": "failed",
+      "report": "ops/codex-ops/learner/20261014-050124-fix-batch.supplement-e623a2c8822b52e642bdc932e6368bbe981f7ea03c80b5f8656dd82ad0fcc915.2.vitest.json",
+      "report_sha256": "e92c719e475086095e0fef677b02de1d803433493e1b6fa230adf7340edeb587",
+      "counts": {
+        "numTotalTests": 1,
+        "numPassedTests": 0,
+        "numFailedTests": 1,
+        "numPendingTests": 0
+      },
+      "duration_ms": 22373.659098,
+      "failure_messages": [
+        "Error: STACK_TRACE_ERROR\n    at task (file:///home/dw/Projects/agent-sts2/agent/node_modules/@vitest/runner/dist/chunk-artifact.js:1784:27)\n    at Object.<anonymous> (file:///home/dw/Projects/agent-sts2/agent/node_modules/@vitest/runner/dist/chunk-artifact.js:1817:16)\n    at Object.<anonymous> (file:///home/dw/Projects/agent-sts2/agent/node_modules/@vitest/runner/dist/chunk-artifact.js:1563:28)\n    at chain (file:///home/dw/Projects/agent-sts2/agent/node_modules/@vitest/runner/dist/chunk-artifact.js:599:14)\n    at /home/dw/Projects/agent-sts2/.worktrees/live/agent/tests/strategy-research-scheduling.test.ts:4:1\n    at processTicksAndRejections (node:internal/process/task_queues:103:5)\n    at VitestModuleEvaluator._runInlinedModule (file:///home/dw/Projects/agent-sts2/agent/node_modules/vitest/dist/module-evaluator.js:206:4)\n    at VitestModuleRunner.directRequest (file:///home/dw/Projects/agent-sts2/agent/node_modules/vite/dist/node/module-runner.js:1270:59)\n    at VitestModuleRunner.cachedRequest (file:///home/dw/Projects/agent-sts2/agent/node_modules/vite/dist/node/module-runner.js:1177:73)\n    at VitestModuleRunner.import (file:///home/dw/Projects/agent-sts2/agent/node_modules/vite/dist/node/module-runner.js:1132:10)"
+      ]
+    }
+  ],
+  "supplement_log": "ops/codex-ops/learner/20261014-050124-fix-batch.supplement-e623a2c8822b52e642bdc932e6368bbe981f7ea03c80b5f8656dd82ad0fcc915.log",
+  "supplement_log_sha256": "23ac369fe4baae1f79d86d5c4cd3320c33ff7c5420a900846c12a35e0574b3b9",
+  "remaining_selected_failure": "strategy-research-scheduling repeats outer 15000ms timeout; measured selected duration 22373.659098ms; no differing registration assertion was reported and exact child diagnostics remain unavailable",
+  "original_full_suite_rc": 1,
+  "full_suite": false,
+  "uncovered_original_failed_file": "tests/ascension-audit-report.test.ts",
+  "long_exact_title_length": 605,
+  "manifest_limit": 500,
+  "original_batch_failed_rc0_merged_null_and_full_failure_preserved": true,
+  "supplement_registered_in_original_batch": true,
+  "live": {
+    "commit": "caa27990d46ac612a54eea03135b7152ccf93e9b",
+    "tree": "139f0e3554a9804bdf3b26c8bf1dcb833ed6439d"
+  },
+  "source_3_leaves": [
+    {
+      "path": "agent/src/sim/build-sim-pool.ts",
+      "sha256": "8dea63800021b9abe022da6c7419b7af52c68a0656441125b380c1e6d588bcbb",
+      "source_main_live_equal": true
+    },
+    {
+      "path": "agent/src/sim/build-sim-worker.ts",
+      "sha256": "772dd4d2392e2f93e2a368ac9ae6514be6ebc6351920203f3b7f6e1774ab163d",
+      "source_main_live_equal": true
+    },
+    {
+      "path": "agent/tests/build-sim-cancellation.test.ts",
+      "sha256": "fabb9680291ff9fab9a2e5d147627ae62d36e728061f5b9f58e84052e0b87d02",
+      "source_main_live_equal": true
+    }
+  ],
+  "failed_source_checkout_and_original_scratch_preserved": true,
+  "decision": "Keep R336; queue diagnostic and deterministic fixed-fixture work on the original ordinary fix chain. No full-suite pass or performance recovery claim."
+}

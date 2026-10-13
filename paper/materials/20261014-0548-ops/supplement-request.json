@@ -1,0 +1,38 @@
+{
+  "at": "2026-10-14 05:53:23 CST",
+  "batch": "20261014-050124-fix-batch",
+  "manifest_sha256": "e623a2c8822b52e642bdc932e6368bbe981f7ea03c80b5f8656dd82ad0fcc915",
+  "manifest": "ops/codex-ops/learner/20261014-050124-fix-batch.continuation-e623a2c8822b52e642bdc932e6368bbe981f7ea03c80b5f8656dd82ad0fcc915.json",
+  "launcher_pid": 2509079,
+  "selection": [
+    {
+      "file": "tests/ops-stall-recovery.test.ts",
+      "tests": [
+        "stall check mod request recovery keeps real stuck-loop, gate and silence alerts"
+      ],
+      "reason": "failed"
+    },
+    {
+      "file": "tests/potion-mc.test.ts",
+      "tests": [
+        "determinism and the time budget logged boards: the combat question is the same twice (the samples are seeded per board)"
+      ],
+      "reason": "failed"
+    },
+    {
+      "file": "tests/strategy-research-scheduling.test.ts",
+      "tests": [
+        "frozen research takes the next slot and starts only after its actual registration is saved"
+      ],
+      "reason": "failed"
+    }
+  ],
+  "live": {
+    "commit": "caa27990d46ac612a54eea03135b7152ccf93e9b",
+    "tree": "139f0e3554a9804bdf3b26c8bf1dcb833ed6439d"
+  },
+  "status": "one scoped broker launcher started; result pending",
+  "original_full_rc": 1,
+  "full_suite": false,
+  "uncovered_original_failed_file": "tests/ascension-audit-report.test.ts"
+}
