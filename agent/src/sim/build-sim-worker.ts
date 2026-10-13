@@ -19,6 +19,7 @@ interface Batch {
   maxTurns: number;
   scripts: boolean;
   cancelled?: Int32Array;
+  streamResults?: boolean;
 }
 
 const batches = new Map<number, Batch>();
@@ -35,7 +36,7 @@ function inputOf(batch: Batch, deck: number): RolloutInput {
 parentPort!.on("message", (msg: BuildWorkerRequest) => {
   if (msg.type === "batch") {
     // A running pre-deployment parent may create a fresh worker from the updated file.
-    batches.set(msg.batch, { base: msg.base, decks: msg.decks, inputs: new Map(), orders: msg.orders, maxTurns: msg.maxTurns, scripts: msg.scripts, ...(msg.cancelled ? { cancelled: new Int32Array(msg.cancelled) } : {}) });
+    batches.set(msg.batch, { base: msg.base, decks: msg.decks, inputs: new Map(), orders: msg.orders, maxTurns: msg.maxTurns, scripts: msg.scripts, ...(msg.cancelled ? { cancelled: new Int32Array(msg.cancelled) } : {}), streamResults: msg.streamResults });
     return;
   }
   if (msg.type === "drop") {
@@ -50,7 +51,10 @@ parentPort!.on("message", (msg: BuildWorkerRequest) => {
     for (const [deck, order, i, seed] of msg.tasks) {
       // A sample already running stays whole; cancelled work produces no synthetic outcome.
       if (batch.cancelled && Atomics.load(batch.cancelled, 0)) break;
-      results.push([deck, order, i, fightSample(inputOf(batch, deck), null, seed, batch.maxTurns, batch.scripts, batch.orders[order] ?? null)]);
+      const result: typeof results[number] = [deck, order, i, fightSample(inputOf(batch, deck), null, seed, batch.maxTurns, batch.scripts, batch.orders[order] ?? null)];
+      // Opt in so a pre-deployment parent still receives exactly one reply per block.
+      if (batch.streamResults) parentPort!.postMessage({ batch: msg.batch, results: [result], partial: true } satisfies BuildWorkerReply);
+      else results.push(result);
     }
     reply = { batch: msg.batch, results };
   } catch (error) {

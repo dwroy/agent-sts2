@@ -146,10 +146,10 @@ export class SerialDeckRunner implements DeckSimRunner {
 
 /** Messages to a worker (build-sim-worker.ts). */
 export type BuildWorkerRequest =
-  | { type: "batch"; batch: number; base: RolloutInput; decks: Partial<RolloutInput>[]; orders: (KillOrder | null)[]; maxTurns: number; scripts: boolean; cancelled?: SharedArrayBuffer }
+  | { type: "batch"; batch: number; base: RolloutInput; decks: Partial<RolloutInput>[]; orders: (KillOrder | null)[]; maxTurns: number; scripts: boolean; cancelled?: SharedArrayBuffer; streamResults?: boolean }
   | { type: "run"; batch: number; tasks: Task[] }
   | { type: "drop"; batch: number };
-export type BuildWorkerReply = { batch: number; results: [deck: number, order: number, sample: number, result: FightSampleResult][] } | { batch: number; error: string };
+export type BuildWorkerReply = { batch: number; results: [deck: number, order: number, sample: number, result: FightSampleResult][]; partial?: boolean } | { batch: number; error: string };
 
 /**
  * Worker threads for deck runs. Keep one for the whole game run (its workers start on the first deck-building question)
@@ -259,9 +259,11 @@ export class BuildSimPool implements DeckSimRunner {
             return;
           }
           diagnostics.firstReplyMs ??= Math.round(performance.now() - diagnosticStart);
-          diagnostics.chunksCompleted += 1;
           diagnostics.outcomesCompleted += reply.results.length;
           for (const [deck, order, i, result] of reply.results) outcomes[deck]![order]![i] = result;
+          // A completed sample is usable before the rest of its block finishes.
+          if (reply.partial) return;
+          diagnostics.chunksCompleted += 1;
           pending -= 1;
           if (pending === 0) finish();
           else give(worker);
@@ -270,7 +272,7 @@ export class BuildSimPool implements DeckSimRunner {
         handlers.set(worker, { message, error });
         worker.on("message", message);
         worker.on("error", error);
-        worker.postMessage({ type: "batch", batch, base, decks, orders: req.orders, maxTurns: req.maxTurns ?? BOSS_SIM_MAX_TURNS, scripts: req.scripts ?? true, cancelled: cancelled.buffer as SharedArrayBuffer } satisfies BuildWorkerRequest);
+        worker.postMessage({ type: "batch", batch, base, decks, orders: req.orders, maxTurns: req.maxTurns ?? BOSS_SIM_MAX_TURNS, scripts: req.scripts ?? true, cancelled: cancelled.buffer as SharedArrayBuffer, streamResults: true } satisfies BuildWorkerRequest);
       }
       // Attach every handler before a zero remaining budget can finish the batch.
       for (const worker of used) give(worker);
