@@ -1,0 +1,31 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-054301/agent
+
+ ❯ tests/brain-codex.test.ts (32 tests | 1 failed | 31 skipped) 259ms
+     × before the first token only BRAIN_CODEX_FIRST_TOKEN_MS (off by default) and the router's timeout apply: long thinking is not a stall 247ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/brain-codex.test.ts > codex runs watched: retries, stalls, timeouts and their trace > before the first token only BRAIN_CODEX_FIRST_TOKEN_MS (off by default) and the router's timeout apply: long thinking is not a stall
+AssertionError: promise rejected "EngineFailure: codex's model catalog has … { …(2) }" instead of resolving
+ ❯ tests/brain-codex.test.ts:357:38
+    355|     const thinking = fakeCodex("thinking", [[...started, { __sleep: 3_…
+    356|     const { engine: e } = tracedEngine(thinking.bin, "thinking", { BRA…
+    357|     await expect(e.decide(request())).resolves.toMatchObject({ answer:…
+       |                                      ^
+    358|     const capped = fakeCodex("first-token", [[...started, { __sleep: 3…
+    359|     const { engine: f, trace } = tracedEngine(capped.bin, "first-token…
+
+Caused by: EngineFailure: codex's model catalog has no gpt-6.1-sol [unavailable] (`codex debug models` exited 0: )
+ ❯ src/brain/engines/codex.ts:859:25
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { kind: 'unavailable', cooldownMs: 1800000 }
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 1 passed (2)
+      Tests  1 failed | 1 passed | 33 skipped (35)
+   Start at  05:54:41
+   Duration  23.53s (transform 13.39s, setup 6.76s, import 9.87s, tests 343ms, environment 0ms)
+

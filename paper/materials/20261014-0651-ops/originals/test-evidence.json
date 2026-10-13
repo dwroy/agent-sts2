@@ -1,0 +1,112 @@
+{
+  "path": {
+    "without_fix": {
+      "exit": 1,
+      "failed": 25,
+      "passed": 0,
+      "log": "path-red.log"
+    },
+    "restored": {
+      "exit": 0,
+      "files": 2,
+      "passed": 49,
+      "log": "path-restored.log"
+    }
+  },
+  "thinking": {
+    "without_fix": {
+      "exit": 1,
+      "failed": 1,
+      "passed": 1,
+      "filtered": 33,
+      "log": "thinking-red.log",
+      "probe": "fixed 3000ms thinking, immediate complete stream, 1500ms native completion delivery gap"
+    },
+    "restored": {
+      "exit": 0,
+      "passed": 1,
+      "filtered": 33,
+      "log": "thinking-restored.log"
+    },
+    "full_fixed_case": {
+      "exit": 0,
+      "passed": 3,
+      "log": "thinking-green.log"
+    },
+    "invalid_first_probe": "thinking-red-sandbox-catalog-failure.log"
+  },
+  "ledger_searches": {
+    "kind": "bug-infra",
+    "texts": [
+      "strategy-no-change",
+      "first token",
+      "4c937f62"
+    ],
+    "matching_items": 0
+  },
+  "unchanged_gameplay": true,
+  "already_fixed_sources_verified": 56,
+  "successful_first_commit_check": {
+    "tsc": 0,
+    "vitest": 0,
+    "files": 380,
+    "cases": 3650,
+    "workers": 2,
+    "retry_limit": 1,
+    "actual_retries": 0,
+    "log": "path-sandbox-bounded-retry.log",
+    "commit": "df5f2e3fac5db56e3c92a241e2b4a170c6962212"
+  },
+  "successful_second_commit_check": {
+    "log": "thinking-sandbox.log",
+    "files": 380,
+    "cases": 3650,
+    "tsc": 0,
+    "vitest": 0,
+    "retries": [],
+    "commit": "a18376cce22eb9e47377d474a85fb864f7c636e2"
+  },
+  "live_merge": {
+    "branch": "codex-fix-silent-20261014-054301",
+    "source": "a18376cce22eb9e47377d474a85fb864f7c636e2",
+    "merged": null,
+    "before": "caa27990d46ac612a54eea03135b7152ccf93e9b",
+    "dirty_before": " M knowledge/characters/silent/boss-damage.json\n M knowledge/characters/silent/construction-opportunities.json\n M knowledge/characters/silent/fight-value-gates.json\n M knowledge/characters/silent/fight-value.json\n M knowledge/characters/silent/monster-records.json\n M knowledge/characters/silent/outcome-stats.json\n M knowledge/characters/silent/room-costs.json\n M knowledge/common/card-upgrades.json\n M knowledge/common/monster-db.json\n M knowledge/common/move-model.json\n M notes/fight-value-backtest-silent.md\n M notes/monster-db-check.md\n",
+    "refreshed_paths": [
+      "knowledge/characters/silent/boss-damage.json",
+      "knowledge/characters/silent/construction-opportunities.json",
+      "knowledge/characters/silent/fight-value-gates.json",
+      "knowledge/characters/silent/fight-value.json",
+      "knowledge/characters/silent/monster-records.json",
+      "knowledge/characters/silent/outcome-stats.json",
+      "knowledge/characters/silent/room-costs.json",
+      "knowledge/common/card-upgrades.json",
+      "knowledge/common/monster-db.json",
+      "knowledge/common/move-model.json"
+    ],
+    "pre_merge": "c1bb0ef724cfe8d599113b8ba76f2c6ebb0c2cfc",
+    "refresh_overlap": [],
+    "preview_exit": 1,
+    "blocked": "merge-tree conflict; no live merge performed",
+    "after": "c1bb0ef724cfe8d599113b8ba76f2c6ebb0c2cfc",
+    "dirty_after": " M notes/fight-value-backtest-silent.md\n M notes/monster-db-check.md\n",
+    "conflict_paths": [
+      "notes/fix-queue-v4.md",
+      "notes/lessons.md",
+      "paper/data/README.md",
+      "paper/data/commits.csv",
+      "paper/data/cost-curve-silent.csv",
+      "paper/data/cost-silent.csv",
+      "paper/data/cost-sources.json",
+      "paper/data/cost-unattributed.csv",
+      "paper/data/decisions_by_label.csv",
+      "paper/data/learning-curve-silent.csv",
+      "paper/data/runs.csv",
+      "paper/data/summary.json",
+      "paper/data/verification.json",
+      "paper/materials/decision-log.md",
+      "paper/materials/learning/ledger.jsonl"
+    ],
+    "source_conflicts": []
+  }
+}

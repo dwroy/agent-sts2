@@ -1,0 +1,455 @@
+{
+  "at": "2026-10-14 07:04:08 CST",
+  "alert": "ops/codex-ops/module-health/LKC9YXKZWTKR-alert.json",
+  "alert_sha256": "ac74602fbc2299f1a1d201f9cd80d745bff81bc2a200a6307e1724ef35d03e43",
+  "run": "LKC9YXKZWTKR",
+  "scope": "Service availability only; sample threshold, simulator validity and game policy unchanged.",
+  "coverage_bounds_and_partial_scan_flags_preserved": {
+    "decisions_complete": true,
+    "decisions": {
+      "path": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+      "start": 1278020000,
+      "end": 1311562305,
+      "complete": false,
+      "malformed": 0,
+      "first_ts": "2026-10-13T18:17:54.469Z"
+    },
+    "brain": {
+      "path": "/home/dw/Projects/agent-sts2/logs/brain.jsonl",
+      "start": 454216620,
+      "end": 487755643,
+      "complete": false,
+      "malformed": 1,
+      "first_ts": "2026-10-12T22:50:54.192Z"
+    },
+    "config": {
+      "path": "/home/dw/Projects/agent-sts2/logs/run-config.jsonl",
+      "start": 0,
+      "end": 1645483,
+      "complete": true,
+      "malformed": 0,
+      "first_ts": "2026-09-30T00:10:45.685Z"
+    }
+  },
+  "complete_as_reported": true,
+  "b3": {
+    "attempts": 26,
+    "skipped": 1,
+    "produced_dpr": 16,
+    "coverage": 0.6153846153846154,
+    "failures": {
+      "below_minimum_samples": 6
+    },
+    "unsupported": 4,
+    "applicable_attempts": 22,
+    "unsupported_only": 4,
+    "candidates": {
+      "observed": 159,
+      "unsupported": 28,
+      "with_dpr": 91,
+      "missing_dpr": 40
+    },
+    "applicable_coverage": 0.7272727272727273,
+    "longest_failure_streak": 4,
+    "trailing_failure_streak": 4,
+    "paired_samples_min": 85,
+    "ms_max": 11300
+  },
+  "brain": {
+    "observed_questions": 27,
+    "questions_with_dpr": 16,
+    "accepted_with_dpr": 16,
+    "decision_use": "unknown; delivery is not evidence of reasoning or a fixed DPR weight"
+  },
+  "failure_rows": [
+    {
+      "source": {
+        "offset": 1310026531,
+        "length": 43453,
+        "sha256": "7889fd67f2cc9c2494ff80329e6fab15c91e0d4881e3df6012cc3b1274d1ea3a"
+      },
+      "raw_SHA_verified": true,
+      "floor": 19,
+      "label": "reward/card",
+      "paired_samples": 214,
+      "complete_outcomes": 1106,
+      "comparison": {
+        "samples": 214,
+        "elapsedMs": 8233,
+        "timedOut": true,
+        "workers": 24,
+        "deadlineMs": 8231.865122999996,
+        "pool": {
+          "queueMs": 0,
+          "coldStart": false,
+          "preparationMs": 2,
+          "firstReplyMs": 131,
+          "chunksPlanned": 625,
+          "chunksDispatched": 152,
+          "chunksCompleted": 128,
+          "outcomesCompleted": 1106
+        }
+      },
+      "order_search": {
+        "samples": 85,
+        "elapsedMs": 2745,
+        "timedOut": true,
+        "workers": 24,
+        "deadlineMs": 2745.0785212499904,
+        "pool": {
+          "queueMs": 0,
+          "coldStart": true,
+          "preparationMs": 13,
+          "firstReplyMs": 571,
+          "chunksPlanned": 39,
+          "chunksDispatched": 39,
+          "chunksCompleted": 25,
+          "outcomesCompleted": 264
+        }
+      },
+      "available_cpus": 32,
+      "load_observed": [
+        24.68,
+        21.01,
+        24.23
+      ],
+      "overall_sim_ms": 11052,
+      "missing_candidates": 5
+    },
+    {
+      "source": {
+        "offset": 1310173629,
+        "length": 75870,
+        "sha256": "50d9c8ea353a4b5be7e17884d9a64fb0bb50878148e77620aa83cd8c7b004069"
+      },
+      "raw_SHA_verified": true,
+      "floor": 24,
+      "label": "rest/plan",
+      "paired_samples": 158,
+      "complete_outcomes": 1769,
+      "comparison": {
+        "samples": 158,
+        "elapsedMs": 9334,
+        "timedOut": true,
+        "workers": 24,
+        "deadlineMs": 9333.73095199978,
+        "pool": {
+          "queueMs": 0,
+          "coldStart": false,
+          "preparationMs": 4,
+          "firstReplyMs": 99,
+          "chunksPlanned": 1375,
+          "chunksDispatched": 234,
+          "chunksCompleted": 210,
+          "outcomesCompleted": 1769
+        }
+      },
+      "order_search": {
+        "samples": 100,
+        "elapsedMs": 1645,
+        "timedOut": false,
+        "workers": 24,
+        "deadlineMs": 2744.9277667499846,
+        "pool": {
+          "queueMs": 0,
+          "coldStart": false,
+          "preparationMs": 0,
+          "firstReplyMs": 71,
+          "chunksPlanned": 39,
+          "chunksDispatched": 39,
+          "chunksCompleted": 39,
+          "outcomesCompleted": 300
+        }
+      },
+      "available_cpus": 32,
+      "load_observed": [
+        40.75,
+        28.91,
+        26.64
+      ],
+      "overall_sim_ms": 11120,
+      "missing_candidates": 10
+    },
+    {
+      "source": {
+        "offset": 1310797802,
+        "length": 44006,
+        "sha256": "b7900d2937640808fdee700c30c4014177ebe17c309da8e8493af3c570edf9ec"
+      },
+      "raw_SHA_verified": true,
+      "floor": 27,
+      "label": "reward/card",
+      "paired_samples": 296,
+      "complete_outcomes": 1512,
+      "comparison": {
+        "samples": 296,
+        "elapsedMs": 8581,
+        "timedOut": true,
+        "workers": 24,
+        "deadlineMs": 8580.759991000174,
+        "pool": {
+          "queueMs": 0,
+          "coldStart": false,
+          "preparationMs": 0,
+          "firstReplyMs": 35,
+          "chunksPlanned": 625,
+          "chunksDispatched": 201,
+          "chunksCompleted": 177,
+          "outcomesCompleted": 1512
+        }
+      },
+      "order_search": {
+        "samples": 100,
+        "elapsedMs": 2397,
+        "timedOut": false,
+        "workers": 24,
+        "deadlineMs": 2744.6647667500074,
+        "pool": {
+          "queueMs": 0,
+          "coldStart": false,
+          "preparationMs": 0,
+          "firstReplyMs": 82,
+          "chunksPlanned": 39,
+          "chunksDispatched": 39,
+          "chunksCompleted": 39,
+          "outcomesCompleted": 300
+        }
+      },
+      "available_cpus": 32,
+      "load_observed": [
+        19.11,
+        24.75,
+        25.62
+      ],
+      "overall_sim_ms": 11070,
+      "missing_candidates": 5
+    },
+    {
+      "source": {
+        "offset": 1310844912,
+        "length": 80771,
+        "sha256": "ec9ca82412d99188cf986e561f64f43365016a5bff9dc67b5075db56e0958bdf"
+      },
+      "raw_SHA_verified": true,
+      "floor": 28,
+      "label": "rest/plan",
+      "paired_samples": 85,
+      "complete_outcomes": 1088,
+      "comparison": {
+        "samples": 85,
+        "elapsedMs": 8222,
+        "timedOut": true,
+        "workers": 24,
+        "deadlineMs": 8221.97063100012,
+        "pool": {
+          "queueMs": 0,
+          "coldStart": false,
+          "preparationMs": 4,
+          "firstReplyMs": 121,
+          "chunksPlanned": 1500,
+          "chunksDispatched": 150,
+          "chunksCompleted": 126,
+          "outcomesCompleted": 1088
+        }
+      },
+      "order_search": {
+        "samples": 82,
+        "elapsedMs": 2741,
+        "timedOut": true,
+        "workers": 24,
+        "deadlineMs": 2741.10809075,
+        "pool": {
+          "queueMs": 0,
+          "coldStart": false,
+          "preparationMs": 0,
+          "firstReplyMs": 109,
+          "chunksPlanned": 39,
+          "chunksDispatched": 39,
+          "chunksCompleted": 27,
+          "outcomesCompleted": 273
+        }
+      },
+      "available_cpus": 32,
+      "load_observed": [
+        33.67,
+        28.3,
+        26.85
+      ],
+      "overall_sim_ms": 11091,
+      "missing_candidates": 11
+    },
+    {
+      "source": {
+        "offset": 1311166235,
+        "length": 35492,
+        "sha256": "75b6a4884ef43d34cb253685c727e527faa1dc13180dc64b507e04bad1230e16"
+      },
+      "raw_SHA_verified": true,
+      "floor": 29,
+      "label": "reward/card",
+      "paired_samples": 251,
+      "complete_outcomes": 1044,
+      "comparison": {
+        "samples": 251,
+        "elapsedMs": 8224,
+        "timedOut": true,
+        "workers": 24,
+        "deadlineMs": 8224.206381000113,
+        "pool": {
+          "queueMs": 0,
+          "coldStart": false,
+          "preparationMs": 1,
+          "firstReplyMs": 69,
+          "chunksPlanned": 500,
+          "chunksDispatched": 140,
+          "chunksCompleted": 116,
+          "outcomesCompleted": 1044
+        }
+      },
+      "order_search": {
+        "samples": 91,
+        "elapsedMs": 2744,
+        "timedOut": true,
+        "workers": 24,
+        "deadlineMs": 2742.621702000033,
+        "pool": {
+          "queueMs": 0,
+          "coldStart": false,
+          "preparationMs": 0,
+          "firstReplyMs": 75,
+          "chunksPlanned": 39,
+          "chunksDispatched": 39,
+          "chunksCompleted": 28,
+          "outcomesCompleted": 278
+        }
+      },
+      "available_cpus": 32,
+      "load_observed": [
+        31.17,
+        30.87,
+        28.08
+      ],
+      "overall_sim_ms": 11065,
+      "missing_candidates": 4
+    },
+    {
+      "source": {
+        "offset": 1311516020,
+        "length": 41884,
+        "sha256": "2843e50450f5a3ed700b60f75d5f7e8c2092353aa723089ff19232ac16eaa956"
+      },
+      "raw_SHA_verified": true,
+      "floor": 30,
+      "label": "reward/card",
+      "paired_samples": 225,
+      "complete_outcomes": 1151,
+      "comparison": {
+        "samples": 225,
+        "elapsedMs": 8234,
+        "timedOut": true,
+        "workers": 24,
+        "deadlineMs": 8234.026868999936,
+        "pool": {
+          "queueMs": 0,
+          "coldStart": false,
+          "preparationMs": 1,
+          "firstReplyMs": 126,
+          "chunksPlanned": 625,
+          "chunksDispatched": 159,
+          "chunksCompleted": 135,
+          "outcomesCompleted": 1151
+        }
+      },
+      "order_search": {
+        "samples": 95,
+        "elapsedMs": 2745,
+        "timedOut": true,
+        "workers": 24,
+        "deadlineMs": 2745.2140110000037,
+        "pool": {
+          "queueMs": 0,
+          "coldStart": false,
+          "preparationMs": 0,
+          "firstReplyMs": 116,
+          "chunksPlanned": 39,
+          "chunksDispatched": 39,
+          "chunksCompleted": 30,
+          "outcomesCompleted": 289
+        }
+      },
+      "available_cpus": 32,
+      "load_observed": [
+        22.54,
+        28.35,
+        27.57
+      ],
+      "overall_sim_ms": 11067,
+      "missing_candidates": 5
+    }
+  ],
+  "run_config_original_headers": [
+    {
+      "source": {
+        "offset": 1640459,
+        "length": 5024,
+        "sha256": "f52c75b5a72e2ff328c9f98ae61163d1768966034333f3935a02e6b9765c274c"
+      },
+      "observed_fields": {
+        "run_id": "LKC9YXKZWTKR",
+        "ts": "2026-10-13T22:09:58.633Z",
+        "code": {
+          "commit": "caa27990d46ac612a54eea03135b7152ccf93e9b",
+          "code": "caa2799+dirty",
+          "dirty": true,
+          "dirty_files": [
+            "knowledge/characters/silent/boss-damage.json",
+            "knowledge/characters/silent/construction-opportunities.json",
+            "knowledge/characters/silent/monster-records.json",
+            "knowledge/characters/silent/outcome-stats.json",
+            "knowledge/characters/silent/room-costs.json",
+            "knowledge/common/card-upgrades.json",
+            "knowledge/common/monster-db.json",
+            "knowledge/common/move-model.json",
+            "notes/fight-value-backtest-silent.md",
+            "notes/monster-db-check.md"
+          ],
+          "branch": "live",
+          "worktree": "live"
+        },
+        "character": "SILENT",
+        "ascension": 10,
+        "target_ascension": 11
+      },
+      "boss_sim_enabled": null
+    }
+  ],
+  "current_owner_snapshot": [
+    {
+      "batch": "20261014-054301-fix-batch",
+      "state": "failed",
+      "task": "fix-batch",
+      "pid": 2451982,
+      "worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-054301"
+    },
+    {
+      "batch": "20261014-061302-fix-batch",
+      "state": "running",
+      "task": "fix-batch",
+      "pid": 2607896,
+      "worktree": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration"
+    }
+  ],
+  "decision": "Keep the existing v5-dpr-health-20261013 performance parent open and append these verified diagnostic rows. The 054301 source only fixes test fixtures; it does not resolve DPR supply. The active 061302 B4/calibration owner retains its original scope. No duplicate learning or new performance owner is created.",
+  "limits": {
+    "minimum_samples": 300,
+    "requested": 1000,
+    "question_ms": 11000,
+    "workers": 24
+  },
+  "observed_outcome_counts_not_paired_samples": true,
+  "candidate_missing_counts_not_question_count": true,
+  "delivery_not_reasoning_or_win_rate": true,
+  "cpu_load_not_causal_diagnosis": true,
+  "no_duplicate_research_or_restart_or_threshold_reduction": true,
+  "original_DPR_performance_parent_not_closed": true
+}

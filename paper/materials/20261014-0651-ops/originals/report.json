@@ -1,0 +1,57 @@
+{
+  "task": "fix-batch",
+  "base": "2f739c28ca61513bd0baf14a2e84867ed99c2f3d",
+  "fixes": [
+    {
+      "item": "R335 路径拒绝夹具重复同步 Python 启动及退出诊断缺口",
+      "commit": "df5f2e3fac5db56e3c92a241e2b4a170c6962212",
+      "test": "agent/tests/strategy-path-startup.test.ts",
+      "fails_without_fix": true
+    },
+    {
+      "item": "R335 首 token 前长思考夹具依赖宿主真实计时与进程调度",
+      "commit": "a18376cce22eb9e47377d474a85fb864f7c636e2",
+      "test": "agent/tests/brain-codex-watchdog.test.ts",
+      "fails_without_fix": true
+    }
+  ],
+  "skipped": [
+    {
+      "item": "v5-dpr-health-20261013 暖池低配对样本与完整 DPR 性能父项",
+      "reason": "证据不足：已有取消、期限、逐完整样本回传子项；没有新的固定执行反例可证明自然样本损失量或供给/胜率。保留 300/1000/11000ms/24 线程。"
+    },
+    {
+      "item": "sandbox-glob-startup-race 上游目录生命周期与自然恢复",
+      "reason": "证据不足：已有有界恢复和复盘租约修复；具体删除者、无租约现场与自然恢复缺口仍未知，不放宽 deny 或租约。"
+    },
+    {
+      "item": "core-build-notify-222802-rc2 旧通知安全恢复",
+      "reason": "证据不足：诊断已修，旧通知是否送达未知，不重放外部消息。"
+    },
+    {
+      "item": "调度公平性核查",
+      "reason": "证据不足：原插入序观察不证明永久饥饿；保留原派发、seen_runs 与完成局时序链。"
+    },
+    {
+      "item": "named-card-facts-transport 其他入口与 P1/P2 消费者",
+      "reason": "策略类/独立功能：事件漏传子项已修，宽父项沿原具名卡任务接续。"
+    },
+    {
+      "item": "出牌、药水、SL、终局、路线、休息及机制宽提案（含 silent-0446/0459）",
+      "reason": "策略类：保留原独立 strategy-proposal、证据和 owner，不重复提案/派发或补游戏知识。"
+    },
+    {
+      "item": "缓存实测、B4/B5 校准、量化/核心、漏斗归因和统一资源价值父要求",
+      "reason": "策略类/独立功能：保留原 owner 和缺证范围，本批不调用模型或网络，不将上线子项当父成果完成。"
+    }
+  ],
+  "merged": null,
+  "tests": {
+    "tsc": 0,
+    "vitest": 0,
+    "cases": 3650
+  },
+  "code_proposals": [],
+  "implementation_domains": [],
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-054301/learner/runs/20261014-054324-fix-batch/report.md"
+}

@@ -1,0 +1,39 @@
+{
+  "pending_path": "ops/codex-ops/pending-integrations/20261014-054301-s2-strategy-proposal.json",
+  "original_pending_sha256": "c6408e89546bed775794922b756d18b502e4d4c96ac864d66dbc95bee5a57661",
+  "original_thread": "01a13738-9390-7d51-a912-4d002ca54431",
+  "original_worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261014-054301-s2",
+  "original_status": "uncommitted_source_full_test_gate_failed_then_exact_integration_required",
+  "continuation": {
+    "at": "2026-10-14 07:05:52 CST",
+    "fixture_source": "a18376cce22eb9e47377d474a85fb864f7c636e2",
+    "fixture_paths": {
+      "agent/tests/brain-codex-watchdog.test.ts": "a7d7d260cd675abddf3096cacf131a044f55c80b0132990dcf2f089d51229495",
+      "agent/tests/brain-codex.test.ts": "36b6ab8ae87bf19dd0544199afe2747516e21d5de17a092b96f8ed39bdb31fb9",
+      "agent/tests/strategy-no-change-path.test.ts": "c3579d422a4b3d70397c418e9086a5607636b68aa45b5cc1ec9de7713fccd844",
+      "agent/tests/strategy-path-startup.test.ts": "a68ade85ae91806c6b3cc613022536a556a48679b64370cdfe8362c3427ed871"
+    },
+    "fixture_live_commit": "30e5cd77bdc740deb3066f0703a766fb6fc8cee2",
+    "fixture_live_tree": "6989a33893b240a44e3fcd4c9ce16164d25d64c5",
+    "status": "original 054301 fixture host full check running; learned source still unpublished",
+    "next": "After the original fixture check completes, continue the original source checkout/thread under its lease and run its complete changed-input gate including paths. Only actual success permits the original learned source commit and exact publication.",
+    "original_three_staged_source_sha_verified": [
+      {
+        "path": "agent/src/reflex/card-model.ts",
+        "sha256": "df10de26c8e9d39e41b149bc4c34e43bb2ebd10c74ab8cd4bbf3d7ce8eb13021",
+        "staged_equals_worktree": true
+      },
+      {
+        "path": "agent/tests/silent-snakebite-preview.test.ts",
+        "sha256": "4acf83d84936b5add263c27a7df3c48f13314b5dbd0629a0b44968afb14e3018",
+        "staged_equals_worktree": true
+      },
+      {
+        "path": "agent/tests/silent-snakebite-preview-evidence.json",
+        "sha256": "3e607c7a85cc4c46d0e767673ead6beb9857c6944895e2315d6d81866b4ef14f",
+        "staged_equals_worktree": true
+      }
+    ],
+    "no_game_source_commit_or_release_or_new_learning": true
+  }
+}
