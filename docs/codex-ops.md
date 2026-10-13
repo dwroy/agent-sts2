@@ -176,3 +176,7 @@ Roy 2026-10-09 授权的全历史核心构筑学习使用 `silent-historical-cor
 | agent/tests/ops-herdr.test.ts、tests/fixtures-herdr/fake-herdr.py | TUI 参数、读屏和会话文件、托管脚本、herdr 叫醒、托管的学习者批次（假 herdr） |
 
 Roy 2026-10-09 授权策略提案先开两路：一个正常派发回调可领取最多两批，每批至多10条，先排除活批已领取的proposal_ids；第二批用实际派发时间戳加 `-s2` 区分，不伪造未来时间。每批独立工作树和租约，任务显式带batch只读自身领取清单；重复任务key不并发重派，补链同一请求不重复。`code_proposal` 回执保持首批接口，完整批次在 learn.json。ops/既有调度器派发，watcher不启动学习；live合入/完整检查仍用原锁串行。新树只连接已有node_modules和logdb-venv，不安装依赖。策略并发上限常量STRATEGY_WORKERS=2；降回1只影响新派发，不中断已跑批。
+# 储君独立通道的受限启动动作
+
+`regent-launch-inspect` 只读原登记游戏身份；`regent-launch-solo <manifest-sha256>` 仅启动固定独立 clientId/端口的储君窗口，持久回执防止重复启动。`regent-native-repair` 仅修复本请求已证 API 未加载、没有对局存档的自有启动窗口；核 PID、创建时间、原生路径和 clientId 后停止该 PID，保留新窗口的失败和原生默认设置。`regent-startup-check` 先核自己的 PID/profile 与实际 modded 保存根，仅执行已广告的启动弹窗或打开选角菜单，不选其他角色、不出发、不启动自动游玩。四个动作不接受任意 URL、PID、shell 或游戏参数；不读取凭据或游戏二进制内容，不控制原 Silent。见 `docs/multi-instance.md`。
+
