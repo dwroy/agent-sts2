@@ -1,0 +1,61 @@
+{
+  "at": "2026-10-14 05:57:54 CST",
+  "scheduler_event_at": "2026-10-14 05:56 CST",
+  "batch": "20261014-050124-fix-batch",
+  "manifest_sha256": "e623a2c8822b52e642bdc932e6368bbe981f7ea03c80b5f8656dd82ad0fcc915",
+  "receipt": "ops/codex-ops/learner/20261014-050124-fix-batch.supplement-e623a2c8822b52e642bdc932e6368bbe981f7ea03c80b5f8656dd82ad0fcc915.json",
+  "receipt_sha256": "c05aacf7074552fac37114bfa422276946c357d366bc4a5a7b02eef7f9e57845",
+  "already_handled_commit": "c50a03264b03f08fed5eefe1504b6b3af36875c2",
+  "live": {
+    "commit": "caa27990d46ac612a54eea03135b7152ccf93e9b",
+    "tree": "139f0e3554a9804bdf3b26c8bf1dcb833ed6439d"
+  },
+  "original_full_rc": 1,
+  "supplement_rc": 1,
+  "full_suite": false,
+  "report_sha_readback": [
+    {
+      "name": "tests/ops-stall-recovery.test.ts",
+      "rc": 0,
+      "report_sha256": "76d05178f4c5606152601683998fd22524e0005617874bcfcf19d0af46b0433c",
+      "counts": {
+        "numTotalTests": 7,
+        "numPassedTests": 1,
+        "numFailedTests": 0,
+        "numPendingTests": 6
+      }
+    },
+    {
+      "name": "tests/potion-mc.test.ts",
+      "rc": 0,
+      "report_sha256": "f175b90773da1b7efca773d4a56b9f4b6985872e010362fc14d4b88aa38a76a9",
+      "counts": {
+        "numTotalTests": 17,
+        "numPassedTests": 1,
+        "numFailedTests": 0,
+        "numPendingTests": 16
+      }
+    },
+    {
+      "name": "tests/strategy-research-scheduling.test.ts",
+      "rc": 1,
+      "report_sha256": "e92c719e475086095e0fef677b02de1d803433493e1b6fa230adf7340edeb587",
+      "counts": {
+        "numTotalTests": 1,
+        "numPassedTests": 0,
+        "numFailedTests": 1,
+        "numPendingTests": 0
+      }
+    }
+  ],
+  "original_supplement_log_sha256": "23ac369fe4baae1f79d86d5c4cd3320c33ff7c5420a900846c12a35e0574b3b9",
+  "one_registered_supplement": true,
+  "failed_source_preserved": true,
+  "long_title_case_still_uncovered": true,
+  "existing_fix_owner": {
+    "state": "running",
+    "pid": 2451982,
+    "worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-054301"
+  },
+  "disposition": "Duplicate delivery of the same pinned supplement already committed in the 0548 wake; retain R336 and the original repair queue. No tests repeated, extra learner dispatched, release changed, cleanup of failed evidence, or watcher/Roy notification."
+}
