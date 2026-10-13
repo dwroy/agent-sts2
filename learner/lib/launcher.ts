@@ -29,7 +29,7 @@ import { DEFAULT_CHARACTER, characterKey } from "../../agent/src/knowledge/files
 import { mcpLaunchSpec, type McpLaunchSpec } from "../../agent/src/brain/tools/mcp-launch.js";
 import { checkCodex, type CodexCheck } from "../../agent/src/brain/engines/codex.js";
 import { AUTH_ERROR, refreshCodexAuth } from "../../agent/src/brain/engines/codex-usage.js";
-import { ENGINES, EngineUnavailableError, childEnv, codexChildEnv, codexKeyCheck, withCodexKeys, type KeyCheck, engineBinary, engineCommand, engineDefaults, learnerCodexHome, shellQuote, strippedEnvNames, unavailableMessage, type EngineName, type EngineRequest } from "./engines.js";
+import { ENGINES, EngineUnavailableError, childEnv, codexChildEnv, codexKeyCheck, withCodexKeys, type KeyCheck, engineBinary, engineCommand, engineDefaults, learnerCodexHome, mainCheckout, shellQuote, strippedEnvNames, unavailableMessage, type EngineName, type EngineRequest } from "./engines.js";
 import { SummaryTracker, findRollout, formatSummary, progressLine, rolloutStats } from "./summary.js";
 import { highestAscension, runCharacters } from "./runs.js";
 import { LearnerUsageError, characterBuiltins, loadTask, parseSets, renderTask } from "./task.js";
@@ -375,6 +375,13 @@ export async function main(argv: string[], overrides: Partial<LauncherDeps> = {}
     const character = resolveCharacter(options, deps.env);
     const builtins = { cwd, worktree: cwd, project_root: deps.projectRoot, logs_dir: join(deps.projectRoot, "logs"), scratch, task: spec.name, ...characterBuiltins(character) };
     const sets = parseSets(options.sets);
+    // A lane rooted in a worktree has its own baseline and merge target. Explicit task sets still win.
+    if (spec.defaults.base_branch !== undefined && deps.env.LEARNER_BASE_REF && sets.base_branch === undefined) {
+      sets.base_branch = deps.env.LEARNER_BASE_REF;
+    }
+    if (spec.defaults.merge_dir !== undefined && deps.env.STS2_LIVE && sets.merge_dir === undefined) {
+      sets.merge_dir = resolve(deps.env.STS2_LIVE);
+    }
     checkRunCharacters(sets, character, join(deps.projectRoot, "logs", "runs.jsonl"));
     const rendered = renderTask(spec, sets, builtins);
     const model = options.model ?? spec.models[options.engine] ?? engineDefaults(options.engine).model;
@@ -594,7 +601,7 @@ export async function main(argv: string[], overrides: Partial<LauncherDeps> = {}
  * directory's git dir read-only unless granted exactly (2026-10-04 probe with `codex sandbox -P learner`).
  */
 export function learnerGitRules(projectRoot: string, cwd?: string): Record<string, "read" | "write" | "none"> {
-  const git = join(projectRoot, ".git");
+  const git = join(mainCheckout(projectRoot), ".git");
   const rules: Record<string, "read" | "write" | "none"> = { [git]: "write", [join(git, "hooks")]: "read", [join(git, "config")]: "read" };
   if (cwd) {
     try {

@@ -96,7 +96,7 @@ def validate(batch_id, batch, root, out_dir, manifest_sha):
     require(digest(log_raw) == original["log_sha256"], "original log SHA mismatch")
     observed = coverage(log_raw)
     require(observed == original["coverage"] and (observed["passed"] or observed["failed"]), "original coverage mismatch or unreadable")
-    live = root / ".worktrees/live"
+    live = Path(os.environ.get("STS2_LIVE", str(root / ".worktrees/live")))
     pin = manifest["live"]
     require(set(pin) == {"commit", "tree"} and all(isinstance(v, str) and SHA.fullmatch(v) for v in pin.values()), "invalid current source/tree")
     require(git(live, "rev-parse", "HEAD", "HEAD^{tree}").splitlines() == [pin["commit"], pin["tree"]], "stale live source/tree")
@@ -207,7 +207,7 @@ def run(batch_id, batch, root, out_dir, manifest_sha, enqueue, inbox):
             with receipt_path.open("x", encoding="utf8") as handle:
                 json.dump(receipt, handle, ensure_ascii=False, indent=2)
             log_path = stem.with_name(stem.name + ".log")
-            live = Path(root, ".worktrees/live")
+            live = Path(os.environ.get("STS2_LIVE", str(Path(root, ".worktrees/live"))))
             node = str(Path.home() / ".local/node/bin/node")
             commands = [("tsc", ["nice", "-n", "19", node, "node_modules/typescript/bin/tsc", "-p", "tsconfig.json", "--noEmit"], None)]
             for index, item in enumerate(manifest["selection"]):

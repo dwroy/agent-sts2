@@ -27,6 +27,10 @@ sha=$(git rev-parse --short HEAD)$(git diff --quiet HEAD || echo "+dirty")
 ts=$(date +%Y%m%d-%H%M%S)
 mkdir -p "$LOGS/console"
 out="$LOGS/console/$ts-$sha.log"
+mod_url="${STS2_BASE_URL:-http://127.0.0.1:8080}"
+if [ -n "${STS2_EXPECTED_PROCESS_ID:-}${STS2_EXPECTED_NATIVE_PROFILE_ID:-}" ]; then
+  python3 "$OPS/instance_gate.py" "$mod_url" || exit 78
+fi
 touch "$out"
 # Follow the current console by name so the terminal viewer switches at each run boundary.
 console_link="$LOGS/console/.current-$$"
@@ -34,9 +38,9 @@ ln -s "$(basename "$out")" "$console_link"
 mv -Tf "$console_link" "$LOGS/console/current"
 echo "$out"
 # A finished run leaves the game on its summary screen, which the loop reads as "run already ended".
-screen=$(curl -s -m 5 http://127.0.0.1:8080/state | python3 -c 'import json,sys; print(json.load(sys.stdin)["data"]["screen"])' 2>/dev/null)
+screen=$(curl -s -m 5 "$mod_url/state" | python3 -c 'import json,sys; print(json.load(sys.stdin)["data"]["screen"])' 2>/dev/null)
 if [ "$screen" = "GAME_OVER" ]; then
-  curl -s -m 10 -X POST http://127.0.0.1:8080/action -H 'content-type: application/json' -d '{"action":"return_to_main_menu"}' >/dev/null
+  curl -s -m 10 -X POST "$mod_url/action" -H 'content-type: application/json' -d '{"action":"return_to_main_menu"}' >/dev/null
   sleep 3
 fi
 # Ablation (Dai 2026-09-27, A8): ops/ablation.json {"arms": [...], "i": n, "total": N} rotates the arms

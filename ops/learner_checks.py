@@ -17,8 +17,12 @@ FULL_CHECK_COMMAND = 'export PATH="$HOME/.local/node/bin:$PATH"; nice -n 19 npx 
 
 # Compare executable sources and their validation inputs, not refreshed knowledge or ops records.
 SOURCE_PATHS = ["agent/src", "agent/tools", "agent/tests", "agent/package*.json", "agent/tsconfig*.json",
-                "agent/vitest*", "learner/*.ts", "learner/*.py", "learner/tasks", "ops/*.sh", "ops/*.py",
+                "agent/vitest*", "learner/*.ts", "learner/*.py", "learner/lib", "learner/tasks", "ops/*.sh", "ops/*.py",
                 "ops/codex", "eval/*.py", "eval/*.ts", "eval/cost-config.json", "knowledge/builders"]
+
+
+def live_dir(root):
+    return os.environ.get("STS2_LIVE", os.path.join(root, ".worktrees", "live"))
 
 
 def read_report(path):
@@ -68,7 +72,7 @@ def verify_empty_fix(report, batch, root):
     try:
         status = git(worktree, "status", "--porcelain", "--untracked-files=all")
         head = git(worktree, "rev-parse", "HEAD")
-        live = git(os.path.join(root, ".worktrees", "live"), "rev-parse", "HEAD")
+        live = git(live_dir(root), "rev-parse", "HEAD")
         if status.returncode or status.stdout.strip() or head.returncode or live.returncode:
             return None
         head, live = head.stdout.strip(), live.stdout.strip()
@@ -87,7 +91,7 @@ def verify_empty_fix(report, batch, root):
 def finish_write_batch(batch_id, batch, rc, root, out_dir, enqueue, inbox, *, run_checks=True):
     report = read_report(os.path.join(out_dir, batch_id + ".out"))
     merged = report.get("merged")
-    live = os.path.join(root, ".worktrees", "live")
+    live = live_dir(root)
     verified = False
     if isinstance(merged, str) and re.fullmatch(r"[0-9a-f]{7,40}", merged):
         verified = subprocess.run(["git", "-C", live, "merge-base", "--is-ancestor", merged, "HEAD"],
@@ -238,7 +242,7 @@ def recheck_write_batch(batch_id, batch, root, out_dir, enqueue, inbox, *, conti
         return 2
     if report_proof:
         commits.append(report["published_commit"])
-    live = os.path.join(root, ".worktrees", "live")
+    live = live_dir(root)
     with open(os.path.join(root, "ops", "live-merge.lock"), "a", encoding="utf8") as lock:
         fcntl.flock(lock, fcntl.LOCK_EX)
         for commit in set(commits):

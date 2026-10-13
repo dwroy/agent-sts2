@@ -570,7 +570,7 @@ def main():
     parser.add_argument("command", choices=["tick", "dispatch", "finish", "status", "write", "request-merge", "recheck", "boss-check", "core-notify"])
     parser.add_argument("--task", choices=["experience-update", "fix-batch", "strategy-proposal"], default="fix-batch")
     parser.add_argument("--branch", default="")
-    parser.add_argument("--character", default="silent")
+    parser.add_argument("--character", default=character_key(os.environ.get("CHARACTER")) or "silent")
     parser.add_argument("--runs", default="")
     parser.add_argument("--request", default="")
     parser.add_argument("--batch", default="")

@@ -2,6 +2,7 @@
 import importlib.util
 import hashlib
 import json
+import os
 from pathlib import Path
 import re
 import subprocess
@@ -9,7 +10,7 @@ import time
 
 # Match the completion source comparison, also protecting all character knowledge.
 RESEARCH_SOURCE_PATHS = ['agent/src','agent/tools','agent/tests','agent/package*.json','agent/tsconfig*.json',
-    'agent/vitest*','learner/*.ts','learner/*.py','learner/tasks','ops/*.sh','ops/*.py','ops/codex',
+    'agent/vitest*','learner/*.ts','learner/*.py','learner/lib','learner/tasks','ops/*.sh','ops/*.py','ops/codex',
     'eval/*.py','eval/*.ts','eval/cost-config.json','knowledge/builders','knowledge','ops/tests','tools']
 
 
@@ -172,7 +173,8 @@ def unassigned_proof(report,batch,root,items,rows,lib):
                 and subprocess.run(['git','-C',str(cwd),'merge-base','--is-ancestor',source,target],
                     stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL).returncode==0)
     merged=report.get('merged')
-    if not ancestor(merged,'HEAD',project/'.worktrees/live'):
+    live = Path(os.environ.get('STS2_LIVE', str(project/'.worktrees/live')))
+    if not ancestor(merged,'HEAD',live):
         raise ValueError('unassigned report lacks an actual live merge')
     for row in rows:
         item=items.get(row['id'])
@@ -189,7 +191,7 @@ def unassigned_proof(report,batch,root,items,rows,lib):
         if row['state'] not in ('implemented','duplicate'):
             raise ValueError('unassigned resolution requires a published source disposition')
         if (not any(f.get('proposal_id')==row['id'] and f.get('commit')==commit for f in fixes)
-                or not ancestor(commit,merged,project/'.worktrees/live') or not ancestor(commit,'HEAD',tree)):
+                or not ancestor(commit,merged,live) or not ancestor(commit,'HEAD',tree)):
             raise ValueError('unassigned disposition is not bound to its reported live source fix')
         if item.get('state') in ('implemented','duplicate') and item.get('commit',item.get('implemented_commit'))!=commit:
             raise ValueError('unassigned disposition conflicts with an existing resolution')
@@ -338,7 +340,7 @@ def resolve(report,batch,root,scripts):
     for row in rows:
         if row['state'] in ('implemented','duplicate'):
             commit=row.get('commit','')
-            if not isinstance(commit,str) or not re.fullmatch('[0-9a-f]{7,40}',commit) or subprocess.run(['git','-C',str(Path(root,'.worktrees/live')),'merge-base','--is-ancestor',commit,'HEAD'],stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL).returncode:
+            if not isinstance(commit,str) or not re.fullmatch('[0-9a-f]{7,40}',commit) or subprocess.run(['git','-C',os.environ.get('STS2_LIVE',str(Path(root,'.worktrees/live'))),'merge-base','--is-ancestor',commit,'HEAD'],stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL).returncode:
                 raise ValueError('implemented/duplicate proposal lacks an actual live source commit')
     # All proofs pass before appending any resolution; no partial successful batch is fabricated.
     for row in rows:

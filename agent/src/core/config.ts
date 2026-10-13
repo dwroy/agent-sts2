@@ -4,6 +4,7 @@ import { delimiter, dirname, isAbsolute, join } from "node:path";
 import type { Effort, EngineName } from "../brain/types.js";
 import { fromRoot } from "./paths.js";
 import { characterKey, DEFAULT_CHARACTER, KNOWLEDGE_DIR, knowledgeFile } from "../knowledge/files.js";
+import type { InstanceBinding } from "../hand/mod/instance.js";
 /**
  * Configuration: environment variables overridden by CLI flags (PLAN.md §9).
  *
@@ -20,6 +21,7 @@ export interface Sts2Config {
   baseUrl: string;
   portScan: { from: number; to: number };
   timeoutMs: number;
+  instance?: InstanceBinding | undefined;
 }
 
 export interface JevConfig {
@@ -1034,6 +1036,12 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env, overrides: Conf
     problems,
   );
   const portScan = parsePortRange(readEnv(env, "STS2_PORT_SCAN") ?? DEFAULTS.sts2PortScan, "STS2_PORT_SCAN", problems);
+  const processIdRaw = readEnv(env, "STS2_EXPECTED_PROCESS_ID");
+  const processId = processIdRaw === null ? null : parseInteger(processIdRaw, "STS2_EXPECTED_PROCESS_ID", problems, { min: 1, max: 2_147_483_647 });
+  const nativeProfileId = readEnv(env, "STS2_EXPECTED_NATIVE_PROFILE_ID");
+  if (nativeProfileId !== null && processId === null) {
+    problems.push({ field: "STS2_EXPECTED_NATIVE_PROFILE_ID", message: "a profile binding also requires STS2_EXPECTED_PROCESS_ID" });
+  }
   const sts2TimeoutMs = parseInteger(
     readEnv(env, "STS2_TIMEOUT_MS") ?? String(DEFAULTS.sts2TimeoutMs),
     "STS2_TIMEOUT_MS",
@@ -1300,7 +1308,9 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env, overrides: Conf
   if (problems.length > 0) throw new ConfigError(problems);
 
   return {
-    sts2: { baseUrl, portScan, timeoutMs: sts2TimeoutMs },
+    sts2: { baseUrl, portScan, timeoutMs: sts2TimeoutMs,
+      ...(processId === null ? {} : { instance: { processId, ...(nativeProfileId === null ? {} : { nativeProfileId }) } }),
+    },
     jev: {
       apiKey: jevApiKey,
       baseUrl: jevBaseUrl,

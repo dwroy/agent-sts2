@@ -29,7 +29,7 @@ set -u
 ROOT="${CODEX_OPS_ROOT:-$ROOT}"
 DIR="${CODEX_OPS_DIR:-$ROOT/ops/codex-ops}"
 export PATH="$HOME/.local/node/bin:/usr/local/bin:/usr/bin:/bin:${PATH:-}"
-MOD="${CODEX_OPS_MOD_URL:-http://127.0.0.1:8080}"
+MOD="${CODEX_OPS_MOD_URL:-${STS2_BASE_URL:-http://127.0.0.1:8080}}"
 WIN=/mnt/c/Windows/System32
 STEAM_URI="steam://rungameid/2868840"
 TASK=sts2-launch-desktop
@@ -45,12 +45,10 @@ esac
 # Our processes (never this script): pid + command line.
 ours() {
   pgrep -af 'ops/autoplay\.sh|ops/stop-after[^ ]*\.sh|index\.ts pla[y]|ops/report\.py|knowledge/builders/|learner/run\.ts|codex-ops-learner\.sh|ops/codex/main\.ts' 2>/dev/null \
-    | grep -v -E '^[0-9]+ (pgrep|grep) ' | cut -c1-220
+    | python3 "$OPS/process_scope.py" filter --root "$ROOT" --live "$LIVE" | cut -c1-220
 }
 play_pids() {
-  for p in $(pgrep -x node); do
-    tr '\0' ' ' < "/proc/$p/cmdline" 2>/dev/null | grep -q 'index\.ts pla[y]' && echo "$p"
-  done
+  pgrep -x node | python3 "$OPS/process_scope.py" filter --kind play --root "$ROOT" --live "$LIVE"
 }
 cmdline() { tr '\0' ' ' < "/proc/$1/cmdline" 2>/dev/null; }
 tasklist() { (cd /mnt/c && timeout 30 "$WIN/tasklist.exe" /FO CSV /NH 2>/dev/null | tr -d '\r'); }
@@ -62,6 +60,9 @@ hosting() {
 }
 
 case "$action" in
+  regent-launch-inspect)
+    [ $# -eq 1 ] || exit 2
+    exec nice -n 19 python3 "$OPS/regent-launch-inspect.py" ;;
   report-run)
     [ $# -eq 2 ] && [[ "$arg" =~ ^[0-9A-Z]{12}$ ]] || exit 2
     exec nice -n 19 python3 "$OPS/report_run.py" "$arg" ;;
@@ -99,6 +100,9 @@ case "$action" in
   stall-check)
     exec bash "$ROOT/ops/stall-check.sh" ;;
   mod-state)
+    if [ -n "${STS2_EXPECTED_PROCESS_ID:-}${STS2_EXPECTED_NATIVE_PROFILE_ID:-}" ]; then
+      python3 "$OPS/instance_gate.py" "$MOD" || exit 78
+    fi
     response=$(curl -fs -m 10 -w '\n%{http_code}' "$MOD/state"); rc=$?
     [ $rc -ne 0 ] && { echo "mod unreachable (curl exit $rc)"; exit 1; }
     out="${response%$'\n'*}"; http="${response##*$'\n'}"
@@ -109,7 +113,7 @@ case "$action" in
     mkdir -p "$DIR"
     exec 7> "$DIR/report-run.lock"
     flock -n 7 || { echo "report recovery is running; autoplay waits"; exit 75; }
-    busy=$(pgrep -af 'ops/autoplay\.sh|ops/stop-after[^ ]*\.sh' | grep -v -E '^[0-9]+ (pgrep|grep) ')
+    busy=$(pgrep -af 'ops/autoplay\.sh|ops/stop-after[^ ]*\.sh' | python3 "$OPS/process_scope.py" filter --root "$ROOT" --live "$LIVE")
     play=$(play_pids)
     if [ -n "$busy" ] || [ -n "$play" ]; then
       echo "refused: still running:"; [ -n "$busy" ] && echo "$busy"; [ -n "$play" ] && echo "play PIDs: $play"
@@ -145,9 +149,9 @@ case "$action" in
     ;;
   autoplay-stop)
     pid=$(cat "$DIR/autoplay.pid" 2>/dev/null)
-    if [ -z "$pid" ] || ! cmdline "$pid" | grep -q 'ops/autoplay\.sh'; then
+    if [ -z "$pid" ] || ! python3 "$OPS/process_scope.py" owns "$pid" --kind autoplay --root "$ROOT" --live "$LIVE"; then
       echo "no autoplay started by autoplay-start is running${pid:+ (PID $pid is not ops/autoplay.sh)}; running ones:"
-      pgrep -af 'ops/autoplay\.sh' | grep -v -E '^[0-9]+ (pgrep|grep) ' || echo "(none)"
+      pgrep -af 'ops/autoplay\.sh' | python3 "$OPS/process_scope.py" filter --kind autoplay --root "$ROOT" --live "$LIVE" || echo "(none)"
       exit 1
     fi
     kill "$pid" && echo "stopped autoplay PID $pid" && rm -f "$DIR/autoplay.pid"
@@ -159,6 +163,8 @@ case "$action" in
     line=$(cmdline "$arg")
     [ -n "$line" ] || { echo "no process $arg"; exit 1; }
     [ "$(stat -c %u "/proc/$arg")" = "$(id -u)" ] || { echo "refused: $arg is not ours"; exit 2; }
+    python3 "$OPS/process_scope.py" owns "$arg" --root "$ROOT" --live "$LIVE" \
+      || { echo "refused: $arg belongs to another instance or checkout"; exit 2; }
     echo "$line" | grep -q -E 'ops/autoplay\.sh|ops/stop-after[^ ]*\.sh|index\.ts play|ops/report\.py|learner/run\.ts' \
       || { echo "refused: $arg is not autoplay / stop-after / play / report.py / a learner run: ${line:0:160}"; exit 2; }
     kill "$arg" && echo "sent SIGTERM to $arg (${line:0:120})"
