@@ -1,0 +1,116 @@
+{
+  "at": "2026-10-14 01:54:34 CST",
+  "batch": "20261013-234152-fix-batch",
+  "original_sources": [
+    "15eb85e2934e428c5e299fc4a1aba456d92fd685",
+    "9e6dd82a34fb8c14e012be68fd0b632544f1459f"
+  ],
+  "integration_candidates": [
+    "9850ea38ff10de3fced40dc16ccccdf6e163322f",
+    "1b0f9f9425ed50b81768048d67ac600528ef7bf6"
+  ],
+  "worktree": "/home/dw/Projects/agent-sts2/.worktrees/ops-ack-health-integration-20261014-0101",
+  "plan": "ops/codex-ops/record-staging/20261014-0101/integration-plan.json",
+  "leaf_sha256": {
+    "ops/learning_requests.py": "e604f3c30da942fbb557c07b1a1915093844e8fc84b94b61367252982126410b",
+    "ops/tests/test_ordinary_notice_ack.py": "1c6fb2fb08f5cea54babc05f472a611dd3bbdd2c3f2b651e46282f056739f6df",
+    "agent/tests/ordinary-notice-ack.test.ts": "5b04743e6ad7db59bccf5f1f48f62e5345517f7097912190fa5f7a1a658f8c93",
+    "ops/module_health.py": "8f56d172df0d4f12783bdce170768cfd32d390e2b9fcad88b776e642f364cb57",
+    "agent/tests/module_health_test.py": "88f1174495033785bc322b6b465d2a47d171815f39675d9f7d8be285dab73797",
+    "agent/tests/module-health.test.ts": "ad8ef72591a720884030099f7bdd78c79c7be9175cb593c5488c01a79ec473d2"
+  },
+  "before_sha256": {
+    "ops/learning_requests.py": "813c70bf46a70319344098493be106ca55b8d860fe02f5553aa868801f8be402",
+    "ops/tests/test_ordinary_notice_ack.py": "d6f888e9dc18a42d350629fcdbec7b62485ef02edcd227a3b68c80b97905f27d",
+    "agent/tests/ordinary-notice-ack.test.ts": "e30e9869bd541659bdecfa8c3f40efe54233634b451850bfedc59899f1e9ee77",
+    "ops/module_health.py": "568e15b110d12c624050db223e9222c3e8d4961609de0bda8e72f2108242f3f9",
+    "agent/tests/module_health_test.py": "17f6c0789faf468adfd1b32cdf74a45d4a4858606cda1f89e7861eff923684ba",
+    "agent/tests/module-health.test.ts": "2ac830e7e3e513bcceb4cdfc5c661cca090ae867b0074032c36f3c379c3a5563"
+  },
+  "full_checks": {
+    "tsc": 0,
+    "vitest": 0
+  },
+  "full_tests": {
+    "passed": 4401,
+    "pending": 2,
+    "files": 427
+  },
+  "environment_recovery": {
+    "original_full_rc": 1,
+    "tsc": 0,
+    "original_full_passed_tests": 4398,
+    "original_full_failed_tests": 1,
+    "original_full_pending_tests": 4,
+    "failure": "component-usage.test.ts: ../data/logdb-venv/bin/python absent, child exit 127",
+    "dependency_link": ".worktrees/ops-ack-health-integration-20261014-0101/data/logdb-venv",
+    "existing_dependency_target": "/home/dw/Projects/agent-sts2/data/logdb-venv",
+    "no_dependency_install_or_production_or_test_source_change": true,
+    "selected_recovery_files": [
+      "tests/component-usage.test.ts",
+      "tests/logdb.test.ts"
+    ],
+    "then_full_suite_with_two_workers": true,
+    "conditional_logdb_skips_checked_separately": true
+  },
+  "original_first_full_failure_preserved": true,
+  "blocking_observation": {
+    "owners": [
+      {
+        "pid": 1342539,
+        "comm": "bash",
+        "cwd": "/home/dw/Projects/agent-sts2",
+        "matching_script_tokens": [],
+        "other_match_lengths": [
+          123
+        ]
+      },
+      {
+        "pid": 1342540,
+        "comm": "bash",
+        "cwd": "/home/dw/Projects/agent-sts2",
+        "matching_script_tokens": [
+          "/home/dw/Projects/agent-sts2/.worktrees/live/knowledge/builders/refresh.sh"
+        ],
+        "other_match_lengths": []
+      },
+      {
+        "pid": 1342541,
+        "comm": "bash",
+        "cwd": "/home/dw/Projects/agent-sts2",
+        "matching_script_tokens": [
+          "/home/dw/Projects/agent-sts2/.worktrees/live/knowledge/builders/refresh.sh"
+        ],
+        "other_match_lengths": []
+      },
+      {
+        "pid": 1342552,
+        "comm": "python3",
+        "cwd": "/home/dw/Projects/agent-sts2",
+        "matching_script_tokens": [
+          "/home/dw/Projects/agent-sts2/.worktrees/live/knowledge/builders/build-fight-value.py"
+        ],
+        "other_match_lengths": []
+      },
+      {
+        "pid": 1361452,
+        "comm": "python3",
+        "cwd": "/home/dw/Projects/agent-sts2",
+        "matching_script_tokens": [
+          "/home/dw/Projects/agent-sts2/.worktrees/live/knowledge/builders/build-boss-damage.py"
+        ],
+        "other_match_lengths": []
+      }
+    ],
+    "main_live_not_mutated_by_guarded_attempt": true
+  },
+  "deployed": true,
+  "next_step": "At the next original ops wake, verify existing refresh processes and the live lock have cleared, preserve completed refreshed knowledge, recheck main/live six before blobs and tested six after fingerprints, then run the existing integrate.py with already committed candidates. No repeated tests if these fingerprints are unchanged. Original batch host recheck follows actual deployment, and only then remind the original watcher to register the two existing receipts.",
+  "no_new_task_or_duplicate_manual_or_owner_interrupt_or_game_restart": true,
+  "actual_deployment_at": "2026-10-14 02:11:21 CST",
+  "actual_deployment_receipt": "paper/materials/20261014-0101-ops/ack-health-deployment.json",
+  "final_combined_main": "179205a84dd5a10e63b5f332b0a680d339d7e8a9",
+  "final_combined_live": "ef71365c892239e11e8b354dc59b4162739ac7c9",
+  "final_combined_tree": "0b07c159f2cf8c8f07353caa14e2b57b5222dd39",
+  "original_pending_and_refresh_guard_history_preserved": true
+}

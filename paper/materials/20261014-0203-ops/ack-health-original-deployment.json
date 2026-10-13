@@ -1,0 +1,92 @@
+{
+  "at": "2026-10-14 02:07:36 CST",
+  "before": {
+    "main": "ca8112f59a3c7a7967c9530a9ed1e8af20f6968a",
+    "live": "5e064b7a25a30a838eb182df45e7fac448b2a469"
+  },
+  "original_batch": "20261013-234152-fix-batch",
+  "original_sources": [
+    "15eb85e2934e428c5e299fc4a1aba456d92fd685",
+    "9e6dd82a34fb8c14e012be68fd0b632544f1459f"
+  ],
+  "integration_candidates": [
+    "9850ea38ff10de3fced40dc16ccccdf6e163322f",
+    "1b0f9f9425ed50b81768048d67ac600528ef7bf6"
+  ],
+  "paths": [
+    "ops/learning_requests.py",
+    "ops/tests/test_ordinary_notice_ack.py",
+    "agent/tests/ordinary-notice-ack.test.ts",
+    "ops/module_health.py",
+    "agent/tests/module_health_test.py",
+    "agent/tests/module-health.test.ts"
+  ],
+  "final_leaf_sha256": {
+    "ops/learning_requests.py": "e604f3c30da942fbb557c07b1a1915093844e8fc84b94b61367252982126410b",
+    "ops/tests/test_ordinary_notice_ack.py": "1c6fb2fb08f5cea54babc05f472a611dd3bbdd2c3f2b651e46282f056739f6df",
+    "agent/tests/ordinary-notice-ack.test.ts": "5b04743e6ad7db59bccf5f1f48f62e5345517f7097912190fa5f7a1a658f8c93",
+    "ops/module_health.py": "8f56d172df0d4f12783bdce170768cfd32d390e2b9fcad88b776e642f364cb57",
+    "agent/tests/module_health_test.py": "88f1174495033785bc322b6b465d2a47d171815f39675d9f7d8be285dab73797",
+    "agent/tests/module-health.test.ts": "ad8ef72591a720884030099f7bdd78c79c7be9175cb593c5488c01a79ec473d2"
+  },
+  "exact_ack_source_paths": [
+    "ops/learning_requests.py",
+    "ops/tests/test_ordinary_notice_ack.py",
+    "agent/tests/ordinary-notice-ack.test.ts"
+  ],
+  "health_integration": {
+    "retained_deployed_source": "c988032d20270b84bacae81a614b50f6704c3804",
+    "original_source": "9e6dd82a34fb8c14e012be68fd0b632544f1459f",
+    "source_additions": "Per-candidate observed/unsupported/with-DPR/missing-DPR counts and incomplete_candidate_dpr diagnostics.",
+    "retained_deployed_contract": "Raw/applicable denominators, immutable unsupported evidence, positive finite nonboolean samples, simulated-option contradiction guards, and consecutive applicable failure streak.",
+    "source_test_adjustment": "An unsupported choice remains neutral between three applicable failures; retain the previous alert instead of resetting it.",
+    "new_mixed_candidate_conflict_fixture": "An actual simulated option or card result cannot be hidden by exclusion metadata.",
+    "source_three_new_methods_and_all_nine_deployed_methods": "12 fixed Python cases passed; only new diagnostic production source withdrawal failed and restoration passed."
+  },
+  "checks": {
+    "tsc": 0,
+    "vitest": 0,
+    "passed_tests": 4401,
+    "pending_tests": 2,
+    "fixed_ack_python_cases": 5,
+    "fixed_health_python_cases": 12,
+    "negative_control": {
+      "without_new_health_source": 1,
+      "restored": 0,
+      "original_deployed_unsupported_tests_retained": 9,
+      "combined_fixed_cases": 12,
+      "ack_exact_source_fixed_cases": 5,
+      "gameplay_rules_changed": false
+    },
+    "gitleaks": 0
+  },
+  "checkouts": {
+    "main": {
+      "actual_leaves": "aa26e95c10765bdca051b77f060e91c0681f5454",
+      "ancestry_bound": "f7becd678c470104efbb7175567dadcdda94efff",
+      "tree": "c1974b9011210ea26a474a3ea986f2a21b9d11d8",
+      "unchanged_versions_blob": "a66d01cf7b47629ba842ea178bd6f06b596ebfa3"
+    },
+    "live": {
+      "actual_leaves": "f1e017c78ac1db880b307c58054db23a288a5cb7",
+      "ancestry_bound": "96828735c05e1e37487fd0ad08e9cbae6db91c51",
+      "tree": "31c8acd74a4c2e2959bdfd00e82576ed6c861349",
+      "unchanged_versions_blob": "b44f76f29aacb532e86b6ffd5ddb50138e7b53cc"
+    }
+  },
+  "refreshes": {
+    "live": {
+      "paths": [
+        "knowledge/characters/silent/fight-value.json"
+      ],
+      "commit": "bc66e215f98ab3e407a2cbf5dbc383fcecb91051"
+    }
+  },
+  "original_source_full_sandbox_checks_and_failures_preserved": true,
+  "original_31_whole_branch_conflicts_not_imported": true,
+  "original_failed_rc0_merged_null_preserved": true,
+  "gameplay_models_permissions_accounts_prompts_and_sampling_budgets_unchanged": true,
+  "new_behavior_release": false,
+  "DPR_sampling_performance_fixed": false,
+  "host_post_deployment_recheck": "One original batch check on the new final live tree; not claimed passed by the integration check."
+}

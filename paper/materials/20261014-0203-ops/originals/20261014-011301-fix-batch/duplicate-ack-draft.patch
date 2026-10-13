@@ -1,0 +1,57 @@
+diff --git a/agent/tests/ordinary-notice-ack.test.ts b/agent/tests/ordinary-notice-ack.test.ts
+index 38a50f3ac..9892c0732 100644
+--- a/agent/tests/ordinary-notice-ack.test.ts
++++ b/agent/tests/ordinary-notice-ack.test.ts
+@@ -6,5 +6,5 @@ it("acknowledges verified ordinary notices without inventing a learning parent a
+     encoding: "utf8", timeout: 15_000,
+   });
+   expect(result.status, result.stdout + result.stderr).toBe(0);
+-  expect(result.stderr).toContain("Ran 4 tests");
++  expect(result.stderr).toContain("Ran 6 tests");
+ });
+diff --git a/ops/learning_requests.py b/ops/learning_requests.py
+index f7ee826b2..b242c248b 100644
+--- a/ops/learning_requests.py
++++ b/ops/learning_requests.py
+@@ -64,7 +64,7 @@ def ack_request(root, state, notice, payload):
+         raise ValueError("ordinary notice must identify an existing character proposal")
+     source = json.loads(artifact(root, notice["source_evidence"]))
+     if (source.get("proposal_id") != request_id or source.get("batch") != notice.get("source_batch")
+-            or not re.fullmatch(r"\d{8}-\d{6}-(?:postmortem|experience-update|strategy-proposal)(?:-s2)?",
++            or not re.fullmatch(r"\d{8}-\d{6}-(?:(?:postmortem|experience-update|strategy-proposal)(?:-s2)?|s2-strategy-proposal)",
+                                 notice.get("source_batch", ""))
+             or source.get("original_proposal_sha256") != notice.get("request_sha256")):
+         raise ValueError("ordinary notice source identity or SHA mismatch")
+diff --git a/ops/tests/test_ordinary_notice_ack.py b/ops/tests/test_ordinary_notice_ack.py
+index d9836fc95..8ae11e8cd 100644
+--- a/ops/tests/test_ordinary_notice_ack.py
++++ b/ops/tests/test_ordinary_notice_ack.py
+@@ -96,6 +96,28 @@ class OrdinaryNoticeAck(unittest.TestCase):
+                 self.reject_without_writes()
+                 self.notice = original; self.registry = original_registry
+ 
++    def test_actual_second_strategy_slot_preserves_delivery_and_parent_proofs(self):
++        self.source['batch'] = '20261013-224302-s2-strategy-proposal'
++        self.notice['source_batch'] = self.source['batch']
++        self.notice['source_evidence'] = self.artifact('source.json', self.source)
++        self.test_ordinary_delivery_chain_never_creates_or_closes_a_learning_parent()
++        self.test_wrong_actor_and_character_and_missing_stage_and_bad_evidence_sha_are_rejected()
++
++    def test_invalid_second_slot_ids_and_source_batch_mismatch_do_not_write(self):
++        original = copy.deepcopy(self.notice)
++        for batch in ('20261013-224302-s3-strategy-proposal', '20261013-224302-s2-postmortem',
++                      '20261013-224302-s2-strategy-proposal-s2', '20261013-224302-s2-strategy-proposal-extra'):
++            with self.subTest(batch=batch):
++                self.source['batch'] = batch
++                self.notice['source_batch'] = batch
++                self.notice['source_evidence'] = self.artifact('source.json', self.source)
++                self.reject_without_writes()
++                self.notice = copy.deepcopy(original)
++        self.source['batch'] = '20261013-224302-s2-strategy-proposal'
++        self.notice['source_batch'] = '20261013-224302-strategy-proposal'
++        self.notice['source_evidence'] = self.artifact('source.json', self.source)
++        self.reject_without_writes()
++
+     def test_wrong_actor_and_character_and_missing_stage_and_bad_evidence_sha_are_rejected(self):
+         self.reject_without_writes(payload_changes={'actor': 'watcher'})
+         self.reject_without_writes(payload_changes={'character': 'other'})

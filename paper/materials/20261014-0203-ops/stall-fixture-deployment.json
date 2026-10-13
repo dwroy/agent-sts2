@@ -1,0 +1,103 @@
+{
+  "at": "2026-10-14 02:09:42 CST",
+  "batch": "20261014-011301-fix-batch",
+  "source": "9b6459fd99f26b17689134e33aa85d6190e71d7d",
+  "candidate": "8f2e3657daf42236c08031390875cdf5e989e27a",
+  "exact_paths": [
+    "agent/tests/ops-stall-recovery.test.ts",
+    "agent/tests/stall-subprocess-fixture.ts"
+  ],
+  "sha256": {
+    "agent/tests/ops-stall-recovery.test.ts": "50206efff84c87e6a9591be65fc2622c43f89f2d25aaedeca2499501d3470fc4",
+    "agent/tests/stall-subprocess-fixture.ts": "7401d1e4c888ed01438902194adeafb003ae0ef635b936fa7c09942c9f109f35"
+  },
+  "original_self_checks": {
+    "duplicate_ack_draft": {
+      "source_only_removed": 1,
+      "restored": 0,
+      "sandbox": {
+        "rc": 0,
+        "tsc": 0,
+        "files": 376,
+        "cases": 3593,
+        "workers": 1
+      },
+      "disposition": "已发现原提交15eb85e2934e428c5e299fc4a1aba456d92fd685，重复草稿保存duplicate-ack-draft.patch后撤回，不提交"
+    },
+    "stall": {
+      "source_only_removed": {
+        "rc": 1,
+        "files": 1,
+        "failed": 4,
+        "passed": 3
+      },
+      "restored": {
+        "rc": 0,
+        "files": 1,
+        "cases": 7
+      },
+      "draft": {
+        "rc": 0,
+        "cases": 7
+      },
+      "fixed_clock_delay_ms": 6000,
+      "subprocess_timeout_ms": 10000,
+      "test_timeout_ms": 15000,
+      "sandbox": {
+        "tsc": 0,
+        "vitest": 0,
+        "files": 376,
+        "cases": 3594,
+        "workers": 2,
+        "rc": 0
+      },
+      "helper_typecheck": 0,
+      "gitleaks": 0
+    },
+    "audit_first_attempt": {
+      "rc": 1,
+      "cause": "KeyError deployment_commits in optional prior metadata",
+      "retry": 0,
+      "rechecked_fixed_entries": 163
+    },
+    "helper_typecheck_first_attempt": {
+      "rc": 1,
+      "cause": "TS5112 requires --ignoreConfig for standalone CLI file check",
+      "corrected_parameters": 0
+    },
+    "ledger_bug_infra_matches": 0,
+    "source_commit": "9b6459fd99f26b17689134e33aa85d6190e71d7d",
+    "source_tree": "2dbfe6cac7263dfb4eb4bc96191338c65be67b9a",
+    "live": {
+      "merged": null,
+      "preflight_rc": 1,
+      "conflicts": 29,
+      "knowledge_conflicts": 10,
+      "refresh_commit": "5e064b7a25a30a838eb182df45e7fac448b2a469",
+      "post_merge_tests": "未执行；预检冲突、未实际合入",
+      "dirty_notes_preserved": " M notes/fight-value-backtest-silent.md\n M notes/monster-db-check.md\n"
+    }
+  },
+  "combined_targeted_checks": {
+    "tsc": 0,
+    "vitest": 0
+  },
+  "checkouts": {
+    "main": {
+      "before": "f7becd678c470104efbb7175567dadcdda94efff",
+      "actual_leaves": "b1ae8470a703b15d8c61d94e149d469eea30e8ab",
+      "ancestry_bound": "179205a84dd5a10e63b5f332b0a680d339d7e8a9",
+      "tree": "bba107527afb2bb5001d847200e2a3fc8dfe61b9"
+    },
+    "live": {
+      "before": "96828735c05e1e37487fd0ad08e9cbae6db91c51",
+      "actual_leaves": "2a38f8269afcfa2c0be835dc1cd1d03dc639ff99",
+      "ancestry_bound": "ef71365c892239e11e8b354dc59b4162739ac7c9",
+      "tree": "0b07c159f2cf8c8f07353caa14e2b57b5222dd39"
+    }
+  },
+  "original_failed_rc0_merged_null_preserved": true,
+  "gameplay_and_sandbox_unchanged": true,
+  "new_behavior_release": false,
+  "post_deployment_full_checks": "Pending one combined final live tree check."
+}

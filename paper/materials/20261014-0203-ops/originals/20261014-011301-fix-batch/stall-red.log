@@ -1,0 +1,138 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-011301/agent
+
+ ❯ tests/ops-stall-recovery.test.ts (7 tests | 4 failed) 2217ms
+     × checks the real script and deterministically verifies startup beyond the former five-second limit 16ms
+     × retains exit, signal, stderr and timing evidence in a readable subprocess failure 5ms
+     × rejects a failed subprocess even when it prints OK 14ms
+     × still terminates a hung subprocess at the configured deadline 112ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/ops-stall-recovery.test.ts > stall check mod request recovery > checks the real script and deterministically verifies startup beyond the former five-second limit
+AssertionError: expected Error: fixed startup exceeded deadline { …(2) } to match object { timeoutMs: 5000, …(3) }
+
+- Expected
++ Received
+
+- {
+-   "elapsedMs": 6000,
++ Error {
+    "killed": true,
+    "signal": "SIGTERM",
+-   "timeoutMs": 5000,
+  }
+
+ ❯ tests/ops-stall-recovery.test.ts:75:72
+     73|     try {
+     74|       await expect(runStallFixture("fixed-script", {}, undefined, exec…
+     75|       await expect(runStallFixture("fixed-script", {}, 5_000, execute)…
+       |                                                                        ^
+     76|         timeoutMs: 5_000, elapsedMs: 6_000, killed: true, signal: "SIG…
+     77|       });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  tests/ops-stall-recovery.test.ts > stall check mod request recovery > retains exit, signal, stderr and timing evidence in a readable subprocess failure
+AssertionError: expected Error: fixed child failed { …(5) } to match object { code: 9, signal: null, …(7) }
+
+- Expected
++ Received
+
+- {
+-   "cause": Error {
+-     "message": "fixed child failed",
+-     "code": 9,
+-     "killed": false,
+-     "signal": null,
+-     "stdout": "OK
+- ",
+-     "stderr": "fixed diagnostic
+- ",
+-   },
++ Error {
+    "code": 9,
+-   "elapsedMs": 6000,
+    "killed": false,
+-   "message": StringContaining "\"stderr\":\"fixed diagnostic\\n\"",
+    "signal": null,
+    "stderr": "fixed diagnostic
+  ",
+    "stdout": "OK
+  ",
+-   "timeoutMs": 10000,
+  }
+
+ ❯ tests/ops-stall-recovery.test.ts:90:73
+     88|     const execute: StallExecutor = async () => { now = 7_000; throw ca…
+     89|     try {
+     90|       await expect(runStallFixture("fixed-script", {}, 10_000, execute…
+       |                                                                         ^
+     91|         code: 9, signal: null, killed: false, stdout: "OK\n", stderr: …
+     92|         timeoutMs: 10_000, elapsedMs: 6_000, cause,
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  tests/ops-stall-recovery.test.ts > stall check mod request recovery > rejects a failed subprocess even when it prints OK
+AssertionError: expected Error: Command failed: bash /home/dw/Proj… { …(6) } to match object { code: 9, stdout: 'OK\n', …(4) }
+(2 matching properties omitted from actual)
+
+- Expected
++ Received
+
+- {
++ Error {
+    "code": 9,
+    "killed": false,
+-   "message": StringContaining "\"code\":9",
+    "signal": null,
+    "stdout": "OK
+  ",
+-   "timeoutMs": 10000,
+  }
+
+ ❯ tests/ops-stall-recovery.test.ts:101:42
+     99|   it("rejects a failed subprocess even when it prints OK", async () =>…
+    100|     await withLauncher("printf 'OK\\n'\nexit 9", async () => {
+    101|       await expect(check("waiting", 990)).rejects.toMatchObject({ code…
+       |                                          ^
+    102|         timeoutMs: 10_000, killed: false, signal: null, message: expec…
+    103|     });
+ ❯ withLauncher tests/ops-stall-recovery.test.ts:41:11
+ ❯ tests/ops-stall-recovery.test.ts:100:11
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+ FAIL  tests/ops-stall-recovery.test.ts > stall check mod request recovery > still terminates a hung subprocess at the configured deadline
+AssertionError: expected Error: Command failed: bash /home/dw/Proj… { …(6) } to match object { killed: true, …(3) }
+(4 matching properties omitted from actual)
+
+- Expected
++ Received
+
+- {
++ Error {
+    "killed": true,
+-   "message": StringContaining "\"killed\":true",
+    "signal": "SIGTERM",
+-   "timeoutMs": 100,
+  }
+
+ ❯ tests/ops-stall-recovery.test.ts:108:52
+    106|     // exec leaves one child PID for execFile to terminate, with no or…
+    107|     await withLauncher("exec sleep 60", async () => {
+    108|       await expect(check("waiting", 990, 990, 100)).rejects.toMatchObj…
+       |                                                    ^
+    109|         timeoutMs: 100, message: expect.stringContaining('"killed":tru…
+    110|     });
+ ❯ withLauncher tests/ops-stall-recovery.test.ts:41:11
+ ❯ tests/ops-stall-recovery.test.ts:107:11
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  4 failed | 3 passed (7)
+   Start at  01:46:29
+   Duration  2.76s (transform 304ms, setup 360ms, import 24ms, tests 2.22s, environment 0ms)
+

@@ -1,0 +1,55 @@
+# 队列处置
+
+- 队列:752 - **silent-0237 — 策略类：沿原 strategy-proposal 链；现有提案状态见 audit.json，不重复派发。
+- 队列:773 - **silent-0245 — 策略类：沿原 strategy-proposal 链；现有提案状态见 audit.json，不重复派发。
+- 队列:774 - **silent-0246 — 策略类：沿原 strategy-proposal 链；现有提案状态见 audit.json，不重复派发。
+- 队列:779 - **silent-0250 — 策略类：沿原 strategy-proposal 链；现有提案状态见 audit.json，不重复派发。
+- 队列:784 - [ ] **silent-0254 — 已修限定工具子项：3b48088dec5fc6eafe576a1296bbdadde43432ee；不关闭宽父范围。
+- 队列:789 - [ ] **silent-0256 — 策略类：沿原 strategy-proposal 链；现有提案状态见 audit.json，不重复派发。
+- 队列:793 - [ ] **silent-0260 — 策略类：沿原 strategy-proposal 链；现有提案状态见 audit.json，不重复派发。
+- 队列:797 - [ ] **silent-0263 — 策略类：沿原 strategy-proposal 链；现有提案状态见 audit.json，不重复派发。
+- 队列:801 - [ ] **silent-0266 — 策略类：沿原 strategy-proposal 链；现有提案状态见 audit.json，不重复派发。
+- 队列:810 - [ ] 学习者复盘 XTSV1U9JD34T／SILENT A10 F48 T8 — 策略类：沿原 strategy-proposal 链；现有提案状态见 audit.json，不重复派发。
+- 队列:817 - [ ] 学习者复盘9Z9H2EXKLF3T／静默A10 F37 — 策略类：沿原 strategy-proposal 链；现有提案状态见 audit.json，不重复派发。
+- 队列:831 - [ ] 学习者复盘GXNKW8X1XYJP／静默A10 F45 T2→T3 — 策略类：沿原 strategy-proposal 链；现有提案状态见 audit.json，不重复派发。
+- 队列:853 - **silent-0290 — 策略类：沿原 strategy-proposal 链；现有提案状态见 audit.json，不重复派发。
+- 队列:854 - **silent-0291 — 策略类：沿原 strategy-proposal 链；现有提案状态见 audit.json，不重复派发。
+- 队列:859 - **silent-0293** — 策略类：沿原 strategy-proposal 链；现有提案状态见 audit.json，不重复派发。
+- 队列:871 - **silent-0295** — 策略类：沿原 strategy-proposal 链；现有提案状态见 audit.json，不重复派发。
+- 队列:877 - **silent-0296** — 策略类：沿原 strategy-proposal 链；现有提案状态见 audit.json，不重复派发。
+- 队列:884 - **silent-0297** — 策略类：沿原 strategy-proposal 链；现有提案状态见 audit.json，不重复派发。
+- 队列:900 - [ ] **非阻塞系统／测试缺口，根因未核定** — 已有固定时钟/最佳线夹具修复；本轮另见保留的 ranking 单项负载超时与原限时重跑，不称性能已修。
+- 队列:907 - **silent-0300** — 策略类：沿原 strategy-proposal 链；现有提案状态见 audit.json，不重复派发。
+- 队列:912 - [ ] **silent-0308** — 策略类：沿原 strategy-proposal 链；现有提案状态见 audit.json，不重复派发。
+- 队列:918 - [ ] **silent-0311** — 策略类：沿原 strategy-proposal 链；现有提案状态见 audit.json，不重复派发。
+- 队列:923 - [ ] **silent-0317** — 策略类：沿原 strategy-proposal 链；现有提案状态见 audit.json，不重复派发。
+- 队列:929 - [ ] **silent-0319** — 策略类：沿原 strategy-proposal 链；现有提案状态见 audit.json，不重复派发。
+- 队列:930 - [ ] **silent-0320** — 策略类：沿原 strategy-proposal 链；现有提案状态见 audit.json，不重复派发。
+- 队列:935 - [ ] **silent-0322** — 策略类：沿原 strategy-proposal 链；现有提案状态见 audit.json，不重复派发。
+- 队列:940 - [ ] **silent-0324** — 策略类：沿原 strategy-proposal 链；现有提案状态见 audit.json，不重复派发。
+- 队列:945 - [ ] **silent-0329** — 策略类：沿原 strategy-proposal 链；现有提案状态见 audit.json，不重复派发。
+- 队列:952 - [ ] **arch-funnel-guard** — 太大/独立功能：保留原父任务与拥有者，普通纯 bug 批不混入实现。
+- 队列:953 - [ ] **arch-learning-priority** — 太大/独立功能：保留原父任务与拥有者，普通纯 bug 批不混入实现。
+- 队列:954 - [ ] **arch-unified-resource-value** — 太大/独立功能：保留原父任务与拥有者，普通纯 bug 批不混入实现。
+- 队列:955 - [ ] **inv-f33-regression** — 太大/独立功能：保留原父任务与拥有者，普通纯 bug 批不混入实现。
+- 队列:959 - [ ] **silent-0332** — 策略类：沿原 strategy-proposal 链；现有提案状态见 audit.json，不重复派发。
+- 队列:964 - [ ] 非阻塞 — 策略类：沿原 strategy-proposal 链；现有提案状态见 audit.json，不重复派发。
+- 队列:968 - [ ] **silent-0338** — 策略类：沿原 strategy-proposal 链；现有提案状态见 audit.json，不重复派发。
+- 队列:980 - [ ] **silent-0339** — 策略类：沿原 strategy-proposal 链；现有提案状态见 audit.json，不重复派发。
+- 队列:992 - [ ] **silent-0344，坚韧之环延迟格挡未接入推演** — 策略类：沿原 strategy-proposal 链；现有提案状态见 audit.json，不重复派发。
+- 队列:1001 - [ ] **silent-0347** — 策略类：沿原 strategy-proposal 链；现有提案状态见 audit.json，不重复派发。
+- 队列:1005 - [ ] **silent-0349** — 策略类：沿原 strategy-proposal 链；现有提案状态见 audit.json，不重复派发。
+- 队列:1009 - [ ] **core-build-notify-222802-rc2** — 证据不足：旧 rc2 没有 stderr，未证明没有发送；新失败诊断与幂等保护已修，原通知不重发。
+- 队列:1020 - [ ] **silent-0362** — 策略类：沿原 strategy-proposal 链；现有提案状态见 audit.json，不重复派发。
+- 队列:1022 - [ ] **silent-0365** — 策略类：沿原 strategy-proposal 链；现有提案状态见 audit.json，不重复派发。
+- 队列:1024 - [ ] **silent-0367** — 策略类：沿原 strategy-proposal 链；现有提案状态见 audit.json，不重复派发。
+- 队列:1029 - [ ] **codex-usage-credit-baseline-recovery** — 已修限定工具子项：e5e2995d659d15af79ec8bba67a4a25c1cb7295f；不关闭宽父范围。
+- 队列:1034 - [ ] ascension-up 把目标进阶当实玩级别 — 已修限定工具子项：8045d9fbf；不关闭宽父范围。
+- 队列:1040 - [ ] 框架/测试收尾 — 证据不足：定向宿主续验入口已修；旧任务公平性/原包装器归因未证，不改变原队列。
+- 队列:1041 - [ ] 调度公平性核查 — 证据不足：定向宿主续验入口已修；旧任务公平性/原包装器归因未证，不改变原队列。
+- 队列:1110 - [ ] **非对局阻塞，通用验证负载/确定性待诊断** — 已修限定工具子项：d9881ba593b0b8d701ebbe1c95626c0ebdd554c7 / 9e8c93555131c33；不关闭宽父范围。
+- 队列:1184 v5-dpr-health-20261013 — 诊断限定子项 c988032d2 已实际部署；性能根因未证，300/1000/11000ms/24线程不改。前批附加分类源9e6dd82a尚未合入，不重复实现。
+- 队列:1186 learning-notice-ordinary-ack-registry-20261013 第二槽批号 — 已有原源15eb85e2934e428c5e299fc4a1aba456d92fd685，未入main/live；本批同源码负对照1/恢复0，重复草稿存档后撤回，不另造源码提交。
+- 队列:1190 silent-0455/0458 普通0费钢铁风暴 — 策略类：沿既有silent-proposal-69776c308a3b298e，不重复派发或改变机制。
+- 队列:1192 ops-stall-recovery-test-subprocess-timeout 原夹具诊断续办 — 本批实现：固定启动延迟验证和完整子进程失败诊断；保留真实脚本、原10秒/15秒期限及非零/挂起保护；宿主负载根因仍未知。
+- 队列:1194 silent-0459 独立run-plan请求整局成本漏计 — 原任务明确沿silent-proposal-6a39ea0a435755c5策略链，不另派普通修复；保留原费用/墙钟/未知身份历史，普通批不抢同一拥有者。

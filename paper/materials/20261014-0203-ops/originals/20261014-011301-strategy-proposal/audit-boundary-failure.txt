@@ -1,0 +1,4 @@
+本批只读辅助提取最初使用原offset文件的seek（近似扫描起点），把它误当JSONL行起点。
+7X0W3U8TVA2A seek=8904831767，json.loads第一段抛JSONDecodeError: Expecting value: line 1 column 1。
+改用已核的first=8904904337后直接解析成功；未更改原日志或原offset文件。
+其后两次可缺字段KeyError与最终成功另存evidence-audit.log、evidence-audit-retry.log、evidence-audit-final.log。
