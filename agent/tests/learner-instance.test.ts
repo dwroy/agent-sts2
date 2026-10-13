@@ -1,8 +1,13 @@
-import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { afterAll, describe, expect, it } from "vitest";
+import { afterAll, describe, expect, it, vi } from "vitest";
 import { learnerGitRules, main } from "../../learner/lib/launcher.js";
+
+vi.mock("node:fs", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("node:fs")>();
+  return { ...actual, readFileSync: vi.fn(actual.readFileSync) };
+});
 
 const root = mkdtempSync(join(tmpdir(), "learner-instance-"));
 afterAll(() => rmSync(root, { recursive: true, force: true }));
@@ -52,15 +57,17 @@ describe("learner targets for an independent worktree lane", () => {
   });
 
   it("grants the shared git metadata needed by a lane learner but protects hooks and config", () => {
-    const child = join(lane, ".worktrees/exp");
-    mkdirSync(child, { recursive: true });
-    const childGit = join(root, ".git/worktrees/exp-regent");
-    writeFileSync(join(child, ".git"), `gitdir: ${childGit}\n`);
-    const rules = learnerGitRules(lane, child);
-    expect(rules[join(root, ".git")]).toBe("write");
+    // A synthetic Git pointer must not borrow the enclosing TMPDIR worktree's identity.
+    const fixtureRoot = "/fixture/project";
+    const fixtureLane = join(fixtureRoot, ".worktrees/regent-climb");
+    const child = join(fixtureLane, ".worktrees/exp");
+    const childGit = join(fixtureRoot, ".git/worktrees/exp-regent");
+    vi.mocked(readFileSync).mockImplementationOnce(() => `gitdir: ${childGit}\n`);
+    const rules = learnerGitRules(fixtureLane, child);
+    expect(rules[join(fixtureRoot, ".git")]).toBe("write");
     expect(rules[childGit]).toBe("write");
-    expect(rules[join(root, ".git/hooks")]).toBe("read");
-    expect(rules[join(root, ".git/config")]).toBe("read");
-    expect(rules[join(lane, ".git")]).toBeUndefined();
+    expect(rules[join(fixtureRoot, ".git/hooks")]).toBe("read");
+    expect(rules[join(fixtureRoot, ".git/config")]).toBe("read");
+    expect(rules[join(fixtureLane, ".git")]).toBeUndefined();
   });
 });
