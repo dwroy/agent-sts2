@@ -1,0 +1,60 @@
+{
+  "at": "2026-10-14 00:55:57 CST",
+  "cut": "2026-10-13T16:48:22.466Z",
+  "command": "nice -n 19 python3 ops/paper_dataset.py --no-raw",
+  "rc": 0,
+  "source_checks_passed": true,
+  "verification": {
+    "checks": {
+      "decisions attributed + unattributed == play records": true,
+      "decisions_by_label sum == attributed decisions": true,
+      "escalations rows == records with escalation": true,
+      "every runs.jsonl id present in runs.csv": true,
+      "commits == git rev-list --all --count": true,
+      "runs.jsonl decision-count mismatches": [
+        [
+          "KF9HMZKTFC3V",
+          879,
+          880
+        ]
+      ]
+    },
+    "row_counts": {
+      "runs.csv": 765,
+      "decisions_by_label.csv": 25509,
+      "escalations.csv": 3600,
+      "fight_plans.csv": 1461,
+      "commits.csv": 5672
+    }
+  },
+  "runs": 765,
+  "decisions": {
+    "play_total": 381944,
+    "attributed_to_runs": 378915,
+    "unattributed_menu_timeline": 3029,
+    "shadow": 20,
+    "by_layer": {
+      "code": 199348,
+      "jev": 75563,
+      "deepseek": 12400,
+      "claude": 186,
+      "code-fallback": 1729,
+      "jev-plan": 75757,
+      "deepseek-plan": 847,
+      "claude-plan": 73
+    },
+    "decider_inferred": 342
+  },
+  "output_files": 332,
+  "output_bytes": 33193679,
+  "owned_history": [
+    "paper/data/history/20261013T164822587442Z",
+    "paper/data/history/20261013T165105476352Z"
+  ],
+  "ambiguous_or_parallel_history_preserved_not_staged": [],
+  "root_reconstructible_before_backups_not_staged_or_deleted": true,
+  "raw_logs_snapshotted": false,
+  "key_scan": "CLEAN",
+  "original_KF9_879_880_difference_preserved": true,
+  "component_costs_use_their_separate_original_byte_cuts": true
+}

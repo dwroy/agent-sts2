@@ -1,0 +1,64 @@
+250:     return "code"
+251: 
+252: 
+253: def main(*, code=None):
+254:     """Prints the post-mortem; returns the run's character (knowledge id; None when no state of it names a run)."""
+255:     decisions = [r for r in load(DEC) if r.get("mode") == "play"]
+256:     runs = [run_of(r) for r in decisions]
+257:     run_id = sys.argv[1] if len(sys.argv) > 1 else next((r for r in reversed(runs) if r), None)
+258:     if not run_id:
+259:         print("no run found")
+260:         return
+261:     recs = [r for r in decisions if run_of(r) == run_id]
+262:     # The GAME_OVER record has no run in its fingerprint: attach the one right after the last record.
+263:     # V4 (2026-09-30) logs it with the run id; then the next GAME_OVER is a later run's, not this one's.
+264:     last_ts = recs[-1]["ts"] if recs else ""
+265:     own_end = any(r.get("screen") == "GAME_OVER" for r in recs)
+293:     by_decider = collections.Counter(decider(r) for r in recs)
+294:     by_label_decider = collections.Counter((r["label"], decider(r)) for r in recs)
+295:     # usage holds Jev's tokens; since 2026-09-28 19:00 it also adds DeepSeek's (the row's `deepseek` field
+296:     # has DeepSeek's own), so split them: Jev = usage minus DeepSeek when usage carries cache_hit_tokens.
+297:     def _ds(r, k, calls_only=False):
+298:         d = r.get("deepseek") if isinstance(r.get("deepseek"), dict) else {}
+299:         # A memo-reused answer made no call: skip it in DeepSeek totals (as stats.py does; BXAZ was
+300:         # overstated by 17k input tokens), but keep it for the Jev split below.
+301:         if calls_only and d.get("reused"):
+302:             return 0
+303:         return d.get(k) or 0
+304:     def _jev(r, k):
+305:         u = r.get("usage") or {}
+306:         return max(0, (u.get(k) or 0) - (_ds(r, k) if "cache_hit_tokens" in u else 0))
+307:     tokens_in = sum(_jev(r, "input_tokens") for r in recs)
+308:     tokens_out = sum(_jev(r, "output_tokens") for r in recs)
+309:     ds_in = sum(_ds(r, "input_tokens", True) for r in recs)
+310:     ds_out = sum(_ds(r, "output_tokens", True) for r in recs)
+311:     ds_hit = sum(_ds(r, "cache_hit_tokens", True) for r in recs)
+312:     jev_calls = sum(1 for r in recs if _jev(r, "input_tokens") > 0 and not brain_direct(r))
+313:     # Escalations to DeepSeek plus its direct decisions (build/route/rest decider since 2026-09-28).
+314:     # Paid DeepSeek calls only: one-shot plan steps and memo-reused answers carry `deepseek.reused` and made no call.
+315:     paid = [r for r in recs if (r.get("escalation") and r["escalation"].get("by", "deepseek") == "deepseek")
+316:             or (isinstance(r.get("deepseek"), dict) and not r["deepseek"].get("reused"))
+317:             or (brain_direct(r) and r.get("decider") != "claude" and not isinstance(r.get("deepseek"), dict))]
+318:     ds_calls = len(paid)
+319:     # The brain's calls by the engine that made them (V4.5: codex answers, DeepSeek falls back).
+320:     by_engine = collections.Counter(brain_engine(r) for r in paid)
+321:     cl_calls = sum(1 for r in recs if r.get("escalation") and r["escalation"].get("by") == "claude")
+322:     elapsed = 0
+323:     if recs:
+324:         from datetime import datetime
+325:         t0 = datetime.fromisoformat(recs[0]["ts"].replace("Z", "+00:00"))
+326:         t1 = datetime.fromisoformat(recs[-1]["ts"].replace("Z", "+00:00"))
+327:         elapsed = (t1 - t0).total_seconds()
+395:                 ascension = st["run"].get("ascension")
+396:                 break
+397:         with open(RUNS, "a", encoding="utf8") as handle:
+398:             handle.write(json.dumps({
+399:                 "run_id": run_id, "ended": recs[-1]["ts"], "victory": victory, "floor": top_floor,
+400:                 "character": character, "ascension": ascension, "code": sha, "decisions": len(recs),
+401:                 "jev_calls": jev_calls, "deepseek_calls": ds_calls, "claude_calls": cl_calls, "tokens": tokens_in + tokens_out, "ds_tokens_in": ds_in, "ds_tokens_out": ds_out, "ds_cache_hit": ds_hit,
+402:                 "deciders": dict(by_decider),
+403:                 "death_fight": None if victory or not fights else sorted(x for x in fights[-1]["enemies"] if x),
+404:                 "death_fight_floor": None if victory or not fights else fights[-1]["floor"],
+405:                 "death_enemy_ids": None if victory or not fights else sorted(x for x in fights[-1]["enemy_ids"] if x),
+406:                 **ablation_arm(),
+407:             }, ensure_ascii=False) + "\n")

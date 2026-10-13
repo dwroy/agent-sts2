@@ -1,0 +1,1 @@
+首次复盘数字核验辅助脚本退出1：verify.py:61 JSONDecodeError: Extra data: line 1 column 3 (char 2)。原因是F17/F23等匹配到资源表而非逐轮数组表，非复盘数字失配。异常钩子另因scratch inspect.py遮蔽标准库同名模块报IndexError；保留原脚本并改名。

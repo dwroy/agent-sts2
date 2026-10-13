@@ -1,0 +1,26 @@
+## 复盘回报
+
+- 已追加：4U3WNL3JRRCX（A10，第33层，无厌沙虫；末试T6以11血5挡对18攻击阵亡，敌剩171血）。
+- 新的纯 bug：
+  - 4U3WNL3JRRCX：局报漏计独立计划请求1次、146897 token — `.worktrees/live/ops/report.py:309`（新）。
+- 写成「未记录」的项：完整dirty运行树；前五试真实退出／死亡；部分归零帧、实体身份／逐击毛伤；完整候选兑现率；替代策略整战对照；数值boss时钟及同策略实打比；Jev缓存、实付账单。
+- 学习账本：4U3WNL3JRRCX：新增 silent-0459；更新 silent-0020、silent-0352、silent-0125、silent-0027、silent-0006、silent-0018、silent-0253、silent-0149（均为支持证据，老错重犯无）；`ledger.py check` 退出码0。
+- 代码提案：
+  - F33资源兑现／账本0352、0027、0253、0149／silent-proposal-f46cd6e528e4ca2a／strategy-proposal：pending，替代药序与整战证据不足，保留原规则。
+  - F33护栏及SL差额／账本0125、0018／silent-proposal-7b8a92febb0db536／strategy-proposal：pending，缺完整后继对照，不改阈值。
+  - F32成本漏计／账本0459／silent-proposal-6a39ea0a435755c5／strategy-proposal：pending，历史范围与合题去重待实现验证。
+
+```json
+{"task":"postmortem","appended":["4U3WNL3JRRCX"],"skipped":[],"bugs":[{"run":"4U3WNL3JRRCX","where":"ops/report.py:309","what":"自动局报漏计独立run-plan脑请求1次、145142输入及1755输出token","new":true}],"ledger":{"added":["silent-0459"],"updated":["silent-0020","silent-0352","silent-0125","silent-0027","silent-0006","silent-0018","silent-0253","silent-0149"],"repeats":[],"check":0},"code_proposals":["silent-proposal-f46cd6e528e4ca2a","silent-proposal-7b8a92febb0db536","silent-proposal-6a39ea0a435755c5"],"implementation_domains":["combat","potion","sl","terminal","structure"],"report":"/home/dw/Projects/agent-sts2/learner/runs/20261014-001305-postmortem/report.md"}
+```
+
+== 学习者 codex / postmortem ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a1360a-05e2-7221-876d-3a2110af6911
+轮数：1；工具调用：command_execution×57
+token：输入 265.1k、输出 41.6k（其中推理 8949）、cache 读 7453.7k、cache 写 0（命中 96.6%）
+成本：未提供
+耗时：1599.6 s（墙钟）
+时间：首个事件 13.7 s、模型首个输出 20.3 s、首次工具 25.5 s、末次工具结束 1557.4 s；工具内共 341.9 s，其余（模型生成、推理、网络）1244.0 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2）；模型的工具调用 exec×45；/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/learner/sessions/2026/10/14/rollout-2026-10-14T00-13-08-01a1360a-05e2-7221-876d-3a2110af6911.jsonl
+日志：/home/dw/Projects/agent-sts2/learner/runs/20261014-001305-postmortem.jsonl
