@@ -60,6 +60,9 @@ hosting() {
 }
 
 case "$action" in
+  regent-launch-inspect)
+    [ $# -eq 1 ] || exit 2
+    exec nice -n 19 python3 "$OPS/regent-launch-inspect.py" ;;
   report-run)
     [ $# -eq 2 ] && [[ "$arg" =~ ^[0-9A-Z]{12}$ ]] || exit 2
     exec nice -n 19 python3 "$OPS/report_run.py" "$arg" ;;

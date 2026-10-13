@@ -74,6 +74,9 @@ class ProcessScopeTests(unittest.TestCase):
         self.assertTrue(scope.belongs(10, self.root, self.live, self.proc))
         self.assertFalse(scope.belongs(20, self.root, self.live, self.proc))
         self.assertTrue(scope.belongs(20, self.second, self.second_live, self.proc))
+        self.process(30, self.live / "agent", ["node", str(self.live / "knowledge/builders/outcome-stats.ts")])
+        self.assertTrue(scope.belongs(30, self.root, self.live, self.proc))
+        self.assertFalse(scope.belongs(30, self.second, self.second_live, self.proc))
 
     def test_scheduler_character_comes_from_the_lane_environment(self):
         result = subprocess.run([sys.executable, "-B", str(OPS / "codex-ops-learn.py"), "status"],

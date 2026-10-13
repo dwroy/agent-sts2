@@ -24,7 +24,8 @@ def belongs(pid, root, live, proc=Path("/proc"), kind="any"):
     for arg in argv:
         path = Path(arg)
         resolved = (path if path.is_absolute() else cwd / path).resolve()
-        if kind == "any" and resolved.is_relative_to(root / "knowledge/builders"):
+        if kind == "any" and any(resolved.is_relative_to(base / "knowledge/builders")
+                                 for base in (root, Path(live).resolve())):
             return True
         if path.name not in allowed and not (path.name.startswith("stop-after") and path.suffix == ".sh"):
             continue
