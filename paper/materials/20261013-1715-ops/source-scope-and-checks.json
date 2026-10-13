@@ -1,0 +1,27 @@
+{
+  "at": "2026-10-13 17:43:25 CST",
+  "batch": "20261013-164302-fix-batch",
+  "source": "d9983263ffecea1bed4e29d65e7f854a3d2e33d7",
+  "before": "Timestamp-only postmortem batch IDs failed the startup lease ID regex, so known pre-session ENOENT had batch/lease=null and could not use the existing recovery.",
+  "after": "Accept the existing registered timestamp-only ID shape; keep live registered owner PID, unchanged lease/input/command, exact pre-session transient error, serial child close and at most two extra attempts.",
+  "source_checks": {
+    "tsc": 0,
+    "sandbox_files": 364,
+    "sandbox_cases": 3501,
+    "new_cases_fail_without_fix": 2,
+    "restored_startup_cases": 25,
+    "gitleaks": 0
+  },
+  "baseline_only_before_lock_release": 23,
+  "actual_main_startup_cases_after_deployment": 25,
+  "actual_main_targeted_rc": 0,
+  "actual_main_targeted_log": "ops/codex-ops/record-staging/20261013-1715/main-after-integration-targeted.log",
+  "actual_main_targeted_sha256": "0fbff4e5deb118b928187017b03af36214ab2be247e5cde675297af8498fcfef",
+  "upstream_directory_lifecycle_root_cause_still_unknown": true,
+  "old_failed_runs_and_attempt_counts_not_reset": true,
+  "no_new_model_calls_or_real_postmortem_redispatch_for_acceptance": true,
+  "learner_sandbox_permission_and_account_model_unchanged": true,
+  "original_source_failed_rc0_17_shared_conflicts_preserved": true,
+  "no_new_gameplay_release_id": true,
+  "no_game_restart_or_prompt_change": true
+}

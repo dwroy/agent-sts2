@@ -1,0 +1,45 @@
+{
+  "at": "2026-10-13 17:31:52 CST",
+  "batch": "20261013-164302-fix-batch",
+  "source": "d9983263ffecea1bed4e29d65e7f854a3d2e33d7",
+  "source_base": "4ef2d6d3c243d7bc26740f0e5896aaff0427584c",
+  "source_paths": [
+    "agent/tests/learner-startup-recovery.test.ts",
+    "learner/lib/startup-recovery.ts"
+  ],
+  "status": "deployed_host_checks_pending",
+  "main_and_live_integrated": true,
+  "existing_publish_owner_snapshot": {
+    "pid": 3072246,
+    "cwd": ".worktrees/silent-boss-calibration",
+    "script": "learner/runs/20261013-161307-silent-boss-calibration/publish.py",
+    "main_index_not_used_by_publisher": true
+  },
+  "source_checks": {
+    "tsc": 0,
+    "sandbox_files": 364,
+    "sandbox_cases": 3501,
+    "source_startup_cases": 25,
+    "new_cases_fail_without_fix": 2,
+    "gitleaks": 0
+  },
+  "baseline_only_test": {
+    "files": 1,
+    "cases": 23,
+    "new_fix_not_credited": true
+  },
+  "original_17_conflicts_failed_rc0_and_old_attempts_retained": true,
+  "continuation": "Recheck live lock/owner and current source blobs, preserve completed refresh, integrate only these two tested leaves and original source ancestry; then run affected startup regression and one original learner-recheck for this batch. No new learner/research, lease bypass, old retry reset, permission expansion, game restart, or prompt change.",
+  "followup_event": {
+    "path": "ops/codex-ops/queue/1791883913135295205-manual.md",
+    "sha256": "75443192d7ea80e8f6d81b3217807ced89494908d056fe861da922e88b0e2846",
+    "status": "queued_not_deployed"
+  },
+  "actual_deployment": {
+    "at": "2026-10-13 17:36:57 CST",
+    "main": "6f6a1ff015ac98d0fef7838e51c545595ade63f7",
+    "live": "9ab2f1fd1ff78389f20d5dd1fc433c0976f5a28b",
+    "tree": "1cbae1c1e8054fb104174ca31bc0ee7d6ae62f95"
+  },
+  "followup_action": "Source already deployed; await/reconcile the one original learner-recheck. Do not deploy/research/check the same tree again."
+}

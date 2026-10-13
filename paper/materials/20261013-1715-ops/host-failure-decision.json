@@ -1,0 +1,72 @@
+{
+  "at": "2026-10-13 18:04:08 CST",
+  "batch": "20261013-164302-fix-batch",
+  "source": "d9983263ffecea1bed4e29d65e7f854a3d2e33d7",
+  "actual_live_commit": "9ab2f1fd1ff78389f20d5dd1fc433c0976f5a28b",
+  "tree": "1cbae1c1e8054fb104174ca31bc0ee7d6ae62f95",
+  "complete_host_check": {
+    "rc": 1,
+    "log": "ops/codex-ops/learner/20261013-164302-fix-batch.fallback-1cbae1c1e8054fb104174ca31bc0ee7d6ae62f95.checks.log",
+    "sha256": "8fc95e78fc141e9cc5ebe88f3604f6ca0146e2ef98f92434d4f69612c8415951",
+    "files_passed": 414,
+    "files_failed": 2,
+    "tests_passed": 4314,
+    "tests_failed": 4,
+    "tests_skipped": 2,
+    "duration_seconds": 721.79,
+    "new_startup_recovery_cases_passed": 25,
+    "authorized_deck_cap_cases_passed": 9,
+    "complete_suite_passed": false
+  },
+  "failed_tests": [
+    {
+      "file": "agent/tests/silent-route-relic.test.ts",
+      "cases": [
+        "map_before question",
+        "reward question",
+        "rest question"
+      ],
+      "observed": "31/32-card fixed snapshots blocked by the authorized operator cap30"
+    },
+    {
+      "file": "agent/tests/silent-tail-resource.test.ts",
+      "cases": [
+        "production rest question"
+      ],
+      "observed": "Expected rest questions; fixed rest_32 snapshot has32 permanent cards"
+    }
+  ],
+  "unchanged_fixture_blob_proof": {
+    "agent/tests/silent-route-relic.test.ts": {
+      "before_integration": "b44a982940466443d9b7cd38b11b123048f6f0e1",
+      "checked_tree": "b44a982940466443d9b7cd38b11b123048f6f0e1",
+      "previous_full_pass": "b44a982940466443d9b7cd38b11b123048f6f0e1"
+    },
+    "agent/tests/silent-tail-resource.test.ts": {
+      "before_integration": "dc34f271b626f309625c999fbb778baa9b7e916f",
+      "checked_tree": "dc34f271b626f309625c999fbb778baa9b7e916f",
+      "previous_full_pass": "dc34f271b626f309625c999fbb778baa9b7e916f"
+    }
+  },
+  "independent_approved_policy": {
+    "request": "roy-20261013-silent-deck-cap30",
+    "release_id": "V4-R325",
+    "source": "2b8b35ac0205f096aec8dfe1ed7bef75536e9936",
+    "live": "11deed8421f292696dce1a4d7e85aff873262299",
+    "proof": "paper/materials/20261013-silent-deck-cap30/acceptance-final.json",
+    "proof_sha256": "204742b4e314e55824971d0096521f2bb59c0733b6e9e9ca1ba8dddb72a5c11a",
+    "actual_next_run_consumption": "paper/materials/20261013-silent-deck-cap30/first-live-consumer-acceptance.json"
+  },
+  "decision": "Retain the two startup-recovery leaves and Roy-authorized cap30. Queue bounded historical test-fixture isolation through the existing ordinary fix chain; no rollback, new research, game restart, assertion deletion or production cap bypass. Full rc1 remains failed; new runtime recovery has not been forced or claimed.",
+  "repair": {
+    "id": "silent-deck-cap-consumer-fixture-isolation-20261013",
+    "status": "pending_not_implemented",
+    "owner": "existing ordinary fix scheduler; next available slot under its original lease",
+    "duplicate_existing_owner_found": false,
+    "scope": [
+      "agent/tests/silent-route-relic.test.ts",
+      "agent/tests/silent-tail-resource.test.ts"
+    ],
+    "acceptance": "Use fixed historical-run context or test-only policy isolation without altering source snapshots, game knowledge, all-choice transport assertions, or the9 cap-boundary tests; preserve original failed check. Source self-tests and required new-tree host check only after a real fix."
+  }
+}
