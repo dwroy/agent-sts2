@@ -1,0 +1,43 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261014-054301-s2/agent
+
+ ❯ tests/silent-snakebite-preview.test.ts (18 tests | 3 failed) 359ms
+   × F30 T3: production models the observed eight once and carries seven after settlement 195ms
+   × F31 T1: production models the observed eight once and carries seven after settlement 125ms
+   × F31 T13: production models the observed eight once and carries seven after settlement 26ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/silent-snakebite-preview.test.ts > F30 T3: production models the observed eight once and carries seven after settlement
+ FAIL  tests/silent-snakebite-preview.test.ts > F31 T1: production models the observed eight once and carries seven after settlement
+ FAIL  tests/silent-snakebite-preview.test.ts > F31 T13: production models the observed eight once and carries seven after settlement
+AssertionError: expected { index: +0, key: 'c0', …(36) } to match object { poison: 8, known: true, …(2) }
+(35 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+    "cost": 2,
+    "damage": null,
+-   "known": true,
+-   "poison": 8,
++   "known": false,
+  }
+
+ ❯ tests/silent-snakebite-preview.test.ts:62:16
+     60|   const input = productionInput(raw);
+     61|   const card = input.hand.find((entry) => entry.cardId === "SNAKEBITE"…
+     62|   expect(card).toMatchObject({ poison: 8, known: true, damage: null, c…
+       |                ^
+     63|   const plan = replaySteps(input, [{ cardIndex: card.index, cardId: ca…
+     64|   expect(plan).not.toBeNull();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  3 failed | 15 passed (18)
+   Start at  05:52:56
+   Duration  5.58s (transform 4.08s, setup 690ms, import 4.25s, tests 359ms, environment 0ms)
+

@@ -1,0 +1,679 @@
+{
+  "at": "2026-10-14 06:33:39 CST",
+  "batch": "20261014-054301-s2-strategy-proposal",
+  "source_commit": null,
+  "original_head": "2f739c28ca61513bd0baf14a2e84867ed99c2f3d",
+  "original_staged_source": [
+    {
+      "path": "agent/src/reflex/card-model.ts",
+      "bytes": 116079,
+      "sha256": "df10de26c8e9d39e41b149bc4c34e43bb2ebd10c74ab8cd4bbf3d7ce8eb13021",
+      "git_blob": "a8e382a13db368c35d60194b70608261e97cf632",
+      "staged_equals_worktree": true
+    },
+    {
+      "path": "agent/tests/silent-snakebite-preview.test.ts",
+      "bytes": 6023,
+      "sha256": "4acf83d84936b5add263c27a7df3c48f13314b5dbd0629a0b44968afb14e3018",
+      "git_blob": "d13a2c59ae43d198cde472427de18f9cdc143719",
+      "staged_equals_worktree": true
+    },
+    {
+      "path": "agent/tests/silent-snakebite-preview-evidence.json",
+      "bytes": 648667,
+      "sha256": "3e607c7a85cc4c46d0e767673ead6beb9857c6944895e2315d6d81866b4ef14f",
+      "git_blob": "025a3e24ae2675e414006977fff3e4bc6aef129c",
+      "staged_equals_worktree": true
+    }
+  ],
+  "original_failed_rc0_merged_null_preserved": true,
+  "source_checks": [
+    {
+      "source": ".worktrees/codex-strategy-silent-20261014-054301-s2/learner/runs/20261014-054325-strategy-proposal/sandbox-check.log",
+      "sha256": "048c57bb8786ad556ca36c06a0cca367654c5255c742bc26d24628273f36f971",
+      "rc": 1,
+      "coverage": {
+        "passed": [],
+        "failed": [
+          "tests/rollout-live.test.ts",
+          "tests/strategy-no-change-path.test.ts",
+          "tests/strategy-research-scheduling.test.ts"
+        ],
+        "skipped": [],
+        "summary": {
+          "files": {
+            "failed": 3,
+            "passed": 375
+          },
+          "tests": {
+            "failed": 3,
+            "passed": 3626
+          }
+        },
+        "failed_tests": {
+          "tests/rollout-live.test.ts": [
+            "rollout facts on Jev's combat question code's ranking, options and auto-acts are unchanged by the rollout"
+          ],
+          "tests/strategy-no-change-path.test.ts": [
+            "registered no-change strategy report directory retains the dirty rejection"
+          ],
+          "tests/strategy-research-scheduling.test.ts": [
+            "frozen research takes the next slot and starts only after its actual registration is saved"
+          ]
+        }
+      },
+      "paths_phase_ran": false
+    },
+    {
+      "source": ".worktrees/codex-strategy-silent-20261014-054301-s2/learner/runs/20261014-054325-strategy-proposal/sandbox-retry.log",
+      "sha256": "2c7001ebf246661c76258c9f4ef4e58f96dbf9b2ae9099f500c436376f366fe0",
+      "rc": 1,
+      "coverage": {
+        "passed": [],
+        "failed": [
+          "tests/rollout-live.test.ts"
+        ],
+        "skipped": [],
+        "summary": {
+          "files": {
+            "failed": 1,
+            "passed": 377
+          },
+          "tests": {
+            "failed": 1,
+            "passed": 3628
+          }
+        },
+        "failed_tests": {
+          "tests/rollout-live.test.ts": [
+            "rollout facts on Jev's combat question code's ranking, options and auto-acts are unchanged by the rollout"
+          ]
+        }
+      },
+      "paths_phase_ran": false
+    },
+    {
+      "source": ".worktrees/codex-strategy-silent-20261014-054301-s2/learner/runs/20261014-054325-strategy-proposal/snakebite-green-initial.log",
+      "sha256": "97796fa5fd34e22aea6f034783c5130540af82de9b4602b943571aa9a16fd5c7",
+      "coverage": {
+        "passed": [],
+        "failed": [],
+        "skipped": [],
+        "summary": {
+          "files": {
+            "passed": 1
+          },
+          "tests": {
+            "passed": 18
+          }
+        },
+        "failed_tests": {}
+      }
+    },
+    {
+      "source": ".worktrees/codex-strategy-silent-20261014-054301-s2/learner/runs/20261014-054325-strategy-proposal/snakebite-withdrawn.log",
+      "sha256": "f692c0f9e4f9fbcfea44e1c8e8f10fc36deac9482fc93c7a7bb58c29f8cd3f28",
+      "coverage": {
+        "passed": [],
+        "failed": [
+          "tests/silent-snakebite-preview.test.ts"
+        ],
+        "skipped": [],
+        "summary": {
+          "files": {
+            "failed": 1
+          },
+          "tests": {
+            "failed": 3,
+            "passed": 15
+          }
+        },
+        "failed_tests": {
+          "tests/silent-snakebite-preview.test.ts": [
+            "F30 T3: production models the observed eight once and carries seven after settlement",
+            "F31 T13: production models the observed eight once and carries seven after settlement",
+            "F31 T1: production models the observed eight once and carries seven after settlement"
+          ]
+        }
+      }
+    },
+    {
+      "source": ".worktrees/codex-strategy-silent-20261014-054301-s2/learner/runs/20261014-054325-strategy-proposal/snakebite-restored.log",
+      "sha256": "e39e9d50669d62d3db094a07e429f1922324e5d602d4ac63d1f24e1eae43aaa8",
+      "coverage": {
+        "passed": [],
+        "failed": [],
+        "skipped": [],
+        "summary": {
+          "files": {
+            "passed": 1
+          },
+          "tests": {
+            "passed": 18
+          }
+        },
+        "failed_tests": {}
+      }
+    }
+  ],
+  "source_gitleaks_rc": 0,
+  "fixture_original_byte_readback": [
+    {
+      "log": "decisions",
+      "line": 281940,
+      "offset": 725893556,
+      "bytes": 1516,
+      "sha256": "fe412351e714a91bdf1d9e3d2219ccc8eaa94a698e8e5d8646be7d33a09d2f9d",
+      "run_id": "7X0W3U8TVA2A",
+      "fixture_field": "decision",
+      "state_equal": false
+    },
+    {
+      "log": "states",
+      "line": 288388,
+      "offset": 8916401157,
+      "bytes": 35677,
+      "sha256": "08bede3df092e5e22f0c05819ff3e392ba7290b45da3b8c31bef1fbc3623cf4e",
+      "run_id": "7X0W3U8TVA2A",
+      "fixture_field": "before",
+      "state_equal": true
+    },
+    {
+      "log": "states",
+      "line": 288389,
+      "offset": 8916436834,
+      "bytes": 34895,
+      "sha256": "ca0b042381bb3e56bf18087f05e0c15d2890c1e87eba0a376b242f33ddaa5c13",
+      "run_id": "7X0W3U8TVA2A",
+      "fixture_field": "after_application",
+      "state_equal": true
+    },
+    {
+      "log": "states",
+      "line": 288392,
+      "offset": 8916540110,
+      "bytes": 37686,
+      "sha256": "6faf09c2361dad787a8ce4d8e4f5b338c64184260fd5e23bb875f3b65c648b1a",
+      "run_id": "7X0W3U8TVA2A",
+      "fixture_field": "after_turn",
+      "state_equal": true
+    },
+    {
+      "log": "decisions",
+      "line": 281955,
+      "offset": 725949927,
+      "bytes": 1711,
+      "sha256": "f294c60e9173e4ec529a7906b5aa270b2b19af52eec0beff8f62f216dd6b192e",
+      "run_id": "7X0W3U8TVA2A",
+      "fixture_field": "decision",
+      "state_equal": false
+    },
+    {
+      "log": "states",
+      "line": 288404,
+      "offset": 8916962782,
+      "bytes": 40620,
+      "sha256": "eb731a2344596fbbe735452f92925608bc9e9d1a145704f6c3b8fce2f6f6d4fa",
+      "run_id": "7X0W3U8TVA2A",
+      "fixture_field": "before",
+      "state_equal": true
+    },
+    {
+      "log": "states",
+      "line": 288405,
+      "offset": 8917003402,
+      "bytes": 39938,
+      "sha256": "78e822ef64f2a6bbcb20b92c9fda57ebc84a9b562b3403370b79e57ed5feb7c1",
+      "run_id": "7X0W3U8TVA2A",
+      "fixture_field": "after_application",
+      "state_equal": true
+    },
+    {
+      "log": "states",
+      "line": 288410,
+      "offset": 8917198593,
+      "bytes": 40368,
+      "sha256": "d180ec18fda66f8115503ee13c260e643702a265611b6a1e5640ea65e70f6c77",
+      "run_id": "7X0W3U8TVA2A",
+      "fixture_field": "after_turn",
+      "state_equal": true
+    },
+    {
+      "log": "decisions",
+      "line": 282020,
+      "offset": 726296287,
+      "bytes": 5124,
+      "sha256": "c2a299da3f9971e29f19aaa2188aa5b71912a53816f7fb1dc509722328d7e010",
+      "run_id": "7X0W3U8TVA2A",
+      "fixture_field": "decision",
+      "state_equal": false
+    },
+    {
+      "log": "states",
+      "line": 288469,
+      "offset": 8919546616,
+      "bytes": 40220,
+      "sha256": "c716213e550836eebd950003344aba0c28b0bee73cab2320b69901128521b078",
+      "run_id": "7X0W3U8TVA2A",
+      "fixture_field": "before",
+      "state_equal": true
+    },
+    {
+      "log": "states",
+      "line": 288470,
+      "offset": 8919586836,
+      "bytes": 39744,
+      "sha256": "1889035851a42ae0cd7f6204197b136e432fc6e69ca491d7986ac2e5e1dcba02",
+      "run_id": "7X0W3U8TVA2A",
+      "fixture_field": "after_application",
+      "state_equal": true
+    },
+    {
+      "log": "states",
+      "line": 288472,
+      "offset": 8919666143,
+      "bytes": 36902,
+      "sha256": "e24cb6aee8c4af45ac72f352f2c23be0ceac2fe5cd3ce7e12bf7de6d4561746a",
+      "run_id": "7X0W3U8TVA2A",
+      "fixture_field": "after_turn",
+      "state_equal": true
+    }
+  ],
+  "live": {
+    "commit": "caa27990d46ac612a54eea03135b7152ccf93e9b",
+    "tree": "139f0e3554a9804bdf3b26c8bf1dcb833ed6439d"
+  },
+  "actual_consumer_identities": [
+    {
+      "commit": "e75438488df159b2e8e9d3458cf219b39aadd933",
+      "is_live_ancestor": true,
+      "path": "learner/lib/selection-execution.ts",
+      "worktree_blob": "409c559f9750e2ab0325a444ce1b98290a9184b4",
+      "live_blob": "409c559f9750e2ab0325a444ce1b98290a9184b4",
+      "same_blob": true,
+      "actual_live_blob": "409c559f9750e2ab0325a444ce1b98290a9184b4"
+    },
+    {
+      "commit": "e75438488df159b2e8e9d3458cf219b39aadd933",
+      "is_live_ancestor": true,
+      "path": "learner/lib/selection-turn.ts",
+      "worktree_blob": "21d0fcf8116ce5736513802dbae5d846770f06b9",
+      "live_blob": "21d0fcf8116ce5736513802dbae5d846770f06b9",
+      "same_blob": true,
+      "actual_live_blob": "21d0fcf8116ce5736513802dbae5d846770f06b9"
+    },
+    {
+      "commit": "5c3dd2ea1500aa0eb8ebc4de73669c083d0a0452",
+      "is_live_ancestor": true,
+      "path": "agent/src/memory/run-journal.ts",
+      "worktree_blob": "664f47738e259255335f41a41f5ff667674b614e",
+      "live_blob": "3d0fcdc02cc9234be6f7cd496c81bb2aa5052f74",
+      "same_blob": false,
+      "actual_live_blob": "3d0fcdc02cc9234be6f7cd496c81bb2aa5052f74"
+    },
+    {
+      "commit": "c4a4f4a94b48dff9b30aaa7228624c1092150145",
+      "is_live_ancestor": true,
+      "path": "agent/src/hand/screens/silent-hand-trick-facts.ts",
+      "worktree_blob": "4c47196bfccae6b621b67bb2c8a9c69722c1a3c6",
+      "live_blob": "4c47196bfccae6b621b67bb2c8a9c69722c1a3c6",
+      "same_blob": true,
+      "actual_live_blob": "4c47196bfccae6b621b67bb2c8a9c69722c1a3c6"
+    },
+    {
+      "commit": "c4a4f4a94b48dff9b30aaa7228624c1092150145",
+      "is_live_ancestor": true,
+      "path": "agent/src/reflex/silent-demon-potion.ts",
+      "worktree_blob": "02c09dbdcb96cdb76f78fc9579db9598ea5bf66a",
+      "live_blob": "02c09dbdcb96cdb76f78fc9579db9598ea5bf66a",
+      "same_blob": true,
+      "actual_live_blob": "02c09dbdcb96cdb76f78fc9579db9598ea5bf66a"
+    }
+  ],
+  "reported_proposal_results": [
+    {
+      "id": "silent-proposal-0802f69b28d25079",
+      "state": "waiting",
+      "reason": "MTQ0四试T3实损0/0/0/8已核；缺整战成对反事实及独立留出，不拟合SL或药水阈值。"
+    },
+    {
+      "id": "silent-proposal-f54e8de2381c1250",
+      "state": "duplicate",
+      "commit": "e75438488df159b2e8e9d3458cf219b39aadd933",
+      "reason": "已有live记录覆盖原选、替线、同题预测排名及弃牌重问断点；未执行完整候选的实际结果保留null，符合原提案记录范围。"
+    },
+    {
+      "id": "silent-proposal-763a4b9d9f17b815",
+      "state": "waiting",
+      "reason": "蛇咬8毒窄补丁18项及撤码反证通过，但完整门禁两轮仍超时，未提交；十四机制宽项也缺联合消费者校核。"
+    },
+    {
+      "id": "silent-proposal-19a5cff2094e2d8f",
+      "state": "waiting",
+      "reason": "阶段及暂死重接事实已核；缺修正输入到实际终结的完整校准和整战反事实。"
+    },
+    {
+      "id": "silent-proposal-3540bf4360bf80af",
+      "state": "waiting",
+      "reason": "赢战HP与回复观测已有；缺回复、用药和SL恢复逐源绑定到路线及休息消费者的完整读回。"
+    },
+    {
+      "id": "silent-proposal-0ea5c0b9c030fdd6",
+      "state": "waiting",
+      "reason": "奇巧资源提示与窄毒药+6已有live实现；完整后继、对象收益兑现及提前用药整战效果仍未验证。"
+    },
+    {
+      "id": "silent-proposal-f915ec544ab94b6e",
+      "state": "waiting",
+      "reason": "护栏重问断点已记录；T5诅咒选择到T6尚未获整轮审计认证，缺完整执行与整战校准。"
+    },
+    {
+      "id": "silent-proposal-8fb51933639faf90",
+      "state": "waiting",
+      "reason": "窄毒药输入已有；七项联合消费者校核及覆甲完整减层条件仍缺。"
+    },
+    {
+      "id": "silent-proposal-b3bc0eb09211af6c",
+      "state": "waiting",
+      "reason": "缺奇巧合法后继到真实终结的完整读回；替对象、提前饮毒及完整护栏替线未受控实打。"
+    },
+    {
+      "id": "silent-proposal-fdc3a505fe5e1a55",
+      "state": "waiting",
+      "reason": "原始回复帧已核；缺各次用药、恢复逐源对应路线及休息题面的完整消费者验证。"
+    }
+  ],
+  "canonical_original_proposal_states": {
+    "silent-proposal-0802f69b28d25079": "waiting",
+    "silent-proposal-f54e8de2381c1250": "waiting",
+    "silent-proposal-763a4b9d9f17b815": "waiting",
+    "silent-proposal-19a5cff2094e2d8f": "waiting",
+    "silent-proposal-3540bf4360bf80af": "waiting",
+    "silent-proposal-0ea5c0b9c030fdd6": "waiting",
+    "silent-proposal-f915ec544ab94b6e": "waiting",
+    "silent-proposal-8fb51933639faf90": "waiting",
+    "silent-proposal-b3bc0eb09211af6c": "waiting",
+    "silent-proposal-fdc3a505fe5e1a55": "waiting"
+  },
+  "new_proposal_state": "pending",
+  "original_failed_batch_does_not_resolve_reported_duplicate": true,
+  "native_runtime": {
+    "native": "ops/codex-ops/accounts/codex1/learner/sessions/2026/10/14/rollout-2026-10-14T05-43-37-01a13738-9390-7d51-a912-4d002ca54431.jsonl",
+    "offset": 50285,
+    "bytes": 5166,
+    "row_sha256": "0f28c69da8fce97703a911fd2d95ef52327f05d239f0ac06c88e44db0940bd29",
+    "model": "gpt-6.1-sol",
+    "effort": "xhigh",
+    "approval_policy": "never",
+    "sandbox_type": "workspace-write",
+    "cwd": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261014-054301-s2",
+    "thread": "01a13738-9390-7d51-a912-4d002ca54431"
+  },
+  "original_launcher_pid_no_longer_exists": true,
+  "rollout_fixture_boards": [
+    {
+      "path": "agent/tests/logged-states/ky3y-f33-t9-pact.json",
+      "sha256": "45cfd9f30beeee3fed6d84686e9dfade3a425b52d0212e6bf1283dce0b119858"
+    },
+    {
+      "path": "agent/tests/logged-states/3sbp-f17-t3-flex.json",
+      "sha256": "a0aa56ecec43b66083001f20f15405c47c5edb28317e83d934dc358183650921"
+    },
+    {
+      "path": "agent/tests/logged-states/xmk1-f33-t3-ask.json",
+      "sha256": "db3decf379efa4b2b526f72811e7d67975f5847d86bcf8e1a1a589abe6690a47"
+    },
+    {
+      "path": "agent/tests/logged-states/981w-f33-t2-mittens.json",
+      "sha256": "053940a9cf870326578200990f56f6873da137a6ea2db0c8a8ecf6a795ac19f8"
+    },
+    {
+      "path": "agent/tests/logged-states/v1mf-f19-t1-mittens.json",
+      "sha256": "b6440aca98085467773f7b49ada4c51adef90ca5aa0fe1a6f8bd45666ccb7793"
+    },
+    {
+      "path": "agent/tests/logged-states/bxaz-f17-t5-forge.json",
+      "sha256": "21842c7b46cbed33000bfc6710b396746727d11a53aa08d2790b347963e71294"
+    },
+    {
+      "path": "agent/tests/logged-states/k7g9-f45-t1.json",
+      "sha256": "c5f7d570bf494b9da09e64b6361b17464c435213f794b4bf1065a109de053e26"
+    },
+    {
+      "path": "agent/tests/logged-states/g8yy-f30-t3.json",
+      "sha256": "8c70a6f8176b3ce64f28efc8c0fe81d0ee8bd41964237b92fa4b19c8c57c5822"
+    },
+    {
+      "path": "agent/tests/logged-states/9vg8-f35-t6.json",
+      "sha256": "7f5b791771e067d5d3c37d10559340fe21212f6c4501237bacdfdc05d80713b4"
+    },
+    {
+      "path": "agent/tests/logged-states/11lc-f17-t2-dup.json",
+      "sha256": "d6de027ab4b56c029fd6c26351d60336b7d3cf923cad17ec8c49f18248c9b7b9"
+    },
+    {
+      "path": "agent/tests/logged-states/qug1-f23-t3-illusion-dead.json",
+      "sha256": "05cf5fed3e100cf8995798ff2168d649e165cfeadeb94520c6455dffbe76edf5"
+    },
+    {
+      "path": "agent/tests/logged-states/v1mf-f33-t2-mittens.json",
+      "sha256": "93764abc5c0b3eaaad8b8413c8c47afc9b9a44299bc63ff246cefcd4572ebf47"
+    },
+    {
+      "path": "agent/tests/logged-states/qug1-f23-t5-replay.json",
+      "sha256": "ac789a06ea50958a45c97f4b3823db05553b44390c320cdb69cd012eea1c8395"
+    },
+    {
+      "path": "agent/tests/logged-states/yql8-f17-t8-husk.json",
+      "sha256": "8693754d50937b70098cc6440950d33d37c39a4e33e4c01c56854127a37c1a31"
+    },
+    {
+      "path": "agent/tests/logged-states/yql8-f17-t8-blast.json",
+      "sha256": "8693754d50937b70098cc6440950d33d37c39a4e33e4c01c56854127a37c1a31"
+    },
+    {
+      "path": "agent/tests/logged-states/etyc-f19-t1-blood.json",
+      "sha256": "7f55b80b60f6e40d286e7ae4a01ab876ac3d5fd998863fcbdb4fd9dd298b67c7"
+    },
+    {
+      "path": "agent/tests/logged-states/8v0h-f24-t3-mittens.json",
+      "sha256": "47c6a3b626c979cc7da08097d1f9037b239260b6f1ee96dac2d797f6082d9c5b"
+    },
+    {
+      "path": "agent/tests/logged-states/pwsd-f23-t3.json",
+      "sha256": "572bb36df40352c3c4c845ee638cedb270bc1dcecd39d3d7759363ab53699077"
+    },
+    {
+      "path": "agent/tests/logged-states/v1mf-f33-t4.json",
+      "sha256": "4c3d6010727faadf794f8c1431ff152f60b7c3cb7e9b8245256df09a191ca779"
+    },
+    {
+      "path": "agent/tests/logged-states/g8yy-f30-t2.json",
+      "sha256": "3b8ab7511659b7412ab59b13e347ae845051ae3ba9b8229108962f85a2143a4b"
+    },
+    {
+      "path": "agent/tests/logged-states/zy39-f23-t3b.json",
+      "sha256": "ac29c41b709d99032723f58643fac97d29485b774b0bb77dad3f44a04c9c0b23"
+    },
+    {
+      "path": "agent/tests/logged-states/heac-f17-t6-saturated.json",
+      "sha256": "9e12f79c165f0c0ae75eef9b0d6fd34ffc83e2265a93fdf0c47766b6705e3b53"
+    },
+    {
+      "path": "agent/tests/logged-states/ky3y-f33-t9-drawn.json",
+      "sha256": "9e304b504f4931d78e8b35c76cf7be807c528b6b223b33726e4c2d3405dd4d9e"
+    },
+    {
+      "path": "agent/tests/logged-states/8v0h-f17-t2-saturated.json",
+      "sha256": "4a26c5bcb564616a9aac555956d2a069885f4500f2469d09b7c93adcd77d5f01"
+    },
+    {
+      "path": "agent/tests/logged-states/xmk1-f33-t3-cut.json",
+      "sha256": "56758381c04de498206045ed0786d9f57701a832f6689bfccd2949b108cf6bd9"
+    },
+    {
+      "path": "agent/tests/logged-states/2mk4-f8-t2-back.json",
+      "sha256": "da1ff06b1412629a5a2a7f459427ad4f5b8b38098048f534f35c0d896adfa6e0"
+    },
+    {
+      "path": "agent/tests/logged-states/vnwr-f33-t6-mittens.json",
+      "sha256": "b87d7ead80ed5bbcb54102b8f66aad68954d3d2ca95a97e085718d498fa8d159"
+    },
+    {
+      "path": "agent/tests/logged-states/yg3h-f33-t1.json",
+      "sha256": "af5be5160bb395f60cb918bbb885d1c4b125ec82436c7b81257bc5cbec729710"
+    },
+    {
+      "path": "agent/tests/logged-states/fn0h-f33-t2.json",
+      "sha256": "614248fc8de2df62c878e6d5d08a3db0f856d0588fc97d2410b6306971a28067"
+    },
+    {
+      "path": "agent/tests/logged-states/0nzb-f25-t1-after-exhaust.json",
+      "sha256": "98caa791f94e1a2c171c91e8be7d09f1e2a048fdaf8b26d2ae037120cb949943"
+    },
+    {
+      "path": "agent/tests/logged-states/jsa5-f48-t6-blood-wall.json",
+      "sha256": "3c2f6d05d9eb730dfa777f9e7fb76a2e372ff3ed853ef9e10dc263250731acab"
+    },
+    {
+      "path": "agent/tests/logged-states/en55-f8-t9.json",
+      "sha256": "411570360d3ea7db8eb3ee843894dd64805ac1f633a4605e030cc3b0725551d5"
+    },
+    {
+      "path": "agent/tests/logged-states/n95w-f19-t3.json",
+      "sha256": "a416ad2f4ac42df04c1b48f3da8dbf21209f0d302313a7f9f390f9ffbea8e5eb"
+    },
+    {
+      "path": "agent/tests/logged-states/3sbp-f12-t2-thrash.json",
+      "sha256": "a714dd704dbe1a1661d39da115c89653c2f0aa29e857dc2053edd3958a182516"
+    },
+    {
+      "path": "agent/tests/logged-states/9lsq-f17-t1-attack-potion.json",
+      "sha256": "16ec54feebd365d01dd0e87490a8c214d7716b76cb37d8b80022171f071f44c4"
+    },
+    {
+      "path": "agent/tests/logged-states/ky3y-f33-t9.json",
+      "sha256": "cad007fb670350341cc7d9a601c52ec81e06db28c7e87758f1b5db0bfa5807e0"
+    },
+    {
+      "path": "agent/tests/logged-states/7kdm-f27-t5-dazed.json",
+      "sha256": "19fa105cca491622ad8ceb10ecf136ff0985961d089522ddaf3d3e2eadf2fa87"
+    },
+    {
+      "path": "agent/tests/logged-states/x7lu-f7-t1.json",
+      "sha256": "962d08aab105b3b8c5774625c64d81bdf1ae57518f58a4fbbd58ae83af145e2a"
+    },
+    {
+      "path": "agent/tests/logged-states/ez2l-f48-t2.json",
+      "sha256": "0bf45c1fea782b1a3945edf319bba9dc884ff4d846d8a2a4667e547d35e71732"
+    },
+    {
+      "path": "agent/tests/logged-states/w8jd-f31-t3.json",
+      "sha256": "64f92d998c2cdfe8e462a41986706f8a15cd4d055af82f34702972798ec7c4f9"
+    },
+    {
+      "path": "agent/tests/logged-states/9q7v-f17-t14-after.json",
+      "sha256": "f1410040425839b995ec8c1b9e2457d46f898774e9b78a696e4dc02a9acfb15f"
+    },
+    {
+      "path": "agent/tests/logged-states/ly0n-f33-t3-mittens.json",
+      "sha256": "f1bd479e3460f714a5b9b7ab1df39083b457a993698098bd1321154e8985752d"
+    },
+    {
+      "path": "agent/tests/logged-states/zy39-f23-t4.json",
+      "sha256": "a7b0f607f9e6f0c1e25ac39295cb24def841f5ef1d7dcfc36e530bb6139489d9"
+    },
+    {
+      "path": "agent/tests/logged-states/qug1-f23-t4-stew.json",
+      "sha256": "57f254a506481e40437e12467a0057f0a2a3c66eaf7ee30611d24c8b1bcd499e"
+    },
+    {
+      "path": "agent/tests/logged-states/kgr6-f23-t4.json",
+      "sha256": "be9788dfbc8dfc83c4456b8946dfb5dc758f9870c0c3f019eb8a804b2ba37e6f"
+    },
+    {
+      "path": "agent/tests/logged-states/x8r8-f17-t8.json",
+      "sha256": "7bed8ae15da5fd10780952a285b8285b5f25a50d088da693fcf2cffa8b46d4dc"
+    },
+    {
+      "path": "agent/tests/logged-states/kyc0-f28-t2-decimillipede.json",
+      "sha256": "2515e0bd13a9722f4d9e3fd08adc1c86c11dce6f022e57fe129786db89e9f7e4"
+    },
+    {
+      "path": "agent/tests/logged-states/0nzb-f25-t1-brand.json",
+      "sha256": "f0a889f68b1d2cbeed500c7824b9aee11c19cce11b651fbca0abe6b4c7d8ef7a"
+    },
+    {
+      "path": "agent/tests/logged-states/9q7v-f17-t14-ask.json",
+      "sha256": "f44db845c711c73904d7073152eb3fca41db861be46750bef6b729f262b80ccb"
+    },
+    {
+      "path": "agent/tests/logged-states/99x7-f9-t3-draw.json",
+      "sha256": "755923ae317edef1b2a26847dfd6992bd3016f0a2294ef6c1c5f30aed33e2e92"
+    },
+    {
+      "path": "agent/tests/logged-states/ra3q-f14-t1-margin.json",
+      "sha256": "3ca3527c39f69d5f6bd457961f619220f29eda89d63d49d126c10f900d6b2fe9"
+    },
+    {
+      "path": "agent/tests/logged-states/2mk4-f8-t2-ask.json",
+      "sha256": "c2249305f446cc38ba56cbde80984a07a0b05c9599280834de8c912cf4f8f427"
+    },
+    {
+      "path": "agent/tests/logged-states/rtf3-f17-t1-draw.json",
+      "sha256": "afaaddbd8bb2dbfd306d2f4ddb2069e3d71e126e4ffd494fd0b7d6e64e9d7a98"
+    },
+    {
+      "path": "agent/tests/logged-states/bxaz-f17-t1-heart-of-iron.json",
+      "sha256": "88dcf533b4370429f97b1823da503a3de3d1fde739c508d72eed50533624842f"
+    },
+    {
+      "path": "agent/tests/logged-states/pkb0-f17-t4a.json",
+      "sha256": "1ae22b94f5290fcc4fb3e44b78f88f41ce97ada440af85c52d417d08bc5a628d"
+    },
+    {
+      "path": "agent/tests/logged-states/77uj-f33-t5.json",
+      "sha256": "7948f50cf428b9df8fa60a140a6b66e2bbfbf9dda3e97ee45f17282dfb28437f"
+    },
+    {
+      "path": "agent/tests/logged-states/ly0n-f33-t5-mittens.json",
+      "sha256": "9918abb39808a033b1c02154f75b9a75fbfdd28fc28194dfb25e8a1235fa7742"
+    },
+    {
+      "path": "agent/tests/logged-states/k8tc-f17-t5.json",
+      "sha256": "8f34d02f70de3d160738d39364d37e962a06ebf9c12608a0b4af07e6a6b8aa67"
+    },
+    {
+      "path": "agent/tests/logged-states/vnwr-f33-t4-mittens.json",
+      "sha256": "6229c939341174dd7baee610b083f0c1b5ceda139f6f1f28745d0be2f2cfef31"
+    },
+    {
+      "path": "agent/tests/logged-states/xmy2-f17-t1.json",
+      "sha256": "5ecb2e2476aa9b36b29219beceb439e3ec16cb60066d67cc53801cc1eaccd386"
+    },
+    {
+      "path": "agent/tests/logged-states/v1mf-f33-t4-end.json",
+      "sha256": "1eaa7022adaee380391b5f74a3b92120e1fb020c7866e313efc5db936df2d603"
+    },
+    {
+      "path": "agent/tests/logged-states/heac-f17-t2-saturated.json",
+      "sha256": "8da62462fcd30cdcee8cd861261089fc35d04339e92d41c243d72ed9a76d9dbf"
+    },
+    {
+      "path": "agent/tests/logged-states/4lc3-f31-t7-tainted.json",
+      "sha256": "311b85723dbc1588c523b2db0dec3240560921525cb6a1f825bbb466f128c362"
+    },
+    {
+      "path": "agent/tests/logged-states/2mk4-f8-t2-pick.json",
+      "sha256": "3132484d6114155cb7fa8ec187bcc2ef39b199e7e2c7684fce66336426a0172f"
+    }
+  ],
+  "rollout_current_hand_snakebite_count": 0,
+  "limitations": [
+    "Two sandbox full runs failed; paths phase did not run; no source commit or live publish exists.",
+    "The 64 fixed rollout hands contain no Snakebite, but exact runtime timeout cause is not established.",
+    "Consumer windows and prediction records do not verify whole candidate causal outcomes or win rate.",
+    "Current live card-model has two independent comment differences, which must be preserved when applying the pending patch.",
+    "Original 15 shared-record merge conflicts require exact source-leaf integration after passing the test gate."
+  ]
+}

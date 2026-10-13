@@ -1,0 +1,154 @@
+{
+  "at": "2026-10-14 06:36:37 CST",
+  "batch": "20261014-054301-s2-strategy-proposal",
+  "source": null,
+  "source_base": "2f739c28ca61513bd0baf14a2e84867ed99c2f3d",
+  "status": "uncommitted_source_full_test_gate_failed_then_exact_integration_required",
+  "original_worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261014-054301-s2",
+  "original_scratch": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261014-054301-s2/learner/runs/20261014-054325-strategy-proposal",
+  "original_thread": "01a13738-9390-7d51-a912-4d002ca54431",
+  "source_paths": [
+    {
+      "path": "agent/src/reflex/card-model.ts",
+      "bytes": 116079,
+      "sha256": "df10de26c8e9d39e41b149bc4c34e43bb2ebd10c74ab8cd4bbf3d7ce8eb13021",
+      "git_blob": "a8e382a13db368c35d60194b70608261e97cf632",
+      "staged_equals_worktree": true
+    },
+    {
+      "path": "agent/tests/silent-snakebite-preview.test.ts",
+      "bytes": 6023,
+      "sha256": "4acf83d84936b5add263c27a7df3c48f13314b5dbd0629a0b44968afb14e3018",
+      "git_blob": "d13a2c59ae43d198cde472427de18f9cdc143719",
+      "staged_equals_worktree": true
+    },
+    {
+      "path": "agent/tests/silent-snakebite-preview-evidence.json",
+      "bytes": 648667,
+      "sha256": "3e607c7a85cc4c46d0e767673ead6beb9857c6944895e2315d6d81866b4ef14f",
+      "git_blob": "025a3e24ae2675e414006977fff3e4bc6aef129c",
+      "staged_equals_worktree": true
+    }
+  ],
+  "patch": ".worktrees/codex-strategy-silent-20261014-054301-s2/learner/runs/20261014-054325-strategy-proposal/snakebite-preview.patch",
+  "patch_sha256": "dff8f9b0e1e895f4b212babbd2632cfef70927f3b07d6750ef36c3e679aebcf9",
+  "current_live": {
+    "commit": "caa27990d46ac612a54eea03135b7152ccf93e9b",
+    "tree": "139f0e3554a9804bdf3b26c8bf1dcb833ed6439d"
+  },
+  "original_state": {
+    "state": "failed",
+    "rc": 0,
+    "merged": null
+  },
+  "original_full_checks": [
+    {
+      "source": ".worktrees/codex-strategy-silent-20261014-054301-s2/learner/runs/20261014-054325-strategy-proposal/sandbox-check.log",
+      "sha256": "048c57bb8786ad556ca36c06a0cca367654c5255c742bc26d24628273f36f971",
+      "rc": 1,
+      "coverage": {
+        "passed": [],
+        "failed": [
+          "tests/rollout-live.test.ts",
+          "tests/strategy-no-change-path.test.ts",
+          "tests/strategy-research-scheduling.test.ts"
+        ],
+        "skipped": [],
+        "summary": {
+          "files": {
+            "failed": 3,
+            "passed": 375
+          },
+          "tests": {
+            "failed": 3,
+            "passed": 3626
+          }
+        },
+        "failed_tests": {
+          "tests/rollout-live.test.ts": [
+            "rollout facts on Jev's combat question code's ranking, options and auto-acts are unchanged by the rollout"
+          ],
+          "tests/strategy-no-change-path.test.ts": [
+            "registered no-change strategy report directory retains the dirty rejection"
+          ],
+          "tests/strategy-research-scheduling.test.ts": [
+            "frozen research takes the next slot and starts only after its actual registration is saved"
+          ]
+        }
+      },
+      "paths_phase_ran": false
+    },
+    {
+      "source": ".worktrees/codex-strategy-silent-20261014-054301-s2/learner/runs/20261014-054325-strategy-proposal/sandbox-retry.log",
+      "sha256": "2c7001ebf246661c76258c9f4ef4e58f96dbf9b2ae9099f500c436376f366fe0",
+      "rc": 1,
+      "coverage": {
+        "passed": [],
+        "failed": [
+          "tests/rollout-live.test.ts"
+        ],
+        "skipped": [],
+        "summary": {
+          "files": {
+            "failed": 1,
+            "passed": 377
+          },
+          "tests": {
+            "failed": 1,
+            "passed": 3628
+          }
+        },
+        "failed_tests": {
+          "tests/rollout-live.test.ts": [
+            "rollout facts on Jev's combat question code's ranking, options and auto-acts are unchanged by the rollout"
+          ]
+        }
+      },
+      "paths_phase_ran": false
+    }
+  ],
+  "paths_phase_ran": false,
+  "original_proposal": "silent-proposal-763a4b9d9f17b815",
+  "child_proposal": "silent-proposal-3e9b94fbf3a4c1a6",
+  "ledger": [
+    "silent-0087",
+    "silent-0460"
+  ],
+  "ledger_state": "proposed; no shipped or source publication",
+  "original_merge_conflicts": [
+    "notes/fix-queue-v4.md",
+    "notes/lessons.md",
+    "paper/data/README.md",
+    "paper/data/commits.csv",
+    "paper/data/cost-curve-silent.csv",
+    "paper/data/cost-silent.csv",
+    "paper/data/cost-sources.json",
+    "paper/data/cost-unattributed.csv",
+    "paper/data/decisions_by_label.csv",
+    "paper/data/learning-curve-silent.csv",
+    "paper/data/runs.csv",
+    "paper/data/summary.json",
+    "paper/data/verification.json",
+    "paper/materials/decision-log.md",
+    "paper/materials/learning/ledger.jsonl"
+  ],
+  "live_comment_difference": "paper/materials/20261014-0628-ops/live-card-model-comment-difference.patch",
+  "existing_fixture_repair_owner": {
+    "state": "running",
+    "pid": 2451982,
+    "worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-054301"
+  },
+  "continuation": [
+    "Keep the original checkout, staged leaves, branch, report and thread. Do not rerun the unchanged failed full suite or dispatch another copy of this learned implementation.",
+    "Continue the existing fixed rollout/process-fixture repair queue after its active owner. Preserve ranking, options, auto-action, parse and registration assertions, all failed logs, timeouts and production rules.",
+    "After a tested fixture repair or resolved environment cause exists, acquire the original checkout lease without stealing it; recheck PID, HEAD, three indexed/worktree SHA values and patch identity. Any changed source requires a fresh source fingerprint.",
+    "Run the required complete source check including paths; only a real exit 0 authorizes the original source commit. Mechanical ops fallback uses the already learned patch without inventing game knowledge or expanding learner permissions.",
+    "Then integrate only the three source/test leaves under live-merge.lock, preserve the two live-only comment changes and all knowledge/parallel records; never merge the entire stale branch or overwrite the 15 shared-record conflicts.",
+    "Bind the actual committed source ancestry, register one new behavior release and actual rule-change records only after real live publication; use the original-batch host check and keep broad proposals and unknown causal outcomes open.",
+    "Retirement requires the original source publication, complete checks and no active owner. Do not delete this failed uncommitted checkout or scratch."
+  ],
+  "public_evidence": "paper/materials/20261014-0628-ops",
+  "deployed": false,
+  "release_id": null,
+  "no_new_learning_parent_or_dispatch": true
+}

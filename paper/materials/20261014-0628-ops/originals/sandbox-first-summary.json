@@ -1,0 +1,38 @@
+{
+  "tsc": 0,
+  "vitest": 1,
+  "phase1_files": {
+    "total": 378,
+    "passed": 375,
+    "failed": 3
+  },
+  "phase1_tests": {
+    "total": 3629,
+    "passed": 3626,
+    "failed": 3
+  },
+  "duration_seconds": 1612.93,
+  "paths_phase_ran": false,
+  "failures": [
+    {
+      "file": "tests/rollout-live.test.ts",
+      "test": "code's ranking, options and auto-acts are unchanged by the rollout",
+      "kind": "test_timeout",
+      "limit_ms": 120000
+    },
+    {
+      "file": "tests/strategy-no-change-path.test.ts",
+      "test": "retains the dirty rejection",
+      "kind": "spawn_status_null",
+      "subprocess_timeout_ms": 5000
+    },
+    {
+      "file": "tests/strategy-research-scheduling.test.ts",
+      "test": "frozen research takes the next slot and starts only after its actual registration is saved",
+      "kind": "test_timeout",
+      "limit_ms": 15000
+    }
+  ],
+  "source_changed_during_run": false,
+  "retry": "sandbox-retry.log; workers=4; in progress; no exclusions/timeouts/assertions changed"
+}
