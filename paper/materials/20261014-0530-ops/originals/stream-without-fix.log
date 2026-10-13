@@ -1,0 +1,82 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-050124/agent
+
+ ❯ tests/build-sim-cancellation.test.ts (10 tests | 3 failed) 27ms
+     × retains whole samples delivered before the deadline while their block is still running 16ms
+     × counts only fully paired samples and dispatches the next block only after completion 2ms
+     × streams every whole outcome once and retains the unlimited batch's seeds and order 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/build-sim-cancellation.test.ts > cancelled build simulation batches > retains whole samples delivered before the deadline while their block is still running
+AssertionError: expected { outcomes: [ [ [ …(8) ] ] ], …(5) } to match object { complete: [ +0 ], …(2) }
+(8 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "complete": [
+-     0,
+-   ],
++   "complete": [],
+    "diagnostics": {
+      "chunksCompleted": 0,
+      "chunksDispatched": 1,
+-     "outcomesCompleted": 1,
++     "outcomesCompleted": 0,
+    },
+    "timedOut": true,
+  }
+
+ ❯ tests/build-sim-cancellation.test.ts:76:20
+     74|     block(batch.batch);
+     75|     const result = await pending;
+     76|     expect(result).toMatchObject({ complete: [0], timedOut: true,
+       |                    ^
+     77|       diagnostics: { chunksDispatched: 1, chunksCompleted: 0, outcomes…
+     78|     expect(result.outcomes[0]![0]![0]).toEqual(outcome);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  tests/build-sim-cancellation.test.ts > cancelled build simulation batches > counts only fully paired samples and dispatches the next block only after completion
+AssertionError: expected [ 2, 2 ] to deeply equal [ 1, 1 ]
+
+- Expected
++ Received
+
+  [
+-   1,
+-   1,
++   2,
++   2,
+  ]
+
+ ❯ tests/build-sim-cancellation.test.ts:95:111
+     93|     first!.emit("message", { batch: batch.batch, results: [[0, 0, 0, o…
+     94|     second!.emit("message", { batch: batch.batch, results: [[1, 0, 0, …
+     95|     expect(fixed.workers.map((worker) => worker.messages.filter((messa…
+       |                                                                                                               ^
+     96|     first!.emit("message", { batch: batch.batch, results: [] });
+     97|     expect(first!.messages.filter((message) => message.type === "run")…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  tests/build-sim-cancellation.test.ts > cancelled build simulation batches > streams every whole outcome once and retains the unlimited batch's seeds and order
+AssertionError: expected "vi.fn()" to be called 9 times, but got 1 times
+ ❯ tests/build-sim-cancellation.test.ts:117:25
+    115|       diagnostics: { chunksCompleted: 1, outcomesCompleted: 8 } });
+    116|     expect(fixed.sample.mock.calls.map((call) => call[2])).toEqual([10…
+    117|     expect(fixed.reply).toHaveBeenCalledTimes(9);
+       |                         ^
+    118|     expect(fixed.reply).toHaveBeenLastCalledWith({ batch: batch.batch,…
+    119|     fixed.handle!({ type: "drop", batch: batch.batch });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  3 failed | 7 passed (10)
+   Start at  05:06:40
+   Duration  532ms (transform 306ms, setup 324ms, import 50ms, tests 27ms, environment 0ms)
+

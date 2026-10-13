@@ -1,0 +1,362 @@
+{
+  "at": "2026-10-14 05:34:14 CST",
+  "alert": "ops/codex-ops/module-health/EEVP0QTLMSX9-alert.json",
+  "alert_sha256": "bd9a42bd6ebfbd65c4dddddc45bacb039281f09091752d758c21720d5afecf4b",
+  "run": "EEVP0QTLMSX9",
+  "coverage_bounds_and_partial_scan_flags_preserved": {
+    "decisions_complete": true,
+    "decisions": {
+      "path": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+      "start": 1268634642,
+      "end": 1302180596,
+      "complete": false,
+      "malformed": 0,
+      "first_ts": "2026-10-13T17:06:23.392Z"
+    },
+    "brain": {
+      "path": "/home/dw/Projects/agent-sts2/logs/brain.jsonl",
+      "start": 452410469,
+      "end": 485875242,
+      "complete": false,
+      "malformed": 1,
+      "first_ts": "2026-10-12T21:49:15.038Z"
+    },
+    "config": {
+      "path": "/home/dw/Projects/agent-sts2/logs/run-config.jsonl",
+      "start": 0,
+      "end": 1640459,
+      "complete": true,
+      "malformed": 0,
+      "first_ts": "2026-09-30T00:10:45.685Z"
+    }
+  },
+  "complete_as_reported": true,
+  "b3": {
+    "attempts": 30,
+    "skipped": 2,
+    "produced_dpr": 25,
+    "coverage": 0.8333333333333334,
+    "failures": {
+      "below_minimum_samples": 5
+    },
+    "unsupported": 0,
+    "applicable_attempts": 30,
+    "unsupported_only": 0,
+    "candidates": {
+      "observed": 224,
+      "unsupported": 30,
+      "with_dpr": 158,
+      "missing_dpr": 36
+    },
+    "applicable_coverage": 0.8333333333333334,
+    "longest_failure_streak": 3,
+    "trailing_failure_streak": 3,
+    "paired_samples_min": 16,
+    "ms_max": 11291
+  },
+  "brain": {
+    "observed_questions": 32,
+    "questions_with_dpr": 25,
+    "accepted_with_dpr": 25,
+    "decision_use": "unknown; delivery is not evidence of reasoning or a fixed DPR weight"
+  },
+  "failure_rows": [
+    {
+      "source": {
+        "offset": 1298498214,
+        "length": 145524,
+        "sha256": "61deeecc6ec87cd2a7f7ce034d28755e58209d45c82fcd55b50ee5761e5d4162"
+      },
+      "raw_SHA_verified": true,
+      "floor": 22,
+      "label": "shop/plan",
+      "paired_samples": 208,
+      "complete_outcomes": 5448,
+      "comparison": {
+        "samples": 208,
+        "elapsedMs": 10908,
+        "timedOut": true,
+        "workers": 24,
+        "deadlineMs": 10905.166296000127,
+        "pool": {
+          "queueMs": 0,
+          "coldStart": false,
+          "preparationMs": 4,
+          "firstReplyMs": 271,
+          "chunksPlanned": 3125,
+          "chunksDispatched": 704,
+          "chunksCompleted": 681,
+          "outcomesCompleted": 5448
+        }
+      },
+      "order_search": null,
+      "available_cpus": 32,
+      "load_observed": [
+        31.87,
+        19.93,
+        20.8
+      ],
+      "overall_sim_ms": 11176,
+      "missing_candidates": 16
+    },
+    {
+      "source": {
+        "offset": 1298704928,
+        "length": 76676,
+        "sha256": "1a1a90198bda99eb23a79a631eb367d22cd73bdf751b9f781e6b8788ac736623"
+      },
+      "raw_SHA_verified": true,
+      "floor": 25,
+      "label": "rest/plan",
+      "paired_samples": 232,
+      "complete_outcomes": 2600,
+      "comparison": {
+        "samples": 232,
+        "elapsedMs": 10977,
+        "timedOut": true,
+        "workers": 24,
+        "deadlineMs": 10974.493430999806,
+        "pool": {
+          "queueMs": 0,
+          "coldStart": false,
+          "preparationMs": 1,
+          "firstReplyMs": 618,
+          "chunksPlanned": 1375,
+          "chunksDispatched": 349,
+          "chunksCompleted": 325,
+          "outcomesCompleted": 2600
+        }
+      },
+      "order_search": null,
+      "available_cpus": 32,
+      "load_observed": [
+        22.69,
+        23.14,
+        22.09
+      ],
+      "overall_sim_ms": 11125,
+      "missing_candidates": 10
+    },
+    {
+      "source": {
+        "offset": 1301850776,
+        "length": 36919,
+        "sha256": "1acfc5960f212c62bd3437f03e6eccddf19f099357df635c838989451aaa7b01"
+      },
+      "raw_SHA_verified": true,
+      "floor": 35,
+      "label": "reward/card",
+      "paired_samples": 16,
+      "complete_outcomes": 192,
+      "comparison": {
+        "samples": 16,
+        "elapsedMs": 8072,
+        "timedOut": true,
+        "workers": 24,
+        "deadlineMs": 8069.469516999554,
+        "pool": {
+          "queueMs": 0,
+          "coldStart": false,
+          "preparationMs": 15,
+          "firstReplyMs": 3440,
+          "chunksPlanned": 500,
+          "chunksDispatched": 47,
+          "chunksCompleted": 24,
+          "outcomesCompleted": 192
+        }
+      },
+      "order_search": {
+        "samples": 0,
+        "elapsedMs": 2692,
+        "timedOut": true,
+        "workers": 24,
+        "deadlineMs": 2690.724914249964,
+        "pool": {
+          "queueMs": 0,
+          "coldStart": true,
+          "preparationMs": 108,
+          "firstReplyMs": null,
+          "chunksPlanned": 39,
+          "chunksDispatched": 24,
+          "chunksCompleted": 0,
+          "outcomesCompleted": 0
+        }
+      },
+      "available_cpus": 32,
+      "load_observed": [
+        15.95,
+        17.26,
+        19.64
+      ],
+      "overall_sim_ms": 10781,
+      "missing_candidates": 4
+    },
+    {
+      "source": {
+        "offset": 1301890884,
+        "length": 13359,
+        "sha256": "a6d3f13f21ef42335751c37f4660ef84199acbb56085c6bafea2ac7088da30ff"
+      },
+      "raw_SHA_verified": true,
+      "floor": 36,
+      "label": "event/choose",
+      "paired_samples": 96,
+      "complete_outcomes": 304,
+      "comparison": {
+        "samples": 96,
+        "elapsedMs": 8062,
+        "timedOut": true,
+        "workers": 24,
+        "deadlineMs": 8062.885311999824,
+        "pool": {
+          "queueMs": 0,
+          "coldStart": false,
+          "preparationMs": 6,
+          "firstReplyMs": 2614,
+          "chunksPlanned": 375,
+          "chunksDispatched": 62,
+          "chunksCompleted": 38,
+          "outcomesCompleted": 304
+        }
+      },
+      "order_search": {
+        "samples": 0,
+        "elapsedMs": 2690,
+        "timedOut": true,
+        "workers": 24,
+        "deadlineMs": 2688.2272474999772,
+        "pool": {
+          "queueMs": 0,
+          "coldStart": false,
+          "preparationMs": 1,
+          "firstReplyMs": null,
+          "chunksPlanned": 39,
+          "chunksDispatched": 24,
+          "chunksCompleted": 0,
+          "outcomesCompleted": 0
+        }
+      },
+      "available_cpus": 32,
+      "load_observed": [
+        19.07,
+        18.02,
+        19.79
+      ],
+      "overall_sim_ms": 10772,
+      "missing_candidates": 2
+    },
+    {
+      "source": {
+        "offset": 1302095925,
+        "length": 36714,
+        "sha256": "eb16c7c15c04ad18b75798690519a536154e2c6ce9809cff7e3caa3f77365c0b"
+      },
+      "raw_SHA_verified": true,
+      "floor": 37,
+      "label": "reward/card",
+      "paired_samples": 208,
+      "complete_outcomes": 880,
+      "comparison": {
+        "samples": 208,
+        "elapsedMs": 8206,
+        "timedOut": true,
+        "workers": 24,
+        "deadlineMs": 8204.977325000335,
+        "pool": {
+          "queueMs": 0,
+          "coldStart": false,
+          "preparationMs": 2,
+          "firstReplyMs": 2019,
+          "chunksPlanned": 500,
+          "chunksDispatched": 134,
+          "chunksCompleted": 110,
+          "outcomesCompleted": 880
+        }
+      },
+      "order_search": {
+        "samples": 40,
+        "elapsedMs": 2738,
+        "timedOut": true,
+        "workers": 24,
+        "deadlineMs": 2736.116153000039,
+        "pool": {
+          "queueMs": 0,
+          "coldStart": false,
+          "preparationMs": 0,
+          "firstReplyMs": 1515,
+          "chunksPlanned": 39,
+          "chunksDispatched": 39,
+          "chunksCompleted": 16,
+          "outcomesCompleted": 128
+        }
+      },
+      "available_cpus": 32,
+      "load_observed": [
+        11.61,
+        16.58,
+        19.11
+      ],
+      "overall_sim_ms": 11008,
+      "missing_candidates": 4
+    }
+  ],
+  "run_config_original_headers": [
+    {
+      "source": {
+        "offset": 1635335,
+        "length": 5124,
+        "sha256": "f8e4a2f5a4463460d92d79132a7baf506531dc6e517de6fc39cc8b7aece5a554"
+      },
+      "observed_fields": {
+        "run_id": "EEVP0QTLMSX9",
+        "ts": "2026-10-13T20:33:39.684Z",
+        "code": {
+          "commit": "60d5206de96389c3430370c0dbb8704f32714d7a",
+          "code": "60d5206+dirty",
+          "dirty": true,
+          "dirty_files": [
+            "knowledge/characters/silent/boss-damage.json",
+            "knowledge/characters/silent/construction-opportunities.json",
+            "knowledge/characters/silent/fight-value-gates.json",
+            "knowledge/characters/silent/fight-value.json",
+            "knowledge/characters/silent/monster-records.json",
+            "knowledge/characters/silent/outcome-stats.json",
+            "knowledge/characters/silent/room-costs.json",
+            "knowledge/common/card-upgrades.json",
+            "knowledge/common/monster-db.json",
+            "knowledge/common/move-model.json",
+            "notes/fight-value-backtest-silent.md",
+            "notes/monster-db-check.md"
+          ],
+          "branch": "live",
+          "worktree": "live"
+        },
+        "character": "SILENT",
+        "ascension": 10,
+        "target_ascension": 11
+      },
+      "boss_sim_enabled": null
+    }
+  ],
+  "current_owner_snapshot": [
+    {
+      "batch": "20261014-050124-fix-batch",
+      "state": "failed",
+      "task": "fix-batch",
+      "pid": 2275316,
+      "worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-050124"
+    }
+  ],
+  "decision": "Continue the original v5-dpr-health-20261013 chain with the already tested original 050124 source 288f37d3. A fixed whole-sample transport regression does not establish the number of lost samples or the cause of this run’s low paired counts.",
+  "limits": {
+    "minimum_samples": 300,
+    "requested": 1000,
+    "question_ms": 11000,
+    "workers": 24
+  },
+  "observed_outcome_counts_not_paired_samples": true,
+  "candidate_missing_counts_not_question_count": true,
+  "delivery_not_reasoning_or_win_rate": true,
+  "no_duplicate_research_or_restart_or_threshold_reduction": true,
+  "original_DPR_performance_parent_not_closed": true
+}

@@ -1,0 +1,51 @@
+{
+  "task": "fix-batch",
+  "base": "4d6f7edcd300dfb3b7123fd3754dfc545d64ed80",
+  "fixes": [
+    {
+      "item": "v5-dpr-health-20261013：期限到时块内已完成样本未回传而丢失",
+      "commit": "288f37d323f7ed57eb3faf86beee6bcb8dd354e3",
+      "test": "agent/tests/build-sim-cancellation.test.ts",
+      "fails_without_fix": true
+    }
+  ],
+  "skipped": [
+    {
+      "item": "v5-dpr-health-20261013暖池配对样本不足与完整DPR性能父项",
+      "reason": "证据不足：本批固定反例只证明块内样本传输丢失，不证明8AGE原告警损失量或自然DPR供给/性能/胜率；300/1000/11000ms/24线程保持。"
+    },
+    {
+      "item": "sandbox-glob-startup-race上游目录生命周期与自然恢复",
+      "reason": "证据不足：已有有界恢复与复盘租约修复；原无租约、具体目录删除者及自然恢复缺口保持，不放宽deny/租约。"
+    },
+    {
+      "item": "core-build-notify-222802-rc2旧通知安全恢复",
+      "reason": "证据不足：失败诊断已修，旧无stderr失败是否送达未知，不能重放外部通知。"
+    },
+    {
+      "item": "调度公平性核查",
+      "reason": "证据不足：原插入序观察不足以证明永久饥饿，需原dispatch/seen_runs/完成局时序；不改并发/排序/租约。"
+    },
+    {
+      "item": "named-card-facts-transport其他入口与P1/P2消费者验收",
+      "reason": "策略类/独立功能：事件资料漏传子项已修，宽父项沿原具名卡/消费者任务。"
+    },
+    {
+      "item": "出牌/药水/SL/终局/路线/休息与机制宽提案（含silent-0446/0459）",
+      "reason": "策略类：已登记独立strategy-proposal链保留，不抢原实现任务、不重复提案/派发，不补游戏知识。"
+    },
+    {
+      "item": "缓存实测、B4/B5校准、量化/核心、漏斗归因和统一资源价值父要求",
+      "reason": "策略类/独立功能：保持原owner/缺证范围，本批不调用LLM/网络，不将上线子项当父成果完成。"
+    }
+  ],
+  "merged": null,
+  "tests": {
+    "tsc": 0,
+    "vitest": 0,
+    "cases": 3622
+  },
+  "code_proposals": [],
+  "implementation_domains": [],
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-050124/learner/runs/20261014-050137-fix-batch/report.md"
+}
