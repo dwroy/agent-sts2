@@ -1,0 +1,77 @@
+{
+  "task": "fix-batch",
+  "base": "2e5d6529c53f5c8d3d8bc155dc8e0e715a3c5cfb",
+  "fixes": [
+    {
+      "item": "ops-worktree-history-disk-pressure-20261013：broker 回执持久化失败隔离、容量预留与无重放恢复",
+      "commit": "a136ddc4b5b0a8696f10b2fae3073322d57e724c",
+      "test": "agent/tests/broker-response-persistence.test.ts",
+      "fails_without_fix": true
+    },
+    {
+      "item": "ops-worktree-history-disk-pressure-20261013：故障标记缺失时 autoplay 保留退出码并显式退出",
+      "commit": "db072ddab47ba94efb46dce2913927f936ecb97e",
+      "test": "agent/tests/autoplay-marker-failure.test.ts",
+      "fails_without_fix": true
+    },
+    {
+      "item": "ops-worktree-history-disk-pressure-20261013：截断 JSONL 的追加边界与偏移/SHA 审计",
+      "commit": "9b07240b18f862efdbe630889ade04e8976eaace",
+      "test": "agent/tests/jsonl-boundary-recovery.test.ts",
+      "fails_without_fix": true
+    },
+    {
+      "item": "learning-notice-ordinary-ack-registry-20261013：普通通知 ACK 写前校验并免查不存在的学习父要求",
+      "commit": "672e198a4730012330f599068a0ef1efadb02002",
+      "test": "agent/tests/ordinary-notice-ack.test.ts",
+      "fails_without_fix": true
+    }
+  ],
+  "skipped": [
+    {
+      "item": "其余机制、出牌、药水、SL、终局、路线及休息提案",
+      "reason": "策略类：沿既有strategy-proposal；有限子项不关闭整个宽提案，本批未添加游戏判断。"
+    },
+    {
+      "item": "silent-0365：未建模定向药水目标截成前两个",
+      "reason": "独立药水/结构提案：当前combat-plan.ts:3909仍为targets.slice(0, 2)；silent-proposal-70c22e94eda8f8a9已承接合法目标及题目容量契约，本批不混入原实现任务。"
+    },
+    {
+      "item": "rest-timeout-accepted-route-not-committed（silent-0446，MEXYTC0Z2MQQ F12）",
+      "reason": "太大/独立结构提案：当前loop.ts异常分支仍绕过applyResolved；原silent-proposal-2d3aa8dfb27dbe3f明确交strategy-proposal实现待确认事务、同局同房动作确认、重启回放和一次性提交。不能无条件apply或仅凭HP变化确认。"
+    },
+    {
+      "item": "silent-0332：双boss接续资源异常根因",
+      "reason": "证据不足：已有分支/seed/资源诊断，VAC6Z1PZ1QJG及64VJC5XT2AT2 F47缺可重放触发样本；保留原提案链，不猜填HP或药水。"
+    },
+    {
+      "item": "core-build-notify-222802-rc2历史失败恢复",
+      "reason": "证据不足：5c92f2aa已修后续失败诊断；旧rc2无stderr，不能证明未发送，保留幂等记录且不重发。"
+    },
+    {
+      "item": "sandbox-glob-startup-race上游目录竞态",
+      "reason": "证据不足：bc2c40e31与4fef181d5已补会话前有界恢复及预检复验；上游目录创建/删除者未证，保留原失败及权限边界。 新增124302/V4BTVFPS9XHV启动失败及本批工具扫描ENOENT已核；上游删除者/框架根因仍未知，不改外部沙箱或凭据屏蔽。"
+    },
+    {
+      "item": "调度公平性、mod短暂超时、既有测试超时的精确宿主时序",
+      "reason": "证据不足：尚未证明永久饥饿、mod内部原因或历史负载因果；固定夹具修复不替代因果证据。"
+    },
+    {
+      "item": "具名卡全入口/未知派发/量化消费者、全漏斗/学习优先级/统一资源价值/F33归因/B4-B5/缓存性能专项",
+      "reason": "太大/独立功能或策略研究：继续原专用任务和父要求；已上线事件子项及工具入口不关闭整个需求。"
+    },
+    {
+      "item": "host-loop-time-cap-wall-clock-061301：历史宿主时序及旧补验拒绝根因",
+      "reason": "证据不足：原1072ms宿主时序及旧空输出exit2拒绝阶段仍未证。确定性夹具/拒绝诊断已经上线；队列09:07记录原080052宿主397文件4226通过/2跳过，本批不重复该完整检查或倒写旧失败。"
+    }
+  ],
+  "merged": null,
+  "tests": {
+    "tsc": 0,
+    "vitest": 0,
+    "cases": 3479
+  },
+  "code_proposals": [],
+  "implementation_domains": [],
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-131301/learner/runs/20261013-131316-fix-batch/report.md"
+}

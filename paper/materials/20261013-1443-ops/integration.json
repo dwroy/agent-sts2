@@ -1,0 +1,147 @@
+{
+  "at": "2026-10-13 14:46:48 CST",
+  "batch": "20261013-131301-fix-batch",
+  "before": {
+    "main": "45d864004d9391eea6f9a38229d2bedfe97846dc",
+    "live": "ffeab7d4253cf09639be6805bb1ecb94606ce12f"
+  },
+  "refresh_commit": "9f72d080b2e90ac13bea3d16ec57d22dec13581d",
+  "preserved_refresh_sha256": {
+    "knowledge/characters/silent/boss-damage.json": "1b17aa133b7110fc6d26661aefed7b8e7b30c07e57c7f891bb582e2e321280de",
+    "knowledge/characters/silent/fight-value-gates.json": "3f579eb23a171932485f344411df24f8ee71926826946b6de4fbb86c4b80b86f",
+    "knowledge/characters/silent/fight-value.json": "3a80a6535877a53a28f5d7e2683b62ffabd56474651f201e3f5a171223b9788e",
+    "knowledge/characters/silent/monster-records.json": "a6aa0bbb9412ec51a91d554dd60bcfcd1d21ab5ebd72a1313f2c76d868e17d1f",
+    "knowledge/characters/silent/outcome-stats.json": "f4109f115e3e12b4baee742f8a9a282e5be01d3ae91b759bfbbb7d879b45fdeb",
+    "knowledge/characters/silent/room-costs.json": "511185bdaea24abe440dc613cb0709d1362bc569454885cb18226f4c482a018d",
+    "knowledge/common/card-upgrades.json": "d2a657e60de79e64a632280c7958142b288b9082a2b81b2eb5627e413567cace",
+    "knowledge/common/monster-db.json": "212af162fc626d79bb72b3aae1502ef8327bcdd7bd5cfe2d847c1be2e00904e2",
+    "knowledge/common/move-model.json": "1b5e1fc740b71ea72b44f7965088ce9784a2ec5c21474098e800d7b5c756cedf",
+    "notes/fight-value-backtest-silent.md": "b68aef9c8e1dca556be29e7ec5c2517aaa533d27d2e784a278ccf7dade282296",
+    "notes/monster-db-check.md": "2db773d7714f9dbbcb0e701e8fa94a4edde5a93d425c75adad5d5a2d092abbf0"
+  },
+  "source_commits": [
+    "a136ddc4b5b0a8696f10b2fae3073322d57e724c",
+    "db072ddab47ba94efb46dce2913927f936ecb97e",
+    "9b07240b18f862efdbe630889ade04e8976eaace",
+    "672e198a4730012330f599068a0ef1efadb02002"
+  ],
+  "deployed_leaves": [
+    {
+      "source": "a136ddc4b5b0a8696f10b2fae3073322d57e724c",
+      "main": "6eb38508ceeb81d534159b3516458521ad09bbed",
+      "live": "8cf6e3a4c4b9f059d18c677699cd1cc6e70769e4"
+    },
+    {
+      "source": "db072ddab47ba94efb46dce2913927f936ecb97e",
+      "main": "64905e235a35137f3dc2121ab8d8bdccc3fbfe0f",
+      "live": "e20f7afb784d3b112d6ee21ffd29fa8dcb378ec7"
+    },
+    {
+      "source": "9b07240b18f862efdbe630889ade04e8976eaace",
+      "main": "3daf122a5168d1a8cb456aed1c926b2d1b6c4488",
+      "live": "c8a65535f1398d2924341865c324c583e1ac6d04"
+    },
+    {
+      "source": "672e198a4730012330f599068a0ef1efadb02002",
+      "main": "c308a7011f33e0fb07cb0ebd2f4803ace698a0bf",
+      "live": "a57ca2d718913c1ccc7e0e10ad300ac05fe84121"
+    }
+  ],
+  "blobs": {
+    "agent/src/brain/engines/codex.ts": {
+      "main": "c0849f19659a5cce9db66b03e9a948fa079f6725",
+      "live": "c0849f19659a5cce9db66b03e9a948fa079f6725",
+      "source": "c0849f19659a5cce9db66b03e9a948fa079f6725"
+    },
+    "agent/src/brain/router.ts": {
+      "main": "42e66e13940597dd0708a41f4838f76baf6933d8",
+      "live": "42e66e13940597dd0708a41f4838f76baf6933d8",
+      "source": "42e66e13940597dd0708a41f4838f76baf6933d8"
+    },
+    "agent/src/brain/wait.ts": {
+      "main": "17f185a8438dd54601aa32023eec3126f34a144f",
+      "live": "17f185a8438dd54601aa32023eec3126f34a144f",
+      "source": "17f185a8438dd54601aa32023eec3126f34a144f"
+    },
+    "agent/src/core/util/jsonl.ts": {
+      "main": "d4c13928fbec29809180baf5dbabd4f80f7fc494",
+      "live": "d4c13928fbec29809180baf5dbabd4f80f7fc494",
+      "source": "d4c13928fbec29809180baf5dbabd4f80f7fc494"
+    },
+    "agent/src/eye/decision-log.ts": {
+      "main": "ff76f93f23f91c50dfd6d4ce160dd672d3b45e89",
+      "live": "ff76f93f23f91c50dfd6d4ce160dd672d3b45e89",
+      "source": "ff76f93f23f91c50dfd6d4ce160dd672d3b45e89"
+    },
+    "agent/src/eye/jev-prompt-log.ts": {
+      "main": "48891d58075074a9a64f25c33deece8aa750cc47",
+      "live": "48891d58075074a9a64f25c33deece8aa750cc47",
+      "source": "48891d58075074a9a64f25c33deece8aa750cc47"
+    },
+    "agent/src/eye/run-config.ts": {
+      "main": "7ea196925e0127e65e5f903a40f07fec7ac636e2",
+      "live": "7ea196925e0127e65e5f903a40f07fec7ac636e2",
+      "source": "7ea196925e0127e65e5f903a40f07fec7ac636e2"
+    },
+    "agent/tests/autoplay-marker-failure.test.ts": {
+      "main": "4b191663267121135a9f30d2ca0400aa4d0e9483",
+      "live": "4b191663267121135a9f30d2ca0400aa4d0e9483",
+      "source": "4b191663267121135a9f30d2ca0400aa4d0e9483"
+    },
+    "agent/tests/broker-response-persistence.test.ts": {
+      "main": "e931377343ad1ca2b8bc7014ae951a67c9a5ddc5",
+      "live": "e931377343ad1ca2b8bc7014ae951a67c9a5ddc5",
+      "source": "e931377343ad1ca2b8bc7014ae951a67c9a5ddc5"
+    },
+    "agent/tests/jsonl-boundary-recovery.test.ts": {
+      "main": "9f1ef0de779d50de1600e8b98025131bbf6c0f3e",
+      "live": "9f1ef0de779d50de1600e8b98025131bbf6c0f3e",
+      "source": "9f1ef0de779d50de1600e8b98025131bbf6c0f3e"
+    },
+    "agent/tests/ordinary-notice-ack.test.ts": {
+      "main": "38a50f3aca2b692af8f4e9e8dafd433c5cc5d4fc",
+      "live": "38a50f3aca2b692af8f4e9e8dafd433c5cc5d4fc",
+      "source": "38a50f3aca2b692af8f4e9e8dafd433c5cc5d4fc"
+    },
+    "ops/autoplay.sh": {
+      "main": "34bc517cec988e21a8f7c7f91fcdf5fb95adc187",
+      "live": "34bc517cec988e21a8f7c7f91fcdf5fb95adc187",
+      "source": "34bc517cec988e21a8f7c7f91fcdf5fb95adc187"
+    },
+    "ops/codex/broker.ts": {
+      "main": "087bad9c5b48b04ea66dbbbfc42edad77096e297",
+      "live": "087bad9c5b48b04ea66dbbbfc42edad77096e297",
+      "source": "087bad9c5b48b04ea66dbbbfc42edad77096e297"
+    },
+    "ops/codex/main.ts": {
+      "main": "6d20921c15aae9ed972166082f50ab3ddf8e65de",
+      "live": "609730c9e9fbe5d25e757612c384a4fef45d832c",
+      "source": "6d20921c15aae9ed972166082f50ab3ddf8e65de"
+    },
+    "ops/learning_requests.py": {
+      "main": "fa72ead6e2e31d629ea7bbc18369e9aa5d6341ec",
+      "live": "fa72ead6e2e31d629ea7bbc18369e9aa5d6341ec",
+      "source": "fa72ead6e2e31d629ea7bbc18369e9aa5d6341ec"
+    },
+    "ops/tests/test_autoplay_marker_failure.py": {
+      "main": "ad058b5ffd5e293afe366486af13ba761e4dc326",
+      "live": "ad058b5ffd5e293afe366486af13ba761e4dc326",
+      "source": "ad058b5ffd5e293afe366486af13ba761e4dc326"
+    },
+    "ops/tests/test_ordinary_notice_ack.py": {
+      "main": "e3fe478730a579bcc17aa82f8171710a6a3c9c65",
+      "live": "e3fe478730a579bcc17aa82f8171710a6a3c9c65",
+      "source": "e3fe478730a579bcc17aa82f8171710a6a3c9c65"
+    }
+  },
+  "after": {
+    "main": "a923acaca7c7d198f869554a17deb10d04fc4ba0",
+    "live": "218fd8fd01e7a4a6356f17d674dc8458cb16bc2e",
+    "live_tree": "5e8e373ceacce2e1c0a71ac0e86af334e6da0853"
+  },
+  "original_merge_conflicts_preserved": true,
+  "live_role_comment_preserved": true,
+  "no_game_restart": true,
+  "no_game_rule_release": true,
+  "host_checks_pending": true
+}

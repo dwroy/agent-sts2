@@ -1,0 +1,55 @@
+{
+  "source_checks": {
+    "broker": {
+      "tsc": 0,
+      "vitest": 0,
+      "files": 357,
+      "cases": 3452,
+      "test": "agent/tests/broker-response-persistence.test.ts:retains a completed result and request after rename failure, drains later requests, and never replays the action",
+      "red": 1,
+      "green": 0
+    },
+    "autoplay": {
+      "tsc": 0,
+      "vitest": 0,
+      "files": 358,
+      "cases": 3453,
+      "test": "agent/tests/autoplay-marker-failure.test.ts:preserves terminal exits without a durable marker and retains the existing explicit recovery hold",
+      "red": 1,
+      "green": 0
+    },
+    "jsonl": {
+      "tsc": 0,
+      "vitest": 0,
+      "files": 359,
+      "cases": 3478,
+      "test": "agent/tests/jsonl-boundary-recovery.test.ts:'brain' JSONL append boundaries > preserves truncated JSON bytes and starts independently parseable fresh records",
+      "red": 1,
+      "green": 0
+    },
+    "ack": {
+      "tsc": 0,
+      "vitest": 0,
+      "files": 360,
+      "cases": 3479,
+      "test": "agent/tests/ordinary-notice-ack.test.ts:acknowledges verified ordinary notices without inventing a learning parent and rejects invalid proofs before writes",
+      "red": 1,
+      "green": 0
+    }
+  },
+  "source_head": "672e198a4730012330f599068a0ef1efadb02002",
+  "original_conflicts": [
+    "docs/learner-retention.md",
+    "learner/README.md",
+    "notes/fix-queue-v4.md",
+    "notes/for-roy.md",
+    "ops/inbox-dev.md",
+    "ops/learner_retention.py",
+    "ops/tests/test_learner_retention.py",
+    "paper/materials/decision-log.md"
+  ],
+  "original_merged": null,
+  "original_state_failed_rc0_preserved": true,
+  "ledger_updates": [],
+  "real_notice_ack_written_by_source": false
+}
