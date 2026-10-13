@@ -455,6 +455,19 @@ def sweep(root, state_dir, apply, limit):
     batches.sort(key=lambda ident: state["batches"][ident].get("task", "postmortem") == "postmortem")
     batches.sort(key=lambda ident: not (state_dir / "retention/requests" / (ident + ".json")).is_file())
     for batch_id in batches:
+        batch = state["batches"][batch_id]
+        tree = safe_path(root, batch.get("worktree") or root)
+        workspace_manifest = state_dir / "retention/worktree-archives" / (tree.name + ".manifest.json")
+        if workspace_manifest.is_file() and not (tree / ".git").exists():
+            workspace = load(workspace_manifest)
+            if (workspace.get("state") == "reclaimed" and workspace.get("root") == str(root)
+                    and workspace.get("proof", {}).get("worktree") == str(tree)
+                    and batch_id in workspace["proof"].get("learner_owners", [])):
+                if apply:
+                    request_outcome(root, state_dir, batch_id, {
+                        "state": "checkout_reclaimed", "workspace_manifest": str(workspace_manifest.relative_to(root)),
+                        "workspace_manifest_sha256": sha_file(workspace_manifest), "no_parent_request_closed": True})
+                continue
         if (state_dir / "retention/archives" / (batch_id + ".manifest.json")).exists():
             if apply:
                 manifest = load(state_dir / "retention/archives" / (batch_id + ".manifest.json"))

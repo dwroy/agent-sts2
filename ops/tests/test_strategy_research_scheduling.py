@@ -526,7 +526,8 @@ class ResearchScheduling(unittest.TestCase):
 
     def assert_host_wrapper_registration(self, ident=IDENT):
         (self.root / "ops").mkdir(exist_ok=True)
-        for name in ("paths.sh", "codex-ops-learner.sh", "strategy_research_jobs.py", "disk_capacity.py"):
+        for name in ("paths.sh", "codex-ops-learner.sh", "strategy_research_jobs.py", "disk_capacity.py",
+                     "worktree_checkout.py", "worktree_retention.py", "learner_retention.py", "learner_checks.py"):
             shutil.copy2(REPO / "ops" / name, self.root / "ops" / name)
         (self.root / "agent/node_modules").mkdir()
         (self.root / "ops/codex-ops-learn.py").write_text(
