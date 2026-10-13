@@ -37,11 +37,25 @@ export interface DeckRunRequest {
   scripts?: boolean;
   /** Milliseconds from the call after which no more tasks are started; the samples done by then are returned. */
   deadlineMs?: number;
+  /** Opt-in telemetry; independent of the sampling clock and never sent to the solver. */
+  diagnostics?: boolean;
   /** The clock (default performance.now); tests pass their own. */
   now?: () => number;
 }
 
+export interface DeckRunDiagnostics {
+  queueMs: number;
+  coldStart: boolean;
+  preparationMs: number;
+  firstReplyMs: number | null;
+  chunksPlanned: number;
+  chunksDispatched: number;
+  chunksCompleted: number;
+  outcomesCompleted: number;
+}
+
 export interface DeckRunResult {
+  diagnostics?: DeckRunDiagnostics;
   /** outcomes[deck][order][sample], undefined where not run (the deadline, or outside the deck's stripe). */
   outcomes: (FightSampleResult | undefined)[][][];
   /** Samples every deck (whose stripe has it) finished under every order. */
@@ -169,12 +183,15 @@ export class BuildSimPool implements DeckSimRunner {
   }
 
   run(req: DeckRunRequest): Promise<DeckRunResult> {
-    const next = this.queue.then(() => this.runNow(req));
+    const queued = performance.now();
+    const next = this.queue.then(() => this.runNow(req, performance.now() - queued));
     this.queue = next.catch(() => undefined);
     return next;
   }
 
-  private async runNow(req: DeckRunRequest): Promise<DeckRunResult> {
+  private async runNow(req: DeckRunRequest, queueMs: number): Promise<DeckRunResult> {
+    const diagnosticStart = performance.now();
+    const coldStart = this.workers.length === 0;
     const now = req.now ?? (() => performance.now());
     const started = now();
     const workers = this.start();
@@ -183,6 +200,9 @@ export class BuildSimPool implements DeckSimRunner {
     const outcomes = emptyOutcomes(req);
     const { base, decks } = slimDecks(req.base, req.decks);
     const used = workers.slice(0, Math.min(workers.length, chunks.length));
+    const diagnostics: DeckRunDiagnostics = { queueMs: Math.round(queueMs), coldStart,
+      preparationMs: Math.round(performance.now() - diagnosticStart), firstReplyMs: null,
+      chunksPlanned: chunks.length, chunksDispatched: 0, chunksCompleted: 0, outcomesCompleted: 0 };
     let timedOut = false;
     await new Promise<void>((resolve, reject) => {
       let pending = chunks.length;
@@ -211,7 +231,10 @@ export class BuildSimPool implements DeckSimRunner {
           return;
         }
         const tasks = chunks.shift();
-        if (tasks) worker.postMessage({ type: "run", batch, tasks } satisfies BuildWorkerRequest);
+        if (tasks) {
+          diagnostics.chunksDispatched += 1;
+          worker.postMessage({ type: "run", batch, tasks } satisfies BuildWorkerRequest);
+        }
       };
       if (chunks.length === 0) {
         resolve();
@@ -225,6 +248,9 @@ export class BuildSimPool implements DeckSimRunner {
             finish(new Error(`build-sim worker: ${reply.error}`));
             return;
           }
+          diagnostics.firstReplyMs ??= Math.round(performance.now() - diagnosticStart);
+          diagnostics.chunksCompleted += 1;
+          diagnostics.outcomesCompleted += reply.results.length;
           for (const [deck, order, i, result] of reply.results) outcomes[deck]![order]![i] = result;
           pending -= 1;
           if (pending === 0) finish();
@@ -244,7 +270,7 @@ export class BuildSimPool implements DeckSimRunner {
         }, Math.max(0, req.deadlineMs - (now() - started)));
       }
     });
-    return { outcomes, complete: completeSamples(req, outcomes), timedOut, elapsedMs: Math.round(now() - started), workers: used.length };
+    return { outcomes, complete: completeSamples(req, outcomes), timedOut, elapsedMs: Math.round(now() - started), workers: used.length, ...(req.diagnostics ? { diagnostics } : {}) };
   }
 
   /** Workers running now (0 before the first run and after close()). */

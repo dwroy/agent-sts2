@@ -9,7 +9,7 @@
 
 import type { RolloutInput } from "../reflex/rollout.js";
 import { calibratedWinProb, compareLines, fightOrders, summarizeLine, type BossSimLineResult, type FightSampleResult } from "./boss-sim.js";
-import type { DeckSimRunner } from "./build-sim-pool.js";
+import type { DeckSimRunner, DeckRunResult } from "./build-sim-pool.js";
 import type { JsonValue } from "../core/util/json.js";
 import { quantitativeFightFacts } from "./quantitative-facts.js";
 
@@ -66,6 +66,7 @@ export interface OptionSim {
 }
 
 export interface CompareResult {
+  diagnostics?: { decks: number; options: number; deckCards: number; deadlineMs: number | null; orderSearch: Record<string, JsonValue> | null; comparison: Record<string, JsonValue> };
   base: OptionSim;
   options: OptionSim[];
   samples: number;
@@ -125,7 +126,7 @@ export async function compareOptions(
   runner: DeckSimRunner,
   base: RolloutInput,
   options: DeckOption[],
-  opts: { samples?: number; seed?: number; deadlineMs?: number; now?: () => number; quantitative?: boolean } = {},
+  opts: { samples?: number; seed?: number; deadlineMs?: number; now?: () => number; quantitative?: boolean; diagnostics?: boolean } = {},
 ): Promise<CompareResult> {
   if (opts.quantitative && base.meta.asc === 10) base = { ...base, captureCore: true, captureResources: true };
   const samples = opts.samples ?? BUILD_SIM_SAMPLES;
@@ -152,15 +153,21 @@ export async function compareOptions(
   const seed = opts.seed ?? BUILD_SIM_SEED;
   const allOrders = [null, ...fightOrders(base)];
   // The kill order: the one the current deck wins most with (boss-sim runBestOrder's rule), on a first short run.
+  const phase = (run: DeckRunResult, deadline: number | undefined): Record<string, JsonValue> => ({
+    samples: run.complete.length, elapsedMs: run.elapsedMs, timedOut: run.timedOut, workers: run.workers,
+    deadlineMs: deadline ?? null, ...(run.diagnostics ? { pool: { ...run.diagnostics } } : {}),
+  });
+  let orderSearch: Record<string, JsonValue> | null = null;
   let order = allOrders[0]!;
   if (allOrders.length > 1) {
-    const first = await runner.run({ base, decks: [{}], orders: allOrders, samples: Math.min(samples, BUILD_SIM_ORDER_SAMPLES), seed, ...(opts.deadlineMs !== undefined ? { deadlineMs: opts.deadlineMs / 4 } : {}), ...(opts.now ? { now: opts.now } : {}) });
+    const first = await runner.run({ base, decks: [{}], orders: allOrders, samples: Math.min(samples, BUILD_SIM_ORDER_SAMPLES), seed, ...(opts.diagnostics ? { diagnostics: true } : {}), ...(opts.deadlineMs !== undefined ? { deadlineMs: opts.deadlineMs / 4 } : {}), ...(opts.now ? { now: opts.now } : {}) });
+    if (opts.diagnostics) orderSearch = phase(first, opts.deadlineMs === undefined ? undefined : opts.deadlineMs / 4);
     const lines = allOrders.map((_, o) => summarizeLine(0, lineOf(first.outcomes, [0], o, first.complete)));
     order = allOrders[bestOrder(lines)]!;
   }
   const orders = [order];
   const left = opts.deadlineMs !== undefined ? Math.max(0, opts.deadlineMs - (now() - started)) : undefined;
-  const run = await runner.run({ base, decks, stripes, orders, samples, seed, ...(left !== undefined ? { deadlineMs: left } : {}), ...(opts.now ? { now: opts.now } : {}) });
+  const run = await runner.run({ base, decks, stripes, orders, samples, seed, ...(opts.diagnostics ? { diagnostics: true } : {}), ...(left !== undefined ? { deadlineMs: left } : {}), ...(opts.now ? { now: opts.now } : {}) });
   const complete = run.complete;
   const summarize = (ids: number[]): BossSimLineResult & { order: string | null } => ({ ...summarizeLine(0, lineOf(run.outcomes, ids, 0, complete)), order: order?.label ?? null });
   const hpOf = (change: Partial<RolloutInput> | null | undefined) => change?.solver?.player.hp ?? base.solver.player.hp;
@@ -194,6 +201,8 @@ export async function compareOptions(
     return simOf(option.key, line, option.mixture ? hpOf(option.mixture[0]) : hpOf(option.change), false);
   });
   return {
+    ...(opts.diagnostics ? { diagnostics: { decks: decks.length, options: options.length, deckCards: base.piles.draw.length,
+      deadlineMs: opts.deadlineMs ?? null, orderSearch, comparison: phase(run, left) } } : {}),
     base: simOf("current", baseLine, base.solver.player.hp, true),
     options: out,
     samples: n,

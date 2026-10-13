@@ -405,6 +405,19 @@ def main(*, code=None):
                 "death_enemy_ids": None if victory or not fights else sorted(x for x in fights[-1]["enemy_ids"] if x),
                 **ablation_arm(),
             }, ensure_ascii=False) + "\n")
+    # Final module acceptance reuses the already loaded complete decision records.
+    try:
+        from pathlib import Path
+        from module_health import audit
+        health = audit(Path(ROOT), Path(os.environ.get("CODEX_OPS_DIR") or os.path.join(ROOT, "ops/codex-ops")),
+                       run_id, recs, run_char)
+        if health:
+            b3 = health["b3"]
+            print(f"\nV5 DPR: {b3['produced_dpr']}/{b3['attempts']} applicable questions; "
+                  f"brain observed {health['brain']['questions_with_dpr']}/{health['brain']['observed_questions']} with DPR. "
+                  "Delivery does not prove decision use; see ops/codex-ops/module-health/.")
+    except Exception as error:
+        print(f"\nModule health acceptance failed: {type(error).__name__}: {error}", file=sys.stderr)
     return run_char
 
 
