@@ -117,7 +117,7 @@ class Lifecycle(unittest.TestCase):
             if "worktree" in argv:
                 (Path(argv[-2])/"agent").mkdir(parents=True,exist_ok=True)
             return subprocess.CompletedProcess(argv,0,stdout="f"*40)
-        with patch.object(jobs.subprocess,"run",side_effect=create_tree), patch.object(jobs,"pid_birth",return_value="birth"):
+        with patch.object(jobs.subprocess,"run",side_effect=create_tree), patch.object(jobs,"pid_birth",return_value="birth"), patch.object(jobs,"require_worktree_capacity"):
             return jobs.dispatch_candidates(self.state, e or [evidence()], str(self.root), "/scripts", alive, stamp, self.start,now)
 
     def test_actual_batch_pid_and_evidence_file(self):

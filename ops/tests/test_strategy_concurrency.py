@@ -101,7 +101,7 @@ class StrategyConcurrency(unittest.TestCase):
             (root/'data/logdb-venv/bin').mkdir(parents=True)
             (root/'data/logdb-venv/bin/python').write_text('existing fixture dependency\n')
             (root/'.gitignore').write_text('.worktrees/\nops/codex-ops/\nagent/node_modules\ndata/logdb-venv\n')
-            for name in ['paths.sh', 'codex-ops-learner.sh']:
+            for name in ['paths.sh', 'codex-ops-learner.sh', 'disk_capacity.py']:
                 shutil.copyfile(ROOT/'ops'/name, root/'ops'/name)
             (root/'ops/codex-ops-learn.py').write_text('raise SystemExit(0)\n')
             env = dict(os.environ)

@@ -10,6 +10,7 @@ import time
 import sys
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "agent/tools/boss-sim"))
 from trust import BOSS_KEYS
+from disk_capacity import require_worktree_capacity
 
 ID = re.compile(r"^[a-z][a-z0-9_]*$")
 BOSS = re.compile(r"^[A-Z][A-Z0-9_]*$")
@@ -198,6 +199,7 @@ def dispatch_candidates(state, evidence, root, scripts, alive, stamp, start, now
             with open(path, "x", encoding="utf8") as handle:
                 json.dump(e, handle, ensure_ascii=False, indent=1)
             persist(state, directory)  # Reserve before any process can start, even across scheduler restarts.
+            require_worktree_capacity(root, base)
             subprocess.run(["git", "-C", root, "worktree", "add", "-b", branch, worktree, base], check=True,
                            stdout=subprocess.DEVNULL, stderr=subprocess.PIPE)
             # Runtime links are outside the tracked tree and never include credentials.
