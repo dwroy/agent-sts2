@@ -14,10 +14,12 @@ from pathlib import Path
 
 def state_lookup(root, character):
     """Index only; read matching original bytes lazily to recover explicit upgrade flags/prices."""
+    if not (root / 'data/logdb/frames').is_dir():
+        return {}
     try:
         import duckdb
         db = duckdb.connect(config={'threads': 1})
-        rows = db.execute("SELECT run_id, floor, ts, off, len FROM read_parquet(?, union_by_name=true) WHERE lower(character)=? AND screen IN ('REWARD','SHOP') ORDER BY ts,off",
+        rows = db.execute("SELECT run_id, floor, coalesce(observed_ts,ts) AS seen_at, off, len FROM read_parquet(?, union_by_name=true) WHERE lower(character)=? AND screen IN ('REWARD','SHOP') ORDER BY seen_at,off",
                           [str(root / 'data/logdb/frames/*.parquet'), character]).fetchall()
         db.close()
         grouped = {}
