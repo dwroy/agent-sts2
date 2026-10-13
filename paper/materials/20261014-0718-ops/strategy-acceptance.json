@@ -1,0 +1,184 @@
+{
+  "at": "2026-10-14 07:24:56 CST",
+  "batch": "20261014-063524-strategy-proposal",
+  "state": "done",
+  "rc": 0,
+  "base": "c9b224846787065ea279f10c7e23c6bb5313edb3",
+  "source_commit": null,
+  "merged": null,
+  "production_tests": {
+    "tsc": null,
+    "vitest": null,
+    "cases": null
+  },
+  "proposal_results": [
+    {
+      "id": "silent-proposal-89354805ee4d7e77",
+      "state": "waiting",
+      "reason": "已有神化升级子实现；仍缺本战实际施放跨抽牌、选择、药水、SL、换战与接续的持续身份。新发现的扑击减费、反射奇巧、猎杀者次轮抽牌未有完整模拟联动，不能只补升级数值便宣称完整覆盖。"
+    },
+    {
+      "id": "silent-proposal-f2bfceddb1898dca",
+      "state": "waiting",
+      "reason": "缺同起点、同模型覆盖、同总预算、同固定随机输入池的预算配对实验及候选稳定性曲线，不能拟合MC预算、药价、HP护栏或三骑士固定focus。"
+    },
+    {
+      "id": "silent-proposal-283a164780d11e69",
+      "state": "waiting",
+      "reason": "独立经验链接仍缺实际施放及SL、换战、接续消费者；同源和已有升级子项不足以登记整项duplicate。三个未覆盖配对还有附加机制缺口。"
+    },
+    {
+      "id": "silent-proposal-ebbfe3b97548756d",
+      "state": "waiting",
+      "reason": "十五子机制尚缺逐项冻结生产调用、状态期限和路线/休息消费者验收矩阵；局部端点及既有源码不能关闭整项，也没有新的可隔离完整机制差额。"
+    },
+    {
+      "id": "silent-proposal-e5b87be50f28f311",
+      "state": "waiting",
+      "reason": "实际离线消费者已读回完整本局，但不认证完整候选；缺在线持续候选身份、中断/重问后的认证、后帧因果及成长建立时点全链。缺另一完整受控后继，不能改SL偏好。"
+    },
+    {
+      "id": "silent-proposal-49632bc4878fb597",
+      "state": "waiting",
+      "reason": "力量、虚弱、加压成长原帧已核；仍缺力量、敏捷、虚弱与独立成长四路径的完整冻结生产调用对照，步法子实现不能关闭复合经验。"
+    },
+    {
+      "id": "silent-proposal-66532328a585941f",
+      "state": "waiting",
+      "reason": "无毒冒泡的零效果证据可核；缺同HP、构筑、药水及完整抽序下不同启动顺序的整场对照和可复现收益函数，不拟合启动或构筑阈值。"
+    },
+    {
+      "id": "silent-proposal-43a76a31ba7bdcfa",
+      "state": "waiting",
+      "reason": "负敏捷与17+16毒结算已核；缺完整A10移动消费者验收和同资源、完整抽序的另一完整SL后继，不改变SL范围。"
+    },
+    {
+      "id": "silent-proposal-5264153a4a4b0e5c",
+      "state": "waiting",
+      "reason": "T4净扣47/损15及幻象余2已核；缺A10召唤、航行、复生联动的完整冻结生产调用和另一focus完整后继，不强制首杀。"
+    },
+    {
+      "id": "silent-proposal-bddfa690a84e03d0",
+      "state": "waiting",
+      "reason": "睡眠、醒来和成长端点已核；缺当前A10睡眠/伤害唤醒/眩晕/成长完整消费者验收及同抽换序完整后继，不拟合血价或固定杀序。"
+    }
+  ],
+  "original_source_rows_reverified": {
+    "states.jsonl": 718,
+    "decisions.jsonl": 3306
+  },
+  "six_SILENT_A10_runs_verified": true,
+  "ten_original_proposal_sha_verified": true,
+  "ledger": {
+    "rows": 26,
+    "each_physical_sha_verified": true,
+    "old_claim_status_version_evidence_unmodified": true
+  },
+  "source_checks": [
+    {
+      "path": "agent/src/reflex/silent-apotheosis.ts",
+      "existing_source": "a11dd870b09f3f1b67fcb5d6c08af6573fd809e0",
+      "equal_at_original_base_live_source": true,
+      "current_live_sha256": "fad01281c8ec85d472913be9e47b43970e141bb8c1396daa34d6fed6e2d959e4"
+    },
+    {
+      "path": "agent/src/reflex/silent-apotheosis-reference.ts",
+      "existing_source": "3aa6c03a83c5cdcdea29c43e3caa130bcce9bd17",
+      "equal_at_original_base_live_source": true,
+      "current_live_sha256": "96fdadf221286c9e21a11d78e7200b320da6c8db7717e9edf1915e4a5b739803"
+    },
+    {
+      "path": "agent/src/reflex/silent-selection-audit.ts",
+      "existing_source": "05cd292c6f01bb31e406473d3a9843e659d62b93",
+      "equal_at_original_base_live_source": true,
+      "current_live_sha256": "2de2533b477546682ef601d0613bd1adb805e03b894f64347475bfa4e222e4db"
+    },
+    {
+      "path": "agent/src/reflex/silent-selection-dispatch.ts",
+      "existing_source": "bade647f9fe4c9103b40e2f26b26296692ad24b7",
+      "equal_at_original_base_live_source": true,
+      "current_live_sha256": "9301b47f0f6a2589ce210d7f3b9fd232854575154e1f77e471d164070003e6d6"
+    },
+    {
+      "path": "agent/src/reflex/silent-hp-guard-audit.ts",
+      "existing_source": "a8b1f8be153fe4f3a34146117546c2178f2e446b",
+      "equal_at_original_base_live_source": true,
+      "current_live_sha256": "183a1c996ce965e05dc5735dc0f3b4f2e2ff65442c7e6779290716b0cd4bf858"
+    },
+    {
+      "path": "learner/lib/selection-execution.ts",
+      "existing_source": "9b87d54f097d84521152e6cca8d6072af8140394",
+      "equal_at_original_base_live_source": true,
+      "current_live_sha256": "5ec0be69ae1a19471e53150c6a78c8a4c40bae4469982578e11b1ef1f668c1c2"
+    },
+    {
+      "path": "learner/lib/selection-observation.ts",
+      "existing_source": "8698c581dac6c7e957f50a381586960a6d0c9b57",
+      "equal_at_original_base_live_source": true,
+      "current_live_sha256": "efce608ca160e1e1d7492a78d47107d9376e62d7fa4a482b9d509b9e181fd065"
+    },
+    {
+      "path": "learner/lib/selection-terminal.ts",
+      "existing_source": "04921bd785ac6838066522f91ea0bb6ab95cb6a1",
+      "equal_at_original_base_live_source": true,
+      "current_live_sha256": "f559992c66f7fe490587b4f4306ddac0ce9ecffd2bc47b292923d51f1e9a6421"
+    },
+    {
+      "path": "learner/lib/selection-turn.ts",
+      "existing_source": "9b87d54f097d84521152e6cca8d6072af8140394",
+      "equal_at_original_base_live_source": true,
+      "current_live_sha256": "038f6ec416103ef5ce75136a7d8a09f40b1a1ac341356d7cfa9b5b6e4300b703"
+    },
+    {
+      "path": "agent/src/reflex/rollout.ts",
+      "existing_source": "f2c7cc1a7288893bceae0f0b20304a2b1fae5f57",
+      "equal_at_original_base_live_source": false,
+      "current_live_sha256": "28415d72ab06e49376a4c703928365cea1f80881c2aefb9889bcf9dda152ae69"
+    },
+    {
+      "path": "agent/src/knowledge/move-model.ts",
+      "existing_source": "295a90aef9eb6f5b267490294f7733806419c45a",
+      "equal_at_original_base_live_source": false,
+      "current_live_sha256": "0631ec3cd373fabcf7efb7aaa3b7a42a22b62f90dcd2859ae98935bd0d902c68"
+    }
+  ],
+  "existing_consumer_only": {
+    "actions": 659,
+    "segments": 113,
+    "observations": 264,
+    "whole_turns": 111,
+    "turn_endpoints": 44,
+    "turn_unknown": 67,
+    "full_candidates": 0
+  },
+  "native": {
+    "path": "ops/codex-ops/accounts/codex1/learner/sessions/2026/10/14/rollout-2026-10-14T06-35-57-01a13768-7d25-7b63-8b9f-21f6b7f703aa.jsonl",
+    "thread": "01a13768-7d25-7b63-8b9f-21f6b7f703aa",
+    "contexts": [
+      {
+        "offset": 50241,
+        "length": 5148,
+        "sha256": "5898b1c75583a8c72462d7258fdd0c24d9a1d47cf92927882c5d2c95b1da60b8",
+        "context": {
+          "cwd": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261014-063524",
+          "model": "gpt-6.1-sol",
+          "effort": "xhigh",
+          "approval_policy": "never",
+          "sandbox_policy": {
+            "type": "workspace-write",
+            "writable_roots": [
+              "/home/dw/Projects/agent-sts2",
+              "/home/dw/Projects/agent-sts2/.git",
+              "/home/dw/Projects/agent-sts2/.git/worktrees/codex-strategy-silent-20261014-063524"
+            ],
+            "network_access": false,
+            "exclude_tmpdir_env_var": false,
+            "exclude_slash_tmp": false
+          }
+        }
+      }
+    ]
+  },
+  "no_new_source_or_test_run_or_version_or_shipped_claim": true,
+  "pending_large_materials_kept": true
+}

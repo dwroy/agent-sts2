@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261014-063524/learner/runs/20261014-063554-strategy-proposal/prepare_consumer.py", line 47, in <module>
+    states, state_checks = bounded_rows('states.jsonl', state_index['first_offset'],
+                           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                                       state_index['last_offset'], 276434, fixture['states'])
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261014-063524/learner/runs/20261014-063554-strategy-proposal/prepare_consumer.py", line 32, in bounded_rows
+    assert all(actual_body.get(k) == v for k, v in fixed_body.items()), (source, fixed['_line'])
+           ~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ('states.jsonl', 276433)

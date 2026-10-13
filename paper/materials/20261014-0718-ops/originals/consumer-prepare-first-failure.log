@@ -1,0 +1,12 @@
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261014-063524/learner/runs/20261014-063554-strategy-proposal/prepare_consumer.py", line 40, in <module>
+    raw_decisions, decision_checks = bounded_rows(
+                                     ~~~~~~~~~~~~^
+        'decisions.jsonl', decisions[0]['offset'], decisions[-1]['offset'],
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        270442, fixture['decisions'])
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261014-063524/learner/runs/20261014-063554-strategy-proposal/prepare_consumer.py", line 32, in bounded_rows
+    assert actual_body == fixed_body, (source, fixed['_line'])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ('decisions.jsonl', 270441)

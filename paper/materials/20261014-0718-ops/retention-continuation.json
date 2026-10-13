@@ -1,0 +1,16 @@
+{
+  "at": "2026-10-14 07:26:27 CST",
+  "batch": "20261014-054301-fix-batch",
+  "status": "source_integrated_and_exact_host_check_passed; retention_only_pending",
+  "source_commits": [
+    "df5f2e3fac5db56e3c92a241e2b4a170c6962212",
+    "a18376cce22eb9e47377d474a85fb864f7c636e2"
+  ],
+  "checked_live": "30e5cd77bdc740deb3066f0703a766fb6fc8cee2",
+  "checked_tree": "6989a33893b240a44e3fcd4c9ce16164d25d64c5",
+  "source_reintegration_needed": false,
+  "retention_reason": "normal guard found 22 ignored Python bytecode caches outside bound scratch; bounded ops cache/retention attempt stopped at LOCK_NB before deletion",
+  "continuation": "Only at a later naturally scheduled wake with the original locks free: recheck the original source/head, completed full check, lease, host PID/cwd and each cache source; discard only reconstructible __pycache__/*.cpython-314.pyc, then use the unchanged bound retention archiver. No gate weakening, duplicate source integration or new learning.",
+  "public_receipt": "paper/materials/20261014-0718-ops/retention-acceptance.json",
+  "archive_or_checkout_deletion_claimed": false
+}
