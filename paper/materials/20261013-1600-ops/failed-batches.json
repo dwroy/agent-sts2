@@ -1,0 +1,117 @@
+{
+  "at": "2026-10-13 16:04:47 CST",
+  "postmortem": {
+    "batch": "20261013-154301",
+    "original_state": {
+      "runs": [
+        "NQKVQ9RD9T2N"
+      ],
+      "pid": 2749439,
+      "started": "2026-10-13 15:43",
+      "state": "failed",
+      "reason": "tick",
+      "character": "silent",
+      "proposal_policy": "Roy-2026-10-07-learning",
+      "pane": "wJ:pV2",
+      "rc": 1,
+      "finished": "2026-10-13 15:43",
+      "done": [],
+      "missing": [
+        "NQKVQ9RD9T2N"
+      ],
+      "proposal_audit_errors": [
+        "missing string code_proposals array"
+      ]
+    },
+    "phase": "native thread/start AGENTS load; sandbox helper construction",
+    "error": "bubblewrap / rg unreadable glob: concurrent directory disappearance (ENOENT)",
+    "no_real_learner_turn_or_completion": true,
+    "no_quota_login_or_game_failure_in_evidence": true,
+    "startup_exit": {
+      "type": "learner_startup_exit",
+      "ts": "2026-10-13T07:43:19.364Z",
+      "pid": 2750098,
+      "attempt": 1,
+      "batch": null,
+      "lease": null,
+      "input_sha256": "be0e583cf4bfa8586dddc9d90723282fcae7950babaff095eebec699c624b538",
+      "command_sha256": "e7da836ee0d84dfb1ee178923973e4724b6c0998804eafe1ce19c43c6fad7018",
+      "exit_code": 1,
+      "signal": null,
+      "timed_out": false,
+      "cancelled": false,
+      "retryable": true
+    },
+    "raw_stderr_path": "learner/runs/20261013-154301-postmortem.jsonl",
+    "original_pending_empty_repair": {
+      "character": "silent",
+      "runs": [],
+      "state": "pending",
+      "reason": "postmortem proposal link audit failed"
+    },
+    "empty_repair_not_dispatched": true,
+    "keep_original_retry_and_sandbox": true,
+    "startup_recovery_boundary": {
+      "recognized_transient_before_session": true,
+      "original_attempts": 1,
+      "batch": null,
+      "lease": null,
+      "guard": "!lease?.current() stops retry despite retryable=true",
+      "no_live_lease_bypass": true
+    }
+  },
+  "calibration": {
+    "batch": "20261013-154322-fix-batch",
+    "original_state": {
+      "task": "fix-batch",
+      "learner_task": "silent-boss-calibration",
+      "character": "silent",
+      "runs": [],
+      "key": "feature:silent-calibration-f857ca16a616590971a9a63a",
+      "pid": 2751722,
+      "state": "failed",
+      "reason": "calibration-refresh",
+      "worktree": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration",
+      "feature_request": "silent-calibration-f857ca16a616590971a9a63a",
+      "proposal_policy": "Roy-2026-10-07-learning",
+      "pane": "wJ:pV6",
+      "finished": "2026-10-13 15:52",
+      "rc": 1,
+      "merged": null,
+      "proposal_audit_errors": [],
+      "report": {},
+      "completion_failure": {
+        "reason": "learner exited without a completion report",
+        "rc": 1,
+        "stderr": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261013-154322-fix-batch.err"
+      },
+      "retry_at": 1791881569.172839
+    },
+    "failure": "Selected model is at capacity",
+    "phase": "after extraction and fixed-model preparation; no final report/publication",
+    "pinned_reuse_audit": {
+      "previous_artifact": "c57767b8410c45eee3ed68b328ba9b57a9b62f0a3b82fc86061e378efb27f2da",
+      "historical_fights": 460,
+      "new_validation_fights": 20,
+      "control_replays": [
+        "C48LLXBGKXQ9:17:2:6263075551",
+        "C48LLXBGKXQ9:33:6:6290069057"
+      ],
+      "historical_fights_and_turns_equal": true,
+      "fixed_model_base": "7e1193cef9467416bc10c8e344a49f4fd98390c7",
+      "fixed_model_sha256": "a16714b6349b4d4c79bbc91c3875c979607f80da1e619b59f5a0a82e45210a5a",
+      "verified_model_inputs": 210,
+      "seed": 1,
+      "samples": 200,
+      "original_full_dataset_row_indices": true,
+      "scope": "Pinned published model; current production changes are not revalidated."
+    },
+    "original_current_model_refresh_exit": "130",
+    "original_disposition": "Specified bare refresh stopped after extraction: it selects current model rather than published fixed model. Incomplete archive d3051f562dfbb4c59107ea7d2500c4f6a3da3fb381e82d1efd546efe7b1ba937 retained; no publication. Continue fixed published experiment via --dataset/--results/--provenance.",
+    "bounded_active_process_snapshot": [],
+    "no_replay_restart_or_fixed_split_overwrite": true,
+    "no_trust_list_or_published_result_change_claimed": true
+  },
+  "no_missing_proposal_assumption_or_manual_redispatch": true,
+  "no_model_account_permission_or_game_restart": true
+}
