@@ -1,0 +1,37 @@
+{
+  "at": "2026-10-14 00:29:31 CST",
+  "batch": "20261013-231302-fix-batch",
+  "full_check": {
+    "rc": 1,
+    "log": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261013-231302-fix-batch.fallback-441e041d4282a714d353b880b3e6e7acab1a5189.checks.log",
+    "merged": "7e04d9a42dd6080a8d3716dd165e44d4b30c458d",
+    "tree": "441e041d4282a714d353b880b3e6e7acab1a5189",
+    "commits": [
+      "c988032d20270b84bacae81a614b50f6704c3804"
+    ]
+  },
+  "log_sha256": "e8b7036a9536e58aaba718aeb0424ba1e05be386f478144bbd9653ce41f81167",
+  "tsc": 0,
+  "vitest": 1,
+  "files_passed": 426,
+  "files_failed": 1,
+  "tests_passed": 4400,
+  "tests_failed": 1,
+  "tests_skipped": 2,
+  "seconds": 1028.89,
+  "failed_case": [
+    "stall check mod request recovery checks the real script after shell startup exceeds the former five-second limit"
+  ],
+  "unchanged_since_parent_full_pass": {
+    "parent": "e0b125153bc08d324f67622153b06fe06a8428cd",
+    "files_sha256": {
+      "agent/tests/ops-stall-recovery.test.ts": "decaa94d316e3ff586a1188262cd0c4c9a3d97d9c5f7ad19a7107e2558a2712b",
+      "ops/stall-check.sh": "2afec7831bfffac33e7f48da8fc9ef138b6e996d5297c144f679b936bf4fc190",
+      "ops/process_scope.py": "7698426eaafbb5a017bcf1e86a4e38eeec6b3caa88690f2032880d1dda787d4b",
+      "ops/instance_gate.py": "db419591f1d2795c56ab2592fa8ebc35c67b5412424930a7ccd2c66f78b46662"
+    }
+  },
+  "decision": "Keep bounded offline audit and health diagnostics: selected failure and script dependencies are unchanged from the parent full pass. Preserve full rc1 and run only the exact failed test through pinned original learner-recheck supplement. Root cause and child exit/signal not established by generic full-suite output; do not claim load/clock cause or full-suite success. Continue the existing stall fixture infrastructure chain if needed.",
+  "new_game_rule_or_production_rollback": false,
+  "new_source_bug_proven": false
+}

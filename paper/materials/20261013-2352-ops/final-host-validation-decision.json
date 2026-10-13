@@ -1,0 +1,28 @@
+{
+  "at": "2026-10-14 00:34:12 CST",
+  "tree": "441e041d4282a714d353b880b3e6e7acab1a5189",
+  "actual_live": "7e04d9a42dd6080a8d3716dd165e44d4b30c458d",
+  "full_host": {
+    "rc": 1,
+    "files_passed": 426,
+    "files_failed": 1,
+    "tests_passed": 4400,
+    "tests_failed": 1,
+    "tests_skipped": 2,
+    "original_log_sha256": "e8b7036a9536e58aaba718aeb0424ba1e05be386f478144bbd9653ce41f81167"
+  },
+  "supplement": {
+    "rc": 0,
+    "scope": "only the original failed test plus tsc",
+    "manifest_sha256": "78a86a6cb32acc8e5c89cd2b5784a80ee19eff2d33026cfd98f3195f38f62895",
+    "passed_cases": 1,
+    "pending_unselected_cases": 5,
+    "receipt": "paper/materials/20261013-2352-ops/failed-case-host-supplement.json",
+    "receipt_sha256": "1bec6f0d1cef32148599de068d44212d8671e0dd930b0738f544a1ce26590109"
+  },
+  "decision": "Keep exact deployed offline audit and diagnostic-only health source; original failure test and scripts unchanged since the previous full-passed parent. Register one bounded continuation of the existing stall fixture diagnostic chain; no new task, no production rollback, no full-suite rerun or relabeling. Actual subprocess exit/signal and precise scheduling cause remain unknown.",
+  "full_suite_passed": false,
+  "source_specific_regression_proven": false,
+  "game_rules_models_permissions_source_unchanged": true,
+  "routine_watchers_or_Roy_notification": false
+}
