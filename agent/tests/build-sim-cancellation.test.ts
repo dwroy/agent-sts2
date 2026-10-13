@@ -53,6 +53,31 @@ function block(batch: number) {
 }
 
 describe("cancelled build simulation batches", () => {
+  it("counts queue wait against the caller's deadline and keeps the following run usable", async () => {
+    vi.useFakeTimers();
+    const pool = new BuildSimPool(1); pools.push(pool);
+    let time = 0;
+    const request = { base: input, decks: [{}], orders: [null], samples: 8, seed: 100, now: () => time };
+    const first = pool.run({ ...request, deadlineMs: 10 });
+    const queued = pool.run({ ...request, deadlineMs: 5 });
+    await Promise.resolve();
+    const worker = fixed.workers[0]!;
+    time = 10;
+    await vi.advanceTimersByTimeAsync(15);
+    expect(await first).toMatchObject({ complete: [], timedOut: true });
+    const result = await queued;
+    expect(result).toMatchObject({ complete: [], timedOut: true, elapsedMs: 10 });
+    expect(worker.messages.filter((message) => message.type === "run")).toHaveLength(1);
+
+    const next = pool.run({ ...request, deadlineMs: 5 });
+    await Promise.resolve();
+    const batch = worker.messages.filter((message) => message.type === "batch").at(-1)!;
+    if (batch.type !== "batch") throw new Error("missing following fixed batch");
+    worker.emit("message", { batch: batch.batch,
+      results: Array.from({ length: 8 }, (_, i) => [0, 0, i, outcome as never]) });
+    expect(await next).toMatchObject({ complete: [0, 1, 2, 3, 4, 5, 6, 7], timedOut: false });
+  });
+
   // 1269Y20SKHUM F37: warm order search timed out without a reply; comparison reused the same workers.
   it("signals cancellation at the deadline, ignores late replies and gives the next batch its own flag", async () => {
     vi.useFakeTimers();

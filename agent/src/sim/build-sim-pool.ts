@@ -184,16 +184,16 @@ export class BuildSimPool implements DeckSimRunner {
 
   run(req: DeckRunRequest): Promise<DeckRunResult> {
     const queued = performance.now();
-    const next = this.queue.then(() => this.runNow(req, performance.now() - queued));
+    const started = (req.now ?? (() => performance.now()))();
+    const next = this.queue.then(() => this.runNow(req, started, performance.now() - queued));
     this.queue = next.catch(() => undefined);
     return next;
   }
 
-  private async runNow(req: DeckRunRequest, queueMs: number): Promise<DeckRunResult> {
+  private async runNow(req: DeckRunRequest, started: number, queueMs: number): Promise<DeckRunResult> {
     const diagnosticStart = performance.now();
     const coldStart = this.workers.length === 0;
     const now = req.now ?? (() => performance.now());
-    const started = now();
     const workers = this.start();
     const batch = (this.batch += 1);
     // A queued drop cannot interrupt a worker's synchronous sample block.
