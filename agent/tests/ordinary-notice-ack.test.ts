@@ -6,5 +6,5 @@ it("acknowledges verified ordinary notices without inventing a learning parent a
     encoding: "utf8", timeout: 15_000,
   });
   expect(result.status, result.stdout + result.stderr).toBe(0);
-  expect(result.stderr).toContain("Ran 4 tests");
+  expect(result.stderr).toContain("Ran 5 tests");
 });

@@ -64,7 +64,7 @@ def ack_request(root, state, notice, payload):
         raise ValueError("ordinary notice must identify an existing character proposal")
     source = json.loads(artifact(root, notice["source_evidence"]))
     if (source.get("proposal_id") != request_id or source.get("batch") != notice.get("source_batch")
-            or not re.fullmatch(r"\d{8}-\d{6}-(?:postmortem|experience-update|strategy-proposal)(?:-s2)?",
+            or not re.fullmatch(r"\d{8}-\d{6}-(?:(?:postmortem|experience-update|strategy-proposal)(?:-s2)?|s2-strategy-proposal)",
                                 notice.get("source_batch", ""))
             or source.get("original_proposal_sha256") != notice.get("request_sha256")):
         raise ValueError("ordinary notice source identity or SHA mismatch")
