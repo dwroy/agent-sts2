@@ -1,0 +1,38 @@
+import hashlib
+import json
+from collections import Counter
+from pathlib import Path
+
+ROOT = Path('/home/dw/Projects/agent-sts2')
+OUT = Path(__file__).parent
+PRIOR = ROOT / 'paper/materials/20261013-0620-ops/strategy-original'
+batch = json.loads((OUT / 'batch.json').read_text())
+wanted = set(batch['runs'])
+manifest = {}
+for kind in ['states', 'decisions', 'sl-attempts', 'runs', 'run-config']:
+    index = PRIOR / (kind + '-index.jsonl')
+    counts = Counter()
+    total = 0
+    digest = hashlib.sha256()
+    handles = {run: (OUT / (run + '-' + kind + '.jsonl')).open('wb') for run in wanted}
+    with (ROOT / 'logs' / (kind + '.jsonl')).open('rb') as source, (OUT / (kind + '-index.jsonl')).open('w') as target:
+        for line in index.open():
+            record = json.loads(line)
+            assert record['run_id'] in wanted
+            source.seek(record['offset'])
+            raw = source.read(record['bytes'])
+            assert hashlib.sha256(raw).hexdigest() == record['sha256'], (kind, record['line'])
+            row = json.loads(raw)
+            assert row.get('run_id', row.get('run')) == record['run_id'], (kind, record['line'], list(row))
+            handles[record['run_id']].write(raw)
+            target.write(line)
+            digest.update(raw)
+            total += len(raw)
+            counts[record['run_id']] += 1
+    for handle in handles.values():
+        handle.close()
+    manifest[kind] = {'source': str(ROOT / 'logs' / (kind + '.jsonl')), 'index_locator': str(index),
+                      'counts': dict(counts), 'bytes': total, 'sha256': digest.hexdigest(),
+                      'verified_original_bytes': True, 'coverage': '既有逐行索引定位，本批逐条回读原日志并核字节SHA；不声称扫描全历史'}
+    print(kind, dict(counts), total, flush=True)
+(OUT / 'evidence-manifest.json').write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + '\n')

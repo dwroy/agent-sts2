@@ -1,0 +1,67 @@
+## 经验库更新回报
+
+- 版本：2026-10-13.4 → 2026-10-13.5；提交：b90539da（分支 exp-merge-recovery-20261013-000402）；合入：未合入。九份刷新知识内容重叠，按要求停止，保留刷新提交 e39ced86，待运维兜底。
+- 条数：新增 0、更新 27（加证据 24、只改数字 0、仅压缩 3）、退役 0；active 231 → 231；总字符 55,281 → 53,980。A8：209 条／48,271 字；A9：210 条／48,555 字。
+- 机制推理（局数为支持／反例，单因胜负未隔离）：
+
+  - 灵动步法 — 敏捷加后继牌挡，受禁挡限制 — 150／0 — WCDTYJKUDS4T
+  - 力量与虚弱 — 逐攻击段计力，虚弱后读实际意图 — 251／0 — WCDTYJKUDS4T
+  - 毒雾 — 后轮补毒，须支付存活窗口 — 117／0 — WCDTYJKUDS4T
+  - 臂甲 — 战内首次牌挡翻倍 — 12／0 — WCDTYJKUDS4T
+  - 触媒 — 增加结毒次数，每结减一 — 87／0 — WCDTYJKUDS4T
+  - 舵盘 — 已见第三轮补18挡 — 4／0 — NEPESJXEV9V3
+  - 精准 — 按实际打出的小刀兑现 — 8／0 — WCDTYJKUDS4T
+  - 预判 — 临敏到期撤回，已记延迟挡保留 — 26／0 — NEPESJXEV9V3
+  - 恶魔回血 — 回血增加实际需伤 — 15／0 — WCDTYJKUDS4T
+  - 三骑士减员 — 各试按实际存活敌人核来袭 — 10／0 — NEPESJXEV9V3
+  - 群蛇形态 — 实出牌触发，生成刀不计刀伤 — 18／0 — WCDTYJKUDS4T
+  - 低语耳环 — 能量收益与首轮接管成本分账 — 4／0 — NEPESJXEV9V3
+  - 棱柱污染 — 技能挡与污染增伤合算 — 22／0 — WCDTYJKUDS4T
+  - 永冻冰晶 — 首次能力补7挡 — 10／0 — NEPESJXEV9V3
+  - 应急按钮 — 当前挡与次轮禁挡分别核算 — 2／0 — WCDTYJKUDS4T
+  - 懒惰 — 生成三刀仍须有出牌名额 — 6／0 — WCDTYJKUDS4T
+  - 再生药水 — 分轮衰减回复，净血变化包含承伤 — 29／0 — NEPESJXEV9V3
+  - 毒药水 — 先施毒，饮用当步不扣敌血 — 63／0 — WCDTYJKUDS4T
+  - 抑制 — 战内牌版本与永久升级分账 — 12／0 — NEPESJXEV9V3
+  - 历石 — 联合结算观察保留，独立伤害未拆出 — 2／0 — WCDTYJKUDS4T
+
+- 改了的手写知识：无。
+- 测试：tsc 退出 0；vitest 345 文件／3,414 用例／退出 0。原目录导入检查遇失效符号链接，源码 SHA 一致的隔离副本重跑通过；失败原件保留。
+- 切片大小：中位下降 57 字；最大 8,924 → 8,250 字。
+- 学习账本：新增无；改成 proposed：silent-0005、silent-0011、silent-0013、silent-0019、silent-0020、silent-0021、silent-0025、silent-0027、silent-0031、silent-0054、silent-0080、silent-0102、silent-0106、silent-0132、silent-0164、silent-0168、silent-0173、silent-0194、silent-0210、silent-0212、silent-0247、silent-0259、silent-0274、silent-0278、silent-0280、silent-0288、silent-0352、silent-0354、silent-0355、silent-0385、silent-0440、silent-0443；退役无；`ledger.py check` 退出 0。
+- 需要 Roy 定的事：无。
+
+```json
+{
+  "task": "experience-update",
+  "version": "2026-10-13.5",
+  "commit": "b90539daed10fb1f61ffbcf83c94515e5e9061c7",
+  "merged": null,
+  "added": 0,
+  "updated": 27,
+  "retired": 0,
+  "active": 231,
+  "mechanisms": ["灵动步法", "力量逐段与虚弱", "毒雾", "臂甲", "触媒", "舵盘", "精准", "预判", "知识恶魔回血观察", "三骑士减员与血价观察", "群蛇形态", "低语耳环", "棱柱污染与逐击血价", "永冻冰晶", "应急按钮", "懒惰出牌名额", "再生药水", "毒药水", "抑制与永久升级", "历石"],
+  "tests": {"tsc": 0, "vitest": 0, "cases": 3414},
+  "ledger": {
+    "added": [],
+    "proposed": ["silent-0005", "silent-0011", "silent-0013", "silent-0019", "silent-0020", "silent-0021", "silent-0025", "silent-0027", "silent-0031", "silent-0054", "silent-0080", "silent-0102", "silent-0106", "silent-0132", "silent-0164", "silent-0168", "silent-0173", "silent-0194", "silent-0210", "silent-0212", "silent-0247", "silent-0259", "silent-0274", "silent-0278", "silent-0280", "silent-0288", "silent-0352", "silent-0354", "silent-0355", "silent-0385", "silent-0440", "silent-0443"],
+    "retired": [],
+    "check": 0
+  },
+  "code_proposals": ["silent-proposal-f030ffb8ca687008", "silent-proposal-8978d60ee108e88a", "silent-proposal-a13a1aa04bb28a76"],
+  "implementation_domains": ["combat", "potion", "sl", "terminal"],
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261013-061302-experience-update/report.md"
+}
+```
+
+== 学习者 codex / experience-update ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a1322d-38d7-7163-bfdf-34b2aeb3c045
+轮数：1；工具调用：command_execution×85 file_change×9
+token：输入 330.4k、输出 95.5k（其中推理 55.6k）、cache 读 13852.8k、cache 写 0（命中 97.7%）
+成本：未提供
+耗时：3545.1 s（墙钟）
+时间：首个事件 24.0 s、模型首个输出 28.3 s、首次工具 30.5 s、末次工具结束 3478.3 s；工具内共 3558.2 s，其余（模型生成、推理、网络）-37.1 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/exp）；模型的工具调用 exec×85 wait×1；/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/learner/sessions/2026/10/13/rollout-2026-10-13T06-13-06-01a1322d-38d7-7163-bfdf-34b2aeb3c045.jsonl
+日志：/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261013-061302-experience-update.jsonl

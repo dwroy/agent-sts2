@@ -1,0 +1,6 @@
+首轮证据复核命令按“COMBAT/T1状态离开再进入”计boss入口，KEN通过后751得到12个63/76空栏片段，断言len=6失败。该计法会把同一尝试的状态屏幕切换计为另一次进场，不能作为尝试分母。失败发生在写evidence-verification.json之前。
+接续不改原日志、SL记录或采集数据；verify-evidence.py明确按六条真实F17 SL尝试的started_at/ended_at分界，每条只取首次可操作T1，并逐条核资源。原失败不是代码或游戏机制失败，不冒报首次成功。
+
+分界修正后验证器又因手填易伤药水英文ID为VULNERABILITY_POTION断言失败。随后逐个回读YQL六次入口，原日志实际都为VULNERABLE_POTION，按真实字段更正。错误仅在临时验证器，未入提案、知识、代码或账本；保留初稿.py.txt及完整stderr，不将药名推断当游戏事实。
+
+下一步曾只依max_hp=999999999取第一个占位帧，其中第2/4試尚为ABOUT_TO_BLOW_MOVE/Stun、total_damage=null。首轮把null按0算导致自爆威胁断言失败；保留phase-initial脚本及stderr。回读各试真实字段后限定EXPLODE_MOVE/DeathBlow、有整数伤害的帧，与当前源码阶段限定一致；不把中间帧未知意图当自爆0伤。此失败之后辅助回报追加器因最终证据JSON尚未生成而FileNotFoundError，没有追加成功结论。

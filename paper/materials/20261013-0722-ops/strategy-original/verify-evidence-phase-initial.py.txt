@@ -1,0 +1,54 @@
+import hashlib
+import json
+from pathlib import Path
+
+OUT = Path(__file__).parent
+runs = json.loads((OUT / 'batch.json').read_text())['runs']
+proofs = {}
+for kind in ['states', 'decisions', 'sl-attempts', 'runs', 'run-config']:
+    index = [json.loads(line) for line in (OUT / (kind + '-index.jsonl')).open()]
+    count = 0
+    for run in runs:
+        selected = [x for x in index if x['run_id'] == run]
+        raw = (OUT / (run + '-' + kind + '.jsonl')).read_bytes().splitlines(keepends=True)
+        assert len(selected) == len(raw)
+        for item, row in zip(selected, raw):
+            assert hashlib.sha256(row).hexdigest() == item['sha256']
+        count += len(raw)
+    proofs[kind] = count
+
+entries = []
+giant = []
+for run in ['KEN58SH9SLZ6', '751FN9QM9MHQ', 'YQL8RZ8BWN1E']:
+    frames = [json.loads(line) for line in (OUT / (run + '-states.jsonl')).open()]
+    attempts = [json.loads(line) for line in (OUT / (run + '-sl-attempts.jsonl')).open()]
+    attempts = [row for row in attempts if row['floor'] == 17]
+    assert len(attempts) == 6
+    occurrences = []
+    for attempt in attempts:
+        relevant = [row for row in frames if attempt['started_at'] <= row['ts'] <= attempt['ended_at']
+                    and row['state']['run']['floor'] == 17 and row['state'].get('in_combat')
+                    and row['state']['screen'] == 'COMBAT']
+        first = next(row['state'] for row in relevant if row['state'].get('turn') == 1)
+        player = first['combat']['player']
+        entry = {'attempt': attempt['attempt'], 'hp': player['current_hp'], 'max_hp': player['max_hp'],
+                 'potions': [p['potion_id'] for p in first['run']['potions'] if p['occupied']]}
+        occurrences.append(entry)
+        if run == 'KEN58SH9SLZ6':
+            assert (entry['hp'], entry['max_hp'], entry['potions']) == (75, 86, [])
+        if run == '751FN9QM9MHQ':
+            assert (entry['hp'], entry['max_hp'], entry['potions']) == (63, 76, [])
+        if run == 'YQL8RZ8BWN1E':
+            assert (entry['hp'], entry['max_hp'], entry['potions']) == (57, 86, ['POISON_POTION', 'VULNERABLE_POTION'])
+            husk = next(row['state'] for row in relevant if any(enemy['enemy_id'] == 'WATERFALL_GIANT'
+                        and enemy['is_alive'] and enemy['max_hp'] == 999999999
+                        for enemy in row['state']['combat']['enemies']))
+            enemy = next(e for e in husk['combat']['enemies'] if e['is_alive'])
+            giant.append({'attempt': attempt['attempt'], 'turn': husk['turn'],
+                          'incoming': sum(i['total_damage'] or 0 for i in enemy['intents'])})
+    entries.append({'run': run, 'entries': occurrences})
+assert [g['incoming'] for g in giant] == [50, 50, 47, 50, 50, 41]
+proofs['boss_entries'] = entries
+proofs['giant_blast_starts'] = giant
+(OUT / 'evidence-verification.json').write_text(json.dumps(proofs, ensure_ascii=False, indent=2) + '\n')
+print('已核8293原记录SHA、18个按真实尝试时间分界的boss入口、6个巨兽自爆阶段。')

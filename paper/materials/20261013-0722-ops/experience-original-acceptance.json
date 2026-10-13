@@ -1,0 +1,148 @@
+{
+  "at": "2026-10-13 07:29:41 CST",
+  "source": "b90539daed10fb1f61ffbcf83c94515e5e9061c7",
+  "original_raw_records": 3523,
+  "original_cli_rows": 96,
+  "original_full_tests": {
+    "tsc": 0,
+    "vitest": 0,
+    "files": 345,
+    "cases": 3414,
+    "exit": 0,
+    "rerun": true,
+    "entry": "原test-sandbox.sh，1427跟踪文件逐SHA相同隔离副本，同一经验文件；单worker，不改排除/预算/超时",
+    "log": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261013-061302-experience-update/test-source-copy.log",
+    "sha256": "a25bb22667d404be3ba74b9fe1e2264c3235dd87b9dc72b02ca783ab1bf1288c",
+    "phases": [
+      {
+        "name": "test-source-direct",
+        "exit": 1,
+        "files_passed": 343,
+        "cases_passed": 3402,
+        "log": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261013-061302-experience-update/test-source-direct.log",
+        "sha256": "5321b7b5c6ba0ec1abe969557af8917a8e57dae1e485bed5f69821919ca53651",
+        "reason": "原工作树忽略的旧learner/runs输出符号链接失效/循环，非新增经验逻辑失败"
+      },
+      {
+        "name": "test-imports-diagnostic",
+        "exit": 1,
+        "files_passed": 0,
+        "cases_passed": 0,
+        "log": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261013-061302-experience-update/test-imports-diagnostic.log",
+        "sha256": "f787c01fb7ce8de93629f78668fd750d7ce379e2e37c7a72079cef816297a06f",
+        "reason": "原工作树忽略的旧learner/runs输出符号链接失效/循环，非新增经验逻辑失败"
+      }
+    ],
+    "initial_reason": "原全套唯一check-imports ENOENT；定向旧符号链接ELOOP；原件和历史目录保持",
+    "host_full_suite": "合入后的调度器宿主完整检查仍待learner-checks"
+  },
+  "original_live_block": {
+    "source": "b90539daed10fb1f61ffbcf83c94515e5e9061c7",
+    "branch": "exp-merge-recovery-20261013-000402",
+    "merged": null,
+    "tests": null,
+    "initial": "e42018c10c8ddda4225ccd273e824425dbd94250",
+    "initial_status": " M knowledge/characters/silent/boss-damage.json\n M knowledge/characters/silent/fight-value-gates.json\n M knowledge/characters/silent/fight-value.json\n M knowledge/characters/silent/monster-records.json\n M knowledge/characters/silent/outcome-stats.json\n M knowledge/characters/silent/room-costs.json\n M knowledge/common/card-upgrades.json\n M knowledge/common/monster-db.json\n M knowledge/common/move-model.json\n M notes/fight-value-backtest-silent.md\n M notes/monster-db-check.md\n",
+    "refresh_paths": [
+      "knowledge/characters/silent/boss-damage.json",
+      "knowledge/characters/silent/fight-value-gates.json",
+      "knowledge/characters/silent/fight-value.json",
+      "knowledge/characters/silent/monster-records.json",
+      "knowledge/characters/silent/outcome-stats.json",
+      "knowledge/characters/silent/room-costs.json",
+      "knowledge/common/card-upgrades.json",
+      "knowledge/common/monster-db.json",
+      "knowledge/common/move-model.json"
+    ],
+    "pre": "e39ced86de2566780e324e5a2a000664dba2cb6c",
+    "live_experience_sha256": "f4ecfed1c3a17df09e11c8ed64f50d5a9148800e554919ba8722e81371608423",
+    "base": "83d43cc1ee9f66cbcd65d952db00ec8ad8ce1d96",
+    "source_knowledge_paths": [
+      "knowledge/builders/build-monster-db.py",
+      "knowledge/builders/build-outcome-stats.py",
+      "knowledge/builders/build-potion-equivalents.py",
+      "knowledge/builders/characters.py",
+      "knowledge/builders/refresh-potion-equivalents.sh",
+      "knowledge/characters/ironclad/potion-equivalents.json",
+      "knowledge/characters/ironclad/sl-elites.json",
+      "knowledge/characters/silent/boss-damage.json",
+      "knowledge/characters/silent/experience.json",
+      "knowledge/characters/silent/fight-value-gates.json",
+      "knowledge/characters/silent/fight-value.json",
+      "knowledge/characters/silent/monster-records.json",
+      "knowledge/characters/silent/outcome-stats.json",
+      "knowledge/characters/silent/potion-equivalents.json",
+      "knowledge/characters/silent/room-costs.json",
+      "knowledge/common/card-upgrades.json",
+      "knowledge/common/monster-db.json",
+      "knowledge/common/move-model.json"
+    ],
+    "live_knowledge_paths": [
+      "knowledge/characters/silent/boss-damage.json",
+      "knowledge/characters/silent/experience.json",
+      "knowledge/characters/silent/fight-value-gates.json",
+      "knowledge/characters/silent/fight-value.json",
+      "knowledge/characters/silent/monster-records.json",
+      "knowledge/characters/silent/outcome-stats.json",
+      "knowledge/characters/silent/room-costs.json",
+      "knowledge/common/card-upgrades.json",
+      "knowledge/common/monster-db.json",
+      "knowledge/common/move-model.json"
+    ],
+    "knowledge_overlap": [
+      "knowledge/characters/silent/boss-damage.json",
+      "knowledge/characters/silent/experience.json",
+      "knowledge/characters/silent/fight-value-gates.json",
+      "knowledge/characters/silent/fight-value.json",
+      "knowledge/characters/silent/monster-records.json",
+      "knowledge/characters/silent/outcome-stats.json",
+      "knowledge/characters/silent/room-costs.json",
+      "knowledge/common/card-upgrades.json",
+      "knowledge/common/monster-db.json",
+      "knowledge/common/move-model.json"
+    ],
+    "knowledge_overlap_conflicts": [
+      "knowledge/characters/silent/boss-damage.json",
+      "knowledge/characters/silent/fight-value-gates.json",
+      "knowledge/characters/silent/fight-value.json",
+      "knowledge/characters/silent/monster-records.json",
+      "knowledge/characters/silent/outcome-stats.json",
+      "knowledge/characters/silent/room-costs.json",
+      "knowledge/common/card-upgrades.json",
+      "knowledge/common/monster-db.json",
+      "knowledge/common/move-model.json"
+    ],
+    "result": "其他并行知识数据与整分支不同内容重叠；按任务停止，不覆盖刷新数据",
+    "final_live_head": "e39ced86de2566780e324e5a2a000664dba2cb6c"
+  },
+  "original_sl_correction": {
+    "stamp": "2026-10-13 07:04:58 CST",
+    "groups": [
+      {
+        "run": "NEPESJXEV9V3",
+        "floor": 45,
+        "attempts": 4,
+        "wins": 0
+      },
+      {
+        "run": "WCDTYJKUDS4T",
+        "floor": 23,
+        "attempts": 2,
+        "wins": 1
+      },
+      {
+        "run": "WCDTYJKUDS4T",
+        "floor": 33,
+        "attempts": 6,
+        "wins": 0
+      }
+    ],
+    "total_attempts": 12,
+    "wins": 1,
+    "experience_unchanged": true,
+    "original_report_sha256": "d62c280a036acec45885318e5d898255935ddd8e16bf79d106a9b6d31fd0d81b",
+    "append_sha256": "1168dab1b621cca2681fc6eeaea7c7d3bede32f81988d1890c4c74dc558a601c"
+  },
+  "original_report_sha256": "c7c9750fdbd7b969644e6fdf0d9ba8237a2729082a54d80506b19b1b035f90bf",
+  "no_parent_request_adopted_or_closed": true
+}

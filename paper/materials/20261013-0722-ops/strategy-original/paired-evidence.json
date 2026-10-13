@@ -1,0 +1,2496 @@
+[
+  {
+    "same_fingerprint": true,
+    "original": {
+      "decision_line": 272434,
+      "run": "751FN9QM9MHQ",
+      "floor": 17,
+      "turn": 2,
+      "attempt": 1,
+      "answer": "plan3",
+      "chosen": {
+        "action": "play_card",
+        "card_index": 0,
+        "target_index": 0
+      },
+      "options": {
+        "plan1": {
+          "plays": "呼唤, then 猎杀者 -> 灵魂异鱼",
+          "result": "survives with 45/76 HP before healing",
+          "hp_lost": 18,
+          "damage_dealt": 15,
+          "enemies_after": "灵魂异鱼 171 HP",
+          "hp_after": 45,
+          "hp_after_pct": 59,
+          "dmg": 15,
+          "lethal_now": "no",
+          "enemy_threat_next": 8,
+          "setup_turn": false,
+          "scaling_gained": "none",
+          "block_wasted": 0,
+          "potions_used": "none",
+          "rollout": "5-turn rollout (8 samples): expected further HP loss 63, fight over within 5 turns in 0/8, expected turns to the end (surviving samples) ~8.9; every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 0/8), then the fight's progress: least enemy HP left (this line ~106, at T5 or at our death), then most turns alive (this line ~5), then least HP lost this turn (this line 18)",
+          "rollout_turns": "T1 exact: hp -18, dmg 15; T2: hp -0 [0-0], dmg 14.3 [6-24], alive 8/8, won 0/8; T3: hp -0 [0-0], dmg 22.4 [15-30], alive 8/8, won 0/8; T4: hp -3.9 [0-15], dmg 2.6 [2-3], alive 8/8, won 0/8; T5: hp -1.5 [0-6], dmg 18.5 [8-28], alive 8/8, won 0/8",
+          "history_estimate": "further HP loss 43, win 99% (this encounter n=33; estimate from act-1 boss fights n=199, typical error ±9.9; few similar states for this encounter)",
+          "whole_fight_sim": "win 27% (vs the best line −3 ± 2 pts, tied on win rate), HP lost when won median 56, ~13 turns to win (this one included); the losing samples die most often on T12 (dead in 74%); 600 samples"
+        },
+        "plan2": {
+          "plays": "打击 -> 灵魂异鱼, then 猎杀者 -> 灵魂异鱼",
+          "result": "survives with 39/76 HP before healing",
+          "hp_lost": 24,
+          "damage_dealt": 21,
+          "enemies_after": "灵魂异鱼 165 HP",
+          "hp_after": 39,
+          "hp_after_pct": 51,
+          "dmg": 21,
+          "lethal_now": "no",
+          "enemy_threat_next": 8,
+          "setup_turn": false,
+          "scaling_gained": "none",
+          "block_wasted": 0,
+          "potions_used": "none",
+          "rollout": "5-turn rollout (8 samples): expected further HP loss 63, fight over within 5 turns in 0/8, expected turns to the end (surviving samples) ~8.6; every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 0/8), then the fight's progress: least enemy HP left (this line ~102, at T5 or at our death), then most turns alive (this line ~5), then least HP lost this turn (this line 24)",
+          "rollout_turns": "T1 exact: hp -24, dmg 21; T2: hp -0 [0-0], dmg 14.3 [6-24], alive 8/8, won 0/8; T3: hp -0 [0-0], dmg 21.6 [12-30], alive 8/8, won 0/8; T4: hp -3.9 [0-15], dmg 2.1 [1-3], alive 8/8, won 0/8; T5: hp -0 [0-0], dmg 18 [7-31], alive 8/8, won 0/8",
+          "history_estimate": "further HP loss 46, win 98% (this encounter n=33; estimate from act-1 boss fights n=199, typical error ±9.9; few similar states for this encounter)",
+          "whole_fight_sim": "win 20% (vs the best line −10 ± 2 pts), HP lost when won median 56, ~12 turns to win (this one included); the losing samples die most often on T12 (dead in 80%); 600 samples"
+        },
+        "plan3": {
+          "plays": "打击 -> 灵魂异鱼, then 呼唤, then 防御",
+          "result": "survives with 50/76 HP before healing",
+          "hp_lost": 13,
+          "damage_dealt": 6,
+          "enemies_after": "灵魂异鱼 180 HP",
+          "block_gained": 5,
+          "hp_after": 50,
+          "hp_after_pct": 66,
+          "dmg": 6,
+          "lethal_now": "no",
+          "enemy_threat_next": 8,
+          "setup_turn": false,
+          "scaling_gained": "none",
+          "block_wasted": 0,
+          "potions_used": "none",
+          "rollout": "5-turn rollout (8 samples): expected further HP loss 62.4, fight over within 5 turns in 0/8, expected turns to the end (surviving samples) ~9.3; every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 0/8), then the fight's progress: least enemy HP left (this line ~118, at T5 or at our death), then most turns alive (this line ~5), then least HP lost this turn (this line 13)",
+          "rollout_turns": "T1 exact: hp -13, dmg 6; T2: hp -0 [0-0], dmg 14.3 [6-24], alive 8/8, won 0/8; T3: hp -0 [0-0], dmg 20.9 [12-29], alive 8/8, won 0/8; T4: hp -3.4 [0-9], dmg 2.4 [1-4], alive 8/8, won 0/8; T5: hp -0 [0-0], dmg 17.3 [1-31], alive 8/8, won 0/8",
+          "history_estimate": "further HP loss 38, win 99% (this encounter n=33; estimate from act-1 boss fights n=199, typical error ±9.9; few similar states for this encounter)",
+          "rollout_best": true,
+          "whole_fight_sim": "win 30% (the best line), HP lost when won median 56, ~15 turns to win (this one included); the losing samples die most often on T12 (dead in 70%); 600 samples"
+        }
+      },
+      "boss_sim": {
+        "available": true,
+        "ms": 3871,
+        "samples": 600,
+        "requested": 600,
+        "timed_out": false,
+        "orders": 0,
+        "workers": 20,
+        "boss": "SOUL_FYSH",
+        "low_trust": false,
+        "best": "plan3",
+        "tied": [],
+        "ranked": [
+          "plan3",
+          "plan1",
+          "plan2"
+        ],
+        "lines": {
+          "plan1": {
+            "win": 0.265,
+            "cal": 0.265,
+            "d": -0.032,
+            "se": 0.021,
+            "loss": 60.79,
+            "won_loss": 56,
+            "order": null
+          },
+          "plan2": {
+            "win": 0.198,
+            "cal": 0.198,
+            "d": -0.098,
+            "se": 0.021,
+            "loss": 61.46,
+            "won_loss": 56,
+            "order": null
+          },
+          "plan3": {
+            "win": 0.297,
+            "cal": 0.297,
+            "d": 0,
+            "se": 0,
+            "loss": 60.68,
+            "won_loss": 56,
+            "order": null
+          }
+        },
+        "rollout_own_best": "plan2",
+        "rollout_own_tied": []
+      },
+      "sl_explore": null,
+      "before": {
+        "line": 278479,
+        "ts": "2026-10-07T10:26:15.674Z",
+        "observed_ts": "2026-10-07T10:26:10.839Z",
+        "screen": "COMBAT",
+        "floor": 17,
+        "turn": 2,
+        "hp": 63,
+        "block": 0,
+        "powers": [
+          {
+            "index": 0,
+            "power_id": "THORNS_POWER",
+            "name": "荆棘",
+            "amount": 3,
+            "is_debuff": false
+          }
+        ],
+        "hand": [
+          "STRIKE_SILENT",
+          "BECKON",
+          "PREDATOR",
+          "DEFEND_SILENT",
+          "STRIKE_SILENT",
+          "STRIKE_SILENT",
+          "INJURY"
+        ],
+        "potions": [
+          {
+            "index": 0,
+            "id": null
+          },
+          {
+            "index": 1,
+            "id": null
+          }
+        ],
+        "enemies": [
+          {
+            "index": 0,
+            "enemy_id": "SOUL_FYSH",
+            "current_hp": 186,
+            "max_hp": 221,
+            "is_alive": true,
+            "move_id": "DE_GAS_MOVE",
+            "powers": [],
+            "intents": [
+              {
+                "index": 0,
+                "intent_type": "Attack",
+                "label": "18",
+                "damage": 18,
+                "hits": 1,
+                "total_damage": 18,
+                "status_card_count": null
+              }
+            ]
+          }
+        ]
+      },
+      "next_turn": {
+        "line": 278483,
+        "ts": "2026-10-07T10:26:22.580Z",
+        "observed_ts": "2026-10-07T10:26:22.574Z",
+        "screen": "COMBAT",
+        "floor": 17,
+        "turn": 3,
+        "hp": 50,
+        "block": 0,
+        "powers": [
+          {
+            "index": 0,
+            "power_id": "THORNS_POWER",
+            "name": "荆棘",
+            "amount": 3,
+            "is_debuff": false
+          }
+        ],
+        "hand": [
+          "SURVIVOR",
+          "FOOTWORK",
+          "DEFEND_SILENT",
+          "PIERCING_WAIL",
+          "SLICE"
+        ],
+        "potions": [
+          {
+            "index": 0,
+            "id": null
+          },
+          {
+            "index": 1,
+            "id": null
+          }
+        ],
+        "enemies": [
+          {
+            "index": 0,
+            "enemy_id": "SOUL_FYSH",
+            "current_hp": 177,
+            "max_hp": 221,
+            "is_alive": true,
+            "move_id": "GAZE_MOVE",
+            "powers": [],
+            "intents": [
+              {
+                "index": 0,
+                "intent_type": "Attack",
+                "label": "8",
+                "damage": 8,
+                "hits": 1,
+                "total_damage": 8,
+                "status_card_count": null
+              },
+              {
+                "index": 1,
+                "intent_type": "StatusCard",
+                "label": "1",
+                "damage": null,
+                "hits": null,
+                "total_damage": null,
+                "status_card_count": 1
+              }
+            ]
+          }
+        ]
+      },
+      "caveat": "实盘快照差为此题面至下一轮净变化，敌回血/召唤须另核；不作候选模型伤害或受控整战胜因。"
+    },
+    "replacement": {
+      "decision_line": 272575,
+      "run": "751FN9QM9MHQ",
+      "floor": 17,
+      "turn": 2,
+      "attempt": 3,
+      "answer": "plan3",
+      "chosen": {
+        "action": "play_card",
+        "card_index": 1
+      },
+      "options": {
+        "plan1": {
+          "plays": "呼唤, then 猎杀者 -> 灵魂异鱼",
+          "result": "survives with 45/76 HP before healing",
+          "hp_lost": 18,
+          "damage_dealt": 15,
+          "enemies_after": "灵魂异鱼 171 HP",
+          "hp_after": 45,
+          "hp_after_pct": 59,
+          "dmg": 15,
+          "lethal_now": "no",
+          "enemy_threat_next": 8,
+          "setup_turn": false,
+          "scaling_gained": "none",
+          "block_wasted": 0,
+          "potions_used": "none",
+          "rollout": "5-turn rollout (24 samples): expected further HP loss 63, fight over within 5 turns in 0/24, expected turns to the end (surviving samples) ~9; every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 0/24), then the fight's progress: least enemy HP left (this line ~111, at T5 or at our death), then most turns alive (this line ~5), then least HP lost this turn (this line 18)",
+          "rollout_turns": "T1 exact: hp -18, dmg 15; T2: hp -0 [0-0], dmg 6 [6-6], alive 24/24, won 0/24; T3: hp -0.5 [0-6], dmg 25.9 [15-36], alive 24/24, won 0/24; T4: hp -4.2 [0-15], dmg 2.4 [1-5], alive 24/24, won 0/24; T5: hp -0 [0-0], dmg 18.5 [8-31], alive 24/24, won 0/24",
+          "history_estimate": "further HP loss 43, win 99% (this encounter n=33; estimate from act-1 boss fights n=199, typical error ±9.9; few similar states for this encounter)",
+          "whole_fight_sim": "win 19% (vs the best line −0 ± 1 pts, tied on win rate), HP lost when won median 58, ~15 turns to win (this one included); the losing samples die most often on T12 (dead in 81%); 1200 samples"
+        },
+        "plan2": {
+          "plays": "打击 -> 灵魂异鱼, then 猎杀者 -> 灵魂异鱼",
+          "result": "survives with 39/76 HP before healing",
+          "hp_lost": 24,
+          "damage_dealt": 21,
+          "enemies_after": "灵魂异鱼 165 HP",
+          "hp_after": 39,
+          "hp_after_pct": 51,
+          "dmg": 21,
+          "lethal_now": "no",
+          "enemy_threat_next": 8,
+          "setup_turn": false,
+          "scaling_gained": "none",
+          "block_wasted": 0,
+          "potions_used": "none",
+          "rollout": "5-turn rollout (24 samples): expected further HP loss 63, fight over within 5 turns in 0/24, expected turns to the end (surviving samples) ~8.8; every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 0/24), then the fight's progress: least enemy HP left (this line ~107, at T5 or at our death), then most turns alive (this line ~5), then least HP lost this turn (this line 24)",
+          "rollout_turns": "T1 exact: hp -24, dmg 21; T2: hp -0 [0-0], dmg 6 [6-6], alive 24/24, won 0/24; T3: hp -0 [0-0], dmg 24.7 [15-36], alive 24/24, won 0/24; T4: hp -4.4 [0-15], dmg 2.4 [1-5], alive 24/24, won 0/24; T5: hp -0 [0-0], dmg 17.5 [8-31], alive 24/24, won 0/24",
+          "history_estimate": "further HP loss 47, win 98% (this encounter n=33; estimate from act-1 boss fights n=199, typical error ±9.9; few similar states for this encounter)",
+          "whole_fight_sim": "win 12% (vs the best line −8 ± 1 pts), HP lost when won median 59, ~15 turns to win (this one included); the losing samples die most often on T12 (dead in 89%); 1200 samples"
+        },
+        "plan3": {
+          "plays": "打击 -> 灵魂异鱼, then 呼唤, then 防御",
+          "result": "survives with 50/76 HP before healing",
+          "hp_lost": 13,
+          "damage_dealt": 6,
+          "enemies_after": "灵魂异鱼 180 HP",
+          "block_gained": 5,
+          "hp_after": 50,
+          "hp_after_pct": 66,
+          "dmg": 6,
+          "lethal_now": "no",
+          "enemy_threat_next": 8,
+          "setup_turn": false,
+          "scaling_gained": "none",
+          "block_wasted": 0,
+          "potions_used": "none",
+          "rollout": "5-turn rollout (24 samples): expected further HP loss 62.8, fight over within 5 turns in 0/24, expected turns to the end (surviving samples) ~9.3; every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 0/24), then the fight's progress: least enemy HP left (this line ~121, at T5 or at our death), then most turns alive (this line ~5), then least HP lost this turn (this line 13)",
+          "rollout_turns": "T1 exact: hp -13, dmg 6; T2: hp -0 [0-0], dmg 6 [6-6], alive 24/24, won 0/24; T3: hp -0.5 [0-6], dmg 24.2 [15-36], alive 24/24, won 0/24; T4: hp -4.7 [0-15], dmg 2.5 [1-5], alive 24/24, won 0/24; T5: hp -0.8 [0-6], dmg 19.6 [10-29], alive 24/24, won 0/24",
+          "history_estimate": "further HP loss 41, win 99% (this encounter n=33; estimate from act-1 boss fights n=199, typical error ±9.9; few similar states for this encounter)",
+          "rollout_best": true,
+          "whole_fight_sim": "win 20% (the best line), HP lost when won median 57, ~16 turns to win (this one included); the losing samples die most often on T15 (dead in 81%); 1200 samples"
+        }
+      },
+      "boss_sim": {
+        "available": true,
+        "ms": 30,
+        "samples": 1200,
+        "requested": 1200,
+        "timed_out": false,
+        "orders": 0,
+        "workers": 20,
+        "boss": "SOUL_FYSH",
+        "low_trust": false,
+        "best": "plan3",
+        "tied": [],
+        "ranked": [
+          "plan3",
+          "plan1",
+          "plan2"
+        ],
+        "lines": {
+          "plan1": {
+            "win": 0.193,
+            "cal": 0.193,
+            "d": -0.002,
+            "se": 0.014,
+            "loss": 61.83,
+            "won_loss": 58,
+            "order": null
+          },
+          "plan2": {
+            "win": 0.115,
+            "cal": 0.115,
+            "d": -0.08,
+            "se": 0.013,
+            "loss": 62.37,
+            "won_loss": 59,
+            "order": null
+          },
+          "plan3": {
+            "win": 0.195,
+            "cal": 0.195,
+            "d": 0,
+            "se": 0,
+            "loss": 61.62,
+            "won_loss": 57,
+            "order": null
+          }
+        },
+        "rollout_own_best": "plan2",
+        "rollout_own_tied": []
+      },
+      "sl_explore": {
+        "point": "T2, the 14th latest question before attempt 1's death on T17",
+        "original": "打击 -> 灵魂异鱼, 呼唤, 防御",
+        "replacement": "呼唤, 猎杀者 -> 灵魂异鱼",
+        "reason": "the best untried line by the question's ranking, among those B2 rates no worse (win rate at most 2 paired standard errors below the pick's)",
+        "played_in": [
+          1,
+          2
+        ],
+        "replayed": 2,
+        "numbers": {
+          "original": "rollout dead 0/24, further loss 62.8, win ~35%; whole-fight sim win 19.5%; this turn hp -13, dmg 6",
+          "replacement": "rollout dead 0/24, further loss 63, win ~36%; whole-fight sim win 19.3%; this turn hp -18, dmg 15"
+        },
+        "gate": "b2",
+        "b2": {
+          "original": 0.195,
+          "replacement": 0.193,
+          "diff": -0.0025,
+          "se": 0.0135
+        },
+        "turn": "BECKON, DEFEND_SILENT, STRIKE_SILENT>灵魂异鱼",
+        "turn_instead": "BECKON, PREDATOR>灵魂异鱼"
+      },
+      "before": {
+        "line": 278620,
+        "ts": "2026-10-07T10:32:10.748Z",
+        "observed_ts": "2026-10-07T10:32:10.145Z",
+        "screen": "COMBAT",
+        "floor": 17,
+        "turn": 2,
+        "hp": 63,
+        "block": 0,
+        "powers": [
+          {
+            "index": 0,
+            "power_id": "THORNS_POWER",
+            "name": "荆棘",
+            "amount": 3,
+            "is_debuff": false
+          }
+        ],
+        "hand": [
+          "STRIKE_SILENT",
+          "BECKON",
+          "PREDATOR",
+          "DEFEND_SILENT",
+          "STRIKE_SILENT",
+          "STRIKE_SILENT",
+          "INJURY"
+        ],
+        "potions": [
+          {
+            "index": 0,
+            "id": null
+          },
+          {
+            "index": 1,
+            "id": null
+          }
+        ],
+        "enemies": [
+          {
+            "index": 0,
+            "enemy_id": "SOUL_FYSH",
+            "current_hp": 186,
+            "max_hp": 221,
+            "is_alive": true,
+            "move_id": "DE_GAS_MOVE",
+            "powers": [],
+            "intents": [
+              {
+                "index": 0,
+                "intent_type": "Attack",
+                "label": "18",
+                "damage": 18,
+                "hits": 1,
+                "total_damage": 18,
+                "status_card_count": null
+              }
+            ]
+          }
+        ]
+      },
+      "next_turn": {
+        "line": 278623,
+        "ts": "2026-10-07T10:32:21.226Z",
+        "observed_ts": "2026-10-07T10:32:17.345Z",
+        "screen": "COMBAT",
+        "floor": 17,
+        "turn": 3,
+        "hp": 45,
+        "block": 0,
+        "powers": [
+          {
+            "index": 0,
+            "power_id": "THORNS_POWER",
+            "name": "荆棘",
+            "amount": 3,
+            "is_debuff": false
+          }
+        ],
+        "hand": [
+          "SURVIVOR",
+          "FOOTWORK",
+          "DEFEND_SILENT",
+          "PIERCING_WAIL",
+          "SLICE",
+          "POISONED_STAB",
+          "NEUTRALIZE"
+        ],
+        "potions": [
+          {
+            "index": 0,
+            "id": null
+          },
+          {
+            "index": 1,
+            "id": null
+          }
+        ],
+        "enemies": [
+          {
+            "index": 0,
+            "enemy_id": "SOUL_FYSH",
+            "current_hp": 168,
+            "max_hp": 221,
+            "is_alive": true,
+            "move_id": "GAZE_MOVE",
+            "powers": [],
+            "intents": [
+              {
+                "index": 0,
+                "intent_type": "Attack",
+                "label": "8",
+                "damage": 8,
+                "hits": 1,
+                "total_damage": 8,
+                "status_card_count": null
+              },
+              {
+                "index": 1,
+                "intent_type": "StatusCard",
+                "label": "1",
+                "damage": null,
+                "hits": null,
+                "total_damage": null,
+                "status_card_count": 1
+              }
+            ]
+          }
+        ]
+      },
+      "caveat": "实盘快照差为此题面至下一轮净变化，敌回血/召唤须另核；不作候选模型伤害或受控整战胜因。"
+    }
+  },
+  {
+    "same_fingerprint": true,
+    "original": {
+      "decision_line": 272531,
+      "run": "751FN9QM9MHQ",
+      "floor": 17,
+      "turn": 7,
+      "attempt": 2,
+      "answer": "plan2",
+      "chosen": {
+        "action": "play_card",
+        "card_index": 0
+      },
+      "options": {
+        "plan1": {
+          "plays": "生存者, then 防御+, then 防御",
+          "result": "survives with 33/76 HP before healing",
+          "hp_lost": 12,
+          "damage_dealt": 1,
+          "enemies_after": "灵魂异鱼 120 HP",
+          "block_gained": 27,
+          "hp_after": 33,
+          "hp_after_pct": 43,
+          "dmg": 1,
+          "lethal_now": "no",
+          "enemy_threat_next": 12,
+          "setup_turn": false,
+          "scaling_gained": "none",
+          "block_wasted": 0,
+          "potions_used": "none",
+          "rollout": "5-turn rollout (24 samples): expected further HP loss 44.1, fight over within 5 turns in 0/24, expected turns to the end (surviving samples) ~7.2; every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 0/24), then the fight's progress: least enemy HP left (this line ~68, at T5 or at our death), then most turns alive (this line ~5), then least HP lost this turn (this line 12)",
+          "rollout_turns": "T1 exact: hp -12, dmg 1; T2: hp -2.7 [2-3], dmg 11.7 [0-18], alive 24/24, won 0/24; T3: hp -0.5 [0-6], dmg 15.9 [0-33], alive 24/24, won 0/24; T4: hp -4.1 [0-15], dmg 1.5 [0-4], alive 24/24, won 0/24; T5: hp -0.3 [0-6], dmg 15.9 [3-27], alive 24/24, won 0/24",
+          "history_estimate": "further HP loss 31, win 97% (this encounter n=33; estimate from act-1 boss fights n=199, typical error ±9.9; few similar states for this encounter)",
+          "rollout_best": true,
+          "whole_fight_sim": "win 15% (the best line), HP lost when won median 40, ~11 turns to win (this one included); the losing samples die most often on T15 (dead in 85%); 1200 samples"
+        },
+        "plan2": {
+          "plays": "匕首雨, then 生存者, then 防御+",
+          "result": "survives with 26/76 HP before healing",
+          "hp_lost": 19,
+          "damage_dealt": 9,
+          "enemies_after": "灵魂异鱼 112 HP",
+          "block_gained": 20,
+          "hp_after": 26,
+          "hp_after_pct": 34,
+          "dmg": 9,
+          "lethal_now": "no",
+          "enemy_threat_next": 12,
+          "setup_turn": false,
+          "scaling_gained": "none",
+          "block_wasted": 0,
+          "potions_used": "none",
+          "rollout": "5-turn rollout (24 samples): expected further HP loss 44.5, fight over within 5 turns in 0/24, expected turns to the end (surviving samples) ~7.1; every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 0/24), then the fight's progress: least enemy HP left (this line ~63, at T5 or at our death), then most turns alive (this line ~5), then least HP lost this turn (this line 19)",
+          "rollout_turns": "T1 exact: hp -19, dmg 9; T2: hp -1.5 [0-3], dmg 8.8 [0-20], alive 24/24, won 0/24; T3: hp -0.3 [0-6], dmg 16.9 [3-33], alive 24/24, won 0/24; T4: hp -4 [0-15], dmg 1.5 [0-4], alive 24/24, won 0/24; T5: hp -0 [0-0], dmg 14.6 [1-27], alive 24/24, won 0/24",
+          "history_estimate": "further HP loss 34, win 95% (this encounter n=33; estimate from act-1 boss fights n=199, typical error ±9.9; few similar states for this encounter)",
+          "whole_fight_sim": "win 10% (vs the best line −5 ± 1 pts), HP lost when won median 41, ~11 turns to win (this one included); the losing samples die most often on T12 (dead in 90%); 1200 samples"
+        },
+        "plan3": {
+          "plays": "匕首雨, then 生存者, then 打击 -> 灵魂异鱼",
+          "result": "survives with 16/76 HP before healing",
+          "hp_lost": 29,
+          "damage_dealt": 15,
+          "enemies_after": "灵魂异鱼 106 HP",
+          "block_gained": 10,
+          "hp_after": 16,
+          "hp_after_pct": 21,
+          "dmg": 15,
+          "lethal_now": "no",
+          "enemy_threat_next": 12,
+          "setup_turn": false,
+          "scaling_gained": "none",
+          "block_wasted": 0,
+          "potions_used": "none",
+          "rollout": "5-turn rollout (24 samples): expected further HP loss 44.9, fight over within 5 turns in 0/24, expected turns to the end (surviving samples) ~6.7, dead within 5 turns in 2/24 (~turn 4); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 2/24), then the fight's progress: least enemy HP left (this line ~60, at T5 or at our death), then most turns alive (this line ~4.9), then least HP lost this turn (this line 29)",
+          "rollout_turns": "T1 exact: hp -29, dmg 15; T2: hp -1.8 [0-3], dmg 7.6 [0-20], alive 24/24, won 0/24; T3: hp -0.5 [0-6], dmg 17.3 [0-29], alive 24/24, won 0/24; T4: hp -3.8 [0-15], dmg 1.5 [0-4], alive 22/24, won 0/24; T5: hp -0 [0-0], dmg 13.6 [1-33], alive 22/24, won 0/24",
+          "history_estimate": "further HP loss 40, win 86% (this encounter n=33; estimate from act-1 boss fights n=199, typical error ±9.9; few similar states for this encounter)",
+          "whole_fight_sim": "win 1% (vs the best line −14 ± 1 pts), HP lost when won median 42, ~11 turns to win (this one included); the losing samples die most often on T12 (dead in 99%); 1200 samples"
+        }
+      },
+      "boss_sim": {
+        "available": true,
+        "ms": 2519,
+        "samples": 1200,
+        "requested": 1200,
+        "timed_out": false,
+        "orders": 0,
+        "workers": 20,
+        "boss": "SOUL_FYSH",
+        "low_trust": false,
+        "best": "plan1",
+        "tied": [],
+        "ranked": [
+          "plan1",
+          "plan2",
+          "plan3"
+        ],
+        "lines": {
+          "plan1": {
+            "win": 0.153,
+            "cal": 0.153,
+            "d": 0,
+            "se": 0,
+            "loss": 44.03,
+            "won_loss": 40,
+            "order": null
+          },
+          "plan2": {
+            "win": 0.103,
+            "cal": 0.103,
+            "d": -0.049,
+            "se": 0.011,
+            "loss": 44.44,
+            "won_loss": 40.5,
+            "order": null
+          },
+          "plan3": {
+            "win": 0.013,
+            "cal": 0.013,
+            "d": -0.139,
+            "se": 0.01,
+            "loss": 44.95,
+            "won_loss": 41.5,
+            "order": null
+          }
+        },
+        "plan": "T12 the enemies hit hardest (incoming ~27); the boss dies ~T17 (median of 183 winning samples)",
+        "rollout_own_best": "plan2",
+        "rollout_own_tied": []
+      },
+      "sl_explore": null,
+      "before": {
+        "line": 278576,
+        "ts": "2026-10-07T10:30:25.429Z",
+        "observed_ts": "2026-10-07T10:30:21.633Z",
+        "screen": "COMBAT",
+        "floor": 17,
+        "turn": 7,
+        "hp": 45,
+        "block": 0,
+        "powers": [
+          {
+            "index": 0,
+            "power_id": "THORNS_POWER",
+            "name": "荆棘",
+            "amount": 3,
+            "is_debuff": false
+          },
+          {
+            "index": 1,
+            "power_id": "DEXTERITY_POWER",
+            "name": "敏捷",
+            "amount": 2,
+            "is_debuff": false
+          },
+          {
+            "index": 2,
+            "power_id": "VULNERABLE_POWER",
+            "name": "易伤",
+            "amount": 2,
+            "is_debuff": true
+          }
+        ],
+        "hand": [
+          "DAGGER_SPRAY",
+          "BECKON",
+          "SURVIVOR",
+          "DEFEND_SILENT",
+          "BECKON",
+          "DEFEND_SILENT",
+          "STRIKE_SILENT"
+        ],
+        "potions": [
+          {
+            "index": 0,
+            "id": null
+          },
+          {
+            "index": 1,
+            "id": null
+          }
+        ],
+        "enemies": [
+          {
+            "index": 0,
+            "enemy_id": "SOUL_FYSH",
+            "current_hp": 121,
+            "max_hp": 221,
+            "is_alive": true,
+            "move_id": "DE_GAS_MOVE",
+            "powers": [
+              {
+                "index": 0,
+                "power_id": "POISON_POWER",
+                "name": "中毒",
+                "amount": 1,
+                "is_debuff": true
+              }
+            ],
+            "intents": [
+              {
+                "index": 0,
+                "intent_type": "Attack",
+                "label": "27",
+                "damage": 27,
+                "hits": 1,
+                "total_damage": 27,
+                "status_card_count": null
+              }
+            ]
+          }
+        ]
+      },
+      "next_turn": {
+        "line": 278581,
+        "ts": "2026-10-07T10:30:38.036Z",
+        "observed_ts": "2026-10-07T10:30:35.571Z",
+        "screen": "COMBAT",
+        "floor": 17,
+        "turn": 8,
+        "hp": 32,
+        "block": 0,
+        "powers": [
+          {
+            "index": 0,
+            "power_id": "THORNS_POWER",
+            "name": "荆棘",
+            "amount": 3,
+            "is_debuff": false
+          },
+          {
+            "index": 1,
+            "power_id": "DEXTERITY_POWER",
+            "name": "敏捷",
+            "amount": 2,
+            "is_debuff": false
+          },
+          {
+            "index": 2,
+            "power_id": "VULNERABLE_POWER",
+            "name": "易伤",
+            "amount": 1,
+            "is_debuff": true
+          }
+        ],
+        "hand": [
+          "PIERCING_WAIL",
+          "STRIKE_SILENT",
+          "DEFEND_SILENT",
+          "DAGGER_THROW",
+          "DEFEND_SILENT"
+        ],
+        "potions": [
+          {
+            "index": 0,
+            "id": null
+          },
+          {
+            "index": 1,
+            "id": null
+          }
+        ],
+        "enemies": [
+          {
+            "index": 0,
+            "enemy_id": "SOUL_FYSH",
+            "current_hp": 109,
+            "max_hp": 221,
+            "is_alive": true,
+            "move_id": "GAZE_MOVE",
+            "powers": [],
+            "intents": [
+              {
+                "index": 0,
+                "intent_type": "Attack",
+                "label": "12",
+                "damage": 12,
+                "hits": 1,
+                "total_damage": 12,
+                "status_card_count": null
+              },
+              {
+                "index": 1,
+                "intent_type": "StatusCard",
+                "label": "1",
+                "damage": null,
+                "hits": null,
+                "total_damage": null,
+                "status_card_count": 1
+              }
+            ]
+          }
+        ]
+      },
+      "caveat": "实盘快照差为此题面至下一轮净变化，敌回血/召唤须另核；不作候选模型伤害或受控整战胜因。"
+    },
+    "replacement": {
+      "decision_line": 272652,
+      "run": "751FN9QM9MHQ",
+      "floor": 17,
+      "turn": 7,
+      "attempt": 4,
+      "answer": "plan2",
+      "chosen": {
+        "action": "play_card",
+        "card_index": 0
+      },
+      "options": {
+        "plan1": {
+          "plays": "生存者, then 防御+, then 防御",
+          "result": "survives with 33/76 HP before healing",
+          "hp_lost": 12,
+          "damage_dealt": 1,
+          "enemies_after": "灵魂异鱼 120 HP",
+          "block_gained": 27,
+          "hp_after": 33,
+          "hp_after_pct": 43,
+          "dmg": 1,
+          "lethal_now": "no",
+          "enemy_threat_next": 12,
+          "setup_turn": false,
+          "scaling_gained": "none",
+          "block_wasted": 0,
+          "potions_used": "none",
+          "rollout": "5-turn rollout (24 samples): expected further HP loss 44.1, fight over within 5 turns in 0/24, expected turns to the end (surviving samples) ~7.2; every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 0/24), then the fight's progress: least enemy HP left (this line ~68, at T5 or at our death), then most turns alive (this line ~5), then least HP lost this turn (this line 12)",
+          "rollout_turns": "T1 exact: hp -12, dmg 1; T2: hp -2.7 [2-3], dmg 11.7 [0-18], alive 24/24, won 0/24; T3: hp -0.5 [0-6], dmg 15.9 [0-33], alive 24/24, won 0/24; T4: hp -4.1 [0-15], dmg 1.5 [0-4], alive 24/24, won 0/24; T5: hp -0.3 [0-6], dmg 15.9 [3-27], alive 24/24, won 0/24",
+          "history_estimate": "further HP loss 31, win 97% (this encounter n=33; estimate from act-1 boss fights n=199, typical error ±9.9; few similar states for this encounter)",
+          "rollout_best": true,
+          "whole_fight_sim": "win 15% (the best line), HP lost when won median 40, ~11 turns to win (this one included); the losing samples die most often on T15 (dead in 85%); 1200 samples"
+        },
+        "plan2": {
+          "plays": "匕首雨, then 生存者, then 防御+",
+          "result": "survives with 26/76 HP before healing",
+          "hp_lost": 19,
+          "damage_dealt": 9,
+          "enemies_after": "灵魂异鱼 112 HP",
+          "block_gained": 20,
+          "hp_after": 26,
+          "hp_after_pct": 34,
+          "dmg": 9,
+          "lethal_now": "no",
+          "enemy_threat_next": 12,
+          "setup_turn": false,
+          "scaling_gained": "none",
+          "block_wasted": 0,
+          "potions_used": "none",
+          "rollout": "5-turn rollout (24 samples): expected further HP loss 44.5, fight over within 5 turns in 0/24, expected turns to the end (surviving samples) ~7.1; every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 0/24), then the fight's progress: least enemy HP left (this line ~63, at T5 or at our death), then most turns alive (this line ~5), then least HP lost this turn (this line 19)",
+          "rollout_turns": "T1 exact: hp -19, dmg 9; T2: hp -1.5 [0-3], dmg 8.8 [0-20], alive 24/24, won 0/24; T3: hp -0.3 [0-6], dmg 16.9 [3-33], alive 24/24, won 0/24; T4: hp -4 [0-15], dmg 1.5 [0-4], alive 24/24, won 0/24; T5: hp -0 [0-0], dmg 14.6 [1-27], alive 24/24, won 0/24",
+          "history_estimate": "further HP loss 34, win 95% (this encounter n=33; estimate from act-1 boss fights n=199, typical error ±9.9; few similar states for this encounter)",
+          "whole_fight_sim": "win 10% (vs the best line −5 ± 1 pts), HP lost when won median 41, ~11 turns to win (this one included); the losing samples die most often on T12 (dead in 90%); 1200 samples"
+        },
+        "plan3": {
+          "plays": "匕首雨, then 生存者, then 打击 -> 灵魂异鱼",
+          "result": "survives with 16/76 HP before healing",
+          "hp_lost": 29,
+          "damage_dealt": 15,
+          "enemies_after": "灵魂异鱼 106 HP",
+          "block_gained": 10,
+          "hp_after": 16,
+          "hp_after_pct": 21,
+          "dmg": 15,
+          "lethal_now": "no",
+          "enemy_threat_next": 12,
+          "setup_turn": false,
+          "scaling_gained": "none",
+          "block_wasted": 0,
+          "potions_used": "none",
+          "rollout": "5-turn rollout (24 samples): expected further HP loss 44.9, fight over within 5 turns in 0/24, expected turns to the end (surviving samples) ~6.7, dead within 5 turns in 2/24 (~turn 4); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 2/24), then the fight's progress: least enemy HP left (this line ~60, at T5 or at our death), then most turns alive (this line ~4.9), then least HP lost this turn (this line 29)",
+          "rollout_turns": "T1 exact: hp -29, dmg 15; T2: hp -1.8 [0-3], dmg 7.6 [0-20], alive 24/24, won 0/24; T3: hp -0.5 [0-6], dmg 17.3 [0-29], alive 24/24, won 0/24; T4: hp -3.8 [0-15], dmg 1.5 [0-4], alive 22/24, won 0/24; T5: hp -0 [0-0], dmg 13.6 [1-33], alive 22/24, won 0/24",
+          "history_estimate": "further HP loss 40, win 86% (this encounter n=33; estimate from act-1 boss fights n=199, typical error ±9.9; few similar states for this encounter)",
+          "whole_fight_sim": "win 1% (vs the best line −14 ± 1 pts), HP lost when won median 42, ~11 turns to win (this one included); the losing samples die most often on T12 (dead in 99%); 1200 samples"
+        }
+      },
+      "boss_sim": {
+        "available": true,
+        "ms": 27,
+        "samples": 1200,
+        "requested": 1200,
+        "timed_out": false,
+        "orders": 0,
+        "workers": 20,
+        "boss": "SOUL_FYSH",
+        "low_trust": false,
+        "best": "plan1",
+        "tied": [],
+        "ranked": [
+          "plan1",
+          "plan2",
+          "plan3"
+        ],
+        "lines": {
+          "plan1": {
+            "win": 0.153,
+            "cal": 0.153,
+            "d": 0,
+            "se": 0,
+            "loss": 44.03,
+            "won_loss": 40,
+            "order": null
+          },
+          "plan2": {
+            "win": 0.103,
+            "cal": 0.103,
+            "d": -0.049,
+            "se": 0.011,
+            "loss": 44.44,
+            "won_loss": 40.5,
+            "order": null
+          },
+          "plan3": {
+            "win": 0.013,
+            "cal": 0.013,
+            "d": -0.139,
+            "se": 0.01,
+            "loss": 44.95,
+            "won_loss": 41.5,
+            "order": null
+          }
+        },
+        "plan": "T12 the enemies hit hardest (incoming ~27); the boss dies ~T17 (median of 183 winning samples)",
+        "rollout_own_best": "plan2",
+        "rollout_own_tied": []
+      },
+      "sl_explore": {
+        "point": "T7, the 10th latest question before attempt 1's death on T17",
+        "original": "匕首雨, 生存者, 防御+",
+        "replacement": "匕首雨, 生存者, 打击 -> 灵魂异鱼",
+        "reason": "the best untried line by the question's ranking (B2 rates every untried line worse: win rate more than 2 paired standard errors below the pick's; the pick is known to fail)",
+        "played_in": [
+          1,
+          2
+        ],
+        "replayed": 13,
+        "numbers": {
+          "original": "rollout dead 0/24, further loss 44.5, win ~41%; whole-fight sim win 10.3%; this turn hp -19, dmg 9",
+          "replacement": "rollout dead 2/24, further loss 44.9, win ~36%; whole-fight sim win 1.3%; this turn hp -29, dmg 15"
+        },
+        "gate": "b2",
+        "b2": {
+          "original": 0.103,
+          "replacement": 0.013,
+          "diff": -0.09,
+          "se": 0.0088
+        },
+        "turn": "DAGGER_SPRAY, DEFEND_SILENT+, SURVIVOR",
+        "turn_instead": "DAGGER_SPRAY, STRIKE_SILENT>灵魂异鱼, SURVIVOR"
+      },
+      "before": {
+        "line": 278697,
+        "ts": "2026-10-07T10:35:16.809Z",
+        "observed_ts": "2026-10-07T10:35:16.182Z",
+        "screen": "COMBAT",
+        "floor": 17,
+        "turn": 7,
+        "hp": 45,
+        "block": 0,
+        "powers": [
+          {
+            "index": 0,
+            "power_id": "THORNS_POWER",
+            "name": "荆棘",
+            "amount": 3,
+            "is_debuff": false
+          },
+          {
+            "index": 1,
+            "power_id": "DEXTERITY_POWER",
+            "name": "敏捷",
+            "amount": 2,
+            "is_debuff": false
+          },
+          {
+            "index": 2,
+            "power_id": "VULNERABLE_POWER",
+            "name": "易伤",
+            "amount": 2,
+            "is_debuff": true
+          }
+        ],
+        "hand": [
+          "DAGGER_SPRAY",
+          "BECKON",
+          "SURVIVOR",
+          "DEFEND_SILENT",
+          "BECKON",
+          "DEFEND_SILENT",
+          "STRIKE_SILENT"
+        ],
+        "potions": [
+          {
+            "index": 0,
+            "id": null
+          },
+          {
+            "index": 1,
+            "id": null
+          }
+        ],
+        "enemies": [
+          {
+            "index": 0,
+            "enemy_id": "SOUL_FYSH",
+            "current_hp": 121,
+            "max_hp": 221,
+            "is_alive": true,
+            "move_id": "DE_GAS_MOVE",
+            "powers": [
+              {
+                "index": 0,
+                "power_id": "POISON_POWER",
+                "name": "中毒",
+                "amount": 1,
+                "is_debuff": true
+              }
+            ],
+            "intents": [
+              {
+                "index": 0,
+                "intent_type": "Attack",
+                "label": "27",
+                "damage": 27,
+                "hits": 1,
+                "total_damage": 27,
+                "status_card_count": null
+              }
+            ]
+          }
+        ]
+      },
+      "next_turn": {
+        "line": 278702,
+        "ts": "2026-10-07T10:35:29.252Z",
+        "observed_ts": "2026-10-07T10:35:26.988Z",
+        "screen": "COMBAT",
+        "floor": 17,
+        "turn": 8,
+        "hp": 22,
+        "block": 0,
+        "powers": [
+          {
+            "index": 0,
+            "power_id": "THORNS_POWER",
+            "name": "荆棘",
+            "amount": 3,
+            "is_debuff": false
+          },
+          {
+            "index": 1,
+            "power_id": "DEXTERITY_POWER",
+            "name": "敏捷",
+            "amount": 2,
+            "is_debuff": false
+          },
+          {
+            "index": 2,
+            "power_id": "VULNERABLE_POWER",
+            "name": "易伤",
+            "amount": 1,
+            "is_debuff": true
+          }
+        ],
+        "hand": [
+          "PIERCING_WAIL",
+          "STRIKE_SILENT",
+          "DEFEND_SILENT",
+          "DAGGER_THROW",
+          "DEFEND_SILENT"
+        ],
+        "potions": [
+          {
+            "index": 0,
+            "id": null
+          },
+          {
+            "index": 1,
+            "id": null
+          }
+        ],
+        "enemies": [
+          {
+            "index": 0,
+            "enemy_id": "SOUL_FYSH",
+            "current_hp": 103,
+            "max_hp": 221,
+            "is_alive": true,
+            "move_id": "GAZE_MOVE",
+            "powers": [],
+            "intents": [
+              {
+                "index": 0,
+                "intent_type": "Attack",
+                "label": "12",
+                "damage": 12,
+                "hits": 1,
+                "total_damage": 12,
+                "status_card_count": null
+              },
+              {
+                "index": 1,
+                "intent_type": "StatusCard",
+                "label": "1",
+                "damage": null,
+                "hits": null,
+                "total_damage": null,
+                "status_card_count": 1
+              }
+            ]
+          }
+        ]
+      },
+      "caveat": "实盘快照差为此题面至下一轮净变化，敌回血/召唤须另核；不作候选模型伤害或受控整战胜因。"
+    }
+  },
+  {
+    "same_fingerprint": true,
+    "original": {
+      "decision_line": 274505,
+      "run": "KEN58SH9SLZ6",
+      "floor": 17,
+      "turn": 10,
+      "attempt": 4,
+      "answer": "plan4",
+      "chosen": {
+        "action": "play_card",
+        "card_index": 0
+      },
+      "options": {
+        "plan1": {
+          "plays": "呼唤, then 呼唤, then 匕首雨",
+          "result": "survives with 22/86 HP before healing",
+          "hp_lost": 15,
+          "damage_dealt": 3,
+          "enemies_after": "灵魂异鱼 79 HP, 中毒 6",
+          "hp_after": 22,
+          "hp_after_pct": 26,
+          "dmg": 3,
+          "lethal_now": "no",
+          "enemy_threat_next": 0,
+          "setup_turn": false,
+          "scaling_gained": "none",
+          "block_wasted": 0,
+          "potions_used": "none",
+          "rollout": "5-turn rollout (24 samples): expected further HP loss 34.4, fight over within 5 turns in 0/24, expected turns to the end (surviving samples) ~5.9, dead within 5 turns in 6/24 (~turn 4); ranked on -(further loss) - 40 x (1 - win chance): win chance ~37% (fights won in the samples, the others by the end-of-horizon estimate), value -59.7",
+          "rollout_turns": "T1 exact: hp -15, dmg 3; T2: hp -0 [0-0], dmg 16.5 [6-23], alive 24/24, won 0/24; T3: hp -10.3 [2-20], dmg 12.1 [5-24], alive 24/24, won 0/24; T4: hp -5.3 [0-14], dmg 10.4 [4-27], alive 18/24, won 0/24; T5: hp -0.3 [0-6], dmg 11.7 [3-26], alive 18/24, won 0/24",
+          "history_estimate": "further HP loss 34, win 39% (this encounter n=51; estimate from act-1 boss fights n=225, typical error ±9.9; few similar states for this encounter)",
+          "whole_fight_sim": "win 12% (vs the best line −27 ± 1 pts), HP lost when won median 33, ~8 turns to win (this one included); the losing samples die most often on T15 (dead in 88%); 1200 samples"
+        },
+        "plan2": {
+          "plays": "呼唤, then 带毒刺击 -> 灵魂异鱼, then 匕首雨",
+          "result": "survives with 16/86 HP before healing",
+          "hp_lost": 21,
+          "damage_dealt": 4,
+          "enemies_after": "灵魂异鱼 78 HP, 中毒 9",
+          "hp_after": 16,
+          "hp_after_pct": 19,
+          "dmg": 4,
+          "lethal_now": "no",
+          "enemy_threat_next": 0,
+          "setup_turn": false,
+          "scaling_gained": "none",
+          "block_wasted": 0,
+          "potions_used": "none",
+          "rollout": "5-turn rollout (24 samples): expected further HP loss 35.3, fight over within 5 turns in 1/24, expected turns to the end (surviving samples) ~5.6, dead within 5 turns in 12/24 (~turn 3.8); ranked on -(further loss) - 40 x (1 - win chance): win chance ~28% (fights won in the samples, the others by the end-of-horizon estimate), value -64.1",
+          "rollout_turns": "T1 exact: hp -21, dmg 4; T2: hp -0 [0-0], dmg 19.5 [9-26], alive 24/24, won 0/24; T3: hp -10 [2-18], dmg 14.9 [6-27], alive 21/24, won 0/24; T4: hp -4.3 [0-12], dmg 12.8 [7-20], alive 12/24, won 0/24; T5: hp -0.5 [0-6], dmg 13.8 [6-27], alive 12/24, won 1/24",
+          "history_estimate": "further HP loss 36, win 29% (this encounter n=51; estimate from act-1 boss fights n=225, typical error ±9.9; few similar states for this encounter)",
+          "whole_fight_sim": "win 13% (vs the best line −26 ± 1 pts), HP lost when won median 34, ~8 turns to win (this one included); the losing samples die most often on T15 (dead in 87%); 1200 samples"
+        },
+        "plan3": {
+          "plays": "猎杀者 -> 灵魂异鱼, then 匕首雨",
+          "result": "survives with 10/86 HP before healing",
+          "hp_lost": 27,
+          "damage_dealt": 4,
+          "enemies_after": "灵魂异鱼 78 HP, 中毒 6",
+          "hp_after": 10,
+          "hp_after_pct": 12,
+          "dmg": 4,
+          "lethal_now": "no",
+          "enemy_threat_next": 0,
+          "setup_turn": false,
+          "scaling_gained": "none",
+          "block_wasted": 0,
+          "potions_used": "none",
+          "rollout": "5-turn rollout (24 samples): expected further HP loss 37, fight over within 5 turns in 0/24, expected turns to the end (surviving samples) ~6.1, dead within 5 turns in 17/24 (~turn 3.2); ranked on -(further loss) - 40 x (1 - win chance): win chance ~9% (fights won in the samples, the others by the end-of-horizon estimate), value -73.5",
+          "rollout_turns": "T1 exact: hp -27, dmg 4; T2: hp -0 [0-0], dmg 16.5 [6-23], alive 24/24, won 0/24; T3: hp -9.3 [2-16], dmg 12.3 [5-23], alive 10/24, won 0/24; T4: hp -3.5 [0-12], dmg 10.4 [4-15], alive 7/24, won 0/24; T5: hp -0 [0-0], dmg 7.7 [3-18], alive 7/24, won 0/24",
+          "history_estimate": "further HP loss 37, win 13% (this encounter n=51; estimate from act-1 boss fights n=225, typical error ±9.9; few similar states for this encounter)",
+          "whole_fight_sim": "win 0% (vs the best line −38 ± 1 pts), HP lost when won median 33, ~8 turns to win (this one included); the losing samples die most often on T12 (dead in 100%); 1200 samples"
+        },
+        "plan4": {
+          "plays": "呼唤, then 带毒刺击 -> 灵魂异鱼, then 呼唤",
+          "result": "survives with 22/86 HP before healing",
+          "hp_lost": 15,
+          "damage_dealt": 2,
+          "enemies_after": "灵魂异鱼 80 HP, 中毒 9",
+          "hp_after": 22,
+          "hp_after_pct": 26,
+          "dmg": 2,
+          "lethal_now": "no",
+          "enemy_threat_next": 0,
+          "setup_turn": false,
+          "scaling_gained": "none",
+          "block_wasted": 0,
+          "potions_used": "none",
+          "rollout": "5-turn rollout (24 samples): expected further HP loss 32.5, fight over within 5 turns in 0/24, expected turns to the end (surviving samples) ~5.6, dead within 5 turns in 6/24 (~turn 4); ranked on -(further loss) - 40 x (1 - win chance): win chance ~46% (fights won in the samples, the others by the end-of-horizon estimate), value -54.1",
+          "rollout_turns": "T1 exact: hp -15, dmg 2; T2: hp -0 [0-0], dmg 19.5 [9-26], alive 24/24, won 0/24; T3: hp -10.2 [2-20], dmg 14.8 [8-25], alive 24/24, won 0/24; T4: hp -5.6 [0-14], dmg 13.5 [7-30], alive 18/24, won 0/24; T5: hp -0 [0-0], dmg 12.8 [6-27], alive 18/24, won 0/24",
+          "history_estimate": "further HP loss 33, win 42% (this encounter n=51; estimate from act-1 boss fights n=225, typical error ±9.9; few similar states for this encounter)",
+          "rollout_best": true,
+          "whole_fight_sim": "win 39% (the best line), HP lost when won median 33, ~8 turns to win (this one included); the losing samples die most often on T15 (dead in 62%); 1200 samples"
+        }
+      },
+      "boss_sim": {
+        "available": true,
+        "ms": 1634,
+        "samples": 1200,
+        "requested": 1200,
+        "timed_out": false,
+        "orders": 0,
+        "workers": 20,
+        "boss": "SOUL_FYSH",
+        "low_trust": false,
+        "best": "plan4",
+        "tied": [],
+        "ranked": [
+          "plan4",
+          "plan2",
+          "plan1",
+          "plan3"
+        ],
+        "lines": {
+          "plan1": {
+            "win": 0.118,
+            "cal": 0.118,
+            "d": -0.267,
+            "se": 0.014,
+            "loss": 36.52,
+            "won_loss": 33,
+            "order": null
+          },
+          "plan2": {
+            "win": 0.127,
+            "cal": 0.127,
+            "d": -0.258,
+            "se": 0.013,
+            "loss": 36.55,
+            "won_loss": 34,
+            "order": null
+          },
+          "plan3": {
+            "win": 0.003,
+            "cal": 0.003,
+            "d": -0.382,
+            "se": 0.014,
+            "loss": 36.99,
+            "won_loss": 33,
+            "order": null
+          },
+          "plan4": {
+            "win": 0.385,
+            "cal": 0.385,
+            "d": 0,
+            "se": 0,
+            "loss": 35.2,
+            "won_loss": 33,
+            "order": null
+          }
+        },
+        "plan": "T12, T13, T15 the enemies hit hardest (incoming ~24, ~12, ~14); the boss dies ~T17 (median of 462 winning samples)",
+        "rollout_own_best": "plan4",
+        "rollout_own_tied": []
+      },
+      "sl_explore": null,
+      "before": {
+        "line": 280588,
+        "ts": "2026-10-07T12:18:11.535Z",
+        "observed_ts": "2026-10-07T12:18:08.764Z",
+        "screen": "COMBAT",
+        "floor": 17,
+        "turn": 10,
+        "hp": 37,
+        "block": 0,
+        "powers": [
+          {
+            "index": 0,
+            "power_id": "DEXTERITY_POWER",
+            "name": "敏捷",
+            "amount": 2,
+            "is_debuff": false
+          }
+        ],
+        "hand": [
+          "BECKON",
+          "PREDATOR",
+          "POISONED_STAB",
+          "BECKON",
+          "DAGGER_SPRAY"
+        ],
+        "potions": [
+          {
+            "index": 0,
+            "id": null
+          },
+          {
+            "index": 1,
+            "id": null
+          }
+        ],
+        "enemies": [
+          {
+            "index": 0,
+            "enemy_id": "SOUL_FYSH",
+            "current_hp": 82,
+            "max_hp": 221,
+            "is_alive": true,
+            "move_id": "SCREAM_MOVE",
+            "powers": [
+              {
+                "index": 0,
+                "power_id": "POISON_POWER",
+                "name": "中毒",
+                "amount": 7,
+                "is_debuff": true
+              },
+              {
+                "index": 1,
+                "power_id": "INTANGIBLE_POWER",
+                "name": "无实体",
+                "amount": 1,
+                "is_debuff": false
+              }
+            ],
+            "intents": [
+              {
+                "index": 0,
+                "intent_type": "Attack",
+                "label": "15",
+                "damage": 15,
+                "hits": 1,
+                "total_damage": 15,
+                "status_card_count": null
+              },
+              {
+                "index": 1,
+                "intent_type": "Debuff",
+                "label": null,
+                "damage": null,
+                "hits": null,
+                "total_damage": null,
+                "status_card_count": null
+              }
+            ]
+          }
+        ]
+      },
+      "next_turn": {
+        "line": 280592,
+        "ts": "2026-10-07T12:18:21.096Z",
+        "observed_ts": "2026-10-07T12:18:19.064Z",
+        "screen": "COMBAT",
+        "floor": 17,
+        "turn": 11,
+        "hp": 22,
+        "block": 0,
+        "powers": [
+          {
+            "index": 0,
+            "power_id": "DEXTERITY_POWER",
+            "name": "敏捷",
+            "amount": 2,
+            "is_debuff": false
+          },
+          {
+            "index": 1,
+            "power_id": "VULNERABLE_POWER",
+            "name": "易伤",
+            "amount": 3,
+            "is_debuff": true
+          }
+        ],
+        "hand": [
+          "STRIKE_SILENT",
+          "STRIKE_SILENT",
+          "BECKON",
+          "CLOAK_AND_DAGGER",
+          "DEFEND_SILENT"
+        ],
+        "potions": [
+          {
+            "index": 0,
+            "id": null
+          },
+          {
+            "index": 1,
+            "id": null
+          }
+        ],
+        "enemies": [
+          {
+            "index": 0,
+            "enemy_id": "SOUL_FYSH",
+            "current_hp": 80,
+            "max_hp": 221,
+            "is_alive": true,
+            "move_id": "BECKON_MOVE",
+            "powers": [
+              {
+                "index": 0,
+                "power_id": "POISON_POWER",
+                "name": "中毒",
+                "amount": 9,
+                "is_debuff": true
+              }
+            ],
+            "intents": [
+              {
+                "index": 0,
+                "intent_type": "StatusCard",
+                "label": "2",
+                "damage": null,
+                "hits": null,
+                "total_damage": null,
+                "status_card_count": 2
+              }
+            ]
+          }
+        ]
+      },
+      "caveat": "实盘快照差为此题面至下一轮净变化，敌回血/召唤须另核；不作候选模型伤害或受控整战胜因。"
+    },
+    "replacement": {
+      "decision_line": 274568,
+      "run": "KEN58SH9SLZ6",
+      "floor": 17,
+      "turn": 10,
+      "attempt": 5,
+      "answer": "plan4",
+      "chosen": {
+        "action": "play_card",
+        "card_index": 0
+      },
+      "options": {
+        "plan1": {
+          "plays": "呼唤, then 呼唤, then 匕首雨",
+          "result": "survives with 22/86 HP before healing",
+          "hp_lost": 15,
+          "damage_dealt": 3,
+          "enemies_after": "灵魂异鱼 79 HP, 中毒 6",
+          "hp_after": 22,
+          "hp_after_pct": 26,
+          "dmg": 3,
+          "lethal_now": "no",
+          "enemy_threat_next": 0,
+          "setup_turn": false,
+          "scaling_gained": "none",
+          "block_wasted": 0,
+          "potions_used": "none",
+          "rollout": "5-turn rollout (24 samples): expected further HP loss 34.4, fight over within 5 turns in 0/24, expected turns to the end (surviving samples) ~5.9, dead within 5 turns in 6/24 (~turn 4); ranked on -(further loss) - 40 x (1 - win chance): win chance ~37% (fights won in the samples, the others by the end-of-horizon estimate), value -59.7",
+          "rollout_turns": "T1 exact: hp -15, dmg 3; T2: hp -0 [0-0], dmg 16.5 [6-23], alive 24/24, won 0/24; T3: hp -10.3 [2-20], dmg 12.1 [5-24], alive 24/24, won 0/24; T4: hp -5.3 [0-14], dmg 10.4 [4-27], alive 18/24, won 0/24; T5: hp -0.3 [0-6], dmg 11.7 [3-26], alive 18/24, won 0/24",
+          "history_estimate": "further HP loss 34, win 39% (this encounter n=51; estimate from act-1 boss fights n=225, typical error ±9.9; few similar states for this encounter)",
+          "whole_fight_sim": "win 12% (vs the best line −27 ± 1 pts), HP lost when won median 33, ~8 turns to win (this one included); the losing samples die most often on T15 (dead in 88%); 1200 samples"
+        },
+        "plan2": {
+          "plays": "呼唤, then 带毒刺击 -> 灵魂异鱼, then 匕首雨",
+          "result": "survives with 16/86 HP before healing",
+          "hp_lost": 21,
+          "damage_dealt": 4,
+          "enemies_after": "灵魂异鱼 78 HP, 中毒 9",
+          "hp_after": 16,
+          "hp_after_pct": 19,
+          "dmg": 4,
+          "lethal_now": "no",
+          "enemy_threat_next": 0,
+          "setup_turn": false,
+          "scaling_gained": "none",
+          "block_wasted": 0,
+          "potions_used": "none",
+          "rollout": "5-turn rollout (24 samples): expected further HP loss 35.3, fight over within 5 turns in 1/24, expected turns to the end (surviving samples) ~5.6, dead within 5 turns in 12/24 (~turn 3.8); ranked on -(further loss) - 40 x (1 - win chance): win chance ~28% (fights won in the samples, the others by the end-of-horizon estimate), value -64.1",
+          "rollout_turns": "T1 exact: hp -21, dmg 4; T2: hp -0 [0-0], dmg 19.5 [9-26], alive 24/24, won 0/24; T3: hp -10 [2-18], dmg 14.9 [6-27], alive 21/24, won 0/24; T4: hp -4.3 [0-12], dmg 12.8 [7-20], alive 12/24, won 0/24; T5: hp -0.5 [0-6], dmg 13.8 [6-27], alive 12/24, won 1/24",
+          "history_estimate": "further HP loss 36, win 29% (this encounter n=51; estimate from act-1 boss fights n=225, typical error ±9.9; few similar states for this encounter)",
+          "whole_fight_sim": "win 13% (vs the best line −26 ± 1 pts), HP lost when won median 34, ~8 turns to win (this one included); the losing samples die most often on T15 (dead in 87%); 1200 samples"
+        },
+        "plan3": {
+          "plays": "猎杀者 -> 灵魂异鱼, then 匕首雨",
+          "result": "survives with 10/86 HP before healing",
+          "hp_lost": 27,
+          "damage_dealt": 4,
+          "enemies_after": "灵魂异鱼 78 HP, 中毒 6",
+          "hp_after": 10,
+          "hp_after_pct": 12,
+          "dmg": 4,
+          "lethal_now": "no",
+          "enemy_threat_next": 0,
+          "setup_turn": false,
+          "scaling_gained": "none",
+          "block_wasted": 0,
+          "potions_used": "none",
+          "rollout": "5-turn rollout (24 samples): expected further HP loss 37, fight over within 5 turns in 0/24, expected turns to the end (surviving samples) ~6.1, dead within 5 turns in 17/24 (~turn 3.2); ranked on -(further loss) - 40 x (1 - win chance): win chance ~9% (fights won in the samples, the others by the end-of-horizon estimate), value -73.5",
+          "rollout_turns": "T1 exact: hp -27, dmg 4; T2: hp -0 [0-0], dmg 16.5 [6-23], alive 24/24, won 0/24; T3: hp -9.3 [2-16], dmg 12.3 [5-23], alive 10/24, won 0/24; T4: hp -3.5 [0-12], dmg 10.4 [4-15], alive 7/24, won 0/24; T5: hp -0 [0-0], dmg 7.7 [3-18], alive 7/24, won 0/24",
+          "history_estimate": "further HP loss 37, win 13% (this encounter n=51; estimate from act-1 boss fights n=225, typical error ±9.9; few similar states for this encounter)",
+          "whole_fight_sim": "win 0% (vs the best line −38 ± 1 pts), HP lost when won median 33, ~8 turns to win (this one included); the losing samples die most often on T12 (dead in 100%); 1200 samples"
+        },
+        "plan4": {
+          "plays": "呼唤, then 带毒刺击 -> 灵魂异鱼, then 呼唤",
+          "result": "survives with 22/86 HP before healing",
+          "hp_lost": 15,
+          "damage_dealt": 2,
+          "enemies_after": "灵魂异鱼 80 HP, 中毒 9",
+          "hp_after": 22,
+          "hp_after_pct": 26,
+          "dmg": 2,
+          "lethal_now": "no",
+          "enemy_threat_next": 0,
+          "setup_turn": false,
+          "scaling_gained": "none",
+          "block_wasted": 0,
+          "potions_used": "none",
+          "rollout": "5-turn rollout (24 samples): expected further HP loss 32.5, fight over within 5 turns in 0/24, expected turns to the end (surviving samples) ~5.6, dead within 5 turns in 6/24 (~turn 4); ranked on -(further loss) - 40 x (1 - win chance): win chance ~46% (fights won in the samples, the others by the end-of-horizon estimate), value -54.1",
+          "rollout_turns": "T1 exact: hp -15, dmg 2; T2: hp -0 [0-0], dmg 19.5 [9-26], alive 24/24, won 0/24; T3: hp -10.2 [2-20], dmg 14.8 [8-25], alive 24/24, won 0/24; T4: hp -5.6 [0-14], dmg 13.5 [7-30], alive 18/24, won 0/24; T5: hp -0 [0-0], dmg 12.8 [6-27], alive 18/24, won 0/24",
+          "history_estimate": "further HP loss 33, win 42% (this encounter n=51; estimate from act-1 boss fights n=225, typical error ±9.9; few similar states for this encounter)",
+          "rollout_best": true,
+          "whole_fight_sim": "win 39% (the best line), HP lost when won median 33, ~8 turns to win (this one included); the losing samples die most often on T15 (dead in 62%); 1200 samples"
+        }
+      },
+      "boss_sim": {
+        "available": true,
+        "ms": 22,
+        "samples": 1200,
+        "requested": 1200,
+        "timed_out": false,
+        "orders": 0,
+        "workers": 20,
+        "boss": "SOUL_FYSH",
+        "low_trust": false,
+        "best": "plan4",
+        "tied": [],
+        "ranked": [
+          "plan4",
+          "plan2",
+          "plan1",
+          "plan3"
+        ],
+        "lines": {
+          "plan1": {
+            "win": 0.118,
+            "cal": 0.118,
+            "d": -0.267,
+            "se": 0.014,
+            "loss": 36.52,
+            "won_loss": 33,
+            "order": null
+          },
+          "plan2": {
+            "win": 0.127,
+            "cal": 0.127,
+            "d": -0.258,
+            "se": 0.013,
+            "loss": 36.55,
+            "won_loss": 34,
+            "order": null
+          },
+          "plan3": {
+            "win": 0.003,
+            "cal": 0.003,
+            "d": -0.382,
+            "se": 0.014,
+            "loss": 36.99,
+            "won_loss": 33,
+            "order": null
+          },
+          "plan4": {
+            "win": 0.385,
+            "cal": 0.385,
+            "d": 0,
+            "se": 0,
+            "loss": 35.2,
+            "won_loss": 33,
+            "order": null
+          }
+        },
+        "plan": "T12, T13, T15 the enemies hit hardest (incoming ~24, ~12, ~14); the boss dies ~T17 (median of 462 winning samples)",
+        "rollout_own_best": "plan4",
+        "rollout_own_tied": []
+      },
+      "sl_explore": {
+        "point": "T10, the 4th latest question before attempt 4's death on T15",
+        "original": "呼唤, 带毒刺击 -> 灵魂异鱼, 呼唤",
+        "replacement": "呼唤, 带毒刺击 -> 灵魂异鱼, 匕首雨",
+        "reason": "the best untried line by the question's ranking (B2 rates every untried line worse: win rate more than 2 paired standard errors below the pick's; the pick is known to fail)",
+        "played_in": [
+          4
+        ],
+        "replayed": 20,
+        "numbers": {
+          "original": "rollout dead 6/24, further loss 32.5, win ~46%; whole-fight sim win 38.5%; this turn hp -15, dmg 2",
+          "replacement": "rollout dead 12/24, further loss 35.3, win ~28%; whole-fight sim win 12.7%; this turn hp -21, dmg 4"
+        },
+        "gate": "b2",
+        "b2": {
+          "original": 0.385,
+          "replacement": 0.127,
+          "diff": -0.2583,
+          "se": 0.0132
+        },
+        "turn": "BECKON, BECKON, POISONED_STAB>灵魂异鱼",
+        "turn_instead": "BECKON, DAGGER_SPRAY, POISONED_STAB>灵魂异鱼"
+      },
+      "before": {
+        "line": 280651,
+        "ts": "2026-10-07T12:20:33.952Z",
+        "observed_ts": "2026-10-07T12:20:33.323Z",
+        "screen": "COMBAT",
+        "floor": 17,
+        "turn": 10,
+        "hp": 37,
+        "block": 0,
+        "powers": [
+          {
+            "index": 0,
+            "power_id": "DEXTERITY_POWER",
+            "name": "敏捷",
+            "amount": 2,
+            "is_debuff": false
+          }
+        ],
+        "hand": [
+          "BECKON",
+          "PREDATOR",
+          "POISONED_STAB",
+          "BECKON",
+          "DAGGER_SPRAY"
+        ],
+        "potions": [
+          {
+            "index": 0,
+            "id": null
+          },
+          {
+            "index": 1,
+            "id": null
+          }
+        ],
+        "enemies": [
+          {
+            "index": 0,
+            "enemy_id": "SOUL_FYSH",
+            "current_hp": 82,
+            "max_hp": 221,
+            "is_alive": true,
+            "move_id": "SCREAM_MOVE",
+            "powers": [
+              {
+                "index": 0,
+                "power_id": "POISON_POWER",
+                "name": "中毒",
+                "amount": 7,
+                "is_debuff": true
+              },
+              {
+                "index": 1,
+                "power_id": "INTANGIBLE_POWER",
+                "name": "无实体",
+                "amount": 1,
+                "is_debuff": false
+              }
+            ],
+            "intents": [
+              {
+                "index": 0,
+                "intent_type": "Attack",
+                "label": "15",
+                "damage": 15,
+                "hits": 1,
+                "total_damage": 15,
+                "status_card_count": null
+              },
+              {
+                "index": 1,
+                "intent_type": "Debuff",
+                "label": null,
+                "damage": null,
+                "hits": null,
+                "total_damage": null,
+                "status_card_count": null
+              }
+            ]
+          }
+        ]
+      },
+      "next_turn": {
+        "line": 280655,
+        "ts": "2026-10-07T12:20:44.531Z",
+        "observed_ts": "2026-10-07T12:20:42.567Z",
+        "screen": "COMBAT",
+        "floor": 17,
+        "turn": 11,
+        "hp": 16,
+        "block": 0,
+        "powers": [
+          {
+            "index": 0,
+            "power_id": "DEXTERITY_POWER",
+            "name": "敏捷",
+            "amount": 2,
+            "is_debuff": false
+          },
+          {
+            "index": 1,
+            "power_id": "VULNERABLE_POWER",
+            "name": "易伤",
+            "amount": 3,
+            "is_debuff": true
+          }
+        ],
+        "hand": [
+          "STRIKE_SILENT",
+          "STRIKE_SILENT",
+          "BECKON",
+          "CLOAK_AND_DAGGER",
+          "DEFEND_SILENT"
+        ],
+        "potions": [
+          {
+            "index": 0,
+            "id": null
+          },
+          {
+            "index": 1,
+            "id": null
+          }
+        ],
+        "enemies": [
+          {
+            "index": 0,
+            "enemy_id": "SOUL_FYSH",
+            "current_hp": 78,
+            "max_hp": 221,
+            "is_alive": true,
+            "move_id": "BECKON_MOVE",
+            "powers": [
+              {
+                "index": 0,
+                "power_id": "POISON_POWER",
+                "name": "中毒",
+                "amount": 9,
+                "is_debuff": true
+              }
+            ],
+            "intents": [
+              {
+                "index": 0,
+                "intent_type": "StatusCard",
+                "label": "2",
+                "damage": null,
+                "hits": null,
+                "total_damage": null,
+                "status_card_count": 2
+              }
+            ]
+          }
+        ]
+      },
+      "caveat": "实盘快照差为此题面至下一轮净变化，敌回血/召唤须另核；不作候选模型伤害或受控整战胜因。"
+    }
+  },
+  {
+    "same_fingerprint": true,
+    "original": {
+      "decision_line": 274484,
+      "run": "KEN58SH9SLZ6",
+      "floor": 17,
+      "turn": 5,
+      "attempt": 4,
+      "answer": "plan5",
+      "chosen": {
+        "action": "play_card",
+        "card_index": 0
+      },
+      "options": {
+        "plan1": {
+          "plays": "灵动步法, then 斗篷与匕首, then 突然一拳 -> 灵魂异鱼",
+          "result": "survives with 57/86 HP before healing",
+          "hp_lost": 9,
+          "damage_dealt": 1,
+          "enemies_after": "灵魂异鱼 135 HP, Weak 1",
+          "block_gained": 8,
+          "cards_drawn": 1,
+          "lasting_value": "sets up a power worth about 8 score over the fight (a few HP now is often worth it in a long fight)",
+          "hp_after": 57,
+          "hp_after_pct": 66,
+          "dmg": 1,
+          "lethal_now": "no",
+          "enemy_threat_next": 0,
+          "setup_turn": false,
+          "scaling_gained": "plays power 灵动步法; lasting value 8",
+          "block_wasted": 0,
+          "potions_used": "none",
+          "rollout": "5-turn rollout (24 samples): expected further HP loss 59.9, fight over within 5 turns in 0/24, expected turns to the end (surviving samples) ~8.3; ranked on -(further loss) - 40 x (1 - win chance): win chance ~55% (fights won in the samples, the others by the end-of-horizon estimate), value -77.8",
+          "rollout_turns": "T1 exact: hp -9, dmg 1; T2: hp -0.3 [0-6], dmg 11 [0-20], alive 24/24, won 0/24; T3: hp -13.1 [0-27], dmg 9.6 [0-19], alive 24/24, won 0/24; T4: hp -6.5 [0-15], dmg 13.4 [0-26], alive 24/24, won 0/24; T5: hp -0 [0-0], dmg 15.2 [0-26], alive 24/24, won 0/24",
+          "history_estimate": "further HP loss 48, win 65% (this encounter n=51; estimate from act-1 boss fights n=225, typical error ±9.9; few similar states for this encounter)",
+          "whole_fight_sim": "win 4% (vs the best line +0 ± 1 pts, tied on win rate), HP lost when won median 61, ~13 turns to win (this one included); the losing samples die most often on T17 (dead in 96%); 1200 samples"
+        },
+        "plan2": {
+          "plays": "灵动步法, then 斗篷与匕首",
+          "result": "survives with 53/86 HP before healing",
+          "hp_lost": 13,
+          "damage_dealt": 0,
+          "enemies_after": "灵魂异鱼 136 HP",
+          "block_gained": 8,
+          "cards_drawn": 1,
+          "energy_unused": 1,
+          "lasting_value": "sets up a power worth about 8 score over the fight (a few HP now is often worth it in a long fight)",
+          "hp_after": 53,
+          "hp_after_pct": 62,
+          "dmg": 0,
+          "lethal_now": "no",
+          "enemy_threat_next": 0,
+          "setup_turn": false,
+          "scaling_gained": "plays power 灵动步法; lasting value 8",
+          "block_wasted": 0,
+          "potions_used": "none",
+          "rollout": "5-turn rollout (24 samples): expected further HP loss 61.6, fight over within 5 turns in 0/24, expected turns to the end (surviving samples) ~8.4; ranked on -(further loss) - 40 x (1 - win chance): win chance ~48% (fights won in the samples, the others by the end-of-horizon estimate), value -82.2",
+          "rollout_turns": "T1 exact: hp -13, dmg 0; T2: hp -0.3 [0-6], dmg 11 [0-20], alive 24/24, won 0/24; T3: hp -13.1 [0-27], dmg 9.6 [0-19], alive 24/24, won 0/24; T4: hp -6.1 [0-14], dmg 12.7 [0-26], alive 24/24, won 0/24; T5: hp -0 [0-0], dmg 14.3 [4-28], alive 24/24, won 0/24",
+          "history_estimate": "further HP loss 51, win 61% (this encounter n=51; estimate from act-1 boss fights n=225, typical error ±9.9; few similar states for this encounter)",
+          "whole_fight_sim": "win 3% (vs the best line −2 ± 1 pts), HP lost when won median 56, ~13 turns to win (this one included); the losing samples die most often on T17 (dead in 98%); 1200 samples"
+        },
+        "plan3": {
+          "plays": "呼唤, then 斗篷与匕首, then 突然一拳 -> 灵魂异鱼",
+          "result": "survives with 61/86 HP before healing",
+          "hp_lost": 5,
+          "damage_dealt": 1,
+          "enemies_after": "灵魂异鱼 135 HP, Weak 1",
+          "block_gained": 6,
+          "cards_drawn": 1,
+          "hp_after": 61,
+          "hp_after_pct": 71,
+          "dmg": 1,
+          "lethal_now": "no",
+          "enemy_threat_next": 0,
+          "setup_turn": false,
+          "scaling_gained": "none",
+          "block_wasted": 0,
+          "potions_used": "none",
+          "rollout": "5-turn rollout (24 samples): expected further HP loss 60.7, fight over within 5 turns in 0/24, expected turns to the end (surviving samples) ~8.4; ranked on -(further loss) - 40 x (1 - win chance): win chance ~50% (fights won in the samples, the others by the end-of-horizon estimate), value -80.5",
+          "rollout_turns": "T1 exact: hp -5, dmg 1; T2: hp -0.3 [0-6], dmg 11 [0-20], alive 24/24, won 0/24; T3: hp -17.3 [2-27], dmg 11.5 [5-19], alive 24/24, won 0/24; T4: hp -7.4 [0-14], dmg 12.7 [1-25], alive 24/24, won 0/24; T5: hp -0 [0-0], dmg 13.2 [3-27], alive 24/24, won 0/24",
+          "history_estimate": "further HP loss 50, win 61% (this encounter n=51; estimate from act-1 boss fights n=225, typical error ±9.9; few similar states for this encounter)",
+          "whole_fight_sim": "win 3% (vs the best line −1 ± 1 pts, tied on win rate), HP lost when won median 60, ~13 turns to win (this one included); the losing samples die most often on T17 (dead in 97%); 1200 samples"
+        },
+        "plan4": {
+          "plays": "打击 -> 灵魂异鱼, then 灵动步法, then 突然一拳 -> 灵魂异鱼",
+          "result": "survives with 49/86 HP before healing",
+          "hp_lost": 17,
+          "damage_dealt": 2,
+          "enemies_after": "灵魂异鱼 134 HP, Weak 1",
+          "lasting_value": "sets up a power worth about 8 score over the fight (a few HP now is often worth it in a long fight)",
+          "hp_after": 49,
+          "hp_after_pct": 57,
+          "dmg": 2,
+          "lethal_now": "no",
+          "enemy_threat_next": 0,
+          "setup_turn": false,
+          "scaling_gained": "plays power 灵动步法; lasting value 8",
+          "block_wasted": 0,
+          "potions_used": "none",
+          "rollout": "5-turn rollout (24 samples): expected further HP loss 61.6, fight over within 5 turns in 0/24, expected turns to the end (surviving samples) ~8.6; ranked on -(further loss) - 40 x (1 - win chance): win chance ~50% (fights won in the samples, the others by the end-of-horizon estimate), value -81.7",
+          "rollout_turns": "T1 exact: hp -17, dmg 2; T2: hp -0 [0-0], dmg 13 [3-26], alive 24/24, won 0/24; T3: hp -8.8 [0-27], dmg 6.5 [0-23], alive 24/24, won 0/24; T4: hp -4 [0-21], dmg 8.3 [0-18], alive 24/24, won 0/24; T5: hp -0 [0-0], dmg 16.2 [6-29], alive 24/24, won 0/24",
+          "history_estimate": "further HP loss 49, win 63% (this encounter n=51; estimate from act-1 boss fights n=225, typical error ±9.9; few similar states for this encounter)",
+          "whole_fight_sim": "win 2% (vs the best line −2 ± 1 pts), HP lost when won median 61, ~13 turns to win (this one included); the losing samples die most often on T17 (dead in 98%); 1200 samples"
+        },
+        "plan5": {
+          "plays": "呼唤, then 灵动步法, then 斗篷与匕首",
+          "result": "survives with 59/86 HP before healing",
+          "hp_lost": 7,
+          "damage_dealt": 0,
+          "enemies_after": "灵魂异鱼 136 HP",
+          "block_gained": 8,
+          "cards_drawn": 1,
+          "lasting_value": "sets up a power worth about 8 score over the fight (a few HP now is often worth it in a long fight)",
+          "hp_after": 59,
+          "hp_after_pct": 69,
+          "dmg": 0,
+          "lethal_now": "no",
+          "enemy_threat_next": 0,
+          "setup_turn": false,
+          "scaling_gained": "plays power 灵动步法; lasting value 8",
+          "block_wasted": 0,
+          "potions_used": "none",
+          "rollout": "5-turn rollout (24 samples): expected further HP loss 58, fight over within 5 turns in 0/24, expected turns to the end (surviving samples) ~8.4; ranked on -(further loss) - 40 x (1 - win chance): win chance ~60% (fights won in the samples, the others by the end-of-horizon estimate), value -73.9",
+          "rollout_turns": "T1 exact: hp -7, dmg 0; T2: hp -0.3 [0-6], dmg 11 [0-20], alive 24/24, won 0/24; T3: hp -13.1 [0-27], dmg 9.6 [0-19], alive 24/24, won 0/24; T4: hp -5.4 [0-14], dmg 13.3 [0-26], alive 24/24, won 0/24; T5: hp -0.5 [0-6], dmg 15 [4-28], alive 24/24, won 0/24",
+          "history_estimate": "further HP loss 46, win 67% (this encounter n=51; estimate from act-1 boss fights n=225, typical error ±9.9; few similar states for this encounter)",
+          "rollout_best": true,
+          "whole_fight_sim": "win 4% (the best line), HP lost when won median 59, ~13 turns to win (this one included); the losing samples die most often on T17 (dead in 96%); 1200 samples"
+        }
+      },
+      "boss_sim": {
+        "available": true,
+        "ms": 48,
+        "samples": 1200,
+        "requested": 1200,
+        "timed_out": false,
+        "orders": 0,
+        "workers": 20,
+        "boss": "SOUL_FYSH",
+        "low_trust": false,
+        "best": "plan5",
+        "tied": [],
+        "ranked": [
+          "plan5",
+          "plan3",
+          "plan1",
+          "plan2",
+          "plan4"
+        ],
+        "lines": {
+          "plan1": {
+            "win": 0.043,
+            "cal": 0.043,
+            "d": 0.002,
+            "se": 0.007,
+            "loss": 65.65,
+            "won_loss": 60.5,
+            "order": null
+          },
+          "plan2": {
+            "win": 0.025,
+            "cal": 0.025,
+            "d": -0.017,
+            "se": 0.006,
+            "loss": 65.76,
+            "won_loss": 56,
+            "order": null
+          },
+          "plan3": {
+            "win": 0.033,
+            "cal": 0.033,
+            "d": -0.008,
+            "se": 0.007,
+            "loss": 65.7,
+            "won_loss": 59.5,
+            "order": null
+          },
+          "plan4": {
+            "win": 0.018,
+            "cal": 0.018,
+            "d": -0.024,
+            "se": 0.007,
+            "loss": 65.89,
+            "won_loss": 61,
+            "order": null
+          },
+          "plan5": {
+            "win": 0.042,
+            "cal": 0.042,
+            "d": 0,
+            "se": 0,
+            "loss": 65.6,
+            "won_loss": 58.5,
+            "order": null
+          }
+        },
+        "rollout_own_best": "plan5",
+        "rollout_own_tied": []
+      },
+      "sl_explore": {
+        "replay": {
+          "point": "T6, the 8th latest question before attempt 3's death on T15",
+          "reference": 3,
+          "line": "呼唤, 灵动步法, 斗篷与匕首",
+          "original": "呼唤, 灵动步法, 斗篷与匕首",
+          "overridden": false,
+          "reason": "the answer is attempt 3's line"
+        }
+      },
+      "before": {
+        "line": 280567,
+        "ts": "2026-10-07T12:17:13.697Z",
+        "observed_ts": "2026-10-07T12:17:13.031Z",
+        "screen": "COMBAT",
+        "floor": 17,
+        "turn": 5,
+        "hp": 66,
+        "block": 0,
+        "powers": [],
+        "hand": [
+          "BECKON",
+          "STRIKE_SILENT",
+          "STRIKE_SILENT",
+          "FOOTWORK",
+          "CLOAK_AND_DAGGER",
+          "STRIKE_SILENT",
+          "SUCKER_PUNCH"
+        ],
+        "potions": [
+          {
+            "index": 0,
+            "id": null
+          },
+          {
+            "index": 1,
+            "id": null
+          }
+        ],
+        "enemies": [
+          {
+            "index": 0,
+            "enemy_id": "SOUL_FYSH",
+            "current_hp": 136,
+            "max_hp": 221,
+            "is_alive": true,
+            "move_id": "SCREAM_MOVE",
+            "powers": [
+              {
+                "index": 0,
+                "power_id": "INTANGIBLE_POWER",
+                "name": "无实体",
+                "amount": 1,
+                "is_debuff": false
+              }
+            ],
+            "intents": [
+              {
+                "index": 0,
+                "intent_type": "Attack",
+                "label": "15",
+                "damage": 15,
+                "hits": 1,
+                "total_damage": 15,
+                "status_card_count": null
+              },
+              {
+                "index": 1,
+                "intent_type": "Debuff",
+                "label": null,
+                "damage": null,
+                "hits": null,
+                "total_damage": null,
+                "status_card_count": null
+              }
+            ]
+          }
+        ]
+      },
+      "next_turn": {
+        "line": 280572,
+        "ts": "2026-10-07T12:17:23.272Z",
+        "observed_ts": "2026-10-07T12:17:22.566Z",
+        "screen": "COMBAT",
+        "floor": 17,
+        "turn": 6,
+        "hp": 59,
+        "block": 0,
+        "powers": [
+          {
+            "index": 0,
+            "power_id": "DEXTERITY_POWER",
+            "name": "敏捷",
+            "amount": 2,
+            "is_debuff": false
+          },
+          {
+            "index": 1,
+            "power_id": "VULNERABLE_POWER",
+            "name": "易伤",
+            "amount": 3,
+            "is_debuff": true
+          }
+        ],
+        "hand": [
+          "SURVIVOR",
+          "DAGGER_SPRAY",
+          "DEFEND_SILENT",
+          "BECKON",
+          "HAZE"
+        ],
+        "potions": [
+          {
+            "index": 0,
+            "id": null
+          },
+          {
+            "index": 1,
+            "id": null
+          }
+        ],
+        "enemies": [
+          {
+            "index": 0,
+            "enemy_id": "SOUL_FYSH",
+            "current_hp": 135,
+            "max_hp": 221,
+            "is_alive": true,
+            "move_id": "BECKON_MOVE",
+            "powers": [],
+            "intents": [
+              {
+                "index": 0,
+                "intent_type": "StatusCard",
+                "label": "2",
+                "damage": null,
+                "hits": null,
+                "total_damage": null,
+                "status_card_count": 2
+              }
+            ]
+          }
+        ]
+      },
+      "caveat": "实盘快照差为此题面至下一轮净变化，敌回血/召唤须另核；不作候选模型伤害或受控整战胜因。"
+    },
+    "replacement": {
+      "decision_line": 274601,
+      "run": "KEN58SH9SLZ6",
+      "floor": 17,
+      "turn": 5,
+      "attempt": 6,
+      "answer": "plan5",
+      "chosen": {
+        "action": "play_card",
+        "card_index": 0
+      },
+      "options": {
+        "plan1": {
+          "plays": "灵动步法, then 斗篷与匕首, then 突然一拳 -> 灵魂异鱼",
+          "result": "survives with 57/86 HP before healing",
+          "hp_lost": 9,
+          "damage_dealt": 1,
+          "enemies_after": "灵魂异鱼 135 HP, Weak 1",
+          "block_gained": 8,
+          "cards_drawn": 1,
+          "lasting_value": "sets up a power worth about 8 score over the fight (a few HP now is often worth it in a long fight)",
+          "hp_after": 57,
+          "hp_after_pct": 66,
+          "dmg": 1,
+          "lethal_now": "no",
+          "enemy_threat_next": 0,
+          "setup_turn": false,
+          "scaling_gained": "plays power 灵动步法; lasting value 8",
+          "block_wasted": 0,
+          "potions_used": "none",
+          "rollout": "5-turn rollout (24 samples): expected further HP loss 59.9, fight over within 5 turns in 0/24, expected turns to the end (surviving samples) ~8.3; ranked on -(further loss) - 40 x (1 - win chance): win chance ~55% (fights won in the samples, the others by the end-of-horizon estimate), value -77.8",
+          "rollout_turns": "T1 exact: hp -9, dmg 1; T2: hp -0.3 [0-6], dmg 11 [0-20], alive 24/24, won 0/24; T3: hp -13.1 [0-27], dmg 9.6 [0-19], alive 24/24, won 0/24; T4: hp -6.5 [0-15], dmg 13.4 [0-26], alive 24/24, won 0/24; T5: hp -0 [0-0], dmg 15.2 [0-26], alive 24/24, won 0/24",
+          "history_estimate": "further HP loss 48, win 65% (this encounter n=51; estimate from act-1 boss fights n=225, typical error ±9.9; few similar states for this encounter)",
+          "whole_fight_sim": "win 4% (vs the best line +0 ± 1 pts, tied on win rate), HP lost when won median 61, ~13 turns to win (this one included); the losing samples die most often on T17 (dead in 96%); 1200 samples"
+        },
+        "plan2": {
+          "plays": "灵动步法, then 斗篷与匕首",
+          "result": "survives with 53/86 HP before healing",
+          "hp_lost": 13,
+          "damage_dealt": 0,
+          "enemies_after": "灵魂异鱼 136 HP",
+          "block_gained": 8,
+          "cards_drawn": 1,
+          "energy_unused": 1,
+          "lasting_value": "sets up a power worth about 8 score over the fight (a few HP now is often worth it in a long fight)",
+          "hp_after": 53,
+          "hp_after_pct": 62,
+          "dmg": 0,
+          "lethal_now": "no",
+          "enemy_threat_next": 0,
+          "setup_turn": false,
+          "scaling_gained": "plays power 灵动步法; lasting value 8",
+          "block_wasted": 0,
+          "potions_used": "none",
+          "rollout": "5-turn rollout (24 samples): expected further HP loss 61.6, fight over within 5 turns in 0/24, expected turns to the end (surviving samples) ~8.4; ranked on -(further loss) - 40 x (1 - win chance): win chance ~48% (fights won in the samples, the others by the end-of-horizon estimate), value -82.2",
+          "rollout_turns": "T1 exact: hp -13, dmg 0; T2: hp -0.3 [0-6], dmg 11 [0-20], alive 24/24, won 0/24; T3: hp -13.1 [0-27], dmg 9.6 [0-19], alive 24/24, won 0/24; T4: hp -6.1 [0-14], dmg 12.7 [0-26], alive 24/24, won 0/24; T5: hp -0 [0-0], dmg 14.3 [4-28], alive 24/24, won 0/24",
+          "history_estimate": "further HP loss 51, win 61% (this encounter n=51; estimate from act-1 boss fights n=225, typical error ±9.9; few similar states for this encounter)",
+          "whole_fight_sim": "win 3% (vs the best line −2 ± 1 pts), HP lost when won median 56, ~13 turns to win (this one included); the losing samples die most often on T17 (dead in 98%); 1200 samples"
+        },
+        "plan3": {
+          "plays": "呼唤, then 斗篷与匕首, then 突然一拳 -> 灵魂异鱼",
+          "result": "survives with 61/86 HP before healing",
+          "hp_lost": 5,
+          "damage_dealt": 1,
+          "enemies_after": "灵魂异鱼 135 HP, Weak 1",
+          "block_gained": 6,
+          "cards_drawn": 1,
+          "hp_after": 61,
+          "hp_after_pct": 71,
+          "dmg": 1,
+          "lethal_now": "no",
+          "enemy_threat_next": 0,
+          "setup_turn": false,
+          "scaling_gained": "none",
+          "block_wasted": 0,
+          "potions_used": "none",
+          "rollout": "5-turn rollout (24 samples): expected further HP loss 60.7, fight over within 5 turns in 0/24, expected turns to the end (surviving samples) ~8.4; ranked on -(further loss) - 40 x (1 - win chance): win chance ~50% (fights won in the samples, the others by the end-of-horizon estimate), value -80.5",
+          "rollout_turns": "T1 exact: hp -5, dmg 1; T2: hp -0.3 [0-6], dmg 11 [0-20], alive 24/24, won 0/24; T3: hp -17.3 [2-27], dmg 11.5 [5-19], alive 24/24, won 0/24; T4: hp -7.4 [0-14], dmg 12.7 [1-25], alive 24/24, won 0/24; T5: hp -0 [0-0], dmg 13.2 [3-27], alive 24/24, won 0/24",
+          "history_estimate": "further HP loss 50, win 61% (this encounter n=51; estimate from act-1 boss fights n=225, typical error ±9.9; few similar states for this encounter)",
+          "whole_fight_sim": "win 3% (vs the best line −1 ± 1 pts, tied on win rate), HP lost when won median 60, ~13 turns to win (this one included); the losing samples die most often on T17 (dead in 97%); 1200 samples"
+        },
+        "plan4": {
+          "plays": "打击 -> 灵魂异鱼, then 灵动步法, then 突然一拳 -> 灵魂异鱼",
+          "result": "survives with 49/86 HP before healing",
+          "hp_lost": 17,
+          "damage_dealt": 2,
+          "enemies_after": "灵魂异鱼 134 HP, Weak 1",
+          "lasting_value": "sets up a power worth about 8 score over the fight (a few HP now is often worth it in a long fight)",
+          "hp_after": 49,
+          "hp_after_pct": 57,
+          "dmg": 2,
+          "lethal_now": "no",
+          "enemy_threat_next": 0,
+          "setup_turn": false,
+          "scaling_gained": "plays power 灵动步法; lasting value 8",
+          "block_wasted": 0,
+          "potions_used": "none",
+          "rollout": "5-turn rollout (24 samples): expected further HP loss 61.6, fight over within 5 turns in 0/24, expected turns to the end (surviving samples) ~8.6; ranked on -(further loss) - 40 x (1 - win chance): win chance ~50% (fights won in the samples, the others by the end-of-horizon estimate), value -81.7",
+          "rollout_turns": "T1 exact: hp -17, dmg 2; T2: hp -0 [0-0], dmg 13 [3-26], alive 24/24, won 0/24; T3: hp -8.8 [0-27], dmg 6.5 [0-23], alive 24/24, won 0/24; T4: hp -4 [0-21], dmg 8.3 [0-18], alive 24/24, won 0/24; T5: hp -0 [0-0], dmg 16.2 [6-29], alive 24/24, won 0/24",
+          "history_estimate": "further HP loss 49, win 63% (this encounter n=51; estimate from act-1 boss fights n=225, typical error ±9.9; few similar states for this encounter)",
+          "whole_fight_sim": "win 2% (vs the best line −2 ± 1 pts), HP lost when won median 61, ~13 turns to win (this one included); the losing samples die most often on T17 (dead in 98%); 1200 samples"
+        },
+        "plan5": {
+          "plays": "呼唤, then 灵动步法, then 斗篷与匕首",
+          "result": "survives with 59/86 HP before healing",
+          "hp_lost": 7,
+          "damage_dealt": 0,
+          "enemies_after": "灵魂异鱼 136 HP",
+          "block_gained": 8,
+          "cards_drawn": 1,
+          "lasting_value": "sets up a power worth about 8 score over the fight (a few HP now is often worth it in a long fight)",
+          "hp_after": 59,
+          "hp_after_pct": 69,
+          "dmg": 0,
+          "lethal_now": "no",
+          "enemy_threat_next": 0,
+          "setup_turn": false,
+          "scaling_gained": "plays power 灵动步法; lasting value 8",
+          "block_wasted": 0,
+          "potions_used": "none",
+          "rollout": "5-turn rollout (24 samples): expected further HP loss 58, fight over within 5 turns in 0/24, expected turns to the end (surviving samples) ~8.4; ranked on -(further loss) - 40 x (1 - win chance): win chance ~60% (fights won in the samples, the others by the end-of-horizon estimate), value -73.9",
+          "rollout_turns": "T1 exact: hp -7, dmg 0; T2: hp -0.3 [0-6], dmg 11 [0-20], alive 24/24, won 0/24; T3: hp -13.1 [0-27], dmg 9.6 [0-19], alive 24/24, won 0/24; T4: hp -5.4 [0-14], dmg 13.3 [0-26], alive 24/24, won 0/24; T5: hp -0.5 [0-6], dmg 15 [4-28], alive 24/24, won 0/24",
+          "history_estimate": "further HP loss 46, win 67% (this encounter n=51; estimate from act-1 boss fights n=225, typical error ±9.9; few similar states for this encounter)",
+          "rollout_best": true,
+          "whole_fight_sim": "win 4% (the best line), HP lost when won median 59, ~13 turns to win (this one included); the losing samples die most often on T17 (dead in 96%); 1200 samples"
+        }
+      },
+      "boss_sim": {
+        "available": true,
+        "ms": 43,
+        "samples": 1200,
+        "requested": 1200,
+        "timed_out": false,
+        "orders": 0,
+        "workers": 20,
+        "boss": "SOUL_FYSH",
+        "low_trust": false,
+        "best": "plan5",
+        "tied": [],
+        "ranked": [
+          "plan5",
+          "plan3",
+          "plan1",
+          "plan2",
+          "plan4"
+        ],
+        "lines": {
+          "plan1": {
+            "win": 0.043,
+            "cal": 0.043,
+            "d": 0.002,
+            "se": 0.007,
+            "loss": 65.65,
+            "won_loss": 60.5,
+            "order": null
+          },
+          "plan2": {
+            "win": 0.025,
+            "cal": 0.025,
+            "d": -0.017,
+            "se": 0.006,
+            "loss": 65.76,
+            "won_loss": 56,
+            "order": null
+          },
+          "plan3": {
+            "win": 0.033,
+            "cal": 0.033,
+            "d": -0.008,
+            "se": 0.007,
+            "loss": 65.7,
+            "won_loss": 59.5,
+            "order": null
+          },
+          "plan4": {
+            "win": 0.018,
+            "cal": 0.018,
+            "d": -0.024,
+            "se": 0.007,
+            "loss": 65.89,
+            "won_loss": 61,
+            "order": null
+          },
+          "plan5": {
+            "win": 0.042,
+            "cal": 0.042,
+            "d": 0,
+            "se": 0,
+            "loss": 65.6,
+            "won_loss": 58.5,
+            "order": null
+          }
+        },
+        "rollout_own_best": "plan5",
+        "rollout_own_tied": []
+      },
+      "sl_explore": {
+        "point": "T5, the 9th latest question before attempt 4's death on T15",
+        "original": "呼唤, 灵动步法, 斗篷与匕首",
+        "replacement": "呼唤, 斗篷与匕首, 突然一拳 -> 灵魂异鱼",
+        "reason": "the best untried line by the question's ranking, among those B2 rates no worse (win rate at most 2 paired standard errors below the pick's)",
+        "played_in": [
+          2,
+          3,
+          4,
+          5
+        ],
+        "replayed": 9,
+        "numbers": {
+          "original": "rollout dead 0/24, further loss 58, win ~60%; whole-fight sim win 4.2%; this turn hp -7, dmg 0",
+          "replacement": "rollout dead 0/24, further loss 60.7, win ~50%; whole-fight sim win 3.3%; this turn hp -5, dmg 1"
+        },
+        "gate": "b2",
+        "b2": {
+          "original": 0.042,
+          "replacement": 0.033,
+          "diff": -0.0083,
+          "se": 0.0068
+        },
+        "turn": "BECKON, CLOAK_AND_DAGGER, FOOTWORK",
+        "turn_instead": "BECKON, CLOAK_AND_DAGGER, SUCKER_PUNCH>灵魂异鱼"
+      },
+      "before": {
+        "line": 280684,
+        "ts": "2026-10-07T12:21:49.051Z",
+        "observed_ts": "2026-10-07T12:21:48.395Z",
+        "screen": "COMBAT",
+        "floor": 17,
+        "turn": 5,
+        "hp": 66,
+        "block": 0,
+        "powers": [],
+        "hand": [
+          "BECKON",
+          "STRIKE_SILENT",
+          "STRIKE_SILENT",
+          "FOOTWORK",
+          "CLOAK_AND_DAGGER",
+          "STRIKE_SILENT",
+          "SUCKER_PUNCH"
+        ],
+        "potions": [
+          {
+            "index": 0,
+            "id": null
+          },
+          {
+            "index": 1,
+            "id": null
+          }
+        ],
+        "enemies": [
+          {
+            "index": 0,
+            "enemy_id": "SOUL_FYSH",
+            "current_hp": 136,
+            "max_hp": 221,
+            "is_alive": true,
+            "move_id": "SCREAM_MOVE",
+            "powers": [
+              {
+                "index": 0,
+                "power_id": "INTANGIBLE_POWER",
+                "name": "无实体",
+                "amount": 1,
+                "is_debuff": false
+              }
+            ],
+            "intents": [
+              {
+                "index": 0,
+                "intent_type": "Attack",
+                "label": "15",
+                "damage": 15,
+                "hits": 1,
+                "total_damage": 15,
+                "status_card_count": null
+              },
+              {
+                "index": 1,
+                "intent_type": "Debuff",
+                "label": null,
+                "damage": null,
+                "hits": null,
+                "total_damage": null,
+                "status_card_count": null
+              }
+            ]
+          }
+        ]
+      },
+      "next_turn": {
+        "line": 280689,
+        "ts": "2026-10-07T12:22:07.826Z",
+        "observed_ts": "2026-10-07T12:22:02.709Z",
+        "screen": "COMBAT",
+        "floor": 17,
+        "turn": 6,
+        "hp": 61,
+        "block": 0,
+        "powers": [
+          {
+            "index": 0,
+            "power_id": "VULNERABLE_POWER",
+            "name": "易伤",
+            "amount": 3,
+            "is_debuff": true
+          }
+        ],
+        "hand": [
+          "SURVIVOR",
+          "DAGGER_SPRAY",
+          "DEFEND_SILENT",
+          "BECKON",
+          "HAZE"
+        ],
+        "potions": [
+          {
+            "index": 0,
+            "id": null
+          },
+          {
+            "index": 1,
+            "id": null
+          }
+        ],
+        "enemies": [
+          {
+            "index": 0,
+            "enemy_id": "SOUL_FYSH",
+            "current_hp": 134,
+            "max_hp": 221,
+            "is_alive": true,
+            "move_id": "BECKON_MOVE",
+            "powers": [],
+            "intents": [
+              {
+                "index": 0,
+                "intent_type": "StatusCard",
+                "label": "2",
+                "damage": null,
+                "hits": null,
+                "total_damage": null,
+                "status_card_count": 2
+              }
+            ]
+          }
+        ]
+      },
+      "caveat": "实盘快照差为此题面至下一轮净变化，敌回血/召唤须另核；不作候选模型伤害或受控整战胜因。"
+    }
+  }
+]

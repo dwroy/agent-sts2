@@ -1,0 +1,23 @@
+## 复盘回报
+
+- 已追加：FETDVL1P59B9（A10，第27层，千足虫末试T5前段毒死，中段11攻击击穿7挡及剩余1血）。
+- 新的纯 bug：
+  - 无。
+- 写成「未记录」的项：FETDVL1P59B9：完整dirty知识快照、部分逐击毛伤与退场帧、首试判死后的结算、后续复活及其他实线、最终实线最优率、boss时钟与未抵达boss实打、替代路线／锻造／留药／奇巧换目标的整战对照、Jev缓存命中。
+- 学习账本：FETDVL1P59B9：新增无；更新 silent-0079、silent-0064、silent-0201、silent-0012、silent-0046、silent-0189、silent-0243、silent-0248、silent-0039；老错为 silent-0079，其余为支持。`ledger.py check` 退出码0。
+- 代码提案：silent-proposal-815928aa95358f75（F27T2同盘多付16血／silent-0079）；silent-proposal-ff7048cdf4f4680d（F27T2—4后段接续清旧毒与力量／silent-0064）。均经CLI登记并关联独立 `strategy-proposal` 实现任务，状态pending；整战收益、独立留出及其他部位／进阶证据不足，限制已保存。
+
+```json
+{"task":"postmortem","appended":["FETDVL1P59B9"],"skipped":[],"bugs":[],"ledger":{"added":[],"updated":["silent-0079","silent-0064","silent-0201","silent-0012","silent-0046","silent-0189","silent-0243","silent-0248","silent-0039"],"repeats":["silent-0079"],"check":0},"code_proposals":["silent-proposal-815928aa95358f75","silent-proposal-ff7048cdf4f4680d"],"implementation_domains":["combat","sl","terminal"],"report":"/home/dw/Projects/agent-sts2/learner/runs/20261013-064303-postmortem/report.md"}
+```
+
+== 学习者 codex / postmortem ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a13248-bbf2-7433-9e22-7c270fba9681
+轮数：1；工具调用：command_execution×45
+token：输入 268.7k、输出 37.1k（其中推理 10.4k）、cache 读 5387.0k、cache 写 0（命中 95.2%）
+成本：未提供
+耗时：1351.8 s（墙钟）
+时间：首个事件 15.3 s、模型首个输出 21.1 s、首次工具 27.6 s、末次工具结束 1334.1 s；工具内共 209.2 s，其余（模型生成、推理、网络）1127.2 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2）；模型的工具调用 exec×38；/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/learner/sessions/2026/10/13/rollout-2026-10-13T06-43-09-01a13248-bbf2-7433-9e22-7c270fba9681.jsonl
+日志：/home/dw/Projects/agent-sts2/learner/runs/20261013-064303-postmortem.jsonl

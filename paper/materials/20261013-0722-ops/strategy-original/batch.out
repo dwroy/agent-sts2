@@ -1,0 +1,65 @@
+已复核六局共 8293 条原记录，十项提案均保留为 `waiting`：已有诊断不能替代完整执行归属和受控整战对照。
+
+[提案](/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261013-070543/learner/runs/20261013-070600-strategy-proposal/proposal.md)及[报告](/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261013-070543/learner/runs/20261013-070600-strategy-proposal/report.md)已保存，16 条账本链接已追加。未改源码、提交、合入或发布；测试未运行，工作树干净，密钥扫描通过。
+
+```json
+{
+  "task": "strategy-proposal",
+  "character": "silent",
+  "batch": "20261013-070543-strategy-proposal",
+  "base": "5cf8cce3cb1465aac2f3a910cc5352696549d8da",
+  "runs": ["751FN9QM9MHQ", "KV0JHNJCKXLS", "YQL8RZ8BWN1E", "L9SGRBB5R698", "PU80F84P6HPN", "KEN58SH9SLZ6"],
+  "fixes": [],
+  "skipped": [
+    {"id": "silent-proposal-366288801d9150d9", "reason": "751 F17 T2/T7同指纹实付5/10血已核；现有成本预测及单步派发不是抽弃续问后的完整回合分账，缺受控整战后继，不能定探索门槛。"},
+    {"id": "silent-proposal-85929bdfc8a3fc1b", "reason": "751 F13 T3整战无药plan5仍8/8胜仅为模型；已有持牌保守损血及未知持有价值诊断，缺实际无药/留药整战及重问后的收益归属。"},
+    {"id": "silent-proposal-efd9f83ee9e1a6dc", "reason": "751六次异鱼尝试均失败；既有候选预测/单步回执不覆盖完整actual_turn，缺同后继整战及按独立局时间切分的验证，不能拟统一血价。"},
+    {"id": "silent-proposal-131042659448ae74", "reason": "力量/敏捷/毒/荆棘/呼唤分项已有证据和限定诊断；没有实际无药/留药完整对照，抽弃重问后联合收益尚不能归属，不能据分项关闭整项。"},
+    {"id": "silent-proposal-990f054036609447", "reason": "KV0 F33 T5删毒净扣36→29且两线零损，T1删攻击28→14也未省血；敌回血和毒同帧，缺完整来源拆账及保持后继一致的整战对照。"},
+    {"id": "silent-proposal-e18d3f18e6cac2a0", "reason": "巨兽阶段和占位血解释已在live；同轮参考仍按原始占位血排序，缺改变排序的完整受控后继及独立验证，不能把展示子项当整项实现。"},
+    {"id": "silent-proposal-9733bb80f445aeae", "reason": "YQL F17 T10残壳毒2→8、血26/挡13/来袭41不变已核；缺提前喝/不喝/留药及阶段排序改动的整战对照，不能拟药水/终局权重。"},
+    {"id": "silent-proposal-c51468c5e8ba6668", "reason": "KEN七次耗药及六次75/86空栏入口已核；随机选牌、发光水重问后的整轮兑现没有完整结构化归属，缺F15不喝或留到boss的完整支线。"},
+    {"id": "silent-proposal-86a7db08d1a31976", "reason": "KEN F17 T10多付6血仅多2伤、T5省2但步法延T9已核；后轮动作/抽序亦变，缺受控能力后继及独立后期局验证，不定统一血价或关闭探索。"},
+    {"id": "silent-proposal-e282a9131b99129a", "reason": "已有持牌、候选和首次派发诊断，但actual_turn仍null；KEN同盘差额不等于完整受控反事实，缺续问执行链、同后继整战和独立后期验证。"}
+  ],
+  "merged": null,
+  "tests": {"tsc": null, "vitest": null, "cases": null},
+  "code_proposals": [
+    "silent-proposal-366288801d9150d9",
+    "silent-proposal-85929bdfc8a3fc1b",
+    "silent-proposal-efd9f83ee9e1a6dc",
+    "silent-proposal-131042659448ae74",
+    "silent-proposal-990f054036609447",
+    "silent-proposal-e18d3f18e6cac2a0",
+    "silent-proposal-9733bb80f445aeae",
+    "silent-proposal-c51468c5e8ba6668",
+    "silent-proposal-86a7db08d1a31976",
+    "silent-proposal-e282a9131b99129a"
+  ],
+  "implementation_domains": [],
+  "proposal_results": [
+    {"id": "silent-proposal-366288801d9150d9", "state": "waiting", "reason": "751 F17 T2/T7同指纹实付5/10血已核；现有成本预测及单步派发不是抽弃续问后的完整回合分账，缺受控整战后继，不能定探索门槛。"},
+    {"id": "silent-proposal-85929bdfc8a3fc1b", "state": "waiting", "reason": "751 F13 T3整战无药plan5仍8/8胜仅为模型；已有持牌保守损血及未知持有价值诊断，缺实际无药/留药整战及重问后的收益归属。"},
+    {"id": "silent-proposal-efd9f83ee9e1a6dc", "state": "waiting", "reason": "751六次异鱼尝试均失败；既有候选预测/单步回执不覆盖完整actual_turn，缺同后继整战及按独立局时间切分的验证，不能拟统一血价。"},
+    {"id": "silent-proposal-131042659448ae74", "state": "waiting", "reason": "力量/敏捷/毒/荆棘/呼唤分项已有证据和限定诊断；没有实际无药/留药完整对照，抽弃重问后联合收益尚不能归属，不能据分项关闭整项。"},
+    {"id": "silent-proposal-990f054036609447", "state": "waiting", "reason": "KV0 F33 T5删毒净扣36→29且两线零损，T1删攻击28→14也未省血；敌回血和毒同帧，缺完整来源拆账及保持后继一致的整战对照。"},
+    {"id": "silent-proposal-e18d3f18e6cac2a0", "state": "waiting", "reason": "巨兽阶段和占位血解释已在live；同轮参考仍按原始占位血排序，缺改变排序的完整受控后继及独立验证，不能把展示子项当整项实现。"},
+    {"id": "silent-proposal-9733bb80f445aeae", "state": "waiting", "reason": "YQL F17 T10残壳毒2→8、血26/挡13/来袭41不变已核；缺提前喝/不喝/留药及阶段排序改动的整战对照，不能拟药水/终局权重。"},
+    {"id": "silent-proposal-c51468c5e8ba6668", "state": "waiting", "reason": "KEN七次耗药及六次75/86空栏入口已核；随机选牌、发光水重问后的整轮兑现没有完整结构化归属，缺F15不喝或留到boss的完整支线。"},
+    {"id": "silent-proposal-86a7db08d1a31976", "state": "waiting", "reason": "KEN F17 T10多付6血仅多2伤、T5省2但步法延T9已核；后轮动作/抽序亦变，缺受控能力后继及独立后期局验证，不定统一血价或关闭探索。"},
+    {"id": "silent-proposal-e282a9131b99129a", "state": "waiting", "reason": "已有持牌、候选和首次派发诊断，但actual_turn仍null；KEN同盘差额不等于完整受控反事实，缺续问执行链、同后继整战和独立后期验证。"}
+  ],
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261013-070543/learner/runs/20261013-070600-strategy-proposal/report.md"
+}
+```
+
+== 学习者 codex / strategy-proposal ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a1325d-b7dd-7c13-a2fc-9e9fc661d265
+轮数：1；工具调用：command_execution×56 file_change×7
+token：输入 180.9k、输出 31.8k（其中推理 6622）、cache 读 4173.3k、cache 写 0（命中 95.8%）
+成本：未提供
+耗时：928.0 s（墙钟）
+时间：首个事件 29.2 s、模型首个输出 33.7 s、首次工具 40.7 s、末次工具结束 883.9 s；工具内共 349.0 s，其余（模型生成、推理、网络）549.8 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261013-070543）；模型的工具调用 exec×32 wait×1；/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/learner/sessions/2026/10/13/rollout-2026-10-13T07-06-05-01a1325d-b7dd-7c13-a2fc-9e9fc661d265.jsonl
+日志：/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261013-070543/learner/runs/20261013-070600-strategy-proposal.jsonl
