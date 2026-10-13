@@ -1,0 +1,908 @@
+{
+  "recorded_at": "2026-10-13 22:19:24 CST",
+  "run_id": "WA7FRJ7UABCV",
+  "source_manifest": [
+    {
+      "path": "ops/codex-ops/module-health/WA7FRJ7UABCV-alert.json",
+      "copy": "paper/materials/20261013-2213-ops/original-alert.json",
+      "bytes": 13223,
+      "sha256": "c705c6a2f6cac99d60e80b3814cf3a86d8a16faa3f98fcc939cc377173f42346"
+    },
+    {
+      "path": "paper/materials/20261013-v5-dpr-health/authorization.json",
+      "copy": "paper/materials/20261013-2213-ops/framework/authorization.json",
+      "bytes": 1069,
+      "sha256": "da1e9c27332e38756701e00cb23e6b20b7cfcd1b67d183e442b2c3f1cc04fb43"
+    },
+    {
+      "path": "paper/materials/20261013-v5-dpr-health/diagnosis.json",
+      "copy": "paper/materials/20261013-2213-ops/framework/diagnosis.json",
+      "bytes": 12464,
+      "sha256": "87da244dc1ac631b52dc2bde7197eeb73683d9c6a1712fbed43e5efae79d66a4"
+    },
+    {
+      "path": "paper/materials/20261013-v5-dpr-health/checks.json",
+      "copy": "paper/materials/20261013-2213-ops/framework/checks.json",
+      "bytes": 816,
+      "sha256": "f2b27dd728da4af1663d1174cb95198eca5baad448d8656a77a2cbdad79999c7"
+    },
+    {
+      "path": "paper/materials/20261013-v5-dpr-health/integration.json",
+      "copy": "paper/materials/20261013-2213-ops/framework/integration.json",
+      "bytes": 3523,
+      "sha256": "fd80fb2f1f37b148d986e4a2211b83097ec7932209e7244551c8a7add7fd1e06"
+    },
+    {
+      "path": "paper/materials/20261013-v5-dpr-health/ops-deployment-handoff.json",
+      "copy": "paper/materials/20261013-2213-ops/framework/ops-deployment-handoff.json",
+      "bytes": 1659,
+      "sha256": "799610ea4ae8f790e6d80f9c407c69a8263191042eb05eee0e41f15c101ffced"
+    },
+    {
+      "path": "paper/materials/20261013-v5-dpr-health/source-leaves.json",
+      "copy": "paper/materials/20261013-2213-ops/framework/source-leaves.json",
+      "bytes": 1661,
+      "sha256": "0b34c3d3c339fef7cc5f62863ae991c3495aef91170cd499fb89401319f39914"
+    }
+  ],
+  "frozen_log_coverage": {
+    "path": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+    "start": 1208414753,
+    "end": 1241863805,
+    "complete": false,
+    "malformed": 0,
+    "first_ts": "2026-10-13T09:07:05.508Z"
+  },
+  "failed_source_rows_verified": 23,
+  "attempts": 39,
+  "produced_dpr": 16,
+  "original_alert_failures": {
+    "below_minimum_samples": 21,
+    "no_complete_dpr": 1,
+    "zero_paired_samples": 1
+  },
+  "trailing_failure_streak": 10,
+  "ms_max": 11248,
+  "per_question_service_metrics": [
+    {
+      "ts": "2026-10-13T13:01:39.252Z",
+      "decision_id": "64f32f32-5b7b-460e-b87a-bf65b3dc79ac",
+      "floor": 1,
+      "label": "event/plan",
+      "samples": 1000,
+      "ms": 9658,
+      "dpr_metric_count": 5,
+      "alert_reason": null,
+      "all_candidate_effects_explicitly_not_simulated": false,
+      "diagnostics": null,
+      "source": {
+        "offset": 1232701059,
+        "length": 85158,
+        "sha256": "12ba1591af4d77bf471563af05d324bd78de6a39c70c690cb1aa5a70878ab5b6"
+      }
+    },
+    {
+      "ts": "2026-10-13T13:04:22.862Z",
+      "decision_id": "b6233b84-0313-40fc-b0fd-caefa42064ed",
+      "floor": 2,
+      "label": "reward/card",
+      "samples": 1000,
+      "ms": 8622,
+      "dpr_metric_count": 4,
+      "alert_reason": null,
+      "all_candidate_effects_explicitly_not_simulated": false,
+      "diagnostics": null,
+      "source": {
+        "offset": 1232873405,
+        "length": 96954,
+        "sha256": "b65100967fee3ea339927ce79ec0f55f9a7bc7ae20d565f1ad91477c8dc7f637"
+      }
+    },
+    {
+      "ts": "2026-10-13T13:05:53.841Z",
+      "decision_id": "d79c1497-7787-4e3f-b752-cd6cb8f5992e",
+      "floor": 3,
+      "label": "reward/card",
+      "samples": 1000,
+      "ms": 10944,
+      "dpr_metric_count": 4,
+      "alert_reason": null,
+      "all_candidate_effects_explicitly_not_simulated": false,
+      "diagnostics": null,
+      "source": {
+        "offset": 1233097980,
+        "length": 100817,
+        "sha256": "3e4fcdb2ce0af156d98a7069fbfa681195eaddb2147d813c7baa82d4d516f25c"
+      }
+    },
+    {
+      "ts": "2026-10-13T13:06:25.915Z",
+      "decision_id": "46e79ae4-b0ac-4f16-8e58-4bece730776a",
+      "floor": 4,
+      "label": "event/choose",
+      "samples": 1000,
+      "ms": 4255,
+      "dpr_metric_count": 1,
+      "alert_reason": null,
+      "all_candidate_effects_explicitly_not_simulated": false,
+      "diagnostics": null,
+      "source": {
+        "offset": 1233201923,
+        "length": 36293,
+        "sha256": "f6c37104da7cd9f8fcf060ac2d70cde3bb472300b2291632db3e4f44b0c772d2"
+      }
+    },
+    {
+      "ts": "2026-10-13T13:07:50.890Z",
+      "decision_id": "12a9fb0d-081c-4f4c-a548-8de60cb52722",
+      "floor": 5,
+      "label": "reward/card",
+      "samples": 760,
+      "ms": 11130,
+      "dpr_metric_count": 4,
+      "alert_reason": null,
+      "all_candidate_effects_explicitly_not_simulated": false,
+      "diagnostics": null,
+      "source": {
+        "offset": 1233345733,
+        "length": 105860,
+        "sha256": "6b994751402875e68046c410af592f679a16e85ee6cae68c70cf5ea1e33fc2bb"
+      }
+    },
+    {
+      "ts": "2026-10-13T13:08:39.458Z",
+      "decision_id": "4cdb714b-25a9-4eaf-8483-692fc2a51b44",
+      "floor": 6,
+      "label": "event/choose",
+      "samples": 1000,
+      "ms": 8358,
+      "dpr_metric_count": 1,
+      "alert_reason": null,
+      "all_candidate_effects_explicitly_not_simulated": false,
+      "diagnostics": null,
+      "source": {
+        "offset": 1233454768,
+        "length": 37049,
+        "sha256": "45cb38011ed2ca287a07d9888487ad8b1460b5281603bf9b2e0216335285b438"
+      }
+    },
+    {
+      "ts": "2026-10-13T13:09:37.722Z",
+      "decision_id": "e6ef181a-2c96-43e1-925c-3ad9e9308a44",
+      "floor": 7,
+      "label": "rest/plan",
+      "samples": 392,
+      "ms": 11248,
+      "dpr_metric_count": 9,
+      "alert_reason": null,
+      "all_candidate_effects_explicitly_not_simulated": false,
+      "diagnostics": null,
+      "source": {
+        "offset": 1233495061,
+        "length": 224647,
+        "sha256": "5c14a73bc791afa286e9516535ddb37adfed511300d959678021a97f49a4be46"
+      }
+    },
+    {
+      "ts": "2026-10-13T13:11:55.521Z",
+      "decision_id": "979c2f12-388c-47d1-8244-faa8b9142b69",
+      "floor": 8,
+      "label": "reward/card",
+      "samples": 824,
+      "ms": 11153,
+      "dpr_metric_count": 4,
+      "alert_reason": null,
+      "all_candidate_effects_explicitly_not_simulated": false,
+      "diagnostics": null,
+      "source": {
+        "offset": 1233927782,
+        "length": 108781,
+        "sha256": "80b97f5ff3312ecc99a7676a2086d5efa70c2c30fd7c978aa28010f7147c6ae8"
+      }
+    },
+    {
+      "ts": "2026-10-13T13:12:55.208Z",
+      "decision_id": "e54fbe67-0c9d-425a-a38a-1bb0d5716059",
+      "floor": 9,
+      "label": "rest/plan",
+      "samples": 288,
+      "ms": 11206,
+      "dpr_metric_count": 0,
+      "alert_reason": "below_minimum_samples",
+      "all_candidate_effects_explicitly_not_simulated": false,
+      "diagnostics": null,
+      "source": {
+        "offset": 1234039765,
+        "length": 75447,
+        "sha256": "8fcdf2f71c12f2ccd3a7823f561183ddb7fd7a19a2f394c8f012d4c53cb6c11c"
+      }
+    },
+    {
+      "ts": "2026-10-13T13:14:37.337Z",
+      "decision_id": "0d9bf8fb-a0a6-4b70-b7fc-b434a57b1836",
+      "floor": 11,
+      "label": "rest/plan",
+      "samples": 248,
+      "ms": 11210,
+      "dpr_metric_count": 0,
+      "alert_reason": "below_minimum_samples",
+      "all_candidate_effects_explicitly_not_simulated": false,
+      "diagnostics": null,
+      "source": {
+        "offset": 1234125294,
+        "length": 70770,
+        "sha256": "fa0ef3ad0c1ae3c515053afd532f4f9d8aefbfe83ba5adbfe550e683502c4051"
+      }
+    },
+    {
+      "ts": "2026-10-13T13:17:28.353Z",
+      "decision_id": "9e5c05f1-fe9f-4e7b-86b3-4c3f8cf5edb4",
+      "floor": 12,
+      "label": "reward/card",
+      "samples": 720,
+      "ms": 11168,
+      "dpr_metric_count": 4,
+      "alert_reason": null,
+      "all_candidate_effects_explicitly_not_simulated": false,
+      "diagnostics": null,
+      "source": {
+        "offset": 1234597257,
+        "length": 110869,
+        "sha256": "a50ecdbd71aad44c9c362e16236947f2fc23468aaad1b492a0820a709be06c5b"
+      }
+    },
+    {
+      "ts": "2026-10-13T13:18:49.507Z",
+      "decision_id": "65a60a4b-dbf8-4f84-a2bb-6285afed054d",
+      "floor": 13,
+      "label": "rest/plan",
+      "samples": 224,
+      "ms": 11137,
+      "dpr_metric_count": 0,
+      "alert_reason": "below_minimum_samples",
+      "all_candidate_effects_explicitly_not_simulated": false,
+      "diagnostics": null,
+      "source": {
+        "offset": 1234711317,
+        "length": 76159,
+        "sha256": "3060aa05de8a5a87b017edf2d3019e2465febad207375832eea4eff8f9dd31b5"
+      }
+    },
+    {
+      "ts": "2026-10-13T13:20:17.088Z",
+      "decision_id": "aa7d12fa-dd4a-478f-bf41-a727057192fa",
+      "floor": 14,
+      "label": "reward/card",
+      "samples": 736,
+      "ms": 11119,
+      "dpr_metric_count": 4,
+      "alert_reason": null,
+      "all_candidate_effects_explicitly_not_simulated": false,
+      "diagnostics": null,
+      "source": {
+        "offset": 1234925928,
+        "length": 106784,
+        "sha256": "efee740466bcf9ebf35b0c81659803bdf05df79410fac1938e8d6eb8e42eb41b"
+      }
+    },
+    {
+      "ts": "2026-10-13T13:20:45.825Z",
+      "decision_id": "8da93d26-3ddf-4636-922f-288cf82a20a4",
+      "floor": 15,
+      "label": "event/choose",
+      "samples": 1000,
+      "ms": 9801,
+      "dpr_metric_count": 1,
+      "alert_reason": null,
+      "all_candidate_effects_explicitly_not_simulated": false,
+      "diagnostics": null,
+      "source": {
+        "offset": 1235035916,
+        "length": 40680,
+        "sha256": "d64873eaa832f2b7fd4c67177cd391dcc415e92eafd2b4836e94417150d1e2ab"
+      }
+    },
+    {
+      "ts": "2026-10-13T13:21:14.092Z",
+      "decision_id": "635383c6-cef3-43b2-92d1-9b9ee631ed19",
+      "floor": 15,
+      "label": "event/choose",
+      "samples": 1000,
+      "ms": 8814,
+      "dpr_metric_count": 1,
+      "alert_reason": null,
+      "all_candidate_effects_explicitly_not_simulated": false,
+      "diagnostics": null,
+      "source": {
+        "offset": 1235076596,
+        "length": 40431,
+        "sha256": "3cfbfae753b0ae082e617e6b260711657b5050b2048929299c8744fd5f191d94"
+      }
+    },
+    {
+      "ts": "2026-10-13T13:21:38.277Z",
+      "decision_id": "dbf5f77d-1223-416e-9ee3-1e2853644e42",
+      "floor": 15,
+      "label": "event/choose",
+      "samples": 1000,
+      "ms": 8240,
+      "dpr_metric_count": 1,
+      "alert_reason": null,
+      "all_candidate_effects_explicitly_not_simulated": false,
+      "diagnostics": null,
+      "source": {
+        "offset": 1235117027,
+        "length": 39896,
+        "sha256": "ffd0590babb02080e5e731552b93926be3117cd1e5628385d68bccd847e2f96e"
+      }
+    },
+    {
+      "ts": "2026-10-13T13:22:11.291Z",
+      "decision_id": "b863227e-cbcb-452c-901a-df98818b280e",
+      "floor": 16,
+      "label": "rest/plan",
+      "samples": 152,
+      "ms": 11108,
+      "dpr_metric_count": 0,
+      "alert_reason": "below_minimum_samples",
+      "all_candidate_effects_explicitly_not_simulated": false,
+      "diagnostics": null,
+      "source": {
+        "offset": 1235160190,
+        "length": 80695,
+        "sha256": "2a8f1fb39e0ce13cd5e5b8238801fc3a9891b034d742e8acc598256f1d2b3316"
+      }
+    },
+    {
+      "ts": "2026-10-13T13:29:11.307Z",
+      "decision_id": "40217a52-6ae1-4716-9c87-91375344a16c",
+      "floor": 19,
+      "label": "reward/card",
+      "samples": 736,
+      "ms": 11167,
+      "dpr_metric_count": 4,
+      "alert_reason": null,
+      "all_candidate_effects_explicitly_not_simulated": false,
+      "diagnostics": null,
+      "source": {
+        "offset": 1235806548,
+        "length": 119048,
+        "sha256": "9ed828cdb316e10011b63c592fc4e4b13fa3431375f46d4341a5d6fafb15d686"
+      }
+    },
+    {
+      "ts": "2026-10-13T13:31:44.794Z",
+      "decision_id": "3350942e-8571-436a-b8bd-2c905c7a3807",
+      "floor": 20,
+      "label": "shop/plan",
+      "samples": 24,
+      "ms": 11088,
+      "dpr_metric_count": 0,
+      "alert_reason": "below_minimum_samples",
+      "all_candidate_effects_explicitly_not_simulated": false,
+      "diagnostics": null,
+      "source": {
+        "offset": 1235929909,
+        "length": 147624,
+        "sha256": "cd402e72083070d8adf5eb4a4010b0a9f4a78c32439d6962cab415303797262c"
+      }
+    },
+    {
+      "ts": "2026-10-13T13:33:27.009Z",
+      "decision_id": "8c3a9865-17f5-4205-a743-0297a1001990",
+      "floor": 21,
+      "label": "reward/card",
+      "samples": 256,
+      "ms": 11176,
+      "dpr_metric_count": 0,
+      "alert_reason": "below_minimum_samples",
+      "all_candidate_effects_explicitly_not_simulated": false,
+      "diagnostics": null,
+      "source": {
+        "offset": 1236282357,
+        "length": 35422,
+        "sha256": "f870e73e1e2a012084726af692bec0cd20a706b52bb84acb690c67d961eb73a9"
+      }
+    },
+    {
+      "ts": "2026-10-13T13:34:28.141Z",
+      "decision_id": "23337b4f-2ec4-4070-aa2c-4a5be1d30f3d",
+      "floor": 22,
+      "label": "event/choose",
+      "samples": 1000,
+      "ms": 10801,
+      "dpr_metric_count": 0,
+      "alert_reason": "no_complete_dpr",
+      "all_candidate_effects_explicitly_not_simulated": true,
+      "diagnostics": null,
+      "source": {
+        "offset": 1236320924,
+        "length": 29802,
+        "sha256": "9268f0cec621a57bc359f9bf6c04a79ebe7157c42d305ade0fc61ac0cd3efdaa"
+      }
+    },
+    {
+      "ts": "2026-10-13T13:35:35.657Z",
+      "decision_id": "bdf36282-fd92-487d-9e6c-7fe774ee3779",
+      "floor": 23,
+      "label": "shop/plan",
+      "samples": 88,
+      "ms": 11045,
+      "dpr_metric_count": 0,
+      "alert_reason": "below_minimum_samples",
+      "all_candidate_effects_explicitly_not_simulated": false,
+      "diagnostics": null,
+      "source": {
+        "offset": 1236355174,
+        "length": 52273,
+        "sha256": "daf7c4a54bf8c263ebcb7efcf7e9887dfafe08ec6ef24ceddf4ddbf41a756c20"
+      }
+    },
+    {
+      "ts": "2026-10-13T13:37:10.672Z",
+      "decision_id": "0da3aa3e-30f6-4296-8111-041b71e4b9e7",
+      "floor": 24,
+      "label": "rest/plan",
+      "samples": 48,
+      "ms": 11084,
+      "dpr_metric_count": 0,
+      "alert_reason": "below_minimum_samples",
+      "all_candidate_effects_explicitly_not_simulated": false,
+      "diagnostics": null,
+      "source": {
+        "offset": 1236411959,
+        "length": 126927,
+        "sha256": "f438b934cd80548db00fb0118530f8826ea4036446bdfb91330786ea1fb4dc81"
+      }
+    },
+    {
+      "ts": "2026-10-13T13:37:41.803Z",
+      "decision_id": "7d25d6b6-e4aa-41ed-9493-453683206052",
+      "floor": 25,
+      "label": "event/choose",
+      "samples": 408,
+      "ms": 11084,
+      "dpr_metric_count": 1,
+      "alert_reason": null,
+      "all_candidate_effects_explicitly_not_simulated": false,
+      "diagnostics": null,
+      "source": {
+        "offset": 1236543478,
+        "length": 49017,
+        "sha256": "2f158da53918bb970cc0ba75667c0c774ef0346cc66d775657a19347d0780cf0"
+      }
+    },
+    {
+      "ts": "2026-10-13T13:38:25.125Z",
+      "decision_id": "13d0d423-17e1-4faa-894f-0528eebe92c0",
+      "floor": 25,
+      "label": "selection/add",
+      "samples": 80,
+      "ms": 11176,
+      "dpr_metric_count": 0,
+      "alert_reason": "below_minimum_samples",
+      "all_candidate_effects_explicitly_not_simulated": false,
+      "diagnostics": null,
+      "source": {
+        "offset": 1236592495,
+        "length": 12010,
+        "sha256": "d84c2df8009aad7fb080bb6f1ef8c5da4f0842041d738e5bb11a77c4823ad718"
+      }
+    },
+    {
+      "ts": "2026-10-13T13:41:09.648Z",
+      "decision_id": "eb37d51d-d280-40e6-83b1-9243c37f74b3",
+      "floor": 27,
+      "label": "rest/plan",
+      "samples": 48,
+      "ms": 11089,
+      "dpr_metric_count": 0,
+      "alert_reason": "below_minimum_samples",
+      "all_candidate_effects_explicitly_not_simulated": false,
+      "diagnostics": null,
+      "source": {
+        "offset": 1236613107,
+        "length": 122350,
+        "sha256": "9244f98e7e7a673dc0f928f44c7c6ef7320ff39fcb6226589b5d89f5b9835acf"
+      }
+    },
+    {
+      "ts": "2026-10-13T13:43:15.230Z",
+      "decision_id": "baeb1e20-e621-4f3d-b271-36054a9d6803",
+      "floor": 28,
+      "label": "reward/card",
+      "samples": 88,
+      "ms": 11041,
+      "dpr_metric_count": 0,
+      "alert_reason": "below_minimum_samples",
+      "all_candidate_effects_explicitly_not_simulated": false,
+      "diagnostics": null,
+      "source": {
+        "offset": 1237005823,
+        "length": 35758,
+        "sha256": "bd003e1d59815246ab319ecc32ded575396c39a8c26e2773192e6da97f7052af"
+      }
+    },
+    {
+      "ts": "2026-10-13T13:45:25.499Z",
+      "decision_id": "f12ac46f-e309-48bf-83df-5718f56bf759",
+      "floor": 29,
+      "label": "reward/card",
+      "samples": 168,
+      "ms": 11047,
+      "dpr_metric_count": 0,
+      "alert_reason": "below_minimum_samples",
+      "all_candidate_effects_explicitly_not_simulated": false,
+      "diagnostics": null,
+      "source": {
+        "offset": 1237373277,
+        "length": 35123,
+        "sha256": "dde91a39a7703818ee53ef0f40c03d1deb20e3a25699443fe470dad201afa4c3"
+      }
+    },
+    {
+      "ts": "2026-10-13T13:46:18.491Z",
+      "decision_id": "de76416d-679a-4145-a1ec-edfcd6a78957",
+      "floor": 30,
+      "label": "event/plan",
+      "samples": 384,
+      "ms": 11064,
+      "dpr_metric_count": 1,
+      "alert_reason": null,
+      "all_candidate_effects_explicitly_not_simulated": false,
+      "diagnostics": null,
+      "source": {
+        "offset": 1237411576,
+        "length": 72052,
+        "sha256": "9df65ca78d232a5681730ca66346da4daa2466083a4136048e3ca9337587b648"
+      }
+    },
+    {
+      "ts": "2026-10-13T13:47:04.131Z",
+      "decision_id": "1e4f3831-110f-4266-b507-f9b6ba2f5238",
+      "floor": 32,
+      "label": "rest/plan",
+      "samples": 0,
+      "ms": 11006,
+      "dpr_metric_count": 0,
+      "alert_reason": "zero_paired_samples",
+      "all_candidate_effects_explicitly_not_simulated": false,
+      "diagnostics": null,
+      "source": {
+        "offset": 1237493851,
+        "length": 117806,
+        "sha256": "141507f17d420bd4c971fc81aa9b68b0b8a1f72d41a2eb6e8623f165ab6434ba"
+      }
+    },
+    {
+      "ts": "2026-10-13T13:55:02.766Z",
+      "decision_id": "7d6636b7-0a0c-4157-9a60-87543de2ce03",
+      "floor": 35,
+      "label": "reward/card",
+      "samples": 88,
+      "ms": 11040,
+      "dpr_metric_count": 0,
+      "alert_reason": "below_minimum_samples",
+      "all_candidate_effects_explicitly_not_simulated": false,
+      "diagnostics": null,
+      "source": {
+        "offset": 1239199177,
+        "length": 35555,
+        "sha256": "2a6e101a760633a7c4732e824e8647c338e8fd9c9f7c1b77bbeda21ab989db5b"
+      }
+    },
+    {
+      "ts": "2026-10-13T13:57:59.726Z",
+      "decision_id": "aa73ac23-c704-4115-bb30-d597698f394d",
+      "floor": 36,
+      "label": "shop/plan",
+      "samples": 8,
+      "ms": 11067,
+      "dpr_metric_count": 0,
+      "alert_reason": "below_minimum_samples",
+      "all_candidate_effects_explicitly_not_simulated": false,
+      "diagnostics": null,
+      "source": {
+        "offset": 1239239142,
+        "length": 171712,
+        "sha256": "a6205ddd565ea7f76bc6f3d6faba501974786180925e00d457f6aaf91d8fcb89"
+      }
+    },
+    {
+      "ts": "2026-10-13T14:00:33.499Z",
+      "decision_id": "7b200e5e-9c23-4434-878f-3f4642c7e3a7",
+      "floor": 36,
+      "label": "shop/plan",
+      "samples": 8,
+      "ms": 11080,
+      "dpr_metric_count": 0,
+      "alert_reason": "below_minimum_samples",
+      "all_candidate_effects_explicitly_not_simulated": false,
+      "diagnostics": null,
+      "source": {
+        "offset": 1239430601,
+        "length": 157797,
+        "sha256": "ae398ca7b1b174c7bef9439b4978eb5771e79fc3f3dbbea34b92e5c0bd06a049"
+      }
+    },
+    {
+      "ts": "2026-10-13T14:02:18.202Z",
+      "decision_id": "d5a4f98f-5c62-430d-9316-bff2832661f5",
+      "floor": 37,
+      "label": "reward/card",
+      "samples": 104,
+      "ms": 11042,
+      "dpr_metric_count": 0,
+      "alert_reason": "below_minimum_samples",
+      "all_candidate_effects_explicitly_not_simulated": false,
+      "diagnostics": null,
+      "source": {
+        "offset": 1239735107,
+        "length": 35455,
+        "sha256": "aca61802df86e9790951b6a0ba82e2ca555433d01a1c251c6153201d9e6397a9"
+      }
+    },
+    {
+      "ts": "2026-10-13T14:05:07.933Z",
+      "decision_id": "cb6d86d8-8b73-4774-b011-954533dd4b01",
+      "floor": 38,
+      "label": "reward/card",
+      "samples": 136,
+      "ms": 11079,
+      "dpr_metric_count": 0,
+      "alert_reason": "below_minimum_samples",
+      "all_candidate_effects_explicitly_not_simulated": false,
+      "diagnostics": null,
+      "source": {
+        "offset": 1240717919,
+        "length": 35709,
+        "sha256": "001f4697c04b166650fbfcce968e81b48323e0bfe61b565c468503e937b5f3a4"
+      }
+    },
+    {
+      "ts": "2026-10-13T14:07:02.367Z",
+      "decision_id": "0ad43856-1c60-47c9-9817-753fdd685785",
+      "floor": 39,
+      "label": "shop/plan",
+      "samples": 80,
+      "ms": 11050,
+      "dpr_metric_count": 0,
+      "alert_reason": "below_minimum_samples",
+      "all_candidate_effects_explicitly_not_simulated": false,
+      "diagnostics": null,
+      "source": {
+        "offset": 1240758055,
+        "length": 54949,
+        "sha256": "cae4a06e85b9c7d754f2e7a4135c0f84542a76d7ad87b77fbf7ae5a22fdde181"
+      }
+    },
+    {
+      "ts": "2026-10-13T14:08:43.152Z",
+      "decision_id": "8bf23b1f-9224-4a2f-8bf4-9b6c03687610",
+      "floor": 40,
+      "label": "rest/plan",
+      "samples": 24,
+      "ms": 11039,
+      "dpr_metric_count": 0,
+      "alert_reason": "below_minimum_samples",
+      "all_candidate_effects_explicitly_not_simulated": false,
+      "diagnostics": null,
+      "source": {
+        "offset": 1240817552,
+        "length": 133402,
+        "sha256": "c45d111a22f935e80b55ab0db87d38553105b63b1cc5df47ce75f0fa26044e91"
+      }
+    },
+    {
+      "ts": "2026-10-13T14:09:44.913Z",
+      "decision_id": "13e859bb-3eea-4bef-868a-b222526fa9c7",
+      "floor": 42,
+      "label": "rest/plan",
+      "samples": 24,
+      "ms": 11033,
+      "dpr_metric_count": 0,
+      "alert_reason": "below_minimum_samples",
+      "all_candidate_effects_explicitly_not_simulated": false,
+      "diagnostics": null,
+      "source": {
+        "offset": 1240960996,
+        "length": 126909,
+        "sha256": "e5e24ee74ab063ad375385c439a0aa3ce7057996960840db4fcd6fb8b4dc0d26"
+      }
+    },
+    {
+      "ts": "2026-10-13T14:10:20.948Z",
+      "decision_id": "0c2e148c-e10c-4788-9dc7-a19772732d42",
+      "floor": 43,
+      "label": "event/choose",
+      "samples": 224,
+      "ms": 11061,
+      "dpr_metric_count": 0,
+      "alert_reason": "below_minimum_samples",
+      "all_candidate_effects_explicitly_not_simulated": false,
+      "diagnostics": null,
+      "source": {
+        "offset": 1241090972,
+        "length": 12406,
+        "sha256": "b7417943bba559c23acc613533ac61cc22102fc3ff80cbeabc0c5f07a898ef7f"
+      }
+    }
+  ],
+  "unsupported_options_case": {
+    "ts": "2026-10-13T13:34:28.141Z",
+    "decision_id": "23337b4f-2ec4-4070-aa2c-4a5be1d30f3d",
+    "floor": 22,
+    "label": "event/choose",
+    "samples": 1000,
+    "ms": 10801,
+    "dpr_metric_count": 0,
+    "alert_reason": "no_complete_dpr",
+    "all_candidate_effects_explicitly_not_simulated": true,
+    "diagnostics": null,
+    "source": {
+      "offset": 1236320924,
+      "length": 29802,
+      "sha256": "9268f0cec621a57bc359f9bf6c04a79ebe7157c42d305ade0fc61ac0cd3efdaa"
+    }
+  },
+  "interpretation": "21 below-minimum and one zero-paired failure are genuine missing-service observations. F22 has 1000 samples but all candidates explicitly unsupported, which must be reported separately; never fabricate candidate DPR. Original alert unchanged.",
+  "causal_limits": "Running process predates telemetry. Six existing controlled two-worker probes also fail when warm; no proof that historical CPU contention or startup alone caused loss.",
+  "running_source": {
+    "commit": "7d5b95142bbb89ed71279791786f40d312eed61c",
+    "code": "7d5b951+dirty",
+    "dirty": true,
+    "dirty_files": [
+      "knowledge/characters/silent/construction-opportunities.json",
+      "knowledge/characters/silent/monster-records.json",
+      "knowledge/characters/silent/outcome-stats.json",
+      "knowledge/characters/silent/room-costs.json",
+      "knowledge/common/card-upgrades.json",
+      "knowledge/common/monster-db.json",
+      "knowledge/common/move-model.json",
+      "notes/fight-value-backtest-silent.md",
+      "notes/monster-db-check.md"
+    ],
+    "branch": "live",
+    "worktree": "live"
+  },
+  "construction": {
+    "architecture": "V5",
+    "schema": "construction-v1",
+    "mode": "shadow",
+    "policy": "observed-signature-completion",
+    "validation": "prospective-calibration-required"
+  },
+  "framework_deployment": {
+    "at": "2026-10-13T14:11:27.222785+00:00",
+    "source": "c4c79ad2669bb8288c5a54179926c976c370d94e",
+    "before": {
+      "main": "c5503e8cf468625dc87126045a9f5d7af9293bee",
+      "live": "f130f71521ab1d4bf25735abb9506d04f07fb2f9"
+    },
+    "main": "a9745ce26506dfaea6dce259f80f3cab81dceb3a",
+    "live": "51b8db5556d0168ba538a2feb8cdae4a2757bd7b",
+    "tree": "a29900fe27097e75ee953f77d94efa4233fc3aba",
+    "leaves": [
+      {
+        "path": "agent/src/sim/build-sim-facts.ts",
+        "source": "871067e5cb7235953e4e9af5c276b6a48e3384b9",
+        "main": "871067e5cb7235953e4e9af5c276b6a48e3384b9",
+        "live": "871067e5cb7235953e4e9af5c276b6a48e3384b9"
+      },
+      {
+        "path": "agent/src/sim/build-sim-pool.ts",
+        "source": "4ce32154219f8b15bd3796333e76c42e8ec2f1ae",
+        "main": "4ce32154219f8b15bd3796333e76c42e8ec2f1ae",
+        "live": "4ce32154219f8b15bd3796333e76c42e8ec2f1ae"
+      },
+      {
+        "path": "agent/src/sim/build-sim.ts",
+        "source": "1434b675b9231b5f3051ce87f56d66f4dca4b685",
+        "main": "1434b675b9231b5f3051ce87f56d66f4dca4b685",
+        "live": "1434b675b9231b5f3051ce87f56d66f4dca4b685"
+      },
+      {
+        "path": "docs/codex-ops.md",
+        "source": "7576caefdcc0cf0202bff6085cc223fe7ab238f3",
+        "main": "7576caefdcc0cf0202bff6085cc223fe7ab238f3",
+        "live": "4d30561aadef4f347ab111d31f4eeaec0f9fae7b"
+      },
+      {
+        "path": "ops/codex-ops.sh",
+        "source": "58d5c9df2bad7e565fea4ff68351a3f2108a1fc5",
+        "main": "58d5c9df2bad7e565fea4ff68351a3f2108a1fc5",
+        "live": "58d5c9df2bad7e565fea4ff68351a3f2108a1fc5"
+      },
+      {
+        "path": "ops/report.py",
+        "source": "fe3733e61ca170772a798571d65046502a8d32c0",
+        "main": "fe3733e61ca170772a798571d65046502a8d32c0",
+        "live": "fe3733e61ca170772a798571d65046502a8d32c0"
+      },
+      {
+        "path": "agent/tests/build-health.test.ts",
+        "source": "269be1c70937292c452dda0d0605f7bb86ba4bb2",
+        "main": "269be1c70937292c452dda0d0605f7bb86ba4bb2",
+        "live": "269be1c70937292c452dda0d0605f7bb86ba4bb2"
+      },
+      {
+        "path": "agent/tests/module-health.test.ts",
+        "source": "d14af0c9c1987ccc0e559f423dd0ff7b0f77ff2f",
+        "main": "d14af0c9c1987ccc0e559f423dd0ff7b0f77ff2f",
+        "live": "d14af0c9c1987ccc0e559f423dd0ff7b0f77ff2f"
+      },
+      {
+        "path": "agent/tests/module_health_test.py",
+        "source": "67125d8a6abd484065e33821b7f3d0c188e888a5",
+        "main": "67125d8a6abd484065e33821b7f3d0c188e888a5",
+        "live": "67125d8a6abd484065e33821b7f3d0c188e888a5"
+      },
+      {
+        "path": "agent/tools/profile-build-health.ts",
+        "source": "86b7a79636e3ee4d688d08055090e315cb46775a",
+        "main": "86b7a79636e3ee4d688d08055090e315cb46775a",
+        "live": "86b7a79636e3ee4d688d08055090e315cb46775a"
+      },
+      {
+        "path": "ops/module_health.py",
+        "source": "c6242d4adef5f656ed0c08ad8420cba25c2dcd93",
+        "main": "c6242d4adef5f656ed0c08ad8420cba25c2dcd93",
+        "live": "c6242d4adef5f656ed0c08ad8420cba25c2dcd93"
+      }
+    ],
+    "preserved_dirty_knowledge": {
+      "notes/fight-value-backtest-silent.md": "aea424105b0c68e67e5af840e3c71b3da6e74a4ed4875a9c82937de64d4200aa",
+      "notes/monster-db-check.md": "64242fae21d3795f1ff801a2a087568e3744b6fd92c79522a6212a9b54cd1e58"
+    },
+    "documentation_exception": "live pre-existing docs retained; only the new feature section appended",
+    "behavior_version": "none: metrics/logging/acceptance only; budgets, thresholds and game policy unchanged",
+    "natural_telemetry": "pending next naturally started process; running game not restarted"
+  },
+  "framework_source_verified": true,
+  "source_ancestry": {
+    "main": true,
+    "live": false
+  },
+  "source_provenance": "Main contains the source commit; live is an exact leaf integration with ten source-equivalent executable/test blobs, without source ancestry. Never claim live source ancestry.",
+  "existing_fix_owner": [
+    {
+      "batch": "20261013-204302-fix-batch",
+      "state": "running",
+      "pid": 4047810,
+      "worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-204302",
+      "reason": "tick"
+    }
+  ],
+  "framework_checkout_retired": true,
+  "continuation": {
+    "same_architecture_scope": "v5-dpr-health-20261013",
+    "mechanism": "One deduplicated ordinary fix-queue continuation; current owner/input unchanged, next original slot",
+    "new_research_request": null,
+    "learner_dispatched": false,
+    "consumed": false
+  },
+  "host_check": {
+    "batch": "20261013-184302-fix-batch",
+    "merged": "51b8db5556d0168ba538a2feb8cdae4a2757bd7b",
+    "tree": "a29900fe27097e75ee953f77d94efa4233fc3aba",
+    "log": "ops/codex-ops/learner/20261013-184302-fix-batch.fallback-a29900fe27097e75ee953f77d94efa4233fc3aba.checks.log",
+    "state": "running",
+    "process": {
+      "pid": 300189,
+      "cwd": "/home/dw/Projects/agent-sts2",
+      "batch": "20261013-184302-fix-batch"
+    },
+    "exit_code": null,
+    "older_d875_pass_reused_as_current": false
+  },
+  "unchanged": {
+    "minimum_samples": 300,
+    "requested_samples": 1000,
+    "deadline_ms": 11000,
+    "worker_limit": 24,
+    "construction_mode": "shadow",
+    "game_restart": false,
+    "account_or_model_or_permissions_change": false,
+    "routine_notifications": false
+  }
+}
