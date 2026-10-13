@@ -1,0 +1,209 @@
+{
+  "at": "2026-10-13T17:33:22.577213+08:00",
+  "release_id": "V4-R325",
+  "source": "2b8b35ac0205f096aec8dfe1ed7bef75536e9936",
+  "deployment": {
+    "main": {
+      "before": "84e4513f5eca679780d08860a8767b185fc179a1",
+      "commit": "7e4b1ee53aa4687df55083c19126dfb1ddf823d2",
+      "paths": [
+        "agent/src/memory/run-constraints.ts",
+        "agent/src/brain/build-facts.ts",
+        "agent/src/eye/run-config.ts",
+        "agent/src/hand/act/gate.ts",
+        "agent/src/hand/screens/index.ts",
+        "agent/src/hand/screens/shop.ts",
+        "agent/tests/silent-deck-cap.test.ts"
+      ],
+      "knowledge_and_other_index_preserved": true,
+      "sha256": {
+        "agent/src/memory/run-constraints.ts": "041e74593b0a7fdbb2e4c9d78e2b7a7454cd3446b62dc764c6378a1122858696",
+        "agent/src/brain/build-facts.ts": "49611b3d0ff50e3ba5971858026808ef18a796930bff1d939a1f7fe7472f0bd0",
+        "agent/src/eye/run-config.ts": "091ab0ed3dd75b86e4d03a218b202411ac2f958869c7ef847610cc456f1f9f7f",
+        "agent/src/hand/act/gate.ts": "a402e7735ed0e29f06bed8d13f162157eb3d5d07280307f853eedbc03455c855",
+        "agent/src/hand/screens/index.ts": "6902687f247c6ce7074b4b47c7b13d64ba08473499e404f20b6d13485f029296",
+        "agent/src/hand/screens/shop.ts": "ae49d3f139434e8aab4352a8edb5b71bbd0e0e7019c9fc7d941d4aaaed324563",
+        "agent/tests/silent-deck-cap.test.ts": "53880e57d87469a4ab1acb34126742f716821fb626933f206c037896ba28bb54"
+      }
+    },
+    "live": {
+      "before": "89ca08b1b0c26d082eb1b8808abb16fffdc5cf19",
+      "commit": "11deed8421f292696dce1a4d7e85aff873262299",
+      "paths": [
+        "agent/src/memory/run-constraints.ts",
+        "agent/src/brain/build-facts.ts",
+        "agent/src/eye/run-config.ts",
+        "agent/src/hand/act/gate.ts",
+        "agent/src/hand/screens/index.ts",
+        "agent/src/hand/screens/shop.ts",
+        "agent/tests/silent-deck-cap.test.ts"
+      ],
+      "knowledge_and_other_index_preserved": true,
+      "sha256": {
+        "agent/src/memory/run-constraints.ts": "041e74593b0a7fdbb2e4c9d78e2b7a7454cd3446b62dc764c6378a1122858696",
+        "agent/src/brain/build-facts.ts": "b70ad6253abf895a99ce72a442ff841898a58ef34bda6a1ab2766937b6d5fd4d",
+        "agent/src/eye/run-config.ts": "091ab0ed3dd75b86e4d03a218b202411ac2f958869c7ef847610cc456f1f9f7f",
+        "agent/src/hand/act/gate.ts": "a402e7735ed0e29f06bed8d13f162157eb3d5d07280307f853eedbc03455c855",
+        "agent/src/hand/screens/index.ts": "6902687f247c6ce7074b4b47c7b13d64ba08473499e404f20b6d13485f029296",
+        "agent/src/hand/screens/shop.ts": "ae49d3f139434e8aab4352a8edb5b71bbd0e0e7019c9fc7d941d4aaaed324563",
+        "agent/tests/silent-deck-cap.test.ts": "53880e57d87469a4ab1acb34126742f716821fb626933f206c037896ba28bb54"
+      }
+    }
+  },
+  "scope": "Silent only; operator experimental constraint, not gameplay knowledge or a proven win-rate improvement",
+  "maximum_permanent_deck_size": 30,
+  "exempt_running_run": "Y82C2NV7WM2M",
+  "current_run_restart": false,
+  "brain_constraints_in_build_facts": true,
+  "checked_at_decision_and_fresh_dispatch": true,
+  "ordered_shop_budget_checked": true,
+  "existing_two_card_reward_reference": "silentRewardAdditionFacts; no new relic-mechanism claim",
+  "unknown_explicit_permanent_gain": "not dispatched; retain state for ops if no safe option",
+  "observed_overflow": "controller stops and preserves state; no cheating removals",
+  "tests": {
+    "production_tsc": 0,
+    "sandbox_final_threads": {
+      "files": 2,
+      "tests": 14,
+      "rc": 0
+    },
+    "sandbox_final_forks": {
+      "files": 3,
+      "tests": 25,
+      "rc": 0
+    },
+    "host_affected": {
+      "files": 8,
+      "tests": 137,
+      "rc": 0
+    },
+    "source_gitleaks": 0,
+    "old_sandbox_failures": "first unused import and fixture character mismatch fixed; explicitly included host-only HTTP suites failed EPERM/listen in sandbox, preserved; host replay passed"
+  },
+  "evidence": {
+    "gitleaks.log": "111cd9cf84e9a679d85adedee460875883154f423c7023bfdf48256a39610de6",
+    "integration.log": "29115c27f9b0a992c04b64455b09a3e890956da6d6a1938cc15fa1cc4f91d64a",
+    "sandbox-02.log": "6c8c39c5ed0b02810c8fa47baf4b7e83ddad6c0aa8482dc7d820a493a6349391",
+    "sandbox-01.log": "a282f1715168cedc19e4ff3a688f04de53322c0e37185d01c6a0571a7d26d4e0",
+    "host-01.log": "62c404aa2b8bad217f305e45ace185895e69035b7f2e2124dc005e255e873adf",
+    "sandbox-final.log": "ca3bfe275d7effc5f70b082f571f90abc09bcef84eca025970d5d97332c949cc",
+    "gitleaks.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+    "deployment.json": "ec380e9f383126bb9163cd50f582ffd7b4ee16241938e443371541e6b8ba847e",
+    "tsc-01.log": "4f7d2ebd56f2d2c50401668a39bfc795cb219b9669dc7d6c348e0f14a4c9866e",
+    "roy-original-requirement.jsonl": "cf3b248191540f7861829f38df2b094367e76a59601048b5dfe70019feb3b09c"
+  },
+  "first_live_run": "AX56AR19UCHD",
+  "actual_first_run_consumed_limit": true,
+  "first_live_proof": "first-live-consumer-acceptance.json",
+  "own_worktree_reclaimed": {
+    "at": "2026-10-13T17:42:18+08:00",
+    "state": "reclaimed",
+    "source": "2b8b35ac0205f096aec8dfe1ed7bef75536e9936",
+    "branch_retained": true,
+    "own_checkout_removed": true,
+    "available_bytes_delta": 1674715136,
+    "standard_original_refusal_kept": "own-standard-completion-original.json",
+    "scope": "authorized owner checkout retirement; immutable published leaves verified, main/live not mutated; historical attribution comment retained",
+    "archive_manifest": "ops/codex-ops/retention/worktree-archives/silent-deck-cap30-20261013.manifest.json",
+    "comparisons": [
+      {
+        "role": "main",
+        "path": "agent/src/memory/run-constraints.ts",
+        "source_sha256": "041e74593b0a7fdbb2e4c9d78e2b7a7454cd3446b62dc764c6378a1122858696",
+        "published_sha256": "041e74593b0a7fdbb2e4c9d78e2b7a7454cd3446b62dc764c6378a1122858696",
+        "historical_comment_exception": null
+      },
+      {
+        "role": "main",
+        "path": "agent/src/brain/build-facts.ts",
+        "source_sha256": "b70ad6253abf895a99ce72a442ff841898a58ef34bda6a1ab2766937b6d5fd4d",
+        "published_sha256": "49611b3d0ff50e3ba5971858026808ef18a796930bff1d939a1f7fe7472f0bd0",
+        "historical_comment_exception": "only original historical attribution in opening comment differs; executable bytes identical"
+      },
+      {
+        "role": "main",
+        "path": "agent/src/eye/run-config.ts",
+        "source_sha256": "091ab0ed3dd75b86e4d03a218b202411ac2f958869c7ef847610cc456f1f9f7f",
+        "published_sha256": "091ab0ed3dd75b86e4d03a218b202411ac2f958869c7ef847610cc456f1f9f7f",
+        "historical_comment_exception": null
+      },
+      {
+        "role": "main",
+        "path": "agent/src/hand/act/gate.ts",
+        "source_sha256": "a402e7735ed0e29f06bed8d13f162157eb3d5d07280307f853eedbc03455c855",
+        "published_sha256": "a402e7735ed0e29f06bed8d13f162157eb3d5d07280307f853eedbc03455c855",
+        "historical_comment_exception": null
+      },
+      {
+        "role": "main",
+        "path": "agent/src/hand/screens/index.ts",
+        "source_sha256": "6902687f247c6ce7074b4b47c7b13d64ba08473499e404f20b6d13485f029296",
+        "published_sha256": "6902687f247c6ce7074b4b47c7b13d64ba08473499e404f20b6d13485f029296",
+        "historical_comment_exception": null
+      },
+      {
+        "role": "main",
+        "path": "agent/src/hand/screens/shop.ts",
+        "source_sha256": "ae49d3f139434e8aab4352a8edb5b71bbd0e0e7019c9fc7d941d4aaaed324563",
+        "published_sha256": "ae49d3f139434e8aab4352a8edb5b71bbd0e0e7019c9fc7d941d4aaaed324563",
+        "historical_comment_exception": null
+      },
+      {
+        "role": "main",
+        "path": "agent/tests/silent-deck-cap.test.ts",
+        "source_sha256": "53880e57d87469a4ab1acb34126742f716821fb626933f206c037896ba28bb54",
+        "published_sha256": "53880e57d87469a4ab1acb34126742f716821fb626933f206c037896ba28bb54",
+        "historical_comment_exception": null
+      },
+      {
+        "role": "live",
+        "path": "agent/src/memory/run-constraints.ts",
+        "source_sha256": "041e74593b0a7fdbb2e4c9d78e2b7a7454cd3446b62dc764c6378a1122858696",
+        "published_sha256": "041e74593b0a7fdbb2e4c9d78e2b7a7454cd3446b62dc764c6378a1122858696",
+        "historical_comment_exception": null
+      },
+      {
+        "role": "live",
+        "path": "agent/src/brain/build-facts.ts",
+        "source_sha256": "b70ad6253abf895a99ce72a442ff841898a58ef34bda6a1ab2766937b6d5fd4d",
+        "published_sha256": "b70ad6253abf895a99ce72a442ff841898a58ef34bda6a1ab2766937b6d5fd4d",
+        "historical_comment_exception": null
+      },
+      {
+        "role": "live",
+        "path": "agent/src/eye/run-config.ts",
+        "source_sha256": "091ab0ed3dd75b86e4d03a218b202411ac2f958869c7ef847610cc456f1f9f7f",
+        "published_sha256": "091ab0ed3dd75b86e4d03a218b202411ac2f958869c7ef847610cc456f1f9f7f",
+        "historical_comment_exception": null
+      },
+      {
+        "role": "live",
+        "path": "agent/src/hand/act/gate.ts",
+        "source_sha256": "a402e7735ed0e29f06bed8d13f162157eb3d5d07280307f853eedbc03455c855",
+        "published_sha256": "a402e7735ed0e29f06bed8d13f162157eb3d5d07280307f853eedbc03455c855",
+        "historical_comment_exception": null
+      },
+      {
+        "role": "live",
+        "path": "agent/src/hand/screens/index.ts",
+        "source_sha256": "6902687f247c6ce7074b4b47c7b13d64ba08473499e404f20b6d13485f029296",
+        "published_sha256": "6902687f247c6ce7074b4b47c7b13d64ba08473499e404f20b6d13485f029296",
+        "historical_comment_exception": null
+      },
+      {
+        "role": "live",
+        "path": "agent/src/hand/screens/shop.ts",
+        "source_sha256": "ae49d3f139434e8aab4352a8edb5b71bbd0e0e7019c9fc7d941d4aaaed324563",
+        "published_sha256": "ae49d3f139434e8aab4352a8edb5b71bbd0e0e7019c9fc7d941d4aaaed324563",
+        "historical_comment_exception": null
+      },
+      {
+        "role": "live",
+        "path": "agent/tests/silent-deck-cap.test.ts",
+        "source_sha256": "53880e57d87469a4ab1acb34126742f716821fb626933f206c037896ba28bb54",
+        "published_sha256": "53880e57d87469a4ab1acb34126742f716821fb626933f206c037896ba28bb54",
+        "historical_comment_exception": null
+      }
+    ]
+  }
+}

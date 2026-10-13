@@ -1,0 +1,30 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/silent-deck-cap30-20261013/agent
+
+ ❯ tests/silent-deck-cap.test.ts (9 tests | 1 failed) 52ms
+     × allows 29 to 30, removes an over-cap reward, and dispatch also rejects it 15ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/silent-deck-cap.test.ts > Roy's Silent-only permanent deck cap > allows 29 to 30, removes an over-cap reward, and dispatch also rejects it
+AssertionError: expected 'blocked' to be 'decision' // Object.is equality
+
+Expected: "decision"
+Received: "blocked"
+
+ ❯ tests/silent-deck-cap.test.ts:30:25
+     28|     expect(gate(full.state, { action: "choose_reward_card", option_ind…
+     29|     const result = planDecision(full);
+     30|     expect(result.kind).toBe("decision");
+       |                         ^
+     31|     if (result.kind === "decision") expect(result.decision).toMatchObj…
+     32|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 1 passed (2)
+      Tests  1 failed | 13 passed (14)
+   Start at  17:20:38
+   Duration  2.80s (transform 2.02s, setup 492ms, import 1.96s, tests 64ms, environment 0ms)
+

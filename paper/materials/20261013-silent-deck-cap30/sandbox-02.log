@@ -1,0 +1,452 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/silent-deck-cap30-20261013/agent
+
+
+ Test Files  2 passed (2)
+      Tests  14 passed (14)
+   Start at  17:23:13
+   Duration  4.23s (transform 3.20s, setup 920ms, import 2.87s, tests 75ms, environment 0ms)
+
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/silent-deck-cap30-20261013/agent
+
+ ❯ tests/oneshot-shop.test.ts (51 tests | 5 failed) 76158ms
+     × shop: one DeepSeek call; the plan row plays step 1 with the call's tokens, each later step is its own reused row 15479ms
+     × shop: a price change under the plan re-asks once, with what was bought 15028ms
+     × shop: an invalid plan is logged (paid, not dispatched) and the visit goes step by step 15027ms
+     × the real client: the plan is read from DeepSeek's JSON reply (the message is laid out like a choice: memory, state, question, options) 15023ms
+     × the real client: an unparseable reply is logged and the visit goes step by step 15025ms
+ ❯ tests/oneshot-rest-event.test.ts (16 tests | 4 failed) 60568ms
+     × rest: one DeepSeek call; the smith and the named card are two rows, the second a reused plan step 15008ms
+     × rest: an answer that names no option key falls back to today's two questions 15027ms
+     × event: remove 2 named in the answer's cards; both picks are plan steps 15023ms
+     × BUILD_ONESHOT=off: the old step-by-step questions 15184ms
+ ❯ tests/execution-gate.test.ts (17 tests | 5 failed) 75541ms
+     × a reward list that changed between deciding and sending (same fingerprint): refused at dispatch, then the new one is claimed 15030ms
+     × a map node that moved under Jev's answer: refused, the answer is not reused, Jev is asked again on the live map 15026ms
+     × combat: a play refused at dispatch every time (the gate passes at decision) ends the turn after the limit 15024ms
+     × a non-combat screen refused at dispatch every time: code's baseline decides after the limit (Jev is not asked again) 15024ms
+     × refusals that go on (code's baseline refused too) reach the stall note: a decision-time pass does not reset it 15024ms
+ ❯ tests/run-config.test.ts (14 tests | 1 failed) 15200ms
+     × the loop writes one row on the run's first state, next to its decision log 15009ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 15 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/execution-gate.test.ts > the loop refuses an action whose indices moved, logs it and re-plans > a reward list that changed between deciding and sending (same fingerprint): refused at dispatch, then the new one is claimed
+Error: Test timed out in 15000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/execution-gate.test.ts:507:3
+    505|
+    506| describe("the loop refuses an action whose indices moved, logs it and …
+    507|   it("a reward list that changed between deciding and sending (same fi…
+       |   ^
+    508|     const decided = rewardClaimPayload();
+    509|     // Same indices (the fingerprint only has those), but reward 0 is …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/15]⎯
+
+ FAIL  tests/execution-gate.test.ts > the loop refuses an action whose indices moved, logs it and re-plans > a map node that moved under Jev's answer: refused, the answer is not reused, Jev is asked again on the live map
+Error: Test timed out in 15000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/execution-gate.test.ts:554:3
+    552|   });
+    553|
+    554|   it("a map node that moved under Jev's answer: refused, the answer is…
+       |   ^
+    555|     const decided = mapPayload();
+    556|     // The same three indices, but the nodes behind 0 and 1 swapped.
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/15]⎯
+
+ FAIL  tests/execution-gate.test.ts > refusals on the re-read before sending add up per board > combat: a play refused at dispatch every time (the gate passes at decision) ends the turn after the limit
+Error: Test timed out in 15000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/execution-gate.test.ts:620:3
+    618|
+    619| describe("refusals on the re-read before sending add up per board", ()…
+    620|   it("combat: a play refused at dispatch every time (the gate passes a…
+       |   ^
+    621|     const decided = combatPayload();
+    622|     // Every card upgraded on the re-read: the fingerprint (index:id:p…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/15]⎯
+
+ FAIL  tests/execution-gate.test.ts > refusals on the re-read before sending add up per board > a non-combat screen refused at dispatch every time: code's baseline decides after the limit (Jev is not asked again)
+Error: Test timed out in 15000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/execution-gate.test.ts:650:3
+    648|   });
+    649|
+    650|   it("a non-combat screen refused at dispatch every time: code's basel…
+       |   ^
+    651|     const decided = mapPayload();
+    652|     const swapped = edited(decided, (raw) => {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/15]⎯
+
+ FAIL  tests/execution-gate.test.ts > refusals on the re-read before sending add up per board > refusals that go on (code's baseline refused too) reach the stall note: a decision-time pass does not reset it
+Error: Test timed out in 15000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/execution-gate.test.ts:685:3
+    683|   });
+    684|
+    685|   it("refusals that go on (code's baseline refused too) reach the stal…
+       |   ^
+    686|     const decided = rewardClaimPayload();
+    687|     const changed = edited(decided, (raw) => {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/15]⎯
+
+ FAIL  tests/oneshot-rest-event.test.ts > rest and event plans in the loop > rest: one DeepSeek call; the smith and the named card are two rows, the second a reused plan step
+Error: Test timed out in 15000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/oneshot-rest-event.test.ts:201:3
+    199|
+    200| describe("rest and event plans in the loop", () => {
+    201|   it("rest: one DeepSeek call; the smith and the named card are two ro…
+       |   ^
+    202|     const bash = keyOf(board(REST, "rest"), "BASH");
+    203|     const deepseek = new FakeDeepSeek(() => `o1:${bash}`);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/15]⎯
+
+ FAIL  tests/oneshot-rest-event.test.ts > rest and event plans in the loop > rest: an answer that names no option key falls back to today's two questions
+Error: Test timed out in 15000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/oneshot-rest-event.test.ts:212:3
+    210|   });
+    211|
+    212|   it("rest: an answer that names no option key falls back to today's t…
+       |   ^
+    213|     const deepseek = new FakeDeepSeek((_criteria, label) => (label ===…
+    214|     const { stats, actions, records } = await play([board(REST, "rest"…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/15]⎯
+
+ FAIL  tests/oneshot-rest-event.test.ts > rest and event plans in the loop > event: remove 2 named in the answer's cards; both picks are plan steps
+Error: Test timed out in 15000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/oneshot-rest-event.test.ts:221:3
+    219|   });
+    220|
+    221|   it("event: remove 2 named in the answer's cards; both picks are plan…
+       |   ^
+    222|     const raw = board("yql8-f22-holes", "event");
+    223|     const cards = [keyOf(raw, "INJURY"), keyOf(raw, "STRIKE_IRONCLAD")…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/15]⎯
+
+ FAIL  tests/oneshot-rest-event.test.ts > rest and event plans in the loop > BUILD_ONESHOT=off: the old step-by-step questions
+Error: Test timed out in 15000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/oneshot-rest-event.test.ts:236:3
+    234|   });
+    235|
+    236|   it("BUILD_ONESHOT=off: the old step-by-step questions", async () => {
+       |   ^
+    237|     const deepseek = new FakeDeepSeek((_criteria, label) => (label ===…
+    238|     const { stats } = await play([board(REST, "rest"), board(REST, "up…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/15]⎯
+
+ FAIL  tests/oneshot-shop.test.ts > shop plans in the loop > shop: one DeepSeek call; the plan row plays step 1 with the call's tokens, each later step is its own reused row
+Error: Test timed out in 15000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/oneshot-shop.test.ts:322:3
+    320|
+    321| describe("shop plans in the loop", () => {
+    322|   it("shop: one DeepSeek call; the plan row plays step 1 with the call…
+       |   ^
+    323|     const deepseek = new FakeDeepSeek(() => "leave", () => ({ plan: ["…
+    324|     const sequence = ["open", "after_card3", "after_potion2", "after_c…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/15]⎯
+
+ FAIL  tests/oneshot-shop.test.ts > shop plans in the loop > shop: a price change under the plan re-asks once, with what was bought
+Error: Test timed out in 15000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/oneshot-shop.test.ts:357:3
+    355|   });
+    356|
+    357|   it("shop: a price change under the plan re-asks once, with what was …
+       |   ^
+    358|     const deepseek = new FakeDeepSeek(() => "leave", (_label, n) => (n…
+    359|     // A discount on every price from the second state on (the members…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/15]⎯
+
+ FAIL  tests/oneshot-shop.test.ts > shop plans in the loop > shop: an invalid plan is logged (paid, not dispatched) and the visit goes step by step
+Error: Test timed out in 15000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/oneshot-shop.test.ts:380:3
+    378|   });
+    379|
+    380|   it("shop: an invalid plan is logged (paid, not dispatched) and the v…
+       |   ^
+    381|     const deepseek = new FakeDeepSeek((criteria) => ("buy_card3" in cr…
+    382|     const { stats, actions, records } = await play([board(SHOP, "open"…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/15]⎯
+
+ FAIL  tests/oneshot-shop.test.ts > shop plans in the loop > the real client: the plan is read from DeepSeek's JSON reply (the message is laid out like a choice: memory, state, question, options)
+Error: Test timed out in 15000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/oneshot-shop.test.ts:391:3
+    389|   });
+    390|
+    391|   it("the real client: the plan is read from DeepSeek's JSON reply (th…
+       |   ^
+    392|     const { client, bodies } = await scriptedDeepSeek([{ content: '{"p…
+    393|     const { stats, actions, records } = await play([board(SHOP, "open"…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/15]⎯
+
+ FAIL  tests/oneshot-shop.test.ts > shop plans in the loop > the real client: an unparseable reply is logged and the visit goes step by step
+Error: Test timed out in 15000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/oneshot-shop.test.ts:402:3
+    400|   });
+    401|
+    402|   it("the real client: an unparseable reply is logged and the visit go…
+       |   ^
+    403|     const { client } = await scriptedDeepSeek([{ content: "buy the blo…
+    404|     const { stats, actions, records } = await play([board(SHOP, "open"…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[14/15]⎯
+
+ FAIL  tests/run-config.test.ts > in the loop > the loop writes one row on the run's first state, next to its decision log
+Error: Test timed out in 15000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/run-config.test.ts:311:3
+    309|
+    310| describe("in the loop", () => {
+    311|   it("the loop writes one row on the run's first state, next to its de…
+       |   ^
+    312|     const deepseek = new FakeDeepSeek(() => "o0");
+    313|     const REST = "7b0d-f8-rest";
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[15/15]⎯
+
+⎯⎯⎯⎯⎯⎯ Unhandled Errors ⎯⎯⎯⎯⎯⎯
+
+Vitest caught 15 unhandled errors during the test run.
+This might cause false positive tests. Resolve unhandled errors to make sure your tests are not affected.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+Error: listen EPERM: operation not permitted 127.0.0.1
+ ❯ Server.setupListenHandle [as _listen2] node:net:1919:21
+ ❯ listenInCluster node:net:1998:12
+ ❯ node:net:2207:7
+ ❯ processTicksAndRejections node:internal/process/task_queues:89:21
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'EPERM', errno: -1, syscall: 'listen', address: '127.0.0.1' }
+This error originated in "tests/oneshot-shop.test.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The latest test that might've caused the error is "shop: one DeepSeek call; the plan row plays step 1 with the call's tokens, each later step is its own reused row". It might mean one of the following:
+- The error was thrown, while Vitest was running this test.
+- If the error occurred after the test had been completed, this was the last documented test before it was thrown.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+Error: listen EPERM: operation not permitted 127.0.0.1
+ ❯ Server.setupListenHandle [as _listen2] node:net:1919:21
+ ❯ listenInCluster node:net:1998:12
+ ❯ node:net:2207:7
+ ❯ processTicksAndRejections node:internal/process/task_queues:89:21
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'EPERM', errno: -1, syscall: 'listen', address: '127.0.0.1' }
+This error originated in "tests/oneshot-shop.test.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The latest test that might've caused the error is "shop: a price change under the plan re-asks once, with what was bought". It might mean one of the following:
+- The error was thrown, while Vitest was running this test.
+- If the error occurred after the test had been completed, this was the last documented test before it was thrown.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+Error: listen EPERM: operation not permitted 127.0.0.1
+ ❯ Server.setupListenHandle [as _listen2] node:net:1919:21
+ ❯ listenInCluster node:net:1998:12
+ ❯ node:net:2207:7
+ ❯ processTicksAndRejections node:internal/process/task_queues:89:21
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'EPERM', errno: -1, syscall: 'listen', address: '127.0.0.1' }
+This error originated in "tests/oneshot-shop.test.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The latest test that might've caused the error is "shop: an invalid plan is logged (paid, not dispatched) and the visit goes step by step". It might mean one of the following:
+- The error was thrown, while Vitest was running this test.
+- If the error occurred after the test had been completed, this was the last documented test before it was thrown.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+Error: listen EPERM: operation not permitted 127.0.0.1
+ ❯ Server.setupListenHandle [as _listen2] node:net:1919:21
+ ❯ listenInCluster node:net:1998:12
+ ❯ node:net:2207:7
+ ❯ processTicksAndRejections node:internal/process/task_queues:89:21
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'EPERM', errno: -1, syscall: 'listen', address: '127.0.0.1' }
+This error originated in "tests/oneshot-shop.test.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The latest test that might've caused the error is "the real client: the plan is read from DeepSeek's JSON reply (the message is laid out like a choice: memory, state, question, options)". It might mean one of the following:
+- The error was thrown, while Vitest was running this test.
+- If the error occurred after the test had been completed, this was the last documented test before it was thrown.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+Error: listen EPERM: operation not permitted 127.0.0.1
+ ❯ Server.setupListenHandle [as _listen2] node:net:1919:21
+ ❯ listenInCluster node:net:1998:12
+ ❯ node:net:2207:7
+ ❯ processTicksAndRejections node:internal/process/task_queues:89:21
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'EPERM', errno: -1, syscall: 'listen', address: '127.0.0.1' }
+This error originated in "tests/oneshot-shop.test.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The latest test that might've caused the error is "the real client: an unparseable reply is logged and the visit goes step by step". It might mean one of the following:
+- The error was thrown, while Vitest was running this test.
+- If the error occurred after the test had been completed, this was the last documented test before it was thrown.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+Error: listen EPERM: operation not permitted 127.0.0.1
+ ❯ Server.setupListenHandle [as _listen2] node:net:1919:21
+ ❯ listenInCluster node:net:1998:12
+ ❯ node:net:2207:7
+ ❯ processTicksAndRejections node:internal/process/task_queues:89:21
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'EPERM', errno: -1, syscall: 'listen', address: '127.0.0.1' }
+This error originated in "tests/oneshot-rest-event.test.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The latest test that might've caused the error is "rest: one DeepSeek call; the smith and the named card are two rows, the second a reused plan step". It might mean one of the following:
+- The error was thrown, while Vitest was running this test.
+- If the error occurred after the test had been completed, this was the last documented test before it was thrown.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+Error: listen EPERM: operation not permitted 127.0.0.1
+ ❯ Server.setupListenHandle [as _listen2] node:net:1919:21
+ ❯ listenInCluster node:net:1998:12
+ ❯ node:net:2207:7
+ ❯ processTicksAndRejections node:internal/process/task_queues:89:21
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'EPERM', errno: -1, syscall: 'listen', address: '127.0.0.1' }
+This error originated in "tests/oneshot-rest-event.test.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The latest test that might've caused the error is "rest: an answer that names no option key falls back to today's two questions". It might mean one of the following:
+- The error was thrown, while Vitest was running this test.
+- If the error occurred after the test had been completed, this was the last documented test before it was thrown.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+Error: listen EPERM: operation not permitted 127.0.0.1
+ ❯ Server.setupListenHandle [as _listen2] node:net:1919:21
+ ❯ listenInCluster node:net:1998:12
+ ❯ node:net:2207:7
+ ❯ processTicksAndRejections node:internal/process/task_queues:89:21
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'EPERM', errno: -1, syscall: 'listen', address: '127.0.0.1' }
+This error originated in "tests/oneshot-rest-event.test.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The latest test that might've caused the error is "event: remove 2 named in the answer's cards; both picks are plan steps". It might mean one of the following:
+- The error was thrown, while Vitest was running this test.
+- If the error occurred after the test had been completed, this was the last documented test before it was thrown.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+Error: listen EPERM: operation not permitted 127.0.0.1
+ ❯ Server.setupListenHandle [as _listen2] node:net:1919:21
+ ❯ listenInCluster node:net:1998:12
+ ❯ node:net:2207:7
+ ❯ processTicksAndRejections node:internal/process/task_queues:89:21
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'EPERM', errno: -1, syscall: 'listen', address: '127.0.0.1' }
+This error originated in "tests/oneshot-rest-event.test.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The latest test that might've caused the error is "BUILD_ONESHOT=off: the old step-by-step questions". It might mean one of the following:
+- The error was thrown, while Vitest was running this test.
+- If the error occurred after the test had been completed, this was the last documented test before it was thrown.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+Error: listen EPERM: operation not permitted 127.0.0.1
+ ❯ Server.setupListenHandle [as _listen2] node:net:1919:21
+ ❯ listenInCluster node:net:1998:12
+ ❯ node:net:2207:7
+ ❯ processTicksAndRejections node:internal/process/task_queues:89:21
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'EPERM', errno: -1, syscall: 'listen', address: '127.0.0.1' }
+This error originated in "tests/execution-gate.test.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The latest test that might've caused the error is "a reward list that changed between deciding and sending (same fingerprint): refused at dispatch, then the new one is claimed". It might mean one of the following:
+- The error was thrown, while Vitest was running this test.
+- If the error occurred after the test had been completed, this was the last documented test before it was thrown.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+Error: listen EPERM: operation not permitted 127.0.0.1
+ ❯ Server.setupListenHandle [as _listen2] node:net:1919:21
+ ❯ listenInCluster node:net:1998:12
+ ❯ node:net:2207:7
+ ❯ processTicksAndRejections node:internal/process/task_queues:89:21
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'EPERM', errno: -1, syscall: 'listen', address: '127.0.0.1' }
+This error originated in "tests/execution-gate.test.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The latest test that might've caused the error is "a map node that moved under Jev's answer: refused, the answer is not reused, Jev is asked again on the live map". It might mean one of the following:
+- The error was thrown, while Vitest was running this test.
+- If the error occurred after the test had been completed, this was the last documented test before it was thrown.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+Error: listen EPERM: operation not permitted 127.0.0.1
+ ❯ Server.setupListenHandle [as _listen2] node:net:1919:21
+ ❯ listenInCluster node:net:1998:12
+ ❯ node:net:2207:7
+ ❯ processTicksAndRejections node:internal/process/task_queues:89:21
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'EPERM', errno: -1, syscall: 'listen', address: '127.0.0.1' }
+This error originated in "tests/execution-gate.test.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The latest test that might've caused the error is "combat: a play refused at dispatch every time (the gate passes at decision) ends the turn after the limit". It might mean one of the following:
+- The error was thrown, while Vitest was running this test.
+- If the error occurred after the test had been completed, this was the last documented test before it was thrown.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+Error: listen EPERM: operation not permitted 127.0.0.1
+ ❯ Server.setupListenHandle [as _listen2] node:net:1919:21
+ ❯ listenInCluster node:net:1998:12
+ ❯ node:net:2207:7
+ ❯ processTicksAndRejections node:internal/process/task_queues:89:21
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'EPERM', errno: -1, syscall: 'listen', address: '127.0.0.1' }
+This error originated in "tests/execution-gate.test.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The latest test that might've caused the error is "a non-combat screen refused at dispatch every time: code's baseline decides after the limit (Jev is not asked again)". It might mean one of the following:
+- The error was thrown, while Vitest was running this test.
+- If the error occurred after the test had been completed, this was the last documented test before it was thrown.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+Error: listen EPERM: operation not permitted 127.0.0.1
+ ❯ Server.setupListenHandle [as _listen2] node:net:1919:21
+ ❯ listenInCluster node:net:1998:12
+ ❯ node:net:2207:7
+ ❯ processTicksAndRejections node:internal/process/task_queues:89:21
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'EPERM', errno: -1, syscall: 'listen', address: '127.0.0.1' }
+This error originated in "tests/execution-gate.test.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The latest test that might've caused the error is "refusals that go on (code's baseline refused too) reach the stall note: a decision-time pass does not reset it". It might mean one of the following:
+- The error was thrown, while Vitest was running this test.
+- If the error occurred after the test had been completed, this was the last documented test before it was thrown.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+Error: listen EPERM: operation not permitted 127.0.0.1
+ ❯ Server.setupListenHandle [as _listen2] node:net:1919:21
+ ❯ listenInCluster node:net:1998:12
+ ❯ node:net:2207:7
+ ❯ processTicksAndRejections node:internal/process/task_queues:89:21
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'EPERM', errno: -1, syscall: 'listen', address: '127.0.0.1' }
+This error originated in "tests/run-config.test.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The latest test that might've caused the error is "the loop writes one row on the run's first state, next to its decision log". It might mean one of the following:
+- The error was thrown, while Vitest was running this test.
+- If the error occurred after the test had been completed, this was the last documented test before it was thrown.
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+
+
+ Test Files  4 failed | 5 passed (9)
+      Tests  15 failed | 133 passed (148)
+     Errors  15 errors
+   Start at  17:23:19
+   Duration  289.62s (transform 5.30s, setup 1.61s, import 7.87s, tests 275.67s, environment 1ms)
+

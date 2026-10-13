@@ -1,0 +1,37 @@
+{
+  "at": "2026-10-13T17:44:17.507534+08:00",
+  "run_id": "AX56AR19UCHD",
+  "first_run_after_exempt": "Y82C2NV7WM2M",
+  "config": {
+    "id": "roy-20261013-silent-deck-cap30",
+    "max_permanent_cards": 30,
+    "activation": "next run after Y82C2NV7WM2M; original run exempt"
+  },
+  "actual_code": "019b2d4+dirty",
+  "brain_consumers": [
+    {
+      "path": "paper/materials/20261013-silent-deck-cap30/first-live-brain-1.jsonl",
+      "sha256": "3405f5e0ccd1dffce6233ceaba3ef511efc611debd1843f976053598e982f186",
+      "offset": 467883421,
+      "bytes": 28104,
+      "ts": "2026-10-13T09:34:56.191Z",
+      "label": "event/plan",
+      "engine": "codex",
+      "accepted": true,
+      "actual_30_card_constraint": true
+    },
+    {
+      "path": "paper/materials/20261013-silent-deck-cap30/first-live-brain-2.jsonl",
+      "sha256": "1db80d6e46596449c0ae7bfe818b44632517ae6e5af6f0c194c848c222fa5eb7",
+      "offset": 467911525,
+      "bytes": 16416,
+      "ts": "2026-10-13T09:35:53.203Z",
+      "label": "map/route-plan",
+      "engine": "codex",
+      "accepted": true,
+      "actual_30_card_constraint": true
+    }
+  ],
+  "no_manual_game_start_or_restart": true,
+  "policy_outcome": "runtime config and accepted Codex question payload consumed; win-rate and later cap boundary not yet observed"
+}
