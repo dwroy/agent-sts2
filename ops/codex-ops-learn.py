@@ -381,9 +381,12 @@ def cmd_finish(args):
     have = postmortem_ids()
     done = [run for run in batch["runs"] if run in have]
     missing = [run for run in batch["runs"] if run not in have]
-    proposal_errors = proposal_dispatch.links(read_report(os.path.join(DIR,"learner",args.batch+".out")), batch, ROOT, SCRIPTS)
+    report = read_report(os.path.join(DIR,"learner",args.batch+".out"))
+    # A failed attempt without a report or preserved lesson has no proposal output to audit.
+    proposal_audit_skipped = args.rc != 0 and not done and not report
+    proposal_errors = [] if proposal_audit_skipped else proposal_dispatch.links(report, batch, ROOT, SCRIPTS)
     batch.update({"state": "done" if args.rc == 0 and not missing and not proposal_errors else "failed", "rc": args.rc, "finished": now_local(), "done": done, "missing": missing,
-                  "proposal_audit_errors": proposal_errors})
+                  "proposal_audit_errors": proposal_errors, "proposal_audit_skipped": proposal_audit_skipped})
     if proposal_errors:
         inbox("复盘代码提案链未通过：" + "; ".join(proposal_errors) + "；保留已写复盘，补提案后重报，不改已结束局或游戏规则。")
         state.setdefault("proposal_repairs",{})[args.batch] = {"character":batch["character"],"runs":done,"state":"pending","reason":"postmortem proposal link audit failed"}
@@ -409,7 +412,8 @@ def cmd_finish(args):
         + "。",
         f"学习者的回报（最后有 json 块）：{out}；stderr：{err}" + (f"；完整事件流：{log_path}" if log_path else "") + "。",
         *ledger_lines(done),
-        "代码提案链：" + ("; ".join(proposal_errors) if proposal_errors else "通过或旧批次无新增协议；待派提案由调度器保存并自动派策略学习者。"),
+        "代码提案链：" + ("未运行：学习者失败且无完整回报或已写复盘；保留原失败与复盘重试。" if proposal_audit_skipped else
+                    "; ".join(proposal_errors) if proposal_errors else "通过或旧批次无新增协议；待派提案由调度器保存并自动派策略学习者。"),
         "按「学习闭环」处理回报：新的纯 bug 里阻塞性的按「卡死」的修法，其他追加到 notes/fix-queue-v4.md；打法或机制上的发现不用你处理。"
         "然后 python3 ops/paper_dataset.py --no-raw，decision-log 记一行，提交主目录仓库（只 add 自己改的文件，加上 notes/lessons.md 和 paper/materials/learning/ledger.jsonl）。",
     ]

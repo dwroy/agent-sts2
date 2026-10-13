@@ -48,12 +48,12 @@ class OrdinaryNoticeAck(unittest.TestCase):
         return {'path': name, 'sha256': flow.digest(path.read_bytes())}
 
     def ack(self, stage='ops_forwarded', payload_changes=None):
-        evidence = self.artifact('delivery.json', {'actual_fixed_delivery': stage})
+        evidence = self.artifact(stage + '.delivery.json', {'actual_fixed_delivery': stage})
         payload = {'notice_id': self.notice['id'], 'stage': stage,
                    'actor': 'ops' if stage == 'ops_forwarded' else 'watcher',
                    'status': 'delivered', 'evidence': evidence}
         payload.update(payload_changes or {})
-        receipt = self.root / 'receipt.json'
+        receipt = self.root / (stage + '.receipt.json')
         flow.atomic(receipt, payload)
         with patch.object(sys, 'argv', ['flow', 'ack', '--notice', self.notice['id'],
                                       '--stage', stage, '--receipt', str(receipt)]):
@@ -99,7 +99,7 @@ class OrdinaryNoticeAck(unittest.TestCase):
     def test_wrong_actor_and_character_and_missing_stage_and_bad_evidence_sha_are_rejected(self):
         self.reject_without_writes(payload_changes={'actor': 'watcher'})
         self.reject_without_writes(payload_changes={'character': 'other'})
-        self.reject_without_writes(payload_changes={'evidence': {'path': 'delivery.json', 'sha256': 'b' * 64}})
+        self.reject_without_writes(payload_changes={'evidence': {'path': 'ops_forwarded.delivery.json', 'sha256': 'b' * 64}})
         self.reject_without_writes(stage='watcher_received')
         self.notice['source_evidence']['sha256'] = 'b' * 64
         self.reject_without_writes()
