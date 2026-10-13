@@ -172,7 +172,8 @@ class Continuation(unittest.TestCase):
     def test_host_wrapper_delivers_the_continuation_to_a_fixed_launcher(self):
         self.dispatch()
         self.f.save()
-        for relative in ("ops/codex-ops-learner.sh", "ops/paths.sh", "ops/proposal_dispatch.py",
+        for relative in ("ops/codex-ops-learner.sh", "ops/paths.sh", "ops/disk_capacity.py", "ops/proposal_dispatch.py",
+                         "ops/worktree_checkout.py", "ops/worktree_retention.py", "ops/learner_retention.py", "ops/learner_checks.py",
                          "ops/strategy_research_jobs.py", "learner/code_proposals.py"):
             self.f.write(relative, (fixtures.REPO / relative).read_bytes())
         for module, filename, names in (

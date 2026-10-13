@@ -311,6 +311,10 @@ def reclaim(root, directory, name, apply=False):
         manifest.update(state="reclaimed", completed_at=retention.stamp(), branch_retained=True,
                         original_reports_and_stream_paths_kept=True, available_bytes_delta=shutil.disk_usage(root).free - before)
         retention.atomic(manifest_path, manifest)
+        for ident in proof["learner_owners"]:
+            retention.request_outcome(root, directory, ident, {
+                "state": "checkout_reclaimed", "workspace_manifest": str(manifest_path.relative_to(root)),
+                "workspace_manifest_sha256": retention.sha_file(manifest_path), "no_parent_request_closed": True})
     return dict(result, state="reclaimed", available_bytes_delta=manifest["available_bytes_delta"])
 
 

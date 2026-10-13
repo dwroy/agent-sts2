@@ -232,8 +232,14 @@ class WorkspaceRetention(unittest.TestCase):
         out.parent.mkdir()
         out.write_text(json.dumps({'task': 'strategy-proposal', 'fixes': [], 'merged': None,
                                   'report': str(scratch / 'report.json')}))
+        with patch.object(resource.retention, 'kick', return_value={'state': 'fixture'}):
+            resource.retention.request_cleanup(self.root, self.directory, batch)
         self.assertEqual(resource.reclaim(self.root, self.directory, tree.name, True)['state'], 'reclaimed')
         self.assertEqual((scratch / 'unresolved.bin').read_bytes(), raw)
+        receipt = self.directory / 'retention/requests' / (batch + '.json')
+        self.assertEqual(resource.retention.load(receipt)['state'], 'checkout_reclaimed')
+        resource.retention.sweep(self.root, self.directory, True, 4)
+        self.assertEqual(resource.retention.load(receipt)['state'], 'checkout_reclaimed')
 
 
 if __name__ == '__main__':
