@@ -90,8 +90,7 @@ if [ "$fresh_tree" = 1 ] && [ "$audit_ready" = 1 ]; then
   flock -w 5 9 || exit 75
   if [ ! -f "$worktree/.git" ]; then
     checkout_ref="${research_base:-${LEARNER_BASE_REF:-main}}"
-    nice -n 19 python3 "$OPS/disk_capacity.py" "$ROOT" "$checkout_ref" >> "$out" 2>> "$err" \
-      && nice -n 19 git worktree add -b "${worktree##*/}" "$worktree" "$checkout_ref" >> "$out" 2>> "$err" || audit_ready=0
+    nice -n 19 python3 "$OPS/worktree_checkout.py" "$ROOT" "$worktree" "$checkout_ref" >> "$out" 2>> "$err" || audit_ready=0
   fi
   if [ "$audit_ready" = 1 ] && [ -n "$(git -C "$worktree" status --porcelain)" ]; then
     echo "worktree has edits; preserve it, never reset a failed candidate" >> "$err"
@@ -117,8 +116,7 @@ if [ "$task" = ascension-audit ]; then
   exec 9> "$DIR/learner/ascension-audit-$character-a$level.lock"
   flock -w 5 9 || exit 75
   if [ ! -f "$worktree/.git" ]; then
-    nice -n 19 python3 "$OPS/disk_capacity.py" "$ROOT" "${LEARNER_BASE_REF:-main}" >> "$out" 2>> "$err" \
-      && nice -n 19 git worktree add -b "${worktree##*/}" "$worktree" "${LEARNER_BASE_REF:-main}" >> "$out" 2>> "$err" || audit_ready=0
+    nice -n 19 python3 "$OPS/worktree_checkout.py" "$ROOT" "$worktree" "${LEARNER_BASE_REF:-main}" >> "$out" 2>> "$err" || audit_ready=0
   fi
   if [ "$audit_ready" = 1 ] && [ -n "$(git -C "$worktree" status --porcelain)" ]; then
     echo "audit worktree has edits; preserve it and retry in a new tree" >> "$err"
@@ -195,8 +193,8 @@ if { [ -z "$research_request" ] || python3 "$OPS/strategy_research_jobs.py" regi
     && { [ -z "$implementation_request" ] || python3 "$OPS/strategy_implementation_jobs.py" registered "$ROOT" "$DIR" "$batch" "$character" "$worktree" "$implementation_request" 2>> "$err"; }; then
   finish_rc=0
   python3 "$OPS/codex-ops-learn.py" finish --batch "$batch" --rc "$rc" --character "$character" > /dev/null || finish_rc=$?
-  if [ "$rc" = 0 ] && [ "$finish_rc" = 0 ] && [ "$learner_task" = "$task" ] \
-      && [ "$task" != ascension-audit ] && [ -z "${LEARNER_CMD:-}" ] && [ -f "$OPS/learner_retention.py" ]; then
+  if [ "$rc" = 0 ] && [ "$finish_rc" = 0 ] \
+      && [ -z "${LEARNER_CMD:-}" ] && [ -f "$OPS/learner_retention.py" ]; then
     # The model and launcher have exited; release this checkout lease before requesting guarded reclamation.
     flock -u 9 2>/dev/null || true
     exec 9>&-

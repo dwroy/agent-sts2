@@ -25,7 +25,7 @@ Roy指定“学习入库”的要求按 [学习要求闭环](docs/learning-reque
 - **规则变更通知**：规则实际上线后先 `date`，在项目根目录 `notes/for-roy.md` 和 `ops/inbox-dev.md` 同时追加通知 Roy：逐项旧规则、新规则、证据/账本、预期影响和回退方法。这是已授权的记录例外，保留其他并行记录；只经 CLI 记台账，不修改运维 prompt。
 - **上线**：修复和已批准的改动测完就合进 `live`（对局在 `.worktrees/live` 里跑），下一局生效。合并前先查 live 里刷新过的知识数据有没有和这次合并冲突。
 - **工作树**：一个功能一个工作树。Claude 用 `.claude/worktrees/`，其他 agent 用 `.worktrees/`。主检出只用来集成。同一个工作树同一时间只能有一个 agent 改代码。
-- **学习回收**：普通学习者结束后由启动器自动申请本批回收，实际入库和检查通过后再清理过程副本及可重建工作树；执行与保留边界见 [学习者产物回收](docs/learner-retention.md)。不在模型仍运行时删自身工作树，不删除未完成研究或原日志、经验、账本；ops 沿原调度器自动重试，不另派清理模型。
+- **完成回收**：所有学习者结束后由启动器自动申请本批回收，实际入库和检查通过后清理过程副本及可重建工作树。运维和开发功能实际合入 main/live 后经 `ops/worktree_retention.py complete` 登记完成，由原调度器自动回收；新工作树用 `ops/worktree_checkout.py` 分配，减少历史统计副本。执行与保留边界见 [完成验收与现场回收](docs/learner-retention.md)。不在模型仍运行时删自身工作树，不删除未完成研究或原日志、经验、账本；ops 沿原调度器自动重试，不另派清理模型。
 - **测试**：改了代码（agent/、learner/、eval/、ops/ 下的脚本、knowledge/builders/）的提交，先在 agent/ 里跑 `npx tsc -p tsconfig.json --noEmit` 和 `npx vitest run`，两者都要通过（PATH 里加 `~/.local/node/bin`）。`tsconfig.test.json` 里测试文件原有的 39 个类型错误是历史遗留，不拦提交。只改记录和数据（notes/、paper/、decision-log、复盘、学习台账、生成的论文表）的提交不用跑测试。Codex 沙箱内用 `bash tools/test-sandbox.sh`（内含 tsc；固定排除名单与原因见脚本），自测通过即可合入。经验和修复批次结束后，调度器在沙箱外补跑完整 tsc + vitest；失败写收件箱并发 learner-checks 事件，由运维 codex 决定回滚还是派修复。沙箱限制不当作代码失败。测试只用固定数据。不要 `npm install`，要加依赖先问 Roy。
 - **git**：用本机的全局身份，不设仓库级的 `user.*`；提交信息末尾带 `Co-Authored-By: <引擎> <模型> <noreply@…>`。推送只经 Windows 的 `ssh.exe`，`upstream` 只拉不推。`third_party/` 下的内容不改。
 - **改运维 prompt**（`ops/ops-session*-prompt.md`）之前，先把稿子给 Roy 看。
