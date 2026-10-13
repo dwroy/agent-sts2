@@ -11,7 +11,9 @@ mkdirSync(join(fixture, "logs/console"), { recursive: true });
 mkdirSync(join(fixture, "ops"));
 mkdirSync(join(fixture, "bin"));
 copyFileSync("../ops/stall-check.sh", join(fixture, "ops/stall-check.sh"));
-writeFileSync(join(fixture, "ops/paths.sh"), `ROOT='${fixture}'\nLOGS="$ROOT/logs"\n`);
+copyFileSync("../ops/process_scope.py", join(fixture, "ops/process_scope.py"));
+copyFileSync("../ops/instance_gate.py", join(fixture, "ops/instance_gate.py"));
+writeFileSync(join(fixture, "ops/paths.sh"), `ROOT='${fixture}'\nOPS="$ROOT/ops"\nLIVE="$ROOT/.worktrees/live"\nLOGS="$ROOT/logs"\n`);
 for (const [command, body] of Object.entries({
   date: "printf '1000\\n'",
   pgrep: "exit 1",

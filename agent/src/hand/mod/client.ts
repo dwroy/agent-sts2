@@ -19,6 +19,7 @@ import {
   type Sts2ErrorPayload,
 } from "./schema.js";
 import type { ActionExpect } from "../act/identity.js";
+import { assertInstanceHealth, assertInstanceProfile, type InstanceBinding } from "./instance.js";
 
 /** Body of `POST /action`. Only the fields a given action needs should be set. */
 export interface ActionRequest {
@@ -95,6 +96,7 @@ export interface ModClientOptions {
   baseUrl: string;
   timeoutMs?: number;
   fetchImpl?: typeof fetch;
+  instance?: InstanceBinding | undefined;
 }
 
 interface RequestOptions {
@@ -116,23 +118,29 @@ export class ModClient {
   readonly baseUrl: string;
   private readonly timeoutMs: number;
   private readonly fetchImpl: typeof fetch;
+  private readonly instance: InstanceBinding | null;
 
   constructor(options: ModClientOptions) {
     this.baseUrl = options.baseUrl.replace(/\/+$/, "");
     this.timeoutMs = options.timeoutMs ?? 10_000;
     this.fetchImpl = options.fetchImpl ?? fetch;
+    this.instance = options.instance ?? null;
   }
 
   withBaseUrl(baseUrl: string): ModClient {
-    return new ModClient({ baseUrl, timeoutMs: this.timeoutMs, fetchImpl: this.fetchImpl });
+    return new ModClient({ baseUrl, timeoutMs: this.timeoutMs, fetchImpl: this.fetchImpl, instance: this.instance ?? undefined });
   }
 
-  health(options: { timeoutMs?: number } = {}): Promise<Health> {
-    return this.request("/health", parseHealth, options);
+  async health(options: { timeoutMs?: number } = {}): Promise<Health> {
+    const health = await this.request("/health", parseHealth, options);
+    if (this.instance) assertInstanceHealth(health, this.instance, this.baseUrl);
+    return health;
   }
 
-  state(): Promise<GameState> {
-    return this.request("/state", parseGameState);
+  async state(): Promise<GameState> {
+    const state = await this.request("/state", parseGameState);
+    if (this.instance) assertInstanceProfile(state, this.instance);
+    return state;
   }
 
   availableActions(): Promise<AvailableActions> {
@@ -153,6 +161,12 @@ export class ModClient {
     parse: (data: unknown) => T,
     options: RequestOptions = {},
   ): Promise<T> {
+    // A restarted endpoint must not silently become another lane's game. Check before every request,
+    // and check the saved profile before mutations. Unbound, existing single-instance traffic is unchanged.
+    if (this.instance && path !== "/health") {
+      await this.health({ timeoutMs: options.timeoutMs ?? this.timeoutMs });
+      if (path === "/action" && this.instance.nativeProfileId !== undefined) await this.state();
+    }
     const url = `${this.baseUrl}${path}`;
     const timeoutMs = options.timeoutMs ?? this.timeoutMs;
     const hasBody = options.body !== undefined;

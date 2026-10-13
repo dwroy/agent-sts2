@@ -62,5 +62,5 @@ it("recovers original and resumed segments once with the original report impleme
     child.on("error", reject); child.on("close", (code) => resolve({ code, out }));
   });
   expect(result.code, result.out).toBe(0);
-  expect(result.out).toContain("Ran 7 tests");
+  expect(result.out).toContain("Ran 9 tests");
 });

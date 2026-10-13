@@ -222,7 +222,7 @@ def verify_experience(root, req, report):
     commit = report.get("merged")
     if not isinstance(commit, str) or not re.fullmatch(r"[0-9a-f]{40}", commit):
         raise ValueError("missing actual live source commit")
-    live = Path(root) / ".worktrees/live"
+    live = Path(os.environ.get("STS2_LIVE", str(Path(root) / ".worktrees/live")))
     if subprocess.run(["git", "-C", str(live), "merge-base", "--is-ancestor", commit, "HEAD"],
                       capture_output=True).returncode:
         raise ValueError("source is not in live")
