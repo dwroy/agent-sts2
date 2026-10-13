@@ -1,9 +1,8 @@
-import { execFile } from "node:child_process";
 import { chmodSync, copyFileSync, mkdirSync, mkdtempSync, rmSync, utimesSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { promisify } from "node:util";
-import { afterAll, describe, expect, it } from "vitest";
+import { afterAll, describe, expect, it, vi } from "vitest";
+import { runStallFixture, type StallExecutor } from "./stall-subprocess-fixture.js";
 
 const fixture = mkdtempSync(join(tmpdir(), "stall-fixed-"));
 afterAll(() => rmSync(fixture, { recursive: true, force: true }));
@@ -24,18 +23,13 @@ for (const [command, body] of Object.entries({
   chmodSync(file, 0o755);
 }
 
-const execFileAsync = promisify(execFile);
-
 async function check(consoleLines: string, decisionEpoch: number, consoleEpoch = 990, timeout = 10_000) {
   const console = join(fixture, "logs/console/fixed.log");
   writeFileSync(console, consoleLines + "\n");
   utimesSync(console, consoleEpoch, consoleEpoch);
   writeFileSync(join(fixture, "logs/decisions.jsonl"), JSON.stringify({ ts: new Date(decisionEpoch * 1000).toISOString() }) + "\n");
-  // Allow shell startup to share the host with play, within the suite's 15-second test limit.
-  // Await the child so Vitest can enforce its own deadline as well; execFile rejects failures.
-  const result = await execFileAsync("bash", [join(fixture, "ops/stall-check.sh")], {
-    encoding: "utf8", timeout, env: { ...process.env, PATH: `${fixture}/bin:${process.env.PATH}` },
-  });
+  const result = await runStallFixture(join(fixture, "ops/stall-check.sh"),
+    { ...process.env, PATH: `${fixture}/bin:${process.env.PATH}` }, timeout);
   return result.stdout;
 }
 
@@ -65,21 +59,54 @@ describe("stall check mod request recovery", () => {
     expect(await check("gate rejected 3 times", 990)).toMatch(/^STALL/);
     expect(await check("waiting", 990, 500)).toMatch(/^STALL: .*console silent 500s/);
   });
-  it("checks the real script after shell startup exceeds the former five-second limit", async () => {
-    // Reproduce scheduling delay without changing the fixed decision/console timestamps.
-    await withLauncher('sleep 6\nexec /bin/bash "$@"', async () => {
-      expect(await check(`${failed}\nretry\n${failed}`, 800)).toMatch(/^STALL: .*console reports unreachable/);
-    });
+  it("checks the real script and deterministically verifies startup beyond the former five-second limit", async () => {
+    // Separate the fixed startup deadline contract from host scheduling of the real shell.
+    let now = 0;
+    const clock = vi.spyOn(Date, "now").mockImplementation(() => now);
+    const execute: StallExecutor = async (_command, _args, options) => {
+      now += 6_000;
+      if (options.timeout < 6_000) {
+        throw Object.assign(new Error("fixed startup exceeded deadline"), { killed: true, signal: "SIGTERM" });
+      }
+      return { stdout: "fixed launch complete", stderr: "" };
+    };
+    try {
+      await expect(runStallFixture("fixed-script", {}, undefined, execute)).resolves.toMatchObject({ stdout: "fixed launch complete" });
+      await expect(runStallFixture("fixed-script", {}, 5_000, execute)).rejects.toMatchObject({
+        timeoutMs: 5_000, elapsedMs: 6_000, killed: true, signal: "SIGTERM",
+      });
+    } finally {
+      clock.mockRestore();
+    }
+    expect(await check(`${failed}\nretry\n${failed}`, 800)).toMatch(/^STALL: .*console reports unreachable/);
+  });
+  it("retains exit, signal, stderr and timing evidence in a readable subprocess failure", async () => {
+    let now = 1_000;
+    const clock = vi.spyOn(Date, "now").mockImplementation(() => now);
+    const cause = Object.assign(new Error("fixed child failed"), { code: 9, killed: false, signal: null,
+      stdout: "OK\n", stderr: "fixed diagnostic\n" });
+    const execute: StallExecutor = async () => { now = 7_000; throw cause; };
+    try {
+      await expect(runStallFixture("fixed-script", {}, 10_000, execute)).rejects.toMatchObject({
+        code: 9, signal: null, killed: false, stdout: "OK\n", stderr: "fixed diagnostic\n",
+        timeoutMs: 10_000, elapsedMs: 6_000, cause,
+        message: expect.stringContaining('"stderr":"fixed diagnostic\\n"'),
+      });
+    } finally {
+      clock.mockRestore();
+    }
   });
   it("rejects a failed subprocess even when it prints OK", async () => {
     await withLauncher("printf 'OK\\n'\nexit 9", async () => {
-      await expect(check("waiting", 990)).rejects.toMatchObject({ code: 9, stdout: "OK\n" });
+      await expect(check("waiting", 990)).rejects.toMatchObject({ code: 9, stdout: "OK\n",
+        timeoutMs: 10_000, killed: false, signal: null, message: expect.stringContaining('"code":9') });
     });
   });
   it("still terminates a hung subprocess at the configured deadline", async () => {
     // exec leaves one child PID for execFile to terminate, with no orphaned sleep process.
     await withLauncher("exec sleep 60", async () => {
-      await expect(check("waiting", 990, 990, 100)).rejects.toMatchObject({ killed: true, signal: "SIGTERM" });
+      await expect(check("waiting", 990, 990, 100)).rejects.toMatchObject({ killed: true, signal: "SIGTERM",
+        timeoutMs: 100, message: expect.stringContaining('"killed":true') });
     });
   });
 });
