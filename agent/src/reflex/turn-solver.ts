@@ -1768,7 +1768,8 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
     next.pendingSelection = true;
     next.unknown = [...next.unknown, `${card.name}（重放弃牌未验证）`];
   }
-  const unverifiedBladeDance = card.bladeDance && (plays > 1 || automatic || card.upgraded || card.cardId !== "BLADE_DANCE" || !card.adds);
+  const unverifiedBladeDance = card.bladeDance && (plays > 1 || automatic ||
+    (card.upgraded && card.bladeDanceShivs !== 4) || card.cardId !== "BLADE_DANCE" || !card.adds);
   if (unverifiedBladeDance) {
     next.pendingSelection = true;
     next.unknown = [...next.unknown, `${card.name}（自动、重放、升级或缺资料的生成未验证）`];
@@ -2165,7 +2166,9 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
   // One Monte Carlo sample of a random potion (potion-mc.ts): the cards it really puts in the hand.
   if (card.adds && !next.pendingSelection && (card.discardCount === undefined || hiddenDaggers(card))) {
     const adds = hiddenDaggers(card) || card.bladeDance ? card.adds.map((shiv, i) => ({
-      ...shiv, index: card.bladeDance ? 3_000_000 + next.steps.length * 3 + i : 2_000_000 + next.steps.length * 2 + i,
+      // Four-Shiv casts use their own range; the plain model's identities remain unchanged.
+      ...shiv, index: card.bladeDance ? (card.bladeDanceShivs === 4 ? 4_000_000 + next.steps.length * 4 + i
+        : 3_000_000 + next.steps.length * 3 + i) : 2_000_000 + next.steps.length * 2 + i,
       key: `${card.key}~shiv${next.steps.length}:${i}`,
       validTargets: next.enemies.filter((enemy) => enemy.alive).map((enemy) => enemy.index),
       damage: shiv.damageBase === undefined ? shiv.damage : Math.floor(ourAttackScaled(shiv.damageBase + (player.strengthNow ?? 0), player.weak, false)),
