@@ -117,12 +117,57 @@ class LearnerRetention(unittest.TestCase):
         self.assertEqual(result['retained']['legacy/malformed fixes report retained'], 1)
         self.assertEqual((self.scratch / 'raw-states.jsonl').read_bytes(), self.raw)
 
+    def test_pending_report_data_does_not_consume_reclamation_limit(self):
+        pending = ['20261013-02000' + str(i) + '-strategy-proposal' for i in range(4)]
+        for ident in pending:
+            self.state['batches'][ident] = {'task': 'strategy-proposal'}
+        self.save()
+        original = retention.reclaim
+
+        def retain_pending(root, directory, ident, apply, state):
+            if ident in pending:
+                return {'batch': ident, 'state': 'retained-report'}
+            return original(root, directory, ident, apply, state)
+
+        with patch.object(retention, 'reclaim', side_effect=retain_pending):
+            for apply, expected in [(False, 'eligible'), (True, 'reclaimed')]:
+                result = retention.sweep(self.root, self.directory, apply, 1)
+                self.assertEqual([item['batch'] for item in result['results']], [self.bid])
+                self.assertEqual(result['results'][0]['state'], expected)
+                self.assertEqual(result['retained']['report-only scratch awaits experience ingestion'], 4)
+
     def test_original_thread_even_completed_is_protected(self):
         folder = self.root / 'notes/learning-requests'
         folder.mkdir()
         retention.atomic(folder / 'original.json', {'state': 'completed', 'original_batch': self.bid, 'worktree': str(self.tree)})
         with self.assertRaisesRegex(ValueError, 'original request/thread'):
             self.run_cleanup()
+
+    def test_learner_requests_cleanup_idempotently_and_full_admission_controls_deletion(self):
+        with patch.object(retention, 'kick', return_value='started'):
+            request = retention.request_cleanup(self.root, self.directory, self.bid)
+            path = self.root / request['request']
+            original = path.read_bytes()
+            self.assertEqual(request['state'], 'pending_verification')
+            self.assertEqual(retention.request_cleanup(self.root, self.directory, self.bid)['worker'], 'started')
+            self.assertEqual(path.read_bytes(), original)
+            self.assertTrue((self.tree / '.git').exists())
+            self.log.write_text('unfinished check')
+            retention.sweep(self.root, self.directory, True, 1)
+            self.assertEqual(retention.load(path)['state'], 'deferred')
+            self.assertTrue((self.scratch / 'raw-states.jsonl').exists())
+            self.log.write_text('Test Files 1 passed\n')
+            retention.sweep(self.root, self.directory, True, 1)
+            self.assertEqual(retention.load(path)['state'], 'reclaimed')
+            self.assertFalse((self.tree / '.git').exists())
+
+    def test_unfinished_or_failed_exit_never_requests_self_cleanup(self):
+        for state, rc in [('running', None), ('failed', 1), ('lost', 0)]:
+            self.batch.update(state=state, rc=rc)
+            self.save()
+            with self.assertRaisesRegex(ValueError, 'no recorded successful exit'):
+                retention.request_cleanup(self.root, self.directory, self.bid)
+        self.assertFalse((self.directory / 'retention/requests').exists())
 
     def test_dirty_worktree_unknown_ignored_file_and_other_role_are_retained(self):
         (self.tree / 'README.md').write_text('uncommitted new source')
@@ -191,7 +236,12 @@ class LearnerRetention(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'not entered'):
             self.run_cleanup()
         self.state['batches']['experience'] = {'task': 'experience-update', 'character': 'silent',
-                                              'checks': {'rc': 0, 'merged': self.head}}
+                                              'checks': {'rc': 0, 'merged': self.head, 'log': str(self.log)}}
+        self.log.write_text('check started but no completion summary')
+        self.save()
+        with self.assertRaisesRegex(ValueError, 'not entered'):
+            self.run_cleanup()
+        self.log.write_text('Test Files 1 passed\n')
         self.save()
         self.assertEqual(self.run_cleanup()['state'], 'reclaimed')
         self.assertFalse((self.scratch / 'raw.jsonl').exists())
