@@ -1,0 +1,71 @@
+diff --git a/agent/src/reflex/card-model.ts b/agent/src/reflex/card-model.ts
+index 9ebaa7126..7363950fc 100644
+--- a/agent/src/reflex/card-model.ts
++++ b/agent/src/reflex/card-model.ts
+@@ -1491,7 +1491,7 @@ const POTION_EFFECTS: Record<string, Partial<CardModel> & { target: TargetMode }
+ /**
+  * The card a card potion adds (「从3张随机攻击牌中选择1张加入你的手牌。这张牌在本回合可以免费打出。」): a 0-cost
+  * card of that type, at a conservative value for the best of three offered. Since the Monte Carlo
+- * (potion-mc.ts, Roy 2026-09-28) this turn's option never uses it: only the rollout's later turns (the
++ * (potion-mc.ts, Dai 2026-09-28) this turn's option never uses it: only the rollout's later turns (the
+  * potions still held, at their expected value) and the solver-level tests do. Ironclad's pool (game
+  * data, 36 attacks / 30 skills): best-of-3 total damage ~17-18.6, best-of-3 block ~8.3; picks logged
+  * (selection/take into my hand): Bludgeon 32 (X8R8 F17 T11), Uppercut 13, Fight Me 10x2, Demon Form
+@@ -1845,7 +1845,7 @@ export function potionEffect(potionId: string): (Partial<CardModel> & { target:
+ }
+ 
+ /**
+- * Random potions (Roy 2026-09-28): simulated by Monte Carlo every turn (potion-mc.ts) and offered to Jev as
++ * Random potions (Dai 2026-09-28): simulated by Monte Carlo every turn (potion-mc.ts) and offered to Jev as
+  * "drink now, then re-plan with the real cards", never as a fixed-value line.
+  *
+  * Card-choice potions: 「从3张随机攻击牌中选择1张加入你的手牌。这张牌在本回合可以免费打出。」 3 random cards of the
+diff --git a/agent/src/reflex/turn-solver.ts b/agent/src/reflex/turn-solver.ts
+index 54cff396f..f44cdcc64 100644
+--- a/agent/src/reflex/turn-solver.ts
++++ b/agent/src/reflex/turn-solver.ts
+@@ -2896,7 +2896,7 @@ export const CONCENTRATION_BONUS = 0.15;
+ export const FOCUS_BONUS = 0.5;
+ /**
+  * Share of damage into a surviving minion that counts while its summoner lives (it leaves with it).
+- * Kept (Roy 2026-09-28 review) for what the score still decides: code's own lines (lethal among lethal
++ * Kept (Dai 2026-09-28 review) for what the score still decides: code's own lines (lethal among lethal
+  * lines, the dominance and HP-guard picks, the fallback) and the rollout's own later turns, where it is
+  * the QE4K rule (turn-solver.test "chips the summoner"). It no longer decides what Jev sees: every kind of
+  * enemy has its own "focus" option (combat-plan.ts focusLines) and every shown line is rolled out under
+@@ -3360,7 +3360,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
+   // Rocket's Laser after Charge Up, the Torch Head's Beam). HP lost now that leaves us below what the next hit takes
+   // through a fresh hand's block is HP the next turn cannot spare, as the Giant's eruption rule below counts it.
+   if (input.nextHit && !winsFight && !dies && hpLoss > 0) score -= weights.hp * input.nextHit.weight * nextHitShortfall(input.nextHit, living, hpAfter, hpLoss);
+-  // A potion drunk is HP paid later (potion-cost.ts, Roy 2026-09-30): its held value, at the HP weight. Until batch K a
++  // A potion drunk is HP paid later (potion-cost.ts, Dai 2026-09-30): its held value, at the HP weight. Until batch K a
+   // hallway potion's lasting part counted 25% (a guessed number); since then potions were free; now the table's value.
+   score -= weights.hp * sim.potionCost;
+   // A Wither stays in the deck and comes back bigger (+3 each Increasing Intensity): price one more
+diff --git a/agent/src/sl/explore.ts b/agent/src/sl/explore.ts
+index 72054748b..ddaacde8e 100644
+--- a/agent/src/sl/explore.ts
++++ b/agent/src/sl/explore.ts
+@@ -1,5 +1,5 @@
+ /**
+- * SL_RETRY_EXPLORE (docs/sl.md §11, Roy 2026-10-02: "retries must try different play"): a retried fight's attempts 3 and
++ * SL_RETRY_EXPLORE (docs/sl.md §11, Dai 2026-10-02: "retries must try different play"): a retried fight's attempts 3 and
+  * later change the line at one decision point of the failed attempts, so that a retry does not replay the death.
+  *
+  * Why (A9, 2026-10-02): with the known draws (§10) the same board gives the same rollout (its seed is the board's, not the
+@@ -316,13 +316,13 @@ export interface SlExploreEnv {
+     fallback?: { point: string; excluded: string[]; attempts: number[]; tried?: SlTried };
+   };
+   /**
+-   * SL_RETRY_EXPLORE_B2 (Roy 2026-10-02): on a boss B2 is trusted on, B2's win rate is the gate ("not worse than the line
++   * SL_RETRY_EXPLORE_B2 (Dai 2026-10-02): on a boss B2 is trusted on, B2's win rate is the gate ("not worse than the line
+    * replaced": ExploreB2.notWorse) instead of the rollout's share of samples dead, in the replacement and the record (the
+    * deviation point is still chosen by the rollout's: exploreTarget).
+    */
+   b2Gate?: boolean;
+   /**
+-   * SL_RETRY_EXPLORE_BOSS_POTIONS (Roy 2026-10-02): in a boss fight a line drinking a potion the line replaced does not is an
++   * SL_RETRY_EXPLORE_BOSS_POTIONS (Dai 2026-10-02): in a boss fight a line drinking a potion the line replaced does not is an
+    * alternative too (potions cost 0 there, and the line replaced is known to lose): the shown potion lines and the random
+    * potions' Monte Carlo lines. Out of a boss fight never (a listed elite's potion costs HP-equivalents).
+    */

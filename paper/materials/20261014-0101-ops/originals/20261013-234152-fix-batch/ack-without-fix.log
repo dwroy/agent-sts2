@@ -1,0 +1,163 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-234152/agent
+
+ ❯ tests/ordinary-notice-ack.test.ts (1 test | 1 failed) 245ms
+   × acknowledges verified ordinary notices without inventing a learning parent and rejects invalid proofs before writes 244ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/ordinary-notice-ack.test.ts > acknowledges verified ordinary notices without inventing a learning parent and rejects invalid proofs before writes
+AssertionError: ..usage: flow [-h] [--batch BATCH] [--notice NOTICE]
+            [--stage {ops_forwarded,watcher_received,roy_notified}]
+            [--request REQUEST] [--receipt RECEIPT]
+            {run,ack,retry}
+flow: error: previous delivery stage has no receipt
+usage: flow [-h] [--batch BATCH] [--notice NOTICE]
+            [--stage {ops_forwarded,watcher_received,roy_notified}]
+            [--request REQUEST] [--receipt RECEIPT]
+            {run,ack,retry}
+flow: error: ordinary notice source identity or SHA mismatch
+Eusage: flow [-h] [--batch BATCH] [--notice NOTICE]
+            [--stage {ops_forwarded,watcher_received,roy_notified}]
+            [--request REQUEST] [--receipt RECEIPT]
+            {run,ack,retry}
+flow: error: previous delivery stage has no receipt
+usage: flow [-h] [--batch BATCH] [--notice NOTICE]
+            [--stage {ops_forwarded,watcher_received,roy_notified}]
+            [--request REQUEST] [--receipt RECEIPT]
+            {run,ack,retry}
+flow: error: ordinary notice source identity or SHA mismatch
+usage: flow [-h] [--batch BATCH] [--notice NOTICE]
+            [--stage {ops_forwarded,watcher_received,roy_notified}]
+            [--request REQUEST] [--receipt RECEIPT]
+            {run,ack,retry}
+flow: error: ordinary notice source identity or SHA mismatch
+usage: flow [-h] [--batch BATCH] [--notice NOTICE]
+            [--stage {ops_forwarded,watcher_received,roy_notified}]
+            [--request REQUEST] [--receipt RECEIPT]
+            {run,ack,retry}
+flow: error: ordinary notice source identity or SHA mismatch
+usage: flow [-h] [--batch BATCH] [--notice NOTICE]
+            [--stage {ops_forwarded,watcher_received,roy_notified}]
+            [--request REQUEST] [--receipt RECEIPT]
+            {run,ack,retry}
+flow: error: ordinary notice source identity or SHA mismatch
+usage: flow [-h] [--batch BATCH] [--notice NOTICE]
+            [--stage {ops_forwarded,watcher_received,roy_notified}]
+            [--request REQUEST] [--receipt RECEIPT]
+            {run,ack,retry}
+flow: error: ordinary notice source identity or SHA mismatch
+usage: flow [-h] [--batch BATCH] [--notice NOTICE]
+            [--stage {ops_forwarded,watcher_received,roy_notified}]
+            [--request REQUEST] [--receipt RECEIPT]
+            {run,ack,retry}
+flow: error: ordinary notice source identity or SHA mismatch
+usage: flow [-h] [--batch BATCH] [--notice NOTICE]
+            [--stage {ops_forwarded,watcher_received,roy_notified}]
+            [--request REQUEST] [--receipt RECEIPT]
+            {run,ack,retry}
+flow: error: ordinary notice source identity or SHA mismatch
+usage: flow [-h] [--batch BATCH] [--notice NOTICE]
+            [--stage {ops_forwarded,watcher_received,roy_notified}]
+            [--request REQUEST] [--receipt RECEIPT]
+            {run,ack,retry}
+flow: error: unknown learning request; ordinary notification scope must be explicit
+usage: flow [-h] [--batch BATCH] [--notice NOTICE]
+            [--stage {ops_forwarded,watcher_received,roy_notified}]
+            [--request REQUEST] [--receipt RECEIPT]
+            {run,ack,retry}
+flow: error: unknown proposal or mismatched character/proposal SHA
+usage: flow [-h] [--batch BATCH] [--notice NOTICE]
+            [--stage {ops_forwarded,watcher_received,roy_notified}]
+            [--request REQUEST] [--receipt RECEIPT]
+            {run,ack,retry}
+flow: error: ordinary notice source identity or SHA mismatch
+usage: flow [-h] [--batch BATCH] [--notice NOTICE]
+            [--stage {ops_forwarded,watcher_received,roy_notified}]
+            [--request REQUEST] [--receipt RECEIPT]
+            {run,ack,retry}
+flow: error: unknown proposal or mismatched character/proposal SHA
+usage: flow [-h] [--batch BATCH] [--notice NOTICE]
+            [--stage {ops_forwarded,watcher_received,roy_notified}]
+            [--request REQUEST] [--receipt RECEIPT]
+            {run,ack,retry}
+flow: error: unknown proposal or mismatched character/proposal SHA
+.usage: flow [-h] [--batch BATCH] [--notice NOTICE]
+            [--stage {ops_forwarded,watcher_received,roy_notified}]
+            [--request REQUEST] [--receipt RECEIPT]
+            {run,ack,retry}
+flow: error: receipt must identify the notice, delivery stage, responsible actor and delivered status
+usage: flow [-h] [--batch BATCH] [--notice NOTICE]
+            [--stage {ops_forwarded,watcher_received,roy_notified}]
+            [--request REQUEST] [--receipt RECEIPT]
+            {run,ack,retry}
+flow: error: unknown proposal or mismatched character/proposal SHA
+usage: flow [-h] [--batch BATCH] [--notice NOTICE]
+            [--stage {ops_forwarded,watcher_received,roy_notified}]
+            [--request REQUEST] [--receipt RECEIPT]
+            {run,ack,retry}
+flow: error: previous delivery stage has no receipt
+usage: flow [-h] [--batch BATCH] [--notice NOTICE]
+            [--stage {ops_forwarded,watcher_received,roy_notified}]
+            [--request REQUEST] [--receipt RECEIPT]
+            {run,ack,retry}
+flow: error: frozen artifact SHA mismatch: /home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-234152/learner/runs/20261013-234208-fix-batch/tmp69rfzbgd/source.json
+.
+======================================================================
+ERROR: test_second_strategy_slot_preserves_batch_identity_and_delivery_guards (__main__.OrdinaryNoticeAck.test_second_strategy_slot_preserves_batch_identity_and_delivery_guards) (batch='20261013-224302-s2-strategy-proposal')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-234152/ops/learning_requests.py", line 466, in main
+    rec = ack_request(root, state, notice, payload)
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-234152/ops/learning_requests.py", line 70, in ack_request
+    raise ValueError("ordinary notice source identity or SHA mismatch")
+ValueError: ordinary notice source identity or SHA mismatch
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-234152/agent/../ops/tests/test_ordinary_notice_ack.py", line 110, in test_second_strategy_slot_preserves_batch_identity_and_delivery_guards
+    self.assertEqual(self.ack(stage), 0)
+                     ~~~~~~~~^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-234152/agent/../ops/tests/test_ordinary_notice_ack.py", line 60, in ack
+    return flow.main()
+           ~~~~~~~~~^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-234152/ops/learning_requests.py", line 482, in main
+    parser.error(str(error))
+    ~~~~~~~~~~~~^^^^^^^^^^^^
+  File "/usr/lib/python3.14/argparse.py", line 2797, in error
+    self.exit(2, _('%(prog)s: error: %(message)s\n') % args)
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/argparse.py", line 2784, in exit
+    _sys.exit(status)
+    ~~~~~~~~~^^^^^^^^
+SystemExit: 2
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.099s
+
+FAILED (errors=1)
+: expected 1 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 1
+
+ ❯ tests/ordinary-notice-ack.test.ts:8:56
+      6|     encoding: "utf8", timeout: 15_000,
+      7|   });
+      8|   expect(result.status, result.stdout + result.stderr).toBe(0);
+       |                                                        ^
+      9|   expect(result.stderr).toContain("Ran 5 tests");
+     10| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed (1)
+   Start at  23:48:41
+   Duration  829ms (transform 359ms, setup 421ms, import 11ms, tests 245ms, environment 0ms)
+

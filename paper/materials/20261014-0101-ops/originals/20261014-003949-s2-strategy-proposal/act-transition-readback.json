@@ -1,0 +1,615 @@
+{
+  "method": "从act_id改变帧追到该次转幕第一实际HP/maxHP变化；不将未回血的过渡帧判为公式反例。",
+  "pairs": [
+    {
+      "run": "HMVJKM56S4Q8",
+      "ascension": 9,
+      "from_act": "0",
+      "to_act": "1",
+      "floor_before": 17,
+      "floor_after": 17,
+      "hp_before": 43,
+      "hp_after": 70,
+      "max_hp_before": 77,
+      "max_hp_after": 77,
+      "actual_heal": 27,
+      "expected_missing_hp_80_percent": 27,
+      "same_max_hp": true,
+      "matches": true,
+      "before_ts": "2026-10-05T18:59:44.805Z",
+      "after_ts": "2026-10-05T18:59:46.145Z",
+      "frames_followed": 1,
+      "observations": [
+        {
+          "ts": "2026-10-05T18:59:46.145Z",
+          "screen": "MAP",
+          "floor": 17,
+          "act": "1",
+          "hp": 43,
+          "max_hp": 77
+        },
+        {
+          "ts": "2026-10-05T19:00:21.587Z",
+          "screen": "EVENT",
+          "floor": 18,
+          "act": "1",
+          "hp": 70,
+          "max_hp": 77
+        }
+      ],
+      "heal_completed_ts": "2026-10-05T19:00:21.587Z"
+    },
+    {
+      "run": "F4QKG4J1AJJZ",
+      "ascension": 9,
+      "from_act": "0",
+      "to_act": "1",
+      "floor_before": 17,
+      "floor_after": 17,
+      "hp_before": 1,
+      "hp_after": 56,
+      "max_hp_before": 70,
+      "max_hp_after": 70,
+      "actual_heal": 55,
+      "expected_missing_hp_80_percent": 55,
+      "same_max_hp": true,
+      "matches": true,
+      "before_ts": "2026-10-05T19:35:56.810Z",
+      "after_ts": "2026-10-05T19:35:58.070Z",
+      "frames_followed": 1,
+      "observations": [
+        {
+          "ts": "2026-10-05T19:35:58.070Z",
+          "screen": "MAP",
+          "floor": 17,
+          "act": "1",
+          "hp": 1,
+          "max_hp": 70
+        },
+        {
+          "ts": "2026-10-05T19:36:45.324Z",
+          "screen": "EVENT",
+          "floor": 18,
+          "act": "1",
+          "hp": 56,
+          "max_hp": 70
+        }
+      ],
+      "heal_completed_ts": "2026-10-05T19:36:45.324Z"
+    },
+    {
+      "run": "F4QKG4J1AJJZ",
+      "ascension": 9,
+      "from_act": "1",
+      "to_act": "2",
+      "floor_before": 33,
+      "floor_after": 33,
+      "hp_before": 2,
+      "hp_after": 56,
+      "max_hp_before": 70,
+      "max_hp_after": 70,
+      "actual_heal": 54,
+      "expected_missing_hp_80_percent": 54,
+      "same_max_hp": true,
+      "matches": true,
+      "before_ts": "2026-10-05T19:59:25.584Z",
+      "after_ts": "2026-10-05T19:59:26.924Z",
+      "frames_followed": 1,
+      "observations": [
+        {
+          "ts": "2026-10-05T19:59:26.924Z",
+          "screen": "MAP",
+          "floor": 33,
+          "act": "2",
+          "hp": 2,
+          "max_hp": 70
+        },
+        {
+          "ts": "2026-10-05T20:00:01.569Z",
+          "screen": "EVENT",
+          "floor": 34,
+          "act": "2",
+          "hp": 56,
+          "max_hp": 70
+        }
+      ],
+      "heal_completed_ts": "2026-10-05T20:00:01.569Z"
+    },
+    {
+      "run": "G403VCZ3BH1B",
+      "ascension": 9,
+      "from_act": "0",
+      "to_act": "1",
+      "floor_before": 17,
+      "floor_after": 17,
+      "hp_before": 2,
+      "hp_after": 56,
+      "max_hp_before": 70,
+      "max_hp_after": 70,
+      "actual_heal": 54,
+      "expected_missing_hp_80_percent": 54,
+      "same_max_hp": true,
+      "matches": true,
+      "before_ts": "2026-10-05T20:21:05.507Z",
+      "after_ts": "2026-10-05T20:21:06.954Z",
+      "frames_followed": 1,
+      "observations": [
+        {
+          "ts": "2026-10-05T20:21:06.954Z",
+          "screen": "MAP",
+          "floor": 17,
+          "act": "1",
+          "hp": 2,
+          "max_hp": 70
+        },
+        {
+          "ts": "2026-10-05T20:21:39.140Z",
+          "screen": "EVENT",
+          "floor": 18,
+          "act": "1",
+          "hp": 56,
+          "max_hp": 70
+        }
+      ],
+      "heal_completed_ts": "2026-10-05T20:21:39.140Z"
+    },
+    {
+      "run": "G403VCZ3BH1B",
+      "ascension": 9,
+      "from_act": "1",
+      "to_act": "2",
+      "floor_before": 33,
+      "floor_after": 33,
+      "hp_before": 17,
+      "hp_after": 59,
+      "max_hp_before": 70,
+      "max_hp_after": 70,
+      "actual_heal": 42,
+      "expected_missing_hp_80_percent": 42,
+      "same_max_hp": true,
+      "matches": true,
+      "before_ts": "2026-10-05T20:35:51.961Z",
+      "after_ts": "2026-10-05T20:35:53.399Z",
+      "frames_followed": 1,
+      "observations": [
+        {
+          "ts": "2026-10-05T20:35:53.399Z",
+          "screen": "MAP",
+          "floor": 33,
+          "act": "2",
+          "hp": 17,
+          "max_hp": 70
+        },
+        {
+          "ts": "2026-10-05T20:36:20.641Z",
+          "screen": "EVENT",
+          "floor": 34,
+          "act": "2",
+          "hp": 59,
+          "max_hp": 70
+        }
+      ],
+      "heal_completed_ts": "2026-10-05T20:36:20.641Z"
+    },
+    {
+      "run": "25226ZFLNR1J",
+      "ascension": 10,
+      "from_act": "0",
+      "to_act": "1",
+      "floor_before": 17,
+      "floor_after": 17,
+      "hp_before": 22,
+      "hp_after": 60,
+      "max_hp_before": 70,
+      "max_hp_after": 70,
+      "actual_heal": 38,
+      "expected_missing_hp_80_percent": 38,
+      "same_max_hp": true,
+      "matches": true,
+      "before_ts": "2026-10-05T21:29:19.421Z",
+      "after_ts": "2026-10-05T21:29:20.765Z",
+      "frames_followed": 1,
+      "observations": [
+        {
+          "ts": "2026-10-05T21:29:20.765Z",
+          "screen": "MAP",
+          "floor": 17,
+          "act": "1",
+          "hp": 22,
+          "max_hp": 70
+        },
+        {
+          "ts": "2026-10-05T21:29:52.015Z",
+          "screen": "EVENT",
+          "floor": 18,
+          "act": "1",
+          "hp": 60,
+          "max_hp": 70
+        }
+      ],
+      "heal_completed_ts": "2026-10-05T21:29:52.015Z"
+    },
+    {
+      "run": "25226ZFLNR1J",
+      "ascension": 10,
+      "from_act": "1",
+      "to_act": "2",
+      "floor_before": 33,
+      "floor_after": 33,
+      "hp_before": 1,
+      "hp_after": 56,
+      "max_hp_before": 70,
+      "max_hp_after": 70,
+      "actual_heal": 55,
+      "expected_missing_hp_80_percent": 55,
+      "same_max_hp": true,
+      "matches": true,
+      "before_ts": "2026-10-05T21:40:55.845Z",
+      "after_ts": "2026-10-05T21:40:57.223Z",
+      "frames_followed": 1,
+      "observations": [
+        {
+          "ts": "2026-10-05T21:40:57.223Z",
+          "screen": "MAP",
+          "floor": 33,
+          "act": "2",
+          "hp": 1,
+          "max_hp": 70
+        },
+        {
+          "ts": "2026-10-05T21:41:30.089Z",
+          "screen": "EVENT",
+          "floor": 34,
+          "act": "2",
+          "hp": 56,
+          "max_hp": 70
+        }
+      ],
+      "heal_completed_ts": "2026-10-05T21:41:30.089Z"
+    },
+    {
+      "run": "JLN5SK17W4FQ",
+      "ascension": 10,
+      "from_act": "0",
+      "to_act": "1",
+      "floor_before": 17,
+      "floor_after": 17,
+      "hp_before": 14,
+      "hp_after": 58,
+      "max_hp_before": 70,
+      "max_hp_after": 70,
+      "actual_heal": 44,
+      "expected_missing_hp_80_percent": 44,
+      "same_max_hp": true,
+      "matches": true,
+      "before_ts": "2026-10-05T22:19:07.156Z",
+      "after_ts": "2026-10-05T22:19:08.492Z",
+      "frames_followed": 1,
+      "observations": [
+        {
+          "ts": "2026-10-05T22:19:08.492Z",
+          "screen": "MAP",
+          "floor": 17,
+          "act": "1",
+          "hp": 14,
+          "max_hp": 70
+        },
+        {
+          "ts": "2026-10-05T22:19:30.928Z",
+          "screen": "EVENT",
+          "floor": 18,
+          "act": "1",
+          "hp": 58,
+          "max_hp": 70
+        }
+      ],
+      "heal_completed_ts": "2026-10-05T22:19:30.928Z"
+    },
+    {
+      "run": "JMH5C51RLN4E",
+      "ascension": 10,
+      "from_act": "0",
+      "to_act": "1",
+      "floor_before": 17,
+      "floor_after": 17,
+      "hp_before": 46,
+      "hp_after": 65,
+      "max_hp_before": 70,
+      "max_hp_after": 70,
+      "actual_heal": 19,
+      "expected_missing_hp_80_percent": 19,
+      "same_max_hp": true,
+      "matches": true,
+      "before_ts": "2026-10-05T23:14:31.083Z",
+      "after_ts": "2026-10-05T23:14:32.409Z",
+      "frames_followed": 1,
+      "observations": [
+        {
+          "ts": "2026-10-05T23:14:32.409Z",
+          "screen": "MAP",
+          "floor": 17,
+          "act": "1",
+          "hp": 46,
+          "max_hp": 70
+        },
+        {
+          "ts": "2026-10-05T23:15:12.816Z",
+          "screen": "EVENT",
+          "floor": 18,
+          "act": "1",
+          "hp": 65,
+          "max_hp": 70
+        }
+      ],
+      "heal_completed_ts": "2026-10-05T23:15:12.816Z"
+    },
+    {
+      "run": "JMH5C51RLN4E",
+      "ascension": 10,
+      "from_act": "1",
+      "to_act": "2",
+      "floor_before": 33,
+      "floor_after": 33,
+      "hp_before": 49,
+      "hp_after": 65,
+      "max_hp_before": 70,
+      "max_hp_after": 70,
+      "actual_heal": 16,
+      "expected_missing_hp_80_percent": 16,
+      "same_max_hp": true,
+      "matches": true,
+      "before_ts": "2026-10-05T23:30:25.244Z",
+      "after_ts": "2026-10-05T23:30:26.596Z",
+      "frames_followed": 1,
+      "observations": [
+        {
+          "ts": "2026-10-05T23:30:26.596Z",
+          "screen": "MAP",
+          "floor": 33,
+          "act": "2",
+          "hp": 49,
+          "max_hp": 70
+        },
+        {
+          "ts": "2026-10-05T23:31:02.054Z",
+          "screen": "EVENT",
+          "floor": 34,
+          "act": "2",
+          "hp": 65,
+          "max_hp": 70
+        }
+      ],
+      "heal_completed_ts": "2026-10-05T23:31:02.054Z"
+    },
+    {
+      "run": "9TG1RP5LFAAK",
+      "ascension": 10,
+      "from_act": "0",
+      "to_act": "1",
+      "floor_before": 17,
+      "floor_after": 17,
+      "hp_before": 28,
+      "hp_after": 61,
+      "max_hp_before": 70,
+      "max_hp_after": 70,
+      "actual_heal": 33,
+      "expected_missing_hp_80_percent": 33,
+      "same_max_hp": true,
+      "matches": true,
+      "before_ts": "2026-10-06T00:09:06.326Z",
+      "after_ts": "2026-10-06T00:09:07.634Z",
+      "frames_followed": 1,
+      "observations": [
+        {
+          "ts": "2026-10-06T00:09:07.634Z",
+          "screen": "MAP",
+          "floor": 17,
+          "act": "1",
+          "hp": 28,
+          "max_hp": 70
+        },
+        {
+          "ts": "2026-10-06T00:09:27.830Z",
+          "screen": "EVENT",
+          "floor": 18,
+          "act": "1",
+          "hp": 61,
+          "max_hp": 70
+        }
+      ],
+      "heal_completed_ts": "2026-10-06T00:09:27.830Z"
+    },
+    {
+      "run": "9TG1RP5LFAAK",
+      "ascension": 10,
+      "from_act": "1",
+      "to_act": "2",
+      "floor_before": 33,
+      "floor_after": 33,
+      "hp_before": 28,
+      "hp_after": 61,
+      "max_hp_before": 70,
+      "max_hp_after": 70,
+      "actual_heal": 33,
+      "expected_missing_hp_80_percent": 33,
+      "same_max_hp": true,
+      "matches": true,
+      "before_ts": "2026-10-06T00:24:45.605Z",
+      "after_ts": "2026-10-06T00:24:46.936Z",
+      "frames_followed": 1,
+      "observations": [
+        {
+          "ts": "2026-10-06T00:24:46.936Z",
+          "screen": "MAP",
+          "floor": 33,
+          "act": "2",
+          "hp": 28,
+          "max_hp": 70
+        },
+        {
+          "ts": "2026-10-06T00:25:26.138Z",
+          "screen": "EVENT",
+          "floor": 34,
+          "act": "2",
+          "hp": 61,
+          "max_hp": 70
+        }
+      ],
+      "heal_completed_ts": "2026-10-06T00:25:26.138Z"
+    },
+    {
+      "run": "JQPT83P8KDSZ",
+      "ascension": 10,
+      "from_act": "0",
+      "to_act": "1",
+      "floor_before": 17,
+      "floor_after": 17,
+      "hp_before": 1,
+      "hp_after": 56,
+      "max_hp_before": 70,
+      "max_hp_after": 70,
+      "actual_heal": 55,
+      "expected_missing_hp_80_percent": 55,
+      "same_max_hp": true,
+      "matches": true,
+      "before_ts": "2026-10-06T01:03:53.343Z",
+      "after_ts": "2026-10-06T01:03:54.646Z",
+      "frames_followed": 1,
+      "observations": [
+        {
+          "ts": "2026-10-06T01:03:54.646Z",
+          "screen": "MAP",
+          "floor": 17,
+          "act": "1",
+          "hp": 1,
+          "max_hp": 70
+        },
+        {
+          "ts": "2026-10-06T01:04:23.009Z",
+          "screen": "EVENT",
+          "floor": 18,
+          "act": "1",
+          "hp": 56,
+          "max_hp": 70
+        }
+      ],
+      "heal_completed_ts": "2026-10-06T01:04:23.009Z"
+    },
+    {
+      "run": "S9UZAK0JP0C0",
+      "ascension": 10,
+      "from_act": "0",
+      "to_act": "1",
+      "floor_before": 17,
+      "floor_after": 17,
+      "hp_before": 29,
+      "hp_after": 84,
+      "max_hp_before": 98,
+      "max_hp_after": 98,
+      "actual_heal": 55,
+      "expected_missing_hp_80_percent": 55,
+      "same_max_hp": true,
+      "matches": true,
+      "before_ts": "2026-10-06T03:11:20.190Z",
+      "after_ts": "2026-10-06T03:11:21.502Z",
+      "frames_followed": 1,
+      "observations": [
+        {
+          "ts": "2026-10-06T03:11:21.502Z",
+          "screen": "MAP",
+          "floor": 17,
+          "act": "1",
+          "hp": 29,
+          "max_hp": 98
+        },
+        {
+          "ts": "2026-10-06T03:11:42.900Z",
+          "screen": "EVENT",
+          "floor": 18,
+          "act": "1",
+          "hp": 84,
+          "max_hp": 98
+        }
+      ],
+      "heal_completed_ts": "2026-10-06T03:11:42.900Z"
+    },
+    {
+      "run": "9Z9H2EXKLF3T",
+      "ascension": 10,
+      "from_act": "0",
+      "to_act": "1",
+      "floor_before": 17,
+      "floor_after": 17,
+      "hp_before": 24,
+      "hp_after": 60,
+      "max_hp_before": 70,
+      "max_hp_after": 70,
+      "actual_heal": 36,
+      "expected_missing_hp_80_percent": 36,
+      "same_max_hp": true,
+      "matches": true,
+      "before_ts": "2026-10-07T19:22:58.924Z",
+      "after_ts": "2026-10-07T19:23:00.300Z",
+      "frames_followed": 1,
+      "observations": [
+        {
+          "ts": "2026-10-07T19:23:00.300Z",
+          "screen": "MAP",
+          "floor": 17,
+          "act": "1",
+          "hp": 24,
+          "max_hp": 70
+        },
+        {
+          "ts": "2026-10-07T19:23:22.300Z",
+          "screen": "EVENT",
+          "floor": 18,
+          "act": "1",
+          "hp": 60,
+          "max_hp": 70
+        }
+      ],
+      "heal_completed_ts": "2026-10-07T19:23:22.300Z"
+    },
+    {
+      "run": "9Z9H2EXKLF3T",
+      "ascension": 10,
+      "from_act": "1",
+      "to_act": "2",
+      "floor_before": 33,
+      "floor_after": 33,
+      "hp_before": 23,
+      "hp_after": 66,
+      "max_hp_before": 77,
+      "max_hp_after": 77,
+      "actual_heal": 43,
+      "expected_missing_hp_80_percent": 43,
+      "same_max_hp": true,
+      "matches": true,
+      "before_ts": "2026-10-07T19:37:52.814Z",
+      "after_ts": "2026-10-07T19:37:54.197Z",
+      "frames_followed": 1,
+      "observations": [
+        {
+          "ts": "2026-10-07T19:37:54.197Z",
+          "screen": "MAP",
+          "floor": 33,
+          "act": "2",
+          "hp": 23,
+          "max_hp": 77
+        },
+        {
+          "ts": "2026-10-07T19:38:18.250Z",
+          "screen": "EVENT",
+          "floor": 34,
+          "act": "2",
+          "hp": 66,
+          "max_hp": 77
+        }
+      ],
+      "heal_completed_ts": "2026-10-07T19:38:18.250Z"
+    }
+  ],
+  "unresolved": [],
+  "excluded": []
+}

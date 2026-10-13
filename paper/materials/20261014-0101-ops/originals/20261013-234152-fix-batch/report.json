@@ -1,0 +1,65 @@
+{
+  "task": "fix-batch",
+  "base": "b6cfca865bd7183f16f883fe073cec1ea87f9813",
+  "fixes": [
+    {
+      "item": "第二策略槽真实批号的普通通知ACK校验",
+      "commit": "15eb85e2934e428c5e299fc4a1aba456d92fd685",
+      "test": "agent/tests/ordinary-notice-ack.test.ts",
+      "fails_without_fix": true
+    },
+    {
+      "item": "DPR健康统计区分明确不支持/采样失败/候选DPR丢失",
+      "commit": "9e6dd82a34fb8c14e012be68fd0b632544f1459f",
+      "test": "agent/tests/module-health.test.ts",
+      "fails_without_fix": true
+    }
+  ],
+  "skipped": [
+    {
+      "item": "V5 DPR执行性能",
+      "reason": "证据不足：冻结六探针/39原题仍有21不足300、1零配对；只有分类子项完成，未定位可修执行根因，原300/1000/11000/24保持。"
+    },
+    {
+      "item": "sandbox-glob-startup-race 上游目录生命周期",
+      "reason": "证据不足：已有会话前恢复/租约源码已修，本轮工具仍遇并行目录ENOENT；归属未证，不扩大沙箱或凭据权限。"
+    },
+    {
+      "item": "core-build-notify-222802-rc2 原历史通知恢复",
+      "reason": "证据不足：新失败诊断/幂等已修；旧rc2无stderr，未证明未发送，不重投。"
+    },
+    {
+      "item": "mod单次超时、Codex缓存实测",
+      "reason": "证据不足：需服务端/受控在线取证，本批离线，不调用LLM或网络。"
+    },
+    {
+      "item": "未闭环出牌/药水/SL/终局/路线及双boss接续提案",
+      "reason": "策略类：逐项原ID/处置见queue-dispositions.json和audit.json；沿既有strategy-proposal链，不因限定实现关闭宽项、不重复派发。"
+    },
+    {
+      "item": "rest-timeout-accepted-route-not-committed",
+      "reason": "策略类/structure专用：原silent-proposal-2d3aa8dfb27dbe3f保留，不混入普通纯bug批。"
+    },
+    {
+      "item": "arch-funnel-guard / arch-learning-priority / arch-unified-resource-value / inv-f33-regression",
+      "reason": "太大/策略类：原独立功能和归因任务保留。"
+    },
+    {
+      "item": "named-card-facts-transport 其他入口/P1/P2、boss校准",
+      "reason": "太大/策略类：已有事件资料子项/校准入口保留，其他父范围沿原拥有者。"
+    },
+    {
+      "item": "调度公平性/旧包装器收尾归因",
+      "reason": "证据不足：定向宿主续验入口已修，原观察未证明永久饥饿；不改原队列/并发或恢复未知历史动作。"
+    }
+  ],
+  "merged": null,
+  "tests": {
+    "tsc": 0,
+    "vitest": 0,
+    "cases": 3578
+  },
+  "code_proposals": [],
+  "implementation_domains": [],
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-234152/learner/runs/20261013-234208-fix-batch/report.md"
+}

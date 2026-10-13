@@ -1,0 +1,222 @@
+[
+  {
+    "path": "agent/src/reflex/rollout-live.ts",
+    "sha256": "c51264c418dc10b94e7de5bf03ee1c8756d6d777e96c834953912f5970bb265b",
+    "matches": [
+      {
+        "line": 803,
+        "text": "  const reattaching = (e: Record<string, unknown>) => asc === 10 &&"
+      },
+      {
+        "line": 813,
+        "text": "        ...(reattaching(e) ? { reattachIn: Object.keys(powers).some((id) => id !== \"REATTACH_POWER\") ? null :"
+      },
+      {
+        "line": 831,
+        "text": "      ...(reattaching(e) ? { reattach: true, reattachHp: powersOf(e)[\"REATTACH_POWER\"] } : { illusion: true }),"
+      }
+    ]
+  },
+  {
+    "path": "agent/src/reflex/rollout.ts",
+    "sha256": "28415d72ab06e49376a4c703928365cea1f80881c2aefb9889bcf9dda152ae69",
+    "matches": [
+      {
+        "line": 558,
+        "text": "  reattachIn?: number | null;"
+      },
+      {
+        "line": 1095,
+        "text": "  reattachIn?: number;"
+      },
+      {
+        "line": 1097,
+        "text": "  resumeReattachMove?: boolean;"
+      },
+      {
+        "line": 1419,
+        "text": "class MissingReattachModel extends Error {"
+      },
+      {
+        "line": 1548,
+        "text": "export function deathAllowed(e: Pick<SimEnemy, \"index\" | \"base\">, enemies: Pick<SimEnemy, \"index\" | \"id\" | \"alive\" | \"gone\" | \"reattachIn\" | \"reviveIn\">[]): ((move: string) => boolean) | undefined {"
+      },
+      {
+        "line": 1574,
+        "text": "function deadForGood(x: Pick<SimEnemy, \"alive\" | \"gone\" | \"reattachIn\" | \"reviveIn\">): boolean {"
+      },
+      {
+        "line": 1575,
+        "text": "  return !x.alive && !x.gone && x.reattachIn === undefined && x.reviveIn === undefined;"
+      },
+      {
+        "line": 2266,
+        "text": "    if (!segmentsLeft) e.reattachIn = undefined;"
+      },
+      {
+        "line": 2267,
+        "text": "    else if (e.reattachIn === undefined) e.reattachIn = REATTACH_TURNS;"
+      },
+      {
+        "line": 2490,
+        "text": "      if (e.alive || e.reattachIn === undefined) continue;"
+      },
+      {
+        "line": 2491,
+        "text": "      e.reattachIn -= 1;"
+      },
+      {
+        "line": 2492,
+        "text": "      if (e.reattachIn > 0) {"
+      },
+      {
+        "line": 2493,
+        "text": "        if (e.resumeReattachMove && e.reattachIn === 1) e.move = \"REATTACH_MOVE\";"
+      },
+      {
+        "line": 2497,
+        "text": "      e.reattachIn = undefined;"
+      },
+      {
+        "line": 2503,
+        "text": "      if (e.resumeReattachMove) {"
+      },
+      {
+        "line": 2510,
+        "text": "          throw new MissingReattachModel();"
+      },
+      {
+        "line": 2513,
+        "text": "        e.resumeReattachMove = false;"
+      },
+      {
+        "line": 2714,
+        "text": "    if (e.hp <= 0 && e.reattach && info?.reattachIn === null) throw new MissingReattachModel();"
+      },
+      {
+        "line": 2767,
+        "text": "      ...(e.reattach && e.hp <= 0 && typeof info?.reattachIn === \"number\""
+      },
+      {
+        "line": 2768,
+        "text": "        ? { reattachIn: info.reattachIn, resumeReattachMove: true } : {}),"
+      },
+      {
+        "line": 3255,
+        "text": "  if (!e.alive) return e.reattachIn !== undefined ? Math.min(e.maxHp, e.base.reattachHp || REATTACH_HP) : 0;"
+      },
+      {
+        "line": 3470,
+        "text": "    if (!(error instanceof MissingStunModel) && !(error instanceof MissingReattachModel)) throw error;"
+      }
+    ]
+  },
+  {
+    "path": "agent/src/reflex/combat-plan.ts",
+    "sha256": "3911044b1787287f28fb9dcba659f7f58310837feb12d2dbc43f1970e65ba239",
+    "matches": [
+      {
+        "line": 3181,
+        "text": "  const demonPoison = observedDemonPoison(state);"
+      },
+      {
+        "line": 3189,
+        "text": "      ? { observedGhostInAJar: true } : {}),"
+      },
+      {
+        "line": 3190,
+        "text": "    ...(demonPoison === null ? {} : { observedPoison: demonPoison }),"
+      },
+      {
+        "line": 3191,
+        "text": "    ...(observedDouble && (state.run?.floor === observedDouble.firstFloor || state.run?.floor === observedDouble.secondFloor) ? { observedPoison: observedDouble.poisonPotionAmount } : {}),"
+      },
+      {
+        "line": 3310,
+        "text": "      (!isModelledPotion(potion.potion_id) || (potionContext.observedGhostInAJar && potion.potion_id === \"GHOST_IN_A_JAR\")) && !mcSources.has(potion.slot));"
+      },
+      {
+        "line": 3573,
+        "text": "    !(potionContext.observedGhostInAJar && top.steps.some((step) => step.cardId.startsWith(\"POTION:GHOST_IN_A_JAR:\"))) &&"
+      }
+    ]
+  },
+  {
+    "path": "agent/src/reflex/card-model.ts",
+    "sha256": "d5f2bf3206e068b017d210c1e4366b73ee3c17b80eb1750a62a83f36d10fc1d6",
+    "matches": [
+      {
+        "line": 1514,
+        "text": "  observedPoison?: number;"
+      },
+      {
+        "line": 1516,
+        "text": "  observedGhostInAJar?: boolean;"
+      },
+      {
+        "line": 1735,
+        "text": "  const effect: (Partial<CardModel> & { target: TargetMode }) | undefined = POTION_EFFECTS[potionId] ?? (potionId === \"POISON_POTION\" && (ctx?.observedPoison ?? 0) > 0"
+      },
+      {
+        "line": 1736,
+        "text": "    ? { target: \"single\" as const, poison: ctx!.observedPoison } : undefined)"
+      },
+      {
+        "line": 1737,
+        "text": "    ?? (potionId === \"GHOST_IN_A_JAR\" && ctx?.observedGhostInAJar === true"
+      }
+    ]
+  },
+  {
+    "path": "agent/src/reflex/silent-demon-potion.ts",
+    "sha256": "30d0ac0808b3dae09b5835577f62efd3fa9691a00cf59860779c2c9a81708fbc",
+    "matches": [
+      {
+        "line": 4,
+        "text": "const OBSERVED_RELICS = [\"BLOOD_VIAL\", \"CENTENNIAL_PUZZLE\", \"JUZU_BRACELET\", \"LOST_COFFER\","
+      },
+      {
+        "line": 17,
+        "text": "  if (relics.length !== OBSERVED_RELICS.length || relics.some((id, i) => id !== OBSERVED_RELICS[i])) return null;"
+      },
+      {
+        "line": 24,
+        "text": "  if (enemies.length !== 1 || enemies[0]![\"enemy_id\"] !== \"KNOWLEDGE_DEMON\" || enemies[0]![\"is_alive\"] !== true) return null;"
+      },
+      {
+        "line": 30,
+        "text": "  return 6;"
+      }
+    ]
+  },
+  {
+    "path": "agent/tests/silent-reattach.test.ts",
+    "sha256": "4715600d895d5cf0642e5fa8756ed29b9252f61d21ebb747ede7afa6935e0b55",
+    "matches": [
+      {
+        "line": 93,
+        "text": "  it(\"7X0 T5 keeps both returning segments and the observed 71 HP before the next poison tick\", () => {"
+      },
+      {
+        "line": 113,
+        "text": "    const unknown = endTurn(\"351777\", (raw) => { raw.combat.enemies[1].move_id = null; });"
+      },
+      {
+        "line": 114,
+        "text": "    expect(unknown.enemies.find((e) => e.index === 1)?.reattachIn).toBeNull();"
+      },
+      {
+        "line": 115,
+        "text": "    expect(rolloutDecision(unknown)).toMatchObject({ horizon: 0, samples: 0, degraded: [\"missing reattach model\"] });"
+      },
+      {
+        "line": 125,
+        "text": "  it(\"ends the fight when the remaining live segments die together; pending bodies do not return\", () => {"
+      },
+      {
+        "line": 137,
+        "text": "  it(\"keeps all-dead, permanent-dead, other characters and unobserved ascensions unchanged\", () => {"
+      }
+    ]
+  }
+]

@@ -1,0 +1,50 @@
+# 未划掉条目的本批处置
+
+- 队列752：- **silent-0237 — 策略类：沿原 strategy-proposal 链；现有提案状态见 audit.json，不重复派发。
+- 队列773：- **silent-0245 — 策略类：沿原 strategy-proposal 链；现有提案状态见 audit.json，不重复派发。
+- 队列774：- **silent-0246 — 策略类：沿原 strategy-proposal 链；现有提案状态见 audit.json，不重复派发。
+- 队列779：- **silent-0250 — 策略类：沿原 strategy-proposal 链；现有提案状态见 audit.json，不重复派发。
+- 队列784：- [ ] **silent-0254 — 已修限定工具子项：3b48088dec5fc6eafe576a1296bbdadde43432ee；不关闭宽父范围。
+- 队列789：- [ ] **silent-0256 — 策略类：沿原 strategy-proposal 链；现有提案状态见 audit.json，不重复派发。
+- 队列793：- [ ] **silent-0260 — 策略类：沿原 strategy-proposal 链；现有提案状态见 audit.json，不重复派发。
+- 队列797：- [ ] **silent-0263 — 策略类：沿原 strategy-proposal 链；现有提案状态见 audit.json，不重复派发。
+- 队列801：- [ ] **silent-0266 — 策略类：沿原 strategy-proposal 链；现有提案状态见 audit.json，不重复派发。
+- 队列810：- [ ] 学习者复盘 XTSV1U9JD34T／SILENT A10 F48 T8 — 策略类：沿原 strategy-proposal 链；现有提案状态见 audit.json，不重复派发。
+- 队列817：- [ ] 学习者复盘9Z9H2EXKLF3T／静默A10 F37 — 策略类：沿原 strategy-proposal 链；现有提案状态见 audit.json，不重复派发。
+- 队列831：- [ ] 学习者复盘GXNKW8X1XYJP／静默A10 F45 T2→T3 — 策略类：沿原 strategy-proposal 链；现有提案状态见 audit.json，不重复派发。
+- 队列853：- **silent-0290 — 策略类：沿原 strategy-proposal 链；现有提案状态见 audit.json，不重复派发。
+- 队列854：- **silent-0291 — 策略类：沿原 strategy-proposal 链；现有提案状态见 audit.json，不重复派发。
+- 队列859：- **silent-0293** — 策略类：沿原 strategy-proposal 链；现有提案状态见 audit.json，不重复派发。
+- 队列871：- **silent-0295** — 策略类：沿原 strategy-proposal 链；现有提案状态见 audit.json，不重复派发。
+- 队列877：- **silent-0296** — 策略类：沿原 strategy-proposal 链；现有提案状态见 audit.json，不重复派发。
+- 队列884：- **silent-0297** — 策略类：沿原 strategy-proposal 链；现有提案状态见 audit.json，不重复派发。
+- 队列900：- [ ] **非阻塞系统／测试缺口，根因未核定** — 已有固定时钟/最佳线夹具修复；本轮另见保留的 ranking 单项负载超时与原限时重跑，不称性能已修。
+- 队列907：- **silent-0300** — 策略类：沿原 strategy-proposal 链；现有提案状态见 audit.json，不重复派发。
+- 队列912：- [ ] **silent-0308** — 策略类：沿原 strategy-proposal 链；现有提案状态见 audit.json，不重复派发。
+- 队列918：- [ ] **silent-0311** — 策略类：沿原 strategy-proposal 链；现有提案状态见 audit.json，不重复派发。
+- 队列923：- [ ] **silent-0317** — 策略类：沿原 strategy-proposal 链；现有提案状态见 audit.json，不重复派发。
+- 队列929：- [ ] **silent-0319** — 策略类：沿原 strategy-proposal 链；现有提案状态见 audit.json，不重复派发。
+- 队列930：- [ ] **silent-0320** — 策略类：沿原 strategy-proposal 链；现有提案状态见 audit.json，不重复派发。
+- 队列935：- [ ] **silent-0322** — 策略类：沿原 strategy-proposal 链；现有提案状态见 audit.json，不重复派发。
+- 队列940：- [ ] **silent-0324** — 策略类：沿原 strategy-proposal 链；现有提案状态见 audit.json，不重复派发。
+- 队列945：- [ ] **silent-0329** — 策略类：沿原 strategy-proposal 链；现有提案状态见 audit.json，不重复派发。
+- 队列952：- [ ] **arch-funnel-guard** — 太大/独立功能：保留原父任务与拥有者，普通纯 bug 批不混入实现。
+- 队列953：- [ ] **arch-learning-priority** — 太大/独立功能：保留原父任务与拥有者，普通纯 bug 批不混入实现。
+- 队列954：- [ ] **arch-unified-resource-value** — 太大/独立功能：保留原父任务与拥有者，普通纯 bug 批不混入实现。
+- 队列955：- [ ] **inv-f33-regression** — 太大/独立功能：保留原父任务与拥有者，普通纯 bug 批不混入实现。
+- 队列959：- [ ] **silent-0332** — 策略类：沿原 strategy-proposal 链；现有提案状态见 audit.json，不重复派发。
+- 队列964：- [ ] 非阻塞 — 策略类：沿原 strategy-proposal 链；现有提案状态见 audit.json，不重复派发。
+- 队列968：- [ ] **silent-0338** — 策略类：沿原 strategy-proposal 链；现有提案状态见 audit.json，不重复派发。
+- 队列980：- [ ] **silent-0339** — 策略类：沿原 strategy-proposal 链；现有提案状态见 audit.json，不重复派发。
+- 队列992：- [ ] **silent-0344，坚韧之环延迟格挡未接入推演** — 策略类：沿原 strategy-proposal 链；现有提案状态见 audit.json，不重复派发。
+- 队列1001：- [ ] **silent-0347** — 策略类：沿原 strategy-proposal 链；现有提案状态见 audit.json，不重复派发。
+- 队列1005：- [ ] **silent-0349** — 策略类：沿原 strategy-proposal 链；现有提案状态见 audit.json，不重复派发。
+- 队列1009：- [ ] **core-build-notify-222802-rc2** — 证据不足：旧 rc2 没有 stderr，未证明没有发送；新失败诊断与幂等保护已修，原通知不重发。
+- 队列1020：- [ ] **silent-0362** — 策略类：沿原 strategy-proposal 链；现有提案状态见 audit.json，不重复派发。
+- 队列1022：- [ ] **silent-0365** — 策略类：沿原 strategy-proposal 链；现有提案状态见 audit.json，不重复派发。
+- 队列1024：- [ ] **silent-0367** — 策略类：沿原 strategy-proposal 链；现有提案状态见 audit.json，不重复派发。
+- 队列1029：- [ ] **codex-usage-credit-baseline-recovery** — 已修限定工具子项：e5e2995d659d15af79ec8bba67a4a25c1cb7295f；不关闭宽父范围。
+- 队列1034：- [ ] ascension-up 把目标进阶当实玩级别 — 已修限定工具子项：8045d9fbf；不关闭宽父范围。
+- 队列1040：- [ ] 框架/测试收尾 — 证据不足：定向宿主续验入口已修；旧任务公平性/原包装器归因未证，不改变原队列。
+- 队列1041：- [ ] 调度公平性核查 — 证据不足：定向宿主续验入口已修；旧任务公平性/原包装器归因未证，不改变原队列。
+- 队列1110：- [ ] **非对局阻塞，通用验证负载/确定性待诊断** — 已修限定工具子项：d9881ba593b0b8d701ebbe1c95626c0ebdd554c7 / 9e8c93555131c33；不关闭宽父范围。

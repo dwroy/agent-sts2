@@ -1,0 +1,103 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-234152/agent
+
+ ❯ tests/module-health.test.ts (1 test | 1 failed) 99ms
+   × separates unsupported candidates, failed sampling and missing DPR while preserving immutable incidents 98ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/module-health.test.ts > separates unsupported candidates, failed sampling and missing DPR while preserving immutable incidents
+AssertionError: FE.....EEEEE.
+======================================================================
+ERROR: test_missing_candidate_dpr_is_not_hidden_by_another_candidate_or_exclusion (__main__.Health.test_missing_candidate_dpr_is_not_hidden_by_another_candidate_or_exclusion)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-234152/agent/tests/module_health_test.py", line 89, in test_missing_candidate_dpr_is_not_hidden_by_another_candidate_or_exclusion
+    self.assertEqual(r['b3']['unsupported_only'], 0)
+                     ~~~~~~~^^^^^^^^^^^^^^^^^^^^
+KeyError: 'unsupported_only'
+
+======================================================================
+ERROR: test_unsupported_metadata_never_masks_failed_or_absent_sampling (__main__.Health.test_unsupported_metadata_never_masks_failed_or_absent_sampling) (reason='below_minimum_samples')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-234152/agent/tests/module_health_test.py", line 116, in test_unsupported_metadata_never_masks_failed_or_absent_sampling
+    self.assertEqual(r['b3']['unsupported_only'], 0)
+                     ~~~~~~~^^^^^^^^^^^^^^^^^^^^
+KeyError: 'unsupported_only'
+
+======================================================================
+ERROR: test_unsupported_metadata_never_masks_failed_or_absent_sampling (__main__.Health.test_unsupported_metadata_never_masks_failed_or_absent_sampling) (reason='zero_paired_samples')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-234152/agent/tests/module_health_test.py", line 116, in test_unsupported_metadata_never_masks_failed_or_absent_sampling
+    self.assertEqual(r['b3']['unsupported_only'], 0)
+                     ~~~~~~~^^^^^^^^^^^^^^^^^^^^
+KeyError: 'unsupported_only'
+
+======================================================================
+ERROR: test_unsupported_metadata_never_masks_failed_or_absent_sampling (__main__.Health.test_unsupported_metadata_never_masks_failed_or_absent_sampling) (reason='no_complete_dpr')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-234152/agent/tests/module_health_test.py", line 116, in test_unsupported_metadata_never_masks_failed_or_absent_sampling
+    self.assertEqual(r['b3']['unsupported_only'], 0)
+                     ~~~~~~~^^^^^^^^^^^^^^^^^^^^
+KeyError: 'unsupported_only'
+
+======================================================================
+ERROR: test_unsupported_metadata_never_masks_failed_or_absent_sampling (__main__.Health.test_unsupported_metadata_never_masks_failed_or_absent_sampling) (reason='no_complete_dpr')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-234152/agent/tests/module_health_test.py", line 116, in test_unsupported_metadata_never_masks_failed_or_absent_sampling
+    self.assertEqual(r['b3']['unsupported_only'], 0)
+                     ~~~~~~~^^^^^^^^^^^^^^^^^^^^
+KeyError: 'unsupported_only'
+
+======================================================================
+ERROR: test_unsupported_metadata_never_masks_failed_or_absent_sampling (__main__.Health.test_unsupported_metadata_never_masks_failed_or_absent_sampling) (reason='missing_simulation_record')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-234152/agent/tests/module_health_test.py", line 116, in test_unsupported_metadata_never_masks_failed_or_absent_sampling
+    self.assertEqual(r['b3']['unsupported_only'], 0)
+                     ~~~~~~~^^^^^^^^^^^^^^^^^^^^
+KeyError: 'unsupported_only'
+
+======================================================================
+FAIL: test_explicit_unsupported_candidates_are_separate_from_missing_dpr (__main__.Health.test_explicit_unsupported_candidates_are_separate_from_missing_dpr)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-234152/agent/tests/module_health_test.py", line 68, in test_explicit_unsupported_candidates_are_separate_from_missing_dpr
+    self.assertEqual(r['b3']['failures'], {})
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'no_complete_dpr': 1} != {}
+- {'no_complete_dpr': 1}
++ {}
+
+----------------------------------------------------------------------
+Ran 9 tests in 0.010s
+
+FAILED (failures=1, errors=6)
+: expected 1 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 1
+
+ ❯ tests/module-health.test.ts:5:56
+      3| it("separates unsupported candidates, failed sampling and missing DPR …
+      4|   const result = spawnSync("python3", ["-B", "tests/module_health_test…
+      5|   expect(result.status, result.stdout + result.stderr).toBe(0);
+       |                                                        ^
+      6| });
+      7|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed (1)
+   Start at  00:10:41
+   Duration  719ms (transform 335ms, setup 400ms, import 11ms, tests 99ms, environment 0ms)
+
