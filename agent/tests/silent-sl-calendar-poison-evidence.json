@@ -1,0 +1,2221 @@
+{
+  "run": "NEWRFAYKTQHR",
+  "ledger": [
+    "silent-0287",
+    "silent-0288"
+  ],
+  "source": "/home/dw/Projects/agent-sts2/learner/runs/20261008-104302-postmortem/proposal-fixed-states.json",
+  "source_sha256": "a228ee2e5f4aad400c35ad2cfbef80eeda78b10fd62108d1c7a82889c1986d44",
+  "verification": [
+    {
+      "key": "boss-control",
+      "source": "logs/states.jsonl",
+      "line": 293767,
+      "ts": "2026-10-08T01:52:59.397Z",
+      "original_line_sha256": "711a7ee0f8905d9bf852d04e46ca38eb75cce4e055e3782e18f71c7ff5233fe7",
+      "matched_original": true
+    },
+    {
+      "key": "first",
+      "source": "logs/states.jsonl",
+      "line": 293955,
+      "ts": "2026-10-08T02:02:10.880Z",
+      "original_line_sha256": "027ff18f8836a50caf1120c0010c174786d81450d89b92197463ae53a8ed0816",
+      "matched_original": true
+    },
+    {
+      "key": "second",
+      "source": "logs/states.jsonl",
+      "line": 293985,
+      "ts": "2026-10-08T02:03:24.865Z",
+      "original_line_sha256": "3bbe28ae639036d8b62f504af239ebb763b6327969093d90e670716c74eac5d4",
+      "matched_original": true
+    },
+    {
+      "key": "insufficient",
+      "source": "logs/states.jsonl",
+      "line": 294012,
+      "ts": "2026-10-08T02:04:35.614Z",
+      "original_line_sha256": "695af737bd9e1b381049cee33a0f78207dfc5eb00a96e0a71f9cef94821a617a",
+      "matched_original": true
+    },
+    {
+      "key": "final",
+      "source": "logs/states.jsonl",
+      "line": 294040,
+      "ts": "2026-10-08T02:05:44.184Z",
+      "original_line_sha256": "1ed70bee47262caea83e66c0e9dda2ed40ab132d9324f0dc7d46a7b8c27bcf1d",
+      "matched_original": true
+    },
+    {
+      "key": "prism-control",
+      "source": "logs/states.jsonl",
+      "line": 294142,
+      "ts": "2026-10-08T02:09:38.921Z",
+      "original_line_sha256": "fb3e5c4f4059e2d604b3ba053333b5e166f7292d58e6c54bdb1945df1d3575b2",
+      "matched_original": true
+    }
+  ],
+  "frames": {
+    "boss-control": {
+      "state_version": 16,
+      "run_id": "NEWRFAYKTQHR",
+      "screen": "COMBAT",
+      "session": {
+        "mode": "singleplayer",
+        "phase": "run",
+        "control_scope": "local_player"
+      },
+      "in_combat": true,
+      "turn": 7,
+      "available_actions": [
+        "end_turn",
+        "save_and_quit"
+      ],
+      "combat": {
+        "action_readiness": {
+          "can_use_combat_actions": true,
+          "reason": "ready",
+          "actions_settled": true,
+          "running_action_type": null,
+          "ready_action_type": null,
+          "modal_open": false,
+          "modal_type": null,
+          "player_actions_disabled": false,
+          "is_paused": false,
+          "local_ready_to_end_turn": false,
+          "all_players_ready_to_end_turn": true,
+          "ending_turn_phase_one": false,
+          "ending_turn_phase_two": false,
+          "end_turn_kick": "",
+          "combat_in_progress": true,
+          "combat_over_or_ending": false,
+          "combat_room_mode": "ActiveCombat",
+          "hand_in_card_play": false,
+          "hand_in_card_selection": false,
+          "hand_mode": "Play",
+          "local_turn_ready": true,
+          "snapshot_stable": true,
+          "player_action_phase": true
+        },
+        "player": {
+          "current_hp": 19,
+          "max_hp": 70,
+          "block": 0,
+          "energy": 2,
+          "stars": 0,
+          "focus": 0,
+          "powers": [
+            {
+              "index": 0,
+              "power_id": "ENVENOM_POWER",
+              "name": "涂毒",
+              "amount": 1,
+              "is_debuff": false
+            },
+            {
+              "index": 1,
+              "power_id": "RINGING_POWER",
+              "name": "昏眩",
+              "amount": 1,
+              "is_debuff": true
+            }
+          ],
+          "base_orb_slots": 0,
+          "orb_capacity": 0,
+          "empty_orb_slots": 0,
+          "orbs": [],
+          "pets": [],
+          "pet_missing": false,
+          "cards_played_this_turn": 1,
+          "attacks_played_this_turn": 1,
+          "skills_played_this_turn": 0
+        },
+        "players": [
+          {
+            "player_id": "1",
+            "slot_index": 0,
+            "is_local": true,
+            "is_connected": true,
+            "character_id": "SILENT",
+            "character_name": "静默猎手",
+            "current_hp": 19,
+            "max_hp": 70,
+            "block": 0,
+            "energy": 2,
+            "stars": 0,
+            "focus": 0,
+            "is_alive": true
+          }
+        ],
+        "hand": [
+          {
+            "index": 0,
+            "card_id": "SLICE",
+            "name": "切割",
+            "upgraded": false,
+            "target_type": "AnyEnemy",
+            "requires_target": true,
+            "target_index_space": "enemies",
+            "valid_target_indices": [
+              0
+            ],
+            "costs_x": false,
+            "star_costs_x": false,
+            "energy_cost": 0,
+            "star_cost": 0,
+            "rules_text": "造成{Damage:diff()}点伤害。",
+            "resolved_rules_text": "造成6点伤害。 昏眩。",
+            "dynamic_values": [
+              {
+                "name": "Damage",
+                "base_value": 6,
+                "current_value": 6,
+                "enchanted_value": 6,
+                "is_modified": false,
+                "was_just_upgraded": false
+              }
+            ],
+            "playable": false,
+            "can_play_result": false,
+            "unplayable_reason": "blocked_by_hook",
+            "unplayable_reason_raw": "BlockedByHook",
+            "unplayable_preventer_id": "RINGING_POWER",
+            "unplayable_preventer_type": "MegaCrit.Sts2.Core.Models.Powers.RingingPower"
+          },
+          {
+            "index": 1,
+            "card_id": "SURVIVOR",
+            "name": "生存者",
+            "upgraded": false,
+            "target_type": "Self",
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "costs_x": false,
+            "star_costs_x": false,
+            "energy_cost": 1,
+            "star_cost": 0,
+            "rules_text": "获得{Block:diff()}点格挡。 丢弃1张牌。",
+            "resolved_rules_text": "获得8点格挡。 丢弃1张牌。 昏眩。",
+            "dynamic_values": [
+              {
+                "name": "Block",
+                "base_value": 8,
+                "current_value": 8,
+                "enchanted_value": 8,
+                "is_modified": false,
+                "was_just_upgraded": false
+              }
+            ],
+            "playable": false,
+            "can_play_result": false,
+            "unplayable_reason": "blocked_by_hook",
+            "unplayable_reason_raw": "BlockedByHook",
+            "unplayable_preventer_id": "RINGING_POWER",
+            "unplayable_preventer_type": "MegaCrit.Sts2.Core.Models.Powers.RingingPower"
+          },
+          {
+            "index": 2,
+            "card_id": "STRIKE_SILENT",
+            "name": "打击",
+            "upgraded": false,
+            "target_type": "AnyEnemy",
+            "requires_target": true,
+            "target_index_space": "enemies",
+            "valid_target_indices": [
+              0
+            ],
+            "costs_x": false,
+            "star_costs_x": false,
+            "energy_cost": 1,
+            "star_cost": 0,
+            "rules_text": "造成{Damage:diff()}点伤害。",
+            "resolved_rules_text": "造成9点伤害。 昏眩。",
+            "dynamic_values": [
+              {
+                "name": "Damage",
+                "base_value": 6,
+                "current_value": 9,
+                "enchanted_value": 6,
+                "is_modified": true,
+                "was_just_upgraded": false
+              }
+            ],
+            "playable": false,
+            "can_play_result": false,
+            "unplayable_reason": "blocked_by_hook",
+            "unplayable_reason_raw": "BlockedByHook",
+            "unplayable_preventer_id": "RINGING_POWER",
+            "unplayable_preventer_type": "MegaCrit.Sts2.Core.Models.Powers.RingingPower"
+          },
+          {
+            "index": 3,
+            "card_id": "STRIKE_SILENT",
+            "name": "打击",
+            "upgraded": false,
+            "target_type": "AnyEnemy",
+            "requires_target": true,
+            "target_index_space": "enemies",
+            "valid_target_indices": [
+              0
+            ],
+            "costs_x": false,
+            "star_costs_x": false,
+            "energy_cost": 1,
+            "star_cost": 0,
+            "rules_text": "造成{Damage:diff()}点伤害。",
+            "resolved_rules_text": "造成9点伤害。 昏眩。",
+            "dynamic_values": [
+              {
+                "name": "Damage",
+                "base_value": 6,
+                "current_value": 9,
+                "enchanted_value": 6,
+                "is_modified": true,
+                "was_just_upgraded": false
+              }
+            ],
+            "playable": false,
+            "can_play_result": false,
+            "unplayable_reason": "blocked_by_hook",
+            "unplayable_reason_raw": "BlockedByHook",
+            "unplayable_preventer_id": "RINGING_POWER",
+            "unplayable_preventer_type": "MegaCrit.Sts2.Core.Models.Powers.RingingPower"
+          }
+        ],
+        "enemies": [
+          {
+            "index": 0,
+            "enemy_id": "CEREMONIAL_BEAST",
+            "name": "仪式兽",
+            "current_hp": 70,
+            "max_hp": 262,
+            "base_max_hp": 262,
+            "block": 0,
+            "is_alive": true,
+            "is_hittable": true,
+            "powers": [
+              {
+                "index": 0,
+                "power_id": "POISON_POWER",
+                "name": "中毒",
+                "amount": 24,
+                "is_debuff": true
+              }
+            ],
+            "intent": "STOMP_MOVE",
+            "move_id": "STOMP_MOVE",
+            "intents": [
+              {
+                "index": 0,
+                "intent_type": "Attack",
+                "label": "17",
+                "damage": 17,
+                "hits": 1,
+                "total_damage": 17,
+                "status_card_count": null
+              }
+            ]
+          }
+        ],
+        "end_turn_will_kill_player": false,
+        "lethal_risks": []
+      },
+      "run": {
+        "character_id": "SILENT",
+        "ascension": 10,
+        "floor": 17,
+        "current_hp": 19,
+        "max_hp": 70,
+        "relics": [
+          {
+            "index": 0,
+            "relic_id": "RING_OF_THE_SNAKE",
+            "name": "蛇之戒指",
+            "description": "在每场战斗开始时，额外抽[blue]{Cards}[/blue]张牌。",
+            "stack": null,
+            "is_melted": false
+          },
+          {
+            "index": 1,
+            "relic_id": "SCROLL_BOXES",
+            "name": "卷轴箱",
+            "description": "拾起时，从[blue]2[/blue]个卡牌包中选择[blue]1[/blue]包加入你的[gold]牌组[/gold]。",
+            "stack": null,
+            "is_melted": false
+          },
+          {
+            "index": 2,
+            "relic_id": "STRIKE_DUMMY",
+            "name": "打击木偶",
+            "description": "名字中有“打击”的卡牌造成[blue]{ExtraDamage}[/blue]点额外伤害。",
+            "stack": null,
+            "is_melted": false
+          },
+          {
+            "index": 3,
+            "relic_id": "STONE_CALENDAR",
+            "name": "历石",
+            "description": "在第[blue]{DamageTurn}[/blue]回合结束时，对所有敌人造成[blue]{Damage}[/blue]点伤害。",
+            "stack": null,
+            "is_melted": false
+          }
+        ],
+        "potions": [
+          {
+            "index": 0,
+            "potion_id": null,
+            "name": null,
+            "description": null,
+            "rarity": null,
+            "occupied": false,
+            "usage": null,
+            "target_type": null,
+            "is_queued": false,
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "can_use": false,
+            "can_discard": false
+          },
+          {
+            "index": 1,
+            "potion_id": null,
+            "name": null,
+            "description": null,
+            "rarity": null,
+            "occupied": false,
+            "usage": null,
+            "target_type": null,
+            "is_queued": false,
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "can_use": false,
+            "can_discard": false
+          }
+        ]
+      }
+    },
+    "first": {
+      "state_version": 16,
+      "run_id": "NEWRFAYKTQHR",
+      "screen": "COMBAT",
+      "session": {
+        "mode": "singleplayer",
+        "phase": "run",
+        "control_scope": "local_player"
+      },
+      "in_combat": true,
+      "turn": 7,
+      "available_actions": [
+        "end_turn",
+        "save_and_quit"
+      ],
+      "combat": {
+        "action_readiness": {
+          "can_use_combat_actions": true,
+          "reason": "ready",
+          "actions_settled": true,
+          "running_action_type": null,
+          "ready_action_type": null,
+          "modal_open": false,
+          "modal_type": null,
+          "player_actions_disabled": false,
+          "is_paused": false,
+          "local_ready_to_end_turn": false,
+          "all_players_ready_to_end_turn": true,
+          "ending_turn_phase_one": false,
+          "ending_turn_phase_two": false,
+          "end_turn_kick": "",
+          "combat_in_progress": true,
+          "combat_over_or_ending": false,
+          "combat_room_mode": "ActiveCombat",
+          "hand_in_card_play": false,
+          "hand_in_card_selection": false,
+          "hand_mode": "Play",
+          "local_turn_ready": true,
+          "snapshot_stable": true,
+          "player_action_phase": true
+        },
+        "player": {
+          "current_hp": 8,
+          "max_hp": 70,
+          "block": 0,
+          "energy": 3,
+          "stars": 0,
+          "focus": 0,
+          "powers": [
+            {
+              "index": 0,
+              "power_id": "DEXTERITY_POWER",
+              "name": "敏捷",
+              "amount": 2,
+              "is_debuff": false
+            },
+            {
+              "index": 1,
+              "power_id": "ENVENOM_POWER",
+              "name": "涂毒",
+              "amount": 1,
+              "is_debuff": false
+            }
+          ],
+          "base_orb_slots": 0,
+          "orb_capacity": 0,
+          "empty_orb_slots": 0,
+          "orbs": [],
+          "pets": [
+            {
+              "index": 0,
+              "pet_id": "PAELS_LEGION",
+              "name": "佩尔的士兵",
+              "current_hp": 9999,
+              "max_hp": 9999,
+              "block": 0,
+              "powers": []
+            }
+          ],
+          "pet_missing": false,
+          "cards_played_this_turn": 0,
+          "attacks_played_this_turn": 0,
+          "skills_played_this_turn": 0
+        },
+        "players": [
+          {
+            "player_id": "1",
+            "slot_index": 0,
+            "is_local": true,
+            "is_connected": true,
+            "character_id": "SILENT",
+            "character_name": "静默猎手",
+            "current_hp": 8,
+            "max_hp": 70,
+            "block": 0,
+            "energy": 3,
+            "stars": 0,
+            "focus": 0,
+            "is_alive": true
+          }
+        ],
+        "hand": [
+          {
+            "index": 0,
+            "card_id": "DAZED",
+            "name": "晕眩",
+            "upgraded": false,
+            "target_type": "None",
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "costs_x": false,
+            "star_costs_x": false,
+            "energy_cost": -1,
+            "star_cost": 0,
+            "rules_text": "",
+            "resolved_rules_text": "不能被打出。 虚无。",
+            "dynamic_values": [],
+            "playable": false,
+            "can_play_result": false,
+            "unplayable_reason": "unplayable",
+            "unplayable_reason_raw": "HasUnplayableKeyword",
+            "unplayable_preventer_id": null,
+            "unplayable_preventer_type": null
+          },
+          {
+            "index": 1,
+            "card_id": "DAZED",
+            "name": "晕眩",
+            "upgraded": false,
+            "target_type": "None",
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "costs_x": false,
+            "star_costs_x": false,
+            "energy_cost": -1,
+            "star_cost": 0,
+            "rules_text": "",
+            "resolved_rules_text": "不能被打出。 虚无。",
+            "dynamic_values": [],
+            "playable": false,
+            "can_play_result": false,
+            "unplayable_reason": "unplayable",
+            "unplayable_reason_raw": "HasUnplayableKeyword",
+            "unplayable_preventer_id": null,
+            "unplayable_preventer_type": null
+          },
+          {
+            "index": 2,
+            "card_id": "DAZED",
+            "name": "晕眩",
+            "upgraded": false,
+            "target_type": "None",
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "costs_x": false,
+            "star_costs_x": false,
+            "energy_cost": -1,
+            "star_cost": 0,
+            "rules_text": "",
+            "resolved_rules_text": "不能被打出。 虚无。",
+            "dynamic_values": [],
+            "playable": false,
+            "can_play_result": false,
+            "unplayable_reason": "unplayable",
+            "unplayable_reason_raw": "HasUnplayableKeyword",
+            "unplayable_preventer_id": null,
+            "unplayable_preventer_type": null
+          },
+          {
+            "index": 3,
+            "card_id": "ASCENDERS_BANE",
+            "name": "进阶之灾",
+            "upgraded": false,
+            "target_type": "None",
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "costs_x": false,
+            "star_costs_x": false,
+            "energy_cost": -1,
+            "star_cost": 0,
+            "rules_text": "",
+            "resolved_rules_text": "不能被打出。 虚无。 永恒。",
+            "dynamic_values": [],
+            "playable": false,
+            "can_play_result": false,
+            "unplayable_reason": "unplayable",
+            "unplayable_reason_raw": "HasUnplayableKeyword",
+            "unplayable_preventer_id": null,
+            "unplayable_preventer_type": null
+          },
+          {
+            "index": 4,
+            "card_id": "DAZED",
+            "name": "晕眩",
+            "upgraded": false,
+            "target_type": "None",
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "costs_x": false,
+            "star_costs_x": false,
+            "energy_cost": -1,
+            "star_cost": 0,
+            "rules_text": "",
+            "resolved_rules_text": "不能被打出。 虚无。",
+            "dynamic_values": [],
+            "playable": false,
+            "can_play_result": false,
+            "unplayable_reason": "unplayable",
+            "unplayable_reason_raw": "HasUnplayableKeyword",
+            "unplayable_preventer_id": null,
+            "unplayable_preventer_type": null
+          }
+        ],
+        "enemies": [
+          {
+            "index": 0,
+            "enemy_id": "ENTOMANCER",
+            "name": "蜂群术士",
+            "current_hp": 57,
+            "max_hp": 165,
+            "base_max_hp": 165,
+            "block": 0,
+            "is_alive": true,
+            "is_hittable": true,
+            "powers": [
+              {
+                "index": 0,
+                "power_id": "PERSONAL_HIVE_POWER",
+                "name": "人体蜂房",
+                "amount": 3,
+                "is_debuff": false
+              },
+              {
+                "index": 1,
+                "power_id": "POISON_POWER",
+                "name": "中毒",
+                "amount": 13,
+                "is_debuff": true
+              },
+              {
+                "index": 2,
+                "power_id": "STRENGTH_POWER",
+                "name": "力量",
+                "amount": 2,
+                "is_debuff": false
+              }
+            ],
+            "intent": "BEES_MOVE",
+            "move_id": "BEES_MOVE",
+            "intents": [
+              {
+                "index": 0,
+                "intent_type": "Attack",
+                "label": "5[font_size=18]×8[/font_size]",
+                "damage": 5,
+                "hits": 8,
+                "total_damage": 40,
+                "status_card_count": null
+              }
+            ]
+          }
+        ],
+        "end_turn_will_kill_player": true,
+        "lethal_risks": [
+          {
+            "risk_id": "incoming_damage",
+            "source": "enemy_intents",
+            "will_kill_player": true,
+            "reason": "Enemy intent damage after current block is at least current HP.",
+            "incoming_damage": 40,
+            "damage_after_block": 40,
+            "player_hp": 8,
+            "player_block": 0,
+            "power_id": null,
+            "power_amount": null
+          }
+        ]
+      },
+      "run": {
+        "character_id": "SILENT",
+        "ascension": 10,
+        "floor": 28,
+        "current_hp": 8,
+        "max_hp": 70,
+        "relics": [
+          {
+            "index": 0,
+            "relic_id": "RING_OF_THE_SNAKE",
+            "name": "蛇之戒指",
+            "description": "在每场战斗开始时，额外抽[blue]{Cards}[/blue]张牌。",
+            "stack": null,
+            "is_melted": false
+          },
+          {
+            "index": 1,
+            "relic_id": "SCROLL_BOXES",
+            "name": "卷轴箱",
+            "description": "拾起时，从[blue]2[/blue]个卡牌包中选择[blue]1[/blue]包加入你的[gold]牌组[/gold]。",
+            "stack": null,
+            "is_melted": false
+          },
+          {
+            "index": 2,
+            "relic_id": "STRIKE_DUMMY",
+            "name": "打击木偶",
+            "description": "名字中有“打击”的卡牌造成[blue]{ExtraDamage}[/blue]点额外伤害。",
+            "stack": null,
+            "is_melted": false
+          },
+          {
+            "index": 3,
+            "relic_id": "STONE_CALENDAR",
+            "name": "历石",
+            "description": "在第[blue]{DamageTurn}[/blue]回合结束时，对所有敌人造成[blue]{Damage}[/blue]点伤害。",
+            "stack": null,
+            "is_melted": false
+          },
+          {
+            "index": 4,
+            "relic_id": "PAELS_LEGION",
+            "name": "佩尔的士兵",
+            "description": "将你从一张卡牌中获得的[gold]格挡[/gold]翻倍，然后此遗物会休眠[blue]{Turns}[/blue]回合。",
+            "stack": null,
+            "is_melted": false
+          },
+          {
+            "index": 5,
+            "relic_id": "LUCKY_FYSH",
+            "name": "招财异鱼",
+            "description": "每当你将一张卡牌加入你的[gold]牌组[/gold]时，获得[blue]{Gold}[/blue][gold]金币[/gold]。",
+            "stack": null,
+            "is_melted": false
+          }
+        ],
+        "potions": [
+          {
+            "index": 0,
+            "potion_id": null,
+            "name": null,
+            "description": null,
+            "rarity": null,
+            "occupied": false,
+            "usage": null,
+            "target_type": null,
+            "is_queued": false,
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "can_use": false,
+            "can_discard": false
+          },
+          {
+            "index": 1,
+            "potion_id": null,
+            "name": null,
+            "description": null,
+            "rarity": null,
+            "occupied": false,
+            "usage": null,
+            "target_type": null,
+            "is_queued": false,
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "can_use": false,
+            "can_discard": false
+          }
+        ]
+      }
+    },
+    "second": {
+      "state_version": 16,
+      "run_id": "NEWRFAYKTQHR",
+      "screen": "COMBAT",
+      "session": {
+        "mode": "singleplayer",
+        "phase": "run",
+        "control_scope": "local_player"
+      },
+      "in_combat": true,
+      "turn": 7,
+      "available_actions": [
+        "end_turn",
+        "save_and_quit"
+      ],
+      "combat": {
+        "action_readiness": {
+          "can_use_combat_actions": true,
+          "reason": "ready",
+          "actions_settled": true,
+          "running_action_type": null,
+          "ready_action_type": null,
+          "modal_open": false,
+          "modal_type": null,
+          "player_actions_disabled": false,
+          "is_paused": false,
+          "local_ready_to_end_turn": false,
+          "all_players_ready_to_end_turn": true,
+          "ending_turn_phase_one": false,
+          "ending_turn_phase_two": false,
+          "end_turn_kick": "",
+          "combat_in_progress": true,
+          "combat_over_or_ending": false,
+          "combat_room_mode": "ActiveCombat",
+          "hand_in_card_play": false,
+          "hand_in_card_selection": false,
+          "hand_mode": "Play",
+          "local_turn_ready": true,
+          "snapshot_stable": true,
+          "player_action_phase": true
+        },
+        "player": {
+          "current_hp": 10,
+          "max_hp": 70,
+          "block": 28,
+          "energy": 0,
+          "stars": 0,
+          "focus": 0,
+          "powers": [
+            {
+              "index": 0,
+              "power_id": "DEXTERITY_POWER",
+              "name": "敏捷",
+              "amount": 2,
+              "is_debuff": false
+            },
+            {
+              "index": 1,
+              "power_id": "ENVENOM_POWER",
+              "name": "涂毒",
+              "amount": 1,
+              "is_debuff": false
+            }
+          ],
+          "base_orb_slots": 0,
+          "orb_capacity": 0,
+          "empty_orb_slots": 0,
+          "orbs": [],
+          "pets": [
+            {
+              "index": 0,
+              "pet_id": "PAELS_LEGION",
+              "name": "佩尔的士兵",
+              "current_hp": 9999,
+              "max_hp": 9999,
+              "block": 0,
+              "powers": []
+            }
+          ],
+          "pet_missing": false,
+          "cards_played_this_turn": 4,
+          "attacks_played_this_turn": 1,
+          "skills_played_this_turn": 3
+        },
+        "players": [
+          {
+            "player_id": "1",
+            "slot_index": 0,
+            "is_local": true,
+            "is_connected": true,
+            "character_id": "SILENT",
+            "character_name": "静默猎手",
+            "current_hp": 10,
+            "max_hp": 70,
+            "block": 28,
+            "energy": 0,
+            "stars": 0,
+            "focus": 0,
+            "is_alive": true
+          }
+        ],
+        "hand": [
+          {
+            "index": 0,
+            "card_id": "STRIKE_SILENT",
+            "name": "打击",
+            "upgraded": false,
+            "target_type": "AnyEnemy",
+            "requires_target": true,
+            "target_index_space": "enemies",
+            "valid_target_indices": [
+              0
+            ],
+            "costs_x": false,
+            "star_costs_x": false,
+            "energy_cost": 1,
+            "star_cost": 0,
+            "rules_text": "造成{Damage:diff()}点伤害。",
+            "resolved_rules_text": "造成9点伤害。",
+            "dynamic_values": [
+              {
+                "name": "Damage",
+                "base_value": 6,
+                "current_value": 9,
+                "enchanted_value": 6,
+                "is_modified": true,
+                "was_just_upgraded": false
+              }
+            ],
+            "playable": false,
+            "can_play_result": false,
+            "unplayable_reason": "not_enough_energy",
+            "unplayable_reason_raw": "EnergyCostTooHigh",
+            "unplayable_preventer_id": null,
+            "unplayable_preventer_type": null
+          }
+        ],
+        "enemies": [
+          {
+            "index": 0,
+            "enemy_id": "ENTOMANCER",
+            "name": "蜂群术士",
+            "current_hp": 59,
+            "max_hp": 165,
+            "base_max_hp": 165,
+            "block": 0,
+            "is_alive": true,
+            "is_hittable": true,
+            "powers": [
+              {
+                "index": 0,
+                "power_id": "PERSONAL_HIVE_POWER",
+                "name": "人体蜂房",
+                "amount": 3,
+                "is_debuff": false
+              },
+              {
+                "index": 1,
+                "power_id": "POISON_POWER",
+                "name": "中毒",
+                "amount": 22,
+                "is_debuff": true
+              },
+              {
+                "index": 2,
+                "power_id": "STRENGTH_POWER",
+                "name": "力量",
+                "amount": 2,
+                "is_debuff": false
+              }
+            ],
+            "intent": "BEES_MOVE",
+            "move_id": "BEES_MOVE",
+            "intents": [
+              {
+                "index": 0,
+                "intent_type": "Attack",
+                "label": "5[font_size=18]×8[/font_size]",
+                "damage": 5,
+                "hits": 8,
+                "total_damage": 40,
+                "status_card_count": null
+              }
+            ]
+          }
+        ],
+        "end_turn_will_kill_player": true,
+        "lethal_risks": [
+          {
+            "risk_id": "incoming_damage",
+            "source": "enemy_intents",
+            "will_kill_player": true,
+            "reason": "Enemy intent damage after current block is at least current HP.",
+            "incoming_damage": 40,
+            "damage_after_block": 12,
+            "player_hp": 10,
+            "player_block": 28,
+            "power_id": null,
+            "power_amount": null
+          }
+        ]
+      },
+      "run": {
+        "character_id": "SILENT",
+        "ascension": 10,
+        "floor": 28,
+        "current_hp": 10,
+        "max_hp": 70,
+        "relics": [
+          {
+            "index": 0,
+            "relic_id": "RING_OF_THE_SNAKE",
+            "name": "蛇之戒指",
+            "description": "在每场战斗开始时，额外抽[blue]{Cards}[/blue]张牌。",
+            "stack": null,
+            "is_melted": false
+          },
+          {
+            "index": 1,
+            "relic_id": "SCROLL_BOXES",
+            "name": "卷轴箱",
+            "description": "拾起时，从[blue]2[/blue]个卡牌包中选择[blue]1[/blue]包加入你的[gold]牌组[/gold]。",
+            "stack": null,
+            "is_melted": false
+          },
+          {
+            "index": 2,
+            "relic_id": "STRIKE_DUMMY",
+            "name": "打击木偶",
+            "description": "名字中有“打击”的卡牌造成[blue]{ExtraDamage}[/blue]点额外伤害。",
+            "stack": null,
+            "is_melted": false
+          },
+          {
+            "index": 3,
+            "relic_id": "STONE_CALENDAR",
+            "name": "历石",
+            "description": "在第[blue]{DamageTurn}[/blue]回合结束时，对所有敌人造成[blue]{Damage}[/blue]点伤害。",
+            "stack": null,
+            "is_melted": false
+          },
+          {
+            "index": 4,
+            "relic_id": "PAELS_LEGION",
+            "name": "佩尔的士兵",
+            "description": "将你从一张卡牌中获得的[gold]格挡[/gold]翻倍，然后此遗物会休眠[blue]{Turns}[/blue]回合。",
+            "stack": 2,
+            "is_melted": false
+          },
+          {
+            "index": 5,
+            "relic_id": "LUCKY_FYSH",
+            "name": "招财异鱼",
+            "description": "每当你将一张卡牌加入你的[gold]牌组[/gold]时，获得[blue]{Gold}[/blue][gold]金币[/gold]。",
+            "stack": null,
+            "is_melted": false
+          }
+        ],
+        "potions": [
+          {
+            "index": 0,
+            "potion_id": null,
+            "name": null,
+            "description": null,
+            "rarity": null,
+            "occupied": false,
+            "usage": null,
+            "target_type": null,
+            "is_queued": false,
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "can_use": false,
+            "can_discard": false
+          },
+          {
+            "index": 1,
+            "potion_id": null,
+            "name": null,
+            "description": null,
+            "rarity": null,
+            "occupied": false,
+            "usage": null,
+            "target_type": null,
+            "is_queued": false,
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "can_use": false,
+            "can_discard": false
+          }
+        ]
+      }
+    },
+    "insufficient": {
+      "state_version": 16,
+      "run_id": "NEWRFAYKTQHR",
+      "screen": "COMBAT",
+      "session": {
+        "mode": "singleplayer",
+        "phase": "run",
+        "control_scope": "local_player"
+      },
+      "in_combat": true,
+      "turn": 7,
+      "available_actions": [
+        "end_turn",
+        "save_and_quit"
+      ],
+      "combat": {
+        "action_readiness": {
+          "can_use_combat_actions": true,
+          "reason": "ready",
+          "actions_settled": true,
+          "running_action_type": null,
+          "ready_action_type": null,
+          "modal_open": false,
+          "modal_type": null,
+          "player_actions_disabled": false,
+          "is_paused": false,
+          "local_ready_to_end_turn": false,
+          "all_players_ready_to_end_turn": true,
+          "ending_turn_phase_one": false,
+          "ending_turn_phase_two": false,
+          "end_turn_kick": "",
+          "combat_in_progress": true,
+          "combat_over_or_ending": false,
+          "combat_room_mode": "ActiveCombat",
+          "hand_in_card_play": false,
+          "hand_in_card_selection": false,
+          "hand_mode": "Play",
+          "local_turn_ready": true,
+          "snapshot_stable": true,
+          "player_action_phase": true
+        },
+        "player": {
+          "current_hp": 1,
+          "max_hp": 70,
+          "block": 0,
+          "energy": 3,
+          "stars": 0,
+          "focus": 0,
+          "powers": [
+            {
+              "index": 0,
+              "power_id": "DEXTERITY_POWER",
+              "name": "敏捷",
+              "amount": 2,
+              "is_debuff": false
+            }
+          ],
+          "base_orb_slots": 0,
+          "orb_capacity": 0,
+          "empty_orb_slots": 0,
+          "orbs": [],
+          "pets": [
+            {
+              "index": 0,
+              "pet_id": "PAELS_LEGION",
+              "name": "佩尔的士兵",
+              "current_hp": 9999,
+              "max_hp": 9999,
+              "block": 0,
+              "powers": []
+            }
+          ],
+          "pet_missing": false,
+          "cards_played_this_turn": 0,
+          "attacks_played_this_turn": 0,
+          "skills_played_this_turn": 0
+        },
+        "players": [
+          {
+            "player_id": "1",
+            "slot_index": 0,
+            "is_local": true,
+            "is_connected": true,
+            "character_id": "SILENT",
+            "character_name": "静默猎手",
+            "current_hp": 1,
+            "max_hp": 70,
+            "block": 0,
+            "energy": 3,
+            "stars": 0,
+            "focus": 0,
+            "is_alive": true
+          }
+        ],
+        "hand": [
+          {
+            "index": 0,
+            "card_id": "DAZED",
+            "name": "晕眩",
+            "upgraded": false,
+            "target_type": "None",
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "costs_x": false,
+            "star_costs_x": false,
+            "energy_cost": -1,
+            "star_cost": 0,
+            "rules_text": "",
+            "resolved_rules_text": "不能被打出。 虚无。",
+            "dynamic_values": [],
+            "playable": false,
+            "can_play_result": false,
+            "unplayable_reason": "unplayable",
+            "unplayable_reason_raw": "HasUnplayableKeyword",
+            "unplayable_preventer_id": null,
+            "unplayable_preventer_type": null
+          },
+          {
+            "index": 1,
+            "card_id": "DAZED",
+            "name": "晕眩",
+            "upgraded": false,
+            "target_type": "None",
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "costs_x": false,
+            "star_costs_x": false,
+            "energy_cost": -1,
+            "star_cost": 0,
+            "rules_text": "",
+            "resolved_rules_text": "不能被打出。 虚无。",
+            "dynamic_values": [],
+            "playable": false,
+            "can_play_result": false,
+            "unplayable_reason": "unplayable",
+            "unplayable_reason_raw": "HasUnplayableKeyword",
+            "unplayable_preventer_id": null,
+            "unplayable_preventer_type": null
+          },
+          {
+            "index": 2,
+            "card_id": "DAZED",
+            "name": "晕眩",
+            "upgraded": false,
+            "target_type": "None",
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "costs_x": false,
+            "star_costs_x": false,
+            "energy_cost": -1,
+            "star_cost": 0,
+            "rules_text": "",
+            "resolved_rules_text": "不能被打出。 虚无。",
+            "dynamic_values": [],
+            "playable": false,
+            "can_play_result": false,
+            "unplayable_reason": "unplayable",
+            "unplayable_reason_raw": "HasUnplayableKeyword",
+            "unplayable_preventer_id": null,
+            "unplayable_preventer_type": null
+          },
+          {
+            "index": 3,
+            "card_id": "DAZED",
+            "name": "晕眩",
+            "upgraded": false,
+            "target_type": "None",
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "costs_x": false,
+            "star_costs_x": false,
+            "energy_cost": -1,
+            "star_cost": 0,
+            "rules_text": "",
+            "resolved_rules_text": "不能被打出。 虚无。",
+            "dynamic_values": [],
+            "playable": false,
+            "can_play_result": false,
+            "unplayable_reason": "unplayable",
+            "unplayable_reason_raw": "HasUnplayableKeyword",
+            "unplayable_preventer_id": null,
+            "unplayable_preventer_type": null
+          },
+          {
+            "index": 4,
+            "card_id": "DAZED",
+            "name": "晕眩",
+            "upgraded": false,
+            "target_type": "None",
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "costs_x": false,
+            "star_costs_x": false,
+            "energy_cost": -1,
+            "star_cost": 0,
+            "rules_text": "",
+            "resolved_rules_text": "不能被打出。 虚无。",
+            "dynamic_values": [],
+            "playable": false,
+            "can_play_result": false,
+            "unplayable_reason": "unplayable",
+            "unplayable_reason_raw": "HasUnplayableKeyword",
+            "unplayable_preventer_id": null,
+            "unplayable_preventer_type": null
+          }
+        ],
+        "enemies": [
+          {
+            "index": 0,
+            "enemy_id": "ENTOMANCER",
+            "name": "蜂群术士",
+            "current_hp": 73,
+            "max_hp": 165,
+            "base_max_hp": 165,
+            "block": 0,
+            "is_alive": true,
+            "is_hittable": true,
+            "powers": [
+              {
+                "index": 0,
+                "power_id": "PERSONAL_HIVE_POWER",
+                "name": "人体蜂房",
+                "amount": 3,
+                "is_debuff": false
+              },
+              {
+                "index": 1,
+                "power_id": "POISON_POWER",
+                "name": "中毒",
+                "amount": 2,
+                "is_debuff": true
+              },
+              {
+                "index": 2,
+                "power_id": "STRENGTH_POWER",
+                "name": "力量",
+                "amount": 2,
+                "is_debuff": false
+              }
+            ],
+            "intent": "BEES_MOVE",
+            "move_id": "BEES_MOVE",
+            "intents": [
+              {
+                "index": 0,
+                "intent_type": "Attack",
+                "label": "5[font_size=18]×8[/font_size]",
+                "damage": 5,
+                "hits": 8,
+                "total_damage": 40,
+                "status_card_count": null
+              }
+            ]
+          }
+        ],
+        "end_turn_will_kill_player": true,
+        "lethal_risks": [
+          {
+            "risk_id": "incoming_damage",
+            "source": "enemy_intents",
+            "will_kill_player": true,
+            "reason": "Enemy intent damage after current block is at least current HP.",
+            "incoming_damage": 40,
+            "damage_after_block": 40,
+            "player_hp": 1,
+            "player_block": 0,
+            "power_id": null,
+            "power_amount": null
+          }
+        ]
+      },
+      "run": {
+        "character_id": "SILENT",
+        "ascension": 10,
+        "floor": 28,
+        "current_hp": 1,
+        "max_hp": 70,
+        "relics": [
+          {
+            "index": 0,
+            "relic_id": "RING_OF_THE_SNAKE",
+            "name": "蛇之戒指",
+            "description": "在每场战斗开始时，额外抽[blue]{Cards}[/blue]张牌。",
+            "stack": null,
+            "is_melted": false
+          },
+          {
+            "index": 1,
+            "relic_id": "SCROLL_BOXES",
+            "name": "卷轴箱",
+            "description": "拾起时，从[blue]2[/blue]个卡牌包中选择[blue]1[/blue]包加入你的[gold]牌组[/gold]。",
+            "stack": null,
+            "is_melted": false
+          },
+          {
+            "index": 2,
+            "relic_id": "STRIKE_DUMMY",
+            "name": "打击木偶",
+            "description": "名字中有“打击”的卡牌造成[blue]{ExtraDamage}[/blue]点额外伤害。",
+            "stack": null,
+            "is_melted": false
+          },
+          {
+            "index": 3,
+            "relic_id": "STONE_CALENDAR",
+            "name": "历石",
+            "description": "在第[blue]{DamageTurn}[/blue]回合结束时，对所有敌人造成[blue]{Damage}[/blue]点伤害。",
+            "stack": null,
+            "is_melted": false
+          },
+          {
+            "index": 4,
+            "relic_id": "PAELS_LEGION",
+            "name": "佩尔的士兵",
+            "description": "将你从一张卡牌中获得的[gold]格挡[/gold]翻倍，然后此遗物会休眠[blue]{Turns}[/blue]回合。",
+            "stack": null,
+            "is_melted": false
+          },
+          {
+            "index": 5,
+            "relic_id": "LUCKY_FYSH",
+            "name": "招财异鱼",
+            "description": "每当你将一张卡牌加入你的[gold]牌组[/gold]时，获得[blue]{Gold}[/blue][gold]金币[/gold]。",
+            "stack": null,
+            "is_melted": false
+          }
+        ],
+        "potions": [
+          {
+            "index": 0,
+            "potion_id": null,
+            "name": null,
+            "description": null,
+            "rarity": null,
+            "occupied": false,
+            "usage": null,
+            "target_type": null,
+            "is_queued": false,
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "can_use": false,
+            "can_discard": false
+          },
+          {
+            "index": 1,
+            "potion_id": null,
+            "name": null,
+            "description": null,
+            "rarity": null,
+            "occupied": false,
+            "usage": null,
+            "target_type": null,
+            "is_queued": false,
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "can_use": false,
+            "can_discard": false
+          }
+        ]
+      }
+    },
+    "final": {
+      "state_version": 16,
+      "run_id": "NEWRFAYKTQHR",
+      "screen": "COMBAT",
+      "session": {
+        "mode": "singleplayer",
+        "phase": "run",
+        "control_scope": "local_player"
+      },
+      "in_combat": true,
+      "turn": 7,
+      "available_actions": [
+        "end_turn",
+        "save_and_quit"
+      ],
+      "combat": {
+        "action_readiness": {
+          "can_use_combat_actions": true,
+          "reason": "ready",
+          "actions_settled": true,
+          "running_action_type": null,
+          "ready_action_type": null,
+          "modal_open": false,
+          "modal_type": null,
+          "player_actions_disabled": false,
+          "is_paused": false,
+          "local_ready_to_end_turn": false,
+          "all_players_ready_to_end_turn": true,
+          "ending_turn_phase_one": false,
+          "ending_turn_phase_two": false,
+          "end_turn_kick": "",
+          "combat_in_progress": true,
+          "combat_over_or_ending": false,
+          "combat_room_mode": "ActiveCombat",
+          "hand_in_card_play": false,
+          "hand_in_card_selection": false,
+          "hand_mode": "Play",
+          "local_turn_ready": true,
+          "snapshot_stable": true,
+          "player_action_phase": true
+        },
+        "player": {
+          "current_hp": 8,
+          "max_hp": 70,
+          "block": 0,
+          "energy": 3,
+          "stars": 0,
+          "focus": 0,
+          "powers": [
+            {
+              "index": 0,
+              "power_id": "DEXTERITY_POWER",
+              "name": "敏捷",
+              "amount": 2,
+              "is_debuff": false
+            }
+          ],
+          "base_orb_slots": 0,
+          "orb_capacity": 0,
+          "empty_orb_slots": 0,
+          "orbs": [],
+          "pets": [
+            {
+              "index": 0,
+              "pet_id": "PAELS_LEGION",
+              "name": "佩尔的士兵",
+              "current_hp": 9999,
+              "max_hp": 9999,
+              "block": 0,
+              "powers": []
+            }
+          ],
+          "pet_missing": false,
+          "cards_played_this_turn": 0,
+          "attacks_played_this_turn": 0,
+          "skills_played_this_turn": 0
+        },
+        "players": [
+          {
+            "player_id": "1",
+            "slot_index": 0,
+            "is_local": true,
+            "is_connected": true,
+            "character_id": "SILENT",
+            "character_name": "静默猎手",
+            "current_hp": 8,
+            "max_hp": 70,
+            "block": 0,
+            "energy": 3,
+            "stars": 0,
+            "focus": 0,
+            "is_alive": true
+          }
+        ],
+        "hand": [
+          {
+            "index": 0,
+            "card_id": "DAZED",
+            "name": "晕眩",
+            "upgraded": false,
+            "target_type": "None",
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "costs_x": false,
+            "star_costs_x": false,
+            "energy_cost": -1,
+            "star_cost": 0,
+            "rules_text": "",
+            "resolved_rules_text": "不能被打出。 虚无。",
+            "dynamic_values": [],
+            "playable": false,
+            "can_play_result": false,
+            "unplayable_reason": "unplayable",
+            "unplayable_reason_raw": "HasUnplayableKeyword",
+            "unplayable_preventer_id": null,
+            "unplayable_preventer_type": null
+          },
+          {
+            "index": 1,
+            "card_id": "DAZED",
+            "name": "晕眩",
+            "upgraded": false,
+            "target_type": "None",
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "costs_x": false,
+            "star_costs_x": false,
+            "energy_cost": -1,
+            "star_cost": 0,
+            "rules_text": "",
+            "resolved_rules_text": "不能被打出。 虚无。",
+            "dynamic_values": [],
+            "playable": false,
+            "can_play_result": false,
+            "unplayable_reason": "unplayable",
+            "unplayable_reason_raw": "HasUnplayableKeyword",
+            "unplayable_preventer_id": null,
+            "unplayable_preventer_type": null
+          },
+          {
+            "index": 2,
+            "card_id": "DAZED",
+            "name": "晕眩",
+            "upgraded": false,
+            "target_type": "None",
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "costs_x": false,
+            "star_costs_x": false,
+            "energy_cost": -1,
+            "star_cost": 0,
+            "rules_text": "",
+            "resolved_rules_text": "不能被打出。 虚无。",
+            "dynamic_values": [],
+            "playable": false,
+            "can_play_result": false,
+            "unplayable_reason": "unplayable",
+            "unplayable_reason_raw": "HasUnplayableKeyword",
+            "unplayable_preventer_id": null,
+            "unplayable_preventer_type": null
+          },
+          {
+            "index": 3,
+            "card_id": "DAZED",
+            "name": "晕眩",
+            "upgraded": false,
+            "target_type": "None",
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "costs_x": false,
+            "star_costs_x": false,
+            "energy_cost": -1,
+            "star_cost": 0,
+            "rules_text": "",
+            "resolved_rules_text": "不能被打出。 虚无。",
+            "dynamic_values": [],
+            "playable": false,
+            "can_play_result": false,
+            "unplayable_reason": "unplayable",
+            "unplayable_reason_raw": "HasUnplayableKeyword",
+            "unplayable_preventer_id": null,
+            "unplayable_preventer_type": null
+          },
+          {
+            "index": 4,
+            "card_id": "DAZED",
+            "name": "晕眩",
+            "upgraded": false,
+            "target_type": "None",
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "costs_x": false,
+            "star_costs_x": false,
+            "energy_cost": -1,
+            "star_cost": 0,
+            "rules_text": "",
+            "resolved_rules_text": "不能被打出。 虚无。",
+            "dynamic_values": [],
+            "playable": false,
+            "can_play_result": false,
+            "unplayable_reason": "unplayable",
+            "unplayable_reason_raw": "HasUnplayableKeyword",
+            "unplayable_preventer_id": null,
+            "unplayable_preventer_type": null
+          }
+        ],
+        "enemies": [
+          {
+            "index": 0,
+            "enemy_id": "ENTOMANCER",
+            "name": "蜂群术士",
+            "current_hp": 52,
+            "max_hp": 165,
+            "base_max_hp": 165,
+            "block": 0,
+            "is_alive": true,
+            "is_hittable": true,
+            "powers": [
+              {
+                "index": 0,
+                "power_id": "PERSONAL_HIVE_POWER",
+                "name": "人体蜂房",
+                "amount": 3,
+                "is_debuff": false
+              },
+              {
+                "index": 1,
+                "power_id": "POISON_POWER",
+                "name": "中毒",
+                "amount": 9,
+                "is_debuff": true
+              },
+              {
+                "index": 2,
+                "power_id": "STRENGTH_POWER",
+                "name": "力量",
+                "amount": 2,
+                "is_debuff": false
+              }
+            ],
+            "intent": "BEES_MOVE",
+            "move_id": "BEES_MOVE",
+            "intents": [
+              {
+                "index": 0,
+                "intent_type": "Attack",
+                "label": "5[font_size=18]×8[/font_size]",
+                "damage": 5,
+                "hits": 8,
+                "total_damage": 40,
+                "status_card_count": null
+              }
+            ]
+          }
+        ],
+        "end_turn_will_kill_player": true,
+        "lethal_risks": [
+          {
+            "risk_id": "incoming_damage",
+            "source": "enemy_intents",
+            "will_kill_player": true,
+            "reason": "Enemy intent damage after current block is at least current HP.",
+            "incoming_damage": 40,
+            "damage_after_block": 40,
+            "player_hp": 8,
+            "player_block": 0,
+            "power_id": null,
+            "power_amount": null
+          }
+        ]
+      },
+      "run": {
+        "character_id": "SILENT",
+        "ascension": 10,
+        "floor": 28,
+        "current_hp": 8,
+        "max_hp": 70,
+        "relics": [
+          {
+            "index": 0,
+            "relic_id": "RING_OF_THE_SNAKE",
+            "name": "蛇之戒指",
+            "description": "在每场战斗开始时，额外抽[blue]{Cards}[/blue]张牌。",
+            "stack": null,
+            "is_melted": false
+          },
+          {
+            "index": 1,
+            "relic_id": "SCROLL_BOXES",
+            "name": "卷轴箱",
+            "description": "拾起时，从[blue]2[/blue]个卡牌包中选择[blue]1[/blue]包加入你的[gold]牌组[/gold]。",
+            "stack": null,
+            "is_melted": false
+          },
+          {
+            "index": 2,
+            "relic_id": "STRIKE_DUMMY",
+            "name": "打击木偶",
+            "description": "名字中有“打击”的卡牌造成[blue]{ExtraDamage}[/blue]点额外伤害。",
+            "stack": null,
+            "is_melted": false
+          },
+          {
+            "index": 3,
+            "relic_id": "STONE_CALENDAR",
+            "name": "历石",
+            "description": "在第[blue]{DamageTurn}[/blue]回合结束时，对所有敌人造成[blue]{Damage}[/blue]点伤害。",
+            "stack": null,
+            "is_melted": false
+          },
+          {
+            "index": 4,
+            "relic_id": "PAELS_LEGION",
+            "name": "佩尔的士兵",
+            "description": "将你从一张卡牌中获得的[gold]格挡[/gold]翻倍，然后此遗物会休眠[blue]{Turns}[/blue]回合。",
+            "stack": null,
+            "is_melted": false
+          },
+          {
+            "index": 5,
+            "relic_id": "LUCKY_FYSH",
+            "name": "招财异鱼",
+            "description": "每当你将一张卡牌加入你的[gold]牌组[/gold]时，获得[blue]{Gold}[/blue][gold]金币[/gold]。",
+            "stack": null,
+            "is_melted": false
+          }
+        ],
+        "potions": [
+          {
+            "index": 0,
+            "potion_id": null,
+            "name": null,
+            "description": null,
+            "rarity": null,
+            "occupied": false,
+            "usage": null,
+            "target_type": null,
+            "is_queued": false,
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "can_use": false,
+            "can_discard": false
+          },
+          {
+            "index": 1,
+            "potion_id": null,
+            "name": null,
+            "description": null,
+            "rarity": null,
+            "occupied": false,
+            "usage": null,
+            "target_type": null,
+            "is_queued": false,
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "can_use": false,
+            "can_discard": false
+          }
+        ]
+      }
+    },
+    "prism-control": {
+      "state_version": 16,
+      "run_id": "NEWRFAYKTQHR",
+      "screen": "COMBAT",
+      "session": {
+        "mode": "singleplayer",
+        "phase": "run",
+        "control_scope": "local_player"
+      },
+      "in_combat": true,
+      "turn": 4,
+      "available_actions": [
+        "end_turn",
+        "play_card",
+        "save_and_quit"
+      ],
+      "combat": {
+        "action_readiness": {
+          "can_use_combat_actions": true,
+          "reason": "ready",
+          "actions_settled": true,
+          "running_action_type": null,
+          "ready_action_type": null,
+          "modal_open": false,
+          "modal_type": null,
+          "player_actions_disabled": false,
+          "is_paused": false,
+          "local_ready_to_end_turn": false,
+          "all_players_ready_to_end_turn": true,
+          "ending_turn_phase_one": false,
+          "ending_turn_phase_two": false,
+          "end_turn_kick": "",
+          "combat_in_progress": true,
+          "combat_over_or_ending": false,
+          "combat_room_mode": "ActiveCombat",
+          "hand_in_card_play": false,
+          "hand_in_card_selection": false,
+          "hand_mode": "Play",
+          "local_turn_ready": true,
+          "snapshot_stable": true,
+          "player_action_phase": true
+        },
+        "player": {
+          "current_hp": 3,
+          "max_hp": 70,
+          "block": 15,
+          "energy": 0,
+          "stars": 0,
+          "focus": 0,
+          "powers": [
+            {
+              "index": 0,
+              "power_id": "STRENGTH_POWER",
+              "name": "力量",
+              "amount": 2,
+              "is_debuff": false
+            },
+            {
+              "index": 1,
+              "power_id": "TAINTED_POWER",
+              "name": "污染",
+              "amount": 9,
+              "is_debuff": true
+            }
+          ],
+          "base_orb_slots": 0,
+          "orb_capacity": 0,
+          "empty_orb_slots": 0,
+          "orbs": [],
+          "pets": [
+            {
+              "index": 0,
+              "pet_id": "PAELS_LEGION",
+              "name": "佩尔的士兵",
+              "current_hp": 9999,
+              "max_hp": 9999,
+              "block": 0,
+              "powers": []
+            }
+          ],
+          "pet_missing": false,
+          "cards_played_this_turn": 3,
+          "attacks_played_this_turn": 0,
+          "skills_played_this_turn": 3
+        },
+        "players": [
+          {
+            "player_id": "1",
+            "slot_index": 0,
+            "is_local": true,
+            "is_connected": true,
+            "character_id": "SILENT",
+            "character_name": "静默猎手",
+            "current_hp": 3,
+            "max_hp": 70,
+            "block": 15,
+            "energy": 0,
+            "stars": 0,
+            "focus": 0,
+            "is_alive": true
+          }
+        ],
+        "hand": [
+          {
+            "index": 0,
+            "card_id": "SKEWER",
+            "name": "串刺",
+            "upgraded": false,
+            "target_type": "AnyEnemy",
+            "requires_target": true,
+            "target_index_space": "enemies",
+            "valid_target_indices": [
+              0
+            ],
+            "costs_x": true,
+            "star_costs_x": false,
+            "energy_cost": 0,
+            "star_cost": 0,
+            "rules_text": "造成{Damage:diff()}点伤害X次。",
+            "resolved_rules_text": "造成10点伤害X次。",
+            "dynamic_values": [
+              {
+                "name": "Damage",
+                "base_value": 8,
+                "current_value": 10,
+                "enchanted_value": 8,
+                "is_modified": true,
+                "was_just_upgraded": false
+              }
+            ],
+            "playable": true,
+            "can_play_result": true,
+            "unplayable_reason": null,
+            "unplayable_reason_raw": null,
+            "unplayable_preventer_id": null,
+            "unplayable_preventer_type": null
+          },
+          {
+            "index": 1,
+            "card_id": "DEADLY_POISON",
+            "name": "致命毒药+",
+            "upgraded": true,
+            "target_type": "AnyEnemy",
+            "requires_target": true,
+            "target_index_space": "enemies",
+            "valid_target_indices": [
+              0
+            ],
+            "costs_x": false,
+            "star_costs_x": false,
+            "energy_cost": 1,
+            "star_cost": 0,
+            "rules_text": "给予{PoisonPower:diff()}层中毒。",
+            "resolved_rules_text": "给予7层中毒。 完美契合。 获得3层污染。",
+            "dynamic_values": [
+              {
+                "name": "PoisonPower",
+                "base_value": 7,
+                "current_value": 7,
+                "enchanted_value": 7,
+                "is_modified": false,
+                "was_just_upgraded": false
+              }
+            ],
+            "playable": false,
+            "can_play_result": false,
+            "unplayable_reason": "not_enough_energy",
+            "unplayable_reason_raw": "EnergyCostTooHigh",
+            "unplayable_preventer_id": null,
+            "unplayable_preventer_type": null
+          },
+          {
+            "index": 2,
+            "card_id": "DAGGER_SPRAY",
+            "name": "匕首雨",
+            "upgraded": false,
+            "target_type": "AllEnemies",
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "costs_x": false,
+            "star_costs_x": false,
+            "energy_cost": 1,
+            "star_cost": 0,
+            "rules_text": "对所有敌人造成{Damage:diff()}点伤害两次。",
+            "resolved_rules_text": "对所有敌人造成6点伤害两次。",
+            "dynamic_values": [
+              {
+                "name": "Damage",
+                "base_value": 4,
+                "current_value": 6,
+                "enchanted_value": 4,
+                "is_modified": true,
+                "was_just_upgraded": false
+              }
+            ],
+            "playable": false,
+            "can_play_result": false,
+            "unplayable_reason": "not_enough_energy",
+            "unplayable_reason_raw": "EnergyCostTooHigh",
+            "unplayable_preventer_id": null,
+            "unplayable_preventer_type": null
+          },
+          {
+            "index": 3,
+            "card_id": "STRIKE_SILENT",
+            "name": "打击",
+            "upgraded": false,
+            "target_type": "AnyEnemy",
+            "requires_target": true,
+            "target_index_space": "enemies",
+            "valid_target_indices": [
+              0
+            ],
+            "costs_x": false,
+            "star_costs_x": false,
+            "energy_cost": 1,
+            "star_cost": 0,
+            "rules_text": "造成{Damage:diff()}点伤害。",
+            "resolved_rules_text": "造成11点伤害。",
+            "dynamic_values": [
+              {
+                "name": "Damage",
+                "base_value": 6,
+                "current_value": 11,
+                "enchanted_value": 6,
+                "is_modified": true,
+                "was_just_upgraded": false
+              }
+            ],
+            "playable": false,
+            "can_play_result": false,
+            "unplayable_reason": "not_enough_energy",
+            "unplayable_reason_raw": "EnergyCostTooHigh",
+            "unplayable_preventer_id": null,
+            "unplayable_preventer_type": null
+          }
+        ],
+        "enemies": [
+          {
+            "index": 0,
+            "enemy_id": "INFESTED_PRISM",
+            "name": "感染棱柱",
+            "current_hp": 116,
+            "max_hp": 171,
+            "base_max_hp": 171,
+            "block": 0,
+            "is_alive": true,
+            "is_hittable": true,
+            "powers": [
+              {
+                "index": 0,
+                "power_id": "VITAL_SPARK_POWER",
+                "name": "活力火花",
+                "amount": 3,
+                "is_debuff": false
+              },
+              {
+                "index": 1,
+                "power_id": "POISON_POWER",
+                "name": "中毒",
+                "amount": 2,
+                "is_debuff": true
+              }
+            ],
+            "intent": "PULSATE_MOVE",
+            "move_id": "PULSATE_MOVE",
+            "intents": [
+              {
+                "index": 0,
+                "intent_type": "Attack",
+                "label": "19",
+                "damage": 19,
+                "hits": 1,
+                "total_damage": 19,
+                "status_card_count": null
+              },
+              {
+                "index": 1,
+                "intent_type": "Buff",
+                "label": null,
+                "damage": null,
+                "hits": null,
+                "total_damage": null,
+                "status_card_count": null
+              },
+              {
+                "index": 2,
+                "intent_type": "Defend",
+                "label": null,
+                "damage": null,
+                "hits": null,
+                "total_damage": null,
+                "status_card_count": null
+              }
+            ]
+          }
+        ],
+        "end_turn_will_kill_player": true,
+        "lethal_risks": [
+          {
+            "risk_id": "incoming_damage",
+            "source": "enemy_intents",
+            "will_kill_player": true,
+            "reason": "Enemy intent damage after current block is at least current HP.",
+            "incoming_damage": 19,
+            "damage_after_block": 4,
+            "player_hp": 3,
+            "player_block": 15,
+            "power_id": null,
+            "power_amount": null
+          }
+        ]
+      },
+      "run": {
+        "character_id": "SILENT",
+        "ascension": 10,
+        "floor": 31,
+        "current_hp": 3,
+        "max_hp": 70,
+        "relics": [
+          {
+            "index": 0,
+            "relic_id": "RING_OF_THE_SNAKE",
+            "name": "蛇之戒指",
+            "description": "在每场战斗开始时，额外抽[blue]{Cards}[/blue]张牌。",
+            "stack": null,
+            "is_melted": false
+          },
+          {
+            "index": 1,
+            "relic_id": "SCROLL_BOXES",
+            "name": "卷轴箱",
+            "description": "拾起时，从[blue]2[/blue]个卡牌包中选择[blue]1[/blue]包加入你的[gold]牌组[/gold]。",
+            "stack": null,
+            "is_melted": false
+          },
+          {
+            "index": 2,
+            "relic_id": "STRIKE_DUMMY",
+            "name": "打击木偶",
+            "description": "名字中有“打击”的卡牌造成[blue]{ExtraDamage}[/blue]点额外伤害。",
+            "stack": null,
+            "is_melted": false
+          },
+          {
+            "index": 3,
+            "relic_id": "STONE_CALENDAR",
+            "name": "历石",
+            "description": "在第[blue]{DamageTurn}[/blue]回合结束时，对所有敌人造成[blue]{Damage}[/blue]点伤害。",
+            "stack": 4,
+            "is_melted": false
+          },
+          {
+            "index": 4,
+            "relic_id": "PAELS_LEGION",
+            "name": "佩尔的士兵",
+            "description": "将你从一张卡牌中获得的[gold]格挡[/gold]翻倍，然后此遗物会休眠[blue]{Turns}[/blue]回合。",
+            "stack": 1,
+            "is_melted": false
+          },
+          {
+            "index": 5,
+            "relic_id": "LUCKY_FYSH",
+            "name": "招财异鱼",
+            "description": "每当你将一张卡牌加入你的[gold]牌组[/gold]时，获得[blue]{Gold}[/blue][gold]金币[/gold]。",
+            "stack": null,
+            "is_melted": false
+          },
+          {
+            "index": 6,
+            "relic_id": "MINIATURE_CANNON",
+            "name": "微型大炮",
+            "description": "[gold]升级[/gold]的攻击牌额外造成[blue]{ExtraDamage}[/blue]点伤害。",
+            "stack": null,
+            "is_melted": false
+          }
+        ],
+        "potions": [
+          {
+            "index": 0,
+            "potion_id": null,
+            "name": null,
+            "description": null,
+            "rarity": null,
+            "occupied": false,
+            "usage": null,
+            "target_type": null,
+            "is_queued": false,
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "can_use": false,
+            "can_discard": false
+          },
+          {
+            "index": 1,
+            "potion_id": null,
+            "name": null,
+            "description": null,
+            "rarity": null,
+            "occupied": false,
+            "usage": null,
+            "target_type": null,
+            "is_queued": false,
+            "requires_target": false,
+            "target_index_space": null,
+            "valid_target_indices": [],
+            "can_use": false,
+            "can_discard": false
+          }
+        ]
+      }
+    }
+  }
+}
