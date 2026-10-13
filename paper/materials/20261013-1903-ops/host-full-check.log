@@ -1,0 +1,1535 @@
+
+[1m[30m[46m RUN [49m[39m[22m [36mv4.1.11 [39m[90m/home/dw/Projects/agent-sts2/.worktrees/live/agent[39m
+
+ [31m❯[39m tests/sl-explore-b2.test.ts [2m([22m[2m5 tests[22m[2m | [22m[31m5 failed[39m[2m)[22m[33m 41500[2mms[22m[39m
+[31m     [31m×[31m a trusted boss (The Kin, Ceremonial Beast) and a low-trust one (the Queen): every point and deviated resolution is bc8c9bc's[39m[33m 8813[2mms[22m[39m
+[31m     [31m×[31m Ceremonial Beast T1: the pick (Mazaleth's Gift) played there; the rollout's gate takes the dry line, B2's the other Gift line the rollout sees dying more often[39m[33m 5256[2mms[22m[39m
+[31m     [31m×[31m a low-trust boss (the Queen, simulated on an SL retry): the rollout's gate, as without the sub-switch[39m[33m 16732[2mms[22m[39m
+[31m     [31m×[31m Ceremonial Beast T1, the dry line played there: off nothing is left; on, a Gift line or Gambler's Brew are alternatives, and B2's pick drinks[39m[33m 4174[2mms[22m[39m
+[31m     [31m×[31m The Kin T5: B2 ranks Snecko Oil (a random potion) first; the replacement drinks it, then re-plans, as Jev's pick of it would[39m[33m 6523[2mms[22m[39m
+ [31m❯[39m tests/sl-retry-planner.test.ts [2m([22m[2m9 tests[22m[2m | [22m[31m8 failed[39m[2m)[22m[33m 113758[2mms[22m[39m
+[31m     [31m×[31m every logged retry board's decision is 3488dc5's, byte for byte[39m[33m 8913[2mms[22m[39m
+[31m     [31m×[31m VNKN F25 T3: Burning Pact draws the known Bash+ and Strike; the question says the next 10 cards; the log has sl_retry[39m[33m 7447[2mms[22m[39m
+     [32m✓[39m VNKN F33 T4 (the replay that died on T5): Shrug It Off draws the known Defend, so a line survives where every line died[32m 28[2mms[22m[39m
+[31m     [31m×[31m JW92 F48 T3: Offering draws the known Defend, Twin Strike and Shrug It Off+[39m[33m 2601[2mms[22m[39m
+[31m     [31m×[31m known draws the pile does not hold: none used, the decision as with the switch off[39m[33m 9852[2mms[22m[39m
+[31m     [31m×[31m the rollout runs 24 samples (frozen clock: the whole schedule); the log says so[39m[33m 33186[2mms[22m[39m
+[31m     [31m×[31m a question's rollout budget is at most what is left of the turn's (re-plans after a draw), never below the usual[39m[33m 11427[2mms[22m[39m
+[31m     [31m×[31m B2 on a retried boss fight runs the compute's samples a line[39m[33m 28594[2mms[22m[39m
+[31m     [31m×[31m a retry step that throws leaves the decision exactly as with both switches off[39m[33m 11708[2mms[22m[39m
+ [32m✓[39m tests/rollout-live.test.ts [2m([22m[2m13 tests[22m[2m)[22m[33m 165953[2mms[22m[39m
+     [33m[2m✓[22m[39m every option of a logged board carries the rollout and history facts; the decision log gets the rollout [33m 3124[2mms[22m[39m
+     [33m[2m✓[22m[39m with a modelled potion held, the rollout fact says later turns may use it [33m 1356[2mms[22m[39m
+     [33m[2m✓[22m[39m a drink-first potion option says it is not rolled out [33m 585[2mms[22m[39m
+     [33m[2m✓[22m[39m up to 10 options: every shown line of every logged board carries the rollout and history facts, exactly one is rollout_best (at most one on a saturated board) [33m 36316[2mms[22m[39m
+     [33m[2m✓[22m[39m the controlled clock: every logged board's rollout stays inside the budget [33m 19976[2mms[22m[39m
+     [33m[2m✓[22m[39m code's ranking, options and auto-acts are unchanged by the rollout [33m 100134[2mms[22m[39m
+     [33m[2m✓[22m[39m logged saturated boards: every line reads its deaths, the enemy HP left and this turn's loss; a tagged best has the fewest deaths, then the least enemy HP left [33m 1584[2mms[22m[39m
+     [33m[2m✓[22m[39m the dead Parafright (ILLUSION_POWER, REVIVE_MOVE) is back next turn: the rollout loses more, next turn's hit counts it [33m 1466[2mms[22m[39m
+     [33m[2m✓[22m[39m the dead Parafright's hit next turn is in every line's enemy_threat_next [33m 1221[2mms[22m[39m
+ [31m❯[39m tests/boss-lines-planner.test.ts [2m([22m[2m7 tests[22m[2m | [22m[31m7 failed[39m[2m)[22m[33m 89169[2mms[22m[39m
+[31m     [31m×[31m BOSS_SIM_LINES=off: every logged boss board's decision is the pre-B2 one, byte for byte[39m[33m 2416[2mms[22m[39m
+[31m     [31m×[31m a fight that is not a boss fight: the same decision with B2 on[39m[33m 593[2mms[22m[39m
+[31m     [31m×[31m a boss it is trusted on (The Kin, turn 5): every line's whole-fight numbers, rollout_best by the simulated win rate, the log[39m[33m 20064[2mms[22m[39m
+[31m     [31m×[31m BOSS_SIM_LOW_TRUST=retry (default): a low-trust boss's first attempt is not simulated at all; the question and every answer as with B2 off, the log says why[39m[33m 16740[2mms[22m[39m
+[31m     [31m×[31m BOSS_SIM_LOW_TRUST=always: a low-trust boss (the Queen, V4.2): no whole-fight number or plan in Jev's question, the question and ranking as with B2 off; the log keeps the numbers[39m[33m 15549[2mms[22m[39m
+[31m     [31m×[31m an SL retry of a low-trust boss (SL_RETRY_SHOW_SIM on): the numbers shown and labelled 低可信, the ranking unchanged; the previous attempts in the question[39m[33m 15311[2mms[22m[39m
+[31m     [31m×[31m turn 1: the fight plan from the best line's samples[39m[33m 18495[2mms[22m[39m
+ [32m✓[39m tests/compute-memo.test.ts [2m([22m[2m11 tests[22m[2m)[22m[33m 84249[2mms[22m[39m
+     [33m[2m✓[22m[39m the same question and every resolution as without it; the board planned again comes from it, rollout and B2 [33m 17486[2mms[22m[39m
+     [33m[2m✓[22m[39m on a worker pool (one worker): the run comes back too, keyed by the data the workers load, after the pool is built again [33m 11248[2mms[22m[39m
+     [33m[2m✓[22m[39m a refresh leaves the running pool's identity intact and a rebuilt pool misses the old memo [33m 18322[2mms[22m[39m
+     [33m[2m✓[22m[39m a hit is charged to the turn as the run was; B2 needs the deadline it took, a run its deadline cut is not kept [33m 18117[2mms[22m[39m
+     [33m[2m✓[22m[39m the rollout needs the budget the stored run needed: less, it runs again; enough, it comes from the memo [33m 14044[2mms[22m[39m
+     [33m[2m✓[22m[39m with exactly that budget the same run is cut nowhere and gives the same result; with less, it is cut [33m 5017[2mms[22m[39m
+ [31m❯[39m tests/sl-explore.test.ts [2m([22m[2m33 tests[22m[2m | [22m[31m13 failed[39m[2m)[22m[33m 9933[2mms[22m[39m
+     [32m✓[39m attempt 2 plays as usual; attempt 3 deviates at the latest question with an untried line (code's turns are no deviation point)[32m 4[2mms[22m[39m
+     [32m✓[39m backtracking: attempt 4 deviates one question further back, attempt 5 the next; then the latest with a line still untried[32m 2[2mms[22m[39m
+     [32m✓[39m a point whose untried lines all die more often in the rollout is passed over while another is not (63WB F33 T5)[32m 1[2mms[22m[39m
+     [32m✓[39m the deviation point is chosen by the rollout's numbers also where B2 gates the replacement (its record is not read)[32m 1[2mms[22m[39m
+     [32m✓[39m SL_RETRY_EXPLORE_ORDER: points where every line loses in every sample come last (R1QJUBVBSSB2 F33: T5 on all dead)[32m 2[2mms[22m[39m
+     [32m✓[39m SL_RETRY_EXPLORE_REPLAY: replayPath is the reference attempt's lines before the point, by board[32m 1[2mms[22m[39m
+     [32m✓[39m a deviation whose board never came up does not count: the next attempt aims at the same point[32m 0[2mms[22m[39m
+     [32m✓[39m no recorded points (the switch was off, or rows from before it): no deviation point[32m 0[2mms[22m[39m
+     [32m✓[39m among the lines no failed attempt played, those the rollout does not see dying more often, the ranking's first[32m 2[2mms[22m[39m
+     [32m✓[39m every untried line dying more often still gives one: the pick is known to fail[32m 0[2mms[22m[39m
+     [32m✓[39m never a line dying this turn while one survives; never a drink the pick does not drink[32m 0[2mms[22m[39m
+     [32m✓[39m SL_RETRY_EXPLORE_B2: on a trusted boss B2's win rate is the gate, and it picks another line than the rollout's gate (63WB F33 T2)[32m 2[2mms[22m[39m
+     [32m✓[39m SL_RETRY_EXPLORE_BOSS_POTIONS (a boss fight): a line drinking a potion the pick does not is an alternative too; the guards hold[32m 1[2mms[22m[39m
+     [32m✓[39m explorePoint: the record's alternatives, the rollout's deaths and, with B2, its win rates and the lines it rates no worse[32m 1[2mms[22m[39m
+     [32m✓[39m SL_RETRY_EXPLORE_REPLAY: the reference line instead of the answer, except a winning answer, a line not shown, or one dying where the answer does not[32m 1[2mms[22m[39m
+     [32m✓[39m a winning pick is never changed; a pick no failed attempt played there is played as answered; nothing left: none[32m 0[2mms[22m[39m
+     [32m✓[39m B2's first among the candidates; a tie on its numbers goes to the rollout[32m 0[2mms[22m[39m
+     [32m✓[39m ignores what differs from attempt to attempt on the same board[32m 3[2mms[22m[39m
+     [32m✓[39m our HP, an enemy's intent, the hand and the piles are part of it[32m 1[2mms[22m[39m
+[31m     [31m×[31m recording (env.sl.explore without a deviation): every logged board's decision is 3488dc5's, byte for byte[39m[33m 8291[2mms[22m[39m
+[31m     [31m×[31m VNKN F25 T1: Jev's pick, played there in attempt 2, gives way to the rollout's best untried line; the row says so[39m[32m 121[2mms[22m[39m
+[31m     [31m×[31m on the deviation point's board a pick no failed attempt played there is played as answered (logged, not changed)[39m[32m 82[2mms[22m[39m
+     [32m✓[39m code's own turns are never changed: VNKN F33 T4 (code plays it) and a lethal, with their lines excluded[32m 41[2mms[22m[39m
+[31m     [31m×[31m every answer's point and, with a deviation, every answer's resolution, log and point: bc8c9bc's[39m[32m 141[2mms[22m[39m
+[31m     [31m×[31m the Decimillipede (a listed elite): every point and deviation is bc8c9bc's; never a line drinking the Speed Potion the pick does not[39m[32m 116[2mms[22m[39m
+[31m     [31m×[31m SL_RETRY_EXPLORE_REPLAY on the Decimillipede T1: attempt 2's line is played instead of Jev's answer, as if Jev had picked it[39m[32m 121[2mms[22m[39m
+[31m     [31m×[31m the Test Subject (a boss; low trust, B2 off here: the rollout's gate): with every dry line played, a line drinking the Weak Potion[39m[33m 924[2mms[22m[39m
+[31m     [31m×[31m deviation at the latest point, then backtracking; every other board plays as answered; the rows keep it all[39m[32m 17[2mms[22m[39m
+[31m     [31m×[31m SL_RETRY_EXPLORE_REPLAY: Jev answers T1 otherwise in attempt 3 (R1QJUBVBSSB2 F33); attempt 2's line is played there, so the attempt reaches its T2 point[39m[32m 11[2mms[22m[39m
+[31m     [31m×[31m no deviation when the board differs from the failed attempts': played as answered, the point kept for the next attempt[39m[32m 13[2mms[22m[39m
+[31m     [31m×[31m a restarted process reads the points back from the log and deviates at the same point[39m[32m 10[2mms[22m[39m
+[31m     [31m×[31m the sub-switches: on by default in env.sl.explore on every board; off, absent (the planner then as at bc8c9bc)[39m[32m 10[2mms[22m[39m
+[31m     [31m×[31m switch off: nothing recorded, no env.sl.explore, the same plays in every attempt (as before the switch)[39m[32m 11[2mms[22m[39m
+ [32m✓[39m tests/target-options.test.ts [2m([22m[2m22 tests[22m[2m)[22m[33m 44301[2mms[22m[39m
+     [33m[2m✓[22m[39m shows an Amalgam-focus line and a Queen-focus line, labelled, within the option cap [33m 7069[2mms[22m[39m
+     [33m[2m✓[22m[39m Jev's picking an Amalgam-focus line plays it (no swap to a Queen line with more damage) [33m 3523[2mms[22m[39m
+     [33m[2m✓[22m[39m gives Jev DeepSeek's whole plan (boss prep and kill order included) and the top 4 lessons about these enemies [33m 2920[2mms[22m[39m
+     [33m[2m✓[22m[39m rolls every shown line out under both kill orders, the Amalgam first among them, and reports and logs them [33m 2649[2mms[22m[39m
+     [33m[2m✓[22m[39m is deterministic: the same board gives the same options and the same kill-order numbers [33m 5742[2mms[22m[39m
+     [33m[2m✓[22m[39m stays inside the 1500ms time budget with a controlled clock, degrading the samples per order first [33m 1949[2mms[22m[39m
+     [33m[2m✓[22m[39m every logged board: one kind of enemy unchanged; several kinds only move from code's act to Jev's question, never to another act [33m 17512[2mms[22m[39m
+     [33m[2m✓[22m[39m the minion-first order kills the minion; its numbers differ from leader-first; deterministic; one kind of enemy is unchanged [33m 894[2mms[22m[39m
+     [33m[2m✓[22m[39m orders that agree as far as a sample went share it: Leader > Minion > Other and Leader > Other > Minion while the leader lives [33m 876[2mms[22m[39m
+     [33m[2m✓[22m[39m an attacking illusion first (Parafright) gets no "dead by T5" count: it revives (981W F30); it stays a kill-order target [33m 356[2mms[22m[39m
+     [33m[2m✓[22m[39m The Kin (2CCM6XK4PB37 F17): the Priest is the leader; no order kills it in 5 turns, so the orders rank by its HP left [33m 571[2mms[22m[39m
+ [32m✓[39m tests/ops-herdr.test.ts [2m([22m[2m27 tests[22m[2m)[22m[33m 46408[2mms[22m[39m
+     [33m[2m✓[22m[39m new learner tabs follow the live ops pane when workspace labels are duplicated [33m 2356[2mms[22m[39m
+     [33m[2m✓[22m[39m shows verified live learner 20261010-164301-strategy-proposal beside ops and closes its reused viewer on exit [33m 5758[2mms[22m[39m
+     [33m[2m✓[22m[39m shows verified live learner 20261010-164301 beside ops and closes its reused viewer on exit [33m 6136[2mms[22m[39m
+     [33m[2m✓[22m[39m run, reuse, busy, status, stop; only its own labels [33m 4024[2mms[22m[39m
+     [33m[2m✓[22m[39m --close-on-exit: the pane closes when the job ends and its last lines are kept [33m 3541[2mms[22m[39m
+     [33m[2m✓[22m[39m starts the TUI once, prompts, reads the turn's answer and tokens from the session file [33m 904[2mms[22m[39m
+     [33m[2m✓[22m[39m other arguments (a new key file, another effort): the idle TUI is restarted [33m 1549[2mms[22m[39m
+     [33m[2m✓[22m[39m waits for both shell exit and registry retirement before starting the replacement [33m 2482[2mms[22m[39m
+     [33m[2m✓[22m[39m retries a short name-release race only after rechecking that the pane and name are free [33m 2272[2mms[22m[39m
+     [33m[2m✓[22m[39m defers a persistent name conflict without duplicate prompts or another stop [33m 1931[2mms[22m[39m
+     [33m[2m✓[22m[39m defers a competing name conflict without duplicate prompts or another stop [33m 1900[2mms[22m[39m
+     [33m[2m✓[22m[39m defers (75) while a person's text sits in the composer or a dialog is up; nothing is sent [33m 2617[2mms[22m[39m
+     [33m[2m✓[22m[39m a turn that does not end in time is interrupted with esc (124); the TUI stays [33m 5672[2mms[22m[39m
+     [33m[2m✓[22m[39m a startup dialog (agent_not_ready) defers without answering it [33m 692[2mms[22m[39m
+     [33m[2m✓[22m[39m a post-mortem batch runs in its own pane, reports as before, and the pane closes [33m 4125[2mms[22m[39m
+     [33m[2m✓[22m[39m herdr unavailable: the batch starts with setsid as before [33m 333[2mms[22m[39m
+ [31m❯[39m tests/passive-pieces-planner.test.ts [2m([22m[2m1 test[22m[2m | [22m[31m1 failed[39m[2m)[22m[33m 1075[2mms[22m[39m
+[31m     [31m×[31m boards without any relic piece: the same question, view and resolutions on and off; the Fan board's question counts the Fan[39m[33m 1074[2mms[22m[39m
+ [31m❯[39m tests/death-move-planner.test.ts [2m([22m[2m8 tests[22m[2m | [22m[31m8 failed[39m[2m)[22m[33m 25874[2mms[22m[39m
+[31m     [31m×[31m MECH_DEATH_MOVE off: every logged board's decision is the pre-change one, byte for byte[39m[33m 960[2mms[22m[39m
+[31m     [31m×[31m MECH_RULES off (MECH_DEATH_MOVE on): the pre-change one with MECH_RULES off[39m[32m 223[2mms[22m[39m
+[31m     [31m×[31m on, the rule-free board (the Kaiser Crab, its ally-death counts in the DB): as before[39m[33m 4475[2mms[22m[39m
+[31m     [31m×[31m on, a monster DB without the ally-death counters (built before them): as before[39m[33m 653[2mms[22m[39m
+[31m     [31m×[31m on, reading the rules fails: the switch off (fail safe)[39m[33m 427[2mms[22m[39m
+[31m     [31m×[31m 0U96U4D9Z3PP F48 T5: the killing lines say Enrage now and Off With Your Head next; hp_lost as without the rule; the Queen carries it; the log records it[39m[33m 367[2mms[22m[39m
+[31m     [31m×[31m 5GKAR00L5AYV F48 T2 (You Are Mine): no change this turn, the head-chop next[39m[33m 5065[2mms[22m[39m
+[31m     [31m×[31m Y3XT9EBS7U8B F37 T1: a line killing the Turret Operator says the Shield's Smash comes next[39m[33m 13702[2mms[22m[39m
+ [32m✓[39m tests/potions-jev-call.test.ts [2m([22m[2m14 tests[22m[2m)[22m[33m 36428[2mms[22m[39m
+     [33m[2m✓[22m[39m synthetic boards: no auto-drink on a survivable turn; the no-answer fallback is potion-free [33m 324[2mms[22m[39m
+     [33m[2m✓[22m[39m logged boards: an auto-act that drinks is a lethal, a pending drink of Jev's line, or a turn where every potion-free line dies [33m 35495[2mms[22m[39m
+ [32m✓[39m tests/eval.test.ts [2m([22m[2m5 tests[22m[2m)[22m[33m 38512[2mms[22m[39m
+     [33m[2m✓[22m[39m passes tests/eval_metrics_test.py (without the venv only the algorithm tests run) [33m 4889[2mms[22m[39m
+     [33m[2m✓[22m[39m passes tests/eval_calibration_test.py (without the venv only the algorithm tests run) [33m 32393[2mms[22m[39m
+     [33m[2m✓[22m[39m prints the unchanged bossClock of each logged board, at the HP given, and the estimate at the real length [33m 582[2mms[22m[39m
+     [33m[2m✓[22m[39m tools/eval/strength-sources.ts prints the same ids as JSON [33m 637[2mms[22m[39m
+ [32m✓[39m tests/loop.test.ts [2m([22m[2m21 tests[22m[2m)[22m[33m 23932[2mms[22m[39m
+     [33m[2m✓[22m[39m plays through a scripted fight and stops when the run ends [33m 779[2mms[22m[39m
+     [33m[2m✓[22m[39m after an action that fails but went through, logs it and asks again instead of replaying the answer (KFPC F4) [33m 3802[2mms[22m[39m
+     [33m[2m✓[22m[39m writes one decision record per decision [33m 549[2mms[22m[39m
+     [33m[2m✓[22m[39m logs the planner's wall time and the time before it on every planned row (latency_ms.planner, latency_ms.pre) [33m 513[2mms[22m[39m
+     [33m[2m✓[22m[39m dispatches nothing in shadow mode [33m 466[2mms[22m[39m
+     [33m[2m✓[22m[39m honours the decision cap [33m 673[2mms[22m[39m
+     [33m[2m✓[22m[39m drives the game without Jev, resolving every question in code [33m 575[2mms[22m[39m
+     [33m[2m✓[22m[39m does not re-ask Jev while the board is unchanged [33m 3762[2mms[22m[39m
+     [33m[2m✓[22m[39m skips the Jev call when the board moves while it is still planning [33m 3758[2mms[22m[39m
+     [33m[2m✓[22m[39m waits for a pending action to settle before planning again [33m 657[2mms[22m[39m
+     [33m[2m✓[22m[39m falls back to the code choice when the shortlist answer is still a guess [33m 557[2mms[22m[39m
+     [33m[2m✓[22m[39m survives a planner that refuses to build an over-large question [33m 472[2mms[22m[39m
+     [33m[2m✓[22m[39m the time cap waits for the fight to end, up to a grace period (TQX5: stopped before the boss's turn) [33m 1287[2mms[22m[39m
+     [33m[2m✓[22m[39m stops when the run ends, after saving the result [33m 570[2mms[22m[39m
+     [33m[2m✓[22m[39m reports a victory as such [33m 493[2mms[22m[39m
+     [33m[2m✓[22m[39m stops when the run disappears even without a score screen [33m 607[2mms[22m[39m
+     [33m[2m✓[22m[39m keeps going when more runs were requested [33m 1842[2mms[22m[39m
+     [33m[2m✓[22m[39m walks through a shop once instead of flapping open and closed [33m 899[2mms[22m[39m
+     [33m[2m✓[22m[39m skips a card reward once instead of claiming and skipping forever [33m 797[2mms[22m[39m
+     [33m[2m✓[22m[39m reports the running session total when combat ends [33m 844[2mms[22m[39m
+ [32m✓[39m tests/build-facts-audit.test.ts [2m([22m[2m20 tests[22m[2m)[22m[33m 41251[2mms[22m[39m
+     [33m[2m✓[22m[39m reward/card with the boss simulation: facts, not scores; every option still listed [33m 303[2mms[22m[39m
+     [33m[2m✓[22m[39m shop/plan with the boss simulation: facts, not scores; every option still listed [33m 6889[2mms[22m[39m
+     [33m[2m✓[22m[39m rest/plan with the boss simulation: facts, not scores; every option still listed [33m 1087[2mms[22m[39m
+     [33m[2m✓[22m[39m selection/remove with the boss simulation: facts, not scores; every option still listed [33m 32228[2mms[22m[39m
+ [31m❯[39m tests/template-target.test.ts [2m([22m[2m12 tests[22m[2m | [22m[31m5 failed[39m[2m)[22m[33m 12900[2mms[22m[39m
+     [32m✓[39m the logged conditionals: choose, show, cond, plural, bare and nested ones go; plain placeholders stay[32m 8[2mms[22m[39m
+     [32m✓[39m Shiv as logged in RNTVAT76BPV0's hand (AnyEnemy, requires_target): single, at its valid targets[32m 10[2mms[22m[39m
+     [32m✓[39m Shiv and Sovereign Blade off the hand and in a potion's pool: single; The Bomb and Corrosive Wave (Self) still every enemy[32m 8[2mms[22m[39m
+[31m     [31m×[31m rntv-f30-t1-shiv: every line names Shiv's target, no option's first action is refused, nor code's[39m[33m 4590[2mms[22m[39m
+[31m     [31m×[31m rntv-f33-t1-shiv: every line names Shiv's target, no option's first action is refused, nor code's[39m[33m 1042[2mms[22m[39m
+     [32m✓[39m rntv-f38-t1-shiv-code: every line names Shiv's target, no option's first action is refused, nor code's[32m 9[2mms[22m[39m
+[31m     [31m×[31m rntv-f38-t1-defend-shiv: every line names Shiv's target, no option's first action is refused, nor code's[39m[33m 1983[2mms[22m[39m
+[31m     [31m×[31m F30 T1: Jev's line (小刀, 欺凌, potion, 防御, potion) starts with Shiv at the Mother Louse, as the gate wants it[39m[33m 2607[2mms[22m[39m
+[31m     [31m×[31m the same run before the Shiv, True Grit's and Primal Force's conditional templates in hand: byte for byte[39m[33m 2624[2mms[22m[39m
+     [32m✓[39m 7DFB21JE2DTK F48 T7: Mad Science (Sapping rider) is not the drawing card, Pommel Strike is[32m 7[2mms[22m[39m
+     [32m✓[39m the same board without Pommel Strike: no draw veto at all (it was Mad Science's before)[32m 2[2mms[22m[39m
+     [32m✓[39m Sapping (7DFB21JE2DTK): not a Strength source; Expertise (JJ75S331VUKX): one[32m 6[2mms[22m[39m
+ [31m❯[39m tests/sl-explore-whole.test.ts [2m([22m[2m17 tests[22m[2m | [22m[31m8 failed[39m[2m)[22m[33m 4468[2mms[22m[39m
+     [32m✓[39m multisets: a part grows into the whole; two of a card are not one[32m 2[2mms[22m[39m
+     [32m✓[39m only a line that draws before its turn is over; its sure plays within some failed turn[32m 1[2mms[22m[39m
+     [32m✓[39m a pick whose sure plays are within a failed turn gives way to a not-worse line known to end otherwise[32m 1[2mms[22m[39m
+     [32m✓[39m kept (played as answered, the avoid after the draw then) when every such line is worse; never a line dying this turn[32m 1[2mms[22m[39m
+     [32m✓[39m a tried pick's replacement prefers a line known to end otherwise, within the gate's pool[32m 1[2mms[22m[39m
+     [32m✓[39m PW7Y F48 (the live rows): attempts 3 and 4 deviated with differs false; the targets, and why[32m 7[2mms[22m[39m
+     [32m✓[39m a wasted deviation at the only point left: the next attempt goes back to it (off: it moves on)[32m 1[2mms[22m[39m
+[31m     [31m×[31m every answer's resolution and point, recording, deviating and avoiding, as e0fa69b[39m[33m 1970[2mms[22m[39m
+[31m     [31m×[31m pw7y-a3-t1-replan: code's "only distinct line" ended the turn as a failed one; now Jev's question, the answer kept off[39m[33m 908[2mms[22m[39m
+[31m     [31m×[31m pw7y-a4-t2-replan: code's "only distinct line" ended the turn as a failed one; now Jev's question, the answer kept off[39m[33m 1106[2mms[22m[39m
+     [32m✓[39m pw7y-a3-t1-replan: where no surviving line ends the turn otherwise, code plays its line and says so (avoid_failed)[32m 23[2mms[22m[39m
+[31m     [31m×[31m pw7y-a3-t1-deviation as a later board of the turn: a question whose every line ends as a failed turn says so[39m[32m 128[2mms[22m[39m
+[31m     [31m×[31m Blood Wall, Pommel Strike+, Stomp: may end as attempts 1-2's after Pommel Strike+'s draw; not 'not played here'[39m[32m 137[2mms[22m[39m
+[31m     [31m×[31m turnOpen: the sure plays of a line stop at its first card that draws; a potion option is open with its drink[39m[32m 125[2mms[22m[39m
+     [32m✓[39m is said (avoid_failed) with `whole`; without it, as before[32m 7[2mms[22m[39m
+[31m     [31m×[31m tells the planner (`whole`), says so in the run config; off: nothing new[39m[32m 26[2mms[22m[39m
+[31m     [31m×[31m an avoid that cannot act later in the deviation's turn is on the row's deviation, and said[39m[32m 22[2mms[22m[39m
+ [32m✓[39m tests/brain-codex.test.ts [2m([22m[2m32 tests[22m[2m)[22m[33m 17879[2mms[22m[39m
+     [33m[2m✓[22m[39m recognises a used-up plan (rest for the process), a rate limit, a lost login and an ignored isolation setting [33m 532[2mms[22m[39m
+     [33m[2m✓[22m[39m after the first token, a stream silent for BRAIN_CODEX_STALL_MS is killed and asked once more; the second run's answer is taken [33m 1746[2mms[22m[39m
+     [33m[2m✓[22m[39m a question that stalled twice (and failed) is not billed to the next one: each latency is its own runs (J4S28FRQKD7G's act-plan, 41 s logged as 316 s) [33m 2278[2mms[22m[39m
+     [33m[2m✓[22m[39m before the first token only BRAIN_CODEX_FIRST_TOKEN_MS (off by default) and the router's timeout apply: long thinking is not a stall [33m 5344[2mms[22m[39m
+     [33m[2m✓[22m[39m stalled twice: the question fails as a timeout and the fallback answers it [33m 2242[2mms[22m[39m
+     [33m[2m✓[22m[39m the router's timeout leaves the evidence: what the stream had sent, and its stderr with credentials masked [33m 1512[2mms[22m[39m
+     [33m[2m✓[22m[39m checks the program, the login file (not read), AGENTS.md, and the model and effort in the catalog [33m 414[2mms[22m[39m
+     [33m[2m✓[22m[39m a call past BRAIN_CODEX_TIMEOUT_MS is killed and DeepSeek answers it [33m 1508[2mms[22m[39m
+ [31m❯[39m tests/mech-move-planner.test.ts [2m([22m[2m8 tests[22m[2m | [22m[31m8 failed[39m[2m)[22m[33m 15326[2mms[22m[39m
+[31m     [31m×[31m MECH_MOVE_RULES off: every logged board's decision is the pre-change one (MECH_RULES on), byte for byte[39m[33m 4640[2mms[22m[39m
+[31m     [31m×[31m MECH_RULES off (MECH_MOVE_RULES on): the pre-change one with MECH_RULES off[39m[33m 936[2mms[22m[39m
+[31m     [31m×[31m on, reading the rules fails: the switch off (fail safe), the Crab's back attack included[39m[33m 1689[2mms[22m[39m
+[31m     [31m×[31m on, a monster DB without the per-monster data: the Axebot boards as before (the Crab's back attack is no data rule)[39m[33m 1636[2mms[22m[39m
+[31m     [31m×[31m NX48MBG3SPRJ F33 T7: a line killing the Rocket counts the Crusher's Enlarging Strike faced (6 + Crab Rage's 6), not from behind[39m[33m 3132[2mms[22m[39m
+[31m     [31m×[31m 8L29N792FA45 F33 T5: the Crusher alone, the noted facing the dead Rocket's: its Guarded Strike lands as shown[39m[33m 649[2mms[22m[39m
+[31m     [31m×[31m Y3XT9EBS7U8B F45 T5 (Stock 1): a killing line says the Axebot is back in Boot Up; its Stock carries the observation; the log records it[39m[33m 1644[2mms[22m[39m
+[31m     [31m×[31m 8L29N792FA45 F39 T3 (Stock 2, 1 HP): the kill takes a stack, the lowered rule[39m[33m 999[2mms[22m[39m
+ [32m✓[39m tests/sl-loop.test.ts [2m([22m[2m4 tests[22m[2m)[22m[33m 13249[2mms[22m[39m
+     [33m[2m✓[22m[39m SL on: the certain death is not played; the fight is reloaded and attempt 2 is played with attempt 1 in Jev's question [33m 335[2mms[22m[39m
+     [33m[2m✓[22m[39m SL on without a reload: the decision rows and Jev's questions are SL off's, plus the sl_* fields [33m 323[2mms[22m[39m
+     [33m[2m✓[22m[39m SL_RELOAD_EARLY: every line dies with nothing left to chance: reloaded before the least-loss line's first card; off: after the line [33m 12433[2mms[22m[39m
+ [31m❯[39m tests/thief.test.ts [2m([22m[2m11 tests[22m[2m | [22m[31m9 failed[39m[2m)[22m[33m 11917[2mms[22m[39m
+[31m     [31m×[31m every logged thief board's decision is the pre-change one, byte for byte[39m[33m 2875[2mms[22m[39m
+[31m     [31m×[31m T2: what it carries (the card missing since the fight's first frame), turns left, HP; every option's thief fact[39m[33m 1703[2mms[22m[39m
+[31m     [31m×[31m its Escape turn: this turn is the last; the lines that leave it alive say it leaves with the card[39m[32m 50[2mms[22m[39m
+[31m     [31m×[31m a line stripping its last Flutter on the Escape turn: stunned, one more turn (8V0HD9Y207WY F19 T5)[39m[32m 271[2mms[22m[39m
+[31m     [31m×[31m the fight's first frame not seen (a restart with no logged frame): one card, unknown which[39m[33m 889[2mms[22m[39m
+     [32m✓[39m after a restart the journal replay notes the fight's first logged frame: the stolen card is known again[32m 6[2mms[22m[39m
+[31m     [31m×[31m the Merc: gold stolen so far (the fight's first frame's gold less now), where it goes on death[39m[33m 2825[2mms[22m[39m
+[31m     [31m×[31m the Fat Gremlin on its Flee turn: no line kills it (14 HP), none added; killable, a line killing it is among the options[39m[33m 1373[2mms[22m[39m
+[31m     [31m×[31m no thief_context, no thief fact, no thief log[39m[33m 668[2mms[22m[39m
+[31m     [31m×[31m a thief step that throws (a broken first-frame note) leaves the decision exactly as with the switch off[39m[33m 1252[2mms[22m[39m
+     [32m✓[39m the fight's first frame is noted whatever the state (an odd one is skipped, never thrown)[32m 2[2mms[22m[39m
+ [31m❯[39m tests/thief-cost.test.ts [2m([22m[2m11 tests[22m[2m | [22m[31m6 failed[39m[2m)[22m[33m 8152[2mms[22m[39m
+[31m     [31m×[31m every logged thief board's decision is ffed0d4's, byte for byte (the switch absent, and false)[39m[33m 2491[2mms[22m[39m
+[31m     [31m×[31m T2: thief_context gives the card's HP and its derivation; each option's loot cost is its value x the samples losing it[39m[33m 1725[2mms[22m[39m
+[31m     [31m×[31m its Escape turn (8V0HD9Y207WY F19 T5): the line stunning it, killed next turn 8/8, is the rollout's best and code's fallback[39m[33m 309[2mms[22m[39m
+[31m     [31m×[31m no value computed for this fight (another fight's, or none): no cost, the facts say why, every choice as with the switch off[39m[33m 864[2mms[22m[39m
+[31m     [31m×[31m fail safe: a value that throws when read leaves the decision exactly as with THIEF_COST off[39m[33m 578[2mms[22m[39m
+[31m     [31m×[31m the Merc's take so far at the potion table's gold rate, and the Fat Gremlin's on its Flee turn[39m[33m 2173[2mms[22m[39m
+     [32m✓[39m the HP guard swaps only when the extra loot lost is no more than the HP the swap saves[32m 2[2mms[22m[39m
+     [32m✓[39m this turn's certain loss: a thief on its last turn the line neither kills nor stuns[32m 1[2mms[22m[39m
+     [32m✓[39m the ranking: deaths first when some line pays a loot cost, then the value with it taken off[32m 2[2mms[22m[39m
+     [32m✓[39m gold without a rate in the table, or unknown gold: no value, said[32m 2[2mms[22m[39m
+     [32m✓[39m the journal replay takes the stolen card's value back from the decision row it was logged with[32m 4[2mms[22m[39m
+ [32m✓[39m tests/boss-sim-build.test.ts [2m([22m[2m14 tests[22m[2m)[22m[33m 14895[2mms[22m[39m
+     [33m[2m✓[22m[39m common random numbers: the same deck twice differs by exactly 0; runs repeat sample for sample [33m 1027[2mms[22m[39m
+     [33m[2m✓[22m[39m the worker pool gives the serial runner's samples; a mixture takes each sample from one member [33m 742[2mms[22m[39m
+     [33m[2m✓[22m[39m card reward: every option's boss_sim line, facts.act_boss_sim at the clock's place, the note; nothing dropped [33m 542[2mms[22m[39m
+     [33m[2m✓[22m[39m a low-confidence boss (the Kaiser Crab here) is marked, with why; a relic the fight does not model is not simulated [33m 8269[2mms[22m[39m
+     [33m[2m✓[22m[39m rest site: resting projects a higher entry HP; each smith option upgrades its card [33m 1323[2mms[22m[39m
+     [33m[2m✓[22m[39m cut short by the clock under 300 samples (of 1000 asked): no numbers, as a failed simulation (Dai 2026-10-02) [33m 926[2mms[22m[39m
+     [33m[2m✓[22m[39m off: DeepSeek's card reward question byte for byte as the screen built it; on: the same question plus the simulation [33m 1622[2mms[22m[39m
+ [32m✓[39m tests/thief-card-value.test.ts [2m([22m[2m10 tests[22m[2m)[22m[33m 14221[2mms[22m[39m
+     [33m[2m✓[22m[39m three decks on the same seeds: with the card, without it, with it at 10 HP less; the facts' numbers are the run's [33m 1156[2mms[22m[39m
+     [33m[2m✓[22m[39m on: the turn-2 decision row carries thief_card_value (岩石铠甲), computed once for the fight; off: none [33m 13042[2mms[22m[39m
+ [32m✓[39m tests/logdb.test.ts [2m([22m[2m8 tests[22m[2m)[22m[33m 19581[2mms[22m[39m
+     [33m[2m✓[22m[39m passes tests/logdb_test.py (without the venv only the extractor tests run) [33m 14565[2mms[22m[39m
+     [33m[2m✓[22m[39m asks query.py for JSON, no sync, the row cap and a timeout, with no keys in its environment [33m 321[2mms[22m[39m
+     [33m[2m✓[22m[39m turns failures into isError with the reason [33m 1316[2mms[22m[39m
+     [33m[2m✓[22m[39m answers SQL over the derived tables [33m 1679[2mms[22m[39m
+     [33m[2m✓[22m[39m refuses writes and files outside the database [33m 912[2mms[22m[39m
+ [32m✓[39m tests/ops-stall-recovery.test.ts [2m([22m[2m6 tests[22m[2m)[22m[33m 10007[2mms[22m[39m
+     [33m[2m✓[22m[39m does not flag a single failed action followed by a current decision [33m 334[2mms[22m[39m
+     [33m[2m✓[22m[39m requires repeated unreachable requests and stale decisions, and clears on recovery [33m 1261[2mms[22m[39m
+     [33m[2m✓[22m[39m keeps real stuck-loop, gate and silence alerts [33m 1720[2mms[22m[39m
+     [33m[2m✓[22m[39m checks the real script after shell startup exceeds the former five-second limit [33m 6576[2mms[22m[39m
+ [32m✓[39m tests/batch-j.test.ts [2m([22m[2m21 tests[22m[2m)[22m[33m 14567[2mms[22m[39m
+     [33m[2m✓[22m[39m Jev: the combat plan question carries it ahead of the advice (plain state and the v1 view) [33m 505[2mms[22m[39m
+     [33m[2m✓[22m[39m the logged F33 T1 board (7 energy, 6 Attacks): Shuriken reaches the solver, and the logged six Attacks deal 112 as they did (96 shown then) [33m 7629[2mms[22m[39m
+     [33m[2m✓[22m[39m the logged F33 T2 board: the Wheel reaches the rollout, and the next turn (fight turn 3) loses less with it [33m 4426[2mms[22m[39m
+     [33m[2m✓[22m[39m the logged F17 T3 board (Brew and one empty slot): "2 random potions", re-planned with them; no "effect not simulated" [33m 474[2mms[22m[39m
+     [33m[2m✓[22m[39m the logged board with both piles empty: Distilled Chaos and Glowwater are lines of the solve (no "not simulated") [33m 679[2mms[22m[39m
+ [31m❯[39m tests/rollout-best-added.test.ts [2m([22m[2m4 tests[22m[2m | [22m[31m1 failed[39m[2m)[22m[33m 891[2mms[22m[39m
+     [32m✓[39m liveRollout picks its best among all code's lines, not only the shown ones (and adds no potion line), with 0 ms host pauses[32m 296[2mms[22m[39m
+     [32m✓[39m liveRollout picks its best among all code's lines, not only the shown ones (and adds no potion line), with 10000 ms host pauses[32m 242[2mms[22m[39m
+     [32m✓[39m pins the monster transitions and terminal model used by the best-added fixture[32m 58[2mms[22m[39m
+[31m     [31m×[31m the rollout's best line is added, last and marked, when code did not show it[39m[32m 291[2mms[22m[39m
+ [32m✓[39m tests/build-decider.test.ts [2m([22m[2m28 tests[22m[2m)[22m[33m 13404[2mms[22m[39m
+     [33m[2m✓[22m[39m a card reward is decided by DeepSeek, logged as decider deepseek with its reason; Jev is not asked [33m 593[2mms[22m[39m
+     [33m[2m✓[22m[39m falls back to Jev, then code, when DeepSeek errors (and does not ask it again as an escalation) [33m 443[2mms[22m[39m
+     [33m[2m✓[22m[39m out of DeepSeek budget: the screen is the baseline decision, no DeepSeek call [33m 445[2mms[22m[39m
+     [33m[2m✓[22m[39m combat still goes to Jev: no DeepSeek call, even on a near-guess [33m 2107[2mms[22m[39m
+     [33m[2m✓[22m[39m route: planned once by the brain at the first fork, the next fork followed in code; a missing node re-plans [33m 1376[2mms[22m[39m
+     [33m[2m✓[22m[39m card reward with a route change: one call for both; the change is its own map/route-change row (a reused plan step); the next map follows it [33m 814[2mms[22m[39m
+     [33m[2m✓[22m[39m card reward with keep (or no route): recorded in the card row only; the next map follows the plan [33m 1725[2mms[22m[39m
+     [33m[2m✓[22m[39m route: when the brain fails, code's greedy baseline moves (never shown to the brain); that floor is not asked again [33m 1030[2mms[22m[39m
+     [33m[2m✓[22m[39m the state changes while DeepSeek decides: a 'not dispatched' row carries its answer and tokens; no action is sent [33m 556[2mms[22m[39m
+     [33m[2m✓[22m[39m reasoning 'Decisive: heal' with a smith answer and no reason: re-asked, heals, both answers logged [33m 791[2mms[22m[39m
+     [33m[2m✓[22m[39m a consistent answer is not a re-ask [33m 671[2mms[22m[39m
+     [33m[2m✓[22m[39m still inconsistent with no usable conclusion: the existing fallback decides, and the answers are logged [33m 733[2mms[22m[39m
+     [33m[2m✓[22m[39m reply not JSON, reasoning concluded heal: heals as DeepSeek, logged 'recovered from reasoning', Jev not asked [33m 649[2mms[22m[39m
+     [33m[2m✓[22m[39m an unknown option and a reasoning that settles on nothing: Jev decides, shown DeepSeek's reason [33m 675[2mms[22m[39m
+     [33m[2m✓[22m[39m reasoning and raw reply conclude on different options: not recovered [33m 610[2mms[22m[39m
+ [32m✓[39m tests/journal-replay.test.ts [2m([22m[2m10 tests[22m[2m)[22m[33m 12346[2mms[22m[39m
+     [33m[2m✓[22m[39m gives DeepSeek the same run memory as a loop that never stopped, and follows the saved route plan [33m 2773[2mms[22m[39m
+     [33m[2m✓[22m[39m after a game relaunch (a run_unknown main menu, then continue) the run memory is rebuilt, and a replay that finds nothing says so [33m 3521[2mms[22m[39m
+     [33m[2m✓[22m[39m restarted between the map move and the card reward: the replay notes the node the move chose, so the reward still carries the route review [33m 1547[2mms[22m[39m
+     [33m[2m✓[22m[39m a route changed on a card reward is the act's plan after a restart (its map/route-change row carries it) [33m 2545[2mms[22m[39m
+     [33m[2m✓[22m[39m the replay notes the node a logged map move chose, and the fight chain at the map's node [33m 506[2mms[22m[39m
+     [33m[2m✓[22m[39m without the replay (the old behaviour) the restarted loop re-plans the route with an empty history [33m 1295[2mms[22m[39m
+ [32m✓[39m tests/brain-codex-session.test.ts [2m([22m[2m23 tests[22m[2m)[22m[33m 9521[2mms[22m[39m
+     [33m[2m✓[22m[39m one server, one thread with our system prompt; each question a turn with the strict schema, reverted after it [33m 323[2mms[22m[39m
+     [33m[2m✓[22m[39m config.toml with anything but model / effort / [tui] (or an instruction source) turns session mode off: exec mode answers [33m 545[2mms[22m[39m
+     [33m[2m✓[22m[39m a stalled turn (silent after its first token) is interrupted, reverted and asked once more [33m 1180[2mms[22m[39m
+     [33m[2m✓[22m[39m a runaway answer (past BRAIN_CODEX_MAX_ANSWER_CHARS) is interrupted, reverted and asked once more [33m 311[2mms[22m[39m
+     [33m[2m✓[22m[39m ET3V5177HXSY F42 rest/plan, logged: a whole cut answer to a question with a discard option is taken (it was refused for lacking discard) [33m 423[2mms[22m[39m
+     [33m[2m✓[22m[39m a cut naming an option that needs a field it lacks (a :discard option without slots, a card option without cards) is asked again; the trace says why [33m 797[2mms[22m[39m
+     [33m[2m✓[22m[39m a cut is asked again as before when its prefix lacks a required field, names no option, or BRAIN_CODEX_ACCEPT_CUT is off [33m 589[2mms[22m[39m
+     [33m[2m✓[22m[39m a server that dies is restarted once; when it dies again, exec mode answers for the rest of the process [33m 2305[2mms[22m[39m
+     [33m[2m✓[22m[39m sweeps a dead process's threads (ours only), and deletes its own thread's files at exit [33m 484[2mms[22m[39m
+     [33m[2m✓[22m[39m the server does not keep the process alive; at exit the process removes its thread's files [33m 797[2mms[22m[39m
+ [32m✓[39m tests/route-review.test.ts [2m([22m[2m27 tests[22m[2m)[22m[33m 9586[2mms[22m[39m
+     [33m[2m✓[22m[39m one call for the rest action, its card and the route; the change is its own row, the plan's last step; the next map follows it [33m 1374[2mms[22m[39m
+     [33m[2m✓[22m[39m answered by another engine (BRAIN_ENGINE_REST=claude): the rest row, its route change and their rationales name it, not DeepSeek [33m 1306[2mms[22m[39m
+     [33m[2m✓[22m[39m a change with another stretch to the next rest site: both rows log it against the kept route; next_rest rides in the question, not the system prefix [33m 1073[2mms[22m[39m
+     [33m[2m✓[22m[39m the real client reads the route-plan answer and the rest answer's route and route_reason [33m 1051[2mms[22m[39m
+     [33m[2m✓[22m[39m an illegal route-plan answer is re-asked once with its errors; the corrected route is followed [33m 1119[2mms[22m[39m
+     [33m[2m✓[22m[39m an unknown option key recovered from the reasoning keeps the answer's route and route_reason (batch E) [33m 1066[2mms[22m[39m
+     [33m[2m✓[22m[39m a consistency re-ask asks for the route again (the route block rides in the same conversation); a second answer without one keeps the first answer's route [33m 2063[2mms[22m[39m
+ [32m✓[39m tests/run-plan-merge.test.ts [2m([22m[2m19 tests[22m[2m)[22m[33m 7076[2mms[22m[39m
+     [33m[2m✓[22m[39m one call: the Ancient's option, the act's route and the run plan; all three stored [33m 1010[2mms[22m[39m
+     [33m[2m✓[22m[39m RUN_PLAN_MERGE=off: the run plan's own call at the map, then the Ancient's question exactly as the screen built it [33m 727[2mms[22m[39m
+     [33m[2m✓[22m[39m nothing due: the question is byte for byte the same with RUN_PLAN_MERGE on and off [33m 1306[2mms[22m[39m
+     [33m[2m✓[22m[39m an answer whose run_plan is no plan: the option and the route are used, the plan stays due and is asked on its own two floors on [33m 728[2mms[22m[39m
+     [33m[2m✓[22m[39m an illegal route re-asked by the router: the corrected answer without a run_plan keeps the first answer's plan [33m 653[2mms[22m[39m
+     [33m[2m✓[22m[39m the run start rides on the run's first question (no plan yet) [33m 563[2mms[22m[39m
+     [33m[2m✓[22m[39m the real client reads the run plan from the answer, or from its own object after it [33m 1356[2mms[22m[39m
+     [33m[2m✓[22m[39m the review due at the F4 map rides on the F5 card reward (the route plan restored from the logs): one call, the card, the route and the plan [33m 371[2mms[22m[39m
+ [32m✓[39m tests/ops-autoplay-console.test.ts [2m([22m[2m7 tests[22m[2m)[22m[33m 6448[2mms[22m[39m
+     [33m[2m✓[22m[39m tails existing history, new lines, and the next run; stops its viewer on exit [33m 3453[2mms[22m[39m
+     [33m[2m✓[22m[39m keeps following writes when the current alias first appears as an empty file [33m 2647[2mms[22m[39m
+ [31m❯[39m tests/mech-rules-planner.test.ts [2m([22m[2m5 tests[22m[2m | [22m[31m5 failed[39m[2m)[22m[33m 2953[2mms[22m[39m
+[31m     [31m×[31m with the observed data in the monster DB, every logged Hopper board's decision is the pre-change one, byte for byte[39m[33m 455[2mms[22m[39m
+[31m     [31m×[31m on, but a monster DB without the observed data: the same[39m[33m 1011[2mms[22m[39m
+[31m     [31m×[31m on, and reading the rules fails: the same (fail safe)[39m[33m 953[2mms[22m[39m
+[31m     [31m×[31m RPC6X61N9FQ0 F20 T3 (Flutter 5, Hat Trick 21): the line with five hits leaves the attack out of hp_lost and says so[39m[32m 235[2mms[22m[39m
+[31m     [31m×[31m 8V0HD9Y207WY F19 T5 (its Escape turn, Flutter 2): the stripping line cancels its move, the Escape a turn later[39m[32m 296[2mms[22m[39m
+ [31m❯[39m tests/sl-early-planner.test.ts [2m([22m[2m15 tests[22m[2m | [22m[31m2 failed[39m[2m)[22m[33m 7898[2mms[22m[39m
+     [32m✓[39m P57H F22 T5 (the Obscura's Parafright, 38 incoming): every line dies, nothing random: the judge reloads early[32m 187[2mms[22m[39m
+     [32m✓[39m 90JG F17 T12: True Grit (a random exhaust) in the hand: chance, so not early[32m 9[2mms[22m[39m
+     [33m[2m✓[22m[39m Z7D7 F28 T6: a random potion (Gambler's Brew) held: its samples are chance, so not early [33m 6185[2mms[22m[39m
+     [32m✓[39m 5BXM F31 T6: Pommel Strike draws cards nobody knows on a first attempt: not early, and the end_turn veto stays[32m 8[2mms[22m[39m
+[31m     [31m×[31m the known order rides with the added cards: the question says so, the log counts them, the solver draws as without them[39m[33m 1218[2mms[22m[39m
+[31m     [31m×[31m an `exact` count alone (what the tracker gives without the switch after a status drawn at once) changes no decision[39m[32m 50[2mms[22m[39m
+     [32m✓[39m one enemy: Juggernaut's and Kusarigama's hits are certain, nothing left to chance, the judge reloads early[32m 14[2mms[22m[39m
+     [32m✓[39m two enemies (P57H F22 T5, the Obscura and its Parafright): the same hits are chance, not early[32m 200[2mms[22m[39m
+     [32m✓[39m 15 HP + 28 block against the Aeonglass's 19x2 and a held Wither+'s 9: the mod does not flag it, our count does: certain[32m 3[2mms[22m[39m
+     [32m✓[39m without the held card: the mod's veto, as before[32m 2[2mms[22m[39m
+     [32m✓[39m only the held cards make it lethal: anything that could cut the loss or kill an attacker first keeps it uncertain[32m 12[2mms[22m[39m
+     [32m✓[39m 7DXA F23 T7: 3 HP + 13 block against 38, flagged lethal, but Stone Calendar's 52 can kill both enemies first: not certain[32m 3[2mms[22m[39m
+     [32m✓[39m Stone Calendar's 52 kills nobody who matters: certain, the note says so[32m 1[2mms[22m[39m
+     [32m✓[39m Y3XT F48 T7: Beating Remnant caps the turn at 20, 55 HP: our own count survives (the old count said 33)[32m 2[2mms[22m[39m
+     [32m✓[39m Beating Remnant at 20 HP or less: exact only with the HP lost so far this turn; with it, the cap less that[32m 2[2mms[22m[39m
+ [32m✓[39m tests/brain-router.test.ts [2m([22m[2m30 tests[22m[2m)[22m[33m 6088[2mms[22m[39m
+     [33m[2m✓[22m[39m a timeout aborts the engine and falls back [33m 1007[2mms[22m[39m
+     [33m[2m✓[22m[39m two timeouts in a row (a re-ask's too) rest the engine for TIMEOUT_REST_MS: the next question does not wait on it [33m 2006[2mms[22m[39m
+     [33m[2m✓[22m[39m a timeout between answers starts the count over [33m 2009[2mms[22m[39m
+     [33m[2m✓[22m[39m an invalid answer whose re-ask timed out goes to the fallback too; a fallback that fails leaves the unusable answer (then Jev/code) [33m 1007[2mms[22m[39m
+ [32m✓[39m tests/insatiable-sandpit.test.ts [2m([22m[2m7 tests[22m[2m)[22m[33m 7181[2mms[22m[39m
+     [33m[2m✓[22m[39m the rollout's turn 2 starts at Sandpit 4 with up to 3 Escapes drawn, and some samples are eaten by turn 5 [33m 2409[2mms[22m[39m
+     [33m[2m✓[22m[39m off: as before, no count in any later turn and fewer deaths [33m 2306[2mms[22m[39m
+     [33m[2m✓[22m[39m the loop's switch (DecisionEnv.sandpitStart, config SANDPIT_START) wins over rollout-live's default [33m 1992[2mms[22m[39m
+ [32m✓[39m tests/brain-loop.test.ts [2m([22m[2m8 tests[22m[2m)[22m[33m 6844[2mms[22m[39m
+     [33m[2m✓[22m[39m BRAIN_ENGINE_REST=claude: Claude decides the rest site, DeepSeek is not asked, the row names the engine [33m 1259[2mms[22m[39m
+     [33m[2m✓[22m[39m BRAIN_ENGINE_SHOP=claude: the shop plan and every step code plays from it name Claude (decider and rationale) [33m 1265[2mms[22m[39m
+     [33m[2m✓[22m[39m a used-up Claude quota falls back to DeepSeek on the same question [33m 736[2mms[22m[39m
+     [33m[2m✓[22m[39m a used-up Claude call budget (BRAIN_CLAUDE_MAX_CALLS) falls back to DeepSeek, which then spends DeepSeek's [33m 697[2mms[22m[39m
+     [33m[2m✓[22m[39m a claude that fails `claude --version` before play: said once as an error, in run-config, and its questions go to DeepSeek without starting it [33m 676[2mms[22m[39m
+     [33m[2m✓[22m[39m DeepSeek as the fallback answers to DEEPSEEK_MAX_CALLS: none left, it is not asked (Jev/code decides) [33m 764[2mms[22m[39m
+     [33m[2m✓[22m[39m DeepSeek as the fallback that answers unusably (DeepSeekAnswerError) is counted [33m 776[2mms[22m[39m
+     [33m[2m✓[22m[39m default configuration: DeepSeek decides and the row carries no brain note (v3's rows) [33m 666[2mms[22m[39m
+ [32m✓[39m tests/boss-sim.test.ts [2m([22m[2m16 tests[22m[2m)[22m[33m 5664[2mms[22m[39m
+     [33m[2m✓[22m[39m is deterministic under a seed, and another seed changes it [33m 791[2mms[22m[39m
+     [33m[2m✓[22m[39m runs on worker threads with exactly the serial numbers [33m 1351[2mms[22m[39m
+     [33m[2m✓[22m[39m compares lines on common random numbers: the same seed per sample, the same enemy moves [33m 362[2mms[22m[39m
+     [33m[2m✓[22m[39m the live solver and 5-turn rollout give the numbers they gave before B1.5 [33m 541[2mms[22m[39m
+     [33m[2m✓[22m[39m redeal: a pre-fight start has every card in the draw pile, the hand drawn in the sample, the entry HP [33m 882[2mms[22m[39m
+     [33m[2m✓[22m[39m kill orders: one per order of two kinds of enemy, none for one; each line keeps its best order's numbers [33m 1051[2mms[22m[39m
+ [32m✓[39m tests/potion-mc.test.ts [2m([22m[2m17 tests[22m[2m)[22m[33m 7293[2mms[22m[39m
+     [33m[2m✓[22m[39m logged boards: the combat question is the same twice (the samples are seeded per board) [33m 5233[2mms[22m[39m
+     [33m[2m✓[22m[39m logged boards holding a random potion: its option has the distribution, the shares and the re-plan note [33m 979[2mms[22m[39m
+     [33m[2m✓[22m[39m with the rollout on, the option's rollout facts are the median sample's line's [33m 854[2mms[22m[39m
+ [32m✓[39m tests/strategy-research-scheduling.test.ts [2m([22m[2m1 test[22m[2m)[22m[33m 5757[2mms[22m[39m
+   [33m[2m✓[22m[39m frozen research takes the next slot and starts only after its actual registration is saved [33m 5754[2mms[22m[39m
+ [32m✓[39m tests/batch-k.test.ts [2m([22m[2m9 tests[22m[2m)[22m[33m 7092[2mms[22m[39m
+     [33m[2m✓[22m[39m the logged DHGT F33 T1 board with the Shuriken's counter at 2 (a Hellraiser Strike played at the turn's start, attacks_played_this_turn 0): the solver's count is the relic's [33m 6626[2mms[22m[39m
+ [32m✓[39m tests/batch-n.test.ts [2m([22m[2m15 tests[22m[2m)[22m[33m 5523[2mms[22m[39m
+       [33m[2m✓[22m[39m empty reply, plan drafted in the reasoning: bought as planned with one call, the row marked recovered [33m 1197[2mms[22m[39m
+       [33m[2m✓[22m[39m an echo reply takes the plan its reasoning drafted (was parsed into a blank race plan) [33m 2116[2mms[22m[39m
+       [33m[2m✓[22m[39m an empty reply takes the plan its reasoning drafted in one call [33m 1987[2mms[22m[39m
+ [32m✓[39m tests/batch-i.test.ts [2m([22m[2m19 tests[22m[2m)[22m[33m 8898[2mms[22m[39m
+     [33m[2m✓[22m[39m the logged F19 T1 board (VTRE, Thieving Hopper 19 x1): the drink is a simulated line, not "effect not simulated" [33m 519[2mms[22m[39m
+     [33m[2m✓[22m[39m logged boards: the relics reach the solver (VTRE F33 T5 at 46/80: Offering then Strike gets Red Skull's 3; V6TW F33 T2: Clay's owed 3) [33m 6545[2mms[22m[39m
+     [33m[2m✓[22m[39m Jev's "Stone Armor, Liquid Memories, Bash+ from it": the frame between the drink and the screen returns nothing and keeps the line (batch-h 3 plays it on after the screen) [33m 480[2mms[22m[39m
+     [33m[2m✓[22m[39m the logged K7G9 F45 T3 board (4 HP, four Burns held, no attack coming, mod says safe): the note names the Burns [33m 1212[2mms[22m[39m
+ [32m✓[39m tests/oneshot-act-start.test.ts [2m([22m[2m20 tests[22m[2m)[22m[33m 6001[2mms[22m[39m
+     [33m[2m✓[22m[39m one DeepSeek call for the Ancient and the route; the route's first move is a reused plan step [33m 1490[2mms[22m[39m
+     [33m[2m✓[22m[39m an answer without a route: re-asked once; still none: the option is taken and the first map asks for the route [33m 1344[2mms[22m[39m
+     [33m[2m✓[22m[39m a random outcome: two calls (the joint question, then the review), the review keeping the route [33m 1382[2mms[22m[39m
+     [33m[2m✓[22m[39m the real client reads the answer's route (and cards); the candidate routes ride in the question, not the system prefix [33m 1332[2mms[22m[39m
+ [32m✓[39m tests/batch-c.test.ts [2m([22m[2m27 tests[22m[2m)[22m[33m 6374[2mms[22m[39m
+     [33m[2m✓[22m[39m Battle Trance cuts Jev's line; the Blood Potion is offered again beside the drawn cards, not drunk by code [33m 2981[2mms[22m[39m
+     [33m[2m✓[22m[39m the logged elite T1 with the clock past the budget: no best, no 'every line loses all our HP', the cap explained [33m 2828[2mms[22m[39m
+ [32m✓[39m tests/ops-codex.test.ts [2m([22m[2m12 tests[22m[2m)[22m[33m 5240[2mms[22m[39m
+     [33m[2m✓[22m[39m round trip: codex-ops-do.sh -> broker -> actions script -> answer and exit code [33m 3466[2mms[22m[39m
+     [33m[2m✓[22m[39m victories, a new ascension, a post-mortem batch with a fake learner, the 10-pending inbox line [33m 606[2mms[22m[39m
+     [33m[2m✓[22m[39m a failed batch is retried later; dispatch refuses unknown runs and a second batch [33m 682[2mms[22m[39m
+     [33m[2m✓[22m[39m wakes once per cause, waits before the next wake, forgets the cause when OK [33m 323[2mms[22m[39m
+ [32m✓[39m tests/oneshot-shop.test.ts [2m([22m[2m51 tests[22m[2m)[22m[33m 5420[2mms[22m[39m
+     [33m[2m✓[22m[39m shop: one DeepSeek call; the plan row plays step 1 with the call's tokens, each later step is its own reused row [33m 1359[2mms[22m[39m
+     [33m[2m✓[22m[39m shop: a price change under the plan re-asks once, with what was bought [33m 968[2mms[22m[39m
+     [33m[2m✓[22m[39m shop: an invalid plan is logged (paid, not dispatched) and the visit goes step by step [33m 788[2mms[22m[39m
+     [33m[2m✓[22m[39m the real client: the plan is read from DeepSeek's JSON reply (the message is laid out like a choice: memory, state, question, options) [33m 759[2mms[22m[39m
+     [33m[2m✓[22m[39m the real client: an unparseable reply is logged and the visit goes step by step [33m 814[2mms[22m[39m
+ [32m✓[39m tests/ops-mod-state.test.ts [2m([22m[2m37 tests[22m[2m)[22m[33m 3844[2mms[22m[39m
+ [32m✓[39m tests/strategy-no-change-path.test.ts [2m([22m[2m24 tests[22m[2m)[22m[33m 3945[2mms[22m[39m
+ [32m✓[39m tests/fix-queue-v4-shrink.test.ts [2m([22m[2m14 tests[22m[2m)[22m[33m 5529[2mms[22m[39m
+     [33m[2m✓[22m[39m XC4T F9 T3: a later turn with the beetle alive is shrunk, its hand from the pile at base (unmarked): a Strike hits it for 4, not 2 [33m 4160[2mms[22m[39m
+     [33m[2m✓[22m[39m four logged boards with Weak, Strength or Howl from Beyond [33m 525[2mms[22m[39m
+ [32m✓[39m tests/silent-apotheosis-reference.test.ts [2m([22m[2m7 tests[22m[2m)[22m[33m 5765[2mms[22m[39m
+   [33m[2m✓[22m[39m labels random potion forecasts and unsimulated potions separately in F45's real question [33m 2057[2mms[22m[39m
+   [33m[2m✓[22m[39m bounds F45's real potion forecast work with 0 ms host pauses [33m 1830[2mms[22m[39m
+   [33m[2m✓[22m[39m bounds F45's real potion forecast work with 10000 ms host pauses [33m 1282[2mms[22m[39m
+ [32m✓[39m tests/boss-lines.test.ts [2m([22m[2m11 tests[22m[2m)[22m[33m 4809[2mms[22m[39m
+     [33m[2m✓[22m[39m every line on the same seeds: the same line twice is the same, sample by sample; serial and pool agree [33m 3091[2mms[22m[39m
+     [33m[2m✓[22m[39m the deadline: the samples every line finished, the same ones for every line, and the count in the text [33m 629[2mms[22m[39m
+     [33m[2m✓[22m[39m B2's and B3's pools never hold workers at once: each one starting its workers releases the other's; the released one starts again on its next run [33m 1044[2mms[22m[39m
+ [32m✓[39m tests/learner-empty-fix.test.ts [2m([22m[2m20 tests[22m[2m)[22m[33m 4378[2mms[22m[39m
+     [33m[2m✓[22m[39m does not accept a failed learner or evidence from a different worktree [33m 419[2mms[22m[39m
+     [33m[2m✓[22m[39m still schedules and runs full checks for a real merge, preserving full-suite failure reporting [33m 388[2mms[22m[39m
+ [32m✓[39m tests/worktree-retention.test.ts [2m([22m[2m1 test[22m[2m)[22m[33m 4195[2mms[22m[39m
+   [33m[2m✓[22m[39m retires only verified workspaces and recovers preserved artifacts after interruptions [33m 4193[2mms[22m[39m
+ [32m✓[39m tests/rollout.test.ts [2m([22m[2m86 tests[22m[2m)[22m[33m 4990[2mms[22m[39m
+     [33m[2m✓[22m[39m is deterministic under a seeded RNG [33m 371[2mms[22m[39m
+     [33m[2m✓[22m[39m a Decimillipede segment killed alone reattaches: the fight is not over (63CP F25) [33m 401[2mms[22m[39m
+     [33m[2m✓[22m[39m an illusion killed comes back at full HP: the fight goes on until the real enemy dies (FA82 F27) [33m 483[2mms[22m[39m
+ [32m✓[39m tests/unassigned-proposal-resolution.test.ts [2m([22m[2m9 tests[22m[2m)[22m[33m 2628[2mms[22m[39m
+   [33m[2m✓[22m[39m unassigned proposal: rejects_foreign_missing_or_changed_original_registration [33m 301[2mms[22m[39m
+   [33m[2m✓[22m[39m unassigned proposal: preserves_output_scope_when_markdown_has_equivalent_prose [33m 318[2mms[22m[39m
+ [32m✓[39m tests/brain-codex-usage.test.ts [2m([22m[2m21 tests[22m[2m)[22m[33m 3812[2mms[22m[39m
+     [33m[2m✓[22m[39m fails on codex's error, a server that ends without answering, a hang (killed at the timeout) and a missing program [33m 1157[2mms[22m[39m
+     [33m[2m✓[22m[39m a server that stays up after its answer is killed after the grace; the answer stands [33m 349[2mms[22m[39m
+     [33m[2m✓[22m[39m reads at start and answers through codex; each codex row carries the reading, and the run-config row the guard [33m 362[2mms[22m[39m
+     [33m[2m✓[22m[39m usage that cannot be read: said once, codex stays on; required reads block codex until a fresh read passes [33m 461[2mms[22m[39m
+     [33m[2m✓[22m[39m the live case (2026-10-04 07:06Z): a 401 expired token on the read, codex's token refresh through the app-server, the read again: codex answers [33m 319[2mms[22m[39m
+ [32m✓[39m tests/learner-retention.test.ts [2m([22m[2m1 test[22m[2m)[22m[33m 3668[2mms[22m[39m
+   [33m[2m✓[22m[39m reclaims only settled learner copies with verified archival and safe restoration [33m 3666[2mms[22m[39m
+ [32m✓[39m tests/oneshot-rest-event.test.ts [2m([22m[2m16 tests[22m[2m)[22m[33m 3779[2mms[22m[39m
+     [33m[2m✓[22m[39m rest: one DeepSeek call; the smith and the named card are two rows, the second a reused plan step [33m 864[2mms[22m[39m
+     [33m[2m✓[22m[39m rest: an answer that names no option key falls back to today's two questions [33m 780[2mms[22m[39m
+     [33m[2m✓[22m[39m event: remove 2 named in the answer's cards; both picks are plan steps [33m 1030[2mms[22m[39m
+     [33m[2m✓[22m[39m BUILD_ONESHOT=off: the old step-by-step questions [33m 830[2mms[22m[39m
+ [32m✓[39m tests/ops-autoplay-reload.test.ts [2m([22m[2m16 tests[22m[2m)[22m[33m 1922[2mms[22m[39m
+ [32m✓[39m tests/brain-claude.test.ts [2m([22m[2m15 tests[22m[2m)[22m[33m 3216[2mms[22m[39m
+     [33m[2m✓[22m[39m with tools: our stdio MCP server is the only one, pre-approved, and its calls come back recorded [33m 327[2mms[22m[39m
+     [33m[2m✓[22m[39m an agent that exits while something it started holds its output: the call ends after the grace, with the output, and the leftover is killed [33m 2033[2mms[22m[39m
+ [32m✓[39m tests/blocked-experience-repair.test.ts [2m([22m[2m18 tests[22m[2m)[22m[33m 2335[2mms[22m[39m
+ [32m✓[39m tests/passive-pieces.test.ts [2m([22m[2m20 tests[22m[2m)[22m[33m 3625[2mms[22m[39m
+     [33m[2m✓[22m[39m Letter Opener (7PWU4CD3QCP3 F48 T4, the Queen's Weak 98): the 3rd Skill deals 5 to every enemy, through block [33m 531[2mms[22m[39m
+     [33m[2m✓[22m[39m the live planner's current turn: the run's pieces with the relics' counters, 0 before the turn's first card; none off [33m 943[2mms[22m[39m
+     [33m[2m✓[22m[39m unset, the solver is as before: the logged boards' plans are the same with the fields absent [33m 1090[2mms[22m[39m
+     [33m[2m✓[22m[39m a board without any of the relic pieces (F4K88F267RCX F48 T3, the Queen) builds the same rollout input and the same rollout on and off [33m 439[2mms[22m[39m
+     [33m[2m✓[22m[39m a board holding Letter Opener (7PWU4CD3QCP3 F48 T4) carries it for the later turns with the switch on, nothing with it off [33m 372[2mms[22m[39m
+ [31m❯[39m tests/sl-explore-canon.test.ts [2m([22m[2m14 tests[22m[2m | [22m[31m8 failed[39m[2m)[22m[33m 6882[2mms[22m[39m
+     [32m✓[39m the same plays in another order are one turn; the same card on another enemy, or upgraded, is another play[32m 3[2mms[22m[39m
+     [32m✓[39m triedHas: a line is tried by its turn's plays (exact) or as a rebuilt summary has them (loose)[32m 1[2mms[22m[39m
+     [32m✓[39m the same plays in another order are not an untried line (off: by text, they were)[32m 3[2mms[22m[39m
+     [32m✓[39m exploreTried: the turns through a board (the record's every board, each point's planned line)[32m 1[2mms[22m[39m
+     [32m✓[39m UK7R9A0NMCXL F33 (logged rows): attempt 1's T1 and T2 come in on attempt 2's boards; a turn played otherwise ends it[32m 3[2mms[22m[39m
+     [32m✓[39m exploreReplacement: a pick an unreadable attempt may have played gives way; one known untried is played[32m 1[2mms[22m[39m
+[31m     [31m×[31m every answer's resolution and point, recording and with a deviation, as 08ec8f9[39m[33m 2705[2mms[22m[39m
+[31m     [31m×[31m Hemokinesis -> Crusher, attempt 1's, gives way to Hemokinesis -> Rocket (the same card on the other enemy: untried)[39m[32m 96[2mms[22m[39m
+[31m     [31m×[31m on the deviation point the replacement's turn is no failed attempt's; it opens with Shrug It Off, which draws[39m[33m 1944[2mms[22m[39m
+[31m     [31m×[31m the re-plan after the draw: Jev's Defend, Defend would end the turn as attempts 2-3's; it gives way, the turn differs[39m[33m 1323[2mms[22m[39m
+[31m     [31m×[31m code's own line ending the turn as a failed attempt's becomes Jev's question (JSA5K8YZ9RXV F48 T1: Demon Form)[39m[33m 738[2mms[22m[39m
+[31m     [31m×[31m attempt 1's row has its turns (each action's board and play); attempt 3's point has the turns through it, attempt 1's among them[39m[32m 29[2mms[22m[39m
+[31m     [31m×[31m a restarted process deviates at the same point with the same turns; the deviation's turn carries `avoid` on its later boards only[39m[32m 18[2mms[22m[39m
+[31m     [31m×[31m both off: attempt 1 unrecorded, no turn record, the target and env.sl.explore as 08ec8f9[39m[32m 16[2mms[22m[39m
+ [32m✓[39m tests/learner-raw-report.test.ts [2m([22m[2m15 tests[22m[2m)[22m[33m 2405[2mms[22m[39m
+     [33m[2m✓[22m[39m rechecks raw output while preserving the original failure and requiring every source ancestor [33m 345[2mms[22m[39m
+ [32m✓[39m tests/component-usage.test.ts [2m([22m[2m1 test[22m[2m)[22m[33m 3044[2mms[22m[39m
+   [33m[2m✓[22m[39m syncs component logs, derives counter deltas and refreshes paper costs on fixed fixtures [33m 3042[2mms[22m[39m
+ [32m✓[39m tests/learning-ledger.test.ts [2m([22m[2m4 tests[22m[2m)[22m[33m 2493[2mms[22m[39m
+     [33m[2m✓[22m[39m passes tests/learning_ledger_test.py [33m 2218[2mms[22m[39m
+ [32m✓[39m tests/batch-b.test.ts [2m([22m[2m43 tests[22m[2m)[22m[33m 3625[2mms[22m[39m
+     [33m[2m✓[22m[39m the first decision of the turn has the whole cap; after 20 lost this turn, none; a new turn, the whole cap again [33m 2537[2mms[22m[39m
+ [32m✓[39m tests/v1mf-bugfix.test.ts [2m([22m[2m4 tests[22m[2m)[22m[33m 3081[2mms[22m[39m
+     [33m[2m✓[22m[39m the logged end-of-turn board (no playable card): the Demise is offered, not dropped by an end turn [33m 1092[2mms[22m[39m
+     [33m[2m✓[22m[39m choosing a line with a later drink keeps it in the line; the cut-short board re-plans it (XMK1 F33 T3) [33m 1905[2mms[22m[39m
+ [32m✓[39m tests/codex-only-brain.test.ts [2m([22m[2m36 tests[22m[2m)[22m[33m 2358[2mms[22m[39m
+     [33m[2m✓[22m[39m rest outage resumes the same real screen question and dispatches once [33m 613[2mms[22m[39m
+     [33m[2m✓[22m[39m reward outage resumes the same real screen question and dispatches once [33m 411[2mms[22m[39m
+     [33m[2m✓[22m[39m event outage resumes the same real screen question and dispatches once [33m 551[2mms[22m[39m
+     [33m[2m✓[22m[39m a genuine brain program fault crosses the loop's legacy fallback catches without dispatch [33m 331[2mms[22m[39m
+     [33m[2m✓[22m[39m missing route facts cannot silently select the code route fallback [33m 328[2mms[22m[39m
+ [32m✓[39m tests/execution-gate.test.ts [2m([22m[2m17 tests[22m[2m)[22m[33m 2829[2mms[22m[39m
+     [33m[2m✓[22m[39m a reward list that changed between deciding and sending (same fingerprint): refused at dispatch, then the new one is claimed [33m 534[2mms[22m[39m
+     [33m[2m✓[22m[39m a map node that moved under Jev's answer: refused, the answer is not reused, Jev is asked again on the live map [33m 431[2mms[22m[39m
+     [33m[2m✓[22m[39m combat: a play refused at dispatch every time (the gate passes at decision) ends the turn after the limit [33m 459[2mms[22m[39m
+     [33m[2m✓[22m[39m a non-combat screen refused at dispatch every time: code's baseline decides after the limit (Jev is not asked again) [33m 454[2mms[22m[39m
+     [33m[2m✓[22m[39m refusals that go on (code's baseline refused too) reach the stall note: a decision-time pass does not reset it [33m 579[2mms[22m[39m
+ [32m✓[39m tests/silent-kin-progress.test.ts [2m([22m[2m16 tests[22m[2m)[22m[33m 2251[2mms[22m[39m
+   [33m[2m✓[22m[39m reaches the actual Jev plan question (v1=false) while preserving options and their numeric rankings [33m 344[2mms[22m[39m
+ [32m✓[39m tests/learner-startup-recovery.test.ts [2m([22m[2m25 tests[22m[2m)[22m[33m 1912[2mms[22m[39m
+     [33m[2m✓[22m[39m retries a registered timestamp-only postmortem with the original lease and input [33m 305[2mms[22m[39m
+     [33m[2m✓[22m[39m caps persistent pre-session failures at two additional attempts [33m 536[2mms[22m[39m
+ [32m✓[39m tests/strategy-implementation.test.ts [2m([22m[2m1 test[22m[2m)[22m[33m 1729[2mms[22m[39m
+   [33m[2m✓[22m[39m binds the approved implementation through the existing broker and host before model start [33m 1727[2mms[22m[39m
+ [32m✓[39m tests/fix-queue-v4-fix3.test.ts [2m([22m[2m14 tests[22m[2m)[22m[33m 2213[2mms[22m[39m
+     [33m[2m✓[22m[39m FSPKJAYY3ET6 F39 T1 without Throwing Axe (block 0): Inflame then Bash loses 6 + the 14 attack [33m 404[2mms[22m[39m
+     [33m[2m✓[22m[39m FSPKJAYY3ET6 F39 T1: Inflame first is Strength +6 and Galvanic's 6 twice (logged 2 -> 8, HP 69 -> 57; 43 at T2) [33m 421[2mms[22m[39m
+     [33m[2m✓[22m[39m not after a card was played this turn, nor on a later turn, nor without the relic [33m 1052[2mms[22m[39m
+ [32m✓[39m tests/ascension-audit-path.test.ts [2m([22m[2m19 tests[22m[2m)[22m[33m 1219[2mms[22m[39m
+ [32m✓[39m tests/learner-launch-failures.test.ts [2m([22m[2m1 test[22m[2m)[22m[33m 1778[2mms[22m[39m
+   [33m[2m✓[22m[39m nested learner launches preserve the native CLI and learner-only policy and missing failed reports keep their original failure [33m 1777[2mms[22m[39m
+ [31m❯[39m tests/potion-cost.test.ts [2m([22m[2m26 tests[22m[2m | [22m[31m4 failed[39m[2m)[22m[33m 3719[2mms[22m[39m
+   [32m✓[39m keeps historical monster transitions and terminal models fixed across knowledge refreshes[32m 69[2mms[22m[39m
+     [32m✓[39m hallway and elite: the held value at this ascension and act (an elite is not discounted)[32m 5[2mms[22m[39m
+     [32m✓[39m a boss fight costs 0[32m 1[2mms[22m[39m
+     [32m✓[39m no conversion value: 0 and said so (not in the table, or no numbers for it); a held value of 0 is 0[32m 2[2mms[22m[39m
+     [32m✓[39m no special case for a full belt or the cheapest potion: every held potion costs its value[32m 1[2mms[22m[39m
+     [32m✓[39m reads the table Jev's facts read; switched off (POTION_COST=off) every cost is 0; a table that does not load costs 0[32m 1[2mms[22m[39m
+     [32m✓[39m a potion card carries its cost; other cards and a 0 cost are untouched[32m 1[2mms[22m[39m
+     [32m✓[39m the same line scores weights.hp x cost less, its outcome carries the cost; potion-free lines are unchanged[32m 19[2mms[22m[39m
+     [32m✓[39m a boss fight (no cost on the card) scores exactly as before[32m 3[2mms[22m[39m
+     [32m✓[39m a drink that saves us from dying is still the line: death outweighs any cost[32m 2[2mms[22m[39m
+     [32m✓[39m a cheaper dry line beats a drink whose saving is less than its cost[32m 1[2mms[22m[39m
+     [32m✓[39m a drink that dies less often wins, whatever its cost (the value alone would pick the dry line)[32m 0[2mms[22m[39m
+     [32m✓[39m equal effective loss and deaths read as tied[32m 1[2mms[22m[39m
+     [32m✓[39m a saturated board (every line loses all our HP) ranks without costs: a potion kept there has no later (8V0H F25 T1)[32m 0[2mms[22m[39m
+     [32m✓[39m boss: with no cost the ranking is the old one (value, then enemy HP left), deaths not moved first[32m 0[2mms[22m[39m
+     [33m[2m✓[22m[39m free, the potion-free line's later turns drink the potion; at a high cost they never do [33m 554[2mms[22m[39m
+     [32m✓[39m a line's value has its drinks taken off (this turn's and the later turns' expected cost)[32m 156[2mms[22m[39m
+     [32m✓[39m the no-potion line: the same turn, no potion in any later turn, its own estimate[32m 140[2mms[22m[39m
+[31m     [31m×[31m hallway (N95W F19 T3, Block Potion 8 HP in act 2): every option states HP loss, potions, cost and total; one option is the no-potion line[39m[33m 1367[2mms[22m[39m
+[31m     [31m×[31m merged when the base line's own rollout drinks nothing later; its own option when it does (ETYC F19 T1: Blood Potion, no conversion value)[39m[33m 766[2mms[22m[39m
+[31m     [31m×[31m rollout off: the base line is tagged, the fact says there is no rollout[39m[32m 12[2mms[22m[39m
+[31m     [31m×[31m the switch off: the question is the one before the costs (no cost facts, no no-potion line)[39m[33m 609[2mms[22m[39m
+     [32m✓[39m RTF3 F17 T1 (Soul Fysh, Block Potion): costs on vs off[32m 7[2mms[22m[39m
+     [32m✓[39m HP guard: a drink line is never replaced for its cost; the bound is set by HP lost[32m 0[2mms[22m[39m
+     [32m✓[39m Monte Carlo: a sample beats the potion-free line only by a margin after the potion's cost[32m 0[2mms[22m[39m
+     [32m✓[39m the fact without a rollout counts this turn's drinks at their cost[32m 0[2mms[22m[39m
+ [32m✓[39m tests/ascension-audit-report.test.ts [2m([22m[2m12 tests[22m[2m)[22m[33m 1306[2mms[22m[39m
+ [32m✓[39m tests/strategy-implementation-continuation.test.ts [2m([22m[2m1 test[22m[2m)[22m[33m 1237[2mms[22m[39m
+   [33m[2m✓[22m[39m resumes the frozen implementation once while preserving waiting proposals and bounded failure history [33m 1236[2mms[22m[39m
+ [32m✓[39m tests/rollout-ties.test.ts [2m([22m[2m5 tests[22m[2m)[22m[33m 2228[2mms[22m[39m
+     [33m[2m✓[22m[39m both tagged rollout_tied naming the other, neither rollout_best, the log names them, choosing either counts as the best [33m 2220[2mms[22m[39m
+ [32m✓[39m tests/strategy-research.test.ts [2m([22m[2m1 test[22m[2m)[22m[33m 1193[2mms[22m[39m
+   [33m[2m✓[22m[39m manual research requires its bound request, frozen evidence and a clean report-only tree [33m 1192[2mms[22m[39m
+ [31m❯[39m tests/sl-replay-plays.test.ts [2m([22m[2m9 tests[22m[2m | [22m[31m7 failed[39m[2m)[22m[33m 4999[2mms[22m[39m
+[31m     [31m×[31m the cause: attempt 3 knows 烙印+ is Pommel Strike's draw, and attempt 2's line with it played beats attempt 2's line[39m[33m 2131[2mms[22m[39m
+     [32m✓[39m attempt 2's plays from the board: its turn record up to its next decision (Pommel Strike's draw re-planned)[32m 13[2mms[22m[39m
+[31m     [31m×[31m off (no plays): as live, the answer kept and the replay stops (the logged decision's sl_explore)[39m[33m 1277[2mms[22m[39m
+[31m     [31m×[31m SL_RETRY_EXPLORE_REPLAY_PLAYS: attempt 2's plays are played as a line (防御 first, 剑柄打击 -> 火箭 next)[39m[33m 734[2mms[22m[39m
+     [32m✓[39m loggedLine: a play whose card (id and upgrade) or enemy is not on the board: none[32m 1[2mms[22m[39m
+[31m     [31m×[31m SL_RETRY_EXPLORE_REPLAY_DEVIATE: neither its line nor its plays can be played: the deviation is made here[39m[33m 782[2mms[22m[39m
+[31m     [31m×[31m gives the reference's plays and the board's fallback with the replay; says the switches in the run config[39m[32m 26[2mms[22m[39m
+[31m     [31m×[31m a reference line not among the options: its plays are played, the board counts as replayed (logged)[39m[32m 14[2mms[22m[39m
+[31m     [31m×[31m neither can be played: the attempt deviates there, not at its point; the next attempt aims at the same point again[39m[32m 18[2mms[22m[39m
+ [32m✓[39m tests/strategy-concurrency.test.ts [2m([22m[2m2 tests[22m[2m)[22m[33m 859[2mms[22m[39m
+     [33m[2m✓[22m[39m claims disjoint inputs, retains active ownership and bootstraps the second slot [33m 850[2mms[22m[39m
+ [32m✓[39m tests/combat-jev.test.ts [2m([22m[2m3 tests[22m[2m)[22m[33m 2393[2mms[22m[39m
+     [33m[2m✓[22m[39m RA3Q F14 T1: code led by 7.7 and played its line; now Jev is asked, with no DeepSeek escalation [33m 1533[2mms[22m[39m
+     [33m[2m✓[22m[39m a low-confidence hallway pick below code's rank 1 stands (no fallback to code) [33m 822[2mms[22m[39m
+ [31m❯[39m tests/batch-c-illusion.test.ts [2m([22m[2m2 tests[22m[2m | [22m[31m2 failed[39m[2m)[22m[33m 5917[2mms[22m[39m
+[31m     [31m×[31m the logged T3 board: the rollout's best is no longer the Parafright line, with 0 ms host pauses[39m[33m 2946[2mms[22m[39m
+[31m     [31m×[31m the logged T3 board: the rollout's best is no longer the Parafright line, with 10000 ms host pauses[39m[33m 2970[2mms[22m[39m
+ [32m✓[39m tests/fix-queue-v4-fix6.test.ts [2m([22m[2m17 tests[22m[2m)[22m[33m 1426[2mms[22m[39m
+     [33m[2m✓[22m[39m YVWAWAPXJXGV F40 T1: the lines before Enthralled is played are the lines after it (logged: every lock gone, energy 8 -> 6), Enthralled first [33m 888[2mms[22m[39m
+ [32m✓[39m tests/potion-card-cost.test.ts [2m([22m[2m3 tests[22m[2m)[22m[33m 3110[2mms[22m[39m
+     [33m[2m✓[22m[39m its samples no longer play the Power free; without the relic, as before (Inflame played free) [33m 3068[2mms[22m[39m
+ [31m❯[39m tests/sl-explore-gaps.test.ts [2m([22m[2m22 tests[22m[2m | [22m[31m11 failed[39m[2m)[22m[33m 1227[2mms[22m[39m
+     [32m✓[39m the cause: the board key matched (attempt 2's T4 board), the plays came in another order, and T5's board differed[32m 33[2mms[22m[39m
+[31m     [31m×[31m off: as live, the first shown line with the turn's plays (another order) is taken for attempt 2's[39m[32m 269[2mms[22m[39m
+[31m     [31m×[31m SL_RETRY_EXPLORE_REPLAY_ORDER: attempt 2's plays in their order (Iron Wave first), counted as its line[39m[32m 156[2mms[22m[39m
+[31m     [31m×[31m the answer itself with attempt 2's turn in another order: kept off (as live), its plays in their order on[39m[32m 162[2mms[22m[39m
+     [32m✓[39m the cause: T5's board was on no failed attempt's path (no fallback), and the point's excluded turn was played again[32m 17[2mms[22m[39m
+[31m     [31m×[31m SL_RETRY_EXPLORE_TARGET_TURN: the point's lines and turns kept off on this board too[39m[32m 71[2mms[22m[39m
+     [32m✓[39m off: code's own line there (another order and cards than attempt 1 played): the replay would stop[32m 24[2mms[22m[39m
+     [32m✓[39m on: attempt 1's plays from the board instead, counted as its line (the decision row says so)[32m 43[2mms[22m[39m
+[31m     [31m×[31m the same question and resolution; the point recorded[39m[32m 78[2mms[22m[39m
+     [32m✓[39m ABCJ: attempt 1 lived longest (T10, 211 left) but recorded no decision points; of the rest attempt 3 (T8, 241 left)[32m 34[2mms[22m[39m
+     [32m✓[39m enemyHpLeft: the last turn's enemies summed; none left 0; unreadable null[32m 1[2mms[22m[39m
+     [32m✓[39m attempts 3 and 5 deviated at T10 and ended it with attempt 2's plays; T11 was still on attempt 2's path[32m 5[2mms[22m[39m
+     [32m✓[39m the later point a re-arm aims at: T14 for attempt 3, T12 for attempt 5 (both came up in the attempt's own play)[32m 30[2mms[22m[39m
+     [32m✓[39m 3B4K4UDQ56B9 F48 attempt 4 T4: the plays actually made, attempts 2-3's turn but for the plain Twin Strike[32m 6[2mms[22m[39m
+     [32m✓[39m P68P7CDJRDH3 F48 attempt 5 T1: attempt 1's whole T1 from the same turn start, not through the point's board[32m 15[2mms[22m[39m
+     [32m✓[39m canonWithoutUpgrades: card upgrades left out, targets and potions kept[32m 3[2mms[22m[39m
+[31m     [31m×[31m attempt 1 records its decision points (the same decisions as without); attempt 3 anchors to it when it lived longest[39m[32m 84[2mms[22m[39m
+[31m     [31m×[31m SL_RETRY_EXPLORE_SECOND with it: attempt 2 still deviates on attempt 1's path; attempt 1's point adds its planned turn to the tried[39m[32m 44[2mms[22m[39m
+[31m     [31m×[31m a deviation whose turn ended as a failed attempt's: a later point of the path in the same attempt[39m[32m 34[2mms[22m[39m
+[31m     [31m×[31m a deviation whose next turn began on a failed attempt's board is wasted (differs false, repeats), and re-armed[39m[32m 32[2mms[22m[39m
+[31m     [31m×[31m re-armed off the reference path too: the replay stopped, the next point's turn deviates on the attempt's own board[39m[32m 40[2mms[22m[39m
+[31m     [31m×[31m off the path before the point, on a board no failed attempt decided on: the point's turn still deviates[39m[32m 41[2mms[22m[39m
+ [32m✓[39m tests/batch-h.test.ts [2m([22m[2m13 tests[22m[2m)[22m[33m 2814[2mms[22m[39m
+     [33m[2m✓[22m[39m the logged F21 T2 board (Battle Trance drawn, 3 energy): a line keeping energy for Pael's Tear is offered and says so [33m 1155[2mms[22m[39m
+     [33m[2m✓[22m[39m Jev's "Stone Armor, Liquid Memories, Bash+ from it": the drink notes Bash+, the screen takes Bash+ (not asked), and Bash+ is played next [33m 746[2mms[22m[39m
+     [33m[2m✓[22m[39m 40 HP, four Beckons held, a 27 hit, mod says safe: the note names the cause, not a calculation mismatch [33m 509[2mms[22m[39m
+ [32m✓[39m tests/ops-deferred.test.ts [2m([22m[2m3 tests[22m[2m)[22m[33m 905[2mms[22m[39m
+   [33m[2m✓[22m[39m requires both age and count, and recovers malformed or future episode state [33m 459[2mms[22m[39m
+ [32m✓[39m tests/sl-any-draw.test.ts [2m([22m[2m13 tests[22m[2m)[22m[33m 1641[2mms[22m[39m
+     [33m[2m✓[22m[39m no card of the pile saves us: certain, naming the drawing card and the superset's size [33m 341[2mms[22m[39m
+     [33m[2m✓[22m[39m an unmodelled card in the pile, and a line living past the draw: not certain [33m 367[2mms[22m[39m
+     [33m[2m✓[22m[39m a number worked out in play (Perfected Strike's Strikes) or a relic changing a card (Pael's Legion's block) is not exact: the bound needs no line living past the draw [33m 489[2mms[22m[39m
+ [31m❯[39m tests/sl-explore-potion.test.ts [2m([22m[2m18 tests[22m[2m | [22m[31m2 failed[39m[2m)[22m[33m 2061[2mms[22m[39m
+     [32m✓[39m P68P F48's turns: the potion is left out of the cards, by id; a summary's by name[32m 4[2mms[22m[39m
+     [32m✓[39m the same cards repeat a failed turn when every potion drunk was drunk by that attempt from there on (as many of each)[32m 1[2mms[22m[39m
+     [32m✓[39m what attempts 2-4 played and how they ended[32m 3[2mms[22m[39m
+     [32m✓[39m the live targets (ebb3710's rules); with the switch, attempts 3 and 4's turns are tried, 5 and 6's are not[32m 16[2mms[22m[39m
+     [32m✓[39m the turns through T1's board by their cards: attempts 2-3's, Powdered Demise drunk after it[32m 9[2mms[22m[39m
+     [32m✓[39m T2's only other line is attempt 2's cards without the potion: not open; attempt 3 goes to T1 instead[32m 6[2mms[22m[39m
+     [32m✓[39m GQ5H: attempt 3's cards with Binding on T1 (drunk on T4 by attempt 3), attempt 2's cards with it (T5), attempt 3's without either[32m 30[2mms[22m[39m
+     [32m✓[39m Z4UK (rows from before the turn record): attempt 6 drank both potions on T1 with attempt 2's T1 cards (rebuilt by name)[32m 3[2mms[22m[39m
+     [32m✓[39m P68P: without the switch attempt 4 still goes to T2 for attempt 2's cards without the potion; with it never[32m 11[2mms[22m[39m
+     [32m✓[39m JKP6 F17: T1's only line left drinks the Weak Potion later (attempt 1: T4); the chain goes to T5 instead[32m 8[2mms[22m[39m
+     [32m✓[39m the two explore wins are still reached, as early, with the winning line open (9175 F33 T2, JSA5 F33 T7)[32m 12[2mms[22m[39m
+     [32m✓[39m the targets, the turns tried through them and whether each deviation's turn was one (12 fights, two rule sets)[32m 43[2mms[22m[39m
+     [32m✓[39m a tried set without cards: triedHas, mayRepeat and the replacement as before[32m 0[2mms[22m[39m
+     [32m✓[39m P68P T2: off, the line without the potion replaces it (as live); on, nothing is left there[32m 1[2mms[22m[39m
+     [32m✓[39m a pick tried only by its cards says so[32m 0[2mms[22m[39m
+[31m     [31m×[31m attempt 4 T1: off, Powdered Demise added to attempt 2's cards (as live); on, a line with other cards[39m[33m 1270[2mms[22m[39m
+[31m     [31m×[31m attempt 3 T2: off, the same cards without the potion (as live); on, no other line there (the target never comes here)[39m[33m 630[2mms[22m[39m
+     [32m✓[39m on: attempt 3 aims at T1 (T2's only other line moves the potion); off: T2, as live; the run config says which[32m 9[2mms[22m[39m
+ [32m✓[39m tests/card-conditions.test.ts [2m([22m[2m21 tests[22m[2m)[22m[33m 1255[2mms[22m[39m
+     [33m[2m✓[22m[39m F4K88F267RCX F37 T1: Tear Asunder (1 hit shown: one HP loss so far this fight) after Hemokinesis's 2 HP: 2 hits [33m 412[2mms[22m[39m
+ [32m✓[39m tests/batch-g.test.ts [2m([22m[2m22 tests[22m[2m)[22m[33m 599[2mms[22m[39m
+ [32m✓[39m tests/run-config.test.ts [2m([22m[2m14 tests[22m[2m)[22m[33m 995[2mms[22m[39m
+     [33m[2m✓[22m[39m the loop writes one row on the run's first state, next to its decision log [33m 844[2mms[22m[39m
+ [32m✓[39m tests/potions-step1.test.ts [2m([22m[2m24 tests[22m[2m)[22m[33m 737[2mms[22m[39m
+ [32m✓[39m tests/batch-e.test.ts [2m([22m[2m19 tests[22m[2m)[22m[33m 1197[2mms[22m[39m
+     [33m[2m✓[22m[39m "Inferno, Defend, Defend, then Flex" (logged 62.5 vs 64.1, marked best, Jev drank it): the same numbers as without, and it says so; still an option [33m 592[2mms[22m[39m
+ [32m✓[39m tests/construction.test.ts [2m([22m[2m12 tests[22m[2m)[22m[32m 180[2mms[22m[39m
+ [32m✓[39m tests/pile-power-cost.test.ts [2m([22m[2m7 tests[22m[2m)[22m[33m 927[2mms[22m[39m
+     [33m[2m✓[22m[39m the draw pile's Unmovable 3, Demon Form 4, Inflame 2: no sample plays a Power at 1 energy (one played Inflame at 1) [33m 620[2mms[22m[39m
+ [32m✓[39m tests/account-drain.test.ts [2m([22m[2m2 tests[22m[2m)[22m[33m 852[2mms[22m[39m
+   [33m[2m✓[22m[39m validates drain lifecycle: test_llm_handoff.py [33m 619[2mms[22m[39m
+ [32m✓[39m tests/autoplay-marker-failure.test.ts [2m([22m[2m1 test[22m[2m)[22m[33m 783[2mms[22m[39m
+   [33m[2m✓[22m[39m preserves terminal exits without a durable marker and retains the existing explicit recovery hold [33m 781[2mms[22m[39m
+ [32m✓[39m tests/loop-time-cap.test.ts [2m([22m[2m4 tests[22m[2m)[22m[33m 2375[2mms[22m[39m
+   [33m[2m✓[22m[39m keeps map and combat deadline assertions independent of a 0ms host pause [33m 933[2mms[22m[39m
+   [33m[2m✓[22m[39m keeps map and combat deadline assertions independent of a 10000ms host pause [33m 743[2mms[22m[39m
+   [33m[2m✓[22m[39m stops at a safe point when the fight ends during the grace period [33m 381[2mms[22m[39m
+   [33m[2m✓[22m[39m bounds score-screen finalization by the same grace deadline [33m 317[2mms[22m[39m
+ [32m✓[39m tests/fix-queue-v4-fix2.test.ts [2m([22m[2m20 tests[22m[2m)[22m[33m 849[2mms[22m[39m
+     [33m[2m✓[22m[39m ZRYR5WLG6E9K F39 T1: Skewer is X hits; the logged line deals 58 as it did (planned 70: one 8 x1.5 hit at X = 0) [33m 335[2mms[22m[39m
+ [32m✓[39m tests/silent-sl-resource-comparison.test.ts [2m([22m[2m6 tests[22m[2m)[22m[33m 717[2mms[22m[39m
+   [33m[2m✓[22m[39m logs the replay comparison through the real planner while keeping the reference line's dispatched action [33m 371[2mms[22m[39m
+   [33m[2m✓[22m[39m records the deviation and later-turn avoidance in the same prediction scope [33m 332[2mms[22m[39m
+ [32m✓[39m tests/learner.test.ts [2m([22m[2m47 tests[22m[2m)[22m[33m 968[2mms[22m[39m
+ [32m✓[39m tests/silent-summon-coverage.test.ts [2m([22m[2m9 tests[22m[2m)[22m[33m 534[2mms[22m[39m
+ [32m✓[39m tests/jev-prompt-log.test.ts [2m([22m[2m6 tests[22m[2m)[22m[33m 898[2mms[22m[39m
+     [33m[2m✓[22m[39m one row per Jev request next to the decision log, with the decision row's decision_id and request id [33m 522[2mms[22m[39m
+     [33m[2m✓[22m[39m JEV_PROMPT_LOG=off writes no prompt log [33m 363[2mms[22m[39m
+ [32m✓[39m tests/learner-self-check.test.ts [2m([22m[2m6 tests[22m[2m)[22m[33m 578[2mms[22m[39m
+ [31m❯[39m tests/inferno-planner.test.ts [2m([22m[2m5 tests[22m[2m | [22m[31m2 failed[39m[2m)[22m[33m 767[2mms[22m[39m
+     [32m✓[39m two Inferno+ (18): 2; one (9, or 6): 1; 27: 3; none: 0; Crimson Mantle's per copy on top[32m 4[2mms[22m[39m
+     [32m✓[39m attempt 5 T6 (15 HP, the Slap 21 next): Breakthrough, Defend, Pillage+ (played, 2 HP after the enemy turn, T7's start took them) now dies; code plays Defend, Pillage+[32m 33[2mms[22m[39m
+[31m     [31m×[31m attempt 1 T6 (17 HP): every line's HP lost carries both copies; one copy (INFERNO_POWER 9) takes one less[39m[32m 263[2mms[22m[39m
+     [32m✓[39m playing the second costs 1 more at the next turn's start: every line dies, and least-loss now ends the turn instead of playing it (logged: played, lost on T2)[32m 7[2mms[22m[39m
+[31m     [31m×[31m more of the rollout's samples die than at 1 a turn, and its best line moves to Blood Wall+, Uppercut+[39m[33m 458[2mms[22m[39m
+ [32m✓[39m tests/learner-keycheck-retry.test.ts [2m([22m[2m8 tests[22m[2m)[22m[33m 621[2mms[22m[39m
+ [32m✓[39m tests/jev-retry.test.ts [2m([22m[2m6 tests[22m[2m)[22m[33m 866[2mms[22m[39m
+     [33m[2m✓[22m[39m retries a 520 and keeps playing, logging each retry [33m 546[2mms[22m[39m
+     [33m[2m✓[22m[39m still stops on a permanent error [33m 309[2mms[22m[39m
+ [31m❯[39m tests/silent-kusarigama.test.ts [2m([22m[2m8 tests[22m[2m | [22m[31m8 failed[39m[2m)[22m[33m 1375[2mms[22m[39m
+[31m   [31m×[31m does not pre-credit a random kill that the recorded complete line failed to deliver[39m[33m 336[2mms[22m[39m
+[31m   [31m×[31m retains the playable suffix and labels the reference result instead of presenting an exact rollout[39m[32m 205[2mms[22m[39m
+[31m   [31m×[31m untriggered relic leaves the original modeled outcome intact[39m[32m 174[2mms[22m[39m
+[31m   [31m×[31m absent relic leaves the original modeled outcome intact[39m[32m 151[2mms[22m[39m
+[31m   [31m×[31m a sole remaining target keeps the old raw-damage and per-hit-cap path[39m[32m 122[2mms[22m[39m
+[31m   [31m×[31m IRONCLAD A10 does not opt into the observed A10 change[39m[32m 162[2mms[22m[39m
+[31m   [31m×[31m SILENT A9 does not opt into the observed A10 change[39m[32m 128[2mms[22m[39m
+[31m   [31m×[31m SILENT A11 does not opt into the observed A10 change[39m[32m 94[2mms[22m[39m
+ [32m✓[39m tests/screens.test.ts [2m([22m[2m153 tests[22m[2m)[22m[33m 602[2mms[22m[39m
+ [32m✓[39m tests/silent-tail-resource.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 101[2mms[22m[39m
+ [31m❯[39m tests/silent-bullet-time.test.ts [2m([22m[2m12 tests[22m[2m | [22m[31m11 failed[39m[2m)[22m[33m 1204[2mms[22m[39m
+[31m   [31m×[31m the final T1 prefix pays three, draws zero and preserves five Block plus both energy gains[39m[32m 232[2mms[22m[39m
+[31m   [31m×[31m three starting energy can pay Bullet Time and then the formerly unaffordable hand[39m[32m 157[2mms[22m[39m
+[31m   [31m×[31m known pile cards cannot be borrowed after the lock, while a draw made before it remains[39m[32m 144[2mms[22m[39m
+[31m   [31m×[31m a replan on the actual locked frame retains energy and never invents draws[39m[32m 30[2mms[22m[39m
+[31m   [31m×[31m the draw lock also stops an existing expected-draw adapter without granting new cards a free cost[39m[32m 140[2mms[22m[39m
+[31m   [31m×[31m false fullFight: free costs and the lock expire, Radiance adds energy for exactly three later turns[39m[32m 110[2mms[22m[39m
+[31m   [31m×[31m true fullFight: free costs and the lock expire, Radiance adds energy for exactly three later turns[39m[32m 93[2mms[22m[39m
+   [32m✓[39m observed start-of-turn energy independently confirms Radiance's three-turn expiry[32m 2[2mms[22m[39m
+[31m   [31m×[31m IRONCLAD A10 upgrade=undefined keeps the old unobserved model[39m[32m 54[2mms[22m[39m
+[31m   [31m×[31m SILENT A9 upgrade=undefined keeps the old unobserved model[39m[32m 65[2mms[22m[39m
+[31m   [31m×[31m SILENT A10 upgrade=true keeps the old unobserved model[39m[32m 66[2mms[22m[39m
+[31m   [31m×[31m without Bullet Time the original Backflip and Adrenaline draws remain unchanged[39m[32m 108[2mms[22m[39m
+ [32m✓[39m tests/learner-check-continuation.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 276[2mms[22m[39m
+ [32m✓[39m tests/giant-blast-terminal.test.ts [2m([22m[2m8 tests[22m[2m)[22m[33m 483[2mms[22m[39m
+ [32m✓[39m tests/paper-dataset-git.test.ts [2m([22m[2m1 test[22m[2m)[22m[33m 338[2mms[22m[39m
+   [33m[2m✓[22m[39m pins Git export and verification to one ref snapshot and fails the CLI on source mismatches [33m 337[2mms[22m[39m
+ [32m✓[39m tests/turn-solver.test.ts [2m([22m[2m137 tests[22m[2m)[22m[33m 515[2mms[22m[39m
+ [32m✓[39m tests/ops-rollout-file.test.ts [2m([22m[2m2 tests[22m[2m)[22m[33m 534[2mms[22m[39m
+     [33m[2m✓[22m[39m reads beyond Node's maximum string size without truncating or altering the session [33m 526[2mms[22m[39m
+ [32m✓[39m tests/mod-client.test.ts [2m([22m[2m9 tests[22m[2m)[22m[33m 492[2mms[22m[39m
+     [33m[2m✓[22m[39m times out instead of hanging [33m 314[2mms[22m[39m
+ [32m✓[39m tests/ops-redaction.test.ts [2m([22m[2m3 tests[22m[2m)[22m[33m 387[2mms[22m[39m
+     [33m[2m✓[22m[39m reports archive and scanner failures even when the dataset succeeds, retaining every retry log [33m 376[2mms[22m[39m
+ [32m✓[39m tests/calibration-dispatch-fixtures.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 156[2mms[22m[39m
+ [32m✓[39m tests/silent-permafrost.test.ts [2m([22m[2m12 tests[22m[2m)[22m[33m 413[2mms[22m[39m
+ [32m✓[39m tests/silent-double-boss.test.ts [2m([22m[2m10 tests[22m[2m)[22m[33m 388[2mms[22m[39m
+ [32m✓[39m tests/silent-tuning-fork.test.ts [2m([22m[2m5 tests[22m[2m)[22m[33m 363[2mms[22m[39m
+ [32m✓[39m tests/prefix-facts.test.ts [2m([22m[2m9 tests[22m[2m)[22m[33m 366[2mms[22m[39m
+ [32m✓[39m tests/core-realization.test.ts [2m([22m[2m10 tests[22m[2m)[22m[33m 440[2mms[22m[39m
+ [32m✓[39m tests/ops-host-recovery.test.ts [2m([22m[2m5 tests[22m[2m)[22m[33m 334[2mms[22m[39m
+ [32m✓[39m tests/silent-flechettes.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 48[2mms[22m[39m
+ [32m✓[39m tests/boss-sim-automation.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 256[2mms[22m[39m
+ [32m✓[39m tests/potion-refresh-climb.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 219[2mms[22m[39m
+ [32m✓[39m tests/silent-smoggy-selection.test.ts [2m([22m[2m20 tests[22m[2m)[22m[32m 49[2mms[22m[39m
+ [32m✓[39m tests/regent-startup-check.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 293[2mms[22m[39m
+ [32m✓[39m tests/batch-m.test.ts [2m([22m[2m27 tests[22m[2m)[22m[33m 385[2mms[22m[39m
+ [32m✓[39m tests/batch-l.test.ts [2m([22m[2m26 tests[22m[2m)[22m[33m 417[2mms[22m[39m
+ [32m✓[39m tests/fight-plan.test.ts [2m([22m[2m28 tests[22m[2m)[22m[33m 325[2mms[22m[39m
+ [32m✓[39m tests/learner-jobs.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 279[2mms[22m[39m
+ [32m✓[39m tests/cost-accounting.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 211[2mms[22m[39m
+ [32m✓[39m tests/learning-requests.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 180[2mms[22m[39m
+ [31m❯[39m tests/silent-selection-audit.test.ts [2m([22m[2m8 tests[22m[2m | [22m[31m8 failed[39m[2m)[22m[32m 289[2mms[22m[39m
+[31m   [31m×[31m the recorded Sandworm pair separates 12 predicted HP from 7 damage and 0/24 from 5/24 deaths[39m[32m 94[2mms[22m[39m
+[31m   [31m×[31m the frozen candidate pair at decision 271348 retains growth and does not claim actual damage[39m[32m 36[2mms[22m[39m
+[31m   [31m×[31m the frozen candidate pair at decision 272040 retains growth and does not claim actual damage[39m[32m 31[2mms[22m[39m
+[31m   [31m×[31m the frozen candidate pair at decision 272195 retains growth and does not claim actual damage[39m[32m 33[2mms[22m[39m
+[31m   [31m×[31m the real question resolution records the original, pre-SL and replacement with the requested first action[39m[32m 23[2mms[22m[39m
+[31m   [31m×[31m the original Jev answer stays separate when the HP guard replaces it before SL[39m[32m 22[2mms[22m[39m
+[31m   [31m×[31m other characters and unobserved ascensions have no audit fields[39m[32m 19[2mms[22m[39m
+[31m   [31m×[31m a missing plan, random-potion median and clock fallback retain their distinct uncertainty[39m[32m 30[2mms[22m[39m
+ [32m✓[39m tests/silent-crab-potion.test.ts [2m([22m[2m27 tests[22m[2m)[22m[32m 300[2mms[22m[39m
+ [32m✓[39m tests/sl-explore-second.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 291[2mms[22m[39m
+ [32m✓[39m tests/silent-observed-intervals.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 37[2mms[22m[39m
+ [32m✓[39m tests/regent-launch-solo.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 219[2mms[22m[39m
+ [32m✓[39m tests/mechanics-step1.test.ts [2m([22m[2m27 tests[22m[2m)[22m[32m 289[2mms[22m[39m
+ [31m❯[39m tests/silent-serpent-form.test.ts [2m([22m[2m18 tests[22m[2m | [22m[31m12 failed[39m[2m)[22m[33m 327[2mms[22m[39m
+[31m   [31m×[31m T1 establishes four points without attributing damage to the power itself or a held second copy[39m[32m 91[2mms[22m[39m
+[31m   [31m×[31m frame 274202: 274203 separates the card's damage and four-point trigger[39m[32m 28[2mms[22m[39m
+[31m   [31m×[31m frame 274203: 274204 separates the card's damage and four-point trigger[39m[32m 24[2mms[22m[39m
+   [32m✓[39m frame 274205: 274206 separates the card's damage and four-point trigger[32m 4[2mms[22m[39m
+[31m   [31m×[31m frame 274207: 274208 separates the card's damage and four-point trigger[39m[32m 26[2mms[22m[39m
+[31m   [31m×[31m frame 274208: 274209 separates the card's damage and four-point trigger[39m[32m 17[2mms[22m[39m
+[31m   [31m×[31m frame 274209: 274210 separates the card's damage and four-point trigger[39m[32m 12[2mms[22m[39m
+[31m   [31m×[31m a complete fixed defense prefix keeps poison settlement separate from the two card triggers[39m[32m 17[2mms[22m[39m
+   [32m✓[39m the rollout carries a newly established power into the next turn, without a self-trigger[32m 12[2mms[22m[39m
+[31m   [31m×[31m IRONCLAD A10 preserves the old outcome on the identical evidence frame[39m[32m 14[2mms[22m[39m
+[31m   [31m×[31m SILENT A9 preserves the old outcome on the identical evidence frame[39m[32m 20[2mms[22m[39m
+[31m   [31m×[31m unobserved two-enemies keeps the option and marks its extra damage unknown[39m[32m 19[2mms[22m[39m
+[31m   [31m×[31m unobserved replay keeps the option and marks its extra damage unknown[39m[32m 16[2mms[22m[39m
+[31m   [31m×[31m unobserved stacking keeps the option and marks its extra damage unknown[39m[32m 18[2mms[22m[39m
+   [32m✓[39m unobserved upgrade does not acquire the plain four-point model[32m 1[2mms[22m[39m
+   [32m✓[39m unobserved second-copy does not invent eight established stacks[32m 2[2mms[22m[39m
+   [32m✓[39m unobserved power-replay does not invent eight established stacks[32m 2[2mms[22m[39m
+   [32m✓[39m automatic establishment keeps the option but does not infer the manually observed power[32m 3[2mms[22m[39m
+ [32m✓[39m tests/disk-capacity.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 171[2mms[22m[39m
+ [32m✓[39m tests/silent-phase-current.test.ts [2m([22m[2m19 tests[22m[2m)[22m[32m 285[2mms[22m[39m
+ [32m✓[39m tests/silent-snakebite.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 32[2mms[22m[39m
+ [32m✓[39m tests/silent-cunning.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 283[2mms[22m[39m
+ [31m❯[39m tests/silent-potion-reference.test.ts [2m([22m[2m12 tests[22m[2m | [22m[31m1 failed[39m[2m)[22m[32m 226[2mms[22m[39m
+   [32m✓[39m keeps 751 F13 T3 missing held value separate from zero charge and both kinds of dry line[32m 5[2mms[22m[39m
+   [32m✓[39m missing rollout never fabricates sampled wins or a whole-fight dry comparison[32m 1[2mms[22m[39m
+   [32m✓[39m clock rollout never fabricates sampled wins or a whole-fight dry comparison[32m 1[2mms[22m[39m
+   [32m✓[39m degraded rollout never fabricates sampled wins or a whole-fight dry comparison[32m 1[2mms[22m[39m
+   [32m✓[39m an absent, unshown or drinking dry reference stays absent; a merged dry reference retains its shown key[32m 1[2mms[22m[39m
+   [32m✓[39m a known held value of 0 is not labelled unknown[32m 1[2mms[22m[39m
+   [32m✓[39m a known held value of 4.5 is not labelled unknown[32m 1[2mms[22m[39m
+   [32m✓[39m the real consumer shows unknown value with valid option keys and preserves choices and ranks (v1=false)[32m 76[2mms[22m[39m
+[31m   [31m×[31m the real consumer shows unknown value with valid option keys and preserves choices and ranks (v1=true)[39m[32m 66[2mms[22m[39m
+   [32m✓[39m IRONCLAD A10 keeps the entire previous question[32m 31[2mms[22m[39m
+   [32m✓[39m SILENT A9 keeps the entire previous question[32m 20[2mms[22m[39m
+   [32m✓[39m a disabled cost policy keeps the original consumer question[32m 19[2mms[22m[39m
+ [32m✓[39m tests/prior-delivery-proofs.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 185[2mms[22m[39m
+ [32m✓[39m tests/silent-reattach.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 225[2mms[22m[39m
+ [32m✓[39m tests/broker-request-write.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 188[2mms[22m[39m
+ [32m✓[39m tests/core-build-jobs.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 166[2mms[22m[39m
+ [32m✓[39m tests/silent-simulation-reference.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 185[2mms[22m[39m
+ [32m✓[39m tests/silent-paels-legion.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 223[2mms[22m[39m
+ [32m✓[39m tests/multi-character.test.ts [2m([22m[2m14 tests[22m[2m)[22m[32m 214[2mms[22m[39m
+ [32m✓[39m tests/silent-held-loss.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 219[2mms[22m[39m
+ [32m✓[39m tests/ordinary-notice-ack.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 141[2mms[22m[39m
+ [32m✓[39m tests/silent-crusher-facing.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 211[2mms[22m[39m
+ [32m✓[39m tests/silent-tungsten-rod.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 186[2mms[22m[39m
+ [32m✓[39m tests/silent-wither-visible.test.ts [2m([22m[2m17 tests[22m[2m)[22m[32m 169[2mms[22m[39m
+ [32m✓[39m tests/silent-reward-addition.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 194[2mms[22m[39m
+ [32m✓[39m tests/postmortem-failure-audit.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 155[2mms[22m[39m
+ [32m✓[39m tests/batch-f.test.ts [2m([22m[2m28 tests[22m[2m)[22m[32m 257[2mms[22m[39m
+ [32m✓[39m tests/run-journal.test.ts [2m([22m[2m19 tests[22m[2m)[22m[32m 196[2mms[22m[39m
+ [32m✓[39m tests/silent-tough-bandages.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 194[2mms[22m[39m
+ [32m✓[39m tests/silent-apotheosis-neutralize.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 37[2mms[22m[39m
+ [32m✓[39m tests/ledger-rerelease.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 149[2mms[22m[39m
+ [32m✓[39m tests/learner-preserved-report.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 144[2mms[22m[39m
+ [32m✓[39m tests/ledger-repeats.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 151[2mms[22m[39m
+ [32m✓[39m tests/learner-check-locks.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 145[2mms[22m[39m
+ [32m✓[39m tests/paper-snapshot-capacity.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 138[2mms[22m[39m
+ [32m✓[39m tests/sl-early.test.ts [2m([22m[2m42 tests[22m[2m)[22m[32m 164[2mms[22m[39m
+ [32m✓[39m tests/silent-selection-dispatch.test.ts [2m([22m[2m13 tests[22m[2m)[22m[32m 189[2mms[22m[39m
+ [32m✓[39m tests/silent-giant-potion.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 198[2mms[22m[39m
+ [32m✓[39m tests/sl-sandpit-judge.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 205[2mms[22m[39m
+ [32m✓[39m tests/boss-damage-attempts.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 148[2mms[22m[39m
+ [32m✓[39m tests/silent-opening.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 158[2mms[22m[39m
+ [32m✓[39m tests/fix-queue-v4.test.ts [2m([22m[2m20 tests[22m[2m)[22m[32m 215[2mms[22m[39m
+ [32m✓[39m tests/boss-sim-home.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 140[2mms[22m[39m
+ [32m✓[39m tests/jev-context.test.ts [2m([22m[2m15 tests[22m[2m)[22m[32m 203[2mms[22m[39m
+ [31m❯[39m tests/silent-shackling-weak.test.ts [2m([22m[2m10 tests[22m[2m | [22m[31m10 failed[39m[2m)[22m[32m 183[2mms[22m[39m
+[31m   [31m×[31m the observed potion-only line predicts the actual one HP loss before drinking[39m[32m 70[2mms[22m[39m
+[31m   [31m×[31m the complete observed Strike/Defend/Backflip/potion prefix keeps seven damage and predicts one loss[39m[32m 41[2mms[22m[39m
+[31m   [31m×[31m the observed no-drink and post-drink reread keep the shown intent without double reduction[39m[32m 18[2mms[22m[39m
+[31m   [31m×[31m does not carry the observed move's scope into later simulated turns[39m[32m 11[2mms[22m[39m
+[31m   [31m×[31m keeps the existing path for character IRONCLAD / A10[39m[32m 6[2mms[22m[39m
+[31m   [31m×[31m keeps the existing path for character SILENT / A9[39m[32m 7[2mms[22m[39m
+[31m   [31m×[31m keeps the existing path for character SILENT / A11[39m[32m 6[2mms[22m[39m
+[31m   [31m×[31m keeps the existing path for character  / A10[39m[32m 5[2mms[22m[39m
+[31m   [31m×[31m keeps other enemies, moves and unknown powers outside the observed scope[39m[32m 9[2mms[22m[39m
+[31m   [31m×[31m keeps ambiguous inversion and unobserved modifiers or loss amounts on their existing path[39m[32m 9[2mms[22m[39m
+ [32m✓[39m tests/death-move-rules.test.ts [2m([22m[2m16 tests[22m[2m)[22m[32m 193[2mms[22m[39m
+ [32m✓[39m tests/jev-experience.test.ts [2m([22m[2m16 tests[22m[2m)[22m[32m 160[2mms[22m[39m
+ [32m✓[39m tests/radiant-tincture.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 174[2mms[22m[39m
+ [32m✓[39m tests/silent-ghost-potion.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 173[2mms[22m[39m
+ [32m✓[39m tests/silent-daughter-wind.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 190[2mms[22m[39m
+ [32m✓[39m tests/learner-instance.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 141[2mms[22m[39m
+ [32m✓[39m tests/ascension-observed.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 149[2mms[22m[39m
+ [32m✓[39m tests/silent-wither-replay.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 178[2mms[22m[39m
+ [32m✓[39m tests/boss-clock.test.ts [2m([22m[2m34 tests[22m[2m)[22m[32m 158[2mms[22m[39m
+ [31m❯[39m tests/silent-sloth-replay.test.ts [2m([22m[2m14 tests[22m[2m | [22m[31m4 failed[39m[2m)[22m[32m 177[2mms[22m[39m
+[31m   [31m×[31m final T8: rejects Defend replay, Strike, Neutralize and preserves the actually executed prefix[39m[32m 77[2mms[22m[39m
+[31m   [31m×[31m the observed cap still allows Neutralize before the replay, without claiming an actual winning line[39m[32m 19[2mms[22m[39m
+   [32m✓[39m replanning after accepted Defend leaves one slot, without changing the raw manual count[32m 10[2mms[22m[39m
+   [32m✓[39m accepted source rows restore the same cap after restart and duplicate rows count once[32m 9[2mms[22m[39m
+   [32m✓[39m failed (timeout): rejected adds no replay slot[32m 4[2mms[22m[39m
+   [32m✓[39m not dispatched: changed adds no replay slot[32m 3[2mms[22m[39m
+[31m   [31m×[31m later turns, same-turn SL counter regression and a new room do not inherit the extra slot[39m[32m 20[2mms[22m[39m
+   [32m✓[39m raw count two after replay plus Strike leaves no remaining cap and the actual death is retained[32m 3[2mms[22m[39m
+[31m   [31m×[31m a last-slot replay remains offered with an explicit unverified boundary[39m[32m 10[2mms[22m[39m
+   [32m✓[39m IRONCLAD keeps the original cap and replay behavior[32m 3[2mms[22m[39m
+   [32m✓[39m silent-a9 keeps the original cap and replay behavior[32m 2[2mms[22m[39m
+   [32m✓[39m no-sloth keeps the original cap and replay behavior[32m 3[2mms[22m[39m
+   [32m✓[39m later-turn rollout preserves the observed cap (whole fight=false)[32m 9[2mms[22m[39m
+   [32m✓[39m later-turn rollout preserves the observed cap (whole fight=true)[32m 4[2mms[22m[39m
+ [32m✓[39m tests/silent-phantom-blades.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 148[2mms[22m[39m
+ [32m✓[39m tests/batch-d.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 162[2mms[22m[39m
+ [32m✓[39m tests/knowledge-check-facts.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 150[2mms[22m[39m
+ [32m✓[39m tests/silent-hp-guard-audit.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 166[2mms[22m[39m
+ [32m✓[39m tests/brain-knowledge.test.ts [2m([22m[2m15 tests[22m[2m)[22m[32m 183[2mms[22m[39m
+ [32m✓[39m tests/learning-ledger-metadata.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 110[2mms[22m[39m
+ [31m❯[39m tests/silent-dodge-roll.test.ts [2m([22m[2m14 tests[22m[2m | [22m[31m9 failed[39m[2m)[22m[32m 191[2mms[22m[39m
+[31m   [31m×[31m frame 273712 captures the observed amount before Tender reduces Dexterity[39m[32m 76[2mms[22m[39m
+[31m   [31m×[31m frame 273725 captures the observed amount before Tender reduces Dexterity[39m[32m 16[2mms[22m[39m
+[31m   [31m×[31m a card played earlier in the same plan reduces the captured amount, rather than using entry Dexterity[39m[32m 14[2mms[22m[39m
+   [32m✓[39m replanning at 273714 retains the pending amount without current-turn credit[32m 4[2mms[22m[39m
+   [32m✓[39m replanning at 273729 retains the pending amount without current-turn credit[32m 2[2mms[22m[39m
+[31m   [31m×[31m newly captured Block from 273712 is paid once after attribute reset[39m[32m 19[2mms[22m[39m
+[31m   [31m×[31m newly captured Block from 273725 is paid once after attribute reset[39m[32m 10[2mms[22m[39m
+   [32m✓[39m outside Silent A10 and the observed upgrade, the original card model is unchanged[32m 1[2mms[22m[39m
+   [32m✓[39m IRONCLAD A10 live replanning preserves the original outcome on identical state data[32m 3[2mms[22m[39m
+   [32m✓[39m SILENT A9 live replanning preserves the original outcome on identical state data[32m 2[2mms[22m[39m
+[31m   [31m×[31m unobserved frail keeps the option and marks delayed Block unknown[39m[32m 10[2mms[22m[39m
+[31m   [31m×[31m unobserved replay keeps the option and marks delayed Block unknown[39m[32m 12[2mms[22m[39m
+[31m   [31m×[31m unobserved duplicate keeps the option and marks delayed Block unknown[39m[32m 10[2mms[22m[39m
+[31m   [31m×[31m unobserved unknown-amount keeps the option and marks delayed Block unknown[39m[32m 9[2mms[22m[39m
+ [32m✓[39m tests/experience.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 138[2mms[22m[39m
+ [32m✓[39m tests/outcome-asc.test.ts [2m([22m[2m16 tests[22m[2m)[22m[32m 180[2mms[22m[39m
+ [32m✓[39m tests/silent-tent-rest.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 158[2mms[22m[39m
+ [32m✓[39m tests/sl-giant-judge.test.ts [2m([22m[2m13 tests[22m[2m)[22m[32m 157[2mms[22m[39m
+ [32m✓[39m tests/silent-phase-reference.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 155[2mms[22m[39m
+ [32m✓[39m tests/silent-humidifier-rest.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 148[2mms[22m[39m
+ [32m✓[39m tests/learner-fallback-checks.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 112[2mms[22m[39m
+ [32m✓[39m tests/silent-loss-reference.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 134[2mms[22m[39m
+ [32m✓[39m tests/deepseek-consistency.test.ts [2m([22m[2m12 tests[22m[2m)[22m[32m 136[2mms[22m[39m
+ [32m✓[39m tests/learner-strategy.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 109[2mms[22m[39m
+ [32m✓[39m tests/discovery.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 152[2mms[22m[39m
+ [32m✓[39m tests/deepseek-cache-layout.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 121[2mms[22m[39m
+ [32m✓[39m tests/silent-poison-win-search.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 141[2mms[22m[39m
+ [32m✓[39m tests/jev-cost.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 79[2mms[22m[39m
+ [32m✓[39m tests/rest-pantograph.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 126[2mms[22m[39m
+ [32m✓[39m tests/shop-potions.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 128[2mms[22m[39m
+ [32m✓[39m tests/silent-survivor-discard.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 129[2mms[22m[39m
+ [32m✓[39m tests/gkb-render.test.ts [2m([22m[2m26 tests[22m[2m)[22m[32m 98[2mms[22m[39m
+ [32m✓[39m tests/boss-sim-b4.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 124[2mms[22m[39m
+ [32m✓[39m tests/silent-sl-comparison.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 131[2mms[22m[39m
+ [32m✓[39m tests/regent-launch-inspect.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 123[2mms[22m[39m
+ [32m✓[39m tests/mcp-server.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 37[2mms[22m[39m
+ [32m✓[39m tests/sandbox-entry.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 51[2mms[22m[39m
+ [32m✓[39m tests/fight-value-observe.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 88[2mms[22m[39m
+ [32m✓[39m tests/silent-demon-input.test.ts [2m([22m[2m24 tests[22m[2m)[22m[32m 136[2mms[22m[39m
+ [32m✓[39m tests/silent-stun-gap.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 86[2mms[22m[39m
+ [32m✓[39m tests/file-escalation.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 131[2mms[22m[39m
+ [32m✓[39m tests/silent-hidden-daggers.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 111[2mms[22m[39m
+ [32m✓[39m tests/silent-reattach-reset.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 134[2mms[22m[39m
+ [32m✓[39m tests/turn-start-settle.test.ts [2m([22m[2m5 tests[22m[2m)[22m[33m 603[2mms[22m[39m
+     [33m[2m✓[22m[39m Inferno up: the first action is not sent on the stale board; the re-read after 500 ms re-plans on the settled one [33m 327[2mms[22m[39m
+ [32m✓[39m tests/silent-route-relic.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 100[2mms[22m[39m
+ [32m✓[39m tests/check-imports.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 116[2mms[22m[39m
+ [32m✓[39m tests/outcome-stats.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 140[2mms[22m[39m
+ [32m✓[39m tests/route-projection.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 139[2mms[22m[39m
+ [32m✓[39m tests/rollout-live-clock.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 104[2mms[22m[39m
+ [32m✓[39m tests/monster-db.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 154[2mms[22m[39m
+ [32m✓[39m tests/silent-skittish.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 138[2mms[22m[39m
+ [32m✓[39m tests/core-window.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 84[2mms[22m[39m
+ [32m✓[39m tests/waterfall-giant.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 121[2mms[22m[39m
+ [32m✓[39m tests/sl-draws-pommel.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 82[2mms[22m[39m
+ [32m✓[39m tests/silent-blade-dance.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 116[2mms[22m[39m
+ [32m✓[39m tests/asc-band-facts.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 98[2mms[22m[39m
+ [32m✓[39m tests/silent-sandpit-discard.test.ts [2m([22m[2m12 tests[22m[2m)[22m[32m 99[2mms[22m[39m
+ [32m✓[39m tests/silent-upgraded-blade-dance.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 106[2mms[22m[39m
+ [32m✓[39m tests/tsconfig-scope.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 63[2mms[22m[39m
+ [32m✓[39m tests/silent-selection-observation.test.ts [2m([22m[2m16 tests[22m[2m)[22m[32m 109[2mms[22m[39m
+ [32m✓[39m tests/gkb-tools.test.ts [2m([22m[2m18 tests[22m[2m)[22m[32m 47[2mms[22m[39m
+ [32m✓[39m tests/silent-candle-rest.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 117[2mms[22m[39m
+ [32m✓[39m tests/boss-damage-tools.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 130[2mms[22m[39m
+ [32m✓[39m tests/act-route-candidates.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 37[2mms[22m[39m
+ [32m✓[39m tests/monster-terminal-hp.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 92[2mms[22m[39m
+ [32m✓[39m tests/sl.test.ts [2m([22m[2m42 tests[22m[2m)[22m[32m 87[2mms[22m[39m
+ [32m✓[39m tests/boss-sim-gaps.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 84[2mms[22m[39m
+ [32m✓[39m tests/silent-burst.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 83[2mms[22m[39m
+ [32m✓[39m tests/route-event.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 115[2mms[22m[39m
+ [32m✓[39m tests/silent-precise-cut.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 45[2mms[22m[39m
+ [32m✓[39m tests/deepseek.test.ts [2m([22m[2m12 tests[22m[2m)[22m[32m 102[2mms[22m[39m
+ [32m✓[39m tests/free-offer.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 70[2mms[22m[39m
+ [32m✓[39m tests/monster-db-context.test.ts [2m([22m[2m17 tests[22m[2m)[22m[32m 102[2mms[22m[39m
+ [32m✓[39m tests/cards-view-memo.test.ts [2m([22m[2m4 tests[22m[2m)[22m[33m 1888[2mms[22m[39m
+   [33m[2m✓[22m[39m 7PWU4CD3QCP3 F47: same board after CARDS_VIEW only reuses an unexecuted answer when safe [33m 516[2mms[22m[39m
+   [33m[2m✓[22m[39m 7PWU4CD3QCP3 F47: hp board after CARDS_VIEW only reuses an unexecuted answer when safe [33m 462[2mms[22m[39m
+   [33m[2m✓[22m[39m 7PWU4CD3QCP3 F47: deck board after CARDS_VIEW only reuses an unexecuted answer when safe [33m 442[2mms[22m[39m
+   [33m[2m✓[22m[39m 7PWU4CD3QCP3 F47: failed-close board after CARDS_VIEW only reuses an unexecuted answer when safe [33m 467[2mms[22m[39m
+ [32m✓[39m tests/shared-experience.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 74[2mms[22m[39m
+ [32m✓[39m tests/potion-equivalents.test.ts [2m([22m[2m15 tests[22m[2m)[22m[32m 108[2mms[22m[39m
+ [32m✓[39m tests/sl-draws-offtop.test.ts [2m([22m[2m15 tests[22m[2m)[22m[32m 92[2mms[22m[39m
+ [32m✓[39m tests/thief-rollout.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 104[2mms[22m[39m
+ [32m✓[39m tests/silent-upgraded-mirage-zero.test.ts [2m([22m[2m21 tests[22m[2m)[22m[32m 86[2mms[22m[39m
+ [32m✓[39m tests/silent-gardener-skittish.test.ts [2m([22m[2m12 tests[22m[2m)[22m[32m 73[2mms[22m[39m
+ [32m✓[39m tests/mittens-exhaust.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 84[2mms[22m[39m
+ [32m✓[39m tests/mech-rules.test.ts [2m([22m[2m12 tests[22m[2m)[22m[32m 79[2mms[22m[39m
+ [32m✓[39m tests/silent-poison-held.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 83[2mms[22m[39m
+ [32m✓[39m tests/silent-frail-dexterity.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 88[2mms[22m[39m
+ [32m✓[39m tests/deepseek-prompt-dump.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 81[2mms[22m[39m
+ [32m✓[39m tests/silent-poison.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 81[2mms[22m[39m
+ [32m✓[39m tests/brain-deepseek.test.ts [2m([22m[2m12 tests[22m[2m)[22m[32m 75[2mms[22m[39m
+ [32m✓[39m tests/silent-rest-sim-hp.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 37[2mms[22m[39m
+ [32m✓[39m tests/jsonl-boundary-recovery.test.ts [2m([22m[2m25 tests[22m[2m)[22m[32m 53[2mms[22m[39m
+ [32m✓[39m tests/boss-sim-b5.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 75[2mms[22m[39m
+ [32m✓[39m tests/silent-snakebite-discard.test.ts [2m([22m[2m20 tests[22m[2m)[22m[32m 75[2mms[22m[39m
+ [32m✓[39m tests/mech-move-rules.test.ts [2m([22m[2m13 tests[22m[2m)[22m[32m 75[2mms[22m[39m
+ [32m✓[39m tests/lizard-tail.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 54[2mms[22m[39m
+ [32m✓[39m tests/sl-revive-judge.test.ts [2m([22m[2m14 tests[22m[2m)[22m[32m 76[2mms[22m[39m
+ [32m✓[39m tests/silent-apotheosis-malaise.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 84[2mms[22m[39m
+ [32m✓[39m tests/knowledge-check-a8w-guides.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 86[2mms[22m[39m
+ [32m✓[39m tests/knowledge-check-a8w-builder.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 89[2mms[22m[39m
+ [32m✓[39m tests/broker-response-persistence.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 34[2mms[22m[39m
+ [32m✓[39m tests/paths.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 81[2mms[22m[39m
+ [32m✓[39m tests/silent-lethal-continuation.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 90[2mms[22m[39m
+ [32m✓[39m tests/sl-retry.test.ts [2m([22m[2m19 tests[22m[2m)[22m[32m 79[2mms[22m[39m
+ [32m✓[39m tests/knowledge-check-a8w-experience.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 64[2mms[22m[39m
+ [32m✓[39m tests/knowledge-check-guides.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 59[2mms[22m[39m
+ [32m✓[39m tests/sl-judge-bounds.test.ts [2m([22m[2m25 tests[22m[2m)[22m[32m 55[2mms[22m[39m
+ [32m✓[39m tests/silent-hp-recovery.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 63[2mms[22m[39m
+ [32m✓[39m tests/silent-strangle.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 53[2mms[22m[39m
+ [32m✓[39m tests/sl-explore-where.test.ts [2m([22m[2m19 tests[22m[2m)[22m[32m 48[2mms[22m[39m
+ [32m✓[39m tests/silent-deck-cap.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 46[2mms[22m[39m
+ [32m✓[39m tests/card-value.test.ts [2m([22m[2m12 tests[22m[2m)[22m[32m 58[2mms[22m[39m
+ [32m✓[39m tests/silent-fasten.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 44[2mms[22m[39m
+ [32m✓[39m tests/sl-giant-final-resources.test.ts [2m([22m[2m32 tests[22m[2m)[22m[32m 50[2mms[22m[39m
+ [32m✓[39m tests/silent-expertise.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 50[2mms[22m[39m
+ [32m✓[39m tests/ops-assist.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 55[2mms[22m[39m
+ [32m✓[39m tests/continuation-diagnostics.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 53[2mms[22m[39m
+ [32m✓[39m tests/silent-snecko-fumes.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 49[2mms[22m[39m
+ [32m✓[39m tests/codex-cache-engine.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 37[2mms[22m[39m
+ [32m✓[39m tests/silent-vambrace-frail.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 42[2mms[22m[39m
+ [32m✓[39m tests/silent-envenom.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 31[2mms[22m[39m
+ [32m✓[39m tests/silent-apotheosis.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 44[2mms[22m[39m
+ [32m✓[39m tests/silent-precise-cut-seven.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 57[2mms[22m[39m
+ [32m✓[39m tests/silent-caltrops.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 38[2mms[22m[39m
+ [32m✓[39m tests/silent-mirage.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 44[2mms[22m[39m
+ [32m✓[39m tests/silent-anticipate.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 40[2mms[22m[39m
+ [32m✓[39m tests/silent-sapping.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 44[2mms[22m[39m
+ [32m✓[39m tests/silent-build-win-ties.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 36[2mms[22m[39m
+ [32m✓[39m tests/silent-apotheosis-backflip.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 28[2mms[22m[39m
+ [32m✓[39m tests/event-settle.test.ts [2m([22m[2m1 test[22m[2m)[22m[33m 508[2mms[22m[39m
+   [33m[2m✓[22m[39m JJ75S331VUKX F31: completed stable event clicks wait out old options without another brain call [33m 506[2mms[22m[39m
+ [32m✓[39m tests/rollout-deadline.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 36[2mms[22m[39m
+ [32m✓[39m tests/silent-apotheosis-snakebite.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 37[2mms[22m[39m
+ [32m✓[39m tests/silent-apotheosis-footwork.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 35[2mms[22m[39m
+ [32m✓[39m tests/shop-removal-preview.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 47[2mms[22m[39m
+ [32m✓[39m tests/silent-metamorphosis.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 27[2mms[22m[39m
+ [32m✓[39m tests/silent-apotheosis-poisoned-stab.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 34[2mms[22m[39m
+ [32m✓[39m tests/silent-malaise.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 32[2mms[22m[39m
+ [32m✓[39m tests/jev-context-limit.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 38[2mms[22m[39m
+ [32m✓[39m tests/silent-apotheosis-accelerant.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 37[2mms[22m[39m
+ [32m✓[39m tests/codex-cache-probe.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 29[2mms[22m[39m
+ [32m✓[39m tests/asc-amounts.test.ts [2m([22m[2m12 tests[22m[2m)[22m[32m 35[2mms[22m[39m
+ [32m✓[39m tests/third-party.test.ts [2m([22m[2m5 tests[22m[2m | [22m[33m2 skipped[39m[2m)[22m[32m 42[2mms[22m[39m
+ [32m✓[39m tests/silent-boss-phase.test.ts [2m([22m[2m14 tests[22m[2m)[22m[32m 40[2mms[22m[39m
+ [32m✓[39m tests/silent-discard-plan.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 31[2mms[22m[39m
+ [32m✓[39m tests/silent-shadowmeld.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 35[2mms[22m[39m
+ [32m✓[39m tests/fight-value.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 42[2mms[22m[39m
+ [32m✓[39m tests/silent-upgraded-malaise.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 40[2mms[22m[39m
+ [32m✓[39m tests/silent-corrosive-wave.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 40[2mms[22m[39m
+ [32m✓[39m tests/silent-discard-snapshot.test.ts [2m([22m[2m21 tests[22m[2m)[22m[32m 29[2mms[22m[39m
+ [32m✓[39m tests/silent-calculated-gamble-upgraded.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 49[2mms[22m[39m
+ [32m✓[39m tests/sl-inferno-judge.test.ts [2m([22m[2m16 tests[22m[2m)[22m[32m 47[2mms[22m[39m
+ [32m✓[39m tests/silent-haze.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 46[2mms[22m[39m
+ [32m✓[39m tests/silent-obscura-summon.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 37[2mms[22m[39m
+ [32m✓[39m tests/named-card-facts.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 35[2mms[22m[39m
+ [32m✓[39m tests/silent-fasten-upgrade.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 32[2mms[22m[39m
+ [32m✓[39m tests/record.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 37[2mms[22m[39m
+ [32m✓[39m tests/silent-footwork.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 26[2mms[22m[39m
+ [32m✓[39m tests/silent-apotheosis-survivor.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 30[2mms[22m[39m
+ [32m✓[39m tests/silent-axe-identity.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 31[2mms[22m[39m
+ [32m✓[39m tests/learner-character.test.ts [2m([22m[2m15 tests[22m[2m)[22m[32m 24[2mms[22m[39m
+ [32m✓[39m tests/silent-maul.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 28[2mms[22m[39m
+ [32m✓[39m tests/silent-upgraded-wave.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 37[2mms[22m[39m
+ [32m✓[39m tests/sl-giant-phase.test.ts [2m([22m[2m16 tests[22m[2m)[22m[32m 34[2mms[22m[39m
+ [32m✓[39m tests/silent-sl-beetle.test.ts [2m([22m[2m19 tests[22m[2m)[22m[32m 37[2mms[22m[39m
+ [32m✓[39m tests/silent-finale-selection.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 34[2mms[22m[39m
+ [32m✓[39m tests/silent-shadow-step.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 31[2mms[22m[39m
+ [32m✓[39m tests/silent-afterimage.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 31[2mms[22m[39m
+ [32m✓[39m tests/silent-knife-trap.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 27[2mms[22m[39m
+ [32m✓[39m tests/silent-single-action-weak.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 32[2mms[22m[39m
+ [32m✓[39m tests/silent-sl-poison-stun.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 24[2mms[22m[39m
+ [32m✓[39m tests/instance-binding.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 18[2mms[22m[39m
+ [32m✓[39m tests/brain-specs.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 23[2mms[22m[39m
+ [32m✓[39m tests/route-next-rest.test.ts [2m([22m[2m14 tests[22m[2m)[22m[32m 31[2mms[22m[39m
+ [32m✓[39m tests/silent-expose.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 21[2mms[22m[39m
+ [32m✓[39m tests/enchant-text.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 28[2mms[22m[39m
+ [32m✓[39m tests/damage.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 23[2mms[22m[39m
+ [32m✓[39m tests/quantitative.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 28[2mms[22m[39m
+ [32m✓[39m tests/silent-selection-execution.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 20[2mms[22m[39m
+ [32m✓[39m tests/silent-single-action-block.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 28[2mms[22m[39m
+ [32m✓[39m tests/silent-slippery-poison.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 23[2mms[22m[39m
+ [32m✓[39m tests/silent-regret.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 20[2mms[22m[39m
+ [32m✓[39m tests/silent-poison-coverage.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 20[2mms[22m[39m
+ [32m✓[39m tests/ops-mod-state-broker.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 14[2mms[22m[39m
+ [32m✓[39m tests/silent-precise-cut-strength.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 20[2mms[22m[39m
+ [32m✓[39m tests/silent-calculated-gamble.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 24[2mms[22m[39m
+ [32m✓[39m tests/route-chain.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 17[2mms[22m[39m
+ [32m✓[39m tests/knowledge-text.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 20[2mms[22m[39m
+ [32m✓[39m tests/codex-usage-recovery.test.ts [2m([22m[2m18 tests[22m[2m)[22m[32m 23[2mms[22m[39m
+ [32m✓[39m tests/brain-codex-usage-contract.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 15[2mms[22m[39m
+ [32m✓[39m tests/run-plan.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 15[2mms[22m[39m
+ [32m✓[39m tests/silent-selection-terminal.test.ts [2m([22m[2m20 tests[22m[2m)[22m[32m 16[2mms[22m[39m
+ [32m✓[39m tests/config.test.ts [2m([22m[2m16 tests[22m[2m)[22m[32m 18[2mms[22m[39m
+ [32m✓[39m tests/learner-paths.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 13[2mms[22m[39m
+ [32m✓[39m tests/outcome-stats-refresh.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 10[2mms[22m[39m
+ [32m✓[39m tests/silent-boss-facts.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 14[2mms[22m[39m
+ [32m✓[39m tests/route-map.test.ts [2m([22m[2m12 tests[22m[2m)[22m[32m 14[2mms[22m[39m
+ [32m✓[39m tests/thief-facts.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 12[2mms[22m[39m
+ [32m✓[39m tests/historical-run-constraints.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 17[2mms[22m[39m
+ [32m✓[39m tests/silent-boss-clock.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 15[2mms[22m[39m
+ [32m✓[39m tests/codex-fast.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 16[2mms[22m[39m
+ [32m✓[39m tests/lock.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 9[2mms[22m[39m
+ [32m✓[39m tests/schema.test.ts [2m([22m[2m17 tests[22m[2m)[22m[32m 14[2mms[22m[39m
+ [32m✓[39m tests/silent-boss-calibration-cli.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 12[2mms[22m[39m
+ [32m✓[39m tests/silent-poison-cap.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 14[2mms[22m[39m
+ [32m✓[39m tests/subscription-usage.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 9[2mms[22m[39m
+ [32m✓[39m tests/legacy-brain-notes.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 14[2mms[22m[39m
+ [32m✓[39m tests/silent-boss-calibration.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 10[2mms[22m[39m
+ [32m✓[39m tests/silent-phase-sequences.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+ [32m✓[39m tests/route-boss-unknown.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 10[2mms[22m[39m
+ [32m✓[39m tests/reward-special.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 9[2mms[22m[39m
+ [32m✓[39m tests/ops-eval-metrics.test.ts [2m([22m[2m22 tests[22m[2m)[22m[32m 10[2mms[22m[39m
+ [32m✓[39m tests/codex-cache-observation.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 8[2mms[22m[39m
+ [32m✓[39m tests/quantitative-log-extract.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 17[2mms[22m[39m
+ [32m✓[39m tests/game-data-cache.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 16[2mms[22m[39m
+ [32m✓[39m tests/silent-potion-provenance.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+ [32m✓[39m tests/deck-profile.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+ [32m✓[39m tests/end-turn-guard-sources.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+ [32m✓[39m tests/knowledge-check-a8w-facts.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+ [32m✓[39m tests/learner-learning-flow.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+ [32m✓[39m tests/move-model-damage.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+ [32m✓[39m tests/boss-trust.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+ [32m✓[39m tests/questions.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+ [32m✓[39m tests/learner-live-tasks.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 5[2mms[22m[39m
+ [32m✓[39m tests/silent-upgrade-preview.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 5[2mms[22m[39m
+ [32m✓[39m tests/learning-roles.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+ [32m✓[39m tests/silent-poison-dominance.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 5[2mms[22m[39m
+ [32m✓[39m tests/pricing.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+ [32m✓[39m tests/ops-action-list.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 4[2mms[22m[39m
+ [32m✓[39m tests/silent-boss-calibration-board.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 4[2mms[22m[39m
+ [32m✓[39m tests/knowledge-check-cards.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 5[2mms[22m[39m
+ [32m✓[39m tests/knowledge-check-a8w-cards.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 3[2mms[22m[39m
+ [32m✓[39m tests/combat-rationale.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 4[2mms[22m[39m
+
+[31m⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 185 [49m[22m[31m⎯⎯⎯⎯⎯⎯[39m
+
+[41m[1m FAIL [22m[49m tests/batch-c-illusion.test.ts[2m > [22ma line aiming only at the illusion keeps that target on later turns (ZY3992X5VEVS F23 T3-T5)[2m > [22mthe logged T3 board: the rollout's best is no longer the Parafright line, with 0 ms host pauses
+[41m[1m FAIL [22m[49m tests/batch-c-illusion.test.ts[2m > [22ma line aiming only at the illusion keeps that target on later turns (ZY3992X5VEVS F23 T3-T5)[2m > [22mthe logged T3 board: the rollout's best is no longer the Parafright line, with 10000 ms host pauses
+[31m[1mError[22m: 公共经验文件 /home/dw/Projects/agent-sts2/.worktrees/live/knowledge/common/shared-experience.json: 读取失败: ENOENT: fixed illusion rollout references, shared-experience.json[39m
+[36m [2m❯[22m fail src/knowledge/shared-experience.ts:[2m33:63[22m[39m
+    [90m 31|[39m const text = (v: unknown): v is string => typeof v === "string" && v.t…
+    [90m 32|[39m const count = (v: unknown): v is number => typeof v === "number" && Nu…
+    [90m 33|[39m const fail = (path: string, detail: string): never => { throw new Erro…
+    [90m   |[39m                                                               [31m^[39m
+    [90m 34|[39m
+    [90m 35|[39m /** Schema checks cannot establish generality; that decision belongs t…
+[90m [2m❯[22m loadSharedExperience src/knowledge/shared-experience.ts:[2m77:26[22m[39m
+[90m [2m❯[22m loadExperience src/knowledge/experience.ts:[2m106:45[22m[39m
+[90m [2m❯[22m selectLessons src/knowledge/experience.ts:[2m309:79[22m[39m
+[90m [2m❯[22m fightLessons src/reflex/combat-plan.ts:[2m482:10[22m[39m
+[90m [2m❯[22m planTurn src/reflex/combat-plan.ts:[2m3943:19[22m[39m
+[90m [2m❯[22m src/reflex/combat-plan.ts:[2m2102:117[22m[39m
+[90m [2m❯[22m withSlRetryFallback src/reflex/combat-plan.ts:[2m2281:80[22m[39m
+[90m [2m❯[22m src/reflex/combat-plan.ts:[2m2102:53[22m[39m
+[90m [2m❯[22m withMechFallback src/reflex/combat-plan.ts:[2m2808:12[22m[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/185]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m tests/boss-lines-planner.test.ts[2m > [22mB2 off: the boss question as before[2m > [22mBOSS_SIM_LINES=off: every logged boss board's decision is the pre-B2 one, byte for byte
+[41m[1m FAIL [22m[49m tests/boss-lines-planner.test.ts[2m > [22mB2 off: the boss question as before[2m > [22ma fight that is not a boss fight: the same decision with B2 on
+[41m[1m FAIL [22m[49m tests/boss-lines-planner.test.ts[2m > [22mB2 on: the boss question[2m > [22ma boss it is trusted on (The Kin, turn 5): every line's whole-fight numbers, rollout_best by the simulated win rate, the log
+[41m[1m FAIL [22m[49m tests/boss-lines-planner.test.ts[2m > [22mB2 on: the boss question[2m > [22mBOSS_SIM_LOW_TRUST=retry (default): a low-trust boss's first attempt is not simulated at all; the question and every answer as with B2 off, the log says why
+[41m[1m FAIL [22m[49m tests/boss-lines-planner.test.ts[2m > [22mB2 on: the boss question[2m > [22mBOSS_SIM_LOW_TRUST=always: a low-trust boss (the Queen, V4.2): no whole-fight number or plan in Jev's question, the question and ranking as with B2 off; the log keeps the numbers
+[41m[1m FAIL [22m[49m tests/boss-lines-planner.test.ts[2m > [22mB2 on: the boss question[2m > [22man SL retry of a low-trust boss (SL_RETRY_SHOW_SIM on): the numbers shown and labelled 低可信, the ranking unchanged; the previous attempts in the question
+[41m[1m FAIL [22m[49m tests/boss-lines-planner.test.ts[2m > [22mB2 on: the boss question[2m > [22mturn 1: the fight plan from the best line's samples
+[41m[1m FAIL [22m[49m tests/death-move-planner.test.ts[2m > [22mMECH_DEATH_MOVE off, MECH_RULES off, no data, no rule: the combat question as at v4 0f63d28[2m > [22mMECH_DEATH_MOVE off: every logged board's decision is the pre-change one, byte for byte
+[41m[1m FAIL [22m[49m tests/death-move-planner.test.ts[2m > [22mMECH_DEATH_MOVE off, MECH_RULES off, no data, no rule: the combat question as at v4 0f63d28[2m > [22mon, the rule-free board (the Kaiser Crab, its ally-death counts in the DB): as before
+[41m[1m FAIL [22m[49m tests/death-move-planner.test.ts[2m > [22mMECH_DEATH_MOVE off, MECH_RULES off, no data, no rule: the combat question as at v4 0f63d28[2m > [22mon, a monster DB without the ally-death counters (built before them): as before
+[41m[1m FAIL [22m[49m tests/death-move-planner.test.ts[2m > [22mMECH_DEATH_MOVE off, MECH_RULES off, no data, no rule: the combat question as at v4 0f63d28[2m > [22mon, reading the rules fails: the switch off (fail safe)
+[41m[1m FAIL [22m[49m tests/death-move-planner.test.ts[2m > [22mMECH_DEATH_MOVE on: the Queen and the Torch Head Amalgam[2m > [22m0U96U4D9Z3PP F48 T5: the killing lines say Enrage now and Off With Your Head next; hp_lost as without the rule; the Queen carries it; the log records it
+[41m[1m FAIL [22m[49m tests/death-move-planner.test.ts[2m > [22mMECH_DEATH_MOVE on: the Queen and the Torch Head Amalgam[2m > [22m5GKAR00L5AYV F48 T2 (You Are Mine): no change this turn, the head-chop next
+[41m[1m FAIL [22m[49m tests/death-move-planner.test.ts[2m > [22mMECH_DEATH_MOVE on: the Living Shield and the Turret Operator[2m > [22mY3XT9EBS7U8B F37 T1: a line killing the Turret Operator says the Shield's Smash comes next
+[41m[1m FAIL [22m[49m tests/inferno-planner.test.ts[2m > [22mC4F14F3XPN0N F33 (A9, the Knowledge Demon): two Inferno+ up take 2 at the next turn's start[2m > [22mattempt 1 T6 (17 HP): every line's HP lost carries both copies; one copy (INFERNO_POWER 9) takes one less
+[41m[1m FAIL [22m[49m tests/inferno-planner.test.ts[2m > [22mA8ENYFR4ZWKG F33 T6 (34 HP, two Infernos up, won): the rollout's later turns lose 2 a turn[2m > [22mmore of the rollout's samples die than at 1 a turn, and its best line moves to Blood Wall+, Uppercut+
+[41m[1m FAIL [22m[49m tests/mech-move-planner.test.ts[2m > [22mMECH_MOVE_RULES off, or MECH_RULES off: the combat question as at v4 3488dc5[2m > [22mMECH_MOVE_RULES off: every logged board's decision is the pre-change one (MECH_RULES on), byte for byte
+[41m[1m FAIL [22m[49m tests/mech-move-planner.test.ts[2m > [22mMECH_MOVE_RULES off, or MECH_RULES off: the combat question as at v4 3488dc5[2m > [22mon, reading the rules fails: the switch off (fail safe), the Crab's back attack included
+[41m[1m FAIL [22m[49m tests/mech-move-planner.test.ts[2m > [22mMECH_MOVE_RULES off, or MECH_RULES off: the combat question as at v4 3488dc5[2m > [22mon, a monster DB without the per-monster data: the Axebot boards as before (the Crab's back attack is no data rule)
+[41m[1m FAIL [22m[49m tests/mech-move-planner.test.ts[2m > [22mMECH_MOVE_RULES on: the Kaiser Crab[2m > [22mNX48MBG3SPRJ F33 T7: a line killing the Rocket counts the Crusher's Enlarging Strike faced (6 + Crab Rage's 6), not from behind
+[41m[1m FAIL [22m[49m tests/mech-move-planner.test.ts[2m > [22mMECH_MOVE_RULES on: the Kaiser Crab[2m > [22m8L29N792FA45 F33 T5: the Crusher alone, the noted facing the dead Rocket's: its Guarded Strike lands as shown
+[41m[1m FAIL [22m[49m tests/mech-move-planner.test.ts[2m > [22mMECH_MOVE_RULES on: the Axebot's Stock[2m > [22mY3XT9EBS7U8B F45 T5 (Stock 1): a killing line says the Axebot is back in Boot Up; its Stock carries the observation; the log records it
+[41m[1m FAIL [22m[49m tests/mech-move-planner.test.ts[2m > [22mMECH_MOVE_RULES on: the Axebot's Stock[2m > [22m8L29N792FA45 F39 T3 (Stock 2, 1 HP): the kill takes a stack, the lowered rule
+[41m[1m FAIL [22m[49m tests/mech-rules-planner.test.ts[2m > [22mMECH_RULES off: the combat question as at v4 ffed0d4[2m > [22mon, but a monster DB without the observed data: the same
+[41m[1m FAIL [22m[49m tests/mech-rules-planner.test.ts[2m > [22mMECH_RULES off: the combat question as at v4 ffed0d4[2m > [22mon, and reading the rules fails: the same (fail safe)
+[41m[1m FAIL [22m[49m tests/mech-rules-planner.test.ts[2m > [22mMECH_RULES on: the Hopper's last Flutter[2m > [22m8V0HD9Y207WY F19 T5 (its Escape turn, Flutter 2): the stripping line cancels its move, the Escape a turn later
+[41m[1m FAIL [22m[49m tests/passive-pieces-planner.test.ts[2m > [22mPASSIVE_PIECES on the combat question[2m > [22mboards without any relic piece: the same question, view and resolutions on and off; the Fan board's question counts the Fan
+[41m[1m FAIL [22m[49m tests/sl-explore-b2.test.ts[2m > [22mthe sub-switches off: the explore part as at bc8c9bc, B2 on[2m > [22ma trusted boss (The Kin, Ceremonial Beast) and a low-trust one (the Queen): every point and deviated resolution is bc8c9bc's
+[41m[1m FAIL [22m[49m tests/sl-explore-b2.test.ts[2m > [22mSL_RETRY_EXPLORE_B2: on a boss B2 is trusted on, B2's win rate gates the replacement[2m > [22mCeremonial Beast T1: the pick (Mazaleth's Gift) played there; the rollout's gate takes the dry line, B2's the other Gift line the rollout sees dying more often
+[41m[1m FAIL [22m[49m tests/sl-explore-b2.test.ts[2m > [22mSL_RETRY_EXPLORE_B2: on a boss B2 is trusted on, B2's win rate gates the replacement[2m > [22ma low-trust boss (the Queen, simulated on an SL retry): the rollout's gate, as without the sub-switch
+[41m[1m FAIL [22m[49m tests/sl-explore-b2.test.ts[2m > [22mSL_RETRY_EXPLORE_BOSS_POTIONS: in a boss fight the replacement may drink a potion the pick does not[2m > [22mCeremonial Beast T1, the dry line played there: off nothing is left; on, a Gift line or Gambler's Brew are alternatives, and B2's pick drinks
+[41m[1m FAIL [22m[49m tests/sl-explore-b2.test.ts[2m > [22mSL_RETRY_EXPLORE_BOSS_POTIONS: in a boss fight the replacement may drink a potion the pick does not[2m > [22mThe Kin T5: B2 ranks Snecko Oil (a random potion) first; the replacement drinks it, then re-plans, as Jev's pick of it would
+[41m[1m FAIL [22m[49m tests/sl-explore-canon.test.ts[2m > [22mSL_RETRY_EXPLORE_TURN on the planner: the deviation holds for its turn (UK7R9A0NMCXL F33 attempt 4 T2)[2m > [22mcode's own line ending the turn as a failed attempt's becomes Jev's question (JSA5K8YZ9RXV F48 T1: Demon Form)
+[41m[1m FAIL [22m[49m tests/sl-explore-canon.test.ts[2m > [22mthe controller: attempt 1 recorded, tried by the turn's plays, the deviation's turn kept[2m > [22mattempt 1's row has its turns (each action's board and play); attempt 3's point has the turns through it, attempt 1's among them
+[41m[1m FAIL [22m[49m tests/sl-explore-canon.test.ts[2m > [22mthe controller: attempt 1 recorded, tried by the turn's plays, the deviation's turn kept[2m > [22ma restarted process deviates at the same point with the same turns; the deviation's turn carries `avoid` on its later boards only
+[41m[1m FAIL [22m[49m tests/sl-explore-canon.test.ts[2m > [22mthe controller: attempt 1 recorded, tried by the turn's plays, the deviation's turn kept[2m > [22mboth off: attempt 1 unrecorded, no turn record, the target and env.sl.explore as 08ec8f9
+[41m[1m FAIL [22m[49m tests/sl-explore-gaps.test.ts[2m > [22mABCJ0TZ6MD06 F48 attempt 4, T5 off the path: the point's turn[2m > [22mSL_RETRY_EXPLORE_TARGET_TURN: the point's lines and turns kept off on this board too
+[41m[1m FAIL [22m[49m tests/sl-explore-gaps.test.ts[2m > [22mSL_RETRY_EXPLORE_ANCHOR's recording on a first attempt (env.slRecord): no decision changes[2m > [22mthe same question and resolution; the point recorded
+[41m[1m FAIL [22m[49m tests/sl-explore-gaps.test.ts[2m > [22mthe controller with SL_RETRY_EXPLORE_ANCHOR[2m > [22mattempt 1 records its decision points (the same decisions as without); attempt 3 anchors to it when it lived longest
+[41m[1m FAIL [22m[49m tests/sl-explore-gaps.test.ts[2m > [22mthe controller with SL_RETRY_EXPLORE_ANCHOR[2m > [22mSL_RETRY_EXPLORE_SECOND with it: attempt 2 still deviates on attempt 1's path; attempt 1's point adds its planned turn to the tried
+[41m[1m FAIL [22m[49m tests/sl-explore-gaps.test.ts[2m > [22mthe controller with SL_RETRY_EXPLORE_REARM[2m > [22ma deviation whose turn ended as a failed attempt's: a later point of the path in the same attempt
+[41m[1m FAIL [22m[49m tests/sl-explore-gaps.test.ts[2m > [22mthe controller with SL_RETRY_EXPLORE_WASTED[2m > [22ma deviation whose next turn began on a failed attempt's board is wasted (differs false, repeats), and re-armed
+[41m[1m FAIL [22m[49m tests/sl-explore-gaps.test.ts[2m > [22mthe controller with SL_RETRY_EXPLORE_WASTED[2m > [22mre-armed off the reference path too: the replay stopped, the next point's turn deviates on the attempt's own board
+[41m[1m FAIL [22m[49m tests/sl-explore-gaps.test.ts[2m > [22mthe controller with SL_RETRY_EXPLORE_TARGET_TURN[2m > [22moff the path before the point, on a board no failed attempt decided on: the point's turn still deviates
+[41m[1m FAIL [22m[49m tests/sl-explore-whole.test.ts[2m > [22mthe controller with SL_RETRY_EXPLORE_WHOLE[2m > [22mtells the planner (`whole`), says so in the run config; off: nothing new
+[41m[1m FAIL [22m[49m tests/sl-explore-whole.test.ts[2m > [22mthe controller with SL_RETRY_EXPLORE_WHOLE[2m > [22man avoid that cannot act later in the deviation's turn is on the row's deviation, and said
+[41m[1m FAIL [22m[49m tests/sl-explore.test.ts[2m > [22mthe planner: the switch recording changes nothing; on the deviation point's board the failed line gives way[2m > [22mrecording (env.sl.explore without a deviation): every logged board's decision is 3488dc5's, byte for byte
+[41m[1m FAIL [22m[49m tests/sl-explore.test.ts[2m > [22mthe planner: the switch recording changes nothing; on the deviation point's board the failed line gives way[2m > [22mVNKN F25 T1: Jev's pick, played there in attempt 2, gives way to the rollout's best untried line; the row says so
+[41m[1m FAIL [22m[49m tests/sl-explore.test.ts[2m > [22mthe planner: the switch recording changes nothing; on the deviation point's board the failed line gives way[2m > [22mon the deviation point's board a pick no failed attempt played there is played as answered (logged, not changed)
+[41m[1m FAIL [22m[49m tests/sl-explore.test.ts[2m > [22mthe sub-switches off: the explore part as at bc8c9bc[2m > [22mevery answer's point and, with a deviation, every answer's resolution, log and point: bc8c9bc's
+[41m[1m FAIL [22m[49m tests/sl-explore.test.ts[2m > [22mthe sub-switches on: a listed elite as before (no added drink); a boss fight's replacement may drink[2m > [22mthe Decimillipede (a listed elite): every point and deviation is bc8c9bc's; never a line drinking the Speed Potion the pick does not
+[41m[1m FAIL [22m[49m tests/sl-explore.test.ts[2m > [22mthe sub-switches on: a listed elite as before (no added drink); a boss fight's replacement may drink[2m > [22mSL_RETRY_EXPLORE_REPLAY on the Decimillipede T1: attempt 2's line is played instead of Jev's answer, as if Jev had picked it
+[41m[1m FAIL [22m[49m tests/sl-explore.test.ts[2m > [22mthe sub-switches on: a listed elite as before (no added drink); a boss fight's replacement may drink[2m > [22mthe Test Subject (a boss; low trust, B2 off here: the rollout's gate): with every dry line played, a line drinking the Weak Potion
+[41m[1m FAIL [22m[49m tests/sl-explore.test.ts[2m > [22mthe controller: attempts record their lines, attempt 3 changes the latest question, attempt 4 the one before[2m > [22mdeviation at the latest point, then backtracking; every other board plays as answered; the rows keep it all
+[41m[1m FAIL [22m[49m tests/sl-explore.test.ts[2m > [22mthe controller: attempts record their lines, attempt 3 changes the latest question, attempt 4 the one before[2m > [22mSL_RETRY_EXPLORE_REPLAY: Jev answers T1 otherwise in attempt 3 (R1QJUBVBSSB2 F33); attempt 2's line is played there, so the attempt reaches its T2 point
+[41m[1m FAIL [22m[49m tests/sl-explore.test.ts[2m > [22mthe controller: attempts record their lines, attempt 3 changes the latest question, attempt 4 the one before[2m > [22mno deviation when the board differs from the failed attempts': played as answered, the point kept for the next attempt
+[41m[1m FAIL [22m[49m tests/sl-explore.test.ts[2m > [22mthe controller: attempts record their lines, attempt 3 changes the latest question, attempt 4 the one before[2m > [22ma restarted process reads the points back from the log and deviates at the same point
+[41m[1m FAIL [22m[49m tests/sl-explore.test.ts[2m > [22mthe controller: attempts record their lines, attempt 3 changes the latest question, attempt 4 the one before[2m > [22mthe sub-switches: on by default in env.sl.explore on every board; off, absent (the planner then as at bc8c9bc)
+[41m[1m FAIL [22m[49m tests/sl-explore.test.ts[2m > [22mthe controller: attempts record their lines, attempt 3 changes the latest question, attempt 4 the one before[2m > [22mswitch off: nothing recorded, no env.sl.explore, the same plays in every attempt (as before the switch)
+[41m[1m FAIL [22m[49m tests/sl-replay-plays.test.ts[2m > [22mthe controller with SL_RETRY_EXPLORE_REPLAY_PLAYS and _DEVIATE[2m > [22mgives the reference's plays and the board's fallback with the replay; says the switches in the run config
+[41m[1m FAIL [22m[49m tests/sl-replay-plays.test.ts[2m > [22mthe controller with SL_RETRY_EXPLORE_REPLAY_PLAYS and _DEVIATE[2m > [22ma reference line not among the options: its plays are played, the board counts as replayed (logged)
+[41m[1m FAIL [22m[49m tests/sl-replay-plays.test.ts[2m > [22mthe controller with SL_RETRY_EXPLORE_REPLAY_PLAYS and _DEVIATE[2m > [22mneither can be played: the attempt deviates there, not at its point; the next attempt aims at the same point again
+[41m[1m FAIL [22m[49m tests/sl-retry-planner.test.ts[2m > [22mSL retry switches off: the combat question as v4 3488dc5 asked it[2m > [22mevery logged retry board's decision is 3488dc5's, byte for byte
+[41m[1m FAIL [22m[49m tests/sl-retry-planner.test.ts[2m > [22mSL_RETRY_KNOWN_DRAWS on: the lines draw the cards the earlier attempt drew[2m > [22mVNKN F25 T3: Burning Pact draws the known Bash+ and Strike; the question says the next 10 cards; the log has sl_retry
+[41m[1m FAIL [22m[49m tests/template-target.test.ts[2m > [22mthe logged Shiv boards (RNTVAT76BPV0): Shiv is played at its target[2m > [22mrntv-f30-t1-shiv: every line names Shiv's target, no option's first action is refused, nor code's
+[41m[1m FAIL [22m[49m tests/template-target.test.ts[2m > [22mthe logged Shiv boards (RNTVAT76BPV0): Shiv is played at its target[2m > [22mrntv-f33-t1-shiv: every line names Shiv's target, no option's first action is refused, nor code's
+[41m[1m FAIL [22m[49m tests/template-target.test.ts[2m > [22mthe logged Shiv boards (RNTVAT76BPV0): Shiv is played at its target[2m > [22mrntv-f38-t1-defend-shiv: every line names Shiv's target, no option's first action is refused, nor code's
+[41m[1m FAIL [22m[49m tests/template-target.test.ts[2m > [22mthe logged Shiv boards (RNTVAT76BPV0): Shiv is played at its target[2m > [22mF30 T1: Jev's line (小刀, 欺凌, potion, 防御, potion) starts with Shiv at the Mother Louse, as the gate wants it
+[41m[1m FAIL [22m[49m tests/template-target.test.ts[2m > [22mcontrol boards: no changed card, the question as on v4 without the fix (6bd48a9; b9473ed for True Grit)[2m > [22mthe same run before the Shiv, True Grit's and Primal Force's conditional templates in hand: byte for byte
+[41m[1m FAIL [22m[49m tests/thief-cost.test.ts[2m > [22mTHIEF_COST off: the combat question as with THIEF_FACTS alone (ffed0d4)[2m > [22mevery logged thief board's decision is ffed0d4's, byte for byte (the switch absent, and false)
+[41m[1m FAIL [22m[49m tests/thief-cost.test.ts[2m > [22mTHIEF_COST on: the Hopper's card[2m > [22mT2: thief_context gives the card's HP and its derivation; each option's loot cost is its value x the samples losing it
+[41m[1m FAIL [22m[49m tests/thief-cost.test.ts[2m > [22mTHIEF_COST on: the Hopper's card[2m > [22mits Escape turn (8V0HD9Y207WY F19 T5): the line stunning it, killed next turn 8/8, is the rollout's best and code's fallback
+[41m[1m FAIL [22m[49m tests/thief-cost.test.ts[2m > [22mTHIEF_COST on: the Hopper's card[2m > [22mno value computed for this fight (another fight's, or none): no cost, the facts say why, every choice as with the switch off
+[41m[1m FAIL [22m[49m tests/thief-cost.test.ts[2m > [22mTHIEF_COST on: the Hopper's card[2m > [22mfail safe: a value that throws when read leaves the decision exactly as with THIEF_COST off
+[41m[1m FAIL [22m[49m tests/thief-cost.test.ts[2m > [22mTHIEF_COST on: the gold[2m > [22mthe Merc's take so far at the potion table's gold rate, and the Fat Gremlin's on its Flee turn
+[41m[1m FAIL [22m[49m tests/thief.test.ts[2m > [22mTHIEF_FACTS off: the combat question as before[2m > [22mevery logged thief board's decision is the pre-change one, byte for byte
+[41m[1m FAIL [22m[49m tests/thief.test.ts[2m > [22mTHIEF_FACTS on: the Thieving Hopper[2m > [22mT2: what it carries (the card missing since the fight's first frame), turns left, HP; every option's thief fact
+[41m[1m FAIL [22m[49m tests/thief.test.ts[2m > [22mTHIEF_FACTS on: the Thieving Hopper[2m > [22mits Escape turn: this turn is the last; the lines that leave it alive say it leaves with the card
+[41m[1m FAIL [22m[49m tests/thief.test.ts[2m > [22mTHIEF_FACTS on: the Thieving Hopper[2m > [22ma line stripping its last Flutter on the Escape turn: stunned, one more turn (8V0HD9Y207WY F19 T5)
+[41m[1m FAIL [22m[49m tests/thief.test.ts[2m > [22mTHIEF_FACTS on: the Thieving Hopper[2m > [22mthe fight's first frame not seen (a restart with no logged frame): one card, unknown which
+[41m[1m FAIL [22m[49m tests/thief.test.ts[2m > [22mTHIEF_FACTS on: the Gremlin Merc and the Fat Gremlin[2m > [22mthe Merc: gold stolen so far (the fight's first frame's gold less now), where it goes on death
+[41m[1m FAIL [22m[49m tests/thief.test.ts[2m > [22mTHIEF_FACTS on: the Gremlin Merc and the Fat Gremlin[2m > [22mthe Fat Gremlin on its Flee turn: no line kills it (14 HP), none added; killable, a line killing it is among the options
+[41m[1m FAIL [22m[49m tests/thief.test.ts[2m > [22mTHIEF_FACTS off[2m > [22mno thief_context, no thief fact, no thief log
+[41m[1m FAIL [22m[49m tests/thief.test.ts[2m > [22mTHIEF_FACTS fail safe (live play)[2m > [22ma thief step that throws (a broken first-frame note) leaves the decision exactly as with the switch off
+[31m[1mError[22m: 公共经验文件 /home/dw/Projects/agent-sts2/.worktrees/live/knowledge/common/shared-experience.json: 读取失败: ENOENT: pinned test, shared-experience.json[39m
+[36m [2m❯[22m fail src/knowledge/shared-experience.ts:[2m33:63[22m[39m
+    [90m 31|[39m const text = (v: unknown): v is string => typeof v === "string" && v.t…
+    [90m 32|[39m const count = (v: unknown): v is number => typeof v === "number" && Nu…
+    [90m 33|[39m const fail = (path: string, detail: string): never => { throw new Erro…
+    [90m   |[39m                                                               [31m^[39m
+    [90m 34|[39m
+    [90m 35|[39m /** Schema checks cannot establish generality; that decision belongs t…
+[90m [2m❯[22m loadSharedExperience src/knowledge/shared-experience.ts:[2m77:26[22m[39m
+[90m [2m❯[22m loadExperience src/knowledge/experience.ts:[2m106:45[22m[39m
+[90m [2m❯[22m selectLessons src/knowledge/experience.ts:[2m309:79[22m[39m
+[90m [2m❯[22m fightLessons src/reflex/combat-plan.ts:[2m482:10[22m[39m
+[90m [2m❯[22m planTurn src/reflex/combat-plan.ts:[2m3943:19[22m[39m
+[90m [2m❯[22m src/reflex/combat-plan.ts:[2m2102:117[22m[39m
+[90m [2m❯[22m withSlRetryFallback src/reflex/combat-plan.ts:[2m2281:80[22m[39m
+[90m [2m❯[22m src/reflex/combat-plan.ts:[2m2102:53[22m[39m
+[90m [2m❯[22m withMechFallback src/reflex/combat-plan.ts:[2m2808:12[22m[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/185]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m tests/death-move-planner.test.ts[2m > [22mMECH_DEATH_MOVE off, MECH_RULES off, no data, no rule: the combat question as at v4 0f63d28[2m > [22mMECH_RULES off (MECH_DEATH_MOVE on): the pre-change one with MECH_RULES off
+[41m[1m FAIL [22m[49m tests/mech-move-planner.test.ts[2m > [22mMECH_MOVE_RULES off, or MECH_RULES off: the combat question as at v4 3488dc5[2m > [22mMECH_RULES off (MECH_MOVE_RULES on): the pre-change one with MECH_RULES off
+[41m[1m FAIL [22m[49m tests/mech-rules-planner.test.ts[2m > [22mMECH_RULES off: the combat question as at v4 ffed0d4[2m > [22mwith the observed data in the monster DB, every logged Hopper board's decision is the pre-change one, byte for byte
+[41m[1m FAIL [22m[49m tests/mech-rules-planner.test.ts[2m > [22mMECH_RULES on: the Hopper's last Flutter[2m > [22mRPC6X61N9FQ0 F20 T3 (Flutter 5, Hat Trick 21): the line with five hits leaves the attack out of hp_lost and says so
+[31m[1mError[22m: 公共经验文件 /home/dw/Projects/agent-sts2/.worktrees/live/knowledge/common/shared-experience.json: 读取失败: ENOENT: pinned test, shared-experience.json[39m
+[36m [2m❯[22m fail src/knowledge/shared-experience.ts:[2m33:63[22m[39m
+    [90m 31|[39m const text = (v: unknown): v is string => typeof v === "string" && v.t…
+    [90m 32|[39m const count = (v: unknown): v is number => typeof v === "number" && Nu…
+    [90m 33|[39m const fail = (path: string, detail: string): never => { throw new Erro…
+    [90m   |[39m                                                               [31m^[39m
+    [90m 34|[39m
+    [90m 35|[39m /** Schema checks cannot establish generality; that decision belongs t…
+[90m [2m❯[22m loadSharedExperience src/knowledge/shared-experience.ts:[2m77:26[22m[39m
+[90m [2m❯[22m loadExperience src/knowledge/experience.ts:[2m106:45[22m[39m
+[90m [2m❯[22m selectLessons src/knowledge/experience.ts:[2m309:79[22m[39m
+[90m [2m❯[22m fightLessons src/reflex/combat-plan.ts:[2m482:10[22m[39m
+[90m [2m❯[22m planTurn src/reflex/combat-plan.ts:[2m3943:19[22m[39m
+[90m [2m❯[22m src/reflex/combat-plan.ts:[2m2102:117[22m[39m
+[90m [2m❯[22m withSlRetryFallback src/reflex/combat-plan.ts:[2m2281:80[22m[39m
+[90m [2m❯[22m src/reflex/combat-plan.ts:[2m2102:53[22m[39m
+[90m [2m❯[22m withMechFallback src/reflex/combat-plan.ts:[2m2789:39[22m[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/185]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m tests/potion-cost.test.ts[2m > [22mJev's question: every option's potion cost, and the no-potion line[2m > [22mhallway (N95W F19 T3, Block Potion 8 HP in act 2): every option states HP loss, potions, cost and total; one option is the no-potion line
+[41m[1m FAIL [22m[49m tests/potion-cost.test.ts[2m > [22mJev's question: every option's potion cost, and the no-potion line[2m > [22mmerged when the base line's own rollout drinks nothing later; its own option when it does (ETYC F19 T1: Blood Potion, no conversion value)
+[41m[1m FAIL [22m[49m tests/potion-cost.test.ts[2m > [22mJev's question: every option's potion cost, and the no-potion line[2m > [22mrollout off: the base line is tagged, the fact says there is no rollout
+[41m[1m FAIL [22m[49m tests/potion-cost.test.ts[2m > [22mJev's question: every option's potion cost, and the no-potion line[2m > [22mthe switch off: the question is the one before the costs (no cost facts, no no-potion line)
+[31m[1mError[22m: 公共经验文件 /home/dw/Projects/agent-sts2/.worktrees/live/knowledge/common/shared-experience.json: 读取失败: ENOENT: pinned potion-cost fixture, shared-experience.json[39m
+[36m [2m❯[22m fail src/knowledge/shared-experience.ts:[2m33:63[22m[39m
+    [90m 31|[39m const text = (v: unknown): v is string => typeof v === "string" && v.t…
+    [90m 32|[39m const count = (v: unknown): v is number => typeof v === "number" && Nu…
+    [90m 33|[39m const fail = (path: string, detail: string): never => { throw new Erro…
+    [90m   |[39m                                                               [31m^[39m
+    [90m 34|[39m
+    [90m 35|[39m /** Schema checks cannot establish generality; that decision belongs t…
+[90m [2m❯[22m loadSharedExperience src/knowledge/shared-experience.ts:[2m77:26[22m[39m
+[90m [2m❯[22m loadExperience src/knowledge/experience.ts:[2m106:45[22m[39m
+[90m [2m❯[22m selectLessons src/knowledge/experience.ts:[2m309:79[22m[39m
+[90m [2m❯[22m fightLessons src/reflex/combat-plan.ts:[2m482:10[22m[39m
+[90m [2m❯[22m planTurn src/reflex/combat-plan.ts:[2m3943:19[22m[39m
+[90m [2m❯[22m src/reflex/combat-plan.ts:[2m2102:117[22m[39m
+[90m [2m❯[22m withSlRetryFallback src/reflex/combat-plan.ts:[2m2281:80[22m[39m
+[90m [2m❯[22m src/reflex/combat-plan.ts:[2m2102:53[22m[39m
+[90m [2m❯[22m withMechFallback src/reflex/combat-plan.ts:[2m2808:12[22m[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/185]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m tests/rollout-best-added.test.ts[2m > [22mfixed omitted rollout best[2m > [22mthe rollout's best line is added, last and marked, when code did not show it
+[31m[1mError[22m: 公共经验文件 /home/dw/Projects/agent-sts2/.worktrees/live/knowledge/common/shared-experience.json: 读取失败: ENOENT: fixed rollout references, shared-experience.json[39m
+[36m [2m❯[22m fail src/knowledge/shared-experience.ts:[2m33:63[22m[39m
+    [90m 31|[39m const text = (v: unknown): v is string => typeof v === "string" && v.t…
+    [90m 32|[39m const count = (v: unknown): v is number => typeof v === "number" && Nu…
+    [90m 33|[39m const fail = (path: string, detail: string): never => { throw new Erro…
+    [90m   |[39m                                                               [31m^[39m
+    [90m 34|[39m
+    [90m 35|[39m /** Schema checks cannot establish generality; that decision belongs t…
+[90m [2m❯[22m loadSharedExperience src/knowledge/shared-experience.ts:[2m77:26[22m[39m
+[90m [2m❯[22m loadExperience src/knowledge/experience.ts:[2m106:45[22m[39m
+[90m [2m❯[22m selectLessons src/knowledge/experience.ts:[2m309:79[22m[39m
+[90m [2m❯[22m fightLessons src/reflex/combat-plan.ts:[2m482:10[22m[39m
+[90m [2m❯[22m planTurn src/reflex/combat-plan.ts:[2m3943:19[22m[39m
+[90m [2m❯[22m src/reflex/combat-plan.ts:[2m2102:117[22m[39m
+[90m [2m❯[22m withSlRetryFallback src/reflex/combat-plan.ts:[2m2281:80[22m[39m
+[90m [2m❯[22m src/reflex/combat-plan.ts:[2m2102:53[22m[39m
+[90m [2m❯[22m withMechFallback src/reflex/combat-plan.ts:[2m2808:12[22m[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/185]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m tests/silent-bullet-time.test.ts[2m > [22mthe final T1 prefix pays three, draws zero and preserves five Block plus both energy gains
+[41m[1m FAIL [22m[49m tests/silent-bullet-time.test.ts[2m > [22mthree starting energy can pay Bullet Time and then the formerly unaffordable hand
+[41m[1m FAIL [22m[49m tests/silent-bullet-time.test.ts[2m > [22mknown pile cards cannot be borrowed after the lock, while a draw made before it remains
+[41m[1m FAIL [22m[49m tests/silent-bullet-time.test.ts[2m > [22ma replan on the actual locked frame retains energy and never invents draws
+[41m[1m FAIL [22m[49m tests/silent-bullet-time.test.ts[2m > [22mthe draw lock also stops an existing expected-draw adapter without granting new cards a free cost
+[41m[1m FAIL [22m[49m tests/silent-bullet-time.test.ts[2m > [22mfalse fullFight: free costs and the lock expire, Radiance adds energy for exactly three later turns
+[41m[1m FAIL [22m[49m tests/silent-bullet-time.test.ts[2m > [22mtrue fullFight: free costs and the lock expire, Radiance adds energy for exactly three later turns
+[41m[1m FAIL [22m[49m tests/silent-bullet-time.test.ts[2m > [22mIRONCLAD A10 upgrade=undefined keeps the old unobserved model
+[41m[1m FAIL [22m[49m tests/silent-bullet-time.test.ts[2m > [22mSILENT A9 upgrade=undefined keeps the old unobserved model
+[41m[1m FAIL [22m[49m tests/silent-bullet-time.test.ts[2m > [22mSILENT A10 upgrade=true keeps the old unobserved model
+[41m[1m FAIL [22m[49m tests/silent-bullet-time.test.ts[2m > [22mwithout Bullet Time the original Backflip and Adrenaline draws remain unchanged
+[31m[1mError[22m: 公共经验文件 /home/dw/Projects/agent-sts2/.worktrees/live/knowledge/common/shared-experience.json: 读取失败: ENOENT: fixed Bullet Time evidence[39m
+[36m [2m❯[22m fail src/knowledge/shared-experience.ts:[2m33:63[22m[39m
+    [90m 31|[39m const text = (v: unknown): v is string => typeof v === "string" && v.t…
+    [90m 32|[39m const count = (v: unknown): v is number => typeof v === "number" && Nu…
+    [90m 33|[39m const fail = (path: string, detail: string): never => { throw new Erro…
+    [90m   |[39m                                                               [31m^[39m
+    [90m 34|[39m
+    [90m 35|[39m /** Schema checks cannot establish generality; that decision belongs t…
+[90m [2m❯[22m loadSharedExperience src/knowledge/shared-experience.ts:[2m77:26[22m[39m
+[90m [2m❯[22m loadExperience src/knowledge/experience.ts:[2m106:45[22m[39m
+[90m [2m❯[22m selectLessons src/knowledge/experience.ts:[2m309:79[22m[39m
+[90m [2m❯[22m fightLessons src/reflex/combat-plan.ts:[2m482:10[22m[39m
+[90m [2m❯[22m planTurn src/reflex/combat-plan.ts:[2m3943:19[22m[39m
+[90m [2m❯[22m src/reflex/combat-plan.ts:[2m2102:117[22m[39m
+[90m [2m❯[22m withSlRetryFallback src/reflex/combat-plan.ts:[2m2281:80[22m[39m
+[90m [2m❯[22m src/reflex/combat-plan.ts:[2m2102:53[22m[39m
+[90m [2m❯[22m withMechFallback src/reflex/combat-plan.ts:[2m2808:12[22m[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/185]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m tests/silent-dodge-roll.test.ts[2m > [22mframe 273712 captures the observed amount before Tender reduces Dexterity
+[41m[1m FAIL [22m[49m tests/silent-dodge-roll.test.ts[2m > [22mframe 273725 captures the observed amount before Tender reduces Dexterity
+[41m[1m FAIL [22m[49m tests/silent-dodge-roll.test.ts[2m > [22ma card played earlier in the same plan reduces the captured amount, rather than using entry Dexterity
+[41m[1m FAIL [22m[49m tests/silent-dodge-roll.test.ts[2m > [22mnewly captured Block from 273712 is paid once after attribute reset
+[41m[1m FAIL [22m[49m tests/silent-dodge-roll.test.ts[2m > [22mnewly captured Block from 273725 is paid once after attribute reset
+[41m[1m FAIL [22m[49m tests/silent-dodge-roll.test.ts[2m > [22munobserved frail keeps the option and marks delayed Block unknown
+[41m[1m FAIL [22m[49m tests/silent-dodge-roll.test.ts[2m > [22munobserved replay keeps the option and marks delayed Block unknown
+[41m[1m FAIL [22m[49m tests/silent-dodge-roll.test.ts[2m > [22munobserved duplicate keeps the option and marks delayed Block unknown
+[41m[1m FAIL [22m[49m tests/silent-dodge-roll.test.ts[2m > [22munobserved unknown-amount keeps the option and marks delayed Block unknown
+[31m[1mError[22m: 公共经验文件 /home/dw/Projects/agent-sts2/.worktrees/live/knowledge/common/shared-experience.json: 读取失败: ENOENT: fixed delayed-Block test[39m
+[36m [2m❯[22m fail src/knowledge/shared-experience.ts:[2m33:63[22m[39m
+    [90m 31|[39m const text = (v: unknown): v is string => typeof v === "string" && v.t…
+    [90m 32|[39m const count = (v: unknown): v is number => typeof v === "number" && Nu…
+    [90m 33|[39m const fail = (path: string, detail: string): never => { throw new Erro…
+    [90m   |[39m                                                               [31m^[39m
+    [90m 34|[39m
+    [90m 35|[39m /** Schema checks cannot establish generality; that decision belongs t…
+[90m [2m❯[22m loadSharedExperience src/knowledge/shared-experience.ts:[2m77:26[22m[39m
+[90m [2m❯[22m loadExperience src/knowledge/experience.ts:[2m106:45[22m[39m
+[90m [2m❯[22m selectLessons src/knowledge/experience.ts:[2m309:79[22m[39m
+[90m [2m❯[22m fightLessons src/reflex/combat-plan.ts:[2m482:10[22m[39m
+[90m [2m❯[22m planTurn src/reflex/combat-plan.ts:[2m3943:19[22m[39m
+[90m [2m❯[22m src/reflex/combat-plan.ts:[2m2102:117[22m[39m
+[90m [2m❯[22m withSlRetryFallback src/reflex/combat-plan.ts:[2m2281:80[22m[39m
+[90m [2m❯[22m src/reflex/combat-plan.ts:[2m2102:53[22m[39m
+[90m [2m❯[22m withMechFallback src/reflex/combat-plan.ts:[2m2808:12[22m[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/185]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m tests/silent-kusarigama.test.ts[2m > [22mdoes not pre-credit a random kill that the recorded complete line failed to deliver
+[41m[1m FAIL [22m[49m tests/silent-kusarigama.test.ts[2m > [22mretains the playable suffix and labels the reference result instead of presenting an exact rollout
+[41m[1m FAIL [22m[49m tests/silent-kusarigama.test.ts[2m > [22muntriggered relic leaves the original modeled outcome intact
+[41m[1m FAIL [22m[49m tests/silent-kusarigama.test.ts[2m > [22mabsent relic leaves the original modeled outcome intact
+[41m[1m FAIL [22m[49m tests/silent-kusarigama.test.ts[2m > [22ma sole remaining target keeps the old raw-damage and per-hit-cap path
+[41m[1m FAIL [22m[49m tests/silent-kusarigama.test.ts[2m > [22mIRONCLAD A10 does not opt into the observed A10 change
+[41m[1m FAIL [22m[49m tests/silent-kusarigama.test.ts[2m > [22mSILENT A9 does not opt into the observed A10 change
+[41m[1m FAIL [22m[49m tests/silent-kusarigama.test.ts[2m > [22mSILENT A11 does not opt into the observed A10 change
+[31m[1mError[22m: 公共经验文件 /home/dw/Projects/agent-sts2/.worktrees/live/knowledge/common/shared-experience.json: 读取失败: ENOENT: fixed Kusarigama evidence[39m
+[36m [2m❯[22m fail src/knowledge/shared-experience.ts:[2m33:63[22m[39m
+    [90m 31|[39m const text = (v: unknown): v is string => typeof v === "string" && v.t…
+    [90m 32|[39m const count = (v: unknown): v is number => typeof v === "number" && Nu…
+    [90m 33|[39m const fail = (path: string, detail: string): never => { throw new Erro…
+    [90m   |[39m                                                               [31m^[39m
+    [90m 34|[39m
+    [90m 35|[39m /** Schema checks cannot establish generality; that decision belongs t…
+[90m [2m❯[22m loadSharedExperience src/knowledge/shared-experience.ts:[2m77:26[22m[39m
+[90m [2m❯[22m loadExperience src/knowledge/experience.ts:[2m106:45[22m[39m
+[90m [2m❯[22m selectLessons src/knowledge/experience.ts:[2m309:79[22m[39m
+[90m [2m❯[22m fightLessons src/reflex/combat-plan.ts:[2m482:10[22m[39m
+[90m [2m❯[22m planTurn src/reflex/combat-plan.ts:[2m3943:19[22m[39m
+[90m [2m❯[22m src/reflex/combat-plan.ts:[2m2102:117[22m[39m
+[90m [2m❯[22m withSlRetryFallback src/reflex/combat-plan.ts:[2m2281:80[22m[39m
+[90m [2m❯[22m src/reflex/combat-plan.ts:[2m2102:53[22m[39m
+[90m [2m❯[22m withMechFallback src/reflex/combat-plan.ts:[2m2808:12[22m[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/185]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m tests/silent-potion-reference.test.ts[2m > [22mthe real consumer shows unknown value with valid option keys and preserves choices and ranks (v1=true)
+[31m[1mError[22m: 公共经验文件 /home/dw/Projects/agent-sts2/.worktrees/live/knowledge/common/shared-experience.json: 读取失败: ENOENT: frozen Silent evidence only[39m
+[36m [2m❯[22m fail src/knowledge/shared-experience.ts:[2m33:63[22m[39m
+    [90m 31|[39m const text = (v: unknown): v is string => typeof v === "string" && v.t…
+    [90m 32|[39m const count = (v: unknown): v is number => typeof v === "number" && Nu…
+    [90m 33|[39m const fail = (path: string, detail: string): never => { throw new Erro…
+    [90m   |[39m                                                               [31m^[39m
+    [90m 34|[39m
+    [90m 35|[39m /** Schema checks cannot establish generality; that decision belongs t…
+[90m [2m❯[22m loadSharedExperience src/knowledge/shared-experience.ts:[2m77:26[22m[39m
+[90m [2m❯[22m loadExperience src/knowledge/experience.ts:[2m72:90[22m[39m
+[90m [2m❯[22m potionLessons src/reflex/jev-experience.ts:[2m313:37[22m[39m
+[90m [2m❯[22m jevExperience src/reflex/jev-experience.ts:[2m374:18[22m[39m
+[90m [2m❯[22m planTurn src/reflex/combat-plan.ts:[2m4059:19[22m[39m
+[90m [2m❯[22m src/reflex/combat-plan.ts:[2m2102:117[22m[39m
+[90m [2m❯[22m withSlRetryFallback src/reflex/combat-plan.ts:[2m2281:80[22m[39m
+[90m [2m❯[22m src/reflex/combat-plan.ts:[2m2102:53[22m[39m
+[90m [2m❯[22m withMechFallback src/reflex/combat-plan.ts:[2m2808:12[22m[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/185]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m tests/silent-selection-audit.test.ts[2m > [22mthe recorded Sandworm pair separates 12 predicted HP from 7 damage and 0/24 from 5/24 deaths
+[41m[1m FAIL [22m[49m tests/silent-selection-audit.test.ts[2m > [22mthe frozen candidate pair at decision 271348 retains growth and does not claim actual damage
+[41m[1m FAIL [22m[49m tests/silent-selection-audit.test.ts[2m > [22mthe frozen candidate pair at decision 272040 retains growth and does not claim actual damage
+[41m[1m FAIL [22m[49m tests/silent-selection-audit.test.ts[2m > [22mthe frozen candidate pair at decision 272195 retains growth and does not claim actual damage
+[41m[1m FAIL [22m[49m tests/silent-selection-audit.test.ts[2m > [22mthe real question resolution records the original, pre-SL and replacement with the requested first action
+[41m[1m FAIL [22m[49m tests/silent-selection-audit.test.ts[2m > [22mthe original Jev answer stays separate when the HP guard replaces it before SL
+[41m[1m FAIL [22m[49m tests/silent-selection-audit.test.ts[2m > [22mother characters and unobserved ascensions have no audit fields
+[41m[1m FAIL [22m[49m tests/silent-selection-audit.test.ts[2m > [22ma missing plan, random-potion median and clock fallback retain their distinct uncertainty
+[31m[1mError[22m: 公共经验文件 /home/dw/Projects/agent-sts2/.worktrees/live/knowledge/common/shared-experience.json: 读取失败: ENOENT: fixed selection evidence[39m
+[36m [2m❯[22m fail src/knowledge/shared-experience.ts:[2m33:63[22m[39m
+    [90m 31|[39m const text = (v: unknown): v is string => typeof v === "string" && v.t…
+    [90m 32|[39m const count = (v: unknown): v is number => typeof v === "number" && Nu…
+    [90m 33|[39m const fail = (path: string, detail: string): never => { throw new Erro…
+    [90m   |[39m                                                               [31m^[39m
+    [90m 34|[39m
+    [90m 35|[39m /** Schema checks cannot establish generality; that decision belongs t…
+[90m [2m❯[22m loadSharedExperience src/knowledge/shared-experience.ts:[2m77:26[22m[39m
+[90m [2m❯[22m loadExperience src/knowledge/experience.ts:[2m106:45[22m[39m
+[90m [2m❯[22m selectLessons src/knowledge/experience.ts:[2m309:79[22m[39m
+[90m [2m❯[22m fightLessons src/reflex/combat-plan.ts:[2m482:10[22m[39m
+[90m [2m❯[22m planTurn src/reflex/combat-plan.ts:[2m3943:19[22m[39m
+[90m [2m❯[22m src/reflex/combat-plan.ts:[2m2102:117[22m[39m
+[90m [2m❯[22m withSlRetryFallback src/reflex/combat-plan.ts:[2m2281:80[22m[39m
+[90m [2m❯[22m src/reflex/combat-plan.ts:[2m2102:53[22m[39m
+[90m [2m❯[22m withMechFallback src/reflex/combat-plan.ts:[2m2808:12[22m[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/185]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m tests/silent-serpent-form.test.ts[2m > [22mT1 establishes four points without attributing damage to the power itself or a held second copy
+[41m[1m FAIL [22m[49m tests/silent-serpent-form.test.ts[2m > [22mframe 274202: 274203 separates the card's damage and four-point trigger
+[41m[1m FAIL [22m[49m tests/silent-serpent-form.test.ts[2m > [22mframe 274203: 274204 separates the card's damage and four-point trigger
+[41m[1m FAIL [22m[49m tests/silent-serpent-form.test.ts[2m > [22mframe 274207: 274208 separates the card's damage and four-point trigger
+[41m[1m FAIL [22m[49m tests/silent-serpent-form.test.ts[2m > [22mframe 274208: 274209 separates the card's damage and four-point trigger
+[41m[1m FAIL [22m[49m tests/silent-serpent-form.test.ts[2m > [22mframe 274209: 274210 separates the card's damage and four-point trigger
+[41m[1m FAIL [22m[49m tests/silent-serpent-form.test.ts[2m > [22ma complete fixed defense prefix keeps poison settlement separate from the two card triggers
+[41m[1m FAIL [22m[49m tests/silent-serpent-form.test.ts[2m > [22mIRONCLAD A10 preserves the old outcome on the identical evidence frame
+[41m[1m FAIL [22m[49m tests/silent-serpent-form.test.ts[2m > [22mSILENT A9 preserves the old outcome on the identical evidence frame
+[41m[1m FAIL [22m[49m tests/silent-serpent-form.test.ts[2m > [22munobserved two-enemies keeps the option and marks its extra damage unknown
+[41m[1m FAIL [22m[49m tests/silent-serpent-form.test.ts[2m > [22munobserved replay keeps the option and marks its extra damage unknown
+[41m[1m FAIL [22m[49m tests/silent-serpent-form.test.ts[2m > [22munobserved stacking keeps the option and marks its extra damage unknown
+[31m[1mError[22m: 公共经验文件 /home/dw/Projects/agent-sts2/.worktrees/live/knowledge/common/shared-experience.json: 读取失败: ENOENT: fixed Serpent Form evidence[39m
+[36m [2m❯[22m fail src/knowledge/shared-experience.ts:[2m33:63[22m[39m
+    [90m 31|[39m const text = (v: unknown): v is string => typeof v === "string" && v.t…
+    [90m 32|[39m const count = (v: unknown): v is number => typeof v === "number" && Nu…
+    [90m 33|[39m const fail = (path: string, detail: string): never => { throw new Erro…
+    [90m   |[39m                                                               [31m^[39m
+    [90m 34|[39m
+    [90m 35|[39m /** Schema checks cannot establish generality; that decision belongs t…
+[90m [2m❯[22m loadSharedExperience src/knowledge/shared-experience.ts:[2m77:26[22m[39m
+[90m [2m❯[22m loadExperience src/knowledge/experience.ts:[2m106:45[22m[39m
+[90m [2m❯[22m selectLessons src/knowledge/experience.ts:[2m309:79[22m[39m
+[90m [2m❯[22m fightLessons src/reflex/combat-plan.ts:[2m482:10[22m[39m
+[90m [2m❯[22m planTurn src/reflex/combat-plan.ts:[2m3943:19[22m[39m
+[90m [2m❯[22m src/reflex/combat-plan.ts:[2m2102:117[22m[39m
+[90m [2m❯[22m withSlRetryFallback src/reflex/combat-plan.ts:[2m2281:80[22m[39m
+[90m [2m❯[22m src/reflex/combat-plan.ts:[2m2102:53[22m[39m
+[90m [2m❯[22m withMechFallback src/reflex/combat-plan.ts:[2m2808:12[22m[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/185]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m tests/silent-shackling-weak.test.ts[2m > [22mthe observed potion-only line predicts the actual one HP loss before drinking
+[41m[1m FAIL [22m[49m tests/silent-shackling-weak.test.ts[2m > [22mthe complete observed Strike/Defend/Backflip/potion prefix keeps seven damage and predicts one loss
+[41m[1m FAIL [22m[49m tests/silent-shackling-weak.test.ts[2m > [22mthe observed no-drink and post-drink reread keep the shown intent without double reduction
+[41m[1m FAIL [22m[49m tests/silent-shackling-weak.test.ts[2m > [22mdoes not carry the observed move's scope into later simulated turns
+[41m[1m FAIL [22m[49m tests/silent-shackling-weak.test.ts[2m > [22mkeeps the existing path for character IRONCLAD / A10
+[41m[1m FAIL [22m[49m tests/silent-shackling-weak.test.ts[2m > [22mkeeps the existing path for character SILENT / A9
+[41m[1m FAIL [22m[49m tests/silent-shackling-weak.test.ts[2m > [22mkeeps the existing path for character SILENT / A11
+[41m[1m FAIL [22m[49m tests/silent-shackling-weak.test.ts[2m > [22mkeeps the existing path for character  / A10
+[41m[1m FAIL [22m[49m tests/silent-shackling-weak.test.ts[2m > [22mkeeps other enemies, moves and unknown powers outside the observed scope
+[41m[1m FAIL [22m[49m tests/silent-shackling-weak.test.ts[2m > [22mkeeps ambiguous inversion and unobserved modifiers or loss amounts on their existing path
+[31m[1mError[22m: 公共经验文件 /home/dw/Projects/agent-sts2/.worktrees/live/knowledge/common/shared-experience.json: 读取失败: ENOENT: fixed Shackling evidence[39m
+[36m [2m❯[22m fail src/knowledge/shared-experience.ts:[2m33:63[22m[39m
+    [90m 31|[39m const text = (v: unknown): v is string => typeof v === "string" && v.t…
+    [90m 32|[39m const count = (v: unknown): v is number => typeof v === "number" && Nu…
+    [90m 33|[39m const fail = (path: string, detail: string): never => { throw new Erro…
+    [90m   |[39m                                                               [31m^[39m
+    [90m 34|[39m
+    [90m 35|[39m /** Schema checks cannot establish generality; that decision belongs t…
+[90m [2m❯[22m loadSharedExperience src/knowledge/shared-experience.ts:[2m77:26[22m[39m
+[90m [2m❯[22m loadExperience src/knowledge/experience.ts:[2m106:45[22m[39m
+[90m [2m❯[22m selectLessons src/knowledge/experience.ts:[2m309:79[22m[39m
+[90m [2m❯[22m fightLessons src/reflex/combat-plan.ts:[2m482:10[22m[39m
+[90m [2m❯[22m planTurn src/reflex/combat-plan.ts:[2m3943:19[22m[39m
+[90m [2m❯[22m src/reflex/combat-plan.ts:[2m2102:117[22m[39m
+[90m [2m❯[22m withSlRetryFallback src/reflex/combat-plan.ts:[2m2281:80[22m[39m
+[90m [2m❯[22m src/reflex/combat-plan.ts:[2m2102:53[22m[39m
+[90m [2m❯[22m withMechFallback src/reflex/combat-plan.ts:[2m2808:12[22m[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/185]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m tests/silent-sloth-replay.test.ts[2m > [22mfinal T8: rejects Defend replay, Strike, Neutralize and preserves the actually executed prefix
+[41m[1m FAIL [22m[49m tests/silent-sloth-replay.test.ts[2m > [22mthe observed cap still allows Neutralize before the replay, without claiming an actual winning line
+[41m[1m FAIL [22m[49m tests/silent-sloth-replay.test.ts[2m > [22mlater turns, same-turn SL counter regression and a new room do not inherit the extra slot
+[41m[1m FAIL [22m[49m tests/silent-sloth-replay.test.ts[2m > [22ma last-slot replay remains offered with an explicit unverified boundary
+[31m[1mError[22m: 公共经验文件 /home/dw/Projects/agent-sts2/.worktrees/live/knowledge/common/shared-experience.json: 读取失败: ENOENT: fixed Sloth test has no generated references[39m
+[36m [2m❯[22m fail src/knowledge/shared-experience.ts:[2m33:63[22m[39m
+    [90m 31|[39m const text = (v: unknown): v is string => typeof v === "string" && v.t…
+    [90m 32|[39m const count = (v: unknown): v is number => typeof v === "number" && Nu…
+    [90m 33|[39m const fail = (path: string, detail: string): never => { throw new Erro…
+    [90m   |[39m                                                               [31m^[39m
+    [90m 34|[39m
+    [90m 35|[39m /** Schema checks cannot establish generality; that decision belongs t…
+[90m [2m❯[22m loadSharedExperience src/knowledge/shared-experience.ts:[2m77:26[22m[39m
+[90m [2m❯[22m loadExperience src/knowledge/experience.ts:[2m106:45[22m[39m
+[90m [2m❯[22m selectLessons src/knowledge/experience.ts:[2m309:79[22m[39m
+[90m [2m❯[22m fightLessons src/reflex/combat-plan.ts:[2m482:10[22m[39m
+[90m [2m❯[22m planTurn src/reflex/combat-plan.ts:[2m3943:19[22m[39m
+[90m [2m❯[22m src/reflex/combat-plan.ts:[2m2102:117[22m[39m
+[90m [2m❯[22m withSlRetryFallback src/reflex/combat-plan.ts:[2m2281:80[22m[39m
+[90m [2m❯[22m src/reflex/combat-plan.ts:[2m2102:53[22m[39m
+[90m [2m❯[22m withMechFallback src/reflex/combat-plan.ts:[2m2808:12[22m[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/185]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m tests/sl-early-planner.test.ts[2m > [22mSL_RETRY_KNOWN_INSERTS: the Insatiable's Frantic Escape added at random places (EJXC F33 T2, the fight as its own retry)[2m > [22mthe known order rides with the added cards: the question says so, the log counts them, the solver draws as without them
+[41m[1m FAIL [22m[49m tests/sl-early-planner.test.ts[2m > [22mSL_RETRY_KNOWN_INSERTS: the Insatiable's Frantic Escape added at random places (EJXC F33 T2, the fight as its own retry)[2m > [22man `exact` count alone (what the tracker gives without the switch after a status drawn at once) changes no decision
+[41m[1m FAIL [22m[49m tests/sl-explore-canon.test.ts[2m > [22mthe planner, both switches off: 08ec8f9's decisions on the logged boards[2m > [22mevery answer's resolution and point, recording and with a deviation, as 08ec8f9
+[41m[1m FAIL [22m[49m tests/sl-explore-canon.test.ts[2m > [22mSL_RETRY_EXPLORE_CANON on the planner: attempt 1's play counts as tried (UK7R9A0NMCXL F33 attempt 5 T1)[2m > [22mHemokinesis -> Crusher, attempt 1's, gives way to Hemokinesis -> Rocket (the same card on the other enemy: untried)
+[41m[1m FAIL [22m[49m tests/sl-explore-canon.test.ts[2m > [22mSL_RETRY_EXPLORE_TURN on the planner: the deviation holds for its turn (UK7R9A0NMCXL F33 attempt 4 T2)[2m > [22mon the deviation point the replacement's turn is no failed attempt's; it opens with Shrug It Off, which draws
+[41m[1m FAIL [22m[49m tests/sl-explore-canon.test.ts[2m > [22mSL_RETRY_EXPLORE_TURN on the planner: the deviation holds for its turn (UK7R9A0NMCXL F33 attempt 4 T2)[2m > [22mthe re-plan after the draw: Jev's Defend, Defend would end the turn as attempts 2-3's; it gives way, the turn differs
+[41m[1m FAIL [22m[49m tests/sl-explore-gaps.test.ts[2m > [22mABCJ0TZ6MD06 F48 attempt 4, T4's first board: attempt 2's turn in another order[2m > [22moff: as live, the first shown line with the turn's plays (another order) is taken for attempt 2's
+[41m[1m FAIL [22m[49m tests/sl-explore-gaps.test.ts[2m > [22mABCJ0TZ6MD06 F48 attempt 4, T4's first board: attempt 2's turn in another order[2m > [22mSL_RETRY_EXPLORE_REPLAY_ORDER: attempt 2's plays in their order (Iron Wave first), counted as its line
+[41m[1m FAIL [22m[49m tests/sl-explore-gaps.test.ts[2m > [22mABCJ0TZ6MD06 F48 attempt 4, T4's first board: attempt 2's turn in another order[2m > [22mthe answer itself with attempt 2's turn in another order: kept off (as live), its plays in their order on
+[41m[1m FAIL [22m[49m tests/sl-explore-potion.test.ts[2m > [22mthe planner on P68P F48's logged deviation boards (Jev answering as logged)[2m > [22mattempt 4 T1: off, Powdered Demise added to attempt 2's cards (as live); on, a line with other cards
+[41m[1m FAIL [22m[49m tests/sl-explore-potion.test.ts[2m > [22mthe planner on P68P F48's logged deviation boards (Jev answering as logged)[2m > [22mattempt 3 T2: off, the same cards without the potion (as live); on, no other line there (the target never comes here)
+[41m[1m FAIL [22m[49m tests/sl-explore-whole.test.ts[2m > [22mthe planner without `whole`: e0fa69b's decisions on the logged boards[2m > [22mevery answer's resolution and point, recording, deviating and avoiding, as e0fa69b
+[41m[1m FAIL [22m[49m tests/sl-explore-whole.test.ts[2m > [22mthe avoid reaches every surviving line: the re-plans after the draw (PW7Y F48 attempts 3 and 4)[2m > [22mpw7y-a3-t1-replan: code's "only distinct line" ended the turn as a failed one; now Jev's question, the answer kept off
+[41m[1m FAIL [22m[49m tests/sl-explore-whole.test.ts[2m > [22mthe avoid reaches every surviving line: the re-plans after the draw (PW7Y F48 attempts 3 and 4)[2m > [22mpw7y-a4-t2-replan: code's "only distinct line" ended the turn as a failed one; now Jev's question, the answer kept off
+[41m[1m FAIL [22m[49m tests/sl-explore-whole.test.ts[2m > [22mthe avoid reaches every surviving line: the re-plans after the draw (PW7Y F48 attempts 3 and 4)[2m > [22mpw7y-a3-t1-deviation as a later board of the turn: a question whose every line ends as a failed turn says so
+[41m[1m FAIL [22m[49m tests/sl-explore-whole.test.ts[2m > [22mthe deviation point judged by the whole turn (PW7Y F48 attempt 3 T1)[2m > [22mBlood Wall, Pommel Strike+, Stomp: may end as attempts 1-2's after Pommel Strike+'s draw; not 'not played here'
+[41m[1m FAIL [22m[49m tests/sl-explore-whole.test.ts[2m > [22mthe deviation point judged by the whole turn (PW7Y F48 attempt 3 T1)[2m > [22mturnOpen: the sure plays of a line stop at its first card that draws; a potion option is open with its drink
+[41m[1m FAIL [22m[49m tests/sl-replay-plays.test.ts[2m > [22mJ4S28FRQKD7G F33 attempt 3, T2's first board: attempt 2's line is not among the options[2m > [22mthe cause: attempt 3 knows 烙印+ is Pommel Strike's draw, and attempt 2's line with it played beats attempt 2's line
+[41m[1m FAIL [22m[49m tests/sl-replay-plays.test.ts[2m > [22mJ4S28FRQKD7G F33 attempt 3, T2's first board: attempt 2's line is not among the options[2m > [22moff (no plays): as live, the answer kept and the replay stops (the logged decision's sl_explore)
+[41m[1m FAIL [22m[49m tests/sl-replay-plays.test.ts[2m > [22mJ4S28FRQKD7G F33 attempt 3, T2's first board: attempt 2's line is not among the options[2m > [22mSL_RETRY_EXPLORE_REPLAY_PLAYS: attempt 2's plays are played as a line (防御 first, 剑柄打击 -> 火箭 next)
+[41m[1m FAIL [22m[49m tests/sl-replay-plays.test.ts[2m > [22mJ4S28FRQKD7G F33 attempt 3, T2's first board: attempt 2's line is not among the options[2m > [22mSL_RETRY_EXPLORE_REPLAY_DEVIATE: neither its line nor its plays can be played: the deviation is made here
+[41m[1m FAIL [22m[49m tests/sl-retry-planner.test.ts[2m > [22mSL_RETRY_KNOWN_DRAWS on: the lines draw the cards the earlier attempt drew[2m > [22mJW92 F48 T3: Offering draws the known Defend, Twin Strike and Shrug It Off+
+[41m[1m FAIL [22m[49m tests/sl-retry-planner.test.ts[2m > [22mSL_RETRY_KNOWN_DRAWS on: the lines draw the cards the earlier attempt drew[2m > [22mknown draws the pile does not hold: none used, the decision as with the switch off
+[41m[1m FAIL [22m[49m tests/sl-retry-planner.test.ts[2m > [22mSL_RETRY_COMPUTE on: more samples on a retry[2m > [22mthe rollout runs 24 samples (frozen clock: the whole schedule); the log says so
+[41m[1m FAIL [22m[49m tests/sl-retry-planner.test.ts[2m > [22mSL_RETRY_COMPUTE on: more samples on a retry[2m > [22ma question's rollout budget is at most what is left of the turn's (re-plans after a draw), never below the usual
+[41m[1m FAIL [22m[49m tests/sl-retry-planner.test.ts[2m > [22mSL_RETRY_COMPUTE on: more samples on a retry[2m > [22mB2 on a retried boss fight runs the compute's samples a line
+[41m[1m FAIL [22m[49m tests/sl-retry-planner.test.ts[2m > [22mSL retry fail safe (live play)[2m > [22ma retry step that throws leaves the decision exactly as with both switches off
+[31m[1mError[22m: 公共经验文件 /home/dw/Projects/agent-sts2/.worktrees/live/knowledge/common/shared-experience.json: 读取失败: ENOENT: pinned test, shared-experience.json[39m
+[36m [2m❯[22m fail src/knowledge/shared-experience.ts:[2m33:63[22m[39m
+    [90m 31|[39m const text = (v: unknown): v is string => typeof v === "string" && v.t…
+    [90m 32|[39m const count = (v: unknown): v is number => typeof v === "number" && Nu…
+    [90m 33|[39m const fail = (path: string, detail: string): never => { throw new Erro…
+    [90m   |[39m                                                               [31m^[39m
+    [90m 34|[39m
+    [90m 35|[39m /** Schema checks cannot establish generality; that decision belongs t…
+[90m [2m❯[22m loadSharedExperience src/knowledge/shared-experience.ts:[2m77:26[22m[39m
+[90m [2m❯[22m loadExperience src/knowledge/experience.ts:[2m106:45[22m[39m
+[90m [2m❯[22m selectLessons src/knowledge/experience.ts:[2m309:79[22m[39m
+[90m [2m❯[22m fightLessons src/reflex/combat-plan.ts:[2m482:10[22m[39m
+[90m [2m❯[22m planTurn src/reflex/combat-plan.ts:[2m3943:19[22m[39m
+[90m [2m❯[22m src/reflex/combat-plan.ts:[2m2102:117[22m[39m
+[90m [2m❯[22m withSlRetryFallback src/reflex/combat-plan.ts:[2m2286:12[22m[39m
+[90m [2m❯[22m src/reflex/combat-plan.ts:[2m2102:53[22m[39m
+[90m [2m❯[22m withMechFallback src/reflex/combat-plan.ts:[2m2808:12[22m[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[14/185]⎯[22m[39m
+
+
+[2m Test Files [22m [1m[31m29 failed[39m[22m[2m | [22m[1m[32m390 passed[39m[22m[90m (419)[39m
+[2m      Tests [22m [1m[31m185 failed[39m[22m[2m | [22m[1m[32m4157 passed[39m[22m[2m | [22m[33m2 skipped[39m[90m (4344)[39m
+[2m   Start at [22m 19:11:52
+[2m   Duration [22m 722.34s[2m (transform 16.98s, setup 28.14s, import 85.35s, tests 1264.80s, environment 50ms)[22m
+

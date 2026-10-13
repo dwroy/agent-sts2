@@ -1,0 +1,67 @@
+{
+  "exporter_rc": 0,
+  "exporter_invocations": 1,
+  "cut_at": "2026-10-13T11:12:30.721Z",
+  "runs": 760,
+  "decisions": {
+    "play_total": 378500,
+    "attributed_to_runs": 375486,
+    "unattributed_menu_timeline": 3014,
+    "shadow": 20,
+    "by_layer": {
+      "code": 198066,
+      "jev": 74553,
+      "deepseek": 12400,
+      "claude": 186,
+      "code-fallback": 1729,
+      "jev-plan": 74855,
+      "deepseek-plan": 847,
+      "claude-plan": 73
+    },
+    "decider_inferred": 342
+  },
+  "checks": {
+    "decisions attributed + unattributed == play records": true,
+    "decisions_by_label sum == attributed decisions": true,
+    "escalations rows == records with escalation": true,
+    "every runs.jsonl id present in runs.csv": true,
+    "commits == git rev-list --all --count": true,
+    "runs.jsonl decision-count mismatches": [
+      [
+        "KF9HMZKTFC3V",
+        879,
+        880
+      ]
+    ]
+  },
+  "own_history_dirs": [
+    "paper/data/history/20261013T111230865270Z",
+    "paper/data/history/20261013T111614117115Z"
+  ],
+  "frozen_outputs": 317,
+  "frozen_bytes": 32114968,
+  "source_checks_passed": true,
+  "source_cut_bytes": {
+    "decisions.jsonl": 1222383906,
+    "deepseek-reasoning.jsonl": 377746518,
+    "runs.jsonl": 319363,
+    "states.jsonl": 12299864793,
+    "fight-plans.jsonl": 2233957,
+    "run-plans.jsonl": 7468220,
+    "brain.jsonl": 470560656,
+    "sl-attempts.jsonl": 36493250,
+    "run-config.jsonl": 1595030
+  },
+  "table_rows": {
+    "runs.csv": 760,
+    "decisions_by_label.csv": 25337,
+    "escalations.csv": 3600,
+    "fight_plans.csv": 1461,
+    "commits.csv": 5566
+  },
+  "key_scan_clean": true,
+  "both_learning_curves_generated": true,
+  "component_costs_generated": true,
+  "performance_policy": "codex-successful-brain-v1",
+  "snapshot_topology": "Dataset and cost snapshots both use paper/data/history; raw trajectory logs are not copied."
+}

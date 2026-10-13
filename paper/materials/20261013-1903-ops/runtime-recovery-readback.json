@@ -1,0 +1,60 @@
+{
+  "at": "2026-10-13T19:16:56.699486+08:00",
+  "game_pid": 34676,
+  "processes": [
+    {
+      "pid": 2059875,
+      "cwd": "/home/dw/Projects/agent-sts2",
+      "kind": "autoplay"
+    },
+    {
+      "pid": 2435965,
+      "cwd": "/home/dw/Projects/agent-sts2/.worktrees/regent-climb",
+      "kind": "autoplay"
+    },
+    {
+      "pid": 3483471,
+      "cwd": "/home/dw/Projects/agent-sts2/.worktrees/live/agent",
+      "kind": "play"
+    },
+    {
+      "pid": 3483482,
+      "cwd": "/home/dw/Projects/agent-sts2/.worktrees/live/agent",
+      "kind": "play"
+    }
+  ],
+  "latest_console": "logs/console/20261013-185029-efe099dd2+dirty.log",
+  "console_tail": [
+    "19:15:38 COMBAT          combat/lethal        -> end_turn jev 0 ms | 0 in",
+    "         lethal: ",
+    "19:15:38 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)",
+    "19:15:39 combat ended — total token usage: 348 decisions, 65 Jev calls, 615,761 in / 3,496 out tokens (≈ $0.0259)",
+    "19:15:39 REWARD          reward/claim         -> claim_reward (option_index=0) jev 0 ms | 0 in",
+    "         claiming Gold (15金币)",
+    "         completed: Action completed.",
+    "         progress: 349 decisions | 65 Jev calls | 615,761 in / 3,496 out tokens | ≈ $0.0259 | 1504.61 s",
+    "19:15:40 REWARD          reward/claim         -> claim_reward (option_index=0) jev 0 ms | 0 in",
+    "         claiming Potion (肌肉药水)",
+    "19:15:40 REWARD          reward/claim         -> claim_reward (option_index=0) jev 0 ms | 0 in",
+    "         claiming Card (将一张牌添加到你的牌组。)",
+    "19:15:50 note boss sim on reward/card: 1000 samples per option, 9846 ms",
+    "19:15:50 note Codex decides reward/card (4 options, floor 19, run context 15365 chars)"
+  ],
+  "no_game_or_loop_interruption": true,
+  "historical_stall_already_recovered": true,
+  "argv_filter": "node + original live agent cwd + exact play CLI argument; shell text excluded",
+  "game_pid_namespace": "Windows; no Linux /proc liveness inference",
+  "mod_readback": {
+    "at": "2026-10-13T19:23:56.186986+08:00",
+    "process_id": 34676,
+    "api_port": 8080,
+    "service": "sts2-ai-agent",
+    "native_profile_id": 1,
+    "screen": "COMBAT",
+    "run": {
+      "ascension": 10,
+      "floor": 25
+    }
+  },
+  "game_actual_identity_verified": true
+}
