@@ -5,7 +5,8 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 // Setup imports planner modules first; discard their generated-data caches before pinning the reader.
 vi.hoisted(() => vi.resetModules());
 vi.mock("node:fs", async (importOriginal) => {
-  const fs = await importOriginal<typeof import("node:fs")>();
+  const { historicalKnowledgeFs } = await import("./historical-knowledge-fs.js");
+  const fs = historicalKnowledgeFs(await importOriginal<typeof import("node:fs")>());
   const { KNOWLEDGE_DIR } = await import("../src/knowledge/files.js");
   const pinned = JSON.parse(fs.readFileSync(new URL("./potion-cost-knowledge.json", import.meta.url), "utf8")) as Record<string, unknown>;
   const readFileSync = ((path: Parameters<typeof fs.readFileSync>[0], ...args: unknown[]) => {

@@ -32,7 +32,8 @@ const GOLD_HP = {
 };
 
 vi.mock("node:fs", async (importOriginal) => {
-  const fs = await importOriginal<typeof import("node:fs")>();
+  const { historicalKnowledgeFs } = await import("./historical-knowledge-fs.js");
+  const fs = historicalKnowledgeFs(await importOriginal<typeof import("node:fs")>());
   const pinned = JSON.parse(fs.readFileSync(join(DATA, "pinned-knowledge.json"), "utf8")) as Record<string, Record<string, Record<string, unknown>>>;
   // The pinned potion table (894f245's) with a gold rate: read only with THIEF_COST on (ffed0d4 never reads it).
   pinned["potion-equivalents.json"]!["meta"]!["gold_hp"] = GOLD_HP;
