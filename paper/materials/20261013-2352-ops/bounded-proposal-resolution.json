@@ -1,0 +1,53 @@
+{
+  "at": "2026-10-14 00:08:06 CST",
+  "original": {
+    "op": "add",
+    "id": "silent-proposal-8f62129d7da70b94",
+    "ts": "2026-10-13T14:43:56+08:00",
+    "character": "silent",
+    "ledger": [
+      "silent-0079",
+      "silent-0021",
+      "silent-0005",
+      "silent-0024",
+      "silent-0027",
+      "silent-0077",
+      "silent-0123",
+      "silent-0129",
+      "silent-0180"
+    ],
+    "runs": [
+      "9Z9H2EXKLF3T"
+    ],
+    "source_task": "postmortem",
+    "target_task": "strategy-proposal",
+    "domains": [
+      "combat",
+      "sl"
+    ],
+    "summary": "分别审计Jev原答、SL替换、重规划与实盘整轮；区分hpAfter、hpLoss、敌净扣、复活及未知抽牌，不据全败样本调整策略门槛。",
+    "proposal": "/home/dw/Projects/agent-sts2/learner/runs/20261008-041302-postmortem/proposal-sl-audit.md",
+    "rule_changes": false,
+    "proposal_sha256": "7244340a466a48e128e06ac3c9da79c6e11fcf874b3ff2f0f724117df72733a6",
+    "state": "waiting",
+    "reason": "候选及预测资源审计子项已为live祖先；9Z9H2EXKLF3T T7预测与实轮已分账，但生产actual_turn仍为空，缺整轮执行闭环及T10差12的历史dirty源码/逐事件账。",
+    "commit": null,
+    "seen_runs": 268,
+    "batch": "code-proposals:silent-proposal-03754e1265894000,silent-proposal-d60691b060dfc40a,silent-proposal-e5ea36df117ca9b7,silent-proposal-ab055ef7dfbb44e5,silent-proposal-0129c465c6f5bd79,silent-proposal-abe9d5d0be109a9f,silent-proposal-f16527e59b5cc1e0,silent-proposal-8f62129d7da70b94,silent-proposal-7a8e9ccb7e646538,silent-proposal-cd9f76184de6e29a:267"
+  },
+  "resolution": {
+    "op": "update",
+    "id": "silent-proposal-8f62129d7da70b94",
+    "ts": "2026-10-14T00:08:06+08:00",
+    "state": "implemented",
+    "commit": "c719bc048fa848119f217ba0e966aac7e2671ddf",
+    "batch": "code-proposals:silent-proposal-03754e1265894000,silent-proposal-e5ea36df117ca9b7,silent-proposal-ab055ef7dfbb44e5,silent-proposal-0129c465c6f5bd79,silent-proposal-abe9d5d0be109a9f,silent-proposal-f16527e59b5cc1e0,silent-proposal-8f62129d7da70b94,silent-proposal-7a8e9ccb7e646538,silent-proposal-cd9f76184de6e29a,silent-proposal-0f0904256806281a:277",
+    "reason": "原独立整轮离线观测审计已精确进入main/live，375文件3589源沙箱与当前4文件44项固定测试过；实际live同9Z完整冻结输入28窗口读回，T7两试净损11/9、T8零血恢复路径、T10净损15分列，完整候选因果/未截断毛伤/历史dirty差额仍unknown。仅完成rule_changes=false原审计范围，不改变策略/规则或声称胜率，相关宽提案/P1P2保持。部署树完整宿主沿原231302-fix-batch单次补验中。",
+    "ops_receipt": "paper/materials/20261013-2352-ops/live-audit-consumer-readback.json",
+    "ops_receipt_sha256": "2fe4f5fd7c8c2123c0b105efeb9df034b9783a51ac330ccf368ef5eca957867a",
+    "original_proposal_sha256": "7244340a466a48e128e06ac3c9da79c6e11fcf874b3ff2f0f724117df72733a6"
+  },
+  "waiting_watermark_preserved": true,
+  "other_nine_dispositions_unchanged": true,
+  "original_failed_completion_unchanged": true
+}

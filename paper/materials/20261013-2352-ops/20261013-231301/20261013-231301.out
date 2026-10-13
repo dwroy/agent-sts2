@@ -1,0 +1,26 @@
+## 复盘回报
+
+- 已追加：WA7FRJ7UABCV（A10，第48层，死于永世沙漏 AEONGLASS；末试T10剩3血14挡，面对29攻击及12伤凋萎）。取得层数及勘误时间已追加更正，原文保留。
+- 新的纯 bug：
+  - WA7FRJ7UABCV：普通0费钢铁风暴仍预支已弃手牌后继 — agent/src/reflex/card-model.ts:974（新范围缺口；fix-queue无同项，同源silent-0455已有升级版修复）。
+- 写成「未记录」的项：WA7FRJ7UABCV：完整dirty源码、前五试真实死亡帧、完整逐击伤害及部分退场帧、永久GUID、完整最终执行率、生成内部顺序、受控替线整战、有效boss时钟、F49资源、Jev缓存与实际费用。
+- 学习账本：WA7FRJ7UABCV：新增silent-0458；更新silent-0455、silent-0025、silent-0354、silent-0005、silent-0023、silent-0024、silent-0020、silent-0125（老错silent-0455，其余support）；`ledger.py check`退出码0。
+- 代码提案：
+  - F48首试T1／silent-0455、0458／silent-proposal-69776c308a3b298e：普通风暴手牌边界；strategy-proposal待调度，未知生成收益不扩范围。
+  - F48六试饮药／silent-0025／silent-proposal-54a69c3dc4a0d0e3：破层与施毒分账；strategy-proposal待调度，缺药序整战对照。
+  - F44—F48资源及末试关键回合／silent-0354、0125等／silent-proposal-e292c9a2ee91f61f：兑现窗口与护栏、SL核验；strategy-proposal待调度，缺受控整战，不拟统一血价。
+
+```json
+{"task":"postmortem","appended":["WA7FRJ7UABCV"],"skipped":[],"bugs":[{"run":"WA7FRJ7UABCV","where":"agent/src/reflex/card-model.ts:974","what":"普通0费钢铁风暴候选仍预支已弃扫腿；新范围缺口，同源silent-0455升级版修复未覆盖","new":true}],"ledger":{"added":["silent-0458"],"updated":["silent-0455","silent-0025","silent-0354","silent-0005","silent-0023","silent-0024","silent-0020","silent-0125"],"repeats":["silent-0455"],"check":0},"code_proposals":["silent-proposal-69776c308a3b298e","silent-proposal-54a69c3dc4a0d0e3","silent-proposal-e292c9a2ee91f61f"],"implementation_domains":["combat","potion","sl","terminal"],"report":"/home/dw/Projects/agent-sts2/learner/runs/20261013-231302-postmortem/report.md"}
+```
+
+== 学习者 codex / postmortem ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a135d3-08e6-7183-93b5-c63d9847bd5c
+轮数：1；工具调用：command_execution×56
+token：输入 218.7k、输出 43.9k（其中推理 12.8k）、cache 读 6348.7k、cache 写 0（命中 96.7%）
+成本：未提供
+耗时：1725.4 s（墙钟）
+时间：首个事件 14.5 s、模型首个输出 20.6 s、首次工具 23.6 s、末次工具结束 1694.3 s；工具内共 223.4 s，其余（模型生成、推理、网络）1487.6 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2）；模型的工具调用 exec×44；/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/learner/sessions/2026/10/13/rollout-2026-10-13T23-13-05-01a135d3-08e6-7183-93b5-c63d9847bd5c.jsonl
+日志：/home/dw/Projects/agent-sts2/learner/runs/20261013-231302-postmortem.jsonl

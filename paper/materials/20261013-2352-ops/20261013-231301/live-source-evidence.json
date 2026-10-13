@@ -1,0 +1,63 @@
+{
+  "sha": "b09d60f57917dc51261e8e0c01e03ddc82128c04",
+  "source": {
+    "agent/src/reflex/card-model.ts": [
+      [
+        "967:  // AYTX5H4H69E3 A10 F45 T1, silent-0317: Bellows upgrades the hand card; it still discards three and draws three.",
+        "968:  const upgradedGamble = character.toLowerCase() === \"silent\" && ascension === 10 && bool(card[\"upgraded\"]) &&",
+        "969:    str(card[\"resolved_rules_text\"]).replace(/\\s+/g, \"\") === \"保留。丢弃你的所有手牌,然后抽相同数量的牌。消耗。\";",
+        "970:  const calculatedGamble = cardId === \"CALCULATED_GAMBLE\" && (!bool(card[\"upgraded\"]) || upgradedGamble);",
+        "971:  // F29 T1 / F30 attempt 3 T1: old hand cards cannot follow this observed upgraded cast.",
+        "972:  // Generation and automatic discard effects remain unknown until the next live hand is read.",
+        "973:  const stormReplacement = character.toLowerCase() === \"silent\" && ascension === 10 &&",
+        "974:    cardId === \"STORM_OF_STEEL\" && bool(card[\"upgraded\"]) && type === \"Skill\" &&",
+        "975:    card[\"target_type\"] === \"Self\" && !requiresTarget && numOrNull(card[\"energy_cost\"]) === 1 &&",
+        "976:    !bool(card[\"costs_x\"]) && card[\"enchantment\"] == null &&",
+        "977:    Array.isArray(card[\"dynamic_values\"]) && card[\"dynamic_values\"].length === 0 &&",
+        "978:    str(card[\"rules_text\"]).replace(/\\s+/g, \"\") === \"丢弃所有手牌。每丢弃一张牌，就将一张{IfUpgraded:show:小刀+|小刀}添加至你的手牌。\" &&",
+        "979:    renderedText.replace(/\\s+/g, \"\") === \"丢弃所有手牌。每丢弃一张牌，就将一张小刀+添加至你的手牌。\";",
+        "980:  const hiddenDaggers = character.toLowerCase() === \"silent\" && cardId === \"HIDDEN_DAGGERS\" && !bool(card[\"upgraded\"]) &&",
+        "981:    dyn(card, \"Cards\") === 2 && dyn(card, \"Shivs\") === 2;",
+        "982:  // YBRA3EJ94GBR F30 T3 / F33 T10, silent-0324: Cards=3 makes Shivs; it never draws from the pile.",
+        "983:  const plainBladeDance = character.toLowerCase() === \"silent\" && ascension === 10 && cardId === \"BLADE_DANCE\" &&",
+        "984:    !bool(card[\"upgraded\"]) && dyn(card, \"Cards\") === 3 &&"
+      ],
+      [
+        "1197:    exhausts,",
+        "1198:    special,",
+        "1199:    ...(shadowStep ? { discardsHand: true, doubleDamageNext: true } : {}),",
+        "1200:    ...(calculatedGamble ? { discardsHand: true, drawDiscardedHand: true } : {}),",
+        "1201:    ...(stormReplacement ? { discardsHand: true, handReplacement: true } : {}),",
+        "1202:    ...(hiddenDaggers ? { discardCount: 2, ...(adds ? { adds } : {}) } : {}),",
+        "1203:    ...(bladeDance ? { bladeDance: true, bladeDanceShivs, ...(adds ? { adds } : {}) } : {}),"
+      ]
+    ],
+    "agent/src/reflex/turn-solver.ts": [
+      [
+        "1703:      next.locked = next.locked.filter((entry) => !leaves.has(entry.key));",
+        "1704:    }",
+        "1705:  }",
+        "1706:  let redraw = 0;",
+        "1707:  if (card.discardsHand) {",
+        "1708:    discarded.push(...[...next.hand, ...next.held, ...next.locked].filter((entry) => entry.type !== \"Potion\").map((entry) => entry.cardId));",
+        "1709:    // The played card and potion slots are not discarded; unknown drawn cards are actual hand slots.",
+        "1710:    if (!card.handReplacement && (player.toughBandagesBlock ?? 0) > 0) gainBlock(next, (discarded.length + next.drawnInHand) * player.toughBandagesBlock!, player);",
+        "1711:    if (card.drawDiscardedHand) redraw = discarded.length + next.drawnInHand;",
+        "1712:    next.hand = next.hand.filter((entry) => entry.type === \"Potion\");",
+        "1713:    next.held = [];",
+        "1714:    next.locked = [];",
+        "1715:    next.drawnInHand = 0;",
+        "1716:  }",
+        "1717:  if (card.handReplacement) {",
+        "1718:    // Do not score the discarded cards as a continuation or invent the replacement/automatic effects.",
+        "1719:    // The actual post-cast frame supplies both the generated hand and any automatic Block.",
+        "1720:    next.pendingSelection = true;",
+        "1721:    next.unknown = [...next.unknown, `${card.name}（生成与自动弃牌效果待实际手牌刷新）`];",
+        "1722:  }",
+        "1723:  // Chains of Binding: playing one Soulbound card locks the others for the turn (88HN T5: Bash+ then",
+        "1724:  // Flame Barrier in one plan; the Barrier was locked, 7 block against 24).",
+        "1725:  if (card.soulbound) {"
+      ]
+    ]
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "at": "2026-10-14 00:15:27 CST",
+  "cut": "2026-10-13T15:55:27.927Z",
+  "verification": {
+    "checks": {
+      "decisions attributed + unattributed == play records": true,
+      "decisions_by_label sum == attributed decisions": true,
+      "escalations rows == records with escalation": true,
+      "every runs.jsonl id present in runs.csv": true,
+      "commits == git rev-list --all --count": true,
+      "runs.jsonl decision-count mismatches": [
+        [
+          "KF9HMZKTFC3V",
+          879,
+          880
+        ]
+      ]
+    },
+    "row_counts": {
+      "runs.csv": 764,
+      "decisions_by_label.csv": 25477,
+      "escalations.csv": 3600,
+      "fight_plans.csv": 1461,
+      "commits.csv": 5652
+    }
+  },
+  "decisions": 381355,
+  "output_files": 330,
+  "output_bytes": 33007719,
+  "history": [
+    "paper/data/history/20261013T155528073440Z",
+    "paper/data/history/20261013T155820693601Z"
+  ],
+  "parallel_cost_snapshot_excluded": "paper/data/history/20261013T155701241999Z",
+  "command": "nice -n 19 python3 ops/paper_dataset.py --no-raw",
+  "rc": 0,
+  "source_checks_passed": true,
+  "keyscan": "CLEAN",
+  "raw_logs_snapshotted": false,
+  "learning_curves": "two 11-row curves, exit0",
+  "KF9_original_difference_preserved": true,
+  "root_before_backups_not_staged": 280,
+  "immutable_history_and_canonical_backup_bytes_preserved": true
+}

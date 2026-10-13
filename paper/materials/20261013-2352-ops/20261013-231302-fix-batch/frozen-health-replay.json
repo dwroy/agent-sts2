@@ -1,0 +1,378 @@
+{
+  "schema": "module-health-v1",
+  "at": "2026-10-13T15:23:12.713581+00:00",
+  "run_id": "WA7FRJ7UABCV",
+  "character": "SILENT",
+  "architecture": "V5",
+  "construction_mode": "shadow",
+  "simulation_enabled": true,
+  "coverage": {
+    "decisions_complete": false,
+    "source": {
+      "path": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+      "start": 1208414753,
+      "end": 1241863805,
+      "complete": false,
+      "malformed": 0,
+      "first_ts": "2026-10-13T09:07:05.508Z"
+    }
+  },
+  "complete": false,
+  "construction": {
+    "missing_route": 1,
+    "predicted": 38
+  },
+  "b3": {
+    "attempts": 39,
+    "skipped": 0,
+    "produced_dpr": 16,
+    "coverage": 0.41025641025641024,
+    "failures": {
+      "below_minimum_samples": 21,
+      "zero_paired_samples": 1
+    },
+    "unsupported": 1,
+    "applicable_attempts": 38,
+    "applicable_coverage": 0.42105263157894735,
+    "longest_failure_streak": 10,
+    "trailing_failure_streak": 10,
+    "paired_samples_min": 0,
+    "ms_max": 11248
+  },
+  "brain": {
+    "observed_questions": 0,
+    "questions_with_dpr": 0,
+    "accepted_with_dpr": 0,
+    "decision_use": "unknown; delivery is not evidence of reasoning or a fixed DPR weight"
+  },
+  "alert": true,
+  "failures": [
+    {
+      "ts": "2026-10-13T13:12:55.208Z",
+      "decision": "e54fbe67-0c9d-425a-a38a-1bb0d5716059",
+      "floor": 9,
+      "label": "rest/plan",
+      "reason": "below_minimum_samples",
+      "source": {
+        "offset": 1234039765,
+        "length": 75447,
+        "sha256": "8fcdf2f71c12f2ccd3a7823f561183ddb7fd7a19a2f394c8f012d4c53cb6c11c"
+      },
+      "diagnostics": null,
+      "error": "只跑完 288 次模拟（不足 300 次），选项之间的差噪声太大，不给数字"
+    },
+    {
+      "ts": "2026-10-13T13:14:37.337Z",
+      "decision": "0d9bf8fb-a0a6-4b70-b7fc-b434a57b1836",
+      "floor": 11,
+      "label": "rest/plan",
+      "reason": "below_minimum_samples",
+      "source": {
+        "offset": 1234125294,
+        "length": 70770,
+        "sha256": "fa0ef3ad0c1ae3c515053afd532f4f9d8aefbfe83ba5adbfe550e683502c4051"
+      },
+      "diagnostics": null,
+      "error": "只跑完 248 次模拟（不足 300 次），选项之间的差噪声太大，不给数字"
+    },
+    {
+      "ts": "2026-10-13T13:18:49.507Z",
+      "decision": "65a60a4b-dbf8-4f84-a2bb-6285afed054d",
+      "floor": 13,
+      "label": "rest/plan",
+      "reason": "below_minimum_samples",
+      "source": {
+        "offset": 1234711317,
+        "length": 76159,
+        "sha256": "3060aa05de8a5a87b017edf2d3019e2465febad207375832eea4eff8f9dd31b5"
+      },
+      "diagnostics": null,
+      "error": "只跑完 224 次模拟（不足 300 次），选项之间的差噪声太大，不给数字"
+    },
+    {
+      "ts": "2026-10-13T13:22:11.291Z",
+      "decision": "b863227e-cbcb-452c-901a-df98818b280e",
+      "floor": 16,
+      "label": "rest/plan",
+      "reason": "below_minimum_samples",
+      "source": {
+        "offset": 1235160190,
+        "length": 80695,
+        "sha256": "2a8f1fb39e0ce13cd5e5b8238801fc3a9891b034d742e8acc598256f1d2b3316"
+      },
+      "diagnostics": null,
+      "error": "只跑完 152 次模拟（不足 300 次），选项之间的差噪声太大，不给数字"
+    },
+    {
+      "ts": "2026-10-13T13:31:44.794Z",
+      "decision": "3350942e-8571-436a-b8bd-2c905c7a3807",
+      "floor": 20,
+      "label": "shop/plan",
+      "reason": "below_minimum_samples",
+      "source": {
+        "offset": 1235929909,
+        "length": 147624,
+        "sha256": "cd402e72083070d8adf5eb4a4010b0a9f4a78c32439d6962cab415303797262c"
+      },
+      "diagnostics": null,
+      "error": "只跑完 24 次模拟（不足 300 次），选项之间的差噪声太大，不给数字"
+    },
+    {
+      "ts": "2026-10-13T13:33:27.009Z",
+      "decision": "8c3a9865-17f5-4205-a743-0297a1001990",
+      "floor": 21,
+      "label": "reward/card",
+      "reason": "below_minimum_samples",
+      "source": {
+        "offset": 1236282357,
+        "length": 35422,
+        "sha256": "f870e73e1e2a012084726af692bec0cd20a706b52bb84acb690c67d961eb73a9"
+      },
+      "diagnostics": null,
+      "error": "只跑完 256 次模拟（不足 300 次），选项之间的差噪声太大，不给数字"
+    },
+    {
+      "ts": "2026-10-13T13:35:35.657Z",
+      "decision": "bdf36282-fd92-487d-9e6c-7fe774ee3779",
+      "floor": 23,
+      "label": "shop/plan",
+      "reason": "below_minimum_samples",
+      "source": {
+        "offset": 1236355174,
+        "length": 52273,
+        "sha256": "daf7c4a54bf8c263ebcb7efcf7e9887dfafe08ec6ef24ceddf4ddbf41a756c20"
+      },
+      "diagnostics": null,
+      "error": "只跑完 88 次模拟（不足 300 次），选项之间的差噪声太大，不给数字"
+    },
+    {
+      "ts": "2026-10-13T13:37:10.672Z",
+      "decision": "0da3aa3e-30f6-4296-8111-041b71e4b9e7",
+      "floor": 24,
+      "label": "rest/plan",
+      "reason": "below_minimum_samples",
+      "source": {
+        "offset": 1236411959,
+        "length": 126927,
+        "sha256": "f438b934cd80548db00fb0118530f8826ea4036446bdfb91330786ea1fb4dc81"
+      },
+      "diagnostics": null,
+      "error": "只跑完 48 次模拟（不足 300 次），选项之间的差噪声太大，不给数字"
+    },
+    {
+      "ts": "2026-10-13T13:38:25.125Z",
+      "decision": "13d0d423-17e1-4faa-894f-0528eebe92c0",
+      "floor": 25,
+      "label": "selection/add",
+      "reason": "below_minimum_samples",
+      "source": {
+        "offset": 1236592495,
+        "length": 12010,
+        "sha256": "d84c2df8009aad7fb080bb6f1ef8c5da4f0842041d738e5bb11a77c4823ad718"
+      },
+      "diagnostics": null,
+      "error": "只跑完 80 次模拟（不足 300 次），选项之间的差噪声太大，不给数字"
+    },
+    {
+      "ts": "2026-10-13T13:41:09.648Z",
+      "decision": "eb37d51d-d280-40e6-83b1-9243c37f74b3",
+      "floor": 27,
+      "label": "rest/plan",
+      "reason": "below_minimum_samples",
+      "source": {
+        "offset": 1236613107,
+        "length": 122350,
+        "sha256": "9244f98e7e7a673dc0f928f44c7c6ef7320ff39fcb6226589b5d89f5b9835acf"
+      },
+      "diagnostics": null,
+      "error": "只跑完 48 次模拟（不足 300 次），选项之间的差噪声太大，不给数字"
+    },
+    {
+      "ts": "2026-10-13T13:43:15.230Z",
+      "decision": "baeb1e20-e621-4f3d-b271-36054a9d6803",
+      "floor": 28,
+      "label": "reward/card",
+      "reason": "below_minimum_samples",
+      "source": {
+        "offset": 1237005823,
+        "length": 35758,
+        "sha256": "bd003e1d59815246ab319ecc32ded575396c39a8c26e2773192e6da97f7052af"
+      },
+      "diagnostics": null,
+      "error": "只跑完 88 次模拟（不足 300 次），选项之间的差噪声太大，不给数字"
+    },
+    {
+      "ts": "2026-10-13T13:45:25.499Z",
+      "decision": "f12ac46f-e309-48bf-83df-5718f56bf759",
+      "floor": 29,
+      "label": "reward/card",
+      "reason": "below_minimum_samples",
+      "source": {
+        "offset": 1237373277,
+        "length": 35123,
+        "sha256": "dde91a39a7703818ee53ef0f40c03d1deb20e3a25699443fe470dad201afa4c3"
+      },
+      "diagnostics": null,
+      "error": "只跑完 168 次模拟（不足 300 次），选项之间的差噪声太大，不给数字"
+    },
+    {
+      "ts": "2026-10-13T13:47:04.131Z",
+      "decision": "1e4f3831-110f-4266-b507-f9b6ba2f5238",
+      "floor": 32,
+      "label": "rest/plan",
+      "reason": "zero_paired_samples",
+      "source": {
+        "offset": 1237493851,
+        "length": 117806,
+        "sha256": "141507f17d420bd4c971fc81aa9b68b0b8a1f72d41a2eb6e8623f165ab6434ba"
+      },
+      "diagnostics": null,
+      "error": "11006 ms 内没有跑完一个样本"
+    },
+    {
+      "ts": "2026-10-13T13:55:02.766Z",
+      "decision": "7d6636b7-0a0c-4157-9a60-87543de2ce03",
+      "floor": 35,
+      "label": "reward/card",
+      "reason": "below_minimum_samples",
+      "source": {
+        "offset": 1239199177,
+        "length": 35555,
+        "sha256": "2a6e101a760633a7c4732e824e8647c338e8fd9c9f7c1b77bbeda21ab989db5b"
+      },
+      "diagnostics": null,
+      "error": "只跑完 88 次模拟（不足 300 次），选项之间的差噪声太大，不给数字"
+    },
+    {
+      "ts": "2026-10-13T13:57:59.726Z",
+      "decision": "aa73ac23-c704-4115-bb30-d597698f394d",
+      "floor": 36,
+      "label": "shop/plan",
+      "reason": "below_minimum_samples",
+      "source": {
+        "offset": 1239239142,
+        "length": 171712,
+        "sha256": "a6205ddd565ea7f76bc6f3d6faba501974786180925e00d457f6aaf91d8fcb89"
+      },
+      "diagnostics": null,
+      "error": "只跑完 8 次模拟（不足 300 次），选项之间的差噪声太大，不给数字"
+    },
+    {
+      "ts": "2026-10-13T14:00:33.499Z",
+      "decision": "7b200e5e-9c23-4434-878f-3f4642c7e3a7",
+      "floor": 36,
+      "label": "shop/plan",
+      "reason": "below_minimum_samples",
+      "source": {
+        "offset": 1239430601,
+        "length": 157797,
+        "sha256": "ae398ca7b1b174c7bef9439b4978eb5771e79fc3f3dbbea34b92e5c0bd06a049"
+      },
+      "diagnostics": null,
+      "error": "只跑完 8 次模拟（不足 300 次），选项之间的差噪声太大，不给数字"
+    },
+    {
+      "ts": "2026-10-13T14:02:18.202Z",
+      "decision": "d5a4f98f-5c62-430d-9316-bff2832661f5",
+      "floor": 37,
+      "label": "reward/card",
+      "reason": "below_minimum_samples",
+      "source": {
+        "offset": 1239735107,
+        "length": 35455,
+        "sha256": "aca61802df86e9790951b6a0ba82e2ca555433d01a1c251c6153201d9e6397a9"
+      },
+      "diagnostics": null,
+      "error": "只跑完 104 次模拟（不足 300 次），选项之间的差噪声太大，不给数字"
+    },
+    {
+      "ts": "2026-10-13T14:05:07.933Z",
+      "decision": "cb6d86d8-8b73-4774-b011-954533dd4b01",
+      "floor": 38,
+      "label": "reward/card",
+      "reason": "below_minimum_samples",
+      "source": {
+        "offset": 1240717919,
+        "length": 35709,
+        "sha256": "001f4697c04b166650fbfcce968e81b48323e0bfe61b565c468503e937b5f3a4"
+      },
+      "diagnostics": null,
+      "error": "只跑完 136 次模拟（不足 300 次），选项之间的差噪声太大，不给数字"
+    },
+    {
+      "ts": "2026-10-13T14:07:02.367Z",
+      "decision": "0ad43856-1c60-47c9-9817-753fdd685785",
+      "floor": 39,
+      "label": "shop/plan",
+      "reason": "below_minimum_samples",
+      "source": {
+        "offset": 1240758055,
+        "length": 54949,
+        "sha256": "cae4a06e85b9c7d754f2e7a4135c0f84542a76d7ad87b77fbf7ae5a22fdde181"
+      },
+      "diagnostics": null,
+      "error": "只跑完 80 次模拟（不足 300 次），选项之间的差噪声太大，不给数字"
+    },
+    {
+      "ts": "2026-10-13T14:08:43.152Z",
+      "decision": "8bf23b1f-9224-4a2f-8bf4-9b6c03687610",
+      "floor": 40,
+      "label": "rest/plan",
+      "reason": "below_minimum_samples",
+      "source": {
+        "offset": 1240817552,
+        "length": 133402,
+        "sha256": "c45d111a22f935e80b55ab0db87d38553105b63b1cc5df47ce75f0fa26044e91"
+      },
+      "diagnostics": null,
+      "error": "只跑完 24 次模拟（不足 300 次），选项之间的差噪声太大，不给数字"
+    },
+    {
+      "ts": "2026-10-13T14:09:44.913Z",
+      "decision": "13e859bb-3eea-4bef-868a-b222526fa9c7",
+      "floor": 42,
+      "label": "rest/plan",
+      "reason": "below_minimum_samples",
+      "source": {
+        "offset": 1240960996,
+        "length": 126909,
+        "sha256": "e5e24ee74ab063ad375385c439a0aa3ce7057996960840db4fcd6fb8b4dc0d26"
+      },
+      "diagnostics": null,
+      "error": "只跑完 24 次模拟（不足 300 次），选项之间的差噪声太大，不给数字"
+    },
+    {
+      "ts": "2026-10-13T14:10:20.948Z",
+      "decision": "0c2e148c-e10c-4788-9dc7-a19772732d42",
+      "floor": 43,
+      "label": "event/choose",
+      "reason": "below_minimum_samples",
+      "source": {
+        "offset": 1241090972,
+        "length": 12406,
+        "sha256": "b7417943bba559c23acc613533ac61cc22102fc3ff80cbeabc0c5f07a898ef7f"
+      },
+      "diagnostics": null,
+      "error": "只跑完 224 次模拟（不足 300 次），选项之间的差噪声太大，不给数字"
+    }
+  ],
+  "diagnostics": [],
+  "unsupported": [
+    {
+      "ts": "2026-10-13T13:34:28.141Z",
+      "decision": "23337b4f-2ec4-4070-aa2c-4a5be1d30f3d",
+      "floor": 22,
+      "label": "event/choose",
+      "source": {
+        "offset": 1236320924,
+        "length": 29802,
+        "sha256": "9268f0cec621a57bc359f9bf6c04a79ebe7157c42d305ade0fc61ac0cd3efdaa"
+      },
+      "not_simulated": {
+        "o0": "这个选项的效果没有换算成牌组或血量的变化：不模拟",
+        "o1": "这个选项的效果没有换算成牌组或血量的变化：不模拟"
+      }
+    }
+  ],
+  "scope": "Service availability only; sample threshold, simulator validity and game policy unchanged."
+}

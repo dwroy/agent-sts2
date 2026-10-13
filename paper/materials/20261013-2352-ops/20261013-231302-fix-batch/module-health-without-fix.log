@@ -1,0 +1,16 @@
+F
+======================================================================
+FAIL: test_explicit_unsupported_candidates_preserve_observed_denominator (__main__.Health.test_explicit_unsupported_candidates_preserve_observed_denominator)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-231302/agent/tests/module_health_test.py", line 70, in test_explicit_unsupported_candidates_preserve_observed_denominator
+    self.assertEqual(report['b3']['failures'], {'below_minimum_samples': 2})
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'below_minimum_samples': 2, 'no_complete_dpr': 1} != {'below_minimum_samples': 2}
+- {'below_minimum_samples': 2, 'no_complete_dpr': 1}
++ {'below_minimum_samples': 2}
+
+----------------------------------------------------------------------
+Ran 1 test in 0.001s
+
+FAILED (failures=1)

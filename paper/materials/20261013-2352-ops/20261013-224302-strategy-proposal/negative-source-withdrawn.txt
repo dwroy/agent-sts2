@@ -1,0 +1,128 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261013-224302/agent
+
+ ❯ tests/silent-selection-turn.test.ts (15 tests | 14 failed) 106ms
+   × 9Z T7 keeps original/SL forecasts apart from both replanned actual turn windows 18ms
+   × T8 records zero HP followed by 20 HP separately from the positive net change 5ms
+   × T10 preserves the early forecast, subsequent least-loss re-plan and observed 18 to 3 11ms
+   × partial openings, exhausted windows and the unverified terminal timestamp stay unknown 5ms
+   × decision_gap cannot certify a complete observed turn window 5ms
+   × missing_state cannot certify a complete observed turn window 6ms
+   × duplicate_state cannot certify a complete observed turn window 5ms
+   × attempt cannot certify a complete observed turn window 4ms
+   × reload cannot certify a complete observed turn window 5ms
+   × time cannot certify a complete observed turn window 5ms
+   × a missing non-decision revival frame leaves the state path unknown while endpoints remain observed 5ms
+   × repeated_type leaves enemy turn comparison unknown 3ms
+   × changed_roster leaves enemy turn comparison unknown 3ms
+   × changed_max_hp leaves enemy turn comparison unknown 3ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 14 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/silent-selection-turn.test.ts > 9Z T7 keeps original/SL forecasts apart from both replanned actual turn windows
+TypeError: Cannot read properties of undefined (reading 'find')
+ ❯ at tests/silent-selection-turn.test.ts:7:80
+      5| const input = (): any => structuredClone(evidence);
+      6| const result = (source = input()) => auditSelectionExecution(source);
+      7| const at = (attempt: number, turn: number, source = input()) => result…
+       |                                                                                ^
+      8|   .find((row) => row.attempt === attempt && row.turn === turn)!;
+      9| const facts = (attempt: number, turn: number, source = input()): any =…
+ ❯ facts tests/silent-selection-turn.test.ts:9:73
+ ❯ tests/silent-selection-turn.test.ts:17:18
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/14]⎯
+
+ FAIL  tests/silent-selection-turn.test.ts > T8 records zero HP followed by 20 HP separately from the positive net change
+TypeError: Cannot read properties of undefined (reading 'find')
+ ❯ at tests/silent-selection-turn.test.ts:7:80
+      5| const input = (): any => structuredClone(evidence);
+      6| const result = (source = input()) => auditSelectionExecution(source);
+      7| const at = (attempt: number, turn: number, source = input()) => result…
+       |                                                                                ^
+      8|   .find((row) => row.attempt === attempt && row.turn === turn)!;
+      9| const facts = (attempt: number, turn: number, source = input()): any =…
+ ❯ facts tests/silent-selection-turn.test.ts:9:73
+ ❯ tests/silent-selection-turn.test.ts:30:15
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/14]⎯
+
+ FAIL  tests/silent-selection-turn.test.ts > T10 preserves the early forecast, subsequent least-loss re-plan and observed 18 to 3
+TypeError: Cannot read properties of undefined (reading 'find')
+ ❯ at tests/silent-selection-turn.test.ts:7:80
+      5| const input = (): any => structuredClone(evidence);
+      6| const result = (source = input()) => auditSelectionExecution(source);
+      7| const at = (attempt: number, turn: number, source = input()) => result…
+       |                                                                                ^
+      8|   .find((row) => row.attempt === attempt && row.turn === turn)!;
+      9| const facts = (attempt: number, turn: number, source = input()): any =…
+ ❯ tests/silent-selection-turn.test.ts:46:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/14]⎯
+
+ FAIL  tests/silent-selection-turn.test.ts > partial openings, exhausted windows and the unverified terminal timestamp stay unknown
+TypeError: Cannot read properties of undefined (reading 'find')
+ ❯ at tests/silent-selection-turn.test.ts:7:80
+      5| const input = (): any => structuredClone(evidence);
+      6| const result = (source = input()) => auditSelectionExecution(source);
+      7| const at = (attempt: number, turn: number, source = input()) => result…
+       |                                                                                ^
+      8|   .find((row) => row.attempt === attempt && row.turn === turn)!;
+      9| const facts = (attempt: number, turn: number, source = input()): any =…
+ ❯ tests/silent-selection-turn.test.ts:55:12
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/14]⎯
+
+ FAIL  tests/silent-selection-turn.test.ts > decision_gap cannot certify a complete observed turn window
+ FAIL  tests/silent-selection-turn.test.ts > missing_state cannot certify a complete observed turn window
+ FAIL  tests/silent-selection-turn.test.ts > duplicate_state cannot certify a complete observed turn window
+ FAIL  tests/silent-selection-turn.test.ts > attempt cannot certify a complete observed turn window
+ FAIL  tests/silent-selection-turn.test.ts > reload cannot certify a complete observed turn window
+ FAIL  tests/silent-selection-turn.test.ts > time cannot certify a complete observed turn window
+TypeError: Cannot read properties of undefined (reading 'filter')
+ ❯ tests/silent-selection-turn.test.ts:72:27
+     70|       source.states[index].observed_ts = decision.observed_ts = previo…
+     71|     }
+     72|     expect(result(source).observed_turns.filter((row) => row.turn === …
+       |                           ^
+     73|       .every((row) => row.status === "unknown" && row.facts === null))…
+     74|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/14]⎯
+
+ FAIL  tests/silent-selection-turn.test.ts > a missing non-decision revival frame leaves the state path unknown while endpoints remain observed
+TypeError: Cannot read properties of undefined (reading 'find')
+ ❯ at tests/silent-selection-turn.test.ts:7:80
+      5| const input = (): any => structuredClone(evidence);
+      6| const result = (source = input()) => auditSelectionExecution(source);
+      7| const at = (attempt: number, turn: number, source = input()) => result…
+       |                                                                                ^
+      8|   .find((row) => row.attempt === attempt && row.turn === turn)!;
+      9| const facts = (attempt: number, turn: number, source = input()): any =…
+ ❯ facts tests/silent-selection-turn.test.ts:9:73
+ ❯ tests/silent-selection-turn.test.ts:78:10
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/14]⎯
+
+ FAIL  tests/silent-selection-turn.test.ts > repeated_type leaves enemy turn comparison unknown
+ FAIL  tests/silent-selection-turn.test.ts > changed_roster leaves enemy turn comparison unknown
+ FAIL  tests/silent-selection-turn.test.ts > changed_max_hp leaves enemy turn comparison unknown
+TypeError: Cannot read properties of undefined (reading 'find')
+ ❯ at tests/silent-selection-turn.test.ts:7:80
+      5| const input = (): any => structuredClone(evidence);
+      6| const result = (source = input()) => auditSelectionExecution(source);
+      7| const at = (attempt: number, turn: number, source = input()) => result…
+       |                                                                                ^
+      8|   .find((row) => row.attempt === attempt && row.turn === turn)!;
+      9| const facts = (attempt: number, turn: number, source = input()): any =…
+ ❯ facts tests/silent-selection-turn.test.ts:9:73
+ ❯ tests/silent-selection-turn.test.ts:89:10
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/14]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  14 failed | 1 passed (15)
+   Start at  22:59:22
+   Duration  720ms (transform 373ms, setup 310ms, import 161ms, tests 106ms, environment 0ms)
+

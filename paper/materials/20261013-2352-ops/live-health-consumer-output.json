@@ -1,0 +1,58 @@
+{
+  "schema": "module-health-v1",
+  "at": "2026-10-13T16:12:03.774180+00:00",
+  "run_id": "WA7FRJ7UABCV",
+  "character": "SILENT",
+  "architecture": "V5",
+  "construction_mode": "shadow",
+  "simulation_enabled": true,
+  "coverage": {
+    "decisions_complete": false,
+    "scope": "one original explicitly unsupported F22 choice"
+  },
+  "complete": false,
+  "construction": {
+    "predicted": 1
+  },
+  "b3": {
+    "attempts": 1,
+    "skipped": 0,
+    "produced_dpr": 0,
+    "coverage": 0.0,
+    "failures": {},
+    "unsupported": 1,
+    "applicable_attempts": 0,
+    "applicable_coverage": null,
+    "longest_failure_streak": 0,
+    "trailing_failure_streak": 0,
+    "paired_samples_min": 1000,
+    "ms_max": 10801
+  },
+  "brain": {
+    "observed_questions": 0,
+    "questions_with_dpr": 0,
+    "accepted_with_dpr": 0,
+    "decision_use": "unknown; delivery is not evidence of reasoning or a fixed DPR weight"
+  },
+  "alert": false,
+  "failures": [],
+  "diagnostics": [],
+  "unsupported": [
+    {
+      "ts": "2026-10-13T13:34:28.141Z",
+      "decision": "23337b4f-2ec4-4070-aa2c-4a5be1d30f3d",
+      "floor": 22,
+      "label": "event/choose",
+      "source": {
+        "offset": 1236320924,
+        "length": 29802,
+        "sha256": "9268f0cec621a57bc359f9bf6c04a79ebe7157c42d305ade0fc61ac0cd3efdaa"
+      },
+      "not_simulated": {
+        "o0": "这个选项的效果没有换算成牌组或血量的变化：不模拟",
+        "o1": "这个选项的效果没有换算成牌组或血量的变化：不模拟"
+      }
+    }
+  ],
+  "scope": "Service availability only; sample threshold, simulator validity and game policy unchanged."
+}

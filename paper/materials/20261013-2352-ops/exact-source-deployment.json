@@ -1,0 +1,112 @@
+{
+  "at": "2026-10-14 00:03:20 CST",
+  "before": {
+    "main": "1ed5e441700b5ceaa3c1f9bc9f27a3b62fe9f082",
+    "live": "e0b125153bc08d324f67622153b06fe06a8428cd"
+  },
+  "original_sources": [
+    {
+      "batch": "20261013-224302-strategy-proposal",
+      "source": "c719bc048fa848119f217ba0e966aac7e2671ddf",
+      "parent": "b85432e091d1ef152ed633303bfee1a38e1dd024",
+      "paths": [
+        "agent/tests/silent-selection-turn-evidence.json",
+        "agent/tests/silent-selection-turn.test.ts",
+        "learner/lib/selection-execution.ts",
+        "learner/lib/selection-turn.ts",
+        "learner/selection-execution.md"
+      ],
+      "leaf_sha256": {
+        "agent/tests/silent-selection-turn-evidence.json": "a1248c6ffb0a866fa9ff8e32d797d2eaa362c3eceff55eb595dee0b6a1173f00",
+        "agent/tests/silent-selection-turn.test.ts": "5d9fc3edc31098da60b51759fdf69746bc68a4275d0d23a0b66520c0bbfba4f6",
+        "learner/lib/selection-execution.ts": "5ec0be69ae1a19471e53150c6a78c8a4c40bae4469982578e11b1ef1f668c1c2",
+        "learner/lib/selection-turn.ts": "038f6ec416103ef5ce75136a7d8a09f40b1a1ac341356d7cfa9b5b6e4300b703",
+        "learner/selection-execution.md": "7a97a8909f22a0e08d740f2dc07fbad439d461497c424315f6f1f5589e0c0ce1"
+      }
+    },
+    {
+      "batch": "20261013-231302-fix-batch",
+      "source": "c988032d20270b84bacae81a614b50f6704c3804",
+      "parent": "3871fc384741aec05c7aacbaf82efcb7304614f3",
+      "paths": [
+        "agent/tests/module_health_test.py",
+        "ops/module_health.py"
+      ],
+      "leaf_sha256": {
+        "agent/tests/module_health_test.py": "17f6c0789faf468adfd1b32cdf74a45d4a4858606cda1f89e7861eff923684ba",
+        "ops/module_health.py": "568e15b110d12c624050db223e9222c3e8d4961609de0bda8e72f2108242f3f9"
+      }
+    }
+  ],
+  "integration_sources": [
+    "4521ba2cd3009a380fcc19afbba0e09a15faea39",
+    "af83475de1e4392caf1a0bac5f694379367c0cc2"
+  ],
+  "paths": [
+    "agent/tests/silent-selection-turn-evidence.json",
+    "agent/tests/silent-selection-turn.test.ts",
+    "learner/lib/selection-execution.ts",
+    "learner/lib/selection-turn.ts",
+    "learner/selection-execution.md",
+    "agent/tests/module_health_test.py",
+    "ops/module_health.py"
+  ],
+  "checkouts": {
+    "main": {
+      "actual_leaves": "e75438488df159b2e8e9d3458cf219b39aadd933",
+      "ancestry_bound": "8c4d23c1813c531944131bbf28c8177d2c44f933",
+      "tree": "a7495bd8d2ddafeadf5f26e213782a3abda12bec",
+      "unchanged_versions_blob": "a66d01cf7b47629ba842ea178bd6f06b596ebfa3"
+    },
+    "live": {
+      "actual_leaves": "9b87d54f097d84521152e6cca8d6072af8140394",
+      "ancestry_bound": "7e04d9a42dd6080a8d3716dd165e44d4b30c458d",
+      "tree": "441e041d4282a714d353b880b3e6e7acab1a5189",
+      "unchanged_versions_blob": "b44f76f29aacb532e86b6ffd5ddb50138e7b53cc"
+    }
+  },
+  "refreshes": {
+    "live": {
+      "paths": [
+        "knowledge/characters/silent/boss-damage.json",
+        "knowledge/characters/silent/construction-opportunities.json",
+        "knowledge/characters/silent/fight-value-gates.json",
+        "knowledge/characters/silent/fight-value.json",
+        "knowledge/characters/silent/monster-records.json",
+        "knowledge/characters/silent/outcome-stats.json",
+        "knowledge/characters/silent/room-costs.json",
+        "knowledge/common/card-upgrades.json",
+        "knowledge/common/monster-db.json",
+        "knowledge/common/move-model.json"
+      ],
+      "commit": "602e478bc8c6f07beee98338542a28c2b57c56f1"
+    }
+  },
+  "checks": {
+    "current_tsc": 0,
+    "fixed_files": 4,
+    "fixed_tests": 44,
+    "gitleaks": 0,
+    "source_audit_sandbox": {
+      "files": 375,
+      "cases": 3589,
+      "tsc": 0,
+      "vitest": 0
+    },
+    "source_health_sandbox": {
+      "files": 374,
+      "cases": 3574,
+      "tsc": 0,
+      "vitest": 0,
+      "python_cases": 9
+    }
+  },
+  "original_record_and_refresh_conflicts_preserved": true,
+  "production_selection_model_and_game_rules_changed": false,
+  "new_behavior_release": false,
+  "existing_V5_R332_unchanged": true,
+  "DPR_sampling_performance_fixed": false,
+  "original_pending_parents_unchanged": true,
+  "game_model_account_permissions_prompt_actions": false,
+  "complete_host_check": "one original learner-recheck on the final combined tree; same exact tree covers both sources, no duplicate suite"
+}
