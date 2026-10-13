@@ -127,6 +127,14 @@ def successful_checks(batch):
     return records[-1] if records and records[-1].get("rc") == 0 else None
 
 
+def check_log_completed(root, check):
+    path = safe_path(root, check.get("log", ""))
+    if not path.is_file() or secret_name(path):
+        return False
+    text = re.sub(rb"\x1b\[[0-9;]*m", b"", path.read_bytes())
+    return bool(re.search(rb"Test Files\s+\d+ passed", text))
+
+
 def evidence_runs(exp):
     runs = set(exp.get("source", {}).get("runs", [])) if isinstance(exp.get("source"), dict) else set()
     for entry in exp.get("entries", []):
@@ -213,6 +221,8 @@ def admission(root, state_dir, state, batch_id):
         for other in reversed(list(state.get("batches", {}).values())):
             check = successful_checks(other)
             if other.get("task") != "experience-update" or other.get("character") != character or not check:
+                continue
+            if not check_log_completed(root, check):
                 continue
             exp = checked_experience(str(live), check.get("merged"), character)
             if exp is None:
@@ -437,20 +447,71 @@ def sweep(root, state_dir, apply, limit):
     result = {"at": stamp(), "apply": apply, "results": [], "retained": {}, "limit": limit}
     batches = sorted(state.get("batches", {}), reverse=True)
     batches.sort(key=lambda ident: state["batches"][ident].get("task", "postmortem") == "postmortem")
+    batches.sort(key=lambda ident: not (state_dir / "retention/requests" / (ident + ".json")).is_file())
     for batch_id in batches:
         if (state_dir / "retention/archives" / (batch_id + ".manifest.json")).exists():
+            if apply:
+                manifest = load(state_dir / "retention/archives" / (batch_id + ".manifest.json"))
+                request_outcome(root, state_dir, batch_id, {"state": manifest["state"]})
             continue
         try:
             item = reclaim(root, state_dir, batch_id, apply, state)
         except (OSError, ValueError, KeyError, TypeError, subprocess.SubprocessError) as error:
             reason = str(error)
             result["retained"][reason] = result["retained"].get(reason, 0) + 1
+            if apply:
+                request_outcome(root, state_dir, batch_id, {"state": "deferred", "reason": reason})
+            continue
+        if item.get("state") == "retained-report":
+            reason = "report-only scratch awaits experience ingestion"
+            result["retained"][reason] = result["retained"].get(reason, 0) + 1
+            if apply:
+                request_outcome(root, state_dir, batch_id, {"state": "deferred", "reason": reason})
             continue
         result["results"].append(item)
+        if apply:
+            request_outcome(root, state_dir, batch_id, item)
         if len(result["results"]) >= limit:
             break
     atomic(state_dir / "retention/last-sweep.json", result)
     return result
+
+
+def request_outcome(root, state_dir, batch_id, outcome):
+    if not BATCH.fullmatch(batch_id):
+        return
+    path = safe_path(root, state_dir / "retention/requests" / (batch_id + ".json"))
+    if path.is_file():
+        with locks([state_dir / "retention-request.lock"]):
+            receipt = load(path)
+            if receipt.get("batch") != batch_id:
+                raise ValueError("cleanup request identity changed")
+            receipt.update(state=outcome["state"], last_result=outcome, updated_at=stamp())
+            atomic(path, receipt)
+
+
+def request_cleanup(root, state_dir, batch_id):
+    """Record a finished learner's intent; admission remains the only deletion authority."""
+    if not BATCH.fullmatch(batch_id):
+        raise ValueError("invalid batch identity")
+    path = safe_path(root, state_dir / "retention/requests" / (batch_id + ".json"))
+    with locks([state_dir / "learn.lock", state_dir / "retention-request.lock"]):
+        batch = load(state_dir / "learn.json").get("batches", {}).get(batch_id)
+        if not batch or batch.get("rc") != 0 or batch.get("state") not in ("done", "failed"):
+            raise ValueError("learner has no recorded successful exit; no cleanup request")
+        identity = {"batch": batch_id, "task": batch.get("task", "postmortem"),
+                    "character": batch.get("character"), "worktree": batch.get("worktree") or str(root)}
+        if path.exists():
+            receipt = load(path)
+            if any(receipt.get(k) != v for k, v in identity.items()):
+                raise ValueError("cleanup request owner changed; original retained")
+        else:
+            receipt = dict(identity, schema="learner-cleanup-request-v1", requested_at=stamp(),
+                           requested_by="learner-wrapper", state="pending_verification",
+                           admission_required=True, model_finished_does_not_prove_ingestion=True)
+            atomic(path, receipt)
+    return {"batch": batch_id, "state": receipt["state"], "request": str(path.relative_to(root)),
+            "worker": kick(root, state_dir, Path(__file__).parent)}
 
 
 def restore(root, state_dir, batch_id):
@@ -551,7 +612,7 @@ def kick(root, state_dir, scripts):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("command", choices=["plan", "sweep", "restore"])
+    parser.add_argument("command", choices=["plan", "sweep", "restore", "request"])
     parser.add_argument("--root", default=os.environ.get("CODEX_OPS_ROOT") or Path(__file__).resolve().parents[1])
     parser.add_argument("--state-dir", default=os.environ.get("CODEX_OPS_DIR"))
     parser.add_argument("--batch")
@@ -567,7 +628,11 @@ def main():
     if not 1 <= args.limit <= 32 or not (root / ".git").exists():
         parser.error("invalid project or bounded limit")
     try:
-        if args.command == "restore":
+        if args.command == "request":
+            if not args.batch:
+                parser.error("request requires exact batch")
+            result = request_cleanup(root, directory, args.batch)
+        elif args.command == "restore":
             if not args.batch:
                 parser.error("restore requires exact batch")
             result = restore(root, directory, args.batch)

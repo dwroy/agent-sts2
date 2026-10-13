@@ -193,7 +193,16 @@ fi
 echo "$(date '+%F %T') learner batch $batch ($runs) exit $rc" >> "$DIR/scheduler.log"
 if { [ -z "$research_request" ] || python3 "$OPS/strategy_research_jobs.py" registered "$ROOT" "$DIR" "$batch" "$character" "$worktree" "$research_request" 2>> "$err"; } \
     && { [ -z "$implementation_request" ] || python3 "$OPS/strategy_implementation_jobs.py" registered "$ROOT" "$DIR" "$batch" "$character" "$worktree" "$implementation_request" 2>> "$err"; }; then
-  python3 "$OPS/codex-ops-learn.py" finish --batch "$batch" --rc "$rc" --character "$character" > /dev/null
+  finish_rc=0
+  python3 "$OPS/codex-ops-learn.py" finish --batch "$batch" --rc "$rc" --character "$character" > /dev/null || finish_rc=$?
+  if [ "$rc" = 0 ] && [ "$finish_rc" = 0 ] && [ "$learner_task" = "$task" ] \
+      && [ "$task" != ascension-audit ] && [ -z "${LEARNER_CMD:-}" ] && [ -f "$OPS/learner_retention.py" ]; then
+    # The model and launcher have exited; release this checkout lease before requesting guarded reclamation.
+    flock -u 9 2>/dev/null || true
+    exec 9>&-
+    nice -n 19 python3 "$OPS/learner_retention.py" request --root "$ROOT" --state-dir "$DIR" --batch "$batch" \
+      >> "$DIR/scheduler.log" 2>&1 || echo "learner cleanup request deferred for $batch; normal tick will retry" >> "$DIR/scheduler.log"
+  fi
 fi
 if [ "${CODEX_OPS_NO_DRAIN:-0}" != 1 ]; then
   # A hosted batch's pane closes when this script ends: the wake (up to 2 h) must not live in it.
