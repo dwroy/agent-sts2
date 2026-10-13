@@ -1,0 +1,20 @@
+{
+  "at": "2026-10-13T08:49:29+08:00",
+  "readonly_command": [
+    "/mnt/c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe",
+    "-NoProfile",
+    "-NonInteractive",
+    "-Command",
+    "[Console]::OutputEncoding=[Text.UTF8Encoding]::new($false); @(Get-Process -Name SlayTheSpire2 -ErrorAction SilentlyContinue | Select-Object @{n='pid';e={$_.Id}},@{n='session_id';e={$_.SessionId}},@{n='start';e={$_.StartTime.ToUniversalTime().ToString('o')}}) | ConvertTo-Json -Compress"
+  ],
+  "exit": 0,
+  "processes": [
+    {
+      "pid": 34676,
+      "session_id": 1,
+      "start": "2026-10-11T06:59:42.9490786Z"
+    }
+  ],
+  "unchanged_known_original_silent_pid": true,
+  "no_second_game_no_original_action": true
+}

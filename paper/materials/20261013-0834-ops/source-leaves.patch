@@ -1,0 +1,294 @@
+diff --git a/agent/tests/loop-time-cap-fixture.ts b/agent/tests/loop-time-cap-fixture.ts
+new file mode 100644
+index 000000000..072b8721b
+--- /dev/null
++++ b/agent/tests/loop-time-cap-fixture.ts
+@@ -0,0 +1,46 @@
++import { mkdtempSync, rmSync } from "node:fs";
++import { tmpdir } from "node:os";
++import { join } from "node:path";
++import { vi } from "vitest";
++import { loadConfig } from "../src/core/config.js";
++import { runLoop, type LoopEvent, type LoopStats } from "../src/hand/loop.js";
++import type { ModClient } from "../src/hand/mod/client.js";
++import { parseGameState } from "../src/hand/mod/schema.js";
++import { testKnowledge } from "./scenarios.js";
++
++/** Exercise real loop deadlines with fixed states and time, without HTTP or a model. */
++export async function runTimeCapFixture(
++  payload: Record<string, unknown>,
++  after?: { atMs: number; payload: Record<string, unknown> },
++): Promise<{ stats: LoopStats; elapsed: number; events: LoopEvent[] }> {
++  const directory = mkdtempSync(join(tmpdir(), "loop-time-cap-"));
++  const controller = new AbortController();
++  const events: LoopEvent[] = [];
++  vi.useFakeTimers({ toFake: ["Date", "setTimeout", "clearTimeout"] });
++  vi.setSystemTime(0);
++  const started = Date.now();
++  const initial = parseGameState(payload);
++  const next = after ? parseGameState(after.payload) : null;
++  const client = {
++    state: async () => after && Date.now() - started >= after.atMs ? next! : initial,
++    action: async () => { throw new Error("time-cap fixture must not dispatch actions"); },
++  } as unknown as ModClient;
++  const config = loadConfig({} as NodeJS.ProcessEnv);
++  const pending = runLoop({
++    config: { ...config, combatPlanner: "card", log: { ...config.log, decisionLog: join(directory, "decisions.jsonl") } },
++    mode: "shadow", client, jev: null, brain: null, knowledge: testKnowledge,
++    restoreRun: false, maxMinutes: 0.005, combatGraceMinutes: 0.01, pollIntervalMs: 2,
++    signal: controller.signal, onEvent: (event) => events.push(event),
++  });
++  try {
++    await vi.advanceTimersByTimeAsync(1_000);
++    // Bound the fixture even if a regression stops the deadline from advancing.
++    controller.abort();
++    await vi.advanceTimersByTimeAsync(2);
++    const stats = await pending;
++    return { stats, elapsed: stats.elapsedMs, events };
++  } finally {
++    vi.useRealTimers();
++    rmSync(directory, { recursive: true, force: true });
++  }
++}
+diff --git a/agent/tests/loop-time-cap.test.ts b/agent/tests/loop-time-cap.test.ts
+new file mode 100644
+index 000000000..bcd0b73e1
+--- /dev/null
++++ b/agent/tests/loop-time-cap.test.ts
+@@ -0,0 +1,38 @@
++import { afterEach, expect, it, vi } from "vitest";
++import { runTimeCapFixture } from "./loop-time-cap-fixture.js";
++import { combatPayload, gameOverPayload, mapPayload } from "./scenarios.js";
++
++afterEach(() => vi.restoreAllMocks());
++
++it.each([0, 10_000])("keeps map and combat deadline assertions independent of a %ims host pause", async (pause) => {
++  let wall = 0;
++  vi.spyOn(Date, "now").mockImplementation(() => (wall += pause));
++  const map = await runTimeCapFixture(mapPayload());
++  expect(map.stats.stoppedBecause).toBe("time cap reached (0.005 min)");
++  expect(map.elapsed).toBeLessThan(850);
++  expect(map.elapsed).toBeGreaterThan(300);
++  const fight = await runTimeCapFixture(combatPayload());
++  expect(fight.stats.stoppedBecause).toContain("still in combat after the grace period");
++  expect(fight.elapsed).toBeGreaterThanOrEqual(850);
++  expect(fight.elapsed).toBeLessThanOrEqual(902);
++  expect(map.stats.errors + fight.stats.errors).toBe(0);
++  expect(map.stats.acts + fight.stats.acts).toBe(0);
++});
++
++it("stops at a safe point when the fight ends during the grace period", async () => {
++  const result = await runTimeCapFixture(combatPayload(), { atMs: 500, payload: mapPayload() });
++  expect(result.events.some((event) => event.type === "combat_end")).toBe(true);
++  expect(result.stats.stoppedBecause).toBe("time cap reached (0.005 min)");
++  expect(result.elapsed).toBeGreaterThanOrEqual(500);
++  expect(result.elapsed).toBeLessThan(850);
++});
++
++it("bounds score-screen finalization by the same grace deadline", async () => {
++  const ending = gameOverPayload();
++  ending["available_actions"] = [];
++  ending["game_over"] = { phase: "summary_animating", is_victory: false };
++  const result = await runTimeCapFixture(combatPayload(), { atMs: 200, payload: ending });
++  expect(result.stats.stoppedBecause).toContain("still finishing the run after the grace period");
++  expect(result.elapsed).toBeGreaterThanOrEqual(850);
++  expect(result.elapsed).toBeLessThanOrEqual(902);
++});
+diff --git a/agent/tests/loop.test.ts b/agent/tests/loop.test.ts
+index bc21e9c06..7f629b4db 100644
+--- a/agent/tests/loop.test.ts
++++ b/agent/tests/loop.test.ts
+@@ -17,6 +17,7 @@ import type { JevAskResult, JevClient } from "../src/reflex/jev/client.js";
+ import { runLoop, type LoopEvent } from "./legacy-brain.js";
+ import { ModClient } from "../src/hand/mod/client.js";
+ import { envelope, errorEnvelope, sendJson, startTestServer, type TestServer } from "./support.js";
++import { runTimeCapFixture } from "./loop-time-cap-fixture.js";
+ import {
+   afterRunPayload,
+   combatPayload,
+@@ -556,25 +557,10 @@ describe("runLoop", () => {
+   });
+ 
+   it("the time cap waits for the fight to end, up to a grace period (TQX5: stopped before the boss's turn)", async () => {
+-    const run = async (payload: Record<string, unknown>) => {
+-      const { server } = await scriptedMod({ sequence: [payload] });
+-      const started = Date.now();
+-      const stats = await runLoop({
+-        config: testConfig(),
+-        mode: "shadow",
+-        client: new ModClient({ baseUrl: server.url }),
+-        jev: null,
+-        knowledge: testKnowledge,
+-        maxMinutes: 0.005, // 0.3 s
+-        combatGraceMinutes: 0.01, // 0.6 s more
+-        pollIntervalMs: 2,
+-      });
+-      return { stats, elapsed: Date.now() - started };
+-    };
+-    const map = await run(mapPayload());
++    const map = await runTimeCapFixture(mapPayload());
+     expect(map.stats.stoppedBecause).toBe("time cap reached (0.005 min)");
+     expect(map.elapsed).toBeLessThan(850);
+-    const fight = await run(combatPayload());
++    const fight = await runTimeCapFixture(combatPayload());
+     expect(fight.stats.stoppedBecause).toContain("still in combat after the grace period");
+     expect(fight.elapsed).toBeGreaterThanOrEqual(850);
+   });
+diff --git a/ops/codex-ops-learn.py b/ops/codex-ops-learn.py
+index e48e4320f..2a07145e1 100755
+--- a/ops/codex-ops-learn.py
++++ b/ops/codex-ops-learn.py
+@@ -476,25 +476,35 @@ def cmd_request_merge(args):
+ 
+ def cmd_recheck(args):
+     batch_id, separator, continuation = args.batch.partition(":")
+-    if separator and not re.fullmatch(r"[0-9a-f]{64}", continuation):
++
++    def refused(reason, **details):
++        # Preserve the refusal and its binding without changing ownership or starting checks.
++        print(json.dumps({"batch": batch_id, "continuation": continuation if separator else None,
++                          "rc": 2, "state": "refused", "reason": reason, **details}, ensure_ascii=False))
+         return 2
++
++    if separator and not re.fullmatch(r"[0-9a-f]{64}", continuation):
++        return refused("invalid-continuation")
+     args.batch = batch_id
+     if not re.fullmatch(r"[0-9]{8}-[0-9]{6}-(experience-update|fix-batch|strategy-proposal)|[0-9]{8}-[0-9]{6}-s2-strategy-proposal", args.batch):
+-        return 2
++        return refused("invalid-batch")
+     # Per-batch checks serialize duplicate requests without blocking unrelated dispatch or completion.
+     with open(os.path.join(DIR, args.batch + ".checks.lock"), "a") as checks_lock:
+         try:
+             fcntl.flock(checks_lock, fcntl.LOCK_EX | (fcntl.LOCK_NB if separator else 0))
+         except BlockingIOError:
+-            return 2
++            return refused("checks-lock-busy")
+         with state_lock():
+             state = load_state()
+             batch = state["batches"].get(args.batch)
+-            if not batch or batch.get("state") == "running":
+-                return 2
+-            if separator and any(other.get("state") == "running" and other.get("worktree") == batch.get("worktree")
+-                                 for other in state["batches"].values()):
+-                return 2
++            if not batch:
++                return refused("unknown-batch")
++            if batch.get("state") == "running":
++                return refused("batch-running")
++            owners = sorted(ident for ident, other in state["batches"].items()
++                            if other.get("state") == "running" and other.get("worktree") == batch.get("worktree")) if separator else []
++            if separator and owners:
++                return refused("active-worktree-owner", owners=owners)
+         result = recheck_write_batch(args.batch, batch, ROOT, os.path.join(DIR, "learner"), enqueue, inbox,
+                                     **({"continuation": continuation} if separator else {}))
+         # Reload after the expensive checks: other jobs may have updated the scheduler meanwhile.
+@@ -502,10 +512,10 @@ def cmd_recheck(args):
+             state = load_state()
+             current = state["batches"].get(args.batch)
+             if current is None:
+-                return 2
++                return refused("batch-disappeared")
+             if separator:
+                 if any(current.get(key) != batch.get(key) for key in ("task", "worktree", "state")):
+-                    return 2
++                    return refused("batch-identity-changed")
+                 if "check_supplements" in batch:
+                     current["check_supplements"] = batch["check_supplements"]
+                 save_state(state)
+diff --git a/ops/tests/test_learner_check_continuation.py b/ops/tests/test_learner_check_continuation.py
+index 7d5858c9e..a2baefb7a 100644
+--- a/ops/tests/test_learner_check_continuation.py
++++ b/ops/tests/test_learner_check_continuation.py
+@@ -4,6 +4,7 @@ import contextlib
+ import copy
+ import fcntl
+ import importlib.util
++import io
+ import json
+ from pathlib import Path
+ import subprocess
+@@ -304,7 +305,7 @@ class Continuation(unittest.TestCase):
+         self.assertEqual(self.run_check(), 2)
+         self.assertFalse(self.calls)
+ 
+-    def scheduler(self, state):
++    def scheduler(self, state, after_check=None):
+         source = ast.parse((SOURCE / "codex-ops-learn.py").read_text())
+         function = next(node for node in source.body if isinstance(node, ast.FunctionDef) and node.name == "cmd_recheck")
+         namespace = {"re": m.re, "os": m.os, "fcntl": fcntl, "json": json, "DIR": str(self.out.parent), "ROOT": str(self.root),
+@@ -314,11 +315,75 @@ class Continuation(unittest.TestCase):
+         def recheck(*args, **kwargs):
+             calls.append((args, kwargs))
+             args[1]["check_supplements"] = [{"rc": 0, "scope": "selected tests only"}]
++            if after_check:
++                after_check(state)
+             return 0
+         namespace["recheck_write_batch"] = recheck
+         exec(compile(ast.Module(body=[function], type_ignores=[]), "scheduler-fixture", "exec"), namespace)
+         return namespace["cmd_recheck"], calls
+ 
++    def test_scheduler_reports_each_preflight_refusal_without_mutation_or_checks(self):
++        token = self.batch_id + ":" + "a" * 64
++        cases = [
++            (self.batch_id + ":bad", {"batches": {self.batch_id: self.batch}}, "invalid-continuation", {}),
++            ("bad-batch:" + "a" * 64, {"batches": {}}, "invalid-batch", {}),
++            (token, {"batches": {}}, "unknown-batch", {}),
++            (token, {"batches": {self.batch_id: {**self.batch, "state": "running"}}}, "batch-running", {}),
++            (token, {"batches": {self.batch_id: self.batch,
++                                "owner": {"state": "running", "worktree": str(self.owner)}}},
++             "active-worktree-owner", {"owners": ["owner"]}),
++        ]
++        for request, state, reason, details in cases:
++            with self.subTest(reason=reason):
++                state = copy.deepcopy(state)
++                before = copy.deepcopy(state)
++                call, calls = self.scheduler(state)
++                output = io.StringIO()
++                with contextlib.redirect_stdout(output):
++                    self.assertEqual(call(SimpleNamespace(batch=request)), 2)
++                receipt = json.loads(output.getvalue())
++                self.assertEqual(receipt, {"batch": request.partition(":")[0],
++                                          "continuation": request.partition(":")[2],
++                                          "rc": 2, "state": "refused", "reason": reason, **details})
++                self.assertEqual(state, before)
++                self.assertFalse(calls)
++
++    def test_scheduler_reports_busy_check_lock_without_starting_or_rewriting(self):
++        state = {"batches": {self.batch_id: copy.deepcopy(self.batch)}}
++        before = copy.deepcopy(state)
++        call, calls = self.scheduler(state)
++        output = io.StringIO()
++        with open(self.out.parent / (self.batch_id + ".checks.lock"), "a") as lock:
++            fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
++            with contextlib.redirect_stdout(output):
++                self.assertEqual(call(SimpleNamespace(batch=self.batch_id + ":" + "a" * 64)), 2)
++        self.assertEqual(json.loads(output.getvalue())["reason"], "checks-lock-busy")
++        self.assertEqual(state, before)
++        self.assertFalse(calls)
++
++    def test_scheduler_reports_postcheck_identity_races_without_overwriting_concurrent_state(self):
++        for reason in ("batch-disappeared", "batch-identity-changed"):
++            with self.subTest(reason=reason):
++                state = {"batches": {self.batch_id: copy.deepcopy(self.batch)}}
++                def mutate(current):
++                    if reason == "batch-disappeared":
++                        current["batches"].pop(self.batch_id)
++                    else:
++                        current["batches"][self.batch_id]["state"] = "running"
++                    current["concurrent"] = 99
++                call, calls = self.scheduler(state, mutate)
++                output = io.StringIO()
++                with contextlib.redirect_stdout(output):
++                    self.assertEqual(call(SimpleNamespace(batch=self.batch_id + ":" + "a" * 64)), 2)
++                self.assertEqual(json.loads(output.getvalue())["reason"], reason)
++                self.assertEqual(len(calls), 1)
++                self.assertEqual(state["concurrent"], 99)
++                if reason == "batch-disappeared":
++                    self.assertNotIn(self.batch_id, state["batches"])
++                else:
++                    self.assertEqual(state["batches"][self.batch_id]["state"], "running")
++                    self.assertNotIn("check_supplements", state["batches"][self.batch_id])
++
+     def test_scheduler_rejects_active_owner_and_keeps_original_checks_pending(self):
+         state = {"batches": {self.batch_id: self.batch, "new-owner": {"state": "running", "worktree": str(self.owner)}}}
+         call, calls = self.scheduler(state)

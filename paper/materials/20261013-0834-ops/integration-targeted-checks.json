@@ -1,0 +1,53 @@
+{
+  "at": "2026-10-13T08:40:10+08:00",
+  "worktree": "/home/dw/Projects/agent-sts2/.worktrees/ops-fix-080052-20261013",
+  "base": "d30b7b6547e2df8579edf7eb67ba3522df187e5a",
+  "sources": [
+    "b3c6dd700b00d0d8b17d5d2efe6fe9aa353618fa",
+    "63f656fb07a21a7496353234269901a832eae497"
+  ],
+  "staged_tree": "c1897ebc58844e9e5ceea8800f12c35a6160f6b0",
+  "source_full_checks": {
+    "source_sha256": {
+      "agent/tests/loop-time-cap-fixture.ts": "1416a73e33940df425ed570791642f050fc3e7b8d95dbbd0d23fd58ef6e5860f",
+      "agent/tests/loop-time-cap.test.ts": "2f3f160f4e962f134ab58e929da1a1a6926f82a67d69347e6e0b1abb7effce1d",
+      "agent/tests/loop.test.ts": "9bd8c779ad48211de280c9dbf4425123520e7a736e1461134ede82f386242bdf",
+      "ops/codex-ops-learn.py": "161ede6672299f14fc4240d150b4f8554e69a2fb41065bd5ea65f1a17de922ba",
+      "ops/tests/test_learner_check_continuation.py": "9f9315f06182f7d6b095b170e152c889002d744bb4cee1c63719c2900fdb8089"
+    },
+    "red": {
+      "time_cap": 1,
+      "recheck": 1
+    },
+    "green": {
+      "time_cap": 0,
+      "original_time_cap": 0,
+      "recheck": 0,
+      "wrapper": 0
+    },
+    "gitleaks": {
+      "time_cap": 0,
+      "recheck": 0
+    },
+    "no_real_llm_or_http": true,
+    "game_source_modified": false,
+    "production_deadlines_modified": false,
+    "ledger_matching_bug_infra": []
+  },
+  "current_tsc_exit": 0,
+  "current_vitest": {
+    "command": "nice -n 19 npx vitest run tests/loop.test.ts tests/loop-time-cap.test.ts tests/learner-check-continuation.test.ts --maxWorkers=2",
+    "exit": 0,
+    "files_passed": 3,
+    "tests_passed": 27,
+    "duration_seconds": 28.2
+  },
+  "paths": [
+    "agent/tests/loop-time-cap-fixture.ts",
+    "agent/tests/loop-time-cap.test.ts",
+    "agent/tests/loop.test.ts",
+    "ops/codex-ops-learn.py",
+    "ops/tests/test_learner_check_continuation.py"
+  ],
+  "behavior_release_required": false
+}

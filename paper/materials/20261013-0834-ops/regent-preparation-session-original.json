@@ -1,0 +1,137 @@
+{
+  "schema": "regent-ops-preparation-v1",
+  "at": "2026-10-13T08:44:18.508832+08:00",
+  "recorded_date": "2026-10-13 08:44:18 CST",
+  "request_id": "roy-20261013-isolated-character-climb",
+  "status": "prepared_headless_game_not_started",
+  "ops_preparation_accepted": true,
+  "session_id": "01a132b0-1d62-76b3-a8e8-17a73cdcdb15",
+  "runtime_root": "/home/dw/Projects/agent-sts2/.worktrees/regent-climb",
+  "branch": "regent-climb",
+  "source_baseline": "3f08dfb9b720deb61e2d6070dceb8f8caf5bd9fb",
+  "source_isolation_commit": "d9044ce46ed2ae99d8610ab98a9654098e93c2da",
+  "runtime_head": "bfdf4bbec4f70df04ff2296041c59f8f59abeefe",
+  "runtime_tree": "773f378515077e4fd4a0e69654728c706d834e6b",
+  "ops": {
+    "initialized": true,
+    "initialization": "既有调度器标准headless首次session；没有再次建session或控制器。",
+    "hosting_mode": "exec",
+    "codex_home_selector": "/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/learner",
+    "brain_home_selector": "/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/brain",
+    "credential_files_read_or_copied": false,
+    "native_model": "gpt-6.1-sol",
+    "native_effort": "xhigh",
+    "launch_service_tier": "default",
+    "native_service_tier_field_reported": false,
+    "execution": "sandbox",
+    "native_sandbox": "workspace-write",
+    "native_network_access": false,
+    "approval_policy": "never",
+    "launcher_reported_native_pid": 1731971,
+    "broker_verified": true,
+    "broker_scheduler_stdout": "1731725 /home/dw/.local/node/bin/node --import ./agent/node_modules/tsx/dist/loader.mjs ops/codex/main.ts wake\nops/STOP present\n"
+  },
+  "space": {
+    "id": "wV",
+    "label": "sts2-climb-2",
+    "planned_pane": "wV:p1",
+    "existing_receipt": "paper/materials/20261013-multi-instance-climb/space-preparation.json",
+    "herdr_env_present": false,
+    "herdr_called_this_round": false,
+    "attached_this_round": false,
+    "actual_current_pane": null,
+    "next_step": "由原watcher/Herdr控制端挂回同一session，不能新建替代session。"
+  },
+  "knowledge": {
+    "character": "REGENT",
+    "target_directory": "/home/dw/Projects/agent-sts2/.worktrees/regent-climb/knowledge/characters/regent",
+    "present": false,
+    "character_knowledge": "空；不创建或导入经验。",
+    "regent_game_logs_present": false,
+    "learning_ledger_bytes": 0,
+    "actual_brain_prefix_verified": false,
+    "other_character_knowledge_consumed": false
+  },
+  "game_gate": {
+    "base_url": "http://127.0.0.1:1",
+    "expected_process_id": 0,
+    "expected_native_profile_id": null,
+    "STOP_preserved": true,
+    "LLM_DRAIN_preserved": true,
+    "gate_probe_exit_code": 78,
+    "gate_probe_stderr": "instance admission refused: expected process ID is invalid\n",
+    "http_attempted_by_gate_probe": false,
+    "second_instance_verified": false,
+    "second_game_started_this_round": false,
+    "play_started": false,
+    "autoplay_started": false,
+    "learning_started": false,
+    "climb_started": false,
+    "no_fallback_to_8080": true
+  },
+  "reported_prior_checks": {
+    "receipt": "paper/materials/regent/bootstrap.json",
+    "results": {
+      "tsc": 0,
+      "vitest_files": 5,
+      "vitest_tests": 22,
+      "vitest_rc": 0,
+      "gitleaks_findings": 0
+    },
+    "repeated_this_round": false,
+    "original_source_acceptance": {
+      "path": "ops/codex-ops/preparation-evidence/architecture-acceptance-source.json",
+      "sha256": "85b1505a2abb971c431d6722edc431eae1cd1cc910512d37686bac7cb8743122"
+    },
+    "full_host_acceptance_verified_this_round": false
+  },
+  "evidence": [
+    {
+      "path": "ops/codex-ops/preparation-evidence/ops-launch.json",
+      "sha256": "55c98ddcc75e08f8b4a807e717cccd89c266c63f72c7f46492deacd7a68f6487"
+    },
+    {
+      "path": "ops/codex-ops/preparation-evidence/ops-native.json",
+      "sha256": "6d5020b2f3829ef8a7fdffb44b4e174d743c3bfd17915031085eca22522fc8d7"
+    },
+    {
+      "path": "ops/codex-ops/preparation-evidence/architecture-source-readback.json",
+      "sha256": "f4e68851ffe7d39bf8b3b7f94d0f8553897c9f26b633d538ce1250b302ded5b6"
+    },
+    {
+      "path": "ops/codex-ops/preparation-evidence/architecture-acceptance-source.json",
+      "sha256": "85b1505a2abb971c431d6722edc431eae1cd1cc910512d37686bac7cb8743122"
+    },
+    {
+      "path": "ops/codex-ops/preparation-evidence/runtime-environment.json",
+      "sha256": "bbdb35e229015b3281f3d099467ea7946533fefa3fb4b994826cc175c3b6edf6"
+    },
+    {
+      "path": "ops/codex-ops/preparation-evidence/inspection-diagnostics.json",
+      "sha256": "b591ba341dbbd3b9c280c71c57fdd09bb47a0940e5975a231f3cf0c64ba4a17a"
+    },
+    {
+      "path": "ops/codex-ops/preparation-evidence/broker-procs.json",
+      "sha256": "54698904b7a49155e080c32cdb212996cf3d8ff0cb4b716175347749265523d9"
+    },
+    {
+      "path": "ops/codex-ops/preparation-evidence/gate-refusal.json",
+      "sha256": "00371f74c3ef1d038f08c0c1cf6883aa7e1192ad9919d77380ba27ccbd63fe70"
+    }
+  ],
+  "pending": [
+    "原控制端在已有wV space内挂接同一session并保存实际pane回执；本轮无HERDR_ENV，未调用Herdr。",
+    "主运维提供独立solo窗口、精确PID/启动身份、不同userdata/settings根与profile、独立API端口、health/state身份与REGENT实际解锁验收。",
+    "验收后再设置真实URL/PID/profile；保留当前127.0.0.1:1与PID0、STOP/LLM_DRAIN，禁止8080回退。",
+    "首次入场前显式核SL_ENABLED=on、完整脑知识前缀及Jev原授权架构；本轮环境无这些实际run-config，未读.env。",
+    "首次脑/学习者启动后分别核native gpt-6.1-sol/xhigh/default；本轮未启动，源码默认值不能代替实际会话。",
+    "学习启动前准备本WT内.worktrees/exp与唯一exp-regent分支，核基线/合入目录及broker接口；本轮未创建学习者或经验树。",
+    "隔离架构的原事件完整宿主检查与中央串行集成登记仍由原主运维办理；本通道不分配正式全局R号。"
+  ],
+  "delivery": {
+    "written_to_own_inboxes": true,
+    "watcher_received_ack": false,
+    "roy_notified_ack": false
+  },
+  "changes": "仅本WT准备回执、证据和追加记录；未改源码、运维prompt、运行门禁或原Silent/中央main/live；未提交、发号或推送。"
+}

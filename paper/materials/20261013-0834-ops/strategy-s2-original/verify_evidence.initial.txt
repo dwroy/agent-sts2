@@ -1,0 +1,70 @@
+import json
+import subprocess
+from pathlib import Path
+
+OUT = Path(__file__).resolve().parent
+frames = json.loads((OUT / 'mechanism-frames.json').read_text())
+f = {x['source_line']: x for rows in frames.values() for x in rows}
+pairs = json.loads((OUT / 'verified-pairs.json').read_text())
+checks = []
+
+
+def check(name, observed, expected, lines):
+    assert observed == expected, (name, observed, expected)
+    checks.append({'name': name, 'observed': observed, 'expected': expected, 'state_lines': lines})
+
+
+def pp(n, p):
+    return f[n]['player_powers'].get(p, 0)
+
+
+def enemy(n, ident):
+    return next(e for e in f[n]['enemies'] if e['id'] == ident)
+
+
+def ep(n, ident, p):
+    return enemy(n, ident)['powers'].get(p, 0)
+
+
+check('感染棱柱T4技能/能力污染', [pp(n, 'TAINTED_POWER') for n in [274830, 274831, 274832, 274833]], [0, 3, 3, 6], [274830, 274831, 274832, 274833])
+check('下一轮火花增长', [ep(n, 'INFESTED_PRISM', 'VITAL_SPARK_POWER') for n in [274833, 274834]], [3, 6], [274833, 274834])
+check('T5三技能污染及T6清除', [pp(n, 'TAINTED_POWER') for n in [274834, 274836, 274837, 274838, 274839]], [0, 6, 12, 18, 0], [274834, 274836, 274837, 274838, 274839])
+check('T5实际净损', f[274834]['hp'] - f[274839]['hp'], 9, [274834, 274839])
+check('失落毒死后的已见返力', [pp(n, 'STRENGTH_POWER') for n in [274351, 274358]], [-4, 0], [274351, 274358])
+check('两步法及后续再抢敏', [pp(n, 'DEXTERITY_POWER') for n in [274351, 274352, 274354, 274362]], [-4, -2, 0, -2], [274351, 274352, 274354, 274362])
+check('蚌两次加压', [ep(n, 'SEWER_CLAM', 'STRENGTH_POWER') for n in [273237, 273252, 273263]], [0, 4, 8], [273237, 273252, 273263])
+check('蚌无弱喷水', [enemy(n, 'SEWER_CLAM')['attacks'][0]['damage'] for n in [273237, 273252, 273263]], [11, 15, 19], [273237, 273252, 273263])
+check('蚌轮初覆甲', [ep(n, 'SEWER_CLAM', 'PLATING_POWER') for n in [273237, 273247, 273252, 273258, 273263]], [9, 9, 8, 7, 6], [273237, 273247, 273252, 273258, 273263])
+check('蚌弱后终态', [enemy(273269, 'SEWER_CLAM')['attacks'][0]['damage'], f[273269]['hp'], enemy(273269, 'SEWER_CLAM')['hp']], [14, 0, 16], [273269])
+check('电击力/攻击成长', [(ep(n, 'ZAPBOT', 'STRENGTH_POWER'), enemy(n, 'ZAPBOT')['attacks'][0]['damage']) for n in [274308, 274313]], [(2, 17), (4, 19)], [274308, 274313])
+check('同现存电击index重排', [enemy(n, 'ZAPBOT')['index'] for n in [274308, 274313]], [4, 3], [274308, 274313])
+check('沙虫末轮挡/实际结算', [f[276433]['hp'], f[276433]['block'], f[276434]['hp'], enemy(276434, 'THE_INSATIABLE')['hp']], [5, 22, 0, 130], [276433, 276434])
+check('阶段切换清毒/力与新HP', [ep(277512, 'TEST_SUBJECT', 'POISON_POWER'), ep(277513, 'TEST_SUBJECT', 'POISON_POWER'), ep(277513, 'TEST_SUBJECT', 'STRENGTH_POWER'), enemy(277513, 'TEST_SUBJECT')['max_hp']], [4, 0, 0, 212], [277512, 277513])
+check('零毒触媒2', [pp(277519, 'ACCELERANT_POWER'), ep(277519, 'TEST_SUBJECT', 'POISON_POWER')], [2, 0], [277519])
+check('后获敏捷不倒补挡', [(pp(n, 'DEXTERITY_POWER'), f[n]['block']) for n in [277523, 277526, 277527]], [(5, 23), (6, 23), (6, 23)], [277523, 277526, 277527])
+check('末轮实际扣37', enemy(277519, 'TEST_SUBJECT')['hp'] - enemy(277528, 'TEST_SUBJECT')['hp'], 37, [277519, 277528])
+check('黑暗镣铐临时力量', [ep(n, 'CRUSHER', 'STRENGTH_POWER') for n in [278236, 278237, 278242]], [0, -9, 0], [278236, 278237, 278242])
+check('轮初14加卡牌6且零损', [f[278236]['block'], f[278240]['block'], f[278236]['hp'] - f[278242]['hp']], [14, 20, 0], [278236, 278240, 278242])
+check('朝向及弱分列', [enemy(n, 'ROCKET')['attacks'][0]['damage'] for n in [278249, 278252, 278253]], [57, 38, 28], [278249, 278252, 278253])
+check('双蟹末轮实死及剩本体', [f[278261]['hp'], [e['hp'] for e in f[278261]['enemies']]], [0, [153, 125]], [278261])
+won = [x for x in pairs['attempts']['YF0LXT1QSTGG'] if x['floor'] == 33 and x['attempt'] == 2]
+check('同局SL成功反例', [(x['result'], x['end_hp']) for x in won], [('won', 20)], [])
+
+manifest = json.loads((OUT / 'evidence-manifest.json').read_text())
+changed = []
+for path, row in manifest['source'].items():
+    if row['equal']:
+        continue
+    base = subprocess.check_output(['git', 'show', manifest['base'] + ':' + path]).decode().splitlines()
+    live = subprocess.check_output(['git', 'show', manifest['live_snapshot'] + ':' + path]).decode().splitlines()
+    assert len(base) == len(live)
+    for old, new in zip(base, live):
+        if old != new:
+            assert old.lstrip().startswith(('//', '*')) and new == old.replace('Roy', 'Dai'), path
+            changed.append({'path': path, 'before': old, 'after': new})
+(OUT / 'source-comment-differences.json').write_text(json.dumps(changed, ensure_ascii=False, indent=2) + '\n')
+(OUT / 'evidence-checks.json').write_text(json.dumps({'scope': '冻结日志取证算术，未运行生产源码测试',
+    'checks': checks, 'pair_count': len(pairs['pairs']), 'comment_difference_lines': len(changed),
+    'production_tests': {'tsc': None, 'vitest': None, 'cases': None}}, ensure_ascii=False, indent=2) + '\n')
+print(json.dumps({'evidence_checks': len(checks), 'verified_pairs': len(pairs['pairs']),
+    'comment_difference_lines': len(changed), 'production_tests': None}, ensure_ascii=False))

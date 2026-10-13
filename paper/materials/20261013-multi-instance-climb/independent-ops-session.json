@@ -1,0 +1,162 @@
+{
+  "at": "2026-10-13T08:51:34+08:00",
+  "request_id": "roy-20261013-isolated-character-climb",
+  "session_id": "01a132b0-1d62-76b3-a8e8-17a73cdcdb15",
+  "headless_initial_turn_started": true,
+  "initial_turn_complete": false,
+  "Herdr_workspace": "wV",
+  "Herdr_session_attachment_complete": true,
+  "runtime_root": "/home/dw/Projects/agent-sts2/.worktrees/regent-climb",
+  "runtime_commit": "bfdf4bbec4f70df04ff2296041c59f8f59abeefe",
+  "isolation_source": "d9044ce46",
+  "original_ops_session": "01a12bec-c83f-7c21-b76f-eb8e5304eb8f",
+  "model_native_readback": {
+    "session_meta": {
+      "id": "01a132b0-1d62-76b3-a8e8-17a73cdcdb15",
+      "cwd": "/home/dw/Projects/agent-sts2/.worktrees/regent-climb",
+      "model_provider": "openai"
+    },
+    "native_turn": {
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "approval_policy": "never",
+      "sandbox_policy": {
+        "type": "workspace-write",
+        "writable_roots": [
+          "/home/dw/Projects/agent-sts2/.git"
+        ],
+        "network_access": false,
+        "exclude_tmpdir_env_var": false,
+        "exclude_slash_tmp": false
+      }
+    },
+    "rollout_path": "/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/learner/sessions/2026/10/13/rollout-2026-10-13T08-36-05-01a132b0-1d62-76b3-a8e8-17a73cdcdb15.jsonl"
+  },
+  "gameplay_admission": false,
+  "temporary_denial_endpoint": "http://127.0.0.1:1",
+  "STOP_present": true,
+  "LLM_DRAIN_present": true,
+  "schema": "independent-ops-session-v2",
+  "status": "persistent_sandbox_ops_running_game_admission_held",
+  "space": "wV",
+  "pane": "wV:p1",
+  "agent": "regent-ops",
+  "branch": "regent-climb",
+  "same_initialized_session_resumed": true,
+  "new_session_created_by_primary_this_wake": false,
+  "headless_initial_exit": 1,
+  "headless_aborted_native_verified": true,
+  "headless_exit1_preserved": true,
+  "initial_original_event_still_pending_not_marked_done": true,
+  "handoff_real_native_turn_complete": true,
+  "native_current": {
+    "turn_id": "01a132bb-c142-7b40-aff4-7fb2f69a4a2c",
+    "cwd": "/home/dw/Projects/agent-sts2/.worktrees/regent-climb",
+    "model": "gpt-6.1-sol",
+    "effort": "xhigh",
+    "approval_policy": "never",
+    "sandbox_policy": {
+      "type": "workspace-write",
+      "writable_roots": [
+        "/home/dw/Projects/agent-sts2/.git"
+      ],
+      "network_access": false,
+      "exclude_tmpdir_env_var": false,
+      "exclude_slash_tmp": false
+    }
+  },
+  "service_tier": "default",
+  "service_tier_basis": "actual foreground Codex argv -c service_tier=default",
+  "native_receipt": {
+    "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/learner/sessions/2026/10/13/rollout-2026-10-13T08-36-05-01a132b0-1d62-76b3-a8e8-17a73cdcdb15.jsonl",
+    "offset": 1029396,
+    "bytes": 6533,
+    "sha256": "16eab910eca459b00605590219c012cf3d9bc12691790a519907e4d5e5c46ad9",
+    "ack_task_complete_offset": 1048181,
+    "ack_task_complete_sha256": "5758876e292bccd3479dc5e920242a53e90194892909a5a608c6331346aca8c1"
+  },
+  "actual_agent_readback": {
+    "id": "cli:agent:get",
+    "result": {
+      "agent": {
+        "agent": "codex",
+        "agent_status": "idle",
+        "cwd": "/home/dw/Projects/agent-sts2/.worktrees/regent-climb",
+        "focused": false,
+        "foreground_cwd": "/home/dw/Projects/agent-sts2/.worktrees/regent-climb",
+        "interactive_ready": true,
+        "name": "regent-ops",
+        "pane_id": "wV:p1",
+        "revision": 54,
+        "state_change_seq": 2119,
+        "tab_id": "wV:t1",
+        "terminal_id": "term_65dad5fafe497390",
+        "terminal_title": "确认储君接管门禁 | regent-climb",
+        "terminal_title_stripped": "确认储君接管门禁 | regent-climb",
+        "workspace_id": "wV"
+      },
+      "type": "agent_info"
+    }
+  },
+  "broker": {
+    "root": "/home/dw/Projects/agent-sts2/.worktrees/regent-climb",
+    "state_dir": "/home/dw/Projects/agent-sts2/.worktrees/regent-climb/ops/codex-ops",
+    "requests": "/home/dw/Projects/agent-sts2/.worktrees/regent-climb/ops/codex-ops/broker",
+    "session_file": "/home/dw/Projects/agent-sts2/.worktrees/regent-climb/ops/codex-ops/session-id",
+    "own_initial_broker_verified": true,
+    "own_initial_procs_readback": "1731725 /home/dw/.local/node/bin/node --import ./agent/node_modules/tsx/dist/loader.mjs ops/codex/main.ts wake\nops/STOP present\n",
+    "lifecycle": "original main.ts wake-scoped broker; no broker assumed between idle wakes",
+    "hosting": "herdr",
+    "no_second_cron": true,
+    "loop_not_started": true
+  },
+  "permissions": "original sandbox profile, no host grant",
+  "credential_contents_read_or_copied": false,
+  "own_holds_sha256": {
+    "ops/STOP": "3fda7b7839670b74e831d9fb360fc1c69d1e16261090b3f12bacdec507c8a36d",
+    "ops/codex-ops/LLM_DRAIN": "86155942d3d645f33bd28c4173a426bad91328be3cfe731e4e048453ece8441e"
+  },
+  "expected_pid": 0,
+  "regent_game_started": false,
+  "regent_knowledge": "empty, no other-character experience consumed",
+  "original_ops": {
+    "session_id": "01a12bec-c83f-7c21-b76f-eb8e5304eb8f",
+    "pane": "wJ:p5",
+    "same_session_verified": true,
+    "still_running": {
+      "id": "cli:agent:get",
+      "result": {
+        "agent": {
+          "agent": "codex",
+          "agent_status": "working",
+          "cwd": "/home/dw/Projects/agent-sts2",
+          "focused": false,
+          "foreground_cwd": "/home/dw/Projects/agent-sts2",
+          "interactive_ready": true,
+          "name": "ops",
+          "pane_id": "wJ:p5",
+          "revision": 334,
+          "state_change_seq": 2106,
+          "tab_id": "wJ:t5",
+          "terminal_id": "term_65d18dccdc7e311",
+          "terminal_title": "⠦ 处理调度器交接事件 | agent-sts2",
+          "terminal_title_stripped": "处理调度器交接事件 | agent-sts2",
+          "workspace_id": "wJ"
+        },
+        "type": "agent_info"
+      }
+    },
+    "game_pid": 34676,
+    "game_process_readback": "paper/materials/20261013-0834-ops/original-game-process-native-readback.json"
+  },
+  "delegated_owner": "regent-ops, same request and thread",
+  "pending": [
+    "independent native solo launch identity, settings/userdata/profile and endpoint health/state proof",
+    "minimal broker read-only/launcher capability if unavailable; watcher implements, new ops does not inherit host",
+    "original headless exit1/pending event safely reconcile along its own channel; never relabel initial failure as success",
+    "isolated recurring named channel/loop after admission, no parent cron alteration"
+  ],
+  "evidence_dir": "paper/materials/20261013-0834-ops",
+  "watcher_received_or_roy_notified_ack": false,
+  "focus_commands_issued": false
+}

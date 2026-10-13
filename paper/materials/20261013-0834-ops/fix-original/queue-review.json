@@ -1,0 +1,11 @@
+{
+  "base": "800bc5eba27cffe6643e79642c3d2698eec10f27",
+  "live": "4192688e8f9edc9eaa3c37a7928ec951216ccc6e",
+  "queue_lines": 1125,
+  "sha256": "d4ca7ebe4ad20b12e740fbddf8f5eac94f1e7099e4c2d23302d7c2bb60bb115e",
+  "historical_items": 167,
+  "historical_commits": 165,
+  "source_paths": 338,
+  "changes_since_prior": [],
+  "new_queue_text": "\n- 2026-10-13 08:00:52 CST **host-loop-time-cap-wall-clock-061301（非对局阻塞，原普通基础设施修复链待认领）**：agent/tests/loop.test.ts:576，原批20261013-061301-experience-update在live79ae8287/tree2615269a完整tsc+vitest exit1，唯一失败“runLoop the time cap waits for the fight to end, up to a grace period (TQX5: stopped before the boss's turn)”的map.elapsed实际1072ms而断言<850ms；395文件/4221项通过、2项原跳过，完整原日志及SHA/覆盖见paper/materials/20261013-0749-ops/host-check-decision.json。本批只更改silent经验，当前live4192688e相对检查树只刷新fight-value.json，没有执行源变化。根因未证，不能把超时负载猜测或固定测试直接当生产对局bug；本轮没有对应新对局局号，不制造证据。只由原学习者依据固定夹具修确定性/核真实清理与时间上限语义，不降低断言、生产时限/规则或扩大权限，不重复已过全套。已注册失败单项清单c3cfd10f（完整SHA见同目录host-check-continuation-registration.json），校验通过但原broker请求exit2且空输出、未产生补验执行回执；ops/codex-ops-learn.py:489—500存在前置拒绝路径，确切拒绝阶段未定位，沿原调用链补诊断/接续，不绕过原锁/owner、不重派旧失败、不造完整通过。\n"
+}

@@ -1,0 +1,53 @@
+{
+  "at": "2026-10-13T08:38:34+08:00",
+  "herdr_env": "1",
+  "primary_session": "01a12bec-c83f-7c21-b76f-eb8e5304eb8f",
+  "regent_session": "01a132b0-1d62-76b3-a8e8-17a73cdcdb15",
+  "primary_pane": {
+    "argv": [
+      "herdr",
+      "pane",
+      "get",
+      "wJ:p5"
+    ],
+    "rc": 0,
+    "out": "{\"id\":\"cli:pane:get\",\"result\":{\"pane\":{\"agent\":\"codex\",\"agent_status\":\"working\",\"cwd\":\"/home/dw/Projects/agent-sts2\",\"focused\":false,\"foreground_cwd\":\"/home/dw/Projects/agent-sts2\",\"label\":\"ops\",\"pane_id\":\"wJ:p5\",\"revision\":334,\"scroll\":{\"max_offset_from_bottom\":0,\"offset_from_bottom\":0,\"viewport_rows\":44},\"tab_id\":\"wJ:t5\",\"terminal_id\":\"term_65d18dccdc7e311\",\"terminal_title\":\"⠴ 处理调度器交接事件 | agent-sts2\",\"terminal_title_stripped\":\"处理调度器交接事件 | agent-sts2\",\"workspace_id\":\"wJ\"},\"type\":\"pane_info\"}}\n",
+    "err": ""
+  },
+  "regent_pane": {
+    "argv": [
+      "herdr",
+      "pane",
+      "get",
+      "wV:p1"
+    ],
+    "rc": 0,
+    "out": "{\"id\":\"cli:pane:get\",\"result\":{\"pane\":{\"agent_status\":\"unknown\",\"cwd\":\"/home/dw/Projects/agent-sts2\",\"focused\":false,\"foreground_cwd\":\"/home/dw/Projects/agent-sts2\",\"pane_id\":\"wV:p1\",\"revision\":1,\"scroll\":{\"max_offset_from_bottom\":0,\"offset_from_bottom\":0,\"viewport_rows\":44},\"tab_id\":\"wV:t1\",\"terminal_id\":\"term_65dad5fafe497390\",\"terminal_title\":\"dw@xdwin: ~/Projects/agent-sts2\",\"terminal_title_stripped\":\"dw@xdwin: ~/Projects/agent-sts2\",\"workspace_id\":\"wV\"},\"type\":\"pane_info\"}}\n",
+    "err": ""
+  },
+  "workspaces": {
+    "argv": [
+      "herdr",
+      "workspace",
+      "list"
+    ],
+    "rc": 0,
+    "out": "{\"id\":\"cli:workspace:list\",\"result\":{\"type\":\"workspace_list\",\"workspaces\":[{\"active_tab_id\":\"wJ:tJT\",\"agent_status\":\"working\",\"focused\":false,\"label\":\"agent-sts2\",\"number\":1,\"pane_count\":8,\"tab_count\":8,\"workspace_id\":\"wJ\"},{\"active_tab_id\":\"wN:t1\",\"agent_status\":\"working\",\"focused\":true,\"label\":\"agent-hearthstone\",\"number\":2,\"pane_count\":9,\"tab_count\":9,\"workspace_id\":\"wN\",\"worktree\":{\"checkout_path\":\"/home/dw/Projects/agent-hearthstone\",\"is_linked_worktree\":false,\"repo_key\":\"/home/dw/Projects/agent-hearthstone/.git\",\"repo_name\":\"agent-hearthstone\",\"repo_root\":\"/home/dw/Projects/agent-hearthstone\"}},{\"active_tab_id\":\"wV:t1\",\"agent_status\":\"unknown\",\"focused\":false,\"label\":\"sts2-climb-2\",\"number\":3,\"pane_count\":1,\"tab_count\":1,\"workspace_id\":\"wV\"}]}}\n",
+    "err": ""
+  },
+  "regent_agent": {
+    "argv": [
+      "herdr",
+      "agent",
+      "get",
+      "regent-ops"
+    ],
+    "rc": 1,
+    "out": "",
+    "err": "{\"error\":{\"code\":\"agent_not_found\",\"message\":\"agent target regent-ops not found\"},\"id\":\"cli:agent:get\"}\n"
+  },
+  "regent_holds": {
+    "ops/STOP": "3fda7b7839670b74e831d9fb360fc1c69d1e16261090b3f12bacdec507c8a36d",
+    "ops/codex-ops/LLM_DRAIN": "86155942d3d645f33bd28c4173a426bad91328be3cfe731e4e048453ece8441e"
+  }
+}

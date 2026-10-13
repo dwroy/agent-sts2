@@ -1,0 +1,138 @@
+{
+  "at": "2026-10-13T08:43:53+08:00",
+  "report": {
+    "task": "fix-batch",
+    "base": "800bc5eba27cffe6643e79642c3d2698eec10f27",
+    "fixes": [
+      {
+        "item": "host-loop-time-cap-wall-clock-061301：固定时钟隔离时间上限测试",
+        "commit": "b3c6dd700b00d0d8b17d5d2efe6fe9aa353618fa",
+        "test": "agent/tests/loop-time-cap.test.ts",
+        "fails_without_fix": true
+      },
+      {
+        "item": "host-loop-time-cap-wall-clock-061301：补验入口静默 exit2 的拒绝诊断",
+        "commit": "63f656fb07a21a7496353234269901a832eae497",
+        "test": "agent/tests/learner-check-continuation.test.ts",
+        "fails_without_fix": true
+      }
+    ],
+    "skipped": [
+      {
+        "item": "其余机制、出牌、药水、SL、终局、路线及休息提案",
+        "reason": "策略类：沿既有strategy-proposal；有限子项不关闭整个宽提案，本批未添加游戏判断。"
+      },
+      {
+        "item": "silent-0365：未建模定向药水目标截成前两个",
+        "reason": "独立药水/结构提案：当前combat-plan.ts:3909仍为targets.slice(0, 2)；silent-proposal-70c22e94eda8f8a9已承接合法目标及题目容量契约，本批不混入原实现任务。"
+      },
+      {
+        "item": "rest-timeout-accepted-route-not-committed（silent-0446，MEXYTC0Z2MQQ F12）",
+        "reason": "太大/独立结构提案：当前loop.ts异常分支仍绕过applyResolved；原silent-proposal-2d3aa8dfb27dbe3f明确交strategy-proposal实现待确认事务、同局同房动作确认、重启回放和一次性提交。不能无条件apply或仅凭HP变化确认。"
+      },
+      {
+        "item": "silent-0332：双boss接续资源异常根因",
+        "reason": "证据不足：已有分支/seed/资源诊断，VAC6Z1PZ1QJG及64VJC5XT2AT2 F47缺可重放触发样本；保留原提案链，不猜填HP或药水。"
+      },
+      {
+        "item": "core-build-notify-222802-rc2历史失败恢复",
+        "reason": "证据不足：5c92f2aa已修后续失败诊断；旧rc2无stderr，不能证明未发送，保留幂等记录且不重发。"
+      },
+      {
+        "item": "sandbox-glob-startup-race上游目录竞态",
+        "reason": "证据不足：bc2c40e31与4fef181d5已补会话前有界恢复及预检复验；上游目录创建/删除者未证，保留原失败及权限边界。"
+      },
+      {
+        "item": "调度公平性、mod短暂超时、既有测试超时的精确宿主时序",
+        "reason": "证据不足：尚未证明永久饥饿、mod内部原因或历史负载因果；固定夹具修复不替代因果证据。"
+      },
+      {
+        "item": "具名卡全入口/未知派发/量化消费者、全漏斗/学习优先级/统一资源价值/F33归因/B4-B5/缓存性能专项",
+        "reason": "太大/独立功能或策略研究：继续原专用任务和父要求；已上线事件子项及工具入口不关闭整个需求。"
+      },
+      {
+        "item": "host-loop-time-cap-wall-clock-061301：历史宿主时序及原真实补验接续",
+        "reason": "证据不足：历史空输出 exit2 的具体阶段仍未知；当前原工作树由080221-experience-update占用，未重发、绕过owner或改写旧完整失败。"
+      }
+    ],
+    "merged": null,
+    "tests": {
+      "tsc": 0,
+      "vitest": 0,
+      "cases": 3418
+    },
+    "code_proposals": [],
+    "implementation_domains": [],
+    "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-080052/learner/runs/20261013-080105-fix-batch/report.md"
+  },
+  "source_full_checks": {
+    "precommit-time-cap-sandbox.log": "\n RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-080052/agent\n\n\n Test Files  345 passed (345)\n      Tests  3407 passed (3407)\n   Start at  08:07:29\n   Duration  320.49s (transform 15.88s, setup 24.59s, import 69.33s, tests 1125.24s, environment 43ms)\n\n\n RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-080052/agent\n\n\n Test Files  1 passed (1)\n      Tests  11 passed (11)\n   Start at  08:12:50\n   Duration  2.11s (transform 1.58s, setup 342ms, import 1.57s, tests 71ms, environment 0ms)\n\n",
+    "precommit-time-cap-sandbox.exit": "0\n",
+    "precommit-recheck-sandbox.log": "\n RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-080052/agent\n\n\n Test Files  345 passed (345)\n      Tests  3407 passed (3407)\n   Start at  08:14:14\n   Duration  363.05s (transform 15.79s, setup 30.05s, import 74.90s, tests 1272.10s, environment 68ms)\n\n\n RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-080052/agent\n\n\n Test Files  1 passed (1)\n      Tests  11 passed (11)\n   Start at  08:20:18\n   Duration  2.17s (transform 1.63s, setup 342ms, import 1.63s, tests 71ms, environment 0ms)\n\n",
+    "precommit-recheck-sandbox.exit": "0\n"
+  },
+  "validation": {
+    "source_sha256": {
+      "agent/tests/loop-time-cap-fixture.ts": "1416a73e33940df425ed570791642f050fc3e7b8d95dbbd0d23fd58ef6e5860f",
+      "agent/tests/loop-time-cap.test.ts": "2f3f160f4e962f134ab58e929da1a1a6926f82a67d69347e6e0b1abb7effce1d",
+      "agent/tests/loop.test.ts": "9bd8c779ad48211de280c9dbf4425123520e7a736e1461134ede82f386242bdf",
+      "ops/codex-ops-learn.py": "161ede6672299f14fc4240d150b4f8554e69a2fb41065bd5ea65f1a17de922ba",
+      "ops/tests/test_learner_check_continuation.py": "9f9315f06182f7d6b095b170e152c889002d744bb4cee1c63719c2900fdb8089"
+    },
+    "red": {
+      "time_cap": 1,
+      "recheck": 1
+    },
+    "green": {
+      "time_cap": 0,
+      "original_time_cap": 0,
+      "recheck": 0,
+      "wrapper": 0
+    },
+    "gitleaks": {
+      "time_cap": 0,
+      "recheck": 0
+    },
+    "no_real_llm_or_http": true,
+    "game_source_modified": false,
+    "production_deadlines_modified": false,
+    "ledger_matching_bug_infra": []
+  },
+  "original_conflicts": {
+    "files": [
+      "eval/versions.json",
+      "knowledge/characters/silent/boss-damage.json",
+      "knowledge/characters/silent/fight-value-gates.json",
+      "knowledge/characters/silent/fight-value.json",
+      "knowledge/characters/silent/monster-records.json",
+      "knowledge/characters/silent/outcome-stats.json",
+      "knowledge/characters/silent/room-costs.json",
+      "knowledge/common/card-upgrades.json",
+      "knowledge/common/monster-db.json",
+      "knowledge/common/move-model.json",
+      "notes/for-roy.md",
+      "notes/lessons.md",
+      "ops/inbox-dev.md",
+      "paper/data/README.md",
+      "paper/data/commits.csv",
+      "paper/data/cost-curve-silent.csv",
+      "paper/data/cost-silent.csv",
+      "paper/data/cost-sources.json",
+      "paper/data/cost-unattributed.csv",
+      "paper/data/decisions_by_label.csv",
+      "paper/data/learning-curve-silent.csv",
+      "paper/data/runs.csv",
+      "paper/data/summary.json",
+      "paper/data/verification.json",
+      "paper/materials/decision-log.md",
+      "paper/materials/experience-changelog-silent.md",
+      "paper/materials/learning/ledger.jsonl",
+      "paper/materials/silent/cost.md"
+    ],
+    "count": 28,
+    "knowledge": 9,
+    "source_conflicts": 0
+  },
+  "historical_refusal_cause_not_inferred": true,
+  "no_game_rules_changed": true
+}
