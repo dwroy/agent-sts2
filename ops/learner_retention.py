@@ -19,7 +19,7 @@ import tarfile
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from learner_checks import read_report
 
-BATCH = re.compile(r"[0-9]{8}-[0-9]{6}(?:-(?:s2-)?(?:experience-update|fix-batch|strategy-proposal))?")
+BATCH = re.compile(r"[0-9]{8}-[0-9]{6}(?:-(?:s2-)?(?:experience-update|fix-batch|strategy-proposal|ascension-audit))?")
 SCRATCH = re.compile(r"[0-9]{8}-[0-9]{6}-[a-z][a-z0-9-]*")
 SHA = re.compile(r"[0-9a-f]{40}")
 SMALL = 128 * 1024
@@ -155,7 +155,7 @@ def checked_experience(live, commit, character):
         return None
 
 
-def admission(root, state_dir, state, batch_id):
+def admission(root, state_dir, state, batch_id, check_ignored=True):
     if not BATCH.fullmatch(batch_id):
         raise ValueError("invalid batch identity")
     batch = state.get("batches", {}).get(batch_id, {})
@@ -250,7 +250,7 @@ def admission(root, state_dir, state, batch_id):
         if not ancestor(root, head) or not ancestor(live, head):
             raise ValueError("unpublished worktree HEAD retained")
         # Other ignored files are not part of this batch's scratch. Never delete them accidentally.
-        for name in git(tree, "ls-files", "--others", "--ignored", "--exclude-standard", "-z").split(b"\0"):
+        for name in (git(tree, "ls-files", "--others", "--ignored", "--exclude-standard", "-z") if check_ignored else b"").split(b"\0"):
             if not name:
                 continue
             path = tree / os.fsdecode(name)
@@ -277,6 +277,12 @@ def active_cwd(path):
         except OSError:
             continue
     return False
+
+
+def require_host_process_view():
+    # A Codex sandbox sees only its own PID namespace, so an empty process scan proves nothing.
+    if Path("/proc/1/comm").read_text().strip() not in ("systemd", "init"):
+        raise ValueError("host process visibility required for reclamation or restoration")
 
 
 def files_under(root, scratch):
@@ -474,6 +480,11 @@ def sweep(root, state_dir, apply, limit):
         if len(result["results"]) >= limit:
             break
     atomic(state_dir / "retention/last-sweep.json", result)
+    remaining = limit - len(result["results"])
+    if remaining > 0:
+        import worktree_retention
+        result["workspaces"] = worktree_retention.sweep(root, state_dir, apply, remaining)
+        atomic(state_dir / "retention/last-sweep.json", result)
     return result
 
 
@@ -628,6 +639,8 @@ def main():
     if not 1 <= args.limit <= 32 or not (root / ".git").exists():
         parser.error("invalid project or bounded limit")
     try:
+        if args.apply or args.command == "restore":
+            require_host_process_view()
         if args.command == "request":
             if not args.batch:
                 parser.error("request requires exact batch")
