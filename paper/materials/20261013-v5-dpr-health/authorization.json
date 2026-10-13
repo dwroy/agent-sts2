@@ -1,0 +1,20 @@
+{
+  "at": "2026-10-13T21:31:52.842318+08:00",
+  "user": "检查原因，需要作为框架固定流程",
+  "scope": "Silent V5 DPR coverage loss, controlled historical diagnosis plus persistent per-run and periodic framework health checks; no gameplay rule or engine change without separate evidence",
+  "worktree": "/home/dw/Projects/agent-sts2/.worktrees/v5-dpr-health-20261013",
+  "base": "d41808c1099d74d6291711e86f4da93843e7a718",
+  "initial_evidence": "paper/materials/20261013-v5-runtime-audit/runtime-status-2121.json",
+  "failed_run": "YP428GT9ZLL3",
+  "observed": "12 B3 failures at ~11 seconds: 10 below 300 paired samples, 2 with zero; 2 DPR questions among15 construction calls. THE_KIN A10.",
+  "thresholds_preserved": {
+    "requested_samples": 1000,
+    "minimum_shown": 300,
+    "default_deadline_ms": 11000
+  },
+  "existing_learner_notice": {
+    "path": "paper/materials/20261013-2120-ops/learner-event-handling.json",
+    "sha256": "2c58ae14ddb121edbe0a68b7cc9656821ad088e612e4e4ba13c36e22ad952415"
+  },
+  "no_duplicate_learning_or_restart": true
+}
