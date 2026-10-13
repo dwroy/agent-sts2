@@ -50,9 +50,10 @@
  *   BRAIN_CODEX_USAGE_STOP_PCT or credits in use rest codex for the rest of the process (the used-up-plan path), so a
  *   call never goes out past the stop. Each brain.jsonl row about codex carries the latest reading (`limits`).
  */
-import { appendFileSync, existsSync, mkdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, isAbsolute, join } from "node:path";
+import { appendJsonLine } from "../../core/util/jsonl.js";
 
 import { CODEX_CONTEXT_WINDOW, CODEX_AUTO_COMPACT_TOKENS, DEFAULT_CODEX_EFFORT, DEFAULT_CODEX_MODEL, type BrainConfig, type BrainEngineSettings } from "../../core/config.js";
 import type { JsonSchema } from "../tools/types.js";
@@ -984,7 +985,7 @@ export class CodexEngine implements BrainEngine {
     if (!file) return;
     try {
       mkdirSync(dirname(file), { recursive: true });
-      appendFileSync(file, `${JSON.stringify(row)}\n`, "utf8");
+      appendJsonLine(file, row);
     } catch {
       // the trace must never break play
     }

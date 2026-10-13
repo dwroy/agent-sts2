@@ -4,8 +4,9 @@
  * and what makes `replay` meaningful.
  */
 
-import { appendFileSync, mkdirSync } from "node:fs";
+import { mkdirSync } from "node:fs";
 import { basename, dirname, join } from "node:path";
+import { appendJsonLine } from "../core/util/jsonl.js";
 
 import type { BrainDecider } from "../brain/types.js";
 import type { JsonValue } from "../core/util/json.js";
@@ -154,7 +155,7 @@ export function createDecisionLog(path: string): DecisionLog {
     write(record) {
       try {
         ensure();
-        appendFileSync(path, `${JSON.stringify(record)}\n`, "utf8");
+        appendJsonLine(path, record);
       } catch {
         // Losing a log line must never stop a run.
       }
@@ -192,7 +193,7 @@ export function createStateLog(path: string): StateLog {
           mkdirSync(dirname(path), { recursive: true });
           ready = true;
         }
-        appendFileSync(path, `${JSON.stringify(entry)}\n`, "utf8");
+        appendJsonLine(path, entry);
       } catch {
         // Same rule as the decision log: never stop a run over a log line.
       }
