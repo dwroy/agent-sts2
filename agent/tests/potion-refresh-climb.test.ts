@@ -8,7 +8,7 @@ const base = mkdtempSync(join(tmpdir(), "potion-refresh-climb-"));
 afterAll(() => rmSync(base, { recursive: true, force: true }));
 let sequence = 0;
 
-async function run(target: string, rows: object[], dry: boolean) {
+async function run(target: string, rows: object[], dry: boolean, envTarget?: string) {
   const root = join(base, String(++sequence));
   for (const name of ["knowledge/builders", "knowledge/characters/silent", "logs", "data/logdb-venv/bin"]) mkdirSync(join(root, name), { recursive: true });
   const script = join(root, "knowledge/builders/refresh-potion-equivalents.sh");
@@ -22,7 +22,7 @@ async function run(target: string, rows: object[], dry: boolean) {
   chmodSync(python, 0o755);
   const result = await new Promise<{ code: number | null; out: string }>((resolveResult, reject) => {
     const child = spawn("bash", [script, ...(dry ? ["--dry-run"] : []), "--character", "silent"],
-      { env: { PATH: process.env.PATH, ENV_FILE: envFile, TEST_ARGS: join(root, "args") } });
+      { env: { PATH: process.env.PATH, ENV_FILE: envFile, TEST_ARGS: join(root, "args"), ...(envTarget !== undefined ? { TARGET_ASCENSION: envTarget } : {}) } });
     let out = "";
     child.stdout.on("data", (v: Buffer) => { out += v.toString(); });
     child.stderr.on("data", (v: Buffer) => { out += v.toString(); });
@@ -52,4 +52,10 @@ it("does not invent a level from another character or malformed evidence", async
 
 it("still rejects unsupported configuration values", async () => {
   expect((await run("unexpected", [], true)).code).toBe(2);
+});
+
+it("uses the exported lane target ahead of the shared env file", async () => {
+  const result = await run("8", [{ character: "SILENT", ascension: 0 }, { character: "IRONCLAD", ascension: 99 }], false, "climb");
+  expect(result.code, result.out).toBe(0);
+  expect(readFileSync(join(result.root, "args"), "utf8")).toContain("--ascensions\n0\n");
 });

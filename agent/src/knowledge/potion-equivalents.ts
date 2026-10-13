@@ -135,7 +135,7 @@ const isRecord = (value: unknown): value is Record<string, unknown> => typeof va
 const isNum = (value: unknown): value is number => typeof value === "number" && Number.isFinite(value);
 
 /** The parsed file, checked; throws KnowledgeLoadError naming the first problem. */
-export function parsePotionEquivalents(text: string, path: string): PotionEquivalentsFile {
+export function parsePotionEquivalents(text: string, path: string, allowUnmeasuredRates = false): PotionEquivalentsFile {
   let parsed: unknown;
   try {
     parsed = JSON.parse(text);
@@ -149,9 +149,10 @@ export function parsePotionEquivalents(text: string, path: string): PotionEquiva
   const meta = parsed["meta"];
   if (!isRecord(meta) || typeof meta["generated"] !== "string" || !isNum(meta["min_n"])) fail("缺少 meta.generated / meta.min_n");
   const rates = parsed["rates"];
-  if (!isRecord(rates) || Object.keys(rates).length === 0) fail("缺少 rates 或为空");
+  if (!isRecord(rates) || (!allowUnmeasuredRates && Object.keys(rates).length === 0)) fail("缺少 rates 或为空");
   for (const [asc, acts] of Object.entries(rates as Record<string, unknown>)) {
-    if (!isRecord(acts) || Object.keys(acts).length === 0) fail(`rates.${asc} 为空`);
+    // New characters can have explicit unmeasured buckets; their absence of rows is not a value.
+    if (!isRecord(acts) || (!allowUnmeasuredRates && Object.keys(acts).length === 0)) fail(`rates.${asc} 为空`);
     for (const [act, row] of Object.entries(acts as Record<string, unknown>)) {
       for (const field of ["fights", "T", "D", "L", "r", "h", "b", "v_card", "v_energy", "from_asc"]) {
         if (!isRecord(row) || !isNum(row[field])) fail(`rates.${asc}.${act} 缺少数字字段 ${field}`);
@@ -203,7 +204,7 @@ export function loadPotionEquivalents(dir: string = DEFAULT_KNOWLEDGE_DIR): Poti
   } catch (error) {
     throw new KnowledgeLoadError(`药水换算表读取失败 ${path}: ${(error as Error).message}`);
   }
-  const file = parsePotionEquivalents(text, path);
+  const file = parsePotionEquivalents(text, path, knowledgeCharacter() !== DEFAULT_CHARACTER);
   cache.set(path, { stamp, file });
   return file;
 }
@@ -220,7 +221,7 @@ export function loadPotionEquivalentsOrNull(dir: string = DEFAULT_KNOWLEDGE_DIR)
 /** The ascension the table has numbers for: this one, else the nearest (the lower on a tie); null when none. */
 export function tableAscension(file: PotionEquivalentsFile, ascension: number): number | null {
   const ascs = Object.keys(file.rates)
-    .filter((key) => /^\d+$/.test(key))
+    .filter((key) => /^\d+$/.test(key) && Object.keys(file.rates[key] ?? {}).length > 0)
     .map(Number)
     .sort((a, b) => Math.abs(a - ascension) - Math.abs(b - ascension) || a - b);
   return ascs[0] ?? null;
