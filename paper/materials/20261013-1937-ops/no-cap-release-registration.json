@@ -1,0 +1,80 @@
+{
+  "at": "2026-10-13T19:42:46.317936+08:00",
+  "source": "62178619cb5cf1690e2e8afa73356ab80413a34e",
+  "behavior_commit": "fa0a436f9b283e83a322a6821b01696f22153a62",
+  "main_behavior_commit": "fa557ebdce596d28b43f82a60c1e435f7e34a5d0",
+  "release_id": "V5-R329",
+  "before": {
+    "main": "bcb871548bf806107f0697bad842baf0b7d3dc29",
+    "live": "fa0a436f9b283e83a322a6821b01696f22153a62"
+  },
+  "after": {
+    "main": "cac733b7488eec335720b8226ef606a84d1ebe95",
+    "live": "67657d7420075dbb80dc2a5cebb7e53cad07fed3"
+  },
+  "source_leaves": [
+    {
+      "path": "agent/src/construction/adapter.ts",
+      "source_sha256": "8e8eb7ac9ab2fc5223404879c789c00d1583173fcec271a88993a4751626e478",
+      "main_live_exact": true
+    },
+    {
+      "path": "agent/src/construction/planner.ts",
+      "source_sha256": "00c6fe9d6a0a8d17208271b441c641b74e34b60b05116189a2f4172caaf3e36b",
+      "main_live_exact": true
+    },
+    {
+      "path": "agent/src/construction/types.ts",
+      "source_sha256": "554781cfaf37c62dd2384e6d076de141f4199a9fb995e154af16efb4fcbc0291",
+      "main_live_exact": true
+    },
+    {
+      "path": "agent/src/eye/run-config.ts",
+      "source_sha256": "4eb7dfcf5f90686f5cef2891179240cf1993ebee065c1cf425aa06223a2ed487",
+      "main_live_exact": true
+    },
+    {
+      "path": "agent/src/memory/run-constraints.ts",
+      "source_sha256": "a3016ef6dbe835a9528e96a958cc028418093cc0a83c231191e26f5f5ff54350",
+      "main_live_exact": true
+    },
+    {
+      "path": "agent/tests/historical-run-constraints.test.ts",
+      "source_sha256": "1e806c350f5c270352e3b474616ad65f8160c766244297406693fa5e30118292",
+      "main_live_exact": true
+    },
+    {
+      "path": "agent/tests/silent-deck-cap.test.ts",
+      "source_sha256": "41c045165e085928e0e51af9148517ec1edcb83293419707517a817cda462d2e",
+      "main_live_exact": true
+    },
+    {
+      "path": "agent/tests/v5-deck-budget.test.ts",
+      "source_sha256": "08f34f604a61e14749d760f4aed05a5f4d16ec3fe92d8530ab24801dd8d54273",
+      "main_live_exact": true
+    },
+    {
+      "path": "docs/v5-construction.md",
+      "source_sha256": "7d8abb61122302432a7e70bc28bb622596dbe0293471a5ce2f0675850b36c14a",
+      "main_live_exact": true
+    }
+  ],
+  "refresh_paths": [
+    "knowledge/characters/silent/boss-damage.json",
+    "knowledge/characters/silent/construction-opportunities.json",
+    "knowledge/characters/silent/fight-value-gates.json",
+    "knowledge/characters/silent/fight-value.json",
+    "knowledge/characters/silent/monster-records.json",
+    "knowledge/characters/silent/outcome-stats.json",
+    "knowledge/characters/silent/room-costs.json",
+    "knowledge/common/card-upgrades.json",
+    "knowledge/common/monster-db.json",
+    "knowledge/common/move-model.json"
+  ],
+  "refresh_commit": "057c3efebfb45db7fe4272b76f2eb36b52db10f4",
+  "historical_registry_preserved": true,
+  "advisory_enabled": false,
+  "new_tree_host_checks_pending": false,
+  "initial_guard_refusal": "Main/live have different actual integration commits; initial live-commit-on-main ancestry check refused before any mutation, then correct per-checkout ancestry verified.",
+  "new_tree_host_checks_rc": 1
+}

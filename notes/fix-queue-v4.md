@@ -1173,3 +1173,7 @@ Roy：「上线后进 F48 反而降低一半，这才是关键，要找问题。
 - 2026-10-13 19:28:16 CST 运维 codex：[silent-deck-cap-consumer-fixture-isolation-20261013关闭四旧测试失败] sourcec099四叶已实际main/live，当前部署b67f677b完整宿主中silent-route-relic、silent-tail-resource及historical-run-constraints均通过；原四个失败名称消失且185剩余失败与原共享项完全相同。只关闭这四历史fixture兼容项，cap30规则未改，原c099 merged=null/合并受阻历史不重写，上游目录归属/旧SL/量化父项不关闭。
 
 - 2026-10-13 19:28:16 CST 运维 codex：[shared-experience-fixed-filesystem-snapshot-20261013原项宿主接续] V5新treeb67f677b全套rc1，剩余29文件185失败逐名称与a837原共享FS185完全相同、29测试blob全等；V5和cap修复通过，不算新增V5故障。原普通fix链/既有队列继续，184302活lease不打断、不造已消费、不另派重复学习；原缺失/空/损坏公共库与真实file snapshot一致性的固定验收要求保持。当前未实现/未关闭，不降低断言或生产schema。
+
+- 2026-10-13 20:04:36 CST 运维 codex：[silent-0308原非阻塞题面项重复证据，不新建任务] 学习者191301核DWW8GX3UQCQM F33T7 d378193—196/s389625—626，combat.ts:100单动作末题只攻击HP口径而漏既有沙坑1截止；其report明确new=false、原fix-queue-v4:912已有。仅关联原回报/账本repeat及pending silent-proposal-a234d05e459d0cc0，不由ops添加药水价值、强喝/无条件SL规则或重复派学习。
+
+- 2026-10-13 20:18:54 CST 运维 codex：[shared-experience-fixed-filesystem-snapshot-20261013关闭固定测试项] 原source8390c62d7真实31叶已主main/live，原184302 batch宿主tree25e961完整421文件4350项过/2skip/tsc0/vitest0；185原错误已消失，原缺失/空/损坏公共库、历史快照、所有候选/预算/负断言保持。储君lane31同source实际同步；只关闭原FS固定测试兼容项，通用池内容/稀疏加载实际消费与原EXP8/3仍原owner待闭环，保留旧失败，不删未知/降低断言或重复研究。

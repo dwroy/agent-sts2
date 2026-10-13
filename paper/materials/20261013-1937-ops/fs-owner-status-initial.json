@@ -1,0 +1,88 @@
+{
+  "at": "2026-10-13T19:40:31.725772+08:00",
+  "batch": "20261013-184302-fix-batch",
+  "state": "running",
+  "staged_source_tree": "67aa19e6dd5424bf216dafab540c58e0e5dae117",
+  "staged_paths": [
+    "agent/tests/batch-c-illusion.test.ts",
+    "agent/tests/boss-lines-planner.test.ts",
+    "agent/tests/death-move-planner.test.ts",
+    "agent/tests/historical-knowledge-fs.ts",
+    "agent/tests/inferno-planner.test.ts",
+    "agent/tests/mech-move-planner.test.ts",
+    "agent/tests/mech-rules-planner.test.ts",
+    "agent/tests/passive-pieces-planner.test.ts",
+    "agent/tests/pinned-shared-experience.test.ts",
+    "agent/tests/potion-cost.test.ts",
+    "agent/tests/rollout-best-added.test.ts",
+    "agent/tests/silent-bullet-time.test.ts",
+    "agent/tests/silent-dodge-roll.test.ts",
+    "agent/tests/silent-kusarigama.test.ts",
+    "agent/tests/silent-potion-reference.test.ts",
+    "agent/tests/silent-selection-audit.test.ts",
+    "agent/tests/silent-serpent-form.test.ts",
+    "agent/tests/silent-shackling-weak.test.ts",
+    "agent/tests/silent-sloth-replay.test.ts",
+    "agent/tests/sl-early-planner.test.ts",
+    "agent/tests/sl-explore-b2.test.ts",
+    "agent/tests/sl-explore-canon.test.ts",
+    "agent/tests/sl-explore-gaps.test.ts",
+    "agent/tests/sl-explore-potion.test.ts",
+    "agent/tests/sl-explore-whole.test.ts",
+    "agent/tests/sl-explore.test.ts",
+    "agent/tests/sl-replay-plays.test.ts",
+    "agent/tests/sl-retry-planner.test.ts",
+    "agent/tests/template-target.test.ts",
+    "agent/tests/thief-cost.test.ts",
+    "agent/tests/thief.test.ts"
+  ],
+  "logs": [
+    {
+      "path": ".worktrees/codex-fix-silent-20261013-184302/learner/runs/20261013-184332-fix-batch/sandbox-fixed-2.log",
+      "bytes": 550,
+      "sha256": "10c481233f1644394f312d6bd8888c45e94e6eae0b9dfc8615fe9da39c51d92a",
+      "tail": [
+        "",
+        "",
+        " RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-184302/agent",
+        "",
+        "",
+        " Test Files  1 passed (1)",
+        "      Tests  11 passed (11)",
+        "   Start at  19:16:14",
+        "   Duration  2.28s (transform 1.72s, setup 372ms, import 1.71s, tests 71ms, environment 0ms)",
+        ""
+      ]
+    },
+    {
+      "path": ".worktrees/codex-fix-silent-20261013-184302/learner/runs/20261013-184332-fix-batch/sandbox-before-shared-commit.log",
+      "bytes": 1168,
+      "sha256": "4255e9422cbc1b76f4d00ca6af51e55217c8fd521b7446f1198b49011b576c69",
+      "tail": [
+        "    188|       for (const context of [\"v1\", \"off\"] as const) {",
+        "",
+        "⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯",
+        "",
+        "",
+        " Test Files  1 failed | 365 passed (366)",
+        "      Tests  1 failed | 3510 passed (3511)",
+        "   Start at  19:17:28",
+        "   Duration  384.61s (transform 15.69s, setup 24.81s, import 69.30s, tests 1382.48s, environment 44ms)",
+        ""
+      ]
+    },
+    {
+      "path": ".worktrees/codex-fix-silent-20261013-184302/learner/runs/20261013-184332-fix-batch/sandbox-before-shared-commit-retry.log",
+      "bytes": 95,
+      "sha256": "93ff87359280485e52a624944444babf94fae013a0b683a1fdc2f604b8990612",
+      "tail": [
+        "",
+        " RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-184302/agent",
+        ""
+      ]
+    }
+  ],
+  "actual_phase": "Original owner retrying full suite after a new rollout-live timing timeout; not yet source committed or a final completion report.",
+  "no_uncommitted_draft_synchronized": true,
+  "no_parallel_edit_or_commit_in_active_owner_worktree": true
+}

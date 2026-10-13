@@ -1,0 +1,65 @@
+{
+  "task": "fix-batch",
+  "base": "7398d10436a9c64d73885370eeff1b4cba3230ad",
+  "fixes": [
+    {
+      "item": "silent-deck-cap-consumer-fixture-isolation-20261013：历史消费者测试隔离，旧基线候选保留",
+      "commit": "ebdebbcde48fd9a515f17c309813d8783debc434",
+      "test": "agent/tests/silent-route-relic.test.ts",
+      "fails_without_fix": true
+    },
+    {
+      "item": "shared-experience-fixed-filesystem-snapshot-20261013：历史公共经验缺失状态一致",
+      "commit": "8390c62d76fc8c7d7b6b7292121a621f4666d39c",
+      "test": "agent/tests/pinned-shared-experience.test.ts",
+      "fails_without_fix": true
+    }
+  ],
+  "skipped": [
+    {
+      "item": "其余机制、出牌、药水、SL、终局、路线及休息提案",
+      "reason": "策略类，沿已有独立 strategy-proposal 处理"
+    },
+    {
+      "item": "silent-0365：定向药水目标截断",
+      "reason": "已有独立药水及结构实现提案，本批不混入"
+    },
+    {
+      "item": "rest-timeout-accepted-route-not-committed",
+      "reason": "独立结构专项，涉及动作确认、重启回放和一次性提交"
+    },
+    {
+      "item": "silent-0332：双boss接续资源异常",
+      "reason": "缺少可重放触发证据"
+    },
+    {
+      "item": "core-build-notify-222802-rc2历史恢复",
+      "reason": "旧失败无stderr，不能证明未发送，保留幂等记录"
+    },
+    {
+      "item": "sandbox-glob-startup-race上游目录竞态",
+      "reason": "目录创建或删除者及框架根因未证"
+    },
+    {
+      "item": "调度公平性、mod短暂超时及历史测试时序",
+      "reason": "精确因果证据不足"
+    },
+    {
+      "item": "具名卡全入口、量化消费者、全漏斗、学习优先级、资源价值、F33归因及B4/B5专项",
+      "reason": "独立功能或策略研究，继续原任务"
+    },
+    {
+      "item": "host-loop-time-cap-wall-clock-061301历史时序及旧拒绝根因",
+      "reason": "确定性夹具和诊断已修，历史因果仍缺证据"
+    }
+  ],
+  "merged": null,
+  "tests": {
+    "tsc": 0,
+    "vitest": 0,
+    "cases": 3522
+  },
+  "code_proposals": [],
+  "implementation_domains": [],
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261013-184302/learner/runs/20261013-184332-fix-batch/report.md"
+}
