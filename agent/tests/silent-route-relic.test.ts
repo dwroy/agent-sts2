@@ -23,6 +23,19 @@ vi.mock("../src/sim/boss-clock.js", async (original) => ({
   ...await original<typeof import("../src/sim/boss-clock.js")>(),
   bossClockJson: () => ({ source: "fixed" }),
 }));
+vi.mock("../src/memory/run-constraints.js", async (original) => {
+  const actual = await original<typeof import("../src/memory/run-constraints.js")>();
+  // This historical snapshot predates cap30; preserve its deck and isolate only its policy.
+  const historical = (state: Parameters<typeof actual.deckBudget>[0]) => state.raw["run_id"] === "HMVJKM56S4Q8";
+  return {
+    ...actual,
+    deckBudget: (...args: Parameters<typeof actual.deckBudget>) => historical(args[0]) ? null : actual.deckBudget(...args),
+    deckBudgetFacts: (...args: Parameters<typeof actual.deckBudgetFacts>) => historical(args[0]) ? {} : actual.deckBudgetFacts(...args),
+    budgetedState: (...args: Parameters<typeof actual.budgetedState>) => historical(args[0]) ? args[0] : actual.budgetedState(...args),
+    deckBudgetProblem: (...args: Parameters<typeof actual.deckBudgetProblem>) => historical(args[0]) ? null : actual.deckBudgetProblem(...args),
+    requiredSelectionProblem: (...args: Parameters<typeof actual.requiredSelectionProblem>) => historical(args[0]) ? null : actual.requiredSelectionProblem(...args),
+  };
+});
 
 const fixture = JSON.parse(readFileSync(new URL("./silent-route-relic-evidence.json", import.meta.url), "utf8"));
 const knowledge = makeKnowledge({}, "cache");
@@ -78,7 +91,10 @@ it("supplies measured entry timing with evidence instead of turning the unknown 
 });
 
 it.each(["map_before", "reward", "rest"])("delivers the observation in the production %s question, keeping all original options", (board) => {
-  const withRelic = question(environment(board));
+  const env = environment(board);
+  const before = JSON.stringify(env.state.raw);
+  expect(env.state.raw).toEqual(fixture.states[board]);
+  const withRelic = question(env);
   const withoutRelic = question(environment(board, removeRelic));
   expect(withRelic.label).toBe(withoutRelic.label);
   expect(["map/route-plan", "reward/card", "rest/choose"]).toContain(withRelic.label);
@@ -95,6 +111,12 @@ it.each(["map_before", "reward", "rest"])("delivers the observation in the produ
     brief.relics = asArray(brief.relics).filter((name) => name !== "活动星图");
   }
   expect(withState).toEqual(withoutState);
+  expect(JSON.stringify(env.state.raw)).toBe(before);
+});
+
+it("keeps the operator deck cap active for runs outside the historical fixture", () => {
+  const env = environment("map_before", (raw) => { raw.run_id = "NEW_SILENT_CAP_TEST"; });
+  expect(planDecision(env)).toMatchObject({ kind: "blocked", reason: expect.stringContaining("exceeds operator cap 30") });
 });
 
 it("does not add the heal again to the planned boss HP, including after an already healed room", () => {

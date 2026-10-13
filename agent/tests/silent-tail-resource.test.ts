@@ -21,6 +21,19 @@ vi.mock("../src/sim/boss-clock.js", async (original) => ({
   ...await original<typeof import("../src/sim/boss-clock.js")>(),
   bossClockJson: () => null,
 }));
+vi.mock("../src/memory/run-constraints.js", async (original) => {
+  const actual = await original<typeof import("../src/memory/run-constraints.js")>();
+  // This historical snapshot predates cap30; preserve its deck and isolate only its policy.
+  const historical = (state: Parameters<typeof actual.deckBudget>[0]) => state.raw["run_id"] === "5BU7ZE1PWLSX";
+  return {
+    ...actual,
+    deckBudget: (...args: Parameters<typeof actual.deckBudget>) => historical(args[0]) ? null : actual.deckBudget(...args),
+    deckBudgetFacts: (...args: Parameters<typeof actual.deckBudgetFacts>) => historical(args[0]) ? {} : actual.deckBudgetFacts(...args),
+    budgetedState: (...args: Parameters<typeof actual.budgetedState>) => historical(args[0]) ? args[0] : actual.budgetedState(...args),
+    deckBudgetProblem: (...args: Parameters<typeof actual.deckBudgetProblem>) => historical(args[0]) ? null : actual.deckBudgetProblem(...args),
+    requiredSelectionProblem: (...args: Parameters<typeof actual.requiredSelectionProblem>) => historical(args[0]) ? null : actual.requiredSelectionProblem(...args),
+  };
+});
 
 const fixture = JSON.parse(readFileSync(new URL("./silent-tail-resource-evidence.json", import.meta.url), "utf8"));
 const knowledge = makeKnowledge({}, "cache");
@@ -62,6 +75,8 @@ it.each(["rest_28", "rest_32"])("carries the observed spent tail into facts and 
 
 it("delivers the state to a production rest question while keeping every choice", () => {
   const env = environment("rest_32");
+  const before = JSON.stringify(env.state.raw);
+  expect(env.state.raw).toEqual(fixture.states.rest_32);
   const used = planDecision(env);
   const unknown = planDecision(environment("rest_32", createScreenMemory("REST")));
   if (used.kind !== "decision" || used.decision.kind !== "ask"
@@ -70,6 +85,12 @@ it("delivers the state to a production rest question while keeping every choice"
   expect(resource(asRecord(used.decision.state.facts)).used).toBe(true);
   expect(resource(asRecord(used.decision.state.run_brief)).available).toBe(false);
   expect(used.decision.questions).toEqual(unknown.decision.questions);
+  expect(JSON.stringify(env.state.raw)).toBe(before);
+});
+
+it("keeps the operator deck cap active for runs outside the historical fixture", () => {
+  const env = environment("rest_32", createScreenMemory("REST"), (raw) => { raw.run_id = "NEW_SILENT_CAP_TEST"; });
+  expect(planDecision(env)).toMatchObject({ kind: "blocked", reason: expect.stringContaining("exceeds operator cap 30") });
 });
 
 it.each([undefined, "other-run"])("leaves missing or foreign run memory unverified (%s)", (runId) => {
