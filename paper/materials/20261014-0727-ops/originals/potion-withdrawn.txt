@@ -1,0 +1,60 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261014-054301/agent
+
+ ❯ tests/silent-skull-potion.test.ts (3 tests | 2 failed) 196ms
+   × the live candidate applies seven once and preserves the observed fatal end turn 130ms
+   × Jev retains dry, modelled and all legal drink-first targets; code does not drink 11ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/silent-skull-potion.test.ts > the live candidate applies seven once and preserves the observed fatal end turn
+AssertionError: expected undefined to match object { Object (poison, validTargets, ...) }
+
+- Expected:
+{
+  "cost": 0,
+  "poison": 7,
+  "type": "Potion",
+  "validTargets": [
+    2,
+  ],
+}
+
++ Received:
+undefined
+
+ ❯ tests/silent-skull-potion.test.ts:45:18
+     43|   const { input } = captured();
+     44|   const potion = input.hand.find((c) => c.cardId === "POTION:POISON_PO…
+     45|   expect(potion).toMatchObject({ poison: 7, validTargets: [2], cost: 0…
+       |                  ^
+     46|   expect(evidence.states["288471"].combat.player.current_hp).toBe(evid…
+     47|   const plan = replaySteps(input, [{ cardIndex: potion.index, cardId: …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/silent-skull-potion.test.ts > Jev retains dry, modelled and all legal drink-first targets; code does not drink
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ tests/silent-skull-potion.test.ts:64:79
+     62|   expect(q.criteria).toHaveProperty("p0->e2");
+     63|   const plans = Object.entries(q.criteria).filter(([key]) => key.start…
+     64|   expect(plans.some(([, s]) => JSON.parse(s ?? "{}").plays?.includes("…
+       |                                                                               ^
+     65|   expect(plans.some(([, s]) => !JSON.parse(s ?? "{}").plays?.includes(…
+     66|   expect(q.criteria["p0->e2"]).toContain("持有价值未校准");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 1 passed (3)
+   Start at  06:32:20
+   Duration  1.83s (transform 1.22s, setup 316ms, import 1.18s, tests 196ms, environment 0ms)
+

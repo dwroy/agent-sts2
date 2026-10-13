@@ -1,0 +1,81 @@
+{
+  "at": "2026-10-14 07:37:27 CST",
+  "submitted_batch": "20261014-054301-strategy-proposal",
+  "submitted_source": "b2a30ea6ebadda351fcc345b65b0c0e870bc5d65",
+  "submitted_sources": [
+    "a7484217e26a24fcbce6e570fb99e524fbc49c4c",
+    "b2a30ea6ebadda351fcc345b65b0c0e870bc5d65"
+  ],
+  "submitted_actual_deployment": false,
+  "related_original_batch": "20261014-054301-s2-strategy-proposal",
+  "related_original_thread": "01a13738-9390-7d51-a912-4d002ca54431",
+  "related_original_worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261014-054301-s2",
+  "related_original_child": "silent-proposal-3e9b94fbf3a4c1a6",
+  "related_original_pending_sha256_at_read": "eee59114c0244ba57f9575bf230b8d70756ed852ad2dede635d4180f4f3fe608",
+  "related_three_staged_sha": [
+    {
+      "path": "agent/src/reflex/card-model.ts",
+      "sha256": "df10de26c8e9d39e41b149bc4c34e43bb2ebd10c74ab8cd4bbf3d7ce8eb13021",
+      "bytes": 116079
+    },
+    {
+      "path": "agent/tests/silent-snakebite-preview.test.ts",
+      "sha256": "4acf83d84936b5add263c27a7df3c48f13314b5dbd0629a0b44968afb14e3018",
+      "bytes": 6023
+    },
+    {
+      "path": "agent/tests/silent-snakebite-preview-evidence.json",
+      "sha256": "3e607c7a85cc4c46d0e767673ead6beb9857c6944895e2315d6d81866b4ef14f",
+      "bytes": 648667
+    }
+  ],
+  "observed_overlap": "Both use 7X0W3U8TVA2A ordinary Snakebite preview 8. The submitted a748 source also wires the deck, draw/discard and redraw consumers; its b2 potion child is additional. The original s2 three-leaf patch changes the direct hand model and has a different guard.",
+  "publication_guard": "Prioritize exact integration of these already submitted/tested two sources once the original lock is free. Before publishing the related s2 patch, read this guard and compare the actual installed consumer coverage and conditions along its original thread; do not stack two implementations or claim an entire wide proposal duplicate from shared evidence.",
+  "related_gate": {
+    "batch": "20261014-054301-s2-strategy-proposal",
+    "original_thread": "01a13738-9390-7d51-a912-4d002ca54431",
+    "fixture_source": "a18376cce22eb9e47377d474a85fb864f7c636e2",
+    "source_commit": null,
+    "game_source_published": false,
+    "release_id": null,
+    "original_failures_and_report_unchanged": true,
+    "new_model_or_study_or_permission_change": false,
+    "at": "2026-10-14 07:22:54 CST",
+    "status": "original changed-input complete source gate running",
+    "pid": 3057128,
+    "original_base": "2f739c28ca61513bd0baf14a2e84867ed99c2f3d",
+    "fixture_head": "a18376cce22eb9e47377d474a85fb864f7c636e2",
+    "source_fingerprints": [
+      {
+        "path": "agent/src/reflex/card-model.ts",
+        "sha256": "df10de26c8e9d39e41b149bc4c34e43bb2ebd10c74ab8cd4bbf3d7ce8eb13021",
+        "bytes": 116079
+      },
+      {
+        "path": "agent/tests/silent-snakebite-preview.test.ts",
+        "sha256": "4acf83d84936b5add263c27a7df3c48f13314b5dbd0629a0b44968afb14e3018",
+        "bytes": 6023
+      },
+      {
+        "path": "agent/tests/silent-snakebite-preview-evidence.json",
+        "sha256": "3e607c7a85cc4c46d0e767673ead6beb9857c6944895e2315d6d81866b4ef14f",
+        "bytes": 648667
+      }
+    ],
+    "source_check_log": ".worktrees/codex-strategy-silent-20261014-054301-s2/learner/runs/20261014-054325-strategy-proposal/ops-0718-changed-fixture-full.log",
+    "sandbox_workers": 2,
+    "original_fixture_host_check": {
+      "rc": 0,
+      "log": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261014-054301-fix-batch.fallback-6989a33893b240a44e3fcd4c9ce16164d25d64c5.checks.log",
+      "merged": "30e5cd77bdc740deb3066f0703a766fb6fc8cee2",
+      "tree": "6989a33893b240a44e3fcd4c9ce16164d25d64c5",
+      "commits": [
+        "df5f2e3fac5db56e3c92a241e2b4a170c6962212",
+        "a18376cce22eb9e47377d474a85fb864f7c636e2"
+      ]
+    },
+    "command": "bash tools/test-sandbox.sh in original agent checkout; SANDBOX_WORKERS=2"
+  },
+  "no_pending_source_or_old_failure_or_proposal_state_overwritten": true,
+  "no_new_parent_or_study_or_model_or_process_interruption": true
+}

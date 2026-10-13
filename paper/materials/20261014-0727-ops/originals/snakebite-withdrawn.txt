@@ -1,0 +1,83 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261014-054301/agent
+
+ ❯ tests/silent-skull-snakebite.test.ts (4 tests | 3 failed) 2221ms
+   × the live hand entry wires both observed eight-point previews, with the seven-point control unchanged 2200ms
+   × the isolated T13 application settles eight once: front twelve becomes four, not three 6ms
+   × deck and both pile consumers carry eight through redraw without adding Skull again 5ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/silent-skull-snakebite.test.ts > the live hand entry wires both observed eight-point previews, with the seven-point control unchanged
+AssertionError: expected { index: 2, key: 'c2', …(36) } to match object { poison: 8, known: true, …(1) }
+(36 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "flatValue": 0,
+-   "known": true,
+-   "poison": 8,
++   "flatValue": 7,
++   "known": false,
+  }
+
+ ❯ tests/silent-skull-snakebite.test.ts:54:70
+     52|     const raw = frame(line);
+     53|     expect(snake(raw).dynamic_values[0]).toMatchObject({ base_value: 7…
+     54|     expect(captured(raw).hand.find((c) => c.cardId === "SNAKEBITE")).t…
+       |                                                                      ^
+     55|   }
+     56|   expect(captured(frame("288203")).hand.find((c) => c.cardId === "SNAK…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  tests/silent-skull-snakebite.test.ts > the isolated T13 application settles eight once: front twelve becomes four, not three
+AssertionError: expected { index: +0, name: 'Boss', …(10) } to match object { hp: 4, poison: 7 }
+(11 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "hp": 4,
+-   "poison": 7,
++   "hp": 12,
+  }
+
+ ❯ tests/silent-skull-snakebite.test.ts:66:40
+     64|   const c = input.hand[0]!;
+     65|   const plan = replaySteps(input, [{ cardIndex: c.index, cardId: c.car…
+     66|   expect(plan.outcome.enemyHpAfter[0]).toMatchObject({ hp: evidence.st…
+       |                                        ^
+     67| });
+     68|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  tests/silent-skull-snakebite.test.ts > deck and both pile consumers carry eight through redraw without adding Skull again
+AssertionError: expected 7 to be 8 // Object.is equality
+
+- Expected
++ Received
+
+- 8
++ 7
+
+ ❯ tests/silent-skull-snakebite.test.ts:72:23
+     70|   const raw = frame("288402"), state = parseGameState(raw);
+     71|   const base = deckModels(state, knowledge).find((c) => c.cardId === "…
+     72|   expect(base.poison).toBe(8);
+       |                       ^
+     73|   raw.agent_view.combat.draw = [{ card_ids: ["SNAKEBITE"], line: "蛇咬 […
+     74|   raw.agent_view.combat.discard = raw.agent_view.combat.draw;
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  3 failed | 1 passed (4)
+   Start at  05:53:17
+   Duration  4.13s (transform 1.45s, setup 394ms, import 1.37s, tests 2.22s, environment 0ms)
+

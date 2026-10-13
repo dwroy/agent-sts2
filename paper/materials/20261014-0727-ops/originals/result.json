@@ -1,0 +1,167 @@
+{
+  "task": "strategy-proposal",
+  "character": "silent",
+  "batch": "20261014-054301-strategy-proposal",
+  "base": "2f739c28ca61513bd0baf14a2e84867ed99c2f3d",
+  "runs": [
+    "RC61MFQM63Y6",
+    "XTSV1U9JD34T",
+    "BTSRF7JL1W1Y",
+    "9Z9H2EXKLF3T",
+    "HMVJKM56S4Q8",
+    "F4QKG4J1AJJZ",
+    "G403VCZ3BH1B",
+    "25226ZFLNR1J",
+    "JLN5SK17W4FQ",
+    "JMH5C51RLN4E"
+  ],
+  "fixes": [
+    {
+      "id": "silent-proposal-e09a3905a3922b95",
+      "commit": "a7484217e26a24fcbce6e570fb99e524fbc49c4c",
+      "summary": "普通蛇咬头骨组合总8毒，手牌/牌堆/牌组分源，防止重抽重复加成",
+      "evidence": [
+        {
+          "run": "7X0W3U8TVA2A",
+          "floor": 31,
+          "turns": [
+            1,
+            13
+          ],
+          "ledger": [
+            "silent-0087"
+          ]
+        }
+      ],
+      "merged": false
+    },
+    {
+      "id": "silent-proposal-292f6731bdb9b669",
+      "commit": "b2a30ea6ebadda351fcc345b65b0c0e870bc5d65",
+      "summary": "实测末轮后段零毒→7；保留无药与所有合法独立饮药选项",
+      "evidence": [
+        {
+          "run": "7X0W3U8TVA2A",
+          "floor": 31,
+          "turns": [
+            13
+          ],
+          "ledger": [
+            "silent-0087",
+            "silent-0020"
+          ]
+        }
+      ],
+      "merged": false
+    }
+  ],
+  "skipped": [
+    {
+      "id": "silent-proposal-03754e1265894000",
+      "reason": "局部逐牌证据成立，但缺八组件联合消费者回放及首刀/被动挡事件归属；不能用已有经验文本关闭复合提案。"
+    },
+    {
+      "id": "silent-proposal-e5ea36df117ca9b7",
+      "reason": "只核首个稳定可行动状态；接管内部动作顺序、耗能轨迹未记录，未定位现题面确定误述。"
+    },
+    {
+      "id": "silent-proposal-ab055ef7dfbb44e5",
+      "reason": "幽灵一层已有子实现；夜魇复制收益存活窗口及延后饮药整战对照未齐，不能关闭复合范围。"
+    },
+    {
+      "id": "silent-proposal-0129c465c6f5bd79",
+      "reason": "弃牌和毒胜保血有窄实现；接管内部顺序、次轮复制兑现、同条件SL整战及联合消费者尚缺。"
+    },
+    {
+      "id": "silent-proposal-abe9d5d0be109a9f",
+      "reason": "实际前后战资源可追溯；缺同资源改线/留药/锻造完整后继及路线/休息/SL分源联合消费者，不拟安全血线。"
+    },
+    {
+      "id": "silent-proposal-f16527e59b5cc1e0",
+      "reason": "局部分源状态支持；缺敏捷/脆弱/覆甲、临时减力、钳子留挡联合回放及延后幽灵同条件对照，不改药价。"
+    },
+    {
+      "id": "silent-proposal-7a8e9ccb7e646538",
+      "reason": "末试T10实18→3/37挡仍需原dirty完整源码与逐击毛伤、持牌伤、复活/截断归属；24/24全败不证明必死。"
+    },
+    {
+      "id": "silent-proposal-cd9f76184de6e29a",
+      "reason": "原提案列十局16对跨幕回复支持旧公式；缺跨幕/营火/赢战耗血/上限变化/SL复药联合消费者与同条件路线后继。"
+    }
+  ],
+  "merged": null,
+  "tests": {
+    "tsc": 0,
+    "vitest": 0,
+    "cases": 3629
+  },
+  "code_proposals": [
+    "silent-proposal-03754e1265894000",
+    "silent-proposal-e5ea36df117ca9b7",
+    "silent-proposal-ab055ef7dfbb44e5",
+    "silent-proposal-0129c465c6f5bd79",
+    "silent-proposal-abe9d5d0be109a9f",
+    "silent-proposal-f16527e59b5cc1e0",
+    "silent-proposal-7a8e9ccb7e646538",
+    "silent-proposal-cd9f76184de6e29a",
+    "silent-proposal-292f6731bdb9b669",
+    "silent-proposal-e09a3905a3922b95"
+  ],
+  "implementation_domains": [
+    "combat",
+    "potion"
+  ],
+  "proposal_results": [
+    {
+      "id": "silent-proposal-03754e1265894000",
+      "state": "waiting",
+      "reason": "局部逐牌证据成立，但缺八组件联合消费者回放及首刀/被动挡事件归属；不能用已有经验文本关闭复合提案。"
+    },
+    {
+      "id": "silent-proposal-e5ea36df117ca9b7",
+      "state": "waiting",
+      "reason": "只核首个稳定可行动状态；接管内部动作顺序、耗能轨迹未记录，未定位现题面确定误述。"
+    },
+    {
+      "id": "silent-proposal-ab055ef7dfbb44e5",
+      "state": "waiting",
+      "reason": "幽灵一层已有子实现；夜魇复制收益存活窗口及延后饮药整战对照未齐，不能关闭复合范围。"
+    },
+    {
+      "id": "silent-proposal-0129c465c6f5bd79",
+      "state": "waiting",
+      "reason": "弃牌和毒胜保血有窄实现；接管内部顺序、次轮复制兑现、同条件SL整战及联合消费者尚缺。"
+    },
+    {
+      "id": "silent-proposal-abe9d5d0be109a9f",
+      "state": "waiting",
+      "reason": "实际前后战资源可追溯；缺同资源改线/留药/锻造完整后继及路线/休息/SL分源联合消费者，不拟安全血线。"
+    },
+    {
+      "id": "silent-proposal-f16527e59b5cc1e0",
+      "state": "waiting",
+      "reason": "局部分源状态支持；缺敏捷/脆弱/覆甲、临时减力、钳子留挡联合回放及延后幽灵同条件对照，不改药价。"
+    },
+    {
+      "id": "silent-proposal-7a8e9ccb7e646538",
+      "state": "waiting",
+      "reason": "末试T10实18→3/37挡仍需原dirty完整源码与逐击毛伤、持牌伤、复活/截断归属；24/24全败不证明必死。"
+    },
+    {
+      "id": "silent-proposal-cd9f76184de6e29a",
+      "state": "waiting",
+      "reason": "原提案列十局16对跨幕回复支持旧公式；缺跨幕/营火/赢战耗血/上限变化/SL复药联合消费者与同条件路线后继。"
+    },
+    {
+      "id": "silent-proposal-292f6731bdb9b669",
+      "state": "waiting",
+      "reason": "无可打手牌、零能量单瓶药对零毒后段实加7子项已实现，候选源码b2a30ea6ebadda351fcc345b65b0c0e870bc5d65；撤码2失败/恢复全7项通过。三次55秒锁超时未合入；最新只读预检0冲突。更早共用/叠毒/多瓶及持有价仍未验证，不能关闭宽项。"
+    },
+    {
+      "id": "silent-proposal-e09a3905a3922b95",
+      "state": "waiting",
+      "reason": "普通蛇咬8毒的手牌/牌堆/牌组有界实现已完成，候选源码a7484217e26a24fcbce6e570fb99e524fbc49c4c；撤码3失败/恢复4通过，最终沙箱3629项通过。三次各55秒未获得live锁，未合入、尚无实际live祖先实现；最新稳定只读预检0冲突，需运维沿原批接续。"
+    }
+  ],
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261014-054301/learner/runs/20261014-054323-strategy-proposal/report.md"
+}
