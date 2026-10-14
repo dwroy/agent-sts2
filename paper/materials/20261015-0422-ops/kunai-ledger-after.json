@@ -1,0 +1,161 @@
+{
+ "id": "silent-0291",
+ "ts": "2026-10-08T12:03:09+08:00",
+ "by": "learner:postmortem",
+ "character": "silent",
+ "kind": "bug-infra",
+ "claim": "静默苦无KUNAI本轮第三攻击新得1敏捷未进入当前方案后继格挡与跨轮推演。live combat-plan.ts:2883无苦无PlayerSim入口，turn-solver.ts:2433的attackRelics无增敏分支；当前日志实见三攻0→1、步法1→3，基础5格挡牌实8，零敏入口漏新敏捷时只会计7。已有格挡不倒补，重新读到既有敏捷正确不代表前瞻覆盖；不将不同牌序的24/31差全归此因，也不承诺修后整战获胜。",
+ "evidence": [
+  {
+   "run": "9R916WW0V65N",
+   "floor": 49,
+   "turn": 1,
+   "role": "support",
+   "note": "前五试s295427—295432三攻增1、步法再加2、普通防御8及重放16；末试s295533—295538三攻同样增敏，随后实际后空翻8＋生存者11，非两防御，勘误已追加。",
+   "added": "2026-10-08T12:03:09+08:00"
+  },
+  {
+   "run": "9R916WW0V65N",
+   "floor": 49,
+   "turn": 2,
+   "role": "support",
+   "note": "末试s295547—295550三刀各8；第3刀使敏捷5→6，原挡0仍0，撕咬10另计；16攻击对12血0挡实死。0085是已见机制，未定位此前瞻缺口。",
+   "added": "2026-10-08T12:03:09+08:00"
+  },
+  {
+   "run": "PYE4VXNSLGSS",
+   "floor": 33,
+   "note": "s337248/337249：第三攻击后敏捷0→1；D328087三攻击候选scaling_gained仍none。当前只读live combat-plan.ts:2883无苦无入口，turn-solver.ts:2433无增敏。T2后置攻击再1→2，不把其倒补16已有挡；缺修模后整战对照。",
+   "role": "repeat",
+   "turn": 1,
+   "added": "2026-10-10T08:53:36+08:00"
+  },
+  {
+   "run": "9R916WW0V65N",
+   "floor": 49,
+   "turn": 1,
+   "role": "support",
+   "note": "本批 s295534→295535 普通第三攻击敏捷0→1，旧挡0；步法后3敏，后空翻8/生存者11分源。offset/bytes/SHA及原字节逐条核验，另核本局8个第六攻击触发。",
+   "added": "2026-10-15T02:00:42+08:00"
+  }
+ ],
+ "first_run": "9R916WW0V65N",
+ "prior": "unknown",
+ "prior_runs": [
+  "F9PP859XZ3RJ",
+  "YF0LXT1QSTGG"
+ ],
+ "prior_note": "旧0085和这两局复盘已记三攻增敏；F9 d216603以既有6敏给防御11，未验证同线新触发的格挡推演。没有足够旧帧/旧源码对照认定本次独立模型缺口的更早首证，不把机制已经见过当模型已经覆盖。",
+ "status": "shipped",
+ "where": {
+  "lessons": [
+   "9R916WW0V65N",
+   "PYE4VXNSLGSS"
+  ],
+  "proposal": [
+   "/home/dw/Projects/agent-sts2/learner/runs/20261008-114303-postmortem/proposal-kunai.md",
+   "/home/dw/Projects/agent-sts2/learner/runs/20261008-114303-postmortem/proposal-resources.md",
+   "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-120901-experience-update/proposal-kunai.md",
+   "/home/dw/Projects/agent-sts2/learner/runs/20261010-084301-postmortem/proposal-kunai.md",
+   "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261010-091304-experience-update/proposal-attributes.md",
+   "/home/dw/Projects/agent-sts2/learner/runs/20261014-184305-strategy-proposal/proposal.md",
+   "/home/dw/Projects/agent-sts2/learner/runs/20261014-184305-strategy-proposal/report.md",
+   "/home/dw/Projects/agent-sts2/learner/runs/20261014-204306-strategy-proposal/proposal.md",
+   "/home/dw/Projects/agent-sts2/learner/runs/20261014-204306-strategy-proposal/report.md",
+   "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261015-014302/learner/runs/20261015-014310-strategy-proposal/proposal.md",
+   "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261015-014302/learner/runs/20261015-014310-strategy-proposal/report.md",
+   "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261015-014302-s2/learner/runs/20261015-014310-strategy-proposal/proposal.md",
+   "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261015-014302-s2/learner/runs/20261015-014310-strategy-proposal/report.md",
+   "paper/materials/20261015-0422-ops/kunai-host-failure-decision.json",
+   "paper/materials/20261015-0422-ops/kunai-three-case-supplement.json"
+  ],
+  "commits": [
+   "92db362a8141478ffa72ceb9b08cd6f90784c786",
+   "0944cf8cfd06d345548f5271f1e6521b0cd46656",
+   "28bec4afac5c6d51e5f1c30de277c1c6575c188b"
+  ]
+ },
+ "note": "notes/fix-queue.md旧计数修复注释不能视作当前苦无增敏已覆盖；这是独立新定位。完整dirty源码未记录，源文件引用按当前只读live。",
+ "asc": 10,
+ "history": [
+  {
+   "ts": "2026-10-08T12:03:09+08:00",
+   "by": "learner:postmortem",
+   "status": "observed"
+  },
+  {
+   "ts": "2026-10-08T12:05:30+08:00",
+   "by": "learner:postmortem"
+  },
+  {
+   "ts": "2026-10-08T12:05:31+08:00",
+   "by": "learner:postmortem"
+  },
+  {
+   "ts": "2026-10-08T12:19:13+08:00",
+   "by": "learner:experience-update"
+  },
+  {
+   "ts": "2026-10-10T08:53:36+08:00",
+   "by": "learner:postmortem"
+  },
+  {
+   "ts": "2026-10-10T08:55:11+08:00",
+   "by": "learner:postmortem"
+  },
+  {
+   "ts": "2026-10-10T09:21:30+08:00",
+   "by": "learner:experience-update"
+  },
+  {
+   "ts": "2026-10-14T19:05:15+08:00",
+   "by": "learner:strategy-proposal"
+  },
+  {
+   "ts": "2026-10-14T21:18:29+08:00",
+   "by": "learner:strategy-proposal"
+  },
+  {
+   "ts": "2026-10-15T01:56:56+08:00",
+   "by": "learner:strategy-proposal"
+  },
+  {
+   "ts": "2026-10-15T02:00:42+08:00",
+   "by": "learner:strategy-proposal",
+   "status": "proposed"
+  },
+  {
+   "ts": "2026-10-15T03:08:28+08:00",
+   "by": "learner:strategy-proposal",
+   "status": "proposed"
+  },
+  {
+   "ts": "2026-10-15T03:17:10+08:00",
+   "by": "learner:strategy-proposal"
+  },
+  {
+   "ts": "2026-10-15T04:33:52+08:00",
+   "by": "ops:codex-learner-checks",
+   "status": "shipped"
+  }
+ ],
+ "version": "V5.silent-kunai-dexterity1",
+ "effect": null,
+ "notes": [
+  "notes/fix-queue.md旧计数修复注释不能视作当前苦无增敏已覆盖；这是独立新定位。完整dirty源码未记录，源文件引用按当前只读live。",
+  "代码提案 silent-proposal-8df611363cd82fc9 → task=strategy-proposal；Roy-2026-10-07-learning",
+  "代码提案 silent-proposal-6353ffbadaaac619 → task=strategy-proposal；Roy-2026-10-07-learning",
+  "代码提案 silent-proposal-3ee015a5b3aa4ae8 → task=strategy-proposal；Roy-2026-10-07-learning",
+  "20261010-084301-postmortem；仅追加本角色核实证据与复盘去处，保留claim、首证、prior、状态、版本及全部历史。",
+  "代码提案 silent-proposal-35cb0f4fbb009904 → task=strategy-proposal；Roy-2026-10-07-learning",
+  "代码提案 silent-proposal-46c3b16d26259a51 → task=strategy-proposal；Roy-2026-10-07-learning",
+  "[20261014-184301-s2-strategy-proposal] 原提案silent-proposal-8df611363cd82fc9逐项核验，原Markdown SHA/本角色归属/冻结原字节已核；详见本批proposal.md与report.md。全部waiting：保留既有窄实现和证据/消费者限制，固定base/live预检17项共享记录冲突使源码实施停止；fixes=[]、merged=null、tests=null，无新策略/经验/版本/shipped。此行仅追加任务追溯，不改变原claim/status/evidence/first_run/asc/prior/version。",
+  "[20261014-204302-strategy-proposal] 原提案 silent-proposal-6353ffbadaaac619, silent-proposal-3ee015a5b3aa4ae8 逐项处置；六流19653原字节和十Markdown SHA已核，具体支持/反例/缺数据见本批报告。收尾核6db实际live443749祖先/7钩子及V5-R345，原35919516f2457a9f记duplicate，其余九项waiting；苦无/螺线窄机制证据充分，首次七项记录冲突/收尾versions一项冲突按任务停止，本批无新源码提交/合入/版本/shipped。临时原型撤码5败/恢复10过后归档撤回，不当生产验收；保留原claim/status/evidence/first_run/asc/prior/version。",
+  "20261015-014302-strategy-proposal：本次10个已派id均waiting，见所附逐项结果。19个原提案自有SILENT局、33276行字节核验，43原帧/算术核对、4限定层消费者；均非新整战因果或源码生产测试。现有窄实现不关闭宽范围。仅补追溯，不改claim/status/evidence/first_run/asc/prior/version，不报implemented/shipped。",
+  "20261015-014302-s2-strategy-proposal 消费原 silent-proposal-3ee015a5b3aa4ae8；仅Silent A10普通手动攻击/一致已知苦无计数，自动与重放留未知。定向7项通过，全套门禁/撤码/live验收尚未完成，不标shipped，不新建重复提案。",
+  "原silent-proposal-3ee015a5b3aa4ae8已实现Silent A10普通苦无触发/后继格挡/跨轮传播，原生gpt-6.1-sol/xhigh核实；最终撤码7败/1过、恢复10过，单worker完整沙箱tsc0+409文件3940项通过，前两失败与启动扫描失败保留。源码92db362a8141478ffa72ceb9b08cd6f90784c786已提交；live锁内合并历史资料/账本/统计冲突，已abort保留知识刷新提交，缺实际live祖先与自然消费，不标implemented/shipped，不造发布号。",
+  "20261015-014302-s2-strategy-proposal逐项消费 silent-proposal-3ee015a5b3aa4ae8；九局本角色8流18459原行逐offset/bytes/SHA核实；苦无0291源92db362a8141478ffa72ceb9b08cd6f90784c786自测3940过但24合入冲突已abort，其余限定已证/缺完整对照或实现验收均保留waiting；不改本条旧claim/status/evidence/first/prior/version，不冒称本条全范围实现或自然收益。",
+  "V5-R349实际main/live普通苦无A10限定增敏传播已交付；原source3940自测过/撤码7红恢复10绿，当前main10/live8定向绿。实际tree4ba23b20完整宿主rc1只3固定超时，4742过2skip；正式同树d032f27e三失败名称在原时限/断言下宿主tsc0/3通过，仅selected/full_suite=false，原全失败保留，决定留用已测限定源码，不宣全套绿。只将原0291源码修复记shipped，claim/evidence/首证/prior/asc保留，未观察自动/重放/螺线、其他角色/进阶与整战胜率未知；当前run仍eafe旧源码，不宣自然消费者采用或血量收益。"
+ ],
+ "shipped_at": "2026-10-15T04:33:52+08:00"
+}

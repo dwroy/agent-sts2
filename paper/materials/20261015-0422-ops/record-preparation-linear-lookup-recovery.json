@@ -1,0 +1,10 @@
+{
+  "initial_script_result": 130,
+  "reason": "Repeatedly splitting a 17MB ledger for each row caused excessive record-preparation cost",
+  "initial_failure_location": "ledger row membership lookup before timestamp/new decision-log/prepared/index mutations",
+  "initial_identity_guard_result": "Two matches included the diagnostic process itself; assertion refused all actions",
+  "owned_script_pid": 3604115,
+  "owned_script_birth": "90230302",
+  "action": "Exact owned script identity rechecked, nice19 and SIGINT only that script; replace membership lookup with one set/counter per ledger",
+  "other_processes_or_game_changes": false
+}
