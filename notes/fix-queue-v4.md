@@ -1293,3 +1293,8 @@ Roy：「上线后进 F48 反而降低一半，这才是关键，要找问题。
 
 - [ ] **silent-0481**：转录原学习者纯bug回报，`agent/src/hand/screens/selection.ts:311/:333` 把技能药水生成牌的“本回合免费”写成“只在本回合存在”（This card is only for this turn）。Y2K25VFDU95P/A10/F9T3 d392030 三选均0费、实选触不可及；T5 s404267重抽显示2费，T3 s404256–404259实际0费消费窗口与后续出现分列。首证回溯C48LLXBGKXQ9 F6T1 d205391；原提案 `silent-proposal-686d4e759478eebb` 已交自动链，限定已观察药水来源，未知组合/永久构筑归属及收益不补造。区别已修silent-0324刀舞模型，不重复派同题，不由ops添加游戏规则。
 - 本局已正常结束，非卡死；仅追加普通修复队列。原报告 `learner/runs/20261014-234303-postmortem/report.md`、`proposal-selection-lifetime.md` 与原文勘误保持。另一排序提案a0e9d06a17deb9af仍待整场受控反事实，原排序/护栏不改。
+
+## 2026-10-15 01:58:35 CST 原R348纸鹤整线固定夹具执行成本（普通infra接续，非新游戏研究）
+
+- [ ] **infra-paper-krane-recorded-line-timeout**：原 `20261014-214302-strategy-proposal` source0f86964c8 的 `agent/tests/silent-paper-krane.test.ts` 第77行两固定整线（state399969/400002）在R348/treefe9ed完整宿主唯一失败为各15s超时，其余4735过2skip；原组合35+2及本树正式定向2项均在原时限/断言通过。`fixedInput` 第55行经 `inputFor`/`planCombatTurn` 做完整枚举只为取solveTap输入，再进行原六步 `replaySteps`；这是读到的夹具建立路径，不证明CPU争用单因或生产模型错误。
+- 沿既有普通fix-batch队列核验固定输入建立成本/重复求解并作等价工程优化；保两原真实帧/六步结果、旧新HP损失10/19对8/16、伤害/药成本、describePlan/生产接线及全部角色/进阶/未知组合边界断言。不得增加15s时限、删/skip失败项、放松断言或改生产worker/样本/预算/牌值/规则；不热改R3/量化冻结输入或为纸鹤机制另派同题。原full rc1/首轮超时与补验scope均保留，直到实际等价源码、自测、部署及新树验收。回执 `paper/materials/20261015-0152-ops/R348-deployment-acceptance.json`。
