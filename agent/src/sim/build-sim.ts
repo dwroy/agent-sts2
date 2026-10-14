@@ -13,6 +13,7 @@ import type { DeckSimRunner, DeckRunResult } from "./build-sim-pool.js";
 import type { JsonValue } from "../core/util/json.js";
 import { quantitativeFightFacts } from "./quantitative-facts.js";
 import { memoKey } from "./compute-memo.js";
+import { bossReadiness, type BossReadiness } from "./boss-readiness.js";
 
 /** Samples per deck (docs/boss-sim.md §8: 1000 per option gives a paired standard error of about 1-1.5 points). */
 export const BUILD_SIM_SAMPLES = 1000;
@@ -67,6 +68,8 @@ export interface OptionSim {
 }
 
 export interface CompareResult {
+  readiness?: BossReadiness;
+  readinessMs?: number;
   completion?: { required: true; uniqueDecks: number; originalDecks: number; memoHit: boolean; originalComputeMs?: number };
   diagnostics?: { decks: number; options: number; deckCards: number; deadlineMs: number | null; orderSearch: Record<string, JsonValue> | null; comparison: Record<string, JsonValue> };
   base: OptionSim;
@@ -132,14 +135,14 @@ export async function compareOptions(
   runner: DeckSimRunner,
   base: RolloutInput,
   options: DeckOption[],
-  opts: { samples?: number; seed?: number; deadlineMs?: number; now?: () => number; quantitative?: boolean; diagnostics?: boolean; requireComplete?: boolean } = {},
+  opts: { samples?: number; seed?: number; deadlineMs?: number; now?: () => number; quantitative?: boolean; diagnostics?: boolean; requireComplete?: boolean; readiness?: boolean } = {},
 ): Promise<CompareResult> {
   if (opts.quantitative) base = { ...base, captureBossMargin: true,
     ...(base.meta.asc === 10 ? { captureCore: true, captureResources: true } : {}) };
   const samples = opts.samples ?? BUILD_SIM_SAMPLES;
   const required = opts.requireComplete === true;
   const cacheKey = required ? memoKey("required-b3-v1", { base, options, samples, seed: opts.seed ?? BUILD_SIM_SEED,
-    quantitative: opts.quantitative, diagnostics: opts.diagnostics, policy: { BOSS_POLICY_THREAT, BOSS_SIM_LOOKAHEAD } }) : null;
+    quantitative: opts.quantitative, diagnostics: opts.diagnostics, readiness: opts.readiness, policy: { BOSS_POLICY_THREAT, BOSS_SIM_LOOKAHEAD } }) : null;
   const cached = cacheKey ? completeComparisons.get(runner) : undefined;
   if (cached?.key === cacheKey) {
     const result = structuredClone(cached.result);
@@ -239,7 +242,13 @@ export async function compareOptions(
     summaries.set(key, line);
     return simOf(option.key, line, option.mixture ? hpOf(option.mixture[0]) : hpOf(option.change), false);
   });
+  const readinessStart = performance.now();
+  const readiness = opts.readiness && opts.quantitative ? bossReadiness(baseLine.outcomes, {
+    calibratedWin: base.continuation ? baseLine.winProb : calibratedWinProb(baseLine.winProb, BUILD_SIM_CALIBRATION_SAMPLES, "pre", base.meta.asc),
+    ...(base.continuation ? {} : { calibrate: (raw: number) => calibratedWinProb(raw, BUILD_SIM_CALIBRATION_SAMPLES, "pre", base.meta.asc) }),
+  }) : undefined;
   const result: CompareResult = {
+    ...(readiness ? { readiness, readinessMs: performance.now() - readinessStart } : {}),
     ...(required ? { completion: { required: true as const, uniqueDecks: decks.length, originalDecks, memoHit: false } } : {}),
     ...(opts.diagnostics ? { diagnostics: { decks: decks.length, options: options.length, deckCards: base.piles.draw.length,
       deadlineMs: opts.deadlineMs ?? null, orderSearch, comparison: phase(run, left) } } : {}),

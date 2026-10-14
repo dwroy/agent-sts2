@@ -38,7 +38,7 @@ import type { UsageStatus } from "../brain/engines/codex-usage.js";
 import { estimateTokens, prefixSizeWarning } from "../brain/knowledge.js";
 import type { EngineName } from "../brain/types.js";
 import type { AppConfig } from "../core/config.js";
-import { CODEX_CONTEXT_WINDOW, CODEX_AUTO_COMPACT_TOKENS, DEFAULT_CLAUDE_MODEL } from "../core/config.js";
+import { CODEX_CONTEXT_WINDOW, CODEX_AUTO_COMPACT_TOKENS, DEFAULT_CLAUDE_MODEL, sReadinessMode } from "../core/config.js";
 import { isMenuRunId } from "../memory/journal-replay.js";
 import { str, type JsonValue } from "../core/util/json.js";
 import { resolveJevPromptLog } from "./jev-prompt-log.js";
@@ -475,6 +475,7 @@ export function runConfigRow(
       build_decider: config.buildDecider,
       build_oneshot: config.buildOneshot,
       boss_sim_build: characterKey(run.character) === "silent" ? "on" : config.bossSimBuild,
+      s_readiness: sReadinessMode(run.character, env),
       ...(characterKey(run.character) === "silent" ? { boss_sim_completion: "required-full-paired-v1", boss_sim_build_requested: config.bossSimBuild } : {}),
       combat_deepseek: config.combatDeepseek,
       thief_facts: config.thiefFacts,

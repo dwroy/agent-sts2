@@ -196,6 +196,45 @@ def construction_pipeline(config, records, brains, plans):
             'limits': 'Payload delivery, accepted output and saved/read-back plans are distinct observations, not causal win-rate evidence. Missing calibration is pending, not a service failure.'}
 
 
+def readiness_pipeline(config, records, brains):
+    """Measure P1 shadow production and actual brain payloads separately."""
+    mode = obj(config.get('loop')).get('s_readiness', 'off')
+    counts = Counter(expected=0, produced=0, missing=0, eligible=0, low_trust=0,
+                     sign_rejected=0, brain_delivered=0, brain_accepted=0)
+    times, streak, longest = [], 0, 0
+    for row in records:
+        if mode == 'off' or row.get('ts', '') < config.get('ts', '') or row.get('label') not in LABELS:
+            continue
+        sim = obj(row.get('boss_sim'))
+        if not sim.get('samples') or sim.get('error') or sim.get('skipped'):
+            continue
+        counts['expected'] += 1
+        value = obj(sim.get('readiness'))
+        if value.get('schema') != 'boss-readiness-v1':
+            counts['missing'] += 1
+            streak += 1
+            longest = max(longest, streak)
+            continue
+        streak = 0
+        counts['produced'] += 1
+        trust = obj(value.get('trust'))
+        counts['eligible'] += trust.get('rankingEligible') is True
+        counts['low_trust'] += bool(trust.get('bossTrustReason'))
+        counts['sign_rejected'] += obj(trust.get('sign_audit')).get('rankingEligible') is False
+        if isinstance(value.get('ms'), (float, int)) and math.isfinite(value['ms']):
+            times.append(value['ms'])
+    for row in brains:
+        if run_of(row) != config['run_id'] or row.get('ts', '') < config.get('ts', ''):
+            continue
+        value = obj(obj(row.get('payload')).get('facts')).get('boss_readiness')
+        if isinstance(value, str) and value.startswith('当前牌组Boss模拟胜率'):
+            counts['brain_delivered'] += 1
+            counts['brain_accepted'] += row.get('accepted') is True
+    return {'mode': mode, **dict(counts), 'ms_max': max(times) if times else None,
+            'longest_missing_streak': longest, 'alert': mode != 'off' and longest >= FAIL_STREAK,
+            'limits': 'Shadow is not brain delivery. Low trust and failed sign audit suppress facts without changing mandatory computation or old ranking.'}
+
+
 def summarize(config, decisions, brains, coverage, plans=()):
     if str(config.get('character', '')).upper() != 'SILENT' or obj(config.get('construction')).get('architecture') != 'V5':
         return None
@@ -272,10 +311,11 @@ def summarize(config, decisions, brains, coverage, plans=()):
     complete = bool(coverage.get('decisions_complete'))
     all_brains = list({r.get('question_id') or (r.get('ts'), r.get('label')): r for r in brains if run_of(r) == rid}.values())
     pipeline = construction_pipeline(config, unique_records, all_brains, plans)
+    readiness = readiness_pipeline(config, unique_records, all_brains)
     return {'schema': 'module-health-v1', 'at': datetime.now(timezone.utc).isoformat(), 'run_id': rid,
             'character': 'SILENT', 'architecture': 'V5', 'construction_mode': obj(config.get('construction')).get('mode'),
             'simulation_enabled': enabled, 'coverage': coverage, 'complete': complete,
-            'construction': dict(construction), 'construction_pipeline': pipeline, 'b3': {'attempts': attempts, 'skipped': skipped, 'produced_dpr': produced,
+            'construction': dict(construction), 'construction_pipeline': pipeline, 's_readiness': readiness, 'b3': {'attempts': attempts, 'skipped': skipped, 'produced_dpr': produced,
               'coverage': produced / attempts if attempts else None, 'failures': dict(faults),
               'unsupported': len(unsupported), 'applicable_attempts': attempts - len(unsupported),
               'unsupported_only': len(unsupported), 'candidates': dict(candidates),
@@ -286,7 +326,7 @@ def summarize(config, decisions, brains, coverage, plans=()):
             'brain': {'observed_questions': len(brain_rows), 'questions_with_dpr': delivered,
                       'accepted_with_dpr': sum(r.get('accepted') is True and dpr_count(r.get('options')) > 0 for r in brain_rows),
                       'decision_use': 'unknown; delivery is not evidence of reasoning or a fixed DPR weight'},
-            'alert': (enabled and longest >= FAIL_STREAK) or pipeline['alert'], 'failures': evidence, 'diagnostics': phases,
+            'alert': (enabled and longest >= FAIL_STREAK) or pipeline['alert'] or readiness['alert'], 'failures': evidence, 'diagnostics': phases,
             'unsupported': unsupported,
             'scope': 'Service availability only; sample threshold, simulator validity and game policy unchanged.'}
 

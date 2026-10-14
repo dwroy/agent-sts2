@@ -19,6 +19,28 @@ def row(i, error='只跑完 24 次模拟（不足 300 次）', **extra):
 
 
 class Health(unittest.TestCase):
+    def test_readiness_shadow_and_actual_payload_readback(self):
+        config = {**CONFIG, 'loop': {**CONFIG['loop'], 's_readiness': 'shadow'}}
+        ready = {'schema': 'boss-readiness-v1', 'ms': 7,
+                 'trust': {'rankingEligible': True, 'sign_audit': {'rankingEligible': True}}}
+        records = [row(1, None, boss_sim={'samples': 1000, 'readiness': ready})]
+        shadow = h.summarize(config, records, [], {})['s_readiness']
+        self.assertEqual((shadow['expected'], shadow['produced'], shadow['brain_delivered']), (1, 1, 0))
+        self.assertEqual(shadow['ms_max'], 7)
+        brain = {'run_id': 'SILENT1', 'label': 'reward/card', 'question_id': 'q', 'accepted': True,
+                 'payload': {'facts': {'boss_readiness': '当前牌组Boss模拟胜率50%（固定夹具）'}}}
+        on = h.summarize(config, records, [brain, brain], {})['s_readiness']
+        self.assertEqual((on['brain_delivered'], on['brain_accepted']), (1, 1))
+        missing = h.summarize(config, [row(i, None) for i in range(3)], [], {})
+        self.assertTrue(missing['alert'])
+        self.assertTrue(missing['s_readiness']['alert'])
+        self.assertFalse(h.summarize(CONFIG, [row(i, None) for i in range(3)], [], {})['s_readiness']['alert'])
+        low = {**ready, 'trust': {'rankingEligible': False, 'bossTrustReason': 'fixture low trust',
+                                'sign_audit': {'rankingEligible': True}}}
+        actual = h.summarize(config, [row(1, None, boss_sim={'samples': 1000, 'readiness': low})], [], {})['s_readiness']
+        self.assertEqual((actual['low_trust'], actual['sign_rejected']), (1, 0))
+        self.assertFalse(actual['alert'])
+
     def summary(self, rows, **kw):
         return h.summarize(CONFIG, rows, kw.get('brains', []), {'decisions_complete': True})
 
