@@ -25,6 +25,16 @@ export function simFailurePolicy(character: string | null | undefined, env: Node
     retries: Number.isSafeInteger(retries) && retries > 0 ? retries : 2 };
 }
 
+/** C2 rollout stage: collect shadow evidence first. An on request is visible but cannot bypass admission. */
+export function simAdaptivePolicy(character: string | null | undefined, env: NodeJS.ProcessEnv = process.env): {
+  mode: "off" | "shadow"; requested: "off" | "shadow" | "on"; admission: "pending";
+} {
+  if (characterKey(character ?? "") !== "silent") return { mode: "off", requested: "off", admission: "pending" };
+  const raw = env["SIM_ADAPTIVE"]?.trim().toLowerCase() ?? "shadow";
+  const requested = raw === "shadow" || raw === "on" ? raw : "off";
+  return { mode: requested === "off" ? "off" : "shadow", requested, admission: "pending" };
+}
+
 /** V5-S P1: resolve against the actual run character, including tools that do not call loadConfig. */
 export function sReadinessMode(character: string | null | undefined, env: NodeJS.ProcessEnv = process.env): "off" | "shadow" | "on" {
   if (characterKey(character ?? "") !== "silent") return "off";

@@ -16,6 +16,10 @@ from pathlib import Path
 import re
 import tempfile
 
+import sys
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from adaptive_health import adaptive_health
+
 LABELS = {'reward/card', 'shop/buy', 'shop/plan', 'rest/choose', 'rest/plan',
           'selection/upgrade', 'selection/remove', 'selection/transform', 'selection/add',
           'event/plan', 'event/choose'}
@@ -336,10 +340,11 @@ def summarize(config, decisions, brains, coverage, plans=()):
     pipeline = construction_pipeline(config, unique_records, all_brains, plans)
     readiness = readiness_pipeline(config, unique_records, all_brains)
     computation = computation_health(unique_records)
+    adaptive = adaptive_health(config, unique_records)
     return {'schema': 'module-health-v1', 'at': datetime.now(timezone.utc).isoformat(), 'run_id': rid,
             'character': 'SILENT', 'architecture': 'V5', 'construction_mode': obj(config.get('construction')).get('mode'),
             'simulation_enabled': enabled, 'coverage': coverage, 'complete': complete,
-            'construction': dict(construction), 'construction_pipeline': pipeline, 's_readiness': readiness, 'computation': computation, 'b3': {'attempts': attempts, 'skipped': skipped, 'produced_dpr': produced,
+            'construction': dict(construction), 'construction_pipeline': pipeline, 's_readiness': readiness, 'computation': computation, 'adaptive': adaptive, 'b3': {'attempts': attempts, 'skipped': skipped, 'produced_dpr': produced,
               'coverage': produced / attempts if attempts else None, 'failures': dict(faults),
               'unsupported': len(unsupported), 'applicable_attempts': attempts - len(unsupported),
               'unsupported_only': len(unsupported), 'candidates': dict(candidates),
@@ -350,7 +355,7 @@ def summarize(config, decisions, brains, coverage, plans=()):
             'brain': {'observed_questions': len(brain_rows), 'questions_with_dpr': delivered,
                       'accepted_with_dpr': sum(r.get('accepted') is True and dpr_count(r.get('options')) > 0 for r in brain_rows),
                       'decision_use': 'unknown; delivery is not evidence of reasoning or a fixed DPR weight'},
-            'alert': (enabled and longest >= FAIL_STREAK) or pipeline['alert'] or readiness['alert'] or computation['alert'], 'failures': evidence, 'diagnostics': phases,
+            'alert': (enabled and longest >= FAIL_STREAK) or pipeline['alert'] or readiness['alert'] or computation['alert'] or adaptive['alert'], 'failures': evidence, 'diagnostics': phases,
             'unsupported': unsupported,
             'scope': 'Service availability only; sample threshold, simulator validity and game policy unchanged.'}
 
@@ -397,7 +402,7 @@ def persist(report, directory, notify=True):
             event = queue / alert['queue_name']
             sent = health / f'{rid}-queued.json'
             if not sent.exists():
-                message = (f'Silent V5 {rid} 模块验收异常：检查必需计算失败/故障降级、DPR缺失与construction_pipeline接线计数。证据：{alert_path}。\n'
+                message = (f'Silent V5 {rid} 模块验收异常：检查必需计算失败/故障降级、影子采样诊断、DPR缺失与construction_pipeline接线计数。证据：{alert_path}。\n'
                            '这是模块服务健康异常，请原ops自主核对样本/耗时/阶段诊断及当前owner，沿既有修复链去重处理；'
                            '不要降低300样本门槛、自动重启对局或新建重复学习。按Roy要求无需常规回报watcher/Roy。\n')
                 # Exclusive creation keeps a queued event's bytes stable across retries.

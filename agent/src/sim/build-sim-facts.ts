@@ -45,7 +45,7 @@ import { silentBuildWinTies } from "./silent-build-win-ties.js";
 import { doubleBossPreparation } from "../knowledge/double-boss.js";
 import { withDoubleBossStart } from "./double-boss-start.js";
 import { BOSS_MARGIN_NOTE } from "./boss-margin.js";
-import { sReadinessMode } from "../core/config.js";
+import { sReadinessMode, simAdaptivePolicy } from "../core/config.js";
 import { readinessText } from "./boss-readiness.js";
 
 /** The deck-building questions that get the simulation. */
@@ -556,7 +556,8 @@ export async function withBossSim(decision: Decision, env: DecisionEnv, setup: B
       }));
       wait = env.simWait?.start({ run: str(state.raw["run_id"]), floor: state.run?.floor ?? null, label: ask.label });
     }
-    const result: CompareResult = await compareOptions(setup.runner, start.input, deckOptions, { samples: setup.samples ?? BUILD_SIM_SAMPLES, seed: setup.seed ?? BUILD_SIM_SEED, deadlineMs: Math.max(0, budget), ...(setup.now ? { now: setup.now } : {}), ...(diagnosticEnabled ? { quantitative: true, diagnostics: true } : {}), ...(required && !attempt?.degraded ? { requireComplete: true } : {}), ...(wait ? { onProgress: wait.progress } : {}), ...(readinessMode !== "off" ? { readiness: true } : {}) });
+    const adaptive = required && !attempt?.degraded && simAdaptivePolicy(str(asRecord(state.run?.raw)["character_id"])).mode === "shadow";
+    const result: CompareResult = await compareOptions(setup.runner, start.input, deckOptions, { samples: setup.samples ?? BUILD_SIM_SAMPLES, seed: setup.seed ?? BUILD_SIM_SEED, deadlineMs: Math.max(0, budget), ...(setup.now ? { now: setup.now } : {}), ...(diagnosticEnabled ? { quantitative: true, diagnostics: true } : {}), ...(required && !attempt?.degraded ? { requireComplete: true } : {}), ...(wait ? { onProgress: wait.progress } : {}), ...(adaptive ? { adaptive: { allowS: !continuation && !bossTrustReason(bossKey(bossId), "b3", state.run?.ascension, state.run?.floor) } } : {}), ...(readinessMode !== "off" ? { readiness: true } : {}) });
     sampled = result.samples;
     if (diagnostics) diagnostics = { ...diagnostics, ...result.diagnostics, boss: bossKey(bossId),
       samples: result.samples, requested: result.requested, minimumShown: Math.min(BUILD_SIM_MIN_SHOWN, result.requested),
@@ -661,6 +662,7 @@ export async function withBossSim(decision: Decision, env: DecisionEnv, setup: B
     if (attempt?.degraded) simFacts["completion"] = `不完整（故障降级，n=${result.samples}）`;
     const completion = attempt?.finish(result.samples, result.requested);
     const record: Record<string, JsonValue> = {
+      ...(result.adaptive ? { adaptive: result.adaptive } : {}),
       ...(readiness ? { readiness: toJsonValue({ ...readiness, mode: readinessMode, ms: result.readinessMs ?? null,
         delivered: readinessMode === "on" && readiness.trust.rankingEligible }) } : {}),
       ...(required ? { completion: { ...result.completion, required: true, status: "complete", ...completion,
