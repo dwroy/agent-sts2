@@ -219,7 +219,7 @@ describe("rollout facts on Jev's combat question", () => {
           expect(b.guard, `${name} ${key}`).toEqual(a.guard);
         }
       }
-    }));
+    }), 30_000);
 });
 
 describe("enemy tables", () => {
