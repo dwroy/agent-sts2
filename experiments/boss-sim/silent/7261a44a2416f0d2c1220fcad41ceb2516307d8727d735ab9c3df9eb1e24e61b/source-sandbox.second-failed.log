@@ -1,0 +1,33 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/agent
+
+ ❯ tests/boss-lines-planner.test.ts (7 tests | 1 failed) 115523ms
+     × an SL retry of a low-trust boss (SL_RETRY_SHOW_SIM on): the numbers shown and labelled 低可信, the ranking unchanged; the previous attempts in the question 41210ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/boss-lines-planner.test.ts > B2 on: the boss question > an SL retry of a low-trust boss (SL_RETRY_SHOW_SIM on): the numbers shown and labelled 低可信, the ranking unchanged; the previous attempts in the question
+AssertionError: expected 'undefined' to match /^低可信 \(low trust\): .*no option is ra…/
+
+- Expected:
+/^低可信 \(low trust\): .*no option is ranked by them/
+
++ Received:
+"undefined"
+
+ ❯ tests/boss-lines-planner.test.ts:265:67
+    263|     const retry = ask("ez2l-f48-t2", true, { sl });
+    264|     expect(retry.decision.state["previous_attempts"]).toEqual({ note: …
+    265|     expect(String(retry.decision.state["whole_fight_sim_trust"])).toMa…
+       |                                                                   ^
+    266|     expect(String(retry.decision.state["whole_fight_sim"])).toContain(…
+    267|     for (const key of Object.keys(retry.criteria).filter((k) => k.star…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 399 passed (400)
+      Tests  1 failed | 3868 passed (3869)
+   Start at  22:24:53
+   Duration  366.72s (transform 17.23s, setup 27.18s, import 75.39s, tests 1291.94s, environment 92ms)
+
