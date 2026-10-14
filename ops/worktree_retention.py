@@ -35,13 +35,15 @@ def registered(root):
     return rows
 
 
-def active(path):
+def active(path, ignore_pid=None):
     """Check cwd and program references, without reading environments or exposing command lines."""
     if retention.active_cwd(path):
         return True
     prefix = str(path).encode()
     for proc in Path("/proc").iterdir():
         if not proc.name.isdigit():
+            continue
+        if ignore_pid is not None and proc.name == str(ignore_pid):
             continue
         try:
             args = (proc / "cmdline").read_bytes().split(b"\0")
@@ -420,7 +422,11 @@ def restore(root, directory, name):
         if tree.exists():
             os.rename(tree, staging)
         try:
-            git(root, "worktree", "add", str(tree), branch.removeprefix("refs/heads/"))
+            if (root / "ops/worktree_storage.py").is_file():
+                import worktree_checkout
+                worktree_checkout.restore_checkout(root, tree, branch.removeprefix("refs/heads/"))
+            else:
+                git(root, "worktree", "add", str(tree), branch.removeprefix("refs/heads/"))
         except Exception:
             if staging.exists() and not tree.exists():
                 os.rename(staging, tree)

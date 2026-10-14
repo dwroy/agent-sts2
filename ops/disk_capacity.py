@@ -25,7 +25,7 @@ def require_capacity(path, byte_count, file_count=0):
                       f"free {free} bytes/{inodes} inodes")
 
 
-def require_worktree_capacity(root, ref, excluded=()):
+def require_worktree_capacity(root, ref, excluded=(), keep=None):
     """Estimate checkout allocation from tracked object sizes, without reading file contents."""
     tree = subprocess.run(["git", "-C", str(root), "ls-tree", "-r", "-l", "-z", ref],
                           capture_output=True, check=True).stdout
@@ -34,7 +34,7 @@ def require_worktree_capacity(root, ref, excluded=()):
         if not entry:
             continue
         metadata, name = entry.split(b"\t", 1)
-        if any(os.fsdecode(name).startswith(prefix) for prefix in excluded):
+        if (keep is not None and not keep(os.fsdecode(name))) or (keep is None and any(os.fsdecode(name).startswith(prefix) for prefix in excluded)):
             continue
         mode, kind, oid, size = metadata.split()
         if kind != b"blob":

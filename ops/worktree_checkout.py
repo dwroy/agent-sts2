@@ -11,7 +11,42 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import learner_retention as retention
 from disk_capacity import require_worktree_capacity
 
-EXCLUDED = ("paper/data/history/",)
+EXCLUDED = ("paper/data/history/", "paper/raw/", "paper/materials/", "experiments/")
+
+
+def cold(name):
+    if name.startswith("paper/materials/"):
+        tail = name.removeprefix("paper/materials/")
+        if ("/" not in tail and tail.endswith(".md")) or tail.startswith("learning/"):
+            return False
+    return any(name.startswith(prefix) for prefix in EXCLUDED)
+
+
+def sparse_patterns(includes=()):
+    # Keep current handoff and learning ledgers; cold evidence is available by pinned Git object.
+    patterns = ["/*", *("!/" + p + "*" for p in EXCLUDED),
+                "/paper/materials/*.md", "/paper/materials/learning/"]
+    for name in sorted(set(includes)):
+        parts = name.split("/")
+        for depth in range(2, len(parts)):
+            parent = "/" + "/".join(parts[:depth]) + "/"
+            patterns.extend([parent, "!" + parent + "*"])
+    # Leaves must follow all ancestor exclusions, including shared ancestors.
+    patterns.extend("/" + name for name in sorted(set(includes)))
+    patterns.extend(["/paper/materials/*.md", "/paper/materials/learning/"])
+    return "\n".join(patterns) + "\n"
+
+
+def set_profile(tree, includes=()):
+    subprocess.run(["git", "-C", str(tree), "sparse-checkout", "set", "--no-cone", "--stdin"],
+                   input=sparse_patterns(includes).encode(), capture_output=True, check=True)
+
+
+def restore_checkout(root, tree, branch):
+    require_worktree_capacity(root, branch, keep=lambda name: not cold(name))
+    retention.git(root, "worktree", "add", "--no-checkout", str(tree), branch)
+    set_profile(tree)
+    retention.git(tree, "read-tree", "-mu", "HEAD")
 
 
 def create(root, directory, tree, ref):
@@ -21,7 +56,7 @@ def create(root, directory, tree, ref):
     worktree_retention.checked_tree(root, tree.name)
     if tree.exists():
         raise ValueError("existing workspace retained; use explicit restore for a retired workspace")
-    require_worktree_capacity(root, ref, excluded=EXCLUDED)
+    require_worktree_capacity(root, ref, keep=lambda name: not cold(name))
     receipt = directory / "retention/allocations" / (tree.name + ".json")
     if receipt.exists():
         raise ValueError("allocation name already used; retain its original receipt")
@@ -34,9 +69,7 @@ def create(root, directory, tree, ref):
     try:
         retention.git(root, "worktree", "add", "--no-checkout", "-b", tree.name, str(tree), base)
         created = True
-        patterns = "/*\n" + "".join("!/" + p + "\n" for p in EXCLUDED)
-        subprocess.run(["git", "-C", str(tree), "sparse-checkout", "set", "--no-cone", "--stdin"],
-                       input=patterns.encode(), capture_output=True, check=True)
+        set_profile(tree)
         retention.git(tree, "read-tree", "-mu", "HEAD")
         if retention.git(tree, "status", "--porcelain", "--untracked-files=all"):
             raise ValueError("new sparse workspace differs from its recorded base")

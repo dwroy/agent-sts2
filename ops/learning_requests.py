@@ -561,6 +561,11 @@ def run(root, state_dir, batch_id):
         home = (Path(state_dir) / "codex-home").read_text().strip()
         if home != req["learner_home"]:
             raise ValueError("learner account changed; explicit original-thread recovery required")
+        if (Path(root) / "ops/worktree_storage.py").is_file():
+            import worktree_storage
+            original = req["original_batch"]
+            if (Path(state_dir) / "retention/storage/source-copies" / (original + ".manifest.json")).is_file():
+                worktree_storage.restore_copies(Path(root), Path(state_dir), original)
         payload = artifact(root, req["input"]).decode()
         template = (Path(root) / "learner/tasks/learning-followup.md").read_text()
         prompt = template.replace("LEARNING_REQUEST_JSON", json.dumps(req, ensure_ascii=False, indent=2))

@@ -347,10 +347,22 @@ def archive(root, base, scratch, files, proof):
     tmp = archive_path.with_name(archive_path.name + ".tmp")
     with tarfile.open(tmp, "w:gz", compresslevel=1, dereference=False) as tar:
         for path in files:
+            safe_path(root, path)
+            if path.is_symlink() or not path.is_file():
+                raise ValueError("nonregular archive input retained")
             before = path.stat()
             digest = sha_file(path)
             name = str(path.relative_to(root))
-            tar.add(path, arcname=name, recursive=False)
+            # Store hardlinked source copies as independent regular members: each path has its own SHA proof.
+            info = tar.gettarinfo(path, arcname=name)
+            info.type = tarfile.REGTYPE
+            info.linkname = ""
+            info.size = before.st_size
+            with os.fdopen(os.open(path, os.O_RDONLY | os.O_NOFOLLOW), "rb") as source:
+                opened = os.fstat(source.fileno())
+                if (opened.st_ino, opened.st_dev) != (before.st_ino, before.st_dev):
+                    raise ValueError("archive input changed before reading")
+                tar.addfile(info, source)
             after = path.stat()
             if (before.st_size, before.st_mtime_ns, before.st_ino) != (after.st_size, after.st_mtime_ns, after.st_ino):
                 raise ValueError("scratch changed during archival; no deletion")
@@ -527,6 +539,12 @@ def sweep(root, state_dir, apply, limit):
         import worktree_retention
         result["workspaces"] = worktree_retention.sweep(root, state_dir, apply, remaining)
         atomic(state_dir / "retention/last-sweep.json", result)
+    storage_remaining = limit - len(result["results"]) - len(result.get("workspaces", {}).get("results", []))
+    if storage_remaining > 0 and (root / "ops/worktree_storage.py").is_file():
+        # Cache eviction has no ingestion/completion semantics; reuse this same bounded worker.
+        import worktree_storage
+        result["storage_cache"] = worktree_storage.sweep(root, state_dir, apply, storage_remaining)
+        atomic(state_dir / "retention/last-sweep.json", result)
     return result
 
 
@@ -592,7 +610,11 @@ def restore(root, state_dir, batch_id):
             if tree.exists():
                 os.rename(tree, staging)
             try:
-                git(root, "worktree", "add", str(tree), branch.removeprefix("refs/heads/"))
+                if (root / "ops/worktree_storage.py").is_file():
+                    import worktree_checkout
+                    worktree_checkout.restore_checkout(root, tree, branch.removeprefix("refs/heads/"))
+                else:
+                    git(root, "worktree", "add", str(tree), branch.removeprefix("refs/heads/"))
             except Exception:
                 if not tree.exists() and staging.exists():
                     os.rename(staging, tree)

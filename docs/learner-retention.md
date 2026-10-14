@@ -43,7 +43,29 @@ nice -n 19 python3 ops/worktree_retention.py restore --workspace <工作树名>
 nice -n 19 python3 ops/worktree_checkout.py "$PWD" "$PWD/.worktrees/<功能名>" HEAD
 ```
 
-分配前检查剩余字节和 inode，失败不启动模型；分配过程失败只回收本次尚未启动的副本，保留失败回执和来源分支。工作树默认不展开 `paper/data/history/` 的重复统计快照，其原件仍在 main 和 Git 历史中。牌组知识、复盘证据、最新统计表和任务输入保持可读。需要旧统计快照时按原提交从 Git 读取，或在该工作树显式扩展 sparse checkout。不能把 sparse 排除当作删除历史。
+分配前检查剩余字节和 inode，失败不启动模型；分配过程失败只回收本次尚未启动的副本，保留失败回执和来源分支。默认展开源码、测试、知识和文档，保留 `paper/materials/` 顶层 Markdown（STATE、决定和变更记录）及 `learning/` 账本；历史 `paper/data/history/`、`paper/raw/`、`experiments/` 与其他 materials 使用固定 Git 提交按需读取。分配回执记录实际基线，原件仍在原实例和 Git 中。缺少历史文件不代表证据不存在，不应据此增加新游戏知识。
+
+## 历史副本和过程副本的独立回收
+
+任务完成、入库和上线继续经过上述验收；存储回收不改变这些状态。原 retention worker 同时执行 `worktree_storage.sweep`，每轮最多处理四棵缓存或过程副本，不新建计时器、模型或调度器。空闲工作树即使是 failed、等待验收或被原要求引用，也可只移除干净的历史 Git 副本：保留分支、提交、原 cwd、修改过的材料、独有文件、所有原日志和报告。实际基线增加独立 Git ref，prepared 和完成动作日志保留。运行中批次、宿主进程引用、学习启动租约、共享发布事务和常驻游戏实例均阻止回收；中途 Git 操作也保留。
+
+```bash
+nice -n 19 python3 ops/worktree_storage.py sweep --root "$PWD" --limit 4 --apply
+python3 ops/worktree_storage.py materialize --root "$PWD" --workspace <原工作树名> \
+  --path paper/materials/<精确证据文件>
+```
+
+materialize 只接受精确的普通 Git 文件，校验实际 HEAD 与 blob；已有展开输入和修改保持不变。每棵树干净的历史输入缓存上限 256 MiB，空闲后原 worker 再回收；修改过的证据不受缓存额度限制，不会被删除。原学习 wrapper 从实例根运行当前 launcher，传给原工作树的 cwd、任务、模型、账号、线程和基线保持原绑定，因此旧 exp 等常驻树也收到新存储规则。全量仓库 tar 与展开 checkout 不作为新的对照输入：记录 Git SHA、`git diff --binary`、固定输入清单及测试输出即可，按所需路径恢复。
+
+旧 `.source-checkout`、`.before-checkout` 和 `source-archive.tar` 可单独压缩归档。先核原 batch、报告路径与 learner_launch 的 cwd/task/scratch，完整 gzip 归档逐文件 SHA 和归档读回通过后，才删除对应的过程副本。原报告、jsonl/out/err/log、其他冻结证据均留在原路径；已知 node_modules 软链接也留在原路径。凭据、陌生软链接、嵌套 Git 和未知 owner 保留。归档在原 `ops/codex-ops/retention/storage/source-copies/`，不因任务失败丢弃。
+
+```bash
+nice -n 19 python3 ops/worktree_storage.py compress --root "$PWD" \
+  --batch <原批次> --scratch <原scratch绝对路径> --apply
+python3 ops/worktree_storage.py restore-copies --root "$PWD" --batch <原批次>
+```
+
+显式恢复前检查容量、归档 SHA 和原路径，已修改文件拒绝覆盖。原 learning-followup 启动器在恢复原线程前自动恢复该原批次的过程副本；其他历史 continuation 需要原 owner 先用 restore-copies 恢复，不改变其 UUID、任务状态、账号或队列。缓存回收结果不构成任务完成、实际入库或消费者上线证明。
 
 标准闭环是：任务结束登记 → 原范围验收和实际发布 → 归档校验 → 复核 owner/进程/租约和共享发布锁 → 回收现场 → 持久回执；任一门禁未满足，原调度器记录原因并继续重试，不派新的清理模型。原对局、token/费用原件、知识库、版本、学习账本、原生会话及失败证据不属于可丢弃现场。
 
