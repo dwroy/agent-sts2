@@ -1,0 +1,129 @@
+{
+  "report": {
+    "task": "fix-batch",
+    "base": "014e6dbd150d3323f61c8c00e52ea8174754ea38",
+    "fixes": [
+      {
+        "item": "infra-learner-event-log-second-collision：同秒学习者事件流混写",
+        "commit": "b6ee3f8c29cc10d4652a67d14f0e0e394aa6ce6f",
+        "test": "agent/tests/learner-strategy-scratch.test.ts",
+        "fails_without_fix": true
+      },
+      {
+        "item": "infra-paper-krane-recorded-line-timeout：固定纸鹤重放夹具重复枚举",
+        "commit": "befc39e5ca0105f8ff96d47f817df44f0b2760f1",
+        "test": "agent/tests/silent-paper-krane.test.ts",
+        "fails_without_fix": true
+      }
+    ],
+    "skipped": [
+      {
+        "item": "silent-0481 技能药水题面生命周期误述",
+        "reason": "策略类：已绑定 silent-proposal-686d4e759478eebb 原独立策略链；涉及已观察药水来源的题面知识，不重复派发或混入工具修复。"
+      },
+      {
+        "item": "silent-0308/0311/0319/0320/0322/0329/0334/0339/0344/0362/0365 等机制、出牌、药水、SL、终局、路线、休息未闭合提案",
+        "reason": "策略类：原提案、证据范围及限制保留，沿既有 strategy-proposal 链；不补游戏机制或参数。"
+      },
+      {
+        "item": "silent-0332 双 Boss 接续正 HP 资源契约异常",
+        "reason": "证据不足：缺具体触发样本、种子及首战末资源；原提案和诊断保留，不伪造正 HP 或吞掉异常。"
+      },
+      {
+        "item": "sandbox-glob-startup-race 上游目录生命周期和注册时序",
+        "reason": "证据不足：有界恢复与租约 ID 子项已有源码；本轮壳层启动前 ENOENT 原件/转录保留并原样重试，未核具体删除者或更改权限。"
+      },
+      {
+        "item": "core-build-notify-222802-rc2 原生投递历史",
+        "reason": "证据不足：诊断子项已修，未核原生未发送证明，不重复发送或代填他人 ACK。"
+      },
+      {
+        "item": "调度公平性和永久饥饿调查",
+        "reason": "证据不足：队列位置不是永久饥饿证明，缺完整 dispatch/seen_runs/新完局时序，不改调度策略或状态。"
+      },
+      {
+        "item": "mod 超时自愈、缓存收益与旧手工 merge-live.py 历史收尾",
+        "reason": "证据不足：历史子修复保留，未核当前根因或活动 owner，不运行模型/网络、不改旧失败回执或操作旧进程。"
+      },
+      {
+        "item": "v5-dpr-health 性能、全漏斗、统一资源价值、全历史构筑、量化 P1/P2/R3 及独立架构任务",
+        "reason": "太大：已有独立原 owner；已部署的诊断、期限、取消和传输子项不关闭父范围，不混入普通批次。"
+      }
+    ],
+    "merged": null,
+    "tests": {
+      "tsc": 0,
+      "vitest": 0,
+      "cases": 3934
+    },
+    "code_proposals": [],
+    "implementation_domains": [],
+    "report": "/home/dw/Projects/agent-sts2/learner/runs/20261015-021309-fix-batch/report.md"
+  },
+  "runtime": {
+    "batch": "20261015-021302-fix-batch",
+    "thread": "01a13b9e-59b4-78f0-9a50-a210d3ed5f9e",
+    "cwd": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261015-021302",
+    "event_log": "learner/runs/20261015-021309-fix-batch.jsonl",
+    "launch": {
+      "offset": 0,
+      "bytes": 14596,
+      "sha256": "2f2424e3f00ca935a8e92e566077b34593772c13f8040f0b13aa4eaca8eb0b1d"
+    },
+    "startup": {
+      "offset": 14596,
+      "bytes": 370,
+      "sha256": "8a8e9320d17120af689631052de39ac7fe59f3929ebb33d87a4c77e0e438962c"
+    },
+    "original_lease": "aa143baf47ac59703c5c676f2023a53e433922332a9b9514da2148fbed33856f",
+    "native_context": {
+      "source": "ops/codex-ops/accounts/codex1/learner/sessions/2026/10/15/rollout-2026-10-15T02-13-15-01a13b9e-59b4-78f0-9a50-a210d3ed5f9e.jsonl",
+      "offset": 50165,
+      "bytes": 5118,
+      "sha256": "c1c89d08decc99532880c42d64070bc8692bb7e532f15b38bf4651181f8b5ec6",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "sandbox": {
+        "type": "workspace-write",
+        "writable_roots": [
+          "/home/dw/Projects/agent-sts2",
+          "/home/dw/Projects/agent-sts2/.git",
+          "/home/dw/Projects/agent-sts2/.git/worktrees/codex-fix-silent-20261015-021302"
+        ],
+        "network_access": false,
+        "exclude_tmpdir_env_var": false,
+        "exclude_slash_tmp": false
+      },
+      "approval_policy": "never"
+    },
+    "native_user_input": {
+      "offset": 55283,
+      "bytes": 12822,
+      "sha256": "4b77f2730ebf3ec20e99727fb0cbedda18f4e0416e27fdd7217acf9c5981904a",
+      "input_sha256": "e7b76aec402f0285a0aa34617daa0b8823d6a0254e1e285c6befbc37c760a3fa"
+    },
+    "account_home": "codex1 learner isolated home",
+    "event_first_thread_not_used": true,
+    "parallel_thread_count": 1
+  },
+  "original_source_checks": [
+    {
+      "log": "learner/runs/20261015-021309-fix-batch/fix1-sandbox-retry.log",
+      "sha256": "cd922769062ad5d829f733f745e3585a65cc6685f234a7b30b4171b06b6da4a2",
+      "original_exit": 0,
+      "cases": 3934,
+      "files": 408
+    },
+    {
+      "log": "learner/runs/20261015-021309-fix-batch/fix2-sandbox.log",
+      "sha256": "99e5facbff6fed66b09658203f2bcd310a63917c8f596df92dec416fb74c3f48",
+      "original_exit": 0,
+      "cases": 3934,
+      "files": 408
+    }
+  ],
+  "original_event_rows_byte_verified": 6,
+  "original_full_failures_and_merge_conflicts_preserved": true,
+  "new_behavior_release": false,
+  "original_scope": "Two infrastructure fixes only, no new gameplay or knowledge"
+}
