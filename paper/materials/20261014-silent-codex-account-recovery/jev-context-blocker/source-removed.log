@@ -1,0 +1,31 @@
+npm warn exec The following package was not found and will be installed: vitest@5.0.4
+
+ RUN  v5.0.4 /home/dw/Projects/agent-sts2
+
+ ❯ .worktrees/silent-jev-context-recovery-20261014/agent/tests/jev-context-recovery.test.ts (2 tests | 1 failed) 20ms
+   × shrinks the twice-rejected W1 request below 70 KB and reconstructs every option and metric exactly 17ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  .worktrees/silent-jev-context-recovery-20261014/agent/tests/jev-context-recovery.test.ts > shrinks the twice-rejected W1 request below 70 KB and reconstructs every option and metric exactly
+AssertionError: expected 'shared-json-values-v1' to be 'shared-json-values-v2' // Object.is equality
+
+Expected: "shared-json-values-v2"
+Received: "shared-json-values-v1"
+
+ ❯ .worktrees/silent-jev-context-recovery-20261014/agent/tests/jev-context-recovery.test.ts:46:32
+     44|   const before = JSON.stringify(fixture), result = compactJevRequest(f…
+     45|   expect(result).not.toBeNull();
+     46|   expect(result.encoding.kind).toBe("shared-json-values-v2");
+       |                                ^
+     47|   expect(result.encoding.shapeDefinitions).toBeGreaterThan(0);
+     48|   expect(result.encoding.encodedBytes).toBeLessThan(70_000);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 1 passed (2)
+   Start at  18:59:51
+   Duration  278ms (transform 62%, tests 19%, import 15%, worker 3%)
+

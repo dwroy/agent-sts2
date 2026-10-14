@@ -1,0 +1,17 @@
+node:internal/process/per_thread:364
+      _loadEnvFile(path);
+      ^
+
+Error: ENOENT: no such file or directory, open '/home/dw/Projects/agent-sts2/.worktrees/live/.env'
+    at process.loadEnvFile (node:internal/process/per_thread:364:7)
+    at <anonymous> (/home/dw/Projects/agent-sts2/ops/codex-ops/record-staging/20261014-1809/frozen-jev-replacement.mts:9:9)
+    at ModuleJob.run (node:internal/modules/esm/module_job:343:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:681:26)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5) {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/home/dw/Projects/agent-sts2/.worktrees/live/.env'
+}
+
+Node.js v22.23.3
