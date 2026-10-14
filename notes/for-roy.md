@@ -1457,3 +1457,126 @@ tsc及2673例沙箱测试通过，推送动作专项2例/Python4例通过。当�
 - 2026-10-14 22:20:33 CST [同反例归属补正] Roy本轮watcher补充已实际接收：B2符号反例与门禁研发继续由V5-S同watcher owner负责；原量化owner只在原阶段安全结束后协同冻结材料，不另派或重跑全史、不热注入/更换原R2固定实验及当前原量化线程输入。ops补核原states offset12472126259/32613字节及原ablation203cd3a9决策SHA、observed_ts/fingerprint精确一致，A10 F17T5第2试身份与原件压缩字节保持。原7源/逐1800样本验收记录不改，本行追加收件边界，P3整组不放行/B3窄通过/所有on关闭保持；不代Roy ACK。paper/materials/20261014-2203-ops/s-counterexample-ownership-clarification.json。
 
 - 2026-10-14 23:08:47 CST [watcher/Roy V5-S实际统计修复上线] 请求roy-20261014-s-decision；source e5d07f4a5a45ff3cf2cb44d09dfa89fa1ebf46ad → main 33b82e2d1e16cad58ceec34877dde2b9845eb593 / live行为 78b691b8f4395f52be5e0bfb566450492ee0e9d6，原源绑定head 907fa494efb34f0286a0205e8976ab161d4b59f7、tree 8fca2bf701c444f3d9912fa2086f0689c0cf1690。旧：bossMargin.outgoingHp只累加action-only dmg，漏掉已实际扣敌人HP的retaliation及终止于回合开始效果时未结转的startDealt，出现won=true但S<0。新：仅S专用outgoingHpDamage按同窗口记录动作伤害、已结转开始伤害、实际扣除反伤和终止carry；旧dmg/原胜负/回合/候选/HP护栏/药水/SL保持，未知目标群/截断/原信任闸不放宽，其他角色默认不捕获S。证据：原ablation 203cd3a9，E5L15SK6ZHZB/A10/F17/T5/attempt2，1800同板同seed样本反号17→0，胜负/回合/复活字段逐值相同；五新固定夹具撤码红恢复绿、22相关项绿。最终tsc0，404文件3889项中4条旧夹具仅时限失败，原件保留；两个失败文件按原断言/原时限单worker复验36项0，加paths11，全3900固定项有通过覆盖，不伪称原整套命令exit0；新工具typecheck/独立Python3/gitleaks0。21源路径已核，仅保既有live署名注释，全部并行脏记录及知识SHA保持，源码祖先绑定不改树。预期只修正S统计，不宣实际胜率收益；P1仍shadow，P1-on/P2/P3/P4/P5未开启。回退由原ops在锁内精确逆向live行为78b691b8f4395f52be5e0bfb566450492ee0e9d6四叶增量、保P0/P1及所有原件并登记新行为号。正式V5-R编号与最终部署树完整宿主检查由原ops接续，当前尚未冒认；当前对局不重启，下一自然进程及两局shadow消费者待核。材料paper/materials/20261014-s-decision（完整来源暂在同名owner工作树目录，随后规范归档）；原R2/R3冻结任务不热改/复派，父请求不关闭。
+
+- 2026-10-14 23:13:18 CST [ops原量化必要异议转达/待watcher与Roy本人回执] 原215252量化同线程必要异议/材料消费，非新学习、非P0重派。原批完成仅冻结证据边界，宽P1/P2/R3不关闭。C04旧R2缺伤害归属，C05对无条件S符号=胜负/均值S排序提出条件限制；抽象数字不是游戏实测，另与本轮S watcher实际反伤修复分列。请现有watcher读原包并在Roy当前会话明确告知差异，保留本人接收/原生用户可见回执；不代填其他角色ACK。当前ACK CLI不支持此未注册legacy父项的strategy continuation，实际转发回执独立留盘，不造新父请求或伪造普通提案。
+原报告 learner/runs/20261014-215252-strategy-proposal/report.md SHA 8a2cb53656991c3ef3c208bf9ccec7eeb10a3a445f3688ef9d71bbf10ce6d042
+消费者输入 learner/runs/20261014-215252-strategy-proposal/p1p2-consumer-input.json SHA b88299215bccc07ccd0a143d93675bcd5609c38bb5d80d1a9d7526949a2d943c
+全部原观点/新结论/证据/影响/下一步原文：
+{
+  "at": "2026-10-14 22:51:16 CST",
+  "claims": [
+    {
+      "id": "C01",
+      "old": "原报告切点2a62/51e0未合入，12冲突。",
+      "update": "历史原件仍正确；冻结R345祖先核验两个commit及后续41e406均true，不能把旧未合入切点当现生产状态。",
+      "evidence": [
+        "旧report.md/result.json",
+        "frozen-ancestry.json",
+        "core-cycle-quantitative-progress.json"
+      ],
+      "ledger_or_experience": [
+        "silent-0021/0194/0376/0385"
+      ],
+      "next": "沿原ops核现源码，不merge旧分支、不重做接口。"
+    },
+    {
+      "id": "C02",
+      "old": "单卡首施放/符号齐全可能被误称完整核心启动/通关率。",
+      "update": "R2所有核心trace valid0—1000；没有具名弃牌对记录或完整四核心启动。LKC基线步法首施放n375、core valid384/1000，只是条件单卡时点。",
+      "evidence": [
+        "r2-candidate-evidence.jsonl",
+        "core-window.ts",
+        "旧54G到手未建原帧"
+      ],
+      "ledger_or_experience": [
+        "silent-0385/0141",
+        "四原核心条目"
+      ],
+      "next": "P1保留qualification/start=null；后续取得支付、身份、真实后继、alive-through-start。"
+    },
+    {
+      "id": "C03",
+      "old": "完成更多旧模型样本/首DPR名次变化可被误当策略提高或生产仍11秒停算。",
+      "update": "54/54仅冻结R2参照；26键配对DPR差跨seed变号，2个2SE键是同局同牌一项对比；旧4/27、5/27未改，R345 required闸另行已发布。",
+      "evidence": [
+        "r2-summary.json",
+        "paired-sign-counterexample.json",
+        "build-sim-facts.ts:549"
+      ],
+      "ledger_or_experience": [
+        "silent-0021/0376"
+      ],
+      "next": "已完成参照不重跑；独立现模型校准和逐条件决策，不能据均值排序宣实盘收益。"
+    },
+    {
+      "id": "C04",
+      "old": "hpLoss或意图伤害可以直接当enemyDPR；均值DPR/HP可拼S。",
+      "update": "旧raw样本hpLoss70、逐轮loss86且归属缺失；所有778行S保持null。需同样本同窗/入口/目标/分账后才算S与deltaS。",
+      "evidence": [
+        "raw-model-accounting-witness.json",
+        "margin-record-boundary.json",
+        "boss-margin批准定义"
+      ],
+      "ledger_or_experience": [
+        "silent-0463旧校准条目，未修改"
+      ],
+      "next": "交061302 R3核真实敌伤/自伤回血/复活及窗口。"
+    },
+    {
+      "id": "C05",
+      "old": "S符号等于胜负/均值S较大就更好若无条件使用。",
+      "update": "恒定速率及正入口HP时可作连续kill-clock条件判断；时序/自伤回血复活另核。抽象反例：均值S0.89且9/10胜，高于S0.02但10/10胜；不是游戏数值或策略建议。",
+      "evidence": [
+        "fixed-offline-validation.json",
+        "boss-margin批准math_boundary",
+        "docs/v5-s-decision-plan.md"
+      ],
+      "ledger_or_experience": [],
+      "next": "原ops→watcher→Roy转交条件差异；本轮不修改P0实现、知识或代填ACK。"
+    },
+    {
+      "id": "C06",
+      "old": "Jev token降低27.566%、五题改选/模型排名相合可以证游戏收益。",
+      "update": "32分层题/13关联局/144含原样与倒序重复；模型名次非真值。6个并集分歧仅历史首动作完成，0实盘反事实；弃牌pending、未建立毒、药水/随机落点分别保留。",
+      "evidence": [
+        "jev-summary.json",
+        "jev-differences.json",
+        "原pilot analysis.json"
+      ],
+      "ledger_or_experience": [
+        "silent-0194/0376/0385/0141及原四条机制"
+      ],
+      "next": "R342已有契约不再实现；P0 Jev-v-code统计由watcher；真实动作校准由原R3 owner。"
+    },
+    {
+      "id": "C07",
+      "old": "原r2子项completed/固定消费者live读回等于宽P1/P2消化或自然采用。",
+      "update": "原V4-R313三题15/15限定经验交付核实且不重开；原明确P1/P2、模型冲突、完整实例/自然效果仍未知。",
+      "evidence": [
+        "parent-and-limited-child-boundary.json",
+        "原r2 final-verification/consumer-receipt"
+      ],
+      "ledger_or_experience": [
+        "silent-0440",
+        "原r2五条限定经验"
+      ],
+      "next": "保持子项completed；本轮只把未完字段交现P0/P1/P2与原效果链。"
+    },
+    {
+      "id": "C08",
+      "old": "旧7e1193固定校准撤可信可以关闭新R345校准或父要求。",
+      "update": "旧210输入质量失败/可信限制有范围；冻结新R3回执尚未实际开始，不是新结果。",
+      "evidence": [
+        "calibration-boundary.json",
+        "calibration-pending-receipt.json"
+      ],
+      "ledger_or_experience": [
+        "silent-0463"
+      ],
+      "next": "原owner按R3输入做真实动作校准；本轮不重放/拟合/轮询或替代验收。"
+    }
+  ],
+  "knowledge_or_ledger_changed": false,
+  "notification_route": "本报告及handoff packet由原ops接收→现watcher核接线/异议→Roy；本轮未写通知ACK或声称已送达。"
+}
+<!-- quantitative-disagreement:20261014-215252:aa9167da778990fac6764b62 -->

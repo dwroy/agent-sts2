@@ -1,0 +1,29 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/ops-integrate-silent-20261014-2300/agent
+
+ ❯ tests/silent-paper-krane.test.ts (14 tests | 2 failed) 46609ms
+   × state 399969: the complete recorded line matches the observed HP loss 16205ms
+   × state 400002: the complete recorded line matches the observed HP loss 29542ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/silent-paper-krane.test.ts > state 399969: the complete recorded line matches the observed HP loss
+ FAIL  tests/silent-paper-krane.test.ts > state 400002: the complete recorded line matches the observed HP loss
+Error: Test timed out in 15000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/silent-paper-krane.test.ts:77:83
+     75| }
+     76|
+     77| it.each([[399969, 399976, false, 10, 8], [400002, 400009, true, 19, 16…
+       |                                                                                   ^
+     78|   "state %i: the complete recorded line matches the observed HP loss",…
+     79|     const input = fixedInput(start);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+
+ Test Files  1 failed | 3 passed (4)
+      Tests  2 failed | 35 passed (37)
+   Start at  23:19:52
+   Duration  52.45s (transform 2.97s, setup 700ms, import 3.69s, tests 47.30s, environment 1ms)
+
