@@ -7,7 +7,7 @@ import { createScreenMemory } from "../src/memory/types.js";
 import { liveRollout, ROLLOUT_BUDGET_MS, rolloutFacts, rolloutLiveOptions } from "../src/reflex/rollout-live.js";
 import { replaySteps } from "../src/reflex/turn-solver.js";
 import { board, card } from "./boss-sim-fixture.js";
-import { withRolloutFixtureClock } from "./rollout-clock-fixture.js";
+import { withRolloutFixtureClock, withRolloutRankingFixture } from "./rollout-clock-fixture.js";
 
 vi.mock("node:fs", async (original) => {
   const fs = await original<typeof import("node:fs")>();
@@ -58,4 +58,18 @@ it("keeps deadline degradation and the fallback facts under a controlled advanci
   expect(result.result.horizon).toBe(1);
   expect(result.best).toBeNull();
   expect(rolloutFacts(args.plans[0]!, result).rollout).toMatch(/^no rollout \(it ran past its time budget; a fallback, not a forecast\)/);
+});
+
+it.each([0, 10_000])("ranking replays retain a bounded multi-turn forecast with %i ms host pauses", (pause) => {
+  let wall = 0;
+  vi.spyOn(performance, "now").mockImplementation(() => (wall += pause));
+  const first = withRolloutRankingFixture(() => liveRollout(fixedArgs()));
+  const second = withRolloutRankingFixture(() => liveRollout(fixedArgs()));
+  expect(first.available).toBe(true);
+  expect(second.available).toBe(true);
+  if (!first.available || !second.available) return;
+  expect(first.result.horizon).toBeGreaterThan(1);
+  expect(first.elapsedMs).toBeLessThanOrEqual(ROLLOUT_BUDGET_MS + 300);
+  expect(second.result.lines.map(({ value, hpLoss, wins, deaths }) => ({ value, hpLoss, wins, deaths })))
+    .toEqual(first.result.lines.map(({ value, hpLoss, wins, deaths }) => ({ value, hpLoss, wins, deaths })));
 });
