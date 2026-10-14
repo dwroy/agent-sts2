@@ -142,12 +142,23 @@
     "frozen_model": "473b9c0e1563e88d174cc24d6007eda5c5a9a9f9 / R346",
     "receipt": "paper/materials/20261015-r3-interface-consumption/watcher-receipt.json",
     "contract": "paper/materials/20261015-r3-interface-consumption/interface-contract.json",
-    "state": "actual watcher read and native Roy notification completed; boundary sent via existing ops; original R3 owner readback pending",
+    "state": "Original R3 owner actual confirmation received; watcher read all 10 field groups and accepted interface conditions. Continuous replay implementation and real attribution remain pending.",
     "whole_fight_replays": 0,
     "real_S_windows": 0,
     "production_model_changed": false,
     "legacy_parent_closed": false,
     "no_replacement_of_frozen_inputs": true,
-    "no_repeated_R2_or_Jev_experiment": true
+    "no_repeated_R2_or_Jev_experiment": true,
+    "previous_state_before_owner_confirmation": "actual watcher read and native Roy notification completed; boundary sent via existing ops; original R3 owner readback pending",
+    "owner_confirmation": {
+      "at": "2026-10-15T02:35:00+08:00",
+      "path": "learner/runs/20261015-022643-R3-interface-confirmation/interface-confirmation.json",
+      "sha256": "7d102700b3bcf013ce55e5f86f117c4ed61c3d011f94177bfc671de1d338b963"
+    },
+    "watcher_field_readback": {
+      "at": "2026-10-15T02:39:42+08:00",
+      "path": "paper/materials/20261015-r3-interface-consumption/owner-field-readback.json",
+      "implementation_complete": false
+    }
   }
 }
