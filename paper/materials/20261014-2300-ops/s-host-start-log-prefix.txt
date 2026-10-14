@@ -1,0 +1,16 @@
+
+[1m[30m[46m RUN [49m[39m[22m [36mv4.1.11 [39m[90m/home/dw/Projects/agent-sts2/.worktrees/live/agent[39m
+
+ [32m✓[39m tests/boss-lines-planner.test.ts [2m([22m[2m7 tests[22m[2m)[22m[33m 113139[2mms[22m[39m
+     [33m[2m✓[22m[39m BOSS_SIM_LINES=off: every logged boss board's decision is the pre-B2 one, byte for byte [33m 21568[2mms[22m[39m
+     [33m[2m✓[22m[39m a boss it is trusted on (The Kin, turn 5): every line's whole-fight numbers, rollout_best by the simulated win rate, the log [33m 5747[2mms[22m[39m
+     [33m[2m✓[22m[39m BOSS_SIM_LOW_TRUST=retry (default): a low-trust boss's first attempt is not simulated at all; the question and every answer as with B2 off, the log says why [33m 7981[2mms[22m[39m
+     [33m[2m✓[22m[39m BOSS_SIM_LOW_TRUST=always: a low-trust boss (the Queen, V4.2): no whole-fight number or plan in Jev's question, the question and ranking as with B2 off; the log keeps the numbers [33m 32957[2mms[22m[39m
+     [33m[2m✓[22m[39m an SL retry of a low-trust boss (SL_RETRY_SHOW_SIM on): the numbers shown and labelled 低可信, the ranking unchanged; the previous attempts in the question [33m 36928[2mms[22m[39m
+     [33m[2m✓[22m[39m turn 1: the fight plan from the best line's samples [33m 7735[2mms[22m[39m
+ [32m✓[39m tests/sl-explore-b2.test.ts [2m([22m[2m5 tests[22m[2m)[22m[33m 205583[2mms[22m[39m
+     [33m[2m✓[22m[39m a trusted boss (The Kin, Ceremonial Beast) and a low-trust one (the Queen): every point and deviated resolution is bc8c9bc's [33m 46823[2mms[22m[39m
+     [33m[2m✓[22m[39m Ceremonial Beast T1: the pick (Mazaleth's Gift) played there; the rollout's gate takes the dry line, B2's the other Gift line the rollout sees dying more often [33m 12169[2mms[22m[39m
+     [33m[2m✓[22m[39m a low-trust boss (the Queen, simulated on an SL retry): the rollout's gate, as without the sub-switch [33m 87067[2mms[22m[39m
+     [33m[2m✓[22m[39m Ceremonial Beast T1, the dry line played there: off nothing is left; on, a Gift line or Gambler's Brew are alternatives, and B2's pick drinks [33m 20938[2mms[22m[39m
+     [33m[2m✓[22m[39m The Kin T5: B2 ranks Snecko Oil (a random potion) first; the replacement drinks it, then re-plans, as Jev's pick of it would [33m 38584[2mms[22m[39m

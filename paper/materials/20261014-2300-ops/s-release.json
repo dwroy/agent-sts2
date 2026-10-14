@@ -1,0 +1,74 @@
+{
+  "source": "e5d07f4a5a45ff3cf2cb44d09dfa89fa1ebf46ad",
+  "actual_behavior": "78b691b8f4395f52be5e0bfb566450492ee0e9d6",
+  "name": "V5.s-margin-attribution1",
+  "original_live_tree_before_registry": "8fca2bf701c444f3d9912fa2086f0689c0cf1690",
+  "checkouts": {
+    "main": {
+      "pre_head": "bd1318631ce784435b54d3ab4bb0485b40e4424a",
+      "registered_head": "23c3e5faa8dd557a381e91d9168145e6513f138f",
+      "registered_tree": "3ba4f5644ead80b81ee61a858f0da0e1fcd84bf1"
+    },
+    "live": {
+      "pre_head": "8035f8223f0a5e9c7caea4971a5f547a6f9b8901",
+      "registered_head": "473b9c0e1563e88d174cc24d6007eda5c5a9a9f9",
+      "registered_tree": "3b6d1a3bbc53057c896f1f14b33e53fdd19467e4"
+    }
+  },
+  "actual_ops_received": true,
+  "source_validation": {
+    "at": "2026-10-14T23:05:05.546659+08:00",
+    "tsc": 0,
+    "fixed_coverage": {
+      "files": 405,
+      "cases": 3900,
+      "all_have_pass": true
+    },
+    "full_entry": {
+      "rc": 1,
+      "files": 404,
+      "cases": 3889,
+      "passed": 3885,
+      "failed": 4,
+      "failures": "only existing target-options (3) and potions-jev-call (1) wall-clock timeouts; original logs preserved"
+    },
+    "failed_files_recheck": {
+      "rc": 0,
+      "files": 2,
+      "cases": 36,
+      "resources": "one Vitest worker; original BOSS_SIM_WORKERS default, assertions and time limits unchanged"
+    },
+    "paths": {
+      "rc": 0,
+      "cases": 11
+    },
+    "new_regression_red_green": {
+      "red": 1,
+      "green": 0,
+      "cases": 5
+    },
+    "related_fixed_tests": 22,
+    "new_tools_typecheck": 0,
+    "optional_all_tools_baseline_errors": "identical 73-line existing output; see tools-typecheck-comparison.json",
+    "gitleaks_source": 0,
+    "gitleaks_evidence": 0,
+    "natural_acceptance": "pending",
+    "host_full": "original ops checks final deployed tree; not yet claimed",
+    "not_claimed": "The full sandbox invocation did not exit zero; this is complete fixed-case pass coverage with isolated timeout rechecks."
+  },
+  "old_failure_and_counterexample_history_preserved": true,
+  "host_full": {
+    "state": "actually_started",
+    "channel": "20261014-211304-fix-batch",
+    "tree": "3b6d1a3bbc53057c896f1f14b33e53fdd19467e4",
+    "receipt": "paper/materials/20261014-2300-ops/s-host-launch-receipt.json",
+    "actual_lock_owner_pid": 2620038,
+    "actual_vitest_pid": 2620505,
+    "full_exit": null
+  },
+  "two_natural_shadow_consumers": "pending",
+  "P1_on_P2_P3_P4_P5_not_enabled": true,
+  "at": "2026-10-14 23:38:13 CST",
+  "release_id": "V5-R346",
+  "state": "registered_host_once_pending"
+}

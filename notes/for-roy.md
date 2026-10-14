@@ -1580,3 +1580,5 @@ tsc及2673例沙箱测试通过，推送动作专项2例/Python4例通过。当�
   "notification_route": "本报告及handoff packet由原ops接收→现watcher核接线/异议→Roy；本轮未写通知ACK或声称已送达。"
 }
 <!-- quantitative-disagreement:20261014-215252:aa9167da778990fac6764b62 -->
+
+- 2026-10-14 23:47:56 CST [正式编号核实 V5-R346 / V5.s-margin-attribution1] 原已部署行为78b691b8/sourcee5d07f4现为实际live祖先，live锁内唯一编号；登记main 23c3e5faa8dd557a381e91d9168145e6513f138f / live 473b9c0e1563e88d174cc24d6007eda5c5a9a9f9。旧：S有效伤只累action-only dmg，漏实际已扣敌HP反伤及开始效果终止carry；新：S专用outgoingHpDamage结转上述已算HP伤，旧dmg/候选/胜负/回合/药水/HP/SL保持。E5L15SK6ZHZB A10 F17T5 attempt2同板三候选各600，旧反号5/8/4→0/0/0，终局字段与受伤逐值同、旧原件保留；仅窄计量修正，不证明其他Boss/实盘准确率或P3资格。源3900固定覆盖保原整套4超时与原预算36项补验，非单次整套exit0。宿主只沿原211304启动一次，精确tree 3b6d1a3bbc53057c896f1f14b33e53fdd19467e4，主检出宿主owner2620038/实际vitest2620505/固定树log已核；完整结果待learner-checks，不借原校准sandbox或旧绿。当前S_READINESS unset、默认shadow；两自然局及所有on/P2–P5仍pending，不重启或改R2/R3。预期：题面S反映目标有效HP伤，收益未知；回退：仅逆实际行为78b691b8增量并登记下个连续号，保知识刷新/原样本/失败。paper/materials/20261014-2300-ops/s-release.json、s-host-launch-receipt.json。
