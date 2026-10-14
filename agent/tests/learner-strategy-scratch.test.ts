@@ -2,7 +2,7 @@ import { execFile, spawn } from "node:child_process";
 import { EventEmitter } from "node:events";
 import { existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
-import { join } from "node:path";
+import { basename, join } from "node:path";
 import { PassThrough, Writable } from "node:stream";
 import { promisify } from "node:util";
 import { afterEach, describe, expect, it, vi } from "vitest";
@@ -34,7 +34,10 @@ function fixture(task = "strategy-proposal") {
       stdout: new PassThrough(), stderr: new PassThrough(), kill: vi.fn(),
       stdin: new Writable({ write(chunk, _encoding, done) { inputs[index] += chunk.toString(); done(); } }),
     });
-    queueMicrotask(() => { child.stdout.end(); child.stderr.end(); child.emit("close", 0, null); });
+    queueMicrotask(() => {
+      child.stdout.end(JSON.stringify({ type: "thread.started", thread_id: `fixture-thread-${index}` }) + "\n");
+      child.stderr.end(); child.emit("close", 0, null);
+    });
     return child;
   }) as typeof spawn);
   const runsDir = join(root, "learner", "runs");
@@ -45,8 +48,8 @@ function fixture(task = "strategy-proposal") {
     projectRoot: root, tasksDir, runsDir, env: { HOME: root, PATH: "" }, secretFiles: [],
     now: () => new Date(2026, 9, 14, 18, 43, 4), out: () => undefined, err: () => undefined,
     checkCodex: undefined, checkKeys: undefined, refreshCodexAuth: undefined,
-  }), records: () => readFileSync(join(runsDir, readdirSync(runsDir).find((f) => f.endsWith(".jsonl"))!), "utf8")
-    .trim().split("\n").map((line) => JSON.parse(line)),
+  }), records: () => readdirSync(runsDir).filter((file) => file.endsWith(".jsonl")).flatMap((file) =>
+    readFileSync(join(runsDir, file), "utf8").trim().split("\n").map((line) => JSON.parse(line))),
   };
 }
 
@@ -60,8 +63,10 @@ describe("strategy launcher scratch ownership", () => {
       const batch = `20261014-184301${suffix}-strategy-proposal`;
       mkdirSync(cwd, { recursive: true });
       expect(await f.run(cwd, batch)).toBe(0);
-      const launch = f.records().filter((row) => row.type === "learner_launch").at(-1)!;
-      const scratch = join(cwd, "learner", "runs", "20261014-184304-strategy-proposal");
+      const launch = f.records().find((row) => row.type === "learner_launch" && row.params.batch === batch)!;
+      const scratch = launch.params.scratch;
+      expect(scratch).toBe(join(cwd, "learner", "runs", basename(scratch)));
+      expect(basename(scratch)).toMatch(/^20261014-184304-[0-9a-f-]{36}-strategy-proposal$/);
       expect(launch.params).toMatchObject({ scratch, batch, worktree: cwd });
       expect(launch.prompt).toContain(`报告 ${scratch}/report.md`);
       expect(f.inputs.at(-1)).toContain(launch.prompt);
@@ -70,7 +75,7 @@ describe("strategy launcher scratch ownership", () => {
       launches.push(launch);
     }
     expect(new Set(launches.map((row) => row.params.scratch)).size).toBe(2);
-    expect(readdirSync(f.runsDir)).toEqual(["20261014-184304-strategy-proposal.jsonl"]);
+    expect(readdirSync(f.runsDir).sort()).toEqual(launches.map((row) => basename(row.params.scratch) + ".jsonl").sort());
     const result = await execute("python3", ["-B", "-c", `
 import copy, importlib.util, json, sys
 from pathlib import Path
@@ -99,12 +104,43 @@ print("OK")
     expect(result.stdout.trim()).toBe("OK");
   });
 
-  it("keeps non-strategy task scratch and logs at their existing location", async () => {
+  it("keeps non-strategy task scratch and logs in the central runs directory", async () => {
     const f = fixture("fix-batch");
     const cwd = join(f.root, ".worktrees", "fix"); mkdirSync(cwd, { recursive: true });
     expect(await f.run(cwd, "fixture-fix-batch")).toBe(0);
-    expect(f.records()[0].params.scratch).toBe(join(f.runsDir, "20261014-184304-fix-batch"));
-    expect(readdirSync(f.runsDir).sort()).toEqual(["20261014-184304-fix-batch", "20261014-184304-fix-batch.jsonl"]);
+    const scratch = f.records().find((row) => row.type === "learner_launch").params.scratch;
+    expect(scratch).toBe(join(f.runsDir, basename(scratch)));
+    expect(basename(scratch)).toMatch(/^20261014-184304-[0-9a-f-]{36}-fix-batch$/);
+    expect(readdirSync(f.runsDir).sort()).toEqual([basename(scratch), basename(scratch) + ".jsonl"].sort());
+  });
+
+  it("isolates concurrent same-second worker streams and repeated batch launches while preserving legacy logs", async () => {
+    const f = fixture();
+    const cwd = join(f.root, ".worktrees", "strategy"); mkdirSync(cwd, { recursive: true });
+    mkdirSync(f.runsDir, { recursive: true });
+    const legacy = join(f.runsDir, "20261014-184304-strategy-proposal.jsonl");
+    const old = JSON.stringify({ type: "learner_launch", params: { batch: "legacy" } }) + "\n";
+    writeFileSync(legacy, old);
+    const batches = ["20261014-231302-strategy-proposal", "20261014-231302-s2-strategy-proposal", "20261014-231302-strategy-proposal"];
+    expect(await Promise.all(batches.map((batch) => f.run(cwd, batch)))).toEqual([0, 0, 0]);
+    expect(readFileSync(legacy, "utf8")).toBe(old);
+    const logs = readdirSync(f.runsDir).filter((file) => file.endsWith(".jsonl") && join(f.runsDir, file) !== legacy);
+    expect(logs).toHaveLength(3);
+    const scratch = new Set<string>(), threads = new Set<string>(), seenBatches: string[] = [];
+    for (const file of logs) {
+      const rows = readFileSync(join(f.runsDir, file), "utf8").trim().split("\n").map((line) => JSON.parse(line));
+      const launches = rows.filter((row) => row.type === "learner_launch");
+      expect(launches).toHaveLength(1);
+      expect(rows.filter((row) => row.type === "learner_startup_attempt")).toHaveLength(1);
+      expect(rows.filter((row) => row.type === "learner_summary")).toHaveLength(1);
+      const thread = rows.filter((row) => row.type === "thread.started");
+      expect(thread).toHaveLength(1); threads.add(thread[0].thread_id);
+      seenBatches.push(launches[0].params.batch);
+      scratch.add(launches[0].params.scratch);
+      expect(file).toBe(basename(launches[0].params.scratch) + ".jsonl");
+    }
+    expect(seenBatches.sort()).toEqual([...batches].sort());
+    expect(scratch.size).toBe(3); expect(threads.size).toBe(3);
   });
 
   it.each(["learner", "learner/runs"])("rejects a %s symlink escaping the worktree before launch", async (path) => {

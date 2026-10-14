@@ -91,6 +91,20 @@ class PreservedCalibration(unittest.TestCase):
         self.assertEqual(self.recheck(), 2)
         self.assertFalse(self.calls)
 
+    def test_accepts_unique_launch_names_without_weakening_scratch_binding(self):
+        name = '20261007-154303-12345678-1234-1234-1234-123456789abc-silent-boss-calibration'
+        scratch = self.scratch.with_name(name)
+        self.scratch.rename(scratch)
+        path = self.launch_path.with_name(name + '.jsonl')
+        self.launch_path.rename(path)
+        launch = copy.deepcopy(self.launch)
+        launch['params']['scratch'] = str(scratch)
+        path.write_text(json.dumps(launch) + '\n')
+        self.assertEqual(self.recheck(), 0)
+        launch['params']['scratch'] = str(self.scratch)
+        path.write_text(json.dumps(launch) + '\n')
+        self.assertEqual(self.recheck(), 2)
+
     def test_rejects_running_batches_and_unpublished_or_failed_reports(self):
         for changes in [dict(task='strategy-proposal'), dict(batch='other'), dict(published_tree='bad'),
                         dict(tests=dict(tsc=0, vitest=1)), dict(fixes=[dict(commit='c' * 7)])]:
