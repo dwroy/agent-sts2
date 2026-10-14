@@ -1,0 +1,44 @@
+{
+  "task": "fix-batch",
+  "base": "3db099b16eb2477c6ee5c839b0c8bf7f1c5c91da",
+  "fixes": [],
+  "skipped": [
+    {
+      "item": "游戏机制、出牌、药水、SL、终局及结构模型队列项",
+      "reason": "策略类；已有独立 strategy-proposal 链，本批不重复实现或派发"
+    },
+    {
+      "item": "arch-funnel-guard / arch-learning-priority / arch-unified-resource-value / inv-f33-regression / 独立缓存及校准研究",
+      "reason": "独立功能/研究，超出普通纯 bug 批次，保留原拥有者"
+    },
+    {
+      "item": "sandbox-glob-startup-race 上游目录生命周期",
+      "reason": "证据不足；会话前恢复及复盘租约子项已修，准确删除者与上游根因未证"
+    },
+    {
+      "item": "调度公平性核查",
+      "reason": "证据不足；插入序观察尚不能证明永久饥饿"
+    },
+    {
+      "item": "core-build-notify-222802-rc2",
+      "reason": "证据不足；已有失败诊断修复，原 native rc2 根因未证，本任务不重放外部通知"
+    },
+    {
+      "item": "v5-dpr-health-20261013 暖池性能 / R1-R2 / P1-P2",
+      "reason": "独立研究已有原线程拥有者；已修执行/传输子项不等于性能父项完成"
+    },
+    {
+      "item": "框架外层总时限收尾",
+      "reason": "原分段宿主补验入口已修；原包装器及精确覆盖收尾由框架拥有者接续"
+    }
+  ],
+  "merged": null,
+  "tests": {
+    "tsc": 0,
+    "vitest": 0,
+    "cases": 55
+  },
+  "code_proposals": [],
+  "implementation_domains": [],
+  "report": "/home/dw/Projects/agent-sts2/learner/runs/20261014-201306-fix-batch/report.md"
+}

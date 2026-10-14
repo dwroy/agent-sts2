@@ -1,0 +1,858 @@
+{
+  "summary": [
+    {
+      "run_id": "MTQ0EUBJ3R6T",
+      "decisions": 424,
+      "segments": 68,
+      "observed_intervals": 156,
+      "matched_states": 424,
+      "observed_turns": 25,
+      "unknown_turns": 50,
+      "comparable_final_forecasts": 57,
+      "actual_candidate_results": 0,
+      "sha256": "8a9868d52c398a4488ad7afecaee3ec745e5dd3e903b12c76912c673ac89447f"
+    },
+    {
+      "run_id": "7X0W3U8TVA2A",
+      "decisions": 445,
+      "segments": 119,
+      "observed_intervals": 36,
+      "matched_states": 445,
+      "observed_turns": 7,
+      "unknown_turns": 64,
+      "comparable_final_forecasts": 93,
+      "actual_candidate_results": 0,
+      "sha256": "3aba47aa5a04a1ef48570bd59aa8fac33fb42eca0b3cc73c25967411a93e1cc9"
+    },
+    {
+      "run_id": "KFRDELW2TH2P",
+      "decisions": 586,
+      "segments": 180,
+      "observed_intervals": 224,
+      "matched_states": 586,
+      "observed_turns": 18,
+      "unknown_turns": 85,
+      "comparable_final_forecasts": 174,
+      "actual_candidate_results": 0,
+      "sha256": "4086172fbe0f93981599eb001f9c7e3962f7256710ca0fb438c97e4d7aea12b3"
+    },
+    {
+      "run_id": "GXNKW8X1XYJP",
+      "decisions": 646,
+      "segments": 116,
+      "observed_intervals": 178,
+      "matched_states": 646,
+      "observed_turns": 20,
+      "unknown_turns": 83,
+      "comparable_final_forecasts": 98,
+      "actual_candidate_results": 0,
+      "sha256": "e6a6fd5b8c3cd854b5db8a2421279592d9aab6978bc6f22d4583aa129ca58377"
+    }
+  ],
+  "consumers": [
+    {
+      "run_id": "KFRDELW2TH2P",
+      "source_line": 289345,
+      "source_sha256": "ec2ba830e7b777304f891fef4bc999b57e17a7a2ace9a7d51ee7614ea1abedad",
+      "hand_trick": null,
+      "observed_poison": 6
+    },
+    {
+      "run_id": "KFRDELW2TH2P",
+      "source_line": 289346,
+      "source_sha256": "1afec2f26c8e2f7f535be5268e91677989a2032b3a281af189b70cb4b1e8def5",
+      "hand_trick": null,
+      "observed_poison": 6
+    },
+    {
+      "run_id": "KFRDELW2TH2P",
+      "source_line": 289347,
+      "source_sha256": "d78f813381f3661c5ec007f6b5e50502517dc98df40b9de8c593ad8ee375f736",
+      "hand_trick": [
+        [
+          0,
+          {
+            "basis": "静默A10 KFRDELW2TH2P/F33T7：手上技法后还剩2个手动出牌名额；防御和带毒刺击用完名额后，奇巧爆发剩1能量仍被懒惰锁住。选择目标不等于已经施放。",
+            "sloth_cap": 3,
+            "manual_cards_played": 1,
+            "remaining_manual_plays_upper_bound": 2,
+            "energy_now": 3,
+            "target_energy_after_one_play": 2,
+            "energy_sufficient_for_target_alone": true,
+            "other_manual_plays_that_exhaust_the_cap": 2,
+            "target_requires_later_skill": null,
+            "hand_now": [
+              {
+                "index": 0,
+                "card_id": "DEFEND_SILENT",
+                "energy_cost_now": 1,
+                "mod_playable_during_selection": true,
+                "blocker_now": null,
+                "text": "获得5点格挡。"
+              },
+              {
+                "index": 1,
+                "card_id": "BURST",
+                "energy_cost_now": 1,
+                "mod_playable_during_selection": true,
+                "blocker_now": null,
+                "text": "在这个回合，你打出的下一张技能牌会被额外打出一次。"
+              },
+              {
+                "index": 2,
+                "card_id": "POISONED_STAB",
+                "energy_cost_now": 1,
+                "mod_playable_during_selection": true,
+                "blocker_now": null,
+                "text": "造成6点伤害。 给予3层中毒。"
+              }
+            ],
+            "continuation_verified": false,
+            "limitation": "选牌帧可打标记与费用只描述当前状态；自动重放也可能耗名额，完整后继和收益尚未验证。先耗尽名额再打目标不可兑现；不能据此固定选择防御或断言爆发先打能赢。"
+          }
+        ],
+        [
+          1,
+          {
+            "basis": "静默A10 KFRDELW2TH2P/F33T7：手上技法后还剩2个手动出牌名额；防御和带毒刺击用完名额后，奇巧爆发剩1能量仍被懒惰锁住。选择目标不等于已经施放。",
+            "sloth_cap": 3,
+            "manual_cards_played": 1,
+            "remaining_manual_plays_upper_bound": 2,
+            "energy_now": 3,
+            "target_energy_after_one_play": 2,
+            "energy_sufficient_for_target_alone": true,
+            "other_manual_plays_that_exhaust_the_cap": 2,
+            "target_requires_later_skill": true,
+            "hand_now": [
+              {
+                "index": 0,
+                "card_id": "DEFEND_SILENT",
+                "energy_cost_now": 1,
+                "mod_playable_during_selection": true,
+                "blocker_now": null,
+                "text": "获得5点格挡。"
+              },
+              {
+                "index": 1,
+                "card_id": "BURST",
+                "energy_cost_now": 1,
+                "mod_playable_during_selection": true,
+                "blocker_now": null,
+                "text": "在这个回合，你打出的下一张技能牌会被额外打出一次。"
+              },
+              {
+                "index": 2,
+                "card_id": "POISONED_STAB",
+                "energy_cost_now": 1,
+                "mod_playable_during_selection": true,
+                "blocker_now": null,
+                "text": "造成6点伤害。 给予3层中毒。"
+              }
+            ],
+            "continuation_verified": false,
+            "limitation": "选牌帧可打标记与费用只描述当前状态；自动重放也可能耗名额，完整后继和收益尚未验证。先耗尽名额再打目标不可兑现；不能据此固定选择防御或断言爆发先打能赢。"
+          }
+        ]
+      ],
+      "observed_poison": 6
+    },
+    {
+      "run_id": "KFRDELW2TH2P",
+      "source_line": 289348,
+      "source_sha256": "10fd923bf920787ecb09498ff47ca5321c737c759227244cd94bab6f9691774b",
+      "hand_trick": null,
+      "observed_poison": 6
+    },
+    {
+      "run_id": "KFRDELW2TH2P",
+      "source_line": 289349,
+      "source_sha256": "34a47d8d3c6c818e7352b9e4d35c04d5b08e288ea2974d9772394bdc147727a0",
+      "hand_trick": null,
+      "observed_poison": 6
+    },
+    {
+      "run_id": "KFRDELW2TH2P",
+      "source_line": 289350,
+      "source_sha256": "e7817e205c01740097bd5a0258db4cfbeb4b6e1179b4f55fd6591b5fa2b26b79",
+      "hand_trick": null,
+      "observed_poison": 6
+    },
+    {
+      "run_id": "KFRDELW2TH2P",
+      "source_line": 289351,
+      "source_sha256": "91219a771620dabb34efaba46475c291cfaf962a8640db6e07513f4dea14b65c",
+      "hand_trick": null,
+      "observed_poison": 6
+    },
+    {
+      "run_id": "KFRDELW2TH2P",
+      "source_line": 289383,
+      "source_sha256": "6cb95db8c7523feccd68422b55187967aad3888f64e6a4773548a798882ff5eb",
+      "hand_trick": null,
+      "observed_poison": 6
+    },
+    {
+      "run_id": "KFRDELW2TH2P",
+      "source_line": 289384,
+      "source_sha256": "a6b4fef5ef56ffd842ef394c8dd5d3e46d27f12d70ad43c79658da28283b6aaf",
+      "hand_trick": null,
+      "observed_poison": 6
+    },
+    {
+      "run_id": "KFRDELW2TH2P",
+      "source_line": 289385,
+      "source_sha256": "af7f5df1a97ac0b6b4205d71dc0c3c4a043a695c7e3981ecfa6f44ec5d545872",
+      "hand_trick": [
+        [
+          0,
+          {
+            "basis": "静默A10 KFRDELW2TH2P/F33T7：手上技法后还剩2个手动出牌名额；防御和带毒刺击用完名额后，奇巧爆发剩1能量仍被懒惰锁住。选择目标不等于已经施放。",
+            "sloth_cap": 3,
+            "manual_cards_played": 1,
+            "remaining_manual_plays_upper_bound": 2,
+            "energy_now": 3,
+            "target_energy_after_one_play": 2,
+            "energy_sufficient_for_target_alone": true,
+            "other_manual_plays_that_exhaust_the_cap": 2,
+            "target_requires_later_skill": null,
+            "hand_now": [
+              {
+                "index": 0,
+                "card_id": "DEFEND_SILENT",
+                "energy_cost_now": 1,
+                "mod_playable_during_selection": true,
+                "blocker_now": null,
+                "text": "获得5点格挡。"
+              },
+              {
+                "index": 1,
+                "card_id": "BURST",
+                "energy_cost_now": 1,
+                "mod_playable_during_selection": true,
+                "blocker_now": null,
+                "text": "在这个回合，你打出的下一张技能牌会被额外打出一次。"
+              },
+              {
+                "index": 2,
+                "card_id": "POISONED_STAB",
+                "energy_cost_now": 1,
+                "mod_playable_during_selection": true,
+                "blocker_now": null,
+                "text": "造成6点伤害。 给予3层中毒。"
+              }
+            ],
+            "continuation_verified": false,
+            "limitation": "选牌帧可打标记与费用只描述当前状态；自动重放也可能耗名额，完整后继和收益尚未验证。先耗尽名额再打目标不可兑现；不能据此固定选择防御或断言爆发先打能赢。"
+          }
+        ],
+        [
+          1,
+          {
+            "basis": "静默A10 KFRDELW2TH2P/F33T7：手上技法后还剩2个手动出牌名额；防御和带毒刺击用完名额后，奇巧爆发剩1能量仍被懒惰锁住。选择目标不等于已经施放。",
+            "sloth_cap": 3,
+            "manual_cards_played": 1,
+            "remaining_manual_plays_upper_bound": 2,
+            "energy_now": 3,
+            "target_energy_after_one_play": 2,
+            "energy_sufficient_for_target_alone": true,
+            "other_manual_plays_that_exhaust_the_cap": 2,
+            "target_requires_later_skill": true,
+            "hand_now": [
+              {
+                "index": 0,
+                "card_id": "DEFEND_SILENT",
+                "energy_cost_now": 1,
+                "mod_playable_during_selection": true,
+                "blocker_now": null,
+                "text": "获得5点格挡。"
+              },
+              {
+                "index": 1,
+                "card_id": "BURST",
+                "energy_cost_now": 1,
+                "mod_playable_during_selection": true,
+                "blocker_now": null,
+                "text": "在这个回合，你打出的下一张技能牌会被额外打出一次。"
+              },
+              {
+                "index": 2,
+                "card_id": "POISONED_STAB",
+                "energy_cost_now": 1,
+                "mod_playable_during_selection": true,
+                "blocker_now": null,
+                "text": "造成6点伤害。 给予3层中毒。"
+              }
+            ],
+            "continuation_verified": false,
+            "limitation": "选牌帧可打标记与费用只描述当前状态；自动重放也可能耗名额，完整后继和收益尚未验证。先耗尽名额再打目标不可兑现；不能据此固定选择防御或断言爆发先打能赢。"
+          }
+        ]
+      ],
+      "observed_poison": 6
+    },
+    {
+      "run_id": "KFRDELW2TH2P",
+      "source_line": 289386,
+      "source_sha256": "c77c6c67fdbe4569f1b71e4e2e4d8cd3dc3fb40d3f0cb691c76672b616fb5774",
+      "hand_trick": null,
+      "observed_poison": 6
+    },
+    {
+      "run_id": "KFRDELW2TH2P",
+      "source_line": 289387,
+      "source_sha256": "008ee370448a3e92713ae7e0dbacf06cfd702eff980c0ece0a4c0c262a16d70f",
+      "hand_trick": null,
+      "observed_poison": 6
+    },
+    {
+      "run_id": "KFRDELW2TH2P",
+      "source_line": 289388,
+      "source_sha256": "aee1a5963c147f55bb72affbf05f5f944d517e2576f438a2d72f31bf0846d850",
+      "hand_trick": null,
+      "observed_poison": 6
+    },
+    {
+      "run_id": "KFRDELW2TH2P",
+      "source_line": 289389,
+      "source_sha256": "748db056e17c76c043283d54f0f9af4a7f960abfe8773f241e2778c5de06d12c",
+      "hand_trick": null,
+      "observed_poison": 6
+    },
+    {
+      "run_id": "KFRDELW2TH2P",
+      "source_line": 289420,
+      "source_sha256": "d282a46e1ef282eb062084408c77e3a5002e59a2c8f24c4536a95c451b9d6fe6",
+      "hand_trick": null,
+      "observed_poison": 6
+    },
+    {
+      "run_id": "KFRDELW2TH2P",
+      "source_line": 289421,
+      "source_sha256": "ab584e30761db594d20be2153f7e4967ebade28d9b1d5e40ccfc8085cb2b0dbe",
+      "hand_trick": null,
+      "observed_poison": 6
+    },
+    {
+      "run_id": "KFRDELW2TH2P",
+      "source_line": 289422,
+      "source_sha256": "f1c77e6579b9aaa89618007d65e72ad26a473aca5aa627f33a00007c2df5bb50",
+      "hand_trick": [
+        [
+          0,
+          {
+            "basis": "静默A10 KFRDELW2TH2P/F33T7：手上技法后还剩2个手动出牌名额；防御和带毒刺击用完名额后，奇巧爆发剩1能量仍被懒惰锁住。选择目标不等于已经施放。",
+            "sloth_cap": 3,
+            "manual_cards_played": 1,
+            "remaining_manual_plays_upper_bound": 2,
+            "energy_now": 3,
+            "target_energy_after_one_play": 2,
+            "energy_sufficient_for_target_alone": true,
+            "other_manual_plays_that_exhaust_the_cap": 2,
+            "target_requires_later_skill": null,
+            "hand_now": [
+              {
+                "index": 0,
+                "card_id": "DEFEND_SILENT",
+                "energy_cost_now": 1,
+                "mod_playable_during_selection": true,
+                "blocker_now": null,
+                "text": "获得5点格挡。"
+              },
+              {
+                "index": 1,
+                "card_id": "BURST",
+                "energy_cost_now": 1,
+                "mod_playable_during_selection": true,
+                "blocker_now": null,
+                "text": "在这个回合，你打出的下一张技能牌会被额外打出一次。"
+              },
+              {
+                "index": 2,
+                "card_id": "POISONED_STAB",
+                "energy_cost_now": 1,
+                "mod_playable_during_selection": true,
+                "blocker_now": null,
+                "text": "造成6点伤害。 给予3层中毒。"
+              }
+            ],
+            "continuation_verified": false,
+            "limitation": "选牌帧可打标记与费用只描述当前状态；自动重放也可能耗名额，完整后继和收益尚未验证。先耗尽名额再打目标不可兑现；不能据此固定选择防御或断言爆发先打能赢。"
+          }
+        ],
+        [
+          1,
+          {
+            "basis": "静默A10 KFRDELW2TH2P/F33T7：手上技法后还剩2个手动出牌名额；防御和带毒刺击用完名额后，奇巧爆发剩1能量仍被懒惰锁住。选择目标不等于已经施放。",
+            "sloth_cap": 3,
+            "manual_cards_played": 1,
+            "remaining_manual_plays_upper_bound": 2,
+            "energy_now": 3,
+            "target_energy_after_one_play": 2,
+            "energy_sufficient_for_target_alone": true,
+            "other_manual_plays_that_exhaust_the_cap": 2,
+            "target_requires_later_skill": true,
+            "hand_now": [
+              {
+                "index": 0,
+                "card_id": "DEFEND_SILENT",
+                "energy_cost_now": 1,
+                "mod_playable_during_selection": true,
+                "blocker_now": null,
+                "text": "获得5点格挡。"
+              },
+              {
+                "index": 1,
+                "card_id": "BURST",
+                "energy_cost_now": 1,
+                "mod_playable_during_selection": true,
+                "blocker_now": null,
+                "text": "在这个回合，你打出的下一张技能牌会被额外打出一次。"
+              },
+              {
+                "index": 2,
+                "card_id": "POISONED_STAB",
+                "energy_cost_now": 1,
+                "mod_playable_during_selection": true,
+                "blocker_now": null,
+                "text": "造成6点伤害。 给予3层中毒。"
+              }
+            ],
+            "continuation_verified": false,
+            "limitation": "选牌帧可打标记与费用只描述当前状态；自动重放也可能耗名额，完整后继和收益尚未验证。先耗尽名额再打目标不可兑现；不能据此固定选择防御或断言爆发先打能赢。"
+          }
+        ]
+      ],
+      "observed_poison": 6
+    },
+    {
+      "run_id": "KFRDELW2TH2P",
+      "source_line": 289423,
+      "source_sha256": "31b795b7ebac28a227e4de8251dacd92175b4a2df391d480ff012ac7dda180b1",
+      "hand_trick": null,
+      "observed_poison": 6
+    },
+    {
+      "run_id": "KFRDELW2TH2P",
+      "source_line": 289424,
+      "source_sha256": "c4f1972d9a04ce638bb67ae3b32cebeeabd29717b8216a02383056f15623ebc5",
+      "hand_trick": null,
+      "observed_poison": 6
+    },
+    {
+      "run_id": "KFRDELW2TH2P",
+      "source_line": 289425,
+      "source_sha256": "20300158e7505a9445e8bcd8ea0b581d4922126765325bafd69694297d53f0e9",
+      "hand_trick": null,
+      "observed_poison": 6
+    },
+    {
+      "run_id": "KFRDELW2TH2P",
+      "source_line": 289426,
+      "source_sha256": "81d3f1afa0dc4c2327ef5c6c21e581b9f50625a2987aeece9cfa5a8fa608379b",
+      "hand_trick": null,
+      "observed_poison": 6
+    },
+    {
+      "run_id": "KFRDELW2TH2P",
+      "source_line": 289458,
+      "source_sha256": "4ab3f6ed6e8b2fa15260ec1570bced1b67e183591a9cd5d76a6acec2b3f5971b",
+      "hand_trick": null,
+      "observed_poison": 6
+    },
+    {
+      "run_id": "KFRDELW2TH2P",
+      "source_line": 289459,
+      "source_sha256": "55df757e643e371bd0687cf33d5b8c366eac1cf3e04eaa49ad6597e835789392",
+      "hand_trick": null,
+      "observed_poison": 6
+    },
+    {
+      "run_id": "KFRDELW2TH2P",
+      "source_line": 289460,
+      "source_sha256": "3d8cbe2a2df4b17950d03c4d592b94850bee6011ad1298e36c299e60f9ec167d",
+      "hand_trick": [
+        [
+          0,
+          {
+            "basis": "静默A10 KFRDELW2TH2P/F33T7：手上技法后还剩2个手动出牌名额；防御和带毒刺击用完名额后，奇巧爆发剩1能量仍被懒惰锁住。选择目标不等于已经施放。",
+            "sloth_cap": 3,
+            "manual_cards_played": 1,
+            "remaining_manual_plays_upper_bound": 2,
+            "energy_now": 3,
+            "target_energy_after_one_play": 2,
+            "energy_sufficient_for_target_alone": true,
+            "other_manual_plays_that_exhaust_the_cap": 2,
+            "target_requires_later_skill": null,
+            "hand_now": [
+              {
+                "index": 0,
+                "card_id": "DEFEND_SILENT",
+                "energy_cost_now": 1,
+                "mod_playable_during_selection": true,
+                "blocker_now": null,
+                "text": "获得5点格挡。"
+              },
+              {
+                "index": 1,
+                "card_id": "BURST",
+                "energy_cost_now": 1,
+                "mod_playable_during_selection": true,
+                "blocker_now": null,
+                "text": "在这个回合，你打出的下一张技能牌会被额外打出一次。"
+              },
+              {
+                "index": 2,
+                "card_id": "POISONED_STAB",
+                "energy_cost_now": 1,
+                "mod_playable_during_selection": true,
+                "blocker_now": null,
+                "text": "造成6点伤害。 给予3层中毒。"
+              }
+            ],
+            "continuation_verified": false,
+            "limitation": "选牌帧可打标记与费用只描述当前状态；自动重放也可能耗名额，完整后继和收益尚未验证。先耗尽名额再打目标不可兑现；不能据此固定选择防御或断言爆发先打能赢。"
+          }
+        ],
+        [
+          1,
+          {
+            "basis": "静默A10 KFRDELW2TH2P/F33T7：手上技法后还剩2个手动出牌名额；防御和带毒刺击用完名额后，奇巧爆发剩1能量仍被懒惰锁住。选择目标不等于已经施放。",
+            "sloth_cap": 3,
+            "manual_cards_played": 1,
+            "remaining_manual_plays_upper_bound": 2,
+            "energy_now": 3,
+            "target_energy_after_one_play": 2,
+            "energy_sufficient_for_target_alone": true,
+            "other_manual_plays_that_exhaust_the_cap": 2,
+            "target_requires_later_skill": true,
+            "hand_now": [
+              {
+                "index": 0,
+                "card_id": "DEFEND_SILENT",
+                "energy_cost_now": 1,
+                "mod_playable_during_selection": true,
+                "blocker_now": null,
+                "text": "获得5点格挡。"
+              },
+              {
+                "index": 1,
+                "card_id": "BURST",
+                "energy_cost_now": 1,
+                "mod_playable_during_selection": true,
+                "blocker_now": null,
+                "text": "在这个回合，你打出的下一张技能牌会被额外打出一次。"
+              },
+              {
+                "index": 2,
+                "card_id": "POISONED_STAB",
+                "energy_cost_now": 1,
+                "mod_playable_during_selection": true,
+                "blocker_now": null,
+                "text": "造成6点伤害。 给予3层中毒。"
+              }
+            ],
+            "continuation_verified": false,
+            "limitation": "选牌帧可打标记与费用只描述当前状态；自动重放也可能耗名额，完整后继和收益尚未验证。先耗尽名额再打目标不可兑现；不能据此固定选择防御或断言爆发先打能赢。"
+          }
+        ]
+      ],
+      "observed_poison": 6
+    },
+    {
+      "run_id": "KFRDELW2TH2P",
+      "source_line": 289461,
+      "source_sha256": "df8adaec6273da9d9836119dfecff6994874a05917df25721220c75ebbb6602a",
+      "hand_trick": null,
+      "observed_poison": 6
+    },
+    {
+      "run_id": "KFRDELW2TH2P",
+      "source_line": 289462,
+      "source_sha256": "12711d555bac31647c87b068e0a90685692523b86d0ef15f5c475a7baa2ec26b",
+      "hand_trick": null,
+      "observed_poison": 6
+    },
+    {
+      "run_id": "KFRDELW2TH2P",
+      "source_line": 289463,
+      "source_sha256": "c6c6a5fdc67c2ec36bfe85b20473af2b881f74c2e22087087ac9caaafb57d074",
+      "hand_trick": null,
+      "observed_poison": 6
+    },
+    {
+      "run_id": "KFRDELW2TH2P",
+      "source_line": 289464,
+      "source_sha256": "a8f31c855112c9a3630cb1c204e537bcea5e2d8dd1770e1747a669c1c059a164",
+      "hand_trick": null,
+      "observed_poison": 6
+    },
+    {
+      "run_id": "KFRDELW2TH2P",
+      "source_line": 289494,
+      "source_sha256": "b94678e02300da5af2659fe63733d90b009e5639e46bf2f86e4cc9d2d4bda519",
+      "hand_trick": null,
+      "observed_poison": 6
+    },
+    {
+      "run_id": "KFRDELW2TH2P",
+      "source_line": 289495,
+      "source_sha256": "fd9bba339b1701d4d45482da3d35fd1bc120e9e102a131db8e3e01bd3567d51f",
+      "hand_trick": null,
+      "observed_poison": 6
+    },
+    {
+      "run_id": "KFRDELW2TH2P",
+      "source_line": 289496,
+      "source_sha256": "d895c2d69313874a9cf31121b3251883abfe34236a76c56409149164d65e5906",
+      "hand_trick": [
+        [
+          0,
+          {
+            "basis": "静默A10 KFRDELW2TH2P/F33T7：手上技法后还剩2个手动出牌名额；防御和带毒刺击用完名额后，奇巧爆发剩1能量仍被懒惰锁住。选择目标不等于已经施放。",
+            "sloth_cap": 3,
+            "manual_cards_played": 1,
+            "remaining_manual_plays_upper_bound": 2,
+            "energy_now": 3,
+            "target_energy_after_one_play": 2,
+            "energy_sufficient_for_target_alone": true,
+            "other_manual_plays_that_exhaust_the_cap": 2,
+            "target_requires_later_skill": null,
+            "hand_now": [
+              {
+                "index": 0,
+                "card_id": "DEFEND_SILENT",
+                "energy_cost_now": 1,
+                "mod_playable_during_selection": true,
+                "blocker_now": null,
+                "text": "获得5点格挡。"
+              },
+              {
+                "index": 1,
+                "card_id": "BURST",
+                "energy_cost_now": 1,
+                "mod_playable_during_selection": true,
+                "blocker_now": null,
+                "text": "在这个回合，你打出的下一张技能牌会被额外打出一次。"
+              },
+              {
+                "index": 2,
+                "card_id": "POISONED_STAB",
+                "energy_cost_now": 1,
+                "mod_playable_during_selection": true,
+                "blocker_now": null,
+                "text": "造成6点伤害。 给予3层中毒。"
+              }
+            ],
+            "continuation_verified": false,
+            "limitation": "选牌帧可打标记与费用只描述当前状态；自动重放也可能耗名额，完整后继和收益尚未验证。先耗尽名额再打目标不可兑现；不能据此固定选择防御或断言爆发先打能赢。"
+          }
+        ],
+        [
+          1,
+          {
+            "basis": "静默A10 KFRDELW2TH2P/F33T7：手上技法后还剩2个手动出牌名额；防御和带毒刺击用完名额后，奇巧爆发剩1能量仍被懒惰锁住。选择目标不等于已经施放。",
+            "sloth_cap": 3,
+            "manual_cards_played": 1,
+            "remaining_manual_plays_upper_bound": 2,
+            "energy_now": 3,
+            "target_energy_after_one_play": 2,
+            "energy_sufficient_for_target_alone": true,
+            "other_manual_plays_that_exhaust_the_cap": 2,
+            "target_requires_later_skill": true,
+            "hand_now": [
+              {
+                "index": 0,
+                "card_id": "DEFEND_SILENT",
+                "energy_cost_now": 1,
+                "mod_playable_during_selection": true,
+                "blocker_now": null,
+                "text": "获得5点格挡。"
+              },
+              {
+                "index": 1,
+                "card_id": "BURST",
+                "energy_cost_now": 1,
+                "mod_playable_during_selection": true,
+                "blocker_now": null,
+                "text": "在这个回合，你打出的下一张技能牌会被额外打出一次。"
+              },
+              {
+                "index": 2,
+                "card_id": "POISONED_STAB",
+                "energy_cost_now": 1,
+                "mod_playable_during_selection": true,
+                "blocker_now": null,
+                "text": "造成6点伤害。 给予3层中毒。"
+              }
+            ],
+            "continuation_verified": false,
+            "limitation": "选牌帧可打标记与费用只描述当前状态；自动重放也可能耗名额，完整后继和收益尚未验证。先耗尽名额再打目标不可兑现；不能据此固定选择防御或断言爆发先打能赢。"
+          }
+        ]
+      ],
+      "observed_poison": 6
+    },
+    {
+      "run_id": "KFRDELW2TH2P",
+      "source_line": 289497,
+      "source_sha256": "7b352834fe0c16d628d57d6d3f18753dac508267851b0258e4ec72ac900d8661",
+      "hand_trick": null,
+      "observed_poison": 6
+    },
+    {
+      "run_id": "KFRDELW2TH2P",
+      "source_line": 289498,
+      "source_sha256": "93ea897c559447c8870217ad680b3c15f300f3d93a2a00395c962a2b8382bc94",
+      "hand_trick": null,
+      "observed_poison": 6
+    },
+    {
+      "run_id": "KFRDELW2TH2P",
+      "source_line": 289499,
+      "source_sha256": "258cfe336bcc206cdf04b4f61091a801dd41ffc447d611e9c6aa62592cee3eaa",
+      "hand_trick": null,
+      "observed_poison": 6
+    },
+    {
+      "run_id": "KFRDELW2TH2P",
+      "source_line": 289500,
+      "source_sha256": "a0d3178bebba83561ccb1187efcd72e7668827e6a90e512c183e08621568ddfb",
+      "hand_trick": null,
+      "observed_poison": 6
+    },
+    {
+      "run_id": "KFRDELW2TH2P",
+      "source_line": 289531,
+      "source_sha256": "476e1fd4789fdf292d967e91ec55d89e264b497b3f4fc41ce59a5fdf916db5c4",
+      "hand_trick": null,
+      "observed_poison": 6
+    },
+    {
+      "run_id": "KFRDELW2TH2P",
+      "source_line": 289532,
+      "source_sha256": "4f872c9b6a0b6b12af24bb9336fe7aba71587ea8edfb0a8f5c86c91eff11cd45",
+      "hand_trick": null,
+      "observed_poison": 6
+    },
+    {
+      "run_id": "KFRDELW2TH2P",
+      "source_line": 289533,
+      "source_sha256": "fea8bec98655d36e3e9c1bf367e56cca3a1ac0be397c4b15a3015cbfff315b3d",
+      "hand_trick": [
+        [
+          0,
+          {
+            "basis": "静默A10 KFRDELW2TH2P/F33T7：手上技法后还剩2个手动出牌名额；防御和带毒刺击用完名额后，奇巧爆发剩1能量仍被懒惰锁住。选择目标不等于已经施放。",
+            "sloth_cap": 3,
+            "manual_cards_played": 1,
+            "remaining_manual_plays_upper_bound": 2,
+            "energy_now": 3,
+            "target_energy_after_one_play": 2,
+            "energy_sufficient_for_target_alone": true,
+            "other_manual_plays_that_exhaust_the_cap": 2,
+            "target_requires_later_skill": null,
+            "hand_now": [
+              {
+                "index": 0,
+                "card_id": "DEFEND_SILENT",
+                "energy_cost_now": 1,
+                "mod_playable_during_selection": true,
+                "blocker_now": null,
+                "text": "获得5点格挡。"
+              },
+              {
+                "index": 1,
+                "card_id": "BURST",
+                "energy_cost_now": 1,
+                "mod_playable_during_selection": true,
+                "blocker_now": null,
+                "text": "在这个回合，你打出的下一张技能牌会被额外打出一次。"
+              },
+              {
+                "index": 2,
+                "card_id": "POISONED_STAB",
+                "energy_cost_now": 1,
+                "mod_playable_during_selection": true,
+                "blocker_now": null,
+                "text": "造成6点伤害。 给予3层中毒。"
+              }
+            ],
+            "continuation_verified": false,
+            "limitation": "选牌帧可打标记与费用只描述当前状态；自动重放也可能耗名额，完整后继和收益尚未验证。先耗尽名额再打目标不可兑现；不能据此固定选择防御或断言爆发先打能赢。"
+          }
+        ],
+        [
+          1,
+          {
+            "basis": "静默A10 KFRDELW2TH2P/F33T7：手上技法后还剩2个手动出牌名额；防御和带毒刺击用完名额后，奇巧爆发剩1能量仍被懒惰锁住。选择目标不等于已经施放。",
+            "sloth_cap": 3,
+            "manual_cards_played": 1,
+            "remaining_manual_plays_upper_bound": 2,
+            "energy_now": 3,
+            "target_energy_after_one_play": 2,
+            "energy_sufficient_for_target_alone": true,
+            "other_manual_plays_that_exhaust_the_cap": 2,
+            "target_requires_later_skill": true,
+            "hand_now": [
+              {
+                "index": 0,
+                "card_id": "DEFEND_SILENT",
+                "energy_cost_now": 1,
+                "mod_playable_during_selection": true,
+                "blocker_now": null,
+                "text": "获得5点格挡。"
+              },
+              {
+                "index": 1,
+                "card_id": "BURST",
+                "energy_cost_now": 1,
+                "mod_playable_during_selection": true,
+                "blocker_now": null,
+                "text": "在这个回合，你打出的下一张技能牌会被额外打出一次。"
+              },
+              {
+                "index": 2,
+                "card_id": "POISONED_STAB",
+                "energy_cost_now": 1,
+                "mod_playable_during_selection": true,
+                "blocker_now": null,
+                "text": "造成6点伤害。 给予3层中毒。"
+              }
+            ],
+            "continuation_verified": false,
+            "limitation": "选牌帧可打标记与费用只描述当前状态；自动重放也可能耗名额，完整后继和收益尚未验证。先耗尽名额再打目标不可兑现；不能据此固定选择防御或断言爆发先打能赢。"
+          }
+        ]
+      ],
+      "observed_poison": 6
+    },
+    {
+      "run_id": "KFRDELW2TH2P",
+      "source_line": 289534,
+      "source_sha256": "acc66dc9e8fdb7791aa01c1f1e77372e7a7b8bd484b87140da63940b680665e7",
+      "hand_trick": null,
+      "observed_poison": 6
+    },
+    {
+      "run_id": "KFRDELW2TH2P",
+      "source_line": 289535,
+      "source_sha256": "49bafb03d6e0cbb26cde57a96afe65ea6324c02da2e9c8de74c1e6a29e7b589d",
+      "hand_trick": null,
+      "observed_poison": 6
+    },
+    {
+      "run_id": "KFRDELW2TH2P",
+      "source_line": 289536,
+      "source_sha256": "0f74065d57858f6af148e274beb15589aae44df3718c55a5224b7e4d31bbdf1e",
+      "hand_trick": null,
+      "observed_poison": 6
+    },
+    {
+      "run_id": "KFRDELW2TH2P",
+      "source_line": 289537,
+      "source_sha256": "d89cede2e0036f67b481c71a5db89b6beed69127fc0d4d3b519b57d6457d437b",
+      "hand_trick": null,
+      "observed_poison": 6
+    }
+  ]
+}

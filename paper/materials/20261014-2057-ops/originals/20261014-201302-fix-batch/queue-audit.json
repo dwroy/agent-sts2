@@ -1,0 +1,992 @@
+{
+  "checked_at": "2026-10-14 20:37:36 CST",
+  "base": "3db099b16eb2477c6ee5c839b0c8bf7f1c5c91da",
+  "live_observed": "b0b4d0a152155582c52ef622fe8fc6d9a0c27335",
+  "queue": "/home/dw/Projects/agent-sts2/notes/fix-queue-v4.md",
+  "queue_sha256": "498705431984b45b1b01470c6f491010e5620a2f60aacd6f36f3ce0af4102a20",
+  "already_fixed": [
+    {
+      "line": 9,
+      "item": "fight-value 构建器 observe_combat 参数缺失",
+      "commit": "aba384cc503e53001933fceb688e9d2c24442b19",
+      "path": "knowledge/builders/build-fight-value.py",
+      "base_blob": "6ec1bcc5ef2251182552efdb26a38f2b3b9ffb18",
+      "base_ancestor": true,
+      "live_ancestor": true
+    },
+    {
+      "line": 6,
+      "item": "失败的大脑调用记录零耗时和零用量",
+      "commit": "531d15444f5e9c29d85d36ff098f3fbf33e647af",
+      "path": "agent/src/brain/router.ts",
+      "base_blob": "42e66e13940597dd0708a41f4838f76baf6933d8",
+      "base_ancestor": true,
+      "live_ancestor": true
+    },
+    {
+      "line": 171,
+      "item": "大脑失败及回退的耗时、用量与引擎归属",
+      "commit": "fc5b2e5e6314c40590dd976189d0137309383c6b",
+      "path": "agent/src/brain/router.ts",
+      "base_blob": "42e66e13940597dd0708a41f4838f76baf6933d8",
+      "base_ancestor": true,
+      "live_ancestor": true
+    },
+    {
+      "line": 192,
+      "item": "SL 日志把低血走廊标为 elite",
+      "commit": "af6f07adfee1ad62ec85d613ab36a7b11857ce89",
+      "path": "agent/src/sl/controller.ts",
+      "base_blob": "c8b8f8bf8e0cd32d6a0413e4a30d6af389b92243",
+      "base_ancestor": true,
+      "live_ancestor": true
+    },
+    {
+      "line": 204,
+      "item": "outcome-stats 刷新后进程仍读旧缓存",
+      "commit": "2650aed8baa84b8cf26e1e98b975582a6d5ab537",
+      "path": "agent/src/knowledge/experience.ts",
+      "base_blob": "e6f03aabbe01edd7fb665e6e20b451a706f53c29",
+      "base_ancestor": true,
+      "live_ancestor": true
+    },
+    {
+      "line": 214,
+      "item": "fix-batch/experience-update 旧队列及 v3 合入模板",
+      "commit": "afd652a3f75df6e7403439f01c565220327884da",
+      "path": "learner/tasks/fix-batch.md",
+      "base_blob": "0cf67273f73ad423f2bc527389d5fc9daed0c663",
+      "base_ancestor": true,
+      "live_ancestor": true
+    },
+    {
+      "line": 216,
+      "item": "DeepSeek 题面导出整读超大 states 日志",
+      "commit": "6ee8e2a2c1edc31492962137b96af8c6e1d12093",
+      "path": "agent/tools/deepseek-prompt-dump.ts",
+      "base_blob": "bca63f8c74a91ca244052de918c59b9cd7577225",
+      "base_ancestor": true,
+      "live_ancestor": true
+    },
+    {
+      "line": 259,
+      "item": "tsc 纳入 learner/runs 临时源码",
+      "commit": "7bc835803f2efd44a5cc6f2009933f3c3bee7653",
+      "path": "agent/tsconfig.json",
+      "base_blob": "5116d1c5f7cae5032ec5a7bae41a46083aeda8c1",
+      "base_ancestor": true,
+      "live_ancestor": true
+    },
+    {
+      "line": 266,
+      "item": "兜底合入后缺宿主完整检查入口",
+      "commit": "f670884a188a047bbd3f7f007c260ade62fae36a",
+      "path": "ops/learner_checks.py",
+      "base_blob": "24b733a3984deaa99bb75862a34c99ba2d8072d1",
+      "base_ancestor": true,
+      "live_ancestor": true
+    },
+    {
+      "line": 269,
+      "item": "单次 mod 超时误报持续卡死",
+      "commit": "a4f4ec868d122dc92af510862c6240cf2eaff2b6",
+      "path": "ops/stall-check.sh",
+      "base_blob": "5cefc14a38b4507d5606ae8562d9603cf8d9118e",
+      "base_ancestor": true,
+      "live_ancestor": true
+    },
+    {
+      "line": 299,
+      "item": "账本无法追加更正来源元数据",
+      "commit": "87c89b7aea90c7275e0fbb04b1e4148a4209630c",
+      "path": "learner/ledger.py",
+      "base_blob": "fa7fb7eca8f8477963351b7d1c1a5ddb435e1dfd",
+      "base_ancestor": true,
+      "live_ancestor": true
+    },
+    {
+      "line": 302,
+      "item": "长检查阻塞学习状态锁",
+      "commit": "233ede56047274ba53a4e1191a245fac816c37a8",
+      "path": "ops/learner_checks.py",
+      "base_blob": "24b733a3984deaa99bb75862a34c99ba2d8072d1",
+      "base_ancestor": true,
+      "live_ancestor": true
+    },
+    {
+      "line": 406,
+      "item": "额度测试错误依赖已设置 TMPDIR",
+      "commit": "6bfbe3d2e2aa6e5e8c1969d5ee1cca08671ae02a",
+      "path": "agent/tests/subscription-usage.test.ts",
+      "base_blob": "f94bb2d38ff600b4be84d91f32ac9ed013f99655",
+      "base_ancestor": true,
+      "live_ancestor": true
+    },
+    {
+      "line": 452,
+      "item": "rollout/target-options 单调截止传播",
+      "commit": "9889436c3b332a3984cdb7f850a1349f464182d1",
+      "path": "agent/src/reflex/rollout-live.ts",
+      "base_blob": "a0f6726378b8777d20757941abc0bd45e98dd616",
+      "base_ancestor": true,
+      "live_ancestor": true
+    },
+    {
+      "line": 469,
+      "item": "无新增修复的成功批次被误标失败",
+      "commit": "01b560ef4966da945511bfccd41abd09440fb0e9",
+      "path": "ops/learner_checks.py",
+      "base_blob": "24b733a3984deaa99bb75862a34c99ba2d8072d1",
+      "base_ancestor": true,
+      "live_ancestor": true
+    },
+    {
+      "line": 719,
+      "item": "历史大脑测试入口漏传日志回调",
+      "commit": "ccd8bb8e017da9c30b408138d04e6d2bc985836d",
+      "path": "agent/tests/legacy-brain.ts",
+      "base_blob": "a8129e38ced1950f53f3e6f836204a98780ad6a0",
+      "base_ancestor": true,
+      "live_ancestor": true
+    },
+    {
+      "line": 784,
+      "item": "silent-0254 无决策死亡战斗错误归因",
+      "commit": "3b48088dec5fc6eafe576a1296bbdadde43432ee",
+      "path": "ops/report.py",
+      "base_blob": "fe3733e61ca170772a798571d65046502a8d32c0",
+      "base_ancestor": true,
+      "live_ancestor": true
+    },
+    {
+      "line": 900,
+      "item": "rollout 最佳线路固定测试的时钟与知识隔离",
+      "commit": "bbc5b993a7524bbb8e80a975f204f8d193657b46",
+      "path": "agent/tests/rollout-live.test.ts",
+      "base_blob": "e04386253f686571a79e60f4c0e2b0af452ee4ef",
+      "base_ancestor": true,
+      "live_ancestor": true
+    },
+    {
+      "line": 1029,
+      "item": "codex-usage-credit-baseline-recovery",
+      "commit": "e5e2995d659d15af79ec8bba67a4a25c1cb7295f",
+      "path": "agent/src/brain/engines/codex-usage.ts",
+      "base_blob": "796f4665467fbbc1dfa1ee1a4b875dfb2b76eb59",
+      "base_ancestor": true,
+      "live_ancestor": true
+    },
+    {
+      "line": 1034,
+      "item": "升阶通知及审计误用请求目标进阶",
+      "commit": "8045d9fbf0a12523b1dbe39bbed8af06c7497b09",
+      "path": "ops/codex-ops-learn.py",
+      "base_blob": "a0e19a83ef9ef2ef72e339c5187e01119032e8df",
+      "base_ancestor": true,
+      "live_ancestor": true
+    },
+    {
+      "line": 1046,
+      "item": "host-checks-broker-push-registration",
+      "commit": "c519952b31e3a0bb3acdd2115883ae8671b8a090",
+      "path": "ops/codex/lib.ts",
+      "base_blob": "f7f81e71502e82f467d762093efd2bdcfd338016",
+      "base_ancestor": true,
+      "live_ancestor": true
+    },
+    {
+      "line": 1047,
+      "item": "host-checks-session-exit-fixture",
+      "commit": "874ae603b3927173f805e0b2fe789330bab710c7",
+      "path": "agent/tests/brain-codex-session.test.ts",
+      "base_blob": "f3112eafd13a1a3091a10aad2d791fd87f088682",
+      "base_ancestor": true,
+      "live_ancestor": true
+    },
+    {
+      "line": 1060,
+      "item": "host-targeted-check-continuation 固定分段补验入口",
+      "commit": "24c2e3a75b5db6bac76d6c924f86b7fcd9438316",
+      "path": "ops/learner_check_continuation.py",
+      "base_blob": "88e43d2464a958d7603c1f11e8276a5d5328fee8",
+      "base_ancestor": true,
+      "live_ancestor": true
+    },
+    {
+      "line": 1063,
+      "item": "调度夹具缺生产 feature 路径",
+      "commit": "2b09c47d431a580e9955d157f4dfb0e576186206",
+      "path": "ops/tests/test_silent_calibration_dispatch.py",
+      "base_blob": "fe6228ac1d5dfc0069e9ebd9deab18dc6037db52",
+      "base_ancestor": true,
+      "live_ancestor": true
+    },
+    {
+      "line": 1067,
+      "item": "sandbox-glob-startup-race 会话前有界恢复",
+      "commit": "bc2c40e313cc36682196277c53c50e30744b88c5",
+      "path": "learner/lib/startup-recovery.ts",
+      "base_blob": "6886bc3e63e4a1953ac100e6393cef2a7c56b4bd",
+      "base_ancestor": true,
+      "live_ancestor": true
+    },
+    {
+      "line": 1075,
+      "item": "blocked-experience-proposal-repair-dispatch",
+      "commit": "84366ad06ee4f978394c1b9489a82c83ea12bd36",
+      "path": "ops/proposal_dispatch.py",
+      "base_blob": "7a90d01fae435df9c4a7598e89b663cf529fae21",
+      "base_ancestor": true,
+      "live_ancestor": true
+    },
+    {
+      "line": 1077,
+      "item": "multi-character-potion-table-fixture-isolation",
+      "commit": "5ef3c4612bd2673c19968c5a2d24bf62af519ee1",
+      "path": "agent/tests/multi-character.test.ts",
+      "base_blob": "db756ec3cf96247d0326b1f4c6aa90c6a6bacbd8",
+      "base_ancestor": true,
+      "live_ancestor": true
+    },
+    {
+      "line": 1083,
+      "item": "compute-memo-worker-data-signature 固定知识输入",
+      "commit": "8fbb441eb61eef226eb7366f9612003480c83988",
+      "path": "agent/tests/compute-memo.test.ts",
+      "base_blob": "597b10831fd45b03a3cb07966006fc330fbfca0f",
+      "base_ancestor": true,
+      "live_ancestor": true
+    },
+    {
+      "line": 1093,
+      "item": "unassigned-strategy-proposal-resolution",
+      "commit": "3a98e213a826e94f9708af4b1a265e1892659f4e",
+      "path": "ops/proposal_dispatch.py",
+      "base_blob": "7a90d01fae435df9c4a7598e89b663cf529fae21",
+      "base_ancestor": true,
+      "live_ancestor": true
+    },
+    {
+      "line": 1097,
+      "item": "ops-stall-recovery 测试执行及诊断确定性",
+      "commit": "9b6459fd99f26b17689134e33aa85d6190e71d7d",
+      "path": "agent/tests/ops-stall-recovery.test.ts",
+      "base_blob": "2351ffaf49ead703ead91a53cdcabadfe1457296",
+      "base_ancestor": true,
+      "live_ancestor": true
+    },
+    {
+      "line": 1103,
+      "item": "batch-c-fixed-fixture-timeout",
+      "commit": "5dd8a20c9d2dd4ed43120b1684e5577b993ac2ff",
+      "path": "agent/tests/batch-c.test.ts",
+      "base_blob": "96cecbddfb24094032e5b60ab8be103d078a4f60",
+      "base_ancestor": true,
+      "live_ancestor": true
+    },
+    {
+      "line": 1110,
+      "item": "host-fixed-test-timeouts-010547 评估版本夹具",
+      "commit": "d9881ba593b0b8d701ebbe1c95626c0ebdd554c7",
+      "path": "agent/tests/eval_metrics_test.py",
+      "base_blob": "e9dca6c1b181d0bead8d0d25a9f33f45f70f43d8",
+      "base_ancestor": true,
+      "live_ancestor": true
+    },
+    {
+      "line": 1117,
+      "item": "paper-dataset-git-consistency-race",
+      "commit": "16bfe0bd6ecaa91d04a91c01edc94cecc781f71f",
+      "path": "ops/paper_dataset.py",
+      "base_blob": "0ce7ba32566280eeebc380a16fd8ee74d7d2a244",
+      "base_ancestor": true,
+      "live_ancestor": true
+    },
+    {
+      "line": 1120,
+      "item": "boss-sim-codex-home-preflight",
+      "commit": "5921f8cd045853182c867a6430e75c3fcde00a87",
+      "path": "ops/report.py",
+      "base_blob": "fe3733e61ca170772a798571d65046502a8d32c0",
+      "base_ancestor": true,
+      "live_ancestor": true
+    },
+    {
+      "line": 1125,
+      "item": "host-loop-time-cap-wall-clock-061301",
+      "commit": "b3c6dd700b00d0d8b17d5d2efe6fe9aa353618fa",
+      "path": "agent/tests/loop.test.ts",
+      "base_blob": "7f629b4db77820006a6f80c6076dc964acb9f2ae",
+      "base_ancestor": true,
+      "live_ancestor": true
+    },
+    {
+      "line": 1131,
+      "item": "工作树磁盘容量预检与历史副本共享",
+      "commit": "c7a6efb1e15ed6c5f31a35ae3ee9833863340393",
+      "path": "ops/worktree_storage.py",
+      "base_blob": "f7680121951c940b5799b911ec141e91a3556743",
+      "base_ancestor": true,
+      "live_ancestor": true
+    },
+    {
+      "line": 1145,
+      "item": "broker 容量及请求回执失败隔离",
+      "commit": "a136ddc4b5b0a8696f10b2fae3073322d57e724c",
+      "path": "ops/codex/main.ts",
+      "base_blob": "6d20921c15aae9ed972166082f50ab3ddf8e65de",
+      "base_ancestor": true,
+      "live_ancestor": true
+    },
+    {
+      "line": 1141,
+      "item": "普通通知 ACK 误查不存在的父要求",
+      "commit": "672e198a4730012330f599068a0ef1efadb02002",
+      "path": "ops/learning_requests.py",
+      "base_blob": "518553635d60df7ce9d7119329104276e85e2d54",
+      "base_ancestor": true,
+      "live_ancestor": true
+    },
+    {
+      "line": 1148,
+      "item": "无产出失败复盘误派提案补链",
+      "commit": "3fdcd77927f01b35c20c6c5c1fcfd790676032d2",
+      "path": "ops/codex-ops-learn.py",
+      "base_blob": "a0e19a83ef9ef2ef72e339c5187e01119032e8df",
+      "base_ancestor": true,
+      "live_ancestor": true
+    },
+    {
+      "line": 1158,
+      "item": "普通通知 ACK 前阶段回执再校验",
+      "commit": "1594def2e1b65b665d3b345f31444194eb4d09e6",
+      "path": "ops/learning_requests.py",
+      "base_blob": "518553635d60df7ce9d7119329104276e85e2d54",
+      "base_ancestor": true,
+      "live_ancestor": true
+    },
+    {
+      "line": 1164,
+      "item": "会话前恢复遗漏纯时间戳复盘租约 ID",
+      "commit": "d9983263ffecea1bed4e29d65e7f854a3d2e33d7",
+      "path": "learner/lib/startup-recovery.ts",
+      "base_blob": "6886bc3e63e4a1953ac100e6393cef2a7c56b4bd",
+      "base_ancestor": true,
+      "live_ancestor": true
+    },
+    {
+      "line": 1166,
+      "item": "历史牌组夹具与新 deck cap 的隔离",
+      "commit": "c0999eaa251133454540e157b2d6fe641731ad65",
+      "path": "agent/tests/silent-route-relic.test.ts",
+      "base_blob": "0b68fcf3fdd2791b45b68ac46e2fcf4578f7e18b",
+      "base_ancestor": false,
+      "live_ancestor": false
+    },
+    {
+      "line": 1170,
+      "item": "公共经验固定文件快照兼容",
+      "commit": "8390c62d76fc8c7d7b6b7292121a621f4666d39c",
+      "path": "agent/tests/historical-knowledge-fs.ts",
+      "base_blob": "975ab3758f086ce707a8d43865e1c65a1f5b7f8a",
+      "base_ancestor": true,
+      "live_ancestor": true
+    },
+    {
+      "line": 1186,
+      "item": "普通通知 ACK 第二策略槽批号兼容",
+      "commit": "15eb85e2934e428c5e299fc4a1aba456d92fd685",
+      "path": "ops/learning_requests.py",
+      "base_blob": "518553635d60df7ce9d7119329104276e85e2d54",
+      "base_ancestor": true,
+      "live_ancestor": true
+    },
+    {
+      "line": 1188,
+      "item": "持药固定时钟与知识隔离",
+      "commit": "8867041f57f0e511606127e568603510af59a0e7",
+      "path": "agent/tests/rollout-held-potion-fixture.ts",
+      "base_blob": "7b8fa692648ef710c7b3f344eea9a1bdb5a837a5",
+      "base_ancestor": true,
+      "live_ancestor": true
+    },
+    {
+      "line": 1188,
+      "item": "锁夹具异步有界等待",
+      "commit": "e770a6d09a8398aee4126f1b7ea37fc70687989f",
+      "path": "agent/tests/learner-lock-fixture.ts",
+      "base_blob": "9f081f4996b8877eef34c9a5fd8510bcd4ece1fb",
+      "base_ancestor": true,
+      "live_ancestor": true
+    },
+    {
+      "line": 1216,
+      "item": "首 token 前长思考及路径拒绝进程夹具",
+      "commit": "a18376cce22eb9e47377d474a85fb864f7c636e2",
+      "path": "agent/tests/brain-codex-watchdog.test.ts",
+      "base_blob": "2af4cf233a21f6a069eb213ce46f35cadbb28668",
+      "base_ancestor": true,
+      "live_ancestor": true
+    },
+    {
+      "line": 1232,
+      "item": "可重建 Python 缓存阻塞回收",
+      "commit": "1e8af775f6b90f100f20ff7c4a08dfddaba893a9",
+      "path": "ops/learner_retention.py",
+      "base_blob": "df783e2b304a903a48fa943feda337f0ceca2842",
+      "base_ancestor": true,
+      "live_ancestor": true
+    },
+    {
+      "line": 1240,
+      "item": "合法校准 feature 通知来源校验",
+      "commit": "38b2f572d90b3b97a23f9eae983f583287492f9a",
+      "path": "ops/learning_requests.py",
+      "base_blob": "518553635d60df7ce9d7119329104276e85e2d54",
+      "base_ancestor": true,
+      "live_ancestor": true
+    },
+    {
+      "line": 1242,
+      "item": "宿主长参数题名承载",
+      "commit": "f8896692b0d868b900ccffc8ed910321d0f3e765",
+      "path": "ops/learner_check_continuation.py",
+      "base_blob": "88e43d2464a958d7603c1f11e8276a5d5328fee8",
+      "base_ancestor": true,
+      "live_ancestor": true
+    },
+    {
+      "line": 1242,
+      "item": "升阶报告批量异步固定解析夹具",
+      "commit": "a11e32ae1a01ecf75cc57519be21f2d144c2cd18",
+      "path": "agent/tests/ascension-audit-output-fixture.ts",
+      "base_blob": "ba335a6736a2b4a508fdb6338ee227916cdf2c92",
+      "base_ancestor": true,
+      "live_ancestor": true
+    },
+    {
+      "line": 1242,
+      "item": "研究调度固定分组夹具",
+      "commit": "cd1f5593430a2d13479368679b5d42994540f7c8",
+      "path": "agent/tests/strategy-research-scheduling.test.ts",
+      "base_blob": "95d1dd491b0ee20281d3d676d3182d29d702eb95",
+      "base_ancestor": true,
+      "live_ancestor": true
+    },
+    {
+      "line": 1242,
+      "item": "随机药水固定板重复性夹具",
+      "commit": "519b63549f1c61276755066e5a76d0351cf09a7c",
+      "path": "agent/tests/potion-mc.test.ts",
+      "base_blob": "b83fc8e89efbe21c65716fe4bea54d8b4bb89af7",
+      "base_ancestor": true,
+      "live_ancestor": true
+    },
+    {
+      "line": 1242,
+      "item": "rollout 排序及自动动作固定矩阵夹具",
+      "commit": "b68a650ab95c15a492cccac598906f32284229be",
+      "path": "agent/tests/rollout-live.test.ts",
+      "base_blob": "e04386253f686571a79e60f4c0e2b0af452ee4ef",
+      "base_ancestor": true,
+      "live_ancestor": true
+    },
+    {
+      "line": 1244,
+      "item": "包装/参数化测试的静态期限解析",
+      "commit": "56c256dad0d33b231b82b53113d3bdd84f9bfa20",
+      "path": "agent/tools/test-blocks.ts",
+      "base_blob": "3a2a10c96bfe9934e27b1e64f7d81ea008bd4761",
+      "base_ancestor": true,
+      "live_ancestor": true
+    },
+    {
+      "line": 1262,
+      "item": "feature producer 到 canonical notice 身份桥接",
+      "commit": "1dd4d434aef67f1d065dbdba23a875ae82741a88",
+      "path": "ops/learning_requests.py",
+      "base_blob": "518553635d60df7ce9d7119329104276e85e2d54",
+      "base_ancestor": true,
+      "live_ancestor": true
+    },
+    {
+      "line": 1272,
+      "item": "run-plans 证据提取漏识别 run 字段",
+      "commit": "78e9b05929366d097a728761d693d790ff16ac87",
+      "path": "learner/extract_evidence.py",
+      "base_blob": "888db107ffbdf7d6dc7613a44bcf6326d6775877",
+      "base_ancestor": true,
+      "live_ancestor": true
+    },
+    {
+      "line": 1280,
+      "item": "Jev 超限请求传输及 R342 合同替换",
+      "commit": "75249befaad497b68ffbdbf242c9e1672beba850",
+      "path": "agent/src/eye/jev-prompt-log.ts",
+      "base_blob": "f26e8ab8ddf5b63d75cd9be7a3d6f66fd9908118",
+      "base_ancestor": true,
+      "live_ancestor": true
+    }
+  ],
+  "literal_unchecked": [
+    {
+      "line": 784,
+      "item": "**silent-0254：无出牌决策的死亡战斗漏记，death_fight误用上一胜战**",
+      "disposition": "已有源码修复",
+      "existing_proposals": []
+    },
+    {
+      "line": 789,
+      "item": "**silent-0256：狡诈药水确定生成未建模，容量及出刀顺序未参与方案比较**",
+      "disposition": "策略类/模型或结构提案：保留已有独立 strategy-proposal 链，本批不认证宽项实现",
+      "existing_proposals": [
+        "silent-proposal-1b9e29122364fa68"
+      ]
+    },
+    {
+      "line": 793,
+      "item": "**silent-0260：普通紧勒后续逐牌失血漏模**",
+      "disposition": "策略类/模型或结构提案：保留已有独立 strategy-proposal 链，本批不认证宽项实现",
+      "existing_proposals": [
+        "silent-proposal-1b9e29122364fa68",
+        "silent-proposal-cfecb5580938873d"
+      ]
+    },
+    {
+      "line": 797,
+      "item": "**silent-0263：已有虚弱的意图转向后少算1伤**",
+      "disposition": "策略类/模型或结构提案：保留已有独立 strategy-proposal 链，本批不认证宽项实现",
+      "existing_proposals": [
+        "silent-proposal-9b4049b484730143",
+        "silent-proposal-cfecb5580938873d"
+      ]
+    },
+    {
+      "line": 801,
+      "item": "**silent-0266：SL已尝试键排序整轮牌，丢失投斧首牌身份**",
+      "disposition": "策略类/模型或结构提案：保留已有独立 strategy-proposal 链，本批不认证宽项实现",
+      "existing_proposals": [
+        "silent-proposal-9b4049b484730143"
+      ]
+    },
+    {
+      "line": 810,
+      "item": "学习者复盘 XTSV1U9JD34T／SILENT A10 F48 T8：decision280547直接end_turn；states286893—286896中32HP／0挡、5能量与手持凋萎，胜前实际受9伤后23HP进入F49",
+      "disposition": "策略类/模型或结构提案：保留已有独立 strategy-proposal 链，本批不认证宽项实现",
+      "existing_proposals": [
+        "silent-proposal-d60691b060dfc40a"
+      ]
+    },
+    {
+      "line": 817,
+      "item": "学习者复盘9Z9H2EXKLF3T／静默A10 F37：decisions281240/281241将REGRET悔恨写进not_on_selection_screen，大脑据此改删STRIKE_SILENT；states287619牌组索引33、287620实际移除页25项且悔恨位于索引0，281242选索引1后287621仍留悔恨",
+      "disposition": "策略类/模型或结构提案：保留已有独立 strategy-proposal 链，本批不认证宽项实现",
+      "existing_proposals": [
+        "silent-proposal-8f62129d7da70b94",
+        "silent-proposal-c32b04d610b1f62d"
+      ]
+    },
+    {
+      "line": 831,
+      "item": "学习者复盘GXNKW8X1XYJP／静默A10 F45 T2→T3：sl-attempts1053—1056将原抽牌堆BLADE_DANCE、ACCELERANT、OUTBREAK、SUCKER_PUNCH列为inserted，旧升级键未入手离堆，已知前缀截到19/18/19/18；states290201→290206及290214核战内改标／出口恢复，瞬时完整中间帧未记录",
+      "disposition": "策略类/模型或结构提案：保留已有独立 strategy-proposal 链，本批不认证宽项实现",
+      "existing_proposals": [
+        "silent-proposal-51fa8bc34774f72d",
+        "silent-proposal-5a95725089f53cd8"
+      ]
+    },
+    {
+      "line": 900,
+      "item": "**非阻塞系统／测试缺口，根因未核定**：批次20261008-144109-experience-update固定发布2b1a5f6d491f826ea1bac28f707716d109fb3e65/树bd8c1560dab59b4e07d1693b44bfcd7b6ddcb0d7完整tsc0/vitest1；301文件3428例通过、1文件1例失败、2跳过",
+      "disposition": "已有源码修复",
+      "existing_proposals": []
+    },
+    {
+      "line": 912,
+      "item": "**silent-0308**：仅转录学习者原回报，`agent/src/reflex/combat.ts:98/:250—252` 的单动作结束题面只合mod致死标志与攻击HP损失，漏接已有沙坑截止事实；`combat-plan.ts:1946`无可打逃离时亦未接入",
+      "disposition": "策略类/模型或结构提案：保留已有独立 strategy-proposal 链，本批不认证宽项实现",
+      "existing_proposals": [
+        "silent-proposal-0ff91bb5da98a252"
+      ]
+    },
+    {
+      "line": 918,
+      "item": "**silent-0311**：仅转录学习者回报，`agent/src/reflex/rollout.ts:1690—1691` 恢复时仍令HP等于旧maxHp、只减库存，`:3196`按库存乘旧maxHp计剩余需求",
+      "disposition": "策略类/模型或结构提案：保留已有独立 strategy-proposal 链，本批不认证宽项实现",
+      "existing_proposals": [
+        "silent-proposal-d04933cbd408d85b"
+      ]
+    },
+    {
+      "line": 923,
+      "item": "**silent-0317**：仅转录学习者回报，`agent/src/reflex/card-model.ts:920` 将 calculatedGamble 限于未升级牌，`:1108` 未为升级分支写入 discardsHand/drawDiscardedHand，`turn-solver.ts:1676` 因而保留已弃旧手牌",
+      "disposition": "策略类/模型或结构提案：保留已有独立 strategy-proposal 链，本批不认证宽项实现",
+      "existing_proposals": [
+        "silent-proposal-2d2fa55483ceb71c"
+      ]
+    },
+    {
+      "line": 929,
+      "item": "**silent-0319**：仅转录学习者回报，`agent/src/reflex/card-model.ts:938/:942` 蛇咬模型仍限未升级且PoisonPower=7，升级版10毒列未建模",
+      "disposition": "策略类/模型或结构提案：保留已有独立 strategy-proposal 链，本批不认证宽项实现",
+      "existing_proposals": [
+        "silent-proposal-689c132e17b5c70f",
+        "silent-proposal-cbf5f609bb228ee5"
+      ]
+    },
+    {
+      "line": 930,
+      "item": "**silent-0320**：仅转录学习者回报，`agent/src/reflex/card-model.ts:471` 未输出本线新建普通UNMOVABLE事件，`turn-solver.ts:1977/:1978` 只消费输入player.unmovableArmed，能力前缀后的首卡格挡没有翻倍",
+      "disposition": "策略类/模型或结构提案：保留已有独立 strategy-proposal 链，本批不认证宽项实现",
+      "existing_proposals": [
+        "silent-proposal-689c132e17b5c70f"
+      ]
+    },
+    {
+      "line": 935,
+      "item": "**silent-0322**：仅转录学习者回报，`agent/src/reflex/card-model.ts:1144/:1146` APOTHEOSIS仍限未升级2费，已升级1费神化未接同线升级",
+      "disposition": "策略类/模型或结构提案：保留已有独立 strategy-proposal 链，本批不认证宽项实现",
+      "existing_proposals": [
+        "silent-proposal-53b3db220508b3d9"
+      ]
+    },
+    {
+      "line": 940,
+      "item": "**silent-0324**：转录学习者原回报，`agent/src/reflex/card-model.ts:929/:1104/:1109` 普通 BLADE_DANCE 的 Cards=3 被读为即时抽3，未接生成3张SHIV",
+      "disposition": "策略类/模型或结构提案：保留已有独立 strategy-proposal 链，本批不认证宽项实现",
+      "existing_proposals": [
+        "silent-proposal-2f91d21607a578e9",
+        "silent-proposal-e7ed37db21fc698a"
+      ]
+    },
+    {
+      "line": 945,
+      "item": "**silent-0329**：转录学习者回报，`agent/src/reflex/turn-solver.ts:2330/:2332—2333`饮药分支未接爬行动物饰品所得3临时力量；定位另见`card-model.ts:1279`、`combat-plan.ts:2502`",
+      "disposition": "策略类/模型或结构提案：保留已有独立 strategy-proposal 链，本批不认证宽项实现",
+      "existing_proposals": [
+        "silent-proposal-90e0bc4e45916d16"
+      ]
+    },
+    {
+      "line": 952,
+      "item": "**arch-funnel-guard**：每次改变对局行为的上线后，按 eval/versions.json 版本自动比较本角色当前进阶的逐级转化率（第一幕路上 / F17 boss / 第二幕路上 / F33 boss / 第三幕路上 / F48 / F49；分母为上一级到达数）",
+      "disposition": "独立架构/归因研究，超出普通纯 bug 批次",
+      "existing_proposals": []
+    },
+    {
+      "line": 953,
+      "item": "**arch-learning-priority**：学习者派题（strategy-proposal、B4/B5 之外的打法学习）按\"该级损失的期望胜局\"排序（整局胜率 = 各级转化率之积，提高前面某级会给后面所有级带来更多局数）",
+      "disposition": "独立架构/归因研究，超出普通纯 bug 批次",
+      "existing_proposals": []
+    },
+    {
+      "line": 954,
+      "item": "**arch-unified-resource-value**：血量和药水的持有价值改为统一模型，输入为到下一次回血/休息前剩余战斗数、下一个休息点、敌人强度等通用量；双 boss（S1.double-boss1）应成为该模型的一个特例而不是独立规则",
+      "disposition": "独立架构/归因研究，超出普通纯 bug 批次",
+      "existing_proposals": []
+    },
+    {
+      "line": 955,
+      "item": "**inv-f33-regression**：归因调查（先做）——F33 boss 胜率下降、第二幕死亡增加是否与 S1.double-boss1 及后续 F48/F49 相关版本有关",
+      "disposition": "独立架构/归因研究，超出普通纯 bug 批次",
+      "existing_proposals": []
+    },
+    {
+      "line": 959,
+      "item": "**silent-0332**：转录学习者原回报，VAC6Z1PZ1QJG/A10/F47休息题d309293，`agent/src/sim/boss-sim.ts:311`的`continuationInput`抛出`missing successful first-fight resources`；成功首战样本进入接续时未满足正HP资源契约，单样本异常传播使整题没有可用选项模拟数字（调用路径:334/:340）",
+      "disposition": "策略类/模型或结构提案：保留已有独立 strategy-proposal 链，本批不认证宽项实现",
+      "existing_proposals": [
+        "silent-proposal-0b28f52e415d80d1"
+      ]
+    },
+    {
+      "line": 964,
+      "item": "非阻塞：学习者报告升级 HIDDEN_DAGGERS 仍将弃二误作抽二，未覆盖弃牌/生成小刀分支；当前 live `agent/src/reflex/card-model.ts:921/929/1109`、`turn-solver.ts:1312` 只覆盖普通版",
+      "disposition": "策略类/模型或结构提案：保留已有独立 strategy-proposal 链，本批不认证宽项实现",
+      "existing_proposals": [
+        "silent-proposal-6a5c67f606bd5af7"
+      ]
+    },
+    {
+      "line": 968,
+      "item": "**silent-0338**：仅转录学习者回报，静默A10/F49女王战致死差异注记漏列求解器已计入的奥利哈钢回合末挡",
+      "disposition": "策略类/模型或结构提案：保留已有独立 strategy-proposal 链，本批不认证宽项实现",
+      "existing_proposals": [
+        "silent-proposal-8d88108e5417f650"
+      ]
+    },
+    {
+      "line": 980,
+      "item": "**silent-0339**：转录学习者原回报，静默A10/F42卷轴T4毒杀后三敌退场且22/77血未降，控制台却记录蜥蜴尾巴已触发；`agent/src/reflex/combat-plan.ts:5004` 将假设复活余血20与实血22容差匹配，`:5054` 战胜入口核销，`:4915` 后续不计复活",
+      "disposition": "策略类/模型或结构提案：保留已有独立 strategy-proposal 链，本批不认证宽项实现",
+      "existing_proposals": [
+        "silent-proposal-c232010cd405fe44"
+      ]
+    },
+    {
+      "line": 992,
+      "item": "**silent-0344，坚韧之环延迟格挡未接入推演**：仅转录学习者，证据 N8A2W8LH39N0 A10 F12 T7—T9",
+      "disposition": "策略类/模型或结构提案：保留已有独立 strategy-proposal 链，本批不认证宽项实现",
+      "existing_proposals": [
+        "silent-proposal-8e17a61707d2ca02"
+      ]
+    },
+    {
+      "line": 1001,
+      "item": "**silent-0347**：证据局 54G5683J0E5S；定位 `agent/src/reflex/rollout-live.ts:831`；学习者原回报“组装师攻击召唤未接入五回合推演；活体召唤只读ILLUSION_MOVE”",
+      "disposition": "策略类/模型或结构提案：保留已有独立 strategy-proposal 链，本批不认证宽项实现",
+      "existing_proposals": [
+        "silent-proposal-43156dee9f23ae43",
+        "silent-proposal-bb7597d8a1fe63ff"
+      ]
+    },
+    {
+      "line": 1005,
+      "item": "**silent-0349**：证据局 9663Y88TYK73；定位 `agent/src/reflex/turn-solver.ts:2684`；学习者原回报“已有虚弱后临时减力直接减显示攻击，末次尖啸方案报损3，实际需损5并死亡",
+      "disposition": "策略类/模型或结构提案：保留已有独立 strategy-proposal 链，本批不认证宽项实现",
+      "existing_proposals": [
+        "silent-proposal-bb7597d8a1fe63ff"
+      ]
+    },
+    {
+      "line": 1009,
+      "item": "**core-build-notify-222802-rc2**：父请求 roy-20261009-historical-core-builds；现有broker `core-build-notify 20261009-222802-fix-batch` 返回failed/rc2，报告身份实质验收及双收件箱已完成",
+      "disposition": "证据不足：失败 stdout/stderr 已由 5c92f2aaf 保存，原 native rc2 根因未证明；不重放通知",
+      "existing_proposals": []
+    },
+    {
+      "line": 1020,
+      "item": "**silent-0362**：仅转录学习者回报，证据 08A0GEAL8KQ5 / SILENT A10；定位 `agent/src/reflex/turn-solver.ts:2684`",
+      "disposition": "策略类/模型或结构提案：保留已有独立 strategy-proposal 链，本批不认证宽项实现",
+      "existing_proposals": [
+        "silent-proposal-0031b60b7dade5cf",
+        "silent-proposal-196013f88a9d7c1c",
+        "silent-proposal-70c22e94eda8f8a9"
+      ]
+    },
+    {
+      "line": 1022,
+      "item": "**silent-0365**：仅转录学习者回报，证据 X4M1GPAJGAB9 / SILENT A10；定位 `agent/src/reflex/combat-plan.ts:3839`",
+      "disposition": "策略类/模型或结构提案：保留已有独立 strategy-proposal 链，本批不认证宽项实现",
+      "existing_proposals": [
+        "silent-proposal-196013f88a9d7c1c",
+        "silent-proposal-70c22e94eda8f8a9"
+      ]
+    },
+    {
+      "line": 1024,
+      "item": "**silent-0367**：仅转录学习者回报，证据 5BU7ZE1PWLSX / SILENT A10；定位 `agent/src/brain/build-facts.ts:26`",
+      "disposition": "策略类/模型或结构提案：保留已有独立 strategy-proposal 链，本批不认证宽项实现",
+      "existing_proposals": [
+        "silent-proposal-196013f88a9d7c1c"
+      ]
+    },
+    {
+      "line": 1029,
+      "item": "**codex-usage-credit-baseline-recovery**：证据SPC7NVA5K4RL F36，旧进程1009746，agent/src/brain/engines/codex-usage.ts:472/584",
+      "disposition": "已有源码修复",
+      "existing_proposals": []
+    },
+    {
+      "line": 1034,
+      "item": "ascension-up 把目标进阶当实玩级别：LWQYSREHMMJ7 的 run-config:330 同时记录 ascension=10/target_ascension=11，runs:694结局A10；其前SILENT选角帧 max_ascension=10/can_increase=false",
+      "disposition": "已有源码修复",
+      "existing_proposals": []
+    },
+    {
+      "line": 1040,
+      "item": "框架/测试收尾：175450的merge-live.py在1200秒外层时限切断尾部paths后，已完成268文件2703例的原件仍自动整套重跑；独立paths11例补验已过，共269文件2714例，却继续长期持live-merge.lock，181302已测修复排队",
+      "disposition": "分段补验入口已修；原外层包装器与收尾属于原框架拥有者",
+      "existing_proposals": []
+    },
+    {
+      "line": 1041,
+      "item": "调度公平性核查：watcher19:13冻结registry739项、pending587/waiting100/implemented38/duplicate14；可评估677项中首pending第80位",
+      "disposition": "证据不足：原单次插入序观察不能证明永久饥饿，不改排序",
+      "existing_proposals": []
+    },
+    {
+      "line": 1110,
+      "item": "**非对局阻塞，通用验证负载/确定性待诊断**：agent/tests/eval.test.ts:26 原120000ms用例、agent/tests/silent-apotheosis-reference.test.ts:114 原15000ms用例在010547完整宿主检查超时；实际live3f7eba0ef0c8f29bc2fbf21c8fb81d7a3cac55ee/tree36d1032b0cd248b0dac9c6d0c25a1b049db8012e，tsc通过、392文件4216项通过、2超时、2跳过",
+      "disposition": "已有源码修复",
+      "existing_proposals": []
+    }
+  ],
+  "main_live_source_differences": [
+    "agent/src/brain/build-facts.ts",
+    "agent/src/brain/engines/claude.ts",
+    "agent/src/brain/engines/codex-session.ts",
+    "agent/src/brain/engines/codex-usage.ts",
+    "agent/src/brain/llm/deepseek-message.ts",
+    "agent/src/brain/llm/deepseek.ts",
+    "agent/src/brain/types.ts",
+    "agent/src/core/config.ts",
+    "agent/src/hand/screens/act-start.ts",
+    "agent/src/hand/screens/card-value.ts",
+    "agent/src/hand/screens/event.ts",
+    "agent/src/hand/screens/map.ts",
+    "agent/src/hand/screens/misc.ts",
+    "agent/src/hand/screens/oneshot.ts",
+    "agent/src/hand/screens/potion-discard.ts",
+    "agent/src/hand/screens/route-review.ts",
+    "agent/src/knowledge/mechanics.ts",
+    "agent/src/knowledge/move-model.ts",
+    "agent/src/knowledge/outcome-facts.ts",
+    "agent/src/knowledge/outcome-tables.ts",
+    "agent/src/knowledge/potion-equivalents.ts",
+    "agent/src/knowledge/relic-values.ts",
+    "agent/src/knowledge/render/potion-text.ts",
+    "agent/src/memory/ascension-target.ts",
+    "agent/src/memory/fight-plan.ts",
+    "agent/src/memory/run-journal.ts",
+    "agent/src/reflex/card-model.ts",
+    "agent/src/reflex/combat-plan.ts",
+    "agent/src/reflex/combat.ts",
+    "agent/src/reflex/jev-experience.ts",
+    "agent/src/reflex/passive-pieces.ts",
+    "agent/src/reflex/potion-cost.ts",
+    "agent/src/reflex/potion-mc.ts",
+    "agent/src/reflex/rollout-live.ts",
+    "agent/src/reflex/rollout.ts",
+    "agent/src/reflex/thief.ts",
+    "agent/src/reflex/turn-solver.ts",
+    "agent/src/sim/boss-clock.ts",
+    "agent/src/sim/boss-start.ts",
+    "agent/src/sim/route-map.ts",
+    "agent/src/sim/thief-card-hp.ts",
+    "agent/src/sim/thief-card-value.ts",
+    "agent/src/sl/controller.ts",
+    "agent/src/sl/draws.ts",
+    "agent/src/sl/elites.ts",
+    "agent/src/sl/explore.ts",
+    "agent/src/sl/judge.ts",
+    "agent/src/sl/random-target.ts",
+    "agent/src/sl/reload.ts",
+    "agent/tests/act-route-candidates.test.ts",
+    "agent/tests/asc-band-facts.test.ts",
+    "agent/tests/batch-j.test.ts",
+    "agent/tests/batch-k.test.ts",
+    "agent/tests/boss-sim-build.test.ts",
+    "agent/tests/brain-codex-usage.test.ts",
+    "agent/tests/build-decider.test.ts",
+    "agent/tests/combat-jev.test.ts",
+    "agent/tests/death-move-data/pinned-knowledge.json",
+    "agent/tests/deepseek-cache-layout.test.ts",
+    "agent/tests/experience.test.ts",
+    "agent/tests/fight-plan.test.ts",
+    "agent/tests/fix-queue-v4-fix3.test.ts",
+    "agent/tests/git_push_main_test.py",
+    "agent/tests/inferno-planner-data/pinned-knowledge.json",
+    "agent/tests/knowledge-check-a8w-builder.test.ts",
+    "agent/tests/knowledge-check-a8w-cards.test.ts",
+    "agent/tests/knowledge-check-a8w-experience.test.ts",
+    "agent/tests/knowledge-check-a8w-facts.test.ts",
+    "agent/tests/knowledge-check-a8w-guides.test.ts",
+    "agent/tests/knowledge-check-cards.test.ts",
+    "agent/tests/knowledge-check-facts.test.ts",
+    "agent/tests/knowledge-check-guides.test.ts",
+    "agent/tests/learner-learning-flow.test.ts",
+    "agent/tests/learner-strategy.test.ts",
+    "agent/tests/learner.test.ts",
+    "agent/tests/learning-roles.test.ts",
+    "agent/tests/logged-states/batch-n/boss-clock-self-damage.json",
+    "agent/tests/mech-move-data/pinned-knowledge.json",
+    "agent/tests/move-model-damage.test.ts",
+    "agent/tests/oneshot-act-start.test.ts",
+    "agent/tests/oneshot-rest-event.test.ts",
+    "agent/tests/oneshot-shop.test.ts",
+    "agent/tests/ops-codex.test.ts",
+    "agent/tests/outcome-asc.test.ts",
+    "agent/tests/potion-equivalents.test.ts",
+    "agent/tests/potion-mc.test.ts",
+    "agent/tests/potions-jev-call.test.ts",
+    "agent/tests/rest-pantograph.test.ts",
+    "agent/tests/rollout-ties.test.ts",
+    "agent/tests/rollout.test.ts",
+    "agent/tests/route-chain.test.ts",
+    "agent/tests/route-next-rest.test.ts",
+    "agent/tests/route-review.test.ts",
+    "agent/tests/run-plan-merge.test.ts",
+    "agent/tests/screens.test.ts",
+    "agent/tests/silent-enchanted-afterimage-state.json",
+    "agent/tests/silent-enchanted-afterimage.test.ts",
+    "agent/tests/silent-whistle-evidence.json",
+    "agent/tests/silent-whistle.test.ts",
+    "agent/tests/sl-any-draw-data/pinned-knowledge.json",
+    "agent/tests/sl-any-draw.test.ts",
+    "agent/tests/sl-early-data/pinned-knowledge.json",
+    "agent/tests/sl-early.test.ts",
+    "agent/tests/sl-explore-canon-data/pinned-knowledge.json",
+    "agent/tests/sl-explore-gaps-data/pinned-knowledge.json",
+    "agent/tests/sl-explore-potion-data/pinned-knowledge.json",
+    "agent/tests/sl-explore-whole-data/pinned-knowledge.json",
+    "agent/tests/sl-replay-data/pinned-knowledge.json",
+    "agent/tests/sl-retry-data/pinned-knowledge.json",
+    "agent/tests/sl.test.ts",
+    "agent/tests/target-options.test.ts",
+    "agent/tests/template-target-data/pinned-knowledge.json",
+    "agent/tests/thief-card-value.test.ts",
+    "agent/tests/turn-solver.test.ts",
+    "agent/tests/v1mf-bugfix.test.ts",
+    "agent/tests/worktree-storage.test.ts",
+    "agent/tools/act-route-candidates-replay.ts",
+    "agent/tools/potion-cost-replay.ts",
+    "agent/tools/potion-drink-audit.py",
+    "agent/tools/route-review-next-rest-replay.ts",
+    "eval/route-projection-split.py",
+    "knowledge/builders/build-monster-db.py",
+    "knowledge/builders/build-outcome-stats.py",
+    "knowledge/builders/build-potion-equivalents.py",
+    "knowledge/builders/characters.py",
+    "knowledge/builders/refresh-potion-equivalents.sh",
+    "learner/lib/engines.ts",
+    "learner/lib/launcher.ts",
+    "learner/lib/runs.ts",
+    "learner/lib/task.ts",
+    "learner/tasks/boss-sim-automation.md",
+    "learner/tasks/codex-brain-cache.md",
+    "learner/tasks/codex-only-brain.md",
+    "learner/tasks/experience-asc-audit.md",
+    "learner/tasks/experience-update.md",
+    "learner/tasks/fix-batch.md",
+    "learner/tasks/mechanics-audit.md",
+    "learner/tasks/postmortem.md",
+    "learner/tasks/silent-a10-regression.md",
+    "learner/tasks/silent-boss-calibration.md",
+    "learner/tasks/silent-double-boss.md",
+    "learner/tasks/strategy-proposal.md",
+    "ops/auto-relaunch.sh",
+    "ops/brain-latency.py",
+    "ops/codex-ops-actions.sh",
+    "ops/codex-ops-learner.sh",
+    "ops/codex/lib.ts",
+    "ops/codex/main.ts",
+    "ops/disk_capacity.py",
+    "ops/experience-pending.py",
+    "ops/learner_retention.py",
+    "ops/learning_requests.py",
+    "ops/run.sh",
+    "ops/stop-after-a8.sh",
+    "ops/stop-after.sh",
+    "ops/tests/test_silent_calibration_dispatch.py",
+    "ops/tests/test_worktree_storage.py",
+    "ops/worktree_checkout.py",
+    "ops/worktree_retention.py",
+    "ops/worktree_storage.py"
+  ],
+  "no_change_verification": null,
+  "initial_read_failure": "四次 shell 启动前 bubblewrap/ripgrep 扫描并行工作树回收目录遭 ENOENT；后续读取恢复，未放宽 deny 或扩权限",
+  "tests": {
+    "scope": "定向固定回归，未跑未变源码整套",
+    "files": 9,
+    "cases": 55,
+    "tsc_exit": 0,
+    "vitest_exit": 0,
+    "reruns": [],
+    "logs": [
+      "tsc.log",
+      "targeted-vitest.log",
+      "targeted-vitest-extra.log"
+    ]
+  }
+}

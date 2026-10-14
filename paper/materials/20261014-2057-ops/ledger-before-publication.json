@@ -1,0 +1,276 @@
+{
+  "silent-0476": {
+    "id": "silent-0476",
+    "ts": "2026-10-14T20:27:40+08:00",
+    "character": "silent",
+    "kind": "mechanic",
+    "claim": "仅静默已观察A0/A10普通战斗专注：自身3抽后建立当轮禁抽，后续已知/采样/预计抽牌不兑现；升级、自动、重放与未观察进阶保持原行为并标未知。实现silent-proposal-68322129f031077b，关联原账本silent-0290/0292。",
+    "evidence": [
+      {
+        "run": "9R916WW0V65N",
+        "floor": 49,
+        "turn": 2,
+        "role": "support",
+        "note": "s295458→459普通专注添3牌并NO_DRAW1，s295460步法未添牌；s295464下一轮封锁消失，原长线未完整实打，不承诺转胜。",
+        "added": "2026-10-14T20:27:40+08:00"
+      },
+      {
+        "run": "LRN0HPZ0FZS1",
+        "floor": 35,
+        "turn": 2,
+        "role": "support",
+        "note": "s211456→457自身抽3并NO_DRAW1，s211458匕首离手未添牌。独立更早A0观察；原行offset/bytes/SHA见trance-states.evidence.jsonl。",
+        "added": "2026-10-14T20:27:40+08:00"
+      }
+    ],
+    "first_run": "LRN0HPZ0FZS1",
+    "prior": "partly",
+    "status": "proposed",
+    "by": "learner:strategy-proposal",
+    "where": {
+      "proposal": [
+        "/home/dw/Projects/agent-sts2/learner/runs/20261014-201306-strategy-proposal/proposal.md",
+        "/home/dw/Projects/agent-sts2/learner/runs/20261014-201306-strategy-proposal/report.md"
+      ],
+      "commits": [
+        "6db27908cc3d39e4567eeb589f5541adfd9eb0ea"
+      ]
+    },
+    "note": "本批20261014-201302-s2-strategy-proposal；原代码提案id保留，不重复登记；只校正模型状态传播，不拟药水/SL/终局阈值。",
+    "asc": 0,
+    "history": [
+      {
+        "ts": "2026-10-14T20:27:40+08:00",
+        "by": "learner:strategy-proposal",
+        "status": "proposed"
+      },
+      {
+        "ts": "2026-10-14T20:54:40+08:00",
+        "by": "learner:strategy-proposal",
+        "status": "proposed"
+      }
+    ],
+    "version": null,
+    "effect": null,
+    "notes": [
+      "本批20261014-201302-s2-strategy-proposal；原代码提案id保留，不重复登记；只校正模型状态传播，不拟药水/SL/终局阈值。",
+      "普通专注实现源 6db27908cc3d39e4567eeb589f5541adfd9eb0ea；固定撤源码5败/恢复24过，源码沙箱399文件3863项全过，gitleaks0。live三方预检9冲突（两源码、共享记录与归档），未实际合入/未发布/未shipped；保留提案68322129f031077b待ops兜底。"
+    ]
+  },
+  "silent-0290": {
+    "id": "silent-0290",
+    "ts": "2026-10-08T12:03:09+08:00",
+    "by": "learner:postmortem",
+    "character": "silent",
+    "kind": "bug-infra",
+    "claim": "战斗专注BATTLE_TRANCE自身抽3后建立的NO_DRAW_POWER没有在同一求解方案传递，原题会继续预支后继抽牌；执行后重读封锁能撤线，却不能修复原题真实性。现live card-model.ts:929、:1072与turn-solver.ts:1954仅对入口封锁或子弹时间处理；本局F49第2试T2原题抽9/伤23/零损，专注后重问至伤4/损7并实际兑现。后继魂缚与重规划也参与撤线，不将全部差额归此单因，不承诺修后转胜。",
+    "evidence": [
+      {
+        "run": "LRN0HPZ0FZS1",
+        "floor": 35,
+        "turn": 2,
+        "role": "support",
+        "note": "d207477安排专注后投掷匕首；s211456—211458先添3牌、建立NO_DRAW1，匕首文本抽1却未添牌，旧复盘未记此缺口。",
+        "added": "2026-10-08T12:03:09+08:00"
+      },
+      {
+        "run": "LRN0HPZ0FZS1",
+        "floor": 46,
+        "turn": 2,
+        "role": "support",
+        "note": "d207693还安排专注后杂技+；s211685—211692可核专注建封锁及实际后继手牌。",
+        "added": "2026-10-08T12:03:09+08:00"
+      },
+      {
+        "run": "9R916WW0V65N",
+        "floor": 49,
+        "turn": 2,
+        "role": "support",
+        "note": "第2试d288467原题专注→步法→小刀→刀刃→准备等、cards_drawn9；s295458→295459实添3并建NO_DRAW1，295460步法不加抽；后题d288468报伤4/损7，本轮s295463 HP12→5。原长线未完整执行。",
+        "added": "2026-10-08T12:03:09+08:00"
+      }
+    ],
+    "first_run": "LRN0HPZ0FZS1",
+    "prior": "partly",
+    "prior_runs": [
+      "LRN0HPZ0FZS1",
+      "JMH5C51RLN4E"
+    ],
+    "prior_note": "尚无专注学习条目时，LRN d207408及JMH d238038大脑均指出其他抽牌先打；LRN d207477/207693及JMH d238182执行计划仍安排专注后的抽牌，战略理解与执行模型不一致。",
+    "status": "observed",
+    "where": {
+      "lessons": [
+        "9R916WW0V65N"
+      ],
+      "proposal": [
+        "/home/dw/Projects/agent-sts2/learner/runs/20261008-114303-postmortem/proposal-trance.md",
+        "/home/dw/Projects/agent-sts2/learner/runs/20261008-114303-postmortem/proposal-resources.md",
+        "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-120901-experience-update/proposal-trance.md",
+        "/home/dw/Projects/agent-sts2/learner/runs/20261014-184305-strategy-proposal/proposal.md",
+        "/home/dw/Projects/agent-sts2/learner/runs/20261014-184305-strategy-proposal/report.md",
+        "/home/dw/Projects/agent-sts2/learner/runs/20261014-201306-strategy-proposal/proposal.md",
+        "/home/dw/Projects/agent-sts2/learner/runs/20261014-201306-strategy-proposal/report.md"
+      ],
+      "commits": [
+        "6db27908cc3d39e4567eeb589f5541adfd9eb0ea"
+      ]
+    },
+    "note": "新定位的专注模型缺口；notes/fix-queue.md无此项，旧0246只覆盖子弹时间。引用当前live行号，不冒认8ef00878+dirty完整源码。",
+    "asc": 0,
+    "history": [
+      {
+        "ts": "2026-10-08T12:03:09+08:00",
+        "by": "learner:postmortem",
+        "status": "observed"
+      },
+      {
+        "ts": "2026-10-08T12:05:30+08:00",
+        "by": "learner:postmortem"
+      },
+      {
+        "ts": "2026-10-08T12:05:31+08:00",
+        "by": "learner:postmortem"
+      },
+      {
+        "ts": "2026-10-08T12:18:46+08:00",
+        "by": "learner:experience-update"
+      },
+      {
+        "ts": "2026-10-14T19:05:15+08:00",
+        "by": "learner:strategy-proposal"
+      },
+      {
+        "ts": "2026-10-14T20:54:40+08:00",
+        "by": "learner:strategy-proposal"
+      }
+    ],
+    "version": null,
+    "effect": null,
+    "notes": [
+      "新定位的专注模型缺口；notes/fix-queue.md无此项，旧0246只覆盖子弹时间。引用当前live行号，不冒认8ef00878+dirty完整源码。",
+      "代码提案 silent-proposal-68322129f031077b → task=strategy-proposal；Roy-2026-10-07-learning",
+      "代码提案 silent-proposal-6353ffbadaaac619 → task=strategy-proposal；Roy-2026-10-07-learning",
+      "代码提案 silent-proposal-35919516f2457a9f → task=strategy-proposal；Roy-2026-10-07-learning",
+      "[20261014-184301-s2-strategy-proposal] 原提案silent-proposal-68322129f031077b逐项核验，原Markdown SHA/本角色归属/冻结原字节已核；详见本批proposal.md与report.md。全部waiting：保留既有窄实现和证据/消费者限制，固定base/live预检17项共享记录冲突使源码实施停止；fixes=[]、merged=null、tests=null，无新策略/经验/版本/shipped。此行仅追加任务追溯，不改变原claim/status/evidence/first_run/asc/prior/version。",
+      "本批普通专注实现关联silent-0476、原提案68322129f031077b；源码沙箱已过但live9处冲突未合入。原机制/模型历史状态保持，不登记shipped。"
+    ]
+  },
+  "silent-0292": {
+    "id": "silent-0292",
+    "ts": "2026-10-08T12:03:09+08:00",
+    "by": "learner:postmortem",
+    "character": "silent",
+    "kind": "mechanic",
+    "claim": "已观察普通战斗专注BATTLE_TRANCE先抽3张，再建立当轮NO_DRAW_POWER1；后继投掷匕首的抽1和棋子能力加抽不兑现，攻击/敏捷等其他效果仍分别结算；下一玩家轮封锁消失。本局被撤去的准备没有实打，不能虚构准备抽0的本局观测，不外推升级、重放、其他取牌或胜负。",
+    "evidence": [
+      {
+        "run": "LRN0HPZ0FZS1",
+        "floor": 35,
+        "turn": 2,
+        "role": "support",
+        "note": "s211456→211457手牌5→7是专注离手后添3，并建NO_DRAW1；下一匕首离手未添牌，s211458手牌7→6，牌文抽1。",
+        "added": "2026-10-08T12:03:09+08:00"
+      },
+      {
+        "run": "9R916WW0V65N",
+        "floor": 49,
+        "turn": 2,
+        "role": "support",
+        "note": "第2试s295458→295459专注先添刀刃、准备、精准三牌并建立NO_DRAW1；295460步法建立2敏却不加抽；295464 T3封锁消失。",
+        "added": "2026-10-08T12:03:09+08:00"
+      },
+      {
+        "run": "JMH5C51RLN4E",
+        "role": "support",
+        "note": "本批重新核实本角色日志，经验silent-battle-trance-draw-lock；逐帧/血档/SL对照及限制见20261008-120901报告。",
+        "added": "2026-10-08T12:18:46+08:00"
+      }
+    ],
+    "first_run": "LRN0HPZ0FZS1",
+    "prior": "partly",
+    "prior_runs": [
+      "LRN0HPZ0FZS1",
+      "JMH5C51RLN4E"
+    ],
+    "prior_note": "早期两静默局的大脑取牌理由均知道抽牌应先于专注，实际规划却仍把专注放在有抽牌后继前；没有已有专注机制账本。",
+    "status": "shipped",
+    "where": {
+      "lessons": [
+        "9R916WW0V65N"
+      ],
+      "proposal": [
+        "/home/dw/Projects/agent-sts2/learner/runs/20261008-114303-postmortem/proposal-trance.md",
+        "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-120901-experience-update/proposal-trance.md",
+        "/home/dw/Projects/agent-sts2/learner/runs/20261014-184305-strategy-proposal/proposal.md",
+        "/home/dw/Projects/agent-sts2/learner/runs/20261014-184305-strategy-proposal/report.md",
+        "/home/dw/Projects/agent-sts2/learner/runs/20261014-201306-strategy-proposal/proposal.md",
+        "/home/dw/Projects/agent-sts2/learner/runs/20261014-201306-strategy-proposal/report.md"
+      ],
+      "experience": [
+        "silent-battle-trance-draw-lock"
+      ],
+      "commits": [
+        "3958e5616ae5a13318da4e4397d2805ec1f919c9",
+        "64e82e9874e55823fd524491ecfbae2aa643e7ad",
+        "5925a43d773d5eecf4442ee4e3e60d39d98ec99d",
+        "e969eb007240e6c9d0a9bfd0f6799738b3d08b9a",
+        "6db27908cc3d39e4567eeb589f5541adfd9eb0ea"
+      ],
+      "changelog": [
+        "## 2026-10-08 静默猎手 第九十六次增量：1 局 A10（version 2026-10-08.13，分支 exp-silent，3958e561）"
+      ]
+    },
+    "note": "同一次复盘新增机制与独立代码bug分账，来源只限本角色奖励/实打。",
+    "asc": 0,
+    "history": [
+      {
+        "ts": "2026-10-08T12:03:09+08:00",
+        "by": "learner:postmortem",
+        "status": "observed"
+      },
+      {
+        "ts": "2026-10-08T12:05:30+08:00",
+        "by": "learner:postmortem"
+      },
+      {
+        "ts": "2026-10-08T12:18:46+08:00",
+        "by": "learner:experience-update"
+      },
+      {
+        "ts": "2026-10-08T12:18:46+08:00",
+        "by": "learner:experience-update"
+      },
+      {
+        "ts": "2026-10-08T12:32:03+08:00",
+        "by": "learner:experience-update",
+        "status": "proposed"
+      },
+      {
+        "ts": "2026-10-08T12:40:26+08:00",
+        "by": "ops",
+        "status": "shipped"
+      },
+      {
+        "ts": "2026-10-14T19:05:15+08:00",
+        "by": "learner:strategy-proposal"
+      },
+      {
+        "ts": "2026-10-14T20:54:40+08:00",
+        "by": "learner:strategy-proposal"
+      }
+    ],
+    "version": "S1.exp96",
+    "effect": null,
+    "notes": [
+      "同一次复盘新增机制与独立代码bug分账，来源只限本角色奖励/实打。",
+      "代码提案 silent-proposal-68322129f031077b → task=strategy-proposal；Roy-2026-10-07-learning",
+      "提交前关联本批经验来源；保持首证/prior/claim/旧上线历史，提交后再登记proposed。",
+      "代码提案 silent-proposal-35919516f2457a9f → task=strategy-proposal；Roy-2026-10-07-learning",
+      "本批经验已提交；首证/prior/claim和旧上线历史保持。经验数据发布与策略代码实现分账，由运维核实实际合入再登记shipped。",
+      "第96次经验原数据2026-10-08.12→.12/增2改17退0/175 active，源3958e561唯一experience.json原blob已实际兜底发布；仅按原学习者ledger-map登记18所属经验数据shipped。源首轮中断130原件保留、重试248文件2608例tsc/vitest0，当前源码/测试/任务与固定完整通过8ef00878逐blob等价，最新刷新及并行代码保持。data-only免重复沙箱，不冒报新树完整通过，原批完整外部另续验。首证/先验/claim/evidence/support/repeat/旧状态历史保持，五个combat/potion/SL代码提案沿原自动链，数据上线不表示代码实现；原out/err/completion/failed及19项记录冲突历史不改。0290/0291纯bug保持原观察/提案状态，不标代码实现；0292首证LRN0HPZ0FZS1/A0及partly先验保持。",
+      "[20261014-184301-s2-strategy-proposal] 原提案silent-proposal-68322129f031077b逐项核验，原Markdown SHA/本角色归属/冻结原字节已核；详见本批proposal.md与report.md。全部waiting：保留既有窄实现和证据/消费者限制，固定base/live预检17项共享记录冲突使源码实施停止；fixes=[]、merged=null、tests=null，无新策略/经验/版本/shipped。此行仅追加任务追溯，不改变原claim/status/evidence/first_run/asc/prior/version。",
+      "本批普通专注实现关联silent-0476、原提案68322129f031077b；源码沙箱已过但live9处冲突未合入。原机制/模型历史状态保持，不登记shipped。"
+    ],
+    "shipped_at": "2026-10-08T12:40:26+08:00"
+  }
+}

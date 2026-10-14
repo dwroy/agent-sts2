@@ -1,0 +1,158 @@
+{
+  "task": "strategy-proposal",
+  "character": "silent",
+  "batch": "20261014-201302-s2-strategy-proposal",
+  "base": "3db099b16eb2477c6ee5c839b0c8bf7f1c5c91da",
+  "runs": [
+    "K2JAGKVJAWZJ",
+    "10GPK5XGHCK3",
+    "UJ0K3G10609Y",
+    "NEWRFAYKTQHR",
+    "79UCJ0K6R9C1",
+    "9YBKCNBFP0X5",
+    "UACFSW4VDDLD",
+    "4Y94N8RDPGPM",
+    "TCFAHJ9K19VY",
+    "UMVLWER4CD98"
+  ],
+  "fixes": [
+    {
+      "id": "silent-proposal-68322129f031077b",
+      "summary": "仅Silent A0/A10普通战斗专注自身3抽后封锁后继抽牌，已提交未合入",
+      "commit": "6db27908cc3d39e4567eeb589f5541adfd9eb0ea",
+      "ledger": [
+        "silent-0476",
+        "silent-0290",
+        "silent-0292"
+      ]
+    }
+  ],
+  "skipped": [
+    {
+      "id": "silent-proposal-243ad8dd038a4ff6",
+      "reason": "K2 F33首29抽后洗牌条件未知，目标/减力/暗影/扫腿/饮药多处同时改变；缺单动作整战与未走路线实到对照，不拟新资源或SL阈值。"
+    },
+    {
+      "id": "silent-proposal-9c3ff04261867dd2",
+      "reason": "K2 F27T2铁心0挡→0挡、覆甲0→7勘误已核；宽资源提案仍缺能力/药水/跨幕回复的完整消费者对照与时点整战证据，不能仅以勘误关闭。"
+    },
+    {
+      "id": "silent-proposal-650ea306e8627f9e",
+      "reason": "K2实核48次Codex脑调用、71个含复用决策，来源勘误成立；其关联宽机制/资源提案仍未全部验证，不能将计数更正登记为整项源码实现。"
+    },
+    {
+      "id": "silent-proposal-aff5ac3bb7cdb81b",
+      "reason": "NEWR F31T2已核原线3损/30伤/11挡与替线8损/23伤/4挡；live已有HP/伤害/格挡结构差额，但缺毒量/污染与饱和标志完整字段、冻结原题至消费者的全链验收。保持探索准入。"
+    },
+    {
+      "id": "silent-proposal-60e68d681e861d1c",
+      "reason": "79UC F14T11先付感染持牌伤已由live祖先2e6fa2实现；原combat/potion宽范围仍缺普通战毒瓶、制品/头骨与升级/叠层重放的完整消费者验证，不把窄覆盖登记整项duplicate。"
+    },
+    {
+      "id": "silent-proposal-9aa48a84227bcdb5",
+      "reason": "K2/79UC/NEWR的SL恢复、实际饮药与净损血已分源；尚无未走路线或不同饮药时点的受控整战结果，宽资源消费者未齐，不能拟新的药水/休息价值。"
+    },
+    {
+      "id": "silent-proposal-7cfd0f9b6b0fbbda",
+      "reason": "普通蜃景和施毒攻击已有live窄实现；本批79UC F14环的即时/后两轮各5挡可核，但临时敏捷施放快照、叠层/重放和宽多机制跨轮消费者仍缺有界隔离验证，保留原提案。"
+    },
+    {
+      "id": "silent-proposal-e6f9cb57c1204036",
+      "reason": "已遵循combat/potion领域更正，与60e68d共用原证据与未闭合的毒药消费者范围；更正本身不等原整项implemented，保留两个原id而不重复实现。"
+    },
+    {
+      "id": "silent-proposal-8df611363cd82fc9",
+      "reason": "9R F49第三手动攻击敏捷+1和后续8挡已核；原遗物stack在攻击仍3时归0、攻击4时为1，与attacks_played_this_turn不能直接互换。缺自动/重放来源、同步计数与更高触发次数的隔离消费者验证，原模板要求可靠计数，保留已知缺口等待补证。"
+    }
+  ],
+  "merged": null,
+  "tests": {
+    "tsc": 0,
+    "vitest": 0,
+    "cases": 3863
+  },
+  "code_proposals": [
+    "silent-proposal-243ad8dd038a4ff6",
+    "silent-proposal-9c3ff04261867dd2",
+    "silent-proposal-650ea306e8627f9e",
+    "silent-proposal-aff5ac3bb7cdb81b",
+    "silent-proposal-60e68d681e861d1c",
+    "silent-proposal-9aa48a84227bcdb5",
+    "silent-proposal-7cfd0f9b6b0fbbda",
+    "silent-proposal-e6f9cb57c1204036",
+    "silent-proposal-68322129f031077b",
+    "silent-proposal-8df611363cd82fc9"
+  ],
+  "implementation_domains": [
+    "combat",
+    "sl"
+  ],
+  "proposal_results": [
+    {
+      "id": "silent-proposal-243ad8dd038a4ff6",
+      "state": "waiting",
+      "reason": "K2 F33首29抽后洗牌条件未知，目标/减力/暗影/扫腿/饮药多处同时改变；缺单动作整战与未走路线实到对照，不拟新资源或SL阈值。"
+    },
+    {
+      "id": "silent-proposal-9c3ff04261867dd2",
+      "state": "waiting",
+      "reason": "K2 F27T2铁心0挡→0挡、覆甲0→7勘误已核；宽资源提案仍缺能力/药水/跨幕回复的完整消费者对照与时点整战证据，不能仅以勘误关闭。"
+    },
+    {
+      "id": "silent-proposal-650ea306e8627f9e",
+      "state": "waiting",
+      "reason": "K2实核48次Codex脑调用、71个含复用决策，来源勘误成立；其关联宽机制/资源提案仍未全部验证，不能将计数更正登记为整项源码实现。"
+    },
+    {
+      "id": "silent-proposal-aff5ac3bb7cdb81b",
+      "state": "waiting",
+      "reason": "NEWR F31T2已核原线3损/30伤/11挡与替线8损/23伤/4挡；live已有HP/伤害/格挡结构差额，但缺毒量/污染与饱和标志完整字段、冻结原题至消费者的全链验收。保持探索准入。"
+    },
+    {
+      "id": "silent-proposal-60e68d681e861d1c",
+      "state": "waiting",
+      "reason": "79UC F14T11先付感染持牌伤已由live祖先2e6fa2实现；原combat/potion宽范围仍缺普通战毒瓶、制品/头骨与升级/叠层重放的完整消费者验证，不把窄覆盖登记整项duplicate。"
+    },
+    {
+      "id": "silent-proposal-9aa48a84227bcdb5",
+      "state": "waiting",
+      "reason": "K2/79UC/NEWR的SL恢复、实际饮药与净损血已分源；尚无未走路线或不同饮药时点的受控整战结果，宽资源消费者未齐，不能拟新的药水/休息价值。"
+    },
+    {
+      "id": "silent-proposal-7cfd0f9b6b0fbbda",
+      "state": "waiting",
+      "reason": "普通蜃景和施毒攻击已有live窄实现；本批79UC F14环的即时/后两轮各5挡可核，但临时敏捷施放快照、叠层/重放和宽多机制跨轮消费者仍缺有界隔离验证，保留原提案。"
+    },
+    {
+      "id": "silent-proposal-e6f9cb57c1204036",
+      "state": "waiting",
+      "reason": "已遵循combat/potion领域更正，与60e68d共用原证据与未闭合的毒药消费者范围；更正本身不等原整项implemented，保留两个原id而不重复实现。"
+    },
+    {
+      "id": "silent-proposal-68322129f031077b",
+      "state": "waiting",
+      "reason": "普通专注源码已提交 6db27908cc3d39e4567eeb589f5541adfd9eb0ea，源码沙箱tsc/vitest0、3863项通过，撤源码5项失败/恢复24项通过；与live b0b4d0a152155582c52ef622fe8fc6d9a0c27335三方预检9处冲突。遵任务冲突停报边界，尚无实际live祖先实现提交，待ops兜底合入及合后验证。"
+    },
+    {
+      "id": "silent-proposal-8df611363cd82fc9",
+      "state": "waiting",
+      "reason": "9R F49第三手动攻击敏捷+1和后续8挡已核；原遗物stack在攻击仍3时归0、攻击4时为1，与attacks_played_this_turn不能直接互换。缺自动/重放来源、同步计数与更高触发次数的隔离消费者验证，原模板要求可靠计数，保留已知缺口等待补证。"
+    }
+  ],
+  "report": "/home/dw/Projects/agent-sts2/learner/runs/20261014-201306-strategy-proposal/report.md",
+  "proposal": "/home/dw/Projects/agent-sts2/learner/runs/20261014-201306-strategy-proposal/proposal.md",
+  "version": null,
+  "release_id": null,
+  "integration_blocked": {
+    "live": "b0b4d0a152155582c52ef622fe8fc6d9a0c27335",
+    "preflight": "/home/dw/Projects/agent-sts2/learner/runs/20261014-201306-strategy-proposal/live-merge-preflight-committed.json",
+    "conflicts": 9,
+    "reason": "任务要求冲突停报；保留净源码提交供ops兜底，未实际改live。"
+  },
+  "live_tests": {
+    "tsc": null,
+    "vitest": null,
+    "cases": null
+  },
+  "gitleaks": 0
+}

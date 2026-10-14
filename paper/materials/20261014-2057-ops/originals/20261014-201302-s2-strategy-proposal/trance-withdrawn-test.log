@@ -1,0 +1,119 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261014-201302-s2/agent
+
+ ❯ tests/silent-battle-trance.test.ts (12 tests | 5 failed) 255ms
+   × the live planner draws Trance's own three before locking, and Footwork retains its Dexterity 67ms
+   × a later draw keeps its Block but cannot borrow a fourth known card 15ms
+   × sampled and SL optimistic draw adapters respect the same lock after their own draw 13ms
+   × the independent earlier A0 observation has the same three draws and a readable replan lock 17ms
+   × unverified replay and altered templates stay outside the certified lock 11ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/silent-battle-trance.test.ts > the live planner draws Trance's own three before locking, and Footwork retains its Dexterity
+AssertionError: expected { energy: 4, hp: 12, block: 9, …(14) } to match object { Object (drawn, noDraw, ...) }
+(14 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+    "dexterity": 3,
+    "drawn": 3,
+-   "noDraw": true,
++   "noDraw": false,
+  }
+
+ ❯ tests/silent-battle-trance.test.ts:68:39
+     66|   const trace = traceSteps(input, [step(input, "BATTLE_TRANCE"), step(…
+     67|   expect(trace.complete).toBe(true);
+     68|   expect(trace.transitions[0]!.after).toMatchObject({ drawn: 3, noDraw…
+       |                                       ^
+     69|   expect(trace.transitions[1]!.after).toMatchObject({ drawn: 3, noDraw…
+     70|   expect(frame(295459).combat.player.powers).toContainEqual(expect.obj…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  tests/silent-battle-trance.test.ts > a later draw keeps its Block but cannot borrow a fourth known card
+AssertionError: expected { winsFight: false, hpLoss: 2, …(21) } to match object { cardsDrawn: 3, blockGained: 5 }
+(21 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+    "blockGained": 5,
+-   "cardsDrawn": 3,
++   "cardsDrawn": 5,
+  }
+
+ ❯ tests/silent-battle-trance.test.ts:79:47
+     77|   input.knownTop = known;
+     78|   const prefix = [step(input, "BATTLE_TRANCE"), step(input, "BACKFLIP"…
+     79|   expect(replaySteps(input, prefix)!.outcome).toMatchObject({ cardsDra…
+       |                                               ^
+     80|   expect(replaySteps(input, [...prefix, { cardIndex: 100, cardId: "FIX…
+     81|   expect(replaySteps(input, [...prefix, { cardIndex: 103, cardId: "FIX…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+ FAIL  tests/silent-battle-trance.test.ts > sampled and SL optimistic draw adapters respect the same lock after their own draw
+AssertionError: expected 2 to be 1 // Object.is equality
+
+- Expected
++ Received
+
+- 1
++ 2
+
+ ❯ tests/silent-battle-trance.test.ts:100:58
+     98|   Object.assign(flip, { draw: 0, drawn: [card(102, "LATER_DRAW", { cos…
+     99|   const prefix = [step(input, "BATTLE_TRANCE"), step(input, "BACKFLIP"…
+    100|   expect(replaySteps(input, prefix)!.outcome.cardsDrawn).toBe(1);
+       |                                                          ^
+    101|   expect(replaySteps(input, [...prefix, { cardIndex: 101, cardId: "OWN…
+    102|   expect(replaySteps(input, [...prefix, { cardIndex: 102, cardId: "LAT…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯
+
+ FAIL  tests/silent-battle-trance.test.ts > the independent earlier A0 observation has the same three draws and a readable replan lock
+AssertionError: expected { energy: 4, hp: 75, block: 1, …(14) } to match object { drawn: 3, noDraw: true }
+(15 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+    "drawn": 3,
+-   "noDraw": true,
++   "noDraw": false,
+  }
+
+ ❯ tests/silent-battle-trance.test.ts:115:6
+    113|   const input = inputFor(frame(211456));
+    114|   expect(traceSteps(input, [step(input, "BATTLE_TRANCE")]).transitions…
+    115|     .toMatchObject({ drawn: 3, noDraw: true });
+       |      ^
+    116|   expect(inputFor(frame(211457)).player.noDraw).toBe(true);
+    117|   expect(frame(211458).combat.hand).toHaveLength(frame(211457).combat.…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/5]⎯
+
+ FAIL  tests/silent-battle-trance.test.ts > unverified replay and altered templates stay outside the certified lock
+AssertionError: expected [] to include '战斗专注（自动出牌、重放或升级未验证）'
+ ❯ tests/silent-battle-trance.test.ts:157:37
+    155|   const line = replaySteps(input, [step(input, "BATTLE_TRANCE"), step(…
+    156|   expect(line.outcome.cardsDrawn).toBe(8);
+    157|   expect(line.outcome.unknownCards).toContain("战斗专注（自动出牌、重放或升级未验证）");
+       |                                     ^
+    158|   const raw = frame().combat.hand.find((c: Raw) => c.card_id === "BATT…
+    159|   expect(modelHandCard({ ...raw, rules_text: "unknown" }, 0, knowledge…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/5]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  5 failed | 7 passed (12)
+   Start at  20:27:43
+   Duration  3.36s (transform 2.64s, setup 683ms, import 2.28s, tests 255ms, environment 0ms)
+

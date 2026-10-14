@@ -1,0 +1,75 @@
+## 修 bug 回报
+- 合并基线：main → 3db099b16eb2477c6ee5c839b0c8bf7f1c5c91da（工作区干净，merge 为 Already up to date）
+- 修复（每条一行）：无新增纯 bug 修复；未修改源码、提交、账本、提案、版本或上线记录。
+- 已被别人修掉的：队列第9行 fight-value 构建器 observe_combat 参数缺失 — aba384cc503e53001933fceb688e9d2c24442b19（当前路径 knowledge/builders/build-fight-value.py；祖先及 blob 核查见 queue-audit.json）
+- 已被别人修掉的：队列第6行 失败的大脑调用记录零耗时和零用量 — 531d15444f5e9c29d85d36ff098f3fbf33e647af（当前路径 agent/src/brain/router.ts；祖先及 blob 核查见 queue-audit.json）
+- 已被别人修掉的：队列第171行 大脑失败及回退的耗时、用量与引擎归属 — fc5b2e5e6314c40590dd976189d0137309383c6b（当前路径 agent/src/brain/router.ts；祖先及 blob 核查见 queue-audit.json）
+- 已被别人修掉的：队列第192行 SL 日志把低血走廊标为 elite — af6f07adfee1ad62ec85d613ab36a7b11857ce89（当前路径 agent/src/sl/controller.ts；祖先及 blob 核查见 queue-audit.json）
+- 已被别人修掉的：队列第204行 outcome-stats 刷新后进程仍读旧缓存 — 2650aed8baa84b8cf26e1e98b975582a6d5ab537（当前路径 agent/src/knowledge/experience.ts；祖先及 blob 核查见 queue-audit.json）
+- 已被别人修掉的：队列第214行 fix-batch/experience-update 旧队列及 v3 合入模板 — afd652a3f75df6e7403439f01c565220327884da（当前路径 learner/tasks/fix-batch.md；祖先及 blob 核查见 queue-audit.json）
+- 已被别人修掉的：队列第216行 DeepSeek 题面导出整读超大 states 日志 — 6ee8e2a2c1edc31492962137b96af8c6e1d12093（当前路径 agent/tools/deepseek-prompt-dump.ts；祖先及 blob 核查见 queue-audit.json）
+- 已被别人修掉的：队列第259行 tsc 纳入 learner/runs 临时源码 — 7bc835803f2efd44a5cc6f2009933f3c3bee7653（当前路径 agent/tsconfig.json；祖先及 blob 核查见 queue-audit.json）
+- 已被别人修掉的：队列第266行 兜底合入后缺宿主完整检查入口 — f670884a188a047bbd3f7f007c260ade62fae36a（当前路径 ops/learner_checks.py；祖先及 blob 核查见 queue-audit.json）
+- 已被别人修掉的：队列第269行 单次 mod 超时误报持续卡死 — a4f4ec868d122dc92af510862c6240cf2eaff2b6（当前路径 ops/stall-check.sh；祖先及 blob 核查见 queue-audit.json）
+- 已被别人修掉的：队列第299行 账本无法追加更正来源元数据 — 87c89b7aea90c7275e0fbb04b1e4148a4209630c（当前路径 learner/ledger.py；祖先及 blob 核查见 queue-audit.json）
+- 已被别人修掉的：队列第302行 长检查阻塞学习状态锁 — 233ede56047274ba53a4e1191a245fac816c37a8（当前路径 ops/learner_checks.py；祖先及 blob 核查见 queue-audit.json）
+- 已被别人修掉的：队列第406行 额度测试错误依赖已设置 TMPDIR — 6bfbe3d2e2aa6e5e8c1969d5ee1cca08671ae02a（当前路径 agent/tests/subscription-usage.test.ts；祖先及 blob 核查见 queue-audit.json）
+- 已被别人修掉的：队列第452行 rollout/target-options 单调截止传播 — 9889436c3b332a3984cdb7f850a1349f464182d1（当前路径 agent/src/reflex/rollout-live.ts；祖先及 blob 核查见 queue-audit.json）
+- 已被别人修掉的：队列第469行 无新增修复的成功批次被误标失败 — 01b560ef4966da945511bfccd41abd09440fb0e9（当前路径 ops/learner_checks.py；祖先及 blob 核查见 queue-audit.json）
+- 已被别人修掉的：队列第719行 历史大脑测试入口漏传日志回调 — ccd8bb8e017da9c30b408138d04e6d2bc985836d（当前路径 agent/tests/legacy-brain.ts；祖先及 blob 核查见 queue-audit.json）
+- 已被别人修掉的：队列第784行 silent-0254 无决策死亡战斗错误归因 — 3b48088dec5fc6eafe576a1296bbdadde43432ee（当前路径 ops/report.py；祖先及 blob 核查见 queue-audit.json）
+- 已被别人修掉的：队列第900行 rollout 最佳线路固定测试的时钟与知识隔离 — bbc5b993a7524bbb8e80a975f204f8d193657b46（当前路径 agent/tests/rollout-live.test.ts；祖先及 blob 核查见 queue-audit.json）
+- 已被别人修掉的：队列第1029行 codex-usage-credit-baseline-recovery — e5e2995d659d15af79ec8bba67a4a25c1cb7295f（当前路径 agent/src/brain/engines/codex-usage.ts；祖先及 blob 核查见 queue-audit.json）
+- 已被别人修掉的：队列第1034行 升阶通知及审计误用请求目标进阶 — 8045d9fbf0a12523b1dbe39bbed8af06c7497b09（当前路径 ops/codex-ops-learn.py；祖先及 blob 核查见 queue-audit.json）
+- 已被别人修掉的：队列第1046行 host-checks-broker-push-registration — c519952b31e3a0bb3acdd2115883ae8671b8a090（当前路径 ops/codex/lib.ts；祖先及 blob 核查见 queue-audit.json）
+- 已被别人修掉的：队列第1047行 host-checks-session-exit-fixture — 874ae603b3927173f805e0b2fe789330bab710c7（当前路径 agent/tests/brain-codex-session.test.ts；祖先及 blob 核查见 queue-audit.json）
+- 已被别人修掉的：队列第1060行 host-targeted-check-continuation 固定分段补验入口 — 24c2e3a75b5db6bac76d6c924f86b7fcd9438316（当前路径 ops/learner_check_continuation.py；祖先及 blob 核查见 queue-audit.json）
+- 已被别人修掉的：队列第1063行 调度夹具缺生产 feature 路径 — 2b09c47d431a580e9955d157f4dfb0e576186206（当前路径 ops/tests/test_silent_calibration_dispatch.py；祖先及 blob 核查见 queue-audit.json）
+- 已被别人修掉的：队列第1067行 sandbox-glob-startup-race 会话前有界恢复 — bc2c40e313cc36682196277c53c50e30744b88c5（当前路径 learner/lib/startup-recovery.ts；祖先及 blob 核查见 queue-audit.json）
+- 已被别人修掉的：队列第1075行 blocked-experience-proposal-repair-dispatch — 84366ad06ee4f978394c1b9489a82c83ea12bd36（当前路径 ops/proposal_dispatch.py；祖先及 blob 核查见 queue-audit.json）
+- 已被别人修掉的：队列第1077行 multi-character-potion-table-fixture-isolation — 5ef3c4612bd2673c19968c5a2d24bf62af519ee1（当前路径 agent/tests/multi-character.test.ts；祖先及 blob 核查见 queue-audit.json）
+- 已被别人修掉的：队列第1083行 compute-memo-worker-data-signature 固定知识输入 — 8fbb441eb61eef226eb7366f9612003480c83988（当前路径 agent/tests/compute-memo.test.ts；祖先及 blob 核查见 queue-audit.json）
+- 已被别人修掉的：队列第1093行 unassigned-strategy-proposal-resolution — 3a98e213a826e94f9708af4b1a265e1892659f4e（当前路径 ops/proposal_dispatch.py；祖先及 blob 核查见 queue-audit.json）
+- 已被别人修掉的：队列第1097行 ops-stall-recovery 测试执行及诊断确定性 — 9b6459fd99f26b17689134e33aa85d6190e71d7d（当前路径 agent/tests/ops-stall-recovery.test.ts；祖先及 blob 核查见 queue-audit.json）
+- 已被别人修掉的：队列第1103行 batch-c-fixed-fixture-timeout — 5dd8a20c9d2dd4ed43120b1684e5577b993ac2ff（当前路径 agent/tests/batch-c.test.ts；祖先及 blob 核查见 queue-audit.json）
+- 已被别人修掉的：队列第1110行 host-fixed-test-timeouts-010547 评估版本夹具 — d9881ba593b0b8d701ebbe1c95626c0ebdd554c7（当前路径 agent/tests/eval_metrics_test.py；祖先及 blob 核查见 queue-audit.json）
+- 已被别人修掉的：队列第1117行 paper-dataset-git-consistency-race — 16bfe0bd6ecaa91d04a91c01edc94cecc781f71f（当前路径 ops/paper_dataset.py；祖先及 blob 核查见 queue-audit.json）
+- 已被别人修掉的：队列第1120行 boss-sim-codex-home-preflight — 5921f8cd045853182c867a6430e75c3fcde00a87（当前路径 ops/report.py；祖先及 blob 核查见 queue-audit.json）
+- 已被别人修掉的：队列第1125行 host-loop-time-cap-wall-clock-061301 — b3c6dd700b00d0d8b17d5d2efe6fe9aa353618fa（当前路径 agent/tests/loop.test.ts；祖先及 blob 核查见 queue-audit.json）
+- 已被别人修掉的：队列第1131行 工作树磁盘容量预检与历史副本共享 — c7a6efb1e15ed6c5f31a35ae3ee9833863340393（当前路径 ops/worktree_storage.py；祖先及 blob 核查见 queue-audit.json）
+- 已被别人修掉的：队列第1145行 broker 容量及请求回执失败隔离 — a136ddc4b5b0a8696f10b2fae3073322d57e724c（当前路径 ops/codex/main.ts；祖先及 blob 核查见 queue-audit.json）
+- 已被别人修掉的：队列第1141行 普通通知 ACK 误查不存在的父要求 — 672e198a4730012330f599068a0ef1efadb02002（当前路径 ops/learning_requests.py；祖先及 blob 核查见 queue-audit.json）
+- 已被别人修掉的：队列第1148行 无产出失败复盘误派提案补链 — 3fdcd77927f01b35c20c6c5c1fcfd790676032d2（当前路径 ops/codex-ops-learn.py；祖先及 blob 核查见 queue-audit.json）
+- 已被别人修掉的：队列第1158行 普通通知 ACK 前阶段回执再校验 — 1594def2e1b65b665d3b345f31444194eb4d09e6（当前路径 ops/learning_requests.py；祖先及 blob 核查见 queue-audit.json）
+- 已被别人修掉的：队列第1164行 会话前恢复遗漏纯时间戳复盘租约 ID — d9983263ffecea1bed4e29d65e7f854a3d2e33d7（当前路径 learner/lib/startup-recovery.ts；祖先及 blob 核查见 queue-audit.json）
+- 已被别人修掉的：队列第1166行 历史牌组夹具与新 deck cap 的隔离 — c0999eaa251133454540e157b2d6fe641731ad65（当前路径 agent/tests/silent-route-relic.test.ts；祖先及 blob 核查见 queue-audit.json）
+- 已被别人修掉的：队列第1170行 公共经验固定文件快照兼容 — 8390c62d76fc8c7d7b6b7292121a621f4666d39c（当前路径 agent/tests/historical-knowledge-fs.ts；祖先及 blob 核查见 queue-audit.json）
+- 已被别人修掉的：队列第1186行 普通通知 ACK 第二策略槽批号兼容 — 15eb85e2934e428c5e299fc4a1aba456d92fd685（当前路径 ops/learning_requests.py；祖先及 blob 核查见 queue-audit.json）
+- 已被别人修掉的：队列第1188行 持药固定时钟与知识隔离 — 8867041f57f0e511606127e568603510af59a0e7（当前路径 agent/tests/rollout-held-potion-fixture.ts；祖先及 blob 核查见 queue-audit.json）
+- 已被别人修掉的：队列第1188行 锁夹具异步有界等待 — e770a6d09a8398aee4126f1b7ea37fc70687989f（当前路径 agent/tests/learner-lock-fixture.ts；祖先及 blob 核查见 queue-audit.json）
+- 已被别人修掉的：队列第1216行 首 token 前长思考及路径拒绝进程夹具 — a18376cce22eb9e47377d474a85fb864f7c636e2（当前路径 agent/tests/brain-codex-watchdog.test.ts；祖先及 blob 核查见 queue-audit.json）
+- 已被别人修掉的：队列第1232行 可重建 Python 缓存阻塞回收 — 1e8af775f6b90f100f20ff7c4a08dfddaba893a9（当前路径 ops/learner_retention.py；祖先及 blob 核查见 queue-audit.json）
+- 已被别人修掉的：队列第1240行 合法校准 feature 通知来源校验 — 38b2f572d90b3b97a23f9eae983f583287492f9a（当前路径 ops/learning_requests.py；祖先及 blob 核查见 queue-audit.json）
+- 已被别人修掉的：队列第1242行 宿主长参数题名承载 — f8896692b0d868b900ccffc8ed910321d0f3e765（当前路径 ops/learner_check_continuation.py；祖先及 blob 核查见 queue-audit.json）
+- 已被别人修掉的：队列第1242行 升阶报告批量异步固定解析夹具 — a11e32ae1a01ecf75cc57519be21f2d144c2cd18（当前路径 agent/tests/ascension-audit-output-fixture.ts；祖先及 blob 核查见 queue-audit.json）
+- 已被别人修掉的：队列第1242行 研究调度固定分组夹具 — cd1f5593430a2d13479368679b5d42994540f7c8（当前路径 agent/tests/strategy-research-scheduling.test.ts；祖先及 blob 核查见 queue-audit.json）
+- 已被别人修掉的：队列第1242行 随机药水固定板重复性夹具 — 519b63549f1c61276755066e5a76d0351cf09a7c（当前路径 agent/tests/potion-mc.test.ts；祖先及 blob 核查见 queue-audit.json）
+- 已被别人修掉的：队列第1242行 rollout 排序及自动动作固定矩阵夹具 — b68a650ab95c15a492cccac598906f32284229be（当前路径 agent/tests/rollout-live.test.ts；祖先及 blob 核查见 queue-audit.json）
+- 已被别人修掉的：队列第1244行 包装/参数化测试的静态期限解析 — 56c256dad0d33b231b82b53113d3bdd84f9bfa20（当前路径 agent/tools/test-blocks.ts；祖先及 blob 核查见 queue-audit.json）
+- 已被别人修掉的：队列第1262行 feature producer 到 canonical notice 身份桥接 — 1dd4d434aef67f1d065dbdba23a875ae82741a88（当前路径 ops/learning_requests.py；祖先及 blob 核查见 queue-audit.json）
+- 已被别人修掉的：队列第1272行 run-plans 证据提取漏识别 run 字段 — 78e9b05929366d097a728761d693d790ff16ac87（当前路径 learner/extract_evidence.py；祖先及 blob 核查见 queue-audit.json）
+- 已被别人修掉的：队列第1280行 Jev 超限请求传输及 R342 合同替换 — 75249befaad497b68ffbdbf242c9e1672beba850（当前路径 agent/src/eye/jev-prompt-log.ts；祖先及 blob 核查见 queue-audit.json）
+- 没修的：游戏机制、出牌、药水、SL、终局及结构模型队列项 — 策略类；已有独立 strategy-proposal 链，本批不重复实现或派发
+- 没修的：arch-funnel-guard / arch-learning-priority / arch-unified-resource-value / inv-f33-regression / 独立缓存及校准研究 — 独立功能/研究，超出普通纯 bug 批次，保留原拥有者
+- 没修的：sandbox-glob-startup-race 上游目录生命周期 — 证据不足；会话前恢复及复盘租约子项已修，准确删除者与上游根因未证
+- 没修的：调度公平性核查 — 证据不足；插入序观察尚不能证明永久饥饿
+- 没修的：core-build-notify-222802-rc2 — 证据不足；已有失败诊断修复，原 native rc2 根因未证，本任务不重放外部通知
+- 没修的：v5-dpr-health-20261013 暖池性能 / R1-R2 / P1-P2 — 独立研究已有原线程拥有者；已修执行/传输子项不等于性能父项完成
+- 没修的：框架外层总时限收尾 — 原分段宿主补验入口已修；原包装器及精确覆盖收尾由框架拥有者接续
+- 测试：tsc 退出码 0；定向 vitest 9 文件 / 55 用例 / 退出码 0，无重跑。第一组 4 文件32例，第二组5文件23例；全部固定数据，无真实 LLM/网络。未改源码且未提交，不重复运行未变源码整套。
+- 合入：未合入；本批没有新源码。当前 main/live 源码存在既有差异，verify_empty_fix 实读为 null；不以空合并或整枝覆盖既有差异绕过验收，交调用方核原集成归属。
+- 需要 Roy 定的事（没有写「无」）：无。
+
+```json
+{"task": "fix-batch", "base": "3db099b16eb2477c6ee5c839b0c8bf7f1c5c91da", "fixes": [], "skipped": [{"item": "游戏机制、出牌、药水、SL、终局及结构模型队列项", "reason": "策略类；已有独立 strategy-proposal 链，本批不重复实现或派发"}, {"item": "arch-funnel-guard / arch-learning-priority / arch-unified-resource-value / inv-f33-regression / 独立缓存及校准研究", "reason": "独立功能/研究，超出普通纯 bug 批次，保留原拥有者"}, {"item": "sandbox-glob-startup-race 上游目录生命周期", "reason": "证据不足；会话前恢复及复盘租约子项已修，准确删除者与上游根因未证"}, {"item": "调度公平性核查", "reason": "证据不足；插入序观察尚不能证明永久饥饿"}, {"item": "core-build-notify-222802-rc2", "reason": "证据不足；已有失败诊断修复，原 native rc2 根因未证，本任务不重放外部通知"}, {"item": "v5-dpr-health-20261013 暖池性能 / R1-R2 / P1-P2", "reason": "独立研究已有原线程拥有者；已修执行/传输子项不等于性能父项完成"}, {"item": "框架外层总时限收尾", "reason": "原分段宿主补验入口已修；原包装器及精确覆盖收尾由框架拥有者接续"}], "merged": null, "tests": {"tsc": 0, "vitest": 0, "cases": 55}, "code_proposals": [], "implementation_domains": [], "report": "/home/dw/Projects/agent-sts2/learner/runs/20261014-201306-fix-batch/report.md"}
+```
