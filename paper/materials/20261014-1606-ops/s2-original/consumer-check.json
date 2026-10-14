@@ -1,0 +1,208 @@
+{
+  "live_source": "/home/dw/Projects/agent-sts2/.worktrees/live",
+  "live_head": "4d55ff9b4e2d6ed9cb701712ab63dba76ac67dac",
+  "results": [
+    {
+      "label": "Q6 普通紧勒三牌和已结毒",
+      "states": [
+        282887,
+        282892
+      ],
+      "damage": 23,
+      "unknown": [
+        "弃牌选择未确定"
+      ],
+      "complete_dispatch_verified": false
+    },
+    {
+      "label": "WQ 连饮逐瓶累计生成",
+      "states": [
+        282292
+      ],
+      "actual": [
+        2,
+        2,
+        2
+      ],
+      "complete_dispatch_verified": false
+    },
+    {
+      "label": "WQ 腾一手位后再饮的局部预测",
+      "states": [
+        282292
+      ],
+      "steps": [
+        {
+          "cardIndex": 100,
+          "cardId": "POTION:CUNNING_POTION:0",
+          "upgraded": false,
+          "cost": 0,
+          "name": "potion 狡诈药水",
+          "target": null,
+          "targetName": null
+        },
+        {
+          "cardIndex": 3000000,
+          "cardId": "SHIV",
+          "upgraded": true,
+          "cost": 0,
+          "name": "小刀+",
+          "target": 0,
+          "targetName": "无厌沙虫"
+        },
+        {
+          "cardIndex": 101,
+          "cardId": "POTION:CUNNING_POTION:1",
+          "upgraded": false,
+          "cost": 0,
+          "name": "potion 狡诈药水",
+          "target": null,
+          "targetName": null
+        }
+      ],
+      "damage": 6,
+      "shivs_left": 2,
+      "unknown": [],
+      "complete_dispatch_verified": false,
+      "limitation": "仅局部模型组合，未实打该替线或验证保留选择/SL恢复/整战结局"
+    },
+    {
+      "label": "WQ 连饮逐瓶累计生成",
+      "states": [
+        282352
+      ],
+      "actual": [
+        3,
+        5,
+        5
+      ],
+      "complete_dispatch_verified": false
+    },
+    {
+      "label": "WQ 腾一手位后再饮的局部预测",
+      "states": [
+        282352
+      ],
+      "steps": [
+        {
+          "cardIndex": 100,
+          "cardId": "POTION:CUNNING_POTION:0",
+          "upgraded": false,
+          "cost": 0,
+          "name": "potion 狡诈药水",
+          "target": null,
+          "targetName": null
+        },
+        {
+          "cardIndex": 3000000,
+          "cardId": "SHIV",
+          "upgraded": true,
+          "cost": 0,
+          "name": "小刀+",
+          "target": 0,
+          "targetName": "无厌沙虫"
+        },
+        {
+          "cardIndex": 101,
+          "cardId": "POTION:CUNNING_POTION:1",
+          "upgraded": false,
+          "cost": 0,
+          "name": "potion 狡诈药水",
+          "target": null,
+          "targetName": null
+        }
+      ],
+      "damage": 6,
+      "shivs_left": 5,
+      "unknown": [],
+      "complete_dispatch_verified": false,
+      "limitation": "仅局部模型组合，未实打该替线或验证保留选择/SL恢复/整战结局"
+    },
+    {
+      "label": "TXZ 已见组合新战模拟开场成本",
+      "states": [
+        281313
+      ],
+      "opening_hp_loss": 4,
+      "live_board_reapplication": false
+    },
+    {
+      "label": "TXZ 已见组合新战模拟开场成本",
+      "states": [
+        281339
+      ],
+      "opening_hp_loss": 4,
+      "live_board_reapplication": false
+    },
+    {
+      "label": "TXZ 已见组合新战模拟开场成本",
+      "states": [
+        281368
+      ],
+      "opening_hp_loss": 4,
+      "live_board_reapplication": false
+    },
+    {
+      "label": "TXZ 已见组合新战模拟开场成本",
+      "states": [
+        281400
+      ],
+      "opening_hp_loss": 4,
+      "live_board_reapplication": false
+    },
+    {
+      "label": "TXZ 已见组合新战模拟开场成本",
+      "states": [
+        281565
+      ],
+      "opening_hp_loss": 4,
+      "live_board_reapplication": false
+    },
+    {
+      "label": "NHA 当前手数精确切击",
+      "states": [
+        283142
+      ],
+      "hand_count": 7,
+      "damage": 1,
+      "complete_dispatch_verified": false
+    },
+    {
+      "label": "NHA 当前手数精确切击",
+      "states": [
+        283143
+      ],
+      "hand_count": 6,
+      "damage": 3,
+      "complete_dispatch_verified": false
+    },
+    {
+      "label": "NHA 当前手数精确切击",
+      "states": [
+        283144
+      ],
+      "hand_count": 5,
+      "damage": 5,
+      "complete_dispatch_verified": false
+    },
+    {
+      "label": "NHA 油灯首次毒的模型边界",
+      "states": [
+        283146,
+        283147
+      ],
+      "model_card_poison": 5,
+      "observed_first_poison": 10,
+      "relic_stack": null,
+      "limitation": "当前模型没有可靠首次消费状态；单卡预览不代表完整候选/替线收益"
+    }
+  ],
+  "blocked_knowledge_reads": [
+    "/home/dw/Projects/agent-sts2/.worktrees/live/knowledge/characters/ironclad/boss-trust.json"
+  ],
+  "limitations": [
+    "只核局部固定消费者，未执行完整候选派发、SL恢复或整战反事实。",
+    "同局牌型来自已核实原始run.deck/selection/combat.hand，未使用刷新知识JSON。",
+    "无生产源码变更，未运行tsc/vitest或生产撤码红绿。"
+  ]
+}

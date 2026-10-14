@@ -1,0 +1,604 @@
+{
+  "base": "f8d306514e2a8afafeac591d38773b92807f2518",
+  "live_head": "4d55ff9b4e2d6ed9cb701712ab63dba76ac67dac",
+  "commits": [
+    {
+      "commit": "e8b4bb320ae3068db5ebb6ce8c6fa91a9689178a",
+      "live_ancestor": true,
+      "subject": "Model observed Silent opening HP loss in continuous fights",
+      "changed_paths": [
+        "agent/src/reflex/continuation-value.ts",
+        "agent/src/reflex/rollout.ts",
+        "agent/src/sim/boss-sim.ts",
+        "agent/src/sim/boss-start.ts",
+        "agent/src/sim/double-boss-start.ts",
+        "agent/src/sim/silent-opening.ts",
+        "agent/tests/silent-opening-evidence.json",
+        "agent/tests/silent-opening.test.ts"
+      ]
+    },
+    {
+      "commit": "fc7042d1df0626e9e726f4bc912d9c6f626d908f",
+      "live_ancestor": false,
+      "subject": "Model observed Silent Royal Poison opening HP in continuous fights",
+      "changed_paths": [
+        "agent/src/reflex/continuation-value.ts",
+        "agent/src/reflex/rollout.ts",
+        "agent/src/sim/boss-sim.ts",
+        "agent/src/sim/boss-start.ts",
+        "agent/src/sim/double-boss-start.ts",
+        "agent/src/sim/silent-opening.ts",
+        "agent/tests/silent-opening-evidence.json",
+        "agent/tests/silent-opening.test.ts"
+      ]
+    },
+    {
+      "commit": "15ea09ad75a421d4bd65a820c187c8ee188186c8",
+      "live_ancestor": false,
+      "subject": "Model observed Silent Cunning Potion generation and hand capacity",
+      "changed_paths": [
+        "agent/src/reflex/card-model.ts",
+        "agent/src/reflex/combat-plan.ts",
+        "agent/src/reflex/rollout.ts",
+        "agent/src/reflex/turn-solver.ts",
+        "agent/src/sim/double-boss-start.ts",
+        "agent/tests/silent-cunning-evidence.json",
+        "agent/tests/silent-cunning-state.json",
+        "agent/tests/silent-cunning.test.ts"
+      ]
+    },
+    {
+      "commit": "6403fdcdadc803a092beb5165a068e22bf51c412",
+      "live_ancestor": true,
+      "subject": "Model observed Silent Cunning Potion generation and hand capacity",
+      "changed_paths": [
+        "agent/src/reflex/card-model.ts",
+        "agent/src/reflex/combat-plan.ts",
+        "agent/src/reflex/rollout.ts",
+        "agent/src/reflex/turn-solver.ts",
+        "agent/src/sim/double-boss-start.ts",
+        "agent/tests/silent-cunning-evidence.json",
+        "agent/tests/silent-cunning-state.json",
+        "agent/tests/silent-cunning.test.ts"
+      ]
+    },
+    {
+      "commit": "5c7105ff0294466da8319f2934beda05c6040794",
+      "live_ancestor": true,
+      "subject": "Model observed ordinary Strangle losses for Silent",
+      "changed_paths": [
+        "agent/src/reflex/card-model.ts",
+        "agent/src/reflex/combat-plan.ts",
+        "agent/src/reflex/rollout.ts",
+        "agent/src/reflex/turn-solver.ts",
+        "agent/tests/silent-strangle-evidence.json",
+        "agent/tests/silent-strangle.test.ts"
+      ]
+    },
+    {
+      "commit": "5604982e13890e0e2bc8bf8246272e8267321c0b",
+      "live_ancestor": true,
+      "subject": "Log Silent A10 SL candidate resource comparisons",
+      "changed_paths": [
+        "agent/src/reflex/combat-plan.ts",
+        "agent/src/reflex/silent-sl-resource-comparison.ts",
+        "agent/tests/silent-sl-resource-comparison.test.ts",
+        "agent/tests/silent-sl-resource-state.json"
+      ]
+    },
+    {
+      "commit": "c769739b97389fdc978b6515b83a38e3cd900f67",
+      "live_ancestor": true,
+      "subject": "Record candidate comparisons for Silent SL replacements",
+      "changed_paths": [
+        "agent/src/reflex/combat-plan.ts",
+        "agent/src/reflex/silent-sl-comparison.ts",
+        "agent/tests/silent-sl-comparison-evidence.json",
+        "agent/tests/silent-sl-comparison.test.ts"
+      ]
+    },
+    {
+      "commit": "8b9bacbebb20eaaa1133a9945da6c7abfcda745d",
+      "live_ancestor": true,
+      "subject": "Recompute observed Precise Cut damage at five and six hand cards",
+      "changed_paths": [
+        "agent/src/reflex/card-model.ts",
+        "agent/src/reflex/turn-solver.ts",
+        "agent/tests/silent-precise-cut-evidence.json",
+        "agent/tests/silent-precise-cut.test.ts"
+      ]
+    },
+    {
+      "commit": "995a345f935efd6d8ae9f67d16bd2653833344d0",
+      "live_ancestor": true,
+      "subject": "Extend Precise Cut to recorded Strength and hand pairs",
+      "changed_paths": [
+        "agent/src/reflex/card-model.ts",
+        "agent/src/reflex/turn-solver.ts",
+        "agent/tests/silent-precise-cut-strength-evidence.json",
+        "agent/tests/silent-precise-cut-strength.test.ts"
+      ]
+    },
+    {
+      "commit": "75a27fb2c230dc552761b2ad9da4be8a9a35dec3",
+      "live_ancestor": true,
+      "subject": "Model observed seven-card Precise Cut damage for Silent A10",
+      "changed_paths": [
+        "agent/src/reflex/card-model.ts",
+        "agent/src/reflex/turn-solver.ts",
+        "agent/tests/silent-precise-cut-seven-evidence.json",
+        "agent/tests/silent-precise-cut-seven.test.ts"
+      ]
+    },
+    {
+      "commit": "ec29ea34b919344b707e57ba472ea210f9c39d62",
+      "live_ancestor": true,
+      "subject": "Fix observed Silent Crusher facing rounding",
+      "changed_paths": [
+        "agent/src/reflex/combat-plan.ts",
+        "agent/src/reflex/rollout.ts",
+        "agent/src/reflex/silent-crusher-facing.ts",
+        "agent/src/reflex/turn-solver.ts",
+        "agent/tests/silent-crusher-facing-evidence.json",
+        "agent/tests/silent-crusher-facing.test.ts"
+      ]
+    },
+    {
+      "commit": "a8b1f8be153fe4f3a34146117546c2178f2e446b",
+      "live_ancestor": true,
+      "subject": "Integrate repaired legacy learning deltas and bounded continuation adapter",
+      "changed_paths": [
+        "agent/src/brain/build-facts.ts",
+        "agent/src/eye/decision-log.ts",
+        "agent/src/hand/loop.ts",
+        "agent/src/hand/screens/selection.ts",
+        "agent/src/hand/screens/silent-discard-facts.ts",
+        "agent/src/memory/relic-resources.ts",
+        "agent/src/memory/run-brief.ts",
+        "agent/src/memory/types.ts",
+        "agent/src/reflex/card-model.ts",
+        "agent/src/reflex/combat-plan.ts",
+        "agent/src/reflex/rollout-live.ts",
+        "agent/src/reflex/rollout.ts",
+        "agent/src/reflex/silent-hp-guard-audit.ts",
+        "agent/src/reflex/silent-selection-audit.ts",
+        "agent/src/reflex/silent-sl-comparison.ts",
+        "agent/src/reflex/silent-sl-resource-comparison.ts",
+        "agent/src/reflex/turn-solver.ts",
+        "agent/src/sim/boss-sim.ts",
+        "agent/src/sl/controller.ts",
+        "agent/src/sl/explore.ts",
+        "agent/src/sl/judge.ts",
+        "agent/tests/continuation-diagnostics.test.ts",
+        "agent/tests/silent-axe-identity-state.json",
+        "agent/tests/silent-axe-identity.test.ts",
+        "agent/tests/silent-discard-snapshot-evidence.json",
+        "agent/tests/silent-discard-snapshot.test.ts",
+        "agent/tests/silent-ghost-potion-evidence.json",
+        "agent/tests/silent-ghost-potion.test.ts",
+        "agent/tests/silent-hp-guard-audit-evidence.json",
+        "agent/tests/silent-hp-guard-audit.test.ts",
+        "agent/tests/silent-kusarigama-evidence.json",
+        "agent/tests/silent-kusarigama.test.ts",
+        "agent/tests/silent-poison-win-search-evidence.json",
+        "agent/tests/silent-poison-win-search.test.ts",
+        "agent/tests/silent-precise-cut-seven-evidence.json",
+        "agent/tests/silent-precise-cut-seven.test.ts",
+        "agent/tests/silent-reattach-state.json",
+        "agent/tests/silent-reattach.test.ts",
+        "agent/tests/silent-sapping-card.json",
+        "agent/tests/silent-sapping.test.ts",
+        "agent/tests/silent-selection-audit-cases.json",
+        "agent/tests/silent-selection-audit-state.json",
+        "agent/tests/silent-selection-audit.test.ts",
+        "agent/tests/silent-sl-beetle-evidence.json",
+        "agent/tests/silent-sl-beetle.test.ts",
+        "agent/tests/silent-sl-comparison-evidence.json",
+        "agent/tests/silent-sl-comparison.test.ts",
+        "agent/tests/silent-sl-resource-comparison.test.ts",
+        "agent/tests/silent-sl-resource-state.json",
+        "agent/tests/silent-smoggy-selection.test.ts",
+        "agent/tests/silent-strangle-evidence.json",
+        "agent/tests/silent-strangle.test.ts",
+        "agent/tests/silent-survivor-discard-state.json",
+        "agent/tests/silent-survivor-discard.test.ts",
+        "agent/tests/silent-tail-resource-evidence.json",
+        "agent/tests/silent-tail-resource.test.ts",
+        "agent/tests/strategy-implementation-continuation.test.ts",
+        "ops/codex-ops-actions.sh",
+        "ops/codex-ops-learner.sh",
+        "ops/codex/lib.ts",
+        "ops/learner_jobs.py",
+        "ops/strategy_implementation_continuation.py",
+        "ops/strategy_implementation_jobs.py",
+        "ops/tests/test_strategy_implementation_continuation.py"
+      ]
+    },
+    {
+      "commit": "d06acd4bcbf2c64608197b7d7b2e572c621bec61",
+      "live_ancestor": true,
+      "subject": "Model observed Silent A10 Abrasive attributes",
+      "changed_paths": [
+        "agent/src/reflex/card-model.ts",
+        "agent/tests/silent-abrasive-evidence.json",
+        "agent/tests/silent-abrasive.test.ts"
+      ]
+    },
+    {
+      "commit": "a5f588dfdb3fd254fded2d6cacb646672b90cc14",
+      "live_ancestor": false,
+      "subject": "Integrate observed Silent A10 Abrasive candidate attributes",
+      "changed_paths": [
+        "agent/src/reflex/card-model.ts",
+        "agent/tests/silent-abrasive-evidence.json",
+        "agent/tests/silent-abrasive.test.ts"
+      ]
+    }
+  ],
+  "blobs": [
+    {
+      "path": "agent/src/reflex/card-model.ts",
+      "base_blob": "387b97709d6379a55d79183ae8809b5555b23ee4",
+      "live_blob": "8ad7d04b8e28614e5240c231017e6fe8bc5915c4",
+      "identical": false,
+      "live_working_sha256": "c31ca7e17a506a1608fa535ebe78b22a0472a6a453166e413edc83bc6edff91e",
+      "live_working_matches_head": true,
+      "changed_blocks": [
+        {
+          "base_line": 1514,
+          "live_line": 1514,
+          "removed_lines": 1,
+          "added_lines": 1,
+          "roy_dai_only": true
+        },
+        {
+          "base_line": 1868,
+          "live_line": 1868,
+          "removed_lines": 1,
+          "added_lines": 1,
+          "roy_dai_only": true
+        }
+      ],
+      "roy_dai_changed_blocks_only": true
+    },
+    {
+      "path": "agent/src/reflex/combat-plan.ts",
+      "base_blob": "22de7987663a342e3e845a03e3f97f0af64a0436",
+      "live_blob": "26204b8c14104fe02f298765780eceb1dcccef97",
+      "identical": false,
+      "live_working_sha256": "3911044b1787287f28fb9dcba659f7f58310837feb12d2dbc43f1970e65ba239",
+      "live_working_matches_head": true,
+      "changed_blocks": [
+        {
+          "base_line": 84,
+          "live_line": 84,
+          "removed_lines": 2,
+          "added_lines": 2,
+          "roy_dai_only": true
+        },
+        {
+          "base_line": 222,
+          "live_line": 222,
+          "removed_lines": 1,
+          "added_lines": 1,
+          "roy_dai_only": true
+        },
+        {
+          "base_line": 352,
+          "live_line": 352,
+          "removed_lines": 1,
+          "added_lines": 1,
+          "roy_dai_only": true
+        },
+        {
+          "base_line": 407,
+          "live_line": 407,
+          "removed_lines": 1,
+          "added_lines": 1,
+          "roy_dai_only": true
+        },
+        {
+          "base_line": 442,
+          "live_line": 442,
+          "removed_lines": 1,
+          "added_lines": 1,
+          "roy_dai_only": true
+        },
+        {
+          "base_line": 492,
+          "live_line": 492,
+          "removed_lines": 1,
+          "added_lines": 1,
+          "roy_dai_only": true
+        },
+        {
+          "base_line": 530,
+          "live_line": 530,
+          "removed_lines": 1,
+          "added_lines": 1,
+          "roy_dai_only": true
+        },
+        {
+          "base_line": 539,
+          "live_line": 539,
+          "removed_lines": 1,
+          "added_lines": 1,
+          "roy_dai_only": true
+        },
+        {
+          "base_line": 578,
+          "live_line": 578,
+          "removed_lines": 1,
+          "added_lines": 1,
+          "roy_dai_only": true
+        },
+        {
+          "base_line": 581,
+          "live_line": 581,
+          "removed_lines": 1,
+          "added_lines": 1,
+          "roy_dai_only": true
+        },
+        {
+          "base_line": 589,
+          "live_line": 589,
+          "removed_lines": 1,
+          "added_lines": 1,
+          "roy_dai_only": true
+        },
+        {
+          "base_line": 595,
+          "live_line": 595,
+          "removed_lines": 1,
+          "added_lines": 1,
+          "roy_dai_only": true
+        },
+        {
+          "base_line": 2348,
+          "live_line": 2348,
+          "removed_lines": 1,
+          "added_lines": 1,
+          "roy_dai_only": true
+        },
+        {
+          "base_line": 3092,
+          "live_line": 3092,
+          "removed_lines": 1,
+          "added_lines": 1,
+          "roy_dai_only": true
+        },
+        {
+          "base_line": 3094,
+          "live_line": 3094,
+          "removed_lines": 1,
+          "added_lines": 1,
+          "roy_dai_only": true
+        },
+        {
+          "base_line": 3125,
+          "live_line": 3125,
+          "removed_lines": 1,
+          "added_lines": 1,
+          "roy_dai_only": true
+        },
+        {
+          "base_line": 3341,
+          "live_line": 3341,
+          "removed_lines": 1,
+          "added_lines": 1,
+          "roy_dai_only": true
+        },
+        {
+          "base_line": 3353,
+          "live_line": 3353,
+          "removed_lines": 1,
+          "added_lines": 1,
+          "roy_dai_only": true
+        },
+        {
+          "base_line": 3512,
+          "live_line": 3512,
+          "removed_lines": 1,
+          "added_lines": 1,
+          "roy_dai_only": true
+        },
+        {
+          "base_line": 3689,
+          "live_line": 3689,
+          "removed_lines": 1,
+          "added_lines": 1,
+          "roy_dai_only": true
+        },
+        {
+          "base_line": 3790,
+          "live_line": 3790,
+          "removed_lines": 1,
+          "added_lines": 1,
+          "roy_dai_only": true
+        },
+        {
+          "base_line": 3825,
+          "live_line": 3825,
+          "removed_lines": 1,
+          "added_lines": 1,
+          "roy_dai_only": true
+        },
+        {
+          "base_line": 3886,
+          "live_line": 3886,
+          "removed_lines": 1,
+          "added_lines": 1,
+          "roy_dai_only": true
+        },
+        {
+          "base_line": 4365,
+          "live_line": 4365,
+          "removed_lines": 1,
+          "added_lines": 1,
+          "roy_dai_only": true
+        },
+        {
+          "base_line": 4451,
+          "live_line": 4451,
+          "removed_lines": 1,
+          "added_lines": 1,
+          "roy_dai_only": true
+        },
+        {
+          "base_line": 4576,
+          "live_line": 4576,
+          "removed_lines": 2,
+          "added_lines": 2,
+          "roy_dai_only": true
+        },
+        {
+          "base_line": 4889,
+          "live_line": 4889,
+          "removed_lines": 1,
+          "added_lines": 1,
+          "roy_dai_only": true
+        }
+      ],
+      "roy_dai_changed_blocks_only": true
+    },
+    {
+      "path": "agent/src/reflex/turn-solver.ts",
+      "base_blob": "54cff396f346f9168c4f267583f604fac07b2a51",
+      "live_blob": "f44cdcc649449fb206f2c1cc8642169760a8cc96",
+      "identical": false,
+      "live_working_sha256": "e664f0dd4cba20140c9d373909e4adb42b5d65432200d2885f6e1f916f9a597e",
+      "live_working_matches_head": true,
+      "changed_blocks": [
+        {
+          "base_line": 2899,
+          "live_line": 2899,
+          "removed_lines": 1,
+          "added_lines": 1,
+          "roy_dai_only": true
+        },
+        {
+          "base_line": 3363,
+          "live_line": 3363,
+          "removed_lines": 1,
+          "added_lines": 1,
+          "roy_dai_only": true
+        }
+      ],
+      "roy_dai_changed_blocks_only": true
+    },
+    {
+      "path": "agent/src/reflex/rollout.ts",
+      "base_blob": "b2abbeba8ca8f195f4f8d47485352690f453bade",
+      "live_blob": "128dd0a2956ddf3caab0b9d9573ca77e18a431e4",
+      "identical": false,
+      "live_working_sha256": "28415d72ab06e49376a4c703928365cea1f80881c2aefb9889bcf9dda152ae69",
+      "live_working_matches_head": true,
+      "changed_blocks": [
+        {
+          "base_line": 20,
+          "live_line": 20,
+          "removed_lines": 1,
+          "added_lines": 1,
+          "roy_dai_only": true
+        },
+        {
+          "base_line": 611,
+          "live_line": 611,
+          "removed_lines": 1,
+          "added_lines": 1,
+          "roy_dai_only": true
+        }
+      ],
+      "roy_dai_changed_blocks_only": true
+    },
+    {
+      "path": "agent/src/reflex/silent-sl-resource-comparison.ts",
+      "base_blob": "d5ac326551cdcf6aeefc22972faa5ac45e91a1f6",
+      "live_blob": "d5ac326551cdcf6aeefc22972faa5ac45e91a1f6",
+      "identical": true,
+      "live_working_sha256": "30da6d7d0c065957c118b211d53ac40360bcf93c05861be3dd811da78f8a8c21",
+      "live_working_matches_head": true,
+      "changed_blocks": [],
+      "roy_dai_changed_blocks_only": true
+    },
+    {
+      "path": "agent/src/reflex/silent-sl-comparison.ts",
+      "base_blob": "df4382a6414fc29d1f8db1e061281be4607d311d",
+      "live_blob": "df4382a6414fc29d1f8db1e061281be4607d311d",
+      "identical": true,
+      "live_working_sha256": "2fbb427662af78dd5428c70e0af9bb82dfe312d4ccffb33201da3c26dfdfc760",
+      "live_working_matches_head": true,
+      "changed_blocks": [],
+      "roy_dai_changed_blocks_only": true
+    },
+    {
+      "path": "agent/src/sim/silent-opening.ts",
+      "base_blob": "94257a518041cf60b42a76d4da7836477c550fbe",
+      "live_blob": "94257a518041cf60b42a76d4da7836477c550fbe",
+      "identical": true,
+      "live_working_sha256": "9d235d423d46513236caef9442e6aa275fa6444cd09db25a5408c42c0a6a2401",
+      "live_working_matches_head": true,
+      "changed_blocks": [],
+      "roy_dai_changed_blocks_only": true
+    },
+    {
+      "path": "agent/src/sim/boss-start.ts",
+      "base_blob": "25a8413bc95364c286fbf452ba6ea5c15982683d",
+      "live_blob": "1a7d14b712e63b18609e368b96133bf4c84442cd",
+      "identical": false,
+      "live_working_sha256": "6a7b5ea8a90c35c1490ce742114e6cfce072637ac2c95dbe5d1b2ab947a13282",
+      "live_working_matches_head": true,
+      "changed_blocks": [
+        {
+          "base_line": 2,
+          "live_line": 2,
+          "removed_lines": 1,
+          "added_lines": 1,
+          "roy_dai_only": true
+        }
+      ],
+      "roy_dai_changed_blocks_only": true
+    },
+    {
+      "path": "agent/src/sim/boss-sim.ts",
+      "base_blob": "bb66c955c57e80b19283c5a1771e87a4309ab5eb",
+      "live_blob": "56cab40ef1856a94aa2d921df14edc95496a75eb",
+      "identical": false,
+      "live_working_sha256": "bf05fe4baede4e17350edf419a2052e62867ed7e8856af0ba54b68bd447d9c17",
+      "live_working_matches_head": true,
+      "changed_blocks": [
+        {
+          "base_line": 3,
+          "live_line": 3,
+          "removed_lines": 1,
+          "added_lines": 1,
+          "roy_dai_only": true
+        },
+        {
+          "base_line": 84,
+          "live_line": 84,
+          "removed_lines": 1,
+          "added_lines": 1,
+          "roy_dai_only": true
+        }
+      ],
+      "roy_dai_changed_blocks_only": true
+    },
+    {
+      "path": "agent/src/sim/double-boss-start.ts",
+      "base_blob": "d19985fbb77244b8e80d3716a8f775c85ced8d68",
+      "live_blob": "d19985fbb77244b8e80d3716a8f775c85ced8d68",
+      "identical": true,
+      "live_working_sha256": "725cceb3f76da9192c575705cb21645784eeb4a268f498a49d4d6e5984b2f30c",
+      "live_working_matches_head": true,
+      "changed_blocks": [],
+      "roy_dai_changed_blocks_only": true
+    }
+  ],
+  "material_consumers": [
+    {
+      "path": "learner/resource_chain.py",
+      "sha256": "d79792aae54fc2664dbdcd87405b3c3d9a8585c7d41a6d5ef7436585d81a9299"
+    }
+  ]
+}

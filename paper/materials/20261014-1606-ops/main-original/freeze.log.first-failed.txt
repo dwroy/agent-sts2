@@ -1,0 +1,17 @@
+runs {'L9SGRBB5R698': 1, 'PU80F84P6HPN': 1, '751FN9QM9MHQ': 1, 'KV0JHNJCKXLS': 1, 'YQL8RZ8BWN1E': 1, 'KEN58SH9SLZ6': 1}
+run-config {'L9SGRBB5R698': 1, 'PU80F84P6HPN': 1, '751FN9QM9MHQ': 1, 'KV0JHNJCKXLS': 1, 'YQL8RZ8BWN1E': 1, 'KEN58SH9SLZ6': 1}
+sl-attempts {'L9SGRBB5R698': 6, 'PU80F84P6HPN': 12, '751FN9QM9MHQ': 6, 'KV0JHNJCKXLS': 7, 'YQL8RZ8BWN1E': 6, 'KEN58SH9SLZ6': 6}
+run-plans {'L9SGRBB5R698': 3, 'PU80F84P6HPN': 5, '751FN9QM9MHQ': 2, 'KV0JHNJCKXLS': 5, 'YQL8RZ8BWN1E': 3, 'KEN58SH9SLZ6': 3}
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261014-154303/learner/runs/20261014-154329-strategy-proposal/freeze.py", line 28, in <module>
+    row = json.loads(raw)
+  File "/usr/lib/python3.14/json/__init__.py", line 352, in loads
+    return _default_decoder.decode(s)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^
+  File "/usr/lib/python3.14/json/decoder.py", line 345, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/json/decoder.py", line 361, in raw_decode
+    obj, end = self.scan_once(s, idx)
+               ~~~~~~~~~~~~~~^^^^^^^^
+json.decoder.JSONDecodeError: Expecting ',' delimiter: line 1 column 2840 (char 2839)

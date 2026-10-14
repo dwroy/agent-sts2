@@ -1,0 +1,81 @@
+import hashlib
+import importlib.util
+import json
+from pathlib import Path
+import subprocess
+
+scratch = Path(__file__).resolve().parent
+root = Path('/home/dw/Projects/agent-sts2')
+report = json.loads((scratch/'final.json').read_text())
+dispatch = json.loads((scratch/'dispatch.json').read_text())
+before = json.loads((scratch/'linked-ledger.json').read_text())
+requested = [json.loads(line) for line in (scratch/'ledger-updates.jsonl').open()]
+ledger_spec=importlib.util.spec_from_file_location('ledger',root/'learner/ledger.py')
+ledger=importlib.util.module_from_spec(ledger_spec)
+ledger_spec.loader.exec_module(ledger)
+appends = []
+folded = {}
+with (root/'paper/materials/learning/ledger.jsonl').open('rb') as f:
+    while True:
+        offset=f.tell();raw=f.readline()
+        if not raw:
+            break
+        row=json.loads(raw)
+        ident=row.get('id')
+        if ident not in before:
+            continue
+        ledger.apply(folded,row)
+        if row.get('by')=='learner:strategy-proposal' and row.get('note','').startswith(report['batch']+'仅追加本批原ID追溯'):
+            assert set(row)<={'op','id','ts','by','where','note'}
+            appends.append({'offset':offset,'bytes':len(raw),'sha256':hashlib.sha256(raw).hexdigest(),'row':row})
+assert len(appends)==len(requested)==31
+assert [r['row']['id'] for r in appends]==[r['id'] for r in requested]
+for wanted,actual in zip(requested,appends):
+    assert all(actual['row'][k]==v for k,v in wanted.items())
+    ident=wanted['id']
+    for field in ['claim','status','version','first_run','prior','prior_note','prior_runs','evidence','effect','asc']:
+        assert folded[ident].get(field)==before[ident].get(field),(ident,field)
+    assert str(scratch/'report.md') in folded[ident]['where']['proposal']
+    assert str(scratch/'proposal.md') in folded[ident]['where']['proposal']
+(scratch/'ledger-actual-appends.jsonl').write_text(''.join(json.dumps(x,ensure_ascii=False)+'\n' for x in appends))
+(scratch/'ledger-link-readback.json').write_text(json.dumps({i:{'status':p['status'],'version':p.get('version'),
+    'report_linked':str(scratch/'report.md') in p['where']['proposal'],'proposal_linked':str(scratch/'proposal.md') in p['where']['proposal']}
+    for i,p in folded.items()},ensure_ascii=False,indent=2)+'\n')
+
+spec=importlib.util.spec_from_file_location('cp',root/'learner/code_proposals.py')
+cp=importlib.util.module_from_spec(spec);spec.loader.exec_module(cp)
+queue=cp.fold(root/cp.QUEUE)
+assigned=json.loads((scratch/'assigned-proposals.json').read_text())
+for p in assigned:
+    current=queue[p['id']]
+    assert current['character']=='silent'
+    assert current['proposal']==p['proposal']
+    assert hashlib.sha256(Path(p['proposal']).read_bytes()).hexdigest()==p['proposal_sha256']
+    assert hashlib.sha256((scratch/(p['id']+'.md')).read_bytes()).hexdigest()==p['proposal_sha256']
+assert report['code_proposals']==dispatch['proposal_ids']
+assert [r['id'] for r in report['proposal_results']]==dispatch['proposal_ids']
+assert all(r['state']=='waiting' and r['reason'] for r in report['proposal_results'])
+assert report['fixes']==[] and report['merged'] is None
+assert report['tests']=={'tsc':None,'vitest':None,'cases':None}
+assert report['implementation_domains']==[]
+assert report['runs']==dispatch['runs']
+assert report['report']==str(scratch/'report.md') and (scratch/'report.md').is_file()
+status=subprocess.check_output(['git','status','--porcelain=v1'],text=True)
+head=subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip()
+assert status=='' and head==report['base']
+source=json.loads((scratch/'source-ancestry.json').read_text())
+live_head=subprocess.check_output(['git','-C',str(root/'.worktrees/live'),'rev-parse','HEAD'],text=True).strip()
+assert live_head==source['live_head']
+for p in source['blobs']:
+    assert hashlib.sha256((root/'.worktrees/live'/p['path']).read_bytes()).hexdigest()==p['live_working_sha256']
+assert json.loads((scratch/'gitleaks.json').read_text())==[]
+timestamp=subprocess.check_output(['date','--iso-8601=seconds'],text=True).strip()
+verification={'checked_at':timestamp,'base':head,'worktree_clean':True,'assigned_proposals':10,
+              'proposal_results_complete':True,'ledger_cli_exit_code':0,'ledger_actual_appends':len(appends),
+              'original_claim_status_evidence_version_unchanged':True,'original_markdown_sha_verified':True,
+              'live_head':live_head,'live_source_unchanged_during_readback':True,
+              'gitleaks_exit_code':0,'gitleaks_findings':0,'tests':report['tests'],
+              'report_sha256':hashlib.sha256((scratch/'report.md').read_bytes()).hexdigest(),
+              'proposal_sha256':hashlib.sha256((scratch/'proposal.md').read_bytes()).hexdigest()}
+(scratch/'final-verification.json').write_text(json.dumps(verification,ensure_ascii=False,indent=2)+'\n')
+print(json.dumps(verification,ensure_ascii=False))
