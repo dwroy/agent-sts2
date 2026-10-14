@@ -1,0 +1,60 @@
+{
+  "run": "6ZGMGEQ5YDVK",
+  "fields_equal": [
+    "run_id",
+    "b3",
+    "brain",
+    "construction",
+    "failures",
+    "unsupported",
+    "alert"
+  ],
+  "pipeline": {
+    "enabled": false,
+    "evaluation_expected": 0,
+    "evaluation_attached": 0,
+    "evaluation_missing": 0,
+    "brain_evaluation": 0,
+    "accepted_evaluation": 0,
+    "accepted_choice_with_evaluation": 0,
+    "plan_due": 0,
+    "accepted_structured_plan": 0,
+    "missing_structured_plan": 0,
+    "saved_structured_plan": 0,
+    "plan_readback": 0,
+    "checkpoint_review_due": 0,
+    "probability_delivered": 0,
+    "admission": {},
+    "evidence": [],
+    "alert": false,
+    "limits": "Payload delivery, accepted output and saved/read-back plans are distinct observations, not causal win-rate evidence. Missing calibration is pending, not a service failure."
+  },
+  "coverage": {
+    "decisions_complete": false,
+    "decisions": {
+      "path": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+      "start": 1324947445,
+      "end": 1333323195,
+      "complete": false,
+      "malformed": 0,
+      "first_ts": "2026-10-14T00:37:08.418Z"
+    },
+    "brain": {
+      "path": "/home/dw/Projects/agent-sts2/logs/brain.jsonl",
+      "start": 483739823,
+      "end": 492122887,
+      "complete": false,
+      "malformed": 0,
+      "first_ts": "2026-10-13T20:36:50.934Z"
+    },
+    "config": {
+      "path": "/home/dw/Projects/agent-sts2/logs/run-config.jsonl",
+      "start": 610974,
+      "end": 1655457,
+      "complete": false,
+      "malformed": 0,
+      "first_ts": "2026-10-06T17:27:19.018Z"
+    }
+  },
+  "limits": "Same bounded frozen read used for old/new consumers; current run incomplete, no count extrapolation."
+}

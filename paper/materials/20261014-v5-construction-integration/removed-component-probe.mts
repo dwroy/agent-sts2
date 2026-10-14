@@ -1,0 +1,10 @@
+import { summarizeCoreWindows } from "/home/dw/Projects/agent-sts2/.worktrees/v5-construction-integration-20261014/agent/src/sim/core-window.ts";
+import { equal } from "node:assert";import {writeFileSync} from "node:fs";
+const base={complete:true,energyPaid:2,byCard:{X:{manual:2,effects:2,firstPlay:1}},combinations:{discardBandages:{pairs:[]}}};
+const absent={...base,energyPaid:0,byCard:{}};
+const removed=summarizeCoreWindows([absent],[base],[7]);
+equal(removed.cards.X.manual.mean,0);equal(removed.cards.X.paired_manual.difference.mean,-2);
+equal(removed.cards.X.paired_first_play_when_both_played.difference.n,0);
+equal(removed.cards.X.paired_first_play_when_both_played.unmatchedBase,1);
+const unknown=summarizeCoreWindows([undefined],[base],[7]);equal(unknown.cards.X.manual.mean,null);equal(unknown.cards.X.paired_manual.difference.n,0);
+writeFileSync("/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-construction-integration/removed-component-probe.json",JSON.stringify({removed:removed.cards.X,unknown:unknown.cards.X,limitation:"Fixed synthetic trace denominator and deletion regression; no game-mechanic assertion."},null,2)+"\n");

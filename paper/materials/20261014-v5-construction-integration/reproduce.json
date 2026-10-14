@@ -1,0 +1,15 @@
+{
+  "source": "f6eeaf7c8c323d623057a8c7184f76c9456a561e",
+  "source_worktree_retired": true,
+  "restore_command": "python3 ops/worktree_retention.py restore --workspace v5-construction-integration-20261014",
+  "source_manifest": "source-commit.json",
+  "source_gate": "checks.json",
+  "failed_source_r1": "failed-source-r1.tar.gz",
+  "retained_inputs": [
+    "consumer-fixtures.json",
+    "../20261013-v5-dpr-health/F2-frame.json",
+    "../20261013-v5-dpr-health/F4-frame.json",
+    "../20261013-v5-dpr-health/F6-frame.json"
+  ],
+  "limits": "Probe scripts record the original worktree path. Restore the archived workspace/source before rerunning and verify input hashes; performance timing is specific to the captured environment. Production gameplay and external model calls are not part of these probes."
+}

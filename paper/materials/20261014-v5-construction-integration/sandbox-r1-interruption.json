@@ -1,0 +1,20 @@
+{
+  "session": 8118,
+  "exit_code": 130,
+  "reason": "Stopped own full suite after an actual architecture import-boundary regression was observed; fixing the source and rerunning is necessary. Partial original log retained, not reported as full acceptance.",
+  "observed_failures": [
+    {
+      "file": "tests/rollout.test.ts",
+      "name": "reaches decision code only through rollout-live.ts, and that only from the combat question's facts",
+      "cause": "New evaluation imported a sample-threshold constant from build-sim-facts, violating the existing simulator entry boundary. Will pass the original threshold from the hand loop instead of weakening the assertion."
+    },
+    {
+      "file": "tests/rollout-live.test.ts",
+      "name": "code's ranking, options and auto-acts are unchanged by the rollout",
+      "elapsed_ms": 149610,
+      "original_owner": "20261014-071302-fix-batch",
+      "committed_fixture_source": "b68a650ab95c15a492cccac598906f32284229be",
+      "owner_final_acceptance": "pending"
+    }
+  ]
+}

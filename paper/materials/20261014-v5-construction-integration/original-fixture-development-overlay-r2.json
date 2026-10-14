@@ -1,0 +1,19 @@
+{
+  "at": "2026-10-14T10:03:02.901589+08:00",
+  "source": "b68a650ab95c15a492cccac598906f32284229be",
+  "original_owner": "20261014-071302-fix-batch",
+  "reason": "The first 3-file development overlay omitted its already committed withPotionWorkFixture dependency. Preserve 131 TypeError failures; add the original 519b potion fixture/test pair unchanged.",
+  "leaves": [
+    {
+      "path": "agent/tests/apotheosis-potion-fixture.ts",
+      "before_sha256": "27721228dc25e66f13e6b996c0706934be5d2c73ba511993dd421781cf097d39",
+      "source_sha256": "ae66d3e16ac401bf631c532292d4a00e1af0c7cfb3bec6f6ba2760e67f3a0f7c"
+    },
+    {
+      "path": "agent/tests/potion-mc.test.ts",
+      "before_sha256": "e82c8757fba0055581081deeef6c354ddeb350065b5034091009a0098809a8b3",
+      "source_sha256": "3c890059781a89bacfa2c17c13cf7d2aea5664e6d614f9436b81d47ff9998437"
+    }
+  ],
+  "scope": "Own isolated development tree only; no main/live write, original owner final acceptance still pending"
+}

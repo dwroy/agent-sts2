@@ -1,0 +1,25 @@
+import { Brain } from "/home/dw/Projects/agent-sts2/.worktrees/v5-construction-integration-20261014/agent/src/brain/brain.ts";
+import { codexKindSchema, strictSchema } from "/home/dw/Projects/agent-sts2/.worktrees/v5-construction-integration-20261014/agent/src/brain/engines/codex.ts";
+import { deepStrictEqual, ok } from "node:assert";
+import { writeFileSync } from "node:fs";
+const direction={primary:"fixture",alternatives:[],checkpoint:6,reason:"fixed harness evidence",pivot_if:"fixed harness condition"};
+const plan={archetype:"fixture",want:[],avoid:[],remove:[],block_target:0,elites:"normal",rest:"auto",boss_prep:"fixture",summary:"fixture",construction:direction};
+const context={character:"silent",floor:5,coreCatalog:[{id:"fixture"}]};
+const rows=[];
+const router={codexOnly:true,config:{knowledgePrefix:"off"},async decide(req){
+ const answer=req.label==="run-plan"?plan:{choice:"skip",reason:"fixed harness",run_plan:plan};
+ const schema=strictSchema(codexKindSchema(req.spec,{fields:"used",reasonLast:true}));
+ const runSchema=req.label==="run-plan"?schema:schema.properties.run_plan;
+ ok(runSchema.properties.construction.required.includes("pivot_if"));
+ deepStrictEqual(req.spec.validate(answer),[]);
+ const incomplete=req.label==="run-plan"?{archetype:"missing"}:{choice:"skip",reason:"missing",run_plan:{archetype:"missing"}};
+ const rejected=req.spec.validate(incomplete);ok(rejected.some(x=>x.includes("construction")));
+ rows.push({label:req.label,strictConstruction:true,missingDirectionRejected:true,payloadContextPresent:JSON.stringify(req.payload).includes("coreCatalog")});
+ return {engine:"codex",model:"fixed-harness-no-call",attempts:1,toolCalls:[],usage:{inputTokens:0,outputTokens:0},problems:[],latencyMs:0,answer};
+}};
+const brain=new Brain(router,{systemPrompt:"fixed harness"});
+const result=await brain.choose({run_plan_task:{construction_context:context}},"fixed harness",{skip:"{}"},{label:"reward/card"});
+deepStrictEqual(result.runPlan.construction,direction);
+const standalone=await brain.askJson({construction_context:context,task:"fixed harness"},"run-plan");
+deepStrictEqual(standalone.json.construction,direction);
+writeFileSync("/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-construction-integration/brain-contract-probe.json",JSON.stringify({rows,limitation:"Real Brain request/spec/strict schema/answer adapter with a deterministic local router; no Codex/Jev request or natural adoption claim."},null,2)+"\n");
