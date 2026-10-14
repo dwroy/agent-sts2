@@ -102,6 +102,8 @@ export interface CardModel {
   temporaryDexterity?: number;
   /** Block per subsequent card play, from Afterimage's observed var (silent-0022 / silent-0023). */
   afterImage?: number;
+  /** 6ZGMGEQ5YDVK A10: the exact enchanted Afterimage template; checked again at play time. */
+  afterimageEnchantBlock?: number;
   /** Silent A10 plain Serpent Form: observed four-point power, not damage on establishment. */
   serpentForm?: number;
   /** Observed whole-hand discard. */
@@ -1198,6 +1200,15 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
       : cardId === "FOOTWORK" && dyn(card, "DexterityPower") !== null ? { dexterity: dyn(card, "DexterityPower")! } : {}),
     ...(anticipate ? { temporaryDexterity: dyn(card, "DexterityPower")! } : {}),
     ...(cardId === "AFTERIMAGE" && dyn(card, "AfterimagePower") !== null ? { afterImage: dyn(card, "AfterimagePower")! } : {}),
+    ...(character.toLowerCase() === "silent" && ascension === 10 && cardId === "AFTERIMAGE" &&
+      bool(card["upgraded"]) && type === "Power" && target === "self" && !requiresTarget &&
+      card["energy_cost"] === 1 && card["star_cost"] === 0 && !bool(card["costs_x"]) &&
+      template.replace(/\s+/g, "") === "你每打出一张牌，都获得{AfterimagePower:diff()}点格挡。" &&
+      renderedText.replace(/\s+/g, "") === "固有。你每打出一张牌，都获得1点格挡。获得3点格挡。" &&
+      asArray(card["dynamic_values"]).length === 1 && dyn(card, "AfterimagePower") === 1 &&
+      ["base_value", "current_value", "enchanted_value"].every((field) =>
+        asRecord(asArray(card["dynamic_values"])[0])[field] === 1) && block === 0
+      ? { afterimageEnchantBlock: 3 } : {}),
     // 5PM6JAQG6FNQ F33 T1, silent-0132: the generated plain power establishes four without hitting.
     ...(character.toLowerCase() === "silent" && ascension === 10 && cardId === "SERPENT_FORM" &&
       !bool(card["upgraded"]) && dyn(card, "SerpentFormPower") === 4 ? { serpentForm: 4 } : {}),
