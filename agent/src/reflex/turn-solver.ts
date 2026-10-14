@@ -1761,6 +1761,16 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
     !player.unmovableArmed && !player.shadowmeldActive && !next.shadowmeld && !next.noBlock &&
     next.enemies.some((enemy) => enemy.alive) &&
     next.enemies.every((enemy) => !enemy.alive || (enemy.poison ?? 0) === 0);
+  // silent-0467/0468: independent three Block, beside Permafrost's seven and later card triggers.
+  // Only the observed first-Power, single manual play has an isolated modifier-free measurement.
+  const enchantedAfterimage = card.afterimageEnchantBlock === 3 && card.block === 0 && cost === 1 &&
+    plays === 1 && !automatic && next.permafrostBlock === 7 && next.afterImage === 0 &&
+    !player.frail && (player.dexterityNow ?? 0) === 0 && next.tempDex === 0 &&
+    !player.unmovableArmed && !player.shadowmeldActive && !next.shadowmeld && !next.noBlock &&
+    !(player.juggernaut ?? 0) && !(player.tender ?? 0);
+  if (card.afterimageEnchantBlock && !enchantedAfterimage) {
+    next.unknown = [...next.unknown, `${card.name}（附魔格挡交互未验证）`];
+  }
   audit?.(cost, plays);
   // Snapshot before this play: new establishment does not trigger itself, and Block/Artifact interactions stay unknown.
   const strangled = next.enemies.filter((enemy) => enemy.alive && (enemy.strangle ?? 0) > 0)
@@ -1796,7 +1806,8 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
     // drew); unmet, the card's draw and energy do not happen.
     const effects = unverifiedBladeDance ? { ...card, draw: 0, adds: undefined }
       : unverifiedDodgeReplay ? { ...card, dodgeRollNextBlock: false }
-      : zeroPoisonMirage ? { ...card, flatValue: 0 } : card;
+      : zeroPoisonMirage ? { ...card, flatValue: 0 }
+      : enchantedAfterimage ? { ...card, block: card.afterimageEnchantBlock! } : card;
     resolveEffects(next, card.handCondition !== undefined && !handConditionMet(next, card, card.handCondition) ? unconditioned(effects) : effects, target, player, cost, plays === 1 && !automatic);
     // 5PM F33 T2-T3: the existing power hits once after a manual card, apart from its attack/poison.
     // New establishment does not trigger itself. Multi-target, replay and stacking remain unknown.
