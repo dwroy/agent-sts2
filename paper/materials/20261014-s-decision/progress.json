@@ -1,0 +1,136 @@
+{
+  "request_id": "roy-20261014-s-decision",
+  "authorized_by": "Roy",
+  "implementation_channel": "watcher-direct; plan section 10(b)",
+  "owner_session": "01a139d6-cfec-78e1-8739-e21ac426a354",
+  "worktree": ".worktrees/s-decision-20261014",
+  "created_at": "2026-10-14T22:01:33.080348+08:00",
+  "state": "first_batch_deployed_parent_in_progress",
+  "parent_closed": false,
+  "source": "e5d07f4a5a45ff3cf2cb44d09dfa89fa1ebf46ad",
+  "main": "33b82e2d1e16cad58ceec34877dde2b9845eb593",
+  "live": "907fa494efb34f0286a0205e8976ab161d4b59f7",
+  "phases": {
+    "P0": {
+      "tools": "implemented",
+      "reports": [
+        "p0-sign-audit.md",
+        "p0-jev-vs-code.md",
+        "p0-boss-trust.md",
+        "evaluation.json"
+      ],
+      "coverage": "Frozen B3 SOUL_FYSH/A10, 4000 valid samples, zero sign mismatches; other groups including B2 pending",
+      "jev": "32 original stratified cases; 20 deviations from code plan1; missing paired SE/S retained as unknown; no off conclusion",
+      "b2_counterexample": "p0-sign-audit-b2.md; SOUL_FYSH/A10 line:1 8/600 > 1%; pooled 17/1800",
+      "b2_owner_boundary": "V5-S current watcher owns this counterexample; do not hot-inject into or modify the running original R2 frozen experiment",
+      "attribution_fix": {
+        "state": "deployed; original ops release registration and host full pending",
+        "old_mismatches": 17,
+        "new_mismatches": 0,
+        "samples": 1800,
+        "evidence": "b2-fixed/comparison.json",
+        "root_cause": "Existing retaliation changes enemy HP but was absent from the cumulative damage used by S; terminal start damage also lacked a following carry record",
+        "legacy_outcome_fields_unchanged": true,
+        "old_evidence_preserved": true
+      }
+    },
+    "P1": {
+      "code": "implemented",
+      "default": "shadow for Silent; off for other characters",
+      "natural_shadow_runs_verified": 0,
+      "natural_shadow_runs_required": 2,
+      "on_published": false,
+      "state": "deployed in live; next native process and two natural games pending"
+    },
+    "P2": {
+      "state": "pending; P1 dependency and two shadow games required"
+    },
+    "P3": {
+      "state": "not implemented/enabled; narrow sign counterexample corrected offline, broader group and phase acceptance remain"
+    },
+    "P4": {
+      "state": "pending P0.2 evidence and P3; original Jev full role and potion rules unchanged"
+    },
+    "P5": {
+      "state": "pending P1/P2"
+    }
+  },
+  "validation": {
+    "at": "2026-10-14T23:05:05.546659+08:00",
+    "tsc": 0,
+    "fixed_coverage": {
+      "files": 405,
+      "cases": 3900,
+      "all_have_pass": true
+    },
+    "full_entry": {
+      "rc": 1,
+      "files": 404,
+      "cases": 3889,
+      "passed": 3885,
+      "failed": 4,
+      "failures": "only existing target-options (3) and potions-jev-call (1) wall-clock timeouts; original logs preserved"
+    },
+    "failed_files_recheck": {
+      "rc": 0,
+      "files": 2,
+      "cases": 36,
+      "resources": "one Vitest worker; original BOSS_SIM_WORKERS default, assertions and time limits unchanged"
+    },
+    "paths": {
+      "rc": 0,
+      "cases": 11
+    },
+    "new_regression_red_green": {
+      "red": 1,
+      "green": 0,
+      "cases": 5
+    },
+    "related_fixed_tests": 22,
+    "new_tools_typecheck": 0,
+    "optional_all_tools_baseline_errors": "identical 73-line existing output; see tools-typecheck-comparison.json",
+    "gitleaks_source": 0,
+    "gitleaks_evidence": 0,
+    "natural_acceptance": "pending",
+    "host_full": "original ops checks final deployed tree; not yet claimed",
+    "not_claimed": "The full sandbox invocation did not exit zero; this is complete fixed-case pass coverage with isolated timeout rechecks."
+  },
+  "next_owner_actions": [
+    "Original ops registers this actual behavior commit and checks final deployed tree once",
+    "Observe two natural P1 shadow runs and actual run-config mode; no restart or on transition before acceptance",
+    "Same watcher continues remaining P0 groups and P3/P2/P4/P5 with separate behavioral publications"
+  ],
+  "limits": [
+    "No new game knowledge",
+    "No behavior release for default shadow-only diagnostics",
+    "Tests and frozen replay do not close the parent or claim natural consumers",
+    "This worktree is retained for unfinished phases; no completion/reclamation request yet"
+  ],
+  "updated_at": "2026-10-14T23:11:22.264826+08:00",
+  "deployments": [
+    {
+      "phase": "P0/P1 shadow",
+      "source": "b0d94ce317f6ca24fd60f0940947e349722e73b5",
+      "main": "4ae762386e6bf43696caf4328917c008f4ba804d",
+      "live": "18aec66704fa7ce58de6c67eb6e603c5c8163f9d",
+      "live_tree": "5f020b5073dc089b53db3dcf9881815252318f5a",
+      "at": "2026-10-14T22:41:22.014483+08:00"
+    },
+    {
+      "phase": "S attribution correction",
+      "source": "e5d07f4a5a45ff3cf2cb44d09dfa89fa1ebf46ad",
+      "main": "33b82e2d1e16cad58ceec34877dde2b9845eb593",
+      "live": "907fa494efb34f0286a0205e8976ab161d4b59f7",
+      "live_behavior": "78b691b8f4395f52be5e0bfb566450492ee0e9d6",
+      "live_tree": "8fca2bf701c444f3d9912fa2086f0689c0cf1690",
+      "at": "2026-10-14T23:06:51.325173+08:00"
+    }
+  ],
+  "live_behavior": "78b691b8f4395f52be5e0bfb566450492ee0e9d6",
+  "live_tree": "8fca2bf701c444f3d9912fa2086f0689c0cf1690",
+  "release_id": null,
+  "archive_at": "2026-10-14 23:22:45 CST",
+  "canonical_evidence_path": "paper/materials/20261014-s-decision",
+  "legacy_continuation_receipt": "legacy-215252-consumption.json",
+  "release_host_current_boundary": "Original ops verified 21 leaves; original calibration sandbox holds live lock. Registration/host checks and two natural shadow runs remain pending."
+}

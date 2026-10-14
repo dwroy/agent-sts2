@@ -1,0 +1,27 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/s-decision-20261014/agent
+
+ ❯ tests/batch-c-illusion.test.ts (2 tests | 1 failed) 22830ms
+     × the logged T3 board: the rollout's best is no longer the Parafright line, with 0 ms host pauses 15138ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/batch-c-illusion.test.ts > a line aiming only at the illusion keeps that target on later turns (ZY3992X5VEVS F23 T3-T5) > the logged T3 board: the rollout's best is no longer the Parafright line, with 0 ms host pauses
+Error: Test timed out in 15000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/batch-c-illusion.test.ts:41:23
+     39|
+     40| describe("a line aiming only at the illusion keeps that target on late…
+     41|   it.each([0, 10_000])("the logged T3 board: the rollout's best is no …
+       |                       ^
+     42|     let wall = 0;
+     43|     vi.spyOn(performance, "now").mockImplementation(() => (wall += pau…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 402 passed (403)
+      Tests  1 failed | 3883 passed (3884)
+   Start at  21:51:16
+   Duration  357.09s (transform 19.37s, setup 40.86s, import 95.28s, tests 1195.26s, environment 50ms)
+

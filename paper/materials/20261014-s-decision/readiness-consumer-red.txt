@@ -1,0 +1,51 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/s-decision-20261014/agent
+
+ ❯ tests/s-readiness-integration.test.ts (4 tests | 2 failed) 340ms
+     × shadow records diagnostics while leaving the original question exactly unchanged 216ms
+     × on delivers only the compact field at the real brain facts boundary 48ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/s-readiness-integration.test.ts > P1 actual B3 plumbing > shadow records diagnostics while leaving the original question exactly unchanged
+AssertionError: expected undefined to match object { schema: 'boss-readiness-v1', …(3) }
+
+- Expected:
+{
+  "delivered": false,
+  "mode": "shadow",
+  "samples": 2,
+  "schema": "boss-readiness-v1",
+}
+
++ Received:
+undefined
+
+ ❯ tests/s-readiness-integration.test.ts:42:38
+     40|     const off = await question("off"), shadow = await question("shadow…
+     41|     expect(shadow.record).not.toHaveProperty("error");
+     42|     expect(shadow.record?.readiness).toMatchObject({ schema: "boss-rea…
+       |                                      ^
+     43|     expect(JSON.stringify(shadow.decision)).toBe(JSON.stringify(off.de…
+     44|     expect(shadow.runner.run.mock.calls.every(([req]) => req.deadlineM…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/s-readiness-integration.test.ts > P1 actual B3 plumbing > on delivers only the compact field at the real brain facts boundary
+TypeError: .toMatch() expects to receive a string, but got undefined
+ ❯ tests/s-readiness-integration.test.ts:52:28
+     50|     if (on.decision.kind !== "ask" || shadow.decision.kind !== "ask") …
+     51|     const { boss_readiness, ...rest } = asRecord(on.decision.state.fac…
+     52|     expect(boss_readiness).toMatch(/^当前牌组Boss模拟胜率/);
+       |                            ^
+     53|     expect(rest).toEqual(shadow.decision.state.facts);
+     54|     expect(on.decision.questions).toEqual(shadow.decision.questions);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 2 passed (4)
+   Start at  22:21:44
+   Duration  3.44s (transform 2.39s, setup 446ms, import 2.46s, tests 340ms, environment 0ms)
+

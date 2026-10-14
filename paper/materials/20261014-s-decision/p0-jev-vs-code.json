@@ -1,0 +1,3554 @@
+{
+  "schema": "jev-vs-code-baseline-v1",
+  "input_sha256": "79d0a390163ba3dcef0a1bc3802c666fd714276e90d6d0dd05503b3e9303479d",
+  "rows": [
+    {
+      "id": "a677f4b1-0909-43f7-a2f2-8ba39e2ada2a",
+      "run_id": "8AGEGLG40SV3",
+      "ts": "2026-10-13T20:18:09.060Z",
+      "floor": 27,
+      "turn": 4,
+      "attempt": 1,
+      "ascension": 10,
+      "fight": "hallway",
+      "confidence": 0.47,
+      "confidence_band": "below_0.5",
+      "jev_choice": "plan4",
+      "code_first": "plan1",
+      "code_first_source": "original code-order plan1; distinct from rollout/B2 best",
+      "rollout_best": "plan1",
+      "b2_best": null,
+      "simulation_tied": [],
+      "deviated": true,
+      "potion_in_comparison": false,
+      "difference_chosen_minus_code": {
+        "rollout_expected_hp_loss": {
+          "mean": 2.5,
+          "se": null
+        },
+        "boss_win": {
+          "mean": null,
+          "paired": null,
+          "se": null
+        },
+        "S": {
+          "mean": null,
+          "se": null
+        }
+      },
+      "execution": {
+        "planned_after_guards": "plan4",
+        "planned_steps": [
+          {
+            "card_id": "PREDATOR",
+            "upgraded": false,
+            "card_index": 1,
+            "target_index": 1
+          },
+          {
+            "card_id": "BLADE_DANCE",
+            "upgraded": false,
+            "card_index": 3,
+            "target_index": null
+          },
+          {
+            "card_id": "HAND_TRICK",
+            "upgraded": false,
+            "card_index": 4,
+            "target_index": null
+          },
+          {
+            "card_id": "SHIV",
+            "upgraded": false,
+            "card_index": 3000003,
+            "target_index": 1
+          },
+          {
+            "card_id": "SHIV",
+            "upgraded": false,
+            "card_index": 3000004,
+            "target_index": 1
+          },
+          {
+            "card_id": "SHIV",
+            "upgraded": false,
+            "card_index": 3000005,
+            "target_index": 1
+          }
+        ],
+        "requested_action": {
+          "action": "play_card",
+          "card_index": 1,
+          "target_index": 1
+        },
+        "dispatched_action": {
+          "action": "play_card",
+          "card_index": 1,
+          "target_index": 1
+        },
+        "dispatch_status": "returned",
+        "returned_status": "completed",
+        "whole_plan_executed": null
+      },
+      "actual_fight_outcome": null,
+      "input_tokens": 20726,
+      "latency_ms": 686,
+      "limits": "Original simulated differences only. Missing paired samples/SE and whole-plan execution remain unknown; no counterfactual or causal result.",
+      "stratum": "override",
+      "sources": [
+        {
+          "path": "originals/a677f4b1-0909-43f7-a2f2-8ba39e2ada2a-decision.jsonl.gz",
+          "raw_sha256": "1835221369e715cdc1fc7159dcc9f972fa8eadca21c83ec7966cd9fe4efa1228",
+          "raw_bytes": 50726,
+          "gzip_sha256": "c264000ab4ccd4d78190b0f9d572e213984760c4138105bdad37a6df11439034",
+          "source": {
+            "path": "logs/decisions.jsonl",
+            "offset": 1291479230,
+            "length": 50726,
+            "sha256": "1835221369e715cdc1fc7159dcc9f972fa8eadca21c83ec7966cd9fe4efa1228"
+          }
+        },
+        {
+          "path": "originals/a677f4b1-0909-43f7-a2f2-8ba39e2ada2a-prompt.jsonl.gz",
+          "raw_sha256": "8df3460bb617b0147405ef6bcac1a320bec49376e8165fb1f3ce53c055c60515",
+          "raw_bytes": 58991,
+          "gzip_sha256": "58c7d7dbb59393dcd3cb844835025ffeb99ff1e919cff215b659197b33b5fbc1",
+          "source": {
+            "path": "logs/jev-prompts.jsonl",
+            "offset": 899967346,
+            "length": 58991,
+            "sha256": "8df3460bb617b0147405ef6bcac1a320bec49376e8165fb1f3ce53c055c60515"
+          }
+        }
+      ]
+    },
+    {
+      "id": "203cd3a9-945c-4800-a314-e2e94276a890",
+      "run_id": "E5L15SK6ZHZB",
+      "ts": "2026-10-13T18:20:43.585Z",
+      "floor": 17,
+      "turn": 5,
+      "attempt": 2,
+      "ascension": 10,
+      "fight": "boss",
+      "confidence": 0.64,
+      "confidence_band": "0.5_to_0.8",
+      "jev_choice": "plan3",
+      "code_first": "plan1",
+      "code_first_source": "original code-order plan1; distinct from rollout/B2 best",
+      "rollout_best": "plan3",
+      "b2_best": "plan1",
+      "simulation_tied": [],
+      "deviated": true,
+      "potion_in_comparison": false,
+      "difference_chosen_minus_code": {
+        "rollout_expected_hp_loss": {
+          "mean": -3.299999999999997,
+          "se": null
+        },
+        "boss_win": {
+          "mean": 0,
+          "paired": 0.001,
+          "se": 0.002
+        },
+        "S": {
+          "mean": null,
+          "se": null
+        }
+      },
+      "execution": {
+        "planned_after_guards": "plan3",
+        "planned_steps": [
+          {
+            "card_id": "DEFLECT",
+            "upgraded": false,
+            "card_index": 0,
+            "target_index": null
+          },
+          {
+            "card_id": "BECKON",
+            "upgraded": false,
+            "card_index": 1,
+            "target_index": null
+          },
+          {
+            "card_id": "DEFEND_SILENT",
+            "upgraded": false,
+            "card_index": 3,
+            "target_index": null
+          },
+          {
+            "card_id": "STRIKE_SILENT",
+            "upgraded": false,
+            "card_index": 4,
+            "target_index": 0
+          }
+        ],
+        "requested_action": {
+          "action": "play_card",
+          "card_index": 0
+        },
+        "dispatched_action": {
+          "action": "play_card",
+          "card_index": 0
+        },
+        "dispatch_status": "returned",
+        "returned_status": "completed",
+        "whole_plan_executed": null
+      },
+      "actual_fight_outcome": null,
+      "input_tokens": 8990,
+      "latency_ms": 544,
+      "limits": "Original simulated differences only. Missing paired samples/SE and whole-plan execution remain unknown; no counterfactual or causal result.",
+      "stratum": "override",
+      "sources": [
+        {
+          "path": "originals/203cd3a9-945c-4800-a314-e2e94276a890-decision.jsonl.gz",
+          "raw_sha256": "8cebcf4485d87ec9a95fdea6c35e51f14e7c29438d697e8fdab774de0855d248",
+          "raw_bytes": 23029,
+          "gzip_sha256": "38ecfa6eea8ec30315eb2955e2a796e7c4afd4abb9ada13227814786847101ee",
+          "source": {
+            "path": "logs/decisions.jsonl",
+            "offset": 1278273983,
+            "length": 23029,
+            "sha256": "8cebcf4485d87ec9a95fdea6c35e51f14e7c29438d697e8fdab774de0855d248"
+          }
+        },
+        {
+          "path": "originals/203cd3a9-945c-4800-a314-e2e94276a890-prompt.jsonl.gz",
+          "raw_sha256": "dd39ffbca187451901f5e645c8ca706b9d4b236a573920ff6518001024902529",
+          "raw_bytes": 25504,
+          "gzip_sha256": "6bb420b4ee15a7e627ef12e4d8d7ff49b84ef853dedea36de7ca8aa9eccda9f5",
+          "source": {
+            "path": "logs/jev-prompts.jsonl",
+            "offset": 892192253,
+            "length": 25504,
+            "sha256": "dd39ffbca187451901f5e645c8ca706b9d4b236a573920ff6518001024902529"
+          }
+        }
+      ]
+    },
+    {
+      "id": "2235f2ad-3b36-4c83-ba88-6b563d12bc33",
+      "run_id": "WA7FRJ7UABCV",
+      "ts": "2026-10-13T14:03:16.489Z",
+      "floor": 38,
+      "turn": 3,
+      "attempt": null,
+      "ascension": 10,
+      "fight": "hallway",
+      "confidence": 0.52,
+      "confidence_band": "0.5_to_0.8",
+      "jev_choice": "plan1",
+      "code_first": "plan1",
+      "code_first_source": "original code-order plan1; distinct from rollout/B2 best",
+      "rollout_best": "plan2",
+      "b2_best": null,
+      "simulation_tied": [],
+      "deviated": false,
+      "potion_in_comparison": false,
+      "difference_chosen_minus_code": {
+        "rollout_expected_hp_loss": {
+          "mean": 0,
+          "se": null
+        },
+        "boss_win": {
+          "mean": null,
+          "paired": null,
+          "se": null
+        },
+        "S": {
+          "mean": null,
+          "se": null
+        }
+      },
+      "execution": {
+        "planned_after_guards": "plan1",
+        "planned_steps": [
+          {
+            "card_id": "SHIV",
+            "upgraded": false,
+            "card_index": 3,
+            "target_index": 0
+          },
+          {
+            "card_id": "SHIV",
+            "upgraded": false,
+            "card_index": 4,
+            "target_index": 0
+          },
+          {
+            "card_id": "NEUTRALIZE",
+            "upgraded": false,
+            "card_index": 6,
+            "target_index": 0
+          },
+          {
+            "card_id": "BLADE_DANCE",
+            "upgraded": false,
+            "card_index": 7,
+            "target_index": null
+          },
+          {
+            "card_id": "SUCKER_PUNCH",
+            "upgraded": false,
+            "card_index": 8,
+            "target_index": 0
+          },
+          {
+            "card_id": "SHIV",
+            "upgraded": false,
+            "card_index": 3000009,
+            "target_index": 0
+          },
+          {
+            "card_id": "SHIV",
+            "upgraded": false,
+            "card_index": 3000010,
+            "target_index": 0
+          },
+          {
+            "card_id": "SHIV",
+            "upgraded": false,
+            "card_index": 3000011,
+            "target_index": 0
+          }
+        ],
+        "requested_action": {
+          "action": "play_card",
+          "card_index": 3,
+          "target_index": 0
+        },
+        "dispatched_action": {
+          "action": "play_card",
+          "card_index": 3,
+          "target_index": 0
+        },
+        "dispatch_status": "returned",
+        "returned_status": "completed",
+        "whole_plan_executed": null
+      },
+      "actual_fight_outcome": null,
+      "input_tokens": 12949,
+      "latency_ms": 442,
+      "limits": "Original simulated differences only. Missing paired samples/SE and whole-plan execution remain unknown; no counterfactual or causal result.",
+      "stratum": "override",
+      "sources": [
+        {
+          "path": "originals/2235f2ad-3b36-4c83-ba88-6b563d12bc33-decision.jsonl.gz",
+          "raw_sha256": "77930e52273c5072cdacfc427faa2d07d5e238b480fa3da5144d1552501379ed",
+          "raw_bytes": 31046,
+          "gzip_sha256": "7f2332529757da9f7a005c859cf50b525f445535b6564e982343a9df4ff28e6a",
+          "source": {
+            "path": "logs/decisions.jsonl",
+            "offset": 1240403374,
+            "length": 31046,
+            "sha256": "77930e52273c5072cdacfc427faa2d07d5e238b480fa3da5144d1552501379ed"
+          }
+        },
+        {
+          "path": "originals/2235f2ad-3b36-4c83-ba88-6b563d12bc33-prompt.jsonl.gz",
+          "raw_sha256": "686bae57e25cd1db42e2f8a862b7635553b3100bce43be119e1075a178e7c4f3",
+          "raw_bytes": 37013,
+          "gzip_sha256": "10223a2c354413e0fadf51bc110f179b9a975d283c7accafb4c4aab0dd41eb09",
+          "source": {
+            "path": "logs/jev-prompts.jsonl",
+            "offset": 864148053,
+            "length": 37013,
+            "sha256": "686bae57e25cd1db42e2f8a862b7635553b3100bce43be119e1075a178e7c4f3"
+          }
+        }
+      ]
+    },
+    {
+      "id": "9d343a2e-a549-447d-a284-3ea9e36178e1",
+      "run_id": "4U3WNL3JRRCX",
+      "ts": "2026-10-13T15:17:36.896Z",
+      "floor": 17,
+      "turn": 7,
+      "attempt": 1,
+      "ascension": 10,
+      "fight": "boss",
+      "confidence": 0.52,
+      "confidence_band": "0.5_to_0.8",
+      "jev_choice": "plan6",
+      "code_first": "plan1",
+      "code_first_source": "original code-order plan1; distinct from rollout/B2 best",
+      "rollout_best": "plan6",
+      "b2_best": "plan1",
+      "simulation_tied": [],
+      "deviated": true,
+      "potion_in_comparison": false,
+      "difference_chosen_minus_code": {
+        "rollout_expected_hp_loss": {
+          "mean": -0.10000000000000142,
+          "se": null
+        },
+        "boss_win": {
+          "mean": 0,
+          "paired": 0,
+          "se": 0
+        },
+        "S": {
+          "mean": null,
+          "se": null
+        }
+      },
+      "execution": {
+        "planned_after_guards": "plan6",
+        "planned_steps": [
+          {
+            "card_id": "BECKON",
+            "upgraded": false,
+            "card_index": 3,
+            "target_index": null
+          },
+          {
+            "card_id": "BECKON",
+            "upgraded": false,
+            "card_index": 4,
+            "target_index": null
+          },
+          {
+            "card_id": "DEFEND_SILENT",
+            "upgraded": false,
+            "card_index": 5,
+            "target_index": null
+          }
+        ],
+        "requested_action": {
+          "action": "play_card",
+          "card_index": 3
+        },
+        "dispatched_action": {
+          "action": "play_card",
+          "card_index": 3
+        },
+        "dispatch_status": "returned",
+        "returned_status": "completed",
+        "whole_plan_executed": null
+      },
+      "actual_fight_outcome": null,
+      "input_tokens": 13076,
+      "latency_ms": 609,
+      "limits": "Original simulated differences only. Missing paired samples/SE and whole-plan execution remain unknown; no counterfactual or causal result.",
+      "stratum": "override",
+      "sources": [
+        {
+          "path": "originals/9d343a2e-a549-447d-a284-3ea9e36178e1-decision.jsonl.gz",
+          "raw_sha256": "61deabfa2cd3d37b63b83ce5b81db638895dc1af1b4015b67f051a41ea4a2875",
+          "raw_bytes": 37408,
+          "gzip_sha256": "7bbf5483ae8580f5a241318563e764d1b428d2550851bb7c5beadbe391e3054a",
+          "source": {
+            "path": "logs/decisions.jsonl",
+            "offset": 1253389811,
+            "length": 37408,
+            "sha256": "61deabfa2cd3d37b63b83ce5b81db638895dc1af1b4015b67f051a41ea4a2875"
+          }
+        },
+        {
+          "path": "originals/9d343a2e-a549-447d-a284-3ea9e36178e1-prompt.jsonl.gz",
+          "raw_sha256": "125267ab290a73c7c3af5201aaede08b5c9a9d9cdde71e145a29cab6f6d350b7",
+          "raw_bytes": 38127,
+          "gzip_sha256": "f75a851ebc4bb8590806941804225ddea2ddaaca187a1f4a9ff0b60bfdd7c091",
+          "source": {
+            "path": "logs/jev-prompts.jsonl",
+            "offset": 875964332,
+            "length": 38127,
+            "sha256": "125267ab290a73c7c3af5201aaede08b5c9a9d9cdde71e145a29cab6f6d350b7"
+          }
+        }
+      ]
+    },
+    {
+      "id": "ae691d21-56c7-4d22-b1f9-0032cf29bb5a",
+      "run_id": "EEVP0QTLMSX9",
+      "ts": "2026-10-13T21:39:32.063Z",
+      "floor": 48,
+      "turn": 6,
+      "attempt": 1,
+      "ascension": 10,
+      "fight": "boss",
+      "confidence": 0.55,
+      "confidence_band": "0.5_to_0.8",
+      "jev_choice": "plan2",
+      "code_first": "plan1",
+      "code_first_source": "original code-order plan1; distinct from rollout/B2 best",
+      "rollout_best": "plan1",
+      "b2_best": null,
+      "simulation_tied": [],
+      "deviated": true,
+      "potion_in_comparison": false,
+      "difference_chosen_minus_code": {
+        "rollout_expected_hp_loss": {
+          "mean": 0,
+          "se": null
+        },
+        "boss_win": {
+          "mean": null,
+          "paired": null,
+          "se": null
+        },
+        "S": {
+          "mean": null,
+          "se": null
+        }
+      },
+      "execution": {
+        "planned_after_guards": "plan2",
+        "planned_steps": [
+          {
+            "card_id": "SUCKER_PUNCH",
+            "upgraded": true,
+            "card_index": 3,
+            "target_index": 0
+          },
+          {
+            "card_id": "FOOTWORK",
+            "upgraded": true,
+            "card_index": 4,
+            "target_index": null
+          },
+          {
+            "card_id": "CLOAK_AND_DAGGER",
+            "upgraded": true,
+            "card_index": 5,
+            "target_index": null
+          }
+        ],
+        "requested_action": {
+          "action": "play_card",
+          "card_index": 3,
+          "target_index": 0
+        },
+        "dispatched_action": {
+          "action": "play_card",
+          "card_index": 3,
+          "target_index": 0
+        },
+        "dispatch_status": "returned",
+        "returned_status": "completed",
+        "whole_plan_executed": null
+      },
+      "actual_fight_outcome": null,
+      "input_tokens": 8813,
+      "latency_ms": 538,
+      "limits": "Original simulated differences only. Missing paired samples/SE and whole-plan execution remain unknown; no counterfactual or causal result.",
+      "stratum": "override",
+      "sources": [
+        {
+          "path": "originals/ae691d21-56c7-4d22-b1f9-0032cf29bb5a-decision.jsonl.gz",
+          "raw_sha256": "3ef6bd26aa17b95ee8524d1fab2d7e74ace04fa73018e719311e05f1983ffd02",
+          "raw_bytes": 21117,
+          "gzip_sha256": "79fcbf3e1ef2d56ebc933b9065cd2901e8f3655daa1089b42c0574f42cb1da1d",
+          "source": {
+            "path": "logs/decisions.jsonl",
+            "offset": 1303841511,
+            "length": 21117,
+            "sha256": "3ef6bd26aa17b95ee8524d1fab2d7e74ace04fa73018e719311e05f1983ffd02"
+          }
+        },
+        {
+          "path": "originals/ae691d21-56c7-4d22-b1f9-0032cf29bb5a-prompt.jsonl.gz",
+          "raw_sha256": "46880574d05a3b3868c84d1dd6c580282e28a38335912de7980767cd5b7ab02a",
+          "raw_bytes": 24921,
+          "gzip_sha256": "fc54971265b5a2f0524d27292a04c2e92de3d80b756d4e3ca3c0eadd800ca39d",
+          "source": {
+            "path": "logs/jev-prompts.jsonl",
+            "offset": 907175541,
+            "length": 24921,
+            "sha256": "46880574d05a3b3868c84d1dd6c580282e28a38335912de7980767cd5b7ab02a"
+          }
+        }
+      ]
+    },
+    {
+      "id": "bdae1a44-d67a-4b3f-b64a-d8854e4eaec8",
+      "run_id": "LKC9YXKZWTKR",
+      "ts": "2026-10-13T22:11:52.301Z",
+      "floor": 2,
+      "turn": 2,
+      "attempt": null,
+      "ascension": 10,
+      "fight": "hallway",
+      "confidence": 0.82,
+      "confidence_band": "at_least_0.8",
+      "jev_choice": "plan2",
+      "code_first": "plan1",
+      "code_first_source": "original code-order plan1; distinct from rollout/B2 best",
+      "rollout_best": "plan1",
+      "b2_best": null,
+      "simulation_tied": [],
+      "deviated": true,
+      "potion_in_comparison": false,
+      "difference_chosen_minus_code": {
+        "rollout_expected_hp_loss": {
+          "mean": 2.3,
+          "se": null
+        },
+        "boss_win": {
+          "mean": null,
+          "paired": null,
+          "se": null
+        },
+        "S": {
+          "mean": null,
+          "se": null
+        }
+      },
+      "execution": {
+        "planned_after_guards": "plan2",
+        "planned_steps": [
+          {
+            "card_id": "STRIKE_SILENT",
+            "upgraded": false,
+            "card_index": 0,
+            "target_index": 0
+          },
+          {
+            "card_id": "STRIKE_SILENT",
+            "upgraded": false,
+            "card_index": 1,
+            "target_index": 0
+          },
+          {
+            "card_id": "STRIKE_SILENT",
+            "upgraded": false,
+            "card_index": 2,
+            "target_index": 0
+          }
+        ],
+        "requested_action": {
+          "action": "play_card",
+          "card_index": 0,
+          "target_index": 0
+        },
+        "dispatched_action": {
+          "action": "play_card",
+          "card_index": 0,
+          "target_index": 0
+        },
+        "dispatch_status": "returned",
+        "returned_status": "completed",
+        "whole_plan_executed": null
+      },
+      "actual_fight_outcome": null,
+      "input_tokens": 4631,
+      "latency_ms": 444,
+      "limits": "Original simulated differences only. Missing paired samples/SE and whole-plan execution remain unknown; no counterfactual or causal result.",
+      "stratum": "override",
+      "sources": [
+        {
+          "path": "originals/bdae1a44-d67a-4b3f-b64a-d8854e4eaec8-decision.jsonl.gz",
+          "raw_sha256": "07175e7d5ea220b1498a4f8504cc18ff6f310365b18e40674890637172926a90",
+          "raw_bytes": 13212,
+          "gzip_sha256": "7cc3e717aa25fcfebf1942b76356748be6005517c59f8adc518742fd1a1f31a2",
+          "source": {
+            "path": "logs/decisions.jsonl",
+            "offset": 1306159767,
+            "length": 13212,
+            "sha256": "07175e7d5ea220b1498a4f8504cc18ff6f310365b18e40674890637172926a90"
+          }
+        },
+        {
+          "path": "originals/bdae1a44-d67a-4b3f-b64a-d8854e4eaec8-prompt.jsonl.gz",
+          "raw_sha256": "9a3a9ad90f03bdc50098d0643b8118b945f9f2a0ab269283fd9225648aaa9904",
+          "raw_bytes": 13380,
+          "gzip_sha256": "1e96cafdd42bf7cfb00c944835ce180197640f5525f5639d6fc01704d326cdf2",
+          "source": {
+            "path": "logs/jev-prompts.jsonl",
+            "offset": 909640968,
+            "length": 13380,
+            "sha256": "9a3a9ad90f03bdc50098d0643b8118b945f9f2a0ab269283fd9225648aaa9904"
+          }
+        }
+      ]
+    },
+    {
+      "id": "c200963c-3572-417f-adf0-fa29d5c12cf0",
+      "run_id": "4U3WNL3JRRCX",
+      "ts": "2026-10-13T15:48:24.980Z",
+      "floor": 33,
+      "turn": 3,
+      "attempt": 5,
+      "ascension": 10,
+      "fight": "boss",
+      "confidence": 0.51,
+      "confidence_band": "0.5_to_0.8",
+      "jev_choice": "plan2",
+      "code_first": "plan1",
+      "code_first_source": "original code-order plan1; distinct from rollout/B2 best",
+      "rollout_best": "plan1",
+      "b2_best": null,
+      "simulation_tied": [],
+      "deviated": true,
+      "potion_in_comparison": false,
+      "difference_chosen_minus_code": {
+        "rollout_expected_hp_loss": {
+          "mean": 0,
+          "se": null
+        },
+        "boss_win": {
+          "mean": 0,
+          "paired": null,
+          "se": null
+        },
+        "S": {
+          "mean": null,
+          "se": null
+        }
+      },
+      "execution": {
+        "planned_after_guards": "plan2",
+        "planned_steps": [
+          {
+            "card_id": "ULTIMATE_DEFEND",
+            "upgraded": false,
+            "card_index": 1,
+            "target_index": null
+          },
+          {
+            "card_id": "DEFEND_SILENT",
+            "upgraded": false,
+            "card_index": 3,
+            "target_index": null
+          },
+          {
+            "card_id": "PIERCING_WAIL",
+            "upgraded": false,
+            "card_index": 4,
+            "target_index": null
+          }
+        ],
+        "requested_action": {
+          "action": "play_card",
+          "card_index": 1
+        },
+        "dispatched_action": {
+          "action": "play_card",
+          "card_index": 1
+        },
+        "dispatch_status": "returned",
+        "returned_status": "completed",
+        "whole_plan_executed": null
+      },
+      "actual_fight_outcome": null,
+      "input_tokens": 9745,
+      "latency_ms": 563,
+      "limits": "Original simulated differences only. Missing paired samples/SE and whole-plan execution remain unknown; no counterfactual or causal result.",
+      "stratum": "override",
+      "sources": [
+        {
+          "path": "originals/c200963c-3572-417f-adf0-fa29d5c12cf0-decision.jsonl.gz",
+          "raw_sha256": "bfec953074600b1a397f436497b2d188b2a75bf228100397d9f2916491c14a13",
+          "raw_bytes": 19709,
+          "gzip_sha256": "ebbd1874c8868696c4862780ce8820b5316afe21c01afb72796832040997b4a2",
+          "source": {
+            "path": "logs/decisions.jsonl",
+            "offset": 1257675888,
+            "length": 19709,
+            "sha256": "bfec953074600b1a397f436497b2d188b2a75bf228100397d9f2916491c14a13"
+          }
+        },
+        {
+          "path": "originals/c200963c-3572-417f-adf0-fa29d5c12cf0-prompt.jsonl.gz",
+          "raw_sha256": "858e6c91bda211e2351d204186b6570771694bcee22d18f4130f0e5705a7b294",
+          "raw_bytes": 26909,
+          "gzip_sha256": "72368917e6197bbf995299299a0de89d7ca245ae6a4e6ad4029aded5eae58c85",
+          "source": {
+            "path": "logs/jev-prompts.jsonl",
+            "offset": 878014519,
+            "length": 26909,
+            "sha256": "858e6c91bda211e2351d204186b6570771694bcee22d18f4130f0e5705a7b294"
+          }
+        }
+      ]
+    },
+    {
+      "id": "14020025-a45a-45c2-9ca8-63eb0c16871a",
+      "run_id": "1269Y20SKHUM",
+      "ts": "2026-10-13T16:30:18.259Z",
+      "floor": 17,
+      "turn": 11,
+      "attempt": 4,
+      "ascension": 10,
+      "fight": "boss",
+      "confidence": 0.02,
+      "confidence_band": "below_0.5",
+      "jev_choice": "p1->e0",
+      "code_first": "plan1",
+      "code_first_source": "original code-order plan1; distinct from rollout/B2 best",
+      "rollout_best": "plan1",
+      "b2_best": "plan1",
+      "simulation_tied": [],
+      "deviated": true,
+      "potion_in_comparison": true,
+      "difference_chosen_minus_code": {
+        "rollout_expected_hp_loss": {
+          "mean": null,
+          "se": null
+        },
+        "boss_win": {
+          "mean": null,
+          "paired": null,
+          "se": null
+        },
+        "S": {
+          "mean": null,
+          "se": null
+        }
+      },
+      "execution": {
+        "planned_after_guards": null,
+        "planned_steps": null,
+        "requested_action": {
+          "action": "use_potion",
+          "option_index": 1,
+          "target_index": 0
+        },
+        "dispatched_action": {
+          "action": "use_potion",
+          "option_index": 1,
+          "target_index": 0
+        },
+        "dispatch_status": "returned",
+        "returned_status": "completed",
+        "whole_plan_executed": null
+      },
+      "actual_fight_outcome": null,
+      "input_tokens": 6984,
+      "latency_ms": 396,
+      "limits": "Original simulated differences only. Missing paired samples/SE and whole-plan execution remain unknown; no counterfactual or causal result.",
+      "stratum": "override",
+      "sources": [
+        {
+          "path": "originals/14020025-a45a-45c2-9ca8-63eb0c16871a-decision.jsonl.gz",
+          "raw_sha256": "a4cae9b130a3fb3828fffd6eeb380deb0fcebb2a79d0cb860243aa7c8554aceb",
+          "raw_bytes": 8299,
+          "gzip_sha256": "5ef40323596fe458042a8ca2b04c8e2d46063928e485b9cf327f62716ae7053a",
+          "source": {
+            "path": "logs/decisions.jsonl",
+            "offset": 1262845954,
+            "length": 8299,
+            "sha256": "a4cae9b130a3fb3828fffd6eeb380deb0fcebb2a79d0cb860243aa7c8554aceb"
+          }
+        },
+        {
+          "path": "originals/14020025-a45a-45c2-9ca8-63eb0c16871a-prompt.jsonl.gz",
+          "raw_sha256": "5e0fa8cd2778debd2c0425fa5607a60e13b52b5d27e7c45b74e71a422f8f6d48",
+          "raw_bytes": 18175,
+          "gzip_sha256": "658e434e50bcbba754846e86cbdae653e39cb76b30d55cd7524f765a212bdc2d",
+          "source": {
+            "path": "logs/jev-prompts.jsonl",
+            "offset": 882303961,
+            "length": 18175,
+            "sha256": "5e0fa8cd2778debd2c0425fa5607a60e13b52b5d27e7c45b74e71a422f8f6d48"
+          }
+        }
+      ]
+    },
+    {
+      "id": "2bd4d5d2-9fd7-46b2-aa4d-908723a8909a",
+      "run_id": "EBVT8UZM6P12",
+      "ts": "2026-10-14T02:51:13.375Z",
+      "floor": 43,
+      "turn": 3,
+      "attempt": 1,
+      "ascension": 10,
+      "fight": "elite",
+      "confidence": 0.22,
+      "confidence_band": "below_0.5",
+      "jev_choice": "plan5",
+      "code_first": "plan1",
+      "code_first_source": "original code-order plan1; distinct from rollout/B2 best",
+      "rollout_best": null,
+      "b2_best": null,
+      "simulation_tied": [],
+      "deviated": true,
+      "potion_in_comparison": true,
+      "difference_chosen_minus_code": {
+        "rollout_expected_hp_loss": {
+          "mean": null,
+          "se": null
+        },
+        "boss_win": {
+          "mean": null,
+          "paired": null,
+          "se": null
+        },
+        "S": {
+          "mean": null,
+          "se": null
+        }
+      },
+      "execution": {
+        "planned_after_guards": "plan5",
+        "planned_steps": [
+          {
+            "card_id": "LEG_SWEEP",
+            "upgraded": false,
+            "card_index": 0,
+            "target_index": 1
+          },
+          {
+            "card_id": "ACCELERANT",
+            "upgraded": false,
+            "card_index": 1,
+            "target_index": null
+          },
+          {
+            "card_id": "DAGGER_SPRAY",
+            "upgraded": false,
+            "card_index": 4,
+            "target_index": null
+          }
+        ],
+        "requested_action": {
+          "action": "play_card",
+          "card_index": 0,
+          "target_index": 1
+        },
+        "dispatched_action": {
+          "action": "play_card",
+          "card_index": 0,
+          "target_index": 1
+        },
+        "dispatch_status": "returned",
+        "returned_status": "completed",
+        "whole_plan_executed": null
+      },
+      "actual_fight_outcome": null,
+      "input_tokens": 20504,
+      "latency_ms": 680,
+      "limits": "Original simulated differences only. Missing paired samples/SE and whole-plan execution remain unknown; no counterfactual or causal result.",
+      "stratum": "no_declared_best",
+      "sources": [
+        {
+          "path": "originals/2bd4d5d2-9fd7-46b2-aa4d-908723a8909a-decision.jsonl.gz",
+          "raw_sha256": "dada3b24c6c0a02b0e7474fc5955b47c0ebd44d259ff463b892169818468c6a7",
+          "raw_bytes": 53667,
+          "gzip_sha256": "906f5c685421f0e03b94ab4df8a4a700b484d419c204198f05a5272a393d1aa6",
+          "source": {
+            "path": "logs/decisions.jsonl",
+            "offset": 1342768919,
+            "length": 53667,
+            "sha256": "dada3b24c6c0a02b0e7474fc5955b47c0ebd44d259ff463b892169818468c6a7"
+          }
+        },
+        {
+          "path": "originals/2bd4d5d2-9fd7-46b2-aa4d-908723a8909a-prompt.jsonl.gz",
+          "raw_sha256": "1cb0141bce53524042bfafbf022a06584a09164e30dc53c0be3f2e4d3bbbf04a",
+          "raw_bytes": 60572,
+          "gzip_sha256": "2bcfea676db7b5bbf5e4a443dff7e1ed48aa5d8484f80849faae5b1af6addaa3",
+          "source": {
+            "path": "logs/jev-prompts.jsonl",
+            "offset": 929166649,
+            "length": 60572,
+            "sha256": "1cb0141bce53524042bfafbf022a06584a09164e30dc53c0be3f2e4d3bbbf04a"
+          }
+        }
+      ]
+    },
+    {
+      "id": "d22cdc17-6267-49fb-a85f-4dc1dcd448e0",
+      "run_id": "WA7FRJ7UABCV",
+      "ts": "2026-10-13T13:52:17.621Z",
+      "floor": 35,
+      "turn": 1,
+      "attempt": null,
+      "ascension": 10,
+      "fight": "hallway",
+      "confidence": 0.42,
+      "confidence_band": "below_0.5",
+      "jev_choice": "plan6",
+      "code_first": "plan1",
+      "code_first_source": "original code-order plan1; distinct from rollout/B2 best",
+      "rollout_best": null,
+      "b2_best": null,
+      "simulation_tied": [],
+      "deviated": true,
+      "potion_in_comparison": true,
+      "difference_chosen_minus_code": {
+        "rollout_expected_hp_loss": {
+          "mean": null,
+          "se": null
+        },
+        "boss_win": {
+          "mean": null,
+          "paired": null,
+          "se": null
+        },
+        "S": {
+          "mean": null,
+          "se": null
+        }
+      },
+      "execution": {
+        "planned_after_guards": "plan6",
+        "planned_steps": [
+          {
+            "card_id": "WISH",
+            "upgraded": false,
+            "card_index": 1,
+            "target_index": null
+          },
+          {
+            "card_id": "FOOTWORK",
+            "upgraded": false,
+            "card_index": 6,
+            "target_index": null
+          },
+          {
+            "card_id": "CLOAK_AND_DAGGER",
+            "upgraded": true,
+            "card_index": 3,
+            "target_index": null
+          },
+          {
+            "card_id": "SURVIVOR",
+            "upgraded": false,
+            "card_index": 4,
+            "target_index": null
+          }
+        ],
+        "requested_action": {
+          "action": "play_card",
+          "card_index": 1
+        },
+        "dispatched_action": {
+          "action": "play_card",
+          "card_index": 1
+        },
+        "dispatch_status": "returned",
+        "returned_status": "pending",
+        "whole_plan_executed": null
+      },
+      "actual_fight_outcome": null,
+      "input_tokens": 19489,
+      "latency_ms": 686,
+      "limits": "Original simulated differences only. Missing paired samples/SE and whole-plan execution remain unknown; no counterfactual or causal result.",
+      "stratum": "no_declared_best",
+      "sources": [
+        {
+          "path": "originals/d22cdc17-6267-49fb-a85f-4dc1dcd448e0-decision.jsonl.gz",
+          "raw_sha256": "b68dc6b0d15d5b6a2dc4e164906e3fddbeeba27885903f2cbf4a12c3055a8ead",
+          "raw_bytes": 48699,
+          "gzip_sha256": "7a27e488a5f35cef32659f91213aee123845835dd8aa471a1b82a2f169d34437",
+          "source": {
+            "path": "logs/decisions.jsonl",
+            "offset": 1238420227,
+            "length": 48699,
+            "sha256": "b68dc6b0d15d5b6a2dc4e164906e3fddbeeba27885903f2cbf4a12c3055a8ead"
+          }
+        },
+        {
+          "path": "originals/d22cdc17-6267-49fb-a85f-4dc1dcd448e0-prompt.jsonl.gz",
+          "raw_sha256": "4d44bc2f25adca9c072dcb7b24149380194870add6223a4498c92f431a7fcc1d",
+          "raw_bytes": 58059,
+          "gzip_sha256": "d2ffc46a3f7e64d0c218054b24c5a2a1916b724b8f028ed2184f7a58838c3b70",
+          "source": {
+            "path": "logs/jev-prompts.jsonl",
+            "offset": 862294110,
+            "length": 58059,
+            "sha256": "4d44bc2f25adca9c072dcb7b24149380194870add6223a4498c92f431a7fcc1d"
+          }
+        }
+      ]
+    },
+    {
+      "id": "7cb74d66-5a5b-4d0b-9a07-bb3455dfc728",
+      "run_id": "8AGEGLG40SV3",
+      "ts": "2026-10-13T20:14:00.453Z",
+      "floor": 25,
+      "turn": 1,
+      "attempt": null,
+      "ascension": 10,
+      "fight": "hallway",
+      "confidence": 0.71,
+      "confidence_band": "0.5_to_0.8",
+      "jev_choice": "plan1",
+      "code_first": "plan1",
+      "code_first_source": "original code-order plan1; distinct from rollout/B2 best",
+      "rollout_best": null,
+      "b2_best": null,
+      "simulation_tied": [],
+      "deviated": false,
+      "potion_in_comparison": false,
+      "difference_chosen_minus_code": {
+        "rollout_expected_hp_loss": {
+          "mean": null,
+          "se": null
+        },
+        "boss_win": {
+          "mean": null,
+          "paired": null,
+          "se": null
+        },
+        "S": {
+          "mean": null,
+          "se": null
+        }
+      },
+      "execution": {
+        "planned_after_guards": "plan1",
+        "planned_steps": [
+          {
+            "card_id": "ASSASSINATE",
+            "upgraded": false,
+            "card_index": 0,
+            "target_index": 0
+          },
+          {
+            "card_id": "DEFEND_SILENT",
+            "upgraded": false,
+            "card_index": 1,
+            "target_index": null
+          },
+          {
+            "card_id": "DEADLY_POISON",
+            "upgraded": false,
+            "card_index": 2,
+            "target_index": 0
+          },
+          {
+            "card_id": "HAND_TRICK",
+            "upgraded": false,
+            "card_index": 3,
+            "target_index": null
+          },
+          {
+            "card_id": "DEFEND_SILENT",
+            "upgraded": false,
+            "card_index": 4,
+            "target_index": null
+          },
+          {
+            "card_id": "PRODUCTION",
+            "upgraded": false,
+            "card_index": 6,
+            "target_index": null
+          },
+          {
+            "card_id": "DEFEND_SILENT",
+            "upgraded": false,
+            "card_index": 5,
+            "target_index": null
+          }
+        ],
+        "requested_action": {
+          "action": "play_card",
+          "card_index": 0,
+          "target_index": 0
+        },
+        "dispatched_action": {
+          "action": "play_card",
+          "card_index": 0,
+          "target_index": 0
+        },
+        "dispatch_status": "returned",
+        "returned_status": "completed",
+        "whole_plan_executed": null
+      },
+      "actual_fight_outcome": null,
+      "input_tokens": 14327,
+      "latency_ms": 844,
+      "limits": "Original simulated differences only. Missing paired samples/SE and whole-plan execution remain unknown; no counterfactual or causal result.",
+      "stratum": "no_declared_best",
+      "sources": [
+        {
+          "path": "originals/7cb74d66-5a5b-4d0b-9a07-bb3455dfc728-decision.jsonl.gz",
+          "raw_sha256": "2d9ae5ccac3b3c1256b34be3386b873a009294b8f33431a54de46d443599b765",
+          "raw_bytes": 37551,
+          "gzip_sha256": "508cafb72119a17875ef261866284f312b9d8660b63ad9b321b2c5f7c9ba679f",
+          "source": {
+            "path": "logs/decisions.jsonl",
+            "offset": 1290693053,
+            "length": 37551,
+            "sha256": "2d9ae5ccac3b3c1256b34be3386b873a009294b8f33431a54de46d443599b765"
+          }
+        },
+        {
+          "path": "originals/7cb74d66-5a5b-4d0b-9a07-bb3455dfc728-prompt.jsonl.gz",
+          "raw_sha256": "4e47704909a95a7e5298700842aa3f26b1bbe7a38b99346dccbba828a05e53ab",
+          "raw_bytes": 42983,
+          "gzip_sha256": "815c17f2bfdac4ab18606b76c3a624d37d8a42c732b816804543023a8933c91b",
+          "source": {
+            "path": "logs/jev-prompts.jsonl",
+            "offset": 899127736,
+            "length": 42983,
+            "sha256": "4e47704909a95a7e5298700842aa3f26b1bbe7a38b99346dccbba828a05e53ab"
+          }
+        }
+      ]
+    },
+    {
+      "id": "dc1a8e7a-cda4-429b-9b00-7565d76dd3c6",
+      "run_id": "EBVT8UZM6P12",
+      "ts": "2026-10-14T02:45:31.358Z",
+      "floor": 40,
+      "turn": 4,
+      "attempt": 1,
+      "ascension": 10,
+      "fight": "hallway",
+      "confidence": 0.47,
+      "confidence_band": "below_0.5",
+      "jev_choice": "plan1",
+      "code_first": "plan1",
+      "code_first_source": "original code-order plan1; distinct from rollout/B2 best",
+      "rollout_best": null,
+      "b2_best": null,
+      "simulation_tied": [],
+      "deviated": false,
+      "potion_in_comparison": false,
+      "difference_chosen_minus_code": {
+        "rollout_expected_hp_loss": {
+          "mean": null,
+          "se": null
+        },
+        "boss_win": {
+          "mean": null,
+          "paired": null,
+          "se": null
+        },
+        "S": {
+          "mean": null,
+          "se": null
+        }
+      },
+      "execution": {
+        "planned_after_guards": "plan1",
+        "planned_steps": [
+          {
+            "card_id": "PRECISE_CUT",
+            "upgraded": false,
+            "card_index": 0,
+            "target_index": 1
+          },
+          {
+            "card_id": "PIERCING_WAIL",
+            "upgraded": false,
+            "card_index": 1,
+            "target_index": null
+          },
+          {
+            "card_id": "STRIKE_SILENT",
+            "upgraded": false,
+            "card_index": 2,
+            "target_index": 1
+          },
+          {
+            "card_id": "NOXIOUS_FUMES",
+            "upgraded": false,
+            "card_index": 3,
+            "target_index": null
+          },
+          {
+            "card_id": "CLOAK_AND_DAGGER",
+            "upgraded": false,
+            "card_index": 4,
+            "target_index": null
+          }
+        ],
+        "requested_action": {
+          "action": "play_card",
+          "card_index": 0,
+          "target_index": 1
+        },
+        "dispatched_action": {
+          "action": "play_card",
+          "card_index": 0,
+          "target_index": 1
+        },
+        "dispatch_status": "returned",
+        "returned_status": "completed",
+        "whole_plan_executed": null
+      },
+      "actual_fight_outcome": null,
+      "input_tokens": 12464,
+      "latency_ms": 602,
+      "limits": "Original simulated differences only. Missing paired samples/SE and whole-plan execution remain unknown; no counterfactual or causal result.",
+      "stratum": "no_declared_best",
+      "sources": [
+        {
+          "path": "originals/dc1a8e7a-cda4-429b-9b00-7565d76dd3c6-decision.jsonl.gz",
+          "raw_sha256": "853a4e7a4998a65225630e55f2cc6b11ae2b4addc6ad7b4b08311fd2272a01c0",
+          "raw_bytes": 32223,
+          "gzip_sha256": "99e0d8de424aa159a4f43efb74569887f44dc556c34fa37a04ce702783046f68",
+          "source": {
+            "path": "logs/decisions.jsonl",
+            "offset": 1341661178,
+            "length": 32223,
+            "sha256": "853a4e7a4998a65225630e55f2cc6b11ae2b4addc6ad7b4b08311fd2272a01c0"
+          }
+        },
+        {
+          "path": "originals/dc1a8e7a-cda4-429b-9b00-7565d76dd3c6-prompt.jsonl.gz",
+          "raw_sha256": "e8300b79b4e3f11e40d51f4f0b6f24ed1cf94a4600c193a5025ba8c498607655",
+          "raw_bytes": 36561,
+          "gzip_sha256": "0a3d98f4f121a1aece7a47520bd3394a8a6df26bda37ba544e59bf953d49d4d9",
+          "source": {
+            "path": "logs/jev-prompts.jsonl",
+            "offset": 928671069,
+            "length": 36561,
+            "sha256": "e8300b79b4e3f11e40d51f4f0b6f24ed1cf94a4600c193a5025ba8c498607655"
+          }
+        }
+      ]
+    },
+    {
+      "id": "85872d47-dff9-473e-acd7-9a867cbe3a68",
+      "run_id": "6ZGMGEQ5YDVK",
+      "ts": "2026-10-14T00:31:26.854Z",
+      "floor": 13,
+      "turn": 2,
+      "attempt": null,
+      "ascension": 10,
+      "fight": "elite",
+      "confidence": 0.37,
+      "confidence_band": "below_0.5",
+      "jev_choice": "plan2",
+      "code_first": "plan1",
+      "code_first_source": "original code-order plan1; distinct from rollout/B2 best",
+      "rollout_best": null,
+      "b2_best": null,
+      "simulation_tied": [],
+      "deviated": true,
+      "potion_in_comparison": false,
+      "difference_chosen_minus_code": {
+        "rollout_expected_hp_loss": {
+          "mean": null,
+          "se": null
+        },
+        "boss_win": {
+          "mean": null,
+          "paired": null,
+          "se": null
+        },
+        "S": {
+          "mean": null,
+          "se": null
+        }
+      },
+      "execution": {
+        "planned_after_guards": "plan2",
+        "planned_steps": [
+          {
+            "card_id": "DEFEND_SILENT",
+            "upgraded": false,
+            "card_index": 1,
+            "target_index": null
+          },
+          {
+            "card_id": "POISONED_STAB",
+            "upgraded": false,
+            "card_index": 4,
+            "target_index": 3
+          },
+          {
+            "card_id": "ABRASIVE",
+            "upgraded": false,
+            "card_index": 5,
+            "target_index": null
+          },
+          {
+            "card_id": "SURVIVOR",
+            "upgraded": false,
+            "card_index": 0,
+            "target_index": null
+          }
+        ],
+        "requested_action": {
+          "action": "play_card",
+          "card_index": 1
+        },
+        "dispatched_action": {
+          "action": "play_card",
+          "card_index": 1
+        },
+        "dispatch_status": "returned",
+        "returned_status": "completed",
+        "whole_plan_executed": null
+      },
+      "actual_fight_outcome": null,
+      "input_tokens": 15267,
+      "latency_ms": 512,
+      "limits": "Original simulated differences only. Missing paired samples/SE and whole-plan execution remain unknown; no counterfactual or causal result.",
+      "stratum": "no_declared_best",
+      "sources": [
+        {
+          "path": "originals/85872d47-dff9-473e-acd7-9a867cbe3a68-decision.jsonl.gz",
+          "raw_sha256": "7e4f058c0cdf7f3b72eb34b64a78a9291c8bbc07bb477275294a1aa5ad0ed308",
+          "raw_bytes": 40221,
+          "gzip_sha256": "8f7e82043a2fea3e86e60043b3c4c4027c643d3740a3abcc86a17111e9a32f95",
+          "source": {
+            "path": "logs/decisions.jsonl",
+            "offset": 1323673804,
+            "length": 40221,
+            "sha256": "7e4f058c0cdf7f3b72eb34b64a78a9291c8bbc07bb477275294a1aa5ad0ed308"
+          }
+        },
+        {
+          "path": "originals/85872d47-dff9-473e-acd7-9a867cbe3a68-prompt.jsonl.gz",
+          "raw_sha256": "0edd713d289e6983a8d39c3b4b91305d429b321a996036d6f68277637cc48884",
+          "raw_bytes": 44920,
+          "gzip_sha256": "e33926a177265037957571cc6bafe74e0390db88a082ec44fc3f632d14a21fc9",
+          "source": {
+            "path": "logs/jev-prompts.jsonl",
+            "offset": 919532189,
+            "length": 44920,
+            "sha256": "0edd713d289e6983a8d39c3b4b91305d429b321a996036d6f68277637cc48884"
+          }
+        }
+      ]
+    },
+    {
+      "id": "c1f7df10-c91a-4771-ac7f-1aeaa571fde8",
+      "run_id": "32VSST9UX7MN",
+      "ts": "2026-10-13T11:40:39.143Z",
+      "floor": 2,
+      "turn": 4,
+      "attempt": null,
+      "ascension": 10,
+      "fight": "hallway",
+      "confidence": 0.76,
+      "confidence_band": "0.5_to_0.8",
+      "jev_choice": "plan1",
+      "code_first": "plan1",
+      "code_first_source": "original code-order plan1; distinct from rollout/B2 best",
+      "rollout_best": null,
+      "b2_best": null,
+      "simulation_tied": [],
+      "deviated": false,
+      "potion_in_comparison": false,
+      "difference_chosen_minus_code": {
+        "rollout_expected_hp_loss": {
+          "mean": null,
+          "se": null
+        },
+        "boss_win": {
+          "mean": null,
+          "paired": null,
+          "se": null
+        },
+        "S": {
+          "mean": null,
+          "se": null
+        }
+      },
+      "execution": {
+        "planned_after_guards": "plan1",
+        "planned_steps": [
+          {
+            "card_id": "STORM_OF_STEEL",
+            "upgraded": false,
+            "card_index": 1,
+            "target_index": null
+          },
+          {
+            "card_id": "STRIKE_SILENT",
+            "upgraded": false,
+            "card_index": 2,
+            "target_index": 0
+          }
+        ],
+        "requested_action": {
+          "action": "play_card",
+          "card_index": 1
+        },
+        "dispatched_action": {
+          "action": "play_card",
+          "card_index": 1
+        },
+        "dispatch_status": "returned",
+        "returned_status": "completed",
+        "whole_plan_executed": null
+      },
+      "actual_fight_outcome": null,
+      "input_tokens": 4055,
+      "latency_ms": 307,
+      "limits": "Original simulated differences only. Missing paired samples/SE and whole-plan execution remain unknown; no counterfactual or causal result.",
+      "stratum": "no_declared_best",
+      "sources": [
+        {
+          "path": "originals/c1f7df10-c91a-4771-ac7f-1aeaa571fde8-decision.jsonl.gz",
+          "raw_sha256": "cbe78a365424f0208a73568012de7fb679843c31cc01a83239475adb091e30a7",
+          "raw_bytes": 10905,
+          "gzip_sha256": "6be0bd393140a76afaf1aa15b47ee942aa7e78e10b308e3d88a90e13e2af27b8",
+          "source": {
+            "path": "logs/decisions.jsonl",
+            "offset": 1224958417,
+            "length": 10905,
+            "sha256": "cbe78a365424f0208a73568012de7fb679843c31cc01a83239475adb091e30a7"
+          }
+        },
+        {
+          "path": "originals/c1f7df10-c91a-4771-ac7f-1aeaa571fde8-prompt.jsonl.gz",
+          "raw_sha256": "4c432f9f048d80482c4273ed73e3de5eb6586a09e7b80e15483d88bf3960af6f",
+          "raw_bytes": 12049,
+          "gzip_sha256": "9b00f9c9741003f30439942d5c2bbc6acf22bb06b5275e6041eedff45d8d346d",
+          "source": {
+            "path": "logs/jev-prompts.jsonl",
+            "offset": 855443293,
+            "length": 12049,
+            "sha256": "4c432f9f048d80482c4273ed73e3de5eb6586a09e7b80e15483d88bf3960af6f"
+          }
+        }
+      ]
+    },
+    {
+      "id": "ab50ed9e-dcc2-4831-98cb-1c34b80f406d",
+      "run_id": "6ZGMGEQ5YDVK",
+      "ts": "2026-10-14T00:26:53.625Z",
+      "floor": 9,
+      "turn": 3,
+      "attempt": null,
+      "ascension": 10,
+      "fight": "hallway",
+      "confidence": 0.24,
+      "confidence_band": "below_0.5",
+      "jev_choice": "plan1",
+      "code_first": "plan1",
+      "code_first_source": "original code-order plan1; distinct from rollout/B2 best",
+      "rollout_best": null,
+      "b2_best": null,
+      "simulation_tied": [],
+      "deviated": false,
+      "potion_in_comparison": false,
+      "difference_chosen_minus_code": {
+        "rollout_expected_hp_loss": {
+          "mean": null,
+          "se": null
+        },
+        "boss_win": {
+          "mean": null,
+          "paired": null,
+          "se": null
+        },
+        "S": {
+          "mean": null,
+          "se": null
+        }
+      },
+      "execution": {
+        "planned_after_guards": "plan1",
+        "planned_steps": [
+          {
+            "card_id": "DEFEND_SILENT",
+            "upgraded": true,
+            "card_index": 0,
+            "target_index": null
+          },
+          {
+            "card_id": "PIERCING_WAIL",
+            "upgraded": false,
+            "card_index": 4,
+            "target_index": null
+          },
+          {
+            "card_id": "SURVIVOR",
+            "upgraded": false,
+            "card_index": 3,
+            "target_index": null
+          }
+        ],
+        "requested_action": {
+          "action": "play_card",
+          "card_index": 0
+        },
+        "dispatched_action": {
+          "action": "play_card",
+          "card_index": 0
+        },
+        "dispatch_status": "returned",
+        "returned_status": "completed",
+        "whole_plan_executed": null
+      },
+      "actual_fight_outcome": null,
+      "input_tokens": 17457,
+      "latency_ms": 696,
+      "limits": "Original simulated differences only. Missing paired samples/SE and whole-plan execution remain unknown; no counterfactual or causal result.",
+      "stratum": "no_declared_best",
+      "sources": [
+        {
+          "path": "originals/ab50ed9e-dcc2-4831-98cb-1c34b80f406d-decision.jsonl.gz",
+          "raw_sha256": "8f27dd42e9c829fb18cf1036202d92168c3cfeaca2a1a4c8012513c17818db1f",
+          "raw_bytes": 46968,
+          "gzip_sha256": "21b47c0e906dfbd31967d01db7e4030451ffab9c39585ea36e73797a9a7cd11d",
+          "source": {
+            "path": "logs/decisions.jsonl",
+            "offset": 1322781813,
+            "length": 46968,
+            "sha256": "8f27dd42e9c829fb18cf1036202d92168c3cfeaca2a1a4c8012513c17818db1f"
+          }
+        },
+        {
+          "path": "originals/ab50ed9e-dcc2-4831-98cb-1c34b80f406d-prompt.jsonl.gz",
+          "raw_sha256": "5d8890de0e10f6acfba2f4f112f183d08cdad58db017a305230e1f4a5aeba657",
+          "raw_bytes": 51959,
+          "gzip_sha256": "0a97b4e220a2bec9892bfffeebc79d44fe831040a4792494363d1636699c4b39",
+          "source": {
+            "path": "logs/jev-prompts.jsonl",
+            "offset": 918938958,
+            "length": 51959,
+            "sha256": "5d8890de0e10f6acfba2f4f112f183d08cdad58db017a305230e1f4a5aeba657"
+          }
+        }
+      ]
+    },
+    {
+      "id": "76b1b74f-e713-4b5a-898d-e162d45e6d9c",
+      "run_id": "Q10YYQ5DUPJA",
+      "ts": "2026-10-14T03:48:40.959Z",
+      "floor": 28,
+      "turn": 1,
+      "attempt": null,
+      "ascension": 10,
+      "fight": "hallway",
+      "confidence": 0.69,
+      "confidence_band": "0.5_to_0.8",
+      "jev_choice": "plan1",
+      "code_first": "plan1",
+      "code_first_source": "original code-order plan1; distinct from rollout/B2 best",
+      "rollout_best": null,
+      "b2_best": null,
+      "simulation_tied": [],
+      "deviated": false,
+      "potion_in_comparison": false,
+      "difference_chosen_minus_code": {
+        "rollout_expected_hp_loss": {
+          "mean": null,
+          "se": null
+        },
+        "boss_win": {
+          "mean": null,
+          "paired": null,
+          "se": null
+        },
+        "S": {
+          "mean": null,
+          "se": null
+        }
+      },
+      "execution": {
+        "planned_after_guards": "plan1",
+        "planned_steps": [
+          {
+            "card_id": "BACKSTAB",
+            "upgraded": false,
+            "card_index": 0,
+            "target_index": 2
+          },
+          {
+            "card_id": "STRIKE_SILENT",
+            "upgraded": false,
+            "card_index": 1,
+            "target_index": 0
+          },
+          {
+            "card_id": "SLICE",
+            "upgraded": false,
+            "card_index": 2,
+            "target_index": 2
+          },
+          {
+            "card_id": "DAGGER_SPRAY",
+            "upgraded": false,
+            "card_index": 4,
+            "target_index": null
+          },
+          {
+            "card_id": "CLOAK_AND_DAGGER",
+            "upgraded": false,
+            "card_index": 6,
+            "target_index": null
+          },
+          {
+            "card_id": "POISONED_STAB",
+            "upgraded": false,
+            "card_index": 7,
+            "target_index": 0
+          },
+          {
+            "card_id": "SURVIVOR",
+            "upgraded": false,
+            "card_index": 5,
+            "target_index": null
+          }
+        ],
+        "requested_action": {
+          "action": "play_card",
+          "card_index": 0,
+          "target_index": 2
+        },
+        "dispatched_action": {
+          "action": "play_card",
+          "card_index": 0,
+          "target_index": 2
+        },
+        "dispatch_status": "returned",
+        "returned_status": "completed",
+        "whole_plan_executed": null
+      },
+      "actual_fight_outcome": null,
+      "input_tokens": 22944,
+      "latency_ms": 680,
+      "limits": "Original simulated differences only. Missing paired samples/SE and whole-plan execution remain unknown; no counterfactual or causal result.",
+      "stratum": "no_declared_best",
+      "sources": [
+        {
+          "path": "originals/76b1b74f-e713-4b5a-898d-e162d45e6d9c-decision.jsonl.gz",
+          "raw_sha256": "7621d36a500a0e416060b7bc7c0dbe1723d35745a252ebc6c961e7a928b3dc13",
+          "raw_bytes": 65927,
+          "gzip_sha256": "8f1ac0654d16511dd4962bebed71777bd1f62f2f28bb270a8d3d2dd26efb8644",
+          "source": {
+            "path": "logs/decisions.jsonl",
+            "offset": 1348763099,
+            "length": 65927,
+            "sha256": "7621d36a500a0e416060b7bc7c0dbe1723d35745a252ebc6c961e7a928b3dc13"
+          }
+        },
+        {
+          "path": "originals/76b1b74f-e713-4b5a-898d-e162d45e6d9c-prompt.jsonl.gz",
+          "raw_sha256": "eeef90debff573100f08103f63019242e8fe3acf997c5ba35e52637e63d7fe87",
+          "raw_bytes": 69042,
+          "gzip_sha256": "9fe8c6bd0c012629c5a8f6c60790bcc15347747f7ff9ab6381cfe4c56ddf04ce",
+          "source": {
+            "path": "logs/jev-prompts.jsonl",
+            "offset": 931893925,
+            "length": 69042,
+            "sha256": "eeef90debff573100f08103f63019242e8fe3acf997c5ba35e52637e63d7fe87"
+          }
+        }
+      ]
+    },
+    {
+      "id": "6071b54e-24d7-403c-8ba4-8db40a3e8eff",
+      "run_id": "WA7FRJ7UABCV",
+      "ts": "2026-10-13T13:44:28.765Z",
+      "floor": 29,
+      "turn": 6,
+      "attempt": null,
+      "ascension": 10,
+      "fight": "hallway",
+      "confidence": 0.44,
+      "confidence_band": "below_0.5",
+      "jev_choice": "plan2",
+      "code_first": "plan1",
+      "code_first_source": "original code-order plan1; distinct from rollout/B2 best",
+      "rollout_best": null,
+      "b2_best": null,
+      "simulation_tied": [
+        "plan1",
+        "plan2",
+        "plan3"
+      ],
+      "deviated": true,
+      "potion_in_comparison": false,
+      "difference_chosen_minus_code": {
+        "rollout_expected_hp_loss": {
+          "mean": 0,
+          "se": null
+        },
+        "boss_win": {
+          "mean": null,
+          "paired": null,
+          "se": null
+        },
+        "S": {
+          "mean": null,
+          "se": null
+        }
+      },
+      "execution": {
+        "planned_after_guards": "plan2",
+        "planned_steps": [
+          {
+            "card_id": "STRIKE_SILENT",
+            "upgraded": false,
+            "card_index": 0,
+            "target_index": 0
+          },
+          {
+            "card_id": "PREDATOR",
+            "upgraded": false,
+            "card_index": 1,
+            "target_index": 0
+          },
+          {
+            "card_id": "SLICE",
+            "upgraded": false,
+            "card_index": 2,
+            "target_index": 0
+          },
+          {
+            "card_id": "DEFEND_SILENT",
+            "upgraded": true,
+            "card_index": 5,
+            "target_index": null
+          }
+        ],
+        "requested_action": {
+          "action": "play_card",
+          "card_index": 0,
+          "target_index": 0
+        },
+        "dispatched_action": {
+          "action": "play_card",
+          "card_index": 0,
+          "target_index": 0
+        },
+        "dispatch_status": "returned",
+        "returned_status": "completed",
+        "whole_plan_executed": null
+      },
+      "actual_fight_outcome": null,
+      "input_tokens": 17930,
+      "latency_ms": 678,
+      "limits": "Original simulated differences only. Missing paired samples/SE and whole-plan execution remain unknown; no counterfactual or causal result.",
+      "stratum": "tied_best",
+      "sources": [
+        {
+          "path": "originals/6071b54e-24d7-403c-8ba4-8db40a3e8eff-decision.jsonl.gz",
+          "raw_sha256": "53a218ce2cdf42328bd790de58caec868a35f05c550fd88489b142c96fd07c26",
+          "raw_bytes": 47370,
+          "gzip_sha256": "0d06a754a2da64665af3c000150314c9731781d48a81ec1b66aeaaecb92a480e",
+          "source": {
+            "path": "logs/decisions.jsonl",
+            "offset": 1237309239,
+            "length": 47370,
+            "sha256": "53a218ce2cdf42328bd790de58caec868a35f05c550fd88489b142c96fd07c26"
+          }
+        },
+        {
+          "path": "originals/6071b54e-24d7-403c-8ba4-8db40a3e8eff-prompt.jsonl.gz",
+          "raw_sha256": "f7b070fccb8649a740d351200a9c951e21996b86cec5449dd6510cb55e4960bf",
+          "raw_bytes": 52579,
+          "gzip_sha256": "40dcd4cc667c226ac7bce0e44dffb8abe3d009ef2177a903235a53af055863ca",
+          "source": {
+            "path": "logs/jev-prompts.jsonl",
+            "offset": 861315684,
+            "length": 52579,
+            "sha256": "f7b070fccb8649a740d351200a9c951e21996b86cec5449dd6510cb55e4960bf"
+          }
+        }
+      ]
+    },
+    {
+      "id": "d57effbb-747f-4c16-b298-7db7635edaf5",
+      "run_id": "E5L15SK6ZHZB",
+      "ts": "2026-10-13T18:30:37.125Z",
+      "floor": 23,
+      "turn": 1,
+      "attempt": null,
+      "ascension": 10,
+      "fight": "hallway",
+      "confidence": 0.76,
+      "confidence_band": "0.5_to_0.8",
+      "jev_choice": "plan1",
+      "code_first": "plan1",
+      "code_first_source": "original code-order plan1; distinct from rollout/B2 best",
+      "rollout_best": null,
+      "b2_best": null,
+      "simulation_tied": [
+        "plan1",
+        "plan2"
+      ],
+      "deviated": false,
+      "potion_in_comparison": false,
+      "difference_chosen_minus_code": {
+        "rollout_expected_hp_loss": {
+          "mean": 0,
+          "se": null
+        },
+        "boss_win": {
+          "mean": null,
+          "paired": null,
+          "se": null
+        },
+        "S": {
+          "mean": null,
+          "se": null
+        }
+      },
+      "execution": {
+        "planned_after_guards": "plan1",
+        "planned_steps": [
+          {
+            "card_id": "STRIKE_SILENT",
+            "upgraded": false,
+            "card_index": 0,
+            "target_index": 0
+          },
+          {
+            "card_id": "SHADOWMELD",
+            "upgraded": false,
+            "card_index": 1,
+            "target_index": null
+          },
+          {
+            "card_id": "MIRAGE",
+            "upgraded": false,
+            "card_index": 3,
+            "target_index": null
+          },
+          {
+            "card_id": "STRIKE_SILENT",
+            "upgraded": true,
+            "card_index": 4,
+            "target_index": 0
+          },
+          {
+            "card_id": "STRIKE_SILENT",
+            "upgraded": false,
+            "card_index": 5,
+            "target_index": 0
+          },
+          {
+            "card_id": "DEFEND_SILENT",
+            "upgraded": false,
+            "card_index": 6,
+            "target_index": null
+          }
+        ],
+        "requested_action": {
+          "action": "play_card",
+          "card_index": 0,
+          "target_index": 0
+        },
+        "dispatched_action": {
+          "action": "play_card",
+          "card_index": 0,
+          "target_index": 0
+        },
+        "dispatch_status": "returned",
+        "returned_status": "completed",
+        "whole_plan_executed": null
+      },
+      "actual_fight_outcome": null,
+      "input_tokens": 7617,
+      "latency_ms": 550,
+      "limits": "Original simulated differences only. Missing paired samples/SE and whole-plan execution remain unknown; no counterfactual or causal result.",
+      "stratum": "tied_best",
+      "sources": [
+        {
+          "path": "originals/d57effbb-747f-4c16-b298-7db7635edaf5-decision.jsonl.gz",
+          "raw_sha256": "d8a8b0a05c32927bb754e7f46911255d28e1ce238eacee4b9adbfddb0e056556",
+          "raw_bytes": 19176,
+          "gzip_sha256": "22b793928775b6c73a5b1bbf492a43758a22995429b36b18ed33d55da00c7bd5",
+          "source": {
+            "path": "logs/decisions.jsonl",
+            "offset": 1279066148,
+            "length": 19176,
+            "sha256": "d8a8b0a05c32927bb754e7f46911255d28e1ce238eacee4b9adbfddb0e056556"
+          }
+        },
+        {
+          "path": "originals/d57effbb-747f-4c16-b298-7db7635edaf5-prompt.jsonl.gz",
+          "raw_sha256": "4493e4f3743f38cd0f1c7898b8a3549b2c3e68835628d4b5cdbb3af539bd5f22",
+          "raw_bytes": 21943,
+          "gzip_sha256": "06cdbcfe6babdfde0b7be00d605952be14bd6f4abd9414fb04eae144d8b3234c",
+          "source": {
+            "path": "logs/jev-prompts.jsonl",
+            "offset": 892545795,
+            "length": 21943,
+            "sha256": "4493e4f3743f38cd0f1c7898b8a3549b2c3e68835628d4b5cdbb3af539bd5f22"
+          }
+        }
+      ]
+    },
+    {
+      "id": "e55689d0-711f-4d8e-84bb-8283dca7be7b",
+      "run_id": "32VSST9UX7MN",
+      "ts": "2026-10-13T12:16:34.265Z",
+      "floor": 29,
+      "turn": 5,
+      "attempt": null,
+      "ascension": 10,
+      "fight": "hallway",
+      "confidence": 0.44,
+      "confidence_band": "below_0.5",
+      "jev_choice": "plan1",
+      "code_first": "plan1",
+      "code_first_source": "original code-order plan1; distinct from rollout/B2 best",
+      "rollout_best": null,
+      "b2_best": null,
+      "simulation_tied": [
+        "plan1",
+        "plan2"
+      ],
+      "deviated": false,
+      "potion_in_comparison": false,
+      "difference_chosen_minus_code": {
+        "rollout_expected_hp_loss": {
+          "mean": 0,
+          "se": null
+        },
+        "boss_win": {
+          "mean": null,
+          "paired": null,
+          "se": null
+        },
+        "S": {
+          "mean": null,
+          "se": null
+        }
+      },
+      "execution": {
+        "planned_after_guards": "plan1",
+        "planned_steps": [
+          {
+            "card_id": "PREPARED",
+            "upgraded": false,
+            "card_index": 5,
+            "target_index": null
+          },
+          {
+            "card_id": "TOXIC",
+            "upgraded": false,
+            "card_index": 0,
+            "target_index": null
+          },
+          {
+            "card_id": "TOXIC",
+            "upgraded": false,
+            "card_index": 1,
+            "target_index": null
+          },
+          {
+            "card_id": "DEFEND_SILENT",
+            "upgraded": false,
+            "card_index": 4,
+            "target_index": null
+          },
+          {
+            "card_id": "NOXIOUS_FUMES",
+            "upgraded": false,
+            "card_index": 6,
+            "target_index": null
+          }
+        ],
+        "requested_action": {
+          "action": "play_card",
+          "card_index": 5
+        },
+        "dispatched_action": {
+          "action": "play_card",
+          "card_index": 5
+        },
+        "dispatch_status": "returned",
+        "returned_status": "pending",
+        "whole_plan_executed": null
+      },
+      "actual_fight_outcome": null,
+      "input_tokens": 19455,
+      "latency_ms": 704,
+      "limits": "Original simulated differences only. Missing paired samples/SE and whole-plan execution remain unknown; no counterfactual or causal result.",
+      "stratum": "tied_best",
+      "sources": [
+        {
+          "path": "originals/e55689d0-711f-4d8e-84bb-8283dca7be7b-decision.jsonl.gz",
+          "raw_sha256": "f6e2b64166f062dbb06539e2c36574b7346ae5ff9bd9fbaa36304a1504e19d01",
+          "raw_bytes": 46871,
+          "gzip_sha256": "90f855276b47c74f83ae5a29dfab9372b3411473265e5ba6c9c06a340a9060cf",
+          "source": {
+            "path": "logs/decisions.jsonl",
+            "offset": 1230393237,
+            "length": 46871,
+            "sha256": "f6e2b64166f062dbb06539e2c36574b7346ae5ff9bd9fbaa36304a1504e19d01"
+          }
+        },
+        {
+          "path": "originals/e55689d0-711f-4d8e-84bb-8283dca7be7b-prompt.jsonl.gz",
+          "raw_sha256": "1e34d6934d976d87950416f33d5d40fbaf0efe0796844dd4960a105c95074c21",
+          "raw_bytes": 55962,
+          "gzip_sha256": "7cf2eb8e034470433955213ca104762ff58412e8c2bd9b84442443c4712039fb",
+          "source": {
+            "path": "logs/jev-prompts.jsonl",
+            "offset": 857713345,
+            "length": 55962,
+            "sha256": "1e34d6934d976d87950416f33d5d40fbaf0efe0796844dd4960a105c95074c21"
+          }
+        }
+      ]
+    },
+    {
+      "id": "f72a8b78-36b9-4c86-849a-a27fccc2f5f6",
+      "run_id": "1269Y20SKHUM",
+      "ts": "2026-10-13T16:13:19.892Z",
+      "floor": 12,
+      "turn": 4,
+      "attempt": null,
+      "ascension": 10,
+      "fight": "hallway",
+      "confidence": 0.35,
+      "confidence_band": "below_0.5",
+      "jev_choice": "plan2",
+      "code_first": "plan1",
+      "code_first_source": "original code-order plan1; distinct from rollout/B2 best",
+      "rollout_best": null,
+      "b2_best": null,
+      "simulation_tied": [
+        "plan2",
+        "plan4"
+      ],
+      "deviated": true,
+      "potion_in_comparison": false,
+      "difference_chosen_minus_code": {
+        "rollout_expected_hp_loss": {
+          "mean": 0,
+          "se": null
+        },
+        "boss_win": {
+          "mean": null,
+          "paired": null,
+          "se": null
+        },
+        "S": {
+          "mean": null,
+          "se": null
+        }
+      },
+      "execution": {
+        "planned_after_guards": "plan2",
+        "planned_steps": [
+          {
+            "card_id": "BACKFLIP",
+            "upgraded": false,
+            "card_index": 1,
+            "target_index": null
+          },
+          {
+            "card_id": "STRIKE_SILENT",
+            "upgraded": false,
+            "card_index": 2,
+            "target_index": 0
+          },
+          {
+            "card_id": "STRIKE_SILENT",
+            "upgraded": false,
+            "card_index": 4,
+            "target_index": 0
+          }
+        ],
+        "requested_action": {
+          "action": "play_card",
+          "card_index": 1
+        },
+        "dispatched_action": {
+          "action": "play_card",
+          "card_index": 1
+        },
+        "dispatch_status": "returned",
+        "returned_status": "completed",
+        "whole_plan_executed": null
+      },
+      "actual_fight_outcome": null,
+      "input_tokens": 10122,
+      "latency_ms": 590,
+      "limits": "Original simulated differences only. Missing paired samples/SE and whole-plan execution remain unknown; no counterfactual or causal result.",
+      "stratum": "tied_best",
+      "sources": [
+        {
+          "path": "originals/f72a8b78-36b9-4c86-849a-a27fccc2f5f6-decision.jsonl.gz",
+          "raw_sha256": "d3fd4c112f76773cf06deea0273610db89b8ddfdf4bd3d91e58e4d75bfdf6ff3",
+          "raw_bytes": 24171,
+          "gzip_sha256": "fac97e3f698e6e716952baa9ed9d55267275f45017396b4c4f2f87bd050c32be",
+          "source": {
+            "path": "logs/decisions.jsonl",
+            "offset": 1260006495,
+            "length": 24171,
+            "sha256": "d3fd4c112f76773cf06deea0273610db89b8ddfdf4bd3d91e58e4d75bfdf6ff3"
+          }
+        },
+        {
+          "path": "originals/f72a8b78-36b9-4c86-849a-a27fccc2f5f6-prompt.jsonl.gz",
+          "raw_sha256": "8748e2cd7efc94e9d03e9c3447ba78269ff9d96fef26034f6f462600bc98cd4a",
+          "raw_bytes": 29417,
+          "gzip_sha256": "ad3c578517123ed1ebe7e030b4bebabc8a8e44bf60ba991d08b5cf05ace6a548",
+          "source": {
+            "path": "logs/jev-prompts.jsonl",
+            "offset": 879404163,
+            "length": 29417,
+            "sha256": "8748e2cd7efc94e9d03e9c3447ba78269ff9d96fef26034f6f462600bc98cd4a"
+          }
+        }
+      ]
+    },
+    {
+      "id": "f216997d-4011-477c-af42-cb71937c0dde",
+      "run_id": "Q9FM7A80E4BZ",
+      "ts": "2026-10-13T23:56:39.642Z",
+      "floor": 17,
+      "turn": 3,
+      "attempt": 3,
+      "ascension": 10,
+      "fight": "boss",
+      "confidence": 0.92,
+      "confidence_band": "at_least_0.8",
+      "jev_choice": "plan1",
+      "code_first": "plan1",
+      "code_first_source": "original code-order plan1; distinct from rollout/B2 best",
+      "rollout_best": "plan1",
+      "b2_best": null,
+      "simulation_tied": [
+        "plan1",
+        "plan2",
+        "plan3",
+        "plan4",
+        "plan5",
+        "plan6",
+        "plan7"
+      ],
+      "deviated": false,
+      "potion_in_comparison": false,
+      "difference_chosen_minus_code": {
+        "rollout_expected_hp_loss": {
+          "mean": 0,
+          "se": null
+        },
+        "boss_win": {
+          "mean": 0,
+          "paired": null,
+          "se": null
+        },
+        "S": {
+          "mean": null,
+          "se": null
+        }
+      },
+      "execution": {
+        "planned_after_guards": null,
+        "planned_steps": [
+          {
+            "card_id": "NEUTRALIZE",
+            "upgraded": false,
+            "card_index": 1,
+            "target_index": 0
+          },
+          {
+            "card_id": "PREDATOR",
+            "upgraded": false,
+            "card_index": 4,
+            "target_index": 0
+          },
+          {
+            "card_id": "DEFLECT",
+            "upgraded": false,
+            "card_index": 5,
+            "target_index": null
+          }
+        ],
+        "requested_action": {
+          "action": "play_card",
+          "card_index": 1,
+          "target_index": 0
+        },
+        "dispatched_action": {
+          "action": "play_card",
+          "card_index": 1,
+          "target_index": 0
+        },
+        "dispatch_status": "returned",
+        "returned_status": "completed",
+        "whole_plan_executed": null
+      },
+      "actual_fight_outcome": null,
+      "input_tokens": 16078,
+      "latency_ms": 707,
+      "limits": "Original simulated differences only. Missing paired samples/SE and whole-plan execution remain unknown; no counterfactual or causal result.",
+      "stratum": "tied_best",
+      "sources": [
+        {
+          "path": "originals/f216997d-4011-477c-af42-cb71937c0dde-decision.jsonl.gz",
+          "raw_sha256": "dd54ee5c1c8c319fd133bc33534a42803b101e99ef023c536c6965577c11b9b4",
+          "raw_bytes": 45214,
+          "gzip_sha256": "376bf73f8c621ab93f5f665523f9f1430f45129f3d4562ffe90f1623ee5c0016",
+          "source": {
+            "path": "logs/decisions.jsonl",
+            "offset": 1320193801,
+            "length": 45214,
+            "sha256": "dd54ee5c1c8c319fd133bc33534a42803b101e99ef023c536c6965577c11b9b4"
+          }
+        },
+        {
+          "path": "originals/f216997d-4011-477c-af42-cb71937c0dde-prompt.jsonl.gz",
+          "raw_sha256": "0e9c1af85c8303da8dd98391f9fe6806577cb0167aea1345367121319896208f",
+          "raw_bytes": 46016,
+          "gzip_sha256": "567700b16c2ba4829850550165ccb7d54c311de7e96e87fb7d003e2752ecb628",
+          "source": {
+            "path": "logs/jev-prompts.jsonl",
+            "offset": 917181984,
+            "length": 46016,
+            "sha256": "0e9c1af85c8303da8dd98391f9fe6806577cb0167aea1345367121319896208f"
+          }
+        }
+      ]
+    },
+    {
+      "id": "c63dc41b-f4cb-4da1-8aa8-5c6a5d804c57",
+      "run_id": "LKC9YXKZWTKR",
+      "ts": "2026-10-13T22:57:17.375Z",
+      "floor": 35,
+      "turn": 2,
+      "attempt": null,
+      "ascension": 10,
+      "fight": "hallway",
+      "confidence": 0.43,
+      "confidence_band": "below_0.5",
+      "jev_choice": "plan1",
+      "code_first": "plan1",
+      "code_first_source": "original code-order plan1; distinct from rollout/B2 best",
+      "rollout_best": null,
+      "b2_best": null,
+      "simulation_tied": [
+        "plan1",
+        "plan4"
+      ],
+      "deviated": false,
+      "potion_in_comparison": true,
+      "difference_chosen_minus_code": {
+        "rollout_expected_hp_loss": {
+          "mean": 0,
+          "se": null
+        },
+        "boss_win": {
+          "mean": null,
+          "paired": null,
+          "se": null
+        },
+        "S": {
+          "mean": null,
+          "se": null
+        }
+      },
+      "execution": {
+        "planned_after_guards": "plan1",
+        "planned_steps": [
+          {
+            "card_id": "ADRENALINE",
+            "upgraded": false,
+            "card_index": 0,
+            "target_index": null
+          },
+          {
+            "card_id": "NOXIOUS_FUMES",
+            "upgraded": true,
+            "card_index": 1,
+            "target_index": null
+          },
+          {
+            "card_id": "FOOTWORK",
+            "upgraded": true,
+            "card_index": 3,
+            "target_index": null
+          },
+          {
+            "card_id": "DEFEND_SILENT",
+            "upgraded": false,
+            "card_index": 2,
+            "target_index": null
+          },
+          {
+            "card_id": "WISH",
+            "upgraded": false,
+            "card_index": 4,
+            "target_index": null
+          },
+          {
+            "card_id": "POTION:EXPLOSIVE_AMPOULE:0",
+            "upgraded": false,
+            "card_index": 100,
+            "target_index": null
+          }
+        ],
+        "requested_action": {
+          "action": "play_card",
+          "card_index": 0
+        },
+        "dispatched_action": {
+          "action": "play_card",
+          "card_index": 0
+        },
+        "dispatch_status": "returned",
+        "returned_status": "completed",
+        "whole_plan_executed": null
+      },
+      "actual_fight_outcome": null,
+      "input_tokens": 17363,
+      "latency_ms": 695,
+      "limits": "Original simulated differences only. Missing paired samples/SE and whole-plan execution remain unknown; no counterfactual or causal result.",
+      "stratum": "tied_best",
+      "sources": [
+        {
+          "path": "originals/c63dc41b-f4cb-4da1-8aa8-5c6a5d804c57-decision.jsonl.gz",
+          "raw_sha256": "ad92cd3603682308927afad282f326265edee0c2f44929bdcca053ca52f7ab24",
+          "raw_bytes": 46002,
+          "gzip_sha256": "3f976adc8a6c3d9e2a570b32bbdd9cf3a8a9e8ea0c95c216a106c4289b441784",
+          "source": {
+            "path": "logs/decisions.jsonl",
+            "offset": 1312451581,
+            "length": 46002,
+            "sha256": "ad92cd3603682308927afad282f326265edee0c2f44929bdcca053ca52f7ab24"
+          }
+        },
+        {
+          "path": "originals/c63dc41b-f4cb-4da1-8aa8-5c6a5d804c57-prompt.jsonl.gz",
+          "raw_sha256": "78e7af27ef4f8c30deb4aa5d6b596f6a93ca4d1c6ded397a427230c2afed3b6b",
+          "raw_bytes": 50415,
+          "gzip_sha256": "b21746df7af0c5debb684835b825839b3879d2a16a380b62f962c78c5dc0fbe4",
+          "source": {
+            "path": "logs/jev-prompts.jsonl",
+            "offset": 912603012,
+            "length": 50415,
+            "sha256": "78e7af27ef4f8c30deb4aa5d6b596f6a93ca4d1c6ded397a427230c2afed3b6b"
+          }
+        }
+      ]
+    },
+    {
+      "id": "2221aa54-f42c-45c6-a2af-2092205b1763",
+      "run_id": "Q10YYQ5DUPJA",
+      "ts": "2026-10-14T03:08:47.417Z",
+      "floor": 3,
+      "turn": 4,
+      "attempt": null,
+      "ascension": 10,
+      "fight": "hallway",
+      "confidence": 0.62,
+      "confidence_band": "0.5_to_0.8",
+      "jev_choice": "plan2",
+      "code_first": "plan1",
+      "code_first_source": "original code-order plan1; distinct from rollout/B2 best",
+      "rollout_best": null,
+      "b2_best": null,
+      "simulation_tied": [
+        "plan2",
+        "plan8"
+      ],
+      "deviated": true,
+      "potion_in_comparison": false,
+      "difference_chosen_minus_code": {
+        "rollout_expected_hp_loss": {
+          "mean": -2.4000000000000004,
+          "se": null
+        },
+        "boss_win": {
+          "mean": null,
+          "paired": null,
+          "se": null
+        },
+        "S": {
+          "mean": null,
+          "se": null
+        }
+      },
+      "execution": {
+        "planned_after_guards": "plan2",
+        "planned_steps": [
+          {
+            "card_id": "DEFEND_SILENT",
+            "upgraded": false,
+            "card_index": 0,
+            "target_index": null
+          },
+          {
+            "card_id": "STRIKE_SILENT",
+            "upgraded": false,
+            "card_index": 1,
+            "target_index": 0
+          },
+          {
+            "card_id": "SURVIVOR",
+            "upgraded": false,
+            "card_index": 2,
+            "target_index": null
+          }
+        ],
+        "requested_action": {
+          "action": "play_card",
+          "card_index": 0
+        },
+        "dispatched_action": {
+          "action": "play_card",
+          "card_index": 0
+        },
+        "dispatch_status": "returned",
+        "returned_status": "completed",
+        "whole_plan_executed": null
+      },
+      "actual_fight_outcome": null,
+      "input_tokens": 18457,
+      "latency_ms": 671,
+      "limits": "Original simulated differences only. Missing paired samples/SE and whole-plan execution remain unknown; no counterfactual or causal result.",
+      "stratum": "tied_best",
+      "sources": [
+        {
+          "path": "originals/2221aa54-f42c-45c6-a2af-2092205b1763-decision.jsonl.gz",
+          "raw_sha256": "c9b1609c1cb892c1e6a8db070b4ed46227fee76ea73f6734c4cfb51ff7420172",
+          "raw_bytes": 50634,
+          "gzip_sha256": "5083bedd8f80160b7ebba23a7e97c168c0861deb072e6a85a866da79644379a9",
+          "source": {
+            "path": "logs/decisions.jsonl",
+            "offset": 1343942784,
+            "length": 50634,
+            "sha256": "c9b1609c1cb892c1e6a8db070b4ed46227fee76ea73f6734c4cfb51ff7420172"
+          }
+        },
+        {
+          "path": "originals/2221aa54-f42c-45c6-a2af-2092205b1763-prompt.jsonl.gz",
+          "raw_sha256": "45168be92087c8698d2c0fd0fc24b587d00aa5607a543652fb16e4d87d957b21",
+          "raw_bytes": 54013,
+          "gzip_sha256": "6b0f8c73d23940644c2c2114570c0438b28204206a7286c835ad86eacff46082",
+          "source": {
+            "path": "logs/jev-prompts.jsonl",
+            "offset": 930206151,
+            "length": 54013,
+            "sha256": "45168be92087c8698d2c0fd0fc24b587d00aa5607a543652fb16e4d87d957b21"
+          }
+        }
+      ]
+    },
+    {
+      "id": "70553119-12b4-47cd-a68e-11e4db7042c8",
+      "run_id": "EEVP0QTLMSX9",
+      "ts": "2026-10-13T21:23:32.886Z",
+      "floor": 37,
+      "turn": 5,
+      "attempt": null,
+      "ascension": 10,
+      "fight": "hallway",
+      "confidence": 0.76,
+      "confidence_band": "0.5_to_0.8",
+      "jev_choice": "plan1",
+      "code_first": "plan1",
+      "code_first_source": "original code-order plan1; distinct from rollout/B2 best",
+      "rollout_best": null,
+      "b2_best": null,
+      "simulation_tied": [
+        "plan1",
+        "plan2"
+      ],
+      "deviated": false,
+      "potion_in_comparison": false,
+      "difference_chosen_minus_code": {
+        "rollout_expected_hp_loss": {
+          "mean": 0,
+          "se": null
+        },
+        "boss_win": {
+          "mean": null,
+          "paired": null,
+          "se": null
+        },
+        "S": {
+          "mean": null,
+          "se": null
+        }
+      },
+      "execution": {
+        "planned_after_guards": "plan1",
+        "planned_steps": [
+          {
+            "card_id": "NEUTRALIZE",
+            "upgraded": true,
+            "card_index": 0,
+            "target_index": 1
+          },
+          {
+            "card_id": "SNAKEBITE",
+            "upgraded": true,
+            "card_index": 1,
+            "target_index": 1
+          },
+          {
+            "card_id": "FOOTWORK",
+            "upgraded": true,
+            "card_index": 3,
+            "target_index": null
+          },
+          {
+            "card_id": "DEFEND_SILENT",
+            "upgraded": false,
+            "card_index": 2,
+            "target_index": null
+          }
+        ],
+        "requested_action": {
+          "action": "play_card",
+          "card_index": 0,
+          "target_index": 1
+        },
+        "dispatched_action": {
+          "action": "play_card",
+          "card_index": 0,
+          "target_index": 1
+        },
+        "dispatch_status": "returned",
+        "returned_status": "completed",
+        "whole_plan_executed": null
+      },
+      "actual_fight_outcome": null,
+      "input_tokens": 8007,
+      "latency_ms": 557,
+      "limits": "Original simulated differences only. Missing paired samples/SE and whole-plan execution remain unknown; no counterfactual or causal result.",
+      "stratum": "tied_best",
+      "sources": [
+        {
+          "path": "originals/70553119-12b4-47cd-a68e-11e4db7042c8-decision.jsonl.gz",
+          "raw_sha256": "a403ba3b36fadd9fda446561f07eedb728e47f820455e41812fac0caba455f4a",
+          "raw_bytes": 18718,
+          "gzip_sha256": "acd069820be6dee6ff7b9d7ae95e3584fcb5e7c44fae784aa83b96441d6852e8",
+          "source": {
+            "path": "logs/decisions.jsonl",
+            "offset": 1302057831,
+            "length": 18718,
+            "sha256": "a403ba3b36fadd9fda446561f07eedb728e47f820455e41812fac0caba455f4a"
+          }
+        },
+        {
+          "path": "originals/70553119-12b4-47cd-a68e-11e4db7042c8-prompt.jsonl.gz",
+          "raw_sha256": "51a95e7373c4314a97be5eb3bbb7e90c6fd1c8d71d54fb05e5a7d0a10cf2ad10",
+          "raw_bytes": 23350,
+          "gzip_sha256": "52a74af7bbf647fd67ef424f86167f29b25ed38bd54e951ae8936f940721b721",
+          "source": {
+            "path": "logs/jev-prompts.jsonl",
+            "offset": 905999220,
+            "length": 23350,
+            "sha256": "51a95e7373c4314a97be5eb3bbb7e90c6fd1c8d71d54fb05e5a7d0a10cf2ad10"
+          }
+        }
+      ]
+    },
+    {
+      "id": "f684ffef-6dc4-4dc7-a911-9fe611fe1ecd",
+      "run_id": "LKC9YXKZWTKR",
+      "ts": "2026-10-13T23:13:43.066Z",
+      "floor": 48,
+      "turn": 6,
+      "attempt": 1,
+      "ascension": 10,
+      "fight": "boss",
+      "confidence": 0.89,
+      "confidence_band": "at_least_0.8",
+      "jev_choice": "plan3",
+      "code_first": "plan1",
+      "code_first_source": "original code-order plan1; distinct from rollout/B2 best",
+      "rollout_best": "plan3",
+      "b2_best": null,
+      "simulation_tied": [],
+      "deviated": true,
+      "potion_in_comparison": false,
+      "difference_chosen_minus_code": {
+        "rollout_expected_hp_loss": {
+          "mean": -2,
+          "se": null
+        },
+        "boss_win": {
+          "mean": null,
+          "paired": null,
+          "se": null
+        },
+        "S": {
+          "mean": null,
+          "se": null
+        }
+      },
+      "execution": {
+        "planned_after_guards": "plan3",
+        "planned_steps": [],
+        "requested_action": {
+          "action": "end_turn"
+        },
+        "dispatched_action": {
+          "action": "end_turn"
+        },
+        "dispatch_status": "returned",
+        "returned_status": "completed",
+        "whole_plan_executed": null
+      },
+      "actual_fight_outcome": null,
+      "input_tokens": 7492,
+      "latency_ms": 387,
+      "limits": "Original simulated differences only. Missing paired samples/SE and whole-plan execution remain unknown; no counterfactual or causal result.",
+      "stratum": "agree",
+      "sources": [
+        {
+          "path": "originals/f684ffef-6dc4-4dc7-a911-9fe611fe1ecd-decision.jsonl.gz",
+          "raw_sha256": "2b16009a9f40d0370d07be1edb55e66db8470e071f4730ce73ebd9470abada08",
+          "raw_bytes": 15775,
+          "gzip_sha256": "8777418259a921ed415093a66e9574e95e1a2d17ff6d54ed787de7552651adb7",
+          "source": {
+            "path": "logs/decisions.jsonl",
+            "offset": 1315298605,
+            "length": 15775,
+            "sha256": "2b16009a9f40d0370d07be1edb55e66db8470e071f4730ce73ebd9470abada08"
+          }
+        },
+        {
+          "path": "originals/f684ffef-6dc4-4dc7-a911-9fe611fe1ecd-prompt.jsonl.gz",
+          "raw_sha256": "226c5b25098187440ba874df1b16f2a7301cca2dd0e3f727422f1aedf55db7a0",
+          "raw_bytes": 20796,
+          "gzip_sha256": "6dcd287e25b401fb0979d2bb5e15e0b327f82d24165e7dbcec739aef85d7e2a2",
+          "source": {
+            "path": "logs/jev-prompts.jsonl",
+            "offset": 914382449,
+            "length": 20796,
+            "sha256": "226c5b25098187440ba874df1b16f2a7301cca2dd0e3f727422f1aedf55db7a0"
+          }
+        }
+      ]
+    },
+    {
+      "id": "b77ae8e7-7850-4656-88fa-07f01a0bcbf0",
+      "run_id": "4YPGHGJD393H",
+      "ts": "2026-10-13T19:17:19.236Z",
+      "floor": 9,
+      "turn": 2,
+      "attempt": null,
+      "ascension": 10,
+      "fight": "hallway",
+      "confidence": 0.99,
+      "confidence_band": "at_least_0.8",
+      "jev_choice": "p0",
+      "code_first": "plan1",
+      "code_first_source": "original code-order plan1; distinct from rollout/B2 best",
+      "rollout_best": "p0",
+      "b2_best": null,
+      "simulation_tied": [],
+      "deviated": true,
+      "potion_in_comparison": true,
+      "difference_chosen_minus_code": {
+        "rollout_expected_hp_loss": {
+          "mean": -4.5,
+          "se": null
+        },
+        "boss_win": {
+          "mean": null,
+          "paired": null,
+          "se": null
+        },
+        "S": {
+          "mean": null,
+          "se": null
+        }
+      },
+      "execution": {
+        "planned_after_guards": "p0",
+        "planned_steps": [
+          {
+            "card_id": "POTION:SWIFT_POTION:0",
+            "upgraded": false,
+            "card_index": 100,
+            "target_index": null
+          },
+          {
+            "card_id": "SKEWER",
+            "upgraded": false,
+            "card_index": 301,
+            "target_index": 0
+          },
+          {
+            "card_id": "CALCULATED_GAMBLE",
+            "upgraded": false,
+            "card_index": 4,
+            "target_index": null
+          }
+        ],
+        "requested_action": {
+          "action": "use_potion",
+          "option_index": 0
+        },
+        "dispatched_action": {
+          "action": "use_potion",
+          "option_index": 0
+        },
+        "dispatch_status": "returned",
+        "returned_status": "completed",
+        "whole_plan_executed": null
+      },
+      "actual_fight_outcome": null,
+      "input_tokens": 18398,
+      "latency_ms": 705,
+      "limits": "Original simulated differences only. Missing paired samples/SE and whole-plan execution remain unknown; no counterfactual or causal result.",
+      "stratum": "agree",
+      "sources": [
+        {
+          "path": "originals/b77ae8e7-7850-4656-88fa-07f01a0bcbf0-decision.jsonl.gz",
+          "raw_sha256": "0951a8126194bddb90f93266b025436030a705ff3b832633d28afea99567ee69",
+          "raw_bytes": 49217,
+          "gzip_sha256": "17b4702f106b083c225525b7f134af7e2e89b1f8f4b95e664525b6dad0dff748",
+          "source": {
+            "path": "logs/decisions.jsonl",
+            "offset": 1284706051,
+            "length": 49217,
+            "sha256": "0951a8126194bddb90f93266b025436030a705ff3b832633d28afea99567ee69"
+          }
+        },
+        {
+          "path": "originals/b77ae8e7-7850-4656-88fa-07f01a0bcbf0-prompt.jsonl.gz",
+          "raw_sha256": "947e2b41e1b614d1c6458bdf2761805066648c30c2e62eb5ee1e282c8b1d139c",
+          "raw_bytes": 53190,
+          "gzip_sha256": "ab88ee8ee131eaec4e5592f9f7b8451cb51ef8659ecff08f9e41ee8745b96f50",
+          "source": {
+            "path": "logs/jev-prompts.jsonl",
+            "offset": 894987782,
+            "length": 53190,
+            "sha256": "947e2b41e1b614d1c6458bdf2761805066648c30c2e62eb5ee1e282c8b1d139c"
+          }
+        }
+      ]
+    },
+    {
+      "id": "5e8d1184-ccb8-4d52-a114-02a2da18a408",
+      "run_id": "EEVP0QTLMSX9",
+      "ts": "2026-10-13T20:56:55.596Z",
+      "floor": 19,
+      "turn": 2,
+      "attempt": null,
+      "ascension": 10,
+      "fight": "hallway",
+      "confidence": 0.99,
+      "confidence_band": "at_least_0.8",
+      "jev_choice": "plan2",
+      "code_first": "plan1",
+      "code_first_source": "original code-order plan1; distinct from rollout/B2 best",
+      "rollout_best": "plan2",
+      "b2_best": null,
+      "simulation_tied": [],
+      "deviated": true,
+      "potion_in_comparison": false,
+      "difference_chosen_minus_code": {
+        "rollout_expected_hp_loss": {
+          "mean": -2.8,
+          "se": null
+        },
+        "boss_win": {
+          "mean": null,
+          "paired": null,
+          "se": null
+        },
+        "S": {
+          "mean": null,
+          "se": null
+        }
+      },
+      "execution": {
+        "planned_after_guards": "plan2",
+        "planned_steps": [
+          {
+            "card_id": "SUCKER_PUNCH",
+            "upgraded": true,
+            "card_index": 2,
+            "target_index": 0
+          },
+          {
+            "card_id": "SNAKEBITE",
+            "upgraded": true,
+            "card_index": 4,
+            "target_index": 0
+          },
+          {
+            "card_id": "SKEWER",
+            "upgraded": false,
+            "card_index": 5,
+            "target_index": 0
+          }
+        ],
+        "requested_action": {
+          "action": "play_card",
+          "card_index": 2,
+          "target_index": 0
+        },
+        "dispatched_action": {
+          "action": "play_card",
+          "card_index": 2,
+          "target_index": 0
+        },
+        "dispatch_status": "returned",
+        "returned_status": "completed",
+        "whole_plan_executed": null
+      },
+      "actual_fight_outcome": null,
+      "input_tokens": 15168,
+      "latency_ms": 581,
+      "limits": "Original simulated differences only. Missing paired samples/SE and whole-plan execution remain unknown; no counterfactual or causal result.",
+      "stratum": "agree",
+      "sources": [
+        {
+          "path": "originals/5e8d1184-ccb8-4d52-a114-02a2da18a408-decision.jsonl.gz",
+          "raw_sha256": "a01932c69b32b4f7a43201cde9c01263207b64f044e2f30be24bb2ec93532ce6",
+          "raw_bytes": 38942,
+          "gzip_sha256": "b2f39a082f24c5c8024e5ea5f172ceaf998d9b6eab38bc00e5491062f91037ca",
+          "source": {
+            "path": "logs/decisions.jsonl",
+            "offset": 1297528130,
+            "length": 38942,
+            "sha256": "a01932c69b32b4f7a43201cde9c01263207b64f044e2f30be24bb2ec93532ce6"
+          }
+        },
+        {
+          "path": "originals/5e8d1184-ccb8-4d52-a114-02a2da18a408-prompt.jsonl.gz",
+          "raw_sha256": "ccf73943f9470267de5ae37f06cd34a53466932c99917758615ee2cb9f7284a7",
+          "raw_bytes": 42911,
+          "gzip_sha256": "fe52543a3c99b37e38a528e9279f0f4d63d1d43fb1345243820b9d8edd65cbad",
+          "source": {
+            "path": "logs/jev-prompts.jsonl",
+            "offset": 903058984,
+            "length": 42911,
+            "sha256": "ccf73943f9470267de5ae37f06cd34a53466932c99917758615ee2cb9f7284a7"
+          }
+        }
+      ]
+    },
+    {
+      "id": "2eed3336-00c1-4dd0-a560-6626020587d5",
+      "run_id": "1269Y20SKHUM",
+      "ts": "2026-10-13T17:20:18.507Z",
+      "floor": 45,
+      "turn": 1,
+      "attempt": null,
+      "ascension": 10,
+      "fight": "hallway",
+      "confidence": 0.85,
+      "confidence_band": "at_least_0.8",
+      "jev_choice": "plan11",
+      "code_first": "plan1",
+      "code_first_source": "original code-order plan1; distinct from rollout/B2 best",
+      "rollout_best": "plan11",
+      "b2_best": null,
+      "simulation_tied": [],
+      "deviated": true,
+      "potion_in_comparison": false,
+      "difference_chosen_minus_code": {
+        "rollout_expected_hp_loss": {
+          "mean": -21.699999999999996,
+          "se": null
+        },
+        "boss_win": {
+          "mean": null,
+          "paired": null,
+          "se": null
+        },
+        "S": {
+          "mean": null,
+          "se": null
+        }
+      },
+      "execution": {
+        "planned_after_guards": "plan11",
+        "planned_steps": [
+          {
+            "card_id": "SHIV",
+            "upgraded": false,
+            "card_index": 0,
+            "target_index": 0
+          },
+          {
+            "card_id": "SHIV",
+            "upgraded": false,
+            "card_index": 1,
+            "target_index": 0
+          },
+          {
+            "card_id": "SHIV",
+            "upgraded": false,
+            "card_index": 2,
+            "target_index": 1
+          },
+          {
+            "card_id": "BACKSTAB",
+            "upgraded": false,
+            "card_index": 3,
+            "target_index": 1
+          },
+          {
+            "card_id": "FLASH_OF_STEEL",
+            "upgraded": false,
+            "card_index": 4,
+            "target_index": 2
+          },
+          {
+            "card_id": "DAGGER_THROW",
+            "upgraded": true,
+            "card_index": 5,
+            "target_index": 1
+          },
+          {
+            "card_id": "MEMENTO_MORI",
+            "upgraded": false,
+            "card_index": 7,
+            "target_index": 1
+          },
+          {
+            "card_id": "NOXIOUS_FUMES",
+            "upgraded": false,
+            "card_index": 9,
+            "target_index": null
+          }
+        ],
+        "requested_action": {
+          "action": "play_card",
+          "card_index": 0,
+          "target_index": 0
+        },
+        "dispatched_action": {
+          "action": "play_card",
+          "card_index": 0,
+          "target_index": 0
+        },
+        "dispatch_status": "returned",
+        "returned_status": "completed",
+        "whole_plan_executed": null
+      },
+      "actual_fight_outcome": null,
+      "input_tokens": 32589,
+      "latency_ms": 922,
+      "limits": "Original simulated differences only. Missing paired samples/SE and whole-plan execution remain unknown; no counterfactual or causal result.",
+      "stratum": "agree",
+      "sources": [
+        {
+          "path": "originals/2eed3336-00c1-4dd0-a560-6626020587d5-decision.jsonl.gz",
+          "raw_sha256": "b4ae03536d8c44f9c8a4266655cf0886373a4bc034afcf759b158bb3db75f8fa",
+          "raw_bytes": 91389,
+          "gzip_sha256": "41cab346fd8627d2572d67b3bd9beb64bf17a8aefb35e5707ba3f627e803decf",
+          "source": {
+            "path": "logs/decisions.jsonl",
+            "offset": 1269528618,
+            "length": 91389,
+            "sha256": "b4ae03536d8c44f9c8a4266655cf0886373a4bc034afcf759b158bb3db75f8fa"
+          }
+        },
+        {
+          "path": "originals/2eed3336-00c1-4dd0-a560-6626020587d5-prompt.jsonl.gz",
+          "raw_sha256": "620e50119b43982f593ab1f458e17db3f6400d1e1017302210f472bd0a7f3e56",
+          "raw_bytes": 96842,
+          "gzip_sha256": "5ceeb8f8de2d1059e61f7ca9c7de0b99a75edd8b0026bd76feb0600337ebd1af",
+          "source": {
+            "path": "logs/jev-prompts.jsonl",
+            "offset": 885378872,
+            "length": 96842,
+            "sha256": "620e50119b43982f593ab1f458e17db3f6400d1e1017302210f472bd0a7f3e56"
+          }
+        }
+      ]
+    },
+    {
+      "id": "170de71d-8ac5-407f-b7d6-4b65d321a5d7",
+      "run_id": "LKC9YXKZWTKR",
+      "ts": "2026-10-13T22:23:40.240Z",
+      "floor": 12,
+      "turn": 2,
+      "attempt": null,
+      "ascension": 10,
+      "fight": "hallway",
+      "confidence": 0.52,
+      "confidence_band": "0.5_to_0.8",
+      "jev_choice": "plan5",
+      "code_first": "plan1",
+      "code_first_source": "original code-order plan1; distinct from rollout/B2 best",
+      "rollout_best": "plan5",
+      "b2_best": null,
+      "simulation_tied": [],
+      "deviated": true,
+      "potion_in_comparison": false,
+      "difference_chosen_minus_code": {
+        "rollout_expected_hp_loss": {
+          "mean": -2.5,
+          "se": null
+        },
+        "boss_win": {
+          "mean": null,
+          "paired": null,
+          "se": null
+        },
+        "S": {
+          "mean": null,
+          "se": null
+        }
+      },
+      "execution": {
+        "planned_after_guards": "plan5",
+        "planned_steps": [
+          {
+            "card_id": "NEUTRALIZE",
+            "upgraded": false,
+            "card_index": 1,
+            "target_index": 0
+          },
+          {
+            "card_id": "SURVIVOR",
+            "upgraded": false,
+            "card_index": 0,
+            "target_index": null
+          }
+        ],
+        "requested_action": {
+          "action": "play_card",
+          "card_index": 1,
+          "target_index": 0
+        },
+        "dispatched_action": {
+          "action": "play_card",
+          "card_index": 1,
+          "target_index": 0
+        },
+        "dispatch_status": "returned",
+        "returned_status": "completed",
+        "whole_plan_executed": null
+      },
+      "actual_fight_outcome": null,
+      "input_tokens": 10755,
+      "latency_ms": 565,
+      "limits": "Original simulated differences only. Missing paired samples/SE and whole-plan execution remain unknown; no counterfactual or causal result.",
+      "stratum": "agree",
+      "sources": [
+        {
+          "path": "originals/170de71d-8ac5-407f-b7d6-4b65d321a5d7-decision.jsonl.gz",
+          "raw_sha256": "a166af637b26405d16105a2e2870642604f29f0a5b7c576fd311c789a6ce4057",
+          "raw_bytes": 27183,
+          "gzip_sha256": "26499d43f2b43824e5652278cd2bd53f05262cdf412034c27796bff6f70bd27b",
+          "source": {
+            "path": "logs/decisions.jsonl",
+            "offset": 1308366064,
+            "length": 27183,
+            "sha256": "a166af637b26405d16105a2e2870642604f29f0a5b7c576fd311c789a6ce4057"
+          }
+        },
+        {
+          "path": "originals/170de71d-8ac5-407f-b7d6-4b65d321a5d7-prompt.jsonl.gz",
+          "raw_sha256": "b5601bdf3eeee6f648ac2a864c48d01bfa7e965de54e9bfe317ec73226f99ce7",
+          "raw_bytes": 30619,
+          "gzip_sha256": "03ae9b5b27946e5f3a7bae4048b7107aa686e557776f4b5aba499b2bdc03b11e",
+          "source": {
+            "path": "logs/jev-prompts.jsonl",
+            "offset": 910251036,
+            "length": 30619,
+            "sha256": "b5601bdf3eeee6f648ac2a864c48d01bfa7e965de54e9bfe317ec73226f99ce7"
+          }
+        }
+      ]
+    },
+    {
+      "id": "ad4f74ac-53a2-4ed3-a978-a3f29a4c1cf1",
+      "run_id": "EEVP0QTLMSX9",
+      "ts": "2026-10-13T20:49:52.302Z",
+      "floor": 13,
+      "turn": 7,
+      "attempt": null,
+      "ascension": 10,
+      "fight": "elite",
+      "confidence": 0.96,
+      "confidence_band": "at_least_0.8",
+      "jev_choice": "plan2",
+      "code_first": "plan1",
+      "code_first_source": "original code-order plan1; distinct from rollout/B2 best",
+      "rollout_best": "plan2",
+      "b2_best": null,
+      "simulation_tied": [],
+      "deviated": true,
+      "potion_in_comparison": false,
+      "difference_chosen_minus_code": {
+        "rollout_expected_hp_loss": {
+          "mean": -2.9,
+          "se": null
+        },
+        "boss_win": {
+          "mean": null,
+          "paired": null,
+          "se": null
+        },
+        "S": {
+          "mean": null,
+          "se": null
+        }
+      },
+      "execution": {
+        "planned_after_guards": "plan2",
+        "planned_steps": [
+          {
+            "card_id": "DEFEND_SILENT",
+            "upgraded": false,
+            "card_index": 3,
+            "target_index": null
+          },
+          {
+            "card_id": "DEFEND_SILENT",
+            "upgraded": false,
+            "card_index": 4,
+            "target_index": null
+          },
+          {
+            "card_id": "SKEWER",
+            "upgraded": false,
+            "card_index": 1,
+            "target_index": 1
+          }
+        ],
+        "requested_action": {
+          "action": "play_card",
+          "card_index": 3
+        },
+        "dispatched_action": {
+          "action": "play_card",
+          "card_index": 3
+        },
+        "dispatch_status": "returned",
+        "returned_status": "completed",
+        "whole_plan_executed": null
+      },
+      "actual_fight_outcome": null,
+      "input_tokens": 5276,
+      "latency_ms": 544,
+      "limits": "Original simulated differences only. Missing paired samples/SE and whole-plan execution remain unknown; no counterfactual or causal result.",
+      "stratum": "agree",
+      "sources": [
+        {
+          "path": "originals/ad4f74ac-53a2-4ed3-a978-a3f29a4c1cf1-decision.jsonl.gz",
+          "raw_sha256": "6b52f799def805a2062e41179a44ae719e890b0380d624e0d5aacd999d09a24f",
+          "raw_bytes": 12947,
+          "gzip_sha256": "18180224283ff41d7df65e35555315a6f85acfdebbd37f12f37e7d35fad53b7a",
+          "source": {
+            "path": "logs/decisions.jsonl",
+            "offset": 1296207904,
+            "length": 12947,
+            "sha256": "6b52f799def805a2062e41179a44ae719e890b0380d624e0d5aacd999d09a24f"
+          }
+        },
+        {
+          "path": "originals/ad4f74ac-53a2-4ed3-a978-a3f29a4c1cf1-prompt.jsonl.gz",
+          "raw_sha256": "d513e4d8dff88e4e5f3d75f576af4253da4187b251401e903cb44098a02a85b0",
+          "raw_bytes": 15087,
+          "gzip_sha256": "d3ea8442bfd34e2a88aa332daad02924cfe0efd791d00e2e6893729156b7f685",
+          "source": {
+            "path": "logs/jev-prompts.jsonl",
+            "offset": 902825876,
+            "length": 15087,
+            "sha256": "d513e4d8dff88e4e5f3d75f576af4253da4187b251401e903cb44098a02a85b0"
+          }
+        }
+      ]
+    },
+    {
+      "id": "d273625a-d220-43a9-bf6a-4f573befd411",
+      "run_id": "Q10YYQ5DUPJA",
+      "ts": "2026-10-14T04:29:08.270Z",
+      "floor": 48,
+      "turn": 1,
+      "attempt": 2,
+      "ascension": 10,
+      "fight": "boss",
+      "confidence": 0.91,
+      "confidence_band": "at_least_0.8",
+      "jev_choice": "plan1",
+      "code_first": "plan1",
+      "code_first_source": "original code-order plan1; distinct from rollout/B2 best",
+      "rollout_best": "plan1",
+      "b2_best": null,
+      "simulation_tied": [],
+      "deviated": false,
+      "potion_in_comparison": true,
+      "difference_chosen_minus_code": {
+        "rollout_expected_hp_loss": {
+          "mean": 0,
+          "se": null
+        },
+        "boss_win": {
+          "mean": 0,
+          "paired": null,
+          "se": null
+        },
+        "S": {
+          "mean": null,
+          "se": null
+        }
+      },
+      "execution": {
+        "planned_after_guards": "plan1",
+        "planned_steps": [
+          {
+            "card_id": "BACKSTAB",
+            "upgraded": false,
+            "card_index": 0,
+            "target_index": 0
+          },
+          {
+            "card_id": "POTION:LUCKY_TONIC:0",
+            "upgraded": false,
+            "card_index": 100,
+            "target_index": null
+          }
+        ],
+        "requested_action": {
+          "action": "play_card",
+          "card_index": 0,
+          "target_index": 0
+        },
+        "dispatched_action": {
+          "action": "play_card",
+          "card_index": 0,
+          "target_index": 0
+        },
+        "dispatch_status": "returned",
+        "returned_status": "completed",
+        "whole_plan_executed": null
+      },
+      "actual_fight_outcome": null,
+      "input_tokens": 9070,
+      "latency_ms": 561,
+      "limits": "Original simulated differences only. Missing paired samples/SE and whole-plan execution remain unknown; no counterfactual or causal result.",
+      "stratum": "agree",
+      "sources": [
+        {
+          "path": "originals/d273625a-d220-43a9-bf6a-4f573befd411-decision.jsonl.gz",
+          "raw_sha256": "e1100c8d044e4c90256d46cae85b24840cd449d25d7fc193ff6be6958e23ab0c",
+          "raw_bytes": 18192,
+          "gzip_sha256": "6798636895cc342787d6e96b0382b25dda054bcdbb8c6a744cbfe76a21d2b9ee",
+          "source": {
+            "path": "logs/decisions.jsonl",
+            "offset": 1353748349,
+            "length": 18192,
+            "sha256": "e1100c8d044e4c90256d46cae85b24840cd449d25d7fc193ff6be6958e23ab0c"
+          }
+        },
+        {
+          "path": "originals/d273625a-d220-43a9-bf6a-4f573befd411-prompt.jsonl.gz",
+          "raw_sha256": "bf8bf4c10c538938f9cac6bb442dea11c5bf2bf5574596622b96b0d589951304",
+          "raw_bytes": 24812,
+          "gzip_sha256": "e34c21067107b398867d17e83673c00a2d98b351120dddccdbaa0d73aded26ad",
+          "source": {
+            "path": "logs/jev-prompts.jsonl",
+            "offset": 934756795,
+            "length": 24812,
+            "sha256": "bf8bf4c10c538938f9cac6bb442dea11c5bf2bf5574596622b96b0d589951304"
+          }
+        }
+      ]
+    },
+    {
+      "id": "eece2399-baac-4b89-a7f7-020af70e1742",
+      "run_id": "WA7FRJ7UABCV",
+      "ts": "2026-10-13T13:18:55.648Z",
+      "floor": 14,
+      "turn": 1,
+      "attempt": null,
+      "ascension": 10,
+      "fight": "hallway",
+      "confidence": 0.59,
+      "confidence_band": "0.5_to_0.8",
+      "jev_choice": "plan2",
+      "code_first": "plan1",
+      "code_first_source": "original code-order plan1; distinct from rollout/B2 best",
+      "rollout_best": "plan2",
+      "b2_best": null,
+      "simulation_tied": [],
+      "deviated": true,
+      "potion_in_comparison": false,
+      "difference_chosen_minus_code": {
+        "rollout_expected_hp_loss": {
+          "mean": -5.699999999999999,
+          "se": null
+        },
+        "boss_win": {
+          "mean": null,
+          "paired": null,
+          "se": null
+        },
+        "S": {
+          "mean": null,
+          "se": null
+        }
+      },
+      "execution": {
+        "planned_after_guards": "plan2",
+        "planned_steps": [
+          {
+            "card_id": "SUCKER_PUNCH",
+            "upgraded": false,
+            "card_index": 1,
+            "target_index": 0
+          },
+          {
+            "card_id": "ECHOING_SLASH",
+            "upgraded": false,
+            "card_index": 3,
+            "target_index": null
+          },
+          {
+            "card_id": "DEFEND_SILENT",
+            "upgraded": false,
+            "card_index": 6,
+            "target_index": null
+          }
+        ],
+        "requested_action": {
+          "action": "play_card",
+          "card_index": 1,
+          "target_index": 0
+        },
+        "dispatched_action": {
+          "action": "play_card",
+          "card_index": 1,
+          "target_index": 0
+        },
+        "dispatch_status": "returned",
+        "returned_status": "completed",
+        "whole_plan_executed": null
+      },
+      "actual_fight_outcome": null,
+      "input_tokens": 9258,
+      "latency_ms": 652,
+      "limits": "Original simulated differences only. Missing paired samples/SE and whole-plan execution remain unknown; no counterfactual or causal result.",
+      "stratum": "agree",
+      "sources": [
+        {
+          "path": "originals/eece2399-baac-4b89-a7f7-020af70e1742-decision.jsonl.gz",
+          "raw_sha256": "1851993029ff8906d5ee957e5d252b1c4d0fe75bccacb6d5e80df741e7e3804c",
+          "raw_bytes": 24243,
+          "gzip_sha256": "86779bcb2c209628cb449c5dc386e40f9e29a9b981868986e012a95f1768b33c",
+          "source": {
+            "path": "logs/decisions.jsonl",
+            "offset": 1234790557,
+            "length": 24243,
+            "sha256": "1851993029ff8906d5ee957e5d252b1c4d0fe75bccacb6d5e80df741e7e3804c"
+          }
+        },
+        {
+          "path": "originals/eece2399-baac-4b89-a7f7-020af70e1742-prompt.jsonl.gz",
+          "raw_sha256": "0c27643358b7a55ae6769e1328d2d6bce576f4fcc5fced83a1e78786733a7566",
+          "raw_bytes": 26824,
+          "gzip_sha256": "7e43c9eb77d62fe0561fbeac96836fe1883e3925c83c2b893cde443f128209c9",
+          "source": {
+            "path": "logs/jev-prompts.jsonl",
+            "offset": 859992404,
+            "length": 26824,
+            "sha256": "0c27643358b7a55ae6769e1328d2d6bce576f4fcc5fced83a1e78786733a7566"
+          }
+        }
+      ]
+    }
+  ],
+  "groups": [
+    {
+      "group": [
+        "hallway",
+        "below_0.5",
+        false
+      ],
+      "n": 6,
+      "comparable": 6,
+      "deviated": 3
+    },
+    {
+      "group": [
+        "boss",
+        "0.5_to_0.8",
+        false
+      ],
+      "n": 4,
+      "comparable": 4,
+      "deviated": 4
+    },
+    {
+      "group": [
+        "hallway",
+        "0.5_to_0.8",
+        false
+      ],
+      "n": 9,
+      "comparable": 9,
+      "deviated": 3
+    },
+    {
+      "group": [
+        "hallway",
+        "at_least_0.8",
+        false
+      ],
+      "n": 3,
+      "comparable": 3,
+      "deviated": 3
+    },
+    {
+      "group": [
+        "boss",
+        "below_0.5",
+        true
+      ],
+      "n": 1,
+      "comparable": 1,
+      "deviated": 1
+    },
+    {
+      "group": [
+        "elite",
+        "below_0.5",
+        true
+      ],
+      "n": 1,
+      "comparable": 1,
+      "deviated": 1
+    },
+    {
+      "group": [
+        "hallway",
+        "below_0.5",
+        true
+      ],
+      "n": 2,
+      "comparable": 2,
+      "deviated": 1
+    },
+    {
+      "group": [
+        "elite",
+        "below_0.5",
+        false
+      ],
+      "n": 1,
+      "comparable": 1,
+      "deviated": 1
+    },
+    {
+      "group": [
+        "boss",
+        "at_least_0.8",
+        false
+      ],
+      "n": 2,
+      "comparable": 2,
+      "deviated": 1
+    },
+    {
+      "group": [
+        "hallway",
+        "at_least_0.8",
+        true
+      ],
+      "n": 1,
+      "comparable": 1,
+      "deviated": 1
+    },
+    {
+      "group": [
+        "elite",
+        "at_least_0.8",
+        false
+      ],
+      "n": 1,
+      "comparable": 1,
+      "deviated": 1
+    },
+    {
+      "group": [
+        "boss",
+        "at_least_0.8",
+        true
+      ],
+      "n": 1,
+      "comparable": 1,
+      "deviated": 0
+    }
+  ],
+  "recommendation": "Keep full until paired evidence is sufficient; tiebreak is the approved next experiment, never infer an off authorization.",
+  "limits": "Reuses the original stratified ablation sample, not a representative all-history deviation rate. No new Jev calls. Missing SE is not evidence of no significant difference."
+}

@@ -1,0 +1,50 @@
+{
+  "at": "2026-10-14T22:13:24.828796+08:00",
+  "request_id": "roy-20261014-s-decision",
+  "evidence": "b2-sign-audit.json",
+  "input": "b2-state-binding.json",
+  "rows": [
+    {
+      "candidate": "line:0",
+      "n": 600,
+      "mismatches": 5,
+      "rate": 0.008333333333333333,
+      "eligible": true
+    },
+    {
+      "candidate": "line:1",
+      "n": 600,
+      "mismatches": 8,
+      "rate": 0.013333333333333334,
+      "eligible": false
+    },
+    {
+      "candidate": "line:2",
+      "n": 600,
+      "mismatches": 4,
+      "rate": 0.006666666666666667,
+      "eligible": true
+    }
+  ],
+  "pooled": {
+    "valid": 1800,
+    "mismatches": 17,
+    "rate": 0.009444444444444445
+  },
+  "allow_P3_for_this_frozen_question": false,
+  "reason": "line:1 has 8/600 sign mismatches (1.333% > approved 1% threshold); pooled rate cannot hide an ineligible candidate in the all-candidate gate",
+  "counterexample": {
+    "case": "line:1",
+    "sample": 126,
+    "won": true,
+    "died": false,
+    "turns": 8,
+    "H": 164,
+    "M": 56,
+    "O": 153,
+    "R": 53,
+    "S": -0.0016877177700348328
+  },
+  "status": "counterexample confirmed; attribution/window cause not yet established; no game mechanics invented",
+  "fallback": "unchanged wonLoss/old ranking; P3 not enabled"
+}

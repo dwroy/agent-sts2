@@ -1,0 +1,26 @@
+{
+  "schema": "source-coverage-v1",
+  "tsc": 0,
+  "sandbox_total_files": 403,
+  "sandbox_total_cases": 3884,
+  "all_cases_have_a_pass_on_identical_source": true,
+  "first": {
+    "file": "sandbox-full.txt",
+    "rc": 1,
+    "failed_files": [
+      "tests/batch-c-illusion.test.ts"
+    ],
+    "reason": "15000ms timeout; fixed assertion/time budget unchanged"
+  },
+  "second": {
+    "file": "sandbox-full-single-worker.txt",
+    "rc": 1,
+    "failed_files": [
+      "tests/potions-jev-call.test.ts"
+    ],
+    "reason": "60000ms timeout; fixed assertion/time budget unchanged"
+  },
+  "rule": "Every case passed in at least one of the two complete unchanged-source runs; do not claim either complete invocation exited zero",
+  "source_manifest": "source-under-full-check.json",
+  "paths": "separate fixed fork check; result recorded separately"
+}

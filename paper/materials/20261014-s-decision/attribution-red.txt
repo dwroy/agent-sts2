@@ -1,0 +1,93 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/s-decision-20261014/agent
+
+ ❯ tests/boss-margin-attribution.test.ts (5 tests | 4 failed) 405ms
+   × counts actual retaliation HP removal in S, without changing legacy outcomes or action statistics 137ms
+   × caps retaliation at applied HP loss instead of counting the uncapped requested effect 100ms
+   × counts a terminal start-of-turn carry once, including a multi-turn window (HP 3) 44ms
+   × counts a terminal start-of-turn carry once, including a multi-turn window (HP 9) 104ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/boss-margin-attribution.test.ts > counts actual retaliation HP removal in S, without changing legacy outcomes or action statistics
+AssertionError: expected +0 to be 3 // Object.is equality
+
+- Expected
++ Received
+
+- 3
++ 0
+
+ ❯ tests/boss-margin-attribution.test.ts:24:34
+     22|   expect(unchanged).toEqual(old);
+     23|   expect(measured.won).toBe(true);
+     24|   expect(bossMargin?.outgoingHp).toBe(3);
+       |                                  ^
+     25|   expect(marginOf(measured)).toBeGreaterThan(0);
+     26|   // The old action-only metric is deliberately not repurposed for a n…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  tests/boss-margin-attribution.test.ts > caps retaliation at applied HP loss instead of counting the uncapped requested effect
+AssertionError: expected +0 to be 2 // Object.is equality
+
+- Expected
++ Received
+
+- 2
++ 0
+
+ ❯ tests/boss-margin-attribution.test.ts:33:43
+     31|   const measured = fightSample(slimInput({ ...passive(2, 9, 0), captur…
+     32|   expect(measured.won).toBe(true);
+     33|   expect(measured.bossMargin?.outgoingHp).toBe(2);
+       |                                           ^
+     34| });
+     35|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  tests/boss-margin-attribution.test.ts > counts a terminal start-of-turn carry once, including a multi-turn window (HP 3)
+AssertionError: expected +0 to be 3 // Object.is equality
+
+- Expected
++ Received
+
+- 3
++ 0
+
+ ❯ tests/boss-margin-attribution.test.ts:43:34
+     41|   expect(unchanged).toEqual(old);
+     42|   expect(measured.won).toBe(true);
+     43|   expect(bossMargin?.outgoingHp).toBe(hp);
+       |                                  ^
+     44|   expect(marginOf(measured)).toBeGreaterThan(0);
+     45|   expect(measured.dmgByTurn.reduce((a, b) => a + b, 0)).toBe(hp - 3);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+ FAIL  tests/boss-margin-attribution.test.ts > counts a terminal start-of-turn carry once, including a multi-turn window (HP 9)
+AssertionError: expected 6 to be 9 // Object.is equality
+
+- Expected
++ Received
+
+- 9
++ 6
+
+ ❯ tests/boss-margin-attribution.test.ts:43:34
+     41|   expect(unchanged).toEqual(old);
+     42|   expect(measured.won).toBe(true);
+     43|   expect(bossMargin?.outgoingHp).toBe(hp);
+       |                                  ^
+     44|   expect(marginOf(measured)).toBeGreaterThan(0);
+     45|   expect(measured.dmgByTurn.reduce((a, b) => a + b, 0)).toBe(hp - 3);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  4 failed | 1 passed (5)
+   Start at  22:26:06
+   Duration  5.12s (transform 3.55s, setup 2.86s, import 1.46s, tests 405ms, environment 0ms)
+

@@ -1,0 +1,41 @@
+{
+  "task": "fix-batch",
+  "channel": "watcher_direct; not a newly dispatched learner batch",
+  "base": "264efa2ead498503a46d75ac4b4307f137648ac9",
+  "fixes": [
+    {
+      "item": "P0 baseline tools and P1 readiness shadow",
+      "commit": "b0d94ce317f6ca24fd60f0940947e349722e73b5",
+      "test": "agent/tests/s-readiness-integration.test.ts",
+      "fails_without_fix": true
+    },
+    {
+      "item": "S attribution of already-applied retaliation and terminal start carry",
+      "commit": "e5d07f4a5a45ff3cf2cb44d09dfa89fa1ebf46ad",
+      "test": "agent/tests/boss-margin-attribution.test.ts",
+      "fails_without_fix": true
+    }
+  ],
+  "skipped": [
+    {
+      "item": "P1-on/P2/P3/P4/P5",
+      "reason": "Later approved stages remain open; natural shadow and remaining baseline gates not yet satisfied"
+    }
+  ],
+  "merged": "907fa494efb34f0286a0205e8976ab161d4b59f7",
+  "tests": {
+    "tsc": 0,
+    "vitest": 1,
+    "cases": 3900,
+    "fixed_coverage_complete": true,
+    "timeout_file_recheck": 0,
+    "paths": 0,
+    "note": "Full invocation rc1 retained; every fixed case passed on identical source after unchanged-budget isolated timeout rechecks"
+  },
+  "code_proposals": [],
+  "implementation_domains": [
+    "structure"
+  ],
+  "parent_closed": false,
+  "report": "paper/materials/20261014-s-decision/report.md"
+}

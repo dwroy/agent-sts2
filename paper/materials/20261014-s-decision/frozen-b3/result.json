@@ -1,0 +1,2903 @@
+{
+  "readiness": {
+    "schema": "boss-readiness-v1",
+    "samples": 1000,
+    "valid": 1000,
+    "missing": 0,
+    "reference": {
+      "myHp": 52,
+      "bossHp": 221,
+      "startTurn": 1,
+      "enemyIds": [
+        "SOUL_FYSH"
+      ],
+      "unknown": []
+    },
+    "win": {
+      "raw": 0,
+      "calibrated": 0.320875268757772,
+      "raw_interval95": [
+        2.168404344971009e-19,
+        0.0038267584855551234
+      ],
+      "calibrated_mc_interval95": [
+        0.320875268757772,
+        0.37012222909306014
+      ],
+      "interval_scope": "won_before_simulation_termination; mapped_MC_interval_is_not_calibration_uncertainty"
+    },
+    "loss": {
+      "n": 1000,
+      "bossLeftFraction": {
+        "n": 1000,
+        "mean": 0.6987737556561092,
+        "sd": 0.046077626634284864,
+        "meanSe": 0.0014571024933917854,
+        "p10": 0.6334841628959276,
+        "median": 0.7013574660633484,
+        "p90": 0.7601809954751131,
+        "min": 0.5520361990950227,
+        "max": 0.8461538461538461
+      },
+      "deathTurn": {
+        "n": 1000,
+        "mean": 12.839,
+        "sd": 1.4265742581843093,
+        "meanSe": 0.04511223907227519,
+        "p10": 12,
+        "median": 12,
+        "p90": 15,
+        "min": 7,
+        "max": 18
+      }
+    },
+    "win_side": {
+      "n": 0,
+      "hpLeftFraction": {
+        "n": 0,
+        "mean": null,
+        "sd": null,
+        "meanSe": null,
+        "p10": null,
+        "median": null,
+        "p90": null,
+        "min": null,
+        "max": null
+      },
+      "turns": {
+        "n": 0,
+        "mean": null,
+        "sd": null,
+        "meanSe": null,
+        "p10": null,
+        "median": null,
+        "p90": null,
+        "min": null,
+        "max": null
+      }
+    },
+    "terms": {
+      "A": {
+        "n": 1000,
+        "mean": 0.02365306798087607,
+        "sd": 0.003936235204342471,
+        "meanSe": 0.0001244746865186051,
+        "p10": 0.018420599008834304,
+        "median": 0.023755656108597284,
+        "p90": 0.02865761689291101,
+        "min": 0.012368024132730015,
+        "max": 0.03619909502262444
+      },
+      "D": {
+        "n": 1000,
+        "mean": 0.07878066794316778,
+        "sd": 0.008194049246837915,
+        "meanSe": 0.0002591185887959507,
+        "p10": 0.06666666666666667,
+        "median": 0.08333333333333333,
+        "p90": 0.08333333333333333,
+        "min": 0.05555555555555555,
+        "max": 0.14285714285714285
+      }
+    },
+    "gap": {
+      "offense": {
+        "n": 1000,
+        "missing": 0,
+        "p25": 11.23076923076923,
+        "p50": 12.384615384615385,
+        "p75": 13.083333333333334
+      },
+      "defense": {
+        "n": 1000,
+        "missing": 0,
+        "p25": 105.42465753424656,
+        "p50": 122.12121212121212,
+        "p75": 139.53333333333333
+      }
+    },
+    "sensitivity": [
+      {
+        "relative": 0.1,
+        "extra_dpr": 0.5227328023773609,
+        "extra_hp": 5.2,
+        "win_with_dpr": 0,
+        "win_with_hp": 0
+      },
+      {
+        "relative": 0.25,
+        "extra_dpr": 1.3068320059434022,
+        "extra_hp": 13,
+        "win_with_dpr": 0,
+        "win_with_hp": 0
+      },
+      {
+        "relative": 0.5,
+        "extra_dpr": 2.6136640118868044,
+        "extra_hp": 26,
+        "win_with_dpr": 0,
+        "win_with_hp": 0
+      }
+    ],
+    "sensitivity_denominator": 1000,
+    "trust": {
+      "rankingEligible": true,
+      "bossTrustReason": null,
+      "sign_audit": {
+        "schema": "s-sign-audit-v1",
+        "samples": 1000,
+        "valid": 1000,
+        "missing": 0,
+        "mismatches": 0,
+        "mismatch_rate": 0,
+        "passed": true,
+        "exceptions": [],
+        "groups": [
+          {
+            "healing": null,
+            "revived": false,
+            "overkill": false,
+            "samples": 1000,
+            "valid": 1000,
+            "missing": 0,
+            "mismatches": 0,
+            "mismatch_rate": 0,
+            "passed": true,
+            "exceptions": []
+          }
+        ],
+        "rankingEligible": true,
+        "limits": "Conditional simulation audit only. Missing attribution is not zero; unrecorded healing stays unknown. Not a calibration of real wins."
+      }
+    },
+    "limits": "Linear constant-rate approximation for diagnosis only, never ranking. Extra damage changes fight duration; extra HP ignores scaling and play order. Missing or censored samples are not losses. Monte Carlo intervals exclude model and calibration uncertainty."
+  },
+  "readinessMs": 7.1193400000011025,
+  "completion": {
+    "required": true,
+    "uniqueDecks": 4,
+    "originalDecks": 4,
+    "memoHit": false
+  },
+  "base": {
+    "key": "current",
+    "quantitative": {
+      "boss_relative_margin": {
+        "schema": "boss-relative-margin-v1",
+        "formula": "my_dpr/boss_hp-enemy_dpr/my_hp",
+        "unit": "reference_hp_fraction_per_turn",
+        "status": "complete_conditional_model",
+        "rankingEligible": true,
+        "samples": 1000,
+        "valid": 1000,
+        "missing": 0,
+        "reference": {
+          "myHp": 52,
+          "bossHp": 221,
+          "startTurn": 1,
+          "enemyIds": [
+            "SOUL_FYSH"
+          ],
+          "unknown": []
+        },
+        "window": "scenario_entry_through_terminal_including_setup_and_terminal_turns",
+        "incomingScope": "enemy_responses_and_held_or_end_turn_status_damage_after_mitigation; own_cost_or_healing_not_separable_is_unknown",
+        "referencesVary": false,
+        "score": {
+          "n": 1000,
+          "mean": -0.05512759996229183,
+          "sd": 0.0074089108222092645,
+          "meanSe": 0.00023429033179252098,
+          "p10": -0.06259426847662142,
+          "median": -0.0560389836407936,
+          "p90": -0.044947209653092006,
+          "min": -0.11312217194570134,
+          "max": -0.03247271759382486
+        },
+        "observedSubset": {
+          "n": 1000,
+          "mean": -0.05512759996229183,
+          "sd": 0.0074089108222092645,
+          "meanSe": 0.00023429033179252098,
+          "p10": -0.06259426847662142,
+          "median": -0.0560389836407936,
+          "p90": -0.044947209653092006,
+          "min": -0.11312217194570134,
+          "max": -0.03247271759382486
+        },
+        "myDpr": {
+          "n": 1000,
+          "mean": 5.227328023773609,
+          "sd": 0.869907980159685,
+          "meanSe": 0.027508905720611695,
+          "p10": 4.070952380952381,
+          "median": 5.25,
+          "p90": 6.333333333333333,
+          "min": 2.7333333333333334,
+          "max": 8
+        },
+        "enemyDpr": {
+          "n": 1000,
+          "mean": 4.096594733044726,
+          "sd": 0.4260905608355713,
+          "meanSe": 0.013474166617389429,
+          "p10": 3.466666666666667,
+          "median": 4.333333333333333,
+          "p90": 4.333333333333333,
+          "min": 2.888888888888889,
+          "max": 7.428571428571429
+        },
+        "paired": {
+          "difference": {
+            "n": 1000,
+            "mean": 0,
+            "sd": 0,
+            "meanSe": 0,
+            "p10": 0,
+            "median": 0,
+            "p90": 0,
+            "min": 0,
+            "max": 0
+          },
+          "unmatchedBase": 0,
+          "unmatchedOption": 0
+        },
+        "won": {
+          "n": 0,
+          "mean": null,
+          "sd": null,
+          "meanSe": null,
+          "p10": null,
+          "median": null,
+          "p90": null,
+          "min": null,
+          "max": null
+        },
+        "died": {
+          "n": 1000,
+          "mean": -0.05512759996229183,
+          "sd": 0.0074089108222092645,
+          "meanSe": 0.00023429033179252098,
+          "p10": -0.06259426847662142,
+          "median": -0.0560389836407936,
+          "p90": -0.044947209653092006,
+          "min": -0.11312217194570134,
+          "max": -0.03247271759382486
+        },
+        "limits": "同一模拟窗口含准备轮及终止轮，入口血量固定；战中题仅代表从当前回合到终止的剩余窗口。敌方DPR计减伤后的敌人响应及持有/回合末状态伤害，不仅是攻击意图；自伤/回血无法拆分时未知。S不是胜率。缺失归属、截断及连续多Boss不补零；子集均值不能作全体排序。自伤、回血、复活和死亡时序仍独立检查；模型未校准不因样本完成而可信。"
+      },
+      "core_window": {
+        "samples": 1000,
+        "valid": 0,
+        "missing": 1000,
+        "energy_paid": {
+          "n": 0,
+          "mean": null,
+          "sd": null,
+          "meanSe": null,
+          "p10": null,
+          "median": null,
+          "p90": null,
+          "min": null,
+          "max": null
+        },
+        "manual_actions": {
+          "n": 0,
+          "mean": null,
+          "sd": null,
+          "meanSe": null,
+          "p10": null,
+          "median": null,
+          "p90": null,
+          "min": null,
+          "max": null
+        },
+        "effect_resolutions": {
+          "n": 0,
+          "mean": null,
+          "sd": null,
+          "meanSe": null,
+          "p10": null,
+          "median": null,
+          "p90": null,
+          "min": null,
+          "max": null
+        },
+        "paired_energy_paid": {
+          "difference": {
+            "n": 0,
+            "mean": null,
+            "sd": null,
+            "meanSe": null,
+            "p10": null,
+            "median": null,
+            "p90": null,
+            "min": null,
+            "max": null
+          },
+          "unmatchedBase": 0,
+          "unmatchedOption": 0
+        },
+        "cards": {},
+        "combinations": {
+          "discardBandages": {},
+          "poisonDefense": null,
+          "dexterityDefense": null,
+          "shivDefense": null,
+          "limits": "仅计已验证杂技/下注各一次真实弃牌且绷带建立的具名组合，其他弃牌分支及其余三核心缺全链归属，保持未知；不相加、不当回流圈数。"
+        },
+        "limits": "公开策略首次施放分母只含实际施放的完成轨迹，并非所有合法方案中的最早可达启动；未到手/未施放样本保留在总分母。模拟支付不是金币成本、药价或最优牌组评分。"
+      },
+      "schema": "quantitative-v1",
+      "source": "boss-sim",
+      "kind": "sample_estimate",
+      "samples": 1000,
+      "wins": 0,
+      "deaths": 1000,
+      "capped": 0,
+      "time_up": 0,
+      "win_interval_scope": "won_before_simulation_termination",
+      "raw_win_mc_interval95": [
+        2.168404344971009e-19,
+        0.0038267584855551234
+      ],
+      "hp_loss": {
+        "n": 1000,
+        "mean": 52,
+        "sd": 0,
+        "meanSe": 0,
+        "p10": 52,
+        "median": 52,
+        "p90": 52,
+        "min": 52,
+        "max": 52
+      },
+      "damage_hp": {
+        "n": 1000,
+        "mean": 66.57100000000007,
+        "sd": 10.183155486176945,
+        "meanSe": 0.32201965103958424,
+        "p10": 53,
+        "median": 66,
+        "p90": 81,
+        "min": 34,
+        "max": 99
+      },
+      "first_turn_damage": {
+        "n": 1000,
+        "mean": 11.600999999999988,
+        "sd": 4.724205448233291,
+        "meanSe": 0.1493924935099388,
+        "p10": 6,
+        "median": 12,
+        "p90": 18,
+        "min": 0,
+        "max": 21
+      },
+      "later_damage": {
+        "n": 1000,
+        "mean": 54.97,
+        "sd": 9.697377951752692,
+        "meanSe": 0.30665801659036934,
+        "p10": 42,
+        "median": 55,
+        "p90": 67,
+        "min": 25,
+        "max": 87
+      },
+      "block_gained": {
+        "n": 1000,
+        "mean": 65.9370000000001,
+        "sd": 13.828385851402007,
+        "meanSe": 0.43729195654077063,
+        "p10": 51,
+        "median": 64,
+        "p90": 84,
+        "min": 8,
+        "max": 115
+      },
+      "potions_used": {
+        "n": 1000,
+        "mean": 0.9990000000000006,
+        "sd": 0.03162277660168379,
+        "meanSe": 0.001,
+        "p10": 1,
+        "median": 1,
+        "p90": 1,
+        "min": 0,
+        "max": 1
+      },
+      "hp_remaining": {
+        "n": 1000,
+        "mean": -7.096000000000002,
+        "sd": 5.520440132748409,
+        "meanSe": 0.17457164506087258,
+        "p10": -15,
+        "median": -6,
+        "p90": -1,
+        "min": -30,
+        "max": 0
+      },
+      "simulated_turns": {
+        "n": 1000,
+        "mean": 12.839,
+        "sd": 1.4265742581843093,
+        "meanSe": 0.04511223907227519,
+        "p10": 12,
+        "median": 12,
+        "p90": 15,
+        "min": 7,
+        "max": 18
+      },
+      "effective_damage_per_turn": {
+        "n": 1000,
+        "mean": 5.227328023773609,
+        "sd": 0.869907980159685,
+        "meanSe": 0.027508905720611695,
+        "p10": 4.070952380952381,
+        "median": 5.25,
+        "p90": 6.333333333333333,
+        "min": 2.7333333333333334,
+        "max": 8
+      },
+      "paired_effective_damage_per_turn": {
+        "difference": {
+          "n": 1000,
+          "mean": 0,
+          "sd": 0,
+          "meanSe": 0,
+          "p10": 0,
+          "median": 0,
+          "p90": 0,
+          "min": 0,
+          "max": 0
+        },
+        "unmatchedBase": 0,
+        "unmatchedOption": 0
+      },
+      "damage_per_turn_won": {
+        "n": 0,
+        "mean": null,
+        "sd": null,
+        "meanSe": null,
+        "p10": null,
+        "median": null,
+        "p90": null,
+        "min": null,
+        "max": null
+      },
+      "damage_per_turn_died": {
+        "n": 1000,
+        "mean": 5.227328023773609,
+        "sd": 0.869907980159685,
+        "meanSe": 0.027508905720611695,
+        "p10": 4.070952380952381,
+        "median": 5.25,
+        "p90": 6.333333333333333,
+        "min": 2.7333333333333334,
+        "max": 8
+      },
+      "damage_curve": [
+        {
+          "turn": 1,
+          "damage": {
+            "n": 1000,
+            "mean": 11.600999999999988,
+            "sd": 4.724205448233291,
+            "meanSe": 0.1493924935099388,
+            "p10": 6,
+            "median": 12,
+            "p90": 18,
+            "min": 0,
+            "max": 21
+          }
+        },
+        {
+          "turn": 2,
+          "damage": {
+            "n": 1000,
+            "mean": 6.312000000000007,
+            "sd": 4.457187736961789,
+            "meanSe": 0.14094865207770718,
+            "p10": 0,
+            "median": 6,
+            "p90": 12,
+            "min": 0,
+            "max": 21
+          }
+        },
+        {
+          "turn": 3,
+          "damage": {
+            "n": 1000,
+            "mean": 7.568999999999997,
+            "sd": 4.720542608908699,
+            "meanSe": 0.14927666436024936,
+            "p10": 0,
+            "median": 6,
+            "p90": 15,
+            "min": 0,
+            "max": 21
+          }
+        },
+        {
+          "turn": 4,
+          "damage": {
+            "n": 1000,
+            "mean": 8.89200000000002,
+            "sd": 4.552698437527249,
+            "meanSe": 0.14396896562475905,
+            "p10": 3,
+            "median": 9,
+            "p90": 15,
+            "min": 0,
+            "max": 21
+          }
+        },
+        {
+          "turn": 5,
+          "damage": {
+            "n": 1000,
+            "mean": 0.6710000000000005,
+            "sd": 0.8529281836628959,
+            "meanSe": 0.026971957409251682,
+            "p10": 0,
+            "median": 0,
+            "p90": 2,
+            "min": 0,
+            "max": 3
+          }
+        },
+        {
+          "turn": 6,
+          "damage": {
+            "n": 1000,
+            "mean": 8.672999999999984,
+            "sd": 4.7978213899738,
+            "meanSe": 0.1517204339899215,
+            "p10": 3,
+            "median": 9,
+            "p90": 15,
+            "min": 0,
+            "max": 21
+          }
+        },
+        {
+          "turn": 7,
+          "damage": {
+            "n": 1000,
+            "mean": 2.6880000000000024,
+            "sd": 3.9332081213846437,
+            "meanSe": 0.12437896175047498,
+            "p10": 0,
+            "median": 0,
+            "p90": 9,
+            "min": 0,
+            "max": 21
+          }
+        },
+        {
+          "turn": 8,
+          "damage": {
+            "n": 999,
+            "mean": 3.342342342342344,
+            "sd": 4.2733408245217195,
+            "meanSe": 0.1352025204056789,
+            "p10": 0,
+            "median": 0,
+            "p90": 9,
+            "min": 0,
+            "max": 15
+          }
+        },
+        {
+          "turn": 9,
+          "damage": {
+            "n": 999,
+            "mean": 6.432432432432434,
+            "sd": 4.95381365501837,
+            "meanSe": 0.15673172800428659,
+            "p10": 0,
+            "median": 6,
+            "p90": 12,
+            "min": 0,
+            "max": 21
+          }
+        },
+        {
+          "turn": 10,
+          "damage": {
+            "n": 999,
+            "mean": 0.39839839839839863,
+            "sd": 0.6784969813823254,
+            "meanSe": 0.021466694499098955,
+            "p10": 0,
+            "median": 0,
+            "p90": 1,
+            "min": 0,
+            "max": 3
+          }
+        },
+        {
+          "turn": 11,
+          "damage": {
+            "n": 971,
+            "mean": 6.580844490216269,
+            "sd": 4.863752285675163,
+            "meanSe": 0.15608523872255045,
+            "p10": 0,
+            "median": 6,
+            "p90": 12,
+            "min": 0,
+            "max": 21
+          }
+        },
+        {
+          "turn": 12,
+          "damage": {
+            "n": 970,
+            "mean": 1.914432989690721,
+            "sd": 3.3133401344235978,
+            "meanSe": 0.1063849402487693,
+            "p10": 0,
+            "median": 0,
+            "p90": 9,
+            "min": 0,
+            "max": 15
+          }
+        }
+      ],
+      "dpr_scope": "逐场从开战计入准备轮和终止轮后求有效伤害/回合，再汇总；胜/死分列，截断和超时不当完整DPR。逐轮曲线只含实际模拟到该轮的样本，分母递减。",
+      "turns_won_only": {
+        "n": 0,
+        "mean": null,
+        "sd": null,
+        "meanSe": null,
+        "p10": null,
+        "median": null,
+        "p90": null,
+        "min": null,
+        "max": null
+      },
+      "paired_hp_loss_difference": {
+        "n": 1000,
+        "mean": 0,
+        "sd": 0,
+        "meanSe": 0,
+        "p10": 0,
+        "median": 0,
+        "p90": 0,
+        "min": 0,
+        "max": 0
+      },
+      "paired_win_difference": {
+        "n": 1000,
+        "mean": 0,
+        "sd": 0,
+        "meanSe": 0,
+        "p10": 0,
+        "median": 0,
+        "p90": 0,
+        "min": 0,
+        "max": 0
+      },
+      "complete_combinations": null,
+      "limits": "模拟分布不是实际结果；p10–p90是样本结果波动，meanSe是均值的蒙特卡洛误差，不含机制/策略偏差。增加样本不能修复模型偏差；零次/全胜样本不证明必死/必胜。超时完成样本可能有选择偏差，capped是未结束，不能当已败；胜率区间仅指模拟终止前获胜。模拟回合数含截断样本；胜局回合仅以wins为分母。区间仅针对原始样本胜率，不是校准胜率或真实游戏置信区间。完整组合定义尚未提供。"
+    },
+    "samples": 1000,
+    "win": 0,
+    "winCal": 0.3209,
+    "diff": null,
+    "bossLeft": 154.429,
+    "hpLossMean": 52,
+    "hpLossWon": null,
+    "turns": 12,
+    "deathTurn": 12,
+    "order": null,
+    "hp": 52
+  },
+  "options": [
+    {
+      "key": "card0",
+      "quantitative": {
+        "boss_relative_margin": {
+          "schema": "boss-relative-margin-v1",
+          "formula": "my_dpr/boss_hp-enemy_dpr/my_hp",
+          "unit": "reference_hp_fraction_per_turn",
+          "status": "complete_conditional_model",
+          "rankingEligible": true,
+          "samples": 1000,
+          "valid": 1000,
+          "missing": 0,
+          "reference": {
+            "myHp": 52,
+            "bossHp": 221,
+            "startTurn": 1,
+            "enemyIds": [
+              "SOUL_FYSH"
+            ],
+            "unknown": []
+          },
+          "window": "scenario_entry_through_terminal_including_setup_and_terminal_turns",
+          "incomingScope": "enemy_responses_and_held_or_end_turn_status_damage_after_mitigation; own_cost_or_healing_not_separable_is_unknown",
+          "referencesVary": false,
+          "score": {
+            "n": 1000,
+            "mean": -0.03852324280390887,
+            "sd": 0.011323036306390586,
+            "meanSe": 0.00035806584756974434,
+            "p10": -0.049773755656108594,
+            "median": -0.03883861236802413,
+            "p90": -0.023814827706230418,
+            "min": -0.10407239819004524,
+            "max": -0.007452754857599143
+          },
+          "observedSubset": {
+            "n": 1000,
+            "mean": -0.03852324280390887,
+            "sd": 0.011323036306390586,
+            "meanSe": 0.00035806584756974434,
+            "p10": -0.049773755656108594,
+            "median": -0.03883861236802413,
+            "p90": -0.023814827706230418,
+            "min": -0.10407239819004524,
+            "max": -0.007452754857599143
+          },
+          "myDpr": {
+            "n": 1000,
+            "mean": 9.459215721288517,
+            "sd": 1.115725035254781,
+            "meanSe": 0.035282323538767715,
+            "p10": 8.075897435897435,
+            "median": 9.5,
+            "p90": 10.916666666666666,
+            "min": 6.4,
+            "max": 12.666666666666666
+          },
+          "enemyDpr": {
+            "n": 1000,
+            "mean": 4.228906442577027,
+            "sd": 0.4929558056886125,
+            "meanSe": 0.01558863131779404,
+            "p10": 3.466666666666667,
+            "median": 4.333333333333333,
+            "p90": 4.333333333333333,
+            "min": 3.0588235294117645,
+            "max": 7.428571428571429
+          },
+          "paired": {
+            "difference": {
+              "n": 1000,
+              "mean": 0.016604357158382932,
+              "sd": 0.013464799011808127,
+              "meanSe": 0.0004257943311369811,
+              "p10": 0.0010482654600301703,
+              "median": 0.01729028889662374,
+              "p90": 0.03225722241559346,
+              "min": -0.04900851743412298,
+              "max": 0.07466063348416288
+            },
+            "unmatchedBase": 0,
+            "unmatchedOption": 0
+          },
+          "won": {
+            "n": 0,
+            "mean": null,
+            "sd": null,
+            "meanSe": null,
+            "p10": null,
+            "median": null,
+            "p90": null,
+            "min": null,
+            "max": null
+          },
+          "died": {
+            "n": 1000,
+            "mean": -0.03852324280390887,
+            "sd": 0.011323036306390586,
+            "meanSe": 0.00035806584756974434,
+            "p10": -0.049773755656108594,
+            "median": -0.03883861236802413,
+            "p90": -0.023814827706230418,
+            "min": -0.10407239819004524,
+            "max": -0.007452754857599143
+          },
+          "limits": "同一模拟窗口含准备轮及终止轮，入口血量固定；战中题仅代表从当前回合到终止的剩余窗口。敌方DPR计减伤后的敌人响应及持有/回合末状态伤害，不仅是攻击意图；自伤/回血无法拆分时未知。S不是胜率。缺失归属、截断及连续多Boss不补零；子集均值不能作全体排序。自伤、回血、复活和死亡时序仍独立检查；模型未校准不因样本完成而可信。"
+        },
+        "core_window": {
+          "samples": 1000,
+          "valid": 0,
+          "missing": 1000,
+          "energy_paid": {
+            "n": 0,
+            "mean": null,
+            "sd": null,
+            "meanSe": null,
+            "p10": null,
+            "median": null,
+            "p90": null,
+            "min": null,
+            "max": null
+          },
+          "manual_actions": {
+            "n": 0,
+            "mean": null,
+            "sd": null,
+            "meanSe": null,
+            "p10": null,
+            "median": null,
+            "p90": null,
+            "min": null,
+            "max": null
+          },
+          "effect_resolutions": {
+            "n": 0,
+            "mean": null,
+            "sd": null,
+            "meanSe": null,
+            "p10": null,
+            "median": null,
+            "p90": null,
+            "min": null,
+            "max": null
+          },
+          "paired_energy_paid": {
+            "difference": {
+              "n": 0,
+              "mean": null,
+              "sd": null,
+              "meanSe": null,
+              "p10": null,
+              "median": null,
+              "p90": null,
+              "min": null,
+              "max": null
+            },
+            "unmatchedBase": 0,
+            "unmatchedOption": 0
+          },
+          "cards": {},
+          "combinations": {
+            "discardBandages": {},
+            "poisonDefense": null,
+            "dexterityDefense": null,
+            "shivDefense": null,
+            "limits": "仅计已验证杂技/下注各一次真实弃牌且绷带建立的具名组合，其他弃牌分支及其余三核心缺全链归属，保持未知；不相加、不当回流圈数。"
+          },
+          "limits": "公开策略首次施放分母只含实际施放的完成轨迹，并非所有合法方案中的最早可达启动；未到手/未施放样本保留在总分母。模拟支付不是金币成本、药价或最优牌组评分。"
+        },
+        "schema": "quantitative-v1",
+        "source": "boss-sim",
+        "kind": "sample_estimate",
+        "samples": 1000,
+        "wins": 0,
+        "deaths": 1000,
+        "capped": 0,
+        "time_up": 0,
+        "win_interval_scope": "won_before_simulation_termination",
+        "raw_win_mc_interval95": [
+          2.168404344971009e-19,
+          0.0038267584855551234
+        ],
+        "hp_loss": {
+          "n": 1000,
+          "mean": 52,
+          "sd": 0,
+          "meanSe": 0,
+          "p10": 52,
+          "median": 52,
+          "p90": 52,
+          "min": 52,
+          "max": 52
+        },
+        "damage_hp": {
+          "n": 1000,
+          "mean": 118.07699999999987,
+          "sd": 20.847054244441104,
+          "meanSe": 0.659241739175145,
+          "p10": 94,
+          "median": 116,
+          "p90": 145,
+          "min": 54,
+          "max": 193
+        },
+        "first_turn_damage": {
+          "n": 1000,
+          "mean": 10.523999999999996,
+          "sd": 4.897081314967661,
+          "meanSe": 0.15485930842350226,
+          "p10": 6,
+          "median": 12,
+          "p90": 18,
+          "min": 0,
+          "max": 21
+        },
+        "later_damage": {
+          "n": 1000,
+          "mean": 107.55300000000001,
+          "sd": 20.9472188363271,
+          "meanSe": 0.6624092216877546,
+          "p10": 83,
+          "median": 106,
+          "p90": 134,
+          "min": 45,
+          "max": 187
+        },
+        "block_gained": {
+          "n": 1000,
+          "mean": 59.61999999999995,
+          "sd": 14.184597378946034,
+          "meanSe": 0.4485563540992399,
+          "p10": 43,
+          "median": 59,
+          "p90": 79,
+          "min": 13,
+          "max": 104
+        },
+        "potions_used": {
+          "n": 1000,
+          "mean": 0.9990000000000007,
+          "sd": 0.031622776601683784,
+          "meanSe": 0.0009999999999999998,
+          "p10": 1,
+          "median": 1,
+          "p90": 1,
+          "min": 0,
+          "max": 1
+        },
+        "hp_remaining": {
+          "n": 1000,
+          "mean": -3.3039999999999976,
+          "sd": 2.8554750458965215,
+          "meanSe": 0.09029804946806848,
+          "p10": -7,
+          "median": -3,
+          "p90": 0,
+          "min": -17,
+          "max": 0
+        },
+        "simulated_turns": {
+          "n": 1000,
+          "mean": 12.459999999999985,
+          "sd": 1.4582614739910418,
+          "meanSe": 0.046114276818860836,
+          "p10": 12,
+          "median": 12,
+          "p90": 15,
+          "min": 7,
+          "max": 17
+        },
+        "effective_damage_per_turn": {
+          "n": 1000,
+          "mean": 9.459215721288517,
+          "sd": 1.115725035254781,
+          "meanSe": 0.035282323538767715,
+          "p10": 8.075897435897435,
+          "median": 9.5,
+          "p90": 10.916666666666666,
+          "min": 6.4,
+          "max": 12.666666666666666
+        },
+        "paired_effective_damage_per_turn": {
+          "difference": {
+            "n": 1000,
+            "mean": 4.231887697514905,
+            "sd": 1.379452392405135,
+            "meanSe": 0.043622114837685834,
+            "p10": 2.416666666666667,
+            "median": 4.25,
+            "p90": 6.025641025641026,
+            "min": -0.5999999999999996,
+            "max": 8.58974358974359
+          },
+          "unmatchedBase": 0,
+          "unmatchedOption": 0
+        },
+        "damage_per_turn_won": {
+          "n": 0,
+          "mean": null,
+          "sd": null,
+          "meanSe": null,
+          "p10": null,
+          "median": null,
+          "p90": null,
+          "min": null,
+          "max": null
+        },
+        "damage_per_turn_died": {
+          "n": 1000,
+          "mean": 9.459215721288517,
+          "sd": 1.115725035254781,
+          "meanSe": 0.035282323538767715,
+          "p10": 8.075897435897435,
+          "median": 9.5,
+          "p90": 10.916666666666666,
+          "min": 6.4,
+          "max": 12.666666666666666
+        },
+        "damage_curve": [
+          {
+            "turn": 1,
+            "damage": {
+              "n": 1000,
+              "mean": 10.523999999999996,
+              "sd": 4.897081314967661,
+              "meanSe": 0.15485930842350226,
+              "p10": 6,
+              "median": 12,
+              "p90": 18,
+              "min": 0,
+              "max": 21
+            }
+          },
+          {
+            "turn": 2,
+            "damage": {
+              "n": 1000,
+              "mean": 5.944000000000001,
+              "sd": 5.071743939374953,
+              "meanSe": 0.16038262557579785,
+              "p10": 0,
+              "median": 6,
+              "p90": 12.200000000000045,
+              "min": 0,
+              "max": 23
+            }
+          },
+          {
+            "turn": 3,
+            "damage": {
+              "n": 1000,
+              "mean": 8.44299999999999,
+              "sd": 5.372673135099193,
+              "meanSe": 0.16989884230510988,
+              "p10": 0,
+              "median": 9,
+              "p90": 17,
+              "min": 0,
+              "max": 24
+            }
+          },
+          {
+            "turn": 4,
+            "damage": {
+              "n": 1000,
+              "mean": 11.845999999999997,
+              "sd": 4.9267186398815745,
+              "meanSe": 0.15579652292832646,
+              "p10": 5.900000000000006,
+              "median": 11,
+              "p90": 18,
+              "min": 2,
+              "max": 25
+            }
+          },
+          {
+            "turn": 5,
+            "damage": {
+              "n": 1000,
+              "mean": 1.6290000000000004,
+              "sd": 0.8497535413760164,
+              "meanSe": 0.026871566405423434,
+              "p10": 1,
+              "median": 1,
+              "p90": 3,
+              "min": 1,
+              "max": 5
+            }
+          },
+          {
+            "turn": 6,
+            "damage": {
+              "n": 1000,
+              "mean": 13.711000000000004,
+              "sd": 5.085995118592457,
+              "meanSe": 0.16083328743250355,
+              "p10": 6,
+              "median": 13,
+              "p90": 20,
+              "min": 4,
+              "max": 27
+            }
+          },
+          {
+            "turn": 7,
+            "damage": {
+              "n": 1000,
+              "mean": 8.31199999999999,
+              "sd": 3.746824614883207,
+              "meanSe": 0.11848499776214158,
+              "p10": 5,
+              "median": 7,
+              "p90": 14.100000000000023,
+              "min": 5,
+              "max": 22
+            }
+          },
+          {
+            "turn": 8,
+            "damage": {
+              "n": 999,
+              "mean": 9.3903903903904,
+              "sd": 3.8817371774474005,
+              "meanSe": 0.12281272931279791,
+              "p10": 6,
+              "median": 8,
+              "p90": 16,
+              "min": 6,
+              "max": 27
+            }
+          },
+          {
+            "turn": 9,
+            "damage": {
+              "n": 987,
+              "mean": 14.801418439716324,
+              "sd": 4.972243241650833,
+              "meanSe": 0.1582682461671485,
+              "p10": 8,
+              "median": 14,
+              "p90": 21,
+              "min": 7,
+              "max": 30
+            }
+          },
+          {
+            "turn": 10,
+            "damage": {
+              "n": 987,
+              "mean": 1.478216818642352,
+              "sd": 0.7524683260744227,
+              "meanSe": 0.023951330712571745,
+              "p10": 1,
+              "median": 1,
+              "p90": 3,
+              "min": 0,
+              "max": 5
+            }
+          },
+          {
+            "turn": 11,
+            "damage": {
+              "n": 932,
+              "mean": 15.819742489270391,
+              "sd": 4.862416060392007,
+              "meanSe": 0.15927373373502293,
+              "p10": 10,
+              "median": 16,
+              "p90": 22,
+              "min": 9,
+              "max": 31
+            }
+          },
+          {
+            "turn": 12,
+            "damage": {
+              "n": 932,
+              "mean": 11.395922746781114,
+              "sd": 5.084559354630474,
+              "meanSe": 0.1665502792749589,
+              "p10": 6,
+              "median": 11,
+              "p90": 19,
+              "min": 0,
+              "max": 27
+            }
+          }
+        ],
+        "dpr_scope": "逐场从开战计入准备轮和终止轮后求有效伤害/回合，再汇总；胜/死分列，截断和超时不当完整DPR。逐轮曲线只含实际模拟到该轮的样本，分母递减。",
+        "turns_won_only": {
+          "n": 0,
+          "mean": null,
+          "sd": null,
+          "meanSe": null,
+          "p10": null,
+          "median": null,
+          "p90": null,
+          "min": null,
+          "max": null
+        },
+        "paired_hp_loss_difference": {
+          "n": 1000,
+          "mean": 0,
+          "sd": 0,
+          "meanSe": 0,
+          "p10": 0,
+          "median": 0,
+          "p90": 0,
+          "min": 0,
+          "max": 0
+        },
+        "paired_win_difference": {
+          "n": 1000,
+          "mean": 0,
+          "sd": 0,
+          "meanSe": 0,
+          "p10": 0,
+          "median": 0,
+          "p90": 0,
+          "min": 0,
+          "max": 0
+        },
+        "complete_combinations": null,
+        "limits": "模拟分布不是实际结果；p10–p90是样本结果波动，meanSe是均值的蒙特卡洛误差，不含机制/策略偏差。增加样本不能修复模型偏差；零次/全胜样本不证明必死/必胜。超时完成样本可能有选择偏差，capped是未结束，不能当已败；胜率区间仅指模拟终止前获胜。模拟回合数含截断样本；胜局回合仅以wins为分母。区间仅针对原始样本胜率，不是校准胜率或真实游戏置信区间。完整组合定义尚未提供。"
+      },
+      "samples": 1000,
+      "win": 0,
+      "winCal": 0.3209,
+      "diff": {
+        "raw": 0,
+        "se": 0,
+        "cal": 0,
+        "calSe": 0,
+        "hpLoss": 0,
+        "hpLossSe": 0,
+        "bossLeft": -51.506,
+        "bossLeftSe": 0.7185
+      },
+      "bossLeft": 102.923,
+      "hpLossMean": 52,
+      "hpLossWon": null,
+      "turns": 12,
+      "deathTurn": 12,
+      "order": null,
+      "hp": 52
+    },
+    {
+      "key": "card1",
+      "quantitative": {
+        "boss_relative_margin": {
+          "schema": "boss-relative-margin-v1",
+          "formula": "my_dpr/boss_hp-enemy_dpr/my_hp",
+          "unit": "reference_hp_fraction_per_turn",
+          "status": "complete_conditional_model",
+          "rankingEligible": true,
+          "samples": 1000,
+          "valid": 1000,
+          "missing": 0,
+          "reference": {
+            "myHp": 52,
+            "bossHp": 221,
+            "startTurn": 1,
+            "enemyIds": [
+              "SOUL_FYSH"
+            ],
+            "unknown": []
+          },
+          "window": "scenario_entry_through_terminal_including_setup_and_terminal_turns",
+          "incomingScope": "enemy_responses_and_held_or_end_turn_status_damage_after_mitigation; own_cost_or_healing_not_separable_is_unknown",
+          "referencesVary": false,
+          "score": {
+            "n": 1000,
+            "mean": -0.04897663247053715,
+            "sd": 0.007710909519934878,
+            "meanSe": 0.0002438403691446975,
+            "p10": -0.058069381598793365,
+            "median": -0.049773755656108594,
+            "p90": -0.03828054298642534,
+            "min": -0.09219457013574661,
+            "max": -0.027149321266968326
+          },
+          "observedSubset": {
+            "n": 1000,
+            "mean": -0.04897663247053715,
+            "sd": 0.007710909519934878,
+            "meanSe": 0.0002438403691446975,
+            "p10": -0.058069381598793365,
+            "median": -0.049773755656108594,
+            "p90": -0.03828054298642534,
+            "min": -0.09219457013574661,
+            "max": -0.027149321266968326
+          },
+          "myDpr": {
+            "n": 1000,
+            "mean": 6.527831323578378,
+            "sd": 1.0026721982297577,
+            "meanSe": 0.03170727892933884,
+            "p10": 5.166666666666667,
+            "median": 6.5,
+            "p90": 7.916666666666667,
+            "min": 3.235294117647059,
+            "max": 9.5
+          },
+          "enemyDpr": {
+            "n": 1000,
+            "mean": 4.082745199898136,
+            "sd": 0.431654157485495,
+            "meanSe": 0.013650102991351843,
+            "p10": 3.466666666666667,
+            "median": 4.333333333333333,
+            "p90": 4.333333333333333,
+            "min": 3.0588235294117645,
+            "max": 6.5
+          },
+          "paired": {
+            "difference": {
+              "n": 1000,
+              "mean": 0.006150967491754686,
+              "sd": 0.010374895778017236,
+              "meanSe": 0.0003280830114539914,
+              "p10": -0.006609661964333242,
+              "median": 0.005737324515605064,
+              "p90": 0.019766214177978886,
+              "min": -0.04362745098039217,
+              "max": 0.03843492147990418
+            },
+            "unmatchedBase": 0,
+            "unmatchedOption": 0
+          },
+          "won": {
+            "n": 0,
+            "mean": null,
+            "sd": null,
+            "meanSe": null,
+            "p10": null,
+            "median": null,
+            "p90": null,
+            "min": null,
+            "max": null
+          },
+          "died": {
+            "n": 1000,
+            "mean": -0.04897663247053715,
+            "sd": 0.007710909519934878,
+            "meanSe": 0.0002438403691446975,
+            "p10": -0.058069381598793365,
+            "median": -0.049773755656108594,
+            "p90": -0.03828054298642534,
+            "min": -0.09219457013574661,
+            "max": -0.027149321266968326
+          },
+          "limits": "同一模拟窗口含准备轮及终止轮，入口血量固定；战中题仅代表从当前回合到终止的剩余窗口。敌方DPR计减伤后的敌人响应及持有/回合末状态伤害，不仅是攻击意图；自伤/回血无法拆分时未知。S不是胜率。缺失归属、截断及连续多Boss不补零；子集均值不能作全体排序。自伤、回血、复活和死亡时序仍独立检查；模型未校准不因样本完成而可信。"
+        },
+        "core_window": {
+          "samples": 1000,
+          "valid": 0,
+          "missing": 1000,
+          "energy_paid": {
+            "n": 0,
+            "mean": null,
+            "sd": null,
+            "meanSe": null,
+            "p10": null,
+            "median": null,
+            "p90": null,
+            "min": null,
+            "max": null
+          },
+          "manual_actions": {
+            "n": 0,
+            "mean": null,
+            "sd": null,
+            "meanSe": null,
+            "p10": null,
+            "median": null,
+            "p90": null,
+            "min": null,
+            "max": null
+          },
+          "effect_resolutions": {
+            "n": 0,
+            "mean": null,
+            "sd": null,
+            "meanSe": null,
+            "p10": null,
+            "median": null,
+            "p90": null,
+            "min": null,
+            "max": null
+          },
+          "paired_energy_paid": {
+            "difference": {
+              "n": 0,
+              "mean": null,
+              "sd": null,
+              "meanSe": null,
+              "p10": null,
+              "median": null,
+              "p90": null,
+              "min": null,
+              "max": null
+            },
+            "unmatchedBase": 0,
+            "unmatchedOption": 0
+          },
+          "cards": {},
+          "combinations": {
+            "discardBandages": {},
+            "poisonDefense": null,
+            "dexterityDefense": null,
+            "shivDefense": null,
+            "limits": "仅计已验证杂技/下注各一次真实弃牌且绷带建立的具名组合，其他弃牌分支及其余三核心缺全链归属，保持未知；不相加、不当回流圈数。"
+          },
+          "limits": "公开策略首次施放分母只含实际施放的完成轨迹，并非所有合法方案中的最早可达启动；未到手/未施放样本保留在总分母。模拟支付不是金币成本、药价或最优牌组评分。"
+        },
+        "schema": "quantitative-v1",
+        "source": "boss-sim",
+        "kind": "sample_estimate",
+        "samples": 1000,
+        "wins": 0,
+        "deaths": 1000,
+        "capped": 0,
+        "time_up": 0,
+        "win_interval_scope": "won_before_simulation_termination",
+        "raw_win_mc_interval95": [
+          2.168404344971009e-19,
+          0.0038267584855551234
+        ],
+        "hp_loss": {
+          "n": 1000,
+          "mean": 52,
+          "sd": 0,
+          "meanSe": 0,
+          "p10": 52,
+          "median": 52,
+          "p90": 52,
+          "min": 52,
+          "max": 52
+        },
+        "damage_hp": {
+          "n": 1000,
+          "mean": 83.56000000000012,
+          "sd": 12.339638028186497,
+          "meanSe": 0.39021361671098354,
+          "p10": 67,
+          "median": 83,
+          "p90": 98,
+          "min": 50,
+          "max": 131
+        },
+        "first_turn_damage": {
+          "n": 1000,
+          "mean": 13.012000000000002,
+          "sd": 5.218725044595767,
+          "meanSe": 0.16503057623086423,
+          "p10": 6,
+          "median": 12,
+          "p90": 20,
+          "min": 0,
+          "max": 23
+        },
+        "later_damage": {
+          "n": 1000,
+          "mean": 70.54800000000004,
+          "sd": 12.421674363546732,
+          "meanSe": 0.392807833417301,
+          "p10": 54,
+          "median": 71,
+          "p90": 86,
+          "min": 36,
+          "max": 112
+        },
+        "block_gained": {
+          "n": 1000,
+          "mean": 58.26300000000004,
+          "sd": 12.77517264212254,
+          "meanSe": 0.40398643050978356,
+          "p10": 43,
+          "median": 56,
+          "p90": 76,
+          "min": 20,
+          "max": 105
+        },
+        "potions_used": {
+          "n": 1000,
+          "mean": 1,
+          "sd": 0,
+          "meanSe": 0,
+          "p10": 1,
+          "median": 1,
+          "p90": 1,
+          "min": 1,
+          "max": 1
+        },
+        "hp_remaining": {
+          "n": 1000,
+          "mean": -7.081000000000001,
+          "sd": 5.746778616274028,
+          "meanSe": 0.18172909636176712,
+          "p10": -15,
+          "median": -6,
+          "p90": -1,
+          "min": -31,
+          "max": 0
+        },
+        "simulated_turns": {
+          "n": 1000,
+          "mean": 12.892999999999994,
+          "sd": 1.5032667131320416,
+          "meanSe": 0.04753746744212203,
+          "p10": 12,
+          "median": 12,
+          "p90": 15,
+          "min": 8,
+          "max": 17
+        },
+        "effective_damage_per_turn": {
+          "n": 1000,
+          "mean": 6.527831323578378,
+          "sd": 1.0026721982297577,
+          "meanSe": 0.03170727892933884,
+          "p10": 5.166666666666667,
+          "median": 6.5,
+          "p90": 7.916666666666667,
+          "min": 3.235294117647059,
+          "max": 9.5
+        },
+        "paired_effective_damage_per_turn": {
+          "difference": {
+            "n": 1000,
+            "mean": 1.300503299804771,
+            "sd": 1.293901161792963,
+            "meanSe": 0.040916747384037985,
+            "p10": -0.4175641025641028,
+            "median": 1.3185897435897438,
+            "p90": 3,
+            "min": -2.416666666666667,
+            "max": 5.307692307692308
+          },
+          "unmatchedBase": 0,
+          "unmatchedOption": 0
+        },
+        "damage_per_turn_won": {
+          "n": 0,
+          "mean": null,
+          "sd": null,
+          "meanSe": null,
+          "p10": null,
+          "median": null,
+          "p90": null,
+          "min": null,
+          "max": null
+        },
+        "damage_per_turn_died": {
+          "n": 1000,
+          "mean": 6.527831323578378,
+          "sd": 1.0026721982297577,
+          "meanSe": 0.03170727892933884,
+          "p10": 5.166666666666667,
+          "median": 6.5,
+          "p90": 7.916666666666667,
+          "min": 3.235294117647059,
+          "max": 9.5
+        },
+        "damage_curve": [
+          {
+            "turn": 1,
+            "damage": {
+              "n": 1000,
+              "mean": 13.012000000000002,
+              "sd": 5.218725044595767,
+              "meanSe": 0.16503057623086423,
+              "p10": 6,
+              "median": 12,
+              "p90": 20,
+              "min": 0,
+              "max": 23
+            }
+          },
+          {
+            "turn": 2,
+            "damage": {
+              "n": 1000,
+              "mean": 8.679999999999989,
+              "sd": 4.930914105306835,
+              "meanSe": 0.15592919519420956,
+              "p10": 0,
+              "median": 8,
+              "p90": 15,
+              "min": 0,
+              "max": 23
+            }
+          },
+          {
+            "turn": 3,
+            "damage": {
+              "n": 1000,
+              "mean": 9.870000000000005,
+              "sd": 4.687117351749268,
+              "meanSe": 0.14821966492024286,
+              "p10": 6,
+              "median": 9,
+              "p90": 15,
+              "min": 0,
+              "max": 23
+            }
+          },
+          {
+            "turn": 4,
+            "damage": {
+              "n": 1000,
+              "mean": 10.223000000000022,
+              "sd": 5.204455529386079,
+              "meanSe": 0.16457933453917395,
+              "p10": 5.700000000000017,
+              "median": 9,
+              "p90": 17,
+              "min": 0,
+              "max": 23
+            }
+          },
+          {
+            "turn": 5,
+            "damage": {
+              "n": 1000,
+              "mean": 0.828,
+              "sd": 0.8872447256553306,
+              "meanSe": 0.028057141750420747,
+              "p10": 0,
+              "median": 1,
+              "p90": 2,
+              "min": 0,
+              "max": 4
+            }
+          },
+          {
+            "turn": 6,
+            "damage": {
+              "n": 1000,
+              "mean": 10.302999999999988,
+              "sd": 5.206755352549348,
+              "meanSe": 0.16465206133328938,
+              "p10": 3,
+              "median": 11,
+              "p90": 17,
+              "min": 0,
+              "max": 23
+            }
+          },
+          {
+            "turn": 7,
+            "damage": {
+              "n": 1000,
+              "mean": 4.122000000000003,
+              "sd": 4.654544100207962,
+              "meanSe": 0.1471896082635617,
+              "p10": 0,
+              "median": 3,
+              "p90": 9,
+              "min": 0,
+              "max": 23
+            }
+          },
+          {
+            "turn": 8,
+            "damage": {
+              "n": 1000,
+              "mean": 4.108000000000002,
+              "sd": 4.643910195288219,
+              "meanSe": 0.14685333466388112,
+              "p10": 0,
+              "median": 3,
+              "p90": 9,
+              "min": 0,
+              "max": 23
+            }
+          },
+          {
+            "turn": 9,
+            "damage": {
+              "n": 998,
+              "mean": 8.185370741482972,
+              "sd": 5.448648430757088,
+              "meanSe": 0.17247395238265012,
+              "p10": 0,
+              "median": 8,
+              "p90": 15,
+              "min": 0,
+              "max": 23
+            }
+          },
+          {
+            "turn": 10,
+            "damage": {
+              "n": 998,
+              "mean": 0.677354709418838,
+              "sd": 0.7937242663961235,
+              "meanSe": 0.02512490263724671,
+              "p10": 0,
+              "median": 0,
+              "p90": 2,
+              "min": 0,
+              "max": 3
+            }
+          },
+          {
+            "turn": 11,
+            "damage": {
+              "n": 981,
+              "mean": 7.3465851172273124,
+              "sd": 5.233931781949856,
+              "meanSe": 0.16710658119353172,
+              "p10": 0,
+              "median": 6,
+              "p90": 14,
+              "min": 0,
+              "max": 23
+            }
+          },
+          {
+            "turn": 12,
+            "damage": {
+              "n": 980,
+              "mean": 3.5887755102040777,
+              "sd": 4.38486538725693,
+              "meanSe": 0.14006938682989192,
+              "p10": 0,
+              "median": 0,
+              "p90": 9,
+              "min": 0,
+              "max": 17
+            }
+          }
+        ],
+        "dpr_scope": "逐场从开战计入准备轮和终止轮后求有效伤害/回合，再汇总；胜/死分列，截断和超时不当完整DPR。逐轮曲线只含实际模拟到该轮的样本，分母递减。",
+        "turns_won_only": {
+          "n": 0,
+          "mean": null,
+          "sd": null,
+          "meanSe": null,
+          "p10": null,
+          "median": null,
+          "p90": null,
+          "min": null,
+          "max": null
+        },
+        "paired_hp_loss_difference": {
+          "n": 1000,
+          "mean": 0,
+          "sd": 0,
+          "meanSe": 0,
+          "p10": 0,
+          "median": 0,
+          "p90": 0,
+          "min": 0,
+          "max": 0
+        },
+        "paired_win_difference": {
+          "n": 1000,
+          "mean": 0,
+          "sd": 0,
+          "meanSe": 0,
+          "p10": 0,
+          "median": 0,
+          "p90": 0,
+          "min": 0,
+          "max": 0
+        },
+        "complete_combinations": null,
+        "limits": "模拟分布不是实际结果；p10–p90是样本结果波动，meanSe是均值的蒙特卡洛误差，不含机制/策略偏差。增加样本不能修复模型偏差；零次/全胜样本不证明必死/必胜。超时完成样本可能有选择偏差，capped是未结束，不能当已败；胜率区间仅指模拟终止前获胜。模拟回合数含截断样本；胜局回合仅以wins为分母。区间仅针对原始样本胜率，不是校准胜率或真实游戏置信区间。完整组合定义尚未提供。"
+      },
+      "samples": 1000,
+      "win": 0,
+      "winCal": 0.3209,
+      "diff": {
+        "raw": 0,
+        "se": 0,
+        "cal": 0,
+        "calSe": 0,
+        "hpLoss": 0,
+        "hpLossSe": 0,
+        "bossLeft": -16.989,
+        "bossLeftSe": 0.4872
+      },
+      "bossLeft": 137.44,
+      "hpLossMean": 52,
+      "hpLossWon": null,
+      "turns": 12,
+      "deathTurn": 12,
+      "order": null,
+      "hp": 52
+    },
+    {
+      "key": "card2",
+      "quantitative": {
+        "boss_relative_margin": {
+          "schema": "boss-relative-margin-v1",
+          "formula": "my_dpr/boss_hp-enemy_dpr/my_hp",
+          "unit": "reference_hp_fraction_per_turn",
+          "status": "complete_conditional_model",
+          "rankingEligible": true,
+          "samples": 1000,
+          "valid": 1000,
+          "missing": 0,
+          "reference": {
+            "myHp": 52,
+            "bossHp": 221,
+            "startTurn": 1,
+            "enemyIds": [
+              "SOUL_FYSH"
+            ],
+            "unknown": []
+          },
+          "window": "scenario_entry_through_terminal_including_setup_and_terminal_turns",
+          "incomingScope": "enemy_responses_and_held_or_end_turn_status_damage_after_mitigation; own_cost_or_healing_not_separable_is_unknown",
+          "referencesVary": false,
+          "score": {
+            "n": 1000,
+            "mean": -0.05372898903731348,
+            "sd": 0.008354674490778667,
+            "meanSe": 0.0002641980050016801,
+            "p10": -0.06297134238310709,
+            "median": -0.05505279034690799,
+            "p90": -0.04193061840120664,
+            "min": -0.08009049773755657,
+            "max": -0.029544849614053764
+          },
+          "observedSubset": {
+            "n": 1000,
+            "mean": -0.05372898903731348,
+            "sd": 0.008354674490778667,
+            "meanSe": 0.0002641980050016801,
+            "p10": -0.06297134238310709,
+            "median": -0.05505279034690799,
+            "p90": -0.04193061840120664,
+            "min": -0.08009049773755657,
+            "max": -0.029544849614053764
+          },
+          "myDpr": {
+            "n": 1000,
+            "mean": 4.970029137039425,
+            "sd": 0.9067337981434913,
+            "meanSe": 0.028673440335887874,
+            "p10": 3.8211764705882354,
+            "median": 4.923076923076923,
+            "p90": 6.085,
+            "min": 2.235294117647059,
+            "max": 8.083333333333334
+          },
+          "enemyDpr": {
+            "n": 1000,
+            "mean": 3.963326050420166,
+            "sd": 0.4713607390284618,
+            "meanSe": 0.014905735349101624,
+            "p10": 3.445000000000001,
+            "median": 4,
+            "p90": 4.333333333333333,
+            "min": 3.0588235294117645,
+            "max": 5.2
+          },
+          "paired": {
+            "difference": {
+              "n": 1000,
+              "mean": 0.0013986109249783708,
+              "sd": 0.010737280822937076,
+              "meanSe": 0.0003395426327732827,
+              "p10": -0.01207390648567119,
+              "median": 0.0010703097807170207,
+              "p90": 0.015019519119865146,
+              "min": -0.029110105580693817,
+              "max": 0.0429864253393665
+            },
+            "unmatchedBase": 0,
+            "unmatchedOption": 0
+          },
+          "won": {
+            "n": 0,
+            "mean": null,
+            "sd": null,
+            "meanSe": null,
+            "p10": null,
+            "median": null,
+            "p90": null,
+            "min": null,
+            "max": null
+          },
+          "died": {
+            "n": 1000,
+            "mean": -0.05372898903731348,
+            "sd": 0.008354674490778667,
+            "meanSe": 0.0002641980050016801,
+            "p10": -0.06297134238310709,
+            "median": -0.05505279034690799,
+            "p90": -0.04193061840120664,
+            "min": -0.08009049773755657,
+            "max": -0.029544849614053764
+          },
+          "limits": "同一模拟窗口含准备轮及终止轮，入口血量固定；战中题仅代表从当前回合到终止的剩余窗口。敌方DPR计减伤后的敌人响应及持有/回合末状态伤害，不仅是攻击意图；自伤/回血无法拆分时未知。S不是胜率。缺失归属、截断及连续多Boss不补零；子集均值不能作全体排序。自伤、回血、复活和死亡时序仍独立检查；模型未校准不因样本完成而可信。"
+        },
+        "core_window": {
+          "samples": 1000,
+          "valid": 0,
+          "missing": 1000,
+          "energy_paid": {
+            "n": 0,
+            "mean": null,
+            "sd": null,
+            "meanSe": null,
+            "p10": null,
+            "median": null,
+            "p90": null,
+            "min": null,
+            "max": null
+          },
+          "manual_actions": {
+            "n": 0,
+            "mean": null,
+            "sd": null,
+            "meanSe": null,
+            "p10": null,
+            "median": null,
+            "p90": null,
+            "min": null,
+            "max": null
+          },
+          "effect_resolutions": {
+            "n": 0,
+            "mean": null,
+            "sd": null,
+            "meanSe": null,
+            "p10": null,
+            "median": null,
+            "p90": null,
+            "min": null,
+            "max": null
+          },
+          "paired_energy_paid": {
+            "difference": {
+              "n": 0,
+              "mean": null,
+              "sd": null,
+              "meanSe": null,
+              "p10": null,
+              "median": null,
+              "p90": null,
+              "min": null,
+              "max": null
+            },
+            "unmatchedBase": 0,
+            "unmatchedOption": 0
+          },
+          "cards": {},
+          "combinations": {
+            "discardBandages": {},
+            "poisonDefense": null,
+            "dexterityDefense": null,
+            "shivDefense": null,
+            "limits": "仅计已验证杂技/下注各一次真实弃牌且绷带建立的具名组合，其他弃牌分支及其余三核心缺全链归属，保持未知；不相加、不当回流圈数。"
+          },
+          "limits": "公开策略首次施放分母只含实际施放的完成轨迹，并非所有合法方案中的最早可达启动；未到手/未施放样本保留在总分母。模拟支付不是金币成本、药价或最优牌组评分。"
+        },
+        "schema": "quantitative-v1",
+        "source": "boss-sim",
+        "kind": "sample_estimate",
+        "samples": 1000,
+        "wins": 0,
+        "deaths": 1000,
+        "capped": 0,
+        "time_up": 0,
+        "win_interval_scope": "won_before_simulation_termination",
+        "raw_win_mc_interval95": [
+          2.168404344971009e-19,
+          0.0038267584855551234
+        ],
+        "hp_loss": {
+          "n": 1000,
+          "mean": 52,
+          "sd": 0,
+          "meanSe": 0,
+          "p10": 52,
+          "median": 52,
+          "p90": 52,
+          "min": 52,
+          "max": 52
+        },
+        "damage_hp": {
+          "n": 1000,
+          "mean": 65.61100000000003,
+          "sd": 11.578330481409523,
+          "meanSe": 0.3661389582340793,
+          "p10": 51,
+          "median": 66,
+          "p90": 79,
+          "min": 31,
+          "max": 111
+        },
+        "first_turn_damage": {
+          "n": 1000,
+          "mean": 10.907999999999994,
+          "sd": 5.000454033439417,
+          "meanSe": 0.15812824080644336,
+          "p10": 6,
+          "median": 12,
+          "p90": 18,
+          "min": 0,
+          "max": 21
+        },
+        "later_damage": {
+          "n": 1000,
+          "mean": 54.702999999999925,
+          "sd": 11.6013526100357,
+          "meanSe": 0.36686698186452016,
+          "p10": 41,
+          "median": 54,
+          "p90": 69.10000000000002,
+          "min": 24,
+          "max": 99
+        },
+        "block_gained": {
+          "n": 1000,
+          "mean": 72.7310000000001,
+          "sd": 14.970328979342774,
+          "meanSe": 0.47340336896746954,
+          "p10": 55,
+          "median": 70,
+          "p90": 93.10000000000002,
+          "min": 27,
+          "max": 125
+        },
+        "potions_used": {
+          "n": 1000,
+          "mean": 1,
+          "sd": 0,
+          "meanSe": 0,
+          "p10": 1,
+          "median": 1,
+          "p90": 1,
+          "min": 1,
+          "max": 1
+        },
+        "hp_remaining": {
+          "n": 1000,
+          "mean": -7.089999999999996,
+          "sd": 6.183051845984323,
+          "meanSe": 0.19552526724219085,
+          "p10": -15,
+          "median": -6,
+          "p90": -1,
+          "min": -32,
+          "max": 0
+        },
+        "simulated_turns": {
+          "n": 1000,
+          "mean": 13.321999999999987,
+          "sd": 1.7115037964448818,
+          "meanSe": 0.05412250220791019,
+          "p10": 12,
+          "median": 13,
+          "p90": 15.100000000000023,
+          "min": 10,
+          "max": 17
+        },
+        "effective_damage_per_turn": {
+          "n": 1000,
+          "mean": 4.970029137039425,
+          "sd": 0.9067337981434913,
+          "meanSe": 0.028673440335887874,
+          "p10": 3.8211764705882354,
+          "median": 4.923076923076923,
+          "p90": 6.085,
+          "min": 2.235294117647059,
+          "max": 8.083333333333334
+        },
+        "paired_effective_damage_per_turn": {
+          "difference": {
+            "n": 1000,
+            "mean": -0.2572988867341811,
+            "sd": 1.2274409844459273,
+            "meanSe": 0.03881509204288439,
+            "p10": -1.8403846153846157,
+            "median": -0.25,
+            "p90": 1.2850000000000004,
+            "min": -3.5999999999999996,
+            "max": 3.566666666666667
+          },
+          "unmatchedBase": 0,
+          "unmatchedOption": 0
+        },
+        "damage_per_turn_won": {
+          "n": 0,
+          "mean": null,
+          "sd": null,
+          "meanSe": null,
+          "p10": null,
+          "median": null,
+          "p90": null,
+          "min": null,
+          "max": null
+        },
+        "damage_per_turn_died": {
+          "n": 1000,
+          "mean": 4.970029137039425,
+          "sd": 0.9067337981434913,
+          "meanSe": 0.028673440335887874,
+          "p10": 3.8211764705882354,
+          "median": 4.923076923076923,
+          "p90": 6.085,
+          "min": 2.235294117647059,
+          "max": 8.083333333333334
+        },
+        "damage_curve": [
+          {
+            "turn": 1,
+            "damage": {
+              "n": 1000,
+              "mean": 10.907999999999994,
+              "sd": 5.000454033439417,
+              "meanSe": 0.15812824080644336,
+              "p10": 6,
+              "median": 12,
+              "p90": 18,
+              "min": 0,
+              "max": 21
+            }
+          },
+          {
+            "turn": 2,
+            "damage": {
+              "n": 1000,
+              "mean": 6.348000000000003,
+              "sd": 4.550560801000641,
+              "meanSe": 0.14390136762242253,
+              "p10": 0,
+              "median": 6,
+              "p90": 15,
+              "min": 0,
+              "max": 21
+            }
+          },
+          {
+            "turn": 3,
+            "damage": {
+              "n": 1000,
+              "mean": 8.105999999999996,
+              "sd": 4.455178179670555,
+              "meanSe": 0.14088510429641823,
+              "p10": 0,
+              "median": 9,
+              "p90": 15,
+              "min": 0,
+              "max": 21
+            }
+          },
+          {
+            "turn": 4,
+            "damage": {
+              "n": 1000,
+              "mean": 8.754000000000012,
+              "sd": 4.752691034779355,
+              "meanSe": 0.15029328684965293,
+              "p10": 3,
+              "median": 9,
+              "p90": 15,
+              "min": 0,
+              "max": 21
+            }
+          },
+          {
+            "turn": 5,
+            "damage": {
+              "n": 1000,
+              "mean": 0.5930000000000003,
+              "sd": 0.8111775446898228,
+              "meanSe": 0.02565168628002864,
+              "p10": 0,
+              "median": 0,
+              "p90": 2,
+              "min": 0,
+              "max": 3
+            }
+          },
+          {
+            "turn": 6,
+            "damage": {
+              "n": 1000,
+              "mean": 8.60100000000001,
+              "sd": 4.852148219329489,
+              "meanSe": 0.15343839917811425,
+              "p10": 0,
+              "median": 9,
+              "p90": 15,
+              "min": 0,
+              "max": 21
+            }
+          },
+          {
+            "turn": 7,
+            "damage": {
+              "n": 1000,
+              "mean": 2.072999999999999,
+              "sd": 3.397825218609135,
+              "meanSe": 0.10744866781964407,
+              "p10": 0,
+              "median": 0,
+              "p90": 9,
+              "min": 0,
+              "max": 18
+            }
+          },
+          {
+            "turn": 8,
+            "damage": {
+              "n": 1000,
+              "mean": 2.1569999999999996,
+              "sd": 3.48489533494128,
+              "meanSe": 0.11020206665709811,
+              "p10": 0,
+              "median": 0,
+              "p90": 9,
+              "min": 0,
+              "max": 21
+            }
+          },
+          {
+            "turn": 9,
+            "damage": {
+              "n": 1000,
+              "mean": 6.8250000000000055,
+              "sd": 4.920425346002678,
+              "meanSe": 0.15559751150190537,
+              "p10": 0,
+              "median": 6,
+              "p90": 12,
+              "min": 0,
+              "max": 21
+            }
+          },
+          {
+            "turn": 10,
+            "damage": {
+              "n": 1000,
+              "mean": 0.4709999999999998,
+              "sd": 0.7360031934038738,
+              "meanSe": 0.02327446456313657,
+              "p10": 0,
+              "median": 0,
+              "p90": 2,
+              "min": 0,
+              "max": 3
+            }
+          },
+          {
+            "turn": 11,
+            "damage": {
+              "n": 984,
+              "mean": 6.32012195121951,
+              "sd": 4.784061532427096,
+              "meanSe": 0.15251031134688123,
+              "p10": 0,
+              "median": 6,
+              "p90": 12,
+              "min": 0,
+              "max": 21
+            }
+          },
+          {
+            "turn": 12,
+            "damage": {
+              "n": 984,
+              "mean": 1.6981707317073162,
+              "sd": 3.2359496283580613,
+              "meanSe": 0.1031583063843532,
+              "p10": 0,
+              "median": 0,
+              "p90": 6,
+              "min": 0,
+              "max": 15
+            }
+          }
+        ],
+        "dpr_scope": "逐场从开战计入准备轮和终止轮后求有效伤害/回合，再汇总；胜/死分列，截断和超时不当完整DPR。逐轮曲线只含实际模拟到该轮的样本，分母递减。",
+        "turns_won_only": {
+          "n": 0,
+          "mean": null,
+          "sd": null,
+          "meanSe": null,
+          "p10": null,
+          "median": null,
+          "p90": null,
+          "min": null,
+          "max": null
+        },
+        "paired_hp_loss_difference": {
+          "n": 1000,
+          "mean": 0,
+          "sd": 0,
+          "meanSe": 0,
+          "p10": 0,
+          "median": 0,
+          "p90": 0,
+          "min": 0,
+          "max": 0
+        },
+        "paired_win_difference": {
+          "n": 1000,
+          "mean": 0,
+          "sd": 0,
+          "meanSe": 0,
+          "p10": 0,
+          "median": 0,
+          "p90": 0,
+          "min": 0,
+          "max": 0
+        },
+        "complete_combinations": null,
+        "limits": "模拟分布不是实际结果；p10–p90是样本结果波动，meanSe是均值的蒙特卡洛误差，不含机制/策略偏差。增加样本不能修复模型偏差；零次/全胜样本不证明必死/必胜。超时完成样本可能有选择偏差，capped是未结束，不能当已败；胜率区间仅指模拟终止前获胜。模拟回合数含截断样本；胜局回合仅以wins为分母。区间仅针对原始样本胜率，不是校准胜率或真实游戏置信区间。完整组合定义尚未提供。"
+      },
+      "samples": 1000,
+      "win": 0,
+      "winCal": 0.3209,
+      "diff": {
+        "raw": 0,
+        "se": 0,
+        "cal": 0,
+        "calSe": 0,
+        "hpLoss": 0,
+        "hpLossSe": 0,
+        "bossLeft": 0.96,
+        "bossLeftSe": 0.4718
+      },
+      "bossLeft": 155.389,
+      "hpLossMean": 52,
+      "hpLossWon": null,
+      "turns": 13,
+      "deathTurn": 13,
+      "order": null,
+      "hp": 52
+    },
+    {
+      "key": "skip",
+      "quantitative": {
+        "boss_relative_margin": {
+          "schema": "boss-relative-margin-v1",
+          "formula": "my_dpr/boss_hp-enemy_dpr/my_hp",
+          "unit": "reference_hp_fraction_per_turn",
+          "status": "complete_conditional_model",
+          "rankingEligible": true,
+          "samples": 1000,
+          "valid": 1000,
+          "missing": 0,
+          "reference": {
+            "myHp": 52,
+            "bossHp": 221,
+            "startTurn": 1,
+            "enemyIds": [
+              "SOUL_FYSH"
+            ],
+            "unknown": []
+          },
+          "window": "scenario_entry_through_terminal_including_setup_and_terminal_turns",
+          "incomingScope": "enemy_responses_and_held_or_end_turn_status_damage_after_mitigation; own_cost_or_healing_not_separable_is_unknown",
+          "referencesVary": false,
+          "score": {
+            "n": 1000,
+            "mean": -0.05512759996229183,
+            "sd": 0.0074089108222092645,
+            "meanSe": 0.00023429033179252098,
+            "p10": -0.06259426847662142,
+            "median": -0.0560389836407936,
+            "p90": -0.044947209653092006,
+            "min": -0.11312217194570134,
+            "max": -0.03247271759382486
+          },
+          "observedSubset": {
+            "n": 1000,
+            "mean": -0.05512759996229183,
+            "sd": 0.0074089108222092645,
+            "meanSe": 0.00023429033179252098,
+            "p10": -0.06259426847662142,
+            "median": -0.0560389836407936,
+            "p90": -0.044947209653092006,
+            "min": -0.11312217194570134,
+            "max": -0.03247271759382486
+          },
+          "myDpr": {
+            "n": 1000,
+            "mean": 5.227328023773609,
+            "sd": 0.869907980159685,
+            "meanSe": 0.027508905720611695,
+            "p10": 4.070952380952381,
+            "median": 5.25,
+            "p90": 6.333333333333333,
+            "min": 2.7333333333333334,
+            "max": 8
+          },
+          "enemyDpr": {
+            "n": 1000,
+            "mean": 4.096594733044726,
+            "sd": 0.4260905608355713,
+            "meanSe": 0.013474166617389429,
+            "p10": 3.466666666666667,
+            "median": 4.333333333333333,
+            "p90": 4.333333333333333,
+            "min": 2.888888888888889,
+            "max": 7.428571428571429
+          },
+          "paired": {
+            "difference": {
+              "n": 1000,
+              "mean": 0,
+              "sd": 0,
+              "meanSe": 0,
+              "p10": 0,
+              "median": 0,
+              "p90": 0,
+              "min": 0,
+              "max": 0
+            },
+            "unmatchedBase": 0,
+            "unmatchedOption": 0
+          },
+          "won": {
+            "n": 0,
+            "mean": null,
+            "sd": null,
+            "meanSe": null,
+            "p10": null,
+            "median": null,
+            "p90": null,
+            "min": null,
+            "max": null
+          },
+          "died": {
+            "n": 1000,
+            "mean": -0.05512759996229183,
+            "sd": 0.0074089108222092645,
+            "meanSe": 0.00023429033179252098,
+            "p10": -0.06259426847662142,
+            "median": -0.0560389836407936,
+            "p90": -0.044947209653092006,
+            "min": -0.11312217194570134,
+            "max": -0.03247271759382486
+          },
+          "limits": "同一模拟窗口含准备轮及终止轮，入口血量固定；战中题仅代表从当前回合到终止的剩余窗口。敌方DPR计减伤后的敌人响应及持有/回合末状态伤害，不仅是攻击意图；自伤/回血无法拆分时未知。S不是胜率。缺失归属、截断及连续多Boss不补零；子集均值不能作全体排序。自伤、回血、复活和死亡时序仍独立检查；模型未校准不因样本完成而可信。"
+        },
+        "core_window": {
+          "samples": 1000,
+          "valid": 0,
+          "missing": 1000,
+          "energy_paid": {
+            "n": 0,
+            "mean": null,
+            "sd": null,
+            "meanSe": null,
+            "p10": null,
+            "median": null,
+            "p90": null,
+            "min": null,
+            "max": null
+          },
+          "manual_actions": {
+            "n": 0,
+            "mean": null,
+            "sd": null,
+            "meanSe": null,
+            "p10": null,
+            "median": null,
+            "p90": null,
+            "min": null,
+            "max": null
+          },
+          "effect_resolutions": {
+            "n": 0,
+            "mean": null,
+            "sd": null,
+            "meanSe": null,
+            "p10": null,
+            "median": null,
+            "p90": null,
+            "min": null,
+            "max": null
+          },
+          "paired_energy_paid": {
+            "difference": {
+              "n": 0,
+              "mean": null,
+              "sd": null,
+              "meanSe": null,
+              "p10": null,
+              "median": null,
+              "p90": null,
+              "min": null,
+              "max": null
+            },
+            "unmatchedBase": 0,
+            "unmatchedOption": 0
+          },
+          "cards": {},
+          "combinations": {
+            "discardBandages": {},
+            "poisonDefense": null,
+            "dexterityDefense": null,
+            "shivDefense": null,
+            "limits": "仅计已验证杂技/下注各一次真实弃牌且绷带建立的具名组合，其他弃牌分支及其余三核心缺全链归属，保持未知；不相加、不当回流圈数。"
+          },
+          "limits": "公开策略首次施放分母只含实际施放的完成轨迹，并非所有合法方案中的最早可达启动；未到手/未施放样本保留在总分母。模拟支付不是金币成本、药价或最优牌组评分。"
+        },
+        "schema": "quantitative-v1",
+        "source": "boss-sim",
+        "kind": "sample_estimate",
+        "samples": 1000,
+        "wins": 0,
+        "deaths": 1000,
+        "capped": 0,
+        "time_up": 0,
+        "win_interval_scope": "won_before_simulation_termination",
+        "raw_win_mc_interval95": [
+          2.168404344971009e-19,
+          0.0038267584855551234
+        ],
+        "hp_loss": {
+          "n": 1000,
+          "mean": 52,
+          "sd": 0,
+          "meanSe": 0,
+          "p10": 52,
+          "median": 52,
+          "p90": 52,
+          "min": 52,
+          "max": 52
+        },
+        "damage_hp": {
+          "n": 1000,
+          "mean": 66.57100000000007,
+          "sd": 10.183155486176945,
+          "meanSe": 0.32201965103958424,
+          "p10": 53,
+          "median": 66,
+          "p90": 81,
+          "min": 34,
+          "max": 99
+        },
+        "first_turn_damage": {
+          "n": 1000,
+          "mean": 11.600999999999988,
+          "sd": 4.724205448233291,
+          "meanSe": 0.1493924935099388,
+          "p10": 6,
+          "median": 12,
+          "p90": 18,
+          "min": 0,
+          "max": 21
+        },
+        "later_damage": {
+          "n": 1000,
+          "mean": 54.97,
+          "sd": 9.697377951752692,
+          "meanSe": 0.30665801659036934,
+          "p10": 42,
+          "median": 55,
+          "p90": 67,
+          "min": 25,
+          "max": 87
+        },
+        "block_gained": {
+          "n": 1000,
+          "mean": 65.9370000000001,
+          "sd": 13.828385851402007,
+          "meanSe": 0.43729195654077063,
+          "p10": 51,
+          "median": 64,
+          "p90": 84,
+          "min": 8,
+          "max": 115
+        },
+        "potions_used": {
+          "n": 1000,
+          "mean": 0.9990000000000006,
+          "sd": 0.03162277660168379,
+          "meanSe": 0.001,
+          "p10": 1,
+          "median": 1,
+          "p90": 1,
+          "min": 0,
+          "max": 1
+        },
+        "hp_remaining": {
+          "n": 1000,
+          "mean": -7.096000000000002,
+          "sd": 5.520440132748409,
+          "meanSe": 0.17457164506087258,
+          "p10": -15,
+          "median": -6,
+          "p90": -1,
+          "min": -30,
+          "max": 0
+        },
+        "simulated_turns": {
+          "n": 1000,
+          "mean": 12.839,
+          "sd": 1.4265742581843093,
+          "meanSe": 0.04511223907227519,
+          "p10": 12,
+          "median": 12,
+          "p90": 15,
+          "min": 7,
+          "max": 18
+        },
+        "effective_damage_per_turn": {
+          "n": 1000,
+          "mean": 5.227328023773609,
+          "sd": 0.869907980159685,
+          "meanSe": 0.027508905720611695,
+          "p10": 4.070952380952381,
+          "median": 5.25,
+          "p90": 6.333333333333333,
+          "min": 2.7333333333333334,
+          "max": 8
+        },
+        "paired_effective_damage_per_turn": {
+          "difference": {
+            "n": 1000,
+            "mean": 0,
+            "sd": 0,
+            "meanSe": 0,
+            "p10": 0,
+            "median": 0,
+            "p90": 0,
+            "min": 0,
+            "max": 0
+          },
+          "unmatchedBase": 0,
+          "unmatchedOption": 0
+        },
+        "damage_per_turn_won": {
+          "n": 0,
+          "mean": null,
+          "sd": null,
+          "meanSe": null,
+          "p10": null,
+          "median": null,
+          "p90": null,
+          "min": null,
+          "max": null
+        },
+        "damage_per_turn_died": {
+          "n": 1000,
+          "mean": 5.227328023773609,
+          "sd": 0.869907980159685,
+          "meanSe": 0.027508905720611695,
+          "p10": 4.070952380952381,
+          "median": 5.25,
+          "p90": 6.333333333333333,
+          "min": 2.7333333333333334,
+          "max": 8
+        },
+        "damage_curve": [
+          {
+            "turn": 1,
+            "damage": {
+              "n": 1000,
+              "mean": 11.600999999999988,
+              "sd": 4.724205448233291,
+              "meanSe": 0.1493924935099388,
+              "p10": 6,
+              "median": 12,
+              "p90": 18,
+              "min": 0,
+              "max": 21
+            }
+          },
+          {
+            "turn": 2,
+            "damage": {
+              "n": 1000,
+              "mean": 6.312000000000007,
+              "sd": 4.457187736961789,
+              "meanSe": 0.14094865207770718,
+              "p10": 0,
+              "median": 6,
+              "p90": 12,
+              "min": 0,
+              "max": 21
+            }
+          },
+          {
+            "turn": 3,
+            "damage": {
+              "n": 1000,
+              "mean": 7.568999999999997,
+              "sd": 4.720542608908699,
+              "meanSe": 0.14927666436024936,
+              "p10": 0,
+              "median": 6,
+              "p90": 15,
+              "min": 0,
+              "max": 21
+            }
+          },
+          {
+            "turn": 4,
+            "damage": {
+              "n": 1000,
+              "mean": 8.89200000000002,
+              "sd": 4.552698437527249,
+              "meanSe": 0.14396896562475905,
+              "p10": 3,
+              "median": 9,
+              "p90": 15,
+              "min": 0,
+              "max": 21
+            }
+          },
+          {
+            "turn": 5,
+            "damage": {
+              "n": 1000,
+              "mean": 0.6710000000000005,
+              "sd": 0.8529281836628959,
+              "meanSe": 0.026971957409251682,
+              "p10": 0,
+              "median": 0,
+              "p90": 2,
+              "min": 0,
+              "max": 3
+            }
+          },
+          {
+            "turn": 6,
+            "damage": {
+              "n": 1000,
+              "mean": 8.672999999999984,
+              "sd": 4.7978213899738,
+              "meanSe": 0.1517204339899215,
+              "p10": 3,
+              "median": 9,
+              "p90": 15,
+              "min": 0,
+              "max": 21
+            }
+          },
+          {
+            "turn": 7,
+            "damage": {
+              "n": 1000,
+              "mean": 2.6880000000000024,
+              "sd": 3.9332081213846437,
+              "meanSe": 0.12437896175047498,
+              "p10": 0,
+              "median": 0,
+              "p90": 9,
+              "min": 0,
+              "max": 21
+            }
+          },
+          {
+            "turn": 8,
+            "damage": {
+              "n": 999,
+              "mean": 3.342342342342344,
+              "sd": 4.2733408245217195,
+              "meanSe": 0.1352025204056789,
+              "p10": 0,
+              "median": 0,
+              "p90": 9,
+              "min": 0,
+              "max": 15
+            }
+          },
+          {
+            "turn": 9,
+            "damage": {
+              "n": 999,
+              "mean": 6.432432432432434,
+              "sd": 4.95381365501837,
+              "meanSe": 0.15673172800428659,
+              "p10": 0,
+              "median": 6,
+              "p90": 12,
+              "min": 0,
+              "max": 21
+            }
+          },
+          {
+            "turn": 10,
+            "damage": {
+              "n": 999,
+              "mean": 0.39839839839839863,
+              "sd": 0.6784969813823254,
+              "meanSe": 0.021466694499098955,
+              "p10": 0,
+              "median": 0,
+              "p90": 1,
+              "min": 0,
+              "max": 3
+            }
+          },
+          {
+            "turn": 11,
+            "damage": {
+              "n": 971,
+              "mean": 6.580844490216269,
+              "sd": 4.863752285675163,
+              "meanSe": 0.15608523872255045,
+              "p10": 0,
+              "median": 6,
+              "p90": 12,
+              "min": 0,
+              "max": 21
+            }
+          },
+          {
+            "turn": 12,
+            "damage": {
+              "n": 970,
+              "mean": 1.914432989690721,
+              "sd": 3.3133401344235978,
+              "meanSe": 0.1063849402487693,
+              "p10": 0,
+              "median": 0,
+              "p90": 9,
+              "min": 0,
+              "max": 15
+            }
+          }
+        ],
+        "dpr_scope": "逐场从开战计入准备轮和终止轮后求有效伤害/回合，再汇总；胜/死分列，截断和超时不当完整DPR。逐轮曲线只含实际模拟到该轮的样本，分母递减。",
+        "turns_won_only": {
+          "n": 0,
+          "mean": null,
+          "sd": null,
+          "meanSe": null,
+          "p10": null,
+          "median": null,
+          "p90": null,
+          "min": null,
+          "max": null
+        },
+        "paired_hp_loss_difference": {
+          "n": 1000,
+          "mean": 0,
+          "sd": 0,
+          "meanSe": 0,
+          "p10": 0,
+          "median": 0,
+          "p90": 0,
+          "min": 0,
+          "max": 0
+        },
+        "paired_win_difference": {
+          "n": 1000,
+          "mean": 0,
+          "sd": 0,
+          "meanSe": 0,
+          "p10": 0,
+          "median": 0,
+          "p90": 0,
+          "min": 0,
+          "max": 0
+        },
+        "complete_combinations": null,
+        "limits": "模拟分布不是实际结果；p10–p90是样本结果波动，meanSe是均值的蒙特卡洛误差，不含机制/策略偏差。增加样本不能修复模型偏差；零次/全胜样本不证明必死/必胜。超时完成样本可能有选择偏差，capped是未结束，不能当已败；胜率区间仅指模拟终止前获胜。模拟回合数含截断样本；胜局回合仅以wins为分母。区间仅针对原始样本胜率，不是校准胜率或真实游戏置信区间。完整组合定义尚未提供。"
+      },
+      "samples": 1000,
+      "win": 0,
+      "winCal": 0.3209,
+      "diff": null,
+      "bossLeft": 154.429,
+      "hpLossMean": 52,
+      "hpLossWon": null,
+      "turns": 12,
+      "deathTurn": 12,
+      "order": null,
+      "hp": 52
+    }
+  ],
+  "samples": 1000,
+  "requested": 1000,
+  "timedOut": false,
+  "elapsedMs": 23325,
+  "workers": 4,
+  "orders": 1,
+  "order": null
+}

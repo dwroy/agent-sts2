@@ -1,0 +1,167 @@
+{
+  "at": "2026-10-14T23:21:16+08:00",
+  "kind": "legacy-strategy-continuation-watcher-consumption-and-native-notification",
+  "owner_session": "01a139d6-cfec-78e1-8739-e21ac426a354",
+  "legacy_parent_reference": "roy-20261011-silent-core-cycle-quantitative-learning",
+  "parent_batch": "20261012-024317-strategy-proposal",
+  "continuation_batch": "20261014-215252-strategy-proposal",
+  "new_parent_or_proposal_created": false,
+  "new_learning_or_P0_dispatch": false,
+  "ack_cli_called": false,
+  "ack_cli_boundary": "User states this unregistered legacy strategy continuation is unsupported; independent actual receipt only.",
+  "inputs": [
+    {
+      "path": "learner/runs/20261014-215252-strategy-proposal/report.md",
+      "sha256": "8a2cb53656991c3ef3c208bf9ccec7eeb10a3a445f3688ef9d71bbf10ce6d042",
+      "bytes": 18100,
+      "watcher_read_entire_file": true
+    },
+    {
+      "path": "learner/runs/20261014-215252-strategy-proposal/p1p2-consumer-input.json",
+      "sha256": "b88299215bccc07ccd0a143d93675bcd5609c38bb5d80d1a9d7526949a2d943c",
+      "bytes": 8294,
+      "watcher_read_entire_file": true
+    }
+  ],
+  "claims_read": {
+    "at": "2026-10-14 22:51:16 CST",
+    "claims": [
+      {
+        "id": "C01",
+        "old": "原报告切点2a62/51e0未合入，12冲突。",
+        "update": "历史原件仍正确；冻结R345祖先核验两个commit及后续41e406均true，不能把旧未合入切点当现生产状态。",
+        "evidence": [
+          "旧report.md/result.json",
+          "frozen-ancestry.json",
+          "core-cycle-quantitative-progress.json"
+        ],
+        "ledger_or_experience": [
+          "silent-0021/0194/0376/0385"
+        ],
+        "next": "沿原ops核现源码，不merge旧分支、不重做接口。"
+      },
+      {
+        "id": "C02",
+        "old": "单卡首施放/符号齐全可能被误称完整核心启动/通关率。",
+        "update": "R2所有核心trace valid0—1000；没有具名弃牌对记录或完整四核心启动。LKC基线步法首施放n375、core valid384/1000，只是条件单卡时点。",
+        "evidence": [
+          "r2-candidate-evidence.jsonl",
+          "core-window.ts",
+          "旧54G到手未建原帧"
+        ],
+        "ledger_or_experience": [
+          "silent-0385/0141",
+          "四原核心条目"
+        ],
+        "next": "P1保留qualification/start=null；后续取得支付、身份、真实后继、alive-through-start。"
+      },
+      {
+        "id": "C03",
+        "old": "完成更多旧模型样本/首DPR名次变化可被误当策略提高或生产仍11秒停算。",
+        "update": "54/54仅冻结R2参照；26键配对DPR差跨seed变号，2个2SE键是同局同牌一项对比；旧4/27、5/27未改，R345 required闸另行已发布。",
+        "evidence": [
+          "r2-summary.json",
+          "paired-sign-counterexample.json",
+          "build-sim-facts.ts:549"
+        ],
+        "ledger_or_experience": [
+          "silent-0021/0376"
+        ],
+        "next": "已完成参照不重跑；独立现模型校准和逐条件决策，不能据均值排序宣实盘收益。"
+      },
+      {
+        "id": "C04",
+        "old": "hpLoss或意图伤害可以直接当enemyDPR；均值DPR/HP可拼S。",
+        "update": "旧raw样本hpLoss70、逐轮loss86且归属缺失；所有778行S保持null。需同样本同窗/入口/目标/分账后才算S与deltaS。",
+        "evidence": [
+          "raw-model-accounting-witness.json",
+          "margin-record-boundary.json",
+          "boss-margin批准定义"
+        ],
+        "ledger_or_experience": [
+          "silent-0463旧校准条目，未修改"
+        ],
+        "next": "交061302 R3核真实敌伤/自伤回血/复活及窗口。"
+      },
+      {
+        "id": "C05",
+        "old": "S符号等于胜负/均值S较大就更好若无条件使用。",
+        "update": "恒定速率及正入口HP时可作连续kill-clock条件判断；时序/自伤回血复活另核。抽象反例：均值S0.89且9/10胜，高于S0.02但10/10胜；不是游戏数值或策略建议。",
+        "evidence": [
+          "fixed-offline-validation.json",
+          "boss-margin批准math_boundary",
+          "docs/v5-s-decision-plan.md"
+        ],
+        "ledger_or_experience": [],
+        "next": "原ops→watcher→Roy转交条件差异；本轮不修改P0实现、知识或代填ACK。"
+      },
+      {
+        "id": "C06",
+        "old": "Jev token降低27.566%、五题改选/模型排名相合可以证游戏收益。",
+        "update": "32分层题/13关联局/144含原样与倒序重复；模型名次非真值。6个并集分歧仅历史首动作完成，0实盘反事实；弃牌pending、未建立毒、药水/随机落点分别保留。",
+        "evidence": [
+          "jev-summary.json",
+          "jev-differences.json",
+          "原pilot analysis.json"
+        ],
+        "ledger_or_experience": [
+          "silent-0194/0376/0385/0141及原四条机制"
+        ],
+        "next": "R342已有契约不再实现；P0 Jev-v-code统计由watcher；真实动作校准由原R3 owner。"
+      },
+      {
+        "id": "C07",
+        "old": "原r2子项completed/固定消费者live读回等于宽P1/P2消化或自然采用。",
+        "update": "原V4-R313三题15/15限定经验交付核实且不重开；原明确P1/P2、模型冲突、完整实例/自然效果仍未知。",
+        "evidence": [
+          "parent-and-limited-child-boundary.json",
+          "原r2 final-verification/consumer-receipt"
+        ],
+        "ledger_or_experience": [
+          "silent-0440",
+          "原r2五条限定经验"
+        ],
+        "next": "保持子项completed；本轮只把未完字段交现P0/P1/P2与原效果链。"
+      },
+      {
+        "id": "C08",
+        "old": "旧7e1193固定校准撤可信可以关闭新R345校准或父要求。",
+        "update": "旧210输入质量失败/可信限制有范围；冻结新R3回执尚未实际开始，不是新结果。",
+        "evidence": [
+          "calibration-boundary.json",
+          "calibration-pending-receipt.json"
+        ],
+        "ledger_or_experience": [
+          "silent-0463"
+        ],
+        "next": "原owner按R3输入做真实动作校准；本轮不重放/拟合/轮询或替代验收。"
+      }
+    ],
+    "knowledge_or_ledger_changed": false,
+    "notification_route": "本报告及handoff packet由原ops接收→现watcher核接线/异议→Roy；本轮未写通知ACK或声称已送达。"
+  },
+  "watcher_received": true,
+  "watcher_notified_roy_in_current_native_conversation": true,
+  "roy_read_or_acknowledged": null,
+  "other_role_ack": null,
+  "native_message": {
+    "path": "/home/dw/.codex/sessions/2026/10/14/rollout-2026-10-14T17-55-41-01a139d6-cfec-78e1-8739-e21ac426a354.jsonl",
+    "offset": 8808301,
+    "bytes": 1679,
+    "sha256": "cd33e92f66b3c06f63332c6e68c730539e6d433508e85062f4d3ba4e0a04558d",
+    "timestamp": "2026-10-14T15:19:47.274Z",
+    "platform_message_id": null,
+    "excerpt": "legacy-215252-native-notification.jsonl",
+    "text": "Roy，两份原件已读完，SHA 均与你给出的一致。这里有三点需要明确纠正口径：\n\n- 旧 R2 的 778 行缺伤害归属，S 必须继续为 `null`。我本轮修复的是当前模拟器漏计已发生反伤和终止轮伤害的问题，不能据此补齐旧样本，也不能替代 R3 的真实动作校准。\n- “S 符号等于胜负”有恒定速率、正入口 HP 等条件；均值 S 较大也不保证胜率更高。`0.89／9胜` 对 `0.02／10胜` 是抽象数学反例，不是游戏实测。后续排序仍须保留胜率优先及可信度限制。\n- 原批完成仅冻结本次证据边界。54/54 参照、V4-R313 的 15/15 限定读回，都不关闭原宽 P1/P2/R3；单卡首施放不是完整核心启动，Jev 省 token 也不证明游戏收益。旧“未合入”和“R3 未启动”只适用于各自历史切点。\n\n我会独立保存本人读包和本条会话告知的回执；其他角色 ACK 保持未填写。"
+  },
+  "boundaries": {
+    "legacy_778_S": null,
+    "legacy_P1_P2_R3_closed": false,
+    "limited_r2_child_reopened": false,
+    "new_S_attribution_fix_is_separate": true,
+    "V5_S_phases_not_legacy_P1_P2": true,
+    "abstract_numbers_are_game_measurements": false,
+    "R3_pending_is_original_frozen_cut_only": true,
+    "knowledge_or_ledger_modified_by_consumption": false
+  }
+}

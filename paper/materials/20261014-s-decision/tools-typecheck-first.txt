@@ -1,0 +1,73 @@
+tools/boss-loss-backtest.ts(49,7): error TS2322: Type '{ fight: Fight; oldLoss: number; newLoss: number | null; newSource: string; realSurvive: number; oldSurvive: number; newSurvive: number; }[]' is not assignable to type 'Row[]'.
+  Type '{ fight: Fight; oldLoss: number; newLoss: number | null; newSource: string; realSurvive: number; oldSurvive: number; newSurvive: number; }' is not assignable to type 'Row'.
+    Types of property 'newLoss' are incompatible.
+      Type 'number | null' is not assignable to type 'number'.
+        Type 'null' is not assignable to type 'number'.
+tools/boss-loss-backtest.ts(60,69): error TS2345: Argument of type 'number | null' is not assignable to parameter of type 'number'.
+  Type 'null' is not assignable to type 'number'.
+tools/boss-sim/pairs.ts(81,13): error TS7034: Variable 'results' implicitly has type 'any[]' in some locations where its type cannot be determined.
+tools/boss-sim/pairs.ts(92,34): error TS7005: Variable 'results' implicitly has an 'any[]' type.
+tools/boss-sim/pairs.ts(93,50): error TS7005: Variable 'results' implicitly has an 'any[]' type.
+tools/boss-sim/pairs.ts(93,94): error TS7005: Variable 'results' implicitly has an 'any[]' type.
+tools/combat-latency-replay.ts(259,26): error TS2339: Property 'rollout' does not exist on type 'never'.
+tools/combat-latency-replay.ts(259,53): error TS2339: Property 'rollout' does not exist on type 'never'.
+tools/combat-latency-replay.ts(260,35): error TS2339: Property 'mcShown' does not exist on type 'never'.
+tools/combat-latency-replay.ts(260,58): error TS7006: Parameter 'sum' implicitly has an 'any' type.
+tools/combat-latency-replay.ts(260,63): error TS7006: Parameter 'mc' implicitly has an 'any' type.
+tools/combat-latency-replay.ts(263,31): error TS2339: Property 'byPlan' does not exist on type 'BossLineSim'.
+  Property 'byPlan' does not exist on type '{ available: false; reason: string; ms: number; }'.
+tools/combat-latency-replay.ts(284,112): error TS2339: Property 'byPlan' does not exist on type 'BossLineSim'.
+  Property 'byPlan' does not exist on type '{ available: false; reason: string; ms: number; }'.
+tools/deepseek-prompt-replay.ts(85,65): error TS2339: Property 'floor' does not exist on type 'never'.
+tools/deepseek-prompt-replay.ts(85,86): error TS2339: Property 'label' does not exist on type 'never'.
+tools/deepseek-prompt-replay.ts(85,107): error TS2339: Property 'message' does not exist on type 'never'.
+tools/deepseek-prompt-replay.ts(85,155): error TS2339: Property 'message' does not exist on type 'never'.
+tools/deepseek-prompt-replay.ts(86,26): error TS2339: Property 'floor' does not exist on type 'never'.
+tools/deepseek-prompt-replay.ts(86,42): error TS2339: Property 'label' does not exist on type 'never'.
+tools/deepseek-prompt-replay.ts(86,69): error TS2339: Property 'message' does not exist on type 'never'.
+tools/deepseek-reward-prompt-dump.ts(37,72): error TS2345: Argument of type 'string[] | Record<string, string | null> | { true?: string | undefined; false?: string | undefined; } | undefined' is not assignable to parameter of type 'Record<string, string | null>'.
+  Type 'undefined' is not assignable to type 'Record<string, string | null>'.
+tools/double-boss/validate.ts(44,9): error TS7022: 'row' implicitly has type 'any' because it does not have a type annotation and is referenced directly or indirectly in its own initializer.
+tools/jev-context-eval.ts(144,26): error TS2339: Property 'run_id' does not exist on type 'GameState'.
+tools/jev-context-eval.ts(150,20): error TS2339: Property 'run_id' does not exist on type 'GameState'.
+tools/jev-context-eval.ts(151,18): error TS2339: Property 'run_id' does not exist on type 'GameState'.
+tools/living-death-moves-replay.ts(156,24): error TS7053: Element implicitly has an 'any' type because expression of type '"run_id"' can't be used to index type '{ group: string; }'.
+  Property 'run_id' does not exist on type '{ group: string; }'.
+tools/living-death-moves-replay.ts(157,143): error TS7053: Element implicitly has an 'any' type because expression of type '"first_off"' can't be used to index type '{ group: string; }'.
+  Property 'first_off' does not exist on type '{ group: string; }'.
+tools/living-death-moves-replay.ts(157,177): error TS7053: Element implicitly has an 'any' type because expression of type '"last_off"' can't be used to index type '{ group: string; }'.
+  Property 'last_off' does not exist on type '{ group: string; }'.
+tools/living-death-moves-replay.ts(158,155): error TS7053: Element implicitly has an 'any' type because expression of type '"floor"' can't be used to index type '{ group: string; }'.
+  Property 'floor' does not exist on type '{ group: string; }'.
+tools/living-death-moves-replay.ts(158,214): error TS7053: Element implicitly has an 'any' type because expression of type '"first_ts"' can't be used to index type '{ group: string; }'.
+  Property 'first_ts' does not exist on type '{ group: string; }'.
+tools/living-death-moves-replay.ts(202,30): error TS2339: Property 'plans' does not exist on type 'never'.
+tools/living-death-moves-replay.ts(205,32): error TS2339: Property 'rollout' does not exist on type 'never'.
+tools/living-death-moves-replay.ts(205,59): error TS2339: Property 'rollout' does not exist on type 'never'.
+tools/living-death-moves-replay.ts(208,66): error TS7006: Parameter 'candidate' implicitly has an 'any' type.
+tools/living-death-moves-replay.ts(208,124): error TS7006: Parameter 'entry' implicitly has an 'any' type.
+tools/living-death-moves-replay.ts(209,99): error TS7006: Parameter 'entry' implicitly has an 'any' type.
+tools/living-death-moves-replay.ts(225,59): error TS7053: Element implicitly has an 'any' type because expression of type '"floor"' can't be used to index type '{ group: string; }'.
+  Property 'floor' does not exist on type '{ group: string; }'.
+tools/living-death-moves-replay.ts(225,117): error TS7053: Element implicitly has an 'any' type because expression of type '"ascension"' can't be used to index type '{ group: string; }'.
+  Property 'ascension' does not exist on type '{ group: string; }'.
+tools/living-death-moves-replay.ts(226,54): error TS7053: Element implicitly has an 'any' type because expression of type '"outcome"' can't be used to index type '{ group: string; }'.
+  Property 'outcome' does not exist on type '{ group: string; }'.
+tools/mech-move-replay.ts(131,44): error TS6133: 'plans' is declared but its value is never read.
+tools/passive-pieces-replay.ts(127,14): error TS2322: Type 'number | null' is not assignable to type 'number'.
+  Type 'null' is not assignable to type 'number'.
+tools/passive-pieces-replay.ts(128,13): error TS2322: Type 'number | null' is not assignable to type 'number'.
+  Type 'null' is not assignable to type 'number'.
+tools/potion-card-cost-replay.ts(82,32): error TS2339: Property 'mcShown' does not exist on type 'never'.
+tools/potion-card-cost-replay.ts(82,52): error TS7006: Parameter 'entry' implicitly has an 'any' type.
+tools/potion-card-cost-replay.ts(86,140): error TS7006: Parameter 'step' implicitly has an 'any' type.
+tools/potion-mc-measure.ts(97,52): error TS7053: Element implicitly has an 'any' type because expression of type 'string' can't be used to index type 'string[] | Record<string, string | null> | { true?: string | undefined; false?: string | undefined; }'.
+  No index signature with a parameter of type 'string' was found on type 'string[] | Record<string, string | null> | { true?: string | undefined; false?: string | undefined; }'.
+tools/potion-mc-measure.ts(101,37): error TS7053: Element implicitly has an 'any' type because expression of type 'string' can't be used to index type 'string[] | Record<string, string | null> | { true?: string | undefined; false?: string | undefined; }'.
+  No index signature with a parameter of type 'string' was found on type 'string[] | Record<string, string | null> | { true?: string | undefined; false?: string | undefined; }'.
+tools/potion-mc-measure.ts(104,59): error TS7053: Element implicitly has an 'any' type because expression of type 'string' can't be used to index type 'string[] | Record<string, string | null> | { true?: string | undefined; false?: string | undefined; }'.
+  No index signature with a parameter of type 'string' was found on type 'string[] | Record<string, string | null> | { true?: string | undefined; false?: string | undefined; }'.
+tools/target-options-measure.ts(72,62): error TS7053: Element implicitly has an 'any' type because expression of type 'string' can't be used to index type 'string[] | Record<string, string | null> | { true?: string | undefined; false?: string | undefined; }'.
+  No index signature with a parameter of type 'string' was found on type 'string[] | Record<string, string | null> | { true?: string | undefined; false?: string | undefined; }'.
+../eval/boss-clock-recompute.ts(76,46): error TS2345: Argument of type 'number | null' is not assignable to parameter of type 'number'.
+  Type 'null' is not assignable to type 'number'.

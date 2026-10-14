@@ -1,0 +1,163 @@
+{
+  "binding": {
+    "source": "logdb --raw states 12472126259",
+    "raw_sha256": "f44fa5730a431eb202e890e8a96ea04291a6390271773f20123528336287ac6c",
+    "run_id": "E5L15SK6ZHZB",
+    "floor": 17,
+    "turn": 5,
+    "case": "203cd3a9-945c-4800-a314-e2e94276a890",
+    "scope": "Original ablation case state via read-only indexed query; current-model B2 sign audit only"
+  },
+  "started_model": "b0d94ce31 + attribution correction; old sample artifacts preserved",
+  "samples": 600,
+  "serial": true,
+  "ms": 19281.355701,
+  "decision": {
+    "kind": "ask",
+    "label": "combat/plan-choice",
+    "state": {
+      "run_brief": {
+        "character": "静默猎手",
+        "act": "1",
+        "floor": 17,
+        "hp": "56/70 (80%)",
+        "gold": 200,
+        "ascension": 10,
+        "deck": "23 cards | 10 attacks / 10 skills / 2 powers | 2 upgraded | 1 curses/statuses | avg cost 0.83",
+        "relics": [
+          "蛇之戒指",
+          "金色珍珠",
+          "铜质鳞片",
+          "五轮书",
+          "异蛇头骨"
+        ],
+        "relic_effects": [
+          "蛇之戒指: 在每场战斗开始时，额外抽?(数值未知)张牌。",
+          "金色珍珠: 拾起时，获得?(数值未知)金币。",
+          "铜质鳞片: 在每场战斗开始时，获得?(数值未知)点荆棘。",
+          "五轮书: 你每将?(数值未知)张牌加入你的牌组时，回复?(数值未知)点生命。",
+          "异蛇头骨: 每当你给予敌人中毒时，所给予的中毒层数增加?(数值未知)层。"
+        ],
+        "potions": [],
+        "notes": [],
+        "relic_effects_note": "?(数值未知) marks a value the mod does not expose; the effect text around it is accurate"
+      },
+      "fight": "boss",
+      "situation": {
+        "turn": 5,
+        "hp": "56/70",
+        "block": 0,
+        "energy": 3,
+        "incoming_if_i_do_nothing": 15
+      },
+      "player": {
+        "hp": 56,
+        "max_hp": 70,
+        "block": 0,
+        "energy": 3,
+        "stars": 0,
+        "powers": [
+          "荆棘 3 (当被攻击命中时，反击造成伤害。)",
+          "敏捷 4 (敏捷会增加从卡牌中获得的格挡。)",
+          "毒雾 2 (在你的回合开始时，给予所有敌人2层中毒。)"
+        ],
+        "cards_played_this_turn": 0,
+        "attacks_played_this_turn": 0,
+        "skills_played_this_turn": 0
+      },
+      "enemies": [
+        {
+          "name": "灵魂异鱼",
+          "hp": "164/221",
+          "block": 0,
+          "intents": "Attack 15, Debuff ",
+          "powers": [
+            "INTANGIBLE_POWER 1 = 无实体: 将本回合受到的所有伤害和生命减少效果降低为1。 (while it lasts every hit and HP loss is reduced to 1: block or set up now, save big hits for the turns without it)",
+            "POISON_POWER 3 = 中毒 [debuff]: 中毒的生物会在自身回合开始时失去生命。中毒层数每回合减少1。"
+          ]
+        }
+      ],
+      "note": "选项数字是代码模型参考，受未建模效果、抽牌重算和推演范围限制。依据当轮代价、成长与后续证据选择整场打法；simulation_reference分列这些限制，无未知标记也不代表已经校准。",
+      "simulation_reference": {
+        "rollout": {
+          "available": true,
+          "scope": "sampled_horizon",
+          "horizon": 5,
+          "samples": 8,
+          "elapsed_ms": 547.1735900000001,
+          "random_potion_shared_ms": 0,
+          "degraded": [],
+          "ranking": "best",
+          "best": "plan3",
+          "tied": [],
+          "tied_total": 0,
+          "note": "仅表示所列回合及样本的模型结果；全败样本不证明实盘必败，目标顺序不是实际击杀记录。排名仅指rollout，整场boss模拟另列；best/tied只列已展示的选项键，tied_total保留原并列线数。"
+        },
+        "options": [
+          {
+            "key": "plan1",
+            "unmodelled_cards": [],
+            "cards_drawn": 2,
+            "draw_replan": true,
+            "evaluated": true,
+            "horizon": 5,
+            "samples": 8,
+            "sampled_wins": 0,
+            "sampled_deaths": 0,
+            "note": "当轮包含抽牌，实际牌面变化后重新核验；抽样中的后续出牌不等于已实打。"
+          },
+          {
+            "key": "plan2",
+            "unmodelled_cards": [],
+            "cards_drawn": 2,
+            "draw_replan": true,
+            "evaluated": true,
+            "horizon": 5,
+            "samples": 8,
+            "sampled_wins": 0,
+            "sampled_deaths": 0,
+            "note": "当轮包含抽牌，实际牌面变化后重新核验；抽样中的后续出牌不等于已实打。"
+          },
+          {
+            "key": "plan3",
+            "unmodelled_cards": [],
+            "cards_drawn": 0,
+            "draw_replan": false,
+            "evaluated": true,
+            "horizon": 5,
+            "samples": 8,
+            "sampled_wins": 0,
+            "sampled_deaths": 0,
+            "note": "当轮按现有模型计算；不由无未知牌标记推定整场结论可信。"
+          }
+        ],
+        "random_potions": []
+      },
+      "potion_context": {
+        "slots": "0/2 used",
+        "act_boss": "this fight"
+      },
+      "whole_fight_sim": "each option's whole_fight_sim: that line this turn, then the simulator's own play to the fight's end, 600 samples per line on the same random numbers (18.6 s); the win rate is calibrated on logged boss fights, the difference to the best line is paired (± standard error). rollout_best is the line with the highest simulated win rate (lines within 2 standard errors of it count as tied), then the least HP lost when won (median); the 5-turn rollout's numbers stay for reference",
+      "boss_relative_margin_objective": "Boss基准目标为S=my_dpr/boss_hp−enemy_dpr/my_hp。只在boss_relative_margin或bossMargin明确rankingEligible=true、同Boss/同窗口且原信任闸允许时比较S及配对差，较大为目标；先满足实际存活/资源约束，不能用高均值覆盖启动前死亡。unknown、缺失归属或截断不得当0分或自行心算补齐。",
+      "knowledge_rule": "When a fight hint, the run plan or a guide conflicts with the experience base (experience) or measured data (the options' numbers, rollouts, outcome statistics), go with the data.",
+      "experience": {
+        "note": "lessons from past runs about these enemies (experience base): evidence, not orders",
+        "lessons": [
+          "[boss:SOUL_FYSH | confidence med, n=4] 观察：异鱼SL换线须并核实伤、持牌血价与已建能力，不定固定探索门槛。A10四场真正重打22试1赢，支持/反例4/0；相关尝试不当独立局（n=4）。典型案例：U51W81MEBCLZ 六次同24血/明晰入口、同初手，第二次药延T2、后续抽弃/动作变；第5次T12仍敌77，第6次参考换T4后空翻为结束，T10实死敌108。活更久不等赢次或单因改善。2Y27VAYZDA02第4次处理呼唤后毒杀余2，其他动作亦变；KEN58SH9SLZ6省血换线延步法，不能推出固定换序/药时。"
+        ]
+      }
+    },
+    "questions": {
+      "plan": {
+        "type": "choice",
+        "instructions": "Which plan should I play this turn?",
+        "criteria": {
+          "plan1": "{\"plays\":\"偏折, then 呼唤, then 后空翻\",\"result\":\"survives with 56/70 HP before healing\",\"hp_lost\":0,\"damage_dealt\":1,\"enemies_after\":\"灵魂异鱼 163 HP, 中毒 2\",\"block_gained\":17,\"cards_drawn\":2,\"energy_unused\":1,\"quantitative_turn\":{\"schema\":\"quantitative-v1\",\"source\":\"turn-solver\",\"kind\":\"conditional_model\",\"window\":\"current_line_and_enemy_response\",\"damage_hp\":1,\"block_gained\":17,\"hp_after\":56,\"energy_left\":1,\"planned_actions\":3,\"planned_card_actions\":3,\"realization\":{\"model\":\"silent-realization-v1\",\"fingerprint\":\"4f5fd6000c6eaeae3bb5d043e6fd9fcd17b8e74b87c5f3b1c21663e6a207c07e\",\"evidence\":[\"L704TLETMZBM/A10/F48/attempt3/T3/silent-0194\",\"KV0JHNJCKXLS/A10/F33/attempt6/T1/silent-0248/0249\",\"54G5683J0E5S/A10/F33/attempt1/T5-9/silent-0141/0385\"],\"kind\":\"conditional_model\",\"complete_line\":true,\"manual_plays\":{\"DEFLECT\":1,\"BECKON\":1,\"BACKFLIP\":1},\"effect_resolutions\":{\"DEFLECT\":1,\"BECKON\":1,\"BACKFLIP\":1},\"energy_paid\":2,\"prefix_energy_paid\":2,\"established_before\":{\"energy\":3,\"hp\":56,\"block\":0,\"damage\":0,\"blockGained\":0,\"drawn\":0,\"drawBudget\":0,\"hand\":[\"DEFLECT\",\"BECKON\",\"BACKFLIP\",\"DEFEND_SILENT\",\"STRIKE_SILENT\"],\"unknownHand\":0,\"noDraw\":false,\"pendingSelection\":false,\"dexterity\":4,\"afterImage\":0,\"poisonExtraTriggers\":0,\"duplicateSkills\":0,\"enemies\":[{\"index\":0,\"hp\":164,\"poison\":3,\"artifact\":0}],\"unknown\":[]},\"modeled_after_actions\":{\"energy\":1,\"hp\":56,\"block\":17,\"damage\":0,\"blockGained\":17,\"drawn\":2,\"drawBudget\":2,\"hand\":[\"DEFEND_SILENT\",\"STRIKE_SILENT\"],\"unknownHand\":2,\"noDraw\":false,\"pendingSelection\":false,\"dexterity\":4,\"afterImage\":0,\"poisonExtraTriggers\":0,\"duplicateSkills\":0,\"enemies\":[{\"index\":0,\"hp\":164,\"poison\":3,\"artifact\":0}],\"unknown\":[]},\"actions\":[{\"card\":\"DEFLECT\",\"target\":null,\"cost\":0,\"effects\":1,\"leaves_pool\":null,\"energy_before\":3,\"energy_after\":3,\"hp_after\":56,\"block_after\":8,\"damage_hp\":0,\"block_gained\":8,\"draws\":0,\"draw_budget\":0,\"no_draw\":false,\"discards\":[],\"pending_selection\":false},{\"card\":\"BECKON\",\"target\":null,\"cost\":1,\"effects\":1,\"leaves_pool\":null,\"energy_before\":3,\"energy_after\":2,\"hp_after\":56,\"block_after\":8,\"damage_hp\":0,\"block_gained\":0,\"draws\":0,\"draw_budget\":0,\"no_draw\":false,\"discards\":[],\"pending_selection\":false},{\"card\":\"BACKFLIP\",\"target\":null,\"cost\":1,\"effects\":1,\"leaves_pool\":null,\"energy_before\":2,\"energy_after\":1,\"hp_after\":56,\"block_after\":17,\"damage_hp\":0,\"block_gained\":9,\"draws\":2,\"draw_budget\":2,\"no_draw\":false,\"discards\":[],\"pending_selection\":false}],\"complete_combinations\":null,\"delayed_damage\":null,\"delayed_block\":null,\"unknown\":[\"抽入牌的身份/顺序未知；不能把期望抽牌换成完整组合\"],\"limits\":\"当前已知合法前缀的条件推演；自动重放不再次付费。已建、到手与手动施放分账，副本无物理UID不追认来源。完整组合须另核原四签名和后继；本表不证明整战收益、回流闭合或无限。\"},\"complete_combinations\":null,\"limits\":\"沿用当前机制模型；动作数不含自动重放，完整组合须有经证据验证的定义，不能用动作数替代。\",\"unknown_cards\":[]},\"held_loss_prediction\":{\"scope\":\"current_turn_model\",\"total_hp_loss\":0,\"held_hp_loss\":0,\"held_hp_loss_from\":[],\"incoming_after_block\":0,\"discard_choice_pending\":false,\"unmodelled_cards\":[],\"actual_held_hp_loss\":null,\"note\":\"持牌失血是该候选的模型预测，不是已结算损血；后续抽牌、选择或重问后须按实际状态重算。\",\"accounting\":\"总损血已包含模型计入的持牌失血，不再相加。挡后入伤沿用模型字段，可能包含其他可挡持牌伤害；本栏不把剩余差额称为已确定敌伤。\"},\"rollout\":\"5-turn rollout (8 samples): expected further HP loss 34.8, fight over within 5 turns in 0/8, expected turns to the end (surviving samples) ~7.3; ranked on -(further loss) - 40 x (1 - win chance): win chance ~92% (fights won in the samples, the others by the end-of-horizon estimate), value -38.2\",\"rollout_turns\":\"T1 exact: hp -0, dmg 1; T2: hp -0 [0-0], dmg 19.5 [11-24], alive 8/8, won 0/8; T3: hp -5.5 [0-15], dmg 14.4 [7-26], alive 8/8, won 0/8; T4: hp -1.9 [0-9], dmg 34.4 [24-41], alive 8/8, won 0/8; T5: hp -1.5 [0-6], dmg 30 [24-36], alive 8/8, won 0/8\",\"history_estimate\":\"further HP loss 20, win 97% (this encounter n=133, typical error ±9.9)\",\"whole_fight_sim\":\"win 99% (vs the best line −0 ± 1 pts, tied on win rate), HP lost when won median 23, ~9 turns to win (this one included); the losing samples die most often on T12 (dead in 1%); 600 samples\",\"boss_relative_margin\":{\"schema\":\"boss-relative-margin-v1\",\"formula\":\"my_dpr/boss_hp-enemy_dpr/my_hp\",\"unit\":\"reference_hp_fraction_per_turn\",\"status\":\"complete_conditional_model\",\"rankingEligible\":true,\"samples\":600,\"valid\":600,\"missing\":0,\"reference\":{\"myHp\":56,\"bossHp\":164,\"startTurn\":5,\"enemyIds\":[\"SOUL_FYSH\"],\"unknown\":[]},\"window\":\"scenario_entry_through_terminal_including_setup_and_terminal_turns\",\"incomingScope\":\"enemy_responses_and_held_or_end_turn_status_damage_after_mitigation; own_cost_or_healing_not_separable_is_unknown\",\"referencesVary\":false,\"score\":{\"n\":600,\"mean\":0.06769285956252423,\"sd\":0.026631124129786157,\"meanSe\":0.0010872110899116131,\"p10\":0.029761904761904753,\"median\":0.06903698979591835,\"p90\":0.10044642857142858,\"min\":-0.03048780487804878,\"max\":0.125},\"observedSubset\":{\"n\":600,\"mean\":0.06769285956252423,\"sd\":0.026631124129786157,\"meanSe\":0.0010872110899116131,\"p10\":0.029761904761904753,\"median\":0.06903698979591835,\"p90\":0.10044642857142858,\"min\":-0.03048780487804878,\"max\":0.125},\"myDpr\":{\"n\":600,\"mean\":19.242027116402113,\"sd\":1.2285907909698313,\"meanSe\":0.05015700900930789,\"p10\":18.22222222222222,\"median\":18.22222222222222,\"p90\":20.5,\"min\":15.5,\"max\":23.428571428571427},\"enemyDpr\":{\"n\":600,\"mean\":2.779648148148145,\"sd\":1.317894985618611,\"meanSe\":0.05380283748896953,\"p10\":1.125,\"median\":2.6666666666666665,\"p90\":4.555555555555555,\"min\":0,\"max\":7},\"paired\":{\"difference\":{\"n\":600,\"mean\":-0.0002071283967516553,\"sd\":0.03445723133881433,\"meanSe\":0.0014067105788188796,\"p10\":-0.04466765873015874,\"median\":0,\"p90\":0.04367559523809524,\"min\":-0.10987103174603174,\"max\":0.0992063492063492},\"unmatchedBase\":0,\"unmatchedOption\":0},\"won\":{\"n\":597,\"mean\":0.068131331259472,\"sd\":0.02596070278532025,\"meanSe\":0.0010625008338613219,\"p10\":0.03125,\"median\":0.06919642857142858,\"p90\":0.10044642857142858,\"min\":0.003968253968253968,\"max\":0.125},\"died\":{\"n\":3,\"mean\":-0.0195630081300813,\"sd\":0.00965112800468627,\"meanSe\":0.005572081351489154,\"p10\":-0.027591463414634147,\"median\":-0.01600609756097561,\"p90\":-0.01295731707317073,\"min\":-0.03048780487804878,\"max\":-0.01219512195121951},\"limits\":\"同一模拟窗口含准备轮及终止轮，入口血量固定；战中题仅代表从当前回合到终止的剩余窗口。敌方DPR计减伤后的敌人响应及持有/回合末状态伤害，不仅是攻击意图；自伤/回血无法拆分时未知。S不是胜率。缺失归属、截断及连续多Boss不补零；子集均值不能作全体排序。自伤、回血、复活和死亡时序仍独立检查；模型未校准不因样本完成而可信。\"}}",
+          "plan2": "{\"plays\":\"偏折, then 后空翻, then 打击 -> 灵魂异鱼\",\"result\":\"survives with 50/70 HP before healing\",\"hp_lost\":6,\"damage_dealt\":2,\"enemies_after\":\"灵魂异鱼 162 HP, 中毒 2\",\"block_gained\":17,\"cards_drawn\":2,\"energy_unused\":1,\"quantitative_turn\":{\"schema\":\"quantitative-v1\",\"source\":\"turn-solver\",\"kind\":\"conditional_model\",\"window\":\"current_line_and_enemy_response\",\"damage_hp\":2,\"block_gained\":17,\"hp_after\":50,\"energy_left\":1,\"planned_actions\":3,\"planned_card_actions\":3,\"realization\":{\"model\":\"silent-realization-v1\",\"fingerprint\":\"269c996413bdbb2de641f1b2ff9e756290db833a87cd0813f2a52c6e05c53b26\",\"evidence\":[\"L704TLETMZBM/A10/F48/attempt3/T3/silent-0194\",\"KV0JHNJCKXLS/A10/F33/attempt6/T1/silent-0248/0249\",\"54G5683J0E5S/A10/F33/attempt1/T5-9/silent-0141/0385\"],\"kind\":\"conditional_model\",\"complete_line\":true,\"manual_plays\":{\"DEFLECT\":1,\"BACKFLIP\":1,\"STRIKE_SILENT\":1},\"effect_resolutions\":{\"DEFLECT\":1,\"BACKFLIP\":1,\"STRIKE_SILENT\":1},\"energy_paid\":2,\"prefix_energy_paid\":2,\"established_before\":{\"energy\":3,\"hp\":56,\"block\":0,\"damage\":0,\"blockGained\":0,\"drawn\":0,\"drawBudget\":0,\"hand\":[\"DEFLECT\",\"BECKON\",\"BACKFLIP\",\"DEFEND_SILENT\",\"STRIKE_SILENT\"],\"unknownHand\":0,\"noDraw\":false,\"pendingSelection\":false,\"dexterity\":4,\"afterImage\":0,\"poisonExtraTriggers\":0,\"duplicateSkills\":0,\"enemies\":[{\"index\":0,\"hp\":164,\"poison\":3,\"artifact\":0}],\"unknown\":[]},\"modeled_after_actions\":{\"energy\":1,\"hp\":56,\"block\":17,\"damage\":1,\"blockGained\":17,\"drawn\":2,\"drawBudget\":2,\"hand\":[\"BECKON\",\"DEFEND_SILENT\"],\"unknownHand\":2,\"noDraw\":false,\"pendingSelection\":false,\"dexterity\":4,\"afterImage\":0,\"poisonExtraTriggers\":0,\"duplicateSkills\":0,\"enemies\":[{\"index\":0,\"hp\":163,\"poison\":3,\"artifact\":0}],\"unknown\":[]},\"actions\":[{\"card\":\"DEFLECT\",\"target\":null,\"cost\":0,\"effects\":1,\"leaves_pool\":null,\"energy_before\":3,\"energy_after\":3,\"hp_after\":56,\"block_after\":8,\"damage_hp\":0,\"block_gained\":8,\"draws\":0,\"draw_budget\":0,\"no_draw\":false,\"discards\":[],\"pending_selection\":false},{\"card\":\"BACKFLIP\",\"target\":null,\"cost\":1,\"effects\":1,\"leaves_pool\":null,\"energy_before\":3,\"energy_after\":2,\"hp_after\":56,\"block_after\":17,\"damage_hp\":0,\"block_gained\":9,\"draws\":2,\"draw_budget\":2,\"no_draw\":false,\"discards\":[],\"pending_selection\":false},{\"card\":\"STRIKE_SILENT\",\"target\":0,\"cost\":1,\"effects\":1,\"leaves_pool\":null,\"energy_before\":2,\"energy_after\":1,\"hp_after\":56,\"block_after\":17,\"damage_hp\":1,\"block_gained\":0,\"draws\":0,\"draw_budget\":0,\"no_draw\":false,\"discards\":[],\"pending_selection\":false}],\"complete_combinations\":null,\"delayed_damage\":null,\"delayed_block\":null,\"unknown\":[\"抽入牌的身份/顺序未知；不能把期望抽牌换成完整组合\"],\"limits\":\"当前已知合法前缀的条件推演；自动重放不再次付费。已建、到手与手动施放分账，副本无物理UID不追认来源。完整组合须另核原四签名和后继；本表不证明整战收益、回流闭合或无限。\"},\"complete_combinations\":null,\"limits\":\"沿用当前机制模型；动作数不含自动重放，完整组合须有经证据验证的定义，不能用动作数替代。\",\"unknown_cards\":[]},\"held_loss_prediction\":{\"scope\":\"current_turn_model\",\"total_hp_loss\":6,\"held_hp_loss\":6,\"held_hp_loss_from\":[\"呼唤\"],\"incoming_after_block\":0,\"discard_choice_pending\":false,\"unmodelled_cards\":[],\"actual_held_hp_loss\":null,\"note\":\"持牌失血是该候选的模型预测，不是已结算损血；后续抽牌、选择或重问后须按实际状态重算。\",\"accounting\":\"总损血已包含模型计入的持牌失血，不再相加。挡后入伤沿用模型字段，可能包含其他可挡持牌伤害；本栏不把剩余差额称为已确定敌伤。\"},\"rollout\":\"5-turn rollout (8 samples): expected further HP loss 44.5, fight over within 5 turns in 0/8, expected turns to the end (surviving samples) ~7.5; ranked on -(further loss) - 40 x (1 - win chance): win chance ~78% (fights won in the samples, the others by the end-of-horizon estimate), value -53.3\",\"rollout_turns\":\"T1 exact: hp -6, dmg 2; T2: hp -0 [0-0], dmg 19.5 [11-24], alive 8/8, won 0/8; T3: hp -5.5 [0-15], dmg 14.4 [7-26], alive 8/8, won 0/8; T4: hp -1.9 [0-9], dmg 34.4 [24-41], alive 8/8, won 0/8; T5: hp -2.3 [0-12], dmg 28.5 [23-36], alive 8/8, won 0/8\",\"history_estimate\":\"further HP loss 27, win 95% (this encounter n=133, typical error ±9.9)\",\"whole_fight_sim\":\"win 99% (vs the best line −0 ± 1 pts, tied on win rate), HP lost when won median 29, ~9 turns to win (this one included); the losing samples die most often on T12 (dead in 1%); 600 samples\",\"boss_relative_margin\":{\"schema\":\"boss-relative-margin-v1\",\"formula\":\"my_dpr/boss_hp-enemy_dpr/my_hp\",\"unit\":\"reference_hp_fraction_per_turn\",\"status\":\"complete_conditional_model\",\"rankingEligible\":true,\"samples\":600,\"valid\":600,\"missing\":0,\"reference\":{\"myHp\":56,\"bossHp\":164,\"startTurn\":5,\"enemyIds\":[\"SOUL_FYSH\"],\"unknown\":[]},\"window\":\"scenario_entry_through_terminal_including_setup_and_terminal_turns\",\"incomingScope\":\"enemy_responses_and_held_or_end_turn_status_damage_after_mitigation; own_cost_or_healing_not_separable_is_unknown\",\"referencesVary\":false,\"score\":{\"n\":600,\"mean\":0.05577228859023282,\"sd\":0.025242707550509,\"meanSe\":0.0010305292204174546,\"p10\":0.0222718253968254,\"median\":0.055555555555555546,\"p90\":0.08928571428571429,\"min\":-0.02972560975609756,\"max\":0.11160714285714286},\"observedSubset\":{\"n\":600,\"mean\":0.05577228859023282,\"sd\":0.025242707550509,\"meanSe\":0.0010305292204174546,\"p10\":0.0222718253968254,\"median\":0.055555555555555546,\"p90\":0.08928571428571429,\"min\":-0.02972560975609756,\"max\":0.11160714285714286},\"myDpr\":{\"n\":600,\"mean\":19.30114748677251,\"sd\":1.2328160773176997,\"meanSe\":0.05032950560213165,\"p10\":18.22222222222222,\"median\":18.22222222222222,\"p90\":20.5,\"min\":15.625,\"max\":23.428571428571427},\"enemyDpr\":{\"n\":600,\"mean\":3.4673875661375635,\"sd\":1.2720591906901229,\"meanSe\":0.05193159899680878,\"p10\":1.875,\"median\":3.4444444444444446,\"p90\":5.222222222222222,\"min\":0.6666666666666666,\"max\":7},\"paired\":{\"difference\":{\"n\":600,\"mean\":-0.012127699369043014,\"sd\":0.03527387900986114,\"meanSe\":0.0014400500803804952,\"p10\":-0.05587797619047619,\"median\":-0.0119047619047619,\"p90\":0.035466269841269854,\"min\":-0.11939242160278746,\"max\":0.0873015873015873},\"unmatchedBase\":0,\"unmatchedOption\":0},\"won\":{\"n\":595,\"mean\":0.05637290630537931,\"sd\":0.02446566768175117,\"meanSe\":0.0010029945877463866,\"p10\":0.023809523809523794,\"median\":0.055555555555555546,\"p90\":0.08928571428571429,\"min\":0.001984126984126991,\"max\":0.11160714285714286},\"died\":{\"n\":5,\"mean\":-0.015701219512195122,\"sd\":0.009650124716778296,\"meanSe\":0.004315666971613435,\"p10\":-0.02576219512195122,\"median\":-0.01448170731707317,\"p90\":-0.006707317073170732,\"min\":-0.02972560975609756,\"max\":-0.004573170731707321},\"limits\":\"同一模拟窗口含准备轮及终止轮，入口血量固定；战中题仅代表从当前回合到终止的剩余窗口。敌方DPR计减伤后的敌人响应及持有/回合末状态伤害，不仅是攻击意图；自伤/回血无法拆分时未知。S不是胜率。缺失归属、截断及连续多Boss不补零；子集均值不能作全体排序。自伤、回血、复活和死亡时序仍独立检查；模型未校准不因样本完成而可信。\"}}",
+          "plan3": "{\"plays\":\"偏折, then 呼唤, then 防御, then 打击 -> 灵魂异鱼\",\"result\":\"survives with 56/70 HP before healing\",\"hp_lost\":0,\"damage_dealt\":2,\"enemies_after\":\"灵魂异鱼 162 HP, 中毒 2\",\"block_gained\":17,\"quantitative_turn\":{\"schema\":\"quantitative-v1\",\"source\":\"turn-solver\",\"kind\":\"conditional_model\",\"window\":\"current_line_and_enemy_response\",\"damage_hp\":2,\"block_gained\":17,\"hp_after\":56,\"energy_left\":0,\"planned_actions\":4,\"planned_card_actions\":4,\"realization\":{\"model\":\"silent-realization-v1\",\"fingerprint\":\"e7df5ac514ae6843335b326ae2915ba9aca78240b1e16d610784a31e62fecc0d\",\"evidence\":[\"L704TLETMZBM/A10/F48/attempt3/T3/silent-0194\",\"KV0JHNJCKXLS/A10/F33/attempt6/T1/silent-0248/0249\",\"54G5683J0E5S/A10/F33/attempt1/T5-9/silent-0141/0385\"],\"kind\":\"conditional_model\",\"complete_line\":true,\"manual_plays\":{\"DEFLECT\":1,\"BECKON\":1,\"DEFEND_SILENT\":1,\"STRIKE_SILENT\":1},\"effect_resolutions\":{\"DEFLECT\":1,\"BECKON\":1,\"DEFEND_SILENT\":1,\"STRIKE_SILENT\":1},\"energy_paid\":3,\"prefix_energy_paid\":3,\"established_before\":{\"energy\":3,\"hp\":56,\"block\":0,\"damage\":0,\"blockGained\":0,\"drawn\":0,\"drawBudget\":0,\"hand\":[\"DEFLECT\",\"BECKON\",\"BACKFLIP\",\"DEFEND_SILENT\",\"STRIKE_SILENT\"],\"unknownHand\":0,\"noDraw\":false,\"pendingSelection\":false,\"dexterity\":4,\"afterImage\":0,\"poisonExtraTriggers\":0,\"duplicateSkills\":0,\"enemies\":[{\"index\":0,\"hp\":164,\"poison\":3,\"artifact\":0}],\"unknown\":[]},\"modeled_after_actions\":{\"energy\":0,\"hp\":56,\"block\":17,\"damage\":1,\"blockGained\":17,\"drawn\":0,\"drawBudget\":0,\"hand\":[\"BACKFLIP\"],\"unknownHand\":0,\"noDraw\":false,\"pendingSelection\":false,\"dexterity\":4,\"afterImage\":0,\"poisonExtraTriggers\":0,\"duplicateSkills\":0,\"enemies\":[{\"index\":0,\"hp\":163,\"poison\":3,\"artifact\":0}],\"unknown\":[]},\"actions\":[{\"card\":\"DEFLECT\",\"target\":null,\"cost\":0,\"effects\":1,\"leaves_pool\":null,\"energy_before\":3,\"energy_after\":3,\"hp_after\":56,\"block_after\":8,\"damage_hp\":0,\"block_gained\":8,\"draws\":0,\"draw_budget\":0,\"no_draw\":false,\"discards\":[],\"pending_selection\":false},{\"card\":\"BECKON\",\"target\":null,\"cost\":1,\"effects\":1,\"leaves_pool\":null,\"energy_before\":3,\"energy_after\":2,\"hp_after\":56,\"block_after\":8,\"damage_hp\":0,\"block_gained\":0,\"draws\":0,\"draw_budget\":0,\"no_draw\":false,\"discards\":[],\"pending_selection\":false},{\"card\":\"DEFEND_SILENT\",\"target\":null,\"cost\":1,\"effects\":1,\"leaves_pool\":null,\"energy_before\":2,\"energy_after\":1,\"hp_after\":56,\"block_after\":17,\"damage_hp\":0,\"block_gained\":9,\"draws\":0,\"draw_budget\":0,\"no_draw\":false,\"discards\":[],\"pending_selection\":false},{\"card\":\"STRIKE_SILENT\",\"target\":0,\"cost\":1,\"effects\":1,\"leaves_pool\":null,\"energy_before\":1,\"energy_after\":0,\"hp_after\":56,\"block_after\":17,\"damage_hp\":1,\"block_gained\":0,\"draws\":0,\"draw_budget\":0,\"no_draw\":false,\"discards\":[],\"pending_selection\":false}],\"complete_combinations\":null,\"delayed_damage\":null,\"delayed_block\":null,\"unknown\":[],\"limits\":\"当前已知合法前缀的条件推演；自动重放不再次付费。已建、到手与手动施放分账，副本无物理UID不追认来源。完整组合须另核原四签名和后继；本表不证明整战收益、回流闭合或无限。\"},\"complete_combinations\":null,\"limits\":\"沿用当前机制模型；动作数不含自动重放，完整组合须有经证据验证的定义，不能用动作数替代。\",\"unknown_cards\":[]},\"held_loss_prediction\":{\"scope\":\"current_turn_model\",\"total_hp_loss\":0,\"held_hp_loss\":0,\"held_hp_loss_from\":[],\"incoming_after_block\":0,\"discard_choice_pending\":false,\"unmodelled_cards\":[],\"actual_held_hp_loss\":null,\"note\":\"持牌失血是该候选的模型预测，不是已结算损血；后续抽牌、选择或重问后须按实际状态重算。\",\"accounting\":\"总损血已包含模型计入的持牌失血，不再相加。挡后入伤沿用模型字段，可能包含其他可挡持牌伤害；本栏不把剩余差额称为已确定敌伤。\"},\"rollout\":\"5-turn rollout (8 samples): expected further HP loss 32.9, fight over within 5 turns in 0/8, expected turns to the end (surviving samples) ~7.4; ranked on -(further loss) - 40 x (1 - win chance): win chance ~93% (fights won in the samples, the others by the end-of-horizon estimate), value -35.6\",\"rollout_turns\":\"T1 exact: hp -0, dmg 2; T2: hp -0 [0-0], dmg 20.8 [13-26], alive 8/8, won 0/8; T3: hp -4.4 [0-20], dmg 14.5 [7-24], alive 8/8, won 0/8; T4: hp -1.1 [0-6], dmg 28.3 [17-41], alive 8/8, won 0/8; T5: hp -0 [0-0], dmg 30.8 [17-46], alive 8/8, won 0/8\",\"history_estimate\":\"further HP loss 19, win 97% (this encounter n=133, typical error ±9.9)\",\"rollout_best\":true,\"whole_fight_sim\":\"win 99% (the best line), HP lost when won median 23, ~8 turns to win (this one included); the losing samples die most often on T12 (dead in 0%); 600 samples\",\"boss_relative_margin\":{\"schema\":\"boss-relative-margin-v1\",\"formula\":\"my_dpr/boss_hp-enemy_dpr/my_hp\",\"unit\":\"reference_hp_fraction_per_turn\",\"status\":\"complete_conditional_model\",\"rankingEligible\":true,\"samples\":600,\"valid\":600,\"missing\":0,\"reference\":{\"myHp\":56,\"bossHp\":164,\"startTurn\":5,\"enemyIds\":[\"SOUL_FYSH\"],\"unknown\":[]},\"window\":\"scenario_entry_through_terminal_including_setup_and_terminal_turns\",\"incomingScope\":\"enemy_responses_and_held_or_end_turn_status_damage_after_mitigation; own_cost_or_healing_not_separable_is_unknown\",\"referencesVary\":false,\"score\":{\"n\":600,\"mean\":0.06789998795927595,\"sd\":0.027982831068181103,\"meanSe\":0.001142394294592401,\"p10\":0.029761904761904753,\"median\":0.06944444444444443,\"p90\":0.10491071428571429,\"min\":-0.008384146341463408,\"max\":0.125},\"observedSubset\":{\"n\":600,\"mean\":0.06789998795927595,\"sd\":0.027982831068181103,\"meanSe\":0.001142394294592401,\"p10\":0.029761904761904753,\"median\":0.06944444444444443,\"p90\":0.10491071428571429,\"min\":-0.008384146341463408,\"max\":0.125},\"myDpr\":{\"n\":600,\"mean\":19.39273809523809,\"sd\":1.2180431018915379,\"meanSe\":0.049726401405852126,\"p10\":18.22222222222222,\"median\":20.5,\"p90\":20.5,\"min\":16.4,\"max\":23.428571428571427},\"enemyDpr\":{\"n\":600,\"mean\":2.8195112433862435,\"sd\":1.4135917685780308,\"meanSe\":0.057709642293576974,\"p10\":1,\"median\":2.75,\"p90\":4.671428571428573,\"min\":0,\"max\":7},\"paired\":{\"difference\":{\"n\":600,\"mean\":0,\"sd\":0,\"meanSe\":0,\"p10\":0,\"median\":0,\"p90\":0,\"min\":0,\"max\":0},\"unmatchedBase\":0,\"unmatchedOption\":0},\"won\":{\"n\":598,\"mean\":0.06815256969565975,\"sd\":0.02768553439860827,\"meanSe\":0.001132145693420819,\"p10\":0.031597222222222214,\"median\":0.06944444444444443,\"p90\":0.10491071428571429,\"min\":0.003968253968253968,\"max\":0.125},\"died\":{\"n\":2,\"mean\":-0.007621951219512195,\"sd\":0.001077906678638021,\"meanSe\":0.0007621951219512133,\"p10\":-0.008231707317073166,\"median\":-0.007621951219512195,\"p90\":-0.007012195121951224,\"min\":-0.008384146341463408,\"max\":-0.006859756097560982},\"limits\":\"同一模拟窗口含准备轮及终止轮，入口血量固定；战中题仅代表从当前回合到终止的剩余窗口。敌方DPR计减伤后的敌人响应及持有/回合末状态伤害，不仅是攻击意图；自伤/回血无法拆分时未知。S不是胜率。缺失归属、截断及连续多Boss不补零；子集均值不能作全体排序。自伤、回血、复活和死亡时序仍独立检查；模型未校准不因样本完成而可信。\"}}"
+        }
+      }
+    }
+  },
+  "scope": "Current-model B2 on original frozen state; fresh memory, not historical selection reproduction; no Jev or game actions"
+}

@@ -1,0 +1,70 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/s-decision-20261014/agent
+
+ ❯ tests/target-options.test.ts (22 tests | 3 failed) 267804ms
+     × gives Jev DeepSeek's whole plan (boss prep and kill order included) and the top 4 lessons about these enemies 27988ms
+     × rolls every shown line out under both kill orders, the Amalgam first among them, and reports and logs them 41936ms
+     × is deterministic: the same board gives the same options and the same kill-order numbers 52265ms
+ ❯ tests/potions-jev-call.test.ts (14 tests | 1 failed) 66138ms
+     × logged boards: an auto-act that drinks is a lethal, a pending drink of Jev's line, or a turn where every potion-free line dies 60776ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/potions-jev-call.test.ts > code's own auto-acts never drink while a potion-free line survives > logged boards: an auto-act that drinks is a lethal, a pending drink of Jev's line, or a turn where every potion-free line dies
+Error: Test timed out in 60000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/potions-jev-call.test.ts:185:3
+    183|   });
+    184|
+    185|   it("logged boards: an auto-act that drinks is a lethal, a pending dr…
+       |   ^
+    186|     const DIR = join(dirname(fileURLToPath(import.meta.url)), "logged-…
+    187|     const boards = readdirSync(DIR)
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  tests/target-options.test.ts > per-target options (EZ2L F48 T2: Queen + Torch Head Amalgam) > gives Jev DeepSeek's whole plan (boss prep and kill order included) and the top 4 lessons about these enemies
+Error: Test timed out in 20000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/target-options.test.ts:120:3
+    118|   });
+    119|
+    120|   it("gives Jev DeepSeek's whole plan (boss prep and kill order includ…
+       |   ^
+    121|     setExperienceForTests(LESSONS);
+    122|     const decision = ez2l() as AskDecision;
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  tests/target-options.test.ts > per-target options (EZ2L F48 T2: Queen + Torch Head Amalgam) > rolls every shown line out under both kill orders, the Amalgam first among them, and reports and logs them
+Error: Test timed out in 20000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/target-options.test.ts:139:3
+    137|   });
+    138|
+    139|   it("rolls every shown line out under both kill orders, the Amalgam f…
+       |   ^
+    140|     const decision = ez2l() as AskDecision;
+    141|     const criteria = criteriaOf(decision);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+ FAIL  tests/target-options.test.ts > per-target options (EZ2L F48 T2: Queen + Torch Head Amalgam) > is deterministic: the same board gives the same options and the same kill-order numbers
+Error: Test timed out in 30000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/target-options.test.ts:169:3
+    167|   });
+    168|
+    169|   it("is deterministic: the same board gives the same options and the …
+       |   ^
+    170|     const a = criteriaOf(ez2l() as AskDecision);
+    171|     const b = criteriaOf(ez2l() as AskDecision);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯
+
+
+ Test Files  2 failed | 402 passed (404)
+      Tests  4 failed | 3885 passed (3889)
+   Start at  22:38:50
+   Duration  995.24s (transform 13.65s, setup 23.54s, import 64.42s, tests 1838.20s, environment 46ms)
+
