@@ -1,0 +1,44 @@
+{
+  "at": "2026-10-14T15:25:14.213109+08:00",
+  "state": "pilot_complete_gameplay_value_pending",
+  "inputs_frozen": true,
+  "model": "jev-1.13.0",
+  "api_calls": 144,
+  "selected_questions": 32,
+  "distinct_runs": 13,
+  "compact_vs_full": {
+    "token_reduction_pct": 27.566275352733683,
+    "mean_latency_ms_full": 447.0293660625002,
+    "mean_latency_ms_compact": 421.21752474999965,
+    "changed_choices": 5
+  },
+  "observed_usage": {
+    "input_tokens": 1844432,
+    "output_tokens": 10052,
+    "sum_request_latency_ms": 64513.68324300001,
+    "failed_usage_unknown": 0
+  },
+  "estimated_api_cost_usd": 0.077466144,
+  "price_source": {
+    "input_per_million": 0.042,
+    "output_per_million": 0,
+    "source": "Roy 2026-10-05 23:14: TypeSafe usage page, $0.042/MTok input; free output"
+  },
+  "cost_is_not_invoice": true,
+  "decision": "Do not change live policy from this prompt-only pilot. Attach all differences, not only favorable cases, to existing R3/quantitative owner after current immutable R1/R2 input ends. Validate actual execution and independent paired outcomes before direct-selector or narrow-semantic-Jev rollout.",
+  "direct_baseline": "16 unique-rank eligible; 16 tie/no-rank abstentions; no invented tie-break",
+  "not_proven": [
+    "DPR or whole-fight accuracy",
+    "Jev superiority or dispensability",
+    "HP savings or win-rate gain",
+    "language advantage or narrow-task advantage",
+    "future selection quality or whole-run speedup"
+  ],
+  "binding_inputs": {
+    "manifest_sha256": "9aeceed08a22c86a81541a0744cd7a25a89d907a0384e85e23e0d66656c7e492",
+    "requests_sha256": "a5be46162d05b1e4693a54f7d6b9384d14131a0e8b0444b89fe7e5478eb036a2",
+    "results_sha256": "350777bae8b29c4391da41e072f2d70b1698baae6f3fe1016dce6751ce9a3088",
+    "source_at_allocation": "928515aecf34a92baaf322f71b660cd217660f47"
+  },
+  "prepared_boundary": "R1 parse error preserved and corrected before API; absent main .env failed before any starts/request; actual calls loaded existing live settings only into process memory."
+}

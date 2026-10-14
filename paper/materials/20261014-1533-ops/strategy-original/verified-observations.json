@@ -1,0 +1,1039 @@
+[
+  {
+    "key": "神化直接升级",
+    "run_id": "VLZ6CCT8AQ0A",
+    "ledger": [
+      "silent-0237",
+      "silent-0238"
+    ],
+    "conclusion": "F35 T1 能量7→5，手牌伤挡与工具费用改变。",
+    "values": {
+      "energy": [
+        7,
+        5
+      ],
+      "pairs": [
+        {
+          "card_id": "DEFEND_SILENT",
+          "variable": "Block",
+          "observed": [
+            5,
+            8
+          ]
+        },
+        {
+          "card_id": "STRIKE_SILENT",
+          "variable": "Damage",
+          "observed": [
+            7,
+            10
+          ]
+        },
+        {
+          "card_id": "DAGGER_SPRAY",
+          "variable": "Damage",
+          "observed": [
+            5,
+            7
+          ]
+        }
+      ],
+      "tools_cost": [
+        1,
+        0
+      ]
+    },
+    "sources": [
+      {
+        "run_id": "VLZ6CCT8AQ0A",
+        "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+        "line": 275564,
+        "offset": 8483923481,
+        "bytes": 42755,
+        "sha256": "fcbd180005bbb4fcd44f767bf261ccab5723f44b77da2f18cb811fc80bf1c287"
+      },
+      {
+        "run_id": "VLZ6CCT8AQ0A",
+        "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+        "line": 275565,
+        "offset": 8483966236,
+        "bytes": 42166,
+        "sha256": "93ccae7f620adec319ed965af658eaacae5bd2d6f058a8b8f63c2585b1918a9f"
+      }
+    ],
+    "scope": "冻结实盘观测；不认证未选方案或整战因果"
+  },
+  {
+    "key": "神化F43同序与后抽",
+    "run_id": "VLZ6CCT8AQ0A",
+    "ledger": [
+      "silent-0237",
+      "silent-0238"
+    ],
+    "conclusion": "F43 T1同序端点净扣51、净损13；T2抽到升级毒雾3。原序仍须逐动作核验，整战转胜未知。",
+    "values": {
+      "pairs": [
+        {
+          "card_id": "SUCKER_PUNCH",
+          "variable": "Damage",
+          "observed": [
+            9,
+            11
+          ]
+        },
+        {
+          "card_id": "SUCKER_PUNCH",
+          "variable": "WeakPower",
+          "observed": [
+            1,
+            2
+          ]
+        },
+        {
+          "card_id": "FASTEN",
+          "variable": "ExtraBlock",
+          "observed": [
+            4,
+            6
+          ]
+        },
+        {
+          "card_id": "PIERCING_WAIL",
+          "variable": "StrengthLoss",
+          "observed": [
+            6,
+            8
+          ]
+        }
+      ],
+      "enemy_hp_net_loss": 51,
+      "player_hp_net_loss": 13,
+      "next_fumes": 3
+    },
+    "sources": [
+      {
+        "run_id": "VLZ6CCT8AQ0A",
+        "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+        "line": 275679,
+        "offset": 8488362923,
+        "bytes": 44896,
+        "sha256": "2d985d82dc59aba760930a3d049ac32962eeabe948d8fcd82781f43ea07a3873"
+      },
+      {
+        "run_id": "VLZ6CCT8AQ0A",
+        "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+        "line": 275680,
+        "offset": 8488407819,
+        "bytes": 43797,
+        "sha256": "9f8c87643f4f738ce5828b3b1c350ebaf13b81b85a3ef985cda8259db81af5a1"
+      },
+      {
+        "run_id": "VLZ6CCT8AQ0A",
+        "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+        "line": 275686,
+        "offset": 8488657696,
+        "bytes": 39345,
+        "sha256": "6905edcb1ff8c4078d90553cb774a51f407550e45fd29f6c1ce479291de7f2d6"
+      },
+      {
+        "run_id": "VLZ6CCT8AQ0A",
+        "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+        "line": 275687,
+        "offset": 8488697041,
+        "bytes": 43110,
+        "sha256": "103e80d5394dc75726db1420e44627125ae8be5b8643c97cc7b89693d71786a0"
+      }
+    ],
+    "scope": "冻结实盘观测；不认证未选方案或整战因果"
+  },
+  {
+    "key": "药水预算退化",
+    "run_id": "VLZ6CCT8AQ0A",
+    "ledger": [
+      "silent-0106",
+      "silent-0201"
+    ],
+    "conclusion": "F45 T1随机药水MC 707ms、rollout horizon1；不是确定死亡证明。",
+    "values": {
+      "timing": {
+        "planner_ms": 1541,
+        "solve_ms": 114,
+        "mc_ms": 707,
+        "rollout_ms": 696,
+        "boss_sim_ms": 0,
+        "other_ms": 24,
+        "cpu_ms": 2430,
+        "load1": 14.88,
+        "probe_ms": 3.03
+      },
+      "rollout": {
+        "available": true,
+        "ms": 696,
+        "horizon": 1,
+        "samples": 1,
+        "degraded": [
+          "first wave at 3 turns",
+          "1-turn"
+        ],
+        "lines": 15,
+        "best": null,
+        "best_added": false,
+        "no_potion": {
+          "key": "plan1",
+          "merged": true
+        },
+        "orders": 6,
+        "orders_dropped": 0,
+        "best_order": null
+      }
+    },
+    "sources": [
+      {
+        "run_id": "VLZ6CCT8AQ0A",
+        "source": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+        "line": 269748,
+        "offset": 680857156,
+        "bytes": 18087,
+        "sha256": "1afeb12e4372c954f4767aaa09b48f86f4707dd7bb8a69bda4a8f5abaf7ad1ed"
+      }
+    ],
+    "scope": "冻结实盘观测；不认证未选方案或整战因果"
+  },
+  {
+    "key": "三骑士末轮参考",
+    "run_id": "VLZ6CCT8AQ0A",
+    "ledger": [
+      "silent-0106",
+      "silent-0005",
+      "silent-0046"
+    ],
+    "conclusion": "F45未见施放神化；T5 32血20挡对显示59攻击，算术需损39、缺7血。",
+    "values": {
+      "cast_records": 0,
+      "hp": 32,
+      "block": 20,
+      "displayed_attack": 59,
+      "displayed_attack_minus_block": 39,
+      "displayed_survival_shortfall": 7,
+      "player_plating": 0,
+      "enemies": [
+        {
+          "id": "FLAIL_KNIGHT",
+          "hp": 24
+        },
+        {
+          "id": "SPECTRAL_KNIGHT",
+          "hp": 80
+        },
+        {
+          "id": "MAGI_KNIGHT",
+          "hp": 77
+        }
+      ]
+    },
+    "sources": [
+      {
+        "run_id": "VLZ6CCT8AQ0A",
+        "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+        "line": 275754,
+        "offset": 8491582495,
+        "bytes": 47336,
+        "sha256": "cfbad1a9564471f060da3b3c960340e4417866635a0450e602e04b685a67a803"
+      }
+    ],
+    "scope": "冻结实盘观测；不认证未选方案或整战因果"
+  },
+  {
+    "key": "触媒三次结算T4",
+    "run_id": "VLZ6CCT8AQ0A",
+    "ledger": [
+      "silent-0027",
+      "silent-0011"
+    ],
+    "conclusion": "F43触媒2下结束帧毒与后帧净扣分别为12→33、16→45；此前直接扣血另记。",
+    "values": {
+      "poison_before_end": 12,
+      "accelerant": 2,
+      "enemy_net_loss": 33
+    },
+    "sources": [
+      {
+        "run_id": "VLZ6CCT8AQ0A",
+        "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+        "line": 275699,
+        "offset": 8489208187,
+        "bytes": 43459,
+        "sha256": "34b76f21d9c6c39b99a506891cbbc21f5aaf803ad2ab3b53335220cc41ed803f"
+      },
+      {
+        "run_id": "VLZ6CCT8AQ0A",
+        "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+        "line": 275701,
+        "offset": 8489299620,
+        "bytes": 42529,
+        "sha256": "963de6ccb42831e518db368bc3bf2f051c7f88fe63b51dfe9301dd9cc61e473e"
+      }
+    ],
+    "scope": "冻结实盘观测；不认证未选方案或整战因果"
+  },
+  {
+    "key": "触媒三次结算T5",
+    "run_id": "VLZ6CCT8AQ0A",
+    "ledger": [
+      "silent-0027",
+      "silent-0011"
+    ],
+    "conclusion": "F43触媒2下结束帧毒与后帧净扣分别为12→33、16→45；此前直接扣血另记。",
+    "values": {
+      "poison_before_end": 16,
+      "accelerant": 2,
+      "enemy_net_loss": 45
+    },
+    "sources": [
+      {
+        "run_id": "VLZ6CCT8AQ0A",
+        "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+        "line": 275705,
+        "offset": 8489467296,
+        "bytes": 39159,
+        "sha256": "b6a55cf8372b92e0f323761705f4e1655f5add324d8e24f73de71cb551ad0bca"
+      },
+      {
+        "run_id": "VLZ6CCT8AQ0A",
+        "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+        "line": 275707,
+        "offset": 8489556083,
+        "bytes": 43831,
+        "sha256": "30bf8c4bb0ff18b9ed94f6e572dc799a483811409a6026087ceed1efe1ad1e97"
+      }
+    ],
+    "scope": "冻结实盘观测；不认证未选方案或整战因果"
+  },
+  {
+    "key": "休息资源端点",
+    "run_id": "VLZ6CCT8AQ0A",
+    "ledger": [
+      "silent-0204",
+      "silent-0020",
+      "silent-0019"
+    ],
+    "conclusion": "九次火房动作分8回血/1锻造；实回血合242、八次上限各+5，锻造未增长。",
+    "values": {
+      "rest_pairs": [
+        {
+          "floor": 7,
+          "option_index": 0,
+          "hp": [
+            30,
+            56
+          ],
+          "max_hp": [
+            70,
+            75
+          ]
+        },
+        {
+          "floor": 11,
+          "option_index": 0,
+          "hp": [
+            17,
+            44
+          ],
+          "max_hp": [
+            75,
+            80
+          ]
+        },
+        {
+          "floor": 16,
+          "option_index": 1,
+          "hp": [
+            43,
+            43
+          ],
+          "max_hp": [
+            80,
+            80
+          ]
+        },
+        {
+          "floor": 24,
+          "option_index": 0,
+          "hp": [
+            27,
+            56
+          ],
+          "max_hp": [
+            80,
+            85
+          ]
+        },
+        {
+          "floor": 27,
+          "option_index": 0,
+          "hp": [
+            56,
+            86
+          ],
+          "max_hp": [
+            85,
+            90
+          ]
+        },
+        {
+          "floor": 32,
+          "option_index": 0,
+          "hp": [
+            41,
+            73
+          ],
+          "max_hp": [
+            90,
+            95
+          ]
+        },
+        {
+          "floor": 40,
+          "option_index": 0,
+          "hp": [
+            26,
+            57
+          ],
+          "max_hp": [
+            89,
+            94
+          ]
+        },
+        {
+          "floor": 42,
+          "option_index": 0,
+          "hp": [
+            57,
+            90
+          ],
+          "max_hp": [
+            94,
+            99
+          ]
+        },
+        {
+          "floor": 44,
+          "option_index": 0,
+          "hp": [
+            33,
+            67
+          ],
+          "max_hp": [
+            99,
+            104
+          ]
+        }
+      ],
+      "actual_hp_recovered_sum": 242
+    },
+    "sources": [
+      {
+        "run_id": "VLZ6CCT8AQ0A",
+        "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+        "line": 275126,
+        "offset": 8469706920,
+        "bytes": 17137,
+        "sha256": "6339a4eb864addc161225a185d058c29b0cc5fe9c8affc10caba101435e93088"
+      },
+      {
+        "run_id": "VLZ6CCT8AQ0A",
+        "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+        "line": 275127,
+        "offset": 8469724057,
+        "bytes": 16194,
+        "sha256": "ec945acc5fc1b1d7fa47b5525e251325ce0588f0e665d2dfb758180fc0463098"
+      },
+      {
+        "run_id": "VLZ6CCT8AQ0A",
+        "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+        "line": 275167,
+        "offset": 8470742061,
+        "bytes": 19858,
+        "sha256": "ffecd4f7235f09200ed20b3b5effcb5aa4c5299a5dfe486a34c25a808081a64f"
+      },
+      {
+        "run_id": "VLZ6CCT8AQ0A",
+        "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+        "line": 275168,
+        "offset": 8470761919,
+        "bytes": 18915,
+        "sha256": "e75a6ca75a814ce71ac8d02591778955a1c6e4ea332a55eb55bac32e0be74686"
+      },
+      {
+        "run_id": "VLZ6CCT8AQ0A",
+        "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+        "line": 275225,
+        "offset": 8472417960,
+        "bytes": 21347,
+        "sha256": "c8cc26356df16ebc3d49e1ecc90fb3697697f1e8216a39d53be71143d24dbfb7"
+      },
+      {
+        "run_id": "VLZ6CCT8AQ0A",
+        "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+        "line": 275227,
+        "offset": 8472474241,
+        "bytes": 20405,
+        "sha256": "a517c4db1adc96e4cca86c11cff7d54eb574f077aeaec426bf5019d76d5e1ab0"
+      },
+      {
+        "run_id": "VLZ6CCT8AQ0A",
+        "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+        "line": 275372,
+        "offset": 8477161020,
+        "bytes": 24512,
+        "sha256": "3853cc6dea1697790885732a9710bfb0d2beeeca0cf449de71b7c1701147d5b0"
+      },
+      {
+        "run_id": "VLZ6CCT8AQ0A",
+        "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+        "line": 275373,
+        "offset": 8477185532,
+        "bytes": 23569,
+        "sha256": "97cd1654ded2697c62a2b5174ac16a0ff0e67702afe4b6bca6f66dacf6debf4a"
+      },
+      {
+        "run_id": "VLZ6CCT8AQ0A",
+        "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+        "line": 275385,
+        "offset": 8477531495,
+        "bytes": 24794,
+        "sha256": "a9fc48dd7cb3e4d07298621ca9424896ad3b1eb904d991b227f2bf390d6aa2d9"
+      },
+      {
+        "run_id": "VLZ6CCT8AQ0A",
+        "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+        "line": 275386,
+        "offset": 8477556289,
+        "bytes": 23851,
+        "sha256": "5fb05d4cbe4850bb0fa246f1de8725ba10c0ce7fc8725a5a528a86c1af3aff78"
+      },
+      {
+        "run_id": "VLZ6CCT8AQ0A",
+        "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+        "line": 275498,
+        "offset": 8481588493,
+        "bytes": 26144,
+        "sha256": "6d090bfb27031f72ccf5165168f228d653a2e0705a13958269218cfa87b4cb00"
+      },
+      {
+        "run_id": "VLZ6CCT8AQ0A",
+        "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+        "line": 275499,
+        "offset": 8481614637,
+        "bytes": 25201,
+        "sha256": "7b186f57af3c49ebea1d04bfca4fa825eb964870d13e6128c6de5bfe54d657c0"
+      },
+      {
+        "run_id": "VLZ6CCT8AQ0A",
+        "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+        "line": 275668,
+        "offset": 8487983283,
+        "bytes": 28905,
+        "sha256": "ce919e07e325b030313a8ddb7e6583af92e8f8a1ba9946848bdcbeabaa3166c3"
+      },
+      {
+        "run_id": "VLZ6CCT8AQ0A",
+        "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+        "line": 275669,
+        "offset": 8488012188,
+        "bytes": 27962,
+        "sha256": "7504f391d80567f1bf26c0c689907f6265e75b24fb2d159fdd72e2873ddbca2f"
+      },
+      {
+        "run_id": "VLZ6CCT8AQ0A",
+        "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+        "line": 275675,
+        "offset": 8488219155,
+        "bytes": 29372,
+        "sha256": "99e57794eb866f0faed462856a34c24fdbd61e58bdebb8a5809ea4bef64b8a8c"
+      },
+      {
+        "run_id": "VLZ6CCT8AQ0A",
+        "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+        "line": 275676,
+        "offset": 8488248527,
+        "bytes": 28429,
+        "sha256": "733c5c6c5a1b6e54f3ec24b7be65f0546876be37b49bf888992fdff29f31fe46"
+      },
+      {
+        "run_id": "VLZ6CCT8AQ0A",
+        "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+        "line": 275718,
+        "offset": 8489957757,
+        "bytes": 30127,
+        "sha256": "74b1ee8f285b5caf2b3ae47db1ed0bf0fee3b7de82bf50b47d0bc07cfaf5fd92"
+      },
+      {
+        "run_id": "VLZ6CCT8AQ0A",
+        "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+        "line": 275719,
+        "offset": 8489987884,
+        "bytes": 29189,
+        "sha256": "b26d0390450e16e30098beef624322f88936e4d3d786da9389ee95e43000280b"
+      }
+    ],
+    "scope": "冻结实盘观测；不认证未选方案或整战因果"
+  },
+  {
+    "key": "下水道蚌独立成长",
+    "run_id": "CA5KE8GFJ9X2",
+    "ledger": [
+      "silent-0005",
+      "silent-0231"
+    ],
+    "conclusion": "F13 T1/T3/T5同招在0/4/8力时显示11/15/19；弱不取消后次成长。",
+    "values": {
+      "strength": [
+        0,
+        4,
+        8
+      ],
+      "displayed_attack": [
+        11,
+        15,
+        19
+      ]
+    },
+    "sources": [
+      {
+        "run_id": "CA5KE8GFJ9X2",
+        "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+        "line": 273238,
+        "offset": 8409720911,
+        "bytes": 31068,
+        "sha256": "65f8266e5cf61de82d7fee3dcbca0a4e0f4c2a81733d399e68b281d5c7e2e53e"
+      },
+      {
+        "run_id": "CA5KE8GFJ9X2",
+        "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+        "line": 273252,
+        "offset": 8410142505,
+        "bytes": 30126,
+        "sha256": "3862929dca05b98a71055bcf1ad92e0093de0d25e50763cafa89bb2150983126"
+      },
+      {
+        "run_id": "CA5KE8GFJ9X2",
+        "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+        "line": 273263,
+        "offset": 8410465687,
+        "bytes": 30084,
+        "sha256": "403b1825c878734242f2e10a52f73c848df1608c609b00a57a72a84e44e3e126"
+      }
+    ],
+    "scope": "冻结实盘观测；不认证未选方案或整战因果"
+  },
+  {
+    "key": "下水道蚌现场虚弱",
+    "run_id": "CA5KE8GFJ9X2",
+    "ledger": [
+      "silent-0005",
+      "silent-0231"
+    ],
+    "conclusion": "F13 T3/T5施弱后显示11/14；这不是成长被关闭。",
+    "values": {
+      "displayed_attack": [
+        11,
+        14
+      ]
+    },
+    "sources": [
+      {
+        "run_id": "CA5KE8GFJ9X2",
+        "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+        "line": 273254,
+        "offset": 8410202741,
+        "bytes": 29264,
+        "sha256": "fb78be60dd45f7aed7620c86025151dcfb37d158d3c4f58f50acd46ade84989c"
+      },
+      {
+        "run_id": "CA5KE8GFJ9X2",
+        "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+        "line": 273268,
+        "offset": 8410610063,
+        "bytes": 26203,
+        "sha256": "33bf3096a1ed09716ad05804825e9a9e43faf274163d96ac73dd673153882e02"
+      }
+    ],
+    "scope": "冻结实盘观测；不认证未选方案或整战因果"
+  },
+  {
+    "key": "吸取负敏捷与毒",
+    "run_id": "61E2QS63Y9WU",
+    "ledger": [
+      "silent-0030",
+      "silent-0027"
+    ],
+    "conclusion": "F17 T5→T6玩家力2→0、敏0→−2、敌力0→2；T6结束17毒，后帧敌67→34。",
+    "values": {
+      "strength": [
+        2,
+        0
+      ],
+      "dexterity": [
+        0,
+        -2
+      ],
+      "enemy_strength": 2,
+      "poison_before_end": 17,
+      "enemy_hp": [
+        67,
+        34
+      ]
+    },
+    "sources": [
+      {
+        "run_id": "61E2QS63Y9WU",
+        "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+        "line": 273502,
+        "offset": 8416272544,
+        "bytes": 30236,
+        "sha256": "be63743841ee48ae831eaffcd6e61ceec4b60f2a908dad93e12bd8d71871b34e"
+      },
+      {
+        "run_id": "61E2QS63Y9WU",
+        "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+        "line": 273504,
+        "offset": 8416332233,
+        "bytes": 30096,
+        "sha256": "589dcbec3df0d64238badc1a9b60803c2aa73e99c672d4202731c1b22bf90c28"
+      },
+      {
+        "run_id": "61E2QS63Y9WU",
+        "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+        "line": 273507,
+        "offset": 8416419946,
+        "bytes": 27563,
+        "sha256": "d7e8a48aa55957f11d2ba33bc76d6ed6bdbcb78415a8d03dc45e50537324d52b"
+      },
+      {
+        "run_id": "61E2QS63Y9WU",
+        "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+        "line": 273508,
+        "offset": 8416447509,
+        "bytes": 29473,
+        "sha256": "db2d4507be25ea62558e11f8ca0c48bff7507e0c22351ef9397372108d49d116"
+      }
+    ],
+    "scope": "冻结实盘观测；不认证未选方案或整战因果"
+  },
+  {
+    "key": "负敏捷双防御",
+    "run_id": "61E2QS63Y9WU",
+    "ledger": [
+      "silent-0030",
+      "silent-0005"
+    ],
+    "conclusion": "F17 T6两张普通防御各显示3挡。",
+    "values": {
+      "defend_blocks": [
+        3,
+        3
+      ]
+    },
+    "sources": [
+      {
+        "run_id": "61E2QS63Y9WU",
+        "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+        "line": 273504,
+        "offset": 8416332233,
+        "bytes": 30096,
+        "sha256": "589dcbec3df0d64238badc1a9b60803c2aa73e99c672d4202731c1b22bf90c28"
+      }
+    ],
+    "scope": "冻结实盘观测；不认证未选方案或整战因果"
+  },
+  {
+    "key": "航行两实体增力",
+    "run_id": "61E2QS63Y9WU",
+    "ledger": [
+      "silent-0039",
+      "silent-0209"
+    ],
+    "conclusion": "F23两次航行后本体与幻象现场力量0→3→6；不能由本体成长单独推幻象退场。",
+    "values": {
+      "body_strength": [
+        0,
+        3,
+        6
+      ],
+      "illusion_strength": [
+        0,
+        3,
+        6
+      ]
+    },
+    "sources": [
+      {
+        "run_id": "61E2QS63Y9WU",
+        "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+        "line": 273583,
+        "offset": 8418765669,
+        "bytes": 36077,
+        "sha256": "6b286b0b228d3fe76960117ea67e39432e82b83e8510339d2c6a228ca606784c"
+      },
+      {
+        "run_id": "61E2QS63Y9WU",
+        "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+        "line": 273589,
+        "offset": 8418972566,
+        "bytes": 36886,
+        "sha256": "91b46c385ceb67424f5dbe79bc5e11464e149870b0885818e6789347d1298fe4"
+      },
+      {
+        "run_id": "61E2QS63Y9WU",
+        "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+        "line": 273596,
+        "offset": 8419227404,
+        "bytes": 39786,
+        "sha256": "12864df19fb9f80a803101606d4e72129b628aceccc5e245bdc3408ee1c52b7f"
+      }
+    ],
+    "scope": "冻结实盘观测；不认证未选方案或整战因果"
+  },
+  {
+    "key": "本体线幻象未退",
+    "run_id": "61E2QS63Y9WU",
+    "ledger": [
+      "silent-0039",
+      "silent-0209"
+    ],
+    "conclusion": "F23 T4本体与幻象合净扣47、玩家净损15；幻象余2仍在场。另一focus未实打。",
+    "values": {
+      "body_hp": [
+        76,
+        41
+      ],
+      "illusion_hp": [
+        14,
+        2
+      ],
+      "player_hp": [
+        25,
+        10
+      ]
+    },
+    "sources": [
+      {
+        "run_id": "61E2QS63Y9WU",
+        "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+        "line": 273593,
+        "offset": 8419114689,
+        "bytes": 38211,
+        "sha256": "3cf5b90f94b99a39f05650e8888a9e8a3c07a6a57f30812c19dcf289af4854b7"
+      },
+      {
+        "run_id": "61E2QS63Y9WU",
+        "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+        "line": 273596,
+        "offset": 8419227404,
+        "bytes": 39786,
+        "sha256": "12864df19fb9f80a803101606d4e72129b628aceccc5e245bdc3408ee1c52b7f"
+      }
+    ],
+    "scope": "冻结实盘观测；不认证未选方案或整战因果"
+  },
+  {
+    "key": "无毒目标冒泡",
+    "run_id": "5PM6JAQG6FNQ",
+    "ledger": [
+      "silent-0009",
+      "silent-0021"
+    ],
+    "conclusion": "F39第二次T2冒泡相邻帧耗1能，玩家29血不变、敌35/72血不变且无毒；35是敌血。",
+    "values": {
+      "energy": [
+        5,
+        4
+      ],
+      "player_hp": [
+        29,
+        29
+      ],
+      "enemy_hp": [
+        35,
+        72
+      ]
+    },
+    "sources": [
+      {
+        "run_id": "5PM6JAQG6FNQ",
+        "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+        "line": 274379,
+        "offset": 8445489179,
+        "bytes": 47212,
+        "sha256": "339930f8e12551606adebfd1276a363770defb524bbb995add9792d897fccd99"
+      },
+      {
+        "run_id": "5PM6JAQG6FNQ",
+        "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+        "line": 274380,
+        "offset": 8445536391,
+        "bytes": 46374,
+        "sha256": "e90ebf658ca70e7039dff4c7c9c5a248614698afcd8cfda99939d421f52634f0"
+      }
+    ],
+    "scope": "冻结实盘观测；不认证未选方案或整战因果"
+  },
+  {
+    "key": "熟睡甲虫醒后成长",
+    "run_id": "DUZUBAJ3A8GP",
+    "ledger": [
+      "silent-0128",
+      "silent-0079"
+    ],
+    "conclusion": "F30首试睡3/2/1，T4醒；T4/T5/T6现场0/2/4力、攻击18/20/22。四试不是四独立局。",
+    "values": {
+      "sleep": [
+        3,
+        2,
+        1,
+        0,
+        0,
+        0
+      ],
+      "awake_strength": [
+        0,
+        2,
+        4
+      ],
+      "awake_attack": [
+        18,
+        20,
+        22
+      ]
+    },
+    "sources": [
+      {
+        "run_id": "DUZUBAJ3A8GP",
+        "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+        "line": 274909,
+        "offset": 8462479122,
+        "bytes": 45103,
+        "sha256": "d7c195a4f2d9cc519a727b88300cf6f63e95ef27556a3e992ae1b2192de24502"
+      },
+      {
+        "run_id": "DUZUBAJ3A8GP",
+        "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+        "line": 274914,
+        "offset": 8462696530,
+        "bytes": 44248,
+        "sha256": "8ccf8a4ad2cd56d93f12584e8930cf27b33cd96070a67e2319ad4cc572dde7a5"
+      },
+      {
+        "run_id": "DUZUBAJ3A8GP",
+        "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+        "line": 274919,
+        "offset": 8462910679,
+        "bytes": 43448,
+        "sha256": "cd7fb78716a27a597bdeb3f3e7dd60e8db65e695c1734cbe7de343cdc77468aa"
+      },
+      {
+        "run_id": "DUZUBAJ3A8GP",
+        "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+        "line": 274923,
+        "offset": 8463079981,
+        "bytes": 46176,
+        "sha256": "3b26db90a278676f315cc3d0ad42b9c0fa0e5be0d53c33194c7ac26fbedf654f"
+      },
+      {
+        "run_id": "DUZUBAJ3A8GP",
+        "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+        "line": 274929,
+        "offset": 8463348072,
+        "bytes": 44287,
+        "sha256": "a4f6795b9578bdfda32f9fabadf7d2f6c7a38124ad45be1701626bde1479a42a"
+      },
+      {
+        "run_id": "DUZUBAJ3A8GP",
+        "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+        "line": 274934,
+        "offset": 8463560010,
+        "bytes": 43083,
+        "sha256": "132c4cf074e10aab4cdf736519d0c344105b8da8c2aa7c8ca51b007a3df8dff5"
+      }
+    ],
+    "scope": "冻结实盘观测；不认证未选方案或整战因果"
+  },
+  {
+    "key": "同指纹SL替换",
+    "run_id": "8JRE1C4H4Z2W",
+    "ledger": [
+      "silent-0079",
+      "silent-0125"
+    ],
+    "conclusion": "F33首试/第三次T2同指纹；第三次原答0/24与SL替换5/24分列，预计封顶47不等同死率。",
+    "values": {
+      "attempts": [
+        1,
+        3
+      ],
+      "sl": {
+        "point": "T2, after the replay of attempt 2's path stopped (T1: the board is not on attempt 2's path)",
+        "original": "狂乱逃离, 带毒刺击 -> 无厌沙虫, 尖啸",
+        "replacement": "狂乱逃离, 带毒刺击 -> 无厌沙虫, 打击 -> 无厌沙虫",
+        "reason": "the best untried line by the question's ranking (every untried line dies more often in the rollout; the pick is known to fail)",
+        "played_in": [
+          1
+        ],
+        "numbers": {
+          "original": "rollout dead 0/24, further loss 47, win ~36%; whole-fight sim win 0%; this turn hp -3, dmg 10",
+          "replacement": "rollout dead 5/24, further loss 47, win ~22%; whole-fight sim win 0%; this turn hp -15, dmg 17"
+        },
+        "gate": "rollout",
+        "turn": "FRANTIC_ESCAPE, PIERCING_WAIL, POISONED_STAB>无厌沙虫",
+        "turn_instead": "FRANTIC_ESCAPE, POISONED_STAB>无厌沙虫, STRIKE_SILENT>无厌沙虫"
+      }
+    },
+    "sources": [
+      {
+        "run_id": "8JRE1C4H4Z2W",
+        "source": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+        "line": 270216,
+        "offset": 682520036,
+        "bytes": 9787,
+        "sha256": "0082da04fe05a5d3b8bfbb3e590dc2288fe41c8e6f70e4be643b95aa082d582e"
+      },
+      {
+        "run_id": "8JRE1C4H4Z2W",
+        "source": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+        "line": 270282,
+        "offset": 682749244,
+        "bytes": 12686,
+        "sha256": "721f1ef7b80a307741e97b8cf9ab47d6ef03330053a3d1e9051127cc2108f5df"
+      }
+    ],
+    "scope": "冻结实盘观测；不认证未选方案或整战因果"
+  },
+  {
+    "key": "沙虫末轮截断",
+    "run_id": "8JRE1C4H4Z2W",
+    "ledger": [
+      "silent-0079",
+      "silent-0021"
+    ],
+    "conclusion": "F33末试T11 5血22挡对显示37；显示需损15与零血净损5分别记录。",
+    "values": {
+      "hp": 5,
+      "block": 22,
+      "displayed_attack": 37,
+      "attack_minus_block_reference": 15,
+      "actual_uncapped_damage": null
+    },
+    "sources": [
+      {
+        "run_id": "8JRE1C4H4Z2W",
+        "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+        "line": 276433,
+        "offset": 8515968305,
+        "bytes": 42700,
+        "sha256": "865cfac14c0d05a6a9945c750854a60c9b193eb5f764363be10ad392f2a61147"
+      }
+    ],
+    "scope": "冻结实盘观测；不认证未选方案或整战因果"
+  }
+]

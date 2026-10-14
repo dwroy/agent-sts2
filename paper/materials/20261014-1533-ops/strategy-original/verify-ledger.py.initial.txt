@@ -1,0 +1,47 @@
+import hashlib
+import importlib.util
+import json
+from pathlib import Path
+
+HERE = Path(__file__).resolve().parent
+ROOT = Path('/home/dw/Projects/agent-sts2')
+BATCH = '20261014-151302-strategy-proposal'
+spec = importlib.util.spec_from_file_location('ledger', ROOT / 'learner/ledger.py')
+ledger = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(ledger)
+path = ROOT / 'paper/materials/learning/ledger.jsonl'
+requests = [json.loads(line) for line in (HERE / 'ledger-updates.jsonl').read_text().splitlines()]
+before = json.loads((HERE / 'linked-ledger.json').read_text())
+after = ledger.fold(ledger.read_rows(str(path)))
+protected = ['claim', 'status', 'version', 'first_run', 'asc', 'evidence', 'prior', 'prior_note', 'prior_runs']
+rows = []
+with path.open('rb') as handle:
+    for line in handle:
+        row = json.loads(line)
+        if row.get('by') == 'learner:strategy-proposal' and row.get('note', '').startswith(BATCH + '：'):
+            rows.append(line)
+assert len(rows) == len(requests) == 26
+assert {json.loads(line)['id'] for line in rows} == set(before)
+checks = []
+for request in requests:
+    ident = request['id']
+    a, b = before[ident], after[ident]
+    assert a['character'] == b['character'] == 'silent'
+    assert all(a.get(key) == b.get(key) for key in protected), ident
+    raw = next(json.loads(line) for line in rows if json.loads(line)['id'] == ident)
+    assert all(raw[key] == value for key, value in request.items())
+    assert any(row['by'] == request['by'] and row['ts'] == raw['ts'] for row in b['history'])
+    assert request['note'] in b['notes']
+    assert all(p in b['where']['proposal'] for p in request['where']['proposal'])
+    checks.append({'id': ident, 'status_preserved': b['status'], 'protected_fields_unchanged': True,
+                   'cli_row_matches_request': True, 'history_notes_and_links_verified': True,
+                   'before_sha256': hashlib.sha256(json.dumps({k: a.get(k) for k in protected}, ensure_ascii=False, sort_keys=True).encode()).hexdigest(),
+                   'after_sha256': hashlib.sha256(json.dumps({k: b.get(k) for k in protected}, ensure_ascii=False, sort_keys=True).encode()).hexdigest()})
+assert (HERE / 'ledger-cli.exit').read_text().strip() == '0'
+(HERE / 'ledger-cli-rows.jsonl').write_bytes(b''.join(rows))
+(HERE / 'ledger-update-verification.json').write_text(json.dumps({'cli_exit': 0, 'links': checks,
+    'rows': len(rows), 'raw_rows_sha256': hashlib.sha256(b''.join(rows)).hexdigest(),
+    'initial_verifier_failure': '误读fold后的原始by/note；CLI已成功追加，不重复提交，改核history/notes及原始物理行。'},
+    ensure_ascii=False, indent=2) + '\n')
+print(json.dumps({'ledger_links': len(checks), 'protected_fields_unchanged': True, 'cli_exit': 0,
+                  'duplicate_append': False}, ensure_ascii=False))

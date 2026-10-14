@@ -1,0 +1,884 @@
+{
+  "at": "2026-10-14 15:40:56 CST",
+  "supplement": "v5-jev-prompt-ablation-20261014",
+  "actual_ops_received": true,
+  "registered": true,
+  "phase": "R3/quantitative engineering supplement after original R1-R2 acceptance",
+  "state": "received_registered_waiting_for_original_R1_R2_acceptance_and_R3_phase",
+  "source": "b4f6559d1a6b349ce0244025f6244640646d57af",
+  "actual_main_integration": "852b6e568ff48d64bc6dce1bcc73526c58336d82",
+  "current_main": "f8d306514e2a8afafeac591d38773b92807f2518",
+  "four_exact_experiment_leaves": [
+    {
+      "path": "experiments/v5-jev-ablation/analyze.py",
+      "source_and_integrated_and_current_main_sha256": "f0c88fd4c8fce5b4083b683e5e10d17ff285d41d578065cab9e808716f6919be"
+    },
+    {
+      "path": "experiments/v5-jev-ablation/prepare.py",
+      "source_and_integrated_and_current_main_sha256": "cfd5b829497a3ef7fddf06a46c14510d5484a6aff500ded71935a063c326b925"
+    },
+    {
+      "path": "experiments/v5-jev-ablation/run.mjs",
+      "source_and_integrated_and_current_main_sha256": "d23458cea36540b454dfbaf67e93bfc4ceafb25652d6c6ef3f3642b8c61569b7"
+    },
+    {
+      "path": "experiments/v5-jev-ablation/test_prepare.py",
+      "source_and_integrated_and_current_main_sha256": "a4cee5523efb1c10548793abbd43338ee46a869d0d01c44b1564a56d43a4280f"
+    }
+  ],
+  "approved_spec_sha256": "649d98bd27eebdcb47a038d22f5b34268a1ce6f4fb3113bfb406f5d70124a630",
+  "artifact_manifest_sha256": "aa1b355b249b416853cd1b31695893e3f82f6e234ae33a882e55fc85466aa865",
+  "artifact_files_verified": 129,
+  "raw_sources_verified": [
+    {
+      "path": "paper/materials/20261014-v5-jev-ablation/pilot-r2/originals/a677f4b1-0909-43f7-a2f2-8ba39e2ada2a-decision.jsonl.gz",
+      "raw_sha256": "1835221369e715cdc1fc7159dcc9f972fa8eadca21c83ec7966cd9fe4efa1228",
+      "source": {
+        "path": "logs/decisions.jsonl",
+        "offset": 1291479230,
+        "length": 50726,
+        "sha256": "1835221369e715cdc1fc7159dcc9f972fa8eadca21c83ec7966cd9fe4efa1228"
+      }
+    },
+    {
+      "path": "paper/materials/20261014-v5-jev-ablation/pilot-r2/originals/a677f4b1-0909-43f7-a2f2-8ba39e2ada2a-prompt.jsonl.gz",
+      "raw_sha256": "8df3460bb617b0147405ef6bcac1a320bec49376e8165fb1f3ce53c055c60515",
+      "source": {
+        "path": "logs/jev-prompts.jsonl",
+        "offset": 899967346,
+        "length": 58991,
+        "sha256": "8df3460bb617b0147405ef6bcac1a320bec49376e8165fb1f3ce53c055c60515"
+      }
+    },
+    {
+      "path": "paper/materials/20261014-v5-jev-ablation/pilot-r2/originals/203cd3a9-945c-4800-a314-e2e94276a890-decision.jsonl.gz",
+      "raw_sha256": "8cebcf4485d87ec9a95fdea6c35e51f14e7c29438d697e8fdab774de0855d248",
+      "source": {
+        "path": "logs/decisions.jsonl",
+        "offset": 1278273983,
+        "length": 23029,
+        "sha256": "8cebcf4485d87ec9a95fdea6c35e51f14e7c29438d697e8fdab774de0855d248"
+      }
+    },
+    {
+      "path": "paper/materials/20261014-v5-jev-ablation/pilot-r2/originals/203cd3a9-945c-4800-a314-e2e94276a890-prompt.jsonl.gz",
+      "raw_sha256": "dd39ffbca187451901f5e645c8ca706b9d4b236a573920ff6518001024902529",
+      "source": {
+        "path": "logs/jev-prompts.jsonl",
+        "offset": 892192253,
+        "length": 25504,
+        "sha256": "dd39ffbca187451901f5e645c8ca706b9d4b236a573920ff6518001024902529"
+      }
+    },
+    {
+      "path": "paper/materials/20261014-v5-jev-ablation/pilot-r2/originals/2235f2ad-3b36-4c83-ba88-6b563d12bc33-decision.jsonl.gz",
+      "raw_sha256": "77930e52273c5072cdacfc427faa2d07d5e238b480fa3da5144d1552501379ed",
+      "source": {
+        "path": "logs/decisions.jsonl",
+        "offset": 1240403374,
+        "length": 31046,
+        "sha256": "77930e52273c5072cdacfc427faa2d07d5e238b480fa3da5144d1552501379ed"
+      }
+    },
+    {
+      "path": "paper/materials/20261014-v5-jev-ablation/pilot-r2/originals/2235f2ad-3b36-4c83-ba88-6b563d12bc33-prompt.jsonl.gz",
+      "raw_sha256": "686bae57e25cd1db42e2f8a862b7635553b3100bce43be119e1075a178e7c4f3",
+      "source": {
+        "path": "logs/jev-prompts.jsonl",
+        "offset": 864148053,
+        "length": 37013,
+        "sha256": "686bae57e25cd1db42e2f8a862b7635553b3100bce43be119e1075a178e7c4f3"
+      }
+    },
+    {
+      "path": "paper/materials/20261014-v5-jev-ablation/pilot-r2/originals/9d343a2e-a549-447d-a284-3ea9e36178e1-decision.jsonl.gz",
+      "raw_sha256": "61deabfa2cd3d37b63b83ce5b81db638895dc1af1b4015b67f051a41ea4a2875",
+      "source": {
+        "path": "logs/decisions.jsonl",
+        "offset": 1253389811,
+        "length": 37408,
+        "sha256": "61deabfa2cd3d37b63b83ce5b81db638895dc1af1b4015b67f051a41ea4a2875"
+      }
+    },
+    {
+      "path": "paper/materials/20261014-v5-jev-ablation/pilot-r2/originals/9d343a2e-a549-447d-a284-3ea9e36178e1-prompt.jsonl.gz",
+      "raw_sha256": "125267ab290a73c7c3af5201aaede08b5c9a9d9cdde71e145a29cab6f6d350b7",
+      "source": {
+        "path": "logs/jev-prompts.jsonl",
+        "offset": 875964332,
+        "length": 38127,
+        "sha256": "125267ab290a73c7c3af5201aaede08b5c9a9d9cdde71e145a29cab6f6d350b7"
+      }
+    },
+    {
+      "path": "paper/materials/20261014-v5-jev-ablation/pilot-r2/originals/ae691d21-56c7-4d22-b1f9-0032cf29bb5a-decision.jsonl.gz",
+      "raw_sha256": "3ef6bd26aa17b95ee8524d1fab2d7e74ace04fa73018e719311e05f1983ffd02",
+      "source": {
+        "path": "logs/decisions.jsonl",
+        "offset": 1303841511,
+        "length": 21117,
+        "sha256": "3ef6bd26aa17b95ee8524d1fab2d7e74ace04fa73018e719311e05f1983ffd02"
+      }
+    },
+    {
+      "path": "paper/materials/20261014-v5-jev-ablation/pilot-r2/originals/ae691d21-56c7-4d22-b1f9-0032cf29bb5a-prompt.jsonl.gz",
+      "raw_sha256": "46880574d05a3b3868c84d1dd6c580282e28a38335912de7980767cd5b7ab02a",
+      "source": {
+        "path": "logs/jev-prompts.jsonl",
+        "offset": 907175541,
+        "length": 24921,
+        "sha256": "46880574d05a3b3868c84d1dd6c580282e28a38335912de7980767cd5b7ab02a"
+      }
+    },
+    {
+      "path": "paper/materials/20261014-v5-jev-ablation/pilot-r2/originals/bdae1a44-d67a-4b3f-b64a-d8854e4eaec8-decision.jsonl.gz",
+      "raw_sha256": "07175e7d5ea220b1498a4f8504cc18ff6f310365b18e40674890637172926a90",
+      "source": {
+        "path": "logs/decisions.jsonl",
+        "offset": 1306159767,
+        "length": 13212,
+        "sha256": "07175e7d5ea220b1498a4f8504cc18ff6f310365b18e40674890637172926a90"
+      }
+    },
+    {
+      "path": "paper/materials/20261014-v5-jev-ablation/pilot-r2/originals/bdae1a44-d67a-4b3f-b64a-d8854e4eaec8-prompt.jsonl.gz",
+      "raw_sha256": "9a3a9ad90f03bdc50098d0643b8118b945f9f2a0ab269283fd9225648aaa9904",
+      "source": {
+        "path": "logs/jev-prompts.jsonl",
+        "offset": 909640968,
+        "length": 13380,
+        "sha256": "9a3a9ad90f03bdc50098d0643b8118b945f9f2a0ab269283fd9225648aaa9904"
+      }
+    },
+    {
+      "path": "paper/materials/20261014-v5-jev-ablation/pilot-r2/originals/c200963c-3572-417f-adf0-fa29d5c12cf0-decision.jsonl.gz",
+      "raw_sha256": "bfec953074600b1a397f436497b2d188b2a75bf228100397d9f2916491c14a13",
+      "source": {
+        "path": "logs/decisions.jsonl",
+        "offset": 1257675888,
+        "length": 19709,
+        "sha256": "bfec953074600b1a397f436497b2d188b2a75bf228100397d9f2916491c14a13"
+      }
+    },
+    {
+      "path": "paper/materials/20261014-v5-jev-ablation/pilot-r2/originals/c200963c-3572-417f-adf0-fa29d5c12cf0-prompt.jsonl.gz",
+      "raw_sha256": "858e6c91bda211e2351d204186b6570771694bcee22d18f4130f0e5705a7b294",
+      "source": {
+        "path": "logs/jev-prompts.jsonl",
+        "offset": 878014519,
+        "length": 26909,
+        "sha256": "858e6c91bda211e2351d204186b6570771694bcee22d18f4130f0e5705a7b294"
+      }
+    },
+    {
+      "path": "paper/materials/20261014-v5-jev-ablation/pilot-r2/originals/14020025-a45a-45c2-9ca8-63eb0c16871a-decision.jsonl.gz",
+      "raw_sha256": "a4cae9b130a3fb3828fffd6eeb380deb0fcebb2a79d0cb860243aa7c8554aceb",
+      "source": {
+        "path": "logs/decisions.jsonl",
+        "offset": 1262845954,
+        "length": 8299,
+        "sha256": "a4cae9b130a3fb3828fffd6eeb380deb0fcebb2a79d0cb860243aa7c8554aceb"
+      }
+    },
+    {
+      "path": "paper/materials/20261014-v5-jev-ablation/pilot-r2/originals/14020025-a45a-45c2-9ca8-63eb0c16871a-prompt.jsonl.gz",
+      "raw_sha256": "5e0fa8cd2778debd2c0425fa5607a60e13b52b5d27e7c45b74e71a422f8f6d48",
+      "source": {
+        "path": "logs/jev-prompts.jsonl",
+        "offset": 882303961,
+        "length": 18175,
+        "sha256": "5e0fa8cd2778debd2c0425fa5607a60e13b52b5d27e7c45b74e71a422f8f6d48"
+      }
+    },
+    {
+      "path": "paper/materials/20261014-v5-jev-ablation/pilot-r2/originals/2bd4d5d2-9fd7-46b2-aa4d-908723a8909a-decision.jsonl.gz",
+      "raw_sha256": "dada3b24c6c0a02b0e7474fc5955b47c0ebd44d259ff463b892169818468c6a7",
+      "source": {
+        "path": "logs/decisions.jsonl",
+        "offset": 1342768919,
+        "length": 53667,
+        "sha256": "dada3b24c6c0a02b0e7474fc5955b47c0ebd44d259ff463b892169818468c6a7"
+      }
+    },
+    {
+      "path": "paper/materials/20261014-v5-jev-ablation/pilot-r2/originals/2bd4d5d2-9fd7-46b2-aa4d-908723a8909a-prompt.jsonl.gz",
+      "raw_sha256": "1cb0141bce53524042bfafbf022a06584a09164e30dc53c0be3f2e4d3bbbf04a",
+      "source": {
+        "path": "logs/jev-prompts.jsonl",
+        "offset": 929166649,
+        "length": 60572,
+        "sha256": "1cb0141bce53524042bfafbf022a06584a09164e30dc53c0be3f2e4d3bbbf04a"
+      }
+    },
+    {
+      "path": "paper/materials/20261014-v5-jev-ablation/pilot-r2/originals/d22cdc17-6267-49fb-a85f-4dc1dcd448e0-decision.jsonl.gz",
+      "raw_sha256": "b68dc6b0d15d5b6a2dc4e164906e3fddbeeba27885903f2cbf4a12c3055a8ead",
+      "source": {
+        "path": "logs/decisions.jsonl",
+        "offset": 1238420227,
+        "length": 48699,
+        "sha256": "b68dc6b0d15d5b6a2dc4e164906e3fddbeeba27885903f2cbf4a12c3055a8ead"
+      }
+    },
+    {
+      "path": "paper/materials/20261014-v5-jev-ablation/pilot-r2/originals/d22cdc17-6267-49fb-a85f-4dc1dcd448e0-prompt.jsonl.gz",
+      "raw_sha256": "4d44bc2f25adca9c072dcb7b24149380194870add6223a4498c92f431a7fcc1d",
+      "source": {
+        "path": "logs/jev-prompts.jsonl",
+        "offset": 862294110,
+        "length": 58059,
+        "sha256": "4d44bc2f25adca9c072dcb7b24149380194870add6223a4498c92f431a7fcc1d"
+      }
+    },
+    {
+      "path": "paper/materials/20261014-v5-jev-ablation/pilot-r2/originals/7cb74d66-5a5b-4d0b-9a07-bb3455dfc728-decision.jsonl.gz",
+      "raw_sha256": "2d9ae5ccac3b3c1256b34be3386b873a009294b8f33431a54de46d443599b765",
+      "source": {
+        "path": "logs/decisions.jsonl",
+        "offset": 1290693053,
+        "length": 37551,
+        "sha256": "2d9ae5ccac3b3c1256b34be3386b873a009294b8f33431a54de46d443599b765"
+      }
+    },
+    {
+      "path": "paper/materials/20261014-v5-jev-ablation/pilot-r2/originals/7cb74d66-5a5b-4d0b-9a07-bb3455dfc728-prompt.jsonl.gz",
+      "raw_sha256": "4e47704909a95a7e5298700842aa3f26b1bbe7a38b99346dccbba828a05e53ab",
+      "source": {
+        "path": "logs/jev-prompts.jsonl",
+        "offset": 899127736,
+        "length": 42983,
+        "sha256": "4e47704909a95a7e5298700842aa3f26b1bbe7a38b99346dccbba828a05e53ab"
+      }
+    },
+    {
+      "path": "paper/materials/20261014-v5-jev-ablation/pilot-r2/originals/dc1a8e7a-cda4-429b-9b00-7565d76dd3c6-decision.jsonl.gz",
+      "raw_sha256": "853a4e7a4998a65225630e55f2cc6b11ae2b4addc6ad7b4b08311fd2272a01c0",
+      "source": {
+        "path": "logs/decisions.jsonl",
+        "offset": 1341661178,
+        "length": 32223,
+        "sha256": "853a4e7a4998a65225630e55f2cc6b11ae2b4addc6ad7b4b08311fd2272a01c0"
+      }
+    },
+    {
+      "path": "paper/materials/20261014-v5-jev-ablation/pilot-r2/originals/dc1a8e7a-cda4-429b-9b00-7565d76dd3c6-prompt.jsonl.gz",
+      "raw_sha256": "e8300b79b4e3f11e40d51f4f0b6f24ed1cf94a4600c193a5025ba8c498607655",
+      "source": {
+        "path": "logs/jev-prompts.jsonl",
+        "offset": 928671069,
+        "length": 36561,
+        "sha256": "e8300b79b4e3f11e40d51f4f0b6f24ed1cf94a4600c193a5025ba8c498607655"
+      }
+    },
+    {
+      "path": "paper/materials/20261014-v5-jev-ablation/pilot-r2/originals/85872d47-dff9-473e-acd7-9a867cbe3a68-decision.jsonl.gz",
+      "raw_sha256": "7e4f058c0cdf7f3b72eb34b64a78a9291c8bbc07bb477275294a1aa5ad0ed308",
+      "source": {
+        "path": "logs/decisions.jsonl",
+        "offset": 1323673804,
+        "length": 40221,
+        "sha256": "7e4f058c0cdf7f3b72eb34b64a78a9291c8bbc07bb477275294a1aa5ad0ed308"
+      }
+    },
+    {
+      "path": "paper/materials/20261014-v5-jev-ablation/pilot-r2/originals/85872d47-dff9-473e-acd7-9a867cbe3a68-prompt.jsonl.gz",
+      "raw_sha256": "0edd713d289e6983a8d39c3b4b91305d429b321a996036d6f68277637cc48884",
+      "source": {
+        "path": "logs/jev-prompts.jsonl",
+        "offset": 919532189,
+        "length": 44920,
+        "sha256": "0edd713d289e6983a8d39c3b4b91305d429b321a996036d6f68277637cc48884"
+      }
+    },
+    {
+      "path": "paper/materials/20261014-v5-jev-ablation/pilot-r2/originals/c1f7df10-c91a-4771-ac7f-1aeaa571fde8-decision.jsonl.gz",
+      "raw_sha256": "cbe78a365424f0208a73568012de7fb679843c31cc01a83239475adb091e30a7",
+      "source": {
+        "path": "logs/decisions.jsonl",
+        "offset": 1224958417,
+        "length": 10905,
+        "sha256": "cbe78a365424f0208a73568012de7fb679843c31cc01a83239475adb091e30a7"
+      }
+    },
+    {
+      "path": "paper/materials/20261014-v5-jev-ablation/pilot-r2/originals/c1f7df10-c91a-4771-ac7f-1aeaa571fde8-prompt.jsonl.gz",
+      "raw_sha256": "4c432f9f048d80482c4273ed73e3de5eb6586a09e7b80e15483d88bf3960af6f",
+      "source": {
+        "path": "logs/jev-prompts.jsonl",
+        "offset": 855443293,
+        "length": 12049,
+        "sha256": "4c432f9f048d80482c4273ed73e3de5eb6586a09e7b80e15483d88bf3960af6f"
+      }
+    },
+    {
+      "path": "paper/materials/20261014-v5-jev-ablation/pilot-r2/originals/ab50ed9e-dcc2-4831-98cb-1c34b80f406d-decision.jsonl.gz",
+      "raw_sha256": "8f27dd42e9c829fb18cf1036202d92168c3cfeaca2a1a4c8012513c17818db1f",
+      "source": {
+        "path": "logs/decisions.jsonl",
+        "offset": 1322781813,
+        "length": 46968,
+        "sha256": "8f27dd42e9c829fb18cf1036202d92168c3cfeaca2a1a4c8012513c17818db1f"
+      }
+    },
+    {
+      "path": "paper/materials/20261014-v5-jev-ablation/pilot-r2/originals/ab50ed9e-dcc2-4831-98cb-1c34b80f406d-prompt.jsonl.gz",
+      "raw_sha256": "5d8890de0e10f6acfba2f4f112f183d08cdad58db017a305230e1f4a5aeba657",
+      "source": {
+        "path": "logs/jev-prompts.jsonl",
+        "offset": 918938958,
+        "length": 51959,
+        "sha256": "5d8890de0e10f6acfba2f4f112f183d08cdad58db017a305230e1f4a5aeba657"
+      }
+    },
+    {
+      "path": "paper/materials/20261014-v5-jev-ablation/pilot-r2/originals/76b1b74f-e713-4b5a-898d-e162d45e6d9c-decision.jsonl.gz",
+      "raw_sha256": "7621d36a500a0e416060b7bc7c0dbe1723d35745a252ebc6c961e7a928b3dc13",
+      "source": {
+        "path": "logs/decisions.jsonl",
+        "offset": 1348763099,
+        "length": 65927,
+        "sha256": "7621d36a500a0e416060b7bc7c0dbe1723d35745a252ebc6c961e7a928b3dc13"
+      }
+    },
+    {
+      "path": "paper/materials/20261014-v5-jev-ablation/pilot-r2/originals/76b1b74f-e713-4b5a-898d-e162d45e6d9c-prompt.jsonl.gz",
+      "raw_sha256": "eeef90debff573100f08103f63019242e8fe3acf997c5ba35e52637e63d7fe87",
+      "source": {
+        "path": "logs/jev-prompts.jsonl",
+        "offset": 931893925,
+        "length": 69042,
+        "sha256": "eeef90debff573100f08103f63019242e8fe3acf997c5ba35e52637e63d7fe87"
+      }
+    },
+    {
+      "path": "paper/materials/20261014-v5-jev-ablation/pilot-r2/originals/6071b54e-24d7-403c-8ba4-8db40a3e8eff-decision.jsonl.gz",
+      "raw_sha256": "53a218ce2cdf42328bd790de58caec868a35f05c550fd88489b142c96fd07c26",
+      "source": {
+        "path": "logs/decisions.jsonl",
+        "offset": 1237309239,
+        "length": 47370,
+        "sha256": "53a218ce2cdf42328bd790de58caec868a35f05c550fd88489b142c96fd07c26"
+      }
+    },
+    {
+      "path": "paper/materials/20261014-v5-jev-ablation/pilot-r2/originals/6071b54e-24d7-403c-8ba4-8db40a3e8eff-prompt.jsonl.gz",
+      "raw_sha256": "f7b070fccb8649a740d351200a9c951e21996b86cec5449dd6510cb55e4960bf",
+      "source": {
+        "path": "logs/jev-prompts.jsonl",
+        "offset": 861315684,
+        "length": 52579,
+        "sha256": "f7b070fccb8649a740d351200a9c951e21996b86cec5449dd6510cb55e4960bf"
+      }
+    },
+    {
+      "path": "paper/materials/20261014-v5-jev-ablation/pilot-r2/originals/d57effbb-747f-4c16-b298-7db7635edaf5-decision.jsonl.gz",
+      "raw_sha256": "d8a8b0a05c32927bb754e7f46911255d28e1ce238eacee4b9adbfddb0e056556",
+      "source": {
+        "path": "logs/decisions.jsonl",
+        "offset": 1279066148,
+        "length": 19176,
+        "sha256": "d8a8b0a05c32927bb754e7f46911255d28e1ce238eacee4b9adbfddb0e056556"
+      }
+    },
+    {
+      "path": "paper/materials/20261014-v5-jev-ablation/pilot-r2/originals/d57effbb-747f-4c16-b298-7db7635edaf5-prompt.jsonl.gz",
+      "raw_sha256": "4493e4f3743f38cd0f1c7898b8a3549b2c3e68835628d4b5cdbb3af539bd5f22",
+      "source": {
+        "path": "logs/jev-prompts.jsonl",
+        "offset": 892545795,
+        "length": 21943,
+        "sha256": "4493e4f3743f38cd0f1c7898b8a3549b2c3e68835628d4b5cdbb3af539bd5f22"
+      }
+    },
+    {
+      "path": "paper/materials/20261014-v5-jev-ablation/pilot-r2/originals/e55689d0-711f-4d8e-84bb-8283dca7be7b-decision.jsonl.gz",
+      "raw_sha256": "f6e2b64166f062dbb06539e2c36574b7346ae5ff9bd9fbaa36304a1504e19d01",
+      "source": {
+        "path": "logs/decisions.jsonl",
+        "offset": 1230393237,
+        "length": 46871,
+        "sha256": "f6e2b64166f062dbb06539e2c36574b7346ae5ff9bd9fbaa36304a1504e19d01"
+      }
+    },
+    {
+      "path": "paper/materials/20261014-v5-jev-ablation/pilot-r2/originals/e55689d0-711f-4d8e-84bb-8283dca7be7b-prompt.jsonl.gz",
+      "raw_sha256": "1e34d6934d976d87950416f33d5d40fbaf0efe0796844dd4960a105c95074c21",
+      "source": {
+        "path": "logs/jev-prompts.jsonl",
+        "offset": 857713345,
+        "length": 55962,
+        "sha256": "1e34d6934d976d87950416f33d5d40fbaf0efe0796844dd4960a105c95074c21"
+      }
+    },
+    {
+      "path": "paper/materials/20261014-v5-jev-ablation/pilot-r2/originals/f72a8b78-36b9-4c86-849a-a27fccc2f5f6-decision.jsonl.gz",
+      "raw_sha256": "d3fd4c112f76773cf06deea0273610db89b8ddfdf4bd3d91e58e4d75bfdf6ff3",
+      "source": {
+        "path": "logs/decisions.jsonl",
+        "offset": 1260006495,
+        "length": 24171,
+        "sha256": "d3fd4c112f76773cf06deea0273610db89b8ddfdf4bd3d91e58e4d75bfdf6ff3"
+      }
+    },
+    {
+      "path": "paper/materials/20261014-v5-jev-ablation/pilot-r2/originals/f72a8b78-36b9-4c86-849a-a27fccc2f5f6-prompt.jsonl.gz",
+      "raw_sha256": "8748e2cd7efc94e9d03e9c3447ba78269ff9d96fef26034f6f462600bc98cd4a",
+      "source": {
+        "path": "logs/jev-prompts.jsonl",
+        "offset": 879404163,
+        "length": 29417,
+        "sha256": "8748e2cd7efc94e9d03e9c3447ba78269ff9d96fef26034f6f462600bc98cd4a"
+      }
+    },
+    {
+      "path": "paper/materials/20261014-v5-jev-ablation/pilot-r2/originals/f216997d-4011-477c-af42-cb71937c0dde-decision.jsonl.gz",
+      "raw_sha256": "dd54ee5c1c8c319fd133bc33534a42803b101e99ef023c536c6965577c11b9b4",
+      "source": {
+        "path": "logs/decisions.jsonl",
+        "offset": 1320193801,
+        "length": 45214,
+        "sha256": "dd54ee5c1c8c319fd133bc33534a42803b101e99ef023c536c6965577c11b9b4"
+      }
+    },
+    {
+      "path": "paper/materials/20261014-v5-jev-ablation/pilot-r2/originals/f216997d-4011-477c-af42-cb71937c0dde-prompt.jsonl.gz",
+      "raw_sha256": "0e9c1af85c8303da8dd98391f9fe6806577cb0167aea1345367121319896208f",
+      "source": {
+        "path": "logs/jev-prompts.jsonl",
+        "offset": 917181984,
+        "length": 46016,
+        "sha256": "0e9c1af85c8303da8dd98391f9fe6806577cb0167aea1345367121319896208f"
+      }
+    },
+    {
+      "path": "paper/materials/20261014-v5-jev-ablation/pilot-r2/originals/c63dc41b-f4cb-4da1-8aa8-5c6a5d804c57-decision.jsonl.gz",
+      "raw_sha256": "ad92cd3603682308927afad282f326265edee0c2f44929bdcca053ca52f7ab24",
+      "source": {
+        "path": "logs/decisions.jsonl",
+        "offset": 1312451581,
+        "length": 46002,
+        "sha256": "ad92cd3603682308927afad282f326265edee0c2f44929bdcca053ca52f7ab24"
+      }
+    },
+    {
+      "path": "paper/materials/20261014-v5-jev-ablation/pilot-r2/originals/c63dc41b-f4cb-4da1-8aa8-5c6a5d804c57-prompt.jsonl.gz",
+      "raw_sha256": "78e7af27ef4f8c30deb4aa5d6b596f6a93ca4d1c6ded397a427230c2afed3b6b",
+      "source": {
+        "path": "logs/jev-prompts.jsonl",
+        "offset": 912603012,
+        "length": 50415,
+        "sha256": "78e7af27ef4f8c30deb4aa5d6b596f6a93ca4d1c6ded397a427230c2afed3b6b"
+      }
+    },
+    {
+      "path": "paper/materials/20261014-v5-jev-ablation/pilot-r2/originals/2221aa54-f42c-45c6-a2af-2092205b1763-decision.jsonl.gz",
+      "raw_sha256": "c9b1609c1cb892c1e6a8db070b4ed46227fee76ea73f6734c4cfb51ff7420172",
+      "source": {
+        "path": "logs/decisions.jsonl",
+        "offset": 1343942784,
+        "length": 50634,
+        "sha256": "c9b1609c1cb892c1e6a8db070b4ed46227fee76ea73f6734c4cfb51ff7420172"
+      }
+    },
+    {
+      "path": "paper/materials/20261014-v5-jev-ablation/pilot-r2/originals/2221aa54-f42c-45c6-a2af-2092205b1763-prompt.jsonl.gz",
+      "raw_sha256": "45168be92087c8698d2c0fd0fc24b587d00aa5607a543652fb16e4d87d957b21",
+      "source": {
+        "path": "logs/jev-prompts.jsonl",
+        "offset": 930206151,
+        "length": 54013,
+        "sha256": "45168be92087c8698d2c0fd0fc24b587d00aa5607a543652fb16e4d87d957b21"
+      }
+    },
+    {
+      "path": "paper/materials/20261014-v5-jev-ablation/pilot-r2/originals/70553119-12b4-47cd-a68e-11e4db7042c8-decision.jsonl.gz",
+      "raw_sha256": "a403ba3b36fadd9fda446561f07eedb728e47f820455e41812fac0caba455f4a",
+      "source": {
+        "path": "logs/decisions.jsonl",
+        "offset": 1302057831,
+        "length": 18718,
+        "sha256": "a403ba3b36fadd9fda446561f07eedb728e47f820455e41812fac0caba455f4a"
+      }
+    },
+    {
+      "path": "paper/materials/20261014-v5-jev-ablation/pilot-r2/originals/70553119-12b4-47cd-a68e-11e4db7042c8-prompt.jsonl.gz",
+      "raw_sha256": "51a95e7373c4314a97be5eb3bbb7e90c6fd1c8d71d54fb05e5a7d0a10cf2ad10",
+      "source": {
+        "path": "logs/jev-prompts.jsonl",
+        "offset": 905999220,
+        "length": 23350,
+        "sha256": "51a95e7373c4314a97be5eb3bbb7e90c6fd1c8d71d54fb05e5a7d0a10cf2ad10"
+      }
+    },
+    {
+      "path": "paper/materials/20261014-v5-jev-ablation/pilot-r2/originals/f684ffef-6dc4-4dc7-a911-9fe611fe1ecd-decision.jsonl.gz",
+      "raw_sha256": "2b16009a9f40d0370d07be1edb55e66db8470e071f4730ce73ebd9470abada08",
+      "source": {
+        "path": "logs/decisions.jsonl",
+        "offset": 1315298605,
+        "length": 15775,
+        "sha256": "2b16009a9f40d0370d07be1edb55e66db8470e071f4730ce73ebd9470abada08"
+      }
+    },
+    {
+      "path": "paper/materials/20261014-v5-jev-ablation/pilot-r2/originals/f684ffef-6dc4-4dc7-a911-9fe611fe1ecd-prompt.jsonl.gz",
+      "raw_sha256": "226c5b25098187440ba874df1b16f2a7301cca2dd0e3f727422f1aedf55db7a0",
+      "source": {
+        "path": "logs/jev-prompts.jsonl",
+        "offset": 914382449,
+        "length": 20796,
+        "sha256": "226c5b25098187440ba874df1b16f2a7301cca2dd0e3f727422f1aedf55db7a0"
+      }
+    },
+    {
+      "path": "paper/materials/20261014-v5-jev-ablation/pilot-r2/originals/b77ae8e7-7850-4656-88fa-07f01a0bcbf0-decision.jsonl.gz",
+      "raw_sha256": "0951a8126194bddb90f93266b025436030a705ff3b832633d28afea99567ee69",
+      "source": {
+        "path": "logs/decisions.jsonl",
+        "offset": 1284706051,
+        "length": 49217,
+        "sha256": "0951a8126194bddb90f93266b025436030a705ff3b832633d28afea99567ee69"
+      }
+    },
+    {
+      "path": "paper/materials/20261014-v5-jev-ablation/pilot-r2/originals/b77ae8e7-7850-4656-88fa-07f01a0bcbf0-prompt.jsonl.gz",
+      "raw_sha256": "947e2b41e1b614d1c6458bdf2761805066648c30c2e62eb5ee1e282c8b1d139c",
+      "source": {
+        "path": "logs/jev-prompts.jsonl",
+        "offset": 894987782,
+        "length": 53190,
+        "sha256": "947e2b41e1b614d1c6458bdf2761805066648c30c2e62eb5ee1e282c8b1d139c"
+      }
+    },
+    {
+      "path": "paper/materials/20261014-v5-jev-ablation/pilot-r2/originals/5e8d1184-ccb8-4d52-a114-02a2da18a408-decision.jsonl.gz",
+      "raw_sha256": "a01932c69b32b4f7a43201cde9c01263207b64f044e2f30be24bb2ec93532ce6",
+      "source": {
+        "path": "logs/decisions.jsonl",
+        "offset": 1297528130,
+        "length": 38942,
+        "sha256": "a01932c69b32b4f7a43201cde9c01263207b64f044e2f30be24bb2ec93532ce6"
+      }
+    },
+    {
+      "path": "paper/materials/20261014-v5-jev-ablation/pilot-r2/originals/5e8d1184-ccb8-4d52-a114-02a2da18a408-prompt.jsonl.gz",
+      "raw_sha256": "ccf73943f9470267de5ae37f06cd34a53466932c99917758615ee2cb9f7284a7",
+      "source": {
+        "path": "logs/jev-prompts.jsonl",
+        "offset": 903058984,
+        "length": 42911,
+        "sha256": "ccf73943f9470267de5ae37f06cd34a53466932c99917758615ee2cb9f7284a7"
+      }
+    },
+    {
+      "path": "paper/materials/20261014-v5-jev-ablation/pilot-r2/originals/2eed3336-00c1-4dd0-a560-6626020587d5-decision.jsonl.gz",
+      "raw_sha256": "b4ae03536d8c44f9c8a4266655cf0886373a4bc034afcf759b158bb3db75f8fa",
+      "source": {
+        "path": "logs/decisions.jsonl",
+        "offset": 1269528618,
+        "length": 91389,
+        "sha256": "b4ae03536d8c44f9c8a4266655cf0886373a4bc034afcf759b158bb3db75f8fa"
+      }
+    },
+    {
+      "path": "paper/materials/20261014-v5-jev-ablation/pilot-r2/originals/2eed3336-00c1-4dd0-a560-6626020587d5-prompt.jsonl.gz",
+      "raw_sha256": "620e50119b43982f593ab1f458e17db3f6400d1e1017302210f472bd0a7f3e56",
+      "source": {
+        "path": "logs/jev-prompts.jsonl",
+        "offset": 885378872,
+        "length": 96842,
+        "sha256": "620e50119b43982f593ab1f458e17db3f6400d1e1017302210f472bd0a7f3e56"
+      }
+    },
+    {
+      "path": "paper/materials/20261014-v5-jev-ablation/pilot-r2/originals/170de71d-8ac5-407f-b7d6-4b65d321a5d7-decision.jsonl.gz",
+      "raw_sha256": "a166af637b26405d16105a2e2870642604f29f0a5b7c576fd311c789a6ce4057",
+      "source": {
+        "path": "logs/decisions.jsonl",
+        "offset": 1308366064,
+        "length": 27183,
+        "sha256": "a166af637b26405d16105a2e2870642604f29f0a5b7c576fd311c789a6ce4057"
+      }
+    },
+    {
+      "path": "paper/materials/20261014-v5-jev-ablation/pilot-r2/originals/170de71d-8ac5-407f-b7d6-4b65d321a5d7-prompt.jsonl.gz",
+      "raw_sha256": "b5601bdf3eeee6f648ac2a864c48d01bfa7e965de54e9bfe317ec73226f99ce7",
+      "source": {
+        "path": "logs/jev-prompts.jsonl",
+        "offset": 910251036,
+        "length": 30619,
+        "sha256": "b5601bdf3eeee6f648ac2a864c48d01bfa7e965de54e9bfe317ec73226f99ce7"
+      }
+    },
+    {
+      "path": "paper/materials/20261014-v5-jev-ablation/pilot-r2/originals/ad4f74ac-53a2-4ed3-a978-a3f29a4c1cf1-decision.jsonl.gz",
+      "raw_sha256": "6b52f799def805a2062e41179a44ae719e890b0380d624e0d5aacd999d09a24f",
+      "source": {
+        "path": "logs/decisions.jsonl",
+        "offset": 1296207904,
+        "length": 12947,
+        "sha256": "6b52f799def805a2062e41179a44ae719e890b0380d624e0d5aacd999d09a24f"
+      }
+    },
+    {
+      "path": "paper/materials/20261014-v5-jev-ablation/pilot-r2/originals/ad4f74ac-53a2-4ed3-a978-a3f29a4c1cf1-prompt.jsonl.gz",
+      "raw_sha256": "d513e4d8dff88e4e5f3d75f576af4253da4187b251401e903cb44098a02a85b0",
+      "source": {
+        "path": "logs/jev-prompts.jsonl",
+        "offset": 902825876,
+        "length": 15087,
+        "sha256": "d513e4d8dff88e4e5f3d75f576af4253da4187b251401e903cb44098a02a85b0"
+      }
+    },
+    {
+      "path": "paper/materials/20261014-v5-jev-ablation/pilot-r2/originals/d273625a-d220-43a9-bf6a-4f573befd411-decision.jsonl.gz",
+      "raw_sha256": "e1100c8d044e4c90256d46cae85b24840cd449d25d7fc193ff6be6958e23ab0c",
+      "source": {
+        "path": "logs/decisions.jsonl",
+        "offset": 1353748349,
+        "length": 18192,
+        "sha256": "e1100c8d044e4c90256d46cae85b24840cd449d25d7fc193ff6be6958e23ab0c"
+      }
+    },
+    {
+      "path": "paper/materials/20261014-v5-jev-ablation/pilot-r2/originals/d273625a-d220-43a9-bf6a-4f573befd411-prompt.jsonl.gz",
+      "raw_sha256": "bf8bf4c10c538938f9cac6bb442dea11c5bf2bf5574596622b96b0d589951304",
+      "source": {
+        "path": "logs/jev-prompts.jsonl",
+        "offset": 934756795,
+        "length": 24812,
+        "sha256": "bf8bf4c10c538938f9cac6bb442dea11c5bf2bf5574596622b96b0d589951304"
+      }
+    },
+    {
+      "path": "paper/materials/20261014-v5-jev-ablation/pilot-r2/originals/eece2399-baac-4b89-a7f7-020af70e1742-decision.jsonl.gz",
+      "raw_sha256": "1851993029ff8906d5ee957e5d252b1c4d0fe75bccacb6d5e80df741e7e3804c",
+      "source": {
+        "path": "logs/decisions.jsonl",
+        "offset": 1234790557,
+        "length": 24243,
+        "sha256": "1851993029ff8906d5ee957e5d252b1c4d0fe75bccacb6d5e80df741e7e3804c"
+      }
+    },
+    {
+      "path": "paper/materials/20261014-v5-jev-ablation/pilot-r2/originals/eece2399-baac-4b89-a7f7-020af70e1742-prompt.jsonl.gz",
+      "raw_sha256": "0c27643358b7a55ae6769e1328d2d6bce576f4fcc5fced83a1e78786733a7566",
+      "source": {
+        "path": "logs/jev-prompts.jsonl",
+        "offset": 859992404,
+        "length": 26824,
+        "sha256": "0c27643358b7a55ae6769e1328d2d6bce576f4fcc5fced83a1e78786733a7566"
+      }
+    }
+  ],
+  "requests_results_starts": 144,
+  "all_actual_resolved_models": [
+    "jev-1.13.0"
+  ],
+  "original_candidate_sets_and_all_request_variants_verified": true,
+  "analysis_recomputed_without_requests_tests_or_source_edits": true,
+  "all32_followup_cases": {
+    "path": "paper/materials/20261014-v5-jev-ablation/pilot-r2/learner-followup.jsonl",
+    "sha256": "d7cca1c94b77295a8fd4171dfe8a6744e84f979fe736cfe0f8defdf330a7580d"
+  },
+  "assessment": {
+    "at": "2026-10-14T15:25:14.213109+08:00",
+    "state": "pilot_complete_gameplay_value_pending",
+    "inputs_frozen": true,
+    "model": "jev-1.13.0",
+    "api_calls": 144,
+    "selected_questions": 32,
+    "distinct_runs": 13,
+    "compact_vs_full": {
+      "token_reduction_pct": 27.566275352733683,
+      "mean_latency_ms_full": 447.0293660625002,
+      "mean_latency_ms_compact": 421.21752474999965,
+      "changed_choices": 5
+    },
+    "observed_usage": {
+      "input_tokens": 1844432,
+      "output_tokens": 10052,
+      "sum_request_latency_ms": 64513.68324300001,
+      "failed_usage_unknown": 0
+    },
+    "estimated_api_cost_usd": 0.077466144,
+    "price_source": {
+      "input_per_million": 0.042,
+      "output_per_million": 0,
+      "source": "Roy 2026-10-05 23:14: TypeSafe usage page, $0.042/MTok input; free output"
+    },
+    "cost_is_not_invoice": true,
+    "decision": "Do not change live policy from this prompt-only pilot. Attach all differences, not only favorable cases, to existing R3/quantitative owner after current immutable R1/R2 input ends. Validate actual execution and independent paired outcomes before direct-selector or narrow-semantic-Jev rollout.",
+    "direct_baseline": "16 unique-rank eligible; 16 tie/no-rank abstentions; no invented tie-break",
+    "not_proven": [
+      "DPR or whole-fight accuracy",
+      "Jev superiority or dispensability",
+      "HP savings or win-rate gain",
+      "language advantage or narrow-task advantage",
+      "future selection quality or whole-run speedup"
+    ],
+    "binding_inputs": {
+      "manifest_sha256": "9aeceed08a22c86a81541a0744cd7a25a89d907a0384e85e23e0d66656c7e492",
+      "requests_sha256": "a5be46162d05b1e4693a54f7d6b9384d14131a0e8b0444b89fe7e5478eb036a2",
+      "results_sha256": "350777bae8b29c4391da41e072f2d70b1698baae6f3fe1016dce6751ce9a3088",
+      "source_at_allocation": "928515aecf34a92baaf322f71b660cd217660f47"
+    },
+    "prepared_boundary": "R1 parse error preserved and corrected before API; absent main .env failed before any starts/request; actual calls loaded existing live settings only into process memory."
+  },
+  "analysis": {
+    "schema": "silent-jev-prompt-pilot-results-v1",
+    "complete": true,
+    "planned": 144,
+    "received": 144,
+    "ok": 144,
+    "response_status": {
+      "ok": 144
+    },
+    "resolved_models": [
+      "jev-1.13.0"
+    ],
+    "cases": 32,
+    "runs": 13,
+    "arms": {
+      "full": {
+        "base_responses": 32,
+        "mean_input_tokens": 13608,
+        "mean_latency_ms": 447.0293660625002,
+        "median_latency_ms": 422.7512014999993,
+        "unique_model_rank_agreement": {
+          "matches": 8,
+          "denominator": 16
+        },
+        "probes": {
+          "denominator": 8,
+          "identical_repeat_changed": 0,
+          "reversed_order_changed": 2
+        },
+        "historical_choice_agreement": 32
+      },
+      "full_unlabelled": {
+        "base_responses": 32,
+        "mean_input_tokens": 13542.46875,
+        "mean_latency_ms": 454.4359581874998,
+        "median_latency_ms": 439.02177499999925,
+        "unique_model_rank_agreement": {
+          "matches": 8,
+          "denominator": 16
+        },
+        "probes": {
+          "denominator": 8,
+          "identical_repeat_changed": 1,
+          "reversed_order_changed": 2
+        },
+        "historical_choice_agreement": 28
+      },
+      "compact_unlabelled": {
+        "base_responses": 32,
+        "mean_input_tokens": 9856.78125,
+        "mean_latency_ms": 421.21752474999965,
+        "median_latency_ms": 411.78972199999953,
+        "unique_model_rank_agreement": {
+          "matches": 9,
+          "denominator": 16
+        },
+        "probes": {
+          "denominator": 8,
+          "identical_repeat_changed": 0,
+          "reversed_order_changed": 2
+        },
+        "historical_choice_agreement": 27
+      }
+    },
+    "paired": {
+      "full_vs_full_unlabelled": {
+        "denominator": 32,
+        "changed_choices": 4,
+        "mean_input_token_change_b_minus_a": -65.53125,
+        "mean_latency_change_ms_b_minus_a": 7.406592124999605
+      },
+      "full_unlabelled_vs_compact_unlabelled": {
+        "denominator": 32,
+        "changed_choices": 3,
+        "mean_input_token_change_b_minus_a": -3685.6875,
+        "mean_latency_change_ms_b_minus_a": -33.21843343750015
+      },
+      "full_vs_compact_unlabelled": {
+        "denominator": 32,
+        "changed_choices": 5,
+        "mean_input_token_change_b_minus_a": -3751.21875,
+        "mean_latency_change_ms_b_minus_a": -25.81184131250055
+      }
+    },
+    "direct_baseline": {
+      "eligible": 16,
+      "abstained": 16
+    },
+    "usage": {
+      "input_tokens": 1844432,
+      "output_tokens": 10052,
+      "sum_request_latency_ms": 64513.68324300001,
+      "failed_usage_unknown": 0
+    },
+    "gameplay_quality": {
+      "measured": false,
+      "win_rate_delta": null,
+      "hp_saved_delta": null,
+      "online_change_authorized_by_this_result": false
+    },
+    "limits": [
+      "32 balanced diagnostic questions from 13 correlated runs; not population incidence or a clean unseen holdout.",
+      "Direct choice abstains on ties/no rank; simulator rank agreement is descriptive, not accuracy.",
+      "Historical latest responses are not a same-version paired baseline; all fresh arms resolve to the pinned model.",
+      "Reversing insertion order leaves option IDs and other option-reference arrays unchanged; name bias is not isolated.",
+      "Repeated responses may vary; one reversed pair cannot prove causal position bias.",
+      "Compaction intentionally removes intermediate realization traces; it is not lossless or a proof of semantic equivalence.",
+      "Explicit rank flags are removed; numerical scores and their limitations remain. No independent outcome labels exist here.",
+      "Token/latency comparisons reflect these paired calls, including provider load/cache effects; not whole-run speedup.",
+      "Guard/SL and actual dispatched actions must be evaluated separately before gameplay attribution."
+    ]
+  },
+  "parents": [
+    "v5-dpr-health-20261013",
+    "roy-20261011-silent-core-cycle-quantitative-learning"
+  ],
+  "original_R1_R2": {
+    "batch": "20261014-123933-fix-batch",
+    "canonical_state": "failed",
+    "pid": 363388,
+    "pid_alive_at_cut": false,
+    "worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302",
+    "thread": "01a13882-33cd-70b1-81e5-2d41bee83d7b",
+    "approved_input_path": "ops/codex-ops/learner/20261014-123933-fix-batch.approved-input.json",
+    "input_sha256": "bb429a72e61b65bb8eadde8350e5b22cc14422b5c559bde489c1502e18870c2d",
+    "native_original_runtime_receipt_sha256": "d02162ebee7039519b36b92afd546e9227d5cf63e77489409b1472a384322453",
+    "native_context_input_ack_and_reply_offset_SHA_reread": true,
+    "original_phase_progress": {
+      "original_outcome": "continue",
+      "original_canonical_state": "failed",
+      "rc": 0,
+      "supported_questions": 27,
+      "unsupported_questions": 3,
+      "reference_completed": 24,
+      "reference_planned": 54,
+      "reference_unfinished": 30,
+      "original_failed_rc0_history_kept": true,
+      "R2_acceptance_complete": false
+    }
+  },
+  "calibration_owner": {
+    "batch": "20261014-061302-fix-batch",
+    "thread": "01a13753-c032-73f0-aa3f-ddc0e14809cd"
+  },
+  "quantitative_owner": {
+    "batch": "20261012-024317-strategy-proposal",
+    "thread": "01a12c46-fef2-7282-b689-1fd8b4e0450b"
+  },
+  "learner_received_this_pilot": false,
+  "this_supplement_actually_started": false,
+  "next_gate": "original fixed-input completion and acceptance wake; freeze same-owner R3 input and verify actual native receipt before marking received/started",
+  "no_new_parent_or_session_no_hot_input_no_144_request_replay": true,
+  "guard_SL_replanning_actual_execution_and_independent_counterfactuals_separate": true,
+  "accuracy_and_paired_benefits_pending_before_narrow_semantics_languages_or_online_roles": true,
+  "wide_P1_P2_current_model_calibration_natural_window_pending": true,
+  "no_production_live_knowledge_model_account_permission_threshold_or_behavior_release_change": true
+}
