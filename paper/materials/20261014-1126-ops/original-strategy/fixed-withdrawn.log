@@ -1,0 +1,81 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261014-104302-s2/agent
+
+ ❯ tests/silent-snakebite-preview.test.ts (7 tests | 4 failed) 45ms
+   × uses the exact eight-point preview at state 288388 without adding another bonus 13ms
+   × uses the exact eight-point preview at state 288404 without adding another bonus 3ms
+   × uses the exact eight-point preview at state 288469 without adding another bonus 3ms
+   × passes the observed preview into the turn solver and retains poison after settlement 20ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/silent-snakebite-preview.test.ts > uses the exact eight-point preview at state 288388 without adding another bonus
+ FAIL  tests/silent-snakebite-preview.test.ts > uses the exact eight-point preview at state 288404 without adding another bonus
+ FAIL  tests/silent-snakebite-preview.test.ts > uses the exact eight-point preview at state 288469 without adding another bonus
+AssertionError: expected { index: +0, key: 'c0', …(36) } to match object { poison: 8, cost: 2, …(3) }
+(34 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+    "cost": 2,
+    "damage": null,
+-   "flatValue": 0,
+-   "known": true,
+-   "poison": 8,
++   "flatValue": 7,
++   "known": false,
+  }
+
+ ❯ tests/silent-snakebite-preview.test.ts:14:28
+     12|
+     13| it.each(evidence.plays)("uses the exact eight-point preview at state $…
+     14|   expect(model(play.card)).toMatchObject({ poison: 8, cost: 2, damage:…
+       |                            ^
+     15|   expect(play.after.poison - play.before.poison).toBe(8);
+     16|   expect(play.after.enemy_hp).toBe(play.before.enemy_hp);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  tests/silent-snakebite-preview.test.ts > passes the observed preview into the turn solver and retains poison after settlement
+AssertionError: expected { winsFight: false, hpLoss: +0, …(20) } to match object { damageDealt: 18, …(3) }
+(29 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "damageDealt": 18,
++   "damageDealt": 10,
+    "enemyHpAfter": [
+      {
+-       "hp": 50,
+-       "poison": 17,
++       "hp": 58,
++       "poison": 9,
+      },
+    ],
+    "energyLeft": 0,
+-   "unknownCards": [],
++   "unknownCards": [
++     "蛇咬",
++   ],
+  }
+
+ ❯ tests/silent-snakebite-preview.test.ts:34:26
+     32|     upgraded: false, target: 0 }])!;
+     33|   // This isolated settlement is a model check, not the historical who…
+     34|   expect(result.outcome).toMatchObject({ damageDealt: play.after.poiso…
+       |                          ^
+     35|     unknownCards: [], enemyHpAfter: [{ hp: play.before.enemy_hp - play…
+     36|       poison: play.after.poison - 1 }] });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  4 failed | 3 passed (7)
+   Start at  10:51:51
+   Duration  1.61s (transform 1.23s, setup 922ms, import 450ms, tests 45ms, environment 0ms)
+

@@ -1,0 +1,230 @@
+{
+  "checks": [
+    {
+      "label": "MTQ F23 T3 player 288806->288812",
+      "actual": 0,
+      "expected": 0,
+      "passed": true
+    },
+    {
+      "label": "MTQ F23 T3 enemy net 288806->288812",
+      "actual": 13,
+      "expected": 13,
+      "passed": true
+    },
+    {
+      "label": "MTQ F23 T3 player 288899->288905",
+      "actual": 8,
+      "expected": 8,
+      "passed": true
+    },
+    {
+      "label": "MTQ F23 T3 enemy net 288899->288905",
+      "actual": 19,
+      "expected": 19,
+      "passed": true
+    },
+    {
+      "label": "MTQ F11 T1 actual net player HP",
+      "actual": 6,
+      "expected": 6,
+      "passed": true
+    },
+    {
+      "label": "MTQ F11 T1 enemy endpoints",
+      "actual": [
+        90,
+        70
+      ],
+      "expected": [
+        90,
+        70
+      ],
+      "passed": true
+    },
+    {
+      "label": "MTQ survivor discard chooses rebound",
+      "actual": {
+        "action": "select_deck_card",
+        "option_index": 3
+      },
+      "expected": {
+        "action": "select_deck_card",
+        "option_index": 3
+      },
+      "passed": true
+    },
+    {
+      "label": "MTQ F11 reask begins Haze",
+      "actual": {
+        "action": "play_card",
+        "card_index": 1
+      },
+      "expected": {
+        "action": "play_card",
+        "card_index": 1
+      },
+      "passed": true
+    },
+    {
+      "label": "KFR F12 after generated Shiv is a new question",
+      "actual": "combat/plan-choice+potion",
+      "expected": "combat/plan-choice+potion",
+      "passed": true
+    },
+    {
+      "label": "KFR F33 T6 poison at 289339",
+      "actual": 36,
+      "expected": 36,
+      "passed": true
+    },
+    {
+      "label": "KFR F33 T6 player endpoints 289339->289345",
+      "actual": 6,
+      "expected": 6,
+      "passed": true
+    },
+    {
+      "label": "KFR F33 T6 enemy endpoints 289339->289345",
+      "actual": 83,
+      "expected": 83,
+      "passed": true
+    },
+    {
+      "label": "KFR F33 T6 poison at 289414",
+      "actual": 36,
+      "expected": 36,
+      "passed": true
+    },
+    {
+      "label": "KFR F33 T6 player endpoints 289414->289420",
+      "actual": 12,
+      "expected": 12,
+      "passed": true
+    },
+    {
+      "label": "KFR F33 T6 enemy endpoints 289414->289420",
+      "actual": 93,
+      "expected": 93,
+      "passed": true
+    },
+    {
+      "label": "KFR poison potion applied amount",
+      "actual": 6,
+      "expected": 6,
+      "passed": true
+    },
+    {
+      "label": "KFR poison potion immediate HP endpoints",
+      "actual": [
+        159,
+        159
+      ],
+      "expected": [
+        159,
+        159
+      ],
+      "passed": true
+    },
+    {
+      "label": "KFR last turn actual enemy net HP",
+      "actual": 85,
+      "expected": 85,
+      "passed": true
+    },
+    {
+      "label": "KFR last frame is player death with enemy remaining",
+      "actual": [
+        0,
+        74
+      ],
+      "expected": [
+        0,
+        74
+      ],
+      "passed": true
+    },
+    {
+      "label": "7X snakebite actual poison at 288388",
+      "actual": 8,
+      "expected": 8,
+      "passed": true
+    },
+    {
+      "label": "7X snakebite no immediate HP damage at 288388",
+      "actual": 68,
+      "expected": 68,
+      "passed": true
+    },
+    {
+      "label": "7X snakebite actual poison at 288404",
+      "actual": 8,
+      "expected": 8,
+      "passed": true
+    },
+    {
+      "label": "7X snakebite no immediate HP damage at 288404",
+      "actual": 50,
+      "expected": 50,
+      "passed": true
+    },
+    {
+      "label": "7X snakebite actual poison at 288469",
+      "actual": 8,
+      "expected": 8,
+      "passed": true
+    },
+    {
+      "label": "7X snakebite no immediate HP damage at 288469",
+      "actual": 12,
+      "expected": 12,
+      "passed": true
+    }
+  ],
+  "summaries": {
+    "MTQ0EUBJ3R6T": {
+      "states": 440,
+      "decisions": 424,
+      "audit_actions": 424,
+      "segments": 68,
+      "observed_intervals": 156,
+      "observed_turns": 75,
+      "turn_statuses": {
+        "observed_turn_endpoints": 25,
+        "unknown": 50
+      },
+      "certified_full_candidates": 0
+    },
+    "7X0W3U8TVA2A": {
+      "states": 461,
+      "decisions": 445,
+      "audit_actions": 445,
+      "segments": 119,
+      "observed_intervals": 36,
+      "observed_turns": 71,
+      "turn_statuses": {
+        "observed_turn_endpoints": 7,
+        "unknown": 64
+      },
+      "certified_full_candidates": 0
+    },
+    "KFRDELW2TH2P": {
+      "states": 620,
+      "decisions": 587,
+      "audit_actions": 586,
+      "segments": 180,
+      "observed_intervals": 224,
+      "observed_turns": 103,
+      "turn_statuses": {
+        "observed_turn_endpoints": 18,
+        "unknown": 85
+      },
+      "certified_full_candidates": 0
+    }
+  },
+  "limitations": [
+    "证据断言和既有离线消费者读回不属于生产源码测试。",
+    "净HP变化不是毛伤事件账，完整候选认证null不代表未执行或无收益。",
+    "三个历史源码均dirty；不冒称从日志重建完整原代码。"
+  ]
+}

@@ -1,0 +1,20 @@
+[
+  {
+    "operation": "scratch snake scan",
+    "error": "AttributeError: combat can be null",
+    "recovery": "(state.get(combat) or {})",
+    "source_failure": false
+  },
+  {
+    "operation": "read test filename",
+    "error": "silent-snakebite-upgrade.test.ts does not exist",
+    "recovery": "rg --files found silent-apotheosis-snakebite.test.ts",
+    "source_failure": false
+  },
+  {
+    "operation": "live source diff",
+    "error": "git diff HEAD absolute live path treated as no-index HEAD",
+    "recovery": "git diff --no-index exact two paths",
+    "source_failure": false
+  }
+]
