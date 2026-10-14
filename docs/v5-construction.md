@@ -30,7 +30,11 @@ Roy 于 2026-10-13 授权：补齐构筑模板与伤害/回合接口，从历史
 
 `CONSTRUCTION_MODE=shadow` 是首发默认值。构筑预测记在原 `decisions.jsonl` 的 `boss_sim.construction`，不向大脑发送概率表，避免未经验证的数字先改变采样政策。无需新模型、守护进程或研究会话。原 agent tab 显示模块状态和耗时；只记录汇总和证据版本，不保存海量逐场景副本。
 
-`advisory` 将比较表实际加入题面，大脑可在原 `run_plan.construction` 保留 `primary/alternatives/checkpoint/reason/pivot_if`，存入原计划日志并回到下次题面。未知核心 ID 不入库，其他角色不解析。每次新题面重算预测；转向由 Codex 在同一计划中解释，代码不按候选概率自动抢答。
+`advisory` 还必须通过对应核心/进阶/模板/指标/截止层的已发布校准，才将该项概率加入题面；仅设环境变量不能绕过。未通过的核心只保留未知，不发送其次数、区间或点估计。每次新题面重算预测；代码不按候选概率自动抢答。
+
+Roy 于 2026-10-14 批准九局审计后的接线改进。Silent 默认另启 `CONSTRUCTION_EVALUATION`：把**同一道题已有的 B3 模拟**与候选库存放入 `facts.construction_evaluation`，不等待未来概率晋级，不新增整战模拟。拿/跳/删/升级分别列张数、升级数、HP/金币变化，以及完整战斗 DPR、与当前牌组的同样本配对差/误差/未配对分母、掉血、具名组件首次施放回合和施放覆盖。升级没有改变模板组件数时，战斗收益仍可不同。核心牌覆盖、手动施放数只是兑现代理，不冒称完整核心、同实例循环或真实胜率。未过原 B3 样本门槛、候选未建模或绑定不符一律为空，不复用旧题结果；没有路线时仍可提供本题指标。
+
+到期的独立或合并计划题均明确要求 `run_plan.construction={primary,alternatives,checkpoint,reason,pivot_if}`。方向只能是学习者模板 ID 或 `uncommitted`，复查层必须晚于当前层；严格 JSON schema、答案校验、计划解析、日志保存、下题读回和到层复查采用相同接口。未到期题继续读取已保存方向，不为每张牌增加独立模型调用。`CONSTRUCTION_EVALUATION=off` 关闭新增同题评估与方向要求；`CONSTRUCTION_MODE=off` 同时关闭两条新接口。其他角色保持原行为。DPR没有新设固定权重，大脑必须结合存活、资源、模型误差和已有方向解释取舍。
 
 `off` 关闭构筑模块。run-config 登记架构、模式和政策，单次预测记录资料 SHA 和运行阶段。完整源码/知识/配置及实际大脑回答继续走原记录链。
 
@@ -39,6 +43,12 @@ Roy 于 2026-10-13 授权：补齐构筑模板与伤害/回合接口，从历史
 固定测试覆盖联合路径死亡、资源顺序、升级/重复/替代件、整组选项、当前局/未来数据隔离、截断与未知、真实模拟器复用、题面 shadow/advisory 和其他角色等价。原签名转换另核与原学习者函数等价。
 
 `eval/construction.py` 对逐项绑定角色/局/决策/核心/指标/截止阶段/模型/政策/SL 的预测与真实结果计算 Brier、偏差和分桶校准；去重，剔除缺证、变线、变政策和未完成窗口。输入实际证据由原日志/学习者提供，工具不从历史最终牌组倒造前瞻预测。机会重放、集齐、可运转和通关分别评价。固定回放不替代自然采用/效果。
+
+校准入场流程沿原 ops/原量化 owner：原预测日志记录 `as_of`、`forecast_model`、`forecast_policy`、`template_sha256`；原学习者从同局后继原帧核实际路线、选择政策、SL 与签名终点，不能将任意最终牌组当该条件策略的结果。匹配 JSONL 的预测和结果都须带 `ascension`、`template_sha256`。运行 `python3 eval/construction.py INPUT.jsonl --out REPORT.json` 后，原 ops 核原行 offset/length/SHA、输入 SHA、真实时间先后和未发生政策偏离，再将报告发布为本角色 `construction-calibration.json`。`publication` 必须注明 `authorized_by=ops`、`kind=prospective-logged-decisions`、`character=silent`、`ascension`、`template_sha256`、`accepted_at` 和与报告 `input_sha256` 相同的 `evidence_sha256`。这些字段是追溯绑定，不能替代原件验收；没有真实匹配材料时不创建通过报告。
+
+首版工程入场线：每组至少 10 个独立局、有正负结果、Brier 优于该组常数基线且绝对偏差不超过 0.1；只对同条件 `conditionalSignature` 开放。这是防止无校准数字进入决策的最低检查，不是胜率保证或最优统计门槛；同局相关性、小样本和政策条件仍需原 owner 保留限制。未来可运转率和通关率不由此晋级。模板或进阶变化即重新匹配；报告不存在、损坏、条件不符或校准未达标都保持不发送概率。
+
+标准健康检查 `ops/module_health.py` 沿原 tick/每局报告运行：分别计 B3 候选 DPR 供给、构筑评估实际附加、真实脑题送达/接受、带评估的选择、到期结构化方向、计划落盘、相同方向下题读回和到层复查请求；读取范围及原行 SHA 一并记录。连续 DPR 缺失或累计三次新增接口缺失进入原唯一模块告警链，原 ops 自主去重处理，不热重启、不新派同题学习、不常规打扰 Roy。`admission` 未通过单列 pending，不伪报故障或晋级；读回、回答、测试全过均不等于因果收益。
 
 原 `roy-20261011-silent-core-cycle-quantitative-learning` 及 `roy-20261012-concrete-core-decklists` 的核心资格、P1/P2、模拟校准与自然效果仍沿同 owner/thread 完成；没有新增同题全历史研究。在线完整成型/通关率、其他路线联合模拟及自然校准未完成时保持公开缺口。不得因 V5 框架发布就关闭这些父要求。
 

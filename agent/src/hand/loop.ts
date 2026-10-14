@@ -52,8 +52,9 @@ import { SlController } from "../sl/controller.js";
 import { LEAST_LOSS_LABEL } from "../sl/judge.js";
 import { asArray, asRecord, bool, num, str, toJsonValue, type JsonValue } from "../core/util/json.js";
 import { OUTCOME_BASIS_KEY } from "../knowledge/outcome-facts.js";
-import { withBossSim, type BuildSimSetup } from "../sim/build-sim-facts.js";
+import { BUILD_SIM_MIN_SHOWN, withBossSim, type BuildSimSetup } from "../sim/build-sim-facts.js";
 import { withConstruction } from "../construction/adapter.js";
+import { withConstructionEvaluation } from "../construction/consumer.js";
 import { passivePiecesOptions } from "../reflex/passive-pieces.js";
 import { cardConditionOptions } from "../reflex/card-model.js";
 import { ensureThiefCardValue, type ThiefCardSetup, type ThiefCardValue } from "../sim/thief-card-value.js";
@@ -783,7 +784,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
       }
     }
     // THIEF_COST (docs/thief.md §7): a Thieving Hopper's stolen card, worth in HP by the act boss simulation, once per
-    // fight before the question that needs it (up to ~15 s, Dai 2026-10-02); kept in screen memory. Never throws: no
+    // fight before the question that needs it (up to ~15 s, Roy 2026-10-02); kept in screen memory. Never throws: no
     // value, no cost.
     if (!planned && config.thiefFacts && config.thiefCost && options.thiefSim && state.in_combat) {
       const value = await ensureThiefCardValue(env, options.thiefSim);
@@ -915,10 +916,18 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
         }
         // V5 runs through the actual consumer in shadow mode before its predictions may guide choices.
         try {
-          const construction = withConstruction(decision, env);
-          decision = construction.decision;
-          if (construction.record) bossSimRecord = { ...asRecord(bossSimRecord), construction: construction.record } as JsonValue;
-          if (construction.record) onEvent({ type: "note", message: `V5 construction ${String(construction.record["mode"])}: ${String(construction.record["status"])}, ${String(construction.record["ms"] ?? 0)} ms` });
+          const construction = withConstruction(decision, env, { simulation: {
+            run: str(state.raw["run_id"]), floor: state.run?.floor ?? 0, label: decision.label,
+            minimumShown: BUILD_SIM_MIN_SHOWN,
+            record: asRecord(bossSimRecord) as Record<string, JsonValue>,
+          } });
+          const probabilityAttached = construction.decision !== decision;
+          decision = withConstructionEvaluation(construction.decision, env, construction.record);
+          if (construction.record) bossSimRecord = { ...asRecord(bossSimRecord), construction: { ...construction.record,
+            evaluation_delivery: decision !== construction.decision ? "attached" : "not_attached",
+            probability_delivery: probabilityAttached ? "attached" : "not_attached",
+          } } as JsonValue;
+          if (construction.record) onEvent({ type: "note", message: `V5 construction ${String(construction.record["mode"])}: ${String(construction.record["status"])}, evaluation=${decision !== construction.decision ? "attached" : "absent"}, probability=${probabilityAttached ? "attached" : "absent"}, ${String(construction.record["ms"] ?? 0)} ms` });
           question = decision.kind === "ask" ? decision.questions[spec.question] : question;
         } catch (error) {
           bossSimRecord = { ...asRecord(bossSimRecord), construction: { status: "error", reason: String(error).slice(0, 180) } } as JsonValue;
@@ -1957,7 +1966,7 @@ async function ensureFightPlan(
   const alive = asArray(combat["enemies"]).map(asRecord).filter((enemy) => enemy["is_alive"] !== false);
   if (alive.length === 0) return;
   const kind = fightKind(combat, env);
-  // From A8 hallway fights kill runs too (棘刺蟾蜍, 地道虫, 啃咬机, 胧光怪, 青蛙骑士): Dai asked for a
+  // From A8 hallway fights kill runs too (棘刺蟾蜍, 地道虫, 啃咬机, 胧光怪, 青蛙骑士): Roy asked for a
   // DeepSeek plan in most fights. The first floors of act 1 stay code-only (starter deck, weak enemies).
   const everyFight = (state.run?.ascension ?? 0) >= ALL_FIGHT_PLANS_FROM_ASCENSION && (state.run?.floor ?? 0) > ALL_FIGHT_PLANS_FROM_FLOOR;
   if (kind !== "elite" && kind !== "boss" && !everyFight) return;

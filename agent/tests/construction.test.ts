@@ -98,7 +98,7 @@ it("reuses the actual fight simulator and returns remaining resources without as
   expect(out.combatResources).toBeDefined(); expect(out.turns).toBe(1);
 });
 
-it("uses the real question in shadow, supports advisory, and keeps other characters equivalent", () => {
+it("uses the real question in shadow, gates uncalibrated advisory, and keeps other characters equivalent", () => {
   const raw = baseState("REWARD", { run_id: "now" });
   const run = raw["run"] as Record<string, unknown>;
   Object.assign(run, { character_id: "SILENT", ascension: 10, act_id: "0", floor: 1, deck: [], gold: 100 });
@@ -112,7 +112,8 @@ it("uses the real question in shadow, supports advisory, and keeps other charact
   const shadow = withConstruction(decision, env, { ...setup, mode: "shadow" });
   expect(shadow.decision).toBe(decision); expect(shadow.record?.status).toBe("predicted");
   const advisory = withConstruction(decision, env, { ...setup, mode: "advisory" });
-  expect(advisory.decision).not.toBe(decision); expect(advisory.record?.mode).toBe("advisory");
+  expect(advisory.decision).toBe(decision); expect(advisory.record?.mode).toBe("advisory");
+  expect(advisory.record?.admission).toMatchObject({ admitted: [] });
   run["character_id"] = "REGENT";
   expect(withConstruction(decision, env, { ...setup, mode: "advisory" })).toEqual({ decision });
 });

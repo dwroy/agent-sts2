@@ -1,5 +1,5 @@
 /**
- * RUN_PLAN_MERGE (default on; Dai 2026-10-02: "进入新的一幕 为什么不直接先进去，然后一起问ds 选项和 这一幕的所有规划呢"): a due
+ * RUN_PLAN_MERGE (default on; Roy 2026-10-02: "进入新的一幕 为什么不直接先进去，然后一起问ds 选项和 这一幕的所有规划呢"): a due
  * run plan rides on the next DeepSeek question instead of its own call at the map.
  *
  * Why: entering a new act paused twice, first at the map for the run plan (TMNFVW6DRQ20 F17 16 s; V4.3 to 10-02 11:15:
@@ -30,7 +30,7 @@ import type { GameState } from "../hand/mod/schema.js";
 import type { AskDecision, ScreenMemory } from "./types.js";
 import { asArray, asRecord, str, toJsonValue, type JsonValue } from "../core/util/json.js";
 import { fightPlanInput } from "./fight-plan.js";
-import { actOf, isRunPlanReply, loadRunPlan, RUN_PLAN_BRIEF, RUN_PLAN_FORMAT, RUN_PLAN_TASK_KEY, runPlanInput, runPlanTrigger, type RunPlan, type RunPlanTrigger } from "./run-plan.js";
+import { actOf, constructionPlanContext, isRunPlanReply, loadRunPlan, RUN_PLAN_BRIEF, RUN_PLAN_FORMAT, RUN_PLAN_TASK_KEY, runPlanInput, runPlanTrigger, type RunPlan, type RunPlanTrigger } from "./run-plan.js";
 
 /**
  * Floors a due plan waits for a question to carry it before the map asks for it on its own. 2: in the 94 V4.3 plans the
@@ -132,8 +132,10 @@ export function runPlanTaskState(state: GameState, knowledge: Knowledge, trigger
   }
   const why = trigger === "start" ? "the run start" : trigger === "act" ? `act ${actOf(state)} begins` : trigger === "hp_drop" ? "a heavy HP loss since the plan" : `the plan is ${String((state.run?.floor ?? 0) - (plan?.floor ?? 0))} floors old`;
   const inFacts = facts["your_run_plan"] !== undefined;
+  const construction = constructionPlanContext(state);
   return {
     ...input,
+    ...(construction ? { construction_context: construction } : {}),
     due_because: why,
     ...(covered ? { facts: "the deck, relics, potions, HP, gold, act boss and act_boss_clock are in state.facts" } : {}),
     // The current plan's content is facts.your_run_plan; when it was made is shown here (the separate call had it whole).

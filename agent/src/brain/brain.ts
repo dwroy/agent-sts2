@@ -77,7 +77,7 @@ export function createEngine(name: EngineName, config: AppConfig, deepseek: Deep
       // Each codex run's trace (its event timeline, retries, stderr tail; no prompt or answer) next to brain.jsonl.
       return new CodexEngine({ settings, codex: config.brain.codex, traceFile: codexTracePath(config), ...(options.note ? { note: options.note } : {}) });
     case "dsh":
-      // Named in the contract, to come with the offline learner (Dai 2026-09-29).
+      // Named in the contract, to come with the offline learner (Roy 2026-09-29).
       throw new Error(`brain engine ${name} is not implemented yet (implemented: deepseek, claude, codex)`);
   }
 }
@@ -130,8 +130,8 @@ export function createBrain(config: AppConfig, deepseek: DeepSeekClient | null, 
 }
 
 /** The spec of a free-form task by its label (run plan, fight plan), with the caller's own format check. */
-function taskSpec(label: string, accept?: (json: Json) => boolean): AnswerSpec {
-  const base = label === "run-plan" ? runPlanSpec(label) : label === "fight-plan" ? fightPlanSpec(label) : freeSpec(label, { type: "object" });
+function taskSpec(label: string, accept?: (json: Json) => boolean, state?: unknown): AnswerSpec {
+  const base = label === "run-plan" ? runPlanSpec(label, state) : label === "fight-plan" ? fightPlanSpec(label) : freeSpec(label, { type: "object" });
   return withAccept(base, accept, "the answer is not in the task's format");
 }
 
@@ -281,7 +281,7 @@ export class Brain {
       ...(options ? { options } : {}),
       payload,
       spec: this.router.codexOnly && isObject(payload) && carriesRunPlan(payload) ? {
-        ...spec, validate: (answer) => [...spec.validate(answer), ...runPlanSpec().validate(isObject(answer) ? answer["run_plan"] : null).map((p) => `run_plan: ${p}`)],
+        ...spec, validate: (answer) => [...spec.validate(answer), ...runPlanSpec("run-plan", payload).validate(isObject(answer) ? answer["run_plan"] : null).map((p) => `run_plan: ${p}`)],
       } : spec,
       ...this.toolsFor(label),
     };
@@ -419,7 +419,7 @@ export class Brain {
     const label = typeof context["label"] === "string" ? context["label"] : "";
     const kind = label.startsWith("shop/") ? shopPlanSpec(label, criteria, state) : label === "map/route-plan" || label === "map/route-review" ? routePlanSpec(label, state) : freeSpec(label, { type: "object" });
     // A due run plan riding on the question (RUN_PLAN_MERGE): its field joins the schema; the checks stay the question's.
-    const base = carriesRunPlan(state) ? withRunPlanField(kind) : kind;
+    const base = carriesRunPlan(state) ? withRunPlanField(kind, state) : kind;
     const spec = withAccept(base, accept, "the screen does not accept this plan (a step it cannot take now)");
     const result = await this.decide(this.request(label, instructions, context["memory"], state, spec, criteria));
     const brain = Brain.meta(result);
@@ -435,7 +435,7 @@ export class Brain {
   async askJson(payload: Record<string, JsonValue>, label: string, accept?: (json: Record<string, unknown>) => boolean): Promise<{ json: Record<string, unknown>; meta: BrainMetaUsage; recovered?: true; note?: string }> {
     const { task, memory, ...input } = payload;
     const question = typeof task === "string" ? task : label;
-    const result = await this.decide(this.request(label, question, memory, input, taskSpec(label, accept)));
+    const result = await this.decide(this.request(label, question, memory, input, taskSpec(label, accept, input)));
     const brain = Brain.meta(result);
     const v3 = Brain.v3<{ json: Record<string, unknown>; meta: BrainMetaUsage; recovered?: true; note?: string }>(result);
     if (v3) return brain ? { ...v3, meta: { ...v3.meta, brain } } : v3;

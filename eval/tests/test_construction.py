@@ -61,6 +61,22 @@ class ConstructionChecks(unittest.TestCase):
         self.assertEqual(len(result['excluded']), 6)
         self.assertFalse(result['automatic_promotion'])
 
+    def test_calibration_keeps_ascensions_and_templates_separate_and_compares_real_time(self):
+        identity = dict(character='silent', run='r', decision='d', core='c', metric='conditionalSignature', horizon=17,
+                        model='m', policy='p', attempt=1, ascension=10, template_sha256='a'*64)
+        p = identity | dict(value=.8, as_of='2026-01-01T08:00:00+08:00')
+        o = identity | dict(value=True, observed_at='2026-01-01T00:01:00Z', complete=True,
+                            followed_policy=True, followed_route=True, evidence=['frame-sha'])
+        lower = {**identity, 'run': 'r2', 'ascension': 9, 'decision': 'd2'}
+        report = calibration.evaluate([dict(prediction=p, outcome=o),
+            dict(prediction=p | lower, outcome=o | lower | dict(value=False)),
+            dict(prediction=p | dict(decision='d3', template_sha256=None), outcome=o | dict(decision='d3'))])
+        self.assertEqual(len(report['groups']), 2)
+        self.assertEqual({g['ascension'] for g in report['groups']}, {9, 10})
+        self.assertEqual(len(report['excluded']), 1)
+        self.assertFalse(calibration.prospective('2026-01-01T00:00:00', '2026-01-02T00:00:00Z'))
+        self.assertFalse(calibration.prospective('not a date', '2026-01-02T00:00:00Z'))
+
     def test_offers_include_unchosen_cards_and_deduplicate_repeated_visits(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)

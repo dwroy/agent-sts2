@@ -138,7 +138,7 @@ export function pickSpec(label: string, options: Record<string, string | null>, 
   }
   // A due run plan riding on the question (RUN_PLAN_MERGE): its field, never a problem (a missing or unusable plan stays
   // due for the next question; strategy/run-plan-merge.ts).
-  if (carriesRunPlan(st)) properties["run_plan"] = RUN_PLAN_FIELD;
+  if (carriesRunPlan(st)) properties["run_plan"] = runPlanField(st);
   return {
     label,
     kind: "pick",
@@ -249,7 +249,11 @@ export function shopPlanList(json: Record<string, unknown>): { list: unknown[]; 
  * already. spec.validate still checks the question's own keys and fields.
  */
 export function stableSchema(spec: AnswerSpec): JsonSchema {
-  if (spec.kind === "pick") return spec.schema.properties?.["run_plan"] ? STABLE_PICK_SCHEMA_WITH_RUN_PLAN : STABLE_PICK_SCHEMA;
+  if (spec.kind === "pick") {
+    const run = spec.schema.properties?.["run_plan"];
+    if (run?.properties?.["construction"]) return { ...STABLE_PICK_SCHEMA, properties: { ...STABLE_PICK_SCHEMA.properties, run_plan: run } };
+    return run ? STABLE_PICK_SCHEMA_WITH_RUN_PLAN : STABLE_PICK_SCHEMA;
+  }
   const plan = spec.schema.properties?.["plan"];
   if (plan?.items?.enum) {
     return { ...spec.schema, properties: { ...spec.schema.properties, plan: { ...plan, items: { type: "string" } } } };
@@ -335,7 +339,37 @@ export function shopPlanSpec(label: string, options: Record<string, string | nul
 }
 
 /** The run plan's answer object (RUN_PLAN_TASK's format). */
-function runPlanSchema(): JsonSchema {
+function constructionContext(state: unknown): Record<string, unknown> | null {
+  const st = record(state), facts = record(st["facts"]);
+  const value = record(facts["construction_evaluation"] ?? record(facts["construction"])["evaluation"] ?? st["construction_context"]
+    ?? record(st["run_plan_task"])["construction_context"]);
+  return value["character"] === "silent" && Array.isArray(value["coreCatalog"]) ? value : null;
+}
+const CONSTRUCTION_FIELD: JsonSchema = {
+  type: "object", description: "Explicit construction hypothesis; unknown complete-core performance stays unknown.",
+  properties: {
+    primary: { type: "string", description: "one coreCatalog ID, or uncommitted" },
+    alternatives: { type: "array", items: { type: "string" }, description: "up to three other coreCatalog IDs" },
+    checkpoint: { type: "integer", description: "a future floor, strictly after the current floor, to review this direction" },
+    reason: { type: "string", description: "evidence and current choice tradeoff; do not invent unavailable probabilities" },
+    pivot_if: { type: "string", description: "observable conditions for changing direction" },
+  }, required: ["primary", "alternatives", "checkpoint", "reason", "pivot_if"], additionalProperties: false,
+};
+function constructionProblems(answer: Record<string, unknown>, state: unknown): string[] {
+  const context = constructionContext(state);
+  if (!context) return [];
+  const c = record(answer["construction"]), problems: string[] = [];
+  const ids = new Set((context["coreCatalog"] as unknown[]).map((x) => record(x)["id"]));
+  if (c["primary"] !== "uncommitted" && !ids.has(c["primary"])) problems.push("construction.primary must be a coreCatalog ID or uncommitted");
+  const alternatives = c["alternatives"];
+  if (!Array.isArray(alternatives) || alternatives.length > 3 || new Set(alternatives).size !== alternatives.length
+    || alternatives.some((id) => !ids.has(id) || id === c["primary"])) problems.push("construction.alternatives must contain up to three distinct alternative core IDs");
+  const floor = Number(context["floor"] ?? record(state)["floor"] ?? record(record(state)["facts"])["floor"] ?? 0);
+  if (!Number.isInteger(c["checkpoint"]) || Number(c["checkpoint"]) <= floor || Number(c["checkpoint"]) > 100) problems.push("construction.checkpoint must be a future floor");
+  for (const key of ["reason", "pivot_if"]) if (typeof c[key] !== "string" || !String(c[key]).trim()) problems.push(`construction.${key} is required`);
+  return problems;
+}
+function runPlanSchema(construction = false): JsonSchema {
   return {
     type: "object",
     properties: {
@@ -348,14 +382,18 @@ function runPlanSchema(): JsonSchema {
       rest: { type: "string", enum: ["heal", "smith", "auto"] },
       boss_prep: { type: "string", description: "max 30 words: what to have ready for the act boss" },
       summary: { type: "string", description: "max 40 words: the plan in plain words" },
+      ...(construction ? { construction: CONSTRUCTION_FIELD } : {}),
     },
-    required: ["archetype", "want", "avoid", "remove", "block_target", "elites", "rest", "boss_prep", "summary"],
+    required: ["archetype", "want", "avoid", "remove", "block_target", "elites", "rest", "boss_prep", "summary", ...(construction ? ["construction"] : [])],
     additionalProperties: false,
   };
 }
 
 /** The run_plan field of a question a due run plan rides on (RUN_PLAN_MERGE). */
 const RUN_PLAN_FIELD: JsonSchema = { ...runPlanSchema(), description: "the run plan state.run_plan_task asks for (RUN_PLAN_TASK's fields)" };
+function runPlanField(state: unknown): JsonSchema {
+  return constructionContext(state) ? { ...runPlanSchema(true), description: RUN_PLAN_FIELD.description } : RUN_PLAN_FIELD;
+}
 
 /** Whether a question's state carries a due run plan (RUN_PLAN_MERGE: state.run_plan_task). */
 export function carriesRunPlan(state: unknown): boolean {
@@ -366,19 +404,19 @@ export function carriesRunPlan(state: unknown): boolean {
  * A plan question (a shop list, a route) a due run plan rides on (RUN_PLAN_MERGE): its schema gains the optional
  * run_plan field; its checks are its own (a missing or unusable run plan is never a problem: it stays due).
  */
-export function withRunPlanField(spec: AnswerSpec): AnswerSpec {
-  return { ...spec, schema: { ...spec.schema, properties: { ...spec.schema.properties, run_plan: RUN_PLAN_FIELD } } };
+export function withRunPlanField(spec: AnswerSpec, state?: unknown): AnswerSpec {
+  return { ...spec, schema: { ...spec.schema, properties: { ...spec.schema.properties, run_plan: runPlanField(state) } } };
 }
 
 /** The run plan (strategy/run-plan.ts RUN_PLAN_TASK); accepted when it is a plan at all, as v3 did. */
-export function runPlanSpec(label = "run-plan"): AnswerSpec {
+export function runPlanSpec(label = "run-plan", state?: unknown): AnswerSpec {
   return {
     label,
     kind: "plan",
-    schema: runPlanSchema(),
+    schema: runPlanSchema(constructionContext(state) !== null),
     validate(answer: unknown): string[] {
       if (!isObject(answer)) return ["the answer is not a JSON object"];
-      return isRunPlanReply(answer) ? [] : ["not a run plan: an object without archetype, want, avoid, remove, block_target, elites, rest, boss_prep or summary (an echo of the {choice, reason} format?)"];
+      return isRunPlanReply(answer) ? constructionProblems(answer, state) : ["not a run plan: an object without archetype, want, avoid, remove, block_target, elites, rest, boss_prep or summary (an echo of the {choice, reason} format?)"];
     },
   };
 }
