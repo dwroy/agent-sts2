@@ -23,6 +23,7 @@ import { choiceQ } from "./jev/questions.js";
 import { quantitativeEnabled, quantitativeTurnFacts } from "../sim/quantitative-facts.js";
 import { BOSS_MARGIN_NOTE } from "../sim/boss-margin.js";
 import { silentPhaseReference } from "./silent-phase-reference.js";
+import { observedRazorSnakebiteScope } from "./silent-razor-snakebite.js";
 import { silentPhaseCurrentFacts } from "./silent-phase-current.js";
 import { silentPotionReference } from "./silent-potion-reference.js";
 import { silentHeldLossFacts } from "./silent-held-loss.js";
@@ -2912,6 +2913,7 @@ function planTurn(env: DecisionEnv): Decision | null {
 
   const legionPreview = paelsLegionPreview(state.run?.raw, combat);
   const firstPowerBlock = permafrostBlock(env.screenMemory, state);
+  const razorSnakebiteScope = observedRazorSnakebiteScope(state.run?.raw, combat, state.run?.ascension ?? null);
   const playerSim: PlayerSim = {
     ...(str(asRecord(state.run?.raw)["character_id"]).toLowerCase() === "silent" && (ascension === 0 || ascension === 10) &&
       powerAmount(player, "NO_DRAW_POWER") > 0 ? { noDraw: true } : {}),
@@ -2985,6 +2987,7 @@ function planTurn(env: DecisionEnv): Decision | null {
     corrosiveWave: powerAmount(player, "CORROSIVE_WAVE_POWER"),
     poisonExtraTriggers: powerAmount(player, "ACCELERANT_POWER"),
     envenom: powerAmount(player, "ENVENOM_POWER"),
+    ...(razorSnakebiteScope !== undefined ? { observedRazorSnakebite: razorSnakebiteScope } : {}),
     ...(phantomBlades === 9 ? { phantomBlades, phantomBladesSpent: !phantomBladesArmed } : {}),
     // Mid-turn draws: a Strike drawn plays itself (Hellraiser); each exhaust draws (Dark Embrace).
     hellraiser: powerAmount(player, "HELLRAISER_POWER") > 0,

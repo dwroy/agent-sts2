@@ -2940,6 +2940,8 @@ function simulate(
     const carried = fullFight && input.fightRelics?.iceCream ? Math.max(0, Math.floor(last.snap.en)) : 0;
     const pSim: PlayerSim = {
       ...base,
+      // silent-0478: the current whole-action certificate is not a later-turn upgrade/replay rule.
+      ...(base.observedRazorSnakebite !== undefined ? { observedRazorSnakebite: false } : {}),
       // KV0JHNJCKXLS T1 -> T2: the transient lock expires; base pile cards retain their original costs.
       ...(base.noDraw !== undefined ? { noDraw: false } : {}),
       ...(base.tuningFork ? { tuningFork: { ...base.tuningFork, count: player.tuningForkCount ?? 0 } } : {}),

@@ -13,6 +13,7 @@
 
 import { cardUpgrade } from "../knowledge/card-upgrades.js";
 import { observedApotheosisUpgrade } from "./silent-apotheosis.js";
+import { observedRazorSnakebiteCard } from "./silent-razor-snakebite.js";
 import type { Knowledge } from "../knowledge/index.js";
 import { asArray, asRecord, bool, num, numOrNull, str, stripMarkup } from "../core/util/json.js";
 
@@ -127,6 +128,8 @@ export interface CardModel {
   doubleDamageNext?: boolean;
   /** Observed poison applications and triggers (silent-0008 / silent-0010 / silent-0011). */
   poison?: number;
+  /** W1YY8PEWGUF9 A10: exact ordinary seven-poison, replay-one preview. */
+  observedRazorSnakebite?: boolean;
   poisonRequiresExisting?: boolean;
   poisonNow?: boolean;
   poisonPerTurn?: number;
@@ -1258,6 +1261,7 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
     ...(character.toLowerCase() === "silent" && (ascension === 6 || ascension === 10) && cardId === "SURVIVOR" &&
       !bool(card["upgraded"]) && /(?:丢弃|弃掉)1张牌/.test(rendered.replace(/\s+/g, "")) ? { survivorDiscard: true } : {}),
     ...(poison > 0 ? { poison, ...(cardId === "BUBBLE_BUBBLE" ? { poisonRequiresExisting: true } : {}), ...(cardId === "OUTBREAK" ? { poisonNow: true } : {}) } : {}),
+    ...(observedRazorSnakebiteCard(card, character, ascension) ? { observedRazorSnakebite: true } : {}),
     ...(cardId === "NOXIOUS_FUMES" && dyn(card, "PoisonPerTurn") !== null ? { poisonPerTurn: dyn(card, "PoisonPerTurn")! } : {}),
     ...(cardId === "ACCELERANT" && dyn(card, "Accelerant") !== null ? { poisonExtraTriggers: dyn(card, "Accelerant")! } : {}),
     ...(cardId === "ENVENOM" && !bool(card["upgraded"]) && dyn(card, "EnvenomPower") !== null ? { envenom: dyn(card, "EnvenomPower")! } : {}),

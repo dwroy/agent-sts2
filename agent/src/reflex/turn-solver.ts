@@ -493,6 +493,8 @@ export interface PlayerSim {
   poisonExtraTriggers?: number;
   /** Observed ENVENOM_POWER: poison for each attack hit that removes HP. */
   envenom?: number;
+  /** Current observed Silent A10 Razor Tooth board only; later simulated turns are unverified. */
+  observedRazorSnakebite?: boolean;
   /** Observed nine-point Phantom Blades power; normalized hand damage excludes it. */
   phantomBlades?: number;
   /** The observed first-Shiv bonus has already been spent, or its availability is unknown. */
@@ -1754,6 +1756,18 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
   // (logged: a Stew-replayed Strike took Pen Nib 3 -> 5, Ornamental Fan 0 -> 2, Nunchaku 2 -> 4; a Duplicator'd
   // Setup Strike Kusarigama 0 -> 2; attacks_played_this_turn +1 each time).
   const plays = 1 + (twice ? 1 : 0) + (twiceAttack ? 1 : 0) + (twiceSkill ? 1 : 0) + replays;
+  // silent-0477/0478: the measured action adds seventeen, without asserting an internal upgrade order.
+  const razorTarget = next.enemies.find((enemy) => enemy.index === target && enemy.alive);
+  const razorCandidate = player.observedRazorSnakebite !== undefined && card.observedRazorSnakebite === true;
+  const razorSnakebite = razorCandidate && player.observedRazorSnakebite === true &&
+    card.cardId === "SNAKEBITE" && card.type === "Skill" && !card.upgraded && card.poison === 7 &&
+    card.replay === 1 && card.target === "single" && cost === 2 && !card.xCost &&
+    plays === 2 && !automatic && !twice && !twiceSkill && !axe &&
+    next.enemies.filter((enemy) => enemy.alive).length === 1 && razorTarget !== undefined &&
+    (razorTarget.poison ?? 0) === 0 && razorTarget.artifact === 0 && !razorTarget.intangible &&
+    next.poisonExtraTriggers === 0 && next.envenom === 0 && !(next.serpentForm ?? 0) &&
+    !player.letterOpener && !player.tuningFork;
+  if (razorCandidate && !razorSnakebite) next.unknown = [...next.unknown, "剃刀牙蛇咬（此重放组合未验证）"];
   // K2JAGKVJAWZJ F46 T1, silent-0010: this zero-Block play has no unmodelled lasting bonus.
   // Recheck at play time; later poison, Dexterity and unobserved replays keep the previous model.
   const zeroPoisonMirage = card.observedZeroPoisonMirage && card.block === 0 && cost === 1 &&
@@ -1840,6 +1854,8 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
     }
     if (card.type === "Skill" && (player.letterOpener || player.tuningFork)) skillRelics(next, player);
   }
+  // Add only the observed aggregate gap after both normal plays; never upgrade unrelated cards or deal HP damage here.
+  if (razorSnakebite && razorTarget.alive) applyDebuff(razorTarget, "poison", 3);
   // T082DRCUHRRD F27 T1 / F9PP859XZ3RJ F37 T2: the old hand is gone before the replacement draw.
   // Use the hand at play time, including held/locked/unknown drawn cards, but excluding potion slots.
   if (redraw > 0) drawExpected(next, redraw, player);
