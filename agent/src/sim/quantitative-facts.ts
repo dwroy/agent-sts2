@@ -6,6 +6,7 @@ import { binomialInterval, pairedDifference, summarizeSamples } from "./quantita
 
 import { summarizeCoreWindows } from "./core-window.js";
 import { coreRealization } from "./core-realization.js";
+import { summarizeBossMargin } from "./boss-margin.js";
 
 export const QUANTITATIVE_SCHEMA = "quantitative-v1";
 export const QUANTITATIVE_LIMITS = "模拟分布不是实际结果；p10–p90是样本结果波动，meanSe是均值的蒙特卡洛误差，不含机制/策略偏差。增加样本不能修复模型偏差；零次/全胜样本不证明必死/必胜。超时完成样本可能有选择偏差，capped是未结束，不能当已败；胜率区间仅指模拟终止前获胜。";
@@ -46,6 +47,7 @@ export function quantitativeFightFacts(samples: readonly FightSampleResult[], ba
     samples.flatMap((s, i) => isComplete(s) ? [{ sample: ids[i]!, value: effectiveDpr(s) }] : []),
   );
   return toJsonValue({
+    ...(samples.some((s) => s.bossMargin !== undefined) ? { boss_relative_margin: summarizeBossMargin(samples, base, ids) } : {}),
     ...(samples.some((s) => s.coreWindow !== undefined) ? {
       core_window: summarizeCoreWindows(samples.map((s) => s.coreWindow), base.map((s) => s.coreWindow), ids),
     } : {}),
@@ -91,6 +93,7 @@ export function compactQuantitativeFight(full: JsonValue): JsonValue {
   const coreCards = asRecord(core.cards);
   const named = ["FOOTWORK", "ACCELERANT", "ACROBATICS", "CALCULATED_GAMBLE", "BURST", "NIGHTMARE"];
   return toJsonValue({ samples: value.samples, raw_win_mc_interval95: value.raw_win_mc_interval95,
+    ...(value.boss_relative_margin ? { boss_relative_margin: value.boss_relative_margin } : {}),
     damage_hp: spread("damage_hp"), simulated_turns: spread("simulated_turns"),
     first_turn_damage: spread("first_turn_damage"), later_damage: spread("later_damage"),
     effective_damage_per_turn: spread("effective_damage_per_turn"), damage_per_turn_won: spread("damage_per_turn_won"),

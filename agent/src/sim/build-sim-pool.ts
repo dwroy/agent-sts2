@@ -37,6 +37,8 @@ export interface DeckRunRequest {
   scripts?: boolean;
   /** Milliseconds from the call after which no more tasks are started; the samples done by then are returned. */
   deadlineMs?: number;
+  /** Required live computations: reject a stalled worker, never return its partial sample set. */
+  progressTimeoutMs?: number;
   /** Opt-in telemetry; independent of the sampling clock and never sent to the solver. */
   diagnostics?: boolean;
   /** The clock (default performance.now); tests pass their own. */
@@ -217,21 +219,29 @@ export class BuildSimPool implements DeckSimRunner {
       let pending = chunks.length;
       let finished = false;
       let timer: ReturnType<typeof setTimeout> | null = null;
-      const handlers = new Map<Worker, { message: (reply: BuildWorkerReply) => void; error: (error: Error) => void }>();
+      let progressTimer: ReturnType<typeof setTimeout> | null = null;
+      const handlers = new Map<Worker, { message: (reply: BuildWorkerReply) => void; error: (error: Error) => void; exit?: (code: number) => void }>();
       const finish = (error?: Error) => {
         if (finished) return;
         finished = true;
         Atomics.store(cancelled, 0, 1);
         this.abort = null;
         if (timer) clearTimeout(timer);
+        if (progressTimer) clearTimeout(progressTimer);
         for (const worker of used) {
           const h = handlers.get(worker)!;
           worker.off("message", h.message);
           worker.off("error", h.error);
+          if (h.exit) worker.off("exit", h.exit);
           worker.postMessage({ type: "drop", batch } satisfies BuildWorkerRequest);
         }
         if (error) reject(error);
         else resolve();
+      };
+      const noteProgress = () => {
+        if (req.progressTimeoutMs === undefined || finished) return;
+        if (progressTimer) clearTimeout(progressTimer);
+        progressTimer = setTimeout(() => finish(new Error("required build-sim worker made no progress; no partial result accepted")), req.progressTimeoutMs);
       };
       const give = (worker: Worker) => {
         if (finished) return;
@@ -260,6 +270,7 @@ export class BuildSimPool implements DeckSimRunner {
           }
           diagnostics.firstReplyMs ??= Math.round(performance.now() - diagnosticStart);
           diagnostics.outcomesCompleted += reply.results.length;
+          if (reply.results.length > 0) noteProgress();
           for (const [deck, order, i, result] of reply.results) outcomes[deck]![order]![i] = result;
           // A completed sample is usable before the rest of its block finishes.
           if (reply.partial) return;
@@ -269,19 +280,27 @@ export class BuildSimPool implements DeckSimRunner {
           else give(worker);
         };
         const error = (err: Error) => finish(err);
-        handlers.set(worker, { message, error });
+        const exit = req.progressTimeoutMs === undefined ? undefined
+          : (code: number) => finish(new Error(`required build-sim worker exited (${code}); no partial result accepted`));
+        handlers.set(worker, { message, error, ...(exit ? { exit } : {}) });
         worker.on("message", message);
         worker.on("error", error);
+        if (exit) worker.on("exit", exit);
         worker.postMessage({ type: "batch", batch, base, decks, orders: req.orders, maxTurns: req.maxTurns ?? BOSS_SIM_MAX_TURNS, scripts: req.scripts ?? true, cancelled: cancelled.buffer as SharedArrayBuffer, streamResults: true } satisfies BuildWorkerRequest);
       }
       // Attach every handler before a zero remaining budget can finish the batch.
       for (const worker of used) give(worker);
+      noteProgress();
       if (req.deadlineMs !== undefined && !finished) {
         timer = setTimeout(() => {
           timedOut = true;
           finish();
         }, Math.max(0, req.deadlineMs - (now() - started)));
       }
+    }).catch(async (error: unknown) => {
+      // A dead/stalled worker must not remain in the reusable pool for the next required attempt.
+      if (req.progressTimeoutMs !== undefined) await this.close();
+      throw error;
     });
     return { outcomes, complete: completeSamples(req, outcomes), timedOut, elapsedMs: Math.round(now() - started), workers: used.length, ...(req.diagnostics ? { diagnostics } : {}) };
   }

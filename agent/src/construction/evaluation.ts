@@ -65,7 +65,8 @@ export function constructionEvaluation(initial: BuildState, options: readonly Ev
         hp: after.hp - before.hp, maxHp: after.maxHp - before.maxHp } : null,
         unavailableReason: option.why ?? (eligible && Object.keys(q).length ? null : "本题该候选没有通过原模拟样本门槛的结果"),
         fight: Object.keys(q).length ? { samples: q.samples, completeDpr: spread(q.effective_damage_per_turn),
-          pairedDpr: paired(q.paired_effective_damage_per_turn), hpLoss: spread(q.hp_loss), pairedHpLoss: spread(q.paired_hp_loss_difference),
+          pairedDpr: paired(q.paired_effective_damage_per_turn), bossMargin: q.boss_relative_margin ?? null,
+          hpLoss: spread(q.hp_loss), pairedHpLoss: spread(q.paired_hp_loss_difference),
           turns: spread(q.simulated_turns), blockGained: spread(q.block_gained), potionsUsed: spread(q.potions_used),
           capped: q.capped, timeUp: q.time_up,
           componentRealization: Object.fromEntries(templates.map((core) => [core.id, componentMetrics(q, core, option.state)])) } : null }];

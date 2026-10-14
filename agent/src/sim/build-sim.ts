@@ -8,10 +8,11 @@
  */
 
 import type { RolloutInput } from "../reflex/rollout.js";
-import { calibratedWinProb, compareLines, fightOrders, summarizeLine, type BossSimLineResult, type FightSampleResult } from "./boss-sim.js";
+import { BOSS_POLICY_THREAT, BOSS_SIM_LOOKAHEAD, calibratedWinProb, compareLines, fightOrders, summarizeLine, type BossSimLineResult, type FightSampleResult } from "./boss-sim.js";
 import type { DeckSimRunner, DeckRunResult } from "./build-sim-pool.js";
 import type { JsonValue } from "../core/util/json.js";
 import { quantitativeFightFacts } from "./quantitative-facts.js";
+import { memoKey } from "./compute-memo.js";
 
 /** Samples per deck (docs/boss-sim.md §8: 1000 per option gives a paired standard error of about 1-1.5 points). */
 export const BUILD_SIM_SAMPLES = 1000;
@@ -66,6 +67,7 @@ export interface OptionSim {
 }
 
 export interface CompareResult {
+  completion?: { required: true; uniqueDecks: number; originalDecks: number; memoHit: boolean; originalComputeMs?: number };
   diagnostics?: { decks: number; options: number; deckCards: number; deadlineMs: number | null; orderSearch: Record<string, JsonValue> | null; comparison: Record<string, JsonValue> };
   base: OptionSim;
   options: OptionSim[];
@@ -78,6 +80,10 @@ export interface CompareResult {
   orders: number;
   order: string | null;
 }
+
+// Only fully computed deterministic comparisons are reused, within this runner/process.
+// The key includes all inputs, policies, sample identities and loaded data version.
+const completeComparisons = new WeakMap<DeckSimRunner, { key: string; result: CompareResult }>();
 
 /** A deck's outcomes on the complete samples under one order (a mixture: sample i from its member i % n). */
 function lineOf(outcomes: (FightSampleResult | undefined)[][][], decks: number[], order: number, complete: number[]): FightSampleResult[] {
@@ -126,24 +132,48 @@ export async function compareOptions(
   runner: DeckSimRunner,
   base: RolloutInput,
   options: DeckOption[],
-  opts: { samples?: number; seed?: number; deadlineMs?: number; now?: () => number; quantitative?: boolean; diagnostics?: boolean } = {},
+  opts: { samples?: number; seed?: number; deadlineMs?: number; now?: () => number; quantitative?: boolean; diagnostics?: boolean; requireComplete?: boolean } = {},
 ): Promise<CompareResult> {
-  if (opts.quantitative && base.meta.asc === 10) base = { ...base, captureCore: true, captureResources: true };
+  if (opts.quantitative) base = { ...base, captureBossMargin: true,
+    ...(base.meta.asc === 10 ? { captureCore: true, captureResources: true } : {}) };
   const samples = opts.samples ?? BUILD_SIM_SAMPLES;
+  const required = opts.requireComplete === true;
+  const cacheKey = required ? memoKey("required-b3-v1", { base, options, samples, seed: opts.seed ?? BUILD_SIM_SEED,
+    quantitative: opts.quantitative, diagnostics: opts.diagnostics, policy: { BOSS_POLICY_THREAT, BOSS_SIM_LOOKAHEAD } }) : null;
+  const cached = cacheKey ? completeComparisons.get(runner) : undefined;
+  if (cached?.key === cacheKey) {
+    const result = structuredClone(cached.result);
+    result.completion = { ...result.completion!, memoHit: true, originalComputeMs: result.elapsedMs };
+    result.elapsedMs = 0;
+    return result;
+  }
   const decks: Partial<RolloutInput>[] = [{}];
   const stripes: ({ at: number; of: number } | null)[] = [null];
   const deckOf = new Map<string, number[]>();
+  const sameDeck = new Map<string, number>();
+  const baseKey = required ? memoKey("required-deck", base) : null;
+  if (baseKey) sameDeck.set(baseKey, 0);
+  let originalDecks = 1;
   for (const option of options) {
     if (option.mixture && option.mixture.length > 0) {
       const ids: number[] = [];
       option.mixture.forEach((change, m) => {
+        originalDecks += 1;
         ids.push(decks.length);
         decks.push(change);
         stripes.push({ at: m, of: option.mixture!.length });
       });
       deckOf.set(option.key, ids);
     } else if (option.change) {
+      originalDecks += 1;
+      const key = required ? memoKey("required-deck", { ...base, ...option.change }) : null;
+      const existing = key ? sameDeck.get(key) : undefined;
+      if (existing !== undefined) {
+        deckOf.set(option.key, [existing]);
+        continue;
+      }
       deckOf.set(option.key, [decks.length]);
+      if (key) sameDeck.set(key, decks.length);
       decks.push(option.change);
       stripes.push(null);
     } else deckOf.set(option.key, [0]);
@@ -160,22 +190,29 @@ export async function compareOptions(
   let orderSearch: Record<string, JsonValue> | null = null;
   let order = allOrders[0]!;
   if (allOrders.length > 1) {
-    const first = await runner.run({ base, decks: [{}], orders: allOrders, samples: Math.min(samples, BUILD_SIM_ORDER_SAMPLES), seed, ...(opts.diagnostics ? { diagnostics: true } : {}), ...(opts.deadlineMs !== undefined ? { deadlineMs: opts.deadlineMs / 4 } : {}), ...(opts.now ? { now: opts.now } : {}) });
-    if (opts.diagnostics) orderSearch = phase(first, opts.deadlineMs === undefined ? undefined : opts.deadlineMs / 4);
+    const first = await runner.run({ base, decks: [{}], orders: allOrders, samples: Math.min(samples, BUILD_SIM_ORDER_SAMPLES), seed, ...(required ? { progressTimeoutMs: 120_000 } : {}), ...(opts.diagnostics ? { diagnostics: true } : {}), ...(!required && opts.deadlineMs !== undefined ? { deadlineMs: opts.deadlineMs / 4 } : {}), ...(opts.now ? { now: opts.now } : {}) });
+    if (required && (first.timedOut || first.complete.length !== Math.min(samples, BUILD_SIM_ORDER_SAMPLES) || first.complete.some((id, i) => id !== i))) throw new Error("required boss order search incomplete");
+    if (opts.diagnostics) orderSearch = phase(first, required || opts.deadlineMs === undefined ? undefined : opts.deadlineMs / 4);
     const lines = allOrders.map((_, o) => summarizeLine(0, lineOf(first.outcomes, [0], o, first.complete)));
     order = allOrders[bestOrder(lines)]!;
   }
   const orders = [order];
-  const left = opts.deadlineMs !== undefined ? Math.max(0, opts.deadlineMs - (now() - started)) : undefined;
-  const run = await runner.run({ base, decks, stripes, orders, samples, seed, ...(opts.diagnostics ? { diagnostics: true } : {}), ...(left !== undefined ? { deadlineMs: left } : {}), ...(opts.now ? { now: opts.now } : {}) });
+  const left = !required && opts.deadlineMs !== undefined ? Math.max(0, opts.deadlineMs - (now() - started)) : undefined;
+  const run = await runner.run({ base, decks, stripes, orders, samples, seed, ...(required ? { progressTimeoutMs: 120_000 } : {}), ...(opts.diagnostics ? { diagnostics: true } : {}), ...(left !== undefined ? { deadlineMs: left } : {}), ...(opts.now ? { now: opts.now } : {}) });
   const complete = run.complete;
+  if (required && (run.timedOut || complete.length !== samples || complete.some((id, i) => id !== i))) {
+    throw new Error(`required boss comparison incomplete: ${complete.length}/${samples}`);
+  }
   const summarize = (ids: number[]): BossSimLineResult & { order: string | null } => ({ ...summarizeLine(0, lineOf(run.outcomes, ids, 0, complete)), order: order?.label ?? null });
   const hpOf = (change: Partial<RolloutInput> | null | undefined) => change?.solver?.player.hp ?? base.solver.player.hp;
   const baseLine = summarize([0]);
   const n = complete.length;
+  const measured = new Map<BossSimLineResult, OptionSim>();
   const simOf = (key: string, line: BossSimLineResult & { order: string | null }, hp: number, isBase: boolean): OptionSim => {
+    const ready = required ? measured.get(line) : undefined;
+    if (ready) return { ...ready, key, hp };
     const d = isBase ? null : compareLines(line, baseLine);
-    return {
+    const value: OptionSim = {
       key,
       ...(opts.quantitative ? { quantitative: quantitativeFightFacts(line.outcomes, baseLine.outcomes, complete) } : {}),
       samples: n,
@@ -190,6 +227,8 @@ export async function compareOptions(
       order: line.order,
       hp,
     };
+    if (required) measured.set(line, value);
+    return value;
   };
   const summaries = new Map<string, BossSimLineResult & { order: string | null }>();
   const out = options.map((option) => {
@@ -200,7 +239,8 @@ export async function compareOptions(
     summaries.set(key, line);
     return simOf(option.key, line, option.mixture ? hpOf(option.mixture[0]) : hpOf(option.change), false);
   });
-  return {
+  const result: CompareResult = {
+    ...(required ? { completion: { required: true as const, uniqueDecks: decks.length, originalDecks, memoHit: false } } : {}),
     ...(opts.diagnostics ? { diagnostics: { decks: decks.length, options: options.length, deckCards: base.piles.draw.length,
       deadlineMs: opts.deadlineMs ?? null, orderSearch, comparison: phase(run, left) } } : {}),
     base: simOf("current", baseLine, base.solver.player.hp, true),
@@ -213,4 +253,6 @@ export async function compareOptions(
     orders: allOrders.length,
     order: order?.label ?? null,
   };
+  if (required && cacheKey) completeComparisons.set(runner, { key: cacheKey, result: structuredClone(result) });
+  return result;
 }
