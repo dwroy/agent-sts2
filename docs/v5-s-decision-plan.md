@@ -333,3 +333,5 @@ S = (O/T)/H − (R/T)/M = (O/H − R/M) / T
 - P1：`boss-readiness.ts` 纯汇总，Silent `S_READINESS` 默认 `shadow`，其他角色强制 `off`。shadow 仅记录 `boss_sim.readiness`，原题面与排序保持；显式 `on` 只给紧凑中文 `facts.boss_readiness`。低可信、缺失轨迹或符号审计失败时仅给未提供说明。run-config记录实际模式，module-health区分产出、真实脑payload及accepted，不以shadow冒充送达。
 - 默认部署属于诊断/日志阶段，不新增游戏知识或行为发布号。**P1-on、P2、P3、P4均未发布**；原R341完整计算、药水/HP/SL语义保持。实际 source/main/live、自测及两局自然验收以 `paper/materials/20261014-s-decision/` 的回执为准，代码通过不能关闭父请求。
 - 下一阶段：原ops沿既有调度核部署树完整检查和两局shadow覆盖/耗时；原owner先定位B2反号与伤害归属、补其他Boss的P0证据后接P3，再按依赖做P2/P4/P5。不得另起同题任务、复派原R2/R3或把已有校准的固定模型结论当当前生产校准。自然验收未完成之前不开P1-on。
+
+- P0反例定位续记：已实现仅供S的反伤/终止开始伤害归属修复，同一B2冻结题1800样本反号17→0，原胜负/回合/复活不变；旧反例原件保留，新结果见`p0-attribution-correction.md`和`b2-fixed/`。这是既有S题面数字的修正，独立行为号由ops核实际live后分配；不等同P3排序已上线或全Boss审计通过。
