@@ -60,6 +60,7 @@ import { infernoCopies, startTurnHpLossOf } from "./start-loss.js";
 import { planCombat as planCombatPerCard } from "./combat.js";
 import { fightKey, fightPlanJson, planFit, planOffersPotion, type FightPlan } from "../memory/fight-plan.js";
 import { permafrostBlock } from "./permafrost.js";
+import { silentKunai } from "./silent-kunai.js";
 import { observedSlothReplay, recordStateFightPlays } from "./fight-plays.js";
 import { RELIC_VALUES } from "../knowledge/relic-values.js";
 import { forcedEliteWithin } from "../hand/screens/rest.js";
@@ -1241,6 +1242,7 @@ export function describePlan(plan: Plan, playerHp: number): Record<string, JsonV
   if (!o.winsFight) summary["enemies_after"] = o.enemyHpAfter.filter((enemy) => enemy.hp > 0).map((enemy) => `${enemy.name} ${enemy.husk ? "husk (cannot be killed, it explodes; damage into it counts for nothing)" : `${enemy.hp} HP`}${enemy.vulnerable ? `, Vulnerable ${enemy.vulnerable}` : ""}${enemy.weak ? `, Weak ${enemy.weak}` : ""}${enemy.poison ? `, 中毒 ${enemy.poison}` : ""}${enemy.demise ? `, Demise ${enemy.demise} (loses ${enemy.demise} HP at the end of each of its turns)` : ""}`).join("; ");
   if (o.blockGained > 0) summary["block_gained"] = o.blockGained;
   if (o.strengthGained > 0) summary["strength_gained"] = o.strengthGained;
+  if (o.kunaiDexterityGained) summary["kunai_dexterity_gained"] = o.kunaiDexterityGained;
   if (o.cardsDrawn > 0) summary["cards_drawn"] = o.cardsDrawn;
   if (o.energyLeft > 0) summary["energy_unused"] = o.energyLeft;
   if ((o.nextTurnEnergy ?? 0) > 0) summary["next_turn_energy"] = `+${o.nextTurnEnergy} energy next turn (Pael's Tear: this line ends the turn with energy unspent)`;
@@ -1366,6 +1368,7 @@ export function planFacts(plan: Plan, ctx: FactContext): Record<string, JsonValu
   }
   const scaling: string[] = [];
   if (o.strengthGained > 0) scaling.push(`+${o.strengthGained} permanent Strength`);
+  if (o.kunaiDexterityGained) scaling.push(`+${o.kunaiDexterityGained} permanent Dexterity (Kunai)`);
   if (powers.length > 0) scaling.push(`plays power ${powers.join(", ")}`);
   if (o.lasting >= 1) scaling.push(`lasting value ${Math.round(o.lasting)}`);
   // A line saved by a revive ends at the revive's HP (less what came after it).
@@ -2926,6 +2929,7 @@ function planTurn(env: DecisionEnv): Decision | null {
 
   const legionPreview = paelsLegionPreview(state.run?.raw, combat);
   const firstPowerBlock = permafrostBlock(env.screenMemory, state);
+  const kunai = silentKunai(state);
   const razorSnakebiteScope = observedRazorSnakebiteScope(state.run?.raw, combat, state.run?.ascension ?? null);
   const playerSim: PlayerSim = {
     ...(str(asRecord(state.run?.raw)["character_id"]).toLowerCase() === "silent" && (ascension === 0 || ascension === 10) &&
@@ -2951,6 +2955,7 @@ function planTurn(env: DecisionEnv): Decision | null {
     vulnerable: powerAmount(player, "VULNERABLE_POWER") > 0,
     frail: powerAmount(player, "FRAIL_POWER") > 0,
     dexterityNow: powerAmount(player, "DEXTERITY_POWER"),
+    ...(kunai !== undefined ? { kunai } : {}),
     intangible: powerAmount(player, "INTANGIBLE_POWER") > 0,
     // -1 on us, never above 0: `> 0` never turned it on (XC4TNGZU4KT9 F9 T3 planned 16 and a kill, dealt 14).
     shrunk,
