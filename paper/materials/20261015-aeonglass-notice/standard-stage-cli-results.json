@@ -1,0 +1,70 @@
+{
+  "notice_id": "c7cadf849b359b4091e6526b",
+  "ops_registration_readback": {
+    "path": "paper/materials/20261015-0328-ops/aeonglass-registration-readback.json",
+    "sha256": "6cd4fe45b813fbd3fcfda3e6b08fa4db3e4c8967e3649717271fe5d7165e2e76"
+  },
+  "ops_forwarded_before": {
+    "path": "/home/dw/Projects/agent-sts2/paper/materials/20261015-0328-ops/aeonglass-ops-forwarded-receipt.json",
+    "sha256": "af54f56a47454f41f9fda8121919ac7d98129a050c9eb780b98da1635684299a",
+    "at": 1792007061.5191712
+  },
+  "results": [
+    {
+      "at": "2026-10-15T03:45:36+08:00",
+      "stage": "watcher_received",
+      "actor": "watcher",
+      "command": [
+        "python3",
+        "ops/learning_requests.py",
+        "ack",
+        "--notice",
+        "c7cadf849b359b4091e6526b",
+        "--stage",
+        "watcher_received",
+        "--receipt",
+        "paper/materials/20261015-aeonglass-notice/watcher_received-receipt.json"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": "",
+      "receipt": {
+        "path": "/home/dw/Projects/agent-sts2/paper/materials/20261015-aeonglass-notice/watcher_received-receipt.json",
+        "sha256": "02930b1defabb71163b2e1463249c57c7651476a4dce018a0a70e4df19cdfb26"
+      },
+      "registered_stage": {
+        "path": "/home/dw/Projects/agent-sts2/paper/materials/20261015-aeonglass-notice/watcher_received-receipt.json",
+        "sha256": "02930b1defabb71163b2e1463249c57c7651476a4dce018a0a70e4df19cdfb26",
+        "at": 1792007136.1748793
+      }
+    },
+    {
+      "at": "2026-10-15T03:45:36+08:00",
+      "stage": "roy_notified",
+      "actor": "watcher",
+      "command": [
+        "python3",
+        "ops/learning_requests.py",
+        "ack",
+        "--notice",
+        "c7cadf849b359b4091e6526b",
+        "--stage",
+        "roy_notified",
+        "--receipt",
+        "paper/materials/20261015-aeonglass-notice/roy_notified-receipt.json"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": "",
+      "receipt": {
+        "path": "/home/dw/Projects/agent-sts2/paper/materials/20261015-aeonglass-notice/roy_notified-receipt.json",
+        "sha256": "961948679135f505b9e33c04d8ebabb168eed238163fd908531ea5c830e25461"
+      },
+      "registered_stage": {
+        "path": "/home/dw/Projects/agent-sts2/paper/materials/20261015-aeonglass-notice/roy_notified-receipt.json",
+        "sha256": "961948679135f505b9e33c04d8ebabb168eed238163fd908531ea5c830e25461",
+        "at": 1792007136.6706307
+      }
+    }
+  ]
+}
