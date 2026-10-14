@@ -1,0 +1,65 @@
+{
+  "at": "2026-10-14 10:39:24 CST",
+  "exit": {
+    "started_at": "2026-10-14 10:29:59 CST",
+    "finished_at": "2026-10-14 10:37:28 CST",
+    "rc": 0,
+    "runs_started": 1,
+    "no_raw": true,
+    "log": "ops/codex-ops/record-staging/20261014-1028/paper-export.log"
+  },
+  "cut_at": "2026-10-14T02:29:59.163Z",
+  "source_checks": {
+    "decisions attributed + unattributed == play records": true,
+    "decisions_by_label sum == attributed decisions": true,
+    "escalations rows == records with escalation": true,
+    "every runs.jsonl id present in runs.csv": true,
+    "commits == git rev-list --all --count": true
+  },
+  "source_checks_passed": true,
+  "original_decision_count_mismatches_preserved": [
+    [
+      "KF9HMZKTFC3V",
+      879,
+      880
+    ]
+  ],
+  "row_counts": {
+    "runs.csv": 773,
+    "decisions_by_label.csv": 25779,
+    "escalations.csv": 3600,
+    "fight_plans.csv": 1461,
+    "commits.csv": 5825
+  },
+  "learning_curve_rows": {
+    "learning-curve-silent.csv": 11,
+    "learning-curve-ironclad.csv": 11
+  },
+  "key_scan_clean": true,
+  "dataset_decisions": {
+    "play_total": 387693,
+    "attributed_to_runs": 384640,
+    "unattributed_menu_timeline": 3053,
+    "shadow": 20,
+    "by_layer": {
+      "code": 201596,
+      "jev": 76969,
+      "deepseek": 12400,
+      "claude": 186,
+      "code-fallback": 1729,
+      "jev-plan": 77426,
+      "deepseek-plan": 847,
+      "claude-plan": 73
+    },
+    "decider_inferred": 342
+  },
+  "main_dataset_and_component_costs_have_their_own_immutable_source_cuts": true,
+  "export_log_sha256": "ef822f08892df536bdd32cf64e0e366c51faca1570539a21dbea4794e1a66f7c",
+  "manifest_sha256": "3f29d4405f6d9678dd61ab2ac8f0e436764f348d16d2c33135948d782b09e0ba",
+  "export_owned_files": 335,
+  "export_owned_bytes": 34249400,
+  "previous_snapshot": "paper/data/history/20261014T022959296916Z",
+  "no_raw": true,
+  "export_run_once": true,
+  "raw_logs_and_other_immutable_history_kept": true
+}
