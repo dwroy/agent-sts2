@@ -1,0 +1,2 @@
+初次全日志解析遇到非本批记录的 JSONDecodeError，退出1，未形成完整输入；初版按顶层run_id过滤states导致空文件。检查原帧确认states的run_id位于state.run_id后，更正为限定六局的rg字节抽取，保留初版空文件与原材料，不将空文件当缺日志。sl日志实际名称为sl-attempts.jsonl。最终以v2快照、v2-source-index.jsonl和逐字节读回为准。源码定位时一次检索了不存在的agent/src/hand/executor.ts，rg退出2，已改查hand/loop.ts。
+原帧断言首版将5PM的写记录时间ts误作观测时间observed_ts，触发StopIteration；原错误在verified-observations.initial.stderr.txt，初稿字节在verify-observations.initial.txt。已按原帧274379/274380的observed_ts 06:20:33.172Z/36.248Z更正并通过17组核验。tsx CLI的六份EPERM与Node完整输入的三份身份门禁拒绝均保留；有界片段保留所有原缺ID记录并显式排除，不补造ID。

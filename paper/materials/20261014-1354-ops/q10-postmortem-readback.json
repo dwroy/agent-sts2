@@ -1,0 +1,93 @@
+{
+  "at": "2026-10-14 14:07:27 CST",
+  "batch": "20261014-131301",
+  "state": "done",
+  "rc": 0,
+  "result": {
+    "task": "postmortem",
+    "appended": [
+      "Q10YYQ5DUPJA"
+    ],
+    "skipped": [],
+    "bugs": [
+      {
+        "run": "Q10YYQ5DUPJA",
+        "where": "agent/src/reflex/card-model.ts:1057",
+        "what": "普通吹哨WHISTLE主动击晕漏模；F49末试T5预测失23血、实际零损",
+        "new": true
+      }
+    ],
+    "ledger": {
+      "added": [
+        "silent-0471",
+        "silent-0472",
+        "silent-0473"
+      ],
+      "updated": [
+        "silent-0020",
+        "silent-0125",
+        "silent-0418"
+      ],
+      "repeats": [],
+      "check": 0
+    },
+    "code_proposals": [
+      "silent-proposal-1bea9962f17ba0ac",
+      "silent-proposal-822f1ca336af3403"
+    ],
+    "implementation_domains": [
+      "combat",
+      "sl",
+      "terminal"
+    ],
+    "report": "/home/dw/Projects/agent-sts2/learner/runs/20261014-131302-postmortem/report.md"
+  },
+  "native": {
+    "event_log": "learner/runs/20261014-131302-postmortem.jsonl",
+    "thread_id": "01a138d4-12c9-7f30-96b2-c9ba94de1d76",
+    "launch_source": {
+      "source": "learner/runs/20261014-131302-postmortem.jsonl",
+      "offset": 0,
+      "bytes": 15630,
+      "sha256": "0ca65c73bd33e28e69be558f4b1f02cc38cf511188f2d0fed3aaefba4c16cf9a"
+    },
+    "launch_task": "postmortem",
+    "launch_cwd": "/home/dw/Projects/agent-sts2",
+    "rendered_task_prompt_sha256": "19ac627284d09ac6a6b2ffb1d9252d7a4e48f435fa1461c796ebe56097758f19",
+    "actual_input_sha256": "b97415b1f601e934ba38c0f7f60ecc0a955d94f95e6bde663c5544621701f83a",
+    "actual_command_sha256": "e7da836ee0d84dfb1ee178923973e4724b6c0998804eafe1ce19c43c6fad7018",
+    "original_startup_lease": null,
+    "native_input_matches_recorded_stdin_sha256": true,
+    "native_context": {
+      "source": "ops/codex-ops/accounts/codex1/learner/sessions/2026/10/14/rollout-2026-10-14T13-13-04-01a138d4-12c9-7f30-96b2-c9ba94de1d76.jsonl",
+      "offset": 49154,
+      "bytes": 4620,
+      "sha256": "0eae38b05b4eb5778f4b624aa35860a773b8bd61fa5fec90bedb27740d2f0bcf",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "sandbox_type": "workspace-write"
+    },
+    "startup_source": {
+      "source": "learner/runs/20261014-131302-postmortem.jsonl",
+      "offset": 15630,
+      "bytes": 284,
+      "sha256": "70fa5c670c7bd99bcda3e5978a0e2424e564800061449d921e58f1e95620a624"
+    }
+  },
+  "native_note_read_proof": [
+    {
+      "native_event_sha256": "1ca7a8af0a7b4270db5b36e09f5b34cacb43a5ee7a660f6bddd8abb0c7414cf4",
+      "command": "/bin/bash -c \"sed -n '1,230p' notes/run-1014-1245-Q10YYQ5DUPJA.md; sed -n '1,230p' notes/run-20261014-1301-Q10YYQ5DUPJA.md; tail -n 48 notes/lessons.md\"",
+      "exit": 0
+    }
+  ],
+  "owned_lesson_bytes": 25997,
+  "owned_lesson_sha256": "5be6fd7f6d76007a6036564a93c304d4f640f729f5943bf0c23d6b55b825d926",
+  "old_prefix_preserved": true,
+  "learner_corrigenda_preserved": true,
+  "source_assertions": 31,
+  "source_assertions_use_frozen_selected_lines_and_original_two_supplement_SHA": true,
+  "original14_CLI_rows": true,
+  "new_pure_bug_nonblocking_queued_under_original_proposal": true,
+  "not_model_validation_shipped_or_gain": true
+}

@@ -1,0 +1,645 @@
+{
+  "at": "2026-10-14 14:07:27 CST",
+  "run": "9GTFF6DC500L",
+  "alert_sha256": "367b6bb7b993cec4b90bcad26eff731428e13e06713c1e970422052786c8a944",
+  "all_original_counter_groups_recomputed": true,
+  "coverage": {
+    "decisions_complete": true,
+    "decisions": {
+      "path": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+      "start": 1329733479,
+      "end": 1363275109,
+      "complete": false,
+      "malformed": 0,
+      "first_ts": "2026-10-14T01:18:31.352Z"
+    },
+    "brain": {
+      "path": "/home/dw/Projects/agent-sts2/logs/brain.jsonl",
+      "start": 466222014,
+      "end": 499737055,
+      "complete": false,
+      "malformed": 0,
+      "first_ts": "2026-10-13T08:20:22.459Z"
+    },
+    "plans": {
+      "path": "/home/dw/Projects/agent-sts2/logs/run-plans.jsonl",
+      "start": 3472571,
+      "end": 7665494,
+      "complete": false,
+      "malformed": 0,
+      "first_ts": "2026-09-29T17:45:48.710Z"
+    },
+    "config": {
+      "path": "/home/dw/Projects/agent-sts2/logs/run-config.jsonl",
+      "start": 0,
+      "end": 1670572,
+      "complete": true,
+      "malformed": 0,
+      "first_ts": "2026-09-30T00:10:45.685Z"
+    }
+  },
+  "actual_config": {
+    "ts": "2026-10-14T04:51:48.135Z",
+    "character": "SILENT",
+    "ascension": 10,
+    "target_ascension": 11,
+    "code": {
+      "commit": "093c68ac658980f53b9940756b3df925adfb49bb",
+      "code": "093c68a+dirty",
+      "dirty": true,
+      "dirty_files": [
+        "knowledge/characters/silent/boss-damage.json",
+        "knowledge/characters/silent/construction-opportunities.json",
+        "knowledge/characters/silent/monster-records.json",
+        "knowledge/characters/silent/outcome-stats.json",
+        "knowledge/characters/silent/room-costs.json",
+        "knowledge/common/card-upgrades.json",
+        "knowledge/common/monster-db.json",
+        "knowledge/common/move-model.json",
+        "notes/fight-value-backtest-silent.md",
+        "notes/monster-db-check.md"
+      ],
+      "branch": "live",
+      "worktree": "live"
+    },
+    "construction": {
+      "architecture": "V5",
+      "schema": "construction-v1",
+      "mode": "shadow",
+      "policy": "observed-signature-completion",
+      "validation": "prospective-calibration-required",
+      "evaluation": "same-question-combat-facts"
+    }
+  },
+  "config_source": {
+    "offset": 1665507,
+    "length": 5065,
+    "sha256": "5a90eeb4eca6ebe0582a22e4ea1a1239bca99865755b62fd77f4b18ee6d1164c"
+  },
+  "b3": {
+    "attempts": 19,
+    "skipped": 1,
+    "produced_dpr": 15,
+    "coverage": 0.7894736842105263,
+    "failures": {
+      "below_minimum_samples": 3
+    },
+    "unsupported": 1,
+    "applicable_attempts": 18,
+    "unsupported_only": 1,
+    "candidates": {
+      "observed": 114,
+      "unsupported": 8,
+      "with_dpr": 94,
+      "missing_dpr": 12
+    },
+    "applicable_coverage": 0.8333333333333334,
+    "longest_failure_streak": 3,
+    "trailing_failure_streak": 0,
+    "paired_samples_min": 154,
+    "ms_max": 11297
+  },
+  "brain": {
+    "observed_questions": 20,
+    "questions_with_dpr": 15,
+    "accepted_with_dpr": 15,
+    "decision_use": "unknown; delivery is not evidence of reasoning or a fixed DPR weight"
+  },
+  "construction_pipeline": {
+    "enabled": true,
+    "evaluation_expected": 22,
+    "evaluation_attached": 22,
+    "evaluation_missing": 0,
+    "brain_evaluation": 22,
+    "accepted_evaluation": 22,
+    "accepted_choice_with_evaluation": 21,
+    "plan_due": 5,
+    "accepted_structured_plan": 5,
+    "missing_structured_plan": 0,
+    "saved_structured_plan": 5,
+    "plan_readback": 19,
+    "checkpoint_review_due": 2,
+    "probability_delivered": 0,
+    "admission": {
+      "missing_or_mismatched_prospective_calibration": 18
+    },
+    "evidence": [],
+    "alert": false,
+    "limits": "Payload delivery, accepted output and saved/read-back plans are distinct observations, not causal win-rate evidence. Missing calibration is pending, not a service failure."
+  },
+  "construction": {
+    "missing_route": 4,
+    "predicted": 18
+  },
+  "failures": [
+    {
+      "ts": "2026-10-14T05:22:53.319Z",
+      "decision": "2f5fb8e3-d267-4b24-8365-14bbb9ba6777",
+      "floor": 19,
+      "label": "reward/card",
+      "reason": "below_minimum_samples",
+      "source": {
+        "offset": 1362339286,
+        "length": 43383,
+        "sha256": "37887ae1ebf8b3d22f5b241ea2cc9529d2bcb19c6912e424fba51d23e5eccb7c"
+      },
+      "diagnostics": {
+        "schema": "build-sim-health-v1",
+        "status": "failed",
+        "availableCpus": 32,
+        "loadAverage": [
+          8.1,
+          11.87,
+          12.84
+        ],
+        "decks": 4,
+        "options": 4,
+        "deckCards": 25,
+        "deadlineMs": 10979.701671000104,
+        "orderSearch": {
+          "samples": 60,
+          "elapsedMs": 2745,
+          "timedOut": true,
+          "workers": 24,
+          "deadlineMs": 2744.925417750026,
+          "pool": {
+            "queueMs": 0,
+            "coldStart": true,
+            "preparationMs": 13,
+            "firstReplyMs": 624,
+            "chunksPlanned": 39,
+            "chunksDispatched": 38,
+            "chunksCompleted": 14,
+            "outcomesCompleted": 187
+          }
+        },
+        "comparison": {
+          "samples": 154,
+          "elapsedMs": 8233,
+          "timedOut": true,
+          "workers": 24,
+          "deadlineMs": 8232.756458000047,
+          "pool": {
+            "queueMs": 0,
+            "coldStart": false,
+            "preparationMs": 2,
+            "firstReplyMs": 159,
+            "chunksPlanned": 500,
+            "chunksDispatched": 96,
+            "chunksCompleted": 72,
+            "outcomesCompleted": 644
+          }
+        },
+        "boss": "KAISER_CRAB",
+        "samples": 154,
+        "requested": 1000,
+        "minimumShown": 300,
+        "timedOut": true,
+        "simMs": 11174,
+        "workers": 24,
+        "reason": "below_minimum_samples"
+      },
+      "error": "只跑完 154 次模拟（不足 300 次），选项之间的差噪声太大，不给数字",
+      "candidates": {
+        "observed": 4,
+        "unsupported": 0,
+        "with_dpr": 0,
+        "missing_dpr": 4
+      }
+    },
+    {
+      "ts": "2026-10-14T05:24:40.404Z",
+      "decision": "bc53c7e7-ca3f-40aa-985b-0f03b0458912",
+      "floor": 21,
+      "label": "reward/card",
+      "reason": "below_minimum_samples",
+      "source": {
+        "offset": 1362574537,
+        "length": 43325,
+        "sha256": "7caabe954f3ec921cc4f6b09de9048715bb7c42b2315122a360f66c19c2336e7"
+      },
+      "diagnostics": {
+        "schema": "build-sim-health-v1",
+        "status": "failed",
+        "availableCpus": 32,
+        "loadAverage": [
+          10.66,
+          12.02,
+          12.81
+        ],
+        "decks": 4,
+        "options": 4,
+        "deckCards": 26,
+        "deadlineMs": 10979.377126000123,
+        "orderSearch": {
+          "samples": 67,
+          "elapsedMs": 2758,
+          "timedOut": true,
+          "workers": 24,
+          "deadlineMs": 2744.844281500031,
+          "pool": {
+            "queueMs": 0,
+            "coldStart": false,
+            "preparationMs": 0,
+            "firstReplyMs": 134,
+            "chunksPlanned": 39,
+            "chunksDispatched": 39,
+            "chunksCompleted": 18,
+            "outcomesCompleted": 212
+          }
+        },
+        "comparison": {
+          "samples": 175,
+          "elapsedMs": 8221,
+          "timedOut": true,
+          "workers": 24,
+          "deadlineMs": 8219.626299000112,
+          "pool": {
+            "queueMs": 0,
+            "coldStart": false,
+            "preparationMs": 1,
+            "firstReplyMs": 122,
+            "chunksPlanned": 500,
+            "chunksDispatched": 101,
+            "chunksCompleted": 77,
+            "outcomesCompleted": 723
+          }
+        },
+        "boss": "KAISER_CRAB",
+        "samples": 175,
+        "requested": 1000,
+        "minimumShown": 300,
+        "timedOut": true,
+        "simMs": 11095,
+        "workers": 24,
+        "reason": "below_minimum_samples"
+      },
+      "error": "只跑完 175 次模拟（不足 300 次），选项之间的差噪声太大，不给数字",
+      "candidates": {
+        "observed": 4,
+        "unsupported": 0,
+        "with_dpr": 0,
+        "missing_dpr": 4
+      }
+    },
+    {
+      "ts": "2026-10-14T05:26:06.185Z",
+      "decision": "0a6253c6-3408-43f9-99fe-1b3ac4b7f1d6",
+      "floor": 22,
+      "label": "reward/card",
+      "reason": "below_minimum_samples",
+      "source": {
+        "offset": 1362756805,
+        "length": 43462,
+        "sha256": "d47333006391b5587085b4b647df6845c010f31c07341646889e2fad13518bd7"
+      },
+      "diagnostics": {
+        "schema": "build-sim-health-v1",
+        "status": "failed",
+        "availableCpus": 32,
+        "loadAverage": [
+          14.45,
+          12.88,
+          13.04
+        ],
+        "decks": 4,
+        "options": 4,
+        "deckCards": 27,
+        "deadlineMs": 10982.705037999898,
+        "orderSearch": {
+          "samples": 80,
+          "elapsedMs": 2746,
+          "timedOut": true,
+          "workers": 24,
+          "deadlineMs": 2745.6762594999745,
+          "pool": {
+            "queueMs": 0,
+            "coldStart": false,
+            "preparationMs": 0,
+            "firstReplyMs": 133,
+            "chunksPlanned": 39,
+            "chunksDispatched": 39,
+            "chunksCompleted": 24,
+            "outcomesCompleted": 249
+          }
+        },
+        "comparison": {
+          "samples": 202,
+          "elapsedMs": 8236,
+          "timedOut": true,
+          "workers": 24,
+          "deadlineMs": 8235.462027999805,
+          "pool": {
+            "queueMs": 0,
+            "coldStart": false,
+            "preparationMs": 1,
+            "firstReplyMs": 139,
+            "chunksPlanned": 500,
+            "chunksDispatched": 118,
+            "chunksCompleted": 94,
+            "outcomesCompleted": 827
+          }
+        },
+        "boss": "KAISER_CRAB",
+        "samples": 202,
+        "requested": 1000,
+        "minimumShown": 300,
+        "timedOut": true,
+        "simMs": 11130,
+        "workers": 24,
+        "reason": "below_minimum_samples"
+      },
+      "error": "只跑完 202 次模拟（不足 300 次），选项之间的差噪声太大，不给数字",
+      "candidates": {
+        "observed": 4,
+        "unsupported": 0,
+        "with_dpr": 0,
+        "missing_dpr": 4
+      }
+    }
+  ],
+  "plan_actual_readbacks": [
+    {
+      "source": {
+        "offset": 7647210,
+        "length": 2883,
+        "sha256": "5f5dca2240716bab63f81355457add693e8a4869ac9002d7e151e056db7f9533"
+      },
+      "ts": "2026-10-14T04:54:00.681Z",
+      "later_actual_reads": [
+        {
+          "source": {
+            "offset": 497589450,
+            "length": 22904,
+            "sha256": "912097d68232795e08277b20dce0c2d17ba1ba56b527dde8a978625f17582689"
+          },
+          "ts": "2026-10-14T04:54:33.695Z",
+          "accepted": true
+        },
+        {
+          "source": {
+            "offset": 497612354,
+            "length": 69343,
+            "sha256": "4d13f656a5c25128790918292069c196d0ceef25881cd3e76c9acca016bf3a8a"
+          },
+          "ts": "2026-10-14T04:55:40.494Z",
+          "accepted": true
+        },
+        {
+          "source": {
+            "offset": 497681697,
+            "length": 74120,
+            "sha256": "cabb6e758b8e52fb4a5bd09d7905c058ceaa8bceec3141cda27756afd1b0ce98"
+          },
+          "ts": "2026-10-14T04:57:13.215Z",
+          "accepted": true
+        },
+        {
+          "source": {
+            "offset": 497755817,
+            "length": 77154,
+            "sha256": "bf71edb8e4efdbe7282e2291b864f5df473ff981a90b7df7a98dd8a24c7721e0"
+          },
+          "ts": "2026-10-14T04:58:39.160Z",
+          "accepted": true
+        },
+        {
+          "source": {
+            "offset": 497832971,
+            "length": 79433,
+            "sha256": "a566a1b0950a21b69bf946f74dd2d528a04323864dd7626c38dde8ee66439822"
+          },
+          "ts": "2026-10-14T04:59:51.450Z",
+          "accepted": true
+        },
+        {
+          "source": {
+            "offset": 497912404,
+            "length": 52367,
+            "sha256": "850703fbff56afa01f3e2624fe868fc405578be869e85f7e15313bc5354409cc"
+          },
+          "ts": "2026-10-14T05:00:26.833Z",
+          "accepted": true
+        },
+        {
+          "source": {
+            "offset": 497964771,
+            "length": 45037,
+            "sha256": "68bde18637b0be6d0d69eb96de5222d5f96676edf691ff855475134c4795bd5b"
+          },
+          "ts": "2026-10-14T05:01:46.557Z",
+          "accepted": true
+        }
+      ],
+      "made_on_floor": 1,
+      "construction": {
+        "primary": "uncommitted",
+        "alternatives": [
+          "P",
+          "D",
+          "S"
+        ],
+        "checkpoint": 6,
+        "reason": "Fury gains 0.488±0.029 simulated DPR versus Strike upgrade’s 0.678±0.012; all samples lose 56 HP. Neutralize survives longer. Favor retrieval’s future flexibility; sparse component traces cannot establish dilution, activation timing or complete-core performance.",
+        "pivot_if": "Favor P with strong poison and defense offers; S with generators and scaling; D with repeated Footworks; consider R after obtaining Tingsha or Tough Bandages."
+      }
+    },
+    {
+      "source": {
+        "offset": 7650093,
+        "length": 2969,
+        "sha256": "64696c9f1457af0a7b4d69b9cca5b2ae5d07174de0f33d3029f4c3a6d922ade1"
+      },
+      "ts": "2026-10-14T05:01:46.561Z",
+      "later_actual_reads": [
+        {
+          "source": {
+            "offset": 498009808,
+            "length": 179942,
+            "sha256": "dd6d440188ca6431362c8d21e31f46872964df33220de964d9778f076a0a43ac"
+          },
+          "ts": "2026-10-14T05:02:24.785Z",
+          "accepted": true
+        },
+        {
+          "source": {
+            "offset": 498189750,
+            "length": 267321,
+            "sha256": "dfb4bf2c8916234787d2522f1af0cadf787e5875ca0785b0a9452edd3b3f711c"
+          },
+          "ts": "2026-10-14T05:03:40.329Z",
+          "accepted": true
+        },
+        {
+          "source": {
+            "offset": 498457071,
+            "length": 94221,
+            "sha256": "0f86dee2614aaf172f433a25c031d2b4a0c2df87695d11d190db152cd4bbe5c8"
+          },
+          "ts": "2026-10-14T05:06:48.845Z",
+          "accepted": true
+        }
+      ],
+      "made_on_floor": 7,
+      "construction": {
+        "primary": "P",
+        "alternatives": [
+          "D",
+          "R"
+        ],
+        "checkpoint": 9,
+        "reason": "Flask and Stab support poison acceleration. Current simulated DPR is 13.45 with meanSe 0.14; boss wins are 5%. Only 86/1000 component traces are valid. Event combat effects, curse dilution and complete-core performance are unmeasured; prioritize purchases addressing both output and survival.",
+        "pivot_if": "Favor D if multiple Footworks and efficient block become available; consider R after obtaining a discard relic and stronger draw-discard support."
+      }
+    },
+    {
+      "source": {
+        "offset": 7653062,
+        "length": 3427,
+        "sha256": "6e87683f19fd7d932c1b4df7c2a4d94491d10eac8524c83b898d7b2db2e06edb"
+      },
+      "ts": "2026-10-14T05:06:48.849Z",
+      "later_actual_reads": [
+        {
+          "source": {
+            "offset": 498551292,
+            "length": 255244,
+            "sha256": "b8b4362fe85fdaee7254dfa5848634d3fb67cc3fb1be5c54c7117f5670c5baec"
+          },
+          "ts": "2026-10-14T05:07:22.626Z",
+          "accepted": true
+        },
+        {
+          "source": {
+            "offset": 498806536,
+            "length": 96267,
+            "sha256": "8f143ebcb99d869664ff71957d0029a6e1497a044dc865f04b8c88d07e39f3d3"
+          },
+          "ts": "2026-10-14T05:09:13.839Z",
+          "accepted": true
+        },
+        {
+          "source": {
+            "offset": 498902803,
+            "length": 96717,
+            "sha256": "9ed01f16e1f022a0eb3c43da44b674f7ec8227fd8de7695bd187078d265af3d5"
+          },
+          "ts": "2026-10-14T05:10:40.625Z",
+          "accepted": true
+        },
+        {
+          "source": {
+            "offset": 498999520,
+            "length": 102387,
+            "sha256": "fe40b3d3ccbf69855e85433e84b25d0d6bcd8152281a153643ba96a33a283365"
+          },
+          "ts": "2026-10-14T05:12:16.130Z",
+          "accepted": true
+        },
+        {
+          "source": {
+            "offset": 499101907,
+            "length": 283073,
+            "sha256": "a47ecef73b6607d23057a5754374d04d2a92e6aa532e99b3292babe8f342e173"
+          },
+          "ts": "2026-10-14T05:12:54.427Z",
+          "accepted": true
+        }
+      ],
+      "made_on_floor": 11,
+      "construction": {
+        "primary": "P",
+        "alternatives": [
+          "D",
+          "R"
+        ],
+        "checkpoint": 16,
+        "reason": "Flask, Stab and Accelerant provide poison output; Footwork strengthens existing block, especially replay Defend. Taking it lowers simulated boss wins by 6.9±1.8 percentage points and DPR by 2.25±0.20, but reduces HP loss by 2.00±0.80. Accept that tradeoff for repeatable later-act defense. Footwork appears in 238/238 valid traces, first played around turn 2.58; only 67 component traces pair, so poison dilution remains unresolved. Future upgrades and complete-core performance are unmeasured.",
+        "pivot_if": "Favor D after acquiring multiple Footworks and efficient repeatable block while retaining output. Consider R only after obtaining a discard relic and stronger draw-discard support."
+      }
+    },
+    {
+      "source": {
+        "offset": 7659074,
+        "length": 2877,
+        "sha256": "f002d4a06a2abc8c74b7c20ea8240b49d5a70dacd11d00e458b842bce6bde729"
+      },
+      "ts": "2026-10-14T05:20:34.953Z",
+      "later_actual_reads": [
+        {
+          "source": {
+            "offset": 499485378,
+            "length": 44416,
+            "sha256": "8b2caeaecb2c03e97a219115364766835a2cc6e9856463e0d3aa1627cb5a1912"
+          },
+          "ts": "2026-10-14T05:22:53.316Z",
+          "accepted": true
+        },
+        {
+          "source": {
+            "offset": 499529794,
+            "length": 45289,
+            "sha256": "beb1514f4a8f8e4ffd2c474fe1fcb2bfaff10c6a6b83573bd4e47b6cf03daa24"
+          },
+          "ts": "2026-10-14T05:24:40.402Z",
+          "accepted": true
+        },
+        {
+          "source": {
+            "offset": 499575083,
+            "length": 44751,
+            "sha256": "5d101b07bad85c6fcfcea25fa2309a498ad95fd52cc628b85ee79746e59f5270"
+          },
+          "ts": "2026-10-14T05:26:06.184Z",
+          "accepted": true
+        },
+        {
+          "source": {
+            "offset": 499619834,
+            "length": 117221,
+            "sha256": "a5589173e92bb501c7cc1065faf56795ddb0d678ac1b2475e134165540efa7de"
+          },
+          "ts": "2026-10-14T05:29:41.989Z",
+          "accepted": true
+        }
+      ],
+      "made_on_floor": 18,
+      "construction": {
+        "primary": "P",
+        "alternatives": [
+          "D"
+        ],
+        "checkpoint": 25,
+        "reason": "Flask+, Accelerant+, Footwork, Sweep and Backflip support poison-defense. Tears improves energy flexibility without adding cards. Simulations are unavailable; draw dilution and complete-core performance remain unknown.",
+        "pivot_if": "Reassess after the shop if poison consistently arrives too late or defense remains inadequate. Favor D if another Footwork and efficient block are actually acquired."
+      }
+    },
+    {
+      "source": {
+        "offset": 7661951,
+        "length": 3543,
+        "sha256": "8403c8bb33fa35fdfb8b9df6a1e15010388660b25c955c3c6e3b7e2c70c8863d"
+      },
+      "ts": "2026-10-14T05:29:41.995Z",
+      "later_actual_reads": [],
+      "made_on_floor": 23,
+      "construction": {
+        "primary": "P",
+        "alternatives": [
+          "D"
+        ],
+        "checkpoint": 25,
+        "reason": "Flask+, Accelerant+, retained Snakebites and Footwork support P. Simulation records 17.01 DPR, 61 HP lost and 0/344 wins, not proven inevitable defeat. All reward DPR differences are within error. Stab coverage falls from 66% to approximately 55–56% with additions, while paired coverage and first-play comparisons have substantial missing or unmatched traces. Dilution is a concern, not a precise estimate; complete-core performance remains unknown.",
+        "pivot_if": "Favor D if the shop supplies a second Footwork and efficient block. If retained poison repeatedly clogs hands or starts late, prioritize draw, energy and removals before further poison."
+      }
+    }
+  ],
+  "performance_parent": "v5-dpr-health-20261013",
+  "original_child": "20261014-123933-fix-batch",
+  "original_state": "running",
+  "hot_input_changed": false,
+  "DPR_and_prospective_calibration_parent_pending": true,
+  "load_not_established_cause": true,
+  "delivery_not_adoption_or_gain": true,
+  "plan_readback_binding_includes_same_made_on_floor": true
+}

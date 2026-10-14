@@ -1,0 +1,39 @@
+{
+  "task": "postmortem",
+  "appended": [
+    "Q10YYQ5DUPJA"
+  ],
+  "skipped": [],
+  "bugs": [
+    {
+      "run": "Q10YYQ5DUPJA",
+      "where": "agent/src/reflex/card-model.ts:1057",
+      "what": "普通吹哨WHISTLE主动击晕漏模；F49末试T5预测失23血、实际零损",
+      "new": true
+    }
+  ],
+  "ledger": {
+    "added": [
+      "silent-0471",
+      "silent-0472",
+      "silent-0473"
+    ],
+    "updated": [
+      "silent-0020",
+      "silent-0125",
+      "silent-0418"
+    ],
+    "repeats": [],
+    "check": 0
+  },
+  "code_proposals": [
+    "silent-proposal-1bea9962f17ba0ac",
+    "silent-proposal-822f1ca336af3403"
+  ],
+  "implementation_domains": [
+    "combat",
+    "sl",
+    "terminal"
+  ],
+  "report": "/home/dw/Projects/agent-sts2/learner/runs/20261014-131302-postmortem/report.md"
+}
