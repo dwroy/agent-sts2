@@ -21,6 +21,7 @@ import type { RunPlan } from "../src/memory/run-plan.js";
 import { solveTap, solveTurn, type EnemySim, type Plan, type PlayerSim, type SolverInput } from "../src/reflex/turn-solver.js";
 import type { CardModel } from "../src/reflex/card-model.js";
 import { logged, loggedEnv } from "./logged.js";
+import { withTargetOptionFixture } from "./target-option-fixture.js";
 
 // The Queen + Amalgam boards plan with full rollouts (both kill orders, death-move and passive pieces): ~1–4 s each
 // alone, over 5 s at load ~10–20 while live play runs. A wider per-test limit keeps the suite from failing on load alone.
@@ -70,10 +71,10 @@ const facts = (criteria: Record<string, string | null>, key: string) => JSON.par
 const pick = (key: string, confidence = 0.9): AnswerSet => ({ plan: { type: "choice", choice: key, probabilities: { [key]: confidence }, confidence, raw: {} } }) as AnswerSet;
 
 describe("per-target options (EZ2L F48 T2: Queen + Torch Head Amalgam)", () => {
-  // Two full-budget solves of a board whose belt holds Radiant Tincture (a line since it is modelled).
+  // Both real solves retain all cards and potions; target labels do not require unlimited future samples.
   it("shows an Amalgam-focus line and a Queen-focus line, labelled, within the option cap", () => {
     setExperienceForTests(LESSONS);
-    const decision = ez2l() as AskDecision;
+    const decision = withTargetOptionFixture((budgetMs) => ez2l({ budgetMs })) as AskDecision;
     expect(decision.kind).toBe("ask");
     const criteria = criteriaOf(decision);
     const keys = planKeys(criteria);
@@ -90,7 +91,7 @@ describe("per-target options (EZ2L F48 T2: Queen + Torch Head Amalgam)", () => {
     expect(String(amalgam.f["enemies_after"])).toMatch(new RegExp(`${AMALGAM} (\\d+) HP`));
     expect(Number(/火炬头聚合体 (\d+) HP/.exec(String(amalgam.f["enemies_after"]))![1])).toBeLessThan(202);
     // Without the per-target options (the question as it was) no shown line hit the Amalgam.
-    const before = ez2l({ target: false }) as AskDecision;
+    const before = withTargetOptionFixture((budgetMs) => ez2l({ budgetMs, target: false })) as AskDecision;
     const beforeCriteria = criteriaOf(before);
     // (Breakthrough's 13 to every enemy was the most any of them put into it.)
     const amalgamHp = (f: Record<string, unknown>) => Number(/火炬头聚合体 (\d+) HP/.exec(String(f["enemies_after"]))![1]);
@@ -102,6 +103,26 @@ describe("per-target options (EZ2L F48 T2: Queen + Torch Head Amalgam)", () => {
     const log = decision.resolve(pick(amalgam.key)).log as Record<string, unknown>;
     expect(Object.values(log["focus"] as Record<string, string>)).toContain(AMALGAM);
   }, 30_000);
+
+  it("bounds the target-label fixture work independently of host pauses and restores its clock", () => {
+    const before = { now: rolloutLiveOptions.now, budget: rolloutLiveOptions.budgetMs, potionNow: potionMcOptions.now };
+    for (const pause of [0, 10_000]) {
+      const date = vi.spyOn(Date, "now").mockReturnValue(pause);
+      try {
+        withTargetOptionFixture((budgetMs) => {
+          expect(budgetMs).toBe(ROLLOUT_BUDGET_MS);
+          expect(rolloutLiveOptions.budgetMs).toBe(ROLLOUT_BUDGET_MS);
+          expect(rolloutLiveOptions.now).toBeTypeOf("function");
+          const now = rolloutLiveOptions.now!;
+          expect([now(), now(), now()]).toEqual([3, 6, 9]);
+          expect(potionMcOptions.now).toBeTypeOf("function");
+        });
+      } finally { date.mockRestore(); }
+      expect({ now: rolloutLiveOptions.now, budget: rolloutLiveOptions.budgetMs, potionNow: potionMcOptions.now }).toEqual(before);
+    }
+    expect(() => withTargetOptionFixture(() => { throw new Error("fixed failure"); })).toThrow("fixed failure");
+    expect({ now: rolloutLiveOptions.now, budget: rolloutLiveOptions.budgetMs, potionNow: potionMcOptions.now }).toEqual(before);
+  });
 
   it("Jev's picking an Amalgam-focus line plays it (no swap to a Queen line with more damage)", () => {
     const decision = ez2l() as AskDecision;
