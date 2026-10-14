@@ -7,12 +7,15 @@ export interface CompactJevRequest {
   state: Record<string, unknown>;
   questions: QuestionSet;
   encoding: {
-    kind: "shared-json-values-v1";
+    kind: "shared-json-values-v1" | "shared-json-values-v2";
     stateKey: string;
     refKey: string;
     originalBytes: number;
     encodedBytes: number;
     definitions: number;
+    shapeKey?: string;
+    valueKey?: string;
+    shapeDefinitions?: number;
   };
 }
 
@@ -28,7 +31,7 @@ export function isJevContextLimitError(error: unknown): boolean {
   }
 }
 
-/** Factor exact repeated JSON values; never prune options, round numbers or summarize text. */
+/** Factor exact repeated values and object key sequences; never prune options, round numbers or summarize text. */
 export function compactJevRequest(state: unknown, questions: QuestionSet): CompactJevRequest | null {
   if (state === null || typeof state !== "object" || Array.isArray(state)) return null;
   const original = JSON.stringify({ state, questions });
@@ -39,13 +42,21 @@ export function compactJevRequest(state: unknown, questions: QuestionSet): Compa
   };
   const stateKey = uniqueKey("__jev_shared_");
   const refKey = uniqueKey("__jev_ref_");
+  const shapeKey = uniqueKey("__js_");
+  const valueKey = uniqueKey("__jv_");
   const parsed = new Map<string, Map<string, Json>>();
   const counts = new Map<string, number>();
+  const shapeCounts = new Map<string, number>();
   const visit = (value: Json): void => {
     const key = JSON.stringify(value);
-    if (key.length >= 160) counts.set(key, (counts.get(key) ?? 0) + 1);
+    // The rejected request is limited in bytes/tokens, not UTF-16 character count.
+    if (Buffer.byteLength(key) >= 64) counts.set(key, (counts.get(key) ?? 0) + 1);
     if (Array.isArray(value)) value.forEach(visit);
-    else if (value !== null && typeof value === "object") Object.values(value).forEach(visit);
+    else if (value !== null && typeof value === "object") {
+      const keys = JSON.stringify(Object.keys(value));
+      if (Buffer.byteLength(keys) >= 64) shapeCounts.set(keys, (shapeCounts.get(keys) ?? 0) + 1);
+      Object.values(value).forEach(visit);
+    }
   };
   for (const [id, question] of Object.entries(questions)) {
     if (question.type !== "choice") continue;
@@ -64,6 +75,8 @@ export function compactJevRequest(state: unknown, questions: QuestionSet): Compa
   }
   const names = new Map<string, string>();
   const definitions: Record<string, Json> = Object.create(null) as Record<string, Json>;
+  const shapeNames = new Map<string, string>();
+  const shapes: Record<string, string[]> = Object.create(null) as Record<string, string[]>;
   const encode = (value: Json, definition = false): Json => {
     const key = JSON.stringify(value);
     if (!definition && (counts.get(key) ?? 0) > 1) {
@@ -77,7 +90,21 @@ export function compactJevRequest(state: unknown, questions: QuestionSet): Compa
     }
     if (Array.isArray(value)) return value.map((item) => encode(item));
     if (value !== null && typeof value === "object") {
-      return Object.fromEntries(Object.entries(value).map(([k, item]) => [k, encode(item)]));
+      const entries = Object.entries(value).map(([k, item]) => [k, encode(item)] as const);
+      const plain = Object.fromEntries(entries);
+      const keys = JSON.stringify(entries.map(([k]) => k));
+      if ((shapeCounts.get(keys) ?? 0) > 1) {
+        const name = shapeNames.get(keys) ?? `s${shapeNames.size}`;
+        const packed = { [shapeKey]: name, [valueKey]: entries.map(([, item]) => item) };
+        if (Buffer.byteLength(JSON.stringify(packed)) < Buffer.byteLength(JSON.stringify(plain))) {
+          if (!shapeNames.has(keys)) {
+            shapeNames.set(keys, name);
+            shapes[name] = entries.map(([k]) => k);
+          }
+          return packed;
+        }
+      }
+      return plain;
     }
     return value;
   };
@@ -88,12 +115,13 @@ export function compactJevRequest(state: unknown, questions: QuestionSet): Compa
       option, options.has(option) ? JSON.stringify(encode(options.get(option)!)) : text,
     ])) }];
   }));
-  if (names.size === 0) return null;
+  if (names.size === 0 && shapeNames.size === 0) return null;
   const encodedState = {
     ...state,
     [stateKey]: {
-      instruction: `无损编码说明：选项JSON里仅含“${refKey}”的对象是本表values中同名值的引用；请先递归展开再理解。它与原值完全相同，不是缺失、预测或新事实。选项顺序、含义和全部数值不变。`,
+      instruction: `无损编码说明：选项JSON里仅含“${refKey}”的对象引用本表values中的同名值。${shapeNames.size ? `仅含“${shapeKey}”和“${valueKey}”的对象，以shapes中同名键列表与值数组按位置一一组装；字段顺序保持。` : ""}请先递归展开再理解；它与原值完全相同，不是缺失、预测或新事实。选项顺序、含义和全部数值不变。`,
       values: definitions,
+      ...(shapeNames.size ? { shapes } : {}),
     },
   };
   const originalBytes = Buffer.byteLength(original);
@@ -101,6 +129,7 @@ export function compactJevRequest(state: unknown, questions: QuestionSet): Compa
   // The retry must materially shrink the request; a marginal rewrite cannot address the rejection.
   if (encodedBytes >= originalBytes * 0.9) return null;
   return { state: encodedState, questions: encodedQuestions, encoding: {
-    kind: "shared-json-values-v1", stateKey, refKey, originalBytes, encodedBytes, definitions: names.size,
+    kind: shapeNames.size ? "shared-json-values-v2" : "shared-json-values-v1", stateKey, refKey, originalBytes, encodedBytes, definitions: names.size,
+    ...(shapeNames.size ? { shapeKey, valueKey, shapeDefinitions: shapeNames.size } : {}),
   } };
 }
