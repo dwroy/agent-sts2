@@ -1,6 +1,6 @@
 # V5 S 决策与 Jev 定位：实施计划
 
-- 状态：**已批准，待实现**。Roy 2026-10-14 在与 Claude 的对话中批准本方案（“我同意你的建议”），并要求整理成实施计划移交 Codex 开发。
+- 状态：**已批准，分阶段实施中**。Roy 2026-10-14 在与 Claude 的对话中批准本方案（“我同意你的建议”），并要求整理成实施计划移交 Codex 开发。
 - 请求 ID：`roy-20261014-s-decision`。
 - 起草：Claude（只起草文档，不实现代码）。实现、自测、合入由 Codex 负责；发布编号、上线登记和兜底由运维 codex 负责。
 - 范围：Silent（静默猎手）。其他角色在各开关关闭时保持现有行为；铁甲战士必须等价。
@@ -321,3 +321,15 @@ S = (O/T)/H − (R/T)/M = (O/H − R/M) / T
 - **分批**：P0 → {P1, P3} → P2 → P4 → P5。每一批按任务模板中的 fix-batch JSON 协议回报，live 合入串行持锁。
 - **父请求关闭条件**：P1–P4 均已上线，自然对局中消费者读回通过，`eval/s_decision.py` 至少输出一份完整报告，ops 和 Roy 的通知回执齐全。测试通过、回放通过或批次结束都不等于完成。
 - **异议**：实现者如果认为本方案某项不成立（例如 P0.1 发现 S 符号与胜负大面积不一致），按学习要求闭环记录异议，经 ops → watcher → Roy 告知，不要硬做。
+
+
+## 11. 实施接续（2026-10-14，首批 P0 / P1 shadow）
+
+本次沿第10节(b)由原 watcher 直接实现，独立工作树 `s-decision-20261014`，父请求保持开放。远端计划 `7c7f91aed` 与本机 R343–R345 已合并为 main `264efa2ea`；保留双方记录和运维未提交内容。
+
+- P0 工具：`agent/tools/s-sign-audit.ts`、`jev-vs-code-replay.ts`；现有冻结输入重算入口 `s-decision-fixture.ts`，只跑离线模拟，不调用 Jev 或游戏动作。`eval/s_decision.py` 输出三个基线报告、逐题来源/动作/结局和原校准清单。
+- P0.1 当前覆盖：原冻结 B3 题、SOUL_FYSH/A10、4,000条样本、0缺失/0符号不一致。原 base/options 统计逐值等价，准备度汇总新增约7.12ms；两条原样本的 k/h 经独立 Python 复算。补充B2同Boss/A10冻结题1800样本中17条反号，其中一条候选8/600（1.333%）超门槛，P3整组不放行；详见p0-sign-audit-b2.md。其他Boss/进阶仍未审计。
+- P0.2 复用原 ablation 的32题和原来源SHA，不再发API或重跑全历史。原代码顺序第一名（plan1）、rollout/B2第一名、Jev答案、护栏/SL后计划、单动作回执分列。20题偏离不能当总体偏离率；历史缺 S 或配对标准误保留未知，不把未知当“无显著差异”。阶段性保持 `JEV_ROLE=full`；不启用 off。
+- P1：`boss-readiness.ts` 纯汇总，Silent `S_READINESS` 默认 `shadow`，其他角色强制 `off`。shadow 仅记录 `boss_sim.readiness`，原题面与排序保持；显式 `on` 只给紧凑中文 `facts.boss_readiness`。低可信、缺失轨迹或符号审计失败时仅给未提供说明。run-config记录实际模式，module-health区分产出、真实脑payload及accepted，不以shadow冒充送达。
+- 默认部署属于诊断/日志阶段，不新增游戏知识或行为发布号。**P1-on、P2、P3、P4均未发布**；原R341完整计算、药水/HP/SL语义保持。实际 source/main/live、自测及两局自然验收以 `paper/materials/20261014-s-decision/` 的回执为准，代码通过不能关闭父请求。
+- 下一阶段：原ops沿既有调度核部署树完整检查和两局shadow覆盖/耗时；原owner先定位B2反号与伤害归属、补其他Boss的P0证据后接P3，再按依赖做P2/P4/P5。不得另起同题任务、复派原R2/R3或把已有校准的固定模型结论当当前生产校准。自然验收未完成之前不开P1-on。
