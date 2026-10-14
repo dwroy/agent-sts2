@@ -59,6 +59,8 @@ def ack_request(root, state, notice, payload):
         return record
     if notice.get("notification_only") is not True or notice.get("registered_learning_request") is not False:
         raise ValueError("unknown learning request; ordinary notification scope must be explicit")
+    if notice.get("source_kind") == "feature":
+        return ack_feature(root, state, notice, payload)
     match = re.fullmatch(r"([a-z][a-z0-9_]*)-proposal-[0-9a-f]{16}", request_id or "")
     if not match or not re.fullmatch(r"[0-9a-f]{64}", notice.get("request_sha256", "")):
         raise ValueError("ordinary notice must identify an existing character proposal")
@@ -77,6 +79,47 @@ def ack_request(root, state, notice, payload):
             or notice.get("character", character) != character
             or payload.get("character", character) != character):
         raise ValueError("unknown proposal or mismatched character/proposal SHA")
+    return None
+
+
+def ack_feature(root, state, notice, payload):
+    """Verify an existing feature's original batch, thread and words without creating a parent."""
+    source = json.loads(artifact(root, notice["source_evidence"]))
+    batch_id = notice.get("source_batch", "")
+    batch = state.get("batches", {}).get(batch_id, {})
+    from learner_jobs import FEATURE_REQUESTS
+    character = batch.get("character")
+    if (not re.fullmatch(r"\d{8}-\d{6}-fix-batch", batch_id)
+            or batch.get("task") != "fix-batch" or batch.get("learner_task") not in FEATURE_REQUESTS
+            or not batch.get("feature_request") or batch["feature_request"] != notice.get("request_id")
+            or source.get("feature_request") != batch["feature_request"] or source.get("batch") != batch_id
+            or not character or source.get("character") != character or notice.get("character") != character
+            or payload.get("character", character) != character or source.get("worktree") != batch.get("worktree")
+            or not UUID.fullmatch(source.get("thread_id", ""))):
+        raise ValueError("feature notice must match its registered batch, character and original thread")
+    tree = Path(batch["worktree"]).resolve()
+    if tree.parent != (Path(root) / ".worktrees").resolve():
+        raise ValueError("feature worktree outside project")
+    report_path = batch.get("report", {}).get("report")
+    if not isinstance(report_path, str):
+        raise ValueError("feature original scratch is not registered")
+    scratch = (Path(root) / report_path).resolve().parent
+    log_path = (Path(root) / source["original_log"]["path"]).resolve()
+    if scratch.parent != tree / "learner/runs" or log_path != scratch.with_suffix(".jsonl"):
+        raise ValueError("feature original log outside registered worktree")
+    events = [json.loads(line) for line in artifact(root, source["original_log"]).splitlines() if line.strip()]
+    launch = next((event for event in events if event.get("type") == "learner_launch"), {})
+    threads = {event.get("thread_id") for event in events if event.get("type") == "thread.started"}
+    if (launch.get("engine") != "codex" or launch.get("cwd") != str(tree)
+            or launch.get("task") != batch["learner_task"] or source["thread_id"] not in threads):
+        raise ValueError("feature original launch/thread mismatch")
+    message_path = (Path(root) / source["original_message"]["path"]).resolve()
+    if not message_path.is_relative_to(scratch):
+        raise ValueError("feature original message outside bound scratch")
+    original = artifact(root, source["original_message"])
+    if (not isinstance(notice.get("message"), str) or original != notice["message"].encode("utf8")
+            or digest(original) != notice.get("request_sha256")):
+        raise ValueError("feature original message SHA mismatch")
     return None
 
 
