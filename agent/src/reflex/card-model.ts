@@ -51,6 +51,8 @@ export interface CardModel {
   /** Per hit, before this turn's extra Strength and before Vulnerable/Weak. null = deals no damage. */
   damage: number | null;
   hits: number;
+  /** Q10YYQ5DUPJA A10 F48/F49: plain Whistle cancels an observed surviving target's current move. */
+  whistleStun?: boolean;
   /** Observed plain Silent Flechettes: remove hits as skills from the observed hand leave (silent-0150/0151). */
   hitsLoseHandSkills?: boolean;
   /** Plain Silent Precise Cut: only recorded hand/Strength pairs are verified (silent-0166/0169). */
@@ -1061,6 +1063,16 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
   const anticipate = cardId === "ANTICIPATE" && dyn(card, "DexterityPower") !== null;
   const bulletTime = character.toLowerCase() === "silent" && ascension === 10 && cardId === "BULLET_TIME" &&
     !bool(card["upgraded"]) && template.replace(/\s+/g, "") === "你在本回合内不能再抽牌。你手牌中的所有牌在本回合免费打出。";
+  // silent-0471/0473: only the unmodified plain preview is observed; target eligibility is checked at play time.
+  const whistleValues = asArray(card["dynamic_values"]).map(asRecord);
+  const whistleStun = character.toLowerCase() === "silent" && ascension === 10 && cardId === "WHISTLE" &&
+    type === "Attack" && !bool(card["upgraded"]) && card["energy_cost"] === 2 &&
+    card["costs_x"] === false && card["star_costs_x"] === false && card["star_cost"] === 0 &&
+    card["enchantment"] == null && card["target_type"] === "AnyEnemy" && requiresTarget &&
+    template.replace(/\s+/g, "") === "造成{Damage:diff()}点伤害。击晕该敌人。" &&
+    renderedText.replace(/\s+/g, "") === "造成33点伤害。击晕该敌人。消耗。" &&
+    whistleValues.length === 1 && whistleValues[0]?.["name"] === "Damage" &&
+    ["base_value", "current_value", "enchanted_value"].every((field) => whistleValues[0]?.[field] === 33);
   const hasModelledEffect =
     // Dark Shackles' temporary Strength loss is applied by the solver (turn-solver tempStrengthLoss): not unknown.
     damage !== null || block > 0 || mirage || vulnerable > 0 || weak > 0 || strength > 0 || tempStrength > 0 || energyGain > 0 || draw > 0 || delayedDamage > 0 || enemyTempStrengthLoss > 0 || poison > 0 || anticipate || calculatedGamble || hiddenDaggers || bladeDance || bulletTime;
@@ -1174,6 +1186,7 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
       ? { strangle: dyn(card, "StranglePower")! } : {}),
     ...(immediatePlays ? { immediatePlays } : {}),
     hits: Math.max(0, Math.round(hits)),
+    ...(whistleStun ? { whistleStun: true } : {}),
     ...(character.toLowerCase() === "silent" && cardId === "FLECHETTES" && !bool(card["upgraded"]) &&
       dyn(card, "CalculatedHits") !== null && /^手牌中每有一张技能牌，造成/.test(template) ? { hitsLoseHandSkills: true } : {}),
     ...(cardId === "MAUL" && dyn(card, "Increase") !== null ? { maulIncrease: dyn(card, "Increase")! } : {}),

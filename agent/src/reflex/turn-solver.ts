@@ -218,6 +218,8 @@ export interface EnemySim {
    * cancelling this turn's attack (HV0D F21: 32 block T3-T10, Below 23 landed five times).
    */
   burrowed?: boolean;
+  /** The current solo form observed surviving plain Whistle (silent-0473); not a future-turn entitlement. */
+  whistleStunnable?: boolean;
   /** Has powers the solver does not model: its damage estimate is discounted to stay safe. */
   unmodelled?: boolean;
   /**
@@ -867,6 +869,8 @@ export interface Outcome {
     demise?: number;
     /** Stunned by the line (Ravenous eating a corpse, a learned strip-stun): its move this enemy turn is lost. */
     stunned?: boolean;
+    /** An active card stun requires a recorded STUNNED successor in rollout. */
+    cardStunned?: boolean;
     /**
      * MECH_RULES: the learned strip-stun this line set off (EnemySim.stunOnStrip): the power stripped (id and game name)
      * and the attack this turn it cancels (the shown intents' total; 0 for a move without one, an Escape).
@@ -1026,7 +1030,7 @@ interface Sim {
   skullUp: boolean;
   /** HP losses on our turn so far (Self-Forming Clay's block per loss). */
   hpLossEvents: number;
-  enemies: (EnemySim & { alive: boolean; newlyWeak: boolean; newlyShrunk?: boolean; strengthDelta: number; lostThisTurn: number; tempStrengthLoss?: number; sleepLost?: number; skittishHit?: boolean; ravenousStunned?: boolean })[];
+  enemies: (EnemySim & { alive: boolean; newlyWeak: boolean; newlyShrunk?: boolean; strengthDelta: number; lostThisTurn: number; tempStrengthLoss?: number; sleepLost?: number; skittishHit?: boolean; ravenousStunned?: boolean; cardStunned?: boolean })[];
   /** Shrink still on us (PlayerSim.shrunk): gone once the last enemy that shrinksUs dies, for the cards played after. */
   shrunk: boolean;
   steps: Step[];
@@ -2377,6 +2381,12 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
     }
   }
 
+  // Q10 F49 T5: damage first, then stun the surviving observed target; kills and phase changes are separate.
+  if (card.whistleStun && targetEnemy?.alive) {
+    if (cost === 2 && targetEnemy.hp > 0 && targetEnemy.whistleStunnable && targetEnemy.artifact === 0 && !targetEnemy.intangible &&
+        next.enemies.filter((enemy) => enemy.alive).length === 1) targetEnemy.cardStunned = true;
+    else next.unknown = [...next.unknown, `${card.name}（此目标击晕未验证）`];
+  }
   if (card.cardId === "MAUL") next.maulGrowth += card.maulIncrease ?? 0;
   if (card.cardId === "SHIV") next.phantomBladesSpent = true;
   // Only the observed single, unupgraded nine-point power is modelled; stacking is unknown.
@@ -2781,6 +2791,7 @@ function incomingHits(sim: Sim, input: SolverInput): IncomingHit[] {
     if (enemy.alive && enemy.burrowed && (start?.block ?? 0) > 0 && enemy.block <= 0) continue;
     // Ravenous: stunned by eating a corpse this turn, its move is lost.
     if (enemy.alive && enemy.ravenousStunned) continue;
+    if (enemy.alive && enemy.cardStunned) continue;
     // MECH_RULES: a learned strip-stun (its last Flutter stripped this turn): stunned, its move is lost.
     if (enemy.alive && strippedStun(enemy, start)) continue;
     // Colossus halves damage from Vulnerable enemies. Played now: every one. Already up: the intent is
@@ -3610,6 +3621,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
           shrink: enemy.shrink ?? 0,
           ...((enemy.demise ?? 0) > 0 ? { demise: enemy.demise } : {}),
           ...(enemy.ravenousStunned ? { stunned: true } : {}),
+          ...(enemy.alive && enemy.cardStunned ? { stunned: true, cardStunned: true } : {}),
           ...stripStunOf(enemy, input),
           ...(enemy.moveOnStrip ? moveRuleOf(enemy, input) : {}),
           ...(enemy.moveOnDeath ? deathMoveOf(enemy, sim, input) : {}),
@@ -3724,7 +3736,7 @@ function simKey(sim: Sim): string {
     + (sim.noDraw ? "#noDraw" : "")
     + (sim.apotheosisApplied ? "#apotheosis" : "")
     + (sim.kusarigamaUnresolved ? "#kusarigamaUnresolved" : "");
-  const enemies = sim.enemies.map((enemy) => `${enemy.hp}/${enemy.block}/${enemy.vulnerable}/${enemy.weak}/${enemy.artifact}/${enemy.strengthDelta}/${enemy.slippery ?? 0}/${enemy.curlUp ?? 0}/${enemy.flutter ?? 0}/${enemy.sleepLost ?? 0}/${enemy.tempStrengthLoss ?? 0}/${enemy.demise ?? 0}/${enemy.shrink ?? 0}/${enemy.ravenousStunned ? 1 : 0}${enemy.strangle !== undefined ? `/strangle${enemy.strangle}` : ""}`).join("|");
+  const enemies = sim.enemies.map((enemy) => `${enemy.hp}/${enemy.block}/${enemy.vulnerable}/${enemy.weak}/${enemy.artifact}/${enemy.strengthDelta}/${enemy.slippery ?? 0}/${enemy.curlUp ?? 0}/${enemy.flutter ?? 0}/${enemy.sleepLost ?? 0}/${enemy.tempStrengthLoss ?? 0}/${enemy.demise ?? 0}/${enemy.shrink ?? 0}/${enemy.ravenousStunned ? 1 : 0}${enemy.strangle !== undefined ? `/strangle${enemy.strangle}` : ""}${enemy.cardStunned ? "/whistleStunned" : ""}`).join("|");
   const phantomKey = (sim.phantomBlades > 0 ? `#pb${sim.phantomBlades}/${sim.phantomBladesSpent ? 1 : 0}` : "")
     + (sim.serpentForm !== null ? `#sf${sim.serpentForm}` : "");
   const poisonKey = (sim.envenom > 0 ? `#env${sim.envenom}` : "") + (sim.enemies.some((enemy) => (enemy.poison ?? 0) > 0) || sim.poisonExtraTriggers > 0 ? `#p${sim.poisonExtraTriggers}:${sim.enemies.map((enemy) => enemy.poison ?? 0).join(",")}` : "");
