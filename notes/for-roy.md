@@ -1670,3 +1670,62 @@ tsc及2673例沙箱测试通过，推送动作专项2例/Python4例通过。当�
 当前continuation是legacy数据阶段，不满足普通proposal/feature ACK CLI身份；请先交本人真实角色回执，不调用已知不支持的legacy ACK、不重写原failed/rc0/mergednull或造假普通提案。
 
 - 2026-10-15 02:32:40 CST 原R3必要反证真实角色读回：watcher本人已亲核report253082f3/counterexamples fb48a533/输入5ff及六条原帧，在Roy现有原生会话2026-10-15 02:19:38 CST明确告知两反例与限定结论；原native行SHA08aa5a53已逐offset/bytes核。known不是物理正确证明，完整实轨整战/真实S仍0，原B2/B3/Queen与16局10:6界限保持；实际通知不等于Roy已读/认可，legacy程序ACK不支持仍pending、不代填。具体接口contract0aec14已交同原R3线程只读字段确认，传输/接收/确认分列，不新派模型/实验或热替原输入。回执paper/materials/20261015-0213-ops/watcher-Roy-native-readback.json及R3-interface-delivery.json。
+
+- 2026-10-15T05:16:39.368832 [ops学习通知/disagreement] silent-proposal-c64bdd50a949d16f：{
+  "proposal_id": "silent-proposal-c64bdd50a949d16f",
+  "character": "silent",
+  "batch": "20261015-044302-s2-strategy-proposal",
+  "original_proposal_sha256": "979e5eb65499c91eed763906c40aa0b50a42b598925021c83c220bef3e7bc658",
+  "original_proposal": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-101302-experience-update/proposal-resources.md",
+  "questions": [
+    {
+      "proposal_id": "silent-proposal-c64bdd50a949d16f",
+      "claim": "原第94批资源提案写：K2JAGKVJAWZJ F27T2铁心已有16挡，药后仍16、覆甲0→7。",
+      "finding": "本批重读s292785–292789与d286120–286124，饮用为d286123；s292788→292789实际格挡0→0、覆甲0→7、HP57→57。原文16挡的数字不受该动作实帧支持。",
+      "evidence": [
+        {
+          "run": "K2JAGKVJAWZJ",
+          "floor": 27,
+          "turn": 2,
+          "stream": "states",
+          "line": 292788,
+          "offset": 9064688947,
+          "bytes": 33105,
+          "sha256": "7391aa2e46ad137fa400730a01e64488574207e125d9adf89d6617b622ea59bf"
+        },
+        {
+          "run": "K2JAGKVJAWZJ",
+          "floor": 27,
+          "turn": 2,
+          "stream": "states",
+          "line": 292789,
+          "offset": 9064722052,
+          "bytes": 32932,
+          "sha256": "a7d446474385ff5d0ab1bee1a2b9ff0dbd30587c7835eb1dd266e016a88f96a1"
+        },
+        {
+          "run": "K2JAGKVJAWZJ",
+          "floor": 27,
+          "turn": 2,
+          "stream": "decisions",
+          "line": 286123,
+          "offset": 741288301,
+          "bytes": 1502,
+          "sha256": "a0039b8baec3a8c2b92e9a44713ced2a0b8ca6f4e9b716ce783113eae30462ef"
+        }
+      ],
+      "experience": [
+        "silent-heart-of-iron-plating"
+      ],
+      "ledger": [
+        "silent-0277"
+      ],
+      "recommendation": "保留原提案/复盘，追加数字勘误；覆甲建立7与当步旧挡不变的限定机制仍受支持。请ops按普通提案来源注册反证通知并转交watcher，由watcher本人告知Roy；不新造学习父请求，不代填ACK，不扩展药水时点或持有价规则。"
+    }
+  ],
+  "evidence": {
+    "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261015-044302-s2/learner/runs/20261015-044313-strategy-proposal/k2-f27-contradiction-check.json",
+    "sha256": "081f45b456e90fd262d4f176428788aba2942deec266f56844575d9283b4c503"
+  }
+}
+ 回执/home/dw/Projects/agent-sts2/ops/codex-ops/learning-notices/d486caef57aeb0c096a29a75.json；watcher须读取并告知Roy，尚未确认用户收到。<!-- learning-notice:d486caef57aeb0c096a29a75 -->

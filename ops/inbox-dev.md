@@ -1952,3 +1952,64 @@ tsc及2673例沙箱测试通过，推送动作专项2例/Python4例通过。当�
 - 2026-10-15 04:35:07 CST 原R349宿主验收处置：精确28bec4/tree4ba23b20完整rc1，仅三固定题超时（纸鹤399969/400002各15s、target-options EZ2L候选题30s），4742过2skip，苦无8项所在文件通过；同一树正式d032f27e补验tsc0、精确3项过/33未选，full_suite=false，原全失败不改绿。留用已测苦无源码，不自动回滚、不重复全套；旧纸鹤队列保持，target-options夹具成本加入原普通fix链唯一条目。0291仅按真实源码交付shipped/V5-R349，原普通苦无提案3ee机械implemented，claim/首证/prior/未知范围不改，宽P1/P2/R3/复合提案不关闭；当前X06同PID3097456/start89295119自然继续F33 T11、旧eafe源码，未重启或宣新版本自然收益。两重复通知按真实回执去重：c7三角色程序已完成，c1用户原生已告知而legacy登记缺口沿原唯一队列pending，不再次提醒watcher/用户。paper/materials/20261015-0422-ops。
 
 - 2026-10-15 04:52:30 CST 原021302工具修复已实际兜底：b6ee3f8c2事件流UUID隔离+befc39e5c纸鹤夹具取真实输入而不重复枚举，main599c5fc2/liveffb51b0b/treee5d46f2f，仅六叶，保既有Dai/存储差异与全部知识/并行记录；原七处历史冲突、failed/rc0/mergednull回报保持。源408文件3934+当前组合四文件68/tsc过，扫描原四个既有测试假键/脱敏夹具仅精确行SHA例外，非凭据/不改仓库扫描规则。原batch新树宿主一次待启动及后续learner-checks实际结果，不称全树已绿；无游戏行为号/知识/账号/控制器或prompt变更。R349 d032三题补验与0422原件SHA完全相同，保原full rc1，不再补测。两041302策略20项均waiting、无新源码；原44trace行/0重复，宽父保持。paper/materials/20261015-0443-ops。
+
+- 2026-10-15T05:16:39.368832 [ops学习通知/disagreement] silent-proposal-c64bdd50a949d16f：{
+  "proposal_id": "silent-proposal-c64bdd50a949d16f",
+  "character": "silent",
+  "batch": "20261015-044302-s2-strategy-proposal",
+  "original_proposal_sha256": "979e5eb65499c91eed763906c40aa0b50a42b598925021c83c220bef3e7bc658",
+  "original_proposal": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-101302-experience-update/proposal-resources.md",
+  "questions": [
+    {
+      "proposal_id": "silent-proposal-c64bdd50a949d16f",
+      "claim": "原第94批资源提案写：K2JAGKVJAWZJ F27T2铁心已有16挡，药后仍16、覆甲0→7。",
+      "finding": "本批重读s292785–292789与d286120–286124，饮用为d286123；s292788→292789实际格挡0→0、覆甲0→7、HP57→57。原文16挡的数字不受该动作实帧支持。",
+      "evidence": [
+        {
+          "run": "K2JAGKVJAWZJ",
+          "floor": 27,
+          "turn": 2,
+          "stream": "states",
+          "line": 292788,
+          "offset": 9064688947,
+          "bytes": 33105,
+          "sha256": "7391aa2e46ad137fa400730a01e64488574207e125d9adf89d6617b622ea59bf"
+        },
+        {
+          "run": "K2JAGKVJAWZJ",
+          "floor": 27,
+          "turn": 2,
+          "stream": "states",
+          "line": 292789,
+          "offset": 9064722052,
+          "bytes": 32932,
+          "sha256": "a7d446474385ff5d0ab1bee1a2b9ff0dbd30587c7835eb1dd266e016a88f96a1"
+        },
+        {
+          "run": "K2JAGKVJAWZJ",
+          "floor": 27,
+          "turn": 2,
+          "stream": "decisions",
+          "line": 286123,
+          "offset": 741288301,
+          "bytes": 1502,
+          "sha256": "a0039b8baec3a8c2b92e9a44713ced2a0b8ca6f4e9b716ce783113eae30462ef"
+        }
+      ],
+      "experience": [
+        "silent-heart-of-iron-plating"
+      ],
+      "ledger": [
+        "silent-0277"
+      ],
+      "recommendation": "保留原提案/复盘，追加数字勘误；覆甲建立7与当步旧挡不变的限定机制仍受支持。请ops按普通提案来源注册反证通知并转交watcher，由watcher本人告知Roy；不新造学习父请求，不代填ACK，不扩展药水时点或持有价规则。"
+    }
+  ],
+  "evidence": {
+    "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261015-044302-s2/learner/runs/20261015-044313-strategy-proposal/k2-f27-contradiction-check.json",
+    "sha256": "081f45b456e90fd262d4f176428788aba2942deec266f56844575d9283b4c503"
+  }
+}
+ 回执/home/dw/Projects/agent-sts2/ops/codex-ops/learning-notices/d486caef57aeb0c096a29a75.json；watcher须读取并告知Roy，尚未确认用户收到。<!-- learning-notice:d486caef57aeb0c096a29a75 -->
+
+- 2026-10-15 05:28:18 CST 原021302基础设施新树宿主验收已通过：liveffb51b0b/treee5d46f2f、B6/bef两源实际祖先，459文件4747过2skip，原failed/rc0/mergednull及R348/R349原full失败保留，当前exact-tree结案，不重复全套或新增行为号。两044302策略20项waiting/无源码/测试，30997原字节与Sol6.1/xhigh/原输入/两线程核；原50CLI保存，49原行+一次0094无status追溯入canonical，Git已shipped与物理proposed漂移沿唯一普通队列。K2数字勘误d486已实际发原watcher、本人真实接收/用户原生告知并后两CLI完成；三角色证据逐SHA/native原字节核，无用户读/ACK或新父项/知识/规则宣称。c1两重复通知只沿原legacy登记缺口，真实告知不重发；所有父范围/对局/账号/prompt保持。paper/materials/20261015-0513-ops。
