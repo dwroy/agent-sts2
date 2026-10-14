@@ -1,0 +1,19 @@
+{"diagnostic":"固定输入的局部模型","hand":[{"index":1,"key":"c1","cardId":"STRANGLE","name":"紧勒","type":"","upgraded":false,"cost":1,"xCost":false,"playable":true,"target":"single","validTargets":[0],"damage":8,"strangle":2,"hits":1,"block":0,"vulnerable":0,"weak":0,"strength":0,"tempStrength":0,"damageBase":8,"enemyStrength":0,"enemyTempStrengthLoss":0,"hpLoss":0,"energyGain":0,"plating":0,"draw":0,"exhausts":false,"special":null,"known":true,"flatValue":0,"heldPenalty":0,"heldHpLoss":0,"retaliate":0,"delayedDamage":0,"inferno":0,"soulbound":false,"putsOnTop":false,"drawsUntil":false,"randomExhaust":false,"text":"造成8点伤害。 你在这个回合内每出一张牌，该名敌人都会失去2点生命。"},{"index":3,"key":"c3","cardId":"SUCKER_PUNCH","name":"突然一拳","type":"","upgraded":false,"cost":1,"xCost":false,"playable":true,"target":"single","validTargets":[0],"damage":8,"hits":1,"block":0,"vulnerable":0,"weak":1,"strength":0,"tempStrength":0,"damageBase":8,"enemyStrength":0,"enemyTempStrengthLoss":0,"hpLoss":0,"energyGain":0,"plating":0,"draw":0,"exhausts":false,"special":null,"known":true,"flatValue":0,"heldPenalty":0,"heldHpLoss":0,"retaliate":0,"delayedDamage":0,"inferno":0,"soulbound":false,"putsOnTop":false,"drawsUntil":false,"randomExhaust":false,"text":"造成8点伤害。 给予1层虚弱。","apotheosisUpgrade":{"damage":2,"weak":1,"damageBase":2}},{"index":6,"key":"c6","cardId":"SURVIVOR","name":"生存者","type":"","upgraded":false,"cost":1,"xCost":false,"playable":true,"target":"self","validTargets":[],"damage":null,"hits":1,"block":8,"blockBase":8,"vulnerable":0,"weak":0,"strength":0,"tempStrength":0,"enemyStrength":0,"enemyTempStrengthLoss":0,"hpLoss":0,"energyGain":0,"plating":0,"draw":0,"exhausts":false,"special":null,"discardAfterDraw":true,"survivorDiscard":true,"known":true,"flatValue":0,"heldPenalty":0,"heldHpLoss":0,"retaliate":0,"delayedDamage":0,"inferno":0,"soulbound":false,"putsOnTop":false,"drawsUntil":false,"randomExhaust":false,"text":"获得8点格挡。 丢弃1张牌。","apotheosisUpgrade":{"block":3,"blockBase":3}}],"enemies":[{"index":0,"name":"骇鳗","hp":103,"maxHp":150,"block":0,"vulnerable":0,"weak":0,"poison":3,"artifact":0,"intangible":false,"slippery":0,"hpLossCap":null,"thorns":0,"curlUp":0,"flutter":0,"perHitCap":null,"slow":false,"illusion":false,"minion":false,"reattach":false,"reattachHp":0,"crabRage":false,"eruption":0,"sandpit":0,"asleep":0,"slumber":0,"scaling":true,"halved":false,"skittish":0,"reflect":false,"demise":0,"shrink":0,"punishesUnblocked":0,"woundsPerHit":0,"enrage":0,"vitalSpark":0,"revives":false,"stock":0,"shriek":75,"burrowed":false,"ravenous":0,"dazedPerHit":0,"unmodelled":false,"attacks":[{"damage":4,"hits":3}]}],"outcome":{"winsFight":false,"hpLoss":1,"hpAfter":33,"dies":false,"blockGained":8,"damageDealt":19,"kills":[],"restocked":[],"enemyHpAfter":[{"index":0,"name":"骇鳗","hp":84,"vulnerable":0,"weak":1,"poison":2,"block":0,"artifact":0,"slippery":0,"curlUp":0,"flutter":0,"strengthGained":0,"shrink":0}],"incomingAfterBlock":1,"energyLeft":0,"vulnerableApplied":0,"weakApplied":1,"strengthGained":0,"cardsDrawn":0,"unknownCards":["紧勒（牌型或升级模板未验证）","弃牌选择未确定"],"sandpitAfter":null,"startTurnKills":[],"withersAdded":0,"sleepCost":0,"lasting":0,"blockWasted":0}}
+node:internal/modules/run_main:123
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+19 !== 23
+
+    at <anonymous> (/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261014-141302/learner/runs/20261014-141325-strategy-proposal/consumer-check.mjs:47:8) {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: 19,
+  expected: 23,
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v22.23.3

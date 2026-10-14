@@ -1,0 +1,6 @@
+{"verified_state_rows": 9815, "fixed_frames": 76, "checks": 20}
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261014-141302/learner/runs/20261014-141325-strategy-proposal/audit-evidence.py", line 73, in <module>
+    assert all(check['passed'] for check in checks), [check for check in checks if not check['passed']]
+           ~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: [{'label': 'WQ 狡诈逐瓶手位', 'actual': [5, 8, 8, 10], 'expected': [5, 8, 10, 10], 'states': [282352, 282353, 282354, 282355], 'passed': False}, {'label': '油灯首次毒值', 'actual': [0, 0], 'expected': [0, 8], 'states': [217009, 217010], 'passed': False}]
