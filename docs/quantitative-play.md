@@ -10,7 +10,7 @@ Roy于2026-10-11批准完整量化升级，并强调游戏随机性造成单次�
 
 构筑题的`quantitative_fight`给出量化事实；`boss_sim.quantitative`日志保留完整均值、标准差、标准误、p10/p50/p90、胜/死/截断数量、成对差及未知项。hand已有decision_id、fingerprint、chosen、请求/问答和SL记录负责绑定身份；完整量化schema版本不替代run-config的实际源码/知识版本。
 
-计算记录与模型请求分别验收。V5-R341 的战斗题仍把完整 `boss_relative_margin` 叠加到旧 `quantitative_turn` 明细上，已观察到请求超限。2026-10-14 Roy 明确要求按 Jev 新职责直接替换：线上只发送结果、代价、风险、必要条件及未知的决策投影，完整计算和中间轨迹留作审计。该替换仍由原 ops 实现；不能以无损压缩旧 JSON、某个字节上限或新指标已经出现代替实际请求验收。字段边界见 [V5 架构](v5-architecture.md)。
+计算记录与模型请求分别验收。V5-R341 曾把完整 `boss_relative_margin` 叠加到旧 `quantitative_turn` 明细上，出现请求超限。V5-R342 按 Roy“直接替换而不是增加”的要求，对 Silent `combat/plan` 请求先生成 `silent-combat-decision-v1` 投影：`turn_model` 和 `boss_evaluation` 替换旧对象，去除逐步轨迹及冗余表达，保留结果、代价、风险、必要条件及未知。完整原题和数值来源绑定另存 `decision_evidence` / `decision_projection`，实际 `request` 记录发送体。只有明确超限时才再对投影做一次无损编码重试；不能以字节上限代替真实接口与自然动作验收。字段边界见 [V5 架构](v5-architecture.md)。
 
 `quantitative-calibration`接收学习者从实际决策、动作和状态提取的匹配记录。必须同角色、进阶、局、SL尝试、决策/指纹、实际采用方案、指标、窗口、模型版本，且观察完整、执行未偏离。未采用方案没有真实反事实；缺帧、重规划、跨SL数据不填零。按角色/进阶/模型/指标/窗口分组计算偏差、MAE、RMSE及经验80%区间覆盖率，重复预测去重。单次超出区间不自动产生bug；持续偏差需结合机制证据排查。
 
