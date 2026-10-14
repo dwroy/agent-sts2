@@ -1,0 +1,314 @@
+{
+  "at": "2026-10-15T03:38:39+08:00",
+  "kind": "original-boss-sim-necessary-counterevidence-watcher-receipt",
+  "notice_id": "c7cadf849b359b4091e6526b",
+  "batch": "20261014-232958-fix-batch",
+  "thread": "01a13b09-048c-7352-be3b-93cb8f0414f3",
+  "evidence_key": "32ed1e652c72defdf637dd1a95339cdbdfbd93238b18b06176f5c244c5af5ecd",
+  "candidate": "75951fd0eb883ff51cd0c94bd28b3db361279d47",
+  "watcher_session": "01a139d6-cfec-78e1-8739-e21ac426a354",
+  "original_files": [
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-aeonglass-20261014-232958/learner/runs/20261014-233007-boss-sim-batch/report.md",
+      "bytes": 8611,
+      "sha256": "f6a33d00715be2e7abbd368350f31b526e4ce15e74a2b072da2e24e8c4a1a21e"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-aeonglass-20261014-232958/learner/runs/20261014-233007-boss-sim-batch/questions.json",
+      "bytes": 1486,
+      "sha256": "05438d0636733fb7bdcb0bb43ee221fba319a382bebb75cb65055970fd2cb391"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-aeonglass-20261014-232958/learner/runs/20261014-233007-boss-sim-batch/trigger-audit.json",
+      "bytes": 2079,
+      "sha256": "be6228b243ec3e326aeeb2790f9210ff2f69fca8d1ff1cc8b88400cb0a59305b"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-aeonglass-20261014-232958/learner/runs/20261014-233007-boss-sim-batch/sl-byte-audit.jsonl",
+      "bytes": 49933,
+      "sha256": "25270ea55f24fbc1ba33ae939ccef5a0da2b81f56e662a1a85cb2cc420c18754"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-aeonglass-20261014-232958/learner/runs/20261014-233007-boss-sim-batch/txz-outcome-conflict-frames.jsonl",
+      "bytes": 368388,
+      "sha256": "aafd26d60d65b98f2fba13bcfdf341e88ae809afbc701d7b7dc56f0ef359112d"
+    }
+  ],
+  "original_learner_notice": [
+    {
+      "original": "触发死亡清单把 TXZ6RVMQA09D 计为 AEONGLASS 死亡。",
+      "finding": "原 SL 与状态帧显示 F48 AEONGLASS 第三试 won/end_hp=4，F49 TEST_SUBJECT 第一试 died/end_hp=0；runs.jsonl death_fight 仍写 AEONGLASS。",
+      "impact": "AEONGLASS 原实际结局 39 场=18 胜/21 死；触发 death_runs 中一局不是实际死于该 boss。验证集不更改，阈值仍满足累计≥5。",
+      "evidence": [
+        {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-aeonglass-20261014-232958/learner/runs/20261014-233007-boss-sim-batch/trigger-audit.json",
+          "sha256": "be6228b243ec3e326aeeb2790f9210ff2f69fca8d1ff1cc8b88400cb0a59305b"
+        },
+        {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-aeonglass-20261014-232958/learner/runs/20261014-233007-boss-sim-batch/sl-byte-audit.jsonl",
+          "sha256": "25270ea55f24fbc1ba33ae939ccef5a0da2b81f56e662a1a85cb2cc420c18754"
+        },
+        {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-aeonglass-20261014-232958/learner/runs/20261014-233007-boss-sim-batch/txz-outcome-conflict-frames.jsonl",
+          "sha256": "aafd26d60d65b98f2fba13bcfdf341e88ae809afbc701d7b7dc56f0ef359112d"
+        }
+      ],
+      "experience_ids": [],
+      "next": "交原 ops 完成通道核实历史 death_fight 归因，并经 watcher 告知 Roy；不修改本批不可变证据、调度器或验收门槛。",
+      "notice_status": "awaiting original ops forwarding; no watcher or Roy ACK claimed"
+    }
+  ],
+  "watcher_original_byte_checks": [
+    {
+      "source": "logs/sl-attempts.jsonl",
+      "offset": 16099827,
+      "bytes": 16704,
+      "sha256": "7c50fb9dee3a57b67e7f2dda3be7d49a3c08cafe6a21c28e31f1d132db38a304",
+      "kind": "selected_SL",
+      "event": {
+        "run_id": "TXZ6RVMQA09D",
+        "floor": 48,
+        "attempt": 1,
+        "result": "predicted_death",
+        "end_hp": 8,
+        "started_at": "2026-10-07T13:03:50.727Z",
+        "ended_at": "2026-10-07T13:05:18.183Z",
+        "reload": {
+          "ok": true,
+          "ms": 7434,
+          "resumed_turn": 1
+        }
+      }
+    },
+    {
+      "source": "logs/sl-attempts.jsonl",
+      "offset": 16116531,
+      "bytes": 23486,
+      "sha256": "e5de711a9f9a8aec1f0ad03667c2f7931957f44e15dd2e11c295d2e3777aa724",
+      "kind": "selected_SL",
+      "event": {
+        "run_id": "TXZ6RVMQA09D",
+        "floor": 48,
+        "attempt": 2,
+        "result": "predicted_death",
+        "end_hp": 11,
+        "started_at": "2026-10-07T13:05:18.184Z",
+        "ended_at": "2026-10-07T13:09:20.518Z",
+        "reload": {
+          "ok": true,
+          "ms": 7497,
+          "resumed_turn": 1
+        }
+      }
+    },
+    {
+      "source": "logs/sl-attempts.jsonl",
+      "offset": 16140017,
+      "bytes": 25793,
+      "sha256": "dd75e64e1c6c6be0565310f588d51fcbf13abf60ae5dc6067c2f8d455dff74b7",
+      "kind": "selected_SL",
+      "event": {
+        "run_id": "TXZ6RVMQA09D",
+        "floor": 48,
+        "attempt": 3,
+        "result": "won",
+        "end_hp": 4,
+        "started_at": "2026-10-07T13:09:20.519Z",
+        "ended_at": "2026-10-07T13:13:28.504Z",
+        "reload": null
+      }
+    },
+    {
+      "source": "logs/states.jsonl",
+      "offset": 8677768549,
+      "bytes": 39358,
+      "sha256": "577bab106d048f214d8bb29d7a5f7acd02cc72f496a425e584ea11b0c48a0eec",
+      "kind": "original_TXZ_frame",
+      "key": "TXZ6RVMQA09D:48:1:8677768549",
+      "tag": "first"
+    },
+    {
+      "source": "logs/states.jsonl",
+      "offset": 8679887226,
+      "bytes": 43979,
+      "sha256": "b27d66ac52510c966f81a367440630779b202049ffcf102fcf699d34d5c5fcb7",
+      "kind": "original_TXZ_frame",
+      "key": "TXZ6RVMQA09D:48:1:8677768549",
+      "tag": "last"
+    },
+    {
+      "source": "logs/states.jsonl",
+      "offset": 8679931205,
+      "bytes": 45997,
+      "sha256": "ab1a1cf73f277c933071c4e5d0cae469065d22d4d9052a8812605f55df6fdf0b",
+      "kind": "original_TXZ_frame",
+      "key": "TXZ6RVMQA09D:48:2:8679931205",
+      "tag": "first"
+    },
+    {
+      "source": "logs/states.jsonl",
+      "offset": 8682395870,
+      "bytes": 45597,
+      "sha256": "acb11988e0899f7b6a83abd459666e5232c4307dda723aa80bfb995239f62c0a",
+      "kind": "original_TXZ_frame",
+      "key": "TXZ6RVMQA09D:48:2:8679931205",
+      "tag": "last"
+    },
+    {
+      "source": "logs/states.jsonl",
+      "offset": 8682441467,
+      "bytes": 45997,
+      "sha256": "34cf60ca254007896a112d093e468ce4d3d0019758ebbd7829f310eede8764c9",
+      "kind": "original_TXZ_frame",
+      "key": "TXZ6RVMQA09D:48:3:8682441467",
+      "tag": "first"
+    },
+    {
+      "source": "logs/states.jsonl",
+      "offset": 8685106785,
+      "bytes": 46344,
+      "sha256": "1e1ee1cf94937da053e312ec211a18ebab4130a8466caa78934b7c5fdc9bb8ef",
+      "kind": "original_TXZ_frame",
+      "key": "TXZ6RVMQA09D:48:3:8682441467",
+      "tag": "last"
+    },
+    {
+      "source": "logs/states.jsonl",
+      "offset": 8685233301,
+      "bytes": 39386,
+      "sha256": "453241d989380381afe7c320ac64bfab54bbdef3369a1d551b5f16ad2cd9b40b",
+      "kind": "original_TXZ_frame",
+      "key": "TXZ6RVMQA09D:49:1:8685233301",
+      "tag": "first"
+    },
+    {
+      "source": "logs/states.jsonl",
+      "offset": 8685233301,
+      "bytes": 39386,
+      "sha256": "453241d989380381afe7c320ac64bfab54bbdef3369a1d551b5f16ad2cd9b40b",
+      "kind": "original_TXZ_frame",
+      "key": "TXZ6RVMQA09D:49:1:8685233301",
+      "tag": "last"
+    },
+    {
+      "source": "logs/states.jsonl",
+      "offset": 8685233301,
+      "bytes": 39386,
+      "sha256": "453241d989380381afe7c320ac64bfab54bbdef3369a1d551b5f16ad2cd9b40b",
+      "screen": "COMBAT",
+      "floor": 49,
+      "hp": 4,
+      "run": "TXZ6RVMQA09D",
+      "kind": "ops_supplement_actual_source"
+    },
+    {
+      "source": "logs/states.jsonl",
+      "offset": 8685272687,
+      "bytes": 47373,
+      "sha256": "aa76d860a773e24d5ac217b9bbae51695d6f2f2a9065b4ec4bfdbbbbaf037b37",
+      "screen": "GAME_OVER",
+      "floor": 49,
+      "hp": 0,
+      "run": "TXZ6RVMQA09D",
+      "kind": "ops_supplement_actual_source"
+    },
+    {
+      "source": "logs/runs.jsonl",
+      "offset": 238952,
+      "bytes": 432,
+      "sha256": "fd8e4ec26c16663e711c1406a0472a0529760ad35c23d3a257444d2ece07d5c1",
+      "row": {
+        "run_id": "TXZ6RVMQA09D",
+        "ended": "2026-10-07T13:14:06.991Z",
+        "victory": false,
+        "floor": 49,
+        "character": "SILENT",
+        "ascension": 10,
+        "code": "f17e15ca+dirty",
+        "decisions": 762,
+        "jev_calls": 171,
+        "deepseek_calls": 46,
+        "claude_calls": 0,
+        "tokens": 995006,
+        "ds_tokens_in": 5870945,
+        "ds_tokens_out": 12160,
+        "ds_cache_hit": 3238144,
+        "deciders": {
+          "codex": 63,
+          "code": 355,
+          "jev": 171,
+          "jev-plan": 173
+        },
+        "death_fight": [
+          "永世沙漏"
+        ]
+      },
+      "kind": "ops_supplement_actual_source"
+    }
+  ],
+  "selected_SL_audit_has_TXZ_F49": false,
+  "F49_death_evidence": "Original F49 COMBAT HP4 -> GAME_OVER HP0, enemy TEST_SUBJECT; original run floor49/death_fight names AEONGLASS. No F49 SL record invented.",
+  "trigger_outcomes": {
+    "fights": 39,
+    "won": 18,
+    "died": 21,
+    "validation_unchanged": true,
+    "cumulative_minimum_5_still_met": true
+  },
+  "candidate_admission": {
+    "state": "rejected",
+    "process_rc": 0,
+    "merged": null,
+    "acceptance": false,
+    "reasons": [
+      "t1 leak worsened",
+      "pre leak worsened",
+      "no bias entered/approached its fixed standard"
+    ],
+    "candidate_live_ancestor": false,
+    "t1_leak_before_after": [
+      3.623,
+      3.667
+    ],
+    "pre_leak_before_after": [
+      3.711,
+      3.753
+    ],
+    "source_checks_not_model_admission": true,
+    "coverage": {
+      "expected": 1048,
+      "numeric": 585,
+      "board_errors": 4,
+      "missing": 459,
+      "complete": false
+    },
+    "ended_A11_samples": 0,
+    "original_cooldown_unchanged": true
+  },
+  "existing_queue": "silent-0254",
+  "watcher_received": true,
+  "watcher_user_visible_notification_sent": true,
+  "roy_read_or_acknowledged": null,
+  "other_role_ACKs_written": false,
+  "programmatic_bridge_called": false,
+  "programmatic_registration": "pending original supported boss-sim identity processing; this receipt supplies actual watcher evidence only",
+  "new_parent_proposal_task_replay_or_fix_created": false,
+  "original_artifacts_logs_validation_or_thresholds_modified": false,
+  "source_or_model_or_game_changed": false,
+  "native_notification": {
+    "path": "/home/dw/.codex/sessions/2026/10/14/rollout-2026-10-14T17-55-41-01a139d6-cfec-78e1-8739-e21ac426a354.jsonl",
+    "offset": 10439915,
+    "bytes": 1647,
+    "sha256": "d3c41f8d4b31b907fae24a08d06bbaa313b01aa77bb05f77aeb050b7ad07fed4",
+    "timestamp": "2026-10-14T19:37:52.542Z",
+    "platform_message_id": null,
+    "excerpt": "native-notification.jsonl",
+    "text": "Roy，已读原报告和 questions，五份原件 SHA 均匹配，并复核了 TXZ 原 SL、八帧及补充死亡帧。学习者指出的归因差异成立：\n\n> 触发清单把 TXZ6RVMQA09D 算作 AEONGLASS 死亡；实际 F48 第三试获胜、余4血，随后在 F49 TEST_SUBJECT 死亡，runs.death_fight 却仍记“永世沙漏”。\n\nF49 死亡由原 COMBAT 4HP→GAME_OVER 0HP 帧支持；所选 SL audit 没有 F49 条目，不能补造。AEONGLASS 仍按 **39场＝18胜／21死**，验证集与累计≥5门槛不变；归因缺口沿已有 `silent-0254` 处理，不另派任务。\n\n候选仍拒绝上线：t1 打穿比 **3.623→3.667**、pre **3.711→3.753**，均变差；3907项源码检查通过不能替代模型准入。1048行中只有585行数值、4行原错误、459行缺失，整体校准不完整，也没有已结束 A11 样本。原 rejected、冷却、未合入及无新发布号状态保持。"
+  },
+  "ops_evidence": {
+    "path": "paper/materials/20261015-0328-ops/aeonglass-rejection-readback.json",
+    "sha256": "0b2b8500babf965cb8ef2bbebeb86f20635edd78fccc5966dea6f5fb461a7531",
+    "supplement_path": "paper/materials/20261015-0328-ops/TXZ-supplement-original-refs.json",
+    "supplement_sha256": "d9cb668a97115e90ae797f4ca562c55e5eeab33bab1c1c87ff1b6c156b0c9511"
+  }
+}
