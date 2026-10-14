@@ -16,6 +16,18 @@ const empty = (req: DeckRunRequest): DeckRunResult => ({ outcomes: req.decks.map
     chunksPlanned: 100, chunksDispatched: 2, chunksCompleted: 0, outcomesCompleted: 0 } } : {}) });
 
 describe("B3 service diagnostics", () => {
+  it("the live Silent policy requires all samples and holds failures instead of using the old budget fallback", async () => {
+    const r = raw();
+    (r.run as Record<string, unknown>).character_id = "SILENT";
+    const e = { ...env(r), requiredBossEvaluation: true };
+    const run = vi.fn(async (req: DeckRunRequest) => empty(req));
+    const result = await withBossSim(decide(env(raw())), e, { ...deps, runner: { run }, deadlineMs: 0 });
+    expect(run).toHaveBeenCalled();
+    expect(run.mock.calls.every(([req]) => req.deadlineMs === undefined)).toBe(true);
+    expect(result.record).toMatchObject({ completion: { required: true, status: "pending" } });
+    expect(result.record?.error).toContain("incomplete");
+    expect(JSON.stringify(result.decision)).not.toContain('effective_damage_per_turn');
+  });
   it.each([10_950, 11_000, 12_000])("does not replenish the question deadline after %i ms of preparation", async (elapsed) => {
     const e = env(raw());
     const now = vi.fn().mockReturnValueOnce(0).mockReturnValue(elapsed);

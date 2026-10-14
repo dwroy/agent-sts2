@@ -636,6 +636,8 @@ export function reviveThrough(startHp: number, losses: number[], revives: Revive
 }
 
 export interface SolverInput {
+  /** Opt-in measurement only; never changes search weights, rules or sampled actions. */
+  captureBossMargin?: boolean;
   /** Extra value of HP carried into an observed following fight (character evidence only). */
   continuationValue?: import("./continuation-value.js").ContinuationValue;
   /** Silent A10's observed first boss: compare dry HP-saving plays before a poison finish. */
@@ -886,6 +888,8 @@ export interface Outcome {
     husk?: boolean;
   }[];
   incomingAfterBlock: number;
+  /** Model HP damage from enemy responses and held/end-turn statuses, after mitigation; own costs stay separate. */
+  receivedHpDamage?: number | null;
   energyLeft: number;
   vulnerableApplied: number;
   weakApplied: number;
@@ -2896,7 +2900,7 @@ export const CONCENTRATION_BONUS = 0.15;
 export const FOCUS_BONUS = 0.5;
 /**
  * Share of damage into a surviving minion that counts while its summoner lives (it leaves with it).
- * Kept (Dai 2026-09-28 review) for what the score still decides: code's own lines (lethal among lethal
+ * Kept (Roy 2026-09-28 review) for what the score still decides: code's own lines (lethal among lethal
  * lines, the dominance and HP-guard picks, the fallback) and the rollout's own later turns, where it is
  * the QE4K rule (turn-solver.test "chips the summoner"). It no longer decides what Jev sees: every kind of
  * enemy has its own "focus" option (combat-plan.ts focusLines) and every shown line is rolled out under
@@ -3360,7 +3364,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
   // Rocket's Laser after Charge Up, the Torch Head's Beam). HP lost now that leaves us below what the next hit takes
   // through a fresh hand's block is HP the next turn cannot spare, as the Giant's eruption rule below counts it.
   if (input.nextHit && !winsFight && !dies && hpLoss > 0) score -= weights.hp * input.nextHit.weight * nextHitShortfall(input.nextHit, living, hpAfter, hpLoss);
-  // A potion drunk is HP paid later (potion-cost.ts, Dai 2026-09-30): its held value, at the HP weight. Until batch K a
+  // A potion drunk is HP paid later (potion-cost.ts, Roy 2026-09-30): its held value, at the HP weight. Until batch K a
   // hallway potion's lasting part counted 25% (a guessed number); since then potions were free; now the table's value.
   score -= weights.hp * sim.potionCost;
   // A Wither stays in the deck and comes back bigger (+3 each Increasing Intensity): price one more
@@ -3612,6 +3616,13 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
           ...(enemy.maxHp >= 1_000_000 ? { husk: true } : {}),
         })),
       incomingAfterBlock,
+      ...(input.captureBossMargin ? { receivedHpDamage:
+        selfLoss === 0 && sim.hpLossEvents === 0 && sim.potionHeal === 0 && regenHeal === 0 &&
+        startTurnLoss === 0 &&
+        cap == null && !otherDeath && (!dies || revives.length === 0 || revived !== undefined)
+          ? revived ? Math.max(0, input.player.hp + revived.reviveHp - revived.hp)
+            : Math.min(input.player.hp, incomingAfterBlock + heldHpLoss + Math.max(0, disintegration - blockAtEnd))
+          : null } : {}),
       energyLeft: sim.energy,
       vulnerableApplied: sim.vulnerableApplied,
       weakApplied: sim.weakApplied,

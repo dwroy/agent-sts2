@@ -1,5 +1,5 @@
 /**
- * B2 (Dai 2026-09-30, docs/boss-sim.md §11): in a boss fight, every line Jev is shown (plan lines, potion lines, the
+ * B2 (Roy 2026-09-30, docs/boss-sim.md §11): in a boss fight, every line Jev is shown (plan lines, potion lines, the
  * random potions' "drink now" lines) is played to the fight's end by the whole-fight simulator (boss-sim.ts), all on the
  * same seeds, each under its best kill order. The question then carries each line's calibrated win rate, its paired
  * difference to the best line (± standard error), the HP lost in the samples won, the turns to the end and the turn the
@@ -8,7 +8,7 @@
  * line each turn: the simulation only
  * adds numbers and, every few turns, a fight plan summarised from the best line's winning samples; code never plays the
  * plan. Bosses the simulator is known to get wrong (LOW_TRUST_BOSSES) keep the 5-turn rollout's ranking, and their
- * numbers and plan go to the decision log only, not to Jev's question (V4.2, Dai 2026-10-01).
+ * numbers and plan go to the decision log only, not to Jev's question (V4.2, Roy 2026-10-01).
  *
  * Time: the planner is synchronous, so the samples run on a pool of worker threads (BossLinesPool) that the planner's
  * thread waits on (Atomics.wait on a shared counter; replies read with receiveMessageOnPort). The pool is built at the
@@ -27,7 +27,9 @@ import { MessageChannel, receiveMessageOnPort, Worker, type MessagePort } from "
 import type { Knowledge } from "../knowledge/index.js";
 import type { GameState } from "../hand/mod/schema.js";
 import type { ScreenMemory } from "../memory/types.js";
-import type { JsonValue } from "../core/util/json.js";
+import { toJsonValue, type JsonValue } from "../core/util/json.js";
+import { summarizeBossMargin } from "./boss-margin.js";
+import { quantitativeEnabled } from "./quantitative-facts.js";
 import type { CardModel } from "../reflex/card-model.js";
 import type { PotionMcSource } from "../reflex/potion-mc.js";
 import type { KillOrder, RolloutInput } from "../reflex/rollout.js";
@@ -65,7 +67,7 @@ import { firstDoubleBoss } from "../knowledge/double-boss.js";
 export const BOSS_LINES_SAMPLES = 600;
 /** One question's wall-clock limit for the samples. */
 export const BOSS_LINES_DEADLINE_MS = 25_000;
-/** A turn's limit over its questions (a re-plan after a draw asks again): Dai's 20-30 s a boss turn. */
+/** A turn's limit over its questions (a re-plan after a draw asks again): Roy's 20-30 s a boss turn. */
 export const BOSS_LINES_TURN_BUDGET_MS = 30_000;
 /** Less than this left of the turn's budget: no simulation for this question. */
 export const BOSS_LINES_MIN_MS = 3_000;
@@ -79,7 +81,7 @@ export const BOSS_LINES_SEED = 7;
 export const BOSS_LINES_TIE_SE = 2;
 
 /**
- * The ranking's second criterion (V4.2, Dai 2026-10-01): the median HP lost in the samples won, the number the question
+ * The ranking's second criterion (V4.2, Roy 2026-10-01): the median HP lost in the samples won, the number the question
  * shows (it was the mean over every sample, a death counting all our HP). A line with no winning sample comes last.
  */
 export function wonLoss(line: BossSimLineResult): number {
@@ -99,7 +101,7 @@ function envWorkers(): number | null {
 export const bossLinesOptions: {
   enabled: boolean;
   /**
-   * BOSS_SIM_LOW_TRUST: when a low-trust boss's fight is simulated. "retry" (default, Dai 2026-10-02): only on an SL retry,
+   * BOSS_SIM_LOW_TRUST: when a low-trust boss's fight is simulated. "retry" (default, Roy 2026-10-02): only on an SL retry,
    * where SL_RETRY_SHOW_SIM shows its numbers; on a first attempt its numbers only went to the decision log, at up to 25 s
    * a question and most of the machine's cores (Kaiser Crab 80-150 s a fight before it was trusted), which cut the same
    * question's rollout. "always": as before (simulated for the log on every question).
@@ -182,6 +184,7 @@ export function bossSimInput(args: BossSimInputArgs): RolloutInput {
   const runRaw = (args.state.run?.raw ?? {}) as Record<string, unknown>;
   const input: RolloutInput = {
     ...board,
+    ...(quantitativeEnabled(args.state) ? { captureBossMargin: true } : {}),
     plans: [],
     piles: { draw: args.piles.draw, discard: args.piles.discard, handBase, ...(args.piles.drawTop && args.piles.drawTop.length > 0 ? { drawTop: args.piles.drawTop, ...(args.piles.drawAdded && args.piles.drawAdded.length > 0 ? { drawAdded: args.piles.drawAdded } : {}) } : {}) },
     meta: { ...meta, kind: "boss" },
@@ -290,7 +293,7 @@ export class BossLinesPool {
     Atomics.store(this.flag, 1, job);
     const tasks: [number, number, number][] = [];
     for (let i = 0; i < samples; i += 1) for (let pair = 0; pair < pairs.length; pair += 1) tasks.push([pair, i, sampleSeed(seed, i)]);
-    const chunk = Math.max(1, Math.ceil(tasks.length / (workers.length * 8)));
+    const chunk = Number.isFinite(deadlineMs) ? Math.max(1, Math.ceil(tasks.length / (workers.length * 8))) : 8;
     const chunks: [number, number, number][][] = [];
     for (let k = 0; k < tasks.length; k += chunk) chunks.push(tasks.slice(k, k + chunk));
     const outcomes: (FightSampleResult | undefined)[][] = pairs.map(() => new Array<FightSampleResult | undefined>(samples));
@@ -306,12 +309,14 @@ export class BossLinesPool {
     };
     for (const w of workers) if (!w.busy) give(w);
     let timedOut = false;
+    let lastReply = Date.now();
     while (pending > 0 && error === null) {
       const seen = Atomics.load(this.flag, 0);
       let got = false;
       for (const w of workers) {
         for (let msg = receiveMessageOnPort(w.port); msg; msg = receiveMessageOnPort(w.port)) {
           got = true;
+          lastReply = Date.now();
           w.busy = false;
           const reply = msg.message as LinesWorkerReply;
           if (reply.job === job) {
@@ -326,6 +331,10 @@ export class BossLinesPool {
         }
       }
       if (pending === 0 || error !== null) break;
+      if (!Number.isFinite(deadlineMs) && Date.now() - lastReply > 120_000) {
+        error = "required evaluation worker made no progress for 120 seconds; no partial result accepted";
+        break;
+      }
       const left = deadlineMs - (now() - started);
       if (left <= 0) {
         timedOut = true;
@@ -470,7 +479,7 @@ export interface LinesRank {
 }
 
 /**
- * B2's ranking (Dai): the whole-fight win rate first, ties within `tieSe` standard errors, then the least `second`
+ * B2's ranking (Roy): the whole-fight win rate first, ties within `tieSe` standard errors, then the least `second`
  * (wonLoss, the HP lost when won; the acceptance tool also ranks by the pre-V4.2 mean HP lost to compare).
  */
 export function rankLines(lines: BossSimLineResult[], tieSe = BOSS_LINES_TIE_SE, eligible: (i: number) => boolean = () => true, second: (line: BossSimLineResult) => number = wonLoss): LinesRank {
@@ -597,6 +606,7 @@ export function fightPlanText(input: RolloutInput, line: BossSimLineResult, turn
 // ---------------------------------------------------------------- the live question
 
 export interface LineSim {
+  bossMargin?: ReturnType<typeof summarizeBossMargin>;
   result: BossSimLineResult & { order: string | null };
   calibrated: number;
   vsBest: LineComparison | null;
@@ -623,6 +633,8 @@ export type BossLineSim =
     };
 
 export interface BossLineSimArgs extends BossSimInputArgs {
+  /** Live Silent controller policy; historical replays retain their frozen budgets unless explicitly opted in. */
+  requiredComplete?: boolean;
   /** Every line shown (plan lines, then the random potions' median lines). */
   lines: Plan[];
   /** Lines the ranking may pick (a line code added is shown; a random potion's line is Jev's to drink). */
@@ -650,14 +662,15 @@ export function bossLineSim(args: BossLineSimArgs): BossLineSim {
   const now = bossLinesOptions.now ?? (() => performance.now());
   const started = now();
   const ms = () => Math.round(now() - started);
+  const required = args.requiredComplete === true && quantitativeEnabled(args.state);
   try {
     if (args.lines.length === 0) return { available: false, reason: "no line", ms: ms() };
     // The turn's budget over its questions (a re-plan after a draw asks again).
     const fight = `${String(args.state.raw["run_id"] ?? "")}:${args.state.run?.floor ?? "?"}`;
-    if (failed.fight === fight && failed.count >= BOSS_LINES_MAX_FAILURES) return { available: false, reason: `off for this fight: ${failed.count} questions in a row got no sample from the worker pool`, ms: ms() };
+    if (!required && failed.fight === fight && failed.count >= BOSS_LINES_MAX_FAILURES) return { available: false, reason: `off for this fight: ${failed.count} questions in a row got no sample from the worker pool`, ms: ms() };
     const turnKey = `${fight}:${args.turn ?? "?"}`;
     const memo = args.memory.bossLines?.turn === turnKey ? args.memory.bossLines : { turn: turnKey, spentMs: 0 };
-    const left = Math.min(bossLinesOptions.deadlineMs, bossLinesOptions.turnBudgetMs - memo.spentMs);
+    const left = required ? Infinity : Math.min(bossLinesOptions.deadlineMs, bossLinesOptions.turnBudgetMs - memo.spentMs);
     if (left < bossLinesOptions.minMs) return { available: false, reason: `this turn's ${Math.round(bossLinesOptions.turnBudgetMs / 1000)} s for the simulation is spent`, ms: ms() };
     const input = bossSimInput(args);
     const boss = bossKeyOf(input.enemies.map((e) => e.id));
@@ -678,6 +691,7 @@ export function bossLineSim(args: BossLineSimArgs): BossLineSim {
       if (args.memo) storeLines(args.memo, input, args.lines, samples, run);
     }
     args.memory.bossLines = { turn: turnKey, spentMs: memo.spentMs + run.elapsedMs };
+    if (required && (run.timedOut || run.samples !== samples)) return { available: false, reason: `required paired computation incomplete: ${run.samples}/${samples}`, ms: ms() };
     if (run.samples === 0) {
       releaseBossLinesPool();
       failed = { fight, count: failed.fight === fight ? failed.count + 1 : 1 };
@@ -694,7 +708,11 @@ export function bossLineSim(args: BossLineSimArgs): BossLineSim {
       const calibrated = line.sequence ? line.winProb : calibratedWinProb(line.winProb, line.samples, start, args.state.run?.ascension ?? 0);
       const vsBest = rank.vsBest[i] ?? null;
       const winTied = rank.winTied[i] ?? false;
-      byPlan.set(args.lines[i]!, { result: line, calibrated, vsBest, winTied, text: lineSimText(line, calibrated, rank.best === i ? null : vsBest, run, turnNow, { best: rank.best === i, winTied, lowTrust }) });
+      const reference = run.lines[rank.best >= 0 ? rank.best : 0]!;
+      const margin = input.captureBossMargin ? summarizeBossMargin(line.outcomes, reference.outcomes, line.outcomes.map((_, at) => at)) : null;
+      byPlan.set(args.lines[i]!, { result: line, calibrated, vsBest, winTied,
+        ...(margin ? { bossMargin: { ...margin, rankingEligible: margin.rankingEligible && !lowTrust } } : {}),
+        text: lineSimText(line, calibrated, rank.best === i ? null : vsBest, run, turnNow, { best: rank.best === i, winTied, lowTrust }) });
     });
     // The ranking as a full order: the lines tied with the top win rate by HP lost when won (the best first), then the rest by win rate.
     const key = (i: number): [number, number, number] => (rank.winTied[i] ? [0, wonLoss(run.lines[i]!), -run.lines[i]!.winProb] : [1, -run.lines[i]!.winProb, wonLoss(run.lines[i]!)]);
@@ -797,6 +815,7 @@ export function simLog(sim: BossLineSim, keyOf: (plan: Plan) => string | null, e
     const key = keyOf(plan);
     if (!key) continue;
     lines[key] = {
+      ...(line.bossMargin ? { boss_relative_margin: toJsonValue(line.bossMargin) } : {}),
       win: Math.round(line.result.winProb * 1000) / 1000,
       cal: Math.round(line.calibrated * 1000) / 1000,
       d: line.vsBest ? Math.round(line.vsBest.winDiff * 1000) / 1000 : 0,

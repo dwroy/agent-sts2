@@ -328,7 +328,7 @@ async function main(argv: string[]): Promise<number> {
             `${mode === "shadow" ? " (decisions are logged, nothing is dispatched)" : ""}` +
             `${skipJev ? style.yellow(" | NO-JEV: combat uses code; brain decisions still require Codex") : ""}\n`,
         );
-        buildSim = config.bossSimBuild === "on" && config.buildDecider === "deepseek" ? new BuildSimPool() : null;
+        buildSim = config.run.characterId.toLowerCase() === "silent" || (config.bossSimBuild === "on" && config.buildDecider === "deepseek") ? new BuildSimPool() : null;
         // THIEF_COST: the Hopper's stolen card simulated against the act boss (thief-card-value.ts): B3's pool when it
         // runs, else one of its own (its workers start on the first Hopper fight).
         thiefPool = config.thiefFacts && config.thiefCost ? (buildSim ?? new BuildSimPool()) : null;

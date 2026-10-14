@@ -11,6 +11,8 @@ import type { JsonValue } from "../core/util/json.js";
 import type { RunBrief } from "./run-brief.js";
 
 export interface DecisionEnv {
+  /** Set by the live loop for Silent; archived replay callers keep their declared historical policy. */
+  requiredBossEvaluation?: boolean;
   state: GameState;
   knowledge: Knowledge;
   brief: RunBrief;
@@ -143,7 +145,7 @@ export interface SlKnownDraws {
   added?: { cards: string[]; names: string[] };
   /**
    * SL_RETRY_KNOWN_INSERTS: how many leading `cards` are known exactly; the rest rest on the model that cards added at random
-   * places leave the order (planning only: the certain-death judge never uses them, Dai 2026-10-02). Absent: all exact.
+   * places leave the order (planning only: the certain-death judge never uses them, Roy 2026-10-02). Absent: all exact.
    */
   exact?: number;
 }
@@ -230,6 +232,8 @@ export interface ScreenMemory {
   rolloutEncounter?: { fight: string; enc: string };
   /** B2 (src/sim/boss-lines.ts): the whole-fight simulation's wall clock spent this boss turn (its budget over re-plans). */
   bossLines?: { turn: string; spentMs: number };
+  /** A required calculation is pending; this cannot become a per-card/model fallback. */
+  bossEvaluationWait?: string;
   /** SL_RETRY_COMPUTE (docs/sl.md §10.3): the rollout's wall clock spent this turn of this attempt (its turn budget over re-plans). */
   slRetryCompute?: { turn: string; spentMs: number };
   /**
