@@ -1,0 +1,142 @@
+{
+  "at": "2026-10-14 15:26:40 CST",
+  "batch": "20261014-144304",
+  "state": "done",
+  "rc": 0,
+  "result": {
+    "task": "postmortem",
+    "appended": [
+      "9GTFF6DC500L"
+    ],
+    "skipped": [],
+    "bugs": [
+      {
+        "run": "9GTFF6DC500L",
+        "where": "agent/src/reflex/combat-plan.ts:5124",
+        "what": "毒胜后仍7血却按假设复活出口误核销蜥蜴尾巴；F49末试T4判死后实复活34。fix-queue-v4已有silent-0339。",
+        "new": false
+      }
+    ],
+    "ledger": {
+      "added": [],
+      "updated": [
+        "silent-0079",
+        "silent-0339",
+        "silent-0059",
+        "silent-0259",
+        "silent-0069",
+        "silent-0025",
+        "silent-0037",
+        "silent-0005",
+        "silent-0228",
+        "silent-0340",
+        "silent-0352"
+      ],
+      "repeats": [
+        "silent-0339"
+      ],
+      "check": 0
+    },
+    "code_proposals": [
+      "silent-proposal-7540499affe862a1",
+      "silent-proposal-a8b6beb464e2a1a9",
+      "silent-proposal-a750d907a2105d3c"
+    ],
+    "implementation_domains": [
+      "combat",
+      "potion",
+      "sl",
+      "terminal"
+    ],
+    "report": "/home/dw/Projects/agent-sts2/learner/runs/20261014-144305-postmortem/report.md"
+  },
+  "native": {
+    "event_log": "learner/runs/20261014-144305-postmortem.jsonl",
+    "thread_id": "01a13926-8482-7771-9c5b-d0ca6dc47b95",
+    "launch_source": {
+      "source": "learner/runs/20261014-144305-postmortem.jsonl",
+      "offset": 0,
+      "bytes": 15630,
+      "sha256": "95e93fc1200dbd68d2644b5603bb9b52157aeea0dd9a2baaf926daaf0810811a"
+    },
+    "launch_task": "postmortem",
+    "launch_cwd": "/home/dw/Projects/agent-sts2",
+    "rendered_task_prompt_sha256": "484a0657b4582ed0ff43d01c354c07dd21ecf856951b1163c10f2c84616bc354",
+    "actual_input_sha256": "8a4b95819e06d3a3fc12ca9099c79531c2d12c618fc41f6763a5fe885e405d9c",
+    "actual_command_sha256": "e7da836ee0d84dfb1ee178923973e4724b6c0998804eafe1ce19c43c6fad7018",
+    "original_startup_lease": null,
+    "native_input_matches_recorded_stdin_sha256": true,
+    "native_context": {
+      "source": "ops/codex-ops/accounts/codex1/learner/sessions/2026/10/14/rollout-2026-10-14T14-43-08-01a13926-8482-7771-9c5b-d0ca6dc47b95.jsonl",
+      "offset": 49152,
+      "bytes": 4620,
+      "sha256": "89be32d6f569529141de970fb6dc1e85d9bd7f3ccfe27fe3b11997ab9f331762",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "sandbox_type": "workspace-write"
+    },
+    "startup_source": {
+      "source": "learner/runs/20261014-144305-postmortem.jsonl",
+      "offset": 15630,
+      "bytes": 284,
+      "sha256": "43c4e944bdec7a7fc3f457ebbc180053b761888830075fe9166fba053513ab36"
+    }
+  },
+  "source_record_counts": {
+    "runs": 1,
+    "decisions": 936,
+    "states": 1014,
+    "run-plans": 12,
+    "sl-attempts": 9,
+    "run-config": 1,
+    "brain": 44
+  },
+  "all2017_original_offset_bytes_SHA_and_body_equal": true,
+  "supplement_original_gzip_rows_match": {
+    "states": 38,
+    "decisions": 15,
+    "sl-attempts": 1
+  },
+  "native_note_and_finding_successful_read_proofs": [
+    {
+      "source": "learner/runs/20261014-144305-postmortem.jsonl",
+      "offset": 191011,
+      "bytes": 7963,
+      "sha256": "3deda9bd9e5e94ff6e7e51a0a02a9ece22d3e5d9b36ac3a9f42f029a44f68b9c",
+      "item_id": "item_11",
+      "read_path": "notes/run-20261014-1423-9GTFF6DC500L.md",
+      "command_sha256": "d1ffad5c0cd3ebfa58c9a0763398a97a746fa644f40458458b71f6220d2410e0",
+      "output_sha256": "9ada91c44a8febcb0bc781c391e6300795fe4b980c2f3111cc0a74381aba0ef2",
+      "exit_code": 0
+    },
+    {
+      "source": "learner/runs/20261014-144305-postmortem.jsonl",
+      "offset": 224643,
+      "bytes": 8450,
+      "sha256": "9239d89451aa758121950c52e53711fb5f885d1aa0342e9381943fd64fe2c30e",
+      "item_id": "item_18",
+      "read_path": "paper/materials/20261014-9gt-f48-hp-loss/finding.json",
+      "command_sha256": "2da2490ac220d31eac2a28c146768088a1d6f6425dda157f39d5b20dc0b44b76",
+      "output_sha256": "cd2e6aadd28f7599abec07a4ed92af2e9d8e27a24bc1325ae4df46079912ef66",
+      "exit_code": 0
+    }
+  ],
+  "60_fixed_data_checks_passed_not_source_tests": true,
+  "lesson_owned_bytes": 26851,
+  "lesson_owned_sha256": "d1a5dd3f344efe927fd65d73eae03a0d7cafe34c1e78d390058653677c33658c",
+  "lesson_old_prefix_bytes": 8518398,
+  "lesson_old_prefix_sha256": "508f3fbb8bd5f7ee9fca79144fb90e667084b27c6d810ded7792eb8da9ac3aa0",
+  "lesson_draft_and_actual_append_exact": true,
+  "runtime_source_commit": "093c68ac658980f53b9940756b3df925adfb49bb",
+  "read_only_live_reference": "4d55ff9b4e2d6ed9cb701712ab63dba76ac67dac",
+  "combat_plan_blob_equal": "3911044b1787287f28fb9dcba659f7f58310837feb12d2dbc43f1970e65ba239",
+  "new_pure_bugs": [],
+  "existing_bug_recurrence": "silent-0339",
+  "existing_nonblocking_fix_queue_and_new_original_strategy_proposal_kept": true,
+  "original_CLI_rows": 17,
+  "evidence_updates": 11,
+  "proposal_link_rows": 6,
+  "no_new_claim_status_first_prior_version_or_shipped": true,
+  "calibration_and_unexecuted_counterfactuals_pending": true,
+  "no_game_source_change_release_restart_duplicate_study_or_routine_message": true
+}

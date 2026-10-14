@@ -1,0 +1,47 @@
+{
+  "task": "postmortem",
+  "appended": [
+    "9GTFF6DC500L"
+  ],
+  "skipped": [],
+  "bugs": [
+    {
+      "run": "9GTFF6DC500L",
+      "where": "agent/src/reflex/combat-plan.ts:5124",
+      "what": "毒胜后仍7血却按假设复活出口误核销蜥蜴尾巴；F49末试T4判死后实复活34。fix-queue-v4已有silent-0339。",
+      "new": false
+    }
+  ],
+  "ledger": {
+    "added": [],
+    "updated": [
+      "silent-0079",
+      "silent-0339",
+      "silent-0059",
+      "silent-0259",
+      "silent-0069",
+      "silent-0025",
+      "silent-0037",
+      "silent-0005",
+      "silent-0228",
+      "silent-0340",
+      "silent-0352"
+    ],
+    "repeats": [
+      "silent-0339"
+    ],
+    "check": 0
+  },
+  "code_proposals": [
+    "silent-proposal-7540499affe862a1",
+    "silent-proposal-a8b6beb464e2a1a9",
+    "silent-proposal-a750d907a2105d3c"
+  ],
+  "implementation_domains": [
+    "combat",
+    "potion",
+    "sl",
+    "terminal"
+  ],
+  "report": "/home/dw/Projects/agent-sts2/learner/runs/20261014-144305-postmortem/report.md"
+}

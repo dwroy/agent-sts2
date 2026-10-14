@@ -1,0 +1,79 @@
+[
+  {
+    "op": "add",
+    "id": "silent-proposal-7540499affe862a1",
+    "ts": "2026-10-14T15:16:17+08:00",
+    "character": "silent",
+    "ledger": [
+      "silent-0079",
+      "silent-0228"
+    ],
+    "runs": [
+      "9GTFF6DC500L"
+    ],
+    "source_task": "postmortem",
+    "target_task": "strategy-proposal",
+    "domains": [
+      "combat",
+      "potion",
+      "terminal"
+    ],
+    "summary": "核F48饱和短推演的攻防取舍、两药消耗与连续boss出口资源；未选线缺真实后继，暂不改保血阈值或固定药时。",
+    "proposal": "/home/dw/Projects/agent-sts2/learner/runs/20261014-144305-postmortem/proposal-f48-tradeoff.md",
+    "rule_changes": true,
+    "authorization": "Roy-2026-10-07-learning",
+    "proposal_sha256": "8fe737f0488506e4eb5349d993cb7e13348228fd600a9539d5b22582147cbbff",
+    "state": "pending"
+  },
+  {
+    "op": "add",
+    "id": "silent-proposal-a8b6beb464e2a1a9",
+    "ts": "2026-10-14T15:16:18+08:00",
+    "character": "silent",
+    "ledger": [
+      "silent-0339",
+      "silent-0340"
+    ],
+    "runs": [
+      "9GTFF6DC500L"
+    ],
+    "source_task": "postmortem",
+    "target_task": "strategy-proposal",
+    "domains": [
+      "combat",
+      "sl",
+      "terminal"
+    ],
+    "summary": "复现已知silent-0339：F48毒胜仍7血却误核销蜥蜴尾巴，F49末试同轮判死后实际复活34；修资源使用证据和SL输入。",
+    "proposal": "/home/dw/Projects/agent-sts2/learner/runs/20261014-144305-postmortem/proposal-tail-false-spent.md",
+    "rule_changes": false,
+    "authorization": "Roy-2026-10-07-learning",
+    "proposal_sha256": "a171898acf9f24a9f7b3c1b9b6b468fcfcc863b20bba564add84eaae756c08b4",
+    "state": "pending"
+  },
+  {
+    "op": "add",
+    "id": "silent-proposal-a750d907a2105d3c",
+    "ts": "2026-10-14T15:16:20+08:00",
+    "character": "silent",
+    "ledger": [
+      "silent-0059",
+      "silent-0037"
+    ],
+    "runs": [
+      "9GTFF6DC500L"
+    ],
+    "source_task": "postmortem",
+    "target_task": "strategy-proposal",
+    "domains": [
+      "combat",
+      "terminal"
+    ],
+    "summary": "核静默A10确定毒收尾仍支付凋萎：蛇咬23→33毒、毒爆45+44+43扣132，末25血42毒退出；玩家16→4的12损须传终局资源。",
+    "proposal": "/home/dw/Projects/agent-sts2/learner/runs/20261014-144305-postmortem/proposal-poison-held-loss.md",
+    "rule_changes": false,
+    "authorization": "Roy-2026-10-07-learning",
+    "proposal_sha256": "4c223811a93d825c71c0e63eb4a714d596aa1e56de5c26352f96db2ddb01d17d",
+    "state": "pending"
+  }
+]
