@@ -7,6 +7,7 @@ import fcntl
 import fnmatch
 from functools import lru_cache
 import hashlib
+import importlib.util
 import json
 import os
 from pathlib import Path
@@ -75,6 +76,24 @@ def secret_name(path):
     return any(fnmatch.fnmatch(part.lower(), pattern) for part in Path(path).parts
                for pattern in [".env", ".env.*", "*.env", "auth.json", ".jev_api_keys", ".deepseek_api_key",
                                ".sts2-jev-env*", "*.pem", "*.key"])
+
+
+def python_cache_source(tree, path):
+    """Only standard CPython caches with a present, tracked source are reconstructible."""
+    path = safe_path(tree, path)
+    if (path.parent.name != "__pycache__" or not path.is_file()
+            or not re.fullmatch(r".+\.cpython-\d+(?:\.opt-[012])?\.pyc", path.name)):
+        return None
+    try:
+        source = safe_path(tree, importlib.util.source_from_cache(str(path)))
+        if secret_name(source) or not source.is_file():
+            return None
+        relative = str(source.relative_to(tree))
+        if git(tree, "ls-files", "--error-unmatch", "-z", "--", relative) != os.fsencode(relative) + b"\0":
+            return None
+    except ValueError:
+        return None
+    return source
 
 
 @contextmanager
@@ -249,6 +268,7 @@ def admission(root, state_dir, state, batch_id, check_ignored=True):
         head = git(tree, "rev-parse", "HEAD").decode().strip()
         if not ancestor(root, head) or not ancestor(live, head):
             raise ValueError("unpublished worktree HEAD retained")
+        caches = []
         # Other ignored files are not part of this batch's scratch. Never delete them accidentally.
         for name in (git(tree, "ls-files", "--others", "--ignored", "--exclude-standard", "-z") if check_ignored else b"").split(b"\0"):
             if not name:
@@ -256,10 +276,19 @@ def admission(root, state_dir, state, batch_id, check_ignored=True):
             path = tree / os.fsdecode(name)
             if secret_name(path):
                 raise ValueError("credential-named path retained without reading")
+            if (not path.is_relative_to(scratch) and path.parent.name == "__pycache__"
+                    and path.suffix == ".pyc"):
+                source = python_cache_source(tree, path)
+                if source is None:
+                    raise ValueError("ignored files outside bound scratch retained")
+                caches.append({"path": str(path.relative_to(root)), "source": str(source.relative_to(root)),
+                               "bytes": path.stat().st_size})
+                continue
             if (not path.is_symlink() and path.is_file() and not path.is_relative_to(scratch)
                     and path != scratch.with_name(scratch.name + ".jsonl")):
                 raise ValueError("ignored files outside bound scratch retained")
-        proof.update(worktree_head=head, worktree_branch=git(tree, "symbolic-ref", "HEAD").decode().strip())
+        proof.update(worktree_head=head, worktree_branch=git(tree, "symbolic-ref", "HEAD").decode().strip(),
+                     discarded_python_cache=caches)
     # Checkouts of report-only batches are redundant, but their still-pending research data remains untouched.
     proof["retire_checkout"] = retired
     proof["compact_scratch"] = proof["kind"] != "settled-report-only"
