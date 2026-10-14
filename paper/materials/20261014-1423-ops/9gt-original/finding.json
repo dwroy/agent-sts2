@@ -1,0 +1,1551 @@
+{
+  "at": "2026-10-14T14:11:09.029625+08:00",
+  "kind": "watcher factual trace, not new learned policy",
+  "run": "9GTFF6DC500L",
+  "floor": 48,
+  "attempt": 1,
+  "result": "won",
+  "turns": 6,
+  "entry_hp": 68,
+  "end_hp": 7,
+  "net_hp_loss": 61,
+  "start_of_turn_hp": [
+    {
+      "turn": 1,
+      "hp": 68
+    },
+    {
+      "turn": 2,
+      "hp": 46
+    },
+    {
+      "turn": 3,
+      "hp": 37
+    },
+    {
+      "turn": 4,
+      "hp": 21
+    },
+    {
+      "turn": 5,
+      "hp": 14
+    },
+    {
+      "turn": 6,
+      "hp": 7
+    }
+  ],
+  "net_loss_by_turn": [
+    22,
+    9,
+    16,
+    7,
+    7,
+    0
+  ],
+  "T1": {
+    "selected": "plan5",
+    "selected_line": {
+      "plays": "触媒+, then 刺杀 -> 女王, then 带毒刺击 -> 女王, then 铭记死亡 -> 女王, then 弹跳药瓶+, then potion 再生药水, then potion 毒药水 -> 女王",
+      "result": "未计锁镰随机伤害的参考结果：survives with 46/68 HP before healing；存活、击杀与损血均非保证",
+      "hp_lost": 22,
+      "damage_dealt": 92,
+      "enemies_after": "火炬头聚合体 211 HP; 女王 327 HP, Vulnerable 1, 中毒 18",
+      "lasting_value": "sets up a power worth about 13 score over the fight (a few HP now is often worth it in a long fight)",
+      "unmodelled_cards": "锁镰（随机落点未展开；未计额外伤害，损血与击杀非保证）",
+      "hp_after": 46,
+      "hp_after_pct": 68,
+      "dmg": 92,
+      "lethal_now": "no",
+      "enemy_threat_next": 22,
+      "setup_turn": false,
+      "scaling_gained": "plays power 触媒+; lasting value 13",
+      "block_wasted": 0,
+      "potions_used": "再生药水, 毒药水",
+      "quantitative_turn": {
+        "schema": "quantitative-v1",
+        "source": "turn-solver",
+        "kind": "conditional_model",
+        "window": "current_line_and_enemy_response",
+        "damage_hp": 92,
+        "block_gained": 0,
+        "hp_after": 46,
+        "energy_left": 0,
+        "planned_actions": 7,
+        "planned_card_actions": 5,
+        "realization": {
+          "model": "silent-realization-v1",
+          "fingerprint": "dfd5420ba4be7543f3963b4a0ba7af9ec8e232561a6e78a689f4460071c16dc8",
+          "evidence": [
+            "L704TLETMZBM/A10/F48/attempt3/T3/silent-0194",
+            "KV0JHNJCKXLS/A10/F33/attempt6/T1/silent-0248/0249",
+            "54G5683J0E5S/A10/F33/attempt1/T5-9/silent-0141/0385"
+          ],
+          "kind": "conditional_model",
+          "complete_line": true,
+          "manual_plays": {
+            "ACCELERANT": 1,
+            "ASSASSINATE": 1,
+            "POISONED_STAB": 1,
+            "MEMENTO_MORI": 1,
+            "BOUNCING_FLASK": 1,
+            "POTION:REGEN_POTION:0": 1,
+            "POTION:POISON_POTION:1": 1
+          },
+          "effect_resolutions": {
+            "ACCELERANT": 1,
+            "ASSASSINATE": 1,
+            "POISONED_STAB": 1,
+            "MEMENTO_MORI": 1,
+            "BOUNCING_FLASK": 1,
+            "POTION:REGEN_POTION:0": 1,
+            "POTION:POISON_POTION:1": 1
+          },
+          "energy_paid": 4,
+          "prefix_energy_paid": 4,
+          "established_before": {
+            "energy": 4,
+            "hp": 68,
+            "block": 0,
+            "damage": 0,
+            "blockGained": 0,
+            "drawn": 0,
+            "drawBudget": 0,
+            "hand": [
+              "ACCELERANT",
+              "ASSASSINATE",
+              "POISONED_STAB",
+              "STRIKE_SILENT",
+              "LEG_SWEEP",
+              "MEMENTO_MORI",
+              "BACKFLIP",
+              "DEFEND_SILENT",
+              "BOUNCING_FLASK",
+              "FOOTWORK"
+            ],
+            "unknownHand": 0,
+            "noDraw": false,
+            "pendingSelection": false,
+            "dexterity": 1,
+            "afterImage": 0,
+            "poisonExtraTriggers": 0,
+            "duplicateSkills": 0,
+            "enemies": [
+              {
+                "index": 0,
+                "hp": 211,
+                "poison": 0,
+                "artifact": 0
+              },
+              {
+                "index": 1,
+                "hp": 419,
+                "poison": 0,
+                "artifact": 0
+              }
+            ],
+            "unknown": []
+          },
+          "modeled_after_actions": {
+            "energy": 0,
+            "hp": 68,
+            "block": 0,
+            "damage": 32,
+            "blockGained": 0,
+            "drawn": 0,
+            "drawBudget": 0,
+            "hand": [
+              "STRIKE_SILENT",
+              "LEG_SWEEP",
+              "BACKFLIP",
+              "DEFEND_SILENT",
+              "FOOTWORK"
+            ],
+            "unknownHand": 0,
+            "noDraw": false,
+            "pendingSelection": false,
+            "dexterity": 1,
+            "afterImage": 0,
+            "poisonExtraTriggers": 2,
+            "duplicateSkills": 0,
+            "enemies": [
+              {
+                "index": 0,
+                "hp": 211,
+                "poison": 0,
+                "artifact": 0
+              },
+              {
+                "index": 1,
+                "hp": 387,
+                "poison": 21,
+                "artifact": 0
+              }
+            ],
+            "unknown": [
+              "锁镰（随机落点未展开；未计额外伤害，损血与击杀非保证）"
+            ]
+          },
+          "actions": [
+            {
+              "card": "ACCELERANT",
+              "target": null,
+              "cost": 0,
+              "effects": 1,
+              "leaves_pool": "power",
+              "energy_before": 4,
+              "energy_after": 4,
+              "hp_after": 68,
+              "block_after": 0,
+              "damage_hp": 0,
+              "block_gained": 0,
+              "draws": 0,
+              "draw_budget": 0,
+              "no_draw": false,
+              "discards": [],
+              "pending_selection": false
+            },
+            {
+              "card": "ASSASSINATE",
+              "target": 1,
+              "cost": 0,
+              "effects": 1,
+              "leaves_pool": "exhaust",
+              "energy_before": 4,
+              "energy_after": 4,
+              "hp_after": 68,
+              "block_after": 0,
+              "damage_hp": 10,
+              "block_gained": 0,
+              "draws": 0,
+              "draw_budget": 0,
+              "no_draw": false,
+              "discards": [],
+              "pending_selection": false
+            },
+            {
+              "card": "POISONED_STAB",
+              "target": 1,
+              "cost": 1,
+              "effects": 1,
+              "leaves_pool": null,
+              "energy_before": 4,
+              "energy_after": 3,
+              "hp_after": 68,
+              "block_after": 0,
+              "damage_hp": 9,
+              "block_gained": 0,
+              "draws": 0,
+              "draw_budget": 0,
+              "no_draw": false,
+              "discards": [],
+              "pending_selection": false
+            },
+            {
+              "card": "MEMENTO_MORI",
+              "target": 1,
+              "cost": 1,
+              "effects": 1,
+              "leaves_pool": null,
+              "energy_before": 3,
+              "energy_after": 2,
+              "hp_after": 68,
+              "block_after": 0,
+              "damage_hp": 13,
+              "block_gained": 0,
+              "draws": 0,
+              "draw_budget": 0,
+              "no_draw": false,
+              "discards": [],
+              "pending_selection": false
+            },
+            {
+              "card": "BOUNCING_FLASK",
+              "target": null,
+              "cost": 2,
+              "effects": 1,
+              "leaves_pool": null,
+              "energy_before": 2,
+              "energy_after": 0,
+              "hp_after": 68,
+              "block_after": 0,
+              "damage_hp": 0,
+              "block_gained": 0,
+              "draws": 0,
+              "draw_budget": 0,
+              "no_draw": false,
+              "discards": [],
+              "pending_selection": false
+            },
+            {
+              "card": "POTION:REGEN_POTION:0",
+              "target": null,
+              "cost": 0,
+              "effects": 1,
+              "leaves_pool": "exhaust",
+              "energy_before": 0,
+              "energy_after": 0,
+              "hp_after": 68,
+              "block_after": 0,
+              "damage_hp": 0,
+              "block_gained": 0,
+              "draws": 0,
+              "draw_budget": 0,
+              "no_draw": false,
+              "discards": [],
+              "pending_selection": false
+            },
+            {
+              "card": "POTION:POISON_POTION:1",
+              "target": 1,
+              "cost": 0,
+              "effects": 1,
+              "leaves_pool": "exhaust",
+              "energy_before": 0,
+              "energy_after": 0,
+              "hp_after": 68,
+              "block_after": 0,
+              "damage_hp": 0,
+              "block_gained": 0,
+              "draws": 0,
+              "draw_budget": 0,
+              "no_draw": false,
+              "discards": [],
+              "pending_selection": false
+            }
+          ],
+          "complete_combinations": null,
+          "delayed_damage": null,
+          "delayed_block": null,
+          "unknown": [
+            "锁镰（随机落点未展开；未计额外伤害，损血与击杀非保证）"
+          ],
+          "limits": "当前已知合法前缀的条件推演；自动重放不再次付费。已建、到手与手动施放分账，副本无物理UID不追认来源。完整组合须另核原四签名和后继；本表不证明整战收益、回流闭合或无限。"
+        },
+        "complete_combinations": null,
+        "limits": "沿用当前机制模型；动作数不含自动重放，完整组合须有经证据验证的定义，不能用动作数替代。",
+        "unknown_cards": [
+          "锁镰（随机落点未展开；未计额外伤害，损血与击杀非保证）"
+        ]
+      },
+      "rollout": "3-turn rollout (4 samples) (later turns may drink the potions still held, each when its turn gains more than the potion's cost): expected further HP loss 102, fight over within 3 turns in 0/4, expected turns to the end (surviving samples) ~10.5; every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 3 turns (this line 0/4), then the fight's progress: least enemy HP left (this line ~336, at T3 or at our death), then most turns alive (this line ~3), then least HP lost this turn (this line 22) [cut to fit the time budget: horizon 3, samples 4 per kill order]",
+      "rollout_turns": "T1 未计锁镰随机伤害（非保证）: hp -22, dmg 92; T2: hp -6 [3-9], dmg 113.5 [61-225], alive 4/4, won 0/4; T3: hp -16 [-2-25], dmg 88.8 [78-114], alive 4/4, won 0/4",
+      "rollout_kill_order": "女王 > 火炬头聚合体: the later turns aim at 女王 first (女王 dead by T3 in 0/4); best of 2 kill orders compared; the orders came out the same here",
+      "rollout_other_orders": "火炬头聚合体 > 女王: further HP loss 102, over 0/4, dead 0/4, 火炬头聚合体 dead 0/4",
+      "history_estimate": "further HP loss 56, win 58% (this encounter n=70; estimate from act-3 boss fights n=251, typical error ±9.9; few similar states for this encounter)",
+      "rollout_best": true,
+      "potion_cost": "fight HP loss 102; potions used 2 (this turn: 再生药水 0 (boss fight), 毒药水 0.4 HP); potion cost 0.4 HP (potion table, this act's held value); total 102.4"
+    },
+    "comparison_defense": {
+      "plays": "触媒+, then 刺杀 -> 女王, then 弹跳药瓶+, then 灵动步法+, then 防御+, then potion 再生药水, then potion 毒药水 -> 女王",
+      "result": "survives with 64/68 HP before healing",
+      "hp_lost": 4,
+      "damage_dealt": 61,
+      "enemies_after": "火炬头聚合体 211 HP; 女王 358 HP, Vulnerable 1, 中毒 15",
+      "block_gained": 24,
+      "lasting_value": "sets up a power worth about 21 score over the fight (a few HP now is often worth it in a long fight)",
+      "hp_after": 64,
+      "hp_after_pct": 94,
+      "dmg": 61,
+      "lethal_now": "no",
+      "enemy_threat_next": 22,
+      "setup_turn": false,
+      "scaling_gained": "plays power 触媒+, 灵动步法+; lasting value 21",
+      "block_wasted": 0,
+      "potions_used": "再生药水, 毒药水",
+      "quantitative_turn": {
+        "schema": "quantitative-v1",
+        "source": "turn-solver",
+        "kind": "conditional_model",
+        "window": "current_line_and_enemy_response",
+        "damage_hp": 61,
+        "block_gained": 24,
+        "hp_after": 64,
+        "energy_left": 0,
+        "planned_actions": 7,
+        "planned_card_actions": 5,
+        "realization": {
+          "model": "silent-realization-v1",
+          "fingerprint": "8ec73559d97dd7c103aaf60a09c421185cd141744cf0c00c1bfaa129bd3125bb",
+          "evidence": [
+            "L704TLETMZBM/A10/F48/attempt3/T3/silent-0194",
+            "KV0JHNJCKXLS/A10/F33/attempt6/T1/silent-0248/0249",
+            "54G5683J0E5S/A10/F33/attempt1/T5-9/silent-0141/0385"
+          ],
+          "kind": "conditional_model",
+          "complete_line": true,
+          "manual_plays": {
+            "ACCELERANT": 1,
+            "ASSASSINATE": 1,
+            "BOUNCING_FLASK": 1,
+            "FOOTWORK": 1,
+            "DEFEND_SILENT": 1,
+            "POTION:REGEN_POTION:0": 1,
+            "POTION:POISON_POTION:1": 1
+          },
+          "effect_resolutions": {
+            "ACCELERANT": 1,
+            "ASSASSINATE": 1,
+            "BOUNCING_FLASK": 1,
+            "FOOTWORK": 1,
+            "DEFEND_SILENT": 2,
+            "POTION:REGEN_POTION:0": 1,
+            "POTION:POISON_POTION:1": 1
+          },
+          "energy_paid": 4,
+          "prefix_energy_paid": 4,
+          "established_before": {
+            "energy": 4,
+            "hp": 68,
+            "block": 0,
+            "damage": 0,
+            "blockGained": 0,
+            "drawn": 0,
+            "drawBudget": 0,
+            "hand": [
+              "ACCELERANT",
+              "ASSASSINATE",
+              "POISONED_STAB",
+              "STRIKE_SILENT",
+              "LEG_SWEEP",
+              "MEMENTO_MORI",
+              "BACKFLIP",
+              "DEFEND_SILENT",
+              "BOUNCING_FLASK",
+              "FOOTWORK"
+            ],
+            "unknownHand": 0,
+            "noDraw": false,
+            "pendingSelection": false,
+            "dexterity": 1,
+            "afterImage": 0,
+            "poisonExtraTriggers": 0,
+            "duplicateSkills": 0,
+            "enemies": [
+              {
+                "index": 0,
+                "hp": 211,
+                "poison": 0,
+                "artifact": 0
+              },
+              {
+                "index": 1,
+                "hp": 419,
+                "poison": 0,
+                "artifact": 0
+              }
+            ],
+            "unknown": []
+          },
+          "modeled_after_actions": {
+            "energy": 0,
+            "hp": 68,
+            "block": 24,
+            "damage": 10,
+            "blockGained": 24,
+            "drawn": 0,
+            "drawBudget": 0,
+            "hand": [
+              "POISONED_STAB",
+              "STRIKE_SILENT",
+              "LEG_SWEEP",
+              "MEMENTO_MORI",
+              "BACKFLIP"
+            ],
+            "unknownHand": 0,
+            "noDraw": false,
+            "pendingSelection": false,
+            "dexterity": 4,
+            "afterImage": 0,
+            "poisonExtraTriggers": 2,
+            "duplicateSkills": 0,
+            "enemies": [
+              {
+                "index": 0,
+                "hp": 211,
+                "poison": 0,
+                "artifact": 0
+              },
+              {
+                "index": 1,
+                "hp": 409,
+                "poison": 18,
+                "artifact": 0
+              }
+            ],
+            "unknown": []
+          },
+          "actions": [
+            {
+              "card": "ACCELERANT",
+              "target": null,
+              "cost": 0,
+              "effects": 1,
+              "leaves_pool": "power",
+              "energy_before": 4,
+              "energy_after": 4,
+              "hp_after": 68,
+              "block_after": 0,
+              "damage_hp": 0,
+              "block_gained": 0,
+              "draws": 0,
+              "draw_budget": 0,
+              "no_draw": false,
+              "discards": [],
+              "pending_selection": false
+            },
+            {
+              "card": "ASSASSINATE",
+              "target": 1,
+              "cost": 0,
+              "effects": 1,
+              "leaves_pool": "exhaust",
+              "energy_before": 4,
+              "energy_after": 4,
+              "hp_after": 68,
+              "block_after": 0,
+              "damage_hp": 10,
+              "block_gained": 0,
+              "draws": 0,
+              "draw_budget": 0,
+              "no_draw": false,
+              "discards": [],
+              "pending_selection": false
+            },
+            {
+              "card": "BOUNCING_FLASK",
+              "target": null,
+              "cost": 2,
+              "effects": 1,
+              "leaves_pool": null,
+              "energy_before": 4,
+              "energy_after": 2,
+              "hp_after": 68,
+              "block_after": 0,
+              "damage_hp": 0,
+              "block_gained": 0,
+              "draws": 0,
+              "draw_budget": 0,
+              "no_draw": false,
+              "discards": [],
+              "pending_selection": false
+            },
+            {
+              "card": "FOOTWORK",
+              "target": null,
+              "cost": 1,
+              "effects": 1,
+              "leaves_pool": "power",
+              "energy_before": 2,
+              "energy_after": 1,
+              "hp_after": 68,
+              "block_after": 0,
+              "damage_hp": 0,
+              "block_gained": 0,
+              "draws": 0,
+              "draw_budget": 0,
+              "no_draw": false,
+              "discards": [],
+              "pending_selection": false
+            },
+            {
+              "card": "DEFEND_SILENT",
+              "target": null,
+              "cost": 1,
+              "effects": 2,
+              "leaves_pool": null,
+              "energy_before": 1,
+              "energy_after": 0,
+              "hp_after": 68,
+              "block_after": 24,
+              "damage_hp": 0,
+              "block_gained": 24,
+              "draws": 0,
+              "draw_budget": 0,
+              "no_draw": false,
+              "discards": [],
+              "pending_selection": false
+            },
+            {
+              "card": "POTION:REGEN_POTION:0",
+              "target": null,
+              "cost": 0,
+              "effects": 1,
+              "leaves_pool": "exhaust",
+              "energy_before": 0,
+              "energy_after": 0,
+              "hp_after": 68,
+              "block_after": 24,
+              "damage_hp": 0,
+              "block_gained": 0,
+              "draws": 0,
+              "draw_budget": 0,
+              "no_draw": false,
+              "discards": [],
+              "pending_selection": false
+            },
+            {
+              "card": "POTION:POISON_POTION:1",
+              "target": 1,
+              "cost": 0,
+              "effects": 1,
+              "leaves_pool": "exhaust",
+              "energy_before": 0,
+              "energy_after": 0,
+              "hp_after": 68,
+              "block_after": 24,
+              "damage_hp": 0,
+              "block_gained": 0,
+              "draws": 0,
+              "draw_budget": 0,
+              "no_draw": false,
+              "discards": [],
+              "pending_selection": false
+            }
+          ],
+          "complete_combinations": null,
+          "delayed_damage": null,
+          "delayed_block": null,
+          "unknown": [],
+          "limits": "当前已知合法前缀的条件推演；自动重放不再次付费。已建、到手与手动施放分账，副本无物理UID不追认来源。完整组合须另核原四签名和后继；本表不证明整战收益、回流闭合或无限。"
+        },
+        "complete_combinations": null,
+        "limits": "沿用当前机制模型；动作数不含自动重放，完整组合须有经证据验证的定义，不能用动作数替代。",
+        "unknown_cards": []
+      },
+      "rollout": "3-turn rollout (4 samples) (later turns may drink the potions still held, each when its turn gains more than the potion's cost): expected further HP loss 102, fight over within 3 turns in 0/4, expected turns to the end (surviving samples) ~12.8; every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 3 turns (this line 0/4), then the fight's progress: least enemy HP left (this line ~387, at T3 or at our death), then most turns alive (this line ~3), then least HP lost this turn (this line 4) [cut to fit the time budget: horizon 3, samples 4 per kill order]",
+      "rollout_turns": "T1 exact: hp -4, dmg 61; T2: hp -3 [0-9], dmg 102.3 [52-207], alive 4/4, won 0/4; T3: hp -16 [-2-25], dmg 79.8 [69-105], alive 4/4, won 0/4",
+      "rollout_kill_order": "女王 > 火炬头聚合体: the later turns aim at 女王 first (女王 dead by T3 in 0/4); best of 2 kill orders compared; the orders came out the same here",
+      "rollout_other_orders": "火炬头聚合体 > 女王: further HP loss 102, over 0/4, dead 0/4, 火炬头聚合体 dead 0/4",
+      "history_estimate": "further HP loss 50, win 64% (this encounter n=70; estimate from act-3 boss fights n=251, typical error ±9.9; few similar states for this encounter)",
+      "potion_cost": "fight HP loss 102; potions used 2 (this turn: 再生药水 0 (boss fight), 毒药水 0.4 HP); potion cost 0.4 HP (potion table, this act's held value); total 102.4"
+    },
+    "comparison_mixed": {
+      "plays": "触媒+, then 刺杀 -> 女王, then 带毒刺击 -> 女王, then 防御+, then 弹跳药瓶+, then potion 再生药水, then potion 毒药水 -> 女王",
+      "result": "survives with 58/68 HP before healing",
+      "hp_lost": 10,
+      "damage_dealt": 79,
+      "enemies_after": "火炬头聚合体 211 HP; 女王 340 HP, Vulnerable 1, 中毒 18",
+      "block_gained": 18,
+      "lasting_value": "sets up a power worth about 13 score over the fight (a few HP now is often worth it in a long fight)",
+      "hp_after": 58,
+      "hp_after_pct": 85,
+      "dmg": 79,
+      "lethal_now": "no",
+      "enemy_threat_next": 22,
+      "setup_turn": false,
+      "scaling_gained": "plays power 触媒+; lasting value 13",
+      "block_wasted": 0,
+      "potions_used": "再生药水, 毒药水",
+      "quantitative_turn": {
+        "schema": "quantitative-v1",
+        "source": "turn-solver",
+        "kind": "conditional_model",
+        "window": "current_line_and_enemy_response",
+        "damage_hp": 79,
+        "block_gained": 18,
+        "hp_after": 58,
+        "energy_left": 0,
+        "planned_actions": 7,
+        "planned_card_actions": 5,
+        "realization": {
+          "model": "silent-realization-v1",
+          "fingerprint": "5f333c6a7d6e8817eb6da740aa05aa15bc73e14120a9090a81551fcf3680a811",
+          "evidence": [
+            "L704TLETMZBM/A10/F48/attempt3/T3/silent-0194",
+            "KV0JHNJCKXLS/A10/F33/attempt6/T1/silent-0248/0249",
+            "54G5683J0E5S/A10/F33/attempt1/T5-9/silent-0141/0385"
+          ],
+          "kind": "conditional_model",
+          "complete_line": true,
+          "manual_plays": {
+            "ACCELERANT": 1,
+            "ASSASSINATE": 1,
+            "POISONED_STAB": 1,
+            "DEFEND_SILENT": 1,
+            "BOUNCING_FLASK": 1,
+            "POTION:REGEN_POTION:0": 1,
+            "POTION:POISON_POTION:1": 1
+          },
+          "effect_resolutions": {
+            "ACCELERANT": 1,
+            "ASSASSINATE": 1,
+            "POISONED_STAB": 1,
+            "DEFEND_SILENT": 2,
+            "BOUNCING_FLASK": 1,
+            "POTION:REGEN_POTION:0": 1,
+            "POTION:POISON_POTION:1": 1
+          },
+          "energy_paid": 4,
+          "prefix_energy_paid": 4,
+          "established_before": {
+            "energy": 4,
+            "hp": 68,
+            "block": 0,
+            "damage": 0,
+            "blockGained": 0,
+            "drawn": 0,
+            "drawBudget": 0,
+            "hand": [
+              "ACCELERANT",
+              "ASSASSINATE",
+              "POISONED_STAB",
+              "STRIKE_SILENT",
+              "LEG_SWEEP",
+              "MEMENTO_MORI",
+              "BACKFLIP",
+              "DEFEND_SILENT",
+              "BOUNCING_FLASK",
+              "FOOTWORK"
+            ],
+            "unknownHand": 0,
+            "noDraw": false,
+            "pendingSelection": false,
+            "dexterity": 1,
+            "afterImage": 0,
+            "poisonExtraTriggers": 0,
+            "duplicateSkills": 0,
+            "enemies": [
+              {
+                "index": 0,
+                "hp": 211,
+                "poison": 0,
+                "artifact": 0
+              },
+              {
+                "index": 1,
+                "hp": 419,
+                "poison": 0,
+                "artifact": 0
+              }
+            ],
+            "unknown": []
+          },
+          "modeled_after_actions": {
+            "energy": 0,
+            "hp": 68,
+            "block": 18,
+            "damage": 19,
+            "blockGained": 18,
+            "drawn": 0,
+            "drawBudget": 0,
+            "hand": [
+              "STRIKE_SILENT",
+              "LEG_SWEEP",
+              "MEMENTO_MORI",
+              "BACKFLIP",
+              "FOOTWORK"
+            ],
+            "unknownHand": 0,
+            "noDraw": false,
+            "pendingSelection": false,
+            "dexterity": 1,
+            "afterImage": 0,
+            "poisonExtraTriggers": 2,
+            "duplicateSkills": 0,
+            "enemies": [
+              {
+                "index": 0,
+                "hp": 211,
+                "poison": 0,
+                "artifact": 0
+              },
+              {
+                "index": 1,
+                "hp": 400,
+                "poison": 21,
+                "artifact": 0
+              }
+            ],
+            "unknown": []
+          },
+          "actions": [
+            {
+              "card": "ACCELERANT",
+              "target": null,
+              "cost": 0,
+              "effects": 1,
+              "leaves_pool": "power",
+              "energy_before": 4,
+              "energy_after": 4,
+              "hp_after": 68,
+              "block_after": 0,
+              "damage_hp": 0,
+              "block_gained": 0,
+              "draws": 0,
+              "draw_budget": 0,
+              "no_draw": false,
+              "discards": [],
+              "pending_selection": false
+            },
+            {
+              "card": "ASSASSINATE",
+              "target": 1,
+              "cost": 0,
+              "effects": 1,
+              "leaves_pool": "exhaust",
+              "energy_before": 4,
+              "energy_after": 4,
+              "hp_after": 68,
+              "block_after": 0,
+              "damage_hp": 10,
+              "block_gained": 0,
+              "draws": 0,
+              "draw_budget": 0,
+              "no_draw": false,
+              "discards": [],
+              "pending_selection": false
+            },
+            {
+              "card": "POISONED_STAB",
+              "target": 1,
+              "cost": 1,
+              "effects": 1,
+              "leaves_pool": null,
+              "energy_before": 4,
+              "energy_after": 3,
+              "hp_after": 68,
+              "block_after": 0,
+              "damage_hp": 9,
+              "block_gained": 0,
+              "draws": 0,
+              "draw_budget": 0,
+              "no_draw": false,
+              "discards": [],
+              "pending_selection": false
+            },
+            {
+              "card": "DEFEND_SILENT",
+              "target": null,
+              "cost": 1,
+              "effects": 2,
+              "leaves_pool": null,
+              "energy_before": 3,
+              "energy_after": 2,
+              "hp_after": 68,
+              "block_after": 18,
+              "damage_hp": 0,
+              "block_gained": 18,
+              "draws": 0,
+              "draw_budget": 0,
+              "no_draw": false,
+              "discards": [],
+              "pending_selection": false
+            },
+            {
+              "card": "BOUNCING_FLASK",
+              "target": null,
+              "cost": 2,
+              "effects": 1,
+              "leaves_pool": null,
+              "energy_before": 2,
+              "energy_after": 0,
+              "hp_after": 68,
+              "block_after": 18,
+              "damage_hp": 0,
+              "block_gained": 0,
+              "draws": 0,
+              "draw_budget": 0,
+              "no_draw": false,
+              "discards": [],
+              "pending_selection": false
+            },
+            {
+              "card": "POTION:REGEN_POTION:0",
+              "target": null,
+              "cost": 0,
+              "effects": 1,
+              "leaves_pool": "exhaust",
+              "energy_before": 0,
+              "energy_after": 0,
+              "hp_after": 68,
+              "block_after": 18,
+              "damage_hp": 0,
+              "block_gained": 0,
+              "draws": 0,
+              "draw_budget": 0,
+              "no_draw": false,
+              "discards": [],
+              "pending_selection": false
+            },
+            {
+              "card": "POTION:POISON_POTION:1",
+              "target": 1,
+              "cost": 0,
+              "effects": 1,
+              "leaves_pool": "exhaust",
+              "energy_before": 0,
+              "energy_after": 0,
+              "hp_after": 68,
+              "block_after": 18,
+              "damage_hp": 0,
+              "block_gained": 0,
+              "draws": 0,
+              "draw_budget": 0,
+              "no_draw": false,
+              "discards": [],
+              "pending_selection": false
+            }
+          ],
+          "complete_combinations": null,
+          "delayed_damage": null,
+          "delayed_block": null,
+          "unknown": [],
+          "limits": "当前已知合法前缀的条件推演；自动重放不再次付费。已建、到手与手动施放分账，副本无物理UID不追认来源。完整组合须另核原四签名和后继；本表不证明整战收益、回流闭合或无限。"
+        },
+        "complete_combinations": null,
+        "limits": "沿用当前机制模型；动作数不含自动重放，完整组合须有经证据验证的定义，不能用动作数替代。",
+        "unknown_cards": []
+      },
+      "rollout": "3-turn rollout (4 samples) (later turns may drink the potions still held, each when its turn gains more than the potion's cost): expected further HP loss 102, fight over within 3 turns in 0/4, expected turns to the end (surviving samples) ~11; every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 3 turns (this line 0/4), then the fight's progress: least enemy HP left (this line ~349, at T3 or at our death), then most turns alive (this line ~3), then least HP lost this turn (this line 10) [cut to fit the time budget: horizon 3, samples 4 per kill order]",
+      "rollout_turns": "T1 exact: hp -10, dmg 79; T2: hp -6 [3-9], dmg 113.5 [61-225], alive 4/4, won 0/4; T3: hp -16 [-2-25], dmg 88.8 [78-114], alive 4/4, won 0/4",
+      "rollout_kill_order": "女王 > 火炬头聚合体: the later turns aim at 女王 first (女王 dead by T3 in 0/4); best of 2 kill orders compared; the orders came out the same here",
+      "rollout_other_orders": "火炬头聚合体 > 女王: further HP loss 102, over 0/4, dead 0/4, 火炬头聚合体 dead 0/4",
+      "history_estimate": "further HP loss 50, win 63% (this encounter n=70; estimate from act-3 boss fights n=251, typical error ±9.9; few similar states for this encounter)",
+      "potion_cost": "fight HP loss 102; potions used 2 (this turn: 再生药水 0 (boss fight), 毒药水 0.4 HP); potion cost 0.4 HP (potion table, this act's held value); total 102.4"
+    },
+    "note": "Full first-turn chosen action sequence including both potions completed. Candidate predictions are conditional and alternative real outcomes are not observed."
+  },
+  "T2": {
+    "selected": "plan5",
+    "end_turn": {
+      "plays": "nothing (end the turn now)",
+      "result": "survives with 37/68 HP before healing",
+      "hp_lost": 9,
+      "damage_dealt": 39,
+      "enemies_after": "火炬头聚合体 175 HP; 女王 305 HP, 中毒 9",
+      "energy_unused": 2,
+      "next_turn_energy": "+2 energy next turn (Pael's Tear: this line ends the turn with energy unspent)",
+      "hp_after": 37,
+      "hp_after_pct": 54,
+      "dmg": 39,
+      "lethal_now": "no",
+      "enemy_threat_next": 24,
+      "setup_turn": false,
+      "scaling_gained": "none",
+      "block_wasted": 0,
+      "potions_used": "none",
+      "quantitative_turn": {
+        "schema": "quantitative-v1",
+        "source": "turn-solver",
+        "kind": "conditional_model",
+        "window": "current_line_and_enemy_response",
+        "damage_hp": 39,
+        "block_gained": 0,
+        "hp_after": 37,
+        "energy_left": 2,
+        "planned_actions": 0,
+        "planned_card_actions": 0,
+        "realization": {
+          "model": "silent-realization-v1",
+          "fingerprint": "96a40c70b6de41931622a60b3da864797110994a47293cfb0d1d6b43b82c1dad",
+          "evidence": [
+            "L704TLETMZBM/A10/F48/attempt3/T3/silent-0194",
+            "KV0JHNJCKXLS/A10/F33/attempt6/T1/silent-0248/0249",
+            "54G5683J0E5S/A10/F33/attempt1/T5-9/silent-0141/0385"
+          ],
+          "kind": "conditional_model",
+          "complete_line": true,
+          "manual_plays": {},
+          "effect_resolutions": {},
+          "energy_paid": 0,
+          "prefix_energy_paid": 0,
+          "established_before": {
+            "energy": 2,
+            "hp": 46,
+            "block": 0,
+            "damage": 0,
+            "blockGained": 0,
+            "drawn": 0,
+            "drawBudget": 0,
+            "hand": [
+              "SURVIVOR",
+              "STRIKE_SILENT",
+              "GREED",
+              "ASCENDERS_BANE"
+            ],
+            "unknownHand": 0,
+            "noDraw": false,
+            "pendingSelection": false,
+            "dexterity": 1,
+            "afterImage": 0,
+            "poisonExtraTriggers": 2,
+            "duplicateSkills": 0,
+            "enemies": [
+              {
+                "index": 0,
+                "hp": 181,
+                "poison": 3,
+                "artifact": 0
+              },
+              {
+                "index": 1,
+                "hp": 338,
+                "poison": 12,
+                "artifact": 0
+              }
+            ],
+            "unknown": []
+          },
+          "modeled_after_actions": {
+            "energy": 2,
+            "hp": 46,
+            "block": 0,
+            "damage": 0,
+            "blockGained": 0,
+            "drawn": 0,
+            "drawBudget": 0,
+            "hand": [
+              "SURVIVOR",
+              "STRIKE_SILENT",
+              "GREED",
+              "ASCENDERS_BANE"
+            ],
+            "unknownHand": 0,
+            "noDraw": false,
+            "pendingSelection": false,
+            "dexterity": 1,
+            "afterImage": 0,
+            "poisonExtraTriggers": 2,
+            "duplicateSkills": 0,
+            "enemies": [
+              {
+                "index": 0,
+                "hp": 181,
+                "poison": 3,
+                "artifact": 0
+              },
+              {
+                "index": 1,
+                "hp": 338,
+                "poison": 12,
+                "artifact": 0
+              }
+            ],
+            "unknown": []
+          },
+          "actions": [],
+          "complete_combinations": null,
+          "delayed_damage": null,
+          "delayed_block": null,
+          "unknown": [],
+          "limits": "当前已知合法前缀的条件推演；自动重放不再次付费。已建、到手与手动施放分账，副本无物理UID不追认来源。完整组合须另核原四签名和后继；本表不证明整战收益、回流闭合或无限。"
+        },
+        "complete_combinations": null,
+        "limits": "沿用当前机制模型；动作数不含自动重放，完整组合须有经证据验证的定义，不能用动作数替代。",
+        "unknown_cards": []
+      },
+      "rollout": "5-turn rollout (8 samples): expected further HP loss 50.1, fight over within 5 turns in 4/8, expected turns to the end (surviving samples) ~5.3, spends 蜥蜴尾巴 (back from 0 HP) in 5/8 (the loss then counts all our HP now, and after the revive only what it loses); ranked on -(further loss) - 40 x (1 - win chance): win chance ~73% (fights won in the samples, the others by the end-of-horizon estimate), value -63",
+      "rollout_turns": "T1 exact: hp -9, dmg 39; T2: hp -14.8 [-3-25], dmg 102.3 [24-228], alive 8/8, won 0/8; T3: hp -10.4 [-1-17], dmg 92.8 [45-156], alive 8/8, won 0/8; T4: hp -5.1 [0-14], dmg 127.8 [38-252], alive 8/8, won 3/8; T5: hp -13.4 [0-28], dmg 75.6 [50-105], alive 8/8, won 4/8",
+      "history_estimate": "further HP loss 46, win 90% (this encounter n=70; estimate from act-3 boss fights n=251, typical error ±9.9; few similar states for this encounter)",
+      "rollout_best": true
+    },
+    "survivor_candidate": {
+      "plays": "生存者",
+      "result": "survives with 40/68 HP before healing",
+      "hp_lost": 6,
+      "damage_dealt": 39,
+      "enemies_after": "火炬头聚合体 175 HP; 女王 305 HP, 中毒 9",
+      "block_gained": 9,
+      "energy_unused": 1,
+      "next_turn_energy": "+2 energy next turn (Pael's Tear: this line ends the turn with energy unspent)",
+      "unmodelled_cards": "弃牌选择未确定",
+      "hp_after": 40,
+      "hp_after_pct": 59,
+      "dmg": 39,
+      "lethal_now": "no",
+      "enemy_threat_next": 24,
+      "setup_turn": false,
+      "scaling_gained": "none",
+      "block_wasted": 0,
+      "potions_used": "none",
+      "quantitative_turn": {
+        "schema": "quantitative-v1",
+        "source": "turn-solver",
+        "kind": "conditional_model",
+        "window": "current_line_and_enemy_response",
+        "damage_hp": 39,
+        "block_gained": 9,
+        "hp_after": 40,
+        "energy_left": 1,
+        "planned_actions": 1,
+        "planned_card_actions": 1,
+        "realization": {
+          "model": "silent-realization-v1",
+          "fingerprint": "01f279ca0dd78832e9d62591aac32ecd8ba074def60af15b893235d7001d6133",
+          "evidence": [
+            "L704TLETMZBM/A10/F48/attempt3/T3/silent-0194",
+            "KV0JHNJCKXLS/A10/F33/attempt6/T1/silent-0248/0249",
+            "54G5683J0E5S/A10/F33/attempt1/T5-9/silent-0141/0385"
+          ],
+          "kind": "conditional_model",
+          "complete_line": true,
+          "manual_plays": {
+            "SURVIVOR": 1
+          },
+          "effect_resolutions": {
+            "SURVIVOR": 1
+          },
+          "energy_paid": 1,
+          "prefix_energy_paid": 1,
+          "established_before": {
+            "energy": 2,
+            "hp": 46,
+            "block": 0,
+            "damage": 0,
+            "blockGained": 0,
+            "drawn": 0,
+            "drawBudget": 0,
+            "hand": [
+              "SURVIVOR",
+              "STRIKE_SILENT",
+              "GREED",
+              "ASCENDERS_BANE"
+            ],
+            "unknownHand": 0,
+            "noDraw": false,
+            "pendingSelection": false,
+            "dexterity": 1,
+            "afterImage": 0,
+            "poisonExtraTriggers": 2,
+            "duplicateSkills": 0,
+            "enemies": [
+              {
+                "index": 0,
+                "hp": 181,
+                "poison": 3,
+                "artifact": 0
+              },
+              {
+                "index": 1,
+                "hp": 338,
+                "poison": 12,
+                "artifact": 0
+              }
+            ],
+            "unknown": []
+          },
+          "modeled_after_actions": {
+            "energy": 1,
+            "hp": 46,
+            "block": 9,
+            "damage": 0,
+            "blockGained": 9,
+            "drawn": 0,
+            "drawBudget": 0,
+            "hand": [
+              "STRIKE_SILENT",
+              "GREED",
+              "ASCENDERS_BANE"
+            ],
+            "unknownHand": 0,
+            "noDraw": false,
+            "pendingSelection": true,
+            "dexterity": 1,
+            "afterImage": 0,
+            "poisonExtraTriggers": 2,
+            "duplicateSkills": 0,
+            "enemies": [
+              {
+                "index": 0,
+                "hp": 181,
+                "poison": 3,
+                "artifact": 0
+              },
+              {
+                "index": 1,
+                "hp": 338,
+                "poison": 12,
+                "artifact": 0
+              }
+            ],
+            "unknown": [
+              "弃牌选择未确定"
+            ]
+          },
+          "actions": [
+            {
+              "card": "SURVIVOR",
+              "target": null,
+              "cost": 1,
+              "effects": 1,
+              "leaves_pool": null,
+              "energy_before": 2,
+              "energy_after": 1,
+              "hp_after": 46,
+              "block_after": 9,
+              "damage_hp": 0,
+              "block_gained": 9,
+              "draws": 0,
+              "draw_budget": 0,
+              "no_draw": false,
+              "discards": [],
+              "pending_selection": true
+            }
+          ],
+          "complete_combinations": null,
+          "delayed_damage": null,
+          "delayed_block": null,
+          "unknown": [
+            "弃牌选择未确定",
+            "选择尚未解决，后继与完整组合未知"
+          ],
+          "limits": "当前已知合法前缀的条件推演；自动重放不再次付费。已建、到手与手动施放分账，副本无物理UID不追认来源。完整组合须另核原四签名和后继；本表不证明整战收益、回流闭合或无限。"
+        },
+        "complete_combinations": null,
+        "limits": "沿用当前机制模型；动作数不含自动重放，完整组合须有经证据验证的定义，不能用动作数替代。",
+        "unknown_cards": [
+          "弃牌选择未确定"
+        ]
+      },
+      "rollout": "5-turn rollout (8 samples): expected further HP loss 51.6, fight over within 5 turns in 5/8, expected turns to the end (surviving samples) ~5.1, spends 蜥蜴尾巴 (back from 0 HP) in 5/8 (the loss then counts all our HP now, and after the revive only what it loses); ranked on -(further loss) - 40 x (1 - win chance): win chance ~74% (fights won in the samples, the others by the end-of-horizon estimate), value -64.3",
+      "rollout_turns": "T1 exact: hp -6, dmg 39; T2: hp -18 [-3-25], dmg 106 [24-228], alive 8/8, won 0/8; T3: hp -10.8 [-1-17], dmg 100.3 [45-210], alive 8/8, won 0/8; T4: hp -5.3 [0-14], dmg 124.4 [38-252], alive 8/8, won 4/8; T5: hp -16.5 [0-28], dmg 76 [50-105], alive 8/8, won 5/8",
+      "rollout_kill_order": "女王 > 火炬头聚合体: the later turns aim at 女王 first (女王 dead by T5 in 5/8); best of 2 kill orders compared",
+      "rollout_other_orders": "火炬头聚合体 > 女王: further HP loss 68.8, over 2/8, dead 0/8, 火炬头聚合体 dead 7/8",
+      "history_estimate": "further HP loss 46, win 94% (this encounter n=70; estimate from act-3 boss fights n=251, typical error ±9.9; few similar states for this encounter)"
+    },
+    "note": "After re-question Jev chose end-turn; this predicts 9 loss vs6 for Survivor, but alternative outcomes unobserved."
+  },
+  "later_conditions": {
+    "T3_visible_powers": [
+      "CHAINS_OF_BINDING_POWER:3",
+      "FRAIL_POWER:99",
+      "WEAK_POWER:99",
+      "VULNERABLE_POWER:99"
+    ],
+    "T4_hand_blocked": "At 06:06:21.076Z BACKFLIP and DEFEND_SILENT both blocked_by_hook/CHAINS_OF_BINDING_POWER while energy2 remained."
+  },
+  "sources": [
+    {
+      "kind": "decisions",
+      "offset": 1367418766,
+      "length": 79683,
+      "sha256": "95b1a273a58eeb16573cc51a5410504aa8b5afc04cd916893158a583550d2bb6"
+    },
+    {
+      "kind": "decisions",
+      "offset": 1367498449,
+      "length": 1780,
+      "sha256": "a98ebbf60283d042044a9d8887f13770345d9131c38142109d318313bee85bba"
+    },
+    {
+      "kind": "decisions",
+      "offset": 1367500229,
+      "length": 1763,
+      "sha256": "977fe68c313b54c9a5ff39bb5c49d017b0bd1d2b31dbf262af68d605fb64a142"
+    },
+    {
+      "kind": "decisions",
+      "offset": 1367501992,
+      "length": 1727,
+      "sha256": "729c3a11cf5f61465ea4b05b376dfbf51ffdd350c74260e446b09ae0292299b8"
+    },
+    {
+      "kind": "decisions",
+      "offset": 1367503719,
+      "length": 1637,
+      "sha256": "91ca398a2ad8e27db1df736f5acd3c5bb6293a1dac088aa6950413767eb4cf6c"
+    },
+    {
+      "kind": "decisions",
+      "offset": 1367505356,
+      "length": 1588,
+      "sha256": "20ac4ed2fc0a86e1718b36b336d5971bcfdd380a3179456793e41e1e4d65eaca"
+    },
+    {
+      "kind": "decisions",
+      "offset": 1367506944,
+      "length": 1648,
+      "sha256": "8d9591c8a8f5cd7ccdb9b4f183706610e2d5e40afb9f617de9be507f9b08fe00"
+    },
+    {
+      "kind": "decisions",
+      "offset": 1367508592,
+      "length": 1375,
+      "sha256": "c1be35736ec8fbed589d4387ae020d0c1fd1375685d535c6de500e38ab9b9d9c"
+    },
+    {
+      "kind": "decisions",
+      "offset": 1367509967,
+      "length": 39027,
+      "sha256": "e957197d20c2591b68259cf062f62e4147e62efe706fdca51a763ad58aad3301"
+    },
+    {
+      "kind": "decisions",
+      "offset": 1367548994,
+      "length": 1346,
+      "sha256": "7e45871e7d9ff62ce4fd101c459fd66461f899284e4da9ebdc872d8e9b9a825d"
+    },
+    {
+      "kind": "decisions",
+      "offset": 1367550340,
+      "length": 25779,
+      "sha256": "3a8a9a42d8c29a01576d955a33cf26091f685c61cbe48d73b3af72b9ae32628b"
+    },
+    {
+      "kind": "decisions",
+      "offset": 1367576119,
+      "length": 24313,
+      "sha256": "3808500c95974fa9dab74f16f1ccf8b31aece11b1d84e190d08034e13aabd1fd"
+    },
+    {
+      "kind": "decisions",
+      "offset": 1367603481,
+      "length": 30127,
+      "sha256": "75399fce11af8bbfdfffa427faf5e19a84c2569d06d22495a43e7d924008a242"
+    },
+    {
+      "kind": "decisions",
+      "offset": 1367638296,
+      "length": 24605,
+      "sha256": "8ca270771891ad1b9d64f661270e1e5157d886b13cacf360b6423ee991a6c032"
+    },
+    {
+      "kind": "decisions",
+      "offset": 1367666661,
+      "length": 2990,
+      "sha256": "f3bd898c18acc1cb0e80443a058a04d393b4009cd63ac96c425a8a0d50822982"
+    },
+    {
+      "kind": "states",
+      "offset": 12722261239,
+      "length": 41914,
+      "sha256": "5d29e7a4e93b6a34c1bc826abbff24bd83a8c56f5cb8460a1c24a001ec957e8b"
+    },
+    {
+      "kind": "states",
+      "offset": 12722303153,
+      "length": 51372,
+      "sha256": "2f8520a98bc019de64b116de60235f32ed9094c492901f07fc4e3658d580027d"
+    },
+    {
+      "kind": "states",
+      "offset": 12722354525,
+      "length": 50478,
+      "sha256": "689a611991fb58fc6a32e79dcc7363f697b48b977126e21fa83e475f592e28fb"
+    },
+    {
+      "kind": "states",
+      "offset": 12722405003,
+      "length": 49649,
+      "sha256": "faff73192846a628a8c338761b62bea0f469b84f08fc3f16a1f1f8b5310273a0"
+    },
+    {
+      "kind": "states",
+      "offset": 12722454652,
+      "length": 48796,
+      "sha256": "e1c43255f3a5b32243b8e51b49b7e3bce0ca962dde4c8a401b840c5b8d186958"
+    },
+    {
+      "kind": "states",
+      "offset": 12722503448,
+      "length": 47642,
+      "sha256": "46feb886b52beb85b636e57df9c29b06a6063e3288d91c83b4460068fe4511fa"
+    },
+    {
+      "kind": "states",
+      "offset": 12722551090,
+      "length": 47172,
+      "sha256": "7f941b2e5dad314edf5173d9b0ad78d30e3b387156bf084138e99df48b38cbce"
+    },
+    {
+      "kind": "states",
+      "offset": 12722598262,
+      "length": 47090,
+      "sha256": "4276ca604efe2fcdfd44b0a8254aa12b9544e28dda9fc80a18b00dfe999cb470"
+    },
+    {
+      "kind": "states",
+      "offset": 12722645352,
+      "length": 46803,
+      "sha256": "85a476c34f46d13a20dc8ad1ead605b3c7512a6f3ef41de031bcf154f0694d13"
+    },
+    {
+      "kind": "states",
+      "offset": 12722692155,
+      "length": 46429,
+      "sha256": "fddd18eceb0dd79d8878f228654a366979775bdced776ee611022b96bb773a80"
+    },
+    {
+      "kind": "states",
+      "offset": 12722738584,
+      "length": 51665,
+      "sha256": "b5fddd187216255848f7f63f2816e085a48c3edb4200e1feaabb275221f9a9ec"
+    },
+    {
+      "kind": "states",
+      "offset": 12722790249,
+      "length": 45835,
+      "sha256": "9ebeeb4d6957dd0ab51b7d002d2e444f417539c867112d0e3ec499b979a50da1"
+    },
+    {
+      "kind": "states",
+      "offset": 12722836084,
+      "length": 45812,
+      "sha256": "8e9041e6462d26c4eda3c90510dfab140b591f5a85bd6abe38001f4685c2b3c0"
+    },
+    {
+      "kind": "states",
+      "offset": 12722881896,
+      "length": 47682,
+      "sha256": "64603082aaa777b68e009be23a3a421a3aa178a56c7d4ff9a72e49cd5b6bf43d"
+    },
+    {
+      "kind": "states",
+      "offset": 12722929578,
+      "length": 47251,
+      "sha256": "a7c54bf4a53248d82bf9136eaf74ea777614a88c2df8034c167022734138cbae"
+    },
+    {
+      "kind": "states",
+      "offset": 12722976829,
+      "length": 46539,
+      "sha256": "25a4b81cbe116b82589582fca57adf3331fed70431562a6e0ae1ad4b1621339b"
+    },
+    {
+      "kind": "states",
+      "offset": 12723023368,
+      "length": 46516,
+      "sha256": "92141d6caeaa03adcb8fb263b92759a3c1a02e9869f0f9355ea3ead03c899d5d"
+    },
+    {
+      "kind": "states",
+      "offset": 12723069884,
+      "length": 48119,
+      "sha256": "9b9f165593925992f3c6c63ab8b83590203a664cb9c84abf6c93a7ebacc573d8"
+    },
+    {
+      "kind": "states",
+      "offset": 12723118003,
+      "length": 47761,
+      "sha256": "138309be5349c10a7d40188e8839316f59015378d252ac2eadd28d1a0ca97e31"
+    },
+    {
+      "kind": "states",
+      "offset": 12723165764,
+      "length": 46973,
+      "sha256": "7e3e0dee6f51a7e53b7d34453110b54dce179a3753988828e8238107832238e6"
+    },
+    {
+      "kind": "states",
+      "offset": 12723212737,
+      "length": 45930,
+      "sha256": "c2c42c47537866c00fca2a323122a3bd9a0fc28d923d3005e12697abcef9f390"
+    },
+    {
+      "kind": "states",
+      "offset": 12723258667,
+      "length": 45950,
+      "sha256": "80a19e9460c246f592b7c375170464c4fa472a94ab4cd5d2658a537a0ca24c0c"
+    },
+    {
+      "kind": "states",
+      "offset": 12723304617,
+      "length": 47829,
+      "sha256": "8f006c9a27d02b039c55b964030425e1b0496bae6f5158238e7e1f71b96eb170"
+    },
+    {
+      "kind": "states",
+      "offset": 12723352446,
+      "length": 47814,
+      "sha256": "34a6b7c31bb70ab42dc9459ec849fb74462eea134ae5cdac5d85fdad4267619a"
+    },
+    {
+      "kind": "states",
+      "offset": 12723400260,
+      "length": 48461,
+      "sha256": "b63e638bfa435b29737f58cf8640798e444f82cd823a80d228a3606bcf8a4c19"
+    },
+    {
+      "kind": "states",
+      "offset": 12723448721,
+      "length": 52135,
+      "sha256": "d46d1b8cf8d99bea342f790ef28c7de1f9efc0fb47a912d5e5f9c6f36f0f0ff1"
+    },
+    {
+      "kind": "states",
+      "offset": 12723500856,
+      "length": 47621,
+      "sha256": "e7343747524e48f93759db8db4af98f29cda491ed0a1d07a9ca2a0811538e76a"
+    },
+    {
+      "kind": "states",
+      "offset": 12723548477,
+      "length": 46945,
+      "sha256": "1603a1567a7e5e654db985897235cc111c954d111d75a3d567f8d42104fb47aa"
+    },
+    {
+      "kind": "states",
+      "offset": 12723595422,
+      "length": 46580,
+      "sha256": "f3535f59e9ce80fe28443cb863bee83a83f42ae708168c43a7e64d199995a8d2"
+    },
+    {
+      "kind": "states",
+      "offset": 12723642002,
+      "length": 45715,
+      "sha256": "89b184f38c4a90d99d007f0ff6a47f12875706cff5cb9474350887d496c9d765"
+    },
+    {
+      "kind": "states",
+      "offset": 12723687717,
+      "length": 45618,
+      "sha256": "fcf7b8b3a547f8f2be6aab50cb2bca01d54f4d621ce7439c1c1431f6c4ea7ea9"
+    },
+    {
+      "kind": "states",
+      "offset": 12723733335,
+      "length": 48969,
+      "sha256": "0528cc814b90b59ecd2fb0bdc791f0729f01e27457560f7cc6fc91a0f8994da1"
+    },
+    {
+      "kind": "states",
+      "offset": 12723782304,
+      "length": 48291,
+      "sha256": "57d6084a2dad61b8a51a3f519c2359c3bfa98fe44df0413136c5d8d0c5d2efaf"
+    },
+    {
+      "kind": "states",
+      "offset": 12723830595,
+      "length": 47333,
+      "sha256": "b08dec7ab4b2df8f6062ffa1400b3ccd41dd39749e65c8a2fe52806ee5d7fc09"
+    },
+    {
+      "kind": "states",
+      "offset": 12723877928,
+      "length": 46941,
+      "sha256": "9beb130371fe2289f6d049f2d0f7674f8409132970a57e8541392cbc6fd93487"
+    },
+    {
+      "kind": "states",
+      "offset": 12723924869,
+      "length": 32799,
+      "sha256": "69f08fccbe1bb574e4e0ef6ee9065a94e5a6586ef3505275b8c527b4c98426c5"
+    },
+    {
+      "kind": "states",
+      "offset": 12723957668,
+      "length": 33088,
+      "sha256": "91a633f08802eaf11f17c12849fdf478b8c1e56490f0ab7cbdfefea88086ec70"
+    },
+    {
+      "kind": "states",
+      "offset": 12723990756,
+      "length": 50663,
+      "sha256": "48ee1773416aea3503be338d1986cfabb5f14a105f96d5c01ccd26c3f31ad8a6"
+    },
+    {
+      "kind": "sl-attempts",
+      "offset": 38901593,
+      "length": 16556,
+      "sha256": "bc3b28cd6871f985fc0a9909b899fac9599d7165b01a0a8ae19afa7e01de9cc7"
+    }
+  ],
+  "limits": [
+    "Actual net HP loss includes observed healing; do not call 61 gross damage.",
+    "This is one actual won first attempt, not sum across SL retries.",
+    "Do not claim defense candidate saves18 actual HP or wins later boss; alternative trajectory requires replay and mechanism validation.",
+    "First-turn 3-turn/4-sample rollout was time-limited and ranked on enemy HP after equal estimated future loss102; this explains model ranking, not objective correctness.",
+    "Separate combat rollout issue from B3 deckbuilding throughput; retain original fixed30 benchmark."
+  ]
+}

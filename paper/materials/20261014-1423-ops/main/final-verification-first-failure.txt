@@ -1,0 +1,6 @@
+首次收尾核验工具退出1，保留原诊断：
+Traceback (most recent call last):
+  File "<stdin>", line 9, in <module>
+AssertionError
+第9行在按stdout行数估算账本更新数：cli=(s/'ledger-update.stdout').read_text().splitlines(); assert len(cli)==30。
+账本CLI自身已经exit0；本诊断属于收尾脚本输出格式假设，不能算生产代码测试或账本写入失败。后续以CLI实际输出和30项fold读回核验，不重新执行追加。
