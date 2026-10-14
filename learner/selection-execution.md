@@ -28,6 +28,10 @@ nice -n 19 node --import ./agent/node_modules/tsx/dist/loader.mjs \
 
 这些是观测净变化，不是卡牌因果、完整入伤或候选收益；pending/拒绝回执原样保留，`causal_action_result`、`full_candidate_result` 始终 null。末局缺少匹配的下一决策或终态战斗端点时保持 unknown，不能补造死亡截断前的完整伤害。本增量不等于原宽提案全部完成，不校准策略阈值，也不接在线选择器。
 
+依据 GXNKW8X1XYJP F45 第二/末次 T2—T3（silent-0019/0079；原提案 silent-proposal-5a95725089f53cd8），动作端点现保留原帧 `run.potions`，没有药栏时为 null。连续、同尝试且可核的观测区间另列 `potion_slot_changes`：只有两端都提供完整、唯一且一致的槽索引/占用状态，才记录同槽药物 ID 的变化；缺槽、重复槽或占用与 ID 矛盾时为 null。药物未变化时为空数组。
+
+F45 T2结束到T3的精灵槽1由有药变空，下一轮分别3/13血、0/7挡；其原帧 usage=Automatic 单独保留，不改记主动喝药。末次T3 `use_potion` 槽0的毒药请求、期望身份和后帧空槽另列在 `logged_potion_request`。这只是已记录请求与观测，pending/拒绝/身份不符不变成已验证生效。变化来源始终 null；原字段不认证逐击复活顺序、完整入伤或整条候选。跨 SL 尝试/缺原行的区间保持 unknown，不能把恢复药栏记作新获。此增量是原提案的药槽观测子项，路线/休息、逐击复活来源、完整候选归属与整战反事实仍待验证。
+
 `observed_actions` 保留全部输入决策的动作与观测，包括没有 `plan-choice` 的代码结束回合。依据 8JRE1C4H4Z2W F33 第六次 T11（decisions 270441→270442、states 276433→276434；silent-0079、silent-0021），`terminal_observation` 专门关联结束回合后尝试号变空的 `run/finalize`。要求原始决策和状态行号各自连续、结束回合回执 completed、同局同层同回合和相同已知重载次数、唯一状态匹配、结束时间等于已核 runs 记录且该局失败、前帧 COMBAT 正血与后帧 GAME_OVER 零血。普通观测区间的尝试号检查保持原样；缺任一条件留 unknown。
 
 该终局端点实际玩家 5→0，敌人 154→130；结算前显示攻击37、当前挡22，其差15仅放 `displayed_attack_reference`。它不把零血截断的实扣5冒充完整入伤，也不把显示算式15冒充已观测伤害。缺意图总伤字段时算式留空；敌人同名单、唯一类型、相同最大血时才比较HP端点，索引变化另列，不认证实例身份；结束页清理能力不当作能力到期。`actual_uncapped_damage`、`causal_action_result`、`full_candidate_result` 始终为 null。本子项只补终局审计，原提案其他范围和策略效果仍须独立验收。
