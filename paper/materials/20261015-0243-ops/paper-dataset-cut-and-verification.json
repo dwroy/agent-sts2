@@ -1,0 +1,41 @@
+{
+  "at": "2026-10-15 02:57:40 CST",
+  "command_exit_code": 0,
+  "generated_at": "2026-10-14T18:46:45.757Z",
+  "source_cut_bytes": {
+    "decisions.jsonl": 1452258670,
+    "deepseek-reasoning.jsonl": 377746518,
+    "runs.jsonl": 329966,
+    "states.jsonl": 12848325962,
+    "fight-plans.jsonl": 2233957,
+    "run-plans.jsonl": 7841127,
+    "brain.jsonl": 531873223,
+    "sl-attempts.jsonl": 39478354,
+    "run-config.jsonl": 1711099
+  },
+  "checks": {
+    "decisions attributed + unattributed == play records": true,
+    "decisions_by_label sum == attributed decisions": true,
+    "escalations rows == records with escalation": true,
+    "every runs.jsonl id present in runs.csv": true,
+    "commits == git rev-list --all --count": true,
+    "runs.jsonl decision-count mismatches": [
+      [
+        "KF9HMZKTFC3V",
+        879,
+        880
+      ]
+    ]
+  },
+  "row_counts": {
+    "runs.csv": 781,
+    "decisions_by_label.csv": 26046,
+    "escalations.csv": 3600,
+    "fight_plans.csv": 1461,
+    "commits.csv": 6059
+  },
+  "raw_snapshot_regeneration": false,
+  "previous_snapshot": "/home/dw/Projects/agent-sts2/paper/data/history/20261014T184646276064Z",
+  "independent_component_cost_cut_preserved": true,
+  "default_actual_successful_Codex_policy_and_other_raw_records_kept": true
+}
