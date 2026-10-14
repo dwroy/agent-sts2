@@ -1304,6 +1304,9 @@ export function describePlan(plan: Plan, playerHp: number): Record<string, JsonV
   if (o.kusarigamaUnresolved) {
     summary["result"] = `未计锁镰随机伤害的参考结果：${summary["result"]}；存活、击杀与损血均非保证`;
   }
+  if (o.escapePlanUnresolved) {
+    summary["result"] = `逃脱计划抽入牌未定的条件参考：${summary["result"]}；后续牌效与存活未保证，抽牌后重规划`;
+  }
   return summary;
 }
 
