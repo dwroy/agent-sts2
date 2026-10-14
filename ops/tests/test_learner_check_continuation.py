@@ -125,6 +125,40 @@ class Continuation(unittest.TestCase):
         self.assertEqual(len(self.batch["check_supplements"]), 1)
         self.assertIn("stderr retained", Path(receipt["log"]).read_text())
 
+    def test_long_parameterized_failure_keeps_exact_name_and_bounded_validation(self):
+        import re
+        name = "suite rejects unsupported or embedded reports: " + json.dumps({
+            "task": "ascension-audit", "report": "fixture[1].md", "runs": ["SILENT000001"] * 32})
+        self.assertGreater(len(name), 500)
+        for selected in (name, "suite " + "x" * (4096 - len("suite "))):
+            self.log.write_text(" ❯ tests/broken.test.ts (2 tests | 1 failed)\n"
+                                " FAIL tests/broken.test.ts > " + selected + "\n"
+                                " Test Files 1 failed (1)\n Tests 1 failed | 1 passed (2)\n")
+            self.manifest["original"].update(log_sha256=m.digest(self.log.read_bytes()),
+                                              coverage=m.coverage(self.log.read_bytes()))
+            self.manifest["selection"][0]["tests"] = [selected]
+            self.assertEqual(self.run_check(), 0)
+            argv = self.calls[-1]
+            pattern = argv[argv.index("--testNamePattern") + 1]
+            self.assertEqual(pattern, "^(?:" + re.escape(selected) + ")$")
+            self.assertIsNotNone(re.fullmatch(pattern, selected))
+            self.assertIsNone(re.fullmatch(pattern, selected + " other case"))
+        before = len(self.calls)
+        for rejected in ("x" * 4097, name + "\n", name + "\x00", "suite unregistered"):
+            self.manifest["selection"][0]["tests"] = [rejected]
+            self.assertEqual(self.run_check(), 2)
+        self.assertEqual(len(self.calls), before)
+
+        # The escaped UTF-8 selector must also fit a bounded single argv element.
+        names = [f"suite {index} " + "x" * 2048 for index in range(32)]
+        self.log.write_text(" ❯ tests/broken.test.ts (32 tests | 32 failed)\n" + "".join(
+            " FAIL tests/broken.test.ts > " + name + "\n" for name in names))
+        self.manifest["original"].update(log_sha256=m.digest(self.log.read_bytes()),
+                                          coverage=m.coverage(self.log.read_bytes()))
+        self.manifest["selection"][0]["tests"] = names
+        self.assertEqual(self.run_check(), 2)
+        self.assertEqual(len(self.calls), before)
+
     def test_existing_recheck_entry_delegates_to_the_bounded_supplement(self):
         spec = importlib.util.spec_from_file_location("checks_entry", SOURCE / "learner_checks.py")
         checks = importlib.util.module_from_spec(spec)
