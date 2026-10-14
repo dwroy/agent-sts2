@@ -1,3 +1,5 @@
+import { beginComputation, type SimAttempt } from "./computation-failure.js";
+import { memoKey } from "./compute-memo.js";
 import { availableParallelism, loadavg } from "node:os";
 /**
  * B3 (Roy 2026-09-30): a deck-building question's options, each with the act boss fought to the end in simulation with
@@ -67,6 +69,7 @@ export function bossEvaluationPending(decision: Decision, state: GameState, reco
   // A defeated boss has no current reference; the existing explicit exclusion remains visible.
   if (value["skipped"] && actBossDefeated(state)) return null;
   const completion = asRecord(value["completion"]);
+  if (completion["status"] === "degraded") return null;
   if (completion["status"] === "complete" && value["samples"] === value["requested"] && Number(value["samples"]) > 0) return null;
   return str(value["error"]) || "required boss evaluation is not complete";
 }
@@ -492,14 +495,22 @@ export async function withBossSim(decision: Decision, env: DecisionEnv, setup: B
   let diagnostics: Record<string, JsonValue> | undefined = diagnosticEnabled ? {
     schema: "build-sim-health-v1", status: "preparing", availableCpus: availableParallelism(), loadAverage: loadavg(),
   } : undefined;
-  const fail = (why: string, code = "simulation_error"): BossSimOutcome => ({
-    decision: { ...ask, state: { ...ask.state, facts: withSimFacts(facts, required
-      ? `必需的boss评估未完成（${why}）；等待完整计算，不允许用空指标作选择`
-      : `boss 模拟没有结果（${why}）：act_boss_clock 仍是 boss 时钟的估计`, true) } },
-    record: { error: why, ms: Math.round(now() - started),
-      ...(required ? { completion: { required: true, status: "pending", latencyTargetMs: setup.deadlineMs ?? BUILD_SIM_DEADLINE_MS } } : {}),
-      ...(diagnostics ? { diagnostics: { ...diagnostics, status: "failed", reason: code } } : {}) },
-  });
+  let attempt: SimAttempt | undefined;
+  let wait: ReturnType<NonNullable<DecisionEnv["simWait"]>["start"]> | undefined;
+  let sampled = 0;
+  const requested = setup.samples ?? BUILD_SIM_SAMPLES;
+  const fail = (why: string, code = "simulation_error"): BossSimOutcome => {
+    const completion = attempt?.finish(sampled, requested, code);
+    return {
+      decision: { ...ask, state: { ...ask.state, facts: withSimFacts(facts, attempt?.degraded
+        ? `不完整（故障降级，n=${sampled}）：${why}；本题不给模拟数字，按现有其他证据继续决策`
+        : required ? `必需的boss评估未完成（${why}）；等待完整计算，不允许用空指标作选择`
+        : `boss 模拟没有结果（${why}）：act_boss_clock 仍是 boss 时钟的估计`, true) } },
+      record: { error: why, ms: Math.round(now() - started),
+        ...(required ? { completion: completion ? { ...completion } : { required: true, status: "pending", latencyTargetMs: setup.deadlineMs ?? BUILD_SIM_DEADLINE_MS } } : {}),
+        ...(diagnostics ? { diagnostics: { ...diagnostics, status: "failed", reason: code } } : {}) },
+    };
+  };
   try {
     if (!bossId) return fail("不知道本幕 boss", "unknown_boss");
     // Right after the boss fight boss_id is still the boss just killed (fix-queue-v4: the card reward after every act
@@ -539,7 +550,14 @@ export async function withBossSim(decision: Decision, env: DecisionEnv, setup: B
     }
     const budget = (setup.deadlineMs ?? BUILD_SIM_DEADLINE_MS) - (now() - started);
     const readinessMode = sReadinessMode(str(asRecord(state.run?.raw)["character_id"]));
-    const result: CompareResult = await compareOptions(setup.runner, start.input, deckOptions, { samples: setup.samples ?? BUILD_SIM_SAMPLES, seed: setup.seed ?? BUILD_SIM_SEED, deadlineMs: Math.max(0, budget), ...(setup.now ? { now: setup.now } : {}), ...(diagnosticEnabled ? { quantitative: true, diagnostics: true } : {}), ...(required ? { requireComplete: true } : {}), ...(readinessMode !== "off" ? { readiness: true } : {}) });
+    if (required) {
+      attempt = beginComputation(env.screenMemory, state, ask.label, memoKey("b3-failure-input", {
+        input: start.input, deckOptions, requested, seed: setup.seed ?? BUILD_SIM_SEED, readinessMode,
+      }));
+      wait = env.simWait?.start({ run: str(state.raw["run_id"]), floor: state.run?.floor ?? null, label: ask.label });
+    }
+    const result: CompareResult = await compareOptions(setup.runner, start.input, deckOptions, { samples: setup.samples ?? BUILD_SIM_SAMPLES, seed: setup.seed ?? BUILD_SIM_SEED, deadlineMs: Math.max(0, budget), ...(setup.now ? { now: setup.now } : {}), ...(diagnosticEnabled ? { quantitative: true, diagnostics: true } : {}), ...(required && !attempt?.degraded ? { requireComplete: true } : {}), ...(wait ? { onProgress: wait.progress } : {}), ...(readinessMode !== "off" ? { readiness: true } : {}) });
+    sampled = result.samples;
     if (diagnostics) diagnostics = { ...diagnostics, ...result.diagnostics, boss: bossKey(bossId),
       samples: result.samples, requested: result.requested, minimumShown: Math.min(BUILD_SIM_MIN_SHOWN, result.requested),
       timedOut: result.timedOut, simMs: result.elapsedMs, workers: result.workers };
@@ -547,10 +565,10 @@ export async function withBossSim(decision: Decision, env: DecisionEnv, setup: B
     // Too few samples to tell the options apart (Roy 2026-10-02): R6V3 F22 n=24 and 5DFX F27-F29 n=24 put "+11.6" style
     // deltas in front of the brain, which quoted them. Cut short by the clock under BUILD_SIM_MIN_SHOWN (or under what was
     // asked for, when less), no numbers, as a failed simulation.
-    const minShown = Math.min(BUILD_SIM_MIN_SHOWN, result.requested);
+    const minShown = attempt?.degraded ? BUILD_SIM_MIN_SHOWN : Math.min(BUILD_SIM_MIN_SHOWN, result.requested);
     if (result.samples < minShown) return fail(`只跑完 ${result.samples} 次模拟（不足 ${minShown} 次），选项之间的差噪声太大，不给数字`, "below_minimum_samples");
-    if (required && (result.timedOut || result.samples !== result.requested)) return fail("必需的配对样本尚未全部完成", "incomplete_required_samples");
-    if (required && [result.base, ...result.options].some((sim) => {
+    if (required && !attempt?.degraded && (result.timedOut || result.samples !== result.requested)) return fail("必需的配对样本尚未全部完成", "incomplete_required_samples");
+    if (required && !attempt?.degraded && [result.base, ...result.options].some((sim) => {
       const dpr = asRecord(asRecord(sim.quantitative)["effective_damage_per_turn"]);
       return typeof dpr["n"] !== "number" || dpr["n"] <= 0 || typeof dpr["mean"] !== "number" || !Number.isFinite(dpr["mean"]);
     })) {
@@ -568,7 +586,8 @@ export async function withBossSim(decision: Decision, env: DecisionEnv, setup: B
         modelTrust: low ? "low" : "existing_boss_gate", modelTrustReason: low ?? null };
     }
     const boss = `${start.boss.name}，A${state.run?.ascension ?? start.boss.asc}`;
-    const head = continuation ? `F48→F49连续通关（第一boss ${boss}；低可信、未经两战校准）：` : `打本幕 boss（${boss}${low ? "；低可信，见 facts.act_boss_sim" : ""}）的模拟：`;
+    const incomplete = attempt?.degraded ? `不完整（故障降级，n=${result.samples}）；` : "";
+    const head = incomplete + (continuation ? `F48→F49连续通关（第一boss ${boss}；低可信、未经两战校准）：` : `打本幕 boss（${boss}${low ? "；低可信，见 facts.act_boss_sim" : ""}）的模拟：`);
     // Mostly lost: the raw rate under 10% (the calibrated one never reads under the map's floor at 0 wins: calibratedFloor).
     const lowWin = result.base.win < 0.1;
     const winTies = silentBuildWinTies(str(asRecord(state.run?.raw)["character_id"]), result.options.filter((sim) => {
@@ -639,10 +658,12 @@ export async function withBossSim(decision: Decision, env: DecisionEnv, setup: B
       ...(low ? { low_confidence: low } : {}),
       ...(lowWin ? { low_win_rate: `当前牌组在模拟里多半打不过（原始胜率 ${pct(b.win)}，校准后的数不会低于 ${(calibratedFloor(state.run?.ascension ?? 0) * 100).toFixed(1)}%，0 胜的读数）：胜率的差信息少，各选项另给 boss 平均剩血（赢的样本算 0）和它的配对差；离 boss 还远时现在的牌组和到 boss 时的牌组差得多` } : {}),
     };
+    if (attempt?.degraded) simFacts["completion"] = `不完整（故障降级，n=${result.samples}）`;
+    const completion = attempt?.finish(result.samples, result.requested);
     const record: Record<string, JsonValue> = {
       ...(readiness ? { readiness: toJsonValue({ ...readiness, mode: readinessMode, ms: result.readinessMs ?? null,
         delivered: readinessMode === "on" && readiness.trust.rankingEligible }) } : {}),
-      ...(required ? { completion: { ...result.completion, required: true, status: "complete",
+      ...(required ? { completion: { ...result.completion, required: true, status: "complete", ...completion,
         latencyTargetMs: setup.deadlineMs ?? BUILD_SIM_DEADLINE_MS, latencyTargetExceeded: ms > (setup.deadlineMs ?? BUILD_SIM_DEADLINE_MS) } } : {}),
       ...(diagnostics ? { diagnostics: { ...diagnostics, status: "produced" } } : {}),
       ...(quantitativeEnabled(state) ? { quantitative: { base: b.quantitative ?? null,
@@ -683,5 +704,7 @@ export async function withBossSim(decision: Decision, env: DecisionEnv, setup: B
     };
   } catch (error) {
     return fail(`出错：${String(error instanceof Error ? error.message : error).slice(0, 160)}`);
+  } finally {
+    wait?.finish();
   }
 }
