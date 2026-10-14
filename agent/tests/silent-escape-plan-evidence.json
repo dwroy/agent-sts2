@@ -1,0 +1,377 @@
+{
+  "status_draw": {
+    "source": {
+      "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+      "line": 212038,
+      "offset": 6343188492,
+      "bytes": 27310,
+      "sha256": "41348a526ddd56f5c484822198054496a536c6ed8e7173e6d67f64dccf04c82e",
+      "run_id": "T082DRCUHRRD"
+    },
+    "floor": 17,
+    "turn": 12,
+    "player": {
+      "current_hp": 49,
+      "max_hp": 70,
+      "block": 4,
+      "energy": 0,
+      "stars": 0,
+      "focus": 0,
+      "powers": [
+        {
+          "index": 0,
+          "power_id": "DEXTERITY_POWER",
+          "name": "敏捷",
+          "amount": 2,
+          "is_debuff": false
+        },
+        {
+          "index": 1,
+          "power_id": "VULNERABLE_POWER",
+          "name": "易伤",
+          "amount": 2,
+          "is_debuff": true
+        }
+      ],
+      "base_orb_slots": 0,
+      "orb_capacity": 0,
+      "empty_orb_slots": 0,
+      "orbs": [],
+      "pets": [],
+      "pet_missing": false,
+      "cards_played_this_turn": 2,
+      "attacks_played_this_turn": 0,
+      "skills_played_this_turn": 1
+    },
+    "escape": {
+      "index": 0,
+      "card_id": "ESCAPE_PLAN",
+      "name": "逃脱计划",
+      "upgraded": false,
+      "target_type": "Self",
+      "requires_target": false,
+      "target_index_space": null,
+      "valid_target_indices": [],
+      "costs_x": false,
+      "star_costs_x": false,
+      "energy_cost": 0,
+      "star_cost": 0,
+      "rules_text": "抽1张牌。 如果抽到的是技能牌，则获得{Block:diff()}点格挡。",
+      "resolved_rules_text": "抽1张牌。 如果抽到的是技能牌，则获得5点格挡。",
+      "dynamic_values": [
+        {
+          "name": "Block",
+          "base_value": 3,
+          "current_value": 5,
+          "enchanted_value": 3,
+          "is_modified": true,
+          "was_just_upgraded": false
+        }
+      ],
+      "playable": true,
+      "can_play_result": true,
+      "unplayable_reason": null,
+      "unplayable_reason_raw": null,
+      "unplayable_preventer_id": null,
+      "unplayable_preventer_type": null
+    },
+    "after_source": {
+      "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+      "line": 212039,
+      "offset": 6343215802,
+      "bytes": 27691,
+      "sha256": "6809a8608ba7d60a4698c7f2dc7321b903eb1220448623d2a4e09ad78f9de60c",
+      "run_id": "T082DRCUHRRD"
+    },
+    "drawn": {
+      "index": 2,
+      "card_id": "BECKON",
+      "name": "呼唤",
+      "upgraded": false,
+      "target_type": "None",
+      "requires_target": false,
+      "target_index_space": null,
+      "valid_target_indices": [],
+      "costs_x": false,
+      "star_costs_x": false,
+      "energy_cost": 1,
+      "star_cost": 0,
+      "rules_text": "在你的回合结束时，如果这张牌在你的手牌中， 你失去{HpLoss}点生命。",
+      "resolved_rules_text": "在你的回合结束时，如果这张牌在你的手牌中， 你失去6点生命。",
+      "dynamic_values": [
+        {
+          "name": "HpLoss",
+          "base_value": 6,
+          "current_value": 6,
+          "enchanted_value": 6,
+          "is_modified": false,
+          "was_just_upgraded": false
+        }
+      ],
+      "playable": false,
+      "can_play_result": false,
+      "unplayable_reason": "not_enough_energy",
+      "unplayable_reason_raw": "EnergyCostTooHigh",
+      "unplayable_preventer_id": null,
+      "unplayable_preventer_type": null
+    },
+    "after_block": 4
+  },
+  "skill_draw": {
+    "source": {
+      "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+      "line": 212055,
+      "offset": 6343635879,
+      "bytes": 30764,
+      "sha256": "11f9165da7b28f58d8374ff384ee4d2b17652fd1da4ea0eddf0ca0316a283ea1",
+      "run_id": "T082DRCUHRRD"
+    },
+    "floor": 19,
+    "turn": 1,
+    "player": {
+      "current_hp": 70,
+      "max_hp": 70,
+      "block": 0,
+      "energy": 7,
+      "stars": 0,
+      "focus": 0,
+      "powers": [],
+      "base_orb_slots": 0,
+      "orb_capacity": 0,
+      "empty_orb_slots": 0,
+      "orbs": [],
+      "pets": [],
+      "pet_missing": false,
+      "cards_played_this_turn": 1,
+      "attacks_played_this_turn": 1,
+      "skills_played_this_turn": 0
+    },
+    "escape": {
+      "index": 0,
+      "card_id": "ESCAPE_PLAN",
+      "name": "逃脱计划",
+      "upgraded": false,
+      "target_type": "Self",
+      "requires_target": false,
+      "target_index_space": null,
+      "valid_target_indices": [],
+      "costs_x": false,
+      "star_costs_x": false,
+      "energy_cost": 0,
+      "star_cost": 0,
+      "rules_text": "抽1张牌。 如果抽到的是技能牌，则获得{Block:diff()}点格挡。",
+      "resolved_rules_text": "抽1张牌。 如果抽到的是技能牌，则获得3点格挡。",
+      "dynamic_values": [
+        {
+          "name": "Block",
+          "base_value": 3,
+          "current_value": 3,
+          "enchanted_value": 3,
+          "is_modified": false,
+          "was_just_upgraded": false
+        }
+      ],
+      "playable": true,
+      "can_play_result": true,
+      "unplayable_reason": null,
+      "unplayable_reason_raw": null,
+      "unplayable_preventer_id": null,
+      "unplayable_preventer_type": null
+    },
+    "after_source": {
+      "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+      "line": 212056,
+      "offset": 6343666643,
+      "bytes": 30933,
+      "sha256": "7a02d2ca23aa1fc32c8570db0904afe92aaacb80fe1ccb313be85a15ba3224c5",
+      "run_id": "T082DRCUHRRD"
+    },
+    "drawn": {
+      "index": 5,
+      "card_id": "DEFEND_SILENT",
+      "name": "防御",
+      "upgraded": false,
+      "target_type": "Self",
+      "requires_target": false,
+      "target_index_space": null,
+      "valid_target_indices": [],
+      "costs_x": false,
+      "star_costs_x": false,
+      "energy_cost": 1,
+      "star_cost": 0,
+      "rules_text": "获得{Block:diff()}点格挡。",
+      "resolved_rules_text": "获得5点格挡。",
+      "dynamic_values": [
+        {
+          "name": "Block",
+          "base_value": 5,
+          "current_value": 5,
+          "enchanted_value": 5,
+          "is_modified": false,
+          "was_just_upgraded": false
+        }
+      ],
+      "playable": true,
+      "can_play_result": true,
+      "unplayable_reason": null,
+      "unplayable_reason_raw": null,
+      "unplayable_preventer_id": null,
+      "unplayable_preventer_type": null
+    },
+    "after_block": 3
+  },
+  "a0_omission": {
+    "source": {
+      "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+      "line": 211753,
+      "offset": 6335886227,
+      "bytes": 48782,
+      "sha256": "c676649da15c1f3642d32464012a4a2353107360636b07eb685fcc62d982b65c",
+      "run_id": "LRN0HPZ0FZS1"
+    },
+    "floor": 48,
+    "turn": 3,
+    "player": {
+      "current_hp": 67,
+      "max_hp": 81,
+      "block": 16,
+      "energy": 0,
+      "stars": 0,
+      "focus": 0,
+      "powers": [
+        {
+          "index": 0,
+          "power_id": "AFTERIMAGE_POWER",
+          "name": "余像",
+          "amount": 1,
+          "is_debuff": false
+        },
+        {
+          "index": 1,
+          "power_id": "NOXIOUS_FUMES_POWER",
+          "name": "毒雾",
+          "amount": 3,
+          "is_debuff": false
+        }
+      ],
+      "base_orb_slots": 0,
+      "orb_capacity": 0,
+      "empty_orb_slots": 0,
+      "orbs": [],
+      "pets": [],
+      "pet_missing": false,
+      "cards_played_this_turn": 10,
+      "attacks_played_this_turn": 6,
+      "skills_played_this_turn": 4
+    },
+    "escape": {
+      "index": 0,
+      "card_id": "ESCAPE_PLAN",
+      "name": "逃脱计划",
+      "upgraded": false,
+      "target_type": "Self",
+      "requires_target": false,
+      "target_index_space": null,
+      "valid_target_indices": [],
+      "costs_x": false,
+      "star_costs_x": false,
+      "energy_cost": 0,
+      "star_cost": 0,
+      "rules_text": "抽1张牌。 如果抽到的是技能牌，则获得{Block:diff()}点格挡。",
+      "resolved_rules_text": "抽1张牌。 如果抽到的是技能牌，则获得3点格挡。",
+      "dynamic_values": [
+        {
+          "name": "Block",
+          "base_value": 3,
+          "current_value": 3,
+          "enchanted_value": 3,
+          "is_modified": false,
+          "was_just_upgraded": false
+        }
+      ],
+      "playable": true,
+      "can_play_result": true,
+      "unplayable_reason": null,
+      "unplayable_reason_raw": null,
+      "unplayable_preventer_id": null,
+      "unplayable_preventer_type": null
+    }
+  },
+  "a10_omission": {
+    "source": {
+      "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+      "line": 297869,
+      "offset": 9241574312,
+      "bytes": 35911,
+      "sha256": "8fff5e4ca6ddd50baf7f17861ea0da8dbd242a46ed5cb744976494ae22c167eb",
+      "run_id": "LYBHQ1X230ZB"
+    },
+    "floor": 30,
+    "turn": 1,
+    "player": {
+      "current_hp": 4,
+      "max_hp": 70,
+      "block": 0,
+      "energy": 0,
+      "stars": 0,
+      "focus": 0,
+      "powers": [
+        {
+          "index": 0,
+          "power_id": "STRENGTH_POWER",
+          "name": "力量",
+          "amount": 1,
+          "is_debuff": false
+        },
+        {
+          "index": 1,
+          "power_id": "DEXTERITY_POWER",
+          "name": "敏捷",
+          "amount": 3,
+          "is_debuff": false
+        }
+      ],
+      "base_orb_slots": 0,
+      "orb_capacity": 0,
+      "empty_orb_slots": 0,
+      "orbs": [],
+      "pets": [],
+      "pet_missing": false,
+      "cards_played_this_turn": 4,
+      "attacks_played_this_turn": 3,
+      "skills_played_this_turn": 0
+    },
+    "escape": {
+      "index": 3,
+      "card_id": "ESCAPE_PLAN",
+      "name": "逃脱计划",
+      "upgraded": false,
+      "target_type": "Self",
+      "requires_target": false,
+      "target_index_space": null,
+      "valid_target_indices": [],
+      "costs_x": false,
+      "star_costs_x": false,
+      "energy_cost": 0,
+      "star_cost": 0,
+      "rules_text": "抽1张牌。 如果抽到的是技能牌，则获得{Block:diff()}点格挡。",
+      "resolved_rules_text": "抽1张牌。 如果抽到的是技能牌，则获得12点格挡。",
+      "dynamic_values": [
+        {
+          "name": "Block",
+          "base_value": 3,
+          "current_value": 12,
+          "enchanted_value": 3,
+          "is_modified": true,
+          "was_just_upgraded": false
+        }
+      ],
+      "playable": true,
+      "can_play_result": true,
+      "unplayable_reason": null,
+      "unplayable_reason_raw": null,
+      "unplayable_preventer_id": null,
+      "unplayable_preventer_type": null
+    }
+  }
+}

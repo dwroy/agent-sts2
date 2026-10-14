@@ -1,0 +1,679 @@
+{
+  "batch": "20261015-051302-s2-strategy-proposal",
+  "native_runtime": {
+    "batch": "20261015-051302-s2-strategy-proposal",
+    "thread": "01a13c43-13c4-7261-8e54-036b3fa2674c",
+    "cwd": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261015-051302-s2",
+    "event_log": "learner/runs/20261015-051308-01e4191f-d865-4ede-96cc-6135ca85542b-strategy-proposal.jsonl",
+    "registered_launch_batch": "20261015-051302-s2-strategy-proposal",
+    "original_lease": "b3675e876ff93c18e8369082f11b629a0c041b15bd584cb832fd7593ad928eaf",
+    "native_context": {
+      "source": "ops/codex-ops/accounts/codex1/learner/sessions/2026/10/15/rollout-2026-10-15T05-13-11-01a13c43-13c4-7261-8e54-036b3fa2674c.jsonl",
+      "offset": 50285,
+      "bytes": 5166,
+      "sha256": "1b7bcd4258be34b2683ecd2bad227d0edc3e7d28ffb0234fedd0f48fa2dcd724",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "sandbox": {
+        "type": "workspace-write",
+        "writable_roots": [
+          "/home/dw/Projects/agent-sts2",
+          "/home/dw/Projects/agent-sts2/.git",
+          "/home/dw/Projects/agent-sts2/.git/worktrees/codex-strategy-silent-20261015-051302-s2"
+        ],
+        "network_access": false,
+        "exclude_tmpdir_env_var": false,
+        "exclude_slash_tmp": false
+      },
+      "approval_policy": "never"
+    },
+    "native_user_input": {
+      "offset": 55451,
+      "bytes": 21493,
+      "sha256": "27d81433cf69bba3dcd99e3373160d9eab51c383823e0b1152620af6b7a24bfe",
+      "input_sha256": "2d006258f6b1538a83abc1a078b8294d7f0a7637290f580e72c6ff1e7f1abd7f"
+    },
+    "original_header_events": [
+      {
+        "offset": 0,
+        "bytes": 23497,
+        "sha256": "352d371c1876b53dfad89142e126ee2ad70af93506d3ded5ba0870ebff2b83ce",
+        "type": "learner_launch",
+        "attempt": null,
+        "code": null
+      },
+      {
+        "offset": 23497,
+        "bytes": 381,
+        "sha256": "8af44213384640b412efe0ca6fb67ab030fc8e60746e1cea848c15d0282f52bb",
+        "type": "learner_startup_attempt",
+        "attempt": 1,
+        "code": null
+      },
+      {
+        "offset": 26890,
+        "bytes": 77,
+        "sha256": "26b73c5ad1ed41f575653e5f5de6ca636999955a0476f725e663b24ff644ebf3",
+        "type": "thread.started",
+        "attempt": null,
+        "code": null
+      }
+    ],
+    "startup_attempts": 1,
+    "failed_startups_preserved": 0,
+    "no_model_or_manual_restart": true
+  },
+  "report_sha256": "18163f3a77b38d4be1ab38d8f75dda0a4dbc3ebf453d39d235c0ed15b734a3ad",
+  "report": {
+    "task": "strategy-proposal",
+    "character": "silent",
+    "batch": "20261015-051302-s2-strategy-proposal",
+    "base": "0052edea183041950e5d16356a0040925f1b39cc",
+    "runs": [
+      "G8NHLL09DLBX",
+      "LRN0HPZ0FZS1",
+      "T082DRCUHRRD",
+      "LYBHQ1X230ZB"
+    ],
+    "fixes": [
+      {
+        "proposal_id": "silent-proposal-0337a5f076c49d02",
+        "ledger": [
+          "silent-0296"
+        ],
+        "commit": "8e196be494ada9a33dac3d897a0671a5b14e0e5b",
+        "source_parent": "0052edea183041950e5d16356a0040925f1b39cc",
+        "summary": "普通逃脱计划固定抽1、技能条件格挡；未知抽牌后重规划，后续与必胜不预支。",
+        "evidence": [
+          {
+            "run": "LRN0HPZ0FZS1",
+            "floor": 48,
+            "turn": 3
+          },
+          {
+            "run": "T082DRCUHRRD",
+            "floor": 17,
+            "turn": 12
+          },
+          {
+            "run": "T082DRCUHRRD",
+            "floor": 19,
+            "turn": 1
+          },
+          {
+            "run": "LYBHQ1X230ZB",
+            "floor": 30,
+            "turn": 1
+          }
+        ],
+        "withdrawn": {
+          "exit": 1,
+          "failed": 6,
+          "passed": 2
+        },
+        "restored": {
+          "exit": 0,
+          "passed": 8
+        }
+      }
+    ],
+    "skipped": [
+      "silent-proposal-982c99080350f43e",
+      "silent-proposal-aaefd918a706de14",
+      "silent-proposal-eb6e17529c0f8cde",
+      "silent-proposal-10c5c87568dcded1",
+      "silent-proposal-72e211c844b4564e",
+      "silent-proposal-1481fe327a22ddeb",
+      "silent-proposal-8e9beeee55eac364",
+      "silent-proposal-ce75cb821e8f2610",
+      "silent-proposal-6ba977a3f01df016"
+    ],
+    "merged": "ae6a8d9950594c9b1e0ebe40fe6ed0866982fe15",
+    "publication_commit": "e61c5667859e0ca236eea031818976fabfad02bf",
+    "tests": {
+      "tsc": 0,
+      "vitest": 0,
+      "cases": 3951
+    },
+    "source_tests": {
+      "tsc": 0,
+      "vitest": 0,
+      "cases": 3950
+    },
+    "security": {
+      "source_precommit": 0,
+      "publication_precommit": 0,
+      "refresh_postcommit": 0
+    },
+    "release_id": null,
+    "release_status": "awaiting-primary-ops-numbering",
+    "version_name": "V5.silent-escape-plan1",
+    "code_proposals": [
+      "silent-proposal-982c99080350f43e",
+      "silent-proposal-aaefd918a706de14",
+      "silent-proposal-eb6e17529c0f8cde",
+      "silent-proposal-10c5c87568dcded1",
+      "silent-proposal-72e211c844b4564e",
+      "silent-proposal-1481fe327a22ddeb",
+      "silent-proposal-0337a5f076c49d02",
+      "silent-proposal-8e9beeee55eac364",
+      "silent-proposal-ce75cb821e8f2610",
+      "silent-proposal-6ba977a3f01df016"
+    ],
+    "implementation_domains": [
+      "combat",
+      "sl"
+    ],
+    "proposal_results": [
+      {
+        "id": "silent-proposal-982c99080350f43e",
+        "state": "waiting",
+        "reason": "已复现G8 F24末试T5随机毒伪斩杀；缺全部合法分配及阶段交互的固定校准与消费者验证，当前缺口仍在。"
+      },
+      {
+        "id": "silent-proposal-aaefd918a706de14",
+        "state": "waiting",
+        "reason": "缺完整原dirty源码及临时属性、自爆阶段、SL资源恢复的整线配对验证；没有保药替代整场结果。"
+      },
+      {
+        "id": "silent-proposal-eb6e17529c0f8cde",
+        "state": "waiting",
+        "reason": "随机毒分配仍未完整展开并验证rollout、SL和自动执行；逃脱计划修正不实现此项。"
+      },
+      {
+        "id": "silent-proposal-10c5c87568dcded1",
+        "state": "waiting",
+        "reason": "局部模型存在，但缺五机制组合与速度、尖啸次轮撤回的完整同帧消费验证，不冒报整项duplicate。"
+      },
+      {
+        "id": "silent-proposal-72e211c844b4564e",
+        "state": "waiting",
+        "reason": "前三试判死截断后的结算及完整dirty树缺失；换线、抽牌、药时点同变，缺阶段与SL完整配对验证。"
+      },
+      {
+        "id": "silent-proposal-1481fe327a22ddeb",
+        "state": "waiting",
+        "reason": "缺不喝药、替代候选和路线的完整执行结果；F25以后未抵达，不能标定持有价值或安全血线。"
+      },
+      {
+        "id": "silent-proposal-0337a5f076c49d02",
+        "state": "implemented",
+        "commit": "8e196be494ada9a33dac3d897a0671a5b14e0e5b",
+        "reason": "普通A0/A10固定抽1、技能条件挡及未知抽牌后重规划已实现；源码为实际live祖先，源与合后沙箱检查通过。"
+      },
+      {
+        "id": "silent-proposal-8e9beeee55eac364",
+        "state": "waiting",
+        "reason": "LYB F29T6仅损18候选实打；损12候选接续F30的实际结局缺失，不能由6血差拟合终局权重。"
+      },
+      {
+        "id": "silent-proposal-ce75cb821e8f2610",
+        "state": "waiting",
+        "reason": "缺当前完整修正组合、次轮复原和首挡消费的同帧回放；未观察叠加与自动出牌保留边界。"
+      },
+      {
+        "id": "silent-proposal-6ba977a3f01df016",
+        "state": "waiting",
+        "reason": "缺替代抽序、目标序的完整执行及当前召唤、重放、SL整线对照；前三次截断不能计已结毒伤。"
+      }
+    ],
+    "proposal": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261015-051302-s2/learner/runs/20261015-051308-01e4191f-d865-4ede-96cc-6135ca85542b-strategy-proposal/proposal.md",
+    "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261015-051302-s2/learner/runs/20261015-051308-01e4191f-d865-4ede-96cc-6135ca85542b-strategy-proposal/report.md"
+  },
+  "source_actual_live_ancestor": true,
+  "source_worktree_clean": true,
+  "actual_live": "19c9720b688ec7152fd1bbda554e9084e042077b",
+  "precise_source_live_leaves": [
+    {
+      "path": "agent/src/reflex/card-model.ts",
+      "source_sha256": "40ce2c99446269f65522465bb8c5166c2df5cfda40027a56530ac1b4fa3759d0",
+      "actual_live_sha256": "84b3cff554b2c93bb75e4a35c92426e55c9e62de1c55aba443349708cb5e4bec",
+      "preexisting_comment_difference": true
+    },
+    {
+      "path": "agent/src/reflex/combat-plan.ts",
+      "source_sha256": "42f29489fb198b65da29abce3de7849f8029fe4de50e2882c0ffdf65a4f27c32",
+      "actual_live_sha256": "42f29489fb198b65da29abce3de7849f8029fe4de50e2882c0ffdf65a4f27c32",
+      "preexisting_comment_difference": false
+    },
+    {
+      "path": "agent/src/reflex/rollout-live.ts",
+      "source_sha256": "daa841e8e7fad15a08d9f2f8734fae27fdb687db08bef0afa4a9e934ea54b3e0",
+      "actual_live_sha256": "4451d711beccaad5b69ae9a86bb2b36f3ababbe88ef732198795cc3449ce0600",
+      "preexisting_comment_difference": true
+    },
+    {
+      "path": "agent/src/reflex/turn-solver.ts",
+      "source_sha256": "f9560834fa34582ed8fd9a26862862bde9a5bdf73703575d92291fa7cf9397c6",
+      "actual_live_sha256": "f9560834fa34582ed8fd9a26862862bde9a5bdf73703575d92291fa7cf9397c6",
+      "preexisting_comment_difference": false
+    },
+    {
+      "path": "agent/tests/silent-escape-plan-evidence.json",
+      "source_sha256": "ae6badbc0d2f6a07184b5170af988d4a7dbe31588ee597cdd0b0ff16937c850b",
+      "actual_live_sha256": "ae6badbc0d2f6a07184b5170af988d4a7dbe31588ee597cdd0b0ff16937c850b",
+      "preexisting_comment_difference": false
+    },
+    {
+      "path": "agent/tests/silent-escape-plan-state.json",
+      "source_sha256": "31378dcdb94fb5ef36478f9764f0627daf8c86ea8104f6784c8fd03482d09447",
+      "actual_live_sha256": "31378dcdb94fb5ef36478f9764f0627daf8c86ea8104f6784c8fd03482d09447",
+      "preexisting_comment_difference": false
+    },
+    {
+      "path": "agent/tests/silent-escape-plan.test.ts",
+      "source_sha256": "7992ce569a9215c46b4043454b96c91fe6fc6c6140a63b8d9505e52e089e1f58",
+      "actual_live_sha256": "7992ce569a9215c46b4043454b96c91fe6fc6c6140a63b8d9505e52e089e1f58",
+      "preexisting_comment_difference": false
+    }
+  ],
+  "seven_evidence_streams": [
+    {
+      "stream": "states",
+      "rows": 3128,
+      "counts": {
+        "G8NHLL09DLBX": 747,
+        "LRN0HPZ0FZS1": 830,
+        "T082DRCUHRRD": 1073,
+        "LYBHQ1X230ZB": 478
+      },
+      "raw_bytes_sha256_and_body": true,
+      "output_sha256": "564a5d60476b7a587fdb7f42c1c2a2893f552a5719b35678c18e7498c765f1a2"
+    },
+    {
+      "stream": "decisions",
+      "rows": 3008,
+      "counts": {
+        "G8NHLL09DLBX": 726,
+        "LRN0HPZ0FZS1": 793,
+        "T082DRCUHRRD": 1034,
+        "LYBHQ1X230ZB": 455
+      },
+      "raw_bytes_sha256_and_body": true,
+      "output_sha256": "53be66e828636771d927eb806c66f2da62bddbb2b5ac2bb0d2f621e21e8caae0"
+    },
+    {
+      "stream": "sl-attempts",
+      "rows": 24,
+      "counts": {
+        "G8NHLL09DLBX": 6,
+        "LRN0HPZ0FZS1": 4,
+        "T082DRCUHRRD": 9,
+        "LYBHQ1X230ZB": 5
+      },
+      "raw_bytes_sha256_and_body": true,
+      "output_sha256": "f5096d193ae1e8f135c662166ab83c3d8859b64b3c024353e80c3bbc4c1be733"
+    },
+    {
+      "stream": "run-config",
+      "rows": 4,
+      "counts": {
+        "G8NHLL09DLBX": 1,
+        "LRN0HPZ0FZS1": 1,
+        "T082DRCUHRRD": 1,
+        "LYBHQ1X230ZB": 1
+      },
+      "raw_bytes_sha256_and_body": true,
+      "output_sha256": "093fcc3dc8a261c21566062b4f4db3b2952cb9b8a7a056987bcfaae06ddee0fd"
+    },
+    {
+      "stream": "run-plans",
+      "rows": 24,
+      "counts": {
+        "G8NHLL09DLBX": 3,
+        "LRN0HPZ0FZS1": 8,
+        "T082DRCUHRRD": 9,
+        "LYBHQ1X230ZB": 4
+      },
+      "raw_bytes_sha256_and_body": true,
+      "output_sha256": "5103f22344375d33a6d7d17d45608330d78cf64578ce69f56ee433b4744a75dc"
+    },
+    {
+      "stream": "brain",
+      "rows": 150,
+      "counts": {
+        "G8NHLL09DLBX": 25,
+        "LRN0HPZ0FZS1": 50,
+        "T082DRCUHRRD": 47,
+        "LYBHQ1X230ZB": 28
+      },
+      "raw_bytes_sha256_and_body": true,
+      "output_sha256": "7f0ad1166cf4985305e5900c8c440938a03c0b829b17db329c17e25a2fdc9f58"
+    },
+    {
+      "stream": "runs",
+      "rows": 4,
+      "counts": {
+        "G8NHLL09DLBX": 1,
+        "LRN0HPZ0FZS1": 1,
+        "T082DRCUHRRD": 1,
+        "LYBHQ1X230ZB": 1
+      },
+      "raw_bytes_sha256_and_body": true,
+      "output_sha256": "87e2e1d1ca35e7b4439f2ff6624f572bc556db7d9ca622ab8caa7fc4620a2a15"
+    }
+  ],
+  "original_proposals_sha256_verified": true,
+  "original_proposals": [
+    {
+      "op": "add",
+      "id": "silent-proposal-982c99080350f43e",
+      "ts": "2026-10-08T13:28:49+08:00",
+      "character": "silent",
+      "ledger": [
+        "silent-0295"
+      ],
+      "runs": [
+        "G8NHLL09DLBX"
+      ],
+      "source_task": "postmortem",
+      "target_task": "strategy-proposal",
+      "domains": [
+        "combat"
+      ],
+      "summary": "按G8NHLL09DLBX F24末试T5实盘反例修正随机施毒的确定斩杀边界；最高HP目标不是施毒的最坏分配。",
+      "proposal": "/home/dw/Projects/agent-sts2/learner/runs/20261008-131301-postmortem/提案-随机施毒斩杀.md",
+      "rule_changes": false,
+      "authorization": "Roy-2026-10-07-learning",
+      "proposal_sha256": "ce48df21145cbfa44e4e3bd38cd51646586d0ff9c0475ee5eb277d5758e49a54",
+      "state": "pending"
+    },
+    {
+      "op": "add",
+      "id": "silent-proposal-aaefd918a706de14",
+      "ts": "2026-10-08T13:29:17+08:00",
+      "character": "silent",
+      "ledger": [
+        "silent-0019",
+        "silent-0017",
+        "silent-0005",
+        "silent-0046",
+        "silent-0253",
+        "silent-0007",
+        "silent-0021"
+      ],
+      "runs": [
+        "G8NHLL09DLBX"
+      ],
+      "source_task": "postmortem",
+      "target_task": "strategy-proposal",
+      "domains": [
+        "combat",
+        "potion",
+        "sl"
+      ],
+      "summary": "核对本局赢战资源消耗、临时敏捷与减力、自爆阶段及SL恢复传递；保留原药水与SL参数，缺少受控整战对照不拟合留药规则。",
+      "proposal": "/home/dw/Projects/agent-sts2/learner/runs/20261008-131301-postmortem/提案-胜战资源与自爆核对.md",
+      "rule_changes": false,
+      "authorization": "Roy-2026-10-07-learning",
+      "proposal_sha256": "7191ac6be6d9b39c84438752c73568ab7e61dfdeece283730c3e75c924667e4e",
+      "state": "pending"
+    },
+    {
+      "op": "add",
+      "id": "silent-proposal-eb6e17529c0f8cde",
+      "ts": "2026-10-08T13:42:56+08:00",
+      "character": "silent",
+      "ledger": [
+        "silent-0007",
+        "silent-0295"
+      ],
+      "runs": [
+        "G8NHLL09DLBX"
+      ],
+      "source_task": "experience-update",
+      "target_task": "strategy-proposal",
+      "domains": [
+        "combat"
+      ],
+      "summary": "旧规则：randomVictim按最高HP选目标并将随机施毒重复落在同一目标，可能触发确定combat/lethal。新行为提案：针对已观察静默普通多敌弹跳药瓶，将未证实分配保留为不确定，只有能够证实随机落点不影响收尾时才给确定斩杀；否则回到正常选线与实际后继帧重规划。施毒不即时扣血、爪牙死不等母体死、荆棘血价与毒结算分别核。升级/重放/未知分配组合未核不外推，其他角色保持等价。独立策略任务有足够数据可按Roy授权实",
+      "proposal": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-133302-experience-update/proposal-poison.md",
+      "experience": [
+        "silent-bouncing-flask-poison",
+        "silent-deadly-poison-application",
+        "silent-poisoned-stab-components"
+      ],
+      "rule_changes": true,
+      "authorization": "Roy-2026-10-07-learning",
+      "proposal_sha256": "3f9e614540438cdc84c3ccd839245412db177e7de437bc7e47bc3b13bdcd6ead",
+      "state": "pending"
+    },
+    {
+      "op": "add",
+      "id": "silent-proposal-10c5c87568dcded1",
+      "ts": "2026-10-08T13:42:57+08:00",
+      "character": "silent",
+      "ledger": [
+        "silent-0012",
+        "silent-0005",
+        "silent-0046",
+        "silent-0253"
+      ],
+      "runs": [
+        "G8NHLL09DLBX"
+      ],
+      "source_task": "experience-update",
+      "target_task": "strategy-proposal",
+      "domains": [
+        "combat",
+        "potion"
+      ],
+      "summary": "旧/新行为：先核当前模型是否已正确传递步法每牌收益、速度本轮+5及次轮撤回、尖啸逐段降力/恢复、弱化自爆和荆棘自损。仅补已核机制遗漏，已有挡不倒补、临时敏不当即时HP；无当前缺口则给duplicate或具体waiting，不凭新败局改饮药/留药门槛。",
+      "proposal": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-133302-experience-update/proposal-modifiers.md",
+      "experience": [
+        "silent-strength-weak-observation",
+        "silent-footwork-block",
+        "silent-piercing-wail-temporary-strength",
+        "silent-speed-potion-temporary-dexterity"
+      ],
+      "rule_changes": true,
+      "authorization": "Roy-2026-10-07-learning",
+      "proposal_sha256": "1f20d1e73ca1a7f0cd168a72a295a74b2a5c73d9df505c73fea9ec1104f5b93e",
+      "state": "pending"
+    },
+    {
+      "op": "add",
+      "id": "silent-proposal-72e211c844b4564e",
+      "ts": "2026-10-08T13:42:57+08:00",
+      "character": "silent",
+      "ledger": [
+        "silent-0017"
+      ],
+      "runs": [
+        "G8NHLL09DLBX"
+      ],
+      "source_task": "experience-update",
+      "target_task": "strategy-proposal",
+      "domains": [
+        "combat",
+        "sl"
+      ],
+      "summary": "旧/新行为：保留真正必死才读档。核巨兽本体毒结束后仍进入实际自爆的终局路径，残壳巨量HP不追加为本体需求，弱化与牌挡逐步核当前血价。SL对照记录原答→探索→抽牌重问→实际执行，13探索分类型；不能从单次换线或截断判死拟合胜率，也不把完成本体标为胜。",
+      "proposal": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-133302-experience-update/proposal-giant-sl.md",
+      "experience": [
+        "silent-giant-explosion-window"
+      ],
+      "rule_changes": true,
+      "authorization": "Roy-2026-10-07-learning",
+      "proposal_sha256": "e8d5e10d11e94c222e3f4b61dc1b6d1ede5b7bc4f5b6d419caf5214dd0b16767",
+      "state": "pending"
+    },
+    {
+      "op": "add",
+      "id": "silent-proposal-1481fe327a22ddeb",
+      "ts": "2026-10-08T13:42:57+08:00",
+      "character": "silent",
+      "ledger": [
+        "silent-0243",
+        "silent-0020",
+        "silent-0019",
+        "silent-0021"
+      ],
+      "runs": [
+        "G8NHLL09DLBX"
+      ],
+      "source_task": "experience-update",
+      "target_task": "strategy-proposal",
+      "domains": [
+        "combat",
+        "potion",
+        "sl"
+      ],
+      "summary": "旧/新行为：核前战获胜的实际出口血药到下一战入口，分开营火/事件/跨幕回复与SL恢复、原瓶恢复与独立新药、已建能力和仅持有。F23两药后仍损30只支持资源链记录，缺保药或改线整场胜利，先完善可复算候选/实际资源证据，保留留药价值、路线血线及SL参数。本局未到F25或终局，不增terminal领域。",
+      "proposal": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-133302-experience-update/proposal-resources.md",
+      "experience": [
+        "silent-act-transition-missing-hp-heal",
+        "silent-rest-buffer-observation",
+        "silent-route-hp-observation",
+        "silent-deck-burst-observation"
+      ],
+      "rule_changes": true,
+      "authorization": "Roy-2026-10-07-learning",
+      "proposal_sha256": "946d698a36a36a5e629534cf3c1bf75bebfd5107485984312290646aba3f45f7",
+      "state": "pending"
+    },
+    {
+      "op": "add",
+      "id": "silent-proposal-0337a5f076c49d02",
+      "ts": "2026-10-08T14:05:42+08:00",
+      "character": "silent",
+      "ledger": [
+        "silent-0296"
+      ],
+      "runs": [
+        "LRN0HPZ0FZS1",
+        "T082DRCUHRRD",
+        "LYBHQ1X230ZB"
+      ],
+      "source_task": "postmortem",
+      "target_task": "strategy-proposal",
+      "domains": [
+        "combat",
+        "sl"
+      ],
+      "summary": "普通逃脱计划固定抽1与抽入技能条件挡的模型接线；核验零能量候选和SL抽牌边界，未证整场改善。",
+      "proposal": "/home/dw/Projects/agent-sts2/learner/runs/20261008-134301-postmortem/proposal-escape-plan.md",
+      "rule_changes": false,
+      "proposal_sha256": "f85f2d6d79738ad5b2c9a0052a57d7a0638a5a114b04d3c8d21d91c29d2255f7",
+      "state": "pending"
+    },
+    {
+      "op": "add",
+      "id": "silent-proposal-8e9beeee55eac364",
+      "ts": "2026-10-08T14:05:43+08:00",
+      "character": "silent",
+      "ledger": [
+        "silent-0019",
+        "silent-0039",
+        "silent-0005",
+        "silent-0013",
+        "silent-0077",
+        "silent-0196",
+        "silent-0128",
+        "silent-0049",
+        "silent-0232",
+        "silent-0115",
+        "silent-0007",
+        "silent-0142"
+      ],
+      "runs": [
+        "LYBHQ1X230ZB"
+      ],
+      "source_task": "postmortem",
+      "target_task": "strategy-proposal",
+      "domains": [
+        "combat",
+        "potion",
+        "terminal"
+      ],
+      "summary": "核验十三场赢局至F30死亡的HP/药水接续、F29T6多6血换9伤的两候选及召唤/毒/首次格挡；无受控替代结局，不调终局权重或喝药规则。",
+      "proposal": "/home/dw/Projects/agent-sts2/learner/runs/20261008-134301-postmortem/proposal-resource-terminal.md",
+      "rule_changes": false,
+      "proposal_sha256": "4bd51d4d4c3eaf3db4d2ce92ace3c40cb78da683cd8af68b1938f87cdabf4c49",
+      "state": "pending"
+    },
+    {
+      "op": "add",
+      "id": "silent-proposal-ce75cb821e8f2610",
+      "ts": "2026-10-08T14:17:20+08:00",
+      "character": "silent",
+      "ledger": [
+        "silent-0012",
+        "silent-0005",
+        "silent-0013",
+        "silent-0077",
+        "silent-0049",
+        "silent-0232"
+      ],
+      "runs": [
+        "LYBHQ1X230ZB"
+      ],
+      "source_task": "experience-update",
+      "target_task": "strategy-proposal",
+      "domains": [
+        "combat"
+      ],
+      "summary": "核已观察普通/升级步法、臂甲首次挡、融入暗影后续牌挡、金刚杵逐段力量、柔嫩逐牌属性变化是否已被当前live完整消费；已有实现登记实际祖先或明确waiting。只修核实的漏模，未知脆弱/叠加/自动出牌交互保持边界，不把6额外挡当整场获胜承诺。",
+      "proposal": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-140852-experience-update/proposal-modifiers.md",
+      "experience": [
+        "silent-strength-weak-observation",
+        "silent-footwork-block",
+        "silent-vambrace-opening-block",
+        "silent-shadowmeld-new-block-double",
+        "silent-vajra-opening-strength",
+        "silent-hunter-tender-card-attributes"
+      ],
+      "rule_changes": true,
+      "authorization": "Roy-2026-10-07-learning",
+      "proposal_sha256": "7ac6a3b2ef0ef94eb0f4e7eae17fe4884662a65f001ee230131d57c6bb53a6af",
+      "state": "pending"
+    },
+    {
+      "op": "add",
+      "id": "silent-proposal-6ba977a3f01df016",
+      "ts": "2026-10-08T14:17:49+08:00",
+      "character": "silent",
+      "ledger": [
+        "silent-0039",
+        "silent-0115",
+        "silent-0007"
+      ],
+      "runs": [
+        "LYBHQ1X230ZB"
+      ],
+      "source_task": "experience-update",
+      "target_task": "strategy-proposal",
+      "domains": [
+        "combat",
+        "sl"
+      ],
+      "summary": "核爆发重放迷雾的各次施毒/虚弱、结束毒、活体召唤新增血与两敌攻击，未执行结算不能记已伤。四次同序重打无赢次，只保留真正必死判据；未知抽牌/复活/航行不从本局补公式或拟新SL触发门槛。",
+      "proposal": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-140852-experience-update/proposal-poison-spawn.md",
+      "experience": [
+        "silent-obscura-summon-growth",
+        "silent-burst-next-skills-replay",
+        "silent-haze-group-poison-weak"
+      ],
+      "rule_changes": true,
+      "authorization": "Roy-2026-10-07-learning",
+      "proposal_sha256": "4b94145589bce645f028a2b5fc4e1959b8e550ed255bdf6d97ce1e669c8ba166",
+      "state": "pending"
+    }
+  ],
+  "source_and_live_sandbox_logs": [
+    {
+      "path": "source-sandbox-final.log",
+      "sha256": "48cae26409c64361ab7013fc79ae9d403d526caca44f72d726c0fa920fdbd542",
+      "source_bound": true
+    },
+    {
+      "path": "live-sandbox.log",
+      "sha256": "644741fc7ff93de7123cccfb1869211539051248bb359401394772fbf96ccd75",
+      "source_bound": true
+    }
+  ],
+  "original_ledger_rows": 21,
+  "old_failures_and_interruptions_preserved": true,
+  "natural_consumer_and_game_benefit": "pending / unknown",
+  "host_full": "same exact 8ee5defe already running via original batch; no repeated check"
+}

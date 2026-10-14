@@ -1729,3 +1729,12 @@ tsc及2673例沙箱测试通过，推送动作专项2例/Python4例通过。当�
   }
 }
  回执/home/dw/Projects/agent-sts2/ops/codex-ops/learning-notices/d486caef57aeb0c096a29a75.json；watcher须读取并告知Roy，尚未确认用户收到。<!-- learning-notice:d486caef57aeb0c096a29a75 -->
+
+## 2026-10-15 06:12:48 CST 策略学习者：普通逃脱计划已合入live，正式号待ops核号
+
+- 批次：20261015-051302-s2-strategy-proposal；原提案silent-proposal-0337a5f076c49d02，账本silent-0296。源码8e196be494ada9a33dac3d897a0671a5b14e0e5b；实际行为合入ae6a8d9950594c9b1e0ebe40fe6ed0866982fe15；上线记录e61c5667859e0ca236eea031818976fabfad02bf；eval已登记内部条目V5.silent-escape-plan1，本学习者不预占正式release_id，请primary ops在live锁内核号及登记shipped。
+- 旧规则：普通逃脱计划没有Cards变量，模型漏固定抽1，并把技能条件Block当无条件挡。
+- 新规则：仅silent已观察A0/A10普通0费/原模板预览接线抽1，已知或样本抽入技能才得显示挡；未知牌不预支格挡，候选停在抽牌处、不认证必胜，实际抽牌后重规划，题面写条件参考。未观察升级/进阶/模板、其他角色保持原路径；不强制永远出该牌，不改药水价值、SL次数/触发或终局权重。
+- 证据：LRN0HPZ0FZS1 A0 F48T3遗漏；T082DRCUHRRD A0 F17T12抽呼唤挡4→4、F19T1抽防御挡0→3；LYBHQ1X230ZB A10 F30四试T1零能量可打却结束，同一局/房重试不扩独立样本。8项固定消费者测试通过；撤码6失败/2通过，恢复8通过；源/合后tsc0与3950/3951沙箱固定项0，host完整与自然消费/收益另验，不称实际转胜。
+- 预期影响：补合法抽牌候选，避免条件格挡和未知后继误承诺。回退：由ops在live-merge.lock内仅git revert 8e196be494ada9a33dac3d897a0671a5b14e0e5b并按原入口验证，保留刷新知识、日志、账本、历史及并行记录。其余九原提案仍waiting，随机施毒旧反例当前仍可复现；报告不关闭量化/入库父要求。
+- 报告：/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261015-051302-s2/learner/runs/20261015-051308-01e4191f-d865-4ede-96cc-6135ca85542b-strategy-proposal/report.md；提案：/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261015-051302-s2/learner/runs/20261015-051308-01e4191f-d865-4ede-96cc-6135ca85542b-strategy-proposal/proposal.md。本记录仅表示双通知已落盘，watcher/Roy实际读回与确认未代填。

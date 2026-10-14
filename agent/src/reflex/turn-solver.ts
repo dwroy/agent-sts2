@@ -809,6 +809,8 @@ export interface Outcome {
   cunningShivsLeft?: CardModel[];
   /** Multi-target Kusarigama damage was omitted; this outcome is conditional, not a bound. */
   kusarigamaUnresolved?: true;
+  /** Escape Plan's unknown draw requires the actual hand before a continuation or a certified win. */
+  escapePlanUnresolved?: true;
   /** Established Serpent Form after this line; absent outside the observed character/ascension. */
   serpentFormAfter?: number | null;
   /** Every enemy dead by the end of this turn (a Waterfall Giant killed is not: explodesNext). */
@@ -1026,6 +1028,7 @@ export interface Plan {
 interface Sim {
   traceDrawn?: number;
   pendingSelection?: boolean;
+  escapePlanUnresolved?: true;
   noDraw: boolean;
   hand: CardModel[];
   energy: number;
@@ -2122,7 +2125,25 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
   const poisonBlock = card.blockFromPoison && !card.upgraded && !player.frail &&
     (player.dexterityNow ?? 0) === 0 && next.tempDex === 0 && !player.unmovableArmed &&
     !player.shadowmeldActive && !next.shadowmeld;
-  const cardBlock = poisonBlock ? next.enemies.reduce((sum, enemy) => sum + (enemy.alive ? enemy.poison ?? 0 : 0), 0) : card.block;
+  let cardBlock = poisonBlock ? next.enemies.reduce((sum, enemy) => sum + (enemy.alive ? enemy.poison ?? 0 : 0), 0) : card.block;
+  if (card.escapePlan) {
+    // Resolve the condition against the same next card used by known/sampled draws.
+    const drawn = card.drawn?.[0] ?? next.known?.[next.pileDrawn];
+    const space = (player.handLimit ?? HAND_LIMIT) - next.hand.filter((entry) => entry.type !== "Potion").length - next.held.length - next.drawnInHand;
+    const room = (player.drawable ?? Infinity) - next.cardsDrawn;
+    if (!singleManualPlay || next.noDraw || space <= 0 || room <= 0) {
+      cardBlock = 0;
+      next.pendingSelection = true;
+      next.escapePlanUnresolved = true;
+      next.unknown = [...next.unknown, `${card.name}（重放、自动或未实际抽入的条件格挡未验证）`];
+    } else if (!drawn || !["Attack", "Skill", "Power", "Status", "Curse"].includes(drawn.type)) {
+      cardBlock = 0;
+      // Its conditional Block may also spend the first-Block marker. Do not invent later plays.
+      next.pendingSelection = true;
+      next.escapePlanUnresolved = true;
+      next.unknown = [...next.unknown, `${card.name}（抽入牌类型未知；未计条件格挡，抽牌后重规划）`];
+    } else if (drawn.type !== "Skill") cardBlock = 0;
+  }
   if (cardBlock > 0 && card.special !== "second_wind" && (card.type === "Potion" || !next.noBlock)) {
     // Unmovable doubles only the first card Block of the turn, but every Block card shows the doubled
     // number until then (92MW F33 T2: 22 planned, 16 gained; T7 -9 planned, -14).
@@ -3209,6 +3230,7 @@ function endBlockParts(sim: Sim, input: SolverInput, winsFight: boolean): { ethe
 }
 
 function fightEnded(sim: Sim, input: SolverInput): boolean {
+  if (sim.escapePlanUnresolved) return false;
   const pending = sim.enemies.some((enemy) => !enemy.alive && (enemy.revives ||
     (input.enemies.find((start) => start.index === enemy.index)!.hp > 0 &&
       ((enemy.stock ?? 0) > 0 || enemy.spawnsOnDeath || ((enemy.eruption ?? 0) > 0 && enemy.maxHp < 1_000_000)))));
@@ -3725,6 +3747,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
         ...(input.player.paelsLegionPreview && sim.tempDex !== 0 ? ["佩尔的士兵（方案内新增敏捷组合未验证）"] : []),
       ],
       ...(sim.kusarigamaUnresolved ? { kusarigamaUnresolved: true as const } : {}),
+      ...(sim.escapePlanUnresolved ? { escapePlanUnresolved: true as const } : {}),
       sandpitAfter,
       ...(stunned.length > 0 ? { stuns: stunned.map((enemy) => enemy.name), stunIndexes: stunned.map((enemy) => enemy.index), stunSaved } : {}),
       ...(sim.bufferSpent > 0 ? { bufferSpentBySelf: sim.bufferSpent } : {}),
@@ -3809,7 +3832,8 @@ function simKey(sim: Sim): string {
     + (sim.slothPlays > 0 ? `#sloth${sim.slothPlays}` : "")
     + (sim.noDraw ? "#noDraw" : "")
     + (sim.apotheosisApplied ? "#apotheosis" : "")
-    + (sim.kusarigamaUnresolved ? "#kusarigamaUnresolved" : "");
+    + (sim.kusarigamaUnresolved ? "#kusarigamaUnresolved" : "")
+    + (sim.escapePlanUnresolved ? "#escapePlanUnresolved" : "");
   const enemies = sim.enemies.map((enemy) => `${enemy.hp}/${enemy.block}/${enemy.vulnerable}/${enemy.weak}/${enemy.artifact}/${enemy.strengthDelta}/${enemy.slippery ?? 0}/${enemy.curlUp ?? 0}/${enemy.flutter ?? 0}/${enemy.sleepLost ?? 0}/${enemy.tempStrengthLoss ?? 0}/${enemy.demise ?? 0}/${enemy.shrink ?? 0}/${enemy.ravenousStunned ? 1 : 0}${enemy.strangle !== undefined ? `/strangle${enemy.strangle}` : ""}${enemy.cardStunned ? "/whistleStunned" : ""}`).join("|");
   const phantomKey = (sim.phantomBlades > 0 ? `#pb${sim.phantomBlades}/${sim.phantomBladesSpent ? 1 : 0}` : "")
     + (sim.serpentForm !== null ? `#sf${sim.serpentForm}` : "");

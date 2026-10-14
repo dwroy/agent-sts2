@@ -127,6 +127,8 @@ export interface CardModel {
   survivorDiscard?: boolean;
   /** Fixed draw in the observed Dagger Throw text, used only by the discard relic model. */
   discardDraw?: number;
+  /** silent-0296: the observed plain Escape Plan draws one; only a drawn Skill grants its displayed Block. */
+  escapePlan?: true;
   doubleDamageNext?: boolean;
   /** Observed poison applications and triggers (silent-0008 / silent-0010 / silent-0011). */
   poison?: number;
@@ -1012,7 +1014,18 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
     !bool(card["upgraded"]) && dyn(card, "Cards") === 3;
   // L704TLETMZBM F48 T4: Dagger Throw's fixed draw has no Cards variable in the observed frame.
   const daggerDraw = character.toLowerCase() === "silent" && cardId === "DAGGER_THROW" && !bool(card["upgraded"]) && /抽1张牌/.test(renderedText.replace(/\s+/g, "")) ? 1 : 0;
-  const draw = hiddenDaggers || bladeDance || shadowStep || metamorphosis || nextTurnOnly(template, "Cards") ? 0 : dyn(card, "Cards") ?? 0;
+  // T082DRCUHRRD F17 T12 / F19 T1; LRN0HPZ0FZS1 F48 T3 and LYBHQ1X230ZB F30 T1.
+  const escapeValues = asArray(card["dynamic_values"]).map(asRecord);
+  const escapePlan = character.toLowerCase() === "silent" && (ascension === 0 || ascension === 10) &&
+    cardId === "ESCAPE_PLAN" && type === "Skill" && !bool(card["upgraded"]) &&
+    card["target_type"] === "Self" && !requiresTarget && card["energy_cost"] === 0 &&
+    card["costs_x"] === false && card["star_costs_x"] === false && card["star_cost"] === 0 &&
+    card["enchantment"] == null && escapeValues.length === 1 &&
+    escapeValues[0]?.["name"] === "Block" && escapeValues[0]?.["base_value"] === 3 &&
+    escapeValues[0]?.["enchanted_value"] === 3 && [3, 5, 12].includes(block) &&
+    template.replace(/\s+/g, "") === "抽1张牌。如果抽到的是技能牌，则获得{Block:diff()}点格挡。" &&
+    renderedText.replace(/\s+/g, "") === `抽1张牌。如果抽到的是技能牌，则获得${block}点格挡。`;
+  const draw = escapePlan ? 1 : hiddenDaggers || bladeDance || shadowStep || metamorphosis || nextTurnOnly(template, "Cards") ? 0 : dyn(card, "Cards") ?? 0;
   const keywords = info?.keywords ?? [];
   const exhausts = keywords.some((keyword) => /exhaust/i.test(keyword));
 
@@ -1265,6 +1278,7 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
     energyGain,
     plating: dyn(card, "PlatingPower") ?? 0,
     draw,
+    ...(escapePlan ? { escapePlan: true as const } : {}),
     exhausts,
     special,
     ...(shadowStep ? { discardsHand: true, doubleDamageNext: true } : {}),

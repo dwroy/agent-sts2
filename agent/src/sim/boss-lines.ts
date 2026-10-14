@@ -18,6 +18,8 @@
  * Switch: BOSS_SIM_LINES=off (bossLinesOptions.enabled) leaves the question and its ranking as they were before B2.
  */
 
+import { beginComputation, type SimAttempt, type SimCompletion } from "./computation-failure.js";
+import type { SimProgress, SimWait } from "./computation-wait.js";
 import { createHash } from "node:crypto";
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
@@ -286,7 +288,7 @@ export class BossLinesPool {
   }
 
   /** Every (pair, sample) to the fight's end, sample-major, until done or `deadlineMs` of wall clock. */
-  run(input: RolloutInput, pairs: { plan: Plan | null; order: KillOrder | null }[], samples: number, seed: number, deadlineMs: number, now: () => number = () => performance.now()): PairsRun {
+  run(input: RolloutInput, pairs: { plan: Plan | null; order: KillOrder | null }[], samples: number, seed: number, deadlineMs: number, now: () => number = () => performance.now(), onProgress?: SimProgress): PairsRun {
     const started = now();
     const workers = this.start();
     const job = (this.job += 1);
@@ -324,6 +326,7 @@ export class BossLinesPool {
             else {
               for (const [pair, i, result] of reply.results) outcomes[pair]![i] = result;
               done += reply.results.length;
+              onProgress?.(done, tasks.length);
               pending -= 1;
             }
           }
@@ -384,7 +387,7 @@ export function releaseBossLinesPool(): void {
 }
 
 /** The same runs in this thread (tests, tools): a deadline is checked between samples. */
-export function runPairsSerial(input: RolloutInput, pairs: { plan: Plan | null; order: KillOrder | null }[], samples: number, seed: number, deadlineMs = Infinity, now: () => number = () => performance.now()): PairsRun {
+export function runPairsSerial(input: RolloutInput, pairs: { plan: Plan | null; order: KillOrder | null }[], samples: number, seed: number, deadlineMs = Infinity, now: () => number = () => performance.now(), onProgress?: SimProgress): PairsRun {
   const started = now();
   const outcomes: (FightSampleResult | undefined)[][] = pairs.map(() => new Array<FightSampleResult | undefined>(samples));
   let timedOut = false;
@@ -397,6 +400,7 @@ export function runPairsSerial(input: RolloutInput, pairs: { plan: Plan | null; 
       }
       outcomes[pair]![i] = fightSampleOf(input, pairs[pair]!, sampleSeed(seed, i));
       done += 1;
+      onProgress?.(done, samples * pairs.length);
     }
   }
   const complete: number[] = [];
@@ -446,13 +450,13 @@ export function linesInput(input: RolloutInput, holdHp = bossLinesOptions.holdHp
 export function runLines(
   input: RolloutInput,
   lines: Plan[],
-  opts: { samples: number; seed: number; deadlineMs: number; serial?: boolean; now?: () => number; holdHp?: (potionId: string, input: RolloutInput) => number | null },
+  opts: { samples: number; seed: number; deadlineMs: number; serial?: boolean; now?: () => number; onProgress?: SimProgress; holdHp?: (potionId: string, input: RolloutInput) => number | null },
 ): LinesResult {
   const orders = fightOrders(input);
   const pairs = lines.flatMap((plan) => [null, ...orders].map((order) => ({ plan, order })));
   const slim = linesInput(input, opts.holdHp);
   const now = opts.now ?? (() => performance.now());
-  const run = opts.serial ? runPairsSerial(slim, pairs, opts.samples, opts.seed, opts.deadlineMs, now) : bossLinesPool().run(slim, pairs, opts.samples, opts.seed, opts.deadlineMs, now);
+  const run = opts.serial ? runPairsSerial(slim, pairs, opts.samples, opts.seed, opts.deadlineMs, now, opts.onProgress) : bossLinesPool().run(slim, pairs, opts.samples, opts.seed, opts.deadlineMs, now, opts.onProgress);
   const per = orders.length + 1;
   const out = lines.map((_, li) => {
     let pick: (BossSimLineResult & { order: string | null }) | null = null;
@@ -614,7 +618,7 @@ export interface LineSim {
   text: string;
 }
 
-export type BossLineSim =
+export type BossLineSim = { completion?: SimCompletion } & (
   | { available: false; reason: string; ms: number }
   | {
       available: true;
@@ -630,11 +634,12 @@ export type BossLineSim =
       plan: string | null;
       /** The lines in the ranking's order (the tied-on-win-rate group by HP lost, then the rest by win rate), for the log. */
       order: Plan[];
-    };
+    });
 
 export interface BossLineSimArgs extends BossSimInputArgs {
   /** Live Silent controller policy; historical replays retain their frozen budgets unless explicitly opted in. */
   requiredComplete?: boolean;
+  simWait?: SimWait;
   /** Every line shown (plan lines, then the random potions' median lines). */
   lines: Plan[];
   /** Lines the ranking may pick (a line code added is shown; a random potion's line is Jev's to drink). */
@@ -663,6 +668,12 @@ export function bossLineSim(args: BossLineSimArgs): BossLineSim {
   const started = now();
   const ms = () => Math.round(now() - started);
   const required = args.requiredComplete === true && quantitativeEnabled(args.state);
+  let attempt: SimAttempt | undefined;
+  let wait: ReturnType<SimWait["start"]> | undefined;
+  let sampled = 0;
+  const samples = args.samples ?? bossLinesOptions.samples;
+  const unavailable = (reason: string): BossLineSim => ({ available: false, reason, ms: ms(),
+    ...(attempt ? { completion: attempt.finish(sampled, samples, reason) } : {}) });
   try {
     if (args.lines.length === 0) return { available: false, reason: "no line", ms: ms() };
     // The turn's budget over its questions (a re-plan after a draw asks again).
@@ -670,18 +681,22 @@ export function bossLineSim(args: BossLineSimArgs): BossLineSim {
     if (!required && failed.fight === fight && failed.count >= BOSS_LINES_MAX_FAILURES) return { available: false, reason: `off for this fight: ${failed.count} questions in a row got no sample from the worker pool`, ms: ms() };
     const turnKey = `${fight}:${args.turn ?? "?"}`;
     const memo = args.memory.bossLines?.turn === turnKey ? args.memory.bossLines : { turn: turnKey, spentMs: 0 };
-    const left = required ? Infinity : Math.min(bossLinesOptions.deadlineMs, bossLinesOptions.turnBudgetMs - memo.spentMs);
+    let left = required ? Infinity : Math.min(bossLinesOptions.deadlineMs, bossLinesOptions.turnBudgetMs - memo.spentMs);
     if (left < bossLinesOptions.minMs) return { available: false, reason: `this turn's ${Math.round(bossLinesOptions.turnBudgetMs / 1000)} s for the simulation is spent`, ms: ms() };
     const input = bossSimInput(args);
     const boss = bossKeyOf(input.enemies.map((e) => e.id));
     const lowTrust = input.continuation?.limitation ?? (boss ? bossTrustReason(boss, "b2", args.state.run?.ascension, args.state.run?.floor) : null);
-    const samples = args.samples ?? bossLinesOptions.samples;
+    if (required) {
+      attempt = beginComputation(args.memory, args.state, "boss-lines", linesMemoKey(input, args.lines, samples, linesWhere() ?? "unknown"));
+      if (attempt.degraded) left = bossLinesOptions.deadlineMs;
+      wait = args.simWait?.start({ run: String(args.state.raw["run_id"] ?? ""), floor: args.state.run?.floor ?? null, label: "boss-lines" });
+    }
     const memoed = args.memo ? recallLines(args.memo, input, args.lines, samples, left) : null;
     let run: LinesResult;
     if (memoed) run = { ...memoed, memo: { wallMs: ms() } };
     else {
       try {
-        run = runLines(input, args.lines, { samples, seed: bossLinesOptions.seed, deadlineMs: left, serial: bossLinesOptions.serial, now });
+        run = runLines(input, args.lines, { samples, seed: bossLinesOptions.seed, deadlineMs: left, serial: bossLinesOptions.serial, now, ...(wait ? { onProgress: wait.progress } : {}) });
       } catch (error) {
         // A worker's error: the next question starts a new pool.
         releaseBossLinesPool();
@@ -691,12 +706,14 @@ export function bossLineSim(args: BossLineSimArgs): BossLineSim {
       if (args.memo) storeLines(args.memo, input, args.lines, samples, run);
     }
     args.memory.bossLines = { turn: turnKey, spentMs: memo.spentMs + run.elapsedMs };
-    if (required && (run.timedOut || run.samples !== samples)) return { available: false, reason: `required paired computation incomplete: ${run.samples}/${samples}`, ms: ms() };
+    sampled = run.samples;
+    if (required && !attempt?.degraded && (run.timedOut || run.samples !== samples)) return unavailable(`required paired computation incomplete: ${run.samples}/${samples}`);
     if (run.samples === 0) {
       releaseBossLinesPool();
       failed = { fight, count: failed.fight === fight ? failed.count + 1 : 1 };
-      return { available: false, reason: `no sample finished within ${Math.round(left / 1000)} s`, ms: ms() };
+      return unavailable(`no sample finished within ${Math.round(left / 1000)} s`);
     }
+    if (attempt?.degraded && run.samples < 300) return unavailable(`不完整（故障降级，n=${run.samples}）；不足 300 次，不给数字，按原 rollout 继续`);
     failed = { fight, count: 0 };
     const eligible = (i: number) => (args.eligible ? args.eligible(args.lines[i]!) : true);
     const rank = rankLines(run.lines, BOSS_LINES_TIE_SE, eligible);
@@ -712,7 +729,7 @@ export function bossLineSim(args: BossLineSimArgs): BossLineSim {
       const margin = input.captureBossMargin ? summarizeBossMargin(line.outcomes, reference.outcomes, line.outcomes.map((_, at) => at)) : null;
       byPlan.set(args.lines[i]!, { result: line, calibrated, vsBest, winTied,
         ...(margin ? { bossMargin: { ...margin, rankingEligible: margin.rankingEligible && !lowTrust } } : {}),
-        text: lineSimText(line, calibrated, rank.best === i ? null : vsBest, run, turnNow, { best: rank.best === i, winTied, lowTrust }) });
+        text: (attempt?.degraded ? `不完整（故障降级，n=${run.samples}）；` : "") + lineSimText(line, calibrated, rank.best === i ? null : vsBest, run, turnNow, { best: rank.best === i, winTied, lowTrust }) });
     });
     // The ranking as a full order: the lines tied with the top win rate by HP lost when won (the best first), then the rest by win rate.
     const key = (i: number): [number, number, number] => (rank.winTied[i] ? [0, wonLoss(run.lines[i]!), -run.lines[i]!.winProb] : [1, -run.lines[i]!.winProb, wonLoss(run.lines[i]!)]);
@@ -721,6 +738,7 @@ export function bossLineSim(args: BossLineSimArgs): BossLineSim {
     const showPlan = args.turn === null || args.turn <= 1 || (args.turn - 1) % BOSS_LINES_PLAN_EVERY === 0;
     const plan = showPlan && rank.best >= 0 ? fightPlanText(input, run.lines[rank.best]!, turnNow) : null;
     const sim: BossLineSim = {
+      ...(attempt ? { completion: attempt.finish(run.samples, samples) } : {}),
       available: true,
       byPlan,
       best: lowTrust || rank.best < 0 || rank.tied.length > 0 ? null : args.lines[rank.best]!,
@@ -735,7 +753,9 @@ export function bossLineSim(args: BossLineSimArgs): BossLineSim {
     bossLinesOptions.onSim?.(sim);
     return sim;
   } catch (error) {
-    return { available: false, reason: `error: ${String(error).slice(0, 160)}`, ms: ms() };
+    return unavailable(`error: ${String(error).slice(0, 160)}`);
+  } finally {
+    wait?.finish();
   }
 }
 
@@ -809,7 +829,8 @@ export function simNote(sim: BossLineSim): string {
 
 /** The decision log's record (log.boss_sim). */
 export function simLog(sim: BossLineSim, keyOf: (plan: Plan) => string | null, extra: Record<string, JsonValue> = {}): Record<string, JsonValue> {
-  if (!sim.available) return { available: false, reason: sim.reason, ms: sim.ms, ...extra };
+  const completion: Record<string, JsonValue> = sim.completion ? { completion: { ...sim.completion } } : {};
+  if (!sim.available) return { available: false, reason: sim.reason, ms: sim.ms, ...completion, ...extra };
   const lines: Record<string, JsonValue> = {};
   for (const [plan, line] of sim.byPlan) {
     const key = keyOf(plan);
@@ -828,6 +849,7 @@ export function simLog(sim: BossLineSim, keyOf: (plan: Plan) => string | null, e
   }
   return {
     available: true,
+    ...completion,
     ...(sim.run.continuation ? { objective: "F48_F49_continuous", calibration: "none", continuation: { source: sim.run.continuation.source, limitation: sim.run.continuation.limitation } } : {}),
     // The question's own wall clock (an SL retry memo hit: the lookup's; the decision row's timing.memo has the stored run's).
     ms: sim.run.memo ? sim.run.memo.wallMs : sim.run.elapsedMs,
