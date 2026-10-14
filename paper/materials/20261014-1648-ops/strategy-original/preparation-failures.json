@@ -1,0 +1,26 @@
+{
+  "source_transpiler_first_attempt": {
+    "tool_session": 58109,
+    "exit_code": 1,
+    "error": "ERR_MODULE_NOT_FOUND: agent/node_modules/typescript/lib/typescript.js",
+    "resolution": "未安装依赖；改用现有esbuild，仅作源码材料比较。"
+  },
+  "esbuild_first_comparison": {
+    "exit_code": 1,
+    "different_files": ["agent/src/reflex/combat-plan.ts"],
+    "cause": "esbuild默认仍保留对象字面量内的No DeepSeek escalation注释；原emitted文本已保存，差异只有Roy→Dai。",
+    "resolution": "启用minifyWhitespace去除该保留注释；原14文件JSON、首轮stdout和emitted文本保留。"
+  },
+  "sandbox_preparation": [
+    {
+      "tool_chunk": "151651",
+      "error": "bubblewrap建立前，其他工作树codex-strategy-silent-20261014-151302回收期间的rg ENOENT",
+      "resolution": "相同命令、原权限重试成功；没有执行首轮命令。"
+    },
+    {
+      "tool_chunk": "562d60",
+      "error": "apply_patch读取前，其他工作树codex-strategy-silent-20261014-144305-s2回收期间的rg ENOENT",
+      "resolution": "相同patch、原权限重试成功；没有扩大权限或修改沙箱。"
+    }
+  ]
+}

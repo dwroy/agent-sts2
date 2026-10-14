@@ -1,0 +1,100 @@
+[
+  {
+    "run": "XTSV1U9JD34T",
+    "line": 280003,
+    "reason": "原始元数据行没有decision_id，独立保留；原行号缺口禁止跨接",
+    "row": {
+      "ts": "2026-10-07T18:27:54.300Z",
+      "mode": "play",
+      "screen": "REWARD",
+      "session": "singleplayer/run",
+      "floor": 11,
+      "turn": 5,
+      "label": "map/route-change",
+      "decider": "codex",
+      "fingerprint": "{\"actions\":[\"save_and_quit\",\"resolve_rewards\",\"collect_rewards_and_proceed\",\"choose_reward_card\",\"skip_reward_cards\"],\"combat\":false,\"enemies\":\"\",\"event\":\"\",\"gold\":110,\"hand\":\"\",\"hp\":23,\"maxHp\":77,\"nodes\":\"\",\"pendingCard\":true,\"player\":\"2:0:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"\",\"rewards\":\"\",\"run\":\"XTSV1U9JD34T\",\"screen\":\"REWARD\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":5}",
+      "rationale": "Codex changed the act's route in reward/card (card-reward review): r11c4 问号 → r12c4 休息 → r13c4 普通战 → r14c5 普通战 → r15c5 休息 → r16c3 Boss => r11c4 问号 → r12c4 休息 → r13c4 普通战 → r14c4 问号 → r15c5 休息 → r16c3 Boss",
+      "confidence": null,
+      "fallback": false,
+      "reasked": false,
+      "no_jev": false,
+      "reused_answer": false,
+      "request_ids": [],
+      "latency_ms": {
+        "plan": 0,
+        "jev": 0,
+        "action": 0
+      },
+      "usage": {
+        "input_tokens": 0,
+        "output_tokens": 0
+      },
+      "deepseek": {
+        "by": "deepseek",
+        "direct": true,
+        "reused": true,
+        "plan_ref": "XTSV1U9JD34T:F11:reward#4",
+        "plan_step": 2,
+        "choice": "r11c4 r12c4 r13c4 r14c4 r15c5 r16c3",
+        "reason": "",
+        "from": "r11c4 问号 → r12c4 休息 → r13c4 普通战 → r14c5 普通战 → r15c5 休息 → r16c3 Boss",
+        "to": "r11c4 问号 → r12c4 休息 → r13c4 普通战 → r14c4 问号 → r15c5 休息 → r16c3 Boss"
+      },
+      "run_id": "XTSV1U9JD34T",
+      "observed_ts": "2026-10-07T18:27:25.692Z",
+      "journal": {
+        "choice": "route (card-reward review): r11c4 问号 → r12c4 休息 → r13c4 普通战 → r14c4 问号 → r15c5 休息 → r16c3 Boss",
+        "reason": ""
+      },
+      "route_plan": {
+        "runId": "XTSV1U9JD34T",
+        "act": 1,
+        "floor": 11,
+        "hpPct": 0.2987012987012987,
+        "path": [
+          {
+            "row": 11,
+            "col": 4,
+            "type": "Unknown",
+            "hpOnArrival": 0.2987012987012987
+          },
+          {
+            "row": 12,
+            "col": 4,
+            "type": "RestSite",
+            "hpOnArrival": 0.2987012987012987
+          },
+          {
+            "row": 13,
+            "col": 4,
+            "type": "Monster",
+            "hpOnArrival": 0.5974025974025974
+          },
+          {
+            "row": 14,
+            "col": 4,
+            "type": "Unknown",
+            "hpOnArrival": 0.5584415584415584
+          },
+          {
+            "row": 15,
+            "col": 5,
+            "type": "RestSite",
+            "hpOnArrival": 0.5584415584415584
+          },
+          {
+            "row": 16,
+            "col": 3,
+            "type": "Boss",
+            "hpOnArrival": 0.8571428571428571
+          }
+        ],
+        "summary": "r11c4 问号 → r12c4 休息 → r13c4 普通战 → r14c4 问号 → r15c5 休息 → r16c3 Boss",
+        "why": "card-reward review"
+      },
+      "result": "route plan changed (no game action)",
+      "_line": 280003,
+      "_source_sha256": "b9d588dda8f263d8890ed935442331d934ab60e002e98b465e6840754866e472"
+    }
+  }
+]

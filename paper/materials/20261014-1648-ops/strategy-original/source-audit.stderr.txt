@@ -1,0 +1,16 @@
+fatal: path 'learner/lib/selection-turns.ts' does not exist in '46993bc280403cccc4c021e31a43d53dbe562d77'
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261014-161301-s2/learner/runs/20261014-161323-strategy-proposal/audit-source.py", line 36, in <module>
+    before = git('show', f'{base}:{path}')
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261014-161301-s2/learner/runs/20261014-161323-strategy-proposal/audit-source.py", line 11, in git
+    return subprocess.check_output(['nice', '-n', '19', 'git', *args], cwd=cwd)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/subprocess.py", line 473, in check_output
+    return run(*popenargs, stdout=PIPE, timeout=timeout, check=True,
+           ~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+               **kwargs).stdout
+               ^^^^^^^^^
+  File "/usr/lib/python3.14/subprocess.py", line 578, in run
+    raise CalledProcessError(retcode, process.args,
+                             output=stdout, stderr=stderr)
+subprocess.CalledProcessError: Command '['nice', '-n', '19', 'git', 'show', '46993bc280403cccc4c021e31a43d53dbe562d77:learner/lib/selection-turns.ts']' returned non-zero exit status 128.
