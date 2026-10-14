@@ -2013,3 +2013,5 @@ tsc及2673例沙箱测试通过，推送动作专项2例/Python4例通过。当�
  回执/home/dw/Projects/agent-sts2/ops/codex-ops/learning-notices/d486caef57aeb0c096a29a75.json；watcher须读取并告知Roy，尚未确认用户收到。<!-- learning-notice:d486caef57aeb0c096a29a75 -->
 
 - 2026-10-15 05:28:18 CST 原021302基础设施新树宿主验收已通过：liveffb51b0b/treee5d46f2f、B6/bef两源实际祖先，459文件4747过2skip，原failed/rc0/mergednull及R348/R349原full失败保留，当前exact-tree结案，不重复全套或新增行为号。两044302策略20项waiting/无源码/测试，30997原字节与Sol6.1/xhigh/原输入/两线程核；原50CLI保存，49原行+一次0094无status追溯入canonical，Git已shipped与物理proposed漂移沿唯一普通队列。K2数字勘误d486已实际发原watcher、本人真实接收/用户原生告知并后两CLI完成；三角色证据逐SHA/native原字节核，无用户读/ACK或新父项/知识/规则宣称。c1两重复通知只沿原legacy登记缺口，真实告知不重发；所有父范围/对局/账号/prompt保持。paper/materials/20261015-0513-ops。
+
+- 2026-10-15 05:36:18 CST 原051302策略机械阻塞读回：10项waiting、HEAD0052/无源码/无提交/无测试，原22冲突全部历史notes/论文数据/绑定/ledger，无所列功能源码冲突；并非已有可合源码的兜底失败。已证螺线窄范围仍原0293/9c3554/9e77e1 owner，不把它记证据不足或已实现；原其他策略仍需校准。原链下一安全租约只实现/自测已证窄叶并由ops精确源码集成，保历史记录/知识刷新，不整体合分支、不新增线程/研究/热输入；本轮未派/未启动接续。K2 d486三真实role已在0513完成，本次是旧队列通知，逐来源/receipt SHA去重，不重发或代ACK。paper/materials/20261015-0532-ops。
