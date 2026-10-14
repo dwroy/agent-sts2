@@ -1,0 +1,6 @@
+本批首次消费者CLI因IPC权限退出后，中间摘要准备误读尚为空的reference-output.json，退出1。
+工具转录保留原调用及输出；下列保存失败的具体诊断，未将其作为生产代码失败，也未计作撤源码测试。
+
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+随后消费者通过node --import既有tsx loader在同沙箱/同输入实际退出0，再读取结果，未修改源日志、生产代码或断言。
