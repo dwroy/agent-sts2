@@ -1,0 +1,122 @@
+import hashlib
+import importlib.util
+import json
+import subprocess
+from collections import Counter
+from pathlib import Path
+
+OUT = Path(__file__).resolve().parent
+ROOT = Path('/home/dw/Projects/agent-sts2')
+WORKTREE = OUT.parents[2]
+def read(name):
+    return json.loads((OUT / name).read_text())
+def digest(data):
+    return hashlib.sha256(data).hexdigest()
+checks = []
+def record(name, value):
+    assert value, name
+    checks.append(name)
+
+report = read('report.json')
+dispatch = read('dispatch.json')
+manifest = read('evidence-manifest.json')
+head = subprocess.check_output(['git', '-C', str(WORKTREE), 'rev-parse', 'HEAD'], text=True).strip()
+status = subprocess.check_output(['git', '-C', str(WORKTREE), 'status', '--porcelain=v1'], text=True)
+record('HEAD保持完整base且跟踪工作树/索引干净', head == report['base'] and status == '')
+record('逐项处置精确覆盖本批十ID', [x['id'] for x in report['proposal_results']] == dispatch['proposal_ids']
+       and report['code_proposals'] == dispatch['proposal_ids'] and len(set(dispatch['proposal_ids'])) == 10)
+record('waiting无伪造源码/测试/合入/专题完成', all(x['state'] == 'waiting' and x['reason'] for x in report['proposal_results'])
+       and report['fixes'] == [] and report['merged'] is None and report['implementation_domains'] == []
+       and report['tests'] == {'tsc': None, 'vitest': None, 'cases': None} and 'research_complete' not in report)
+record('报告/提案真实绝对路径存在', Path(report['report']) == OUT / 'report.md'
+       and (OUT / 'report.md').is_file() and (OUT / 'proposal.md').is_file())
+for source in manifest['sources'].values():
+    record('提取源SHA:' + Path(source['extracted']).name, digest(Path(source['extracted']).read_bytes()) == source['sha256'])
+for proposal in manifest['proposals']:
+    record('原提案SHA:' + proposal['id'], digest(Path(proposal['source']).read_bytes()) == proposal['sha256']
+           and digest(Path(proposal['copy']).read_bytes()) == proposal['sha256'])
+provenance = read('source-lines.json')
+handles = {}
+try:
+    for row in provenance:
+        handle = handles.setdefault(row['file'], Path(row['file']).open('rb')) if row['file'] not in handles else handles[row['file']]
+        handle.seek(row['offset'])
+        raw = handle.read(row['bytes'])
+        assert digest(raw) == row['sha256']
+finally:
+    for handle in handles.values():
+        handle.close()
+record('8293原行offset/bytes/SHA源读回', len(provenance) == 8293)
+consumers = read('consumer-results.json')
+record('原输入拒绝与限定输入通过如实分列', consumers[0]['full_exit_code'] == 0
+       and all(x['full_exit_code'] == 1 and x['bounded_exit_code'] == 0 for x in consumers[1:])
+record('六条缺ID原行完整留存且限定输入不伪造', sum(len(x['excluded_source_lines']) for x in consumers) == 6)
+analysis = read('evidence-analysis.json')
+record('材料消费者计数一致', analysis['counts'] == {'states': 4167, 'decisions': 4071,
+       'consumer_decisions': 4065, 'segments': 861, 'observed_intervals': 2336,
+       'unknown_intervals': 1729, 'observed_turns': 415, 'unknown_turns': 362})
+expected = [([-13, -18], [-9, -18]), ([-13, -23], [-12, -18]), ([-8, -2], [-17, -11]),
+            ([-15, -21], [-2, -4]), ([-7, -5], [-1, -2])]
+for pair, (hp, damage) in zip(analysis['paired_turns'], expected):
+    record('同指纹轮窗差额:' + pair['run'] + ':T' + str(pair['turn']), pair['same_fingerprint']
+           and [x['hp_delta'] for x in pair['windows']] == hp
+           and [x['enemy_hp_changes'][0]['hp_delta'] for x in pair['windows']] == damage
+           and all(x['state_path_status'] == 'contiguous_source_states' for x in pair['windows']))
+for use in analysis['potion_uses']:
+    slot = use['action']['option_index']
+    before = next(x for x in use['before']['potions'] if x['index'] == slot)
+    after = next(x for x in use['after']['potions'] if x['index'] == slot)
+    assert before['occupied'] is True and before['id'] and after['occupied'] is False and after['id'] is None
+record('八次本批直接耗药槽位读回', len(analysis['potion_uses']) == 8)
+record('KEN三pending回执与实际槽位证据分列', [x['decision_line'] for x in analysis['potion_uses']
+       if x['run'] == 'KEN58SH9SLZ6' and x['result'].startswith('pending')] == [274131, 274237, 274272])
+a, b = analysis['giant_poison_snapshots']
+record('巨兽毒变化不冒称自爆减伤', [a['hp'], a['block'], b['hp'], b['block']] == [26, 13, 26, 13]
+       and a['enemy']['intents'][0]['damage'] == b['enemy']['intents'][0]['damage'] == 41
+       and a['enemy']['powers'][0]['amount'] == 2 and b['enemy']['powers'][0]['amount'] == 8)
+supplement = read('evidence-supplement.json')
+record('KEN能力建立T5/T9及T8未兑现挡', [x['snapshot']['turn'] for x in supplement['ken_dexterity']] == [5, 9]
+       and all(x['resolved_rules_text'] == '获得5点格挡。' for x in supplement['ken_t8_defends']['cards']))
+kv = json.loads((OUT / 'KV0JHNJCKXLS-input.json').read_text())
+ds = {x['_line']: x for x in kv['decisions']}
+record('KV原配对fingerprint同一', ds[273400]['fingerprint'] == ds[273450]['fingerprint'])
+record('KV手工净扣与消费者未知边界并存', [x['before']['enemies'][0]['current_hp'] - x['after']['enemies'][0]['current_hp']
+       for x in supplement['kv_pairs']] == [36, 29]
+       and all(x['before']['hp'] == x['after']['hp'] == 30
+               and x['consumer_turn_window'] == 'unknown:turn_end_unverified' for x in supplement['kv_pairs']))
+source_provenance = read('source-provenance.json')
+for x in source_provenance['files']:
+    record('本base源码叶未改:' + x['path'], digest((WORKTREE / x['path']).read_bytes()) == x['base_sha256'])
+    record('已有源码实际live祖先:' + x['path'], subprocess.run(['git', '-C', str(ROOT / '.worktrees/live'),
+           'merge-base', '--is-ancestor', x['live_source_commit'], 'HEAD'], capture_output=True).returncode == 0)
+raw = (ROOT / 'paper/materials/learning/ledger.jsonl').read_bytes()
+prefix = read('ledger-prefix-before.json')
+record('账本原前缀保留', digest(raw[:prefix['bytes']]) == prefix['sha256'])
+updates = [json.loads(line) for line in (OUT / 'ledger-updates.jsonl').read_text().splitlines()]
+expected_updates = {x['id']: x for x in updates}
+receipts = []
+offset = 0
+for line_no, line in enumerate(raw.splitlines(keepends=True), 1):
+    if offset >= prefix['bytes']:
+        x = json.loads(line)
+        original = expected_updates.get(x.get('id'))
+        if original and all(x.get(k) == v for k, v in original.items()):
+            receipts.append({'id': x['id'], 'line': line_no, 'offset': offset,
+                             'bytes': len(line), 'sha256': digest(line), 'row': x})
+    offset += len(line)
+record('根CLI十六链接行逐物理读回', Counter(x['id'] for x in receipts) == Counter(expected_updates))
+spec = importlib.util.spec_from_file_location('ledger', ROOT / 'learner/ledger.py')
+module = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(module)
+folded = module.fold(module.read_rows(str(ROOT / 'paper/materials/learning/ledger.jsonl')))
+old = read('assigned-ledger.json')
+for ident, item in old.items():
+    record('旧账本claim/status/来源保持:' + ident, all(folded[ident].get(key) == item.get(key)
+        for key in ['character', 'claim', 'status', 'version', 'evidence', 'first_run', 'prior', 'prior_runs']))
+(OUT / 'ledger-cli-receipts.json').write_text(json.dumps(receipts, ensure_ascii=False, indent=2) + '\n')
+record('gitleaks材料报告无检出', read('gitleaks.json') == [])
+receipt = {'kind': 'material_verification_only_not_production_tests', 'checks': checks,
+           'source_lines_verified': len(provenance), 'ledger_update_ids': list(expected_updates),
+           'base': head, 'git_status': status, 'tests': report['tests'], 'proposal_states': '10 waiting'}
+(OUT / 'acceptance.json').write_text(json.dumps(receipt, ensure_ascii=False, indent=2) + '\n')
+print('材料校验完成：', len(checks), '项；8293原行源指纹、16根CLI链接、10 waiting、HEAD/工作树保持。')
