@@ -1013,6 +1013,54 @@
       "broader_R3_P1_P2_natural_acceptance_pending": true,
       "no_repeat_fixed_input_30_questions_54_pools_or_144_APIs": true,
       "no_new_source_tests_merge_release_or_game_action": true
+    },
+    "20261015-0235-R3-owner-interface-confirmation": {
+      "at": "2026-10-15 02:41:33 CST",
+      "parent": "20261014-061302-fix-batch",
+      "original_batch": "20261015-001829-fix-batch",
+      "same_thread": "01a13753-c032-73f0-aa3f-ddc0e14809cd",
+      "actual_owner_read_and_returned": true,
+      "owner_reply": {
+        "path": "paper/materials/20261015-0235-ops/R3-owner-interface-confirmation.json",
+        "bytes": 30601,
+        "sha256": "7d102700b3bcf013ce55e5f86f117c4ed61c3d011f94177bfc671de1d338b963"
+      },
+      "native_original_final_reply": {
+        "path": "ops/codex-ops/accounts/codex1/learner/sessions/2026/10/14/rollout-2026-10-14T06-13-18-01a13753-c032-73f0-aa3f-ddc0e14809cd.jsonl",
+        "offset": 12642600,
+        "bytes": 1210,
+        "sha256": "dc41318c29aeaca4a402d84969fe2eda42975775e1579292a74e5d0b9be2f4bd",
+        "timestamp": "2026-10-14T18:35:19.609Z"
+      },
+      "substantive_interface_objections": [],
+      "watcher_field_table_transport": {
+        "path": "paper/materials/20261015-0235-ops/R3-owner-coordination-send.json",
+        "bytes": 911,
+        "sha256": "3ff2bcafeff4193784cd9b66f87896687b72c6a34451ffe0cf654fd594b5180b"
+      },
+      "watcher_field_table_readback": {
+        "path": "paper/materials/20261015-0235-ops/R3-watcher-field-readback.json",
+        "bytes": 12448,
+        "sha256": "83a2b82923569bdaaa749f44987304f43614bf719ce6d3fd3f2f3a0f3f4d4f3f"
+      },
+      "watcher_original_native_field_readback": {
+        "path": "/home/dw/.codex/sessions/2026/10/14/rollout-2026-10-14T17-55-41-01a139d6-cfec-78e1-8739-e21ac426a354.jsonl",
+        "offset": 10264468,
+        "bytes": 1339,
+        "sha256": "919ea60dd955151050d71614c6b1dbd2f62746bf7a906001175695aaafb9b8c1",
+        "timestamp": "2026-10-14T18:39:14.342Z",
+        "platform_message_id": null,
+        "excerpt": "owner-field-readback-native.jsonl",
+        "text": "已读完原 owner 的回执、报告和10类字段表，SHA `7d102700…` 与 ops 归档副本一致。双方接口边界无实质异议，现已从“等待 owner 确认”推进到“owner 已确认、watcher 已读回字段表”。\n\n我会按这些限制消费字段：槽位和模型 key 不作持久实例 ID；派生抽序只作有证前缀；`drinks.effective_hp_gain` 只作净 HP 变化。单轮验证必须传真实非空 Plan，核动作、目标及 `policyTurns=0`，并分清敌方阶段、回合末和下轮启动端点。连续整战接口与实际事件分账仍待实现，宽 R3/P1/P2 保持开放。"
+      },
+      "interface_confirmation_two_way_actual": true,
+      "state": "original_R3_owner_confirmed_contract_offline_interface_implementation_pending",
+      "frozen_input_sha256": "5ffbb2947cf1996448f766f4fc1bc1be69d44aa67104547af683f7b14684721e",
+      "frozen_model": "473b9c0e1563e88d174cc24d6007eda5c5a9a9f9",
+      "old_failed_rc0_mergednull_preserved": true,
+      "no_new_parent_source_or_experiment": true,
+      "real_full_fight_and_S_zero_and_wide_R3_P1P2_pending": true,
+      "conditions": "Persistent identities and actual uncapped damage/resources still unknown; effective_hp_gain is net HP observation, not independent heal attribution; full ordered actions/randomness/window required."
     }
   }
 }
