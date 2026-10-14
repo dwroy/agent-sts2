@@ -7,6 +7,8 @@
  * samples and the median turns. Facts, not a verdict: no option is scored, ranked or dropped.
  */
 
+import { ADAPTIVE_RULE, safeAdaptiveShadow } from "./adaptive-shadow.js";
+import { toJsonValue } from "../core/util/json.js";
 import type { RolloutInput } from "../reflex/rollout.js";
 import { BOSS_POLICY_THREAT, BOSS_SIM_LOOKAHEAD, calibratedWinProb, compareLines, fightOrders, summarizeLine, type BossSimLineResult, type FightSampleResult } from "./boss-sim.js";
 import type { DeckSimRunner, DeckRunResult } from "./build-sim-pool.js";
@@ -68,6 +70,7 @@ export interface OptionSim {
 }
 
 export interface CompareResult {
+  adaptive?: JsonValue;
   readiness?: BossReadiness;
   readinessMs?: number;
   completion?: { required: true; uniqueDecks: number; originalDecks: number; memoHit: boolean; originalComputeMs?: number };
@@ -135,14 +138,15 @@ export async function compareOptions(
   runner: DeckSimRunner,
   base: RolloutInput,
   options: DeckOption[],
-  opts: { samples?: number; seed?: number; deadlineMs?: number; now?: () => number; quantitative?: boolean; diagnostics?: boolean; requireComplete?: boolean; onProgress?: import("./computation-wait.js").SimProgress; readiness?: boolean } = {},
+  opts: { samples?: number; seed?: number; deadlineMs?: number; now?: () => number; quantitative?: boolean; diagnostics?: boolean; requireComplete?: boolean; adaptive?: { allowS: boolean }; onProgress?: import("./computation-wait.js").SimProgress; readiness?: boolean } = {},
 ): Promise<CompareResult> {
   if (opts.quantitative) base = { ...base, captureBossMargin: true,
     ...(base.meta.asc === 10 ? { captureCore: true, captureResources: true } : {}) };
   const samples = opts.samples ?? BUILD_SIM_SAMPLES;
   const required = opts.requireComplete === true;
   const cacheKey = required ? memoKey("required-b3-v1", { base, options, samples, seed: opts.seed ?? BUILD_SIM_SEED,
-    quantitative: opts.quantitative, diagnostics: opts.diagnostics, readiness: opts.readiness, policy: { BOSS_POLICY_THREAT, BOSS_SIM_LOOKAHEAD } }) : null;
+    quantitative: opts.quantitative, diagnostics: opts.diagnostics, readiness: opts.readiness,
+    ...(opts.adaptive ? { adaptive: { ...ADAPTIVE_RULE, ...opts.adaptive } } : {}), policy: { BOSS_POLICY_THREAT, BOSS_SIM_LOOKAHEAD } }) : null;
   const cached = cacheKey ? completeComparisons.get(runner) : undefined;
   if (cached?.key === cacheKey) {
     const result = structuredClone(cached.result);
@@ -247,7 +251,18 @@ export async function compareOptions(
     calibratedWin: base.continuation ? baseLine.winProb : calibratedWinProb(baseLine.winProb, BUILD_SIM_CALIBRATION_SAMPLES, "pre", base.meta.asc),
     ...(base.continuation ? {} : { calibrate: (raw: number) => calibratedWinProb(raw, BUILD_SIM_CALIBRATION_SAMPLES, "pre", base.meta.asc) }),
   }) : undefined;
+  const adaptive = required && opts.adaptive && options.length && n === samples ? safeAdaptiveShadow([
+    { key: "@current", samples: baseLine.outcomes, baseline: true, workGroup: "0" },
+    ...options.map((option) => ({ key: option.key, samples: summarize(deckOf.get(option.key)!).outcomes, workGroup: deckOf.get(option.key)!.join(",") })),
+  ], { lane: "b3", requested: samples, allowS: opts.adaptive.allowS }) : null;
+  if (adaptive && "work" in adaptive) {
+    const orderWork = allOrders.length > 1 ? Math.min(samples, BUILD_SIM_ORDER_SAMPLES) * allOrders.length : 0;
+    adaptive.work.full += orderWork;
+    adaptive.work.shadow += orderWork;
+    adaptive.work.savedFraction = 1 - adaptive.work.shadow / adaptive.work.full;
+  }
   const result: CompareResult = {
+    ...(adaptive ? { adaptive: toJsonValue({ ...adaptive, input_key: cacheKey, fixed_order_search_in_work: true }) } : {}),
     ...(readiness ? { readiness, readinessMs: performance.now() - readinessStart } : {}),
     ...(required ? { completion: { required: true as const, uniqueDecks: decks.length, originalDecks, memoHit: false } } : {}),
     ...(opts.diagnostics ? { diagnostics: { decks: decks.length, options: options.length, deckCards: base.piles.draw.length,

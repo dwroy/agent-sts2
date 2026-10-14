@@ -1,0 +1,48 @@
+{
+  "at": "2026-10-15T07:41:37.948008+08:00",
+  "parent": "roy-20261014-s-decision",
+  "stage": "C2 shadow only",
+  "base": "996c19ce286426a21bab9cc16c1e18dc36349607",
+  "checks": {
+    "production_tsc": 0,
+    "sandbox_command": "SANDBOX_WORKERS=2 nice -n 19 bash tools/test-sandbox.sh",
+    "sandbox_rc": 0,
+    "main_files": 420,
+    "main_cases": 3968,
+    "paths_files": 1,
+    "paths_cases": 11,
+    "sandbox_log": "sandbox-01.log",
+    "targeted_files": 13,
+    "targeted_cases": 47,
+    "targeted_rc": 0,
+    "targeted_log": "targeted-01.log",
+    "tool_tsc": 0,
+    "tool_tsc_log": "tool-tsc-03.log",
+    "prior_tool_cli_failures": [
+      "tool-tsc-01.log: explicit files need --ignoreConfig",
+      "tool-tsc-02.log: standalone flags need existing node types"
+    ]
+  },
+  "offline": {
+    "source": "offline-limited.json",
+    "reused_questions": 2,
+    "admission_eligible": 0,
+    "additional_simulations": 0,
+    "real_API_calls": 0,
+    "real_game_actions": 0
+  },
+  "activation": {
+    "default_silent": "shadow",
+    "other_roles": "off",
+    "on_implemented": false,
+    "on_request_actual": "shadow; admission pending",
+    "new_natural_completed_runs_verified": 0
+  },
+  "limits": [
+    "Shadow retains full samples and original decisions; savings are estimates only",
+    "Complete offline question coverage and two completed natural C2 runs remain required",
+    "Older P1 runs and limited P0 exports do not satisfy C2 admission",
+    "B2 median wonLoss ordering retained; no invented paired mean SE for early elimination",
+    "Original R2/R3 inputs, parent identities and rejected evidence unchanged"
+  ]
+}

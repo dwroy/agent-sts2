@@ -1,0 +1,227 @@
+{
+  "schema": "adaptive-offline-replay-v1",
+  "questions": 2,
+  "eligible": 0,
+  "agreement": null,
+  "savedFraction": {
+    "p50": null,
+    "p90": null
+  },
+  "mismatches": [],
+  "results": [
+    {
+      "id": "original-P0-b3-SOUL_FYSH-A10",
+      "source": {
+        "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-s-decision/frozen-b3/samples.json.gz",
+        "sha256": "f82342fcb561724ddbedb5c8f96d9f1458084a4cdb5e4f417c7e2a0d5d492690"
+      },
+      "limitation": "Original P0 S-only export under its frozen model; hypothetical S-eligible gate. Missing original per-sample HP fallback fields and complete B2 order provenance. Reused without simulation; excluded from C2 production admission.",
+      "result": {
+        "schema": "sim-adaptive-shadow-v1",
+        "mode": "shadow",
+        "lane": "b3",
+        "rule": {
+          "version": "adaptive-v1",
+          "b3First": 300,
+          "b2First": 200,
+          "batch": 100,
+          "zElim": 3,
+          "zTie": 2,
+          "first": 300,
+          "requested": 1000
+        },
+        "candidates": [
+          {
+            "key": "1:0:0",
+            "samples": 300,
+            "stop": "leader",
+            "rounds": 1,
+            "baseline": true
+          },
+          {
+            "key": "1:1:0",
+            "samples": 300,
+            "stop": "leader",
+            "rounds": 1,
+            "baseline": false
+          },
+          {
+            "key": "1:2:0",
+            "samples": 300,
+            "stop": "eliminated",
+            "rounds": 1,
+            "baseline": false
+          },
+          {
+            "key": "1:3:0",
+            "samples": 300,
+            "stop": "eliminated",
+            "rounds": 1,
+            "baseline": false
+          },
+          {
+            "key": "skip",
+            "samples": 300,
+            "stop": "eliminated",
+            "rounds": 1,
+            "baseline": false
+          }
+        ],
+        "full": {
+          "leader": "1:1:0",
+          "group": [
+            "1:1:0"
+          ]
+        },
+        "shadow": {
+          "leader": "1:1:0",
+          "group": [
+            "1:1:0"
+          ]
+        },
+        "evaluable": true,
+        "agreement": true,
+        "work": {
+          "full": 4000,
+          "shadow": 1200,
+          "savedFraction": 0.7,
+          "unit": "unique-option-sample-equivalents"
+        },
+        "rounds": [
+          {
+            "n": 300,
+            "leader": "1:1:0",
+            "eliminated": [
+              {
+                "key": "1:2:0",
+                "metric": {
+                  "key": "S",
+                  "difference": -0.011208596818258768,
+                  "se": 0.000725358162198554
+                }
+              },
+              {
+                "key": "1:3:0",
+                "metric": {
+                  "key": "S",
+                  "difference": -0.015900681040486715,
+                  "se": 0.0007329962912306624
+                }
+              },
+              {
+                "key": "skip",
+                "metric": {
+                  "key": "S",
+                  "difference": -0.017072919154899422,
+                  "se": 0.00074484127846631
+                }
+              }
+            ]
+          }
+        ],
+        "limits": "Prefix replay only; no samples saved in shadow. S needs prefix sign/attribution and model trust gates. B2 wonLoss median retains its ordering but has no invented paired SE, so cannot eliminate. Whole-question admission requires independent offline and two-run natural coverage."
+      }
+    },
+    {
+      "id": "original-P0-b2-SOUL_FYSH-A10",
+      "source": {
+        "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-s-decision/b2-fixed/b2-samples.json.gz",
+        "sha256": "51609298d4c220d43b6f8467b4289aacc7e24bb7d64af08778a5e7e84052e41c"
+      },
+      "limitation": "Original P0 S-only export under its frozen model; hypothetical S-eligible gate. Missing original per-sample HP fallback fields and complete B2 order provenance. Reused without simulation; excluded from C2 production admission.",
+      "result": {
+        "schema": "sim-adaptive-shadow-v1",
+        "mode": "shadow",
+        "lane": "b2",
+        "rule": {
+          "version": "adaptive-v1",
+          "b3First": 300,
+          "b2First": 200,
+          "batch": 100,
+          "zElim": 3,
+          "zTie": 2,
+          "first": 200,
+          "requested": 600
+        },
+        "candidates": [
+          {
+            "key": "line:0",
+            "samples": 600,
+            "stop": "max",
+            "rounds": 5,
+            "baseline": false
+          },
+          {
+            "key": "line:1",
+            "samples": 600,
+            "stop": "max",
+            "rounds": 5,
+            "baseline": false
+          },
+          {
+            "key": "line:2",
+            "samples": 600,
+            "stop": "max",
+            "rounds": 5,
+            "baseline": false
+          }
+        ],
+        "full": {
+          "leader": "line:2",
+          "group": [
+            "line:0",
+            "line:1",
+            "line:2"
+          ]
+        },
+        "shadow": {
+          "leader": "line:2",
+          "group": [
+            "line:0",
+            "line:1",
+            "line:2"
+          ]
+        },
+        "evaluable": true,
+        "agreement": true,
+        "work": {
+          "full": 1800,
+          "shadow": 1800,
+          "savedFraction": 0,
+          "unit": "unique-option-sample-equivalents"
+        },
+        "rounds": [
+          {
+            "n": 200,
+            "leader": "line:2",
+            "eliminated": []
+          },
+          {
+            "n": 300,
+            "leader": "line:0",
+            "eliminated": []
+          },
+          {
+            "n": 400,
+            "leader": "line:2",
+            "eliminated": []
+          },
+          {
+            "n": 500,
+            "leader": "line:2",
+            "eliminated": []
+          },
+          {
+            "n": 600,
+            "leader": "line:2",
+            "eliminated": []
+          }
+        ],
+        "limits": "Prefix replay only; no samples saved in shadow. S needs prefix sign/attribution and model trust gates. B2 wonLoss median retains its ordering but has no invented paired SE, so cannot eliminate. Whole-question admission requires independent offline and two-run natural coverage."
+      }
+    }
+  ],
+  "admission": "pending independent offline coverage and two completed natural shadow runs; no automatic activation",
+  "limits": "Same saved simulated samples and their prefixes, not observed game outcomes or win-rate improvement.",
+  "input_sha256": "2b0fceb7042b654495ecfa7c900ae1b37077b468afb6d315b53a73af7bb62f82"
+}
