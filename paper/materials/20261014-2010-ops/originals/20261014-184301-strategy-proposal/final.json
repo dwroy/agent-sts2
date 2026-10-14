@@ -1,0 +1,92 @@
+{
+  "task": "strategy-proposal",
+  "character": "silent",
+  "batch": "20261014-184301-strategy-proposal",
+  "base": "a43decfe89e60877dea41d91157d4b32dbc989b8",
+  "runs": [
+    "MTQ0EUBJ3R6T",
+    "7X0W3U8TVA2A",
+    "KFRDELW2TH2P",
+    "GXNKW8X1XYJP"
+  ],
+  "fixes": [],
+  "skipped": [],
+  "merged": null,
+  "tests": {
+    "tsc": null,
+    "vitest": null,
+    "cases": null
+  },
+  "code_proposals": [
+    "silent-proposal-f54e8de2381c1250",
+    "silent-proposal-763a4b9d9f17b815",
+    "silent-proposal-19a5cff2094e2d8f",
+    "silent-proposal-3540bf4360bf80af",
+    "silent-proposal-0ea5c0b9c030fdd6",
+    "silent-proposal-f915ec544ab94b6e",
+    "silent-proposal-8fb51933639faf90",
+    "silent-proposal-b3bc0eb09211af6c",
+    "silent-proposal-fdc3a505fe5e1a55",
+    "silent-proposal-5a95725089f53cd8"
+  ],
+  "implementation_domains": [
+    "combat",
+    "potion",
+    "sl",
+    "terminal",
+    "structure"
+  ],
+  "proposal_results": [
+    {
+      "id": "silent-proposal-f54e8de2381c1250",
+      "state": "waiting",
+      "reason": "候选/派发/重问追溯已有live实现；历史选牌中断后缺完整候选执行身份及实际线可比推演，无法认证实线排名。原actual_turn=null的保守语义本身不是bug。"
+    },
+    {
+      "id": "silent-proposal-763a4b9d9f17b815",
+      "state": "waiting",
+      "reason": "上述窄子项已有实现；原十四项跨直接施毒修饰、持续能力及临时增益边界，仍缺全部组合到实际后继/资源归属的冻结消费者校准，不能以四个窄入口核对覆盖整包，也不从dirty历史推断完整原模型。"
+    },
+    {
+      "id": "silent-proposal-19a5cff2094e2d8f",
+      "state": "waiting",
+      "reason": "同抽失败线和有限推演没有提供受控完整胜线；暂死/恢复/终局的完整因果及修正输入到实际整战终结尚缺，不能改SL或终局权重，也不能整项duplicate。"
+    },
+    {
+      "id": "silent-proposal-3540bf4360bf80af",
+      "state": "waiting",
+      "reason": "离线资源观测不等于路线/休息题面已逐源读回；缺入房与开场补血、营火、实饮及SL恢复到对应题面的端到端校核和可比替路线，不能改安全血线。"
+    },
+    {
+      "id": "silent-proposal-0ea5c0b9c030fdd6",
+      "state": "waiting",
+      "reason": "名额提示和本组合毒药6已有live实现；完整合法后继/对象收益兑现仍明确未验证，缺换对象/顺序与提前饮毒整战对照，不能将宽提案整体标重复或宣称改善胜率。"
+    },
+    {
+      "id": "silent-proposal-f915ec544ab94b6e",
+      "state": "waiting",
+      "reason": "断点与资源端点审计已有；候选重问后身份不能重建成完整执行，缺同种子整战胜负校准。多10输出且多损6、两线均败，不足以拟合新的保血权重。"
+    },
+    {
+      "id": "silent-proposal-8fb51933639faf90",
+      "state": "waiting",
+      "reason": "本批核实的窄药效不能补出覆甲完整减层触发条件及未知修饰组合；七项药效/能力的跨回合联合消费者尚无充分隔离校准，保留原规则。"
+    },
+    {
+      "id": "silent-proposal-b3bc0eb09211af6c",
+      "state": "waiting",
+      "reason": "缺合法后继到真实终结的完整链、替对象及提前饮毒的受控整战结果；有限模拟或敌余血更少不证明更安全，不据此拟合终局价值。"
+    },
+    {
+      "id": "silent-proposal-fdc3a505fe5e1a55",
+      "state": "waiting",
+      "reason": "缺这些来源逐项进入当时路线/休息题面并读回的完整冻结对照，以及可比替路线/休息对锻造的整场结果，不能从六次回血仍败拟合阈值。"
+    },
+    {
+      "id": "silent-proposal-5a95725089f53cd8",
+      "state": "waiting",
+      "reason": "药槽、相邻端点和整轮审计已有live子项；仍缺逐击复活瞬时帧/完整入伤、自动消耗的完整因果及完整候选执行归属。两实线均败，不能把局部多10HP当整战收益。"
+    }
+  ],
+  "report": "/home/dw/Projects/agent-sts2/learner/runs/20261014-184304-strategy-proposal/report.md"
+}

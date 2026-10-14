@@ -1,0 +1,93 @@
+{
+  "task": "strategy-proposal",
+  "character": "silent",
+  "batch": "20261014-194301-strategy-proposal",
+  "base": "9199bf7ae5162c772de053e162955aad6f7b9a6a",
+  "runs": [
+    "E5L15SK6ZHZB",
+    "8AGEGLG40SV3",
+    "EEVP0QTLMSX9",
+    "LKC9YXKZWTKR",
+    "Q9FM7A80E4BZ",
+    "6ZGMGEQ5YDVK",
+    "EBVT8UZM6P12",
+    "Q10YYQ5DUPJA",
+    "9GTFF6DC500L",
+    "QRZX1S9USYWP"
+  ],
+  "fixes": [
+    {
+      "id": "enchanted-afterimage-block",
+      "proposal_id": "silent-proposal-0137566a28b900e1",
+      "commit": "dfe1952ed4dddb7a01dcc4edf00e3f08686d3700",
+      "ledger": [
+        "silent-0467",
+        "silent-0468"
+      ],
+      "evidence": [
+        {
+          "run": "6ZGMGEQ5YDVK",
+          "floor": 37,
+          "turn": 1
+        },
+        {
+          "run": "6ZGMGEQ5YDVK",
+          "floor": 39,
+          "turn": 1
+        },
+        {
+          "run": "6ZGMGEQ5YDVK",
+          "floor": 45,
+          "turn": 1
+        }
+      ],
+      "state": "committed-not-merged"
+    }
+  ],
+  "skipped": [
+    {
+      "scope": "live-merge",
+      "reason": "源码已提交且源沙箱通过；锁内最新live整分支预检在README.md、docs/quantitative-play.md、docs/v5-architecture.md、docs/v5-construction.md、paper/materials/STATE-2026-10-14.md共5个共享文档冲突，按任务停止，未实际merge。待ops保留并行文档并兜底合入、补合后检查；缺的是实际live祖先，不缺本次限定机制证据，不能登记implemented/shipped。"
+    }
+  ],
+  "merged": null,
+  "tests": {
+    "tsc": 0,
+    "vitest": 0,
+    "cases": 3859
+  },
+  "test_files": 399,
+  "withdraw_source": {
+    "exit": 1,
+    "failed": 6,
+    "passed": 2
+  },
+  "restore_source": {
+    "exit": 0,
+    "passed": 8
+  },
+  "live_tests": {
+    "tsc": null,
+    "vitest": null,
+    "cases": null
+  },
+  "version": null,
+  "release_id": null,
+  "code_proposals": [
+    "silent-proposal-0137566a28b900e1"
+  ],
+  "implementation_domains": [
+    "combat",
+    "sl",
+    "terminal"
+  ],
+  "proposal_results": [
+    {
+      "id": "silent-proposal-0137566a28b900e1",
+      "state": "waiting",
+      "reason": "源码已提交且源沙箱通过；锁内最新live整分支预检在README.md、docs/quantitative-play.md、docs/v5-architecture.md、docs/v5-construction.md、paper/materials/STATE-2026-10-14.md共5个共享文档冲突，按任务停止，未实际merge。待ops保留并行文档并兜底合入、补合后检查；缺的是实际live祖先，不缺本次限定机制证据，不能登记implemented/shipped。"
+    }
+  ],
+  "proposal": "/home/dw/Projects/agent-sts2/learner/runs/20261014-194305-strategy-proposal/proposal.md",
+  "report": "/home/dw/Projects/agent-sts2/learner/runs/20261014-194305-strategy-proposal/report.md"
+}

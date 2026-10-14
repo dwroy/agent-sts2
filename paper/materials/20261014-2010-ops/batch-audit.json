@@ -1,0 +1,919 @@
+[
+  {
+    "batch": "20261014-155247-fix-batch",
+    "canonical": {
+      "state": "failed",
+      "rc": 0,
+      "merged": null,
+      "finished": "2026-10-14 18:19",
+      "pid": 953251,
+      "worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302",
+      "pane": "wJ:pZA",
+      "reason": "authorized-original-thread-R2-unfinished-reference",
+      "dispatch_identity": "continuation:v5-dpr-health-20261013:c0508e5077af68842abfaee11537a3aa4282af376c4ba8ad3c5c9965273b5a17"
+    },
+    "report": {
+      "task": "fix-batch",
+      "base": "40d6bc976cf7ffeae28a72a7e0b47d71cadc7d57",
+      "fixes": [],
+      "skipped": [
+        {
+          "item": "72f3b88e-7e04-4da1-92c6-ecdf3c7c4a1a",
+          "reason": "本幕 boss 已结束，下一幕 boss 未观察"
+        },
+        {
+          "item": "f11d4d91-0185-4fb1-abe3-4a894d7380bc",
+          "reason": "本幕 boss 已结束，下一幕 boss 未观察"
+        },
+        {
+          "item": "2e4d4c83-93df-4965-98f4-2074fbce59b2",
+          "reason": "原 offered 全部缺少模型支持的数值转移"
+        },
+        {
+          "item": "R2 未完参照",
+          "reason": "130 分钟资源窗结束；完成 50/54，剩余 4 组"
+        }
+      ],
+      "merged": null,
+      "tests": {
+        "tsc": null,
+        "vitest": null,
+        "cases": null
+      },
+      "code_proposals": [],
+      "implementation_domains": [],
+      "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-155247-fix-batch/report.md",
+      "continuation_result": {
+        "supplement_id": "v5-boss-revalidation-20261014-approved-supplement",
+        "parent_batch": "20261014-123933-fix-batch",
+        "original_root_batch": "20261014-114302-fix-batch",
+        "phase": "R2-unfinished-reference-continuation",
+        "input_manifest_sha256": "c0508e5077af68842abfaee11537a3aa4282af376c4ba8ad3c5c9965273b5a17",
+        "outcome": "continue",
+        "attempt": "ops-20261014-155247-r2",
+        "coverage": {
+          "questions": 30,
+          "supported": 27,
+          "unsupported": 3,
+          "reference_groups": 54,
+          "original_complete_skipped": 24,
+          "new_complete": 26,
+          "complete": 50,
+          "unfinished": 4,
+          "per_question": {
+            "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-155247-fix-batch/question-coverage.json",
+            "sha256": "304ffa79b8f531155cf0a976623f88b1a13aefd4793f93fe2e1104c92cd7b061"
+          }
+        },
+        "unfinished": [
+          {
+            "id": "a64050d1-557f-4746-bcbe-f5ef7925c1fc",
+            "seed": 20261014,
+            "status": "resource_interrupted",
+            "observed_partial_pairs": 184
+          },
+          {
+            "id": "a3972427-a5e0-4b04-ac7d-d2069888fd11",
+            "seed": 20261014,
+            "status": "pending"
+          },
+          {
+            "id": "3e158b45-2504-465a-a0e3-4a15330b43c4",
+            "seed": 20261014,
+            "status": "pending"
+          },
+          {
+            "id": "0c2e148c-e10c-4788-9dc7-a19772732d42",
+            "seed": 20261014,
+            "status": "pending"
+          }
+        ],
+        "artifacts": {
+          "input": [
+            {
+              "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261014-155247-fix-batch.approved-input.json",
+              "sha256": "c0508e5077af68842abfaee11537a3aa4282af376c4ba8ad3c5c9965273b5a17"
+            },
+            {
+              "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/input-manifest.json",
+              "sha256": "934c5cee86e01b752318c72f9154bc79b7608bedac42b3ef705e3437d59737f3"
+            }
+          ],
+          "model": [
+            {
+              "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model-manifest.json",
+              "sha256": "0320f83f7919290bccb8993f2dae871e134d10bf61d0f7e3af627a4618ff6210"
+            },
+            {
+              "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/compiled-manifest.json",
+              "sha256": "53dfd6d4384ddfa354a1a402fc3df42cb7f0485780d444ec514b179106b8d75b"
+            },
+            {
+              "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/production-config.json",
+              "sha256": "0bd8136fff4bec7998d31afd6ca1a02fc04f7a74bcc12ce0f6e0b44cf1e4f5ed"
+            }
+          ],
+          "seed": [
+            {
+              "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/seeds.json",
+              "sha256": "12de5943b3e8a420b59d769c00794c482b7edc5aa491c605c6757820334d2142"
+            },
+            {
+              "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/continuation-attempts/ops-20261014-155247-r2/contract.json",
+              "sha256": "dabd6aed937ef1f4e84c2a730c19c9af573d6f5b8c6d2b25f73a7628239931ac"
+            }
+          ],
+          "result": [
+            {
+              "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-155247-fix-batch/result-manifest.json",
+              "sha256": "ac6229242fd80558f520027412b13f2c3727ddd58a66a99772005bfbdac1b60f"
+            }
+          ],
+          "profiling": [
+            {
+              "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-155247-fix-batch/profiling-manifest.json",
+              "sha256": "7ee6d921c3b0a12ef489859d4bb4c234ab16bb5581ffa3c0e6e7196deae66bcf"
+            }
+          ]
+        },
+        "original_checkpoint": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/checkpoint.json",
+          "sha256": "5e36f20a3e226c8b1f668cb69189dc0fd9e774e310a637da1c4058a3ba207401"
+        },
+        "checkpoint": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/continuation-attempts/ops-20261014-155247-r2/checkpoint.json",
+          "sha256": "d7becdb3e940380f7af00faf197db03527ed70cf7f37f44990d5c1668c2e1488"
+        },
+        "scope_limit": "仅限本次 R2 接续；不关闭 R3/R4、自然验收或宽 P1/P2。1000 参照只检模型内收敛，终局 DPR 分母另列。"
+      }
+    },
+    "report_json_semantic_equal": null,
+    "source_paths": [],
+    "refs": [
+      {
+        "path": "ops/codex-ops/learner/20261014-155247-fix-batch.out",
+        "sha256": "d817571727ea1ee5965e893370ccb12c16f53595876d6f8cd1f9a4ce6282b191",
+        "bytes": 6766
+      },
+      {
+        "path": "ops/codex-ops/learner/20261014-155247-fix-batch.err",
+        "sha256": "1293d46bcd57ba4314e63f9637f81fc27a51ae38974e61b4b1935848bd431fa9",
+        "bytes": 38724
+      },
+      {
+        "path": ".worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-155247-fix-batch/report.md",
+        "sha256": "040c05e086f0fe2eb8d577964379f21a5047b2d64a0be66966398eeedf63d1d3",
+        "bytes": 8074
+      }
+    ],
+    "checks": {},
+    "worktree_clean_tracked": true,
+    "actual_source_head": "40d6bc976cf7ffeae28a72a7e0b47d71cadc7d57"
+  },
+  {
+    "batch": "20261014-174302-strategy-proposal",
+    "canonical": {
+      "state": "failed",
+      "rc": 0,
+      "merged": null,
+      "finished": "2026-10-14 18:29",
+      "pid": 1332608,
+      "worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261014-174302",
+      "pane": "wJ:pZG",
+      "reason": "tick",
+      "dispatch_identity": "silent:A11:285"
+    },
+    "report": {
+      "task": "strategy-proposal",
+      "character": "silent",
+      "batch": "20261014-174302-strategy-proposal",
+      "base": "75fef29d32e4b33c635fbc1f33fa4df9b04d5ba8",
+      "runs": [
+        "E5L15SK6ZHZB",
+        "8AGEGLG40SV3",
+        "EEVP0QTLMSX9",
+        "LKC9YXKZWTKR",
+        "Q9FM7A80E4BZ",
+        "6ZGMGEQ5YDVK",
+        "EBVT8UZM6P12",
+        "Q10YYQ5DUPJA",
+        "9GTFF6DC500L",
+        "QRZX1S9USYWP"
+      ],
+      "fixes": [
+        {
+          "id": "silent-proposal-1bea9962f17ba0ac",
+          "summary": "已观察静默A10普通吹哨的当轮击晕补模",
+          "commit": "cebeb2c6a45a09ef6752b713d6a3005df750117b",
+          "ledger": [
+            "silent-0471",
+            "silent-0473"
+          ]
+        }
+      ],
+      "skipped": [
+        {
+          "item": "未观察的等级、角色、升级、形态及未来重复施放",
+          "reason": "证据不足，保留旧行为"
+        },
+        {
+          "item": "遗忘之魂消耗附伤",
+          "reason": "旧模型仍缺独立1伤，本次保留残差"
+        }
+      ],
+      "merged": null,
+      "tests": {
+        "tsc": 0,
+        "vitest": 0,
+        "cases": 3851
+      },
+      "live_tests": null,
+      "code_proposals": [
+        "silent-proposal-1bea9962f17ba0ac"
+      ],
+      "implementation_domains": [
+        "combat",
+        "sl"
+      ],
+      "proposal_results": [
+        {
+          "id": "silent-proposal-1bea9962f17ba0ac",
+          "state": "waiting",
+          "reason": "源码已提交并自测通过；live合入因16共享记录冲突中止，abort成功。源码尚非live祖先，待ops兜底；机制证据充分，无需重新派同题研究。"
+        }
+      ],
+      "version": null,
+      "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261014-174302/learner/runs/20261014-174321-strategy-proposal/report.md",
+      "proposal": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261014-174302/learner/runs/20261014-174321-strategy-proposal/proposal.md"
+    },
+    "report_json_semantic_equal": null,
+    "source_paths": [
+      {
+        "source": "cebeb2c6a45a09ef6752b713d6a3005df750117b",
+        "path": "agent/src/reflex/card-model.ts",
+        "sha256": "9de983067cc0ba67c49ac3118ca92aea69ca5bd92cc080ec002d1fc5ef78619b"
+      },
+      {
+        "source": "cebeb2c6a45a09ef6752b713d6a3005df750117b",
+        "path": "agent/src/reflex/combat-plan.ts",
+        "sha256": "9ac9285ce9effcd5c7d3e3f49d56482cf1fc99a1dd162a6296e5393f2daf1bbb"
+      },
+      {
+        "source": "cebeb2c6a45a09ef6752b713d6a3005df750117b",
+        "path": "agent/src/reflex/rollout.ts",
+        "sha256": "19cada2063f6c82edbe3a542396e37aa10a4c05bdd12967a8daaf55a69b86d66"
+      },
+      {
+        "source": "cebeb2c6a45a09ef6752b713d6a3005df750117b",
+        "path": "agent/src/reflex/turn-solver.ts",
+        "sha256": "78fd028079141c99a1196d9c5c9c24082f6c07c43a0cfd0346ad7c32a259032b"
+      },
+      {
+        "source": "cebeb2c6a45a09ef6752b713d6a3005df750117b",
+        "path": "agent/tests/silent-whistle-evidence.json",
+        "sha256": "0a9291d85545aeb98ce2a07ddc47950bbbae4bd7f4e7aacbf7e289539ec95c4f"
+      },
+      {
+        "source": "cebeb2c6a45a09ef6752b713d6a3005df750117b",
+        "path": "agent/tests/silent-whistle.test.ts",
+        "sha256": "c6894f77de591d22c9017d692b03d5b452f98f3460944a79811771c126cd0a4f"
+      }
+    ],
+    "refs": [
+      {
+        "path": "ops/codex-ops/learner/20261014-174302-strategy-proposal.out",
+        "sha256": "518d54570e7ce0af7c812dae5d101a89bdd24963530c58877f365059d56e6ce4",
+        "bytes": 3318
+      },
+      {
+        "path": "ops/codex-ops/learner/20261014-174302-strategy-proposal.err",
+        "sha256": "6f6de363bc80d854ae615c6fb8488d304e60614702f0f24bd07e74e92fb2597d",
+        "bytes": 15734
+      },
+      {
+        "path": ".worktrees/codex-strategy-silent-20261014-174302/learner/runs/20261014-174321-strategy-proposal/report.md",
+        "sha256": "393599f0d47c0d7101d1e2b92e0d36905bf3e5f375f82396d81c6a8453e789fd",
+        "bytes": 8083
+      },
+      {
+        "path": ".worktrees/codex-strategy-silent-20261014-174302/learner/runs/20261014-174321-strategy-proposal/proposal.md",
+        "sha256": "c8b2a9a4d36128edd756cc6b84c5684db4544403347c6bc704bd2cce6c597c17",
+        "bytes": 4020
+      },
+      {
+        "path": ".worktrees/codex-strategy-silent-20261014-174302/learner/runs/20261014-174321-strategy-proposal/source-sandbox.log",
+        "sha256": "8307bf3f53a3a103bdda1d2f4528c8682fb1c452fcaf9f5c1e52cb5fd3d7bac8",
+        "bytes": 560
+      },
+      {
+        "path": ".worktrees/codex-strategy-silent-20261014-174302/learner/runs/20261014-174321-strategy-proposal/source-checks.json",
+        "sha256": "2effe1b456efe7b3a6ac789ebf8c8e2a47c966ff02fb25616542c66422903019",
+        "bytes": 302
+      },
+      {
+        "path": ".worktrees/codex-strategy-silent-20261014-174302/learner/runs/20261014-174321-strategy-proposal/source-under-test.json",
+        "sha256": "505222202459068a62dcca2ec94f44a59e69f9ae02afd52a195345c8a147c8d4",
+        "bytes": 996
+      },
+      {
+        "path": ".worktrees/codex-strategy-silent-20261014-174302/learner/runs/20261014-174321-strategy-proposal/source-commit.json",
+        "sha256": "8e24d1e80849554c2866b3cf4cb7697157064ff99579f85eeb77d62d266dd46b",
+        "bytes": 475
+      },
+      {
+        "path": ".worktrees/codex-strategy-silent-20261014-174302/learner/runs/20261014-174321-strategy-proposal/gitleaks-source.log",
+        "sha256": "f956d01467bb81b3cc4077bfa40192cb6489a508f1c9f9c534b10ebc957d10bd",
+        "bytes": 110
+      },
+      {
+        "path": ".worktrees/codex-strategy-silent-20261014-174302/learner/runs/20261014-174321-strategy-proposal/whistle-final-restored.log",
+        "sha256": "c2d67749da6e80fa383f5c50bf70f20f804b75c9cc4df9de9600282e3738767f",
+        "bytes": 270
+      }
+    ],
+    "checks": {
+      "source-sandbox.log": "\n RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261014-174302/agent\n\n\n Test Files  395 passed (395)\n      Tests  3840 passed (3840)\n   Start at  18:00:32\n   Duration  1024.93s (transform 11.24s, setup 17.48s, import 49.70s, tests 906.99s, environment 41ms)\n\n\n RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261014-174302/agent\n\n\n Test Files  1 passed (1)\n      Tests  11 passed (11)\n   Start at  18:17:38\n   Duration  2.27s (transform 1.71s, setup 367ms, import 1.71s, tests 65ms, environment 0ms)\n\n",
+      "source-checks.json": {
+        "tsc": 0,
+        "vitest": 0,
+        "sandbox_exit": 0,
+        "main_files": 395,
+        "main_cases": 3840,
+        "paths_files": 1,
+        "paths_cases": 11,
+        "total_cases": 3851,
+        "withdrawn_exit": 1,
+        "withdrawn_failed": 6,
+        "restored_exit": 0,
+        "restored_cases": 9,
+        "gitleaks": 0,
+        "six_tested_blobs_match": true
+      },
+      "source-under-test.json": {
+        "base": "75fef29d32e4b33c635fbc1f33fa4df9b04d5ba8",
+        "paths": [
+          "agent/src/reflex/card-model.ts",
+          "agent/src/reflex/combat-plan.ts",
+          "agent/src/reflex/rollout.ts",
+          "agent/src/reflex/turn-solver.ts",
+          "agent/tests/silent-whistle-evidence.json",
+          "agent/tests/silent-whistle.test.ts"
+        ],
+        "source_staged_sha256": {
+          "agent/src/reflex/card-model.ts": "9de983067cc0ba67c49ac3118ca92aea69ca5bd92cc080ec002d1fc5ef78619b",
+          "agent/src/reflex/combat-plan.ts": "9ac9285ce9effcd5c7d3e3f49d56482cf1fc99a1dd162a6296e5393f2daf1bbb",
+          "agent/src/reflex/rollout.ts": "19cada2063f6c82edbe3a542396e37aa10a4c05bdd12967a8daaf55a69b86d66",
+          "agent/src/reflex/turn-solver.ts": "78fd028079141c99a1196d9c5c9c24082f6c07c43a0cfd0346ad7c32a259032b",
+          "agent/tests/silent-whistle-evidence.json": "0a9291d85545aeb98ce2a07ddc47950bbbae4bd7f4e7aacbf7e289539ec95c4f",
+          "agent/tests/silent-whistle.test.ts": "c6894f77de591d22c9017d692b03d5b452f98f3460944a79811771c126cd0a4f"
+        }
+      },
+      "source-commit.json": {
+        "commit": "cebeb2c6a45a09ef6752b713d6a3005df750117b",
+        "base": "75fef29d32e4b33c635fbc1f33fa4df9b04d5ba8",
+        "clean": true,
+        "checks": {
+          "tsc": 0,
+          "vitest": 0,
+          "sandbox_exit": 0,
+          "main_files": 395,
+          "main_cases": 3840,
+          "paths_files": 1,
+          "paths_cases": 11,
+          "total_cases": 3851,
+          "withdrawn_exit": 1,
+          "withdrawn_failed": 6,
+          "restored_exit": 0,
+          "restored_cases": 9,
+          "gitleaks": 0,
+          "six_tested_blobs_match": true
+        }
+      },
+      "gitleaks-source.log": "6:02PM INF 0 commits scanned.\n6:02PM INF scanned ~108725 bytes (108.72 KB) in 328ms\n6:02PM INF no leaks found\n",
+      "whistle-final-restored.log": "\n RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261014-174302/agent\n\n\n Test Files  1 passed (1)\n      Tests  9 passed (9)\n   Start at  18:00:27\n   Duration  2.76s (transform 1.98s, setup 509ms, import 1.87s, tests 193ms, environment 0ms)\n\n"
+    },
+    "worktree_clean_tracked": true,
+    "actual_source_head": "cebeb2c6a45a09ef6752b713d6a3005df750117b"
+  },
+  {
+    "batch": "20261014-184301-strategy-proposal",
+    "canonical": {
+      "state": "failed",
+      "rc": 0,
+      "merged": null,
+      "finished": "2026-10-14 19:00",
+      "pid": 1529518,
+      "worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261014-184301",
+      "pane": "wJ:pZH",
+      "reason": "proposal",
+      "dispatch_identity": "code-proposals:silent-proposal-f54e8de2381c1250,silent-proposal-763a4b9d9f17b815,silent-proposal-19a5cff2094e2d8f,silent-proposal-3540bf4360bf80af,silent-proposal-0ea5c0b9c030fdd6,silent-proposal-f915ec544ab94b6e,silent-proposal-8fb51933639faf90,silent-proposal-b3bc0eb09211af6c,silent-proposal-fdc3a505fe5e1a55,silent-proposal-5a95725089f53cd8:291"
+    },
+    "report": {
+      "task": "strategy-proposal",
+      "character": "silent",
+      "batch": "20261014-184301-strategy-proposal",
+      "base": "a43decfe89e60877dea41d91157d4b32dbc989b8",
+      "runs": [
+        "MTQ0EUBJ3R6T",
+        "7X0W3U8TVA2A",
+        "KFRDELW2TH2P",
+        "GXNKW8X1XYJP"
+      ],
+      "fixes": [],
+      "skipped": [],
+      "merged": null,
+      "tests": {
+        "tsc": null,
+        "vitest": null,
+        "cases": null
+      },
+      "code_proposals": [
+        "silent-proposal-f54e8de2381c1250",
+        "silent-proposal-763a4b9d9f17b815",
+        "silent-proposal-19a5cff2094e2d8f",
+        "silent-proposal-3540bf4360bf80af",
+        "silent-proposal-0ea5c0b9c030fdd6",
+        "silent-proposal-f915ec544ab94b6e",
+        "silent-proposal-8fb51933639faf90",
+        "silent-proposal-b3bc0eb09211af6c",
+        "silent-proposal-fdc3a505fe5e1a55",
+        "silent-proposal-5a95725089f53cd8"
+      ],
+      "implementation_domains": [
+        "combat",
+        "potion",
+        "sl",
+        "terminal",
+        "structure"
+      ],
+      "proposal_results": [
+        {
+          "id": "silent-proposal-f54e8de2381c1250",
+          "state": "waiting",
+          "reason": "候选追溯已有实现；选牌重问后缺完整执行身份及实际线可比排名。"
+        },
+        {
+          "id": "silent-proposal-763a4b9d9f17b815",
+          "state": "waiting",
+          "reason": "蛇咬8毒已进入live；十四机制组合仍缺完整跨回合消费者校准。"
+        },
+        {
+          "id": "silent-proposal-19a5cff2094e2d8f",
+          "state": "waiting",
+          "reason": "缺修正输入到实际终局的完整校核及同种子整战对照。"
+        },
+        {
+          "id": "silent-proposal-3540bf4360bf80af",
+          "state": "waiting",
+          "reason": "缺赢战消耗、回血和SL恢复进入路线/休息题面的逐源读回。"
+        },
+        {
+          "id": "silent-proposal-0ea5c0b9c030fdd6",
+          "state": "waiting",
+          "reason": "名额提示与窄毒药模型已有实现；合法后继、对象收益及提前饮毒整战效果未证。"
+        },
+        {
+          "id": "silent-proposal-f915ec544ab94b6e",
+          "state": "waiting",
+          "reason": "同盘多10伤、多损6且两线均败；缺完整候选执行归属和整战校准。"
+        },
+        {
+          "id": "silent-proposal-8fb51933639faf90",
+          "state": "waiting",
+          "reason": "窄范围6毒已实现；覆甲完整减层条件及药效/能力联合校准不足。"
+        },
+        {
+          "id": "silent-proposal-b3bc0eb09211af6c",
+          "state": "waiting",
+          "reason": "缺合法后继至真实终结的完整链，以及替对象或提前饮毒的整战对照。"
+        },
+        {
+          "id": "silent-proposal-fdc3a505fe5e1a55",
+          "state": "waiting",
+          "reason": "缺资源分源进入路线/休息消费者的完整对照及可比替路线结果。"
+        },
+        {
+          "id": "silent-proposal-5a95725089f53cd8",
+          "state": "waiting",
+          "reason": "药槽观测子项已有；缺逐击复活帧、完整入伤与完整候选归属，两条实线均失败。"
+        }
+      ],
+      "report": "/home/dw/Projects/agent-sts2/learner/runs/20261014-184304-strategy-proposal/report.md"
+    },
+    "report_json_semantic_equal": null,
+    "source_paths": [],
+    "refs": [
+      {
+        "path": "ops/codex-ops/learner/20261014-184301-strategy-proposal.out",
+        "sha256": "008fb6271015da62195e53e33997b412ab4609e3c8f23fd11c1c3b96232ff6c0",
+        "bytes": 4331
+      },
+      {
+        "path": "ops/codex-ops/learner/20261014-184301-strategy-proposal.err",
+        "sha256": "f35927843bfda8bae88374058fb839b2c982c199074ce5e55f63f2e687285a7a",
+        "bytes": 11668
+      },
+      {
+        "path": "learner/runs/20261014-184304-strategy-proposal/report.md",
+        "sha256": "de7a1272a0a8250c50497a6c47aa13d6498f98505ca74e93b8173c071936ceec",
+        "bytes": 8463
+      },
+      {
+        "path": "learner/runs/20261014-184304-strategy-proposal/proposal.md",
+        "sha256": "6f6e7d778b4801d103167620d7827f276cbf0800f04f17ad21c84740438fbecf",
+        "bytes": 15897
+      }
+    ],
+    "checks": {},
+    "worktree_clean_tracked": true,
+    "actual_source_head": "a43decfe89e60877dea41d91157d4b32dbc989b8"
+  },
+  {
+    "batch": "20261014-184301-s2-strategy-proposal",
+    "canonical": {
+      "state": "failed",
+      "rc": 0,
+      "merged": null,
+      "finished": "2026-10-14 19:08",
+      "pid": 1529634,
+      "worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261014-184301-s2",
+      "pane": "wJ:pZJ",
+      "reason": "proposal",
+      "dispatch_identity": "code-proposals:silent-proposal-243ad8dd038a4ff6,silent-proposal-9c3ff04261867dd2,silent-proposal-650ea306e8627f9e,silent-proposal-aff5ac3bb7cdb81b,silent-proposal-60e68d681e861d1c,silent-proposal-9aa48a84227bcdb5,silent-proposal-7cfd0f9b6b0fbbda,silent-proposal-e6f9cb57c1204036,silent-proposal-68322129f031077b,silent-proposal-8df611363cd82fc9:291"
+    },
+    "report": {
+      "task": "strategy-proposal",
+      "character": "silent",
+      "batch": "20261014-184301-s2-strategy-proposal",
+      "base": "a43decfe89e60877dea41d91157d4b32dbc989b8",
+      "runs": [
+        "K2JAGKVJAWZJ",
+        "10GPK5XGHCK3",
+        "UJ0K3G10609Y",
+        "NEWRFAYKTQHR",
+        "79UCJ0K6R9C1",
+        "9YBKCNBFP0X5",
+        "UACFSW4VDDLD",
+        "4Y94N8RDPGPM",
+        "TCFAHJ9K19VY",
+        "UMVLWER4CD98"
+      ],
+      "fixes": [],
+      "skipped": [],
+      "merged": null,
+      "tests": {
+        "tsc": null,
+        "vitest": null,
+        "cases": null
+      },
+      "code_proposals": [
+        "silent-proposal-243ad8dd038a4ff6",
+        "silent-proposal-9c3ff04261867dd2",
+        "silent-proposal-650ea306e8627f9e",
+        "silent-proposal-aff5ac3bb7cdb81b",
+        "silent-proposal-60e68d681e861d1c",
+        "silent-proposal-9aa48a84227bcdb5",
+        "silent-proposal-7cfd0f9b6b0fbbda",
+        "silent-proposal-e6f9cb57c1204036",
+        "silent-proposal-68322129f031077b",
+        "silent-proposal-8df611363cd82fc9"
+      ],
+      "implementation_domains": [
+        "combat",
+        "potion",
+        "sl",
+        "terminal"
+      ],
+      "proposal_results": [
+        {
+          "id": "silent-proposal-243ad8dd038a4ff6",
+          "state": "waiting",
+          "reason": "首29抽后的抽牌条件与单动作/替代路线整战反事实缺失；17项共享记录合入冲突亦未解决。"
+        },
+        {
+          "id": "silent-proposal-9c3ff04261867dd2",
+          "state": "waiting",
+          "reason": "铁心0挡更正已核，但宽资源提案缺完整消费者及相同资源下的饮药/构筑整战对照；17项合入冲突未解决。"
+        },
+        {
+          "id": "silent-proposal-650ea306e8627f9e",
+          "state": "waiting",
+          "reason": "48调用/71决策来源勘误已核；关联宽机制与资源提案仍缺消费者验证，不能仅以文档更正关闭全部范围；17项合入冲突未解决。"
+        },
+        {
+          "id": "silent-proposal-aff5ac3bb7cdb81b",
+          "state": "waiting",
+          "reason": "原答、实线及HP/伤害对照已记录；格挡/毒/污染差额与饱和标志的完整结构字段/消费者未齐，17项合入冲突阻止剩余接线；不据单局改探索准入。"
+        },
+        {
+          "id": "silent-proposal-60e68d681e861d1c",
+          "state": "waiting",
+          "reason": "感染先扣持牌伤已有live窄实现；普通战毒药/头骨/制品等路径的完整消费者验证未齐，17项合入冲突阻止剩余接线；本项领域沿e6f9更正为combat/potion。"
+        },
+        {
+          "id": "silent-proposal-9aa48a84227bcdb5",
+          "state": "waiting",
+          "reason": "未执行路线与饮药时点的受控整战结果缺失，宽资源消费者尚未齐；不能据净HP损失拟新价值/门槛，17项合入冲突未解决。"
+        },
+        {
+          "id": "silent-proposal-7cfd0f9b6b0fbbda",
+          "state": "waiting",
+          "reason": "普通施毒/蜃景等只有窄子项已覆盖；坚韧之环施放值跨轮入口及宽组合消费者未完成，升级/叠层/重放仍未核；17项合入冲突阻止接线。"
+        },
+        {
+          "id": "silent-proposal-e6f9cb57c1204036",
+          "state": "waiting",
+          "reason": "领域更正已遵循，原感染/毒药宽范围消费者仍未齐且17项合入冲突未解决；不把同文更正登记成整项已有实现。"
+        },
+        {
+          "id": "silent-proposal-68322129f031077b",
+          "state": "waiting",
+          "reason": "本批A10普通专注机制已核，固定投影仍自身抽3后noDraw=false；17项共享记录冲突阻止实现及消费者验收，不能记duplicate；升级/重放/其他取牌未核。"
+        },
+        {
+          "id": "silent-proposal-8df611363cd82fc9",
+          "state": "waiting",
+          "reason": "手动第三攻增1敏与后挡8已核；仍无苦无入口及跨轮传播验收，17项合入冲突阻止实现，不能记duplicate；自动/重放和缺失计数保持未知。"
+        }
+      ],
+      "report": "/home/dw/Projects/agent-sts2/learner/runs/20261014-184305-strategy-proposal/report.md",
+      "proposal": "/home/dw/Projects/agent-sts2/learner/runs/20261014-184305-strategy-proposal/proposal.md",
+      "source_modified": false,
+      "blocker": {
+        "kind": "live-record-conflicts",
+        "count": 17,
+        "live": "d9bfb65a4ec28cdda8706a150fc4341d28db1227",
+        "receipt": "/home/dw/Projects/agent-sts2/learner/runs/20261014-184305-strategy-proposal/live-merge-preflight.json"
+      }
+    },
+    "report_json_semantic_equal": null,
+    "source_paths": [],
+    "refs": [
+      {
+        "path": "ops/codex-ops/learner/20261014-184301-s2-strategy-proposal.out",
+        "sha256": "877904169ce4dbbd470b6cc13f7b6ac484917628185152460efee4ddd64f4b92",
+        "bytes": 5643
+      },
+      {
+        "path": "ops/codex-ops/learner/20261014-184301-s2-strategy-proposal.err",
+        "sha256": "ac809b79f2ce90aa1e03441569c1df261e085bdfb8d02aab09fe91fded0676f3",
+        "bytes": 12098
+      },
+      {
+        "path": "learner/runs/20261014-184305-strategy-proposal/report.md",
+        "sha256": "ab649136df5e0aa4b3c88139471a7a7a482195426437f4d30bcfe578e7f82e3f",
+        "bytes": 25135
+      },
+      {
+        "path": "learner/runs/20261014-184305-strategy-proposal/proposal.md",
+        "sha256": "83797e08ef444b30bcb9978d4a9266b147394c89a23cfd9b614b4aa31881430a",
+        "bytes": 20573
+      }
+    ],
+    "checks": {},
+    "worktree_clean_tracked": true,
+    "actual_source_head": "a43decfe89e60877dea41d91157d4b32dbc989b8"
+  },
+  {
+    "batch": "20261014-184301-fix-batch",
+    "canonical": {
+      "state": "failed",
+      "rc": 0,
+      "merged": null,
+      "finished": "2026-10-14 19:14",
+      "pid": 1529873,
+      "worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-184301",
+      "pane": "wJ:pZK",
+      "reason": "tick",
+      "dispatch_identity": "215cd3aaadc8904e65ab5826f28c5968a40e8cc7e707478de4cdc9defb70d0a3"
+    },
+    "report": {
+      "task": "fix-batch",
+      "base": "a43decfe89e60877dea41d91157d4b32dbc989b8",
+      "fixes": [],
+      "skipped": [
+        {
+          "item": "已有模型、药水、SL、终局和结构提案",
+          "reason": "策略类；沿已有 strategy-proposal 链，不重复派发或实现"
+        },
+        {
+          "item": "silent-0332 接续资源与 sandbox-glob 上游生命周期",
+          "reason": "证据不足；缺触发样本或具体目录/注册时序归属"
+        },
+        {
+          "item": "调度公平性与原通知/收尾历史未知",
+          "reason": "证据不足；不推定永久饥饿或原生未发送，不改旧状态"
+        },
+        {
+          "item": "全漏斗、统一资源价值、具名资料其它入口、DPR/量化/P1/P2",
+          "reason": "太大；独立架构研究已有 owner，普通纯 bug 批次不混入"
+        }
+      ],
+      "merged": null,
+      "tests": {
+        "tsc": 0,
+        "vitest": 0,
+        "cases": 3844
+      },
+      "code_proposals": [],
+      "implementation_domains": [],
+      "report": "/home/dw/Projects/agent-sts2/learner/runs/20261014-184306-fix-batch/report.md"
+    },
+    "report_json_semantic_equal": null,
+    "source_paths": [],
+    "refs": [
+      {
+        "path": "ops/codex-ops/learner/20261014-184301-fix-batch.out",
+        "sha256": "03f01446087e92991b04c65a626d54b89813f0bb64ae6a70a1207689c242128d",
+        "bytes": 2800
+      },
+      {
+        "path": "ops/codex-ops/learner/20261014-184301-fix-batch.err",
+        "sha256": "07b43af2bd57b9f1fe09d2a2a9037e997ea9ce067f5caa2b584c9856e2be877f",
+        "bytes": 13241
+      },
+      {
+        "path": "learner/runs/20261014-184306-fix-batch/report.md",
+        "sha256": "530007f10e3a377a2d922d54daeae0b87fd2d5d54b95b8f0f96a3dfb95faaa71",
+        "bytes": 15677
+      }
+    ],
+    "checks": {},
+    "worktree_clean_tracked": true,
+    "actual_source_head": "a43decfe89e60877dea41d91157d4b32dbc989b8"
+  },
+  {
+    "batch": "20261014-194301-strategy-proposal",
+    "canonical": {
+      "state": "failed",
+      "rc": 0,
+      "merged": null,
+      "finished": "2026-10-14 20:03",
+      "pid": 1741858,
+      "worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261014-194301",
+      "pane": "wJ:pZM",
+      "reason": "tick",
+      "dispatch_identity": "silent:A11:285"
+    },
+    "report": {
+      "task": "strategy-proposal",
+      "character": "silent",
+      "batch": "20261014-194301-strategy-proposal",
+      "base": "9199bf7ae5162c772de053e162955aad6f7b9a6a",
+      "runs": [
+        "E5L15SK6ZHZB",
+        "8AGEGLG40SV3",
+        "EEVP0QTLMSX9",
+        "LKC9YXKZWTKR",
+        "Q9FM7A80E4BZ",
+        "6ZGMGEQ5YDVK",
+        "EBVT8UZM6P12",
+        "Q10YYQ5DUPJA",
+        "9GTFF6DC500L",
+        "QRZX1S9USYWP"
+      ],
+      "fixes": [
+        {
+          "id": "enchanted-afterimage-block",
+          "proposal_id": "silent-proposal-0137566a28b900e1",
+          "commit": "dfe1952ed4dddb7a01dcc4edf00e3f08686d3700",
+          "ledger": [
+            "silent-0467",
+            "silent-0468"
+          ],
+          "evidence": [
+            {
+              "run": "6ZGMGEQ5YDVK",
+              "floor": 37,
+              "turn": 1
+            },
+            {
+              "run": "6ZGMGEQ5YDVK",
+              "floor": 39,
+              "turn": 1
+            },
+            {
+              "run": "6ZGMGEQ5YDVK",
+              "floor": 45,
+              "turn": 1
+            }
+          ],
+          "state": "committed-not-merged"
+        }
+      ],
+      "skipped": [
+        {
+          "scope": "live-merge",
+          "reason": "最新live预检有5个共享文档冲突，按任务停止，待运维兜底合入。"
+        }
+      ],
+      "merged": null,
+      "tests": {
+        "tsc": 0,
+        "vitest": 0,
+        "cases": 3859
+      },
+      "live_tests": {
+        "tsc": null,
+        "vitest": null,
+        "cases": null
+      },
+      "version": null,
+      "release_id": null,
+      "code_proposals": [
+        "silent-proposal-0137566a28b900e1"
+      ],
+      "implementation_domains": [
+        "combat",
+        "sl",
+        "terminal"
+      ],
+      "proposal_results": [
+        {
+          "id": "silent-proposal-0137566a28b900e1",
+          "state": "waiting",
+          "reason": "源码已提交且自测通过；共享文档合并冲突阻止上线，尚无实际live祖先，不能登记implemented或shipped。"
+        }
+      ],
+      "report": "/home/dw/Projects/agent-sts2/learner/runs/20261014-194305-strategy-proposal/report.md"
+    },
+    "report_json_semantic_equal": null,
+    "source_paths": [
+      {
+        "source": "dfe1952ed4dddb7a01dcc4edf00e3f08686d3700",
+        "path": "agent/src/reflex/card-model.ts",
+        "sha256": "73b144e7c6d28cc566de7aab2019497808b45c55778583ba634eac36290050d5"
+      },
+      {
+        "source": "dfe1952ed4dddb7a01dcc4edf00e3f08686d3700",
+        "path": "agent/src/reflex/turn-solver.ts",
+        "sha256": "bd55f45c66e409844a2dca67aef9e0c4057cd4b4c4720a4aca6b2a0ff184a494"
+      },
+      {
+        "source": "dfe1952ed4dddb7a01dcc4edf00e3f08686d3700",
+        "path": "agent/tests/silent-enchanted-afterimage-state.json",
+        "sha256": "66405f7217a0780183bc754e60415c3b4446a4caa30850e36ac9876bf894d4bf"
+      },
+      {
+        "source": "dfe1952ed4dddb7a01dcc4edf00e3f08686d3700",
+        "path": "agent/tests/silent-enchanted-afterimage.test.ts",
+        "sha256": "d9db883cf74ef83e39346664c17f3333596b0e3b0fefd01f3350895267ff4f33"
+      }
+    ],
+    "refs": [
+      {
+        "path": "ops/codex-ops/learner/20261014-194301-strategy-proposal.out",
+        "sha256": "c403c8be3e87c81374ac6591119bd16fd65601a94964752a56352745c7a36921",
+        "bytes": 3202
+      },
+      {
+        "path": "ops/codex-ops/learner/20261014-194301-strategy-proposal.err",
+        "sha256": "c263321a42d7097127b9798738fb1f1d672ac4153505eb3f072dafe58b94595d",
+        "bytes": 14886
+      },
+      {
+        "path": "learner/runs/20261014-194305-strategy-proposal/report.md",
+        "sha256": "ebf50188905a5e07c99b8f3e23b2a4257258ddbc57eba96d7015ea6c27b606cc",
+        "bytes": 8122
+      },
+      {
+        "path": "learner/runs/20261014-194305-strategy-proposal/proposal.md",
+        "sha256": "8892178cc7d3668e62aedc80d2e1924a7e33e30373880b86a44b7c41e19f9cf8",
+        "bytes": 4806
+      },
+      {
+        "path": "learner/runs/20261014-194305-strategy-proposal/sandbox-tests.log",
+        "sha256": "a4bedfe044b4235e73f09f1b815f00339211c8b524bcd7b12c3a2aefee7017da",
+        "bytes": 559
+      },
+      {
+        "path": "learner/runs/20261014-194305-strategy-proposal/sandbox-tests.exit",
+        "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+        "bytes": 2
+      },
+      {
+        "path": "learner/runs/20261014-194305-strategy-proposal/source-gitleaks.log",
+        "sha256": "8a286bc04260e4795f887c348604fbe2be5211ee927a6492b5bb42575128ae6d",
+        "bytes": 80
+      },
+      {
+        "path": "learner/runs/20261014-194305-strategy-proposal/target-without-source.log",
+        "sha256": "2852d5a3cd81f163e79b688c83de56f8170d0ead21e837a0aec3c8a536d7a371",
+        "bytes": 5316
+      },
+      {
+        "path": "learner/runs/20261014-194305-strategy-proposal/target-restored.log",
+        "sha256": "b64ef70924ba0cd25a0bdb03bd3cdd358635d1edb6b2a43645180b2a7d71a365",
+        "bytes": 270
+      }
+    ],
+    "checks": {
+      "sandbox-tests.log": "\n RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261014-194301/agent\n\n\n Test Files  398 passed (398)\n      Tests  3848 passed (3848)\n   Start at  19:49:37\n   Duration  547.52s (transform 12.89s, setup 27.32s, import 61.21s, tests 940.96s, environment 43ms)\n\n\n RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261014-194301/agent\n\n\n Test Files  1 passed (1)\n      Tests  11 passed (11)\n   Start at  19:58:45\n   Duration  2.26s (transform 1.71s, setup 391ms, import 1.67s, tests 50ms, environment 0ms)\n\n",
+      "source-gitleaks.log": "7:59PM INF scanned ~303102 bytes (303.10 KB) in 190ms\n7:59PM INF no leaks found\n",
+      "target-without-source.log": "106|     const outcome = replaySteps(input, steps(input, [\"AFTERIMAGE\"]))!.…\n    107|     expect(outcome.blockGained).toBe(changed.player?.permafrostBlock =…\n    108|     expect(outcome.unknownCards).toContain(\"余像+（附魔格挡交互未验证）\");\n       |                                  ^\n    109|   }\n    110| });\n\n⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/6]⎯\n\n FAIL  tests/silent-enchanted-afterimage.test.ts > the later-turn rollout uses the same guarded effect without renewing Permafrost\nAssertionError: expected 7 to be 10 // Object.is equality\n\n- Expected\n+ Received\n\n- 10\n+ 7\n\n ❯ tests/silent-enchanted-afterimage.test.ts:124:32\n    122|   const records = simulateFight(input, plan, 3, 1, false).records;\n    123|   expect(records[0]!.snap.blk).toBe(0);\n    124|   expect(records[1]!.snap.blk).toBe(10);\n       |                                ^\n    125|   expect(records[2]!.snap.blk).toBe(0);\n    126| });\n\n⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/6]⎯\n\n\n Test Files  1 failed (1)\n      Tests  6 failed | 2 passed (8)\n   Start at  19:49:04\n   Duration  4.72s (transform 3.14s, setup 1.32s, import 2.09s, tests 1.17s, environment 0ms)\n\n",
+      "target-restored.log": "\n RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261014-194301/agent\n\n\n Test Files  1 passed (1)\n      Tests  8 passed (8)\n   Start at  19:49:31\n   Duration  3.79s (transform 2.20s, setup 657ms, import 1.82s, tests 1.17s, environment 0ms)\n\n"
+    },
+    "worktree_clean_tracked": true,
+    "actual_source_head": "dfe1952ed4dddb7a01dcc4edf00e3f08686d3700"
+  }
+]

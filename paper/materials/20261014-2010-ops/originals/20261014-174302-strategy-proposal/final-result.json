@@ -1,0 +1,63 @@
+{
+  "task": "strategy-proposal",
+  "character": "silent",
+  "batch": "20261014-174302-strategy-proposal",
+  "base": "75fef29d32e4b33c635fbc1f33fa4df9b04d5ba8",
+  "runs": [
+    "E5L15SK6ZHZB",
+    "8AGEGLG40SV3",
+    "EEVP0QTLMSX9",
+    "LKC9YXKZWTKR",
+    "Q9FM7A80E4BZ",
+    "6ZGMGEQ5YDVK",
+    "EBVT8UZM6P12",
+    "Q10YYQ5DUPJA",
+    "9GTFF6DC500L",
+    "QRZX1S9USYWP"
+  ],
+  "fixes": [
+    {
+      "id": "silent-proposal-1bea9962f17ba0ac",
+      "summary": "已观察静默A10普通吹哨的当轮击晕补模",
+      "commit": "cebeb2c6a45a09ef6752b713d6a3005df750117b",
+      "ledger": [
+        "silent-0471",
+        "silent-0473"
+      ]
+    }
+  ],
+  "skipped": [
+    {
+      "item": "未观察的等级、角色、升级、形态及未来重复施放",
+      "reason": "证据不足，保留旧数值并限定适用范围"
+    },
+    {
+      "item": "遗忘之魂消耗附伤",
+      "reason": "旧模型仍缺独立1伤，本次保持残差、不扩展机制"
+    }
+  ],
+  "merged": null,
+  "tests": {
+    "tsc": 0,
+    "vitest": 0,
+    "cases": 3851
+  },
+  "live_tests": null,
+  "code_proposals": [
+    "silent-proposal-1bea9962f17ba0ac"
+  ],
+  "implementation_domains": [
+    "combat",
+    "sl"
+  ],
+  "proposal_results": [
+    {
+      "id": "silent-proposal-1bea9962f17ba0ac",
+      "state": "waiting",
+      "reason": "机制证据充分，源码cebeb2c6a45a09ef6752b713d6a3005df750117b已提交且沙箱通过；live合入因16共享记录冲突中止并abort0，源码尚非live祖先，待ops兜底；不应冒称implemented或重新派同题研究。"
+    }
+  ],
+  "version": null,
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261014-174302/learner/runs/20261014-174321-strategy-proposal/report.md",
+  "proposal": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261014-174302/learner/runs/20261014-174321-strategy-proposal/proposal.md"
+}

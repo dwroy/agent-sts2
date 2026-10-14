@@ -1,0 +1,326 @@
+{
+  "silent-0471": {
+    "id": "silent-0471",
+    "ts": "2026-10-14T13:33:22+08:00",
+    "by": "learner:postmortem",
+    "character": "silent",
+    "kind": "bug-infra",
+    "claim": "静默A10普通吹哨WHISTLE主动击晕幸存实验体的效果缺失于卡牌与整线模型。末试T5预测5血减23至−18，实打吹哨→防御+使36攻击取消、零损活到T6；同线没有抽弃或目标改变。应补当前取消攻击的狭窄模型，并同步SL判死消费者；不能据此承诺整战获胜。",
+    "evidence": [
+      {
+        "run": "Q10YYQ5DUPJA",
+        "floor": 49,
+        "turn": 5,
+        "role": "support",
+        "note": "第6试d388996预计末HP−18；s401065→401066吹哨33加消耗附伤1使148→114且STUNNED，随后防御+实13挡，s401068仍5血；第4/5试同轮预计末HP−8而实9→9。live card-model.ts:1057/1200、turn-solver.ts:2779缺主动卡牌击晕。",
+        "added": "2026-10-14T13:33:22+08:00"
+      }
+    ],
+    "first_run": "Q10YYQ5DUPJA",
+    "prior": "unknown",
+    "prior_runs": [],
+    "prior_note": "silent账本按吹哨、WHISTLE、击晕检索无对应项；更早静默复盘无该牌主动击晕与完整两步预测对照。旧盛碗虫被动晕不同，不能据它判先验已会。",
+    "status": "proposed",
+    "where": {
+      "lessons": [
+        "Q10YYQ5DUPJA"
+      ],
+      "proposal": [
+        "/home/dw/Projects/agent-sts2/learner/runs/20261014-131302-postmortem/proposal-whistle.md",
+        "/home/dw/Projects/agent-sts2/learner/runs/20261014-131302-postmortem/proposal-whistle-evidence-supplement.md",
+        "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261014-174302/learner/runs/20261014-174321-strategy-proposal/proposal.md"
+      ],
+      "commits": [
+        "cebeb2c6a45a09ef6752b713d6a3005df750117b"
+      ]
+    },
+    "asc": 10,
+    "history": [
+      {
+        "ts": "2026-10-14T13:33:22+08:00",
+        "by": "learner:postmortem",
+        "status": "observed"
+      },
+      {
+        "ts": "2026-10-14T13:35:32+08:00",
+        "by": "learner:postmortem"
+      },
+      {
+        "ts": "2026-10-14T13:41:07+08:00",
+        "by": "learner:postmortem"
+      },
+      {
+        "ts": "2026-10-14T18:00:53+08:00",
+        "by": "learner:strategy-proposal",
+        "status": "proposed"
+      },
+      {
+        "ts": "2026-10-14T18:19:18+08:00",
+        "by": "learner:strategy-proposal",
+        "status": "proposed"
+      },
+      {
+        "ts": "2026-10-14T18:27:12+08:00",
+        "by": "learner:strategy-proposal",
+        "status": "proposed"
+      }
+    ],
+    "version": null,
+    "effect": null,
+    "notes": [
+      "代码提案 silent-proposal-1bea9962f17ba0ac → task=strategy-proposal；Roy-2026-10-07-learning",
+      "补充F48先回响削挡再吹哨的动作归属；F49T5漏晕的23血确定差额不变，原实现提案与SHA保持。",
+      "20261014-174302普通策略沿原silent-proposal-1bea9962f17ba0ac补模；Q10 F48T2/F49末试T5七帧及两决策核offset/bytes/SHA。仅Silent A10普通33伤两费吹哨和已见唯一存活形态；后继缺数据拒发安全数；原遗忘之魂1伤仍未建模，修T5不当整战可赢。未合live、不标shipped，原claim/prior/首证及提案字节保持。",
+      "本批源码 cebeb2c6a45a09ef6752b713d6a3005df750117b；源码沙箱tsc0、395文件3840项+paths11项exit0，最终撤码6败3过恢复9过，gitleaks0。正在按live锁流程核合入，当前不标shipped或预填正式发布号；一局有限形态及遗忘之魂1伤残差保持。",
+      "20261014-174302结论：足够证据的吹哨窄补模源码已提交并自测通过；live锁内merge因16共享记录冲突exit1，abort0，live仍d9bfb65a4ec28cdda8706a150fc4341d28db1227，两份无关脏笔记逐SHA保持。源码不是live祖先，待ops合入兜底；没有合后测试、行为版本、双上线通知或shipped。不是机制缺证，不另派同题新局研究；完整报告 /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261014-174302/learner/runs/20261014-174321-strategy-proposal/report.md"
+    ]
+  },
+  "silent-0473": {
+    "id": "silent-0473",
+    "ts": "2026-10-14T13:33:24+08:00",
+    "by": "learner:postmortem",
+    "character": "silent",
+    "kind": "mechanic",
+    "claim": "静默A10已实见普通吹哨WHISTLE在伤害后击晕幸存目标，当前攻击意图变STUNNED、该敌当轮不攻击；下一轮恢复攻击，不当永久减伤。实验体末试T5取消6×6＝36，仍5血进入T6，33本体加遗忘之魂1使148→114，再独立结2毒至112；沙漏试2T2亦见幸存目标STUNNED。限这两种目标、实见文本及当前轮，不外推升级、免晕/人工制品或其它角色。",
+    "evidence": [
+      {
+        "run": "Q10YYQ5DUPJA",
+        "floor": 48,
+        "turn": 2,
+        "role": "support",
+        "note": "试2d388793/s400851→400852，沙漏503血33挡后吹哨使492血STUNNED；下一轮回到双击。该轮还有其他增益，不将全部零损归吹哨。",
+        "added": "2026-10-14T13:33:24+08:00"
+      },
+      {
+        "run": "Q10YYQ5DUPJA",
+        "floor": 49,
+        "turn": 5,
+        "role": "support",
+        "note": "试4/5/6实际均吹哨击晕且本轮零损；末试s401065→401066，36攻击变STUNNED，s401068恢复36，5血不变；同局SL不当三独立支持局。",
+        "added": "2026-10-14T13:33:24+08:00"
+      },
+      {
+        "run": "Q10YYQ5DUPJA",
+        "floor": 48,
+        "turn": 2,
+        "role": "support",
+        "note": "逐步澄清：试2s400850为503血33挡，d388792回响斩击后s400851为503血23挡，d388793吹哨33伤加消耗附伤1后s400852为492血0挡/STUNNED；原证据33挡是轮首，吹哨单步起点挡应23。击晕观察保持，联合伤害不全归吹哨。",
+        "added": "2026-10-14T13:41:07+08:00"
+      }
+    ],
+    "first_run": "Q10YYQ5DUPJA",
+    "prior": "unknown",
+    "prior_runs": [],
+    "prior_note": "更早静默账本及复盘没有普通WHISTLE对幸存目标主动击晕的对应条目；其他敌被动晕或吹哨直接击杀不能作可比先验。",
+    "status": "proposed",
+    "where": {
+      "lessons": [
+        "Q10YYQ5DUPJA"
+      ],
+      "proposal": [
+        "/home/dw/Projects/agent-sts2/learner/runs/20261014-131302-postmortem/proposal-whistle.md",
+        "/home/dw/Projects/agent-sts2/learner/runs/20261014-131302-postmortem/proposal-whistle-evidence-supplement.md",
+        "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261014-174302/learner/runs/20261014-174321-strategy-proposal/proposal.md"
+      ],
+      "commits": [
+        "cebeb2c6a45a09ef6752b713d6a3005df750117b"
+      ]
+    },
+    "asc": 10,
+    "history": [
+      {
+        "ts": "2026-10-14T13:33:24+08:00",
+        "by": "learner:postmortem",
+        "status": "observed"
+      },
+      {
+        "ts": "2026-10-14T13:35:32+08:00",
+        "by": "learner:postmortem"
+      },
+      {
+        "ts": "2026-10-14T13:41:07+08:00",
+        "by": "learner:postmortem"
+      },
+      {
+        "ts": "2026-10-14T18:00:53+08:00",
+        "by": "learner:strategy-proposal",
+        "status": "proposed"
+      },
+      {
+        "ts": "2026-10-14T18:19:18+08:00",
+        "by": "learner:strategy-proposal",
+        "status": "proposed"
+      },
+      {
+        "ts": "2026-10-14T18:27:12+08:00",
+        "by": "learner:strategy-proposal",
+        "status": "proposed"
+      }
+    ],
+    "version": null,
+    "effect": null,
+    "notes": [
+      "代码提案 silent-proposal-1bea9962f17ba0ac → task=strategy-proposal；Roy-2026-10-07-learning",
+      "原提案SHA保持，本逐步补充供同一strategy-proposal消费，未派第二研究或改claim/status。",
+      "20261014-174302普通策略沿原silent-proposal-1bea9962f17ba0ac补模；Q10 F48T2/F49末试T5七帧及两决策核offset/bytes/SHA。仅Silent A10普通33伤两费吹哨和已见唯一存活形态；后继缺数据拒发安全数；原遗忘之魂1伤仍未建模，修T5不当整战可赢。未合live、不标shipped，原claim/prior/首证及提案字节保持。",
+      "本批源码 cebeb2c6a45a09ef6752b713d6a3005df750117b；源码沙箱tsc0、395文件3840项+paths11项exit0，最终撤码6败3过恢复9过，gitleaks0。正在按live锁流程核合入，当前不标shipped或预填正式发布号；一局有限形态及遗忘之魂1伤残差保持。",
+      "20261014-174302结论：足够证据的吹哨窄补模源码已提交并自测通过；live锁内merge因16共享记录冲突exit1，abort0，live仍d9bfb65a4ec28cdda8706a150fc4341d28db1227，两份无关脏笔记逐SHA保持。源码不是live祖先，待ops合入兜底；没有合后测试、行为版本、双上线通知或shipped。不是机制缺证，不另派同题新局研究；完整报告 /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261014-174302/learner/runs/20261014-174321-strategy-proposal/report.md"
+    ]
+  },
+  "silent-0467": {
+    "id": "silent-0467",
+    "ts": "2026-10-14T10:03:11+08:00",
+    "by": "learner:postmortem",
+    "character": "silent",
+    "kind": "bug-infra",
+    "claim": "静默A10木札伶俐为余像+附加的独立3挡没有进入牌模型：牌文已写获得3点格挡，但动态变量只有AfterimagePower，card-model只取CalculatedBlock/Block。6ZGMGEQ5YDVK F45首试T1完整余像/打击/偏折+/带毒刺击线预计新增17挡，实际新增20；遗物永冻7挡已接，缺的是附魔3挡。只定位同线格挡预测缺口，不证明它改变胜负。",
+    "evidence": [
+      {
+        "run": "6ZGMGEQ5YDVK",
+        "floor": 45,
+        "turn": 1,
+        "role": "support",
+        "note": "首试d387236逐步余像报7挡、完整线17挡；s399207->208格挡10->20，s399211最终30，实新增20。card-model.ts:888/:1165/:1180，turn-solver.ts:1814已有永冻；启动cc82ef5与当前card-model字节相同。",
+        "added": "2026-10-14T10:03:11+08:00"
+      },
+      {
+        "run": "6ZGMGEQ5YDVK",
+        "floor": 39,
+        "turn": 1,
+        "role": "support",
+        "note": "SL第二试d387142余像/步法+/带毒刺击报新增9挡，s399084->085余像当步10->20、完整新增12，直伤6和损0一致。",
+        "added": "2026-10-14T10:03:11+08:00"
+      }
+    ],
+    "first_run": "6ZGMGEQ5YDVK",
+    "prior": "unknown",
+    "prior_runs": [],
+    "prior_note": "按silent账本检索伶俐、木札、PERMAFROST、获得3点格挡及更早静默复盘，无同附魔可比实线；旧0172/0173只涉及永冻7挡，不能充作本附魔先验。",
+    "status": "proposed",
+    "where": {
+      "lessons": [
+        "6ZGMGEQ5YDVK"
+      ],
+      "proposal": [
+        "/home/dw/Projects/agent-sts2/learner/runs/20261014-094303-postmortem/proposal-enchanted-afterimage.md",
+        "/home/dw/Projects/agent-sts2/learner/runs/20261014-194305-strategy-proposal/proposal.md"
+      ],
+      "commits": [
+        "dfe1952ed4dddb7a01dcc4edf00e3f08686d3700"
+      ]
+    },
+    "asc": 10,
+    "history": [
+      {
+        "ts": "2026-10-14T10:03:11+08:00",
+        "by": "learner:postmortem",
+        "status": "observed"
+      },
+      {
+        "ts": "2026-10-14T10:05:25+08:00",
+        "by": "learner:postmortem"
+      },
+      {
+        "ts": "2026-10-14T19:50:43+08:00",
+        "by": "learner:strategy-proposal",
+        "status": "proposed"
+      },
+      {
+        "ts": "2026-10-14T20:00:41+08:00",
+        "by": "learner:strategy-proposal",
+        "status": "proposed"
+      },
+      {
+        "ts": "2026-10-14T20:02:49+08:00",
+        "by": "learner:strategy-proposal",
+        "status": "proposed"
+      }
+    ],
+    "version": null,
+    "effect": null,
+    "notes": [
+      "代码提案 silent-proposal-0137566a28b900e1 → task=strategy-proposal；Roy-2026-10-07-learning",
+      "本批20261014-194301-strategy-proposal核原字节证据，实施既有silent-proposal-0137566a28b900e1的精确silent/A10首次永冻无修饰窗口；未观察交互保留旧值并显式未知；尚未声明live上线。",
+      "精确余像附魔3挡实现源码 dfe1952ed4dddb7a01dcc4edf00e3f08686d3700；证据6ZGMGEQ5YDVK F37/F39/F45 T1；原silent-proposal-0137566a28b900e1。源沙箱tsc0、399文件3859项通过，固定撤码6败/2过、恢复8过；live合后检查尚待结果，不标shipped。",
+      "本批20261014-194301-strategy-proposal结案记录：源码已提交且源沙箱通过；锁内最新live整分支预检在README.md、docs/quantitative-play.md、docs/v5-architecture.md、docs/v5-construction.md、paper/materials/STATE-2026-10-14.md共5个共享文档冲突，按任务停止，未实际merge。待ops保留并行文档并兜底合入、补合后检查；缺的是实际live祖先，不缺本次限定机制证据，不能登记implemented/shipped。源码 dfe1952ed4dddb7a01dcc4edf00e3f08686d3700；原提案silent-proposal-0137566a28b900e1，报告 /home/dw/Projects/agent-sts2/learner/runs/20261014-194305-strategy-proposal/report.md"
+    ]
+  },
+  "silent-0468": {
+    "id": "silent-0468",
+    "ts": "2026-10-14T10:03:11+08:00",
+    "by": "learner:postmortem",
+    "character": "silent",
+    "kind": "mechanic",
+    "claim": "本局静默A10木札伶俐后的余像+在首次能力窗口，牌文独立增加3挡，与永冻冰晶首次能力7挡同时兑现为当步10挡；余像本体建立1层、后续出牌各另补1，自身不另补1。只确认无敏捷/脆弱的这些当步组合；附魔是否吃敏捷、脆弱、重放或其它牌/角色未验证，不把永冻数值改成10。",
+    "evidence": [
+      {
+        "run": "6ZGMGEQ5YDVK",
+        "floor": 37,
+        "turn": 1,
+        "role": "support",
+        "note": "s398960->398961首次余像格挡10->20、HP47不变；F36木札选择余像附魔，牌文追加获得3点格挡，无Block动态变量。",
+        "added": "2026-10-14T10:03:11+08:00"
+      },
+      {
+        "run": "6ZGMGEQ5YDVK",
+        "floor": 45,
+        "turn": 1,
+        "role": "support",
+        "note": "首试s399207->208余像10->20，后续打击+1、偏折+8、带毒刺击+1到30；第三试同能力当步也+10。连同F39第二试与F43共有5个窗口，均同一局，不当5个独立样本。",
+        "added": "2026-10-14T10:03:11+08:00"
+      }
+    ],
+    "first_run": "6ZGMGEQ5YDVK",
+    "prior": "unknown",
+    "prior_runs": [],
+    "prior_note": "更早silent账本/复盘无木札伶俐的可比现场，旧永冻7挡与余像逐牌1挡不证明附魔条件已掌握。",
+    "status": "proposed",
+    "where": {
+      "lessons": [
+        "6ZGMGEQ5YDVK"
+      ],
+      "proposal": [
+        "/home/dw/Projects/agent-sts2/learner/runs/20261014-094303-postmortem/proposal-enchanted-afterimage.md",
+        "/home/dw/Projects/agent-sts2/learner/runs/20261014-194305-strategy-proposal/proposal.md"
+      ],
+      "commits": [
+        "dfe1952ed4dddb7a01dcc4edf00e3f08686d3700"
+      ]
+    },
+    "asc": 10,
+    "history": [
+      {
+        "ts": "2026-10-14T10:03:11+08:00",
+        "by": "learner:postmortem",
+        "status": "observed"
+      },
+      {
+        "ts": "2026-10-14T10:05:25+08:00",
+        "by": "learner:postmortem"
+      },
+      {
+        "ts": "2026-10-14T19:50:43+08:00",
+        "by": "learner:strategy-proposal",
+        "status": "proposed"
+      },
+      {
+        "ts": "2026-10-14T20:00:41+08:00",
+        "by": "learner:strategy-proposal",
+        "status": "proposed"
+      },
+      {
+        "ts": "2026-10-14T20:02:49+08:00",
+        "by": "learner:strategy-proposal",
+        "status": "proposed"
+      }
+    ],
+    "version": null,
+    "effect": null,
+    "notes": [
+      "代码提案 silent-proposal-0137566a28b900e1 → task=strategy-proposal；Roy-2026-10-07-learning",
+      "本批20261014-194301-strategy-proposal核原字节证据，实施既有silent-proposal-0137566a28b900e1的精确silent/A10首次永冻无修饰窗口；未观察交互保留旧值并显式未知；尚未声明live上线。",
+      "精确余像附魔3挡实现源码 dfe1952ed4dddb7a01dcc4edf00e3f08686d3700；证据6ZGMGEQ5YDVK F37/F39/F45 T1；原silent-proposal-0137566a28b900e1。源沙箱tsc0、399文件3859项通过，固定撤码6败/2过、恢复8过；live合后检查尚待结果，不标shipped。",
+      "本批20261014-194301-strategy-proposal结案记录：源码已提交且源沙箱通过；锁内最新live整分支预检在README.md、docs/quantitative-play.md、docs/v5-architecture.md、docs/v5-construction.md、paper/materials/STATE-2026-10-14.md共5个共享文档冲突，按任务停止，未实际merge。待ops保留并行文档并兜底合入、补合后检查；缺的是实际live祖先，不缺本次限定机制证据，不能登记implemented/shipped。源码 dfe1952ed4dddb7a01dcc4edf00e3f08686d3700；原提案silent-proposal-0137566a28b900e1，报告 /home/dw/Projects/agent-sts2/learner/runs/20261014-194305-strategy-proposal/report.md"
+    ]
+  }
+}
