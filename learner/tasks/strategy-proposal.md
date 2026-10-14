@@ -20,6 +20,7 @@ Roy 2026-10-05 08:33 批准独立策略学习任务。本次角色为 {{characte
 - 只从本角色对局、复盘和 {{character_dir}} 学习。核对 runs.jsonl 角色；不得读取或搬用其他角色知识。共用事实仅用观察得到的数据。
 - 先按第 1.2 节核对本批是否承接已授权专题；匹配时只按 work_spec 研究，否则读 fix-queue-v4.md 的待定策略项与已有提案，选证据充分、可验证的一项。游戏知识只能从对局里学，不使用自己的预训练知识补结论。
 - 每项提案落盘到 {{scratch}}/proposal.md，写证据局号、层、回合、既有学习账本 id、反例、预期行为及验证方法。没有证据就报告证据不足，不改策略。
+- 提取原日志用共用入口：`python3 {{worktree}}/learner/extract_evidence.py --logs "{{logs_dir}}" --output "{{scratch}}/evidence" --runs "<本批核实局号，逗号分隔>"`。身份读取包括 run-plans 的 `run`、其他流的 `run_id`／`state.run_id`／fingerprint.run；不把正文提及当所属局，冲突身份拒收。保存各流 source_size、逐行 offset/bytes/SHA 与计数；复核旧截点用 `--streams run-plans --source-size <原字节截点>` 并另存输出，不覆盖旧报告或零行初稿。0 行仅说明该截点未选到，不据此断言原日志缺失。
 
 ## 1.1 派发提案与补链
 本次调度批次为 {{batch}}。从 {{project_root}}/ops/codex-ops/learn.json 只读对应行，核对角色和工作树；若存在 proposal_ids，只处理这些已领取的 id，不领取其他批次或扩展到整条队列。batch=manual 时保持原手动证据任务。
