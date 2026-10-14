@@ -1,0 +1,68 @@
+import hashlib
+import json
+import pathlib
+
+s = pathlib.Path(__file__).resolve().parent
+dispatch = json.loads((s / 'dispatch-and-proposals.json').read_text())
+runs = dispatch['dispatch']['runs']
+checks = []
+def check(label, actual, expected, sources):
+    checks.append({'label': label, 'actual': actual, 'expected': expected,
+                   'sources': sources, 'passed': actual == expected})
+
+facts = {run: {r['line']: r for r in json.loads((s / (run + '-state-facts.json')).read_text())} for run in runs}
+def f(run, line):
+    return facts[run][line]
+def enemy(row, id):
+    return next(e for e in row['enemies'] if e['id'] == id)
+
+N, P, G, R, B = runs
+check('NHA首试T1实损', f(N,283391)['hp']-f(N,283397)['hp'], 1, [283391,283397])
+check('NHA末试T1实损', f(N,283502)['hp']-f(N,283507)['hp'], 7, [283502,283507])
+check('NHA首试候选窗口敌血净减（开场遗物之后起算）', sum(e['hp'] for e in f(N,283391)['enemies'])-sum(e['hp'] for e in f(N,283397)['enemies']), 8, [283391,283397])
+check('NHA末试候选窗口敌血净减', sum(e['hp'] for e in f(N,283502)['enemies'])-sum(e['hp'] for e in f(N,283507)['enemies']), 24, [283502,283507])
+check('NHA首末T1挡', [f(N,283396)['block'],f(N,283506)['block']], [14,8], [283396,283506])
+check('NHA末轮显示攻击减当前挡', sum(e['attack'] for e in f(N,283525)['enemies'])-f(N,283525)['block'], 32, [283525])
+check('P74末弃牌帧资源', [f(P,284817)[k] for k in ['hp','block','energy']], [1,16,2], [284817])
+check('P74末弃牌四选项', [c['card_id'] for c in f(P,284817)['hand']], ['STRANGLE','NOXIOUS_FUMES','SLICE','GREED'], [284817])
+check('P74卵毒后仍活', [enemy(f(P,284821),'BOWLBUG_EGG')['hp'],f(P,284821)['hp']], [2,0], [284821])
+check('P74石虫全挡眩晕', enemy(f(P,284821),'BOWLBUG_ROCK')['move'], 'STUNNED', [284821])
+check('P74滑溜火焰净扣', enemy(f(P,284630),'VANTOM')['hp']-enemy(f(P,284631),'VANTOM')['hp'], 1, [284630,284631])
+check('P74滑溜6两结净扣', enemy(f(P,284635),'VANTOM')['hp']-enemy(f(P,284636),'VANTOM')['hp'], 2, [284635,284636])
+check('P74无滑溜12毒两结净扣', enemy(f(P,284658),'VANTOM')['hp']-enemy(f(P,284659),'VANTOM')['hp'], 23, [284658,284659])
+check('P74胧光T2实损', f(P,284743)['hp']-f(P,284744)['hp'], 20, [284743,284744])
+check('P74胧光T4实损', f(P,284753)['hp']-f(P,284754)['hp'], 24, [284753,284754])
+check('P74胧光胜后到下战HP', [f(P,284761)['hp'],f(P,284766)['hp']], [9,9], [284761,284766])
+check('G33女王末T8毒端点', [enemy(f(G,284407),'QUEEN')['powers']['POISON_POWER'],enemy(f(G,284408),'QUEEN')['hp']], [42,148], [284407,284408])
+check('G33余像实建两层', f(G,284407)['powers']['AFTERIMAGE_POWER'], 2, [284407])
+check('G33末轮显示攻击减当前挡', sum(e['attack'] for e in f(G,284407)['enemies'])-f(G,284407)['block'], 19, [284407])
+check('RC首末T1实损', [f(R,285315)['hp']-f(R,285321)['hp'],f(R,285491)['hp']-f(R,285497)['hp']], [4,8], [285315,285321,285491,285497])
+check('RC首末T1敌血净减', [sum(e['hp'] for e in f(R,a)['enemies'])-sum(e['hp'] for e in f(R,b)['enemies']) for a,b in [(285315,285321),(285491,285497)]], [30,23], [285315,285321,285491,285497])
+check('RC首末T1当前挡', [f(R,285320)['block'],f(R,285496)['block']], [16,12], [285320,285496])
+check('RC普通触媒实建1', f(R,285495)['powers']['ACCELERANT_POWER'], 1, [285495])
+check('RC异鱼持呼唤末HP', [f(R,285095)['hp'],f(R,285096)['hp']], [8,2], [285095,285096])
+check('BTS睡层实际下降', [enemy(f(B,n),'SLUMBERING_BEETLE')['powers'].get('SLUMBER_POWER') for n in [286148,286149,286150,286152]], [3,2,1,None], [286148,286149,286150,286152])
+check('BTS末轮资源', [f(B,286173)['hp'],f(B,286173)['block'],f(B,286173)['powers']['PLATING_POWER'],enemy(f(B,286173),'SLUMBERING_BEETLE')['attack']], [14,5,1,22], [286173])
+check('BTS末轮显示算式需损', enemy(f(B,286173),'SLUMBERING_BEETLE')['attack']-f(B,286173)['block']-f(B,286173)['powers']['PLATING_POWER'], 16, [286173])
+check('BTS零血截断与甲虫毒后HP', [f(B,286174)['hp'],enemy(f(B,286174),'SLUMBERING_BEETLE')['hp']], [0,13], [286174])
+for run, expected in [(N,120),(P,42),(G,133),(R,105),(B,42)]:
+    seq=list(facts[run].values())
+    gains=[{'line':a['line'],'next':b['line'],'gain':b['hp']-a['hp']} for a,b in zip(seq,seq[1:])
+           if a['screen']==b['screen']=='REST' and a['floor']==b['floor'] and b['hp']>a['hp']]
+    check(run+'已到营火HP增量',sum(x['gain'] for x in gains),expected,gains)
+
+# Re-read each selected raw record at its original byte location, including the corrected plan schema.
+verified = 0
+for kind in ['runs','run-config','states','decisions','sl-attempts','run-plans']:
+    index=json.loads((s/(kind+'-index.json')).read_text())
+    with (pathlib.Path('/home/dw/Projects/agent-sts2/logs')/(kind+'.jsonl')).open('rb') as source:
+        for meta in index:
+            source.seek(meta['offset']); raw=source.read(meta['bytes'])
+            assert hashlib.sha256(raw).hexdigest()==meta['sha256'], (kind,meta['line'])
+            verified += 1
+result={'scope':'固定证据与算术校验；不是生产tsc/vitest或修复红绿测试',
+        'checks':checks,'raw_records_verified':verified,'passed':all(x['passed'] for x in checks)}
+(s/'evidence-verification.json').write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n')
+print(json.dumps({'passed':result['passed'],'checks':len(checks),'raw_records_verified':verified,
+                  'failures':[x for x in checks if not x['passed']]},ensure_ascii=False))
+assert result['passed']

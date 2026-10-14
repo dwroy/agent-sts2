@@ -1,0 +1,171 @@
+{
+  "at": "2026-10-14 14:36:17 CST",
+  "batch": "20261014-141302-s2-strategy-proposal",
+  "source_base": "4796b995789a09193b9b0bae8d3a0b03128210eb",
+  "state": "done",
+  "rc": 0,
+  "merged": null,
+  "source_clean": true,
+  "tests": {
+    "tsc": null,
+    "vitest": null,
+    "cases": null
+  },
+  "proposal_results": [
+    {
+      "id": "silent-proposal-9952ee8e8df9a0fe",
+      "state": "waiting",
+      "reason": "缺跨重问的完整采用线、累计能力收益及同条件后战/改路对照；局部多16输出多6血价不足校准SL门槛或终局血价。"
+    },
+    {
+      "id": "silent-proposal-47be799a87af03be",
+      "state": "waiting",
+      "reason": "缺四个合法弃牌分支在弃后动态牌面、紧勒、失衡、毒和剩血的联合生产验收；快照不模拟这些结果，保留精确分支未实打，不能关闭整项。"
+    },
+    {
+      "id": "silent-proposal-3a5274da3c42672a",
+      "state": "waiting",
+      "reason": "缺召唤/复活、一次翻倍、普通触媒及连续用药在同一冻结生产链的联合回放；主怪末次零血中间帧未获，不能据净差拟新药价或杀序。"
+    },
+    {
+      "id": "silent-proposal-bc4b92d590f2c4ce",
+      "state": "waiting",
+      "reason": "首牌身份、弃牌计划提示与快照已有live子实现；缺完整候选执行归属、累计余像收益和动态弃牌分支验收，不能将综合提案标duplicate。"
+    },
+    {
+      "id": "silent-proposal-f52fbbab4dccc3b4",
+      "state": "waiting",
+      "reason": "缺分源毛伤、复活增血与同条件路线/休息/SL/保药整战支线；赢战净耗和后战入口不确定新的血价或统一击杀顺序。"
+    },
+    {
+      "id": "silent-proposal-10f37c0edd3d24a6",
+      "state": "waiting",
+      "reason": "既有局部机制不能代替所有来源在同一冻结生产链的联合回放；未知叠加与开场/回复/重载完整分账仍缺，不外推新公式。"
+    },
+    {
+      "id": "silent-proposal-3f82387e2e179703",
+      "state": "waiting",
+      "reason": "缺累计毒/挡收益、完整执行身份及同抽序同预算整战对照；死亡饱和不能证明即时等价，也不足以改SL排序。"
+    },
+    {
+      "id": "silent-proposal-aee21084c991abd3",
+      "state": "waiting",
+      "reason": "原选最优与后续重规划不是同条完整线；缺旧dirty执行树、逐样本抽序/移动模型和完整实际线联合回放，一条3/4线的一次死亡不足校准概率或权重。"
+    },
+    {
+      "id": "silent-proposal-df37594e9b12debf",
+      "state": "waiting",
+      "reason": "唯一单弃只是子实现；缺跨重规划完整线、实际转向、累计能力与呼唤自损的联合消费者验证，不能关闭宽项或规定能力优先级。"
+    },
+    {
+      "id": "silent-proposal-42e81c83b2e1e56b",
+      "state": "waiting",
+      "reason": "缺独立回复/药槽/存档事件账及同条件后战反事实；连续赢战、休息与boss入口不能确定路线或终局HP新参数。"
+    }
+  ],
+  "original_offset_bytes_SHA_and_snapshot_counts": {
+    "states": 3238,
+    "decisions": 3138,
+    "sl-attempts": 31,
+    "runs": 5,
+    "run-config": 5,
+    "run-plans": 26
+  },
+  "33_original_evidence_checks_verified": true,
+  "source_paths_verified": 14,
+  "source_commits_ancestor_scope_preserved": [
+    {
+      "name": "axe",
+      "commit": "e784dd9f043bf87c29109573f48975f9903280d3",
+      "base_ancestor": true,
+      "live_ancestor": true
+    },
+    {
+      "name": "survivor",
+      "commit": "bf423c173d3be348a4ad714e1d26516df619ff41",
+      "base_ancestor": true,
+      "live_ancestor": true
+    },
+    {
+      "name": "discard_plan",
+      "commit": "97efc0618936c6d7783fbf36e79b056b90d65589",
+      "base_ancestor": true,
+      "live_ancestor": true
+    },
+    {
+      "name": "discard_snapshot",
+      "commit": "4b0823f519f1b724d6cff2b1cd50b74146dc4a9d",
+      "base_ancestor": true,
+      "live_ancestor": true
+    },
+    {
+      "name": "prediction_audit",
+      "commit": "be69855995737d6f381adb10bf248964832da24b",
+      "base_ancestor": true,
+      "live_ancestor": true
+    },
+    {
+      "name": "legacy_live_integration",
+      "commit": "a8b1f8be153fe4f3a34146117546c2178f2e446b",
+      "base_ancestor": true,
+      "live_ancestor": true
+    },
+    {
+      "name": "offline_audit",
+      "commit": "ac631877279c43842346ea921d996554e0252709",
+      "base_ancestor": true,
+      "live_ancestor": true
+    },
+    {
+      "name": "offline_live_integration",
+      "commit": "6f3f783941270ac182237c46068097ff67e85907",
+      "base_ancestor": true,
+      "live_ancestor": true
+    },
+    {
+      "name": "main_live_dependency",
+      "commit": "5b56a452bb9be14d620b368ec46974c1b57901ca",
+      "base_ancestor": true,
+      "live_ancestor": true
+    }
+  ],
+  "native": {
+    "event_log": ".worktrees/codex-strategy-silent-20261014-141302-s2/learner/runs/20261014-141326-strategy-proposal.jsonl",
+    "thread_id": "01a1390b-65ba-7931-a4d0-d2a41aa0c40e",
+    "launch_source": {
+      "source": ".worktrees/codex-strategy-silent-20261014-141302-s2/learner/runs/20261014-141326-strategy-proposal.jsonl",
+      "offset": 0,
+      "bytes": 21149,
+      "sha256": "32a7a43c07cda2fc17927fd286b5171e392a6b9c4544047097b67ad45a519ba6"
+    },
+    "launch_task": "strategy-proposal",
+    "launch_cwd": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261014-141302-s2",
+    "rendered_task_prompt_sha256": "9fe3d3b1514ccc4549f1125978135a211c9c293a3589543973eeb4c8969acc66",
+    "actual_input_sha256": "372d4cd61d8bf8772ba762bc4b5e9411cf765f922baeb8a3a2461e9b89ab7b97",
+    "actual_command_sha256": "d4dca945dac9ff85827ed477aaab8a76669065ed4df6bcce7db493ccac3bdd32",
+    "original_startup_lease": "14925693fb67ffe28997912fc2e4d132455477e49b2f0f803453cf085bc6a482",
+    "native_input_matches_recorded_stdin_sha256": true,
+    "native_context": {
+      "source": "ops/codex-ops/accounts/codex1/learner/sessions/2026/10/14/rollout-2026-10-14T14-13-30-01a1390b-65ba-7931-a4d0-d2a41aa0c40e.jsonl",
+      "offset": 50286,
+      "bytes": 5166,
+      "sha256": "db504c71ef4ea9b5756fca7b54815ef13fdde0e0ef2ffd6d02b6c0fac2c2f1e0",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "sandbox_type": "workspace-write"
+    },
+    "startup_source": {
+      "source": ".worktrees/codex-strategy-silent-20261014-141302-s2/learner/runs/20261014-141326-strategy-proposal.jsonl",
+      "offset": 21149,
+      "bytes": 380,
+      "sha256": "5ed50e86f9b5374c95e07b829039db286b7de88896d74f85caa7bef388b7c2bf"
+    }
+  },
+  "ledger_CLI_rows": 32,
+  "only_original_by_where_note_changes": true,
+  "original_plan_field_correction_to26_and_old_zero_index_preserved": true,
+  "PRECISE_CUT_initial_checker_failure_and_recovery_preserved": true,
+  "consumer_missing_route_id_full_failure_and_bounded_scope_kept": true,
+  "no_new_dissent_research_export_code_tests_merge_release_or_routine_message": true,
+  "waiting_original_materials_kept": true
+}

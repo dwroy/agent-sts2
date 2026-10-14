@@ -1,0 +1,101 @@
+[
+  {
+    "run": "P74C04AEPL1F",
+    "row": {
+      "ts": "2026-10-07T16:31:24.563Z",
+      "mode": "play",
+      "screen": "EVENT",
+      "session": "singleplayer/run",
+      "floor": 11,
+      "turn": null,
+      "label": "map/route-change",
+      "decider": "codex",
+      "fingerprint": "{\"actions\":[\"save_and_quit\",\"choose_event_option\"],\"combat\":false,\"enemies\":\"\",\"event\":\"THE_LEGENDS_WERE_TRUE:80:false:顺走地图/获得[gold]藏宝图[/gold]。/false|耐心寻找出口/失去[red]8[/red]点生命。获得[blue]1[/blue]瓶随机[gold]药水[/gold]。/false\",\"gold\":385,\"hand\":\"\",\"hp\":63,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"0:0:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"\",\"rewards\":\"\",\"run\":\"P74C04AEPL1F\",\"screen\":\"EVENT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":null}",
+      "rationale": "Codex changed the act's route in event/choose (event review): r11c4 商店 → r12c5 精英 → r13c4 普通战 → r14c4 普通战 → r15c4 休息 → r16c3 Boss => r11c4 商店 → r12c4 普通战 → r13c4 普通战 → r14c4 普通战 → r15c4 休息 → r16c3 Boss; next rest: 到 F16 时新路线约 54/70，保留路线约 32/70（p75 38 对 7）；下一只精英：新路线 boss 前没有精英，保留路线 F13 r12c5 进场 63/70（p75 63）",
+      "confidence": null,
+      "fallback": false,
+      "reasked": false,
+      "no_jev": false,
+      "reused_answer": false,
+      "request_ids": [],
+      "latency_ms": {
+        "plan": 0,
+        "jev": 0,
+        "action": 0
+      },
+      "usage": {
+        "input_tokens": 0,
+        "output_tokens": 0
+      },
+      "deepseek": {
+        "by": "deepseek",
+        "direct": true,
+        "reused": true,
+        "plan_ref": "P74C04AEPL1F:F11:event#5",
+        "plan_step": 2,
+        "choice": "r11c4 r12c4 r13c4 r14c4 r15c4 r16c3",
+        "reason": "",
+        "from": "r11c4 商店 → r12c5 精英 → r13c4 普通战 → r14c4 普通战 → r15c4 休息 → r16c3 Boss",
+        "to": "r11c4 商店 → r12c4 普通战 → r13c4 普通战 → r14c4 普通战 → r15c4 休息 → r16c3 Boss",
+        "next_rest": "到 F16 时新路线约 54/70，保留路线约 32/70（p75 38 对 7）；下一只精英：新路线 boss 前没有精英，保留路线 F13 r12c5 进场 63/70（p75 63）",
+        "next_rest_worse": false,
+        "next_rest_elite_worse": false
+      },
+      "run_id": "P74C04AEPL1F",
+      "observed_ts": "2026-10-07T16:30:59.037Z",
+      "journal": {
+        "choice": "route (event review): r11c4 商店 → r12c4 普通战 → r13c4 普通战 → r14c4 普通战 → r15c4 休息 → r16c3 Boss",
+        "reason": ""
+      },
+      "route_plan": {
+        "runId": "P74C04AEPL1F",
+        "act": 1,
+        "floor": 11,
+        "hpPct": 0.9,
+        "path": [
+          {
+            "row": 11,
+            "col": 4,
+            "type": "Shop",
+            "hpOnArrival": 0.9
+          },
+          {
+            "row": 12,
+            "col": 4,
+            "type": "Monster",
+            "hpOnArrival": 0.9
+          },
+          {
+            "row": 13,
+            "col": 4,
+            "type": "Monster",
+            "hpOnArrival": 0.8571428571428571
+          },
+          {
+            "row": 14,
+            "col": 4,
+            "type": "Monster",
+            "hpOnArrival": 0.8142857142857143
+          },
+          {
+            "row": 15,
+            "col": 4,
+            "type": "RestSite",
+            "hpOnArrival": 0.7714285714285715
+          },
+          {
+            "row": 16,
+            "col": 3,
+            "type": "Boss",
+            "hpOnArrival": 1
+          }
+        ],
+        "summary": "r11c4 商店 → r12c4 普通战 → r13c4 普通战 → r14c4 普通战 → r15c4 休息 → r16c3 Boss",
+        "why": "event review"
+      },
+      "result": "route plan changed (no game action)",
+      "_line": 278271,
+      "_source_sha256": "9e979189dc97c20bf12a660b102f0acc0ade68e180170a9a8dd85993bd452611"
+    }
+  }
+]
