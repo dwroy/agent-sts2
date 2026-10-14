@@ -1,0 +1,38 @@
+{
+  "floors": {
+    "DUZUBAJ3A8GP": [
+      27
+    ],
+    "5PM6JAQG6FNQ": [
+      38,
+      39
+    ],
+    "CA5KE8GFJ9X2": [
+      13
+    ],
+    "8JRE1C4H4Z2W": [
+      17,
+      33
+    ],
+    "YF0LXT1QSTGG": [
+      33,
+      48
+    ],
+    "XP2SL33HT0D9": [
+      33
+    ]
+  },
+  "state_line_anchor": {
+    "decision_line": 271309,
+    "state_line": 277327,
+    "timestamp": "2026-10-07T09:06:51.167Z",
+    "offset": 8547528472,
+    "sha256": "4bed570928243cc2d464cb7244d22faef6b09d11bf8bcaa8199552e56e96491b",
+    "start_line_offset": 272987
+  },
+  "limitations": [
+    "状态全局行号以原提案277327及同观测时间/指纹锚定；独立身份由原日志byte offset/length/SHA256提供。",
+    "scoped只取原提案关联楼层且decision_id有效的决策，移除处原行号有断点，消费者不会跨缺行联接。",
+    "full原样保留缺失decision_id，不伪造ID。"
+  ]
+}

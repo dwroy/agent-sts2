@@ -1,0 +1,35 @@
+import collections
+import hashlib
+import json
+import subprocess
+from pathlib import Path
+
+OUT = Path(__file__).resolve().parent
+ROOT = OUT.parents[2]
+dispatch = json.loads((OUT / 'dispatch.json').read_text())
+receipts = []
+for run in dispatch['runs']:
+    for scope in (['full', 'scoped'] if run in ['DUZUBAJ3A8GP', 'CA5KE8GFJ9X2'] else ['scoped']):
+        source = OUT / (run + '-' + scope + '.json')
+        target = OUT / (run + '-' + scope + '-audit.json')
+        stderr = OUT / (run + '-' + scope + '-audit.stderr.txt')
+        with target.open('w') as stdout, stderr.open('w') as errors:
+            result = subprocess.run(['node', '--import', 'tsx', 'learner/audit-selection.ts', str(source)],
+                                    cwd=ROOT, stdout=stdout, stderr=errors)
+        receipt = {'run_id': run, 'scope': scope, 'input': str(source),
+                   'input_sha256': hashlib.sha256(source.read_bytes()).hexdigest(),
+                   'output': str(target), 'stderr': str(stderr), 'rc': result.returncode,
+                   'validation_kind': 'existing_offline_consumer_readback_not_source_tests'}
+        if result.returncode == 0:
+            data = json.loads(target.read_text())
+            receipt.update({'segments': len(data['segments']),
+                            'intervals': dict(collections.Counter(v['reason'] for v in data['observed_intervals'])),
+                            'action_observations': dict(collections.Counter(v['observed_interval']['status'] for v in data['observed_actions'])),
+                            'turn_windows': dict(collections.Counter(v['status'] for v in data['observed_turns'])),
+                            'all_full_candidate_results_unknown': all(v['actual_full_candidate_result'] is None for v in data['segments'])})
+            assert receipt['all_full_candidate_results_unknown']
+        else:
+            receipt['error'] = stderr.read_text()
+        receipts.append(receipt)
+        (OUT / 'consumer-receipts.json').write_text(json.dumps(receipts, ensure_ascii=False, indent=2) + '\n')
+        print(json.dumps(receipt, ensure_ascii=False), flush=True)
