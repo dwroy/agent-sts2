@@ -1,0 +1,31 @@
+[必要学习反证；原AEONGLASS B4，非新任务] 2026-10-15 03:36:51 CST
+原batch 20261014-232958-fix-batch/thread 01a13b09-048c-7352-be3b-93cb8f0414f3/evidence 32ed1e652c72defdf637dd1a95339cdbdfbd93238b18b06176f5c244c5af5ecd，候选75951fd0eb883ff51cd0c94bd28b3db361279d47 rejected/rc0/mergednull，未上线/无新号。
+原报告 /home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-aeonglass-20261014-232958/learner/runs/20261014-233007-boss-sim-batch/report.md SHA256 f6a33d00715be2e7abbd368350f31b526e4ce15e74a2b072da2e24e8c4a1a21e；原questions /home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-aeonglass-20261014-232958/learner/runs/20261014-233007-boss-sim-batch/questions.json SHA256 05438d0636733fb7bdcb0bb43ee221fba319a382bebb75cb65055970fd2cb391。
+请你在现有用户原生会话明确告知以下学习者原文、证据、与旧归因的差异和下一步：
+[
+  {
+    "original": "触发死亡清单把 TXZ6RVMQA09D 计为 AEONGLASS 死亡。",
+    "finding": "原 SL 与状态帧显示 F48 AEONGLASS 第三试 won/end_hp=4，F49 TEST_SUBJECT 第一试 died/end_hp=0；runs.jsonl death_fight 仍写 AEONGLASS。",
+    "impact": "AEONGLASS 原实际结局 39 场=18 胜/21 死；触发 death_runs 中一局不是实际死于该 boss。验证集不更改，阈值仍满足累计≥5。",
+    "evidence": [
+      {
+        "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-aeonglass-20261014-232958/learner/runs/20261014-233007-boss-sim-batch/trigger-audit.json",
+        "sha256": "be6228b243ec3e326aeeb2790f9210ff2f69fca8d1ff1cc8b88400cb0a59305b"
+      },
+      {
+        "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-aeonglass-20261014-232958/learner/runs/20261014-233007-boss-sim-batch/sl-byte-audit.jsonl",
+        "sha256": "25270ea55f24fbc1ba33ae939ccef5a0da2b81f56e662a1a85cb2cc420c18754"
+      },
+      {
+        "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-aeonglass-20261014-232958/learner/runs/20261014-233007-boss-sim-batch/txz-outcome-conflict-frames.jsonl",
+        "sha256": "aafd26d60d65b98f2fba13bcfdf341e88ae809afbc701d7b7dc56f0ef359112d"
+      }
+    ],
+    "experience_ids": [],
+    "next": "交原 ops 完成通道核实历史 death_fight 归因，并经 watcher 告知 Roy；不修改本批不可变证据、调度器或验收门槛。",
+    "notice_status": "awaiting original ops forwarding; no watcher or Roy ACK claimed"
+  }
+]
+ops已核2145原状态、524开场、147原SL行与TXZ八帧；补核原F49 COMBAT4HP→GAME_OVER0HP及runs原行。所选SL audit没有F49条目，不造SL；原death_fight却记永世沙漏，属于已入silent-0254旧队列的归因缺口，不另派修复/研究，不改原日志/验证分母或门槛。固定t1 leak3.623→3.667/pre3.711→3.753变差，没有任何偏差达到/接近标准；3907源码检查/隔离绿不证明模型准入。预期1048行只有585数值/4原board错误/459缺失，整体校准不完整，无已结束A11样本；原rejected/自动冷却保持。
+传输不是你已读或用户已知。请实际读取后仅本人保存watcher_received回执及用户可见原生告知字节绑定，notice_id=c7cadf849b359b4091e6526b，不代用户ACK。boss-sim身份桥须原batch/thread/evidence/原报告与真实接收回执，目前程序登记待本人接收证据；不调用不支持的legacy桥、不造父要求/普通提案或复派实验。无需常规回复/用户确认；必要角色实证留盘。
+ops证据paper/materials/20261015-0328-ops/aeonglass-rejection-readback.json、TXZ-supplement-original-refs.json。

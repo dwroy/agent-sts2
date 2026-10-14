@@ -1,0 +1,41 @@
+{
+ "accepted": false,
+ "reasons": [
+  "t1 leak worsened",
+  "pre leak worsened",
+  "no bias entered/approached its fixed standard"
+ ],
+ "improved": [],
+ "near_rule": "excess reduced >=20% and remaining excess <=10% of fixed limit (leak <=0.03)",
+ "isolation": {
+  "passed": true,
+  "base": "1e4be6b85e2d19e7e4dde8f0b5846846e06b250e",
+  "head": "75951fd0eb883ff51cd0c94bd28b3db361279d47",
+  "output_sha256": "1bce9c63060eb08d4225bb1facb368d0f52c6b9e1fc3ff80ca35350ad08d6bc0",
+  "candidate_sha256": "1bce9c63060eb08d4225bb1facb368d0f52c6b9e1fc3ff80ca35350ad08d6bc0",
+  "shared_changes": [
+   "agent/src/reflex/rollout.ts",
+   "agent/src/sim/boss-sim.ts",
+   "agent/tests/boss-sim-silent-aeonglass-b4.test.ts",
+   "agent/tests/logged-states/silent-aeonglass-b4/intensity.json"
+  ],
+  "runner": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-aeonglass-20261014-232958/learner/runs/20261014-233007-boss-sim-batch/acceptance/source-1e4be6b85e2d19e7e4dde8f0b5846846e06b250e/agent/tools/boss-sim/isolation.ts",
+  "outputs": [
+   "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-aeonglass-20261014-232958/learner/runs/20261014-233007-boss-sim-batch/acceptance/before.isolation.json",
+   "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-aeonglass-20261014-232958/learner/runs/20261014-233007-boss-sim-batch/acceptance/after.isolation.json"
+  ]
+ },
+ "character": "silent",
+ "boss": "AEONGLASS",
+ "mode": "b4",
+ "inputs": {
+  "before": {
+   "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-aeonglass-20261014-232958/learner/runs/20261014-233007-boss-sim-batch/final-incomplete/before-trust.json",
+   "sha256": "f55fb5f7f3b6bc1d3b8e986b50fd1fd08f57dcb20cc5f147e9dc2db83b44f3f5"
+  },
+  "after": {
+   "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-aeonglass-20261014-232958/learner/runs/20261014-233007-boss-sim-batch/final-incomplete/after-trust.json",
+   "sha256": "00322b8bcb6e2a4e648ca3f56dbf679a51dd8d11df358f3e5ce80b2a7dbb6281"
+  }
+ }
+}

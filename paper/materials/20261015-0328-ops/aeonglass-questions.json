@@ -1,0 +1,24 @@
+[
+ {
+  "original": "触发死亡清单把 TXZ6RVMQA09D 计为 AEONGLASS 死亡。",
+  "finding": "原 SL 与状态帧显示 F48 AEONGLASS 第三试 won/end_hp=4，F49 TEST_SUBJECT 第一试 died/end_hp=0；runs.jsonl death_fight 仍写 AEONGLASS。",
+  "impact": "AEONGLASS 原实际结局 39 场=18 胜/21 死；触发 death_runs 中一局不是实际死于该 boss。验证集不更改，阈值仍满足累计≥5。",
+  "evidence": [
+   {
+    "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-aeonglass-20261014-232958/learner/runs/20261014-233007-boss-sim-batch/trigger-audit.json",
+    "sha256": "be6228b243ec3e326aeeb2790f9210ff2f69fca8d1ff1cc8b88400cb0a59305b"
+   },
+   {
+    "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-aeonglass-20261014-232958/learner/runs/20261014-233007-boss-sim-batch/sl-byte-audit.jsonl",
+    "sha256": "25270ea55f24fbc1ba33ae939ccef5a0da2b81f56e662a1a85cb2cc420c18754"
+   },
+   {
+    "path": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-aeonglass-20261014-232958/learner/runs/20261014-233007-boss-sim-batch/txz-outcome-conflict-frames.jsonl",
+    "sha256": "aafd26d60d65b98f2fba13bcfdf341e88ae809afbc701d7b7dc56f0ef359112d"
+   }
+  ],
+  "experience_ids": [],
+  "next": "交原 ops 完成通道核实历史 death_fight 归因，并经 watcher 告知 Roy；不修改本批不可变证据、调度器或验收门槛。",
+  "notice_status": "awaiting original ops forwarding; no watcher or Roy ACK claimed"
+ }
+]

@@ -1,0 +1,56 @@
+{
+  "id": "c7cadf849b359b4091e6526b",
+  "kind": "disagreement",
+  "request_id": "32ed1e652c72defdf637dd1a95339cdbdfbd93238b18b06176f5c244c5af5ecd",
+  "request_sha256": "94ce270ca138957e200f6eca2cc09c8b76638b76cf4c10e34bc3c86a4d518181",
+  "message": "[必要学习反证；原AEONGLASS B4，非新任务] 2026-10-15 03:36:51 CST\n原batch 20261014-232958-fix-batch/thread 01a13b09-048c-7352-be3b-93cb8f0414f3/evidence 32ed1e652c72defdf637dd1a95339cdbdfbd93238b18b06176f5c244c5af5ecd，候选75951fd0eb883ff51cd0c94bd28b3db361279d47 rejected/rc0/mergednull，未上线/无新号。\n原报告 /home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-aeonglass-20261014-232958/learner/runs/20261014-233007-boss-sim-batch/report.md SHA256 f6a33d00715be2e7abbd368350f31b526e4ce15e74a2b072da2e24e8c4a1a21e；原questions /home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-aeonglass-20261014-232958/learner/runs/20261014-233007-boss-sim-batch/questions.json SHA256 05438d0636733fb7bdcb0bb43ee221fba319a382bebb75cb65055970fd2cb391。\n请你在现有用户原生会话明确告知以下学习者原文、证据、与旧归因的差异和下一步：\n[\n  {\n    \"original\": \"触发死亡清单把 TXZ6RVMQA09D 计为 AEONGLASS 死亡。\",\n    \"finding\": \"原 SL 与状态帧显示 F48 AEONGLASS 第三试 won/end_hp=4，F49 TEST_SUBJECT 第一试 died/end_hp=0；runs.jsonl death_fight 仍写 AEONGLASS。\",\n    \"impact\": \"AEONGLASS 原实际结局 39 场=18 胜/21 死；触发 death_runs 中一局不是实际死于该 boss。验证集不更改，阈值仍满足累计≥5。\",\n    \"evidence\": [\n      {\n        \"path\": \"/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-aeonglass-20261014-232958/learner/runs/20261014-233007-boss-sim-batch/trigger-audit.json\",\n        \"sha256\": \"be6228b243ec3e326aeeb2790f9210ff2f69fca8d1ff1cc8b88400cb0a59305b\"\n      },\n      {\n        \"path\": \"/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-aeonglass-20261014-232958/learner/runs/20261014-233007-boss-sim-batch/sl-byte-audit.jsonl\",\n        \"sha256\": \"25270ea55f24fbc1ba33ae939ccef5a0da2b81f56e662a1a85cb2cc420c18754\"\n      },\n      {\n        \"path\": \"/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-aeonglass-20261014-232958/learner/runs/20261014-233007-boss-sim-batch/txz-outcome-conflict-frames.jsonl\",\n        \"sha256\": \"aafd26d60d65b98f2fba13bcfdf341e88ae809afbc701d7b7dc56f0ef359112d\"\n      }\n    ],\n    \"experience_ids\": [],\n    \"next\": \"交原 ops 完成通道核实历史 death_fight 归因，并经 watcher 告知 Roy；不修改本批不可变证据、调度器或验收门槛。\",\n    \"notice_status\": \"awaiting original ops forwarding; no watcher or Roy ACK claimed\"\n  }\n]\nops已核2145原状态、524开场、147原SL行与TXZ八帧；补核原F49 COMBAT4HP→GAME_OVER0HP及runs原行。所选SL audit没有F49条目，不造SL；原death_fight却记永世沙漏，属于已入silent-0254旧队列的归因缺口，不另派修复/研究，不改原日志/验证分母或门槛。固定t1 leak3.623→3.667/pre3.711→3.753变差，没有任何偏差达到/接近标准；3907源码检查/隔离绿不证明模型准入。预期1048行只有585数值/4原board错误/459缺失，整体校准不完整，无已结束A11样本；原rejected/自动冷却保持。\n传输不是你已读或用户已知。请实际读取后仅本人保存watcher_received回执及用户可见原生告知字节绑定，notice_id=c7cadf849b359b4091e6526b，不代用户ACK。boss-sim身份桥须原batch/thread/evidence/原报告与真实接收回执，目前程序登记待本人接收证据；不调用不支持的legacy桥、不造父要求/普通提案或复派实验。无需常规回复/用户确认；必要角色实证留盘。\nops证据paper/materials/20261015-0328-ops/aeonglass-rejection-readback.json、TXZ-supplement-original-refs.json。\n",
+  "notification_only": true,
+  "registered_learning_request": false,
+  "source_kind": "boss-sim",
+  "character": "silent",
+  "source_batch": "20261014-232958-fix-batch",
+  "source_evidence_key": "32ed1e652c72defdf637dd1a95339cdbdfbd93238b18b06176f5c244c5af5ecd",
+  "source_thread": "01a13b09-048c-7352-be3b-93cb8f0414f3",
+  "source_report": {
+    "path": ".worktrees/boss-sim-silent-aeonglass-20261014-232958/learner/runs/20261014-233007-boss-sim-batch/report.md",
+    "sha256": "f6a33d00715be2e7abbd368350f31b526e4ce15e74a2b072da2e24e8c4a1a21e"
+  },
+  "source_questions": {
+    "path": ".worktrees/boss-sim-silent-aeonglass-20261014-232958/learner/runs/20261014-233007-boss-sim-batch/questions.json",
+    "sha256": "05438d0636733fb7bdcb0bb43ee221fba319a382bebb75cb65055970fd2cb391"
+  },
+  "ops_forwarded": {
+    "path": "/home/dw/Projects/agent-sts2/paper/materials/20261015-0328-ops/aeonglass-ops-forwarded-receipt.json",
+    "sha256": "af54f56a47454f41f9fda8121919ac7d98129a050c9eb780b98da1635684299a",
+    "at": 1792007061.5191712
+  },
+  "watcher_received": {
+    "path": "/home/dw/Projects/agent-sts2/paper/materials/20261015-aeonglass-notice/watcher_received-receipt.json",
+    "sha256": "02930b1defabb71163b2e1463249c57c7651476a4dce018a0a70e4df19cdfb26",
+    "at": 1792007136.1748793
+  },
+  "roy_notified": {
+    "path": "/home/dw/Projects/agent-sts2/paper/materials/20261015-aeonglass-notice/roy_notified-receipt.json",
+    "sha256": "961948679135f505b9e33c04d8ebabb168eed238163fd908531ea5c830e25461",
+    "at": 1792007136.6706307
+  },
+  "at": "2026-10-15 03:36:51 CST",
+  "state": "actual_watcher_received_user_notified_boss_sim_formal_stage_provenance_pending",
+  "program_ACK_pending": true,
+  "no_new_learning_parent": true,
+  "actual_role_facts": {
+    "watcher_received": true,
+    "user_native_notified": true,
+    "user_read_or_ACK": null
+  },
+  "actual_role_receipt": {
+    "path": "paper/materials/20261015-0328-ops/aeonglass-actual-role-readback.json",
+    "sha256": "5e77cbb0511c96b7a789e6b8380cc421e019289f7bb583f1cc21b1f197258f22"
+  },
+  "last_queued_at": 1792006984.0709643,
+  "last_queue": "/home/dw/Projects/agent-sts2/ops/codex-ops/queue/1792006984070640377-learning-attention.md",
+  "source_evidence": {
+    "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/learning-notices/sources/c7cadf849b359b4091e6526b.json",
+    "sha256": "f0d6b98cc130b612bfd3fcb9ef78a64947329c57c826e140b6119425c8b73327"
+  }
+}

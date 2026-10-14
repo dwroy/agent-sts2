@@ -1,0 +1,151 @@
+[
+ {
+  "phase": "base initial runner",
+  "rc": 1,
+  "reason": "relative data/game-data.json was resolved from agent",
+  "log": "base-replay-path-failure.log"
+ },
+ {
+  "phase": "compile initial",
+  "rc": 1,
+  "reason": "installed TypeScript 7 has no lib/typescript.js; switched to the installed esbuild transformer",
+  "source": "compile-typescript-unavailable.mjs"
+ },
+ {
+  "phase": "mechanic initial green",
+  "rc": 1,
+  "tests_failed": 1,
+  "reason": "wall-clock budgetNeedMs differs; fixed clock added only to new fixture",
+  "log": "mechanic-green-initial.log"
+ },
+ {
+  "phase": "mechanic without fix",
+  "rc": 1,
+  "tests_failed": 2,
+  "tests_passed": 2,
+  "log": "mechanic-without-fix.log"
+ },
+ {
+  "phase": "trigger audit initial",
+  "rc": 1,
+  "reason": "assertion comparing trigger death_runs to SL actual deaths failed; discrepancy retained in trigger-audit.json"
+ },
+ {
+  "phase": "original sandbox workers=1",
+  "rc": 130,
+  "reason": "paused while replay workers were suspended to reduce contention",
+  "log": "sandbox-source-workers1-paused.log"
+ },
+ {
+  "phase": "original sandbox fixture layout",
+  "rc": 130,
+  "reason": "new non-state fixture in top-level logged-states was scanned as a state by protected rollout-live tests; moved new fixture into its own subdirectory",
+  "log": "sandbox-source-fixture-layout-failure.log"
+ },
+ {
+  "phase": "protected rollout-live collection diagnostic",
+  "rc": 1,
+  "reason": "TypeError reading combat from the new mechanism fixture; no protected assertions changed",
+  "log": "collection-diagnostic.log"
+ },
+ {
+  "phase": "full sandbox four workers",
+  "rc": 1,
+  "failed": 8,
+  "passed": 3887,
+  "files": 405,
+  "reason": "7 wall-clock timeouts; import check saw archival code copies and failed unavailable TypeScript API draft. Archives renamed .txt, no checker/assertion changes.",
+  "log": "sandbox-source-workers4-complete.log"
+ },
+ {
+  "phase": "original one-worker scope review",
+  "rc": 130,
+  "reason": "Interrupted without completed result to narrow A0 to two actually observed uses; all prior output retained.",
+  "log": "sandbox-source-a0-scope-review-paused.log"
+ },
+ {
+  "phase": "A0 scope edit apply_patch",
+  "rc": 1,
+  "reason": "Source hunk wrote, new test write failed; exact missing test edit then applied by shell.",
+  "partial_source": "boss-sim.ts"
+ },
+ {
+  "phase": "mechanic v2 without fix",
+  "rc": 1,
+  "tests_failed": 3,
+  "tests_passed": 2,
+  "log": "mechanic-v2-without-fix.log"
+ },
+ {
+  "phase": "scope-corrected source check with replay contention",
+  "rc": 1,
+  "failed": 1,
+  "passed": 3895,
+  "reason": "target-options original case timed out at 20000 ms; no assertion weakened. Same source original full check independently repeated and passed.",
+  "log": "sandbox-source-v2.log"
+ },
+ {
+  "phase": "initial incomplete frozen profiles acceptance",
+  "rc": 1,
+  "reason": "overall validation coverage mismatch while replay still pending",
+  "isolation_passed": true,
+  "acceptance": "acceptance-initial-incomplete.json"
+ },
+ {
+  "phase": "report final check first draft",
+  "rc": 1,
+  "reason": "Assertion expecting every target input to produce a numeric result exposed the preserved K3676LU8B0UH board:no solve pair. Final report explicitly separates 589 present /585 numeric /4 board errors /459 missing, including target78 attempts/76 numeric. No data or assertion in protected code changed."
+ },
+ {
+  "phase": "baseline frozen replay timeout bound",
+  "rc": 130,
+  "reason": "Native 240 minute launch bound; own replay session72254 stopped for truthful final validation. No game/scheduler touched.",
+  "stop": "replay-stop.json"
+ },
+ {
+  "phase": "paired runner errors",
+  "rc": 1,
+  "errors": [
+   {
+    "key": "K3676LU8B0UH:48:2:6525158984",
+    "start": "t1",
+    "error": "board: Error: no solve"
+   },
+   {
+    "key": "K3676LU8B0UH:48:2:6525158984",
+    "start": "pre",
+    "error": "board: Error: no solve"
+   },
+   {
+    "key": "54G5683J0E5S:33:1:10284668504",
+    "start": "t1",
+    "error": "board: Error: no solve"
+   },
+   {
+    "key": "54G5683J0E5S:33:1:10284668504",
+    "start": "pre",
+    "error": "board: Error: no solve"
+   }
+  ],
+  "reason": "Original board returns no solve; both sides preserve identical error rows, no invented numerical outcomes."
+ },
+ {
+  "phase": "final immutable baseline acceptance",
+  "rc": 1,
+  "accepted": false,
+  "reasons": [
+   "t1 leak worsened",
+   "pre leak worsened",
+   "no bias entered/approached its fixed standard"
+  ],
+  "isolation_passed": true,
+  "acceptance": "acceptance.json"
+ },
+ {
+  "phase": "records gitleaks initial",
+  "rc": 1,
+  "findings": 3,
+  "reason": "Three exact SHA256 evidence/archive values flagged generic-api-key. All verified against immutable evidence or file hash. Only exact file/line fingerprints allowed in temporary scan file; no repository rule disabled. Verified second scan rc0; original report retained.",
+  "proof": "records-gitleaks-sha-false-positives.json"
+ }
+]

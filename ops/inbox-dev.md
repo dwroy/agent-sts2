@@ -1939,3 +1939,12 @@ tsc及2673例沙箱测试通过，推送动作专项2例/Python4例通过。当�
 - 2026-10-15 02:32:40 CST 原R3必要反证真实角色读回：watcher本人已亲核report253082f3/counterexamples fb48a533/输入5ff及六条原帧，在Roy现有原生会话2026-10-15 02:19:38 CST明确告知两反例与限定结论；原native行SHA08aa5a53已逐offset/bytes核。known不是物理正确证明，完整实轨整战/真实S仍0，原B2/B3/Queen与16局10:6界限保持；实际通知不等于Roy已读/认可，legacy程序ACK不支持仍pending、不代填。具体接口contract0aec14已交同原R3线程只读字段确认，传输/接收/确认分列，不新派模型/实验或热替原输入。回执paper/materials/20261015-0213-ops/watcher-Roy-native-readback.json及R3-interface-delivery.json。
 
 - 2026-10-15 03:27:29 CST 运维接续014302-s2：苦无源92db362a8141478ffa72ceb9b08cd6f90784c786已核七叶及3940自测，固定9R A10原帧/原native身份一致；原24合入冲突、首败和刷新提交7ccd6158保留。首次live LOCK_NB忙且任何源码写前退出；只读核owner为原ops/learner_retention.py PID3363421/start89779288，不抢锁或中断。唯一pending-integrations/20261015-014302-s2-strategy-proposal.json；后续锁自然空闲时重核main/live及知识，精确七叶组合/原源祖先后再登记正式号与同原批宿主。当前未上线/无新号/未补测，0291不提前shipped，十宽提案及自然消费保持待核；本轮所属26记录已扫描，Git封存也待锁释放，main index未碰。不另派同题或重启对局。paper/materials/20261015-0323-ops/source-acceptance-pending.json。
+
+- 2026-10-15 03:36:51 CST 必要反证：原20261014-232958-fix-batch/AEONGLASS B4候选固定拒收，rc0/mergednull。学习者指出TXZ6RVMQA09D F48沙漏第三试won/end_hp4，F49实验体死亡（ops另核原COMBAT4→GAME_OVER0、所选SL无F49不补造）；原death_fight误记沙漏，沿silent-0254旧项，不改日志/门槛/验证分母。原文/证据/差异/下一步见paper/materials/20261015-0328-ops/aeonglass-necessary-notice-message.txt，questions SHA05438d0636733fb7bdcb0bb43ee221fba319a382bebb75cb65055970fd2cb391；已向现有watcher wJ:pJT原生投递一次，notice c7cadf849b359b4091e6526b，本人接收/用户告知回执pending，不把发送当已读。
+
+- 2026-10-15 03:37:58 CST [已授权规则实际上线 V5-R349] Silent普通苦无增敏精确接入，原source 92db362a8141478ffa72ceb9b08cd6f90784c786、实际live行为0944cf8cfd06d345548f5271f1e6521b0cd46656、源码绑定530acc77e23acb58aff5dede673fb29ed7878ddc、登记HEAD28bec4afac5c6d51e5f1c30de277c1c6575c188b。
+  旧规则：本角色求解/整战候选忽略苦无新增敏捷与跨轮传播。
+  新规则：仅Silent A10、未熔化、计数一致、未持螺线的普通手动攻击，按原学习者已核第三/第六攻击兑现新敏捷，只作用后继格挡，跨轮保敏捷并重置计数、新战重新初始化；Jev收到持续增敏事实。自动/重放或不明计数不填已知，其他角色和未观察进阶走原路径。
+  证据：9R916WW0V65N A10 F49 T1/T2及同局八次第六攻击原字节，silent-0085/0291，silent-proposal-3ee015a5b3aa4ae8；源409文件3940含paths11通过、撤码7红/恢复10绿；组合main tsc0/10定向0。main七叶/live六功能叶，live从未部署的独立存储夹具/其Python依赖不额外引入；原S归属、知识刷新和并行记录保持。实际live补验及新tree宿主另留回执；不是借旧树全绿或宣称自然收益，宽提案/自然消费者仍pending。
+  预期：候选后继格挡与跨轮敏捷事实按已观测本角色证据一致，游戏胜率/血量收益未知。
+  回退：只revert本次live行为0944cf8cfd06d345548f5271f1e6521b0cd46656并按新行为重新登记累计号，可恢复上线前忽略苦无的行为；不回收旧号或覆盖刷新/历史复盘。当前对局不重启，下一自然进程读取。完整证据paper/materials/20261015-0328-ops/kunai-publication.json。
