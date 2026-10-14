@@ -1,0 +1,30 @@
+{
+  "at": "2026-10-15 01:30:22 CST",
+  "source_batches": [
+    "20261014-214543-strategy-proposal",
+    "20261014-214302-strategy-proposal"
+  ],
+  "original_test_worktree": ".worktrees/ops-integrate-silent-20261014-2300",
+  "code_changed_since_prior_composition": false,
+  "changed_execution_condition": "Original full host suites finished; two exact failed cases isolated to one worker.",
+  "arguments": [
+    "nice",
+    "-n",
+    "19",
+    "./node_modules/.bin/vitest",
+    "run",
+    "tests/silent-paper-krane.test.ts",
+    "--maxWorkers",
+    "1",
+    "--no-file-parallelism",
+    "-t",
+    "state (399969|400002): the complete recorded line matches the observed HP loss"
+  ],
+  "rc": 0,
+  "seconds": 22.212247682968155,
+  "log": "paper/materials/20261015-0118-ops/original-two-timeouts-isolated.log",
+  "log_sha256": "d3571d0ad267f9d491278b70bfe8d6b7441b46339783da4ee0f6d46b5ab53a23",
+  "old_two_timeouts_preserved": true,
+  "original_assertions_and_15s_test_budget_unchanged": true,
+  "main_variant_acceptance_and_publication_not_yet_done": true
+}

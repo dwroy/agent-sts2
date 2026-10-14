@@ -1,0 +1,54 @@
+十项均保留 `waiting`：局部实现已有，但完整后继或消费者验证仍不足。19,929 条原记录、49 项固定数值核验通过，31 条账本追溯链接已读回。未改源码、未提交或合入，tsc/vitest 未运行。
+
+[提案](learner/runs/20261014-233814-strategy-proposal/proposal.md)与[报告](learner/runs/20261014-233814-strategy-proposal/report.md)已保存。报告如实记录了宽搜索触及旧混合角色文本的隔离失误；该输出未用于结论。
+
+```json
+{
+  "task": "strategy-proposal",
+  "character": "silent",
+  "batch": "20261014-233810-s2-strategy-proposal",
+  "base": "23c3e5faa8dd557a381e91d9168145e6513f138f",
+  "runs": ["KEN58SH9SLZ6", "TXZ6RVMQA09D", "WQZVENQ7DTRP", "02HB4L0C3C67", "4D4J8USKCPAV", "F4QKG4J1AJJZ", "JLN5SK17W4FQ", "LS8035TB32P3", "NB8KCF6HRGVF", "S9UZAK0JP0C0"],
+  "fixes": [],
+  "skipped": [],
+  "merged": null,
+  "tests": {"tsc": null, "vitest": null, "cases": null},
+  "code_proposals": [
+    "silent-proposal-08eaa60bcc449852",
+    "silent-proposal-92920295a648b540",
+    "silent-proposal-a327449c331efbc1",
+    "silent-proposal-a099e89437e942bb",
+    "silent-proposal-47910f82a1fdd98f",
+    "silent-proposal-f1374df72d8e6a25",
+    "silent-proposal-38a49e6c97f31eea",
+    "silent-proposal-ef0e38a5dbd3bc07",
+    "silent-proposal-7f820c02d39bfaea",
+    "silent-proposal-04b6b430759815ed"
+  ],
+  "implementation_domains": [],
+  "proposal_results": [
+    {"id": "silent-proposal-08eaa60bcc449852", "state": "waiting", "reason": "缺同资源、同后续牌序的不饮用或留药至boss整战对照，不能校准持药价格。"},
+    {"id": "silent-proposal-92920295a648b540", "state": "waiting", "reason": "缺固定后轮抽序、药栏和入口资源的连续通关替线，不能改SL资格或终局权重。"},
+    {"id": "silent-proposal-a327449c331efbc1", "state": "waiting", "reason": "缺血量与沙坑两条结束边界的完整受控后继、同预算配对及独立胜局。"},
+    {"id": "silent-proposal-a099e89437e942bb", "state": "waiting", "reason": "生成与容量子项已有live实现；缺计划妥当保留选择、完整候选派发及SL恢复联合验证。"},
+    {"id": "silent-proposal-47910f82a1fdd98f", "state": "waiting", "reason": "开场四血和连战接续已有live实现；缺留药、路线与SL受控完整后继及未知回复/复活顺序。"},
+    {"id": "silent-proposal-f1374df72d8e6a25", "state": "waiting", "reason": "缺隔离机制误差后的同预算完整后继，以及未用、早用、留药的成对整战结果。"},
+    {"id": "silent-proposal-38a49e6c97f31eea", "state": "waiting", "reason": "普通紧勒和磨蚀预览已有live实现；缺弃牌触发、增益分源、重接、反伤及再生联合消费者验证。"},
+    {"id": "silent-proposal-ef0e38a5dbd3bc07", "state": "waiting", "reason": "缺另选营火、事件、早用药或换路线的完整受控结果，不能由失败链拟合资源权重。"},
+    {"id": "silent-proposal-7f820c02d39bfaea", "state": "waiting", "reason": "预测比较已有live实现；缺成对完整后继、完整派发归属及同预算饱和排序校准。"},
+    {"id": "silent-proposal-04b6b430759815ed", "state": "waiting", "reason": "部分子公式已有live实现；油灯缺可靠首次消费追踪、跨动作/新战/SL恢复验证，能力完整后继未证。"}
+  ],
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261014-233810-s2/learner/runs/20261014-233814-strategy-proposal/report.md"
+}
+```
+
+== 学习者 codex / strategy-proposal ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a13b10-7a12-7842-8a58-f9898627e240
+轮数：1；工具调用：command_execution×62 file_change×3
+token：输入 171.7k、输出 38.7k（其中推理 12.8k）、cache 读 4143.4k、cache 写 0（命中 96.0%）
+成本：未提供
+耗时：1634.1 s（墙钟）
+时间：首个事件 13.5 s、模型首个输出 21.3 s、首次工具 29.5 s、末次工具结束 1588.3 s；工具内共 1218.4 s，其余（模型生成、推理、网络）402.2 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261014-233810-s2）；模型的工具调用 exec×35 wait×1；/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/learner/sessions/2026/10/14/rollout-2026-10-14T23-38-18-01a13b10-7a12-7842-8a58-f9898627e240.jsonl
+日志：/home/dw/Projects/agent-sts2/learner/runs/20261014-233814-strategy-proposal.jsonl

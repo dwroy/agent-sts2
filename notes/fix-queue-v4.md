@@ -1288,3 +1288,8 @@ Roy：「上线后进 F48 反而降低一半，这才是关键，要找问题。
 
 
 - [ ] **infra-learner-event-log-second-collision**（2026-10-15 00:27:38 CST，非阻塞）：`learner/runs/20261014-231312-strategy-proposal.jsonl` 同时含231302及231302-s2两源的learner_launch/startup/thread事件，独立batch、cwd和原生线程均实核；offset 0/24111两launch，22994/47015两startup，50890/53240两thread。当前root事件文件名按秒+task产生碰撞，单按第一launch/thread审计会误配；已通过各自out实际thread、startup.batch与原生user input SHA重新绑定，9批真实Sol6.1/xhigh/workspace-write/network=false保持。需原普通纯bug owner使事件文件名具有batch/租约唯一性，并提供同秒双worker固定夹具；保留旧交错原件和兼容读取，不改原任务/线程/权限/模型或已修per-WT报告scratch。证据 `paper/materials/20261015-0000-ops/event-log-collision-proof.json`。不重复派研究、未称源码已修。
+
+## 2026-10-15 01:26:07 CST Y2K25VFDU95P复盘：技能药水题面生命周期误述（非阻塞）
+
+- [ ] **silent-0481**：转录原学习者纯bug回报，`agent/src/hand/screens/selection.ts:311/:333` 把技能药水生成牌的“本回合免费”写成“只在本回合存在”（This card is only for this turn）。Y2K25VFDU95P/A10/F9T3 d392030 三选均0费、实选触不可及；T5 s404267重抽显示2费，T3 s404256–404259实际0费消费窗口与后续出现分列。首证回溯C48LLXBGKXQ9 F6T1 d205391；原提案 `silent-proposal-686d4e759478eebb` 已交自动链，限定已观察药水来源，未知组合/永久构筑归属及收益不补造。区别已修silent-0324刀舞模型，不重复派同题，不由ops添加游戏规则。
+- 本局已正常结束，非卡死；仅追加普通修复队列。原报告 `learner/runs/20261014-234303-postmortem/report.md`、`proposal-selection-lifetime.md` 与原文勘误保持。另一排序提案a0e9d06a17deb9af仍待整场受控反事实，原排序/护栏不改。

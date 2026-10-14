@@ -1,0 +1,19 @@
+{
+  "at": "2026-10-15 01:38:41 CST",
+  "failures": [
+    {
+      "path": "paper/materials/20261015-0118-ops/audit-events-first-failure.log",
+      "sha256": "ecfd9cf833f97ef9beb2ba4e5c23818b94ad1e3a69acf8976ec1444db336bc48",
+      "scope": "Own readback assumed run-identities.json was a dict; no source/account change."
+    },
+    {
+      "path": "paper/materials/20261015-0118-ops/audit-events-second-failure.log",
+      "sha256": "af371130605e8f0ad43162e40732249f1ede72fd82de2bbe37a9cfb78519c3cb",
+      "scope": "Same ownership readback schema error retained; fixed by normalizing list and exact frozen runs rows."
+    },
+    {
+      "scope": "Own process-inspection header parsing and optional run-identity filename lookup failed read-only; no process or source mutation. Corrected narrow readback follows real source schema."
+    }
+  ],
+  "learner_failures_and_original_tests_not_reclassified": true
+}
