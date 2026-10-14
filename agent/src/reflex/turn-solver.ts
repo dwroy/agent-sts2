@@ -1799,15 +1799,18 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
     next.unknown = [...next.unknown, `${card.name}（自动、重放、升级或缺资料的生成未验证）`];
   }
   if (card.bulletTime && (plays > 1 || automatic)) next.unknown = [...next.unknown, "子弹时间（自动出牌或重放未验证）"];
+  const unverifiedDrawLock = card.drawLockAfter && (plays > 1 || automatic || card.upgraded);
+  if (unverifiedDrawLock) next.unknown = [...next.unknown, "战斗专注（自动出牌、重放或升级未验证）"];
   for (let play = 0; play < plays; play += 1) {
     const serpent = next.serpentForm;
     const serpentTargets = next.enemies.filter((enemy) => enemy.alive);
     // CARD_CONDITIONS: a hand condition is read on the hand as this play resolves (a second play of it sees what the first
     // drew); unmet, the card's draw and energy do not happen.
-    const effects = unverifiedBladeDance ? { ...card, draw: 0, adds: undefined }
+    const verifiedCard = unverifiedDrawLock ? { ...card, drawLockAfter: false } : card;
+    const effects = unverifiedBladeDance ? { ...verifiedCard, draw: 0, adds: undefined }
       : unverifiedDodgeReplay ? { ...card, dodgeRollNextBlock: false }
       : zeroPoisonMirage ? { ...card, flatValue: 0 }
-      : enchantedAfterimage ? { ...card, block: card.afterimageEnchantBlock! } : card;
+      : enchantedAfterimage ? { ...card, block: card.afterimageEnchantBlock! } : verifiedCard;
     resolveEffects(next, card.handCondition !== undefined && !handConditionMet(next, card, card.handCondition) ? unconditioned(effects) : effects, target, player, cost, plays === 1 && !automatic);
     // 5PM F33 T2-T3: the existing power hits once after a manual card, apart from its attack/poison.
     // New establishment does not trigger itself. Multi-target, replay and stacking remain unknown.
@@ -2464,6 +2467,8 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
   next.corrosiveWave = Math.max(next.corrosiveWave, card.corrosiveWave ?? 0);
   if (card.draw > 0) drawExpected(next, card.draw, player);
   else if ((player.toughBandagesBlock ?? 0) > 0 && card.discardAfterDraw && (card.discardDraw ?? 0) > 0) drawExpected(next, card.discardDraw!, player);
+  // Own known/sampled/expected draws resolve first; every later draw adapter shares this transient lock.
+  if (card.drawLockAfter) next.noDraw = true;
   // Damage to us (Foul Potion, Galvanic's 「受到6点伤害」): like an enemy hit, block first, Intangible caps it at 1, the
   // rest is HP lost. Last, as the card text puts it: a Power played under Galvanic is up when its 6 lands (8L29N792FA45
   // F37 T2: Rupture+ played at block 0, its own 6 gave +2 Strength).

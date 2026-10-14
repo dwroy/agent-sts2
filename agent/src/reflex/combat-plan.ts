@@ -2913,7 +2913,7 @@ function planTurn(env: DecisionEnv): Decision | null {
   const legionPreview = paelsLegionPreview(state.run?.raw, combat);
   const firstPowerBlock = permafrostBlock(env.screenMemory, state);
   const playerSim: PlayerSim = {
-    ...(str(asRecord(state.run?.raw)["character_id"]).toLowerCase() === "silent" && ascension === 10 &&
+    ...(str(asRecord(state.run?.raw)["character_id"]).toLowerCase() === "silent" && (ascension === 0 || ascension === 10) &&
       powerAmount(player, "NO_DRAW_POWER") > 0 ? { noDraw: true } : {}),
     ...(firstPowerBlock !== undefined ? { permafrostBlock: firstPowerBlock } : {}),
     freeAttacks,
