@@ -296,7 +296,7 @@ function singleFightSample(input: RolloutInput, plan: Plan | null, seed: number,
   return {
     won,
     ...(bossReference ? { bossMargin: { reference: bossReference,
-      outgoingHp: records.reduce((sum, r) => sum + r.dmg, 0),
+      outgoingHp: records.reduce((sum, r) => sum + (r.outgoingHpDamage ?? r.dmg), 0),
       receivedHp: records.every((r) => typeof r.receivedHpDamage === "number" && Number.isFinite(r.receivedHpDamage))
         ? records.reduce((sum, r) => sum + r.receivedHpDamage!, 0) : null } } : {}),
     ...(input.captureCore ? { coreWindow: coreWindow(records.flatMap((r) => r.coreTrace ? [r.coreTrace] : [])) } : {}),

@@ -1350,6 +1350,8 @@ interface Piles {
 /** One sample's trajectory: per simulated turn, the HP lost that turn and the end-of-our-turn snapshot. */
 export interface TurnRecord {
   receivedHpDamage?: number | null;
+  /** Same-window HP removed, including applied retaliation and a terminal start-of-turn carry. */
+  outgoingHpDamage?: number;
   coreTrace?: CoreTurnTrace;
   /** Exact resources after the turn, used only by an observed following-fight objective. */
   resources?: { hp: number; revives: Revive[]; drunkKeys: string[] };
@@ -2220,13 +2222,16 @@ function applyPlan(
   const flutterBefore = input.escapes ? new Map(enemies.map((e) => [e.index, e.flutter])) : null;
   // Retaliation (Flame Barrier, Thorns) on the enemy turn, by attacker: off its HP too.
   const retaliated = new Map((o.retaliated ?? []).map((r) => [r.index, r.amount]));
+  let retaliationDamage = 0;
   // Slippery stacks the retaliation took (a stack per hit it hurt).
   const slipperyUsed = new Map((o.retaliated ?? []).map((r) => [r.index, r.slipperyUsed ?? 0]));
   for (const e of enemies) {
     const a = after.get(e.index);
     if (!a || !e.alive) continue;
     const hit = a.hp < e.hp;
-    e.hp = a.hp - (a.hp > 0 && !a.husk ? Math.min(a.hp, retaliated.get(e.index) ?? 0) : 0);
+    const retaliationLoss = a.hp > 0 && !a.husk ? Math.min(a.hp, retaliated.get(e.index) ?? 0) : 0;
+    e.hp = a.hp - retaliationLoss;
+    retaliationDamage += retaliationLoss;
     if (fullFight) e.hurt = e.hurt === true || hit || e.hp < a.hp;
     e.vulnerable = a.vulnerable;
     e.weak = a.weak;
@@ -2540,7 +2545,8 @@ function applyPlan(
     loss: startHp - player.hp + (o.revived?.reviveHp ?? 0),
     ...(input.captureResources || input.continuation || input.solver.continuationValue ? { resources: { hp: player.hp, revives: player.revives.slice(), drunkKeys: plan.steps.filter(isPotion).map((step) => step.cardId) } } : {}),
     enemyPart: o.incomingAfterBlock,
-    ...(input.captureBossMargin ? { receivedHpDamage: o.receivedHpDamage ?? null } : {}),
+    ...(input.captureBossMargin ? { receivedHpDamage: o.receivedHpDamage ?? null,
+      outgoingHpDamage: o.damageDealt + carried + retaliationDamage + (won ? player.startDealt : 0) } : {}),
     dmg: o.damageDealt + carried,
     snap,
     won,
