@@ -23,6 +23,47 @@ function powerChanges(before: unknown, after: unknown) {
     .map((id) => ({ power_id: id, before: a.get(id) ?? null, after: b.get(id) ?? null }));
 }
 
+// GXNKW8X1XYJP F45 T2/T3, silent-0019/0079: an empty slot is not a drink receipt.
+function potionChanges(before: unknown, after: unknown) {
+  const index = (value: unknown) => {
+    if (!Array.isArray(value)) return null;
+    const slots = new Map<number, Row>();
+    for (const item of value) {
+      const row = asRecord(item), slot = numOrNull(row.index);
+      if (slot === null || !Number.isInteger(slot) || slot < 0 || slots.has(slot) ||
+          typeof row.occupied !== "boolean" ||
+          (row.occupied ? !str(row.potion_id) : row.potion_id !== null)) return null;
+      slots.set(slot, row);
+    }
+    return slots;
+  };
+  const a = index(before), b = index(after);
+  // A missing slot is not evidence that the slot is empty or its contents were consumed.
+  if (!a || !b || a.size !== b.size || [...a.keys()].some((slot) => !b.has(slot))) return null;
+  return [...a.keys()].sort((x, y) => x - y).flatMap((slot) => {
+    const left = a.get(slot)!, right = b.get(slot)!;
+    return left.potion_id === right.potion_id ? [] : [{
+      slot, before_potion_id: left.potion_id, after_potion_id: right.potion_id,
+      before_reported_usage: left.usage ?? null, after_reported_usage: right.usage ?? null,
+      // Automatic consumption, pickup, discard and SL restoration require their own evidence.
+      causal_source: null,
+    }];
+  });
+}
+
+function potionRequest(row: Row, before: Row) {
+  const chosen = asRecord(row.chosen);
+  if (chosen.action !== "use_potion" && chosen.action !== "discard_potion") return null;
+  const slot = numOrNull(chosen.option_index), expected = str(asRecord(asRecord(row.expect).potion).id) || null;
+  const matches = Array.isArray(before.potions) ? before.potions.map(asRecord).filter((item) => item.index === slot) : [];
+  const potion = slot !== null && Number.isInteger(slot) && slot >= 0 && matches.length === 1 ? matches[0]! : null;
+  const id = potion?.occupied === true ? str(potion.potion_id) || null : null;
+  return { action: chosen.action, slot, expected_potion_id: expected, observed_potion_id: id,
+    identity_matches: expected !== null && id !== null ? expected === id : null,
+    dispatch_result: row.result ?? null, gate_reject: row.gate_reject ?? null,
+    state_effect_verified: false };
+}
+
 /** 8JRE F33 T1/T4, silent-0021/0079: endpoints show observed changes, never causal card credit. */
 export function selectionObservation(row: Row, next: Row | undefined, before: Row | null, after: Row | null) {
   const unknown = (reason: string) => ({ status: "unknown", reason, facts: null });
@@ -54,6 +95,8 @@ export function selectionObservation(row: Row, next: Row | undefined, before: Ro
       after,
       player_hp_delta: delta(before.hp, after.hp),
       player_power_changes: powerChanges(before.powers, after.powers),
+      potion_slot_changes: potionChanges(before.potions, after.potions),
+      logged_potion_request: potionRequest(row, before),
       enemy_comparison: comparable ? "unique_type_same_roster_not_instance_identity" : "ambiguous_or_changed_roster",
       enemy_changes: comparable ? a.map((enemy) => {
         const other = b.find((item) => item.id === enemy.id)!;

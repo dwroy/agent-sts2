@@ -51,6 +51,7 @@ function observation(row: Row) {
     turn: state.turn ?? null, screen: state.screen ?? null,
     hp: numOrNull(player.current_hp) ?? numOrNull(asRecord(state.run).current_hp),
     block: numOrNull(player.block), energy: numOrNull(player.energy),
+    potions: Array.isArray(asRecord(state.run).potions) ? asRecord(state.run).potions : null,
     player_powers: player.powers ?? null,
     hand: Array.isArray(combat.hand) ? combat.hand.map((item) => {
       const card = asRecord(item);
