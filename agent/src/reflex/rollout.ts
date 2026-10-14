@@ -2593,7 +2593,7 @@ function drawOne(piles: Piles, random: () => number): CardModel | undefined {
 
 /** Static per-enemy flags that do not carry into simulated turns (they depend on this turn's board). */
 function laterTurnSim(base: EnemySim): EnemySim {
-  const { asleep: _a, slumber: _s, imbalanced: _i, shriek: _sh, burrowed: _b, skittish: _sk, weakShackling: _ws, weakMalaise: _wm, observedWeakFacingBase: _wf, strangle: _strangle, whistleStunnable: _whistle, ...rest } = base;
+  const { asleep: _a, slumber: _s, imbalanced: _i, shriek: _sh, burrowed: _b, skittish: _sk, weakShackling: _ws, weakMalaise: _wm, observedWeakFacingBase: _wf, paperKraneNewWeak: _pk, strangle: _strangle, whistleStunnable: _whistle, ...rest } = base;
   return rest;
 }
 

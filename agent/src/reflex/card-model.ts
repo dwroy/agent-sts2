@@ -45,6 +45,8 @@ export interface CardModel {
   xCost: boolean;
   /** The observed Silent Malaise upgrade's extra debuff beyond energy spent (silent-0144). */
   malaiseBonus?: number;
+  /** EBVT8UZM6P12 A10 F43: the two observed manual Weak sources under Paper Krane. */
+  paperKraneWeak?: "neutralize" | "malaise";
   playable: boolean;
   target: TargetMode;
   validTargets: number[];
@@ -1082,6 +1084,19 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
     card["target_type"] === "Self" && !requiresTarget && numOrNull(card["energy_cost"]) === 0 &&
     !bool(card["costs_x"]) && dyn(card, "Cards") === 3 &&
     template.replace(/\s+/g, "") === "抽{Cards:diff()}张牌。你在本回合内不能再抽任何牌。";
+  // silent-0469: certify the observed templates, not other Weak cards or upgraded Malaise.
+  const paperKraneContext = character.toLowerCase() === "silent" && ascension === 10 &&
+    card["enchantment"] == null && card["target_type"] === "AnyEnemy" && requiresTarget &&
+    card["star_costs_x"] === false && card["star_cost"] === 0;
+  const paperKraneWeak = paperKraneContext && cardId === "NEUTRALIZE" && type === "Attack" &&
+    bool(card["upgraded"]) && card["energy_cost"] === 0 && card["costs_x"] === false &&
+    dyn(card, "Damage") === 4 && dyn(card, "WeakPower") === 2 &&
+    template.replace(/\s+/g, "") === "造成{Damage:diff()}点伤害。给予{WeakPower:diff()}层虚弱。" &&
+    renderedText.replace(/\s+/g, "") === "造成4点伤害。给予2层虚弱。" ? "neutralize" as const
+    : paperKraneContext && cardId === "MALAISE" && type === "Skill" && !bool(card["upgraded"]) &&
+      card["energy_cost"] === 0 && card["costs_x"] === true && asArray(card["dynamic_values"]).length === 0 &&
+      str(card["rules_text"]).replace(/\s+/g, "") === "敌人失去X{IfUpgraded:show:+1}点力量。给予X{IfUpgraded:show:+1}层虚弱。" &&
+      renderedText.replace(/\s+/g, "") === "敌人失去X点力量。给予X层虚弱。消耗。" ? "malaise" as const : undefined;
   const hasModelledEffect =
     // Dark Shackles' temporary Strength loss is applied by the solver (turn-solver tempStrengthLoss): not unknown.
     damage !== null || block > 0 || mirage || vulnerable > 0 || weak > 0 || strength > 0 || tempStrength > 0 || energyGain > 0 || draw > 0 || delayedDamage > 0 || enemyTempStrengthLoss > 0 || poison > 0 || anticipate || calculatedGamble || hiddenDaggers || bladeDance || bulletTime;
@@ -1203,6 +1218,7 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
     ...(burst ? { burst: true, burstSkills: burstSkills! } : {}),
     ...(bulletTime ? { bulletTime: true } : {}),
     ...(drawLockAfter ? { drawLockAfter: true } : {}),
+    ...(paperKraneWeak ? { paperKraneWeak } : {}),
     ...(corrosiveWave > 0 ? { corrosiveWave } : {}),
     block,
     ...(character.toLowerCase() === "silent" && ascension === 10 && cardId === "DODGE_AND_ROLL" && bool(card["upgraded"]) &&

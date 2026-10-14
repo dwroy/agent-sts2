@@ -142,6 +142,8 @@ export interface EnemySim {
   block: number;
   vulnerable: number;
   weak: number;
+  /** EBVT8UZM6P12 A10 F43: decision-turn Paper Krane certification for these two moves. */
+  paperKraneNewWeak?: "ram" | "shield";
   /** Silent A10 PLOW_MOVE: observed Shackling under existing Weak, decision turn only. */
   weakShackling?: true;
   /** VLZ6CCT8AQ0A A10 F43 T2: existing Weak with the observed three-point Malaise loss. */
@@ -1030,7 +1032,7 @@ interface Sim {
   skullUp: boolean;
   /** HP losses on our turn so far (Self-Forming Clay's block per loss). */
   hpLossEvents: number;
-  enemies: (EnemySim & { alive: boolean; newlyWeak: boolean; newlyShrunk?: boolean; strengthDelta: number; lostThisTurn: number; tempStrengthLoss?: number; sleepLost?: number; skittishHit?: boolean; ravenousStunned?: boolean; cardStunned?: boolean })[];
+  enemies: (EnemySim & { alive: boolean; newlyWeak: boolean; newlyWeakPaperKrane?: CardModel["paperKraneWeak"]; newlyShrunk?: boolean; strengthDelta: number; lostThisTurn: number; tempStrengthLoss?: number; sleepLost?: number; skittishHit?: boolean; ravenousStunned?: boolean; cardStunned?: boolean })[];
   /** Shrink still on us (PlayerSim.shrunk): gone once the last enemy that shrinksUs dies, for the cards played after. */
   shrunk: boolean;
   steps: Step[];
@@ -1455,7 +1457,7 @@ function redSkullCheck(sim: Sim, player: PlayerSim): void {
  * One debuff application: Artifact negates it and loses a stack, whatever the debuff (TQX5 T1:
  * Powdered Demise into Artifact 3 did nothing). Returns the amount that landed.
  */
-function applyDebuff(enemy: Sim["enemies"][number], kind: "vulnerable" | "weak" | "strengthLoss" | "tempStrengthLoss" | "demise" | "shrink" | "poison", amount: number): number {
+function applyDebuff(enemy: Sim["enemies"][number], kind: "vulnerable" | "weak" | "strengthLoss" | "tempStrengthLoss" | "demise" | "shrink" | "poison", amount: number, paperKraneWeak?: CardModel["paperKraneWeak"]): number {
   if (amount <= 0) return 0;
   if (enemy.artifact > 0) {
     enemy.artifact -= 1;
@@ -1465,7 +1467,10 @@ function applyDebuff(enemy: Sim["enemies"][number], kind: "vulnerable" | "weak" 
   else if (kind === "strengthLoss") enemy.strengthDelta -= amount;
   else if (kind === "poison") enemy.poison = (enemy.poison ?? 0) + amount;
   else if (kind === "weak") {
-    if (enemy.weak === 0) enemy.newlyWeak = true;
+    if (enemy.weak === 0) {
+      enemy.newlyWeak = true;
+      enemy.newlyWeakPaperKrane = paperKraneWeak;
+    } else if (enemy.newlyWeak) enemy.newlyWeakPaperKrane = undefined;
     enemy.weak += amount;
   } else if (kind === "shrink") {
     if ((enemy.shrink ?? 0) === 0) enemy.newlyShrunk = true;
@@ -2033,7 +2038,7 @@ export function musicBoxCopy(card: CardModel): CardModel {
 }
 
 /** A card's effects on the sim (energy and hand already paid). Called twice under Duplication. */
-function resolveEffects(next: Sim, card: CardModel, target: number | null, player: PlayerSim, cost: number, apotheosisAllowed = false): void {
+function resolveEffects(next: Sim, card: CardModel, target: number | null, player: PlayerSim, cost: number, singleManualPlay = false): void {
   const targetEnemy = target === null ? null : next.enemies.find((enemy) => enemy.index === target && enemy.alive) ?? null;
   if (card.target === "single" && targetEnemy === null) return;
   if (card.type !== "Potion" && next.afterImage > 0) gainBlock(next, next.afterImage, player);
@@ -2162,7 +2167,7 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
   }
   // VLZ6CCT8AQ0A F35/F43: upgrades are state changes, not a flat bonus for holding the card.
   if (card.apotheosis) {
-    if (!apotheosisAllowed || player.weak || player.frail || next.shrunk || next.shadowmeld) {
+    if (!singleManualPlay || player.weak || player.frail || next.shrunk || next.shadowmeld) {
       next.unknown = [...next.unknown, "神化（重放、自动出牌或属性组合未验证）"];
     } else {
       const upgrade = (entry: CardModel) => {
@@ -2423,6 +2428,10 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
   next.envenom += card.envenom ?? 0;
 
   const debuffTargets = card.target === "all" ? next.enemies.filter((enemy) => enemy.alive) : targetEnemy ? [targetEnemy] : [];
+  const paperKraneWeak = singleManualPlay && card.target === "single" &&
+    ((card.paperKraneWeak === "neutralize" && card.upgraded && cost === 0 && card.damage === 4 && card.weak === 2) ||
+     (card.paperKraneWeak === "malaise" && !card.upgraded && card.xCost && (cost === 1 || cost === 2) && !card.malaiseBonus))
+    ? card.paperKraneWeak : undefined;
   for (const enemy of debuffTargets) {
     if (!enemy.alive) continue;
     // In card-text order: Artifact blocks whichever lands first (Uppercut: Weak, then Vulnerable).
@@ -2432,13 +2441,13 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
       // Strength loss persists after temporary Wail restores; unupgraded zero X applies neither debuff.
       const amount = cost + (card.malaiseBonus ?? 0);
       applyDebuff(enemy, "strengthLoss", amount);
-      next.weakApplied += applyDebuff(enemy, "weak", amount);
+      next.weakApplied += applyDebuff(enemy, "weak", amount, paperKraneWeak);
     } else if (card.weakFirst) {
-      next.weakApplied += applyDebuff(enemy, "weak", card.weak);
+      next.weakApplied += applyDebuff(enemy, "weak", card.weak, paperKraneWeak);
       next.vulnerableApplied += applyDebuff(enemy, "vulnerable", card.vulnerable);
     } else {
       next.vulnerableApplied += applyDebuff(enemy, "vulnerable", card.vulnerable);
-      next.weakApplied += applyDebuff(enemy, "weak", card.weak);
+      next.weakApplied += applyDebuff(enemy, "weak", card.weak, paperKraneWeak);
     }
     if (card.enemyStrength > 0) enemy.strengthDelta += card.enemyStrength;
     // Temporary loss: lowers this turn's attack, not a lasting change (so not scored as one).
@@ -2862,7 +2871,21 @@ function incomingHits(sim: Sim, input: SolverInput): IncomingHit[] {
           // (4LC3 F31 T3: 3 shown is base 5; Tainted 2 made it floor(7 x 0.75) = 5, Tainted 4 made it 6).
           amount = enemy.weak > 0 && !enemy.newlyWeak ? Math.floor((Math.ceil((amount + 1) / 0.75) - 1 + tainted) * 0.75) : Math.floor(amount + tainted);
         }
-        if (enemy.newlyWeak) amount = Math.floor(amount * 0.75);
+        if (enemy.newlyWeak) {
+          // silent-0469: floor(17 * .6)=10, floor((17-1) * .6)=9, floor((7-2) * .6)=3.
+          // Existing Weak intents already contain the reduction; never rescale them or later moves.
+          const paperKrane = !moved && !died && (start?.weak ?? 0) === 0 &&
+            enemy.attacks.length === 1 && attack.hits === 1 && (enemy.tempStrengthLoss ?? 0) === 0 &&
+            !player.vulnerable && !player.surrounded && player.facing == null &&
+            !player.colossus && !sim.colossus && !player.intangible && !sim.intangible &&
+            !(enemy.shrink ?? 0) && !enemy.newlyShrunk && sim.tainted === 0 &&
+            ((enemy.paperKraneNewWeak === "ram" && shown === 17 &&
+              ((enemy.newlyWeakPaperKrane === "neutralize" && enemy.weak === 2 && enemy.strengthDelta === 0) ||
+               (enemy.newlyWeakPaperKrane === "malaise" && enemy.weak === 1 && enemy.strengthDelta === -1))) ||
+             (enemy.paperKraneNewWeak === "shield" && shown === 7 &&
+              enemy.newlyWeakPaperKrane === "malaise" && enemy.weak === 2 && enemy.strengthDelta === -2));
+          amount = Math.floor(amount * (paperKrane ? 0.6 : 0.75));
+        }
         if (enemy.newlyShrunk) amount = Math.floor(amount * SHRINK_DAMAGE_FACTOR);
         if (halvedByColossus) amount = Math.floor(amount * 0.5);
         if (player.intangible || sim.intangible) amount = Math.min(amount, 1);
