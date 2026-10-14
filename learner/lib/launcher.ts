@@ -11,14 +11,15 @@
  *
  * The agent's whole event stream goes to learner/runs/<time>-<task>.jsonl, framed by a learner_launch line
  * (task, parameters, command, full prompt) and a learner_summary line; its temporary files go to the matching
- * learner/runs/<time>-<task>/ directory ({{scratch}}). Keys never reach the agent (childEnv) and never stay in
+ * learner/runs/<time>-<task>/ directory ({{scratch}}), inside the task worktree for strategy-proposal reports.
+ * Keys never reach the agent (childEnv) and never stay in
  * the log (redactSecrets).
  *
  * Exit codes: 0 done, 1 the agent failed, 2 usage/task error, 3 engine or tool server unavailable, 124 timeout.
  */
 import { spawn, type ChildProcess } from "node:child_process";
 import { createHash } from "node:crypto";
-import { appendFileSync, closeSync, existsSync, mkdirSync, mkdtempSync, openSync, readdirSync, readFileSync, readSync, renameSync, rmSync, statSync, writeSync } from "node:fs";
+import { appendFileSync, closeSync, existsSync, mkdirSync, mkdtempSync, openSync, readdirSync, readFileSync, readSync, realpathSync, renameSync, rmSync, statSync, writeSync } from "node:fs";
 import { homedir, tmpdir } from "node:os";
 import { join, relative, resolve, sep } from "node:path";
 import { createInterface } from "node:readline";
@@ -371,7 +372,15 @@ export async function main(argv: string[], overrides: Partial<LauncherDeps> = {}
     if (!inside(deps.projectRoot, cwd)) throw new LearnerUsageError(`--cwd ${cwd} 不在项目目录 ${deps.projectRoot} 里`);
     const spec = loadTask(options.task, deps.tasksDir);
     const stem = `${stamp(deps.now())}-${spec.name}`;
-    const scratch = join(deps.runsDir, stem);
+    // No-change strategy reports must belong to the batch's worktree; event logs remain centralized.
+    const scratch = spec.name === "strategy-proposal" ? join(cwd, "learner", "runs", stem) : join(deps.runsDir, stem);
+    if (spec.name === "strategy-proposal") {
+      for (const dir of [join(cwd, "learner"), join(cwd, "learner", "runs")]) {
+        if (existsSync(dir) && !inside(realpathSync(cwd), realpathSync(dir))) {
+          throw new LearnerUsageError(`策略任务临时目录 ${dir} 不在工作树 ${cwd} 里`);
+        }
+      }
+    }
     const character = resolveCharacter(options, deps.env);
     const builtins = { cwd, worktree: cwd, project_root: deps.projectRoot, logs_dir: join(deps.projectRoot, "logs"), scratch, task: spec.name, ...characterBuiltins(character) };
     const sets = parseSets(options.sets);
@@ -405,7 +414,7 @@ export async function main(argv: string[], overrides: Partial<LauncherDeps> = {}
       ...(options.withTools ? { mcp: toolServerSpec(options, deps.projectRoot, deps.env) } : {}),
     }, deps.env);
     const timeoutMin = options.timeoutMin ?? spec.timeoutMin;
-    prepared = { request, prompt: rendered.prompt, values: rendered.values, taskName: spec.name, ...(timeoutMin !== undefined ? { timeoutMin } : {}), logPath: `${scratch}.jsonl`, scratch };
+    prepared = { request, prompt: rendered.prompt, values: rendered.values, taskName: spec.name, ...(timeoutMin !== undefined ? { timeoutMin } : {}), logPath: join(deps.runsDir, `${stem}.jsonl`), scratch };
   } catch (error) {
     if (error instanceof LearnerUsageError) {
       deps.err(`${error.message}\n${USAGE}\n`);
@@ -451,6 +460,7 @@ export async function main(argv: string[], overrides: Partial<LauncherDeps> = {}
   }
 
   mkdirSync(scratch, { recursive: true });
+  mkdirSync(deps.runsDir, { recursive: true });
   const started = deps.now();
   const log = (event: Record<string, unknown>): void => appendFileSync(logPath, `${JSON.stringify(event)}\n`);
   log({
