@@ -68,6 +68,8 @@ export interface CardModel {
   burstSkills?: number;
   /** KV0JHNJCKXLS A10 F33 T1: plain Bullet Time frees the existing hand and stops this turn's draws. */
   bulletTime?: boolean;
+  /** 9R916WW0V65N F49 T2, silent-0290/0292: plain Battle Trance draws before locking later draws. */
+  drawLockAfter?: boolean;
   /** VLZ6CCT8AQ0A A10: ordinary Apotheosis, with unverified upgrades kept unknown. */
   apotheosis?: boolean;
   apotheosisUpgrade?: UpgradeDelta;
@@ -1061,6 +1063,11 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
   const anticipate = cardId === "ANTICIPATE" && dyn(card, "DexterityPower") !== null;
   const bulletTime = character.toLowerCase() === "silent" && ascension === 10 && cardId === "BULLET_TIME" &&
     !bool(card["upgraded"]) && template.replace(/\s+/g, "") === "你在本回合内不能再抽牌。你手牌中的所有牌在本回合免费打出。";
+  const drawLockAfter = character.toLowerCase() === "silent" && (ascension === 0 || ascension === 10) && cardId === "BATTLE_TRANCE" &&
+    type === "Skill" && !bool(card["upgraded"]) && card["enchantment"] == null &&
+    card["target_type"] === "Self" && !requiresTarget && numOrNull(card["energy_cost"]) === 0 &&
+    !bool(card["costs_x"]) && dyn(card, "Cards") === 3 &&
+    template.replace(/\s+/g, "") === "抽{Cards:diff()}张牌。你在本回合内不能再抽任何牌。";
   const hasModelledEffect =
     // Dark Shackles' temporary Strength loss is applied by the solver (turn-solver tempStrengthLoss): not unknown.
     damage !== null || block > 0 || mirage || vulnerable > 0 || weak > 0 || strength > 0 || tempStrength > 0 || energyGain > 0 || draw > 0 || delayedDamage > 0 || enemyTempStrengthLoss > 0 || poison > 0 || anticipate || calculatedGamble || hiddenDaggers || bladeDance || bulletTime;
@@ -1180,6 +1187,7 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
     ...(shadowmeld ? { shadowmeld: true } : {}),
     ...(burst ? { burst: true, burstSkills: burstSkills! } : {}),
     ...(bulletTime ? { bulletTime: true } : {}),
+    ...(drawLockAfter ? { drawLockAfter: true } : {}),
     ...(corrosiveWave > 0 ? { corrosiveWave } : {}),
     block,
     ...(character.toLowerCase() === "silent" && ascension === 10 && cardId === "DODGE_AND_ROLL" && bool(card["upgraded"]) &&
