@@ -18,6 +18,13 @@ export type LogLevel = "debug" | "info" | "warn" | "error";
 export type RunStart = "auto" | "continue" | "new";
 export type JevContextVersion = "off" | "v1";
 
+/** Only Silent's live mandatory computation may use the approved fault exit. */
+export function simFailurePolicy(character: string | null | undefined, env: NodeJS.ProcessEnv = process.env): { enabled: boolean; retries: number } {
+  const retries = Number(env["SIM_FAILURE_RETRIES"] ?? 2);
+  return { enabled: characterKey(character ?? "") === "silent" && env["SIM_FAILURE_EXIT"] !== "off",
+    retries: Number.isSafeInteger(retries) && retries > 0 ? retries : 2 };
+}
+
 /** V5-S P1: resolve against the actual run character, including tools that do not call loadConfig. */
 export function sReadinessMode(character: string | null | undefined, env: NodeJS.ProcessEnv = process.env): "off" | "shadow" | "on" {
   if (characterKey(character ?? "") !== "silent") return "off";

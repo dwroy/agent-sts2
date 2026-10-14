@@ -19,6 +19,22 @@ def row(i, error='只跑完 24 次模拟（不足 300 次）', **extra):
 
 
 class Health(unittest.TestCase):
+    def test_computation_failures_and_degraded_b2_are_counted_once_and_alerted(self):
+        def attempt(i, status, failure):
+            return row(i, label='combat/plan', boss_sim={'completion': {
+                'key': 'same', 'attempt_id': str(i), 'attempts': i, 'status': status,
+                'failure': failure, 'reasons': ['worker stalled'], 'samples': 320 if i == 3 else 0, 'requested': 600}})
+        rows = [attempt(1, 'pending', True), attempt(2, 'pending', True), attempt(3, 'degraded', False)]
+        r = self.summary(rows + rows)
+        self.assertEqual({k: r['computation'][k] for k in ('attempts', 'failures', 'degraded')},
+                         {'attempts': 3, 'failures': 2, 'degraded': 1})
+        self.assertTrue(r['alert'])
+        self.assertEqual(r['b3']['attempts'], 0)
+        self.assertTrue(self.summary(rows[:1])['computation']['alert'])
+        again = attempt(4, 'pending', True)
+        again['boss_sim']['completion']['attempts'] = 1
+        self.assertEqual(self.summary(rows + [again])['computation']['failures'], 3)
+
     def test_readiness_shadow_and_actual_payload_readback(self):
         config = {**CONFIG, 'loop': {**CONFIG['loop'], 's_readiness': 'shadow'}}
         ready = {'schema': 'boss-readiness-v1', 'ms': 7,

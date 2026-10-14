@@ -13,6 +13,7 @@ import type { RunBrief } from "./run-brief.js";
 export interface DecisionEnv {
   /** Set by the live loop for Silent; archived replay callers keep their declared historical policy. */
   requiredBossEvaluation?: boolean;
+  simWait?: import("../sim/computation-wait.js").SimWait;
   state: GameState;
   knowledge: Knowledge;
   brief: RunBrief;
@@ -234,6 +235,9 @@ export interface ScreenMemory {
   bossLines?: { turn: string; spentMs: number };
   /** A required calculation is pending; this cannot become a per-card/model fallback. */
   bossEvaluationWait?: string;
+  bossEvaluationRecord?: JsonValue;
+  simFailure?: { key: string; count: number; reasons: string[] };
+  simFailureBoard?: string;
   /** SL_RETRY_COMPUTE (docs/sl.md §10.3): the rollout's wall clock spent this turn of this attempt (its turn budget over re-plans). */
   slRetryCompute?: { turn: string; spentMs: number };
   /**

@@ -39,6 +39,7 @@ export interface DeckRunRequest {
   deadlineMs?: number;
   /** Required live computations: reject a stalled worker, never return its partial sample set. */
   progressTimeoutMs?: number;
+  onProgress?: import("./computation-wait.js").SimProgress;
   /** Opt-in telemetry; independent of the sampling clock and never sent to the solver. */
   diagnostics?: boolean;
   /** The clock (default performance.now); tests pass their own. */
@@ -135,12 +136,17 @@ export class SerialDeckRunner implements DeckSimRunner {
     const maxTurns = req.maxTurns ?? BOSS_SIM_MAX_TURNS;
     const scripts = req.scripts ?? true;
     let timedOut = false;
-    for (const chunk of taskChunks(req)) {
+    const chunks = taskChunks(req);
+    const requested = chunks.reduce((n, c) => n + c.length, 0);
+    let done = 0;
+    for (const chunk of chunks) {
       if (req.deadlineMs !== undefined && now() - started >= req.deadlineMs) {
         timedOut = true;
         break;
       }
       for (const [deck, order, i, seed] of chunk) outcomes[deck]![order]![i] = fightSample(inputs[deck]!, null, seed, maxTurns, scripts, req.orders[order] ?? null);
+      done += chunk.length;
+      req.onProgress?.(done, requested);
     }
     return Promise.resolve({ outcomes, complete: completeSamples(req, outcomes), timedOut, elapsedMs: Math.round(now() - started), workers: 0 });
   }
@@ -208,6 +214,7 @@ export class BuildSimPool implements DeckSimRunner {
     // A queued drop cannot interrupt a worker's synchronous sample block.
     const cancelled = new Int32Array(new SharedArrayBuffer(Int32Array.BYTES_PER_ELEMENT));
     const chunks = taskChunks(req);
+    const requested = chunks.reduce((n, c) => n + c.length, 0);
     const outcomes = emptyOutcomes(req);
     const { base, decks } = slimDecks(req.base, req.decks);
     const used = workers.slice(0, Math.min(workers.length, chunks.length));
@@ -270,6 +277,7 @@ export class BuildSimPool implements DeckSimRunner {
           }
           diagnostics.firstReplyMs ??= Math.round(performance.now() - diagnosticStart);
           diagnostics.outcomesCompleted += reply.results.length;
+          req.onProgress?.(diagnostics.outcomesCompleted, requested);
           if (reply.results.length > 0) noteProgress();
           for (const [deck, order, i, result] of reply.results) outcomes[deck]![order]![i] = result;
           // A completed sample is usable before the rest of its block finishes.

@@ -6,6 +6,7 @@
  * and the run boundary.
  */
 
+import { fileSimWait } from "../sim/computation-wait.js";
 import { randomUUID } from "node:crypto";
 import { dirname, join } from "node:path";
 
@@ -685,6 +686,8 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
     if (state.screen === "MAP") rememberMap(screenMemory, state);
     observedTs = new Date().toISOString();
     const observedFp = fingerprint(state);
+    if (screenMemory.simFailureBoard !== observedFp) screenMemory.simFailure = undefined;
+    screenMemory.simFailureBoard = observedFp;
     // This board was refused GATE_REJECTION_LIMIT times (at decision or at dispatch): combat ends the turn (at the
     // gate below); elsewhere the screen's code baseline decides (planned without trust-Jev, no model or Jev asked),
     // so nothing is paid again for the same refusal.
@@ -719,6 +722,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
     const slRecord = slEnv ? undefined : sl?.recordFor(state);
     const env: DecisionEnv = {
       requiredBossEvaluation: str(asRecord(state.run?.raw)["character_id"]).toLowerCase() === "silent",
+      simWait: fileSimWait(join(dirname(config.log.decisionLog), "sim-wait.json"), (message) => onEvent({ type: "note", message })),
       state,
       knowledge,
       brief,
@@ -826,6 +830,19 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
     plannerFailures = 0;
 
     if (planned.kind === "wait") {
+      if (screenMemory.bossEvaluationWait && screenMemory.bossEvaluationRecord) {
+        const row: DecisionRecord = {
+          ts: new Date().toISOString(), mode, screen: state.screen, session: `${state.session.mode}/${state.session.phase}`,
+          floor: state.run?.floor ?? null, turn: state.turn, label: "combat/plan", decider: "code",
+          fingerprint: observedFp, questions: {}, rationale: planned.reason, confidence: null,
+          fallback: false, reasked: false, no_jev: false, reused_answer: false, request_ids: [],
+          latency_ms: { plan: plannerMs ?? 0, jev: 0, action: 0 }, usage: { input_tokens: 0, output_tokens: 0 },
+          boss_sim: screenMemory.bossEvaluationRecord, ...(runId ? { run_id: runId } : {}), observed_ts: observedTs,
+          result: "not dispatched: required boss evaluation pending",
+        };
+        log.write(row);
+        logState(state, observedFp, row.ts);
+      }
       stats.waits += 1;
       noteStall(state, planned.reason);
       onEvent({ type: "wait", screen: state.screen, reason: planned.reason });

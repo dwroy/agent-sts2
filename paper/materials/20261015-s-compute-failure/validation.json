@@ -1,0 +1,40 @@
+{
+  "at": "2026-10-15T07:26:22.604015+08:00",
+  "parent": "roy-20261014-s-decision",
+  "stage": "C1",
+  "targeted": {
+    "files": 8,
+    "cases": 28,
+    "rc": 0,
+    "log": "targeted-03.log"
+  },
+  "sandbox": {
+    "command": "SANDBOX_WORKERS=2 nice -n 19 bash tools/test-sandbox.sh",
+    "tsc": 0,
+    "original_vitest_rc": 1,
+    "files": 415,
+    "passed_cases": 3948,
+    "failed_cases": 1,
+    "log": "sandbox-01.log",
+    "failure": "component-usage test could not start: missing data/logdb-venv/bin/python in sparse worktree",
+    "environment_repair": "linked existing canonical logdb-venv; no install or source change",
+    "recheck": {
+      "log": "component-environment-recheck-02.log",
+      "rc": 0,
+      "cases": 1
+    },
+    "case_coverage_after_environment_recheck": {
+      "passed": 3949,
+      "failed_remaining": 0
+    }
+  },
+  "original_failure_logs_preserved": true,
+  "game_actions": 0,
+  "API_calls": 0,
+  "scope": "Fixed-data computation service tests. Full host composition and natural deployment readback remain separate.",
+  "paths": {
+    "log": "paths-01.log",
+    "rc": 0,
+    "cases": 11
+  }
+}
