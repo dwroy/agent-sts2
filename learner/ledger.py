@@ -29,6 +29,7 @@ import fcntl
 import json
 import os
 import re
+import subprocess
 import sys
 
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -387,6 +388,34 @@ def check_file(path=None, runs=None, versions=None):
 # ---------------------------------------------------------------- writing
 
 
+def committed_status_snapshot(path):
+    """Read the tracked ledger at one HEAD; custom fixture ledgers have no publication baseline."""
+    tracked = os.path.join(REPO, "paper", "materials", "learning", "ledger.jsonl")
+    if os.path.realpath(path) != os.path.realpath(tracked):
+        return None
+    head = ledger_git("rev-parse", "--verify", "HEAD").strip()
+    text = ledger_git("show", f"{head}:paper/materials/learning/ledger.jsonl")
+    try:
+        rows = [(n, json.loads(line)) for n, line in enumerate(text.splitlines(), 1) if line.strip()]
+        items = fold(rows)
+    except (ValueError, KeyError, TypeError, AttributeError) as error:
+        raise LedgerError("cannot read committed ledger status baseline") from error
+    return head, items, rows
+
+
+def ledger_git(*args):
+    """Fail closed when the publication baseline cannot be verified."""
+    try:
+        return subprocess.run(["git", "-C", REPO, *args], check=True, capture_output=True,
+                              text=True, timeout=10).stdout
+    except (OSError, subprocess.SubprocessError) as error:
+        raise LedgerError("cannot verify committed ledger baseline; nothing appended") from error
+
+
+def status_identity(item):
+    return tuple(item.get(key) for key in ("status", "version", "shipped_at")) if item else None
+
+
 def read_input(stream):
     text = stream.read().strip()
     if not text:
@@ -414,7 +443,16 @@ def append(op, rows, path=None):
     versions = load_versions()
     with open(path, "a+", encoding="utf8") as handle:
         fcntl.flock(handle, fcntl.LOCK_EX)
-        items = fold(read_rows(path))
+        physical_rows = read_rows(path)
+        items = fold(physical_rows)
+        # Compare the locked physical prefix before applying this batch's own updates.
+        snapshot = committed_status_snapshot(path) if op == "update" and any(
+            isinstance(row, dict) and "status" in row for row in rows) else None
+        # Pending appends are normal. A status mismatch needs review only when history forked.
+        extends_committed = snapshot and [row for _, row in physical_rows[:len(snapshot[2])]] == [
+            row for _, row in snapshot[2]]
+        drifted = {key for key, item in snapshot[1].items()
+                   if status_identity(items.get(key)) != status_identity(item)} if snapshot and not extends_committed else set()
         out = []
         problems = []
         for i, raw in enumerate(rows):
@@ -440,6 +478,10 @@ def append(op, rows, path=None):
                 if "asc" not in row:
                     found.append("asc: required (first_run is not in runs.jsonl)")
             else:
+                if "status" in row and row.get("id") in drifted:
+                    problems.append(f"row {i + 1}: {row['id']}: physical/committed ledger status divergence; "
+                                    "reconcile the publication history before updating status")
+                    continue
                 # Correcting the source also corrects its ascension; explicit mismatches are rejected below.
                 first = row.get("first_run")
                 known_asc = runs[first].get("ascension") if runs is not None and isinstance(first, str) and first in runs else None
@@ -454,6 +496,8 @@ def append(op, rows, path=None):
             out.append(ordered)
         if problems:
             raise LedgerError("\n".join(problems))
+        if snapshot and ledger_git("rev-parse", "--verify", "HEAD").strip() != snapshot[0]:
+            raise LedgerError("committed ledger baseline changed during validation; retry after review")
         handle.seek(0, os.SEEK_END)
         for row in out:
             handle.write(json.dumps(row, ensure_ascii=False) + "\n")
