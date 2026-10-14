@@ -1,0 +1,24 @@
+{
+  "received_at": "2026-10-15 07:22:57 CST",
+  "type": "original-source-release-registration",
+  "original_batch": "20261015-051302-s2-strategy-proposal",
+  "source": "8e196be494ada9a33dac3d897a0671a5b14e0e5b",
+  "actual_behavior": "ae6a8d9950594c9b1e0ebe40fe6ed0866982fe15",
+  "actual_main_source_sync": "f2063dd06c13fb22ddf5dad6bb56bac76042490f",
+  "source_leaves": 7,
+  "name": "V5.silent-escape-plan1",
+  "release_id": null,
+  "status": "ready; pending existing live host-check lock",
+  "same_original_ops_owner": true,
+  "registration_script": "ops/codex-ops/record-staging/20261015-0710/register-release.py",
+  "registration_script_sha256": "a2727b4a11d200c62eb7b1cbc50d889566ce12696db2313ac668cd60747903b2",
+  "lock_readback": [
+    "84: FLOCK  ADVISORY  WRITE 4134974 08:30:372157 0 EOF"
+  ],
+  "existing_shared_full_tree": "8ee5defe2b062f00653c8d396f614b5f7f18f82b",
+  "next_step": "on original host learner-checks wake, acquire live lock nonblocking; reread cumulative mapping, register actual behavior once, CLI ship 0296, retain all old fields/records and natural consumer pending",
+  "new_model_dispatch": false,
+  "new_code_owner": false,
+  "current_game_restart": false,
+  "actual_registration_started": false
+}
