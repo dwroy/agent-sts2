@@ -1,0 +1,41 @@
+{
+  "task": "postmortem",
+  "appended": [
+    "Q9FM7A80E4BZ"
+  ],
+  "skipped": [],
+  "bugs": [
+    {
+      "run": "Q9FM7A80E4BZ",
+      "where": "agent/src/reflex/turn-solver.ts:1516",
+      "what": "发条靴低额攻击漏模，末试T8三小刀少报9伤；更早同型证据已补立账。",
+      "new": true
+    }
+  ],
+  "ledger": {
+    "added": [
+      "silent-0465",
+      "silent-0466"
+    ],
+    "updated": [
+      "silent-0465",
+      "silent-0030",
+      "silent-0125"
+    ],
+    "repeats": [
+      "silent-0465"
+    ],
+    "check": 0
+  },
+  "code_proposals": [
+    "silent-proposal-a98391cbbe996a35",
+    "silent-proposal-2b9379056147660a",
+    "silent-proposal-263511c7d12ef833"
+  ],
+  "implementation_domains": [
+    "combat",
+    "sl",
+    "terminal"
+  ],
+  "report": "/home/dw/Projects/agent-sts2/learner/runs/20261014-081303-postmortem/report.md"
+}
