@@ -159,7 +159,13 @@ def inventory(root, tree):
         path = retention.safe_path(root, path)
         if not path.is_file():
             raise ValueError("non-regular ignored artifact retained")
-        if ("__pycache__" in path.parts and path.suffix == ".pyc") or path.suffix == ".tsbuildinfo":
+        if "__pycache__" in path.parts and path.suffix == ".pyc":
+            source = retention.python_cache_source(tree, path)
+            if source is None:
+                raise ValueError("unknown Python bytecode retained")
+            cache.append({"path": str(path.relative_to(root)), "source": str(source.relative_to(root)),
+                          "bytes": path.stat().st_size})
+        elif path.suffix == ".tsbuildinfo":
             cache.append({"path": str(path.relative_to(root)), "bytes": path.stat().st_size})
         else:
             files.append(path)
