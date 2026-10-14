@@ -2440,7 +2440,9 @@ function applyPlan(
       const dead = filtered ? DEATH_MOVES[e.id] : undefined;
       const deathFilter = dead ? (m: string) => !dead.includes(m) && (!learnedFilter || learnedFilter(m)) : learnedFilter;
       const living = dead ? (m: string) => !dead.includes(m) : undefined;
-      if (stunned) e.move = table?.next["STUNNED"] ? nextMove(table, "STUNNED", pick, undefined, living) : nextMove(table, e.move, pick, undefined, living);
+      // silent-0473: an active Whistle stun lasts this turn only; unknown successors cannot invent safety.
+      if (after.get(e.index)?.cardStunned) e.move = nextMove(table, STUNNED_MOVE, pick, undefined, living);
+      else if (stunned) e.move = table?.next["STUNNED"] ? nextMove(table, "STUNNED", pick, undefined, living) : nextMove(table, e.move, pick, undefined, living);
       else if (imbalanced && blockStunned.has(e.index)) e.move = STUNNED_MOVE;
       else if (fullFight && !(e.burrowed && m && !m.burrows)) {
         // The growing move's next use has a hit more (Multi Claw) or more damage (Pressure Gun); the script picks the next move.
@@ -2591,7 +2593,7 @@ function drawOne(piles: Piles, random: () => number): CardModel | undefined {
 
 /** Static per-enemy flags that do not carry into simulated turns (they depend on this turn's board). */
 function laterTurnSim(base: EnemySim): EnemySim {
-  const { asleep: _a, slumber: _s, imbalanced: _i, shriek: _sh, burrowed: _b, skittish: _sk, weakShackling: _ws, weakMalaise: _wm, observedWeakFacingBase: _wf, strangle: _strangle, ...rest } = base;
+  const { asleep: _a, slumber: _s, imbalanced: _i, shriek: _sh, burrowed: _b, skittish: _sk, weakShackling: _ws, weakMalaise: _wm, observedWeakFacingBase: _wf, strangle: _strangle, whistleStunnable: _whistle, ...rest } = base;
   return rest;
 }
 

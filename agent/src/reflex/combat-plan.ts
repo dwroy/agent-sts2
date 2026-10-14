@@ -765,6 +765,15 @@ export function enemySims(combat: Record<string, unknown>, asc?: number, charact
       block: num(enemy["block"]),
       vulnerable: powerAmount(enemy, "VULNERABLE_POWER"),
       weak: powerAmount(enemy, "WEAK_POWER"),
+      // Q10YYQ5DUPJA A10 F48 T2/F49 T5, silent-0473: only these solo surviving forms were actively stunned.
+      ...(character.toLowerCase() === "silent" && asc === 10 && living.length === 1 &&
+        ((enemy["enemy_id"] === "AEONGLASS" && enemy["max_hp"] === 535 && enemy["move_id"] === "EYE_LASERS_MOVE" &&
+          powerAmount(enemy, "WITHERING_PRESENCE_POWER") === 6 &&
+          asArray(enemy["powers"]).every((p) => str(asRecord(p)["power_id"]) === "WITHERING_PRESENCE_POWER")) ||
+         (enemy["enemy_id"] === "TEST_SUBJECT" && enemy["max_hp"] === 212 && enemy["move_id"] === "MULTI_CLAW_MOVE" &&
+          powerAmount(enemy, "ADAPTABLE_POWER") === 1 && powerAmount(enemy, "PAINFUL_STABS_POWER") === 1 &&
+          asArray(enemy["powers"]).every((p) => ["ADAPTABLE_POWER", "PAINFUL_STABS_POWER", "STRENGTH_POWER", "WEAK_POWER", "POISON_POWER"].includes(str(asRecord(p)["power_id"])))))
+        ? { whistleStunnable: true as const } : {}),
       ...observedCrusherWeakFacing(combat, enemy, asc, character),
       // 3UPY3BP2LVS7 F17 T3, silent-0349: only this observed move and power combination.
       ...(character.toLowerCase() === "silent" && asc === 10 &&
@@ -1231,6 +1240,8 @@ export function describePlan(plan: Plan, playerHp: number): Record<string, JsonV
   // the score of this turn does not count it, so it is said (a fact, not a weight).
   if (!o.winsFight && (o.freeAttacksLeft ?? 0) > 0) summary["free_attacks_kept"] = `${o.freeAttacksLeft} free Attack${o.freeAttacksLeft === 1 ? "" : "s"} (Unrelenting) left unused: ${o.freeAttacksLeft === 1 ? "it stays" : "they stay"} up into next turn (the next Attack played costs 0)`;
   if ((o.stuns ?? []).length > 0) summary["stuns"] = `${o.stuns!.join(", ")}: its attack fully blocked (Imbalanced), it skips its next move (~${o.stunSaved ?? 0} damage saved next turn)`;
+  const cardStuns = o.enemyHpAfter.filter((enemy) => enemy.hp > 0 && enemy.cardStunned);
+  if (cardStuns.length > 0) summary["card_stun"] = `${cardStuns.map((enemy) => enemy.name).join("、")}：吹哨取消该目标本轮攻击，已计入损血；下一轮仍须承伤，后继招式缺数据时预测未知。`;
   // MECH_RULES: a learned strip-stun this line sets off (the Hopper's last Flutter): its move this turn is cancelled.
   const stripped = o.winsFight ? [] : o.enemyHpAfter.filter((enemy) => enemy.strippedStun && enemy.hp > 0);
   if (stripped.length > 0) {
