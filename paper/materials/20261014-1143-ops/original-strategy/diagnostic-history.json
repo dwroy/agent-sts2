@@ -1,0 +1,29 @@
+{
+  "state_extraction_first_pass": {
+    "selected_states": 0,
+    "cause": "误读顶层run_id；原结构为state.run_id",
+    "preserved": "evidence-manifest-first-pass.json",
+    "recovered_states": 3432
+  },
+  "tsx_cli_failure": {
+    "exit_code": 1,
+    "error": "listen EPERM: operation not permitted",
+    "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261014-111301/learner/runs/20261014-111323-strategy-proposal/tsx-1000/3.pipe",
+    "recovery": "node --import tsx，无IPC监听"
+  },
+  "first_consumer_failure": {
+    "exit_code": 1,
+    "error": "决策必须按观测时间排序，且 decision_id 非空、不重复",
+    "cause": "5条历史决策缺decision_id",
+    "recovery": "不补id；在缺行断开消费者窗口"
+  },
+  "auxiliary_read_failures": [
+    "KeyError: decision_id；改为按原缺字段明确处理",
+    "NameError: summary is not defined；完整audit_evidence.py恢复通过",
+    "cp cannot stat：命令cwd为agent，错误用了根相对路径；首次stderr工具输出存在，未冒称副本完整保留",
+    "bubblewrap启动前rg ENOENT一次；同一tail读取重试成功，未改权限",
+    "最终身份检查首次以相对scratch父路径比较绝对worktree而断言失败；resolve后同身份检查通过，首次未写记录。"
+  ],
+  "consumer_exit": 0,
+  "raw_evidence_checks": 9
+}

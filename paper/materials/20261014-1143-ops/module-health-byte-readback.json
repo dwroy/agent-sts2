@@ -1,0 +1,1081 @@
+{
+  "at": "2026-10-14 11:55:17 CST",
+  "run": "Q10YYQ5DUPJA",
+  "actual_ascension": 10,
+  "actual_start_config": {
+    "ts": "2026-10-14T03:03:07.257Z",
+    "character": "SILENT",
+    "ascension": 10,
+    "target_ascension": 11,
+    "code": {
+      "commit": "908f043bb01b6c7c1406bed6394df36f41528a56",
+      "code": "908f043+dirty",
+      "dirty": true,
+      "dirty_files": [
+        "knowledge/characters/silent/boss-damage.json",
+        "knowledge/characters/silent/construction-opportunities.json",
+        "knowledge/characters/silent/monster-records.json",
+        "knowledge/characters/silent/outcome-stats.json",
+        "knowledge/characters/silent/room-costs.json",
+        "knowledge/common/card-upgrades.json",
+        "knowledge/common/monster-db.json",
+        "knowledge/common/move-model.json",
+        "notes/fight-value-backtest-silent.md",
+        "notes/monster-db-check.md"
+      ],
+      "branch": "live",
+      "worktree": "live"
+    },
+    "construction": {
+      "architecture": "V5",
+      "schema": "construction-v1",
+      "mode": "shadow",
+      "policy": "observed-signature-completion",
+      "validation": "prospective-calibration-required",
+      "evaluation": "same-question-combat-facts"
+    }
+  },
+  "config_source": {
+    "offset": 1660444,
+    "length": 5063,
+    "sha256": "91bee20a65d55b70504e7ed0d5334270a92be623ea8922ef9b0fb16de9f6ed67"
+  },
+  "source_report": "ops/codex-ops/module-health/Q10YYQ5DUPJA.json",
+  "frozen_report_copy": "paper/materials/20261014-1143-ops/original-module-report.json",
+  "frozen_report_copy_sha256": "12d9875dddc6c5045b9817561c3b517bd06ce4676603e157bda9dfceb44136c0",
+  "source_alert_sha256": "ced4f5b49510368449f8908eeee1357f092099dd7b3881afe07d18760a653ceb",
+  "frozen_report_serialization": "first original report semantic JSON snapshot; raw decision/brain/plan/config byte identities independently verified",
+  "exact_frozen_original_report_all_counter_groups_reproduced": true,
+  "original_coverage_limits_preserved": {
+    "decisions_complete": true,
+    "decisions": {
+      "path": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+      "start": 1315463653,
+      "end": 1349003540,
+      "complete": false,
+      "malformed": 0,
+      "first_ts": "2026-10-13T23:14:26.750Z"
+    },
+    "brain": {
+      "path": "/home/dw/Projects/agent-sts2/logs/brain.jsonl",
+      "start": 462415284,
+      "end": 495969531,
+      "complete": false,
+      "malformed": 0,
+      "first_ts": "2026-10-13T05:12:55.570Z"
+    },
+    "plans": {
+      "path": "/home/dw/Projects/agent-sts2/logs/run-plans.jsonl",
+      "start": 3437023,
+      "end": 7630777,
+      "complete": false,
+      "malformed": 0,
+      "first_ts": "2026-09-29T16:13:15.243Z"
+    },
+    "config": {
+      "path": "/home/dw/Projects/agent-sts2/logs/run-config.jsonl",
+      "start": 0,
+      "end": 1665507,
+      "complete": true,
+      "malformed": 0,
+      "first_ts": "2026-09-30T00:10:45.685Z"
+    }
+  },
+  "b3": {
+    "attempts": 26,
+    "skipped": 1,
+    "produced_dpr": 13,
+    "coverage": 0.5,
+    "failures": {
+      "below_minimum_samples": 11
+    },
+    "unsupported": 2,
+    "applicable_attempts": 24,
+    "unsupported_only": 2,
+    "candidates": {
+      "observed": 183,
+      "unsupported": 9,
+      "with_dpr": 51,
+      "missing_dpr": 123
+    },
+    "applicable_coverage": 0.5416666666666666,
+    "longest_failure_streak": 7,
+    "trailing_failure_streak": 2,
+    "paired_samples_min": 33,
+    "ms_max": 11227
+  },
+  "construction_pipeline": {
+    "enabled": true,
+    "evaluation_expected": 29,
+    "evaluation_attached": 29,
+    "evaluation_missing": 0,
+    "brain_evaluation": 29,
+    "accepted_evaluation": 29,
+    "accepted_choice_with_evaluation": 28,
+    "plan_due": 6,
+    "accepted_structured_plan": 6,
+    "missing_structured_plan": 0,
+    "saved_structured_plan": 6,
+    "plan_readback": 28,
+    "checkpoint_review_due": 5,
+    "probability_delivered": 0,
+    "admission": {
+      "missing_or_mismatched_prospective_calibration": 25
+    },
+    "evidence": [],
+    "alert": false,
+    "limits": "Payload delivery, accepted output and saved/read-back plans are distinct observations, not causal win-rate evidence. Missing calibration is pending, not a service failure."
+  },
+  "brain": {
+    "observed_questions": 27,
+    "questions_with_dpr": 13,
+    "accepted_with_dpr": 13,
+    "decision_use": "unknown; delivery is not evidence of reasoning or a fixed DPR weight"
+  },
+  "actual_failed_stage_readbacks": [
+    {
+      "floor": 11,
+      "label": "selection/add",
+      "source": {
+        "offset": 1345983116,
+        "length": 21479,
+        "sha256": "76113be7f96a30060589db892571d834cdc8275d79be1feb3b7d13f3223779f9"
+      },
+      "samples": 284,
+      "total_ms": 11128,
+      "decks": 9,
+      "options": 8,
+      "deckCards": 19,
+      "comparison": {
+        "samples": 284,
+        "elapsedMs": 10920,
+        "timedOut": true,
+        "workers": 24,
+        "deadlineMs": 10919.780273000011,
+        "pool": {
+          "queueMs": 0,
+          "coldStart": false,
+          "preparationMs": 1,
+          "firstReplyMs": 51,
+          "chunksPlanned": 1125,
+          "chunksDispatched": 342,
+          "chunksCompleted": 318,
+          "outcomesCompleted": 2622
+        }
+      },
+      "orderSearch": null
+    },
+    {
+      "floor": 12,
+      "label": "rest/plan",
+      "source": {
+        "offset": 1346228196,
+        "length": 99804,
+        "sha256": "9687262eef914db3521e8c799661232d3e6647014295b78613ff31f163dd0ac0"
+      },
+      "samples": 189,
+      "total_ms": 11074,
+      "decks": 13,
+      "options": 12,
+      "deckCards": 21,
+      "comparison": {
+        "samples": 189,
+        "elapsedMs": 10927,
+        "timedOut": true,
+        "workers": 24,
+        "deadlineMs": 10925.843570000026,
+        "pool": {
+          "queueMs": 0,
+          "coldStart": false,
+          "preparationMs": 1,
+          "firstReplyMs": 102,
+          "chunksPlanned": 1625,
+          "chunksDispatched": 336,
+          "chunksCompleted": 312,
+          "outcomesCompleted": 2564
+        }
+      },
+      "orderSearch": null
+    },
+    {
+      "floor": 14,
+      "label": "shop/plan",
+      "source": {
+        "offset": 1346625274,
+        "length": 168820,
+        "sha256": "f396eee2a2964c6a57335642fc1004fe8057da9eb92df619b61b6e01ce3436e0"
+      },
+      "samples": 84,
+      "total_ms": 11042,
+      "decks": 26,
+      "options": 26,
+      "deckCards": 22,
+      "comparison": {
+        "samples": 84,
+        "elapsedMs": 10868,
+        "timedOut": true,
+        "workers": 24,
+        "deadlineMs": 10867.507014999865,
+        "pool": {
+          "queueMs": 0,
+          "coldStart": false,
+          "preparationMs": 2,
+          "firstReplyMs": 85,
+          "chunksPlanned": 3250,
+          "chunksDispatched": 314,
+          "chunksCompleted": 290,
+          "outcomesCompleted": 2402
+        }
+      },
+      "orderSearch": null
+    },
+    {
+      "floor": 15,
+      "label": "reward/card",
+      "source": {
+        "offset": 1346812233,
+        "length": 43758,
+        "sha256": "114a1767da4c089565dd552123c9f6d38e1ad7dff8bb9bf899b1a29df3f1a515"
+      },
+      "samples": 193,
+      "total_ms": 11093,
+      "decks": 4,
+      "options": 4,
+      "deckCards": 25,
+      "comparison": {
+        "samples": 193,
+        "elapsedMs": 10989,
+        "timedOut": true,
+        "workers": 24,
+        "deadlineMs": 10988.883395999903,
+        "pool": {
+          "queueMs": 0,
+          "coldStart": false,
+          "preparationMs": 0,
+          "firstReplyMs": 232,
+          "chunksPlanned": 500,
+          "chunksDispatched": 112,
+          "chunksCompleted": 88,
+          "outcomesCompleted": 797
+        }
+      },
+      "orderSearch": null
+    },
+    {
+      "floor": 16,
+      "label": "rest/plan",
+      "source": {
+        "offset": 1346858918,
+        "length": 128592,
+        "sha256": "60a20e3ae128dfce30fe8809d5d3a0fbf15c67a81c05e6ddb0464abdcb3c2f5f"
+      },
+      "samples": 43,
+      "total_ms": 11033,
+      "decks": 18,
+      "options": 17,
+      "deckCards": 26,
+      "comparison": {
+        "samples": 43,
+        "elapsedMs": 10971,
+        "timedOut": true,
+        "workers": 24,
+        "deadlineMs": 10970.24155500019,
+        "pool": {
+          "queueMs": 0,
+          "coldStart": false,
+          "preparationMs": 2,
+          "firstReplyMs": 259,
+          "chunksPlanned": 2250,
+          "chunksDispatched": 123,
+          "chunksCompleted": 99,
+          "outcomesCompleted": 866
+        }
+      },
+      "orderSearch": null
+    },
+    {
+      "floor": 19,
+      "label": "reward/card",
+      "source": {
+        "offset": 1347469591,
+        "length": 43512,
+        "sha256": "c081319c2f287244c5f374e6cb6e3ca08ad1b6c99eec094e13195fb3c959668b"
+      },
+      "samples": 248,
+      "total_ms": 11122,
+      "decks": 4,
+      "options": 4,
+      "deckCards": 27,
+      "comparison": {
+        "samples": 248,
+        "elapsedMs": 8235,
+        "timedOut": true,
+        "workers": 24,
+        "deadlineMs": 8234.824349999893,
+        "pool": {
+          "queueMs": 0,
+          "coldStart": false,
+          "preparationMs": 1,
+          "firstReplyMs": 119,
+          "chunksPlanned": 500,
+          "chunksDispatched": 143,
+          "chunksCompleted": 119,
+          "outcomesCompleted": 1026
+        }
+      },
+      "orderSearch": {
+        "samples": 89,
+        "elapsedMs": 2746,
+        "timedOut": true,
+        "workers": 24,
+        "deadlineMs": 2745.6052909999853,
+        "pool": {
+          "queueMs": 0,
+          "coldStart": false,
+          "preparationMs": 0,
+          "firstReplyMs": 141,
+          "chunksPlanned": 39,
+          "chunksDispatched": 39,
+          "chunksCompleted": 30,
+          "outcomesCompleted": 271
+        }
+      }
+    },
+    {
+      "floor": 21,
+      "label": "shop/plan",
+      "source": {
+        "offset": 1347565657,
+        "length": 191975,
+        "sha256": "306d840ee2c1db00ae8491d379878928c11476f76c62348bd30c4acc8fc96be7"
+      },
+      "samples": 33,
+      "total_ms": 11026,
+      "decks": 33,
+      "options": 33,
+      "deckCards": 28,
+      "comparison": {
+        "samples": 33,
+        "elapsedMs": 8481,
+        "timedOut": true,
+        "workers": 24,
+        "deadlineMs": 8479.68365199957,
+        "pool": {
+          "queueMs": 0,
+          "coldStart": false,
+          "preparationMs": 6,
+          "firstReplyMs": 72,
+          "chunksPlanned": 4125,
+          "chunksDispatched": 174,
+          "chunksCompleted": 150,
+          "outcomesCompleted": 1288
+        }
+      },
+      "orderSearch": {
+        "samples": 100,
+        "elapsedMs": 2424,
+        "timedOut": false,
+        "workers": 24,
+        "deadlineMs": 2726.036547249998,
+        "pool": {
+          "queueMs": 0,
+          "coldStart": false,
+          "preparationMs": 0,
+          "firstReplyMs": 102,
+          "chunksPlanned": 39,
+          "chunksDispatched": 39,
+          "chunksCompleted": 39,
+          "outcomesCompleted": 300
+        }
+      }
+    },
+    {
+      "floor": 22,
+      "label": "reward/card",
+      "source": {
+        "offset": 1347845496,
+        "length": 43152,
+        "sha256": "01ead2595cc636f45bda5c99465112cb71bdaebbeb7fb24122e042ac38afb705"
+      },
+      "samples": 276,
+      "total_ms": 11086,
+      "decks": 4,
+      "options": 4,
+      "deckCards": 30,
+      "comparison": {
+        "samples": 276,
+        "elapsedMs": 8227,
+        "timedOut": true,
+        "workers": 24,
+        "deadlineMs": 8226.099495000206,
+        "pool": {
+          "queueMs": 0,
+          "coldStart": false,
+          "preparationMs": 0,
+          "firstReplyMs": 95,
+          "chunksPlanned": 500,
+          "chunksDispatched": 155,
+          "chunksCompleted": 131,
+          "outcomesCompleted": 1140
+        }
+      },
+      "orderSearch": {
+        "samples": 90,
+        "elapsedMs": 2746,
+        "timedOut": true,
+        "workers": 24,
+        "deadlineMs": 2743.292255999986,
+        "pool": {
+          "queueMs": 0,
+          "coldStart": false,
+          "preparationMs": 0,
+          "firstReplyMs": 86,
+          "chunksPlanned": 39,
+          "chunksDispatched": 39,
+          "chunksCompleted": 28,
+          "outcomesCompleted": 275
+        }
+      }
+    },
+    {
+      "floor": 24,
+      "label": "rest/plan",
+      "source": {
+        "offset": 1347944114,
+        "length": 145195,
+        "sha256": "9d9b2ab32c7a5ff5e041ac6b54492824550c5818fc4909d41f5e64e1a548e291"
+      },
+      "samples": 75,
+      "total_ms": 11151,
+      "decks": 20,
+      "options": 19,
+      "deckCards": 32,
+      "comparison": {
+        "samples": 75,
+        "elapsedMs": 8839,
+        "timedOut": true,
+        "workers": 24,
+        "deadlineMs": 8835.744198000059,
+        "pool": {
+          "queueMs": 0,
+          "coldStart": false,
+          "preparationMs": 1,
+          "firstReplyMs": 41,
+          "chunksPlanned": 2500,
+          "chunksDispatched": 204,
+          "chunksCompleted": 180,
+          "outcomesCompleted": 1549
+        }
+      },
+      "orderSearch": {
+        "samples": 100,
+        "elapsedMs": 2145,
+        "timedOut": false,
+        "workers": 24,
+        "deadlineMs": 2745.285962749971,
+        "pool": {
+          "queueMs": 0,
+          "coldStart": false,
+          "preparationMs": 0,
+          "firstReplyMs": 40,
+          "chunksPlanned": 39,
+          "chunksDispatched": 39,
+          "chunksCompleted": 39,
+          "outcomesCompleted": 300
+        }
+      }
+    },
+    {
+      "floor": 27,
+      "label": "rest/plan",
+      "source": {
+        "offset": 1348547909,
+        "length": 150903,
+        "sha256": "0da33cba49f9480c6915a0205ed42e1b045c95a2f6625bf881b4dac1c68d0e35"
+      },
+      "samples": 133,
+      "total_ms": 11170,
+      "decks": 21,
+      "options": 20,
+      "deckCards": 33,
+      "comparison": {
+        "samples": 133,
+        "elapsedMs": 9382,
+        "timedOut": true,
+        "workers": 24,
+        "deadlineMs": 9380.79069699999,
+        "pool": {
+          "queueMs": 0,
+          "coldStart": false,
+          "preparationMs": 11,
+          "firstReplyMs": 45,
+          "chunksPlanned": 2625,
+          "chunksDispatched": 371,
+          "chunksCompleted": 347,
+          "outcomesCompleted": 2857
+        }
+      },
+      "orderSearch": {
+        "samples": 100,
+        "elapsedMs": 1565,
+        "timedOut": false,
+        "workers": 24,
+        "deadlineMs": 2736.618512999965,
+        "pool": {
+          "queueMs": 0,
+          "coldStart": false,
+          "preparationMs": 0,
+          "firstReplyMs": 27,
+          "chunksPlanned": 39,
+          "chunksDispatched": 39,
+          "chunksCompleted": 39,
+          "outcomesCompleted": 300
+        }
+      }
+    },
+    {
+      "floor": 28,
+      "label": "reward/card",
+      "source": {
+        "offset": 1348959147,
+        "length": 43118,
+        "sha256": "11f98dd807cf36f98692529a1659cd39692dc334d35764ca4a82235def411e71"
+      },
+      "samples": 121,
+      "total_ms": 11076,
+      "decks": 4,
+      "options": 4,
+      "deckCards": 33,
+      "comparison": {
+        "samples": 121,
+        "elapsedMs": 8222,
+        "timedOut": true,
+        "workers": 24,
+        "deadlineMs": 8221.972970999777,
+        "pool": {
+          "queueMs": 0,
+          "coldStart": false,
+          "preparationMs": 1,
+          "firstReplyMs": 221,
+          "chunksPlanned": 500,
+          "chunksDispatched": 76,
+          "chunksCompleted": 52,
+          "outcomesCompleted": 517
+        }
+      },
+      "orderSearch": {
+        "samples": 41,
+        "elapsedMs": 2743,
+        "timedOut": true,
+        "workers": 24,
+        "deadlineMs": 2741.368580249953,
+        "pool": {
+          "queueMs": 0,
+          "coldStart": false,
+          "preparationMs": 0,
+          "firstReplyMs": 48,
+          "chunksPlanned": 39,
+          "chunksDispatched": 27,
+          "chunksCompleted": 3,
+          "outcomesCompleted": 147
+        }
+      }
+    }
+  ],
+  "saved_and_later_read_plan_bindings": [
+    {
+      "source": {
+        "offset": 7612949,
+        "length": 2727,
+        "sha256": "1417732fd314f13ee4b009d7f3ef38d0c48305d3240587a7956e529e94cfb0f3"
+      },
+      "ts": "2026-10-14T03:05:01.334Z",
+      "made_on_floor": 1,
+      "construction": {
+        "primary": "uncommitted",
+        "alternatives": [
+          "P",
+          "D",
+          "S"
+        ],
+        "checkpoint": 6,
+        "reason": "The starter deck lacks scaling, and its boss simulation shows inadequate damage. Neither offered relic is modeled; draw dilution and complete-core performance remain unknown.",
+        "pivot_if": "Commit when rewards establish poison with Accelerant, repeated Footwork, or supported shiv scaling. Consider discard construction if Tingsha or Tough Bandages appears."
+      },
+      "later_actual_brain_readbacks": [
+        {
+          "source": {
+            "offset": 494282254,
+            "length": 22496,
+            "sha256": "60e99f3a5cfb453484698b164d1bb03a463caf825cbf1cc799e7777d9aea8d10"
+          },
+          "ts": "2026-10-14T03:06:27.667Z",
+          "floor": 1,
+          "accepted": true,
+          "label": "map/route-plan",
+          "checkpoint_reached_and_review_task_present": false
+        },
+        {
+          "source": {
+            "offset": 494304750,
+            "length": 68408,
+            "sha256": "5656cf7a6a5c8de7d86ac23c79987bd18cd63b13856ab041ff6de06b1be99c02"
+          },
+          "ts": "2026-10-14T03:08:11.742Z",
+          "floor": 2,
+          "accepted": true,
+          "label": "reward/card",
+          "checkpoint_reached_and_review_task_present": false
+        },
+        {
+          "source": {
+            "offset": 494373158,
+            "length": 69243,
+            "sha256": "0f8826ad5cf3b6eb3668762c4fc214b33f47f1fce17eb246e7eff0a241d0376a"
+          },
+          "ts": "2026-10-14T03:10:29.453Z",
+          "floor": 3,
+          "accepted": true,
+          "label": "reward/card",
+          "checkpoint_reached_and_review_task_present": false
+        },
+        {
+          "source": {
+            "offset": 494442401,
+            "length": 70707,
+            "sha256": "0d530c0cd83039a795dbfcc7c782af472aa6d25393e0dc70379f546a46457b0b"
+          },
+          "ts": "2026-10-14T03:11:41.055Z",
+          "floor": 4,
+          "accepted": true,
+          "label": "reward/card",
+          "checkpoint_reached_and_review_task_present": false
+        },
+        {
+          "source": {
+            "offset": 494513108,
+            "length": 70551,
+            "sha256": "d3e140cdd3e0df9ec0f9efa1d315ee6942869d704ccb2ac6fec41047639f5746"
+          },
+          "ts": "2026-10-14T03:12:55.427Z",
+          "floor": 5,
+          "accepted": true,
+          "label": "reward/card",
+          "checkpoint_reached_and_review_task_present": false
+        },
+        {
+          "source": {
+            "offset": 494583659,
+            "length": 54167,
+            "sha256": "281f81b83fae104010e2eb3bc5252b6264cd0c5df9bcfe5d233caa2aaa5d1791"
+          },
+          "ts": "2026-10-14T03:14:22.953Z",
+          "floor": 6,
+          "accepted": true,
+          "label": "event/plan",
+          "checkpoint_reached_and_review_task_present": true
+        }
+      ]
+    },
+    {
+      "source": {
+        "offset": 7615676,
+        "length": 2708,
+        "sha256": "93387beb37ef6de494441d13b1ae8b1c62f307a000d7c4740dac4c4950362323"
+      },
+      "ts": "2026-10-14T03:14:22.959Z",
+      "made_on_floor": 6,
+      "construction": {
+        "primary": "uncommitted",
+        "alternatives": [
+          "P",
+          "D",
+          "S"
+        ],
+        "checkpoint": 10,
+        "reason": "Baseline simulated DPR 17.45 and near-full HP loss expose damage and defense deficiencies. No core is assembled; enchantment effects, draw dilution, and complete-core performance remain unknown.",
+        "pivot_if": "Favor P with poison, Accelerant, and defense; D with repeated Footwork and sustained output; S with shiv supply, scaling, and defensive support."
+      },
+      "later_actual_brain_readbacks": [
+        {
+          "source": {
+            "offset": 494637826,
+            "length": 127272,
+            "sha256": "890d14a8e9cc9f03e4f2242fe7ead449aaddb19c54f046c66cedd1196d7392bc"
+          },
+          "ts": "2026-10-14T03:16:26.307Z",
+          "floor": 7,
+          "accepted": true,
+          "label": "rest/plan",
+          "checkpoint_reached_and_review_task_present": false
+        },
+        {
+          "source": {
+            "offset": 494765098,
+            "length": 74088,
+            "sha256": "59ec9a06cebab83822d96c8587963e8d7bd479a7950076fd94cdd1a02e58ddc4"
+          },
+          "ts": "2026-10-14T03:19:35.969Z",
+          "floor": 8,
+          "accepted": true,
+          "label": "reward/card",
+          "checkpoint_reached_and_review_task_present": false
+        },
+        {
+          "source": {
+            "offset": 494839186,
+            "length": 73724,
+            "sha256": "d07816697b83f6d0550317adc58d3458698a7a0584a50f84e24a29fa5db9c478"
+          },
+          "ts": "2026-10-14T03:21:53.140Z",
+          "floor": 9,
+          "accepted": true,
+          "label": "reward/card",
+          "checkpoint_reached_and_review_task_present": false
+        },
+        {
+          "source": {
+            "offset": 494912910,
+            "length": 52560,
+            "sha256": "c009c8513aacfe4742c113d5bec34b0ffedb101fafd1302d1b00eba5c67e684b"
+          },
+          "ts": "2026-10-14T03:23:50.633Z",
+          "floor": 11,
+          "accepted": true,
+          "label": "event/choose",
+          "checkpoint_reached_and_review_task_present": true
+        }
+      ]
+    },
+    {
+      "source": {
+        "offset": 7618384,
+        "length": 2793,
+        "sha256": "c7d371401d970013206ef8e0cce92cea867810dc50bcbb506717a933b4d291c4"
+      },
+      "ts": "2026-10-14T03:23:50.643Z",
+      "made_on_floor": 11,
+      "construction": {
+        "primary": "uncommitted",
+        "alternatives": [
+          "P",
+          "D",
+          "S"
+        ],
+        "checkpoint": 14,
+        "reason": "No qualifying core exists. Baseline damage and boss survival are inadequate; prioritize usable poison and scalable defense. Event-card identities, draw dilution, and complete-core performance remain unknown.",
+        "pivot_if": "Favor P when poison, Accelerant, and defense are acquired; D with repeated Footwork and sustained output; S only with shiv supply, scaling, and defensive support."
+      },
+      "later_actual_brain_readbacks": [
+        {
+          "source": {
+            "offset": 494965470,
+            "length": 34971,
+            "sha256": "67b9dd8fb662bb26891fdf0ba6be52aa922f7be3f6dfbe6194c256277c3646e3"
+          },
+          "ts": "2026-10-14T03:24:21.309Z",
+          "floor": 11,
+          "accepted": true,
+          "label": "selection/add",
+          "checkpoint_reached_and_review_task_present": false
+        },
+        {
+          "source": {
+            "offset": 495000441,
+            "length": 97842,
+            "sha256": "f7d25e27ad96cfb11703b9c51ee85026d85d5702d9d42452fd48b41bd4bcaa19"
+          },
+          "ts": "2026-10-14T03:24:52.081Z",
+          "floor": 11,
+          "accepted": true,
+          "label": "selection/add",
+          "checkpoint_reached_and_review_task_present": false
+        },
+        {
+          "source": {
+            "offset": 495098283,
+            "length": 44046,
+            "sha256": "aa8216724313ee338487d21466e46d905f85673f2e6416dea0c4b90bf8551bb7"
+          },
+          "ts": "2026-10-14T03:25:29.232Z",
+          "floor": 12,
+          "accepted": true,
+          "label": "rest/plan",
+          "checkpoint_reached_and_review_task_present": false
+        },
+        {
+          "source": {
+            "offset": 495142329,
+            "length": 77148,
+            "sha256": "ec140385f1aaa9ba493cea6da04dc3e197fbd916db5899a231f6203d41a232c5"
+          },
+          "ts": "2026-10-14T03:26:51.819Z",
+          "floor": 13,
+          "accepted": true,
+          "label": "reward/card",
+          "checkpoint_reached_and_review_task_present": false
+        },
+        {
+          "source": {
+            "offset": 495219477,
+            "length": 50625,
+            "sha256": "b60159056726b7165fa09016d4a65c143f4923c5bcd82f168650575dd5f31b08"
+          },
+          "ts": "2026-10-14T03:28:33.771Z",
+          "floor": 14,
+          "accepted": true,
+          "label": "shop/plan",
+          "checkpoint_reached_and_review_task_present": false
+        },
+        {
+          "source": {
+            "offset": 495270102,
+            "length": 38335,
+            "sha256": "bf296b7857ed2b71f033f00716daee4a3e839e4fe9080019b6d0556122bb2c6d"
+          },
+          "ts": "2026-10-14T03:30:17.677Z",
+          "floor": 15,
+          "accepted": true,
+          "label": "reward/card",
+          "checkpoint_reached_and_review_task_present": true
+        }
+      ]
+    },
+    {
+      "source": {
+        "offset": 7621177,
+        "length": 2962,
+        "sha256": "80f77ef24c98b869cedbada82fc875542c39425aa52bc57fc3a38e5eb4c54a87"
+      },
+      "ts": "2026-10-14T03:30:17.682Z",
+      "made_on_floor": 15,
+      "construction": {
+        "primary": "P",
+        "alternatives": [
+          "D",
+          "R"
+        ],
+        "checkpoint": 18,
+        "reason": "Existing poison, Footwork and replay Defend favor P. Flask adds sustained single-target output but increases two-energy competition; Accelerant remains missing. Simulations, draw dilution and complete-core performance are unknown.",
+        "pivot_if": "Favor D if another Footwork and efficient block arrive; favor R if Tingsha or Tough Bandages appears. Reassess P if poison setup repeatedly displaces necessary defense."
+      },
+      "later_actual_brain_readbacks": [
+        {
+          "source": {
+            "offset": 495308437,
+            "length": 44498,
+            "sha256": "eac5ca82b2d76353e931362cf6167838eea8e571680078d4845392773e4587e0"
+          },
+          "ts": "2026-10-14T03:30:52.437Z",
+          "floor": 16,
+          "accepted": true,
+          "label": "rest/plan",
+          "checkpoint_reached_and_review_task_present": false
+        },
+        {
+          "source": {
+            "offset": 495352935,
+            "length": 34895,
+            "sha256": "94394435401c7355ada8e6839cb6a76881dd01e5d49ba48df48fa9e32c75a8c7"
+          },
+          "ts": "2026-10-14T03:33:12.258Z",
+          "floor": 17,
+          "accepted": true,
+          "label": "reward/card",
+          "checkpoint_reached_and_review_task_present": false
+        },
+        {
+          "source": {
+            "offset": 495387830,
+            "length": 45792,
+            "sha256": "1f93d88274ea0c8a935935842a0300592e16f489acd94216536b7b44248aff93"
+          },
+          "ts": "2026-10-14T03:35:57.589Z",
+          "floor": 18,
+          "accepted": true,
+          "label": "event/act-plan",
+          "checkpoint_reached_and_review_task_present": true
+        }
+      ]
+    },
+    {
+      "source": {
+        "offset": 7624139,
+        "length": 3063,
+        "sha256": "6acb22639da9f6aaa40c6c59026674f648dd76216a453fd957223556cc65abb5"
+      },
+      "ts": "2026-10-14T03:35:57.594Z",
+      "made_on_floor": 18,
+      "construction": {
+        "primary": "P",
+        "alternatives": [
+          "D",
+          "R"
+        ],
+        "checkpoint": 24,
+        "reason": "Existing poison, Footwork and replay Defend support P, but Accelerant is missing and expensive poison competes with defense. Cocoa helps opening setup only. Full-fight simulations, draw dilution and complete-core performance remain unknown.",
+        "pivot_if": "Favor D if another Footwork and efficient repeatable block arrive while output remains adequate. Favor R after acquiring Tingsha or Tough Bandages. Reconsider expensive poison additions if setup repeatedly displaces necessary defense."
+      },
+      "later_actual_brain_readbacks": [
+        {
+          "source": {
+            "offset": 495433622,
+            "length": 45013,
+            "sha256": "c433a6cfd392e2ae70ba2e486d6de5cab32f7a0f05777dda5d3fa17e01d43c7b"
+          },
+          "ts": "2026-10-14T03:37:43.700Z",
+          "floor": 19,
+          "accepted": true,
+          "label": "reward/card",
+          "checkpoint_reached_and_review_task_present": false
+        },
+        {
+          "source": {
+            "offset": 495478635,
+            "length": 50220,
+            "sha256": "85d48edd6eb119231c7f016d6fcba998f141d18507275ff2ac8418f8f2c95809"
+          },
+          "ts": "2026-10-14T03:38:34.758Z",
+          "floor": 20,
+          "accepted": true,
+          "label": "event/choose",
+          "checkpoint_reached_and_review_task_present": false
+        },
+        {
+          "source": {
+            "offset": 495528855,
+            "length": 59344,
+            "sha256": "a4d75d64c8d5e073a14dff4cecbfe0d5cec0866f1002ba6d5da28a3194735c48"
+          },
+          "ts": "2026-10-14T03:39:38.641Z",
+          "floor": 21,
+          "accepted": true,
+          "label": "shop/plan",
+          "checkpoint_reached_and_review_task_present": false
+        },
+        {
+          "source": {
+            "offset": 495588199,
+            "length": 46318,
+            "sha256": "f79e6d2ff8d8201e8f54d55796ba0f6bc01fb0e0656e56a131b91ff6df4ed971"
+          },
+          "ts": "2026-10-14T03:41:16.812Z",
+          "floor": 22,
+          "accepted": true,
+          "label": "reward/card",
+          "checkpoint_reached_and_review_task_present": false
+        },
+        {
+          "source": {
+            "offset": 495634517,
+            "length": 53074,
+            "sha256": "bcb83604d9a90e414a6f5b61069cbe6ca25e000bf10976ef512014d1edb25bf2"
+          },
+          "ts": "2026-10-14T03:42:03.882Z",
+          "floor": 23,
+          "accepted": true,
+          "label": "event/choose",
+          "checkpoint_reached_and_review_task_present": false
+        },
+        {
+          "source": {
+            "offset": 495687591,
+            "length": 58481,
+            "sha256": "1cbbc8e5da3e9fd8bf77c8a3c8c5becb4492f51700e63aa017d54a007bf6a318"
+          },
+          "ts": "2026-10-14T03:43:40.404Z",
+          "floor": 24,
+          "accepted": true,
+          "label": "rest/plan",
+          "checkpoint_reached_and_review_task_present": false
+        },
+        {
+          "source": {
+            "offset": 495746072,
+            "length": 112874,
+            "sha256": "3c4cf4aebe0c8a952ef4d2eb18d26a9ad0f756ea2f61a777fbc82a372758cfba"
+          },
+          "ts": "2026-10-14T03:47:47.931Z",
+          "floor": 25,
+          "accepted": true,
+          "label": "reward/card",
+          "checkpoint_reached_and_review_task_present": true
+        }
+      ]
+    },
+    {
+      "source": {
+        "offset": 7627202,
+        "length": 3575,
+        "sha256": "a1eb57c93ed2d19cae121e0a998b81bbdb9a66ef4b5d69f4bce4095062d0285d"
+      },
+      "ts": "2026-10-14T03:47:47.936Z",
+      "made_on_floor": 25,
+      "construction": {
+        "primary": "D",
+        "alternatives": [
+          "P"
+        ],
+        "checkpoint": 28,
+        "reason": "Three Footworks, Backflip and poison support D; P lacks Accelerant. Simulated DPR: skip 26.70; Roll 24.39 (-2.31±0.71); Footwork 24.40 (-2.29±0.70); Cloak 24.86 (-1.84±0.70), differences ± paired standard errors. Cloak increases block from 39.37 to 42.96; every option loses 38 HP with zero sampled wins. Footwork coverage is 93/103 versus 109/127 valid traces, first play 1.67 versus 1.64 turns. Missing and unmatched traces leave dilution uncertain. Cloak's favorable Act 2 outcomes are observation",
+        "pivot_if": "Favor P after acquiring Accelerant with reliably executable poison and protection. Consider R only after obtaining a discard relic. Reassess slow additions when setup displaces necessary defense."
+      },
+      "later_actual_brain_readbacks": [
+        {
+          "source": {
+            "offset": 495858946,
+            "length": 61265,
+            "sha256": "3b515fc7f8b8cbb2def7211b891360b9d42c3c9904503f1c3becd00a246d7961"
+          },
+          "ts": "2026-10-14T03:48:29.484Z",
+          "floor": 27,
+          "accepted": true,
+          "label": "rest/plan",
+          "checkpoint_reached_and_review_task_present": false
+        },
+        {
+          "source": {
+            "offset": 495920211,
+            "length": 49320,
+            "sha256": "5aa55ace5e7006fab7a2210e4992ce0c5c975e51246131208148fe0ef5d87014"
+          },
+          "ts": "2026-10-14T03:50:00.660Z",
+          "floor": 28,
+          "accepted": true,
+          "label": "reward/card",
+          "checkpoint_reached_and_review_task_present": false
+        }
+      ]
+    }
+  ],
+  "current_registered_owners": {
+    "20261014-114302-strategy-proposal": {
+      "task": "strategy-proposal",
+      "state": "running",
+      "pid": 173388,
+      "worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261014-114302",
+      "feature_request": null
+    },
+    "20261014-114302-s2-strategy-proposal": {
+      "task": "strategy-proposal",
+      "state": "running",
+      "pid": 173618,
+      "worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261014-114302-s2",
+      "feature_request": null
+    },
+    "20261014-114302-fix-batch": {
+      "task": "fix-batch",
+      "state": "running",
+      "pid": 173857,
+      "worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302",
+      "feature_request": null
+    }
+  },
+  "performance_parent": "v5-dpr-health-20261013",
+  "no_construction_payload_or_structured_plan_gap_observed": true,
+  "DPR_throughput_and_full_core_prospective_calibration_remain_pending": true,
+  "cpu_load_is_observation_not_established_cause": true,
+  "outcomes_not_paired_samples_or_independent_runs": true,
+  "current_natural_run_is_not_proof_A10_R339_preview_was_consumed": true,
+  "no_restart_new_learning_threshold_change_or_routine_notification": true
+}

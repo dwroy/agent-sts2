@@ -1,0 +1,43 @@
+{
+  "base": "530d786d85f192fe5977f88e1f8d065507f8264b",
+  "source": "5ee86d1ef500d52dbf18177238f2f090afa17c4b",
+  "negative_control": {
+    "without_fix": 1,
+    "restored": 0
+  },
+  "source_checks": {
+    "tsc": 0,
+    "vitest": 0,
+    "files": 386,
+    "cases": 3809,
+    "reruns": 0
+  },
+  "gitleaks": 0,
+  "matching_bug_infra_ledger_entries": [],
+  "source_clean": true,
+  "live": {
+    "merged": null,
+    "source": "5ee86d1ef500d52dbf18177238f2f090afa17c4b",
+    "observed_live": "30569977308fe1bbc688053029c3c6ec84d323ba",
+    "premerge": null,
+    "lock_attempts": [
+      {
+        "log": "live-integration.log",
+        "wait_seconds": 55,
+        "exit_code": 1
+      },
+      {
+        "log": "live-integration-retry.log",
+        "wait_seconds": 55,
+        "exit_code": 75
+      },
+      {
+        "log": "live-integration-final.log",
+        "wait_seconds": 55,
+        "exit_code": 75
+      }
+    ],
+    "error": "三次live-merge.lock等待各55秒超时；未执行刷新/预检/合并/合后测试，不改live，不登记上线或版本。"
+  },
+  "gameplay_changed": false
+}

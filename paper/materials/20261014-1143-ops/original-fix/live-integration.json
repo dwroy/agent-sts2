@@ -1,0 +1,24 @@
+{
+  "merged": null,
+  "source": "5ee86d1ef500d52dbf18177238f2f090afa17c4b",
+  "observed_live": "30569977308fe1bbc688053029c3c6ec84d323ba",
+  "premerge": null,
+  "lock_attempts": [
+    {
+      "log": "live-integration.log",
+      "wait_seconds": 55,
+      "exit_code": 1
+    },
+    {
+      "log": "live-integration-retry.log",
+      "wait_seconds": 55,
+      "exit_code": 75
+    },
+    {
+      "log": "live-integration-final.log",
+      "wait_seconds": 55,
+      "exit_code": 75
+    }
+  ],
+  "error": "三次live-merge.lock等待各55秒超时；未执行刷新/预检/合并/合后测试，不改live，不登记上线或版本。"
+}

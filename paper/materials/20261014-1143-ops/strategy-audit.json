@@ -1,0 +1,6565 @@
+{
+  "at": "2026-10-14 11:55:17 CST",
+  "batch": "20261014-111301-strategy-proposal",
+  "base": "a32d1efb3330adbc88073e79cbfc694de2bb042c",
+  "source_clean": true,
+  "original_state": "done",
+  "rc": 0,
+  "merged": null,
+  "implementation_domains": [
+    "combat",
+    "potion",
+    "sl",
+    "structure"
+  ],
+  "tests": {
+    "tsc": null,
+    "vitest": null,
+    "cases": null
+  },
+  "proposal_results": [
+    {
+      "id": "silent-proposal-89354805ee4d7e77",
+      "state": "waiting",
+      "reason": "数值子机制已有实证；缺猛扑减费、猎杀者延迟抽牌、本能反应弃牌触发与神化传播的完整冻结生产配对，以及跨抽牌/选择/药水/SL/换战/接续的实际施放持续身份；原完整请求未实现。"
+    },
+    {
+      "id": "silent-proposal-f2bfceddb1898dca",
+      "state": "waiting",
+      "reason": "缺相同起点、模型覆盖、总预算和固定随机池下现有/分阶段MC配对、样本成熟度及候选稳定性曲线；没有神化覆盖补齐后的同题对照，不能据707ms或一败拟新预算、血价或持药参数。"
+    },
+    {
+      "id": "silent-proposal-283a164780d11e69",
+      "state": "waiting",
+      "reason": "缺原经验所要求的实际施放持续身份和三种未接入模板的升级交互配对；共享问题和已有子源码不能证明整项duplicate。"
+    },
+    {
+      "id": "silent-proposal-ebbfe3b97548756d",
+      "state": "waiting",
+      "reason": "缺15条机制逐项的完整属性组合、升级联动、状态期限及资源/路线消费者冻结验收；本批端点及已有子公式不覆盖整组。"
+    },
+    {
+      "id": "silent-proposal-e5b87be50f28f311",
+      "state": "waiting",
+      "reason": "缺抽牌、选择、药水和重规划后的完整候选持续归属、未选原线及完整独立后继；113个片段的actual_full_candidate_result均为null，不能用整轮端点关闭整条审计或改SL血价。"
+    },
+    {
+      "id": "silent-proposal-49632bc4878fb597",
+      "state": "waiting",
+      "reason": "本局无正敏捷实证，且没有逐击力量、正负敏捷、虚弱及独立成长四路可唯一分源的完整冻结生产校准/后继；不据局部端点加统一保血或输出权重。"
+    },
+    {
+      "id": "silent-proposal-66532328a585941f",
+      "state": "waiting",
+      "reason": "缺同HP、牌组、药水和完整抽序下另一启动/构筑顺序的整场对照及可复现收益函数；不能拟合启动阈值或固定组件加分。"
+    },
+    {
+      "id": "silent-proposal-43a76a31ba7bdcfa",
+      "state": "waiting",
+      "reason": "缺A10吸取、负敏捷、毒与后继移动的完整冻结生产整战配对，以及同资源/完整抽序下另一完整SL线；不由首试胜利更改SL范围或阈值。"
+    },
+    {
+      "id": "silent-proposal-5264153a4a4b0e5c",
+      "state": "waiting",
+      "reason": "缺A10召唤、航行增力、幻象复现/退场的完整生产调用校准及另一focus完整后继；已有召唤子源码不能登记整项duplicate或规定首杀。"
+    },
+    {
+      "id": "silent-proposal-bddfa690a84e03d0",
+      "state": "waiting",
+      "reason": "缺当前A10睡眠、伤害唤醒、眩晕接续、独立成长的完整冻结生产校准及同抽换序完整后继；四败不够拟合输出血价或固定杀序。"
+    }
+  ],
+  "raw_counts": {
+    "runs": 6,
+    "states": 3432,
+    "decisions": 3306,
+    "sl-attempts": 29,
+    "run-config": 6
+  },
+  "all6779_original_source_copy_SHA_and_input_bodies_match": true,
+  "source_manifest_sha256": "abe523ad0bd808d6c4d0497fefac5ae521c9e6f8de5081a348bf3f925e185b95",
+  "nine_original_fixed_evidence_checks": {
+    "checks": [
+      {
+        "label": "VLZ F35T1 神化实际能量前后",
+        "actual": [
+          7,
+          5
+        ],
+        "expected": [
+          7,
+          5
+        ]
+      },
+      {
+        "label": "VLZ F35T1 DEFEND_SILENT",
+        "actual": [
+          5,
+          8
+        ],
+        "expected": [
+          5,
+          8
+        ]
+      },
+      {
+        "label": "VLZ F35T1 STRIKE_SILENT",
+        "actual": [
+          7,
+          10
+        ],
+        "expected": [
+          7,
+          10
+        ]
+      },
+      {
+        "label": "VLZ F35T1 DAGGER_SPRAY",
+        "actual": [
+          5,
+          7
+        ],
+        "expected": [
+          5,
+          7
+        ]
+      },
+      {
+        "label": "8JRE F33 首/第三试T2同起点指纹",
+        "actual": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:326:0:true\",\"event\":\"\",\"gold\":40,\"hand\":\"0:FRANTIC_ESCAPE:true|1:POISONED_STAB:true|2:STRIKE_SILENT:true|3:LEADING_STRIKE:true|4:PIERCING_WAIL:true|5:STRIKE_SILENT:true\",\"hp\":47,\"maxHp\":72,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"3:0:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"STRENGTH_POWER:1|AFTERIMAGE_POWER:1|DEXTERITY_POWER:2\",\"rewards\":\"\",\"run\":\"8JRE1C4H4Z2W\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":2}",
+        "expected": "{\"actions\":[\"end_turn\",\"play_card\",\"save_and_quit\"],\"combat\":true,\"enemies\":\"0:326:0:true\",\"event\":\"\",\"gold\":40,\"hand\":\"0:FRANTIC_ESCAPE:true|1:POISONED_STAB:true|2:STRIKE_SILENT:true|3:LEADING_STRIKE:true|4:PIERCING_WAIL:true|5:STRIKE_SILENT:true\",\"hp\":47,\"maxHp\":72,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"3:0:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"STRENGTH_POWER:1|AFTERIMAGE_POWER:1|DEXTERITY_POWER:2\",\"rewards\":\"\",\"run\":\"8JRE1C4H4Z2W\",\"screen\":\"COMBAT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":2}"
+      },
+      {
+        "label": "VLZ F43T5 猛扑后免费技能层",
+        "actual": 1,
+        "expected": 1
+      },
+      {
+        "label": "VLZ F43T5 生存者后免费层消失",
+        "actual": false,
+        "expected": false
+      },
+      {
+        "label": "VLZ F43T5 生存者净挡/实费",
+        "actual": [
+          15,
+          0
+        ],
+        "expected": [
+          15,
+          0
+        ]
+      },
+      {
+        "label": "VLZ F35T2→T3 免费层保留",
+        "actual": [
+          1,
+          1
+        ],
+        "expected": [
+          1,
+          1
+        ]
+      }
+    ],
+    "turn_groups": [
+      {
+        "run_id": "CA5KE8GFJ9X2",
+        "floor": 13,
+        "turn": 1,
+        "before": {
+          "line": 273237,
+          "hp": 3,
+          "block": 0,
+          "energy": 0,
+          "powers": {},
+          "enemies": [
+            {
+              "id": "SEWER_CLAM",
+              "hp": 58,
+              "block": 0,
+              "powers": {
+                "PLATING_POWER": 9
+              },
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Attack",
+                  "label": "11",
+                  "damage": 11,
+                  "hits": 1,
+                  "total_damage": 11,
+                  "status_card_count": null
+                }
+              ]
+            }
+          ],
+          "hand": []
+        },
+        "after": {
+          "line": 273246,
+          "hp": 2,
+          "block": 0,
+          "energy": 0,
+          "powers": {
+            "THORNS_POWER": 3
+          },
+          "enemies": [
+            {
+              "id": "SEWER_CLAM",
+              "hp": 40,
+              "block": 0,
+              "powers": {
+                "PLATING_POWER": 9,
+                "VULNERABLE_POWER": 1,
+                "WEAK_POWER": 1
+              },
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Attack",
+                  "label": "8",
+                  "damage": 8,
+                  "hits": 1,
+                  "total_damage": 8,
+                  "status_card_count": null
+                }
+              ]
+            }
+          ],
+          "hand": []
+        }
+      },
+      {
+        "run_id": "CA5KE8GFJ9X2",
+        "floor": 13,
+        "turn": 3,
+        "before": {
+          "line": 273252,
+          "hp": 2,
+          "block": 0,
+          "energy": 3,
+          "powers": {
+            "THORNS_POWER": 3
+          },
+          "enemies": [
+            {
+              "id": "SEWER_CLAM",
+              "hp": 39,
+              "block": 8,
+              "powers": {
+                "PLATING_POWER": 8,
+                "STRENGTH_POWER": 4
+              },
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Attack",
+                  "label": "15",
+                  "damage": 15,
+                  "hits": 1,
+                  "total_damage": 15,
+                  "status_card_count": null
+                }
+              ]
+            }
+          ],
+          "hand": [
+            {
+              "id": "STRIKE_SILENT",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "Damage",
+                  "base_value": 6,
+                  "current_value": 6,
+                  "enchanted_value": 6,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "STRIKE_SILENT",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "Damage",
+                  "base_value": 6,
+                  "current_value": 6,
+                  "enchanted_value": 6,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "SUCKER_PUNCH",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "Damage",
+                  "base_value": 8,
+                  "current_value": 8,
+                  "enchanted_value": 8,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                },
+                {
+                  "name": "WeakPower",
+                  "base_value": 1,
+                  "current_value": 1,
+                  "enchanted_value": 1,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "BACKFLIP",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "Block",
+                  "base_value": 5,
+                  "current_value": 5,
+                  "enchanted_value": 5,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                },
+                {
+                  "name": "Cards",
+                  "base_value": 2,
+                  "current_value": 2,
+                  "enchanted_value": 2,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "DEFEND_SILENT",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "Block",
+                  "base_value": 5,
+                  "current_value": 5,
+                  "enchanted_value": 5,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            }
+          ]
+        },
+        "after": {
+          "line": 273257,
+          "hp": 2,
+          "block": 13,
+          "energy": 0,
+          "powers": {
+            "THORNS_POWER": 3
+          },
+          "enemies": [
+            {
+              "id": "SEWER_CLAM",
+              "hp": 39,
+              "block": 0,
+              "powers": {
+                "PLATING_POWER": 8,
+                "STRENGTH_POWER": 4,
+                "WEAK_POWER": 1
+              },
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Attack",
+                  "label": "11",
+                  "damage": 11,
+                  "hits": 1,
+                  "total_damage": 11,
+                  "status_card_count": null
+                }
+              ]
+            }
+          ],
+          "hand": [
+            {
+              "id": "STRIKE_SILENT",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "Damage",
+                  "base_value": 6,
+                  "current_value": 6,
+                  "enchanted_value": 6,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "DEFEND_SILENT",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "Block",
+                  "base_value": 5,
+                  "current_value": 5,
+                  "enchanted_value": 5,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "DEFEND_SILENT",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "Block",
+                  "base_value": 5,
+                  "current_value": 5,
+                  "enchanted_value": 5,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "run_id": "CA5KE8GFJ9X2",
+        "floor": 13,
+        "turn": 5,
+        "before": {
+          "line": 273263,
+          "hp": 2,
+          "block": 0,
+          "energy": 3,
+          "powers": {
+            "THORNS_POWER": 3
+          },
+          "enemies": [
+            {
+              "id": "SEWER_CLAM",
+              "hp": 22,
+              "block": 6,
+              "powers": {
+                "PLATING_POWER": 6,
+                "STRENGTH_POWER": 8
+              },
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Attack",
+                  "label": "19",
+                  "damage": 19,
+                  "hits": 1,
+                  "total_damage": 19,
+                  "status_card_count": null
+                }
+              ]
+            }
+          ],
+          "hand": [
+            {
+              "id": "STRIKE_SILENT",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "Damage",
+                  "base_value": 6,
+                  "current_value": 6,
+                  "enchanted_value": 6,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "DEFEND_SILENT",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "Block",
+                  "base_value": 5,
+                  "current_value": 5,
+                  "enchanted_value": 5,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "ASCENDERS_BANE",
+              "upgraded": false,
+              "cost": -1,
+              "values": []
+            },
+            {
+              "id": "DEFEND_SILENT",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "Block",
+                  "base_value": 5,
+                  "current_value": 5,
+                  "enchanted_value": 5,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "NEUTRALIZE",
+              "upgraded": false,
+              "cost": 0,
+              "values": [
+                {
+                  "name": "Damage",
+                  "base_value": 3,
+                  "current_value": 3,
+                  "enchanted_value": 3,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                },
+                {
+                  "name": "WeakPower",
+                  "base_value": 1,
+                  "current_value": 1,
+                  "enchanted_value": 1,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            }
+          ]
+        },
+        "after": {
+          "line": 273269,
+          "hp": 0,
+          "block": 0,
+          "energy": 0,
+          "powers": {},
+          "enemies": [
+            {
+              "id": "SEWER_CLAM",
+              "hp": 16,
+              "block": 0,
+              "powers": {
+                "PLATING_POWER": 5,
+                "STRENGTH_POWER": 8,
+                "WEAK_POWER": 1
+              },
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Attack",
+                  "label": "14",
+                  "damage": 14,
+                  "hits": 1,
+                  "total_damage": 14,
+                  "status_card_count": null
+                }
+              ]
+            }
+          ],
+          "hand": []
+        }
+      },
+      {
+        "run_id": "5PM6JAQG6FNQ",
+        "floor": 39,
+        "turn": 2,
+        "before": {
+          "line": 274341,
+          "hp": 29,
+          "block": 0,
+          "energy": 5,
+          "powers": {
+            "THORNS_POWER": 3,
+            "STRENGTH_POWER": -2,
+            "DEXTERITY_POWER": -2
+          },
+          "enemies": [
+            {
+              "id": "THE_LOST",
+              "hp": 42,
+              "block": 0,
+              "powers": {
+                "POSSESS_STRENGTH_POWER": 1,
+                "WEAK_POWER": 1,
+                "STRENGTH_POWER": 2
+              },
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Attack",
+                  "label": "5[font_size=18]×2[/font_size]",
+                  "damage": 5,
+                  "hits": 2,
+                  "total_damage": 10,
+                  "status_card_count": null
+                }
+              ]
+            },
+            {
+              "id": "THE_FORGOTTEN",
+              "hp": 78,
+              "block": 8,
+              "powers": {
+                "POSSESS_SPEED_POWER": 1,
+                "WEAK_POWER": 1,
+                "DEXTERITY_POWER": 2
+              },
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Attack",
+                  "label": "12",
+                  "damage": 12,
+                  "hits": 1,
+                  "total_damage": 12,
+                  "status_card_count": null
+                }
+              ]
+            }
+          ],
+          "hand": [
+            {
+              "id": "BACKFLIP",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "Block",
+                  "base_value": 5,
+                  "current_value": 3,
+                  "enchanted_value": 5,
+                  "is_modified": true,
+                  "was_just_upgraded": false
+                },
+                {
+                  "name": "Cards",
+                  "base_value": 2,
+                  "current_value": 2,
+                  "enchanted_value": 2,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "DEFEND_SILENT",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "Block",
+                  "base_value": 5,
+                  "current_value": 3,
+                  "enchanted_value": 5,
+                  "is_modified": true,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "STRIKE_SILENT",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "Damage",
+                  "base_value": 6,
+                  "current_value": 4,
+                  "enchanted_value": 6,
+                  "is_modified": true,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "DEFEND_SILENT",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "Block",
+                  "base_value": 5,
+                  "current_value": 3,
+                  "enchanted_value": 5,
+                  "is_modified": true,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "DAGGER_SPRAY",
+              "upgraded": true,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "Damage",
+                  "base_value": 6,
+                  "current_value": 4,
+                  "enchanted_value": 6,
+                  "is_modified": true,
+                  "was_just_upgraded": false
+                }
+              ]
+            }
+          ]
+        },
+        "after": {
+          "line": 274346,
+          "hp": 29,
+          "block": 12,
+          "energy": 0,
+          "powers": {
+            "THORNS_POWER": 3,
+            "STRENGTH_POWER": -2,
+            "DEXTERITY_POWER": -2
+          },
+          "enemies": [
+            {
+              "id": "THE_LOST",
+              "hp": 29,
+              "block": 0,
+              "powers": {
+                "POSSESS_STRENGTH_POWER": 1,
+                "WEAK_POWER": 1,
+                "STRENGTH_POWER": 2
+              },
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Attack",
+                  "label": "5[font_size=18]×2[/font_size]",
+                  "damage": 5,
+                  "hits": 2,
+                  "total_damage": 10,
+                  "status_card_count": null
+                }
+              ]
+            },
+            {
+              "id": "THE_FORGOTTEN",
+              "hp": 73,
+              "block": 0,
+              "powers": {
+                "POSSESS_SPEED_POWER": 1,
+                "WEAK_POWER": 1,
+                "DEXTERITY_POWER": 2
+              },
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Attack",
+                  "label": "12",
+                  "damage": 12,
+                  "hits": 1,
+                  "total_damage": 12,
+                  "status_card_count": null
+                }
+              ]
+            }
+          ],
+          "hand": [
+            {
+              "id": "STRIKE_SILENT",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "Damage",
+                  "base_value": 6,
+                  "current_value": 4,
+                  "enchanted_value": 6,
+                  "is_modified": true,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "BUBBLE_BUBBLE",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "PoisonPower",
+                  "base_value": 9,
+                  "current_value": 9,
+                  "enchanted_value": 9,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "run_id": "5PM6JAQG6FNQ",
+        "floor": 39,
+        "turn": 2,
+        "before": {
+          "line": 274379,
+          "hp": 29,
+          "block": 0,
+          "energy": 5,
+          "powers": {
+            "THORNS_POWER": 3,
+            "STRENGTH_POWER": -2,
+            "DEXTERITY_POWER": -2
+          },
+          "enemies": [
+            {
+              "id": "THE_LOST",
+              "hp": 35,
+              "block": 0,
+              "powers": {
+                "POSSESS_STRENGTH_POWER": 1,
+                "WEAK_POWER": 1,
+                "STRENGTH_POWER": 2
+              },
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Attack",
+                  "label": "5[font_size=18]×2[/font_size]",
+                  "damage": 5,
+                  "hits": 2,
+                  "total_damage": 10,
+                  "status_card_count": null
+                }
+              ]
+            },
+            {
+              "id": "THE_FORGOTTEN",
+              "hp": 72,
+              "block": 8,
+              "powers": {
+                "POSSESS_SPEED_POWER": 1,
+                "DEXTERITY_POWER": 2
+              },
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Attack",
+                  "label": "17",
+                  "damage": 17,
+                  "hits": 1,
+                  "total_damage": 17,
+                  "status_card_count": null
+                }
+              ]
+            }
+          ],
+          "hand": [
+            {
+              "id": "BUBBLE_BUBBLE",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "PoisonPower",
+                  "base_value": 9,
+                  "current_value": 9,
+                  "enchanted_value": 9,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "DEFEND_SILENT",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "Block",
+                  "base_value": 5,
+                  "current_value": 3,
+                  "enchanted_value": 5,
+                  "is_modified": true,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "DEFEND_SILENT",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "Block",
+                  "base_value": 5,
+                  "current_value": 3,
+                  "enchanted_value": 5,
+                  "is_modified": true,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "BULLET_TIME",
+              "upgraded": false,
+              "cost": 3,
+              "values": []
+            },
+            {
+              "id": "STRIKE_SILENT",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "Damage",
+                  "base_value": 6,
+                  "current_value": 4,
+                  "enchanted_value": 6,
+                  "is_modified": true,
+                  "was_just_upgraded": false
+                }
+              ]
+            }
+          ]
+        },
+        "after": {
+          "line": 274383,
+          "hp": 29,
+          "block": 6,
+          "energy": 1,
+          "powers": {
+            "THORNS_POWER": 3,
+            "STRENGTH_POWER": -2,
+            "DEXTERITY_POWER": -2
+          },
+          "enemies": [
+            {
+              "id": "THE_LOST",
+              "hp": 30,
+              "block": 0,
+              "powers": {
+                "POSSESS_STRENGTH_POWER": 1,
+                "WEAK_POWER": 1,
+                "STRENGTH_POWER": 2
+              },
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Attack",
+                  "label": "5[font_size=18]×2[/font_size]",
+                  "damage": 5,
+                  "hits": 2,
+                  "total_damage": 10,
+                  "status_card_count": null
+                }
+              ]
+            },
+            {
+              "id": "THE_FORGOTTEN",
+              "hp": 71,
+              "block": 0,
+              "powers": {
+                "POSSESS_SPEED_POWER": 1,
+                "DEXTERITY_POWER": 2
+              },
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Attack",
+                  "label": "17",
+                  "damage": 17,
+                  "hits": 1,
+                  "total_damage": 17,
+                  "status_card_count": null
+                }
+              ]
+            }
+          ],
+          "hand": [
+            {
+              "id": "BULLET_TIME",
+              "upgraded": false,
+              "cost": 3,
+              "values": []
+            }
+          ]
+        }
+      },
+      {
+        "run_id": "61E2QS63Y9WU",
+        "floor": 17,
+        "turn": 5,
+        "before": {
+          "line": 273502,
+          "hp": 56,
+          "block": 0,
+          "energy": 3,
+          "powers": {
+            "ACCELERANT_POWER": 1,
+            "PLATING_POWER": 4,
+            "STRENGTH_POWER": 2
+          },
+          "enemies": [
+            {
+              "id": "LAGAVULIN_MATRIARCH",
+              "hp": 104,
+              "block": 14,
+              "powers": {
+                "POISON_POWER": 12
+              },
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Debuff",
+                  "label": null,
+                  "damage": null,
+                  "hits": null,
+                  "total_damage": null,
+                  "status_card_count": null
+                },
+                {
+                  "index": 1,
+                  "intent_type": "Buff",
+                  "label": null,
+                  "damage": null,
+                  "hits": null,
+                  "total_damage": null,
+                  "status_card_count": null
+                }
+              ]
+            }
+          ],
+          "hand": [
+            {
+              "id": "DEFEND_SILENT",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "Block",
+                  "base_value": 5,
+                  "current_value": 5,
+                  "enchanted_value": 5,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "SNAKEBITE",
+              "upgraded": false,
+              "cost": 2,
+              "values": [
+                {
+                  "name": "PoisonPower",
+                  "base_value": 7,
+                  "current_value": 7,
+                  "enchanted_value": 7,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "STRIKE_SILENT",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "Damage",
+                  "base_value": 6,
+                  "current_value": 8,
+                  "enchanted_value": 6,
+                  "is_modified": true,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "SURVIVOR",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "Block",
+                  "base_value": 8,
+                  "current_value": 8,
+                  "enchanted_value": 8,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "DEFEND_SILENT",
+              "upgraded": true,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "Block",
+                  "base_value": 8,
+                  "current_value": 8,
+                  "enchanted_value": 8,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            }
+          ]
+        },
+        "after": {
+          "line": 273503,
+          "hp": 56,
+          "block": 0,
+          "energy": 1,
+          "powers": {
+            "ACCELERANT_POWER": 1,
+            "PLATING_POWER": 4,
+            "STRENGTH_POWER": 2
+          },
+          "enemies": [
+            {
+              "id": "LAGAVULIN_MATRIARCH",
+              "hp": 104,
+              "block": 14,
+              "powers": {
+                "POISON_POWER": 19
+              },
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Debuff",
+                  "label": null,
+                  "damage": null,
+                  "hits": null,
+                  "total_damage": null,
+                  "status_card_count": null
+                },
+                {
+                  "index": 1,
+                  "intent_type": "Buff",
+                  "label": null,
+                  "damage": null,
+                  "hits": null,
+                  "total_damage": null,
+                  "status_card_count": null
+                }
+              ]
+            }
+          ],
+          "hand": [
+            {
+              "id": "DEFEND_SILENT",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "Block",
+                  "base_value": 5,
+                  "current_value": 5,
+                  "enchanted_value": 5,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "STRIKE_SILENT",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "Damage",
+                  "base_value": 6,
+                  "current_value": 8,
+                  "enchanted_value": 6,
+                  "is_modified": true,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "SURVIVOR",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "Block",
+                  "base_value": 8,
+                  "current_value": 8,
+                  "enchanted_value": 8,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "DEFEND_SILENT",
+              "upgraded": true,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "Block",
+                  "base_value": 8,
+                  "current_value": 8,
+                  "enchanted_value": 8,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "run_id": "61E2QS63Y9WU",
+        "floor": 17,
+        "turn": 6,
+        "before": {
+          "line": 273504,
+          "hp": 56,
+          "block": 0,
+          "energy": 3,
+          "powers": {
+            "ACCELERANT_POWER": 1,
+            "PLATING_POWER": 3,
+            "DEXTERITY_POWER": -2
+          },
+          "enemies": [
+            {
+              "id": "LAGAVULIN_MATRIARCH",
+              "hp": 67,
+              "block": 0,
+              "powers": {
+                "POISON_POWER": 17,
+                "STRENGTH_POWER": 2
+              },
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Attack",
+                  "label": "23",
+                  "damage": 23,
+                  "hits": 1,
+                  "total_damage": 23,
+                  "status_card_count": null
+                }
+              ]
+            }
+          ],
+          "hand": [
+            {
+              "id": "POISONED_STAB",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "Damage",
+                  "base_value": 6,
+                  "current_value": 6,
+                  "enchanted_value": 6,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                },
+                {
+                  "name": "PoisonPower",
+                  "base_value": 3,
+                  "current_value": 3,
+                  "enchanted_value": 3,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "DEFEND_SILENT",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "Block",
+                  "base_value": 5,
+                  "current_value": 3,
+                  "enchanted_value": 5,
+                  "is_modified": true,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "PIERCING_WAIL",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "StrengthLoss",
+                  "base_value": 6,
+                  "current_value": 6,
+                  "enchanted_value": 6,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "PREDATOR",
+              "upgraded": true,
+              "cost": 2,
+              "values": [
+                {
+                  "name": "Damage",
+                  "base_value": 20,
+                  "current_value": 20,
+                  "enchanted_value": 20,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "DEFEND_SILENT",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "Block",
+                  "base_value": 5,
+                  "current_value": 3,
+                  "enchanted_value": 5,
+                  "is_modified": true,
+                  "was_just_upgraded": false
+                }
+              ]
+            }
+          ]
+        },
+        "after": {
+          "line": 273507,
+          "hp": 56,
+          "block": 6,
+          "energy": 0,
+          "powers": {
+            "ACCELERANT_POWER": 1,
+            "PLATING_POWER": 3,
+            "DEXTERITY_POWER": -2
+          },
+          "enemies": [
+            {
+              "id": "LAGAVULIN_MATRIARCH",
+              "hp": 67,
+              "block": 0,
+              "powers": {
+                "POISON_POWER": 17,
+                "STRENGTH_POWER": -4,
+                "PIERCING_WAIL_POWER": 6
+              },
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Attack",
+                  "label": "17",
+                  "damage": 17,
+                  "hits": 1,
+                  "total_damage": 17,
+                  "status_card_count": null
+                }
+              ]
+            }
+          ],
+          "hand": [
+            {
+              "id": "POISONED_STAB",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "Damage",
+                  "base_value": 6,
+                  "current_value": 6,
+                  "enchanted_value": 6,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                },
+                {
+                  "name": "PoisonPower",
+                  "base_value": 3,
+                  "current_value": 3,
+                  "enchanted_value": 3,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "PREDATOR",
+              "upgraded": true,
+              "cost": 2,
+              "values": [
+                {
+                  "name": "Damage",
+                  "base_value": 20,
+                  "current_value": 20,
+                  "enchanted_value": 20,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "run_id": "61E2QS63Y9WU",
+        "floor": 23,
+        "turn": 3,
+        "before": {
+          "line": 273589,
+          "hp": 45,
+          "block": 0,
+          "energy": 3,
+          "powers": {},
+          "enemies": [
+            {
+              "id": "PARAFRIGHT",
+              "hp": 18,
+              "block": 0,
+              "powers": {
+                "ILLUSION_POWER": 1,
+                "MINION_POWER": 1,
+                "STRENGTH_POWER": 3
+              },
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Attack",
+                  "label": "20",
+                  "damage": 20,
+                  "hits": 1,
+                  "total_damage": 20,
+                  "status_card_count": null
+                }
+              ]
+            },
+            {
+              "id": "THE_OBSCURA",
+              "hp": 87,
+              "block": 0,
+              "powers": {
+                "POISON_POWER": 4,
+                "VULNERABLE_POWER": 1,
+                "STRENGTH_POWER": 3
+              },
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Attack",
+                  "label": "10",
+                  "damage": 10,
+                  "hits": 1,
+                  "total_damage": 10,
+                  "status_card_count": null
+                },
+                {
+                  "index": 1,
+                  "intent_type": "Defend",
+                  "label": null,
+                  "damage": null,
+                  "hits": null,
+                  "total_damage": null,
+                  "status_card_count": null
+                }
+              ]
+            }
+          ],
+          "hand": [
+            {
+              "id": "DEFEND_SILENT",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "Block",
+                  "base_value": 5,
+                  "current_value": 5,
+                  "enchanted_value": 5,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "CLUMSY",
+              "upgraded": false,
+              "cost": -1,
+              "values": []
+            },
+            {
+              "id": "NEUTRALIZE",
+              "upgraded": true,
+              "cost": 0,
+              "values": [
+                {
+                  "name": "Damage",
+                  "base_value": 4,
+                  "current_value": 4,
+                  "enchanted_value": 4,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                },
+                {
+                  "name": "WeakPower",
+                  "base_value": 2,
+                  "current_value": 2,
+                  "enchanted_value": 2,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "DEADLY_POISON",
+              "upgraded": true,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "PoisonPower",
+                  "base_value": 7,
+                  "current_value": 7,
+                  "enchanted_value": 7,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "SNAKEBITE",
+              "upgraded": true,
+              "cost": 2,
+              "values": [
+                {
+                  "name": "PoisonPower",
+                  "base_value": 10,
+                  "current_value": 10,
+                  "enchanted_value": 10,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            }
+          ]
+        },
+        "after": {
+          "line": 273592,
+          "hp": 45,
+          "block": 5,
+          "energy": 1,
+          "powers": {},
+          "enemies": [
+            {
+              "id": "PARAFRIGHT",
+              "hp": 14,
+              "block": 0,
+              "powers": {
+                "ILLUSION_POWER": 1,
+                "MINION_POWER": 1,
+                "STRENGTH_POWER": 3,
+                "WEAK_POWER": 2
+              },
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Attack",
+                  "label": "15",
+                  "damage": 15,
+                  "hits": 1,
+                  "total_damage": 15,
+                  "status_card_count": null
+                }
+              ]
+            },
+            {
+              "id": "THE_OBSCURA",
+              "hp": 87,
+              "block": 0,
+              "powers": {
+                "POISON_POWER": 11,
+                "VULNERABLE_POWER": 1,
+                "STRENGTH_POWER": 3
+              },
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Attack",
+                  "label": "10",
+                  "damage": 10,
+                  "hits": 1,
+                  "total_damage": 10,
+                  "status_card_count": null
+                },
+                {
+                  "index": 1,
+                  "intent_type": "Defend",
+                  "label": null,
+                  "damage": null,
+                  "hits": null,
+                  "total_damage": null,
+                  "status_card_count": null
+                }
+              ]
+            }
+          ],
+          "hand": [
+            {
+              "id": "CLUMSY",
+              "upgraded": false,
+              "cost": -1,
+              "values": []
+            },
+            {
+              "id": "SNAKEBITE",
+              "upgraded": true,
+              "cost": 2,
+              "values": [
+                {
+                  "name": "PoisonPower",
+                  "base_value": 10,
+                  "current_value": 10,
+                  "enchanted_value": 10,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "run_id": "61E2QS63Y9WU",
+        "floor": 23,
+        "turn": 4,
+        "before": {
+          "line": 273593,
+          "hp": 25,
+          "block": 0,
+          "energy": 3,
+          "powers": {},
+          "enemies": [
+            {
+              "id": "PARAFRIGHT",
+              "hp": 14,
+              "block": 0,
+              "powers": {
+                "ILLUSION_POWER": 1,
+                "MINION_POWER": 1,
+                "STRENGTH_POWER": 3,
+                "WEAK_POWER": 1
+              },
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Attack",
+                  "label": "15",
+                  "damage": 15,
+                  "hits": 1,
+                  "total_damage": 15,
+                  "status_card_count": null
+                }
+              ]
+            },
+            {
+              "id": "THE_OBSCURA",
+              "hp": 76,
+              "block": 7,
+              "powers": {
+                "POISON_POWER": 10,
+                "STRENGTH_POWER": 3
+              },
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Buff",
+                  "label": null,
+                  "damage": null,
+                  "hits": null,
+                  "total_damage": null,
+                  "status_card_count": null
+                }
+              ]
+            }
+          ],
+          "hand": [
+            {
+              "id": "SNAKEBITE",
+              "upgraded": true,
+              "cost": 2,
+              "values": [
+                {
+                  "name": "PoisonPower",
+                  "base_value": 10,
+                  "current_value": 10,
+                  "enchanted_value": 10,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "DEFEND_SILENT",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "Block",
+                  "base_value": 5,
+                  "current_value": 5,
+                  "enchanted_value": 5,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "FLECHETTES",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "CalculatedHits",
+                  "base_value": 0,
+                  "current_value": 2,
+                  "enchanted_value": 0,
+                  "is_modified": true,
+                  "was_just_upgraded": false
+                },
+                {
+                  "name": "CalculationBase",
+                  "base_value": 0,
+                  "current_value": 0,
+                  "enchanted_value": 0,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                },
+                {
+                  "name": "CalculationExtra",
+                  "base_value": 1,
+                  "current_value": 1,
+                  "enchanted_value": 1,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                },
+                {
+                  "name": "Damage",
+                  "base_value": 5,
+                  "current_value": 5,
+                  "enchanted_value": 5,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "PREDATOR",
+              "upgraded": true,
+              "cost": 2,
+              "values": [
+                {
+                  "name": "Damage",
+                  "base_value": 20,
+                  "current_value": 20,
+                  "enchanted_value": 20,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "EXTERMINATE",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "Damage",
+                  "base_value": 3,
+                  "current_value": 3,
+                  "enchanted_value": 3,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                },
+                {
+                  "name": "Repeat",
+                  "base_value": 4,
+                  "current_value": 4,
+                  "enchanted_value": 4,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "STRIKE_SILENT",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "Damage",
+                  "base_value": 6,
+                  "current_value": 6,
+                  "enchanted_value": 6,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            }
+          ]
+        },
+        "after": {
+          "line": 273595,
+          "hp": 25,
+          "block": 0,
+          "energy": 0,
+          "powers": {
+            "DRAW_CARDS_NEXT_TURN_POWER": 2
+          },
+          "enemies": [
+            {
+              "id": "PARAFRIGHT",
+              "hp": 2,
+              "block": 0,
+              "powers": {
+                "ILLUSION_POWER": 1,
+                "MINION_POWER": 1,
+                "STRENGTH_POWER": 3,
+                "WEAK_POWER": 1
+              },
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Attack",
+                  "label": "15",
+                  "damage": 15,
+                  "hits": 1,
+                  "total_damage": 15,
+                  "status_card_count": null
+                }
+              ]
+            },
+            {
+              "id": "THE_OBSCURA",
+              "hp": 51,
+              "block": 0,
+              "powers": {
+                "POISON_POWER": 10,
+                "STRENGTH_POWER": 3
+              },
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Buff",
+                  "label": null,
+                  "damage": null,
+                  "hits": null,
+                  "total_damage": null,
+                  "status_card_count": null
+                }
+              ]
+            }
+          ],
+          "hand": [
+            {
+              "id": "SNAKEBITE",
+              "upgraded": true,
+              "cost": 2,
+              "values": [
+                {
+                  "name": "PoisonPower",
+                  "base_value": 10,
+                  "current_value": 10,
+                  "enchanted_value": 10,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "DEFEND_SILENT",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "Block",
+                  "base_value": 5,
+                  "current_value": 5,
+                  "enchanted_value": 5,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "FLECHETTES",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "CalculatedHits",
+                  "base_value": 0,
+                  "current_value": 2,
+                  "enchanted_value": 0,
+                  "is_modified": true,
+                  "was_just_upgraded": false
+                },
+                {
+                  "name": "CalculationBase",
+                  "base_value": 0,
+                  "current_value": 0,
+                  "enchanted_value": 0,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                },
+                {
+                  "name": "CalculationExtra",
+                  "base_value": 1,
+                  "current_value": 1,
+                  "enchanted_value": 1,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                },
+                {
+                  "name": "Damage",
+                  "base_value": 5,
+                  "current_value": 5,
+                  "enchanted_value": 5,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "STRIKE_SILENT",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "Damage",
+                  "base_value": 6,
+                  "current_value": 6,
+                  "enchanted_value": 6,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "run_id": "61E2QS63Y9WU",
+        "floor": 23,
+        "turn": 5,
+        "before": {
+          "line": 273596,
+          "hp": 10,
+          "block": 0,
+          "energy": 3,
+          "powers": {},
+          "enemies": [
+            {
+              "id": "PARAFRIGHT",
+              "hp": 2,
+              "block": 0,
+              "powers": {
+                "ILLUSION_POWER": 1,
+                "MINION_POWER": 1,
+                "STRENGTH_POWER": 6
+              },
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Attack",
+                  "label": "23",
+                  "damage": 23,
+                  "hits": 1,
+                  "total_damage": 23,
+                  "status_card_count": null
+                }
+              ]
+            },
+            {
+              "id": "THE_OBSCURA",
+              "hp": 41,
+              "block": 0,
+              "powers": {
+                "POISON_POWER": 9,
+                "STRENGTH_POWER": 6
+              },
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Attack",
+                  "label": "17",
+                  "damage": 17,
+                  "hits": 1,
+                  "total_damage": 17,
+                  "status_card_count": null
+                }
+              ]
+            }
+          ],
+          "hand": [
+            {
+              "id": "SNAKEBITE",
+              "upgraded": true,
+              "cost": 2,
+              "values": [
+                {
+                  "name": "PoisonPower",
+                  "base_value": 10,
+                  "current_value": 10,
+                  "enchanted_value": 10,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "ACCELERANT",
+              "upgraded": true,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "Accelerant",
+                  "base_value": 2,
+                  "current_value": 2,
+                  "enchanted_value": 2,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "DEFEND_SILENT",
+              "upgraded": true,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "Block",
+                  "base_value": 8,
+                  "current_value": 8,
+                  "enchanted_value": 8,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "STRIKE_SILENT",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "Damage",
+                  "base_value": 6,
+                  "current_value": 6,
+                  "enchanted_value": 6,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "DEFEND_SILENT",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "Block",
+                  "base_value": 5,
+                  "current_value": 5,
+                  "enchanted_value": 5,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "EXTERMINATE",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "Damage",
+                  "base_value": 3,
+                  "current_value": 3,
+                  "enchanted_value": 3,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                },
+                {
+                  "name": "Repeat",
+                  "base_value": 4,
+                  "current_value": 4,
+                  "enchanted_value": 4,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "FLECHETTES",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "CalculatedHits",
+                  "base_value": 0,
+                  "current_value": 4,
+                  "enchanted_value": 0,
+                  "is_modified": true,
+                  "was_just_upgraded": false
+                },
+                {
+                  "name": "CalculationBase",
+                  "base_value": 0,
+                  "current_value": 0,
+                  "enchanted_value": 0,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                },
+                {
+                  "name": "CalculationExtra",
+                  "base_value": 1,
+                  "current_value": 1,
+                  "enchanted_value": 1,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                },
+                {
+                  "name": "Damage",
+                  "base_value": 5,
+                  "current_value": 5,
+                  "enchanted_value": 5,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "PIERCING_WAIL",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "StrengthLoss",
+                  "base_value": 6,
+                  "current_value": 6,
+                  "enchanted_value": 6,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            }
+          ]
+        },
+        "after": {
+          "line": 273605,
+          "hp": 10,
+          "block": 0,
+          "energy": 0,
+          "powers": {},
+          "enemies": [
+            {
+              "id": "PARAFRIGHT",
+              "hp": 0,
+              "block": 0,
+              "powers": {
+                "ILLUSION_POWER": 1,
+                "MINION_POWER": 1,
+                "STRENGTH_POWER": 6
+              },
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Heal",
+                  "label": null,
+                  "damage": null,
+                  "hits": null,
+                  "total_damage": null,
+                  "status_card_count": null
+                }
+              ]
+            }
+          ],
+          "hand": []
+        }
+      },
+      {
+        "run_id": "DUZUBAJ3A8GP",
+        "floor": 30,
+        "turn": 3,
+        "before": {
+          "line": 274919,
+          "hp": 5,
+          "block": 0,
+          "energy": 4,
+          "powers": {
+            "THORNS_POWER": 3,
+            "FASTEN_POWER": 4
+          },
+          "enemies": [
+            {
+              "id": "BOWLBUG_SILK",
+              "hp": 37,
+              "block": 0,
+              "powers": {},
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Debuff",
+                  "label": null,
+                  "damage": null,
+                  "hits": null,
+                  "total_damage": null,
+                  "status_card_count": null
+                }
+              ]
+            },
+            {
+              "id": "SLUMBERING_BEETLE",
+              "hp": 89,
+              "block": 17,
+              "powers": {
+                "PLATING_POWER": 17,
+                "SLUMBER_POWER": 1
+              },
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Sleep",
+                  "label": null,
+                  "damage": null,
+                  "hits": null,
+                  "total_damage": null,
+                  "status_card_count": null
+                }
+              ]
+            }
+          ],
+          "hand": [
+            {
+              "id": "DEFEND_SILENT",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "Block",
+                  "base_value": 5,
+                  "current_value": 9,
+                  "enchanted_value": 5,
+                  "is_modified": true,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "NEUTRALIZE",
+              "upgraded": false,
+              "cost": 0,
+              "values": [
+                {
+                  "name": "Damage",
+                  "base_value": 3,
+                  "current_value": 3,
+                  "enchanted_value": 3,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                },
+                {
+                  "name": "WeakPower",
+                  "base_value": 1,
+                  "current_value": 1,
+                  "enchanted_value": 1,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "PREDATOR",
+              "upgraded": false,
+              "cost": 2,
+              "values": [
+                {
+                  "name": "Damage",
+                  "base_value": 15,
+                  "current_value": 15,
+                  "enchanted_value": 15,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "PIERCING_WAIL",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "StrengthLoss",
+                  "base_value": 6,
+                  "current_value": 6,
+                  "enchanted_value": 6,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "BOUNCING_FLASK",
+              "upgraded": false,
+              "cost": 2,
+              "values": [
+                {
+                  "name": "PoisonPower",
+                  "base_value": 3,
+                  "current_value": 3,
+                  "enchanted_value": 3,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                },
+                {
+                  "name": "Repeat",
+                  "base_value": 3,
+                  "current_value": 3,
+                  "enchanted_value": 3,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            }
+          ]
+        },
+        "after": {
+          "line": 274922,
+          "hp": 5,
+          "block": 0,
+          "energy": 0,
+          "powers": {
+            "THORNS_POWER": 3,
+            "FASTEN_POWER": 4,
+            "DRAW_CARDS_NEXT_TURN_POWER": 2
+          },
+          "enemies": [
+            {
+              "id": "BOWLBUG_SILK",
+              "hp": 19,
+              "block": 0,
+              "powers": {
+                "WEAK_POWER": 1,
+                "POISON_POWER": 6
+              },
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Debuff",
+                  "label": null,
+                  "damage": null,
+                  "hits": null,
+                  "total_damage": null,
+                  "status_card_count": null
+                }
+              ]
+            },
+            {
+              "id": "SLUMBERING_BEETLE",
+              "hp": 89,
+              "block": 17,
+              "powers": {
+                "PLATING_POWER": 17,
+                "SLUMBER_POWER": 1,
+                "POISON_POWER": 3
+              },
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Sleep",
+                  "label": null,
+                  "damage": null,
+                  "hits": null,
+                  "total_damage": null,
+                  "status_card_count": null
+                }
+              ]
+            }
+          ],
+          "hand": [
+            {
+              "id": "DEFEND_SILENT",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "Block",
+                  "base_value": 5,
+                  "current_value": 9,
+                  "enchanted_value": 5,
+                  "is_modified": true,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "PIERCING_WAIL",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "StrengthLoss",
+                  "base_value": 6,
+                  "current_value": 6,
+                  "enchanted_value": 6,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "run_id": "DUZUBAJ3A8GP",
+        "floor": 30,
+        "turn": 4,
+        "before": {
+          "line": 274923,
+          "hp": 5,
+          "block": 0,
+          "energy": 4,
+          "powers": {
+            "THORNS_POWER": 3,
+            "FASTEN_POWER": 4,
+            "WEAK_POWER": 1
+          },
+          "enemies": [
+            {
+              "id": "BOWLBUG_SILK",
+              "hp": 13,
+              "block": 0,
+              "powers": {
+                "POISON_POWER": 5
+              },
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Attack",
+                  "label": "5[font_size=18]×2[/font_size]",
+                  "damage": 5,
+                  "hits": 2,
+                  "total_damage": 10,
+                  "status_card_count": null
+                }
+              ]
+            },
+            {
+              "id": "SLUMBERING_BEETLE",
+              "hp": 86,
+              "block": 0,
+              "powers": {
+                "POISON_POWER": 2
+              },
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Attack",
+                  "label": "18",
+                  "damage": 18,
+                  "hits": 1,
+                  "total_damage": 18,
+                  "status_card_count": null
+                },
+                {
+                  "index": 1,
+                  "intent_type": "Buff",
+                  "label": null,
+                  "damage": null,
+                  "hits": null,
+                  "total_damage": null,
+                  "status_card_count": null
+                }
+              ]
+            }
+          ],
+          "hand": [
+            {
+              "id": "STRIKE_SILENT",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "Damage",
+                  "base_value": 6,
+                  "current_value": 4,
+                  "enchanted_value": 6,
+                  "is_modified": true,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "SURVIVOR",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "Block",
+                  "base_value": 8,
+                  "current_value": 8,
+                  "enchanted_value": 8,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "DEFEND_SILENT",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "Block",
+                  "base_value": 5,
+                  "current_value": 9,
+                  "enchanted_value": 5,
+                  "is_modified": true,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "POISONED_STAB",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "Damage",
+                  "base_value": 6,
+                  "current_value": 4,
+                  "enchanted_value": 6,
+                  "is_modified": true,
+                  "was_just_upgraded": false
+                },
+                {
+                  "name": "PoisonPower",
+                  "base_value": 3,
+                  "current_value": 3,
+                  "enchanted_value": 3,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "DEFEND_SILENT",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "Block",
+                  "base_value": 5,
+                  "current_value": 9,
+                  "enchanted_value": 5,
+                  "is_modified": true,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "ASCENDERS_BANE",
+              "upgraded": false,
+              "cost": -1,
+              "values": []
+            },
+            {
+              "id": "CLOAK_AND_DAGGER",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "Block",
+                  "base_value": 6,
+                  "current_value": 6,
+                  "enchanted_value": 6,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                },
+                {
+                  "name": "Cards",
+                  "base_value": 1,
+                  "current_value": 1,
+                  "enchanted_value": 1,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            }
+          ]
+        },
+        "after": {
+          "line": 274928,
+          "hp": 5,
+          "block": 26,
+          "energy": 0,
+          "powers": {
+            "THORNS_POWER": 3,
+            "FASTEN_POWER": 4,
+            "WEAK_POWER": 1
+          },
+          "enemies": [
+            {
+              "id": "BOWLBUG_SILK",
+              "hp": 13,
+              "block": 0,
+              "powers": {
+                "POISON_POWER": 5
+              },
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Attack",
+                  "label": "5[font_size=18]×2[/font_size]",
+                  "damage": 5,
+                  "hits": 2,
+                  "total_damage": 10,
+                  "status_card_count": null
+                }
+              ]
+            },
+            {
+              "id": "SLUMBERING_BEETLE",
+              "hp": 82,
+              "block": 0,
+              "powers": {
+                "POISON_POWER": 5
+              },
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Attack",
+                  "label": "18",
+                  "damage": 18,
+                  "hits": 1,
+                  "total_damage": 18,
+                  "status_card_count": null
+                },
+                {
+                  "index": 1,
+                  "intent_type": "Buff",
+                  "label": null,
+                  "damage": null,
+                  "hits": null,
+                  "total_damage": null,
+                  "status_card_count": null
+                }
+              ]
+            }
+          ],
+          "hand": [
+            {
+              "id": "STRIKE_SILENT",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "Damage",
+                  "base_value": 6,
+                  "current_value": 4,
+                  "enchanted_value": 6,
+                  "is_modified": true,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "CLOAK_AND_DAGGER",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "Block",
+                  "base_value": 6,
+                  "current_value": 6,
+                  "enchanted_value": 6,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                },
+                {
+                  "name": "Cards",
+                  "base_value": 1,
+                  "current_value": 1,
+                  "enchanted_value": 1,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "run_id": "DUZUBAJ3A8GP",
+        "floor": 30,
+        "turn": 5,
+        "before": {
+          "line": 274929,
+          "hp": 3,
+          "block": 0,
+          "energy": 4,
+          "powers": {
+            "THORNS_POWER": 3,
+            "FASTEN_POWER": 4
+          },
+          "enemies": [
+            {
+              "id": "BOWLBUG_SILK",
+              "hp": 2,
+              "block": 0,
+              "powers": {
+                "POISON_POWER": 4
+              },
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Debuff",
+                  "label": null,
+                  "damage": null,
+                  "hits": null,
+                  "total_damage": null,
+                  "status_card_count": null
+                }
+              ]
+            },
+            {
+              "id": "SLUMBERING_BEETLE",
+              "hp": 74,
+              "block": 0,
+              "powers": {
+                "POISON_POWER": 4,
+                "STRENGTH_POWER": 2
+              },
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Attack",
+                  "label": "20",
+                  "damage": 20,
+                  "hits": 1,
+                  "total_damage": 20,
+                  "status_card_count": null
+                },
+                {
+                  "index": 1,
+                  "intent_type": "Buff",
+                  "label": null,
+                  "damage": null,
+                  "hits": null,
+                  "total_damage": null,
+                  "status_card_count": null
+                }
+              ]
+            }
+          ],
+          "hand": [
+            {
+              "id": "DEFEND_SILENT",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "Block",
+                  "base_value": 5,
+                  "current_value": 9,
+                  "enchanted_value": 5,
+                  "is_modified": true,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "DEADLY_POISON",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "PoisonPower",
+                  "base_value": 5,
+                  "current_value": 5,
+                  "enchanted_value": 5,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "PIERCING_WAIL",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "StrengthLoss",
+                  "base_value": 6,
+                  "current_value": 6,
+                  "enchanted_value": 6,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "MIRAGE",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "CalculatedBlock",
+                  "base_value": 0,
+                  "current_value": 8,
+                  "enchanted_value": 0,
+                  "is_modified": true,
+                  "was_just_upgraded": false
+                },
+                {
+                  "name": "CalculationBase",
+                  "base_value": 0,
+                  "current_value": 0,
+                  "enchanted_value": 0,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                },
+                {
+                  "name": "CalculationExtra",
+                  "base_value": 1,
+                  "current_value": 1,
+                  "enchanted_value": 1,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "DEADLY_POISON",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "PoisonPower",
+                  "base_value": 5,
+                  "current_value": 5,
+                  "enchanted_value": 5,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            }
+          ]
+        },
+        "after": {
+          "line": 274933,
+          "hp": 3,
+          "block": 22,
+          "energy": 0,
+          "powers": {
+            "THORNS_POWER": 3,
+            "FASTEN_POWER": 4
+          },
+          "enemies": [
+            {
+              "id": "BOWLBUG_SILK",
+              "hp": 2,
+              "block": 0,
+              "powers": {
+                "POISON_POWER": 4,
+                "STRENGTH_POWER": -6,
+                "PIERCING_WAIL_POWER": 6
+              },
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Debuff",
+                  "label": null,
+                  "damage": null,
+                  "hits": null,
+                  "total_damage": null,
+                  "status_card_count": null
+                }
+              ]
+            },
+            {
+              "id": "SLUMBERING_BEETLE",
+              "hp": 74,
+              "block": 0,
+              "powers": {
+                "POISON_POWER": 9,
+                "STRENGTH_POWER": -4,
+                "PIERCING_WAIL_POWER": 6
+              },
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Attack",
+                  "label": "14",
+                  "damage": 14,
+                  "hits": 1,
+                  "total_damage": 14,
+                  "status_card_count": null
+                },
+                {
+                  "index": 1,
+                  "intent_type": "Buff",
+                  "label": null,
+                  "damage": null,
+                  "hits": null,
+                  "total_damage": null,
+                  "status_card_count": null
+                }
+              ]
+            }
+          ],
+          "hand": [
+            {
+              "id": "DEADLY_POISON",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "PoisonPower",
+                  "base_value": 5,
+                  "current_value": 5,
+                  "enchanted_value": 5,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "run_id": "DUZUBAJ3A8GP",
+        "floor": 30,
+        "turn": 6,
+        "before": {
+          "line": 274934,
+          "hp": 3,
+          "block": 0,
+          "energy": 4,
+          "powers": {
+            "THORNS_POWER": 3,
+            "FASTEN_POWER": 4
+          },
+          "enemies": [
+            {
+              "id": "SLUMBERING_BEETLE",
+              "hp": 62,
+              "block": 0,
+              "powers": {
+                "POISON_POWER": 8,
+                "STRENGTH_POWER": 4
+              },
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Attack",
+                  "label": "22",
+                  "damage": 22,
+                  "hits": 1,
+                  "total_damage": 22,
+                  "status_card_count": null
+                },
+                {
+                  "index": 1,
+                  "intent_type": "Buff",
+                  "label": null,
+                  "damage": null,
+                  "hits": null,
+                  "total_damage": null,
+                  "status_card_count": null
+                }
+              ]
+            }
+          ],
+          "hand": [
+            {
+              "id": "ECHOING_SLASH",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "Damage",
+                  "base_value": 10,
+                  "current_value": 10,
+                  "enchanted_value": 10,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "BURST",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "Skills",
+                  "base_value": 1,
+                  "current_value": 1,
+                  "enchanted_value": 1,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "STRIKE_SILENT",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "Damage",
+                  "base_value": 6,
+                  "current_value": 6,
+                  "enchanted_value": 6,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "DEFEND_SILENT",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "Block",
+                  "base_value": 5,
+                  "current_value": 9,
+                  "enchanted_value": 5,
+                  "is_modified": true,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "DEADLY_POISON",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "PoisonPower",
+                  "base_value": 5,
+                  "current_value": 5,
+                  "enchanted_value": 5,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            }
+          ]
+        },
+        "after": {
+          "line": 274934,
+          "hp": 3,
+          "block": 0,
+          "energy": 4,
+          "powers": {
+            "THORNS_POWER": 3,
+            "FASTEN_POWER": 4
+          },
+          "enemies": [
+            {
+              "id": "SLUMBERING_BEETLE",
+              "hp": 62,
+              "block": 0,
+              "powers": {
+                "POISON_POWER": 8,
+                "STRENGTH_POWER": 4
+              },
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Attack",
+                  "label": "22",
+                  "damage": 22,
+                  "hits": 1,
+                  "total_damage": 22,
+                  "status_card_count": null
+                },
+                {
+                  "index": 1,
+                  "intent_type": "Buff",
+                  "label": null,
+                  "damage": null,
+                  "hits": null,
+                  "total_damage": null,
+                  "status_card_count": null
+                }
+              ]
+            }
+          ],
+          "hand": [
+            {
+              "id": "ECHOING_SLASH",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "Damage",
+                  "base_value": 10,
+                  "current_value": 10,
+                  "enchanted_value": 10,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "BURST",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "Skills",
+                  "base_value": 1,
+                  "current_value": 1,
+                  "enchanted_value": 1,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "STRIKE_SILENT",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "Damage",
+                  "base_value": 6,
+                  "current_value": 6,
+                  "enchanted_value": 6,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "DEFEND_SILENT",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "Block",
+                  "base_value": 5,
+                  "current_value": 9,
+                  "enchanted_value": 5,
+                  "is_modified": true,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "DEADLY_POISON",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "PoisonPower",
+                  "base_value": 5,
+                  "current_value": 5,
+                  "enchanted_value": 5,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "run_id": "DUZUBAJ3A8GP",
+        "floor": 30,
+        "turn": 3,
+        "before": {
+          "line": 274948,
+          "hp": 10,
+          "block": 0,
+          "energy": 4,
+          "powers": {
+            "THORNS_POWER": 3
+          },
+          "enemies": [
+            {
+              "id": "BOWLBUG_ROCK",
+              "hp": 39,
+              "block": 0,
+              "powers": {
+                "IMBALANCED_POWER": 1
+              },
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Stun",
+                  "label": null,
+                  "damage": null,
+                  "hits": null,
+                  "total_damage": null,
+                  "status_card_count": null
+                }
+              ]
+            },
+            {
+              "id": "SLUMBERING_BEETLE",
+              "hp": 89,
+              "block": 17,
+              "powers": {
+                "PLATING_POWER": 17,
+                "SLUMBER_POWER": 1
+              },
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Sleep",
+                  "label": null,
+                  "damage": null,
+                  "hits": null,
+                  "total_damage": null,
+                  "status_card_count": null
+                }
+              ]
+            }
+          ],
+          "hand": [
+            {
+              "id": "PREDATOR",
+              "upgraded": false,
+              "cost": 2,
+              "values": [
+                {
+                  "name": "Damage",
+                  "base_value": 15,
+                  "current_value": 15,
+                  "enchanted_value": 15,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "PIERCING_WAIL",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "StrengthLoss",
+                  "base_value": 6,
+                  "current_value": 6,
+                  "enchanted_value": 6,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "BOUNCING_FLASK",
+              "upgraded": false,
+              "cost": 2,
+              "values": [
+                {
+                  "name": "PoisonPower",
+                  "base_value": 3,
+                  "current_value": 3,
+                  "enchanted_value": 3,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                },
+                {
+                  "name": "Repeat",
+                  "base_value": 3,
+                  "current_value": 3,
+                  "enchanted_value": 3,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "STRIKE_SILENT",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "Damage",
+                  "base_value": 6,
+                  "current_value": 6,
+                  "enchanted_value": 6,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "SURVIVOR",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "Block",
+                  "base_value": 8,
+                  "current_value": 8,
+                  "enchanted_value": 8,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            }
+          ]
+        },
+        "after": {
+          "line": 274950,
+          "hp": 10,
+          "block": 0,
+          "energy": 0,
+          "powers": {
+            "THORNS_POWER": 3,
+            "DRAW_CARDS_NEXT_TURN_POWER": 2
+          },
+          "enemies": [
+            {
+              "id": "BOWLBUG_ROCK",
+              "hp": 24,
+              "block": 0,
+              "powers": {
+                "IMBALANCED_POWER": 1,
+                "POISON_POWER": 6
+              },
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Stun",
+                  "label": null,
+                  "damage": null,
+                  "hits": null,
+                  "total_damage": null,
+                  "status_card_count": null
+                }
+              ]
+            },
+            {
+              "id": "SLUMBERING_BEETLE",
+              "hp": 89,
+              "block": 17,
+              "powers": {
+                "PLATING_POWER": 17,
+                "SLUMBER_POWER": 1,
+                "POISON_POWER": 3
+              },
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Sleep",
+                  "label": null,
+                  "damage": null,
+                  "hits": null,
+                  "total_damage": null,
+                  "status_card_count": null
+                }
+              ]
+            }
+          ],
+          "hand": [
+            {
+              "id": "PIERCING_WAIL",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "StrengthLoss",
+                  "base_value": 6,
+                  "current_value": 6,
+                  "enchanted_value": 6,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "STRIKE_SILENT",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "Damage",
+                  "base_value": 6,
+                  "current_value": 6,
+                  "enchanted_value": 6,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "SURVIVOR",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "Block",
+                  "base_value": 8,
+                  "current_value": 8,
+                  "enchanted_value": 8,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "run_id": "DUZUBAJ3A8GP",
+        "floor": 30,
+        "turn": 4,
+        "before": {
+          "line": 274951,
+          "hp": 10,
+          "block": 0,
+          "energy": 4,
+          "powers": {
+            "THORNS_POWER": 3
+          },
+          "enemies": [
+            {
+              "id": "BOWLBUG_ROCK",
+              "hp": 18,
+              "block": 0,
+              "powers": {
+                "IMBALANCED_POWER": 1,
+                "POISON_POWER": 5
+              },
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Attack",
+                  "label": "16",
+                  "damage": 16,
+                  "hits": 1,
+                  "total_damage": 16,
+                  "status_card_count": null
+                }
+              ]
+            },
+            {
+              "id": "SLUMBERING_BEETLE",
+              "hp": 86,
+              "block": 0,
+              "powers": {
+                "POISON_POWER": 2
+              },
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Attack",
+                  "label": "18",
+                  "damage": 18,
+                  "hits": 1,
+                  "total_damage": 18,
+                  "status_card_count": null
+                },
+                {
+                  "index": 1,
+                  "intent_type": "Buff",
+                  "label": null,
+                  "damage": null,
+                  "hits": null,
+                  "total_damage": null,
+                  "status_card_count": null
+                }
+              ]
+            }
+          ],
+          "hand": [
+            {
+              "id": "DEFEND_SILENT",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "Block",
+                  "base_value": 5,
+                  "current_value": 5,
+                  "enchanted_value": 5,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "POISONED_STAB",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "Damage",
+                  "base_value": 6,
+                  "current_value": 6,
+                  "enchanted_value": 6,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                },
+                {
+                  "name": "PoisonPower",
+                  "base_value": 3,
+                  "current_value": 3,
+                  "enchanted_value": 3,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "DEFEND_SILENT",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "Block",
+                  "base_value": 5,
+                  "current_value": 5,
+                  "enchanted_value": 5,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "ASCENDERS_BANE",
+              "upgraded": false,
+              "cost": -1,
+              "values": []
+            },
+            {
+              "id": "CLOAK_AND_DAGGER",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "Block",
+                  "base_value": 6,
+                  "current_value": 6,
+                  "enchanted_value": 6,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                },
+                {
+                  "name": "Cards",
+                  "base_value": 1,
+                  "current_value": 1,
+                  "enchanted_value": 1,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "DEFEND_SILENT",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "Block",
+                  "base_value": 5,
+                  "current_value": 5,
+                  "enchanted_value": 5,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "DEADLY_POISON",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "PoisonPower",
+                  "base_value": 5,
+                  "current_value": 5,
+                  "enchanted_value": 5,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            }
+          ]
+        },
+        "after": {
+          "line": 274956,
+          "hp": 10,
+          "block": 16,
+          "energy": 0,
+          "powers": {
+            "THORNS_POWER": 3
+          },
+          "enemies": [
+            {
+              "id": "BOWLBUG_ROCK",
+              "hp": 8,
+              "block": 0,
+              "powers": {
+                "IMBALANCED_POWER": 1,
+                "POISON_POWER": 8
+              },
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Attack",
+                  "label": "16",
+                  "damage": 16,
+                  "hits": 1,
+                  "total_damage": 16,
+                  "status_card_count": null
+                }
+              ]
+            },
+            {
+              "id": "SLUMBERING_BEETLE",
+              "hp": 86,
+              "block": 0,
+              "powers": {
+                "POISON_POWER": 2
+              },
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Attack",
+                  "label": "18",
+                  "damage": 18,
+                  "hits": 1,
+                  "total_damage": 18,
+                  "status_card_count": null
+                },
+                {
+                  "index": 1,
+                  "intent_type": "Buff",
+                  "label": null,
+                  "damage": null,
+                  "hits": null,
+                  "total_damage": null,
+                  "status_card_count": null
+                }
+              ]
+            }
+          ],
+          "hand": [
+            {
+              "id": "ASCENDERS_BANE",
+              "upgraded": false,
+              "cost": -1,
+              "values": []
+            },
+            {
+              "id": "DEFEND_SILENT",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "Block",
+                  "base_value": 5,
+                  "current_value": 5,
+                  "enchanted_value": 5,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "DEADLY_POISON",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "PoisonPower",
+                  "base_value": 5,
+                  "current_value": 5,
+                  "enchanted_value": 5,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "run_id": "DUZUBAJ3A8GP",
+        "floor": 30,
+        "turn": 5,
+        "before": {
+          "line": 274957,
+          "hp": 8,
+          "block": 0,
+          "energy": 4,
+          "powers": {
+            "THORNS_POWER": 3
+          },
+          "enemies": [
+            {
+              "id": "SLUMBERING_BEETLE",
+              "hp": 81,
+              "block": 0,
+              "powers": {
+                "POISON_POWER": 1,
+                "STRENGTH_POWER": 2
+              },
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Attack",
+                  "label": "20",
+                  "damage": 20,
+                  "hits": 1,
+                  "total_damage": 20,
+                  "status_card_count": null
+                },
+                {
+                  "index": 1,
+                  "intent_type": "Buff",
+                  "label": null,
+                  "damage": null,
+                  "hits": null,
+                  "total_damage": null,
+                  "status_card_count": null
+                }
+              ]
+            }
+          ],
+          "hand": [
+            {
+              "id": "PIERCING_WAIL",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "StrengthLoss",
+                  "base_value": 6,
+                  "current_value": 6,
+                  "enchanted_value": 6,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "MIRAGE",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "CalculatedBlock",
+                  "base_value": 0,
+                  "current_value": 1,
+                  "enchanted_value": 0,
+                  "is_modified": true,
+                  "was_just_upgraded": false
+                },
+                {
+                  "name": "CalculationBase",
+                  "base_value": 0,
+                  "current_value": 0,
+                  "enchanted_value": 0,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                },
+                {
+                  "name": "CalculationExtra",
+                  "base_value": 1,
+                  "current_value": 1,
+                  "enchanted_value": 1,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "DEADLY_POISON",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "PoisonPower",
+                  "base_value": 5,
+                  "current_value": 5,
+                  "enchanted_value": 5,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "ECHOING_SLASH",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "Damage",
+                  "base_value": 10,
+                  "current_value": 10,
+                  "enchanted_value": 10,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "BURST",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "Skills",
+                  "base_value": 1,
+                  "current_value": 1,
+                  "enchanted_value": 1,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            }
+          ]
+        },
+        "after": {
+          "line": 274961,
+          "hp": 8,
+          "block": 1,
+          "energy": 0,
+          "powers": {
+            "THORNS_POWER": 3
+          },
+          "enemies": [
+            {
+              "id": "SLUMBERING_BEETLE",
+              "hp": 71,
+              "block": 0,
+              "powers": {
+                "POISON_POWER": 1,
+                "STRENGTH_POWER": -10,
+                "PIERCING_WAIL_POWER": 12
+              },
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Attack",
+                  "label": "8",
+                  "damage": 8,
+                  "hits": 1,
+                  "total_damage": 8,
+                  "status_card_count": null
+                },
+                {
+                  "index": 1,
+                  "intent_type": "Buff",
+                  "label": null,
+                  "damage": null,
+                  "hits": null,
+                  "total_damage": null,
+                  "status_card_count": null
+                }
+              ]
+            }
+          ],
+          "hand": [
+            {
+              "id": "DEADLY_POISON",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "PoisonPower",
+                  "base_value": 5,
+                  "current_value": 5,
+                  "enchanted_value": 5,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "run_id": "DUZUBAJ3A8GP",
+        "floor": 30,
+        "turn": 6,
+        "before": {
+          "line": 274962,
+          "hp": 1,
+          "block": 0,
+          "energy": 4,
+          "powers": {
+            "THORNS_POWER": 3
+          },
+          "enemies": [
+            {
+              "id": "SLUMBERING_BEETLE",
+              "hp": 67,
+              "block": 0,
+              "powers": {
+                "STRENGTH_POWER": 4
+              },
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Attack",
+                  "label": "22",
+                  "damage": 22,
+                  "hits": 1,
+                  "total_damage": 22,
+                  "status_card_count": null
+                },
+                {
+                  "index": 1,
+                  "intent_type": "Buff",
+                  "label": null,
+                  "damage": null,
+                  "hits": null,
+                  "total_damage": null,
+                  "status_card_count": null
+                }
+              ]
+            }
+          ],
+          "hand": [
+            {
+              "id": "STRIKE_SILENT",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "Damage",
+                  "base_value": 6,
+                  "current_value": 6,
+                  "enchanted_value": 6,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "STRIKE_SILENT",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "Damage",
+                  "base_value": 6,
+                  "current_value": 6,
+                  "enchanted_value": 6,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "DEADLY_POISON",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "PoisonPower",
+                  "base_value": 5,
+                  "current_value": 5,
+                  "enchanted_value": 5,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "DEFEND_SILENT",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "Block",
+                  "base_value": 5,
+                  "current_value": 5,
+                  "enchanted_value": 5,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "ULTIMATE_STRIKE",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "Damage",
+                  "base_value": 14,
+                  "current_value": 14,
+                  "enchanted_value": 14,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            }
+          ]
+        },
+        "after": {
+          "line": 274962,
+          "hp": 1,
+          "block": 0,
+          "energy": 4,
+          "powers": {
+            "THORNS_POWER": 3
+          },
+          "enemies": [
+            {
+              "id": "SLUMBERING_BEETLE",
+              "hp": 67,
+              "block": 0,
+              "powers": {
+                "STRENGTH_POWER": 4
+              },
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Attack",
+                  "label": "22",
+                  "damage": 22,
+                  "hits": 1,
+                  "total_damage": 22,
+                  "status_card_count": null
+                },
+                {
+                  "index": 1,
+                  "intent_type": "Buff",
+                  "label": null,
+                  "damage": null,
+                  "hits": null,
+                  "total_damage": null,
+                  "status_card_count": null
+                }
+              ]
+            }
+          ],
+          "hand": [
+            {
+              "id": "STRIKE_SILENT",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "Damage",
+                  "base_value": 6,
+                  "current_value": 6,
+                  "enchanted_value": 6,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "STRIKE_SILENT",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "Damage",
+                  "base_value": 6,
+                  "current_value": 6,
+                  "enchanted_value": 6,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "DEADLY_POISON",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "PoisonPower",
+                  "base_value": 5,
+                  "current_value": 5,
+                  "enchanted_value": 5,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "DEFEND_SILENT",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "Block",
+                  "base_value": 5,
+                  "current_value": 5,
+                  "enchanted_value": 5,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "ULTIMATE_STRIKE",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "Damage",
+                  "base_value": 14,
+                  "current_value": 14,
+                  "enchanted_value": 14,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "run_id": "DUZUBAJ3A8GP",
+        "floor": 30,
+        "turn": 3,
+        "before": {
+          "line": 274975,
+          "hp": 5,
+          "block": 0,
+          "energy": 4,
+          "powers": {
+            "THORNS_POWER": 3,
+            "FASTEN_POWER": 4
+          },
+          "enemies": [
+            {
+              "id": "BOWLBUG_SILK",
+              "hp": 37,
+              "block": 0,
+              "powers": {},
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Debuff",
+                  "label": null,
+                  "damage": null,
+                  "hits": null,
+                  "total_damage": null,
+                  "status_card_count": null
+                }
+              ]
+            },
+            {
+              "id": "SLUMBERING_BEETLE",
+              "hp": 89,
+              "block": 17,
+              "powers": {
+                "PLATING_POWER": 17,
+                "SLUMBER_POWER": 1
+              },
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Sleep",
+                  "label": null,
+                  "damage": null,
+                  "hits": null,
+                  "total_damage": null,
+                  "status_card_count": null
+                }
+              ]
+            }
+          ],
+          "hand": [
+            {
+              "id": "DEFEND_SILENT",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "Block",
+                  "base_value": 5,
+                  "current_value": 9,
+                  "enchanted_value": 5,
+                  "is_modified": true,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "NEUTRALIZE",
+              "upgraded": false,
+              "cost": 0,
+              "values": [
+                {
+                  "name": "Damage",
+                  "base_value": 3,
+                  "current_value": 3,
+                  "enchanted_value": 3,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                },
+                {
+                  "name": "WeakPower",
+                  "base_value": 1,
+                  "current_value": 1,
+                  "enchanted_value": 1,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "PREDATOR",
+              "upgraded": false,
+              "cost": 2,
+              "values": [
+                {
+                  "name": "Damage",
+                  "base_value": 15,
+                  "current_value": 15,
+                  "enchanted_value": 15,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "PIERCING_WAIL",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "StrengthLoss",
+                  "base_value": 6,
+                  "current_value": 6,
+                  "enchanted_value": 6,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "BOUNCING_FLASK",
+              "upgraded": false,
+              "cost": 2,
+              "values": [
+                {
+                  "name": "PoisonPower",
+                  "base_value": 3,
+                  "current_value": 3,
+                  "enchanted_value": 3,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                },
+                {
+                  "name": "Repeat",
+                  "base_value": 3,
+                  "current_value": 3,
+                  "enchanted_value": 3,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            }
+          ]
+        },
+        "after": {
+          "line": 274978,
+          "hp": 5,
+          "block": 0,
+          "energy": 0,
+          "powers": {
+            "THORNS_POWER": 3,
+            "FASTEN_POWER": 4,
+            "DRAW_CARDS_NEXT_TURN_POWER": 2
+          },
+          "enemies": [
+            {
+              "id": "BOWLBUG_SILK",
+              "hp": 19,
+              "block": 0,
+              "powers": {
+                "WEAK_POWER": 1,
+                "POISON_POWER": 6
+              },
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Debuff",
+                  "label": null,
+                  "damage": null,
+                  "hits": null,
+                  "total_damage": null,
+                  "status_card_count": null
+                }
+              ]
+            },
+            {
+              "id": "SLUMBERING_BEETLE",
+              "hp": 89,
+              "block": 17,
+              "powers": {
+                "PLATING_POWER": 17,
+                "SLUMBER_POWER": 1,
+                "POISON_POWER": 3
+              },
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Sleep",
+                  "label": null,
+                  "damage": null,
+                  "hits": null,
+                  "total_damage": null,
+                  "status_card_count": null
+                }
+              ]
+            }
+          ],
+          "hand": [
+            {
+              "id": "DEFEND_SILENT",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "Block",
+                  "base_value": 5,
+                  "current_value": 9,
+                  "enchanted_value": 5,
+                  "is_modified": true,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "PIERCING_WAIL",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "StrengthLoss",
+                  "base_value": 6,
+                  "current_value": 6,
+                  "enchanted_value": 6,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "run_id": "DUZUBAJ3A8GP",
+        "floor": 30,
+        "turn": 4,
+        "before": {
+          "line": 274979,
+          "hp": 5,
+          "block": 0,
+          "energy": 4,
+          "powers": {
+            "THORNS_POWER": 3,
+            "FASTEN_POWER": 4,
+            "WEAK_POWER": 1
+          },
+          "enemies": [
+            {
+              "id": "BOWLBUG_SILK",
+              "hp": 13,
+              "block": 0,
+              "powers": {
+                "POISON_POWER": 5
+              },
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Attack",
+                  "label": "5[font_size=18]×2[/font_size]",
+                  "damage": 5,
+                  "hits": 2,
+                  "total_damage": 10,
+                  "status_card_count": null
+                }
+              ]
+            },
+            {
+              "id": "SLUMBERING_BEETLE",
+              "hp": 86,
+              "block": 0,
+              "powers": {
+                "POISON_POWER": 2
+              },
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Attack",
+                  "label": "18",
+                  "damage": 18,
+                  "hits": 1,
+                  "total_damage": 18,
+                  "status_card_count": null
+                },
+                {
+                  "index": 1,
+                  "intent_type": "Buff",
+                  "label": null,
+                  "damage": null,
+                  "hits": null,
+                  "total_damage": null,
+                  "status_card_count": null
+                }
+              ]
+            }
+          ],
+          "hand": [
+            {
+              "id": "STRIKE_SILENT",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "Damage",
+                  "base_value": 6,
+                  "current_value": 4,
+                  "enchanted_value": 6,
+                  "is_modified": true,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "SURVIVOR",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "Block",
+                  "base_value": 8,
+                  "current_value": 8,
+                  "enchanted_value": 8,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "DEFEND_SILENT",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "Block",
+                  "base_value": 5,
+                  "current_value": 9,
+                  "enchanted_value": 5,
+                  "is_modified": true,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "POISONED_STAB",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "Damage",
+                  "base_value": 6,
+                  "current_value": 4,
+                  "enchanted_value": 6,
+                  "is_modified": true,
+                  "was_just_upgraded": false
+                },
+                {
+                  "name": "PoisonPower",
+                  "base_value": 3,
+                  "current_value": 3,
+                  "enchanted_value": 3,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "DEFEND_SILENT",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "Block",
+                  "base_value": 5,
+                  "current_value": 9,
+                  "enchanted_value": 5,
+                  "is_modified": true,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "ASCENDERS_BANE",
+              "upgraded": false,
+              "cost": -1,
+              "values": []
+            },
+            {
+              "id": "CLOAK_AND_DAGGER",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "Block",
+                  "base_value": 6,
+                  "current_value": 6,
+                  "enchanted_value": 6,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                },
+                {
+                  "name": "Cards",
+                  "base_value": 1,
+                  "current_value": 1,
+                  "enchanted_value": 1,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            }
+          ]
+        },
+        "after": {
+          "line": 274984,
+          "hp": 5,
+          "block": 26,
+          "energy": 0,
+          "powers": {
+            "THORNS_POWER": 3,
+            "FASTEN_POWER": 4,
+            "WEAK_POWER": 1
+          },
+          "enemies": [
+            {
+              "id": "BOWLBUG_SILK",
+              "hp": 13,
+              "block": 0,
+              "powers": {
+                "POISON_POWER": 5
+              },
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Attack",
+                  "label": "5[font_size=18]×2[/font_size]",
+                  "damage": 5,
+                  "hits": 2,
+                  "total_damage": 10,
+                  "status_card_count": null
+                }
+              ]
+            },
+            {
+              "id": "SLUMBERING_BEETLE",
+              "hp": 82,
+              "block": 0,
+              "powers": {
+                "POISON_POWER": 5
+              },
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Attack",
+                  "label": "18",
+                  "damage": 18,
+                  "hits": 1,
+                  "total_damage": 18,
+                  "status_card_count": null
+                },
+                {
+                  "index": 1,
+                  "intent_type": "Buff",
+                  "label": null,
+                  "damage": null,
+                  "hits": null,
+                  "total_damage": null,
+                  "status_card_count": null
+                }
+              ]
+            }
+          ],
+          "hand": [
+            {
+              "id": "STRIKE_SILENT",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "Damage",
+                  "base_value": 6,
+                  "current_value": 4,
+                  "enchanted_value": 6,
+                  "is_modified": true,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "CLOAK_AND_DAGGER",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "Block",
+                  "base_value": 6,
+                  "current_value": 6,
+                  "enchanted_value": 6,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                },
+                {
+                  "name": "Cards",
+                  "base_value": 1,
+                  "current_value": 1,
+                  "enchanted_value": 1,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "run_id": "DUZUBAJ3A8GP",
+        "floor": 30,
+        "turn": 5,
+        "before": {
+          "line": 274985,
+          "hp": 3,
+          "block": 0,
+          "energy": 4,
+          "powers": {
+            "THORNS_POWER": 3,
+            "FASTEN_POWER": 4
+          },
+          "enemies": [
+            {
+              "id": "BOWLBUG_SILK",
+              "hp": 2,
+              "block": 0,
+              "powers": {
+                "POISON_POWER": 4
+              },
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Debuff",
+                  "label": null,
+                  "damage": null,
+                  "hits": null,
+                  "total_damage": null,
+                  "status_card_count": null
+                }
+              ]
+            },
+            {
+              "id": "SLUMBERING_BEETLE",
+              "hp": 74,
+              "block": 0,
+              "powers": {
+                "POISON_POWER": 4,
+                "STRENGTH_POWER": 2
+              },
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Attack",
+                  "label": "20",
+                  "damage": 20,
+                  "hits": 1,
+                  "total_damage": 20,
+                  "status_card_count": null
+                },
+                {
+                  "index": 1,
+                  "intent_type": "Buff",
+                  "label": null,
+                  "damage": null,
+                  "hits": null,
+                  "total_damage": null,
+                  "status_card_count": null
+                }
+              ]
+            }
+          ],
+          "hand": [
+            {
+              "id": "DEFEND_SILENT",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "Block",
+                  "base_value": 5,
+                  "current_value": 9,
+                  "enchanted_value": 5,
+                  "is_modified": true,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "DEADLY_POISON",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "PoisonPower",
+                  "base_value": 5,
+                  "current_value": 5,
+                  "enchanted_value": 5,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "PIERCING_WAIL",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "StrengthLoss",
+                  "base_value": 6,
+                  "current_value": 6,
+                  "enchanted_value": 6,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "MIRAGE",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "CalculatedBlock",
+                  "base_value": 0,
+                  "current_value": 8,
+                  "enchanted_value": 0,
+                  "is_modified": true,
+                  "was_just_upgraded": false
+                },
+                {
+                  "name": "CalculationBase",
+                  "base_value": 0,
+                  "current_value": 0,
+                  "enchanted_value": 0,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                },
+                {
+                  "name": "CalculationExtra",
+                  "base_value": 1,
+                  "current_value": 1,
+                  "enchanted_value": 1,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "DEADLY_POISON",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "PoisonPower",
+                  "base_value": 5,
+                  "current_value": 5,
+                  "enchanted_value": 5,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            }
+          ]
+        },
+        "after": {
+          "line": 274989,
+          "hp": 3,
+          "block": 22,
+          "energy": 0,
+          "powers": {
+            "THORNS_POWER": 3,
+            "FASTEN_POWER": 4
+          },
+          "enemies": [
+            {
+              "id": "BOWLBUG_SILK",
+              "hp": 2,
+              "block": 0,
+              "powers": {
+                "POISON_POWER": 9,
+                "STRENGTH_POWER": -6,
+                "PIERCING_WAIL_POWER": 6
+              },
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Debuff",
+                  "label": null,
+                  "damage": null,
+                  "hits": null,
+                  "total_damage": null,
+                  "status_card_count": null
+                }
+              ]
+            },
+            {
+              "id": "SLUMBERING_BEETLE",
+              "hp": 74,
+              "block": 0,
+              "powers": {
+                "POISON_POWER": 4,
+                "STRENGTH_POWER": -4,
+                "PIERCING_WAIL_POWER": 6
+              },
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Attack",
+                  "label": "14",
+                  "damage": 14,
+                  "hits": 1,
+                  "total_damage": 14,
+                  "status_card_count": null
+                },
+                {
+                  "index": 1,
+                  "intent_type": "Buff",
+                  "label": null,
+                  "damage": null,
+                  "hits": null,
+                  "total_damage": null,
+                  "status_card_count": null
+                }
+              ]
+            }
+          ],
+          "hand": [
+            {
+              "id": "DEADLY_POISON",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "PoisonPower",
+                  "base_value": 5,
+                  "current_value": 5,
+                  "enchanted_value": 5,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "run_id": "DUZUBAJ3A8GP",
+        "floor": 30,
+        "turn": 6,
+        "before": {
+          "line": 274990,
+          "hp": 3,
+          "block": 0,
+          "energy": 4,
+          "powers": {
+            "THORNS_POWER": 3,
+            "FASTEN_POWER": 4
+          },
+          "enemies": [
+            {
+              "id": "SLUMBERING_BEETLE",
+              "hp": 67,
+              "block": 0,
+              "powers": {
+                "POISON_POWER": 3,
+                "STRENGTH_POWER": 4
+              },
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Attack",
+                  "label": "22",
+                  "damage": 22,
+                  "hits": 1,
+                  "total_damage": 22,
+                  "status_card_count": null
+                },
+                {
+                  "index": 1,
+                  "intent_type": "Buff",
+                  "label": null,
+                  "damage": null,
+                  "hits": null,
+                  "total_damage": null,
+                  "status_card_count": null
+                }
+              ]
+            }
+          ],
+          "hand": [
+            {
+              "id": "ECHOING_SLASH",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "Damage",
+                  "base_value": 10,
+                  "current_value": 10,
+                  "enchanted_value": 10,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "BURST",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "Skills",
+                  "base_value": 1,
+                  "current_value": 1,
+                  "enchanted_value": 1,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "STRIKE_SILENT",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "Damage",
+                  "base_value": 6,
+                  "current_value": 6,
+                  "enchanted_value": 6,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "DEFEND_SILENT",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "Block",
+                  "base_value": 5,
+                  "current_value": 9,
+                  "enchanted_value": 5,
+                  "is_modified": true,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "DEADLY_POISON",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "PoisonPower",
+                  "base_value": 5,
+                  "current_value": 5,
+                  "enchanted_value": 5,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            }
+          ]
+        },
+        "after": {
+          "line": 274990,
+          "hp": 3,
+          "block": 0,
+          "energy": 4,
+          "powers": {
+            "THORNS_POWER": 3,
+            "FASTEN_POWER": 4
+          },
+          "enemies": [
+            {
+              "id": "SLUMBERING_BEETLE",
+              "hp": 67,
+              "block": 0,
+              "powers": {
+                "POISON_POWER": 3,
+                "STRENGTH_POWER": 4
+              },
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Attack",
+                  "label": "22",
+                  "damage": 22,
+                  "hits": 1,
+                  "total_damage": 22,
+                  "status_card_count": null
+                },
+                {
+                  "index": 1,
+                  "intent_type": "Buff",
+                  "label": null,
+                  "damage": null,
+                  "hits": null,
+                  "total_damage": null,
+                  "status_card_count": null
+                }
+              ]
+            }
+          ],
+          "hand": [
+            {
+              "id": "ECHOING_SLASH",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "Damage",
+                  "base_value": 10,
+                  "current_value": 10,
+                  "enchanted_value": 10,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "BURST",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "Skills",
+                  "base_value": 1,
+                  "current_value": 1,
+                  "enchanted_value": 1,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "STRIKE_SILENT",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "Damage",
+                  "base_value": 6,
+                  "current_value": 6,
+                  "enchanted_value": 6,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "DEFEND_SILENT",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "Block",
+                  "base_value": 5,
+                  "current_value": 9,
+                  "enchanted_value": 5,
+                  "is_modified": true,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "DEADLY_POISON",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "PoisonPower",
+                  "base_value": 5,
+                  "current_value": 5,
+                  "enchanted_value": 5,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "run_id": "DUZUBAJ3A8GP",
+        "floor": 30,
+        "turn": 3,
+        "before": {
+          "line": 275003,
+          "hp": 5,
+          "block": 0,
+          "energy": 4,
+          "powers": {
+            "THORNS_POWER": 3,
+            "FASTEN_POWER": 4
+          },
+          "enemies": [
+            {
+              "id": "BOWLBUG_SILK",
+              "hp": 37,
+              "block": 0,
+              "powers": {},
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Debuff",
+                  "label": null,
+                  "damage": null,
+                  "hits": null,
+                  "total_damage": null,
+                  "status_card_count": null
+                }
+              ]
+            },
+            {
+              "id": "SLUMBERING_BEETLE",
+              "hp": 89,
+              "block": 17,
+              "powers": {
+                "PLATING_POWER": 17,
+                "SLUMBER_POWER": 1
+              },
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Sleep",
+                  "label": null,
+                  "damage": null,
+                  "hits": null,
+                  "total_damage": null,
+                  "status_card_count": null
+                }
+              ]
+            }
+          ],
+          "hand": [
+            {
+              "id": "DEFEND_SILENT",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "Block",
+                  "base_value": 5,
+                  "current_value": 9,
+                  "enchanted_value": 5,
+                  "is_modified": true,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "NEUTRALIZE",
+              "upgraded": false,
+              "cost": 0,
+              "values": [
+                {
+                  "name": "Damage",
+                  "base_value": 3,
+                  "current_value": 3,
+                  "enchanted_value": 3,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                },
+                {
+                  "name": "WeakPower",
+                  "base_value": 1,
+                  "current_value": 1,
+                  "enchanted_value": 1,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "PREDATOR",
+              "upgraded": false,
+              "cost": 2,
+              "values": [
+                {
+                  "name": "Damage",
+                  "base_value": 15,
+                  "current_value": 15,
+                  "enchanted_value": 15,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "PIERCING_WAIL",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "StrengthLoss",
+                  "base_value": 6,
+                  "current_value": 6,
+                  "enchanted_value": 6,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "BOUNCING_FLASK",
+              "upgraded": false,
+              "cost": 2,
+              "values": [
+                {
+                  "name": "PoisonPower",
+                  "base_value": 3,
+                  "current_value": 3,
+                  "enchanted_value": 3,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                },
+                {
+                  "name": "Repeat",
+                  "base_value": 3,
+                  "current_value": 3,
+                  "enchanted_value": 3,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            }
+          ]
+        },
+        "after": {
+          "line": 275006,
+          "hp": 5,
+          "block": 0,
+          "energy": 0,
+          "powers": {
+            "THORNS_POWER": 3,
+            "FASTEN_POWER": 4,
+            "DRAW_CARDS_NEXT_TURN_POWER": 2
+          },
+          "enemies": [
+            {
+              "id": "BOWLBUG_SILK",
+              "hp": 19,
+              "block": 0,
+              "powers": {
+                "WEAK_POWER": 1,
+                "POISON_POWER": 6
+              },
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Debuff",
+                  "label": null,
+                  "damage": null,
+                  "hits": null,
+                  "total_damage": null,
+                  "status_card_count": null
+                }
+              ]
+            },
+            {
+              "id": "SLUMBERING_BEETLE",
+              "hp": 89,
+              "block": 17,
+              "powers": {
+                "PLATING_POWER": 17,
+                "SLUMBER_POWER": 1,
+                "POISON_POWER": 3
+              },
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Sleep",
+                  "label": null,
+                  "damage": null,
+                  "hits": null,
+                  "total_damage": null,
+                  "status_card_count": null
+                }
+              ]
+            }
+          ],
+          "hand": [
+            {
+              "id": "DEFEND_SILENT",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "Block",
+                  "base_value": 5,
+                  "current_value": 9,
+                  "enchanted_value": 5,
+                  "is_modified": true,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "PIERCING_WAIL",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "StrengthLoss",
+                  "base_value": 6,
+                  "current_value": 6,
+                  "enchanted_value": 6,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "run_id": "DUZUBAJ3A8GP",
+        "floor": 30,
+        "turn": 4,
+        "before": {
+          "line": 275007,
+          "hp": 5,
+          "block": 0,
+          "energy": 4,
+          "powers": {
+            "THORNS_POWER": 3,
+            "FASTEN_POWER": 4,
+            "WEAK_POWER": 1
+          },
+          "enemies": [
+            {
+              "id": "BOWLBUG_SILK",
+              "hp": 13,
+              "block": 0,
+              "powers": {
+                "POISON_POWER": 5
+              },
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Attack",
+                  "label": "5[font_size=18]×2[/font_size]",
+                  "damage": 5,
+                  "hits": 2,
+                  "total_damage": 10,
+                  "status_card_count": null
+                }
+              ]
+            },
+            {
+              "id": "SLUMBERING_BEETLE",
+              "hp": 86,
+              "block": 0,
+              "powers": {
+                "POISON_POWER": 2
+              },
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Attack",
+                  "label": "18",
+                  "damage": 18,
+                  "hits": 1,
+                  "total_damage": 18,
+                  "status_card_count": null
+                },
+                {
+                  "index": 1,
+                  "intent_type": "Buff",
+                  "label": null,
+                  "damage": null,
+                  "hits": null,
+                  "total_damage": null,
+                  "status_card_count": null
+                }
+              ]
+            }
+          ],
+          "hand": [
+            {
+              "id": "STRIKE_SILENT",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "Damage",
+                  "base_value": 6,
+                  "current_value": 4,
+                  "enchanted_value": 6,
+                  "is_modified": true,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "SURVIVOR",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "Block",
+                  "base_value": 8,
+                  "current_value": 8,
+                  "enchanted_value": 8,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "DEFEND_SILENT",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "Block",
+                  "base_value": 5,
+                  "current_value": 9,
+                  "enchanted_value": 5,
+                  "is_modified": true,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "POISONED_STAB",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "Damage",
+                  "base_value": 6,
+                  "current_value": 4,
+                  "enchanted_value": 6,
+                  "is_modified": true,
+                  "was_just_upgraded": false
+                },
+                {
+                  "name": "PoisonPower",
+                  "base_value": 3,
+                  "current_value": 3,
+                  "enchanted_value": 3,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "DEFEND_SILENT",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "Block",
+                  "base_value": 5,
+                  "current_value": 9,
+                  "enchanted_value": 5,
+                  "is_modified": true,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "ASCENDERS_BANE",
+              "upgraded": false,
+              "cost": -1,
+              "values": []
+            },
+            {
+              "id": "CLOAK_AND_DAGGER",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "Block",
+                  "base_value": 6,
+                  "current_value": 6,
+                  "enchanted_value": 6,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                },
+                {
+                  "name": "Cards",
+                  "base_value": 1,
+                  "current_value": 1,
+                  "enchanted_value": 1,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            }
+          ]
+        },
+        "after": {
+          "line": 275012,
+          "hp": 5,
+          "block": 24,
+          "energy": 0,
+          "powers": {
+            "THORNS_POWER": 3,
+            "FASTEN_POWER": 4,
+            "WEAK_POWER": 1
+          },
+          "enemies": [
+            {
+              "id": "BOWLBUG_SILK",
+              "hp": 13,
+              "block": 0,
+              "powers": {
+                "POISON_POWER": 5
+              },
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Attack",
+                  "label": "5[font_size=18]×2[/font_size]",
+                  "damage": 5,
+                  "hits": 2,
+                  "total_damage": 10,
+                  "status_card_count": null
+                }
+              ]
+            },
+            {
+              "id": "SLUMBERING_BEETLE",
+              "hp": 79,
+              "block": 0,
+              "powers": {
+                "POISON_POWER": 5
+              },
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Attack",
+                  "label": "18",
+                  "damage": 18,
+                  "hits": 1,
+                  "total_damage": 18,
+                  "status_card_count": null
+                },
+                {
+                  "index": 1,
+                  "intent_type": "Buff",
+                  "label": null,
+                  "damage": null,
+                  "hits": null,
+                  "total_damage": null,
+                  "status_card_count": null
+                }
+              ]
+            }
+          ],
+          "hand": [
+            {
+              "id": "STRIKE_SILENT",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "Damage",
+                  "base_value": 6,
+                  "current_value": 4,
+                  "enchanted_value": 6,
+                  "is_modified": true,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "SURVIVOR",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "Block",
+                  "base_value": 8,
+                  "current_value": 8,
+                  "enchanted_value": 8,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "ASCENDERS_BANE",
+              "upgraded": false,
+              "cost": -1,
+              "values": []
+            }
+          ]
+        }
+      },
+      {
+        "run_id": "DUZUBAJ3A8GP",
+        "floor": 30,
+        "turn": 5,
+        "before": {
+          "line": 275013,
+          "hp": 1,
+          "block": 0,
+          "energy": 4,
+          "powers": {
+            "THORNS_POWER": 3,
+            "FASTEN_POWER": 4
+          },
+          "enemies": [
+            {
+              "id": "BOWLBUG_SILK",
+              "hp": 2,
+              "block": 0,
+              "powers": {
+                "POISON_POWER": 4
+              },
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Debuff",
+                  "label": null,
+                  "damage": null,
+                  "hits": null,
+                  "total_damage": null,
+                  "status_card_count": null
+                }
+              ]
+            },
+            {
+              "id": "SLUMBERING_BEETLE",
+              "hp": 71,
+              "block": 0,
+              "powers": {
+                "POISON_POWER": 4,
+                "STRENGTH_POWER": 2
+              },
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Attack",
+                  "label": "20",
+                  "damage": 20,
+                  "hits": 1,
+                  "total_damage": 20,
+                  "status_card_count": null
+                },
+                {
+                  "index": 1,
+                  "intent_type": "Buff",
+                  "label": null,
+                  "damage": null,
+                  "hits": null,
+                  "total_damage": null,
+                  "status_card_count": null
+                }
+              ]
+            }
+          ],
+          "hand": [
+            {
+              "id": "DEFEND_SILENT",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "Block",
+                  "base_value": 5,
+                  "current_value": 9,
+                  "enchanted_value": 5,
+                  "is_modified": true,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "DEADLY_POISON",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "PoisonPower",
+                  "base_value": 5,
+                  "current_value": 5,
+                  "enchanted_value": 5,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "PIERCING_WAIL",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "StrengthLoss",
+                  "base_value": 6,
+                  "current_value": 6,
+                  "enchanted_value": 6,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "MIRAGE",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "CalculatedBlock",
+                  "base_value": 0,
+                  "current_value": 8,
+                  "enchanted_value": 0,
+                  "is_modified": true,
+                  "was_just_upgraded": false
+                },
+                {
+                  "name": "CalculationBase",
+                  "base_value": 0,
+                  "current_value": 0,
+                  "enchanted_value": 0,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                },
+                {
+                  "name": "CalculationExtra",
+                  "base_value": 1,
+                  "current_value": 1,
+                  "enchanted_value": 1,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "DEADLY_POISON",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "PoisonPower",
+                  "base_value": 5,
+                  "current_value": 5,
+                  "enchanted_value": 5,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            }
+          ]
+        },
+        "after": {
+          "line": 275017,
+          "hp": 1,
+          "block": 22,
+          "energy": 0,
+          "powers": {
+            "THORNS_POWER": 3,
+            "FASTEN_POWER": 4
+          },
+          "enemies": [
+            {
+              "id": "BOWLBUG_SILK",
+              "hp": 2,
+              "block": 0,
+              "powers": {
+                "POISON_POWER": 4,
+                "STRENGTH_POWER": -6,
+                "PIERCING_WAIL_POWER": 6
+              },
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Debuff",
+                  "label": null,
+                  "damage": null,
+                  "hits": null,
+                  "total_damage": null,
+                  "status_card_count": null
+                }
+              ]
+            },
+            {
+              "id": "SLUMBERING_BEETLE",
+              "hp": 71,
+              "block": 0,
+              "powers": {
+                "POISON_POWER": 9,
+                "STRENGTH_POWER": -4,
+                "PIERCING_WAIL_POWER": 6
+              },
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Attack",
+                  "label": "14",
+                  "damage": 14,
+                  "hits": 1,
+                  "total_damage": 14,
+                  "status_card_count": null
+                },
+                {
+                  "index": 1,
+                  "intent_type": "Buff",
+                  "label": null,
+                  "damage": null,
+                  "hits": null,
+                  "total_damage": null,
+                  "status_card_count": null
+                }
+              ]
+            }
+          ],
+          "hand": [
+            {
+              "id": "DEADLY_POISON",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "PoisonPower",
+                  "base_value": 5,
+                  "current_value": 5,
+                  "enchanted_value": 5,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "run_id": "DUZUBAJ3A8GP",
+        "floor": 30,
+        "turn": 6,
+        "before": {
+          "line": 275018,
+          "hp": 1,
+          "block": 0,
+          "energy": 4,
+          "powers": {
+            "THORNS_POWER": 3,
+            "FASTEN_POWER": 4
+          },
+          "enemies": [
+            {
+              "id": "SLUMBERING_BEETLE",
+              "hp": 59,
+              "block": 0,
+              "powers": {
+                "POISON_POWER": 8,
+                "STRENGTH_POWER": 4
+              },
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Attack",
+                  "label": "22",
+                  "damage": 22,
+                  "hits": 1,
+                  "total_damage": 22,
+                  "status_card_count": null
+                },
+                {
+                  "index": 1,
+                  "intent_type": "Buff",
+                  "label": null,
+                  "damage": null,
+                  "hits": null,
+                  "total_damage": null,
+                  "status_card_count": null
+                }
+              ]
+            }
+          ],
+          "hand": [
+            {
+              "id": "ECHOING_SLASH",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "Damage",
+                  "base_value": 10,
+                  "current_value": 10,
+                  "enchanted_value": 10,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "BURST",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "Skills",
+                  "base_value": 1,
+                  "current_value": 1,
+                  "enchanted_value": 1,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "STRIKE_SILENT",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "Damage",
+                  "base_value": 6,
+                  "current_value": 6,
+                  "enchanted_value": 6,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "DEADLY_POISON",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "PoisonPower",
+                  "base_value": 5,
+                  "current_value": 5,
+                  "enchanted_value": 5,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "SURVIVOR",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "Block",
+                  "base_value": 8,
+                  "current_value": 8,
+                  "enchanted_value": 8,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            }
+          ]
+        },
+        "after": {
+          "line": 275023,
+          "hp": 0,
+          "block": 0,
+          "energy": 0,
+          "powers": {},
+          "enemies": [
+            {
+              "id": "SLUMBERING_BEETLE",
+              "hp": 32,
+              "block": 0,
+              "powers": {
+                "POISON_POWER": 7,
+                "STRENGTH_POWER": 4
+              },
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Attack",
+                  "label": "22",
+                  "damage": 22,
+                  "hits": 1,
+                  "total_damage": 22,
+                  "status_card_count": null
+                },
+                {
+                  "index": 1,
+                  "intent_type": "Buff",
+                  "label": null,
+                  "damage": null,
+                  "hits": null,
+                  "total_damage": null,
+                  "status_card_count": null
+                }
+              ]
+            }
+          ],
+          "hand": []
+        }
+      },
+      {
+        "run_id": "VLZ6CCT8AQ0A",
+        "floor": 45,
+        "turn": 5,
+        "before": {
+          "line": 275748,
+          "hp": 32,
+          "block": 0,
+          "energy": 3,
+          "powers": {
+            "STRENGTH_POWER": 2,
+            "FASTEN_POWER": 4,
+            "ACCELERANT_POWER": 1,
+            "TOOLS_OF_THE_TRADE_POWER": 1,
+            "HEX_POWER": 2,
+            "DAMPEN_POWER": 1,
+            "DEXTERITY_POWER": 3
+          },
+          "enemies": [
+            {
+              "id": "FLAIL_KNIGHT",
+              "hp": 24,
+              "block": 0,
+              "powers": {
+                "POISON_POWER": 2,
+                "STRENGTH_POWER": 3
+              },
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Attack",
+                  "label": "13[font_size=18]×2[/font_size]",
+                  "damage": 13,
+                  "hits": 2,
+                  "total_damage": 26,
+                  "status_card_count": null
+                }
+              ]
+            },
+            {
+              "id": "SPECTRAL_KNIGHT",
+              "hp": 80,
+              "block": 0,
+              "powers": {},
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Attack",
+                  "label": "17",
+                  "damage": 17,
+                  "hits": 1,
+                  "total_damage": 17,
+                  "status_card_count": null
+                }
+              ]
+            },
+            {
+              "id": "MAGI_KNIGHT",
+              "hp": 77,
+              "block": 9,
+              "powers": {},
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Attack",
+                  "label": "40",
+                  "damage": 40,
+                  "hits": 1,
+                  "total_damage": 40,
+                  "status_card_count": null
+                }
+              ]
+            }
+          ],
+          "hand": [
+            {
+              "id": "STRIKE_SILENT",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "Damage",
+                  "base_value": 6,
+                  "current_value": 8,
+                  "enchanted_value": 6,
+                  "is_modified": true,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "NOXIOUS_FUMES",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "PoisonPerTurn",
+                  "base_value": 2,
+                  "current_value": 2,
+                  "enchanted_value": 2,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "PREPARED",
+              "upgraded": false,
+              "cost": 0,
+              "values": [
+                {
+                  "name": "Cards",
+                  "base_value": 1,
+                  "current_value": 1,
+                  "enchanted_value": 1,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "PIERCING_WAIL",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "StrengthLoss",
+                  "base_value": 6,
+                  "current_value": 6,
+                  "enchanted_value": 6,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "ACCELERANT",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "Accelerant",
+                  "base_value": 1,
+                  "current_value": 1,
+                  "enchanted_value": 1,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "BACKFLIP",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "Block",
+                  "base_value": 5,
+                  "current_value": 8,
+                  "enchanted_value": 5,
+                  "is_modified": true,
+                  "was_just_upgraded": false
+                },
+                {
+                  "name": "Cards",
+                  "base_value": 2,
+                  "current_value": 2,
+                  "enchanted_value": 2,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "NOXIOUS_FUMES",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "PoisonPerTurn",
+                  "base_value": 2,
+                  "current_value": 2,
+                  "enchanted_value": 2,
+                  "is_modified": false,
+                  "was_just_upgraded": false
+                }
+              ]
+            },
+            {
+              "id": "DAGGER_SPRAY",
+              "upgraded": false,
+              "cost": 1,
+              "values": [
+                {
+                  "name": "Damage",
+                  "base_value": 4,
+                  "current_value": 6,
+                  "enchanted_value": 4,
+                  "is_modified": true,
+                  "was_just_upgraded": false
+                }
+              ]
+            }
+          ]
+        },
+        "after": {
+          "line": 275755,
+          "hp": 0,
+          "block": 0,
+          "energy": 0,
+          "powers": {},
+          "enemies": [
+            {
+              "id": "FLAIL_KNIGHT",
+              "hp": 21,
+              "block": 0,
+              "powers": {
+                "STRENGTH_POWER": -3,
+                "PIERCING_WAIL_POWER": 6
+              },
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Attack",
+                  "label": "7[font_size=18]×2[/font_size]",
+                  "damage": 7,
+                  "hits": 2,
+                  "total_damage": 14,
+                  "status_card_count": null
+                }
+              ]
+            },
+            {
+              "id": "SPECTRAL_KNIGHT",
+              "hp": 80,
+              "block": 0,
+              "powers": {
+                "STRENGTH_POWER": -6,
+                "PIERCING_WAIL_POWER": 6
+              },
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Attack",
+                  "label": "11",
+                  "damage": 11,
+                  "hits": 1,
+                  "total_damage": 11,
+                  "status_card_count": null
+                }
+              ]
+            },
+            {
+              "id": "MAGI_KNIGHT",
+              "hp": 77,
+              "block": 0,
+              "powers": {
+                "STRENGTH_POWER": -6,
+                "PIERCING_WAIL_POWER": 6
+              },
+              "intents": [
+                {
+                  "index": 0,
+                  "intent_type": "Attack",
+                  "label": "34",
+                  "damage": 34,
+                  "hits": 1,
+                  "total_damage": 34,
+                  "status_card_count": null
+                }
+              ]
+            }
+          ],
+          "hand": []
+        }
+      }
+    ]
+  },
+  "eight_source_blob_ancestor_readback": {
+    "live_head": "51241fde644046b67dc8813fa97a089970bd21f9",
+    "paths": {
+      "agent/src/reflex/silent-apotheosis.ts": {
+        "live_ancestor_commit": "a11dd870b09f3f1b67fcb5d6c08af6573fd809e0",
+        "ancestor_verified": true,
+        "base_blob": "c5282d3cb8c42ab812d7d27bc69796b146dd0720",
+        "live_blob": "c5282d3cb8c42ab812d7d27bc69796b146dd0720",
+        "equal": true
+      },
+      "agent/src/reflex/silent-apotheosis-reference.ts": {
+        "live_ancestor_commit": "3aa6c03a83c5cdcdea29c43e3caa130bcce9bd17",
+        "ancestor_verified": true,
+        "base_blob": "c9d00f670fd4dc12b15251fc715d2a3e215ac04b",
+        "live_blob": "c9d00f670fd4dc12b15251fc715d2a3e215ac04b",
+        "equal": true
+      },
+      "agent/src/reflex/silent-selection-audit.ts": {
+        "live_ancestor_commit": "05cd292c6f01bb31e406473d3a9843e659d62b93",
+        "ancestor_verified": true,
+        "base_blob": "cfe8132edd3112c78c004d21b9544678140e85c9",
+        "live_blob": "cfe8132edd3112c78c004d21b9544678140e85c9",
+        "equal": true
+      },
+      "agent/src/reflex/silent-hp-guard-audit.ts": {
+        "live_ancestor_commit": "a8b1f8be153fe4f3a34146117546c2178f2e446b",
+        "ancestor_verified": true,
+        "base_blob": "6bed860a6970660523174d66fbcac8ef24467f23",
+        "live_blob": "6bed860a6970660523174d66fbcac8ef24467f23",
+        "equal": true
+      },
+      "learner/lib/selection-execution.ts": {
+        "live_ancestor_commit": "9b87d54f097d84521152e6cca8d6072af8140394",
+        "ancestor_verified": true,
+        "base_blob": "409c559f9750e2ab0325a444ce1b98290a9184b4",
+        "live_blob": "409c559f9750e2ab0325a444ce1b98290a9184b4",
+        "equal": true
+      },
+      "agent/src/reflex/card-model.ts": {
+        "live_ancestor_commit": "ba2d865123473dab7ca5e50f9be3d20a2296fbdf",
+        "ancestor_verified": true,
+        "base_blob": "9ebaa712692d4ab1a45575db7310b6e557046ccc",
+        "live_blob": "7363950fc2e836d5c43ac5e8ed6bc5eaa215c646",
+        "equal": false
+      },
+      "agent/src/reflex/turn-solver.ts": {
+        "live_ancestor_commit": "ba2d865123473dab7ca5e50f9be3d20a2296fbdf",
+        "ancestor_verified": true,
+        "base_blob": "54cff396f346f9168c4f267583f604fac07b2a51",
+        "live_blob": "f44cdcc649449fb206f2c1cc8642169760a8cc96",
+        "equal": false
+      },
+      "agent/src/reflex/rollout.ts": {
+        "live_ancestor_commit": "f2c7cc1a7288893bceae0f0b20304a2b1fae5f57",
+        "ancestor_verified": true,
+        "base_blob": "b2abbeba8ca8f195f4f8d47485352690f453bade",
+        "live_blob": "128dd0a2956ddf3caab0b9d9573ca77e18a431e4",
+        "equal": false
+      }
+    }
+  },
+  "original_consumer_summary": {
+    "runs": [
+      {
+        "run_id": "VLZ6CCT8AQ0A",
+        "states": 729,
+        "decisions": 699,
+        "consumer_windows": 1,
+        "excluded_decisions": [],
+        "segments": 99,
+        "full_candidates_certified": 0,
+        "observed_intervals": 77,
+        "observed_turns": 10,
+        "unknown_turn_reasons": {
+          "turn_opening_unverified": 93,
+          "turn_end_unverified": 4
+        }
+      },
+      {
+        "run_id": "8JRE1C4H4Z2W",
+        "states": 676,
+        "decisions": 659,
+        "consumer_windows": 1,
+        "excluded_decisions": [],
+        "segments": 113,
+        "full_candidates_certified": 0,
+        "observed_intervals": 264,
+        "observed_turns": 44,
+        "unknown_turn_reasons": {
+          "turn_opening_unverified": 61,
+          "turn_end_unverified": 6
+        }
+      },
+      {
+        "run_id": "CA5KE8GFJ9X2",
+        "states": 282,
+        "decisions": 265,
+        "consumer_windows": 2,
+        "excluded_decisions": [
+          {
+            "source_line": 267143,
+            "reason": "missing_decision_id"
+          }
+        ],
+        "segments": 41,
+        "full_candidates_certified": 0,
+        "observed_intervals": 0,
+        "observed_turns": 0,
+        "unknown_turn_reasons": {
+          "turn_opening_unverified": 46
+        }
+      },
+      {
+        "run_id": "5PM6JAQG6FNQ",
+        "states": 660,
+        "decisions": 638,
+        "consumer_windows": 1,
+        "excluded_decisions": [],
+        "segments": 83,
+        "full_candidates_certified": 0,
+        "observed_intervals": 202,
+        "observed_turns": 25,
+        "unknown_turn_reasons": {
+          "turn_opening_unverified": 69,
+          "turn_end_unverified": 7
+        }
+      },
+      {
+        "run_id": "61E2QS63Y9WU",
+        "states": 462,
+        "decisions": 443,
+        "consumer_windows": 2,
+        "excluded_decisions": [
+          {
+            "source_line": 267517,
+            "reason": "missing_decision_id"
+          }
+        ],
+        "segments": 63,
+        "full_candidates_certified": 0,
+        "observed_intervals": 127,
+        "observed_turns": 14,
+        "unknown_turn_reasons": {
+          "turn_opening_unverified": 53,
+          "turn_end_unverified": 6
+        }
+      },
+      {
+        "run_id": "DUZUBAJ3A8GP",
+        "states": 623,
+        "decisions": 602,
+        "consumer_windows": 4,
+        "excluded_decisions": [
+          {
+            "source_line": 268789,
+            "reason": "missing_decision_id"
+          },
+          {
+            "source_line": 268818,
+            "reason": "missing_decision_id"
+          },
+          {
+            "source_line": 268864,
+            "reason": "missing_decision_id"
+          }
+        ],
+        "segments": 77,
+        "full_candidates_certified": 0,
+        "observed_intervals": 189,
+        "observed_turns": 28,
+        "unknown_turn_reasons": {
+          "turn_opening_unverified": 63,
+          "turn_end_unverified": 5
+        }
+      }
+    ],
+    "supported": [
+      "ACCELERANT",
+      "BACKFLIP",
+      "DAGGER_SPRAY",
+      "DEFEND_SILENT",
+      "FASTEN",
+      "FOOTWORK",
+      "MALAISE",
+      "NEUTRALIZE",
+      "NOXIOUS_FUMES",
+      "PIERCING_WAIL",
+      "POISONED_STAB",
+      "SNAKEBITE",
+      "STRIKE_SILENT",
+      "SUCKER_PUNCH",
+      "SURVIVOR",
+      "TOOLS_OF_THE_TRADE"
+    ],
+    "unmodelled": [
+      "APOTHEOSIS",
+      "ASCENDERS_BANE",
+      "BACKFLIP",
+      "BECKON",
+      "DAGGER_SPRAY",
+      "DAZED",
+      "DEADLY_POISON",
+      "DEFEND_SILENT",
+      "MALAISE",
+      "NEUTRALIZE",
+      "PIERCING_WAIL",
+      "POISONED_STAB",
+      "POUNCE",
+      "PREDATOR",
+      "PREPARED",
+      "REFLEX",
+      "REND",
+      "SNAKEBITE",
+      "STRIKE_SILENT",
+      "SURVIVOR",
+      "TOXIC"
+    ]
+  },
+  "no_complete_candidate_or_cast_identity_inferred": true,
+  "native_contexts": [
+    {
+      "source": "ops/codex-ops/accounts/codex1/learner/sessions/2026/10/14/rollout-2026-10-14T11-13-27-01a13866-8be7-78c3-b0b8-f3470419b597.jsonl",
+      "offset": 50241,
+      "bytes": 5148,
+      "sha256": "d722ee142c076ed6bb677b7b873cabab367facf6dc5d76a8ef505d971d021431",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "sandbox_type": "workspace-write"
+    }
+  ],
+  "original_cli_rows": 26,
+  "no_claim_status_evidence_version_first_run_or_prior_change": true,
+  "seven_original_proposed_status_reaffirmations_verified_equal_before_and_after": true,
+  "no_code_merge_version_or_test_invented": true,
+  "waiting_bound_original_materials_preserved": true
+}

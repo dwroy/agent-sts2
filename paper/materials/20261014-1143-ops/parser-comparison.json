@@ -1,0 +1,202 @@
+{
+  "originalSource": "5ee86d1ef500d52dbf18177238f2f090afa17c4b",
+  "publishedSource": "56c256dad0d33b231b82b53113d3bdd84f9bfa20",
+  "results": [
+    {
+      "kind": "original_candidate_fixed_input",
+      "index": 0,
+      "sourceOffset": 302,
+      "blocks": [
+        {
+          "title": "wrapped full scan",
+          "timeout": 120000
+        },
+        {
+          "title": "nested closure",
+          "timeout": 30000
+        },
+        {
+          "title": "one board %s",
+          "timeout": 30000
+        },
+        {
+          "title": "missing each deadline",
+          "timeout": null
+        },
+        {
+          "title": "missing wrapped deadline",
+          "timeout": null
+        },
+        {
+          "title": "next test",
+          "timeout": 30000
+        }
+      ],
+      "scope": [
+        {
+          "title": "wrapped full scan",
+          "timeout": 120000,
+          "required": 120000
+        },
+        {
+          "title": "nested closure",
+          "timeout": 30000,
+          "required": 30000
+        },
+        {
+          "title": "one board %s",
+          "timeout": 30000,
+          "required": 30000
+        },
+        {
+          "title": "missing each deadline",
+          "timeout": null,
+          "required": 30000
+        },
+        {
+          "title": "missing wrapped deadline",
+          "timeout": null,
+          "required": 30000
+        },
+        {
+          "title": "next test",
+          "timeout": 30000,
+          "required": 30000
+        }
+      ],
+      "equal": true
+    },
+    {
+      "kind": "original_candidate_fixed_input",
+      "index": 1,
+      "sourceOffset": 2497,
+      "blocks": [
+        {
+          "title": "short scan",
+          "timeout": 30000
+        },
+        {
+          "title": "short individual %s",
+          "timeout": 15000
+        },
+        {
+          "title": "dynamic deadline",
+          "timeout": null
+        },
+        {
+          "title": "ordinary test",
+          "timeout": null
+        }
+      ],
+      "scope": [
+        {
+          "title": "short scan",
+          "timeout": 30000,
+          "required": 120000
+        },
+        {
+          "title": "short individual %s",
+          "timeout": 15000,
+          "required": 30000
+        },
+        {
+          "title": "dynamic deadline",
+          "timeout": null,
+          "required": 30000
+        }
+      ],
+      "equal": true
+    },
+    {
+      "kind": "actual_published_fixture",
+      "file": "potion-mc.test.ts",
+      "registrations": 18,
+      "checked": 5,
+      "registered_deadlines": [
+        {
+          "title": "logged boards: the combat question is the same twice (the samples are seeded per board)",
+          "timeout": 30000,
+          "required": 30000
+        },
+        {
+          "title": "logged boards holding a random potion: its option has the distribution, the shares and the re-plan note",
+          "timeout": 30000,
+          "required": 30000
+        },
+        {
+          "title": "with the rollout on, the option's rollout facts are the median sample's line's",
+          "timeout": 30000,
+          "required": 30000
+        },
+        {
+          "title": "Jev's pick of it drinks now, drops any committed line, and the next board is planned afresh (the real cards)",
+          "timeout": 30000,
+          "required": 30000
+        },
+        {
+          "title": "Entropic Brew (always an option): 'drink first: <text> (N random potions …), then re-plan', no hp/damage numbers",
+          "timeout": 30000,
+          "required": 30000
+        }
+      ],
+      "equal": true
+    },
+    {
+      "kind": "actual_published_fixture",
+      "file": "rollout-live.test.ts",
+      "registrations": 12,
+      "checked": 9,
+      "registered_deadlines": [
+        {
+          "title": "every option of a logged board carries the rollout and history facts; the decision log gets the rollout",
+          "timeout": 30000,
+          "required": 30000
+        },
+        {
+          "title": "a drink-first potion option says it is not rolled out",
+          "timeout": 30000,
+          "required": 30000
+        },
+        {
+          "title": "up to 10 options: every shown line of every logged board carries the rollout and history facts, exactly one is rollout_best (at most one on a saturated board)",
+          "timeout": 120000,
+          "required": 120000
+        },
+        {
+          "title": "keeps to the time budget under a mock clock, degrading the horizon/samples, and says so",
+          "timeout": 30000,
+          "required": 30000
+        },
+        {
+          "title": "the controlled clock: every logged board's rollout stays inside the budget",
+          "timeout": 120000,
+          "required": 120000
+        },
+        {
+          "title": "code's ranking, options and auto-acts are unchanged by the rollout: %s (%s)",
+          "timeout": 30000,
+          "required": 30000
+        },
+        {
+          "title": "logged saturated boards: every line reads its deaths, the enemy HP left and this turn's loss; a tagged best has the fewest deaths, then the least enemy HP left",
+          "timeout": 30000,
+          "required": 30000
+        },
+        {
+          "title": "the dead Parafright (ILLUSION_POWER, REVIVE_MOVE) is back next turn: the rollout loses more, next turn's hit counts it",
+          "timeout": 30000,
+          "required": 30000
+        },
+        {
+          "title": "the dead Parafright's hit next turn is in every line's enemy_threat_next",
+          "timeout": 30000,
+          "required": 30000
+        }
+      ],
+      "equal": true
+    }
+  ],
+  "scope": "Only the two dispatched fixed input groups and two current fixture files; no claim of parser equivalence for all programs",
+  "noProductionMutation": true,
+  "noSourceOrFullSuiteRerun": true
+}

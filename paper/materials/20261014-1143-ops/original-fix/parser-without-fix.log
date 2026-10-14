@@ -1,0 +1,114 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-111301/agent
+
+ ❯ tests/test-timeout-blocks.test.ts (4 tests | 3 failed) 17ms
+   × reads wrapped, nested and parameterized planner deadlines without swallowing following tests 11ms
+   × checks every current logged-board registration in rollout-live.test.ts 1ms
+   × keeps missing, dynamic and insufficient deadlines visible in the scanned scope 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/test-timeout-blocks.test.ts > reads wrapped, nested and parameterized planner deadlines without swallowing following tests
+AssertionError: expected [ Array(1) ] to deeply equal [ { …(3) }, …(5) ]
+
+- Expected
++ Received
+
+  [
+    {
+      "parameterized": false,
+-     "timeout": 120000,
+-     "title": "wrapped full scan",
+-   },
+-   {
+-     "parameterized": false,
+-     "timeout": 30000,
+-     "title": "nested closure",
+-   },
+-   {
+-     "parameterized": true,
+-     "timeout": 30000,
+-     "title": "one board %s",
+-   },
+-   {
+-     "parameterized": true,
+-     "timeout": null,
+-     "title": "missing each deadline",
+-   },
+-   {
+-     "parameterized": false,
+      "timeout": null,
+-     "title": "missing wrapped deadline",
+-   },
+-   {
+-     "parameterized": false,
+-     "timeout": 30000,
+-     "title": "next test",
++     "title": "wrapped full scan",
+    },
+  ]
+
+ ❯ tests/test-timeout-blocks.test.ts:25:98
+     23|     it("next test", () => { logged("fixed"); }, 30_000);
+     24|   `);
+     25|   expect(blocks.map(({ title, timeout, parameterized }) => ({ title, t…
+       |                                                                                                  ^
+     26|     { title: "wrapped full scan", timeout: 120_000, parameterized: fal…
+     27|     { title: "nested closure", timeout: 30_000, parameterized: false },
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  tests/test-timeout-blocks.test.ts > checks every current logged-board registration in rollout-live.test.ts
+AssertionError: the controlled clock: every logged board's rollout stays inside the budget: expected null not to be null
+ ❯ tests/test-timeout-blocks.test.ts:41:44
+     39|   expect(boards.length).toBeGreaterThan(2);
+     40|   for (const block of boards) {
+     41|     expect(block.timeout, block.title).not.toBeNull();
+       |                                            ^
+     42|     expect(block.timeout!, block.title).toBeGreaterThanOrEqual(loggedB…
+     43|   }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  tests/test-timeout-blocks.test.ts > keeps missing, dynamic and insufficient deadlines visible in the scanned scope
+AssertionError: expected [ [ null, 120000 ] ] to deeply equal [ [ 30000, 120000 ], …(3) ]
+
+- Expected
++ Received
+
+  [
+    [
+-     30000,
++     null,
+      120000,
+-   ],
+-   [
+-     15000,
+-     30000,
+-   ],
+-   [
+-     null,
+-     30000,
+-   ],
+-   [
+-     null,
+-     null,
+    ],
+  ]
+
+ ❯ tests/test-timeout-blocks.test.ts:56:77
+     54|     it("ordinary test", () => { expect(true).toBe(true); });
+     55|   `);
+     56|   expect(blocks.map((block) => [block.timeout, loggedBoardTimeout(bloc…
+       |                                                                             ^
+     57|     [30_000, 120_000], [15_000, 30_000], [null, 30_000], [null, null],
+     58|   ]);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  3 failed | 1 passed (4)
+   Start at  11:23:31
+   Duration  620ms (transform 385ms, setup 442ms, import 17ms, tests 17ms, environment 0ms)
+

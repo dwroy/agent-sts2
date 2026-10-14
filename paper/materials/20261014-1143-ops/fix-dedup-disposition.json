@@ -1,0 +1,110 @@
+{
+  "at": "2026-10-14 11:55:17 CST",
+  "batch": "20261014-111301-fix-batch",
+  "candidate_source": "5ee86d1ef500d52dbf18177238f2f090afa17c4b",
+  "original_failed_rc0_mergednull_preserved": true,
+  "original_verification": {
+    "base": "530d786d85f192fe5977f88e1f8d065507f8264b",
+    "source": "5ee86d1ef500d52dbf18177238f2f090afa17c4b",
+    "negative_control": {
+      "without_fix": 1,
+      "restored": 0
+    },
+    "source_checks": {
+      "tsc": 0,
+      "vitest": 0,
+      "files": 386,
+      "cases": 3809,
+      "reruns": 0
+    },
+    "gitleaks": 0,
+    "matching_bug_infra_ledger_entries": [],
+    "source_clean": true,
+    "live": {
+      "merged": null,
+      "source": "5ee86d1ef500d52dbf18177238f2f090afa17c4b",
+      "observed_live": "30569977308fe1bbc688053029c3c6ec84d323ba",
+      "premerge": null,
+      "lock_attempts": [
+        {
+          "log": "live-integration.log",
+          "wait_seconds": 55,
+          "exit_code": 1
+        },
+        {
+          "log": "live-integration-retry.log",
+          "wait_seconds": 55,
+          "exit_code": 75
+        },
+        {
+          "log": "live-integration-final.log",
+          "wait_seconds": 55,
+          "exit_code": 75
+        }
+      ],
+      "error": "三次live-merge.lock等待各55秒超时；未执行刷新/预检/合并/合后测试，不改live，不登记上线或版本。"
+    },
+    "gameplay_changed": false
+  },
+  "original_lock_failures": {
+    "merged": null,
+    "source": "5ee86d1ef500d52dbf18177238f2f090afa17c4b",
+    "observed_live": "30569977308fe1bbc688053029c3c6ec84d323ba",
+    "premerge": null,
+    "lock_attempts": [
+      {
+        "log": "live-integration.log",
+        "wait_seconds": 55,
+        "exit_code": 1
+      },
+      {
+        "log": "live-integration-retry.log",
+        "wait_seconds": 55,
+        "exit_code": 75
+      },
+      {
+        "log": "live-integration-final.log",
+        "wait_seconds": 55,
+        "exit_code": 75
+      }
+    ],
+    "error": "三次live-merge.lock等待各55秒超时；未执行刷新/预检/合并/合后测试，不改live，不登记上线或版本。"
+  },
+  "published_fix_source": "56c256dad0d33b231b82b53113d3bdd84f9bfa20",
+  "published_full_host_acceptance": {
+    "at": "2026-10-14 11:55:17 CST",
+    "batch": "20261014-104302-s2-strategy-proposal",
+    "release_id": "V5-R339",
+    "source": "7ec8096e441313fc50ab669cde512e3781a194f5",
+    "actual_live": "30569977308fe1bbc688053029c3c6ec84d323ba",
+    "tree": "56053513d55854c5b622af3e5d079e3f70e21f8f",
+    "rc": 0,
+    "files_passed": 438,
+    "cases_passed": 4621,
+    "cases_skipped": 2,
+    "duration_seconds": 661.42,
+    "original_log": "ops/codex-ops/learner/20261014-104302-s2-strategy-proposal.fallback-56053513d55854c5b622af3e5d079e3f70e21f8f.checks.log",
+    "original_log_sha256": "0937cee3ee6e53fa00845d3093d907bbaabbaa0f64b7c73872c9d7dd9880e437",
+    "three_original_delta_blobs_and_source_ancestry_verified": true,
+    "wide_proposals_and_fourteen_mechanism_parent_not_closed": true,
+    "natural_A10_preview_consumer_not_inferred_from_tests": true,
+    "no_source_or_full_check_repeat": true
+  },
+  "decision": "reported static timeout gap already repaired by deployed56c; keep alternative source original, do not replace parser or duplicate merge/full checks",
+  "two_original_fixed_groups_and_current5_potion9_rollout_registrations_equal": true,
+  "comparison_receipt": "paper/materials/20261014-1143-ops/parser-comparison.json",
+  "no_general_parser_equivalence_claim": true,
+  "candidate_not_claimed_merged_shipped_or_host_tested": true,
+  "native_contexts": [
+    {
+      "source": "ops/codex-ops/accounts/codex1/learner/sessions/2026/10/14/rollout-2026-10-14T11-13-30-01a13866-98e8-79e2-9c15-e77186fec16a.jsonl",
+      "offset": 50167,
+      "bytes": 5118,
+      "sha256": "bdb37356fc9570f800498cd7ca8c00af5ae277441eb9a08410c397f12d569062",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "sandbox_type": "workspace-write"
+    }
+  ],
+  "status": "duplicate_candidate_retained_reported_gap_closed_by_existing_published_fix"
+}
