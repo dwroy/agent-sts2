@@ -1,0 +1,154 @@
+{
+  "at": "2026-10-14 12:33:32 CST",
+  "batch": "20261014-114302-fix-batch",
+  "source": "1dd4d434aef67f1d065dbdba23a875ae82741a88",
+  "checked_source_head": "1dd4d434aef67f1d065dbdba23a875ae82741a88",
+  "original_state": "failed",
+  "original_rc": 0,
+  "original_merged": null,
+  "source_tests": {
+    "tsc": 0,
+    "sandbox_files": 388,
+    "sandbox_cases": 3805,
+    "paths_files": 1,
+    "paths_cases": 11,
+    "combined_cases": 3816,
+    "rc": 0
+  },
+  "source_full_log": ".worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-114327-fix-batch/final-sandbox.log",
+  "source_full_log_sha256": "abdeb7af83d01b9286f23e81b994867e6c2c888a08720519292890cd4f01ae13",
+  "withdrawal_two_failures_restoration_seven_pass": true,
+  "original_five_record_conflicts_and_failed_history_kept": {
+    "log": ".worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-114327-fix-batch/live-preflight.log",
+    "sha256": "66d1294e31889f911d24d9b674d4ad86bad6292c78f945611e44fc2df6d32811",
+    "refresh_commit": "175dc5db70ddfb50b1bd5e208736d5dc8d1a00a1"
+  },
+  "native_source": "ops/codex-ops/accounts/codex1/learner/sessions/2026/10/14/rollout-2026-10-14T11-43-39-01a13882-33cd-70b1-81e5-2d41bee83d7b.jsonl",
+  "actual_native_contexts": [
+    {
+      "offset": 50167,
+      "bytes": 5118,
+      "sha256": "ca1663f31cb982eec4bae8f0785be30ca58ba5f65802dc0e4364de2aca2dc8e8",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "sandbox_type": "workspace-write"
+    }
+  ],
+  "no_parallel_development_or_source_retest": true,
+  "no_game_behavior_release": true,
+  "game_sampling_and_deadline_unchanged": true,
+  "native_notice_sources_and_independent_actor_ACK_stages_preserved": true,
+  "checkouts": {
+    "main": {
+      "commit": "e9fa277501ed92a9361f90bff928af7be663f5a7",
+      "source_ancestor": "40d6bc976cf7ffeae28a72a7e0b47d71cadc7d57",
+      "tree": "e014f6a52419bc4ead307f82cd91a0cafddc9053",
+      "leaves": [
+        {
+          "path": "agent/tests/boss-sim-notice-registration.test.ts",
+          "source_blob": "a310deb4bdcaf66ba4ef04b4d49916d472f96836",
+          "bytes": 1046,
+          "sha256": "6df302326efcb8d296c441413261ec22be7bfd92476f0b9d2d7afb68c9926e2f",
+          "three_way_rc": 0,
+          "source_equal": true,
+          "prepared": "ops/codex-ops/record-staging/20261014-1230/leaf-preflight/main/0/merged"
+        },
+        {
+          "path": "agent/tests/feature-notice-registration.test.ts",
+          "source_blob": "a47e86bbd562a3629ade9f8854b15531cd5cf3d2",
+          "bytes": 1052,
+          "sha256": "2cc468f4f6e4871dded9e218b4ea1b3e6e5c0ad8c13b846780d1c5019411aba2",
+          "three_way_rc": 0,
+          "source_equal": true,
+          "prepared": "ops/codex-ops/record-staging/20261014-1230/leaf-preflight/main/1/merged"
+        },
+        {
+          "path": "ops/learning_requests.py",
+          "source_blob": "fe19e514ef3ecbfd6e0344275923a2638ecd8824",
+          "bytes": 43519,
+          "sha256": "4a52b5287a58737ec5510c00c8640d86c0a9ceedcd350f73cec63003626ec90c",
+          "three_way_rc": 0,
+          "source_equal": true,
+          "prepared": "ops/codex-ops/record-staging/20261014-1230/leaf-preflight/main/2/merged"
+        },
+        {
+          "path": "ops/tests/test_boss_sim_notice_registration.py",
+          "source_blob": "629877e8be87fd5ae69a3480e6632067c06745ca",
+          "bytes": 6701,
+          "sha256": "d021f3d0f6487de5e1c754a32f592217301c3da45f315d2be1e959e190a61af8",
+          "three_way_rc": 0,
+          "source_equal": true,
+          "prepared": "ops/codex-ops/record-staging/20261014-1230/leaf-preflight/main/3/merged"
+        },
+        {
+          "path": "ops/tests/test_feature_notice_registration.py",
+          "source_blob": "4803fbb916d1d0c4c3e9b838674794493161df83",
+          "bytes": 9166,
+          "sha256": "9f5e554b2c28b480ec4e05bd15f003efbd930515987e24319f052133538e50df",
+          "three_way_rc": 0,
+          "source_equal": true,
+          "prepared": "ops/codex-ops/record-staging/20261014-1230/leaf-preflight/main/4/merged"
+        }
+      ],
+      "other_dirty_records_and_refresh_bytes_preserved": true
+    },
+    "live": {
+      "commit": "a51f3b6bdf451746cf5c812aaa4c24638f8e39ef",
+      "source_ancestor": "093c68ac658980f53b9940756b3df925adfb49bb",
+      "tree": "cc740ccd201c51fb3dde6dabbe79cff35ce08fa6",
+      "leaves": [
+        {
+          "path": "agent/tests/boss-sim-notice-registration.test.ts",
+          "source_blob": "a310deb4bdcaf66ba4ef04b4d49916d472f96836",
+          "bytes": 1046,
+          "sha256": "6df302326efcb8d296c441413261ec22be7bfd92476f0b9d2d7afb68c9926e2f",
+          "three_way_rc": 0,
+          "source_equal": true,
+          "prepared": "ops/codex-ops/record-staging/20261014-1230/leaf-preflight/live/0/merged"
+        },
+        {
+          "path": "agent/tests/feature-notice-registration.test.ts",
+          "source_blob": "a47e86bbd562a3629ade9f8854b15531cd5cf3d2",
+          "bytes": 1052,
+          "sha256": "2cc468f4f6e4871dded9e218b4ea1b3e6e5c0ad8c13b846780d1c5019411aba2",
+          "three_way_rc": 0,
+          "source_equal": true,
+          "prepared": "ops/codex-ops/record-staging/20261014-1230/leaf-preflight/live/1/merged"
+        },
+        {
+          "path": "ops/learning_requests.py",
+          "source_blob": "fe19e514ef3ecbfd6e0344275923a2638ecd8824",
+          "bytes": 43519,
+          "sha256": "4a52b5287a58737ec5510c00c8640d86c0a9ceedcd350f73cec63003626ec90c",
+          "three_way_rc": 0,
+          "source_equal": true,
+          "prepared": "ops/codex-ops/record-staging/20261014-1230/leaf-preflight/live/2/merged"
+        },
+        {
+          "path": "ops/tests/test_boss_sim_notice_registration.py",
+          "source_blob": "629877e8be87fd5ae69a3480e6632067c06745ca",
+          "bytes": 6701,
+          "sha256": "d021f3d0f6487de5e1c754a32f592217301c3da45f315d2be1e959e190a61af8",
+          "three_way_rc": 0,
+          "source_equal": true,
+          "prepared": "ops/codex-ops/record-staging/20261014-1230/leaf-preflight/live/3/merged"
+        },
+        {
+          "path": "ops/tests/test_feature_notice_registration.py",
+          "source_blob": "4803fbb916d1d0c4c3e9b838674794493161df83",
+          "bytes": 9166,
+          "sha256": "9f5e554b2c28b480ec4e05bd15f003efbd930515987e24319f052133538e50df",
+          "three_way_rc": 0,
+          "source_equal": true,
+          "prepared": "ops/codex-ops/record-staging/20261014-1230/leaf-preflight/live/4/merged"
+        }
+      ],
+      "other_dirty_records_and_refresh_bytes_preserved": true
+    }
+  },
+  "host_check": {
+    "status": "requires_one_new_tree_original_batch_check",
+    "rc": null
+  },
+  "status": "source_precisely_integrated_original_host_check_pending"
+}
