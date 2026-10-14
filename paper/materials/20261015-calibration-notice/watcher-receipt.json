@@ -1,0 +1,156 @@
+{
+  "at": "2026-10-15T00:19:27+08:00",
+  "kind": "existing-calibration-model-limitation-watcher-receipt",
+  "original_request": "silent-calibration-63fa42917452d208cb51772b",
+  "original_batch": "20261014-214302-fix-batch",
+  "canonical_report_directory": "learner/runs/20261014-214308-silent-boss-calibration",
+  "ledger": "silent-0480",
+  "watcher_session": "01a139d6-cfec-78e1-8739-e21ac426a354",
+  "source_report_commit": "e00dbd473312bd05f4fa0e2fc4439baffdaba638",
+  "fixed_model": "7e1193cef9467416bc10c8e344a49f4fd98390c7",
+  "actual_live_from_report": "1e4be6b85e2d19e7e4dde8f0b5846846e06b250e",
+  "questions": {
+    "path": "learner/runs/20261014-214308-silent-boss-calibration/questions.json",
+    "bytes": 963,
+    "sha256": "e78aac1874a66613a648b0e687f9efac4b64d83dfac7817ba7be9ff68811d16b",
+    "root_archive_and_source_blob_equal": true
+  },
+  "archive_verification": {
+    "path": "paper/materials/20261015-0000-ops/calibration-source-originals.tar.gz",
+    "gzip_sha256": "922557a864b1591998046687201c80af7c329ccda54fd4722a6a786ae6a34e2a",
+    "tar_payload_sha256": "ceea208ad3ddb6c52b6e60d08ef6ec2507b930d44b54465bdf38870589a6cfb5",
+    "manifest_sha256": "6dfafb807b54e09fdfe87a445b82b7f01bd2e4a98de2bcba3b9565f536f0dca9",
+    "members_verified": 88,
+    "first_attempt": "Compared gzip wrapper against manifest git_archive_sha256 and asserted; manifest identifies uncompressed tar. Follow-up verified tar hash and all 88 members; no source change."
+  },
+  "read_scope": [
+    "entire original questions.json",
+    "report scope/provenance/F49 and A10 sections",
+    "structured result F49/A10/trust/production-drift fields",
+    "all 88 archived file bytes against manifest"
+  ],
+  "report_sha256": "4222c6f7b001935a5487e36bebcd382c198690285892b2b3aa28fe6f9bcd256c",
+  "original_notice": {
+    "kind": "model-limitation",
+    "character": "silent",
+    "finding": "F49独立验证23场，数量缺口0仍不达标；B2/B3预测与实际差+26.0/+20.9个百分点，打穿比3.575/3.572。新增2胜/1死并不支持将F49标可信。A10 B3整体打穿比1.307略超1.3，按原逐boss门槛继续报告，不降低标准或拟合验证标签。",
+    "evidence": [
+      {
+        "run": "LKC9YXKZWTKR",
+        "floor": 49,
+        "attempt": 1,
+        "turns": 16,
+        "outcome": "won"
+      },
+      {
+        "run": "Q10YYQ5DUPJA",
+        "floor": 49,
+        "attempt": 6,
+        "turns": 6,
+        "outcome": "died"
+      },
+      {
+        "run": "9GTFF6DC500L",
+        "floor": 49,
+        "attempt": 6,
+        "turns": 8,
+        "outcome": "won"
+      }
+    ],
+    "trust_changes": {
+      "b2": {
+        "added": [],
+        "removed": []
+      },
+      "b3": {
+        "added": [],
+        "removed": []
+      }
+    },
+    "scope": "Pinned experiment; current production model not independently revalidated.",
+    "ops_received": false,
+    "watcher_received": false,
+    "roy_notified": false
+  },
+  "observed_fields": {
+    "f49": {
+      "t1": {
+        "n": 23,
+        "gap": 0.26,
+        "brier": 0.1497,
+        "leak_ratio": 3.575,
+        "missing": 0
+      },
+      "pre": {
+        "n": 23,
+        "gap": 0.209,
+        "brier": 0.1238,
+        "leak_ratio": 3.572,
+        "missing": 0
+      }
+    },
+    "a10": {
+      "t1": {
+        "n": 413,
+        "gap": 0.040000000000000036,
+        "brier": 0.1117,
+        "mean_pred": 0.762,
+        "actual_win": 0.722,
+        "leak_ratio": 1.293
+      },
+      "pre": {
+        "n": 413,
+        "gap": 0.04400000000000004,
+        "brier": 0.1148,
+        "mean_pred": 0.766,
+        "actual_win": 0.722,
+        "leak_ratio": 1.307
+      }
+    },
+    "live_model_differences": {
+      "count": 70,
+      "commit": "1e4be6b85e2d19e7e4dde8f0b5846846e06b250e"
+    },
+    "trusted": {
+      "b2": [
+        "THE_KIN",
+        "CEREMONIAL_BEAST",
+        "LAGAVULIN_MATRIARCH",
+        "SOUL_FYSH",
+        "VANTOM",
+        "WATERFALL_GIANT"
+      ],
+      "b3": [
+        "THE_KIN",
+        "CEREMONIAL_BEAST",
+        "LAGAVULIN_MATRIARCH",
+        "SOUL_FYSH",
+        "VANTOM",
+        "WATERFALL_GIANT"
+      ]
+    }
+  },
+  "scope_note": "23 F49 independent validation samples and missing=0 establish count sufficiency, not quality. The report also retains a generic insufficient-quantity sentence near its 25 total F49 outcomes; the explicit validation table and necessary notice govern this limited conclusion. Original report remains unchanged.",
+  "watcher_received": true,
+  "watcher_user_visible_notification_sent": true,
+  "roy_read_or_acknowledged": null,
+  "other_role_acks": null,
+  "programmatic_ack": "pending; not invoked",
+  "ack_boundary": "Existing feature ACK scratch must be under WT while canonical report/eventlog are under root learner/runs; original identity unchanged.",
+  "new_parent_or_research_created": false,
+  "P3_enabled": false,
+  "thresholds_changed": false,
+  "original_30_54_144_rerun": false,
+  "parent_closed": false,
+  "R3_current_production_revalidation": "still required on original owner/model/knowledge/window evidence chain",
+  "native_notification": {
+    "path": "/home/dw/.codex/sessions/2026/10/14/rollout-2026-10-14T17-55-41-01a139d6-cfec-78e1-8739-e21ac426a354.jsonl",
+    "offset": 9522560,
+    "bytes": 1618,
+    "sha256": "8403bee44f3a06dd548474b5eedbd7522c2cf45d0b245ed5938edd91e2dda4b4",
+    "timestamp": "2026-10-14T16:18:37.956Z",
+    "platform_message_id": null,
+    "excerpt": "native-notification.jsonl",
+    "text": "Roy，原 questions 的 SHA 已匹配，归档内 88 份文件也与 manifest 一致。这份必要反证明确的是：\n\n- **F49 数量已达标，质量仍未过关**：独立验证 23 场、数量缺口 0，但 B2/B3 预测高估分别为 26.0／20.9 个百分点，打穿比为 3.575／3.572。新增两胜一死不能据此标可信。\n- **A10 B3 整体打穿比 1.307 已超过 1.3**；继续按原逐 Boss 门槛判断，可信名单仍为原六项，不降低标准，也不用验证标签重新拟合。\n- 这些结论只属于固定模型 `7e1193`。报告所核 live 与固定输入有 70 项差异，当前生产尚未独立复验，也没有证明整局通关收益。\n\n原父要求及 R3 核证继续保留；不重跑原 30 题／54 池／Jev 144，不开启 P3。本次只登记我实际收到并在当前会话告知 Roy；程序 ACK 仍 pending，其他角色确认不代填。"
+  }
+}
