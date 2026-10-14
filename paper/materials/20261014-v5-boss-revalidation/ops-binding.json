@@ -2,7 +2,7 @@
   "at": "2026-10-14 12:15:29 CST",
   "supplement_id": "v5-boss-revalidation-20261014-approved-supplement",
   "work_spec_sha256": "836576d0d3a59fa3a7c56aea67bd1c226e565e4f3c11b3bea4624c03a514b81d",
-  "state": "original_same_thread_R1_R2_continuation_started_with_native_reply_fixed_model_inputs_and_results_pending",
+  "state": "original_same_thread_R2_unfinished_reference_continuation_started_numeric_results_pending",
   "actual_ops_received": true,
   "authorized_native_user_line_verified": true,
   "registered": true,
@@ -992,17 +992,45 @@
   },
   "prior_ops_binding_sha256": "046bee1634fc8919c808d1c3f28e6f78a69f24d6238ca05ffcf332deca9fc36f",
   "current_continuation": {
-    "batch": "20261014-123933-fix-batch",
+    "batch": "20261014-155247-fix-batch",
+    "parent_batch": "20261014-123933-fix-batch",
     "same_thread": "01a13882-33cd-70b1-81e5-2d41bee83d7b",
     "frozen_input": {
-      "path": "ops/codex-ops/learner/20261014-123933-fix-batch.approved-input.json",
-      "sha256": "bb429a72e61b65bb8eadde8350e5b22cc14422b5c559bde489c1502e18870c2d"
+      "path": "ops/codex-ops/learner/20261014-155247-fix-batch.approved-input.json",
+      "sha256": "c0508e5077af68842abfaee11537a3aa4282af376c4ba8ad3c5c9965273b5a17"
     },
-    "actual_input_sha256": "416e1a13831e967946a230d6439f1bef40decc3c9edaac445b087094f3df64a1",
-    "runtime_acceptance": "paper/materials/20261014-1230-ops/original-thread-runtime-acceptance.json",
+    "actual_input_sha256": "770ae9b77341ccad363276088f4423b34c9f4d2606806fb4775480245e1fb05e",
+    "runtime_acceptance": "paper/materials/20261014-1545-ops/original-thread-runtime-acceptance.json",
     "learner_received": true,
-    "actual_R1_R2_phase_started": true,
-    "numeric_baselines_started_or_complete_not_inferred": true,
-    "fixed_input_acceptance_and_numeric_results_pending": true
-  }
+    "actual_R2_continuation_phase_started": true,
+    "new_reference_pool_started_or_complete_not_inferred": true,
+    "original24_complete_references_preserved": true,
+    "new_unfinished30_reference_acceptance_pending": true
+  },
+  "continuation_history": [
+    {
+      "original": {
+        "batch": "20261014-123933-fix-batch",
+        "same_thread": "01a13882-33cd-70b1-81e5-2d41bee83d7b",
+        "frozen_input": {
+          "path": "ops/codex-ops/learner/20261014-123933-fix-batch.approved-input.json",
+          "sha256": "bb429a72e61b65bb8eadde8350e5b22cc14422b5c559bde489c1502e18870c2d"
+        },
+        "actual_input_sha256": "416e1a13831e967946a230d6439f1bef40decc3c9edaac445b087094f3df64a1",
+        "runtime_acceptance": "paper/materials/20261014-1230-ops/original-thread-runtime-acceptance.json",
+        "learner_received": true,
+        "actual_R1_R2_phase_started": true,
+        "numeric_baselines_started_or_complete_not_inferred": true,
+        "fixed_input_acceptance_and_numeric_results_pending": true
+      },
+      "canonical_state_at_finish": "failed",
+      "rc": 0,
+      "merged": null,
+      "outcome": "continue",
+      "reference_complete": 24,
+      "reference_total": 54,
+      "reference_unfinished": 30,
+      "old_input_and_report_preserved": true
+    }
+  ]
 }

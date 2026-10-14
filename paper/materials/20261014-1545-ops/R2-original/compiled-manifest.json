@@ -1,0 +1,1441 @@
+{
+  "esbuild": "0.28.2",
+  "transform": "ES2022 transpilation; one inspection export; worker delegates unchanged fightSample calls with timing/GC telemetry; numerical sample objects unmodified; telemetry adds measured overhead",
+  "files": [
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/brain/brain.js",
+      "sha256": "02ab780a8325a9af9731d4c20adf538b02658c10da55547fdb3dbfcdd5da7c41",
+      "original_source_sha256": "8fa39e259836833b7353a4caf9af14ed3e0f6b1b5ce4a08bfd65c3fd219d5c00",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/brain/build-facts.js",
+      "sha256": "1c867996d3f8255edff8e07583e4d93c17e55eef6c3de90b6cfc8294f4179a19",
+      "original_source_sha256": "36665d95257341ecf5aa7b1ef00689542fa49139a6759e2cdd786d295425d730",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/brain/engines/claude.js",
+      "sha256": "d9622c6d635e8c93628efde0c44d6f040ff8ae24868bc61ef881e105ef5deaa8",
+      "original_source_sha256": "6cac56e4b82cb68e86111708a8be93b01528b3c3b5de551a5d6036fcb8c94254",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/brain/engines/codex-cache.js",
+      "sha256": "018ef751a4873d9d13299cbd06e8f358dda011fbdc21ae77a9e700498ca5faed",
+      "original_source_sha256": "128e173d99884bd1b301199b5944b4aa1ad9916d740903d83bcd0e858bd6ceda",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/brain/engines/codex-session.js",
+      "sha256": "5b57936c02277cba0819a7edf2b597230bd58aedb044d3e077d2fe6f6080573e",
+      "original_source_sha256": "875ec2012ef0f9c85074cc4c317b776a2c4016734d6140430cb45c7e11f5e9c7",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/brain/engines/codex-usage.js",
+      "sha256": "fdf4c18dfe748152ea30a46d4337fcdf68bb4efccccaf6822e6aaec5a7767a03",
+      "original_source_sha256": "73cdb1c9fc9a0e77632700a3fe347cf406e70ac7712a0814931f5e0308448209",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/brain/engines/codex.js",
+      "sha256": "112e158d59ee2987521867dc569d880b73ac13149045fce66705ff34e11b8e9e",
+      "original_source_sha256": "452af40ed1523d15a6c842346f14533c0b28f11309804a78fd21fca0bb444dba",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/brain/engines/deepseek.js",
+      "sha256": "3cf5e79ac9d3dbe8cadb772f92709b3c32a4d6e5af535112f14d33b2d5fc608f",
+      "original_source_sha256": "448c6518aaa5fa1dea4f3893726883198dc0ef1751c959496ea16dd5788f37c4",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/brain/engines/process.js",
+      "sha256": "b60bf8b95248b42b0ace6cd20ab283b721ca2b7017d5461bcde0f98985968f4d",
+      "original_source_sha256": "5ec8fb3437222f9f9e6ac5e39487526ed133dd611520f4aaf33f6ba167f0e226",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/brain/knowledge.js",
+      "sha256": "11b1bcaac1a16b796bd963078b2be4b5142b21409a1cf04ffeb5cec2e30bde1d",
+      "original_source_sha256": "8558c0c4f0124ba8fc61385fa1cf9587307b25ca85a64ce07ed74f4918ef6c8a",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/brain/labels.js",
+      "sha256": "4d6449373506fad7d67fb5c7620825fef9bfabc3a55a24d5130d72192eedbd83",
+      "original_source_sha256": "29c47f5e90f6ed35531e9f6ca219f14671046a85a03b669e78878c44593b4e2a",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/brain/llm/consistency.js",
+      "sha256": "66b9483a7e3b9d68c847dbe6afcaa7da470f2e31002acc950fd91c8f368428e0",
+      "original_source_sha256": "812d3250cdc73fcda1c51bbcf081ea5d098a40f01bec18639d71e151a3c39d1b",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/brain/llm/deepseek-message.js",
+      "sha256": "5be6294e850bb83b776764e77b814f672eb98aa29ed6325333bc3944ab5e6598",
+      "original_source_sha256": "87e4f28c13a6e6fda5b8dbf8912cf0b52ebd98724bc99c29b51e4dce75184fec",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/brain/llm/deepseek.js",
+      "sha256": "ebfcedfcd2faa83e4afcdf0b507d50d905f321b3f324a7441ac93818d94b7a03",
+      "original_source_sha256": "6e2b98d146033f8706f52d3d76a60ee24e8b33dc0798ea33406a2bdb30499d3c",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/brain/llm/file-escalation.js",
+      "sha256": "3945794341de9ca3d5255eaeda39b0ae1dd732399541b6c3e0b87d423e9bab57",
+      "original_source_sha256": "70bacd5862bf0fe015988d050829b4a0e78faa0efc8a0806aea4def31dff68c7",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/brain/message.js",
+      "sha256": "b284eaf55b30855d8ed33e83572c130afea277644069443ed6499b03a64460c4",
+      "original_source_sha256": "29cf55dfa160388092de51e20bf802ea75e11fba993df57eaab515c391f37ebc",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/brain/router.js",
+      "sha256": "cbbc2bcd23cc666ce50eb7e8d886702f175ffca7cfd805010e73de512956a13d",
+      "original_source_sha256": "32ea6ea4ce9f5baf795e640f430f917d9ebfd856668e00aed2aeaac70c865080",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/brain/source.js",
+      "sha256": "73bac2c629cd7bd8d716c0ef75752d86f67144d4219bace3a4e5e8b90d222ea5",
+      "original_source_sha256": "ac540139eb027150ec2fe25f454c78f1a66242f4bd97046d9d61451faac98926",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/brain/specs.js",
+      "sha256": "215bc92516258c9e123bad76d86c3856573148057dba0527462d6eb3dca395c2",
+      "original_source_sha256": "d84ae73b9961f37f715a32e5bae06325fb9af39cb038476d4b745860e17f42a0",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/brain/tools/kb-tools.js",
+      "sha256": "606302317dd0615936b20d7089375f892b49e5fb9fd255e5748b17b83e156d84",
+      "original_source_sha256": "2b80d224253353c5b369acfeb4e72106e2adf4e3c360444060620532ca600af8",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/brain/tools/logs-query.js",
+      "sha256": "56b44b0e2d2018d0070d58fe6a00bfb3584420dba7876d5aa9fa0e4c1a34fde4",
+      "original_source_sha256": "8d8adc3c5e1ec0d9deccd6bd816f06804c9114466b32876d7bf9a5a2909c6357",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/brain/tools/mcp-launch.js",
+      "sha256": "f2b1466e13ea5a326fa0e6958c21091b1d9e5758787c36921d5f3413a7a618e0",
+      "original_source_sha256": "7a2138d7f941cc8caa114f30df0bb3eb9347e50d860d003dbad204f8bb577e09",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/brain/tools/mcp-server.js",
+      "sha256": "bb1622580802424b2c457f0fd72d9ffc2d214ee3645168a1cf80300c482c4f7e",
+      "original_source_sha256": "a2a581db5f9ce8d7a7ca7f9cb3efe84b735d72b901427118dce2edd012de47fc",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/brain/tools/registry.js",
+      "sha256": "89de4bccde0748d09d69a8b7145d734fc1acc3e8c6b837b6020599fc229778f5",
+      "original_source_sha256": "2cc8a38dfe3177a85e7dda28059cd1f46e6be58eb5cde5693a754cc1be70b28c",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/brain/tools/types.js",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "original_source_sha256": "e38a1f12f82482610bff40fb008a6b05904e57c791036657312743319d7c4f75",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/brain/tools/validate.js",
+      "sha256": "b9d0cb9236162a172be02aedf441c09b45d7251e767c589c6e8afef35e87424b",
+      "original_source_sha256": "0ad8ceec84a7ae1749f6f38eeb4d8e4c8a3f7871bd1f99c9638893bbd74d11c5",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/brain/types.js",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "original_source_sha256": "44310c692e8a692045a2292d9e7b525ed306575757847e06d3e963125dfc09c6",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/brain/wait.js",
+      "sha256": "d0f80bab974424bd97911311d21c1160a58e3e604c369ec0a7d45b9ed57f582a",
+      "original_source_sha256": "4d6c50b6be4310f3e5652b848e647b3f8a46ad7c9087a0d51c643752f9d03094",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/construction/adapter.js",
+      "sha256": "2ccdea5a64bccf5d9d10c073f3c7e1ba0f8c8ca10ef63774653fe064970c1095",
+      "original_source_sha256": "14e7243741514aaa9d16009ceb583923ea4a9773e33310c2d7073ef4147fe70d",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/construction/admission.js",
+      "sha256": "eddd14ca97616de44c266e836a676a12e5e21679c3ed2b4c5d47e7fd145dd513",
+      "original_source_sha256": "94781b2c2f12e470fbd3849a680d24ecd8679b72d67d6a7fd4d1e6c6549b4398",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/construction/combat.js",
+      "sha256": "8818605d9a7aad91a85437a4adb874c6914c84b21d601d74bb251381087c07ed",
+      "original_source_sha256": "bb4148837ca8aad0d0c7206107ba6b3aeacb1e8f580c4ce35d31b4a9d77f1762",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/construction/consumer.js",
+      "sha256": "2c59c713677a4be5801270cbab4fa604270d207f40f0751d5da36df0fcb0a2d9",
+      "original_source_sha256": "9d84a28b9e30acc5f98f0ffbaacb0c99678548d71bdd0d5b8591f338f28aeb1a",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/construction/data.js",
+      "sha256": "ce632e95ebc1ec419a22fb38f4b7c948e638d7d8b2f6816767992b58c60ce490",
+      "original_source_sha256": "2010e856531dc5e0cb99119db6d80392523c10d41cd7d15df2e4a68e3f177c04",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/construction/evaluation.js",
+      "sha256": "0054592a97250eeefadcbfd917b8a8f914523ccac417dd3600eace67c8aa53b0",
+      "original_source_sha256": "8e3e60f0e67614b2e233e5557c91cfdc71fa5ba5b0f250dd179ee26580b1c1f5",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/construction/planner.js",
+      "sha256": "c540984c9d7ab131f43cec4b5f7c7874739ad500c58ba309c2ced5b63c653c20",
+      "original_source_sha256": "b6d053333612a79797550deb68e84a4b68cb660e75d7aba73555d7fa9714f2f5",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/construction/types.js",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "original_source_sha256": "554781cfaf37c62dd2384e6d076de141f4199a9fb995e154af16efb4fcbc0291",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/core/cli/doctor.js",
+      "sha256": "b747726288fa313b088ffe86a4b1cc48d880c0873086c84be592a73776f1ff61",
+      "original_source_sha256": "bdb514d064ac2ec06ddf91c3b4b7b7afb023d93ac521292937742a31abd2e61d",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/core/cli/reporter.js",
+      "sha256": "1ae24180a164ef0fa7b02d03289b621d49875ccea8b37588d98dc6caec25a693",
+      "original_source_sha256": "81d5c4b0253361c6d83106dcf141d3e314352c64bd9852fb56de043a465b196b",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/core/cli/runtime.js",
+      "sha256": "116d252b6544c39aadf3937209fac5e01da1b09b94c4bdbf9ce1b81d4d645aad",
+      "original_source_sha256": "8b255cbd6abff7f40488c71aad923ff3d616b4a276b55e69b4bc57d40da5a38f",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/core/config.js",
+      "sha256": "50abce97f36e8b405fe446ef79d6c8d10682ffd038b93b0c8d68d18081b404e8",
+      "original_source_sha256": "04d4168a77877e5d2cd308e654bc4d86362323e039b3f96604325ad969e16a32",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/core/index.js",
+      "sha256": "34c3c3ecc7e9485ffaa75f349d856a3c5aeb0bfec4bb48a5bf429871a235fb45",
+      "original_source_sha256": "6b025f92c9c963dc467c0368b2b5f30365128be50079e57bd03fc0580845dd42",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/core/jev-settings.js",
+      "sha256": "04af03e118b8def7f50249be90b37daada97a4a2a429bf375ef518566537d19f",
+      "original_source_sha256": "25fc17e9bc4c33adae86f82537e87ffd7cb3eb906057335cef9d4cabbae3efb6",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/core/paths.js",
+      "sha256": "f2939c55fc6def55e0ffed2502ae3798e7688892a24e52a69300859baa52bb2f",
+      "original_source_sha256": "9f60add837acf13966ef8e5ecdf667e28dcc6ee7612ff76f141ddd0455f27b62",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/core/util/data-version.js",
+      "sha256": "c520ceab0804a462ea0cee681cd2d3941380c582ac7de750377d8226aaf35e86",
+      "original_source_sha256": "8ad004938a95b2b6b43353cb73372151e03f94d02343a0416140b812ed7800f4",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/core/util/format.js",
+      "sha256": "895dffcef40b4ad52137c3ac9915aae5d05af63ebb3831d3d563d549fdbb748e",
+      "original_source_sha256": "77751bafc25435a45278b4c4dd2b301ff22a4a8bb126aa9b2fe6bf7b723e9f75",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/core/util/json.js",
+      "sha256": "fe9c116227e2c55469af94b46076ec84ecf87b0149c8d03cbbad4caa6a606931",
+      "original_source_sha256": "da294432a452d1d300715f7942a871704de28080f5cf4c167236c47982ebf452",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/core/util/jsonl.js",
+      "sha256": "576935d54f6b76246d545971a0450d3efe62568d93382150bf48325b8217a978",
+      "original_source_sha256": "06c006cf08cbe6dd74c210464e39b261b1b629d4dc879b144e88af341a7e22b7",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/core/util/lock.js",
+      "sha256": "6a9c523a60a74e6fe04eb966434e675e9fe9cf7163d2d85669bc1ff65b34b05a",
+      "original_source_sha256": "5d42d6cbefd3e1a8c79d91395d39418bb5579a7ff107f6ab7219cacb95bc95ed",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/eye/decision-log.js",
+      "sha256": "9b6f3af6d9b56b789a13eb7e75bb6e221848d61520eb07edcf98b9162d0c7871",
+      "original_source_sha256": "77ade396fb4493a8b765ce51569f619980c759203990335ede97964834406e31",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/eye/jev-prompt-log.js",
+      "sha256": "5f3873fe8fc7b8700d3ff77f6d740d12df781689f089c5395b7a2981377b3df6",
+      "original_source_sha256": "c27dd92850153ce770dd130d7df20a43b04a9fb4edc6a3cb9258b474580b9b27",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/eye/replay/record.js",
+      "sha256": "a596d9c691678ffd212df815d8b86304fe72eb44680ca0ea56c9da8cd2134b98",
+      "original_source_sha256": "f8896c8602b79271bca7968faf654fe5534813abb0f26202ee9ea6c20611f76a",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/eye/replay/replay.js",
+      "sha256": "ffe86171c3cb1569490a3028fab74c3d282fa1fdc13554b308137b40bde2783e",
+      "original_source_sha256": "836a303b635752ad2adcbc1838c6fe883d490b1cfed1c739126e14e70846cb67",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/eye/run-config.js",
+      "sha256": "06192c9cf161131f622a291cc56462b9a6a9926f18f0b564915732cef325dd61",
+      "original_source_sha256": "cfba04d45f830cd25a32bb2282fd9b2bdd5394a4817a217fbb4d1fc480b9a206",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/hand/act/dispatch.js",
+      "sha256": "e28f0ba3549987b5febe4bc241df59b1b21e606ea6f5a913c0f1e23cd22dd56e",
+      "original_source_sha256": "968c7e64cc4c5a47a3bb6189e2bf2d7e8fd15ee4842d922d4dee7d97236817b5",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/hand/act/gate.js",
+      "sha256": "49b12946ae810174fa67d84b4029017ddb78624739b64eb5be72a722c9717a64",
+      "original_source_sha256": "a402e7735ed0e29f06bed8d13f162157eb3d5d07280307f853eedbc03455c855",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/hand/act/identity.js",
+      "sha256": "fb69fd133fed8e112c789704ac2facc4630bdcbfd3653c6ef4f9828ed2afd988",
+      "original_source_sha256": "03c74667f80bce553b7e00a9777f3c580ef5297c4af2fc6001bdaccc43bc14ab",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/hand/act/turn-start.js",
+      "sha256": "041031390fbe9d6ad6ff11da5ee8b2069b3a76489d388a8f386f71dbdf982afe",
+      "original_source_sha256": "c0b307dd5542ab6d4289daf3a12ff3938c770c205cefe0371a3f8f6e4a7c96e5",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/hand/loop.js",
+      "sha256": "26a2394668f9f196d425be4da080d98639054f1dc830a2ba4e69042502ed5edf",
+      "original_source_sha256": "7e780cfbd7c74e5adc8ad5c47dc97fcaaf017d3219a907df5f8f3d7bad75c643",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/hand/mod/client.js",
+      "sha256": "1d254d4bef27522a280a41413188f83b16ae3f2039e2dc122c9c83acfa35b644",
+      "original_source_sha256": "4f1888bff879968fb20024b9eded95efd1b5ca88889d16b724011ab6394dbd2d",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/hand/mod/discovery.js",
+      "sha256": "89eab48d9285d9e2cdb0706333b96534758710616b6dff264ee73e00b8d226e9",
+      "original_source_sha256": "ad6a603f05d029491d9672375af008ce123c57f81a10b5651a52e988728c3cad",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/hand/mod/instance.js",
+      "sha256": "2eacba32cb86da42c8788df51dc909879c0e50af7db91435759a86905ae9b935",
+      "original_source_sha256": "ddc73df0b53572173c7d0f75391847bf3ae102e7cb984b39729fb86018fb2ed8",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/hand/mod/schema.js",
+      "sha256": "d1e64c5046781b0f48d775d87f9b452edb3514ee5f0513a259cd02231fb5ed5c",
+      "original_source_sha256": "72dc4dfeefaa27ee701b49b1318b50380599980234f7623431b20ff479a0b01f",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/hand/screens/act-start.js",
+      "sha256": "65076586dd3473152e3d1adf38eb0aeaa5088395807e70cd1e9f181d51e5ec82",
+      "original_source_sha256": "5bba273ec049cd6367020defc1e3ac12915e68c4732095f2dbe0b538e78d0455",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/hand/screens/card-value.js",
+      "sha256": "d9f9d8d62a3759234d809ca94c1813e836d9041b9852ac67b4c05f68f5ecbea8",
+      "original_source_sha256": "c71986fefe8602293ba7e6d262043a2eef85d1c98d54e033f55567f8ab4e2bc6",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/hand/screens/chest.js",
+      "sha256": "bad4825a81cae463470a9f45c0b0267face58efaba6240370c4baf5599e66050",
+      "original_source_sha256": "94e5666d4c8b6881bfad3b969106c16192cccfc6e3502c19d8e5ffeffaa3b671",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/hand/screens/event.js",
+      "sha256": "3abcc50996daca10cc1de65ba0a02bdd0eadb6bd63ab0fcd86c1f6fcdce0e4df",
+      "original_source_sha256": "dbf35bf9361c35b943e4ce3f4a4669f17c9b16bb1dfe14be27f6a19528c75751",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/hand/screens/index.js",
+      "sha256": "39df07c445d5480c361ecff0a5c90afacc78defc6b72d0dc86ac666e8a07961c",
+      "original_source_sha256": "6902687f247c6ce7074b4b47c7b13d64ba08473499e404f20b6d13485f029296",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/hand/screens/map.js",
+      "sha256": "d5f0d30c51fe5c0b40a904b15dac52f12408b679df9a45756e1926d9e420d1e1",
+      "original_source_sha256": "b76007beab23fe5988cd63e4fd7d6d8e69ec748f80793fe6faf9493cdef55e64",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/hand/screens/misc.js",
+      "sha256": "0498cc0c5336dc37aa9a99ecf21feaaaa7a9878588d9de4751c5c89929207497",
+      "original_source_sha256": "6246f60aa6d9dd908a8ef2fe2628626e4a0bada03f4fbbfc8196fea5ec4d84b5",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/hand/screens/oneshot.js",
+      "sha256": "25009a22aec933fb7ba841777ceefd5bac439d3b0acfcfa8afbaa7665d995067",
+      "original_source_sha256": "267c174c9edec20c6ce3323cfa123a4fc8ecd13c6bb8f892b5fed9af26a24277",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/hand/screens/pick.js",
+      "sha256": "c7750d284e7e330dffc72497dbc3c7c462576e5cf0ace44927f496b17ac5b769",
+      "original_source_sha256": "f9e3b53bbe9d8c335ed8760398fd8c6209cd1d6b15b62f78b09e9677423db7ac",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/hand/screens/potion-discard.js",
+      "sha256": "8522e3d3631e580551bfe97a008eb12aaaaed3cf5bc881de3decfd4f10138916",
+      "original_source_sha256": "5ebfa5f5207b91f296c0df0e27f40340d1b01452cab397a010504fb26ddd6e17",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/hand/screens/rest.js",
+      "sha256": "fff02ad98d372cc9d6fefd82869d89df8d10ef093cd94198deb6be3b9933fd51",
+      "original_source_sha256": "518aea18de27a60b39a1473ef0e89ba54da908b57aa085af6577e90643f1cd97",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/hand/screens/reward.js",
+      "sha256": "b6bdc9d90c12e1eb0b974fd4de9b92857d174c98688de0fdc78a042ac2ed58b6",
+      "original_source_sha256": "53498af1a41ba4b3fc28421677faeb293c638842eb8eadadd036d02e52c148f0",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/hand/screens/route-plan.js",
+      "sha256": "83b139655e19cba7b05c1c95a05b4c735cb7b5d47d67d4db09c406ad726faf6d",
+      "original_source_sha256": "262ccb76eb726cc1bb0c253d0c0e62be6bd39d6ce3a1d37ac89d651e7776390b",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/hand/screens/route-review.js",
+      "sha256": "411f8e717a27903eb3a76f8097d276663f1149c28d28c6e533ab47041222e408",
+      "original_source_sha256": "102440a44378fef6648690ad6bbe3a3873853f2cd3a1f53b542ea2308cafdc86",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/hand/screens/selection.js",
+      "sha256": "5a19febda25a08aa6a9adb86b801caf78822d6038ebdf054a8f7e16f93b9754a",
+      "original_source_sha256": "10e93041b2fcb1892d6d7c80e57db54b1051efbe35e08d3a6ce9e6ade4989680",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/hand/screens/shop.js",
+      "sha256": "9320ba2f5d80ae1c19a889622cf466ac5ac35c4ec4feb8824ba12de608fdf4b2",
+      "original_source_sha256": "ae49d3f139434e8aab4352a8edb5b71bbd0e0e7019c9fc7d941d4aaaed324563",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/hand/screens/silent-discard-facts.js",
+      "sha256": "121c30e1d2d9609b640f985560dadc261804ab38898a473c58112e651c03740a",
+      "original_source_sha256": "97a130560b461fa2831617b9b6bfb30fbe592f6270a48dd0d350b6d6d2cddbea",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/hand/screens/silent-hand-trick-facts.js",
+      "sha256": "ab1f3ca87aad97012fb50cf21b8bcd889bedb85a7ee59c98e35d27d935ea7f59",
+      "original_source_sha256": "ebce034d086e32fe10cd6a2e3b849accabd30bc7bcd3d7241ab7ded43f8f5395",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/hand/screens/silent-reward-addition.js",
+      "sha256": "26dc743f3ba36fc4ebc43020b30c5b27c95879fa94e137f524d3bc6323bcc21d",
+      "original_source_sha256": "bc3f8d2f9de05bd0392b062821e39ffeb08af973e3d3b10bb7d4fcdfad471b50",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/hand/screens/silent-sandpit-discard.js",
+      "sha256": "23711cec8bf5c5237c78e05a233d1beb41afc5e803d9c58fc7305acaa8c84265",
+      "original_source_sha256": "62735ca5f96196d3c6416fc5506740395139860b3aa084ec7767b3c0578499f1",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/hand/screens/silent-smoggy-selection.js",
+      "sha256": "9dbe6d252ff07ac9ffc50d7b188a6d1e34249be54e85d4790e386f789400c574",
+      "original_source_sha256": "853d98f599226231593be2ba1efaa4df3486954b8c02fc54d3109e93abba783e",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/hand/screens/silent-snakebite-discard.js",
+      "sha256": "90ff3eb3e45e8869e2e809722582a97a672d19b39a82c3d779b93578852e683e",
+      "original_source_sha256": "bfc831f94fd5dc0aa8ad117717fcf3bde337df84fb839689233ca81d57bbeb03",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/index.js",
+      "sha256": "3cc9a7d5c6db3bf79f20fde78c978964960ee73424560b165a2526cd568a5b1e",
+      "original_source_sha256": "9aee86b0b3c0169d8eee0c16193d271d09aeb1f07f6bd2090b32c0624fa13a3b",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/knowledge/boss-phase.js",
+      "sha256": "312b3f582eb5520474fbcb50598cddff6015aab8d15aebd31257cf272a57282e",
+      "original_source_sha256": "4e84d7b11e1d37e04df9375c0a0ddf1285689776d8728353b61135466b32e73b",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/knowledge/card-references.js",
+      "sha256": "f83ba7fc71c3811c036d28904849e5e9ba446c614cccb87ccde92d9434c6db8f",
+      "original_source_sha256": "255afc71c93d950a306500d715edd786f97d330026a2da2600dc83afd16481f0",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/knowledge/card-upgrades.js",
+      "sha256": "b02dd5d14044b55bbfdaa90f73e6d0f48b5e3c183cc7d4319f27be525c1bfbb8",
+      "original_source_sha256": "46fe172dc7dd5f36e9b9e0460217f0a9c933b8f740746fdc9c290ace768ff64e",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/knowledge/double-boss.js",
+      "sha256": "f8f33750722ffea5b001d9ec8efbaa49eecec8175bef57ccc6d1eb8524c1bba3",
+      "original_source_sha256": "46e497cb169d6a7266f55434b9ab90e311894174100fe4b70c9992a4aa418fed",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/knowledge/enchant-text.js",
+      "sha256": "a40e4c91e639f427d6d8bd9700816144c463dcfb9e617e71ccc5e750f75852cf",
+      "original_source_sha256": "7a034321b9ba6a8d89e841b537d1eb02a8de5aa0915828d57b5120047ab0168b",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/knowledge/event-pages.js",
+      "sha256": "6216fe31bce720b3604e1b053c7ae60d333234e93baafc4597bfadbb6c6d7fea",
+      "original_source_sha256": "e121bbd24923a4e1af6e94527264b2dabe639a4be40f13fa08e4b9db619416f1",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/knowledge/experience.js",
+      "sha256": "0496c52b272b693c2d04ffdcd2d86ed8757fe344966dcf65aea81992dc58a904",
+      "original_source_sha256": "2b9fedb9ef907bc346519da202b9dbcecda6765f777b1f4557f9226be602e1dd",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/knowledge/files.js",
+      "sha256": "b87a6b8b515e57b74b0f60c9cc29da3b1df5993b884c276d02b1d8c45b625626",
+      "original_source_sha256": "96742c6793c6d988444a0b60c74a8e57370c75e95b9f27a4a42fd854d8eeae6d",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/knowledge/index.js",
+      "sha256": "ee703adf6ad67af4aadbc3cfc60cc0eaa74be35e7291c7849eb80f4175648a20",
+      "original_source_sha256": "4f79e78beb3d40fd992683ee02be2f3c20649dc0e366e7a7ec2fd4a43aca0712",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/knowledge/jev-hints.js",
+      "sha256": "3c11f12d09b16f38c62aac26cb3db2a8490a2f5601ca5c1da524c9d77cbb1daa",
+      "original_source_sha256": "a5287ef451cd0f91e2a2ec75ab745a7a7cb154867c6b5edeaa0e3f2d6d141d29",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/knowledge/mechanics.js",
+      "sha256": "8d8d741a808152ca3c5f977b6ffc7535427c8c94564da6993940190d6554ecc4",
+      "original_source_sha256": "ec9a020940d5cc9ad17651b1a69b7d11795a116828f2d63857c63f8e5127ec64",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/knowledge/monster-db.js",
+      "sha256": "ed99a4addc24c44e843f43292c8d5be353665fc1a242ede567749f753c932c52",
+      "original_source_sha256": "e56258e59c607c7853e5a740ad0ada2facb326d162e352839b458c9505cbc1c2",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/knowledge/move-model.js",
+      "sha256": "80fa373072ad9bf6eb2181623bbbe0a0e670a7a1b122cc10d2060d747669ad9e",
+      "original_source_sha256": "0631ec3cd373fabcf7efb7aaa3b7a42a22b62f90dcd2859ae98935bd0d902c68",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/knowledge/outcome-facts.js",
+      "sha256": "dabb2b6d553803725cec16299899c117e66147618054ba8289bf281d05a83eda",
+      "original_source_sha256": "c0a2e06d40cb97146b13cf956df27c5ea40afe680577e89b0b2af600032fcd67",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/knowledge/outcome-tables.js",
+      "sha256": "c6675b51b682b65d7a8ec875b976d17a5490d018cbfb705085685a8018b6c8f4",
+      "original_source_sha256": "fe124039984c4b9c2918a301fa42003dada2a1482a8a957e60b404abc0e481ce",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/knowledge/potion-equivalents.js",
+      "sha256": "996210d0da54383e652a7ad80532709d0640c0f883aecbaff17a9bccb4ccd46a",
+      "original_source_sha256": "4d0cd84127be1ae95636293d181c3fda5392478a5cbf6304a292de6ce32d05f3",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/knowledge/potion-values.js",
+      "sha256": "fd27b2ea702e6f2142d3d806998f82dc8df6b0fe1c20234e977776092cbd92e6",
+      "original_source_sha256": "31708aef8b4e8b731a80c072c38848753171eb3b6ab18d7ed15b301f2b218740",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/knowledge/relic-values.js",
+      "sha256": "24408c570f452855b4150ab8d9940f55393336c880fc4748a52b77c3202e65c9",
+      "original_source_sha256": "69e0db188188301e0b99ad1dc3e7226ea70587384d4a0f02665229faeff717c9",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/knowledge/render/data.js",
+      "sha256": "c596d15c37dee1b397a6aa443973e45923950c04f02a8ce6e11cb5a2ab7b36c9",
+      "original_source_sha256": "e08e480b4d4bb51f0fdbe65f557f47b5057302bf4cc2078f9c591b69c466a171",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/knowledge/render/experience-text.js",
+      "sha256": "ef56352832a5c52b3e4b74f4ec9b9d1ba2f1ded7bd2f53c7aa6fe2bbcb57997d",
+      "original_source_sha256": "10a074dba702f77edc563c7405b815777583ed630826c10993de130368586a56",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/knowledge/render/facts.js",
+      "sha256": "d6b1f103d3d5ce0e9bd8f470381d747616979e07a6a84b7d766d1f290d48619f",
+      "original_source_sha256": "b9f62fc1ff5a244950fd7eb7d730a1ef354f7ad8e8f0180a14ae73a1b27e352f",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/knowledge/render/format.js",
+      "sha256": "b59c54d73360e3593227b10f946d4d674589236011258d3d90f8e888deff8dc9",
+      "original_source_sha256": "e5dafb0fa0c581ff76c33e32847d590a57c16a057c9a37c18c843bdec7ffbc36",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/knowledge/render/knowledge-prefix.js",
+      "sha256": "8b455529e5ba607eb6dd9a61ef8e0e51cc766a1d9536ab63c1b1efe061f9852b",
+      "original_source_sha256": "f0822bf3987a2908eeb8aee2fc1c5a6ecd4e650620abcad1e72dd351fd1dd163",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/knowledge/render/monster-text.js",
+      "sha256": "1e4791d35e3abb6dfbd406479d802977616b2d65e9706609a772a9592cba5027",
+      "original_source_sha256": "c4231f7489bab518f496117e9982cc2d4e2cc2b75614f6800689e6d027332aac",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/knowledge/render/old-knowledge.js",
+      "sha256": "8b33468a57a4f87a657f308a595600816a6e0c905e26e070a8a0dd063135cb91",
+      "original_source_sha256": "baae261eb37d2225e79a6fa981236e12d17b7c466b80580f202a0dd54f66ebc1",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/knowledge/render/potion-text.js",
+      "sha256": "137addb105d1418de020cf69a5e1917df2104382b74254609a44921cfc2a854b",
+      "original_source_sha256": "4caca701a2c52b017ac837acbaa4015f22fb2299a519ff507cf4074d4bb38fc0",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/knowledge/render/stats-text.js",
+      "sha256": "4f468ed27a2a6b952382eacab9a6c47005da4daf6a5eea8ad1c5d1e4f2c28b0c",
+      "original_source_sha256": "91354ae54f8723be09ca95ac58a93a650affe8e4aef70dd34c4382ede24d208a",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/knowledge/room-costs.js",
+      "sha256": "a10c350334b180d781175be13bfb8f36fc843b786a6548a80f1d703e44569b2c",
+      "original_source_sha256": "531a2f02ba97906d364658b4fe21f141716dd86a9c6305f2d4ce80ec43031f81",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/knowledge/shared-experience.js",
+      "sha256": "3b1990173fcea41339c1e0b22cd0dde576388ef7afc9cfc347b6a9c47dde380e",
+      "original_source_sha256": "cc64ac54eec67b4a3892158d79f6823687117ceff54605e35ddee8e716e60fa8",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/memory/ascension-target.js",
+      "sha256": "1c500197ec69df75abca64f5103db23faf41b77f19f8d0656616617a701581f1",
+      "original_source_sha256": "524c0695fe558985ad70b26beb13b500b7fac2a627a3503cc42bf3699fc8070e",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/memory/deck-profile.js",
+      "sha256": "80e546dfc7f275604dfa0278e937134c93117c28230d2979415991c0b6872a27",
+      "original_source_sha256": "d6640509715174ac2c3affc2ea16423d91cda757a3f73640e685d17385a4a0e1",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/memory/deck.js",
+      "sha256": "0d5fc7348b493b0cd0aba00f0c469dd95255ad65d5030e6588ae47da2fda39dd",
+      "original_source_sha256": "a38484995c36609229459a0b3bac901d698f81f964def923340f0d356d53fdcf",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/memory/fight-plan.js",
+      "sha256": "9b8626a7b3003ebaea921993d6e2b313adb351a4b530005e14128c512167d187",
+      "original_source_sha256": "a260169f393e724cc3c5737d3336649217dfb0b19cce46be90c588d6ae0c0884",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/memory/journal-replay.js",
+      "sha256": "ed7acce300e2f3072ec5c79fa5bad377394fef8e9fa0b56a8d42bdf5aa8ceb00",
+      "original_source_sha256": "b2273f526812f13e4c1061a8636d3105102ccd8dd566a18177b44ea16f09d848",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/memory/narrow.js",
+      "sha256": "ae1e5a8d5fbb82c1a94084245bbe786f0b8211b3e89056dade873a21e917bc99",
+      "original_source_sha256": "aef22caeb263bab54acb8c78f7620fb82c53174485c931c96edc542ce75eb5a7",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/memory/relic-resources.js",
+      "sha256": "8f57e07862b720216cb26d1e2bf61a12ee2928e6e3ba7010bacc24e1d34bab46",
+      "original_source_sha256": "b52ba3c484769c96ae8a33d736cecc817428ace6b80f5207469d78b4a66c2108",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/memory/run-brief.js",
+      "sha256": "e29a6bea6dfd6a7f281ef67e878dccd4dc369cc9d0f88576627b93982cded4c5",
+      "original_source_sha256": "3eb7cda092b67ea178b2ffb4b5ff38478ae9d7d90d4a785b4f910ed3ae99d24a",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/memory/run-constraints.js",
+      "sha256": "b864f08601e4e1fb845d3a6c791632ca4c3c645e1ca9b3c5ff384be57167ceb2",
+      "original_source_sha256": "a3016ef6dbe835a9528e96a958cc028418093cc0a83c231191e26f5f5ff54350",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/memory/run-journal.js",
+      "sha256": "6074f05863d6700c5cf6d33daa46edba8f1810d96fbeff370de51df675b055fa",
+      "original_source_sha256": "cc7be81c7ad7c10db91f2c8b0bbf6fd02134dc873cf3e48a04f0906ab8e077c8",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/memory/run-plan-merge.js",
+      "sha256": "d0efdbd4731539d4552c9beb7d3bd5c02c46d2f058a77a0694a80df5318ec6ce",
+      "original_source_sha256": "1afb0e5424e9d7d2d98309252b85231c91fa977de9ac79c30eb5531541ed4606",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/memory/run-plan.js",
+      "sha256": "25210ab1f3b087d64659fdc75774ac70cace5151800a7b3aa89fed4dc0250e69",
+      "original_source_sha256": "7551d239b782a0427b48d13377ba05fc0abcf6b8df2d0430112140b59c4d296a",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/memory/types.js",
+      "sha256": "c88587e4f455093ae094bf33718ce2997f79eeddf88f89d2739d405c20f25e76",
+      "original_source_sha256": "fd4953ad3e62a3b59a18191d72381a7977cb8faa2ecb10d67972c09fc49ad5b7",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/reflex/card-model.js",
+      "sha256": "b83f62f11fa0ed8484014e35721820b7b9b674c78ff5cd7ec373e0f67132bf03",
+      "original_source_sha256": "2b492c883b727d920c963fa4bc2e29316f58cd3bceaeafdcc0f3b04e7f7f85f4",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/reflex/combat-plan.js",
+      "sha256": "f750a707407d3dba3ee46c3bba5576a813625ec26b7682cac34f9f7fc7fd3d78",
+      "original_source_sha256": "3911044b1787287f28fb9dcba659f7f58310837feb12d2dbc43f1970e65ba239",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/reflex/combat.js",
+      "sha256": "800ddae9f579519f6807df2a1e53dc0b4cb2c3217d1501359b816e1d5e4950c5",
+      "original_source_sha256": "1f5c52688a3faaf6bfaa752c83afb33d05db20d0e5ad4b38c068575424b48695",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/reflex/continuation-value.js",
+      "sha256": "a033230057b9055dc1ab61e5f88983371c6e3507331b6b589be156a7ed6f047d",
+      "original_source_sha256": "002277b50728ab8fd405799c0a3345e5dcb788ba8f37d5489b5fbcd9623029bb",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/reflex/damage.js",
+      "sha256": "f4869a421aa3f2b85c860761bc3d326a66d504a29b2ffcced9824012aa7a7a95",
+      "original_source_sha256": "7fd7092922f9e692ead821eac958e9d2b6d013f62f5a131691157d22dc361786",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/reflex/fight-plays.js",
+      "sha256": "c39f4b42b268c858199ad035c1e74607ec9104c1a5875f706557059a85e434a5",
+      "original_source_sha256": "608c10043f73918bf9117d90cf770668511bbc7757ee6485f4c943173064231f",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/reflex/fight-value.js",
+      "sha256": "c25a3419a64e52196919391b6bc618b35029c3d35e4f52bb9796e41810fc727e",
+      "original_source_sha256": "e630a01778f0758e2fcec26b0219532cd7cb74a3b2d307b1f6e7395808c148ef",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/reflex/jev/answers.js",
+      "sha256": "a896387e560f0b39f17deb1d375226c20e67a14cb2181e9d8c9520f5d98a7db7",
+      "original_source_sha256": "5f73eb0e7d267bb04754ac92578b44b7e9eba4cff1d85ff49ff91c05a754b729",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/reflex/jev/client.js",
+      "sha256": "ea433d15489422bdd12cf7795f7bce49eff78ddfa69d1e979dd0d6f8f25fde47",
+      "original_source_sha256": "34b56ec932554bddcef67839c3a1bb21d86bf9ff4fc4412f2cfcd6cf585118ff",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/reflex/jev/compact-request.js",
+      "sha256": "27cf4dc380f806e1a63d4e1cf193870d797c4fa1e2d7dcaa8433c7cee3df93b4",
+      "original_source_sha256": "fddd3efdf176877fe4055a0c7b537a37f5f19dba8802b6ad277b5c30be05dccc",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/reflex/jev/pricing.js",
+      "sha256": "8ad7cee75e355cf53932ebd4ea7a03b3b8a2d2efe452d189d2d7077e45a305aa",
+      "original_source_sha256": "c538ad5027da7398fe9a1a9dc065e1fe8612e5baaac5a345b7a374282cb1fb4c",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/reflex/jev/questions.js",
+      "sha256": "34be88bac5be218b60c7dc52e45b4bb13fe225ff831365b32ad779766f779aa9",
+      "original_source_sha256": "50f7e648d6392c6201625abe2c17969d0453b8fdd6e156a0e0e9435df1c2d3a6",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/reflex/jev-experience.js",
+      "sha256": "0563dffd030d439bc40b06e47cb8dac5fbbbc4e575354c982aa0117428e6d6d3",
+      "original_source_sha256": "2e00c018939d3b90ca9a5f022f13222b7e8cfba60059c6e26b232311342a9d2f",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/reflex/passive-pieces.js",
+      "sha256": "3320466780ef0aa33fe9d68616dcf58a010b60c6373959a7406f43c40d8fa24c",
+      "original_source_sha256": "e2199e79808fee247b5a7798e12b21ae126a1fb8ca66ad1f1293240f1f22647c",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/reflex/permafrost.js",
+      "sha256": "c4ea8c5754feabb1a4b539da3008a6c57082b092a90bbd878c560e7753f46f7f",
+      "original_source_sha256": "d6b5707427b7acea5f59edb7a51799efe7ab1d2cb64168510161d755d17760bb",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/reflex/potion-cost.js",
+      "sha256": "f506e1768df431c8f4ffda1daaca40cc9da59608357d63246ef224d62c96cc37",
+      "original_source_sha256": "cc09b1012495d6ed582c2566d6a1096343a1820f22e0306ada2e75878d14e01e",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/reflex/potion-mc.js",
+      "sha256": "2b67e0b7b3de6e093194b3c71a2eb493750ab73766083737e35412cbe258c8e1",
+      "original_source_sha256": "f51b92866d0c82ed8b934a4301ca1f693703c65021e6b71a2caf6f58055a8d14",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/reflex/potion-value.js",
+      "sha256": "ddeabce23498ca41723b3547059e969cc451b0415aebad7872d1dfa35e068ddd",
+      "original_source_sha256": "dea5f46fd58c10ed57c2d8f4788e73b0fbb7decc2c38d4e5469802ad517e8c0a",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/reflex/rollout-live.js",
+      "sha256": "d9d8e85649f2a41055738b7f134edccb15dff5c54937e4223a220c286c0a386e",
+      "original_source_sha256": "c51264c418dc10b94e7de5bf03ee1c8756d6d777e96c834953912f5970bb265b",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/reflex/rollout.js",
+      "sha256": "cbcd6a4364bf0d82bddea4aa9a63b4b678752af00f98c7eaf97982bf20365fc9",
+      "original_source_sha256": "28415d72ab06e49376a4c703928365cea1f80881c2aefb9889bcf9dda152ae69",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/reflex/silent-apotheosis-reference.js",
+      "sha256": "c4ae37128ce7bd89b55893b841095df2644ea573b61af8db9a9d6b1bc40b4a98",
+      "original_source_sha256": "96fdadf221286c9e21a11d78e7200b320da6c8db7717e9edf1915e4a5b739803",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/reflex/silent-apotheosis.js",
+      "sha256": "ecfb01dd9795618043dd822ddd3661f6b6e3ea3dac7cd5c50dedb17a0c5bd4e1",
+      "original_source_sha256": "fad01281c8ec85d472913be9e47b43970e141bb8c1396daa34d6fed6e2d959e4",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/reflex/silent-crab-potion.js",
+      "sha256": "152bd41702758f89a4a5b670ff123ba26b2d154a59a5e488a221e03da410036d",
+      "original_source_sha256": "88e4d0b8a41249559dd838640093f10438fb9809b9067a8d4f8a01b955f239c6",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/reflex/silent-crusher-facing.js",
+      "sha256": "63dc1d3afa8844046213ba89da5b47cc91a9d236d586a7a69e4a2edbf4d4ce41",
+      "original_source_sha256": "78a90e120c688a8bae4ed80077ef12a862efa29b1d423160cca4cf72a13eed8e",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/reflex/silent-demon-potion.js",
+      "sha256": "1bbdc5e4909193126a349330ccecd9cfa6c7457fb3b8a5c78803171637ca9aed",
+      "original_source_sha256": "30d0ac0808b3dae09b5835577f62efd3fa9691a00cf59860779c2c9a81708fbc",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/reflex/silent-giant-potion.js",
+      "sha256": "3b6e5744477681158451f054f1c7f691b05ed5c01650bd91fdd56942eb9d1df1",
+      "original_source_sha256": "4f032ab6458326668c37361d33b7882e7f922bf07ad3f995abb6b5085de5a5d6",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/reflex/silent-held-loss.js",
+      "sha256": "654d1887e1f0a242b9718d92e79acf68a48b3edd076b5b3075fb53d423f8bdc6",
+      "original_source_sha256": "c60884d37a5386e21ea357cb6b0942bcc3c098366167dcde4506ae79541e9022",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/reflex/silent-hp-guard-audit.js",
+      "sha256": "8901342347374371e1a79ad519073a63c20ca3c73bd5f7610d3ec0e8a9d92001",
+      "original_source_sha256": "183a1c996ce965e05dc5735dc0f3b4f2e2ff65442c7e6779290716b0cd4bf858",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/reflex/silent-kin-progress.js",
+      "sha256": "4c1afade6afe12c06ec49e7053e0f60039fa2a6488cd79d0faafec1ef05fb4f9",
+      "original_source_sha256": "a73c8cd3f1d5953e12f1167f328962fc1a738467411ac27cb5a5bbaaac33edc4",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/reflex/silent-loss-reference.js",
+      "sha256": "592a65450107233b6c32b5cf71dfd1f2d7d806b65630b2d5779b4c293f8a2120",
+      "original_source_sha256": "713d94462279914dea649b2337e1495a3cc42fd986650099f49f88409bf49c25",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/reflex/silent-phase-current.js",
+      "sha256": "b684888f8cd2ed8c9a50e11d4ddc616018b9106261e2b76a0bcf37f15e02e51f",
+      "original_source_sha256": "cd4499e87f7b660bcc549330164391b9252388a55124ac202dfbae3715b1f74f",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/reflex/silent-phase-reference.js",
+      "sha256": "5e7b64bc593903cf561cee66f9b979d259d4e3b5498cb6a994ac843b40148a87",
+      "original_source_sha256": "529b07f58c1934e1e36e99d4c5888183f01109f60684513d7446b49c06e769e1",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/reflex/silent-potion-reference.js",
+      "sha256": "2d70fe3c306f66ee73c79194798c2b121a4c2a354410b47b84212806bd45e378",
+      "original_source_sha256": "94399dd7279d6eaed91d139507baf6936a161cd61a792644a4ab7c5d9102a360",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/reflex/silent-selection-audit.js",
+      "sha256": "a9a0dd2ac766d9cc9633c2f4b807a0e949307b7dfa257a65affc4163b7daddea",
+      "original_source_sha256": "2de2533b477546682ef601d0613bd1adb805e03b894f64347475bfa4e222e4db",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/reflex/silent-selection-dispatch.js",
+      "sha256": "1d3b2752fcef70e94646f67d421d9aeb0e0893894b13813cff1b2e7a25618405",
+      "original_source_sha256": "9301b47f0f6a2589ce210d7f3b9fd232854575154e1f77e471d164070003e6d6",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/reflex/silent-simulation-reference.js",
+      "sha256": "733a27268bdf11f675b243960a170b45c36c14a7b009e9f1ba549a4b2fa97f02",
+      "original_source_sha256": "7b017994d9594d9bed3c124f0e62bad686692ea9ea517da559a1f7303042c195",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/reflex/silent-skittish.js",
+      "sha256": "096e57d9eb96716026a7d0d45db4516b5dad2d95c82ef8325801c56bd059da5e",
+      "original_source_sha256": "dbfa23ec61b30dff80b5f8158cf2f8c9da6ad8cb5e70334f9ab402689b491820",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/reflex/silent-sl-comparison.js",
+      "sha256": "0188bb7ac46e7bc2e0671e115f13294454400f22bf1dcc14950c8ddc1ac648e0",
+      "original_source_sha256": "2fbb427662af78dd5428c70e0af9bb82dfe312d4ccffb33201da3c26dfdfc760",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/reflex/silent-sl-resource-comparison.js",
+      "sha256": "fc5df053672d825e5e4104ea92d8d886e987a23f90d6db715d9aeff152f92b94",
+      "original_source_sha256": "30da6d7d0c065957c118b211d53ac40360bcf93c05861be3dd811da78f8a8c21",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/reflex/silent-summon-coverage.js",
+      "sha256": "73a4bc8a433fd1c7c1d781cbbaf3005b219134672e153aa53f942485ba3aa4d3",
+      "original_source_sha256": "41e8a32a168747dc44aef573aac1363b193b48c3df206365840c350727b46e22",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/reflex/start-loss.js",
+      "sha256": "a223c446fd80f823f9e60fc378d3eaa7d2e65d0bc796c9f145f5564c509875c4",
+      "original_source_sha256": "bda105bf162ea693ac35679a4dcf4fabe6a844b6b83eba9bf3ea5ac6c853bc55",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/reflex/thief.js",
+      "sha256": "0d1f9d65a8dda186d201a7d743f1659c56202e37e5ca80e55fb2fbc5d0c008d9",
+      "original_source_sha256": "363d27dc1cc3d85b407bb714f3c5b8d37e24a48e510685a6a5407124200f0329",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/reflex/turn-solver.js",
+      "sha256": "6e15af8c27ef014c9ad13da1a2398de08577744366fc78d18b57df93bc17a6cc",
+      "original_source_sha256": "e664f0dd4cba20140c9d373909e4adb42b5d65432200d2885f6e1f916f9a597e",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/sim/boss-clock.js",
+      "sha256": "ecbd86a732691682174b4af895a84dbb64638e938322ddf4b0ba711cd10d47bd",
+      "original_source_sha256": "5a4ce39fe711b234448fbb465f4bb9f7ba258cc57a56904e88aba9b38cfe81e8",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/sim/boss-lines-worker.js",
+      "sha256": "70df20854f2a92a9892977bc1473721c65783cb07cf553553b0e8687b80272ea",
+      "original_source_sha256": "d3d1a8342a4a38ef361bf420e28d796ac46964fcd6707d52d7a04c00dc3d6dc1",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/sim/boss-lines.js",
+      "sha256": "50f27c2fefaed3ab349d222904171e255d4019bf66f21fb5641f8395633d9962",
+      "original_source_sha256": "ac5af605bd41d680f9e2b19d6aa24ffb5fe582f976433bc735996c5ae4c690dc",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/sim/boss-sim-worker.js",
+      "sha256": "b3b023ec2060aa40def0241ec65a175cc9ab49e8e28680b4e15a2d7cf3908c25",
+      "original_source_sha256": "2a1c494fb6b5811e3708070aecb2bb0c3bb30277b989ee24e0d2cb68e6f4f49a",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/sim/boss-sim.js",
+      "sha256": "b6dfa1b0962ae8f6892b0130605583cd82ea63ab6a6b4af13a952d9e49e3a4dd",
+      "original_source_sha256": "bf05fe4baede4e17350edf419a2052e62867ed7e8856af0ba54b68bd447d9c17",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/sim/boss-start.js",
+      "sha256": "66e2f248f89c58048cd4826875637ec91b1f0b33282aa8c6413d0e4f1f3ba1b0",
+      "original_source_sha256": "6a7b5ea8a90c35c1490ce742114e6cfce072637ac2c95dbe5d1b2ab947a13282",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/sim/boss-trust.js",
+      "sha256": "a0cb9aa495b245ddb76695b237f4ce1a5ca5f34835d71cb550bd2025e68015c4",
+      "original_source_sha256": "51343d95717c09e57451fb58975d94a1130291b9b2a3a6a1c92a15b5fef872c2",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/sim/build-sim-facts.js",
+      "sha256": "762dfd3fb8647a01022bbd2e2b11aaa11a6fadadcd0449d507454024aa454b28",
+      "original_source_sha256": "9f1190239f91804487561ef29c1335a86c005108fff5132ee1282079905d765a",
+      "inspection_export_only": true,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/sim/build-sim-pool.js",
+      "sha256": "465f6159e3239d8a53c22c9c21c5c78422a090748f78da0a3448aea648915c97",
+      "original_source_sha256": "8dea63800021b9abe022da6c7419b7af52c68a0656441125b380c1e6d588bcbb",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/sim/build-sim-worker.js",
+      "sha256": "6ae12538eb6d44d226f9bc2944d5ab58ca154d7f776002cf71bd952df15a3745",
+      "original_source_sha256": "772dd4d2392e2f93e2a368ac9ae6514be6ebc6351920203f3b7f6e1774ab163d",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": true
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/sim/build-sim.js",
+      "sha256": "0b8692739af966aad52c1ce96ab08b12b146bfba612cca5d6a7ecf45e33eb803",
+      "original_source_sha256": "ea23f4c17440801835223d668c6116abdfaabfa55feff4974d1c557201c23ab4",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/sim/compute-memo.js",
+      "sha256": "77c23702374c6bca23c4202c3744d84f30f2be5b19779418fa9cfb30715a8ad2",
+      "original_source_sha256": "36f0e72ea67c9ddcc34d4ce9234ce2b9397be16d8edab0da07da8d9abb802761",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/sim/construction-combat.js",
+      "sha256": "c290c7a41bb48146d2fbe1b93f68a3130730972ab8bcb050da0c6e019129662e",
+      "original_source_sha256": "9deb118347b60753c7e40fb4e0e588e91107e3960e3fc40089af940d85a0e36b",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/sim/core-realization.js",
+      "sha256": "fa5f9a4ff0ab759714271f9c48169256674379a7c52617b7646d547b34305eca",
+      "original_source_sha256": "51523124a4b1cb3948fef2d6f334cfa76f6f2fb35968e50ef5868651497718cd",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/sim/core-window.js",
+      "sha256": "4ff304b1931d54d79af95f3edbbf7510b7eb1d12ea3aca52783afa78656de88f",
+      "original_source_sha256": "87a061c6ace294483e2482498b33ed3d76934c1cc92c129b34f1fa1517934ca2",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/sim/double-boss-start.js",
+      "sha256": "b0d01db7dc1b8dc8a020151646cd11620f2efdfaf1a29cb6b86a8cc1ec782df7",
+      "original_source_sha256": "725cceb3f76da9192c575705cb21645784eeb4a268f498a49d4d6e5984b2f30c",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/sim/quantitative-calibration.js",
+      "sha256": "c51ef0ab2216f1c502a4f9ea8291d8128f9656cbfa356bf3ce9cfeb2d104ca61",
+      "original_source_sha256": "7edb1b8fa86b49f60ec2e1e4ddee1c6e065432d18ad8cf81461e97fc8242527f",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/sim/quantitative-facts.js",
+      "sha256": "de5019194e7c6308be08f9ded283c7393924c4b5c49557260f7b38dd05aaa24e",
+      "original_source_sha256": "10d3ce76892605f14237fcebbc0a1c9a90666c24ccf3c77ce4a1113a89a32212",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/sim/quantitative-log-extract.js",
+      "sha256": "ce8ab4de2ee12c724af6ec1a0eb254efe60b5491dd0620f73781b10e922d44a0",
+      "original_source_sha256": "e679232a6cc36efeef49493f3bb3874ee58c977444dfa057af4830c530f22c15",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/sim/quantitative-stats.js",
+      "sha256": "09b0f7926c5f2227016c3cf76dd2102f073e8627caf2d48dcdd9d4b6671ff8ca",
+      "original_source_sha256": "e33124df786f4060919d6713e494f9ce447b20c75113a573f7e549adf4e8a377",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/sim/route-map.js",
+      "sha256": "285309bb6c02ff4913bf40c738cb34ee9b687930cc70d89e7d3cf3ba2fbe1b27",
+      "original_source_sha256": "763b2ae1548d06871ee3c8926c464ec66a1d80ecd924df6f003b260e446b99e4",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/sim/route-projection.js",
+      "sha256": "5a75182a9b88131c0d678a855e532f4633915bc78c988b1868e96168b74b124e",
+      "original_source_sha256": "ad0e4c94d1e4212cc6732d737a861ae08d6134877186ff97d2623f4b15fd5f8c",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/sim/silent-build-win-ties.js",
+      "sha256": "0b72549dc80f7e8c899812460fbe19d3f5d2dd75513509cd217d1a301c9a5f5e",
+      "original_source_sha256": "7a232f09e25f9c8fd56cdadea7495ce58b74ab4f8460a68a7ee5af15d01652e3",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/sim/silent-opening.js",
+      "sha256": "5b62a81358baa34031a39973609d83f2bcf94a7f83c0ec3a6d43e2e0a75f9603",
+      "original_source_sha256": "9d235d423d46513236caef9442e6aa275fa6444cd09db25a5408c42c0a6a2401",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/sim/sim-pools.js",
+      "sha256": "28a24168f43925a445f148aa43eb829d36f9fca8efe4e2fb13890d1d58657fe2",
+      "original_source_sha256": "f852fee8b01efdc07bed9d92d32b95c005b1d18447c86d789f1e465f1c158e7c",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/sim/thief-card-hp.js",
+      "sha256": "5cc0727a68a60ac518d454bd1a3bd3b9077bae309b9cb3fbac895dd6fd57a37c",
+      "original_source_sha256": "3691b49c6f80644be5d128771ec94cc7bdfc03a156648023f51e1ee8ee27fc43",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/sim/thief-card-value.js",
+      "sha256": "f4256c3159d4418e7d05c6ed981d7c3b5042962eb814eac6e37f2c475efcbe25",
+      "original_source_sha256": "f3b4ee6d1cbd0010b9de7a09c604cdd47a865871532284493fa498355630d9a7",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/sl/attempts.js",
+      "sha256": "64e5b5d22589856f52ddd407883cf17f6b9828dc006a5cce019b15558f04ddd6",
+      "original_source_sha256": "f3f785f18c77ccc482a58b236d168780c8e010fb0bec12ec3e14ab61a8aca415",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/sl/controller.js",
+      "sha256": "5538d3c32df1ebe2f11a1d666e39bc32db17bd23dcdc46a9fb149ce2a6463921",
+      "original_source_sha256": "9544fff0338eaae22178986a75b1f2c63f648f6fbcebcfdccf97361b2733f0af",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/sl/draws.js",
+      "sha256": "48142778c23d19818bb9cb8ff1a5a64c51a0d49d366a69d87c9b114ecde8a05e",
+      "original_source_sha256": "757b57ea5e8d130e2204280cc4c5322e7a273cda4e5abca47f03b567b63c3a79",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/sl/elites.js",
+      "sha256": "73c538c0a12e9851319a140aebbfd214ed81ffff40c21ee0f32b55fee577b5df",
+      "original_source_sha256": "9056eed440b4b363e850a85a3b93519f4b3271b03fe751a17ec4dd452a7236e8",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/sl/explore.js",
+      "sha256": "63a0b5caa9f21d4067b78506086b7ef24938a058b69b79d9b47ba6333881ddbe",
+      "original_source_sha256": "89875b8d7fa6470bf2fea69188c16125992f9736a6fa048123c26f7ae6c0d312",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/sl/judge.js",
+      "sha256": "5b5fb9fedbf6e5a03e4b57ba0d364eda1be4deb473d5b1e75a2da42328390429",
+      "original_source_sha256": "9c8708b71e8002fa0bcd59a2d9baf8085bf5e2d3e051deca04b15824e41cd595",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/sl/random-target.js",
+      "sha256": "962f3e5f7f1c8897d3330f31c2dd587f101c5d92f9293d3bdebf136320d86c77",
+      "original_source_sha256": "f45267c71283eb16f408303559637534b63ac4d77d4d0a4ccf04f704b61f985d",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/sl/reload.js",
+      "sha256": "ac314ee34e9c4c706de640b2de37c11e9b9674440754599f6c6ba9a0c41814d2",
+      "original_source_sha256": "907eb148fb63b9999137396275eb83ed9774ef7ab33b1ebee345d34ead311be9",
+      "inspection_export_only": false,
+      "worker_telemetry_delegate": false
+    }
+  ]
+}

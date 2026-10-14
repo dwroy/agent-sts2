@@ -1,0 +1,2363 @@
+{
+  "external_input_manifest_sha256": "bb429a72e61b65bb8eadde8350e5b22cc14422b5c559bde489c1502e18870c2d",
+  "packet": {
+    "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-input-packet-r2.json",
+    "sha256": "1328c5a0c0aa7047d1e959d579d5d4001d75323c3a613c68877cb939a3fa5fa4"
+  },
+  "approved_spec": {
+    "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/approved-work-spec.json",
+    "sha256": "836576d0d3a59fa3a7c56aea67bd1c226e565e4f3c11b3bea4624c03a514b81d"
+  },
+  "targets": {
+    "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/targets-manifest.json",
+    "sha256": "1f4295c44336a86a4cd63a70f3ad3829c27c7a54dfccedec3136f2db359d6666"
+  },
+  "historical_strata": {
+    "below_minimum_samples": 13,
+    "dpr_available": 11,
+    "zero_paired_samples": 3,
+    "no_dpr": 3
+  },
+  "cases": [
+    {
+      "id": "41ab7b9a-3ae0-45c5-8094-7183f41207e5",
+      "run_id": "LKC9YXKZWTKR",
+      "label": "reward/card",
+      "floor": 19,
+      "cutoff": "2026-10-13T22:34:16.808Z",
+      "target": {
+        "id": "41ab7b9a-3ae0-45c5-8094-7183f41207e5",
+        "run_id": "LKC9YXKZWTKR",
+        "ts": "2026-10-13T22:34:53.951Z",
+        "label": "reward/card",
+        "floor": 19,
+        "observed_ts": "2026-10-13T22:34:16.808Z",
+        "fingerprint": "{\"actions\":[\"save_and_quit\",\"resolve_rewards\",\"collect_rewards_and_proceed\",\"choose_reward_card\",\"skip_reward_cards\"],\"combat\":false,\"enemies\":\"\",\"event\":\"\",\"gold\":293,\"hand\":\"\",\"hp\":47,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":true,\"player\":\"4:0:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"\",\"rewards\":\"\",\"run\":\"LKC9YXKZWTKR\",\"screen\":\"REWARD\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":5}",
+        "boss": "KAISER_CRAB",
+        "historical_samples": 214,
+        "historical_failure": "below_minimum_samples",
+        "historical_ms": 11072,
+        "options": 5,
+        "decks": 5,
+        "deck_cards": 24,
+        "dpr_count": 0,
+        "decision_source": {
+          "path": "logs/decisions.jsonl",
+          "offset": 1310026531,
+          "length": 43453,
+          "sha256": "7889fd67f2cc9c2494ff80329e6fab15c91e0d4881e3df6012cc3b1274d1ea3a"
+        },
+        "config_source": {
+          "offset": 1640459,
+          "length": 5024,
+          "sha256": "f52c75b5a72e2ff328c9f98ae61163d1768966034333f3935a02e6b9765c274c"
+        },
+        "state_reconstruction": "pending_original_state_and_route_history_verification"
+      },
+      "inputs": {
+        "state": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/41ab7b9a-3ae0-45c5-8094-7183f41207e5/state.json",
+          "sha256": "8f311855bd030c4f71345d01f55e28fea0ddf4a4b6f6408d46a76bbcbee9addf",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/states/41ab7b9a-3ae0-45c5-8094-7183f41207e5.json.gz",
+            "sha256": "6f89c5409db137a2dff188fecdee73e3e705e255dce9a58b9db97b5c5df5e8a3"
+          }
+        },
+        "decision": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/41ab7b9a-3ae0-45c5-8094-7183f41207e5/decision.json",
+          "sha256": "7889fd67f2cc9c2494ff80329e6fab15c91e0d4881e3df6012cc3b1274d1ea3a",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/decisions/41ab7b9a-3ae0-45c5-8094-7183f41207e5.json.gz",
+            "sha256": "41784c6cfa224c745bfa9bb55cfbf02134a527df8aa0e1708c9ae1da0a5d162f"
+          }
+        },
+        "brain": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/41ab7b9a-3ae0-45c5-8094-7183f41207e5/brain.json",
+          "sha256": "255a88fb6fafa9898917441d35f83485abef867dcfea6ac0eecd8c589564764b",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/brain/41ab7b9a-3ae0-45c5-8094-7183f41207e5.json.gz",
+            "sha256": "475c7a3c8da8a8e31a6f8e3d49687955d0b2a58ff8bdc764a345e9c086aeb48e"
+          }
+        },
+        "run-plans.jsonl": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/41ab7b9a-3ae0-45c5-8094-7183f41207e5/run-plans.jsonl",
+          "sha256": "599294b4c1facfbf03103b1d104b0dc0967e43ce73b71288c7c34c683c471feb",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/context-by-question/41ab7b9a-3ae0-45c5-8094-7183f41207e5-run-plans.jsonl.gz",
+            "sha256": "bf99f59bdc5a96a4e1cf897afe179f0817703bde332a62346f7c3086c3012f08"
+          }
+        },
+        "sl-attempts.jsonl": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/41ab7b9a-3ae0-45c5-8094-7183f41207e5/sl-attempts.jsonl",
+          "sha256": "8181ebf4cacdcf351db803ef834f0e478ac5e9f616a06d10941b1a6eaf0d3c4a",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/context-by-question/41ab7b9a-3ae0-45c5-8094-7183f41207e5-sl-attempts.jsonl.gz",
+            "sha256": "2ed900045548d299c50b73d2f7e4fa3c836bdd01596e5382f2e48186dcdb0b99"
+          }
+        }
+      }
+    },
+    {
+      "id": "d98f1d44-2b13-44f5-9c55-300d78211c4a",
+      "run_id": "32VSST9UX7MN",
+      "label": "reward/card",
+      "floor": 2,
+      "cutoff": "2026-10-13T11:40:49.945Z",
+      "target": {
+        "id": "d98f1d44-2b13-44f5-9c55-300d78211c4a",
+        "run_id": "32VSST9UX7MN",
+        "ts": "2026-10-13T11:42:07.968Z",
+        "label": "reward/card",
+        "floor": 2,
+        "observed_ts": "2026-10-13T11:40:49.945Z",
+        "fingerprint": "{\"actions\":[\"save_and_quit\",\"resolve_rewards\",\"collect_rewards_and_proceed\",\"choose_reward_card\",\"skip_reward_cards\"],\"combat\":false,\"enemies\":\"\",\"event\":\"\",\"gold\":106,\"hand\":\"\",\"hp\":45,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":true,\"player\":\"2:0:0\",\"potions\":\"SPEED_POTION:true:false|:false:false\",\"powers\":\"\",\"rewards\":\"\",\"run\":\"32VSST9UX7MN\",\"screen\":\"REWARD\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":5}",
+        "boss": "SOUL_FYSH",
+        "historical_samples": 1000,
+        "historical_failure": null,
+        "historical_ms": 10534,
+        "options": 4,
+        "decks": null,
+        "deck_cards": null,
+        "dpr_count": 4,
+        "decision_source": {
+          "path": "logs/decisions.jsonl",
+          "offset": 1224980120,
+          "length": 91108,
+          "sha256": "2924652fe7dd0bba7116357bf2302e0805ae116a6d594895fe8215d139df5dbd"
+        },
+        "config_source": {
+          "offset": 1595030,
+          "length": 5024,
+          "sha256": "d5548cec772f5cdc59d46ce5ae40f0952f101c647d3db4c336372214e0672478"
+        },
+        "state_reconstruction": "pending_original_state_and_route_history_verification"
+      },
+      "inputs": {
+        "state": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/d98f1d44-2b13-44f5-9c55-300d78211c4a/state.json",
+          "sha256": "e1b00ca6d7dade0d6ae97d3756d742f5796ef6e5729dda73a672f5a24996fc45",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/states/d98f1d44-2b13-44f5-9c55-300d78211c4a.json.gz",
+            "sha256": "d317f84783e203202aee4e71340711e1f7ffd1d3779ef05eb022bf76d35da571"
+          }
+        },
+        "decision": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/d98f1d44-2b13-44f5-9c55-300d78211c4a/decision.json",
+          "sha256": "2924652fe7dd0bba7116357bf2302e0805ae116a6d594895fe8215d139df5dbd",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/decisions/d98f1d44-2b13-44f5-9c55-300d78211c4a.json.gz",
+            "sha256": "30d830576b244d481f49cc2b3613c6c0692a5bb2a284eaadeb057c679736d521"
+          }
+        },
+        "brain": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/d98f1d44-2b13-44f5-9c55-300d78211c4a/brain.json",
+          "sha256": "6d4dfbc3ef29655a136646c374fdf8c68ecca72a9b3b2fea08122b24434cc037",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/brain/d98f1d44-2b13-44f5-9c55-300d78211c4a.json.gz",
+            "sha256": "3eeadb8ce8e5d856646c3221a05928fb7aa42c89f069952270566989d7961640"
+          }
+        },
+        "run-plans.jsonl": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/d98f1d44-2b13-44f5-9c55-300d78211c4a/run-plans.jsonl",
+          "sha256": "8ecf3ce1884c0debc819fa2e875e41b48d656e7a3adecac9aef5ff2b4359b4c6",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/context-by-question/d98f1d44-2b13-44f5-9c55-300d78211c4a-run-plans.jsonl.gz",
+            "sha256": "ba8df215a82eafe07aeaab2d054bda6e9bc8522a1e3138f00fcd750c424e5234"
+          }
+        },
+        "sl-attempts.jsonl": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/d98f1d44-2b13-44f5-9c55-300d78211c4a/sl-attempts.jsonl",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/context-by-question/d98f1d44-2b13-44f5-9c55-300d78211c4a-sl-attempts.jsonl.gz",
+            "sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+          }
+        }
+      }
+    },
+    {
+      "id": "b2aab20d-e0b1-48bf-befa-9f3ba04f7e82",
+      "run_id": "YP428GT9ZLL3",
+      "label": "reward/card",
+      "floor": 6,
+      "cutoff": "2026-10-13T12:37:27.404Z",
+      "target": {
+        "id": "b2aab20d-e0b1-48bf-befa-9f3ba04f7e82",
+        "run_id": "YP428GT9ZLL3",
+        "ts": "2026-10-13T12:39:18.570Z",
+        "label": "reward/card",
+        "floor": 6,
+        "observed_ts": "2026-10-13T12:37:27.404Z",
+        "fingerprint": "{\"actions\":[\"save_and_quit\",\"resolve_rewards\",\"collect_rewards_and_proceed\",\"choose_reward_card\",\"skip_reward_cards\"],\"combat\":false,\"enemies\":\"\",\"event\":\"\",\"gold\":52,\"hand\":\"\",\"hp\":32,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":true,\"player\":\"3:0:0\",\"potions\":\"STABLE_SERUM:true:false|:false:false\",\"powers\":\"\",\"rewards\":\"\",\"run\":\"YP428GT9ZLL3\",\"screen\":\"REWARD\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":5}",
+        "boss": null,
+        "historical_samples": null,
+        "historical_failure": "zero_paired_samples",
+        "historical_ms": 11071,
+        "options": 4,
+        "decks": null,
+        "deck_cards": null,
+        "dpr_count": 0,
+        "decision_source": {
+          "path": "logs/decisions.jsonl",
+          "offset": 1231722804,
+          "length": 36963,
+          "sha256": "39525b08b8f99f120d0186b8490d9e5069d12f5d3facd615a991dec14462583c"
+        },
+        "config_source": {
+          "offset": 1600054,
+          "length": 5026,
+          "sha256": "516c2ae90f4bf0b1737391b5f740617504c357986b3f869f5a6f4b27b989b374"
+        },
+        "state_reconstruction": "pending_original_state_and_route_history_verification"
+      },
+      "inputs": {
+        "state": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/b2aab20d-e0b1-48bf-befa-9f3ba04f7e82/state.json",
+          "sha256": "d2132f657c5db72a4f3c6cbc939e1f7365d9b605c742f5f29ee374eb72718a8c",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/states/b2aab20d-e0b1-48bf-befa-9f3ba04f7e82.json.gz",
+            "sha256": "ab8592d7dc915bff5fa008985b541854913a60598a2e9bfc97de03920e1d651a"
+          }
+        },
+        "decision": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/b2aab20d-e0b1-48bf-befa-9f3ba04f7e82/decision.json",
+          "sha256": "39525b08b8f99f120d0186b8490d9e5069d12f5d3facd615a991dec14462583c",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/decisions/b2aab20d-e0b1-48bf-befa-9f3ba04f7e82.json.gz",
+            "sha256": "182139664fbd60b0a2e6d997c2d25c6f7137a2c793e40c3ada1408b087455982"
+          }
+        },
+        "brain": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/b2aab20d-e0b1-48bf-befa-9f3ba04f7e82/brain.json",
+          "sha256": "ef3a97ee7231cdff7a953ff822eb17f359bfd17092c5e3af528a400a5c8ac107",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/brain/b2aab20d-e0b1-48bf-befa-9f3ba04f7e82.json.gz",
+            "sha256": "5c9dd4d684d8d947bace1a963cdc130615aca8268076b3347efa349024809ed5"
+          }
+        },
+        "run-plans.jsonl": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/b2aab20d-e0b1-48bf-befa-9f3ba04f7e82/run-plans.jsonl",
+          "sha256": "66d1a22398ee947232f2c9994ef1d6dc1c37afa3a8410a4afd33cbb8f4b32b8f",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/context-by-question/b2aab20d-e0b1-48bf-befa-9f3ba04f7e82-run-plans.jsonl.gz",
+            "sha256": "2b1637db40677ad01e9bb3390a2cb25304f055dbb527ab2d03db4612c4626d83"
+          }
+        },
+        "sl-attempts.jsonl": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/b2aab20d-e0b1-48bf-befa-9f3ba04f7e82/sl-attempts.jsonl",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/context-by-question/b2aab20d-e0b1-48bf-befa-9f3ba04f7e82-sl-attempts.jsonl.gz",
+            "sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+          }
+        }
+      }
+    },
+    {
+      "id": "72f3b88e-7e04-4da1-92c6-ecdf3c7c4a1a",
+      "run_id": "WA7FRJ7UABCV",
+      "label": "reward/card",
+      "floor": 17,
+      "cutoff": "2026-10-13T13:25:26.407Z",
+      "target": {
+        "id": "72f3b88e-7e04-4da1-92c6-ecdf3c7c4a1a",
+        "run_id": "WA7FRJ7UABCV",
+        "ts": "2026-10-13T13:25:47.457Z",
+        "label": "reward/card",
+        "floor": 17,
+        "observed_ts": "2026-10-13T13:25:26.407Z",
+        "fingerprint": "{\"actions\":[\"save_and_quit\",\"resolve_rewards\",\"collect_rewards_and_proceed\",\"choose_reward_card\",\"skip_reward_cards\"],\"combat\":false,\"enemies\":\"\",\"event\":\"\",\"gold\":312,\"hand\":\"\",\"hp\":14,\"maxHp\":81,\"nodes\":\"\",\"pendingCard\":true,\"player\":\"1:0:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"\",\"rewards\":\"\",\"run\":\"WA7FRJ7UABCV\",\"screen\":\"REWARD\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":14}",
+        "boss": "LAGAVULIN_MATRIARCH",
+        "historical_samples": null,
+        "historical_failure": null,
+        "historical_ms": 0,
+        "options": 4,
+        "decks": null,
+        "deck_cards": null,
+        "dpr_count": 0,
+        "decision_source": {
+          "path": "logs/decisions.jsonl",
+          "offset": 1235618133,
+          "length": 4704,
+          "sha256": "4f34af8da79beab9140b2e60b02bb66e66d75d05f2e8e702d96af8806f8c3f45"
+        },
+        "config_source": {
+          "offset": 1605080,
+          "length": 4979,
+          "sha256": "de4203fe0081e4ed6db81fe02491a06be53b983b9fc582fcf50f8518e901391d"
+        },
+        "state_reconstruction": "pending_original_state_and_route_history_verification"
+      },
+      "inputs": {
+        "state": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/72f3b88e-7e04-4da1-92c6-ecdf3c7c4a1a/state.json",
+          "sha256": "27bdf55040eb159888d6802d9558259292f697206d6cd2d24af790902d320c99",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/states/72f3b88e-7e04-4da1-92c6-ecdf3c7c4a1a.json.gz",
+            "sha256": "36a6f11da35ce02e57e85b9e95d216458738e2eb0dac1631a88d12133955b8f2"
+          }
+        },
+        "decision": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/72f3b88e-7e04-4da1-92c6-ecdf3c7c4a1a/decision.json",
+          "sha256": "4f34af8da79beab9140b2e60b02bb66e66d75d05f2e8e702d96af8806f8c3f45",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/decisions/72f3b88e-7e04-4da1-92c6-ecdf3c7c4a1a.json.gz",
+            "sha256": "1ab606c6e0cbbbefda15b1a893b29df19b1f307f86e449309545bae519f48f5d"
+          }
+        },
+        "brain": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/72f3b88e-7e04-4da1-92c6-ecdf3c7c4a1a/brain.json",
+          "sha256": "0af871c58fb0d37e58ccf86583163b942251f6074a17980aa4a0fd35d5324a4e",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/brain/72f3b88e-7e04-4da1-92c6-ecdf3c7c4a1a.json.gz",
+            "sha256": "65b25d6983f8eb597759dba65a6c534a5947a329fda9e4a242f5a268d7614ae2"
+          }
+        },
+        "run-plans.jsonl": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/72f3b88e-7e04-4da1-92c6-ecdf3c7c4a1a/run-plans.jsonl",
+          "sha256": "8cc559f46ee40fd0b6e4f6cff41d8159b53f8141c719e2d3513ee26efcf0bc99",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/context-by-question/72f3b88e-7e04-4da1-92c6-ecdf3c7c4a1a-run-plans.jsonl.gz",
+            "sha256": "175ed8ac2b23c4c600eaad87c8e056990e3c73cdcd49c385164982893061da90"
+          }
+        },
+        "sl-attempts.jsonl": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/72f3b88e-7e04-4da1-92c6-ecdf3c7c4a1a/sl-attempts.jsonl",
+          "sha256": "b3a18b173aa9bd6073e90ced8a469ed87168911ae0c024994e3a038d91fa0ae1",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/context-by-question/72f3b88e-7e04-4da1-92c6-ecdf3c7c4a1a-sl-attempts.jsonl.gz",
+            "sha256": "7d7fd9ff0c7ec7edcb6c1fcfe043a955a949b63e0793017a26cff5e9c9b74a6e"
+          }
+        }
+      }
+    },
+    {
+      "id": "ad0a4679-fe21-4f94-860f-a3ff9218e975",
+      "run_id": "4U3WNL3JRRCX",
+      "label": "reward/card",
+      "floor": 19,
+      "cutoff": "2026-10-13T15:21:16.080Z",
+      "target": {
+        "id": "ad0a4679-fe21-4f94-860f-a3ff9218e975",
+        "run_id": "4U3WNL3JRRCX",
+        "ts": "2026-10-13T15:22:04.493Z",
+        "label": "reward/card",
+        "floor": 19,
+        "observed_ts": "2026-10-13T15:21:16.080Z",
+        "fingerprint": "{\"actions\":[\"save_and_quit\",\"resolve_rewards\",\"collect_rewards_and_proceed\",\"choose_reward_card\",\"skip_reward_cards\"],\"combat\":false,\"enemies\":\"\",\"event\":\"\",\"gold\":382,\"hand\":\"\",\"hp\":62,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":true,\"player\":\"0:0:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"\",\"rewards\":\"\",\"run\":\"4U3WNL3JRRCX\",\"screen\":\"REWARD\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":3}",
+        "boss": "THE_INSATIABLE",
+        "historical_samples": 1000,
+        "historical_failure": null,
+        "historical_ms": 9776,
+        "options": 4,
+        "decks": 4,
+        "deck_cards": 22,
+        "dpr_count": 4,
+        "decision_source": {
+          "path": "logs/decisions.jsonl",
+          "offset": 1253635926,
+          "length": 121062,
+          "sha256": "90e8a76faa716837bd0503605c814bccf18d2282eda09d3ac8a4e52b5476f1d2"
+        },
+        "config_source": {
+          "offset": 1610059,
+          "length": 5025,
+          "sha256": "ea295de6fb2fb36acc108200ffbf0482cbbca8eec95ffba20d270744cb50d493"
+        },
+        "state_reconstruction": "pending_original_state_and_route_history_verification"
+      },
+      "inputs": {
+        "state": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/ad0a4679-fe21-4f94-860f-a3ff9218e975/state.json",
+          "sha256": "5996ca394dc7aa4c7dd81a20002e9fac49d6003f8c9a18b4f782b3a8a4154e5d",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/states/ad0a4679-fe21-4f94-860f-a3ff9218e975.json.gz",
+            "sha256": "abb358897b450aefb33bd4181ed3ccbaa7a21dff2f02b6224fd2efef03e6795f"
+          }
+        },
+        "decision": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/ad0a4679-fe21-4f94-860f-a3ff9218e975/decision.json",
+          "sha256": "90e8a76faa716837bd0503605c814bccf18d2282eda09d3ac8a4e52b5476f1d2",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/decisions/ad0a4679-fe21-4f94-860f-a3ff9218e975.json.gz",
+            "sha256": "e134f9a2f14a06825def8287ca26592c041199d8dd71a6b4ec4a69056518ed1f"
+          }
+        },
+        "brain": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/ad0a4679-fe21-4f94-860f-a3ff9218e975/brain.json",
+          "sha256": "974706e31a27ba9d0dd3b49ee0f1174d0ac077dc8881aa6278ffb31705815879",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/brain/ad0a4679-fe21-4f94-860f-a3ff9218e975.json.gz",
+            "sha256": "8042eddd19ffcfb2317d12f89201e5d71b1fc70badd0c8910e678422dab4985f"
+          }
+        },
+        "run-plans.jsonl": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/ad0a4679-fe21-4f94-860f-a3ff9218e975/run-plans.jsonl",
+          "sha256": "dede24ab1f2cdf49060e3ceed9964795427d22ea8a3bbad2c5b87d483eddbd0a",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/context-by-question/ad0a4679-fe21-4f94-860f-a3ff9218e975-run-plans.jsonl.gz",
+            "sha256": "ab0e77260198d1c38477cca29cb2b893b927313208bda7b7351adee56b95e52e"
+          }
+        },
+        "sl-attempts.jsonl": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/ad0a4679-fe21-4f94-860f-a3ff9218e975/sl-attempts.jsonl",
+          "sha256": "8fa108b4e349485750616cce5548c1c7c9178e4269dbb20d5735a78297491176",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/context-by-question/ad0a4679-fe21-4f94-860f-a3ff9218e975-sl-attempts.jsonl.gz",
+            "sha256": "bc246ecbd55390c5ee576bfc47546a17fe1f843f5dcfde7d67db6117fc2205c5"
+          }
+        }
+      }
+    },
+    {
+      "id": "f11d4d91-0185-4fb1-abe3-4a894d7380bc",
+      "run_id": "1269Y20SKHUM",
+      "label": "reward/card",
+      "floor": 33,
+      "cutoff": "2026-10-13T16:57:36.688Z",
+      "target": {
+        "id": "f11d4d91-0185-4fb1-abe3-4a894d7380bc",
+        "run_id": "1269Y20SKHUM",
+        "ts": "2026-10-13T16:58:56.373Z",
+        "label": "reward/card",
+        "floor": 33,
+        "observed_ts": "2026-10-13T16:57:36.688Z",
+        "fingerprint": "{\"actions\":[\"save_and_quit\",\"resolve_rewards\",\"collect_rewards_and_proceed\",\"choose_reward_card\",\"skip_reward_cards\"],\"combat\":false,\"enemies\":\"\",\"event\":\"\",\"gold\":194,\"hand\":\"\",\"hp\":24,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":true,\"player\":\"4:0:0\",\"potions\":\"POWER_POTION:true:false|:false:false\",\"powers\":\"\",\"rewards\":\"\",\"run\":\"1269Y20SKHUM\",\"screen\":\"REWARD\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":10}",
+        "boss": "KNOWLEDGE_DEMON",
+        "historical_samples": null,
+        "historical_failure": null,
+        "historical_ms": 0,
+        "options": 4,
+        "decks": null,
+        "deck_cards": null,
+        "dpr_count": 0,
+        "decision_source": {
+          "path": "logs/decisions.jsonl",
+          "offset": 1267563019,
+          "length": 4886,
+          "sha256": "77da18ab1287b1ea2ede416af02d4f4c232c7d14c2cd6f3b8bec5bf4d549f4d8"
+        },
+        "config_source": {
+          "offset": 1615084,
+          "length": 5023,
+          "sha256": "92ae224f574fb01c917ece8d725fe1541b77899c1d472bb1e0f3dcb6984d0738"
+        },
+        "state_reconstruction": "pending_original_state_and_route_history_verification"
+      },
+      "inputs": {
+        "state": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/f11d4d91-0185-4fb1-abe3-4a894d7380bc/state.json",
+          "sha256": "78404450d27728db3dc89228f29e6ce087853b48677671bd5fd4eff3dcd5abf7",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/states/f11d4d91-0185-4fb1-abe3-4a894d7380bc.json.gz",
+            "sha256": "45fe7d0bdf14053d2e259d59daeaa05e83866fac304b6b0dc14cd48421248230"
+          }
+        },
+        "decision": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/f11d4d91-0185-4fb1-abe3-4a894d7380bc/decision.json",
+          "sha256": "77da18ab1287b1ea2ede416af02d4f4c232c7d14c2cd6f3b8bec5bf4d549f4d8",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/decisions/f11d4d91-0185-4fb1-abe3-4a894d7380bc.json.gz",
+            "sha256": "32c1cd8f244af2fafa43d50c7392c1aa0d7aa018d236b06bb8d66932b8225485"
+          }
+        },
+        "brain": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/f11d4d91-0185-4fb1-abe3-4a894d7380bc/brain.json",
+          "sha256": "c21f5e4440e9c3ff9f4f5853ad92cb8c7763103af1b22342d91eb911ab0e5588",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/brain/f11d4d91-0185-4fb1-abe3-4a894d7380bc.json.gz",
+            "sha256": "1e023c36fb8c36583335e46d148be0a9764bcece44edd968ca5c271e1ead750f"
+          }
+        },
+        "run-plans.jsonl": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/f11d4d91-0185-4fb1-abe3-4a894d7380bc/run-plans.jsonl",
+          "sha256": "26e901af7d9a6727792243e0f99ee83e9f8d1b113a0fe20fbb25d78c44021656",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/context-by-question/f11d4d91-0185-4fb1-abe3-4a894d7380bc-run-plans.jsonl.gz",
+            "sha256": "7dfbae2e12ef38ec63fc24de952338c0d36b49b89f1f5ab4cd30d6318a8651ca"
+          }
+        },
+        "sl-attempts.jsonl": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/f11d4d91-0185-4fb1-abe3-4a894d7380bc/sl-attempts.jsonl",
+          "sha256": "98413bd112830a8f614e4e4ad50a42fd19f283c24b4242b878204e6606661fbb",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/context-by-question/f11d4d91-0185-4fb1-abe3-4a894d7380bc-sl-attempts.jsonl.gz",
+            "sha256": "f4ab003bff1a33fa41afef7d3d95767708219dec1aee6aa80cd07e148dc7a956"
+          }
+        }
+      }
+    },
+    {
+      "id": "e76fe23a-fc90-4c1d-84df-d55fba0c1413",
+      "run_id": "E5L15SK6ZHZB",
+      "label": "reward/card",
+      "floor": 35,
+      "cutoff": "2026-10-13T18:49:43.740Z",
+      "target": {
+        "id": "e76fe23a-fc90-4c1d-84df-d55fba0c1413",
+        "run_id": "E5L15SK6ZHZB",
+        "ts": "2026-10-13T18:51:10.383Z",
+        "label": "reward/card",
+        "floor": 35,
+        "observed_ts": "2026-10-13T18:49:43.740Z",
+        "fingerprint": "{\"actions\":[\"save_and_quit\",\"resolve_rewards\",\"collect_rewards_and_proceed\",\"choose_reward_card\",\"skip_reward_cards\"],\"combat\":false,\"enemies\":\"\",\"event\":\"\",\"gold\":172,\"hand\":\"\",\"hp\":43,\"maxHp\":76,\"nodes\":\"\",\"pendingCard\":true,\"player\":\"4:0:0\",\"potions\":\"FYSH_OIL:true:false|:false:false\",\"powers\":\"\",\"rewards\":\"\",\"run\":\"E5L15SK6ZHZB\",\"screen\":\"REWARD\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":5}",
+        "boss": "QUEEN",
+        "historical_samples": 192,
+        "historical_failure": "below_minimum_samples",
+        "historical_ms": 11095,
+        "options": 4,
+        "decks": 4,
+        "deck_cards": 33,
+        "dpr_count": 0,
+        "decision_source": {
+          "path": "logs/decisions.jsonl",
+          "offset": 1282408149,
+          "length": 36787,
+          "sha256": "065321d9db069c0b6bac45f59bce148bba4803d63f9f00fed2fb2ea033254fbb"
+        },
+        "config_source": {
+          "offset": 1620107,
+          "length": 5078,
+          "sha256": "9d705f7448bca5e0ca602abb5fe74a716ca8276b1947d78acc4fc61327981b93"
+        },
+        "state_reconstruction": "pending_original_state_and_route_history_verification"
+      },
+      "inputs": {
+        "state": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/e76fe23a-fc90-4c1d-84df-d55fba0c1413/state.json",
+          "sha256": "c6b071a464025d1ba150b14de326467071a7d39859cc7f4d89e9d10d7a4b7566",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/states/e76fe23a-fc90-4c1d-84df-d55fba0c1413.json.gz",
+            "sha256": "096185a4e11eb415026e57a86b2bb6bfb61fbd3c086dc5624db30f1e61a00105"
+          }
+        },
+        "decision": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/e76fe23a-fc90-4c1d-84df-d55fba0c1413/decision.json",
+          "sha256": "065321d9db069c0b6bac45f59bce148bba4803d63f9f00fed2fb2ea033254fbb",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/decisions/e76fe23a-fc90-4c1d-84df-d55fba0c1413.json.gz",
+            "sha256": "b9561e296b76f2e0ef3570a545fd0bbd1071483d83fe5f6588b224b77afd0126"
+          }
+        },
+        "brain": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/e76fe23a-fc90-4c1d-84df-d55fba0c1413/brain.json",
+          "sha256": "d8b9f1e0c2a8bd5c6fa97a8e98bf6f97b9251a879fa20b8e13fc8c1c37a717b5",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/brain/e76fe23a-fc90-4c1d-84df-d55fba0c1413.json.gz",
+            "sha256": "2b866addba6867e99c3da079f116c24baac5047a47c7f805ebd1d0d8c6b2cee4"
+          }
+        },
+        "run-plans.jsonl": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/e76fe23a-fc90-4c1d-84df-d55fba0c1413/run-plans.jsonl",
+          "sha256": "5ef5a3ff01957631cc3ddcc657fba32e97c7c96ed818b2bf79a397bbd35b77c6",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/context-by-question/e76fe23a-fc90-4c1d-84df-d55fba0c1413-run-plans.jsonl.gz",
+            "sha256": "a4611620fb0c917c09e1bbbbedd92062ec5f9bb3a07beff179849be76b49a987"
+          }
+        },
+        "sl-attempts.jsonl": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/e76fe23a-fc90-4c1d-84df-d55fba0c1413/sl-attempts.jsonl",
+          "sha256": "6e4261be6aadf2c7c8b1f1a854ed0ab208a2297ef95e19276f4b2bd99ec6be75",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/context-by-question/e76fe23a-fc90-4c1d-84df-d55fba0c1413-sl-attempts.jsonl.gz",
+            "sha256": "282ed5212a494d7cad661c5b65285ef27d8bcdfbb7ec7d0720504dbfb490af2a"
+          }
+        }
+      }
+    },
+    {
+      "id": "85470380-9835-42ea-9204-2f6f190e00e0",
+      "run_id": "YP428GT9ZLL3",
+      "label": "reward/card",
+      "floor": 14,
+      "cutoff": "2026-10-13T12:50:56.401Z",
+      "target": {
+        "id": "85470380-9835-42ea-9204-2f6f190e00e0",
+        "run_id": "YP428GT9ZLL3",
+        "ts": "2026-10-13T12:51:57.655Z",
+        "label": "reward/card",
+        "floor": 14,
+        "observed_ts": "2026-10-13T12:50:56.401Z",
+        "fingerprint": "{\"actions\":[\"save_and_quit\",\"resolve_rewards\",\"collect_rewards_and_proceed\",\"choose_reward_card\",\"skip_reward_cards\"],\"combat\":false,\"enemies\":\"\",\"event\":\"\",\"gold\":140,\"hand\":\"\",\"hp\":7,\"maxHp\":80,\"nodes\":\"\",\"pendingCard\":true,\"player\":\"1:0:0\",\"potions\":\"WEAK_POTION:true:false|:false:false\",\"powers\":\"\",\"rewards\":\"\",\"run\":\"YP428GT9ZLL3\",\"screen\":\"REWARD\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":11}",
+        "boss": null,
+        "historical_samples": null,
+        "historical_failure": "zero_paired_samples",
+        "historical_ms": 11008,
+        "options": 4,
+        "decks": null,
+        "deck_cards": null,
+        "dpr_count": 0,
+        "decision_source": {
+          "path": "logs/decisions.jsonl",
+          "offset": 1232613867,
+          "length": 34650,
+          "sha256": "6a967c4b2426d385f6e09d1033a1741bc61a6314979f58f3e80e9d6c09b17ef6"
+        },
+        "config_source": {
+          "offset": 1600054,
+          "length": 5026,
+          "sha256": "516c2ae90f4bf0b1737391b5f740617504c357986b3f869f5a6f4b27b989b374"
+        },
+        "state_reconstruction": "pending_original_state_and_route_history_verification"
+      },
+      "inputs": {
+        "state": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/85470380-9835-42ea-9204-2f6f190e00e0/state.json",
+          "sha256": "abd2ba4ed58b55d3a0d2296a418c7e453b4c35a949556a8d3a9e3cf60c9e4c32",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/states/85470380-9835-42ea-9204-2f6f190e00e0.json.gz",
+            "sha256": "bf0d4cd3b96d6112255b0b7ad78e9fda0d38026ad70454efa15edd107528efb7"
+          }
+        },
+        "decision": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/85470380-9835-42ea-9204-2f6f190e00e0/decision.json",
+          "sha256": "6a967c4b2426d385f6e09d1033a1741bc61a6314979f58f3e80e9d6c09b17ef6",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/decisions/85470380-9835-42ea-9204-2f6f190e00e0.json.gz",
+            "sha256": "6deeac0133afb4add340aa8541723529f09bee9bc02b059c06e2ac4174bc5023"
+          }
+        },
+        "brain": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/85470380-9835-42ea-9204-2f6f190e00e0/brain.json",
+          "sha256": "6aa8344dbd160d9fff2c27766f035b23d71ed21d8b803d9e3227e57f79db9ab8",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/brain/85470380-9835-42ea-9204-2f6f190e00e0.json.gz",
+            "sha256": "d34e1ce33d673646aca1d3aa1272f3d105069f3461b0a5200dca7672498e38b1"
+          }
+        },
+        "run-plans.jsonl": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/85470380-9835-42ea-9204-2f6f190e00e0/run-plans.jsonl",
+          "sha256": "9a42959ec522a0205211b55050d5821ac515166807a8be764a79e15ca69a7818",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/context-by-question/85470380-9835-42ea-9204-2f6f190e00e0-run-plans.jsonl.gz",
+            "sha256": "59440752844d968455e358138d98e078c926bad0ae7c5540423551deae4a796c"
+          }
+        },
+        "sl-attempts.jsonl": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/85470380-9835-42ea-9204-2f6f190e00e0/sl-attempts.jsonl",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/context-by-question/85470380-9835-42ea-9204-2f6f190e00e0-sl-attempts.jsonl.gz",
+            "sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+          }
+        }
+      }
+    },
+    {
+      "id": "f3cc6eaa-3b1c-4e9a-8d29-1ed1b7217937",
+      "run_id": "4YPGHGJD393H",
+      "label": "reward/card",
+      "floor": 2,
+      "cutoff": "2026-10-13T19:04:41.472Z",
+      "target": {
+        "id": "f3cc6eaa-3b1c-4e9a-8d29-1ed1b7217937",
+        "run_id": "4YPGHGJD393H",
+        "ts": "2026-10-13T19:07:04.288Z",
+        "label": "reward/card",
+        "floor": 2,
+        "observed_ts": "2026-10-13T19:04:41.472Z",
+        "fingerprint": "{\"actions\":[\"save_and_quit\",\"resolve_rewards\",\"collect_rewards_and_proceed\",\"choose_reward_card\",\"skip_reward_cards\"],\"combat\":false,\"enemies\":\"\",\"event\":\"\",\"gold\":12,\"hand\":\"\",\"hp\":51,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":true,\"player\":\"1:0:0\",\"potions\":\"DROPLET_OF_PRECOGNITION:true:false|:false:false\",\"powers\":\"\",\"rewards\":\"\",\"run\":\"4YPGHGJD393H\",\"screen\":\"REWARD\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":5}",
+        "boss": "CEREMONIAL_BEAST",
+        "historical_samples": 1000,
+        "historical_failure": null,
+        "historical_ms": 2928,
+        "options": 4,
+        "decks": 4,
+        "deck_cards": 13,
+        "dpr_count": 4,
+        "decision_source": {
+          "path": "logs/decisions.jsonl",
+          "offset": 1283127439,
+          "length": 95625,
+          "sha256": "e1496948ae5b53aa5ec69deb420b3ababe323f088570b2e0002bb58848a436e9"
+        },
+        "config_source": {
+          "offset": 1625185,
+          "length": 5024,
+          "sha256": "c0acdfad91e7fa1748e78a94b9ac73c9d5eb3ffd592468c7d96e0e14498d522d"
+        },
+        "state_reconstruction": "pending_original_state_and_route_history_verification"
+      },
+      "inputs": {
+        "state": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/f3cc6eaa-3b1c-4e9a-8d29-1ed1b7217937/state.json",
+          "sha256": "bc490aaac39c7ebcb4a322610fcf23eb767523105fd7b460cf89c331b9a8c0cf",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/states/f3cc6eaa-3b1c-4e9a-8d29-1ed1b7217937.json.gz",
+            "sha256": "0597d082f9efccdab0d24a848beb398c4459253934021f409d3dad378d3d864f"
+          }
+        },
+        "decision": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/f3cc6eaa-3b1c-4e9a-8d29-1ed1b7217937/decision.json",
+          "sha256": "e1496948ae5b53aa5ec69deb420b3ababe323f088570b2e0002bb58848a436e9",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/decisions/f3cc6eaa-3b1c-4e9a-8d29-1ed1b7217937.json.gz",
+            "sha256": "00cc8aa6f6c0c943b44ab6370169929b45205c2cad1666d90449e7beb5a0eaf5"
+          }
+        },
+        "brain": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/f3cc6eaa-3b1c-4e9a-8d29-1ed1b7217937/brain.json",
+          "sha256": "a746a92a070b5775b25c1c5f9068fcb6929c8347a1b4f65582bc662cd54368a7",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/brain/f3cc6eaa-3b1c-4e9a-8d29-1ed1b7217937.json.gz",
+            "sha256": "c9d488cba66e7487141288f956c0bdb93abfa40b323032899627dfca2e912292"
+          }
+        },
+        "run-plans.jsonl": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/f3cc6eaa-3b1c-4e9a-8d29-1ed1b7217937/run-plans.jsonl",
+          "sha256": "c8603f19910cf8921e0ddb59c400933e594b033ee8a99e83413c040b7c4f6fb6",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/context-by-question/f3cc6eaa-3b1c-4e9a-8d29-1ed1b7217937-run-plans.jsonl.gz",
+            "sha256": "439aec55297cc39a35e8a15bc30dd235231d6f61fcba42b06783f0026f8c50d1"
+          }
+        },
+        "sl-attempts.jsonl": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/f3cc6eaa-3b1c-4e9a-8d29-1ed1b7217937/sl-attempts.jsonl",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/context-by-question/f3cc6eaa-3b1c-4e9a-8d29-1ed1b7217937-sl-attempts.jsonl.gz",
+            "sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+          }
+        }
+      }
+    },
+    {
+      "id": "c496f8db-2a9d-476a-9e3d-0d4b1f4f9a48",
+      "run_id": "8AGEGLG40SV3",
+      "label": "reward/card",
+      "floor": 2,
+      "cutoff": "2026-10-13T19:36:18.798Z",
+      "target": {
+        "id": "c496f8db-2a9d-476a-9e3d-0d4b1f4f9a48",
+        "run_id": "8AGEGLG40SV3",
+        "ts": "2026-10-13T19:37:29.104Z",
+        "label": "reward/card",
+        "floor": 2,
+        "observed_ts": "2026-10-13T19:36:18.798Z",
+        "fingerprint": "{\"actions\":[\"save_and_quit\",\"resolve_rewards\",\"collect_rewards_and_proceed\",\"choose_reward_card\",\"skip_reward_cards\"],\"combat\":false,\"enemies\":\"\",\"event\":\"\",\"gold\":111,\"hand\":\"\",\"hp\":47,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":true,\"player\":\"2:0:0\",\"potions\":\"HEART_OF_IRON:true:false|:false:false\",\"powers\":\"\",\"rewards\":\"\",\"run\":\"8AGEGLG40SV3\",\"screen\":\"REWARD\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":6}",
+        "boss": "THE_KIN",
+        "historical_samples": 48,
+        "historical_failure": "below_minimum_samples",
+        "historical_ms": 11052,
+        "options": 4,
+        "decks": 4,
+        "deck_cards": 16,
+        "dpr_count": 0,
+        "decision_source": {
+          "path": "logs/decisions.jsonl",
+          "offset": 1286320496,
+          "length": 38192,
+          "sha256": "232b3483f45cb71c062e98d0fdea0db0602801833576c507484eed143f21d519"
+        },
+        "config_source": {
+          "offset": 1630209,
+          "length": 5126,
+          "sha256": "fe047f89c5ab3b47aaf3644b07cec393238b0e9ac7bef0db766c04a87bd3162b"
+        },
+        "state_reconstruction": "pending_original_state_and_route_history_verification"
+      },
+      "inputs": {
+        "state": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/c496f8db-2a9d-476a-9e3d-0d4b1f4f9a48/state.json",
+          "sha256": "91b050939c67a13d401be5fc1710f4931bf6dfe445981da5289db990199e977b",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/states/c496f8db-2a9d-476a-9e3d-0d4b1f4f9a48.json.gz",
+            "sha256": "93b64ddacee81fecd82085f5a5c20e33c625987c5420d708c24e07bebdc44254"
+          }
+        },
+        "decision": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/c496f8db-2a9d-476a-9e3d-0d4b1f4f9a48/decision.json",
+          "sha256": "232b3483f45cb71c062e98d0fdea0db0602801833576c507484eed143f21d519",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/decisions/c496f8db-2a9d-476a-9e3d-0d4b1f4f9a48.json.gz",
+            "sha256": "95095f91f53f03262801584d4e656e03ec00cd2c7d013d25187090495c000f2b"
+          }
+        },
+        "brain": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/c496f8db-2a9d-476a-9e3d-0d4b1f4f9a48/brain.json",
+          "sha256": "4fad12cb9ac124442da37456fa8edc7d035d8418a7791b83fae29cf33aa002fa",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/brain/c496f8db-2a9d-476a-9e3d-0d4b1f4f9a48.json.gz",
+            "sha256": "6efa5bd76ca0cf13ba1141e4d00990f81dcbca1390888bd8a8bfb54667ff514c"
+          }
+        },
+        "run-plans.jsonl": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/c496f8db-2a9d-476a-9e3d-0d4b1f4f9a48/run-plans.jsonl",
+          "sha256": "7284d90f0a97cba0fc9ec2c7b38a30fc07c745c8d46df7318f8202559fb3505a",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/context-by-question/c496f8db-2a9d-476a-9e3d-0d4b1f4f9a48-run-plans.jsonl.gz",
+            "sha256": "76b6610982026425b7c6cd1e45b5c87500b0b8f8803afd9a28f2ecabb4509142"
+          }
+        },
+        "sl-attempts.jsonl": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/c496f8db-2a9d-476a-9e3d-0d4b1f4f9a48/sl-attempts.jsonl",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/context-by-question/c496f8db-2a9d-476a-9e3d-0d4b1f4f9a48-sl-attempts.jsonl.gz",
+            "sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+          }
+        }
+      }
+    },
+    {
+      "id": "57c76043-d985-4161-a835-682881c6305b",
+      "run_id": "1269Y20SKHUM",
+      "label": "rest/plan",
+      "floor": 47,
+      "cutoff": "2026-10-13T17:24:53.332Z",
+      "target": {
+        "id": "57c76043-d985-4161-a835-682881c6305b",
+        "run_id": "1269Y20SKHUM",
+        "ts": "2026-10-13T17:26:52.873Z",
+        "label": "rest/plan",
+        "floor": 47,
+        "observed_ts": "2026-10-13T17:24:53.332Z",
+        "fingerprint": "{\"actions\":[\"save_and_quit\",\"choose_rest_option\",\"discard_potion\"],\"combat\":false,\"enemies\":\"\",\"event\":\"\",\"gold\":221,\"hand\":\"\",\"hp\":70,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"0:0:0\",\"potions\":\"LUCKY_TONIC:true:false|LUCKY_TONIC:true:false\",\"powers\":\"\",\"rewards\":\"\",\"run\":\"1269Y20SKHUM\",\"screen\":\"REST\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":null}",
+        "boss": "QUEEN",
+        "historical_samples": 16,
+        "historical_failure": "below_minimum_samples",
+        "historical_ms": 11039,
+        "options": 21,
+        "decks": 22,
+        "deck_cards": 40,
+        "dpr_count": 0,
+        "decision_source": {
+          "path": "logs/decisions.jsonl",
+          "offset": 1270622720,
+          "length": 144937,
+          "sha256": "f0287dc4f26aae5c98b6d4eef436ad6f518b01276aa7737ffe66555a278902e7"
+        },
+        "config_source": {
+          "offset": 1615084,
+          "length": 5023,
+          "sha256": "92ae224f574fb01c917ece8d725fe1541b77899c1d472bb1e0f3dcb6984d0738"
+        },
+        "state_reconstruction": "pending_original_state_and_route_history_verification"
+      },
+      "inputs": {
+        "state": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/57c76043-d985-4161-a835-682881c6305b/state.json",
+          "sha256": "4a79b853fc56e1e811cb99ce700f3e81a7dcd0a1b8e10470a085fd6022239fdf",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/states/57c76043-d985-4161-a835-682881c6305b.json.gz",
+            "sha256": "c9ca3953de6d985c714e9ddb6ab0b6d63e42fc7e91e4d560030307061de16b3e"
+          }
+        },
+        "decision": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/57c76043-d985-4161-a835-682881c6305b/decision.json",
+          "sha256": "f0287dc4f26aae5c98b6d4eef436ad6f518b01276aa7737ffe66555a278902e7",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/decisions/57c76043-d985-4161-a835-682881c6305b.json.gz",
+            "sha256": "4fac92445384d77c29e9ce8238e12df2014f93d48e420d6a0deac65599c91c86"
+          }
+        },
+        "brain": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/57c76043-d985-4161-a835-682881c6305b/brain.json",
+          "sha256": "4fd2c670b0f69c93aedfabb80c6325ae2bc587973c7709fc096b80983114ff5d",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/brain/57c76043-d985-4161-a835-682881c6305b.json.gz",
+            "sha256": "a64a60a62e37f33509298ea0edf814aa945a572bda8347104bf8cabeb41f0dbb"
+          }
+        },
+        "run-plans.jsonl": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/57c76043-d985-4161-a835-682881c6305b/run-plans.jsonl",
+          "sha256": "73ed2881b0149e9af7a8b25f81e186521d3f41e88e6252e808dc761b2338be19",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/context-by-question/57c76043-d985-4161-a835-682881c6305b-run-plans.jsonl.gz",
+            "sha256": "cb4f7da5e5148d6ce48959642e3e3bd0b42b582aba05da772e2cbdb9598c5817"
+          }
+        },
+        "sl-attempts.jsonl": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/57c76043-d985-4161-a835-682881c6305b/sl-attempts.jsonl",
+          "sha256": "98413bd112830a8f614e4e4ad50a42fd19f283c24b4242b878204e6606661fbb",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/context-by-question/57c76043-d985-4161-a835-682881c6305b-sl-attempts.jsonl.gz",
+            "sha256": "f4ab003bff1a33fa41afef7d3d95767708219dec1aee6aa80cd07e148dc7a956"
+          }
+        }
+      }
+    },
+    {
+      "id": "7db570b5-db49-46e2-b9ba-107955726a79",
+      "run_id": "32VSST9UX7MN",
+      "label": "rest/plan",
+      "floor": 27,
+      "cutoff": "2026-10-13T12:12:30.662Z",
+      "target": {
+        "id": "7db570b5-db49-46e2-b9ba-107955726a79",
+        "run_id": "32VSST9UX7MN",
+        "ts": "2026-10-13T12:13:31.073Z",
+        "label": "rest/plan",
+        "floor": 27,
+        "observed_ts": "2026-10-13T12:12:30.662Z",
+        "fingerprint": "{\"actions\":[\"save_and_quit\",\"choose_rest_option\",\"discard_potion\"],\"combat\":false,\"enemies\":\"\",\"event\":\"\",\"gold\":71,\"hand\":\"\",\"hp\":50,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"0:0:0\",\"potions\":\"POISON_POTION:true:false|:false:false\",\"powers\":\"\",\"rewards\":\"\",\"run\":\"32VSST9UX7MN\",\"screen\":\"REST\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":null}",
+        "boss": "KAISER_CRAB",
+        "historical_samples": 336,
+        "historical_failure": null,
+        "historical_ms": 11294,
+        "options": 19,
+        "decks": null,
+        "deck_cards": null,
+        "dpr_count": 19,
+        "decision_source": {
+          "path": "logs/decisions.jsonl",
+          "offset": 1229299722,
+          "length": 514631,
+          "sha256": "095ffdef67e4c355ea99613471d5f5aa34cec72d9d9f3337cc9723125d048ba2"
+        },
+        "config_source": {
+          "offset": 1595030,
+          "length": 5024,
+          "sha256": "d5548cec772f5cdc59d46ce5ae40f0952f101c647d3db4c336372214e0672478"
+        },
+        "state_reconstruction": "pending_original_state_and_route_history_verification"
+      },
+      "inputs": {
+        "state": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/7db570b5-db49-46e2-b9ba-107955726a79/state.json",
+          "sha256": "f513275b37e74ccd621ed7e8f7fe3e21810edcfc3745cb801aa99d368eb2e394",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/states/7db570b5-db49-46e2-b9ba-107955726a79.json.gz",
+            "sha256": "45c532e7e8e56ae7343ced3c6bf1e90d5a2e0cf93bc2e6ba8ff5200a9e43a733"
+          }
+        },
+        "decision": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/7db570b5-db49-46e2-b9ba-107955726a79/decision.json",
+          "sha256": "095ffdef67e4c355ea99613471d5f5aa34cec72d9d9f3337cc9723125d048ba2",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/decisions/7db570b5-db49-46e2-b9ba-107955726a79.json.gz",
+            "sha256": "5d750a2fe39ee7fac768956330f828b2aecb488e086576c1fdaa5760de242850"
+          }
+        },
+        "brain": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/7db570b5-db49-46e2-b9ba-107955726a79/brain.json",
+          "sha256": "b34fb757666b81ea5f4a204d68b3bf8db018f5a0b80968f1dd45cd9b192d8b2b",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/brain/7db570b5-db49-46e2-b9ba-107955726a79.json.gz",
+            "sha256": "80c934616aedc9deccd721836c0cdf3dd4abf9c9f1c8a55150248304ce8ea7dc"
+          }
+        },
+        "run-plans.jsonl": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/7db570b5-db49-46e2-b9ba-107955726a79/run-plans.jsonl",
+          "sha256": "2d8faff6447f6df13920e4776d14e87d3453e1635183cb937d85a1a8efb61a53",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/context-by-question/7db570b5-db49-46e2-b9ba-107955726a79-run-plans.jsonl.gz",
+            "sha256": "79da6d89de3d8e577306e4ee2ef5b98bccf0cd00e22707744d715a4d261f6840"
+          }
+        },
+        "sl-attempts.jsonl": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/7db570b5-db49-46e2-b9ba-107955726a79/sl-attempts.jsonl",
+          "sha256": "771c2ac68377f6dfd2b6f91872da8999e15c08557450b4887884a50f7f9deae7",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/context-by-question/7db570b5-db49-46e2-b9ba-107955726a79-sl-attempts.jsonl.gz",
+            "sha256": "93f58c1f0ccebfcab7bfced37f8d4f0b61212c3b9a7959f413313976c44c0256"
+          }
+        }
+      }
+    },
+    {
+      "id": "1e4f3831-110f-4266-b507-f9b6ba2f5238",
+      "run_id": "WA7FRJ7UABCV",
+      "label": "rest/plan",
+      "floor": 32,
+      "cutoff": "2026-10-13T13:46:24.413Z",
+      "target": {
+        "id": "1e4f3831-110f-4266-b507-f9b6ba2f5238",
+        "run_id": "WA7FRJ7UABCV",
+        "ts": "2026-10-13T13:47:04.131Z",
+        "label": "rest/plan",
+        "floor": 32,
+        "observed_ts": "2026-10-13T13:46:24.413Z",
+        "fingerprint": "{\"actions\":[\"save_and_quit\",\"choose_rest_option\",\"discard_potion\"],\"combat\":false,\"enemies\":\"\",\"event\":\"\",\"gold\":710,\"hand\":\"\",\"hp\":58,\"maxHp\":85,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"0:0:0\",\"potions\":\"DEXTERITY_POTION:true:false|POISON_POTION:true:false\",\"powers\":\"\",\"rewards\":\"\",\"run\":\"WA7FRJ7UABCV\",\"screen\":\"REST\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":null}",
+        "boss": null,
+        "historical_samples": null,
+        "historical_failure": "zero_paired_samples",
+        "historical_ms": 11006,
+        "options": 17,
+        "decks": null,
+        "deck_cards": null,
+        "dpr_count": 0,
+        "decision_source": {
+          "path": "logs/decisions.jsonl",
+          "offset": 1237493851,
+          "length": 117806,
+          "sha256": "141507f17d420bd4c971fc81aa9b68b0b8a1f72d41a2eb6e8623f165ab6434ba"
+        },
+        "config_source": {
+          "offset": 1605080,
+          "length": 4979,
+          "sha256": "de4203fe0081e4ed6db81fe02491a06be53b983b9fc582fcf50f8518e901391d"
+        },
+        "state_reconstruction": "pending_original_state_and_route_history_verification"
+      },
+      "inputs": {
+        "state": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/1e4f3831-110f-4266-b507-f9b6ba2f5238/state.json",
+          "sha256": "75aad71d77f61340cd4c854e0acb10cf90cb74a27696559769a7966b7ea1438f",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/states/1e4f3831-110f-4266-b507-f9b6ba2f5238.json.gz",
+            "sha256": "04f068dada3a99f175b6addc13eb726b01664d5a8abf5c6f133d5e19bfb5552e"
+          }
+        },
+        "decision": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/1e4f3831-110f-4266-b507-f9b6ba2f5238/decision.json",
+          "sha256": "141507f17d420bd4c971fc81aa9b68b0b8a1f72d41a2eb6e8623f165ab6434ba",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/decisions/1e4f3831-110f-4266-b507-f9b6ba2f5238.json.gz",
+            "sha256": "1dae53f84d874594389b38d7a42b25de5557b7101ce4fe803ccad57c33b6d9a1"
+          }
+        },
+        "brain": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/1e4f3831-110f-4266-b507-f9b6ba2f5238/brain.json",
+          "sha256": "d63ab53b8fa42ed9325dfde3bd673219e2df3940bd4d77137fabeb728b7b9a72",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/brain/1e4f3831-110f-4266-b507-f9b6ba2f5238.json.gz",
+            "sha256": "02a12f2816384103e1d6077fba095645399a3ba03303dad51988feeb970817e2"
+          }
+        },
+        "run-plans.jsonl": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/1e4f3831-110f-4266-b507-f9b6ba2f5238/run-plans.jsonl",
+          "sha256": "e9811e6ea26b323165da4cee40dacccbb5638c3f8940844cca8d01fe8de7b328",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/context-by-question/1e4f3831-110f-4266-b507-f9b6ba2f5238-run-plans.jsonl.gz",
+            "sha256": "57320466f70b8f05b75ca43596404691a3bc8ea9fe53f122b84592d7cbd13eec"
+          }
+        },
+        "sl-attempts.jsonl": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/1e4f3831-110f-4266-b507-f9b6ba2f5238/sl-attempts.jsonl",
+          "sha256": "b3a18b173aa9bd6073e90ced8a469ed87168911ae0c024994e3a038d91fa0ae1",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/context-by-question/1e4f3831-110f-4266-b507-f9b6ba2f5238-sl-attempts.jsonl.gz",
+            "sha256": "7d7fd9ff0c7ec7edcb6c1fcfe043a955a949b63e0793017a26cff5e9c9b74a6e"
+          }
+        }
+      }
+    },
+    {
+      "id": "e5b1c402-bab3-4f7a-b518-eedfd5512975",
+      "run_id": "E5L15SK6ZHZB",
+      "label": "rest/plan",
+      "floor": 32,
+      "cutoff": "2026-10-13T18:43:38.187Z",
+      "target": {
+        "id": "e5b1c402-bab3-4f7a-b518-eedfd5512975",
+        "run_id": "E5L15SK6ZHZB",
+        "ts": "2026-10-13T18:44:32.941Z",
+        "label": "rest/plan",
+        "floor": 32,
+        "observed_ts": "2026-10-13T18:43:38.187Z",
+        "fingerprint": "{\"actions\":[\"save_and_quit\",\"choose_rest_option\",\"discard_potion\"],\"combat\":false,\"enemies\":\"\",\"event\":\"\",\"gold\":88,\"hand\":\"\",\"hp\":64,\"maxHp\":74,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"0:0:0\",\"potions\":\"DEXTERITY_POTION:true:false|:false:false\",\"powers\":\"\",\"rewards\":\"\",\"run\":\"E5L15SK6ZHZB\",\"screen\":\"REST\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":null}",
+        "boss": "THE_INSATIABLE",
+        "historical_samples": 136,
+        "historical_failure": "below_minimum_samples",
+        "historical_ms": 11160,
+        "options": 20,
+        "decks": 21,
+        "deck_cards": 32,
+        "dpr_count": 0,
+        "decision_source": {
+          "path": "logs/decisions.jsonl",
+          "offset": 1281627117,
+          "length": 132903,
+          "sha256": "49956cb96aeb01a1665b140e62a299315b932b029efddea1e0b5e27174905cd1"
+        },
+        "config_source": {
+          "offset": 1620107,
+          "length": 5078,
+          "sha256": "9d705f7448bca5e0ca602abb5fe74a716ca8276b1947d78acc4fc61327981b93"
+        },
+        "state_reconstruction": "pending_original_state_and_route_history_verification"
+      },
+      "inputs": {
+        "state": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/e5b1c402-bab3-4f7a-b518-eedfd5512975/state.json",
+          "sha256": "a6d3f4e23660d8f6ac44f855adb1502d1bc6af9817dafb932044c6db3464b739",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/states/e5b1c402-bab3-4f7a-b518-eedfd5512975.json.gz",
+            "sha256": "72afaa01a43e0139751f784310b7501c2e5d360a1e81ca118a1036cd2b057c1a"
+          }
+        },
+        "decision": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/e5b1c402-bab3-4f7a-b518-eedfd5512975/decision.json",
+          "sha256": "49956cb96aeb01a1665b140e62a299315b932b029efddea1e0b5e27174905cd1",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/decisions/e5b1c402-bab3-4f7a-b518-eedfd5512975.json.gz",
+            "sha256": "376b5d7749c444912b629d6c7d9724f1acbf26f2e47083fa7a45f4dfcad9053e"
+          }
+        },
+        "brain": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/e5b1c402-bab3-4f7a-b518-eedfd5512975/brain.json",
+          "sha256": "2d53336500db69a992ede73cd642499c690ab18960d6aa3c1114cfa5b8f5bc6d",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/brain/e5b1c402-bab3-4f7a-b518-eedfd5512975.json.gz",
+            "sha256": "54398474b520a1e4c251d539b6b1097c0a9a733469d7c9c9c1dc02d937476ef7"
+          }
+        },
+        "run-plans.jsonl": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/e5b1c402-bab3-4f7a-b518-eedfd5512975/run-plans.jsonl",
+          "sha256": "69627b5ea0927428a4f87abea3f7a5d098bc736ddfb4d5d9971b519c6ea822d3",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/context-by-question/e5b1c402-bab3-4f7a-b518-eedfd5512975-run-plans.jsonl.gz",
+            "sha256": "6760b552edd4ea7aefd8119e88a37cf28e860387a0049b5997c3548f91d45b2b"
+          }
+        },
+        "sl-attempts.jsonl": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/e5b1c402-bab3-4f7a-b518-eedfd5512975/sl-attempts.jsonl",
+          "sha256": "43cdf3838e2ebcc547a809186ff0196c6816d413dbef5d01674e830732a785d3",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/context-by-question/e5b1c402-bab3-4f7a-b518-eedfd5512975-sl-attempts.jsonl.gz",
+            "sha256": "b2e226f74495c976da8d57a235d666b910a30c1be2e26fb779e745f44aad86ce"
+          }
+        }
+      }
+    },
+    {
+      "id": "4ca80dad-edf5-4242-90bf-e60dae3df647",
+      "run_id": "6ZGMGEQ5YDVK",
+      "label": "rest/plan",
+      "floor": 40,
+      "cutoff": "2026-10-14T01:27:40.888Z",
+      "target": {
+        "id": "4ca80dad-edf5-4242-90bf-e60dae3df647",
+        "run_id": "6ZGMGEQ5YDVK",
+        "ts": "2026-10-14T01:29:03.353Z",
+        "label": "rest/plan",
+        "floor": 40,
+        "observed_ts": "2026-10-14T01:27:40.888Z",
+        "fingerprint": "{\"actions\":[\"save_and_quit\",\"choose_rest_option\",\"discard_potion\"],\"combat\":false,\"enemies\":\"\",\"event\":\"\",\"gold\":156,\"hand\":\"\",\"hp\":6,\"maxHp\":64,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"0:0:0\",\"potions\":\"SWIFT_POTION:true:false|:false:false\",\"powers\":\"\",\"rewards\":\"\",\"run\":\"6ZGMGEQ5YDVK\",\"screen\":\"REST\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":null}",
+        "boss": "AEONGLASS",
+        "historical_samples": 340,
+        "historical_failure": null,
+        "historical_ms": 11195,
+        "options": 17,
+        "decks": 18,
+        "deck_cards": 39,
+        "dpr_count": 17,
+        "decision_source": {
+          "path": "logs/decisions.jsonl",
+          "offset": 1331133501,
+          "length": 564856,
+          "sha256": "d4df851ae1e41b2c705c1c357ae5523c94b5a4d3e7db5ed6cb903c423acf2f4b"
+        },
+        "config_source": {
+          "offset": 1650470,
+          "length": 4987,
+          "sha256": "ac4613a7585688e6c4569059d20f4a1b3dec19b88a372b8b402a200a320b5de9"
+        },
+        "state_reconstruction": "pending_original_state_and_route_history_verification"
+      },
+      "inputs": {
+        "state": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/4ca80dad-edf5-4242-90bf-e60dae3df647/state.json",
+          "sha256": "fe8e09a393dfa18e9dffa019e6f6274a194b33a698e30b65ea85b33016016a8c",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/states/4ca80dad-edf5-4242-90bf-e60dae3df647.json.gz",
+            "sha256": "f9d82fa575e03690456e0d3de30014927e0be7e9d2ecaf7b178a7c1ad4c1f894"
+          }
+        },
+        "decision": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/4ca80dad-edf5-4242-90bf-e60dae3df647/decision.json",
+          "sha256": "d4df851ae1e41b2c705c1c357ae5523c94b5a4d3e7db5ed6cb903c423acf2f4b",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/decisions/4ca80dad-edf5-4242-90bf-e60dae3df647.json.gz",
+            "sha256": "d08bcaf37ba9bec6effc70cbb90849dfa9d5ad3e002ac62fb96339b4de56e99c"
+          }
+        },
+        "brain": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/4ca80dad-edf5-4242-90bf-e60dae3df647/brain.json",
+          "sha256": "e6ff9c17b75ffa8df98d6eb1f37f2a8b71f61a850bf97fa94fa05b1042329cfc",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/brain/4ca80dad-edf5-4242-90bf-e60dae3df647.json.gz",
+            "sha256": "f916c3c0af3e3a6919a2506803a460d8bf230b44209d0dde51ff7b55b520e39a"
+          }
+        },
+        "run-plans.jsonl": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/4ca80dad-edf5-4242-90bf-e60dae3df647/run-plans.jsonl",
+          "sha256": "82c5b16b13f5ae1e9f64eb2dd995673343d2df427b24c026d42a9b6e7e16c79f",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/context-by-question/4ca80dad-edf5-4242-90bf-e60dae3df647-run-plans.jsonl.gz",
+            "sha256": "bc5895940b8e2d69781e8028f25727b67bf92e420da57555a1059b6f4cc95061"
+          }
+        },
+        "sl-attempts.jsonl": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/4ca80dad-edf5-4242-90bf-e60dae3df647/sl-attempts.jsonl",
+          "sha256": "ead8eda85bbd36cfc0c3dc46c6867e35322573baa412c1543aeae1314605b7e2",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/context-by-question/4ca80dad-edf5-4242-90bf-e60dae3df647-sl-attempts.jsonl.gz",
+            "sha256": "2a6b2257f820d471585b762eb940740dd14bfa07ad1f578990fec8f1e547baac"
+          }
+        }
+      }
+    },
+    {
+      "id": "c8df4f70-dd1b-4931-8476-e712cd63aeeb",
+      "run_id": "8AGEGLG40SV3",
+      "label": "rest/plan",
+      "floor": 16,
+      "cutoff": "2026-10-13T19:53:27.639Z",
+      "target": {
+        "id": "c8df4f70-dd1b-4931-8476-e712cd63aeeb",
+        "run_id": "8AGEGLG40SV3",
+        "ts": "2026-10-13T19:54:27.108Z",
+        "label": "rest/plan",
+        "floor": 16,
+        "observed_ts": "2026-10-13T19:53:27.639Z",
+        "fingerprint": "{\"actions\":[\"save_and_quit\",\"choose_rest_option\",\"use_potion\",\"discard_potion\"],\"combat\":false,\"enemies\":\"\",\"event\":\"\",\"gold\":33,\"hand\":\"\",\"hp\":40,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"0:0:0\",\"potions\":\"HEART_OF_IRON:true:false|ENTROPIC_BREW:true:true\",\"powers\":\"\",\"rewards\":\"\",\"run\":\"8AGEGLG40SV3\",\"screen\":\"REST\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":null}",
+        "boss": "THE_KIN",
+        "historical_samples": 16,
+        "historical_failure": "below_minimum_samples",
+        "historical_ms": 11024,
+        "options": 17,
+        "decks": 18,
+        "deck_cards": 25,
+        "dpr_count": 0,
+        "decision_source": {
+          "path": "logs/decisions.jsonl",
+          "offset": 1288600508,
+          "length": 120048,
+          "sha256": "1d6d5de85dcff99a0952abc211e31f8d740977684c737c2e6d610a5aa5551f6a"
+        },
+        "config_source": {
+          "offset": 1630209,
+          "length": 5126,
+          "sha256": "fe047f89c5ab3b47aaf3644b07cec393238b0e9ac7bef0db766c04a87bd3162b"
+        },
+        "state_reconstruction": "pending_original_state_and_route_history_verification"
+      },
+      "inputs": {
+        "state": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/c8df4f70-dd1b-4931-8476-e712cd63aeeb/state.json",
+          "sha256": "21768d42ac3c4668fd4605d58a141cec552e64ba43f30c53186ceaffc731ed0e",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/states/c8df4f70-dd1b-4931-8476-e712cd63aeeb.json.gz",
+            "sha256": "9cdf342ab8527411b673dbd035824a5f3192d795727ed34a48c2bfefa114df87"
+          }
+        },
+        "decision": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/c8df4f70-dd1b-4931-8476-e712cd63aeeb/decision.json",
+          "sha256": "1d6d5de85dcff99a0952abc211e31f8d740977684c737c2e6d610a5aa5551f6a",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/decisions/c8df4f70-dd1b-4931-8476-e712cd63aeeb.json.gz",
+            "sha256": "53393993f66e2b03a73b6ceb3b932e7c99a981ad216d51f63bacf341ef2988d5"
+          }
+        },
+        "brain": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/c8df4f70-dd1b-4931-8476-e712cd63aeeb/brain.json",
+          "sha256": "0ebf123115a245d34d32f6dad5fd7023f17690a3daaf0fb2292f1983cf0334f3",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/brain/c8df4f70-dd1b-4931-8476-e712cd63aeeb.json.gz",
+            "sha256": "78ef9e7eda968c45f6658fa9dcb9fc6738a7283f01140f7c24bb70a5006f86fd"
+          }
+        },
+        "run-plans.jsonl": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/c8df4f70-dd1b-4931-8476-e712cd63aeeb/run-plans.jsonl",
+          "sha256": "a6cd52a3d537568367931c6d5d043fdf2db41fc68016a97316b83c6e1722b5ce",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/context-by-question/c8df4f70-dd1b-4931-8476-e712cd63aeeb-run-plans.jsonl.gz",
+            "sha256": "53414e11461c120d0a63b932206f79aba7da00ce255f2035367f2518a8be5d5f"
+          }
+        },
+        "sl-attempts.jsonl": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/c8df4f70-dd1b-4931-8476-e712cd63aeeb/sl-attempts.jsonl",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/context-by-question/c8df4f70-dd1b-4931-8476-e712cd63aeeb-sl-attempts.jsonl.gz",
+            "sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+          }
+        }
+      }
+    },
+    {
+      "id": "eaa7cf27-ce3b-466e-8ca2-8ba9fd36a74a",
+      "run_id": "Q9FM7A80E4BZ",
+      "label": "rest/plan",
+      "floor": 13,
+      "cutoff": "2026-10-13T23:46:07.723Z",
+      "target": {
+        "id": "eaa7cf27-ce3b-466e-8ca2-8ba9fd36a74a",
+        "run_id": "Q9FM7A80E4BZ",
+        "ts": "2026-10-13T23:46:47.750Z",
+        "label": "rest/plan",
+        "floor": 13,
+        "observed_ts": "2026-10-13T23:46:07.723Z",
+        "fingerprint": "{\"actions\":[\"save_and_quit\",\"choose_rest_option\"],\"combat\":false,\"enemies\":\"\",\"event\":\"\",\"gold\":93,\"hand\":\"\",\"hp\":22,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"0:0:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"\",\"rewards\":\"\",\"run\":\"Q9FM7A80E4BZ\",\"screen\":\"REST\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":null}",
+        "boss": "LAGAVULIN_MATRIARCH",
+        "historical_samples": 310,
+        "historical_failure": null,
+        "historical_ms": 11120,
+        "options": 15,
+        "decks": 16,
+        "deck_cards": 23,
+        "dpr_count": 15,
+        "decision_source": {
+          "path": "logs/decisions.jsonl",
+          "offset": 1318549873,
+          "length": 417777,
+          "sha256": "6364c338bacd4aaecadf02e73656bf82317eb97a0bc1c632cbd94319a22f8520"
+        },
+        "config_source": {
+          "offset": 1645483,
+          "length": 4987,
+          "sha256": "452897a4c14798b256fb8eaa94b5db60f33cb27888c00f1bc3d3da3b4234f949"
+        },
+        "state_reconstruction": "pending_original_state_and_route_history_verification"
+      },
+      "inputs": {
+        "state": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/eaa7cf27-ce3b-466e-8ca2-8ba9fd36a74a/state.json",
+          "sha256": "8066e2093a5a7c420df474f65572734b85a0b38ed73ae7cac62cf03d70b4058d",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/states/eaa7cf27-ce3b-466e-8ca2-8ba9fd36a74a.json.gz",
+            "sha256": "64799791a0e49fea78a37d5d10908be8904cb66d417de0bd56040624379e2421"
+          }
+        },
+        "decision": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/eaa7cf27-ce3b-466e-8ca2-8ba9fd36a74a/decision.json",
+          "sha256": "6364c338bacd4aaecadf02e73656bf82317eb97a0bc1c632cbd94319a22f8520",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/decisions/eaa7cf27-ce3b-466e-8ca2-8ba9fd36a74a.json.gz",
+            "sha256": "ee1599e320f2cd6823d8b13213e3746935f854ec27cf985766b125db23020eab"
+          }
+        },
+        "brain": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/eaa7cf27-ce3b-466e-8ca2-8ba9fd36a74a/brain.json",
+          "sha256": "d12541ab054e37733f69f49af872e4f4f4ecd09e4a1ea11448a2f5c7f8688050",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/brain/eaa7cf27-ce3b-466e-8ca2-8ba9fd36a74a.json.gz",
+            "sha256": "6ffe81036a0687789be51b00d54c3a3b4c8fae52dc8202997c3ea1514245aa86"
+          }
+        },
+        "run-plans.jsonl": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/eaa7cf27-ce3b-466e-8ca2-8ba9fd36a74a/run-plans.jsonl",
+          "sha256": "a1c1418075a101006ac6b38d0a402c95f5e343d1ab5319b2203577af7095e906",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/context-by-question/eaa7cf27-ce3b-466e-8ca2-8ba9fd36a74a-run-plans.jsonl.gz",
+            "sha256": "7d4efb6ff45e9a2b15bc4f94e4e14368f04e658e0a37d7a619a2e48721ae5810"
+          }
+        },
+        "sl-attempts.jsonl": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/eaa7cf27-ce3b-466e-8ca2-8ba9fd36a74a/sl-attempts.jsonl",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/context-by-question/eaa7cf27-ce3b-466e-8ca2-8ba9fd36a74a-sl-attempts.jsonl.gz",
+            "sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+          }
+        }
+      }
+    },
+    {
+      "id": "9c4485fe-5e66-4eeb-89a7-9ae6875cc42c",
+      "run_id": "EEVP0QTLMSX9",
+      "label": "rest/plan",
+      "floor": 32,
+      "cutoff": "2026-10-13T21:13:13.838Z",
+      "target": {
+        "id": "9c4485fe-5e66-4eeb-89a7-9ae6875cc42c",
+        "run_id": "EEVP0QTLMSX9",
+        "ts": "2026-10-13T21:14:01.028Z",
+        "label": "rest/plan",
+        "floor": 32,
+        "observed_ts": "2026-10-13T21:13:13.838Z",
+        "fingerprint": "{\"actions\":[\"save_and_quit\",\"choose_rest_option\",\"discard_potion\"],\"combat\":false,\"enemies\":\"\",\"event\":\"\",\"gold\":32,\"hand\":\"\",\"hp\":67,\"maxHp\":84,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"0:0:0\",\"potions\":\"POISON_POTION:true:false|COLORLESS_POTION:true:false|:false:false\",\"powers\":\"\",\"rewards\":\"\",\"run\":\"EEVP0QTLMSX9\",\"screen\":\"REST\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":null}",
+        "boss": "KNOWLEDGE_DEMON",
+        "historical_samples": 576,
+        "historical_failure": null,
+        "historical_ms": 11262,
+        "options": 13,
+        "decks": 14,
+        "deck_cards": 29,
+        "dpr_count": 13,
+        "decision_source": {
+          "path": "logs/decisions.jsonl",
+          "offset": 1300716120,
+          "length": 363712,
+          "sha256": "c6b3f8edf705ff47ed32e09443d20dd621e728d870e2d0c375fbe8fb967ce449"
+        },
+        "config_source": {
+          "offset": 1635335,
+          "length": 5124,
+          "sha256": "f8e4a2f5a4463460d92d79132a7baf506531dc6e517de6fc39cc8b7aece5a554"
+        },
+        "state_reconstruction": "pending_original_state_and_route_history_verification"
+      },
+      "inputs": {
+        "state": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/9c4485fe-5e66-4eeb-89a7-9ae6875cc42c/state.json",
+          "sha256": "a6b1fdaa621565e9ca619c8f6a78bb6d8ee70c74f503af8451421c2b616e86cc",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/states/9c4485fe-5e66-4eeb-89a7-9ae6875cc42c.json.gz",
+            "sha256": "512d7ad277aa09b9e71611b10d70e03f267ef5fd2dfab65714fe5f3447dce17f"
+          }
+        },
+        "decision": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/9c4485fe-5e66-4eeb-89a7-9ae6875cc42c/decision.json",
+          "sha256": "c6b3f8edf705ff47ed32e09443d20dd621e728d870e2d0c375fbe8fb967ce449",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/decisions/9c4485fe-5e66-4eeb-89a7-9ae6875cc42c.json.gz",
+            "sha256": "dc7535c234488a0832d4050a90f6e275b0d94deac082e0a06ed91a1ea32c97a8"
+          }
+        },
+        "brain": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/9c4485fe-5e66-4eeb-89a7-9ae6875cc42c/brain.json",
+          "sha256": "9135ac02a30b0935b768e97841e8c367cb8b94c735e801a17b05d656297f798d",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/brain/9c4485fe-5e66-4eeb-89a7-9ae6875cc42c.json.gz",
+            "sha256": "1ffb22a06ef93c30f4818c0e90d5f2c62b21ea831b97a2d142d9d3556ff869ea"
+          }
+        },
+        "run-plans.jsonl": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/9c4485fe-5e66-4eeb-89a7-9ae6875cc42c/run-plans.jsonl",
+          "sha256": "f08a625b0a27a8ca2310402f3338886a3dfccd71bf168e74ef77cc2359c6daaf",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/context-by-question/9c4485fe-5e66-4eeb-89a7-9ae6875cc42c-run-plans.jsonl.gz",
+            "sha256": "e50475dfe424c388f51f0450f68369d728088abd72e5fc06bcaca2ed79fa3f06"
+          }
+        },
+        "sl-attempts.jsonl": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/9c4485fe-5e66-4eeb-89a7-9ae6875cc42c/sl-attempts.jsonl",
+          "sha256": "bf70cb5200ad473ee6822982b6d2de514182ba56c29a3da4a245ee702f8b0f4d",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/context-by-question/9c4485fe-5e66-4eeb-89a7-9ae6875cc42c-sl-attempts.jsonl.gz",
+            "sha256": "8e9a1c56881ed55f2ec339871b17e51077d311ff219f08f27870fde555c55258"
+          }
+        }
+      }
+    },
+    {
+      "id": "df919f2c-e22d-49ff-883d-ec4749d35ed0",
+      "run_id": "EEVP0QTLMSX9",
+      "label": "shop/plan",
+      "floor": 40,
+      "cutoff": "2026-10-13T21:28:27.114Z",
+      "target": {
+        "id": "df919f2c-e22d-49ff-883d-ec4749d35ed0",
+        "run_id": "EEVP0QTLMSX9",
+        "ts": "2026-10-13T21:30:49.555Z",
+        "label": "shop/plan",
+        "floor": 40,
+        "observed_ts": "2026-10-13T21:28:27.114Z",
+        "fingerprint": "{\"actions\":[\"save_and_quit\",\"close_shop_inventory\",\"buy_card\",\"remove_card_at_shop\",\"discard_potion\"],\"combat\":false,\"enemies\":\"\",\"event\":\"\",\"gold\":132,\"hand\":\"\",\"hp\":25,\"maxHp\":84,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"0:0:0\",\"potions\":\"POISON_POTION:true:false|RADIANT_TINCTURE:true:false|OROBIC_ACID:true:false\",\"powers\":\"\",\"rewards\":\"\",\"run\":\"EEVP0QTLMSX9\",\"screen\":\"SHOP\",\"selection\":\"null:false\",\"shopOpen\":true,\"shopStock\":\"0:true|1:true|2:true|3:true|4:true|5:true|6:true\",\"turn\":null}",
+        "boss": "QUEEN",
+        "historical_samples": 8,
+        "historical_failure": "below_minimum_samples",
+        "historical_ms": 11031,
+        "options": 18,
+        "decks": 32,
+        "deck_cards": 35,
+        "dpr_count": 0,
+        "decision_source": {
+          "path": "logs/decisions.jsonl",
+          "offset": 1302552645,
+          "length": 140916,
+          "sha256": "6dfb21b0c2237b59ef6de8a95bfaba763939cabdc1169013fac98b4572d68647"
+        },
+        "config_source": {
+          "offset": 1635335,
+          "length": 5124,
+          "sha256": "f8e4a2f5a4463460d92d79132a7baf506531dc6e517de6fc39cc8b7aece5a554"
+        },
+        "state_reconstruction": "pending_original_state_and_route_history_verification"
+      },
+      "inputs": {
+        "state": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/df919f2c-e22d-49ff-883d-ec4749d35ed0/state.json",
+          "sha256": "8ff48a6690df833ea2593881554594d05e58a2ae8ee0acfac59660c297022caf",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/states/df919f2c-e22d-49ff-883d-ec4749d35ed0.json.gz",
+            "sha256": "930065152711651f7d68f4ff7e933bea7761d1e6514cd5b8dd3139358071d51c"
+          }
+        },
+        "decision": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/df919f2c-e22d-49ff-883d-ec4749d35ed0/decision.json",
+          "sha256": "6dfb21b0c2237b59ef6de8a95bfaba763939cabdc1169013fac98b4572d68647",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/decisions/df919f2c-e22d-49ff-883d-ec4749d35ed0.json.gz",
+            "sha256": "fc24070ba96cd6e35c05900634b9a4b389f8bf12499cd2fd40e7a0583e9f6832"
+          }
+        },
+        "brain": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/df919f2c-e22d-49ff-883d-ec4749d35ed0/brain.json",
+          "sha256": "fd577f60927c33ccdb89e304c23c1c3f5dab5973032a3c5364bce166c6bbae43",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/brain/df919f2c-e22d-49ff-883d-ec4749d35ed0.json.gz",
+            "sha256": "2d4f34b3c0a629c2d0428d6e73813fd56e1b74c20b25eadcc564e1af170344fd"
+          }
+        },
+        "run-plans.jsonl": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/df919f2c-e22d-49ff-883d-ec4749d35ed0/run-plans.jsonl",
+          "sha256": "6dd0e516ae939eae981af5d2026881c8f2a8a509036eb5c59820364b4fdd4d6d",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/context-by-question/df919f2c-e22d-49ff-883d-ec4749d35ed0-run-plans.jsonl.gz",
+            "sha256": "37d853d3b45928f40e0a6c1243d3606b097a4bdcdf0426ff268436521fbe2b34"
+          }
+        },
+        "sl-attempts.jsonl": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/df919f2c-e22d-49ff-883d-ec4749d35ed0/sl-attempts.jsonl",
+          "sha256": "55ef28cfa0f44948b5c1cb71efed569f1c40cace6fac71fe59f5427ad32efde4",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/context-by-question/df919f2c-e22d-49ff-883d-ec4749d35ed0-sl-attempts.jsonl.gz",
+            "sha256": "20be47d71ce9a9c32d9831c031cc923d603ff887298701ce6f327630ba5643ba"
+          }
+        }
+      }
+    },
+    {
+      "id": "1765c568-77cb-4401-b2c7-174ff84a9658",
+      "run_id": "E5L15SK6ZHZB",
+      "label": "shop/plan",
+      "floor": 9,
+      "cutoff": "2026-10-13T18:07:00.075Z",
+      "target": {
+        "id": "1765c568-77cb-4401-b2c7-174ff84a9658",
+        "run_id": "E5L15SK6ZHZB",
+        "ts": "2026-10-13T18:07:31.316Z",
+        "label": "shop/plan",
+        "floor": 9,
+        "observed_ts": "2026-10-13T18:07:00.075Z",
+        "fingerprint": "{\"actions\":[\"save_and_quit\",\"close_shop_inventory\",\"buy_card\",\"discard_potion\"],\"combat\":false,\"enemies\":\"\",\"event\":\"\",\"gold\":61,\"hand\":\"\",\"hp\":43,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"0:0:0\",\"potions\":\"POWER_POTION:true:false|FLEX_POTION:true:false\",\"powers\":\"\",\"rewards\":\"\",\"run\":\"E5L15SK6ZHZB\",\"screen\":\"SHOP\",\"selection\":\"null:false\",\"shopOpen\":true,\"shopStock\":\"0:true|1:true|2:true|3:true|4:true|5:true|6:true\",\"turn\":null}",
+        "boss": "SOUL_FYSH",
+        "historical_samples": 704,
+        "historical_failure": null,
+        "historical_ms": 11236,
+        "options": 17,
+        "decks": 7,
+        "deck_cards": 19,
+        "dpr_count": 7,
+        "decision_source": {
+          "path": "logs/decisions.jsonl",
+          "offset": 1276050870,
+          "length": 183290,
+          "sha256": "1085edffcd2ddc80ec38131c396df5ae830ec2cbf6a0c24a89d722a98696a86b"
+        },
+        "config_source": {
+          "offset": 1620107,
+          "length": 5078,
+          "sha256": "9d705f7448bca5e0ca602abb5fe74a716ca8276b1947d78acc4fc61327981b93"
+        },
+        "state_reconstruction": "pending_original_state_and_route_history_verification"
+      },
+      "inputs": {
+        "state": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/1765c568-77cb-4401-b2c7-174ff84a9658/state.json",
+          "sha256": "5cfbd57c8ded372b473af342de0c14945af2302d3b3355893f08eeea89f89b81",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/states/1765c568-77cb-4401-b2c7-174ff84a9658.json.gz",
+            "sha256": "7657b78fc8bb95ae25e53b4fe1efe733a4e29175ed472dc9d081d08853c232fe"
+          }
+        },
+        "decision": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/1765c568-77cb-4401-b2c7-174ff84a9658/decision.json",
+          "sha256": "1085edffcd2ddc80ec38131c396df5ae830ec2cbf6a0c24a89d722a98696a86b",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/decisions/1765c568-77cb-4401-b2c7-174ff84a9658.json.gz",
+            "sha256": "38633f64c7a49c00b3d2a5af9bbc0edde204b91c24861a3f39eced2624b19fab"
+          }
+        },
+        "brain": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/1765c568-77cb-4401-b2c7-174ff84a9658/brain.json",
+          "sha256": "ae29716d72733291b4b95cbcaefcd8502b699cbf12c93372acf94a1721fd0836",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/brain/1765c568-77cb-4401-b2c7-174ff84a9658.json.gz",
+            "sha256": "60d4cb3204f8ece957c7ff985d106dbfea1e6a6474677f5f5aacf82ea7c72202"
+          }
+        },
+        "run-plans.jsonl": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/1765c568-77cb-4401-b2c7-174ff84a9658/run-plans.jsonl",
+          "sha256": "ec899959f9fe0759210b1f681b321a806a47d245e0f55d4ce525b1195ca41d66",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/context-by-question/1765c568-77cb-4401-b2c7-174ff84a9658-run-plans.jsonl.gz",
+            "sha256": "d8ea71a17dc47445e2e216204a074ea46e7ab6e5c368ae7c71b345c6e11ef352"
+          }
+        },
+        "sl-attempts.jsonl": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/1765c568-77cb-4401-b2c7-174ff84a9658/sl-attempts.jsonl",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/context-by-question/1765c568-77cb-4401-b2c7-174ff84a9658-sl-attempts.jsonl.gz",
+            "sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+          }
+        }
+      }
+    },
+    {
+      "id": "a99e6bca-c1cb-4ffe-8abc-0d409eb3b2db",
+      "run_id": "32VSST9UX7MN",
+      "label": "shop/plan",
+      "floor": 6,
+      "cutoff": "2026-10-13T11:44:57.155Z",
+      "target": {
+        "id": "a99e6bca-c1cb-4ffe-8abc-0d409eb3b2db",
+        "run_id": "32VSST9UX7MN",
+        "ts": "2026-10-13T11:46:29.235Z",
+        "label": "shop/plan",
+        "floor": 6,
+        "observed_ts": "2026-10-13T11:44:57.155Z",
+        "fingerprint": "{\"actions\":[\"save_and_quit\",\"close_shop_inventory\",\"buy_card\",\"buy_relic\",\"remove_card_at_shop\",\"discard_potion\"],\"combat\":false,\"enemies\":\"\",\"event\":\"\",\"gold\":426,\"hand\":\"\",\"hp\":43,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"0:0:0\",\"potions\":\"SPEED_POTION:true:false|FIRE_POTION:true:false\",\"powers\":\"\",\"rewards\":\"\",\"run\":\"32VSST9UX7MN\",\"screen\":\"SHOP\",\"selection\":\"null:false\",\"shopOpen\":true,\"shopStock\":\"0:true|1:true|2:true|3:true|4:true|5:true|6:true\",\"turn\":null}",
+        "boss": null,
+        "historical_samples": null,
+        "historical_failure": "below_minimum_samples",
+        "historical_ms": 11131,
+        "options": 17,
+        "decks": null,
+        "deck_cards": null,
+        "dpr_count": 0,
+        "decision_source": {
+          "path": "logs/decisions.jsonl",
+          "offset": 1225390596,
+          "length": 109048,
+          "sha256": "a6757b4fc5175fb9d540e6b637df2edea828970413f928f93f5a2efa72cdf678"
+        },
+        "config_source": {
+          "offset": 1595030,
+          "length": 5024,
+          "sha256": "d5548cec772f5cdc59d46ce5ae40f0952f101c647d3db4c336372214e0672478"
+        },
+        "state_reconstruction": "pending_original_state_and_route_history_verification"
+      },
+      "inputs": {
+        "state": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/a99e6bca-c1cb-4ffe-8abc-0d409eb3b2db/state.json",
+          "sha256": "8f1693642ec0f2f81a26fcc33c82f04ac8f27e403d9cf4d304abd0a9801cf457",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/states/a99e6bca-c1cb-4ffe-8abc-0d409eb3b2db.json.gz",
+            "sha256": "35976b15912cc7f8ce57a4655d5b28e89a8ca95cbbee8a8791a0f6db7bcc2897"
+          }
+        },
+        "decision": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/a99e6bca-c1cb-4ffe-8abc-0d409eb3b2db/decision.json",
+          "sha256": "a6757b4fc5175fb9d540e6b637df2edea828970413f928f93f5a2efa72cdf678",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/decisions/a99e6bca-c1cb-4ffe-8abc-0d409eb3b2db.json.gz",
+            "sha256": "2e4d515a2f81539c713f45a2074a66f40ea1e310be2f0e8574d5642b239c241d"
+          }
+        },
+        "brain": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/a99e6bca-c1cb-4ffe-8abc-0d409eb3b2db/brain.json",
+          "sha256": "ed0aa89db7902fc303edaa46d3440a312f0afa28eec67c6c5b675f7a43da5b3f",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/brain/a99e6bca-c1cb-4ffe-8abc-0d409eb3b2db.json.gz",
+            "sha256": "7abbd0294d442c280c284e35ede037748ae05b335a374bf8e13f0867ce069dc3"
+          }
+        },
+        "run-plans.jsonl": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/a99e6bca-c1cb-4ffe-8abc-0d409eb3b2db/run-plans.jsonl",
+          "sha256": "8ecf3ce1884c0debc819fa2e875e41b48d656e7a3adecac9aef5ff2b4359b4c6",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/context-by-question/a99e6bca-c1cb-4ffe-8abc-0d409eb3b2db-run-plans.jsonl.gz",
+            "sha256": "ba8df215a82eafe07aeaab2d054bda6e9bc8522a1e3138f00fcd750c424e5234"
+          }
+        },
+        "sl-attempts.jsonl": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/a99e6bca-c1cb-4ffe-8abc-0d409eb3b2db/sl-attempts.jsonl",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/context-by-question/a99e6bca-c1cb-4ffe-8abc-0d409eb3b2db-sl-attempts.jsonl.gz",
+            "sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+          }
+        }
+      }
+    },
+    {
+      "id": "a59f70f7-886e-411e-91c7-2c0f26f21899",
+      "run_id": "LKC9YXKZWTKR",
+      "label": "shop/plan",
+      "floor": 5,
+      "cutoff": "2026-10-13T22:15:06.610Z",
+      "target": {
+        "id": "a59f70f7-886e-411e-91c7-2c0f26f21899",
+        "run_id": "LKC9YXKZWTKR",
+        "ts": "2026-10-13T22:16:00.106Z",
+        "label": "shop/plan",
+        "floor": 5,
+        "observed_ts": "2026-10-13T22:15:06.610Z",
+        "fingerprint": "{\"actions\":[\"save_and_quit\",\"close_shop_inventory\",\"buy_card\",\"buy_potion\",\"remove_card_at_shop\",\"discard_potion\"],\"combat\":false,\"enemies\":\"\",\"event\":\"\",\"gold\":126,\"hand\":\"\",\"hp\":49,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"0:0:0\",\"potions\":\"SWIFT_POTION:true:false|:false:false\",\"powers\":\"\",\"rewards\":\"\",\"run\":\"LKC9YXKZWTKR\",\"screen\":\"SHOP\",\"selection\":\"null:false\",\"shopOpen\":true,\"shopStock\":\"0:true|1:true|2:true|3:true|4:true|5:true|6:true\",\"turn\":null}",
+        "boss": "VANTOM",
+        "historical_samples": 433,
+        "historical_failure": null,
+        "historical_ms": 11300,
+        "options": 16,
+        "decks": 16,
+        "deck_cards": 18,
+        "dpr_count": 16,
+        "decision_source": {
+          "path": "logs/decisions.jsonl",
+          "offset": 1306690498,
+          "length": 342868,
+          "sha256": "669c905a61ce7c34aae15945400de7c83cea844891951f6e13e1f719f317bd13"
+        },
+        "config_source": {
+          "offset": 1640459,
+          "length": 5024,
+          "sha256": "f52c75b5a72e2ff328c9f98ae61163d1768966034333f3935a02e6b9765c274c"
+        },
+        "state_reconstruction": "pending_original_state_and_route_history_verification"
+      },
+      "inputs": {
+        "state": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/a59f70f7-886e-411e-91c7-2c0f26f21899/state.json",
+          "sha256": "23a4fc245f9c98f31881d8357389b9473f0a3a815ef7692dbb6a9605c22ef13e",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/states/a59f70f7-886e-411e-91c7-2c0f26f21899.json.gz",
+            "sha256": "a608dfedd7bc42517bb91d06ee3a9a875a4d59c4a056ea5a895a659159aee99e"
+          }
+        },
+        "decision": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/a59f70f7-886e-411e-91c7-2c0f26f21899/decision.json",
+          "sha256": "669c905a61ce7c34aae15945400de7c83cea844891951f6e13e1f719f317bd13",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/decisions/a59f70f7-886e-411e-91c7-2c0f26f21899.json.gz",
+            "sha256": "e98a6cb1855c1749bd679e981cf2ba22ede9e3eb2a0fe0eb1dcfb2f355496750"
+          }
+        },
+        "brain": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/a59f70f7-886e-411e-91c7-2c0f26f21899/brain.json",
+          "sha256": "215639728e8087261c7804b9e3df106b3911fcb7dc97c93a6f989d4a7c03cc30",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/brain/a59f70f7-886e-411e-91c7-2c0f26f21899.json.gz",
+            "sha256": "0c46503b26dc8ccd4e1fbc3a99be752bedc84e25fceb85e5768097660514bb7c"
+          }
+        },
+        "run-plans.jsonl": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/a59f70f7-886e-411e-91c7-2c0f26f21899/run-plans.jsonl",
+          "sha256": "59008bf0409e33e43d1406d93fdca511a4ca4ce5839177453a59623fdf58b73b",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/context-by-question/a59f70f7-886e-411e-91c7-2c0f26f21899-run-plans.jsonl.gz",
+            "sha256": "e8725a289a86830c2e828ebd39e01ca36cabaca6f9f9db67f963fdd006850476"
+          }
+        },
+        "sl-attempts.jsonl": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/a59f70f7-886e-411e-91c7-2c0f26f21899/sl-attempts.jsonl",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/context-by-question/a59f70f7-886e-411e-91c7-2c0f26f21899-sl-attempts.jsonl.gz",
+            "sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+          }
+        }
+      }
+    },
+    {
+      "id": "8a4e3d81-ad1d-4988-9b3b-d076d1b15c82",
+      "run_id": "4U3WNL3JRRCX",
+      "label": "shop/plan",
+      "floor": 29,
+      "cutoff": "2026-10-13T15:35:22.957Z",
+      "target": {
+        "id": "8a4e3d81-ad1d-4988-9b3b-d076d1b15c82",
+        "run_id": "4U3WNL3JRRCX",
+        "ts": "2026-10-13T15:36:57.469Z",
+        "label": "shop/plan",
+        "floor": 29,
+        "observed_ts": "2026-10-13T15:35:22.957Z",
+        "fingerprint": "{\"actions\":[\"save_and_quit\",\"close_shop_inventory\",\"buy_card\",\"buy_relic\",\"remove_card_at_shop\",\"discard_potion\"],\"combat\":false,\"enemies\":\"\",\"event\":\"\",\"gold\":230,\"hand\":\"\",\"hp\":11,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"0:0:0\",\"potions\":\"POTION_OF_BINDING:true:false|POWER_POTION:true:false\",\"powers\":\"\",\"rewards\":\"\",\"run\":\"4U3WNL3JRRCX\",\"screen\":\"SHOP\",\"selection\":\"null:false\",\"shopOpen\":true,\"shopStock\":\"0:true|1:true|2:true|3:true|4:true|5:true|6:true\",\"turn\":null}",
+        "boss": "THE_INSATIABLE",
+        "historical_samples": 232,
+        "historical_failure": "below_minimum_samples",
+        "historical_ms": 11186,
+        "options": 17,
+        "decks": 30,
+        "deck_cards": 29,
+        "dpr_count": 0,
+        "decision_source": {
+          "path": "logs/decisions.jsonl",
+          "offset": 1255824234,
+          "length": 164758,
+          "sha256": "0f1d1034382323d0d22d8fd8b69b55f779443dfe3de6ccc4b9224efefda63baa"
+        },
+        "config_source": {
+          "offset": 1610059,
+          "length": 5025,
+          "sha256": "ea295de6fb2fb36acc108200ffbf0482cbbca8eec95ffba20d270744cb50d493"
+        },
+        "state_reconstruction": "pending_original_state_and_route_history_verification"
+      },
+      "inputs": {
+        "state": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/8a4e3d81-ad1d-4988-9b3b-d076d1b15c82/state.json",
+          "sha256": "a89eaad093bfd8f6c596194c43a088837f9f65aa2d3e68b767418f7d4d7d3497",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/states/8a4e3d81-ad1d-4988-9b3b-d076d1b15c82.json.gz",
+            "sha256": "5ffc37b5469f706f0f7a568ebec1326a0c1cc1512dc70eb1186376aebee23b39"
+          }
+        },
+        "decision": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/8a4e3d81-ad1d-4988-9b3b-d076d1b15c82/decision.json",
+          "sha256": "0f1d1034382323d0d22d8fd8b69b55f779443dfe3de6ccc4b9224efefda63baa",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/decisions/8a4e3d81-ad1d-4988-9b3b-d076d1b15c82.json.gz",
+            "sha256": "bc593fa0e9450f21038353ab809b779ff303802f709bbfec8711dbe80f400f95"
+          }
+        },
+        "brain": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/8a4e3d81-ad1d-4988-9b3b-d076d1b15c82/brain.json",
+          "sha256": "b43ab4b07d50468db41289421f587967eea8a65f883939f96b47ff9d4222f207",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/brain/8a4e3d81-ad1d-4988-9b3b-d076d1b15c82.json.gz",
+            "sha256": "e5ccfdfaa6842a0c1a032fbbe5898b9230815cf4f9521d308d6451ef07520d7a"
+          }
+        },
+        "run-plans.jsonl": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/8a4e3d81-ad1d-4988-9b3b-d076d1b15c82/run-plans.jsonl",
+          "sha256": "f726df478c319488be3e59ec06b015dbeb8a7beea42aaa5fedad4dc971a6355b",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/context-by-question/8a4e3d81-ad1d-4988-9b3b-d076d1b15c82-run-plans.jsonl.gz",
+            "sha256": "10fcef89b1609ae7ac9c6b0a594499c8fb1c275f5567acc9c78172064cb02240"
+          }
+        },
+        "sl-attempts.jsonl": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/8a4e3d81-ad1d-4988-9b3b-d076d1b15c82/sl-attempts.jsonl",
+          "sha256": "4e8cfd8593846534b4409570027200cb89c8aeb29f4523cdee1eb1f1404ba4de",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/context-by-question/8a4e3d81-ad1d-4988-9b3b-d076d1b15c82-sl-attempts.jsonl.gz",
+            "sha256": "5e8258dab340c3e2d5dffa0e39ee08b4ab0d7088ecdc834ec14547de0e985cda"
+          }
+        }
+      }
+    },
+    {
+      "id": "5c258cc4-4fd2-43c9-beaf-71ed175868f8",
+      "run_id": "6ZGMGEQ5YDVK",
+      "label": "shop/plan",
+      "floor": 31,
+      "cutoff": "2026-10-14T00:59:00.755Z",
+      "target": {
+        "id": "5c258cc4-4fd2-43c9-beaf-71ed175868f8",
+        "run_id": "6ZGMGEQ5YDVK",
+        "ts": "2026-10-14T00:59:44.573Z",
+        "label": "shop/plan",
+        "floor": 31,
+        "observed_ts": "2026-10-14T00:59:00.755Z",
+        "fingerprint": "{\"actions\":[\"save_and_quit\",\"close_shop_inventory\",\"buy_card\",\"buy_potion\",\"discard_potion\"],\"combat\":false,\"enemies\":\"\",\"event\":\"\",\"gold\":138,\"hand\":\"\",\"hp\":26,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"0:0:0\",\"potions\":\"BLOCK_POTION:true:false|:false:false\",\"powers\":\"\",\"rewards\":\"\",\"run\":\"6ZGMGEQ5YDVK\",\"screen\":\"SHOP\",\"selection\":\"null:false\",\"shopOpen\":true,\"shopStock\":\"0:true|1:true|2:true|3:true|4:true|5:true|6:true\",\"turn\":null}",
+        "boss": "KNOWLEDGE_DEMON",
+        "historical_samples": 384,
+        "historical_failure": null,
+        "historical_ms": 11233,
+        "options": 16,
+        "decks": 10,
+        "deck_cards": 31,
+        "dpr_count": 10,
+        "decision_source": {
+          "path": "logs/decisions.jsonl",
+          "offset": 1327676770,
+          "length": 288762,
+          "sha256": "03e780fee04ba2d09702fab46303f0a4037753255c6f1f98f83b9f874f42f62e"
+        },
+        "config_source": {
+          "offset": 1650470,
+          "length": 4987,
+          "sha256": "ac4613a7585688e6c4569059d20f4a1b3dec19b88a372b8b402a200a320b5de9"
+        },
+        "state_reconstruction": "pending_original_state_and_route_history_verification"
+      },
+      "inputs": {
+        "state": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/5c258cc4-4fd2-43c9-beaf-71ed175868f8/state.json",
+          "sha256": "72dd838a83a88b8598e05e2b21037b03026e731a6455765485802f53e75223f2",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/states/5c258cc4-4fd2-43c9-beaf-71ed175868f8.json.gz",
+            "sha256": "4f342e5ad55eca9d476fb141880efd24bdbe84af78a7ffd38fd0ec4ffc2d954b"
+          }
+        },
+        "decision": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/5c258cc4-4fd2-43c9-beaf-71ed175868f8/decision.json",
+          "sha256": "03e780fee04ba2d09702fab46303f0a4037753255c6f1f98f83b9f874f42f62e",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/decisions/5c258cc4-4fd2-43c9-beaf-71ed175868f8.json.gz",
+            "sha256": "c5a20d9aebb786290799d7f786d1a83c846aa6c666d910df803d03683c6694c5"
+          }
+        },
+        "brain": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/5c258cc4-4fd2-43c9-beaf-71ed175868f8/brain.json",
+          "sha256": "5881a474ee10e248145d67b94e104989fef4cf30f0da6d4f0137e6821796adbe",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/brain/5c258cc4-4fd2-43c9-beaf-71ed175868f8.json.gz",
+            "sha256": "f64bbf2650873b5a66af02d0047bc2ea7c56ad3742040aa01d6c40e0095f6259"
+          }
+        },
+        "run-plans.jsonl": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/5c258cc4-4fd2-43c9-beaf-71ed175868f8/run-plans.jsonl",
+          "sha256": "de7c3163028100faa9a94443f149b95feb084e485b0530fc97b0e1cf34e0b828",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/context-by-question/5c258cc4-4fd2-43c9-beaf-71ed175868f8-run-plans.jsonl.gz",
+            "sha256": "f6e38dd9a8bbe75f26e794e6e4ceb5dcc2ba06fed504caa15ee6bf28fd32f2d2"
+          }
+        },
+        "sl-attempts.jsonl": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/5c258cc4-4fd2-43c9-beaf-71ed175868f8/sl-attempts.jsonl",
+          "sha256": "d0768c67686ed244fdae757d6cb629eac27d7da2efbcfca2078bb6c88aba0e15",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/context-by-question/5c258cc4-4fd2-43c9-beaf-71ed175868f8-sl-attempts.jsonl.gz",
+            "sha256": "8d89be3aaf72fad87fb38faa36efa7a376f3249b761c6e13d75935ff78fdfd09"
+          }
+        }
+      }
+    },
+    {
+      "id": "8346108e-f972-427b-a448-d2852b0e6dfd",
+      "run_id": "1269Y20SKHUM",
+      "label": "selection/remove",
+      "floor": 40,
+      "cutoff": "2026-10-13T17:11:14.587Z",
+      "target": {
+        "id": "8346108e-f972-427b-a448-d2852b0e6dfd",
+        "run_id": "1269Y20SKHUM",
+        "ts": "2026-10-13T17:12:24.663Z",
+        "label": "selection/remove",
+        "floor": 40,
+        "observed_ts": "2026-10-13T17:11:14.587Z",
+        "fingerprint": "{\"actions\":[\"save_and_quit\",\"select_deck_card\",\"discard_potion\"],\"combat\":false,\"enemies\":\"\",\"event\":\"\",\"gold\":237,\"hand\":\"\",\"hp\":57,\"maxHp\":66,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"0:0:0\",\"potions\":\"LUCKY_TONIC:true:false|LUCKY_TONIC:true:false\",\"powers\":\"\",\"rewards\":\"\",\"run\":\"1269Y20SKHUM\",\"screen\":\"CARD_SELECTION\",\"selection\":\"0:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":null}",
+        "boss": "QUEEN",
+        "historical_samples": 8,
+        "historical_failure": "below_minimum_samples",
+        "historical_ms": 11054,
+        "options": 25,
+        "decks": 26,
+        "deck_cards": 34,
+        "dpr_count": 0,
+        "decision_source": {
+          "path": "logs/decisions.jsonl",
+          "offset": 1268929710,
+          "length": 169350,
+          "sha256": "7eb43e58f629f95b9a838cb273ff4feb509adf3bcf75f73f8496560ee16994ad"
+        },
+        "config_source": {
+          "offset": 1615084,
+          "length": 5023,
+          "sha256": "92ae224f574fb01c917ece8d725fe1541b77899c1d472bb1e0f3dcb6984d0738"
+        },
+        "state_reconstruction": "pending_original_state_and_route_history_verification"
+      },
+      "inputs": {
+        "state": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/8346108e-f972-427b-a448-d2852b0e6dfd/state.json",
+          "sha256": "e9d329a3a178b53a6b8cc5859f5de01df8b53341e948582b29e5cadef6182c08",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/states/8346108e-f972-427b-a448-d2852b0e6dfd.json.gz",
+            "sha256": "fe828cdec5195a097342e7c60bbb6d9ffc9b024e7054813d67ae0bbbe0240a0b"
+          }
+        },
+        "decision": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/8346108e-f972-427b-a448-d2852b0e6dfd/decision.json",
+          "sha256": "7eb43e58f629f95b9a838cb273ff4feb509adf3bcf75f73f8496560ee16994ad",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/decisions/8346108e-f972-427b-a448-d2852b0e6dfd.json.gz",
+            "sha256": "0b10b3d786b2781f564fe6553f9d3e7d5f739363867f8e549350c251f9bf6239"
+          }
+        },
+        "brain": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/8346108e-f972-427b-a448-d2852b0e6dfd/brain.json",
+          "sha256": "e22d78401dd71ea0ced9446291ef37c98c3e4109260058d5c97786d86a2b91bb",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/brain/8346108e-f972-427b-a448-d2852b0e6dfd.json.gz",
+            "sha256": "367f9434ce9fd447d1735af283378f360a2585ecc7d7edf92ddd2eee6f6d6272"
+          }
+        },
+        "run-plans.jsonl": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/8346108e-f972-427b-a448-d2852b0e6dfd/run-plans.jsonl",
+          "sha256": "73ed2881b0149e9af7a8b25f81e186521d3f41e88e6252e808dc761b2338be19",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/context-by-question/8346108e-f972-427b-a448-d2852b0e6dfd-run-plans.jsonl.gz",
+            "sha256": "cb4f7da5e5148d6ce48959642e3e3bd0b42b582aba05da772e2cbdb9598c5817"
+          }
+        },
+        "sl-attempts.jsonl": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/8346108e-f972-427b-a448-d2852b0e6dfd/sl-attempts.jsonl",
+          "sha256": "98413bd112830a8f614e4e4ad50a42fd19f283c24b4242b878204e6606661fbb",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/context-by-question/8346108e-f972-427b-a448-d2852b0e6dfd-sl-attempts.jsonl.gz",
+            "sha256": "f4ab003bff1a33fa41afef7d3d95767708219dec1aee6aa80cd07e148dc7a956"
+          }
+        }
+      }
+    },
+    {
+      "id": "a64050d1-557f-4746-bcbe-f5ef7925c1fc",
+      "run_id": "LKC9YXKZWTKR",
+      "label": "selection/remove",
+      "floor": 46,
+      "cutoff": "2026-10-13T23:10:03.610Z",
+      "target": {
+        "id": "a64050d1-557f-4746-bcbe-f5ef7925c1fc",
+        "run_id": "LKC9YXKZWTKR",
+        "ts": "2026-10-13T23:10:49.049Z",
+        "label": "selection/remove",
+        "floor": 46,
+        "observed_ts": "2026-10-13T23:10:03.610Z",
+        "fingerprint": "{\"actions\":[\"save_and_quit\",\"select_deck_card\",\"discard_potion\"],\"combat\":false,\"enemies\":\"\",\"event\":\"\",\"gold\":254,\"hand\":\"\",\"hp\":68,\"maxHp\":68,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"0:0:0\",\"potions\":\"ENERGY_POTION:true:false|BLESSING_OF_THE_FORGE:true:false|:false:false|:false:false\",\"powers\":\"\",\"rewards\":\"\",\"run\":\"LKC9YXKZWTKR\",\"screen\":\"CARD_SELECTION\",\"selection\":\"0:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":null}",
+        "boss": "AEONGLASS",
+        "historical_samples": 48,
+        "historical_failure": "below_minimum_samples",
+        "historical_ms": 11094,
+        "options": 25,
+        "decks": 26,
+        "deck_cards": 37,
+        "dpr_count": 0,
+        "decision_source": {
+          "path": "logs/decisions.jsonl",
+          "offset": 1314237190,
+          "length": 163196,
+          "sha256": "d6e3a994590d27b3d1e783896be365ece5af3e80776b4465de59a35c935ff669"
+        },
+        "config_source": {
+          "offset": 1640459,
+          "length": 5024,
+          "sha256": "f52c75b5a72e2ff328c9f98ae61163d1768966034333f3935a02e6b9765c274c"
+        },
+        "state_reconstruction": "pending_original_state_and_route_history_verification"
+      },
+      "inputs": {
+        "state": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/a64050d1-557f-4746-bcbe-f5ef7925c1fc/state.json",
+          "sha256": "d2b2c9889cf388f497dffa78ada04dec68a7242df3156f074919a47da0091544",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/states/a64050d1-557f-4746-bcbe-f5ef7925c1fc.json.gz",
+            "sha256": "b2e62ac13a92c1fbed61d4cb2daf9bc97ea50d07cb8ffaf232751fd1b7a464cc"
+          }
+        },
+        "decision": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/a64050d1-557f-4746-bcbe-f5ef7925c1fc/decision.json",
+          "sha256": "d6e3a994590d27b3d1e783896be365ece5af3e80776b4465de59a35c935ff669",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/decisions/a64050d1-557f-4746-bcbe-f5ef7925c1fc.json.gz",
+            "sha256": "dfa076c430c3cbd10909ba66ba3f70799ee9ee234f825ea3d5dfacd36bac282f"
+          }
+        },
+        "brain": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/a64050d1-557f-4746-bcbe-f5ef7925c1fc/brain.json",
+          "sha256": "99e38d97f344852c37c210bf63371bcb39e54acd536c1cb86b545e21f23ef100",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/brain/a64050d1-557f-4746-bcbe-f5ef7925c1fc.json.gz",
+            "sha256": "770ae454a1e446e815bc6fa4b3d4435225f7d5db904ea11684fee9f6e75433f8"
+          }
+        },
+        "run-plans.jsonl": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/a64050d1-557f-4746-bcbe-f5ef7925c1fc/run-plans.jsonl",
+          "sha256": "f020f00c81f5c21cbfc26509e7690151dc62ae93257655a7b847eabb044e103a",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/context-by-question/a64050d1-557f-4746-bcbe-f5ef7925c1fc-run-plans.jsonl.gz",
+            "sha256": "d5b5519981531ea18b3fcda4322d6aef1162e91c55597db0a73a4ffa5e8dc688"
+          }
+        },
+        "sl-attempts.jsonl": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/a64050d1-557f-4746-bcbe-f5ef7925c1fc/sl-attempts.jsonl",
+          "sha256": "743a1c127ab3fc5f2a63838371498a2825543afcab786738b24761081dce6dca",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/context-by-question/a64050d1-557f-4746-bcbe-f5ef7925c1fc-sl-attempts.jsonl.gz",
+            "sha256": "59794b5714459e477ad50a6d3b9268abc839f97970e9720ae7e2b4cba6e3e553"
+          }
+        }
+      }
+    },
+    {
+      "id": "a3972427-a5e0-4b04-ac7d-d2069888fd11",
+      "run_id": "1269Y20SKHUM",
+      "label": "selection/remove",
+      "floor": 44,
+      "cutoff": "2026-10-13T17:18:29.079Z",
+      "target": {
+        "id": "a3972427-a5e0-4b04-ac7d-d2069888fd11",
+        "run_id": "1269Y20SKHUM",
+        "ts": "2026-10-13T17:19:27.921Z",
+        "label": "selection/remove",
+        "floor": 44,
+        "observed_ts": "2026-10-13T17:18:29.079Z",
+        "fingerprint": "{\"actions\":[\"save_and_quit\",\"select_deck_card\",\"discard_potion\"],\"combat\":false,\"enemies\":\"\",\"event\":\"\",\"gold\":173,\"hand\":\"\",\"hp\":67,\"maxHp\":67,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"0:0:0\",\"potions\":\"LUCKY_TONIC:true:false|LUCKY_TONIC:true:false\",\"powers\":\"\",\"rewards\":\"\",\"run\":\"1269Y20SKHUM\",\"screen\":\"CARD_SELECTION\",\"selection\":\"0:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":null}",
+        "boss": "QUEEN",
+        "historical_samples": 16,
+        "historical_failure": "below_minimum_samples",
+        "historical_ms": 11040,
+        "options": 25,
+        "decks": 26,
+        "deck_cards": 40,
+        "dpr_count": 0,
+        "decision_source": {
+          "path": "logs/decisions.jsonl",
+          "offset": 1269354962,
+          "length": 169283,
+          "sha256": "e533da37ed013ff182a0e9cf339f8320bafbcc8fab674157f273191994ada07e"
+        },
+        "config_source": {
+          "offset": 1615084,
+          "length": 5023,
+          "sha256": "92ae224f574fb01c917ece8d725fe1541b77899c1d472bb1e0f3dcb6984d0738"
+        },
+        "state_reconstruction": "pending_original_state_and_route_history_verification"
+      },
+      "inputs": {
+        "state": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/a3972427-a5e0-4b04-ac7d-d2069888fd11/state.json",
+          "sha256": "68522587f0af95cbd3ef5e9deb96acef087a4224bd2cfcea9a87a6aafddc7e55",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/states/a3972427-a5e0-4b04-ac7d-d2069888fd11.json.gz",
+            "sha256": "b9e42bddae9d8d17446cfa3e223a2db863b21f8149755b5639e8b5a6332d487d"
+          }
+        },
+        "decision": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/a3972427-a5e0-4b04-ac7d-d2069888fd11/decision.json",
+          "sha256": "e533da37ed013ff182a0e9cf339f8320bafbcc8fab674157f273191994ada07e",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/decisions/a3972427-a5e0-4b04-ac7d-d2069888fd11.json.gz",
+            "sha256": "8e26f36b8688aa3f168586a42ffa0e7bed1141b1fe032a34160d5b99a6447aa6"
+          }
+        },
+        "brain": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/a3972427-a5e0-4b04-ac7d-d2069888fd11/brain.json",
+          "sha256": "1be710d80bad6786c60a879c7d05d6cd437288cf0e8a15d92212912d434b7e7c",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/brain/a3972427-a5e0-4b04-ac7d-d2069888fd11.json.gz",
+            "sha256": "ebb95d67d0d62c39b29f52a687da10d2a30b7a6ab2094fee1f319a5cfd339618"
+          }
+        },
+        "run-plans.jsonl": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/a3972427-a5e0-4b04-ac7d-d2069888fd11/run-plans.jsonl",
+          "sha256": "73ed2881b0149e9af7a8b25f81e186521d3f41e88e6252e808dc761b2338be19",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/context-by-question/a3972427-a5e0-4b04-ac7d-d2069888fd11-run-plans.jsonl.gz",
+            "sha256": "cb4f7da5e5148d6ce48959642e3e3bd0b42b582aba05da772e2cbdb9598c5817"
+          }
+        },
+        "sl-attempts.jsonl": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/a3972427-a5e0-4b04-ac7d-d2069888fd11/sl-attempts.jsonl",
+          "sha256": "98413bd112830a8f614e4e4ad50a42fd19f283c24b4242b878204e6606661fbb",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/context-by-question/a3972427-a5e0-4b04-ac7d-d2069888fd11-sl-attempts.jsonl.gz",
+            "sha256": "f4ab003bff1a33fa41afef7d3d95767708219dec1aee6aa80cd07e148dc7a956"
+          }
+        }
+      }
+    },
+    {
+      "id": "2e4d4c83-93df-4965-98f4-2074fbce59b2",
+      "run_id": "LKC9YXKZWTKR",
+      "label": "event/choose",
+      "floor": 23,
+      "cutoff": "2026-10-13T22:36:21.974Z",
+      "target": {
+        "id": "2e4d4c83-93df-4965-98f4-2074fbce59b2",
+        "run_id": "LKC9YXKZWTKR",
+        "ts": "2026-10-13T22:36:57.280Z",
+        "label": "event/choose",
+        "floor": 23,
+        "observed_ts": "2026-10-13T22:36:21.974Z",
+        "fingerprint": "{\"actions\":[\"save_and_quit\",\"choose_event_option\"],\"combat\":false,\"enemies\":\"\",\"event\":\"WELCOME_TO_WONGOS:83:false:旺购的打折货物/支付[red]100[/red][gold]金币[/gold]。获得[blue]1[/blue]件随机[gold]普通遗物[/gold]。/false|旺购的特选商品/支付[red]200[/red][gold]金币[/gold]。获得[gold]吊灯[/gold]。/false|旺购的神秘盲盒/支付[red]300[/red][gold]金币[/gold]。在[blue]5[/blue]场战斗后获得[blue]3[/blue]个随机[gold]遗物[/gold]。/false|离开/随机[red]降级[/red]一张牌。/false\",\"gold\":324,\"hand\":\"\",\"hp\":47,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"0:0:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"\",\"rewards\":\"\",\"run\":\"LKC9YXKZWTKR\",\"screen\":\"EVENT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":null}",
+        "boss": "KAISER_CRAB",
+        "historical_samples": 999,
+        "historical_failure": null,
+        "historical_ms": 11082,
+        "options": 4,
+        "decks": 1,
+        "deck_cards": 25,
+        "dpr_count": 0,
+        "decision_source": {
+          "path": "logs/decisions.jsonl",
+          "offset": 1310145279,
+          "length": 25206,
+          "sha256": "20d20803e3e38b5bedbeac970bbddbc76724e8d09156f1aa8ac231e6e2b87eb4"
+        },
+        "config_source": {
+          "offset": 1640459,
+          "length": 5024,
+          "sha256": "f52c75b5a72e2ff328c9f98ae61163d1768966034333f3935a02e6b9765c274c"
+        },
+        "state_reconstruction": "pending_original_state_and_route_history_verification"
+      },
+      "inputs": {
+        "state": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/2e4d4c83-93df-4965-98f4-2074fbce59b2/state.json",
+          "sha256": "f805618f40c50c87b57a52379f6ca6d1b5ab2359e02a0497a8ae5260f50a480c",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/states/2e4d4c83-93df-4965-98f4-2074fbce59b2.json.gz",
+            "sha256": "20da23e924d427e21d231632be8ab0f1f5a64080e1a2ad58845a89d43940f8d1"
+          }
+        },
+        "decision": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/2e4d4c83-93df-4965-98f4-2074fbce59b2/decision.json",
+          "sha256": "20d20803e3e38b5bedbeac970bbddbc76724e8d09156f1aa8ac231e6e2b87eb4",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/decisions/2e4d4c83-93df-4965-98f4-2074fbce59b2.json.gz",
+            "sha256": "628d5df8e648fb9c1f574de6713d300e6ff9677e66f519dccc061c31dcb2d6fc"
+          }
+        },
+        "brain": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/2e4d4c83-93df-4965-98f4-2074fbce59b2/brain.json",
+          "sha256": "42fd0fbeecdf2f7d5426a00130210f6cd97c1e304bc11cb93c0ad0072554caf1",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/brain/2e4d4c83-93df-4965-98f4-2074fbce59b2.json.gz",
+            "sha256": "4d435851a7b8d1b5c7324f65b2a82823430c48da9f2516cce60048a09efea64d"
+          }
+        },
+        "run-plans.jsonl": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/2e4d4c83-93df-4965-98f4-2074fbce59b2/run-plans.jsonl",
+          "sha256": "599294b4c1facfbf03103b1d104b0dc0967e43ce73b71288c7c34c683c471feb",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/context-by-question/2e4d4c83-93df-4965-98f4-2074fbce59b2-run-plans.jsonl.gz",
+            "sha256": "bf99f59bdc5a96a4e1cf897afe179f0817703bde332a62346f7c3086c3012f08"
+          }
+        },
+        "sl-attempts.jsonl": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/2e4d4c83-93df-4965-98f4-2074fbce59b2/sl-attempts.jsonl",
+          "sha256": "8181ebf4cacdcf351db803ef834f0e478ac5e9f616a06d10941b1a6eaf0d3c4a",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/context-by-question/2e4d4c83-93df-4965-98f4-2074fbce59b2-sl-attempts.jsonl.gz",
+            "sha256": "2ed900045548d299c50b73d2f7e4fa3c836bdd01596e5382f2e48186dcdb0b99"
+          }
+        }
+      }
+    },
+    {
+      "id": "3e158b45-2504-465a-a0e3-4a15330b43c4",
+      "run_id": "YP428GT9ZLL3",
+      "label": "event/choose",
+      "floor": 1,
+      "cutoff": "2026-10-13T12:27:39.838Z",
+      "target": {
+        "id": "3e158b45-2504-465a-a0e3-4a15330b43c4",
+        "run_id": "YP428GT9ZLL3",
+        "ts": "2026-10-13T12:29:02.656Z",
+        "label": "event/choose",
+        "floor": 1,
+        "observed_ts": "2026-10-13T12:27:39.838Z",
+        "fingerprint": "{\"actions\":[\"save_and_quit\",\"choose_event_option\"],\"combat\":false,\"enemies\":\"\",\"event\":\"NEOW:0:false:羽翼之靴/你在选择下一层的房间时有[blue]3[/blue]次机会可以无视当前的路线。/false|石炉加湿器/每当你在[gold]休息处[/gold][gold]休息[/gold]时，将你的最大生命值提升[blue]5[/blue]点。/false|涅奥的牺牲/获得[blue]1[/blue]瓶[gold]龙涎香[/gold]，并将[blue]1[/blue]张[red]愧疚[/red]加入你的[gold]牌组[/gold]。/false\",\"gold\":99,\"hand\":\"\",\"hp\":56,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"0:0:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"\",\"rewards\":\"\",\"run\":\"YP428GT9ZLL3\",\"screen\":\"EVENT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":null}",
+        "boss": "THE_KIN",
+        "historical_samples": 1000,
+        "historical_failure": null,
+        "historical_ms": 10814,
+        "options": 3,
+        "decks": null,
+        "deck_cards": null,
+        "dpr_count": 1,
+        "decision_source": {
+          "path": "logs/decisions.jsonl",
+          "offset": 1230993157,
+          "length": 27853,
+          "sha256": "3901a2b666ac082222a2d0d0140a90d22f97aa0db22e95bc7303c5cd0ebc87f4"
+        },
+        "config_source": {
+          "offset": 1600054,
+          "length": 5026,
+          "sha256": "516c2ae90f4bf0b1737391b5f740617504c357986b3f869f5a6f4b27b989b374"
+        },
+        "state_reconstruction": "pending_original_state_and_route_history_verification"
+      },
+      "inputs": {
+        "state": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/3e158b45-2504-465a-a0e3-4a15330b43c4/state.json",
+          "sha256": "8469c817f662bff94ec344028e1e56d50a728b2223c36640e125df6ee7982afe",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/states/3e158b45-2504-465a-a0e3-4a15330b43c4.json.gz",
+            "sha256": "265cd517a145e12b405fc38046a0ae73dad1ba1a36650d87ad8aae32f0f7585a"
+          }
+        },
+        "decision": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/3e158b45-2504-465a-a0e3-4a15330b43c4/decision.json",
+          "sha256": "3901a2b666ac082222a2d0d0140a90d22f97aa0db22e95bc7303c5cd0ebc87f4",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/decisions/3e158b45-2504-465a-a0e3-4a15330b43c4.json.gz",
+            "sha256": "713f72018049621095a28edd3244429cbe1b9ac990a909a503defa16f3119514"
+          }
+        },
+        "brain": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/3e158b45-2504-465a-a0e3-4a15330b43c4/brain.json",
+          "sha256": "a8dca9a0b67ecfcb9fd52a349f032acd040a31ca71c6a60d78e5945310bcd327",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/brain/3e158b45-2504-465a-a0e3-4a15330b43c4.json.gz",
+            "sha256": "424309c776a1f8860f5db226ef43c422cac360aeb27d2cac14aad214fb087015"
+          }
+        },
+        "run-plans.jsonl": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/3e158b45-2504-465a-a0e3-4a15330b43c4/run-plans.jsonl",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/context-by-question/3e158b45-2504-465a-a0e3-4a15330b43c4-run-plans.jsonl.gz",
+            "sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+          }
+        },
+        "sl-attempts.jsonl": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/3e158b45-2504-465a-a0e3-4a15330b43c4/sl-attempts.jsonl",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/context-by-question/3e158b45-2504-465a-a0e3-4a15330b43c4-sl-attempts.jsonl.gz",
+            "sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+          }
+        }
+      }
+    },
+    {
+      "id": "0c2e148c-e10c-4788-9dc7-a19772732d42",
+      "run_id": "WA7FRJ7UABCV",
+      "label": "event/choose",
+      "floor": 43,
+      "cutoff": "2026-10-13T14:09:46.566Z",
+      "target": {
+        "id": "0c2e148c-e10c-4788-9dc7-a19772732d42",
+        "run_id": "WA7FRJ7UABCV",
+        "ts": "2026-10-13T14:10:20.948Z",
+        "label": "event/choose",
+        "floor": 43,
+        "observed_ts": "2026-10-13T14:09:46.566Z",
+        "fingerprint": "{\"actions\":[\"save_and_quit\",\"choose_event_option\",\"discard_potion\"],\"combat\":false,\"enemies\":\"\",\"event\":\"THIS_OR_THAT:140:false:这个/失去[red]6[/red]点生命。获得[blue]52[/blue][gold]金币[/gold]。/false|那个/将一张[red]笨拙[/red]加入你的[gold]牌组[/gold]。获得一件随机[gold]遗物[/gold]。/false\",\"gold\":36,\"hand\":\"\",\"hp\":57,\"maxHp\":80,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"0:0:0\",\"potions\":\"POTION_OF_BINDING:true:false|POISON_POTION:true:false\",\"powers\":\"\",\"rewards\":\"\",\"run\":\"WA7FRJ7UABCV\",\"screen\":\"EVENT\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":null}",
+        "boss": null,
+        "historical_samples": null,
+        "historical_failure": "below_minimum_samples",
+        "historical_ms": 11061,
+        "options": 2,
+        "decks": null,
+        "deck_cards": null,
+        "dpr_count": 0,
+        "decision_source": {
+          "path": "logs/decisions.jsonl",
+          "offset": 1241090972,
+          "length": 12406,
+          "sha256": "b7417943bba559c23acc613533ac61cc22102fc3ff80cbeabc0c5f07a898ef7f"
+        },
+        "config_source": {
+          "offset": 1605080,
+          "length": 4979,
+          "sha256": "de4203fe0081e4ed6db81fe02491a06be53b983b9fc582fcf50f8518e901391d"
+        },
+        "state_reconstruction": "pending_original_state_and_route_history_verification"
+      },
+      "inputs": {
+        "state": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/0c2e148c-e10c-4788-9dc7-a19772732d42/state.json",
+          "sha256": "7d89fccb1146ea43ceef67422919c3db911bf16e5c63015620124e8a2014e7c5",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/states/0c2e148c-e10c-4788-9dc7-a19772732d42.json.gz",
+            "sha256": "e80913ee34440ab89c8fbfccf13619daafc58710949ba0398ce86d0447775ec9"
+          }
+        },
+        "decision": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/0c2e148c-e10c-4788-9dc7-a19772732d42/decision.json",
+          "sha256": "b7417943bba559c23acc613533ac61cc22102fc3ff80cbeabc0c5f07a898ef7f",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/decisions/0c2e148c-e10c-4788-9dc7-a19772732d42.json.gz",
+            "sha256": "2139704dd5bd1657c033c9049566e5dea6fc96c10033993c455e07fa12463d9e"
+          }
+        },
+        "brain": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/0c2e148c-e10c-4788-9dc7-a19772732d42/brain.json",
+          "sha256": "2971c303ae1b22e99da3f128c2dee935486e62e4167b4f40911bedfeb747aa7c",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/brain/0c2e148c-e10c-4788-9dc7-a19772732d42.json.gz",
+            "sha256": "e8ba14d144cced3dcf1152cb862c28275b7c3605d5b57787110b57b40dd3645c"
+          }
+        },
+        "run-plans.jsonl": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/0c2e148c-e10c-4788-9dc7-a19772732d42/run-plans.jsonl",
+          "sha256": "608a4063050dbd57d8c69724faabd2f273c1d40cae06f14f344546a8985577b9",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/context-by-question/0c2e148c-e10c-4788-9dc7-a19772732d42-run-plans.jsonl.gz",
+            "sha256": "ed705b7a58857fca6016048341a6b994e77abfec0c6ba831df533e340c239146"
+          }
+        },
+        "sl-attempts.jsonl": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/inputs/0c2e148c-e10c-4788-9dc7-a19772732d42/sl-attempts.jsonl",
+          "sha256": "6b25947dd941715acdcd3116899549aca2d6e50fd1c8514632991890a152bbef",
+          "original_compressed": {
+            "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-boss-revalidation/historical-inputs/context-by-question/0c2e148c-e10c-4788-9dc7-a19772732d42-sl-attempts.jsonl.gz",
+            "sha256": "b61de87270381c730c75234753e399fa4d21ac08cd45a5238bf59c5d0144dac7"
+          }
+        }
+      }
+    }
+  ]
+}

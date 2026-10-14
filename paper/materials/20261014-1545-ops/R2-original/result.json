@@ -1,0 +1,1342 @@
+{
+  "task": "fix-batch",
+  "base": "40d6bc976cf7ffeae28a72a7e0b47d71cadc7d57",
+  "fixes": [],
+  "skipped": [
+    {
+      "item": "72f3b88e-7e04-4da1-92c6-ecdf3c7c4a1a",
+      "reason": "当前模型：本幕 boss 已结束，下一幕 boss 尚不可见"
+    },
+    {
+      "item": "f11d4d91-0185-4fb1-abe3-4a894d7380bc",
+      "reason": "当前模型：本幕 boss 已结束，下一幕 boss 尚不可见"
+    },
+    {
+      "item": "2e4d4c83-93df-4965-98f4-2074fbce59b2",
+      "reason": "所有原 offered 动作均没有当前模型支持的数值牌组/HP 转移"
+    },
+    {
+      "item": "R2 1000 配对参照未完成项",
+      "reason": "完成 24/54 组；完整待办及实际部分样本保留于 checkpoint 和 profiling，未伪报 1000"
+    }
+  ],
+  "merged": null,
+  "tests": {
+    "tsc": null,
+    "vitest": null,
+    "cases": null
+  },
+  "code_proposals": [],
+  "implementation_domains": [],
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/report.md",
+  "continuation_result": {
+    "supplement_id": "v5-boss-revalidation-20261014-approved-supplement",
+    "parent_batch": "20261014-114302-fix-batch",
+    "phase": "R1-R2",
+    "input_manifest_sha256": "bb429a72e61b65bb8eadde8350e5b22cc14422b5c559bde489c1502e18870c2d",
+    "external_binding_scope": "launcher-frozen supplement input digest; local experiment manifest has its separately computed SHA",
+    "outcome": "continue",
+    "coverage": [
+      {
+        "id": "41ab7b9a-3ae0-45c5-8094-7183f41207e5",
+        "status": "supported",
+        "offered": 5,
+        "numerical": 5,
+        "reason": null,
+        "seeds": [
+          {
+            "seed": 7,
+            "limited_pairs": 16,
+            "reference_status": "done",
+            "reference_pairs": 1000,
+            "reference_observed_partial_pairs": null
+          },
+          {
+            "seed": 20261014,
+            "limited_pairs": 115,
+            "reference_status": "pending",
+            "reference_pairs": null,
+            "reference_observed_partial_pairs": null
+          }
+        ],
+        "unfinished": [
+          {
+            "id": "41ab7b9a-3ae0-45c5-8094-7183f41207e5",
+            "seed": 20261014,
+            "mode": "reference",
+            "status": "pending",
+            "error": null
+          }
+        ]
+      },
+      {
+        "id": "d98f1d44-2b13-44f5-9c55-300d78211c4a",
+        "status": "supported",
+        "offered": 4,
+        "numerical": 4,
+        "reason": null,
+        "seeds": [
+          {
+            "seed": 7,
+            "limited_pairs": 554,
+            "reference_status": "done",
+            "reference_pairs": 1000,
+            "reference_observed_partial_pairs": null
+          },
+          {
+            "seed": 20261014,
+            "limited_pairs": 581,
+            "reference_status": "pending",
+            "reference_pairs": null,
+            "reference_observed_partial_pairs": null
+          }
+        ],
+        "unfinished": [
+          {
+            "id": "d98f1d44-2b13-44f5-9c55-300d78211c4a",
+            "seed": 20261014,
+            "mode": "reference",
+            "status": "pending",
+            "error": null
+          }
+        ]
+      },
+      {
+        "id": "b2aab20d-e0b1-48bf-befa-9f3ba04f7e82",
+        "status": "supported",
+        "offered": 4,
+        "numerical": 4,
+        "reason": null,
+        "seeds": [
+          {
+            "seed": 7,
+            "limited_pairs": 37,
+            "reference_status": "done",
+            "reference_pairs": 1000,
+            "reference_observed_partial_pairs": null
+          },
+          {
+            "seed": 20261014,
+            "limited_pairs": 37,
+            "reference_status": "pending",
+            "reference_pairs": null,
+            "reference_observed_partial_pairs": null
+          }
+        ],
+        "unfinished": [
+          {
+            "id": "b2aab20d-e0b1-48bf-befa-9f3ba04f7e82",
+            "seed": 20261014,
+            "mode": "reference",
+            "status": "pending",
+            "error": null
+          }
+        ]
+      },
+      {
+        "id": "72f3b88e-7e04-4da1-92c6-ecdf3c7c4a1a",
+        "status": "structurally_unsupported",
+        "offered": 4,
+        "numerical": 0,
+        "reason": "current model: act boss already defeated; next boss not observed",
+        "seeds": [
+          {
+            "seed": 7,
+            "limited_pairs": null,
+            "reference_status": "not_supported",
+            "reference_pairs": null,
+            "reference_observed_partial_pairs": null
+          },
+          {
+            "seed": 20261014,
+            "limited_pairs": null,
+            "reference_status": "not_supported",
+            "reference_pairs": null,
+            "reference_observed_partial_pairs": null
+          }
+        ],
+        "unfinished": []
+      },
+      {
+        "id": "ad0a4679-fe21-4f94-860f-a3ff9218e975",
+        "status": "supported",
+        "offered": 4,
+        "numerical": 4,
+        "reason": null,
+        "seeds": [
+          {
+            "seed": 7,
+            "limited_pairs": 701,
+            "reference_status": "done",
+            "reference_pairs": 1000,
+            "reference_observed_partial_pairs": null
+          },
+          {
+            "seed": 20261014,
+            "limited_pairs": 730,
+            "reference_status": "pending",
+            "reference_pairs": null,
+            "reference_observed_partial_pairs": null
+          }
+        ],
+        "unfinished": [
+          {
+            "id": "ad0a4679-fe21-4f94-860f-a3ff9218e975",
+            "seed": 20261014,
+            "mode": "reference",
+            "status": "pending",
+            "error": null
+          }
+        ]
+      },
+      {
+        "id": "f11d4d91-0185-4fb1-abe3-4a894d7380bc",
+        "status": "structurally_unsupported",
+        "offered": 4,
+        "numerical": 0,
+        "reason": "current model: act boss already defeated; next boss not observed",
+        "seeds": [
+          {
+            "seed": 7,
+            "limited_pairs": null,
+            "reference_status": "not_supported",
+            "reference_pairs": null,
+            "reference_observed_partial_pairs": null
+          },
+          {
+            "seed": 20261014,
+            "limited_pairs": null,
+            "reference_status": "not_supported",
+            "reference_pairs": null,
+            "reference_observed_partial_pairs": null
+          }
+        ],
+        "unfinished": []
+      },
+      {
+        "id": "e76fe23a-fc90-4c1d-84df-d55fba0c1413",
+        "status": "supported",
+        "offered": 4,
+        "numerical": 4,
+        "reason": null,
+        "seeds": [
+          {
+            "seed": 7,
+            "limited_pairs": 49,
+            "reference_status": "done",
+            "reference_pairs": 1000,
+            "reference_observed_partial_pairs": null
+          },
+          {
+            "seed": 20261014,
+            "limited_pairs": 117,
+            "reference_status": "pending",
+            "reference_pairs": null,
+            "reference_observed_partial_pairs": null
+          }
+        ],
+        "unfinished": [
+          {
+            "id": "e76fe23a-fc90-4c1d-84df-d55fba0c1413",
+            "seed": 20261014,
+            "mode": "reference",
+            "status": "pending",
+            "error": null
+          }
+        ]
+      },
+      {
+        "id": "85470380-9835-42ea-9204-2f6f190e00e0",
+        "status": "supported",
+        "offered": 4,
+        "numerical": 4,
+        "reason": null,
+        "seeds": [
+          {
+            "seed": 7,
+            "limited_pairs": 23,
+            "reference_status": "done",
+            "reference_pairs": 1000,
+            "reference_observed_partial_pairs": null
+          },
+          {
+            "seed": 20261014,
+            "limited_pairs": 34,
+            "reference_status": "pending",
+            "reference_pairs": null,
+            "reference_observed_partial_pairs": null
+          }
+        ],
+        "unfinished": [
+          {
+            "id": "85470380-9835-42ea-9204-2f6f190e00e0",
+            "seed": 20261014,
+            "mode": "reference",
+            "status": "pending",
+            "error": null
+          }
+        ]
+      },
+      {
+        "id": "f3cc6eaa-3b1c-4e9a-8d29-1ed1b7217937",
+        "status": "supported",
+        "offered": 4,
+        "numerical": 4,
+        "reason": null,
+        "seeds": [
+          {
+            "seed": 7,
+            "limited_pairs": 916,
+            "reference_status": "done",
+            "reference_pairs": 1000,
+            "reference_observed_partial_pairs": null
+          },
+          {
+            "seed": 20261014,
+            "limited_pairs": 1000,
+            "reference_status": "pending",
+            "reference_pairs": null,
+            "reference_observed_partial_pairs": null
+          }
+        ],
+        "unfinished": [
+          {
+            "id": "f3cc6eaa-3b1c-4e9a-8d29-1ed1b7217937",
+            "seed": 20261014,
+            "mode": "reference",
+            "status": "pending",
+            "error": null
+          }
+        ]
+      },
+      {
+        "id": "c496f8db-2a9d-476a-9e3d-0d4b1f4f9a48",
+        "status": "supported",
+        "offered": 4,
+        "numerical": 4,
+        "reason": null,
+        "seeds": [
+          {
+            "seed": 7,
+            "limited_pairs": 31,
+            "reference_status": "done",
+            "reference_pairs": 1000,
+            "reference_observed_partial_pairs": null
+          },
+          {
+            "seed": 20261014,
+            "limited_pairs": 51,
+            "reference_status": "pending",
+            "reference_pairs": null,
+            "reference_observed_partial_pairs": null
+          }
+        ],
+        "unfinished": [
+          {
+            "id": "c496f8db-2a9d-476a-9e3d-0d4b1f4f9a48",
+            "seed": 20261014,
+            "mode": "reference",
+            "status": "pending",
+            "error": null
+          }
+        ]
+      },
+      {
+        "id": "57c76043-d985-4161-a835-682881c6305b",
+        "status": "supported",
+        "offered": 21,
+        "numerical": 21,
+        "reason": null,
+        "seeds": [
+          {
+            "seed": 7,
+            "limited_pairs": 8,
+            "reference_status": "done",
+            "reference_pairs": 1000,
+            "reference_observed_partial_pairs": null
+          },
+          {
+            "seed": 20261014,
+            "limited_pairs": 8,
+            "reference_status": "pending",
+            "reference_pairs": null,
+            "reference_observed_partial_pairs": null
+          }
+        ],
+        "unfinished": [
+          {
+            "id": "57c76043-d985-4161-a835-682881c6305b",
+            "seed": 20261014,
+            "mode": "reference",
+            "status": "pending",
+            "error": null
+          }
+        ]
+      },
+      {
+        "id": "7db570b5-db49-46e2-b9ba-107955726a79",
+        "status": "supported",
+        "offered": 19,
+        "numerical": 19,
+        "reason": null,
+        "seeds": [
+          {
+            "seed": 7,
+            "limited_pairs": 104,
+            "reference_status": "done",
+            "reference_pairs": 1000,
+            "reference_observed_partial_pairs": null
+          },
+          {
+            "seed": 20261014,
+            "limited_pairs": 136,
+            "reference_status": "pending",
+            "reference_pairs": null,
+            "reference_observed_partial_pairs": null
+          }
+        ],
+        "unfinished": [
+          {
+            "id": "7db570b5-db49-46e2-b9ba-107955726a79",
+            "seed": 20261014,
+            "mode": "reference",
+            "status": "pending",
+            "error": null
+          }
+        ]
+      },
+      {
+        "id": "1e4f3831-110f-4266-b507-f9b6ba2f5238",
+        "status": "supported",
+        "offered": 17,
+        "numerical": 17,
+        "reason": null,
+        "seeds": [
+          {
+            "seed": 7,
+            "limited_pairs": 8,
+            "reference_status": "done",
+            "reference_pairs": 1000,
+            "reference_observed_partial_pairs": null
+          },
+          {
+            "seed": 20261014,
+            "limited_pairs": 16,
+            "reference_status": "pending",
+            "reference_pairs": null,
+            "reference_observed_partial_pairs": null
+          }
+        ],
+        "unfinished": [
+          {
+            "id": "1e4f3831-110f-4266-b507-f9b6ba2f5238",
+            "seed": 20261014,
+            "mode": "reference",
+            "status": "pending",
+            "error": null
+          }
+        ]
+      },
+      {
+        "id": "e5b1c402-bab3-4f7a-b518-eedfd5512975",
+        "status": "supported",
+        "offered": 20,
+        "numerical": 20,
+        "reason": null,
+        "seeds": [
+          {
+            "seed": 7,
+            "limited_pairs": 40,
+            "reference_status": "done",
+            "reference_pairs": 1000,
+            "reference_observed_partial_pairs": null
+          },
+          {
+            "seed": 20261014,
+            "limited_pairs": 48,
+            "reference_status": "pending",
+            "reference_pairs": null,
+            "reference_observed_partial_pairs": null
+          }
+        ],
+        "unfinished": [
+          {
+            "id": "e5b1c402-bab3-4f7a-b518-eedfd5512975",
+            "seed": 20261014,
+            "mode": "reference",
+            "status": "pending",
+            "error": null
+          }
+        ]
+      },
+      {
+        "id": "4ca80dad-edf5-4242-90bf-e60dae3df647",
+        "status": "supported",
+        "offered": 17,
+        "numerical": 17,
+        "reason": null,
+        "seeds": [
+          {
+            "seed": 7,
+            "limited_pairs": 136,
+            "reference_status": "done",
+            "reference_pairs": 1000,
+            "reference_observed_partial_pairs": null
+          },
+          {
+            "seed": 20261014,
+            "limited_pairs": 144,
+            "reference_status": "pending",
+            "reference_pairs": null,
+            "reference_observed_partial_pairs": null
+          }
+        ],
+        "unfinished": [
+          {
+            "id": "4ca80dad-edf5-4242-90bf-e60dae3df647",
+            "seed": 20261014,
+            "mode": "reference",
+            "status": "pending",
+            "error": null
+          }
+        ]
+      },
+      {
+        "id": "c8df4f70-dd1b-4931-8476-e712cd63aeeb",
+        "status": "supported",
+        "offered": 17,
+        "numerical": 17,
+        "reason": null,
+        "seeds": [
+          {
+            "seed": 7,
+            "limited_pairs": 0,
+            "reference_status": "done",
+            "reference_pairs": 1000,
+            "reference_observed_partial_pairs": null
+          },
+          {
+            "seed": 20261014,
+            "limited_pairs": 2,
+            "reference_status": "pending",
+            "reference_pairs": null,
+            "reference_observed_partial_pairs": null
+          }
+        ],
+        "unfinished": [
+          {
+            "id": "c8df4f70-dd1b-4931-8476-e712cd63aeeb",
+            "seed": 20261014,
+            "mode": "reference",
+            "status": "pending",
+            "error": null
+          }
+        ]
+      },
+      {
+        "id": "eaa7cf27-ce3b-466e-8ca2-8ba9fd36a74a",
+        "status": "supported",
+        "offered": 15,
+        "numerical": 15,
+        "reason": null,
+        "seeds": [
+          {
+            "seed": 7,
+            "limited_pairs": 121,
+            "reference_status": "done",
+            "reference_pairs": 1000,
+            "reference_observed_partial_pairs": null
+          },
+          {
+            "seed": 20261014,
+            "limited_pairs": 160,
+            "reference_status": "pending",
+            "reference_pairs": null,
+            "reference_observed_partial_pairs": null
+          }
+        ],
+        "unfinished": [
+          {
+            "id": "eaa7cf27-ce3b-466e-8ca2-8ba9fd36a74a",
+            "seed": 20261014,
+            "mode": "reference",
+            "status": "pending",
+            "error": null
+          }
+        ]
+      },
+      {
+        "id": "9c4485fe-5e66-4eeb-89a7-9ae6875cc42c",
+        "status": "supported",
+        "offered": 13,
+        "numerical": 13,
+        "reason": null,
+        "seeds": [
+          {
+            "seed": 7,
+            "limited_pairs": 167,
+            "reference_status": "done",
+            "reference_pairs": 1000,
+            "reference_observed_partial_pairs": null
+          },
+          {
+            "seed": 20261014,
+            "limited_pairs": 264,
+            "reference_status": "pending",
+            "reference_pairs": null,
+            "reference_observed_partial_pairs": null
+          }
+        ],
+        "unfinished": [
+          {
+            "id": "9c4485fe-5e66-4eeb-89a7-9ae6875cc42c",
+            "seed": 20261014,
+            "mode": "reference",
+            "status": "pending",
+            "error": null
+          }
+        ]
+      },
+      {
+        "id": "df919f2c-e22d-49ff-883d-ec4749d35ed0",
+        "status": "supported",
+        "offered": 18,
+        "numerical": 32,
+        "reason": null,
+        "seeds": [
+          {
+            "seed": 7,
+            "limited_pairs": 0,
+            "reference_status": "done",
+            "reference_pairs": 1000,
+            "reference_observed_partial_pairs": null
+          },
+          {
+            "seed": 20261014,
+            "limited_pairs": 0,
+            "reference_status": "pending",
+            "reference_pairs": null,
+            "reference_observed_partial_pairs": null
+          }
+        ],
+        "unfinished": [
+          {
+            "id": "df919f2c-e22d-49ff-883d-ec4749d35ed0",
+            "seed": 20261014,
+            "mode": "reference",
+            "status": "pending",
+            "error": null
+          }
+        ]
+      },
+      {
+        "id": "1765c568-77cb-4401-b2c7-174ff84a9658",
+        "status": "supported",
+        "offered": 17,
+        "numerical": 7,
+        "reason": null,
+        "seeds": [
+          {
+            "seed": 7,
+            "limited_pairs": 174,
+            "reference_status": "done",
+            "reference_pairs": 1000,
+            "reference_observed_partial_pairs": null
+          },
+          {
+            "seed": 20261014,
+            "limited_pairs": 328,
+            "reference_status": "pending",
+            "reference_pairs": null,
+            "reference_observed_partial_pairs": null
+          }
+        ],
+        "unfinished": [
+          {
+            "id": "1765c568-77cb-4401-b2c7-174ff84a9658",
+            "seed": 20261014,
+            "mode": "reference",
+            "status": "pending",
+            "error": null
+          }
+        ]
+      },
+      {
+        "id": "a99e6bca-c1cb-4ffe-8abc-0d409eb3b2db",
+        "status": "supported",
+        "offered": 17,
+        "numerical": 17,
+        "reason": null,
+        "seeds": [
+          {
+            "seed": 7,
+            "limited_pairs": 136,
+            "reference_status": "done",
+            "reference_pairs": 1000,
+            "reference_observed_partial_pairs": null
+          },
+          {
+            "seed": 20261014,
+            "limited_pairs": 136,
+            "reference_status": "pending",
+            "reference_pairs": null,
+            "reference_observed_partial_pairs": null
+          }
+        ],
+        "unfinished": [
+          {
+            "id": "a99e6bca-c1cb-4ffe-8abc-0d409eb3b2db",
+            "seed": 20261014,
+            "mode": "reference",
+            "status": "pending",
+            "error": null
+          }
+        ]
+      },
+      {
+        "id": "a59f70f7-886e-411e-91c7-2c0f26f21899",
+        "status": "supported",
+        "offered": 16,
+        "numerical": 16,
+        "reason": null,
+        "seeds": [
+          {
+            "seed": 7,
+            "limited_pairs": 256,
+            "reference_status": "done",
+            "reference_pairs": 1000,
+            "reference_observed_partial_pairs": null
+          },
+          {
+            "seed": 20261014,
+            "limited_pairs": 296,
+            "reference_status": "pending",
+            "reference_pairs": null,
+            "reference_observed_partial_pairs": null
+          }
+        ],
+        "unfinished": [
+          {
+            "id": "a59f70f7-886e-411e-91c7-2c0f26f21899",
+            "seed": 20261014,
+            "mode": "reference",
+            "status": "pending",
+            "error": null
+          }
+        ]
+      },
+      {
+        "id": "8a4e3d81-ad1d-4988-9b3b-d076d1b15c82",
+        "status": "supported",
+        "offered": 17,
+        "numerical": 30,
+        "reason": null,
+        "seeds": [
+          {
+            "seed": 7,
+            "limited_pairs": 88,
+            "reference_status": "done",
+            "reference_pairs": 1000,
+            "reference_observed_partial_pairs": null
+          },
+          {
+            "seed": 20261014,
+            "limited_pairs": 96,
+            "reference_status": "pending",
+            "reference_pairs": null,
+            "reference_observed_partial_pairs": null
+          }
+        ],
+        "unfinished": [
+          {
+            "id": "8a4e3d81-ad1d-4988-9b3b-d076d1b15c82",
+            "seed": 20261014,
+            "mode": "reference",
+            "status": "pending",
+            "error": null
+          }
+        ]
+      },
+      {
+        "id": "5c258cc4-4fd2-43c9-beaf-71ed175868f8",
+        "status": "supported",
+        "offered": 16,
+        "numerical": 10,
+        "reason": null,
+        "seeds": [
+          {
+            "seed": 7,
+            "limited_pairs": 143,
+            "reference_status": "done",
+            "reference_pairs": 1000,
+            "reference_observed_partial_pairs": null
+          },
+          {
+            "seed": 20261014,
+            "limited_pairs": 190,
+            "reference_status": "pending",
+            "reference_pairs": null,
+            "reference_observed_partial_pairs": null
+          }
+        ],
+        "unfinished": [
+          {
+            "id": "5c258cc4-4fd2-43c9-beaf-71ed175868f8",
+            "seed": 20261014,
+            "mode": "reference",
+            "status": "pending",
+            "error": null
+          }
+        ]
+      },
+      {
+        "id": "8346108e-f972-427b-a448-d2852b0e6dfd",
+        "status": "supported",
+        "offered": 25,
+        "numerical": 25,
+        "reason": null,
+        "seeds": [
+          {
+            "seed": 7,
+            "limited_pairs": 8,
+            "reference_status": "done",
+            "reference_pairs": 1000,
+            "reference_observed_partial_pairs": null
+          },
+          {
+            "seed": 20261014,
+            "limited_pairs": 8,
+            "reference_status": "pending",
+            "reference_pairs": null,
+            "reference_observed_partial_pairs": null
+          }
+        ],
+        "unfinished": [
+          {
+            "id": "8346108e-f972-427b-a448-d2852b0e6dfd",
+            "seed": 20261014,
+            "mode": "reference",
+            "status": "pending",
+            "error": null
+          }
+        ]
+      },
+      {
+        "id": "a64050d1-557f-4746-bcbe-f5ef7925c1fc",
+        "status": "supported",
+        "offered": 25,
+        "numerical": 25,
+        "reason": null,
+        "seeds": [
+          {
+            "seed": 7,
+            "limited_pairs": 19,
+            "reference_status": "done",
+            "reference_pairs": 1000,
+            "reference_observed_partial_pairs": null
+          },
+          {
+            "seed": 20261014,
+            "limited_pairs": 8,
+            "reference_status": "pending",
+            "reference_pairs": null,
+            "reference_observed_partial_pairs": null
+          }
+        ],
+        "unfinished": [
+          {
+            "id": "a64050d1-557f-4746-bcbe-f5ef7925c1fc",
+            "seed": 20261014,
+            "mode": "reference",
+            "status": "pending",
+            "error": null
+          }
+        ]
+      },
+      {
+        "id": "a3972427-a5e0-4b04-ac7d-d2069888fd11",
+        "status": "supported",
+        "offered": 25,
+        "numerical": 25,
+        "reason": null,
+        "seeds": [
+          {
+            "seed": 7,
+            "limited_pairs": 8,
+            "reference_status": "resource_interrupted",
+            "reference_pairs": null,
+            "reference_observed_partial_pairs": 616
+          },
+          {
+            "seed": 20261014,
+            "limited_pairs": 1,
+            "reference_status": "pending",
+            "reference_pairs": null,
+            "reference_observed_partial_pairs": null
+          }
+        ],
+        "unfinished": [
+          {
+            "id": "a3972427-a5e0-4b04-ac7d-d2069888fd11",
+            "seed": 7,
+            "mode": "reference",
+            "status": "resource_interrupted",
+            "error": "Error: build-sim pool released mid-run\n    at BuildSimPool.close (file:///home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/sim/build-sim-pool.js:213:18)\n    at Timeout._onTimeout (file:///home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/measure.mjs:112:74)\n    at listOnTimeout (node:internal/timers:585:17)\n    at process.processTimers (node:internal/timers:521:7)"
+          },
+          {
+            "id": "a3972427-a5e0-4b04-ac7d-d2069888fd11",
+            "seed": 20261014,
+            "mode": "reference",
+            "status": "pending",
+            "error": null
+          }
+        ]
+      },
+      {
+        "id": "2e4d4c83-93df-4965-98f4-2074fbce59b2",
+        "status": "structurally_unsupported",
+        "offered": 4,
+        "numerical": 0,
+        "reason": "no original offered candidate has a supported numerical transition",
+        "seeds": [
+          {
+            "seed": 7,
+            "limited_pairs": null,
+            "reference_status": "not_supported",
+            "reference_pairs": null,
+            "reference_observed_partial_pairs": null
+          },
+          {
+            "seed": 20261014,
+            "limited_pairs": null,
+            "reference_status": "not_supported",
+            "reference_pairs": null,
+            "reference_observed_partial_pairs": null
+          }
+        ],
+        "unfinished": []
+      },
+      {
+        "id": "3e158b45-2504-465a-a0e3-4a15330b43c4",
+        "status": "supported",
+        "offered": 3,
+        "numerical": 1,
+        "reason": null,
+        "seeds": [
+          {
+            "seed": 7,
+            "limited_pairs": 488,
+            "reference_status": "pending",
+            "reference_pairs": null,
+            "reference_observed_partial_pairs": null
+          },
+          {
+            "seed": 20261014,
+            "limited_pairs": 533,
+            "reference_status": "pending",
+            "reference_pairs": null,
+            "reference_observed_partial_pairs": null
+          }
+        ],
+        "unfinished": [
+          {
+            "id": "3e158b45-2504-465a-a0e3-4a15330b43c4",
+            "seed": 7,
+            "mode": "reference",
+            "status": "pending",
+            "error": null
+          },
+          {
+            "id": "3e158b45-2504-465a-a0e3-4a15330b43c4",
+            "seed": 20261014,
+            "mode": "reference",
+            "status": "pending",
+            "error": null
+          }
+        ]
+      },
+      {
+        "id": "0c2e148c-e10c-4788-9dc7-a19772732d42",
+        "status": "supported",
+        "offered": 2,
+        "numerical": 2,
+        "reason": null,
+        "seeds": [
+          {
+            "seed": 7,
+            "limited_pairs": 109,
+            "reference_status": "pending",
+            "reference_pairs": null,
+            "reference_observed_partial_pairs": null
+          },
+          {
+            "seed": 20261014,
+            "limited_pairs": 116,
+            "reference_status": "pending",
+            "reference_pairs": null,
+            "reference_observed_partial_pairs": null
+          }
+        ],
+        "unfinished": [
+          {
+            "id": "0c2e148c-e10c-4788-9dc7-a19772732d42",
+            "seed": 7,
+            "mode": "reference",
+            "status": "pending",
+            "error": null
+          },
+          {
+            "id": "0c2e148c-e10c-4788-9dc7-a19772732d42",
+            "seed": 20261014,
+            "mode": "reference",
+            "status": "pending",
+            "error": null
+          }
+        ]
+      }
+    ],
+    "unfinished": [
+      {
+        "id": "41ab7b9a-3ae0-45c5-8094-7183f41207e5",
+        "seed": 20261014,
+        "mode": "reference",
+        "status": "pending",
+        "error": null
+      },
+      {
+        "id": "d98f1d44-2b13-44f5-9c55-300d78211c4a",
+        "seed": 20261014,
+        "mode": "reference",
+        "status": "pending",
+        "error": null
+      },
+      {
+        "id": "b2aab20d-e0b1-48bf-befa-9f3ba04f7e82",
+        "seed": 20261014,
+        "mode": "reference",
+        "status": "pending",
+        "error": null
+      },
+      {
+        "id": "ad0a4679-fe21-4f94-860f-a3ff9218e975",
+        "seed": 20261014,
+        "mode": "reference",
+        "status": "pending",
+        "error": null
+      },
+      {
+        "id": "e76fe23a-fc90-4c1d-84df-d55fba0c1413",
+        "seed": 20261014,
+        "mode": "reference",
+        "status": "pending",
+        "error": null
+      },
+      {
+        "id": "85470380-9835-42ea-9204-2f6f190e00e0",
+        "seed": 20261014,
+        "mode": "reference",
+        "status": "pending",
+        "error": null
+      },
+      {
+        "id": "f3cc6eaa-3b1c-4e9a-8d29-1ed1b7217937",
+        "seed": 20261014,
+        "mode": "reference",
+        "status": "pending",
+        "error": null
+      },
+      {
+        "id": "c496f8db-2a9d-476a-9e3d-0d4b1f4f9a48",
+        "seed": 20261014,
+        "mode": "reference",
+        "status": "pending",
+        "error": null
+      },
+      {
+        "id": "57c76043-d985-4161-a835-682881c6305b",
+        "seed": 20261014,
+        "mode": "reference",
+        "status": "pending",
+        "error": null
+      },
+      {
+        "id": "7db570b5-db49-46e2-b9ba-107955726a79",
+        "seed": 20261014,
+        "mode": "reference",
+        "status": "pending",
+        "error": null
+      },
+      {
+        "id": "1e4f3831-110f-4266-b507-f9b6ba2f5238",
+        "seed": 20261014,
+        "mode": "reference",
+        "status": "pending",
+        "error": null
+      },
+      {
+        "id": "e5b1c402-bab3-4f7a-b518-eedfd5512975",
+        "seed": 20261014,
+        "mode": "reference",
+        "status": "pending",
+        "error": null
+      },
+      {
+        "id": "4ca80dad-edf5-4242-90bf-e60dae3df647",
+        "seed": 20261014,
+        "mode": "reference",
+        "status": "pending",
+        "error": null
+      },
+      {
+        "id": "c8df4f70-dd1b-4931-8476-e712cd63aeeb",
+        "seed": 20261014,
+        "mode": "reference",
+        "status": "pending",
+        "error": null
+      },
+      {
+        "id": "eaa7cf27-ce3b-466e-8ca2-8ba9fd36a74a",
+        "seed": 20261014,
+        "mode": "reference",
+        "status": "pending",
+        "error": null
+      },
+      {
+        "id": "9c4485fe-5e66-4eeb-89a7-9ae6875cc42c",
+        "seed": 20261014,
+        "mode": "reference",
+        "status": "pending",
+        "error": null
+      },
+      {
+        "id": "df919f2c-e22d-49ff-883d-ec4749d35ed0",
+        "seed": 20261014,
+        "mode": "reference",
+        "status": "pending",
+        "error": null
+      },
+      {
+        "id": "1765c568-77cb-4401-b2c7-174ff84a9658",
+        "seed": 20261014,
+        "mode": "reference",
+        "status": "pending",
+        "error": null
+      },
+      {
+        "id": "a99e6bca-c1cb-4ffe-8abc-0d409eb3b2db",
+        "seed": 20261014,
+        "mode": "reference",
+        "status": "pending",
+        "error": null
+      },
+      {
+        "id": "a59f70f7-886e-411e-91c7-2c0f26f21899",
+        "seed": 20261014,
+        "mode": "reference",
+        "status": "pending",
+        "error": null
+      },
+      {
+        "id": "8a4e3d81-ad1d-4988-9b3b-d076d1b15c82",
+        "seed": 20261014,
+        "mode": "reference",
+        "status": "pending",
+        "error": null
+      },
+      {
+        "id": "5c258cc4-4fd2-43c9-beaf-71ed175868f8",
+        "seed": 20261014,
+        "mode": "reference",
+        "status": "pending",
+        "error": null
+      },
+      {
+        "id": "8346108e-f972-427b-a448-d2852b0e6dfd",
+        "seed": 20261014,
+        "mode": "reference",
+        "status": "pending",
+        "error": null
+      },
+      {
+        "id": "a64050d1-557f-4746-bcbe-f5ef7925c1fc",
+        "seed": 20261014,
+        "mode": "reference",
+        "status": "pending",
+        "error": null
+      },
+      {
+        "id": "a3972427-a5e0-4b04-ac7d-d2069888fd11",
+        "seed": 7,
+        "mode": "reference",
+        "status": "resource_interrupted",
+        "error": "Error: build-sim pool released mid-run\n    at BuildSimPool.close (file:///home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model/agent/src/sim/build-sim-pool.js:213:18)\n    at Timeout._onTimeout (file:///home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/measure.mjs:112:74)\n    at listOnTimeout (node:internal/timers:585:17)\n    at process.processTimers (node:internal/timers:521:7)"
+      },
+      {
+        "id": "a3972427-a5e0-4b04-ac7d-d2069888fd11",
+        "seed": 20261014,
+        "mode": "reference",
+        "status": "pending",
+        "error": null
+      },
+      {
+        "id": "3e158b45-2504-465a-a0e3-4a15330b43c4",
+        "seed": 7,
+        "mode": "reference",
+        "status": "pending",
+        "error": null
+      },
+      {
+        "id": "3e158b45-2504-465a-a0e3-4a15330b43c4",
+        "seed": 20261014,
+        "mode": "reference",
+        "status": "pending",
+        "error": null
+      },
+      {
+        "id": "0c2e148c-e10c-4788-9dc7-a19772732d42",
+        "seed": 7,
+        "mode": "reference",
+        "status": "pending",
+        "error": null
+      },
+      {
+        "id": "0c2e148c-e10c-4788-9dc7-a19772732d42",
+        "seed": 20261014,
+        "mode": "reference",
+        "status": "pending",
+        "error": null
+      }
+    ],
+    "artifacts": {
+      "input": [
+        {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/input-manifest.json",
+          "sha256": "934c5cee86e01b752318c72f9154bc79b7608bedac42b3ef705e3437d59737f3"
+        },
+        {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/coverage.json",
+          "sha256": "d477a87fee685eea95a1b8a62a6c1a43df11d5205776d1caa4733ed8857e338b"
+        },
+        {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/prepared-manifest.json",
+          "sha256": "3aa9a41bff9984155f35c2215e6f50386047e4d87bc1a78657d2d9c99b12be46"
+        },
+        {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/same-input-audit.json",
+          "sha256": "0bb5f37c2fe9c5a5803de2e50bcdda94646c34b2ca1fd2f0f59e2333abde29d9"
+        },
+        {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/question-coverage.json",
+          "sha256": "544d9fb6f314cc851fb8d2265dc6eb95b7777361621ed1d4d97d2ae7fc9d2a0b"
+        },
+        {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/route-recovery-audit.json",
+          "sha256": "1140ed40650959e7d7879e8d579177548c3b669b16865b36b1f0581b31f68131"
+        }
+      ],
+      "model": [
+        {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/model-manifest.json",
+          "sha256": "0320f83f7919290bccb8993f2dae871e134d10bf61d0f7e3af627a4618ff6210"
+        },
+        {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/compiled-manifest.json",
+          "sha256": "53dfd6d4384ddfa354a1a402fc3df42cb7f0485780d444ec514b179106b8d75b"
+        },
+        {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/production-config.json",
+          "sha256": "0bd8136fff4bec7998d31afd6ca1a02fc04f7a74bcc12ce0f6e0b44cf1e4f5ed"
+        },
+        {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/runner-manifest.json",
+          "sha256": "6bd52df98f983b78b64a7c81a19b9c0daa5d87badba94b4f73f12fa9d27a09f5"
+        },
+        {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/runtime-manifest.json",
+          "sha256": "9896f428baa56f3a9fc8b850e017b4e1e3868f16c2e7aba99ce4bc042fe99fe4"
+        }
+      ],
+      "seed": [
+        {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/seeds.json",
+          "sha256": "12de5943b3e8a420b59d769c00794c482b7edc5aa491c605c6757820334d2142"
+        },
+        {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/measurement-contract.json",
+          "sha256": "0524cf11b17a16ebfba3f60941e2f95b32d4c730917ad640ed9dd0486a9a8d5e"
+        }
+      ],
+      "result": [
+        {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/result-manifest.json",
+          "sha256": "62c425ea6d221c9f5d930a6ab0d0982d05e7d5fb77e134f57a70009af81cc308"
+        },
+        {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/analysis-progress.json",
+          "sha256": "58bca06486030891ca920f6448c707599d7647caed24b8f05dbfeff8a5737186"
+        },
+        {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/paired-analysis-index.json",
+          "sha256": "1659523129f22c8b5dafa69cf5fc56379d9afe92026fa319d662dc879faf3363"
+        },
+        {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/failure-manifest.json",
+          "sha256": "1cec1c34ce91f8b9a939478b0c40cddf465b384a9d6328d7e40c7f39b2bee08f"
+        }
+      ],
+      "profiling": [
+        {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/profiling-manifest.json",
+          "sha256": "ce691711c232603b212b6a75ebce10b5739713103e6f75bd54020246c05ca6dd"
+        }
+      ]
+    },
+    "checkpoint": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/checkpoint.json",
+      "sha256": "5e36f20a3e226c8b1f668cb69189dc0fd9e774e310a637da1c4058a3ba207401"
+    },
+    "resume": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/resume.mjs",
+      "sha256": "0372b36fe9f85e81bcf55d6f4198db591b84684e6284590cf20679d75d6773e7"
+    },
+    "current_live_model": "093c68ac658980f53b9940756b3df925adfb49bb",
+    "current_live_tree": "cc740ccd201c51fb3dde6dabbe79cff35ce08fa6",
+    "completed_reference_scope": "所有数值候选计算完成同 seed ID；完整终局 DPR 分母另存，不声称 1000 完整终局 DPR",
+    "summary": [
+      {
+        "seed": 7,
+        "supported_questions": 27,
+        "full_questions": 30,
+        "limited_completed": 27,
+        "numeric_gate_count": 4,
+        "numeric_gate_supported_fraction": 0.14814814814814814,
+        "numeric_gate_full_fraction": 0.13333333333333333,
+        "all_numeric_candidates_have_terminal_dpr": 4,
+        "zero_complete_pair_questions": 2,
+        "completed_1000_references": 24
+      },
+      {
+        "seed": 20261014,
+        "supported_questions": 27,
+        "full_questions": 30,
+        "limited_completed": 27,
+        "numeric_gate_count": 5,
+        "numeric_gate_supported_fraction": 0.18518518518518517,
+        "numeric_gate_full_fraction": 0.16666666666666666,
+        "all_numeric_candidates_have_terminal_dpr": 5,
+        "zero_complete_pair_questions": 1,
+        "completed_1000_references": 0
+      }
+    ],
+    "scope_limit": "complete only means the R1/R2 fixed-input phase; R3/R4 and broader parents remain pending",
+    "validation": {
+      "source_unchanged": true,
+      "same_input_request_cases": 27,
+      "telemetry_equivalent_fixed_samples": 2,
+      "snapshot_hash_verification": {
+        "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-123935-fix-batch/resume-validation.log",
+        "sha256": "268cd5d8b932b65c67545e6a1cb7bd420a38e6d36f5548395f287ae4ed5d7875"
+      }
+    }
+  }
+}

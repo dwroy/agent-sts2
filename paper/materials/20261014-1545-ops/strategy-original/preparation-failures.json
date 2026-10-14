@@ -1,0 +1,29 @@
+{
+  "classification": "材料准备/只读定位；不是生产测试失败",
+  "failures": [
+    {
+      "command": "rg --files learner ops/codex-ops knowledge/characters/silent ...",
+      "exit_code": 2,
+      "stderr": "rg: ops/codex-ops: No such file or directory (os error 2)",
+      "resolution": "仅工作树缺该运行目录；本批身份已从根目录ops/codex-ops/learn.json核实，未改目录或派发。"
+    },
+    {
+      "command": "rg/sed agent/src/knowledge/room-cost.ts agent/src/sim/route-hp.ts",
+      "exit_code": 2,
+      "stderr": "rg: agent/src/knowledge/room-cost.ts: No such file or directory (os error 2)\nrg: agent/src/sim/route-hp.ts: No such file or directory (os error 2)\nsed: can't read agent/src/knowledge/room-cost.ts: No such file or directory",
+      "resolution": "经rg --files定位实际agent/src/knowledge/room-costs.ts；已读五样本常量，没有生产变更。"
+    },
+    {
+      "command": "nice -n 15 python3 learner/runs/20261014-151326-strategy-proposal/make_report.py",
+      "exit_code": 1,
+      "stderr": "error building bubblewrap command: Fatal error: ripgrep unreadable glob scan failed for /home/dw/Projects/agent-sts2: rg: /home/dw/Projects/agent-sts2/.worktrees/v5-jev-eval-20261014/paper/materials/silent/20261008-0951-events: No such file or directory (os error 2)\nrg: /home/dw/Projects/agent-sts2/.worktrees/v5-jev-eval-20261014/paper/materials/silent/20261007-2207-events: No such file or directory (os error 2)\nrg: /home/dw/Projects/agent-sts2/.worktrees/v5-jev-eval-20261014/paper/materials/silent/20261006-2259-bvf-postmortem: No such file or directory (os error 2)\nrg: /home/dw/Projects/agent-sts2/.worktrees/v5-jev-eval-20261014/paper/materials/silent/20261008-1235-experience96: No such file or directory (os error 2)\n",
+      "executed_model_script": false,
+      "resolution": "同权限同命令重试一次exit0；未修改sandbox、账号或执行权限。"
+    }
+  ],
+  "truncated_diagnostics": "初始折叠账本摘要和一次对minified本角色JSON的rg输出过长，工具截断；未用于扩大证据或改知识，后续改用有界字段和本批原字节核验。",
+  "consumer_original_rejections": [
+    "DUZUBAJ3A8GP-full-failure.json",
+    "CA5KE8GFJ9X2-full-failure.json"
+  ]
+}
