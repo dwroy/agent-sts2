@@ -1045,8 +1045,17 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
   const fasten = character.toLowerCase() === "silent" && cardId === "FASTEN" ?
     (!bool(card["upgraded"]) && dyn(card, "ExtraBlock") === 4 ? 4
       : bool(card["upgraded"]) && ascension === 10 && dyn(card, "ExtraBlock") === 6 ? 6 : 0) : 0;
+  // MTQ0EUBJ3R6T A10 F20 T3, silent-0044: the observed plain power establishes 1 Dexterity and 4 Thorns.
+  // Keep every unobserved preview, upgrade, level and character on its prior model.
+  const observedAbrasive = character.toLowerCase() === "silent" && ascension === 10 && cardId === "ABRASIVE" &&
+    type === "Power" && !bool(card["upgraded"]) && card["target_type"] === "Self" &&
+    card["requires_target"] === false && card["costs_x"] === false && card["star_costs_x"] === false &&
+    card["star_cost"] === 0 && card["energy_cost"] === 3 && card["enchantment"] == null &&
+    template.replace(/\s+/g, "") === "获得{DexterityPower:diff()}点敏捷。获得{ThornsPower:diff()}点荆棘。" &&
+    renderedText.replace(/\s+/g, "") === "奇巧。获得1点敏捷。获得4点荆棘。" &&
+    dyn(card, "DexterityPower") === 1 && dyn(card, "ThornsPower") === 4;
   // CA5KE8GFJ9X2 F9 T6 / F13 T1, silent-0229: the observed plain Caltrops establishes three Thorns.
-  const thorns = character.toLowerCase() === "silent" && cardId === "CALTROPS" &&
+  const thorns = observedAbrasive ? 4 : character.toLowerCase() === "silent" && cardId === "CALTROPS" &&
     !bool(card["upgraded"]) && dyn(card, "ThornsPower") === 3 ? 3 : 0;
   // VN7RQJMJEFMX F30 T1 and 75X1BARMNZ03 F17 T2, silent-0113: the upgrade grants four temporary Dexterity.
   const anticipate = cardId === "ANTICIPATE" && dyn(card, "DexterityPower") !== null;
@@ -1185,7 +1194,8 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
     strength,
     ...(fasten > 0 ? { fasten } : {}),
     ...(thorns > 0 ? { thorns } : {}),
-    ...(madExpertise ? { dexterity: 2 } : cardId === "FOOTWORK" && dyn(card, "DexterityPower") !== null ? { dexterity: dyn(card, "DexterityPower")! } : {}),
+    ...(madExpertise ? { dexterity: 2 } : observedAbrasive ? { dexterity: 1 }
+      : cardId === "FOOTWORK" && dyn(card, "DexterityPower") !== null ? { dexterity: dyn(card, "DexterityPower")! } : {}),
     ...(anticipate ? { temporaryDexterity: dyn(card, "DexterityPower")! } : {}),
     ...(cardId === "AFTERIMAGE" && dyn(card, "AfterimagePower") !== null ? { afterImage: dyn(card, "AfterimagePower")! } : {}),
     // 5PM6JAQG6FNQ F33 T1, silent-0132: the generated plain power establishes four without hitting.
