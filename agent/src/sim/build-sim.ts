@@ -135,7 +135,7 @@ export async function compareOptions(
   runner: DeckSimRunner,
   base: RolloutInput,
   options: DeckOption[],
-  opts: { samples?: number; seed?: number; deadlineMs?: number; now?: () => number; quantitative?: boolean; diagnostics?: boolean; requireComplete?: boolean; readiness?: boolean } = {},
+  opts: { samples?: number; seed?: number; deadlineMs?: number; now?: () => number; quantitative?: boolean; diagnostics?: boolean; requireComplete?: boolean; onProgress?: import("./computation-wait.js").SimProgress; readiness?: boolean } = {},
 ): Promise<CompareResult> {
   if (opts.quantitative) base = { ...base, captureBossMargin: true,
     ...(base.meta.asc === 10 ? { captureCore: true, captureResources: true } : {}) };
@@ -193,7 +193,7 @@ export async function compareOptions(
   let orderSearch: Record<string, JsonValue> | null = null;
   let order = allOrders[0]!;
   if (allOrders.length > 1) {
-    const first = await runner.run({ base, decks: [{}], orders: allOrders, samples: Math.min(samples, BUILD_SIM_ORDER_SAMPLES), seed, ...(required ? { progressTimeoutMs: 120_000 } : {}), ...(opts.diagnostics ? { diagnostics: true } : {}), ...(!required && opts.deadlineMs !== undefined ? { deadlineMs: opts.deadlineMs / 4 } : {}), ...(opts.now ? { now: opts.now } : {}) });
+    const first = await runner.run({ ...(opts.onProgress ? { onProgress: opts.onProgress } : {}), base, decks: [{}], orders: allOrders, samples: Math.min(samples, BUILD_SIM_ORDER_SAMPLES), seed, ...(required ? { progressTimeoutMs: 120_000 } : {}), ...(opts.diagnostics ? { diagnostics: true } : {}), ...(!required && opts.deadlineMs !== undefined ? { deadlineMs: opts.deadlineMs / 4 } : {}), ...(opts.now ? { now: opts.now } : {}) });
     if (required && (first.timedOut || first.complete.length !== Math.min(samples, BUILD_SIM_ORDER_SAMPLES) || first.complete.some((id, i) => id !== i))) throw new Error("required boss order search incomplete");
     if (opts.diagnostics) orderSearch = phase(first, required || opts.deadlineMs === undefined ? undefined : opts.deadlineMs / 4);
     const lines = allOrders.map((_, o) => summarizeLine(0, lineOf(first.outcomes, [0], o, first.complete)));
@@ -201,7 +201,7 @@ export async function compareOptions(
   }
   const orders = [order];
   const left = !required && opts.deadlineMs !== undefined ? Math.max(0, opts.deadlineMs - (now() - started)) : undefined;
-  const run = await runner.run({ base, decks, stripes, orders, samples, seed, ...(required ? { progressTimeoutMs: 120_000 } : {}), ...(opts.diagnostics ? { diagnostics: true } : {}), ...(left !== undefined ? { deadlineMs: left } : {}), ...(opts.now ? { now: opts.now } : {}) });
+  const run = await runner.run({ ...(opts.onProgress ? { onProgress: opts.onProgress } : {}), base, decks, stripes, orders, samples, seed, ...(required ? { progressTimeoutMs: 120_000 } : {}), ...(opts.diagnostics ? { diagnostics: true } : {}), ...(left !== undefined ? { deadlineMs: left } : {}), ...(opts.now ? { now: opts.now } : {}) });
   const complete = run.complete;
   if (required && (run.timedOut || complete.length !== samples || complete.some((id, i) => id !== i))) {
     throw new Error(`required boss comparison incomplete: ${complete.length}/${samples}`);

@@ -38,7 +38,7 @@ import type { UsageStatus } from "../brain/engines/codex-usage.js";
 import { estimateTokens, prefixSizeWarning } from "../brain/knowledge.js";
 import type { EngineName } from "../brain/types.js";
 import type { AppConfig } from "../core/config.js";
-import { CODEX_CONTEXT_WINDOW, CODEX_AUTO_COMPACT_TOKENS, DEFAULT_CLAUDE_MODEL, sReadinessMode } from "../core/config.js";
+import { CODEX_CONTEXT_WINDOW, CODEX_AUTO_COMPACT_TOKENS, DEFAULT_CLAUDE_MODEL, sReadinessMode, simFailurePolicy } from "../core/config.js";
 import { isMenuRunId } from "../memory/journal-replay.js";
 import { str, type JsonValue } from "../core/util/json.js";
 import { resolveJevPromptLog } from "./jev-prompt-log.js";
@@ -167,6 +167,8 @@ export interface RunConfigRow {
     build_oneshot: string;
     /** B3: the act boss simulated for each option of a deck-building question (BOSS_SIM_BUILD). */
     boss_sim_build: string;
+    sim_failure_exit?: "on" | "off";
+    sim_failure_retries?: number;
     combat_deepseek: string;
     /** THIEF_FACTS (docs/thief.md): the thieves' facts, escape and kill-line coverage on the combat question. */
     thief_facts: boolean;
@@ -476,6 +478,8 @@ export function runConfigRow(
       build_oneshot: config.buildOneshot,
       boss_sim_build: characterKey(run.character) === "silent" ? "on" : config.bossSimBuild,
       s_readiness: sReadinessMode(run.character, env),
+      sim_failure_exit: simFailurePolicy(run.character, env).enabled ? "on" as const : "off" as const,
+      sim_failure_retries: simFailurePolicy(run.character, env).retries,
       ...(characterKey(run.character) === "silent" ? { boss_sim_completion: "required-full-paired-v1", boss_sim_build_requested: config.bossSimBuild } : {}),
       combat_deepseek: config.combatDeepseek,
       thief_facts: config.thiefFacts,

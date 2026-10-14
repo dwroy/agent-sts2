@@ -2122,6 +2122,7 @@ export function hardRuleLines(plans: Plan[], enemies: EnemySim[]): Plan[] {
 
 export function planCombatTurn(env: DecisionEnv): Decision | null {
   env.screenMemory.bossEvaluationWait = undefined;
+  env.screenMemory.bossEvaluationRecord = undefined;
   // SL_RETRY_EXPLORE_ANCHOR (env.slRecord, a first attempt): the points recorded the same way, nothing else.
   const explore = env.sl?.explore !== undefined || env.slRecord !== undefined;
   if (explore) {
@@ -3843,6 +3844,7 @@ function planTurn(env: DecisionEnv): Decision | null {
             randomPotions: [...mcSources.values()],
             lines: [...shown, ...mcMedians],
             requiredComplete: requiredBossComputation,
+            ...(env.simWait ? { simWait: env.simWait } : {}),
             turn: state.turn ?? null,
             drinks: drinksPotion,
             ...(slCompute ? { samples: slCompute.bossSimSamples } : {}),
@@ -3850,7 +3852,8 @@ function planTurn(env: DecisionEnv): Decision | null {
           })
         : { available: false, reason: "no draw/discard piles in the state", ms: 0 }
       : null;
-  if (requiredBossComputation && (!bossSim?.available || bossSim.run.timedOut || bossSim.run.samples !== bossSim.run.requested)) {
+  if (requiredBossComputation && bossSim) env.screenMemory.bossEvaluationRecord = simLog(bossSim, () => null);
+  if (requiredBossComputation && bossSim?.completion?.status !== "degraded" && (!bossSim?.available || bossSim.run.timedOut || bossSim.run.samples !== bossSim.run.requested)) {
     env.screenMemory.bossEvaluationWait = `required boss evaluation pending: ${bossSim && !bossSim.available ? bossSim.reason : "complete paired samples unavailable"}`;
     return null;
   }
@@ -4035,6 +4038,8 @@ function planTurn(env: DecisionEnv): Decision | null {
     },
     // THIEF_FACTS: who carries our card or gold, how many turns are left to kill it, its HP and block (thief.ts).
     ...(thiefContext ? { thief_context: thiefContext } : {}),
+    ...(bossSim?.completion?.status === "degraded" ? { simulation_completion:
+      `不完整（故障降级，n=${bossSim.completion.samples}）；${bossSim.available ? "沿用原可信度与排序闸" : "模拟数字不可用，沿用原 rollout"}` } : {}),
     // B2: how to read each option's whole_fight_sim, and the fight plan from the best line's winning samples (information).
     ...(bossSim && simShown ? { whole_fight_sim: simNote(bossSim),
       ...(quantitativeEnabled(state) ? { boss_relative_margin_objective: BOSS_MARGIN_NOTE } : {}),
