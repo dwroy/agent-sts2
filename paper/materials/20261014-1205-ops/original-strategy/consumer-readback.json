@@ -1,0 +1,232 @@
+{
+  "scope": "bounded_existing_consumer_readback_not_new_source_tests",
+  "consumers": {
+    "giant_280160": {
+      "phase": {
+        "phase": "blast_pending",
+        "enemy_id": "WATERFALL_GIANT",
+        "move_id": "EXPLODE_MOVE",
+        "raw_hp": 999999999,
+        "max_hp": 999999999,
+        "body_hp": 0,
+        "incoming_at_turn_start": 41
+      },
+      "facts": {
+        "giant_blast_current": {
+          "scope": "observed_current_snapshot",
+          "phase": "blast_pending",
+          "body_hp": 0,
+          "raw_husk_hp": 999999999,
+          "poison_now": 2,
+          "hp_now": 26,
+          "block_now": 13,
+          "incoming_now": 41,
+          "fight_won": false,
+          "note": "本体已结束，当前仍待自爆结算；占位体血量及其扣血不代表本体进度。毒层不是已兑现毒伤，当前血挡和来袭也不是候选执行后的结算。本栏不改必死判断或参考路径排序。",
+          "poison_potion_observation": {
+            "scope": "single_observed_use",
+            "evidence": {
+              "run": "YQL8RZ8BWN1E",
+              "floor": 17,
+              "turn": 10,
+              "state_lines": [
+                280160,
+                280161
+              ]
+            },
+            "before": {
+              "poison": 2,
+              "hp": 26,
+              "block": 13,
+              "incoming": 41
+            },
+            "after": {
+              "poison": 8,
+              "hp": 26,
+              "block": 13,
+              "incoming": 41
+            },
+            "note": "这次实盘在本体结束后饮用毒药水，只观察到残壳毒2→8，血26、挡13、自爆来袭41均未变；不能把新增6毒算作减伤6或本体进度。此处不是当前饮用结果的预测，提前饮用、留药和整战收益仍未知，不据此删除或强制选择药水。"
+          }
+        }
+      },
+      "input_unchanged": true
+    },
+    "giant_280161": {
+      "phase": {
+        "phase": "blast_pending",
+        "enemy_id": "WATERFALL_GIANT",
+        "move_id": "EXPLODE_MOVE",
+        "raw_hp": 999999999,
+        "max_hp": 999999999,
+        "body_hp": 0,
+        "incoming_at_turn_start": 41
+      },
+      "facts": {
+        "giant_blast_current": {
+          "scope": "observed_current_snapshot",
+          "phase": "blast_pending",
+          "body_hp": 0,
+          "raw_husk_hp": 999999999,
+          "poison_now": 8,
+          "hp_now": 26,
+          "block_now": 13,
+          "incoming_now": 41,
+          "fight_won": false,
+          "note": "本体已结束，当前仍待自爆结算；占位体血量及其扣血不代表本体进度。毒层不是已兑现毒伤，当前血挡和来袭也不是候选执行后的结算。本栏不改必死判断或参考路径排序。"
+        }
+      },
+      "input_unchanged": true
+    },
+    "giant_280162": {
+      "phase": null,
+      "facts": {},
+      "input_unchanged": true
+    },
+    "anchor_YQL8RZ8BWN1E": {
+      "raw_last_hp": [
+        {
+          "attempt": 1,
+          "hp": 999999990
+        },
+        {
+          "attempt": 2,
+          "hp": 999999999
+        },
+        {
+          "attempt": 3,
+          "hp": 999999971
+        },
+        {
+          "attempt": 4,
+          "hp": 999999996
+        },
+        {
+          "attempt": 5,
+          "hp": 999999990
+        },
+        {
+          "attempt": 6,
+          "hp": 999999999
+        }
+      ],
+      "legacy_ranking": [
+        5,
+        1,
+        4,
+        2,
+        3,
+        6
+      ],
+      "note": "读取原历史summary；未补造阶段字段，原始占位血仍供现行排序。"
+    },
+    "anchor_L9SGRBB5R698": {
+      "raw_last_hp": [
+        {
+          "attempt": 1,
+          "hp": 999999999
+        },
+        {
+          "attempt": 2,
+          "hp": 58
+        },
+        {
+          "attempt": 3,
+          "hp": 28
+        },
+        {
+          "attempt": 4,
+          "hp": 999999999
+        },
+        {
+          "attempt": 5,
+          "hp": 999999993
+        },
+        {
+          "attempt": 6,
+          "hp": 999999999
+        }
+      ],
+      "legacy_ranking": [
+        4,
+        1,
+        3,
+        5,
+        6,
+        2
+      ],
+      "note": "读取原历史summary；未补造阶段字段，原始占位血仍供现行排序。"
+    },
+    "anchor_PU80F84P6HPN": {
+      "raw_last_hp": [
+        {
+          "attempt": 1,
+          "hp": 999999989
+        },
+        {
+          "attempt": 2,
+          "hp": 999999981
+        },
+        {
+          "attempt": 3,
+          "hp": 999999999
+        },
+        {
+          "attempt": 4,
+          "hp": 999999999
+        },
+        {
+          "attempt": 5,
+          "hp": 999999999
+        }
+      ],
+      "legacy_ranking": [
+        3,
+        4,
+        2,
+        1
+      ],
+      "note": "读取原历史summary；未补造阶段字段，原始占位血仍供现行排序。"
+    },
+    "selection_dispatch": {
+      "audit_is_control_fixture": true,
+      "historical_dispatch_result": "pending (unstable): Action queued but state is still transitioning.",
+      "result": {
+        "selection_dispatch": {
+          "schema": 1,
+          "scope": "single_action_receipt",
+          "requested_action": {
+            "action": "use_potion",
+            "option_index": 0
+          },
+          "gated_action": {
+            "action": "use_potion",
+            "option_index": 0
+          },
+          "expected_identity": null,
+          "dispatch_status": "returned",
+          "not_dispatched_reason": null,
+          "returned_status": "completed",
+          "returned_stable": true,
+          "error_kind": null,
+          "state_effect_verified": false,
+          "whole_plan_executed": null,
+          "actual_turn": null
+        }
+      },
+      "note": "实际盘面/动作＋明确的completed控制回执，仅核单动作消费者仍不认证整轮；不是给旧日志回填selection_audit。"
+    },
+    "potion_missing_table": {
+      "input_is_control_fixture": true,
+      "result": {
+        "id": "FLEX_POTION",
+        "name": "FLEX_POTION",
+        "holdHp": null,
+        "source": null,
+        "hp": 0,
+        "zero": "no_table"
+      },
+      "note": "显式null表控制输入，未读取刷新知识；该返回值不能充作留药实盘估价。"
+    }
+  }
+}

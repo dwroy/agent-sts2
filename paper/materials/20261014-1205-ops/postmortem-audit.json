@@ -1,0 +1,97 @@
+{
+  "at": "2026-10-14 12:12:51 CST",
+  "batch": "20261014-111301",
+  "run": "EBVT8UZM6P12",
+  "original_state": "done",
+  "rc": 0,
+  "raw_counts": {
+    "decisions": 737,
+    "states": 769,
+    "run-plans": 8,
+    "sl-attempts": 8,
+    "run-config": 1,
+    "brain": 41,
+    "jev-prompts": 187
+  },
+  "raw_byte_sha_rows_verified": 1751,
+  "lesson_bytes": 25851,
+  "lesson_sha256": "9e72e9648c258fae4b13dd7cd84a39602c6ba7afcb3e9d64c653ed239191bcf9",
+  "lesson_heading_exactly_once": true,
+  "original_fixed_numeric_checks": 41,
+  "original_ledger_rows": 4,
+  "original_proposals": {
+    "silent-proposal-60a60ac13fdaf5fe": {
+      "state": "pending",
+      "ledger": [
+        "silent-0469"
+      ],
+      "runs": [
+        "EBVT8UZM6P12"
+      ],
+      "source_task": "postmortem",
+      "target_task": "strategy-proposal",
+      "domains": [
+        "combat",
+        "sl",
+        "terminal"
+      ],
+      "proposal": "/home/dw/Projects/agent-sts2/learner/runs/20261014-111302-postmortem/proposal-paper-krane.md",
+      "proposal_sha256": "06be2d2be326ea02a03c2f8ec0f87b817fc1ca136267b09e4ef11ea437129972"
+    },
+    "silent-proposal-e0abad5c66b2b1dd": {
+      "state": "pending",
+      "ledger": [
+        "silent-0020",
+        "silent-0106",
+        "silent-0125"
+      ],
+      "runs": [
+        "EBVT8UZM6P12"
+      ],
+      "source_task": "postmortem",
+      "target_task": "strategy-proposal",
+      "domains": [
+        "combat",
+        "potion",
+        "sl",
+        "terminal"
+      ],
+      "proposal": "/home/dw/Projects/agent-sts2/learner/runs/20261014-111302-postmortem/proposal-resource-and-replan.md",
+      "proposal_sha256": "2d4a7bf784b10219009a5171cb78edc4dd70b27945c469579279f53aab2b9abb"
+    }
+  },
+  "native_binding": {
+    "event_log": "learner/runs/20261014-111302-postmortem.jsonl",
+    "thread_id": "01a13866-3565-7c73-8932-39a1c4f20357",
+    "launch_source": {
+      "source": "learner/runs/20261014-111302-postmortem.jsonl",
+      "offset": 0,
+      "bytes": 15630,
+      "sha256": "19c4dcf5730efe2f6ab7182a34cf1f1f6ee4aed872aedb7b813e80a53bd5ea4e"
+    },
+    "launch_task": "postmortem",
+    "launch_cwd": "/home/dw/Projects/agent-sts2",
+    "rendered_task_prompt_sha256": "2ace47215064470a89d41d03d71d7ce8d34313d1399cfadb8a23b1b5d4d7162b",
+    "actual_input_sha256": "2ad5793e849706bb0365fe71abd20c5609de651f5309f29c2578a51f8d2b6885",
+    "actual_command_sha256": "e7da836ee0d84dfb1ee178923973e4724b6c0998804eafe1ce19c43c6fad7018",
+    "original_startup_lease": null,
+    "native_input_matches_recorded_stdin_sha256": true,
+    "native_context": {
+      "source": "ops/codex-ops/accounts/codex1/learner/sessions/2026/10/14/rollout-2026-10-14T11-13-04-01a13866-3565-7c73-8932-39a1c4f20357.jsonl",
+      "offset": 49151,
+      "bytes": 4620,
+      "sha256": "56c55a207b60af50ab07886dcdeaa1b440f43ec28c359332e55fb1b6f58f30ad",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "sandbox_type": "workspace-write"
+    },
+    "startup_source": {
+      "source": "learner/runs/20261014-111302-postmortem.jsonl",
+      "offset": 15630,
+      "bytes": 283,
+      "sha256": "7954aad5b674c1381a1537cfc83c544a5e9f76432e84240e49104d71df3bf4d3"
+    }
+  },
+  "new_nonblocking_model_bug_forwarded_to_original_strategy_proposal_only": "silent-proposal-60a60ac13fdaf5fe",
+  "unobserved_full_candidate_counterfactual_mechanism_bill_and_dirty_tree_not_inferred": true
+}

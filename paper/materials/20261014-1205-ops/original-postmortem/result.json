@@ -1,0 +1,38 @@
+{
+  "task": "postmortem",
+  "appended": [
+    "EBVT8UZM6P12"
+  ],
+  "skipped": [],
+  "bugs": [
+    {
+      "run": "EBVT8UZM6P12",
+      "where": "agent/src/reflex/turn-solver.ts:2834",
+      "what": "纸鹤的新施虚弱减伤未接求解器，固定0.75使两试首轮高报2/3失血",
+      "new": true
+    }
+  ],
+  "ledger": {
+    "added": [
+      "silent-0469"
+    ],
+    "updated": [
+      "silent-0020",
+      "silent-0106",
+      "silent-0125"
+    ],
+    "repeats": [],
+    "check": 0
+  },
+  "code_proposals": [
+    "silent-proposal-60a60ac13fdaf5fe",
+    "silent-proposal-e0abad5c66b2b1dd"
+  ],
+  "implementation_domains": [
+    "combat",
+    "potion",
+    "sl",
+    "terminal"
+  ],
+  "report": "/home/dw/Projects/agent-sts2/learner/runs/20261014-111302-postmortem/report.md"
+}

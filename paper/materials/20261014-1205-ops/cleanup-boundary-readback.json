@@ -1,0 +1,53 @@
+{
+  "at": "2026-10-14 12:19:52 CST",
+  "existing_retention_requests": [
+    {
+      "batch": "20261014-111301",
+      "source": "ops/codex-ops/retention/requests/20261014-111301.json",
+      "source_sha256": "c7ebe669e0ce5af3b4e80e185c1c4b539839e3a64eab5a4417d2a55bdad32ceb",
+      "original_request": {
+        "batch": "20261014-111301",
+        "task": "postmortem",
+        "character": "silent",
+        "worktree": "/home/dw/Projects/agent-sts2",
+        "schema": "learner-cleanup-request-v1",
+        "requested_at": "2026-10-14T11:44:14+08:00",
+        "requested_by": "learner-wrapper",
+        "state": "deferred",
+        "admission_required": true,
+        "model_finished_does_not_prove_ingestion": true,
+        "last_result": {
+          "state": "deferred",
+          "reason": "postmortem not settled"
+        },
+        "updated_at": "2026-10-14T12:13:13+08:00"
+      }
+    },
+    {
+      "batch": "20261014-114302-s2-strategy-proposal",
+      "source": "ops/codex-ops/retention/requests/20261014-114302-s2-strategy-proposal.json",
+      "source_sha256": "331ebbc8ddba83b8c5b6da4039510faf2f9fe0403375d151ddbc6e161cb7ecae",
+      "original_request": {
+        "batch": "20261014-114302-s2-strategy-proposal",
+        "task": "strategy-proposal",
+        "character": "silent",
+        "worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261014-114302-s2",
+        "schema": "learner-cleanup-request-v1",
+        "requested_at": "2026-10-14T12:02:37+08:00",
+        "requested_by": "learner-wrapper",
+        "state": "deferred",
+        "admission_required": true,
+        "model_finished_does_not_prove_ingestion": true,
+        "last_result": {
+          "state": "deferred",
+          "reason": "unpublished worktree HEAD retained"
+        },
+        "updated_at": "2026-10-14T12:13:09+08:00"
+      }
+    }
+  ],
+  "pending_proposals_original_failed_logs_threads_and_unpublished_sources_preserved": true,
+  "no_new_cleanup_permission_or_policy_gate_relaxation": true,
+  "cleanup_stage": "planned_after_exact_commit_SHA_readback",
+  "only_own_verified_copies_in_cleanup_scope": true
+}
