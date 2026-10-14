@@ -1,0 +1,63 @@
+{
+  "schema": "silent-jev-prompt-pilot-v1",
+  "seed": "roy-v5-jev-20261014-r1",
+  "model": "jev-1.13.0",
+  "historical_completed_runs": [
+    "1269Y20SKHUM",
+    "32VSST9UX7MN",
+    "4U3WNL3JRRCX",
+    "4YPGHGJD393H",
+    "6ZGMGEQ5YDVK",
+    "8AGEGLG40SV3",
+    "E5L15SK6ZHZB",
+    "EBVT8UZM6P12",
+    "EEVP0QTLMSX9",
+    "LKC9YXKZWTKR",
+    "Q10YYQ5DUPJA",
+    "Q9FM7A80E4BZ",
+    "WA7FRJ7UABCV",
+    "YP428GT9ZLL3"
+  ],
+  "selected_runs": [
+    "1269Y20SKHUM",
+    "32VSST9UX7MN",
+    "4U3WNL3JRRCX",
+    "4YPGHGJD393H",
+    "6ZGMGEQ5YDVK",
+    "8AGEGLG40SV3",
+    "E5L15SK6ZHZB",
+    "EBVT8UZM6P12",
+    "EEVP0QTLMSX9",
+    "LKC9YXKZWTKR",
+    "Q10YYQ5DUPJA",
+    "Q9FM7A80E4BZ",
+    "WA7FRJ7UABCV"
+  ],
+  "cases": 32,
+  "strata": {
+    "override": 8,
+    "no_declared_best": 8,
+    "tied_best": 8,
+    "agree": 8
+  },
+  "api_calls": 144,
+  "probe_cases": 8,
+  "source_cut": {
+    "jev_prompts_bytes": 947590755,
+    "audit_sha256": "d9d666ab3624b30b8227db4780c2a7c17d6d2feb0e123f8a54506e43fe81c4ea",
+    "case_index_sha256": "a4f42d491f0ee3c019ffd0342a54fa7272cdbbb6f7b271af82b8091bf733dd21"
+  },
+  "protocol": {
+    "scope": "Prompt behavior/cost pilot, not held-out gameplay efficacy or calibration",
+    "selection": "8 per historical agree/override/tied/no-best stratum; SHA order; one per run/floor; <=2/run/stratum",
+    "baseline": "Unique visible rank only; tied/missing ranks explicitly abstain; no new gameplay ranking",
+    "fresh_calls": "All 3 API arms pinned to same model; historical latest answers are descriptive only",
+    "compact": "Remove only intermediate realization traces and redundant equal dmg, retaining inputs/knowledge/limits",
+    "order": "Reverse insertion order with option IDs stable; this does not test name/ID bias",
+    "repeat": "Same-input repeats distinguish output variation from order-associated variation",
+    "uncertainty": "Balanced diagnostic strata are not population weights; run/SL correlation remains",
+    "truth": "No original simulator rank or Jev confidence is an outcome truth label",
+    "gates": "No production change; original R3 learner must independently validate paired candidate outcomes first",
+    "language": "English/Chinese narrow-question follow-up deferred; do not translate learned knowledge without fidelity check"
+  }
+}

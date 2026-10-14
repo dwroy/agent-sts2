@@ -1,0 +1,112 @@
+{
+  "schema": "silent-jev-prompt-pilot-results-v1",
+  "complete": true,
+  "planned": 144,
+  "received": 144,
+  "ok": 144,
+  "response_status": {
+    "ok": 144
+  },
+  "resolved_models": [
+    "jev-1.13.0"
+  ],
+  "cases": 32,
+  "runs": 13,
+  "arms": {
+    "full": {
+      "base_responses": 32,
+      "mean_input_tokens": 13608,
+      "mean_latency_ms": 447.0293660625002,
+      "median_latency_ms": 422.7512014999993,
+      "unique_model_rank_agreement": {
+        "matches": 8,
+        "denominator": 16
+      },
+      "probes": {
+        "denominator": 8,
+        "identical_repeat_changed": 0,
+        "reversed_order_changed": 2
+      },
+      "historical_choice_agreement": 32
+    },
+    "full_unlabelled": {
+      "base_responses": 32,
+      "mean_input_tokens": 13542.46875,
+      "mean_latency_ms": 454.4359581874998,
+      "median_latency_ms": 439.02177499999925,
+      "unique_model_rank_agreement": {
+        "matches": 8,
+        "denominator": 16
+      },
+      "probes": {
+        "denominator": 8,
+        "identical_repeat_changed": 1,
+        "reversed_order_changed": 2
+      },
+      "historical_choice_agreement": 28
+    },
+    "compact_unlabelled": {
+      "base_responses": 32,
+      "mean_input_tokens": 9856.78125,
+      "mean_latency_ms": 421.21752474999965,
+      "median_latency_ms": 411.78972199999953,
+      "unique_model_rank_agreement": {
+        "matches": 9,
+        "denominator": 16
+      },
+      "probes": {
+        "denominator": 8,
+        "identical_repeat_changed": 0,
+        "reversed_order_changed": 2
+      },
+      "historical_choice_agreement": 27
+    }
+  },
+  "paired": {
+    "full_vs_full_unlabelled": {
+      "denominator": 32,
+      "changed_choices": 4,
+      "mean_input_token_change_b_minus_a": -65.53125,
+      "mean_latency_change_ms_b_minus_a": 7.406592124999605
+    },
+    "full_unlabelled_vs_compact_unlabelled": {
+      "denominator": 32,
+      "changed_choices": 3,
+      "mean_input_token_change_b_minus_a": -3685.6875,
+      "mean_latency_change_ms_b_minus_a": -33.21843343750015
+    },
+    "full_vs_compact_unlabelled": {
+      "denominator": 32,
+      "changed_choices": 5,
+      "mean_input_token_change_b_minus_a": -3751.21875,
+      "mean_latency_change_ms_b_minus_a": -25.81184131250055
+    }
+  },
+  "direct_baseline": {
+    "eligible": 16,
+    "abstained": 16
+  },
+  "usage": {
+    "input_tokens": 1844432,
+    "output_tokens": 10052,
+    "sum_request_latency_ms": 64513.68324300001,
+    "failed_usage_unknown": 0
+  },
+  "gameplay_quality": {
+    "measured": false,
+    "win_rate_delta": null,
+    "hp_saved_delta": null,
+    "online_change_authorized_by_this_result": false
+  },
+  "limits": [
+    "32 balanced diagnostic questions from 13 correlated runs; not population incidence or a clean unseen holdout.",
+    "Direct choice abstains on ties/no rank; simulator rank agreement is descriptive, not accuracy.",
+    "Historical latest responses are not a same-version paired baseline; all fresh arms resolve to the pinned model.",
+    "Reversing insertion order leaves option IDs and other option-reference arrays unchanged; name bias is not isolated.",
+    "Repeated responses may vary; one reversed pair cannot prove causal position bias.",
+    "Compaction intentionally removes intermediate realization traces; it is not lossless or a proof of semantic equivalence.",
+    "Explicit rank flags are removed; numerical scores and their limitations remain. No independent outcome labels exist here.",
+    "Token/latency comparisons reflect these paired calls, including provider load/cache effects; not whole-run speedup.",
+    "Guard/SL and actual dispatched actions must be evaluated separately before gameplay attribution."
+  ]
+}

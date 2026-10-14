@@ -1,0 +1,6 @@
+Roy 2026-10-14 15:08 实际批准 Jev 合理分工对照，接续原 Silent V5 quantitative/R3 范围，非另派历史研究。watcher 已独立完成提示工程试验与工具，原 123933/thread01a13882 正在运行的固定30题/spec/r2/input/租约保持，不热注入也不重跑原 R1/R2。
+交付 paper/materials/20261014-v5-jev-ablation/approved-supplement.json、assessment.json、pilot-r2/analysis.json、learner-followup.jsonl；source b4f6559d1a6b349ce0244025f6244640646d57af 已 main 852b6e568ff48d64bc6dce1bcc73526c58336d82，只有 experiments/v5-jev-ablation 四叶，无生产源码/知识/行为号或 live 变动，不派本树全套检查。
+13局中固定32题（原14已结束V5审计，按同意/改选/并列/无best各8，非总体随机胜率样本），三API臂 full/full_unlabelled/compact_unlabelled，另代码唯一best基线对16题返回、其余16题明确abstain。32×3 + 8×2×3=144次实际请求全部返回 jev-1.13.0，原生产仍jev-latest不变。8题各做原样重复和倒序；64原件SHA、全候选保留、5固定检查/Node语法/密钥扫描、压缩后读回通过。
+结果 full平均13608 token/447ms，compact9856.78/421ms，少27.57% token但32题改选5；仅去显式best/tied标签改选4，去标签后进一步删中间轨迹改选3。三臂倒序各2/8改选，原样重复0/1/0；不能由此推断实际胜率或单一位置因果。总1844432输入+10052输出，按现有Roy单价估计$0.07747非账单。原模型排名非真值；不把新相同模型full读回32/32历史答案当游戏准确率。R1并列字段解释错误及main无.env的请求前失败独立保留；144实际请求无失败，无生产环境改写。
+请在原输入自然结束后，将本已完成工程pilot作为原R3/量化owner的补充输入，绑定同owner/thread/source，不新建重复学习父项、不另派全历史；全部差异题及原题包含在learner-followup中，先独立校准实际执行及反事实比较再判Jev/代码选择优劣。原guard/SL改变答案与换手后继必须分列。只有在独立准确率/配对收益成立后，才进一步测试窄语义问题、英文/中文表达及线上角色分工；候选、算术、置信门槛由代码明确处理，具体游戏标准由原学习者据本角色证据给出。
+请在同目录ops-binding.json记录你实际读取、承接的父项/owner及阶段pending；queued不当已读。无需常规回报、催用户或新开session/重启对局，不复派144请求；必要学习异议仍按原流程。原宽P1/P2、校准与当前R1/R2不因本pilot关闭。
