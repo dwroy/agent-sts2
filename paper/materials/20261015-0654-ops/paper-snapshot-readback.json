@@ -1,0 +1,70 @@
+{
+  "at": "2026-10-15 07:09:17 CST",
+  "command": [
+    "python3",
+    "ops/paper_dataset.py",
+    "--no-raw"
+  ],
+  "actual_exit_code": 0,
+  "runs": 783,
+  "decisions": 394946,
+  "source_cut": "2026-10-14T22:57:19.426Z",
+  "owned_generated_files": 13,
+  "owned_current_outputs": 11,
+  "owned_preserved_curve_backups": 2,
+  "verification": {
+    "checks": {
+      "decisions attributed + unattributed == play records": true,
+      "decisions_by_label sum == attributed decisions": true,
+      "escalations rows == records with escalation": true,
+      "every runs.jsonl id present in runs.csv": true,
+      "commits == git rev-list --all --count": true,
+      "runs.jsonl decision-count mismatches": [
+        [
+          "KF9HMZKTFC3V",
+          879,
+          880
+        ]
+      ]
+    },
+    "row_counts": {
+      "runs.csv": 783,
+      "decisions_by_label.csv": 26123,
+      "escalations.csv": 3600,
+      "fight_plans.csv": 1461,
+      "commits.csv": 6115
+    }
+  },
+  "old_warning_unchanged": [
+    [
+      "KF9HMZKTFC3V",
+      879,
+      880
+    ]
+  ],
+  "previous_snapshot": "/home/dw/Projects/agent-sts2/paper/data/history/20261014T225719705035Z",
+  "prior_current_outputs_SHA_verified": [
+    "escalations.csv",
+    "metrics.md",
+    "cost-unattributed.csv",
+    "cost-ironclad.csv",
+    "learning-curve-silent.csv",
+    "verification.json",
+    "runs.csv",
+    "decisions_by_label.csv",
+    "fight_plans.csv",
+    "README.md",
+    "commits.csv",
+    "learning-curve-ironclad.csv",
+    "cost-silent.csv",
+    "cost-sources.json",
+    "cost-none.csv",
+    "cost-curve-ironclad.csv",
+    "summary.json",
+    "cost-curve-silent.csv"
+  ],
+  "raw_export": false,
+  "key_scan": "CLEAN",
+  "commit_rows_at_dataset_generation": 6115,
+  "later_record_commits_not_claimed_in_this_frozen_snapshot": true
+}
