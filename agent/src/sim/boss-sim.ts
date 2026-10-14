@@ -28,6 +28,7 @@ import { potionCost, potionIdOf } from "../reflex/potion-cost.js";
 import type { Plan } from "../reflex/turn-solver.js";
 import { knowledgeCharacter } from "../knowledge/files.js";
 import { silentBossCalibration } from "./boss-trust.js";
+import type { BossMarginTrace } from "./boss-margin.js";
 
 /** The most turns a sample plays (the start turn included): logged A7-A9 boss fights ran 2-24 turns (median 9). */
 export const BOSS_SIM_MAX_TURNS = 30;
@@ -122,6 +123,7 @@ export interface BossSimOptions {
 
 /** One sample of one line, played to the fight's end. */
 export interface FightSampleResult {
+  bossMargin?: BossMarginTrace;
   coreWindow?: import("./core-window.js").CoreWindowResult;
   resources?: { hp: number; revives: import("../reflex/turn-solver.js").Revive[]; drunkKeys: string[] };
   sequence?: { firstWon: boolean; firstHp: number | null; firstPotions: string[]; secondBoss: string | null; firstTurns: number; secondWon: boolean | null; secondDied: boolean | null };
@@ -250,7 +252,7 @@ export function slimInput(
   return {
     ...input,
     ...(input.continuation ? { continuation: { ...input.continuation, variants: input.continuation.variants.map((v) => ({ ...v, input: slimInput(v.input, policyNodes, damageScale, hpScale, threat, potionHold, holdHp) })) } } : {}),
-    solver: hand === input.solver.hand ? input.solver : { ...input.solver, hand },
+    solver: input.captureBossMargin ? { ...input.solver, hand, captureBossMargin: true } : hand === input.solver.hand ? input.solver : { ...input.solver, hand },
     plans: [],
     model: null,
     gates: null,
@@ -282,7 +284,7 @@ function singleFightSample(input: RolloutInput, plan: Plan | null, seed: number,
     lossByTurn: [], dmgByTurn: [], incomingByTurn: [], enemyLossByTurn: [], enemyHpByTurn: [], blockByTurn: [],
     powers: [], drinks: [], kills: [], policyTurns: 0, policyNodes: 0,
   };
-  const { records, policyTurns, policyNodes } = simulateFight(input, plan, maxTurns, seed, scripts, order);
+  const { records, policyTurns, policyNodes, bossReference } = simulateFight(input, plan, maxTurns, seed, scripts, order);
   const startHp = input.solver.player.hp;
   const lossCap = startHp + (input.solver.player.revives ?? []).reduce((sum, revive) => sum + revive.hp, 0);
   const last = records[records.length - 1];
@@ -293,6 +295,10 @@ function singleFightSample(input: RolloutInput, plan: Plan | null, seed: number,
   const enemyHpLeft = won || !last ? 0 : last.hpLeft ? Object.values(last.hpLeft).reduce((sum, hp) => sum + hp, 0) : last.snap.E.reduce((sum, e) => sum + (e[5] ? Math.max(0, e[2]) : 0), 0);
   return {
     won,
+    ...(bossReference ? { bossMargin: { reference: bossReference,
+      outgoingHp: records.reduce((sum, r) => sum + r.dmg, 0),
+      receivedHp: records.every((r) => typeof r.receivedHpDamage === "number" && Number.isFinite(r.receivedHpDamage))
+        ? records.reduce((sum, r) => sum + r.receivedHpDamage!, 0) : null } } : {}),
     ...(input.captureCore ? { coreWindow: coreWindow(records.flatMap((r) => r.coreTrace ? [r.coreTrace] : [])) } : {}),
     ...(last?.resources ? { resources: { ...last.resources, drunkKeys: records.flatMap((r) => r.resources?.drunkKeys ?? []) } } : {}),
     died,
@@ -363,6 +369,7 @@ export function fightSample(input: RolloutInput, plan: Plan | null, seed: number
   const transferred = continuationInput(input, first, variant.input, { seed, plan });
   const second = singleFightSample(transferred.input, null, sampleSeed(seed, 1), maxTurns, scripts, null);
   return { ...second,
+    ...(input.captureBossMargin ? { bossMargin: undefined } : {}),
     ...(input.captureCore ? { coreWindow: undefined } : {}),
     turns: first.turns + second.turns, hpLoss: first.hpLoss + transferred.openingHpLoss + second.hpLoss, revived: first.revived + second.revived,
     drunk: [...first.drunk, ...second.drunk], policyTurns: first.policyTurns + second.policyTurns, policyNodes: first.policyNodes + second.policyNodes,

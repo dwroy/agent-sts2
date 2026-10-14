@@ -42,6 +42,7 @@ import { LOW_CONFIDENCE_B3, bossTrustReason } from "./boss-trust.js";
 import { silentBuildWinTies } from "./silent-build-win-ties.js";
 import { doubleBossPreparation } from "../knowledge/double-boss.js";
 import { withDoubleBossStart } from "./double-boss-start.js";
+import { BOSS_MARGIN_NOTE } from "./boss-margin.js";
 
 /** The deck-building questions that get the simulation. */
 export const BUILD_SIM_LABELS = new Set([
@@ -51,6 +52,22 @@ export const BUILD_SIM_LABELS = new Set([
 
 /** Fewer samples than this (cut short by the time budget) and the options' numbers are not shown (Roy 2026-10-02). */
 export const BUILD_SIM_MIN_SHOWN = 300;
+
+/** Roy 2026-10-14: supported Silent construction choices wait for full paired computation. */
+export function requiresBossEvaluation(decision: Decision, state: GameState): boolean {
+  return quantitativeEnabled(state) && decision.kind === "ask" && !!decision.deepseek?.options && BUILD_SIM_LABELS.has(decision.label);
+}
+
+/** Missing computation is a wait condition, never permission for a model/code fallback. */
+export function bossEvaluationPending(decision: Decision, state: GameState, record: JsonValue | undefined): string | null {
+  if (!requiresBossEvaluation(decision, state)) return null;
+  const value = asRecord(record);
+  // A defeated boss has no current reference; the existing explicit exclusion remains visible.
+  if (value["skipped"] && actBossDefeated(state)) return null;
+  const completion = asRecord(value["completion"]);
+  if (completion["status"] === "complete" && value["samples"] === value["requested"] && Number(value["samples"]) > 0) return null;
+  return str(value["error"]) || "required boss evaluation is not complete";
+}
 
 /** A transform's outcome: this many random cards of the character, each on 1/n of the samples. */
 export const TRANSFORM_DRAWS = 6;
@@ -467,12 +484,18 @@ export async function withBossSim(decision: Decision, env: DecisionEnv, setup: B
   const { state, knowledge } = env;
   const bossId = bossIdForFacts(state) ?? (actBossDefeated(state) ? str(asRecord(state.run?.raw)["boss_id"]) : "");
   const diagnosticEnabled = quantitativeEnabled(state);
+  // The live loop sets this from the actual role, never from an optional environment toggle.
+  // Offline historical callers retain the budget of their frozen experiment.
+  const required = env.requiredBossEvaluation === true && requiresBossEvaluation(decision, state);
   let diagnostics: Record<string, JsonValue> | undefined = diagnosticEnabled ? {
     schema: "build-sim-health-v1", status: "preparing", availableCpus: availableParallelism(), loadAverage: loadavg(),
   } : undefined;
   const fail = (why: string, code = "simulation_error"): BossSimOutcome => ({
-    decision: { ...ask, state: { ...ask.state, facts: withSimFacts(facts, `boss 模拟没有结果（${why}）：act_boss_clock 仍是 boss 时钟的估计`, true) } },
+    decision: { ...ask, state: { ...ask.state, facts: withSimFacts(facts, required
+      ? `必需的boss评估未完成（${why}）；等待完整计算，不允许用空指标作选择`
+      : `boss 模拟没有结果（${why}）：act_boss_clock 仍是 boss 时钟的估计`, true) } },
     record: { error: why, ms: Math.round(now() - started),
+      ...(required ? { completion: { required: true, status: "pending", latencyTargetMs: setup.deadlineMs ?? BUILD_SIM_DEADLINE_MS } } : {}),
       ...(diagnostics ? { diagnostics: { ...diagnostics, status: "failed", reason: code } } : {}) },
   });
   try {
@@ -513,7 +536,7 @@ export async function withBossSim(decision: Decision, env: DecisionEnv, setup: B
       else if (plan.change !== undefined || plan.mixture) deckOptions.push({ key: plan.key, change: plan.change ?? null, ...(plan.mixture ? { mixture: plan.mixture } : {}) });
     }
     const budget = (setup.deadlineMs ?? BUILD_SIM_DEADLINE_MS) - (now() - started);
-    const result: CompareResult = await compareOptions(setup.runner, start.input, deckOptions, { samples: setup.samples ?? BUILD_SIM_SAMPLES, seed: setup.seed ?? BUILD_SIM_SEED, deadlineMs: Math.max(0, budget), ...(setup.now ? { now: setup.now } : {}), ...(diagnosticEnabled ? { quantitative: true, diagnostics: true } : {}) });
+    const result: CompareResult = await compareOptions(setup.runner, start.input, deckOptions, { samples: setup.samples ?? BUILD_SIM_SAMPLES, seed: setup.seed ?? BUILD_SIM_SEED, deadlineMs: Math.max(0, budget), ...(setup.now ? { now: setup.now } : {}), ...(diagnosticEnabled ? { quantitative: true, diagnostics: true } : {}), ...(required ? { requireComplete: true } : {}) });
     if (diagnostics) diagnostics = { ...diagnostics, ...result.diagnostics, boss: bossKey(bossId),
       samples: result.samples, requested: result.requested, minimumShown: Math.min(BUILD_SIM_MIN_SHOWN, result.requested),
       timedOut: result.timedOut, simMs: result.elapsedMs, workers: result.workers };
@@ -523,9 +546,22 @@ export async function withBossSim(decision: Decision, env: DecisionEnv, setup: B
     // asked for, when less), no numbers, as a failed simulation.
     const minShown = Math.min(BUILD_SIM_MIN_SHOWN, result.requested);
     if (result.samples < minShown) return fail(`只跑完 ${result.samples} 次模拟（不足 ${minShown} 次），选项之间的差噪声太大，不给数字`, "below_minimum_samples");
+    if (required && (result.timedOut || result.samples !== result.requested)) return fail("必需的配对样本尚未全部完成", "incomplete_required_samples");
+    if (required && [result.base, ...result.options].some((sim) => {
+      const dpr = asRecord(asRecord(sim.quantitative)["effective_damage_per_turn"]);
+      return typeof dpr["n"] !== "number" || dpr["n"] <= 0 || typeof dpr["mean"] !== "number" || !Number.isFinite(dpr["mean"]);
+    })) {
+      return fail("完整战斗DPR没有有效轨迹；截断或未知不能填零", "no_complete_dpr");
+    }
     const sims = new Map(result.options.map((sim) => [sim.key, sim]));
     const key = bossKey(bossId);
     const low = continuation?.limitation ?? bossTrustReason(key, "b3", state.run?.ascension, state.run?.floor);
+    for (const sim of [result.base, ...result.options]) {
+      const q = asRecord(sim.quantitative);
+      const margin = asRecord(q["boss_relative_margin"]);
+      if (Object.keys(margin).length) q["boss_relative_margin"] = { ...margin, rankingEligible: margin["rankingEligible"] === true && !low,
+        modelTrust: low ? "low" : "existing_boss_gate", modelTrustReason: low ?? null };
+    }
     const boss = `${start.boss.name}，A${state.run?.ascension ?? start.boss.asc}`;
     const head = continuation ? `F48→F49连续通关（第一boss ${boss}；低可信、未经两战校准）：` : `打本幕 boss（${boss}${low ? "；低可信，见 facts.act_boss_sim" : ""}）的模拟：`;
     // Mostly lost: the raw rate under 10% (the calibrated one never reads under the map's floor at 0 wins: calibratedFloor).
@@ -580,7 +616,7 @@ export async function withBossSim(decision: Decision, env: DecisionEnv, setup: B
     const b = result.base;
     const ms = Math.round(now() - started);
     const simFacts: Record<string, JsonValue> = {
-      ...(quantitativeEnabled(state) ? { quantitative_uncertainty: QUANTITATIVE_LIMITS } : {}),
+      ...(quantitativeEnabled(state) ? { quantitative_uncertainty: QUANTITATIVE_LIMITS, boss_margin_objective: BOSS_MARGIN_NOTE } : {}),
       // Not logged at this ascension: HP from the nearest one; damage, buffs and block moved by the measured change
       // between ascensions (monster-db moveDamageAt, amountAt), not the nearest one's as logged.
       boss: `${boss}：${start.boss.parts.map((p) => `${p.name} ${p.hp} 血`).join("、")}${start.boss.exact ? "" : `（A${state.run?.ascension ?? "?"} 没有这个 boss 的日志：数值取最近的 A${start.boss.asc}，伤害、增益和格挡按实测的进阶变化估算）`}`,
@@ -599,6 +635,8 @@ export async function withBossSim(decision: Decision, env: DecisionEnv, setup: B
       ...(lowWin ? { low_win_rate: `当前牌组在模拟里多半打不过（原始胜率 ${pct(b.win)}，校准后的数不会低于 ${(calibratedFloor(state.run?.ascension ?? 0) * 100).toFixed(1)}%，0 胜的读数）：胜率的差信息少，各选项另给 boss 平均剩血（赢的样本算 0）和它的配对差；离 boss 还远时现在的牌组和到 boss 时的牌组差得多` } : {}),
     };
     const record: Record<string, JsonValue> = {
+      ...(required ? { completion: { ...result.completion, required: true, status: "complete",
+        latencyTargetMs: setup.deadlineMs ?? BUILD_SIM_DEADLINE_MS, latencyTargetExceeded: ms > (setup.deadlineMs ?? BUILD_SIM_DEADLINE_MS) } } : {}),
       ...(diagnostics ? { diagnostics: { ...diagnostics, status: "produced" } } : {}),
       ...(quantitativeEnabled(state) ? { quantitative: { base: b.quantitative ?? null,
         options: Object.fromEntries(result.options.map((sim) => [sim.key, sim.quantitative ?? null])) } } : {}),

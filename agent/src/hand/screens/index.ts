@@ -154,6 +154,7 @@ export function planDecision(env: DecisionEnv): PlanOutcome {
   }
 
   if (decision) return { kind: "decision", decision };
+  if (screen === "COMBAT" && env.screenMemory.bossEvaluationWait) return { kind: "wait", reason: env.screenMemory.bossEvaluationWait };
   return { kind: "wait", reason: `waiting on ${screen} (transition, animation, or nothing legal yet)` };
 }
 

@@ -20,7 +20,8 @@
  */
 
 import { choiceQ } from "./jev/questions.js";
-import { quantitativeTurnFacts } from "../sim/quantitative-facts.js";
+import { quantitativeEnabled, quantitativeTurnFacts } from "../sim/quantitative-facts.js";
+import { BOSS_MARGIN_NOTE } from "../sim/boss-margin.js";
 import { silentPhaseReference } from "./silent-phase-reference.js";
 import { silentPhaseCurrentFacts } from "./silent-phase-current.js";
 import { silentPotionReference } from "./silent-potion-reference.js";
@@ -52,7 +53,7 @@ import type { PotionView } from "../memory/narrow.js";
 import type { Knowledge } from "../knowledge/index.js";
 import type { GameState } from "../hand/mod/schema.js";
 import { distinctPlans, dominates, drawsCards, effectiveLoss, EXHAUST_HAND, EXHAUST_PICKERS as SOLVER_EXHAUST_PICKERS, HAND_LIMIT, hpText, mantleHpCost, MOVE_RULE_POWERS, musicBoxCopy, PEN_NIB_EVERY, replaySteps, SHRINKER, solveTurn, STRIP_COUNTERS, type DeathMove, type DrawPileCard, type EnemySim, type MoveOnStrip, type Plan, type PlayerSim, type Revive, type SolverInput, type Step } from "./turn-solver.js";
-import { asArray, asRecord, bool, num, numOrNull, str, type JsonValue } from "../core/util/json.js";
+import { asArray, asRecord, bool, num, numOrNull, str, toJsonValue, type JsonValue } from "../core/util/json.js";
 import { liveSolverFields } from "./passive-pieces.js";
 import { infernoCopies, startTurnHpLossOf } from "./start-loss.js";
 import { planCombat as planCombatPerCard } from "./combat.js";
@@ -2092,6 +2093,7 @@ export function hardRuleLines(plans: Plan[], enemies: EnemySim[]): Plan[] {
 }
 
 export function planCombatTurn(env: DecisionEnv): Decision | null {
+  env.screenMemory.bossEvaluationWait = undefined;
   // SL_RETRY_EXPLORE_ANCHOR (env.slRecord, a first attempt): the points recorded the same way, nothing else.
   const explore = env.sl?.explore !== undefined || env.slRecord !== undefined;
   if (explore) {
@@ -3230,6 +3232,7 @@ function planTurn(env: DecisionEnv): Decision | null {
   let solvedInput: SolverInput | null = null;
   const solve = () =>
     solveTurn((solvedInput = {
+      ...(kind === "boss" && quantitativeEnabled(state) ? { captureBossMargin: true } : {}),
       hand: [
         ...hand,
         ...potionsAll
@@ -3791,10 +3794,11 @@ function planTurn(env: DecisionEnv): Decision | null {
   if (kind !== "boss") releaseBossLinesPool();
   // BOSS_SIM_LOW_TRUST=retry (default): a low-trust boss is simulated only on an SL retry, where its numbers are shown; on
   // a first attempt they only went to the log, and the sim's cores cut this question's rollout. The question is the same.
-  const lowTrustSkipped = bossLinesOptions.lowTrust === "retry" && kind === "boss" && env.sl?.showSim !== true && lowTrustOfState(state) !== null;
-  const bossPiles = kind === "boss" && bossLinesOptions.enabled && !lowTrustSkipped && rolloutSolver !== null ? rolloutPiles(state, env.knowledge, enemyTargets) : null;
+  const requiredBossComputation = env.requiredBossEvaluation === true && kind === "boss" && quantitativeEnabled(state);
+  const lowTrustSkipped = !requiredBossComputation && bossLinesOptions.lowTrust === "retry" && kind === "boss" && env.sl?.showSim !== true && lowTrustOfState(state) !== null;
+  const bossPiles = kind === "boss" && (bossLinesOptions.enabled || requiredBossComputation) && !lowTrustSkipped && rolloutSolver !== null ? rolloutPiles(state, env.knowledge, enemyTargets) : null;
   const bossSim: BossLineSim | null =
-    kind === "boss" && bossLinesOptions.enabled && rolloutSolver !== null
+    kind === "boss" && (bossLinesOptions.enabled || requiredBossComputation) && rolloutSolver !== null
       ? lowTrustSkipped
         ? { available: false, reason: `low-trust boss (${lowTrustOfState(state)}): simulated on SL retries only (BOSS_SIM_LOW_TRUST=retry)`, ms: 0 }
         : bossPiles
@@ -3806,6 +3810,7 @@ function planTurn(env: DecisionEnv): Decision | null {
             piles: knownTop ? { ...bossPiles, drawTop: knownTop.indices, ...(knownTop.added.length > 0 ? { drawAdded: knownTop.added } : {}) } : bossPiles,
             randomPotions: [...mcSources.values()],
             lines: [...shown, ...mcMedians],
+            requiredComplete: requiredBossComputation,
             turn: state.turn ?? null,
             drinks: drinksPotion,
             ...(slCompute ? { samples: slCompute.bossSimSamples } : {}),
@@ -3813,6 +3818,10 @@ function planTurn(env: DecisionEnv): Decision | null {
           })
         : { available: false, reason: "no draw/discard piles in the state", ms: 0 }
       : null;
+  if (requiredBossComputation && (!bossSim?.available || bossSim.run.timedOut || bossSim.run.samples !== bossSim.run.requested)) {
+    env.screenMemory.bossEvaluationWait = `required boss evaluation pending: ${bossSim && !bossSim.available ? bossSim.reason : "complete paired samples unavailable"}`;
+    return null;
+  }
   const simRanks = bossSim?.available && !bossSim.lowTrust ? bossSim : null;
   // SL_RETRY_SHOW_SIM (docs/sl.md): on a retried boss fight a low-trust boss's numbers are shown too, labelled; the
   // ranking (simRanks) stays the trusted bosses' only.
@@ -3820,7 +3829,7 @@ function planTurn(env: DecisionEnv): Decision | null {
   const simShown = bossSim !== null && ((bossSim.available ? bossSim.lowTrust : lowTrustOfState(state)) === null || slLowTrustSim !== null);
   const simFact = (plan: Plan): Record<string, JsonValue> => {
     const line = simShown && bossSim?.available ? bossSim.byPlan.get(plan) : undefined;
-    return line ? { whole_fight_sim: line.text } : {};
+    return line ? { whole_fight_sim: line.text, ...(line.bossMargin ? { boss_relative_margin: toJsonValue(line.bossMargin) } : {}) } : {};
   };
   // Every option's potion cost fact (Roy 2026-09-30), when a potion can be drunk on this board.
   const costNote = (plan: Plan): Record<string, JsonValue> =>
@@ -3995,7 +4004,9 @@ function planTurn(env: DecisionEnv): Decision | null {
     // THIEF_FACTS: who carries our card or gold, how many turns are left to kill it, its HP and block (thief.ts).
     ...(thiefContext ? { thief_context: thiefContext } : {}),
     // B2: how to read each option's whole_fight_sim, and the fight plan from the best line's winning samples (information).
-    ...(bossSim && simShown ? { whole_fight_sim: simNote(bossSim), ...(bossSim.available && bossSim.plan ? { whole_fight_plan: `the simulation's best line, from its samples (information, not an order): ${bossSim.plan}` } : {}) } : {}),
+    ...(bossSim && simShown ? { whole_fight_sim: simNote(bossSim),
+      ...(quantitativeEnabled(state) ? { boss_relative_margin_objective: BOSS_MARGIN_NOTE } : {}),
+      ...(bossSim.available && bossSim.plan ? { whole_fight_plan: `the simulation's best line, from its samples (information, not an order): ${bossSim.plan}` } : {}) } : {}),
     ...(slLowTrustSim !== null
       ? { whole_fight_sim_trust: `低可信 (low trust): the simulator is not validated on this boss (${slLowTrustSim}). Its numbers are shown only because this fight is an SL retry, to help find another approach; no option is ranked by them.` }
       : {}),

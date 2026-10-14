@@ -44,6 +44,7 @@
 
 import { readFileSync } from "node:fs";
 import type { CoreTurnTrace } from "../sim/core-window.js";
+import type { BossMarginReference } from "../sim/boss-margin.js";
 import { continuationCost, continuationUtility, type ContinuationValue } from "./continuation-value.js";
 
 import { TEMP_STRENGTH_LOSS_POWERS } from "../knowledge/move-model.js";
@@ -623,6 +624,7 @@ export interface RolloutOptions {
 }
 
 export interface RolloutInput {
+  captureBossMargin?: boolean;
   /** Opt-in trace of selected lines only; the search and random stream are unchanged. */
   captureCore?: boolean;
   /** Verified fresh-fight HP cost already applied to a synthetic board; reapply to transferred entry HP only. */
@@ -1347,6 +1349,7 @@ interface Piles {
 
 /** One sample's trajectory: per simulated turn, the HP lost that turn and the end-of-our-turn snapshot. */
 export interface TurnRecord {
+  receivedHpDamage?: number | null;
   coreTrace?: CoreTurnTrace;
   /** Exact resources after the turn, used only by an observed following-fight objective. */
   resources?: { hp: number; revives: Revive[]; drunkKeys: string[] };
@@ -2535,6 +2538,7 @@ function applyPlan(
     loss: startHp - player.hp + (o.revived?.reviveHp ?? 0),
     ...(input.captureResources || input.continuation || input.solver.continuationValue ? { resources: { hp: player.hp, revives: player.revives.slice(), drunkKeys: plan.steps.filter(isPotion).map((step) => step.cardId) } } : {}),
     enemyPart: o.incomingAfterBlock,
+    ...(input.captureBossMargin ? { receivedHpDamage: o.receivedHpDamage ?? null } : {}),
     dmg: o.damageDealt + carried,
     snap,
     won,
@@ -2592,6 +2596,7 @@ function laterTurnSim(base: EnemySim): EnemySim {
 }
 
 interface Budget {
+  bossReference?: BossMarginReference;
   now: () => number;
   start: number;
   budgetMs: number;
@@ -2622,7 +2627,7 @@ function simulate(
   // Do not initialize another sample once its budget has already expired.
   if (Number.isFinite(deadline) && budget.now() - budget.start >= deadline) return null;
   const random = rng(seed);
-  const s = input.solver;
+  const s = input.captureBossMargin ? { ...input.solver, captureBossMargin: true } : input.solver;
   const opts = input.options ?? {};
   const handSize = opts.handSize ?? 5;
   const policyNodes = opts.policyNodes ?? 1500;
@@ -2771,6 +2776,13 @@ function simulate(
     };
   });
   const piles: Piles = { draw: sampledDrawPile(input.piles, random), discard: input.piles.discard.slice(), ...(input.onShuffle ? { onShuffle: input.onShuffle } : {}) };
+  if (input.captureBossMargin && fullFight) {
+    const unknown: string[] = [];
+    if (input.enemies.some((e) => (e.powers?.["MINION_POWER"] ?? 0) > 0)) unknown.push("damage_to_minions_not_separately_attributed");
+    if (enemies.some((e) => e.base.illusion || e.base.reattach || e.base.spawnsOnDeath || (e.base.stock ?? 0) > 0)) unknown.push("changing_target_population");
+    budget.bossReference = { myHp: base.hp, bossHp: enemies.reduce((sum, e) => sum + remainingHp(e, input), 0), startTurn: input.solver.turn ?? 1,
+      enemyIds: input.enemies.map((e) => e.id), unknown };
+  }
   const records: TurnRecord[] = [];
   const powers = { ...input.playerPowers };
   // Modelled potions still held in this sample: 0-energy cards that exist once (drunk: gone), each carrying its cost
@@ -3149,6 +3161,7 @@ const KNOWLEDGE_CURSE_POWERS = ["SLOTH_POWER", "MIND_ROT_POWER", "WASTE_AWAY_POW
 
 /** A whole-fight sample (simulateFight): the per-turn records and the policy's work. */
 export interface FightTrajectory {
+  bossReference?: BossMarginReference;
   records: TurnRecord[];
   policyTurns: number;
   policyNodes: number;
@@ -3166,7 +3179,8 @@ export function simulateFight(input: RolloutInput, plan: Plan | null, maxTurns: 
   // scripts = false: the rollout's simulation exactly, only without its horizon (the backtest's ablation). `order`: the
   // later turns aim at its first group alive (the rollout's kill orders), null: the solver's own targets.
   const records = simulate(input, plan, maxTurns, seed, budget, Infinity, order, { depth: 0 }, false, scripts) ?? [];
-  return { records, policyTurns: budget.policyTurns, policyNodes: budget.policyNodes };
+  return { records, policyTurns: budget.policyTurns, policyNodes: budget.policyNodes,
+    ...(budget.bossReference ? { bossReference: budget.bossReference } : {}) };
 }
 
 interface SampleValue {

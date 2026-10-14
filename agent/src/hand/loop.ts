@@ -52,7 +52,7 @@ import { SlController } from "../sl/controller.js";
 import { LEAST_LOSS_LABEL } from "../sl/judge.js";
 import { asArray, asRecord, bool, num, str, toJsonValue, type JsonValue } from "../core/util/json.js";
 import { OUTCOME_BASIS_KEY } from "../knowledge/outcome-facts.js";
-import { BUILD_SIM_MIN_SHOWN, withBossSim, type BuildSimSetup } from "../sim/build-sim-facts.js";
+import { BUILD_SIM_MIN_SHOWN, bossEvaluationPending, withBossSim, type BuildSimSetup } from "../sim/build-sim-facts.js";
 import { withConstruction } from "../construction/adapter.js";
 import { withConstructionEvaluation } from "../construction/consumer.js";
 import { passivePiecesOptions } from "../reflex/passive-pieces.js";
@@ -718,6 +718,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
     // SL_RETRY_EXPLORE_ANCHOR: a first attempt's decision points recorded (nothing else changes).
     const slRecord = slEnv ? undefined : sl?.recordFor(state);
     const env: DecisionEnv = {
+      requiredBossEvaluation: str(asRecord(state.run?.raw)["character_id"]).toLowerCase() === "silent",
       state,
       knowledge,
       brief,
@@ -911,7 +912,37 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
             question = decision.kind === "ask" ? decision.questions[spec.question] : question;
             bossSimRecord = simmed.record;
             const r = simmed.record;
-            onEvent({ type: "note", message: `boss sim on ${decision.label}: ${r["error"] ? `failed (${String(r["error"])}), clock kept` : r["skipped"] ? `not run (${String(r["skipped"])})` : `${String(r["samples"])} samples per option, ${String(r["ms"])} ms`}` });
+            onEvent({ type: "note", message: `boss sim on ${decision.label}: ${r["error"] ? `incomplete (${String(r["error"])})` : r["skipped"] ? `not run (${String(r["skipped"])})` : `${String(r["samples"])} samples per option, ${String(r["ms"])} ms`}` });
+          }
+        }
+        const evaluationPending = bossEvaluationPending(decision, state, bossSimRecord);
+        if (evaluationPending) {
+          stats.waits += 1;
+          const row: DecisionRecord = {
+            ts: new Date().toISOString(), mode, screen: state.screen, session: `${state.session.mode}/${state.session.phase}`,
+            floor: state.run?.floor ?? null, turn: state.turn, label: decision.label, decider: "code",
+            fingerprint: stateFingerprint, questions: toJsonValue(decision.kind === "ask" ? decision.questions : {}) as Record<string, JsonValue>,
+            rationale: evaluationPending, confidence: null, fallback: false, reasked: false, no_jev: false,
+            reused_answer: false, request_ids: [], latency_ms: { plan: Number(asRecord(bossSimRecord)["ms"] ?? 0), jev: 0, action: 0 },
+            usage: { input_tokens: 0, output_tokens: 0 }, boss_sim: bossSimRecord ?? { completion: { required: true, status: "pending" }, error: evaluationPending },
+            ...(runId ? { run_id: runId } : {}), observed_ts: observedTs,
+            result: "not dispatched: required boss evaluation pending",
+          };
+          log.write(row);
+          logState(state, stateFingerprint, row.ts);
+          onEvent({ type: "wait", screen: state.screen, reason: evaluationPending });
+          await sleep(Math.max(pollIntervalMs, 5000));
+          continue;
+        }
+        if (env.requiredBossEvaluation && bossSimRecord && !asRecord(bossSimRecord)["skipped"]) {
+          // Complete computation may outlive the old latency target. Re-read before spending a model call.
+          let changed = true;
+          try { changed = fingerprint(await client.state()) !== stateFingerprint; } catch { /* retry without dispatch */ }
+          if (changed) {
+            stats.staleSkips += 1;
+            onEvent({ type: "note", message: "state changed or unavailable after required boss evaluation; re-planning" });
+            await sleep(pollIntervalMs);
+            continue;
           }
         }
         // V5 runs through the actual consumer in shadow mode before its predictions may guide choices.

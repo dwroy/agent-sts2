@@ -636,6 +636,8 @@ export function reviveThrough(startHp: number, losses: number[], revives: Revive
 }
 
 export interface SolverInput {
+  /** Opt-in measurement only; never changes search weights, rules or sampled actions. */
+  captureBossMargin?: boolean;
   /** Extra value of HP carried into an observed following fight (character evidence only). */
   continuationValue?: import("./continuation-value.js").ContinuationValue;
   /** Silent A10's observed first boss: compare dry HP-saving plays before a poison finish. */
@@ -886,6 +888,8 @@ export interface Outcome {
     husk?: boolean;
   }[];
   incomingAfterBlock: number;
+  /** Model HP damage from enemy responses and held/end-turn statuses, after mitigation; own costs stay separate. */
+  receivedHpDamage?: number | null;
   energyLeft: number;
   vulnerableApplied: number;
   weakApplied: number;
@@ -3612,6 +3616,13 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
           ...(enemy.maxHp >= 1_000_000 ? { husk: true } : {}),
         })),
       incomingAfterBlock,
+      ...(input.captureBossMargin ? { receivedHpDamage:
+        selfLoss === 0 && sim.hpLossEvents === 0 && sim.potionHeal === 0 && regenHeal === 0 &&
+        startTurnLoss === 0 &&
+        cap == null && !otherDeath && (!dies || revives.length === 0 || revived !== undefined)
+          ? revived ? Math.max(0, input.player.hp + revived.reviveHp - revived.hp)
+            : Math.min(input.player.hp, incomingAfterBlock + heldHpLoss + Math.max(0, disintegration - blockAtEnd))
+          : null } : {}),
       energyLeft: sim.energy,
       vulnerableApplied: sim.vulnerableApplied,
       weakApplied: sim.weakApplied,
