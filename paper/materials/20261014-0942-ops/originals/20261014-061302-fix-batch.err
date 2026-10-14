@@ -1,0 +1,500 @@
+学习者 codex / silent-boss-calibration 已启动（尝试 1，PID 2610051），日志 /home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261014-061307-silent-boss-calibration.jsonl
+[00:17] 说：我先确认工作树状态、合入 main，并阅读学习协议和现有校准流程；随后检查 live 的静默校准记录，按固定切分执行刷新，保留样本不足和未达标项的证据。 
+[00:23] 命令 /bin/bash -c 'git status --short'（退出码 0）
+[00:40] 命令 /bin/bash -c "sed -n '1,220p' README.md"（退出码 0）
+[00:43] 命令 /bin/bash -c "rg --files -g 'AGENTS.md' -g 'STATE-*.md' -g '*fix-batch*' -g '*boss*' paper/materials agent/tools/boss-si（退出码 0）
+[00:43] 命令 /bin/bash -c 'git merge --no-edit main'（退出码 0）
+[00:53] 命令 /bin/bash -c "sed -n '1,230p' paper/materials/STATE-2026-10-12.md"（退出码 0）
+[00:56] 命令 /bin/bash -c "sed -n '1,240p' docs/learning-code-proposals.md"（退出码 0）
+[00:56] 命令 /bin/bash -c "sed -n '1,260p' docs/learning-protocol.md"（退出码 0）
+[00:56] 命令 /bin/bash -c 'tail -n 65 paper/materials/decision-log.md'（退出码 0）
+[00:56] 命令 /bin/bash -c "wc -l notes/ops-handoff.md docs/boss-sim.md agent/tools/boss-sim/refresh-silent.py; rg --files agent/tools（退出码 0）
+[01:02] 说：main 已合入，仓库已有静默校准和定期刷新实现。这批将沿用现有入口，重点核对 live 的固定切分、触发阈值和可信表，避免重新拟合旧样本或发布空版本。 
+[01:07] 命令 /bin/bash -c "sed -n '1,210p' docs/learning-protocol.md"（退出码 0）
+[01:07] 命令 /bin/bash -c "sed -n '1,190p' docs/learning-code-proposals.md"（退出码 0）
+[01:07] 命令 /bin/bash -c "wc -l notes/ops-handoff.md; rg -n '"'^##|''^###'"' notes/ops-handoff.md; rg --files agent/tools/boss-sim; （退出码 0）
+[01:23] 命令 /bin/bash -c "sed -n '1,200p' agent/tools/boss-sim/refresh-silent.py"（退出码 0）
+[01:23] 命令 /bin/bash -c "rg -n '静默猎手 boss 模拟校准' notes/fix-queue-v4.md; rg -n 'live-merge|锁内|flock|refresh|preflight|预检|save-live|me（退出码 0）
+[01:24] 命令 /bin/bash -c "sed -n '250,380p' docs/boss-sim.md; sed -n '435,538p' docs/boss-sim.md; sed -n '1205,1230p' docs/boss-sim.（退出码 0）
+[01:24] 命令 /bin/bash -c "python3 - <<'PY'
+[01:24] import json
+[01:24] from pathlib import Path
+[01:24] p=Path('/home/dw/Projects/agent-sts2/.worktrees/live（退出码 0）
+[01:31] 命令 /bin/bash -c "sed -n '1,175p' agent/tools/boss-sim/refresh-silent.py"（退出码 0）
+[01:41] 命令 /bin/bash -c "python3 - <<'PY'
+[01:41] import json
+[01:41] from pathlib import Path
+[01:41] p=Path('/home/dw/Projects/agent-sts2/.worktrees/live（退出码 0）
+[01:43] 命令 /bin/bash -c "rg -n 'live-merge|锁内|flock|refresh|preflight|预检|save-live|merge-live' notes/ops-handoff.md | tail -n 12; t（退出码 0）
+[02:02] 命令 /bin/bash -c "sed -n '641,670p' notes/fix-queue-v4.md; sed -n '1,110p' learner/tasks/fix-batch.md; sed -n '1,160p' docs/（退出码 0）
+[02:20] 命令 /bin/bash -c "sed -n '1,180p' agent/tools/boss-sim/cadence.py; rg -n '"'^def |cadence|frozen_split'"' agent/tools/boss-s（退出码 0）
+[02:24] 说：live 的固定调参集为 107 场，验证集为 374 场。现有 B2/B3 可信名单分别有 7/6 个 boss；F49 虽有 20 场成功验证，残差和打穿比
+[02:35] 命令 /bin/bash -c "ps -eo pid,ppid,ni,etime,args | rg 'refresh-silent.py|backtest.ts|build-[a-z]|refresh.sh' | head -n 20; ls（退出码 0）
+[02:44] 命令 /bin/bash -c "ls -lh /home/dw/Projects/agent-sts2/logs/runs.jsonl /home/dw/Projects/agent-sts2/logs/sl-attempts.jsonl; l（退出码 0）
+[02:46] 命令 /bin/bash -c "sed -n '318,380p' ops/learner_jobs.py; sed -n '1,70p' notes/ops-handoff.md"（退出码 0）
+[03:00] 命令 /bin/bash -c "ls -lh learner/runs/20261014-061307-silent-boss-calibration/dataset; tail -n 5 learner/runs/20261014-06130（退出码 0）
+[03:12] 命令 /bin/bash -c "rg --files learner/runs/20261013-161307-silent-boss-calibration -g '*.py' -g 'publication.json' -g '*repla（退出码 0）
+[03:23] 命令 /bin/bash -c "date; sed -n '1,210p' learner/runs/20261013-161307-silent-boss-calibration/prepare.py; sed -n '1,180p' lea（退出码 0）
+[03:45] 命令 /bin/bash -c "python3 - <<'PY'
+[03:45] import json,sys
+[03:45] from pathlib import Path
+[03:45] sys.path.insert(0,'agent/tools/boss-sim')
+[03:45] from c（退出码 0）
+[03:50] 说：已核到 21 次新实际 boss 结局，达到刷新阈值，最高进阶仍是 A10。我会冻结上一批模型，只重放新验证样本并用历史对照核验结果；旧调参 keys、切点和 
+[03:55] 命令 /bin/bash -c "ls -lh learner/runs/20261014-061307-silent-boss-calibration/dataset; tail -n 4 learner/runs/20261014-06130（退出码 0）
+[04:09] 命令 /bin/bash -c 'mkdir -p learner/runs/20261014-061307-silent-boss-calibration
+[04:09] PATH="$HOME/.local/node/bin:$PATH" TMPDIR=/h（退出码 130）
+[04:28] 命令 /bin/bash -c "ls -lh learner/runs/20261014-061307-silent-boss-calibration; rg --files learner/runs/20261013-161307-silen（退出码 0）
+[04:40] 命令 /bin/bash -c "python3 - <<'PY'
+[04:40] from pathlib import Path
+[04:40] import json
+[04:40] s=Path('learner/runs/20261014-061307-silent-boss-cal（退出码 0）
+[04:46] 命令 /bin/bash -c "sed -n '1,190p' learner/runs/20261013-161307-silent-boss-calibration/isolate-source.py; cat learner/runs/2（退出码 0）
+[05:22] 命令 /bin/bash -c "python3 - <<'PY'
+[05:22] import json,collections
+[05:22] from pathlib import Path
+[05:22] s=Path('learner/runs/20261014-061307-sil（退出码 0）
+[05:29] 命令 /bin/bash -c "rg -n '统一发布编号' docs/eval.md; rg --files eval ops | rg 'version|release|preflight'; tail -n 4 learner/runs/（退出码 0）
+[05:52] 命令 /bin/bash -c "date; tail -n 3 learner/runs/20261014-061307-silent-boss-calibration/replay.log; ls -lh learner/runs/20261（退出码 2）
+[06:15] 命令 /bin/bash -c 'nice -n 19 python3 learner/runs/20261014-061307-silent-boss-calibration/audit-sources.py > learner/runs/20（退出码 0）
+[06:23] 命令 /bin/bash -c "rg -n 'source-check|source-snapshot|logdb-venv|ledger.jsonl' learner/runs/20261013-161307-silent-boss-cali（退出码 0）
+[06:44] 命令 /bin/bash -c "python3 - <<'PY'
+[06:44] from pathlib import Path
+[06:44] import json
+[06:44] s=Path('learner/runs/20261014-061307-silent-boss-cal（退出码 0）
+[06:53] 改文件 [{"path":"/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261014-061307-silent-boss-calib
+[07:08] 说：本次提取到 284 个已结束静默局、1,245 次 boss 尝试，502 场有实际结局且具备开场帧；21 场新增样本均为 A10，15 胜、6 死，没有新增 
+[07:16] 命令 /bin/bash -c 'wc -l learner/runs/20261014-061307-silent-boss-calibration/pinned-results/results-0.jsonl; tail -n 6 learn（退出码 0）
+[07:18] 命令 /bin/bash -c 'nice -n 19 python3 learner/runs/20261014-061307-silent-boss-calibration/audit-sources.py > learner/runs/20（退出码 0）
+[07:33] 命令 /bin/bash -c "python3 - <<'PY'
+[07:33] from pathlib import Path
+[07:33] s=Path('learner/runs/20261014-061307-silent-boss-calibration')
+[07:33] p（退出码 0）
+[07:42] 改文件 [{"path":"/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261014-061307-silent-boss-calib
+[07:58] 命令 /bin/bash -c "python3 - <<'PY'
+[07:58] import json
+[07:58] from pathlib import Path
+[07:58] p=Path('learner/runs/20261014-061307-silent-boss-cal（退出码 0）
+[08:01] 命令 /bin/bash -c 'exec nice -n 19 python3 learner/runs/20261014-061307-silent-boss-calibration/run-command.py isolate-source（退出码 0）
+[08:23] 命令 /bin/bash -c "date; wc -l learner/runs/20261014-061307-silent-boss-calibration/pinned-results/results-0.jsonl; sed -n '1（退出码 0）
+[09:52] 改文件 [{"path":"/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261014-061307-silent-boss-calib
+[10:08] 命令 /bin/bash -c "python3 - <<'PY'
+[10:08] import json
+[10:08] from pathlib import Path
+[10:08] p=Path('learner/runs/20261014-061307-silent-boss-cal（退出码 0）
+[10:27] 说：原始来源核验已通过：1,243 个开场帧的 SHA、角色和进阶一致，1,245 次尝试均有此前的运行配置记录。固定模型重放已完成 18/46 个起点结果；完成后
+[10:32] 命令 /bin/bash -c "rg -n 'live-merge.lock|flock|refresh|check.*process|procs' ops/refresh.sh ops/refresh-*.sh ops/*.py | head（退出码 0）
+[10:39] 命令 /bin/bash -c "rg --files knowledge ops | rg '/refresh|live-|preflight'; rg -n 'refresh_knowledge|live-merge.lock|refresh（退出码 0）
+[10:46] 命令 /bin/bash -c "sed -n '1,155p' knowledge/builders/refresh.sh; sed -n '447,468p' ops/report.py; rg -n 'refresh.*pid|build.（退出码 1）
+[11:08] 命令 /bin/bash -c 'tail -n 12 /home/dw/Projects/agent-sts2/ops/refresh.log; git -C /home/dw/Projects/agent-sts2/.worktrees/li（退出码 0）
+[11:17] 命令 /bin/bash -c "rg -n 'def main|write_text|json.dump|gate|backtest|print|replace' knowledge/builders/build-fight-value.py （退出码 0）
+[12:09] 命令 /bin/bash -c "python3 - <<'PY'
+[12:09] from pathlib import Path
+[12:09] s=Path('learner/runs/20261014-061307-silent-boss-calibration')
+[12:09] p（退出码 0）
+[12:18] 改文件 [{"path":"/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261014-061307-silent-boss-calib
+[12:48] 命令 /bin/bash -c "sed -n '1390,1445p' knowledge/builders/build-fight-value.py; sed -n '1900,1922p' knowledge/builders/build-（退出码 0）
+[13:37] 命令 /bin/bash -c "sed -n '1609,1658p' knowledge/builders/build-fight-value.py; sed -n '1,35p' /home/dw/Projects/agent-sts2/.（退出码 0）
+[13:45] 改文件 [{"path":"/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261014-061307-silent-boss-calib
+[14:14] 命令 /bin/bash -c "python3 - <<'PY'
+[14:14] from pathlib import Path
+[14:14] s=Path('learner/runs/20261014-061307-silent-boss-calibration')
+[14:14] f（退出码 0）
+[15:11] 改文件 [{"path":"/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261014-061307-silent-boss-calib
+[15:12] 命令 /bin/bash -c 'date; wc -l learner/runs/20261014-061307-silent-boss-calibration/pinned-results/results-0.jsonl; ls -lh le（退出码 0）
+[15:17] 说：重放已完成 32/46 个起点结果，尚未发布候选。历史 481 场输入和逐回合记录与上一批完全一致；当前生产模型与固定实验模型的差异也已单独记录，这次报告会明确
+[15:50] 命令 /bin/bash -c "sed -n '211,280p' agent/tools/boss-sim/silent_calibration.py; rg -n 'sandbox|check|gitleaks' learner/runs/（退出码 0）
+[16:28] 改文件 [{"path":"/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261014-061307-silent-boss-calib
+[16:30] 命令 /bin/bash -c 'wc -l learner/runs/20261014-061307-silent-boss-calibration/pinned-results/results-0.jsonl; tail -n 2 learn（退出码 0）
+[16:47] 命令 /bin/bash -c "python3 - <<'PY'
+[16:47] from pathlib import Path
+[16:47] import json
+[16:47] s=Path('learner/runs/20261014-061307-silent-boss-cal（退出码 0）
+[16:52] 说：目前停留在 1269Y20SKHUM 的 F48 女王战重放，保留原定 200 样本配置继续运行。报告会区分样本数量和质量门槛：F49 已满足数量要求，仍因指标
+[17:04] 命令 /bin/bash -c "python3 - <<'PY'
+[17:04] import json,hashlib,time
+[17:04] from pathlib import Path
+[17:04] s=Path('learner/runs/20261014-061307-si（退出码 0）
+[17:32] 命令 /bin/bash -c "date; wc -l learner/runs/20261014-061307-silent-boss-calibration/pinned-results/results-0.jsonl; python3 -（退出码 0）
+[17:59] 命令 /bin/bash -c "exec nice -n 19 python3 - <<'PY'
+[17:59] import ast,json
+[17:59] from pathlib import Path
+[17:59] s=Path('learner/runs/20261014-06（退出码 0）
+[18:47] 命令 /bin/bash -c 'wc -l learner/runs/20261014-061307-silent-boss-calibration/pinned-results/results-0.jsonl; date'（退出码 0）
+[18:55] 说：女王战的首回合起点已完成，约耗时 130 秒，战前起点仍在运行。其余已完成结果没有模拟错误；随后将核验全部结果和幂等性，再依次运行测试、读取消费者和合入 liv
+[19:48] 命令 /bin/bash -c 'date; wc -l learner/runs/20261014-061307-silent-boss-calibration/pinned-results/results-0.jsonl; tail -n 2（退出码 0）
+[20:35] 命令 /bin/bash -c "wc -l learner/runs/20261014-061307-silent-boss-calibration/pinned-results/results-0.jsonl; tail -n 2 learn（退出码 0）
+[21:22] 命令 /bin/bash -c 'date; wc -l learner/runs/20261014-061307-silent-boss-calibration/pinned-results/results-0.jsonl; tail -n 2（退出码 0）
+[21:33] 说：重放已完成 38/46 个起点结果。旧模型、历史输入和来源核验均通过，剩余结果尚未进入可信名单；测试将采用单 worker，减少运行时竞争。 
+[22:33] 命令 /bin/bash -c 'date; wc -l learner/runs/20261014-061307-silent-boss-calibration/pinned-results/results-0.jsonl; tail -n 2（退出码 0）
+[23:00] 说：剩余时间主要在同族战的两种起点重放。参数和准入标准仍保持固定；测试所需的源码及夹具快照已准备并逐 SHA 核验，旧报告和未完成产物均保留。 
+[24:09] 改文件 [{"path":"/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261014-061307-silent-boss-calib
+[24:13] 命令 /bin/bash -c 'date; wc -l learner/runs/20261014-061307-silent-boss-calibration/pinned-results/results-0.jsonl'（退出码 0）
+[25:54] 命令 /bin/bash -c "python3 - <<'PY'
+[25:54] from pathlib import Path
+[25:54] s=Path('learner/runs/20261014-061307-silent-boss-calibration')
+[25:54] p（退出码 0）
+[26:32] 说：重放已完成 43/46 个起点结果，随后会自动核对两场历史对照、生成校准结果并运行沙箱测试。live 上线流程已准备好，包含保存刷新数据、检查重叠、合后测试及失
+[26:36] 命令 /bin/bash -c 'date; tail -n 3 learner/runs/20261014-061307-silent-boss-calibration/finish.log; wc -l learner/runs/202610（退出码 0）
+[27:38] 命令 /bin/bash -c 'date; wc -l learner/runs/20261014-061307-silent-boss-calibration/pinned-results/results-0.jsonl; tail -n 3（退出码 1）
+[27:44] 说：现在只剩 EEVP0QTLMSX9 的 F48 女王战两个起点。全部结果完成后会核验两种幂等情况：相同内容复用完成档案，以及不足 20 次新结局时跳过；两者都须
+[28:38] 命令 /bin/bash -c 'date; wc -l learner/runs/20261014-061307-silent-boss-calibration/pinned-results/results-0.jsonl; ls -lh le（退出码 2）
+[29:39] 说：最后一场仍在重放，尚未生成候选或开始发布。当前使用一个模拟进程；历史结果已复用，旧调参 keys、切点和模型输入均保持固定。 
+[30:05] 改文件 [{"path":"/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261014-061307-silent-boss-calib
+[30:08] 命令 /bin/bash -c 'date; wc -l learner/runs/20261014-061307-silent-boss-calibration/pinned-results/results-0.jsonl'（退出码 0）
+[31:51] 命令 /bin/bash -c 'nice -n 19 python3 learner/runs/20261014-061307-silent-boss-calibration/run-command.py audit-board /home/d（退出码 0）
+[31:53] 命令 /bin/bash -c 'date; wc -l learner/runs/20261014-061307-silent-boss-calibration/pinned-results/results-0.jsonl; tail -n 2（退出码 0）
+[31:57] 说：46 个起点结果已全部完成。现在正在核对历史对照并生成最终可信表，随后自动进入单 worker 沙箱测试；固定切分和模型参数的核验结果会写入报告。 
+[32:00] 命令 /bin/bash -c 'tail -n 6 learner/runs/20261014-061307-silent-boss-calibration/finish.log; ls -lh learner/runs/20261014-06（退出码 2）
+[32:16] 命令 /bin/bash -c "python3 - <<'PY'
+[32:16] from pathlib import Path
+[32:16] import json
+[32:16] s=Path('learner/runs/20261014-061307-silent-boss-cal（退出码 0）
+[33:11] 改文件 [{"path":"/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261014-061307-silent-boss-calib
+[33:13] 命令 /bin/bash -c 'date; tail -n 6 learner/runs/20261014-061307-silent-boss-calibration/source-sandbox.log'（退出码 0）
+[33:20] 说：新验证支持撤回知识恶魔的 B2 可信分类：39 场的打穿比升至 1.325，超过原定 1.3 上限；B3 为 1.347，继续低可信。可信名单因此变为 B2/B
+[34:17] 命令 /bin/bash -c "python3 - <<'PY'
+[34:17] from pathlib import Path
+[34:17] s=Path('learner/runs/20261014-061307-silent-boss-calibration')
+[34:17] p（退出码 0）
+[35:02] 命令 /bin/bash -c 'date; tail -n 12 learner/runs/20261014-061307-silent-boss-calibration/source-sandbox.log; ls -lh learner/r（退出码 0）
+[35:12] 说：校准结果已完成：验证集为 395 场，其中 B2/B3 各 393 场模拟成功，Brier 为 0.1149/0.1179。A10 残差为 +4.8/+5.2 
+[35:35] 命令 /bin/bash -c "sed -n '1,70p' agent/vitest.config.ts; tail -n 8 learner/runs/20261013-161307-silent-boss-calibration/sour（退出码 0）
+[36:24] 命令 /bin/bash -c 'exec nice -n 19 python3 learner/runs/20261014-061307-silent-boss-calibration/check-after-replay.py'（退出码 130）
+[36:25] 命令 /bin/bash -c "python3 - <<'PY'
+[36:25] from pathlib import Path
+[36:25] import json
+[36:25] s=Path('/home/dw/Projects/agent-sts2/.worktrees/sile（退出码 0）
+[36:35] 说：完整套件改用仓库默认的 4-worker 配置继续自测，原单 worker 中断记录保留为 exit 130，不据此认定卡死。源码、夹具、断言和排除名单保持相同
+[37:11] 改文件 [{"path":"/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261014-061307-silent-boss-calib
+[37:14] 命令 /bin/bash -c 'date; tail -n 7 learner/runs/20261014-061307-silent-boss-calibration/source-sandbox.log'（退出码 0）
+[38:29] 命令 /bin/bash -c 'date; tail -n 10 learner/runs/20261014-061307-silent-boss-calibration/source-sandbox.log; ls -lh learner/r（退出码 0）
+[39:07] 说：12 个 boss 的验证数量均已达到 10 场，数量缺口都为 0；未准入的 6 个仍因 Brier、胜率差或打穿比超标保持低可信。完整测试尚未返回结果，暂不进
+[40:22] 命令 /bin/bash -c 'date; tail -n 12 learner/runs/20261014-061307-silent-boss-calibration/source-sandbox.log; ls -lh learner/r（退出码 0）
+[41:35] 命令 /bin/bash -c 'date; tail -n 12 learner/runs/20261014-061307-silent-boss-calibration/source-sandbox.log'（退出码 0）
+[42:19] 说：沙箱套件出现一项失败：既有 rollout 排序不变性测试运行约 165 秒，超过其 120 秒限时。这项代码和夹具本批均未修改。我会保留完整失败记录，等套件结
+[43:43] 命令 /bin/bash -c 'date; tail -n 14 learner/runs/20261014-061307-silent-boss-calibration/source-sandbox.log'（退出码 0）
+[44:07] 命令 /bin/bash -c 'PATH="$HOME/.local/node/bin:$PATH" TMPDIR=/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/（退出码 1）
+[45:03] 命令 /bin/bash -c 'date; tail -n 12 learner/runs/20261014-061307-silent-boss-calibration/source-sandbox.log'（退出码 0）
+[45:48] 命令 /bin/bash -c "printf '1\\n' > learner/runs/20261014-061307-silent-boss-calibration/source-sandbox.exit
+[45:48] rg -n -A 7 'FAIL （退出码 0）
+[46:34] 说：完整源检查已结束：tsc 通过，3,610 项通过，唯一失败是上述 120 秒超时；完整退出码 1 已保留。正在按原限时单独复验这一项，并补跑因套件提前退出而尚
+[47:15] 改文件 [{"path":"/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261014-061307-silent-boss-calib
+[47:16] 命令 /bin/bash -c 'date; tail -n 10 learner/runs/20261014-061307-silent-boss-calibration/source-supplement.log'（退出码 0）
+[47:25] 命令 /bin/bash -c 'export PATH="$HOME/.local/node/bin:$PATH"
+[47:25] export TMPDIR=/home/dw/Projects/agent-sts2/.worktrees/silent-bos（退出码 0）
+[48:00] 命令 /bin/bash -c 'date; tail -n 12 learner/runs/20261014-061307-silent-boss-calibration/source-supplement.log'（退出码 0）
+[48:20] 说：单独复验通过：排序不变性测试用原 120 秒预算在约 89 秒完成，paths 的 11 项也通过。原整套超时记录保留，同一快照的沙箱组合覆盖为 378 文件、
+[48:35] 命令 /bin/bash -c 'export PATH="$HOME/.local/node/bin:$PATH"
+[48:35] export TMPDIR=/home/dw/Projects/agent-sts2/.worktrees/silent-bos（退出码 0）
+[48:35] 命令 /bin/bash -c "date; python3 - <<'PY'
+[48:35] from pathlib import Path
+[48:35] import json,re
+[48:35] s=Path('learner/runs/20261014-061307-silent（退出码 0）
+[49:02] 命令 /bin/bash -c 'tail -n 4 learner/runs/20261014-061307-silent-boss-calibration/python-calibration.log; tail -n 4 learner/r（退出码 0）
+[49:35] 命令 /bin/bash -c "date
+[49:35] nice -n 19 python3 - <<'PY'
+[49:35] import hashlib,json
+[49:35] from pathlib import Path
+[49:35] s=Path('learner/runs/2026101（退出码 0）
+[50:00] 命令 /bin/bash -c "git status --short; tail -n 3 learner/runs/20261014-061307-silent-boss-calibration/seal.log; head -n 1 lea（退出码 0）
+[50:36] 命令 /bin/bash -c 'git add -- knowledge/characters/silent/boss-trust.json paper/materials/silent/boss-sim-calibration.md expe（退出码 0）
+[51:14] 命令 /bin/bash -c 'cat learner/runs/20261014-061307-silent-boss-calibration/source-commit.txt; tail -n 4 learner/runs/2026101（退出码 0）
+[52:26] 命令 /bin/bash -c "date
+[52:26] python3 - <<'PY'
+[52:26] import json
+[52:26] from pathlib import Path
+[52:26] s=Path('learner/runs/20261014-061307-silent-bos（退出码 0）
+[52:28] 命令 /bin/bash -c 'exec nice -n 19 python3 learner/runs/20261014-061307-silent-boss-calibration/publish.py c53d5273269a3b82af（退出码 3）
+[53:15] 说：Python 校准 12 项、调度 45 项和实际 B2/B3 读取探针均通过。候选已提交为 `c53d5273269a3b82af3c7e62f5f8caab
+[53:20] 命令 /bin/bash -c "date; python3 - <<'PY'
+[53:20] from pathlib import Path
+[53:20] import json
+[53:20] s=Path('learner/runs/20261014-061307-silent-bo（退出码 1）
+[54:57] 改文件 [{"path":"/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261014-061307-silent-boss-calib
+[56:18] 命令 /bin/bash -c "date; python3 - <<'PY'
+[56:18] from pathlib import Path
+[56:18] import json
+[56:18] s=Path('learner/runs/20261014-061307-silent-bo（退出码 1）
+[57:05] 说：live 合入锁当前由另一会话持有，本任务尚未写入 live。候选、自测结果和首个锁忙回执均已保存；我会等待锁释放后接续，不中断现有锁持有者或对局。 
+[58:40] 命令 /bin/bash -c "date; nice -n 19 python3 - <<'PY'
+[58:40] from pathlib import Path
+[58:40] import hashlib,json
+[58:40] p=Path('experiments/boss-si（退出码 0）
+[59:41] 命令 /bin/bash -c 'exec nice -n 19 python3 learner/runs/20261014-061307-silent-boss-calibration/wait-publication.py'（退出码 130）
+[59:43] 命令 /bin/bash -c "nice -n 19 python3 - <<'PY'
+[59:43] from pathlib import Path
+[59:43] import subprocess,json
+[59:43] p=Path('experiments/boss-sim/s（退出码 0）
+[60:25] 说：封存复核发现，Git 忽略规则使首个提交漏入了 9 份已有日志，包含原失败和补验记录。我暂停了本任务的锁等待，保留原提交并追加补档提交；数据和模型不变。补档完整
+[60:45] 改文件 [{"path":"/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261014-061307-silent-boss-calib
+[60:49] 命令 /bin/bash -c 'git add -f -- experiments/boss-sim/silent/5b6357749884b0a49942460c722589cc5835e14233f51412772692fc3bf39cc8（退出码 0）
+[61:59] 命令 /bin/bash -c 'cat learner/runs/20261014-061307-silent-boss-calibration/source-commit.txt; git status --short; tail -n 3 （退出码 0）
+[62:39] 命令 /bin/bash -c "date
+[62:39] nice -n 19 python3 - <<'PY'
+[62:39] from pathlib import Path
+[62:39] import subprocess,json,hashlib
+[62:39] s=Path('learner/r（退出码 0）
+[63:57] 命令 /bin/bash -c "date; python3 - <<'PY'
+[63:57] from pathlib import Path
+[63:57] import json
+[63:57] s=Path('learner/runs/20261014-061307-silent-bo（退出码 1）
+[64:08] 说：补档提交 `57afeb1dc9407ba07797fc04ad86a271496c313c` 已完成，gitleaks 通过。封存清单的 62 个文件均已从 
+[65:58] 命令 /bin/bash -c "date; git -C /home/dw/Projects/agent-sts2/.worktrees/live status --short --untracked-files=all; git -C /ho（退出码 0）
+[66:23] 命令 /bin/bash -c "date; python3 - <<'PY'
+[66:23] from pathlib import Path
+[66:23] import json
+[66:23] s=Path('learner/runs/20261014-061307-silent-bo（退出码 0）
+[67:18] 说：候选已合入 live，实际提交为 `19b02dcc884825226c193ac1616f0c397f38fae9`。锁内已先保存知识刷新为 `309f443
+[71:38] 命令 /bin/bash -c 'date; tail -n 9 learner/runs/20261014-061307-silent-boss-calibration/live-sandbox.log; ls -lh learner/runs（退出码 0）
+[72:00] 说：合后沙箱测试仍在运行，当前未输出新失败，live 提交仍为 `19b02dcc884825226c193ac1616f0c397f38fae9`。测试结束后还会
+[73:15] 命令 /bin/bash -c "nice -n 19 python3 - <<'PY'
+[73:15] import json
+[73:15] from pathlib import Path
+[73:15] s=Path('learner/runs/20261014-061307-sile（退出码 0）
+[74:09] 说：合后测试已运行约 7 分钟，目前尚无失败输出。封存、源码祖先和其他文件保留情况均已核验；我继续等待完整结果，随后完成版本登记及反证双通知。 
+[75:09] 命令 /bin/bash -c 'date; tail -n 8 learner/runs/20261014-061307-silent-boss-calibration/live-sandbox.log'（退出码 0）
+[75:58] 说：合后套件仍在执行，发布登记尚未开始。通知稿已写明知识恶魔 B2 的旧分类、新分类、三场证据、预期影响和回退方法；实际发布后再追加到两个收件箱，并保留后续确认状态
+[76:49] 命令 /bin/bash -c 'date; tail -n 9 learner/runs/20261014-061307-silent-boss-calibration/live-sandbox.log'（退出码 0）
+[77:56] 说：合后测试尚未返回最终结果，目前没有失败输出。发布、回退和登记流程均已就绪；我继续等待实际检查结果。 
+[78:48] 命令 /bin/bash -c 'date; tail -n 9 learner/runs/20261014-061307-silent-boss-calibration/live-sandbox.log'（退出码 0）
+[79:08] 说：合后检查仍在进行，尚无最终结果。 
+[80:00] 命令 /bin/bash -c 'date; tail -n 8 learner/runs/20261014-061307-silent-boss-calibration/live-sandbox.log'（退出码 0）
+[81:09] 说：合后测试继续执行，目前未输出失败；发布登记仍在等待检查完成。 
+[82:08] 命令 /bin/bash -c 'date; tail -n 9 learner/runs/20261014-061307-silent-boss-calibration/live-sandbox.log'（退出码 0）
+[83:09] 命令 /bin/bash -c "date; nice -n 19 python3 - <<'PY'
+[83:09] from pathlib import Path
+[83:09] s=Path('learner/runs/20261014-061307-silent-bos（退出码 0）
+[83:12] 说：合后检查还在运行，当前没有新失败输出；实际提交、原检查失败和补验记录均已保存。 
+[84:09] 命令 /bin/bash -c 'date; tail -n 9 learner/runs/20261014-061307-silent-boss-calibration/live-sandbox.log'（退出码 0）
+[84:40] 说：合后套件仍未结束，当前没有失败输出。 
+[85:43] 命令 /bin/bash -c 'date; tail -n 9 learner/runs/20261014-061307-silent-boss-calibration/live-sandbox.log'（退出码 0）
+[86:19] 说：完整检查仍在执行；已合入提交和回退点均保持，尚未登记发布。 
+[87:11] 命令 /bin/bash -c 'date; tail -n 9 learner/runs/20261014-061307-silent-boss-calibration/live-sandbox.log'（退出码 0）
+[87:53] 说：合后测试还在运行，目前无失败输出。我会等它完成后再给出最终发布和回报。 
+[88:51] 命令 /bin/bash -c 'date; tail -n 9 learner/runs/20261014-061307-silent-boss-calibration/live-sandbox.log'（退出码 0）
+[89:20] 说：仍在等待合后完整检查结果。 
+[90:16] 命令 /bin/bash -c 'date; tail -n 9 learner/runs/20261014-061307-silent-boss-calibration/live-sandbox.log'（退出码 0）
+[91:36] 说：合后套件出现一项失败，来自既有 `learner-empty-fix` 的缺检查回执用例。本批未改该代码或夹具。我会保留原记录，等待完整结果；若合后检查失败，流
+[91:40] 命令 /bin/bash -c "rg -n -A 12 -B 5 'keeps new output' /home/dw/Projects/agent-sts2/.worktrees/live/agent/tests/learner-empty（退出码 0）
+[93:28] 命令 /bin/bash -c 'date; tail -n 18 learner/runs/20261014-061307-silent-boss-calibration/live-sandbox.log'（退出码 0）
+[93:46] 说：合后套件目前有两项失败：`learner-empty-fix` 的缺检查回执用例，以及 `ascension-audit-path` 的独立工作树报告用例。两项
+[94:39] 命令 /bin/bash -c 'date; tail -n 20 learner/runs/20261014-061307-silent-boss-calibration/live-sandbox.log; test ! -f learner/（退出码 0）
+[95:29] 说：完整合后套件尚未结束，当前仍是上述两项失败。尚未发布；我在等待完整诊断和退出状态，避免遗漏其他结果。 
+[96:21] 命令 /bin/bash -c 'date; tail -n 30 learner/runs/20261014-061307-silent-boss-calibration/live-sandbox.log'（退出码 0）
+[97:11] 命令 /bin/bash -c 'exec nice -n 19 python3 learner/runs/20261014-061307-silent-boss-calibration/wait-publication.py'（退出码 1）
+[97:15] 说：完整合后检查仍在进行，目前仍是同两项失败。失败原件、合前刷新和回退点均保留。 
+[97:24] 命令 /bin/bash -c "date; tail -n 95 learner/runs/20261014-061307-silent-boss-calibration/live-sandbox.log; cat learner/runs/2（退出码 0）
+[99:32] 说：合后完整检查退出码为 1：3,637 项通过，两项失败均表现为固定 Python 子进程没有退出码。流程已回退到 `309f4434f9c4da24311d49
+[99:46] 命令 /bin/bash -c "date
+[99:46] nice -n 19 python3 - <<'PY'
+[99:46] import json,subprocess
+[99:46] from pathlib import Path
+[99:46] s=Path('learner/runs/2026（退出码 0）
+[99:57] 命令 /bin/bash -c 'export PATH="$HOME/.local/node/bin:$PATH"
+[99:57] export TMPDIR=/home/dw/Projects/agent-sts2/.worktrees/silent-bos（退出码 0）
+[100:11] 命令 /bin/bash -c 'tail -n 38 learner/runs/20261014-061307-silent-boss-calibration/live-supplement.log; git -C /home/dw/Proje（退出码 0）
+[101:16] 说：两项失败用例在原预算下单独复验均通过，分别耗时约 218ms 和 82ms；paths 的 11 项也通过，没有改断言或相关代码。我将保存完整失败与回退记录，重
+[101:33] 改文件 [{"path":"/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261014-061307-silent-boss-calib
+[101:40] 命令 /bin/bash -c "date
+[101:40] nice -n 19 python3 - <<'PY'
+[101:40] import json
+[101:40] from pathlib import Path
+[101:40] s=Path('learner/runs/20261014-061307（退出码 0）
+[102:21] 命令 /bin/bash -c "date; python3 - <<'PY'
+[102:21] from pathlib import Path
+[102:21] import json
+[102:21] s=Path('learner/runs/20261014-061307-silent-bo（退出码 0）
+[102:48] 命令 /bin/bash -c "date; ls -l /home/dw/Projects/agent-sts2/.worktrees/live/notes/fight-value-backtest-silent.md; git -C /hom（退出码 0）
+[103:31] 说：已保存检查期间新增的知识刷新为 `cc82ef5cbc3c14a304a70229b72fb39b17f60f13`，并重新合入为 `c4a8b0d65fdc5
+[104:23] 命令 /bin/bash -c 'date; tail -n 9 learner/runs/20261014-061307-silent-boss-calibration/live-sandbox.log'（退出码 0）
+[105:10] 说：新的完整合后检查正在执行，目前没有失败输出；此前失败和回退记录仍独立保留。 
+[106:02] 命令 /bin/bash -c 'date; tail -n 10 learner/runs/20261014-061307-silent-boss-calibration/live-sandbox.log'（退出码 0）
+[106:56] 命令 /bin/bash -c 'date; tail -n 14 learner/runs/20261014-061307-silent-boss-calibration/live-sandbox.log'（退出码 0）
+[107:06] 说：新的完整合后套件仍在执行，当前没有失败输出。版本登记和实际反证通知将等检查结束后进行。 
+[108:04] 命令 /bin/bash -c 'date; tail -n 14 learner/runs/20261014-061307-silent-boss-calibration/live-sandbox.log'（退出码 0）
+[109:46] 说：新的完整合后检查再次触发既有 rollout 排序不变性用例的 120 秒超时，运行约 132 秒。本批仍未改该用例或预算；我会保留本轮记录并按流程回退，然后核
+[110:39] 命令 /bin/bash -c 'date; tail -n 28 learner/runs/20261014-061307-silent-boss-calibration/live-sandbox.log'（退出码 0）
+[112:04] 命令 /bin/bash -c 'date; tail -n 36 learner/runs/20261014-061307-silent-boss-calibration/live-sandbox.log'（退出码 0）
+[112:44] 命令 /bin/bash -c 'exec nice -n 19 python3 learner/runs/20261014-061307-silent-boss-calibration/wait-publication.py'（退出码 1）
+[112:51] 说：本轮完整检查仍未结束，目前只有 rollout 超时这一项失败；原 120 秒限时保持不变。 
+[113:16] 命令 /bin/bash -c "date; rg -n -A 9 'FAIL |Test timed out|Test Files|Tests ' learner/runs/20261014-061307-silent-boss-calibra（退出码 0）
+[114:21] 说：本轮退出码为 1：3,638 项通过，唯一失败是同一 rollout 的 120 秒超时；已回退到 `cc82ef5cbc3c14a304a70229b72fb
+[114:33] 改文件 [{"path":"/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261014-061307-silent-boss-calib
+[116:05] 命令 /bin/bash -c "date; python3 - <<'PY'
+[116:05] from pathlib import Path
+[116:05] import json
+[116:05] s=Path('learner/runs/20261014-061307-silent-bo（退出码 0）
+[117:24] 说：又有新局结束，后台知识刷新尚未写完最后的模型报告。本任务正在锁内等待最终输出稳定，随后保存刷新并接续检查；未覆盖刷新数据或中断对局。 
+[119:38] 命令 /bin/bash -c "date; ls -l /home/dw/Projects/agent-sts2/.worktrees/live/notes/fight-value-backtest-silent.md; python3 - <（退出码 0）
+[121:55] 命令 /bin/bash -c 'date; tail -n 4 /home/dw/Projects/agent-sts2/ops/refresh.log; ls -l /home/dw/Projects/agent-sts2/.worktree（退出码 0）
+[124:25] 命令 /bin/bash -c 'date; ls -lt /home/dw/Projects/agent-sts2/.worktrees/live/knowledge/characters/silent/fight-value*.json /h（退出码 0）
+[126:05] 说：最新一局的后台刷新仍在进行，最后的模型报告尚未更新。我继续等待其完成后接续；候选参数和已封存验证样本保持固定。 
+[130:19] 命令 /bin/bash -c "date; ls -l /home/dw/Projects/agent-sts2/.worktrees/live/notes/fight-value-backtest-silent.md; python3 - <（退出码 0）
+[134:45] 命令 /bin/bash -c 'date; ls -l /home/dw/Projects/agent-sts2/.worktrees/live/notes/fight-value-backtest-silent.md /home/dw/Pro（退出码 0）
+[137:20] 命令 /bin/bash -c "date; ls -l /home/dw/Projects/agent-sts2/.worktrees/live/notes/fight-value-backtest-silent.md; python3 - <（退出码 0）
+[140:40] 命令 /bin/bash -c 'date; ls -l /home/dw/Projects/agent-sts2/.worktrees/live/knowledge/characters/silent/fight-value.json /hom（退出码 0）
+[146:55] 说：后台最终模型报告已更新，刷新已保存后重新合入候选。第三次合后完整检查已按允许的 2-worker 配置启动；两次回退和原失败记录继续保留。 
+[147:01] 命令 /bin/bash -c "date; python3 - <<'PY'
+[147:01] import json
+[147:01] from pathlib import Path
+[147:01] s=Path('learner/runs/20261014-061307-silent-bo（退出码 0）
+[154:21] 命令 /bin/bash -c 'date; tail -n 10 learner/runs/20261014-061307-silent-boss-calibration/live-sandbox.log'（退出码 0）
+[156:57] 说：第三次合后检查仍在执行，当前出现 rollout 超时和一项 `ops-herdr` 用例失败。本批未修改相关代码；我会保留完整结果并按失败回退流程处理，继续核
+[157:49] 命令 /bin/bash -c 'date; tail -n 30 learner/runs/20261014-061307-silent-boss-calibration/live-sandbox.log'（退出码 0）
+[161:46] 命令 /bin/bash -c 'exec nice -n 19 python3 learner/runs/20261014-061307-silent-boss-calibration/wait-publication.py'（退出码 1）
+[166:43] 命令 /bin/bash -c 'date; tail -n 40 learner/runs/20261014-061307-silent-boss-calibration/live-sandbox.log'（退出码 0）
+[168:35] 命令 /bin/bash -c "date -Iseconds; python3 - <<'PY'
+[168:35] import json
+[168:35] from pathlib import Path
+[168:35] p=Path('learner/runs/20261014-061307（退出码 1）
+[168:46] 说：校准结果已完成：B2、B3 各有 6 个 boss 达标，新增证据使 KNOWLEDGE_DEMON 的 B2 不再达标。live 检查中出现了现有测试的超时和
+[168:49] 命令 /bin/bash -c "date -Iseconds
+[168:49] python3 - <<'PY'
+[168:49] import json
+[168:49] from pathlib import Path
+[168:49] p=Path('learner/runs/20261014-061307-（退出码 0）
+[169:14] 命令 /bin/bash -c "python3 - <<'PY'
+[169:14] import json
+[169:14] from pathlib import Path
+[169:14] p=Path('learner/runs/20261014-061307-silent-boss-cal（退出码 0）
+[169:15] 命令 /bin/bash -c "git status --short
+[169:15] git -C /home/dw/Projects/agent-sts2/.worktrees/live log -3 --format='%H %s'
+[169:15] sed -n '1,2（退出码 0）
+[169:36] 命令 /bin/bash -c "python3 - <<'PY'
+[169:36] import json
+[169:36] from pathlib import Path
+[169:36] p=Path('learner/runs/20261014-061307-silent-boss-cal（退出码 0）
+[169:36] 命令 /bin/bash -c "sed -n '140,240p' agent/tests/rollout-live.test.ts
+[169:36] sed -n '145,200p' agent/tests/ops-herdr.test.ts
+[169:36] sed -n （退出码 0）
+[169:52] 说：最后一次 live 全量检查有两项失败：Herdr 测试超时，以及 rollout 排名不变测试出现断言差异。脚本已回退本次合入，并保留 live 原有知识刷新
+[170:01] 命令 /bin/bash -c "rg -n 'source-check|git.*archive|1562|supplement|TMPDIR' learner/runs/20261014-061307-silent-boss-calibrat（退出码 0）
+[170:01] 命令 /bin/bash -c "python3 /home/dw/Projects/agent-sts2/learner/ledger.py --help
+[170:01] python3 - <<'PY'
+[170:01] from pathlib import Path
+[170:01] p=（退出码 0）
+[170:08] 命令 /bin/bash -c "sed -n '1,130p' learner/runs/20261014-061307-silent-boss-calibration/isolate-source.py
+[170:08] sed -n '1,100p' lea（退出码 0）
+[170:34] 命令 /bin/bash -c "nice -n 19 python3 - <<'PY'
+[170:34] from pathlib import Path
+[170:34] import hashlib, io, json, shutil, subprocess, tarfile（退出码 0）
+[171:22] 命令 /bin/bash -c "python3 - <<'PY'
+[171:22] from pathlib import Path
+[171:22] import json
+[171:22] p=Path('learner/runs/20261014-061307-silent-boss-cal（退出码 0）
+[171:38] 命令 /bin/bash -c "rg -n 'F49|A10|刷新|上线|合入|测试' paper/materials/silent/boss-sim-calibration.md --max-count 30
+[171:38] python3 - <<'PY'（退出码 1）
+[171:49] 命令 /bin/bash -c "rg -n 'by_boss|brier|platt|fit|per_boss|calibration' agent/tools/boss-sim/trust.py agent/tools/boss-sim/ca（退出码 0）
+[172:01] 命令 /bin/bash -c "rg -n 'by_boss|platt|def metrics|def calibrate|group' agent/tools/boss-sim/silent_calibration.py --max-cou（退出码 0）
+[172:11] 命令 /bin/bash -c "date -Iseconds
+[172:11] tail -n 10 learner/runs/20261014-061307-silent-boss-calibration/live-third-supplement.log
+[172:11] s（退出码 0）
+[172:41] 命令 /bin/bash -c 'export PATH="$HOME/.local/node/bin:$PATH"
+[172:41] export TMPDIR=/home/dw/Projects/agent-sts2/.worktrees/silent-bos（退出码 0）
+[172:42] 命令 /bin/bash -c "date -Iseconds
+[172:42] tail -n 18 learner/runs/20261014-061307-silent-boss-calibration/live-third-supplement.log
+[172:42] s（退出码 0）
+[172:54] 说：两项失败用例在同一失败提交的固定快照中单独复查通过，断言和超时预算均保持原样。这个结果支持并发负载是影响因素，但还不足以证明 live 全量检查通过。我将最后用
+[173:52] 命令 /bin/bash -c "date -Iseconds
+[173:52] python3 - <<'PY'
+[173:52] import json,hashlib
+[173:52] from pathlib import Path
+[173:52] p=Path('learner/runs/20261014（退出码 0）
+[174:20] 命令 /bin/bash -c "sed -n '1,230p' agent/tools/boss-sim/refresh-silent.py
+[174:20] sed -n '230,375p' agent/tools/boss-sim/refresh-sile（退出码 0）
+[174:47] 命令 /bin/bash -c "date -Iseconds
+[174:47] python3 - <<'PY'
+[174:47] import json
+[174:47] from pathlib import Path
+[174:47] p=Path('learner/runs/20261014-061307-（退出码 0）
+[175:19] 命令 /bin/bash -c "python3 - <<'PY'
+[175:19] from pathlib import Path
+[175:19] import json
+[175:19] p=Path('learner/runs/20261014-061307-silent-boss-cal（退出码 0）
+[175:25] 说：最后一次 live 全量检查已开始，tsc 已通过。它使用的文件树与刚才两项补验的快照完全相同，目前尚未报告失败。此前三次失败日志和回退记录都已保存，发布仍待这
+[175:56] 命令 /bin/bash -c "sed -n '1,185p' learner/runs/20261014-061307-silent-boss-calibration/notify-publication.py
+[175:56] python3 - <<'PY（退出码 0）
+[176:35] 命令 /bin/bash -c "date -Iseconds
+[176:35] rg --files /home/dw/Projects/agent-sts2/ops/codex-ops | rg '20261014-061307'
+[176:35] python3 - <<'P（退出码 0）
+[177:13] 说：校准的适用范围也已写清：A0–4、A5–9 均没有独立验证样本，各还差至少 10 场；F49 虽有 20 场成功验证，但胜率偏差和打穿血量比均超标，继续保持低可
+[178:12] 命令 /bin/bash -c "cat > learner/runs/20261014-061307-silent-boss-calibration/complete-report.py <<'PY'
+[178:12] \"\"\"Record actual f（退出码 0）
+[179:47] 命令 /bin/bash -c "date -Iseconds
+[179:47] python3 - <<'PY'
+[179:47] from pathlib import Path
+[179:47] import json
+[179:47] p=Path('learner/runs/20261014-061307-（退出码 0）
+[180:33] 命令 /bin/bash -c "python3 - <<'PY'
+[180:33] from pathlib import Path
+[180:33] p=Path('learner/runs/20261014-061307-silent-boss-calibration/com（退出码 0）
+[180:38] 说：归档和回执已核对：新实验保存在独立指纹目录，旧报告、旧名单和来源记录均保留。账本 silent-0463 仍为 fight/proposed；最终回执会分别记录
+[181:43] 命令 /bin/bash -c "date -Iseconds
+[181:43] python3 - <<'PY'
+[181:43] from pathlib import Path
+[181:43] p=Path('learner/runs/20261014-061307-silent-boss-（退出码 0）
+[182:02] 说：单 worker 的完整检查尚未结束，目前日志只有启动信息，还没有结果摘要。我会等实际退出码再判定是否发布；已准备好成功登记或失败回退的完整回执。
+[183:10] 命令 /bin/bash -c "nice -n 19 python3 - <<'PY'
+[183:10] from pathlib import Path
+[183:10] import re
+[183:10] p=Path('learner/runs/20261014-061307-silent（退出码 0）
+[184:28] 说：本次新增的 21 场实际结局全部进入验证集，107 个调参样本、切点和整体 Platt 参数均保持不变。名单变化来自新增验证证据；完整 live 检查仍在等待结
+[185:57] 命令 /bin/bash -c "date -Iseconds
+[185:57] python3 - <<'PY'
+[185:57] from pathlib import Path
+[185:57] import json
+[185:57] p=Path('learner/runs/20261014-061307-（退出码 0）
+[186:22] 说：当前仍未收到 live 全量检查的结果摘要，发布版本尚未登记。等待期间没有改动测试预算、断言或固定排除名单；最终结果将以完整入口的实际退出码为准。
+[187:50] 命令 /bin/bash -c "date -Iseconds
+[187:50] python3 - <<'PY'
+[187:50] from pathlib import Path
+[187:50] p=Path('learner/runs/20261014-061307-silent-boss-（退出码 0）
+[187:57] 说：完整检查仍在运行，尚未报告失败，也尚未产生结果摘要。发布登记继续等待检查结束。
+[189:33] 说：合后检查尚未退出。校准数据、来源审计、固定夹具测试和候选消费者读回均已完成；当前待完成的是 live 完整检查，以及通过后的发布登记。
+[191:08] 命令 /bin/bash -c "date -Iseconds
+[191:08] python3 - <<'PY'
+[191:08] from pathlib import Path
+[191:08] p=Path('learner/runs/20261014-061307-silent-boss-（退出码 0）
+[191:48] 说：检查仍在进行，尚无最终摘要。封存实验目录保持原样；此次 live 合入只更新静默可信名单、校准报告和新实验归档，其他代码与并行刷新均已保留。
+[193:04] 命令 /bin/bash -c "date -Iseconds
+[193:04] python3 - <<'PY'
+[193:04] from pathlib import Path
+[193:04] p=Path('learner/runs/20261014-061307-silent-boss-（退出码 0）
+[193:50] 说：live 完整检查仍在运行，尚未登记发布号。A10 的整体胜率残差为 B2 +4.8、B3 +5.2 个百分点；F49 的偏差更大，已单列为低可信范围。
+[195:33] 命令 /bin/bash -c "date -Iseconds
+[195:33] python3 - <<'PY'
+[195:33] from pathlib import Path
+[195:33] p=Path('learner/runs/20261014-061307-silent-boss-（退出码 0）
+[195:58] 说：单 worker 检查尚未退出，日志仍没有结果摘要。目前没有新的失败记录；本轮结束后会按实际结果完成发布登记或记录阻塞。
+[197:34] 命令 /bin/bash -c "date -Iseconds
+[197:34] python3 - <<'PY'
+[197:34] from pathlib import Path
+[197:34] p=Path('learner/runs/20261014-061307-silent-boss-（退出码 0）
+[198:32] 说：完整检查仍未结束，暂未报告新失败。最终回执会保留前三次失败及补验记录，并明确最终合入提交、发布树、测试退出码和账本状态。
+[200:27] 命令 /bin/bash -c "date -Iseconds
+[200:27] python3 - <<'PY'
+[200:27] from pathlib import Path
+[200:27] p=Path('learner/runs/20261014-061307-silent-boss-（退出码 0）
+[200:31] 说：完整检查还在运行，尚无结果摘要。工作树和原始失败日志均保留，没有启动其他修复或清理任务。
+[201:40] 命令 /bin/bash -c "python3 - <<'PY'
+[201:40] from pathlib import Path
+[201:40] p=Path('learner/runs/20261014-061307-silent-boss-calibration')
+[201:40] f（退出码 0）
+[202:28] 命令 /bin/bash -c "date -Iseconds
+[202:28] python3 - <<'PY'
+[202:28] from pathlib import Path
+[202:28] import json
+[202:28] p=Path('learner/runs/20261014-061307-（退出码 0）
+[202:39] 说：live 完整检查通过：tsc 通过，Vitest 379 个文件、3639 项，以及 paths 的 11 项全部通过。已实际合入并登记内部版本 S1.bos
+[202:51] 命令 /bin/bash -c "python3 - <<'PY'
+[202:51] from pathlib import Path
+[202:51] import json,subprocess
+[202:51] p=Path('learner/runs/20261014-061307-sile（退出码 0）
+[203:35] 命令 /bin/bash -c "nice -n 19 python3 learner/runs/20261014-061307-silent-boss-calibration/notify-publication.py
+[203:35] nice -n 19 p（退出码 0）
+[205:18] 命令 /bin/bash -c "nice -n 19 python3 - <<'PY'
+[205:18] from pathlib import Path
+[205:18] import hashlib,json,subprocess
+[205:18] p=Path('learner/runs/2（退出码 0）
+[207:42] 说：```json { "task": "fix-batch", "base": "26a84205060dc9b6528ff889c2627554b048734b

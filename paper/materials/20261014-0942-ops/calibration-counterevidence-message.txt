@@ -1,0 +1,21 @@
+【原061302静默校准反证，必要通知，非新研究/常规进度】
+原feature_request=silent-calibration-b6bc553627ec2bce0b2eb394，batch=20261014-061302-fix-batch，silent-0463仍proposed，父项不关闭。请现有watcher读取并明确告知Roy。
+[
+  {
+    "claim": "上一批知识恶魔B2通过四指标，36场验证、打穿比1.281，列为可信。",
+    "finding": "新增3场独立验证后n=39、打穿比1.325，超过预先固定1.3上限；其余三项通过，数量缺口0仍必须撤回B2可信。B3打穿比1.347，继续低可信。",
+    "evidence": [
+      "Y82C2NV7WM2M A10 F33尝试6 T1–6 died",
+      "1269Y20SKHUM A10 F33尝试1 T1–10 won",
+      "EEVP0QTLMSX9 A10 F33尝试1 T1–11 won"
+    ],
+    "knowledge": [
+      "knowledge/characters/silent/boss-trust.json"
+    ],
+    "recommendation": "沿既有四标准撤回B2可信；不改门槛或策略，继续同模型扩验证。实际发布后双收件箱通知ops→watcher→Roy，不代填确认。"
+  }
+]
+来源：.worktrees/silent-boss-calibration/learner/runs/20261014-061307-silent-boss-calibration/questions.json；SHA256=33928b04184e634693d339409721675e169e51ad4117f2fe29cb5797d58c9fc7。
+源57afeb1dc/实际live合入6c8eed9f/发布be35c7a32/tree5cc6307cb，B2知识恶魔36→39场、打穿比1.281→1.325超固定1.3撤可信；B3=1.347仍低可信。三新证据局Y82C2NV7WM2M/1269Y20SKHUM/EEVP0QTLMSX9均A10 F33，各实际died/won/won。210固定模型输入、107调参keys/Platt/时间切点不变，新增21只扩验证；当前生产模型99输入不同未由此实验验证，F49联合通关率仍未知。不得当原实时预测或胜率提升。
+双收件箱09:36:50原文已真实追加，原receipt=同目录dual-notification.json。当前原宿主完整检查持main live锁；ops未重跑/核正式号或声称宿主全绿。
+通知token=e3da4e7e53c43cf7f2549c27，实际发送/原文回执在paper/materials/20261014-0942-ops/；请保留你本人接收与用户可见回复原件/JSON回执，不代填角色。此校准feature不是character-proposal/experience-live父要求，现learning_requests普通ACK入口仅支持character-proposal，勿造新学习父项或代填CLI；沿原feature记录真实接收/告知事实，程序登记缺口保持pending。只转本反证，不改你的原construction/evaluation-admission/P1/P2 owner或派重复研究。

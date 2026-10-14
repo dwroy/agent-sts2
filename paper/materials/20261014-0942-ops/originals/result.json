@@ -1,0 +1,954 @@
+{
+  "task": "fix-batch",
+  "base": "26a84205060dc9b6528ff889c2627554b048734b",
+  "fixes": [
+    {
+      "item": "Roy 已授权新功能：静默 boss 模拟校准",
+      "commit": "57afeb1dc9407ba07797fc04ad86a271496c313c",
+      "data_commit": "c53d5273269a3b82af3c7e62f5f8caabae5013ad",
+      "reused_code_commit": "cdf75af64fb5b118a5a808ecb3b05e2a05991c36",
+      "actual_merge": "6c8eed9f4b6f95a09d259fe9089dcdcc4c1f39c6",
+      "fixed_release_commit": "be35c7a32ce7f294e4fd2645d0fcb812e9c87b29",
+      "fixed_release_tree": "5cc6307cb7343f122588b06714a991c1ecca3be2",
+      "version": "S1.boss-calibration17",
+      "release_id": null,
+      "ledger": [
+        "silent-0463"
+      ],
+      "test": {
+        "source_fixed_coverage": {
+          "complete": true,
+          "tsc": 0,
+          "unique_files": 378,
+          "unique_cases": 3622,
+          "original_full_exit": 1,
+          "original_passed": 3610,
+          "original_timeout": 1,
+          "supplement_exit": 0,
+          "supplement_cases": 1,
+          "paths_cases": 11,
+          "same_source_and_fixtures": true,
+          "budgets_and_assertions_unchanged": true,
+          "scope": "All selected cases passed across original full run plus the single original-timeout case and previously unrun paths. Original full exit1 is retained."
+        },
+        "live_sandbox_exit": 0,
+        "live_summary": [
+          "Test Files  379 passed (379)",
+          "Tests  3639 passed (3639)",
+          "Duration  1637.70s (transform 20.15s, setup 35.55s, import 93.91s, tests 1415.86s, environment 64ms)",
+          "Test Files  1 passed (1)",
+          "Tests  11 passed (11)",
+          "Duration  5.29s (transform 4.18s, setup 967ms, import 3.96s, tests 108ms, environment 1ms)"
+        ],
+        "python_calibration": {
+          "cases": 12,
+          "exit": 0
+        },
+        "python_dispatch": {
+          "cases": 45,
+          "exit": 0
+        },
+        "candidate_consumer": {
+          "checks": 28,
+          "exit": 0
+        },
+        "live_consumer": {
+          "root": "/home/dw/Projects/agent-sts2/.worktrees/live",
+          "artifact": "5b6357749884b0a49942460c722589cc5835e14233f51412772692fc3bf39cc8",
+          "checks": 28,
+          "results": [
+            {
+              "boss": "KAISER_CRAB",
+              "use": "b2",
+              "trusted": false,
+              "reason": "校准 Brier 0.186，高于整体 0.115 的 1.25 倍 0.144"
+            },
+            {
+              "boss": "THE_KIN",
+              "use": "b2",
+              "trusted": true,
+              "reason": null
+            },
+            {
+              "boss": "QUEEN",
+              "use": "b2",
+              "trusted": false,
+              "reason": "校准 Brier 0.253，高于整体 0.115 的 1.25 倍 0.144; 偏乐观：预测平均胜率 71%，实际 38%"
+            },
+            {
+              "boss": "AEONGLASS",
+              "use": "b2",
+              "trusted": false,
+              "reason": "校准 Brier 0.193，高于整体 0.115 的 1.25 倍 0.144; 偏乐观：预测平均胜率 68%，实际 46%; 模拟每回合被打穿的血是实际的 3.37 倍"
+            },
+            {
+              "boss": "CEREMONIAL_BEAST",
+              "use": "b2",
+              "trusted": true,
+              "reason": null
+            },
+            {
+              "boss": "KNOWLEDGE_DEMON",
+              "use": "b2",
+              "trusted": false,
+              "reason": "模拟每回合被打穿的血是实际的 1.32 倍"
+            },
+            {
+              "boss": "LAGAVULIN_MATRIARCH",
+              "use": "b2",
+              "trusted": true,
+              "reason": null
+            },
+            {
+              "boss": "SOUL_FYSH",
+              "use": "b2",
+              "trusted": true,
+              "reason": null
+            },
+            {
+              "boss": "TEST_SUBJECT",
+              "use": "b2",
+              "trusted": false,
+              "reason": "校准 Brier 0.153，高于整体 0.115 的 1.25 倍 0.144; 偏乐观：预测平均胜率 35%，实际 10%; 模拟每回合被打穿的血是实际的 2.94 倍"
+            },
+            {
+              "boss": "THE_INSATIABLE",
+              "use": "b2",
+              "trusted": false,
+              "reason": "校准 Brier 0.146，高于整体 0.115 的 1.25 倍 0.144"
+            },
+            {
+              "boss": "VANTOM",
+              "use": "b2",
+              "trusted": true,
+              "reason": null
+            },
+            {
+              "boss": "WATERFALL_GIANT",
+              "use": "b2",
+              "trusted": true,
+              "reason": null
+            },
+            {
+              "boss": "KAISER_CRAB",
+              "use": "b3",
+              "trusted": false,
+              "reason": "校准 Brier 0.218，高于整体 0.118 的 1.25 倍 0.147; 模拟每回合被打穿的血是实际的 1.30 倍"
+            },
+            {
+              "boss": "THE_KIN",
+              "use": "b3",
+              "trusted": true,
+              "reason": null
+            },
+            {
+              "boss": "QUEEN",
+              "use": "b3",
+              "trusted": false,
+              "reason": "校准 Brier 0.239，高于整体 0.118 的 1.25 倍 0.147; 偏乐观：预测平均胜率 68%，实际 38%"
+            },
+            {
+              "boss": "AEONGLASS",
+              "use": "b3",
+              "trusted": false,
+              "reason": "校准 Brier 0.206，高于整体 0.118 的 1.25 倍 0.147; 偏乐观：预测平均胜率 69%，实际 46%; 模拟每回合被打穿的血是实际的 3.34 倍"
+            },
+            {
+              "boss": "CEREMONIAL_BEAST",
+              "use": "b3",
+              "trusted": true,
+              "reason": null
+            },
+            {
+              "boss": "KNOWLEDGE_DEMON",
+              "use": "b3",
+              "trusted": false,
+              "reason": "模拟每回合被打穿的血是实际的 1.35 倍"
+            },
+            {
+              "boss": "LAGAVULIN_MATRIARCH",
+              "use": "b3",
+              "trusted": true,
+              "reason": null
+            },
+            {
+              "boss": "SOUL_FYSH",
+              "use": "b3",
+              "trusted": true,
+              "reason": null
+            },
+            {
+              "boss": "TEST_SUBJECT",
+              "use": "b3",
+              "trusted": false,
+              "reason": "偏乐观：预测平均胜率 32%，实际 10%; 模拟每回合被打穿的血是实际的 2.85 倍"
+            },
+            {
+              "boss": "THE_INSATIABLE",
+              "use": "b3",
+              "trusted": false,
+              "reason": "校准 Brier 0.167，高于整体 0.118 的 1.25 倍 0.147; 模拟每回合被打穿的血是实际的 1.33 倍"
+            },
+            {
+              "boss": "VANTOM",
+              "use": "b3",
+              "trusted": true,
+              "reason": null
+            },
+            {
+              "boss": "WATERFALL_GIANT",
+              "use": "b3",
+              "trusted": true,
+              "reason": null
+            }
+          ],
+          "scope": "Actual artifact read through Silent production consumers; no natural-game adoption or win-rate claim."
+        }
+      },
+      "fails_without_fix": false,
+      "nature": "authorized new feature periodic calibration; no production code or strategy thresholds changed"
+    }
+  ],
+  "skipped": [
+    {
+      "scope": "A0–4",
+      "validation": 0,
+      "missing": 10
+    },
+    {
+      "scope": "A5–9",
+      "validation": 0,
+      "missing": 10
+    },
+    {
+      "scope": "F49",
+      "validation": 20,
+      "missing": 0,
+      "reason": "gap and leak failed; no new F49 actual outcomes"
+    },
+    {
+      "scope": "historical simulation errors",
+      "fights": 3,
+      "reason": "Retained original no-solve outcomes"
+    },
+    {
+      "scope": "current production model reliability",
+      "reason": "99 inputs differ from the pinned experiment; not revalidated"
+    },
+    {
+      "scope": "historical exact dirty trees and mid-fight code changes",
+      "reason": "Not fully reconstructable from recorded run-config metadata"
+    }
+  ],
+  "merged": "6c8eed9f4b6f95a09d259fe9089dcdcc4c1f39c6",
+  "tests": {
+    "source": {
+      "tsc": 0,
+      "vitest": 0,
+      "files": 378,
+      "cases": 3622,
+      "original_full_exit": 1,
+      "supplement_exit": 0,
+      "coverage": {
+        "complete": true,
+        "tsc": 0,
+        "unique_files": 378,
+        "unique_cases": 3622,
+        "original_full_exit": 1,
+        "original_passed": 3610,
+        "original_timeout": 1,
+        "supplement_exit": 0,
+        "supplement_cases": 1,
+        "paths_cases": 11,
+        "same_source_and_fixtures": true,
+        "budgets_and_assertions_unchanged": true,
+        "scope": "All selected cases passed across original full run plus the single original-timeout case and previously unrun paths. Original full exit1 is retained."
+      },
+      "python_calibration": {
+        "cases": 12,
+        "exit": 0
+      },
+      "python_dispatch": {
+        "cases": 45,
+        "exit": 0
+      },
+      "external_full": "scheduler after completion",
+      "consumer": {
+        "checks": 28,
+        "exit": 0,
+        "natural_adoption": "unverified"
+      },
+      "snapshot_verified_files": 1562
+    },
+    "live_sandbox_exit": 0,
+    "live_summary": [
+      "Test Files  379 passed (379)",
+      "Tests  3639 passed (3639)",
+      "Duration  1637.70s (transform 20.15s, setup 35.55s, import 93.91s, tests 1415.86s, environment 64ms)",
+      "Test Files  1 passed (1)",
+      "Tests  11 passed (11)",
+      "Duration  5.29s (transform 4.18s, setup 967ms, import 3.96s, tests 108ms, environment 1ms)"
+    ],
+    "prior_live_failures": [
+      {
+        "attempt": "first",
+        "merge": "19b02dcc884825226c193ac1616f0c397f38fae9",
+        "tree": "0eb5825dd14082cd28e6fcd4d16b750f450089f6",
+        "exit": 1,
+        "rollback_to": "309f4434f9c4da24311d492ee9a3b293dfb2419b",
+        "publication": null,
+        "preserved_log": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261014-061307-silent-boss-calibration/live-sandbox.first-failed.log",
+        "log_sha256": "0db2a3a834bee250d773276ffed21b8d0aad17e853d896c01d509e3beb353201",
+        "failures": [
+          "FAIL  tests/ascension-audit-path.test.ts > registered ascension audit report directory > accepts the preserved report in this batch's registered independent worktree",
+          "FAIL  tests/learner-empty-fix.test.ts > empty fix batch completion > keeps new output or missing/failed checks pending for repair: {\"tests\":{\"tsc\":0,\"vitest\":0,\"cases\":0}}"
+        ],
+        "summary": [
+          "⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯",
+          "Test Files  2 failed | 377 passed (379)",
+          "Tests  2 failed | 3637 passed (3639)"
+        ]
+      },
+      {
+        "attempt": "second",
+        "merge": "c4a8b0d65fdc5393b19855d68272bb08ca743fc4",
+        "tree": "e88bd0014052c22820201dbb4d8e99c7385699c2",
+        "exit": 1,
+        "rollback_to": "cc82ef5cbc3c14a304a70229b72fb39b17f60f13",
+        "publication": null,
+        "preserved_log": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261014-061307-silent-boss-calibration/live-sandbox.second-failed.log",
+        "log_sha256": "50b96abeeba1d42924539a1d0c90182cbde42c62723e730be5732235ef1964dc",
+        "failures": [
+          "FAIL  tests/rollout-live.test.ts > rollout facts on Jev's combat question > code's ranking, options and auto-acts are unchanged by the rollout"
+        ],
+        "summary": [
+          "⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯",
+          "Test Files  1 failed | 378 passed (379)",
+          "Tests  1 failed | 3638 passed (3639)"
+        ]
+      },
+      {
+        "attempt": "third",
+        "merge": "65763022bbb3a5571671e8fab4ae0c92c52b2fd5",
+        "tree": "2763a83f315492942e5c151a3304e0a9a6c5226c",
+        "exit": 1,
+        "rollback_to": "ab3e6c70100b17b9210e2b12d93e8e8a4f311235",
+        "publication": null,
+        "preserved_log": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261014-061307-silent-boss-calibration/live-sandbox.third-failed.log",
+        "log_sha256": "4e4ad7752552a6773c47146f9bac5065a51535ed5bc07a6ec06c5323e347b7b0",
+        "failures": [
+          "FAIL  tests/ops-herdr.test.ts > ops/herdr-host.sh (fake herdr) > new learner tabs follow the live ops pane when workspace labels are duplicated",
+          "FAIL  tests/rollout-live.test.ts > rollout facts on Jev's combat question > code's ranking, options and auto-acts are unchanged by the rollout"
+        ],
+        "summary": [
+          "⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯",
+          "Test Files  2 failed | 377 passed (379)",
+          "Tests  2 failed | 3637 passed (3639)"
+        ]
+      }
+    ],
+    "third_failed_cases_supplement": {
+      "commit": "65763022bbb3a5571671e8fab4ae0c92c52b2fd5",
+      "tree": "2763a83f315492942e5c151a3304e0a9a6c5226c",
+      "files": 1562,
+      "same_fixtures_and_source": true,
+      "original_assertions_and_timeout_budgets": true,
+      "cases": 2,
+      "exit": 0
+    },
+    "external_full": "scheduler; not claimed passed"
+  },
+  "code_proposals": [],
+  "implementation_domains": [],
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261014-061307-silent-boss-calibration/report.md",
+  "calibration_report": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/paper/materials/silent/boss-sim-calibration.md",
+  "artifact": "5b6357749884b0a49942460c722589cc5835e14233f51412772692fc3bf39cc8",
+  "archive": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/experiments/boss-sim/silent/5b6357749884b0a49942460c722589cc5835e14233f51412772692fc3bf39cc8",
+  "counts": {
+    "finished_runs": 284,
+    "attempts": 1245,
+    "usable_outcomes": 502,
+    "new_outcomes": 21,
+    "new_wins": 15,
+    "new_deaths": 6,
+    "censored": 742,
+    "missing_opening_uncensored": 1,
+    "tune": 107,
+    "validation": 395,
+    "successful_validation": 393
+  },
+  "boss_table": {
+    "AEONGLASS": {
+      "name": "永世沙漏",
+      "b2": {
+        "n": 26,
+        "missing": 0,
+        "brier": 0.1932,
+        "mean_pred": 0.676,
+        "actual_win": 0.462,
+        "leak_ratio": 3.366,
+        "leak_turns": 134,
+        "failed": [
+          "brier",
+          "gap",
+          "leak"
+        ],
+        "trusted": false
+      },
+      "b3": {
+        "n": 26,
+        "missing": 0,
+        "brier": 0.2057,
+        "mean_pred": 0.687,
+        "actual_win": 0.462,
+        "leak_ratio": 3.344,
+        "leak_turns": 134,
+        "failed": [
+          "brier",
+          "gap",
+          "leak"
+        ],
+        "trusted": false
+      }
+    },
+    "CEREMONIAL_BEAST": {
+      "name": "仪式兽",
+      "b2": {
+        "n": 35,
+        "missing": 0,
+        "brier": 0.0613,
+        "mean_pred": 0.786,
+        "actual_win": 0.8,
+        "leak_ratio": 1.151,
+        "leak_turns": 201,
+        "failed": [],
+        "trusted": true
+      },
+      "b3": {
+        "n": 35,
+        "missing": 0,
+        "brier": 0.0537,
+        "mean_pred": 0.802,
+        "actual_win": 0.8,
+        "leak_ratio": 1.155,
+        "leak_turns": 201,
+        "failed": [],
+        "trusted": true
+      }
+    },
+    "KAISER_CRAB": {
+      "name": "帝王蟹",
+      "b2": {
+        "n": 38,
+        "missing": 0,
+        "brier": 0.1857,
+        "mean_pred": 0.671,
+        "actual_win": 0.579,
+        "leak_ratio": 1.293,
+        "leak_turns": 194,
+        "failed": [
+          "brier"
+        ],
+        "trusted": false
+      },
+      "b3": {
+        "n": 38,
+        "missing": 0,
+        "brier": 0.2177,
+        "mean_pred": 0.69,
+        "actual_win": 0.579,
+        "leak_ratio": 1.304,
+        "leak_turns": 194,
+        "failed": [
+          "brier",
+          "leak"
+        ],
+        "trusted": false
+      }
+    },
+    "KNOWLEDGE_DEMON": {
+      "name": "知识恶魔",
+      "b2": {
+        "n": 39,
+        "missing": 0,
+        "brier": 0.0961,
+        "mean_pred": 0.758,
+        "actual_win": 0.821,
+        "leak_ratio": 1.325,
+        "leak_turns": 225,
+        "failed": [
+          "leak"
+        ],
+        "trusted": false
+      },
+      "b3": {
+        "n": 39,
+        "missing": 0,
+        "brier": 0.0863,
+        "mean_pred": 0.762,
+        "actual_win": 0.821,
+        "leak_ratio": 1.347,
+        "leak_turns": 225,
+        "failed": [
+          "leak"
+        ],
+        "trusted": false
+      }
+    },
+    "LAGAVULIN_MATRIARCH": {
+      "name": "乐加维林族母",
+      "b2": {
+        "n": 36,
+        "missing": 0,
+        "brier": 0.0645,
+        "mean_pred": 0.845,
+        "actual_win": 0.861,
+        "leak_ratio": 1.018,
+        "leak_turns": 208,
+        "failed": [],
+        "trusted": true
+      },
+      "b3": {
+        "n": 36,
+        "missing": 0,
+        "brier": 0.0628,
+        "mean_pred": 0.837,
+        "actual_win": 0.861,
+        "leak_ratio": 1.072,
+        "leak_turns": 208,
+        "failed": [],
+        "trusted": true
+      }
+    },
+    "QUEEN": {
+      "name": "女王",
+      "b2": {
+        "n": 24,
+        "missing": 0,
+        "brier": 0.2534,
+        "mean_pred": 0.711,
+        "actual_win": 0.375,
+        "leak_ratio": 1.064,
+        "leak_turns": 100,
+        "failed": [
+          "brier",
+          "gap"
+        ],
+        "trusted": false
+      },
+      "b3": {
+        "n": 24,
+        "missing": 0,
+        "brier": 0.2389,
+        "mean_pred": 0.684,
+        "actual_win": 0.375,
+        "leak_ratio": 1.171,
+        "leak_turns": 100,
+        "failed": [
+          "brier",
+          "gap"
+        ],
+        "trusted": false
+      }
+    },
+    "SOUL_FYSH": {
+      "name": "灵魂异鱼",
+      "b2": {
+        "n": 28,
+        "missing": 0,
+        "brier": 0.0441,
+        "mean_pred": 0.922,
+        "actual_win": 0.893,
+        "leak_ratio": 0.967,
+        "leak_turns": 167,
+        "failed": [],
+        "trusted": true
+      },
+      "b3": {
+        "n": 28,
+        "missing": 0,
+        "brier": 0.0479,
+        "mean_pred": 0.93,
+        "actual_win": 0.893,
+        "leak_ratio": 0.968,
+        "leak_turns": 167,
+        "failed": [],
+        "trusted": true
+      }
+    },
+    "TEST_SUBJECT": {
+      "name": "实验体",
+      "b2": {
+        "n": 20,
+        "missing": 0,
+        "brier": 0.1531,
+        "mean_pred": 0.351,
+        "actual_win": 0.1,
+        "leak_ratio": 2.943,
+        "leak_turns": 72,
+        "failed": [
+          "brier",
+          "gap",
+          "leak"
+        ],
+        "trusted": false
+      },
+      "b3": {
+        "n": 20,
+        "missing": 0,
+        "brier": 0.1388,
+        "mean_pred": 0.321,
+        "actual_win": 0.1,
+        "leak_ratio": 2.855,
+        "leak_turns": 72,
+        "failed": [
+          "gap",
+          "leak"
+        ],
+        "trusted": false
+      }
+    },
+    "THE_INSATIABLE": {
+      "name": "无厌沙虫",
+      "b2": {
+        "n": 38,
+        "missing": 0,
+        "brier": 0.1458,
+        "mean_pred": 0.672,
+        "actual_win": 0.632,
+        "leak_ratio": 1.285,
+        "leak_turns": 201,
+        "failed": [
+          "brier"
+        ],
+        "trusted": false
+      },
+      "b3": {
+        "n": 38,
+        "missing": 0,
+        "brier": 0.1665,
+        "mean_pred": 0.674,
+        "actual_win": 0.632,
+        "leak_ratio": 1.333,
+        "leak_turns": 201,
+        "failed": [
+          "brier",
+          "leak"
+        ],
+        "trusted": false
+      }
+    },
+    "THE_KIN": {
+      "name": "同族",
+      "b2": {
+        "n": 34,
+        "missing": 0,
+        "brier": 0.0849,
+        "mean_pred": 0.807,
+        "actual_win": 0.853,
+        "leak_ratio": 1.215,
+        "leak_turns": 199,
+        "failed": [],
+        "trusted": true
+      },
+      "b3": {
+        "n": 34,
+        "missing": 0,
+        "brier": 0.0932,
+        "mean_pred": 0.823,
+        "actual_win": 0.853,
+        "leak_ratio": 1.205,
+        "leak_turns": 199,
+        "failed": [],
+        "trusted": true
+      }
+    },
+    "VANTOM": {
+      "name": "墨影幻灵",
+      "b2": {
+        "n": 42,
+        "missing": 0,
+        "brier": 0.0637,
+        "mean_pred": 0.898,
+        "actual_win": 0.929,
+        "leak_ratio": 0.94,
+        "leak_turns": 237,
+        "failed": [],
+        "trusted": true
+      },
+      "b3": {
+        "n": 42,
+        "missing": 0,
+        "brier": 0.0586,
+        "mean_pred": 0.902,
+        "actual_win": 0.929,
+        "leak_ratio": 0.923,
+        "leak_turns": 237,
+        "failed": [],
+        "trusted": true
+      }
+    },
+    "WATERFALL_GIANT": {
+      "name": "瀑布巨兽",
+      "b2": {
+        "n": 33,
+        "missing": 0,
+        "brier": 0.102,
+        "mean_pred": 0.83,
+        "actual_win": 0.818,
+        "leak_ratio": 0.909,
+        "leak_turns": 196,
+        "failed": [],
+        "trusted": true
+      },
+      "b3": {
+        "n": 33,
+        "missing": 0,
+        "brier": 0.1028,
+        "mean_pred": 0.85,
+        "actual_win": 0.818,
+        "leak_ratio": 0.879,
+        "leak_turns": 196,
+        "failed": [],
+        "trusted": true
+      }
+    }
+  },
+  "a10": {
+    "t1": {
+      "n": 393,
+      "gap": 0.04800000000000004,
+      "brier": 0.1149,
+      "mean_pred": 0.76,
+      "actual_win": 0.712,
+      "leak_ratio": 1.28
+    },
+    "pre": {
+      "n": 393,
+      "gap": 0.052000000000000046,
+      "brier": 0.1179,
+      "mean_pred": 0.764,
+      "actual_win": 0.712,
+      "leak_ratio": 1.29
+    }
+  },
+  "f49": {
+    "t1": {
+      "n": 20,
+      "actual_win": 0.1,
+      "mean_pred": 0.43,
+      "brier": 0.1398,
+      "auc": 1.0,
+      "const_brier": 0.09,
+      "buckets": [
+        {
+          "bucket": "0–20%",
+          "n": 0,
+          "pred": null,
+          "actual": null
+        },
+        {
+          "bucket": "20–40%",
+          "n": 15,
+          "pred": 0.351,
+          "actual": 0.0
+        },
+        {
+          "bucket": "40–60%",
+          "n": 2,
+          "pred": 0.504,
+          "actual": 0.0
+        },
+        {
+          "bucket": "60–80%",
+          "n": 1,
+          "pred": 0.627,
+          "actual": 0.0
+        },
+        {
+          "bucket": "80–100%",
+          "n": 2,
+          "pred": 0.85,
+          "actual": 1.0
+        }
+      ],
+      "worst_bucket_n20": null,
+      "won_loss_err": {
+        "n": 2,
+        "median": 39.5,
+        "mean": 39.5,
+        "mae": 39.5,
+        "p10": 9,
+        "p90": 70,
+        "within5": 0.0
+      },
+      "leak": {
+        "n": 46,
+        "sim_enemy": 10.74,
+        "actual_enemy": 3.59,
+        "enemy_ratio": 2.994,
+        "sim_loss": 10.2,
+        "actual_loss": 4.54,
+        "loss_ratio": 2.244
+      }
+    },
+    "pre": {
+      "n": 20,
+      "actual_win": 0.1,
+      "mean_pred": 0.384,
+      "brier": 0.1011,
+      "auc": 1.0,
+      "const_brier": 0.09,
+      "buckets": [
+        {
+          "bucket": "0–20%",
+          "n": 0,
+          "pred": null,
+          "actual": null
+        },
+        {
+          "bucket": "20–40%",
+          "n": 17,
+          "pred": 0.321,
+          "actual": 0.0
+        },
+        {
+          "bucket": "40–60%",
+          "n": 1,
+          "pred": 0.489,
+          "actual": 0.0
+        },
+        {
+          "bucket": "60–80%",
+          "n": 0,
+          "pred": null,
+          "actual": null
+        },
+        {
+          "bucket": "80–100%",
+          "n": 2,
+          "pred": 0.872,
+          "actual": 1.0
+        }
+      ],
+      "worst_bucket_n20": null,
+      "won_loss_err": {
+        "n": 2,
+        "median": 38.5,
+        "mean": 38.5,
+        "mae": 38.5,
+        "p10": 6,
+        "p90": 71,
+        "within5": 0.0
+      },
+      "leak": {
+        "n": 46,
+        "sim_enemy": 11.28,
+        "actual_enemy": 3.59,
+        "enemy_ratio": 3.144,
+        "sim_loss": 10.85,
+        "actual_loss": 4.54,
+        "loss_ratio": 2.389
+      }
+    }
+  },
+  "refresh": {
+    "entry": "agent/tools/boss-sim/refresh-silent.py",
+    "dispatch": "ops/learner_jobs.py:calibration_job",
+    "cadence": "ticks :13/:43 and learner finish; ascension or 20 new won/died boss attempts; censored SL does not count",
+    "fixed_model": "7e1193cef9467416bc10c8e344a49f4fd98390c7",
+    "fixed_input_files": 210,
+    "split_cutoff_utc": "2026-10-06T02:46:11.648000",
+    "frozen_invocation_flags": [
+      "--previous",
+      "--dataset",
+      "--results",
+      "--provenance"
+    ],
+    "default_current_model_not_claimed_pinned": true,
+    "idempotency": {
+      "complete_artifact_skip": true,
+      "updated_previous_threshold_skip": true,
+      "no_subprocess_on_skips": true,
+      "tune_keys_and_cutoff_unchanged": true,
+      "platt_and_selection_unchanged": true,
+      "new_keys_only_in_validation": true,
+      "replayed_new_outcomes": 21,
+      "new_outcomes_since_live": 21,
+      "validation": 395,
+      "frozen_cadence": {
+        "due": false,
+        "new_completed_boss_attempts": 0,
+        "max_asc": 10,
+        "trigger": null
+      }
+    }
+  },
+  "commits": {
+    "source": [
+      "c53d5273269a3b82af3c7e62f5f8caabae5013ad",
+      "57afeb1dc9407ba07797fc04ad86a271496c313c"
+    ],
+    "preserved_live_refresh": [
+      "309f4434f9c4da24311d492ee9a3b293dfb2419b",
+      "cc82ef5cbc3c14a304a70229b72fb39b17f60f13",
+      "ab3e6c70100b17b9210e2b12d93e8e8a4f311235"
+    ],
+    "rolled_back_merges": [
+      "19b02dcc884825226c193ac1616f0c397f38fae9",
+      "c4a8b0d65fdc5393b19855d68272bb08ca743fc4",
+      "65763022bbb3a5571671e8fab4ae0c92c52b2fd5"
+    ],
+    "final_attempt_merge": "6c8eed9f4b6f95a09d259fe9089dcdcc4c1f39c6",
+    "successful_merge": "6c8eed9f4b6f95a09d259fe9089dcdcc4c1f39c6",
+    "publication": "be35c7a32ce7f294e4fd2645d0fcb812e9c87b29"
+  },
+  "source_live_ancestor": true,
+  "live_head_at_completion": "be35c7a32ce7f294e4fd2645d0fcb812e9c87b29",
+  "learning_notice": {
+    "finding": [
+      {
+        "claim": "上一批知识恶魔B2通过四指标，36场验证、打穿比1.281，列为可信。",
+        "finding": "新增3场独立验证后n=39、打穿比1.325，超过预先固定1.3上限；其余三项通过，数量缺口0仍必须撤回B2可信。B3打穿比1.347，继续低可信。",
+        "evidence": [
+          "Y82C2NV7WM2M A10 F33尝试6 T1–6 died",
+          "1269Y20SKHUM A10 F33尝试1 T1–10 won",
+          "EEVP0QTLMSX9 A10 F33尝试1 T1–11 won"
+        ],
+        "knowledge": [
+          "knowledge/characters/silent/boss-trust.json"
+        ],
+        "recommendation": "沿既有四标准撤回B2可信；不改门槛或策略，继续同模型扩验证。实际发布后双收件箱通知ops→watcher→Roy，不代填确认。"
+      }
+    ],
+    "dual_append_receipt": {
+      "written_at": "2026-10-14 09:36:50 CST",
+      "source": "57afeb1dc9407ba07797fc04ad86a271496c313c",
+      "ledger": "silent-0463",
+      "actual_append_evidence": [
+        {
+          "path": "/home/dw/Projects/agent-sts2/notes/for-roy.md",
+          "offset": 856040,
+          "length": 1469,
+          "sha256": "c769a6345f158ef3ea8712ffb32de52233c84b6c0b7e4e1eed663fde1de08b23",
+          "old_prefix_sha256": "a0fab9d190882d90c05662c752f7ba2185dd4edefe46e459a84f009e3cd52123"
+        },
+        {
+          "path": "/home/dw/Projects/agent-sts2/ops/inbox-dev.md",
+          "offset": 1015986,
+          "length": 1469,
+          "sha256": "c769a6345f158ef3ea8712ffb32de52233c84b6c0b7e4e1eed663fde1de08b23",
+          "old_prefix_sha256": "059101949922580cbe83352fcb396ccf88cb0756d61d186c8cf98c7fa21ab1f5"
+        }
+      ],
+      "watcher_received": false,
+      "roy_notified": false,
+      "scope": "Actual dual append only; ops forwarding and downstream role confirmations remain separate."
+    },
+    "watcher_received": false,
+    "roy_notified": false
+  },
+  "ledger_status": "proposed only; ops owns shipped and official release_id",
+  "request_closed": false,
+  "natural_adoption": "not verified"
+}
