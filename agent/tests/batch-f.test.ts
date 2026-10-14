@@ -28,6 +28,7 @@ import { exhaustedSinceTurnStart, turnStartAoe } from "../src/reflex/combat-plan
 import { replayRun } from "../src/memory/journal-replay.js";
 import { solveTurn, type EnemySim, type Plan, type PlayerSim, type SolverInput } from "../src/reflex/turn-solver.js";
 import { knowledgeFile } from "../src/knowledge/files.js";
+import { testBlocks } from "../tools/test-blocks.js";
 
 function card(index: number, cardId: string, overrides: Partial<CardModel> = {}): CardModel {
   return {
@@ -128,19 +129,7 @@ describe("2. Tests that plan logged boards have a timeout that holds under load 
   // at vitest's default 5 s they timed out under load (potion-mc "the same twice" once; it takes 1.6 s alone).
   const TESTS = dirname(fileURLToPath(import.meta.url));
   const blocks = (file: string): { title: string; body: string; timeout: number | null }[] => {
-    const lines = readFileSync(join(TESTS, file), "utf8").split("\n");
-    const found: { title: string; body: string; timeout: number | null }[] = [];
-    for (let i = 0; i < lines.length; i += 1) {
-      const head = /^(\s*)it\("([^"]*)"/.exec(lines[i]!);
-      if (!head) continue;
-      const end = new RegExp(`^${head[1]}\\}(?:, ([\\d_]+))?\\);\\s*$`);
-      let j = i + 1;
-      while (j < lines.length && !end.test(lines[j]!)) j += 1;
-      const timeout = end.exec(lines[j] ?? "")?.[1];
-      found.push({ title: head[2]!, body: lines.slice(i, j + 1).join("\n"), timeout: timeout ? Number(timeout.replace(/_/g, "")) : null });
-      i = j;
-    }
-    return found;
+    return testBlocks(readFileSync(join(TESTS, file), "utf8"));
   };
 
   for (const file of ["potion-mc.test.ts", "rollout-live.test.ts"]) {
