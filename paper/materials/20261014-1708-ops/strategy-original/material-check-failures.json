@@ -1,0 +1,27 @@
+[
+  {
+    "exit_code": 1,
+    "error": "ERR_MODULE_NOT_FOUND",
+    "module": "agent/node_modules/typescript/lib/typescript.js",
+    "scope": "辅助源码去注释比较",
+    "resolution": "保存原blob差异，逐修改行核注释前缀及实际Roy→Dai字节替换；未修改依赖或源码"
+  },
+  {
+    "exit_code": 1,
+    "error": "AssertionError",
+    "scope": "首版注释前缀检查漏掉单行/**...*/",
+    "resolution": "定位四行均为单行块注释，修正材料检查正则后全部通过；原源码未变"
+  },
+  {
+    "exit_code": 1,
+    "error": "AssertionError",
+    "scope": "首次护栏材料校验误以sl_explore字段存在等同覆盖",
+    "resolution": "原三条replay.overridden=false保持；按显式overridden或原线/替线差异核四条真覆盖，未改原日志/源码/提案"
+  },
+  {
+    "exit_code": 1,
+    "error": "FileNotFoundError",
+    "scope": "紧接首次护栏校验失败的artifact索引生成引用尚未写出的guard文件",
+    "resolution": "护栏事实修正且文件存在后再生成最终索引；首失败保留，不当生产测试失败"
+  }
+]
