@@ -1,0 +1,70 @@
+{
+  "observed_run": "EBVT8UZM6P12",
+  "report_source": "ops/codex-ops/module-health/EBVT8UZM6P12.json",
+  "report_sha256": "6860b15fa0b8a3302ae61bee9645ec6dc2b09b5f0233c87ba67026ac9b9d8ef8",
+  "construction_pipeline": {
+    "enabled": false,
+    "evaluation_expected": 0,
+    "evaluation_attached": 0,
+    "evaluation_missing": 0,
+    "brain_evaluation": 0,
+    "accepted_evaluation": 0,
+    "accepted_choice_with_evaluation": 0,
+    "plan_due": 0,
+    "accepted_structured_plan": 0,
+    "missing_structured_plan": 0,
+    "saved_structured_plan": 0,
+    "plan_readback": 0,
+    "checkpoint_review_due": 0,
+    "probability_delivered": 0,
+    "admission": {},
+    "evidence": [],
+    "alert": false,
+    "limits": "Payload delivery, accepted output and saved/read-back plans are distinct observations, not causal win-rate evidence. Missing calibration is pending, not a service failure."
+  },
+  "complete": true,
+  "no_notify_or_game_action": true,
+  "actual_config": {
+    "offset": 1655457,
+    "bytes": 4987,
+    "sha256": "eae0d141f76b1d4e15e518797f38b577c9843b02e062db64fcefd8f18187d783",
+    "ts": "2026-10-14T01:47:03.712Z",
+    "run": "EBVT8UZM6P12",
+    "character": "SILENT",
+    "ascension": 10,
+    "code": {
+      "commit": "be35c7a32ce7f294e4fd2645d0fcb812e9c87b29",
+      "code": "be35c7a+dirty",
+      "dirty": true,
+      "dirty_files": [
+        "knowledge/characters/silent/boss-damage.json",
+        "knowledge/characters/silent/construction-opportunities.json",
+        "knowledge/characters/silent/monster-records.json",
+        "knowledge/characters/silent/outcome-stats.json",
+        "knowledge/characters/silent/room-costs.json",
+        "knowledge/common/card-upgrades.json",
+        "knowledge/common/monster-db.json",
+        "knowledge/common/move-model.json",
+        "notes/monster-db-check.md"
+      ],
+      "branch": "live",
+      "worktree": "live"
+    },
+    "construction": {
+      "architecture": "V5",
+      "schema": "construction-v1",
+      "mode": "shadow",
+      "policy": "observed-signature-completion",
+      "validation": "prospective-calibration-required"
+    }
+  },
+  "release_id": "V5-R338",
+  "acceptance": "Pending next natural source process; old config has no evaluation field, enabled false/zero pipeline counters are not new-source service failure",
+  "required": [
+    "construction.evaluation same-question-combat-facts",
+    "facts.construction_evaluation bound to actual question and sample admission",
+    "accepted structured run_plan.construction when due",
+    "saved run-plans plus later brain readback/checkpoint",
+    "future-probability prospective calibration before advisory"
+  ]
+}

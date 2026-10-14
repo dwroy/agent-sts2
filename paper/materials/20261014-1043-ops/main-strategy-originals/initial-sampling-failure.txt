@@ -1,0 +1,1 @@
+实际只读抽样初稿：states.jsonl 12638144908 字节；SAMPLE 280166 keys ts/observed_ts/fingerprint/screen/session/state。打印 list(state.combat) 时非战斗 combat=null 导致 TypeError: NoneType object is not iterable，退出码1。随后以 state.run_id 绑定，并对 combat 使用 or {}；完整角色核验及原始行提取由 extract_evidence.py 完成。此错误不属于生产代码或源码测试失败。
