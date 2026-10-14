@@ -1,0 +1,6 @@
+本批只读路径定位诊断（均未修改源码，不是代码测试失败）：
+1. 工作树中没有ops/codex-ops，派发身份改读任务指定的项目根ops/codex-ops/learn.json。
+2. agent/src/reflex/turn-audit*.ts与agent/src/sl/*audit*匹配不存在；实际模块为silent-selection-audit、silent-selection-dispatch及learner/lib/selection-*。
+3. agent/src/reflex/silent-selection-execution.ts与learner/selection_execution.ts不存在；实际消费者为learner/lib/selection-execution.ts。已读取原模块并做本批有界读回。
+4. 初次项目根node --import tsx找不到包的真实堆栈保存在consumer-readback-initial-error.log；scratch导入相对路径也由../../../lib改为../../lib。改在agent目录运行后退出0；没有改生产消费者。
+5. 原无decision_id的4条路线元记录触发两局完整输入拒绝。原记录保持，只在bounded输入中排除；具体行号和原拒绝见consumer-readback.json，不造身份，不改校验器。

@@ -1,0 +1,269 @@
+[
+  {
+    "run_id": "CA5KE8GFJ9X2",
+    "attempts": [
+      {
+        "label": "full",
+        "accepted": false,
+        "reason": "Error: 决策必须按观测时间排序，且 decision_id 非空、不重复",
+        "decisions": 265
+      },
+      {
+        "label": "bounded",
+        "accepted": true,
+        "decisions": 264,
+        "segments": 41,
+        "segment_boundaries": {
+          "superseded_by_question": 14,
+          "end_turn_requested": 24,
+          "turn_room_or_attempt_changed": 3
+        },
+        "observed_interval_reasons": {
+          "room_or_attempt_changed_or_unknown": 263,
+          "input_exhausted": 1
+        },
+        "observed_action_statuses": {
+          "unknown": 264
+        },
+        "observed_turns": 46,
+        "candidate_results_certified": 0,
+        "limitations": [
+          "同题唯一文字匹配仅定位日志候选，不证明隐藏卡牌身份或完整执行。",
+          "completed 只代表动作接口回执；pending 不当成已生效。",
+          "不拟合护栏、药水或SL阈值；不把预测排名、净HP变化或相关读档当胜率因果。",
+          "相邻原始决策的前后快照仅描述观测区间，不能认证中间没有未落盘动作；持有手牌不等于已建立能力。",
+          "缺原行号、跨尝试、非结束回合的跨轮或状态匹配不唯一时不连接后帧；敌人索引不作为跨帧实体身份。",
+          "连续原决策的前后状态仅记观测差值；能力出现时点、净HP变化不证明单卡因果或完整候选收益；缺失能力列表不当零层。",
+          "enemy_id 是类型；仅同名单唯一类型可比较端点，同类重复、增减员不推定实体身份或击杀。",
+          "结束页尝试号为空只在已核结束回合/最终结束页的连续决策与状态中单列；零血净损不等于完整入伤，显示攻击减当前挡仅为算术参考。",
+          "整轮窗口需前轮结束请求及本轮结束端点均可核，保留全部重问；净HP差、恢复路径和单题预测分别列账，不能归因SL替换或认证整条候选。"
+        ]
+      }
+    ],
+    "exclusions": [
+      {
+        "line": 267143,
+        "label": "map/route-change",
+        "reason": "原行没有decision_id，不补造身份"
+      }
+    ]
+  },
+  {
+    "run_id": "5PM6JAQG6FNQ",
+    "attempts": [
+      {
+        "label": "full",
+        "accepted": true,
+        "decisions": 638,
+        "segments": 83,
+        "segment_boundaries": {
+          "end_turn_requested": 66,
+          "superseded_by_question": 16,
+          "turn_room_or_attempt_changed": 1
+        },
+        "observed_interval_reasons": {
+          "room_or_attempt_changed_or_unknown": 433,
+          "adjacent_logged_observations": 202,
+          "turn_boundary_unverified": 2,
+          "input_exhausted": 1
+        },
+        "observed_action_statuses": {
+          "unknown": 436,
+          "observed_endpoints": 202
+        },
+        "observed_turns": 101,
+        "candidate_results_certified": 0,
+        "limitations": [
+          "同题唯一文字匹配仅定位日志候选，不证明隐藏卡牌身份或完整执行。",
+          "completed 只代表动作接口回执；pending 不当成已生效。",
+          "不拟合护栏、药水或SL阈值；不把预测排名、净HP变化或相关读档当胜率因果。",
+          "相邻原始决策的前后快照仅描述观测区间，不能认证中间没有未落盘动作；持有手牌不等于已建立能力。",
+          "缺原行号、跨尝试、非结束回合的跨轮或状态匹配不唯一时不连接后帧；敌人索引不作为跨帧实体身份。",
+          "连续原决策的前后状态仅记观测差值；能力出现时点、净HP变化不证明单卡因果或完整候选收益；缺失能力列表不当零层。",
+          "enemy_id 是类型；仅同名单唯一类型可比较端点，同类重复、增减员不推定实体身份或击杀。",
+          "结束页尝试号为空只在已核结束回合/最终结束页的连续决策与状态中单列；零血净损不等于完整入伤，显示攻击减当前挡仅为算术参考。",
+          "整轮窗口需前轮结束请求及本轮结束端点均可核，保留全部重问；净HP差、恢复路径和单题预测分别列账，不能归因SL替换或认证整条候选。"
+        ]
+      }
+    ],
+    "exclusions": []
+  },
+  {
+    "run_id": "DUZUBAJ3A8GP",
+    "attempts": [
+      {
+        "label": "full",
+        "accepted": false,
+        "reason": "Error: 决策必须按观测时间排序，且 decision_id 非空、不重复",
+        "decisions": 602
+      },
+      {
+        "label": "bounded",
+        "accepted": true,
+        "decisions": 599,
+        "segments": 77,
+        "segment_boundaries": {
+          "end_turn_requested": 61,
+          "superseded_by_question": 13,
+          "turn_room_or_attempt_changed": 3
+        },
+        "observed_interval_reasons": {
+          "room_or_attempt_changed_or_unknown": 409,
+          "adjacent_logged_observations": 189,
+          "input_exhausted": 1
+        },
+        "observed_action_statuses": {
+          "unknown": 410,
+          "observed_endpoints": 189
+        },
+        "observed_turns": 96,
+        "candidate_results_certified": 0,
+        "limitations": [
+          "同题唯一文字匹配仅定位日志候选，不证明隐藏卡牌身份或完整执行。",
+          "completed 只代表动作接口回执；pending 不当成已生效。",
+          "不拟合护栏、药水或SL阈值；不把预测排名、净HP变化或相关读档当胜率因果。",
+          "相邻原始决策的前后快照仅描述观测区间，不能认证中间没有未落盘动作；持有手牌不等于已建立能力。",
+          "缺原行号、跨尝试、非结束回合的跨轮或状态匹配不唯一时不连接后帧；敌人索引不作为跨帧实体身份。",
+          "连续原决策的前后状态仅记观测差值；能力出现时点、净HP变化不证明单卡因果或完整候选收益；缺失能力列表不当零层。",
+          "enemy_id 是类型；仅同名单唯一类型可比较端点，同类重复、增减员不推定实体身份或击杀。",
+          "结束页尝试号为空只在已核结束回合/最终结束页的连续决策与状态中单列；零血净损不等于完整入伤，显示攻击减当前挡仅为算术参考。",
+          "整轮窗口需前轮结束请求及本轮结束端点均可核，保留全部重问；净HP差、恢复路径和单题预测分别列账，不能归因SL替换或认证整条候选。"
+        ]
+      }
+    ],
+    "exclusions": [
+      {
+        "line": 268789,
+        "label": "map/route-change",
+        "reason": "原行没有decision_id，不补造身份"
+      },
+      {
+        "line": 268818,
+        "label": "map/route-change",
+        "reason": "原行没有decision_id，不补造身份"
+      },
+      {
+        "line": 268864,
+        "label": "map/route-change",
+        "reason": "原行没有decision_id，不补造身份"
+      }
+    ]
+  },
+  {
+    "run_id": "8JRE1C4H4Z2W",
+    "attempts": [
+      {
+        "label": "full",
+        "accepted": true,
+        "decisions": 659,
+        "segments": 113,
+        "segment_boundaries": {
+          "end_turn_requested": 81,
+          "superseded_by_question": 31,
+          "turn_room_or_attempt_changed": 1
+        },
+        "observed_interval_reasons": {
+          "room_or_attempt_changed_or_unknown": 394,
+          "adjacent_logged_observations": 264,
+          "input_exhausted": 1
+        },
+        "observed_action_statuses": {
+          "unknown": 395,
+          "observed_endpoints": 264
+        },
+        "observed_turns": 111,
+        "candidate_results_certified": 0,
+        "limitations": [
+          "同题唯一文字匹配仅定位日志候选，不证明隐藏卡牌身份或完整执行。",
+          "completed 只代表动作接口回执；pending 不当成已生效。",
+          "不拟合护栏、药水或SL阈值；不把预测排名、净HP变化或相关读档当胜率因果。",
+          "相邻原始决策的前后快照仅描述观测区间，不能认证中间没有未落盘动作；持有手牌不等于已建立能力。",
+          "缺原行号、跨尝试、非结束回合的跨轮或状态匹配不唯一时不连接后帧；敌人索引不作为跨帧实体身份。",
+          "连续原决策的前后状态仅记观测差值；能力出现时点、净HP变化不证明单卡因果或完整候选收益；缺失能力列表不当零层。",
+          "enemy_id 是类型；仅同名单唯一类型可比较端点，同类重复、增减员不推定实体身份或击杀。",
+          "结束页尝试号为空只在已核结束回合/最终结束页的连续决策与状态中单列；零血净损不等于完整入伤，显示攻击减当前挡仅为算术参考。",
+          "整轮窗口需前轮结束请求及本轮结束端点均可核，保留全部重问；净HP差、恢复路径和单题预测分别列账，不能归因SL替换或认证整条候选。"
+        ]
+      }
+    ],
+    "exclusions": []
+  },
+  {
+    "run_id": "YF0LXT1QSTGG",
+    "attempts": [
+      {
+        "label": "full",
+        "accepted": true,
+        "decisions": 1065,
+        "segments": 204,
+        "segment_boundaries": {
+          "end_turn_requested": 49,
+          "turn_room_or_attempt_changed": 56,
+          "superseded_by_question": 99
+        },
+        "observed_interval_reasons": {
+          "room_or_attempt_changed_or_unknown": 640,
+          "adjacent_logged_observations": 424,
+          "input_exhausted": 1
+        },
+        "observed_action_statuses": {
+          "unknown": 641,
+          "observed_endpoints": 424
+        },
+        "observed_turns": 160,
+        "candidate_results_certified": 0,
+        "limitations": [
+          "同题唯一文字匹配仅定位日志候选，不证明隐藏卡牌身份或完整执行。",
+          "completed 只代表动作接口回执；pending 不当成已生效。",
+          "不拟合护栏、药水或SL阈值；不把预测排名、净HP变化或相关读档当胜率因果。",
+          "相邻原始决策的前后快照仅描述观测区间，不能认证中间没有未落盘动作；持有手牌不等于已建立能力。",
+          "缺原行号、跨尝试、非结束回合的跨轮或状态匹配不唯一时不连接后帧；敌人索引不作为跨帧实体身份。",
+          "连续原决策的前后状态仅记观测差值；能力出现时点、净HP变化不证明单卡因果或完整候选收益；缺失能力列表不当零层。",
+          "enemy_id 是类型；仅同名单唯一类型可比较端点，同类重复、增减员不推定实体身份或击杀。",
+          "结束页尝试号为空只在已核结束回合/最终结束页的连续决策与状态中单列；零血净损不等于完整入伤，显示攻击减当前挡仅为算术参考。",
+          "整轮窗口需前轮结束请求及本轮结束端点均可核，保留全部重问；净HP差、恢复路径和单题预测分别列账，不能归因SL替换或认证整条候选。"
+        ]
+      }
+    ],
+    "exclusions": []
+  },
+  {
+    "run_id": "XP2SL33HT0D9",
+    "attempts": [
+      {
+        "label": "full",
+        "accepted": true,
+        "decisions": 712,
+        "segments": 123,
+        "segment_boundaries": {
+          "end_turn_requested": 88,
+          "superseded_by_question": 34,
+          "turn_room_or_attempt_changed": 1
+        },
+        "observed_interval_reasons": {
+          "room_or_attempt_changed_or_unknown": 437,
+          "adjacent_logged_observations": 274,
+          "input_exhausted": 1
+        },
+        "observed_action_statuses": {
+          "unknown": 438,
+          "observed_endpoints": 274
+        },
+        "observed_turns": 122,
+        "candidate_results_certified": 0,
+        "limitations": [
+          "同题唯一文字匹配仅定位日志候选，不证明隐藏卡牌身份或完整执行。",
+          "completed 只代表动作接口回执；pending 不当成已生效。",
+          "不拟合护栏、药水或SL阈值；不把预测排名、净HP变化或相关读档当胜率因果。",
+          "相邻原始决策的前后快照仅描述观测区间，不能认证中间没有未落盘动作；持有手牌不等于已建立能力。",
+          "缺原行号、跨尝试、非结束回合的跨轮或状态匹配不唯一时不连接后帧；敌人索引不作为跨帧实体身份。",
+          "连续原决策的前后状态仅记观测差值；能力出现时点、净HP变化不证明单卡因果或完整候选收益；缺失能力列表不当零层。",
+          "enemy_id 是类型；仅同名单唯一类型可比较端点，同类重复、增减员不推定实体身份或击杀。",
+          "结束页尝试号为空只在已核结束回合/最终结束页的连续决策与状态中单列；零血净损不等于完整入伤，显示攻击减当前挡仅为算术参考。",
+          "整轮窗口需前轮结束请求及本轮结束端点均可核，保留全部重问；净HP差、恢复路径和单题预测分别列账，不能归因SL替换或认证整条候选。"
+        ]
+      }
+    ],
+    "exclusions": []
+  }
+]
