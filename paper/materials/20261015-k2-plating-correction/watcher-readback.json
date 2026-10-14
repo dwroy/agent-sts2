@@ -1,0 +1,158 @@
+{
+  "at": "2026-10-15T05:18:45+08:00",
+  "notice_id": "d486caef57aeb0c096a29a75",
+  "proposal_id": "silent-proposal-c64bdd50a949d16f",
+  "original_batch": "20261015-044302-s2-strategy-proposal",
+  "watcher_session": "01a139d6-cfec-78e1-8739-e21ac426a354",
+  "read_scope": [
+    "entire canonical notice and source",
+    "entire report.md",
+    "original proposal relevant citation with full SHA verification",
+    "counterexample five frame/five action projections and three original byte checks"
+  ],
+  "source_evidence": {
+    "path": ".worktrees/codex-strategy-silent-20261015-044302-s2/learner/runs/20261015-044313-strategy-proposal/notice-source.json",
+    "sha256": "80f256a29daaa423bb6608ceed21273964d8bc3fce08a7f00a610b8113af44e8"
+  },
+  "original_proposal": {
+    "path": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-101302-experience-update/proposal-resources.md",
+    "sha256": "979e5eb65499c91eed763906c40aa0b50a42b598925021c83c220bef3e7bc658"
+  },
+  "report": {
+    "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261015-044302-s2/learner/runs/20261015-044313-strategy-proposal/report.md",
+    "sha256": "07d69517ea68a47eb87892a80a588de6186f8b713fa72789435ccdd1a46e96bb",
+    "bytes": 7689
+  },
+  "counterexample": {
+    "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261015-044302-s2/learner/runs/20261015-044313-strategy-proposal/k2-f27-contradiction-check.json",
+    "sha256": "081f45b456e90fd262d4f176428788aba2942deec266f56844575d9283b4c503"
+  },
+  "original_claim_and_correction": [
+    {
+      "proposal_id": "silent-proposal-c64bdd50a949d16f",
+      "claim": "原第94批资源提案写：K2JAGKVJAWZJ F27T2铁心已有16挡，药后仍16、覆甲0→7。",
+      "finding": "本批重读s292785–292789与d286120–286124，饮用为d286123；s292788→292789实际格挡0→0、覆甲0→7、HP57→57。原文16挡的数字不受该动作实帧支持。",
+      "evidence": [
+        {
+          "run": "K2JAGKVJAWZJ",
+          "floor": 27,
+          "turn": 2,
+          "stream": "states",
+          "line": 292788,
+          "offset": 9064688947,
+          "bytes": 33105,
+          "sha256": "7391aa2e46ad137fa400730a01e64488574207e125d9adf89d6617b622ea59bf"
+        },
+        {
+          "run": "K2JAGKVJAWZJ",
+          "floor": 27,
+          "turn": 2,
+          "stream": "states",
+          "line": 292789,
+          "offset": 9064722052,
+          "bytes": 32932,
+          "sha256": "a7d446474385ff5d0ab1bee1a2b9ff0dbd30587c7835eb1dd266e016a88f96a1"
+        },
+        {
+          "run": "K2JAGKVJAWZJ",
+          "floor": 27,
+          "turn": 2,
+          "stream": "decisions",
+          "line": 286123,
+          "offset": 741288301,
+          "bytes": 1502,
+          "sha256": "a0039b8baec3a8c2b92e9a44713ced2a0b8ca6f4e9b716ce783113eae30462ef"
+        }
+      ],
+      "experience": [
+        "silent-heart-of-iron-plating"
+      ],
+      "ledger": [
+        "silent-0277"
+      ],
+      "recommendation": "保留原提案/复盘，追加数字勘误；覆甲建立7与当步旧挡不变的限定机制仍受支持。请ops按普通提案来源注册反证通知并转交watcher，由watcher本人告知Roy；不新造学习父请求，不代填ACK，不扩展药水时点或持有价规则。"
+    }
+  ],
+  "verified_raw_evidence": [
+    {
+      "run": "K2JAGKVJAWZJ",
+      "floor": 27,
+      "turn": 2,
+      "stream": "states",
+      "line": 292788,
+      "offset": 9064688947,
+      "bytes": 33105,
+      "sha256": "7391aa2e46ad137fa400730a01e64488574207e125d9adf89d6617b622ea59bf",
+      "source": "logs/states.jsonl",
+      "actual_projection": {
+        "run": "K2JAGKVJAWZJ",
+        "character": "SILENT",
+        "ascension": 10,
+        "floor": 27,
+        "turn": 2,
+        "hp": 57,
+        "block": 0,
+        "plating": 0
+      }
+    },
+    {
+      "run": "K2JAGKVJAWZJ",
+      "floor": 27,
+      "turn": 2,
+      "stream": "states",
+      "line": 292789,
+      "offset": 9064722052,
+      "bytes": 32932,
+      "sha256": "a7d446474385ff5d0ab1bee1a2b9ff0dbd30587c7835eb1dd266e016a88f96a1",
+      "source": "logs/states.jsonl",
+      "actual_projection": {
+        "run": "K2JAGKVJAWZJ",
+        "character": "SILENT",
+        "ascension": 10,
+        "floor": 27,
+        "turn": 2,
+        "hp": 57,
+        "block": 0,
+        "plating": 7
+      }
+    },
+    {
+      "run": "K2JAGKVJAWZJ",
+      "floor": 27,
+      "turn": 2,
+      "stream": "decisions",
+      "line": 286123,
+      "offset": 741288301,
+      "bytes": 1502,
+      "sha256": "a0039b8baec3a8c2b92e9a44713ced2a0b8ca6f4e9b716ce783113eae30462ef",
+      "source": "logs/decisions.jsonl",
+      "actual_projection": {
+        "run": "K2JAGKVJAWZJ",
+        "decision_id": "a46d7eb3-204b-40c2-b26b-adcdfc868b96",
+        "action": {
+          "action": "use_potion",
+          "option_index": 0
+        },
+        "potion": {
+          "id": "HEART_OF_IRON"
+        },
+        "result": "completed: Action completed."
+      }
+    }
+  ],
+  "watcher_received": true,
+  "watcher_user_visible_notification_sent": true,
+  "roy_read_or_acknowledged": null,
+  "other_role_ACKs_written": false,
+  "native_notification": {
+    "path": "/home/dw/.codex/sessions/2026/10/14/rollout-2026-10-14T17-55-41-01a139d6-cfec-78e1-8739-e21ac426a354.jsonl",
+    "offset": 11031849,
+    "bytes": 1413,
+    "sha256": "945a8ae194f05da31876e22b21416a099c0d9b10bd519e92a251603de6113774",
+    "timestamp": "2026-10-14T21:18:18.260Z"
+  },
+  "old_artifacts_and_gameplay_rules_unchanged": true,
+  "new_parent_task_or_experiment": false,
+  "broad_proposal_completed": false,
+  "unrelated_R3_notice_repeated": false
+}

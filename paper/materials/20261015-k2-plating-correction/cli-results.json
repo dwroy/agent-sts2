@@ -1,0 +1,49 @@
+{
+  "notice_id": "d486caef57aeb0c096a29a75",
+  "results": [
+    {
+      "stage": "watcher_received",
+      "command": [
+        "python3",
+        "ops/learning_requests.py",
+        "ack",
+        "--notice",
+        "d486caef57aeb0c096a29a75",
+        "--stage",
+        "watcher_received",
+        "--receipt",
+        "paper/materials/20261015-k2-plating-correction/watcher_received-receipt.json"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": "",
+      "registered": {
+        "path": "/home/dw/Projects/agent-sts2/paper/materials/20261015-k2-plating-correction/watcher_received-receipt.json",
+        "sha256": "e0d1cdb83fda7b55e9ada393185dbea8928ca9f407296befdcadf4da4b964092",
+        "at": 1792012725.7671406
+      }
+    },
+    {
+      "stage": "roy_notified",
+      "command": [
+        "python3",
+        "ops/learning_requests.py",
+        "ack",
+        "--notice",
+        "d486caef57aeb0c096a29a75",
+        "--stage",
+        "roy_notified",
+        "--receipt",
+        "paper/materials/20261015-k2-plating-correction/roy_notified-receipt.json"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": "",
+      "registered": {
+        "path": "/home/dw/Projects/agent-sts2/paper/materials/20261015-k2-plating-correction/roy_notified-receipt.json",
+        "sha256": "d45cba8be48dec4776ce54fea9a4228d2b883cd475a9956fa47f0a9f718e5815",
+        "at": 1792012726.1842651
+      }
+    }
+  ]
+}
