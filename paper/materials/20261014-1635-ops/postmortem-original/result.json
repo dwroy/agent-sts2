@@ -1,0 +1,44 @@
+{
+  "task": "postmortem",
+  "appended": [
+    "QRZX1S9USYWP"
+  ],
+  "skipped": [],
+  "bugs": [
+    {
+      "run": "QRZX1S9USYWP",
+      "where": "agent/src/reflex/card-model.ts:1090",
+      "what": "炼制药水未接药槽容量，满槽实付1能量且净入栏0，未知技能仍给固定5分",
+      "new": true
+    }
+  ],
+  "ledger": {
+    "added": [
+      "silent-0474",
+      "silent-0475"
+    ],
+    "updated": [
+      "silent-0019",
+      "silent-0209",
+      "silent-0232",
+      "silent-0224",
+      "silent-0227",
+      "silent-0039",
+      "silent-0045",
+      "silent-0294"
+    ],
+    "repeats": [],
+    "check": 0
+  },
+  "code_proposals": [
+    "silent-proposal-cae7ed8545a65c66",
+    "silent-proposal-6deadb11f48aadda"
+  ],
+  "implementation_domains": [
+    "combat",
+    "potion",
+    "sl",
+    "terminal"
+  ],
+  "report": "/home/dw/Projects/agent-sts2/learner/runs/20261014-154305-postmortem/report.md"
+}

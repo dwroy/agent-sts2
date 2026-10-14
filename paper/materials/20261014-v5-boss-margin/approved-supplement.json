@@ -1,0 +1,88 @@
+{
+  "id": "v5-boss-relative-dpr-margin-20261014",
+  "at": "2026-10-14 16:33:04 CST",
+  "authorized_by": "Roy",
+  "authorization": {
+    "path": "roy-authorization.jsonl",
+    "native_offset": 56481805,
+    "bytes": 816,
+    "sha256": "fe2b6191b08b6011d69b1b46ecf1ce2678769a9762b15501fb719c7ce924c948"
+  },
+  "parents": [
+    "v5-dpr-health-20261013",
+    "roy-20261011-silent-core-cycle-quantitative-learning"
+  ],
+  "prior_engineering_supplement": "v5-jev-prompt-ablation-20261014",
+  "state": "approved_architecture_objective_pending_original_owner_implementation_and_validation",
+  "formula": {
+    "requested": "my_dpr/enemy_hp - enemy_drp/my_hp",
+    "canonical": "S = my_dpr / boss_hp - enemy_dpr / my_hp",
+    "direction": "maximize under existing survival/validity guards",
+    "unit": "fraction of reference HP per turn",
+    "meaning": "我方每回合打掉Boss血量比例减去敌方每回合打掉我方血量比例。",
+    "scope": "SILENT V5; boss-based candidate assessment; not a universal all-character gameplay rule"
+  },
+  "definitions": {
+    "boss_reference": "Freeze encounter identity, ascension, relevant target HP pools/phases, source/model/knowledge and entry conditions before candidate comparison; only existing learner-validated encounter definitions. Do not use generic hallway or minion-damage totals as boss-target output.",
+    "my_dpr": "Effective damage to the modeled victory-relevant boss target(s), averaged over a declared whole-fight sample window including setup and terminal turns; never only the active combo window or overkill inflation.",
+    "enemy_dpr": "Actual incoming HP damage after modeled mitigation from the entire boss encounter over the SAME sample window; not displayed enemy intent, gross pre-block attacks, or the existing capped hpLoss field without accounting validation.",
+    "boss_hp": "Known reference entry HP pool for the target encounter; immutable within each scenario, not shrinking every turn to boost score. Multiple entities/phases/healing require explicit supported scope; missing support stays unknown.",
+    "my_hp": "Legally available HP at that candidate scenario entry. Rest/heal/HP-cost changes may alter it only through the existing legal action projection. Do not substitute future borrowed healing or repeatedly changing in-fight HP.",
+    "health_resources": "Enemy HP damage, self-cost, effective healing, potions and revival consumption need separate trace accounting. The requested scalar does not by itself fully value healing/self-cost or time order; retain existing survival/resource outcomes and test these cases rather than inventing a hidden weight.",
+    "zero_and_unknown": "Nonpositive reference HP, zero/incomplete turn window, unsupported target identity or missing damage attribution returns unknown/invalid, never infinity or zero-filled safety."
+  },
+  "math_boundary": [
+    "With positive HP and constant damage rates, S>0 is equivalent to the continuous-time kill-clock ordering. Real turn order and burst/setup/healing require full trajectories.",
+    "S is a ranking proxy, not win probability; larger mean S across stochastic candidates does not prove higher actual win rate.",
+    "A score computed after a realized complete outcome is retrospective; it cannot be described as a historical prediction or used as its own independent correctness label."
+  ],
+  "acceptance": [
+    "Reuse original frozen candidates/current-model/scenario IDs and samples when trace fields support S; do not alter in-progress immutable inputs or rerun completed Jev calls.",
+    "Compute S per matched sample then summarize mean/distribution and paired deltaS, sample identity, won/died/censored/missing denominators; do not substitute a ratio of unrelated aggregate means or mix windows.",
+    "Compare raw DPR ranking, existing selector and boss-relative S ranking against independently checked real trajectories and separately declared counterfactual model evidence. Include slower high-defense, fast fragile, delayed core, healing/revive and multi-boss scenarios when existing evidence supports them.",
+    "Reward/skip/buy/remove/upgrade compare deltaS against the same baseline boss scenario. Component signature probability and alive-through-core-start remain separate; do not multiply unvalidated marginal probabilities.",
+    "Known next-boss and final/continuous-boss assessment are labeled separately; resources carry across successive fights. Unknown future boss identity/entry HP is scenario uncertainty, not hidden privileged information.",
+    "Expose exact compact values and uncertainty to the brain/Jev only after original calibration/admission gates; code calculates the formula, models explain candidate trade-offs. No new independent brain call required.",
+    "Follow original tests/main-live/version/consumer/natural-acceptance/cleanup standards for an actual behavior release; this record is not a source release or successful calibration."
+  ],
+  "existing_owner": {
+    "current_R2_batch": "20261014-155247-fix-batch",
+    "thread": "01a13882-33cd-70b1-81e5-2d41bee83d7b",
+    "calibration_thread": "01a13753-c032-73f0-aa3f-ddc0e14809cd",
+    "quantitative_thread": "01a12c46-fef2-7282-b689-1fd8b4e0450b",
+    "ops_session": "01a12bec-c83f-7c21-b76f-eb8e5304eb8f"
+  },
+  "coordination": "Append to same pending R3/quantitative continuation at safe completion boundary; no new learning parent or duplicate research, no hot input or game restart. Existing P1/P2 and current R2 completion remain open.",
+  "ops_received_this_supplement": false,
+  "learner_received_this_supplement": false,
+  "live_changed": false,
+  "examples_not_game_evidence": [
+    {
+      "illustration_only": true,
+      "case": "offense_but_insufficient_survival",
+      "boss_hp": 600,
+      "my_hp": 60,
+      "my_dpr": 100,
+      "enemy_dpr": 15,
+      "score_per_turn": -0.08333333333333334
+    },
+    {
+      "illustration_only": true,
+      "case": "positive_margin",
+      "boss_hp": 600,
+      "my_hp": 60,
+      "my_dpr": 120,
+      "enemy_dpr": 8,
+      "score_per_turn": 0.06666666666666668
+    },
+    {
+      "illustration_only": true,
+      "case": "lower_damage_better_survival_margin",
+      "boss_hp": 600,
+      "my_hp": 60,
+      "my_dpr": 90,
+      "enemy_dpr": 3,
+      "score_per_turn": 0.09999999999999999
+    }
+  ]
+}
