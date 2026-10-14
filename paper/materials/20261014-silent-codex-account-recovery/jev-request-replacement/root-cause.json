@@ -1,0 +1,42 @@
+{
+  "observed_at": "2026-10-14T19:19:06.649924+08:00",
+  "user_requirement": "按最新Jev定位和请求内容直接替换旧请求，而非叠加",
+  "confirmed_facts": [
+    {
+      "stage": "request_spec",
+      "evidence": "paper/materials/20261014-v5-jev-ablation/assessment.json",
+      "fact": "32题/144调用的精简请求试验报告token降低27.566%，正式状态仍pilot_complete_gameplay_value_pending，线上请求替换未验收。"
+    },
+    {
+      "stage": "implementation_scope",
+      "evidence": "paper/materials/20261014-v5-required-boss-evaluation/implementation-binding.json",
+      "fact": "R341任务绑定必需完整计算、性能复用和核心公式/shared consumer plumbing，没有列出Jev旧字段退出映射。"
+    },
+    {
+      "stage": "wire_builder",
+      "evidence": "agent/src/reflex/combat-plan.ts:3832",
+      "fact": "把完整line.bossMargin序列化到每个旧候选上；原quantitative_turn明细继续发送。"
+    },
+    {
+      "stage": "checks",
+      "evidence": "agent/tests/required-boss-evaluation.test.ts:140",
+      "fact": "本次新公式消费者测试断言boss_relative_margin出现且数值匹配；所读交付验收未规定旧字段必须消失或新的Jev请求合同。"
+    },
+    {
+      "stage": "production_failure",
+      "evidence": "paper/materials/20261014-silent-codex-account-recovery/jev-context-blocker/watcher-payload-size-analysis.json",
+      "fact": "10候选原state+questions102618 bytes，压缩85805 bytes，原请求与重试均400；API均未报告准确tokens。"
+    }
+  ],
+  "engineering_assessment": "请求精简与公式上线分成两个独立交付，旧线上数据结构被当作保留基线，缺少从内部计算/审计数据到新Jev职责投影的替换验收。这里只判断实现与验收缺口，不推断具体人员主观动机。",
+  "watcher_correction": "此前只要求进一步无损压缩和恢复，未先核新职责/旧字段退出，过宽要求保留全部旧语义已向原ops明确更正。",
+  "requested_acceptance": [
+    "旧到新职责/字段映射",
+    "完整审计数据保留但不全部送模型",
+    "新线上合同白名单和旧字段排除断言",
+    "相同冻结题面对照及实际Jev token/接受情况",
+    "同一Silent局恢复；账号codex/同space保持"
+  ],
+  "delivery": "delivery.json",
+  "implementation_status": "指令已送入原ops界面，读取时仍在上下文整理并有排队消息；未验收接单或上线。"
+}
