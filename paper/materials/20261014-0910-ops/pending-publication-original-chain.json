@@ -1,0 +1,52 @@
+{
+  "at": "2026-10-14 09:13:44 CST",
+  "source": "0c8fd8720573f83699fe8de55abeab744aeff8c9",
+  "status": "both_regent_releases_live_lock_busy_no_publication_write",
+  "source_or_metadata_writes": 0,
+  "number": null,
+  "only_leaf": "knowledge/characters/regent/experience.json",
+  "sha256": "f485bb7357d3ddd03c9d4e2205c5fb35c6995cfe8c7a46d5d36e5e4abb7288ab",
+  "pending_releases": [
+    {
+      "alias": "Regent.exp2",
+      "actual_live_commit": "0c8fd8720573f83699fe8de55abeab744aeff8c9",
+      "release_id": null,
+      "scope": "knowledge/characters/regent/experience.json"
+    },
+    {
+      "alias": "Regent.star-pipeline1",
+      "actual_live_commit": "4ab5e9f4b13eaa5b96c969ceebe79e2562222ce0",
+      "release_id": null,
+      "source_parent": "0c8fd8720573f83699fe8de55abeab744aeff8c9",
+      "scope": [
+        "agent/src/brain/build-facts.ts",
+        "agent/src/hand/screens/oneshot.ts",
+        "agent/src/hand/screens/reward.ts",
+        "agent/src/hand/screens/selection.ts",
+        "agent/src/hand/screens/shop.ts",
+        "agent/src/knowledge/card-resource-facts.ts",
+        "agent/src/memory/deck.ts",
+        "agent/src/reflex/card-model.ts",
+        "agent/src/reflex/combat-plan.ts",
+        "agent/src/reflex/combat.ts",
+        "agent/src/reflex/regent-stars.ts",
+        "agent/src/reflex/rollout-live.ts",
+        "agent/src/reflex/turn-solver.ts",
+        "agent/src/sim/boss-lines.ts",
+        "agent/src/sim/build-sim-facts.ts",
+        "agent/tests/fixtures/regent-resource-pipeline.json",
+        "agent/tests/fixtures/regent-star-budget.json",
+        "agent/tests/learner-instance.test.ts",
+        "agent/tests/regent-resource-pipeline.test.ts",
+        "agent/tests/regent-star-budget.test.ts",
+        "agent/tests/rollout-live.test.ts",
+        "agent/tests/sandbox-entry.test.ts",
+        "agent/tools/test-sandbox.sh",
+        "learner/lib/launcher.ts"
+      ]
+    }
+  ],
+  "latest_preflight": "paper/materials/20261014-0910-ops/regent-publication-preflight.json",
+  "original_pending_receipt": "paper/materials/20261014-0910-ops/original-pending-exp2.json",
+  "next_step": "At the next existing wake, acquire original main and Regent publication locks with LOCK_NB; reread actual ancestors/current blobs/registry/index and refreshed knowledge; allocate two actual cumulative IDs and return lane metadata; exact three-way leaf integration only, no branch merge or current-run restart; one exact deployed-tree host full check along original task; keep full failures and supplement coverage."
+}

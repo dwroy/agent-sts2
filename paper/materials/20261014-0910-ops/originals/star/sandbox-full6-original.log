@@ -1,0 +1,56 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/regent-climb/.worktrees/dev-regent-star-pipeline-20261014/agent
+
+ ❯ tests/ops-stall-recovery.test.ts (6 tests | 1 failed) 16607ms
+     × checks the real script after shell startup exceeds the former five-second limit 10393ms
+ ❯ tests/fix-queue-v4-shrink.test.ts (14 tests | 1 failed) 21457ms
+     × XC4T F9 T3: a later turn with the beetle alive is shrunk, its hand from the pile at base (unmarked): a Strike hits it for 4, not 2 18027ms
+ ❯ tests/component-usage.test.ts (1 test | 1 failed) 150ms
+   × syncs component logs, derives counter deltas and refreshes paper costs on fixed fixtures 148ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/component-usage.test.ts > syncs component logs, derives counter deltas and refreshes paper costs on fixed fixtures
+AssertionError: nice: ../data/logdb-venv/bin/python: No such file or directory (os error 2)
+: expected 127 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 127
+
+ ❯ tests/component-usage.test.ts:14:38
+     12|     child.on("close", (code) => resolve({ code, output }));
+     13|   });
+     14|   expect(result.code, result.output).toBe(0);
+       |                                      ^
+     15|   expect(result.output).toContain("Ran 9 tests");
+     16| }, 20_000);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  tests/fix-queue-v4-shrink.test.ts > 6. the rollout's later turns: shrunk once while the beetle lives, not at all after it dies > XC4T F9 T3: a later turn with the beetle alive is shrunk, its hand from the pile at base (unmarked): a Strike hits it for 4, not 2
+Error: Test timed out in 15000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/fix-queue-v4-shrink.test.ts:228:3
+    226|   }
+    227|
+    228|   it("XC4T F9 T3: a later turn with the beetle alive is shrunk, its ha…
+       |   ^
+    229|     const solves = allSolves(fixture("xc4t-f9-t3-shrink", "t3"));
+    230|     const later = solves.filter(({ input }) => (input.turn ?? 0) > 3);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  tests/ops-stall-recovery.test.ts > stall check mod request recovery > checks the real script after shell startup exceeds the former five-second limit
+Error: Command failed: bash /tmp/sts2-fixed-tests.Tk6KZT/stall-fixed-Oj5SU4/ops/stall-check.sh
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  3 failed | 354 passed (357)
+      Tests  3 failed | 3470 passed (3473)
+   Start at  08:42:05
+   Duration  766.52s (transform 32.25s, setup 68.88s, import 221.66s, tests 2612.05s, environment 82ms)
+

@@ -1,0 +1,11 @@
+{
+  "original_error": "audit-regent.py:46 AssertionError because ops mistyped the expected SHA literal (missing db before cd3a).",
+  "corrected_expected_sha_from_original_proof": "75ffacd99a1e37c266003051800e23c14fe7202adadc8306ba1da2dbffdbcd3a",
+  "original_prefix_and_regent_receipts_unchanged": true,
+  "additional_schema_errors": [
+    "ops treated knowledge_shas_before_after worktree hashes as committed Git blob hashes; refreshed common data differs from HEAD.",
+    "follow-up git show assumed every generated knowledge leaf was tracked; Regent boss-damage.json is untracked, causing exit128."
+  ],
+  "corrected_knowledge_check": "source commit changes no knowledge path; historical and current worktree hashes and tracked membership are separate fields",
+  "not_a_source_or_learner_validation_failure": true
+}

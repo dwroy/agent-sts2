@@ -1,0 +1,65 @@
+{
+  "at": "2026-10-14T09:02:39.491868+08:00",
+  "source_parent": "0c8fd8720573f83699fe8de55abeab744aeff8c9",
+  "scope": "REGENT A0 fixed payments and verified base producers; observed A1 exposed payments and replan after every actual card; A2 and other characters retain prior behavior",
+  "tests": {
+    "production_tsc": {
+      "exit_code": 0,
+      "evidence": "sandbox-full6-original.log: vitest starts only after set -eu production tsc command succeeds"
+    },
+    "sandbox_full6": {
+      "exit_code": 1,
+      "files_passed": 354,
+      "files_failed": 3,
+      "tests_passed": 3470,
+      "tests_failed": 3,
+      "duration_seconds": 766.52,
+      "log": "sandbox-full6-original.log",
+      "failures": [
+        "component-usage: existing Python venv link missing in isolated worktree",
+        "fix-queue-v4-shrink: original 15000ms timed out under four workers",
+        "ops-stall-recovery: original 10000ms child deadline under four workers"
+      ]
+    },
+    "supplement_after_existing_venv_link": {
+      "exit_code": 0,
+      "files": 4,
+      "tests": 32,
+      "log": "supplement-linked-final.log",
+      "pool": "one fork",
+      "assertions_and_deadlines": "unchanged",
+      "includes": "all three initially failed files plus paths.test.ts"
+    },
+    "original_supplement_before_link": "supplement-before-venv-link.log (31 passed / one missing-venv failure)",
+    "sandbox_exclusions": "original list unchanged; scheduler host checks remain required"
+  },
+  "secret_scan": {
+    "exit_code": 0,
+    "report": "staged-source-gitleaks.json"
+  },
+  "source_manifest": "source-leaves.json",
+  "experience": {
+    "actual_live_source": "0c8fd8720573f83699fe8de55abeab744aeff8c9",
+    "active_entries": 49,
+    "full_prefix_readback": "prefix-readback.json",
+    "natural_consumers": "natural-experience-consumer.json",
+    "decision_or_win_effect": "not established"
+  },
+  "learning_proposals": {
+    "partial_implementation": [
+      "regent-proposal-a3d96446aeb6b202",
+      "regent-proposal-24fc5e93d5333f0d",
+      "regent-proposal-fedc2173db1b3341"
+    ],
+    "unverified_parent_scope": "strength/joint mechanics/random hits/full dynamic production/X/automatic cards and multi-turn calibration remain waiting; public candidates are not published"
+  },
+  "a0_victory": {
+    "run": "YKAHRZYZQRS7",
+    "at": "2026-10-14 08:15:15 CST",
+    "code_repair_live_at_victory": false,
+    "causal_claim": "none"
+  },
+  "deployment": "not yet merged when this source receipt was written; actual merge is recorded separately",
+  "git_profile": "git-permission-readback.json: exact root and source git metadata writes; hooks/config remain read-only; future native publish not yet observed",
+  "rollback": "Revert only this source change on the Regent lane, register a new behavior release, keep learned-data source/history and original run identities."
+}
