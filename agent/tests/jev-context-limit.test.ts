@@ -17,7 +17,7 @@ const answer: JevAskResult = { model: fixture.model, answers: {
 }, inputTokens: 4_000, outputTokens: 42, latencyMs: 9, requestId: "fixed-request" };
 
 function expanded(compact: CompactJevRequest): QuestionSet {
-  const table = compact.state[compact.encoding.stateKey] as { values: Record<string, unknown> };
+  const table = compact.state[compact.encoding.stateKey] as { values: Record<string, unknown>; shapes?: Record<string, string[]> };
   const expand = (value: unknown): unknown => {
     if (Array.isArray(value)) return value.map(expand);
     if (value !== null && typeof value === "object") {
@@ -26,6 +26,13 @@ function expanded(compact: CompactJevRequest): QuestionSet {
         const key = object[compact.encoding.refKey] as string;
         expect(Object.hasOwn(table.values, key)).toBe(true);
         return expand(table.values[key]);
+      }
+      const { shapeKey, valueKey } = compact.encoding;
+      if (shapeKey && valueKey && Object.keys(object).length === 2 && shapeKey in object && valueKey in object) {
+        const keys = table.shapes![object[shapeKey] as string]!;
+        const values = object[valueKey] as unknown[];
+        expect(keys).toHaveLength(values.length);
+        return Object.fromEntries(keys.map((key, i) => [key, expand(values[i])]));
       }
       return Object.fromEntries(Object.entries(object).map(([key, item]) => [key, expand(item)]));
     }
@@ -84,7 +91,7 @@ describe("bounded Jev context-limit recovery", () => {
     expect(rows).toHaveLength(2);
     expect(rows[0]!.error?.status).toBe(400);
     expect(rows[0]!.transport_encoding).toBeUndefined();
-    expect(rows[1]!.transport_encoding?.kind).toBe("shared-json-values-v1");
+    expect(rows[1]!.transport_encoding?.kind).toBe("shared-json-values-v2");
     for (const [index, row] of rows.entries()) {
       expect(row.request).toEqual({ model: fixture.model, ...sent[index] });
       expect(row.decision_id).toBe(meta.decisionId);
@@ -102,11 +109,12 @@ describe("bounded Jev context-limit recovery", () => {
     }
   });
 
-  it("sends successful requests unchanged and leaves uncompressible failures fatal", async () => {
+  it("sends other-character successful requests unchanged and leaves uncompressible failures fatal", async () => {
     const sent: unknown[] = [];
     const client = { model: "same", async ask(state: unknown, questions: QuestionSet) { sent.push({ state, questions }); return answer; } };
-    await askJevLogged(client, null, meta, fixture.state, fixture.questions);
-    expect(sent).toEqual([{ state: fixture.state, questions: fixture.questions }]);
+    const state = { ...fixture.state, run_brief: { ...(fixture.state.run_brief as object), character: "REGENT" } };
+    await askJevLogged(client, null, meta, state, fixture.questions);
+    expect(sent).toEqual([{ state, questions: fixture.questions }]);
     let calls = 0;
     await expect(askJevLogged({ model: "same", async ask(): Promise<JevAskResult> { calls += 1; throw failure(); } }, null, meta,
       {}, { pick: { type: "choice", instructions: "same", criteria: { a: "plain" } } })).rejects.toThrow("max_tokens_exceeded");

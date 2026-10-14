@@ -17,6 +17,7 @@ import type { AnswerSet } from "../reflex/jev/answers.js";
 import { classifyJevError, type JevAskResult } from "../reflex/jev/client.js";
 import type { QuestionSet } from "../reflex/jev/questions.js";
 import { compactJevRequest, isJevContextLimitError, type CompactJevRequest } from "../reflex/jev/compact-request.js";
+import { projectSilentCombatDecision, type DecisionProjection } from "../reflex/jev/decision-projection.js";
 
 export interface JevPromptMeta {
   /** The decision this request was made for (the decision row's `decision_id`). */
@@ -56,6 +57,9 @@ export interface JevPromptRecord {
   error?: { kind: string; status: number | null; message: string };
   /** Present only on the bounded, lossless retry of a context-limit rejection. */
   transport_encoding?: CompactJevRequest["encoding"];
+  decision_projection?: DecisionProjection["contract"];
+  /** Full computed evidence is retained locally and never sent as the projected wire request. */
+  decision_evidence?: DecisionProjection["evidence"];
 }
 
 export interface JevPromptLog {
@@ -107,20 +111,22 @@ export interface JevAsker {
  */
 export async function askJevLogged(jev: JevAsker, log: JevPromptLog | null, meta: JevPromptMeta, state: unknown, questions: QuestionSet): Promise<JevAskResult> {
   const started = Date.now();
+  const projection = meta.label.startsWith("combat/plan") ? projectSilentCombatDecision(state, questions) : null;
+  const wireState = projection?.state ?? state, wireQuestions = projection?.questions ?? questions;
   try {
-    return await askOnceLogged(jev, log, meta, state, questions);
+    return await askOnceLogged(jev, log, meta, wireState, wireQuestions, undefined, projection ?? undefined);
   } catch (error) {
     if (!isJevContextLimitError(error)) throw error;
-    const compact = compactJevRequest(state, questions);
+    const compact = compactJevRequest(wireState, wireQuestions);
     if (!compact) throw error;
     // Keep the first rejection and the actual retry body in separate joined log rows.
     // No recursion: another rejection is returned to the existing failure handling.
-    const result = await askOnceLogged(jev, log, meta, compact.state, compact.questions, compact.encoding);
+    const result = await askOnceLogged(jev, log, meta, compact.state, compact.questions, compact.encoding, projection ?? undefined, false);
     return { ...result, latencyMs: Date.now() - started };
   }
 }
 
-async function askOnceLogged(jev: JevAsker, log: JevPromptLog | null, meta: JevPromptMeta, state: unknown, questions: QuestionSet, encoding?: CompactJevRequest["encoding"]): Promise<JevAskResult> {
+async function askOnceLogged(jev: JevAsker, log: JevPromptLog | null, meta: JevPromptMeta, state: unknown, questions: QuestionSet, encoding?: CompactJevRequest["encoding"], projection?: DecisionProjection, includeEvidence = true): Promise<JevAskResult> {
   const started = Date.now();
   const base = {
     ts: new Date(started).toISOString(),
@@ -135,6 +141,7 @@ async function askOnceLogged(jev: JevAsker, log: JevPromptLog | null, meta: JevP
     call: meta.call,
     request: { model: jev.model, state, questions },
     ...(encoding ? { transport_encoding: encoding } : {}),
+    ...(projection ? { decision_projection: projection.contract, ...(includeEvidence ? { decision_evidence: projection.evidence } : {}) } : {}),
   };
   try {
     const result = await jev.ask(state, questions);
