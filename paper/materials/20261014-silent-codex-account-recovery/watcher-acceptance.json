@@ -1,0 +1,125 @@
+{
+  "observed_at": "2026-10-14T18:29:58.061625+08:00",
+  "scope": "Silent, wJ only",
+  "result": "实际账号切换和同局恢复已验证",
+  "process": {
+    "pid": 1493063,
+    "cwd": "/home/dw/Projects/agent-sts2/.worktrees/live/agent",
+    "env_whitelist": {
+      "BRAIN_CODEX_MODEL": "gpt-6.1-sol",
+      "BRAIN_CODEX_HOME": "/home/dw/.codex-brain",
+      "BRAIN_CODEX_EFFORT": "xhigh",
+      "STS2_WORKSPACE": "/home/dw/Projects/agent-sts2"
+    }
+  },
+  "account_preflight": "paper/materials/20261014-silent-codex-account-recovery/account-preflight.json",
+  "run_config": {
+    "ts": "2026-10-14T10:27:37.353Z",
+    "run_id": "W1YY8PEWGUF9",
+    "restart": true,
+    "floor": 16,
+    "code": {
+      "commit": "d9bfb65a4ec28cdda8706a150fc4341d28db1227",
+      "code": "d9bfb65+dirty",
+      "dirty": true,
+      "dirty_files": [
+        "notes/fight-value-backtest-silent.md",
+        "notes/monster-db-check.md"
+      ],
+      "branch": "live",
+      "worktree": "live"
+    },
+    "usage": {
+      "engine": "codex",
+      "read_at": "2026-10-14T10:27:36.447Z",
+      "read_ms": 821,
+      "plan": "promax",
+      "used_pct": 29,
+      "window": "codex/primary",
+      "window_min": 10080,
+      "resets_at": "2026-10-20T05:21:29.000Z",
+      "credits": 0,
+      "ordinary_usage_allowed": true,
+      "reached_type": null
+    },
+    "source": {
+      "path": "logs/run-config.jsonl",
+      "offset": 1680904,
+      "bytes": 4767,
+      "sha256": "79293d671a5dc9c07be8b8bdca8fd4d627ace8534fe95d2f5b097e13ddf2a677"
+    }
+  },
+  "release_id": "V5-R341",
+  "actual_brain": {
+    "ts": "2026-10-14T10:28:58.071Z",
+    "label": "rest/plan",
+    "question_id": "mv7yuiec-1493063-1",
+    "model": "gpt-6.1-sol",
+    "effort": "xhigh",
+    "accepted": true,
+    "source": {
+      "path": "logs/brain.jsonl",
+      "offset": 505849130,
+      "bytes": 291879,
+      "sha256": "5e0448c8378a37f82e3a5221f5bd031d6c572dd1326cdd077f0cbc6218dce514"
+    }
+  },
+  "native_call": {
+    "ts": "2026-10-14T10:28:58.070Z",
+    "question_id": "mv7yuiec-1493063-1",
+    "thread_id": "01a139f5-06a8-7d51-8e52-bb9d33c2a720",
+    "turn_id": "01a139f5-06d6-74c0-a224-31a15fac4420",
+    "outcome": "answered",
+    "model": "gpt-6.1-sol",
+    "effort": "xhigh",
+    "source": {
+      "path": "logs/codex-calls.jsonl",
+      "offset": 36215018,
+      "bytes": 4059,
+      "sha256": "0a3aac397af69814701436bd3b83e6d2e2e4448281a92705716cabdcdc6972d0"
+    }
+  },
+  "completed_actions": [
+    {
+      "ts": "2026-10-14T10:28:58.076Z",
+      "floor": 16,
+      "label": "rest/plan",
+      "decision_id": "281321d5-e80a-430d-9b42-34d7ee9aa893",
+      "chosen": {
+        "action": "choose_rest_option",
+        "option_index": 0
+      },
+      "result": "completed: Action completed.",
+      "source": {
+        "path": "logs/decisions.jsonl",
+        "offset": 1379831771,
+        "bytes": 654890,
+        "sha256": "aa766e0b7878934ed9bf58d5e06f0fd4f81dcf4d9bb722e7cf14eefa77b717cb"
+      }
+    },
+    {
+      "ts": "2026-10-14T10:28:58.339Z",
+      "floor": 16,
+      "label": "rest/proceed",
+      "decision_id": "54aeeb39-8a49-4c7a-bbce-18061925f421",
+      "chosen": {
+        "action": "proceed"
+      },
+      "result": "completed: Action completed.",
+      "source": {
+        "path": "logs/decisions.jsonl",
+        "offset": 1380486661,
+        "bytes": 1175,
+        "sha256": "65614e3411348596c7ced3c354df153954e445f85c78d373f0b2c272d906f073"
+      }
+    }
+  ],
+  "mod_readback": {
+    "run_id": "W1YY8PEWGUF9",
+    "screen": "MAP",
+    "floor": 16,
+    "ascension": 10
+  },
+  "other_space_operations": false,
+  "watcher_game_mutations": false
+}

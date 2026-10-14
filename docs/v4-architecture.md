@@ -1,5 +1,7 @@
 # V4 架构：当前实现
 
+V5 沿用本文的基础模块和运行闭环。2026-10-14 起，构筑、必需 Boss 评估、核心公式及 Jev 新请求的当前边界以 [V5 架构](v5-architecture.md) 为入口；本文的历史参数不覆盖后续明确授权。
+
 核对日期：2026-10-11（同步已批准的 Codex 默认配置和 watcher 职责）。本文说明 main 的现行代码；运行中的进程采用哪个提交和配置，要看实际 live、`logs/run-config.jsonl` 和调用日志。现场状态见 `paper/materials/STATE-*.md` 及 [decision-log](../paper/materials/decision-log.md)。
 
 V4 从 2026-09-29 的模块拆分发展而来。[原始设计](history/v4-architecture-2026-09-29.md) 与 [首次上线方案](v4-go-live.md) 保留历史口径。其中 DeepSeek 默认、Claude 优先、Codex 待实现、v3/v4 分支及人工审核流程已由后续实现和授权更新。当前边界以 [AGENTS.md](../AGENTS.md)、[学习协议](learning-protocol.md) 为准。

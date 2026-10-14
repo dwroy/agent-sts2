@@ -1,12 +1,15 @@
 # 文档索引
 
-2026-10-10 按 main 核对。当前实现、历史设计和实验结果分开阅读；实际运行提交/配置要核 live、run-config 和调用记录。最新 STATE 是现场快照，后续变化查 decision-log，旧报告不回填新状态。
+2026-10-14 核对 V5 文档入口及发布边界。当前实现、已批准但待实现的要求、历史设计和实验结果分开阅读；实际运行提交/配置要核 live、run-config 和调用记录。最新 STATE 是现场快照，后续变化查 decision-log，旧报告不回填新状态。
 
 ## 当前说明
 
 | 文档 | 内容 |
 |---|---|
-| [V4 架构](v4-architecture.md) | 当前模块、Codex 大脑、知识/日志、学习闭环、main/live 与验证 |
+| [V5 架构](v5-architecture.md) | 当前职责、必需 Boss 评估、核心公式、Jev 请求替换及发布/待实现边界 |
+| [V5 构筑模块](v5-construction.md) | 未来成型预测、当前候选战斗评估、结构化方向与校准入场 |
+| [量化计算与校准](quantitative-play.md) | 数值窗口、配对差、未知与日志/模型请求的不同用途 |
+| [V4 基础架构](v4-architecture.md) | V5 沿用的模块、Codex 大脑、知识/日志、学习闭环与 main/live |
 | [仓库布局](layout.md) | 模块路径、角色数据、工作区和运行目录 |
 | [学习协议](learning-protocol.md) | 游戏知识证据边界、角色隔离、职责与规则修改授权 |
 | [代码提案闭环](learning-code-proposals.md) | 经验与源码提案、CLI 登记、等待/失败和上线追溯 |
@@ -15,6 +18,7 @@
 | [Codex 大脑等待与战绩](codex-only-brain.md) | 原题等待、心跳/取消、成功脑局归类与统计限制 |
 | [Codex Fast](codex-fast.md) | priority 档位与配置生效边界 |
 | [Codex 运维](codex-ops.md) | 调度、持久事件、宿主动作、工作树租约与外部检查 |
+| [完成验收与现场回收](learner-retention.md) | 稀疏分配、历史副本回收、归档恢复及活动 owner 保护 |
 | [评估](eval.md) | 按版本/角色/进阶/配置的指标；首试/SL、纯 Codex 与原始口径 |
 | [日志库](logdb.md) | 增量派生、表/视图、只读查询与成本来源 |
 | [上游来源](third-party.md) | submodule 与代码来源边界 |

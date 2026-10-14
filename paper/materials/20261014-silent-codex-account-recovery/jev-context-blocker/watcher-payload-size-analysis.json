@@ -1,0 +1,81 @@
+{
+  "observed_at": "2026-10-14T11:11:42.019Z",
+  "scope": "Frozen failed W1 F17 Jev request, structural size analysis only",
+  "release": "V5-R341",
+  "options": 10,
+  "original": {
+    "state_and_questions_bytes": 102618,
+    "request_bytes": 102639,
+    "state_bytes": 11326,
+    "questions_bytes": 91269,
+    "ts": "2026-10-14T10:44:02.644Z",
+    "error": {
+      "kind": "unknown",
+      "status": 400,
+      "message": "400 {\"detail\":{\"error_type\":\"max_tokens_exceeded\"}}"
+    },
+    "input_tokens": null
+  },
+  "existing_compressed": {
+    "state_and_questions_bytes": 85805,
+    "request_bytes": 85826,
+    "ts": "2026-10-14T10:44:03.461Z",
+    "error": {
+      "kind": "unknown",
+      "status": 400,
+      "message": "400 {\"detail\":{\"error_type\":\"max_tokens_exceeded\"}}"
+    },
+    "input_tokens": null,
+    "transport_encoding": {
+      "kind": "shared-json-values-v1",
+      "stateKey": "__jev_shared_0",
+      "refKey": "__jev_ref_0",
+      "originalBytes": 102618,
+      "encodedBytes": 85805,
+      "definitions": 24
+    }
+  },
+  "candidate_field_bytes": {
+    "plays": 1644,
+    "result": 390,
+    "hp_lost": 10,
+    "damage_dealt": 19,
+    "enemies_after": 420,
+    "block_gained": 10,
+    "strength_gained": 7,
+    "cards_drawn": 10,
+    "lasting_value": 707,
+    "hp_after": 20,
+    "hp_after_pct": 20,
+    "dmg": 19,
+    "lethal_now": 40,
+    "enemy_threat_next": 20,
+    "setup_turn": 50,
+    "scaling_gained": 298,
+    "block_wasted": 20,
+    "potions_used": 230,
+    "quantitative_turn": 38580,
+    "rollout": 3429,
+    "rollout_turns": 2589,
+    "history_estimate": 730,
+    "whole_fight_sim": 2051,
+    "boss_relative_margin": 26562,
+    "potion_cost": 1893,
+    "unmodelled_cards": 280,
+    "energy_unused": 5,
+    "rollout_best": 4
+  },
+  "removed_only_added_boss_margin_fields_projection": {
+    "request_bytes": 73449,
+    "increment_bytes": 29190,
+    "not_a_real_old_version_replay": true
+  },
+  "implementation_evidence": {
+    "commit": "a9fcf33ca4c204d03cfc310c7f7ced61f196f964",
+    "candidate_addition": "agent/src/reflex/combat-plan.ts:3832",
+    "shared_addition": "agent/src/reflex/combat-plan.ts:4008",
+    "producer": "agent/src/sim/boss-margin.ts:45"
+  },
+  "conclusion": "R341 appends per-option boss_relative_margin summaries while retaining quantitative_turn details; reduced transport bytes in retry do not establish fewer model tokens or successful recovery.",
+  "token_limit_unknown": true
+}

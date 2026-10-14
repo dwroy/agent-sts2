@@ -1,0 +1,78 @@
+{
+  "observed_at": "2026-10-14T19:25:49.989540+08:00",
+  "request": "核查 main 最新磁盘/回收逻辑，判断 Silent 是否需做磁盘优化",
+  "scope": "主实例/Silent；空间统计排除所有 *regent* 工作树，不修改其他space",
+  "main_head": "d78af42e6bcb6f639817bf730b9373bdf429d501",
+  "reviewed_changes": [
+    "c7a6efb1e",
+    "a43decfe8",
+    "d78af42e6"
+  ],
+  "features_verified": [
+    "分配前容量/inode预检与稀疏工作树",
+    "空闲Git历史副本可独立回收，任务状态/分支/原cwd不变",
+    "过程源码副本压缩归档并SHA回读后才删除，可恢复",
+    "完成工作树按实际分配基线核main/live发布",
+    "原learn tick使用main脚本、nice19、每轮四项；无新定时器或清理模型"
+  ],
+  "filesystem": {
+    "total_bytes": 1081101176832,
+    "used_bytes": 688061444096,
+    "free_bytes": 338047377408,
+    "df_used_percent": 68,
+    "inode_used_percent": 14
+  },
+  "allocated_bytes_snapshot": {
+    "worktrees_excluding_regent": 418066538496,
+    "main_learner_runs": 86241243136,
+    "exp_worktree_included_in_worktrees_total": 62087585792,
+    "exp_learner_included_in_exp_total": 59272077312,
+    "main_logs": 16187822080,
+    "main_paper": 12359782400,
+    "git": 5839933440
+  },
+  "size_limit": "du逐目录运行期间系统仍活动；各项是近似同时点，占用不等于可删空间，exp不得与worktrees重复相加。",
+  "automatic_execution": {
+    "proven": true,
+    "source": "ops/codex-ops/retention/last-sweep.json",
+    "latest_cache_receipt": "2026-10-14T19:15:52+08:00",
+    "workspace_receipts": 24,
+    "removed_reconstructible_bytes": 18634121216
+  },
+  "read_only_preflight": {
+    "command": "nice -n 19 python3 -B ops/worktree_storage.py sweep --root /home/dw/Projects/agent-sts2 --state-dir /home/dw/Projects/agent-sts2/ops/codex-ops --limit 4",
+    "apply": false,
+    "state": "four_eligible",
+    "candidates": [
+      {
+        "workspace": "codex-fix-silent-20261011-132959",
+        "git_cache_bytes": 1268965376
+      },
+      {
+        "workspace": "codex-fix-silent-20261011-181302",
+        "git_cache_bytes": 1273937920
+      },
+      {
+        "workspace": "codex-fix-silent-20261011-200112",
+        "git_cache_bytes": 1450287104
+      },
+      {
+        "workspace": "codex-fix-silent-20261011-202201",
+        "git_cache_bytes": 1450622976
+      }
+    ],
+    "bytes": 5443813376,
+    "active_codex_dev_protected": true
+  },
+  "retained_gaps": {
+    "sample_old_batch": "20261007-010232-experience-update",
+    "sample_size_bytes": 2135367680,
+    "exact_batch_plan_result": "original request/thread retained",
+    "historical_layout": "原launch绑定cwd=.worktrees/exp但scratch在主learner/runs；此外当前归属规则仅接受工作树内learner/runs，后续须用原回执独立核实，不改写旧报告或直接删。",
+    "other_retained_summary_source": "ops/codex-ops/retention/last-sweep.json",
+    "legacy_boss_workspace_names": "九个带下划线的boss-sim旧名称被当前NAME规则拒收；不能绕过目录/owner保护。"
+  },
+  "assessment": "值得继续回收历史副本；新逻辑已在Silent主实例生效，不需另装或重启游戏。当前无容量紧急情况，沿原worker有界消化；历史保护项单独核查，不一键删除工作树/learner记录。",
+  "actions_taken": "只读代码/磁盘/回执核查与不带apply的预演；本watcher未执行回收、删除、账号或进程变更。",
+  "jev_request_replacement": "继续由wJ:p5原ops优先推进，未转派清理模型或改其当前任务。"
+}
