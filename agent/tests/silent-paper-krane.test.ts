@@ -14,8 +14,14 @@ import { rolloutLiveOptions } from "../src/reflex/rollout-live.js";
 import { simulateFight } from "../src/reflex/rollout.js";
 import { replaySteps, solveTap, solveTurn, type SolverInput, type Step } from "../src/reflex/turn-solver.js";
 import { board, card } from "./boss-sim-fixture.js";
+import * as turnSolver from "../src/reflex/turn-solver.js";
 
 vi.hoisted(() => vi.resetModules());
+const enumerations = vi.hoisted(() => vi.fn());
+vi.mock("../src/reflex/turn-solver.js", async (original) => {
+  const solver = await original<typeof import("../src/reflex/turn-solver.js")>();
+  return { ...solver, solveTurn: (input: SolverInput) => { enumerations(); return solver.solveTurn(input); } };
+});
 vi.mock("node:fs", async (original) => {
   const fs = await original<typeof import("node:fs")>();
   const { KNOWLEDGE_DIR } = await import("../src/knowledge/files.js");
@@ -54,7 +60,18 @@ function inputFor(raw = frame()): SolverInput {
   return input;
 }
 function fixedInput(line = 399969): SolverInput {
-  if (!cachedInputs.has(line)) cachedInputs.set(line, inputFor(frame(line)));
+  if (!cachedInputs.has(line)) {
+    // Capture the production board before enumeration; recorded lines only need replaySteps.
+    const captured = Symbol("fixed Paper Krane input");
+    const intercept = vi.spyOn(turnSolver, "solveTurn").mockImplementation((input) => {
+      cachedInputs.set(line, input);
+      throw captured;
+    });
+    try { planCombatTurn(envFor(frame(line))); }
+    catch (error) { if (error !== captured) throw error; }
+    finally { intercept.mockRestore(); }
+    if (!cachedInputs.has(line)) throw new Error("the fixed board did not reach the solver");
+  }
   return structuredClone(cachedInputs.get(line)!);
 }
 function step(input: SolverInput, id: string, target: number | null): Step {
@@ -86,6 +103,20 @@ it.each([[399969, 399976, false, 10, 8], [400002, 400009, true, 19, 16]] as cons
     expect(describePlan(after, 96)).toMatchObject({ hp_lost: loss, result: `survives with ${41 - loss}/96 HP before healing` });
   },
 );
+
+it("captures replay fixtures without enumeration and preserves the production solver input", () => {
+  cachedInputs.clear(); enumerations.mockClear();
+  const input = fixedInput(399975);
+  expect(enumerations).not.toHaveBeenCalled();
+  expect(solveTap.onSolve).toBeNull();
+  // Keep a real planner solve as an independent input-equivalence and hook-restoration check.
+  expect(input).toEqual(inputFor(frame(399975)));
+  expect(enumerations).toHaveBeenCalled();
+  const next = fixedInput(399975);
+  input.player.hp = -1;
+  expect(next.player.hp).toBe(41);
+  expect(fixedInput(399975).player.hp).toBe(41);
+});
 
 it("replanning consumes already-reduced intents once, and new Malaise still reaches the shared outcome", () => {
   const input = fixedInput(399973);
