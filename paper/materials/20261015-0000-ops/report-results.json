@@ -1,0 +1,815 @@
+[
+  {
+    "task": "fix-batch",
+    "base": "f1f431e88e8e613aed599c521d616b6c08d187b3",
+    "fixes": [],
+    "skipped": [
+      {
+        "item": "游戏机制、出牌、药水、SL、终局及结构模型",
+        "reason": "策略类，保留已有独立提案链"
+      },
+      {
+        "item": "漏斗、资源价值、缓存及校准研究",
+        "reason": "独立功能或研究，保留原拥有者"
+      },
+      {
+        "item": "sandbox-glob-startup-race上游目录生命周期",
+        "reason": "证据不足；有界恢复子项已修"
+      },
+      {
+        "item": "调度公平性核查",
+        "reason": "证据不足，尚不能证明永久饥饿"
+      },
+      {
+        "item": "core-build-notify-222802-rc2",
+        "reason": "证据不足，原native失败根因未证"
+      },
+      {
+        "item": "v5-dpr-health暖池性能及校准",
+        "reason": "独立研究已有原线程拥有者"
+      },
+      {
+        "item": "框架外层总时限收尾",
+        "reason": "分段补验入口已修，剩余由框架拥有者接续"
+      },
+      {
+        "item": "learner-raw-report固定子进程status=null",
+        "reason": "首次失败、同源码复测通过，根因未证；保留首轮失败"
+      }
+    ],
+    "merged": null,
+    "tests": {
+      "tsc": 0,
+      "vitest": 1,
+      "cases": 3888
+    },
+    "recheck": {
+      "vitest": 0,
+      "files": 2,
+      "cases": 26
+    },
+    "code_proposals": [],
+    "implementation_domains": [],
+    "report": "/home/dw/Projects/agent-sts2/learner/runs/20261014-224322-fix-batch/report.md",
+    "wrapper_sha256": "1370ec0c4c96185ad3e453f33b1f7f5fb30b791fbb02eb801bbb43bbabff18f3",
+    "batch_id": "20261014-224302-fix-batch"
+  },
+  {
+    "task": "strategy-proposal",
+    "character": "silent",
+    "batch": "20261014-224302-strategy-proposal",
+    "base": "4ae762386e6bf43696caf4328917c008f4ba804d",
+    "runs": [
+      "DUZUBAJ3A8GP",
+      "5PM6JAQG6FNQ",
+      "CA5KE8GFJ9X2",
+      "8JRE1C4H4Z2W",
+      "YF0LXT1QSTGG",
+      "XP2SL33HT0D9"
+    ],
+    "fixes": [],
+    "skipped": [],
+    "merged": null,
+    "tests": {
+      "tsc": null,
+      "vitest": null,
+      "cases": null
+    },
+    "code_proposals": [
+      "silent-proposal-c20b5139dd0dff71",
+      "silent-proposal-ae9e692d680e3819",
+      "silent-proposal-52f1e1bd2e7db0ed",
+      "silent-proposal-6dd8bbff876be528",
+      "silent-proposal-578e415a259e6835",
+      "silent-proposal-c0767768bf6a7ab1",
+      "silent-proposal-a46bdb7fe711d79a",
+      "silent-proposal-1044224808015e5c",
+      "silent-proposal-7cbc6005db712ba9",
+      "silent-proposal-c59f592f1427a67e"
+    ],
+    "implementation_domains": [],
+    "proposal_results": [
+      {
+        "id": "silent-proposal-c20b5139dd0dff71",
+        "state": "waiting",
+        "reason": "缺历史dirty移动表及火花、污染、虚弱、施毒收益的生产多步联合校准。"
+      },
+      {
+        "id": "silent-proposal-ae9e692d680e3819",
+        "state": "waiting",
+        "reason": "缺独立抢夺来源账、混合增益隔离及遗忘死亡返敏端点。"
+      },
+      {
+        "id": "silent-proposal-52f1e1bd2e7db0ed",
+        "state": "waiting",
+        "reason": "事实读取已有；缺历史移动表及加压、覆甲减层、虚弱联合重放。"
+      },
+      {
+        "id": "silent-proposal-6dd8bbff876be528",
+        "state": "waiting",
+        "reason": "增长接线已有；缺跨召唤持久身份、计数重置校准及另一目标序后继。"
+      },
+      {
+        "id": "silent-proposal-578e415a259e6835",
+        "state": "waiting",
+        "reason": "窄审计已有；完整候选身份和重问后续步归属未知，旧账本错链保留。"
+      },
+      {
+        "id": "silent-proposal-c0767768bf6a7ab1",
+        "state": "waiting",
+        "reason": "缺完整候选续步归属、同抽序同预算整战反事实及独立后置验证。"
+      },
+      {
+        "id": "silent-proposal-a46bdb7fe711d79a",
+        "state": "waiting",
+        "reason": "阶段现场说明已有；缺延迟施毒、抽弃牌、敏捷时点的完整候选联合校准。"
+      },
+      {
+        "id": "silent-proposal-1044224808015e5c",
+        "state": "waiting",
+        "reason": "缺完整候选执行归属、配对随机池预算及独立整战胜线。"
+      },
+      {
+        "id": "silent-proposal-7cbc6005db712ba9",
+        "state": "waiting",
+        "reason": "局部原帧已核；缺轮初挡、减力恢复、朝向与成长的完整候选联合校准。"
+      },
+      {
+        "id": "silent-proposal-c59f592f1427a67e",
+        "state": "waiting",
+        "reason": "缺各子域完整候选实果、联合校准及受控路线和用药后继。"
+      }
+    ],
+    "report": "/home/dw/Projects/agent-sts2/learner/runs/20261014-224321-strategy-proposal/report.md",
+    "wrapper_sha256": "64bbc0e5505a822efbcbafd056437bba6b11e2ee8ed44574cb9c83fdf525642c",
+    "batch_id": "20261014-224302-strategy-proposal"
+  },
+  {
+    "task": "fix-batch",
+    "base": "33b82e2d1e16cad58ceec34877dde2b9845eb593",
+    "fixes": [],
+    "skipped": [
+      {
+        "item": "游戏机制、出牌、药水、SL、终局及结构模型队列项（含silent-0311/0459/0465/0469/0474/0477）",
+        "reason": "策略类；已有独立strategy-proposal链，保留原证据和拥有者，不在普通纯bug批次重复实现或派发"
+      },
+      {
+        "item": "arch-funnel-guard / arch-learning-priority / arch-unified-resource-value / inv-f33-regression / 独立缓存及校准研究",
+        "reason": "独立功能/研究，超出普通纯bug批次；保留原授权任务和拥有者"
+      },
+      {
+        "item": "sandbox-glob-startup-race上游目录生命周期",
+        "reason": "证据不足；有界恢复及复盘租约子项已修。本批一次工具命令执行前因另一项目.codex目录ENOENT被拒，相同命令重试成功；具体目录删除者及上游根因未证，另一项目不在修改范围"
+      },
+      {
+        "item": "调度公平性核查",
+        "reason": "证据不足；原插入序观察不能证明永久饥饿，保留原核查范围"
+      },
+      {
+        "item": "core-build-notify-222802-rc2",
+        "reason": "证据不足；保留原native rc2及诊断，本任务不重放外部通知"
+      },
+      {
+        "item": "v5-dpr-health-20261013暖池性能 / R1-R2 / P1-P2",
+        "reason": "独立研究已有原线程拥有者；执行和传输子项已修，不关闭性能父项"
+      },
+      {
+        "item": "框架外层总时限收尾",
+        "reason": "原分段宿主补验入口24c2e3a75已修；原包装器和精确覆盖收尾由原框架拥有者接续，缺新的可复现纯bug证据"
+      }
+    ],
+    "merged": null,
+    "tests": {
+      "tsc": 0,
+      "vitest": 0,
+      "cases": 3904
+    },
+    "code_proposals": [],
+    "implementation_domains": [],
+    "report": "/home/dw/Projects/agent-sts2/learner/runs/20261014-231313-fix-batch/report.md",
+    "wrapper_sha256": "15269b85fa575c13837a877a88a066e3e5ae6939927839fbdcb366fd74c9d31a",
+    "batch_id": "20261014-231302-fix-batch"
+  },
+  {
+    "task": "strategy-proposal",
+    "character": "silent",
+    "batch": "20261014-231302-s2-strategy-proposal",
+    "base": "33b82e2d1e16cad58ceec34877dde2b9845eb593",
+    "runs": [
+      "DUZUBAJ3A8GP",
+      "5PM6JAQG6FNQ",
+      "CA5KE8GFJ9X2",
+      "8JRE1C4H4Z2W",
+      "YF0LXT1QSTGG",
+      "XP2SL33HT0D9"
+    ],
+    "fixes": [],
+    "skipped": [],
+    "merged": null,
+    "tests": {
+      "tsc": null,
+      "vitest": null,
+      "cases": null
+    },
+    "code_proposals": [
+      "silent-proposal-c20b5139dd0dff71",
+      "silent-proposal-ae9e692d680e3819",
+      "silent-proposal-52f1e1bd2e7db0ed",
+      "silent-proposal-6dd8bbff876be528",
+      "silent-proposal-578e415a259e6835",
+      "silent-proposal-c0767768bf6a7ab1",
+      "silent-proposal-a46bdb7fe711d79a",
+      "silent-proposal-1044224808015e5c",
+      "silent-proposal-7cbc6005db712ba9",
+      "silent-proposal-c59f592f1427a67e"
+    ],
+    "implementation_domains": [
+      "combat",
+      "sl",
+      "structure"
+    ],
+    "proposal_results": [
+      {
+        "id": "silent-proposal-c20b5139dd0dff71",
+        "state": "waiting",
+        "reason": "缺冻结移动表及火花增长、污染撤除、虚弱和迷雾收益的同一多步生产重放；不能由本轮9血价推出少打技能规则。"
+      },
+      {
+        "id": "silent-proposal-ae9e692d680e3819",
+        "state": "waiting",
+        "reason": "缺混合增益时逐来源抢夺账、遗忘死亡返敏的非清场端点和完整候选校准；不能把敌当前全部力量/敏捷返还玩家或固定击杀序。"
+      },
+      {
+        "id": "silent-proposal-52f1e1bd2e7db0ed",
+        "state": "waiting",
+        "reason": "缺历史dirty移动表和加压/覆甲/弱的生产多步重放、减层触发隔离；不能改固定房间成本或宣称完整覆甲条件已证。"
+      },
+      {
+        "id": "silent-proposal-6dd8bbff876be528",
+        "state": "waiting",
+        "reason": "缺召唤前后稳定实例身份、增长计数重置和实际移动模板重放；另一击杀序未实打，不能将候选少损27计作实际收益。"
+      },
+      {
+        "id": "silent-proposal-578e415a259e6835",
+        "state": "waiting",
+        "reason": "缺完整候选身份、抽弃牌重问后的续步执行归属及受控后继；0016是覆甲账本，原金刚杵错链不能重新支持或关闭宽项。"
+      },
+      {
+        "id": "silent-proposal-c0767768bf6a7ab1",
+        "state": "waiting",
+        "reason": "缺完整候选续步归属、同抽序同预算整战反事实及后移独立验证；不能拟合SL血价系数或禁止探索。"
+      },
+      {
+        "id": "silent-proposal-a46bdb7fe711d79a",
+        "state": "waiting",
+        "reason": "缺延迟施毒、抽弃牌及后取得敏捷在完整候选中的传播与生产联合校准；不能强制能力先手或预支未来毒伤。"
+      },
+      {
+        "id": "silent-proposal-1044224808015e5c",
+        "state": "waiting",
+        "reason": "缺完整候选执行归属、配对随机池/预算与独立双蟹整战胜线；B2零差或零标准误不支持更改并列探索优先级。"
+      },
+      {
+        "id": "silent-proposal-7cbc6005db712ba9",
+        "state": "waiting",
+        "reason": "缺轮初挡、减力恢复、朝向/弱和攻次成长的整候选联合传播与消费者校准；不以局部已实现冒认整个提案duplicate。"
+      },
+      {
+        "id": "silent-proposal-c59f592f1427a67e",
+        "state": "waiting",
+        "reason": "缺各子域完整候选实果、联合校准和受控路线/留药后继；历史支持总数不能替代独立因果分母，不改成长或终局权重。"
+      }
+    ],
+    "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261014-231302-s2/learner/runs/20261014-231312-strategy-proposal/report.md",
+    "wrapper_sha256": "37b7eb96a52cd84875750656cff41929aa8dc2a57db026b84d75f0f30b2735b1",
+    "batch_id": "20261014-231302-s2-strategy-proposal"
+  },
+  {
+    "task": "strategy-proposal",
+    "character": "silent",
+    "batch": "20261014-231302-strategy-proposal",
+    "base": "33b82e2d1e16cad58ceec34877dde2b9845eb593",
+    "runs": [
+      "VLZ6CCT8AQ0A",
+      "8JRE1C4H4Z2W",
+      "CA5KE8GFJ9X2",
+      "5PM6JAQG6FNQ",
+      "61E2QS63Y9WU",
+      "DUZUBAJ3A8GP"
+    ],
+    "fixes": [],
+    "skipped": [],
+    "merged": null,
+    "tests": {
+      "tsc": null,
+      "vitest": null,
+      "cases": null
+    },
+    "code_proposals": [
+      "silent-proposal-89354805ee4d7e77",
+      "silent-proposal-f2bfceddb1898dca",
+      "silent-proposal-283a164780d11e69",
+      "silent-proposal-ebbfe3b97548756d",
+      "silent-proposal-e5b87be50f28f311",
+      "silent-proposal-49632bc4878fb597",
+      "silent-proposal-66532328a585941f",
+      "silent-proposal-43a76a31ba7bdcfa",
+      "silent-proposal-5264153a4a4b0e5c",
+      "silent-proposal-bddfa690a84e03d0"
+    ],
+    "implementation_domains": [],
+    "proposal_results": [
+      {
+        "id": "silent-proposal-89354805ee4d7e77",
+        "state": "waiting",
+        "reason": "缺跨抽牌、选牌、药水、SL与换战的实际施放持续身份及生产读回；现有窄升级传播未验证全部属性组合。"
+      },
+      {
+        "id": "silent-proposal-f2bfceddb1898dca",
+        "state": "waiting",
+        "reason": "缺完整模型下同起点、同随机池、同总预算的分阶段MC配对及候选稳定性曲线，不能由707ms样本制定新规则。"
+      },
+      {
+        "id": "silent-proposal-283a164780d11e69",
+        "state": "waiting",
+        "reason": "与第一项同源，但仍缺实际施放持续身份和未覆盖交互校准；没有完整live实现证明，暂不能登记duplicate。"
+      },
+      {
+        "id": "silent-proposal-ebbfe3b97548756d",
+        "state": "waiting",
+        "reason": "缺十五条机制的属性组合、升级联动、状态期限及战斗/路线/休息消费者联合校准，局部端点和源码不证明全覆盖。"
+      },
+      {
+        "id": "silent-proposal-e5b87be50f28f311",
+        "state": "waiting",
+        "reason": "已有预测阶段与端点审计，仍缺跨抽牌、选牌、重问、药水、SL的候选持续归属及本局全过程生产校准。"
+      },
+      {
+        "id": "silent-proposal-49632bc4878fb597",
+        "state": "waiting",
+        "reason": "本局无正敏捷实测，缺逐击力量、正负敏捷、虚弱与蚌独立成长的冻结生产联合校准。"
+      },
+      {
+        "id": "silent-proposal-66532328a585941f",
+        "state": "waiting",
+        "reason": "缺同HP、牌组、药水、完整抽序下不同启动顺序的受控整战对照和收益函数，无毒冒泡局部事实不足以拟合权重。"
+      },
+      {
+        "id": "silent-proposal-43a76a31ba7bdcfa",
+        "state": "waiting",
+        "reason": "缺A10同起始HP、构筑、抽序的生产整战配对及另一可核SL线，首试胜利和毒端点不足以改SL范围或阈值。"
+      },
+      {
+        "id": "silent-proposal-5264153a4a4b0e5c",
+        "state": "waiting",
+        "reason": "缺A10召唤、航行、复现、退场全链生产校准及另一focus完整后继，已有召唤源码与T4端点未认证整战排序收益。"
+      },
+      {
+        "id": "silent-proposal-bddfa690a84e03d0",
+        "state": "waiting",
+        "reason": "缺伤害唤醒、眩晕接续与当前进阶成长的生产全链校准及同抽换序后继，四次相关失败不能拟新血价或杀序。"
+      }
+    ],
+    "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261014-231302/learner/runs/20261014-231312-strategy-proposal/report.md",
+    "wrapper_sha256": "0c5e768a707dc0d5845a782b794497dc3e202229be9d7ff46949cf531494a560",
+    "batch_id": "20261014-231302-strategy-proposal"
+  },
+  {
+    "task": "postmortem",
+    "appended": [
+      "YUWMCVH6MFUH"
+    ],
+    "skipped": [],
+    "bugs": [
+      {
+        "run": "YUWMCVH6MFUH",
+        "where": "agent/src/reflex/combat-plan.ts:3929",
+        "what": "未模拟定向毒药水合法第三目标被截断；旧silent-0365，本局复现，fix-queue未见",
+        "new": false
+      }
+    ],
+    "ledger": {
+      "added": [],
+      "updated": [
+        "silent-0365",
+        "silent-0106",
+        "silent-0080",
+        "silent-0005",
+        "silent-0023",
+        "silent-0276",
+        "silent-0278",
+        "silent-0280",
+        "silent-0445"
+      ],
+      "repeats": [
+        "silent-0365",
+        "silent-0106"
+      ],
+      "check": 0
+    },
+    "code_proposals": [
+      "silent-proposal-20570478de25be42",
+      "silent-proposal-7aa39569666cc602"
+    ],
+    "implementation_domains": [
+      "combat",
+      "potion"
+    ],
+    "report": "/home/dw/Projects/agent-sts2/learner/runs/20261014-231302-postmortem/report.md",
+    "wrapper_sha256": "e11ffb4c03b94a11905a121c4929f4518fb315f60acb867138c96ab7aee9deb7",
+    "batch_id": "20261014-231301"
+  },
+  {
+    "task": "fix-batch",
+    "base": "264efa2ead498503a46d75ac4b4307f137648ac9",
+    "fixes": [
+      {
+        "item": "Roy 已授权新功能：静默 boss 模拟校准",
+        "nature": "周期数据刷新；未新增生产代码或修复其他队列 bug",
+        "commit": "860cef054e66eed74f920ec97fba213bb3befbd0",
+        "reused_code_commit": "cdf75af64fb5b118a5a808ecb3b05e2a05991c36",
+        "fixed_model_commit": "7e1193cef9467416bc10c8e344a49f4fd98390c7",
+        "actual_merge": "1e4be6b85e2d19e7e4dde8f0b5846846e06b250e",
+        "fixed_release_commit": "8035f8223f0a5e9c7caea4971a5f547a6f9b8901",
+        "fixed_release_tree": "ee9a053b3438ad86be5e78e918536f8dc3a94128",
+        "version": "S1.boss-calibration18",
+        "release_id": null,
+        "release_id_status": "待运维锁内核号",
+        "ledger": [
+          "silent-0480"
+        ],
+        "ledger_status": "fight / proposed；shipped 由运维确认",
+        "test": "源码与合后完整沙箱通过；Python固定夹具通过；B2/B3消费者各28项读回通过",
+        "fails_without_fix": false
+      }
+    ],
+    "merged": "1e4be6b85e2d19e7e4dde8f0b5846846e06b250e",
+    "tests": {
+      "tsc": 0,
+      "vitest": 0,
+      "files": 405,
+      "cases": 3902,
+      "source_files": 401,
+      "source_cases": 3880,
+      "python_cases": [
+        12,
+        48,
+        45
+      ],
+      "candidate_consumer": 28,
+      "live_consumer": 28,
+      "gitleaks": 0,
+      "prior_failures": "两轮源码检查失败、启动错误及原日志均保留；历史副本按SHA恢复，未修改断言或预算",
+      "external_full": "交调度器，尚未宣称通过"
+    },
+    "counts": {
+      "finished_silent_runs": 292,
+      "boss_attempts": 1283,
+      "usable_actual_outcomes": 522,
+      "censored": 760,
+      "missing_opening_uncensored": 1,
+      "new_outcomes": 20,
+      "new_wins": 18,
+      "new_deaths": 2,
+      "tune": 107,
+      "validation": 415,
+      "successful_validation": 413
+    },
+    "boss_table": {
+      "CEREMONIAL_BEAST": {
+        "n": 36,
+        "missing": 0,
+        "B2": "可信",
+        "B3": "可信"
+      },
+      "THE_KIN": {
+        "n": 34,
+        "missing": 0,
+        "B2": "可信",
+        "B3": "可信"
+      },
+      "LAGAVULIN_MATRIARCH": {
+        "n": 38,
+        "missing": 0,
+        "B2": "可信",
+        "B3": "可信"
+      },
+      "SOUL_FYSH": {
+        "n": 29,
+        "missing": 0,
+        "B2": "可信",
+        "B3": "可信"
+      },
+      "VANTOM": {
+        "n": 44,
+        "missing": 0,
+        "B2": "可信",
+        "B3": "可信"
+      },
+      "WATERFALL_GIANT": {
+        "n": 35,
+        "missing": 0,
+        "B2": "可信",
+        "B3": "可信"
+      },
+      "KAISER_CRAB": {
+        "n": 41,
+        "missing": 0,
+        "B2_failed": [
+          "brier",
+          "leak"
+        ],
+        "B3_failed": [
+          "brier",
+          "leak"
+        ]
+      },
+      "QUEEN": {
+        "n": 25,
+        "missing": 0,
+        "B2_failed": [
+          "brier",
+          "gap"
+        ],
+        "B3_failed": [
+          "brier",
+          "gap"
+        ]
+      },
+      "AEONGLASS": {
+        "n": 29,
+        "missing": 0,
+        "B2_failed": [
+          "brier",
+          "gap",
+          "leak"
+        ],
+        "B3_failed": [
+          "brier",
+          "gap",
+          "leak"
+        ]
+      },
+      "KNOWLEDGE_DEMON": {
+        "n": 41,
+        "missing": 0,
+        "B2_failed": [
+          "leak"
+        ],
+        "B3_failed": [
+          "leak"
+        ]
+      },
+      "TEST_SUBJECT": {
+        "n": 22,
+        "missing": 0,
+        "B2_failed": [
+          "brier",
+          "gap",
+          "leak"
+        ],
+        "B3_failed": [
+          "brier",
+          "gap",
+          "leak"
+        ]
+      },
+      "THE_INSATIABLE": {
+        "n": 39,
+        "missing": 0,
+        "B2_failed": [
+          "brier"
+        ],
+        "B3_failed": [
+          "brier",
+          "leak"
+        ]
+      }
+    },
+    "a10": {
+      "B2": {
+        "n": 413,
+        "brier": 0.1117,
+        "residual_pp": 4.0,
+        "leak_ratio": 1.293
+      },
+      "B3": {
+        "n": 413,
+        "brier": 0.1148,
+        "residual_pp": 4.4,
+        "leak_ratio": 1.307
+      }
+    },
+    "f49": {
+      "n": 23,
+      "missing": 0,
+      "trust": "低",
+      "B2": {
+        "residual_pp": 26.0,
+        "leak_ratio": 3.575
+      },
+      "B3": {
+        "residual_pp": 20.9,
+        "leak_ratio": 3.572
+      }
+    },
+    "skipped": [
+      {
+        "item": "A0–4独立验证",
+        "actual": 0,
+        "missing": 10
+      },
+      {
+        "item": "A5–9独立验证",
+        "actual": 0,
+        "missing": 10
+      },
+      {
+        "item": "F49可信准入",
+        "reason": "数量足够，质量指标仍失败"
+      },
+      {
+        "item": "当前生产模型重新验证",
+        "reason": "工作树101项、实际合入live70项列定输入不同；本批只验证固定模型"
+      },
+      {
+        "item": "B2中途独立校准及F48→F49联合通关率",
+        "reason": "未验证"
+      },
+      {
+        "item": "完整历史dirty执行树及局中切码",
+        "reason": "未完整重建"
+      }
+    ],
+    "refresh": {
+      "entry": "agent/tools/boss-sim/refresh-silent.py",
+      "scheduler": "ops/learner_jobs.py:calibration_job",
+      "trigger": "每小时:13/:43及学习完成事件检查；升阶或新增20次实际boss结局",
+      "fixed_cutoff_utc": "2026-10-06T02:46:11.648000",
+      "fixed_flags": [
+        "--previous",
+        "--dataset",
+        "--results",
+        "--provenance"
+      ],
+      "idempotency": "完成目录及不足阈值均跳过；切点、调参keys、Platt和门槛不变"
+    },
+    "commits": {
+      "data": "9a085a82736265954385e61f14105e18e55af610",
+      "logs": "860cef054e66eed74f920ec97fba213bb3befbd0",
+      "report_scope": "e00dbd473312bd05f4fa0e2fc4439baffdaba638",
+      "saved_live_refresh": "2a1a898e1bef3d3a6e895c4c7327999a13c61ae8",
+      "merge": "1e4be6b85e2d19e7e4dde8f0b5846846e06b250e",
+      "publication": "8035f8223f0a5e9c7caea4971a5f547a6f9b8901"
+    },
+    "archive": "experiments/boss-sim/silent/7261a44a2416f0d2c1220fcad41ceb2516307d8727d735ab9c3df9eb1e24e61b/",
+    "calibration_report": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/paper/materials/silent/boss-sim-calibration.md",
+    "report": "/home/dw/Projects/agent-sts2/learner/runs/20261014-214308-silent-boss-calibration/report.md",
+    "code_proposals": [],
+    "implementation_domains": [],
+    "request_closed": false,
+    "natural_adoption": "未验证；未代填运维、watcher或Roy确认",
+    "wrapper_sha256": "b5d1d5b7c132a27faf25f9bbf4c45869b2096de046a542fad840620a9517de7a",
+    "batch_id": "20261014-214302-fix-batch"
+  },
+  {
+    "task": "fix-batch",
+    "base": "23c3e5faa8dd557a381e91d9168145e6513f138f",
+    "fixes": [],
+    "skipped": [
+      {
+        "item": "仍未完成的游戏机制、出牌、药水、SL、终局及结构模型队列项",
+        "reason": "策略类；保留已有独立 strategy-proposal 链，不重复实现或派发"
+      },
+      {
+        "item": "silent-0477 剃刀牙普通蛇咬重放／silent-0469 纸鹤施弱",
+        "reason": "策略类；原源6a958bda8／0f86964c8已自测，原ops正沿原任务精确集成，不重复修复"
+      },
+      {
+        "item": "架构、缓存、校准及V5性能专题",
+        "reason": "独立功能或研究，超出普通纯bug批次；由原拥有者接续"
+      },
+      {
+        "item": "sandbox-glob-startup-race 上游目录生命周期",
+        "reason": "证据不足；有界恢复bc2c40e31及租约ID d9983263f已修；未证上游删除者或具体租约拒绝阶段，不放宽守卫"
+      },
+      {
+        "item": "调度公平性核查",
+        "reason": "证据不足；单次插入序观察不能证明永久饥饿"
+      },
+      {
+        "item": "core-build-notify-222802-rc2",
+        "reason": "证据不足；原生rc2根因未证，不重放外部通知"
+      },
+      {
+        "item": "框架外层总时限收尾",
+        "reason": "固定分段补验入口24c2e3a75已修；原包装器及精确覆盖收尾由框架拥有者接续"
+      },
+      {
+        "item": "silent-0459 独立run-plan整局成本漏计",
+        "reason": "原队列指定沿6a39ea0a435755c5独立结构提案实现，不另派普通修复"
+      }
+    ],
+    "merged": null,
+    "tests": {
+      "tsc": 0,
+      "vitest": 0,
+      "cases": 70
+    },
+    "code_proposals": [],
+    "implementation_domains": [],
+    "report": "/home/dw/Projects/agent-sts2/learner/runs/20261014-233815-fix-batch/report.md",
+    "wrapper_sha256": "8c3ca9bf117e520acbfdd7680b2aa4f44c8a9435c1f4b80117316d7d5569e017",
+    "batch_id": "20261014-233810-fix-batch"
+  },
+  {
+    "task": "strategy-proposal",
+    "character": "silent",
+    "batch": "20261014-233810-strategy-proposal",
+    "base": "23c3e5faa8dd557a381e91d9168145e6513f138f",
+    "runs": [
+      "751FN9QM9MHQ",
+      "KV0JHNJCKXLS",
+      "YQL8RZ8BWN1E",
+      "L9SGRBB5R698",
+      "PU80F84P6HPN",
+      "KEN58SH9SLZ6"
+    ],
+    "fixes": [],
+    "skipped": [],
+    "merged": null,
+    "tests": {
+      "tsc": null,
+      "vitest": null,
+      "cases": null
+    },
+    "code_proposals": [
+      "silent-proposal-366288801d9150d9",
+      "silent-proposal-85929bdfc8a3fc1b",
+      "silent-proposal-efd9f83ee9e1a6dc",
+      "silent-proposal-131042659448ae74",
+      "silent-proposal-990f054036609447",
+      "silent-proposal-e18d3f18e6cac2a0",
+      "silent-proposal-9733bb80f445aeae",
+      "silent-proposal-c51468c5e8ba6668",
+      "silent-proposal-86a7db08d1a31976",
+      "silent-proposal-e282a9131b99129a"
+    ],
+    "implementation_domains": [],
+    "proposal_results": [
+      {
+        "id": "silent-proposal-366288801d9150d9",
+        "state": "waiting",
+        "reason": "751局部血价及live预测诊断已核；缺跨抽弃、续问的完整候选实果、受控整战后继及独立校准，不能拟失血准入阈值。"
+      },
+      {
+        "id": "silent-proposal-85929bdfc8a3fc1b",
+        "state": "waiting",
+        "reason": "751仅有实际喝药分支；缺不喝或留至boss的完整支线及逐源实果，不能校准持有价值或改弃牌规则。"
+      },
+      {
+        "id": "silent-proposal-efd9f83ee9e1a6dc",
+        "state": "waiting",
+        "reason": "751六次SL相关且全败；缺完整候选归属、受控整战及独立验证，已有子诊断不足关闭原经验提案。"
+      },
+      {
+        "id": "silent-proposal-131042659448ae74",
+        "state": "waiting",
+        "reason": "缺751能力、毒、反伤逐源兑现及续问后的完整执行，无药或留药跨战联合验证不足。"
+      },
+      {
+        "id": "silent-proposal-990f054036609447",
+        "state": "waiting",
+        "reason": "KV同盘净差已核；缺完整毛伤来源、候选末端、固定后继整战及未执行路线或休息支线，不能拟SL或回血门槛。"
+      },
+      {
+        "id": "silent-proposal-e18d3f18e6cac2a0",
+        "state": "waiting",
+        "reason": "三巨兽局阶段展示已有live实现；新参考排序缺受控完整后继、最终资源校准及独立验证，不能判整项duplicate。"
+      },
+      {
+        "id": "silent-proposal-9733bb80f445aeae",
+        "state": "waiting",
+        "reason": "缺巨兽提前喝、不喝、留药及新SL排序的受控整战比较，跨战药值与策略收益未知。"
+      },
+      {
+        "id": "silent-proposal-c51468c5e8ba6668",
+        "state": "waiting",
+        "reason": "KEN七次耗药及空栏boss入口已核；缺随机选牌、续问后的完整候选收益，以及F15不喝或留药至boss支线。"
+      },
+      {
+        "id": "silent-proposal-86a7db08d1a31976",
+        "state": "waiting",
+        "reason": "KEN同盘血价和步法延迟反例已核；缺完整伤源、能力兑现归属、受控整战及独立校准，不能改探索或HP护栏。"
+      },
+      {
+        "id": "silent-proposal-e282a9131b99129a",
+        "state": "waiting",
+        "reason": "KEN六次尝试属于同一局；缺完整后继反事实、能力兑现归属及独立后期校准，不能拟统一血价或关闭原经验提案。"
+      }
+    ],
+    "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261014-233810/learner/runs/20261014-233814-strategy-proposal/report.md",
+    "wrapper_sha256": "47a045310d9ac742e26758727b54b8a5987708e56ea3448e8e0a218790f11cec",
+    "batch_id": "20261014-233810-strategy-proposal"
+  }
+]

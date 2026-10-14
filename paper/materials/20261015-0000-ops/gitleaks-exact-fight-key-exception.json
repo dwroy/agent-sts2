@@ -1,0 +1,22 @@
+{
+  "rule": "generic-api-key",
+  "exact_fingerprint": "ops/codex-ops/record-staging/20261015-0000/scan/calibration-source-originals.tar.gz/experiments/boss-sim/silent/7261a44a2416f0d2c1220fcad41ceb2516307d8727d735ab9c3df9eb1e24e61b/fight-code-provenance.json:generic-api-key:10866",
+  "file_sha256": "f7f37b09d3c47613a2de83db989afba922d3c9b3615b0a9783b38800fdf5d0bf",
+  "finding_is_nonsecret_fight_identity": true,
+  "binding": {
+    "run_id": "5X2GHKJ89PN1",
+    "floor": 48,
+    "attempt": 4,
+    "recorded_state_byte_offset": 7776970478,
+    "derived_key_components_match_same_record_columns": true,
+    "original_frame_matching_run_id_fields": [
+      "state.run_id",
+      "state.agent_view.run_id"
+    ],
+    "original_state_sha256": "27f95de40a12840646940f52d060a1d5be01242fc237bcf99c45af529e07bfad"
+  },
+  "producer": "agent/tools/boss-sim/character_extract.py:122 builds run:floor:attempt:first.off",
+  "exception_scope": "one immutable file/SHA and one finding fingerprint in this owned unpacked scan only; no repository scanner rules changed",
+  "original_exit_1_and_redacted_location_retained": true,
+  "initial_ops_three_component_and_top_level_raw_ts_assumptions_rejected_without_changing_source": true
+}

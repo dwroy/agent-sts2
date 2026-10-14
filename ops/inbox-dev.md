@@ -1842,3 +1842,59 @@ tsc及2673例沙箱测试通过，推送动作专项2例/Python4例通过。当�
 核实际Silent控制器2592655/start88377626，原autoplay1738396、同局1GN7WFBWC2E3继续，HTTP状态为SHOP。36个线程原0–31/NI0，现逐birth核后只改亲和性至0–29，24模拟worker及1000完整样本闸保持；30–31是一个物理核的两个逻辑线程。仅本PID及其继承线程避让，其他host进程不在本次范围。计算耗时可能增加，不将当前争用倒推为炉石旧超时全部原因。
 
 实际36线程读回及HTTP实例34676/profile1同局原件在paper/materials/20261014-sts2-cpu-coordination/；原before.json保存TID/birth/mask，验证明确交还后运行 `python3 paper/materials/20261014-sts2-cpu-coordination/affinity-control.py restore`，身份或掩码被另一owner改变时拒绝覆盖。已向hearthstone-main/wN:p1实际投递，未代其确认接收。没有停止HTTP、改变账号/预算/队列、重启或生产源码改动。
+
+
+
+## 2026-10-15 00:43:14 CST 原校准必要反证接续（非常规进度）
+
+原silent-calibration-63fa42917452d208cb51772b／20261014-214302-fix-batch／silent-0480的问题原文：
+
+{
+ "kind": "model-limitation",
+ "character": "silent",
+ "finding": "F49独立验证23场，数量缺口0仍不达标；B2/B3预测与实际差+26.0/+20.9个百分点，打穿比3.575/3.572。新增2胜/1死并不支持将F49标可信。A10 B3整体打穿比1.307略超1.3，按原逐boss门槛继续报告，不降低标准或拟合验证标签。",
+ "evidence": [
+  {
+   "run": "LKC9YXKZWTKR",
+   "floor": 49,
+   "attempt": 1,
+   "turns": 16,
+   "outcome": "won"
+  },
+  {
+   "run": "Q10YYQ5DUPJA",
+   "floor": 49,
+   "attempt": 6,
+   "turns": 6,
+   "outcome": "died"
+  },
+  {
+   "run": "9GTFF6DC500L",
+   "floor": 49,
+   "attempt": 6,
+   "turns": 8,
+   "outcome": "won"
+  }
+ ],
+ "trust_changes": {
+  "b2": {
+   "added": [],
+   "removed": []
+  },
+  "b3": {
+   "added": [],
+   "removed": []
+  }
+ },
+ "scope": "Pinned experiment; current production model not independently revalidated.",
+ "ops_received": false,
+ "watcher_received": false,
+ "roy_notified": false
+}
+
+固定7e1193模型的F49验证23场、数量缺口0，质量仍不达标；新增两胜不等于可信，A10 B3打穿比1.307超原1.3，不将固定模型归为当前生产复验。原报告列定当前live70输入不同，保旧低可信/失败/反证。原R3已在061302同thread实际续接，只读复验原已授权实轨、不改冻结R2/144次pilot或P0/P3实现、不关闭宽父。问题/证据/旧观点差异/下一步已实际投递现有watcher wJ:pJT；本人watcher/Roy回执仍待本人提供，root scratch与feature ACK的WT约束不合，未改原身份或代填。原实际发送证据见paper/materials/20261015-0000-ops/calibration-ops-forwarded-receipt.json。
+
+
+## 2026-10-15 00:43:14 CST 炉石明确交还CPU边界
+
+00:26:35实际核2592655/start88377626仍是原Silent控制器，运行既有affinity-control.py restore退出0；36线程全部回0–31/NI0，同PID继续，不触替代PID/账号/预算/队列/源码。原SMT30–31同物理核与炉石失败保留，不由资源试验反推全部因果。实际回执paper/materials/20261014-sts2-cpu-coordination/CPU-release-restoration-result.json及restored.json。

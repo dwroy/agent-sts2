@@ -1,0 +1,118 @@
+```json
+{
+  "task": "fix-batch",
+  "base": "264efa2ead498503a46d75ac4b4307f137648ac9",
+  "fixes": [{
+    "item": "Roy 已授权新功能：静默 boss 模拟校准",
+    "nature": "周期数据刷新；未新增生产代码或修复其他队列 bug",
+    "commit": "860cef054e66eed74f920ec97fba213bb3befbd0",
+    "reused_code_commit": "cdf75af64fb5b118a5a808ecb3b05e2a05991c36",
+    "fixed_model_commit": "7e1193cef9467416bc10c8e344a49f4fd98390c7",
+    "actual_merge": "1e4be6b85e2d19e7e4dde8f0b5846846e06b250e",
+    "fixed_release_commit": "8035f8223f0a5e9c7caea4971a5f547a6f9b8901",
+    "fixed_release_tree": "ee9a053b3438ad86be5e78e918536f8dc3a94128",
+    "version": "S1.boss-calibration18",
+    "release_id": null,
+    "release_id_status": "待运维锁内核号",
+    "ledger": ["silent-0480"],
+    "ledger_status": "fight / proposed；shipped 由运维确认",
+    "test": "源码与合后完整沙箱通过；Python固定夹具通过；B2/B3消费者各28项读回通过",
+    "fails_without_fix": false
+  }],
+  "merged": "1e4be6b85e2d19e7e4dde8f0b5846846e06b250e",
+  "tests": {
+    "tsc": 0,
+    "vitest": 0,
+    "files": 405,
+    "cases": 3902,
+    "source_files": 401,
+    "source_cases": 3880,
+    "python_cases": [12, 48, 45],
+    "candidate_consumer": 28,
+    "live_consumer": 28,
+    "gitleaks": 0,
+    "prior_failures": "两轮源码检查失败、启动错误及原日志均保留；历史副本按SHA恢复，未修改断言或预算",
+    "external_full": "交调度器，尚未宣称通过"
+  },
+  "counts": {
+    "finished_silent_runs": 292,
+    "boss_attempts": 1283,
+    "usable_actual_outcomes": 522,
+    "censored": 760,
+    "missing_opening_uncensored": 1,
+    "new_outcomes": 20,
+    "new_wins": 18,
+    "new_deaths": 2,
+    "tune": 107,
+    "validation": 415,
+    "successful_validation": 413
+  },
+  "boss_table": {
+    "CEREMONIAL_BEAST": {"n": 36, "missing": 0, "B2": "可信", "B3": "可信"},
+    "THE_KIN": {"n": 34, "missing": 0, "B2": "可信", "B3": "可信"},
+    "LAGAVULIN_MATRIARCH": {"n": 38, "missing": 0, "B2": "可信", "B3": "可信"},
+    "SOUL_FYSH": {"n": 29, "missing": 0, "B2": "可信", "B3": "可信"},
+    "VANTOM": {"n": 44, "missing": 0, "B2": "可信", "B3": "可信"},
+    "WATERFALL_GIANT": {"n": 35, "missing": 0, "B2": "可信", "B3": "可信"},
+    "KAISER_CRAB": {"n": 41, "missing": 0, "B2_failed": ["brier", "leak"], "B3_failed": ["brier", "leak"]},
+    "QUEEN": {"n": 25, "missing": 0, "B2_failed": ["brier", "gap"], "B3_failed": ["brier", "gap"]},
+    "AEONGLASS": {"n": 29, "missing": 0, "B2_failed": ["brier", "gap", "leak"], "B3_failed": ["brier", "gap", "leak"]},
+    "KNOWLEDGE_DEMON": {"n": 41, "missing": 0, "B2_failed": ["leak"], "B3_failed": ["leak"]},
+    "TEST_SUBJECT": {"n": 22, "missing": 0, "B2_failed": ["brier", "gap", "leak"], "B3_failed": ["brier", "gap", "leak"]},
+    "THE_INSATIABLE": {"n": 39, "missing": 0, "B2_failed": ["brier"], "B3_failed": ["brier", "leak"]}
+  },
+  "a10": {
+    "B2": {"n": 413, "brier": 0.1117, "residual_pp": 4.0, "leak_ratio": 1.293},
+    "B3": {"n": 413, "brier": 0.1148, "residual_pp": 4.4, "leak_ratio": 1.307}
+  },
+  "f49": {
+    "n": 23,
+    "missing": 0,
+    "trust": "低",
+    "B2": {"residual_pp": 26.0, "leak_ratio": 3.575},
+    "B3": {"residual_pp": 20.9, "leak_ratio": 3.572}
+  },
+  "skipped": [
+    {"item": "A0–4独立验证", "actual": 0, "missing": 10},
+    {"item": "A5–9独立验证", "actual": 0, "missing": 10},
+    {"item": "F49可信准入", "reason": "数量足够，质量指标仍失败"},
+    {"item": "当前生产模型重新验证", "reason": "工作树101项、实际合入live70项列定输入不同；本批只验证固定模型"},
+    {"item": "B2中途独立校准及F48→F49联合通关率", "reason": "未验证"},
+    {"item": "完整历史dirty执行树及局中切码", "reason": "未完整重建"}
+  ],
+  "refresh": {
+    "entry": "agent/tools/boss-sim/refresh-silent.py",
+    "scheduler": "ops/learner_jobs.py:calibration_job",
+    "trigger": "每小时:13/:43及学习完成事件检查；升阶或新增20次实际boss结局",
+    "fixed_cutoff_utc": "2026-10-06T02:46:11.648000",
+    "fixed_flags": ["--previous", "--dataset", "--results", "--provenance"],
+    "idempotency": "完成目录及不足阈值均跳过；切点、调参keys、Platt和门槛不变"
+  },
+  "commits": {
+    "data": "9a085a82736265954385e61f14105e18e55af610",
+    "logs": "860cef054e66eed74f920ec97fba213bb3befbd0",
+    "report_scope": "e00dbd473312bd05f4fa0e2fc4439baffdaba638",
+    "saved_live_refresh": "2a1a898e1bef3d3a6e895c4c7327999a13c61ae8",
+    "merge": "1e4be6b85e2d19e7e4dde8f0b5846846e06b250e",
+    "publication": "8035f8223f0a5e9c7caea4971a5f547a6f9b8901"
+  },
+  "archive": "experiments/boss-sim/silent/7261a44a2416f0d2c1220fcad41ceb2516307d8727d735ab9c3df9eb1e24e61b/",
+  "calibration_report": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/paper/materials/silent/boss-sim-calibration.md",
+  "report": "/home/dw/Projects/agent-sts2/learner/runs/20261014-214308-silent-boss-calibration/report.md",
+  "code_proposals": [],
+  "implementation_domains": [],
+  "request_closed": false,
+  "natural_adoption": "未验证；未代填运维、watcher或Roy确认"
+}
+```
+
+== 学习者 codex / silent-boss-calibration ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a13aa7-271f-7090-a433-5be2b15b2da3
+轮数：1；工具调用：command_execution×159 file_change×3
+token：输入 352.3k、输出 131.3k（其中推理 84.4k）、cache 读 31519.9k、cache 写 0（命中 98.9%）
+成本：未提供
+耗时：7326.8 s（墙钟）
+时间：首个事件 20.5 s、模型首个输出 27.0 s、首次工具 30.0 s、末次工具结束 7205.6 s；工具内共 6175.9 s，其余（模型生成、推理、网络）1130.3 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration）；模型的工具调用 exec×138 wait×17；/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/learner/sessions/2026/10/14/rollout-2026-10-14T21-43-15-01a13aa7-271f-7090-a433-5be2b15b2da3.jsonl
+日志：/home/dw/Projects/agent-sts2/learner/runs/20261014-214308-silent-boss-calibration.jsonl

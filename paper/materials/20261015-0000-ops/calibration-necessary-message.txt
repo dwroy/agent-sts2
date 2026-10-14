@@ -1,0 +1,45 @@
+[必要学习反证，原silent-calibration-63fa42917452d208cb51772b / 20261014-214302-fix-batch，同owner，非进度回报/新研究] 原周期校准报告已经实际交付，问题原文如下，保留固定模型7e1193及原父范围：
+{
+ "kind": "model-limitation",
+ "character": "silent",
+ "finding": "F49独立验证23场，数量缺口0仍不达标；B2/B3预测与实际差+26.0/+20.9个百分点，打穿比3.575/3.572。新增2胜/1死并不支持将F49标可信。A10 B3整体打穿比1.307略超1.3，按原逐boss门槛继续报告，不降低标准或拟合验证标签。",
+ "evidence": [
+  {
+   "run": "LKC9YXKZWTKR",
+   "floor": 49,
+   "attempt": 1,
+   "turns": 16,
+   "outcome": "won"
+  },
+  {
+   "run": "Q10YYQ5DUPJA",
+   "floor": 49,
+   "attempt": 6,
+   "turns": 6,
+   "outcome": "died"
+  },
+  {
+   "run": "9GTFF6DC500L",
+   "floor": 49,
+   "attempt": 6,
+   "turns": 8,
+   "outcome": "won"
+  }
+ ],
+ "trust_changes": {
+  "b2": {
+   "added": [],
+   "removed": []
+  },
+  "b3": {
+   "added": [],
+   "removed": []
+  }
+ },
+ "scope": "Pinned experiment; current production model not independently revalidated.",
+ "ops_received": false,
+ "watcher_received": false,
+ "roy_notified": false
+}
+
+与旧观点的差异：F49验证已有23且数量缺口0，仍不能由新增两胜或满样本数推成可信；A10 B3固定模型打穿比1.307超过1.3，逐Boss名单维持原六项。当前生产有列定70项输入差异，固定模型结果不能冒作已复验生产，更不作整局通关收益。原report/固定source e00dbd473312bd05f4fa0e2fc4439baffdaba638、live 1e4be6b85e2d19e7e4dde8f0b5846846e06b250e，账本silent-0480；原questions SHA256=e78aac1874a66613a648b0e687f9efac4b64d83dfac7817ba7be9ff68811d16b. 来源learner/runs/20261014-214308-silent-boss-calibration/questions.json；完整原件归档paper/materials/20261015-0000-ops/calibration-source-originals.tar.gz及manifest。下一步沿既有R3真实轨迹校准恢复原模型/知识/窗口独立核证，原30题/54池/Jev144不重跑，不启P3/不降低阈值。请在现有Roy会话明确告知这份原必要反证、保留本人实际接收/用户可见回复回执；不要代填其他角色ACK或新造父项。现有feature ACK要求scratch在WT下，但canonical report/eventlog实际在root learner/runs，未改原身份来绕过。程序登记仍pending；本条投递只登记ops实际发送。

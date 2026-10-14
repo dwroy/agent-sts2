@@ -1582,3 +1582,54 @@ tsc及2673例沙箱测试通过，推送动作专项2例/Python4例通过。当�
 <!-- quantitative-disagreement:20261014-215252:aa9167da778990fac6764b62 -->
 
 - 2026-10-14 23:47:56 CST [正式编号核实 V5-R346 / V5.s-margin-attribution1] 原已部署行为78b691b8/sourcee5d07f4现为实际live祖先，live锁内唯一编号；登记main 23c3e5faa8dd557a381e91d9168145e6513f138f / live 473b9c0e1563e88d174cc24d6007eda5c5a9a9f9。旧：S有效伤只累action-only dmg，漏实际已扣敌HP反伤及开始效果终止carry；新：S专用outgoingHpDamage结转上述已算HP伤，旧dmg/候选/胜负/回合/药水/HP/SL保持。E5L15SK6ZHZB A10 F17T5 attempt2同板三候选各600，旧反号5/8/4→0/0/0，终局字段与受伤逐值同、旧原件保留；仅窄计量修正，不证明其他Boss/实盘准确率或P3资格。源3900固定覆盖保原整套4超时与原预算36项补验，非单次整套exit0。宿主只沿原211304启动一次，精确tree 3b6d1a3bbc53057c896f1f14b33e53fdd19467e4，主检出宿主owner2620038/实际vitest2620505/固定树log已核；完整结果待learner-checks，不借原校准sandbox或旧绿。当前S_READINESS unset、默认shadow；两自然局及所有on/P2–P5仍pending，不重启或改R2/R3。预期：题面S反映目标有效HP伤，收益未知；回退：仅逆实际行为78b691b8增量并登记下个连续号，保知识刷新/原样本/失败。paper/materials/20261014-2300-ops/s-release.json、s-host-launch-receipt.json。
+
+
+
+## 2026-10-15 00:43:14 CST 原校准必要反证接续（非常规进度）
+
+原silent-calibration-63fa42917452d208cb51772b／20261014-214302-fix-batch／silent-0480的问题原文：
+
+{
+ "kind": "model-limitation",
+ "character": "silent",
+ "finding": "F49独立验证23场，数量缺口0仍不达标；B2/B3预测与实际差+26.0/+20.9个百分点，打穿比3.575/3.572。新增2胜/1死并不支持将F49标可信。A10 B3整体打穿比1.307略超1.3，按原逐boss门槛继续报告，不降低标准或拟合验证标签。",
+ "evidence": [
+  {
+   "run": "LKC9YXKZWTKR",
+   "floor": 49,
+   "attempt": 1,
+   "turns": 16,
+   "outcome": "won"
+  },
+  {
+   "run": "Q10YYQ5DUPJA",
+   "floor": 49,
+   "attempt": 6,
+   "turns": 6,
+   "outcome": "died"
+  },
+  {
+   "run": "9GTFF6DC500L",
+   "floor": 49,
+   "attempt": 6,
+   "turns": 8,
+   "outcome": "won"
+  }
+ ],
+ "trust_changes": {
+  "b2": {
+   "added": [],
+   "removed": []
+  },
+  "b3": {
+   "added": [],
+   "removed": []
+  }
+ },
+ "scope": "Pinned experiment; current production model not independently revalidated.",
+ "ops_received": false,
+ "watcher_received": false,
+ "roy_notified": false
+}
+
+固定7e1193模型的F49验证23场、数量缺口0，质量仍不达标；新增两胜不等于可信，A10 B3打穿比1.307超原1.3，不将固定模型归为当前生产复验。原报告列定当前live70输入不同，保旧低可信/失败/反证。原R3已在061302同thread实际续接，只读复验原已授权实轨、不改冻结R2/144次pilot或P0/P3实现、不关闭宽父。问题/证据/旧观点差异/下一步已实际投递现有watcher wJ:pJT；本人watcher/Roy回执仍待本人提供，root scratch与feature ACK的WT约束不合，未改原身份或代填。原实际发送证据见paper/materials/20261015-0000-ops/calibration-ops-forwarded-receipt.json。

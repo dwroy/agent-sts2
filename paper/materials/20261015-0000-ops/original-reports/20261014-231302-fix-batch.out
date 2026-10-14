@@ -1,0 +1,24 @@
+## 修 bug 回报
+
+- 合并基线：main → 33b82e2d1e16cad58ceec34877dde2b9845eb593
+- 修复（每条一行）：无新增修复。
+- 已被别人修掉的：62项，逐项提交号见[完整回报](/home/dw/Projects/agent-sts2/learner/runs/20261014-231313-fix-batch/report.md)。其中 scratch 归属 — 5f04139ce；证据提取 run 字段 — 78e9b0592；通知身份桥接 — 1dd4d434a。
+- 没修的：策略及独立研究项 — 保留原任务；目录竞态、调度公平性、通知 rc2、框架收尾 — 缺少新的可复现证据。
+- 测试：tsc 退出码0；vitest 406文件 / 3904用例 / 退出码0，首轮通过、无重跑；gitleaks退出码0。
+- 合入：未合入；本批无新增源码，62项既有修复均已核为基线及 live 祖先。
+- 需要 Roy 定的事（没有写「无」）：无。
+
+```json
+{"task":"fix-batch","base":"33b82e2d1e16cad58ceec34877dde2b9845eb593","fixes":[],"skipped":[{"item":"游戏机制、出牌、药水、SL、终局及结构模型队列项（含silent-0311/0459/0465/0469/0474/0477）","reason":"策略类；已有独立strategy-proposal链，保留原证据和拥有者，不在普通纯bug批次重复实现或派发"},{"item":"arch-funnel-guard / arch-learning-priority / arch-unified-resource-value / inv-f33-regression / 独立缓存及校准研究","reason":"独立功能/研究，超出普通纯bug批次；保留原授权任务和拥有者"},{"item":"sandbox-glob-startup-race上游目录生命周期","reason":"证据不足；有界恢复及复盘租约子项已修。本批一次工具命令执行前因另一项目.codex目录ENOENT被拒，相同命令重试成功；具体目录删除者及上游根因未证，另一项目不在修改范围"},{"item":"调度公平性核查","reason":"证据不足；原插入序观察不能证明永久饥饿，保留原核查范围"},{"item":"core-build-notify-222802-rc2","reason":"证据不足；保留原native rc2及诊断，本任务不重放外部通知"},{"item":"v5-dpr-health-20261013暖池性能 / R1-R2 / P1-P2","reason":"独立研究已有原线程拥有者；执行和传输子项已修，不关闭性能父项"},{"item":"框架外层总时限收尾","reason":"原分段宿主补验入口24c2e3a75已修；原包装器和精确覆盖收尾由原框架拥有者接续，缺新的可复现纯bug证据"}],"merged":null,"tests":{"tsc":0,"vitest":0,"cases":3904},"code_proposals":[],"implementation_domains":[],"report":"/home/dw/Projects/agent-sts2/learner/runs/20261014-231313-fix-batch/report.md"}
+```
+
+== 学习者 codex / fix-batch ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a13af9-a309-70d0-9ab8-284e343558cf
+轮数：1；工具调用：command_execution×39
+token：输入 198.5k、输出 17.0k（其中推理 9057）、cache 读 3423.5k、cache 写 0（命中 94.5%）
+成本：未提供
+耗时：763.3 s（墙钟）
+时间：首个事件 14.6 s、模型首个输出 21.3 s、首次工具 23.0 s、末次工具结束 702.3 s；工具内共 398.1 s，其余（模型生成、推理、网络）350.5 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-231302）；模型的工具调用 exec×31；/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/learner/sessions/2026/10/14/rollout-2026-10-14T23-13-21-01a13af9-a309-70d0-9ab8-284e343558cf.jsonl
+日志：/home/dw/Projects/agent-sts2/learner/runs/20261014-231313-fix-batch.jsonl

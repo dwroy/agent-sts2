@@ -1,0 +1,43 @@
+## 复盘回报
+
+- 已追加：YUWMCVH6MFUH（A10，第43层，三骑士战T8以11血17挡对魔法骑士40攻击阵亡）。
+- 新的纯 bug：无；旧目标截断 bug silent-0365 已补证。
+- 写成「未记录」的项：YUWMCVH6MFUH：完整dirty输入、逐击伤源及结算顺序、未选策略的整场反事实、完整最优线兑现比例、非boss SL条目、F44以后资源、boss时钟需伤／估伤比、Jev缓存、真实账单、净战斗用时。
+- 学习账本：YUWMCVH6MFUH：新增无；更新 silent-0365、silent-0106、silent-0080、silent-0005、silent-0023、silent-0276、silent-0278、silent-0280、silent-0445（老错 silent-0365、silent-0106）；`ledger.py check`退出码0。
+- 代码提案：silent-proposal-20570478de25be42（F43T1—3／silent-0365，药水目标覆盖）；silent-proposal-7aa39569666cc602（F43T5／T8／silent-0106、silent-0080等，战斗窗口与敏捷兑现）。均登记pending，关联strategy-proposal；缺受控整场证据的策略保持现状，未实现或上线。
+
+```json
+{
+  "task": "postmortem",
+  "appended": ["YUWMCVH6MFUH"],
+  "skipped": [],
+  "bugs": [
+    {
+      "run": "YUWMCVH6MFUH",
+      "where": "agent/src/reflex/combat-plan.ts:3929",
+      "what": "未模拟定向毒药水合法第三目标被截断；旧silent-0365，本局复现，fix-queue未见",
+      "new": false
+    }
+  ],
+  "ledger": {
+    "added": [],
+    "updated": ["silent-0365", "silent-0106", "silent-0080", "silent-0005", "silent-0023", "silent-0276", "silent-0278", "silent-0280", "silent-0445"],
+    "repeats": ["silent-0365", "silent-0106"],
+    "check": 0
+  },
+  "code_proposals": ["silent-proposal-20570478de25be42", "silent-proposal-7aa39569666cc602"],
+  "implementation_domains": ["combat", "potion"],
+  "report": "/home/dw/Projects/agent-sts2/learner/runs/20261014-231302-postmortem/report.md"
+}
+```
+
+== 学习者 codex / postmortem ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a13af9-60f2-72a1-8fce-b98a8e2de902
+轮数：1；工具调用：command_execution×46
+token：输入 209.8k、输出 37.3k（其中推理 11.2k）、cache 读 4567.3k、cache 写 0（命中 95.6%）
+成本：未提供
+耗时：1505.2 s（墙钟）
+时间：首个事件 22.2 s、模型首个输出 29.8 s、首次工具 33.4 s、末次工具结束 1474.1 s；工具内共 138.4 s，其余（模型生成、推理、网络）1344.6 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2）；模型的工具调用 exec×37；/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/learner/sessions/2026/10/14/rollout-2026-10-14T23-13-04-01a13af9-60f2-72a1-8fce-b98a8e2de902.jsonl
+日志：/home/dw/Projects/agent-sts2/learner/runs/20261014-231302-postmortem.jsonl

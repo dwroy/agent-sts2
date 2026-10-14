@@ -1,0 +1,33 @@
+{
+  "at": "2026-10-15 00:15:20 CST",
+  "batch": "20261014-214302-fix-batch",
+  "source": "e00dbd473312bd05f4fa0e2fc4439baffdaba638",
+  "data_source": "9a085a82736265954385e61f14105e18e55af610",
+  "actual_live": "1e4be6b85e2d19e7e4dde8f0b5846846e06b250e",
+  "publication": "8035f8223f0a5e9c7caea4971a5f547a6f9b8901",
+  "name": "S1.boss-calibration18",
+  "formal_release_id": null,
+  "exact_leaves": [
+    {
+      "path": "knowledge/characters/silent/boss-trust.json",
+      "source_sha256": "e70d0febffb91a807a69768a8aae658d8ce58ec7ce576e3071e002bbf3599090",
+      "live_sha256": "e70d0febffb91a807a69768a8aae658d8ce58ec7ce576e3071e002bbf3599090",
+      "main_is_prior_snapshot": true
+    },
+    {
+      "path": "paper/materials/silent/boss-sim-calibration.md",
+      "source_sha256": "a5a0393e6ec88a35299020e5c79a656b584aa5a6bfc7a9b27b69e67eae88005f",
+      "live_sha256": "a5a0393e6ec88a35299020e5c79a656b584aa5a6bfc7a9b27b69e67eae88005f",
+      "main_is_prior_snapshot": true
+    }
+  ],
+  "main_sync_not_done": true,
+  "state": "actual_live_verified_main_sync_and_number_pending_original_host_lock",
+  "lock_receipt": "paper/materials/20261015-0000-ops/live-lock-readback.json",
+  "next_step": "After original live check releases the lock, sync only these two clean data leaves, bind original source ancestor, preserve refreshed knowledge and old registry order, then assign the next cumulative release. No source/API/controller changes.",
+  "S_host_same_deployed_code_full_pass_receipt": "paper/materials/20261015-0000-ops/s-host-full-acceptance.json",
+  "separate_calibration_host_check_log": "ops/codex-ops/learner/20261014-214302-fix-batch.fallback-3b6d1a3bbc53057c896f1f14b33e53fdd19467e4.checks.log",
+  "fixed_model_only": "7e1193cef9467416bc10c8e344a49f4fd98390c7",
+  "production_model_revalidation_and_parent_still_open": true,
+  "no_new_check_requested_this_wake": true
+}

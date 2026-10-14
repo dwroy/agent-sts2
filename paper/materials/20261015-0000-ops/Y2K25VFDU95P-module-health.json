@@ -1,0 +1,439 @@
+{
+  "schema": "module-health-v1",
+  "at": "2026-10-14T15:30:03.365786+00:00",
+  "run_id": "Y2K25VFDU95P",
+  "character": "SILENT",
+  "architecture": "V5",
+  "construction_mode": "shadow",
+  "simulation_enabled": true,
+  "coverage": {
+    "decisions_complete": true,
+    "decisions": {
+      "path": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+      "start": 1389790304,
+      "end": 1423344650,
+      "complete": false,
+      "malformed": 0,
+      "first_ts": "2026-10-14T12:08:36.889Z"
+    },
+    "brain": {
+      "path": "/home/dw/Projects/agent-sts2/logs/brain.jsonl",
+      "start": 488033057,
+      "end": 521585362,
+      "complete": false,
+      "malformed": 0,
+      "first_ts": "2026-10-13T23:00:57.213Z"
+    },
+    "plans": {
+      "path": "/home/dw/Projects/agent-sts2/logs/run-plans.jsonl",
+      "start": 3595807,
+      "end": 7789358,
+      "complete": false,
+      "malformed": 0,
+      "first_ts": "2026-09-30T00:41:01.289Z"
+    },
+    "config": {
+      "path": "/home/dw/Projects/agent-sts2/logs/run-config.jsonl",
+      "start": 0,
+      "end": 1700723,
+      "complete": true,
+      "malformed": 0,
+      "first_ts": "2026-09-30T00:10:45.685Z"
+    }
+  },
+  "complete": true,
+  "construction": {
+    "missing_route": 2,
+    "predicted": 7
+  },
+  "construction_pipeline": {
+    "enabled": true,
+    "evaluation_expected": 9,
+    "evaluation_attached": 9,
+    "evaluation_missing": 0,
+    "brain_evaluation": 9,
+    "accepted_evaluation": 9,
+    "accepted_choice_with_evaluation": 8,
+    "plan_due": 2,
+    "accepted_structured_plan": 2,
+    "missing_structured_plan": 0,
+    "saved_structured_plan": 2,
+    "plan_readback": 8,
+    "checkpoint_review_due": 1,
+    "probability_delivered": 0,
+    "admission": {
+      "missing_or_mismatched_prospective_calibration": 7
+    },
+    "evidence": [],
+    "alert": false,
+    "limits": "Payload delivery, accepted output and saved/read-back plans are distinct observations, not causal win-rate evidence. Missing calibration is pending, not a service failure."
+  },
+  "s_readiness": {
+    "mode": "shadow",
+    "expected": 8,
+    "produced": 8,
+    "missing": 0,
+    "eligible": 0,
+    "low_trust": 8,
+    "sign_rejected": 6,
+    "brain_delivered": 0,
+    "brain_accepted": 0,
+    "ms_max": 10.452681000053417,
+    "longest_missing_streak": 0,
+    "alert": false,
+    "limits": "Shadow is not brain delivery. Low trust and failed sign audit suppress facts without changing mandatory computation or old ranking."
+  },
+  "b3": {
+    "attempts": 8,
+    "skipped": 0,
+    "produced_dpr": 8,
+    "coverage": 1.0,
+    "failures": {},
+    "unsupported": 0,
+    "applicable_attempts": 8,
+    "unsupported_only": 0,
+    "candidates": {
+      "observed": 52,
+      "unsupported": 11,
+      "with_dpr": 41,
+      "missing_dpr": 0
+    },
+    "applicable_coverage": 1.0,
+    "longest_failure_streak": 0,
+    "trailing_failure_streak": 0,
+    "paired_samples_min": 1000,
+    "ms_max": 32752
+  },
+  "brain": {
+    "observed_questions": 8,
+    "questions_with_dpr": 8,
+    "accepted_with_dpr": 8,
+    "decision_use": "unknown; delivery is not evidence of reasoning or a fixed DPR weight"
+  },
+  "alert": false,
+  "failures": [],
+  "diagnostics": [
+    {
+      "ts": "2026-10-14T15:03:15.338Z",
+      "schema": "build-sim-health-v1",
+      "status": "produced",
+      "availableCpus": 32,
+      "loadAverage": [
+        5.25,
+        13.17,
+        23.25
+      ],
+      "decks": 25,
+      "options": 4,
+      "deckCards": 13,
+      "deadlineMs": 10901.082697,
+      "orderSearch": null,
+      "comparison": {
+        "samples": 1000,
+        "elapsedMs": 11561,
+        "timedOut": false,
+        "workers": 24,
+        "deadlineMs": null,
+        "pool": {
+          "queueMs": 0,
+          "coldStart": true,
+          "preparationMs": 10,
+          "firstReplyMs": 533,
+          "chunksPlanned": 3125,
+          "chunksDispatched": 3125,
+          "chunksCompleted": 3125,
+          "outcomesCompleted": 5000
+        }
+      },
+      "boss": "WATERFALL_GIANT",
+      "samples": 1000,
+      "requested": 1000,
+      "minimumShown": 300,
+      "timedOut": false,
+      "simMs": 11767,
+      "workers": 24
+    },
+    {
+      "ts": "2026-10-14T15:06:17.076Z",
+      "schema": "build-sim-health-v1",
+      "status": "produced",
+      "availableCpus": 32,
+      "loadAverage": [
+        6.82,
+        10.16,
+        20.07
+      ],
+      "decks": 4,
+      "options": 4,
+      "deckCards": 15,
+      "deadlineMs": 10923.64342800001,
+      "orderSearch": null,
+      "comparison": {
+        "samples": 1000,
+        "elapsedMs": 9173,
+        "timedOut": false,
+        "workers": 24,
+        "deadlineMs": null,
+        "pool": {
+          "queueMs": 0,
+          "coldStart": false,
+          "preparationMs": 0,
+          "firstReplyMs": 56,
+          "chunksPlanned": 500,
+          "chunksDispatched": 500,
+          "chunksCompleted": 500,
+          "outcomesCompleted": 4000
+        }
+      },
+      "boss": "WATERFALL_GIANT",
+      "samples": 1000,
+      "requested": 1000,
+      "minimumShown": 300,
+      "timedOut": false,
+      "simMs": 9383,
+      "workers": 24
+    },
+    {
+      "ts": "2026-10-14T15:08:38.845Z",
+      "schema": "build-sim-health-v1",
+      "status": "produced",
+      "availableCpus": 32,
+      "loadAverage": [
+        6.89,
+        9.86,
+        19.09
+      ],
+      "decks": 2,
+      "options": 1,
+      "deckCards": 16,
+      "deadlineMs": 10922.934351000004,
+      "orderSearch": null,
+      "comparison": {
+        "samples": 1000,
+        "elapsedMs": 4403,
+        "timedOut": false,
+        "workers": 24,
+        "deadlineMs": null,
+        "pool": {
+          "queueMs": 0,
+          "coldStart": false,
+          "preparationMs": 0,
+          "firstReplyMs": 38,
+          "chunksPlanned": 250,
+          "chunksDispatched": 250,
+          "chunksCompleted": 250,
+          "outcomesCompleted": 2000
+        }
+      },
+      "boss": "WATERFALL_GIANT",
+      "samples": 1000,
+      "requested": 1000,
+      "minimumShown": 300,
+      "timedOut": false,
+      "simMs": 4511,
+      "workers": 24
+    },
+    {
+      "ts": "2026-10-14T15:10:51.241Z",
+      "schema": "build-sim-health-v1",
+      "status": "produced",
+      "availableCpus": 32,
+      "loadAverage": [
+        3.26,
+        7.14,
+        16.45
+      ],
+      "decks": 4,
+      "options": 4,
+      "deckCards": 16,
+      "deadlineMs": 10945.613543999963,
+      "orderSearch": null,
+      "comparison": {
+        "samples": 1000,
+        "elapsedMs": 10828,
+        "timedOut": false,
+        "workers": 24,
+        "deadlineMs": null,
+        "pool": {
+          "queueMs": 0,
+          "coldStart": false,
+          "preparationMs": 0,
+          "firstReplyMs": 42,
+          "chunksPlanned": 500,
+          "chunksDispatched": 500,
+          "chunksCompleted": 500,
+          "outcomesCompleted": 4000
+        }
+      },
+      "boss": "WATERFALL_GIANT",
+      "samples": 1000,
+      "requested": 1000,
+      "minimumShown": 300,
+      "timedOut": false,
+      "simMs": 10979,
+      "workers": 24
+    },
+    {
+      "ts": "2026-10-14T15:12:37.151Z",
+      "schema": "build-sim-health-v1",
+      "status": "produced",
+      "availableCpus": 32,
+      "loadAverage": [
+        4.8,
+        7.42,
+        15.7
+      ],
+      "decks": 13,
+      "options": 14,
+      "deckCards": 17,
+      "deadlineMs": 10873.78259399999,
+      "orderSearch": null,
+      "comparison": {
+        "samples": 1000,
+        "elapsedMs": 22960,
+        "timedOut": false,
+        "workers": 24,
+        "deadlineMs": null,
+        "pool": {
+          "queueMs": 0,
+          "coldStart": false,
+          "preparationMs": 1,
+          "firstReplyMs": 25,
+          "chunksPlanned": 1625,
+          "chunksDispatched": 1625,
+          "chunksCompleted": 1625,
+          "outcomesCompleted": 13000
+        }
+      },
+      "boss": "WATERFALL_GIANT",
+      "samples": 1000,
+      "requested": 1000,
+      "minimumShown": 300,
+      "timedOut": false,
+      "simMs": 23221,
+      "workers": 24
+    },
+    {
+      "ts": "2026-10-14T15:18:14.547Z",
+      "schema": "build-sim-health-v1",
+      "status": "produced",
+      "availableCpus": 32,
+      "loadAverage": [
+        5.18,
+        7.51,
+        14.73
+      ],
+      "decks": 4,
+      "options": 4,
+      "deckCards": 19,
+      "deadlineMs": 10916.669980000006,
+      "orderSearch": null,
+      "comparison": {
+        "samples": 1000,
+        "elapsedMs": 12451,
+        "timedOut": false,
+        "workers": 24,
+        "deadlineMs": null,
+        "pool": {
+          "queueMs": 0,
+          "coldStart": false,
+          "preparationMs": 2,
+          "firstReplyMs": 47,
+          "chunksPlanned": 500,
+          "chunksDispatched": 500,
+          "chunksCompleted": 500,
+          "outcomesCompleted": 4000
+        }
+      },
+      "boss": "WATERFALL_GIANT",
+      "samples": 1000,
+      "requested": 1000,
+      "minimumShown": 300,
+      "timedOut": false,
+      "simMs": 12667,
+      "workers": 24
+    },
+    {
+      "ts": "2026-10-14T15:20:03.787Z",
+      "schema": "build-sim-health-v1",
+      "status": "produced",
+      "availableCpus": 32,
+      "loadAverage": [
+        12.72,
+        14.41,
+        16.35
+      ],
+      "decks": 4,
+      "options": 4,
+      "deckCards": 20,
+      "deadlineMs": 10909.323072999949,
+      "orderSearch": null,
+      "comparison": {
+        "samples": 1000,
+        "elapsedMs": 10543,
+        "timedOut": false,
+        "workers": 24,
+        "deadlineMs": null,
+        "pool": {
+          "queueMs": 0,
+          "coldStart": false,
+          "preparationMs": 0,
+          "firstReplyMs": 42,
+          "chunksPlanned": 500,
+          "chunksDispatched": 500,
+          "chunksCompleted": 500,
+          "outcomesCompleted": 4000
+        }
+      },
+      "boss": "WATERFALL_GIANT",
+      "samples": 1000,
+      "requested": 1000,
+      "minimumShown": 300,
+      "timedOut": false,
+      "simMs": 10655,
+      "workers": 24
+    },
+    {
+      "ts": "2026-10-14T15:21:12.703Z",
+      "schema": "build-sim-health-v1",
+      "status": "produced",
+      "availableCpus": 32,
+      "loadAverage": [
+        18.71,
+        16.07,
+        16.84
+      ],
+      "decks": 12,
+      "options": 11,
+      "deckCards": 21,
+      "deadlineMs": 10910.428914000047,
+      "orderSearch": null,
+      "comparison": {
+        "samples": 1000,
+        "elapsedMs": 32080,
+        "timedOut": false,
+        "workers": 24,
+        "deadlineMs": null,
+        "pool": {
+          "queueMs": 0,
+          "coldStart": false,
+          "preparationMs": 0,
+          "firstReplyMs": 36,
+          "chunksPlanned": 1500,
+          "chunksDispatched": 1500,
+          "chunksCompleted": 1500,
+          "outcomesCompleted": 12000
+        }
+      },
+      "boss": "WATERFALL_GIANT",
+      "samples": 1000,
+      "requested": 1000,
+      "minimumShown": 300,
+      "timedOut": false,
+      "simMs": 32639,
+      "workers": 24
+    }
+  ],
+  "unsupported": [],
+  "scope": "Service availability only; sample threshold, simulator validity and game policy unchanged."
+}
