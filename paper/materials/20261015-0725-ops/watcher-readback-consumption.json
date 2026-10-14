@@ -1,0 +1,74 @@
+{
+  "at": "2026-10-15 07:55:33 CST",
+  "actor": "original STS2 ops",
+  "stage": "watcher publication readback actually read and bound",
+  "parent": "roy-20261014-s-decision",
+  "watcher_record_commit": "b77dda9d9629c767982cb34f3f5c46835b984564",
+  "watcher_readback": {
+    "path": "paper/materials/20261015-s-compute-failure/deployment-readback.json",
+    "sha256": "a8fb64d1cc9ca03d1f3966daeb0a72d698cbdedf7ce8f64f13bbd7c4845e4cbe"
+  },
+  "publication_and_role_and_host_receipt_SHA_verified": {
+    "paper/materials/20261015-0725-ops/c1-c2-publication.json": "ec10502756de79f429de4fffd1eddaad71bc422e866cf0b4711193edb00eccca",
+    "paper/materials/20261015-0725-ops/c1-c2-host-start-readback.json": "95d69dff59d1a0545724d2a844f808abc931146c4a59f7476f3fb9d86a3f4499",
+    "paper/materials/20261015-s-compute-failure/ops-publication-receipt.json": "cb9500873b69b4165f0e4c98c85b3e58ef9fcf70a3573a4f1ffe42a94d08dea5",
+    "paper/materials/20261015-s-adaptive-shadow/ops-wiring-receipt.json": "674fc28b6b77142abcc34ce0e55030d988aa6895f46010ce236e84cfecaab20f"
+  },
+  "actual_live": "52046a3deaa359adbafdd9e6d3e96c2527017f49",
+  "actual_tree": "99fc93ce40c83a260a5d755aa92e3c5e0da038d6",
+  "C1": {
+    "source": "767ba5f1ca98e1ad72a1a5ba172836d0af13e97d",
+    "release_id": "V5-R351",
+    "behavior": "06c6e8c6da5d6e3d5764c2b506e30202a4ca70f4"
+  },
+  "C2": {
+    "source": "7eb2c69abb44b65e73115324385f1350a5c8dd30",
+    "shadow_commit": "52046a3deaa359adbafdd9e6d3e96c2527017f49",
+    "adds_release": false,
+    "on_enabled": false,
+    "natural_completed_verified": 0
+  },
+  "29_code_check_leaf_SHA_bindings_verified": true,
+  "core_config": {
+    "raw_Dai_Roy_difference_preserved": true,
+    "watcher_compiled_equivalence": {
+      "method": "existing esbuild TypeScript transform; comments omitted",
+      "equal": true,
+      "sha256": "ad808456b4b1e6d9edb17b0ae7e0e782bf0bcff62b65fe027595ac4f47dff9af",
+      "scope": "Only core/config.ts; preserved Dai/Roy text difference does not change generated runtime code",
+      "prior_probe": "TypeScript legacy lib/typescript.js entry unavailable; no source mutation or dependency installation"
+    },
+    "new_compile_or_test_run": false
+  },
+  "retention_original_receipts": [
+    {
+      "role": "C1",
+      "path": "paper/materials/20261015-s-compute-failure/retention-complete-attempt.json",
+      "sha256": "56e89ff6c2cd2b7e81b688a1efed6151807c320f3d4eb384b86d5fc410aa8f2e",
+      "state": "retained",
+      "reason": "source leaf not in recorded publication: agent/src/core/config.ts"
+    },
+    {
+      "role": "C2",
+      "path": "paper/materials/20261015-s-adaptive-shadow/retention-complete-attempt.json",
+      "sha256": "56e89ff6c2cd2b7e81b688a1efed6151807c320f3d4eb384b86d5fc410aa8f2e",
+      "state": "retained",
+      "reason": "source leaf not in recorded publication: agent/src/core/config.ts"
+    }
+  ],
+  "retention_action": "preserve both original isolated trees; no force deletion or cleanup model",
+  "host_full": {
+    "original_batch": "20261015-051302-s2-strategy-proposal",
+    "source": "paper/materials/20261015-0725-ops/c1-c2-host-start-readback.json",
+    "exact_tree": "99fc93ce40c83a260a5d755aa92e3c5e0da038d6",
+    "stage": "prior actual-start receipt verified; wait for original scheduler result event",
+    "new_request": false,
+    "result": "pending, no completion event consumed this turn"
+  },
+  "natural_C1": "pending",
+  "natural_C2": "pending new runs; old P1 service gate not substituted",
+  "wide_R3_P1_P2": "open",
+  "current_game_restart": false,
+  "repeat_Roy_notification": false,
+  "other_role_or_user_ACK": "not asserted"
+}
