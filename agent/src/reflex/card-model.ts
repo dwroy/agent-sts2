@@ -1017,8 +1017,18 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
     renderedText.replace(/\s+/g, "") === "保留。给予10层中毒。" &&
     snakebiteValues[0]?.["name"] === "PoisonPower" &&
     ["base_value", "current_value", "enchanted_value"].every((field) => snakebiteValues[0]?.[field] === 10);
+  // 7X0W3U8TVA2A A10 F30 T3 / F31 T1,T13, silent-0087: the displayed eight already includes the modifier.
+  // Consume only this observed plain preview; do not add a second relic bonus or infer an upgraded preview.
+  const modifiedPlainSnakebite = ascension === 10 && !bool(card["upgraded"]) &&
+    card["target_type"] === "AnyEnemy" && requiresTarget && numOrNull(card["energy_cost"]) === 2 &&
+    card["costs_x"] === false && card["star_costs_x"] === false && card["star_cost"] === 0 &&
+    card["enchantment"] == null && template === "给予{PoisonPower:diff()}层中毒。" &&
+    renderedText.replace(/\s+/g, "") === "保留。给予8层中毒。" && snakebiteValues.length === 1 &&
+    snakebiteValues[0]?.["name"] === "PoisonPower" && snakebiteValues[0]?.["base_value"] === 7 &&
+    snakebiteValues[0]?.["current_value"] === 8 && snakebiteValues[0]?.["enchanted_value"] === 7 &&
+    snakebiteValues[0]?.["is_modified"] === true && snakebiteValues[0]?.["was_just_upgraded"] === false;
   const snakebite = character.toLowerCase() === "silent" && cardId === "SNAKEBITE" &&
-    ((!bool(card["upgraded"]) && dyn(card, "PoisonPower") === 7) || upgradedSnakebite);
+    ((!bool(card["upgraded"]) && dyn(card, "PoisonPower") === 7) || upgradedSnakebite || modifiedPlainSnakebite);
   // DUZUBAJ3A8GP F6 T1 / F27 T4-T5, silent-0234: only the observed plain/upgraded Haze values are wired.
   const haze = character.toLowerCase() === "silent" && cardId === "HAZE" &&
     (bool(card["upgraded"]) ? dyn(card, "PoisonPower") === 6 : dyn(card, "PoisonPower") === 4);
