@@ -1,0 +1,46 @@
+{
+  "at": "2026-10-15 07:04:35 CST",
+  "original_batch": "20261015-060253-fix-batch",
+  "shared_host_batch": "20261015-051302-s2-strategy-proposal",
+  "shared_host_worker": {
+    "pid": 4134974,
+    "birth": "91086072",
+    "args": [
+      "python3",
+      "/home/dw/Projects/agent-sts2/ops/codex-ops-learn.py",
+      "finish",
+      "--batch",
+      "20261015-051302-s2-strategy-proposal",
+      "--rc",
+      "0",
+      "--character",
+      "silent"
+    ],
+    "checks_logs": [
+      "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261015-051302-s2-strategy-proposal.fallback-8ee5defe2b062f00653c8d396f614b5f7f18f82b.checks.log"
+    ]
+  },
+  "exact_live": "19c9720b688ec7152fd1bbda554e9084e042077b",
+  "exact_tree": "8ee5defe2b062f00653c8d396f614b5f7f18f82b",
+  "shared_full_actual_started": true,
+  "full_completed": false,
+  "own_recheck_was_waiting_not_started": {
+    "pid": 4135560,
+    "birth": "91092844",
+    "live_lock_row": [
+      "60:",
+      "->",
+      "FLOCK",
+      "ADVISORY",
+      "WRITE",
+      "4135560",
+      "08:30:372157",
+      "0",
+      "EOF"
+    ]
+  },
+  "original_parallel_host_check_untouched": true,
+  "no_game_or_model_or_budget_change": true,
+  "deduplication": "Stop only this wake’s duplicate waiting recheck; reuse existing locked full check for this same combined tree, preserving both original reports and source scopes.",
+  "duplicate_waiting_recheck_signal_sent": true
+}

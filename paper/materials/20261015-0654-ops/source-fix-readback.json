@@ -1,0 +1,125 @@
+{
+  "runtime": {
+    "batch": "20261015-060253-fix-batch",
+    "thread": "01a13c70-eeed-7ab2-a647-b505a45d01be",
+    "cwd": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261015-060253",
+    "event_log": "learner/runs/20261015-060313-109dd307-0a9c-49f5-8d4a-9075722e6093-fix-batch.jsonl",
+    "registered_launch_batch": "20261015-060253-fix-batch",
+    "original_lease": "ebf3f407e5421563ce9bc26d5f903c91c32abc38a1481cd55e41db81a6e0687d",
+    "native_context": {
+      "source": "ops/codex-ops/accounts/codex1/learner/sessions/2026/10/15/rollout-2026-10-15T06-03-16-01a13c70-eeed-7ab2-a647-b505a45d01be.jsonl",
+      "offset": 50167,
+      "bytes": 5118,
+      "sha256": "4fc0de10672468226ecc806107805f3a15be4b1b8fbdbd6ce0d0b8091a370fef",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "sandbox": {
+        "type": "workspace-write",
+        "writable_roots": [
+          "/home/dw/Projects/agent-sts2",
+          "/home/dw/Projects/agent-sts2/.git",
+          "/home/dw/Projects/agent-sts2/.git/worktrees/codex-fix-silent-20261015-060253"
+        ],
+        "network_access": false,
+        "exclude_tmpdir_env_var": false,
+        "exclude_slash_tmp": false
+      },
+      "approval_policy": "never"
+    },
+    "native_user_input": {
+      "offset": 55285,
+      "bytes": 13081,
+      "sha256": "b6fc68ccd2e5c779e415c87df53d50bd34381bfaea48ab4e75e8fb3230692c18",
+      "input_sha256": "950ac5ba7b83dcef4f7a4f2fb69198542d3133e45b87ad9e3d37b2ddcbe28a1d"
+    },
+    "original_header_events": [
+      {
+        "offset": 0,
+        "bytes": 14892,
+        "sha256": "a88031d44b1f6e02098c53c33c32129312c41a789f35709c4a6a93331c0f8956",
+        "type": "learner_launch",
+        "attempt": null,
+        "code": null
+      },
+      {
+        "offset": 14892,
+        "bytes": 370,
+        "sha256": "ff0d0f2011da22715298b623406fff1c92e37ac5b3624a52dca93fd834b7d909",
+        "type": "learner_startup_attempt",
+        "attempt": 1,
+        "code": null
+      },
+      {
+        "offset": 18268,
+        "bytes": 77,
+        "sha256": "c01d510e8ac94e5bef2a89683ed50b2b58c74ec15c9de89a8d55143287983f13",
+        "type": "thread.started",
+        "attempt": null,
+        "code": null
+      }
+    ],
+    "startup_attempts": 1,
+    "failed_startups_preserved": 0,
+    "no_model_or_manual_restart": true
+  },
+  "source": "dd478f0b3e5a0f234f082972d21b203dbf8229d7",
+  "base": "10a19978fb559f1afd952f696fc4d526006a6f0a",
+  "paths": [
+    "agent/tests/ledger-publication-baseline.test.ts",
+    "agent/tests/ledger_publication_baseline_test.py",
+    "learner/ledger.py"
+  ],
+  "self_checks": {
+    "tsc": 0,
+    "vitest": 0,
+    "files": 412,
+    "cases": 3946
+  },
+  "full_log_sha256": "1330a9bf60fae791f9855704d2a7fad508b4c8c05c30e40b193085dba8977828",
+  "original_red_logs": [
+    {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261015-060313-109dd307-0a9c-49f5-8d4a-9075722e6093-fix-batch/ledger-red-primary.log",
+      "sha256": "3ae4e91854b5e58d5f91d14eb03b66c1308068721b1c374163bcb98c97db466d"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261015-060313-109dd307-0a9c-49f5-8d4a-9075722e6093-fix-batch/final-wrapper-red.log",
+      "sha256": "b7d4250e7920e67f5cc72899556a30739102d672c9365a627b37a0ed97dc0e78"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/learner/runs/20261015-060313-109dd307-0a9c-49f5-8d4a-9075722e6093-fix-batch/prefix-review-before.log",
+      "sha256": "842c33f43cf769ca04426202976652b14c4f8890b16f8ef2c5b949ddb2a56490"
+    }
+  ],
+  "merge_attempt": {
+    "branch": "codex-fix-silent-20261015-060253",
+    "source_base": "10a19978fb559f1afd952f696fc4d526006a6f0a",
+    "merged": null,
+    "tests_run": false,
+    "before_refresh": "e61c5667859e0ca236eea031818976fabfad02bf",
+    "initial_dirty": [
+      " M knowledge/characters/silent/boss-damage.json",
+      " M knowledge/characters/silent/construction-opportunities.json",
+      " M knowledge/characters/silent/fight-value-gates.json",
+      " M knowledge/characters/silent/fight-value.json",
+      " M knowledge/characters/silent/outcome-stats.json",
+      " M knowledge/characters/silent/room-costs.json",
+      " M knowledge/common/card-upgrades.json",
+      " M notes/fight-value-backtest-silent.md",
+      " M notes/monster-db-check.md"
+    ],
+    "premerge": "5b70942253b9004315093cd961e4f34e0c277d5e",
+    "refresh_overlap": [],
+    "merge_exit": 1,
+    "conflicts": [
+      "paper/materials/decision-log.md"
+    ],
+    "aborted": true,
+    "after_abort": "5b70942253b9004315093cd961e4f34e0c277d5e",
+    "final_dirty": [
+      " M notes/fight-value-backtest-silent.md",
+      " M notes/monster-db-check.md"
+    ]
+  },
+  "status": "source checked; exact integration pending",
+  "behavior_release": false
+}
