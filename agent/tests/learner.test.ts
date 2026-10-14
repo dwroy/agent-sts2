@@ -613,7 +613,8 @@ describe("whole runs against fake binaries", () => {
     expect(seen.env).toContain("PATH");
 
     const logs = readdirSync(join(tmp, "runs")).filter((file) => file.endsWith("-smoke.jsonl"));
-    expect(logs).toEqual(["20260929-233000-smoke.jsonl"]);
+    expect(logs).toHaveLength(1);
+    expect(logs[0]).toMatch(/^20260929-233000-[0-9a-f-]{36}-smoke\.jsonl$/);
     const lines = readFileSync(join(tmp, "runs", logs[0]!), "utf8").trim().split("\n").map((line) => JSON.parse(line) as Record<string, unknown>);
     expect(lines[0]).toMatchObject({ type: "learner_launch", engine: "codex", task: "smoke", params: { run: "ULQPBK1211FG" } });
     expect(String(lines[0]!["prompt"])).toContain("## ULQPBK1211FG");
@@ -694,10 +695,11 @@ describe("whole runs against fake binaries", () => {
     expect(text).toContain("$0.0123");
     expect(text).toContain("4.2 s（agent 自报）");
     expect(text).toContain("已替换成 [REDACTED]");
-    const log = readFileSync(join(tmp, "runs", "20260929-233000-smoke.jsonl"), "utf8");
+    const file = readdirSync(join(tmp, "runs")).find((name) => name.endsWith("-smoke.jsonl"))!;
+    const log = readFileSync(join(tmp, "runs", file), "utf8");
     expect(log).not.toContain(SECRET);
     expect(log).toContain("leaked [REDACTED]");
-    expect(existsSync(join(tmp, "runs", "20260929-233000-smoke"))).toBe(true); // the {{scratch}} directory
+    expect(existsSync(join(tmp, "runs", file.slice(0, -6)))).toBe(true); // the {{scratch}} directory
     rmSync(join(tmp, "runs"), { recursive: true, force: true });
   });
 });

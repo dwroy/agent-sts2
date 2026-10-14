@@ -172,7 +172,8 @@ def preserved_calibration_report(batch_id, batch, root):
     candidates = []
     try:
         for launch_path in runs.glob(batch_id[:8] + "-*-" + task + ".jsonl"):
-            if not re.fullmatch(r"[0-9]{8}-[0-9]{6}-" + task + r"\.jsonl", launch_path.name):
+            # Accept legacy names as well as isolated launches; keep the scratch/name identity check below.
+            if not re.fullmatch(r"[0-9]{8}-[0-9]{6}-(?:[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}-)?" + task + r"\.jsonl", launch_path.name):
                 continue
             launched = dt.datetime.strptime(launch_path.name[:15], "%Y%m%d-%H%M%S")
             if not 0 <= (launched - start).total_seconds() <= 60:
