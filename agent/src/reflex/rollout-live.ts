@@ -1135,7 +1135,7 @@ export function rolloutFacts(plan: Plan, r: LiveRollout): Record<string, JsonVal
  */
 export function turnsText(plan: Plan, line: LineEstimate, samples: number): string {
   const o = plan.outcome;
-  const first = `${o.kusarigamaUnresolved ? "T1 未计锁镰随机伤害（非保证）" : "T1 exact"}: ${hpText(o.hpLoss)}, dmg ${o.damageDealt}${o.winsFight ? ", won" : o.dies ? ", dead" : o.revived ? `, revived at ${o.revived.hp} HP` : ""}`;
+  const first = `${o.escapePlanUnresolved ? "T1 逃脱计划抽入牌未定（条件参考）" : o.kusarigamaUnresolved ? "T1 未计锁镰随机伤害（非保证）" : "T1 exact"}: ${hpText(o.hpLoss)}, dmg ${o.damageDealt}${o.winsFight ? ", won" : o.dies ? ", dead" : o.revived ? `, revived at ${o.revived.hp} HP` : ""}`;
   const later = line.perTurn.map((t) =>
     t.fighting === 0
       ? `T${t.turn}: over (alive ${t.alive}/${samples}, won ${t.won}/${samples})`
