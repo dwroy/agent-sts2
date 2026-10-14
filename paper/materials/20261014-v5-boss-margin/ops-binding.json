@@ -12,8 +12,8 @@
     "v5-dpr-health-20261013",
     "roy-20261011-silent-core-cycle-quantitative-learning"
   ],
-  "phase": "Pending original-owner R3/quantitative after fixed R2 completion and acceptance",
-  "state": "received_registered_not_sent_to_running_R2_or_started",
+  "phase": "Original quantitative evidence continuation; R341 formula implementation already published, independent calibration pending",
+  "state": "R2_reference_accepted_quantitative_received_R3_prepared_active_calibration_lease_busy",
   "canonical_formula": "S = my_dpr / boss_hp - enemy_dpr / my_hp",
   "current_R2": {
     "batch": "20261014-155247-fix-batch",
@@ -31,7 +31,7 @@
     "original24_complete_references_preserved": true,
     "new_unfinished30_reference_acceptance_pending": true
   },
-  "current_R2_canonical_state": "running",
+  "current_R2_canonical_state": "failed",
   "calibration_owner": {
     "batch": "20261014-061302-fix-batch",
     "thread": "01a13753-c032-73f0-aa3f-ddc0e14809cd"
@@ -40,8 +40,8 @@
     "batch": "20261012-024317-strategy-proposal",
     "thread": "01a12c46-fef2-7282-b689-1fd8b4e0450b"
   },
-  "learner_received_this_supplement": false,
-  "this_supplement_actually_started": false,
+  "learner_received_this_supplement": true,
+  "this_supplement_actually_started": true,
   "prior_144_call_Jev_pilot_kept_no_replay": true,
   "formula_implemented_calibrated_or_published": false,
   "exact_trace_attribution_windows_targets_entry_HP_and_unknown_handling_pending": true,
@@ -50,5 +50,72 @@
   "no_hot_input_new_parent_duplicate_history_source_model_game_version_or_prompt_change": true,
   "original_P1_P2_current_model_calibration_and_natural_gates_open": true,
   "next_gate": "Freeze same-owner continuation input at safe original phase boundary; require actual native receipt and implementation tests, publication and consumers.",
-  "required_dissent_delivery_preserved": true
+  "required_dissent_delivery_preserved": true,
+  "continuation_stage_history": [
+    {
+      "observed_at": "2026-10-14 21:56:21 CST",
+      "previous_state": "received_registered_not_sent_to_running_R2_or_started",
+      "previous_current_continuation": null,
+      "previous_phase": "Pending original-owner R3/quantitative after fixed R2 completion and acceptance",
+      "original_binding_snapshot": "paper/materials/20261014-2121-ops/original-binding-2.json.gz",
+      "original_sha256": "d34cc44040ad65adc9895709d143005b1397b428e123d59047e9bb95ae1d5398"
+    }
+  ],
+  "last_ops_verified_at": "2026-10-14 21:56:21 CST",
+  "R2_completion_acceptance": {
+    "path": "paper/materials/20261014-2121-ops/R2-completion-acceptance.json",
+    "sha256": "cf4ec47743f815b2fbab8d47008cc1f1da53b5992a298310c25a9b68f5862710"
+  },
+  "R2_reference_groups_complete": 54,
+  "R2_reference_support_denominator": {
+    "supported": 27,
+    "unsupported": 3,
+    "all_questions": 30
+  },
+  "R2_complete_only_reference_stage_not_real_calibration": true,
+  "next_original_owner_continuations": {
+    "quantitative": {
+      "batch": "20261014-215252-strategy-proposal",
+      "parent_batch": "20261012-024317-strategy-proposal",
+      "same_thread": "01a12c46-fef2-7282-b689-1fd8b4e0450b",
+      "learner_received": true,
+      "actual_phase_started": true,
+      "runtime_acceptance": {
+        "path": "paper/materials/20261014-2121-ops/quantitative-runtime-acceptance.json",
+        "sha256": "01f12f13d9521947ed3e89c6d5d1230f07cbf7702a6965d0f6dd12053ef6441d"
+      },
+      "scope": "data-only P1/P2 evidence; V5-S P0 implementation remains watcher-owned"
+    },
+    "calibration": {
+      "parent_batch": "20261014-061302-fix-batch",
+      "same_thread": "01a13753-c032-73f0-aa3f-ddc0e14809cd",
+      "learner_received": false,
+      "actual_phase_started": false,
+      "pending_receipt": {
+        "path": "paper/materials/20261014-2121-ops/calibration-pending-receipt.json",
+        "sha256": "730c92e7fd5458588b54d229dfb9f1cd5e886a8adb2192cd85faa3ee05ca264d"
+      },
+      "blocked_by": [
+        {
+          "batch": "20261014-214302-fix-batch",
+          "pid": 2174464,
+          "state": "running",
+          "task": "fix-batch",
+          "feature_request": "silent-calibration-63fa42917452d208cb51772b",
+          "pid_alive": true
+        }
+      ],
+      "no_active_calibration_input_change": true
+    }
+  },
+  "broad_P1_P2_R3_R4_current_model_calibration_and_natural_effects_pending": true,
+  "no_duplicate_V5_S_P0_or_interface_implementation": true,
+  "current_R2_limited_reference_result": "accepted-complete",
+  "current_formula_stage": {
+    "source": "b55d81fd38e6031d254fb1ee4e60023f86aaee98",
+    "release_id": "V5-R341",
+    "implemented_published": true,
+    "independent_real_trajectory_calibration_complete": false,
+    "V5_S_decision_implementation_owner": ".worktrees/s-decision-20261014"
+  }
 }

@@ -1,0 +1,54 @@
+{
+  "task": "strategy-proposal",
+  "character": "silent",
+  "runs": [],
+  "pid": 2208957,
+  "pane": "wJ:p01",
+  "state": "failed",
+  "reason": "authorized-original-owner-after-R2-completion",
+  "worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-024317",
+  "original_owner_role": "quantitative",
+  "continuation_parent_batch": "20261012-024317-strategy-proposal",
+  "resume_thread": "01a12c46-fef2-7282-b689-1fd8b4e0450b",
+  "continuation_supplement_id": "v5-boss-revalidation-20261014-approved-supplement",
+  "continuation_input": {
+    "path": "ops/codex-ops/learner/20261014-214621-strategy-proposal.approved-input.json",
+    "sha256": "090e06674242b78bae2cd18c5017d164f4f554ed9f5b87d244ca4154431e0ff0",
+    "bytes": 4323
+  },
+  "continuation_task": {
+    "path": "ops/codex-ops/learner/20261014-214621-strategy-proposal.approved-input/strategy-proposal.md",
+    "sha256": "bdaad41c91b15642daaba70a3143982df9337774a84e21ad471441cb396b3c4c",
+    "bytes": 9058
+  },
+  "proposal_policy": "Roy-2026-10-07-learning",
+  "startup_retry_history": [
+    {
+      "at": "2026-10-14 21:50:00 CST",
+      "old_pid": 2196406,
+      "new_pid": 2208957,
+      "old_pane": "wJ:pZ0",
+      "new_pane": "wJ:p01",
+      "failure_receipt": {
+        "path": "paper/materials/20261014-2121-ops/quantitative-original-wrapper-failure.json",
+        "sha256": "95f820b61203d1b90a1697aaeeb239f9ad0b854671f3786efd714ad1bbc47a76",
+        "bytes": 305
+      },
+      "cause": "Wrapper read canonical registration before acquiring learn.lock; KeyError before learner launch.",
+      "fix": "Read canonical registration inside the existing learn.lock; unchanged native input/task/thread/account.",
+      "old_failure_kept_no_native_input_was_sent": true
+    }
+  ],
+  "finished": "2026-10-14 21:50",
+  "rc": 2,
+  "merged": null,
+  "proposal_audit_errors": [],
+  "report": {},
+  "completion_failure": {
+    "reason": "learner exited without a completion report",
+    "rc": 2,
+    "stderr": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261014-214621-strategy-proposal.err"
+  },
+  "retry_at": 1791989401.1682904,
+  "dispatch_identity": "continuation:quantitative:090e06674242b78bae2cd18c5017d164f4f554ed9f5b87d244ca4154431e0ff0"
+}

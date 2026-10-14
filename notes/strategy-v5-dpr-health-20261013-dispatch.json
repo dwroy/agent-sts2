@@ -2,17 +2,17 @@
   "request_id": "v5-dpr-health-20261013",
   "supplement_id": "v5-boss-revalidation-20261014-approved-supplement",
   "authorized_by": "Roy",
-  "at": "2026-10-14 15:55:33 CST",
-  "state": "original-owner-R2-unfinished-reference-running-broad-scope-pending",
+  "at": "2026-10-14 20:31:59 CST",
+  "state": "original-owner-R2-reference-accepted-R3-quantitative-broad-scope-pending",
   "original_batch": "20261014-114302-fix-batch",
-  "actual_batch": "20261014-155247-fix-batch",
+  "actual_batch": "20261014-202300-fix-batch",
   "worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302",
   "thread_id": "01a13882-33cd-70b1-81e5-2d41bee83d7b",
   "input": {
-    "path": "ops/codex-ops/learner/20261014-155247-fix-batch.approved-input.json",
-    "sha256": "c0508e5077af68842abfaee11537a3aa4282af376c4ba8ad3c5c9965273b5a17"
+    "path": "ops/codex-ops/learner/20261014-202300-fix-batch.approved-input.json",
+    "sha256": "decff18638db20dd26801e69389b9b9ab460088db8b7acdb3966dbf771f39c1d"
   },
-  "runtime_acceptance": "paper/materials/20261014-1545-ops/original-thread-runtime-acceptance.json",
+  "runtime_acceptance": "paper/materials/20261014-2010-ops/original-thread-runtime-acceptance.json",
   "only_lease_and_retention_binding_no_new_learning_parent_or_scheduler": true,
   "retain_original_thread_cwd_for_R3_R4_and_later_approved_revisions": true,
   "continuation_history": [
@@ -24,6 +24,75 @@
       },
       "runtime_acceptance": "paper/materials/20261014-1230-ops/original-thread-runtime-acceptance.json",
       "state": "original_partial_finished_continue"
+    },
+    {
+      "actual_batch": "20261014-155247-fix-batch",
+      "input": {
+        "path": "ops/codex-ops/learner/20261014-155247-fix-batch.approved-input.json",
+        "sha256": "c0508e5077af68842abfaee11537a3aa4282af376c4ba8ad3c5c9965273b5a17"
+      },
+      "runtime_acceptance": "paper/materials/20261014-1545-ops/original-thread-runtime-acceptance.json",
+      "state": "original_partial_finished_continue"
     }
-  ]
+  ],
+  "continuation_stage_history": [
+    {
+      "observed_at": "2026-10-14 21:56:21 CST",
+      "previous_state": "original-owner-R2-unfinished-reference-running-broad-scope-pending",
+      "previous_current_continuation": null,
+      "previous_phase": null,
+      "original_binding_snapshot": "paper/materials/20261014-2121-ops/original-binding-4.json.gz",
+      "original_sha256": "6f3c62caecf71306bf816fe2840370f04bf484955bd51bf9f9cc12bc87a0cdf0"
+    }
+  ],
+  "last_ops_verified_at": "2026-10-14 21:56:21 CST",
+  "R2_completion_acceptance": {
+    "path": "paper/materials/20261014-2121-ops/R2-completion-acceptance.json",
+    "sha256": "cf4ec47743f815b2fbab8d47008cc1f1da53b5992a298310c25a9b68f5862710"
+  },
+  "R2_reference_groups_complete": 54,
+  "R2_reference_support_denominator": {
+    "supported": 27,
+    "unsupported": 3,
+    "all_questions": 30
+  },
+  "R2_complete_only_reference_stage_not_real_calibration": true,
+  "next_original_owner_continuations": {
+    "quantitative": {
+      "batch": "20261014-215252-strategy-proposal",
+      "parent_batch": "20261012-024317-strategy-proposal",
+      "same_thread": "01a12c46-fef2-7282-b689-1fd8b4e0450b",
+      "learner_received": true,
+      "actual_phase_started": true,
+      "runtime_acceptance": {
+        "path": "paper/materials/20261014-2121-ops/quantitative-runtime-acceptance.json",
+        "sha256": "01f12f13d9521947ed3e89c6d5d1230f07cbf7702a6965d0f6dd12053ef6441d"
+      },
+      "scope": "data-only P1/P2 evidence; V5-S P0 implementation remains watcher-owned"
+    },
+    "calibration": {
+      "parent_batch": "20261014-061302-fix-batch",
+      "same_thread": "01a13753-c032-73f0-aa3f-ddc0e14809cd",
+      "learner_received": false,
+      "actual_phase_started": false,
+      "pending_receipt": {
+        "path": "paper/materials/20261014-2121-ops/calibration-pending-receipt.json",
+        "sha256": "730c92e7fd5458588b54d229dfb9f1cd5e886a8adb2192cd85faa3ee05ca264d"
+      },
+      "blocked_by": [
+        {
+          "batch": "20261014-214302-fix-batch",
+          "pid": 2174464,
+          "state": "running",
+          "task": "fix-batch",
+          "feature_request": "silent-calibration-63fa42917452d208cb51772b",
+          "pid_alive": true
+        }
+      ],
+      "no_active_calibration_input_change": true
+    }
+  },
+  "broad_P1_P2_R3_R4_current_model_calibration_and_natural_effects_pending": true,
+  "no_duplicate_V5_S_P0_or_interface_implementation": true,
+  "retain_all_R2_original_sources_and_raw_results_for_following_owners": true
 }

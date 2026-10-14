@@ -1,0 +1,152 @@
+{
+  "ts": "2026-10-14T12:51:18.127Z",
+  "run_id": "YUWMCVH6MFUH",
+  "ascension": 10,
+  "character": "SILENT",
+  "floor": 1,
+  "code": {
+    "commit": "b0b4d0a152155582c52ef622fe8fc6d9a0c27335",
+    "code": "b0b4d0a+dirty",
+    "dirty": true,
+    "dirty_files": [
+      "knowledge/characters/silent/boss-damage.json",
+      "knowledge/characters/silent/construction-opportunities.json",
+      "knowledge/characters/silent/monster-records.json",
+      "knowledge/characters/silent/outcome-stats.json",
+      "knowledge/characters/silent/room-costs.json",
+      "knowledge/common/card-upgrades.json",
+      "knowledge/common/monster-db.json",
+      "knowledge/common/move-model.json",
+      "notes/fight-value-backtest-silent.md",
+      "notes/monster-db-check.md"
+    ],
+    "branch": "live",
+    "worktree": "live"
+  },
+  "brain": {
+    "active": true,
+    "engine": "codex",
+    "by_prefix": {},
+    "fallback": null,
+    "reask": null,
+    "tools": null,
+    "log": "/home/dw/Projects/agent-sts2/.worktrees/live/logs/brain.jsonl",
+    "engines": {
+      "codex": {
+        "model": "gpt-6.1-sol",
+        "model_by_prefix": {},
+        "timeout_ms": 600000,
+        "effort": "xhigh",
+        "reask": null,
+        "tools": false,
+        "max_calls": null
+      }
+    },
+    "codex": {
+      "mode": "session",
+      "service_tier": "default",
+      "context_window": 512000,
+      "auto_compact_token_limit": 460800,
+      "summary": "auto",
+      "stall_ms": 120000,
+      "first_token_ms": null,
+      "stall_retries": 1,
+      "schema_fields": "used",
+      "route_reason": "drop",
+      "route_pattern": true,
+      "accept_cut": true,
+      "max_field_chars": 600,
+      "max_answer_blanks": 100
+    }
+  },
+  "knowledge": {
+    "prefix": "full",
+    "ascension": 10,
+    "prefix_sha": "2bde958f9788",
+    "prefix_chars": 182327,
+    "prefix_tokens_est": {
+      "deepseek": 127629,
+      "claude": 176857
+    },
+    "system_sha": "43c8b523d781",
+    "system_chars": 184611,
+    "experience_version": "2026-10-13.8",
+    "prefix_note": "the prefix at this run's start; the brain re-renders it when the knowledge files or notes/lessons.md change (brain/knowledge.ts), so the prefix each call used is its brain.jsonl row's knowledge.prefix_sha"
+  },
+  "jev": {
+    "enabled": true,
+    "model": "jev-latest",
+    "context": "v1",
+    "strict": true,
+    "prompt_log": "/home/dw/Projects/agent-sts2/.worktrees/live/logs/jev-prompts.jsonl"
+  },
+  "construction": {
+    "architecture": "V5",
+    "schema": "construction-v1",
+    "mode": "shadow",
+    "policy": "observed-signature-completion",
+    "validation": "prospective-calibration-required",
+    "evaluation": "same-question-combat-facts"
+  },
+  "operator_constraints": {
+    "id": "roy-20261013-v5-no-deck-cap",
+    "max_permanent_cards": null,
+    "activation": "V5: Roy removed the fixed permanent deck-size limit"
+  },
+  "sl": {
+    "enabled": true,
+    "boss_retries": 5,
+    "elite_retries": 3,
+    "act3_low_hp": true,
+    "act3_low_hp_pct": 50,
+    "act2_low_hp": true,
+    "act2_low_hp_pct": 50,
+    "retry_show_sim": true,
+    "retry_memo": true,
+    "retry_known_draws": true,
+    "retry_compute": {
+      "rollout_samples": 24,
+      "rollout_budget_ms": 20000,
+      "turn_budget_ms": 30000,
+      "mc_samples": 36,
+      "mc_budget_ms": 1200,
+      "boss_sim_samples": 1200
+    },
+    "judge_known_draws": true,
+    "judge_any_draw": true,
+    "reload_early": true,
+    "reload_on_revive": false,
+    "retry_known_inserts": true,
+    "retry_known_top": true,
+    "retry_explore": true,
+    "retry_explore_b2": true,
+    "retry_explore_boss_potions": true,
+    "retry_explore_order": true,
+    "retry_explore_replay": true,
+    "retry_explore_replay_plays": true,
+    "retry_explore_replay_deviate": true,
+    "retry_explore_key_counters": true,
+    "retry_explore_second": true,
+    "retry_explore_replay_order": true,
+    "retry_explore_replay_code": true,
+    "retry_explore_target_turn": true,
+    "retry_explore_rearm": true,
+    "retry_explore_wasted": true,
+    "retry_explore_anchor": true,
+    "retry_explore_canon": true,
+    "retry_explore_turn": true,
+    "retry_explore_whole": true,
+    "retry_explore_where": true,
+    "retry_explore_potion": true,
+    "retry_known_picks": true,
+    "retry_known_off_top": true,
+    "retry_known_hand_order": true,
+    "step_timeout_ms": 60000,
+    "log": "/home/dw/Projects/agent-sts2/.worktrees/live/logs/sl-attempts.jsonl",
+    "elites": [],
+    "elites_date": ""
+  },
+  "config_sha": "a297885b226a",
+  "original_row_sha256": "793a396666a35c4206a838cf46d36e8f3b3d166ca89e6454ddf16698d2e4104f",
+  "bytes": 5131
+}

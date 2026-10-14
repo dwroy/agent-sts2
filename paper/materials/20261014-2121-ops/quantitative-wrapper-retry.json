@@ -1,0 +1,15 @@
+{
+  "at": "2026-10-14 21:50:00 CST",
+  "old_pid": 2196406,
+  "new_pid": 2208957,
+  "old_pane": "wJ:pZ0",
+  "new_pane": "wJ:p01",
+  "failure_receipt": {
+    "path": "paper/materials/20261014-2121-ops/quantitative-original-wrapper-failure.json",
+    "sha256": "95f820b61203d1b90a1697aaeeb239f9ad0b854671f3786efd714ad1bbc47a76",
+    "bytes": 305
+  },
+  "cause": "Wrapper read canonical registration before acquiring learn.lock; KeyError before learner launch.",
+  "fix": "Read canonical registration inside the existing learn.lock; unchanged native input/task/thread/account.",
+  "old_failure_kept_no_native_input_was_sent": true
+}

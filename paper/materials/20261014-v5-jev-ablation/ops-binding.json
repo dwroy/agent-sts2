@@ -3,8 +3,8 @@
   "supplement": "v5-jev-prompt-ablation-20261014",
   "actual_ops_received": true,
   "registered": true,
-  "phase": "R3/quantitative engineering supplement after original R1-R2 acceptance",
-  "state": "received_registered_waiting_for_original_R1_R2_acceptance_and_R3_phase",
+  "phase": "Original quantitative owner consuming frozen 144-call pilot as data; R3 actual-trajectory consumption pending lease",
+  "state": "R2_reference_accepted_quantitative_received_R3_prepared_active_calibration_lease_busy",
   "source": "b4f6559d1a6b349ce0244025f6244640646d57af",
   "actual_main_integration": "852b6e568ff48d64bc6dce1bcc73526c58336d82",
   "current_main": "f8d306514e2a8afafeac591d38773b92807f2518",
@@ -873,12 +873,71 @@
     "batch": "20261012-024317-strategy-proposal",
     "thread": "01a12c46-fef2-7282-b689-1fd8b4e0450b"
   },
-  "learner_received_this_pilot": false,
-  "this_supplement_actually_started": false,
-  "next_gate": "original fixed-input completion and acceptance wake; freeze same-owner R3 input and verify actual native receipt before marking received/started",
+  "learner_received_this_pilot": true,
+  "this_supplement_actually_started": true,
+  "next_gate": "Original calibration continuation and independent outcome/paired-benefit validation; V5-S P0 direct implementation remains separate.",
   "no_new_parent_or_session_no_hot_input_no_144_request_replay": true,
   "guard_SL_replanning_actual_execution_and_independent_counterfactuals_separate": true,
   "accuracy_and_paired_benefits_pending_before_narrow_semantics_languages_or_online_roles": true,
   "wide_P1_P2_current_model_calibration_natural_window_pending": true,
-  "no_production_live_knowledge_model_account_permission_threshold_or_behavior_release_change": true
+  "no_production_live_knowledge_model_account_permission_threshold_or_behavior_release_change": true,
+  "continuation_stage_history": [
+    {
+      "observed_at": "2026-10-14 21:56:21 CST",
+      "previous_state": "received_registered_waiting_for_original_R1_R2_acceptance_and_R3_phase",
+      "previous_current_continuation": null,
+      "previous_phase": "R3/quantitative engineering supplement after original R1-R2 acceptance",
+      "original_binding_snapshot": "paper/materials/20261014-2121-ops/original-binding-1.json.gz",
+      "original_sha256": "00d849ff96d8500321c2e14b05ab013d6aefe97d1f0709190235190c7bced240"
+    }
+  ],
+  "last_ops_verified_at": "2026-10-14 21:56:21 CST",
+  "R2_completion_acceptance": {
+    "path": "paper/materials/20261014-2121-ops/R2-completion-acceptance.json",
+    "sha256": "cf4ec47743f815b2fbab8d47008cc1f1da53b5992a298310c25a9b68f5862710"
+  },
+  "R2_reference_groups_complete": 54,
+  "R2_reference_support_denominator": {
+    "supported": 27,
+    "unsupported": 3,
+    "all_questions": 30
+  },
+  "R2_complete_only_reference_stage_not_real_calibration": true,
+  "next_original_owner_continuations": {
+    "quantitative": {
+      "batch": "20261014-215252-strategy-proposal",
+      "parent_batch": "20261012-024317-strategy-proposal",
+      "same_thread": "01a12c46-fef2-7282-b689-1fd8b4e0450b",
+      "learner_received": true,
+      "actual_phase_started": true,
+      "runtime_acceptance": {
+        "path": "paper/materials/20261014-2121-ops/quantitative-runtime-acceptance.json",
+        "sha256": "01f12f13d9521947ed3e89c6d5d1230f07cbf7702a6965d0f6dd12053ef6441d"
+      },
+      "scope": "data-only P1/P2 evidence; V5-S P0 implementation remains watcher-owned"
+    },
+    "calibration": {
+      "parent_batch": "20261014-061302-fix-batch",
+      "same_thread": "01a13753-c032-73f0-aa3f-ddc0e14809cd",
+      "learner_received": false,
+      "actual_phase_started": false,
+      "pending_receipt": {
+        "path": "paper/materials/20261014-2121-ops/calibration-pending-receipt.json",
+        "sha256": "730c92e7fd5458588b54d229dfb9f1cd5e886a8adb2192cd85faa3ee05ca264d"
+      },
+      "blocked_by": [
+        {
+          "batch": "20261014-214302-fix-batch",
+          "pid": 2174464,
+          "state": "running",
+          "task": "fix-batch",
+          "feature_request": "silent-calibration-63fa42917452d208cb51772b",
+          "pid_alive": true
+        }
+      ],
+      "no_active_calibration_input_change": true
+    }
+  },
+  "broad_P1_P2_R3_R4_current_model_calibration_and_natural_effects_pending": true,
+  "no_duplicate_V5_S_P0_or_interface_implementation": true
 }

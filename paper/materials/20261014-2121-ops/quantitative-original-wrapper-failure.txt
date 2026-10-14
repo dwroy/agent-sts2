@@ -1,0 +1,12 @@
+2026-10-14 21:46:24 learner-20261014-214621-strategy-proposal (wJ:pZ0) closed; last lines:
+dw@xdwin:~/Projects/agent-sts2$  bash /home/dw/Projects/agent-sts2/ops/herdr-exec.sh learner-20261014-214621-strategy-proposal /home/dw/Projects/agent-sts2/ops/codex-ops/learner/learner-20261014-214621-strategy-proposal.pid 1 - /home/dw/Projects/agent-sts2/ops/codex-ops/herdr.json -- env CODEX_HOME=/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/learner LEARNER_CODEX_HOME=/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/learner nice -n 19 python3 -B /home/dw/Projects/agent-sts2/ops/codex-ops/record-staging/20261014-2121/resume-next.py run 20261014-214621-strategy-proposal
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/ops/codex-ops/record-staging/20261014-2121/resume-next.py", line 216, in <module>
+    raise SystemExit(run(sys.argv[2]))
+                     ~~~^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/ops/codex-ops/record-staging/20261014-2121/resume-next.py", line 121, in run
+    batch = state['batches'][batch_id]
+            ~~~~~~~~~~~~~~~~^^^^^^^^^^
+KeyError: '20261014-214621-strategy-proposal'
+[herdr-host] learner-20261014-214621-strategy-proposal exited 1 at 2026-10-14 21:46:22; closing this pane
+dw@xdwin:~/Projects/agent-sts2$

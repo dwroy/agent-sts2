@@ -1,0 +1,26 @@
+{
+  "cases": [
+    {
+      "id": "a3972427-a5e0-4b04-ac7d-d2069888fd11",
+      "seed": 7,
+      "raw_object_mismatches": 617,
+      "JSON_encoded_mismatches": 0,
+      "difference_paths": [
+        "coreWindow [property presence]"
+      ]
+    },
+    {
+      "id": "a64050d1-557f-4746-bcbe-f5ef7925c1fc",
+      "seed": 20261014,
+      "raw_object_mismatches": 529,
+      "JSON_encoded_mismatches": 0,
+      "difference_paths": [
+        "coreWindow [property presence]"
+      ]
+    }
+  ],
+  "cause": "JSON omits coreWindow properties whose value is undefined; V8 retains them. Every other raw property is checked strictly.",
+  "original_partial_statistics_reproduced": true,
+  "model_unchanged": true,
+  "initial_artifacts_preserved": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-114302/learner/runs/20261014-202300-fix-batch/partial-comparisons-initial"
+}
