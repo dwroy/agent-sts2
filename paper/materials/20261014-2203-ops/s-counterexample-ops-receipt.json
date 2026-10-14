@@ -1,0 +1,137 @@
+{
+  "at": "2026-10-14 22:16:07 CST",
+  "request_id": "roy-20261014-s-decision",
+  "actual_ops_received": true,
+  "actual_artifact_readback_and_scalar_recalculation": true,
+  "original_owner": ".worktrees/s-decision-20261014",
+  "fixed_question_short_id": "203cd3a9",
+  "evidence_identity": {
+    "run": "E5L15SK6ZHZB",
+    "ascension": 10,
+    "floor": 17,
+    "turn": 5,
+    "attempt": 2
+  },
+  "candidate_groups": [
+    {
+      "candidate": "line:0",
+      "valid": 600,
+      "negative_S_but_won": 5,
+      "positions": [
+        122,
+        323,
+        381,
+        390,
+        527
+      ],
+      "rate": 0.008333333333333333,
+      "all600_positive_reference_complete_window_metadata": true
+    },
+    {
+      "candidate": "line:1",
+      "valid": 600,
+      "negative_S_but_won": 8,
+      "positions": [
+        126,
+        162,
+        259,
+        382,
+        437,
+        450,
+        578,
+        597
+      ],
+      "rate": 0.013333333333333334,
+      "all600_positive_reference_complete_window_metadata": true
+    },
+    {
+      "candidate": "line:2",
+      "valid": 600,
+      "negative_S_but_won": 4,
+      "positions": [
+        67,
+        207,
+        371,
+        557
+      ],
+      "rate": 0.006666666666666667,
+      "all600_positive_reference_complete_window_metadata": true
+    }
+  ],
+  "pooled_17_of1800_not_used_to_pass_line1": true,
+  "current_P3_gate": false,
+  "current_old_sort_kept": true,
+  "cause_attribution_window_unknown_not_new_game_mechanics": true,
+  "S_example": {
+    "sample": 126,
+    "candidate": "line:1",
+    "won": true,
+    "T": 8,
+    "H": 164,
+    "M": 56,
+    "O": 153,
+    "R": 53,
+    "S": -0.0016877177700348328
+  },
+  "archive": {
+    "path": "paper/materials/20261014-2203-ops/s-counterexample-originals.tar.gz",
+    "sha256": "f2f7724c5ae629db25ba2e324df39dbd2da2b5d86b1fa99b73987d9ef282a6d7",
+    "members": [
+      {
+        "source": ".worktrees/s-decision-20261014/paper/materials/20261014-s-decision/p0-sign-audit-b2.md",
+        "name": "p0-sign-audit-b2.md",
+        "bytes": 1396,
+        "sha256": "d7f8c1bbebe86fc9d0e90d55de3aaae0513ac69af228db28e41941385bf9b928"
+      },
+      {
+        "source": ".worktrees/s-decision-20261014/paper/materials/20261014-s-decision/p0-b2-gate.json",
+        "name": "p0-b2-gate.json",
+        "bytes": 1277,
+        "sha256": "309a21b6c4ba93b02b8d83e2524a66ecb0b4194e3b971a33198f7c542977b42b"
+      },
+      {
+        "source": ".worktrees/s-decision-20261014/paper/materials/20261014-s-decision/b2-samples.json.gz",
+        "name": "b2-samples.json.gz",
+        "bytes": 6153,
+        "sha256": "221febdd3da2d436b472069e70bb832c070b4d3bf5746d2f89a720ebf9de9691"
+      },
+      {
+        "source": ".worktrees/s-decision-20261014/paper/materials/20261014-s-decision/b2-sign-audit.json",
+        "name": "b2-sign-audit.json",
+        "bytes": 15147,
+        "sha256": "d461328c70d36113083314f8f21469f556d8e3bf47cd583bdcdab786ed058fa3"
+      },
+      {
+        "source": ".worktrees/s-decision-20261014/paper/materials/20261014-s-decision/b2-state-binding.json",
+        "name": "b2-state-binding.json",
+        "bytes": 344,
+        "sha256": "4025b9cdfe9c05a3adc08084af582ab9a0184e2ddb724f19fb7a135633349504"
+      },
+      {
+        "source": ".worktrees/s-decision-20261014/paper/materials/20261014-s-decision/b2-state-index.json",
+        "name": "b2-state-index.json",
+        "bytes": 820,
+        "sha256": "eb1b676d8b00c1d23a71e492b1710508912baa3987e3571e4c9176e38591aa3d"
+      },
+      {
+        "source": ".worktrees/s-decision-20261014/paper/materials/20261014-s-decision/b2-replay-result.json",
+        "name": "b2-replay-result.json",
+        "bytes": 30722,
+        "sha256": "b97c846a745dcee46f57b9c01c35d6e46d8dfa94450fdb7226071946bf1f0645"
+      }
+    ]
+  },
+  "B3_4000_pass_kept_narrow_not_reinterpreted_as_B2_pass": true,
+  "original_quantitative_owner": {
+    "batch": "20261014-215252-strategy-proposal",
+    "original_batch": "20261012-024317-strategy-proposal",
+    "same_thread": "01a12c46-fef2-7282-b689-1fd8b4e0450b",
+    "current_immutable_actual_native_input_sha256": "d67c63615ae60267352360cf029ae8e9dd240c9bf4a051558ad5572eae9d5c89",
+    "continuation_at_safe_phase_boundary": true,
+    "learner_received_this_new_counterexample": false,
+    "actually_started_this_new_counterexample": false
+  },
+  "watcher_reports_Roy_already_received_substantive_counterexample": true,
+  "ops_did_not_record_other_role_ACK_or_send_redundant_notification": true,
+  "next_step": "Original quantitative/R3 owner independently checks attribution/window at safe continuation; no formula/sign repair to force gate, no duplicate P0 implementation."
+}

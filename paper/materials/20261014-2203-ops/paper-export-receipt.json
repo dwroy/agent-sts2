@@ -1,0 +1,178 @@
+{
+  "at": "2026-10-14 22:21:43 CST",
+  "command": "nice -n19 python3 ops/paper_dataset.py --no-raw",
+  "exit": 0,
+  "one_actual_export_only": true,
+  "cut": "2026-10-14T14:06:26.353Z",
+  "source_cut_bytes": {
+    "decisions.jsonl": 1409022548,
+    "deepseek-reasoning.jsonl": 377746518,
+    "runs.jsonl": 328404,
+    "states.jsonl": 12792212916,
+    "fight-plans.jsonl": 2233957,
+    "run-plans.jsonl": 7761921,
+    "brain.jsonl": 516062608,
+    "sl-attempts.jsonl": 39312931,
+    "run-config.jsonl": 1695570
+  },
+  "rows": {
+    "runs.csv": 778,
+    "decisions_by_label.csv": 25955,
+    "escalations.csv": 3600,
+    "fight_plans.csv": 1461,
+    "commits.csv": 6000
+  },
+  "source_checks_passed": true,
+  "all5_checks_true": true,
+  "original_count_mismatch_preserved": [
+    [
+      "KF9HMZKTFC3V",
+      879,
+      880
+    ]
+  ],
+  "not_postmortem_W1_count_mismatch": true,
+  "generated_files": [
+    {
+      "path": "paper/data/README.md",
+      "bytes": 14169,
+      "sha256": "c76e050ca05adba56116a96760ee7be34df585b6fc3f5849fa47f39faca20623"
+    },
+    {
+      "path": "paper/data/commits.csv",
+      "bytes": 903951,
+      "sha256": "e3f39cfe19d4cb0beefe8d46ab05b276918ffb5785073d8cd41d7d820687329b"
+    },
+    {
+      "path": "paper/data/cost-curve-silent.csv",
+      "bytes": 13818,
+      "sha256": "9c3819e5503a67ae55acf43c356d2b7a31f73ecf2c7411a7be0457fdb0cda47a"
+    },
+    {
+      "path": "paper/data/cost-silent.csv",
+      "bytes": 300480,
+      "sha256": "2a8ca1ce0e7dacf30367192c5fefc988461368a700d9f9d8aec81bba9c35c675"
+    },
+    {
+      "path": "paper/data/cost-sources.json",
+      "bytes": 154930,
+      "sha256": "4926227766a85c61703d0ffb8debd6d06f9a5bfdef254727904a152778005ec2"
+    },
+    {
+      "path": "paper/data/cost-unattributed.csv",
+      "bytes": 18648,
+      "sha256": "46208082a991269a73c2c63525c6e62571d3c18ed934735871ec907c05b00410"
+    },
+    {
+      "path": "paper/data/decisions_by_label.csv",
+      "bytes": 1121944,
+      "sha256": "ccea02e10be9ffc7db730d1e53f2148af7add3cdc81b1f9b52898abe09f10bfd"
+    },
+    {
+      "path": "paper/data/escalations.csv",
+      "bytes": 1267694,
+      "sha256": "2d573d6ed9324f67b8a2a9b22688bc29cefd740ac7e544bc282be8bd9060d0a3"
+    },
+    {
+      "path": "paper/data/fight_plans.csv",
+      "bytes": 714774,
+      "sha256": "ddc5f40a447c1f035a7a2478f766a1513ee442631855646490243cc7b78889c4"
+    },
+    {
+      "path": "paper/data/learning-curve-ironclad.csv",
+      "bytes": 103370,
+      "sha256": "45405e24c8358a99d977c28852cf3e705fddc4f1923f9a7b16ff727a849b082b"
+    },
+    {
+      "path": "paper/data/learning-curve-silent.csv",
+      "bytes": 62098,
+      "sha256": "ae6b1581fe7a6a64a67fe28b816bbc2a648134056435369319eb51044de76aa6"
+    },
+    {
+      "path": "paper/data/runs.csv",
+      "bytes": 1265643,
+      "sha256": "8007eb122f4677deb39ac30c2b5d55c487aff5161d465ebe65c69611afcbc914"
+    },
+    {
+      "path": "paper/data/summary.json",
+      "bytes": 466796,
+      "sha256": "921e9c90ff63beab50777bdb80dd9b8033a026b73f092a62a38d0b634e38959b"
+    },
+    {
+      "path": "paper/data/verification.json",
+      "bytes": 587,
+      "sha256": "6a108e4b9323b9961228f39028126d695a4cf64b8c7b9f50b093f101d78b0ced"
+    }
+  ],
+  "postmortem_W1_actual_generated_row": {
+    "run_id": "W1YY8PEWGUF9",
+    "start_ts": "2026-10-14T07:20:33.584Z",
+    "end_ts": "2026-10-14T12:43:17.534Z",
+    "duration_min": "322.7",
+    "floor_max": "45",
+    "act_reached": "3",
+    "outcome": "defeat",
+    "victory": "0",
+    "outcome_source": "runs.jsonl",
+    "finished": "1",
+    "character": "SILENT",
+    "ascension": "10",
+    "code_version": "current",
+    "code_version_source": "runs.jsonl",
+    "code_version_console": "93cedf7ec+dirty",
+    "code_versions_all": "4d55ff9b4+dirty d9bfb65a4+dirty 93cedf7ec+dirty",
+    "n_decisions": "841",
+    "n_shadow": "0",
+    "decider_inferred": "0",
+    "n_code": "383",
+    "n_jev": "185",
+    "n_deepseek": "0",
+    "n_claude": "0",
+    "n_code_fallback": "0",
+    "n_jev_plan": "215",
+    "n_deepseek_plan": "0",
+    "n_claude_plan": "0",
+    "jev_calls": "232",
+    "jev_in_tokens": "10508835",
+    "jev_out_tokens": "73885",
+    "jev_cost_usd": "0.444474",
+    "jev_latency_p50_ms": "570",
+    "ds_calls": "0",
+    "ds_in": "0",
+    "ds_cache_hit": "0",
+    "ds_out": "0",
+    "ds_reasoning": "0",
+    "ds_total_tokens": "0",
+    "ds_calls_no_token_split": "0",
+    "ds_cost_usd": "0",
+    "ds_latency_p50_s": "",
+    "ds_overrides": "0",
+    "fight_plans": "0",
+    "fight_plan_errors": "0",
+    "fight_plan_cost_usd": "0",
+    "fight_plan_latency_p50_s": "",
+    "claude_calls": "0",
+    "claude_latency_p50_s": "",
+    "hp_guard_count": "0",
+    "escalation_chain": "none",
+    "era": "deepseek_memory",
+    "learning_loop": "1",
+    "death_enemy": "灵魂枢纽",
+    "death_enemy_ids": "SOUL_NEXUS",
+    "final_hp": "0",
+    "max_hp": "70",
+    "bosses_seen": "WATERFALL_GIANT_BOSS KNOWLEDGE_DEMON_BOSS TEST_SUBJECT_BOSS",
+    "has_postmortem": "1",
+    "postmortem_heading": "W1YY8PEWGUF9（A10，静默猎手，第45层，死于精英灵魂枢纽 SOUL_NEXUS：四试均31/70血、两槽虚弱药水进场，前三试T5判死读档；末试T5以3血25挡对虚弱后的7×4＝28攻击阵亡，完整需损3、存活至少差1血，结13毒后敌仍47/254血，槽1虚弱药水未用）",
+    "preloop_listed": "0",
+    "n_run_notes": "1",
+    "autoplay_finished_lines": "1",
+    "in_runs_jsonl": "1",
+    "brain_source": "{\"basis\": \"brain.jsonl accepted verdict; legacy answer != null, no error/problems; unique question_id+engine\", \"brain_rows\": 87, \"coverage\": \"missing_or_unresolved_logged_questions\", \"eligible\": false, \"embedded_answers\": {\"map/route\": 33, \"run-plan\": 13}, \"exclusion_reason\": \"unresolved_brain_questions\", \"failed_or_unaccepted_rows\": 37, \"first_success\": \"2026-10-14T07:20:33.569Z\", \"last_success\": \"2026-10-14T12:37:20.397Z\", \"policy\": \"codex-successful-brain-v1\", \"source\": \"unknown\", \"successful_answers\": {\"codex\": 50}, \"successful_by_label\": {\"event/act-plan\": {\"codex\": 2}, \"event/choose\": {\"codex\": 6}, \"event/plan\": {\"codex\": 2}, \"map/route-plan\": {\"codex\": 1}, \"map/statue-potion\": {\"codex\": 4}, \"rest/plan\": {\"codex\": 9}, \"reward/card\": {\"codex\": 21}, \"run-plan\": {\"codex\": 2}, \"selection/remove\": {\"codex\": 2}, \"shop/plan\": {\"codex\": 1}}, \"unknown_successes\": 0, \"unresolved_questions\": 1}",
+    "first_attempt": "{\"death_floor\": 17, \"floor\": 17, \"passed_act1\": false, \"passed_act2\": false, \"reloads\": 0, \"sl_rows\": 8, \"victory\": false}",
+    "performance_policy": "codex-successful-brain-v1",
+    "performance_included": "0",
+    "performance_exclusion_reason": "unresolved_brain_questions"
+  },
+  "no_raw_logs_copied": true
+}

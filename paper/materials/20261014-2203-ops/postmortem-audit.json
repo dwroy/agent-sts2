@@ -1,0 +1,87 @@
+{
+  "batch": "20261014-211302",
+  "report": {
+    "task": "postmortem",
+    "appended": [
+      "W1YY8PEWGUF9"
+    ],
+    "skipped": [],
+    "bugs": [
+      {
+        "run": "W1YY8PEWGUF9",
+        "where": "agent/src/reflex/turn-solver.ts:1812",
+        "what": "剃刀牙下普通蛇咬重放静态复用七毒，实录整步十七毒而模型十四毒。",
+        "new": true
+      }
+    ],
+    "ledger": {
+      "added": [
+        "silent-0477",
+        "silent-0478",
+        "silent-0479"
+      ],
+      "updated": [
+        "silent-0019",
+        "silent-0079"
+      ],
+      "repeats": [],
+      "check": 0
+    },
+    "code_proposals": [
+      "silent-proposal-f8b3c984fcd0d2cd",
+      "silent-proposal-49d90dc60be08a84"
+    ],
+    "implementation_domains": [
+      "combat",
+      "potion",
+      "sl",
+      "terminal"
+    ],
+    "report": "/home/dw/Projects/agent-sts2/learner/runs/20261014-211306-postmortem/report.md"
+  },
+  "native": {
+    "event_log": "learner/runs/20261014-211306-postmortem.jsonl",
+    "thread_id": "01a13a8b-b410-7730-8a9e-152e735bb29c",
+    "launch_source": {
+      "source": "learner/runs/20261014-211306-postmortem.jsonl",
+      "offset": 0,
+      "bytes": 16607,
+      "sha256": "08c62fee98467bd803852fda2606e3a4523002a972ac6701cb1d190f04cc4e4d"
+    },
+    "launch_task": "postmortem",
+    "launch_cwd": "/home/dw/Projects/agent-sts2",
+    "rendered_task_prompt_sha256": "3eb99521797a70e571622b021a0b8ce97cb45cdceb1e5d3fe94d3a20d3a19d81",
+    "actual_input_sha256": "e50e5131408d2a8a861d1aabcb32f3a24f81115068b5cb8119e58656a6881aa9",
+    "actual_command_sha256": "e7da836ee0d84dfb1ee178923973e4724b6c0998804eafe1ce19c43c6fad7018",
+    "original_startup_lease": "b8a2b96184af88bf9e8f53702e5f10cc6f852d46ede24cb707b9971f4b84600f",
+    "native_input_matches_recorded_stdin_sha256": true,
+    "native_context": {
+      "source": "ops/codex-ops/accounts/codex1/learner/sessions/2026/10/14/rollout-2026-10-14T21-13-16-01a13a8b-b410-7730-8a9e-152e735bb29c.jsonl",
+      "offset": 49151,
+      "bytes": 4620,
+      "sha256": "ef716d4fe26c799b9cb61bd42fa356c4f1106b1fa3831be1493f3e4dad3410c3",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "sandbox_type": "workspace-write"
+    },
+    "startup_source": {
+      "source": "learner/runs/20261014-211306-postmortem.jsonl",
+      "offset": 16607,
+      "bytes": 360,
+      "sha256": "f5c071f730d832d12f2478f9383c74c79f66d839af2a1201cbbe89910f10d0d7"
+    }
+  },
+  "old_lesson_prefix_SHA_verified": true,
+  "lesson_added_bytes": 24272,
+  "lesson_sha256": "0b7bc4822d7580520ceb2a29640de97a2b72a310d7e6738a5a73afb2b3118d60",
+  "raw_source_rows_verified": {
+    "decisions": 841,
+    "states": 874,
+    "brain": 87,
+    "run-plans": 15,
+    "sl-attempts": 8,
+    "run-config": 3
+  },
+  "known_number_checks": 22,
+  "scope": "Only original learner conclusions; no ops gameplay inference or source publication."
+}

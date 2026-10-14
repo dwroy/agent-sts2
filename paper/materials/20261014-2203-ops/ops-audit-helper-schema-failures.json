@@ -1,0 +1,16 @@
+{
+  "at": "2026-10-14 22:20:33 CST",
+  "failures": [
+    {
+      "exception": "AttributeError str has no get",
+      "cause": "eval/versions.json is a dict with versions list, not itself a list",
+      "recovery": "Corrected iteration over actual versions list; original failure log retained"
+    },
+    {
+      "exception": "KeyError turn",
+      "cause": "Raw mod combat has no turn key; original state fingerprint supplies the recorded turn",
+      "recovery": "Verified exact original fingerprint/observed_ts and original frozen decision; no source/counterexample changed"
+    }
+  ],
+  "source_or_game_model_failures_not_inferred": true
+}
