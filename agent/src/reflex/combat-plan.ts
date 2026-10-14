@@ -23,6 +23,7 @@ import { choiceQ } from "./jev/questions.js";
 import { quantitativeEnabled, quantitativeTurnFacts } from "../sim/quantitative-facts.js";
 import { BOSS_MARGIN_NOTE } from "../sim/boss-margin.js";
 import { silentPhaseReference } from "./silent-phase-reference.js";
+import { observedRazorSnakebiteScope } from "./silent-razor-snakebite.js";
 import { silentPhaseCurrentFacts } from "./silent-phase-current.js";
 import { silentPotionReference } from "./silent-potion-reference.js";
 import { silentHeldLossFacts } from "./silent-held-loss.js";
@@ -750,8 +751,12 @@ export function distinctNames(items: { name: string; id: string }[]): string[] {
   });
 }
 
-export function enemySims(combat: Record<string, unknown>, asc?: number, character = ""): EnemySim[] {
+export function enemySims(combat: Record<string, unknown>, asc?: number, character = "", relics: readonly unknown[] = []): EnemySim[] {
   const ctxOf = (enemy: Record<string, unknown>): DamageContext | undefined => (asc === undefined ? undefined : boardDamageContext(enemy, asRecord(combat["player"]), asc));
+  const paperKrane = character.toLowerCase() === "silent" && asc === 10 && relics.some((entry) => {
+    const relic = asRecord(entry);
+    return relic["relic_id"] === "PAPER_KRANE" && relic["is_melted"] === false;
+  });
   const living = asArray(combat["enemies"])
     .map(asRecord)
     .filter((enemy) => enemy["is_alive"] !== false);
@@ -765,6 +770,15 @@ export function enemySims(combat: Record<string, unknown>, asc?: number, charact
       block: num(enemy["block"]),
       vulnerable: powerAmount(enemy, "VULNERABLE_POWER"),
       weak: powerAmount(enemy, "WEAK_POWER"),
+      // EBVT8UZM6P12 F43 T1, silent-0469: only the two observed, initially unweakened moves.
+      ...(paperKrane && asArray(enemy["powers"]).every((p) => str(asRecord(p)["power_id"]) === "VULNERABLE_POWER") &&
+        asArray(enemy["intents"]).filter((i) => asRecord(i)["intent_type"] === "Attack").length === 1 &&
+        asArray(enemy["intents"]).some((i) => {
+          const hit = asRecord(i);
+          return hit["intent_type"] === "Attack" && hit["hits"] === 1 &&
+            ((enemy["enemy_id"] === "FLAIL_KNIGHT" && enemy["move_id"] === "RAM_MOVE" && hit["damage"] === 17) ||
+             (enemy["enemy_id"] === "MAGI_KNIGHT" && enemy["move_id"] === "POWER_SHIELD_MOVE" && hit["damage"] === 7));
+        }) ? { paperKraneNewWeak: (enemy["enemy_id"] === "FLAIL_KNIGHT" ? "ram" : "shield") as "ram" | "shield" } : {}),
       // Q10YYQ5DUPJA A10 F48 T2/F49 T5, silent-0473: only these solo surviving forms were actively stunned.
       ...(character.toLowerCase() === "silent" && asc === 10 && living.length === 1 &&
         ((enemy["enemy_id"] === "AEONGLASS" && enemy["max_hp"] === 535 && enemy["move_id"] === "EYE_LASERS_MOVE" &&
@@ -2876,7 +2890,7 @@ function planTurn(env: DecisionEnv): Decision | null {
   const phantomBladesArmed = stripPhantomBlades(hand, phantomBlades, powerAmount(player, "STRENGTH_POWER"), powerAmount(player, "WEAK_POWER") > 0, shrunk);
   const ascension = state.run?.ascension ?? 0;
   const character = state.run?.ascension == null ? "" : str(asRecord(state.run.raw)["character_id"]);
-  const enemies = enemySims(combat, ascension, character);
+  const enemies = enemySims(combat, ascension, character, asArray(asRecord(state.run?.raw)["relics"]));
   carrySilentSkittish(env.screenMemory, state, enemies);
   // MECH_RULES (docs/mechanics-learning.md): the learned strip-stun rules on the enemies carrying such a power (the
   // Thieving Hopper's Flutter): a line stripping the last stack cancels its move this turn in the solver and the rollout.
@@ -2912,6 +2926,7 @@ function planTurn(env: DecisionEnv): Decision | null {
 
   const legionPreview = paelsLegionPreview(state.run?.raw, combat);
   const firstPowerBlock = permafrostBlock(env.screenMemory, state);
+  const razorSnakebiteScope = observedRazorSnakebiteScope(state.run?.raw, combat, state.run?.ascension ?? null);
   const playerSim: PlayerSim = {
     ...(str(asRecord(state.run?.raw)["character_id"]).toLowerCase() === "silent" && (ascension === 0 || ascension === 10) &&
       powerAmount(player, "NO_DRAW_POWER") > 0 ? { noDraw: true } : {}),
@@ -2985,6 +3000,7 @@ function planTurn(env: DecisionEnv): Decision | null {
     corrosiveWave: powerAmount(player, "CORROSIVE_WAVE_POWER"),
     poisonExtraTriggers: powerAmount(player, "ACCELERANT_POWER"),
     envenom: powerAmount(player, "ENVENOM_POWER"),
+    ...(razorSnakebiteScope !== undefined ? { observedRazorSnakebite: razorSnakebiteScope } : {}),
     ...(phantomBlades === 9 ? { phantomBlades, phantomBladesSpent: !phantomBladesArmed } : {}),
     // Mid-turn draws: a Strike drawn plays itself (Hellraiser); each exhaust draws (Dark Embrace).
     hellraiser: powerAmount(player, "HELLRAISER_POWER") > 0,
