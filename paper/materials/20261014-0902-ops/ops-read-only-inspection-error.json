@@ -1,0 +1,7 @@
+{
+  "original_error": "AssertionError at verify-events.py:144: len(output[observed_intervals]) compared to summary.observed_intervals.",
+  "cause": "The interval array keeps every action, including unknown intervals; the existing summary counts action.observed_interval.status=observed_endpoints only.",
+  "corrected_to_original_consumer_semantics": true,
+  "original_consumer_inputs_outputs_source_and_assertions_unchanged": true,
+  "not_a_learner_or_production_test_failure": true
+}
