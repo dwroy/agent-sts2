@@ -39,7 +39,12 @@ export function quantitativeFightFacts(samples: readonly FightSampleResult[], ba
     samples.map((s, i) => ({ sample: ids[i]!, value: value(s) })),
   ).difference;
   const effectiveDpr = (s: FightSampleResult) => s.dmgByTurn.reduce((a, b) => a + b, 0) / s.turns;
-  const completed = samples.filter((s) => !s.capped && !s.timeUp && (s.won || s.died) && s.turns > 0);
+  const isComplete = (s: FightSampleResult) => !s.capped && !s.timeUp && (s.won || s.died) && s.turns > 0;
+  const completed = samples.filter(isComplete);
+  const pairedDpr = pairedDifference(
+    base.flatMap((s, i) => isComplete(s) ? [{ sample: ids[i]!, value: effectiveDpr(s) }] : []),
+    samples.flatMap((s, i) => isComplete(s) ? [{ sample: ids[i]!, value: effectiveDpr(s) }] : []),
+  );
   return toJsonValue({
     ...(samples.some((s) => s.coreWindow !== undefined) ? {
       core_window: summarizeCoreWindows(samples.map((s) => s.coreWindow), base.map((s) => s.coreWindow), ids),
@@ -58,6 +63,7 @@ export function quantitativeFightFacts(samples: readonly FightSampleResult[], ba
     hp_remaining: summarizeSamples(samples.flatMap((s) => s.resources ? [s.resources.hp] : [])),
     simulated_turns: summarizeSamples(samples.map((s) => s.turns)),
     effective_damage_per_turn: summarizeSamples(completed.map(effectiveDpr)),
+    paired_effective_damage_per_turn: pairedDpr,
     damage_per_turn_won: summarizeSamples(completed.filter((s) => s.won).map(effectiveDpr)),
     damage_per_turn_died: summarizeSamples(completed.filter((s) => s.died).map(effectiveDpr)),
     damage_curve: Array.from({ length: Math.min(12, Math.max(0, ...samples.map((s) => s.dmgByTurn.length))) }, (_, turn) => ({
@@ -88,6 +94,7 @@ export function compactQuantitativeFight(full: JsonValue): JsonValue {
     damage_hp: spread("damage_hp"), simulated_turns: spread("simulated_turns"),
     first_turn_damage: spread("first_turn_damage"), later_damage: spread("later_damage"),
     effective_damage_per_turn: spread("effective_damage_per_turn"), damage_per_turn_won: spread("damage_per_turn_won"),
+    paired_effective_damage_per_turn: value.paired_effective_damage_per_turn,
     damage_per_turn_died: spread("damage_per_turn_died"), damage_curve: value.damage_curve, dpr_scope: value.dpr_scope,
     hp_loss: spread("hp_loss"), turns_won_only: spread("turns_won_only"),
     paired_hp_loss_difference: spread("paired_hp_loss_difference"),

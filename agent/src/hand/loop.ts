@@ -52,8 +52,9 @@ import { SlController } from "../sl/controller.js";
 import { LEAST_LOSS_LABEL } from "../sl/judge.js";
 import { asArray, asRecord, bool, num, str, toJsonValue, type JsonValue } from "../core/util/json.js";
 import { OUTCOME_BASIS_KEY } from "../knowledge/outcome-facts.js";
-import { withBossSim, type BuildSimSetup } from "../sim/build-sim-facts.js";
+import { BUILD_SIM_MIN_SHOWN, withBossSim, type BuildSimSetup } from "../sim/build-sim-facts.js";
 import { withConstruction } from "../construction/adapter.js";
+import { withConstructionEvaluation } from "../construction/consumer.js";
 import { passivePiecesOptions } from "../reflex/passive-pieces.js";
 import { cardConditionOptions } from "../reflex/card-model.js";
 import { ensureThiefCardValue, type ThiefCardSetup, type ThiefCardValue } from "../sim/thief-card-value.js";
@@ -915,10 +916,18 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
         }
         // V5 runs through the actual consumer in shadow mode before its predictions may guide choices.
         try {
-          const construction = withConstruction(decision, env);
-          decision = construction.decision;
-          if (construction.record) bossSimRecord = { ...asRecord(bossSimRecord), construction: construction.record } as JsonValue;
-          if (construction.record) onEvent({ type: "note", message: `V5 construction ${String(construction.record["mode"])}: ${String(construction.record["status"])}, ${String(construction.record["ms"] ?? 0)} ms` });
+          const construction = withConstruction(decision, env, { simulation: {
+            run: str(state.raw["run_id"]), floor: state.run?.floor ?? 0, label: decision.label,
+            minimumShown: BUILD_SIM_MIN_SHOWN,
+            record: asRecord(bossSimRecord) as Record<string, JsonValue>,
+          } });
+          const probabilityAttached = construction.decision !== decision;
+          decision = withConstructionEvaluation(construction.decision, env, construction.record);
+          if (construction.record) bossSimRecord = { ...asRecord(bossSimRecord), construction: { ...construction.record,
+            evaluation_delivery: decision !== construction.decision ? "attached" : "not_attached",
+            probability_delivery: probabilityAttached ? "attached" : "not_attached",
+          } } as JsonValue;
+          if (construction.record) onEvent({ type: "note", message: `V5 construction ${String(construction.record["mode"])}: ${String(construction.record["status"])}, evaluation=${decision !== construction.decision ? "attached" : "absent"}, probability=${probabilityAttached ? "attached" : "absent"}, ${String(construction.record["ms"] ?? 0)} ms` });
           question = decision.kind === "ask" ? decision.questions[spec.question] : question;
         } catch (error) {
           bossSimRecord = { ...asRecord(bossSimRecord), construction: { status: "error", reason: String(error).slice(0, 180) } } as JsonValue;

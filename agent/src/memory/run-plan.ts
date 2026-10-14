@@ -27,6 +27,7 @@ import { bossClockJson } from "../sim/boss-clock.js";
 import { bossIdForFacts, observedBossPhase } from "../knowledge/boss-phase.js";
 import { asArray, asRecord, str, type JsonValue } from "../core/util/json.js";
 import { loadConstructionData } from "../construction/data.js";
+import { CONSTRUCTION_EVALUATION_NOTE, constructionEvaluationEnabled } from "../construction/consumer.js";
 
 export type RunPlanTrigger = "start" | "act" | "hp_drop" | "review";
 export type EliteAppetite = "seek" | "normal" | "avoid";
@@ -87,6 +88,8 @@ export function runPlanTrigger(plan: RunPlan | null | undefined, state: GameStat
   if (act !== plan.act) return "act";
   const hp = hpFraction(state);
   if (plan.hpPct - hp >= RUN_PLAN_HP_DROP || (hp < RUN_PLAN_LOW_HP && plan.hpPct >= RUN_PLAN_LOW_HP)) return "hp_drop";
+  if (constructionEvaluationEnabled(str(asRecord(state.run?.raw)["character_id"]).toLowerCase()) && plan.construction
+    && (state.run?.floor ?? 0) > plan.floor && (state.run?.floor ?? 0) >= plan.construction.checkpoint) return "review";
   if ((state.run?.floor ?? 0) - plan.floor >= RUN_PLAN_REVIEW_FLOORS) return "review";
   return null;
 }
@@ -128,11 +131,22 @@ export const RUN_PLAN_TASK = [
  */
 export const RUN_PLAN_TASK_KEY = "run_plan_task";
 
+/** Keep standalone and merged plan questions on the same role-scoped contract. */
+export function constructionPlanContext(state: GameState): Record<string, JsonValue> | null {
+  const character = str(asRecord(state.run?.raw)["character_id"]).toLowerCase();
+  const templates = constructionEvaluationEnabled(character) ? loadConstructionData(character)?.templates.filter((c) => c.ascensions.includes(state.run?.ascension ?? 0)) : undefined;
+  return templates?.length ? { character, floor: state.run?.floor ?? 0,
+    coreCatalog: templates.map((c) => ({ id: c.id, name: c.name, candidate: c.status !== "validated" })),
+    instruction: CONSTRUCTION_EVALUATION_NOTE, future_probability_status: "not supplied by this plan context" } : null;
+}
+
 /** What DeepSeek is shown: the deck grouped, relics, potions, HP/gold, act boss and the trigger. */
 export function runPlanInput(state: GameState, knowledge: Knowledge, trigger: RunPlanTrigger, deckLines: string[], relics: string[], potions: string[]): Record<string, JsonValue> {
   const raw = asRecord(state.run?.raw);
   const phase = observedBossPhase(state);
+  const construction = constructionPlanContext(state);
   return {
+    ...(construction ? { construction_context: construction } : {}),
     trigger,
     act: actOf(state),
     floor: state.run?.floor ?? null,
@@ -190,8 +204,9 @@ export function parseRunPlan(json: Record<string, unknown>, state: GameState, kn
   const allowedCores = str(asRecord(state.run?.raw)["character_id"]).toLowerCase() === "silent"
     ? new Set(loadConstructionData("silent")?.templates.map((c) => c.id) ?? []) : new Set<string>();
   const primary = str(construction["primary"]), checkpoint = construction["checkpoint"];
-  const validConstruction = allowedCores.has(primary) && typeof checkpoint === "number" && Number.isInteger(checkpoint)
-    && checkpoint >= (state.run?.floor ?? 0) && checkpoint <= 100 && str(construction["reason"]).length > 0 && str(construction["pivot_if"]).length > 0;
+  const validConstruction = str(asRecord(state.run?.raw)["character_id"]).toLowerCase() === "silent"
+    && (allowedCores.has(primary) || primary === "uncommitted") && typeof checkpoint === "number" && Number.isInteger(checkpoint)
+    && checkpoint > (state.run?.floor ?? 0) && checkpoint <= 100 && str(construction["reason"]).length > 0 && str(construction["pivot_if"]).length > 0;
   return {
     runId: str(state.raw["run_id"]),
     act: actOf(state),

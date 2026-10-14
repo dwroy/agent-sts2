@@ -8,7 +8,9 @@ import { deckCards, selectableCards } from "../hand/screens/oneshot.js";
 import { restHealHere } from "../hand/screens/rest.js";
 import { restedHp } from "../sim/route-projection.js";
 import { loadConstructionData } from "./data.js";
-import { applyBuildAction, forecastConstruction } from "./planner.js";
+import { applyBuildAction, forecastConstruction, prepareOpportunities } from "./planner.js";
+import { CONSTRUCTION_MODEL, CONSTRUCTION_POLICY, constructionAdmission, constructionTemplateDigest, loadConstructionCalibration } from "./admission.js";
+import { constructionEvaluation, type SimulationBinding } from "./evaluation.js";
 import type { BuildAction, BuildState, PathStep } from "./types.js";
 
 export type ConstructionMode = "off" | "shadow" | "advisory";
@@ -95,7 +97,7 @@ export function constructionRoute(env: DecisionEnv): PathStep[] | null {
 }
 
 /** Shadow forecasts use the real consumer, but never add probabilities to the model prompt. */
-export function withConstruction(decision: Decision, env: DecisionEnv, setup: { mode?: ConstructionMode; data?: ReturnType<typeof loadConstructionData>; samples?: number; asOf?: string } = {}): { decision: Decision; record?: Record<string, JsonValue> } {
+export function withConstruction(decision: Decision, env: DecisionEnv, setup: { mode?: ConstructionMode; data?: ReturnType<typeof loadConstructionData>; samples?: number; asOf?: string; simulation?: SimulationBinding; calibration?: unknown } = {}): { decision: Decision; record?: Record<string, JsonValue> } {
   const started = performance.now();
   const character = str(asRecord(env.state.run?.raw)["character_id"]).toLowerCase();
   const mode = setup.mode ?? constructionMode(character);
@@ -106,20 +108,33 @@ export function withConstruction(decision: Decision, env: DecisionEnv, setup: { 
     run: str(env.state.raw["run_id"]), floor: env.state.run?.floor ?? null, label: decision.label };
   if (!data) return { decision, record: { ...base, status: "missing_evidence", reason: "本角色模板或机会资料不可用；保留原决策。" } };
   const steps = constructionRoute(env), state = constructionState(env), ascension = env.state.run?.ascension ?? 0;
-  if (!steps?.length) return { decision, record: { ...base, status: "missing_route", data: data.signature } };
   const options = [{ key: "current", state }, ...constructionOptions(decision, env, state)];
+  const evaluation = constructionEvaluation(state, options, data.templates.filter((c) => c.ascensions.includes(ascension)),
+    { run: str(env.state.raw["run_id"]), floor: state.floor, label: decision.label }, setup.simulation);
+  if (!steps?.length) return { decision, record: { ...base, status: "missing_route", data: data.signature, evaluation: toJsonValue(evaluation) } };
+  const asOf = setup.asOf ?? new Date().toISOString();
+  const prepared = prepareOpportunities({ model: data.model, steps, act: mapActOf(env.state), ascension,
+    currentRun: str(env.state.raw["run_id"]), asOf });
   const forecasts = Object.fromEntries(options.map((option) => [option.key, option.state ? data.templates.filter((c) => c.ascensions.includes(ascension)).map((core) => forecastConstruction({
     state: option.state!, core, model: data.model, steps, act: mapActOf(env.state), ascension,
-    currentRun: str(env.state.raw["run_id"]), asOf: setup.asOf ?? new Date().toISOString(), samples: setup.samples ?? 128,
+    currentRun: str(env.state.raw["run_id"]), asOf, samples: setup.samples ?? 128, prepared,
   })) : null]));
-  const record = { ...base, status: "predicted", data: data.signature, horizon: steps.at(-1)!.floor, ms: Math.round(performance.now() - started),
+  const admission = constructionAdmission(setup.calibration === undefined ? loadConstructionCalibration(character) : setup.calibration,
+    data.templates, ascension, steps.at(-1)!.floor, asOf);
+  const record = { ...base, admission, forecast_model: CONSTRUCTION_MODEL, forecast_policy: CONSTRUCTION_POLICY,
+    template_sha256: constructionTemplateDigest(data.templates), evaluation: toJsonValue(evaluation), as_of: asOf, status: "predicted", data: data.signature, horizon: steps.at(-1)!.floor, ms: Math.round(performance.now() - started),
     policy: "补齐原学习者共现签名；不预支未来金币、遗物、未观察组件或战斗存活。", forecasts: toJsonValue(forecasts) };
-  if (mode === "shadow") return { decision, record };
+  if (mode === "shadow" || admission.admitted.length === 0) return { decision, record };
   const spec = decision.deepseek, question = spec ? decision.questions[spec.question] : undefined;
   if (!spec || question?.type !== "choice") return { decision, record };
   const facts = asRecord(decision.state["facts"]);
+  // Keep every forecast in the audit, but expose only the metric/core actually calibrated.
+  const admittedRecord = { ...record, forecasts: Object.fromEntries(Object.entries(forecasts).map(([key, rows]) => [key,
+    rows?.map((row) => ({ core: row.core, candidate: row.candidate, missingNow: row.missingNow, support: row.support,
+      conditionalSignature: admission.admitted.includes(row.core) ? row.conditionalSignature : { estimate: null, reason: "此核心未通过同指标校准" },
+      aliveAndFunctional: null, terminalWin: null, meanDamagePerTurn: null, limits: row.limits })) ?? null])) };
   return { record, decision: { ...decision,
-    state: { ...decision.state, facts: toJsonValue({ ...facts, construction: record }) },
+    state: { ...decision.state, facts: toJsonValue({ ...facts, construction: admittedRecord }) },
     questions: { ...decision.questions, [spec.question]: { ...question,
       instructions: question.instructions + " 构筑模块提供各方向在给定机会下的组件签名概率。目标为整局通关，不能只选集齐率最高者；结合伤害/回合、启动时间、升级、稀释和过渡存活比较。signature不代表可运转；aliveAndFunctional或terminalWin为null时不得编造成型/通关率。给出主方向、备用方向、当前取舍及转向条件；如本题同时更新run_plan，在其construction字段填写{primary,alternatives,checkpoint,reason,pivot_if}，方向使用模块core ID。" } } } };
 }

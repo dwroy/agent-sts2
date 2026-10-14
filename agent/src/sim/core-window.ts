@@ -53,8 +53,13 @@ export function summarizeCoreWindows(samples: readonly (CoreWindowResult | undef
   if (samples.length !== ids.length || base.length !== ids.length || new Set(ids).size !== ids.length) throw new Error("mismatched core samples");
   const paid = (rows: readonly (CoreWindowResult | undefined)[]) => rows.flatMap((r, i) => r?.energyPaid == null ? [] : [{ sample: ids[i]!, value: r.energyPaid }]);
   const known = samples.filter((r): r is CoreWindowResult => r !== undefined && r.complete);
-  const names = [...new Set(known.flatMap((r) => Object.keys(r.byCard)))].sort();
+  const names = [...new Set([...known, ...base.filter((r): r is CoreWindowResult => r !== undefined && r.complete)]
+    .flatMap((r) => Object.keys(r.byCard)))].sort();
   const pairs = [...new Set(known.flatMap((r) => r.combinations.discardBandages.pairs.map((p) => p.components.join("+"))))];
+  const cardValues = (rows: readonly (CoreWindowResult | undefined)[], id: string, first: boolean) => rows.flatMap((r, i) => {
+    if (!r?.complete || (first && !r.byCard[id])) return [];
+    return [{ sample: ids[i]!, value: first ? r.byCard[id]!.firstPlay : r.byCard[id]?.manual ?? 0 }];
+  });
   return { samples: samples.length, valid: known.length, missing: samples.length - known.length,
     energy_paid: summarizeSamples(paid(samples).map((r) => r.value)),
     manual_actions: summarizeSamples(known.map((r) => Object.values(r.byCard).reduce((sum, c) => sum + c.manual, 0))),
@@ -64,6 +69,8 @@ export function summarizeCoreWindows(samples: readonly (CoreWindowResult | undef
       manual: summarizeSamples(known.map((r) => r.byCard[id]?.manual ?? 0)),
       effects: summarizeSamples(known.map((r) => r.byCard[id]?.effects ?? 0)),
       first_play_when_played: summarizeSamples(known.flatMap((r) => r.byCard[id] ? [r.byCard[id]!.firstPlay] : [])),
+      paired_manual: pairedDifference(cardValues(base, id, false), cardValues(samples, id, false)),
+      paired_first_play_when_both_played: pairedDifference(cardValues(base, id, true), cardValues(samples, id, true)),
     }])),
     combinations: { discardBandages: Object.fromEntries(pairs.map((pair) => [pair, {
       count: summarizeSamples(known.map((r) => r.combinations.discardBandages.pairs.find((p) => p.components.join("+") === pair)?.count ?? 0)),
