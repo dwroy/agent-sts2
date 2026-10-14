@@ -29,18 +29,29 @@ spec.loader.exec_module(jobs)
 
 
 class ResearchScheduling(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        # Each test copies this real repository; refs, index and files remain private.
+        baseline = tempfile.TemporaryDirectory()
+        cls.addClassCleanup(baseline.cleanup)
+        cls.baseline_root = Path(baseline.name)
+        (cls.baseline_root / "agent").mkdir()
+        (cls.baseline_root / "agent/.keep").write_text("fixed fixture\n")
+        for args in (("init", "-b", "main"), ("add", "agent/.keep"),
+                     ("commit", "-m", "Fixed scheduling baseline"), ("rev-parse", "main")):
+            result = subprocess.run(["git", "-C", str(cls.baseline_root), *args], capture_output=True, text=True)
+            if result.returncode:
+                raise RuntimeError(result.stderr)
+        cls.baseline_commit = result.stdout.strip()
+
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()
         self.addCleanup(self.temp.cleanup)
         self.root = Path(self.temp.name)
         (self.root / "notes").mkdir()
         (self.root / "paper/frozen").mkdir(parents=True)
-        (self.root / "agent").mkdir()
-        (self.root / "agent/.keep").write_text("fixed fixture\n")
-        self.git("init", "-b", "main")
-        self.git("add", "agent/.keep")
-        self.git("commit", "-m", "Fixed scheduling baseline")
-        self.base = self.git("rev-parse", "main").stdout.strip()
+        shutil.copytree(self.baseline_root, self.root, dirs_exist_ok=True)
+        self.base = self.baseline_commit
         self.manifest = {"request_id": IDENT, "character": "silent", "run_count": 2,
                          "dispatch_runs": RUNS, "runs": [{"run_id": run, "ended_at": "2026-01-01T00:00:00Z"}
                                                           for run in RUNS]}
@@ -56,6 +67,23 @@ class ResearchScheduling(unittest.TestCase):
         self.state = {"batches": {}, "proposal_repairs": {}, "ascension": {"silent": 0}}
         self.launched = []
         self.launch_action = None
+
+    def test_fixture_clone_keeps_private_history_without_rebuilding_baseline(self):
+        other = ResearchScheduling("test_full_slots_are_read_only")
+        self.addCleanup(other.doCleanups)
+        # Setup must use the sealed baseline even if another Git startup is unavailable.
+        with patch.object(subprocess, "run", side_effect=AssertionError("unexpected Git setup subprocess")):
+            other.setUp()
+        self.assertEqual(other.base, self.base)
+        self.assertNotEqual(other.root, self.root)
+        before = (other.root / "agent/.keep").read_bytes()
+        (self.root / "agent/.keep").write_text("private changed fixture\n")
+        self.git("add", "agent/.keep")
+        self.git("commit", "-m", "Change only one fixed scheduling repository")
+        self.assertNotEqual(self.git("rev-parse", "main").stdout.strip(), self.base)
+        self.assertEqual(other.git("rev-parse", "main").stdout.strip(), other.base)
+        self.assertEqual((other.root / "agent/.keep").read_bytes(), before)
+        self.assertEqual((self.baseline_root / "agent/.keep").read_bytes(), before)
 
     def git(self, *args):
         result = subprocess.run(["git", "-C", str(self.root), *args], capture_output=True, text=True)

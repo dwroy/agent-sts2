@@ -1,10 +1,9 @@
-import { spawnSync } from "node:child_process";
 import { expect, it } from "vitest";
+import { runSchedulingGroup, schedulingGroups } from "./research-scheduling-fixture.js";
 
-it("frozen research takes the next slot and starts only after its actual registration is saved", () => {
-  const result = spawnSync("nice", ["-n", "19", "python3", "-B", "../ops/tests/test_strategy_research_scheduling.py"], {
-    encoding: "utf8", timeout: 30_000,
+it.each(schedulingGroups().map((cases, index) => [index + 1, cases] as const))(
+  "frozen research group %i takes the next slot and starts only after its actual registration is saved", async (_index, cases) => {
+    const result = await runSchedulingGroup(cases);
+    expect(result.stderr, result.stdout + result.stderr).toMatch(new RegExp(`Ran ${cases.length} tests?`));
+    expect(result.stderr).toContain("OK");
   });
-  expect(result.status, result.stderr).toBe(0);
-  expect(result.stderr).toMatch(/Ran [1-9]\d* tests/);
-});
