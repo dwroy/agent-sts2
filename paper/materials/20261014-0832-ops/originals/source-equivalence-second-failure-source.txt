@@ -1,0 +1,25 @@
+import fs from 'node:fs';
+import { dirname, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { execFileSync } from 'node:child_process';
+import { createHash } from 'node:crypto';
+
+const scratch = dirname(fileURLToPath(import.meta.url));
+const tree = resolve(scratch, '../../..');
+const { transformSync } = await import(tree + '/agent/node_modules/esbuild/lib/main.js');
+const manifest = JSON.parse(fs.readFileSync(scratch + '/live-source-verification.json', 'utf8'));
+const paths = [...new Set(manifest.sources.flatMap(x => x.paths).filter(x => !x.same_blob).map(x => x.path))];
+const hash = x => createHash('sha256').update(x).digest('hex');
+const rows = [];
+for (const path of paths) {
+  const emit = ref => transformSync(execFileSync('git', ['show', ref + ':' + path], { encoding: 'utf8' }),
+    { loader: 'ts', target: 'esnext', legalComments: 'none' }).code;
+  const before = emit(manifest.base), live = emit(manifest.live_head);
+  if (before !== live) throw new Error('执行文本不同：' + path);
+  rows.push({ path, base_js_sha256: hash(before), live_js_sha256: hash(live), equal_without_comments: true });
+}
+fs.writeFileSync(scratch + '/source-code-equivalence.json', JSON.stringify({
+  base: manifest.base, live_head: manifest.live_head, rows,
+  scope: '仅去注释后的执行文本核对，不是tsc/vitest',
+}, null, 2) + '\n');
+process.stdout.write(JSON.stringify({ equal_execution_files: rows.length, tsc: null, vitest: null }) + '\n');

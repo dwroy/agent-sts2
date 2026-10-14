@@ -1,0 +1,126 @@
+import hashlib
+import json
+from pathlib import Path
+
+OUT = Path(__file__).parent
+RUNS = ['NHA2KW0RB7VP', 'P74C04AEPL1F', 'G33HU22H2543', 'RC61MFQM63Y6', 'BTSRF7JL1W1Y']
+S = {run: json.loads((OUT / f'{run}-state-facts.json').read_text()) for run in RUNS}
+D = {run: [json.loads(line) for line in (OUT / f'{run}-decisions.jsonl').open()] for run in RUNS}
+
+def powers(entries):
+    return {p['power_id']: p['amount'] for p in entries}
+
+def enemy(row, ident):
+    return next(e for e in row['enemies'] if e['enemy_id'] == ident)
+
+def threat(row):
+    return sum(i.get('total_damage') or 0 for e in row['enemies'] if e.get('is_alive') for i in e['intents'])
+
+def start_turn(rows, turn):
+    return next(x for x in rows if x['turn'] == turn and x['hand'])
+
+def attempts(run, floor):
+    groups = []
+    last = None
+    for row in S[run]:
+        if row['floor'] != floor or row['turn'] is None:
+            continue
+        if not groups or row['turn'] < last:
+            groups.append([])
+        groups[-1].append(row)
+        last = row['turn']
+    return groups
+
+def first_round(group):
+    before = start_turn(group, 1)
+    after = start_turn(group, 2)
+    end = [x for x in group if x['turn'] == 1][-1]
+    return {'start_hp': before['hp'], 'block': end['block'], 'hp_loss': before['hp'] - after['hp'],
+        'enemy_net_drop': sum(e['current_hp'] for e in before['enemies']) - sum(e['current_hp'] for e in after['enemies']),
+        'offsets': [before['offset'], end['offset'], after['offset']], 'last_turn': group[-1]['turn'], 'last_hp': group[-1]['hp']}
+
+findings = {'scope': '五个派发局，静默A10；同局SL不当独立局；只核实实帧和原题面，不拟合新权重'}
+n = [first_round(g) for g in attempts(RUNS[0], 33)]
+assert len(n) == 6
+assert [(x['block'], x['hp_loss'], x['enemy_net_drop']) for x in n] == [(14, 1, 8)] * 4 + [(8, 7, 24)] * 2
+findings['NHA_F33_T1'] = n
+r = [first_round(g) for g in attempts(RUNS[3], 33)]
+assert len(r) == 6
+assert (r[0]['block'], r[0]['hp_loss'], r[0]['enemy_net_drop']) == (16, 4, 30)
+assert (r[-1]['block'], r[-1]['hp_loss'], r[-1]['enemy_net_drop']) == (12, 8, 23)
+findings['RC61_F33_T1'] = r
+for run, floor in [(RUNS[0], 33), (RUNS[3], 33)]:
+    ds = [x for x in D[run] if x.get('floor') == floor and x.get('turn') == 1 and x.get('label') == 'combat/plan-choice']
+    first = next(x for x in ds if x.get('sl_attempt') == 1)
+    last = next(x for x in ds if x.get('sl_attempt') == 6)
+    assert first['fingerprint'] == last['fingerprint']
+    findings[run + '_first_last_board'] = {'same_fingerprint': True,
+        'sha256': hashlib.sha256(first['fingerprint'].encode()).hexdigest(),
+        'first_observed_ts': first['observed_ts'], 'last_observed_ts': last['observed_ts'],
+        'limitation': '同首手即时对照；后轮出牌、抽弃不同，不能当同预算受控完整战斗'}
+
+p = attempts(RUNS[1], 23)
+assert len(p) == 4
+selection = next(x for x in p[-1] if x['selection'] and x['hp'] == 1 and x['block'] == 16)
+egg = enemy(selection, 'BOWLBUG_EGG')
+assert threat(selection) == 24 and egg['current_hp'] == 3 and powers(egg['powers'])['POISON_POWER'] == 1
+dead = p[-1][-1]
+assert dead['hp'] == 0 and enemy(dead, 'BOWLBUG_EGG')['current_hp'] == 2
+discard = next(x for x in D[RUNS[1]] if x.get('observed_ts') == selection['observed_ts'])
+assert discard['chosen'] == {'action': 'select_deck_card', 'option_index': 2}
+chosen_card = next(c for c in selection['selection']['cards'] if c['index'] == 2)
+assert chosen_card['card_id'] == 'PRECISE_CUT'
+findings['P74_F23_T3'] = {'hp': 1, 'block': 16, 'incoming': 24, 'egg_before': 3, 'egg_poison': 1,
+    'egg_after': 2, 'final_hp': 0, 'discarded': chosen_card['card_id'],
+    'offsets': [selection['offset'], dead['offset']], 'counterexample': '首试/第三试卵先退场，不能与末次混成同一弃牌胜负对照',
+    'unknown': '保留精确切击、弃另一牌的完整结果与触发后动态牌面未实打'}
+
+f22 = [x for x in S[RUNS[1]] if x['floor'] == 22]
+t2, t3, t4, t5 = [start_turn(f22, t) for t in [2, 3, 4, 5]]
+assert t2['hp'] - t3['hp'] == 20 and t4['hp'] - t5['hp'] == 24
+exit22 = next(x for x in f22 if x['screen'] == 'REWARD')
+entry23 = start_turn(p[0], 1)
+assert exit22['hp'] == entry23['hp'] == 9
+findings['P74_F22_resources'] = {'T2_loss': 20, 'T4_loss': 24, 'win_exit_hp': 9, 'next_entry_hp': 9,
+    'offsets': [t2['offset'], t3['offset'], t4['offset'], t5['offset'], exit22['offset'], entry23['offset']],
+    'unknown': '主怪最终归零的中间帧及完整毛伤事件账缺失；不把净本体差拟合作复活伤害'}
+
+b = attempts(RUNS[4], 31)[0]
+t4_start = start_turn(b, 4)
+t4_end = [x for x in b if x['turn'] == 4 and x['hp'] > 0][-1]
+beetle = enemy(t4_end, 'SLUMBERING_BEETLE')
+assert t4_end['hp'] == 14 and t4_end['block'] == 5
+assert powers(t4_end['player_powers'])['PLATING_POWER'] == 1
+assert powers(beetle['powers'])['STRENGTH_POWER'] == 4 and threat(t4_end) == 22
+assert b[-1]['hp'] == 0 and enemy(b[-1], 'SLUMBERING_BEETLE')['current_hp'] == 13
+final_choice = next(x for x in D[RUNS[4]] if x['observed_ts'] == '2026-10-07T18:14:47.679Z')
+criterion = json.loads(final_choice['questions']['plan']['criteria']['plan2'])
+assert 'dead within 5 turns in 1/4' in criterion['rollout']
+findings['BTS_F31_T3_T4'] = {'final_candidate': criterion, 'T4_hp': 14, 'card_block': 5, 'plating': 1,
+    'beetle_strength': 4, 'incoming': 22, 'uncapped_required_hp_loss': 16, 'final_hp': 0, 'beetle_final_hp': 13,
+    'offsets': [t4_start['offset'], t4_end['offset'], b[-1]['offset']],
+    'unknown': '四个模拟样本的完整逐次轨迹及种子、各分支抽序和目标后继缺失；原抽牌前线已取消'}
+
+rests = {}
+for run in RUNS:
+    points = {x['observed_ts']: x for x in S[run]}
+    items = []
+    for choice in D[run]:
+        if (choice.get('chosen') or {}).get('action') != 'choose_rest_option':
+            continue
+        proceed = next(x for x in D[run] if x['floor'] == choice['floor'] and x.get('label') == 'rest/proceed')
+        before, after = points[choice['observed_ts']], points[proceed['observed_ts']]
+        items.append({'floor': choice['floor'], 'action': choice['expect']['option']['id'],
+            'before_hp': before['hp'], 'after_hp': after['hp'], 'gain': after['hp'] - before['hp'],
+            'offsets': [before['offset'], after['offset']]})
+    rests[run] = {'events': items, 'heal_total': sum(x['gain'] for x in items if x['action'] == 'HEAL'),
+        'smith_count': sum(x['action'] == 'SMITH' for x in items)}
+assert [rests[run]['heal_total'] for run in RUNS] == [120, 42, 133, 105, 42]
+findings['actual_rest_resources'] = rests
+findings['limitations'] = ['没有替代路线/休息与锻造/跨战留药的条件匹配完整实打结果',
+    'SL恢复不是实际回血，也不是新获药；同局多次尝试不作独立留出',
+    '原运行版本含dirty，当前源码不能冒作当时精确实现',
+    '候选汇总与实线后继分开；没有完整逐样本轨迹不能从饱和死亡或一次死亡拟合新规则']
+(OUT / 'case-findings.json').write_text(json.dumps(findings, ensure_ascii=False, indent=2) + '\n')
+print(json.dumps({'verified': True, 'runs': len(RUNS), 'NHA_attempts': len(n), 'RC61_attempts': len(r),
+    'P74_attempts': len(p), 'rest_totals': {run: rests[run]['heal_total'] for run in RUNS}}, ensure_ascii=False))

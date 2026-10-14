@@ -1,0 +1,240 @@
+node:internal/child_process:1120
+    result.error = new ErrnoException(result.error, 'spawnSync ' + options.file);
+                   ^
+
+<ref *1> Error: spawnSync git EPERM
+    at Object.spawnSync (node:internal/child_process:1120:20)
+    at spawnSync (node:child_process:902:24)
+    at execFileSync (node:child_process:945:15)
+    at emit (file:///home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261014-080351-s2/learner/runs/20261014-080426-strategy-proposal/source-equivalence.mjs:15:37)
+    at file:///home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261014-080351-s2/learner/runs/20261014-080426-strategy-proposal/source-equivalence.mjs:17:18 {
+  errno: -1,
+  code: 'EPERM',
+  syscall: 'spawnSync git',
+  path: 'git',
+  spawnargs: [
+    'show',
+    'b6ad94734eb8bee9f201cfcd4f3fa46eb0088035:agent/src/sl/explore.ts'
+  ],
+  error: [Circular *1],
+  status: 0,
+  signal: null,
+  output: [
+    null,
+    '/**\n' +
+      ` * SL_RETRY_EXPLORE (docs/sl.md §11, Roy 2026-10-02: "retries must try different play"): a retried fight's attempts 3 and\n` +
+      ' * later change the line at one decision point of the failed attempts, so that a retry does not replay the death.\n' +
+      ' *\n' +
+      " * Why (A9, 2026-10-02): with the known draws (§10) the same board gives the same rollout (its seed is the board's, not the\n" +
+      " * attempt's) and Jev answers the same, so the retries repeated themselves to the card: 63WBEEF2JVM5 F33 (the Knowledge\n" +
+      ' * Demon) attempts 2-6 made the same picks at all 9 questions and died on T7 at 9 HP + 25 block against 36 five times;\n' +
+      ' * 1YXMHF6FSPK4 F33 (the Crusher and Rocket) attempts 2-6 died on T6 at 11 HP + 10 block against 27 five times.\n' +
+      ' * previous_attempts listed the same plays every time; Jev still picked the same line at 0.98.\n' +
+      ' *\n' +
+      " * - Recording (every attempt from the 2nd): each decision point's board (slBoardKey: the turn, the hand, the piles, our HP,\n" +
+      " *   block, energy and powers, the potions, the enemies' HP, block, powers and intents) and the line chosen there, as the\n" +
+      " *   options write it; a question's point also keeps the shown lines that could have replaced it. Kept in the attempt's row\n" +
+      ' *   in sl-attempts.jsonl (`explore`), so a restarted process has them.\n' +
+      ' * - The deviation point (exploreTarget, at the start of attempts 3+): a decision point on the path of the first recorded\n' +
+      ' *   attempt (attempt 2: the first with the known draws; the later attempts follow it until their own deviation), where a\n' +
+      ' *   shown line was never played on that board by any failed attempt. The point deviated at the fewest times, and among\n' +
+      ' *   those the latest: attempt 3 changes the question closest to the death, attempt 4 the one before it, and so on back;\n' +
+      " *   once every point had its turn, the latest with a line still untried again. Only Jev's questions: code's own turns\n" +
+      ' *   (the only line, a dominating line, a lethal, every line dying) have no line it would play instead. SL_RETRY_EXPLORE_ORDER:\n' +
+      ' *   points where every line loses in every sample come after all others (R1QJUBVBSSB2 F33: T5 on, all 24/24 dead).\n' +
+      " * - SL_RETRY_EXPLORE_REPLAY: before the deviation point the attempt plays the reference attempt's line on each board of its\n" +
+      ' *   path (replayPath, replayChoice), so that it reaches the point (R1QJ F33 attempt 3: Jev answered T5 otherwise and the\n' +
+      ' *   fight died before its T8 point); a board off the path stops it.\n' +
+      " * - On that board only, the line about to be played, when a failed attempt played it there, is replaced after Jev's answer\n" +
+      " *   (exploreReplacement): by the shown line the question's ranking (B2's where it ranks, its ties the rollout's; else the rollout's) puts first\n" +
+      ' *   among those no failed attempt played there, preferring the ones not worse than it (the gate: on a boss B2 is trusted on,\n' +
+      " *   B2's win rate within 2 paired standard errors, SL_RETRY_EXPLORE_B2; else the rollout's share of samples dead), never\n" +
+      ' *   one dying this turn while one survives, never one drinking a potion the pick does not drink (but in a boss fight,\n' +
+      " *   SL_RETRY_EXPLORE_BOSS_POTIONS: potions cost nothing there, so the shown potion lines and the random potions' Monte\n" +
+      ' *   Carlo lines count like the dry ones). Every other board plays as usual. The decision row says so (`sl_explore`).\n' +
+      ` * - SL_RETRY_EXPLORE_CANON (2026-10-03, A9 runs 10-12): a line is "tried" on a board by the turn's plays, not by its text:\n` +
+      ` *   the multiset of card id (with "+") and target (the options' distinctNames name), potions included (turnCanon), the\n` +
+      " *   cards already played that turn counted in. Attempt 1 is recorded too (its turns: each action's board and play), so its\n" +
+      ' *   plays count as tried where it was (UK7R9A0NMCXL F33 attempt 5 replayed attempt 1, which the record did not have;\n' +
+      ` *   63WBEEF2JVM5 F33 T1: attempt 1's "打击, 剑柄打击, potion" then 欺凌 after the draw is attempt 2's one line). Rows from\n` +
+      " *   before it (no turns) are rebuilt from their summary where their history is the reference's (legacyTried).\n" +
+      ' * - SL_RETRY_EXPLORE_TURN (2026-10-03, UK7R F33 attempt 4): the deviation holds for the rest of its turn: every later\n' +
+      " *   decision of that turn avoids a line that would end the turn with the plays a failed attempt's turn had through the\n" +
+      " *   deviation point's board (Shrug It Off drew, the re-plan's answer was Defend, Defend: attempt 2's turn in another order).\n" +
+      " * - SL_RETRY_EXPLORE_WHOLE (2026-10-03, PW7Y9EWUW8SB F48 attempts 3-4): the deviation's turn judged by its whole plays. A\n" +
+      ' *   line that draws before its turn is over (`open`) is re-planned after the draw, so only its plays up to the draw are\n' +
+      " *   sure (`committed`): when those are within a failed attempt's turn there, the rest may end the turn as that one\n" +
+      ` *   (mayRepeat; attempt 3's Blood Wall, Pommel Strike+, Stomp "not played there", then Rampage, Stomp after the draw:\n` +
+      " *   attempts 1-2's turn). Such a pick gives way to a line that cannot, not worse; a replacement prefers one; the avoid\n" +
+      ` *   later in the turn reaches every line that survives, not only the ones shown (code's "only distinct line" after the\n` +
+      ' *   draw); an avoid that cannot act says so; and a deviation whose turn still ended as a failed one is not a used point\n' +
+      ' *   (exploreTarget: the next attempt goes back to it, its line there now tried).\n' +
+      ' * - SL_RETRY_EXPLORE_WHERE (2026-10-03, GQ5H73A1VCL8 F48: attempts 3-6 all at T1, the HP lost after T4 and T5): the point\n' +
+      ' *   goes where the failed attempts lost their HP (hpLostByTurn, whereWeights), a different turn each attempt (whereChoice);\n' +
+      ` *   "every line loses" only breaks ties (it is the rollout's horizon).\n` +
+      ' * - SL_RETRY_EXPLORE_POTION (2026-10-03, P68P7CDJRDH3 F48 attempts 3-4): a line is tried on a board by its cards (the\n' +
+      ' *   multiset of card and target, as _CANON) when its potions add nothing the failed attempt lacked: a failed turn there\n' +
+      ' *   with the same cards whose attempt drank, from that turn to its end, every potion the line drinks (cardsOf, potionsOf,\n' +
+      ' *   SlTried.cards). Attempt 3 drank one potion fewer on T2 (attempt 2 drank it there, attempt 3 on T3), attempt 4 one more\n' +
+      " *   on T1 (attempts 2-3 drank it on T2-T3): both played attempt 2's cards and all three ended at 1 HP + 24 block against\n" +
+      ' *   44. A potion none of them drank from there on (held to the death) still makes the line new.\n' +
+      ' * - SL_RETRY_EXPLORE_REPLAY_PLAYS (2026-10-03, J4S28FRQKD7G F33 attempts 3, 4 and 6): a later attempt knows more draws, so on a\n' +
+      " *   board of the path the reference's line may read otherwise and not be among the options (attempt 2's 「防御, 剑柄打击 -> 火箭,\n" +
+      " *   怨恨 -> 火箭」 planned without knowing Pommel Strike's draw, 烙印+; with it known that line scored 1016th of 1290): its plays\n" +
+      ' *   from the board up to its next decision (its turn record, replayPlays) are played as a line when legal there (combat-plan\n' +
+      ' *   loggedLine), and the replay goes on.\n' +
+      " * - SL_RETRY_EXPLORE_REPLAY_DEVIATE (2026-10-03, J4S28 F33 attempt 6 played attempt 4's fight again after both stopped\n" +
+      ' *   replaying on T2): where the replay cannot go on before the point (neither line nor plays), or once the attempt is off the\n' +
+      ' *   path, it deviates on the first board a failed attempt decided on (boardTried: their lines and turns there), not into a\n' +
+      " *   failed attempt's fight; `explore.fallback`, not a use of the target's point.\n" +
+      ' * - SL_RETRY_EXPLORE_KEY_COUNTERS (2026-10-04, 7TQFLQBKRE4S F33 attempt 3): in slBoardKey a relic counter that wraps to 0\n' +
+      " *   shown at its count reads 0 (开心小花 3 on the turn's first frame, 0 a frame later, its energy already given: the replay\n" +
+      ` *   stopped "not on attempt 2's path" on the very board it aimed at).\n` +
+      " * - SL_RETRY_EXPLORE_SECOND (2026-10-04, 7TQF F39): attempt 2 replans with the known draws, but still on attempt 1's path from\n" +
+      ' *   the turn attempt 1 lost the most HP (secondPlan) it deviates there (every logged attempt 2 on that path then had played\n' +
+      " *   attempt 1's whole fight again).\n" +
+      ' * - Any error: the attempt plays as without the switch. Off: nothing here runs, and the decisions are as before.\n' +
+      ' */\n' +
+      'import { createHash } from "node:crypto";\n' +
+      'import { giantFinalResourcesText, type SlGiantFinalResources, type SlGiantPhase } from "./attempts.js";\n' +
+      'import type { GameState } from "../hand/mod/schema.js";\n' +
+      'import { asArray, asRecord, num, numOrNull, str, stableStringify } from "../core/util/json.js";\n' +
+      '\n' +
+      '/** One decision point of an attempt: the board and the line chosen on it. */\n' +
+      'export interface SlPoint {\n' +
+      '  /** slBoardKey of the board the line was chosen on. */\n' +
+      '  board: string;\n' +
+      '  turn: number | null;\n' +
+      `  /** "question": a combat plan question Jev answered; "code": code's own line (only line, dominating, lethal, least-loss...). */\n` +
+      '  kind: "question" | "code";\n' +
+      '  label: string;\n' +
+      '  /** The line played, its steps as the options write them ("痛击 -> 知识恶魔, 防御", "end turn"; a potion option: "drink X"). */\n' +
+      '  line: string;\n' +
+      "  /** A question: the shown lines that could replace it (exploreAlternatives), by their steps. Absent for code's lines. */\n" +
+      '  alternatives?: string[];\n' +
+      '  /**\n' +
+      "   * A question: the rollout's share of samples dead within its horizon, by line (the one played and its alternatives), when it\n" +
+      '   * ran. exploreTarget passes over a point whose untried lines all die more often than the one played while another does not.\n' +
+      '   */\n' +
+      '  dead?: Record<string, number>;\n' +
+      '  /**\n' +
+      "   * SL_RETRY_EXPLORE_B2, a question on a boss B2 is trusted on: B2's calibrated win rate by line (the one played and its\n" +
+      "   * alternatives), the alternatives B2 rates no worse than the one played (the replacement's gate), and B2's raw share of\n" +
+      '   * samples won (`won`). exploreTarget weighs "worse" by `dead` (B2 rates every untried line of every point on 63WBEEF2JVM5\n' +
+      "   * F33's path worse, so by B2 no point would be passed over, the Blood Wall one included; notes/sl-explore.md), and with\n" +
+      '   * SL_RETRY_EXPLORE_ORDER "every line loses" by `won` (else `dead`).\n' +
+      '   */\n' +
+      '  b2?: { win: Record<string, number>; notWorse: string[]; won?: Record<string, number> };\n' +
+      '  /** The line is this atte'... 90222 more characters,
+    ''
+  ],
+  pid: 10,
+  stdout: '/**\n' +
+    ` * SL_RETRY_EXPLORE (docs/sl.md §11, Roy 2026-10-02: "retries must try different play"): a retried fight's attempts 3 and\n` +
+    ' * later change the line at one decision point of the failed attempts, so that a retry does not replay the death.\n' +
+    ' *\n' +
+    " * Why (A9, 2026-10-02): with the known draws (§10) the same board gives the same rollout (its seed is the board's, not the\n" +
+    " * attempt's) and Jev answers the same, so the retries repeated themselves to the card: 63WBEEF2JVM5 F33 (the Knowledge\n" +
+    ' * Demon) attempts 2-6 made the same picks at all 9 questions and died on T7 at 9 HP + 25 block against 36 five times;\n' +
+    ' * 1YXMHF6FSPK4 F33 (the Crusher and Rocket) attempts 2-6 died on T6 at 11 HP + 10 block against 27 five times.\n' +
+    ' * previous_attempts listed the same plays every time; Jev still picked the same line at 0.98.\n' +
+    ' *\n' +
+    " * - Recording (every attempt from the 2nd): each decision point's board (slBoardKey: the turn, the hand, the piles, our HP,\n" +
+    " *   block, energy and powers, the potions, the enemies' HP, block, powers and intents) and the line chosen there, as the\n" +
+    " *   options write it; a question's point also keeps the shown lines that could have replaced it. Kept in the attempt's row\n" +
+    ' *   in sl-attempts.jsonl (`explore`), so a restarted process has them.\n' +
+    ' * - The deviation point (exploreTarget, at the start of attempts 3+): a decision point on the path of the first recorded\n' +
+    ' *   attempt (attempt 2: the first with the known draws; the later attempts follow it until their own deviation), where a\n' +
+    ' *   shown line was never played on that board by any failed attempt. The point deviated at the fewest times, and among\n' +
+    ' *   those the latest: attempt 3 changes the question closest to the death, attempt 4 the one before it, and so on back;\n' +
+    " *   once every point had its turn, the latest with a line still untried again. Only Jev's questions: code's own turns\n" +
+    ' *   (the only line, a dominating line, a lethal, every line dying) have no line it would play instead. SL_RETRY_EXPLORE_ORDER:\n' +
+    ' *   points where every line loses in every sample come after all others (R1QJUBVBSSB2 F33: T5 on, all 24/24 dead).\n' +
+    " * - SL_RETRY_EXPLORE_REPLAY: before the deviation point the attempt plays the reference attempt's line on each board of its\n" +
+    ' *   path (replayPath, replayChoice), so that it reaches the point (R1QJ F33 attempt 3: Jev answered T5 otherwise and the\n' +
+    ' *   fight died before its T8 point); a board off the path stops it.\n' +
+    " * - On that board only, the line about to be played, when a failed attempt played it there, is replaced after Jev's answer\n" +
+    " *   (exploreReplacement): by the shown line the question's ranking (B2's where it ranks, its ties the rollout's; else the rollout's) puts first\n" +
+    ' *   among those no failed attempt played there, preferring the ones not worse than it (the gate: on a boss B2 is trusted on,\n' +
+    " *   B2's win rate within 2 paired standard errors, SL_RETRY_EXPLORE_B2; else the rollout's share of samples dead), never\n" +
+    ' *   one dying this turn while one survives, never one drinking a potion the pick does not drink (but in a boss fight,\n' +
+    " *   SL_RETRY_EXPLORE_BOSS_POTIONS: potions cost nothing there, so the shown potion lines and the random potions' Monte\n" +
+    ' *   Carlo lines count like the dry ones). Every other board plays as usual. The decision row says so (`sl_explore`).\n' +
+    ` * - SL_RETRY_EXPLORE_CANON (2026-10-03, A9 runs 10-12): a line is "tried" on a board by the turn's plays, not by its text:\n` +
+    ` *   the multiset of card id (with "+") and target (the options' distinctNames name), potions included (turnCanon), the\n` +
+    " *   cards already played that turn counted in. Attempt 1 is recorded too (its turns: each action's board and play), so its\n" +
+    ' *   plays count as tried where it was (UK7R9A0NMCXL F33 attempt 5 replayed attempt 1, which the record did not have;\n' +
+    ` *   63WBEEF2JVM5 F33 T1: attempt 1's "打击, 剑柄打击, potion" then 欺凌 after the draw is attempt 2's one line). Rows from\n` +
+    " *   before it (no turns) are rebuilt from their summary where their history is the reference's (legacyTried).\n" +
+    ' * - SL_RETRY_EXPLORE_TURN (2026-10-03, UK7R F33 attempt 4): the deviation holds for the rest of its turn: every later\n' +
+    " *   decision of that turn avoids a line that would end the turn with the plays a failed attempt's turn had through the\n" +
+    " *   deviation point's board (Shrug It Off drew, the re-plan's answer was Defend, Defend: attempt 2's turn in another order).\n" +
+    " * - SL_RETRY_EXPLORE_WHOLE (2026-10-03, PW7Y9EWUW8SB F48 attempts 3-4): the deviation's turn judged by its whole plays. A\n" +
+    ' *   line that draws before its turn is over (`open`) is re-planned after the draw, so only its plays up to the draw are\n' +
+    " *   sure (`committed`): when those are within a failed attempt's turn there, the rest may end the turn as that one\n" +
+    ` *   (mayRepeat; attempt 3's Blood Wall, Pommel Strike+, Stomp "not played there", then Rampage, Stomp after the draw:\n` +
+    " *   attempts 1-2's turn). Such a pick gives way to a line that cannot, not worse; a replacement prefers one; the avoid\n" +
+    ` *   later in the turn reaches every line that survives, not only the ones shown (code's "only distinct line" after the\n` +
+    ' *   draw); an avoid that cannot act says so; and a deviation whose turn still ended as a failed one is not a used point\n' +
+    ' *   (exploreTarget: the next attempt goes back to it, its line there now tried).\n' +
+    ' * - SL_RETRY_EXPLORE_WHERE (2026-10-03, GQ5H73A1VCL8 F48: attempts 3-6 all at T1, the HP lost after T4 and T5): the point\n' +
+    ' *   goes where the failed attempts lost their HP (hpLostByTurn, whereWeights), a different turn each attempt (whereChoice);\n' +
+    ` *   "every line loses" only breaks ties (it is the rollout's horizon).\n` +
+    ' * - SL_RETRY_EXPLORE_POTION (2026-10-03, P68P7CDJRDH3 F48 attempts 3-4): a line is tried on a board by its cards (the\n' +
+    ' *   multiset of card and target, as _CANON) when its potions add nothing the failed attempt lacked: a failed turn there\n' +
+    ' *   with the same cards whose attempt drank, from that turn to its end, every potion the line drinks (cardsOf, potionsOf,\n' +
+    ' *   SlTried.cards). Attempt 3 drank one potion fewer on T2 (attempt 2 drank it there, attempt 3 on T3), attempt 4 one more\n' +
+    " *   on T1 (attempts 2-3 drank it on T2-T3): both played attempt 2's cards and all three ended at 1 HP + 24 block against\n" +
+    ' *   44. A potion none of them drank from there on (held to the death) still makes the line new.\n' +
+    ' * - SL_RETRY_EXPLORE_REPLAY_PLAYS (2026-10-03, J4S28FRQKD7G F33 attempts 3, 4 and 6): a later attempt knows more draws, so on a\n' +
+    " *   board of the path the reference's line may read otherwise and not be among the options (attempt 2's 「防御, 剑柄打击 -> 火箭,\n" +
+    " *   怨恨 -> 火箭」 planned without knowing Pommel Strike's draw, 烙印+; with it known that line scored 1016th of 1290): its plays\n" +
+    ' *   from the board up to its next decision (its turn record, replayPlays) are played as a line when legal there (combat-plan\n' +
+    ' *   loggedLine), and the replay goes on.\n' +
+    " * - SL_RETRY_EXPLORE_REPLAY_DEVIATE (2026-10-03, J4S28 F33 attempt 6 played attempt 4's fight again after both stopped\n" +
+    ' *   replaying on T2): where the replay cannot go on before the point (neither line nor plays), or once the attempt is off the\n' +
+    ' *   path, it deviates on the first board a failed attempt decided on (boardTried: their lines and turns there), not into a\n' +
+    " *   failed attempt's fight; `explore.fallback`, not a use of the target's point.\n" +
+    ' * - SL_RETRY_EXPLORE_KEY_COUNTERS (2026-10-04, 7TQFLQBKRE4S F33 attempt 3): in slBoardKey a relic counter that wraps to 0\n' +
+    " *   shown at its count reads 0 (开心小花 3 on the turn's first frame, 0 a frame later, its energy already given: the replay\n" +
+    ` *   stopped "not on attempt 2's path" on the very board it aimed at).\n` +
+    " * - SL_RETRY_EXPLORE_SECOND (2026-10-04, 7TQF F39): attempt 2 replans with the known draws, but still on attempt 1's path from\n" +
+    ' *   the turn attempt 1 lost the most HP (secondPlan) it deviates there (every logged attempt 2 on that path then had played\n' +
+    " *   attempt 1's whole fight again).\n" +
+    ' * - Any error: the attempt plays as without the switch. Off: nothing here runs, and the decisions are as before.\n' +
+    ' */\n' +
+    'import { createHash } from "node:crypto";\n' +
+    'import { giantFinalResourcesText, type SlGiantFinalResources, type SlGiantPhase } from "./attempts.js";\n' +
+    'import type { GameState } from "../hand/mod/schema.js";\n' +
+    'import { asArray, asRecord, num, numOrNull, str, stableStringify } from "../core/util/json.js";\n' +
+    '\n' +
+    '/** One decision point of an attempt: the board and the line chosen on it. */\n' +
+    'export interface SlPoint {\n' +
+    '  /** slBoardKey of the board the line was chosen on. */\n' +
+    '  board: string;\n' +
+    '  turn: number | null;\n' +
+    `  /** "question": a combat plan question Jev answered; "code": code's own line (only line, dominating, lethal, least-loss...). */\n` +
+    '  kind: "question" | "code";\n' +
+    '  label: string;\n' +
+    '  /** The line played, its steps as the options write them ("痛击 -> 知识恶魔, 防御", "end turn"; a potion option: "drink X"). */\n' +
+    '  line: string;\n' +
+    "  /** A question: the shown lines that could replace it (exploreAlternatives), by their steps. Absent for code's lines. */\n" +
+    '  alternatives?: string[];\n' +
+    '  /**\n' +
+    "   * A question: the rollout's share of samples dead within its horizon, by line (the one played and its alternatives), when it\n" +
+    '   * ran. exploreTarget passes over a point whose untried lines all die more often than the one played while another does not.\n' +
+    '   */\n' +
+    '  dead?: Record<string, number>;\n' +
+    '  /**\n' +
+    "   * SL_RETRY_EXPLORE_B2, a question on a boss B2 is trusted on: B2's calibrated win rate by line (the one played and its\n" +
+    "   * alternatives), the alternatives B2 rates no worse than the one played (the replacement's gate), and B2's raw share of\n" +
+    '   * samples won (`won`). exploreTarget weighs "worse" by `dead` (B2 rates every untried line of every point on 63WBEEF2JVM5\n' +
+    "   * F33's path worse, so by B2 no point would be passed over, the Blood Wall one included; notes/sl-explore.md), and with\n" +
+    '   * SL_RETRY_EXPLORE_ORDER "every line loses" by `won` (else `dead`).\n' +
+    '   */\n' +
+    '  b2?: { win: Record<string, number>; notWorse: string[]; won?: Record<string, number> };\n' +
+    '  /** The line is this atte'... 90222 more characters,
+  stderr: ''
+}
+
+Node.js v22.23.3
