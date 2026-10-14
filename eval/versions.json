@@ -2364,7 +2364,8 @@
       "commit": "2c0c7d87ce5753f57cbe39a9921c4030e63c9cb6",
       "release_id": "V5-R336",
       "source": "2026-10-14 05:32:54 CST 原050124-fix source 288f37d323f7ed57eb3faf86beee6bcb8dd354e3：新父进程显式streamResults=true，worker每个完整样本结束即回传partial结果；块结束才计chunksCompleted及调度后块，期限前已收到的完整样本参与配对，未完成/截止后结果不伪填。旧父进程未传streamResults仍每块单回传，兼容已运行控制器；完整样本算法/参数/种子与300最低/1000目标/11000ms/24线程不改，铁甲固定真实worker与串行等价。源tsc0/378文件3622沙箱通过；撤码3败7过、恢复10过、gitleaks0；铁甲补验cwd初败/恢复1过13未选及初稿审计诊断保留，原15共享记录冲突/failed-rc0-null不改。已按原锁精确三叶绑定完整源祖先，部署树完整宿主沿原批一次，下一自然进程生效，不重启对局。本反例只证明传输丢失漏洞，EEVP旧告警损失量/自然DPR性能及胜率未知，不关闭原宽父项或把原R335部分复验称整套绿。回退逆向本source三叶并登记新发布号，保留原刷新/失败/台账。"
-    }
+    },
+    {"name": "S1.boss-calibration17", "family": "Silent", "commit": "6c8eed9f4b6f95a09d259fe9089dcdcc4c1f39c6", "source": "2026-10-14 09:34:55 CST: Roy授权静默boss校准刷新；21新实际结局，284完局/1245尝试/502可用，固定107调参/395验证；源57afeb1dc9407ba07797fc04ad86a271496c313c；silent-0463；固定模型/Platt/切点不变；paper/materials/silent/boss-sim-calibration.md"}
   ],
   "release_numbering": {
     "schema_version": 1,
