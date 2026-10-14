@@ -1,0 +1,45 @@
+{
+  "at": "2026-10-14 17:04:25 CST",
+  "run": "W1YY8PEWGUF9",
+  "screen": "REST",
+  "floor": 16,
+  "brain_label": "rest/plan",
+  "brain_ts": "2026-10-14T09:03:23.857Z",
+  "source": {
+    "path": "logs/brain.jsonl",
+    "offset": 505116877,
+    "bytes": 43073,
+    "sha256": "701583e65353c1a9733693b097ef8316d4285c4a8c45d8823fd91944d6f53eee"
+  },
+  "accepted": false,
+  "model_attempts": 0,
+  "error_kind": "quota",
+  "actual_model": "gpt-6.1-sol",
+  "actual_effort": "xhigh",
+  "limits": {
+    "used_pct": 100,
+    "window": "codex/primary",
+    "window_min": 10080,
+    "resets_at": "2026-10-20T04:58:44.000Z",
+    "ordinary_usage_allowed": false,
+    "reached_type": "rate_limit_reached"
+  },
+  "instance": {
+    "status": "instance_verified",
+    "process_id": 34676,
+    "base_url": "http://127.0.0.1:8080",
+    "native_profile_id": "1"
+  },
+  "controller_pid": 847021,
+  "autoplay_pid": 2059875,
+  "mod_state_original_sha256": "4a658eaf629e2e42bcffd8ebf2ae106789bdd80200eadca18d8ac70f958bb1eb",
+  "procs_original_sha256": "4a5f8fa61074ab32074eeeebfabd6bff7b8483c273d1b1b7053ba367a41120ba",
+  "policy": "Preserve the current question and existing controller; existing Codex-only usage recovery owns fresh reads and continuation when included usage permits.",
+  "usage_guard_source": "agent/src/brain/engines/codex-usage.ts",
+  "usage_guard_source_sha256": "81440bd9a27acaa2bceb8ad5d482dc10e14003d5b1718170aef5f39022e99326",
+  "no_model_request_retry_account_credit_budget_guard_fallback_or_game_restart_performed": true,
+  "not_a_construction_failure": true,
+  "watcher_already_reported_same_gate_no_duplicate_native_notification": true,
+  "new_Roy_decision_requested": false,
+  "reset_is_reported_by_current_limit_not_a_guaranteed_recovery_time": true
+}
