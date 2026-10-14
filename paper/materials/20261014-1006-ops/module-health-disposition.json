@@ -1,0 +1,86 @@
+{
+  "at": "2026-10-14 10:18:16 CST",
+  "run": "EBVT8UZM6P12",
+  "coverage": {
+    "attempts": 8,
+    "skipped": 0,
+    "produced_dpr": 4,
+    "coverage": 0.5,
+    "failures": {
+      "below_minimum_samples": 3
+    },
+    "unsupported": 1,
+    "applicable_attempts": 7,
+    "unsupported_only": 1,
+    "candidates": {
+      "observed": 60,
+      "unsupported": 3,
+      "with_dpr": 16,
+      "missing_dpr": 41
+    },
+    "applicable_coverage": 0.5714285714285714,
+    "longest_failure_streak": 3,
+    "trailing_failure_streak": 3,
+    "paired_samples_min": 138,
+    "ms_max": 11157
+  },
+  "verified_failures": [
+    {
+      "ts": "2026-10-14T01:57:37.702Z",
+      "floor": 6,
+      "label": "event/plan",
+      "source": {
+        "offset": 1334636533,
+        "length": 33130,
+        "sha256": "f717c43d1a037d239082ccc492df439399d14f53a19cc77b9d6b2e28113cfb82"
+      },
+      "samples": 247,
+      "sim_ms": 11093,
+      "decks": 9,
+      "cold_start": false,
+      "first_reply_ms": 81,
+      "queue_ms": 0,
+      "reason": "below_minimum_samples"
+    },
+    {
+      "ts": "2026-10-14T01:58:38.361Z",
+      "floor": 7,
+      "label": "rest/plan",
+      "source": {
+        "offset": 1334674452,
+        "length": 64084,
+        "sha256": "5f430bc06ed889beee246fd8d73d2e75793708abc1063dfe29923a03f5bdaf14"
+      },
+      "samples": 231,
+      "sim_ms": 11095,
+      "decks": 9,
+      "cold_start": false,
+      "first_reply_ms": 67,
+      "queue_ms": 0,
+      "reason": "below_minimum_samples"
+    },
+    {
+      "ts": "2026-10-14T01:59:41.565Z",
+      "floor": 8,
+      "label": "shop/plan",
+      "source": {
+        "offset": 1334744423,
+        "length": 108332,
+        "sha256": "305831dcda8e99b375ecd5e8aeee35ea4b9ba42940101f451bdcc430b1daecee"
+      },
+      "samples": 138,
+      "sim_ms": 11029,
+      "decks": 17,
+      "cold_start": false,
+      "first_reply_ms": 65,
+      "queue_ms": 0,
+      "reason": "below_minimum_samples"
+    }
+  ],
+  "fixed_single_thread_profile_us": 11644615,
+  "profile_scope": "Current checkout model, fixed F6, HP70/no historical route; one serial CPU profile. Not production CPU attribution or proof of a fix.",
+  "owner": "Existing v5-dpr-health-20261013 ordinary fix chain",
+  "diagnosis": "Warm replies arrived. Paired work per option did not reach minimum before original deadline. Single-thread F6 profile cannot establish production root cause.",
+  "threshold_or_deadline_or_workers_changed": false,
+  "game_restart_or_new_learning_dispatched": false
+}

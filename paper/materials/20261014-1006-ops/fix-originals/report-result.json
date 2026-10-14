@@ -1,0 +1,71 @@
+{
+  "task": "fix-batch",
+  "base": "be9d851d6da3541c3f464af64cc5aef1d7a776bb",
+  "fixes": [
+    {
+      "item": "补验接口拒绝超过500字符的完整参数化用例名",
+      "commit": "f8896692b0d868b900ccffc8ed910321d0f3e765",
+      "test": "agent/tests/learner-check-continuation.test.ts",
+      "fails_without_fix": true
+    },
+    {
+      "item": "ascension-audit-report固定解析夹具反复启动同步Python且丢失退出诊断",
+      "commit": "a11e32ae1a01ecf75cc57519be21f2d144c2cd18",
+      "test": "agent/tests/ascension-audit-output-fixture.test.ts",
+      "fails_without_fix": true
+    },
+    {
+      "item": "strategy-research-scheduling把完整Python验收塞入单个15秒用例",
+      "commit": "cd1f5593430a2d13479368679b5d42994540f7c8",
+      "test": "agent/tests/research-scheduling-fixture.test.ts",
+      "fails_without_fix": true
+    },
+    {
+      "item": "potion-mc题面重复性夹具关闭采样预算导致整组30秒超时",
+      "commit": "519b63549f1c61276755066e5a76d0351cf09a7c",
+      "test": "agent/tests/potion-mc.test.ts",
+      "fails_without_fix": true
+    },
+    {
+      "item": "rollout固定排序/选项/自动动作验收受真实时钟与整组计算量影响",
+      "commit": "b68a650ab95c15a492cccac598906f32284229be",
+      "test": "agent/tests/rollout-live-clock.test.ts",
+      "fails_without_fix": true
+    }
+  ],
+  "skipped": [
+    {
+      "item": "出牌、药水、SL、终局、路线、休息及模型机制条目（含 silent-0308/0311/0317/0319/0320/0322/0324/0329/0332/0338/0339/0344/0347/0349/0362/0365/0367/0461）",
+      "reason": "策略类，沿队列已有的独立 strategy-proposal 及原证据链；普通纯 bug 批次不添加游戏判断、不重复登记或派发。"
+    },
+    {
+      "item": "silent-0459 独立 run-plan 请求成本漏计",
+      "reason": "队列明确交既有 silent-proposal-6a39ea0a435755c5 独立策略链，本批不重复实现。"
+    },
+    {
+      "item": "全漏斗/资源价值/核心构筑/学习优先级等宽架构功能与实际消费者闭环",
+      "reason": "太大，属于已有独立实现任务；已修工具入口不等于父要求完成。"
+    },
+    {
+      "item": "v5-dpr-health-20261013 暖池供给/单样本性能父项",
+      "reason": "证据不足以定位剩余性能缺口的确定性执行 bug；取消/零预算/分类/完整样本回传子项已有源码，仍保持300最低、1000目标、11000ms期限及24线程上限，不据测试夹具修复宣称自然性能解决。"
+    },
+    {
+      "item": "sandbox-glob-startup-race 上游目录生命周期",
+      "reason": "证据不足；本批也遇到 retired 目录 ENOENT，原权限下重试读命令成功，不能据此认定删除者或改权限。已修恢复/租约子项不重做。"
+    },
+    {
+      "item": "调度公平性永久饥饿及核心通知实际送达",
+      "reason": "证据不足；队列观测与退出诊断不等于永久饥饿或实际送达，不代写确认。"
+    }
+  ],
+  "merged": null,
+  "tests": {
+    "tsc": 0,
+    "vitest": 0,
+    "cases": 3795
+  },
+  "code_proposals": [],
+  "implementation_domains": [],
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-071302/learner/runs/20261014-071328-fix-batch/report.md"
+}
