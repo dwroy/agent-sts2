@@ -18,6 +18,8 @@
  * Switch: BOSS_SIM_LINES=off (bossLinesOptions.enabled) leaves the question and its ranking as they were before B2.
  */
 
+import { ADAPTIVE_RULE, safeAdaptiveShadow } from "./adaptive-shadow.js";
+import { simAdaptivePolicy } from "../core/config.js";
 import { beginComputation, type SimAttempt, type SimCompletion } from "./computation-failure.js";
 import type { SimProgress, SimWait } from "./computation-wait.js";
 import { createHash } from "node:crypto";
@@ -29,7 +31,7 @@ import { MessageChannel, receiveMessageOnPort, Worker, type MessagePort } from "
 import type { Knowledge } from "../knowledge/index.js";
 import type { GameState } from "../hand/mod/schema.js";
 import type { ScreenMemory } from "../memory/types.js";
-import { toJsonValue, type JsonValue } from "../core/util/json.js";
+import { asRecord, toJsonValue, type JsonValue } from "../core/util/json.js";
 import { summarizeBossMargin } from "./boss-margin.js";
 import { quantitativeEnabled } from "./quantitative-facts.js";
 import type { CardModel } from "../reflex/card-model.js";
@@ -416,6 +418,7 @@ function fightSampleOf(input: RolloutInput, pair: { plan: Plan | null; order: Ki
 // ---------------------------------------------------------------- lines, best orders, ranking
 
 export interface LinesResult {
+  adaptive?: JsonValue;
   continuation?: { source: string; limitation: string };
   /** Per line (the order given): its numbers under its best kill order. */
   lines: (BossSimLineResult & { order: string | null })[];
@@ -450,7 +453,7 @@ export function linesInput(input: RolloutInput, holdHp = bossLinesOptions.holdHp
 export function runLines(
   input: RolloutInput,
   lines: Plan[],
-  opts: { samples: number; seed: number; deadlineMs: number; serial?: boolean; now?: () => number; onProgress?: SimProgress; holdHp?: (potionId: string, input: RolloutInput) => number | null },
+  opts: { samples: number; seed: number; deadlineMs: number; serial?: boolean; now?: () => number; adaptive?: { allowS: boolean }; onProgress?: SimProgress; holdHp?: (potionId: string, input: RolloutInput) => number | null },
 ): LinesResult {
   const orders = fightOrders(input);
   const pairs = lines.flatMap((plan) => [null, ...orders].map((order) => ({ plan, order })));
@@ -467,7 +470,16 @@ export function runLines(
     }
     return pick!;
   });
-  return { lines: out, samples: run.complete.length, requested: opts.samples, timedOut: run.timedOut, elapsedMs: run.elapsedMs, workers: run.workers, orders: orders.length, pairs: pairs.length, done: run.done,
+  const adaptive = opts.adaptive && !run.timedOut && run.complete.length === opts.samples ? safeAdaptiveShadow(
+    out.map((line, i) => ({ key: `line:${i}`, samples: line.outcomes,
+      orders: Array.from({ length: per }, (_, k) => run.complete.map((id) => run.outcomes[i * per + k]![id]!)) })),
+    { lane: "b2", requested: opts.samples, allowS: opts.adaptive.allowS }) : null;
+  if (adaptive && "work" in adaptive) {
+    adaptive.work.full *= per;
+    adaptive.work.shadow *= per;
+    adaptive.work.unit = "fight-sample-outcomes";
+  }
+  return { ...(adaptive ? { adaptive: toJsonValue({ ...adaptive, input_key: linesMemoKey(input, lines, opts.samples, "shadow-record", opts.adaptive) }) } : {}), lines: out, samples: run.complete.length, requested: opts.samples, timedOut: run.timedOut, elapsedMs: run.elapsedMs, workers: run.workers, orders: orders.length, pairs: pairs.length, done: run.done,
     ...(input.continuation ? { continuation: { source: input.continuation.source, limitation: input.continuation.limitation } } : {}) };
 }
 
@@ -691,19 +703,20 @@ export function bossLineSim(args: BossLineSimArgs): BossLineSim {
       if (attempt.degraded) left = bossLinesOptions.deadlineMs;
       wait = args.simWait?.start({ run: String(args.state.raw["run_id"] ?? ""), floor: args.state.run?.floor ?? null, label: "boss-lines" });
     }
-    const memoed = args.memo ? recallLines(args.memo, input, args.lines, samples, left) : null;
+    const adaptive = required && !attempt?.degraded && simAdaptivePolicy(String(args.state.run?.raw["character_id"] ?? "")).mode === "shadow" ? { allowS: !lowTrust } : undefined;
+    const memoed = args.memo ? recallLines(args.memo, input, args.lines, samples, left, adaptive) : null;
     let run: LinesResult;
     if (memoed) run = { ...memoed, memo: { wallMs: ms() } };
     else {
       try {
-        run = runLines(input, args.lines, { samples, seed: bossLinesOptions.seed, deadlineMs: left, serial: bossLinesOptions.serial, now, ...(wait ? { onProgress: wait.progress } : {}) });
+        run = runLines(input, args.lines, { samples, seed: bossLinesOptions.seed, deadlineMs: left, serial: bossLinesOptions.serial, now, ...(wait ? { onProgress: wait.progress } : {}), ...(adaptive ? { adaptive } : {}) });
       } catch (error) {
         // A worker's error: the next question starts a new pool.
         releaseBossLinesPool();
         failed = { fight, count: failed.fight === fight ? failed.count + 1 : 1 };
         throw error;
       }
-      if (args.memo) storeLines(args.memo, input, args.lines, samples, run);
+      if (args.memo) storeLines(args.memo, input, args.lines, samples, run, adaptive);
     }
     args.memory.bossLines = { turn: turnKey, spentMs: memo.spentMs + run.elapsedMs };
     sampled = run.samples;
@@ -773,15 +786,15 @@ function linesWhere(): string | null {
 }
 
 /** The memo key of a B2 run: everything runLines reads (the input, the lines, samples, seed, hold values, turns) and where it ran. */
-function linesMemoKey(input: RolloutInput, lines: Plan[], samples: number, where: string): string | null {
-  return memoKey("b2", { input, lines, samples, seed: bossLinesOptions.seed, holdHp: identityToken(bossLinesOptions.holdHp ?? tableHoldHp), maxTurns: BOSS_SIM_MAX_TURNS, where });
+function linesMemoKey(input: RolloutInput, lines: Plan[], samples: number, where: string, adaptive?: { allowS: boolean }): string | null {
+  return memoKey("b2", { input, lines, samples, seed: bossLinesOptions.seed, holdHp: identityToken(bossLinesOptions.holdHp ?? tableHoldHp), maxTurns: BOSS_SIM_MAX_TURNS, where, ...(adaptive ? { adaptive: { ...ADAPTIVE_RULE, ...adaptive } } : {}) });
 }
 
 /** A stored run of this input that finished every sample, when `left` (this question's deadline) is at least its time; else null. */
-function recallLines(memo: ComputeMemo, input: RolloutInput, lines: Plan[], samples: number, left: number): LinesResult | null {
+function recallLines(memo: ComputeMemo, input: RolloutInput, lines: Plan[], samples: number, left: number, adaptive?: { allowS: boolean }): LinesResult | null {
   try {
     const where = linesWhere();
-    const key = where ? linesMemoKey(input, lines, samples, where) : null;
+    const key = where ? linesMemoKey(input, lines, samples, where, adaptive) : null;
     const hit = key ? memo.get<LinesResult, { elapsedMs: number }>(key) : null;
     if (!hit || hit.value.timedOut || hit.meta.elapsedMs > left) return null;
     memo.took();
@@ -792,11 +805,11 @@ function recallLines(memo: ComputeMemo, input: RolloutInput, lines: Plan[], samp
 }
 
 /** Keeps a run that finished every sample (none cut by the deadline). */
-function storeLines(memo: ComputeMemo, input: RolloutInput, lines: Plan[], samples: number, run: LinesResult): void {
+function storeLines(memo: ComputeMemo, input: RolloutInput, lines: Plan[], samples: number, run: LinesResult, adaptive?: { allowS: boolean }): void {
   try {
     if (run.timedOut || run.samples < samples || run.samples === 0) return;
     const where = linesWhere();
-    const key = where ? linesMemoKey(input, lines, samples, where) : null;
+    const key = where ? linesMemoKey(input, lines, samples, where, adaptive) : null;
     if (key) memo.set(key, run, { elapsedMs: run.elapsedMs });
   } catch {
     // not kept
@@ -850,6 +863,8 @@ export function simLog(sim: BossLineSim, keyOf: (plan: Plan) => string | null, e
   return {
     available: true,
     ...completion,
+    ...(sim.run.adaptive ? { adaptive: toJsonValue({ ...asRecord(sim.run.adaptive), candidate_keys:
+      Object.fromEntries([...sim.byPlan.keys()].map((plan, i) => [`line:${i}`, keyOf(plan)])) }) } : {}),
     ...(sim.run.continuation ? { objective: "F48_F49_continuous", calibration: "none", continuation: { source: sim.run.continuation.source, limitation: sim.run.continuation.limitation } } : {}),
     // The question's own wall clock (an SL retry memo hit: the lookup's; the decision row's timing.memo has the stored run's).
     ms: sim.run.memo ? sim.run.memo.wallMs : sim.run.elapsedMs,
