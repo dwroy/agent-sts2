@@ -1,0 +1,187 @@
+{
+  "at": "2026-10-14T12:48:02.627511+08:00",
+  "kind": "watcher_observation_for_original_postmortem_not_learned_rule",
+  "run_id": "Q10YYQ5DUPJA",
+  "floor": 49,
+  "turn": 4,
+  "sl_attempt": 5,
+  "decision_id": "bfb1edec-df35-41a9-a887-78c97d247d6f",
+  "ts": "2026-10-14T04:43:21.862Z",
+  "sources": [
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1355926081,
+      "length": 18537,
+      "sha256": "af01c96ae6df6aad3080af1cb813a83c960d7e79cb32453fb26208718742d68c",
+      "frozen": "paper/materials/20261014-q10-shiv-end-turn/decisions-original.json.gz"
+    },
+    {
+      "path": "logs/states.jsonl",
+      "offset": 12695915752,
+      "length": 48524,
+      "sha256": "9e2d398d1c5d5ffde529e6b9c233bf4e9207fcec01ac3d7d533dbba82bdaac32",
+      "frozen": "paper/materials/20261014-q10-shiv-end-turn/states-original.json.gz"
+    }
+  ],
+  "actual_hand_card": {
+    "index": 2,
+    "card_id": "SHIV",
+    "name": "小刀",
+    "upgraded": false,
+    "target_type": "AnyEnemy",
+    "requires_target": true,
+    "target_index_space": "enemies",
+    "valid_target_indices": [
+      0
+    ],
+    "costs_x": false,
+    "star_costs_x": false,
+    "energy_cost": 0,
+    "star_cost": 0,
+    "rules_text": "{TargetType:choose(AllEnemies):对所有敌人|}造成{Damage:diff()}点伤害。",
+    "resolved_rules_text": "造成4点伤害。 消耗。",
+    "dynamic_values": [
+      {
+        "name": "Damage",
+        "base_value": 4,
+        "current_value": 4,
+        "enchanted_value": 4,
+        "is_modified": false,
+        "was_just_upgraded": false
+      }
+    ],
+    "playable": true,
+    "can_play_result": true,
+    "unplayable_reason": null,
+    "unplayable_reason_raw": null,
+    "unplayable_preventer_id": null,
+    "unplayable_preventer_type": null
+  },
+  "choice": {
+    "action": "end_turn"
+  },
+  "jev_answer": {
+    "plan": {
+      "type": "choice",
+      "choice": "plan3",
+      "probabilities": {
+        "plan1": 0.04,
+        "plan2": 0.03,
+        "plan3": 0.93
+      },
+      "confidence": 0.89,
+      "raw": {
+        "type": "choice",
+        "choice": "plan3",
+        "confidence": 0.89,
+        "probabilities": {
+          "plan1": 0.04,
+          "plan2": 0.03,
+          "plan3": 0.93
+        }
+      }
+    }
+  },
+  "rollout": {
+    "available": true,
+    "ms": 655,
+    "horizon": 5,
+    "samples": 24,
+    "degraded": [],
+    "lines": 4,
+    "best": "plan3",
+    "best_added": true,
+    "saturated": true
+  },
+  "boss_sim": {
+    "available": true,
+    "ms": 3435,
+    "samples": 1200,
+    "requested": 1200,
+    "timed_out": false,
+    "orders": 0,
+    "workers": 20,
+    "boss": "TEST_SUBJECT",
+    "low_trust": true,
+    "best": null,
+    "tied": [],
+    "ranked": [
+      "plan1",
+      "plan2",
+      "plan3"
+    ],
+    "lines": {
+      "plan1": {
+        "win": 0,
+        "cal": 0,
+        "d": 0,
+        "se": 0,
+        "loss": 9,
+        "won_loss": null,
+        "order": null
+      },
+      "plan2": {
+        "win": 0,
+        "cal": 0,
+        "d": 0,
+        "se": 0,
+        "loss": 9,
+        "won_loss": null,
+        "order": null
+      },
+      "plan3": {
+        "win": 0,
+        "cal": 0,
+        "d": 0,
+        "se": 0,
+        "loss": 9,
+        "won_loss": null,
+        "order": null
+      }
+    },
+    "plan": "drink 爆炸安瓿 ~T4; no plan wins in most samples: 0/1200 won, the fight ends ~T6",
+    "rollout_own_best": "plan3",
+    "rollout_own_tied": []
+  },
+  "plans": {
+    "plan1": {
+      "plays": "小刀 -> 实验体 #C81, then potion 爆炸安瓿",
+      "hp_lost": 0,
+      "damage_dealt": 14,
+      "hp_after": 9,
+      "potions_used": "爆炸安瓿",
+      "rollout": "5-turn rollout (24 samples) (later turns may use the potions still held): expected further HP loss 9, fight over within 5 turns in 0/24, expected turns to the end (surviving samples) ~7.9, dead within 5 turns in 17/24 (~turn 4.2); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 17/24), then the fight's progress: least enemy HP left (this line ~411, at T5 or at our death), then most turns alive (this line ~4.4), then least HP lost this turn (this line 0)",
+      "rollout_best": null,
+      "whole_fight_sim": "low confidence: win 0% (the simulation's best line), no winning sample; the losing samples die most often on T6 (dead in 100%); 1200 samples"
+    },
+    "plan2": {
+      "plays": "小刀 -> 实验体 #C81",
+      "hp_lost": 0,
+      "damage_dealt": 4,
+      "hp_after": 9,
+      "potions_used": "none",
+      "rollout": "5-turn rollout (24 samples) (later turns may use the potions still held): expected further HP loss 9, fight over within 5 turns in 0/24, expected turns to the end (surviving samples) ~7.9, dead within 5 turns in 17/24 (~turn 4.2); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 17/24), then the fight's progress: least enemy HP left (this line ~411, at T5 or at our death), then most turns alive (this line ~4.4), then least HP lost this turn (this line 0)",
+      "rollout_best": null,
+      "whole_fight_sim": "low confidence: win 0% (vs the simulation's best line ±0 ± 1 pts, tied on win rate), no winning sample; the losing samples die most often on T6 (dead in 100%); 1200 samples"
+    },
+    "plan3": {
+      "plays": "nothing (end the turn now)",
+      "hp_lost": 0,
+      "damage_dealt": 0,
+      "hp_after": 9,
+      "potions_used": "none",
+      "rollout": "5-turn rollout (24 samples) (later turns may use the potions still held): expected further HP loss 9, fight over within 5 turns in 0/24, expected turns to the end (surviving samples) ~7.8, dead within 5 turns in 13/24 (~turn 4); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 13/24), then the fight's progress: least enemy HP left (this line ~409, at T5 or at our death), then most turns alive (this line ~4.5), then least HP lost this turn (this line 0)",
+      "rollout_best": true,
+      "whole_fight_sim": "low confidence: win 0% (vs the simulation's best line ±0 ± 1 pts, tied on win rate), no winning sample; the losing samples die most often on T6 (dead in 100%); 1200 samples"
+    }
+  },
+  "verified_causal_chain": "Card was playable and offered. Five-turn rollout added end-turn as best; Jev chose plan3 and end_turn execution completed. No action dispatch failure is observed.",
+  "unresolved": [
+    "Why 24-sample future trajectories differ by 17/24 vs13/24 deaths despite immediate player HP equal and 4 extra modeled damage when playing SHIV.",
+    "Potential future pile/exhaust/randomness/solver-policy changes or model mechanism error must be distinguished; none established by this log alone.",
+    "The separate low-trust 1200-sample whole-fight estimates were all zero wins and did not certify end-turn superiority.",
+    "This is combat rollout/B2 choice, distinct from deck-building B3 300-sample reporting gate.",
+    "Do not infer unconditional play-every-zero-cost-card policy or revised game knowledge without learner evidence."
+  ],
+  "followup": "Attach this exact frame to original Q10 postmortem and existing model-validation lineage; do not mutate frozen 30-question B3 benchmark or duplicate the study."
+}

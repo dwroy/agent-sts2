@@ -1,0 +1,89 @@
+{
+  "kind": "只读固定证据核验",
+  "records": [
+    {
+      "feature": "弃牌快照",
+      "raw_state_ts": "2026-10-07T16:43:42.485Z",
+      "legal_options": 4,
+      "greedy_branch": {
+        "basis": "仅从当前实存手牌移除此副本；弃牌触发尚未结算，后续费用、可打性和牌面变化须重读。每张牌的能量余额独立计算，不能相加成整线；抽到的牌、伤害、格挡、剩血及胜负均未推演。",
+        "current_resources": {
+          "hp": 1,
+          "block": 16,
+          "energy": 2
+        },
+        "discarded": {
+          "hand_index_before_discard": 3,
+          "card_id": "GREED",
+          "name": "贪婪",
+          "upgraded": false
+        },
+        "retained_cards": [
+          {
+            "hand_index_before_discard": 0,
+            "card_id": "STRANGLE",
+            "name": "紧勒",
+            "upgraded": false,
+            "energy_cost_now": 1,
+            "playable_before_discard": true,
+            "unplayable_reason": null,
+            "energy_sufficient_for_this_card_alone": true,
+            "energy_after_this_card_alone": 1,
+            "text_now": "造成8点伤害。 你在这个回合内每出一张牌，该名敌人都会失去2点生命。"
+          },
+          {
+            "hand_index_before_discard": 1,
+            "card_id": "NOXIOUS_FUMES",
+            "name": "毒雾+",
+            "upgraded": true,
+            "energy_cost_now": 1,
+            "playable_before_discard": true,
+            "unplayable_reason": null,
+            "energy_sufficient_for_this_card_alone": true,
+            "energy_after_this_card_alone": 1,
+            "text_now": "在你的回合开始时，给予所有敌人3层中毒。"
+          },
+          {
+            "hand_index_before_discard": 2,
+            "card_id": "PRECISE_CUT",
+            "name": "精确切击",
+            "upgraded": false,
+            "energy_cost_now": 0,
+            "playable_before_discard": true,
+            "unplayable_reason": null,
+            "energy_sufficient_for_this_card_alone": true,
+            "energy_after_this_card_alone": 2,
+            "text_now": "造成7点伤害。 你的手牌中每有一张牌，此牌的伤害就降低2点。"
+          }
+        ]
+      },
+      "conclusion": "保留精确切击的静态副本已能读回；没有弃后动态伤害或整线剩血预测。"
+    },
+    {
+      "feature": "投斧首牌",
+      "raw_state_ts": "2026-10-07T15:58:45.771Z",
+      "first": "@axe:AFTERIMAGE%2B|AFTERIMAGE+, DEFEND_SILENT, DRAMATIC_ENTRANCE+",
+      "other": "@axe:DRAMATIC_ENTRANCE%2B|AFTERIMAGE+, DEFEND_SILENT, DRAMATIC_ENTRANCE+",
+      "conclusion": "首牌身份分开；不证明余像先的候选曾被完整执行或会获胜。"
+    },
+    {
+      "feature": "唯一单弃",
+      "raw_state_ts": "2026-10-07T17:22:02.147Z",
+      "decision_id": "e04a339e-5bb8-4ec6-8456-ae7cea5f6dcf",
+      "input_scope": "只用本帧手牌/意图/力量与虚弱牌面；未来移动表和抽牌池均未重建",
+      "block": 7,
+      "hp_loss": 50,
+      "hp_after": -5,
+      "discarded": [
+        "STRIKE_SILENT"
+      ],
+      "conclusion": "无法兑现的打击后继与转向被取消；不认证整场SL替线。"
+    },
+    {
+      "feature": "SL比较未知传播",
+      "actual_turn_result": null,
+      "conclusion": "缺候选时保持未知；候选记录不能充当实际整轮回放。"
+    }
+  ],
+  "blockedReads": []
+}

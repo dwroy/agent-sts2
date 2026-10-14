@@ -1,0 +1,131 @@
+{
+  "at": "2026-10-14 13:07:18 CST",
+  "request_from": "hearthstone-main wN:p1",
+  "desktop_owner": "hs-game wN:p14",
+  "desktop_owner_thread": "01a137e9-56e4-71e2-a082-c9a84ea3435c",
+  "window_until": "2026-10-14 13:50 CST or explicit handback, no automatic focus after expiry",
+  "controllers": [
+    {
+      "pid": 282508,
+      "ppid": 1771107,
+      "state": "S",
+      "cwd": "/home/dw/Projects/agent-sts2/.worktrees/regent-climb",
+      "kind": "autoplay",
+      "cmdline_sha256": "eb1d1f16a4fff1b0fbd4913e375b2eeef6fdb160c313badfc8e344ee0f840b3c"
+    },
+    {
+      "pid": 410096,
+      "ppid": 410095,
+      "state": "S",
+      "cwd": "/home/dw/Projects/agent-sts2/.worktrees/live/agent",
+      "kind": "mod_api_play",
+      "cmdline_sha256": "2b9e7e020a7ee2d93fb0b9c4f6e04a10b8e6c1faac9deaa1b101c845a05b1f15"
+    },
+    {
+      "pid": 410107,
+      "ppid": 410096,
+      "state": "S",
+      "cwd": "/home/dw/Projects/agent-sts2/.worktrees/live/agent",
+      "kind": "mod_api_play",
+      "cmdline_sha256": "44f2d4bc38dcbd4fa0a0f03c3f618badb35c5e7d1ad8d7c9710a9fcef7c9ec95"
+    },
+    {
+      "pid": 2059875,
+      "ppid": 3138345,
+      "state": "S",
+      "cwd": "/home/dw/Projects/agent-sts2",
+      "kind": "autoplay",
+      "cmdline_sha256": "4c38082f2289fa0f992a9f931ef8375dae3f7d7ba26008762f0652d0c51bcf52"
+    },
+    {
+      "pid": 3749295,
+      "ppid": 3749294,
+      "state": "S",
+      "cwd": "/home/dw/Projects/agent-sts2/.worktrees/regent-climb/agent",
+      "kind": "mod_api_play",
+      "cmdline_sha256": "2e0f023206e64fe40320e7e0d3bfa84f12bade80ba236acb803c22854f46cac3"
+    },
+    {
+      "pid": 3749327,
+      "ppid": 3749295,
+      "state": "S",
+      "cwd": "/home/dw/Projects/agent-sts2/.worktrees/regent-climb/agent",
+      "kind": "mod_api_play",
+      "cmdline_sha256": "44f2d4bc38dcbd4fa0a0f03c3f618badb35c5e7d1ad8d7c9710a9fcef7c9ec95"
+    }
+  ],
+  "lanes": [
+    {
+      "lane": "silent",
+      "expected_process_id": 34676,
+      "base_url": "http://127.0.0.1:8080",
+      "health": {},
+      "health_body_sha256": "0278309721411f819d8aff4289f4ce06da8892b0d3ba90520531e252c9ae8227",
+      "verified_health_fields": {
+        "process_id": 34676,
+        "status": "ready"
+      },
+      "health_raw_body_sha256": "91e474cf6925cb0f02680a8b7b846c49a493dd00500a28978d5c2f5c8c43405e"
+    },
+    {
+      "lane": "regent",
+      "expected_process_id": 34260,
+      "base_url": "http://127.0.0.1:18181",
+      "health": {},
+      "health_body_sha256": "a7a9738f6510122e80c8d6b8b6983a2f18a208363c2b0383b38580281b591b49",
+      "verified_health_fields": {
+        "process_id": 34260,
+        "status": "ready"
+      },
+      "health_raw_body_sha256": "8f88d540b18f1821c05f0dabc2381465de51bd93bed8b84b7a222308e696a370"
+    }
+  ],
+  "fixed_source_readback": [
+    {
+      "path": "ops/run.sh",
+      "sha256": "b3b404ed4cb98a39b80951a1b69fb933dbf1520b3cbed0d24483c285261286fa"
+    },
+    {
+      "path": "ops/autoplay.sh",
+      "sha256": "9ee74d36c5a9d4446906afea3049edfd8da05bdf082258dafffc73cd3c47794a"
+    },
+    {
+      "path": "agent/src/hand/mod/client.ts",
+      "sha256": "4f1888bff879968fb20024b9eded95efd1b5ca88889d16b724011ab6394dbd2d"
+    },
+    {
+      "path": ".worktrees/regent-climb/ops/run.sh",
+      "sha256": "b3b404ed4cb98a39b80951a1b69fb933dbf1520b3cbed0d24483c285261286fa"
+    },
+    {
+      "path": ".worktrees/regent-climb/ops/autoplay.sh",
+      "sha256": "1fde8d554dc5a086e9e7f450badfbc16e0b02897e25659043c21dc46866c2fce"
+    },
+    {
+      "path": ".worktrees/regent-climb/agent/src/hand/mod/client.ts",
+      "sha256": "4f1888bff879968fb20024b9eded95efd1b5ca88889d16b724011ab6394dbd2d"
+    }
+  ],
+  "desktop_mouse_keyboard_controller_found_in_checked_STS2_lanes": false,
+  "mod_api_play_and_autoplay_not_suspended": true,
+  "no_game_end_kill_restart_account_budget_or_queue_change": true,
+  "new_windows_focus_keyboard_mouse_and_launch_operations_held": true,
+  "source_scope_limit": "Checked running STS2 play/autoplay entrypoints and ModClient; not a global Windows input trace or proof of who last focused STS2.",
+  "first_health_read_limit": "Initial read selected top-level fields from an ok/data response and retained only a body SHA; no instance verification was claimed from empty field selection.",
+  "windows_game_processes": [
+    {
+      "image": "SlayTheSpire2.exe",
+      "pid": 34676,
+      "session_name": "Console",
+      "session_id": 1
+    },
+    {
+      "image": "SlayTheSpire2.exe",
+      "pid": 34260,
+      "session_name": "Console",
+      "session_id": 1
+    }
+  ],
+  "broker_win_procs_exit": 0,
+  "at_verified": "2026-10-14 13:07:54 CST"
+}

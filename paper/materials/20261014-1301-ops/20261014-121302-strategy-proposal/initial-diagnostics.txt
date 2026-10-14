@@ -1,0 +1,2 @@
+初次查派发嵌套结构时直接按根字典索引触发 KeyError；改为有界递归查本batch后恢复。日志不在本工作树 logs/，首次 rg 提示 ENOENT；后续仅使用根 logs/。未改生产文件。
+药槽读取初稿误用potion_index，原chosen使用option_index；保留初稿后修复分析器。核验脚本两处Q6元组缺attempt字段导致ValueError；失败保留，补齐后29项实帧核验0。读回补丁误写sl/explore路径导致ENOENT，实际scratch文件为explore.base-live.patch，后续已读回。

@@ -1,0 +1,38 @@
+[
+  {
+    "at": "2026-10-14 13:07:54 CST",
+    "target": "regent-ops",
+    "message": "共享 Windows 桌面协调：Roy/ hearthstone-main wN:p1 要求 hs-game wN:p14 thread01a137e9-56e4-71e2-a082-c9a84ea3435c 独占桌面输入至13:50或明确交还。请暂停所有 Windows 聚焦、键鼠、游戏窗口启动/重启/切前台；期限后也先协调真实交接，不自动争焦点。现有局不结束、不杀进程、不改账号/预算/队列，代码和固定离线、无桌面改变的只读工作继续，原sandbox保持。主Silent/Regent现有play是mod HTTP/API，未调用桌面键鼠或窗口启动，不冒称已暂停HTTP控制器；若发现会抢焦点的操作就保留不执行。无需另建session/研究，证据 paper/materials/20261014-1301-ops/desktop-readback.json。",
+    "exit_code": 0,
+    "receipt": "paper/materials/20261014-1301-ops/desktop-prompt-regent-ops.json",
+    "receipt_sha256": "70f1dc2230b864f8a554f0c5c40b0941cf745e0e8d427ad11d95fa77d1e1fc2a",
+    "recipient_read_or_paused_not_claimed": true
+  },
+  {
+    "at": "2026-10-14 13:07:55 CST",
+    "target": "regent-dev",
+    "message": "共享 Windows 桌面协调：Roy/ hearthstone-main wN:p1 要求 hs-game wN:p14 thread01a137e9-56e4-71e2-a082-c9a84ea3435c 独占桌面输入至13:50或明确交还。请暂停所有 Windows 聚焦、键鼠、游戏窗口启动/重启/切前台；期限后也先协调真实交接，不自动争焦点。现有局不结束、不杀进程、不改账号/预算/队列，代码和固定离线、无桌面改变的只读工作继续，原sandbox保持。主Silent/Regent现有play是mod HTTP/API，未调用桌面键鼠或窗口启动，不冒称已暂停HTTP控制器；若发现会抢焦点的操作就保留不执行。无需另建session/研究，证据 paper/materials/20261014-1301-ops/desktop-readback.json。",
+    "exit_code": 0,
+    "receipt": "paper/materials/20261014-1301-ops/desktop-prompt-regent-dev.json",
+    "receipt_sha256": "b4f094bc8a166102075186663039d245a938ee575d4937781fcbcc2cf0ec9551",
+    "recipient_read_or_paused_not_claimed": true
+  },
+  {
+    "at": "2026-10-14 13:07:55 CST",
+    "target": "wJ:pJT",
+    "message": "共享 Windows 桌面协调：Roy/ hearthstone-main wN:p1 要求 hs-game wN:p14 thread01a137e9-56e4-71e2-a082-c9a84ea3435c 独占桌面输入至13:50或明确交还。请暂停所有 Windows 聚焦、键鼠、游戏窗口启动/重启/切前台；期限后也先协调真实交接，不自动争焦点。现有局不结束、不杀进程、不改账号/预算/队列，代码和固定离线、无桌面改变的只读工作继续，原sandbox保持。主Silent/Regent现有play是mod HTTP/API，未调用桌面键鼠或窗口启动，不冒称已暂停HTTP控制器；若发现会抢焦点的操作就保留不执行。无需另建session/研究，证据 paper/materials/20261014-1301-ops/desktop-readback.json。",
+    "exit_code": 0,
+    "receipt": "paper/materials/20261014-1301-ops/desktop-prompt-wJ-pJT.json",
+    "receipt_sha256": "64b6369b95e2ef7401dcdf90e9b1062dd5d96cd0240f998d75a018d2ec408b27",
+    "recipient_read_or_paused_not_claimed": true
+  },
+  {
+    "at": "2026-10-14 13:07:55 CST",
+    "target": "hearthstone-main",
+    "message": "STS2主ops已只读核：Silent Windows PID34676和Regent34260均Console/session1，确实在共享Windows桌面，不归因先前前台。Silent autoplay2059875(S)，play410107(S，tsx父410096)；Regent autoplay282508(S)，play3749327(S，tsx父3749295)。两lane现有run/autoplay/ModClient源码只走127.0.0.1:8080/18181的HTTP action，健康读回绑定原game PID；所核入口无SendInput/SendKeys/SetForeground/pyautogui/xdotool/窗口启动。现有API对局保持，未SIGSTOP/杀进程/结束局或改队列；本主会话新增Windows聚焦/键鼠/启动/重启/切前台已hold，原本没有本lane桌面键鼠控制器。此是入口/传输范围证据，不冒全Windows输入跟踪或归责。会同时告知既有Regent ops/dev及STS2 watcher保持同边界；13:50后也先与你协调交接再真实桌面输入。证据 paper/materials/20261014-1301-ops/desktop-readback.json。",
+    "exit_code": 0,
+    "receipt": "paper/materials/20261014-1301-ops/desktop-prompt-hearthstone-main.json",
+    "receipt_sha256": "b25edffc676ef503196a82f4c4f868435a649a02a6e6dd7544fe5735b9c8e4fc",
+    "recipient_read_or_paused_not_claimed": true
+  }
+]
