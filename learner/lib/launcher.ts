@@ -9,16 +9,16 @@
  * the task works on ({{character}}, {{experience_path}}, … in task.ts) and the runs it may name: a --set runs/run id
  * that logs/runs.jsonl records for another character is refused (a row without `character` is a legacy Ironclad run).
  *
- * The agent's whole event stream goes to learner/runs/<time>-<task>.jsonl, framed by a learner_launch line
+ * The agent's whole event stream goes to learner/runs/<time>-<launch-id>-<task>.jsonl, framed by a learner_launch line
  * (task, parameters, command, full prompt) and a learner_summary line; its temporary files go to the matching
- * learner/runs/<time>-<task>/ directory ({{scratch}}), inside the task worktree for strategy-proposal reports.
+ * learner/runs/<time>-<launch-id>-<task>/ directory ({{scratch}}), inside the task worktree for strategy-proposal reports.
  * Keys never reach the agent (childEnv) and never stay in
  * the log (redactSecrets).
  *
  * Exit codes: 0 done, 1 the agent failed, 2 usage/task error, 3 engine or tool server unavailable, 124 timeout.
  */
 import { spawn, type ChildProcess } from "node:child_process";
-import { createHash } from "node:crypto";
+import { createHash, randomUUID } from "node:crypto";
 import { appendFileSync, closeSync, existsSync, mkdirSync, mkdtempSync, openSync, readdirSync, readFileSync, readSync, realpathSync, renameSync, rmSync, statSync, writeSync } from "node:fs";
 import { homedir, tmpdir } from "node:os";
 import { join, relative, resolve, sep } from "node:path";
@@ -371,7 +371,8 @@ export async function main(argv: string[], overrides: Partial<LauncherDeps> = {}
     if (!existsSync(cwd) || !statSync(cwd).isDirectory()) throw new LearnerUsageError(`--cwd ${cwd} 不是目录`);
     if (!inside(deps.projectRoot, cwd)) throw new LearnerUsageError(`--cwd ${cwd} 不在项目目录 ${deps.projectRoot} 里`);
     const spec = loadTask(options.task, deps.tasksDir);
-    const stem = `${stamp(deps.now())}-${spec.name}`;
+    // Parallel workers can launch the same task within one second, including manual runs without a lease.
+    const stem = `${stamp(deps.now())}-${randomUUID()}-${spec.name}`;
     // No-change strategy reports must belong to the batch's worktree; event logs remain centralized.
     const scratch = spec.name === "strategy-proposal" ? join(cwd, "learner", "runs", stem) : join(deps.runsDir, stem);
     if (spec.name === "strategy-proposal") {
