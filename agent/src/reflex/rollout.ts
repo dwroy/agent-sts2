@@ -2194,6 +2194,11 @@ function applyPlan(
   addMade("WITHER", o.withersAdded, "discard");
   // Our end-of-turn snapshot (before the enemy turn), for the terminal estimate.
   player.strength += o.strengthGained;
+  // 9R F49 T1 -> T2: Kunai's new Dexterity lasts, separately from Footwork and temporary gains.
+  if (o.kunaiDexterityGained) {
+    player.dexterity += o.kunaiDexterityGained;
+    playerPowers["DEXTERITY_POWER"] = (playerPowers["DEXTERITY_POWER"] ?? 0) + o.kunaiDexterityGained;
+  }
   player.freeAttacks = o.freeAttacksLeft ?? 0;
   if (player.penNib !== undefined) player.penNib = (player.penNib + (o.attackPlays ?? 0)) % PEN_NIB_EVERY;
   if (o.tuningForkCount !== undefined) player.tuningForkCount = o.tuningForkCount;
@@ -3031,6 +3036,7 @@ function simulate(
       ...(base.kusarigama ? { kusarigama: { ...base.kusarigama, count: 0 } } : {}),
       // Shuriken: a new turn, the count starts again (the Strength it gave is in player.strength already).
       ...(base.shuriken ? { shuriken: { ...base.shuriken, count: 0 } } : {}),
+      ...(base.kunai ? { kunai: { count: 0 } } : {}),
       // Music Box: a new turn, its first Attack card makes a copy again.
       ...(base.musicBox ? { musicBox: { count: 0 } } : {}),
       // Throwing Axe: the fight's first card was the decision turn's.
