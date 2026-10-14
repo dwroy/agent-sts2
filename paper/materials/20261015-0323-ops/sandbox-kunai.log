@@ -1,0 +1,33 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261015-014302-s2/agent
+
+ ❯ tests/worktree-storage.test.ts (2 tests | 1 failed) 5369ms
+   × grants exact Git metadata for both the independent instance and learner workspace 16ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/worktree-storage.test.ts > grants exact Git metadata for both the independent instance and learner workspace
+AssertionError: expected undefined to be 'read' // Object.is equality
+
+- Expected:
+"read"
+
++ Received:
+undefined
+
+ ❯ tests/worktree-storage.test.ts:29:39
+     27|     expect(rules[join(git, "worktrees", "lane")]).toBe("write");
+     28|     expect(rules[join(git, "worktrees", "fixed")]).toBe("write");
+     29|     expect(rules[join(git, "hooks")]).toBe("read");
+       |                                       ^
+     30|     expect(rules[join(git, "config")]).toBe("read");
+     31|   } finally {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 407 passed (408)
+      Tests  1 failed | 3927 passed (3928)
+   Start at  01:56:46
+   Duration  368.47s (transform 18.07s, setup 28.00s, import 76.05s, tests 1298.32s, environment 51ms)
+

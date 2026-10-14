@@ -1,0 +1,29 @@
+{
+  "first_full": {
+    "tsc": 0,
+    "vitest": 1,
+    "passed": 3927,
+    "failed": 1,
+    "failure": "worktree-storage 临时目录嵌套主检出夹具定位，已修正测试且生产权限代码不变"
+  },
+  "second_full": {
+    "tsc": 0,
+    "vitest": 1,
+    "passed": 3924,
+    "failed": 5,
+    "details": [
+      " FAIL  tests/learner-empty-fix.test.ts > empty fix batch completion > does not accept an empty report when Git evidence is unshipped",
+      "     59|   expect(result.status, result.stderr).toBe(0);",
+      " FAIL  tests/potions-jev-call.test.ts > code's own auto-acts never drink while a potion-free line survives > logged boards: an auto-act that drinks is a lethal, a pending drink of Jev's line, or a turn where every potion-free line dies",
+      "Error: Test timed out in 60000ms.",
+      " FAIL  tests/target-options.test.ts > per-target options (EZ2L F48 T2: Queen + Torch Head Amalgam) > shows an Amalgam-focus line and a Queen-focus line, labelled, within the option cap",
+      "Error: Test timed out in 30000ms.",
+      " FAIL  tests/target-options.test.ts > per-target options (EZ2L F48 T2: Queen + Torch Head Amalgam) > Jev's picking an Amalgam-focus line plays it (no swap to a Queen line with more damage)",
+      "Error: Test timed out in 20000ms.",
+      " FAIL  tests/target-options.test.ts > per-target options (EZ2L F48 T2: Queen + Torch Head Amalgam) > gives Jev DeepSeek's whole plan (boss prep and kill order included) and the top 4 lessons about these enemies",
+      "Error: Test timed out in 20000ms.",
+      "   Duration  840.50s (transform 68.96s, setup 181.77s, import 389.66s, tests 2476.71s, environment 91ms)"
+    ]
+  },
+  "retry": "保持原时限/断言/固定排除名单，以SANDBOX_WORKERS=1完整重跑一次；根因未由时长独立证实，结果尚待。"
+}

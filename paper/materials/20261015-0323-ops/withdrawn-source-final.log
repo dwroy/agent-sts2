@@ -1,0 +1,145 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261015-014302-s2/agent
+
+ ❯ tests/silent-kunai.test.ts (8 tests | 7 failed) 186ms
+   × matches the isolated third-attack gain and never adds it to existing Block 24ms
+   × gives only later Block cards the new Dexterity, alongside independently established Footwork 3ms
+   × counts ordinary cards once, including multi-hit, and triggers on the sixth Attack 3ms
+   × keeps replay triggers unknown and preserves the previous Block calculation 2ms
+   × carries Kunai Dexterity into the next turn, resets its count and starts a new fight from fresh input 11ms
+   × reaches the actual planner solver input from the frozen Silent board (v1=false) 95ms
+   × reaches the actual planner solver input from the frozen Silent board (v1=true) 35ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 7 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/silent-kunai.test.ts > matches the isolated third-attack gain and never adds it to existing Block
+AssertionError: expected { energy: 4, hp: 70, block: 23, …(14) } to match object { dexterity: 1, block: 23 }
+(15 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+    "block": 23,
+-   "dexterity": 1,
++   "dexterity": 0,
+  }
+
+ ❯ tests/silent-kunai.test.ts:77:39
+     75|   const trace = traceSteps(input, [step(0, "NEUTRALIZE", 0)]);
+     76|   expect(trace.complete).toBe(true);
+     77|   expect(trace.transitions[0]!.after).toMatchObject({ dexterity: 1, bl…
+       |                                       ^
+     78|   expect(trace.plan!.outcome.kunaiDexterityGained).toBe(1);
+     79|   const observed = rawAt(295549);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/7]⎯
+
+ FAIL  tests/silent-kunai.test.ts > gives only later Block cards the new Dexterity, alongside independently established Footwork
+AssertionError: expected 14 to be 16 // Object.is equality
+
+- Expected
++ Received
+
+- 16
++ 14
+
+ ❯ tests/silent-kunai.test.ts:88:37
+     86|   const later = replaySteps(input, [step(0, "NEUTRALIZE", 0), step(1, …
+     87|   const earlier = replaySteps(input, [step(2, "DEFEND_SILENT"), step(0…
+     88|   expect(later.outcome.blockGained).toBe(16);
+       |                                     ^
+     89|   expect(earlier.outcome.blockGained).toBe(13);
+     90|   delete input.player.kunai;
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/7]⎯
+
+ FAIL  tests/silent-kunai.test.ts > counts ordinary cards once, including multi-hit, and triggers on the sixth Attack
+AssertionError: expected [ +0, +0, +0, +0, +0, +0 ] to deeply equal [ +0, +0, 1, 1, 1, 2 ]
+
+- Expected
++ Received
+
+  [
+    0,
+    0,
+-   1,
+-   1,
+-   1,
+-   2,
++   0,
++   0,
++   0,
++   0,
+  ]
+
+ ❯ tests/silent-kunai.test.ts:98:60
+     96|   input.hand = Array.from({ length: 6 }, (_, i) => card(i, i === 0 ? "…
+     97|   const traced = traceSteps(input, input.hand.map((c) => step(c.index,…
+     98|   expect(traced.transitions.map((t) => t.after.dexterity)).toEqual([0,…
+       |                                                            ^
+     99|   expect(traced.plan!.outcome.kunaiDexterityGained).toBe(2);
+    100| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/7]⎯
+
+ FAIL  tests/silent-kunai.test.ts > keeps replay triggers unknown and preserves the previous Block calculation
+AssertionError: expected '' to contain '苦无'
+
+- Expected
++ Received
+
+- 苦无
+
+ ❯ tests/silent-kunai.test.ts:107:47
+    105|   expect(plan.outcome.kunaiDexterityGained).toBeUndefined();
+    106|   expect(plan.outcome.blockGained).toBe(5);
+    107|   expect(plan.outcome.unknownCards.join(",")).toContain("苦无");
+       |                                               ^
+    108| });
+    109|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/7]⎯
+
+ FAIL  tests/silent-kunai.test.ts > carries Kunai Dexterity into the next turn, resets its count and starts a new fight from fresh input
+AssertionError: expected 2 to be 3 // Object.is equality
+
+- Expected
++ Received
+
+- 3
++ 2
+
+ ❯ tests/silent-kunai.test.ts:117:41
+    115|   const later: SolverInput[] = []; solveTap.onSolve = (value) => { lat…
+    116|   simulateFight(input, plan, 2, 1, false);
+    117|   expect(later[0]!.player.dexterityNow).toBe(3);
+       |                                         ^
+    118|   expect(later[0]!.player.kunai).toEqual({ count: 0 });
+    119|   expect(later[0]!.hand.find((c) => c.cardId === "DEFEND_SILENT")!.blo…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/7]⎯
+
+ FAIL  tests/silent-kunai.test.ts > reaches the actual planner solver input from the frozen Silent board (v1=false)
+ FAIL  tests/silent-kunai.test.ts > reaches the actual planner solver input from the frozen Silent board (v1=true)
+AssertionError: expected undefined to deeply equal { count: 2 }
+
+- Expected:
+{
+  "count": 2,
+}
+
++ Received:
+undefined
+
+ ❯ tests/silent-kunai.test.ts:132:31
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/7]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  7 failed | 1 passed (8)
+   Start at  02:10:05
+   Duration  2.34s (transform 1.65s, setup 388ms, import 1.62s, tests 186ms, environment 0ms)
+

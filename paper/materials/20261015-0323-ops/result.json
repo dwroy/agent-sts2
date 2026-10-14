@@ -1,0 +1,142 @@
+{
+  "task": "strategy-proposal",
+  "character": "silent",
+  "batch": "20261015-014302-s2-strategy-proposal",
+  "status": "blocked",
+  "base": "ce7380056283f513fc226143dccea0f8f2deb069",
+  "runs": [
+    "9R916WW0V65N",
+    "JMH5C51RLN4E",
+    "9TG1RP5LFAAK",
+    "ZVYUL2YP3518",
+    "TDLBRNA0R05B",
+    "TXZ6RVMQA09D",
+    "XTSV1U9JD34T",
+    "PD9AYQVMLQW6",
+    "T0DGVABPV60U"
+  ],
+  "fixes": [
+    {
+      "proposal": "silent-proposal-3ee015a5b3aa4ae8",
+      "ledger": [
+        "silent-0085",
+        "silent-0291"
+      ],
+      "commit": "92db362a8141478ffa72ceb9b08cd6f90784c786",
+      "summary": "Silent A10普通苦无增敏进入后继格挡、跨轮和Jev候选事实；源码自测通过，合入受阻。"
+    }
+  ],
+  "skipped": [],
+  "merged": null,
+  "tests": {
+    "tsc": 0,
+    "vitest": 0,
+    "cases": 0
+  },
+  "test_counts": {
+    "feature": 8,
+    "targeted": 10,
+    "sandbox_files": 409,
+    "sandbox_cases": 3940,
+    "withdrawn_failed": 7
+  },
+  "live_tests": null,
+  "version": null,
+  "source_commit": "92db362a8141478ffa72ceb9b08cd6f90784c786",
+  "refresh_commit": "7ccd6158140be85a2e75a66d18d2dd7fde697cfc",
+  "merge_conflicts": [
+    "agent/tests/worktree-storage.test.ts",
+    "eval/versions.json",
+    "notes/fix-queue-v4.md",
+    "notes/for-roy.md",
+    "notes/lessons.md",
+    "notes/strategy-v5-dpr-health-20261013-dispatch.json",
+    "ops/inbox-dev.md",
+    "paper/data/README.md",
+    "paper/data/commits.csv",
+    "paper/data/cost-curve-silent.csv",
+    "paper/data/cost-silent.csv",
+    "paper/data/cost-sources.json",
+    "paper/data/cost-unattributed.csv",
+    "paper/data/decisions_by_label.csv",
+    "paper/data/learning-curve-silent.csv",
+    "paper/data/runs.csv",
+    "paper/data/summary.json",
+    "paper/data/verification.json",
+    "paper/materials/20261014-v5-boss-margin/ops-binding.json",
+    "paper/materials/20261014-v5-boss-revalidation/ops-binding.json",
+    "paper/materials/20261014-v5-jev-ablation/ops-binding.json",
+    "paper/materials/decision-log.md",
+    "paper/materials/learning/ledger.jsonl",
+    "paper/materials/silent/cost.md"
+  ],
+  "code_proposals": [
+    "silent-proposal-3ee015a5b3aa4ae8",
+    "silent-proposal-9e5d50fdd7bf1fbd",
+    "silent-proposal-20b9df170d51b280",
+    "silent-proposal-91cc7fd647077569",
+    "silent-proposal-9c3554ff02a3119c",
+    "silent-proposal-f35a311b35f2b12a",
+    "silent-proposal-4f7d4e424337cb58",
+    "silent-proposal-9e77e1e88c0cecd4",
+    "silent-proposal-e406c9312e1c329a",
+    "silent-proposal-6f660733c357cfe0"
+  ],
+  "implementation_domains": [
+    "combat"
+  ],
+  "proposal_results": [
+    {
+      "id": "silent-proposal-3ee015a5b3aa4ae8",
+      "state": "waiting",
+      "reason": "普通苦无触发、后继格挡和跨轮传播已实现并提交92db362a8141478ffa72ceb9b08cd6f90784c786，撤码7败/恢复10过，完整沙箱3940项通过；缺实际live祖先和自然消费证据。锁内合入24项冲突后已abort，保留刷新数据，按任务停止，不标implemented/shipped。"
+    },
+    {
+      "id": "silent-proposal-9e5d50fdd7bf1fbd",
+      "state": "waiting",
+      "reason": "八局F48出口与F49入口HP连续得到复核；缺固定两战抽弃/药水/复活充能配对、保药或替代路线完整对照及按局时间留出校准，不由全败拟终局/药价权重。"
+    },
+    {
+      "id": "silent-proposal-20b9df170d51b280",
+      "state": "waiting",
+      "reason": "余像、冰晶、精准、滚石和阶段事实已有部分实现；女王魂缚/减益及多机制同条件完整候选、跨阶段消费者缺口未闭，前两实验体及前五女王尝试无完整结算，不把窄实现当整项duplicate。"
+    },
+    {
+      "id": "silent-proposal-91cc7fd647077569",
+      "state": "waiting",
+      "reason": "勘误限定旧13支持局55试5赢、真正重打12场54试4赢；本批九局并非原13局冻结尝试全集，缺逐尝试原分母及消费该口径的对应源码验收，不能用后续新增局替换旧数。"
+    },
+    {
+      "id": "silent-proposal-9c3554ff02a3119c",
+      "state": "waiting",
+      "reason": "显式小刀增敏和次轮撤回的窄机制证据充分；本批苦无合入遇24项冲突后按任务停止进一步源码工作。螺线同牌序完整候选/后轮永久与临时量实现验收仍缺；原候选后继换升级牌和重问未完全对应，不把15→20全归遗物，不推广自动/重放。"
+    },
+    {
+      "id": "silent-proposal-f35a311b35f2b12a",
+      "state": "waiting",
+      "reason": "首/末F48T2扫腿与速行者观察差12HP，但狡诈由T6提前到T2、后继抽弃亦变，首试本身失败；缺固定药时/抽序及原线完整胜利或时间留出对照，不据局部差直接改全败探索排序。"
+    },
+    {
+      "id": "silent-proposal-4f7d4e424337cb58",
+      "state": "waiting",
+      "reason": "同板面炼制生成血清已证，护栏/SL/重问/抽弃更改未隔离；缺固定生成产物及未来抽弃的完整配对、产物分布和独立留出样本，未实饮的血清不是即时血/挡，不调护栏或持有价。"
+    },
+    {
+      "id": "silent-proposal-9e77e1e88c0cecd4",
+      "state": "waiting",
+      "reason": "螺线临时量及永久步法的局部机制已证，仍缺其独立传播实现、完整同条件候选以及覆甲/脆弱/钨棍复合后继消费者验证。当前钨棍仅已验证普通敌击；本批合入冲突停止后续源码，不把宽组合或整场收益报完成。"
+    },
+    {
+      "id": "silent-proposal-e406c9312e1c329a",
+      "state": "waiting",
+      "reason": "已见滚石轮初递增、速行者单目标抽伤2及铁棒额外抽1；缺计数跨轮/未知未来抽牌与完整线实际对应，未隔离多目标、重放、自动触发和无实体复合；当前速行者/铁棒仍未完成独立前瞻验收，不预支未来收益。"
+    },
+    {
+      "id": "silent-proposal-6f660733c357cfe0",
+      "state": "waiting",
+      "reason": "已证实验体技能激怒/换阶段状态变化与局部换线血价；缺原答→护栏→SL→抽牌重问→实际整战的固定配对及独立后验，无扫腿原线整战胜利，不拟探索/血价新权重。"
+    }
+  ],
+  "proposal": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261015-014302-s2/learner/runs/20261015-014310-strategy-proposal/proposal.md",
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261015-014302-s2/learner/runs/20261015-014310-strategy-proposal/report.md"
+}

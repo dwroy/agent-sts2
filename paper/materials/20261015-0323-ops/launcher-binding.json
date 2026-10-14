@@ -1,0 +1,31 @@
+{
+  "rows": [
+    {
+      "source": "/home/dw/Projects/agent-sts2/learner/runs/20261015-014310-strategy-proposal.jsonl",
+      "line": 3,
+      "offset": 23386,
+      "bytes": 23072,
+      "sha256": "05fd87fe2be296c427b97930221e68fb973187ed27857bd72afa370b4fbcbaa4",
+      "type": "learner_launch",
+      "engine": "codex",
+      "cwd": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261015-014302-s2",
+      "model": "gpt-6.1-sol",
+      "effort": [
+        "model_reasoning_effort=\"xhigh\""
+      ],
+      "service_tier": [
+        "service_tier=\"default\""
+      ]
+    },
+    {
+      "source": "/home/dw/Projects/agent-sts2/learner/runs/20261015-014310-strategy-proposal.jsonl",
+      "line": 4,
+      "offset": 46458,
+      "bytes": 381,
+      "sha256": "f5a363f4c3965fa7a6d3b60d4da6f3d2570ff3136e058b92964fe3fd73b3c9f2",
+      "type": "learner_startup_attempt",
+      "batch": "20261015-014302-s2-strategy-proposal"
+    }
+  ],
+  "limitation": "中央事件流含另一普通批次；仅绑定本批cwd和startup.batch，不将任一thread.started直接当本批原生线程。宿主命令为gpt-6.1-sol/xhigh/default，题面要求high与实际命令不一致；本任务未降强度或改账号/权限。"
+}

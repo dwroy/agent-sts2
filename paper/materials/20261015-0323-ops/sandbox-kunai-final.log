@@ -1,0 +1,92 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261015-014302-s2/agent
+
+ ❯ tests/potions-jev-call.test.ts (14 tests | 1 failed) 66299ms
+     × logged boards: an auto-act that drinks is a lethal, a pending drink of Jev's line, or a turn where every potion-free line dies 63504ms
+ ❯ tests/target-options.test.ts (22 tests | 3 failed) 177918ms
+     × shows an Amalgam-focus line and a Queen-focus line, labelled, within the option cap 50512ms
+     × Jev's picking an Amalgam-focus line plays it (no swap to a Queen line with more damage) 37610ms
+     × gives Jev DeepSeek's whole plan (boss prep and kill order included) and the top 4 lessons about these enemies 32894ms
+ ❯ tests/learner-empty-fix.test.ts (20 tests | 1 failed) 38221ms
+     × does not accept an empty report when Git evidence is unshipped 5048ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/learner-empty-fix.test.ts > empty fix batch completion > does not accept an empty report when Git evidence is unshipped
+AssertionError: expected null to be +0 // Object.is equality
+
+- Expected:
+0
+
++ Received:
+null
+
+ ❯ complete tests/learner-empty-fix.test.ts:59:40
+     57| `;
+     58|   const result = spawnSync("python3", ["-B", "-c", script, JSON.string…
+     59|   expect(result.status, result.stderr).toBe(0);
+       |                                        ^
+     60|   return JSON.parse(result.stdout);
+     61| }
+ ❯ tests/learner-empty-fix.test.ts:83:22
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  tests/potions-jev-call.test.ts > code's own auto-acts never drink while a potion-free line survives > logged boards: an auto-act that drinks is a lethal, a pending drink of Jev's line, or a turn where every potion-free line dies
+Error: Test timed out in 60000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/potions-jev-call.test.ts:185:3
+    183|   });
+    184|
+    185|   it("logged boards: an auto-act that drinks is a lethal, a pending dr…
+       |   ^
+    186|     const DIR = join(dirname(fileURLToPath(import.meta.url)), "logged-…
+    187|     const boards = readdirSync(DIR)
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+ FAIL  tests/target-options.test.ts > per-target options (EZ2L F48 T2: Queen + Torch Head Amalgam) > shows an Amalgam-focus line and a Queen-focus line, labelled, within the option cap
+Error: Test timed out in 30000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/target-options.test.ts:74:3
+     72| describe("per-target options (EZ2L F48 T2: Queen + Torch Head Amalgam)…
+     73|   // Two full-budget solves of a board whose belt holds Radiant Tinctu…
+     74|   it("shows an Amalgam-focus line and a Queen-focus line, labelled, wi…
+       |   ^
+     75|     setExperienceForTests(LESSONS);
+     76|     const decision = ez2l() as AskDecision;
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯
+
+ FAIL  tests/target-options.test.ts > per-target options (EZ2L F48 T2: Queen + Torch Head Amalgam) > Jev's picking an Amalgam-focus line plays it (no swap to a Queen line with more damage)
+Error: Test timed out in 20000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/target-options.test.ts:106:3
+    104|   }, 30_000);
+    105|
+    106|   it("Jev's picking an Amalgam-focus line plays it (no swap to a Queen…
+       |   ^
+    107|     const decision = ez2l() as AskDecision;
+    108|     const criteria = criteriaOf(decision);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/5]⎯
+
+ FAIL  tests/target-options.test.ts > per-target options (EZ2L F48 T2: Queen + Torch Head Amalgam) > gives Jev DeepSeek's whole plan (boss prep and kill order included) and the top 4 lessons about these enemies
+Error: Test timed out in 20000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/target-options.test.ts:120:3
+    118|   });
+    119|
+    120|   it("gives Jev DeepSeek's whole plan (boss prep and kill order includ…
+       |   ^
+    121|     setExperienceForTests(LESSONS);
+    122|     const decision = ez2l() as AskDecision;
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/5]⎯
+
+
+ Test Files  3 failed | 405 passed (408)
+      Tests  5 failed | 3924 passed (3929)
+   Start at  02:14:18
+   Duration  840.50s (transform 68.96s, setup 181.77s, import 389.66s, tests 2476.71s, environment 91ms)
+
