@@ -368,6 +368,8 @@ export interface PlayerSim {
   /** Existing Frail and Dexterity, already reflected in the hand's displayed Block. */
   frail?: boolean;
   dexterityNow?: number;
+  /** Silent A10 ordinary manual attacks only; counter read from the observed, consistent relic stack. */
+  kunai?: { count: number };
   /** Takes 50% less from enemy attacks? (Intangible etc. — not modelled beyond this flag.) */
   intangible: boolean;
   /**
@@ -967,6 +969,8 @@ export interface Outcome {
   tuningForkCount?: number;
   /** Permafrost availability after this line, carried into later simulated turns. */
   permafrostBlockLeft?: number;
+  /** Dexterity established by observed Kunai triggers, retained by later turns of this fight. */
+  kunaiDexterityGained?: number;
   /** Drinks in the line whose effect may outlast this turn (turnOnlyDrink): such a line is never "no effect". */
   lastingDrinks?: number;
   /**
@@ -1045,6 +1049,8 @@ interface Sim {
   flat: number;
   /** Dexterity gained this turn (Speed Potion): added to every block card played after it. */
   tempDex: number;
+  kunaiDexterity: number;
+  kunaiUnknown: boolean;
   /** Only Fasten gained within this line; existing Fasten is already in displayed Block. */
   fasten: number;
   /** Shadowmeld newly played within this line; never carried into a later turn. */
@@ -1850,7 +1856,19 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
       const id = bandagesDiscard(next, only, player);
       if (id !== null) discarded.push(id);
     }
-    if (card.type === "Attack") attackRelics(next, player);
+    if (card.type === "Attack") {
+      attackRelics(next, player);
+      // The gain comes after the Attack; existing Block and this card's own Block are never backfilled.
+      if (player.kunai) {
+        if (plays !== 1 || automatic) {
+          next.kunaiUnknown = true;
+          next.unknown = [...next.unknown, "苦无（自动出牌或重放的敏捷触发未验证）"];
+        } else if (!next.kunaiUnknown && (player.kunai.count + next.relicAttacks) % 3 === 0) {
+          next.tempDex += 1;
+          next.kunaiDexterity += 1;
+        }
+      }
+    }
     if (card.type === "Power" && (player.lostWisp ?? 0) > 0) sweepRaw(next, player.lostWisp ?? 0);
     if (card.type === "Power" && next.permafrostBlock > 0) {
       gainBlock(next, next.permafrostBlock, player);
@@ -3730,6 +3748,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
       ...(sim.relicAttacks > 0 ? { attackPlays: sim.relicAttacks } : {}),
       ...(input.player.tuningFork && input.player.tuningFork.every > 0 ? { tuningForkCount: (input.player.tuningFork.count + sim.relicSkills) % input.player.tuningFork.every } : {}),
       ...(input.player.permafrostBlock !== undefined ? { permafrostBlockLeft: sim.permafrostBlock } : {}),
+      ...(sim.kunaiDexterity > 0 ? { kunaiDexterityGained: sim.kunaiDexterity } : {}),
       ...(sim.lastingDrinks > 0 ? { lastingDrinks: sim.lastingDrinks } : {}),
       ...(sim.potionCost > 0 ? { potionCost: sim.potionCost } : {}),
       ...(sim.potionHeal > 0 ? { potionHeal: sim.potionHeal } : {}),
@@ -3795,7 +3814,7 @@ function simKey(sim: Sim): string {
   const phantomKey = (sim.phantomBlades > 0 ? `#pb${sim.phantomBlades}/${sim.phantomBladesSpent ? 1 : 0}` : "")
     + (sim.serpentForm !== null ? `#sf${sim.serpentForm}` : "");
   const poisonKey = (sim.envenom > 0 ? `#env${sim.envenom}` : "") + (sim.enemies.some((enemy) => (enemy.poison ?? 0) > 0) || sim.poisonExtraTriggers > 0 ? `#p${sim.poisonExtraTriggers}:${sim.enemies.map((enemy) => enemy.poison ?? 0).join(",")}` : "");
-  return `${hand}#${sim.energy}#${sim.hp}#${sim.block}#${sim.strength}#${sim.hpLostThisTurn ? 1 : 0}#${enemies}#${sim.flat}#${sim.tempDex}#${sim.buffer}#${sim.retaliate}#${sim.rupture}#${sim.facing}#${sim.colossus ? 1 : 0}#${sim.played}#${sim.draws.map((draw) => `${draw.withEnergy}/${draw.withoutEnergy}`).join(",")}#${sim.exhausted.length}/${sim.exhaustedCount > 0 ? 1 : 0}#${sim.escapes}#${sim.mantles}#${sim.enraged}#${sim.tainted}#${sim.inferno}#${sim.bombs}#${sim.gigantic}#${sim.topPlaced ? 1 : 0}#${sim.vigor}#${sim.noBlock ? 1 : 0}#${sim.attacksPlayed}/${sim.relicAttacks}/${sim.skillsPlayed}#${sim.freeAttacks}#${sim.duplicate}/${sim.duplicateAttacks}#${sim.drawnInHand}#${sim.bufferSpent}#${sim.regen}#${sim.pileDrawn}#${sim.plating}#${sim.strikeReplay}#${sim.hpLossEvents}#${sim.axeReplay ? 1 : 0}${sim.relicSkills > 0 ? `#${sim.relicSkills}` : ""}${sim.infernos > 0 ? `#i${sim.infernos}` : ""}${sim.rage > 0 ? `#r${sim.rage}` : ""}${sim.locked.length > 0 && sim.hand.some((card) => card.handCondition !== undefined) ? `#l${sim.locked.length}` : ""}${sim.hand.some((card) => (card.perExhaustDamage ?? 0) > 0) ? `#x${sim.exhaustedCount}` : ""}${poisonKey}${phantomKey}${sim.maulGrowth > 0 ? `#m${sim.maulGrowth}` : ""}${sim.shadowmeld ? "#sm" : ""}${sim.corrosiveWave > 0 ? `#cw${sim.corrosiveWave}` : ""}${sim.fasten > 0 ? `#fasten${sim.fasten}` : ""}${sim.nextTurnBlock > 0 ? `#nextBlock${sim.nextTurnBlock}` : ""}`;
+  return `${hand}#${sim.energy}#${sim.hp}#${sim.block}#${sim.strength}#${sim.hpLostThisTurn ? 1 : 0}#${enemies}#${sim.flat}#${sim.tempDex}#${sim.buffer}#${sim.retaliate}#${sim.rupture}#${sim.facing}#${sim.colossus ? 1 : 0}#${sim.played}#${sim.draws.map((draw) => `${draw.withEnergy}/${draw.withoutEnergy}`).join(",")}#${sim.exhausted.length}/${sim.exhaustedCount > 0 ? 1 : 0}#${sim.escapes}#${sim.mantles}#${sim.enraged}#${sim.tainted}#${sim.inferno}#${sim.bombs}#${sim.gigantic}#${sim.topPlaced ? 1 : 0}#${sim.vigor}#${sim.noBlock ? 1 : 0}#${sim.attacksPlayed}/${sim.relicAttacks}/${sim.skillsPlayed}#${sim.freeAttacks}#${sim.duplicate}/${sim.duplicateAttacks}#${sim.drawnInHand}#${sim.bufferSpent}#${sim.regen}#${sim.pileDrawn}#${sim.plating}#${sim.strikeReplay}#${sim.hpLossEvents}#${sim.axeReplay ? 1 : 0}${sim.relicSkills > 0 ? `#${sim.relicSkills}` : ""}${sim.infernos > 0 ? `#i${sim.infernos}` : ""}${sim.rage > 0 ? `#r${sim.rage}` : ""}${sim.locked.length > 0 && sim.hand.some((card) => card.handCondition !== undefined) ? `#l${sim.locked.length}` : ""}${sim.hand.some((card) => (card.perExhaustDamage ?? 0) > 0) ? `#x${sim.exhaustedCount}` : ""}${poisonKey}${phantomKey}${sim.maulGrowth > 0 ? `#m${sim.maulGrowth}` : ""}${sim.shadowmeld ? "#sm" : ""}${sim.corrosiveWave > 0 ? `#cw${sim.corrosiveWave}` : ""}${sim.fasten > 0 ? `#fasten${sim.fasten}` : ""}${sim.nextTurnBlock > 0 ? `#nextBlock${sim.nextTurnBlock}` : ""}${sim.kunaiDexterity > 0 ? `#kunai${sim.kunaiDexterity}` : ""}${sim.kunaiUnknown ? "#kunaiUnknown" : ""}`;
 }
 
 export interface SolveResult {
@@ -3932,6 +3951,8 @@ function rootSim(input: SolverInput, weights: Weights): Sim {
     weakApplied: 0,
     flat: 0,
     tempDex: 0,
+    kunaiDexterity: 0,
+    kunaiUnknown: false,
     fasten: 0,
     shadowmeld: false,
     corrosiveWave: input.player.corrosiveWave ?? 0,
@@ -4083,7 +4104,7 @@ export function solveTurn(input: SolverInput): SolveResult {
     // replaces) a potion-free line, however close their scores. Otherwise a potion line scoring a hair
     // higher (lasting Dexterity, say) swallows "end turn" and the planner sees no dry line that survives,
     // so it drinks on its own as the "only line" (2CCM6XK4PB37 F15 T2, Dexterity Potion at 0 energy).
-    const signature = `${o.hpLoss}|${o.damageDealt}|${o.kills.join(",")}|${o.enemyHpAfter.map((enemy) => `${enemy.hp}:${enemy.vulnerable}:${enemy.weak}${enemy.poison ? `:p${enemy.poison}` : ""}`).join(",")}|${o.strengthGained}|${o.cardsDrawn}|${o.sandpitAfter ?? "-"}|${Math.round(plan.score)}|${[...potionSteps].sort().join(",")}${o.maulGrowth && !o.winsFight ? `|m${o.maulGrowth}` : ""}${sim.pendingSelection ? "|selection" : ""}${sim.kusarigamaUnresolved ? "|kusarigamaUnresolved" : ""}`;
+    const signature = `${o.hpLoss}|${o.damageDealt}|${o.kills.join(",")}|${o.enemyHpAfter.map((enemy) => `${enemy.hp}:${enemy.vulnerable}:${enemy.weak}${enemy.poison ? `:p${enemy.poison}` : ""}`).join(",")}|${o.strengthGained}|${o.cardsDrawn}|${o.sandpitAfter ?? "-"}|${Math.round(plan.score)}|${[...potionSteps].sort().join(",")}${o.maulGrowth && !o.winsFight ? `|m${o.maulGrowth}` : ""}${sim.pendingSelection ? "|selection" : ""}${sim.kusarigamaUnresolved ? "|kusarigamaUnresolved" : ""}${sim.kunaiDexterity > 0 ? `|kunai${sim.kunaiDexterity}` : ""}${sim.kunaiUnknown ? "|kunaiUnknown" : ""}`;
     const existing = byOutcome.get(signature);
     // Same outcome: prefer the line drinking fewer potions (a potion reaching the same end state is a potion
     // wasted, even a costless one in a boss fight), then the shorter plan (fewer steps = fewer chances for the
@@ -4210,7 +4231,7 @@ function outcomeVector(plan: Plan): number[] {
   // Sword Boomerang doubled by One-Two Punch killed it at 31 HP into a 56 blast as the "only distinct line").
   const eruption = (o.explodesNext ?? 0) > 0 ? (o.eruptionMargin ?? -(o.explodesNext ?? 0)) : 0;
   // The enemies' Strength gained is an axis too (enemyStrengthGained): a line feeding it never dominates one that does not.
-  return [o.winsFight ? 1 : 0, -o.hpLoss, o.damageDealt, -living, debuffs, o.strengthGained, drawn, -potionStepCount(plan.steps), o.sandpitAfter ?? 0, -o.sleepCost, Math.floor(o.lasting / 5), o.stunSaved ?? 0, -(o.revived?.sources.length ?? 0), eruption, o.nextTurnEnergy ?? 0, o.winsFight ? 0 : o.maulGrowth ?? 0, o.winsFight ? 0 : -enemyStrengthGained(o)];
+  return [o.winsFight ? 1 : 0, -o.hpLoss, o.damageDealt, -living, debuffs, o.strengthGained, drawn, -potionStepCount(plan.steps), o.sandpitAfter ?? 0, -o.sleepCost, Math.floor(o.lasting / 5), o.stunSaved ?? 0, -(o.revived?.sources.length ?? 0), eruption, o.nextTurnEnergy ?? 0, o.winsFight ? 0 : o.maulGrowth ?? 0, o.winsFight ? 0 : -enemyStrengthGained(o), o.winsFight ? 0 : o.kunaiDexterityGained ?? 0];
 }
 
 /** True when `a` is at least as good as `b` on every outcome axis and better on one. */
@@ -4279,6 +4300,7 @@ export function distinctPlans(plans: Plan[], limit: number): Plan[] {
         Math.abs(other.outcome.damageDealt - plan.outcome.damageDealt) <= 3 &&
         other.outcome.kills.length === plan.outcome.kills.length &&
         other.outcome.strengthGained === plan.outcome.strengthGained &&
+        (other.outcome.kunaiDexterityGained ?? 0) === (plan.outcome.kunaiDexterityGained ?? 0) &&
         enemyStrengthGained(other.outcome) === enemyStrengthGained(plan.outcome) &&
         other.outcome.sandpitAfter === plan.outcome.sandpitAfter &&
         (other.outcome.nextTurnEnergy ?? 0) === (plan.outcome.nextTurnEnergy ?? 0),
