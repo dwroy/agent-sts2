@@ -16,7 +16,7 @@ F49新增3个实际结局（LKC9YXKZWTKR尝试1 T1–16 won；Q10YYQ5DUPJA尝试
 
 1281个开场按原日志offset/length/SHA/角色/进阶核验，2个缺开场排除；全部1283次尝试关联开场前run-config元数据，fight-code-provenance.json保留实际启动/续跑版本。源表中的current/dirty字段不改写成新HEAD，完整历史dirty树和局中切码仍未重建。SL结局事件与末帧HP可处于不同结算时点，沿原提取器保留两值，不据差异添加机制。
 
-当前生产相对固定模型有 101 项输入不同，本表只验证固定实验，不宣称这些改动已重新校准。旧报告、来源和失败日志保留；裸刷新在重放前中断130，首次单独提取启动因沙箱glob扫描竞态未执行，提取重试0；首次未生成候选前的tsc完成、vitest受控中断130。重放保留检查点并两片继续，原种子不变，最多四个后台OS进程且nice19。最终固定自测和实际live发布独立记于本批report.md/publication.json，未以初稿宣称通过、shipped或自然采用。
+本批同步 main 的工作树（264efa2ead498503a46d75ac4b4307f137648ac9）相对固定模型有 101 项已列输入不同；实际合入 live 的对照（1e4be6b85e2d19e7e4dde8f0b5846846e06b250e，23:13读回）在原210项输入中有70项不同。101不是live现场计数，本表只验证固定实验，不宣称这些改动已重新校准。旧报告、来源和失败日志保留；裸刷新在重放前中断130，首次单独提取启动因沙箱glob扫描竞态未执行，提取重试0；首次未生成候选前的tsc完成、vitest受控中断130。重放保留检查点并两片继续，原种子不变，最多四个后台OS进程且nice19。最终固定自测和实际live发布独立记于本批report.md/publication.json，未以初稿宣称通过、shipped或自然采用。
 
 定期入口 agent/tools/boss-sim/refresh-silent.py；ops/learner_jobs.py:calibration_job 每小时:13/:43及学习完成事件检查升阶或20新won/died boss尝试。新样本只扩验证，本批沿既有--dataset/--results/--provenance入口固定模型；完成档案幂等跳过和新previous不足阈值跳过均不启动子进程、输出字节不变。新指纹目录 7261a44a2416f0d2c1220fcad41ceb2516307d8727d735ab9c3df9eb1e24e61b 不覆盖任何旧目录。
 
