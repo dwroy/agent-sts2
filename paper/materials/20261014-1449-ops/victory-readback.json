@@ -1,0 +1,696 @@
+{
+  "at": "2026-10-14 14:55:13 CST",
+  "run_id": "9GTFF6DC500L",
+  "actual_character": "SILENT",
+  "actual_ascension": 10,
+  "ended": "2026-10-14T06:18:33.606Z",
+  "floor": 49,
+  "victory": true,
+  "first_attempt_win": false,
+  "final_boss_winning_attempt": 6,
+  "final_recorded_reload_count": 5,
+  "attempts": [
+    {
+      "floor": 17,
+      "attempt": 1,
+      "result": "won",
+      "ts": "2026-10-14T05:16:12.705Z"
+    },
+    {
+      "floor": 33,
+      "attempt": 1,
+      "result": "won",
+      "ts": "2026-10-14T05:47:04.373Z"
+    },
+    {
+      "floor": 48,
+      "attempt": 1,
+      "result": "won",
+      "ts": "2026-10-14T06:06:59.867Z"
+    },
+    {
+      "floor": 49,
+      "attempt": 1,
+      "result": "predicted_death",
+      "ts": "2026-10-14T06:09:36.698Z"
+    },
+    {
+      "floor": 49,
+      "attempt": 2,
+      "result": "predicted_death",
+      "ts": "2026-10-14T06:11:35.982Z"
+    },
+    {
+      "floor": 49,
+      "attempt": 3,
+      "result": "predicted_death",
+      "ts": "2026-10-14T06:13:41.175Z"
+    },
+    {
+      "floor": 49,
+      "attempt": 4,
+      "result": "predicted_death",
+      "ts": "2026-10-14T06:15:05.136Z"
+    },
+    {
+      "floor": 49,
+      "attempt": 5,
+      "result": "predicted_death",
+      "ts": "2026-10-14T06:16:40.313Z"
+    },
+    {
+      "floor": 49,
+      "attempt": 6,
+      "result": "won",
+      "ts": "2026-10-14T06:18:24.633Z"
+    }
+  ],
+  "time_config_to_end_seconds": 5205.471,
+  "time_config_to_end_text": "86分45秒（1小时26分45秒）",
+  "time_logged_first_last_decision_seconds": 5072.923,
+  "first_decision": {
+    "source": "logs/decisions.jsonl",
+    "offset": 1356427623,
+    "bytes": 141173,
+    "sha256": "41e9318b7491678117800238780eebfeed3173682144144c980cd646e92adf14",
+    "ts": "2026-10-14T04:54:00.683Z",
+    "observed_ts": "2026-10-14T04:51:52.403Z",
+    "label": "event/plan",
+    "sl_attempt": null,
+    "sl_reloads": 0
+  },
+  "last_decision": {
+    "source": "logs/decisions.jsonl",
+    "offset": 1369935575,
+    "bytes": 1188,
+    "sha256": "c3520f6844300dabbf00790cf28576b39eb135b1d4e519a6265b532012221248",
+    "ts": "2026-10-14T06:18:33.606Z",
+    "observed_ts": "2026-10-14T06:18:33.605Z",
+    "label": "run/finalize",
+    "sl_attempt": null,
+    "sl_reloads": 5
+  },
+  "configured_start": "2026-10-14T04:51:48.135Z",
+  "actual_start_code": {
+    "commit": "093c68ac658980f53b9940756b3df925adfb49bb",
+    "code": "093c68a+dirty",
+    "dirty": true,
+    "dirty_files": [
+      "knowledge/characters/silent/boss-damage.json",
+      "knowledge/characters/silent/construction-opportunities.json",
+      "knowledge/characters/silent/monster-records.json",
+      "knowledge/characters/silent/outcome-stats.json",
+      "knowledge/characters/silent/room-costs.json",
+      "knowledge/common/card-upgrades.json",
+      "knowledge/common/monster-db.json",
+      "knowledge/common/move-model.json",
+      "notes/fight-value-backtest-silent.md",
+      "notes/monster-db-check.md"
+    ],
+    "branch": "live",
+    "worktree": "live"
+  },
+  "brain_source": "codex",
+  "Codex_record_eligible": true,
+  "eligibility_source": "codex-successful-brain-v1",
+  "actual_native_brain_request_models_verified": {
+    "codex/gpt-6.1-sol/xhigh": 44
+  },
+  "native_brain_source_refs": [
+    {
+      "source": "logs/brain.jsonl",
+      "offset": 497506345,
+      "bytes": 83105,
+      "sha256": "de95467a00e6acacd7e7c6a585c9ad1ad33227be5b3564ba161a9950684f27e0",
+      "engine": "codex",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "accepted": true
+    },
+    {
+      "source": "logs/brain.jsonl",
+      "offset": 497589450,
+      "bytes": 22904,
+      "sha256": "912097d68232795e08277b20dce0c2d17ba1ba56b527dde8a978625f17582689",
+      "engine": "codex",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "accepted": true
+    },
+    {
+      "source": "logs/brain.jsonl",
+      "offset": 497612354,
+      "bytes": 69343,
+      "sha256": "4d13f656a5c25128790918292069c196d0ceef25881cd3e76c9acca016bf3a8a",
+      "engine": "codex",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "accepted": true
+    },
+    {
+      "source": "logs/brain.jsonl",
+      "offset": 497681697,
+      "bytes": 74120,
+      "sha256": "cabb6e758b8e52fb4a5bd09d7905c058ceaa8bceec3141cda27756afd1b0ce98",
+      "engine": "codex",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "accepted": true
+    },
+    {
+      "source": "logs/brain.jsonl",
+      "offset": 497755817,
+      "bytes": 77154,
+      "sha256": "bf71edb8e4efdbe7282e2291b864f5df473ff981a90b7df7a98dd8a24c7721e0",
+      "engine": "codex",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "accepted": true
+    },
+    {
+      "source": "logs/brain.jsonl",
+      "offset": 497832971,
+      "bytes": 79433,
+      "sha256": "a566a1b0950a21b69bf946f74dd2d528a04323864dd7626c38dde8ee66439822",
+      "engine": "codex",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "accepted": true
+    },
+    {
+      "source": "logs/brain.jsonl",
+      "offset": 497912404,
+      "bytes": 52367,
+      "sha256": "850703fbff56afa01f3e2624fe868fc405578be869e85f7e15313bc5354409cc",
+      "engine": "codex",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "accepted": true
+    },
+    {
+      "source": "logs/brain.jsonl",
+      "offset": 497964771,
+      "bytes": 45037,
+      "sha256": "68bde18637b0be6d0d69eb96de5222d5f96676edf691ff855475134c4795bd5b",
+      "engine": "codex",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "accepted": true
+    },
+    {
+      "source": "logs/brain.jsonl",
+      "offset": 498009808,
+      "bytes": 179942,
+      "sha256": "dd6d440188ca6431362c8d21e31f46872964df33220de964d9778f076a0a43ac",
+      "engine": "codex",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "accepted": true
+    },
+    {
+      "source": "logs/brain.jsonl",
+      "offset": 498189750,
+      "bytes": 267321,
+      "sha256": "dfb4bf2c8916234787d2522f1af0cadf787e5875ca0785b0a9452edd3b3f711c",
+      "engine": "codex",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "accepted": true
+    },
+    {
+      "source": "logs/brain.jsonl",
+      "offset": 498457071,
+      "bytes": 94221,
+      "sha256": "0f86dee2614aaf172f433a25c031d2b4a0c2df87695d11d190db152cd4bbe5c8",
+      "engine": "codex",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "accepted": true
+    },
+    {
+      "source": "logs/brain.jsonl",
+      "offset": 498551292,
+      "bytes": 255244,
+      "sha256": "b8b4362fe85fdaee7254dfa5848634d3fb67cc3fb1be5c54c7117f5670c5baec",
+      "engine": "codex",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "accepted": true
+    },
+    {
+      "source": "logs/brain.jsonl",
+      "offset": 498806536,
+      "bytes": 96267,
+      "sha256": "8f143ebcb99d869664ff71957d0029a6e1497a044dc865f04b8c88d07e39f3d3",
+      "engine": "codex",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "accepted": true
+    },
+    {
+      "source": "logs/brain.jsonl",
+      "offset": 498902803,
+      "bytes": 96717,
+      "sha256": "9ed01f16e1f022a0eb3c43da44b674f7ec8227fd8de7695bd187078d265af3d5",
+      "engine": "codex",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "accepted": true
+    },
+    {
+      "source": "logs/brain.jsonl",
+      "offset": 498999520,
+      "bytes": 102387,
+      "sha256": "fe40b3d3ccbf69855e85433e84b25d0d6bcd8152281a153643ba96a33a283365",
+      "engine": "codex",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "accepted": true
+    },
+    {
+      "source": "logs/brain.jsonl",
+      "offset": 499101907,
+      "bytes": 283073,
+      "sha256": "a47ecef73b6607d23057a5754374d04d2a92e6aa532e99b3292babe8f342e173",
+      "engine": "codex",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "accepted": true
+    },
+    {
+      "source": "logs/brain.jsonl",
+      "offset": 499384980,
+      "bytes": 23047,
+      "sha256": "79c1b3f857036cbe1ca25e5d06ee79a9defbb2ef1bc18832d3b8a4133e9d0dd8",
+      "engine": "codex",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "accepted": true
+    },
+    {
+      "source": "logs/brain.jsonl",
+      "offset": 499408027,
+      "bytes": 33971,
+      "sha256": "669dad15a83a6ff04675bf7fcaf646405eb0f1631b9f630c0269a26d71ecd55a",
+      "engine": "codex",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "accepted": true
+    },
+    {
+      "source": "logs/brain.jsonl",
+      "offset": 499441998,
+      "bytes": 43380,
+      "sha256": "640c3e1744a091b1b0c97687912b5a964471eb083369a1219e535b883174871f",
+      "engine": "codex",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "accepted": true
+    },
+    {
+      "source": "logs/brain.jsonl",
+      "offset": 499485378,
+      "bytes": 44416,
+      "sha256": "8b2caeaecb2c03e97a219115364766835a2cc6e9856463e0d3aa1627cb5a1912",
+      "engine": "codex",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "accepted": true
+    },
+    {
+      "source": "logs/brain.jsonl",
+      "offset": 499529794,
+      "bytes": 45289,
+      "sha256": "beb1514f4a8f8e4ffd2c474fe1fcb2bfaff10c6a6b83573bd4e47b6cf03daa24",
+      "engine": "codex",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "accepted": true
+    },
+    {
+      "source": "logs/brain.jsonl",
+      "offset": 499575083,
+      "bytes": 44751,
+      "sha256": "5d101b07bad85c6fcfcea25fa2309a498ad95fd52cc628b85ee79746e59f5270",
+      "engine": "codex",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "accepted": true
+    },
+    {
+      "source": "logs/brain.jsonl",
+      "offset": 499619834,
+      "bytes": 117221,
+      "sha256": "a5589173e92bb501c7cc1065faf56795ddb0d678ac1b2475e134165540efa7de",
+      "engine": "codex",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "accepted": true
+    },
+    {
+      "source": "logs/brain.jsonl",
+      "offset": 499737055,
+      "bytes": 56742,
+      "sha256": "626e03183edef4b09c246d7d07c778cc5df85610d44a4eeb4acb69128a89ca98",
+      "engine": "codex",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "accepted": true
+    },
+    {
+      "source": "logs/brain.jsonl",
+      "offset": 499793797,
+      "bytes": 60059,
+      "sha256": "7f291309ab2dad35b2537a8e8ae2aae68e337601e8d99d94867a507fcd50723b",
+      "engine": "codex",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "accepted": true
+    },
+    {
+      "source": "logs/brain.jsonl",
+      "offset": 499853856,
+      "bytes": 63791,
+      "sha256": "275b01945af6f6e781048bc06df03d092d2c38125fc19ce8858d69c7ca9086bb",
+      "engine": "codex",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "accepted": true
+    },
+    {
+      "source": "logs/brain.jsonl",
+      "offset": 499917647,
+      "bytes": 60599,
+      "sha256": "64dfde1eb8e6fc75b488b3f7c7b3bfce5087d361b18d38c65cb6b3f8d4d7b076",
+      "engine": "codex",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "accepted": true
+    },
+    {
+      "source": "logs/brain.jsonl",
+      "offset": 499978246,
+      "bytes": 54201,
+      "sha256": "f96c72d109e14f5031927d4376c260e2f4a7724b4a0acb1363377e00d9961c43",
+      "engine": "codex",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "accepted": true
+    },
+    {
+      "source": "logs/brain.jsonl",
+      "offset": 500032447,
+      "bytes": 43374,
+      "sha256": "3ea75ae364e889d70cddc0c304a83e79e3f4bd8fb141fa8859040392de8ad63d",
+      "engine": "codex",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "accepted": true
+    },
+    {
+      "source": "logs/brain.jsonl",
+      "offset": 500075821,
+      "bytes": 43895,
+      "sha256": "f6655eea7bf6fa6bb59430dead870d2b18a9ae79c6d316d1fba2eb1e72247dd8",
+      "engine": "codex",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "accepted": true
+    },
+    {
+      "source": "logs/brain.jsonl",
+      "offset": 500119716,
+      "bytes": 59189,
+      "sha256": "f89623a67e7e87aa4474ceb37dc22fff30bb6fafe62e68fc538cc712f26714af",
+      "engine": "codex",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "accepted": true
+    },
+    {
+      "source": "logs/brain.jsonl",
+      "offset": 500178905,
+      "bytes": 45066,
+      "sha256": "f19330b8c302dbfeb549a463b36fdabf94ad910dd33f133b28bfa7b9d5af1f06",
+      "engine": "codex",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "accepted": true
+    },
+    {
+      "source": "logs/brain.jsonl",
+      "offset": 500223971,
+      "bytes": 57053,
+      "sha256": "2cc25600a082051d5b53b2d115d69147f922e87dd0c8a153c84bf3af04ca9704",
+      "engine": "codex",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "accepted": true
+    },
+    {
+      "source": "logs/brain.jsonl",
+      "offset": 500281024,
+      "bytes": 55080,
+      "sha256": "796910ec80841e84b1c040cbd46dd18a251c0f70b9e04e44bf1fb67a12884430",
+      "engine": "codex",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "accepted": true
+    },
+    {
+      "source": "logs/brain.jsonl",
+      "offset": 500336104,
+      "bytes": 55378,
+      "sha256": "c2c5b505b5d4e1731b7f9874dcb3d5cad3387940410f38f5abdc975a86f1f836",
+      "engine": "codex",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "accepted": true
+    },
+    {
+      "source": "logs/brain.jsonl",
+      "offset": 500391482,
+      "bytes": 56276,
+      "sha256": "0f4f758462f668b9636ea75c860708a5f5c3f1eea39e77cf0f82c4e774240786",
+      "engine": "codex",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "accepted": true
+    },
+    {
+      "source": "logs/brain.jsonl",
+      "offset": 500447758,
+      "bytes": 113381,
+      "sha256": "25914224681bf07ecfce6ec33e7b9fe39a96fe7e5fdc8957b9cad6f5fa12623d",
+      "engine": "codex",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "accepted": true
+    },
+    {
+      "source": "logs/brain.jsonl",
+      "offset": 500561139,
+      "bytes": 68374,
+      "sha256": "daeff25505f3a0590b278f6bbc1382365563840619b99e7fc6760c1884d16243",
+      "engine": "codex",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "accepted": true
+    },
+    {
+      "source": "logs/brain.jsonl",
+      "offset": 500629513,
+      "bytes": 62091,
+      "sha256": "cc8dc2c8ada0f01f67e7e8ebd9169ec8d05494c5185e71d818dd0f03ca99fafa",
+      "engine": "codex",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "accepted": true
+    },
+    {
+      "source": "logs/brain.jsonl",
+      "offset": 500691604,
+      "bytes": 56119,
+      "sha256": "ea6a0c8feb86a022498eee5600df488fb49e88a96f781e9e68d7f1f41ec0ae47",
+      "engine": "codex",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "accepted": true
+    },
+    {
+      "source": "logs/brain.jsonl",
+      "offset": 500747723,
+      "bytes": 52105,
+      "sha256": "e0bc370c29212bf411775460b7b1b19fb13c3fc9806502aaa63a5cc458da2920",
+      "engine": "codex",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "accepted": true
+    },
+    {
+      "source": "logs/brain.jsonl",
+      "offset": 500799828,
+      "bytes": 75324,
+      "sha256": "66325786d72b142c771dca80168c2b73e2670d14bd9b9fa227f318b59e47ea25",
+      "engine": "codex",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "accepted": true
+    },
+    {
+      "source": "logs/brain.jsonl",
+      "offset": 500875152,
+      "bytes": 68942,
+      "sha256": "899c71f458347750a37666e076f350ff28c24c8e60172dfc612ce96c569a6b24",
+      "engine": "codex",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "accepted": true
+    },
+    {
+      "source": "logs/brain.jsonl",
+      "offset": 500944094,
+      "bytes": 39747,
+      "sha256": "f1bdcabea628ec71480c92ec00871a8e1fc39215a6823c2f3cb3890666920855",
+      "engine": "codex",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "accepted": true
+    }
+  ],
+  "all_original_scores_costs_and_SL_history_kept": true,
+  "time_includes_wait_no_operator_or_model_wait_split_claimed": true,
+  "next_run": {
+    "run_id": "QRZX1S9USYWP",
+    "ts": "2026-10-14T06:25:42.538Z",
+    "actual_ascension": 10,
+    "unclamped_logged_target_ascension": 11,
+    "target_ascension_mode": "climb",
+    "code": {
+      "commit": "4d55ff9b4e2d6ed9cb701712ab63dba76ac67dac",
+      "code": "4d55ff9+dirty",
+      "dirty": true,
+      "dirty_files": [
+        "knowledge/characters/silent/boss-damage.json",
+        "knowledge/characters/silent/construction-opportunities.json",
+        "knowledge/characters/silent/fight-value-gates.json",
+        "knowledge/characters/silent/fight-value.json",
+        "knowledge/characters/silent/monster-records.json",
+        "knowledge/characters/silent/outcome-stats.json",
+        "knowledge/characters/silent/room-costs.json",
+        "knowledge/common/card-upgrades.json",
+        "knowledge/common/monster-db.json",
+        "knowledge/common/move-model.json",
+        "notes/fight-value-backtest-silent.md",
+        "notes/monster-db-check.md"
+      ],
+      "branch": "live",
+      "worktree": "live"
+    },
+    "config_source": {
+      "source": "logs/run-config.jsonl",
+      "offset": 1670572,
+      "bytes": 5165,
+      "sha256": "bd97375475ea512f65052f4388ddc0139b8ac76199f8aaa680482cc66d93cf19"
+    },
+    "actual_character_select_cap_readbacks": [
+      {
+        "source": "logs/states.jsonl",
+        "offset": 12735950624,
+        "bytes": 3483,
+        "sha256": "799adbe25c8a6239736b2f142968177fa019f093cb3b2f9b3a08797dac63fc52",
+        "ts": "2026-10-14T06:25:39.107Z",
+        "observed_ts": "2026-10-14T06:25:36.157Z",
+        "selected_character_id": "SILENT",
+        "ascension": 10,
+        "max_ascension": 10,
+        "available_actions": [
+          "close_main_menu_submenu",
+          "select_character",
+          "embark",
+          "decrease_ascension"
+        ]
+      }
+    ],
+    "native_max_ascension": 10,
+    "no_config_or_current_game_changed": true
+  },
+  "original_source_refs": {
+    "runs": [
+      {
+        "source": "logs/runs.jsonl",
+        "offset": 326968,
+        "bytes": 465,
+        "sha256": "169042eae979dfc53159ad132b0c74fab33539336c4961e22768304cc78f5539"
+      }
+    ],
+    "run-config": [
+      {
+        "source": "logs/run-config.jsonl",
+        "offset": 1665507,
+        "bytes": 5065,
+        "sha256": "5a90eeb4eca6ebe0582a22e4ea1a1239bca99865755b62fd77f4b18ee6d1164c"
+      }
+    ],
+    "sl-attempts": [
+      {
+        "source": "logs/sl-attempts.jsonl",
+        "offset": 38849606,
+        "bytes": 14028,
+        "sha256": "eefb4811955578b31e64503726da39964ebf0e616dc1e2cbace6d5642b08387a"
+      },
+      {
+        "source": "logs/sl-attempts.jsonl",
+        "offset": 38863634,
+        "bytes": 37959,
+        "sha256": "a01cd1670a493b4925e5b4b613de96ca8386f3e3435c6f0838016a7e45daaaf0"
+      },
+      {
+        "source": "logs/sl-attempts.jsonl",
+        "offset": 38901593,
+        "bytes": 16556,
+        "sha256": "bc3b28cd6871f985fc0a9909b899fac9599d7165b01a0a8ae19afa7e01de9cc7"
+      },
+      {
+        "source": "logs/sl-attempts.jsonl",
+        "offset": 38918149,
+        "bytes": 12843,
+        "sha256": "269f960c36e8f2fbc93b52037e2bb32d2bbe9dce86e710b5b9238dddd2f60b22"
+      },
+      {
+        "source": "logs/sl-attempts.jsonl",
+        "offset": 38930992,
+        "bytes": 13981,
+        "sha256": "85bb0449e5bcf66c285da5a4191881cc81d983f3ddb7a7360e4bf108817fb32a"
+      },
+      {
+        "source": "logs/sl-attempts.jsonl",
+        "offset": 38944973,
+        "bytes": 23354,
+        "sha256": "3fd6aec5d794c4fce4cef286916546e476f021fa6492dcba1ff03b418aab498d"
+      },
+      {
+        "source": "logs/sl-attempts.jsonl",
+        "offset": 38968327,
+        "bytes": 23348,
+        "sha256": "b8604b336704171703376de1abd4cdcc77a3da281e7827d676d4c6039e181b39"
+      },
+      {
+        "source": "logs/sl-attempts.jsonl",
+        "offset": 38991675,
+        "bytes": 24362,
+        "sha256": "4e02afa08c4be59427423b7b008167e2e20f0778b71036aab368ca8944dabb5f"
+      },
+      {
+        "source": "logs/sl-attempts.jsonl",
+        "offset": 39016037,
+        "bytes": 24388,
+        "sha256": "3e5a937f6b35f202395404713911b6f232607f844ac87834de87811589123163"
+      }
+    ]
+  },
+  "no_stable_strategy_performance_gain_or_causal_claim": true,
+  "local_inbox_append_only_no_watcher_or_Roy_read_ACK_claim": true,
+  "win_notified_original_scheduler_entry_not_changed": true,
+  "win_after_SL": true
+}
