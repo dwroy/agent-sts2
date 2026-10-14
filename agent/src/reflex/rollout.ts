@@ -2599,7 +2599,7 @@ function drawOne(piles: Piles, random: () => number): CardModel | undefined {
 
 /** Static per-enemy flags that do not carry into simulated turns (they depend on this turn's board). */
 function laterTurnSim(base: EnemySim): EnemySim {
-  const { asleep: _a, slumber: _s, imbalanced: _i, shriek: _sh, burrowed: _b, skittish: _sk, weakShackling: _ws, weakMalaise: _wm, observedWeakFacingBase: _wf, strangle: _strangle, whistleStunnable: _whistle, ...rest } = base;
+  const { asleep: _a, slumber: _s, imbalanced: _i, shriek: _sh, burrowed: _b, skittish: _sk, weakShackling: _ws, weakMalaise: _wm, observedWeakFacingBase: _wf, paperKraneNewWeak: _pk, strangle: _strangle, whistleStunnable: _whistle, ...rest } = base;
   return rest;
 }
 
@@ -2946,6 +2946,8 @@ function simulate(
     const carried = fullFight && input.fightRelics?.iceCream ? Math.max(0, Math.floor(last.snap.en)) : 0;
     const pSim: PlayerSim = {
       ...base,
+      // silent-0478: the current whole-action certificate is not a later-turn upgrade/replay rule.
+      ...(base.observedRazorSnakebite !== undefined ? { observedRazorSnakebite: false } : {}),
       // KV0JHNJCKXLS T1 -> T2: the transient lock expires; base pile cards retain their original costs.
       ...(base.noDraw !== undefined ? { noDraw: false } : {}),
       ...(base.tuningFork ? { tuningFork: { ...base.tuningFork, count: player.tuningForkCount ?? 0 } } : {}),
