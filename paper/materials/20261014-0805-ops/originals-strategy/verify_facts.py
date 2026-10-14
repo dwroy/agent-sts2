@@ -1,0 +1,138 @@
+import collections
+import hashlib
+import json
+from pathlib import Path
+
+scratch = Path(__file__).resolve().parent
+bundle = json.loads((scratch / 'dispatch-and-proposals.json').read_text())
+manifest = json.loads((scratch / 'source-verification.json').read_text())
+checks = []
+
+def check(name, value):
+    assert value, name
+    checks.append(name)
+
+summary = {}
+turns = []
+pairs = []
+kv = []
+ability = []
+expected = {
+    ('751FN9QM9MHQ', 1, 2): (-13, -9), ('751FN9QM9MHQ', 3, 2): (-18, -18),
+    ('751FN9QM9MHQ', 2, 7): (-13, -12), ('751FN9QM9MHQ', 4, 7): (-23, -18),
+    ('751FN9QM9MHQ', 1, 13): (-8, -17), ('751FN9QM9MHQ', 6, 13): (-2, -11),
+    ('KEN58SH9SLZ6', 4, 10): (-15, -2), ('KEN58SH9SLZ6', 5, 10): (-21, -4),
+    ('KEN58SH9SLZ6', 4, 5): (-7, -1), ('KEN58SH9SLZ6', 6, 5): (-5, -2),
+}
+for run in bundle['dispatch']['runs']:
+    payload = (scratch / (run + '.input.json')).read_bytes()
+    check(run + '输入SHA', hashlib.sha256(payload).hexdigest() == manifest['input_manifest'][run]['sha256'])
+    check(run + '消费者退出码', (scratch / (run + '.audit.exit')).read_text().strip() == '0')
+    data = json.loads(payload)
+    audit = json.loads((scratch / (run + '.audit.json')).read_text())
+    check(run + '消费者身份', audit['run_id'] == run and audit['character'] == 'silent' and audit['ascension'] == 10)
+    check(run + '候选归属保持未知', all(row['actual_full_candidate_result'] is None for row in audit['segments']))
+    check(run + '整轮因果保持未知', all(row['facts'] is None or row['facts']['causal_candidate_result'] is None for row in audit['observed_turns']))
+    summary[run] = {'exit': 0, 'segments': len(audit['segments']), 'actions': len(audit['observed_actions']),
+                    'turns': len(audit['observed_turns']), 'status': dict(collections.Counter(row['status'] for row in audit['observed_turns'])),
+                    'unknown_reasons': dict(collections.Counter(row['reason'] for row in audit['observed_turns'] if row['reason']))}
+    for row in audit['observed_turns']:
+        key = (run, row['attempt'], row['turn'])
+        if row['floor'] == 17 and key in expected:
+            f = row['facts']
+            check(str(key) + '已核端点', row['status'] == 'observed_turn_endpoints')
+            check(str(key) + '血价与净输出', (f['player_hp_delta'], f['enemy_hp_changes'][0]['hp_delta']) == expected[key])
+            turns.append({'run': run, 'floor': 17, 'turn': row['turn'], 'attempt': row['attempt'],
+                          'hp_delta': f['player_hp_delta'], 'enemy_hp_changes': f['enemy_hp_changes'],
+                          'source_states': [f['before']['source_line'], f['after']['source_line']],
+                          'replanning_decisions': f['replanning_decisions']})
+        if run == 'KV0JHNJCKXLS' and row['floor'] == 33 and row['turn'] == 5 and row['attempt'] in (4, 5):
+            check('KV消费者边界未知', row['status'] == 'unknown' and row['reason'] == 'turn_end_unverified')
+    decisions = {row['_line']: row for row in data['decisions']}
+    for a, b in ((272434, 272575), (272531, 272652), (272483, 272820), (274484, 274601), (274505, 274568)):
+        if a not in decisions:
+            continue
+        check(f'{a}/{b}同指纹', decisions[a]['fingerprint'] == decisions[b]['fingerprint'])
+        pairs.append({'run': run, 'decisions': [a, b], 'floor': decisions[a]['floor'], 'turn': decisions[a]['turn'],
+                      'attempts': [decisions[a]['sl_attempt'], decisions[b]['sl_attempt']], 'same_fingerprint': True})
+    actions = {row['source_line']: row for row in audit['observed_actions']}
+    if run == 'KV0JHNJCKXLS':
+        for attempt, expected_reduction in ((4, 36), (5, 29)):
+            a = next(row for row in data['decisions'] if row['floor'] == 33 and row['sl_attempt'] == attempt and row['turn'] == 5)
+            b = next(row for row in data['decisions'] if row['floor'] == 33 and row['sl_attempt'] == attempt and row['turn'] == 6)
+            before, after = actions[a['_line']]['before'], actions[b['_line']]['before']
+            check(f'KV{attempt}同零损', before['hp'] == after['hp'] == 30)
+            check(f'KV{attempt}净输出', before['enemies'][0]['hp'] - after['enemies'][0]['hp'] == expected_reduction)
+            kv.append({'attempt': attempt, 'decisions': [a['_line'], b['_line']], 'hp_delta': 0,
+                       'enemy_net_reduction': expected_reduction, 'scope': '人工端点；消费者结束/诅咒选择链仍未认证'})
+    if run == 'KEN58SH9SLZ6':
+        states = {row['_line']: row['state'] for row in data['states']}
+        for decision_line, a, b, card, block_gain, dex_after in (
+            (274485, 280568, 280569, 'FOOTWORK', 0, 2),
+            (274604, 280687, 280688, 'SHIV', 0, 0),
+            (274614, 280697, 280698, 'DEFEND_SILENT', 5, None),
+            (274616, 280699, 280700, 'DEFEND_SILENT', 5, None),
+            (274618, 280701, 280702, 'FOOTWORK', 0, 2),
+        ):
+            before, after = states[a]['combat']['player'], states[b]['combat']['player']
+            check(f'KEN{decision_line}实际牌身份', decisions[decision_line]['expect']['card']['id'] == card)
+            request = decisions[decision_line]['chosen']
+            hand_card = next(entry for entry in states[a]['combat']['hand'] if entry['index'] == request['card_index'])
+            check(f'KEN{decision_line}派发前手牌身份', request['action'] == 'play_card' and hand_card['card_id'] == card)
+            check(f'KEN{decision_line}接口完成', decisions[decision_line]['result'].startswith('completed:'))
+            check(f'KEN{decision_line}挡量', after['block'] - before['block'] == block_gain)
+            dex = sum(power['amount'] for power in after['powers'] if power['power_id'] == 'DEXTERITY_POWER')
+            if dex_after is not None:
+                check(f'KEN{decision_line}敏捷', dex == dex_after)
+            else:
+                check(f'KEN{decision_line}尚无敏捷', dex == 0)
+            ability.append({'decision': decision_line, 'states': [a, b], 'card': card, 'block_delta': block_gain, 'dex_after': dex})
+
+check('十组端点', len(turns) == 10)
+check('五组同指纹', len(pairs) == 5)
+check('777整轮窗口', sum(row['turns'] for row in summary.values()) == 777)
+observed = sum(row['status'].get('observed_turn_endpoints', 0) for row in summary.values())
+check('415端点362未知', observed == 415)
+
+records = json.loads((scratch / 'key-original-records.json').read_text())
+states = records['states']
+before, after = states['280160']['state'], states['280161']['state']
+p1, p2 = before['combat']['player'], after['combat']['player']
+e1, e2 = before['combat']['enemies'][0], after['combat']['enemies'][0]
+poison = lambda enemy: next(power['amount'] for power in enemy['powers'] if power['power_id'] == 'POISON_POWER')
+check('残壳毒2变8', poison(e1) == 2 and poison(e2) == 8)
+check('毒药后血挡自爆未变', p1['current_hp'] == p2['current_hp'] == 26 and p1['block'] == p2['block'] == 13
+      and e1['intents'] == e2['intents'] and e1['intents'][0]['damage'] == 41)
+drinks = []
+for a, b, slot, decision_line in ((280206, 280207, 0, 274131), (280232, 280233, 0, 274156), (280262, 280263, 0, 274185),
+                                  (280313, 280314, 1, 274235), (280315, 280316, 0, 274237),
+                                  (280348, 280349, 1, 274267), (280354, 280355, 0, 274272)):
+    first = next(row for row in states[str(a)]['state']['run']['potions'] if row['index'] == slot)
+    last = next(row for row in states[str(b)]['state']['run']['potions'] if row['index'] == slot)
+    check(f'KEN{a}/{b}耗药', first['occupied'] is True and last['occupied'] is False)
+    request = records['decisions'][str(decision_line)]['chosen']
+    decision = records['decisions'][str(decision_line)]
+    check(f'KEN{decision_line}使用而非弃药', request['action'] == 'use_potion' and request['option_index'] == slot)
+    check(f'KEN{decision_line}药水身份', decision['expect']['potion']['id'] == first['potion_id'])
+    drinks.append({'decision': decision_line, 'states': [a, b], 'slot': slot, 'potion': first['potion_id'],
+                   'dispatch_result': decision['result'], 'scope': '请求身份与后继占用状态；pending回执不单独证明整线执行'})
+criteria = records['decisions']['272361']['questions']['plan']['criteria']
+facts = {key: json.loads(criteria[key]) for key in ('plan2', 'plan3', 'plan5')}
+check('F13三候选损8', all(value['hp_lost'] == 8 for value in facts.values()))
+check('F13有药伤26无药伤16', facts['plan2']['damage_dealt'] == 26 and facts['plan5']['damage_dealt'] == 16)
+check('F13五轮8/8', all('8/8' in value['rollout'] for value in facts.values()))
+check('F13整战无药单列', 'no potion for the rest' in facts['plan5']['no_potion_fight'])
+check('F13本轮无药后续用7/8', '7/8' in facts['plan3']['potion_cost'])
+check('F13缺表未知', 'potion table did not load' in facts['plan2']['potion_cost'])
+b2 = records['decisions']['274568']['sl_explore']['b2']
+check('KENT10配对差', b2 == {'original': 0.385, 'replacement': 0.127, 'diff': -0.2583, 'se': 0.0132})
+
+receipt = {'scope': '固定原日志与现有离线消费者读回', 'checks': len(checks), 'consumer_exits': [0] * 6,
+           'observed_turn_endpoints': observed, 'unknown_turn_windows': 777 - observed,
+           'full_candidate_certified': False, 'controlled_whole_fight_replay': False,
+           'production_tests': {'tsc': None, 'vitest': None, 'cases': None}}
+for name, data in [('consumer-summary', summary), ('paired-turns', turns), ('fingerprint-pairs', pairs),
+                   ('manual-kv-endpoints', kv), ('ken-ability', ability), ('ken-drinks', drinks),
+                   ('f13-potion-candidates', facts), ('fact-check', receipt)]:
+    (scratch / (name + '.json')).write_text(json.dumps(data, ensure_ascii=False, indent=2) + '\n')
+print(json.dumps(receipt, ensure_ascii=False))

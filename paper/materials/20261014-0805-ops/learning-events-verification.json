@@ -1,0 +1,169 @@
+{
+  "at": "2026-10-14 08:11:35 CST",
+  "postmortem_batch": "20261014-074305",
+  "postmortem_run": "LKC9YXKZWTKR",
+  "bugs": [],
+  "source_proposals": [
+    {
+      "id": "silent-proposal-35884d9cd8b83bb3",
+      "proposal": "/home/dw/Projects/agent-sts2/learner/runs/20261014-074306-postmortem/proposal-double-boss.md",
+      "proposal_sha256": "5f9175c471b1fcb6d131007fd6cce440e7b239e949ad217a8a1088d1f3cfb880",
+      "state": "pending",
+      "ledger": [
+        "silent-0228"
+      ],
+      "runs": [
+        "LKC9YXKZWTKR"
+      ],
+      "batch": null
+    },
+    {
+      "id": "silent-proposal-8c27b175cfaea43c",
+      "proposal": "/home/dw/Projects/agent-sts2/learner/runs/20261014-074306-postmortem/proposal-hp-guard.md",
+      "proposal_sha256": "bb92b4bf611308cbe0f9b98081d956abfb8b79a45f5586812801da7cc9d45978",
+      "state": "pending",
+      "ledger": [
+        "silent-0125"
+      ],
+      "runs": [
+        "LKC9YXKZWTKR"
+      ],
+      "batch": null
+    },
+    {
+      "id": "silent-proposal-d2f205b868f812ec",
+      "proposal": "/home/dw/Projects/agent-sts2/learner/runs/20261014-074306-postmortem/proposal-poison-realization.md",
+      "proposal_sha256": "ab08e0c39ffc7fbc8808591f076ebdd392511c0379d9ff6a430ea4f2b2d0d9c3",
+      "state": "pending",
+      "ledger": [
+        "silent-0352"
+      ],
+      "runs": [
+        "LKC9YXKZWTKR"
+      ],
+      "batch": null
+    }
+  ],
+  "original_lesson_bytes": 22560,
+  "original_lesson_sha256": "abc1f0bec6029fd4ff3f0e629c3a431827e0e02ad7a255b1d85d75b4e86a24e2",
+  "original_prefix_preserved": {
+    "bytes": 8394511,
+    "sha256": "ca3deff7ba961c83aa9514fc3755a1fda36ad3e95a49a0b1b8e8f63a7ff2debb"
+  },
+  "source_evidence_reverified": [
+    {
+      "source": "logs/states.jsonl",
+      "frozen": "learner/runs/20261014-074306-postmortem/states.json",
+      "rows": 833,
+      "raw_rows_sha256": "859eb4b0fc216e99c23188d8a714d3a2ddfb15533a4251f3c5e848f09477fa4a"
+    },
+    {
+      "source": "logs/decisions.jsonl",
+      "frozen": "learner/runs/20261014-074306-postmortem/decisions.json",
+      "rows": 798,
+      "raw_rows_sha256": "3a9a14e3cb0f75cb6b621e3d66b82011d935e4c08f4c25862a66d5646078249a"
+    }
+  ],
+  "postmortem_cli_rows": 6,
+  "strategy_batch": "20261014-074306-s2-strategy-proposal",
+  "strategy_base": "7348f447707b5dcac716b0b36825a28b2943f3b6",
+  "source_commits": [],
+  "strategy_merged": null,
+  "strategy_production_tests": {
+    "tsc": null,
+    "vitest": null,
+    "cases": null
+  },
+  "strategy_all_waiting": [
+    {
+      "id": "silent-proposal-366288801d9150d9",
+      "state": "waiting",
+      "reason": "缺跨续问完整候选归属、同输入同预算受控整战和独立后期验证，不能拟额外失血门槛。"
+    },
+    {
+      "id": "silent-proposal-85929bdfc8a3fc1b",
+      "state": "waiting",
+      "reason": "缺弃牌续问后完整执行归属及F13无药/留药到F17的受控完整结果，不能校准持有价。"
+    },
+    {
+      "id": "silent-proposal-efd9f83ee9e1a6dc",
+      "state": "waiting",
+      "reason": "T2/T7/T13端点已核；完整执行分账与独立整战验证不足，不能以诊断子实现关闭来源提案。"
+    },
+    {
+      "id": "silent-proposal-131042659448ae74",
+      "state": "waiting",
+      "reason": "跨重问整线归属、能力逐轮兑现及无药/留药组合支线未联合验收。"
+    },
+    {
+      "id": "silent-proposal-990f054036609447",
+      "state": "waiting",
+      "reason": "KV T5同零损且净扣36/29；结束/诅咒链未认证，缺毛伤/回血归属、受控整战及路线休息反事实。"
+    },
+    {
+      "id": "silent-proposal-e18d3f18e6cac2a0",
+      "state": "waiting",
+      "reason": "阶段诊断已有；同轮排序仍用原始占位血，缺改序完整受控后继与最终资源校准。"
+    },
+    {
+      "id": "silent-proposal-9733bb80f445aeae",
+      "state": "waiting",
+      "reason": "缺新排名完整受控后继和提前喝/留药整战结果，PU旧胜线不能验证新策略收益。"
+    },
+    {
+      "id": "silent-proposal-c51468c5e8ba6668",
+      "state": "waiting",
+      "reason": "七次耗药已核；随机选牌/重问后完整候选收益未认证，缺F15不喝或留药到boss的受控支线。"
+    },
+    {
+      "id": "silent-proposal-86a7db08d1a31976",
+      "state": "waiting",
+      "reason": "T10多损6仅多2净扣、T5省2却延迟步法；缺完整能力归属、后继一致整战对照及独立验证。"
+    },
+    {
+      "id": "silent-proposal-e282a9131b99129a",
+      "state": "waiting",
+      "reason": "六试相关且后继同变，完整候选因果未知；缺受控整战与独立后期样本，不能以子诊断关闭原提案。"
+    }
+  ],
+  "strategy_raw_log_counts": {
+    "decisions": 4071,
+    "states": 4167,
+    "sl-attempts": 43,
+    "run-config": 6
+  },
+  "strategy_existing_source_leaves": 14,
+  "existing_consumer_actions": 4065,
+  "existing_consumer_observed_endpoints": 415,
+  "existing_consumer_unknown_turn_windows": 362,
+  "full_candidate_or_controlled_fight_certified": false,
+  "strategy_cli_rows": 16,
+  "only_22_original_physical_cli_rows_staged_no_other_actor_rows": true,
+  "native_runtime": [
+    {
+      "source": "ops/codex-ops/accounts/codex1/learner/sessions/2026/10/14/rollout-2026-10-14T07-43-11-01a137a6-0aa1-7851-b911-4d84226b9c2a.jsonl",
+      "thread": "01a137a6-0aa1-7851-b911-4d84226b9c2a",
+      "offset": 49155,
+      "bytes": 4620,
+      "sha256": "e763378546f5bc2b7b8a854a5bb445c410aa3c58dde8e5f03e4a72ee41e2d10d",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "sandbox_type": "workspace-write",
+      "approval_policy": "never"
+    },
+    {
+      "source": "ops/codex-ops/accounts/codex1/learner/sessions/2026/10/14/rollout-2026-10-14T07-43-55-01a137a6-b917-7171-bd45-fcb50692eb05.jsonl",
+      "thread": "01a137a6-b917-7171-bd45-fcb50692eb05",
+      "offset": 50283,
+      "bytes": 5166,
+      "sha256": "52109119cd9299813b30b164fcd544745782de20db0560215a091f377fbde4b0",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "sandbox_type": "workspace-write",
+      "approval_policy": "never"
+    }
+  ],
+  "original_failed_scratch_tests_preserved_not_production_failures": true,
+  "raw_large_materials_native_and_pending_parents_kept": true,
+  "no_new_bug_or_game_knowledge_or_duplicate_dispatch": true
+}

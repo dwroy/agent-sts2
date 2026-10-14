@@ -1,0 +1,1 @@
+抽取与初稿失败现场保留：沙箱构建两次遇并行工作树临时路径ENOENT，原权限原命令重试成功；初稿表生成第一次对combat=null调用get而抛AttributeError，未写draft.md；依赖修正因draft.md不存在报FileNotFoundError；只读机制检查末尾同样对combat=null报AttributeError。现build_draft.py和verify.py使用空combat分支，已修正scratch处理；原稿draft-prose.md及原始抽取保持，不是游戏源码故障。
