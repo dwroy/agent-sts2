@@ -1,0 +1,338 @@
+{
+ "population": {
+  "runs": 16,
+  "diagnostic_train_runs": 10,
+  "holdout_runs": 6,
+  "attempts": 73,
+  "first_attempts": 32,
+  "SL_retry_attempts": 41,
+  "actual_outcome_events": {
+   "won": 25,
+   "predicted_death": 41,
+   "died": 7
+  },
+  "original_frames": 3494,
+  "combat_selection_frames": 241,
+  "execution_requests_including_selection": 3485,
+  "confirmed_primary_action_chains": 2996,
+  "additional_selection_requests": 234
+ },
+ "atomic_replay": {
+  "rows": 3251,
+  "status": {
+   "replayed_observed_step": 2883,
+   "execution_binding_unknown": 255,
+   "replay_error": 113
+  },
+  "targeted_binding_corrections": 81,
+  "same_solver_input_sha256": true,
+  "original_full_exit": 0,
+  "correction_exit": 0,
+  "model_unchanged": true,
+  "API_calls": 0,
+  "reference_reruns": 0
+ },
+ "whole_turn": {
+  "turn_groups": 677,
+  "statuses": {
+   "forced_observed_turn_replayed": 173,
+   "unknown": 504
+  },
+  "initial_exit": 0,
+  "targeted_correction_exit": 0,
+  "targeted_turn_groups": 71,
+  "model_unchanged": true,
+  "no_API_calls": true,
+  "no_reference_reruns": true,
+  "whole_fight_forward_replays": 0
+ },
+ "strict_complete_turn_windows": 160,
+ "raw_slotwise_and_named_pool_residuals": {
+  "train": {
+   "named_enemy_active_pool_hp": {
+    "n": 2078,
+    "mean": 0.06785370548604427,
+    "mae": 0.06785370548604427,
+    "median": 0.0,
+    "p10": 0.0,
+    "p90": 0.0,
+    "min": 0.0,
+    "max": 12.0,
+    "exact": 2026
+   },
+   "player_hp": {
+    "n": 2059,
+    "mean": -0.1024769305488101,
+    "mae": 0.1024769305488101,
+    "median": 0,
+    "p10": 0,
+    "p90": 0,
+    "min": -44,
+    "max": 0,
+    "exact": 2048
+   },
+   "block": {
+    "n": 1704,
+    "mean": -0.028755868544600938,
+    "mae": 0.028755868544600938,
+    "median": 0.0,
+    "p10": 0,
+    "p90": 0,
+    "min": -7,
+    "max": 0,
+    "exact": 1697
+   },
+   "energy": {
+    "n": 1704,
+    "mean": 0.0,
+    "mae": 0.0,
+    "median": 0.0,
+    "p10": 0,
+    "p90": 0,
+    "min": 0,
+    "max": 0,
+    "exact": 1704
+   },
+   "enemy_hp_0": {
+    "n": 1704,
+    "mean": -0.0880281690140845,
+    "mae": 0.20539906103286384,
+    "median": 0.0,
+    "p10": 0,
+    "p90": 0,
+    "min": -250,
+    "max": 12,
+    "exact": 1662
+   },
+   "enemy_poison_0": {
+    "n": 1704,
+    "mean": -0.03345070422535211,
+    "mae": 0.03345070422535211,
+    "median": 0.0,
+    "p10": 0,
+    "p90": 0,
+    "min": -9,
+    "max": 0,
+    "exact": 1694
+   },
+   "enemy_hp_1": {
+    "n": 374,
+    "mean": 0.10962566844919786,
+    "mae": 0.10962566844919786,
+    "median": 0.0,
+    "p10": 0,
+    "p90": 0,
+    "min": 0,
+    "max": 6,
+    "exact": 363
+   },
+   "enemy_poison_1": {
+    "n": 374,
+    "mean": -0.03208556149732621,
+    "mae": 0.06417112299465241,
+    "median": 0.0,
+    "p10": 0,
+    "p90": 0,
+    "min": -3,
+    "max": 6,
+    "exact": 367
+   }
+  },
+  "holdout": {
+   "named_enemy_active_pool_hp": {
+    "n": 913,
+    "mean": 0.0963855421686747,
+    "mae": 0.0963855421686747,
+    "median": 0.0,
+    "p10": 0.0,
+    "p90": 0.0,
+    "min": 0.0,
+    "max": 4.0,
+    "exact": 874
+   },
+   "player_hp": {
+    "n": 824,
+    "mean": -0.04004854368932039,
+    "mae": 0.04004854368932039,
+    "median": 0.0,
+    "p10": 0,
+    "p90": 0,
+    "min": -18,
+    "max": 0,
+    "exact": 822
+   },
+   "block": {
+    "n": 674,
+    "mean": 0.008902077151335312,
+    "mae": 0.008902077151335312,
+    "median": 0.0,
+    "p10": 0,
+    "p90": 0,
+    "min": 0,
+    "max": 3,
+    "exact": 672
+   },
+   "energy": {
+    "n": 674,
+    "mean": -0.005934718100890208,
+    "mae": 0.005934718100890208,
+    "median": 0.0,
+    "p10": 0,
+    "p90": 0,
+    "min": -1,
+    "max": 0,
+    "exact": 670
+   },
+   "enemy_hp_0": {
+    "n": 674,
+    "mean": 0.11275964391691394,
+    "mae": 0.14836795252225518,
+    "median": 0.0,
+    "p10": 0,
+    "p90": 0,
+    "min": -12,
+    "max": 4,
+    "exact": 634
+   },
+   "enemy_poison_0": {
+    "n": 674,
+    "mean": 0.019287833827893175,
+    "mae": 0.019287833827893175,
+    "median": 0.0,
+    "p10": 0,
+    "p90": 0,
+    "min": 0,
+    "max": 13,
+    "exact": 673
+   },
+   "enemy_hp_1": {
+    "n": 239,
+    "mean": -0.3682008368200837,
+    "mae": 0.3682008368200837,
+    "median": 0,
+    "p10": 0,
+    "p90": 0,
+    "min": -88,
+    "max": 0,
+    "exact": 238
+   },
+   "enemy_poison_1": {
+    "n": 239,
+    "mean": 0.0,
+    "mae": 0.0,
+    "median": 0,
+    "p10": 0,
+    "p90": 0,
+    "min": 0,
+    "max": 0,
+    "exact": 239
+   },
+   "enemy_hp_2": {
+    "n": 42,
+    "mean": 0.0,
+    "mae": 0.0,
+    "median": 0.0,
+    "p10": 0,
+    "p90": 0,
+    "min": 0,
+    "max": 0,
+    "exact": 42
+   },
+   "enemy_poison_2": {
+    "n": 42,
+    "mean": 0.0,
+    "mae": 0.0,
+    "median": 0.0,
+    "p10": 0,
+    "p90": 0,
+    "min": 0,
+    "max": 0,
+    "exact": 42
+   }
+  }
+ },
+ "forced_turn_hp_residuals": {
+  "train": {
+   "n": 102,
+   "mean": -0.3137254901960784,
+   "mae": 0.35294117647058826,
+   "median": 0.0,
+   "p10": 0,
+   "p90": 0,
+   "min": -24,
+   "max": 2,
+   "exact": 97
+  },
+  "holdout": {
+   "n": 58,
+   "mean": -0.3103448275862069,
+   "mae": 0.3103448275862069,
+   "median": 0.0,
+   "p10": 0,
+   "p90": 0,
+   "min": -18,
+   "max": 0,
+   "exact": 57
+  }
+ },
+ "limitations": {
+  "unreproduced_hand_change_steps": 320,
+  "enemy_index_identity_changed_steps": 27,
+  "input_initial_scalar_difference_steps": 0,
+  "actual_raw_enemy_attribution_attempts": 0,
+  "actual_S_valid_attempts": 0,
+  "independent_whole_fight_forward_replays": 0,
+  "new_probability_fit": false,
+  "new_group_trust": false,
+  "natural_two_game_acceptance": false,
+  "retrospective_holdout_not_guaranteed_model_unseen": true
+ },
+ "Jev": {
+  "returns": 144,
+  "followup_cases": 32,
+  "selected_run_cases": 27,
+  "boss_overlap_cases": 7,
+  "choice_difference_boss_cases": 2,
+  "API_calls_this_stage": 0
+ },
+ "preserved_prior": {
+  "B2_old_withdrawn_leak": 1.325,
+  "B3_old_low_leak": 1.347,
+  "Queen_duplicate_plus2": "prior contradiction retained; no claim of repair; zero structurally complete QueenT1 forced windows in this panel",
+  "latest_frozen_historical_trust": {
+   "name": "知识恶魔",
+   "t1": {
+    "n": 41,
+    "missing": 0,
+    "brier": 0.0934,
+    "mean_pred": 0.76,
+    "actual_win": 0.829,
+    "leak_ratio": 1.357,
+    "leak_turns": 237,
+    "failed": [
+     "leak"
+    ]
+   },
+   "pre": {
+    "n": 41,
+    "missing": 0,
+    "brier": 0.0833,
+    "mean_pred": 0.766,
+    "actual_win": 0.829,
+    "leak_ratio": 1.388,
+    "leak_turns": 237,
+    "failed": [
+     "leak"
+    ]
+   }
+  }
+ },
+ "code_changes": false,
+ "policy_changes": false,
+ "ledger_writes": false,
+ "production_tests": {
+  "tsc": null,
+  "vitest": null,
+  "python": null
+ }
+}

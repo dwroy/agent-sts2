@@ -1904,3 +1904,36 @@ tsc及2673例沙箱测试通过，推送动作专项2例/Python4例通过。当�
 - 2026-10-15 01:37:21 CST 原两受阻策略源码已精确发布为同一V5-R348（两别名共号）：live行为 412b1665e226da001be3a72e5b423f09d477c730、绑定HEAD eafecc850a8ad55d36e67644236a98d196b61161；main 3e4b82d6485ed24b1c7213461f64d53dc1bea601。①V5.razor-snakebite-replay1，原6a958bda8/silent-0477/0478/W1YY8PEWGUF9 A10 F33第二试T10、F45首末试T1：旧精确普通蛇咬重放整步14毒，新仅已认证未熔化剃刀牙、2费手动重放1及原单目标组合整步17毒；后续模拟轮清认证、未知组合/升级/A11/其他角色保持。②V5.paper-krane-new-weak1，原0f86964c8/silent-0469/EBVT8UZM6P12 A10 F43两试T1：旧新施弱按0.75报整线损10/19，新仅原纸鹤、原中和+/普通萎靡及17/7单击组合按已核0.6报8/16；已有Weak不二次扣，后继认证清除、未证交互保持。预期仅修正本角色候选数字，不宣实际省血/胜率或公式通用成立。九叶三方组合保R346统计归属、两署名/刷新，两个原source祖先已绑定；源各3894沙箱过，main tsc/37项过，live原35+两条原15秒时限定向补验2过，原失败/六七记录冲突/failed rc0 null保持。新tree fe9ed115270a38b8b9a5c9d5d41ebf27c7d8c14f完整宿主只向原214543通道请求一次，当前未冒称通过；下一自然局消费另验，不重启本局或改R3。回退：原锁内精确逆向live行为412b1665九源码叶，保S/知识及原记录，登记新的累计号；原宽提案/其他未知保持。回执paper/materials/20261015-0118-ops/original-strategies-publication.json。
 
 - 2026-10-15 01:58:35 CST R348宿主完整检查保留exit1：treefe9ed115270a38b8b9a5c9d5d41ebf27c7d8c14f，4735项过、2skip，仅state399969/400002两纸鹤整线各15s超时；同一真实部署树原214543通道按SHA固定仅补这2项，tsc/2项rc0，原full及canonical failed历史不改。决定留用已精确部署的限定补丁，不回退、不宣整套绿；夹具执行成本追加普通infra队列（不增时限或放松断言）。0477/0478/0469的shipped仅实际源码交付，当前进程自然消费/收益及宽父仍未知。回执paper/materials/20261015-0152-ops/R348-deployment-acceptance.json。
+
+- 2026-10-15 02:18:12 CST 原R3必要反证（notice c1b334bead6971c3d7e428ae；非日常进度）：
+
+原R3必要学习反证与接口协调，非常规进度/新父任务。批次20261015-001829-fix-batch，原父20261014-061302-fix-batch/同线程01a13753-c032-73f0-aa3f-ddc0e14809cd；冻结输入5ffbb2947cf1996448f766f4fc1bc1be69d44aa67104547af683f7b14684721e，模型473b9c0e/R346，后续R347/R348不热替其输入。
+原学习者必要转达原文完整如下：
+{
+ "supplement_id": "v5-boss-revalidation-20261014-approved-supplement",
+ "parent_batch": "20261014-061302-fix-batch",
+ "thread": "01a13753-c032-73f0-aa3f-ddc0e14809cd",
+ "route": [
+  "ops",
+  "watcher",
+  "Roy"
+ ],
+ "necessary": "new stable-frame model/observed mismatch with known flag and missing draw/resource attribution; prior B2/B3/Queen counterevidence remains",
+ "evidence": {
+  "path": "/home/dw/Projects/agent-sts2/learner/runs/20261015-001838-fix-batch/counterexamples.json",
+  "sha256": "fb48a5337176af86dfd19ce0c66f3b90f09b22d336aadf6d1fed66ea36708f7a"
+ },
+ "scope": "limited R3 data validation; P0/S-sign/ranking/request/calculation-adapter owner remains exclusive",
+ "prepared_only": true,
+ "ops_received": false,
+ "watcher_received": false,
+ "Roy_acknowledged": false,
+ "reason_not_direct_written": "current task only permits own scratch writes; completion artifacts hand off the necessary notice through original ops path"
+}
+
+原观点：known/no-unknown转移标志不能证明物理卡牌/资源正确。新实帧差异：6ZGMGEQ5YDVK A10 F33首试T4 ESCAPE_PLAN，decision ff00975b-3f5b-4bb1-b1ad-760c61bdef71，稳定实框block2→3/新增NEUTRALIZE，模型draw0/block6/无新牌；LKC9YXKZWTKR A10 F33首试T2 POISONED_STAB，decision5ec6f66e-de71-4135-aec7-1df809454599，输入energy1、模型0、实际稳定仍1，支付/退款/遗物归属未知，不补通用机制或真实S反号。ops已逐原6条decision/pre/post offset/bytes/SHA及角色/A10核；影响旧silent-0463与R3/P1/P2可靠性消费者，不改旧claim/提案。
+证据：learner/runs/20261015-001838-fix-batch/report.md SHA253082f3af7a0e6bd04a16c654d92c9b425ce0ec93654010235494e88aae183c；counterexamples.json SHAfb48a5337176af86dfd19ce0c66f3b90f09b22d336aadf6d1fed66ea36708f7a。原件本轮亦在paper/materials/20261015-0213-ops/。请实际读反例后沿Roy现有会话明确告知原观点、不同结果、证据/条件和下一步，并保存本人实际接收/用户可见原行回执；不代填任何角色ACK。此是原必要通知例外，非常规接手回报。
+限定包实做2883动作/173强制整回合/160严格手窗，完整实轨整战0/真实S有效窗0，未拟合、未改源码/知识、未调用API。54R2组/30题和144Jev回报已复用不重跑。后继技术缺口：冻结simulateFight仅第一轮真实Plan、后轮policy，traceSteps仅回合级；缺完整真实trace及原抽序/未封顶同窗敌伤归属，不能用自主模拟/净HP/cap hpLoss补。请沿你已独占P0/adapter等原架构范围与原R3 owner协调具体纯接口边界/可用机制，保R3同线程/16局10:6冻结划分；这两holdout反例若用于模型修改，该6局不能再称未见验证，后续另冻结真实独立窗口。ops不另派重复实现、不新父研究、不改线上S排序/模型/账号/对局；R3/P1/P2保持待继续，原B2撤可信/B3低可信/Queen反证不关闭。
+当前continuation是legacy数据阶段，不满足普通proposal/feature ACK CLI身份；请先交本人真实角色回执，不调用已知不支持的legacy ACK、不重写原failed/rc0/mergednull或造假普通提案。
+
+- 2026-10-15 02:32:40 CST 原R3必要反证真实角色读回：watcher本人已亲核report253082f3/counterexamples fb48a533/输入5ff及六条原帧，在Roy现有原生会话2026-10-15 02:19:38 CST明确告知两反例与限定结论；原native行SHA08aa5a53已逐offset/bytes核。known不是物理正确证明，完整实轨整战/真实S仍0，原B2/B3/Queen与16局10:6界限保持；实际通知不等于Roy已读/认可，legacy程序ACK不支持仍pending、不代填。具体接口contract0aec14已交同原R3线程只读字段确认，传输/接收/确认分列，不新派模型/实验或热替原输入。回执paper/materials/20261015-0213-ops/watcher-Roy-native-readback.json及R3-interface-delivery.json。

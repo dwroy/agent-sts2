@@ -1,0 +1,101 @@
+{
+  "at": "2026-10-15T02:22:09+08:00",
+  "kind": "same-owner-interface-coordination-only",
+  "parent_batch": "20261014-061302-fix-batch",
+  "continuation_batch": "20261015-001829-fix-batch",
+  "r3_thread": "01a13753-c032-73f0-aa3f-ddc0e14809cd",
+  "watcher_owner": "01a139d6-cfec-78e1-8739-e21ac426a354",
+  "input_sha256": "5ffbb2947cf1996448f766f4fc1bc1be69d44aa67104547af683f7b14684721e",
+  "frozen_model_commit": "473b9c0e1563e88d174cc24d6007eda5c5a9a9f9",
+  "frozen_release": "V5-R346",
+  "state": "watcher boundary offered; original R3 owner confirmation pending",
+  "new_parent_or_dispatch": false,
+  "production_code_modified": false,
+  "existing_verified_interfaces": [
+    {
+      "path": "agent/src/reflex/turn-solver.ts",
+      "line": 3999,
+      "name": "traceSteps(input, steps)",
+      "capability": "复用既有转移，给出当前回合初态/逐动作前后状态/payment及complete；不是跨回合状态推进或真实伤害归属证据。"
+    },
+    {
+      "path": "agent/src/reflex/turn-solver.ts",
+      "line": 692,
+      "name": "SolverInput.knownTop",
+      "capability": "能绑定有证据的已知牌堆前缀；未观察抽序不能用seed或后验手牌差补作完整原抽序。"
+    },
+    {
+      "path": "agent/src/reflex/rollout.ts",
+      "line": 3185,
+      "name": "simulateFight(input, plan, maxTurns, seed, scripts, order)",
+      "capability": "首轮可传真实Plan；3059附近后轮solveTurn自主选线。maxTurns=1可做已完成单回合验证；延长maxTurns不是完整真实动作重放。"
+    },
+    {
+      "path": "agent/src/reflex/rollout.ts",
+      "line": 629,
+      "name": "captureCore/captureResources/captureBossMargin",
+      "capability": "选择线遥测和模拟资源/S字段；不能替代实际资源事件或未封顶同窗敌伤标签。"
+    }
+  ],
+  "r3_supplies_existing_evidence": {
+    "identity": [
+      "原model/code/knowledge/dependency SHA",
+      "run/character/ascension/floor/attempt/turn/decision/动作顺序",
+      "各层原始offset/bytes/SHA/observed_ts/稳定就绪与执行回执",
+      "原10:6分组"
+    ],
+    "actions": [
+      "卡牌实例与升级/临时修改、目标身份及槽位映射",
+      "药水实体/槽位、选择及其后继；不唯一时unknown",
+      "入口状态、明确观察的抽牌/生成/弃牌/耗能/退款/资源事件分别留来源"
+    ],
+    "unavailable": "原抽序、跨轮状态链或伤害归属缺失时明列null与原因，不新增反事实。"
+  },
+  "watcher_adapter_boundary": {
+    "reuse": "只暴露/绑定既有机械转移和原计划；不复制一套机制或由watcher补游戏规则。",
+    "future_missing_capability": "需要离线、显式开关的连续状态重放入口，逐回合强制原动作与有证据的随机输入；缺任一步时停止并报告不支持，禁止回退policy或每轮重置实帧后称整战。此入口尚未实现，本文件不宣称可用。",
+    "identity_gate": "卡牌实例/目标/选择后继必须可唯一对应；trace complete/known只表示机械完成，另独立比较观测端点。",
+    "randomness_gate": "若以后使用实见随机事件作为条件输入，只能声称条件转移验证，不能将该事件本身再当预测准确标签；真实结果绝不回填模拟状态以抹去差异。",
+    "outputs": [
+      "预测与实际分列；动作/回合/完整整战/严格窗口分母分列",
+      "每字段状态observed/modelled/unknown及来源；不以known推导物理正确",
+      "敌人对玩家未封顶HP伤/自伤/有效回血/复活/目标有效伤分账，同入口/目标/窗口才能形成真实S",
+      "截断/时序不完整/目标变动/无法分账时S=null；净HP与cap hpLoss不可代替归属"
+    ],
+    "production_boundary": "不改线上S排序、Boss可信名单、模型参数、账号、对局；R347/R348不得热替R346输入。"
+  },
+  "acceptance_before_any_future_full_fight_claim": [
+    "同一个初态连续推进所有真实动作，完整执行覆盖且policyTurns=0",
+    "中途不重置为实帧；真实原抽序/选择/目标身份和窗口可证",
+    "所有缺失/未支持样本保留原分母，窗口/末端差异不以0补",
+    "只有独立实际归属完整时计算真实S；条件重放和独立预测校准分开"
+  ],
+  "holdout": {
+    "train_run_ids": [
+      "K3676LU8B0UH",
+      "54G5683J0E5S",
+      "Y8GDTNWG4R3X",
+      "Y82C2NV7WM2M",
+      "32VSST9UX7MN",
+      "YP428GT9ZLL3",
+      "WA7FRJ7UABCV",
+      "4U3WNL3JRRCX",
+      "1269Y20SKHUM",
+      "E5L15SK6ZHZB"
+    ],
+    "holdout_run_ids": [
+      "4YPGHGJD393H",
+      "8AGEGLG40SV3",
+      "EEVP0QTLMSX9",
+      "LKC9YXKZWTKR",
+      "Q9FM7A80E4BZ",
+      "6ZGMGEQ5YDVK"
+    ],
+    "used_to_change_model_now": false,
+    "future_rule": "若这两反例用于模型修改，原6局不得再称未见验证；原划分不挪，另冻结后继独立真实窗口。"
+  },
+  "r3_confirmation_requested": [
+    "现有原件可提供哪些逐动作身份/抽序/资源字段，缺项逐项列null即可，无需新跑实验",
+    "对上述单回合与完整整战接口边界有异议时沿原线程返回；原宽R3/P1/P2及B2/B3/Queen限制保持"
+  ]
+}

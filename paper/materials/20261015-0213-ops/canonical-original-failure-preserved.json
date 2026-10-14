@@ -1,0 +1,120 @@
+{
+  "task": "fix-batch",
+  "character": "silent",
+  "runs": [],
+  "worktree": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration",
+  "key": "continuation:calibration:5ffbb2947cf1996448f766f4fc1bc1be69d44aa67104547af683f7b14684721e",
+  "pid": 2754451,
+  "pane": "wJ:p0G",
+  "state": "failed",
+  "reason": "same-original-calibration-owner-R3-after-periodic-refresh",
+  "original_owner_role": "calibration",
+  "continuation_parent_batch": "20261014-061302-fix-batch",
+  "resume_thread": "01a13753-c032-73f0-aa3f-ddc0e14809cd",
+  "continuation_supplement_id": "v5-boss-revalidation-20261014-approved-supplement",
+  "continuation_input": {
+    "path": "paper/materials/20261015-0000-ops/R3-approved-input.json",
+    "sha256": "5ffbb2947cf1996448f766f4fc1bc1be69d44aa67104547af683f7b14684721e",
+    "bytes": 5987
+  },
+  "continuation_task": {
+    "path": "paper/materials/20261015-0000-ops/R3-task/fix-batch.md",
+    "sha256": "8f269e03e2d06d6fccc9e1d7f88e62507dcba924f5816d6487df644c5d1c00b5",
+    "bytes": 11218
+  },
+  "proposal_policy": "Roy-2026-10-07-learning",
+  "finished": "2026-10-15 02:09",
+  "rc": 0,
+  "merged": null,
+  "proposal_audit_errors": [],
+  "report": {
+    "task": "fix-batch",
+    "base": "e00dbd473312bd05f4fa0e2fc4439baffdaba638",
+    "fixes": [],
+    "skipped": [
+      "本轮仅做原R3离线数据验证，没有生产源码、知识、台账或开关变更。",
+      "完整战斗实轨、真实S及胜率校准仍缺接口、初始抽序和独立未封顶敌伤归属，保持unknown。"
+    ],
+    "merged": null,
+    "tests": {
+      "tsc": null,
+      "vitest": null,
+      "python": null
+    },
+    "code_proposals": [],
+    "implementation_domains": [],
+    "report": "/home/dw/Projects/agent-sts2/learner/runs/20261015-001838-fix-batch/report.md",
+    "continuation_result": {
+      "supplement_id": "v5-boss-revalidation-20261014-approved-supplement",
+      "parent_batch": "20261014-061302-fix-batch",
+      "phase": "R3",
+      "input_manifest_sha256": "5ffbb2947cf1996448f766f4fc1bc1be69d44aa67104547af683f7b14684721e",
+      "outcome": "continue",
+      "bounded_validation_package_complete": true,
+      "coverage": {
+        "R2_groups_verified": 54,
+        "fixed_questions": 30,
+        "unsupported_retained": 3,
+        "closed_SILENT_runs": 16,
+        "train_runs": 10,
+        "holdout_runs": 6,
+        "boss_attempts": 73,
+        "first_attempts": 32,
+        "SL_retry_attempts": 41,
+        "execution_requests": 3485,
+        "atomic_actions_replayed": 2883,
+        "forced_observed_turns": 173,
+        "strict_same_hand_windows": 160,
+        "full_real_fight_replays": 0,
+        "actual_S_valid_windows": 0,
+        "Jev_returns_reused": 144,
+        "new_API_calls": 0
+      },
+      "model_code_head": "473b9c0e1563e88d174cc24d6007eda5c5a9a9f9",
+      "model_release_id_at_capture": "V5-R346",
+      "actual_running_code_at_capture": "8035f8223+dirty",
+      "model": [
+        {
+          "path": "/home/dw/Projects/agent-sts2/learner/runs/20261015-001838-fix-batch/model-freeze.json",
+          "sha256": "add808061c952b085f7ab46dfe9074d54ed0dac1c7880d714b8ecbfb1dd060b0"
+        }
+      ],
+      "input": [
+        {
+          "path": "/home/dw/Projects/agent-sts2/learner/runs/20261015-001838-fix-batch/trajectory-input-manifest.json",
+          "sha256": "03339e3e4efc69217aa784dde6ad7b418ba720d95eed73728c7b2de7c3bb97c7"
+        }
+      ],
+      "holdout": [
+        {
+          "path": "/home/dw/Projects/agent-sts2/learner/runs/20261015-001838-fix-batch/holdout-preregistration.json",
+          "sha256": "6cbe319d502de1922f2299c98fbaa7ee2fb36023eed236af259cb108c77654f6"
+        }
+      ],
+      "result": [
+        {
+          "path": "/home/dw/Projects/agent-sts2/learner/runs/20261015-001838-fix-batch/analysis-summary.json",
+          "sha256": "1f8694d81b342408e724dcbf27f03724de25b25d0ef2c936d95c7e733f4adb57"
+        },
+        {
+          "path": "/home/dw/Projects/agent-sts2/learner/runs/20261015-001838-fix-batch/counterexamples.json",
+          "sha256": "fb48a5337176af86dfd19ce0c66f3b90f09b22d336aadf6d1fed66ea36708f7a"
+        }
+      ],
+      "checkpoint": {
+        "path": "/home/dw/Projects/agent-sts2/learner/runs/20261015-001838-fix-batch/report.json",
+        "sha256": "f38ac82e8b60f1d0081badb8891ed510ffd14ee611e27cd660ea07e6476a10d6",
+        "contains_full_artifact_inventory": true,
+        "worktree_clean_and_HEAD_unchanged": true,
+        "fit_performed": false,
+        "production_published": false,
+        "broader_parent_closed": false,
+        "old_B2_B3_Queen_counterevidence_retained": true,
+        "notification_prepared_only": true,
+        "ops_watcher_Roy_ACK": false
+      },
+      "next_step": "沿原R3补齐完整真实动作序列、初始抽序及伤害资源归属；将ESCAPE_PLAN和POISONED_STAB实帧差异交原ops→watcher→Roy链。P0独占owner保持，缺证部分不拟合、不标可信，宽R3/P1/P2及自然验收继续。"
+    }
+  },
+  "retry_at": 1792004949.961982
+}

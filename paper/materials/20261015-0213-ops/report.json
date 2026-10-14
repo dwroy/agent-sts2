@@ -1,0 +1,259 @@
+{
+ "task": "fix-batch",
+ "base": "e00dbd473312bd05f4fa0e2fc4439baffdaba638",
+ "fixes": [],
+ "skipped": [
+  {
+   "item": "原已批准R3限定数据阶段",
+   "reason": "仅离线数据验证，无新生产源码/知识/台账/开关；不造commit、合入、版本或全套测试"
+  },
+  {
+   "item": "完整实际轨迹与真实S/胜率校准",
+   "reason": "缺可强制后续全部真实动作的接口/初始抽序及独立未封顶同窗口敌伤；结果保持unknown，宽R3继续"
+  }
+ ],
+ "merged": null,
+ "tests": {
+  "tsc": null,
+  "vitest": null,
+  "python": null
+ },
+ "code_proposals": [],
+ "implementation_domains": [],
+ "report": "/home/dw/Projects/agent-sts2/learner/runs/20261015-001838-fix-batch/report.md",
+ "continuation_result": {
+  "supplement_id": "v5-boss-revalidation-20261014-approved-supplement",
+  "parent_batch": "20261014-061302-fix-batch",
+  "phase": "R3",
+  "input_manifest_sha256": "5ffbb2947cf1996448f766f4fc1bc1be69d44aa67104547af683f7b14684721e",
+  "outcome": "continue",
+  "bounded_validation_package_complete": true,
+  "coverage": {
+   "R2_verified_groups": 54,
+   "R2_paired_verified": 54,
+   "fixed_questions": 30,
+   "unsupported_kept": 3,
+   "runs": 16,
+   "diagnostic_train_runs": 10,
+   "holdout_runs": 6,
+   "attempts": 73,
+   "first_attempts": 32,
+   "SL_retry_attempts": 41,
+   "actual_outcome_events": {
+    "won": 25,
+    "predicted_death": 41,
+    "died": 7
+   },
+   "original_frames": 3494,
+   "combat_selection_frames": 241,
+   "execution_requests_including_selection": 3485,
+   "confirmed_primary_action_chains": 2996,
+   "additional_selection_requests": 234,
+   "atomic_replayed": 2883,
+   "atomic_replay_gaps": 113,
+   "execution_binding_unknown": 255,
+   "whole_turn_groups": 677,
+   "forced_observed_turns": 173,
+   "strict_same_hand_windows": 160,
+   "full_real_fight_replays": 0,
+   "actual_S_valid": 0,
+   "Jev_returns_reused": 144,
+   "Jev_boss_overlap": 7,
+   "new_API_calls": 0
+  },
+  "model": [
+   {
+    "path": "/home/dw/Projects/agent-sts2/learner/runs/20261015-001838-fix-batch/model-freeze.json",
+    "sha256": "add808061c952b085f7ab46dfe9074d54ed0dac1c7880d714b8ecbfb1dd060b0",
+    "bytes": 37981
+   },
+   {
+    "path": "/home/dw/Projects/agent-sts2/learner/runs/20261015-001838-fix-batch/additional-model-dependencies.json",
+    "sha256": "7bf5a5238a340db2bcf587464b2154a8d4f9ee4355b9af6762edb84a77468ddc",
+    "bytes": 3760
+   }
+  ],
+  "input": [
+   {
+    "path": "/home/dw/Projects/agent-sts2/learner/runs/20261015-001838-fix-batch/continuation-input.json",
+    "sha256": "5ffbb2947cf1996448f766f4fc1bc1be69d44aa67104547af683f7b14684721e",
+    "bytes": 5987
+   },
+   {
+    "path": "/home/dw/Projects/agent-sts2/learner/runs/20261015-001838-fix-batch/input-verification.json",
+    "sha256": "371e5b1db22b4d8e3852843af95d4862ad820e7eb47f016588fb57c44b715d32",
+    "bytes": 11188
+   },
+   {
+    "path": "/home/dw/Projects/agent-sts2/learner/runs/20261015-001838-fix-batch/trajectory-input-manifest.json",
+    "sha256": "03339e3e4efc69217aa784dde6ad7b418ba720d95eed73728c7b2de7c3bb97c7",
+    "bytes": 639396
+   },
+   {
+    "path": "/home/dw/Projects/agent-sts2/learner/runs/20261015-001838-fix-batch/selection-boundaries.json",
+    "sha256": "6d35335e8a5090bcb0d3f9395c269603426d40bfd7ac8d10b6c22d6ebf7c64a0",
+    "bytes": 3324001
+   },
+   {
+    "path": "/home/dw/Projects/agent-sts2/learner/runs/20261015-001838-fix-batch/frames-index.jsonl",
+    "sha256": "14d3d527711b0dee6cb3914ea043655d1ff273a4d57735e84721c09f11eb6955",
+    "bytes": 8022212
+   },
+   {
+    "path": "/home/dw/Projects/agent-sts2/learner/runs/20261015-001838-fix-batch/executions.jsonl",
+    "sha256": "3e8fd315cc915ebc97a96120305910f18a568f2030f32769fcf189e6d84e861b",
+    "bytes": 25509848
+   },
+   {
+    "path": "/home/dw/Projects/agent-sts2/learner/runs/20261015-001838-fix-batch/attempts.json",
+    "sha256": "c548141c3bbf9ea63c10b9fcce57327eaebd3ef953b883fdb455616a9821c4a5",
+    "bytes": 4767252
+   },
+   {
+    "path": "/home/dw/Projects/agent-sts2/learner/runs/20261015-001838-fix-batch/states.raw.jsonl.gz",
+    "sha256": "84a34c0e633cf5c036aebba43c6433b7123debc59d5addc8ff8e0741b8431e54",
+    "bytes": 10691207
+   },
+   {
+    "path": "/home/dw/Projects/agent-sts2/learner/runs/20261015-001838-fix-batch/decisions.raw.jsonl.gz",
+    "sha256": "6acb850b3dc0cad57b87e55df84fe166e338c9e982d0103fe3c23fb52aceb75c",
+    "bytes": 2436077
+   },
+   {
+    "path": "/home/dw/Projects/agent-sts2/learner/runs/20261015-001838-fix-batch/selection-states.raw.jsonl.gz",
+    "sha256": "3a74c326d96d453f8ec839ea0a4271332ffb7df409d4c210c46a3a2bc674ddc7",
+    "bytes": 912719
+   },
+   {
+    "path": "/home/dw/Projects/agent-sts2/learner/runs/20261015-001838-fix-batch/selection-decisions.raw.jsonl.gz",
+    "sha256": "a58d2eace8273fa9fd3e2db3817f8b77674ddf117c339505fa8e2456e0677316",
+    "bytes": 52605
+   },
+   {
+    "path": "/home/dw/Projects/agent-sts2/learner/runs/20261015-001838-fix-batch/replay-inputs.jsonl.gz",
+    "sha256": "85ba3ab62d3c6b7d538976d3bad080ad38285d675cd3994b3029f2764156d29e",
+    "bytes": 5007877
+   }
+  ],
+  "holdout": [
+   {
+    "path": "/home/dw/Projects/agent-sts2/learner/runs/20261015-001838-fix-batch/holdout-preregistration.json",
+    "sha256": "6cbe319d502de1922f2299c98fbaa7ee2fb36023eed236af259cb108c77654f6",
+    "bytes": 3365
+   },
+   {
+    "path": "/home/dw/Projects/agent-sts2/learner/runs/20261015-001838-fix-batch/whole-turn-preregistration.json",
+    "sha256": "cab69b7b61b9d986c8085493c1428f2b7e3912a3fc8c23f05c487f4a7ae07644",
+    "bytes": 1115
+   }
+  ],
+  "result": [
+   {
+    "path": "/home/dw/Projects/agent-sts2/learner/runs/20261015-001838-fix-batch/error-distribution.json",
+    "sha256": "9ae6a193625af970b5496e14d3cbf35efa7b83dbfdbc8f469adbb8ed6c8e09e4",
+    "bytes": 4263
+   },
+   {
+    "path": "/home/dw/Projects/agent-sts2/learner/runs/20261015-001838-fix-batch/analysis-summary.json",
+    "sha256": "1f8694d81b342408e724dcbf27f03724de25b25d0ef2c936d95c7e733f4adb57",
+    "bytes": 6572
+   },
+   {
+    "path": "/home/dw/Projects/agent-sts2/learner/runs/20261015-001838-fix-batch/counterexamples.json",
+    "sha256": "fb48a5337176af86dfd19ce0c66f3b90f09b22d336aadf6d1fed66ea36708f7a",
+    "bytes": 37035
+   },
+   {
+    "path": "/home/dw/Projects/agent-sts2/learner/runs/20261015-001838-fix-batch/resource-window-ledger.json",
+    "sha256": "90d77d4b63d2cef84141211288c9ed37b946d0d018198dc3cd2daf8098f92c4a",
+    "bytes": 10291379
+   },
+   {
+    "path": "/home/dw/Projects/agent-sts2/learner/runs/20261015-001838-fix-batch/replay-results.jsonl",
+    "sha256": "9f770e4868bda00527003c8d0b79fc3f714362d29a3a6d64b556accc544373ea",
+    "bytes": 33826756
+   },
+   {
+    "path": "/home/dw/Projects/agent-sts2/learner/runs/20261015-001838-fix-batch/whole-turn-results.jsonl",
+    "sha256": "cb934c0c5135a767b0086f0c9fa34ccb46f20a033cb0db0da358aa0fd485ea98",
+    "bytes": 3793301
+   },
+   {
+    "path": "/home/dw/Projects/agent-sts2/learner/runs/20261015-001838-fix-batch/forced-action-identity-audit.json",
+    "sha256": "7210a6fc850263830c08588da1c2a2989226af32ccffcd18ca659419556365c7",
+    "bytes": 347
+   },
+   {
+    "path": "/home/dw/Projects/agent-sts2/learner/runs/20261015-001838-fix-batch/replay-endpoint-audit.json",
+    "sha256": "52f15fe2b2b0011a066260d3609d601d932206031b29cab120508380a9f96528",
+    "bytes": 1827195
+   },
+   {
+    "path": "/home/dw/Projects/agent-sts2/learner/runs/20261015-001838-fix-batch/whole-turn-window-audit.json",
+    "sha256": "9b826d6693f9497c31c13134115360c61188afae71e4803a636f70eb52a8c42a",
+    "bytes": 8722
+   },
+   {
+    "path": "/home/dw/Projects/agent-sts2/learner/runs/20261015-001838-fix-batch/jev-overlap.json",
+    "sha256": "c2a4cb3a5e7ab05fe383a4d85b9c4a5059385799a3dfdddb73e084b4e058e128",
+    "bytes": 1407144
+   },
+   {
+    "path": "/home/dw/Projects/agent-sts2/learner/runs/20261015-001838-fix-batch/r2-readback-audit.json",
+    "sha256": "2fe80645772488f41f1cdb33e0c998cf0422b539079348d21fc008c396e17ac4",
+    "bytes": 286260
+   },
+   {
+    "path": "/home/dw/Projects/agent-sts2/learner/runs/20261015-001838-fix-batch/selection-boundaries.json",
+    "sha256": "6d35335e8a5090bcb0d3f9395c269603426d40bfd7ac8d10b6c22d6ebf7c64a0",
+    "bytes": 3324001
+   },
+   {
+    "path": "/home/dw/Projects/agent-sts2/learner/runs/20261015-001838-fix-batch/ops-forwarding-request.json",
+    "sha256": "05faff5c340dc4d4d90d39779051a01b5c37f54bdfad00eff644b8866dc92c4a",
+    "bytes": 943
+   }
+  ],
+  "model_code_head": "473b9c0e1563e88d174cc24d6007eda5c5a9a9f9",
+  "model_code_tree": "3b6d1a3bbc53057c896f1f14b33e53fdd19467e4",
+  "model_release_id_at_capture": "V5-R346",
+  "S_attribution_source_ancestor": "e5d07f4a5a45ff3cf2cb44d09dfa89fa1ebf46ad",
+  "actual_running_code_at_capture": "8035f8223+dirty",
+  "source_files_verified": 228,
+  "source_account_permission_preserved": true,
+  "checkpoint": {
+   "path": "/home/dw/Projects/agent-sts2/learner/runs/20261015-001838-fix-batch",
+   "report": {
+    "path": "/home/dw/Projects/agent-sts2/learner/runs/20261015-001838-fix-batch/report.md",
+    "sha256": "253082f3af7a0e6bd04a16c654d92c9b425ce0ec93654010235494e88aae183c",
+    "bytes": 9971
+   },
+   "worktree_HEAD_unchanged": true,
+   "model_physical_files_unchanged": true,
+   "preregistered_split_unchanged": true,
+   "old_failure_and_counterevidence_retained": true,
+   "fit_performed": false,
+   "production_published_by_this_stage": false,
+   "broader_parent_closed": false,
+   "P0_owner_unchanged": true,
+   "notification_prepared": {
+    "path": "/home/dw/Projects/agent-sts2/learner/runs/20261015-001838-fix-batch/ops-forwarding-request.json",
+    "sha256": "05faff5c340dc4d4d90d39779051a01b5c37f54bdfad00eff644b8866dc92c4a",
+    "bytes": 943
+   },
+   "notification_ACK": {
+    "ops": false,
+    "watcher": false,
+    "Roy": false
+   }
+  },
+  "unknown": {
+   "forced_future_action_sequence_interface": "Frozen simulateFight takes one forced initial Plan, then a policy for later turns; traceSteps is turn-level. No autonomous simulation was passed off as whole-real-trajectory replay.",
+   "raw_enemy_damage": "State snapshots/decision receipts do not supply independent uncapped same-window enemy HP-damage accounting; net HP/capped hpLoss/displayed intent never filled it.",
+   "initial_order": "Displayed draw-pile membership does not establish original physical order; draws/generated-card/selection ambiguity retained.",
+   "full_core": "First real manual card appearances are observed, but automatic effects and all four complete-core windows lack enough identity/attribution evidence.",
+   "holdout": "The6 chronological runs were frozen before this current-model experiment; they are retrospective and may occur in existing role knowledge, not guaranteed unseen-model natural validation."
+  },
+  "next_step": "沿同线程原R3接续完整实际轨迹/初始抽序/伤害资源归属接口和独立窗口；原watcher独占P0/排序/request/adapter，读取本包反例。未取证部分不拟合或标可信，不等待Roy重新授权。"
+ }
+}

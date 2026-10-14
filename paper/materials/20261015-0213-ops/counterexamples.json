@@ -1,0 +1,1544 @@
+{
+ "cases": [
+  {
+   "id": "ff00975b-3f5b-4bb1-b1ad-760c61bdef71",
+   "run": "6ZGMGEQ5YDVK",
+   "floor": 33,
+   "turn": 4,
+   "attempt": 1,
+   "split": "holdout",
+   "source": {
+    "path": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+    "offset": 1328227105,
+    "bytes": 1569,
+    "sha256": "5fe9075693ea778989db9c65e490bf936239219e5a5a12b822cb6d759ebc4c43"
+   },
+   "pre": {
+    "offset": 12612589403,
+    "bytes": 42350,
+    "sha256": "c37532605c88901019c3c07ee0f761cf25003695d2247e0eaaecc8afb410d9ee"
+   },
+   "post": {
+    "offset": 12612631753,
+    "bytes": 42476,
+    "sha256": "83194c9f5a0a781d8af58e72bbd0fe8e87c8c60e95d83a6f1d6f3a960ead6823"
+   },
+   "actual_card": {
+    "index": 4,
+    "card_id": "ESCAPE_PLAN",
+    "name": "逃脱计划",
+    "upgraded": false,
+    "target_type": "Self",
+    "requires_target": false,
+    "target_index_space": null,
+    "valid_target_indices": [],
+    "costs_x": false,
+    "star_costs_x": false,
+    "energy_cost": 0,
+    "star_cost": 0,
+    "rules_text": "抽1张牌。 如果抽到的是技能牌，则获得{Block:diff()}点格挡。",
+    "resolved_rules_text": "抽1张牌。 如果抽到的是技能牌，则获得3点格挡。",
+    "dynamic_values": [
+     {
+      "name": "Block",
+      "base_value": 3,
+      "current_value": 3,
+      "enchanted_value": 3,
+      "is_modified": false,
+      "was_just_upgraded": false
+     }
+    ],
+    "playable": true,
+    "can_play_result": true,
+    "unplayable_reason": null,
+    "unplayable_reason_raw": null,
+    "unplayable_preventer_id": null,
+    "unplayable_preventer_type": null
+   },
+   "actual_before": {
+    "hp": 39,
+    "block": 2,
+    "energy": 0,
+    "turn": 4,
+    "playerPowers": [
+     {
+      "index": 0,
+      "power_id": "AFTERIMAGE_POWER",
+      "name": "余像",
+      "amount": 1,
+      "is_debuff": false
+     },
+     {
+      "index": 1,
+      "power_id": "MIND_ROT_POWER",
+      "name": "心灵腐化",
+      "amount": 1,
+      "is_debuff": true
+     }
+    ],
+    "cardsPlayed": 2,
+    "enemies": [
+     {
+      "index": 0,
+      "id": "KNOWLEDGE_DEMON",
+      "hp": 364,
+      "block": 0,
+      "alive": true,
+      "powers": [
+       {
+        "index": 0,
+        "power_id": "POISON_POWER",
+        "name": "中毒",
+        "amount": 20,
+        "is_debuff": true
+       },
+       {
+        "index": 1,
+        "power_id": "WEAK_POWER",
+        "name": "虚弱",
+        "amount": 1,
+        "is_debuff": true
+       }
+      ]
+     }
+    ],
+    "potions": [
+     {
+      "index": 0,
+      "potion_id": "BLOCK_POTION",
+      "name": "格挡药水",
+      "description": "获得[blue]{Block}[/blue]点[gold]格挡[/gold]。",
+      "rarity": "Common",
+      "occupied": true,
+      "usage": "CombatOnly",
+      "target_type": "AnyPlayer",
+      "is_queued": false,
+      "requires_target": false,
+      "target_index_space": null,
+      "valid_target_indices": [],
+      "can_use": true,
+      "can_discard": true
+     },
+     {
+      "index": 1,
+      "potion_id": "BLOCK_POTION",
+      "name": "格挡药水",
+      "description": "获得[blue]{Block}[/blue]点[gold]格挡[/gold]。",
+      "rarity": "Common",
+      "occupied": true,
+      "usage": "CombatOnly",
+      "target_type": "AnyPlayer",
+      "is_queued": false,
+      "requires_target": false,
+      "target_index_space": null,
+      "valid_target_indices": [],
+      "can_use": true,
+      "can_discard": true
+     }
+    ],
+    "relics": [
+     {
+      "index": 0,
+      "relic_id": "RING_OF_THE_SNAKE",
+      "name": "蛇之戒指",
+      "description": "在每场战斗开始时，额外抽[blue]{Cards}[/blue]张牌。",
+      "stack": null,
+      "is_melted": false
+     },
+     {
+      "index": 1,
+      "relic_id": "LOST_COFFER",
+      "name": "失物盒",
+      "description": "拾起时，获得[blue]1[/blue]次卡牌奖励和[blue]1[/blue]瓶随机药水。",
+      "stack": null,
+      "is_melted": false
+     },
+     {
+      "index": 2,
+      "relic_id": "ANCHOR",
+      "name": "锚",
+      "description": "每场战斗开始时获得[blue]{Block}[/blue]点[gold]格挡[/gold]。",
+      "stack": null,
+      "is_melted": false
+     },
+     {
+      "index": 3,
+      "relic_id": "SHURIKEN",
+      "name": "手里剑",
+      "description": "你每在同一回合内打出[blue]{Cards}[/blue]张攻击牌，获得[blue]{StrengthPower}[/blue]点[gold]力量[/gold]。",
+      "stack": 1,
+      "is_melted": false
+     },
+     {
+      "index": 4,
+      "relic_id": "YUMMY_COOKIE",
+      "name": "美味饼干",
+      "description": "拾起时，[gold]升级[/gold][blue]{Cards}[/blue]张牌。",
+      "stack": null,
+      "is_melted": false
+     },
+     {
+      "index": 5,
+      "relic_id": "POLLINOUS_CORE",
+      "name": "花粉核心",
+      "description": "每[blue]{Turns}[/blue]个回合，额外抽[blue]{Cards}[/blue]张牌。",
+      "stack": 0,
+      "is_melted": false
+     },
+     {
+      "index": 6,
+      "relic_id": "JOSS_PAPER",
+      "name": "金纸",
+      "description": "你每[gold]消耗[/gold][blue]{ExhaustAmount}[/blue]张牌，就抽[blue]{Cards}[/blue]张牌。",
+      "stack": 0,
+      "is_melted": false
+     },
+     {
+      "index": 7,
+      "relic_id": "LIZARD_TAIL",
+      "name": "蜥蜴尾巴",
+      "description": "当你的生命值将要降低至[blue]0[/blue]或以下时，回复到最大生命值的[green]{Heal}%[/green]（仅能起效一次）。",
+      "stack": null,
+      "is_melted": false
+     }
+    ],
+    "hand": [
+     {
+      "index": 0,
+      "id": "FOOTWORK",
+      "upgraded": true,
+      "cost": 1
+     },
+     {
+      "index": 1,
+      "id": "DEFEND_SILENT",
+      "upgraded": true,
+      "cost": 1
+     },
+     {
+      "index": 2,
+      "id": "PIERCING_WAIL",
+      "upgraded": false,
+      "cost": 1
+     },
+     {
+      "index": 3,
+      "id": "DEFEND_SILENT",
+      "upgraded": false,
+      "cost": 1
+     },
+     {
+      "index": 4,
+      "id": "ESCAPE_PLAN",
+      "upgraded": false,
+      "cost": 0
+     }
+    ],
+    "inCombat": true,
+    "screen": "COMBAT",
+    "rawEnemyHpDamage": null,
+    "effectiveBossDamage": null,
+    "S": null
+   },
+   "actual_after": {
+    "hp": 39,
+    "block": 3,
+    "energy": 0,
+    "turn": 4,
+    "playerPowers": [
+     {
+      "index": 0,
+      "power_id": "AFTERIMAGE_POWER",
+      "name": "余像",
+      "amount": 1,
+      "is_debuff": false
+     },
+     {
+      "index": 1,
+      "power_id": "MIND_ROT_POWER",
+      "name": "心灵腐化",
+      "amount": 1,
+      "is_debuff": true
+     }
+    ],
+    "cardsPlayed": 3,
+    "enemies": [
+     {
+      "index": 0,
+      "id": "KNOWLEDGE_DEMON",
+      "hp": 364,
+      "block": 0,
+      "alive": true,
+      "powers": [
+       {
+        "index": 0,
+        "power_id": "POISON_POWER",
+        "name": "中毒",
+        "amount": 20,
+        "is_debuff": true
+       },
+       {
+        "index": 1,
+        "power_id": "WEAK_POWER",
+        "name": "虚弱",
+        "amount": 1,
+        "is_debuff": true
+       }
+      ]
+     }
+    ],
+    "potions": [
+     {
+      "index": 0,
+      "potion_id": "BLOCK_POTION",
+      "name": "格挡药水",
+      "description": "获得[blue]{Block}[/blue]点[gold]格挡[/gold]。",
+      "rarity": "Common",
+      "occupied": true,
+      "usage": "CombatOnly",
+      "target_type": "AnyPlayer",
+      "is_queued": false,
+      "requires_target": false,
+      "target_index_space": null,
+      "valid_target_indices": [],
+      "can_use": true,
+      "can_discard": true
+     },
+     {
+      "index": 1,
+      "potion_id": "BLOCK_POTION",
+      "name": "格挡药水",
+      "description": "获得[blue]{Block}[/blue]点[gold]格挡[/gold]。",
+      "rarity": "Common",
+      "occupied": true,
+      "usage": "CombatOnly",
+      "target_type": "AnyPlayer",
+      "is_queued": false,
+      "requires_target": false,
+      "target_index_space": null,
+      "valid_target_indices": [],
+      "can_use": true,
+      "can_discard": true
+     }
+    ],
+    "relics": [
+     {
+      "index": 0,
+      "relic_id": "RING_OF_THE_SNAKE",
+      "name": "蛇之戒指",
+      "description": "在每场战斗开始时，额外抽[blue]{Cards}[/blue]张牌。",
+      "stack": null,
+      "is_melted": false
+     },
+     {
+      "index": 1,
+      "relic_id": "LOST_COFFER",
+      "name": "失物盒",
+      "description": "拾起时，获得[blue]1[/blue]次卡牌奖励和[blue]1[/blue]瓶随机药水。",
+      "stack": null,
+      "is_melted": false
+     },
+     {
+      "index": 2,
+      "relic_id": "ANCHOR",
+      "name": "锚",
+      "description": "每场战斗开始时获得[blue]{Block}[/blue]点[gold]格挡[/gold]。",
+      "stack": null,
+      "is_melted": false
+     },
+     {
+      "index": 3,
+      "relic_id": "SHURIKEN",
+      "name": "手里剑",
+      "description": "你每在同一回合内打出[blue]{Cards}[/blue]张攻击牌，获得[blue]{StrengthPower}[/blue]点[gold]力量[/gold]。",
+      "stack": 1,
+      "is_melted": false
+     },
+     {
+      "index": 4,
+      "relic_id": "YUMMY_COOKIE",
+      "name": "美味饼干",
+      "description": "拾起时，[gold]升级[/gold][blue]{Cards}[/blue]张牌。",
+      "stack": null,
+      "is_melted": false
+     },
+     {
+      "index": 5,
+      "relic_id": "POLLINOUS_CORE",
+      "name": "花粉核心",
+      "description": "每[blue]{Turns}[/blue]个回合，额外抽[blue]{Cards}[/blue]张牌。",
+      "stack": 0,
+      "is_melted": false
+     },
+     {
+      "index": 6,
+      "relic_id": "JOSS_PAPER",
+      "name": "金纸",
+      "description": "你每[gold]消耗[/gold][blue]{ExhaustAmount}[/blue]张牌，就抽[blue]{Cards}[/blue]张牌。",
+      "stack": 0,
+      "is_melted": false
+     },
+     {
+      "index": 7,
+      "relic_id": "LIZARD_TAIL",
+      "name": "蜥蜴尾巴",
+      "description": "当你的生命值将要降低至[blue]0[/blue]或以下时，回复到最大生命值的[green]{Heal}%[/green]（仅能起效一次）。",
+      "stack": null,
+      "is_melted": false
+     }
+    ],
+    "hand": [
+     {
+      "index": 0,
+      "id": "FOOTWORK",
+      "upgraded": true,
+      "cost": 1
+     },
+     {
+      "index": 1,
+      "id": "DEFEND_SILENT",
+      "upgraded": true,
+      "cost": 1
+     },
+     {
+      "index": 2,
+      "id": "PIERCING_WAIL",
+      "upgraded": false,
+      "cost": 1
+     },
+     {
+      "index": 3,
+      "id": "DEFEND_SILENT",
+      "upgraded": false,
+      "cost": 1
+     },
+     {
+      "index": 4,
+      "id": "NEUTRALIZE",
+      "upgraded": false,
+      "cost": 0
+     }
+    ],
+    "inCombat": true,
+    "screen": "COMBAT",
+    "rawEnemyHpDamage": null,
+    "effectiveBossDamage": null,
+    "S": null
+   },
+   "stable_post_readiness": {
+    "can_use_combat_actions": true,
+    "reason": "ready",
+    "actions_settled": true,
+    "running_action_type": null,
+    "ready_action_type": null,
+    "modal_open": false,
+    "modal_type": null,
+    "player_actions_disabled": false,
+    "is_paused": false,
+    "local_ready_to_end_turn": false,
+    "all_players_ready_to_end_turn": true,
+    "ending_turn_phase_one": false,
+    "ending_turn_phase_two": false,
+    "end_turn_kick": "",
+    "combat_in_progress": true,
+    "combat_over_or_ending": false,
+    "combat_room_mode": "ActiveCombat",
+    "hand_in_card_play": false,
+    "hand_in_card_selection": false,
+    "hand_mode": "Play",
+    "local_turn_ready": true,
+    "snapshot_stable": true,
+    "player_action_phase": true
+   },
+   "actual_selection": null,
+   "model_initial": {
+    "energy": 0,
+    "hp": 39,
+    "block": 2,
+    "damage": 0,
+    "blockGained": 0,
+    "drawn": 0,
+    "drawBudget": 0,
+    "hand": [
+     "FOOTWORK",
+     "DEFEND_SILENT",
+     "PIERCING_WAIL",
+     "DEFEND_SILENT",
+     "ESCAPE_PLAN"
+    ],
+    "unknownHand": 0,
+    "noDraw": false,
+    "pendingSelection": false,
+    "dexterity": 0,
+    "afterImage": 1,
+    "poisonExtraTriggers": 0,
+    "duplicateSkills": 0,
+    "enemies": [
+     {
+      "index": 0,
+      "hp": 364,
+      "poison": 20,
+      "artifact": 0
+     }
+    ],
+    "unknown": []
+   },
+   "model_transition": [
+    {
+     "step": {
+      "cardIndex": 4,
+      "cardId": "ESCAPE_PLAN",
+      "upgraded": false,
+      "cost": 0,
+      "name": "逃脱计划",
+      "target": null,
+      "targetName": null
+     },
+     "payment": 0,
+     "effects": 1,
+     "type": "Skill",
+     "leavesPool": null,
+     "before": {
+      "energy": 0,
+      "hp": 39,
+      "block": 2,
+      "damage": 0,
+      "blockGained": 0,
+      "drawn": 0,
+      "drawBudget": 0,
+      "hand": [
+       "FOOTWORK",
+       "DEFEND_SILENT",
+       "PIERCING_WAIL",
+       "DEFEND_SILENT",
+       "ESCAPE_PLAN"
+      ],
+      "unknownHand": 0,
+      "noDraw": false,
+      "pendingSelection": false,
+      "dexterity": 0,
+      "afterImage": 1,
+      "poisonExtraTriggers": 0,
+      "duplicateSkills": 0,
+      "enemies": [
+       {
+        "index": 0,
+        "hp": 364,
+        "poison": 20,
+        "artifact": 0
+       }
+      ],
+      "unknown": []
+     },
+     "after": {
+      "energy": 0,
+      "hp": 39,
+      "block": 6,
+      "damage": 0,
+      "blockGained": 4,
+      "drawn": 0,
+      "drawBudget": 0,
+      "hand": [
+       "FOOTWORK",
+       "DEFEND_SILENT",
+       "PIERCING_WAIL",
+       "DEFEND_SILENT"
+      ],
+      "unknownHand": 0,
+      "noDraw": false,
+      "pendingSelection": false,
+      "dexterity": 0,
+      "afterImage": 1,
+      "poisonExtraTriggers": 0,
+      "duplicateSkills": 0,
+      "enemies": [
+       {
+        "index": 0,
+        "hp": 364,
+        "poison": 20,
+        "artifact": 0
+       }
+      ],
+      "unknown": []
+     }
+    }
+   ],
+   "original_errors": {
+    "player_hp": {
+     "predicted": 39,
+     "actual": 39,
+     "residual": 0
+    },
+    "block": {
+     "predicted": 6,
+     "actual": 3,
+     "residual": 3
+    },
+    "energy": {
+     "predicted": 0,
+     "actual": 0,
+     "residual": 0
+    },
+    "enemy_hp_0": {
+     "predicted": 364,
+     "actual": 364,
+     "residual": 0
+    },
+    "enemy_poison_0": {
+     "predicted": 20,
+     "actual": 20,
+     "residual": 0
+    }
+   },
+   "initial_model_declared_unknown": [],
+   "actual_full_S": null,
+   "proposal_status": "scratch evidence and successor suggestion only; no production registration or implementation",
+   "model_card": {
+    "index": 4,
+    "key": "c4",
+    "cardId": "ESCAPE_PLAN",
+    "name": "逃脱计划",
+    "type": "Skill",
+    "upgraded": false,
+    "cost": 0,
+    "xCost": false,
+    "playable": true,
+    "target": "self",
+    "validTargets": [],
+    "damage": null,
+    "hits": 1,
+    "block": 3,
+    "blockBase": 3,
+    "vulnerable": 0,
+    "weak": 0,
+    "strength": 0,
+    "tempStrength": 0,
+    "enemyStrength": 0,
+    "enemyTempStrengthLoss": 0,
+    "hpLoss": 0,
+    "energyGain": 0,
+    "plating": 0,
+    "draw": 0,
+    "exhausts": false,
+    "special": null,
+    "known": true,
+    "flatValue": 0,
+    "heldPenalty": 0,
+    "heldHpLoss": 0,
+    "retaliate": 0,
+    "delayedDamage": 0,
+    "inferno": 0,
+    "soulbound": false,
+    "putsOnTop": false,
+    "drawsUntil": false,
+    "randomExhaust": false,
+    "text": "抽1张牌。 如果抽到的是技能牌，则获得3点格挡。"
+   },
+   "exact_model_input_sha256": "ab45e1c8ee2a67756854248ef9165b93fd42c9adfac306cc6e097b5303fdc6e6"
+  },
+  {
+   "id": "5ec6f66e-de71-4135-aec7-1df809454599",
+   "run": "LKC9YXKZWTKR",
+   "floor": 33,
+   "turn": 2,
+   "attempt": 1,
+   "split": "holdout",
+   "source": {
+    "path": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+    "offset": 1311976901,
+    "bytes": 30360,
+    "sha256": "d2ace927f2ad17c32750929e713adfaff5108b5b25957af1b2aff249db1790f2"
+   },
+   "pre": {
+    "offset": 12566032862,
+    "bytes": 43618,
+    "sha256": "bc879b0f76caaaba9839a423921e52969b4c1fb545898b362c0a50d4872768c6"
+   },
+   "post": {
+    "offset": 12566076480,
+    "bytes": 42661,
+    "sha256": "1a267754cad7aa5540a4e2c6fd9e74fb52c8e8be3dc4d1ed1ab6b804611094f1"
+   },
+   "actual_card": {
+    "index": 2,
+    "card_id": "POISONED_STAB",
+    "name": "带毒刺击",
+    "upgraded": false,
+    "target_type": "AnyEnemy",
+    "requires_target": true,
+    "target_index_space": "enemies",
+    "valid_target_indices": [
+     0,
+     1
+    ],
+    "costs_x": false,
+    "star_costs_x": false,
+    "energy_cost": 1,
+    "star_cost": 0,
+    "rules_text": "造成{Damage:diff()}点伤害。 给予{PoisonPower:diff()}层中毒。",
+    "resolved_rules_text": "造成6点伤害。 给予3层中毒。",
+    "dynamic_values": [
+     {
+      "name": "Damage",
+      "base_value": 6,
+      "current_value": 6,
+      "enchanted_value": 6,
+      "is_modified": false,
+      "was_just_upgraded": false
+     },
+     {
+      "name": "PoisonPower",
+      "base_value": 3,
+      "current_value": 3,
+      "enchanted_value": 3,
+      "is_modified": false,
+      "was_just_upgraded": false
+     }
+    ],
+    "playable": true,
+    "can_play_result": true,
+    "unplayable_reason": null,
+    "unplayable_reason_raw": null,
+    "unplayable_preventer_id": null,
+    "unplayable_preventer_type": null
+   },
+   "actual_before": {
+    "hp": 59,
+    "block": 16,
+    "energy": 1,
+    "turn": 2,
+    "playerPowers": [
+     {
+      "index": 0,
+      "power_id": "SURROUNDED_POWER",
+      "name": "遭到包围",
+      "amount": 1,
+      "is_debuff": true
+     },
+     {
+      "index": 1,
+      "power_id": "NOXIOUS_FUMES_POWER",
+      "name": "毒雾",
+      "amount": 2,
+      "is_debuff": false
+     },
+     {
+      "index": 2,
+      "power_id": "DEXTERITY_POWER",
+      "name": "敏捷",
+      "amount": 3,
+      "is_debuff": false
+     }
+    ],
+    "cardsPlayed": 2,
+    "enemies": [
+     {
+      "index": 0,
+      "id": "CRUSHER",
+      "hp": 209,
+      "block": 0,
+      "alive": true,
+      "powers": [
+       {
+        "index": 0,
+        "power_id": "BACK_ATTACK_LEFT_POWER",
+        "name": "后方攻击",
+        "amount": 1,
+        "is_debuff": false
+       },
+       {
+        "index": 1,
+        "power_id": "CRAB_RAGE_POWER",
+        "name": "蟹之怒",
+        "amount": 1,
+        "is_debuff": false
+       },
+       {
+        "index": 2,
+        "power_id": "VULNERABLE_POWER",
+        "name": "易伤",
+        "amount": 3,
+        "is_debuff": true
+       },
+       {
+        "index": 3,
+        "power_id": "POISON_POWER",
+        "name": "中毒",
+        "amount": 2,
+        "is_debuff": true
+       }
+      ]
+     },
+     {
+      "index": 1,
+      "id": "ROCKET",
+      "hp": 181,
+      "block": 0,
+      "alive": true,
+      "powers": [
+       {
+        "index": 0,
+        "power_id": "BACK_ATTACK_RIGHT_POWER",
+        "name": "后方攻击",
+        "amount": 1,
+        "is_debuff": false
+       },
+       {
+        "index": 1,
+        "power_id": "CRAB_RAGE_POWER",
+        "name": "蟹之怒",
+        "amount": 1,
+        "is_debuff": false
+       },
+       {
+        "index": 2,
+        "power_id": "POISON_POWER",
+        "name": "中毒",
+        "amount": 2,
+        "is_debuff": true
+       }
+      ]
+     }
+    ],
+    "potions": [
+     {
+      "index": 0,
+      "potion_id": null,
+      "name": null,
+      "description": null,
+      "rarity": null,
+      "occupied": false,
+      "usage": null,
+      "target_type": null,
+      "is_queued": false,
+      "requires_target": false,
+      "target_index_space": null,
+      "valid_target_indices": [],
+      "can_use": false,
+      "can_discard": false
+     },
+     {
+      "index": 1,
+      "potion_id": null,
+      "name": null,
+      "description": null,
+      "rarity": null,
+      "occupied": false,
+      "usage": null,
+      "target_type": null,
+      "is_queued": false,
+      "requires_target": false,
+      "target_index_space": null,
+      "valid_target_indices": [],
+      "can_use": false,
+      "can_discard": false
+     }
+    ],
+    "relics": [
+     {
+      "index": 0,
+      "relic_id": "RING_OF_THE_SNAKE",
+      "name": "蛇之戒指",
+      "description": "在每场战斗开始时，额外抽[blue]{Cards}[/blue]张牌。",
+      "stack": null,
+      "is_melted": false
+     },
+     {
+      "index": 1,
+      "relic_id": "LARGE_CAPSULE",
+      "name": "巨大扭蛋",
+      "description": "拾起时，获得[blue]{Relics}[/blue]件随机[gold]遗物[/gold]。额外将一对[gold]打击[/gold]和[gold]防御[/gold]，加入你的[gold]牌组[/gold]。",
+      "stack": null,
+      "is_melted": false
+     },
+     {
+      "index": 2,
+      "relic_id": "BAG_OF_MARBLES",
+      "name": "弹珠袋",
+      "description": "在每场战斗开始时，给予所有敌人[blue]{VulnerablePower}[/blue]层[gold]易伤[/gold]。",
+      "stack": null,
+      "is_melted": false
+     },
+     {
+      "index": 3,
+      "relic_id": "CAPTAINS_WHEEL",
+      "name": "舵盘",
+      "description": "在你的[blue]第三[/blue]回合开始时，获得[blue]{Block}[/blue]点[gold]格挡[/gold]。",
+      "stack": null,
+      "is_melted": false
+     },
+     {
+      "index": 4,
+      "relic_id": "AMETHYST_AUBERGINE",
+      "name": "紫水晶茄子",
+      "description": "敌人额外掉落[blue]{Gold}[/blue][gold]金币[/gold]。",
+      "stack": null,
+      "is_melted": false
+     },
+     {
+      "index": 5,
+      "relic_id": "CENTENNIAL_PUZZLE",
+      "name": "百年积木",
+      "description": "你在每场战斗中第一次损失生命值时，抽[blue]{Cards}[/blue]张牌。",
+      "stack": null,
+      "is_melted": false
+     },
+     {
+      "index": 6,
+      "relic_id": "LASTING_CANDY",
+      "name": "吃不完的糖",
+      "description": "每两场战斗，你的卡牌奖励就会额外包含一张能力牌。",
+      "stack": 0,
+      "is_melted": false
+     },
+     {
+      "index": 7,
+      "relic_id": "PAELS_FLESH",
+      "name": "佩尔之肉",
+      "description": "从你的第[blue]3[/blue]回合开始，在回合开始时额外获得{Energy:energyIcons()}。",
+      "stack": 2,
+      "is_melted": false
+     },
+     {
+      "index": 8,
+      "relic_id": "NUNCHAKU",
+      "name": "双截棍",
+      "description": "你每打出[blue]{Cards}[/blue]张攻击牌，获得{Energy:energyIcons()}。",
+      "stack": 9,
+      "is_melted": false
+     },
+     {
+      "index": 9,
+      "relic_id": "TEA_OF_DISCOURTESY",
+      "name": "无礼之茶",
+      "description": "在下一场战斗开始时，将[blue]{DazedCount}[/blue]张[gold]晕眩[/gold]放入你的[gold]抽牌堆[/gold]。",
+      "stack": null,
+      "is_melted": false
+     },
+     {
+      "index": 10,
+      "relic_id": "STRAWBERRY",
+      "name": "草莓",
+      "description": "拾起时，将你的最大生命值提升[blue]{MaxHp}[/blue]。",
+      "stack": null,
+      "is_melted": false
+     },
+     {
+      "index": 11,
+      "relic_id": "MUMMIFIED_HAND",
+      "name": "干瘪之手",
+      "description": "你每打出一张能力牌，[gold]手牌[/gold]中就有一张随机牌在这个回合可以免费打出。",
+      "stack": null,
+      "is_melted": false
+     }
+    ],
+    "hand": [
+     {
+      "index": 0,
+      "id": "SUCKER_PUNCH",
+      "upgraded": false,
+      "cost": 1
+     },
+     {
+      "index": 1,
+      "id": "SURVIVOR",
+      "upgraded": false,
+      "cost": 1
+     },
+     {
+      "index": 2,
+      "id": "POISONED_STAB",
+      "upgraded": false,
+      "cost": 1
+     },
+     {
+      "index": 3,
+      "id": "ACCELERANT",
+      "upgraded": false,
+      "cost": 1
+     },
+     {
+      "index": 4,
+      "id": "DEADLY_POISON",
+      "upgraded": false,
+      "cost": 1
+     },
+     {
+      "index": 5,
+      "id": "STRIKE_SILENT",
+      "upgraded": false,
+      "cost": 1
+     },
+     {
+      "index": 6,
+      "id": "DEFEND_SILENT",
+      "upgraded": false,
+      "cost": 1
+     },
+     {
+      "index": 7,
+      "id": "ACCELERANT",
+      "upgraded": true,
+      "cost": 1
+     }
+    ],
+    "inCombat": true,
+    "screen": "COMBAT",
+    "rawEnemyHpDamage": null,
+    "effectiveBossDamage": null,
+    "S": null
+   },
+   "actual_after": {
+    "hp": 59,
+    "block": 16,
+    "energy": 1,
+    "turn": 2,
+    "playerPowers": [
+     {
+      "index": 0,
+      "power_id": "SURROUNDED_POWER",
+      "name": "遭到包围",
+      "amount": 1,
+      "is_debuff": true
+     },
+     {
+      "index": 1,
+      "power_id": "NOXIOUS_FUMES_POWER",
+      "name": "毒雾",
+      "amount": 2,
+      "is_debuff": false
+     },
+     {
+      "index": 2,
+      "power_id": "DEXTERITY_POWER",
+      "name": "敏捷",
+      "amount": 3,
+      "is_debuff": false
+     }
+    ],
+    "cardsPlayed": 3,
+    "enemies": [
+     {
+      "index": 0,
+      "id": "CRUSHER",
+      "hp": 209,
+      "block": 0,
+      "alive": true,
+      "powers": [
+       {
+        "index": 0,
+        "power_id": "BACK_ATTACK_LEFT_POWER",
+        "name": "后方攻击",
+        "amount": 1,
+        "is_debuff": false
+       },
+       {
+        "index": 1,
+        "power_id": "CRAB_RAGE_POWER",
+        "name": "蟹之怒",
+        "amount": 1,
+        "is_debuff": false
+       },
+       {
+        "index": 2,
+        "power_id": "VULNERABLE_POWER",
+        "name": "易伤",
+        "amount": 3,
+        "is_debuff": true
+       },
+       {
+        "index": 3,
+        "power_id": "POISON_POWER",
+        "name": "中毒",
+        "amount": 2,
+        "is_debuff": true
+       }
+      ]
+     },
+     {
+      "index": 1,
+      "id": "ROCKET",
+      "hp": 175,
+      "block": 0,
+      "alive": true,
+      "powers": [
+       {
+        "index": 0,
+        "power_id": "BACK_ATTACK_RIGHT_POWER",
+        "name": "后方攻击",
+        "amount": 1,
+        "is_debuff": false
+       },
+       {
+        "index": 1,
+        "power_id": "CRAB_RAGE_POWER",
+        "name": "蟹之怒",
+        "amount": 1,
+        "is_debuff": false
+       },
+       {
+        "index": 2,
+        "power_id": "POISON_POWER",
+        "name": "中毒",
+        "amount": 5,
+        "is_debuff": true
+       }
+      ]
+     }
+    ],
+    "potions": [
+     {
+      "index": 0,
+      "potion_id": null,
+      "name": null,
+      "description": null,
+      "rarity": null,
+      "occupied": false,
+      "usage": null,
+      "target_type": null,
+      "is_queued": false,
+      "requires_target": false,
+      "target_index_space": null,
+      "valid_target_indices": [],
+      "can_use": false,
+      "can_discard": false
+     },
+     {
+      "index": 1,
+      "potion_id": null,
+      "name": null,
+      "description": null,
+      "rarity": null,
+      "occupied": false,
+      "usage": null,
+      "target_type": null,
+      "is_queued": false,
+      "requires_target": false,
+      "target_index_space": null,
+      "valid_target_indices": [],
+      "can_use": false,
+      "can_discard": false
+     }
+    ],
+    "relics": [
+     {
+      "index": 0,
+      "relic_id": "RING_OF_THE_SNAKE",
+      "name": "蛇之戒指",
+      "description": "在每场战斗开始时，额外抽[blue]{Cards}[/blue]张牌。",
+      "stack": null,
+      "is_melted": false
+     },
+     {
+      "index": 1,
+      "relic_id": "LARGE_CAPSULE",
+      "name": "巨大扭蛋",
+      "description": "拾起时，获得[blue]{Relics}[/blue]件随机[gold]遗物[/gold]。额外将一对[gold]打击[/gold]和[gold]防御[/gold]，加入你的[gold]牌组[/gold]。",
+      "stack": null,
+      "is_melted": false
+     },
+     {
+      "index": 2,
+      "relic_id": "BAG_OF_MARBLES",
+      "name": "弹珠袋",
+      "description": "在每场战斗开始时，给予所有敌人[blue]{VulnerablePower}[/blue]层[gold]易伤[/gold]。",
+      "stack": null,
+      "is_melted": false
+     },
+     {
+      "index": 3,
+      "relic_id": "CAPTAINS_WHEEL",
+      "name": "舵盘",
+      "description": "在你的[blue]第三[/blue]回合开始时，获得[blue]{Block}[/blue]点[gold]格挡[/gold]。",
+      "stack": null,
+      "is_melted": false
+     },
+     {
+      "index": 4,
+      "relic_id": "AMETHYST_AUBERGINE",
+      "name": "紫水晶茄子",
+      "description": "敌人额外掉落[blue]{Gold}[/blue][gold]金币[/gold]。",
+      "stack": null,
+      "is_melted": false
+     },
+     {
+      "index": 5,
+      "relic_id": "CENTENNIAL_PUZZLE",
+      "name": "百年积木",
+      "description": "你在每场战斗中第一次损失生命值时，抽[blue]{Cards}[/blue]张牌。",
+      "stack": null,
+      "is_melted": false
+     },
+     {
+      "index": 6,
+      "relic_id": "LASTING_CANDY",
+      "name": "吃不完的糖",
+      "description": "每两场战斗，你的卡牌奖励就会额外包含一张能力牌。",
+      "stack": 0,
+      "is_melted": false
+     },
+     {
+      "index": 7,
+      "relic_id": "PAELS_FLESH",
+      "name": "佩尔之肉",
+      "description": "从你的第[blue]3[/blue]回合开始，在回合开始时额外获得{Energy:energyIcons()}。",
+      "stack": 2,
+      "is_melted": false
+     },
+     {
+      "index": 8,
+      "relic_id": "NUNCHAKU",
+      "name": "双截棍",
+      "description": "你每打出[blue]{Cards}[/blue]张攻击牌，获得{Energy:energyIcons()}。",
+      "stack": 10,
+      "is_melted": false
+     },
+     {
+      "index": 9,
+      "relic_id": "TEA_OF_DISCOURTESY",
+      "name": "无礼之茶",
+      "description": "在下一场战斗开始时，将[blue]{DazedCount}[/blue]张[gold]晕眩[/gold]放入你的[gold]抽牌堆[/gold]。",
+      "stack": null,
+      "is_melted": false
+     },
+     {
+      "index": 10,
+      "relic_id": "STRAWBERRY",
+      "name": "草莓",
+      "description": "拾起时，将你的最大生命值提升[blue]{MaxHp}[/blue]。",
+      "stack": null,
+      "is_melted": false
+     },
+     {
+      "index": 11,
+      "relic_id": "MUMMIFIED_HAND",
+      "name": "干瘪之手",
+      "description": "你每打出一张能力牌，[gold]手牌[/gold]中就有一张随机牌在这个回合可以免费打出。",
+      "stack": null,
+      "is_melted": false
+     }
+    ],
+    "hand": [
+     {
+      "index": 0,
+      "id": "SUCKER_PUNCH",
+      "upgraded": false,
+      "cost": 1
+     },
+     {
+      "index": 1,
+      "id": "SURVIVOR",
+      "upgraded": false,
+      "cost": 1
+     },
+     {
+      "index": 2,
+      "id": "ACCELERANT",
+      "upgraded": false,
+      "cost": 1
+     },
+     {
+      "index": 3,
+      "id": "DEADLY_POISON",
+      "upgraded": false,
+      "cost": 1
+     },
+     {
+      "index": 4,
+      "id": "STRIKE_SILENT",
+      "upgraded": false,
+      "cost": 1
+     },
+     {
+      "index": 5,
+      "id": "DEFEND_SILENT",
+      "upgraded": false,
+      "cost": 1
+     },
+     {
+      "index": 6,
+      "id": "ACCELERANT",
+      "upgraded": true,
+      "cost": 1
+     }
+    ],
+    "inCombat": true,
+    "screen": "COMBAT",
+    "rawEnemyHpDamage": null,
+    "effectiveBossDamage": null,
+    "S": null
+   },
+   "stable_post_readiness": {
+    "can_use_combat_actions": true,
+    "reason": "ready",
+    "actions_settled": true,
+    "running_action_type": null,
+    "ready_action_type": null,
+    "modal_open": false,
+    "modal_type": null,
+    "player_actions_disabled": false,
+    "is_paused": false,
+    "local_ready_to_end_turn": false,
+    "all_players_ready_to_end_turn": true,
+    "ending_turn_phase_one": false,
+    "ending_turn_phase_two": false,
+    "end_turn_kick": "",
+    "combat_in_progress": true,
+    "combat_over_or_ending": false,
+    "combat_room_mode": "ActiveCombat",
+    "hand_in_card_play": false,
+    "hand_in_card_selection": false,
+    "hand_mode": "Play",
+    "local_turn_ready": true,
+    "snapshot_stable": true,
+    "player_action_phase": true
+   },
+   "actual_selection": null,
+   "model_initial": {
+    "energy": 1,
+    "hp": 59,
+    "block": 16,
+    "damage": 0,
+    "blockGained": 0,
+    "drawn": 0,
+    "drawBudget": 0,
+    "hand": [
+     "SUCKER_PUNCH",
+     "SURVIVOR",
+     "POISONED_STAB",
+     "ACCELERANT",
+     "DEADLY_POISON",
+     "STRIKE_SILENT",
+     "DEFEND_SILENT",
+     "ACCELERANT"
+    ],
+    "unknownHand": 0,
+    "noDraw": false,
+    "pendingSelection": false,
+    "dexterity": 3,
+    "afterImage": 0,
+    "poisonExtraTriggers": 0,
+    "duplicateSkills": 0,
+    "enemies": [
+     {
+      "index": 0,
+      "hp": 209,
+      "poison": 2,
+      "artifact": 0
+     },
+     {
+      "index": 1,
+      "hp": 181,
+      "poison": 2,
+      "artifact": 0
+     }
+    ],
+    "unknown": []
+   },
+   "model_transition": [
+    {
+     "step": {
+      "cardIndex": 2,
+      "cardId": "POISONED_STAB",
+      "upgraded": false,
+      "cost": 1,
+      "name": "带毒刺击",
+      "target": 1,
+      "targetName": "火箭"
+     },
+     "payment": 1,
+     "effects": 1,
+     "type": "Attack",
+     "leavesPool": null,
+     "before": {
+      "energy": 1,
+      "hp": 59,
+      "block": 16,
+      "damage": 0,
+      "blockGained": 0,
+      "drawn": 0,
+      "drawBudget": 0,
+      "hand": [
+       "SUCKER_PUNCH",
+       "SURVIVOR",
+       "POISONED_STAB",
+       "ACCELERANT",
+       "DEADLY_POISON",
+       "STRIKE_SILENT",
+       "DEFEND_SILENT",
+       "ACCELERANT"
+      ],
+      "unknownHand": 0,
+      "noDraw": false,
+      "pendingSelection": false,
+      "dexterity": 3,
+      "afterImage": 0,
+      "poisonExtraTriggers": 0,
+      "duplicateSkills": 0,
+      "enemies": [
+       {
+        "index": 0,
+        "hp": 209,
+        "poison": 2,
+        "artifact": 0
+       },
+       {
+        "index": 1,
+        "hp": 181,
+        "poison": 2,
+        "artifact": 0
+       }
+      ],
+      "unknown": []
+     },
+     "after": {
+      "energy": 0,
+      "hp": 59,
+      "block": 16,
+      "damage": 6,
+      "blockGained": 0,
+      "drawn": 0,
+      "drawBudget": 0,
+      "hand": [
+       "SUCKER_PUNCH",
+       "SURVIVOR",
+       "ACCELERANT",
+       "DEADLY_POISON",
+       "STRIKE_SILENT",
+       "DEFEND_SILENT",
+       "ACCELERANT"
+      ],
+      "unknownHand": 0,
+      "noDraw": false,
+      "pendingSelection": false,
+      "dexterity": 3,
+      "afterImage": 0,
+      "poisonExtraTriggers": 0,
+      "duplicateSkills": 0,
+      "enemies": [
+       {
+        "index": 0,
+        "hp": 209,
+        "poison": 2,
+        "artifact": 0
+       },
+       {
+        "index": 1,
+        "hp": 175,
+        "poison": 5,
+        "artifact": 0
+       }
+      ],
+      "unknown": []
+     }
+    }
+   ],
+   "original_errors": {
+    "player_hp": {
+     "predicted": 59,
+     "actual": 59,
+     "residual": 0
+    },
+    "block": {
+     "predicted": 16,
+     "actual": 16,
+     "residual": 0
+    },
+    "energy": {
+     "predicted": 0,
+     "actual": 1,
+     "residual": -1
+    },
+    "enemy_hp_0": {
+     "predicted": 209,
+     "actual": 209,
+     "residual": 0
+    },
+    "enemy_poison_0": {
+     "predicted": 2,
+     "actual": 2,
+     "residual": 0
+    },
+    "enemy_hp_1": {
+     "predicted": 175,
+     "actual": 175,
+     "residual": 0
+    },
+    "enemy_poison_1": {
+     "predicted": 5,
+     "actual": 5,
+     "residual": 0
+    }
+   },
+   "initial_model_declared_unknown": [],
+   "actual_full_S": null,
+   "proposal_status": "scratch evidence and successor suggestion only; no production registration or implementation",
+   "model_card": {
+    "index": 2,
+    "key": "c2",
+    "cardId": "POISONED_STAB",
+    "name": "带毒刺击",
+    "type": "Attack",
+    "upgraded": false,
+    "cost": 1,
+    "xCost": false,
+    "playable": true,
+    "target": "single",
+    "validTargets": [
+     0,
+     1
+    ],
+    "damage": 6,
+    "hits": 1,
+    "block": 0,
+    "vulnerable": 0,
+    "weak": 0,
+    "strength": 0,
+    "tempStrength": 0,
+    "damageBase": 6,
+    "enemyStrength": 0,
+    "enemyTempStrengthLoss": 0,
+    "hpLoss": 0,
+    "energyGain": 0,
+    "plating": 0,
+    "draw": 0,
+    "exhausts": false,
+    "special": null,
+    "poison": 3,
+    "known": true,
+    "flatValue": 0,
+    "heldPenalty": 0,
+    "heldHpLoss": 0,
+    "retaliate": 0,
+    "delayedDamage": 0,
+    "inferno": 0,
+    "soulbound": false,
+    "putsOnTop": false,
+    "drawsUntil": false,
+    "randomExhaust": false,
+    "text": "造成6点伤害。 给予3层中毒。",
+    "apotheosisUpgrade": {
+     "damage": 2,
+     "damageBase": 2,
+     "poison": 1
+    }
+   },
+   "exact_model_input_sha256": "7d24a063ec889781b81de8a2124560678439e7e0c978865e799cdcb75c10c77e"
+  }
+ ],
+ "prior_view": "Existing frozen model exposes known/no-unknown transition fields; this flag is not evidence that physical card/resource outcomes are correct.",
+ "different_finding": "ESCAPE_PLAN endpoint has an actual new NEUTRALIZE and block2→3 while replay omits the draw and predicts block6; POISONED_STAB energy1→1 versus replay0 needs payment/refund source accounting. Conditions and original bytes are retained, no universal new card rule asserted.",
+ "affected": [
+  "roy-20261011-silent-core-cycle-quantitative-learning",
+  "v5-dpr-health-20261013",
+  "original R3/P1/P2 model reliability consumers"
+ ],
+ "unchanged_ledger": [
+  "silent-0463"
+ ],
+ "S_sign_hypothesis": "not independently tested: actual uncapped same-window enemy damage remains unknown",
+ "next_steps": [
+  "Original implementation owner should bind the explicit observed draw/resource fields or keep affected computations unknown; no patch is implemented in this phase.",
+  "If these holdout findings inform a new model, do not reuse these6 runs as unseen validation; preserve this split and separately freeze a later independent window."
+ ]
+}
