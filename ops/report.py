@@ -48,6 +48,46 @@ def brain_engine(r):
     return d.split(" (for ")[0] if is_brain(d) else "deepseek"
 
 
+def standalone_plan_costs(path, run_id, represented=()):
+    """Count explicit standalone brain requests; merged plans and ambiguous identities add nothing."""
+    rows = {}
+    unknown = set()
+    if os.path.exists(path):
+        with open(path, encoding="utf8") as handle:
+            for line_no, line in enumerate(handle, 1):
+                try:
+                    row = json.loads(line)
+                except json.JSONDecodeError:
+                    continue
+                if (not isinstance(row, dict) or row.get("run_id") != run_id or row.get("label") != "run-plan"
+                        or row.get("reused") or row.get("merged_into")):
+                    continue
+                ident = row.get("question_id")
+                if not isinstance(ident, str) or not ident:
+                    unknown.add(f"line:{line_no}:missing-question-id")
+                    continue
+                if ident in represented:
+                    continue
+                usage = row.get("usage") if isinstance(row.get("usage"), dict) else {}
+                values = (usage.get("inputTokens"), usage.get("outputTokens"), usage.get("cacheHitTokens", 0))
+                engine = row.get("engine")
+                if (not isinstance(engine, str) or not is_brain(engine)
+                        or any(type(value) is not int or value < 0 for value in values)
+                        or values[2] > values[0]):
+                    unknown.add(ident)
+                    continue
+                entry = (engine, *values)
+                if ident in rows and rows[ident] != entry:
+                    unknown.add(ident)
+                rows[ident] = entry
+    valid = {ident: entry for ident, entry in rows.items() if ident not in unknown}
+    return {"calls": len(valid), "input_tokens": sum(entry[1] for entry in valid.values()),
+            "output_tokens": sum(entry[2] for entry in valid.values()),
+            "cache_hit_tokens": sum(entry[3] for entry in valid.values()),
+            "by_engine": dict(collections.Counter(entry[0] for entry in valid.values())),
+            "question_ids": sorted(valid), "unresolved": sorted(unknown)}
+
+
 def load(path):
     if not os.path.exists(path):
         return []
@@ -317,7 +357,14 @@ def main(*, code=None):
             or (brain_direct(r) and r.get("decider") != "claude" and not isinstance(r.get("deepseek"), dict))]
     ds_calls = len(paid)
     # The brain's calls by the engine that made them (V4.5: codex answers, DeepSeek falls back).
+    plans = standalone_plan_costs(os.path.join(ROOT, "logs/brain.jsonl"), run_id,
+                                  {row["id"] for row in paid if isinstance(row.get("id"), str)})
+    ds_calls += plans["calls"]
+    ds_in += plans["input_tokens"]
+    ds_out += plans["output_tokens"]
+    ds_hit += plans["cache_hit_tokens"]
     by_engine = collections.Counter(brain_engine(r) for r in paid)
+    by_engine.update(plans["by_engine"])
     cl_calls = sum(1 for r in recs if r.get("escalation") and r["escalation"].get("by") == "claude")
     elapsed = 0
     if recs:
@@ -346,6 +393,8 @@ def main(*, code=None):
     brain_name = "DeepSeek" if set(by_engine) <= {"deepseek"} else "大脑"
     brain_split = "" if brain_name == "DeepSeek" else "（" + "，".join(f"{k} {v}" for k, v in by_engine.most_common()) + "）"
     out.append(f"- 决策 {len(recs)} 个；Jev 调用 {jev_calls} 次，Claude {cl_calls} 次，{brain_name} {ds_calls} 次{brain_split}；token {tokens_in:,} 入 / {tokens_out:,} 出，约 ${(tokens_in + tokens_out) / 1e6 * PRICE_PER_M:.4f}（Jev）；{brain_name} token {ds_in:,} 入（缓存命中 {ds_hit:,}，{(ds_hit / ds_in * 100 if ds_in else 0):.0f}%）/ {ds_out:,} 出；用时 {elapsed/60:.1f} 分钟")
+    if plans["calls"] or plans["unresolved"]:
+        out.append(f"- 独立计划脑请求：已计 {plans['calls']} 次；身份或用量不完整/冲突的 {len(plans['unresolved'])} 项保留未知，未按时间猜配；原动作数及墙钟不重复增加。")
     out.append(f"- 决策者：" + "，".join(f"{k} {v}" for k, v in by_decider.most_common()))
     out.append("")
     out.append("### 战斗掉血（按层）")
@@ -399,6 +448,8 @@ def main(*, code=None):
                 "run_id": run_id, "ended": recs[-1]["ts"], "victory": victory, "floor": top_floor,
                 "character": character, "ascension": ascension, "code": sha, "decisions": len(recs),
                 "jev_calls": jev_calls, "deepseek_calls": ds_calls, "claude_calls": cl_calls, "tokens": tokens_in + tokens_out, "ds_tokens_in": ds_in, "ds_tokens_out": ds_out, "ds_cache_hit": ds_hit,
+                **({"brain_cost_accounting": {"source": "brain.jsonl:run-plan", **plans}}
+                   if plans["calls"] or plans["unresolved"] else {}),
                 "deciders": dict(by_decider),
                 "death_fight": None if victory or not fights else sorted(x for x in fights[-1]["enemies"] if x),
                 "death_fight_floor": None if victory or not fights else fights[-1]["floor"],

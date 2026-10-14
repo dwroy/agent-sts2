@@ -68,6 +68,8 @@ def ack_request(root, state, notice, payload):
     if feature:
         return (ack_boss_sim(root, state, notice, payload) if notice["source_kind"] == "boss-sim"
                 else ack_feature(root, state, notice, payload))
+    if notice.get("source_kind") == "legacy-continuation":
+        return ack_legacy_continuation(root, state, notice, payload)
     match = re.fullmatch(r"([a-z][a-z0-9_]*)-proposal-[0-9a-f]{16}", request_id or "")
     if not match or not re.fullmatch(r"[0-9a-f]{64}", notice.get("request_sha256", "")):
         raise ValueError("ordinary notice must identify an existing character proposal")
@@ -86,6 +88,75 @@ def ack_request(root, state, notice, payload):
             or notice.get("character", character) != character
             or payload.get("character", character) != character):
         raise ValueError("unknown proposal or mismatched character/proposal SHA")
+    return None
+
+
+def ack_legacy_continuation(root, state, notice, payload):
+    """Bind a historical same-thread continuation without inventing a feature or learning parent."""
+    batch_id = notice.get("source_batch", "")
+    batch = state.get("batches", {}).get(batch_id, {})
+    parent_id = batch.get("continuation_parent_batch")
+    parent = state.get("batches", {}).get(parent_id, {})
+    character = batch.get("character")
+    thread = batch.get("resume_thread", "")
+    request = batch.get("continuation_supplement_id", "")
+    if (not re.fullmatch(r"\d{8}-\d{6}-fix-batch", batch_id) or batch.get("task") != "fix-batch"
+            or not parent_id or parent.get("task") != "fix-batch" or batch.get("feature_request")
+            or not character or parent.get("character") != character or notice.get("character") != character
+            or payload.get("character", character) != character or not UUID.fullmatch(thread)
+            or not ID.fullmatch(request) or notice.get("request_id") != request
+            or notice.get("original_parent_batch") != parent_id or notice.get("original_thread") != thread
+            or batch.get("worktree") != parent.get("worktree")):
+        raise ValueError("legacy continuation must match its registered parent, character and resume thread")
+    tree = Path(batch["worktree"]).resolve()
+    if tree.parent != (Path(root) / ".worktrees").resolve():
+        raise ValueError("legacy continuation worktree outside project")
+    frozen = batch["continuation_input"]
+    approved = json.loads(artifact(root, frozen))
+    if (approved.get("supplement_id") != request or approved.get("parent_batch") != parent_id
+            or approved.get("same_thread") != thread):
+        raise ValueError("legacy continuation frozen input identity mismatch")
+    report_path = batch.get("report", {}).get("report")
+    if not isinstance(report_path, str):
+        raise ValueError("legacy continuation original report missing")
+    scratch = (Path(root) / report_path).resolve().parent
+    if scratch.parent not in ((Path(root) / "learner/runs").resolve(), tree / "learner/runs"):
+        raise ValueError("legacy continuation scratch outside registered project")
+    source_path = (Path(root) / notice["source_evidence"]["path"]).resolve()
+    original = artifact(root, notice["source_evidence"])
+    source = json.loads(original)
+    if (source_path.parent != scratch or source.get("supplement_id") != request
+            or source.get("parent_batch") != parent_id or source.get("thread") != thread
+            or digest(original) != notice.get("request_sha256")
+            or not isinstance(notice.get("message"), str) or original != notice["message"].encode("utf8")):
+        raise ValueError("legacy continuation producer words or SHA mismatch")
+    if artifact(root, source["evidence"]) != artifact(root, notice["counterexamples"]):
+        raise ValueError("legacy continuation counterexample SHA mismatch")
+    # Preserve root scratch compatibility, but authenticate the actual launch and consumed input.
+    log_path = scratch.with_suffix(".jsonl")
+    events = [json.loads(line) for line in log_path.read_bytes().splitlines() if line.strip()]
+    launches = [event for event in events if event.get("type") == "learner_launch"]
+    if len(launches) != 1:
+        raise ValueError("legacy continuation event stream is missing or ambiguous")
+    launch = launches[0]
+    command = launch.get("command", [])
+    command_sha = digest(json.dumps([command[0], command[1:], str(tree)],
+                                   ensure_ascii=False, separators=(",", ":")).encode()) if command else ""
+    if (launch.get("engine") != "codex" or launch.get("task") != "fix-batch"
+            or launch.get("cwd") != str(tree) or launch.get("params", {}).get("scratch") != str(scratch)
+            or len(command) < 4 or command[1:3] != ["exec", "resume"] or command[-2:] != [thread, "-"]
+            or request not in launch.get("prompt", "") or frozen["sha256"] not in launch.get("prompt", "")):
+        raise ValueError("legacy continuation original launch or frozen input mismatch")
+    attempts = [event for event in events if event.get("type") == "learner_startup_attempt"
+                and event.get("batch") == batch_id and event.get("command_sha256") == command_sha
+                and re.fullmatch(r"[0-9a-f]{64}", event.get("input_sha256", ""))]
+    acks = [event for event in events if event.get("type") == "learner_resume_ack"
+            and event.get("batch") == batch_id and event.get("thread_id") == thread
+            and event.get("command_sha256") == command_sha
+            and re.fullmatch(r"[0-9a-f]{64}", event.get("first_message_sha256", ""))
+            and any(event.get("input_sha256") == attempt["input_sha256"] for attempt in attempts)]
+    if not acks or not any(event.get("type") == "thread.started" and event.get("thread_id") == thread for event in events):
+        raise ValueError("legacy continuation lacks an authenticated same-thread input consumption receipt")
     return None
 
 
@@ -355,7 +426,7 @@ def reconcile(state, root, scripts, character, alive, stamp, start, limit=2):
     for notice in (state_dir / "learning-notices").glob("*.json"):
         value = json.loads(notice.read_bytes())
         if not value.get("roy_notified"):
-            if value.get("source_kind") in ("feature", "boss-sim"):
+            if value.get("source_kind") in ("feature", "boss-sim", "legacy-continuation"):
                 # Preserve the native delivery ID and independent ACKs; never resend as a parent notice.
                 if time.time() - value.get("last_queued_at", 0) >= 1800:
                     queue = state_dir / "queue"
