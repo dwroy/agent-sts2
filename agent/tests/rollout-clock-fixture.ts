@@ -1,4 +1,5 @@
-import { rolloutLiveOptions } from "../src/reflex/rollout-live.js";
+import { ROLLOUT_BUDGET_MS, rolloutLiveOptions } from "../src/reflex/rollout-live.js";
+import { withPotionWorkFixture } from "./apotheosis-potion-fixture.js";
 
 /** Budget fixtures measure simulated work, independently of pauses by the OS scheduler. */
 export function withRolloutFixtureClock<T>(run: () => T, step = 3): T {
@@ -9,5 +10,16 @@ export function withRolloutFixtureClock<T>(run: () => T, step = 3): T {
     return run();
   } finally {
     rolloutLiveOptions.now = previous;
+  }
+}
+
+/** Ranking transport replays keep the production budget and bound work across all logged boards. */
+export function withRolloutRankingFixture<T>(run: () => T): T {
+  const budget = rolloutLiveOptions.budgetMs;
+  rolloutLiveOptions.budgetMs = ROLLOUT_BUDGET_MS;
+  try {
+    return withPotionWorkFixture(() => withRolloutFixtureClock(run));
+  } finally {
+    rolloutLiveOptions.budgetMs = budget;
   }
 }
