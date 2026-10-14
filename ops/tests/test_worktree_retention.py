@@ -29,6 +29,7 @@ class WorkspaceRetention(unittest.TestCase):
         history.write_text('derived historical data, canonical copy remains\n')
         (self.root / 'agent/src').mkdir(parents=True)
         (self.root / 'agent/src/example.ts').write_text('export const fixed = 1;\n')
+        (self.root / 'ops/fixture.py').write_text('fixed = 1\n')
         self.git('add', '.')
         self.git('commit', '-m', 'fixed source')
         self.head = self.git('rev-parse', 'HEAD').strip()
@@ -42,7 +43,7 @@ class WorkspaceRetention(unittest.TestCase):
         self.raw = b'fixed original event and token accounting\n' * 7000
         (self.scratch / 'original.jsonl').write_bytes(self.raw)
         (self.scratch / 'report.json').write_text('{"scope": "fixed"}\n')
-        self.cache = self.tree / 'ops/__pycache__/fixture.pyc'
+        self.cache = self.tree / 'ops/__pycache__/fixture.cpython-314.pyc'
         self.cache.parent.mkdir(parents=True)
         self.cache.write_bytes(b'rebuildable bytecode')
         (self.root / 'agent/node_modules').mkdir()
