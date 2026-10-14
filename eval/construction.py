@@ -5,7 +5,9 @@ Input JSONL has prediction/outcome objects. This does not invent a counterfactua
 """
 import argparse
 import json
+import hashlib
 from collections import defaultdict
+from datetime import datetime
 from pathlib import Path
 
 
@@ -26,13 +28,19 @@ def evaluate(rows):
             why = 'no observed binary outcome/evidence'
         elif not isinstance(p.get('value'), (float, int)) or isinstance(p['value'], bool) or not 0 <= p['value'] <= 1:
             why = 'unknown probability'
-        elif not p.get('as_of') or not o.get('observed_at') or p['as_of'] >= o['observed_at']:
+        elif not prospective(p.get('as_of'), o.get('observed_at')):
             why = 'not a prospective prediction'
+        elif p.get('metric') == 'conditionalSignature' and (
+                type(p.get('ascension')) is not int or p['ascension'] != o.get('ascension')
+                or not isinstance(p.get('template_sha256'), str) or len(p['template_sha256']) != 64
+                or any(c not in '0123456789abcdef' for c in p['template_sha256'])
+                or p['template_sha256'] != o.get('template_sha256')):
+            why = 'missing or mismatched ascension/template binding'
         if why:
             excluded.append({'row': i, 'reason': why})
             continue
         seen.add(identity)
-        key = (p['character'], p['core'], p['metric'], p['horizon'], p['model'], p['policy'])
+        key = (p['character'], p['core'], p['metric'], p['horizon'], p['model'], p['policy'], p.get('ascension'), p.get('template_sha256'))
         groups[key].append((p['value'], int(o['value']), p['run']))
     out = []
     for key, values in sorted(groups.items(), key=lambda pair: str(pair[0])):
@@ -43,13 +51,23 @@ def evaluate(rows):
             if xs:
                 bins.append({'range': [band / 5, (band + 1) / 5], 'n': len(xs),
                              'predicted': sum(p for p, _ in xs) / len(xs), 'observed': sum(y for _, y in xs) / len(xs)})
-        out.append(dict(zip(('character', 'core', 'metric', 'horizon', 'model', 'policy'), key)) |
+        out.append(dict(zip(('character', 'core', 'metric', 'horizon', 'model', 'policy', 'ascension', 'template_sha256'), key)) |
                    {'n': n, 'independent_runs': len({r for _, _, r in values}),
-                    'brier': sum((p-y)**2 for p, y, _ in values)/n, 'bias': sum(p-y for p, y, _ in values)/n, 'bins': bins})
+                    'brier': sum((p-y)**2 for p, y, _ in values)/n, 'bias': sum(p-y for p, y, _ in values)/n,
+                    'positives': sum(y for _, y, _ in values), 'negatives': sum(1-y for _, y, _ in values),
+                    'baseline_brier': (sum(y for _, y, _ in values)/n) * (1-sum(y for _, y, _ in values)/n), 'bins': bins})
     return {'schema': 'construction-calibration-v1', 'groups': out, 'excluded': excluded,
             'limits': ['同局多决策不是独立对局；此表不证明选牌因果收益。',
                        '机会重放、实际组件集齐、实战可运转、整局通关必须分别校准，不跨指标晋级。'],
             'automatic_promotion': False}
+
+
+def prospective(before, after):
+    try:
+        a, b = (datetime.fromisoformat(s.replace('Z', '+00:00')) for s in (before, after))
+        return a.tzinfo is not None and b.tzinfo is not None and a < b
+    except (ValueError, TypeError, AttributeError):
+        return False
 
 
 if __name__ == '__main__':
@@ -57,6 +75,8 @@ if __name__ == '__main__':
     parser.add_argument('input', type=Path)
     parser.add_argument('--out', type=Path, required=True)
     args = parser.parse_args()
-    result = evaluate(json.loads(line) for line in args.input.open() if line.strip())
+    raw = args.input.read_bytes()
+    result = evaluate(json.loads(line) for line in raw.splitlines() if line.strip())
+    result['input_sha256'] = hashlib.sha256(raw).hexdigest()
     args.out.write_text(json.dumps(result, ensure_ascii=False, indent=2) + '\n')
     print(json.dumps({'groups': len(result['groups']), 'excluded': len(result['excluded'])}))

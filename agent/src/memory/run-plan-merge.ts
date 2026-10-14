@@ -30,7 +30,7 @@ import type { GameState } from "../hand/mod/schema.js";
 import type { AskDecision, ScreenMemory } from "./types.js";
 import { asArray, asRecord, str, toJsonValue, type JsonValue } from "../core/util/json.js";
 import { fightPlanInput } from "./fight-plan.js";
-import { actOf, isRunPlanReply, loadRunPlan, RUN_PLAN_BRIEF, RUN_PLAN_FORMAT, RUN_PLAN_TASK_KEY, runPlanInput, runPlanTrigger, type RunPlan, type RunPlanTrigger } from "./run-plan.js";
+import { actOf, constructionPlanContext, isRunPlanReply, loadRunPlan, RUN_PLAN_BRIEF, RUN_PLAN_FORMAT, RUN_PLAN_TASK_KEY, runPlanInput, runPlanTrigger, type RunPlan, type RunPlanTrigger } from "./run-plan.js";
 
 /**
  * Floors a due plan waits for a question to carry it before the map asks for it on its own. 2: in the 94 V4.3 plans the
@@ -132,8 +132,10 @@ export function runPlanTaskState(state: GameState, knowledge: Knowledge, trigger
   }
   const why = trigger === "start" ? "the run start" : trigger === "act" ? `act ${actOf(state)} begins` : trigger === "hp_drop" ? "a heavy HP loss since the plan" : `the plan is ${String((state.run?.floor ?? 0) - (plan?.floor ?? 0))} floors old`;
   const inFacts = facts["your_run_plan"] !== undefined;
+  const construction = constructionPlanContext(state);
   return {
     ...input,
+    ...(construction ? { construction_context: construction } : {}),
     due_because: why,
     ...(covered ? { facts: "the deck, relics, potions, HP, gold, act boss and act_boss_clock are in state.facts" } : {}),
     // The current plan's content is facts.your_run_plan; when it was made is shown here (the separate call had it whole).

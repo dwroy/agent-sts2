@@ -214,6 +214,39 @@ class Health(unittest.TestCase):
             self.assertFalse(source['complete'])
             self.assertTrue(all('sha256' in r['_source'] for r in rows))
 
+    def test_construction_delivery_plan_persistence_and_readback_are_distinct(self):
+        config = {**CONFIG, 'construction': {**CONFIG['construction'], 'evaluation': 'same-question-combat-facts'}}
+        evaluation = {'schema': 'construction-evaluation-v1', 'run': 'SILENT1', 'floor': 2, 'coreCatalog': [{'id': 'P'}]}
+        direction = {'primary': 'P', 'alternatives': [], 'checkpoint': 5, 'reason': 'fixture', 'pivot_if': 'fixture'}
+        brain = {'run_id': 'SILENT1', 'question_id': 'q1', 'ts': '2026-10-14T00:00:00Z', 'label': 'reward/card', 'accepted': True,
+                 'payload': {'facts': {'construction_evaluation': evaluation}, 'run_plan_task': {}},
+                 'answer': {'choice': 'skip', 'run_plan': {'construction': direction}}}
+        plan = {'ts': '2026-10-14T00:00:01Z', 'plan': {'runId': 'SILENT1', 'floor': 2, 'construction': direction}}
+        next_question = {'run_id': 'SILENT1', 'question_id': 'q2', 'ts': '2026-10-14T00:05:00Z', 'label': 'reward/card',
+                         'payload': {'facts': {'floor': 5, 'your_run_plan': {'made_on_floor': 2, 'construction': direction}},
+                                     'run_plan_task': {'trigger': 'review'}}}
+        decision = row(1, None, boss_sim={'samples': 320, 'construction': {'evaluation': evaluation,
+            'evaluation_delivery': 'attached', 'admission': {'admitted': [], 'reason': 'missing_calibration'}}})
+        result = h.summarize(config, [decision], [brain, next_question, brain], {}, [plan])['construction_pipeline']
+        for key in ('evaluation_attached', 'accepted_evaluation', 'accepted_choice_with_evaluation',
+                    'accepted_structured_plan', 'saved_structured_plan', 'plan_readback', 'checkpoint_review_due'):
+            self.assertEqual(result[key], 1, key)
+        self.assertEqual(result['probability_delivered'], 0)
+        self.assertFalse(result['alert'])
+        without_save = h.summarize(config, [decision], [brain, next_question], {}, [])['construction_pipeline']
+        self.assertEqual(without_save['plan_readback'], 0)
+        self.assertEqual(without_save['saved_structured_plan'], 0)
+        # A requested flag or accepted answer does not prove the construction payload or plan arrived.
+        broken = [row(i, None, boss_sim={'samples': 320, 'construction': {'evaluation': evaluation}}) for i in range(3)]
+        failure = h.summarize(config, broken, [], {})['construction_pipeline']
+        self.assertTrue(failure['alert'])
+        self.assertEqual(failure['evaluation_missing'], 3)
+        self.assertEqual(failure['accepted_evaluation'], 0)
+        shopping = {**brain, 'label': 'shop/plan', 'answer': {'plan': [], 'run_plan': {'construction': direction}}}
+        self.assertEqual(h.summarize(config, [], [shopping], {})['construction_pipeline']['accepted_choice_with_evaluation'], 1)
+        malformed = {**brain, 'answer': {'choice': 'skip', 'run_plan': {'construction': {'primary': []}}}}
+        self.assertEqual(h.summarize(config, [], [malformed], {})['construction_pipeline']['missing_structured_plan'], 1)
+
 
 if __name__ == '__main__':
     unittest.main()

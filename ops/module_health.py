@@ -130,7 +130,73 @@ def candidate_dpr_coverage(options, sim):
     return dict(counts)
 
 
-def summarize(config, decisions, brains, coverage):
+def construction_pipeline(config, records, brains, plans):
+    """Observe actual payload/answer/persistence separately; no inference from a requested mode."""
+    rid = config['run_id']
+    enabled = obj(config.get('construction')).get('evaluation') == 'same-question-combat-facts'
+    counts = Counter(evaluation_expected=0, evaluation_attached=0, evaluation_missing=0,
+                     brain_evaluation=0, accepted_evaluation=0, accepted_choice_with_evaluation=0,
+                     plan_due=0, accepted_structured_plan=0, missing_structured_plan=0,
+                     saved_structured_plan=0, plan_readback=0, checkpoint_review_due=0,
+                     probability_delivered=0)
+    admissions, evidence = Counter(), []
+    for row in records:
+        c = obj(obj(row.get('boss_sim')).get('construction'))
+        if c.get('admission'):
+            admissions[obj(c['admission']).get('reason') or 'admitted'] += 1
+        if enabled and c.get('evaluation'):
+            counts['evaluation_expected'] += 1
+            attached = c.get('evaluation_delivery') == 'attached'
+            counts['evaluation_attached' if attached else 'evaluation_missing'] += 1
+            if not attached:
+                evidence.append({'kind': 'evaluation_not_attached', 'source': row.get('_source'),
+                                 'decision': row.get('decision_id')})
+    saved = [r for r in plans if obj(r.get('plan')).get('runId') == rid and obj(obj(r.get('plan')).get('construction'))]
+    counts['saved_structured_plan'] = len(saved)
+    for row in brains:
+        payload, answer = obj(row.get('payload')), obj(row.get('answer'))
+        facts, task = obj(payload.get('facts')), obj(payload.get('run_plan_task'))
+        evaluation = obj(facts.get('construction_evaluation'))
+        delivered = evaluation.get('schema') == 'construction-evaluation-v1' and evaluation.get('run') == rid
+        accepted = row.get('accepted') is True
+        counts['brain_evaluation'] += delivered
+        counts['accepted_evaluation'] += delivered and accepted
+        counts['accepted_choice_with_evaluation'] += delivered and accepted and (
+            bool(answer.get('choice')) or isinstance(answer.get('plan'), list) or isinstance(answer.get('steps'), list))
+        counts['probability_delivered'] += bool(obj(facts.get('construction')).get('forecasts'))
+        context = evaluation or obj(task.get('construction_context')) or obj(payload.get('construction_context'))
+        due = bool(context) and ('run_plan_task' in payload or row.get('label') == 'run-plan')
+        if due:
+            counts['plan_due'] += 1
+            plan = answer if row.get('label') == 'run-plan' else obj(answer.get('run_plan'))
+            c = obj(plan.get('construction'))
+            catalog = {obj(core).get('id') for core in context.get('coreCatalog', []) if isinstance(obj(core).get('id'), str)}
+            primary, alternatives, floor = c.get('primary'), c.get('alternatives'), context.get('floor')
+            valid = (isinstance(primary, str) and primary in catalog | {'uncommitted'}
+                     and isinstance(alternatives, list) and len(alternatives) <= 3
+                     and all(isinstance(x, str) and x in catalog and x != primary for x in alternatives)
+                     and len(set(alternatives)) == len(alternatives)
+                     and type(c.get('checkpoint')) is int and type(floor) is int and floor < c['checkpoint'] <= 100
+                     and all(isinstance(c.get(key), str) and c[key].strip() for key in ('reason', 'pivot_if')))
+            if accepted:
+                counts['accepted_structured_plan' if valid else 'missing_structured_plan'] += 1
+                if not valid:
+                    evidence.append({'kind': 'accepted_without_structured_plan', 'source': row.get('_source'),
+                                     'question': row.get('question_id')})
+        previous = obj(facts.get('your_run_plan'))
+        pc = obj(previous.get('construction'))
+        matched = [r for r in saved if obj(r['plan']).get('construction') == pc
+                   and obj(r['plan']).get('floor') == previous.get('made_on_floor') and r.get('ts', '') <= row.get('ts', '')]
+        if pc and matched:
+            counts['plan_readback'] += 1
+            if task and isinstance(pc.get('checkpoint'), int) and facts.get('floor', -1) >= pc['checkpoint']:
+                counts['checkpoint_review_due'] += 1
+    return {'enabled': enabled, **dict(counts), 'admission': dict(admissions), 'evidence': evidence,
+            'alert': enabled and (counts['evaluation_missing'] >= FAIL_STREAK or counts['missing_structured_plan'] >= FAIL_STREAK),
+            'limits': 'Payload delivery, accepted output and saved/read-back plans are distinct observations, not causal win-rate evidence. Missing calibration is pending, not a service failure.'}
+
+
+def summarize(config, decisions, brains, coverage, plans=()):
     if str(config.get('character', '')).upper() != 'SILENT' or obj(config.get('construction')).get('architecture') != 'V5':
         return None
     rid = config['run_id']
@@ -141,11 +207,13 @@ def summarize(config, decisions, brains, coverage):
     candidates = Counter(observed=0, unsupported=0, with_dpr=0, missing_dpr=0)
     seen = set()
     construction = Counter()
+    unique_records = []
     for row in records:
         identity = row.get('decision_id') or (row.get('ts'), row.get('label'))
         if identity in seen:
             continue
         seen.add(identity)
+        unique_records.append(row)
         sim = obj(row.get('boss_sim'))
         status = obj(sim.get('construction')).get('status')
         if status:
@@ -202,10 +270,12 @@ def summarize(config, decisions, brains, coverage):
     brain_rows = list({r.get('question_id') or (r.get('ts'), r.get('label')): r for r in brain_rows}.values())
     delivered = sum(dpr_count(r.get('options')) > 0 for r in brain_rows)
     complete = bool(coverage.get('decisions_complete'))
+    all_brains = list({r.get('question_id') or (r.get('ts'), r.get('label')): r for r in brains if run_of(r) == rid}.values())
+    pipeline = construction_pipeline(config, unique_records, all_brains, plans)
     return {'schema': 'module-health-v1', 'at': datetime.now(timezone.utc).isoformat(), 'run_id': rid,
             'character': 'SILENT', 'architecture': 'V5', 'construction_mode': obj(config.get('construction')).get('mode'),
             'simulation_enabled': enabled, 'coverage': coverage, 'complete': complete,
-            'construction': dict(construction), 'b3': {'attempts': attempts, 'skipped': skipped, 'produced_dpr': produced,
+            'construction': dict(construction), 'construction_pipeline': pipeline, 'b3': {'attempts': attempts, 'skipped': skipped, 'produced_dpr': produced,
               'coverage': produced / attempts if attempts else None, 'failures': dict(faults),
               'unsupported': len(unsupported), 'applicable_attempts': attempts - len(unsupported),
               'unsupported_only': len(unsupported), 'candidates': dict(candidates),
@@ -216,7 +286,7 @@ def summarize(config, decisions, brains, coverage):
             'brain': {'observed_questions': len(brain_rows), 'questions_with_dpr': delivered,
                       'accepted_with_dpr': sum(r.get('accepted') is True and dpr_count(r.get('options')) > 0 for r in brain_rows),
                       'decision_use': 'unknown; delivery is not evidence of reasoning or a fixed DPR weight'},
-            'alert': enabled and longest >= FAIL_STREAK, 'failures': evidence, 'diagnostics': phases,
+            'alert': (enabled and longest >= FAIL_STREAK) or pipeline['alert'], 'failures': evidence, 'diagnostics': phases,
             'unsupported': unsupported,
             'scope': 'Service availability only; sample threshold, simulator validity and game policy unchanged.'}
 
@@ -263,7 +333,7 @@ def persist(report, directory, notify=True):
             event = queue / alert['queue_name']
             sent = health / f'{rid}-queued.json'
             if not sent.exists():
-                message = (f'Silent V5 {rid} 连续至少{FAIL_STREAK}道适用题缺少完整DPR。证据：{alert_path}。\n'
+                message = (f'Silent V5 {rid} 模块验收异常：检查DPR缺失与construction_pipeline接线计数。证据：{alert_path}。\n'
                            '这是模块服务健康异常，请原ops自主核对样本/耗时/阶段诊断及当前owner，沿既有修复链去重处理；'
                            '不要降低300样本门槛、自动重启对局或新建重复学习。按Roy要求无需常规回报watcher/Roy。\n')
                 # Exclusive creation keeps a queued event's bytes stable across retries.
@@ -287,8 +357,9 @@ def audit(root, directory, run_id=None, decisions=None, character=None, notify=T
         source = {'path': str(root / 'logs/decisions.jsonl'), 'source': 'report.py full run records'}
         complete = True
     brains, brain_source = read_tail(root / 'logs/brain.jsonl')
+    plans, plan_source = read_tail(root / 'logs/run-plans.jsonl', 4 * 1024 * 1024)
     report = summarize(config, decisions, brains, {'decisions_complete': complete, 'decisions': source,
-                         'brain': brain_source, 'config': config_source})
+                         'brain': brain_source, 'plans': plan_source, 'config': config_source}, plans)
     persist(report, directory, notify)
     return report
 

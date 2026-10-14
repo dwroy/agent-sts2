@@ -1,5 +1,5 @@
 import { binomialInterval } from "../sim/quantitative-stats.js";
-import type { BuildAction, BuildState, CoreTemplate, FightEvaluator, OpportunityModel, PathForecast, PathStep, Probability, Requirement } from "./types.js";
+import type { BuildAction, BuildState, CoreTemplate, FightEvaluator, Opportunity, OpportunityModel, PathForecast, PathStep, Probability, Requirement } from "./types.js";
 
 export function missingRequirements(state: BuildState, core: CoreTemplate): { id: string; count: number }[] {
   const count = (r: Requirement): number => {
@@ -12,8 +12,7 @@ export function missingRequirements(state: BuildState, core: CoreTemplate): { id
 }
 
 /** Each transition checks resources before mutation; an invalid proposal never creates a future slot or gold. */
-export function applyBuildAction(state: BuildState, action: BuildAction): BuildState | null {
-  const next = structuredClone(state);
+function mutateBuildAction(next: BuildState, action: BuildAction): BuildState | null {
   if (action.kind === "skip") return next;
   if (!Number.isFinite(action.price) || action.price < 0 || next.gold < action.price) return null;
   next.gold -= action.price;
@@ -30,9 +29,13 @@ export function applyBuildAction(state: BuildState, action: BuildAction): BuildS
   } else {
     if (!Number.isInteger(action.index) || action.index < 0 || action.index >= next.cards.length) return null;
     if (action.kind === "remove") next.cards.splice(action.index, 1);
-    else { if (next.cards[action.index]!.upgraded) return null; next.cards[action.index]!.upgraded = true; }
+    else { if (next.cards[action.index]!.upgraded) return null; next.cards[action.index] = { ...next.cards[action.index]!, upgraded: true }; }
   }
   return next;
+}
+
+export function applyBuildAction(state: BuildState, action: BuildAction): BuildState | null {
+  return mutateBuildAction(structuredClone(state), action);
 }
 
 export function applyBuildActions(state: BuildState, actions: readonly BuildAction[]): BuildState | null {
@@ -46,7 +49,9 @@ export function completionChoice(state: BuildState, core: CoreTemplate, actions:
   const distance = (s: BuildState) => missingRequirements(s, core).reduce((n, r) => n + r.count, 0);
   let best: BuildAction = { kind: "skip" }, score = distance(state), price = Infinity;
   for (const action of actions) {
-    const after = applyBuildAction(state, action);
+    // Only the inventory distance is read here. Copy the mutable arrays, without
+    // cloning every unchanged card/resource object for every candidate offer.
+    const after = mutateBuildAction({ ...state, cards: state.cards.slice(), relics: state.relics.slice() }, action);
     if (!after) continue;
     const value = distance(after), cost = action.kind === "skip" ? 0 : action.price;
     if (value < score || (value === score && value < distance(state) && cost < price)) { best = action; score = value; price = cost; }
@@ -78,6 +83,29 @@ export interface ForecastInput {
   terminalIsRunEnd?: boolean;
   /** A policy only receives the revealed present, never the sampled future. */
   chooseAction?: (state: Readonly<BuildState>, core: CoreTemplate, actions: readonly BuildAction[]) => BuildAction;
+  /** Shared immutable opportunity lookup for this question, never a cached outcome. */
+  prepared?: PreparedOpportunities;
+}
+
+type OpportunityContext = Pick<ForecastInput, "model" | "steps" | "act" | "ascension" | "currentRun" | "asOf">;
+export interface PreparedOpportunities {
+  readonly model: OpportunityModel;
+  readonly context: string;
+  readonly pools: readonly (readonly Opportunity[])[];
+  readonly support: PathForecast["support"];
+}
+function contextKey(input: OpportunityContext): string {
+  return JSON.stringify([input.act, input.ascension, input.currentRun, input.asOf, input.steps.map((s) => [s.floor, s.kind])]);
+}
+/** Filtering the same history for every option/core wastes the online simulation budget. */
+export function prepareOpportunities(input: OpportunityContext): PreparedOpportunities {
+  const pools = input.steps.map((step) => input.model.rows.filter((r) => r.run !== input.currentRun && r.ts < input.asOf
+    && r.act === input.act && r.ascension === input.ascension && r.kind === step.kind && Math.abs(r.floor - step.floor) <= 4));
+  const supplied = pools.flat();
+  const opportunityPools = pools.filter((_, i) => ["reward", "shop"].includes(input.steps[i]!.kind));
+  return { model: input.model, context: contextKey(input), pools,
+    support: { opportunities: new Set(supplied.map((r) => r.id)).size, independentRuns: new Set(supplied.map((r) => r.run)).size,
+      minimumPool: opportunityPools.length ? Math.min(...opportunityPools.map((p) => p.length)) : 0 } };
 }
 
 /** Joint paths preserve resource costs, death and censoring; never multiply marginal probabilities. */
@@ -87,8 +115,9 @@ export function forecastConstruction(input: ForecastInput): PathForecast {
   const samples = Math.max(1, Math.min(2048, Math.floor(input.samples ?? 256)));
   const signature: (boolean | null)[] = [], conditional: (boolean | null)[] = [], functional: (boolean | null)[] = [], wins: (boolean | null)[] = [];
   const floors: number[] = [], dpr: number[] = [];
-  const pools = input.steps.map((step) => model.rows.filter((r) => r.run !== input.currentRun && r.ts < input.asOf
-    && r.act === input.act && r.ascension === input.ascension && r.kind === step.kind && Math.abs(r.floor - step.floor) <= 4));
+  const prepared = input.prepared?.model === model && input.prepared.context === contextKey(input)
+    ? input.prepared : prepareOpportunities(input);
+  const pools = prepared.pools;
   for (let n = 0; n < samples; n++) {
     let state = structuredClone(input.state), inventoryKnown = true, conditionalKnown = true, survivalKnown = true, functionalKnown: boolean | null = null;
     let dead = state.hp <= 0, first = missingRequirements(state, core).length ? null : state.floor;
@@ -138,11 +167,8 @@ export function forecastConstruction(input: ForecastInput): PathForecast {
     if (inventoryKnown && first !== null) floors.push(first);
     if (turns > 0 && survivalKnown) dpr.push(damage / turns);
   }
-  const supplied = pools.flat();
-  const opportunityPools = pools.filter((_, i) => ["reward", "shop"].includes(input.steps[i]!.kind));
   return { core: core.id, candidate: core.status !== "validated", samples, missingNow: missingRequirements(input.state, core),
-    support: { opportunities: new Set(supplied.map((r) => r.id)).size, independentRuns: new Set(supplied.map((r) => r.run)).size,
-      minimumPool: opportunityPools.length ? Math.min(...opportunityPools.map((p) => p.length)) : 0 },
+    support: { ...prepared.support },
     signature: probability(signature), conditionalSignature: probability(conditional), aliveAndFunctional: probability(functional), terminalWin: probability(wins),
     firstSignatureFloor: floors.length ? floors.reduce((a, b) => a + b, 0) / floors.length : null,
     meanDamagePerTurn: dpr.length ? dpr.reduce((a, b) => a + b, 0) / dpr.length : null,
