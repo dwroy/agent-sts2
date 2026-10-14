@@ -92,7 +92,7 @@ def executable(path):
         path == pattern or path.startswith(pattern + "/") or fnmatch.fnmatch(path, pattern) for pattern in SOURCE_PATHS)
 
 
-def acceptance(root, tree, source, main_commit, live_commit):
+def acceptance(root, tree, source, main_commit, live_commit, allocation_base=None):
     if not all(retention.SHA.fullmatch(x or "") for x in (source, main_commit, live_commit)):
         raise ValueError("full source and publication SHAs required")
     live = retention.safe_path(root, os.environ.get("STS2_LIVE") or root / ".worktrees/live")
@@ -100,7 +100,10 @@ def acceptance(root, tree, source, main_commit, live_commit):
         raise ValueError("publication is not in this runtime's main/live")
     if git(tree, "rev-parse", "HEAD").decode().strip() != source:
         raise ValueError("source differs from workspace HEAD")
-    base = git(root, "merge-base", source, main_commit).decode().strip()
+    base = allocation_base or git(root, "merge-base", source, main_commit).decode().strip()
+    if not retention.SHA.fullmatch(base) or subprocess.run(
+            ["git", "-C", str(root), "merge-base", "--is-ancestor", base, source], capture_output=True).returncode:
+        raise ValueError("allocation baseline is not in the source history")
     changed = git(root, "diff", "--name-only", base, source).decode().splitlines()
     checked = []
     for name in changed:
@@ -121,7 +124,18 @@ def acceptance(root, tree, source, main_commit, live_commit):
 
 def complete(root, directory, name, source, main_commit, live_commit):
     tree = checked_tree(root, name)
-    proof = acceptance(root, tree, source, main_commit, live_commit)
+    allocation = directory / "retention/allocations" / (name + ".json")
+    base = None
+    if allocation.is_file():
+        record = retention.load(retention.safe_path(root, allocation))
+        if (record.get("schema") != "workspace-allocation-v1" or record.get("root") != str(root)
+                or record.get("worktree") != str(tree) or record.get("branch") != name
+                or record.get("state") != "allocated"):
+            raise ValueError("original allocation receipt mismatch")
+        base = record["base"]
+    proof = acceptance(root, tree, source, main_commit, live_commit, base)
+    if base is not None:
+        proof.update(allocation_receipt=str(allocation.relative_to(root)), allocation_sha256=retention.sha_file(allocation))
     record = {"schema": "workspace-lifecycle-v1", "root": str(root), "worktree": str(tree),
               "state": "accepted", "at": retention.stamp(), "acceptance": proof}
     retention.atomic(directory / "retention/workspaces" / (name + ".json"), record)

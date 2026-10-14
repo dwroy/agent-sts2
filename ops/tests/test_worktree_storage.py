@@ -269,6 +269,25 @@ class Storage(unittest.TestCase):
             storage.retention.sweep(self.root, self.directory, False, 1)
         cache.assert_not_called()
 
+    def test_allocated_feature_checks_live_leaves_even_after_main_contains_source(self):
+        tree = self.root / '.worktrees/dev-allocation-fixture'
+        live = self.root / '.worktrees/live'
+        self.git('worktree', 'add', '-b', 'live', str(live), self.head)
+        storage.checkout.create(self.root, self.directory, tree, 'main')
+        (tree / 'agent/src/fixed.ts').write_text('export const fixed = 99;\n')
+        self.git('add', 'agent/src/fixed.ts', tree=tree)
+        self.git('commit', '-m', 'fixed feature source', tree=tree)
+        source = self.git('rev-parse', 'HEAD', tree=tree).strip()
+        self.git('cherry-pick', source)
+        main = self.git('rev-parse', 'HEAD').strip()
+        with self.assertRaisesRegex(ValueError, 'source leaf'):
+            storage.workspaces.complete(self.root, self.directory, tree.name, source, main, self.head)
+        self.git('cherry-pick', source, tree=live)
+        publication = self.git('rev-parse', 'HEAD', tree=live).strip()
+        proof = storage.workspaces.complete(self.root, self.directory, tree.name, source, main, publication)['acceptance']
+        self.assertEqual(proof['base'], self.head)
+        self.assertEqual(proof['verified_source_paths'], ['agent/src/fixed.ts'])
+
 
 if __name__ == '__main__':
     unittest.main()

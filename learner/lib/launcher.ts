@@ -609,10 +609,11 @@ export async function main(argv: string[], overrides: Partial<LauncherDeps> = {}
 export function learnerGitRules(projectRoot: string, cwd?: string): Record<string, "read" | "write" | "none"> {
   const git = join(mainCheckout(projectRoot), ".git");
   const rules: Record<string, "read" | "write" | "none"> = { [git]: "write", [join(git, "hooks")]: "read", [join(git, "config")]: "read" };
-  if (cwd) {
+  // The source checkout and the independent live lane both need their exact Git metadata grants.
+  for (const checkout of new Set([projectRoot, cwd].filter((path): path is string => !!path))) {
     try {
-      const pointer = readFileSync(join(cwd, ".git"), "utf8").match(/^gitdir:\s*(.+)$/m)?.[1]?.trim();
-      if (pointer) rules[resolve(cwd, pointer)] = "write";
+      const pointer = readFileSync(join(checkout, ".git"), "utf8").match(/^gitdir:\s*(.+)$/m)?.[1]?.trim();
+      if (pointer) rules[resolve(checkout, pointer)] = "write";
     } catch {
       // cwd is the main checkout (a .git directory) or not a git checkout: nothing more to grant
     }
