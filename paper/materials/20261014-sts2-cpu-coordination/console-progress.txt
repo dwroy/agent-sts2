@@ -1,0 +1,116 @@
+x chose 逃脱计划 (Skill, 0E) (code's fallback order: 50, rank 1 of 4; not shown to Codex)
+23:40:10 REWARD          reward/proceed       -> collect_rewards_and_proceed jev 0 ms | 0 in
+         no rewards left to claim; advancing with collect_rewards_and_proceed
+23:40:11 MAP             map/route-follow     -> choose_map_node (option_index=1) jev 0 ms | 0 in
+         following the brain's route plan (floor 1): step 4/16 Monster at row 4, col 1; plan r1c1 普通战 → r2c1 普通战 → r3c0 问号 → r4c1 普通战 → r5c1 问号 → r6c1 休息 → r7c2 商店 → r8c1 休息 → r9c2 宝箱 → r10c3 精英 → r11c2 问号 → r12c2 休息 → r13c2 精英 → r14c2 普通战 → r15c2 休息 → r16c3 Boss
+23:40:11 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+23:40:17 COMBAT          combat/plan-choice   -> play_card (card_index=0, target_index=2) conf 0.95 jev 599 ms | 7856 in
+         Jev chose plan 5/5 (打击 -> 墨宝 #3, 打击 -> 墨宝 #3, 尖啸) with confidence 0.95; code rank - (rollout's best line, added)
+23:40:17 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+23:40:18 COMBAT          combat/plan-continue -> play_card (card_index=2, target_index=2) jev 0 ms | 0 in
+         continuing the Jev-chosen plan: 打击 -> 墨宝 #3
+23:40:18 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+23:40:19 COMBAT          combat/plan-continue -> play_card (card_index=3) jev 0 ms | 0 in
+         continuing the Jev-chosen plan: 尖啸
+23:40:19 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+23:40:21 COMBAT          combat/plan          -> end_turn jev 0 ms | 0 in
+         code plan (dominates every other line): end turn; hp -0, dmg 0
+23:40:21 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+23:40:30 COMBAT          combat/plan-choice   -> play_card (card_index=0, target_index=0) conf 0.30 jev 641 ms | 5812 in
+         Jev chose plan 3/3 (打击 -> 墨宝 #1, 防御, 打击 -> 墨宝 #3, 逃脱计划) with confidence 0.30; code rank - (rollout's best line, added)
+23:40:30 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+23:40:31 COMBAT          combat/plan-continue -> play_card (card_index=0) jev 0 ms | 0 in
+         continuing the Jev-chosen plan: 防御
+23:40:31 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+23:40:32 COMBAT          combat/plan-continue -> play_card (card_index=0, target_index=2) jev 0 ms | 0 in
+         continuing the Jev-chosen plan: 打击 -> 墨宝 #3
+23:40:32 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+23:40:35 COMBAT          combat/plan-choice   -> play_card (card_index=0, target_index=0) conf 0.90 jev 742 ms | 4586 in
+         Jev chose plan 1/2 (切割 -> 墨宝 #1, 逃脱计划) with confidence 0.90; code rank 1
+23:40:35 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+23:40:36 COMBAT          combat/plan-continue -> play_card (card_index=0) jev 0 ms | 0 in
+         continuing the Jev-chosen plan: 逃脱计划
+23:40:36 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+23:40:38 COMBAT          combat/plan-choice   -> end_turn conf 0.92 jev 335 ms | 4567 in
+         Jev chose plan 1/2 (end turn) with confidence 0.92; code rank 1
+23:40:38 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+23:40:44 COMBAT          combat/plan-choice   -> play_card (card_index=0, target_index=0) conf 0.48 jev 938 ms | 12637 in
+         Jev chose plan 1/10 (蛇咬 -> 墨宝 #1, 中和 -> 墨宝 #2, 生存者) with confidence 0.48; code rank 1
+23:40:44 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+23:40:46 COMBAT          combat/plan-continue -> play_card (card_index=0, target_index=1) jev 0 ms | 0 in
+         continuing the Jev-chosen plan: 中和 -> 墨宝 #2
+23:40:46 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+23:40:47 note action came back pending; waited for the board to settle
+23:40:47 COMBAT          combat/plan-continue -> play_card (card_index=2) jev 0 ms | 0 in
+         continuing the Jev-chosen plan: 生存者
+23:40:48 CARD_SELECTION  selection/choose     -> select_deck_card (option_index=2) conf 0.55 jev 338 ms | 3981 in
+         Jev chose 进阶之灾 with confidence 0.55
+23:40:49 COMBAT          combat/plan          -> end_turn jev 0 ms | 0 in
+         code plan (dominates every other line): end turn; hp -0, dmg 7
+23:40:49 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+23:40:54 COMBAT          combat/plan          -> play_card (card_index=0) jev 0 ms | 0 in
+         code plan (dominates every other line): 防御, 打击 -> 墨宝, 中和 -> 墨宝; hp -0, dmg 9
+         completed: Action completed.
+         progress: 100 decisions | 20 Jev calls | 117,982 in / 1,001 out tokens | ≈ $0.0050 | 636.96 s
+23:40:54 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+23:40:55 COMBAT          combat/plan-continue -> play_card (card_index=1, target_index=0) jev 0 ms | 0 in
+         continuing the code-chosen plan: 打击 -> 墨宝
+23:40:55 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+23:40:56 COMBAT          combat/plan-continue -> play_card (card_index=1, target_index=0) jev 0 ms | 0 in
+         continuing the code-chosen plan: 中和 -> 墨宝
+23:40:56 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+23:40:57 COMBAT          combat/plan          -> end_turn jev 0 ms | 0 in
+         code plan (dominates every other line): end turn; hp -0, dmg 0
+23:40:57 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+23:41:02 COMBAT          combat/lethal        -> play_card (card_index=0, target_index=0) jev 0 ms | 0 in
+         lethal: 打击 -> 墨宝, 打击 -> 墨宝
+23:41:02 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+23:41:02 COMBAT          combat/plan-continue -> play_card (card_index=2, target_index=0) jev 0 ms | 0 in
+         continuing the code-chosen plan: 打击 -> 墨宝
+23:41:03 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+23:41:03 combat ended — total token usage: 105 decisions, 20 Jev calls, 117,982 in / 1,001 out tokens (≈ $0.0050)
+23:41:04 REWARD          reward/claim         -> claim_reward (option_index=0) jev 0 ms | 0 in
+         claiming Gold (9金币)
+23:41:04 REWARD          reward/claim         -> claim_reward (option_index=0) jev 0 ms | 0 in
+         claiming Potion (敏捷药水)
+23:41:04 REWARD          reward/claim         -> claim_reward (option_index=0) jev 0 ms | 0 in
+         claiming Card (将一张牌添加到你的牌组。)
+23:43:20 note boss sim on reward/card: 1000 samples per option, 136044 ms
+23:43:25 note V5 construction shadow: predicted, evaluation=attached, probability=absent, 4815 ms
+23:43:25 note Codex decides reward/card (4 options, floor 5, run context 10016 chars)
+23:43:58 note Codex (30.9 s) reward/card: card1 — Flask adds sustained poison, stronger observed boss outcomes, and some simulated wins. Higher AoE DPR alone isn't survival; sparse traces leave dilution uncertain.
+23:43:58 REWARD          reward/card          -> choose_reward_card (option_index=1) jev 0 ms | 169871 in
+         Codex decided card1: Flask adds sustained poison, stronger observed boss outcomes, and some simulated wins. Higher AoE DPR alone isn't survival; sparse traces leave dilution uncertain. | Codex chose 弹跳药瓶 (Skill, 2E) (code's fallback order: 50, rank 1 of 4; not shown to Codex)
+23:43:58 REWARD          reward/proceed       -> collect_rewards_and_proceed jev 0 ms | 0 in
+         no rewards left to claim; advancing with collect_rewards_and_proceed
+23:44:00 MAP             map/route-follow     -> choose_map_node (option_index=0) jev 0 ms | 0 in
+         following the brain's route plan (floor 1): step 5/16 Unknown at row 5, col 1; plan r1c1 普通战 → r2c1 普通战 → r3c0 问号 → r4c1 普通战 → r5c1 问号 → r6c1 休息 → r7c2 商店 → r8c1 休息 → r9c2 宝箱 → r10c3 精英 → r11c2 问号 → r12c2 休息 → r13c2 精英 → r14c2 普通战 → r15c2 休息 → r16c3 Boss
+23:45:13 note boss sim on event/choose: 1000 samples per option, 72624 ms
+23:45:14 note V5 construction shadow: predicted, evaluation=attached, probability=absent, 1097 ms
+23:45:14 note Codex decides event/choose (2 options, floor 6, run context 6492 chars)
+23:45:42 note Codex (28.0 s) event/choose: o1 — Relic upside outweighs an ethereal curse; the nearby shop offers removal. Simulations omit relic value and leave dilution uncertain.
+23:45:42 note action came back completed; waited for the board to settle
+23:45:42 EVENT           event/choose         -> choose_event_option (option_index=1) jev 0 ms | 160957 in
+         Codex decided o1: Relic upside outweighs an ethereal curse; the nearby shop offers removal. Simulations omit relic value and leave dilution uncertain. | Codex chose 那个 (code's fallback order: 0, rank 1 of 2; not shown to Codex)
+23:45:43 note action came back completed; waited for the board to settle
+23:45:43 EVENT           event/leave          -> choose_event_option (option_index=0) jev 0 ms | 0 in
+         the event is finished; taking the proceed option
+23:45:43 note run plan due (review, floor 6): it rides on the next Codex question
+23:45:45 MAP             map/route-follow     -> choose_map_node (option_index=1) jev 0 ms | 0 in
+         following the brain's route plan (floor 1): step 6/16 RestSite at row 6, col 1; plan r1c1 普通战 → r2c1 普通战 → r3c0 问号 → r4c1 普通战 → r5c1 问号 → r6c1 休息 → r7c2 商店 → r8c1 休息 → r9c2 宝箱 → r10c3 精英 → r11c2 问号 → r12c2 休息 → r13c2 精英 → r14c2 普通战 → r15c2 休息 → r16c3 Boss
+23:52:04 note boss sim on rest/plan: 1000 samples per option, 378884 ms
+23:52:11 note V5 construction shadow: predicted, evaluation=attached, probability=absent, 7652 ms
+23:52:11 note the run plan (review) rides on rest/plan
+23:52:11 note Codex decides rest/plan (12 options, floor 7, run context 11323 chars)
+23:54:09 note run plan (rode on rest/plan, review): Poison pressure backed by dexterity, weakness, and efficient block; want HAZE, ACCELERANT, BACKFLIP, FOOTWORK, NOXIOUS_FUMES, DAGGER_SPRAY; elites normal; rest auto
+23:54:09 note Codex (117.3 s) rest/plan: o1:c19 — Flask upgrade substantially improves simulated wins and reduces HP loss. The shop-to-rest path allows safe smithing now.
+23:54:09 REST            rest/plan            -> choose_rest_option (option_index=1) jev 0 ms | 221213 in
+         Codex decided o1:c19: Flask upgrade substantially improves simulated wins and reduces HP loss. The shop-to-rest path allows safe smithing now. | Codex chose 锻造 (SMITH): upgrade 弹跳药瓶 (code's fallback order: 6.05, rank 1 of 12; not shown to Codex)
+23:54:10 CARD_SELECTION  selection/upgrade    -> select_deck_card (option_index=18) jev 0 ms | 0 in
+         Codex plan 1GN7WFBWC2E3:F7:rest#1 step 2: upgrade 弹跳药瓶 (named with the rest choice)
+23:54:10 REST            rest/proceed         -> proceed jev 0 ms | 0 in
+         nothing to choose at this rest site
+23:54:11 MAP             map/route-follow     -> choose_map_node (option_index=1) jev 0 ms | 0 in
+         following the brain's route plan (floor 1): step 7/16 Shop at row 7, col 2; plan r1c1 普通战 → r2c1 普通战 → r3c0 问号 → r4c1 普通战 → r5c1 问号 → r6c1 休息 → r7c2 商店 → r8c1 休息 → r9c2 宝箱 → r10c3 精英 → r11c2 问号 → r12c2 休息 → r13c2 精英 → r14c2 普通战 → r15c2 休息 → r16c3 Boss
+23:54:12 SHOP            shop/open            -> open_shop_inventory jev 0 ms | 0 in
+         entering the shop: opening the inventory
