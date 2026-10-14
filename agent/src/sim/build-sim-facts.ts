@@ -33,7 +33,7 @@ import { offHandCardModel, pilePowerExtraCost, type CardModel } from "../reflex/
 import type { MoveModelData, RolloutInput } from "../reflex/rollout.js";
 import { actFirstFloor } from "./route-map.js";
 import { projectPath, restedHp } from "./route-projection.js";
-import { asArray, asRecord, bool, numOrNull, str, type JsonValue } from "../core/util/json.js";
+import { asArray, asRecord, bool, numOrNull, str, toJsonValue, type JsonValue } from "../core/util/json.js";
 import { FIGHT_START_RELICS, bossKey, passiveSimRelic, syntheticBossStart, type SyntheticStart } from "./boss-start.js";
 import { calibratedWinProb } from "./boss-sim.js";
 import { BUILD_SIM_CALIBRATION_SAMPLES, BUILD_SIM_DEADLINE_MS, BUILD_SIM_SAMPLES, BUILD_SIM_SEED, compareOptions, type CompareResult, type DeckOption, type OptionSim } from "./build-sim.js";
@@ -43,6 +43,8 @@ import { silentBuildWinTies } from "./silent-build-win-ties.js";
 import { doubleBossPreparation } from "../knowledge/double-boss.js";
 import { withDoubleBossStart } from "./double-boss-start.js";
 import { BOSS_MARGIN_NOTE } from "./boss-margin.js";
+import { sReadinessMode } from "../core/config.js";
+import { readinessText } from "./boss-readiness.js";
 
 /** The deck-building questions that get the simulation. */
 export const BUILD_SIM_LABELS = new Set([
@@ -536,7 +538,8 @@ export async function withBossSim(decision: Decision, env: DecisionEnv, setup: B
       else if (plan.change !== undefined || plan.mixture) deckOptions.push({ key: plan.key, change: plan.change ?? null, ...(plan.mixture ? { mixture: plan.mixture } : {}) });
     }
     const budget = (setup.deadlineMs ?? BUILD_SIM_DEADLINE_MS) - (now() - started);
-    const result: CompareResult = await compareOptions(setup.runner, start.input, deckOptions, { samples: setup.samples ?? BUILD_SIM_SAMPLES, seed: setup.seed ?? BUILD_SIM_SEED, deadlineMs: Math.max(0, budget), ...(setup.now ? { now: setup.now } : {}), ...(diagnosticEnabled ? { quantitative: true, diagnostics: true } : {}), ...(required ? { requireComplete: true } : {}) });
+    const readinessMode = sReadinessMode(str(asRecord(state.run?.raw)["character_id"]));
+    const result: CompareResult = await compareOptions(setup.runner, start.input, deckOptions, { samples: setup.samples ?? BUILD_SIM_SAMPLES, seed: setup.seed ?? BUILD_SIM_SEED, deadlineMs: Math.max(0, budget), ...(setup.now ? { now: setup.now } : {}), ...(diagnosticEnabled ? { quantitative: true, diagnostics: true } : {}), ...(required ? { requireComplete: true } : {}), ...(readinessMode !== "off" ? { readiness: true } : {}) });
     if (diagnostics) diagnostics = { ...diagnostics, ...result.diagnostics, boss: bossKey(bossId),
       samples: result.samples, requested: result.requested, minimumShown: Math.min(BUILD_SIM_MIN_SHOWN, result.requested),
       timedOut: result.timedOut, simMs: result.elapsedMs, workers: result.workers };
@@ -556,6 +559,8 @@ export async function withBossSim(decision: Decision, env: DecisionEnv, setup: B
     const sims = new Map(result.options.map((sim) => [sim.key, sim]));
     const key = bossKey(bossId);
     const low = continuation?.limitation ?? bossTrustReason(key, "b3", state.run?.ascension, state.run?.floor);
+    const readiness = result.readiness ? { ...result.readiness, trust: { ...result.readiness.trust,
+      rankingEligible: result.readiness.trust.rankingEligible && !low, bossTrustReason: low ?? null } } : null;
     for (const sim of [result.base, ...result.options]) {
       const q = asRecord(sim.quantitative);
       const margin = asRecord(q["boss_relative_margin"]);
@@ -635,6 +640,8 @@ export async function withBossSim(decision: Decision, env: DecisionEnv, setup: B
       ...(lowWin ? { low_win_rate: `当前牌组在模拟里多半打不过（原始胜率 ${pct(b.win)}，校准后的数不会低于 ${(calibratedFloor(state.run?.ascension ?? 0) * 100).toFixed(1)}%，0 胜的读数）：胜率的差信息少，各选项另给 boss 平均剩血（赢的样本算 0）和它的配对差；离 boss 还远时现在的牌组和到 boss 时的牌组差得多` } : {}),
     };
     const record: Record<string, JsonValue> = {
+      ...(readiness ? { readiness: toJsonValue({ ...readiness, mode: readinessMode, ms: result.readinessMs ?? null,
+        delivered: readinessMode === "on" && readiness.trust.rankingEligible }) } : {}),
       ...(required ? { completion: { ...result.completion, required: true, status: "complete",
         latencyTargetMs: setup.deadlineMs ?? BUILD_SIM_DEADLINE_MS, latencyTargetExceeded: ms > (setup.deadlineMs ?? BUILD_SIM_DEADLINE_MS) } } : {}),
       ...(diagnostics ? { diagnostics: { ...diagnostics, status: "produced" } } : {}),
@@ -668,7 +675,8 @@ export async function withBossSim(decision: Decision, env: DecisionEnv, setup: B
     return {
       decision: {
         ...ask,
-        state: { ...ask.state, facts: withSimFacts(facts, simFacts, false) },
+        state: { ...ask.state, facts: { ...withSimFacts(facts, simFacts, false),
+          ...(readinessMode === "on" && readiness ? { boss_readiness: readinessText(readiness) } : {}) } },
         questions: { ...ask.questions, [spec.question]: { ...question, instructions: `${question.instructions} ${continuation ? "boss_sim为F48→F49连续两战原始通关率及配对差，未经两战校准；HP/药水由第一战实际样本传递，全部选项保留，由Codex选择。" : BOSS_SIM_NOTE}`, criteria } },
       },
       record,
