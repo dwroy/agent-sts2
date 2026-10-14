@@ -1,0 +1,27 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/v5-required-boss-evaluation-20261014/agent
+
+ ❯ tests/build-health.test.ts (7 tests | 1 failed) 339ms
+     × the live Silent policy requires all samples and holds failures instead of using the old budget fallback 10ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/build-health.test.ts > B3 service diagnostics > the live Silent policy requires all samples and holds failures instead of using the old budget fallback
+Error: expected a decision, got blocked: the run on screen is Silent (silent) but this process plays Ironclad (CHARACTER unset) and reads its knowledge: abandon or finish that run by hand, or set CHARACTER to it
+ ❯ decide tests/oneshot-support.ts:67:42
+     65| export function decide(e: DecisionEnv): Decision {
+     66|   const outcome = planDecision(e);
+     67|   if (outcome.kind !== "decision") throw new Error(`expected a decisio…
+       |                                          ^
+     68|   return outcome.decision;
+     69| }
+ ❯ tests/build-health.test.ts:24:38
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 4 passed (5)
+      Tests  1 failed | 32 passed (33)
+   Start at  17:30:19
+   Duration  10.37s (transform 4.03s, setup 793ms, import 4.83s, tests 3.84s, environment 1ms)
+

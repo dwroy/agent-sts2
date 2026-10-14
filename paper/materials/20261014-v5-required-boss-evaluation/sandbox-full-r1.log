@@ -1,0 +1,287 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/v5-required-boss-evaluation-20261014/agent
+
+ ❯ tests/component-usage.test.ts (1 test | 1 failed) 50ms
+   × syncs component logs, derives counter deltas and refreshes paper costs on fixed fixtures 48ms
+ ❯ tests/build-health.test.ts (6 tests | 1 failed) 466ms
+     × retains failed Silent workload facts and keeps incomplete DPR out of the question 45ms
+ ❯ tests/silent-build-win-ties.test.ts (7 tests | 2 failed) 79ms
+   × sends bounded quantitative summaries to the actual consumer and full statistics to the audit record 36ms
+   × adds ties to the production DeepSeek question, retaining all options and the original simulation facts 14ms
+ ❯ tests/silent-rest-sim-hp.test.ts (9 tests | 7 failed) 64ms
+   × separates F40's observed +24 HP from two floored boss inputs and locates their different exhausted rooms 33ms
+   × retains every original option, resolver and simulation value in the real question augmentation 6ms
+   × keeps F16's non-exhausted 42 and 65 HP inputs distinct 3ms
+   × also annotates the step-by-step smith group without changing its per-card simulation 3ms
+   × shows current-HP provenance when no route plan is present 3ms
+   × does not turn an unknown projection into a known 1-HP tie 3ms
+   × does not attach a reference or tie to a smith target the planner could not find 3ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 11 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/build-health.test.ts > B3 service diagnostics > retains failed Silent workload facts and keeps incomplete DPR out of the question
+AssertionError: expected { schema: 'build-sim-health-v1', …(4) } to match object { schema: 'build-sim-health-v1', …(5) }
+(2 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "minimumShown": 300,
+-   "reason": "zero_paired_samples",
+-   "requested": 1000,
+-   "samples": 0,
++   "reason": "simulation_error",
+    "schema": "build-sim-health-v1",
+    "status": "failed",
+  }
+
+ ❯ tests/build-health.test.ts:51:40
+     49|     const e = env(r);
+     50|     const result = await withBossSim(decide(env(raw())), e, { ...deps,…
+     51|     expect(result.record?.diagnostics).toMatchObject({ schema: "build-…
+       |                                        ^
+     52|       reason: "zero_paired_samples", samples: 0, requested: 1000, mini…
+     53|     expect(JSON.stringify(result.decision)).not.toContain('effective_d…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/11]⎯
+
+ FAIL  tests/component-usage.test.ts > syncs component logs, derives counter deltas and refreshes paper costs on fixed fixtures
+AssertionError: nice: ../data/logdb-venv/bin/python: No such file or directory (os error 2)
+: expected 127 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 127
+
+ ❯ tests/component-usage.test.ts:14:38
+     12|     child.on("close", (code) => resolve({ code, output }));
+     13|   });
+     14|   expect(result.code, result.output).toBe(0);
+       |                                      ^
+     15|   expect(result.output).toContain("Ran 9 tests");
+     16| }, 20_000);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/11]⎯
+
+ FAIL  tests/silent-build-win-ties.test.ts > sends bounded quantitative summaries to the actual consumer and full statistics to the audit record
+AssertionError: expected undefined to match object { samples: 8, …(2) }
+
+- Expected:
+{
+  "capped": 1,
+  "hp_loss": {
+    "p10": 5,
+    "p90": 19,
+  },
+  "samples": 8,
+}
+
++ Received:
+undefined
+
+ ❯ tests/silent-build-win-ties.test.ts:123:55
+    121|     paired_hp_loss_difference: { n: 8, mean: -2, meanSe: 0.7, p10: -4,…
+    122|   const { outcome, criteria } = await question("SILENT", 8, quantitati…
+    123|   expect(JSON.parse(criteria.o0!).quantitative_fight).toMatchObject({ …
+       |                                                       ^
+    124|   expect(outcome.record?.quantitative).toMatchObject({ base: quantitat…
+    125|   expect(JSON.parse(criteria.unsupported!)).not.toHaveProperty("quanti…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/11]⎯
+
+ FAIL  tests/silent-build-win-ties.test.ts > adds ties to the production DeepSeek question, retaining all options and the original simulation facts
+AssertionError: expected { error: '必需的配对样本尚未全部完成', ms: 4, …(2) } to not have property "error"
+
+- Expected:
+undefined
+
++ Received:
+"必需的配对样本尚未全部完成"
+
+ ❯ tests/silent-build-win-ties.test.ts:132:30
+    130| it("adds ties to the production DeepSeek question, retaining all optio…
+    131|   const { outcome, ask, criteria } = await question();
+    132|   expect(outcome.record).not.toHaveProperty("error");
+       |                              ^
+    133|   expect(Object.keys(criteria)).toEqual(Object.keys(ask.questions.pick…
+    134|   for (const option of options) {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/11]⎯
+
+ FAIL  tests/silent-rest-sim-hp.test.ts > separates F40's observed +24 HP from two floored boss inputs and locates their different exhausted rooms
+AssertionError: expected undefined to match object { current_hp: 4, …(8) }
+
+- Expected:
+{
+  "after_action_hp": 28,
+  "after_action_max_hp": 82,
+  "assumed_future_heal_floors": [
+    44,
+    47,
+  ],
+  "current_hp": 4,
+  "entry_hp_tied_with": [
+    "o1:c0",
+  ],
+  "entry_source": "route",
+  "immediate_hp_gain": 24,
+  "projection_exhausted_at": {
+    "floor": 45,
+    "room": "Elite",
+  },
+  "simulated_entry_hp": 1,
+}
+
++ Received:
+undefined
+
+ ❯ tests/silent-rest-sim-hp.test.ts:98:27
+     96| it("separates F40's observed +24 HP from two floored boss inputs and l…
+     97|   const { reference } = await question();
+     98|   expect(reference("o0")).toMatchObject({ current_hp: 4, after_action_…
+       |                           ^
+     99|     after_action_max_hp: 82, simulated_entry_hp: 1, entry_source: "rou…
+    100|     projection_exhausted_at: { floor: 45, room: "Elite" }, assumed_fut…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/11]⎯
+
+ FAIL  tests/silent-rest-sim-hp.test.ts > retains every original option, resolver and simulation value in the real question augmentation
+AssertionError: expected { Object (error, ms, ...) } to not have property "error"
+
+- Expected:
+undefined
+
++ Received:
+"必需的配对样本尚未全部完成"
+
+ ❯ tests/silent-rest-sim-hp.test.ts:111:30
+    109| it("retains every original option, resolver and simulation value in th…
+    110|   const { outcome, ask, criteria, result } = await question();
+    111|   expect(outcome.record).not.toHaveProperty("error");
+       |                              ^
+    112|   expect(Object.keys(criteria)).toEqual(Object.keys(ask.questions.pick…
+    113|   expect((outcome.decision as AskDecision).deepseek).toBe(ask.deepseek…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/11]⎯
+
+ FAIL  tests/silent-rest-sim-hp.test.ts > keeps F16's non-exhausted 42 and 65 HP inputs distinct
+AssertionError: expected undefined to match object { current_hp: 42, …(6) }
+
+- Expected:
+{
+  "after_action_hp": 65,
+  "assumed_future_heal_floors": [],
+  "current_hp": 42,
+  "immediate_hp_gain": 23,
+  "projected_boss_hp": 65,
+  "projection_exhausted_at": null,
+  "simulated_entry_hp": 65,
+}
+
++ Received:
+undefined
+
+ ❯ tests/silent-rest-sim-hp.test.ts:128:27
+    126| it("keeps F16's non-exhausted 42 and 65 HP inputs distinct", async () …
+    127|   const { reference } = await question({ floor: 16 });
+    128|   expect(reference("o0")).toMatchObject({ current_hp: 42, after_action…
+       |                           ^
+    129|     projected_boss_hp: 65, simulated_entry_hp: 65, projection_exhauste…
+    130|   expect(reference("o1:c0")).toMatchObject({ after_action_hp: 42, proj…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/11]⎯
+
+ FAIL  tests/silent-rest-sim-hp.test.ts > also annotates the step-by-step smith group without changing its per-card simulation
+AssertionError: expected undefined to match object { after_action_hp: 4, …(2) }
+
+- Expected:
+{
+  "after_action_hp": 4,
+  "entry_hp_tied_with": [
+    "o0",
+  ],
+  "simulated_entry_hp": 1,
+}
+
++ Received:
+undefined
+
+ ❯ tests/silent-rest-sim-hp.test.ts:137:27
+    135| it("also annotates the step-by-step smith group without changing its p…
+    136|   const { criteria, reference } = await question({ group: true });
+    137|   expect(reference("o1")).toMatchObject({ after_action_hp: 4, simulate…
+       |                           ^
+    138|   expect(reference("o0").entry_hp_tied_with).toEqual(["o1"]);
+    139|   expect(JSON.parse(criteria.o1!).boss_sim_by_card.c0).toContain("5%");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/11]⎯
+
+ FAIL  tests/silent-rest-sim-hp.test.ts > shows current-HP provenance when no route plan is present
+AssertionError: expected undefined to match object { entry_source: 'hp_now', …(4) }
+
+- Expected:
+{
+  "assumed_future_heal_floors": [],
+  "entry_source": "hp_now",
+  "projected_boss_hp": 28,
+  "projection_exhausted_at": null,
+  "simulated_entry_hp": 28,
+}
+
++ Received:
+undefined
+
+ ❯ tests/silent-rest-sim-hp.test.ts:144:27
+    142| it("shows current-HP provenance when no route plan is present", async …
+    143|   const { reference } = await question({ route: false });
+    144|   expect(reference("o0")).toMatchObject({ entry_source: "hp_now", proj…
+       |                           ^
+    145|     simulated_entry_hp: 28, projection_exhausted_at: null, assumed_fut…
+    146|   expect(reference("o0")).not.toHaveProperty("entry_hp_tied_with");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/11]⎯
+
+ FAIL  tests/silent-rest-sim-hp.test.ts > does not turn an unknown projection into a known 1-HP tie
+AssertionError: expected undefined to match object { projected_boss_hp: null, …(2) }
+
+- Expected:
+{
+  "projected_boss_hp": null,
+  "projection_exhausted_at": null,
+  "simulated_entry_hp": 1,
+}
+
++ Received:
+undefined
+
+ ❯ tests/silent-rest-sim-hp.test.ts:155:27
+    153|   }));
+    154|   const { reference } = await question();
+    155|   expect(reference("o0")).toMatchObject({ projected_boss_hp: null, sim…
+       |                           ^
+    156|   expect(reference("o0").note).toContain("进场投影未知");
+    157|   expect(reference("o0")).not.toHaveProperty("entry_hp_tied_with");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/11]⎯
+
+ FAIL  tests/silent-rest-sim-hp.test.ts > does not attach a reference or tie to a smith target the planner could not find
+TypeError: Cannot convert undefined or null to object
+ ❯ tests/silent-rest-sim-hp.test.ts:163:31
+    161|   const { criteria, reference } = await question({ badSmith: true });
+    162|   expect(JSON.parse(criteria["o1:missing"]!)).not.toHaveProperty("boss…
+    163|   expect(reference("o0")).not.toHaveProperty("entry_hp_tied_with");
+       |                               ^
+    164| });
+    165|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/11]⎯
+
+
+ Test Files  4 failed | 387 passed (391)
+      Tests  11 failed | 3810 passed (3821)
+   Start at  17:07:37
+   Duration  1203.21s (transform 19.43s, setup 32.91s, import 88.36s, tests 997.01s, environment 61ms)
+

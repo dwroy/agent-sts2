@@ -1,0 +1,92 @@
+{
+  "at": "2026-10-14T16:43:30+08:00",
+  "scope": "Silent V5 current construction-evaluation release:3 completed runs plus1 ongoing, separately reported. Frozen full-run-start coverage from existing logs.",
+  "completed_aggregate": {
+    "evaluation_attached": 113,
+    "brain_evaluation": 113,
+    "accepted_evaluation": 113,
+    "accepted_choice_with_evaluation": 110,
+    "accepted_structured_plan": 26,
+    "saved_structured_plan": 26,
+    "plan_readback": 106,
+    "probability_delivered": 0,
+    "applicable_b3": 92,
+    "produced_dpr": 51,
+    "dpr_coverage": 0.5543478260869565
+  },
+  "per_run": [
+    {
+      "run": "Q10YYQ5DUPJA",
+      "completed": true,
+      "victory": false,
+      "end_floor": 49,
+      "evaluations_accepted": 48,
+      "plans_saved": 9,
+      "dpr_available": 18,
+      "applicable": 39,
+      "coverage": 0.46153846153846156,
+      "low_samples": 21,
+      "longest_failure_streak": 7
+    },
+    {
+      "run": "9GTFF6DC500L",
+      "completed": true,
+      "victory": true,
+      "end_floor": 49,
+      "evaluations_accepted": 42,
+      "plans_saved": 10,
+      "dpr_available": 15,
+      "applicable": 34,
+      "coverage": 0.4411764705882353,
+      "low_samples": 19,
+      "longest_failure_streak": 16
+    },
+    {
+      "run": "QRZX1S9USYWP",
+      "completed": true,
+      "victory": false,
+      "end_floor": 24,
+      "evaluations_accepted": 23,
+      "plans_saved": 7,
+      "dpr_available": 18,
+      "applicable": 19,
+      "coverage": 0.9473684210526315,
+      "low_samples": 1,
+      "longest_failure_streak": 1
+    },
+    {
+      "run": "W1YY8PEWGUF9",
+      "completed": false,
+      "victory": null,
+      "end_floor": null,
+      "evaluations_accepted": 15,
+      "plans_saved": 4,
+      "dpr_available": 14,
+      "applicable": 14,
+      "coverage": 1.0,
+      "low_samples": 0,
+      "longest_failure_streak": 0
+    }
+  ],
+  "explicit_reason_counts": {
+    "completed_choice_reasons_with_DPR": 22,
+    "completed_accepted_payloads": 113,
+    "all_choice_reasons_with_DPR": 28,
+    "all_accepted_payloads": 128,
+    "method": "Literal DPR/damage-per-turn phrases only; not all reasoning use and not causal attribution."
+  },
+  "source_rows_sha_verified": 361,
+  "signature_probability_delivery": 0,
+  "prospective_calibration_file_exists_main": false,
+  "prospective_calibration_file_exists_live": false,
+  "causal_win_rate_contribution": null,
+  "new_normalized_boss_score_live": false,
+  "findings": [
+    "The consumer interface, structured directions and readback are actually used. Choice rationales cite measured DPR and survival, with executed skip/defense choices verified.",
+    "Future component-formation probabilities remain shadow; qualified full-core operation is unknown.",
+    "Only51/92 applicable completed-run construction questions supplied usable DPR;41 were below the unchanged sample gate.",
+    "The newer module reorganizes existing B3 facts as well as adding persistent direction, so citing B3 metrics alone cannot isolate its incremental contribution.",
+    "One win among3 completed interface-enabled runs is not a causal efficacy estimate; no controlled matched module-off comparison.",
+    "Current incomplete run is stopped at a Codex usage gate, not an observed construction-pipeline error."
+  ]
+}

@@ -1,0 +1,543 @@
+{
+  "Q10YYQ5DUPJA": [
+    {
+      "floor": 1,
+      "ts": "2026-10-14T03:05:01.334Z",
+      "primary": "uncommitted",
+      "alternatives": [
+        "P",
+        "D",
+        "S"
+      ],
+      "checkpoint": 6,
+      "reason": "The starter deck lacks scaling, and its boss simulation shows inadequate damage. Neither offered relic is modeled; draw dilution and complete-core performance remain unknown.",
+      "pivot_if": "Commit when rewards establish poison with Accelerant, repeated Footwork, or supported shiv scaling. Consider discard construction if Tingsha or Tough Bandages appears.",
+      "source": {
+        "path": "logs/run-plans.jsonl",
+        "offset": 7612949,
+        "length": 2727,
+        "sha256": "1417732fd314f13ee4b009d7f3ef38d0c48305d3240587a7956e529e94cfb0f3"
+      }
+    },
+    {
+      "floor": 6,
+      "ts": "2026-10-14T03:14:22.959Z",
+      "primary": "uncommitted",
+      "alternatives": [
+        "P",
+        "D",
+        "S"
+      ],
+      "checkpoint": 10,
+      "reason": "Baseline simulated DPR 17.45 and near-full HP loss expose damage and defense deficiencies. No core is assembled; enchantment effects, draw dilution, and complete-core performance remain unknown.",
+      "pivot_if": "Favor P with poison, Accelerant, and defense; D with repeated Footwork and sustained output; S with shiv supply, scaling, and defensive support.",
+      "source": {
+        "path": "logs/run-plans.jsonl",
+        "offset": 7615676,
+        "length": 2708,
+        "sha256": "93387beb37ef6de494441d13b1ae8b1c62f307a000d7c4740dac4c4950362323"
+      }
+    },
+    {
+      "floor": 11,
+      "ts": "2026-10-14T03:23:50.643Z",
+      "primary": "uncommitted",
+      "alternatives": [
+        "P",
+        "D",
+        "S"
+      ],
+      "checkpoint": 14,
+      "reason": "No qualifying core exists. Baseline damage and boss survival are inadequate; prioritize usable poison and scalable defense. Event-card identities, draw dilution, and complete-core performance remain unknown.",
+      "pivot_if": "Favor P when poison, Accelerant, and defense are acquired; D with repeated Footwork and sustained output; S only with shiv supply, scaling, and defensive support.",
+      "source": {
+        "path": "logs/run-plans.jsonl",
+        "offset": 7618384,
+        "length": 2793,
+        "sha256": "c7d371401d970013206ef8e0cce92cea867810dc50bcbb506717a933b4d291c4"
+      }
+    },
+    {
+      "floor": 15,
+      "ts": "2026-10-14T03:30:17.682Z",
+      "primary": "P",
+      "alternatives": [
+        "D",
+        "R"
+      ],
+      "checkpoint": 18,
+      "reason": "Existing poison, Footwork and replay Defend favor P. Flask adds sustained single-target output but increases two-energy competition; Accelerant remains missing. Simulations, draw dilution and complete-core performance are unknown.",
+      "pivot_if": "Favor D if another Footwork and efficient block arrive; favor R if Tingsha or Tough Bandages appears. Reassess P if poison setup repeatedly displaces necessary defense.",
+      "source": {
+        "path": "logs/run-plans.jsonl",
+        "offset": 7621177,
+        "length": 2962,
+        "sha256": "80f77ef24c98b869cedbada82fc875542c39425aa52bc57fc3a38e5eb4c54a87"
+      }
+    },
+    {
+      "floor": 18,
+      "ts": "2026-10-14T03:35:57.594Z",
+      "primary": "P",
+      "alternatives": [
+        "D",
+        "R"
+      ],
+      "checkpoint": 24,
+      "reason": "Existing poison, Footwork and replay Defend support P, but Accelerant is missing and expensive poison competes with defense. Cocoa helps opening setup only. Full-fight simulations, draw dilution and complete-core performance remain unknown.",
+      "pivot_if": "Favor D if another Footwork and efficient repeatable block arrive while output remains adequate. Favor R after acquiring Tingsha or Tough Bandages. Reconsider expensive poison additions if setup repeatedly displaces necessary defense.",
+      "source": {
+        "path": "logs/run-plans.jsonl",
+        "offset": 7624139,
+        "length": 3063,
+        "sha256": "6acb22639da9f6aaa40c6c59026674f648dd76216a453fd957223556cc65abb5"
+      }
+    },
+    {
+      "floor": 25,
+      "ts": "2026-10-14T03:47:47.936Z",
+      "primary": "D",
+      "alternatives": [
+        "P"
+      ],
+      "checkpoint": 28,
+      "reason": "Three Footworks, Backflip and poison support D; P lacks Accelerant. Simulated DPR: skip 26.70; Roll 24.39 (-2.31±0.71); Footwork 24.40 (-2.29±0.70); Cloak 24.86 (-1.84±0.70), differences ± paired standard errors. Cloak increases block from 39.37 to 42.96; every option loses 38 HP with zero sampled wins. Footwork coverage is 93/103 versus 109/127 valid traces, first play 1.67 versus 1.64 turns. Missing and unmatched traces leave dilution uncertain. Cloak's favorable Act 2 outcomes are observation",
+      "pivot_if": "Favor P after acquiring Accelerant with reliably executable poison and protection. Consider R only after obtaining a discard relic. Reassess slow additions when setup displaces necessary defense.",
+      "source": {
+        "path": "logs/run-plans.jsonl",
+        "offset": 7627202,
+        "length": 3575,
+        "sha256": "a1eb57c93ed2d19cae121e0a998b81bbdb9a66ef4b5d69f4bce4095062d0285d"
+      }
+    },
+    {
+      "floor": 29,
+      "ts": "2026-10-14T03:52:50.498Z",
+      "primary": "P",
+      "alternatives": [
+        "D"
+      ],
+      "checkpoint": 32,
+      "reason": "Accelerant now complements existing poison; three Footworks and replay Defend support protection. Backflip adds scalable block and access rather than unsupported shiv supply. No simulation passed: full-fight DPR, HP loss, casting coverage, first-play timing, dilution, and upgrade/removal tradeoffs are unavailable. Component presence does not establish complete-core performance.",
+      "pivot_if": "If poison setup repeatedly misses survivable windows, emphasize D's draw, block and efficient damage. Consider S or R only after obtaining their missing scaling or discard-relic support.",
+      "source": {
+        "path": "logs/run-plans.jsonl",
+        "offset": 7630777,
+        "length": 3270,
+        "sha256": "fae93fa422c7f0ec8bb171307bcb9d0f971ecc50633a1e14906f62de9f912dd2"
+      }
+    },
+    {
+      "floor": 34,
+      "ts": "2026-10-14T04:07:24.212Z",
+      "primary": "P",
+      "alternatives": [
+        "D"
+      ],
+      "checkpoint": 40,
+      "reason": "Existing poison, Accelerant, three Footworks, eleven block cards and replay Defend support P and D. Whistle adds known damage/control without requiring elites. Complete-fight simulations, dilution effects and complete-core performance remain unknown.",
+      "pivot_if": "If poison repeatedly arrives too late, emphasize D with efficient draw and direct output. Consider shiv or discard directions only after their missing enabling relics appear.",
+      "source": {
+        "path": "logs/run-plans.jsonl",
+        "offset": 7636628,
+        "length": 3069,
+        "sha256": "9ab4df4364072bf295716d52449f1c28d56696f2ea3e7441d1e8f46f581a2c94"
+      }
+    },
+    {
+      "floor": 42,
+      "ts": "2026-10-14T04:20:10.320Z",
+      "primary": "P",
+      "alternatives": [
+        "D"
+      ],
+      "checkpoint": 47,
+      "reason": "Two upgraded Flasks, Accelerant+, three Footworks and eleven block cards support P with D backup. Offered additions change paired DPR by +0.15 (SE 0.74), -1.25 (SE 0.75), and -0.62 (SE 0.77), with unchanged modeled HP loss. Only 2–8 valid core traces prevent reliable coverage, startup or dilution comparisons. Complete-core performance remains unknown.",
+      "pivot_if": "If observed fights repeatedly leave poison or Accelerant inaccessible, prioritize efficient draw and retention. If poison starts reliably but defense fails, prioritize Mirage, block upgrades and healing.",
+      "source": {
+        "path": "logs/run-plans.jsonl",
+        "offset": 7639697,
+        "length": 3291,
+        "sha256": "9c80d0fb72ed90c3e39e94bf04421408832a5891c1ae8f0f5137d0d687fb4a20"
+      }
+    }
+  ],
+  "9GTFF6DC500L": [
+    {
+      "floor": 1,
+      "ts": "2026-10-14T04:54:00.681Z",
+      "primary": "uncommitted",
+      "alternatives": [
+        "P",
+        "D",
+        "S"
+      ],
+      "checkpoint": 6,
+      "reason": "Fury gains 0.488±0.029 simulated DPR versus Strike upgrade’s 0.678±0.012; all samples lose 56 HP. Neutralize survives longer. Favor retrieval’s future flexibility; sparse component traces cannot establish dilution, activation timing or complete-core performance.",
+      "pivot_if": "Favor P with strong poison and defense offers; S with generators and scaling; D with repeated Footworks; consider R after obtaining Tingsha or Tough Bandages.",
+      "source": {
+        "path": "logs/run-plans.jsonl",
+        "offset": 7647210,
+        "length": 2883,
+        "sha256": "5f5dca2240716bab63f81355457add693e8a4869ac9002d7e151e056db7f9533"
+      }
+    },
+    {
+      "floor": 7,
+      "ts": "2026-10-14T05:01:46.561Z",
+      "primary": "P",
+      "alternatives": [
+        "D",
+        "R"
+      ],
+      "checkpoint": 9,
+      "reason": "Flask and Stab support poison acceleration. Current simulated DPR is 13.45 with meanSe 0.14; boss wins are 5%. Only 86/1000 component traces are valid. Event combat effects, curse dilution and complete-core performance are unmeasured; prioritize purchases addressing both output and survival.",
+      "pivot_if": "Favor D if multiple Footworks and efficient block become available; consider R after obtaining a discard relic and stronger draw-discard support.",
+      "source": {
+        "path": "logs/run-plans.jsonl",
+        "offset": 7650093,
+        "length": 2969,
+        "sha256": "64696c9f1457af0a7b4d69b9cca5b2ae5d07174de0f33d3029f4c3a6d922ade1"
+      }
+    },
+    {
+      "floor": 11,
+      "ts": "2026-10-14T05:06:48.849Z",
+      "primary": "P",
+      "alternatives": [
+        "D",
+        "R"
+      ],
+      "checkpoint": 16,
+      "reason": "Flask, Stab and Accelerant provide poison output; Footwork strengthens existing block, especially replay Defend. Taking it lowers simulated boss wins by 6.9±1.8 percentage points and DPR by 2.25±0.20, but reduces HP loss by 2.00±0.80. Accept that tradeoff for repeatable later-act defense. Footwork appears in 238/238 valid traces, first played around turn 2.58; only 67 component traces pair, so poison dilution remains unresolved. Future upgrades and complete-core performance are unmeasured.",
+      "pivot_if": "Favor D after acquiring multiple Footworks and efficient repeatable block while retaining output. Consider R only after obtaining a discard relic and stronger draw-discard support.",
+      "source": {
+        "path": "logs/run-plans.jsonl",
+        "offset": 7653062,
+        "length": 3427,
+        "sha256": "6e87683f19fd7d932c1b4df7c2a4d94491d10eac8524c83b898d7b2db2e06edb"
+      }
+    },
+    {
+      "floor": 18,
+      "ts": "2026-10-14T05:20:34.953Z",
+      "primary": "P",
+      "alternatives": [
+        "D"
+      ],
+      "checkpoint": 25,
+      "reason": "Flask+, Accelerant+, Footwork, Sweep and Backflip support poison-defense. Tears improves energy flexibility without adding cards. Simulations are unavailable; draw dilution and complete-core performance remain unknown.",
+      "pivot_if": "Reassess after the shop if poison consistently arrives too late or defense remains inadequate. Favor D if another Footwork and efficient block are actually acquired.",
+      "source": {
+        "path": "logs/run-plans.jsonl",
+        "offset": 7659074,
+        "length": 2877,
+        "sha256": "f002d4a06a2abc8c74b7c20ea8240b49d5a70dacd11d00e458b842bce6bde729"
+      }
+    },
+    {
+      "floor": 23,
+      "ts": "2026-10-14T05:29:41.995Z",
+      "primary": "P",
+      "alternatives": [
+        "D"
+      ],
+      "checkpoint": 25,
+      "reason": "Flask+, Accelerant+, retained Snakebites and Footwork support P. Simulation records 17.01 DPR, 61 HP lost and 0/344 wins, not proven inevitable defeat. All reward DPR differences are within error. Stab coverage falls from 66% to approximately 55–56% with additions, while paired coverage and first-play comparisons have substantial missing or unmatched traces. Dilution is a concern, not a precise estimate; complete-core performance remains unknown.",
+      "pivot_if": "Favor D if the shop supplies a second Footwork and efficient block. If retained poison repeatedly clogs hands or starts late, prioritize draw, energy and removals before further poison.",
+      "source": {
+        "path": "logs/run-plans.jsonl",
+        "offset": 7661951,
+        "length": 3543,
+        "sha256": "8403c8bb33fa35fdfb8b9df6a1e15010388660b25c955c3c6e3b7e2c70c8863d"
+      }
+    },
+    {
+      "floor": 27,
+      "ts": "2026-10-14T05:33:53.386Z",
+      "primary": "P",
+      "alternatives": [
+        "D"
+      ],
+      "checkpoint": 31,
+      "reason": "Flask+, Accelerant+, two Snakebites and Footwork+ support P. Upgrading targeted poison adds no card. Simulation is unavailable; comparative DPR, HP loss, deployment coverage, first-play timing, dilution effects and complete-core performance remain unknown.",
+      "pivot_if": "Consider D if another Footwork and efficient block arrive. If retained poison repeatedly clogs hands or starts late, prioritize draw, energy and removals over additional poison.",
+      "source": {
+        "path": "logs/run-plans.jsonl",
+        "offset": 7665494,
+        "length": 3005,
+        "sha256": "8d506c46ae7551c055b62d5544aba377597b3b7bb535be25e8d4c7ab4beb8326"
+      }
+    },
+    {
+      "floor": 32,
+      "ts": "2026-10-14T05:40:38.894Z",
+      "primary": "P",
+      "alternatives": [
+        "D"
+      ],
+      "checkpoint": 34,
+      "reason": "Flask+, Accelerant+, two retained Snakebites and Footwork+ support P. Upgrading Sweep improves defense without adding a draw slot; Tent permits separate healing. Simulation is unavailable: comparative DPR, paired differences and errors, HP loss, deployment coverage, first-play timing, dilution and complete-core performance remain unknown.",
+      "pivot_if": "Consider D after obtaining another Footwork and efficient block. If expensive poison repeatedly crowds hands or delays defense, prioritize draw, energy and removals over additional poison.",
+      "source": {
+        "path": "logs/run-plans.jsonl",
+        "offset": 7668499,
+        "length": 3157,
+        "sha256": "a539d272afba49068ed3e96dc165f4077f7e8ab9555972faf71a1d0e25f4c472"
+      }
+    },
+    {
+      "floor": 34,
+      "ts": "2026-10-14T05:49:23.085Z",
+      "primary": "P",
+      "alternatives": [
+        "D"
+      ],
+      "checkpoint": 42,
+      "reason": "Flask+, Accelerant+, retained Snakebites, Outbreak and Footwork+ support P. Mask freely deploys an existing core power without adding a curse or sacrificing maximum HP. Simulated DPR, paired differences, HP loss, deployment coverage, timing, dilution and complete-core performance remain unknown.",
+      "pivot_if": "Favor D if another Footwork and efficient block arrive while poison remains effective. If retained poison crowds hands or setup repeatedly costs HP, prioritize draw, energy and removals over additional poison.",
+      "source": {
+        "path": "logs/run-plans.jsonl",
+        "offset": 7671656,
+        "length": 3229,
+        "sha256": "c3dbac7b10ca4121d0b35cecf27cb335f7eda00b303da720cecc207f95ec3d69"
+      }
+    },
+    {
+      "floor": 43,
+      "ts": "2026-10-14T05:59:43.786Z",
+      "primary": "P",
+      "alternatives": [
+        "D"
+      ],
+      "checkpoint": 46,
+      "reason": "Flask+, Accelerant+, retained Snakebites, Outbreak+ and Footwork+ support P. Backflip offers draw and scalable defense; skipping avoids another draw slot. Removals and upgrades strengthen existing resources without additions. Full-fight DPR, paired differences/errors, HP loss, deployment coverage/timing, dilution and complete-core performance are unavailable.",
+      "pivot_if": "Consider D if another Footwork and efficient blocks arrive. If retained poison crowds hands or setup repeatedly costs HP, prioritize energy, draw and removals over more poison.",
+      "source": {
+        "path": "logs/run-plans.jsonl",
+        "offset": 7674885,
+        "length": 3239,
+        "sha256": "68a6c037fb20b5868bbc11111faab1f2c03cd65aa657a6eb77e12470fe6cd927"
+      }
+    },
+    {
+      "floor": 47,
+      "ts": "2026-10-14T06:05:14.591Z",
+      "primary": "P",
+      "alternatives": [
+        "D"
+      ],
+      "checkpoint": 49,
+      "reason": "Flask+, Accelerant+, retained Snakebites, Outbreak+, Footwork+ and Mirage support P. Choose poison supply over a single-card block upgrade without adding a draw slot. Full-fight DPR, paired errors, HP loss, deployment coverage/timing, dilution and complete-core performance are unavailable.",
+      "pivot_if": "If poison deployment repeatedly sacrifices survival, prioritize affordable defense and energy. Reassess the second boss using actual exit HP, potions and available rewards.",
+      "source": {
+        "path": "logs/run-plans.jsonl",
+        "offset": 7678124,
+        "length": 3004,
+        "sha256": "5fada65b27d1c3a8adf0c7f1c9e796d349302b2b22d4b0edecdce9da12283e89"
+      }
+    }
+  ],
+  "QRZX1S9USYWP": [
+    {
+      "floor": 1,
+      "ts": "2026-10-14T06:27:33.602Z",
+      "primary": "uncommitted",
+      "alternatives": [
+        "S",
+        "P",
+        "D"
+      ],
+      "checkpoint": 6,
+      "reason": "No core is assembled. Multi-hit damage addresses Vantom's Slippery, while Fishing Rod preserves flexibility. Event combat differences, future component availability, and complete-core performance remain unknown.",
+      "pivot_if": "Favor S after acquiring shiv supply and scaling, P after substantial poison and defensive support, or D after two Footworks and sustained output. Reassess upon finding a discard relic.",
+      "source": {
+        "path": "logs/run-plans.jsonl",
+        "offset": 7683002,
+        "length": 2899,
+        "sha256": "44c6c9a0dbfc124d94691aab943fd83fba2926e71b0833a30cfdefede6dc0deb"
+      }
+    },
+    {
+      "floor": 7,
+      "ts": "2026-10-14T06:41:35.079Z",
+      "primary": "P",
+      "alternatives": [
+        "D",
+        "S",
+        "R"
+      ],
+      "checkpoint": 10,
+      "reason": "Snakebite improves paired boss DPR by 0.68±0.09 and reduces HP loss by 0.72±0.19, though total block falls. Poisoned Stab starts 0.89±0.29 turns later in 56 matched played traces; sparse coverage limits dilution conclusions. Poison favors P provisionally, but Accelerant and defensive scaling remain absent. Complete-core performance and future component odds are unknown.",
+      "pivot_if": "Favor D after two Footworks, S after shiv scaling plus defense, or R after a discard relic and multiple discard tools. Deprioritize expensive poison setup if it repeatedly displaces necessary block.",
+      "source": {
+        "path": "logs/run-plans.jsonl",
+        "offset": 7685901,
+        "length": 3160,
+        "sha256": "68f85ae7e83582f828a7af9215cbf346d1a51a2c882c79ecfc20e1d7a5a7c48c"
+      }
+    },
+    {
+      "floor": 11,
+      "ts": "2026-10-14T06:45:37.571Z",
+      "primary": "P",
+      "alternatives": [
+        "D",
+        "R"
+      ],
+      "checkpoint": 14,
+      "reason": "Poison and Footwork support P provisionally, but Accelerant is absent. Neutralize smith improves paired DPR by 0.426±0.044 and HP loss by -3.18±0.27; Poisoned Stab offers higher DPR but less survival improvement. Matched poison/Footwork first-play timing is unchanged, with only 95/418 valid traces. Complete-core performance and future acquisition probabilities remain unknown.",
+      "pivot_if": "Favor D after acquiring a second Footwork and efficient block/draw. Favor R with a discard relic and multiple discard tools. Reassess poison when setup displaces necessary defense.",
+      "source": {
+        "path": "logs/run-plans.jsonl",
+        "offset": 7689061,
+        "length": 3104,
+        "sha256": "9de2610dd8a7ca44262bce0383048df15baccd67080bc0bdfbc7866cde7db00d"
+      }
+    },
+    {
+      "floor": 15,
+      "ts": "2026-10-14T06:52:42.447Z",
+      "primary": "P",
+      "alternatives": [
+        "D",
+        "R"
+      ],
+      "checkpoint": 18,
+      "reason": "Poisoned Stab+ and Footwork support provisional P, but Accelerant is missing. Skip retains 35% modeled boss survival and 15.18 DPR; additions reduce DPR without clear HP savings. Matched startup differences are mostly inconclusive with incomplete traces, so dilution remains uncertain. Complete-core performance and future acquisition probabilities are unknown.",
+      "pivot_if": "Favor D after obtaining a second Footwork plus efficient block/draw. Consider R with a discard relic and multiple discard tools. Reassess poison if setup repeatedly displaces necessary defense.",
+      "source": {
+        "path": "logs/run-plans.jsonl",
+        "offset": 7692165,
+        "length": 3173,
+        "sha256": "02a604c3d0cbb16546e0cfed00d94f2deca24c39988b818311b1e4a86fcca3e7"
+      }
+    },
+    {
+      "floor": 18,
+      "ts": "2026-10-14T06:57:29.335Z",
+      "primary": "D",
+      "alternatives": [
+        "P"
+      ],
+      "checkpoint": 22,
+      "reason": "Five enchanted Strikes provide damage without consuming defensive energy. Footwork and Shadowmeld support provisional D, but another Footwork and efficient block/draw are missing. Full-fight performance, startup dilution and future acquisition probabilities remain unknown.",
+      "pivot_if": "Favor P if stronger poison application and Accelerant arrive. Reconsider dexterity setup if it repeatedly displaces necessary defense without sufficient subsequent block.",
+      "source": {
+        "path": "logs/run-plans.jsonl",
+        "offset": 7695338,
+        "length": 3101,
+        "sha256": "a249c811cb484f8b13f681255c47dc7c816d4390dbcc90deeb858f3aabcc7972"
+      }
+    },
+    {
+      "floor": 20,
+      "ts": "2026-10-14T07:02:17.256Z",
+      "primary": "D",
+      "alternatives": [
+        "P",
+        "S"
+      ],
+      "checkpoint": 22,
+      "reason": "D remains provisional: another Footwork and efficient block/draw are missing. Blade Dance+ gains 1.40±0.29 simulated DPR; Anticipate loses 0.82±0.26, while Flick Flack's gain is unresolved. Equal one-HP losses cannot distinguish defense. Paired setup coverage and first-play differences are inconclusive; complete-core performance remains unknown.",
+      "pivot_if": "Favor P if Accelerant and reliable poison arrive; favor S with attack-scaling relics or strong shiv payoffs. Reconsider D if setup repeatedly displaces necessary block.",
+      "source": {
+        "path": "logs/run-plans.jsonl",
+        "offset": 7698439,
+        "length": 3168,
+        "sha256": "a53bd7f73fa96a0f8c7262b33f36053a73c3604ce19754921386a86fa339088a"
+      }
+    },
+    {
+      "floor": 23,
+      "ts": "2026-10-14T07:07:40.538Z",
+      "primary": "D",
+      "alternatives": [
+        "S",
+        "P"
+      ],
+      "checkpoint": 27,
+      "reason": "Backflip+ gives simulated DPR 24.29 (+0.28±0.30), versus Precise Cut 26.02 (+2.01±0.31), Prepared 24.15 and skip 24.00, but highest total block at 13.86. One-HP deaths cannot rank survival. Paired Footwork plays (−0.025±0.035) and first-play timing (−0.088±0.110) differences are inconclusive; dilution and complete-core performance remain unknown. D still lacks a second Footwork.",
+      "pivot_if": "Favor P if Accelerant and reliable poison arrive; favor S with shiv scaling and per-card defense. Reconsider D if setup repeatedly displaces necessary block.",
+      "source": {
+        "path": "logs/run-plans.jsonl",
+        "offset": 7701607,
+        "length": 3186,
+        "sha256": "47d967d8a6f60496a27d68ee4aa5b80cc427aefee42587d7f07c69b57ca9a86e"
+      }
+    }
+  ],
+  "W1YY8PEWGUF9": [
+    {
+      "floor": 1,
+      "ts": "2026-10-14T07:20:33.579Z",
+      "primary": "uncommitted",
+      "alternatives": [
+        "P",
+        "S",
+        "D"
+      ],
+      "checkpoint": 6,
+      "reason": "No core exists. Defend transformation adds 1.79±0.06 simulated DPR; Neutralize adds 2.18±0.25 but sacrifices Weak. Replay and colorless choices are unmodeled; prefer lasting replay despite its gold cost. Sparse component traces establish no complete-core performance.",
+      "pivot_if": "Favor P with reliable poison and Accelerant; S with shiv supply and scaling; D with two Footworks and sustained output. Consider R only after obtaining a discard-payoff relic.",
+      "source": {
+        "path": "logs/run-plans.jsonl",
+        "offset": 7704793,
+        "length": 3011,
+        "sha256": "94b0654362c85d4e334488108cc40247bc166fe16ee8727b6bd30e50d8164f85"
+      }
+    },
+    {
+      "floor": 7,
+      "ts": "2026-10-14T07:32:31.709Z",
+      "primary": "P",
+      "alternatives": [
+        "D",
+        "R"
+      ],
+      "checkpoint": 11,
+      "reason": "Flask and replayed Snakebite supply poison, but Accelerant and scaling defense are absent. Flask smith adds 1.18±0.07 simulated DPR; Survivor smith improves boss survival by 9±1.1 points versus healing's 17.2±1.3. Flask's paired play-count and first-play differences are inconclusive with many missing traces. Complete-core performance and dilution remain unknown.",
+      "pivot_if": "Reassess if scaling defense remains absent at F11. Favor D with two Footworks and efficient block; consider R only with a discard-payoff relic and repeatable discard.",
+      "source": {
+        "path": "logs/run-plans.jsonl",
+        "offset": 7707804,
+        "length": 3182,
+        "sha256": "e455981d823943750bc16a17ce23fa3f93caba5fae2939ff87466e9aa71fce10"
+      }
+    },
+    {
+      "floor": 12,
+      "ts": "2026-10-14T07:38:10.954Z",
+      "primary": "P",
+      "alternatives": [
+        "D"
+      ],
+      "checkpoint": 16,
+      "reason": "Flask and replayed Snakebite support P. Footwork improves simulated wins +12.1±1.1 points despite DPR −1.28±0.17; paired HP loss improves −0.88±0.10. Hidden Daggers adds DPR without clear survival improvement. Footwork appears in 201/201 valid traces, mean first play T2.44; 799 traces are missing. Flask coverage remains similar, with inconclusive paired use/start differences. Survivor starts later in only 18 paired traces. Dilution and complete-core performance remain unknown.",
+      "pivot_if": "Favor D if a second Footwork and efficient block arrive while Accelerant remains absent. Reassess poison commitment if applying it consistently prevents adequate defense.",
+      "source": {
+        "path": "logs/run-plans.jsonl",
+        "offset": 7710986,
+        "length": 3473,
+        "sha256": "9cd7d1dcbeb1010a234f8cc6fdf4c996872bfef306dd102372648950bfab9b67"
+      }
+    },
+    {
+      "floor": 14,
+      "ts": "2026-10-14T07:42:29.323Z",
+      "primary": "P",
+      "alternatives": [
+        "D"
+      ],
+      "checkpoint": 16,
+      "reason": "Bubble adds 2.26±0.18 complete-fight DPR; HP-loss difference −0.18±0.22 and wins +2±2 points leave survival improvement inconclusive. Stab adds less DPR without clear survival improvement; Infinite Blades worsens both. Footwork plays in all 338 valid option traces, but 662 traces are missing. Paired Footwork timing +0.09±0.14 turns and Flask usage −0.16±0.10 are inconclusive: dilution remains uncertain. Existing poison and Footwork support P, but Accelerant and complete-core performance remain u",
+      "pivot_if": "Favor D if a second Footwork and efficient block arrive without Accelerant. Reassess poison additions if their energy costs repeatedly prevent adequate defense.",
+      "source": {
+        "path": "logs/run-plans.jsonl",
+        "offset": 7714459,
+        "length": 3463,
+        "sha256": "4fe837836594cb478137caefedcc1b6a7b59702a449b1191ea1d11c34266e192"
+      }
+    }
+  ]
+}

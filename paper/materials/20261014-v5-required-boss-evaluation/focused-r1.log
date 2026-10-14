@@ -1,0 +1,63 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/v5-required-boss-evaluation-20261014/agent
+
+ ❯ tests/required-boss-evaluation.test.ts (9 tests | 2 failed) 92ms
+     × finishes all sample identities beyond the latency target and deduplicates only equal inputs 48ms
+     × includes setup turns, retains missing/censored/sequence samples, and never ranks a selected valid subset 4ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/required-boss-evaluation.test.ts > required complete paired evaluation > finishes all sample identities beyond the latency target and deduplicates only equal inputs
+AssertionError: expected [ {}, …(2) ] to have a length of 2 but got 3
+
+- Expected
++ Received
+
+- 2
++ 3
+
+ ❯ tests/required-boss-evaluation.test.ts:29:29
+     27|     expect(calls).toHaveLength(1);
+     28|     expect(calls[0]!.deadlineMs).toBeUndefined();
+     29|     expect(calls[0]!.decks).toHaveLength(2);
+       |                             ^
+     30|     expect(actual).toMatchObject({ samples: 3, requested: 3, timedOut:…
+     31|       completion: { originalDecks: 3, uniqueDecks: 2, memoHit: false }…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/required-boss-evaluation.test.ts > boss-relative formula and provenance > includes setup turns, retains missing/censored/sequence samples, and never ranks a selected valid subset
+AssertionError: expected { …(16) } to match object { rankingEligible: true, …(2) }
+(54 matching properties omitted from actual)
+
+- Expected
++ Received
+
+@@ -1,9 +1,9 @@
+  {
+    "paired": {
+      "difference": {
+-       "mean": 0.1,
++       "mean": 0.10000000000000003,
+      },
+    },
+    "rankingEligible": true,
+    "score": {
+      "mean": 0.4,
+
+ ❯ tests/required-boss-evaluation.test.ts:103:18
+    101|     expect(marginOf({ ...a, turns: 4 })).toBeCloseTo(.15);
+    102|     const full = summarizeBossMargin([b], [a], [7]);
+    103|     expect(full).toMatchObject({ rankingEligible: true, score: { mean:…
+       |                  ^
+    104|     for (const unavailable of [marginSample(100, null), { ...a, capped…
+    105|       const result = summarizeBossMargin([b, unavailable], [a, a], [7,…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed | 2 passed (3)
+      Tests  2 failed | 22 passed (24)
+   Start at  17:04:36
+   Duration  2.64s (transform 1.48s, setup 441ms, import 1.64s, tests 153ms, environment 0ms)
+

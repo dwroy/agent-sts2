@@ -1,0 +1,28 @@
+Merge made by the 'ort' strategy.
+ agent/src/construction/consumer.ts           |   3 +-
+ agent/src/construction/evaluation.ts         |   3 +-
+ agent/src/core/index.ts                      |   2 +-
+ agent/src/eye/run-config.ts                  |   3 +-
+ agent/src/hand/loop.ts                       |  35 ++++++-
+ agent/src/hand/screens/index.ts              |   1 +
+ agent/src/memory/types.ts                    |   4 +
+ agent/src/reflex/combat-plan.ts              |  25 +++--
+ agent/src/reflex/rollout.ts                  |  18 +++-
+ agent/src/reflex/turn-solver.ts              |  11 +++
+ agent/src/sim/boss-lines.ts                  |  29 +++++-
+ agent/src/sim/boss-margin.ts                 |  63 ++++++++++++
+ agent/src/sim/boss-sim.ts                    |  11 ++-
+ agent/src/sim/build-sim-facts.ts             |  44 ++++++++-
+ agent/src/sim/build-sim-pool.ts              |  23 ++++-
+ agent/src/sim/build-sim.ts                   |  60 +++++++++--
+ agent/src/sim/quantitative-facts.ts          |   3 +
+ agent/tests/build-health.test.ts             |  12 +++
+ agent/tests/required-boss-evaluation.test.ts | 142 +++++++++++++++++++++++++++
+ agent/tests/required-boss-lines.test.ts      |  37 +++++++
+ agent/tests/required-build-worker.test.ts    |  51 ++++++++++
+ docs/v5-construction.md                      |  10 ++
+ 22 files changed, 554 insertions(+), 36 deletions(-)
+ create mode 100644 agent/src/sim/boss-margin.ts
+ create mode 100644 agent/tests/required-boss-evaluation.test.ts
+ create mode 100644 agent/tests/required-boss-lines.test.ts
+ create mode 100644 agent/tests/required-build-worker.test.ts

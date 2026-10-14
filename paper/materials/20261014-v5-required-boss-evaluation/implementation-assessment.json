@@ -1,0 +1,77 @@
+{
+  "time": "2026-10-14T17:37:27.223947+08:00",
+  "scope": "Existing watcher implements approved architecture; no new game knowledge",
+  "old": {
+    "construction_dpr_coverage": {
+      "completed_runs": 3,
+      "applicable": 92,
+      "produced": 51,
+      "below_minimum": 41
+    },
+    "budget": "11 seconds then missing DPR could proceed"
+  },
+  "new": {
+    "online_silent": "mandatory full target samples; no partial/empty metric choice",
+    "b3_default_samples": 1000,
+    "b2_default_samples": 600,
+    "same_input_reuse": "exact model/input/data/policy/seed equality only",
+    "latency_target_is_not_completion_deadline": true,
+    "recovery": "worker failure/exit/no sample progress rejects partial result, discards broken pool, live wait/retry; board re-read after calculation",
+    "formula": "my_dpr/boss_hp-enemy_dpr/my_hp",
+    "formula_limit": "conditional model, supported complete attribution only; same window and entry HP; excludes unidentifiable self/healing and continuous-Boss aggregate; old trust gates retained"
+  },
+  "historical_verification": {
+    "paired_samples": 1000,
+    "timed_out": false,
+    "wall_ms": 57360.354552,
+    "checks": [
+      {
+        "option": "current",
+        "dpr_samples": 1000,
+        "margin_valid": 1000,
+        "margin_missing": 0,
+        "original_fight_metrics_identical": true
+      },
+      {
+        "option": "card0",
+        "dpr_samples": 1000,
+        "margin_valid": 1000,
+        "margin_missing": 0,
+        "original_fight_metrics_identical": true
+      },
+      {
+        "option": "card1",
+        "dpr_samples": 1000,
+        "margin_valid": 1000,
+        "margin_missing": 0,
+        "original_fight_metrics_identical": true
+      },
+      {
+        "option": "card2",
+        "dpr_samples": 1000,
+        "margin_valid": 1000,
+        "margin_missing": 0,
+        "original_fight_metrics_identical": true
+      },
+      {
+        "option": "skip",
+        "dpr_samples": 1000,
+        "margin_valid": 1000,
+        "margin_missing": 0,
+        "original_fight_metrics_identical": true
+      }
+    ],
+    "scope": "measurement coverage and metric equivalence under this current model; not real win rate or production speed"
+  },
+  "publication": "not yet; final source checks running",
+  "original_owners_kept": {
+    "R2": "20261014-155247-fix-batch",
+    "R3": "01a13753-c032-73f0-aa3f-ddc0e14809cd"
+  },
+  "current_game": "original process and question preserved; known Codex usage guard hold, not bypassed",
+  "no_claims": [
+    "real win rate improvement",
+    "all mechanism attribution validated",
+    "natural live consumption before deployment"
+  ]
+}

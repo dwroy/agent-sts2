@@ -1,0 +1,10 @@
+{
+  "at": "2026-10-14 17:44:42 CST",
+  "message": "- 2026-10-14 17:44:42 CST [watcher/Roy授权实际部署] Silent 必需 Boss 评估 source b55d81fd38e6031d254fb1ee4e60023f86aaee98 → main 75fef29d32e4b33c635fbc1f33fa4df9b04d5ba8 / live behavior a9fcf33ca4c204d03cfc310c7f7ced61f196f964（绑定 36a96406d3dd863e2cfd5dccf872a01111334211）。旧规则：B3 11秒截止、不足300样本可不带DPR继续；新规则：在线已支持候选全目标配对完成（B3默认1000、B2默认600）才决策，旧预算只作延迟目标；失败等待/重建worker，计算后重读局面。同输入精确复用与候选去重，不减候选/样本，不改其他角色策略。核心 S=my_dpr/boss_hp-enemy_dpr/my_hp 同窗口、入口HP固定，已接入构筑与Boss出牌；受伤含既有状态损伤，混合自伤/回血、召唤混合、连续Boss等归属未知不补数，原可信度/生存资源闸保留。证据/台账：paper/materials/20261014-v5-required-boss-evaluation/（固定全测393文件3826项+paths11、tsc0；宿主边界77项、gitleaks0；一道原冻结历史题各1000/1000且原战斗统计一致），知识SHA全保持；没有新增游戏经验/真实胜率提升声明。预期：DPR不再因预算缺失，首次复杂题可能更慢，相同输入节省重复计算。回退：如确需撤回，原ops精确revert本行为22叶并登记新号，保留知识和旧回执；旧开关不能关闭Silent必需计算。正式编号/新部署树完整宿主补验由原ops承接，当前进程/对局未重启、自然消费待核；原R2/R3/P1/P2不关闭。\n",
+  "source": "b55d81fd38e6031d254fb1ee4e60023f86aaee98",
+  "main": "75fef29d32e4b33c635fbc1f33fa4df9b04d5ba8",
+  "live_behavior": "a9fcf33ca4c204d03cfc310c7f7ced61f196f964",
+  "live": "36a96406d3dd863e2cfd5dccf872a01111334211",
+  "formal_number": "pending_original_ops",
+  "natural_consumer": "pending_next_natural_process; original Codex quota hold preserved"
+}
