@@ -1,0 +1,31 @@
+{
+  "source_commit": "d06acd4bcbf2c64608197b7d7b2e572c621bec61",
+  "source_parent": "40d6bc976cf7ffeae28a72a7e0b47d71cadc7d57",
+  "lock": "/home/dw/Projects/agent-sts2/ops/live-merge.lock",
+  "live_head_before": "093c68ac658980f53b9940756b3df925adfb49bb",
+  "live_head_after": "093c68ac658980f53b9940756b3df925adfb49bb",
+  "source_is_live_ancestor": false,
+  "merge_tree_exit": 1,
+  "conflicts": [
+    "notes/fix-queue-v4.md",
+    "notes/lessons.md",
+    "ops/inbox-dev.md",
+    "paper/data/README.md",
+    "paper/data/commits.csv",
+    "paper/data/cost-curve-silent.csv",
+    "paper/data/cost-silent.csv",
+    "paper/data/cost-sources.json",
+    "paper/data/cost-unattributed.csv",
+    "paper/data/decisions_by_label.csv",
+    "paper/data/learning-curve-silent.csv",
+    "paper/data/runs.csv",
+    "paper/data/summary.json",
+    "paper/data/verification.json",
+    "paper/materials/decision-log.md",
+    "paper/materials/learning/ledger.jsonl"
+  ],
+  "actual_git_merge_executed": false,
+  "knowledge_path_overlap": [],
+  "refresh_status_before": "M knowledge/characters/silent/boss-damage.json\n M knowledge/characters/silent/construction-opportunities.json\n M knowledge/characters/silent/fight-value-gates.json\n M knowledge/characters/silent/fight-value.json\n M knowledge/characters/silent/monster-records.json\n M knowledge/characters/silent/outcome-stats.json\n M knowledge/characters/silent/room-costs.json\n M knowledge/common/card-upgrades.json\n M knowledge/common/monster-db.json\n M knowledge/common/move-model.json",
+  "reason": "锁内完整分支合入预检发现共享记录冲突，按任务停止，不覆盖live记录或刷新知识；未执行实际合并、合后测试、行为版本或上线通知。"
+}
