@@ -1,0 +1,136 @@
+{
+  "at": "2026-10-14 11:12:27 CST",
+  "original_batch": "20261014-071302-fix-batch",
+  "pinned_live": "908f043bb01b6c7c1406bed6394df36f41528a56",
+  "pinned_tree": "fa956bf13a090835e5172b9a22facdd4712b32aa",
+  "original_rc": 1,
+  "original_log": "ops/codex-ops/learner/20261014-071302-fix-batch.fallback-fa956bf13a090835e5172b9a22facdd4712b32aa.checks.log",
+  "original_log_bytes": 117263,
+  "original_log_sha256": "d37a7f8300c70ab23d37172ca39fc02a7978d0ef6f198f124274fc8c40840232",
+  "files": {
+    "passed": 435,
+    "failed": 1,
+    "total": 436
+  },
+  "cases": {
+    "passed": 4611,
+    "failed": 1,
+    "skipped": 2,
+    "total": 4614
+  },
+  "duration_seconds": 771.05,
+  "single_failure": "batch-f.test.ts:151 static timeout parser returns null for nested controlled-clock closure",
+  "actual_logged_board_budget_ms": 120000,
+  "failure_is_assertion_not_runtime_timeout": true,
+  "decision": "keep published R338 and original fixture/tool/calibration source; continue the existing 104302 repair owner without parallel dispatch",
+  "repair_batch": "20261014-104302-fix-batch",
+  "repair_observed_canonical_state": "failed",
+  "repair_source_committed": "56c256dad0d33b231b82b53113d3bdd84f9bfa20",
+  "repair_source_ancestry_not_yet_live": true,
+  "repair_provisional_original_report": ".worktrees/codex-fix-silent-20261014-104302/learner/runs/20261014-104319-fix-batch/report.md",
+  "repair_report_sha256": "de83c6d57a1ca33376d83e955006050d3983af9df909cca2e6a1d5662def5e96",
+  "repair_source_binding": {
+    "initial_main": "e1a5917174ea62adbba6c3d5ce82014a7dd507f4",
+    "synchronized_main": "20fe63269a9110c5a514099d681a27d8b5bacdfe",
+    "source_commit": "56c256dad0d33b231b82b53113d3bdd84f9bfa20",
+    "checked_source_head": "f557a41a3c0dfa3f4e08ed108195448829c8e97d",
+    "paths": [
+      {
+        "path": "agent/tests/batch-f.test.ts",
+        "sha256": "bce56ae953a3668b624c4718216d56174fc6b701ac027f5acf7cb0a9780d10b1",
+        "unchanged_after_main_merge": true
+      },
+      {
+        "path": "agent/tests/rollout-live.test.ts",
+        "sha256": "99b164b8797ac984e244cee4173ba62b1bd4a019a62b90ff6bba4cc423e058eb",
+        "unchanged_after_main_merge": true
+      },
+      {
+        "path": "agent/tests/test-blocks.test.ts",
+        "sha256": "dae8e2154f93462a7bd1fcca29fa0f5a546050b80b56d0291b312fc18e202adc",
+        "unchanged_after_main_merge": true
+      },
+      {
+        "path": "agent/tools/test-blocks.ts",
+        "sha256": "861fde6a55a43de7e183455a3a34e048eb107b485f67e1cffb4d3c7bdf332aa3",
+        "unchanged_after_main_merge": true
+      }
+    ]
+  },
+  "repair_original_sandbox_log": ".worktrees/codex-fix-silent-20261014-104302/learner/runs/20261014-104319-fix-batch/final-source-sandbox.log",
+  "repair_original_sandbox_sha256": "40f26a10c8dc0ad3e2b1406cbc4233cbade7288f9d05c2c1ec5182f460312247",
+  "repair_original_sandbox_observed": {
+    "main_files": 385,
+    "main_cases": 3796,
+    "path_files": 1,
+    "path_cases": 11,
+    "combined_files": 386,
+    "combined_cases": 3807,
+    "rc": 0
+  },
+  "repair_completion_delivery_and_exact_integration_pending": false,
+  "actual_live_at_readback": "cf683f1dba35fd8bb5f664ab86d3d241e3d93bbd",
+  "changes_since_pinned_only_refresh_records": [
+    "knowledge/characters/silent/boss-damage.json",
+    "knowledge/characters/silent/construction-opportunities.json",
+    "knowledge/characters/silent/fight-value-gates.json",
+    "knowledge/characters/silent/monster-records.json",
+    "knowledge/characters/silent/outcome-stats.json",
+    "knowledge/characters/silent/room-costs.json",
+    "knowledge/common/card-upgrades.json",
+    "knowledge/common/monster-db.json",
+    "knowledge/common/move-model.json"
+  ],
+  "host_result_not_borrowed_for_later_tree": true,
+  "no_unchanged_full_rerun": true,
+  "no_timeout_assertion_exclusion_or_game_rule_change": true,
+  "combined_tree_covers_construction20_and_tool8_original_blob_binding": "paper/materials/20261014-1043-ops/integration-release.json",
+  "construction_natural_consumer_and_calibration_performance_parents_still_pending": true,
+  "no_game_restart_or_routine_watcher_roy_message": true,
+  "same_original_repair_later_completed_and_integrated": {
+    "receipt": "paper/materials/20261014-1105-ops/parser-integration.json",
+    "actual_live": "51241fde644046b67dc8813fa97a089970bd21f9",
+    "tree": "9dd9900e32fe929df31adbaea36f56a1292aa5e3",
+    "original_failed_rc0_mergednull_preserved": true,
+    "new_tree_host": {
+      "at": "2026-10-14 11:15:57 CST",
+      "batch": "20261014-104302-fix-batch",
+      "source": "56c256dad0d33b231b82b53113d3bdd84f9bfa20",
+      "actual_live": "51241fde644046b67dc8813fa97a089970bd21f9",
+      "tree": "9dd9900e32fe929df31adbaea36f56a1292aa5e3",
+      "log": "ops/codex-ops/learner/20261014-104302-fix-batch.fallback-9dd9900e32fe929df31adbaea36f56a1292aa5e3.checks.log",
+      "status": "actual_original_host_check_running",
+      "result": null,
+      "actual_workers": [
+        {
+          "pid": 51868,
+          "parent": 51769,
+          "nice": 19,
+          "comm": "npm exec vitest"
+        },
+        {
+          "pid": 51887,
+          "parent": 51886,
+          "nice": 19,
+          "comm": "node"
+        },
+        {
+          "pid": 52030,
+          "parent": 51887,
+          "nice": 19,
+          "comm": "node"
+        },
+        {
+          "pid": 52031,
+          "parent": 51887,
+          "nice": 19,
+          "comm": "node"
+        }
+      ],
+      "nonempty_vitest_log_observed": true,
+      "original_fa956_rc1_preserved": true,
+      "no_duplicate071302_or100836_same_tree_full_check": true
+    }
+  },
+  "new_tree_full_check_and_natural_consumption_pending": true
+}

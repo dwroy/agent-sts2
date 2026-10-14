@@ -1,0 +1,14 @@
+[
+  {
+    "action": "读取旧 states-numbered 首行",
+    "error": "JSONDecodeError Extra data",
+    "reason": "文件为原行号:JSON格式；未改原件",
+    "resolved": "按首个冒号拆分后解析并与原始logs逐字节SHA匹配"
+  },
+  {
+    "action": "尝试按空白拆分编号行",
+    "error": "JSONDecodeError Expecting value",
+    "reason": "原编号分隔符为冒号",
+    "resolved": "按首个冒号拆分；7个目标原始行全部匹配"
+  }
+]

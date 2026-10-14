@@ -1,0 +1,208 @@
+{
+  "at": "2026-10-14 11:14:19 CST",
+  "batch": "20261014-104302-fix-batch",
+  "source": "56c256dad0d33b231b82b53113d3bdd84f9bfa20",
+  "checked_source_head": "f557a41a3c0dfa3f4e08ed108195448829c8e97d",
+  "original_state": "failed",
+  "original_rc": 0,
+  "original_merged": null,
+  "source_tests": {
+    "tsc": 0,
+    "sandbox_files": 385,
+    "sandbox_cases": 3796,
+    "paths_files": 1,
+    "paths_cases": 11,
+    "combined_cases": 3807,
+    "rc": 0
+  },
+  "source_full_log": ".worktrees/codex-fix-silent-20261014-104302/learner/runs/20261014-104319-fix-batch/final-source-sandbox.log",
+  "source_full_log_sha256": "40f26a10c8dc0ad3e2b1406cbc4233cbade7288f9d05c2c1ec5182f460312247",
+  "withdrawal_three_failures_restoration_four_pass": true,
+  "original17_conflicts_and_failed_history_kept": {
+    "status": "blocked-by-record-conflicts",
+    "source_commit": "56c256dad0d33b231b82b53113d3bdd84f9bfa20",
+    "source_head": "f557a41a3c0dfa3f4e08ed108195448829c8e97d",
+    "live_before": "980a0bc1f16871d2f9a8904753b768e31bdec46f",
+    "knowledge_overlap": [],
+    "refreshed_paths": [
+      "knowledge/characters/silent/boss-damage.json",
+      "knowledge/characters/silent/construction-opportunities.json",
+      "knowledge/characters/silent/monster-records.json",
+      "knowledge/characters/silent/outcome-stats.json",
+      "knowledge/characters/silent/room-costs.json",
+      "knowledge/common/card-upgrades.json",
+      "knowledge/common/monster-db.json",
+      "knowledge/common/move-model.json"
+    ],
+    "preflight_exit": 1,
+    "integration_exit": 13,
+    "conflicts": [
+      "notes/fix-queue-v4.md",
+      "notes/for-roy.md",
+      "notes/lessons.md",
+      "ops/inbox-dev.md",
+      "paper/data/README.md",
+      "paper/data/commits.csv",
+      "paper/data/cost-curve-silent.csv",
+      "paper/data/cost-silent.csv",
+      "paper/data/cost-sources.json",
+      "paper/data/cost-unattributed.csv",
+      "paper/data/decisions_by_label.csv",
+      "paper/data/learning-curve-silent.csv",
+      "paper/data/runs.csv",
+      "paper/data/summary.json",
+      "paper/data/verification.json",
+      "paper/materials/decision-log.md",
+      "paper/materials/learning/ledger.jsonl"
+    ],
+    "source_merge_performed": false,
+    "post_merge_tests_performed": false,
+    "source_is_live_ancestor_at_readback": false,
+    "current_live_at_readback": "980a0bc1f16871d2f9a8904753b768e31bdec46f"
+  },
+  "native_source": "ops/codex-ops/accounts/codex1/learner/sessions/2026/10/14/rollout-2026-10-14T10-43-26-01a1384b-125b-7df0-b228-d382bdbaf798.jsonl",
+  "actual_native_contexts": [
+    {
+      "offset": 50166,
+      "bytes": 5118,
+      "sha256": "34ac74684b9eb4029bd9f7f3cf5a12b06c6bdba78813981aa9739e547c021d67",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "sandbox_type": "workspace-write"
+    }
+  ],
+  "no_parallel_development_or_source_retest": true,
+  "no_game_behavior_release": true,
+  "game_sampling_and_deadline_unchanged": true,
+  "fixture_existing_controlled_clock_plan_has_explicit30s_timeout": true,
+  "checkouts": {
+    "main": {
+      "commit": "b42c3d252a2efa6fc40caed571ee3f25f489bd1c",
+      "source_ancestor": "a32d1efb3330adbc88073e79cbfc694de2bb042c",
+      "tree": "67ad4dd4743146f0ed555de8158265f0791bac63",
+      "leaves": [
+        {
+          "path": "agent/tests/batch-f.test.ts",
+          "source_blob": "0e69ee1ab3518fbff741ffe55e2c9e4fdd8c27b8",
+          "bytes": 35728,
+          "sha256": "bce56ae953a3668b624c4718216d56174fc6b701ac027f5acf7cb0a9780d10b1",
+          "three_way_rc": 0,
+          "source_equal": true,
+          "prepared": "ops/codex-ops/record-staging/20261014-1105/leaf-preflight/main/0/merged"
+        },
+        {
+          "path": "agent/tests/rollout-live.test.ts",
+          "source_blob": "e04386253f686571a79e60f4c0e2b0af452ee4ef",
+          "bytes": 22990,
+          "sha256": "99b164b8797ac984e244cee4173ba62b1bd4a019a62b90ff6bba4cc423e058eb",
+          "three_way_rc": 0,
+          "source_equal": true,
+          "prepared": "ops/codex-ops/record-staging/20261014-1105/leaf-preflight/main/1/merged"
+        },
+        {
+          "path": "agent/tests/test-blocks.test.ts",
+          "source_blob": "1c248ad106ad83d72a97719fefc8aa71c5aa06e0",
+          "bytes": 1805,
+          "sha256": "dae8e2154f93462a7bd1fcca29fa0f5a546050b80b56d0291b312fc18e202adc",
+          "three_way_rc": 0,
+          "source_equal": true,
+          "prepared": "ops/codex-ops/record-staging/20261014-1105/leaf-preflight/main/2/merged"
+        },
+        {
+          "path": "agent/tools/test-blocks.ts",
+          "source_blob": "3a2a10c96bfe9934e27b1e64f7d81ea008bd4761",
+          "bytes": 3584,
+          "sha256": "861fde6a55a43de7e183455a3a34e048eb107b485f67e1cffb4d3c7bdf332aa3",
+          "three_way_rc": 0,
+          "source_equal": true,
+          "prepared": "ops/codex-ops/record-staging/20261014-1105/leaf-preflight/main/3/merged"
+        }
+      ],
+      "other_dirty_records_and_refresh_bytes_preserved": true
+    },
+    "live": {
+      "commit": "be57cc77cbd5441fefcdf886d4f3202f83ee024a",
+      "source_ancestor": "51241fde644046b67dc8813fa97a089970bd21f9",
+      "tree": "9dd9900e32fe929df31adbaea36f56a1292aa5e3",
+      "leaves": [
+        {
+          "path": "agent/tests/batch-f.test.ts",
+          "source_blob": "0e69ee1ab3518fbff741ffe55e2c9e4fdd8c27b8",
+          "bytes": 35728,
+          "sha256": "bce56ae953a3668b624c4718216d56174fc6b701ac027f5acf7cb0a9780d10b1",
+          "three_way_rc": 0,
+          "source_equal": true,
+          "prepared": "ops/codex-ops/record-staging/20261014-1105/leaf-preflight/live/0/merged"
+        },
+        {
+          "path": "agent/tests/rollout-live.test.ts",
+          "source_blob": "e04386253f686571a79e60f4c0e2b0af452ee4ef",
+          "bytes": 22990,
+          "sha256": "99b164b8797ac984e244cee4173ba62b1bd4a019a62b90ff6bba4cc423e058eb",
+          "three_way_rc": 0,
+          "source_equal": true,
+          "prepared": "ops/codex-ops/record-staging/20261014-1105/leaf-preflight/live/1/merged"
+        },
+        {
+          "path": "agent/tests/test-blocks.test.ts",
+          "source_blob": "1c248ad106ad83d72a97719fefc8aa71c5aa06e0",
+          "bytes": 1805,
+          "sha256": "dae8e2154f93462a7bd1fcca29fa0f5a546050b80b56d0291b312fc18e202adc",
+          "three_way_rc": 0,
+          "source_equal": true,
+          "prepared": "ops/codex-ops/record-staging/20261014-1105/leaf-preflight/live/2/merged"
+        },
+        {
+          "path": "agent/tools/test-blocks.ts",
+          "source_blob": "3a2a10c96bfe9934e27b1e64f7d81ea008bd4761",
+          "bytes": 3584,
+          "sha256": "861fde6a55a43de7e183455a3a34e048eb107b485f67e1cffb4d3c7bdf332aa3",
+          "three_way_rc": 0,
+          "source_equal": true,
+          "prepared": "ops/codex-ops/record-staging/20261014-1105/leaf-preflight/live/3/merged"
+        }
+      ],
+      "other_dirty_records_and_refresh_bytes_preserved": true
+    }
+  },
+  "host_check": {
+    "at": "2026-10-14 11:15:57 CST",
+    "batch": "20261014-104302-fix-batch",
+    "source": "56c256dad0d33b231b82b53113d3bdd84f9bfa20",
+    "actual_live": "51241fde644046b67dc8813fa97a089970bd21f9",
+    "tree": "9dd9900e32fe929df31adbaea36f56a1292aa5e3",
+    "log": "ops/codex-ops/learner/20261014-104302-fix-batch.fallback-9dd9900e32fe929df31adbaea36f56a1292aa5e3.checks.log",
+    "status": "actual_original_host_check_running",
+    "result": null,
+    "actual_workers": [
+      {
+        "pid": 51868,
+        "parent": 51769,
+        "nice": 19,
+        "comm": "npm exec vitest"
+      },
+      {
+        "pid": 51887,
+        "parent": 51886,
+        "nice": 19,
+        "comm": "node"
+      },
+      {
+        "pid": 52030,
+        "parent": 51887,
+        "nice": 19,
+        "comm": "node"
+      },
+      {
+        "pid": 52031,
+        "parent": 51887,
+        "nice": 19,
+        "comm": "node"
+      }
+    ],
+    "nonempty_vitest_log_observed": true,
+    "original_fa956_rc1_preserved": true,
+    "no_duplicate071302_or100836_same_tree_full_check": true
+  },
+  "status": "source_precisely_integrated_original_host_check_pending"
+}
