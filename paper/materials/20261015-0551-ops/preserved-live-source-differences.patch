@@ -1,0 +1,27 @@
+diff --git a/agent/tests/target-options.test.ts b/agent/tests/target-options.test.ts
+index 40bccef73..5c3077079 100644
+--- a/agent/tests/target-options.test.ts
++++ b/agent/tests/target-options.test.ts
+@@ -1,5 +1,5 @@
+ /**
+- * Per-target options and kill-order rollouts (Roy 2026-09-28: which enemy to kill is Jev's call). The logged
++ * Per-target options and kill-order rollouts (Dai 2026-09-28: which enemy to kill is Jev's call). The logged
+  * board is EZ2L F48 T2 (Queen 394 + Torch Head Amalgam 202, a minion): every option shown then hit the Queen,
+  * the Amalgam-first line never reached Jev, nor did DeepSeek's plan ("先拆聚合体").
+  */
+diff --git a/ops/learning_requests.py b/ops/learning_requests.py
+index a38550301..57b8e0824 100644
+--- a/ops/learning_requests.py
++++ b/ops/learning_requests.py
+@@ -632,11 +632,6 @@ def run(root, state_dir, batch_id):
+         home = (Path(state_dir) / "codex-home").read_text().strip()
+         if home != req["learner_home"]:
+             raise ValueError("learner account changed; explicit original-thread recovery required")
+-        if (Path(root) / "ops/worktree_storage.py").is_file():
+-            import worktree_storage
+-            original = req["original_batch"]
+-            if (Path(state_dir) / "retention/storage/source-copies" / (original + ".manifest.json")).is_file():
+-                worktree_storage.restore_copies(Path(root), Path(state_dir), original)
+         payload = artifact(root, req["input"]).decode()
+         template = (Path(root) / "learner/tasks/learning-followup.md").read_text()
+         prompt = template.replace("LEARNING_REQUEST_JSON", json.dumps(req, ensure_ascii=False, indent=2))

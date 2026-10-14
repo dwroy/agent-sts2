@@ -1,0 +1,162 @@
+{
+  "batch": "20261015-044302-fix-batch",
+  "report": {
+    "task": "fix-batch",
+    "base": "0052edea183041950e5d16356a0040925f1b39cc",
+    "fixes": [
+      {
+        "item": "infra-target-options-fixed-fixture-timeout：EZ2L标注候选固定夹具超时",
+        "commit": "bae9c45ccffefb284a1c6634526c8768a9f5f7a8",
+        "test": "agent/tests/target-options.test.ts",
+        "fails_without_fix": true
+      },
+      {
+        "item": "infra-legacy-continuation-notice-ack-identity：合法旧续跑通知身份被拒",
+        "commit": "368fccabd42eb72ffcea9a2fe6cbbb7c149326be",
+        "test": "agent/tests/legacy-continuation-notice-ack.test.ts",
+        "fails_without_fix": true
+      },
+      {
+        "item": "silent-0459：独立run-plan请求成本漏计",
+        "commit": "799a5cd0caf9329b43c32376079218a9bd0c3e9e",
+        "test": "agent/tests/report-plan-costs.test.ts",
+        "fails_without_fix": true
+      }
+    ],
+    "skipped": [
+      {
+        "item": "infra-learner-event-log-second-collision",
+        "reason": "已修，提交 b6ee3f8c29cc10d4652a67d14f0e0e394aa6ce6f"
+      },
+      {
+        "item": "infra-paper-krane-recorded-line-timeout",
+        "reason": "已修，提交 befc39e5ca0105f8ff96d47f817df44f0b2760f1"
+      },
+      {
+        "item": "其余未结游戏机制/打法项（含silent-0481）",
+        "reason": "策略类，保留原行为及已有独立strategy-proposal"
+      },
+      {
+        "item": "core-build-notify-222802-rc2",
+        "reason": "原失败原因及实际投递状态未知，不重复发送"
+      },
+      {
+        "item": "调度公平性核查",
+        "reason": "证据不足，未证明永久饥饿"
+      },
+      {
+        "item": "独立架构、缓存和DPR/校准功能",
+        "reason": "太大且有独立原任务，不混入普通修复批次"
+      }
+    ],
+    "merged": null,
+    "tests": {
+      "tsc": 0,
+      "vitest": 0,
+      "files": 411,
+      "cases": 3945
+    },
+    "code_proposals": [
+      "silent-proposal-6a39ea0a435755c5"
+    ],
+    "implementation_domains": [
+      "structure"
+    ],
+    "report": "/home/dw/Projects/agent-sts2/learner/runs/20261015-044315-fix-batch/report.md"
+  },
+  "runtime": {
+    "batch": "20261015-044302-fix-batch",
+    "thread": "01a13c27-c4be-71c0-a9c6-f01cb9c2bf2e",
+    "cwd": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261015-044302",
+    "event_log": "learner/runs/20261015-044315-fix-batch.jsonl",
+    "launch": {
+      "offset": 0,
+      "bytes": 14596,
+      "sha256": "555d9bbb5207ac7c6d9b0cf181ce612f6ea10a6649c9857ec2433cfde7189f5a"
+    },
+    "startup": {
+      "offset": 14596,
+      "bytes": 370,
+      "sha256": "7636a47f8fac627e008cdf1151bdea11a9565206717540d8c397f36f3ac0fe0e"
+    },
+    "original_lease": "1a21f8ed1b1cc4c6952f6ad7ce2c0ba1ac319fdc76cabab8b2fb540856a93b31",
+    "native_context": {
+      "source": "ops/codex-ops/accounts/codex1/learner/sessions/2026/10/15/rollout-2026-10-15T04-43-21-01a13c27-c4be-71c0-a9c6-f01cb9c2bf2e.jsonl",
+      "offset": 50167,
+      "bytes": 5118,
+      "sha256": "d21574aa8b3cd402462129717fe26c1de5eec2753a673e68181e51ea77276c1d",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "sandbox": {
+        "type": "workspace-write",
+        "writable_roots": [
+          "/home/dw/Projects/agent-sts2",
+          "/home/dw/Projects/agent-sts2/.git",
+          "/home/dw/Projects/agent-sts2/.git/worktrees/codex-fix-silent-20261015-044302"
+        ],
+        "network_access": false,
+        "exclude_tmpdir_env_var": false,
+        "exclude_slash_tmp": false
+      },
+      "approval_policy": "never"
+    },
+    "native_user_input": {
+      "offset": 55285,
+      "bytes": 12822,
+      "sha256": "f4e3ae071b5c038e46a9610dcd4d66e1cdb45abd1090fda7bf0e452933eb5bf2",
+      "input_sha256": "78fd88fdd48932d58600d09417e42ad9f0050e579b40ef1a071c4e05c67be56b"
+    },
+    "account_home": "codex1 learner isolated home",
+    "event_first_thread_not_used": true,
+    "parallel_thread_count": 1
+  },
+  "actual_source": "799a5cd0caf9329b43c32376079218a9bd0c3e9e",
+  "source_clean": true,
+  "current_main": "0ed6d1e80673b5a4df37b7eae7df6db3d666c89e",
+  "current_live": "fd0e9c3fa68e9c34a48e7149865c16eaf3465cef",
+  "original_canonical": {
+    "state": "failed",
+    "rc": 0,
+    "merged": null
+  },
+  "source_checks": [
+    {
+      "path": "learner/runs/20261015-044315-fix-batch/precommit-target.log",
+      "sha256": "53507cb9893e4e359c9a9ab375c48b802cc1a37118df3a46108d09c458d0699c",
+      "sandbox_main_cases": 3933,
+      "paths_cases": 11,
+      "tsc": 0,
+      "reported_exit": 0
+    },
+    {
+      "path": "learner/runs/20261015-044315-fix-batch/precommit-legacy.log",
+      "sha256": "242abeaab0f6b9c0733f500a5e1bfb404264bdbbd7f4537d08cdc1d93b9dc124",
+      "sandbox_main_cases": 3933,
+      "paths_cases": 11,
+      "tsc": 0,
+      "reported_exit": 0
+    },
+    {
+      "path": "learner/runs/20261015-044315-fix-batch/precommit-report.log",
+      "sha256": "b03b07041dc49c3e1922b5626e0b8e1fec31ff0544ae8d21ac9baad52e3dbb1b",
+      "sandbox_main_cases": 3934,
+      "paths_cases": 11,
+      "tsc": 0,
+      "reported_exit": 0
+    }
+  ],
+  "precise_paths": [
+    "agent/tests/legacy-continuation-notice-ack.test.ts",
+    "agent/tests/report-plan-costs.test.ts",
+    "agent/tests/report_plan_costs_test.py",
+    "agent/tests/target-option-fixture.ts",
+    "agent/tests/target-options.test.ts",
+    "ops/learning_requests.py",
+    "ops/report.py",
+    "ops/tests/test_legacy_continuation_notice_ack.py"
+  ],
+  "main_executable_baseline_equal_source_base": true,
+  "original_failure_and_conflicts_preserved": true,
+  "selected_projection_not_new_research": true,
+  "new_game_behavior": false
+}

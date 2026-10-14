@@ -1,0 +1,33 @@
+{
+  "checks": [
+    {
+      "name": "composition-tsc",
+      "rc": 0,
+      "command": [
+        "npx",
+        "--no-install",
+        "tsc",
+        "-p",
+        "tsconfig.json",
+        "--noEmit"
+      ]
+    },
+    {
+      "name": "composition-fixed-tests",
+      "rc": 0,
+      "command": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "tests/target-options.test.ts",
+        "tests/legacy-continuation-notice-ack.test.ts",
+        "tests/report-plan-costs.test.ts",
+        "--maxWorkers=2",
+        "--reporter=dot"
+      ]
+    }
+  ],
+  "full_suite": false,
+  "original_source_full_pass": true
+}
