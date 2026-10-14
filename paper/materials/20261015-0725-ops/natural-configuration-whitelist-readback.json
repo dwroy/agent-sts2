@@ -1,0 +1,54 @@
+{
+  "at": "2026-10-15 07:50:01 CST",
+  "configuration_whitelist_only": true,
+  "repo_live_play_processes": [
+    {
+      "pid": 25467,
+      "birth": "91270655",
+      "argv": [
+        "node",
+        "/home/dw/Projects/agent-sts2/.worktrees/live/agent/node_modules/.bin/tsx",
+        "src/index.ts",
+        "play",
+        "--max-runs",
+        "1",
+        "--max-minutes",
+        "240"
+      ],
+      "configuration_whitelist": {
+        "SIM_ADAPTIVE": "unset",
+        "SIM_FAILURE_EXIT": "unset",
+        "SIM_FAILURE_RETRIES": "unset",
+        "S_READINESS": "unset"
+      },
+      "scope": "configuration read only; does not prove new C1/C2 loaded in an existing process"
+    },
+    {
+      "pid": 25478,
+      "birth": "91270660",
+      "argv": [
+        "/home/dw/.local/node/bin/node",
+        "--require",
+        "/home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/preflight.cjs",
+        "--import",
+        "file:///home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/loader.mjs",
+        "src/index.ts",
+        "play",
+        "--max-runs",
+        "1",
+        "--max-minutes",
+        "240"
+      ],
+      "configuration_whitelist": {
+        "SIM_ADAPTIVE": "unset",
+        "SIM_FAILURE_EXIT": "unset",
+        "SIM_FAILURE_RETRIES": "unset",
+        "S_READINESS": "unset"
+      },
+      "scope": "configuration read only; does not prove new C1/C2 loaded in an existing process"
+    }
+  ],
+  "S_READINESS_external_on_seen": false,
+  "no_controller_restart": true,
+  "C1_C2_natural_config_and_consumer": "pending next natural new process"
+}

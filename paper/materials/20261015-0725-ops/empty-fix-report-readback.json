@@ -1,0 +1,653 @@
+{
+  "batch": "20261015-071302-fix-batch",
+  "runtime": {
+    "batch": "20261015-071302-fix-batch",
+    "thread": "01a13cb1-18d0-7332-a3f3-5f1d81656056",
+    "cwd": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261015-071302",
+    "event_log": "learner/runs/20261015-071314-9f94258e-ff6c-46ae-9dc0-408ef6fb14a3-fix-batch.jsonl",
+    "registered_launch_batch": "20261015-071302-fix-batch",
+    "original_lease": "bb45f354ea253dd6588c5dda33e5140250f1105550dc122ccdf9781116286a71",
+    "native_context": {
+      "source": "ops/codex-ops/accounts/codex1/learner/sessions/2026/10/15/rollout-2026-10-15T07-13-21-01a13cb1-18d0-7332-a3f3-5f1d81656056.jsonl",
+      "offset": 64059,
+      "bytes": 5118,
+      "sha256": "de99ce27bef495e33810c83cd30a00b9dfa6be4bf7efc1da57dc85c2e663220e",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "sandbox": {
+        "type": "workspace-write",
+        "writable_roots": [
+          "/home/dw/Projects/agent-sts2",
+          "/home/dw/Projects/agent-sts2/.git",
+          "/home/dw/Projects/agent-sts2/.git/worktrees/codex-fix-silent-20261015-071302"
+        ],
+        "network_access": false,
+        "exclude_tmpdir_env_var": false,
+        "exclude_slash_tmp": false
+      },
+      "approval_policy": "never"
+    },
+    "native_user_input": {
+      "offset": 69177,
+      "bytes": 13081,
+      "sha256": "b76b5e9ea969900adf2c0728ed5763dda64e5ec6f464020a40c26fa6ea660e3a",
+      "input_sha256": "d4af0b9a11745e213e4f5e967e19476240f51c2aba2b5b37ad1e77d9d3dd9b4e"
+    },
+    "original_header_events": [
+      {
+        "offset": 0,
+        "bytes": 14892,
+        "sha256": "0963d9d22da1dfc249dd0e896f3eb2d9a7471b1358163add4f6a77c7276cc78f",
+        "type": "learner_launch",
+        "attempt": null,
+        "code": null
+      },
+      {
+        "offset": 14892,
+        "bytes": 370,
+        "sha256": "a00e318ed0cb38b8a4781bc89242a20bddeaafa9e7e603c9c87d3a4f857731d4",
+        "type": "learner_startup_attempt",
+        "attempt": 1,
+        "code": null
+      },
+      {
+        "offset": 17842,
+        "bytes": 77,
+        "sha256": "ee343b6ee81a2659c750dc11bd74da491ef8f3ac41e4e4d95555ba583c2ab4d4",
+        "type": "thread.started",
+        "attempt": null,
+        "code": null
+      }
+    ],
+    "startup_attempts": 1,
+    "failed_startups_preserved": 0,
+    "no_model_or_manual_restart": true
+  },
+  "report": {
+    "task": "fix-batch",
+    "base": "4ffbcee235584d67f2d8c96ec678915c2e8579d1",
+    "fixes": [],
+    "skipped": [
+      {
+        "item": "既有纯工具修复24项",
+        "reason": "实际交付提交均已是当前基线和live祖先，逐项提交见报告及ancestry-audit.json"
+      },
+      {
+        "item": "未结机制/打法/题面项（含silent-0481）",
+        "reason": "策略类，保留已有独立strategy-proposal"
+      },
+      {
+        "item": "silent-0332、core-build-notify-222802-rc2、调度公平性及扫描上游根因",
+        "reason": "证据不足，保留原核查链"
+      },
+      {
+        "item": "独立架构、缓存及DPR/校准任务",
+        "reason": "太大且已有独立原任务"
+      }
+    ],
+    "merged": null,
+    "tests": {
+      "tsc": 0,
+      "vitest": 0,
+      "files": 7,
+      "cases": 48
+    },
+    "code_proposals": [],
+    "implementation_domains": [],
+    "report": "/home/dw/Projects/agent-sts2/learner/runs/20261015-071314-9f94258e-ff6c-46ae-9dc0-408ef6fb14a3-fix-batch/report.md"
+  },
+  "original_report_sha256": "c06808a81a421ab86a01b415ef77fcaebd24a2033d5af6b5ffce69ae0e23392f",
+  "base_and_tracked_clean_verified": true,
+  "source_diff_bytes": 0,
+  "existing_24_commit_ancestors_verified": true,
+  "ancestry_audit": [
+    {
+      "item": "infra-ledger-status-prefix-git-divergence",
+      "commit": "dd478f0b3e5a0f234f082972d21b203dbf8229d7",
+      "base_ancestor": true,
+      "live_ancestor": true,
+      "paths": [
+        "agent/tests/ledger-publication-baseline.test.ts",
+        "agent/tests/ledger_publication_baseline_test.py",
+        "learner/ledger.py"
+      ]
+    },
+    {
+      "item": "infra-target-options-fixed-fixture-timeout",
+      "commit": "bae9c45ccffefb284a1c6634526c8768a9f5f7a8",
+      "base_ancestor": true,
+      "live_ancestor": true,
+      "paths": [
+        "agent/tests/target-option-fixture.ts",
+        "agent/tests/target-options.test.ts"
+      ]
+    },
+    {
+      "item": "infra-legacy-continuation-notice-ack-identity",
+      "commit": "368fccabd42eb72ffcea9a2fe6cbbb7c149326be",
+      "base_ancestor": true,
+      "live_ancestor": true,
+      "paths": [
+        "agent/tests/legacy-continuation-notice-ack.test.ts",
+        "ops/learning_requests.py",
+        "ops/tests/test_legacy_continuation_notice_ack.py"
+      ]
+    },
+    {
+      "item": "silent-0459 独立计划成本",
+      "commit": "799a5cd0caf9329b43c32376079218a9bd0c3e9e",
+      "base_ancestor": true,
+      "live_ancestor": true,
+      "paths": [
+        "agent/tests/report-plan-costs.test.ts",
+        "agent/tests/report_plan_costs_test.py",
+        "ops/report.py"
+      ]
+    },
+    {
+      "item": "infra-learner-event-log-second-collision",
+      "commit": "b6ee3f8c29cc10d4652a67d14f0e0e394aa6ce6f",
+      "base_ancestor": true,
+      "live_ancestor": true,
+      "paths": [
+        "agent/tests/learner-strategy-scratch.test.ts",
+        "agent/tests/learner.test.ts",
+        "agent/tests/learner_preserved_report_test.py",
+        "learner/lib/launcher.ts",
+        "ops/learner_checks.py"
+      ]
+    },
+    {
+      "item": "infra-paper-krane-recorded-line-timeout",
+      "commit": "befc39e5ca0105f8ff96d47f817df44f0b2760f1",
+      "base_ancestor": true,
+      "live_ancestor": true,
+      "paths": [
+        "agent/tests/silent-paper-krane.test.ts"
+      ]
+    },
+    {
+      "item": "strategy-proposal scratch归属",
+      "commit": "5f04139cefe5c651dd5bf62f7e164014dbf5f23b",
+      "base_ancestor": true,
+      "live_ancestor": true,
+      "paths": [
+        "agent/tests/learner-strategy-scratch.test.ts",
+        "learner/lib/launcher.ts"
+      ]
+    },
+    {
+      "item": "run-plans显式run证据提取",
+      "commit": "78e9b05929366d097a728761d693d790ff16ac87",
+      "base_ancestor": true,
+      "live_ancestor": true,
+      "paths": [
+        "agent/tests/extract-evidence.test.ts",
+        "agent/tests/extract_evidence_test.py",
+        "learner/extract_evidence.py",
+        "learner/tasks/strategy-proposal.md"
+      ]
+    },
+    {
+      "item": "batch-f参数化/包装超时扫描",
+      "commit": "56c256dad0d33b231b82b53113d3bdd84f9bfa20",
+      "base_ancestor": true,
+      "live_ancestor": true,
+      "paths": [
+        "agent/tests/batch-f.test.ts",
+        "agent/tests/rollout-live.test.ts",
+        "agent/tests/test-blocks.test.ts",
+        "agent/tools/test-blocks.ts"
+      ]
+    },
+    {
+      "item": "已注册feature通知身份",
+      "commit": "1dd4d434aef67f1d065dbdba23a875ae82741a88",
+      "base_ancestor": true,
+      "live_ancestor": true,
+      "paths": [
+        "agent/tests/boss-sim-notice-registration.test.ts",
+        "agent/tests/feature-notice-registration.test.ts",
+        "ops/learning_requests.py",
+        "ops/tests/test_boss_sim_notice_registration.py",
+        "ops/tests/test_feature_notice_registration.py"
+      ]
+    },
+    {
+      "item": "feature通知回执校验",
+      "commit": "38b2f572d90b3b97a23f9eae983f583287492f9a",
+      "base_ancestor": true,
+      "live_ancestor": true,
+      "paths": [
+        "agent/tests/feature-notice-ack.test.ts",
+        "ops/learning_requests.py",
+        "ops/tests/test_feature_notice_ack.py"
+      ]
+    },
+    {
+      "item": "tracked-source Python缓存回收",
+      "commit": "1e8af775f6b90f100f20ff7c4a08dfddaba893a9",
+      "base_ancestor": true,
+      "live_ancestor": true,
+      "paths": [
+        "agent/tests/python-cache-retention.test.ts",
+        "ops/learner_retention.py",
+        "ops/tests/test_python_cache_retention.py",
+        "ops/tests/test_worktree_retention.py",
+        "ops/worktree_retention.py"
+      ]
+    },
+    {
+      "item": "ordinary通知ACK注册",
+      "commit": "672e198a4730012330f599068a0ef1efadb02002",
+      "base_ancestor": true,
+      "live_ancestor": true,
+      "paths": [
+        "agent/tests/ordinary-notice-ack.test.ts",
+        "ops/learning_requests.py",
+        "ops/tests/test_ordinary_notice_ack.py"
+      ]
+    },
+    {
+      "item": "ordinary通知前阶段校验",
+      "commit": "1594def2e1b65b665d3b345f31444194eb4d09e6",
+      "base_ancestor": true,
+      "live_ancestor": true,
+      "paths": [
+        "agent/tests/prior-delivery-proofs.test.ts",
+        "ops/learning_requests.py",
+        "ops/tests/test_ordinary_notice_ack.py",
+        "ops/tests/test_prior_delivery_proofs.py"
+      ]
+    },
+    {
+      "item": "失败复盘空提案误审",
+      "commit": "3fdcd77927f01b35c20c6c5c1fcfd790676032d2",
+      "base_ancestor": true,
+      "live_ancestor": true,
+      "paths": [
+        "agent/tests/postmortem-failure-audit.test.ts",
+        "ops/codex-ops-learn.py",
+        "ops/tests/test_postmortem_completion.py"
+      ]
+    },
+    {
+      "item": "共享经验固定FS夹具",
+      "commit": "8390c62d76fc8c7d7b6b7292121a621f4666d39c",
+      "base_ancestor": true,
+      "live_ancestor": true,
+      "paths": [
+        "agent/tests/batch-c-illusion.test.ts",
+        "agent/tests/boss-lines-planner.test.ts",
+        "agent/tests/death-move-planner.test.ts",
+        "agent/tests/historical-knowledge-fs.ts",
+        "agent/tests/inferno-planner.test.ts",
+        "agent/tests/mech-move-planner.test.ts",
+        "agent/tests/mech-rules-planner.test.ts",
+        "agent/tests/passive-pieces-planner.test.ts",
+        "agent/tests/pinned-shared-experience.test.ts",
+        "agent/tests/potion-cost.test.ts",
+        "agent/tests/rollout-best-added.test.ts",
+        "agent/tests/silent-bullet-time.test.ts",
+        "agent/tests/silent-dodge-roll.test.ts",
+        "agent/tests/silent-kusarigama.test.ts",
+        "agent/tests/silent-potion-reference.test.ts",
+        "agent/tests/silent-selection-audit.test.ts",
+        "agent/tests/silent-serpent-form.test.ts",
+        "agent/tests/silent-shackling-weak.test.ts",
+        "agent/tests/silent-sloth-replay.test.ts",
+        "agent/tests/sl-early-planner.test.ts",
+        "agent/tests/sl-explore-b2.test.ts",
+        "agent/tests/sl-explore-canon.test.ts",
+        "agent/tests/sl-explore-gaps.test.ts",
+        "agent/tests/sl-explore-potion.test.ts",
+        "agent/tests/sl-explore-whole.test.ts",
+        "agent/tests/sl-explore.test.ts",
+        "agent/tests/sl-replay-plays.test.ts",
+        "agent/tests/sl-retry-planner.test.ts",
+        "agent/tests/template-target.test.ts",
+        "agent/tests/thief-cost.test.ts",
+        "agent/tests/thief.test.ts"
+      ]
+    },
+    {
+      "item": "deck-cap消费者固定夹具",
+      "commit": "ec8c578b66bf5498372f1b779ae58a766dff8112",
+      "base_ancestor": true,
+      "live_ancestor": true,
+      "paths": [
+        "agent/tests/historical-run-constraints-fixture.ts",
+        "agent/tests/historical-run-constraints.test.ts",
+        "agent/tests/silent-route-relic.test.ts",
+        "agent/tests/silent-tail-resource.test.ts"
+      ],
+      "original_source_commit": "c0999eaa251133454540e157b2d6fe641731ad65",
+      "original_source_is_ancestor": false,
+      "note": "原source c099非直接祖先；实际集成ec8c按当前Git祖先核，后续cap架构已另改，不回退。"
+    },
+    {
+      "item": "论文Git一致快照",
+      "commit": "16bfe0bd6ecaa91d04a91c01edc94cecc781f71f",
+      "base_ancestor": true,
+      "live_ancestor": true,
+      "paths": [
+        "agent/tests/paper-dataset-git.test.ts",
+        "ops/paper_dataset.py",
+        "ops/tests/test_paper_dataset_git.py"
+      ]
+    },
+    {
+      "item": "boss-sim Codex home preflight",
+      "commit": "5921f8cd045853182c867a6430e75c3fcde00a87",
+      "base_ancestor": true,
+      "live_ancestor": true,
+      "paths": [
+        "agent/tests/boss-sim-home.test.ts",
+        "ops/report.py",
+        "ops/tests/test_boss_sim_home.py"
+      ]
+    },
+    {
+      "item": "compute-memo worker固定知识",
+      "commit": "8fbb441eb61eef226eb7366f9612003480c83988",
+      "base_ancestor": true,
+      "live_ancestor": true,
+      "paths": [
+        "agent/tests/compute-memo-files.ts",
+        "agent/tests/compute-memo-worker.ts",
+        "agent/tests/compute-memo.test.ts"
+      ]
+    },
+    {
+      "item": "rollout best测试确定性",
+      "commit": "bbc5b993a7524bbb8e80a975f204f8d193657b46",
+      "base_ancestor": true,
+      "live_ancestor": true,
+      "paths": [
+        "agent/tests/rollout-best-added.test.ts",
+        "agent/tests/rollout-live.test.ts"
+      ]
+    },
+    {
+      "item": "升阶通知/额度恢复基线",
+      "commit": "5b56a452bb9be14d620b368ec46974c1b57901ca",
+      "base_ancestor": true,
+      "live_ancestor": true,
+      "paths": [
+        "README.md",
+        "agent/src/brain/engines/codex-usage.ts",
+        "agent/src/hand/loop.ts",
+        "agent/src/hand/screens/selection.ts",
+        "agent/src/memory/journal-replay.ts",
+        "agent/src/memory/types.ts",
+        "agent/src/reflex/card-model.ts",
+        "agent/src/reflex/combat-plan.ts",
+        "agent/src/reflex/continuation-value.ts",
+        "agent/src/reflex/rollout-live.ts",
+        "agent/src/reflex/rollout.ts",
+        "agent/src/reflex/silent-apotheosis.ts",
+        "agent/src/reflex/silent-skittish.ts",
+        "agent/src/reflex/turn-solver.ts",
+        "agent/src/sim/boss-sim.ts",
+        "agent/src/sim/boss-start.ts",
+        "agent/src/sim/build-sim-facts.ts",
+        "agent/src/sim/build-sim.ts",
+        "agent/src/sim/double-boss-start.ts",
+        "agent/src/sim/quantitative-calibration.ts",
+        "agent/src/sim/quantitative-facts.ts",
+        "agent/src/sim/quantitative-stats.ts",
+        "agent/src/sim/silent-opening.ts",
+        "agent/src/sl/attempts.ts",
+        "agent/src/sl/controller.ts",
+        "agent/src/sl/explore.ts",
+        "agent/tests/ascension-observed.test.ts",
+        "agent/tests/brain-codex-session.test.ts",
+        "agent/tests/brain-codex-usage.test.ts",
+        "agent/tests/codex-usage-recovery.test.ts",
+        "agent/tests/ops-codex.test.ts",
+        "agent/tests/ops-deferred.test.ts",
+        "agent/tests/quantitative.test.ts",
+        "agent/tests/silent-apotheosis-backflip-evidence.json",
+        "agent/tests/silent-apotheosis-backflip.test.ts",
+        "agent/tests/silent-apotheosis-footwork-evidence.json",
+        "agent/tests/silent-apotheosis-footwork.test.ts",
+        "agent/tests/silent-apotheosis-neutralize-evidence.json",
+        "agent/tests/silent-apotheosis-neutralize.test.ts",
+        "agent/tests/silent-apotheosis-poisoned-stab-evidence.json",
+        "agent/tests/silent-apotheosis-poisoned-stab.test.ts",
+        "agent/tests/silent-apotheosis-snakebite-evidence.json",
+        "agent/tests/silent-apotheosis-snakebite.test.ts",
+        "agent/tests/silent-apotheosis-survivor-evidence.json",
+        "agent/tests/silent-apotheosis-survivor.test.ts",
+        "agent/tests/silent-blade-dance-evidence.json",
+        "agent/tests/silent-blade-dance.test.ts",
+        "agent/tests/silent-build-win-ties.test.ts",
+        "agent/tests/silent-cunning-evidence.json",
+        "agent/tests/silent-cunning-state.json",
+        "agent/tests/silent-cunning.test.ts",
+        "agent/tests/silent-discard-plan-evidence.json",
+        "agent/tests/silent-discard-plan.test.ts",
+        "agent/tests/silent-gardener-skittish-evidence.json",
+        "agent/tests/silent-gardener-skittish.test.ts",
+        "agent/tests/silent-opening-evidence.json",
+        "agent/tests/silent-opening.test.ts",
+        "agent/tests/silent-phase-reference.test.ts",
+        "agent/tests/silent-reattach-evidence.json",
+        "agent/tests/silent-reattach-reset.test.ts",
+        "agent/tests/silent-shackling-weak-state.json",
+        "agent/tests/silent-shackling-weak.test.ts",
+        "agent/tests/silent-skittish-state.json",
+        "agent/tests/silent-skittish.test.ts",
+        "agent/tests/sl-giant-phase-data/yql-blast.json",
+        "agent/tests/sl-giant-phase.test.ts",
+        "agent/tools/quantitative.ts",
+        "docs/ops-assist.md",
+        "docs/quantitative-play.md",
+        "docs/v4-architecture.md",
+        "knowledge/characters/silent/boss-trust.json",
+        "knowledge/characters/silent/experience.json",
+        "ops/codex-ops-learn.py",
+        "ops/codex-ops.sh"
+      ]
+    },
+    {
+      "item": "无出牌死亡战统计",
+      "commit": "3b48088dec5fc6eafe576a1296bbdadde43432ee",
+      "base_ancestor": true,
+      "live_ancestor": true,
+      "paths": [
+        "agent/tests/report_death_fight_test.py",
+        "ops/report.py"
+      ]
+    },
+    {
+      "item": "复盘启动租约ID",
+      "commit": "223b2121ae6d9b92169df6b6eeeada66d89c553d",
+      "base_ancestor": true,
+      "live_ancestor": true,
+      "paths": [
+        "agent/tests/learner-startup-recovery.test.ts",
+        "learner/lib/startup-recovery.ts"
+      ]
+    }
+  ],
+  "no_source_completion_precheck": {
+    "base": "4ffbcee235584d67f2d8c96ec678915c2e8579d1",
+    "live": "19c9720b688ec7152fd1bbda554e9084e042077b",
+    "clean": true,
+    "verify_empty_fix": null,
+    "existing_source_difference_count": 158,
+    "existing_source_differences": [
+      "agent/src/brain/build-facts.ts",
+      "agent/src/brain/engines/claude.ts",
+      "agent/src/brain/engines/codex-session.ts",
+      "agent/src/brain/engines/codex-usage.ts",
+      "agent/src/brain/llm/deepseek-message.ts",
+      "agent/src/brain/llm/deepseek.ts",
+      "agent/src/brain/types.ts",
+      "agent/src/core/config.ts",
+      "agent/src/hand/screens/act-start.ts",
+      "agent/src/hand/screens/card-value.ts",
+      "agent/src/hand/screens/event.ts",
+      "agent/src/hand/screens/map.ts",
+      "agent/src/hand/screens/misc.ts",
+      "agent/src/hand/screens/oneshot.ts",
+      "agent/src/hand/screens/potion-discard.ts",
+      "agent/src/hand/screens/route-review.ts",
+      "agent/src/knowledge/mechanics.ts",
+      "agent/src/knowledge/move-model.ts",
+      "agent/src/knowledge/outcome-facts.ts",
+      "agent/src/knowledge/outcome-tables.ts",
+      "agent/src/knowledge/potion-equivalents.ts",
+      "agent/src/knowledge/relic-values.ts",
+      "agent/src/knowledge/render/potion-text.ts",
+      "agent/src/memory/ascension-target.ts",
+      "agent/src/memory/fight-plan.ts",
+      "agent/src/memory/run-journal.ts",
+      "agent/src/reflex/card-model.ts",
+      "agent/src/reflex/combat-plan.ts",
+      "agent/src/reflex/combat.ts",
+      "agent/src/reflex/jev-experience.ts",
+      "agent/src/reflex/passive-pieces.ts",
+      "agent/src/reflex/potion-cost.ts",
+      "agent/src/reflex/potion-mc.ts",
+      "agent/src/reflex/rollout-live.ts",
+      "agent/src/reflex/thief.ts",
+      "agent/src/reflex/turn-solver.ts",
+      "agent/src/sim/boss-clock.ts",
+      "agent/src/sim/boss-start.ts",
+      "agent/src/sim/route-map.ts",
+      "agent/src/sim/thief-card-hp.ts",
+      "agent/src/sim/thief-card-value.ts",
+      "agent/src/sl/controller.ts",
+      "agent/src/sl/draws.ts",
+      "agent/src/sl/elites.ts",
+      "agent/src/sl/explore.ts",
+      "agent/src/sl/judge.ts",
+      "agent/src/sl/random-target.ts",
+      "agent/src/sl/reload.ts",
+      "agent/tests/act-route-candidates.test.ts",
+      "agent/tests/asc-band-facts.test.ts",
+      "agent/tests/batch-j.test.ts",
+      "agent/tests/batch-k.test.ts",
+      "agent/tests/boss-sim-build.test.ts",
+      "agent/tests/brain-codex-usage.test.ts",
+      "agent/tests/build-decider.test.ts",
+      "agent/tests/combat-jev.test.ts",
+      "agent/tests/death-move-data/pinned-knowledge.json",
+      "agent/tests/deepseek-cache-layout.test.ts",
+      "agent/tests/experience.test.ts",
+      "agent/tests/fight-plan.test.ts",
+      "agent/tests/fix-queue-v4-fix3.test.ts",
+      "agent/tests/git_push_main_test.py",
+      "agent/tests/inferno-planner-data/pinned-knowledge.json",
+      "agent/tests/knowledge-check-a8w-builder.test.ts",
+      "agent/tests/knowledge-check-a8w-cards.test.ts",
+      "agent/tests/knowledge-check-a8w-experience.test.ts",
+      "agent/tests/knowledge-check-a8w-facts.test.ts",
+      "agent/tests/knowledge-check-a8w-guides.test.ts",
+      "agent/tests/knowledge-check-cards.test.ts",
+      "agent/tests/knowledge-check-facts.test.ts",
+      "agent/tests/knowledge-check-guides.test.ts",
+      "agent/tests/learner-learning-flow.test.ts",
+      "agent/tests/learner-strategy.test.ts",
+      "agent/tests/learner.test.ts",
+      "agent/tests/learning-roles.test.ts",
+      "agent/tests/logged-states/batch-n/boss-clock-self-damage.json",
+      "agent/tests/mech-move-data/pinned-knowledge.json",
+      "agent/tests/move-model-damage.test.ts",
+      "agent/tests/oneshot-act-start.test.ts",
+      "agent/tests/oneshot-rest-event.test.ts",
+      "agent/tests/oneshot-shop.test.ts",
+      "agent/tests/ops-codex.test.ts",
+      "agent/tests/outcome-asc.test.ts",
+      "agent/tests/potion-equivalents.test.ts",
+      "agent/tests/potion-mc.test.ts",
+      "agent/tests/potions-jev-call.test.ts",
+      "agent/tests/rest-pantograph.test.ts",
+      "agent/tests/rollout-ties.test.ts",
+      "agent/tests/rollout.test.ts",
+      "agent/tests/route-chain.test.ts",
+      "agent/tests/route-next-rest.test.ts",
+      "agent/tests/route-review.test.ts",
+      "agent/tests/run-plan-merge.test.ts",
+      "agent/tests/screens.test.ts",
+      "agent/tests/silent-escape-plan-evidence.json",
+      "agent/tests/silent-escape-plan-state.json",
+      "agent/tests/silent-escape-plan.test.ts",
+      "agent/tests/sl-any-draw-data/pinned-knowledge.json",
+      "agent/tests/sl-any-draw.test.ts",
+      "agent/tests/sl-early-data/pinned-knowledge.json",
+      "agent/tests/sl-early.test.ts",
+      "agent/tests/sl-explore-canon-data/pinned-knowledge.json",
+      "agent/tests/sl-explore-gaps-data/pinned-knowledge.json",
+      "agent/tests/sl-explore-potion-data/pinned-knowledge.json",
+      "agent/tests/sl-explore-whole-data/pinned-knowledge.json",
+      "agent/tests/sl-replay-data/pinned-knowledge.json",
+      "agent/tests/sl-retry-data/pinned-knowledge.json",
+      "agent/tests/sl.test.ts",
+      "agent/tests/target-options.test.ts",
+      "agent/tests/template-target-data/pinned-knowledge.json",
+      "agent/tests/thief-card-value.test.ts",
+      "agent/tests/turn-solver.test.ts",
+      "agent/tests/v1mf-bugfix.test.ts",
+      "agent/tests/worktree-storage.test.ts",
+      "agent/tools/act-route-candidates-replay.ts",
+      "agent/tools/potion-cost-replay.ts",
+      "agent/tools/potion-drink-audit.py",
+      "agent/tools/route-review-next-rest-replay.ts",
+      "eval/route-projection-split.py",
+      "knowledge/builders/build-monster-db.py",
+      "knowledge/builders/build-outcome-stats.py",
+      "knowledge/builders/build-potion-equivalents.py",
+      "knowledge/builders/characters.py",
+      "knowledge/builders/refresh-potion-equivalents.sh",
+      "learner/lib/engines.ts",
+      "learner/lib/launcher.ts",
+      "learner/lib/runs.ts",
+      "learner/lib/task.ts",
+      "learner/tasks/boss-sim-automation.md",
+      "learner/tasks/codex-brain-cache.md",
+      "learner/tasks/codex-only-brain.md",
+      "learner/tasks/experience-asc-audit.md",
+      "learner/tasks/experience-update.md",
+      "learner/tasks/fix-batch.md",
+      "learner/tasks/mechanics-audit.md",
+      "learner/tasks/postmortem.md",
+      "learner/tasks/silent-a10-regression.md",
+      "learner/tasks/silent-boss-calibration.md",
+      "learner/tasks/silent-double-boss.md",
+      "learner/tasks/strategy-proposal.md",
+      "ops/auto-relaunch.sh",
+      "ops/brain-latency.py",
+      "ops/codex-ops-actions.sh",
+      "ops/codex-ops-learner.sh",
+      "ops/codex/lib.ts",
+      "ops/codex/main.ts",
+      "ops/disk_capacity.py",
+      "ops/experience-pending.py",
+      "ops/learner_retention.py",
+      "ops/learning_requests.py",
+      "ops/run.sh",
+      "ops/stop-after-a8.sh",
+      "ops/stop-after.sh",
+      "ops/tests/test_silent_calibration_dispatch.py",
+      "ops/tests/test_worktree_storage.py",
+      "ops/worktree_checkout.py",
+      "ops/worktree_retention.py",
+      "ops/worktree_storage.py"
+    ],
+    "core_notification": {
+      "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/core-notifications/e31642e05c34a680bb55838cefa71f98cfff06a420b1541652a3d40fc78c15ae.json",
+      "sha256": "567a6d7801be73a43b6825448cccccc34c9bffef2fb2a12c2f80a8b77df36fb5",
+      "state": "failed",
+      "rc": 2,
+      "stdout_bytes": 0,
+      "stderr_bytes": 0
+    }
+  },
+  "canonical_original_state": "failed/rc0/mergednull; retained independently of no-source report acceptance",
+  "tests": "tsc0; selected 7 files 48 cases / Python3, not full suite; 22 target-options items unselected",
+  "no_new_merge_or_behavior_release_or_full_recheck": true,
+  "original_strategy_and_architecture_owners_unchanged": true
+}

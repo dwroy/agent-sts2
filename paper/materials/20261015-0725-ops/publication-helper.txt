@@ -1,0 +1,66 @@
+from pathlib import Path
+import subprocess,json,hashlib,os,fcntl,re
+root=Path.cwd();live=root/'.worktrees/live';p=root/'ops/codex-ops/record-staging/20261015-0725';pub=root/'paper/materials/20261015-0725-ops'
+c1=json.loads((p/'c1-validated-stage.json').read_text());c2=json.loads((p/'c2-composition-plan.json').read_text());sha=lambda b:hashlib.sha256(b).hexdigest()
+def git(*a,cwd=root,env=None,data=None):return subprocess.check_output(['git','-C',str(cwd),*a],env=env,input=data,stderr=subprocess.PIPE)
+def textfile(f,d):f.write_text(json.dumps(d,ensure_ascii=False,indent=2)+'\n')
+def commit(tree,parents,title,cwd=live):
+ args=['commit-tree',tree]
+ for parent in dict.fromkeys(parents):args+=['-p',parent]
+ msg=(title+'\n\nCo-Authored-By: Codex gpt-6.1-sol <noreply@openai.com>\n').encode()
+ return git(*args,cwd=cwd,data=msg).decode().strip()
+def entry(tree,path):
+ b=git('ls-tree',tree,'--',path,cwd=live).decode().strip();return b.split('\t')[0].split() if b else None
+now=subprocess.check_output(['date','+%Y-%m-%d %H:%M:%S %Z'],text=True).strip()
+lock=(root/'ops/live-merge.lock').open('a');fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB)
+with lock:
+ old=git('rev-parse','HEAD',cwd=live).decode().strip();mainold=git('rev-parse','HEAD').decode().strip();assert old==c1['live'],('live advanced',old);assert not git('diff','--cached','--name-only',cwd=live);assert not git('diff','--cached','--name-only')
+ for src in [c1['source'],c2['source']]:git('merge-base','--is-ancestor',src,mainold)
+ for name in sorted(set(c1['paths']+c2['paths'])):
+  e=entry(old,name)
+  if e:
+   assert (live/name).read_bytes()==git('show',old+':'+name,cwd=live),('dirty selected path',name)
+  else:assert not (live/name).exists(),('unexpected selected file',name)
+ # Commit only current existing knowledge refresh bytes; never rewrite working knowledge or notes.
+ refresh=git('diff','--name-only',old,'--','knowledge',cwd=live).decode().splitlines();assert all((live/f).is_file() for f in refresh)
+ idx=p/'publication.index';env={**os.environ,'GIT_INDEX_FILE':str(idx)};git('read-tree',old,cwd=live,env=env);knowledge=[]
+ for name in refresh:
+  b=(live/name).read_bytes();mode=entry(old,name)[0];blob=git('hash-object','-w','--stdin',cwd=live,data=b).decode().strip();git('update-index','--add','--cacheinfo',f'{mode},{blob},{name}',cwd=live,env=env);knowledge.append({'path':name,'sha256':sha(b),'git_blob':blob})
+ fresh_tree=git('write-tree',cwd=live,env=env).decode().strip();fresh=commit(fresh_tree,[old],'Preserve existing live knowledge refresh before C1/C2') if refresh else old
+ for name in c1['paths']:
+  mode,kind,blob=entry(c1['validated_tree'],name);assert kind=='blob';git('update-index','--add','--cacheinfo',f'{mode},{blob},{name}',cwd=live,env=env)
+ c1tree=git('write-tree',cwd=live,env=env).decode().strip();assert sorted(git('diff','--name-only',fresh_tree,c1tree,cwd=live).decode().splitlines())==sorted(c1['paths']);behavior=commit(c1tree,[fresh,c1['source']],'Publish Silent C1 required-computation failure exit')
+ # Allocate a single cumulative behavior number from both actual ledgers inside this lock.
+ datasets={};mappings={};seqs={}
+ for cwd,head in [(root,mainold),(live,old)]:
+  b=git('show',head+':eval/versions.json',cwd=cwd);assert (cwd/'eval/versions.json').read_bytes()==b;d=json.loads(b);datasets[str(cwd)]=d
+  for row in d['release_numbering']['releases']:
+   seq=int(re.fullmatch(r'V\d+-R(\d+)',row['release_id'])[1]);assert seq not in seqs or seqs[seq]==row['commit'];seqs[seq]=row['commit']
+   if row['commit'] in mappings:assert mappings[row['commit']]['release_id']==row['release_id'];mappings[row['commit']]['aliases']=list(dict.fromkeys(mappings[row['commit']]['aliases']+row['aliases']))
+   else:mappings[row['commit']]=json.loads(json.dumps(row))
+ assert set(seqs)==set(range(max(seqs)+1));assert behavior not in mappings
+ rid=f'V5-R{max(seqs)+1:03d}';name='V5.s-compute-failure-exit1';mappings[behavior]={'release_id':rid,'commit':behavior,'aliases':[name]};ordered=sorted(mappings.values(),key=lambda row:int(row['release_id'].split('-R')[1]))
+ version={'name':name,'family':'V5','character':'SILENT','commit':behavior,'release_id':rid,'release_status':'registered-primary-ops','source':f'{now}; watcher-direct source {c1["source"]}; roy-20261014-s-decision C1 approved fault exit. Same-input mandatory failures counted twice; third B3 11s/B2 25s bounded attempt, n>=300 incomplete and lower/failed without numbers; off retains old wait. Original source tsc0/3948 fixed pass plus original environment failure and one corrected-link pass, paths11; actual composition tsc0/45 fixed pass. Preserve knowledge, Escape Plan and Dai comments. Final combined host full and natural consumer pending; no accuracy/game-benefit claim.'}
+ version_bytes={}
+ for cwd,d in datasets.items():
+  assert not any(v['name']==name for v in d['versions']);d['versions'].append(version);d['release_numbering']['releases']=ordered;version_bytes[cwd]=(json.dumps(d,ensure_ascii=False,indent=2)+'\n').encode()
+ midx=p/'c1-main-metadata.index';menv={**os.environ,'GIT_INDEX_FILE':str(midx)};git('read-tree',mainold,env=menv);mb=git('hash-object','-w','--stdin',data=version_bytes[str(root)]).decode().strip();git('update-index','--add','--cacheinfo',f'100644,{mb},eval/versions.json',env=menv);mtree=git('write-tree',env=menv).decode().strip();mainnew=commit(mtree,[mainold],f'Register {rid} for actual C1 failure exit',cwd=root)
+ vb=git('hash-object','-w','--stdin',cwd=live,data=version_bytes[str(live)]).decode().strip();git('update-index','--add','--cacheinfo',f'100644,{vb},eval/versions.json',cwd=live,env=env);registrationtree=git('write-tree',cwd=live,env=env).decode().strip();registered=commit(registrationtree,[behavior,mainnew],f'Bind actual C1 publication to {rid}')
+ # C2 remains a separate shadow-only diagnostic publication after C1, without another behavior number.
+ for path in c2['paths']:
+  mode,kind,blob=entry(c2['combined_tree'],path);assert kind=='blob';git('update-index','--add','--cacheinfo',f'{mode},{blob},{path}',cwd=live,env=env)
+ finaltree=git('write-tree',cwd=live,env=env).decode().strip();changed=sorted(git('diff','--name-only',registrationtree,finaltree,cwd=live).decode().splitlines());assert changed==sorted(c2['paths']);final=commit(finaltree,[registered,c2['source']],'Wire C2 full-sample shadow diagnostics after C1')
+ for f in knowledge:assert git('rev-parse',final+':'+f['path'],cwd=live).decode().strip()==f['git_blob']
+ for path in set(c1['paths']+c2['paths']):assert entry(finaltree,path)==entry(c2['combined_tree'],path)
+ plan={'at':now,'old_live':old,'old_main':mainold,'refresh_commit':fresh,'refresh_paths':knowledge,'C1':{'source':c1['source'],'behavior':behavior,'behavior_tree':c1tree,'registration':registered,'registration_tree':registrationtree,'release_id':rid,'name':name,'paths':c1['paths'],'source_actual_ancestor':True},'C2':{'source':c2['source'],'actual_live':final,'tree':finaltree,'paths':c2['paths'],'mode':'shadow','on_request':'actual shadow; admission pending','new_behavior_number':False,'source_actual_ancestor':True},'actual_main_registration':mainnew,'checks':{'source_C1_full':'3948 pass; original missing-link failure retained; one corrected-link component pass; paths11','source_C2_full':'3968 pass; paths11','actual_combined_tsc':0,'actual_combined_fixed_files':13,'actual_combined_fixed_cases':45,'actual_combined_fixed_exit':0,'selected_input_gitleaks':0,'host_full':'not started yet, one final combined tree request next'},'preserved':['refreshed knowledge','Escape Plan R350','Dai comments','parallel dirty records','original inputs and owners'],'natural_C1':'pending','natural_C2_verified_runs':0,'game_benefit':'unknown','wide_R3_P1_P2':'open','no_game_restart':True,'lock':{'inode':os.fstat(lock.fileno()).st_ino,'exclusive':True}}
+ textfile(p/'publication-intended.json',plan)
+ # Compare-and-swap refs; write only the chosen deployment/metadata files, preserving all other work.
+ git('update-ref','HEAD',mainnew,mainold);(root/'eval/versions.json').write_bytes(version_bytes[str(root)]);git('read-tree',mtree)
+ git('update-ref','HEAD',final,old,cwd=live)
+ for path in sorted(set(c1['paths']+c2['paths']+['eval/versions.json'])):
+  mode,kind,blob=entry(finaltree,path);f=live/path;f.parent.mkdir(parents=True,exist_ok=True);f.write_bytes(git('cat-file','blob',blob,cwd=live));f.chmod(0o755 if mode=='100755' else 0o644)
+ git('read-tree',finaltree,cwd=live)
+ for src in [c1['source'],c2['source']]:git('merge-base','--is-ancestor',src,'HEAD',cwd=live)
+ assert not git('diff','--cached','--name-only',cwd=live);assert not git('diff','--cached','--name-only');assert not git('diff','--name-only','--','knowledge',cwd=live)
+ textfile(pub/'c1-c2-publication.json',plan)
+ print(json.dumps({'C1_release':rid,'C1_behavior':behavior,'C2_final_live':final,'final_tree':finaltree,'refresh_paths':len(refresh),'main_registration':mainnew}))
