@@ -31,16 +31,19 @@
         "evidence": "b2-fixed/comparison.json",
         "root_cause": "Existing retaliation changes enemy HP but was absent from the cumulative damage used by S; terminal start damage also lacked a following carry record",
         "legacy_outcome_fields_unchanged": true,
-        "old_evidence_preserved": true
+        "old_evidence_preserved": true,
+        "release_id": "V5-R346",
+        "release_readback": "eval/versions.json; original paper/materials/20261014-2300-ops/s-release.json"
       }
     },
     "P1": {
       "code": "implemented",
       "default": "shadow for Silent; off for other characters",
-      "natural_shadow_runs_verified": 0,
+      "natural_shadow_runs_verified": 2,
       "natural_shadow_runs_required": 2,
       "on_published": false,
-      "state": "deployed in live; next native process and two natural games pending"
+      "state": "Two completed natural shadow runs verified for production and latency only; P0 group/trust limits and on publication remain open",
+      "natural_gate_readback": "paper/materials/20261015-s-compute-failure/p1-natural-gate-readback.json"
     },
     "P2": {
       "state": "pending; P1 dependency and two shadow games required"
@@ -53,6 +56,28 @@
     },
     "P5": {
       "state": "pending P1/P2"
+    },
+    "C1": {
+      "state": "main integrated; original ops live publication pending",
+      "source": "767ba5f1ca98e1ad72a1a5ba172836d0af13e97d",
+      "main": "5ca80ce6d377b91ece1f97fef73c1685bbc914a7",
+      "allocation": "ops/codex-ops/retention/allocations/s-compute-failure-20261015.json",
+      "validation": "paper/materials/20261015-s-compute-failure/validation.json",
+      "live": null,
+      "release_id": null
+    },
+    "C2": {
+      "state": "shadow implementation integrated in main; original ops live publication pending",
+      "source": "7eb2c69abb44b65e73115324385f1350a5c8dd30",
+      "main": "72286332ec835ee9929793543e435686935320ff",
+      "allocation": "ops/codex-ops/retention/allocations/s-adaptive-shadow-20261015.json",
+      "validation": "paper/materials/20261015-s-adaptive-shadow/validation.json",
+      "on_implemented": false,
+      "on_enabled": false,
+      "natural_shadow_runs_verified": 0,
+      "natural_shadow_runs_required": 2,
+      "offline_admission_eligible": 0,
+      "live": null
     }
   },
   "validation": {
@@ -96,9 +121,9 @@
     "not_claimed": "The full sandbox invocation did not exit zero; this is complete fixed-case pass coverage with isolated timeout rechecks."
   },
   "next_owner_actions": [
-    "Original ops registers this actual behavior commit and checks final deployed tree once",
-    "Observe two natural P1 shadow runs and actual run-config mode; no restart or on transition before acceptance",
-    "Same watcher continues remaining P0 groups and P3/P2/P4/P5 with separate behavioral publications"
+    "Original ops publishes C1 under the existing live lock with its own behavior release, then C2 shadow diagnostics; exact final-tree host acceptance remains separate",
+    "Verify complete offline C2 question coverage and at least two completed new natural C2 shadow runs; old P1 runs and limited P0 exports do not satisfy admission",
+    "Same watcher continues P0 group/trust boundaries, P1-on and P2/P3/P4/P5 dependencies, and the original pure R3 adapter coordination without replaying or replacing original learning batches"
   ],
   "limits": [
     "No new game knowledge",
@@ -106,7 +131,7 @@
     "Tests and frozen replay do not close the parent or claim natural consumers",
     "This worktree is retained for unfinished phases; no completion/reclamation request yet"
   ],
-  "updated_at": "2026-10-14T23:11:22.264826+08:00",
+  "updated_at": "2026-10-15T07:44:04.715672+08:00",
   "deployments": [
     {
       "phase": "P0/P1 shadow",

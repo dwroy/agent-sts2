@@ -1,0 +1,76 @@
+{
+  "at": "2026-10-15T07:37:05.640773+08:00",
+  "parent": "roy-20261014-s-decision",
+  "phase": "P1 shadow service/performance gate",
+  "verified_completed_natural_runs": 2,
+  "runs_source": {
+    "path": "paper/materials/20261015-v5-performance-0641/per-run.json",
+    "sha256": "8d909daea6e01cdf488ad350a9cddf0f1c3180ffd31583f0082cd10f4f280717"
+  },
+  "runs": [
+    {
+      "run": "1GN7WFBWC2E3",
+      "started_config": "2026-10-14T15:30:27.480Z",
+      "ended": "2026-10-14T17:54:49.804Z",
+      "finished": true,
+      "release": "V5-R347",
+      "commit": "8035f8223f0a5e9c7caea4971a5f547a6f9b8901",
+      "ancestry": {
+        "b0d94ce317f6ca24fd60f0940947e349722e73b5": true,
+        "e5d07f4a5a45ff3cf2cb44d09dfa89fa1ebf46ad": true
+      },
+      "health_source": "ops/codex-ops/module-health/1GN7WFBWC2E3.json",
+      "frozen_copy": "p1-shadow-1GN7WFBWC2E3.json",
+      "sha256": "b0093fbd5dddd8a41efe1ed2ec95e9c4278708ea1bc21b4bfe450a17acb02a75",
+      "readiness": {
+        "mode": "shadow",
+        "expected": 40,
+        "produced": 40,
+        "missing": 0,
+        "eligible": 13,
+        "low_trust": 12,
+        "sign_rejected": 27,
+        "brain_delivered": 0,
+        "brain_accepted": 0,
+        "ms_max": 14.589131999760866,
+        "longest_missing_streak": 0,
+        "alert": false,
+        "limits": "Shadow is not brain delivery. Low trust and failed sign audit suppress facts without changing mandatory computation or old ranking."
+      }
+    },
+    {
+      "run": "X06YT1507E5M",
+      "started_config": "2026-10-14T18:03:22.516Z",
+      "ended": "2026-10-14T21:15:46.026Z",
+      "finished": true,
+      "release": "V5-R348",
+      "commit": "eafecc850a8ad55d36e67644236a98d196b61161",
+      "ancestry": {
+        "b0d94ce317f6ca24fd60f0940947e349722e73b5": true,
+        "e5d07f4a5a45ff3cf2cb44d09dfa89fa1ebf46ad": true
+      },
+      "health_source": "ops/codex-ops/module-health/X06YT1507E5M.json",
+      "frozen_copy": "p1-shadow-X06YT1507E5M.json",
+      "sha256": "69af03eaaf2b8f7bb9be4e171926ca4a876e8c45bc407e3f8492eaaf8e32f20f",
+      "readiness": {
+        "mode": "shadow",
+        "expected": 42,
+        "produced": 42,
+        "missing": 0,
+        "eligible": 15,
+        "low_trust": 12,
+        "sign_rejected": 27,
+        "brain_delivered": 0,
+        "brain_accepted": 0,
+        "ms_max": 13.467615000903606,
+        "longest_missing_streak": 0,
+        "alert": false,
+        "limits": "Shadow is not brain delivery. Low trust and failed sign audit suppress facts without changing mandatory computation or old ranking."
+      }
+    }
+  ],
+  "passed": true,
+  "P1_on_enabled": false,
+  "C2_natural_runs_verified": 0,
+  "scope": "P1 shadow production/latency only. No brain delivery or game benefit; no closure of broad P1/P2/R3. Older runs predate C2 and cannot satisfy C2 admission. Remaining P0 group audit and model trust limits preserved."
+}
