@@ -49,18 +49,25 @@ def artifact(root, ref):
 def ack_request(root, state, notice, payload):
     """Resolve delivery ownership before writing any ACK; ordinary notices have no learning parent."""
     token = digest(canonical([notice.get("request_sha256"), notice.get("kind"), notice.get("message")]))[:24]
-    if notice.get("id") != payload.get("notice_id") or notice.get("id") != token:
+    feature = notice.get("source_kind") in ("feature", "boss-sim")
+    payload_id = payload.get("notice_id")
+    if notice.get("source_kind") == "boss-sim" and payload.get("stage") == "ops_forwarded":
+        payload_id = payload_id or payload.get("delivery_token")
+    if notice.get("id") != payload_id:
+        raise ValueError("notice identity or frozen content mismatch")
+    if not feature and notice.get("id") != token:
         raise ValueError("notice identity or frozen content mismatch")
     request_id = notice.get("request_id")
     record = state.get("learning_requests", {}).get(request_id)
     if record is not None:
-        if notice.get("notification_only") is True or notice.get("registered_learning_request") is False:
+        if feature or notice.get("notification_only") is True or notice.get("registered_learning_request") is False:
             raise ValueError("ordinary notification scope conflicts with a registered learning request")
         return record
     if notice.get("notification_only") is not True or notice.get("registered_learning_request") is not False:
         raise ValueError("unknown learning request; ordinary notification scope must be explicit")
-    if notice.get("source_kind") == "feature":
-        return ack_feature(root, state, notice, payload)
+    if feature:
+        return (ack_boss_sim(root, state, notice, payload) if notice["source_kind"] == "boss-sim"
+                else ack_feature(root, state, notice, payload))
     match = re.fullmatch(r"([a-z][a-z0-9_]*)-proposal-[0-9a-f]{16}", request_id or "")
     if not match or not re.fullmatch(r"[0-9a-f]{64}", notice.get("request_sha256", "")):
         raise ValueError("ordinary notice must identify an existing character proposal")
@@ -80,6 +87,27 @@ def ack_request(root, state, notice, payload):
             or payload.get("character", character) != character):
         raise ValueError("unknown proposal or mismatched character/proposal SHA")
     return None
+
+
+def contains_original(original, sent):
+    """Permit complete JSON pretty-printing, while retaining every original key and value."""
+    if original and original in sent:
+        return True
+    try:
+        value = json.loads(original)
+        if not isinstance(value, (dict, list)) or not value:
+            return False
+        text = sent.decode("utf8")
+        for match in re.finditer(r"(?m)^[ \t]*[\[{]", text):
+            try:
+                candidate, _ = json.JSONDecoder().raw_decode(text[match.start():].lstrip())
+                if canonical(candidate) == canonical(value):
+                    return True
+            except ValueError:
+                continue
+    except (ValueError, UnicodeError):
+        pass
+    return False
 
 
 def ack_feature(root, state, notice, payload):
@@ -120,7 +148,119 @@ def ack_feature(root, state, notice, payload):
     if (not isinstance(notice.get("message"), str) or original != notice["message"].encode("utf8")
             or digest(original) != notice.get("request_sha256")):
         raise ValueError("feature original message SHA mismatch")
+    token = digest(canonical([notice["request_sha256"], notice["kind"], notice["message"]]))[:24]
+    if source.get("native_delivery"):
+        delivery = source["native_delivery"]
+        receipt = json.loads(artifact(root, delivery["receipt"]))
+        evidence = json.loads(artifact(root, receipt["evidence"]))
+        sent = artifact(root, delivery["message"])
+        response = evidence.get("transport_response", {}).get("result", {})
+        if (receipt.get("notice_id") != notice.get("id") or receipt.get("stage") != "ops_forwarded"
+                or receipt.get("actor") != "ops" or receipt.get("status") != "delivered"
+                or evidence.get("notice_id") != notice.get("id")
+                or evidence.get("source_feature_request") != batch["feature_request"]
+                or evidence.get("source_batch") != batch_id or evidence.get("transport_exit") != 0
+                or response.get("type") != "agent_prompted" or not evidence.get("target_pane")
+                or response.get("agent", {}).get("pane_id") != evidence["target_pane"]
+                or digest(sent) != evidence.get("message_sha256") or not contains_original(original, sent)
+                or (notice.get("ops_forwarded") and
+                    artifact(root, notice["ops_forwarded"]) != artifact(root, delivery["receipt"]))
+                or (payload.get("stage") == "ops_forwarded" and payload != receipt)):
+            raise ValueError("feature native delivery identity, original words or receipt mismatch")
+    elif notice.get("id") != token:
+        raise ValueError("feature notice identity or frozen content mismatch")
     return None
+
+
+def ack_boss_sim(root, state, notice, payload):
+    """Bind a B4/B5 notice to its existing evidence and independently observed native text."""
+    source = json.loads(artifact(root, notice["source_evidence"]))
+    batch_id = notice.get("source_batch", "")
+    batch = state.get("batches", {}).get(batch_id, {})
+    evidence = batch.get("boss_sim", {})
+    key = evidence.get("key", "")
+    if (not re.fullmatch(r"\d{8}-\d{6}-fix-batch", batch_id) or batch.get("task") != "fix-batch"
+            or batch.get("learner_task") != "boss-sim-batch" or batch.get("feature_request")
+            or not re.fullmatch(r"[0-9a-f]{64}", key) or batch.get("key") != key
+            or source.get("evidence_key") != key or notice.get("request_id") != key
+            or evidence.get("mode") not in ("b4", "b5") or source.get("batch") != batch_id
+            or not batch.get("character") or evidence.get("character") != batch["character"]
+            or source.get("character") != batch["character"] or notice.get("character") != batch["character"]
+            or payload.get("character", batch["character"]) != batch["character"]
+            or source.get("worktree") != batch.get("worktree") or not UUID.fullmatch(source.get("thread_id", ""))):
+        raise ValueError("boss simulation notice must match its original batch, character and evidence key")
+    tree = Path(batch["worktree"]).resolve()
+    log = (Path(root) / source["original_log"]["path"]).resolve()
+    scratch = log.with_suffix("")
+    report = (Path(root) / source["original_report"]["path"]).resolve()
+    frozen = (Path(root) / source["boss_evidence"]["path"]).resolve()
+    if (tree.parent != (Path(root) / ".worktrees").resolve() or log.parent != tree / "learner/runs"
+            or log.suffix != ".jsonl" or report != scratch / "report.md"
+            or frozen != Path(batch["evidence_path"]).resolve()
+            or canonical(json.loads(artifact(root, source["boss_evidence"]))) != canonical(evidence)):
+        raise ValueError("boss simulation notice frozen input or scratch mismatch")
+    events = [json.loads(line) for line in artifact(root, source["original_log"]).splitlines() if line.strip()]
+    launch = next((event for event in events if event.get("type") == "learner_launch"), {})
+    threads = {event.get("thread_id") for event in events if event.get("type") == "thread.started"}
+    if (launch.get("engine") != "codex" or launch.get("cwd") != str(tree)
+            or launch.get("task") != "boss-sim-batch" or source["thread_id"] not in threads):
+        raise ValueError("boss simulation original launch/thread mismatch")
+    original_report = artifact(root, source["original_report"])
+    delivery = source["native_delivery"]
+    sent = artifact(root, delivery["message"])
+    receipt = json.loads(artifact(root, delivery["receipt"]))
+    response = json.loads(artifact(root, receipt["evidence"])).get("result", {})
+    received = json.loads(artifact(root, delivery["received"]))
+    if (receipt.get("delivery_token") != notice.get("id") or receipt.get("stage") != "ops_forwarded"
+            or receipt.get("actor") != "ops" or receipt.get("status") != "delivered"
+            or receipt.get("original_batch") != batch_id or response.get("type") != "agent_prompted"
+            or not response.get("agent", {}).get("pane_id")
+            or received.get("notice_id") != notice.get("id") or received.get("original_batch") != batch_id
+            or received.get("stage") != "watcher_received" or received.get("actor") != "watcher"
+            or received.get("status") != "delivered" or artifact(root, received["evidence"]) != sent
+            or digest(original_report).encode() not in sent or key.encode() not in sent or batch_id.encode() not in sent
+            or sent != notice.get("message", "").encode("utf8") or digest(sent) != notice.get("request_sha256")
+            or (payload.get("stage") == "ops_forwarded" and payload != receipt)
+            or (notice.get("ops_forwarded") and
+                artifact(root, notice["ops_forwarded"]) != artifact(root, delivery["receipt"]))):
+        raise ValueError("boss simulation native delivery, original report or independent receipt mismatch")
+    return None
+
+
+def register_feature_notice(root, state_dir, state, source_path, notice_id, kind):
+    """Bind the producer's frozen provenance and existing delivery ID; do not send or ACK."""
+    path = (Path(root) / source_path).resolve()
+    source_ref = {"path": str(path), "sha256": digest(path.read_bytes())}
+    source = json.loads(artifact(root, source_ref))
+    source_kind = source.get("source_kind", "feature")
+    original = artifact(root, source["native_delivery"]["message"] if source_kind == "boss-sim"
+                        else source["original_message"])
+    request_id = source["evidence_key"] if source_kind == "boss-sim" else source["feature_request"]
+    notice = {"id": notice_id, "kind": kind, "request_id": request_id,
+              "request_sha256": digest(original), "message": original.decode("utf8"),
+              "notification_only": True, "registered_learning_request": False, "source_kind": source_kind,
+              "character": source["character"], "source_batch": source["batch"], "source_evidence": source_ref,
+              "ops_forwarded": False, "watcher_received": False, "roy_notified": False}
+    if not re.fullmatch(r"[0-9a-f]{24}", notice_id):
+        raise ValueError("invalid feature notice ID")
+    ack_request(root, state, notice, {"notice_id": notice_id, "character": source["character"]})
+    frozen_source = Path(state_dir) / "learning-notices/sources" / (notice_id + ".json")
+    frozen_raw = (json.dumps(source, ensure_ascii=False, indent=2) + "\n").encode("utf8")
+    notice["source_evidence"] = {"path": str(frozen_source), "sha256": digest(frozen_raw)}
+    if frozen_source.exists() and frozen_source.read_bytes() != frozen_raw:
+        raise ValueError("existing feature notice has a different frozen source")
+    destination = Path(state_dir) / "learning-notices" / (notice_id + ".json")
+    if destination.exists():
+        existing = json.loads(destination.read_bytes())
+        identity = set(notice) - {"ops_forwarded", "watcher_received", "roy_notified"}
+        if any(existing.get(key) != notice[key] for key in identity):
+            raise ValueError("existing feature notice has a different frozen source")
+        if not frozen_source.exists():
+            atomic(frozen_source, source)
+        return notice_id
+    atomic(frozen_source, source)
+    atomic(destination, notice)
+    return notice_id
 
 
 def read_request(root, path):
@@ -215,8 +355,20 @@ def reconcile(state, root, scripts, character, alive, stamp, start, limit=2):
     for notice in (state_dir / "learning-notices").glob("*.json"):
         value = json.loads(notice.read_bytes())
         if not value.get("roy_notified"):
-            notify(root, state_dir, {"id": value["request_id"], "request_sha256": value.get("request_sha256")},
-                   value["kind"], value["message"])
+            if value.get("source_kind") in ("feature", "boss-sim"):
+                # Preserve the native delivery ID and independent ACKs; never resend as a parent notice.
+                if time.time() - value.get("last_queued_at", 0) >= 1800:
+                    queue = state_dir / "queue"
+                    queue.mkdir(parents=True, exist_ok=True)
+                    event = queue / f"{time.time_ns()}-learning-attention.md"
+                    event.write_text(f"原feature通知 {value['id']}：{value['message']}\n"
+                                     f"来源与回执：{notice}。按 docs/learning-requests.md 分角色登记真实回执；"
+                                     "queued不代表发送、接收或Roy已知。\n")
+                    value.update(last_queued_at=time.time(), last_queue=str(event))
+                    atomic(notice, value)
+            else:
+                notify(root, state_dir, {"id": value["request_id"], "request_sha256": value.get("request_sha256")},
+                       value["kind"], value["message"])
     for path in sorted((Path(root) / "notes/learning-requests").glob("*.json")):
         if not ID.fullmatch(path.stem):
             continue
@@ -453,15 +605,27 @@ def run(root, state_dir, batch_id):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("action", choices=("run", "ack", "retry"))
+    parser.add_argument("action", choices=("run", "ack", "retry", "register-feature"))
     parser.add_argument("--batch")
     parser.add_argument("--notice")
     parser.add_argument("--stage", choices=("ops_forwarded", "watcher_received", "roy_notified"))
     parser.add_argument("--request")
     parser.add_argument("--receipt")
+    parser.add_argument("--source")
+    parser.add_argument("--kind", choices=("disagreement", "blocked"), default="disagreement")
     args = parser.parse_args()
     root = Path(os.environ.get("CODEX_OPS_ROOT") or Path(__file__).resolve().parent.parent)
     state_dir = Path(os.environ.get("CODEX_OPS_DIR") or root / "ops/codex-ops")
+    if args.action == "register-feature":
+        if not args.source or not args.notice:
+            parser.error("feature source and original notice ID required")
+        try:
+            with locked(state_dir) as state:
+                ident = register_feature_notice(root, state_dir, state, args.source, args.notice, args.kind)
+        except (ValueError, KeyError, TypeError, OSError, ImportError) as error:
+            parser.error(str(error))
+        print(ident)
+        return 0
     if args.action == "run":
         try:
             return run(root, state_dir, args.batch)
@@ -498,7 +662,10 @@ def main():
             notice = json.loads(path.read_bytes())
             payload = json.loads(receipt.read_bytes())
             actor = "ops" if args.stage == "ops_forwarded" else "watcher"
-            if (payload.get("notice_id") != args.notice or payload.get("stage") != args.stage
+            payload_id = payload.get("notice_id")
+            if notice.get("source_kind") == "boss-sim" and args.stage == "ops_forwarded":
+                payload_id = payload_id or payload.get("delivery_token")
+            if (payload_id != args.notice or payload.get("stage") != args.stage
                     or payload.get("actor") != actor or payload.get("status") != "delivered"):
                 parser.error("receipt must identify the notice, delivery stage, responsible actor and delivered status")
             artifact(root, payload["evidence"])
@@ -512,7 +679,10 @@ def main():
                 for stage in stages[:stages.index(args.stage)]:
                     prior = json.loads(artifact(root, notice[stage]))
                     prior_actor = "ops" if stage == "ops_forwarded" else "watcher"
-                    if (prior.get("notice_id") != args.notice or prior.get("stage") != stage
+                    prior_id = prior.get("notice_id")
+                    if notice.get("source_kind") == "boss-sim" and stage == "ops_forwarded":
+                        prior_id = prior_id or prior.get("delivery_token")
+                    if (prior_id != args.notice or prior.get("stage") != stage
                             or prior.get("actor") != prior_actor or prior.get("status") != "delivered"):
                         raise ValueError("previous delivery receipt identity mismatch")
                     artifact(root, prior["evidence"])
