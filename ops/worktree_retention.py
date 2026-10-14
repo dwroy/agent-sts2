@@ -205,7 +205,15 @@ def admission(root, directory, tree):
         if record.get("root") != str(root) or record.get("worktree") != str(tree) or record.get("state") != "accepted":
             raise ValueError("workspace acceptance incomplete")
         p = record["acceptance"]
-        acceptance(root, tree, p["source"], p["main_commit"], p["live_commit"])
+        base = None
+        if p.get("allocation_receipt"):
+            allocation = retention.safe_path(root, p["allocation_receipt"])
+            expected = directory / "retention/allocations" / (tree.name + ".json")
+            if (allocation != expected or retention.sha_file(allocation) != p["allocation_sha256"]
+                    or retention.load(allocation).get("base") != p["base"]):
+                raise ValueError("accepted allocation receipt changed")
+            base = p["base"]
+        acceptance(root, tree, p["source"], p["main_commit"], p["live_commit"], base)
     elif (directory / "retention/allocations" / (tree.name + ".json")).exists() and tree.name.startswith("ops-"):
         raise ValueError("allocated ops workspace needs explicit completion acceptance")
     elif tree.name.startswith("ops-"):

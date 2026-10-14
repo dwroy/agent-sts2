@@ -287,6 +287,15 @@ class Storage(unittest.TestCase):
         proof = storage.workspaces.complete(self.root, self.directory, tree.name, source, main, publication)['acceptance']
         self.assertEqual(proof['base'], self.head)
         self.assertEqual(proof['verified_source_paths'], ['agent/src/fixed.ts'])
+        allocation = self.directory / 'retention/allocations' / (tree.name + '.json')
+        original = allocation.read_bytes()
+        changed = json.loads(original);changed['base'] = source
+        storage.retention.atomic(allocation, changed)
+        with self.assertRaisesRegex(ValueError, 'allocation receipt changed'):
+            storage.workspaces.reclaim(self.root, self.directory, tree.name, True)
+        self.assertTrue((tree / '.git').is_file())
+        allocation.write_bytes(original)
+        self.assertEqual(storage.workspaces.reclaim(self.root, self.directory, tree.name, True)['state'], 'reclaimed')
 
 
 if __name__ == '__main__':
