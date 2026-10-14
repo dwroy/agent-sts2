@@ -1,0 +1,63 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-154303/agent
+
+ ❯ tests/extract-evidence.test.ts (2 tests | 1 failed) 83ms
+     × keeps run-plans rows, original offsets and hashes without matching foreign mentions 79ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/extract-evidence.test.ts > run-scoped evidence extraction > keeps run-plans rows, original offsets and hashes without matching foreign mentions
+Error: Command failed: python3 -B tests/extract_evidence_test.py
+F.F.F
+======================================================================
+FAIL: test_foreign_mentions_and_conflicting_identities_are_not_selected (__main__.ExtractEvidenceTest.test_foreign_mentions_and_conflicting_identities_are_not_selected) (row={'run_id': 'K3676LU8B0UH', 'run': 'SADL3CGYTGSR'})
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-154303/agent/tests/extract_evidence_test.py", line 50, in test_foreign_mentions_and_conflicting_identities_are_not_selected
+    self.assertNotEqual(evidence.run_identity(row), RUN)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'K3676LU8B0UH' == 'K3676LU8B0UH'
+
+======================================================================
+FAIL: test_original_cutoff_does_not_include_later_appends_or_partial_lines (__main__.ExtractEvidenceTest.test_original_cutoff_does_not_include_later_appends_or_partial_lines)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-154303/agent/tests/extract_evidence_test.py", line 58, in test_original_cutoff_does_not_include_later_appends_or_partial_lines
+    self.assertEqual(manifest['counts'], {RUN: 1})
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'K3676LU8B0UH': 0} != {'K3676LU8B0UH': 1}
+- {'K3676LU8B0UH': 0}
+?                  ^
+
++ {'K3676LU8B0UH': 1}
+?                  ^
+
+
+======================================================================
+FAIL: test_plan_run_field_preserves_exact_raw_evidence (__main__.ExtractEvidenceTest.test_plan_run_field_preserves_exact_raw_evidence)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-154303/agent/tests/extract_evidence_test.py", line 28, in test_plan_run_field_preserves_exact_raw_evidence
+    self.assertEqual(manifest['counts'], {RUN: 2})
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'K3676LU8B0UH': 0} != {'K3676LU8B0UH': 2}
+- {'K3676LU8B0UH': 0}
+?                  ^
+
++ {'K3676LU8B0UH': 2}
+?                  ^
+
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.004s
+
+FAILED (failures=3)
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 1 passed (2)
+   Start at  15:52:03
+   Duration  626ms (transform 330ms, setup 375ms, import 24ms, tests 83ms, environment 0ms)
+

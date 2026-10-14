@@ -1,0 +1,85 @@
+{
+  "batch": "20261014-154303-fix-batch",
+  "source": "78e9b05929366d097a728761d693d790ff16ac87",
+  "source_parent": "f8d306514e2a8afafeac591d38773b92807f2518",
+  "original_failed_rc0_mergednull_preserved": true,
+  "source_checks": {
+    "source": "78e9b05929366d097a728761d693d790ff16ac87",
+    "sandbox": {
+      "tsc": 0,
+      "vitest": 0,
+      "files": 391,
+      "cases": 3823
+    },
+    "first_attempt": {
+      "tsc": 0,
+      "vitest": 1,
+      "files_passed": 389,
+      "files_failed": 1,
+      "cases_passed": 3811,
+      "cases_failed": 1,
+      "failure": "check-imports scanned own staged-scan .ts copy",
+      "preserved_log": "sandbox-source.log"
+    },
+    "rerun": "sandbox-source-rerun.log",
+    "without_fix": {
+      "vitest": 1,
+      "python_assertions_failed": 3,
+      "log": "extraction-without-fix.log"
+    },
+    "with_fix": {
+      "vitest": 0,
+      "cases": 2,
+      "python_cases": 5,
+      "log": "extraction-with-fix.log"
+    },
+    "gitleaks_source": 0,
+    "gitleaks_refresh": 0,
+    "host_full_suite": null,
+    "extended_history_inventory": {
+      "completed": false,
+      "stopped_session": 30051,
+      "exit": 130,
+      "not_used_as_verification": true
+    }
+  },
+  "full_log_sha256": "49be3982368437dc5f71ed5b70d94fc582dbf636177926978aef7c048faf3da3",
+  "original_merge_conflicts": 18,
+  "original_cut_rows_verified": 77,
+  "original_cut_bytes": 7683002,
+  "original_cut_runs": 15,
+  "native": {
+    "event_log": ".worktrees/codex-fix-silent-20261014-154303/learner/runs/20261014-154330-fix-batch.jsonl",
+    "thread_id": "01a1395e-4997-7ab2-92ba-6994f5cca62e",
+    "launch_source": {
+      "source": ".worktrees/codex-fix-silent-20261014-154303/learner/runs/20261014-154330-fix-batch.jsonl",
+      "offset": 0,
+      "bytes": 13949,
+      "sha256": "5c1cbd7759dab8d8451c1a7fd9a9d720c15f5d68c1c4cc858f34d95bad36d235"
+    },
+    "launch_task": "fix-batch",
+    "launch_cwd": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261014-154303",
+    "rendered_task_prompt_sha256": "23b4aa10e5b6bb0f6a6df7e2c8a258b6fb2568d15cf77f9942697239db96eb08",
+    "actual_input_sha256": "8ec96e6fa900c43cddc3a69eb9f018309cb6cb6d980ed497d9d25b74110cddbd",
+    "actual_command_sha256": "a67c5dd66becc8cf166b97980c203338ab673a0c24e4e5c32a2abe11390e1bfd",
+    "original_startup_lease": "e79a18c552a44b7fa13bdcc94430469408c7f78712b2aa214dbbd614d2000bcf",
+    "native_input_matches_recorded_stdin_sha256": true,
+    "native_context": {
+      "source": "ops/codex-ops/accounts/codex1/learner/sessions/2026/10/14/rollout-2026-10-14T15-44-02-01a1395e-4997-7ab2-92ba-6994f5cca62e.jsonl",
+      "offset": 50167,
+      "bytes": 5118,
+      "sha256": "a975d1d3d72fcc6c6ef4b3f98d46f6d30b8ea56147d881eab677366420161e12",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "sandbox_type": "workspace-write"
+    },
+    "startup_source": {
+      "source": ".worktrees/codex-fix-silent-20261014-154303/learner/runs/20261014-154330-fix-batch.jsonl",
+      "offset": 17907,
+      "bytes": 369,
+      "sha256": "c8b17eb2357ab31f9a555287d5a988881c70599115945f8d379cc37d99b9f162"
+    }
+  },
+  "no_gameplay_change_or_learning_claim": true,
+  "no_new_bug_infra_ledger_item": true
+}

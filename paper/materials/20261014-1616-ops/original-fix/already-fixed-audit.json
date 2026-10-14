@@ -1,0 +1,205 @@
+[
+  {
+    "item": "silent-0254 无动作死亡战斗归因",
+    "commit": "3b48088dec5fc6eafe576a1296bbdadde43432ee",
+    "base_ancestor": true,
+    "files": [
+      "ops/report.py"
+    ],
+    "current_signatures": {
+      "State-only frames": true,
+      "enemy_ids": true
+    }
+  },
+  {
+    "item": "额度恢复旧余额基线",
+    "commit": "e5e2995d659d15af79ec8bba67a4a25c1cb7295f",
+    "base_ancestor": true,
+    "files": [
+      "agent/src/brain/engines/codex-usage.ts"
+    ],
+    "current_signatures": {
+      "recoverCreditBaseline": true,
+      "two fresh reads": true
+    }
+  },
+  {
+    "item": "ascension-up 实际等级",
+    "commit": "8045d9fbf0a12523b1dbe39bbed8af06c7497b09",
+    "base_ancestor": true,
+    "files": [
+      "ops/codex-ops-learn.py"
+    ],
+    "current_signatures": {
+      "value = row.get(\"ascension\")": true
+    }
+  },
+  {
+    "item": "core-build-notify 失败诊断",
+    "commit": "5c92f2aaf0b758a1a5e7d591745694004664f83a",
+    "base_ancestor": true,
+    "files": [
+      "ops/core_build_jobs.py"
+    ],
+    "current_signatures": {
+      "\"stderr\": result.stderr": true
+    }
+  },
+  {
+    "item": "精确树宿主分段补验",
+    "commit": "24c2e3a75b5db6bac76d6c924f86b7fcd9438316",
+    "base_ancestor": true,
+    "files": [
+      "ops/learner_checks.py",
+      "ops/learner_check_continuation.py"
+    ],
+    "current_signatures": {
+      "continuation": true,
+      "sha256": true
+    }
+  },
+  {
+    "item": "会话前有界ENOENT恢复",
+    "commit": "bc2c40e313cc36682196277c53c50e30744b88c5",
+    "base_ancestor": true,
+    "files": [
+      "learner/lib/startup-recovery.ts"
+    ],
+    "current_signatures": {
+      "transientBeforeSession": true
+    }
+  },
+  {
+    "item": "复盘启动租约ID",
+    "commit": "d9983263ffecea1bed4e29d65e7f854a3d2e33d7",
+    "base_ancestor": true,
+    "files": [
+      "learner/lib/startup-recovery.ts"
+    ],
+    "current_signatures": {
+      "captureStartupLease": true
+    }
+  },
+  {
+    "item": "Python可重建缓存",
+    "commit": "1e8af775f6b90f100f20ff7c4a08dfddaba893a9",
+    "base_ancestor": true,
+    "files": [
+      "ops/learner_retention.py",
+      "ops/worktree_retention.py"
+    ],
+    "current_signatures": {
+      "cache": true
+    }
+  },
+  {
+    "item": "paper Git同refs快照",
+    "commit": "16bfe0bd6ecaa91d04a91c01edc94cecc781f71f",
+    "base_ancestor": true,
+    "files": [
+      "ops/paper_dataset.py"
+    ],
+    "current_signatures": {
+      "git_commits": true
+    }
+  },
+  {
+    "item": "boss learner隔离home",
+    "commit": "5921f8cd045853182c867a6430e75c3fcde00a87",
+    "base_ancestor": true,
+    "files": [
+      "ops/report.py"
+    ],
+    "current_signatures": {
+      "LEARNER_CODEX_HOME": true
+    }
+  },
+  {
+    "item": "空产出经验误补链",
+    "commit": "84366ad06ee4f978394c1b9489a82c83ea12bd36",
+    "base_ancestor": true,
+    "files": [
+      "ops/proposal_dispatch.py"
+    ],
+    "current_signatures": {
+      "blocked": true
+    }
+  },
+  {
+    "item": "未派ID策略报告机械处置",
+    "commit": "3a98e213a826e94f9708af4b1a265e1892659f4e",
+    "base_ancestor": true,
+    "files": [
+      "ops/proposal_dispatch.py"
+    ],
+    "current_signatures": {
+      "Ordinary batches": true
+    }
+  },
+  {
+    "item": "无完整复盘失败误补链",
+    "commit": "3fdcd77927f01b35c20c6c5c1fcfd790676032d2",
+    "base_ancestor": true,
+    "files": [
+      "ops/codex-ops-learn.py"
+    ],
+    "current_signatures": {
+      "proposal_audit_skipped": true
+    }
+  },
+  {
+    "item": "ordinary ACK及前阶段验证",
+    "commit": "1594def2e1b65b665d3b345f31444194eb4d09e6",
+    "base_ancestor": true,
+    "files": [
+      "ops/learning_requests.py"
+    ],
+    "current_signatures": {
+      "receipt": true
+    }
+  },
+  {
+    "item": "第二策略槽ACK批号",
+    "commit": "15eb85e2934e428c5e299fc4a1aba456d92fd685",
+    "base_ancestor": true,
+    "files": [
+      "ops/learning_requests.py"
+    ],
+    "current_signatures": {
+      "s2": true
+    }
+  },
+  {
+    "item": "注册feature通知ACK",
+    "commit": "38b2f572d90b3b97a23f9eae983f583287492f9a",
+    "base_ancestor": true,
+    "files": [
+      "ops/learning_requests.py"
+    ],
+    "current_signatures": {
+      "feature": true
+    }
+  },
+  {
+    "item": "嵌套producer通知身份",
+    "commit": "1dd4d434aef67f1d065dbdba23a875ae82741a88",
+    "base_ancestor": true,
+    "files": [
+      "ops/learning_requests.py"
+    ],
+    "current_signatures": {
+      "source": true
+    }
+  },
+  {
+    "item": "batch-f包装/参数化期限解析",
+    "commit": "56c256dad0d33b231b82b53113d3bdd84f9bfa20",
+    "base_ancestor": true,
+    "files": [
+      "agent/tools/test-blocks.ts"
+    ],
+    "current_signatures": {
+      "timeout": true
+    }
+  }
+]
