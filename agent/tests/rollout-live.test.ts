@@ -19,7 +19,7 @@ import { readFileSync } from "node:fs";
 import type { LineEstimate } from "../src/reflex/rollout.js";
 import { logged, loggedEnv } from "./logged.js";
 import { knowledgeFile } from "../src/knowledge/files.js";
-import { withRolloutFixtureClock } from "./rollout-clock-fixture.js";
+import { withRolloutFixtureClock, withRolloutRankingFixture } from "./rollout-clock-fixture.js";
 
 const DIR = join(dirname(fileURLToPath(import.meta.url)), "logged-states");
 const BOARDS = readdirSync(DIR)
@@ -36,8 +36,8 @@ afterEach(() => {
 
 function plan(name: string, enabled: boolean, jevContext: "v1" | "off" = "v1"): Decision | null {
   rolloutLiveOptions.enabled = enabled;
-  // The random-potion samples are cut by wall-clock time; a frozen clock keeps them identical across calls.
-  potionMcOptions.now = () => 0;
+  // Batch fixtures supply a bounded work clock; other calls retain identical full samples.
+  potionMcOptions.now ??= () => 0;
   return planCombatTurn(loggedEnv(logged(name), { jevContext }));
 }
 
@@ -103,43 +103,45 @@ describe("rollout facts on Jev's combat question", () => {
     const { MAX_OPTIONS } = await import("../src/reflex/combat-plan.js");
     expect(MAX_OPTIONS).toBe(10);
     let most = 0;
-    for (const name of BOARDS) {
-      const decision = plan(name, true);
-      if (decision?.kind !== "ask") continue;
-      const criteria = criteriaOf(decision);
-      const keys = planKeys(criteria);
-      most = Math.max(most, keys.length);
-      expect(keys.length, name).toBeLessThanOrEqual(MAX_OPTIONS + 2); // + a planned setup line, + the rollout's added line
-      const log = decision.resolve(pick("plan1")).log?.rollout as Record<string, unknown> | undefined;
-      if (!log?.["available"]) continue;
-      for (const key of keys) {
-        const f = facts(criteria, key);
-        expect(String(f["rollout"]), `${name} ${key}`).toMatch(/rollout|estimate/);
-        expect(String(f["rollout"]), `${name} ${key}`).not.toMatch(/unavailable/);
-        expect(f["history_estimate"], `${name} ${key}`).toBeDefined();
+    withRolloutRankingFixture(() => {
+      for (const name of BOARDS) {
+        const decision = plan(name, true);
+        if (decision?.kind !== "ask") continue;
+        const criteria = criteriaOf(decision);
+        const keys = planKeys(criteria);
+        most = Math.max(most, keys.length);
+        expect(keys.length, name).toBeLessThanOrEqual(MAX_OPTIONS + 2); // + a planned setup line, + the rollout's added line
+        const log = decision.resolve(pick("plan1")).log?.rollout as Record<string, unknown> | undefined;
+        if (!log?.["available"]) continue;
+        for (const key of keys) {
+          const f = facts(criteria, key);
+          expect(String(f["rollout"]), `${name} ${key}`).toMatch(/rollout|estimate/);
+          expect(String(f["rollout"]), `${name} ${key}`).not.toMatch(/unavailable/);
+          expect(f["history_estimate"], `${name} ${key}`).toBeDefined();
+        }
+        // The rollout's best: one line, or a random potion's option (its median sample's line). When every
+        // line loses all the HP: at most one best, or two or more shown lines tied on every key (deaths, this
+        // turn's loss, enemy HP left, turns alive) and no best. Not saturated: one best, or two or more
+        // options tied for it (the same numbers as shown) and no best.
+        const tagged = Object.keys(criteria).filter((key) => facts(criteria, key)["rollout_best"] === true).length;
+        const tied = Object.keys(criteria).filter((key) => facts(criteria, key)["rollout_tied"] !== undefined);
+        // The time budget's 1-turn fallback (a loaded machine) is no forecast: no best.
+        if ((log["degraded"] as string[]).includes("1-turn")) expect(tagged + tied.length, name).toBe(0);
+        else if (log["saturated"] === true && tied.length > 0) {
+          expect(tagged, name).toBe(0);
+          expect(tied.length, name).toBeGreaterThanOrEqual(2);
+          expect(log["tied"], name).toEqual(tied);
+        } else if (log["saturated"] === true) expect(tagged, name).toBeLessThanOrEqual(1);
+        else if (tied.length > 0) {
+          expect(tagged, name).toBe(0);
+          expect(tied.length, name).toBeGreaterThanOrEqual(2);
+          expect(log["tied"], name).toEqual(tied);
+          const shownLoss = (key: string) => /expected further HP loss ([\d.]+)/.exec(String(facts(criteria, key)["rollout"]))![1];
+          expect(new Set(tied.map(shownLoss)).size, name).toBe(1);
+        } else expect(tagged, name).toBe(1);
       }
-      // The rollout's best: one line, or a random potion's option (its median sample's line). When every
-      // line loses all the HP: at most one best, or two or more shown lines tied on every key (deaths, this
-      // turn's loss, enemy HP left, turns alive) and no best. Not saturated: one best, or two or more
-      // options tied for it (the same numbers as shown) and no best.
-      const tagged = Object.keys(criteria).filter((key) => facts(criteria, key)["rollout_best"] === true).length;
-      const tied = Object.keys(criteria).filter((key) => facts(criteria, key)["rollout_tied"] !== undefined);
-      // The time budget's 1-turn fallback (a loaded machine) is no forecast: no best.
-      if ((log["degraded"] as string[]).includes("1-turn")) expect(tagged + tied.length, name).toBe(0);
-      else if (log["saturated"] === true && tied.length > 0) {
-        expect(tagged, name).toBe(0);
-        expect(tied.length, name).toBeGreaterThanOrEqual(2);
-        expect(log["tied"], name).toEqual(tied);
-      } else if (log["saturated"] === true) expect(tagged, name).toBeLessThanOrEqual(1);
-      else if (tied.length > 0) {
-        expect(tagged, name).toBe(0);
-        expect(tied.length, name).toBeGreaterThanOrEqual(2);
-        expect(log["tied"], name).toEqual(tied);
-        const shownLoss = (key: string) => /expected further HP loss ([\d.]+)/.exec(String(facts(criteria, key)["rollout"]))![1];
-        expect(new Set(tied.map(shownLoss)).size, name).toBe(1);
-      } else expect(tagged, name).toBe(1);
-    }
-    expect(most).toBeGreaterThan(4);
+      expect(most).toBeGreaterThan(4);
+    });
   }, 120_000);
 
   it("keeps to the time budget under a mock clock, degrading the horizon/samples, and says so", () => {
@@ -176,50 +178,48 @@ describe("rollout facts on Jev's combat question", () => {
     }
   }), 120_000);
 
-  it("code's ranking, options and auto-acts are unchanged by the rollout", () => {
-    for (const name of BOARDS) {
-      for (const context of ["v1", "off"] as const) {
-        const off = plan(name, false, context);
-        const on = plan(name, true, context);
-        // (An unsimulated potion was offered when the best potion-free option died in a rollout sample (T1), a
-        // dependence on the rollout; since batch K it is always offered.)
-        expect(on?.kind, name).toBe(off?.kind);
-        expect(on?.label, name).toBe(off?.label);
-        if (off?.kind === "act" && on?.kind === "act") {
-          expect(on.intent, name).toEqual(off.intent);
-          expect(on.rationale, name).toBe(off.rationale);
-          continue;
-        }
-        if (off?.kind !== "ask" || on?.kind !== "ask") continue;
-        const before = criteriaOf(off);
-        const after = criteriaOf(on);
-        for (const key of Object.keys(before)) {
-          // Same option under the same key, the rollout facts aside.
-          // (An unsimulated potion's option carries no rollout-dependent reason since batch K; `offered` is fixed text.)
-          const { rollout: _r, history_estimate: _h, rollout_best: _b, rollout_tied: _tie, rollout_turns: _t, rollout_kill_order: _k, rollout_other_orders: _ko, offered: _o, ...rest } = facts(after, key);
-          const { offered: _o2, ...restBefore } = facts(before, key);
-          expect(rest, `${name} ${key}`).toEqual(restBefore);
-          // And resolving it plays the same (the HP guard and potion rules see code's options only), but for
-          // the designed dependences of the guard: it does not swap into a line the rollout sees dying more often
-          // than the pick (guardKeepsPick; XMK1 F33 T3 cut: plan 6 dies in more samples than plan 1), and on a
-          // big-hit turn it keeps a setup line only while the rollout sees it die no more often than the replacement
-          // (setupKept; the same board: plan 9's Inferno dies in 7/8, its replacement plan 4 in 6/8).
-          const deaths = (option: string) => Number(/dead within \d+ turns in (\d+)\//.exec(String(facts(after, option)["rollout"]))?.[1] ?? 0);
-          for (const confidence of [0.9, 0.3]) {
-            const a = off.resolve(pick(key, confidence));
-            const b = on.resolve(pick(key, confidence));
-            if (a.guard && a.guard.choice !== b.guard?.choice && deaths(a.guard.choice) > deaths(key)) continue;
-            if (!a.guard && b.guard && deaths(key) > deaths(b.guard.choice)) continue;
-            expect(b.intent, `${name} ${key}`).toEqual(a.intent);
-            // The option count in "plan k/N" is what Jev saw (N + 1 with an added line); the rest is the same.
-            const count = (text: string) => text.replace(/plan (\d+)\/\d+/, "plan $1/N");
-            expect(count(b.rationale), `${name} ${key}`).toBe(count(a.rationale));
-            expect(b.guard, `${name} ${key}`).toEqual(a.guard);
-          }
+  it.each(BOARDS.flatMap((name) => (["v1", "off"] as const).map((context) => [name, context] as const)))(
+    "code's ranking, options and auto-acts are unchanged by the rollout: %s (%s)",
+    (name, context) => withRolloutRankingFixture(() => {
+      const off = plan(name, false, context);
+      const on = plan(name, true, context);
+      // (An unsimulated potion was offered when the best potion-free option died in a rollout sample (T1), a
+      // dependence on the rollout; since batch K it is always offered.)
+      expect(on?.kind, name).toBe(off?.kind);
+      expect(on?.label, name).toBe(off?.label);
+      if (off?.kind === "act" && on?.kind === "act") {
+        expect(on.intent, name).toEqual(off.intent);
+        expect(on.rationale, name).toBe(off.rationale);
+        return;
+      }
+      if (off?.kind !== "ask" || on?.kind !== "ask") return;
+      const before = criteriaOf(off);
+      const after = criteriaOf(on);
+      for (const key of Object.keys(before)) {
+        // Same option under the same key, the rollout facts aside.
+        // (An unsimulated potion's option carries no rollout-dependent reason since batch K; `offered` is fixed text.)
+        const { rollout: _r, history_estimate: _h, rollout_best: _b, rollout_tied: _tie, rollout_turns: _t, rollout_kill_order: _k, rollout_other_orders: _ko, offered: _o, ...rest } = facts(after, key);
+        const { offered: _o2, ...restBefore } = facts(before, key);
+        expect(rest, `${name} ${key}`).toEqual(restBefore);
+        // And resolving it plays the same (the HP guard and potion rules see code's options only), but for
+        // the designed dependences of the guard: it does not swap into a line the rollout sees dying more often
+        // than the pick (guardKeepsPick; XMK1 F33 T3 cut: plan 6 dies in more samples than plan 1), and on a
+        // big-hit turn it keeps a setup line only while the rollout sees it die no more often than the replacement
+        // (setupKept; the same board: plan 9's Inferno dies in 7/8, its replacement plan 4 in 6/8).
+        const deaths = (option: string) => Number(/dead within \d+ turns in (\d+)\//.exec(String(facts(after, option)["rollout"]))?.[1] ?? 0);
+        for (const confidence of [0.9, 0.3]) {
+          const a = off.resolve(pick(key, confidence));
+          const b = on.resolve(pick(key, confidence));
+          if (a.guard && a.guard.choice !== b.guard?.choice && deaths(a.guard.choice) > deaths(key)) continue;
+          if (!a.guard && b.guard && deaths(key) > deaths(b.guard.choice)) continue;
+          expect(b.intent, `${name} ${key}`).toEqual(a.intent);
+          // The option count in "plan k/N" is what Jev saw (N + 1 with an added line); the rest is the same.
+          const count = (text: string) => text.replace(/plan (\d+)\/\d+/, "plan $1/N");
+          expect(count(b.rationale), `${name} ${key}`).toBe(count(a.rationale));
+          expect(b.guard, `${name} ${key}`).toEqual(a.guard);
         }
       }
-    }
-  }, 120_000);
+    }));
 });
 
 describe("enemy tables", () => {

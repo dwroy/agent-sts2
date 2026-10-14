@@ -17,6 +17,7 @@ BATCH = re.compile(r"[0-9]{8}-[0-9]{6}-(?:experience-update|fix-batch|strategy-p
 SHA = re.compile(r"[0-9a-f]{40}")
 DIGEST = re.compile(r"[0-9a-f]{64}")
 TEST = re.compile(r"tests/[a-z0-9][a-z0-9_-]*\.test\.ts")
+MAX_TEST_NAME = 4096
 ANSI = re.compile(r"\x1b\[[0-9;]*m")
 # A passed file may be revisited only when its test or a mapped dependency changed.
 DEPENDENCIES = {
@@ -119,8 +120,11 @@ def validate(batch_id, batch, root, out_dir, manifest_sha):
         name, tests, reason = item["file"], item["tests"], item["reason"]
         require(isinstance(name, str) and TEST.fullmatch(name) and name not in seen, "invalid or repeated test path")
         seen.add(name)
-        require(isinstance(tests, list) and len(tests) <= 32 and all(isinstance(t, str) and 0 < len(t) <= 500
+        # Parameterized failures include the rendered fixture, so retain their full identity.
+        require(isinstance(tests, list) and len(tests) <= 32 and all(isinstance(t, str) and 0 < len(t) <= MAX_TEST_NAME
                 and not any(ord(c) < 32 for c in t) for t in tests) and len(set(tests)) == len(tests), "invalid exact test names")
+        require(len(("^(?:" + "|".join(re.escape(t) for t in tests) + ")$").encode("utf8")) <= 60 * 1024,
+                "exact test pattern exceeds argument limit")
         git(live, "ls-files", "--error-unmatch", "agent/" + name)
         read_fixed(live / "agent" / name, live / "agent/tests", 2 * 1024 * 1024)
         affected = bool(changed.intersection(["agent/" + name, *DEPENDENCIES.get(name, [])]))

@@ -2,6 +2,16 @@ import { spawnSync } from "node:child_process";
 import { expect, it } from "vitest";
 import { validateRequest } from "../../ops/codex/lib.js";
 
+it("retains long parameterized failure names in an exact bounded host supplement", () => {
+  const result = spawnSync("nice", ["-n", "19", "python3", "-B", "../ops/tests/test_learner_check_continuation.py",
+    "Continuation.test_long_parameterized_failure_keeps_exact_name_and_bounded_validation"], {
+    encoding: "utf8", timeout: 5_000,
+  });
+  expect(result.status, JSON.stringify({ status: result.status, signal: result.signal, error: result.error?.message,
+    stdout: result.stdout, stderr: result.stderr })).toBe(0);
+  expect(result.stderr).toContain("OK");
+});
+
 it("binds host supplements to original coverage and exact sources without repeating full checks", () => {
   const result = spawnSync("python3", ["-B", "../ops/tests/test_learner_check_continuation.py"], {
     encoding: "utf8", timeout: 20_000,

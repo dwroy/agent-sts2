@@ -5,7 +5,7 @@
  * potions carry no numbers; the samples are deterministic per board.
  */
 
-import { afterEach, describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 
 import type { AnswerSet } from "../src/reflex/jev/answers.js";
 import type { AskDecision, Decision } from "../src/memory/types.js";
@@ -15,8 +15,10 @@ import { beatsDryLine, MC_BEATS_DAMAGE, MC_BEATS_HP, MC_MIN_SAMPLES, MC_SAMPLES,
 import { rolloutLiveOptions } from "../src/reflex/rollout-live.js";
 import { solveTurn, type EnemySim, type Plan, type PlayerSim, type SolverInput } from "../src/reflex/turn-solver.js";
 import { logged, loggedEnv } from "./logged.js";
+import { withPotionQuestionFixture } from "./apotheosis-potion-fixture.js";
 
 afterEach(() => {
+  vi.restoreAllMocks();
   rolloutLiveOptions.enabled = true;
   potionMcOptions.now = null;
   potionMcOptions.budgetMs = 400;
@@ -181,15 +183,27 @@ describe("determinism and the time budget", () => {
   });
 
   it("logged boards: the combat question is the same twice (the samples are seeded per board)", () => {
-    rolloutLiveOptions.enabled = false;
-    // (Only the wall-clock cut could differ between runs: no cut here.)
-    potionMcOptions.budgetMs = 1e9;
     for (const name of ["x8r8-f17-t8", "k8tc-f17-t5", "77uj-f33-t5"]) {
-      const a = criteriaOf(planCombatTurn(loggedEnv(logged(name))));
-      const b = criteriaOf(planCombatTurn(loggedEnv(logged(name))));
+      const a = withPotionQuestionFixture(() => criteriaOf(planCombatTurn(loggedEnv(logged(name)))));
+      const b = withPotionQuestionFixture(() => criteriaOf(planCombatTurn(loggedEnv(logged(name)))));
       expect(b, name).toEqual(a);
     }
   }, 30_000);
+
+  it.each([0, 10_000])("question fixtures keep repeated seeded samples and finite work with %i ms host pauses", (pause) => {
+    let wall = 0;
+    vi.spyOn(performance, "now").mockImplementation(() => (wall += pause));
+    const run = () => runPotionMc(input([defend(1)]), source, null, 7, potionMcOptions.budgetMs);
+    const first = withPotionQuestionFixture(run);
+    const second = withPotionQuestionFixture(run);
+    expect(first.requested).toBe(MC_SAMPLES);
+    expect(first.samples).toBe(2);
+    expect(first.plans.every((plan) => plan !== null)).toBe(true);
+    expect(first.ms).toBeLessThanOrEqual(400 + 300);
+    expect(second.plans.map((plan) => plan!.steps)).toEqual(first.plans.map((plan) => plan!.steps));
+    expect([second.hpLoss, second.damage, second.wins, second.beats])
+      .toEqual([first.hpLoss, first.damage, first.wins, first.beats]);
+  });
 });
 
 describe("(a)/(b)/(d) on Jev's question: always an option, drink now then re-plan", () => {
