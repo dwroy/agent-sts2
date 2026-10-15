@@ -1,0 +1,9 @@
+{
+  "command": "nice -n 19 python3 ops/codex-ops/record-staging/20261015-1200/audit.py",
+  "exit": 1,
+  "stage": "read-only native identity helper",
+  "failure": "AssertionError comparing assumed registered batch with original startup batch",
+  "cause": "an older audit adaptation inserted scheduler batch id; this original postmortem launch and startup both genuinely have batch=null and lease=null",
+  "correction": "retain both original null fields; bind scheduler event via actual native input SHA, scratch path, cwd, run and thread rather than fabricate registered launch metadata",
+  "production_or_original_logs_changed": false
+}
