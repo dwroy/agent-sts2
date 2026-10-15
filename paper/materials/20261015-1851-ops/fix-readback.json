@@ -1,0 +1,227 @@
+{
+  "batch": "20261015-184302-fix-batch",
+  "canonical_state": "failed",
+  "canonical_rc": 0,
+  "original_report": {
+    "task": "fix-batch",
+    "base": "cc29ccb63ffa1f36c0dd7c17316e8ef013fd8622",
+    "fixes": [],
+    "skipped": [
+      {
+        "item": "silent-0481：技能药水选牌生命周期措辞",
+        "reason": "策略类/题面游戏知识：当前 selection.ts 两处旧措辞仍在；已读原学习者 Y2K25VFDU95P F9T3/T5 证据及提案 silent-proposal-686d4e759478eebb，目标为独立 strategy-proposal。本普通批不重复实现或新建提案。"
+      },
+      {
+        "item": "silent-0311：库存后继血量预算",
+        "reason": "策略类/模型：已有silent-proposal-d2f24919ee64b90b，沿独立strategy-proposal处理。原日志s412004/412017/412046实核为2LZHP9BYFTHE A10 F37 T1/4/10；队列新补证写F38，定位差异留盘，不改队列或补固定倍率。"
+      },
+      {
+        "item": "silent-0332：首战资源nonpositive-hp契约异常",
+        "reason": "证据不足：新补证缺完整末资源/steps，机制根因未定位；已有silent-proposal-5aa2672bd7cd1bf4沿独立structure实现链，本批不猜造成功资源。"
+      },
+      {
+        "item": "silent-0469：聚合体纸鹤多击/玩家易伤/突然一拳补证",
+        "reason": "策略类：聚合体多击/玩家易伤/突然一拳超出原骑士窄范围；已有silent-proposal-0cce435d0d61ac93，沿独立策略链。"
+      },
+      {
+        "item": "rest-timeout-accepted-route-not-committed / silent-0446",
+        "reason": "策略类/structure：当前 hand/loop.ts 仍在 dispatch 成功后 applyResolved；已有 silent-proposal-2d3aa8dfb27dbe3f，实际动作确认和路线提交须按原独立提案验证，不无条件提交未确认动作。"
+      },
+      {
+        "item": "其余未闭合的出牌、机制、药水、SL、终局、路线与休息条目",
+        "reason": "策略类：沿各条已有 strategy-proposal 和账本处理；窄范围已发布不代表宽父完成，不在普通纯 bug 批次补游戏知识。"
+      },
+      {
+        "item": "codex 大脑缓存命中偏低",
+        "reason": "证据不足：旧命中率观察缺当前原生调用的受控同题比较，本离线任务不调用真实 LLM 或网络，不能据命中率认定源码 bug。"
+      },
+      {
+        "item": "调度公平性核查",
+        "reason": "证据不足：原条目未证明永久饥饿；保留原 dispatch/seen_runs 及独立框架任务边界，不更改并发或队列状态。"
+      },
+      {
+        "item": "sandbox-glob-startup-race：目录生命周期上游根因",
+        "reason": "证据不足：有界启动恢复及复盘租约修复已在本基线/live，上游目录删除者及自然恢复仍未证，不扩大沙箱或放松凭据预检。"
+      },
+      {
+        "item": "core-build-notify-222802-rc2：原通知发送/恢复事实",
+        "reason": "证据不足：5c92f2aaf 已保存后续原生诊断，旧 rc2 无 stderr 无法事后还原发送事实；不重发或改历史回执。"
+      },
+      {
+        "item": "named-card-facts-transport：事件入口之外的宽范围",
+        "reason": "策略类/独立功能：事件入口 42c920f34 已实现；其他入口/跨局及原 P1/P2 范围沿原架构 owner，不扩入本批。"
+      },
+      {
+        "item": "boss 模拟样本/性能与 v5-dpr-health 宽范围",
+        "reason": "太大/独立功能：继续原冻结输入、专项和实际消费者验收，不以本批固定测试代替模型校准，也不减样本、扩预算或删候选。"
+      },
+      {
+        "item": "arch-funnel-guard / arch-learning-priority / arch-unified-resource-value / inv-f33-regression",
+        "reason": "策略类/独立架构与归因研究：沿已批准独立任务，不在普通纯 bug 批次改变玩法、资源价格或派发优先级。"
+      },
+      {
+        "item": "框架外层总时限收尾",
+        "reason": "太大/独立框架范围：精确分段续验入口24c2e3a75已修，原包装器及宿主收尾沿原 owner，不改历史失败或重放通知。"
+      }
+    ],
+    "merged": null,
+    "tests": {
+      "tsc": 0,
+      "vitest": 0,
+      "cases": 42
+    },
+    "code_proposals": [],
+    "implementation_domains": [],
+    "report": "/home/dw/Projects/agent-sts2/learner/runs/20261015-184313-e4988612-605c-4fbd-85c7-1abb985854ab-fix-batch/report.md"
+  },
+  "native": {
+    "batch": "20261015-184302-fix-batch",
+    "thread": "01a13f28-cff3-73f0-9b2c-d539a8a19c18",
+    "cwd": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261015-184302",
+    "event_log": "learner/runs/20261015-184313-e4988612-605c-4fbd-85c7-1abb985854ab-fix-batch.jsonl",
+    "registered_launch_batch": "20261015-184302-fix-batch",
+    "original_lease": "c686f48a248891d08930c9d2327473410e37abb7902fd2c38274499c768a0450",
+    "native_context": {
+      "source": "ops/codex-ops/accounts/codex1/learner/sessions/2026/10/15/rollout-2026-10-15T18-43-21-01a13f28-cff3-73f0-9b2c-d539a8a19c18.jsonl",
+      "offset": 50167,
+      "bytes": 5118,
+      "sha256": "374a115d487d1665e3359e69e08b04919f8209a9bfa46c14fc47885ffce5c40f",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "sandbox": {
+        "type": "workspace-write",
+        "writable_roots": [
+          "/home/dw/Projects/agent-sts2",
+          "/home/dw/Projects/agent-sts2/.git",
+          "/home/dw/Projects/agent-sts2/.git/worktrees/codex-fix-silent-20261015-184302"
+        ],
+        "network_access": false,
+        "exclude_tmpdir_env_var": false,
+        "exclude_slash_tmp": false
+      },
+      "approval_policy": "never"
+    },
+    "native_user_input": {
+      "offset": 55285,
+      "bytes": 13081,
+      "sha256": "598c798176c1804c307f805f225cb1333d723f3d8b53dcdeaa4d1d4aa5a08fb5",
+      "input_sha256": "767d5e659d2449c78419cca817efff5817a9f41ec34966cd8cab4e3b063a4201"
+    },
+    "original_header_events": [
+      {
+        "offset": 0,
+        "bytes": 14892,
+        "sha256": "e57b3e6fd82697f732528875e32a1acd95d1faad0140358d6fe184d312f15be9",
+        "type": "learner_launch",
+        "attempt": null,
+        "code": null
+      },
+      {
+        "offset": 14892,
+        "bytes": 370,
+        "sha256": "81cd17fb448ecd84bc5a6e819bae8d58ebca8095525c1076bf4596b2fea3f1fd",
+        "type": "learner_startup_attempt",
+        "attempt": 1,
+        "code": null
+      },
+      {
+        "offset": 18275,
+        "bytes": 77,
+        "sha256": "d018e0758282f1006f0c454bc29be9a72f9a4c74d41aeb779efb21d6479d6a3f",
+        "type": "thread.started",
+        "attempt": null,
+        "code": null
+      }
+    ],
+    "startup_attempts": 1,
+    "failed_startups_preserved": 0,
+    "no_model_or_manual_restart": true
+  },
+  "original_73_ancestors_and_base_source_hashes_verified": true,
+  "original_source_review": "前批72项的对应源码SHA均相同，来源提交均为当前base/live祖先；补核DPR明确不支持候选分类子项同样已修。与前批base的源码/测试无差异，仅ops/inbox-dev.md追加记录。",
+  "original_queue_snapshot": {
+    "lines": 1330,
+    "sha256": "fd69e36b15f1a89af95fa2cdad693007f36be7a92ce72a1fbc1c045137cd0974"
+  },
+  "original_coverage": {
+    "checks": {
+      "tsc": 0,
+      "vitest-core": 0,
+      "vitest-fixtures": 0,
+      "vitest-startup": 0
+    },
+    "vitest_files": 10,
+    "vitest_cases": 42,
+    "filtered_cases": 33,
+    "full_test_sandbox_run": false,
+    "reason": "无源码改动或新提交，执行定向固定回归；不冒称完整套件。",
+    "reruns": [],
+    "logs": {
+      "tsc": {
+        "path": "/home/dw/Projects/agent-sts2/learner/runs/20261015-184313-e4988612-605c-4fbd-85c7-1abb985854ab-fix-batch/tsc.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "vitest-core": {
+        "path": "/home/dw/Projects/agent-sts2/learner/runs/20261015-184313-e4988612-605c-4fbd-85c7-1abb985854ab-fix-batch/vitest-core.log",
+        "sha256": "d8e92d42c404c0b82a5fa402ae8509e8730866406f708738bb81cbedc4cf5f05"
+      },
+      "vitest-fixtures": {
+        "path": "/home/dw/Projects/agent-sts2/learner/runs/20261015-184313-e4988612-605c-4fbd-85c7-1abb985854ab-fix-batch/vitest-fixtures.log",
+        "sha256": "361e2c849bd972ca340532643f042ba7790c6a85130171aabdd4e1e9e1b4c228"
+      },
+      "vitest-startup": {
+        "path": "/home/dw/Projects/agent-sts2/learner/runs/20261015-184313-e4988612-605c-4fbd-85c7-1abb985854ab-fix-batch/vitest-startup.log",
+        "sha256": "ab1b1c549316ff5f4bb55d5e69a7847f9ac5c1fe96c4807b54c533853b3eb204"
+      }
+    },
+    "commands": {
+      "tsc": "nice -n 19 npx tsc -p tsconfig.json --noEmit",
+      "vitest-core": "nice -n 19 npx vitest run tests/learner-strategy-scratch.test.ts tests/learner-entry.test.ts tests/ledger-publication-baseline.test.ts tests/legacy-continuation-notice-ack.test.ts tests/ordinary-notice-ack.test.ts tests/extract-evidence.test.ts tests/report-plan-costs.test.ts --pool=threads --maxWorkers=1",
+      "vitest-fixtures": "nice -n 19 npx vitest run tests/silent-paper-krane.test.ts tests/target-options.test.ts --pool=threads --maxWorkers=1 -t 'complete recorded line|captures replay fixtures|shows an Amalgam-focus|bounds the target-label'",
+      "vitest-startup": "nice -n 19 npx vitest run tests/learner-startup-recovery.test.ts --pool=threads --maxWorkers=1"
+    }
+  },
+  "coverage_interpretation": "tsc0 and 10 selected files/42 cases passed; 33 name-filtered cases not run, no reruns. No full-suite pass asserted.",
+  "stock_locator_correction": {
+    "old_ops_text": "F38",
+    "original_raw_run_floor": 37,
+    "original_frames": [
+      {
+        "line": 412004,
+        "offset": 13074021456,
+        "length": 33928,
+        "sha256": "8417755b3c7cf380165ce3d2358828c1a3bab2f9e225ccbb3720f07602271f60",
+        "raw_run_floor": 37,
+        "turn": 1
+      },
+      {
+        "line": 412017,
+        "offset": 13074510228,
+        "length": 38411,
+        "sha256": "3331ce3b5719bf327503256929581e660d33a64eec2daed4e5a165112a34f421",
+        "raw_run_floor": 37,
+        "turn": 4
+      },
+      {
+        "line": 412046,
+        "offset": 13075579896,
+        "length": 37984,
+        "sha256": "9bedb6680e5265dcc41e553dae0f8e3a9c09133ddbf7f0e97fb5a9de73e70548",
+        "raw_run_floor": 37,
+        "turn": 10
+      }
+    ],
+    "scope": "Original learner proposal and three raw frames agree on F37; append-only location correction, no changed arithmetic, mechanism or gameplay conclusion."
+  },
+  "original_probe_failure_preserved": {
+    "initial_rc": 1,
+    "initial_error": "evidence-probe-first-error.txt",
+    "corrected_readback": "stock-evidence-readback.json",
+    "corrected_rc": 0,
+    "scope": "仅材料空值适配；非生产测试失败。原logs三个指定offset/length身份均核通过。"
+  },
+  "no_new_commit_or_merge_blocker": true,
+  "canonical_failed_rc0_mergednull_preserved": true,
+  "no_repeated_checks_or_full_or_release": true,
+  "wide_items_unchanged": true
+}
