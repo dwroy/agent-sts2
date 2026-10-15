@@ -1,0 +1,98 @@
+{
+  "at": "2026-10-16 02:48:18 CST",
+  "batch": "20261016-021301-strategy-proposal",
+  "source": "8d386fc7668820c2fc387d966f9d94bdcab189fb",
+  "source_parent": "d523c467cb0e00cfbf181f4490ba6a4d0fbf1ba1",
+  "main": "182cd40b3e8ae4a3e951eb9ce7aa595a9786bb96",
+  "actual_live": "e716bd28fd8eca9e4d76d066680304fd11935e37",
+  "tree": "b7c5dff8ff645786f19084a1715dc2a3d29fe05d",
+  "release_id": "V5-R365",
+  "behavior_commit": "52495248f983fe8ba4b98ec1e626fb94a79e2aa5",
+  "five_leaves": [
+    {
+      "path": "agent/src/reflex/card-model.ts",
+      "source_sha256": "287115627e5bc3f93da8283620a9b255df880286d4e8e1408009d9f8c87a45c7",
+      "live_sha256": "2baebe174f6c55b11323edc6fda53bfee6712202e92d791b4b5080e322ff911d",
+      "main_exact_source": true,
+      "historical_comment_difference_only": true
+    },
+    {
+      "path": "agent/src/reflex/combat-plan.ts",
+      "source_sha256": "f7e359f54083a24073f4ba23c93d95ee302af407f9dc52fc80569ef7759ec1c3",
+      "live_sha256": "f7e359f54083a24073f4ba23c93d95ee302af407f9dc52fc80569ef7759ec1c3",
+      "main_exact_source": true,
+      "historical_comment_difference_only": false
+    },
+    {
+      "path": "agent/src/reflex/turn-solver.ts",
+      "source_sha256": "51e277c71d41c99c7f35477e6c05fd5ec9ca65247e3969b45688c489393cf648",
+      "live_sha256": "51e277c71d41c99c7f35477e6c05fd5ec9ca65247e3969b45688c489393cf648",
+      "main_exact_source": true,
+      "historical_comment_difference_only": false
+    },
+    {
+      "path": "agent/tests/silent-paper-krane-beam-states.json",
+      "source_sha256": "22ef5796f153c08d751c9f12d266878cd56947701f7c025deadba9cd73d41670",
+      "live_sha256": "22ef5796f153c08d751c9f12d266878cd56947701f7c025deadba9cd73d41670",
+      "main_exact_source": true,
+      "historical_comment_difference_only": false
+    },
+    {
+      "path": "agent/tests/silent-paper-krane-beam.test.ts",
+      "source_sha256": "65c6aef9d6d305d4addac0208b10a15116ba771d17987b60a5d89ce65b0a6ca4",
+      "live_sha256": "65c6aef9d6d305d4addac0208b10a15116ba771d17987b60a5d89ce65b0a6ca4",
+      "main_exact_source": true,
+      "historical_comment_difference_only": false
+    }
+  ],
+  "original_completion": "failed/rc0/mergednull and18 record conflicts preserved",
+  "host": "paper/materials/20261016-0240-ops/host-start.json",
+  "host_result": "pending",
+  "targeted": {
+    "live": "e716bd28fd8eca9e4d76d066680304fd11935e37",
+    "tree": "b7c5dff8ff645786f19084a1715dc2a3d29fe05d",
+    "source": "8d386fc7668820c2fc387d966f9d94bdcab189fb",
+    "results": [
+      {
+        "name": "tsc",
+        "command": [
+          "nice",
+          "-n",
+          "19",
+          "npx",
+          "--no-install",
+          "tsc",
+          "-p",
+          "tsconfig.json",
+          "--noEmit"
+        ],
+        "exit_code": 0
+      },
+      {
+        "name": "targeted",
+        "command": [
+          "nice",
+          "-n",
+          "19",
+          "npx",
+          "--no-install",
+          "vitest",
+          "run",
+          "--pool=threads",
+          "--maxWorkers=1",
+          "tests/silent-paper-krane-beam.test.ts",
+          "tests/silent-paper-krane.test.ts"
+        ],
+        "exit_code": 0
+      }
+    ],
+    "files": 2,
+    "cases": 21,
+    "passed": true,
+    "whole_suite": false,
+    "preexisting_dirty_records_preserved": true
+  },
+  "natural_consumer": "pending next natural matching Silent A10 Paper Krane/plain Sucker Punch/beam payload and accepted/action; no forced game or model request",
+  "worktree": "retain source identity and evidence until original host/retention gates; do not delete",
+  "wide_parents": "open"
+}

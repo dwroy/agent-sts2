@@ -1,0 +1,278 @@
+{
+  "batch": "20261016-021301-strategy-proposal",
+  "original_report": {
+    "task": "strategy-proposal",
+    "character": "silent",
+    "batch": "20261016-021301-strategy-proposal",
+    "base": "d523c467cb0e00cfbf181f4490ba6a4d0fbf1ba1",
+    "runs": [
+      "WJ0LTVSSDY61",
+      "HLAWCGM3KHVB",
+      "DUB5VQQ6D6D1",
+      "2LZHP9BYFTHE",
+      "RQCHNN0W72KF",
+      "VNSXWCWXR3VW",
+      "PTGQF9BEQ6G1",
+      "A3X30TN54LSH",
+      "ZE2DNC29WWHB",
+      "JWK2C8LE4SFV"
+    ],
+    "evidence_runs": [
+      "HLAWCGM3KHVB"
+    ],
+    "fixes": [
+      {
+        "id": "silent-0489",
+        "commit": "8d386fc7668820c2fc387d966f9d94bdcab189fb",
+        "summary": "限定修复纸鹤配普通突然一拳的聚合体光束失血预测18→12；已提交自测，尚未上线。"
+      }
+    ],
+    "skipped": [],
+    "merged": null,
+    "version": null,
+    "tests": {
+      "tsc": 0,
+      "vitest": 0,
+      "cases": 0
+    },
+    "live_tests": null,
+    "code_proposals": [
+      "silent-proposal-0cce435d0d61ac93"
+    ],
+    "implementation_domains": [
+      "combat"
+    ],
+    "proposal_results": [
+      {
+        "id": "silent-proposal-0cce435d0d61ac93",
+        "state": "waiting",
+        "reason": "源码已提交并通过4110项沙箱测试；live合入遇18个记录/统计文件冲突，已abort并保留知识刷新3583a02b82f1176c73f38f4fa8725079fd3ee669。源码不是live祖先，需ops按已测源码集成、完成合后检查与发布登记；不是缺机制证据。"
+      }
+    ],
+    "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-021301/learner/runs/20261016-021305-0ce60e2a-08b0-48b6-bce6-1e016439eb33-strategy-proposal/report.md"
+  },
+  "source": "8d386fc7668820c2fc387d966f9d94bdcab189fb",
+  "source_parent": "d523c467cb0e00cfbf181f4490ba6a4d0fbf1ba1",
+  "source_paths": [
+    "agent/src/reflex/card-model.ts",
+    "agent/src/reflex/combat-plan.ts",
+    "agent/src/reflex/turn-solver.ts",
+    "agent/tests/silent-paper-krane-beam-states.json",
+    "agent/tests/silent-paper-krane-beam.test.ts"
+  ],
+  "source_checks": {
+    "tsc": 0,
+    "exit_code": 0,
+    "sandbox_files": 437,
+    "sandbox_cases": 4099,
+    "paths_cases": 11,
+    "total": 4110,
+    "withdrawn_failures": 3,
+    "withdrawn_passes": 3
+  },
+  "original_report_cases_zero_preserved": true,
+  "native": {
+    "batch": "20261016-021301-strategy-proposal",
+    "thread": "01a140c4-954d-73d2-92c7-778d33198c78",
+    "cwd": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-021301",
+    "event_log": "learner/runs/20261016-021305-0ce60e2a-08b0-48b6-bce6-1e016439eb33-strategy-proposal.jsonl",
+    "registered_launch_batch": "20261016-021301-strategy-proposal",
+    "original_lease": "8764d6e44e7f2f6b7618eac69b2d08f327a01093a483523e79201f024a6dfbbe",
+    "native_context": {
+      "source": "ops/codex-ops/accounts/codex1/learner/sessions/2026/10/16/rollout-2026-10-16T02-13-07-01a140c4-954d-73d2-92c7-778d33198c78.jsonl",
+      "offset": 50242,
+      "bytes": 5148,
+      "sha256": "470b4b88b016198c0d62212e512c3e3ddf7e6bfcd1f622c3640741e1e7a53763",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "sandbox": {
+        "type": "workspace-write",
+        "writable_roots": [
+          "/home/dw/Projects/agent-sts2",
+          "/home/dw/Projects/agent-sts2/.git",
+          "/home/dw/Projects/agent-sts2/.git/worktrees/codex-strategy-silent-20261016-021301"
+        ],
+        "network_access": false,
+        "exclude_tmpdir_env_var": false,
+        "exclude_slash_tmp": false
+      },
+      "approval_policy": "never"
+    },
+    "native_user_input": {
+      "offset": 55390,
+      "bytes": 21499,
+      "sha256": "449ee925740a1639578134167aebd340ff88734d9c214ee02dcbc66a20e5c249",
+      "input_sha256": "44dee2e879e923356c358f8cf4a9096c7d9fee0ffeb56ba2fb24555d7c510d65"
+    },
+    "original_header_events": [
+      {
+        "offset": 0,
+        "bytes": 23563,
+        "sha256": "01fc06fc6450b14f26a32a1ea27f97603cc5e7dc5c0b6e5893290dff6aa8f8f1",
+        "type": "learner_launch",
+        "attempt": null,
+        "code": null
+      },
+      {
+        "offset": 23563,
+        "bytes": 378,
+        "sha256": "426c78e8e966724104e19121bb9059fad1e4b17663dd7bb731ad74b8f6b40059",
+        "type": "learner_startup_attempt",
+        "attempt": 1,
+        "code": null
+      },
+      {
+        "offset": 26947,
+        "bytes": 77,
+        "sha256": "d001f85241e9b3a690da7d0d3197e221523f555819f9c11184f43707fd303d1e",
+        "type": "thread.started",
+        "attempt": null,
+        "code": null
+      }
+    ],
+    "startup_attempts": 1,
+    "failed_startups_preserved": 0,
+    "no_model_or_manual_restart": true
+  },
+  "raw_evidence_rows": 14618,
+  "stream_counts": {
+    "states": 7246,
+    "decisions": 6821,
+    "sl-attempts": 64,
+    "run-config": 11,
+    "run-plans": 95,
+    "brain": 371,
+    "runs": 10,
+    "fight-plans": 0
+  },
+  "all_raw_offsets_and_fixture_states_verified": true,
+  "core_original_refs": [
+    {
+      "line": 410804,
+      "offset": 13039506312,
+      "bytes": 49323,
+      "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+      "source_size": 13255067249,
+      "sha256": "49b68b2a4319033887ea4f63bed15cc3b67d82e023694313a07ae2f28672bbf6",
+      "run_id": "HLAWCGM3KHVB"
+    },
+    {
+      "line": 410805,
+      "offset": 13039555635,
+      "bytes": 48916,
+      "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+      "source_size": 13255067249,
+      "sha256": "f1531d9245d93c235cac0148d03ad7ced63ddd53dc8d1f365dff67b274e0a9c2",
+      "run_id": "HLAWCGM3KHVB"
+    },
+    {
+      "line": 410806,
+      "offset": 13039604551,
+      "bytes": 48069,
+      "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+      "source_size": 13255067249,
+      "sha256": "9f16dcedcb5081d3ca67b54b5f8cf9fb55362228f831abf63723440675b0984b",
+      "run_id": "HLAWCGM3KHVB"
+    },
+    {
+      "line": 410807,
+      "offset": 13039652620,
+      "bytes": 47331,
+      "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+      "source_size": 13255067249,
+      "sha256": "e368a2306859fc8f3060a33fbd270bf7b84d8679c8f779863f683edd7cf9ca6b",
+      "run_id": "HLAWCGM3KHVB"
+    },
+    {
+      "line": 410808,
+      "offset": 13039699951,
+      "bytes": 49547,
+      "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+      "source_size": 13255067249,
+      "sha256": "452227c016cb78a22558fe108b6cda9598e38b9be7122bee4e627e8544d9852a",
+      "run_id": "HLAWCGM3KHVB"
+    },
+    {
+      "line": 398069,
+      "offset": 1587237709,
+      "bytes": 58779,
+      "source": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+      "source_size": 1737080283,
+      "sha256": "520d3b35b9fe428a4224a819507adca5316ed6190378891e8d6692b2cd5e5620",
+      "run_id": "HLAWCGM3KHVB"
+    },
+    {
+      "line": 398070,
+      "offset": 1587296488,
+      "bytes": 1661,
+      "source": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+      "source_size": 1737080283,
+      "sha256": "e55f7a067c331bf7974371b6ab97ea3eebd64d606f4ec21295af260ab48908ae",
+      "run_id": "HLAWCGM3KHVB"
+    },
+    {
+      "line": 398071,
+      "offset": 1587298149,
+      "bytes": 1592,
+      "source": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+      "source_size": 1737080283,
+      "sha256": "b3d06f73eb0366fbd78db833d2f0d807930e93e94ef1e34a697e6a82a91a95b1",
+      "run_id": "HLAWCGM3KHVB"
+    },
+    {
+      "line": 398072,
+      "offset": 1587299741,
+      "bytes": 1323,
+      "source": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+      "source_size": 1737080283,
+      "sha256": "e85d4ef34a3c996c086fee233afec4e6d99377e81fe95d5248b9b7c612457f5b",
+      "run_id": "HLAWCGM3KHVB"
+    }
+  ],
+  "original_conflicts": {
+    "source_commit": "8d386fc7668820c2fc387d966f9d94bdcab189fb",
+    "actual_live_ancestor": false,
+    "ancestor_exit": 1,
+    "integration_exit": 20,
+    "merge_exit": 1,
+    "source_checks": {
+      "tsc": 0,
+      "vitest": 0,
+      "cases": 0,
+      "test_files": 438,
+      "tests_passed": 4110
+    },
+    "live_checks": null,
+    "initial_live": "cfa1c0be88147b4eac65c13d8c550b23ed4eef17",
+    "retained_live": "3583a02b82f1176c73f38f4fa8725079fd3ee669",
+    "conflicts": [
+      "notes/for-roy.md",
+      "notes/lessons.md",
+      "notes/ops-handoff.md",
+      "ops/inbox-dev.md",
+      "paper/data/README.md",
+      "paper/data/commits.csv",
+      "paper/data/cost-curve-silent.csv",
+      "paper/data/cost-silent.csv",
+      "paper/data/cost-sources.json",
+      "paper/data/cost-unattributed.csv",
+      "paper/data/decisions_by_label.csv",
+      "paper/data/learning-curve-silent.csv",
+      "paper/data/runs.csv",
+      "paper/data/summary.json",
+      "paper/data/verification.json",
+      "paper/materials/decision-log.md",
+      "paper/materials/learning/ledger.jsonl",
+      "paper/materials/silent/cost.md"
+    ],
+    "merged": null,
+    "version": null
+  },
+  "owned_learner_rows": 4,
+  "limits": [
+    "One observed Silent A10 HLAW turn only; 14HP boundary is a synthetic fixed assertion, not a rescued game.",
+    "Only that plain Sucker Punch / Paper Krane / BEAM_MOVE endpoint is certified. Unknown modifiers, other roles/ascensions, existing Weak and later moves retain their previous paths.",
+    "Original first targeted fixture failure, three withdrawn-source failures, record merge conflicts and failed/rc0/mergednull remain preserved. Source full is not a new combined-tree host result.",
+    "Natural consumer and whole-game benefit remain unknown. Wide learning/calibration/R2/R3 parents are not closed."
+  ]
+}

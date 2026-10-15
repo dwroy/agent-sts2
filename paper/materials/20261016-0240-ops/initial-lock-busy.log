@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/ops/codex-ops/record-staging/20261016-0240/publish.py", line 29, in <module>
+    fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB);at=subprocess.check_output(['date','+%Y-%m-%d %H:%M:%S %Z'],text=True).strip();print(at,flush=True);mh=git('rev-parse','HEAD').decode().strip();lh=git('rev-parse','HEAD',cwd=live).decode().strip();assert lh=='3583a02b82f1176c73f38f4fa8725079fd3ee669'
+    ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+BlockingIOError: [Errno 11] Resource temporarily unavailable

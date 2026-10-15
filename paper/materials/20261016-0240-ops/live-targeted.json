@@ -1,0 +1,44 @@
+{
+  "live": "e716bd28fd8eca9e4d76d066680304fd11935e37",
+  "tree": "b7c5dff8ff645786f19084a1715dc2a3d29fe05d",
+  "source": "8d386fc7668820c2fc387d966f9d94bdcab189fb",
+  "results": [
+    {
+      "name": "tsc",
+      "command": [
+        "nice",
+        "-n",
+        "19",
+        "npx",
+        "--no-install",
+        "tsc",
+        "-p",
+        "tsconfig.json",
+        "--noEmit"
+      ],
+      "exit_code": 0
+    },
+    {
+      "name": "targeted",
+      "command": [
+        "nice",
+        "-n",
+        "19",
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--pool=threads",
+        "--maxWorkers=1",
+        "tests/silent-paper-krane-beam.test.ts",
+        "tests/silent-paper-krane.test.ts"
+      ],
+      "exit_code": 0
+    }
+  ],
+  "files": 2,
+  "cases": 21,
+  "passed": true,
+  "whole_suite": false,
+  "preexisting_dirty_records_preserved": true
+}

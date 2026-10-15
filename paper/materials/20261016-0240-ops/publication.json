@@ -1,0 +1,141 @@
+{
+  "at": "2026-10-16 02:45:25 CST",
+  "source": "8d386fc7668820c2fc387d966f9d94bdcab189fb",
+  "source_parent": "d523c467cb0e00cfbf181f4490ba6a4d0fbf1ba1",
+  "source_checks": {
+    "tsc": 0,
+    "exit_code": 0,
+    "sandbox_files": 437,
+    "sandbox_cases": 4099,
+    "paths_cases": 11,
+    "total": 4110,
+    "withdrawn_failures": 3,
+    "withdrawn_passes": 3
+  },
+  "old_main": "36aab69ff879442cc6d492b2ab99b8b6bbd8853b",
+  "main": "182cd40b3e8ae4a3e951eb9ce7aa595a9786bb96",
+  "old_live": "3583a02b82f1176c73f38f4fa8725079fd3ee669",
+  "knowledge_refresh_commit": "3583a02b82f1176c73f38f4fa8725079fd3ee669",
+  "knowledge_refresh": [],
+  "name": "V5.silent-paper-krane-beam1",
+  "release_id": "V5-R365",
+  "behavior_commit": "52495248f983fe8ba4b98ec1e626fb94a79e2aa5",
+  "behavior_tree": "5e54a57b169f68d0c6153170629f55cc31532ab6",
+  "actual_live": "e716bd28fd8eca9e4d76d066680304fd11935e37",
+  "tree": "b7c5dff8ff645786f19084a1715dc2a3d29fe05d",
+  "leaves": [
+    {
+      "path": "agent/src/reflex/card-model.ts",
+      "source_sha256": "287115627e5bc3f93da8283620a9b255df880286d4e8e1408009d9f8c87a45c7",
+      "live_sha256": "2baebe174f6c55b11323edc6fda53bfee6712202e92d791b4b5080e322ff911d",
+      "main_exact_source": true,
+      "historical_comment_difference_only": true
+    },
+    {
+      "path": "agent/src/reflex/combat-plan.ts",
+      "source_sha256": "f7e359f54083a24073f4ba23c93d95ee302af407f9dc52fc80569ef7759ec1c3",
+      "live_sha256": "f7e359f54083a24073f4ba23c93d95ee302af407f9dc52fc80569ef7759ec1c3",
+      "main_exact_source": true,
+      "historical_comment_difference_only": false
+    },
+    {
+      "path": "agent/src/reflex/turn-solver.ts",
+      "source_sha256": "51e277c71d41c99c7f35477e6c05fd5ec9ca65247e3969b45688c489393cf648",
+      "live_sha256": "51e277c71d41c99c7f35477e6c05fd5ec9ca65247e3969b45688c489393cf648",
+      "main_exact_source": true,
+      "historical_comment_difference_only": false
+    },
+    {
+      "path": "agent/tests/silent-paper-krane-beam-states.json",
+      "source_sha256": "22ef5796f153c08d751c9f12d266878cd56947701f7c025deadba9cd73d41670",
+      "live_sha256": "22ef5796f153c08d751c9f12d266878cd56947701f7c025deadba9cd73d41670",
+      "main_exact_source": true,
+      "historical_comment_difference_only": false
+    },
+    {
+      "path": "agent/tests/silent-paper-krane-beam.test.ts",
+      "source_sha256": "65c6aef9d6d305d4addac0208b10a15116ba771d17987b60a5d89ce65b0a6ca4",
+      "live_sha256": "65c6aef9d6d305d4addac0208b10a15116ba771d17987b60a5d89ce65b0a6ca4",
+      "main_exact_source": true,
+      "historical_comment_difference_only": false
+    }
+  ],
+  "original_completion_preserved": {
+    "task": "strategy-proposal",
+    "character": "silent",
+    "batch": "20261016-021301-strategy-proposal",
+    "base": "d523c467cb0e00cfbf181f4490ba6a4d0fbf1ba1",
+    "runs": [
+      "WJ0LTVSSDY61",
+      "HLAWCGM3KHVB",
+      "DUB5VQQ6D6D1",
+      "2LZHP9BYFTHE",
+      "RQCHNN0W72KF",
+      "VNSXWCWXR3VW",
+      "PTGQF9BEQ6G1",
+      "A3X30TN54LSH",
+      "ZE2DNC29WWHB",
+      "JWK2C8LE4SFV"
+    ],
+    "evidence_runs": [
+      "HLAWCGM3KHVB"
+    ],
+    "fixes": [
+      {
+        "id": "silent-0489",
+        "commit": "8d386fc7668820c2fc387d966f9d94bdcab189fb",
+        "summary": "限定修复纸鹤配普通突然一拳的聚合体光束失血预测18→12；已提交自测，尚未上线。"
+      }
+    ],
+    "skipped": [],
+    "merged": null,
+    "version": null,
+    "tests": {
+      "tsc": 0,
+      "vitest": 0,
+      "cases": 0
+    },
+    "live_tests": null,
+    "code_proposals": [
+      "silent-proposal-0cce435d0d61ac93"
+    ],
+    "implementation_domains": [
+      "combat"
+    ],
+    "proposal_results": [
+      {
+        "id": "silent-proposal-0cce435d0d61ac93",
+        "state": "waiting",
+        "reason": "源码已提交并通过4110项沙箱测试；live合入遇18个记录/统计文件冲突，已abort并保留知识刷新3583a02b82f1176c73f38f4fa8725079fd3ee669。源码不是live祖先，需ops按已测源码集成、完成合后检查与发布登记；不是缺机制证据。"
+      }
+    ],
+    "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-021301/learner/runs/20261016-021305-0ce60e2a-08b0-48b6-bce6-1e016439eb33-strategy-proposal/report.md"
+  },
+  "original_conflicts_preserved": [
+    "notes/for-roy.md",
+    "notes/lessons.md",
+    "notes/ops-handoff.md",
+    "ops/inbox-dev.md",
+    "paper/data/README.md",
+    "paper/data/commits.csv",
+    "paper/data/cost-curve-silent.csv",
+    "paper/data/cost-silent.csv",
+    "paper/data/cost-sources.json",
+    "paper/data/cost-unattributed.csv",
+    "paper/data/decisions_by_label.csv",
+    "paper/data/learning-curve-silent.csv",
+    "paper/data/runs.csv",
+    "paper/data/summary.json",
+    "paper/data/verification.json",
+    "paper/materials/decision-log.md",
+    "paper/materials/learning/ledger.jsonl",
+    "paper/materials/silent/cost.md"
+  ],
+  "wide_parents": "remain open; original completion and proposal waiting disposition preserved",
+  "prior_host": "R364 exact f733 passed only; not proof for this new tree",
+  "new_host": "pending single original021301-strategy-proposal channel request",
+  "natural_consumer": "pending",
+  "current_game_account_home_model_prompt_changed": false,
+  "source_actual_main_live_ancestor": true,
+  "all_unrelated_live_leaves_preserved": true
+}
