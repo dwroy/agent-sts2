@@ -1,0 +1,77 @@
+{
+  "at": "2026-10-15 11:28:58 CST",
+  "request": {
+    "at": "2026-10-15 11:28:01 CST",
+    "command": [
+      "bash",
+      "ops/codex-ops-do.sh",
+      "learner-recheck",
+      "20261015-101301-fix-batch"
+    ],
+    "batch": "20261015-101301-fix-batch",
+    "request_pid": 839239,
+    "request_birth": "92684044",
+    "expected_live": "fba193dfe31844e1dbde9f2ad7174427fcd446dc",
+    "expected_tree": "143b43fbe993b9cc722f44ee7745cbd57838eb56",
+    "expected_log": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261015-101301-fix-batch.fallback-143b43fbe993b9cc722f44ee7745cbd57838eb56.checks.log",
+    "stage": "request wrapper launched; actual host worker pending readback",
+    "one_final_combined_full": true,
+    "both_sources": [
+      {
+        "name": "infra",
+        "source": "22efae55484bc2bdcc54e847a8dc40bb4888c4e2",
+        "paths": [
+          "agent/tests/learner-entry.test.ts",
+          "ops/codex-ops-learner.sh",
+          "ops/learner_entry.py",
+          "ops/tests/test_learner_entry.py",
+          "ops/tests/test_learner_launch_failures.py",
+          "ops/tests/test_strategy_implementation.py",
+          "ops/tests/test_strategy_implementation_continuation.py",
+          "ops/tests/test_strategy_research_scheduling.py"
+        ],
+        "composition_commit": "ae6480dce773def530cdfeaec1a5068491afdafc",
+        "composition_tree": "6ac78bd88030d0460a29e198098d1244816a65fd"
+      },
+      {
+        "name": "cloak",
+        "source": "bdfbab2eb6d4e3d3c9014928712365560e3da176",
+        "paths": [
+          "agent/src/reflex/card-model.ts",
+          "agent/src/reflex/combat-plan.ts",
+          "agent/src/reflex/turn-solver.ts",
+          "agent/tests/silent-cloak-generation-evidence.json",
+          "agent/tests/silent-cloak-generation.test.ts"
+        ],
+        "composition_commit": "0f63424e30fe1dbf3b70f8e6a6edf265e544e7f0",
+        "composition_tree": "700695a708d586434b6e83f382507a413475d168"
+      }
+    ],
+    "source_ancestor_proof": "both original source commits are actual live ancestors; same combined tree covers both",
+    "original_strategy_report_shape_limit": "original strategy fixes array contains ledger strings; ordinary recheck validator expects fix objects. Preserve original report; use original valid fix batch for one combined full rather than editing the report or starting duplicate full.",
+    "game_restart": false
+  },
+  "actually_started": true,
+  "lock_rows": [
+    "164: FLOCK  ADVISORY  WRITE 839258 08:30:372157 0 EOF"
+  ],
+  "owners": [
+    {
+      "pid": 839258,
+      "birth": "92684090",
+      "argv": [
+        "python3",
+        "/home/dw/Projects/agent-sts2/ops/codex-ops-learn.py",
+        "recheck",
+        "--batch",
+        "20261015-101301-fix-batch"
+      ],
+      "expected_log_fds": [
+        "5"
+      ]
+    }
+  ],
+  "full_result": "pending",
+  "single_combined_full_for_both_original_sources": true,
+  "both_original_completion_failures_and_histories_preserved": true
+}
