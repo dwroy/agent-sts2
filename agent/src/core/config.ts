@@ -23,10 +23,10 @@ export function sCombatRankEnabled(character: string | null | undefined, env: No
   return characterKey(character ?? "") === "silent" && (env["S_COMBAT_RANK"] ?? "on") === "on";
 }
 
-/** P2 starts with natural shadow validation; other roles retain the original question and schema. */
+/** Release this default only after P2's two natural shadow runs; other roles keep the original question and schema. */
 export function sBuildRankMode(character: string | null | undefined, env: NodeJS.ProcessEnv = process.env): "off" | "shadow" | "on" {
   if (characterKey(character ?? "") !== "silent") return "off";
-  const mode = env["S_BUILD_RANK"]?.trim().toLowerCase() ?? "shadow";
+  const mode = env["S_BUILD_RANK"]?.trim().toLowerCase() ?? "on";
   return mode === "shadow" || mode === "on" ? mode : "off";
 }
 
