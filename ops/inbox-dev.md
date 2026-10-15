@@ -2251,3 +2251,5 @@ selector于2026-10-15 13:15:58 CST从/home/dw/.codex-brain原子改为/home/dw/P
 - 2026-10-16 01:11:34 CST [运维 codex/必要通知运输] 既有学习通知08473b2ce666b35ebdaca530已向原watcher wJ:pJT/01a13dcd实际提醒一次，rc0/agent_prompted回执留盘；原双写和ops_forwarded保持，提交不等已读，watcher_received与roy_notified待本人回执。未另建父项、实验或会话。回执paper/materials/20261016-0108-ops/watcher-reminder-transport.json。
 
 - 2026-10-16 01:21:51 CST [运维 codex] 原011301修复批次无新增源码或合入受阻，原failed/rc0保留；tsc与9文件69项定向0，仅按原范围记录，不声称完整套件通过。既有修复来源和41条待办边界已核，不重复合入/发号/补测。回执paper/materials/20261016-0119-ops/。
+
+- 2026-10-16 01:29:00 CST [运维 codex] 原011301策略十项继续waiting，无源码变更/合入受阻；39项为限定材料检查及既有离线消费者读回，生产tests仍null。33所属追溯已核，完整候选/逐源资源与抽序身份等缺口保持。回执paper/materials/20261016-0127-ops/。
