@@ -25,6 +25,8 @@ const PAIRS: Record<string, { cost?: [number, number]; vars: Record<string, [num
   POISONED_STAB: { vars: { Damage: [6, 8], PoisonPower: [3, 4] } },
   // F43 T1's plain deck card and T5's upgraded draw; the card was not played that turn.
   SNAKEBITE: { cost: [2, 2], vars: { PoisonPower: [7, 10] } },
+  // F36 T1's plain deck and T2's upgraded draw/cast; F37 T5 repeats the seven-Poison effect.
+  DEADLY_POISON: { vars: { PoisonPower: [5, 7] } },
 };
 
 /** No inferred upgrade for modified values, costs, text effects, or cards absent from the paired evidence. */
@@ -47,6 +49,10 @@ export function observedApotheosisUpgrade(card: Record<string, unknown>): Record
   if (str(card["card_id"]) === "SNAKEBITE" &&
     (str(card["rules_text"]) !== "给予{PoisonPower:diff()}层中毒。" ||
       str(card["resolved_rules_text"]).replace(/\s+/g, "") !== "保留。给予7层中毒。")) return null;
+  if (str(card["card_id"]) === "DEADLY_POISON" &&
+    (card["star_costs_x"] !== false || card["star_cost"] !== 0 ||
+      str(card["rules_text"]) !== "给予{PoisonPower:diff()}层中毒。" ||
+      str(card["resolved_rules_text"]).replace(/\s+/g, "") !== "给予5层中毒。")) return null;
   const values = asArray(card["dynamic_values"]).map(asRecord);
   if (values.length !== Object.keys(pair.vars).length) return null;
   for (const [name, [plain]] of Object.entries(pair.vars)) {
@@ -58,6 +64,7 @@ export function observedApotheosisUpgrade(card: Record<string, unknown>): Record
   return {
     ...card, upgraded: true, energy_cost: pair.cost?.[1] ?? card["energy_cost"],
     ...(str(card["card_id"]) === "SNAKEBITE" ? { resolved_rules_text: "保留。 给予10层中毒。" } : {}),
+    ...(str(card["card_id"]) === "DEADLY_POISON" ? { resolved_rules_text: "给予7层中毒。" } : {}),
     dynamic_values: values.map((value) => {
       const [plain, upgraded] = pair.vars[str(value["name"])]!;
       return { ...value, base_value: upgraded, enchanted_value: upgraded,
