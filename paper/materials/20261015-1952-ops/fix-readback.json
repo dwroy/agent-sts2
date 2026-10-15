@@ -1,0 +1,179 @@
+{
+  "batch": "20261015-194301-fix-batch",
+  "canonical_state": "failed",
+  "rc": 0,
+  "original_report": {
+    "task": "fix-batch",
+    "base": "f8ca991199183fb007dbeeb512cfa861912433dc",
+    "fixes": [],
+    "skipped": [
+      {
+        "item": "silent-0481",
+        "reason": "策略类题面知识，沿原独立提案"
+      },
+      {
+        "item": "silent-0311",
+        "reason": "策略类模型，沿原独立提案"
+      },
+      {
+        "item": "silent-0332",
+        "reason": "完整resources/steps截断，根因证据不足"
+      },
+      {
+        "item": "silent-0469聚合体组合",
+        "reason": "策略类，超出已发布骑士窄范围"
+      },
+      {
+        "item": "silent-0446",
+        "reason": "结构提案须独立验证动作确认与路线提交"
+      },
+      {
+        "item": "其余出牌、机制、药水、SL、终局、路线、休息范围",
+        "reason": "策略类，继续原提案链"
+      },
+      {
+        "item": "codex大脑缓存命中偏低",
+        "reason": "缺受控同题比较"
+      },
+      {
+        "item": "调度公平性核查",
+        "reason": "未证明永久饥饿"
+      },
+      {
+        "item": "sandbox-glob-startup-race上游根因",
+        "reason": "租约为空不能确定拒绝分支、时序或目录删除者"
+      },
+      {
+        "item": "core-build-notify-222802-rc2",
+        "reason": "历史发送事实缺证"
+      },
+      {
+        "item": "named-card-facts-transport宽范围",
+        "reason": "独立功能"
+      },
+      {
+        "item": "boss模拟性能及v5-dpr-health宽范围",
+        "reason": "独立专项"
+      },
+      {
+        "item": "漏斗、学习优先级、统一资源价值及F33归因",
+        "reason": "独立架构或策略研究"
+      },
+      {
+        "item": "框架外层总时限收尾",
+        "reason": "独立框架范围"
+      }
+    ],
+    "merged": null,
+    "tests": {
+      "tsc": 0,
+      "vitest": 0,
+      "cases": 35,
+      "files": 5,
+      "scope": "targeted",
+      "reruns": []
+    },
+    "code_proposals": [],
+    "implementation_domains": [],
+    "report": "/home/dw/Projects/agent-sts2/learner/runs/20261015-194306-bcf68a34-5915-46a0-a2ce-8d21b36a27e1-fix-batch/report.md"
+  },
+  "native": {
+    "batch": "20261015-194301-fix-batch",
+    "thread": "01a13f5f-95ee-7fe0-b828-761d83812f52",
+    "cwd": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261015-194301",
+    "event_log": "learner/runs/20261015-194306-bcf68a34-5915-46a0-a2ce-8d21b36a27e1-fix-batch.jsonl",
+    "registered_launch_batch": "20261015-194301-fix-batch",
+    "original_lease": "e10052f56d96dfde30effd063a04047aa45e8051b7f5cdf1f34132d9b3bfc103",
+    "native_context": {
+      "source": "ops/codex-ops/accounts/codex1/learner/sessions/2026/10/15/rollout-2026-10-15T19-43-11-01a13f5f-95ee-7fe0-b828-761d83812f52.jsonl",
+      "offset": 50167,
+      "bytes": 5118,
+      "sha256": "afc11c31314a015948f6aec9988ee3b7d4d4eb0f9bad123c3a4c418510edea65",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "sandbox": {
+        "type": "workspace-write",
+        "writable_roots": [
+          "/home/dw/Projects/agent-sts2",
+          "/home/dw/Projects/agent-sts2/.git",
+          "/home/dw/Projects/agent-sts2/.git/worktrees/codex-fix-silent-20261015-194301"
+        ],
+        "network_access": false,
+        "exclude_tmpdir_env_var": false,
+        "exclude_slash_tmp": false
+      },
+      "approval_policy": "never"
+    },
+    "native_user_input": {
+      "offset": 55285,
+      "bytes": 13081,
+      "sha256": "7c2b76e7552e0220cd26cee18a418fd75b69669e142a4e3384376c38de5448d2",
+      "input_sha256": "ae62f27008d49b83def35f802e77849f958ab445a12bf4cc05b58a78fa404c92"
+    },
+    "original_header_events": [
+      {
+        "offset": 0,
+        "bytes": 14892,
+        "sha256": "4c1b0dc8b07b8ee458fb29de606af8cadbf601bb166c36531545b2fdc28eedcb",
+        "type": "learner_launch",
+        "attempt": null,
+        "code": null
+      },
+      {
+        "offset": 14892,
+        "bytes": 370,
+        "sha256": "ff5ef6406931234365688fa5bc71831916e3dcfd10ef8dd3036e83ec681cf0fb",
+        "type": "learner_startup_attempt",
+        "attempt": 1,
+        "code": null
+      },
+      {
+        "offset": 18275,
+        "bytes": 77,
+        "sha256": "2246073e3ff15bfab7a390419f9ddb1ee472dc9ffbd85e96aa99a44e11e3492b",
+        "type": "thread.started",
+        "attempt": null,
+        "code": null
+      }
+    ],
+    "startup_attempts": 1,
+    "failed_startups_preserved": 0,
+    "no_model_or_manual_restart": true
+  },
+  "source_references": 73,
+  "unique_paths": 51,
+  "base_source_shas_and_all_ancestors_verified": true,
+  "old_live_present_leaf_shas_verified": true,
+  "original_old_live_absent_paths": [
+    "ops/worktree_storage.py"
+  ],
+  "ops_guard_correction": "First ops guard incorrectly required every historical live leaf to exist; original live_leaf_present flags were respected on corrected readback. No source or original audit changed.",
+  "original_live_snapshot": "fe6462651b593b9831581c088deface9957a404f",
+  "queue_original_unchecked_entries": 41,
+  "all_dispositions_read_back": true,
+  "original_checks": {
+    "tsc": 0,
+    "vitest": 0,
+    "cases": 35,
+    "files": 5,
+    "scope": "targeted",
+    "reruns": []
+  },
+  "original_check_logs_sha256": {
+    "tsc.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "tsc.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "vitest.log": "9867fd827b44ccf73eec285d9ac568f4d5082b68012d1cb392a5819643b82fbd",
+    "vitest.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "gitleaks.log": "536a8fe0346f311a4dbbd9441d32eaa0ff33818141e002e91687a7fe7f111fb9",
+    "gitleaks.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "gitleaks.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+  },
+  "checks_reexecuted": false,
+  "no_new_commit_or_merge_blocker": true,
+  "canonical_failed_rc0_preserved_not_product_failure_claim": true,
+  "original_startup_and_nine_resource_failure_rows_verified": true,
+  "unresolved": "Original nonpositive-hp resources/steps truncated; root cause unknown. Empty startup lease does not identify refusal branch, registration timing or directory deleter; no manual replay.",
+  "original_preparation_failures_preserved": "Initial historical path guesses and missing-path searches retained in original event/output. No dependency installation or sandbox expansion.",
+  "no_new_ledger_status_source_merge_release_dataset_or_runtime_changes": true,
+  "original_wide_parents_and_owners_preserved": true
+}
