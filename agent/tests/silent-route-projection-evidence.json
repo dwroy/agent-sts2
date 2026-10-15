@@ -1,0 +1,313 @@
+[
+  {
+    "runId": "K2JAGKVJAWZJ",
+    "floor": 34,
+    "screen": "EVENT",
+    "stateVersion": 16,
+    "observedTs": "2026-10-08T01:06:04.412Z",
+    "decisionId": "e3a524c3-3b5f-49a5-a7a3-83ee81f2726e",
+    "currentNode": "r0c3",
+    "start": {
+      "hp": 65,
+      "max": 75
+    },
+    "costs": {
+      "act": 3,
+      "maxHp": 75,
+      "monster": {
+        "median": 17,
+        "p75": 29,
+        "source": "logged A10 act-3 Monster rooms, n=93 incl. 9 deaths"
+      },
+      "elite": {
+        "median": 52,
+        "p75": 64,
+        "source": "logged A10 act-3 Elite rooms, n=11 incl. 2 deaths"
+      },
+      "unknown": {
+        "median": 0,
+        "p75": 0,
+        "source": "logged A10 act-3 Unknown rooms, n=78"
+      }
+    },
+    "loggedPath": [
+      {
+        "row": 1,
+        "col": 1,
+        "type": "Monster",
+        "hpOnArrival": 0.8666666666666667
+      },
+      {
+        "row": 2,
+        "col": 2,
+        "type": "Unknown",
+        "hpOnArrival": 0.64
+      },
+      {
+        "row": 3,
+        "col": 2,
+        "type": "Unknown",
+        "hpOnArrival": 0.64
+      },
+      {
+        "row": 4,
+        "col": 1,
+        "type": "Monster",
+        "hpOnArrival": 0.64
+      },
+      {
+        "row": 5,
+        "col": 0,
+        "type": "Monster",
+        "hpOnArrival": 0.41333333333333333
+      },
+      {
+        "row": 6,
+        "col": 0,
+        "type": "RestSite",
+        "hpOnArrival": 0.18666666666666668
+      },
+      {
+        "row": 7,
+        "col": 1,
+        "type": "Treasure",
+        "hpOnArrival": 0.48
+      },
+      {
+        "row": 8,
+        "col": 2,
+        "type": "RestSite",
+        "hpOnArrival": 0.48
+      },
+      {
+        "row": 9,
+        "col": 1,
+        "type": "Unknown",
+        "hpOnArrival": 0.7733333333333333
+      },
+      {
+        "row": 10,
+        "col": 2,
+        "type": "RestSite",
+        "hpOnArrival": 0.7733333333333333
+      },
+      {
+        "row": 11,
+        "col": 2,
+        "type": "Shop",
+        "hpOnArrival": 1
+      },
+      {
+        "row": 12,
+        "col": 3,
+        "type": "Elite",
+        "hpOnArrival": 1
+      },
+      {
+        "row": 13,
+        "col": 4,
+        "type": "RestSite",
+        "hpOnArrival": 0.30666666666666664
+      },
+      {
+        "row": 14,
+        "col": 3,
+        "type": "Boss",
+        "hpOnArrival": 0.6
+      },
+      {
+        "row": 15,
+        "col": 3,
+        "type": "Boss",
+        "hpOnArrival": null
+      }
+    ],
+    "source": {
+      "decision": {
+        "source": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+        "line": 286314,
+        "offset": 742170399,
+        "bytes": 14930,
+        "sha256": "5af27810468144b3029e8948c8a1bf5222e7569f3164d725ed9e5d93e3545f3e"
+      },
+      "brain": {
+        "source": "/home/dw/Projects/agent-sts2/logs/brain.jsonl",
+        "line": 8622,
+        "offset": 284501158,
+        "bytes": 47311,
+        "sha256": "078aff6509f523afb0980c3f9e3754de710fa4788e00491ac764184f441a1152"
+      },
+      "state": {
+        "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+        "line": 293013,
+        "offset": 9073203738,
+        "bytes": 27683,
+        "sha256": "bb2c3e2f67c1052cf3e6059818775673c070a694652fe8d34663df7aa68f2fcd"
+      }
+    },
+    "costNote": "第 3 幕每个房间掉血（中位数/p75，最大生命 75）：普通战 17/29（logged A10 act-3 Monster rooms, n=93 incl. 9 deaths）；精英 52/64（logged A10 act-3 Elite rooms, n=11 incl. 2 deaths）；问号 0/0（logged A10 act-3 Unknown rooms, n=78）。掉血 = 进房 HP 减下一层 HP（已含燃烧之血、药水、事件），死在房间里记为全部进房 HP；休息回血 = 最大生命 30%（向下取整），锻造不回血。",
+    "limitations": [
+      "Costs are frozen from the historical displayed payload; no full dirty checkout is reconstructed."
+    ],
+    "sourcePositionText": "你在 r0c3（F34 远古）；下一步可走：r1c1、r1c4"
+  },
+  {
+    "runId": "79UCJ0K6R9C1",
+    "floor": 1,
+    "screen": "MAP",
+    "stateVersion": 16,
+    "observedTs": "2026-10-08T01:22:15.319Z",
+    "decisionId": "d8576131-8ebe-4897-ac33-0d3c590fd315",
+    "currentNode": "r0c3",
+    "start": {
+      "hp": 56,
+      "max": 70
+    },
+    "costs": {
+      "act": 1,
+      "maxHp": 70,
+      "monster": {
+        "median": 3,
+        "p75": 9,
+        "source": "logged A10 act-1 Monster rooms, n=421 incl. 4 deaths"
+      },
+      "elite": {
+        "median": 24.5,
+        "p75": 35.8,
+        "source": "logged A10 act-1 Elite rooms, n=70 incl. 6 deaths"
+      },
+      "unknown": {
+        "median": 0,
+        "p75": 3,
+        "source": "logged A10 act-1 Unknown rooms, n=265"
+      }
+    },
+    "loggedPath": [
+      {
+        "row": 1,
+        "col": 4,
+        "type": "Monster",
+        "hpOnArrival": 0.8
+      },
+      {
+        "row": 2,
+        "col": 4,
+        "type": "Monster",
+        "hpOnArrival": 0.7571428571428571
+      },
+      {
+        "row": 3,
+        "col": 5,
+        "type": "Monster",
+        "hpOnArrival": 0.7142857142857143
+      },
+      {
+        "row": 4,
+        "col": 6,
+        "type": "Shop",
+        "hpOnArrival": 0.6714285714285714
+      },
+      {
+        "row": 5,
+        "col": 6,
+        "type": "Monster",
+        "hpOnArrival": 0.6714285714285714
+      },
+      {
+        "row": 6,
+        "col": 6,
+        "type": "Unknown",
+        "hpOnArrival": 0.6285714285714286
+      },
+      {
+        "row": 7,
+        "col": 6,
+        "type": "Elite",
+        "hpOnArrival": 0.6285714285714286
+      },
+      {
+        "row": 8,
+        "col": 6,
+        "type": "RestSite",
+        "hpOnArrival": 0.2785714285714286
+      },
+      {
+        "row": 9,
+        "col": 5,
+        "type": "Treasure",
+        "hpOnArrival": 0.5785714285714286
+      },
+      {
+        "row": 10,
+        "col": 6,
+        "type": "RestSite",
+        "hpOnArrival": 0.5785714285714286
+      },
+      {
+        "row": 11,
+        "col": 6,
+        "type": "Monster",
+        "hpOnArrival": 0.8785714285714286
+      },
+      {
+        "row": 12,
+        "col": 6,
+        "type": "RestSite",
+        "hpOnArrival": 0.8357142857142857
+      },
+      {
+        "row": 13,
+        "col": 6,
+        "type": "Elite",
+        "hpOnArrival": 1
+      },
+      {
+        "row": 14,
+        "col": 6,
+        "type": "Shop",
+        "hpOnArrival": 0.65
+      },
+      {
+        "row": 15,
+        "col": 6,
+        "type": "RestSite",
+        "hpOnArrival": 0.65
+      },
+      {
+        "row": 16,
+        "col": 3,
+        "type": "Boss",
+        "hpOnArrival": 0.95
+      }
+    ],
+    "source": {
+      "decision": {
+        "source": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+        "line": 286488,
+        "offset": 742869675,
+        "bytes": 5173,
+        "sha256": "db30815b239f4b92f9884cc5d62f43a4a56dacc2c4fe4643092cfc42944580a2"
+      },
+      "brain": {
+        "source": "/home/dw/Projects/agent-sts2/logs/brain.jsonl",
+        "line": 8635,
+        "offset": 285067710,
+        "bytes": 16752,
+        "sha256": "3848736aea0642e1f8eb32c2f3df5f4e7345d958406afeb752595f4807458b1c"
+      },
+      "state": {
+        "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+        "line": 293228,
+        "offset": 9081888016,
+        "bytes": 34337,
+        "sha256": "d67285c3c0801f9e435279ea7f0a2785a42e0a8c33e6ab7d148e3b5d7623d255"
+      }
+    },
+    "costNote": "第 1 幕每个房间掉血（中位数/p75，最大生命 70）：普通战 3/9（logged A10 act-1 Monster rooms, n=421 incl. 4 deaths）；精英 24.5/35.8（logged A10 act-1 Elite rooms, n=70 incl. 6 deaths）；问号 0/3（logged A10 act-1 Unknown rooms, n=265）。掉血 = 进房 HP 减下一层 HP（已含燃烧之血、药水、事件），死在房间里记为全部进房 HP；休息回血 = 最大生命 30%（向下取整），锻造不回血。",
+    "limitations": [
+      "Costs are frozen from the displayed historical payload; this is not a reconstruction of all historical knowledge bytes.",
+      "The displayed p75 35.8 may be rounded; assertions concern the logged median path."
+    ],
+    "sourcePositionText": "你在 r0c3（F1 远古）；下一步可走：r1c0、r1c3、r1c4、r1c6"
+  }
+]
