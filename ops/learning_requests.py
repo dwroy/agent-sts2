@@ -204,7 +204,9 @@ def ack_feature(root, state, notice, payload):
         raise ValueError("feature original scratch is not registered")
     scratch = (Path(root) / report_path).resolve().parent
     log_path = (Path(root) / source["original_log"]["path"]).resolve()
-    if scratch.parent != tree / "learner/runs" or log_path != scratch.with_suffix(".jsonl"):
+    root_scratch = scratch.parent == (Path(root) / "learner/runs").resolve()
+    if ((scratch.parent != tree / "learner/runs" and not root_scratch)
+            or log_path != scratch.with_suffix(".jsonl")):
         raise ValueError("feature original log outside registered worktree")
     events = [json.loads(line) for line in artifact(root, source["original_log"]).splitlines() if line.strip()]
     launch = next((event for event in events if event.get("type") == "learner_launch"), {})
@@ -212,6 +214,13 @@ def ack_feature(root, state, notice, payload):
     if (launch.get("engine") != "codex" or launch.get("cwd") != str(tree)
             or launch.get("task") != batch["learner_task"] or source["thread_id"] not in threads):
         raise ValueError("feature original launch/thread mismatch")
+    # Root event logs are shared by jobs; bind them to the launcher's original scratch and owner.
+    if root_scratch:
+        params = launch.get("params")
+        if (not isinstance(params, dict) or not isinstance(params.get("scratch"), str)
+                or (Path(root) / params["scratch"]).resolve() != scratch
+                or params.get("worktree") != str(tree) or params.get("character") != character):
+            raise ValueError("feature root event log does not match registered launch scratch/owner")
     message_path = (Path(root) / source["original_message"]["path"]).resolve()
     if not message_path.is_relative_to(scratch):
         raise ValueError("feature original message outside bound scratch")
