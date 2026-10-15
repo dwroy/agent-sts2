@@ -1,0 +1,51 @@
+from pathlib import Path
+import subprocess,json,hashlib,fcntl,os
+root=Path.cwd();p=root/'ops/codex-ops/record-staging/20261015-0929';pub=root/'paper/materials/20261015-s-build-rank';live=root/'.worktrees/live';d=json.loads((p/'p2-composition.json').read_text());sha=lambda b:hashlib.sha256(b).hexdigest()
+def git(*a,cwd=root,env=None,data=None):return subprocess.check_output(['git','-C',str(cwd),*a],env=env,input=data,stderr=subprocess.PIPE)
+def write(name,value):(pub/name).write_text(json.dumps(value,ensure_ascii=False,indent=2)+'\n')
+def commit(tree,parents,title):
+ args=['commit-tree',tree]
+ for ref in dict.fromkeys(parents):args+=['-p',ref]
+ return git(*args,cwd=live,data=(title+'\n\nCo-Authored-By: Codex gpt-6.1-sol <noreply@openai.com>\n').encode()).decode().strip()
+assert json.loads((pub/'ops-composition-checks.json').read_text())=={'tsc':0,'vitest':0,'health':0};assert '44 passed (44)' in (pub/'ops-composition-fixed.log').read_text() and 'Ran 17 tests' in (pub/'ops-composition-health.log').read_text();assert json.loads((p/'p2-selected-gitleaks.json').read_text())==[]
+now=subprocess.check_output(['date','+%Y-%m-%d %H:%M:%S %Z'],text=True).strip();whitelist=[]
+for pid,birth_expected in [(231163,'91678821'),(1738396,'86996299')]:
+ proc=Path('/proc')/str(pid)
+ try:
+  stat=(proc/'stat').read_text();birth=stat[stat.rfind(')')+2:].split()[19]
+  if birth!=birth_expected:whitelist.append({'pid':pid,'state':'birth changed; not inspected or touched'});continue
+  envraw=dict(v.split(b'=',1) for v in (proc/'environ').read_bytes().split(b'\0') if b'=' in v);value=envraw.get(b'S_BUILD_RANK');assert value is None or value==b'shadow';whitelist.append({'pid':pid,'birth':birth,'S_BUILD_RANK':value.decode() if value else None})
+ except FileNotFoundError:whitelist.append({'pid':pid,'state':'absent; no replacement touched'})
+ready={**d,'at':now,'composition_tests':{'tsc':0,'files':6,'cases':44,'vitest':0,'health_cases':17,'health':0},'gitleaks':0,'known_original_launcher_controller_S_BUILD_RANK_whitelist':whitelist,'source_full_not_exact_final_refactor':True,'natural_shadow_runs':0,'on_admission':'pending two full natural shadow runs and actual choice/consumer readback by original watcher','new_behavior_release_id':False,'previous_behavior_ids':['V5-R352','V5-R353'],'resume_original_ops_command':'nice -n 19 python3 ops/codex-ops/record-staging/20261015-0929/publish-p2.py','next_full':'one new exact deployed combined tree after P2 actually publishes; do not borrow or interrupt current P1/P3 full'}
+write('ops-ready-receipt.json',ready);lock=(root/'ops/live-merge.lock').open('a')
+try:fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB)
+except BlockingIOError:
+ inode=str((root/'ops/live-merge.lock').stat().st_ino);rows=[r for r in Path('/proc/locks').read_text().splitlines() if r.split()[-3].split(':')[-1]==inode];owners=[]
+ for row in rows:
+  pid=int(row.split()[4]);proc=Path('/proc')/str(pid)
+  try:
+   stat=(proc/'stat').read_text();argv=[b.decode() for b in (proc/'cmdline').read_bytes().split(b'\0') if b];owners.append({'pid':pid,'birth':stat[stat.rfind(')')+2:].split()[19],'argv':argv})
+  except FileNotFoundError:pass
+ write('ops-publication-pending.json',{'at':now,'parent':'roy-20261014-s-decision','source':d['source'],'owner_main':d['owner_main_integration'],'stage':'received/composed/validated; waiting original live lock, not published or started as a new job','ready_receipt':'paper/materials/20261015-s-build-rank/ops-ready-receipt.json','expected_old_live':d['old_live'],'candidate_tree':d['validated_tree'],'lock_rows':rows,'owners':owners,'current_host_request':'paper/materials/20261015-s-combat-rank/ops-combined-host-start-readback.json','live_mutated':False,'new_host_started':False,'new_model_or_learner_dispatch':False,'next':'Continue this original prepared publication only after the existing host completion event; verify live/source/config identities again. No wait/poll/interrupt/restart.'});print(json.dumps({'published':False,'reason':'existing P1/P3 full owns live lock','ready_source':d['source'],'validated_candidate_tree':d['validated_tree'],'original_owner_processes':owners,'same_chain_continuation':'pending original host completion event'}));raise SystemExit(0)
+with lock:
+ old=git('rev-parse','HEAD',cwd=live).decode().strip();assert old==d['old_live'],'Live advanced; preserve the ready tree and recompose in original ops chain';assert not git('diff','--cached','--name-only',cwd=live);selected=json.loads((p/'p2-selected-manifest.json').read_text());refresh=[r for r in selected if r['kind']=='existing knowledge refresh'];assert sorted(r['path'] for r in refresh)==sorted(git('diff','--name-only','HEAD','--','knowledge',cwd=live).decode().splitlines())
+ for row in selected:
+  assert sha((p/'p2-selected-scan'/row['path']).read_bytes())==row['sha256']
+  if row['kind']=='existing knowledge refresh':assert sha((live/row['path']).read_bytes())==row['sha256']
+  else:
+   exists=subprocess.run(['git','cat-file','-e',old+':'+row['path']],capture_output=True).returncode==0
+   if exists:assert (live/row['path']).read_bytes()==git('show',old+':'+row['path'],cwd=live)
+   else:assert not (live/row['path']).exists()
+ env={**os.environ,'GIT_INDEX_FILE':str(p/'p2-live-publication.index')};git('read-tree',old,cwd=live,env=env)
+ def stage(row):
+  blob=git('hash-object','-w','--stdin',cwd=live,data=(p/'p2-selected-scan'/row['path']).read_bytes()).decode().strip();git('update-index','--add','--cacheinfo',f'100644,{blob},{row["path"]}',cwd=live,env=env)
+ for row in refresh:stage(row)
+ fresh_tree=git('write-tree',cwd=live,env=env).decode().strip();fresh=commit(fresh_tree,[old],'Preserve current knowledge refresh before P2 shadow') if refresh else old
+ for row in selected:
+  if row['kind']=='publication leaf':stage(row)
+ tree=git('write-tree',cwd=live,env=env).decode().strip();assert git('diff','--name-only',fresh_tree,tree,cwd=live).decode().splitlines()==d['paths'];published=commit(tree,[fresh,d['source']],'Wire Silent construction ranking shadow after P1/P3')
+ for row in selected:assert sha(git('show',published+':'+row['path'],cwd=live))==row['sha256']
+ git('update-ref','HEAD',published,old,cwd=live)
+ for path in d['paths']:(live/path).write_bytes(git('show',published+':'+path,cwd=live))
+ git('read-tree',tree,cwd=live);git('merge-base','--is-ancestor',d['source'],'HEAD',cwd=live);assert not git('diff','--cached','--name-only',cwd=live)
+ write('ops-publication-receipt.json',{**ready,'at':now,'stage':'actually published shadow; no new behavior number','actual_live':published,'actual_live_tree':tree,'preserved_knowledge_refresh':refresh,'source_actual_live_ancestor':True,'previous_release_ids_preserved':True,'host_full':'not started for this new combination','natural_consumers':'pending','game_restarted':False});print(json.dumps({'published':True,'live':published,'tree':tree,'mode':'shadow','new_behavior_number':False,'new_exact_host_required':True}))

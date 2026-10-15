@@ -1,0 +1,31 @@
+{
+  "at": "2026-10-15 09:49:18 CST",
+  "parent": "roy-20261014-s-decision",
+  "source": "f685e05173341c045b851a0986f5151b2f915816",
+  "owner_main": "5e6e7c6d896fe44a506b2464aef45bc9965108a1",
+  "stage": "received/composed/validated; waiting original live lock, not published or started as a new job",
+  "ready_receipt": "paper/materials/20261015-s-build-rank/ops-ready-receipt.json",
+  "expected_old_live": "d2dda4b75d6eacf5c5fcdf6f5f1da8a28c1c6ede",
+  "candidate_tree": "c9ae1aa4722145115178f8206e6b2f4e838a0b1c",
+  "lock_rows": [
+    "162: FLOCK  ADVISORY  WRITE 431398 08:30:372157 0 EOF"
+  ],
+  "owners": [
+    {
+      "pid": 431398,
+      "birth": "92049183",
+      "argv": [
+        "python3",
+        "/home/dw/Projects/agent-sts2/ops/codex-ops-learn.py",
+        "recheck",
+        "--batch",
+        "20261015-051302-s2-strategy-proposal"
+      ]
+    }
+  ],
+  "current_host_request": "paper/materials/20261015-s-combat-rank/ops-combined-host-start-readback.json",
+  "live_mutated": false,
+  "new_host_started": false,
+  "new_model_or_learner_dispatch": false,
+  "next": "Continue this original prepared publication only after the existing host completion event; verify live/source/config identities again. No wait/poll/interrupt/restart."
+}
