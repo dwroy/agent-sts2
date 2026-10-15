@@ -1,0 +1,1713 @@
+{
+  "batch": "20261016-050119-s2-strategy-proposal",
+  "original_report": {
+    "task": "strategy-proposal",
+    "character": "silent",
+    "batch": "20261016-050119-s2-strategy-proposal",
+    "base": "b09c827062ca0f061571c181f324828016d17a10",
+    "runs": [
+      "KEN58SH9SLZ6",
+      "TXZ6RVMQA09D",
+      "WQZVENQ7DTRP",
+      "02HB4L0C3C67",
+      "4D4J8USKCPAV",
+      "F4QKG4J1AJJZ",
+      "JLN5SK17W4FQ",
+      "LS8035TB32P3",
+      "NB8KCF6HRGVF",
+      "S9UZAK0JP0C0"
+    ],
+    "fixes": [],
+    "skipped": [],
+    "merged": null,
+    "tests": {
+      "tsc": null,
+      "vitest": null,
+      "cases": null
+    },
+    "code_proposals": [
+      "silent-proposal-08eaa60bcc449852",
+      "silent-proposal-92920295a648b540",
+      "silent-proposal-a327449c331efbc1",
+      "silent-proposal-a099e89437e942bb",
+      "silent-proposal-47910f82a1fdd98f",
+      "silent-proposal-f1374df72d8e6a25",
+      "silent-proposal-38a49e6c97f31eea",
+      "silent-proposal-ef0e38a5dbd3bc07",
+      "silent-proposal-7f820c02d39bfaea",
+      "silent-proposal-04b6b430759815ed"
+    ],
+    "implementation_domains": [],
+    "proposal_results": [
+      {
+        "id": "silent-proposal-08eaa60bcc449852",
+        "state": "waiting",
+        "reason": "缺F15未饮用及同入口、同后继把药留到Boss的完整成对结果；七次请求和两次回复端点不能校准持药价，三条pending仍只按后继状态另核。"
+      },
+      {
+        "id": "silent-proposal-92920295a648b540",
+        "state": "waiting",
+        "reason": "缺保持抽序、生成牌和药栏一致的两战完整替线；本局首胜后开场死亡，现有连战开场子实现不能证明SL资源比较已校准。"
+      },
+      {
+        "id": "silent-proposal-a327449c331efbc1",
+        "state": "waiting",
+        "reason": "缺攻防与沙坑两边界的完整受控后继、跨重规划候选执行归属及独立胜局；9血换15伤和4血换一沙坑轮均不足确定新SL阈值。"
+      },
+      {
+        "id": "silent-proposal-a099e89437e942bb",
+        "state": "waiting",
+        "reason": "容量与确定生成已有live窄实现；仍缺计划妥当保留容量、穿插出刀、跨重问整候选派发和SL恢复的联合校准，42饮不能关闭整项。"
+      },
+      {
+        "id": "silent-proposal-47910f82a1fdd98f",
+        "state": "waiting",
+        "reason": "四血开场已有live子实现；仍缺留药、路线和SL完整后继对照，以及未知回血/复活组合的内部结算顺序，不能关闭联合要求。"
+      },
+      {
+        "id": "silent-proposal-f1374df72d8e6a25",
+        "state": "waiting",
+        "reason": "缺隔离机制误差后的同入口、同预算未用/早用/留药成对整战和下一战后继；两条失败资源链及未执行早喝候选不能拟合新权重。"
+      },
+      {
+        "id": "silent-proposal-38a49e6c97f31eea",
+        "state": "waiting",
+        "reason": "普通紧勒已有live窄实现；仍缺弃磨蚀、增益分源、再生、自动触发和SL恢复的联合消费者校准及受控整战后继。"
+      },
+      {
+        "id": "silent-proposal-ef0e38a5dbd3bc07",
+        "state": "waiting",
+        "reason": "缺另一营火、事件、路线和用药时机的受控完整结果；两条实际资源链只验证兑现，不能据此拟合路线或终局权重。"
+      },
+      {
+        "id": "silent-proposal-7f820c02d39bfaea",
+        "state": "waiting",
+        "reason": "缺同预算饱和排序校准、跨弃牌完整候选执行归属及成对完整后继；同局六次失败和1/7血价差不足确定新SL阈值。"
+      },
+      {
+        "id": "silent-proposal-04b6b430759815ed",
+        "state": "waiting",
+        "reason": "蟹朝向已有live窄实现；仍缺油灯首次消费身份跨动作/新战/SL恢复的联合输入，以及未覆盖X值、升级组合和能力整战后继。"
+      }
+    ],
+    "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-050119-s2/learner/runs/20261016-050122-b4e62fbe-5d5d-474a-8add-2e1dccb65cf4-strategy-proposal/report.md"
+  },
+  "original_scratch_result": {
+    "task": "strategy-proposal",
+    "character": "silent",
+    "batch": "20261016-050119-s2-strategy-proposal",
+    "base": "b09c827062ca0f061571c181f324828016d17a10",
+    "runs": [
+      "KEN58SH9SLZ6",
+      "TXZ6RVMQA09D",
+      "WQZVENQ7DTRP",
+      "02HB4L0C3C67",
+      "4D4J8USKCPAV",
+      "F4QKG4J1AJJZ",
+      "JLN5SK17W4FQ",
+      "LS8035TB32P3",
+      "NB8KCF6HRGVF",
+      "S9UZAK0JP0C0"
+    ],
+    "fixes": [],
+    "skipped": [],
+    "merged": null,
+    "tests": {
+      "tsc": null,
+      "vitest": null,
+      "cases": null
+    },
+    "code_proposals": [
+      "silent-proposal-08eaa60bcc449852",
+      "silent-proposal-92920295a648b540",
+      "silent-proposal-a327449c331efbc1",
+      "silent-proposal-a099e89437e942bb",
+      "silent-proposal-47910f82a1fdd98f",
+      "silent-proposal-f1374df72d8e6a25",
+      "silent-proposal-38a49e6c97f31eea",
+      "silent-proposal-ef0e38a5dbd3bc07",
+      "silent-proposal-7f820c02d39bfaea",
+      "silent-proposal-04b6b430759815ed"
+    ],
+    "implementation_domains": [],
+    "proposal_results": [
+      {
+        "id": "silent-proposal-08eaa60bcc449852",
+        "state": "waiting",
+        "reason": "缺F15未饮用及同入口、同后继把药留到Boss的完整成对结果；七次请求和两次回复端点不能校准持药价，三条pending仍只按后继状态另核。"
+      },
+      {
+        "id": "silent-proposal-92920295a648b540",
+        "state": "waiting",
+        "reason": "缺保持抽序、生成牌和药栏一致的两战完整替线；本局首胜后开场死亡，现有连战开场子实现不能证明SL资源比较已校准。"
+      },
+      {
+        "id": "silent-proposal-a327449c331efbc1",
+        "state": "waiting",
+        "reason": "缺攻防与沙坑两边界的完整受控后继、跨重规划候选执行归属及独立胜局；9血换15伤和4血换一沙坑轮均不足确定新SL阈值。"
+      },
+      {
+        "id": "silent-proposal-a099e89437e942bb",
+        "state": "waiting",
+        "reason": "容量与确定生成已有live窄实现；仍缺计划妥当保留容量、穿插出刀、跨重问整候选派发和SL恢复的联合校准，42饮不能关闭整项。"
+      },
+      {
+        "id": "silent-proposal-47910f82a1fdd98f",
+        "state": "waiting",
+        "reason": "四血开场已有live子实现；仍缺留药、路线和SL完整后继对照，以及未知回血/复活组合的内部结算顺序，不能关闭联合要求。"
+      },
+      {
+        "id": "silent-proposal-f1374df72d8e6a25",
+        "state": "waiting",
+        "reason": "缺隔离机制误差后的同入口、同预算未用/早用/留药成对整战和下一战后继；两条失败资源链及未执行早喝候选不能拟合新权重。"
+      },
+      {
+        "id": "silent-proposal-38a49e6c97f31eea",
+        "state": "waiting",
+        "reason": "普通紧勒已有live窄实现；仍缺弃磨蚀、增益分源、再生、自动触发和SL恢复的联合消费者校准及受控整战后继。"
+      },
+      {
+        "id": "silent-proposal-ef0e38a5dbd3bc07",
+        "state": "waiting",
+        "reason": "缺另一营火、事件、路线和用药时机的受控完整结果；两条实际资源链只验证兑现，不能据此拟合路线或终局权重。"
+      },
+      {
+        "id": "silent-proposal-7f820c02d39bfaea",
+        "state": "waiting",
+        "reason": "缺同预算饱和排序校准、跨弃牌完整候选执行归属及成对完整后继；同局六次失败和1/7血价差不足确定新SL阈值。"
+      },
+      {
+        "id": "silent-proposal-04b6b430759815ed",
+        "state": "waiting",
+        "reason": "蟹朝向已有live窄实现；仍缺油灯首次消费身份跨动作/新战/SL恢复的联合输入，以及未覆盖X值、升级组合和能力整战后继。"
+      }
+    ],
+    "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-050119-s2/learner/runs/20261016-050122-b4e62fbe-5d5d-474a-8add-2e1dccb65cf4-strategy-proposal/report.md"
+  },
+  "original_gate": {
+    "base": "b09c827062ca0f061571c181f324828016d17a10",
+    "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-050119-s2/learner/runs/20261016-050122-b4e62fbe-5d5d-474a-8add-2e1dccb65cf4-strategy-proposal/report.md",
+    "dispositions": [
+      {
+        "id": "silent-proposal-08eaa60bcc449852",
+        "state": "waiting",
+        "reason": "缺F15未饮用及同入口、同后继把药留到Boss的完整成对结果；七次请求和两次回复端点不能校准持药价，三条pending仍只按后继状态另核。"
+      },
+      {
+        "id": "silent-proposal-92920295a648b540",
+        "state": "waiting",
+        "reason": "缺保持抽序、生成牌和药栏一致的两战完整替线；本局首胜后开场死亡，现有连战开场子实现不能证明SL资源比较已校准。"
+      },
+      {
+        "id": "silent-proposal-a327449c331efbc1",
+        "state": "waiting",
+        "reason": "缺攻防与沙坑两边界的完整受控后继、跨重规划候选执行归属及独立胜局；9血换15伤和4血换一沙坑轮均不足确定新SL阈值。"
+      },
+      {
+        "id": "silent-proposal-a099e89437e942bb",
+        "state": "waiting",
+        "reason": "容量与确定生成已有live窄实现；仍缺计划妥当保留容量、穿插出刀、跨重问整候选派发和SL恢复的联合校准，42饮不能关闭整项。"
+      },
+      {
+        "id": "silent-proposal-47910f82a1fdd98f",
+        "state": "waiting",
+        "reason": "四血开场已有live子实现；仍缺留药、路线和SL完整后继对照，以及未知回血/复活组合的内部结算顺序，不能关闭联合要求。"
+      },
+      {
+        "id": "silent-proposal-f1374df72d8e6a25",
+        "state": "waiting",
+        "reason": "缺隔离机制误差后的同入口、同预算未用/早用/留药成对整战和下一战后继；两条失败资源链及未执行早喝候选不能拟合新权重。"
+      },
+      {
+        "id": "silent-proposal-38a49e6c97f31eea",
+        "state": "waiting",
+        "reason": "普通紧勒已有live窄实现；仍缺弃磨蚀、增益分源、再生、自动触发和SL恢复的联合消费者校准及受控整战后继。"
+      },
+      {
+        "id": "silent-proposal-ef0e38a5dbd3bc07",
+        "state": "waiting",
+        "reason": "缺另一营火、事件、路线和用药时机的受控完整结果；两条实际资源链只验证兑现，不能据此拟合路线或终局权重。"
+      },
+      {
+        "id": "silent-proposal-7f820c02d39bfaea",
+        "state": "waiting",
+        "reason": "缺同预算饱和排序校准、跨弃牌完整候选执行归属及成对完整后继；同局六次失败和1/7血价差不足确定新SL阈值。"
+      },
+      {
+        "id": "silent-proposal-04b6b430759815ed",
+        "state": "waiting",
+        "reason": "蟹朝向已有live窄实现；仍缺油灯首次消费身份跨动作/新战/SL恢复的联合输入，以及未覆盖X值、升级组合和能力整战后继。"
+      }
+    ]
+  },
+  "native": {
+    "batch": "20261016-050119-s2-strategy-proposal",
+    "thread": "01a1415e-b0f1-7261-b559-3af40e54ba34",
+    "cwd": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-050119-s2",
+    "event_log": "learner/runs/20261016-050122-b4e62fbe-5d5d-474a-8add-2e1dccb65cf4-strategy-proposal.jsonl",
+    "registered_launch_batch": "20261016-050119-s2-strategy-proposal",
+    "original_lease": "a11cc50af4fc1551e943486070e44a39a90eecc89307523b8481c198c2e06df6",
+    "native_context": {
+      "source": "ops/codex-ops/accounts/codex1/learner/sessions/2026/10/16/rollout-2026-10-16T05-01-27-01a1415e-b0f1-7261-b559-3af40e54ba34.jsonl",
+      "offset": 50286,
+      "bytes": 5166,
+      "sha256": "df399ed13236b79fe94984de79b3fe13e975618079fc06db6c8af0ca27b5cd1c",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "sandbox": {
+        "type": "workspace-write",
+        "writable_roots": [
+          "/home/dw/Projects/agent-sts2",
+          "/home/dw/Projects/agent-sts2/.git",
+          "/home/dw/Projects/agent-sts2/.git/worktrees/codex-strategy-silent-20261016-050119-s2"
+        ],
+        "network_access": false,
+        "exclude_tmpdir_env_var": false,
+        "exclude_slash_tmp": false
+      },
+      "approval_policy": "never"
+    },
+    "native_user_input": {
+      "offset": 55452,
+      "bytes": 21571,
+      "sha256": "6bb5868d5ebc2d96758344ea1d98dd6168d77fb3547afc6d89643f189eb2dd11",
+      "input_sha256": "1e464a3bceae885e1aa16c0f21870e6c6dadabbf517bbdece57bd234a77baf88"
+    },
+    "original_header_events": [
+      {
+        "offset": 0,
+        "bytes": 23653,
+        "sha256": "c433f56405ae988a49756c7d2e3b2ca87c0cdf87c780940b3398b99e5484cc09",
+        "type": "learner_launch",
+        "attempt": null,
+        "code": null
+      },
+      {
+        "offset": 23653,
+        "bytes": 380,
+        "sha256": "019d847587f4af1b87d4d0d22ee5b3c96503dce8044a73e0498d8d8f0afb6392",
+        "type": "learner_startup_attempt",
+        "attempt": 1,
+        "code": null
+      },
+      {
+        "offset": 27040,
+        "bytes": 77,
+        "sha256": "ae2d84aec57a92ab202005bba4b4aab0e18d9fe6d475f139afe654a7e9a85e35",
+        "type": "thread.started",
+        "attempt": null,
+        "code": null
+      }
+    ],
+    "startup_attempts": 1,
+    "failed_startups_preserved": 0,
+    "no_model_or_manual_restart": true
+  },
+  "original_completion": {
+    "base": "b09c827062ca0f061571c181f324828016d17a10",
+    "git_status_clean": true,
+    "fixes": [],
+    "merged": null,
+    "tests": {
+      "tsc": null,
+      "vitest": null,
+      "cases": null
+    },
+    "assigned_proposals": 10,
+    "waiting": 10,
+    "evidence_rows": 19929,
+    "material_assertions": 124,
+    "ledger_cli_updates": 31,
+    "ledger_prefix_unchanged": true,
+    "root_records_only_via_cli": true
+  },
+  "original_proposals": [
+    {
+      "op": "add",
+      "id": "silent-proposal-08eaa60bcc449852",
+      "ts": "2026-10-16T03:43:39+08:00",
+      "character": "silent",
+      "ledger": [
+        "silent-0019",
+        "silent-0020"
+      ],
+      "runs": [
+        "KEN58SH9SLZ6"
+      ],
+      "source_task": "experience-update",
+      "target_task": "strategy-proposal",
+      "domains": [
+        "potion"
+      ],
+      "summary": "核赢战耗药与真实回复到boss入口的资源结转；缺未饮用/留药整战对照保留现价值规则",
+      "proposal": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261007-214301-experience-update/proposal-resources.md",
+      "experience": [
+        "silent-route-hp-observation",
+        "silent-rest-buffer-observation"
+      ],
+      "rule_changes": true,
+      "authorization": "Roy-2026-10-07-learning",
+      "proposal_sha256": "4d080ad9b9f1c93bff7bf169d59add7d863db358ca7e05ba10d95cdfb6b31016",
+      "state": "waiting",
+      "reason": "缺F15未饮用及同入口、同后继留药至Boss的完整成对结果；七次实际饮药与两次回复端点不足校准持药价。",
+      "commit": null,
+      "seen_runs": 313,
+      "batch": "code-proposals:silent-proposal-08eaa60bcc449852,silent-proposal-92920295a648b540,silent-proposal-a327449c331efbc1,silent-proposal-a099e89437e942bb,silent-proposal-47910f82a1fdd98f,silent-proposal-f1374df72d8e6a25,silent-proposal-38a49e6c97f31eea,silent-proposal-ef0e38a5dbd3bc07,silent-proposal-7f820c02d39bfaea,silent-proposal-04b6b430759815ed:313"
+    },
+    {
+      "op": "add",
+      "id": "silent-proposal-92920295a648b540",
+      "ts": "2026-10-16T03:43:39+08:00",
+      "character": "silent",
+      "ledger": [
+        "silent-0228",
+        "silent-0255"
+      ],
+      "runs": [
+        "TXZ6RVMQA09D"
+      ],
+      "source_task": "postmortem",
+      "target_task": "strategy-proposal",
+      "domains": [
+        "combat",
+        "sl",
+        "terminal"
+      ],
+      "summary": "固定核对SL T6少损3也少伤9、首战赢后4血与F49开场死；三尝试按同局资源链验收，禁止将首胜/低可信0%当连战改善或SL依据，缺通关对照时保留原规则并等待新局。",
+      "proposal": "/home/dw/Projects/agent-sts2/learner/runs/20261007-214301-postmortem/proposal-sl-continuation-validation.md",
+      "rule_changes": false,
+      "authorization": "Roy-2026-10-07-learning",
+      "proposal_sha256": "f9d04951c404f2d568d492c633e8baeb7ca5b4bee6826e20e9d5c2348c739bbf",
+      "state": "waiting",
+      "reason": "缺保持抽序、生成和药栏一致的两战完整替线；开场扣血与连续Boss源码不覆盖SL资源比较和连续通关校准。",
+      "commit": null,
+      "seen_runs": 313,
+      "batch": "code-proposals:silent-proposal-08eaa60bcc449852,silent-proposal-92920295a648b540,silent-proposal-a327449c331efbc1,silent-proposal-a099e89437e942bb,silent-proposal-47910f82a1fdd98f,silent-proposal-f1374df72d8e6a25,silent-proposal-38a49e6c97f31eea,silent-proposal-ef0e38a5dbd3bc07,silent-proposal-7f820c02d39bfaea,silent-proposal-04b6b430759815ed:313"
+    },
+    {
+      "op": "add",
+      "id": "silent-proposal-a327449c331efbc1",
+      "ts": "2026-10-16T03:43:39+08:00",
+      "character": "silent",
+      "ledger": [
+        "silent-0079",
+        "silent-0018"
+      ],
+      "runs": [
+        "WQZVENQ7DTRP"
+      ],
+      "source_task": "postmortem",
+      "target_task": "strategy-proposal",
+      "domains": [
+        "combat",
+        "sl"
+      ],
+      "summary": "复验沙虫全败探索同盘面9血换15伤与4血换沙坑一轮，保留血价、毒、沙坑两边界比较；缺独立胜局及完整反事实，不拟固定阈值，不放宽必死SL，行为证据不足部分保留waiting。",
+      "proposal": "/home/dw/Projects/agent-sts2/learner/runs/20261007-221303-postmortem/sl-tradeoff-proposal.md",
+      "rule_changes": true,
+      "authorization": "Roy-2026-10-07-learning",
+      "proposal_sha256": "e52c156a500b9e5f9d35e7b7e6922a91ee893b16576bc7d11f14e179c2e6a925",
+      "state": "waiting",
+      "reason": "缺攻防与沙坑双边界的完整受控后继、跨重规划候选执行绑定及独立胜局；当前端点不能确定新SL血价门槛。",
+      "commit": null,
+      "seen_runs": 313,
+      "batch": "code-proposals:silent-proposal-08eaa60bcc449852,silent-proposal-92920295a648b540,silent-proposal-a327449c331efbc1,silent-proposal-a099e89437e942bb,silent-proposal-47910f82a1fdd98f,silent-proposal-f1374df72d8e6a25,silent-proposal-38a49e6c97f31eea,silent-proposal-ef0e38a5dbd3bc07,silent-proposal-7f820c02d39bfaea,silent-proposal-04b6b430759815ed:313"
+    },
+    {
+      "op": "add",
+      "id": "silent-proposal-a099e89437e942bb",
+      "ts": "2026-10-16T03:43:39+08:00",
+      "character": "silent",
+      "ledger": [
+        "silent-0030",
+        "silent-0257",
+        "silent-0258"
+      ],
+      "runs": [
+        "02HB4L0C3C67",
+        "4D4J8USKCPAV",
+        "F4QKG4J1AJJZ",
+        "JLN5SK17W4FQ",
+        "LS8035TB32P3",
+        "NB8KCF6HRGVF",
+        "S9UZAK0JP0C0",
+        "SADL3CGYTGSR",
+        "WQZVENQ7DTRP"
+      ],
+      "source_task": "experience-update",
+      "target_task": "strategy-proposal",
+      "domains": [
+        "combat",
+        "potion"
+      ],
+      "summary": "狡诈药水确定生成与剩余手位、计划妥当保留容量及出刀穿插完整序列核验",
+      "proposal": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261007-223544-experience-update/proposal-cunning-capacity.md",
+      "experience": [
+        "silent-cunning-potion-shiv-capacity",
+        "silent-well-laid-plans-retention"
+      ],
+      "rule_changes": true,
+      "authorization": "Roy-2026-10-07-learning",
+      "proposal_sha256": "e02b6c6c93defbea23d60a515bf17be3c1c6ac3d3b47dd0e6da647cea92910c2",
+      "state": "waiting",
+      "reason": "确定生成与容量已有live窄实现；仍缺计划妥当保留、穿插出刀、整候选实际派发和SL恢复的联合校准，不能关闭整项。",
+      "commit": null,
+      "seen_runs": 313,
+      "batch": "code-proposals:silent-proposal-08eaa60bcc449852,silent-proposal-92920295a648b540,silent-proposal-a327449c331efbc1,silent-proposal-a099e89437e942bb,silent-proposal-47910f82a1fdd98f,silent-proposal-f1374df72d8e6a25,silent-proposal-38a49e6c97f31eea,silent-proposal-ef0e38a5dbd3bc07,silent-proposal-7f820c02d39bfaea,silent-proposal-04b6b430759815ed:313"
+    },
+    {
+      "op": "add",
+      "id": "silent-proposal-47910f82a1fdd98f",
+      "ts": "2026-10-16T03:43:39+08:00",
+      "character": "silent",
+      "ledger": [
+        "silent-0018",
+        "silent-0019",
+        "silent-0020",
+        "silent-0021",
+        "silent-0025",
+        "silent-0079",
+        "silent-0198",
+        "silent-0228",
+        "silent-0255"
+      ],
+      "runs": [
+        "TXZ6RVMQA09D",
+        "WQZVENQ7DTRP"
+      ],
+      "source_task": "experience-update",
+      "target_task": "strategy-proposal",
+      "domains": [
+        "combat",
+        "potion",
+        "sl",
+        "terminal"
+      ],
+      "summary": "无小血瓶王室猛毒开场4血续战入口、SL同盘攻防/沙坑代价与真实资源结转",
+      "proposal": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261007-223544-experience-update/proposal-continuation-sl.md",
+      "experience": [
+        "silent-royal-poison-blood-vial-opening-net",
+        "silent-aeonglass-artifact-growth-sl",
+        "silent-insatiable-dual-clock",
+        "silent-deck-burst-observation",
+        "silent-route-hp-observation",
+        "silent-rest-buffer-observation"
+      ],
+      "rule_changes": true,
+      "authorization": "Roy-2026-10-07-learning",
+      "proposal_sha256": "d4ff2c80c60bdac273fbce918109b0a4634484006ec7e3b6b4516b9afede51bd",
+      "state": "waiting",
+      "reason": "开场4血窄分支已有live实现；缺留药、路线和SL完整后继对照，以及未知回血/复活组合结算顺序，不能据子项关闭联合要求。",
+      "commit": null,
+      "seen_runs": 313,
+      "batch": "code-proposals:silent-proposal-08eaa60bcc449852,silent-proposal-92920295a648b540,silent-proposal-a327449c331efbc1,silent-proposal-a099e89437e942bb,silent-proposal-47910f82a1fdd98f,silent-proposal-f1374df72d8e6a25,silent-proposal-38a49e6c97f31eea,silent-proposal-ef0e38a5dbd3bc07,silent-proposal-7f820c02d39bfaea,silent-proposal-04b6b430759815ed:313"
+    },
+    {
+      "op": "add",
+      "id": "silent-proposal-f1374df72d8e6a25",
+      "ts": "2026-10-16T03:43:39+08:00",
+      "character": "silent",
+      "ledger": [
+        "silent-0019",
+        "silent-0020",
+        "silent-0050",
+        "silent-0253"
+      ],
+      "runs": [
+        "1913SE84AXQF",
+        "Q6M2Y34MWKRE"
+      ],
+      "source_task": "postmortem",
+      "target_task": "strategy-proposal",
+      "domains": [
+        "combat",
+        "potion",
+        "terminal"
+      ],
+      "summary": "将胜战退出HP与药栏接入下一战评估，核对低置信选线和持续/临时药价；证据不足先保留阈值",
+      "proposal": "/home/dw/Projects/agent-sts2/learner/runs/20261007-224302-postmortem/proposal-resource-value.md",
+      "rule_changes": true,
+      "authorization": "Roy-2026-10-07-learning",
+      "proposal_sha256": "df1e14ed2c6b4b31c1dcbd1bd373702cff34a58332d4aab60f7e31dc44b395a0",
+      "state": "waiting",
+      "reason": "缺隔离机制误差后的同入口、同预算未用/早用/留药成对整战和下一战后继，不能由两条失败链校准资源权重。",
+      "commit": null,
+      "seen_runs": 313,
+      "batch": "code-proposals:silent-proposal-08eaa60bcc449852,silent-proposal-92920295a648b540,silent-proposal-a327449c331efbc1,silent-proposal-a099e89437e942bb,silent-proposal-47910f82a1fdd98f,silent-proposal-f1374df72d8e6a25,silent-proposal-38a49e6c97f31eea,silent-proposal-ef0e38a5dbd3bc07,silent-proposal-7f820c02d39bfaea,silent-proposal-04b6b430759815ed:313"
+    },
+    {
+      "op": "add",
+      "id": "silent-proposal-38a49e6c97f31eea",
+      "ts": "2026-10-16T03:43:39+08:00",
+      "character": "silent",
+      "ledger": [
+        "silent-0006",
+        "silent-0011",
+        "silent-0025",
+        "silent-0044",
+        "silent-0050",
+        "silent-0064",
+        "silent-0133",
+        "silent-0253",
+        "silent-0259",
+        "silent-0261",
+        "silent-0262"
+      ],
+      "runs": [
+        "1913SE84AXQF",
+        "Q6M2Y34MWKRE"
+      ],
+      "source_task": "experience-update",
+      "target_task": "strategy-proposal",
+      "domains": [
+        "combat",
+        "potion",
+        "sl"
+      ],
+      "summary": "第83批静默经验：紧勒逐牌失血与增益分源固定帧闭环",
+      "proposal": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261007-234302-experience-update/proposal-mechanisms.md",
+      "experience": [
+        "silent-strength-weak-observation",
+        "silent-noxious-fumes-growth",
+        "silent-abrasive-thorns-dexterity",
+        "silent-ceremonial-beast-threshold-growth-sl",
+        "silent-decimillipede-reattach-poison",
+        "silent-terror-eel-vigor-vulnerable",
+        "silent-speed-potion-temporary-dexterity",
+        "silent-construct-artifact-growth",
+        "silent-regen-potion-decay-heal",
+        "silent-strangle-following-card-hp-loss"
+      ],
+      "rule_changes": true,
+      "authorization": "Roy-2026-10-07-learning",
+      "proposal_sha256": "6a07471e9049744900d49529a939a7014fb686810a0d7983e6c35eb65b5e8cb0",
+      "state": "waiting",
+      "reason": "普通紧勒已有live窄实现；缺弃磨蚀、增益分源、再生、自动触发和SL恢复的联合消费者校准及受控整战后继。",
+      "commit": null,
+      "seen_runs": 313,
+      "batch": "code-proposals:silent-proposal-08eaa60bcc449852,silent-proposal-92920295a648b540,silent-proposal-a327449c331efbc1,silent-proposal-a099e89437e942bb,silent-proposal-47910f82a1fdd98f,silent-proposal-f1374df72d8e6a25,silent-proposal-38a49e6c97f31eea,silent-proposal-ef0e38a5dbd3bc07,silent-proposal-7f820c02d39bfaea,silent-proposal-04b6b430759815ed:313"
+    },
+    {
+      "op": "add",
+      "id": "silent-proposal-ef0e38a5dbd3bc07",
+      "ts": "2026-10-16T03:43:39+08:00",
+      "character": "silent",
+      "ledger": [
+        "silent-0019",
+        "silent-0020",
+        "silent-0021"
+      ],
+      "runs": [
+        "1913SE84AXQF",
+        "Q6M2Y34MWKRE"
+      ],
+      "source_task": "experience-update",
+      "target_task": "strategy-proposal",
+      "domains": [
+        "combat",
+        "potion",
+        "terminal"
+      ],
+      "summary": "第83批静默经验：精英胜后连续血价与实际回复/能力资源链核验",
+      "proposal": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261007-234302-experience-update/proposal-resources.md",
+      "experience": [
+        "silent-route-hp-observation",
+        "silent-rest-buffer-observation",
+        "silent-deck-burst-observation"
+      ],
+      "rule_changes": true,
+      "authorization": "Roy-2026-10-07-learning",
+      "proposal_sha256": "d37416e85fd4f9331fc5f652f5838eae9b528a76fe45b9c10aac07acfd572da5",
+      "state": "waiting",
+      "reason": "缺另一营火、事件、路线和用药时机的受控完整结果；实际两条资源链只能复核兑现，不能拟合路线或终局权重。",
+      "commit": null,
+      "seen_runs": 313,
+      "batch": "code-proposals:silent-proposal-08eaa60bcc449852,silent-proposal-92920295a648b540,silent-proposal-a327449c331efbc1,silent-proposal-a099e89437e942bb,silent-proposal-47910f82a1fdd98f,silent-proposal-f1374df72d8e6a25,silent-proposal-38a49e6c97f31eea,silent-proposal-ef0e38a5dbd3bc07,silent-proposal-7f820c02d39bfaea,silent-proposal-04b6b430759815ed:313"
+    },
+    {
+      "op": "add",
+      "id": "silent-proposal-7f820c02d39bfaea",
+      "ts": "2026-10-16T03:43:39+08:00",
+      "character": "silent",
+      "source_task": "postmortem",
+      "target_task": "strategy-proposal",
+      "domains": [
+        "combat",
+        "sl"
+      ],
+      "summary": "死亡统计饱和的SL替换须显式比较即时血价与击杀、存活推进，门槛等待固定验证",
+      "ledger": [
+        "silent-0079"
+      ],
+      "runs": [
+        "NHA2KW0RB7VP"
+      ],
+      "proposal": "/home/dw/Projects/agent-sts2/learner/runs/20261007-234302-postmortem/proposal-saturated-sl.md",
+      "rule_changes": true,
+      "authorization": "Roy-2026-10-07-learning",
+      "proposal_sha256": "bee54fe85711a177349f927c21f184b7112308ead5c74708b8f3b0b183ecf105",
+      "state": "waiting",
+      "reason": "缺同预算饱和排序校准、跨弃牌完整候选执行归属及成对完整后继；六次同局失败不足确定新SL阈值。",
+      "commit": null,
+      "seen_runs": 313,
+      "batch": "code-proposals:silent-proposal-08eaa60bcc449852,silent-proposal-92920295a648b540,silent-proposal-a327449c331efbc1,silent-proposal-a099e89437e942bb,silent-proposal-47910f82a1fdd98f,silent-proposal-f1374df72d8e6a25,silent-proposal-38a49e6c97f31eea,silent-proposal-ef0e38a5dbd3bc07,silent-proposal-7f820c02d39bfaea,silent-proposal-04b6b430759815ed:313"
+    },
+    {
+      "op": "add",
+      "id": "silent-proposal-04b6b430759815ed",
+      "ts": "2026-10-16T03:43:39+08:00",
+      "character": "silent",
+      "ledger": [
+        "silent-0005",
+        "silent-0006",
+        "silent-0021",
+        "silent-0011",
+        "silent-0065",
+        "silent-0264",
+        "silent-0079",
+        "silent-0133",
+        "silent-0169",
+        "silent-0189",
+        "silent-0013",
+        "silent-0053",
+        "silent-0162",
+        "silent-0265"
+      ],
+      "runs": [
+        "NHA2KW0RB7VP",
+        "K3676LU8B0UH",
+        "SADL3CGYTGSR"
+      ],
+      "source_task": "experience-update",
+      "target_task": "strategy-proposal",
+      "domains": [
+        "combat",
+        "terminal"
+      ],
+      "summary": "按静默实帧核油灯首次放大、当前手数/脆弱/能量、蟹朝向取整及能力兑现；只修已观察子公式和估值窗口",
+      "proposal": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-004303-experience-update/proposal-mechanisms.md",
+      "experience": [
+        "silent-footwork-block",
+        "silent-strength-weak-observation",
+        "silent-deck-burst-observation",
+        "silent-noxious-fumes-growth",
+        "silent-kaiser-crab-facing-sl",
+        "silent-ceremonial-beast-threshold-growth-sl",
+        "silent-precise-cut-hand-count-observation",
+        "silent-paels-flesh-third-turn-energy",
+        "silent-frail-card-block",
+        "silent-malaise-x-debuff",
+        "silent-mr-struggles-turn-start-damage",
+        "silent-unsettling-lamp-first-debuff"
+      ],
+      "rule_changes": true,
+      "authorization": "Roy-2026-10-07-learning",
+      "proposal_sha256": "188d4daee0970bba6b59aa7c3498d9da76ef31aac4a42c69be2a86192cadab58",
+      "state": "waiting",
+      "reason": "蟹朝向窄分支已有live实现；缺油灯首次消费身份跨动作/新战/SL恢复联合输入，以及未覆盖X值、升级组合和能力整战后继。",
+      "commit": null,
+      "seen_runs": 313,
+      "batch": "code-proposals:silent-proposal-08eaa60bcc449852,silent-proposal-92920295a648b540,silent-proposal-a327449c331efbc1,silent-proposal-a099e89437e942bb,silent-proposal-47910f82a1fdd98f,silent-proposal-f1374df72d8e6a25,silent-proposal-38a49e6c97f31eea,silent-proposal-ef0e38a5dbd3bc07,silent-proposal-7f820c02d39bfaea,silent-proposal-04b6b430759815ed:313"
+    }
+  ],
+  "stream_counts": {
+    "states": 9815,
+    "decisions": 9448,
+    "sl-attempts": 78,
+    "run-config": 15,
+    "run-plans": 77,
+    "brain": 481,
+    "runs": 15,
+    "fight-plans": 0
+  },
+  "original_rows_verified": 19929,
+  "ascension_cohorts": {
+    "1": 1,
+    "7": 1,
+    "9": 1,
+    "10": 12
+  },
+  "material_assertions": 124,
+  "source": {
+    "live_head": "e716bd28fd8eca9e4d76d066680304fd11935e37",
+    "commits": {
+      "cunning": {
+        "commit": "6403fdcdadc803a092beb5165a068e22bf51c412",
+        "base_ancestor": true,
+        "live_ancestor": true,
+        "title": "Model observed Silent Cunning Potion generation and hand capacity"
+      },
+      "strangle": {
+        "commit": "5c7105ff0294466da8319f2934beda05c6040794",
+        "base_ancestor": true,
+        "live_ancestor": true,
+        "title": "Model observed ordinary Strangle losses for Silent"
+      },
+      "opening": {
+        "commit": "e8b4bb320ae3068db5ebb6ce8c6fa91a9689178a",
+        "base_ancestor": true,
+        "live_ancestor": true,
+        "title": "Model observed Silent opening HP loss in continuous fights"
+      },
+      "sl_resources": {
+        "commit": "5604982e13890e0e2bc8bf8246272e8267321c0b",
+        "base_ancestor": true,
+        "live_ancestor": true,
+        "title": "Log Silent A10 SL candidate resource comparisons"
+      },
+      "crusher": {
+        "commit": "68711002f15b298b8863d2258ee5da236da151d2",
+        "base_ancestor": true,
+        "live_ancestor": true,
+        "title": "Sync tested Silent Crusher facing rounding from live"
+      }
+    },
+    "leaves": [
+      {
+        "path": "agent/src/reflex/card-model.ts",
+        "base_sha256": "287115627e5bc3f93da8283620a9b255df880286d4e8e1408009d9f8c87a45c7",
+        "work_sha256": "287115627e5bc3f93da8283620a9b255df880286d4e8e1408009d9f8c87a45c7",
+        "live_tracked_sha256": "2baebe174f6c55b11323edc6fda53bfee6712202e92d791b4b5080e322ff911d",
+        "live_work_sha256": "2baebe174f6c55b11323edc6fda53bfee6712202e92d791b4b5080e322ff911d",
+        "work_equals_base": true,
+        "live_work_equals_base": false,
+        "live_work_equals_tracked": true
+      },
+      {
+        "path": "agent/src/reflex/turn-solver.ts",
+        "base_sha256": "51e277c71d41c99c7f35477e6c05fd5ec9ca65247e3969b45688c489393cf648",
+        "work_sha256": "51e277c71d41c99c7f35477e6c05fd5ec9ca65247e3969b45688c489393cf648",
+        "live_tracked_sha256": "51e277c71d41c99c7f35477e6c05fd5ec9ca65247e3969b45688c489393cf648",
+        "live_work_sha256": "51e277c71d41c99c7f35477e6c05fd5ec9ca65247e3969b45688c489393cf648",
+        "work_equals_base": true,
+        "live_work_equals_base": true,
+        "live_work_equals_tracked": true
+      },
+      {
+        "path": "agent/src/reflex/combat-plan.ts",
+        "base_sha256": "f7e359f54083a24073f4ba23c93d95ee302af407f9dc52fc80569ef7759ec1c3",
+        "work_sha256": "f7e359f54083a24073f4ba23c93d95ee302af407f9dc52fc80569ef7759ec1c3",
+        "live_tracked_sha256": "f7e359f54083a24073f4ba23c93d95ee302af407f9dc52fc80569ef7759ec1c3",
+        "live_work_sha256": "f7e359f54083a24073f4ba23c93d95ee302af407f9dc52fc80569ef7759ec1c3",
+        "work_equals_base": true,
+        "live_work_equals_base": true,
+        "live_work_equals_tracked": true
+      },
+      {
+        "path": "agent/src/reflex/silent-sl-resource-comparison.ts",
+        "base_sha256": "30da6d7d0c065957c118b211d53ac40360bcf93c05861be3dd811da78f8a8c21",
+        "work_sha256": "30da6d7d0c065957c118b211d53ac40360bcf93c05861be3dd811da78f8a8c21",
+        "live_tracked_sha256": "30da6d7d0c065957c118b211d53ac40360bcf93c05861be3dd811da78f8a8c21",
+        "live_work_sha256": "30da6d7d0c065957c118b211d53ac40360bcf93c05861be3dd811da78f8a8c21",
+        "work_equals_base": true,
+        "live_work_equals_base": true,
+        "live_work_equals_tracked": true
+      },
+      {
+        "path": "agent/src/reflex/silent-crusher-facing.ts",
+        "base_sha256": "78a90e120c688a8bae4ed80077ef12a862efa29b1d423160cca4cf72a13eed8e",
+        "work_sha256": "78a90e120c688a8bae4ed80077ef12a862efa29b1d423160cca4cf72a13eed8e",
+        "live_tracked_sha256": "78a90e120c688a8bae4ed80077ef12a862efa29b1d423160cca4cf72a13eed8e",
+        "live_work_sha256": "78a90e120c688a8bae4ed80077ef12a862efa29b1d423160cca4cf72a13eed8e",
+        "work_equals_base": true,
+        "live_work_equals_base": true,
+        "live_work_equals_tracked": true
+      },
+      {
+        "path": "agent/src/sim/silent-opening.ts",
+        "base_sha256": "f3baa27bfac07d9f60995e37b7bbe31f7fa5baa63f18dd4fda3bc8d2c09bf502",
+        "work_sha256": "f3baa27bfac07d9f60995e37b7bbe31f7fa5baa63f18dd4fda3bc8d2c09bf502",
+        "live_tracked_sha256": "f3baa27bfac07d9f60995e37b7bbe31f7fa5baa63f18dd4fda3bc8d2c09bf502",
+        "live_work_sha256": "f3baa27bfac07d9f60995e37b7bbe31f7fa5baa63f18dd4fda3bc8d2c09bf502",
+        "work_equals_base": true,
+        "live_work_equals_base": true,
+        "live_work_equals_tracked": true
+      },
+      {
+        "path": "agent/src/sim/boss-start.ts",
+        "base_sha256": "01ef66ce210a3d022f1e28e34188b7005c7a88aa2b020e6f242f4030a95aee02",
+        "work_sha256": "01ef66ce210a3d022f1e28e34188b7005c7a88aa2b020e6f242f4030a95aee02",
+        "live_tracked_sha256": "35bb060b332fd8d81b2d3c72e3765545368fdd140588d6915a4b83e9a908a226",
+        "live_work_sha256": "35bb060b332fd8d81b2d3c72e3765545368fdd140588d6915a4b83e9a908a226",
+        "work_equals_base": true,
+        "live_work_equals_base": false,
+        "live_work_equals_tracked": true
+      },
+      {
+        "path": "agent/src/sim/double-boss-start.ts",
+        "base_sha256": "3241dedb92ff1ff9803df3786f15e65e669e7371756cca8668fb8c57771e97eb",
+        "work_sha256": "3241dedb92ff1ff9803df3786f15e65e669e7371756cca8668fb8c57771e97eb",
+        "live_tracked_sha256": "3241dedb92ff1ff9803df3786f15e65e669e7371756cca8668fb8c57771e97eb",
+        "live_work_sha256": "3241dedb92ff1ff9803df3786f15e65e669e7371756cca8668fb8c57771e97eb",
+        "work_equals_base": true,
+        "live_work_equals_base": true,
+        "live_work_equals_tracked": true
+      },
+      {
+        "path": "agent/src/sl/explore.ts",
+        "base_sha256": "2f37e85cc1c1c31e96a0d1b90db850893ec75b6cf5b4b84bf07bbb8de4e3ec43",
+        "work_sha256": "2f37e85cc1c1c31e96a0d1b90db850893ec75b6cf5b4b84bf07bbb8de4e3ec43",
+        "live_tracked_sha256": "89875b8d7fa6470bf2fea69188c16125992f9736a6fa048123c26f7ae6c0d312",
+        "live_work_sha256": "89875b8d7fa6470bf2fea69188c16125992f9736a6fa048123c26f7ae6c0d312",
+        "work_equals_base": true,
+        "live_work_equals_base": false,
+        "live_work_equals_tracked": true
+      },
+      {
+        "path": "learner/resource_chain.py",
+        "base_sha256": "d79792aae54fc2664dbdcd87405b3c3d9a8585c7d41a6d5ef7436585d81a9299",
+        "work_sha256": "d79792aae54fc2664dbdcd87405b3c3d9a8585c7d41a6d5ef7436585d81a9299",
+        "live_tracked_sha256": "d79792aae54fc2664dbdcd87405b3c3d9a8585c7d41a6d5ef7436585d81a9299",
+        "live_work_sha256": "d79792aae54fc2664dbdcd87405b3c3d9a8585c7d41a6d5ef7436585d81a9299",
+        "work_equals_base": true,
+        "live_work_equals_base": true,
+        "live_work_equals_tracked": true
+      },
+      {
+        "path": "learner/audit-selection.ts",
+        "base_sha256": "f24ca05a02f19ecad35109c76e09405a5baca29e51df66c41e3ad77252ba25bb",
+        "work_sha256": "f24ca05a02f19ecad35109c76e09405a5baca29e51df66c41e3ad77252ba25bb",
+        "live_tracked_sha256": "f24ca05a02f19ecad35109c76e09405a5baca29e51df66c41e3ad77252ba25bb",
+        "live_work_sha256": "f24ca05a02f19ecad35109c76e09405a5baca29e51df66c41e3ad77252ba25bb",
+        "work_equals_base": true,
+        "live_work_equals_base": true,
+        "live_work_equals_tracked": true
+      },
+      {
+        "path": "learner/lib/selection-execution.ts",
+        "base_sha256": "4ef06b464b5e645aea8eec3be78ef7bb3d0030b38de590cc11d84f8e76d80c5a",
+        "work_sha256": "4ef06b464b5e645aea8eec3be78ef7bb3d0030b38de590cc11d84f8e76d80c5a",
+        "live_tracked_sha256": "4ef06b464b5e645aea8eec3be78ef7bb3d0030b38de590cc11d84f8e76d80c5a",
+        "live_work_sha256": "4ef06b464b5e645aea8eec3be78ef7bb3d0030b38de590cc11d84f8e76d80c5a",
+        "work_equals_base": true,
+        "live_work_equals_base": true,
+        "live_work_equals_tracked": true
+      },
+      {
+        "path": "learner/lib/selection-observation.ts",
+        "base_sha256": "458c52b56d5582078243207364f413e308c3f71717379edcfcc8a126ee1df259",
+        "work_sha256": "458c52b56d5582078243207364f413e308c3f71717379edcfcc8a126ee1df259",
+        "live_tracked_sha256": "458c52b56d5582078243207364f413e308c3f71717379edcfcc8a126ee1df259",
+        "live_work_sha256": "458c52b56d5582078243207364f413e308c3f71717379edcfcc8a126ee1df259",
+        "work_equals_base": true,
+        "live_work_equals_base": true,
+        "live_work_equals_tracked": true
+      },
+      {
+        "path": "learner/lib/selection-terminal.ts",
+        "base_sha256": "f559992c66f7fe490587b4f4306ddac0ce9ecffd2bc47b292923d51f1e9a6421",
+        "work_sha256": "f559992c66f7fe490587b4f4306ddac0ce9ecffd2bc47b292923d51f1e9a6421",
+        "live_tracked_sha256": "f559992c66f7fe490587b4f4306ddac0ce9ecffd2bc47b292923d51f1e9a6421",
+        "live_work_sha256": "f559992c66f7fe490587b4f4306ddac0ce9ecffd2bc47b292923d51f1e9a6421",
+        "work_equals_base": true,
+        "live_work_equals_base": true,
+        "live_work_equals_tracked": true
+      },
+      {
+        "path": "learner/lib/selection-turn.ts",
+        "base_sha256": "038f6ec416103ef5ce75136a7d8a09f40b1a1ac341356d7cfa9b5b6e4300b703",
+        "work_sha256": "038f6ec416103ef5ce75136a7d8a09f40b1a1ac341356d7cfa9b5b6e4300b703",
+        "live_tracked_sha256": "038f6ec416103ef5ce75136a7d8a09f40b1a1ac341356d7cfa9b5b6e4300b703",
+        "live_work_sha256": "038f6ec416103ef5ce75136a7d8a09f40b1a1ac341356d7cfa9b5b6e4300b703",
+        "work_equals_base": true,
+        "live_work_equals_base": true,
+        "live_work_equals_tracked": true
+      },
+      {
+        "path": "agent/src/reflex/continuation-value.ts",
+        "base_sha256": "002277b50728ab8fd405799c0a3345e5dcb788ba8f37d5489b5fbcd9623029bb",
+        "work_sha256": "002277b50728ab8fd405799c0a3345e5dcb788ba8f37d5489b5fbcd9623029bb",
+        "live_tracked_sha256": "002277b50728ab8fd405799c0a3345e5dcb788ba8f37d5489b5fbcd9623029bb",
+        "live_work_sha256": "002277b50728ab8fd405799c0a3345e5dcb788ba8f37d5489b5fbcd9623029bb",
+        "work_equals_base": true,
+        "live_work_equals_base": true,
+        "live_work_equals_tracked": true
+      },
+      {
+        "path": "agent/src/reflex/potion-cost.ts",
+        "base_sha256": "b0a952df65e6af5ddd99742b9894367dff086052ef810865e85fe73c0c06c0b2",
+        "work_sha256": "b0a952df65e6af5ddd99742b9894367dff086052ef810865e85fe73c0c06c0b2",
+        "live_tracked_sha256": "cc09b1012495d6ed582c2566d6a1096343a1820f22e0306ada2e75878d14e01e",
+        "live_work_sha256": "cc09b1012495d6ed582c2566d6a1096343a1820f22e0306ada2e75878d14e01e",
+        "work_equals_base": true,
+        "live_work_equals_base": false,
+        "live_work_equals_tracked": true
+      }
+    ]
+  },
+  "original_consumers": [
+    {
+      "run": "KEN58SH9SLZ6",
+      "rc": 0,
+      "files": {
+        "KEN58SH9SLZ6.audit-input.json": "37e5236993d56c6a866c34fccbaff2886514b07cfc301330cd3c051c0afb05b6",
+        "KEN58SH9SLZ6.audit.json": "b708733aad9688f8b00e0da4159a0416e3bf91556c40bf196046973f0d5f5d99",
+        "KEN58SH9SLZ6.audit.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "segments": 67,
+      "actions": 371,
+      "turns": 86,
+      "observed_turns": 70,
+      "observed_intervals": 331,
+      "terminal_intervals": 1,
+      "full_candidate_certified": 0
+    },
+    {
+      "run": "TXZ6RVMQA09D",
+      "rc": 0,
+      "files": {
+        "TXZ6RVMQA09D.audit-input.json": "f1cc4ddff2e59ee66dfe66a55895ee5c6b6a9ddeeaf7709984d2cb89f0ddb10c",
+        "TXZ6RVMQA09D.audit.json": "401f77f8495482f7744a471ab055df2bd5a9f842e9a2c758b26fc188b60f064d",
+        "TXZ6RVMQA09D.audit.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "segments": 45,
+      "actions": 124,
+      "turns": 28,
+      "observed_turns": 22,
+      "observed_intervals": 118,
+      "terminal_intervals": 0,
+      "full_candidate_certified": 0
+    },
+    {
+      "run": "WQZVENQ7DTRP",
+      "rc": 0,
+      "files": {
+        "WQZVENQ7DTRP.audit-input.json": "e0b74a932f2dd2dcf044ef8a4888ff91c4c8c1c96d95d19e36b4222caed8ef36",
+        "WQZVENQ7DTRP.audit.json": "a5dfc056bd45c4012303af0e724a0dac3353e0bb829f788028acfb3bde6d54f0",
+        "WQZVENQ7DTRP.audit.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "segments": 139,
+      "actions": 377,
+      "turns": 64,
+      "observed_turns": 53,
+      "observed_intervals": 370,
+      "terminal_intervals": 1,
+      "full_candidate_certified": 0
+    },
+    {
+      "run": "1913SE84AXQF",
+      "rc": 0,
+      "files": {
+        "1913SE84AXQF.audit-input.json": "73a73ed89ca60063dc15ab1d5bdc530deb2d7f7bd1eb3be7c45de4ac4e5d09b9",
+        "1913SE84AXQF.audit.json": "f565500a3460e97279cd1c0cd516b59fd9bd675694f8a81ac9f40b3cb43db1ea",
+        "1913SE84AXQF.audit.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "segments": 11,
+      "actions": 66,
+      "turns": 12,
+      "observed_turns": 6,
+      "observed_intervals": 31,
+      "terminal_intervals": 0,
+      "full_candidate_certified": 0
+    },
+    {
+      "run": "Q6M2Y34MWKRE",
+      "rc": 1,
+      "files": {
+        "Q6M2Y34MWKRE.audit-input.json": "b0044c4d9edbe164a264d98dea79a53a12d46e5ac551e3ef4db5acf2ecd04778",
+        "Q6M2Y34MWKRE.audit.json": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "Q6M2Y34MWKRE.audit.stderr.txt": "b9607b4b866696f0674beaee85232b68d3fed4f7732827d3b4467e74bd6a941d"
+      }
+    },
+    {
+      "run": "NHA2KW0RB7VP",
+      "rc": 0,
+      "files": {
+        "NHA2KW0RB7VP.audit-input.json": "81867c6c6608c1bd6e2c26ba2876949001602c55e20100aeaca0923412a2a5e0",
+        "NHA2KW0RB7VP.audit.json": "2a7cf60e978fa00ce142c8cf7f49efe55ac6bbf1fdf5e7165c5a62fdcfccc662",
+        "NHA2KW0RB7VP.audit.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "segments": 41,
+      "actions": 136,
+      "turns": 24,
+      "observed_turns": 13,
+      "observed_intervals": 129,
+      "terminal_intervals": 1,
+      "full_candidate_certified": 0
+    }
+  ],
+  "original_filtered_retry": {
+    "run": "Q6M2Y34MWKRE",
+    "rc": 0,
+    "excluded_metadata": [
+      {
+        "line": 276607,
+        "label": "map/route-change",
+        "reason": "无decision_id、chosen动作，非战斗动作；原件保留，跨行缺口不连接"
+      }
+    ],
+    "files": {
+      "Q6M2Y34MWKRE.action-input.json": "2d27caaea8239af4d00f73d9ff48a2688232f9764852534215cfa97ef91257d9",
+      "Q6M2Y34MWKRE.action-audit.json": "b3519e9870cffee63e3814ab62eb5aedfba0fe99124b2fe56879bfffa6c61be5",
+      "Q6M2Y34MWKRE.action-audit.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "segments": 13,
+    "actions": 72,
+    "turns": 14,
+    "observed_turns": 0,
+    "observed_intervals": 0,
+    "terminal_intervals": 0,
+    "full_candidate_certified": 0
+  },
+  "consumer_counts": {
+    "segments": 316,
+    "actions": 1146,
+    "turns": 228,
+    "observed_turns": 164,
+    "unknown_turns": 64,
+    "observed_intervals": 979,
+    "terminal_intervals": 3
+  },
+  "consumer_summaries": [
+    {
+      "run": "KEN58SH9SLZ6",
+      "segments": 67,
+      "actions": 371,
+      "turns": 86,
+      "observed_turns": 70,
+      "unknown_turns": 16,
+      "observed_intervals": 331,
+      "terminal_intervals": 1
+    },
+    {
+      "run": "TXZ6RVMQA09D",
+      "segments": 45,
+      "actions": 124,
+      "turns": 28,
+      "observed_turns": 22,
+      "unknown_turns": 6,
+      "observed_intervals": 118,
+      "terminal_intervals": 0
+    },
+    {
+      "run": "WQZVENQ7DTRP",
+      "segments": 139,
+      "actions": 377,
+      "turns": 64,
+      "observed_turns": 53,
+      "unknown_turns": 11,
+      "observed_intervals": 370,
+      "terminal_intervals": 1
+    },
+    {
+      "run": "1913SE84AXQF",
+      "segments": 11,
+      "actions": 66,
+      "turns": 12,
+      "observed_turns": 6,
+      "unknown_turns": 6,
+      "observed_intervals": 31,
+      "terminal_intervals": 0
+    },
+    {
+      "run": "Q6M2Y34MWKRE",
+      "segments": 13,
+      "actions": 72,
+      "turns": 14,
+      "observed_turns": 0,
+      "unknown_turns": 14,
+      "observed_intervals": 0,
+      "terminal_intervals": 0
+    },
+    {
+      "run": "NHA2KW0RB7VP",
+      "segments": 41,
+      "actions": 136,
+      "turns": 24,
+      "observed_turns": 13,
+      "unknown_turns": 11,
+      "observed_intervals": 129,
+      "terminal_intervals": 1
+    }
+  ],
+  "owned_trace_rows": [
+    {
+      "line": 26315,
+      "offset": 19628812,
+      "bytes": 606,
+      "sha256": "8660b275389d77f7b29048af322bd9150b39170c3c3d466d0f71b566f1576993",
+      "row": {
+        "op": "update",
+        "id": "silent-0005",
+        "ts": "2026-10-16T05:12:35+08:00",
+        "by": "learner:strategy-proposal",
+        "where": {
+          "proposal": [
+            "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-050119-s2/learner/runs/20261016-050122-b4e62fbe-5d5d-474a-8add-2e1dccb65cf4-strategy-proposal/proposal.md#silent-proposal-04b6b430759815ed"
+          ]
+        },
+        "note": "20261016-050119-s2-strategy-proposal仅追加追溯：已核本批派发原稿、角色和原日志，相关项均waiting，证据/反例/具体缺口见本批proposal.md与report.md；未新增知识、support/repeat、源码、版本或shipped。"
+      }
+    },
+    {
+      "line": 26316,
+      "offset": 19629418,
+      "bytes": 819,
+      "sha256": "305b5e37a20adb2d2433618eb08c2304de59614b13047231ef7c61c73725abf4",
+      "row": {
+        "op": "update",
+        "id": "silent-0006",
+        "ts": "2026-10-16T05:12:35+08:00",
+        "by": "learner:strategy-proposal",
+        "where": {
+          "proposal": [
+            "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-050119-s2/learner/runs/20261016-050122-b4e62fbe-5d5d-474a-8add-2e1dccb65cf4-strategy-proposal/proposal.md#silent-proposal-38a49e6c97f31eea",
+            "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-050119-s2/learner/runs/20261016-050122-b4e62fbe-5d5d-474a-8add-2e1dccb65cf4-strategy-proposal/proposal.md#silent-proposal-04b6b430759815ed"
+          ]
+        },
+        "note": "20261016-050119-s2-strategy-proposal仅追加追溯：已核本批派发原稿、角色和原日志，相关项均waiting，证据/反例/具体缺口见本批proposal.md与report.md；未新增知识、support/repeat、源码、版本或shipped。"
+      }
+    },
+    {
+      "line": 26317,
+      "offset": 19630237,
+      "bytes": 819,
+      "sha256": "2b125a97c9a7092b00f20ab3f0804167c9dc49afe62830fbf0da5877a239090f",
+      "row": {
+        "op": "update",
+        "id": "silent-0011",
+        "ts": "2026-10-16T05:12:35+08:00",
+        "by": "learner:strategy-proposal",
+        "where": {
+          "proposal": [
+            "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-050119-s2/learner/runs/20261016-050122-b4e62fbe-5d5d-474a-8add-2e1dccb65cf4-strategy-proposal/proposal.md#silent-proposal-38a49e6c97f31eea",
+            "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-050119-s2/learner/runs/20261016-050122-b4e62fbe-5d5d-474a-8add-2e1dccb65cf4-strategy-proposal/proposal.md#silent-proposal-04b6b430759815ed"
+          ]
+        },
+        "note": "20261016-050119-s2-strategy-proposal仅追加追溯：已核本批派发原稿、角色和原日志，相关项均waiting，证据/反例/具体缺口见本批proposal.md与report.md；未新增知识、support/repeat、源码、版本或shipped。"
+      }
+    },
+    {
+      "line": 26318,
+      "offset": 19631056,
+      "bytes": 606,
+      "sha256": "daad06b8850e7f83cc7c14652bcf07a3624b854ba6e7c0b7880926f506ca03fc",
+      "row": {
+        "op": "update",
+        "id": "silent-0013",
+        "ts": "2026-10-16T05:12:35+08:00",
+        "by": "learner:strategy-proposal",
+        "where": {
+          "proposal": [
+            "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-050119-s2/learner/runs/20261016-050122-b4e62fbe-5d5d-474a-8add-2e1dccb65cf4-strategy-proposal/proposal.md#silent-proposal-04b6b430759815ed"
+          ]
+        },
+        "note": "20261016-050119-s2-strategy-proposal仅追加追溯：已核本批派发原稿、角色和原日志，相关项均waiting，证据/反例/具体缺口见本批proposal.md与report.md；未新增知识、support/repeat、源码、版本或shipped。"
+      }
+    },
+    {
+      "line": 26319,
+      "offset": 19631662,
+      "bytes": 819,
+      "sha256": "13733efe5746ad94a04b3778b8e53d1c3d9e60d9064645b0cc8df1df67b98f1f",
+      "row": {
+        "op": "update",
+        "id": "silent-0018",
+        "ts": "2026-10-16T05:12:35+08:00",
+        "by": "learner:strategy-proposal",
+        "where": {
+          "proposal": [
+            "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-050119-s2/learner/runs/20261016-050122-b4e62fbe-5d5d-474a-8add-2e1dccb65cf4-strategy-proposal/proposal.md#silent-proposal-a327449c331efbc1",
+            "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-050119-s2/learner/runs/20261016-050122-b4e62fbe-5d5d-474a-8add-2e1dccb65cf4-strategy-proposal/proposal.md#silent-proposal-47910f82a1fdd98f"
+          ]
+        },
+        "note": "20261016-050119-s2-strategy-proposal仅追加追溯：已核本批派发原稿、角色和原日志，相关项均waiting，证据/反例/具体缺口见本批proposal.md与report.md；未新增知识、support/repeat、源码、版本或shipped。"
+      }
+    },
+    {
+      "line": 26320,
+      "offset": 19632481,
+      "bytes": 1245,
+      "sha256": "e7db795eaad2d60798c24404754ecd2c4dfbdcccef0557f5ed51496af2380e83",
+      "row": {
+        "op": "update",
+        "id": "silent-0019",
+        "ts": "2026-10-16T05:12:35+08:00",
+        "by": "learner:strategy-proposal",
+        "where": {
+          "proposal": [
+            "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-050119-s2/learner/runs/20261016-050122-b4e62fbe-5d5d-474a-8add-2e1dccb65cf4-strategy-proposal/proposal.md#silent-proposal-08eaa60bcc449852",
+            "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-050119-s2/learner/runs/20261016-050122-b4e62fbe-5d5d-474a-8add-2e1dccb65cf4-strategy-proposal/proposal.md#silent-proposal-47910f82a1fdd98f",
+            "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-050119-s2/learner/runs/20261016-050122-b4e62fbe-5d5d-474a-8add-2e1dccb65cf4-strategy-proposal/proposal.md#silent-proposal-f1374df72d8e6a25",
+            "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-050119-s2/learner/runs/20261016-050122-b4e62fbe-5d5d-474a-8add-2e1dccb65cf4-strategy-proposal/proposal.md#silent-proposal-ef0e38a5dbd3bc07"
+          ]
+        },
+        "note": "20261016-050119-s2-strategy-proposal仅追加追溯：已核本批派发原稿、角色和原日志，相关项均waiting，证据/反例/具体缺口见本批proposal.md与report.md；未新增知识、support/repeat、源码、版本或shipped。"
+      }
+    },
+    {
+      "line": 26321,
+      "offset": 19633726,
+      "bytes": 1245,
+      "sha256": "1463cda11c1f5870832b73cf109151d92fac92711d42a412d193cc31f22889b8",
+      "row": {
+        "op": "update",
+        "id": "silent-0020",
+        "ts": "2026-10-16T05:12:35+08:00",
+        "by": "learner:strategy-proposal",
+        "where": {
+          "proposal": [
+            "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-050119-s2/learner/runs/20261016-050122-b4e62fbe-5d5d-474a-8add-2e1dccb65cf4-strategy-proposal/proposal.md#silent-proposal-08eaa60bcc449852",
+            "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-050119-s2/learner/runs/20261016-050122-b4e62fbe-5d5d-474a-8add-2e1dccb65cf4-strategy-proposal/proposal.md#silent-proposal-47910f82a1fdd98f",
+            "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-050119-s2/learner/runs/20261016-050122-b4e62fbe-5d5d-474a-8add-2e1dccb65cf4-strategy-proposal/proposal.md#silent-proposal-f1374df72d8e6a25",
+            "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-050119-s2/learner/runs/20261016-050122-b4e62fbe-5d5d-474a-8add-2e1dccb65cf4-strategy-proposal/proposal.md#silent-proposal-ef0e38a5dbd3bc07"
+          ]
+        },
+        "note": "20261016-050119-s2-strategy-proposal仅追加追溯：已核本批派发原稿、角色和原日志，相关项均waiting，证据/反例/具体缺口见本批proposal.md与report.md；未新增知识、support/repeat、源码、版本或shipped。"
+      }
+    },
+    {
+      "line": 26322,
+      "offset": 19634971,
+      "bytes": 1032,
+      "sha256": "a4fc3027ab3303db166d650fe5e16376261d0dad0bf0cdd71e08c8360ea1e928",
+      "row": {
+        "op": "update",
+        "id": "silent-0021",
+        "ts": "2026-10-16T05:12:35+08:00",
+        "by": "learner:strategy-proposal",
+        "where": {
+          "proposal": [
+            "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-050119-s2/learner/runs/20261016-050122-b4e62fbe-5d5d-474a-8add-2e1dccb65cf4-strategy-proposal/proposal.md#silent-proposal-47910f82a1fdd98f",
+            "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-050119-s2/learner/runs/20261016-050122-b4e62fbe-5d5d-474a-8add-2e1dccb65cf4-strategy-proposal/proposal.md#silent-proposal-ef0e38a5dbd3bc07",
+            "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-050119-s2/learner/runs/20261016-050122-b4e62fbe-5d5d-474a-8add-2e1dccb65cf4-strategy-proposal/proposal.md#silent-proposal-04b6b430759815ed"
+          ]
+        },
+        "note": "20261016-050119-s2-strategy-proposal仅追加追溯：已核本批派发原稿、角色和原日志，相关项均waiting，证据/反例/具体缺口见本批proposal.md与report.md；未新增知识、support/repeat、源码、版本或shipped。"
+      }
+    },
+    {
+      "line": 26323,
+      "offset": 19636003,
+      "bytes": 819,
+      "sha256": "f50292328b78be9ee11dec5d3205afab0b7ca08096e469c11a273f80b9768817",
+      "row": {
+        "op": "update",
+        "id": "silent-0025",
+        "ts": "2026-10-16T05:12:35+08:00",
+        "by": "learner:strategy-proposal",
+        "where": {
+          "proposal": [
+            "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-050119-s2/learner/runs/20261016-050122-b4e62fbe-5d5d-474a-8add-2e1dccb65cf4-strategy-proposal/proposal.md#silent-proposal-47910f82a1fdd98f",
+            "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-050119-s2/learner/runs/20261016-050122-b4e62fbe-5d5d-474a-8add-2e1dccb65cf4-strategy-proposal/proposal.md#silent-proposal-38a49e6c97f31eea"
+          ]
+        },
+        "note": "20261016-050119-s2-strategy-proposal仅追加追溯：已核本批派发原稿、角色和原日志，相关项均waiting，证据/反例/具体缺口见本批proposal.md与report.md；未新增知识、support/repeat、源码、版本或shipped。"
+      }
+    },
+    {
+      "line": 26324,
+      "offset": 19636822,
+      "bytes": 606,
+      "sha256": "abc7506b734638e63c2bd1af70725b79869b1ab2a3f159b187dd625e22a2f207",
+      "row": {
+        "op": "update",
+        "id": "silent-0030",
+        "ts": "2026-10-16T05:12:35+08:00",
+        "by": "learner:strategy-proposal",
+        "where": {
+          "proposal": [
+            "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-050119-s2/learner/runs/20261016-050122-b4e62fbe-5d5d-474a-8add-2e1dccb65cf4-strategy-proposal/proposal.md#silent-proposal-a099e89437e942bb"
+          ]
+        },
+        "note": "20261016-050119-s2-strategy-proposal仅追加追溯：已核本批派发原稿、角色和原日志，相关项均waiting，证据/反例/具体缺口见本批proposal.md与report.md；未新增知识、support/repeat、源码、版本或shipped。"
+      }
+    },
+    {
+      "line": 26325,
+      "offset": 19637428,
+      "bytes": 606,
+      "sha256": "d5ef6ebedd63f36b1dd022ee580612aa30d1f37ad0fb469d65c64d66d3fd4768",
+      "row": {
+        "op": "update",
+        "id": "silent-0044",
+        "ts": "2026-10-16T05:12:35+08:00",
+        "by": "learner:strategy-proposal",
+        "where": {
+          "proposal": [
+            "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-050119-s2/learner/runs/20261016-050122-b4e62fbe-5d5d-474a-8add-2e1dccb65cf4-strategy-proposal/proposal.md#silent-proposal-38a49e6c97f31eea"
+          ]
+        },
+        "note": "20261016-050119-s2-strategy-proposal仅追加追溯：已核本批派发原稿、角色和原日志，相关项均waiting，证据/反例/具体缺口见本批proposal.md与report.md；未新增知识、support/repeat、源码、版本或shipped。"
+      }
+    },
+    {
+      "line": 26326,
+      "offset": 19638034,
+      "bytes": 819,
+      "sha256": "2576b3ee296312cd6f1835e0752ea85b923936606b5e9da3e3407653f545175c",
+      "row": {
+        "op": "update",
+        "id": "silent-0050",
+        "ts": "2026-10-16T05:12:35+08:00",
+        "by": "learner:strategy-proposal",
+        "where": {
+          "proposal": [
+            "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-050119-s2/learner/runs/20261016-050122-b4e62fbe-5d5d-474a-8add-2e1dccb65cf4-strategy-proposal/proposal.md#silent-proposal-f1374df72d8e6a25",
+            "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-050119-s2/learner/runs/20261016-050122-b4e62fbe-5d5d-474a-8add-2e1dccb65cf4-strategy-proposal/proposal.md#silent-proposal-38a49e6c97f31eea"
+          ]
+        },
+        "note": "20261016-050119-s2-strategy-proposal仅追加追溯：已核本批派发原稿、角色和原日志，相关项均waiting，证据/反例/具体缺口见本批proposal.md与report.md；未新增知识、support/repeat、源码、版本或shipped。"
+      }
+    },
+    {
+      "line": 26327,
+      "offset": 19638853,
+      "bytes": 606,
+      "sha256": "19e8ff8514ddc411ecc2657b7d4acbbc8b4c70c1066304f9e2400bdb608ac599",
+      "row": {
+        "op": "update",
+        "id": "silent-0053",
+        "ts": "2026-10-16T05:12:35+08:00",
+        "by": "learner:strategy-proposal",
+        "where": {
+          "proposal": [
+            "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-050119-s2/learner/runs/20261016-050122-b4e62fbe-5d5d-474a-8add-2e1dccb65cf4-strategy-proposal/proposal.md#silent-proposal-04b6b430759815ed"
+          ]
+        },
+        "note": "20261016-050119-s2-strategy-proposal仅追加追溯：已核本批派发原稿、角色和原日志，相关项均waiting，证据/反例/具体缺口见本批proposal.md与report.md；未新增知识、support/repeat、源码、版本或shipped。"
+      }
+    },
+    {
+      "line": 26328,
+      "offset": 19639459,
+      "bytes": 606,
+      "sha256": "400e1d2d4ed5e71cc8d222eebdc4f351a2d0595de4cf92b6dd38a9aab49024e0",
+      "row": {
+        "op": "update",
+        "id": "silent-0064",
+        "ts": "2026-10-16T05:12:35+08:00",
+        "by": "learner:strategy-proposal",
+        "where": {
+          "proposal": [
+            "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-050119-s2/learner/runs/20261016-050122-b4e62fbe-5d5d-474a-8add-2e1dccb65cf4-strategy-proposal/proposal.md#silent-proposal-38a49e6c97f31eea"
+          ]
+        },
+        "note": "20261016-050119-s2-strategy-proposal仅追加追溯：已核本批派发原稿、角色和原日志，相关项均waiting，证据/反例/具体缺口见本批proposal.md与report.md；未新增知识、support/repeat、源码、版本或shipped。"
+      }
+    },
+    {
+      "line": 26329,
+      "offset": 19640065,
+      "bytes": 606,
+      "sha256": "111960f03818943e62491bc04333d16c035bd0821d72f5fc394a0335da5e06bc",
+      "row": {
+        "op": "update",
+        "id": "silent-0065",
+        "ts": "2026-10-16T05:12:35+08:00",
+        "by": "learner:strategy-proposal",
+        "where": {
+          "proposal": [
+            "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-050119-s2/learner/runs/20261016-050122-b4e62fbe-5d5d-474a-8add-2e1dccb65cf4-strategy-proposal/proposal.md#silent-proposal-04b6b430759815ed"
+          ]
+        },
+        "note": "20261016-050119-s2-strategy-proposal仅追加追溯：已核本批派发原稿、角色和原日志，相关项均waiting，证据/反例/具体缺口见本批proposal.md与report.md；未新增知识、support/repeat、源码、版本或shipped。"
+      }
+    },
+    {
+      "line": 26330,
+      "offset": 19640671,
+      "bytes": 1245,
+      "sha256": "a7c40c93d0903e0d6dc2e39ad9f1500304247677ce3b31fd67abc8ff409e3959",
+      "row": {
+        "op": "update",
+        "id": "silent-0079",
+        "ts": "2026-10-16T05:12:35+08:00",
+        "by": "learner:strategy-proposal",
+        "where": {
+          "proposal": [
+            "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-050119-s2/learner/runs/20261016-050122-b4e62fbe-5d5d-474a-8add-2e1dccb65cf4-strategy-proposal/proposal.md#silent-proposal-a327449c331efbc1",
+            "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-050119-s2/learner/runs/20261016-050122-b4e62fbe-5d5d-474a-8add-2e1dccb65cf4-strategy-proposal/proposal.md#silent-proposal-47910f82a1fdd98f",
+            "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-050119-s2/learner/runs/20261016-050122-b4e62fbe-5d5d-474a-8add-2e1dccb65cf4-strategy-proposal/proposal.md#silent-proposal-7f820c02d39bfaea",
+            "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-050119-s2/learner/runs/20261016-050122-b4e62fbe-5d5d-474a-8add-2e1dccb65cf4-strategy-proposal/proposal.md#silent-proposal-04b6b430759815ed"
+          ]
+        },
+        "note": "20261016-050119-s2-strategy-proposal仅追加追溯：已核本批派发原稿、角色和原日志，相关项均waiting，证据/反例/具体缺口见本批proposal.md与report.md；未新增知识、support/repeat、源码、版本或shipped。"
+      }
+    },
+    {
+      "line": 26331,
+      "offset": 19641916,
+      "bytes": 819,
+      "sha256": "d7a807a0a2a157638b5b254773d910b75335ac25c218e3c5119c7bd7a9a29847",
+      "row": {
+        "op": "update",
+        "id": "silent-0133",
+        "ts": "2026-10-16T05:12:35+08:00",
+        "by": "learner:strategy-proposal",
+        "where": {
+          "proposal": [
+            "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-050119-s2/learner/runs/20261016-050122-b4e62fbe-5d5d-474a-8add-2e1dccb65cf4-strategy-proposal/proposal.md#silent-proposal-38a49e6c97f31eea",
+            "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-050119-s2/learner/runs/20261016-050122-b4e62fbe-5d5d-474a-8add-2e1dccb65cf4-strategy-proposal/proposal.md#silent-proposal-04b6b430759815ed"
+          ]
+        },
+        "note": "20261016-050119-s2-strategy-proposal仅追加追溯：已核本批派发原稿、角色和原日志，相关项均waiting，证据/反例/具体缺口见本批proposal.md与report.md；未新增知识、support/repeat、源码、版本或shipped。"
+      }
+    },
+    {
+      "line": 26332,
+      "offset": 19642735,
+      "bytes": 606,
+      "sha256": "d3880336ac5f19457db8606d5f29a67b5f1e52266727ee3db18b929cc68ad3d3",
+      "row": {
+        "op": "update",
+        "id": "silent-0162",
+        "ts": "2026-10-16T05:12:35+08:00",
+        "by": "learner:strategy-proposal",
+        "where": {
+          "proposal": [
+            "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-050119-s2/learner/runs/20261016-050122-b4e62fbe-5d5d-474a-8add-2e1dccb65cf4-strategy-proposal/proposal.md#silent-proposal-04b6b430759815ed"
+          ]
+        },
+        "note": "20261016-050119-s2-strategy-proposal仅追加追溯：已核本批派发原稿、角色和原日志，相关项均waiting，证据/反例/具体缺口见本批proposal.md与report.md；未新增知识、support/repeat、源码、版本或shipped。"
+      }
+    },
+    {
+      "line": 26333,
+      "offset": 19643341,
+      "bytes": 606,
+      "sha256": "436f0802ebd9a560c5389abbc717c7d1c470cd2a08d6c493c8f3b8c94be93ca1",
+      "row": {
+        "op": "update",
+        "id": "silent-0169",
+        "ts": "2026-10-16T05:12:35+08:00",
+        "by": "learner:strategy-proposal",
+        "where": {
+          "proposal": [
+            "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-050119-s2/learner/runs/20261016-050122-b4e62fbe-5d5d-474a-8add-2e1dccb65cf4-strategy-proposal/proposal.md#silent-proposal-04b6b430759815ed"
+          ]
+        },
+        "note": "20261016-050119-s2-strategy-proposal仅追加追溯：已核本批派发原稿、角色和原日志，相关项均waiting，证据/反例/具体缺口见本批proposal.md与report.md；未新增知识、support/repeat、源码、版本或shipped。"
+      }
+    },
+    {
+      "line": 26334,
+      "offset": 19643947,
+      "bytes": 606,
+      "sha256": "0b33ccb3d9c98d3518d14a516d31b46babbe00b966490f9d2287ed03a922b966",
+      "row": {
+        "op": "update",
+        "id": "silent-0189",
+        "ts": "2026-10-16T05:12:35+08:00",
+        "by": "learner:strategy-proposal",
+        "where": {
+          "proposal": [
+            "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-050119-s2/learner/runs/20261016-050122-b4e62fbe-5d5d-474a-8add-2e1dccb65cf4-strategy-proposal/proposal.md#silent-proposal-04b6b430759815ed"
+          ]
+        },
+        "note": "20261016-050119-s2-strategy-proposal仅追加追溯：已核本批派发原稿、角色和原日志，相关项均waiting，证据/反例/具体缺口见本批proposal.md与report.md；未新增知识、support/repeat、源码、版本或shipped。"
+      }
+    },
+    {
+      "line": 26335,
+      "offset": 19644553,
+      "bytes": 606,
+      "sha256": "a8a062830475c33fb4cac52ce760a6594ba99f51f2000ce4d37b654d455c660f",
+      "row": {
+        "op": "update",
+        "id": "silent-0198",
+        "ts": "2026-10-16T05:12:35+08:00",
+        "by": "learner:strategy-proposal",
+        "where": {
+          "proposal": [
+            "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-050119-s2/learner/runs/20261016-050122-b4e62fbe-5d5d-474a-8add-2e1dccb65cf4-strategy-proposal/proposal.md#silent-proposal-47910f82a1fdd98f"
+          ]
+        },
+        "note": "20261016-050119-s2-strategy-proposal仅追加追溯：已核本批派发原稿、角色和原日志，相关项均waiting，证据/反例/具体缺口见本批proposal.md与report.md；未新增知识、support/repeat、源码、版本或shipped。"
+      }
+    },
+    {
+      "line": 26336,
+      "offset": 19645159,
+      "bytes": 819,
+      "sha256": "d36f506800b6a626b582d75f745e9d4b0574c0a4efa4ff73c6f153a63f17d0db",
+      "row": {
+        "op": "update",
+        "id": "silent-0228",
+        "ts": "2026-10-16T05:12:35+08:00",
+        "by": "learner:strategy-proposal",
+        "where": {
+          "proposal": [
+            "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-050119-s2/learner/runs/20261016-050122-b4e62fbe-5d5d-474a-8add-2e1dccb65cf4-strategy-proposal/proposal.md#silent-proposal-92920295a648b540",
+            "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-050119-s2/learner/runs/20261016-050122-b4e62fbe-5d5d-474a-8add-2e1dccb65cf4-strategy-proposal/proposal.md#silent-proposal-47910f82a1fdd98f"
+          ]
+        },
+        "note": "20261016-050119-s2-strategy-proposal仅追加追溯：已核本批派发原稿、角色和原日志，相关项均waiting，证据/反例/具体缺口见本批proposal.md与report.md；未新增知识、support/repeat、源码、版本或shipped。"
+      }
+    },
+    {
+      "line": 26337,
+      "offset": 19645978,
+      "bytes": 819,
+      "sha256": "654e12ad5bcf34bd0874fd814228fc4a712e5c79b1a5db42569ffa1316008984",
+      "row": {
+        "op": "update",
+        "id": "silent-0253",
+        "ts": "2026-10-16T05:12:35+08:00",
+        "by": "learner:strategy-proposal",
+        "where": {
+          "proposal": [
+            "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-050119-s2/learner/runs/20261016-050122-b4e62fbe-5d5d-474a-8add-2e1dccb65cf4-strategy-proposal/proposal.md#silent-proposal-f1374df72d8e6a25",
+            "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-050119-s2/learner/runs/20261016-050122-b4e62fbe-5d5d-474a-8add-2e1dccb65cf4-strategy-proposal/proposal.md#silent-proposal-38a49e6c97f31eea"
+          ]
+        },
+        "note": "20261016-050119-s2-strategy-proposal仅追加追溯：已核本批派发原稿、角色和原日志，相关项均waiting，证据/反例/具体缺口见本批proposal.md与report.md；未新增知识、support/repeat、源码、版本或shipped。"
+      }
+    },
+    {
+      "line": 26338,
+      "offset": 19646797,
+      "bytes": 819,
+      "sha256": "ee228d17b8dfbc55952326aa79cd4ee3d8c3d5df75ea76bcc39e7fe4f6ebecce",
+      "row": {
+        "op": "update",
+        "id": "silent-0255",
+        "ts": "2026-10-16T05:12:35+08:00",
+        "by": "learner:strategy-proposal",
+        "where": {
+          "proposal": [
+            "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-050119-s2/learner/runs/20261016-050122-b4e62fbe-5d5d-474a-8add-2e1dccb65cf4-strategy-proposal/proposal.md#silent-proposal-92920295a648b540",
+            "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-050119-s2/learner/runs/20261016-050122-b4e62fbe-5d5d-474a-8add-2e1dccb65cf4-strategy-proposal/proposal.md#silent-proposal-47910f82a1fdd98f"
+          ]
+        },
+        "note": "20261016-050119-s2-strategy-proposal仅追加追溯：已核本批派发原稿、角色和原日志，相关项均waiting，证据/反例/具体缺口见本批proposal.md与report.md；未新增知识、support/repeat、源码、版本或shipped。"
+      }
+    },
+    {
+      "line": 26339,
+      "offset": 19647616,
+      "bytes": 606,
+      "sha256": "6e7c2958cb362e53c821d929b41013bfd6f625205d8bc57c680db86e936e3b39",
+      "row": {
+        "op": "update",
+        "id": "silent-0257",
+        "ts": "2026-10-16T05:12:35+08:00",
+        "by": "learner:strategy-proposal",
+        "where": {
+          "proposal": [
+            "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-050119-s2/learner/runs/20261016-050122-b4e62fbe-5d5d-474a-8add-2e1dccb65cf4-strategy-proposal/proposal.md#silent-proposal-a099e89437e942bb"
+          ]
+        },
+        "note": "20261016-050119-s2-strategy-proposal仅追加追溯：已核本批派发原稿、角色和原日志，相关项均waiting，证据/反例/具体缺口见本批proposal.md与report.md；未新增知识、support/repeat、源码、版本或shipped。"
+      }
+    },
+    {
+      "line": 26340,
+      "offset": 19648222,
+      "bytes": 606,
+      "sha256": "e95be333aaefda0af3878f46a668009624abe2e43e9e4db38628ce8b72f9e2e8",
+      "row": {
+        "op": "update",
+        "id": "silent-0258",
+        "ts": "2026-10-16T05:12:35+08:00",
+        "by": "learner:strategy-proposal",
+        "where": {
+          "proposal": [
+            "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-050119-s2/learner/runs/20261016-050122-b4e62fbe-5d5d-474a-8add-2e1dccb65cf4-strategy-proposal/proposal.md#silent-proposal-a099e89437e942bb"
+          ]
+        },
+        "note": "20261016-050119-s2-strategy-proposal仅追加追溯：已核本批派发原稿、角色和原日志，相关项均waiting，证据/反例/具体缺口见本批proposal.md与report.md；未新增知识、support/repeat、源码、版本或shipped。"
+      }
+    },
+    {
+      "line": 26341,
+      "offset": 19648828,
+      "bytes": 606,
+      "sha256": "9f3aa184328029c3e4308e44a52c88b2b36d10bd4f965e43aed7dd6b13373a7f",
+      "row": {
+        "op": "update",
+        "id": "silent-0259",
+        "ts": "2026-10-16T05:12:35+08:00",
+        "by": "learner:strategy-proposal",
+        "where": {
+          "proposal": [
+            "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-050119-s2/learner/runs/20261016-050122-b4e62fbe-5d5d-474a-8add-2e1dccb65cf4-strategy-proposal/proposal.md#silent-proposal-38a49e6c97f31eea"
+          ]
+        },
+        "note": "20261016-050119-s2-strategy-proposal仅追加追溯：已核本批派发原稿、角色和原日志，相关项均waiting，证据/反例/具体缺口见本批proposal.md与report.md；未新增知识、support/repeat、源码、版本或shipped。"
+      }
+    },
+    {
+      "line": 26342,
+      "offset": 19649434,
+      "bytes": 606,
+      "sha256": "8ecbfa926530d5b4a2b5247404d6e4e84ede015b215c4a2c08df27283fa6c220",
+      "row": {
+        "op": "update",
+        "id": "silent-0261",
+        "ts": "2026-10-16T05:12:35+08:00",
+        "by": "learner:strategy-proposal",
+        "where": {
+          "proposal": [
+            "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-050119-s2/learner/runs/20261016-050122-b4e62fbe-5d5d-474a-8add-2e1dccb65cf4-strategy-proposal/proposal.md#silent-proposal-38a49e6c97f31eea"
+          ]
+        },
+        "note": "20261016-050119-s2-strategy-proposal仅追加追溯：已核本批派发原稿、角色和原日志，相关项均waiting，证据/反例/具体缺口见本批proposal.md与report.md；未新增知识、support/repeat、源码、版本或shipped。"
+      }
+    },
+    {
+      "line": 26343,
+      "offset": 19650040,
+      "bytes": 606,
+      "sha256": "b04ee5a01892b7ed55283f09300c0ed4250c0bff358acdea3782d0b09d4ddfa3",
+      "row": {
+        "op": "update",
+        "id": "silent-0262",
+        "ts": "2026-10-16T05:12:35+08:00",
+        "by": "learner:strategy-proposal",
+        "where": {
+          "proposal": [
+            "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-050119-s2/learner/runs/20261016-050122-b4e62fbe-5d5d-474a-8add-2e1dccb65cf4-strategy-proposal/proposal.md#silent-proposal-38a49e6c97f31eea"
+          ]
+        },
+        "note": "20261016-050119-s2-strategy-proposal仅追加追溯：已核本批派发原稿、角色和原日志，相关项均waiting，证据/反例/具体缺口见本批proposal.md与report.md；未新增知识、support/repeat、源码、版本或shipped。"
+      }
+    },
+    {
+      "line": 26344,
+      "offset": 19650646,
+      "bytes": 606,
+      "sha256": "9d768aaae66bf8f4facc15050c255e4d6765c5e4733fa8416e9ab1460f30d7ee",
+      "row": {
+        "op": "update",
+        "id": "silent-0264",
+        "ts": "2026-10-16T05:12:35+08:00",
+        "by": "learner:strategy-proposal",
+        "where": {
+          "proposal": [
+            "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-050119-s2/learner/runs/20261016-050122-b4e62fbe-5d5d-474a-8add-2e1dccb65cf4-strategy-proposal/proposal.md#silent-proposal-04b6b430759815ed"
+          ]
+        },
+        "note": "20261016-050119-s2-strategy-proposal仅追加追溯：已核本批派发原稿、角色和原日志，相关项均waiting，证据/反例/具体缺口见本批proposal.md与report.md；未新增知识、support/repeat、源码、版本或shipped。"
+      }
+    },
+    {
+      "line": 26345,
+      "offset": 19651252,
+      "bytes": 606,
+      "sha256": "0f7ab56b46bff09c6603ac520398f18ab55b71f1aec0890963680afd9f7232a2",
+      "row": {
+        "op": "update",
+        "id": "silent-0265",
+        "ts": "2026-10-16T05:12:35+08:00",
+        "by": "learner:strategy-proposal",
+        "where": {
+          "proposal": [
+            "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-050119-s2/learner/runs/20261016-050122-b4e62fbe-5d5d-474a-8add-2e1dccb65cf4-strategy-proposal/proposal.md#silent-proposal-04b6b430759815ed"
+          ]
+        },
+        "note": "20261016-050119-s2-strategy-proposal仅追加追溯：已核本批派发原稿、角色和原日志，相关项均waiting，证据/反例/具体缺口见本批proposal.md与report.md；未新增知识、support/repeat、源码、版本或shipped。"
+      }
+    }
+  ],
+  "protected_fields_and_prefixes_preserved": true,
+  "no_checks_reexecuted": true,
+  "limits": [
+    "Fifteen Silent runs A1/A7/A9 one each andA10 twelve remain separate; same-run SL attempts are not independent experiments.",
+    "Q6 original metadata rejection rc1/empty output retained; filtered single retry is bounded with no attempt fabrication or continuity across removed row.",
+    "Six bounded windows and164 observed/64 unknown turns do not certify complete candidates or historical105/109-run studies.",
+    "Forty-two Cunning potion observations and local capacity/damage facts do not calibrate complete successor execution, SL recovery or retention value.",
+    "Old TXZ death attribution correction and proper lamp target identity remain narrow existing evidence; no new contrary knowledge reported.",
+    "Original CLI stdout format-probe JSON error retained; no duplicate CLI or product failure. No source, merge, release, production tests, paper refresh, new dispatch or game action; wide parents remain open."
+  ]
+}
