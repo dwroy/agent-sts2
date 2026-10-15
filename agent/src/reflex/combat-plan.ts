@@ -1302,6 +1302,9 @@ export function describePlan(plan: Plan, playerHp: number): Record<string, JsonV
   if ((o.bufferSpentBySelf ?? 0) > 0) summary["buffer_used_by_own_hp_loss"] = o.bufferSpentBySelf!;
   if (o.sandpitAfter !== null) summary["sandpit_after_enemy_turn"] = o.sandpitAfter <= 0 ? `${o.sandpitAfter} (eaten: I DIE)` : o.sandpitAfter;
   if (o.unknownCards.length > 0) summary["unmodelled_cards"] = o.unknownCards.join(", ");
+  if (o.randomPoisonUnresolved) {
+    summary["result"] = `未计随机新增毒的条件参考：${summary["result"]}；存活、击杀与损血均非保证，实际施毒后重规划`;
+  }
   if (o.kusarigamaUnresolved) {
     summary["result"] = `未计锁镰随机伤害的参考结果：${summary["result"]}；存活、击杀与损血均非保证`;
   }
@@ -3338,7 +3341,8 @@ function planTurn(env: DecisionEnv): Decision | null {
   //    estimate may be pessimistic (random draws, unmodelled relics) — and let potions come first.
   // Every simulated line dies, but a random potion may not: the least-loss line goes to the question.
   let allDie: Plan | null = null;
-  if (best.outcome.dies) {
+  const unresolvedPoisonLines = solved.plans.filter((plan) => plan.outcome.randomPoisonUnresolved);
+  if (best.outcome.dies && unresolvedPoisonLines.length === 0) {
     // Pael's Eye: the first turn a fight ends with no card played, the hand is exhausted and an extra
     // turn follows (a fresh draw before the enemy acts). 12ZG F23 T6: never used, died to a 24 Pounce.
     const fightId = fightKey(state);
@@ -3353,7 +3357,7 @@ function planTurn(env: DecisionEnv): Decision | null {
     if (potionsNow.length > 0 && !randomLives) return planCombatPerCard(env);
     if (randomLives) allDie = leastLossPlan(solved.plans, hand, playerSim.hp);
   }
-  if (best.outcome.dies && allDie === null) {
+  if (best.outcome.dies && allDie === null && unresolvedPoisonLines.length === 0) {
     const leastLoss = leastLossPlan(solved.plans, hand, playerSim.hp);
     const drawing = leastLoss.steps[0] !== undefined && hand.some((card) => card.index === leastLoss.steps[0]!.cardIndex && drawsCards(card));
     commit(env, state.turn, leastLoss, hand, "code");
@@ -3401,9 +3405,12 @@ function planTurn(env: DecisionEnv): Decision | null {
   // (The fight plan's auto-drink of an unmodelled potion at its planned moment is gone: the potion is
   // offered to Jev on every turn, the fight plan's moment noted.)
   const surviving = allDie ? [allDie] : hardRuleLines(solved.plans.filter((plan) => !plan.outcome.dies), enemies);
+  // A death in an omitted-poison reference cannot eliminate the playable random candidate.
+  for (const line of unresolvedPoisonLines) if (!surviving.includes(line)) surviving.push(line);
   // Every modelled potion in the belt is on a shown line (the best line drinking it), next to the
   // potion-free ones: whether to spend it is Jev's call.
   const options = withPotionLines(distinctPlans(surviving, MAX_OPTIONS), surviving, potionsAll.filter((potion) => isModelledPotion(potion.potion_id)).map((potion) => potion.potion_id), MAX_OPTIONS);
+  if (unresolvedPoisonLines[0] && !options.some((line) => line.outcome.randomPoisonUnresolved)) options.push(unresolvedPoisonLines[0]);
   // A potion lethal: every way to win this turn (one line per set of potions it spends) is shown.
   for (const line of potionLethal) if (!options.includes(line)) options.push(line);
   // Some potion-free line survives the turn: then code never drinks on its own.
@@ -3605,6 +3612,7 @@ function planTurn(env: DecisionEnv): Decision | null {
     }
   }
   const clear =
+    unresolvedPoisonLines.length === 0 &&
     (!second || options.every((plan) => plan === top || dominates(top, plan))) &&
     [...options, ...focusOf.keys()].every((plan) => plan === top || beatsOnTargets(top, plan)) &&
     !setupClose &&

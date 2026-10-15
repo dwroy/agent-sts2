@@ -51,6 +51,8 @@ export interface CardModel {
   playable: boolean;
   target: TargetMode;
   validTargets: number[];
+  /** G8NHLL09DLBX F24 T5, silent-0295: unresolved multi-target poison is not a guaranteed kill. */
+  deferRandomPoison?: true;
   /** Per hit, before this turn's extra Strength and before Vulnerable/Weak. null = deals no damage. */
   damage: number | null;
   hits: number;
@@ -1084,6 +1086,14 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
   const haze = character.toLowerCase() === "silent" && cardId === "HAZE" &&
     (bool(card["upgraded"]) ? dyn(card, "PoisonPower") === 6 : dyn(card, "PoisonPower") === 4);
   const poison = ["DEADLY_POISON", "POISONED_STAB", "BOUNCING_FLASK", "BUBBLE_BUBBLE", "OUTBREAK"].includes(cardId) || snakebite || haze ? dyn(card, "PoisonPower") ?? 0 : 0;
+  const deferRandomPoison = character.toLowerCase() === "silent" && ascension === 10 &&
+    cardId === "BOUNCING_FLASK" && !bool(card["upgraded"]) && type === "Skill" &&
+    card["target_type"] === "RandomEnemy" && card["requires_target"] === false &&
+    card["energy_cost"] === 2 && card["costs_x"] === false && card["star_cost"] === 0 &&
+    card["star_costs_x"] === false && card["enchantment"] == null &&
+    template === "随机给予敌人{PoisonPower:diff()}层中毒{Repeat:diff()}次。" &&
+    renderedText.replace(/\s+/g, "") === "随机给予敌人3层中毒3次。" &&
+    poison === 3 && dyn(card, "Repeat") === 3;
   // 2L1BNN9ZJEFU F48 attempt 6 T8, silent-0112: the upgraded zero-cost card also has Power=1.
   const shadowmeld = cardId === "SHADOWMELD" && dyn(card, "Power") === 1;
   // VN7RQJMJEFMX F27 T6, silent-0115: the upgrade arms two Skills, not two extra plays of one Skill.
@@ -1306,6 +1316,7 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
     energyGain,
     plating: dyn(card, "PlatingPower") ?? 0,
     draw,
+    ...(deferRandomPoison ? { deferRandomPoison: true as const } : {}),
     ...(escapePlan ? { escapePlan: true as const } : {}),
     exhausts,
     special,
