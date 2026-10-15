@@ -16,6 +16,7 @@ import type { JsonValue } from "../core/util/json.js";
 import { quantitativeFightFacts } from "./quantitative-facts.js";
 import { memoKey } from "./compute-memo.js";
 import { bossReadiness, type BossReadiness } from "./boss-readiness.js";
+import { buildRank } from "./build-rank.js";
 
 /** Samples per deck (docs/boss-sim.md §8: 1000 per option gives a paired standard error of about 1-1.5 points). */
 export const BUILD_SIM_SAMPLES = 1000;
@@ -70,6 +71,7 @@ export interface OptionSim {
 }
 
 export interface CompareResult {
+  buildRanking?: JsonValue;
   adaptive?: JsonValue;
   readiness?: BossReadiness;
   readinessMs?: number;
@@ -138,14 +140,15 @@ export async function compareOptions(
   runner: DeckSimRunner,
   base: RolloutInput,
   options: DeckOption[],
-  opts: { samples?: number; seed?: number; deadlineMs?: number; now?: () => number; quantitative?: boolean; diagnostics?: boolean; requireComplete?: boolean; adaptive?: { allowS: boolean }; onProgress?: import("./computation-wait.js").SimProgress; readiness?: boolean } = {},
+  opts: { samples?: number; seed?: number; deadlineMs?: number; now?: () => number; quantitative?: boolean; diagnostics?: boolean; requireComplete?: boolean; adaptive?: { allowS: boolean }; onProgress?: import("./computation-wait.js").SimProgress; readiness?: boolean;
+    buildRank?: { lowTrust: string | null; calibratedFloor: number; tieSe: number } } = {},
 ): Promise<CompareResult> {
   if (opts.quantitative) base = { ...base, captureBossMargin: true,
     ...(base.meta.asc === 10 ? { captureCore: true, captureResources: true } : {}) };
   const samples = opts.samples ?? BUILD_SIM_SAMPLES;
   const required = opts.requireComplete === true;
   const cacheKey = required ? memoKey("required-b3-v1", { base, options, samples, seed: opts.seed ?? BUILD_SIM_SEED,
-    quantitative: opts.quantitative, diagnostics: opts.diagnostics, readiness: opts.readiness,
+    quantitative: opts.quantitative, diagnostics: opts.diagnostics, readiness: opts.readiness, buildRank: opts.buildRank,
     ...(opts.adaptive ? { adaptive: { ...ADAPTIVE_RULE, ...opts.adaptive } } : {}), policy: { BOSS_POLICY_THREAT, BOSS_SIM_LOOKAHEAD } }) : null;
   const cached = cacheKey ? completeComparisons.get(runner) : undefined;
   if (cached?.key === cacheKey) {
@@ -251,6 +254,7 @@ export async function compareOptions(
     calibratedWin: base.continuation ? baseLine.winProb : calibratedWinProb(baseLine.winProb, BUILD_SIM_CALIBRATION_SAMPLES, "pre", base.meta.asc),
     ...(base.continuation ? {} : { calibrate: (raw: number) => calibratedWinProb(raw, BUILD_SIM_CALIBRATION_SAMPLES, "pre", base.meta.asc) }),
   }) : undefined;
+  const readinessMs = readiness ? performance.now() - readinessStart : undefined;
   const adaptive = required && opts.adaptive && options.length && n === samples ? safeAdaptiveShadow([
     { key: "@current", samples: baseLine.outcomes, baseline: true, workGroup: "0" },
     ...options.map((option) => ({ key: option.key, samples: summarize(deckOf.get(option.key)!).outcomes, workGroup: deckOf.get(option.key)!.join(",") })),
@@ -261,9 +265,22 @@ export async function compareOptions(
     adaptive.work.shadow += orderWork;
     adaptive.work.savedFraction = 1 - adaptive.work.shadow / adaptive.work.full;
   }
+  let buildRanking: JsonValue | undefined;
+  if (opts.buildRank) {
+    try {
+      buildRanking = toJsonValue(buildRank(simOf("current", baseLine, base.solver.player.hp, true), out,
+        { base: baseLine.outcomes, options: new Map(options.map((option) => [option.key, summarize(deckOf.get(option.key)!).outcomes])) },
+        { ...opts.buildRank, calibrationSamples: BUILD_SIM_CALIBRATION_SAMPLES,
+          calibrate: (p) => base.continuation ? p : calibratedWinProb(p, BUILD_SIM_CALIBRATION_SAMPLES, "pre", base.meta.asc) }));
+    } catch (error) {
+      // A diagnostic failure cannot turn an otherwise completed computation into an infinite retry.
+      buildRanking = { schema: "build-ranking-v1", status: "unavailable", reason: String(error).slice(0, 180) };
+    }
+  }
   const result: CompareResult = {
+    ...(buildRanking ? { buildRanking } : {}),
     ...(adaptive ? { adaptive: toJsonValue({ ...adaptive, input_key: cacheKey, fixed_order_search_in_work: true }) } : {}),
-    ...(readiness ? { readiness, readinessMs: performance.now() - readinessStart } : {}),
+    ...(readiness ? { readiness, readinessMs } : {}),
     ...(required ? { completion: { required: true as const, uniqueDecks: decks.length, originalDecks, memoHit: false } } : {}),
     ...(opts.diagnostics ? { diagnostics: { decks: decks.length, options: options.length, deckCards: base.piles.draw.length,
       deadlineMs: opts.deadlineMs ?? null, orderSearch, comparison: phase(run, left) } } : {}),

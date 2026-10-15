@@ -372,3 +372,15 @@ Silent 的 `S_READINESS` 默认值由 shadow 改为 on，保留显式 off/shadow
 `boss_sim.s_ranking` 记录旧/新首位、完整分组、配对差、每条候选的符号审计、回退原因与实际题面key；module-health分列产出、S使用、回退和缺失。P0审计失败/未知组保持旧排序，不把模型样本的符号通过当游戏校准。新工具 `agent/tools/s-combat-rank-replay.ts` 在原SHA冻结的历史状态上以同一批样本比较两个排序，不调用API或游戏动作。
 
 本次固定SOUL_FYSH/A10题重放三候选各600样本，1,800样本0符号反例；最佳候选仍为原第3条，S第一组为第3/第1条，第2条落后；不声称策略收益。5个原冻结铁甲局面开关前后的题面和每个答案处理结果逐题等价。源测试与发布/消费者回执在 `paper/materials/20261015-s-combat-rank/`，源码完成不替代正式独立发布或自然读回。
+
+## 16. P2 接续（2026-10-15，先shadow）
+
+`build-rank.ts` 在同一批B3逐样本结果上计算候选之间的配对胜率差及S差，按2SE建立有锚点的并列组，再用已有配对掉血差排序；不相加或相减两条对基准的标准误来代替候选间协方差。分列对当前牌组的改善/无可区分差异/变差、配对A/D贡献和饱和标志。整个并列组的S归属/符号与原可信度通过后才使用S；低可信仅给胜率排序，未知不补0。
+
+Silent的 `S_BUILD_RANK=off|shadow|on` 初始为shadow，其他角色off。影子只记录，原题面与选择保持；on在 `facts.build_ranking` 提供统一表，并移去候选里重复的S块及旧并列提示。保留所有合法候选和未模拟说明。删牌/升级使用动作key与具体卡key；未选择目标时记录pending，不冒认已经选了第一张卡。商店比较首个购买/删牌动作，不能把单项排序当整套购物组合的模拟结果。
+
+on时 `ranking_override_reason` 进入实际答案schema和stable schema；偏离第一组而缺理由或超过25词走现有补问。Brain到hand保留实际理由，`boss_sim.build_ranking.selection` 与deepseek兼容记录绑定真实选择；固定全循环测试覆盖首答缺理由、补问后只派发一次及实际日志读回。module-health区分产出、真实脑送达/接受、偏离和理由缺失；shadow不要求模型给从未收到的排序理由。
+
+历史对照复用原P0冻结的4,000条S样本与原配对HP均值，不重跑原R2研究、不重建未记录HP轨迹。原32VSST9UX7MN/F2题的新第一组为card0，与当时已接受脑答案相同；这1题仅为描述性对照，无总体一致率或收益结论。`build-rank-replay.ts`核每份输入SHA与原答案身份。另将readiness计时终点移到其纯汇总之后，避免混入后续C2影子/P2排序耗时；旧日志保持。
+
+检查及原输入绑定在 `paper/materials/20261015-s-build-rank/`。完整两局P2自然shadow、正式on独立发布与消费者读回仍须逐项验收；当前初始shadow不等于这些门槛已完成。

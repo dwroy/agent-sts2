@@ -54,6 +54,8 @@ import { LEAST_LOSS_LABEL } from "../sl/judge.js";
 import { asArray, asRecord, bool, num, str, toJsonValue, type JsonValue } from "../core/util/json.js";
 import { OUTCOME_BASIS_KEY } from "../knowledge/outcome-facts.js";
 import { BUILD_SIM_MIN_SHOWN, bossEvaluationPending, withBossSim, type BuildSimSetup } from "../sim/build-sim-facts.js";
+import { buildRankingSelection, rankingOverrideProblems } from "../sim/build-ranking-choice.js";
+import { shopPlanList } from "../brain/specs.js";
 import { withConstruction } from "../construction/adapter.js";
 import { withConstructionEvaluation } from "../construction/consumer.js";
 import { passivePiecesOptions } from "../reflex/passive-pieces.js";
@@ -1055,6 +1057,13 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
         };
         /** Plays DeepSeek's choice; false when it does not resolve to an action. */
         const accept = (answer: BrainChoice, recovered: { line: string } | null): boolean => {
+          const ranking = asRecord(asRecord(bossSimRecord)["build_ranking"]);
+          const rankingAnswer = { choice: answer.choice, cards: answer.cards, ranking_override_reason: answer.rankingOverrideReason };
+          const rankingProblems = ranking["mode"] === "on" ? rankingOverrideProblems(ranking, rankingAnswer) : [];
+          if (rankingProblems.length) {
+            deepseekAnswerUnusable = rankingProblems.join("; ");
+            return false;
+          }
           const picked = ask.resolve({
             [spec.question]: { type: "choice", choice: answer.choice, probabilities: { [answer.choice]: 1 }, confidence: 1, raw: { escalated: "deepseek", decider: brainDecider(answer.brain), ...(answer.cards ? { cards: answer.cards } : {}), ...(answer.route ? { route: answer.route } : {}), ...(answer.routeReason ? { route_reason: answer.routeReason } : {}), ...(answer.discard ? { discard: answer.discard } : {}) } },
           } as AnswerSet);
@@ -1074,6 +1083,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
             direct: true,
             choice: answer.choice,
             reason: answer.reason,
+            ...(answer.rankingOverrideReason !== undefined ? { ranking_override_reason: answer.rankingOverrideReason } : {}),
             latency_ms: answer.latencyMs,
             tokens: answer.inputTokens + answer.outputTokens,
             input_tokens: answer.inputTokens,
@@ -1095,6 +1105,8 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
             // A one-shot plan: its reference and steps; this row plays step 1, later steps are their own rows.
             ...(picked.plan ? { plan_id: picked.plan.id, plan: picked.plan.steps, plan_step: 1 } : {}),
           };
+          if (ranking["schema"] === "build-ranking-v1") bossSimRecord = { ...asRecord(bossSimRecord),
+            build_ranking: toJsonValue({ ...ranking, selection: buildRankingSelection(ranking, rankingAnswer) }) };
           deepseekAsked = toJsonValue(ask.questions) as Record<string, JsonValue>;
           deepseekMemo = { key: memoKey, resolved: deepseekResolved, record: deepseekRecord };
           onEvent({ type: "note", message: `${answeredBy(answer.brain)} (${(answer.latencyMs / 1000).toFixed(1)} s) ${ask.label}: ${answer.choice}${how} — ${answer.reason}` });
@@ -1150,9 +1162,13 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
                 direct: true,
                 choice: out.plan ? JSON.stringify(out.plan.steps) : "",
                 reason,
+                ...(typeof json["ranking_override_reason"] === "string" ? { ranking_override_reason: json["ranking_override_reason"] } : {}),
                 ...usage,
                 ...(out.plan ? { plan_id: out.plan.id, plan: out.plan.steps, plan_step: 1 } : {}),
               };
+              const ranking = asRecord(asRecord(bossSimRecord)["build_ranking"]);
+              if (ranking["schema"] === "build-ranking-v1") bossSimRecord = { ...asRecord(bossSimRecord),
+                build_ranking: toJsonValue({ ...ranking, selection: buildRankingSelection(ranking, { ...json, plan: shopPlanList(json)?.list }, true) }) };
               deepseekAsked = toJsonValue(decision.questions) as Record<string, JsonValue>;
               deepseekMemo = { key: memoKey, resolved: deepseekResolved, record: deepseekRecord };
               onEvent({ type: "note", message: `${answeredBy(meta.brain)} (${(meta.latencyMs / 1000).toFixed(1)} s) ${decision.label}: ${deepseekRecord["choice"]}${note ? ` (${note})` : ""} — ${reason}` });

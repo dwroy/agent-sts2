@@ -57,7 +57,7 @@ export interface BrainMeta {
   notes?: string[];
 }
 
-export type BrainChoice = DeepSeekAnswer & { brain?: BrainMeta };
+export type BrainChoice = DeepSeekAnswer & { brain?: BrainMeta; rankingOverrideReason?: string };
 export type BrainMetaUsage = Omit<DeepSeekAnswer, "choice" | "reason"> & { brain?: BrainMeta };
 
 type Json = Record<string, unknown>;
@@ -397,6 +397,7 @@ export class Brain {
       ...Brain.usage(result, brain),
       choice: answer["choice"],
       reason: typeof answer["reason"] === "string" ? answer["reason"].trim() : "",
+      ...(typeof answer["ranking_override_reason"] === "string" ? { rankingOverrideReason: answer["ranking_override_reason"].trim() } : {}),
       ...(cards.length > 0 ? { cards } : {}),
       ...(route ? { route, ...(routeReason ? { routeReason } : {}) } : {}),
       ...(discard.length > 0 ? { discard } : {}),
