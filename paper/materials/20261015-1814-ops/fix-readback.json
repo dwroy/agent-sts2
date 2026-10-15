@@ -1,0 +1,184 @@
+{
+  "batch": "20261015-180124-fix-batch",
+  "canonical_state": "failed",
+  "canonical_rc": 0,
+  "original_report": {
+    "task": "fix-batch",
+    "base": "3e1d6d5405fc9cbf6cea7858dfe79f7e49c88ccb",
+    "fixes": [],
+    "skipped": [
+      {
+        "item": "silent-0481：技能药水选牌生命周期措辞",
+        "reason": "策略类：原686d4e提案沿独立strategy-proposal处理。"
+      },
+      {
+        "item": "silent-0469：聚合体纸鹤多击/玩家易伤/突然一拳补证",
+        "reason": "策略类：原0cce43提案沿独立策略链处理。"
+      },
+      {
+        "item": "rest-timeout-accepted-route-not-committed / silent-0446",
+        "reason": "策略类/structure：原2d3aa8提案验证动作确认与路线提交。"
+      },
+      {
+        "item": "其余未闭合的出牌、机制、药水、SL、终局、路线与休息条目",
+        "reason": "策略类：沿已有角色证据与提案链处理。"
+      },
+      {
+        "item": "codex 大脑缓存命中偏低",
+        "reason": "证据不足：缺当前原生调用的受控比较，离线不调用LLM。"
+      },
+      {
+        "item": "调度公平性核查",
+        "reason": "证据不足：原观察未证明永久饥饿。"
+      },
+      {
+        "item": "sandbox-glob-startup-race：目录生命周期上游根因",
+        "reason": "证据不足：有界恢复已修，上游目录删除者未证。"
+      },
+      {
+        "item": "core-build-notify-222802-rc2：原通知发送/恢复事实",
+        "reason": "证据不足：旧rc2无stderr，不能还原发送事实或安全重发。"
+      },
+      {
+        "item": "named-card-facts-transport：事件入口之外的宽范围",
+        "reason": "太大/独立功能：事件子项已修，宽范围沿原owner。"
+      },
+      {
+        "item": "boss 模拟样本/性能与 v5-dpr-health 宽范围",
+        "reason": "太大/独立功能：沿冻结输入和专项验收。"
+      },
+      {
+        "item": "arch-funnel-guard / arch-learning-priority / arch-unified-resource-value / inv-f33-regression",
+        "reason": "策略类/独立架构研究，不混入普通纯bug批。"
+      },
+      {
+        "item": "框架外层总时限收尾",
+        "reason": "太大/独立框架：分段续验已修，外层收尾沿原owner。"
+      }
+    ],
+    "merged": null,
+    "tests": {
+      "tsc": 0,
+      "vitest": 0,
+      "cases": 41
+    },
+    "code_proposals": [],
+    "implementation_domains": [],
+    "report": "/home/dw/Projects/agent-sts2/learner/runs/20261015-180133-e5bc071e-be7c-42fe-98cb-89ae479dedbb-fix-batch/report.md"
+  },
+  "native": {
+    "batch": "20261015-180124-fix-batch",
+    "thread": "01a13f02-a1b9-76e0-b0c3-a68a62cd462d",
+    "cwd": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261015-180124",
+    "event_log": "learner/runs/20261015-180133-e5bc071e-be7c-42fe-98cb-89ae479dedbb-fix-batch.jsonl",
+    "registered_launch_batch": "20261015-180124-fix-batch",
+    "original_lease": "eba9297f8541faa6f647755e7b7405840d7ad7f95d813efa99008f46a3bdfa96",
+    "native_context": {
+      "source": "ops/codex-ops/accounts/codex1/learner/sessions/2026/10/15/rollout-2026-10-15T18-01-39-01a13f02-a1b9-76e0-b0c3-a68a62cd462d.jsonl",
+      "offset": 64061,
+      "bytes": 5118,
+      "sha256": "c9406767bb0e22e9bebe36c969efee305707a0d23f77bc7b32f8502ab23ec1e8",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "sandbox": {
+        "type": "workspace-write",
+        "writable_roots": [
+          "/home/dw/Projects/agent-sts2",
+          "/home/dw/Projects/agent-sts2/.git",
+          "/home/dw/Projects/agent-sts2/.git/worktrees/codex-fix-silent-20261015-180124"
+        ],
+        "network_access": false,
+        "exclude_tmpdir_env_var": false,
+        "exclude_slash_tmp": false
+      },
+      "approval_policy": "never"
+    },
+    "native_user_input": {
+      "offset": 69179,
+      "bytes": 13081,
+      "sha256": "db2b36d81e05634050b9fb148d30c9230098e7370f6d91b740d1577f060c2296",
+      "input_sha256": "4ccccdcda7515f2f435183c1230c454036846c7c1ead7e5f566db5443ffce38c"
+    },
+    "original_header_events": [
+      {
+        "offset": 0,
+        "bytes": 14892,
+        "sha256": "8f2e570bfb7ee570730785f5a86979d3ea4be05e6e831898a26c5f38d2a74fdf",
+        "type": "learner_launch",
+        "attempt": null,
+        "code": null
+      },
+      {
+        "offset": 14892,
+        "bytes": 370,
+        "sha256": "9c906b760a842089dbf12ced381738ed00072c604cca7f49c13ac00ea43a36c7",
+        "type": "learner_startup_attempt",
+        "attempt": 1,
+        "code": null
+      },
+      {
+        "offset": 18268,
+        "bytes": 77,
+        "sha256": "a6a2ec88c9527d84307ab28955e47639808b91fe55932fa4795fd174069cf2d7",
+        "type": "thread.started",
+        "attempt": null,
+        "code": null
+      }
+    ],
+    "startup_attempts": 1,
+    "failed_startups_preserved": 0,
+    "no_model_or_manual_restart": true
+  },
+  "original_72_ancestors_and_base_source_hashes_verified": true,
+  "original_source_review": "68项对应源码与164309审计相同；其余4项均在card-model.ts，基线差异只将DEADLY_POISON加入已有apotheosisUpgradeText分支，另有silent-apotheosis.ts的独立窄修复。隐秘匕首、狡诈药水、紧勒、普通刀舞修复仍保留；四文件及新增致命毒药固定测试通过。不以窄修复关闭神化宽父项。",
+  "original_queue_snapshot_only": {
+    "lines": 1326,
+    "sha256": "4a5f2266f367603928f7083239a359c92cbd285a73ccf85a0af9a8c9ae50b9d9",
+    "later_2LZ_queue_repeat_not_part_of_this_cut": true
+  },
+  "original_coverage": {
+    "checks": {
+      "tsc": 0,
+      "vitest-core": 1,
+      "vitest-core-r2": 0,
+      "vitest-fixtures": 0
+    },
+    "vitest_files": 9,
+    "vitest_cases": 41,
+    "filtered_cases": 33,
+    "full_test_sandbox_run": false,
+    "reason": "本批无源码改动或新提交，只执行定向固定回归。",
+    "reruns": [
+      {
+        "initial": "vitest-core",
+        "result": 1,
+        "cause": "basic报告器不受Vitest 4支持，启动失败、未执行测试。",
+        "corrected": "vitest-core-r2",
+        "result_after_correction": 0
+      }
+    ],
+    "logs": {
+      "tsc": {
+        "path": "/home/dw/Projects/agent-sts2/learner/runs/20261015-180133-e5bc071e-be7c-42fe-98cb-89ae479dedbb-fix-batch/tsc.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "vitest-core": {
+        "path": "/home/dw/Projects/agent-sts2/learner/runs/20261015-180133-e5bc071e-be7c-42fe-98cb-89ae479dedbb-fix-batch/vitest-core.log",
+        "sha256": "a22abf3fe156c1d83e282e037b8d6a24a0ecc9284c33ca1a54db6ccd7e3e155f"
+      },
+      "vitest-core-r2": {
+        "path": "/home/dw/Projects/agent-sts2/learner/runs/20261015-180133-e5bc071e-be7c-42fe-98cb-89ae479dedbb-fix-batch/vitest-core-r2.log",
+        "sha256": "ceb3b532d113df5da56c50480fd2292abbc561bf2120953cb3aa4fce89d40cc1"
+      },
+      "vitest-fixtures": {
+        "path": "/home/dw/Projects/agent-sts2/learner/runs/20261015-180133-e5bc071e-be7c-42fe-98cb-89ae479dedbb-fix-batch/vitest-fixtures.log",
+        "sha256": "5965ed9d4972e6532474c93098303775f4b6c42efeddc00a5a757c06f312697a"
+      }
+    }
+  },
+  "coverage_interpretation": "tsc0 and 9 selected files/41 cases passed; 33 name-filtered cases not run. Initial reporter startup failure retained. No full-suite pass asserted.",
+  "no_new_commit_or_merge_blocker": true,
+  "canonical_failed_rc0_mergednull_preserved": true,
+  "no_repeated_checks_or_full_or_release": true,
+  "wide_items_unchanged": true
+}
