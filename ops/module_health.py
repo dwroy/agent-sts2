@@ -239,6 +239,40 @@ def readiness_pipeline(config, records, brains):
             'limits': 'Shadow is not brain delivery. Low trust and failed sign audit suppress facts without changing mandatory computation or old ranking.'}
 
 
+def combat_s_ranking_health(config, records):
+    """Count actual P3 consumption; low trust and rejected attribution are explicit fallbacks."""
+    mode = obj(config.get('loop')).get('s_combat_rank', 'off')
+    counts = Counter(expected=0, produced=0, used=0, fallback=0, missing=0)
+    reasons, seen = Counter(), set()
+    streak = longest = 0
+    for row in records:
+        if mode != 'on' or row.get('ts', '') < config.get('ts', ''):
+            continue
+        sim = obj(row.get('boss_sim'))
+        if sim.get('available') is not True:
+            continue
+        key = row.get('decision_id') or (row.get('ts'), row.get('label'))
+        if key in seen:
+            continue
+        seen.add(key)
+        counts['expected'] += 1
+        value = obj(sim.get('s_ranking'))
+        if value.get('schema') != 's-combat-ranking-v1':
+            counts['missing'] += 1
+            streak += 1
+            longest = max(longest, streak)
+            continue
+        streak = 0
+        counts['produced'] += 1
+        counts['used'] += value.get('used') is True
+        counts['fallback'] += value.get('used') is not True
+        if value.get('reason'):
+            reasons[value['reason']] += 1
+    return {'mode': mode, **dict(counts), 'fallback_reasons': dict(reasons),
+            'longest_missing_streak': longest, 'alert': longest >= FAIL_STREAK,
+            'limits': 'S tie ranking is conditional on paired samples, sign audit and existing model trust; not game calibration or causal benefit.'}
+
+
 def computation_health(records):
     counts = Counter(attempts=0, failures=0, degraded=0)
     evidence = []
@@ -341,10 +375,11 @@ def summarize(config, decisions, brains, coverage, plans=()):
     readiness = readiness_pipeline(config, unique_records, all_brains)
     computation = computation_health(unique_records)
     adaptive = adaptive_health(config, unique_records)
+    s_combat = combat_s_ranking_health(config, unique_records)
     return {'schema': 'module-health-v1', 'at': datetime.now(timezone.utc).isoformat(), 'run_id': rid,
             'character': 'SILENT', 'architecture': 'V5', 'construction_mode': obj(config.get('construction')).get('mode'),
             'simulation_enabled': enabled, 'coverage': coverage, 'complete': complete,
-            'construction': dict(construction), 'construction_pipeline': pipeline, 's_readiness': readiness, 'computation': computation, 'adaptive': adaptive, 'b3': {'attempts': attempts, 'skipped': skipped, 'produced_dpr': produced,
+            'construction': dict(construction), 'construction_pipeline': pipeline, 's_readiness': readiness, 's_combat_rank': s_combat, 'computation': computation, 'adaptive': adaptive, 'b3': {'attempts': attempts, 'skipped': skipped, 'produced_dpr': produced,
               'coverage': produced / attempts if attempts else None, 'failures': dict(faults),
               'unsupported': len(unsupported), 'applicable_attempts': attempts - len(unsupported),
               'unsupported_only': len(unsupported), 'candidates': dict(candidates),
@@ -355,7 +390,7 @@ def summarize(config, decisions, brains, coverage, plans=()):
             'brain': {'observed_questions': len(brain_rows), 'questions_with_dpr': delivered,
                       'accepted_with_dpr': sum(r.get('accepted') is True and dpr_count(r.get('options')) > 0 for r in brain_rows),
                       'decision_use': 'unknown; delivery is not evidence of reasoning or a fixed DPR weight'},
-            'alert': (enabled and longest >= FAIL_STREAK) or pipeline['alert'] or readiness['alert'] or computation['alert'] or adaptive['alert'], 'failures': evidence, 'diagnostics': phases,
+            'alert': (enabled and longest >= FAIL_STREAK) or pipeline['alert'] or readiness['alert'] or s_combat['alert'] or computation['alert'] or adaptive['alert'], 'failures': evidence, 'diagnostics': phases,
             'unsupported': unsupported,
             'scope': 'Service availability only; sample threshold, simulator validity and game policy unchanged.'}
 

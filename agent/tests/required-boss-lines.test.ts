@@ -14,6 +14,23 @@ vi.mock("../src/reflex/rollout-live.js", async (original) => ({
 const original = { ...bossLinesOptions };
 afterEach(() => { Object.assign(bossLinesOptions, original); vi.restoreAllMocks(); vi.unstubAllEnvs(); releaseBossLinesPool(); });
 
+it("replays Ironclad Boss questions identically with S_COMBAT_RANK on or off", () => {
+  Object.assign(bossLinesOptions, { serial: true, now: () => 0, deadlineMs: 25000, turnBudgetMs: 30000 });
+  const input = board({ bossHp: 12 });
+  const lines = solveTurn(input.solver).plans.slice(0, 3);
+  for (const turn of [1, 3, 7]) {
+    const question = (mode: string) => {
+      vi.stubEnv("S_COMBAT_RANK", mode);
+      const result = bossLineSim({ state: { raw: { run_id: "fixed-Ironclad-replay" }, run: { floor: 1, ascension: 10,
+        raw: { character_id: "IRONCLAD" } } }, knowledge: {}, memory: createScreenMemory("COMBAT"),
+        solver: input.solver, piles: input.piles, randomPotions: [], lines, turn, drinks: () => false, samples: 4 } as unknown as BossLineSimArgs);
+      expect(result.available).toBe(true);
+      return simLog(result, (plan) => `plan${lines.indexOf(plan) + 1}`);
+    };
+    expect(question("on")).toEqual(question("off"));
+  }
+});
+
 it("live Silent completes every Boss line beyond the budget while historical and other-role budgets stay intact", () => {
   Object.assign(bossLinesOptions, { serial: true, deadlineMs: 0, turnBudgetMs: 0 });
   const input = board({ bossHp: 12 });
@@ -28,6 +45,8 @@ it("live Silent completes every Boss line beyond the budget while historical and
   if (!result.available) throw new Error(result.reason);
   expect(result.run).toMatchObject({ samples: 4, requested: 4, timedOut: false });
   expect(result.byPlan.size).toBe(args.lines.length);
+  expect(result.sRanking?.schema).toBe("s-combat-ranking-v1");
+  expect(simLog(result, (plan) => `plan${args.lines.indexOf(plan) + 1}`)).toHaveProperty("s_ranking.candidate_keys");
   for (const line of result.byPlan.values()) {
     expect(line.result.outcomes).toHaveLength(4);
     expect(line.bossMargin).toMatchObject({ samples: 4, valid: 4, missing: 0, enemyDpr: { n: 4 }, myDpr: { n: 4 } });

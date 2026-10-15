@@ -4,7 +4,8 @@
  * same seeds, each under its best kill order. The question then carries each line's calibrated win rate, its paired
  * difference to the best line (± standard error), the HP lost in the samples won, the turns to the end and the turn the
  * losing samples die on; the best line (rollout_best) is the one with the highest simulated win rate (lines within
- * BOSS_LINES_TIE_SE standard errors tied), then the least HP lost in the samples won (median; V4.2). Jev still picks the
+ * BOSS_LINES_TIE_SE standard errors tied), then admitted paired S for Silent's P3 path, then the least HP lost in the
+ * samples won (median; V4.2). Other roles and failed S gates retain the V4.2 ranking. Jev still picks the
  * line each turn: the simulation only
  * adds numbers and, every few turns, a fight plan summarised from the best line's winning samples; code never plays the
  * plan. Bosses the simulator is known to get wrong (LOW_TRUST_BOSSES) keep the 5-turn rollout's ranking, and their
@@ -19,7 +20,9 @@
  */
 
 import { ADAPTIVE_RULE, safeAdaptiveShadow } from "./adaptive-shadow.js";
-import { simAdaptivePolicy } from "../core/config.js";
+import { simAdaptivePolicy, sCombatRankEnabled } from "../core/config.js";
+import { rankByBossMargin, type CombatSRanking } from "./s-combat-rank.js";
+import { auditSigns } from "./s-sign.js";
 import { beginComputation, type SimAttempt, type SimCompletion } from "./computation-failure.js";
 import type { SimProgress, SimWait } from "./computation-wait.js";
 import { createHash } from "node:crypto";
@@ -484,6 +487,8 @@ export function runLines(
 }
 
 export interface LinesRank {
+  order?: number[];
+  sRanking?: CombatSRanking;
   /** Index of the best line: the top win rate's tie group (within tieSe paired standard errors), then the least HP lost when won. */
   best: number;
   /** Lines whose numbers are the best's (win % and median HP lost when won, to one decimal): two or more, no single best. */
@@ -498,7 +503,8 @@ export interface LinesRank {
  * B2's ranking (Roy): the whole-fight win rate first, ties within `tieSe` standard errors, then the least `second`
  * (wonLoss, the HP lost when won; the acceptance tool also ranks by the pre-V4.2 mean HP lost to compare).
  */
-export function rankLines(lines: BossSimLineResult[], tieSe = BOSS_LINES_TIE_SE, eligible: (i: number) => boolean = () => true, second: (line: BossSimLineResult) => number = wonLoss): LinesRank {
+export function rankLines(lines: BossSimLineResult[], tieSe = BOSS_LINES_TIE_SE, eligible: (i: number) => boolean = () => true, second: (line: BossSimLineResult) => number = wonLoss, sPolicy?: { lowTrust: string | null }): LinesRank {
+  if (sPolicy) return rankByBossMargin(lines, rankLines(lines, tieSe, eligible, second), tieSe, sPolicy.lowTrust, second);
   const idx = lines.map((_, i) => i).filter(eligible);
   if (idx.length === 0) return { best: -1, tied: [], vsBest: lines.map(() => null), winTied: lines.map(() => false) };
   let top = idx[0]!;
@@ -646,6 +652,7 @@ export type BossLineSim = { completion?: SimCompletion } & (
       plan: string | null;
       /** The lines in the ranking's order (the tied-on-win-rate group by HP lost, then the rest by win rate), for the log. */
       order: Plan[];
+      sRanking?: CombatSRanking;
     });
 
 export interface BossLineSimArgs extends BossSimInputArgs {
@@ -729,8 +736,9 @@ export function bossLineSim(args: BossLineSimArgs): BossLineSim {
     if (attempt?.degraded && run.samples < 300) return unavailable(`不完整（故障降级，n=${run.samples}）；不足 300 次，不给数字，按原 rollout 继续`);
     failed = { fight, count: 0 };
     const eligible = (i: number) => (args.eligible ? args.eligible(args.lines[i]!) : true);
-    const rank = rankLines(run.lines, BOSS_LINES_TIE_SE, eligible);
-    const dryRank = rankLines(run.lines, BOSS_LINES_TIE_SE, (i) => eligible(i) && !args.drinks(args.lines[i]!));
+    const sPolicy = sCombatRankEnabled(String(args.state.run?.raw["character_id"] ?? "")) ? { lowTrust } : undefined;
+    const rank = rankLines(run.lines, BOSS_LINES_TIE_SE, eligible, wonLoss, sPolicy);
+    const dryRank = rankLines(run.lines, BOSS_LINES_TIE_SE, (i) => eligible(i) && !args.drinks(args.lines[i]!), wonLoss, sPolicy);
     const turnNow = args.turn ?? 1;
     const start = turnNow <= 1 ? "start" : "mid";
     const byPlan = new Map<Plan, LineSim>();
@@ -741,13 +749,13 @@ export function bossLineSim(args: BossLineSimArgs): BossLineSim {
       const reference = run.lines[rank.best >= 0 ? rank.best : 0]!;
       const margin = input.captureBossMargin ? summarizeBossMargin(line.outcomes, reference.outcomes, line.outcomes.map((_, at) => at)) : null;
       byPlan.set(args.lines[i]!, { result: line, calibrated, vsBest, winTied,
-        ...(margin ? { bossMargin: { ...margin, rankingEligible: margin.rankingEligible && !lowTrust } } : {}),
+        ...(margin ? { bossMargin: { ...margin, rankingEligible: margin.rankingEligible && !lowTrust && (!sPolicy || auditSigns(line.outcomes).rankingEligible) } } : {}),
         text: (attempt?.degraded ? `不完整（故障降级，n=${run.samples}）；` : "") + lineSimText(line, calibrated, rank.best === i ? null : vsBest, run, turnNow, { best: rank.best === i, winTied, lowTrust }) });
     });
-    // The ranking as a full order: the lines tied with the top win rate by HP lost when won (the best first), then the rest by win rate.
+    // P3 supplies its complete anchored order; the legacy path keeps its exact original comparator.
     const key = (i: number): [number, number, number] => (rank.winTied[i] ? [0, wonLoss(run.lines[i]!), -run.lines[i]!.winProb] : [1, -run.lines[i]!.winProb, wonLoss(run.lines[i]!)]);
     const cmp = (x: number, y: number) => (x === y ? 0 : x < y ? -1 : 1);
-    const order = run.lines.map((_, i) => i).sort((a, b) => cmp(key(a)[0], key(b)[0]) || cmp(key(a)[1], key(b)[1]) || cmp(key(a)[2], key(b)[2]) || a - b).map((i) => args.lines[i]!);
+    const order = (rank.order ?? run.lines.map((_, i) => i).sort((a, b) => cmp(key(a)[0], key(b)[0]) || cmp(key(a)[1], key(b)[1]) || cmp(key(a)[2], key(b)[2]) || a - b)).map((i) => args.lines[i]!);
     const showPlan = args.turn === null || args.turn <= 1 || (args.turn - 1) % BOSS_LINES_PLAN_EVERY === 0;
     const plan = showPlan && rank.best >= 0 ? fightPlanText(input, run.lines[rank.best]!, turnNow) : null;
     const sim: BossLineSim = {
@@ -762,6 +770,7 @@ export function bossLineSim(args: BossLineSimArgs): BossLineSim {
       run,
       plan,
       order,
+      ...(rank.sRanking ? { sRanking: rank.sRanking } : {}),
     };
     bossLinesOptions.onSim?.(sim);
     return sim;
@@ -837,6 +846,7 @@ export function simNote(sim: BossLineSim): string {
   if (!sim.available) return `whole-fight simulation unavailable (${sim.reason})`;
   if (sim.run.continuation) return `F48→F49连续通关模拟：每条第一战胜利样本以实际剩余HP、药水和复活资源进入第二战，第二boss按已观察分布抽样；${sim.run.samples}配对样本，未经两战校准。${sim.run.continuation.limitation}；不是必死或SL判据。证据：${sim.run.continuation.source}`;
   const how = `each option's whole_fight_sim: that line this turn, then the simulator's own play to the fight's end, ${sim.run.samples} samples per line on the same random numbers (${sim.run.timedOut ? `cut from ${sim.run.requested} by the time limit, ` : ""}${(sim.run.elapsedMs / 1000).toFixed(1)} s); the win rate is calibrated on logged boss fights, the difference to the best line is paired (± standard error)`;
+  if (sim.sRanking?.used) return `${how}. rollout_best uses simulated win rate first (ties within ${BOSS_LINES_TIE_SE} paired standard errors), then S within that group (ties within ${BOSS_LINES_TIE_SE} paired standard errors), then median HP lost when won; attribution and sign checks passed for the whole win-rate tie group. S is conditional model margin, not real win probability; the 5-turn rollout's numbers stay for reference`;
   return `${how}. rollout_best is the line with the highest simulated win rate (lines within ${BOSS_LINES_TIE_SE} standard errors of it count as tied), then the least HP lost when won (median); the 5-turn rollout's numbers stay for reference`;
 }
 
@@ -863,6 +873,8 @@ export function simLog(sim: BossLineSim, keyOf: (plan: Plan) => string | null, e
   return {
     available: true,
     ...completion,
+    ...(sim.sRanking ? { s_ranking: toJsonValue({ ...sim.sRanking, candidate_keys:
+      [...sim.byPlan.keys()].map((plan) => keyOf(plan)) }) } : {}),
     ...(sim.run.adaptive ? { adaptive: toJsonValue({ ...asRecord(sim.run.adaptive), candidate_keys:
       Object.fromEntries([...sim.byPlan.keys()].map((plan, i) => [`line:${i}`, keyOf(plan)])) }) } : {}),
     ...(sim.run.continuation ? { objective: "F48_F49_continuous", calibration: "none", continuation: { source: sim.run.continuation.source, limitation: sim.run.continuation.limitation } } : {}),

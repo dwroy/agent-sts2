@@ -18,6 +18,11 @@ export type LogLevel = "debug" | "info" | "warn" | "error";
 export type RunStart = "auto" | "continue" | "new";
 export type JevContextVersion = "off" | "v1";
 
+/** P3 changes only Silent's admitted Boss tie groups; other characters keep the legacy ranking. */
+export function sCombatRankEnabled(character: string | null | undefined, env: NodeJS.ProcessEnv = process.env): boolean {
+  return characterKey(character ?? "") === "silent" && (env["S_COMBAT_RANK"] ?? "on") === "on";
+}
+
 /** Only Silent's live mandatory computation may use the approved fault exit. */
 export function simFailurePolicy(character: string | null | undefined, env: NodeJS.ProcessEnv = process.env): { enabled: boolean; retries: number } {
   const retries = Number(env["SIM_FAILURE_RETRIES"] ?? 2);
