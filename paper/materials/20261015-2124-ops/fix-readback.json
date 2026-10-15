@@ -1,0 +1,215 @@
+{
+  "at": "2026-10-15 21:29:23 CST",
+  "batch": "20261015-211145-fix-batch",
+  "canonical_state": "failed",
+  "rc": 0,
+  "original_report": {
+    "task": "fix-batch",
+    "base": "f32876369a61ee7ead8193a53dcd652837060c6a",
+    "fixes": [],
+    "skipped": [
+      {
+        "item": "silent-0481：技能药水生命周期措辞",
+        "reason": "策略类/题面知识，沿原686d4e759478eebb提案"
+      },
+      {
+        "item": "silent-0311：库存后继血量预算",
+        "reason": "策略类/模型，沿原d2f24919ee64b90b提案"
+      },
+      {
+        "item": "silent-0332：成功首战资源nonpositive-hp",
+        "reason": "证据不足，完整resources/steps仍截断，根因未知"
+      },
+      {
+        "item": "silent-0469：聚合体纸鹤组合",
+        "reason": "策略类，超出现有骑士窄修复范围"
+      },
+      {
+        "item": "silent-0446：休息动作确认与路线提交",
+        "reason": "策略类/结构，沿原独立提案"
+      },
+      {
+        "item": "其余出牌、机制、药水、SL、终局、路线、休息项",
+        "reason": "策略类，逐项处置见queue-dispositions.json"
+      },
+      {
+        "item": "Codex大脑缓存命中偏低",
+        "reason": "证据不足，缺当前原生请求的受控比较"
+      },
+      {
+        "item": "调度公平性核查",
+        "reason": "证据不足，尚未证明永久饥饿"
+      },
+      {
+        "item": "sandbox-glob-startup-race剩余范围",
+        "reason": "证据不足，无法据空租约确定拒绝分支、注册时序或目录删除者"
+      },
+      {
+        "item": "core-build-notify历史发送事实",
+        "reason": "证据不足，原rc2缺stderr"
+      },
+      {
+        "item": "named-card-facts-transport其他入口",
+        "reason": "太大，属于独立功能范围"
+      },
+      {
+        "item": "Boss模拟性能及v5-dpr-health宽范围",
+        "reason": "太大，沿原专项与冻结输入接续"
+      },
+      {
+        "item": "架构漏斗、学习优先级、统一资源价值及F33归因",
+        "reason": "策略类/独立架构任务"
+      },
+      {
+        "item": "框架外层总时限收尾",
+        "reason": "太大，精确续验入口已实现，剩余范围沿原框架任务"
+      }
+    ],
+    "merged": null,
+    "tests": {
+      "tsc": 0,
+      "vitest": 0,
+      "cases": 59,
+      "files": 7,
+      "scope": "targeted",
+      "reruns": []
+    },
+    "code_proposals": [],
+    "implementation_domains": [],
+    "report": "/home/dw/Projects/agent-sts2/learner/runs/20261015-211151-2f7c7a4e-e7f3-4eb6-8da1-8ab3627f4ee2-fix-batch/report.md"
+  },
+  "current_main": "dd38c39f2f4e2976e5bdc62cf5ed79bfc117152c",
+  "current_live_read_only": "fe6462651b593b9831581c088deface9957a404f",
+  "native": {
+    "batch": "20261015-211145-fix-batch",
+    "thread": "01a13fb0-d537-7d20-a699-f44b90855640",
+    "cwd": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261015-211145",
+    "event_log": "learner/runs/20261015-211151-2f7c7a4e-e7f3-4eb6-8da1-8ab3627f4ee2-fix-batch.jsonl",
+    "registered_launch_batch": "20261015-211145-fix-batch",
+    "original_lease": "47886bcd84b574414725e263110bdab64804a69529506f2f73973d8c6611b7eb",
+    "native_context": {
+      "source": "ops/codex-ops/accounts/codex1/learner/sessions/2026/10/15/rollout-2026-10-15T21-11-55-01a13fb0-d537-7d20-a699-f44b90855640.jsonl",
+      "offset": 64061,
+      "bytes": 5118,
+      "sha256": "7894be225f8d27636f7840d25778506443c7dc1fb284353af2d3ae9f672338ea",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "sandbox": {
+        "type": "workspace-write",
+        "writable_roots": [
+          "/home/dw/Projects/agent-sts2",
+          "/home/dw/Projects/agent-sts2/.git",
+          "/home/dw/Projects/agent-sts2/.git/worktrees/codex-fix-silent-20261015-211145"
+        ],
+        "network_access": false,
+        "exclude_tmpdir_env_var": false,
+        "exclude_slash_tmp": false
+      },
+      "approval_policy": "never"
+    },
+    "native_user_input": {
+      "offset": 69179,
+      "bytes": 13081,
+      "sha256": "bc59ad95ef14675f9f247a3558f708821ed5d52e96e0e50b5b163a7f58d8ae79",
+      "input_sha256": "c2b9400272ed2633d030790888306e3dbc8e7cc34f415eb5997e6c294e13126a"
+    },
+    "original_header_events": [
+      {
+        "offset": 0,
+        "bytes": 14892,
+        "sha256": "1d79900c21c7097f8b2fbd0e88210bba3fd22573773437ab9d79562f5fd78b98",
+        "type": "learner_launch",
+        "attempt": null,
+        "code": null
+      },
+      {
+        "offset": 14892,
+        "bytes": 370,
+        "sha256": "0107c05e9ed95b6ceb3b3c7771d5976212c313f70f0fdae498b2f0f231f2a748",
+        "type": "learner_startup_attempt",
+        "attempt": 1,
+        "code": null
+      },
+      {
+        "offset": 18268,
+        "bytes": 77,
+        "sha256": "15d09b93591095d7325dfb45bd1aba566d0f5b7a917185c5c8d952b67b69e839",
+        "type": "thread.started",
+        "attempt": null,
+        "code": null
+      }
+    ],
+    "startup_attempts": 1,
+    "failed_startups_preserved": 0,
+    "no_model_or_manual_restart": true
+  },
+  "original_pinned_live": "fe6462651b593b9831581c088deface9957a404f",
+  "source_references_verified": 73,
+  "unique_source_paths": 51,
+  "source_base_shas_and_ancestors_verified": true,
+  "pinned_live_existing_leaf_shas_verified": true,
+  "pinned_live_absent_paths": [
+    "ops/worktree_storage.py"
+  ],
+  "pinned_live_different_paths": [
+    "agent/src/brain/build-facts.ts",
+    "agent/src/brain/engines/codex-usage.ts",
+    "agent/src/hand/screens/event.ts",
+    "agent/src/reflex/card-model.ts",
+    "agent/src/sl/explore.ts",
+    "agent/tests/brain-codex-usage.test.ts",
+    "learner/lib/launcher.ts",
+    "ops/codex-ops-actions.sh",
+    "ops/codex/main.ts",
+    "ops/learner_retention.py",
+    "ops/learning_requests.py"
+  ],
+  "source_ancestry_is_not_leaf_equality_or_current_deployment": true,
+  "queue_unchecked": 41,
+  "queue_prefix_preserved": true,
+  "queue_concurrent_append": "\n- 2026-10-15 21:14:22 CST [原silent-0332复盘补链，非新bug] 原204301复盘已实际完成RQCHNN0W72KF与VNSXWCWXR3VW；RQ仍是原F40/F48三组nonpositive-hp资源接续异常，原1840/1926补证与5aa2672链保持，完整resources/steps仍截断、根因未修，C1降级出口不当根因修复。不重复派同题，不更改正HP契约、样本/预算或对局。新复盘与联合资源/条件机制提案silent-proposal-f4e0f382dd79714b由原自动策略链处理，VNS资源提案47a7b241b6020251独立保留，均不冒实现/上线；学习者原bugs.new=false，无新增阻塞纯bug。原RQ失败启动历史保留。报告learner/runs/20261015-204302-3d780a35-a078-4b93-bcea-905a0e394efe-postmortem/report.md；本轮接收paper/materials/20261015-2111-ops/。\n",
+  "audit_attachment_correction": {
+    "previous": {
+      "line": 1294,
+      "item": "- [ ] **silent-0481**：转录原学习者纯bug回报，`agent/src/hand/screens/selection.ts:311/:333` 把技能药水生成牌的“本回合免费”写成“只在本回合存在”（This card is only for this turn）。Y2K25VFDU95P/A10/F9T3 d392030 三选均0费、实选触不可及；T5 s404267重抽显示2费，T3 s404256–404259实际0费消费窗口与后续出现分列。首证回溯C48LLXBGKXQ9 F6T1 d205391；原提案 `silent-proposal-686d4e759478eebb` 已交自动链，限定已观察药水来源，未知组合/永久构筑归属及收益不补造。区别已修silent-0324刀舞模型，不重复派同题，不由ops添加游戏规则。",
+      "disposition": "已修或已覆盖窄子项；不关闭更宽父项",
+      "commit": "66c22ba7d87b8748690a4183fff838acd346bd3e"
+    },
+    "current": {
+      "line": 1294,
+      "item": "- [ ] **silent-0481**：转录原学习者纯bug回报，`agent/src/hand/screens/selection.ts:311/:333` 把技能药水生成牌的“本回合免费”写成“只在本回合存在”（This card is only for this turn）。Y2K25VFDU95P/A10/F9T3 d392030 三选均0费、实选触不可及；T5 s404267重抽显示2费，T3 s404256–404259实际0费消费窗口与后续出现分列。首证回溯C48LLXBGKXQ9 F6T1 d205391；原提案 `silent-proposal-686d4e759478eebb` 已交自动链，限定已观察药水来源，未知组合/永久构筑归属及收益不补造。区别已修silent-0324刀舞模型，不重复派同题，不由ops添加游戏规则。",
+      "disposition": "策略类/题面知识：技能药水生命周期措辞仍在，沿 silent-proposal-686d4e759478eebb；刀舞窄修复不覆盖本项",
+      "prior_scratch_inventory_correction": "前批报告正文已正确列为未修，但其附件误关联刀舞提交；本附件按当前源码更正，不回写历史"
+    },
+    "scope": "Only the current audit attachment classification is corrected. The prior report body already retained this unresolved issue; old files remain unchanged. No new game claim, implementation, notice ACK or learning task."
+  },
+  "original_checks": {
+    "tsc": 0,
+    "vitest": 0,
+    "cases": 59,
+    "files": 7,
+    "scope": "targeted",
+    "reruns": []
+  },
+  "checks_reexecuted": false,
+  "full_suite_claim": false,
+  "original_check_log_shas": {
+    "tsc.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "tsc.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "vitest.log": "2a5ee2fcd7d8199b94f5332e7a4cef6354f9a8e0a4ee4726d0a5e7d74b2a2c59",
+    "vitest.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "gitleaks.log": "595a9e7f90d54ba1b8b3db15781af5f2c5ace970662badc1b76d73f9dbcedb36",
+    "gitleaks.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "gitleaks.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+  },
+  "no_new_source_commit_or_blocked_merge": true,
+  "canonical_failed_rc0_preserved_not_product_failure_claim": true,
+  "original_startup_and_nine_resource_failure_rows_verified": true,
+  "preparation_failures_preserved": [
+    "Pinned live worktree_storage.py absent: original first audit failure retained.",
+    "Concurrent original0332 queue append: failed byte-identical assumption retained; prior prefix verified."
+  ],
+  "ops_preparation_correction": "The first ops phrase guard incorrectly required two identical-capitalization strings. The two original strings differ in initial case; corrected to a case-insensitive readback. Original helper/failure retained; no earlier records had been written.",
+  "unresolved": "Original0332 resources/steps remain truncated and mechanism root cause unknown. Empty startup lease does not identify refusal branch, registration timing or directory deleter. Other original strategy, performance and architecture parents remain open under their existing owners.",
+  "no_ledger_lesson_queue_source_release_dataset_or_runtime_mutation": true
+}
