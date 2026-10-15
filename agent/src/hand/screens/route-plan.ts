@@ -19,6 +19,16 @@ export interface RoutePlanStep {
   hpOnArrival: number | null;
 }
 
+/** Audit inputs and absolute arrivals, kept with the decision row's observed_ts and fingerprint. */
+export interface RoutePlanProjection {
+  version: 1;
+  currentNode: string | null;
+  start: { hp: number; maxHp: number };
+  costs: RoomCostModel;
+  assumptions: { rests: "heal"; bossLoss: "unmodelled" };
+  arrival: { row: number; col: number; type: string; hp: number | null; maxHp: number }[];
+}
+
 export interface RoutePlan {
   runId: string;
   act: number;
@@ -26,6 +36,8 @@ export interface RoutePlan {
   /** HP fraction when the plan was made. */
   hpPct: number;
   path: RoutePlanStep[];
+  /** Silent A10 audit only; the existing route facts and normalized arrivals remain the decision inputs. */
+  projection?: RoutePlanProjection;
   /** The route as text: "r8c1 普通战 → r9c1 休息 → … → r16c3 Boss". */
   summary: string;
   /** Why the previous plan of this act was replaced (a re-plan or a revision), for the run memory. */
@@ -193,6 +205,17 @@ export function makeRoutePlan(env: DecisionEnv, map: RouteMap, ids: string[], st
     floor: env.state.run?.floor ?? null,
     hpPct: start.max > 0 ? Math.max(0, Math.min(1, start.hp / start.max)) : 1,
     path: nodes.map((node, at) => ({ row: node.row, col: node.col, type: node.type, hpOnArrival: projection.arrival[at] === null ? null : Math.max(0, Math.min(1, projection.arrival[at]! / (projection.maxArrival[at]! || start.max || 1))) })),
+    // K2JAGKVJAWZJ F34/F46 and 79UCJ0K6R9C1 F14: a later max HP cannot recover an old projection.
+    ...(str(asRecord(env.state.run?.raw)["character_id"]).toUpperCase() === "SILENT" && env.state.run?.ascension === 10 ? {
+      projection: {
+        version: 1 as const,
+        currentNode: map.current,
+        start: { hp: start.hp, maxHp: start.max },
+        costs: structuredClone(costs),
+        assumptions: { rests: "heal" as const, bossLoss: "unmodelled" as const },
+        arrival: nodes.map((node, at) => ({ row: node.row, col: node.col, type: node.type, hp: projection.arrival[at]!, maxHp: projection.maxArrival[at]! })),
+      },
+    } : {}),
     summary: routeText(map, ids),
     ...(why ? { why } : {}),
   };
