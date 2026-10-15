@@ -1,0 +1,53 @@
+{
+  "at": "2026-10-15 16:39:36 CST",
+  "request": {
+    "at": "2026-10-15 16:38:34 CST",
+    "command": [
+      "bash",
+      "ops/codex-ops-do.sh",
+      "learner-recheck",
+      "20261015-051302-s2-strategy-proposal"
+    ],
+    "original_batch": "20261015-051302-s2-strategy-proposal",
+    "request_pid": 1838216,
+    "birth": "94547331",
+    "exact_live": "fad271855a515e229c7022f5049cc870f95a8d69",
+    "exact_tree": "24de68ae5d7c329dc445f48451fff885ce1c43c2",
+    "expected_log": "ops/codex-ops/learner/20261015-051302-s2-strategy-proposal.fallback-24de68ae5d7c329dc445f48451fff885ce1c43c2.checks.log",
+    "stage": "actual request client launched; worker acceptance and host result pending",
+    "final_combination_requests": 1,
+    "intermediate_P2_full_requested": false,
+    "source_full_repeated": false,
+    "no_game_or_model_or_account_change": true
+  },
+  "lock_rows": [
+    "66: FLOCK  ADVISORY  WRITE 1838232 08:30:372157 0 EOF"
+  ],
+  "owners": [
+    {
+      "pid": 1838232,
+      "birth": "94547365",
+      "argv": [
+        "python3",
+        "/home/dw/Projects/agent-sts2/ops/codex-ops-learn.py",
+        "recheck",
+        "--batch",
+        "20261015-051302-s2-strategy-proposal"
+      ],
+      "cwd": "/home/dw/Projects/agent-sts2",
+      "expected_log_fds": [
+        "5"
+      ]
+    }
+  ],
+  "actually_started": true,
+  "exact_live_readback": "fad271855a515e229c7022f5049cc870f95a8d69",
+  "exact_tree_readback": "24de68ae5d7c329dc445f48451fff885ce1c43c2",
+  "log_prefix_bytes": 116,
+  "log_prefix_sha256": "69d9459d27587a47222c3a5b8795434a199a2711f5b1ce0e5e2ef34772e4fcaa",
+  "full_result": "pending; RUN is not full success",
+  "intermediate_P2_full_not_requested": true,
+  "one_final_combination_request": true,
+  "old_failures_and_source_full": "preserved/not rerun",
+  "current_run": "2LZHP9BYFTHE PID1815776 remains original shadow/shadow; not restarted"
+}
