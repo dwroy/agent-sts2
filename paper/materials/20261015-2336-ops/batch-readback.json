@@ -1,0 +1,428 @@
+{
+  "batch": "20261015-231035-strategy-proposal",
+  "original_report": {
+    "task": "strategy-proposal",
+    "character": "silent",
+    "batch": "20261015-231035-strategy-proposal",
+    "base": "a37b9d065d05ae3d06aae7591a606ebdb7aa7121",
+    "runs": [
+      "751FN9QM9MHQ",
+      "KV0JHNJCKXLS",
+      "YQL8RZ8BWN1E",
+      "L9SGRBB5R698",
+      "PU80F84P6HPN",
+      "KEN58SH9SLZ6"
+    ],
+    "fixes": [],
+    "skipped": [],
+    "merged": null,
+    "tests": {
+      "tsc": null,
+      "vitest": null,
+      "cases": null
+    },
+    "code_proposals": [
+      "silent-proposal-366288801d9150d9",
+      "silent-proposal-85929bdfc8a3fc1b",
+      "silent-proposal-efd9f83ee9e1a6dc",
+      "silent-proposal-131042659448ae74",
+      "silent-proposal-990f054036609447",
+      "silent-proposal-e18d3f18e6cac2a0",
+      "silent-proposal-9733bb80f445aeae",
+      "silent-proposal-c51468c5e8ba6668",
+      "silent-proposal-86a7db08d1a31976",
+      "silent-proposal-e282a9131b99129a"
+    ],
+    "implementation_domains": [],
+    "proposal_results": [
+      {
+        "id": "silent-proposal-366288801d9150d9",
+        "state": "waiting",
+        "reason": "候选预测与单动作回执已有live实现；缺抽弃续问后的逐源实际归属、受控完整后继和独立后期验证，不据5/10血差设置SL阈值。"
+      },
+      {
+        "id": "silent-proposal-85929bdfc8a3fc1b",
+        "state": "waiting",
+        "reason": "未知持有价及同题无药参考已有live展示；缺实打无药整战、跨战留药分支及弃呼唤后的逐源结算，不能改饮用/持有价规则。"
+      },
+      {
+        "id": "silent-proposal-efd9f83ee9e1a6dc",
+        "state": "waiting",
+        "reason": "预测分账已实现，但没有逐来源完整执行归属和受控整战后继，不以相关六次尝试校准SL排序。"
+      },
+      {
+        "id": "silent-proposal-131042659448ae74",
+        "state": "waiting",
+        "reason": "持牌保守项/未决弃牌/未知持药值已有窄展示；actual_turn仍null，逐源伤害、能力后继与跨战无药结果未闭合，不能整项duplicate。"
+      },
+      {
+        "id": "silent-proposal-990f054036609447",
+        "state": "waiting",
+        "reason": "已核净差仍缺诅咒选择后的完整收益归属、回血逐源、受控整战及路线/休息反事实，不能新增SL或资源门槛。"
+      },
+      {
+        "id": "silent-proposal-e18d3f18e6cac2a0",
+        "state": "waiting",
+        "reason": "巨兽阶段/资源已有实际live源码；占位HP仍参与旧tie-break，缺改序后的受控完整后继与结局校准，不关闭宽提案。"
+      },
+      {
+        "id": "silent-proposal-9733bb80f445aeae",
+        "state": "waiting",
+        "reason": "局部残壳药水观察已有live展示；缺提前喝、不喝、留药与改变参考排序的受控整战支线。"
+      },
+      {
+        "id": "silent-proposal-c51468c5e8ba6668",
+        "state": "waiting",
+        "reason": "七次耗药已核，但缺随机选牌/发光水重问后的完整收益归属、F15不用药及留药至boss对照，不能拟持药阈值。"
+      },
+      {
+        "id": "silent-proposal-86a7db08d1a31976",
+        "state": "waiting",
+        "reason": "缺完整逐源能力收益、受控整战与独立留出；不能设置统一6血/2伤探索阈值或直接关闭探索。"
+      },
+      {
+        "id": "silent-proposal-e282a9131b99129a",
+        "state": "waiting",
+        "reason": "预测与回执不认证完整候选，缺能力后继完整归属、保持后轮条件的反事实和独立新局验证，保留探索与HP护栏。"
+      }
+    ],
+    "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261015-231035/learner/runs/20261015-231040-ef8fe3b8-3c45-43d7-8307-e73c95248025-strategy-proposal/report.md"
+  },
+  "original_no_change_gate": {
+    "base": "a37b9d065d05ae3d06aae7591a606ebdb7aa7121",
+    "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261015-231035/learner/runs/20261015-231040-ef8fe3b8-3c45-43d7-8307-e73c95248025-strategy-proposal/report.md",
+    "dispositions": [
+      {
+        "id": "silent-proposal-366288801d9150d9",
+        "state": "waiting",
+        "reason": "候选预测与单动作回执已有live实现；缺抽弃续问后的逐源实际归属、受控完整后继和独立后期验证，不据5/10血差设置SL阈值。"
+      },
+      {
+        "id": "silent-proposal-85929bdfc8a3fc1b",
+        "state": "waiting",
+        "reason": "未知持有价及同题无药参考已有live展示；缺实打无药整战、跨战留药分支及弃呼唤后的逐源结算，不能改饮用/持有价规则。"
+      },
+      {
+        "id": "silent-proposal-efd9f83ee9e1a6dc",
+        "state": "waiting",
+        "reason": "预测分账已实现，但没有逐来源完整执行归属和受控整战后继，不以相关六次尝试校准SL排序。"
+      },
+      {
+        "id": "silent-proposal-131042659448ae74",
+        "state": "waiting",
+        "reason": "持牌保守项/未决弃牌/未知持药值已有窄展示；actual_turn仍null，逐源伤害、能力后继与跨战无药结果未闭合，不能整项duplicate。"
+      },
+      {
+        "id": "silent-proposal-990f054036609447",
+        "state": "waiting",
+        "reason": "已核净差仍缺诅咒选择后的完整收益归属、回血逐源、受控整战及路线/休息反事实，不能新增SL或资源门槛。"
+      },
+      {
+        "id": "silent-proposal-e18d3f18e6cac2a0",
+        "state": "waiting",
+        "reason": "巨兽阶段/资源已有实际live源码；占位HP仍参与旧tie-break，缺改序后的受控完整后继与结局校准，不关闭宽提案。"
+      },
+      {
+        "id": "silent-proposal-9733bb80f445aeae",
+        "state": "waiting",
+        "reason": "局部残壳药水观察已有live展示；缺提前喝、不喝、留药与改变参考排序的受控整战支线。"
+      },
+      {
+        "id": "silent-proposal-c51468c5e8ba6668",
+        "state": "waiting",
+        "reason": "七次耗药已核，但缺随机选牌/发光水重问后的完整收益归属、F15不用药及留药至boss对照，不能拟持药阈值。"
+      },
+      {
+        "id": "silent-proposal-86a7db08d1a31976",
+        "state": "waiting",
+        "reason": "缺完整逐源能力收益、受控整战与独立留出；不能设置统一6血/2伤探索阈值或直接关闭探索。"
+      },
+      {
+        "id": "silent-proposal-e282a9131b99129a",
+        "state": "waiting",
+        "reason": "预测与回执不认证完整候选，缺能力后继完整归属、保持后轮条件的反事实和独立新局验证，保留探索与HP护栏。"
+      }
+    ]
+  },
+  "native": {
+    "batch": "20261015-231035-strategy-proposal",
+    "thread": "01a1401d-9394-7f03-9661-4fb999d729ce",
+    "cwd": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261015-231035",
+    "event_log": "learner/runs/20261015-231040-ef8fe3b8-3c45-43d7-8307-e73c95248025-strategy-proposal.jsonl",
+    "registered_launch_batch": "20261015-231035-strategy-proposal",
+    "original_lease": "96f82e74af36b99a6cf60f92bc753602ae997dffef530090d5300a568ae03f5f",
+    "native_context": {
+      "source": "ops/codex-ops/accounts/codex1/learner/sessions/2026/10/15/rollout-2026-10-15T23-10-42-01a1401d-9394-7f03-9661-4fb999d729ce.jsonl",
+      "offset": 50241,
+      "bytes": 5148,
+      "sha256": "f060056d64d6341e2b95cde7e61fa5cf435e70f8a5f788eb22a4295743a24dd0",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "sandbox": {
+        "type": "workspace-write",
+        "writable_roots": [
+          "/home/dw/Projects/agent-sts2",
+          "/home/dw/Projects/agent-sts2/.git",
+          "/home/dw/Projects/agent-sts2/.git/worktrees/codex-strategy-silent-20261015-231035"
+        ],
+        "network_access": false,
+        "exclude_tmpdir_env_var": false,
+        "exclude_slash_tmp": false
+      },
+      "approval_policy": "never"
+    },
+    "native_user_input": {
+      "offset": 55389,
+      "bytes": 21447,
+      "sha256": "bf1bac0ad0d28ec1a2cf9fe9c74d0e0cd8cfb2227cf373796d7f60c670568efb",
+      "input_sha256": "6eaa085016e4326de7ec88a7a6a3aae0c2c6d2afe95b45c32a30cc5e501704d5"
+    },
+    "original_header_events": [
+      {
+        "offset": 0,
+        "bytes": 23459,
+        "sha256": "70efa7c69c1466ea757fa6a705c93912c1955b0f53da81f988f4217c415fd2a3",
+        "type": "learner_launch",
+        "attempt": null,
+        "code": null
+      },
+      {
+        "offset": 23459,
+        "bytes": 378,
+        "sha256": "2af0545765247f3b5be49b3fb9aaedb3596f4f4484b85925c646c80cd17b40b3",
+        "type": "learner_startup_attempt",
+        "attempt": 1,
+        "code": null
+      },
+      {
+        "offset": 26843,
+        "bytes": 77,
+        "sha256": "a1672117f2d23275cba21121b3876fa4c55e71376b26aa3c6d4f594c7021c36a",
+        "type": "thread.started",
+        "attempt": null,
+        "code": null
+      }
+    ],
+    "startup_attempts": 1,
+    "failed_startups_preserved": 0,
+    "no_model_or_manual_restart": true
+  },
+  "original_final_validation": {
+    "base": "a37b9d065d05ae3d06aae7591a606ebdb7aa7121",
+    "head": "a37b9d065d05ae3d06aae7591a606ebdb7aa7121",
+    "git_status_porcelain": "",
+    "diff_bytes": 0,
+    "new_commits": [],
+    "proposal_result_count": 10,
+    "all_waiting": true,
+    "report_json_verified": true,
+    "artifact_count": 69,
+    "evidence_material_checks": {
+      "extract": 40,
+      "cases": 49,
+      "manual": 4
+    },
+    "production_tests": {
+      "tsc": null,
+      "vitest": null,
+      "cases": null
+    },
+    "ledger_rows": 16
+  },
+  "original_artifact_sha_verified": true,
+  "original_evidence_rows": 8444,
+  "original_material_checks": {
+    "extract": 40,
+    "cases": 49,
+    "manual": 4
+  },
+  "original_six_audit_summary": [
+    {
+      "run": "751FN9QM9MHQ",
+      "segments": 96,
+      "observed_turns": 129,
+      "turn_status": {
+        "unknown": 46,
+        "observed_turn_endpoints": 83
+      },
+      "unknown_reasons": {
+        "turn_opening_unverified": 41,
+        "turn_end_unverified": 5
+      },
+      "full_candidate_results": 0
+    },
+    {
+      "run": "KV0JHNJCKXLS",
+      "segments": 92,
+      "observed_turns": 114,
+      "turn_status": {
+        "unknown": 83,
+        "observed_turn_endpoints": 31
+      },
+      "unknown_reasons": {
+        "turn_opening_unverified": 71,
+        "turn_end_unverified": 12
+      },
+      "full_candidate_results": 0
+    },
+    {
+      "run": "YQL8RZ8BWN1E",
+      "segments": 213,
+      "observed_turns": 114,
+      "turn_status": {
+        "unknown": 51,
+        "observed_turn_endpoints": 63
+      },
+      "unknown_reasons": {
+        "turn_opening_unverified": 46,
+        "turn_end_unverified": 5
+      },
+      "full_candidate_results": 0
+    },
+    {
+      "run": "L9SGRBB5R698",
+      "segments": 228,
+      "observed_turns": 125,
+      "turn_status": {
+        "unknown": 60,
+        "observed_turn_endpoints": 65
+      },
+      "unknown_reasons": {
+        "turn_opening_unverified": 54,
+        "turn_end_unverified": 6
+      },
+      "full_candidate_results": 0
+    },
+    {
+      "run": "PU80F84P6HPN",
+      "segments": 136,
+      "observed_turns": 183,
+      "turn_status": {
+        "unknown": 80,
+        "observed_turn_endpoints": 103
+      },
+      "unknown_reasons": {
+        "turn_opening_unverified": 69,
+        "turn_end_unverified": 11
+      },
+      "full_candidate_results": 0
+    },
+    {
+      "run": "KEN58SH9SLZ6",
+      "segments": 96,
+      "observed_turns": 112,
+      "turn_status": {
+        "unknown": 42,
+        "observed_turn_endpoints": 70
+      },
+      "unknown_reasons": {
+        "turn_opening_unverified": 37,
+        "turn_end_unverified": 5
+      },
+      "full_candidate_results": 0
+    }
+  ],
+  "original_exclusions": [
+    {
+      "run": "751FN9QM9MHQ",
+      "decisions": 615,
+      "audit_decisions": 615,
+      "states": 624,
+      "exclusions": [],
+      "input_sha256": "d049ecd647a7854d4c82e157ff569306ef0d3925247160aed021602212e79df3"
+    },
+    {
+      "run": "KV0JHNJCKXLS",
+      "decisions": 669,
+      "audit_decisions": 667,
+      "states": 686,
+      "exclusions": [
+        {
+          "line": 272938,
+          "reason": "缺decision_id",
+          "label": "map/route-change",
+          "screen": "REST"
+        },
+        {
+          "line": 273191,
+          "reason": "缺decision_id",
+          "label": "map/route-change",
+          "screen": "REST"
+        }
+      ],
+      "input_sha256": "b0197aff2a3e461c3d2499019129fb11502cf34a2d417ba2d7e69945b48cc588"
+    },
+    {
+      "run": "YQL8RZ8BWN1E",
+      "decisions": 571,
+      "audit_decisions": 570,
+      "states": 582,
+      "exclusions": [
+        {
+          "line": 273668,
+          "reason": "缺decision_id",
+          "label": "map/route-change",
+          "screen": "REWARD"
+        }
+      ],
+      "input_sha256": "aa1e1eaa845765b11f339a4123520f3c969f530e77ae2d985cbdd530c563747c"
+    },
+    {
+      "run": "L9SGRBB5R698",
+      "decisions": 635,
+      "audit_decisions": 634,
+      "states": 653,
+      "exclusions": [
+        {
+          "line": 243739,
+          "reason": "缺decision_id",
+          "label": "map/route-change",
+          "screen": "EVENT"
+        }
+      ],
+      "input_sha256": "4b8783052f577a1e221d84cf71ee627f10209767ffe22a438ff1f9eccc68fb89"
+    },
+    {
+      "run": "PU80F84P6HPN",
+      "decisions": 1033,
+      "audit_decisions": 1032,
+      "states": 1064,
+      "exclusions": [
+        {
+          "line": 246622,
+          "reason": "缺decision_id",
+          "label": "map/route-change",
+          "screen": "REST"
+        }
+      ],
+      "input_sha256": "a7aadd08b95f3f01e2e09dd97e622ecebcab74cb82b32b1e473f371d3ddc2430"
+    },
+    {
+      "run": "KEN58SH9SLZ6",
+      "decisions": 548,
+      "audit_decisions": 547,
+      "states": 558,
+      "exclusions": [
+        {
+          "line": 274207,
+          "reason": "缺decision_id",
+          "label": "map/route-change",
+          "screen": "REWARD"
+        }
+      ],
+      "input_sha256": "9db651197412af507e1cd1bd7deebe2d11a3d1c65f80d40559d3a0372cedb173"
+    }
+  ],
+  "source13_sha_and_ancestry_verified": true,
+  "equal10_historical_comment_only3": true,
+  "owned_learner_cli_rows": 16,
+  "protected_fold_and_old_history_where_preserved": true,
+  "material_and_audit_not_reexecuted": true,
+  "limits": [
+    "861 segments/777 turn windows have415 observed endpoints and362 unknown; all full-candidate results remain null.",
+    "Six missing decision_id map/route-change metadata excluded; original4071 decisions versus4065 audit input retained. No continuity invented.",
+    "KV post-end curse selection/timeout endpoints remain manual; tool turn_end_unverified is not overwritten. Three pending KEN potion receipts not promoted to completed.",
+    "Historical dirty consumed tree/knowledge, complete per-source execution, controlled full fight/cross-fight outcomes and independent holdout remain missing.",
+    "No new source, behavior release, tests, game knowledge, wide-parent closure or natural-consumer claims from this batch."
+  ]
+}

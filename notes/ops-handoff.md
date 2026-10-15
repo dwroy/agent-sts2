@@ -1568,3 +1568,5 @@
 - 2026-10-15 23:07:12 CST 2249原两源发布的精确宿主检查已通过：214302-fix fallback tree94a022bc/livee1e7ee85，486文件4905过2跳、tsc0/vitest0；V5-R363号与两source实际祖先核。宿主pending关闭，不再重复原请求或重跑不变树；原failed/mergednull及旧阻塞回执不改。原自然注册保存/租约和Silent A10持有/买入payload消费者仍pending，按后继自然事件核，不启动对局/模型，不把新策略224302-s2旧冻结输入当屏障消费者；源码WT继续原retention门禁，不强删。回执paper/materials/20261015-2304-ops/host-closure.json。
 
 - 2026-10-15 23:27:04 CST 原224302-strategy d3e57c77三叶记录冲突已由ops窄合main/live，实际V5-R364/livecfa1c0be88147b4eac65c13d8c550b23ed4eef17/treef73356866790b5645e781161ee1ade655ff21066，source祖先/原六冲突保留、1文件4定向0、双通知及2发布追溯齐。原通道单次宿主已请求，按后继learner-checks核精确f7335686树，不重复请求或借R363的94a绿；下一自然匹配Silent A10 Pounce未知效果payload仍pending，不人为开局/调用模型或改其他角色/账号，十宽waiting/原sourceWT继续既有检查及retention门槛。回执paper/materials/20261015-2321-ops/publication-handoff.json。
+
+- 2026-10-15 23:38:18 CST V5-R364 d3e57c77原224302策略精确f7335686/livecfa1c0be完整宿主tsc/vitest0（487文件4909过2跳/637.88s），原唯一fallback及日志SHA收尾；新树host pending关闭，不重复请求/借旧树绿。原failed/mergednull/六冲突不改，下一自然匹配Silent A10猛扑known=false及unknownCards消费者仍pending，十宽提案保持waiting，原source WT继续既有retention门槛；不人为开局或新派模型。原231035策略材料不是自然消费者。回执paper/materials/20261015-2336-ops/host-closure.json。
