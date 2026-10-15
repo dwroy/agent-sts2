@@ -2247,3 +2247,5 @@ selector于2026-10-15 13:15:58 CST从/home/dw/.codex-brain原子改为/home/dw/P
 } 回执/home/dw/Projects/agent-sts2/ops/codex-ops/learning-notices/08473b2ce666b35ebdaca530.json；watcher须读取并告知Roy，尚未确认用户收到。<!-- learning-notice:08473b2ce666b35ebdaca530 -->
 
 - 2026-10-16 01:06:06 CST [运维 codex] 原004302-s2九waiting，一项原选/护栏/SL记录功能由既有cf72bd源码覆盖，无本批上线。45所属追溯已核；RC61/F45旧证据定位勘误已依原提案通知08473b2ce666b35ebdaca530实际转入现有watcher收件箱，watcher读取及Roy告知仍pending。回执paper/materials/20261016-0101-ops/。
+
+- 2026-10-16 01:11:34 CST [运维 codex/必要通知运输] 既有学习通知08473b2ce666b35ebdaca530已向原watcher wJ:pJT/01a13dcd实际提醒一次，rc0/agent_prompted回执留盘；原双写和ops_forwarded保持，提交不等已读，watcher_received与roy_notified待本人回执。未另建父项、实验或会话。回执paper/materials/20261016-0108-ops/watcher-reminder-transport.json。
