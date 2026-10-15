@@ -1822,7 +1822,11 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
   }
   const unverifiedBladeDance = card.bladeDance && (plays > 1 || automatic ||
     (card.upgraded && card.bladeDanceShivs !== 4) || card.cardId !== "BLADE_DANCE" || !card.adds);
-  if (unverifiedBladeDance) {
+  // Only a single manual plain cast with a free hand slot is supported by the two observed windows.
+  const unverifiedCloak = card.cloakAndDagger && (plays > 1 || automatic || card.upgraded ||
+    card.cardId !== "CLOAK_AND_DAGGER" || !card.adds ||
+    next.hand.filter((entry) => entry.type !== "Potion").length + next.held.length + next.locked.length + next.drawnInHand >= (player.handLimit ?? HAND_LIMIT));
+  if (unverifiedBladeDance || unverifiedCloak) {
     next.pendingSelection = true;
     next.unknown = [...next.unknown, `${card.name}（自动、重放、升级或缺资料的生成未验证）`];
   }
@@ -1835,7 +1839,7 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
     // CARD_CONDITIONS: a hand condition is read on the hand as this play resolves (a second play of it sees what the first
     // drew); unmet, the card's draw and energy do not happen.
     const verifiedCard = unverifiedDrawLock ? { ...card, drawLockAfter: false } : card;
-    const effects = unverifiedBladeDance ? { ...verifiedCard, draw: 0, adds: undefined }
+    const effects = unverifiedBladeDance || unverifiedCloak ? { ...verifiedCard, draw: 0, adds: undefined }
       : unverifiedDodgeReplay ? { ...card, dodgeRollNextBlock: false }
       : zeroPoisonMirage ? { ...card, flatValue: 0 }
       : enchantedAfterimage ? { ...card, block: card.afterimageEnchantBlock! } : verifiedCard;
@@ -2253,9 +2257,9 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
   }
   // One Monte Carlo sample of a random potion (potion-mc.ts): the cards it really puts in the hand.
   if (card.adds && !next.pendingSelection && (card.discardCount === undefined || hiddenDaggers(card))) {
-    const adds = hiddenDaggers(card) || card.bladeDance ? card.adds.map((shiv, i) => ({
+    const adds = hiddenDaggers(card) || card.bladeDance || card.cloakAndDagger ? card.adds.map((shiv, i) => ({
       // Four-Shiv casts use their own range; the plain model's identities remain unchanged.
-      ...shiv, index: card.bladeDance ? (card.bladeDanceShivs === 4 ? 4_000_000 + next.steps.length * 4 + i
+      ...shiv, index: card.cloakAndDagger ? 5_000_000 + next.steps.length : card.bladeDance ? (card.bladeDanceShivs === 4 ? 4_000_000 + next.steps.length * 4 + i
         : 3_000_000 + next.steps.length * 3 + i) : 2_000_000 + next.steps.length * 2 + i,
       key: `${card.key}~shiv${next.steps.length}:${i}`,
       validTargets: next.enemies.filter((enemy) => enemy.alive).map((enemy) => enemy.index),

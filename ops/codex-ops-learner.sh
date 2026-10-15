@@ -184,7 +184,9 @@ else
   fi
   # The launcher may retry only a proven pre-session failure under this same registration.
   export LEARNER_BATCH_ID="$batch" LEARNER_STATE_FILE="$DIR/learn.json"
-  nice -n 10 "$ROOT/agent/node_modules/.bin/tsx" "$worktree/learner/run.ts" "${args[@]}" > "$out" 2> "$err"
+  # Use current instance policy for persistent old workspaces; task source and native cwd stay bound below.
+  nice -n 10 python3 "$OPS/learner_entry.py" "$ROOT" "$worktree" "$batch" "$DIR/learn.json" "$out" "$err" \
+    -- "$ROOT/agent/node_modules/.bin/tsx" "$ROOT/learner/run.ts" "${args[@]}"
   rc=$?
 fi
 [ -n "$tailer" ] && { sleep 1; kill "$tailer" 2>/dev/null; }
