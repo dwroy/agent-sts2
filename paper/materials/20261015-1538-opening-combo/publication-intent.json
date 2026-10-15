@@ -1,0 +1,82 @@
+{
+  "at": "2026-10-15 15:42:58 CST",
+  "original_batch": "20261015-144302-strategy-proposal",
+  "original_thread": "01a13e4c-ff8d-7473-b1d8-12a893f63281",
+  "source": "ebf8c57ecd811cceeb85fa636d49abbbb4c65dc8",
+  "source_parent": "2427a8c58a64cd5ab1842dc0b339d2a50805f191",
+  "main": "55533ec07a3fe8349fb5764005c2e502ac339095",
+  "source_leaves": [
+    {
+      "path": "agent/src/sim/double-boss-start.ts",
+      "sha256": "3241dedb92ff1ff9803df3786f15e65e669e7371756cca8668fb8c57771e97eb"
+    },
+    {
+      "path": "agent/src/sim/silent-opening.ts",
+      "sha256": "f3baa27bfac07d9f60995e37b7bbe31f7fa5baa63f18dd4fda3bc8d2c09bf502"
+    },
+    {
+      "path": "agent/tests/silent-opening-ad3-evidence.json",
+      "sha256": "cdc60725e98437f1e65ceeb1a0da52514c9c041145679622b5213329dd7826ac"
+    },
+    {
+      "path": "agent/tests/silent-opening.test.ts",
+      "sha256": "a52584a2f61968f48af0791c9a330cfa2c0e75f558428e34d3c19abd469aa759"
+    }
+  ],
+  "source_checks": {
+    "targeted": {
+      "removed_exit": 1,
+      "removed_failures": 3,
+      "restored_exit": 0,
+      "restored_passes": 8
+    },
+    "first_sandbox": {
+      "exit": 1,
+      "tsc": 0,
+      "vitest_passed": 4057,
+      "vitest_failed": 1,
+      "failure": "check-imports scans a transient tempfile directory removed by a parallel test (ENOENT); original log preserved"
+    },
+    "retry": {
+      "workers": 1,
+      "scope": "unchanged tools/test-sandbox.sh",
+      "status": "passed",
+      "exit": 0,
+      "tsc": 0,
+      "vitest_files": 432,
+      "vitest_tests": 4069
+    }
+  },
+  "actual_live_at_readback": {
+    "commit": "1e3f8d10bddc7bb97acad87cf37238490c4cfc5c",
+    "tree": "be679d7e446c1ed5397ed7f683a1c1e7de8e42f3"
+  },
+  "source_is_live_ancestor": false,
+  "live_stage": "pending original live mutex; source not published",
+  "release_id": null,
+  "blocker": {
+    "pid": 1625656,
+    "birth_expected": "94133040",
+    "batch": "20261015-141302-strategy-proposal",
+    "tree": "be679d7e446c1ed5397ed7f683a1c1e7de8e42f3",
+    "result": "pending original scheduler learner-checks",
+    "additional_check_requests": 0,
+    "birth": "94133040",
+    "cwd": "/home/dw/Projects/agent-sts2",
+    "actual_open_paths": [
+      "/home/dw/Projects/agent-sts2/ops/live-merge.lock",
+      "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261015-141302-strategy-proposal.fallback-be679d7e446c1ed5397ed7f683a1c1e7de8e42f3.checks.log"
+    ],
+    "stage": "existing full-check process actual live lock/log open; do not interrupt"
+  },
+  "next_trigger": "same ops on original 141302 host learner-checks event after lock release",
+  "next_actions": [
+    "hold original live lock; re-read actual live/knowledge refresh, current max registry and existing Flask release mapping",
+    "register already-live Flask publication first if still pending, preserving old rows and source",
+    "three-way only these four opening leaves; preserve knowledge, all live switches/history, never merge prepared P2/C2-on main branch",
+    "allocate unique official id only for actual new live behavior commit, then exact combined tree host full once via original 144302 batch",
+    "append actual rule old/new/evidence/rollback notices and narrow source ledger links; keep broad1f34 and other five waiting; natural consumer separate"
+  ],
+  "no_background_publisher_or_new_learning_or_duplicate_dispatch": true,
+  "no_current_game_restart_or_account_model_sample_change": true
+}
