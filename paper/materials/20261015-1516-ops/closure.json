@@ -1,0 +1,53 @@
+{
+  "at": "2026-10-15 15:17:35 CST",
+  "batch": "20261015-141302-s2-strategy-proposal",
+  "manifest_sha256": "a1d5c31d6eb2bde3975fded1206ecc2b6a3210d0734be7a8eeb2ec8256f8aab2",
+  "actual_host_supplement_exit": 0,
+  "exact_live_checked": {
+    "commit": "8c1935b9c672c5e9fdd676371e16988a8f0bc714",
+    "tree": "7e9b21378fb803dec3bf586d1f6e9be20b160008"
+  },
+  "tsc": 0,
+  "selected_file": "agent/tests/build-facts-audit.test.ts",
+  "executed_passed": 1,
+  "filtered_not_executed": 19,
+  "selected_full_test_name": "V4 M2 audit: build questions carry facts, not code's scores selection/remove with the boss simulation: facts, not scores; every option still listed",
+  "test_duration_ms": 15738.363229999999,
+  "original_timeout_ms": 60000,
+  "unchanged_test_blob": true,
+  "full_suite": false,
+  "original_full": {
+    "commit": "d488d29a09677776a6e7b419156e2fad17b70aa3",
+    "tree": "a110b92280cad9bd8843dc286323b04756233840",
+    "rc": 1,
+    "coverage": {
+      "files": {
+        "failed": 1,
+        "passed": 481
+      },
+      "tests": {
+        "failed": 1,
+        "passed": 4870,
+        "skipped": 2
+      }
+    },
+    "original_log_sha256": "1ca75511188eb9adc7405c168da77592ae93e54689fe489ab090417646279e21"
+  },
+  "source_changes_between_trees": [
+    "agent/src/reflex/card-model.ts",
+    "agent/src/reflex/combat-plan.ts",
+    "agent/src/reflex/rollout-live.ts",
+    "agent/src/reflex/turn-solver.ts",
+    "agent/tests/silent-random-poison-evidence.json",
+    "agent/tests/silent-random-poison.test.ts"
+  ],
+  "actual_live_at_readback": {
+    "commit": "534c3140f2e3a98fcd6380ce4447b00592cba026",
+    "tree": "5e56407b582cef19f7149d33730c563a02a00e1c"
+  },
+  "interpretation": "selected case passes at the later explicitly pinned tree, after the independent Flask source change; original full-suite timeout, coverage and failure stay unchanged; not a controlled proof of contention causality or an original/full-current-tree pass",
+  "decision": "retain deployed Serpent narrow fix; close only registered failed-case supplement; no rollback, further tests, new source/release or duplicate dispatch",
+  "canonical_original_completion": "failed/rc0/mergednull preserved",
+  "original_wide_proposal_natural_consumer_and_other_owner_scopes": "unchanged, not closed by this host test",
+  "no_game_account_model_sample_or_prompt_change": true
+}
