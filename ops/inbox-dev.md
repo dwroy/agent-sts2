@@ -2062,3 +2062,12 @@ tsc及2673例沙箱测试通过，推送动作专项2例/Python4例通过。当�
 - 2026-10-15 11:17:03 CST [运维 codex] 通关：UPAB38G2PA02，静默猎手A10/F49，10:59:39结束，SL后赢（F49成功读档1次、第二试T13胜剩7HP；F17/F33/F48首试胜），整局2小时19分06秒、含SL。下一局WJ0LTVSSDY61已自然打A10：climb请求11，但本次Silent选角实际max_ascension=10；不能写已打A11。V5正式战绩由24局2胜更新25局3胜22败、12.0%（首试1/SL后2；近20局3胜，原9连败结束），原W1排除/未结束局不计及旧统计切点保持。本胜运行旧R351/52046a3de，不是R352/R353/新P2C2收益验收。原始核对paper/materials/20261015-1113-victory/victory.json；不改当前局/账号/队列/预算，不重复派复盘。
 
 - 2026-10-15 11:30:10 CST [运维 codex] 原101301两学习者已测源码兜底实际上线：V5-R354/V5.cloak-generation1，行为ec74a49ce41370c10540c795338cbe5eecb78846，livefba193dfe31844e1dbde9f2ad7174427fcd446dc/tree143b43fbe993b9cc722f44ee7745cbd57838eb56。①旧普通斗篷Cards1误抽1/消费knownTop；新仅Silent A10已观察普通未附魔1费6挡/一刀模板生成SHIV、不抽牌，保已知顶并读实际手牌重规划。证据2E4 F22T2、REEB F45T6及YUW/X06有界支持、silent-0461/两旧提案；升级/A0宽项仍开，无死亡单因或收益声称，其他角色和原HP/SL/药价保持。②旧共享main临时解析失败即中断；新仅会话前空输出+精确config TransformError且原租约/命令/owner不变才最多3尝试，原错误逐字保留，取消/未知/有输出不重放；沿main已有中央ROOT策略，账号/模型/沙箱/权限不变。源4014/4020绿及原失败/4处和3处冲突保留，组合tsc0/26固定项0、gitleaks0，保两Dai注释与两知识刷新。精确新组合一次宿主全检已真实worker839258持锁启动、结果pending；原strategy数组格式限制与原mergednull/failed历史不改。台账只CLI补窄发布追溯，宽项不整体shipped，原waiting/正式队列登记边界见report。预期修正虚构抽牌后继/减少已证会话前启动中断，不宣赢率收益；回退分别逆斗篷5叶／infra8叶，保知识/其他功能。当前WJ0不重启热载，新消费者、P2/C2准入和宽R3仍pending。详情paper/materials/20261015-1118-ops/publication-receipt.json、host-start-readback.json与report.md。
+
+
+### 2026-10-15 12:29:03 CST 主线codex1下局切换预检：账号可用，旧credits闸阻塞，尚未激活
+
+按Roy12:13授权，只核主线Silent下一自然局。codex1实际account/read匹配原身份，gpt-6.1-sol/xhigh/default和无home AGENTS通过；延长有界RPC后实际余额43894.46、周额度100%、重置10/20 12:58:44 CST，先前30秒左右超时属慢初始化，未判账号无效。
+
+实际阻塞：旧agent/src/brain/engines/codex-usage.ts会在ordinaryUsageAllowed=false、100%窗口或credits消费时阻断；本次真实读数下start/beforeCall均拒绝。Roy的credits使用已明确授权，需核清“仅主线brain-home”的改动范围是否包括只对主线增加paid-credit准入；具体最小方案和固定验收已写credit-admission-scope.md，尚未改代码/保护。selector保原/home/dw/.codex-brain，因此不能声称下一局已生效。
+
+HLAWCGM3KHVB/PID952170当前局保持；未来如旧局出现BRAIN_FALLBACK按指示照常结束并分账。Regent/其他space、ops/学习者账号均未改，未兑券/发模型请求、未读凭据或改prompt/预算/队列。预检及未激活回执：paper/materials/20261015-silent-codex1-next-run/account-preflight.json、target-rpc-diagnostic.json、activation-blocker.json。
