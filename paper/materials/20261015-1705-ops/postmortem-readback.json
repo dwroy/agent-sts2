@@ -1,0 +1,152 @@
+{
+  "batch": "20261015-164301",
+  "run": "DUB5VQQ6D6D1",
+  "report": {
+    "task": "postmortem",
+    "appended": [
+      "DUB5VQQ6D6D1"
+    ],
+    "skipped": [],
+    "bugs": [],
+    "ledger": {
+      "added": [],
+      "updated": [
+        "silent-0019",
+        "silent-0418",
+        "silent-0079",
+        "silent-0005",
+        "silent-0027",
+        "silent-0094",
+        "silent-0384"
+      ],
+      "repeats": [],
+      "check": 0
+    },
+    "code_proposals": [
+      "silent-proposal-6fc52f7595ed70c5",
+      "silent-proposal-7d551c6863ce9b9f"
+    ],
+    "implementation_domains": [
+      "combat",
+      "potion",
+      "sl"
+    ],
+    "report": "/home/dw/Projects/agent-sts2/learner/runs/20261015-164301-4e63b776-3db5-4bbd-9e9b-54ae2aa36b80-postmortem/report.md"
+  },
+  "native": {
+    "batch": "20261015-164301",
+    "thread": "01a13eba-ae30-7d32-b547-51bd0924aa2a",
+    "cwd": "/home/dw/Projects/agent-sts2",
+    "event_log": "learner/runs/20261015-164301-4e63b776-3db5-4bbd-9e9b-54ae2aa36b80-postmortem.jsonl",
+    "registered_launch_batch": null,
+    "original_lease": null,
+    "native_context": {
+      "source": "ops/codex-ops/accounts/codex1/learner/sessions/2026/10/15/rollout-2026-10-15T16-43-04-01a13eba-ae30-7d32-b547-51bd0924aa2a.jsonl",
+      "offset": 49154,
+      "bytes": 4620,
+      "sha256": "e24af4c91d09231e508d55290c4ce1685b21358df04c562a885d029148c12d9d",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "sandbox": {
+        "type": "workspace-write",
+        "writable_roots": [
+          "/home/dw/Projects/agent-sts2/.git"
+        ],
+        "network_access": false,
+        "exclude_tmpdir_env_var": false,
+        "exclude_slash_tmp": false
+      },
+      "approval_policy": "never"
+    },
+    "native_user_input": {
+      "offset": 53774,
+      "bytes": 15345,
+      "sha256": "1405f53e701d925a66df47f6fd00cb406ab80ebe844da991e066f631e40dc182",
+      "input_sha256": "000c51cab899cda8790a0a89761a37f01fc8fad8eeb591857549c69d49df66d8"
+    },
+    "original_header_events": [
+      {
+        "offset": 0,
+        "bytes": 16866,
+        "sha256": "0efe24e74026e362e43de4ce1c35c6f7c31d86d7d8cfcfe3c0ef20f16f7b2e9f",
+        "type": "learner_launch",
+        "attempt": null,
+        "code": null
+      },
+      {
+        "offset": 16866,
+        "bytes": 285,
+        "sha256": "743c681c327fe57410112a6e2ff617b8a017d7b3dec772564175faafed5f2661",
+        "type": "learner_startup_attempt",
+        "attempt": 1,
+        "code": null
+      },
+      {
+        "offset": 20157,
+        "bytes": 77,
+        "sha256": "ab6f4322106dd377351ef135060bb4cea18bd5dce641b2e55de22bc22d8012b2",
+        "type": "thread.started",
+        "attempt": null,
+        "code": null
+      }
+    ],
+    "startup_attempts": 1,
+    "failed_startups_preserved": 0,
+    "no_model_or_manual_restart": true
+  },
+  "original_rows_byte_JSON_identity_verified": 1017,
+  "stream_counts": {
+    "runs": 1,
+    "decisions": 485,
+    "states": 497,
+    "run-plans": 5,
+    "sl-attempts": 5,
+    "brain": 23,
+    "run-config": 1
+  },
+  "learner_material_assertions": 1086,
+  "material_checks_not_reexecuted": true,
+  "original_lesson_bytes": 19487,
+  "prefix_preserved": true,
+  "ledger_rows": 14,
+  "support_updates": 7,
+  "repeats": 0,
+  "source_run_code": {
+    "commit": "534c3140f2e3a98fcd6380ce4447b00592cba026",
+    "code": "534c314+dirty",
+    "dirty": true,
+    "dirty_files": [
+      "knowledge/characters/silent/boss-damage.json",
+      "knowledge/characters/silent/construction-opportunities.json",
+      "knowledge/characters/silent/monster-records.json",
+      "knowledge/characters/silent/outcome-stats.json",
+      "knowledge/characters/silent/room-costs.json",
+      "knowledge/common/card-upgrades.json",
+      "knowledge/common/monster-db.json",
+      "knowledge/common/move-model.json",
+      "notes/fight-value-backtest-silent.md",
+      "notes/monster-db-check.md"
+    ],
+    "branch": "live",
+    "worktree": "live"
+  },
+  "actual_accepted_brain": 23,
+  "brain": "recorded gpt-6.1-sol/xhigh/default; account cohort separately accepted by original watcher",
+  "no_new_pure_bug_or_queue": true,
+  "proposals": [
+    {
+      "id": "silent-proposal-6fc52f7595ed70c5",
+      "state": "pending",
+      "proposal": "/home/dw/Projects/agent-sts2/learner/runs/20261015-164301-4e63b776-3db5-4bbd-9e9b-54ae2aa36b80-postmortem/proposal-resources.md",
+      "proposal_sha256": "227ae24bc708a7d8e0df6bf6d2340fdeaf6342f6736a634cac5d7bc71ec39091"
+    },
+    {
+      "id": "silent-proposal-7d551c6863ce9b9f",
+      "state": "pending",
+      "proposal": "/home/dw/Projects/agent-sts2/learner/runs/20261015-164301-4e63b776-3db5-4bbd-9e9b-54ae2aa36b80-postmortem/proposal-execution-sl.md",
+      "proposal_sha256": "05c3ec572bd0f95764adec74b9c6a92576225d3a2fcf8f31c0374da26e18d157"
+    }
+  ],
+  "limits": "original full alternative outcomes, gross damage/last-hit order, first3SL exits, complete dirty knowledge/boss clock/pure game time/Jev cache/invoices remain unrecorded; do not add ops strategy knowledge",
+  "temporary_learner_script_failures": "original nullable-regex sum and inspect.py stdlib shadow errors retained; not production game bugs"
+}

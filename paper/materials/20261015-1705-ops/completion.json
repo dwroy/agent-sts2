@@ -1,0 +1,53 @@
+{
+  "at": "2026-10-15 17:17:01 CST",
+  "postmortem": "DUB5VQQ6D6D1",
+  "original_rows": 1017,
+  "original_lesson_bytes": 19487,
+  "new_bug": false,
+  "original_ledger_updates": 7,
+  "original_proposal_links": 7,
+  "original_strategy_waiting": 20,
+  "owned_ledger_rows": 96,
+  "ledger_protected_fold_preserved": true,
+  "paper_single_exit": 0,
+  "paper_cut": "2026-10-15T09:09:05.067Z",
+  "paper_output_count": 14,
+  "paper_five_checks": true,
+  "original_R361_host_full_exit": 1,
+  "bounded_supplement_snapshot": {
+    "at": "2026-10-15 17:10:08 CST",
+    "manifest_sha256": "5181f8ccf4e243dbf11238ec41bb3eb5db80608dd85b1f4c01bc6f15cb1d82d3",
+    "pinned_live": {
+      "commit": "5761b0bb64dde3d3e02c1fb040c46564b15cacea",
+      "tree": "41773bedb2c160df1ab0b3c02545784861e3e0e9"
+    },
+    "original_full_rc": 1,
+    "original_full_tree": "6a55e0ad8cadcf05e7550315852589caf82d8085",
+    "live_changed_from_original_full": true,
+    "actual_mutex_rows": [
+      {
+        "pid": 1939522,
+        "waiting": false,
+        "raw": "159: FLOCK  ADVISORY  WRITE 1939522 08:30:372157 0 EOF",
+        "birth": "94685378",
+        "cwd": "/home/dw/Projects/agent-sts2/.worktrees/live/agent",
+        "comm": "bash"
+      },
+      {
+        "pid": 1975179,
+        "waiting": true,
+        "raw": "159: -> FLOCK  ADVISORY  WRITE 1975179 08:30:372157 0 EOF",
+        "birth": "94720877",
+        "cwd": "/home/dw/Projects/agent-sts2",
+        "comm": "python3"
+      }
+    ],
+    "actual_receipt": null,
+    "stage": "broker request submitted; no execution/result receipt yet, not claimed started",
+    "single_selected_case": true,
+    "no_other_lock_interruption_or_game_restart": true
+  },
+  "no_source_or_release_or_game_or_account_model_prompt_change": true,
+  "parallel_physical_records_kept": true,
+  "next_natural_on_consumers": "original watcher pending"
+}

@@ -1,0 +1,33 @@
+{
+  "at": "2026-10-15 17:10:08 CST",
+  "manifest_sha256": "5181f8ccf4e243dbf11238ec41bb3eb5db80608dd85b1f4c01bc6f15cb1d82d3",
+  "pinned_live": {
+    "commit": "5761b0bb64dde3d3e02c1fb040c46564b15cacea",
+    "tree": "41773bedb2c160df1ab0b3c02545784861e3e0e9"
+  },
+  "original_full_rc": 1,
+  "original_full_tree": "6a55e0ad8cadcf05e7550315852589caf82d8085",
+  "live_changed_from_original_full": true,
+  "actual_mutex_rows": [
+    {
+      "pid": 1939522,
+      "waiting": false,
+      "raw": "159: FLOCK  ADVISORY  WRITE 1939522 08:30:372157 0 EOF",
+      "birth": "94685378",
+      "cwd": "/home/dw/Projects/agent-sts2/.worktrees/live/agent",
+      "comm": "bash"
+    },
+    {
+      "pid": 1975179,
+      "waiting": true,
+      "raw": "159: -> FLOCK  ADVISORY  WRITE 1975179 08:30:372157 0 EOF",
+      "birth": "94720877",
+      "cwd": "/home/dw/Projects/agent-sts2",
+      "comm": "python3"
+    }
+  ],
+  "actual_receipt": null,
+  "stage": "broker request submitted; no execution/result receipt yet, not claimed started",
+  "single_selected_case": true,
+  "no_other_lock_interruption_or_game_restart": true
+}
