@@ -39,7 +39,7 @@ export function simFailurePolicy(character: string | null | undefined, env: Node
 
 /** C2 rollout stage: collect shadow evidence first. An on request is visible but cannot bypass admission. */
 export function simAdaptivePolicy(character: string | null | undefined, env: NodeJS.ProcessEnv = process.env): {
-  mode: "off" | "shadow"; requested: "off" | "shadow" | "on"; admission: "pending";
+  mode: "off" | "shadow" | "on"; requested: "off" | "shadow" | "on"; admission: "pending";
 } {
   if (characterKey(character ?? "") !== "silent") return { mode: "off", requested: "off", admission: "pending" };
   const raw = env["SIM_ADAPTIVE"]?.trim().toLowerCase() ?? "shadow";

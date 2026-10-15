@@ -17,6 +17,16 @@ const ranked = (lines: ReturnType<typeof line>[], lowTrust: string | null = null
   rankLines(lines, 2, eligible, wonLoss, { lowTrust });
 
 describe("P3 paired S sorting", () => {
+  it("admits explicit adaptive prefixes while keeping own means and common-prefix differences", () => {
+    const a = line(0, Array.from({ length: 200 }, () => sample(false, 20, 50)));
+    const b = line(1, Array.from({ length: 600 }, (_, i) => sample(false, i < 200 ? 80 : 60, 50)));
+    expect(ranked([a, b]).sRanking?.used).toBe(false);
+    const result = rankLines([a, b], 2, () => true, wonLoss, { lowTrust: null, allowPrefixes: true });
+    expect(result).toMatchObject({ best: 1, order: [1, 0], sRanking: { used: true } });
+    expect(result.sRanking!.comparisons.find((row) => row.line === 0 && row.leader === 1)).toMatchObject({ samples: 200 });
+    expect(result.sRanking!.comparisons.find((row) => row.line === 0 && row.leader === 1)!.mean).toBeCloseTo(-.12);
+    expect(result.sRanking!.scores.find((row) => row.line === 1)!.mean).toBeCloseTo(-1 / 15);
+  });
   it("distinguishes all-death lines by their admitted margin and keeps the full order consistent", () => {
     const lines = [line(0, sample(false, 20, 50)), line(1, sample(false, 80, 50)), line(2, sample(false, 50, 50))];
     expect(rankLines(lines).best).toBe(0);

@@ -9,7 +9,7 @@ import { memoKey } from "./compute-memo.js";
 export interface SimCompletion {
   required: true;
   attempt_id: string;
-  status: "complete" | "pending" | "degraded";
+  status: "complete" | "complete_adaptive" | "pending" | "degraded";
   attempts: number;
   reasons: string[];
   samples: number;
@@ -34,11 +34,11 @@ export class SimAttempt {
   constructor(private readonly memory: ScreenMemory, private readonly key: string | null, readonly degraded: boolean) {
     this.previous = { count: memory.simFailure?.count ?? 0, reasons: [...(memory.simFailure?.reasons ?? [])] };
   }
-  finish(samples: number, requested: number, reason?: string): SimCompletion {
+  finish(samples: number, requested: number, reason?: string, adaptive = false): SimCompletion {
     const reasons = reason ? [...this.previous.reasons, reason].slice(-32) : this.previous.reasons;
     const attempts = this.previous.count + 1;
     this.memory.simFailure = reason && this.key ? { key: this.key, count: attempts, reasons } : undefined;
-    return { required: true, attempt_id: this.id, status: this.degraded ? "degraded" : reason ? "pending" : "complete",
+    return { required: true, attempt_id: this.id, status: this.degraded ? "degraded" : reason ? "pending" : adaptive ? "complete_adaptive" : "complete",
       attempts, reasons, samples, requested, failure: reason !== undefined, key: this.key };
   }
 }

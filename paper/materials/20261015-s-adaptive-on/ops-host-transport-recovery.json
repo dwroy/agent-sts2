@@ -1,0 +1,39 @@
+{
+  "at": "2026-10-15 10:28:41 CST",
+  "original_broker_request": {
+    "request_path": "ops/codex-ops/broker/1792031200506635286-598116.req",
+    "sha256": "a9296d5c47780a56376af2be2f17ff0be148d79a904b78ff1391f6da1ebf69c4",
+    "body": {
+      "action": "learner-recheck",
+      "args": [
+        "20261015-051302-s2-strategy-proposal"
+      ]
+    },
+    "pid": 598116,
+    "birth": "92315972",
+    "state": "unserved, no pinned log/worker before cancellation"
+  },
+  "original_request_json": "paper/materials/20261015-s-adaptive-on/ops-combined-host-request.json",
+  "transport": "original main ops authorized host directly calls the same existing recheck CLI, same batch/tree/live lock/dedup/history/events",
+  "actual_command": [
+    "nice",
+    "-n",
+    "19",
+    "python3",
+    "ops/codex-ops-learn.py",
+    "recheck",
+    "--batch",
+    "20261015-051302-s2-strategy-proposal"
+  ],
+  "actual_request_pid": 606935,
+  "actual_request_birth": "92328053",
+  "expected_live": "d1c942783e267750dac79d6b780e16093dd7aa1d",
+  "expected_tree": "6ef9f0f8808ec51de400c70455fa7aa360f9c7bb",
+  "expected_log": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261015-051302-s2-strategy-proposal.fallback-6ef9f0f8808ec51de400c70455fa7aa360f9c7bb.checks.log",
+  "actual_full_checks_before_this_request": 0,
+  "requested_actual_full_runs_for_this_combination": 1,
+  "stage": "direct original recheck process launched; pinned worker proof next",
+  "source_test_or_game_failure": false,
+  "no_game_or_offline_owner_process_touched": true,
+  "new_batch_model_account_permissions_or_game_restart": false
+}

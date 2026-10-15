@@ -3,6 +3,8 @@ import { board } from "./boss-sim-fixture.js";
 import { bossLineSim, bossLinesOptions, BossLinesPool, releaseBossLinesPool, runPairsSerial, simLog, type BossLineSimArgs } from "../src/sim/boss-lines.js";
 import { solveTurn } from "../src/reflex/turn-solver.js";
 import { createScreenMemory } from "../src/memory/types.js";
+import * as config from "../src/core/config.js";
+import { ComputeMemo } from "../src/sim/compute-memo.js";
 
 // Fix only the board adapter: the whole-fight runner, samples and formula remain real.
 vi.mock("../src/reflex/rollout-live.js", async (original) => ({
@@ -13,6 +15,25 @@ vi.mock("../src/reflex/rollout-live.js", async (original) => ({
 }));
 const original = { ...bossLinesOptions };
 afterEach(() => { Object.assign(bossLinesOptions, original); vi.restoreAllMocks(); vi.unstubAllEnvs(); releaseBossLinesPool(); });
+
+it("accepts an actually completed adaptive B2 result and reuses only its matching on-mode memo", () => {
+  Object.assign(bossLinesOptions, { serial: true, now: () => 0 });
+  const policy = vi.spyOn(config, "simAdaptivePolicy").mockReturnValue({ mode: "on", requested: "on", admission: "pending" });
+  const input = board({ bossHp: 12 }), memo = new ComputeMemo("fixed-C2-B2");
+  const solver = { ...input.solver, captureBossMargin: true };
+  const args = { state: { raw: { run_id: "fixed-C2-B2" }, turn: 1, run: { floor: 1, ascension: 10, raw: { character_id: "SILENT" } } },
+    knowledge: {}, memory: createScreenMemory("COMBAT"), solver, piles: input.piles, randomPotions: [],
+    lines: solveTurn(solver).plans.slice(0, 1), turn: 1, drinks: () => false, samples: 600, requiredComplete: true, memo } as unknown as BossLineSimArgs;
+  const result = bossLineSim(args);
+  expect(result).toMatchObject({ available: true, completion: { status: "complete_adaptive" }, run: { samples: 200, requested: 600 } });
+  expect(simLog(result, () => "p1")).toHaveProperty("lines.p1.samples", 200);
+  const reused = bossLineSim(args);
+  expect(reused).toMatchObject({ available: true, completion: { status: "complete_adaptive" } });
+  expect(memo.hits).toBe(1);
+  policy.mockReturnValue({ mode: "off", requested: "off", admission: "pending" });
+  expect(bossLineSim(args)).toMatchObject({ available: true, completion: { status: "complete" }, run: { samples: 600 } });
+  expect(memo.hits).toBe(1);
+});
 
 it("replays Ironclad Boss questions identically with S_COMBAT_RANK on or off", () => {
   Object.assign(bossLinesOptions, { serial: true, now: () => 0, deadlineMs: 25000, turnBudgetMs: 30000 });
