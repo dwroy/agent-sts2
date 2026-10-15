@@ -1,0 +1,656 @@
+{
+  "batch": "20261015-204301",
+  "original_report": {
+    "task": "postmortem",
+    "appended": [
+      "RQCHNN0W72KF",
+      "VNSXWCWXR3VW"
+    ],
+    "skipped": [],
+    "bugs": [
+      {
+        "run": "RQCHNN0W72KF",
+        "where": "agent/src/sim/boss-sim.ts:338",
+        "what": "旧silent-0332成功首战nonpositive-hp资源接续异常复现，完整资源与步骤截断，根因未修",
+        "new": false
+      }
+    ],
+    "ledger": {
+      "added": [
+        "silent-0485"
+      ],
+      "updated": [
+        "silent-0027",
+        "silent-0028",
+        "silent-0059",
+        "silent-0173",
+        "silent-0228",
+        "silent-0253",
+        "silent-0332",
+        "silent-0418"
+      ],
+      "repeats": [
+        "silent-0332"
+      ],
+      "check": 0
+    },
+    "code_proposals": [
+      "silent-proposal-f4e0f382dd79714b",
+      "silent-proposal-47a7b241b6020251"
+    ],
+    "implementation_domains": [
+      "combat",
+      "potion",
+      "terminal",
+      "structure"
+    ],
+    "report": "/home/dw/Projects/agent-sts2/learner/runs/20261015-204302-3d780a35-a078-4b93-bcea-905a0e394efe-postmortem/report.md"
+  },
+  "native": {
+    "batch": "20261015-204301",
+    "thread": "01a13f96-6826-7071-8159-c683916c8527",
+    "cwd": "/home/dw/Projects/agent-sts2",
+    "event_log": "learner/runs/20261015-204302-3d780a35-a078-4b93-bcea-905a0e394efe-postmortem.jsonl",
+    "registered_launch_batch": null,
+    "original_lease": null,
+    "native_context": {
+      "source": "ops/codex-ops/accounts/codex1/learner/sessions/2026/10/15/rollout-2026-10-15T20-43-04-01a13f96-6826-7071-8159-c683916c8527.jsonl",
+      "offset": 49155,
+      "bytes": 4620,
+      "sha256": "9e52796318fa80414c5b945399c785d13d226166513e4f425c0422b392f5d2a8",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "sandbox": {
+        "type": "workspace-write",
+        "writable_roots": [
+          "/home/dw/Projects/agent-sts2/.git"
+        ],
+        "network_access": false,
+        "exclude_tmpdir_env_var": false,
+        "exclude_slash_tmp": false
+      },
+      "approval_policy": "never"
+    },
+    "native_user_input": {
+      "offset": 53775,
+      "bytes": 15371,
+      "sha256": "43c48cb6dda41b59cd28ccdcc4947611c23b1d13b611c6af36784e55730e54c0",
+      "input_sha256": "2be1873be4142a6e250a73071cfaaf00b88a315c0b3cfdc1a3d061b39176a8be"
+    },
+    "original_header_events": [
+      {
+        "offset": 0,
+        "bytes": 16905,
+        "sha256": "9f3637f33e8e8db92c9899c60506e66a6160e134c7030701c9624a509f6cc668",
+        "type": "learner_launch",
+        "attempt": null,
+        "code": null
+      },
+      {
+        "offset": 16905,
+        "bytes": 285,
+        "sha256": "3278a82df20b3e6aa93c33640becf528238df67cc4842892dfe4d489cf3091aa",
+        "type": "learner_startup_attempt",
+        "attempt": 1,
+        "code": null
+      },
+      {
+        "offset": 19322,
+        "bytes": 77,
+        "sha256": "6fde807ea6780749c570662459dd85a7f81f4a1699a0fd8ff69ff7e8809b8718",
+        "type": "thread.started",
+        "attempt": null,
+        "code": null
+      }
+    ],
+    "startup_attempts": 1,
+    "failed_startups_preserved": 0,
+    "no_model_or_manual_restart": true
+  },
+  "done_runs": [
+    "RQCHNN0W72KF",
+    "VNSXWCWXR3VW"
+  ],
+  "missing": [],
+  "no_new_bug": true,
+  "old_issue": "silent-0332",
+  "lesson_sections_and_original_prefixes_verified": true,
+  "lesson_bytes": [
+    17537,
+    20778
+  ],
+  "byte_stream_audit": "complete; original offset rows parsed equal, explicit identity verified, original line bytes/SHA now frozen by ops",
+  "no_repeated_learner_or_game_action": true,
+  "ops_readback_guard_correction": "Initial guard incorrectly read state.player; actual HP is state.run and block is state.combat.player. Original failing guard/log retained, no data or producer changed.",
+  "stream_counts": {
+    "RQCHNN0W72KF": {
+      "states": 797,
+      "decisions": 772,
+      "sl-attempts": 9,
+      "run-config": 1,
+      "run-plans": 15,
+      "brain": 53
+    },
+    "VNSXWCWXR3VW": {
+      "states": 951,
+      "decisions": 810,
+      "sl-attempts": 11,
+      "run-config": 1,
+      "run-plans": 14,
+      "brain": 49
+    }
+  },
+  "original_rows_checked": 3483,
+  "actual_accepted_codex": {
+    "RQCHNN0W72KF": 53,
+    "VNSXWCWXR3VW": 49
+  },
+  "actual_run_config": {
+    "RQCHNN0W72KF": {
+      "code": {
+        "commit": "3d066a583631b85acb208813c31510864007adac",
+        "code": "3d066a5+dirty",
+        "dirty": true,
+        "dirty_files": [
+          "knowledge/characters/silent/boss-damage.json",
+          "knowledge/characters/silent/construction-opportunities.json",
+          "knowledge/characters/silent/monster-records.json",
+          "knowledge/characters/silent/outcome-stats.json",
+          "knowledge/characters/silent/room-costs.json",
+          "knowledge/common/card-upgrades.json",
+          "knowledge/common/monster-db.json",
+          "knowledge/common/move-model.json",
+          "notes/monster-db-check.md"
+        ],
+        "branch": "live",
+        "worktree": "live"
+      },
+      "brain": {
+        "active": true,
+        "engine": "codex",
+        "by_prefix": {},
+        "fallback": null,
+        "reask": null,
+        "tools": null,
+        "log": "/home/dw/Projects/agent-sts2/.worktrees/live/logs/brain.jsonl",
+        "engines": {
+          "codex": {
+            "model": "gpt-6.1-sol",
+            "model_by_prefix": {},
+            "timeout_ms": 600000,
+            "effort": "xhigh",
+            "reask": null,
+            "tools": false,
+            "max_calls": null
+          }
+        },
+        "codex": {
+          "mode": "session",
+          "service_tier": "default",
+          "context_window": 512000,
+          "auto_compact_token_limit": 460800,
+          "summary": "auto",
+          "stall_ms": 120000,
+          "first_token_ms": null,
+          "stall_retries": 1,
+          "schema_fields": "used",
+          "route_reason": "drop",
+          "route_pattern": true,
+          "accept_cut": true,
+          "max_field_chars": 600,
+          "max_answer_blanks": 100
+        }
+      },
+      "loop": {
+        "mode": "play",
+        "combat_planner": "turn",
+        "build_decider": "deepseek",
+        "build_oneshot": "on",
+        "boss_sim_build": "on",
+        "s_readiness": "on",
+        "s_combat_rank": "on",
+        "s_build_rank": "on",
+        "sim_failure_exit": "on",
+        "sim_failure_retries": 2,
+        "sim_adaptive": "on",
+        "sim_adaptive_requested": "on",
+        "sim_adaptive_admission": "accepted",
+        "boss_sim_completion": "required-full-paired-v1",
+        "boss_sim_build_requested": "on",
+        "combat_deepseek": "off",
+        "thief_facts": true,
+        "thief_cost": true,
+        "mech_rules": true,
+        "mech_move_rules": true,
+        "mech_death_move": true,
+        "passive_pieces": true,
+        "sandpit_start": true,
+        "fight_plan": "off",
+        "run_plan": "v1",
+        "run_plan_merge": true,
+        "escalation": [
+          "deepseek"
+        ],
+        "confidence": {
+          "act": 0.55,
+          "strong": 0.75
+        },
+        "run_start": "auto",
+        "character": "SILENT"
+      }
+    },
+    "VNSXWCWXR3VW": {
+      "code": {
+        "commit": "fe6462651b593b9831581c088deface9957a404f",
+        "code": "fe64626+dirty",
+        "dirty": true,
+        "dirty_files": [
+          "knowledge/characters/silent/boss-damage.json",
+          "knowledge/characters/silent/construction-opportunities.json",
+          "knowledge/characters/silent/fight-value-gates.json",
+          "knowledge/characters/silent/fight-value.json",
+          "knowledge/characters/silent/monster-records.json",
+          "knowledge/characters/silent/outcome-stats.json",
+          "knowledge/characters/silent/room-costs.json",
+          "knowledge/common/card-upgrades.json",
+          "knowledge/common/monster-db.json",
+          "knowledge/common/move-model.json",
+          "notes/fight-value-backtest-silent.md",
+          "notes/monster-db-check.md"
+        ],
+        "branch": "live",
+        "worktree": "live"
+      },
+      "brain": {
+        "active": true,
+        "engine": "codex",
+        "by_prefix": {},
+        "fallback": null,
+        "reask": null,
+        "tools": null,
+        "log": "/home/dw/Projects/agent-sts2/.worktrees/live/logs/brain.jsonl",
+        "engines": {
+          "codex": {
+            "model": "gpt-6.1-sol",
+            "model_by_prefix": {},
+            "timeout_ms": 600000,
+            "effort": "xhigh",
+            "reask": null,
+            "tools": false,
+            "max_calls": null
+          }
+        },
+        "codex": {
+          "mode": "session",
+          "service_tier": "default",
+          "context_window": 512000,
+          "auto_compact_token_limit": 460800,
+          "summary": "auto",
+          "stall_ms": 120000,
+          "first_token_ms": null,
+          "stall_retries": 1,
+          "schema_fields": "used",
+          "route_reason": "drop",
+          "route_pattern": true,
+          "accept_cut": true,
+          "max_field_chars": 600,
+          "max_answer_blanks": 100
+        }
+      },
+      "loop": {
+        "mode": "play",
+        "combat_planner": "turn",
+        "build_decider": "deepseek",
+        "build_oneshot": "on",
+        "boss_sim_build": "on",
+        "s_readiness": "on",
+        "s_combat_rank": "on",
+        "s_build_rank": "on",
+        "sim_failure_exit": "on",
+        "sim_failure_retries": 2,
+        "sim_adaptive": "on",
+        "sim_adaptive_requested": "on",
+        "sim_adaptive_admission": "accepted",
+        "boss_sim_completion": "required-full-paired-v1",
+        "boss_sim_build_requested": "on",
+        "combat_deepseek": "off",
+        "thief_facts": true,
+        "thief_cost": true,
+        "mech_rules": true,
+        "mech_move_rules": true,
+        "mech_death_move": true,
+        "passive_pieces": true,
+        "sandpit_start": true,
+        "fight_plan": "off",
+        "run_plan": "v1",
+        "run_plan_merge": true,
+        "escalation": [
+          "deepseek"
+        ],
+        "confidence": {
+          "act": 0.55,
+          "strong": 0.75
+        },
+        "run_start": "auto",
+        "character": "SILENT"
+      }
+    }
+  },
+  "original_run_rows": {
+    "RQCHNN0W72KF": {
+      "row": {
+        "run_id": "RQCHNN0W72KF",
+        "ended": "2026-10-15T11:05:32.020Z",
+        "victory": false,
+        "floor": 49,
+        "character": "SILENT",
+        "ascension": 10,
+        "code": "current",
+        "decisions": 772,
+        "jev_calls": 207,
+        "deepseek_calls": 53,
+        "claude_calls": 0,
+        "tokens": 1819070,
+        "ds_tokens_in": 9914466,
+        "ds_tokens_out": 69772,
+        "ds_cache_hit": 5744640,
+        "brain_cost_accounting": {
+          "source": "brain.jsonl:run-plan",
+          "calls": 4,
+          "input_tokens": 587873,
+          "output_tokens": 10646,
+          "cache_hit_tokens": 410496,
+          "by_engine": {
+            "codex": 4
+          },
+          "question_ids": [
+            "mv9c9451-2047994-18",
+            "mv9c9451-2047994-37",
+            "mv9c9451-2047994-52",
+            "mv9c9451-2047994-53"
+          ],
+          "unresolved": []
+        },
+        "deciders": {
+          "codex": 59,
+          "code": 290,
+          "jev": 207,
+          "jev-plan": 216
+        },
+        "death_fight": [
+          "实验体 #C86"
+        ],
+        "death_fight_floor": 49,
+        "death_enemy_ids": [
+          "TEST_SUBJECT"
+        ]
+      },
+      "line": 787,
+      "offset": 336022,
+      "bytes": 794,
+      "sha256": "104006ea462f9a47cb727ff25cb963ffd198d114286a57eda768a16515e3b856"
+    },
+    "VNSXWCWXR3VW": {
+      "row": {
+        "run_id": "VNSXWCWXR3VW",
+        "ended": "2026-10-15T12:41:24.915Z",
+        "victory": false,
+        "floor": 49,
+        "character": "SILENT",
+        "ascension": 10,
+        "code": "current",
+        "decisions": 810,
+        "jev_calls": 176,
+        "deepseek_calls": 49,
+        "claude_calls": 0,
+        "tokens": 1554886,
+        "ds_tokens_in": 8929648,
+        "ds_tokens_out": 62694,
+        "ds_cache_hit": 4925696,
+        "brain_cost_accounting": {
+          "source": "brain.jsonl:run-plan",
+          "calls": 4,
+          "input_tokens": 587605,
+          "output_tokens": 8139,
+          "cache_hit_tokens": 410496,
+          "by_engine": {
+            "codex": 4
+          },
+          "question_ids": [
+            "mv9fuq0u-2406082-17",
+            "mv9fuq0u-2406082-33",
+            "mv9fuq0u-2406082-48",
+            "mv9fuq0u-2406082-49"
+          ],
+          "unresolved": []
+        },
+        "deciders": {
+          "codex": 64,
+          "code": 334,
+          "jev": 176,
+          "jev-plan": 236
+        },
+        "death_fight": [
+          "实验体 #C86"
+        ],
+        "death_fight_floor": 49,
+        "death_enemy_ids": [
+          "TEST_SUBJECT"
+        ]
+      },
+      "line": 788,
+      "offset": 336816,
+      "bytes": 793,
+      "sha256": "cb9ff60aee218890c414712f7006f20f79f7af4f20f4d87b7b17102ac2f72cf3"
+    }
+  },
+  "original_key_number_verification": {
+    "RQCHNN0W72KF": {
+      "verified": true,
+      "key_frames": [
+        {
+          "state_line": 412841,
+          "offset": 13103515857,
+          "ts": "2026-10-15T10:54:07.032Z",
+          "hp": 70,
+          "max_hp": 70,
+          "block": 0,
+          "enemies": [
+            [
+              "TORCH_HEAD_AMALGAM",
+              211
+            ],
+            [
+              "QUEEN",
+              419
+            ]
+          ]
+        },
+        {
+          "state_line": 412884,
+          "offset": 13105753530,
+          "ts": "2026-10-15T11:01:05.365Z",
+          "hp": 4,
+          "max_hp": 70,
+          "block": 0,
+          "enemies": []
+        },
+        {
+          "state_line": 412886,
+          "offset": 13105836206,
+          "ts": "2026-10-15T11:02:19.718Z",
+          "hp": 4,
+          "max_hp": 70,
+          "block": 0,
+          "enemies": [
+            [
+              "TEST_SUBJECT",
+              111
+            ]
+          ]
+        },
+        {
+          "state_line": 412959,
+          "offset": 13109476450,
+          "ts": "2026-10-15T11:05:29.624Z",
+          "hp": 4,
+          "max_hp": 70,
+          "block": 6,
+          "enemies": [
+            [
+              "TEST_SUBJECT",
+              53
+            ]
+          ]
+        },
+        {
+          "state_line": 412960,
+          "offset": 13109523973,
+          "ts": "2026-10-15T11:05:32.020Z",
+          "hp": 0,
+          "max_hp": 70,
+          "block": 0,
+          "enemies": [
+            [
+              "TEST_SUBJECT",
+              44
+            ]
+          ]
+        }
+      ],
+      "sl_turns": [
+        2,
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      "section_sha256": "5c10d94a0cd2c8670a871ad7c52bb18030ece9ab743e29463b93bf0f24cd5743"
+    },
+    "VNSXWCWXR3VW": {
+      "verified": true,
+      "key_frames": [
+        {
+          "state_line": 413680,
+          "offset": 13133655611,
+          "ts": "2026-10-15T12:30:45.327Z",
+          "hp": 52,
+          "max_hp": 69,
+          "block": 0,
+          "enemies": [
+            [
+              "AEONGLASS",
+              535
+            ]
+          ]
+        },
+        {
+          "state_line": 413746,
+          "offset": 13136579637,
+          "ts": "2026-10-15T12:33:46.687Z",
+          "hp": 11,
+          "max_hp": 69,
+          "block": 0,
+          "enemies": []
+        },
+        {
+          "state_line": 413748,
+          "offset": 13136655057,
+          "ts": "2026-10-15T12:34:56.143Z",
+          "hp": 11,
+          "max_hp": 69,
+          "block": 0,
+          "enemies": [
+            [
+              "TEST_SUBJECT",
+              111
+            ]
+          ]
+        },
+        {
+          "state_line": 413913,
+          "offset": 13143568145,
+          "ts": "2026-10-15T12:41:22.246Z",
+          "hp": 4,
+          "max_hp": 69,
+          "block": 15,
+          "enemies": [
+            [
+              "TEST_SUBJECT",
+              12
+            ]
+          ]
+        },
+        {
+          "state_line": 413914,
+          "offset": 13143606684,
+          "ts": "2026-10-15T12:41:24.915Z",
+          "hp": 0,
+          "max_hp": 69,
+          "block": 0,
+          "enemies": [
+            [
+              "TEST_SUBJECT",
+              11
+            ]
+          ]
+        }
+      ],
+      "sl_turns": [
+        4,
+        5,
+        3,
+        3,
+        5,
+        3
+      ],
+      "section_sha256": "4be58e14e018d34008e6ebe04dcbd7d24e9b76045dd6305681b549b70d244705"
+    }
+  },
+  "three_source_leaves_same_at_each_native_run_base": {
+    "live_commit": "fe6462651b593b9831581c088deface9957a404f",
+    "leaves": {
+      "agent/src/sim/boss-sim.ts": "040b5a290651cb081f5b2c91aef5b12ca4b0bfcf30a757efaa5d37923feae5ee",
+      "agent/src/reflex/combat-plan.ts": "f795dfd8b059eb2fc7c0aebf949a87336fcc9c8ff8fe7d8ddb56ba93553db58e",
+      "agent/src/reflex/turn-solver.ts": "1be9afa1c06a4385096fa36172e4e499b809fb1fe22a21f540c1d0bb3b086f82"
+    }
+  },
+  "original_ledger_rows": 25,
+  "evidence_bearing_rows": 13,
+  "trace_only_proposal_links": 12,
+  "original_proposals": [
+    {
+      "id": "silent-proposal-f4e0f382dd79714b",
+      "state": "pending",
+      "proposal": "/home/dw/Projects/agent-sts2/learner/runs/20261015-204302-3d780a35-a078-4b93-bcea-905a0e394efe-postmortem/proposal-RQCHNN0W72KF.md",
+      "proposal_sha256": "ca2914a953e2f1d49d5d3399482fd27cfcf3e194d97fb12573c9fd7eda5517dc",
+      "ledger": [
+        "silent-0228",
+        "silent-0485",
+        "silent-0332",
+        "silent-0028",
+        "silent-0027"
+      ],
+      "implemented_commit": null
+    },
+    {
+      "id": "silent-proposal-47a7b241b6020251",
+      "state": "pending",
+      "proposal": "/home/dw/Projects/agent-sts2/learner/runs/20261015-204302-3d780a35-a078-4b93-bcea-905a0e394efe-postmortem/proposal-VNSXWCWXR3VW.md",
+      "proposal_sha256": "6d0276b8b0def972f52acbbf533738836402af9aaded9614aea37b15991f460b",
+      "ledger": [
+        "silent-0228",
+        "silent-0028",
+        "silent-0418",
+        "silent-0059",
+        "silent-0027",
+        "silent-0253",
+        "silent-0173"
+      ],
+      "implemented_commit": null
+    }
+  ],
+  "original_failure_preserved": "First draft used snake_case for camelCase brain usage and divided by zero before lesson append; exception hook also hit own inspect.py shadowing stdlib. Initial scripts/report/failure and pre-append draft count corrections retained; no product change or repeated learner.",
+  "limits": "Gross damage/overkill, early SL exit frames, full fault resources/steps, boss clocks, pure combat times, Jev cache/paid invoices, dirty knowledge and controlled counterfactuals remain unrecorded. RQ prior session-start failure remains history; new completed postmortem does not overwrite it. Descriptive on-mode defeats are not model calibration or benefit proof."
+}
