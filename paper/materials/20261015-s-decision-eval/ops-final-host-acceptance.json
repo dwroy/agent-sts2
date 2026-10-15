@@ -1,0 +1,98 @@
+{
+  "at": "2026-10-15 11:10:43 CST",
+  "actor": "ops",
+  "event": "learner-checks",
+  "parent": "roy-20261014-s-decision",
+  "source": "1f6b9beece5e864c0451f469ddc974bae5a39d23",
+  "batch": "20261015-051302-s2-strategy-proposal",
+  "checked_live": "9aefbaf476256caff190ef09880ee71cdd6443aa",
+  "exact_checked_tree": "489e3c6f5ba7ef1dcc4049ea22b81cd229731fba",
+  "canonical": {
+    "rc": 0,
+    "log": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261015-051302-s2-strategy-proposal.fallback-489e3c6f5ba7ef1dcc4049ea22b81cd229731fba.checks.log",
+    "merged": "9aefbaf476256caff190ef09880ee71cdd6443aa",
+    "tree": "489e3c6f5ba7ef1dcc4049ea22b81cd229731fba",
+    "commits": [
+      "8e196be494ada9a33dac3d897a0671a5b14e0e5b",
+      "ae6a8d9950594c9b1e0ebe40fe6ed0866982fe15"
+    ]
+  },
+  "full": {
+    "tsc": 0,
+    "vitest": 0,
+    "files": 478,
+    "passed": 4829,
+    "skipped": 2,
+    "total": 4831,
+    "seconds": 771.19
+  },
+  "log": "ops/codex-ops/learner/20261015-051302-s2-strategy-proposal.fallback-489e3c6f5ba7ef1dcc4049ea22b81cd229731fba.checks.log",
+  "log_sha256": "8e7b71270489a11a1f5e70052e470bd3450dae335574cb7061fff7b7e5899144",
+  "frozen_log": "paper/materials/20261015-1109-ops/eval-exact-host-checks.log",
+  "source_ancestry": true,
+  "checked_three_leaves": [
+    {
+      "path": "agent/tests/s_decision_eval_test.py",
+      "sha256": "df5457a6103b72162b87dab9d9cbce7e5ad3a9b0eb3dd961465bcc85818456ef"
+    },
+    {
+      "path": "docs/v5-s-decision-plan.md",
+      "sha256": "dac6ace0538e883fa2bcbe65b48731627c66f4c8b9af207ac2650dcee8a9e5a2"
+    },
+    {
+      "path": "eval/s_decision.py",
+      "sha256": "aa4d589cc51d2baac581d24c187742682a9e2826ed9db555a76cb55bf173d54a"
+    }
+  ],
+  "current_live_at_read": "d536200428b79637ec5024ede2bcb0b5bb549e79",
+  "current_tree_at_read": "84d54445e991bb30d8d60d93e95cf31bf85c4dac",
+  "later_knowledge_refresh": [
+    {
+      "path": "knowledge/characters/silent/boss-damage.json",
+      "checked_sha256": "82483dbbb88790442ab815058c0edc5e0d8bdc11a5d070dc1053686b9c00f379",
+      "current_sha256": "73094e72a35b3a16f1ab416a2b3b7e66234aa05899e8d783f16be6c08ad3e6bc"
+    },
+    {
+      "path": "knowledge/characters/silent/construction-opportunities.json",
+      "checked_sha256": "a8f5d95db2a28e232194131971725783ab87aff79d81e33c8cb47fd9a9733051",
+      "current_sha256": "a1544b0cde3d9a352c8e109c0ecb6a6f3c16eeed70f04802cb1155c422d03678"
+    },
+    {
+      "path": "knowledge/characters/silent/monster-records.json",
+      "checked_sha256": "40ccfbacaf7cd09eca3e57197a80df4955699c515c5b8269e2a78cd13a646e0e",
+      "current_sha256": "52bf73170bd90f06e0402483a7191404a74a8d00d6477a572ffa40167dbb90b8"
+    },
+    {
+      "path": "knowledge/characters/silent/outcome-stats.json",
+      "checked_sha256": "541c29786a01ad79e3175fdc45a6f8998b444abb097e475dce91e5dfc793d25a",
+      "current_sha256": "629ccba14b9ffb329b91476fa2ffb681b2b4c1f76ebb911f2ec1aef0657166e7"
+    },
+    {
+      "path": "knowledge/characters/silent/room-costs.json",
+      "checked_sha256": "2f747557a0c8c714c812eccd4c0bdbc402eb9b1b0b6ce472678b5d5552a15470",
+      "current_sha256": "9cd0c46c91282cb3ae794119e7db7465144bf305bb71de8edc5b9b5abfb42696"
+    },
+    {
+      "path": "knowledge/common/card-upgrades.json",
+      "checked_sha256": "fffb29ddeb1d0f85f8e01c213a8173197c3ee9bc817721c4df4281757b883ba5",
+      "current_sha256": "d1ed58cd4586cae11f4e37e33aed582d47f1eec1f34da3bbcfa5dfe7ed668681"
+    },
+    {
+      "path": "knowledge/common/monster-db.json",
+      "checked_sha256": "a67cdb254089b6b40042e037cf609047fa8996a90be08e126e3cae353a474859",
+      "current_sha256": "eae79d2f0749030bf593cbc858d8be00becea9d19555fe119aa817773dc99a89"
+    },
+    {
+      "path": "knowledge/common/move-model.json",
+      "checked_sha256": "e192390e8af94f2832e14582c136a506c982dbe614a10b5c2d5e067f860339c2",
+      "current_sha256": "226294af143e9e3d99f9e8747869f071524eae829ba1834d9b2e2fe8ae32a6ee"
+    }
+  ],
+  "current_code_paths_equal_checked": true,
+  "later_refreshed_tree_claimed_precise_full": false,
+  "publication_and_host_gate": "accepted for precise489e offline evaluation combination",
+  "no_extra_check_or_behavior_number": true,
+  "runtime_scope": "offline evaluation only; no game action or changed runtime source",
+  "natural_P1_P3_payload_accepted_and_P2_C2_two_full_runs": "pending; first natural startup config only",
+  "P2_C2_on_and_wide_R3_parent": "pending original owner; not closed"
+}
