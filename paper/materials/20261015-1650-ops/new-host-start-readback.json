@@ -1,0 +1,51 @@
+{
+  "at": "2026-10-15 16:55:41 CST",
+  "request": {
+    "at": "2026-10-15 16:54:25 CST",
+    "command": [
+      "bash",
+      "ops/codex-ops-do.sh",
+      "learner-recheck",
+      "20261015-154303-strategy-proposal"
+    ],
+    "original_batch": "20261015-154303-strategy-proposal",
+    "request_pid": 1917240,
+    "birth": "94642488",
+    "exact_live": "7f74c828ff66e4542de0c91eecece50c36a2b080",
+    "exact_tree": "6a55e0ad8cadcf05e7550315852589caf82d8085",
+    "expected_log": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261015-154303-strategy-proposal.fallback-6a55e0ad8cadcf05e7550315852589caf82d8085.checks.log",
+    "new_combination_requests": 1,
+    "stage": "actual request process launched; host/full result pending",
+    "new_learning_or_model_or_current_game_restart": false
+  },
+  "lock_rows": [
+    "125: FLOCK  ADVISORY  WRITE 1917254 08:30:372157 0 EOF"
+  ],
+  "owners": [
+    {
+      "pid": 1917254,
+      "birth": "94642533",
+      "argv": [
+        "python3",
+        "/home/dw/Projects/agent-sts2/ops/codex-ops-learn.py",
+        "recheck",
+        "--batch",
+        "20261015-154303-strategy-proposal"
+      ],
+      "cwd": "/home/dw/Projects/agent-sts2",
+      "expected_log_fds": [
+        "5"
+      ]
+    }
+  ],
+  "actually_started": true,
+  "exact_live_readback": "7f74c828ff66e4542de0c91eecece50c36a2b080",
+  "exact_tree_readback": "6a55e0ad8cadcf05e7550315852589caf82d8085",
+  "log_prefix_bytes": 116,
+  "log_prefix_sha256": "69d9459d27587a47222c3a5b8795434a199a2711f5b1ce0e5e2ef34772e4fcaa",
+  "full_result": "pending; RUN is not full success",
+  "R359_R360_old_tree_full_passed": "24de only; not borrowed for new R361 tree",
+  "one_final_combination_request": true,
+  "old_failures_and_source_full": "preserved/not rerun",
+  "current_game": "not restarted or changed by ops; current natural identity belongs actual run-config"
+}

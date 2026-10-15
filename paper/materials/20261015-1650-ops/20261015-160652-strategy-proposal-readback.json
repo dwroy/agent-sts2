@@ -1,0 +1,183 @@
+{
+  "batch": "20261015-160652-strategy-proposal",
+  "original_completion": {
+    "state": "done",
+    "rc": 0,
+    "merged": null
+  },
+  "original_report": {
+    "task": "strategy-proposal",
+    "character": "silent",
+    "batch": "20261015-160652-strategy-proposal",
+    "base": "7459f1425ca012a6c6a228a2838fea05f4cb98ad",
+    "runs": [
+      "751FN9QM9MHQ",
+      "KV0JHNJCKXLS",
+      "YQL8RZ8BWN1E",
+      "L9SGRBB5R698",
+      "PU80F84P6HPN",
+      "KEN58SH9SLZ6"
+    ],
+    "fixes": [],
+    "skipped": [
+      "silent-proposal-366288801d9150d9",
+      "silent-proposal-85929bdfc8a3fc1b",
+      "silent-proposal-efd9f83ee9e1a6dc",
+      "silent-proposal-131042659448ae74",
+      "silent-proposal-990f054036609447",
+      "silent-proposal-e18d3f18e6cac2a0",
+      "silent-proposal-9733bb80f445aeae",
+      "silent-proposal-c51468c5e8ba6668",
+      "silent-proposal-86a7db08d1a31976",
+      "silent-proposal-e282a9131b99129a"
+    ],
+    "merged": null,
+    "tests": {
+      "tsc": null,
+      "vitest": null,
+      "cases": null
+    },
+    "code_proposals": [
+      "silent-proposal-366288801d9150d9",
+      "silent-proposal-85929bdfc8a3fc1b",
+      "silent-proposal-efd9f83ee9e1a6dc",
+      "silent-proposal-131042659448ae74",
+      "silent-proposal-990f054036609447",
+      "silent-proposal-e18d3f18e6cac2a0",
+      "silent-proposal-9733bb80f445aeae",
+      "silent-proposal-c51468c5e8ba6668",
+      "silent-proposal-86a7db08d1a31976",
+      "silent-proposal-e282a9131b99129a"
+    ],
+    "implementation_domains": [],
+    "proposal_results": [
+      {
+        "id": "silent-proposal-366288801d9150d9",
+        "state": "waiting",
+        "reason": "751 F17 T2/T7/T13配对净差已复核，现有live候选比较明确actual_turn_result=null；缺抽弃续问后的完整执行归属及受控整战后继，不能拟合SL额外失血阈值。"
+      },
+      {
+        "id": "silent-proposal-85929bdfc8a3fc1b",
+        "state": "waiting",
+        "reason": "751 F13 T3用药plan2与全程无药plan5均为8/8模型结束、8损，plan3后轮仍有7/8用药；缺无药实际整战、留至boss分支和弃呼唤后完整逐源实果，不能校准持药血价或改弃牌。"
+      },
+      {
+        "id": "silent-proposal-efd9f83ee9e1a6dc",
+        "state": "waiting",
+        "reason": "751 T2多9净扣付5血、T7多6付10、T13省6少6均核，六试同局未胜；已有预测分账不闭合整轮实果，缺单因受控后继与时间靠后的独立验证，不改SL排序。"
+      },
+      {
+        "id": "silent-proposal-131042659448ae74",
+        "state": "waiting",
+        "reason": "持牌保守损血与弃牌未决已有live结构字段，选择阶段和单动作回执仍将actual_turn留空；缺攻击/毒/荆棘逐源及能力后继兑现、完整无药跨战分支，不能以局部诊断标整项duplicate。"
+      },
+      {
+        "id": "silent-proposal-990f054036609447",
+        "state": "waiting",
+        "reason": "KV F33第4/5试T5删致命毒药后净扣36→29且当轮均零损已核；后轮条件亦变，缺保持后继条件的受控整战、敌回血逐源归属及未执行路线/休息分支，不定SL或终局权重。"
+      },
+      {
+        "id": "silent-proposal-e18d3f18e6cac2a0",
+        "state": "waiting",
+        "reason": "巨兽阶段/末态资源已有live祖先源码，但anchorRank仍以原始占位血作同轮tie-break；L9失败与PU第5试F17胜保留，缺新参考排序的受控完整后继和资源/结局校准，不改排序或标整项完成。"
+      },
+      {
+        "id": "silent-proposal-9733bb80f445aeae",
+        "state": "waiting",
+        "reason": "YQL F17末试T10药前后毒2→8而26血/13挡/41自爆不变已核；缺提前喝、不喝、留药和新SL参考排序的受控整战，阶段事实不能量化药水持有值或证明改序收益。"
+      },
+      {
+        "id": "silent-proposal-c51468c5e8ba6668",
+        "state": "waiting",
+        "reason": "KEN七次use_potion与七组实际槽位消耗已核；单动作返回不证明随机选牌/发光水重问后完整收益，缺F15不喝及留至boss的完整分支，无法量化逐槽跨战持有值。"
+      },
+      {
+        "id": "silent-proposal-86a7db08d1a31976",
+        "state": "waiting",
+        "reason": "KEN F17第4/5试T10多损6只多净扣2，第4/6试步法T5推迟至T9已核；缺完整逐源/候选归属、受控整战及新局留出验证，不能设6血/2伤通用准入或只按省血排序。"
+      },
+      {
+        "id": "silent-proposal-e282a9131b99129a",
+        "state": "waiting",
+        "reason": "KEN双向取舍与原经验一致且六试同局未胜；已有选择预测及单动作回执不足闭合能力建立后继和整轮实果，缺受控胜线及后期独立验证，保留探索和HP护栏。"
+      }
+    ],
+    "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261015-160652/learner/runs/20261015-160655-3bcaa68d-f40b-4255-8422-97d79b1b6ece-strategy-proposal/report.md"
+  },
+  "native": {
+    "batch": "20261015-160652-strategy-proposal",
+    "thread": "01a13e99-9fc5-71f3-9c09-75feef3ad798",
+    "cwd": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261015-160652",
+    "event_log": "learner/runs/20261015-160655-3bcaa68d-f40b-4255-8422-97d79b1b6ece-strategy-proposal.jsonl",
+    "registered_launch_batch": "20261015-160652-strategy-proposal",
+    "original_lease": "a4c631e08e10e99108abae2a17739864cd8fa7b588363b0583c0fca98f87d8be",
+    "native_context": {
+      "source": "ops/codex-ops/accounts/codex1/learner/sessions/2026/10/15/rollout-2026-10-15T16-06-57-01a13e99-9fc5-71f3-9c09-75feef3ad798.jsonl",
+      "offset": 50242,
+      "bytes": 5148,
+      "sha256": "75a9f468c67864893e4706fe65d6b032ceb7fdd9213efd2a049cd4cb0c01d86b",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "sandbox": {
+        "type": "workspace-write",
+        "writable_roots": [
+          "/home/dw/Projects/agent-sts2",
+          "/home/dw/Projects/agent-sts2/.git",
+          "/home/dw/Projects/agent-sts2/.git/worktrees/codex-strategy-silent-20261015-160652"
+        ],
+        "network_access": false,
+        "exclude_tmpdir_env_var": false,
+        "exclude_slash_tmp": false
+      },
+      "approval_policy": "never"
+    },
+    "native_user_input": {
+      "offset": 55390,
+      "bytes": 21447,
+      "sha256": "f28b301aaf66a114cb28ebd191259273a12fa84f3f094459e6ecbbfe39fc2c17",
+      "input_sha256": "6b63cabd431ab684008e7610c5bcc905680c7f6a13c08ef9714a03eb620cee81"
+    },
+    "original_header_events": [
+      {
+        "offset": 0,
+        "bytes": 23459,
+        "sha256": "efe530346543dca19445f739844421598608590a43e57254d20ae2febc64d17f",
+        "type": "learner_launch",
+        "attempt": null,
+        "code": null
+      },
+      {
+        "offset": 23459,
+        "bytes": 378,
+        "sha256": "56978e0388b85d736222f89f665925e645f9cda95b727f78a5238375f084244a",
+        "type": "learner_startup_attempt",
+        "attempt": 1,
+        "code": null
+      },
+      {
+        "offset": 26843,
+        "bytes": 77,
+        "sha256": "5fbdbb5e65134223af15ab5ecdd7e9a61c5a7553e17e75904ccb8984589f6af6",
+        "type": "thread.started",
+        "attempt": null,
+        "code": null
+      }
+    ],
+    "startup_attempts": 1,
+    "failed_startups_preserved": 0,
+    "no_model_or_manual_restart": true
+  },
+  "report_ref": {
+    "path": ".worktrees/codex-strategy-silent-20261015-160652/learner/runs/20261015-160655-3bcaa68d-f40b-4255-8422-97d79b1b6ece-strategy-proposal/report.md",
+    "bytes": 10988,
+    "sha256": "aa270145c4ba7e28f159cf569565f89979a7df850c4a89bca4416cbe0176b599"
+  },
+  "worktree_clean": true,
+  "new_learning_or_model": false,
+  "ten_original_waiting_preserved": true,
+  "source_changes": false,
+  "reported_raw_rows": 8444,
+  "reported_material_checks": 45,
+  "verification_boundary": "read original learner artifacts and native isolation; no redundant material or source tests rerun",
+  "owned_ledger_rows": 16
+}

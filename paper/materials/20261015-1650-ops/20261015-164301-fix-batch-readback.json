@@ -1,0 +1,146 @@
+{
+  "batch": "20261015-164301-fix-batch",
+  "original_completion": {
+    "state": "failed",
+    "rc": 0,
+    "merged": null
+  },
+  "original_report": {
+    "task": "fix-batch",
+    "base": "8a450aa06e05fd7b115b2e89736f889ecc4366ad",
+    "fixes": [],
+    "skipped": [
+      {
+        "item": "silent-0481",
+        "reason": "策略类题面知识，沿已有silent-proposal-686d4e759478eebb处理。"
+      },
+      {
+        "item": "silent-0469聚合体纸鹤补证",
+        "reason": "策略类，沿已有silent-proposal-0cce435d0d61ac93处理。"
+      },
+      {
+        "item": "silent-0446休息超时后路线提交",
+        "reason": "结构策略类，沿已有silent-proposal-2d3aa8dfb27dbe3f处理。"
+      },
+      {
+        "item": "其余未闭合的打法和机制条目",
+        "reason": "策略类，继续各条既有提案链。"
+      },
+      {
+        "item": "Codex缓存命中偏低",
+        "reason": "证据不足，缺当前受控比较。"
+      },
+      {
+        "item": "调度公平性核查",
+        "reason": "证据不足，尚未证明永久饥饿。"
+      },
+      {
+        "item": "sandbox-glob-startup-race上游根因",
+        "reason": "恢复补丁已修，上游目录生命周期证据不足。"
+      },
+      {
+        "item": "core-build-notify-222802-rc2历史恢复",
+        "reason": "诊断保存已修，原发送事实证据不足。"
+      },
+      {
+        "item": "named-card-facts-transport宽范围",
+        "reason": "事件入口已修，其余属独立功能。"
+      },
+      {
+        "item": "boss模拟性能及v5-dpr-health宽范围",
+        "reason": "独立专项范围过大，沿原任务处理。"
+      },
+      {
+        "item": "arch-funnel-guard / arch-learning-priority / arch-unified-resource-value / inv-f33-regression",
+        "reason": "独立架构及策略研究。"
+      },
+      {
+        "item": "框架外层总时限收尾",
+        "reason": "分段续验入口已修，其余沿原框架任务处理。"
+      }
+    ],
+    "merged": null,
+    "tests": {
+      "tsc": 0,
+      "vitest": 0,
+      "cases": 63
+    },
+    "code_proposals": [],
+    "implementation_domains": [],
+    "report": "/home/dw/Projects/agent-sts2/learner/runs/20261015-164309-d52cfcef-b4b8-4c62-a6c0-12d463f20d2c-fix-batch/report.md"
+  },
+  "native": {
+    "batch": "20261015-164301-fix-batch",
+    "thread": "01a13eba-cbbb-7a21-9cd5-cbb1b3105ae1",
+    "cwd": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261015-164301",
+    "event_log": "learner/runs/20261015-164309-d52cfcef-b4b8-4c62-a6c0-12d463f20d2c-fix-batch.jsonl",
+    "registered_launch_batch": "20261015-164301-fix-batch",
+    "original_lease": "21d4453078916f6ab974cb7d6d7d2a6ac049844f36d31cf24196fce9d9baac71",
+    "native_context": {
+      "source": "ops/codex-ops/accounts/codex1/learner/sessions/2026/10/15/rollout-2026-10-15T16-43-11-01a13eba-cbbb-7a21-9cd5-cbb1b3105ae1.jsonl",
+      "offset": 50164,
+      "bytes": 5118,
+      "sha256": "2ee2b3e0246dd8532de9eabca24e2144314d619eeca9731d72d3c6efe1f23736",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "sandbox": {
+        "type": "workspace-write",
+        "writable_roots": [
+          "/home/dw/Projects/agent-sts2",
+          "/home/dw/Projects/agent-sts2/.git",
+          "/home/dw/Projects/agent-sts2/.git/worktrees/codex-fix-silent-20261015-164301"
+        ],
+        "network_access": false,
+        "exclude_tmpdir_env_var": false,
+        "exclude_slash_tmp": false
+      },
+      "approval_policy": "never"
+    },
+    "native_user_input": {
+      "offset": 55282,
+      "bytes": 13081,
+      "sha256": "8d289ad467e34c315087d911a9f71b93886250f4a57361683bdec32f243ac87c",
+      "input_sha256": "15c33c66a2e454f6d9d998a0486bd70b34f86b4640e2098764f3a4bfcbd5dad1"
+    },
+    "original_header_events": [
+      {
+        "offset": 0,
+        "bytes": 14892,
+        "sha256": "3316ca29510de3659bb4db2792d9b0ee62f88293072d2dd333d5cf025d159af7",
+        "type": "learner_launch",
+        "attempt": null,
+        "code": null
+      },
+      {
+        "offset": 14892,
+        "bytes": 370,
+        "sha256": "6423fc20a1a54f38d110776ee7f9c6bc9c8c7d67ef885d40cd38cc397e84e0c1",
+        "type": "learner_startup_attempt",
+        "attempt": 1,
+        "code": null
+      },
+      {
+        "offset": 18268,
+        "bytes": 77,
+        "sha256": "b58774b0fef386718c0305a86915bb09f643f31241744b79999914d20c22d647",
+        "type": "thread.started",
+        "attempt": null,
+        "code": null
+      }
+    ],
+    "startup_attempts": 1,
+    "failed_startups_preserved": 0,
+    "no_model_or_manual_restart": true
+  },
+  "report_ref": {
+    "path": "learner/runs/20261015-164309-d52cfcef-b4b8-4c62-a6c0-12d463f20d2c-fix-batch/report.md",
+    "bytes": 25349,
+    "sha256": "e427e87603ea163207a9e127766c0b020db70e77b67422401ed9773e09eaa270"
+  },
+  "worktree_clean": true,
+  "new_learning_or_model": false,
+  "existing_fix_ancestors_verified": 72,
+  "source_changes": false,
+  "tests_boundary": "learner tsc0 and 10-file63 selected pass; 33 name-filtered not executed, not full; no redundant checks",
+  "state_failed_rc0_preserved": true
+}
