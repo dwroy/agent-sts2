@@ -2,7 +2,8 @@ import { accessSync, constants as fsConstants, readFileSync, statSync } from "no
 import { delimiter, dirname, isAbsolute, join } from "node:path";
 
 import type { Effort, EngineName } from "../brain/types.js";
-import { fromRoot } from "./paths.js";
+import { fromRoot, PROJECT_ROOT } from "./paths.js";
+import { mainSilentCreditsAllowed } from "../brain/engines/codex-credit-policy.js";
 import { characterKey, DEFAULT_CHARACTER, KNOWLEDGE_DIR, knowledgeFile } from "../knowledge/files.js";
 import type { InstanceBinding } from "../hand/mod/instance.js";
 import { sharedJevSettings } from "./jev-settings.js";
@@ -632,7 +633,7 @@ export interface BrainConfig {
      * (BRAIN_CODEX_USAGE_REQUIRED=on, default off): while reads fail codex is off (its questions to the fallback) until
      * a read works, instead of being said once and kept on.
      */
-    usage: { stopPct: number; everyCalls: number; everyMin: number; required: boolean };
+    usage: { stopPct: number; everyCalls: number; everyMin: number; required: boolean; paidCredits?: true };
   };
 }
 
@@ -876,6 +877,8 @@ export function readBrainConfig(env: NodeJS.ProcessEnv, problems: ConfigProblem[
     everyCalls: usageInt("BRAIN_CODEX_USAGE_EVERY_CALLS", DEFAULT_CODEX_USAGE_EVERY_CALLS, { min: 1, max: 1000 }),
     everyMin: usageInt("BRAIN_CODEX_USAGE_EVERY_MIN", DEFAULT_CODEX_USAGE_EVERY_MIN, { min: 1, max: 1440 }),
     required: parseOnOff(readEnv(env, "BRAIN_CODEX_USAGE_REQUIRED"), "BRAIN_CODEX_USAGE_REQUIRED", problems) ?? false,
+    ...(mainSilentCreditsAllowed(env, characterKey(readEnv(env, "CHARACTER")) ?? DEFAULT_CHARACTER, PROJECT_ROOT)
+      ? { paidCredits: true as const, required: true } : {}),
   };
   const prefixRaw = (readEnv(env, "KNOWLEDGE_PREFIX") ?? "off").toLowerCase();
   if (prefixRaw !== "off" && prefixRaw !== "full") problems.push({ field: "KNOWLEDGE_PREFIX", message: `expected off or full, got "${prefixRaw}"` });
