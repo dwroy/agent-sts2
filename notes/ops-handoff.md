@@ -1556,3 +1556,5 @@
 - 2026-10-09 20:39 运维codex20:27提交校验补记：严格空白检查发现学习者原正式复盘 notes/lessons.md:8804 的EOF空行，原30189字节追加与原命令/草稿全等；保留原字节，仅此原件EOF空行单独核验例外，其余自写记录严格检查。不重复追加复盘/台账/论文命令，未把记录格式检查当游戏或源码失败；独立回执paper/materials/silent/20261009-2027-events/ops-precommit-validation-failure.json。
 
 - 2026-10-11 18:26 CST [Roy协调] ops拓扑为一个主会话、最多两个只读辅助session；本轮两个临时积压审计已完成，不重复领取。开发独立负责归档修复source62c22f7c7/main1496de4f4及持久broker/辅助入口；ops只在当前live合并和隔离复验后正常纳入已测派单/归档修复。整套已过项目不再无差别重测，仅失败文件/未跑paths单worker复验，原失败/断言/预算保持。264条历史扫描候选仍由开发复核性质，不冒报泄露或全部清洁。
+
+- 2026-10-15 22:25:39 CST 原214302-fix待live接续：source798af209b9a268b7dafab1440150f1b39cd5595d的3文件注册屏障已main09cecbe8b28f1885a4800c009a8717eb9c33caed；源完整435/4093绿。live f92636ae有知识构建器PID3127135及8知识刷新，ops未写live/未启动host。一次learner-merge原分支manual已排队，不能整枝重跑原10知识冲突merge，也不能重跑已完成main helper；下一原事件按paper/materials/20261015-2216-ops/pending-live-handoff.json非阻塞锁/当前builder/当前3叶三方核，保知识刷新后窄集成并绑定原source，随后同原批learner-recheck单次精确树宿主full及自然lease读回。若仍busy只留pending不即时重复排队；不重启局/新派学习者/改权限，原历史失败及上游目录unknown保持，WT先保留。

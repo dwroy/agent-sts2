@@ -1,0 +1,248 @@
+{
+  "at": "2026-10-15 22:22:52 CST",
+  "batch": "20261015-214302-fix-batch",
+  "source": "798af209b9a268b7dafab1440150f1b39cd5595d",
+  "native": {
+    "batch": "20261015-214302-fix-batch",
+    "thread": "01a13fcd-7f9d-7a81-b69f-404e7796cecb",
+    "cwd": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261015-214302",
+    "event_log": "learner/runs/20261015-214306-c1fbbfac-f9e0-42d8-a5ef-51eedcffc4f9-fix-batch.jsonl",
+    "registered_launch_batch": "20261015-214302-fix-batch",
+    "original_lease": "32d7031e45c3a2afd0b2447e8a4983e97f02ca1d47d586c1cba7dcdd363bebb4",
+    "native_context": {
+      "source": "ops/codex-ops/accounts/codex1/learner/sessions/2026/10/15/rollout-2026-10-15T21-43-14-01a13fcd-7f9d-7a81-b69f-404e7796cecb.jsonl",
+      "offset": 50167,
+      "bytes": 5118,
+      "sha256": "bbfc1102c843035dbb1bf05b43e595d004536b3a5b77c657fe5a33c0129770a6",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "sandbox": {
+        "type": "workspace-write",
+        "writable_roots": [
+          "/home/dw/Projects/agent-sts2",
+          "/home/dw/Projects/agent-sts2/.git",
+          "/home/dw/Projects/agent-sts2/.git/worktrees/codex-fix-silent-20261015-214302"
+        ],
+        "network_access": false,
+        "exclude_tmpdir_env_var": false,
+        "exclude_slash_tmp": false
+      },
+      "approval_policy": "never"
+    },
+    "native_user_input": {
+      "offset": 55285,
+      "bytes": 13081,
+      "sha256": "dbbc8207eeaf07001f9af7a02188e24076e140c01fdd21f0a6fa69485de07da6",
+      "input_sha256": "83dc23615c51e3a1aa83c28b192560005f4363139c1185dc3cedc7ec2ad75701"
+    },
+    "original_header_events": [
+      {
+        "offset": 0,
+        "bytes": 14892,
+        "sha256": "b57e776fb1b5e9deacebbdcc8f98262f82f4079bfb2281e9ae38abcd84704bcf",
+        "type": "learner_launch",
+        "attempt": null,
+        "code": null
+      },
+      {
+        "offset": 14892,
+        "bytes": 370,
+        "sha256": "98faaa210f2d26edd6ea93e35f21e6894bdd82df2da7dacfe6660c3a83c1d130",
+        "type": "learner_startup_attempt",
+        "attempt": 1,
+        "code": null
+      },
+      {
+        "offset": 17841,
+        "bytes": 77,
+        "sha256": "85df96fe984a39e08f982cad9d45d8d893cf2ce7bf0f58b90244279f01cfb745",
+        "type": "thread.started",
+        "attempt": null,
+        "code": null
+      }
+    ],
+    "startup_attempts": 1,
+    "failed_startups_preserved": 0,
+    "no_model_or_manual_restart": true
+  },
+  "original_report": {
+    "task": "fix-batch",
+    "base": "a24ab305b337de84344000190c7f06c1ad8d59ed",
+    "fixes": [
+      {
+        "item": "sandbox-glob-startup-race：父注册事务尚未保存即捕获启动租约",
+        "commit": "798af209b9a268b7dafab1440150f1b39cd5595d",
+        "test": "agent/tests/learner-registration-barrier.test.ts",
+        "fails_without_fix": true
+      }
+    ],
+    "skipped": [
+      {
+        "item": "silent-0481",
+        "reason": "策略类/题面知识，沿原提案"
+      },
+      {
+        "item": "silent-0311",
+        "reason": "策略类/模型，沿原提案"
+      },
+      {
+        "item": "silent-0332",
+        "reason": "证据不足，完整resources/steps仍截断"
+      },
+      {
+        "item": "silent-0469聚合体组合",
+        "reason": "策略类，超出现有骑士窄修复范围"
+      },
+      {
+        "item": "silent-0446休息确认与路线提交",
+        "reason": "策略类/结构，沿原独立提案"
+      },
+      {
+        "item": "其余出牌、机制、药水、SL、终局、路线和休息项",
+        "reason": "策略类，逐项处置见queue-dispositions.json"
+      },
+      {
+        "item": "Codex缓存命中偏低",
+        "reason": "证据不足，缺当前原生请求受控比较"
+      },
+      {
+        "item": "调度公平性核查",
+        "reason": "证据不足，未证明永久饥饿"
+      },
+      {
+        "item": "sandbox-glob-startup-race上游生命周期",
+        "reason": "证据不足；本批仅修注册竞态，目录删除者及其他历史原因未知"
+      },
+      {
+        "item": "core-build-notify历史发送事实",
+        "reason": "证据不足，原rc2缺stderr；后续诊断已修"
+      },
+      {
+        "item": "named-card-facts其他入口",
+        "reason": "太大，属于独立功能范围"
+      },
+      {
+        "item": "Boss模拟性能及v5-dpr-health宽范围",
+        "reason": "太大，沿原专项和冻结输入接续"
+      },
+      {
+        "item": "漏斗、学习优先级、统一资源价值及F33归因",
+        "reason": "策略类/独立架构任务"
+      },
+      {
+        "item": "框架外层总时限收尾",
+        "reason": "太大；精确续验入口已实现，剩余范围沿原框架任务"
+      }
+    ],
+    "merged": null,
+    "tests": {
+      "tsc": 0,
+      "vitest": 0,
+      "cases": 4093
+    },
+    "code_proposals": [],
+    "implementation_domains": [],
+    "report": "/home/dw/Projects/agent-sts2/learner/runs/20261015-214306-c1fbbfac-f9e0-42d8-a5ef-51eedcffc4f9-fix-batch/report.md"
+  },
+  "original_failed_rc0_and_merged_null_preserved": true,
+  "source_checks": {
+    "tsc": 0,
+    "sandbox_files": 434,
+    "sandbox_cases": 4082,
+    "paths_files": 1,
+    "paths_cases": 11,
+    "combined_cases": 4093,
+    "rc": 0,
+    "reruns": []
+  },
+  "source_full_log_sha256": "3a76f51bba7553992504810cadca42f6ed716fa6b7f695e146d2c3afe2ee1201",
+  "source_negative_and_positive_log_sha256": {
+    "registration-negative.log": "b9f45d00dc969bed72732b75af0552b82338226fce31e66b40308db133f95995",
+    "registration-positive.log": "fa40d43e5818a5e42c6224508a766f7008442042af59dfe022c5e307113f71ed"
+  },
+  "original_conflict_receipt": {
+    "source_commit": "798af209b9a268b7dafab1440150f1b39cd5595d",
+    "before_refresh": "f92636aec0e099e656eb18d14ef73c7dc266ff55",
+    "before_merge": "f92636aec0e099e656eb18d14ef73c7dc266ff55",
+    "current_live": "f92636aec0e099e656eb18d14ef73c7dc266ff55",
+    "source_merged": false,
+    "preflight_exit": 1,
+    "merge_script_exit": 3,
+    "knowledge_conflicts": [
+      "knowledge/characters/silent/boss-damage.json",
+      "knowledge/characters/silent/construction-opportunities.json",
+      "knowledge/characters/silent/fight-value-gates.json",
+      "knowledge/characters/silent/fight-value.json",
+      "knowledge/characters/silent/monster-records.json",
+      "knowledge/characters/silent/outcome-stats.json",
+      "knowledge/characters/silent/room-costs.json",
+      "knowledge/common/card-upgrades.json",
+      "knowledge/common/monster-db.json",
+      "knowledge/common/move-model.json"
+    ],
+    "knowledge_refresh_needed_in_this_attempt": false,
+    "actual_merge_attempted": false,
+    "post_merge_tests_run": false,
+    "status_after": " M notes/fight-value-backtest-silent.md\n M notes/monster-db-check.md\n",
+    "status_same_as_locked_before": true,
+    "index_clean": true,
+    "release_added": false,
+    "ledger_updated": false
+  },
+  "source_context_difference": "Live launcher retains its existing task/storage and Git metadata grant differences from main. Those unrelated leaves are deliberately preserved, not declared equivalent; the final live tree needs its own original host check.",
+  "no_new_game_behavior_release": true,
+  "no_ledger_or_knowledge_change": true,
+  "old_null_leases_and_upstream_directory_lifecycle_remain_unknown": true,
+  "natural_future_learner_consumer": "pending; no new model or experiment dispatched",
+  "checkouts": {
+    "main": {
+      "before": "fb2916e08ef6af82f0a7ed3ccf7af5437b3a7e84",
+      "commit": "09cecbe8b28f1885a4800c009a8717eb9c33caed",
+      "tree": "36dc4db09be8f90c9d51e44091b7a4c38ac31091",
+      "source_ancestor": true,
+      "leaves": [
+        {
+          "path": "agent/tests/learner-registration-barrier.test.ts",
+          "mode": "100644",
+          "blob": "9684124f0c14f39730b8828fad04b3a6f1f28cd9",
+          "sha256": "77c50c7534a720ae03c54fc5989ff2546c6ae83f63a7b3e602a91d4fbb8847ec"
+        },
+        {
+          "path": "ops/codex-ops-learner.sh",
+          "mode": "100755",
+          "blob": "7133d26b6c9141cd4462c3b7b992df92f7b1bf11",
+          "sha256": "88ffea70a4c3bbeaff46a1a82c87529e30b0a1e41faec00201ff7063f7a6ed70"
+        },
+        {
+          "path": "ops/tests/test_learner_registration_barrier.py",
+          "mode": "100644",
+          "blob": "98580e9ada6d6b32bc1f82b0f3e48455e9df94de",
+          "sha256": "4791450ba8c485fe0c4ed5ddd97e542a623af721ce05264e1568e469867c0973"
+        }
+      ],
+      "only_three_checked_leaves_changed": true,
+      "knowledge_and_versions_exactly_preserved": true,
+      "parallel_worktree_files_not_written": true
+    }
+  },
+  "host_check": {
+    "status": "pending_original_batch_request",
+    "rc": null
+  },
+  "active_knowledge_builder_pids": [
+    "3127135"
+  ],
+  "live_integration_deferred_for_active_builder": true,
+  "status": "main_integrated_live_pending_active_knowledge_builder",
+  "live_current_read_only": "f92636aec0e099e656eb18d14ef73c7dc266ff55",
+  "live_current_knowledge_dirty_paths": [
+    "knowledge/characters/silent/boss-damage.json",
+    "knowledge/characters/silent/construction-opportunities.json",
+    "knowledge/characters/silent/monster-records.json",
+    "knowledge/characters/silent/outcome-stats.json",
+    "knowledge/characters/silent/room-costs.json",
+    "knowledge/common/card-upgrades.json",
+    "knowledge/common/monster-db.json",
+    "knowledge/common/move-model.json"
+  ]
+}

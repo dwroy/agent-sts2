@@ -1,0 +1,51 @@
+{
+  "at": "2026-10-15 22:25:39 CST",
+  "batch": "20261015-214302-fix-batch",
+  "source": "798af209b9a268b7dafab1440150f1b39cd5595d",
+  "main_integrated": "09cecbe8b28f1885a4800c009a8717eb9c33caed",
+  "live_observed": "f92636aec0e099e656eb18d14ef73c7dc266ff55",
+  "source_paths": [
+    {
+      "path": "agent/tests/learner-registration-barrier.test.ts",
+      "mode": "100644",
+      "blob": "9684124f0c14f39730b8828fad04b3a6f1f28cd9",
+      "sha256": "77c50c7534a720ae03c54fc5989ff2546c6ae83f63a7b3e602a91d4fbb8847ec"
+    },
+    {
+      "path": "ops/codex-ops-learner.sh",
+      "mode": "100755",
+      "blob": "7133d26b6c9141cd4462c3b7b992df92f7b1bf11",
+      "sha256": "88ffea70a4c3bbeaff46a1a82c87529e30b0a1e41faec00201ff7063f7a6ed70"
+    },
+    {
+      "path": "ops/tests/test_learner_registration_barrier.py",
+      "mode": "100644",
+      "blob": "98580e9ada6d6b32bc1f82b0f3e48455e9df94de",
+      "sha256": "4791450ba8c485fe0c4ed5ddd97e542a623af721ce05264e1568e469867c0973"
+    }
+  ],
+  "block": "Original full branch preflight conflicted in10 knowledge JSONs. Ops preserved it and integrated only3 checked source leaves into main. Live build-fight-value.py PID3127135 was active, with8 live knowledge files being refreshed; no live writes or waiting loop.",
+  "request": {
+    "action": "learner-merge",
+    "argument": "codex-fix-silent-20261015-214302",
+    "rc": 0,
+    "receipt": "paper/materials/20261015-2216-ops/live-continuation-request.log",
+    "state": "queued_original_manual_continuation_not_live_acceptance"
+  },
+  "next_steps": [
+    "On the original continuation, acquire ops/live-merge.lock nonblockingly. If a builder is still active, preserve pending; do not enqueue another immediate retry loop.",
+    "Inspect actual current live/index and knowledge refresh; preserve all new data and parallel records. Never rerun the old full-branch merge or the already-completed main integration helper.",
+    "Integrate only the original3 source leaves with a fresh three-way preflight against source798af209 parent; retain all other live leaves. Bind original source ancestry as in the established narrow integration flow.",
+    "Run the2 fixed registration fixtures on the actual new live composition, then request one original learner-recheck20261015-214302-fix-batch pinned host full. Preserve failures and exact tree; do not borrow source full as live success.",
+    "Only later natural learner launches can validate saved registration/lease consumption. Do not start a model just for this. Keep upstream directory lifecycle, original null leases, 0332 and wider parents open."
+  ],
+  "host_full": {
+    "started": false,
+    "rc": null
+  },
+  "live_fixture_check": "not_started_no_live_integration",
+  "natural_consumer": "pending",
+  "release_id": null,
+  "release_reason": "Infrastructure registration sequencing only; no game behavior change.",
+  "source_workspace": "retained_for_original_live_and_host_closure; no cleanup attempted"
+}
