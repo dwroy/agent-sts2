@@ -1,0 +1,243 @@
+{
+  "batch": "20261015-211145-s2-strategy-proposal",
+  "original_report": {
+    "task": "strategy-proposal",
+    "character": "silent",
+    "batch": "20261015-211145-s2-strategy-proposal",
+    "base": "f32876369a61ee7ead8193a53dcd652837060c6a",
+    "runs": [
+      "KEN58SH9SLZ6",
+      "TXZ6RVMQA09D",
+      "WQZVENQ7DTRP",
+      "02HB4L0C3C67",
+      "4D4J8USKCPAV",
+      "F4QKG4J1AJJZ",
+      "JLN5SK17W4FQ",
+      "LS8035TB32P3",
+      "NB8KCF6HRGVF",
+      "S9UZAK0JP0C0"
+    ],
+    "fixes": [],
+    "skipped": [],
+    "merged": null,
+    "tests": {
+      "tsc": null,
+      "vitest": null,
+      "cases": null
+    },
+    "code_proposals": [
+      "silent-proposal-08eaa60bcc449852",
+      "silent-proposal-92920295a648b540",
+      "silent-proposal-a327449c331efbc1",
+      "silent-proposal-a099e89437e942bb",
+      "silent-proposal-47910f82a1fdd98f",
+      "silent-proposal-f1374df72d8e6a25",
+      "silent-proposal-38a49e6c97f31eea",
+      "silent-proposal-ef0e38a5dbd3bc07",
+      "silent-proposal-7f820c02d39bfaea",
+      "silent-proposal-04b6b430759815ed"
+    ],
+    "implementation_domains": [],
+    "proposal_results": [
+      {
+        "id": "silent-proposal-08eaa60bcc449852",
+        "state": "waiting",
+        "reason": "缺F15不饮用及同入口、同后继留药至Boss的完整成对结果，无法校准持药价。"
+      },
+      {
+        "id": "silent-proposal-92920295a648b540",
+        "state": "waiting",
+        "reason": "缺保持抽序、生成与药栏一致的两战通关替线；已有开场扣血实现不覆盖连战与SL资源校准。"
+      },
+      {
+        "id": "silent-proposal-a327449c331efbc1",
+        "state": "waiting",
+        "reason": "缺攻防与沙坑双边界的完整受控后继及独立胜局，不能拟定新SL血价门槛。"
+      },
+      {
+        "id": "silent-proposal-a099e89437e942bb",
+        "state": "waiting",
+        "reason": "生成与容量已有实现；仍缺保留、穿插出刀、整候选实际派发和SL恢复的联合校准。"
+      },
+      {
+        "id": "silent-proposal-47910f82a1fdd98f",
+        "state": "waiting",
+        "reason": "开场4血子项已有实现；缺留药、路线、SL完整后继对照及未知回血、复活组合的结算顺序。"
+      },
+      {
+        "id": "silent-proposal-f1374df72d8e6a25",
+        "state": "waiting",
+        "reason": "缺隔离机制误差后的同入口、同预算未用、早用、留药成对整战，不能校准资源权重。"
+      },
+      {
+        "id": "silent-proposal-38a49e6c97f31eea",
+        "state": "waiting",
+        "reason": "普通紧勒已有限定实现；缺弃磨蚀、增益分源、再生、自动触发与SL恢复的联合消费者校准。"
+      },
+      {
+        "id": "silent-proposal-ef0e38a5dbd3bc07",
+        "state": "waiting",
+        "reason": "缺另一营火、事件、路线和用药时机的受控完整结果，不能由实际失败链拟合资源权重。"
+      },
+      {
+        "id": "silent-proposal-7f820c02d39bfaea",
+        "state": "waiting",
+        "reason": "缺同预算饱和排序校准、跨弃牌整候选执行归属及成对完整后继；六次失败不足确定新SL阈值。"
+      },
+      {
+        "id": "silent-proposal-04b6b430759815ed",
+        "state": "waiting",
+        "reason": "蟹朝向窄分支已有实现；缺油灯首次消费身份、跨动作、新战及SL恢复联合输入，以及其他X值、升级组合与能力整战后继。"
+      }
+    ],
+    "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261015-211145-s2/learner/runs/20261015-211149-fba8cb6c-a641-42b8-9fd1-5a6d71a62c46-strategy-proposal/report.md"
+  },
+  "native": {
+    "batch": "20261015-211145-s2-strategy-proposal",
+    "thread": "01a13fb0-c501-7112-a930-cb0bc45be9cf",
+    "cwd": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261015-211145-s2",
+    "event_log": "learner/runs/20261015-211149-fba8cb6c-a641-42b8-9fd1-5a6d71a62c46-strategy-proposal.jsonl",
+    "registered_launch_batch": "20261015-211145-s2-strategy-proposal",
+    "original_lease": "b33eae11441879ce25bde0ed2a48bbc8a5388140030feddfe6d6ae99a0809aa3",
+    "native_context": {
+      "source": "ops/codex-ops/accounts/codex1/learner/sessions/2026/10/15/rollout-2026-10-15T21-11-51-01a13fb0-c501-7112-a930-cb0bc45be9cf.jsonl",
+      "offset": 50283,
+      "bytes": 5166,
+      "sha256": "c0b50cdac33c03e54a52bddc3f33a2936232559571c28751c554c52dfd4bfbe7",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "sandbox": {
+        "type": "workspace-write",
+        "writable_roots": [
+          "/home/dw/Projects/agent-sts2",
+          "/home/dw/Projects/agent-sts2/.git",
+          "/home/dw/Projects/agent-sts2/.git/worktrees/codex-strategy-silent-20261015-211145-s2"
+        ],
+        "network_access": false,
+        "exclude_tmpdir_env_var": false,
+        "exclude_slash_tmp": false
+      },
+      "approval_policy": "never"
+    },
+    "native_user_input": {
+      "offset": 55449,
+      "bytes": 21571,
+      "sha256": "0911b43aa23039f1ccc3106db520e6c6cbefb05b76a1c804d347692f16579032",
+      "input_sha256": "8a1fde2d38780f9980769b4956f760487f154a3a3a1f434d0cca700d183d5213"
+    },
+    "original_header_events": [
+      {
+        "offset": 0,
+        "bytes": 23653,
+        "sha256": "64250cf691fecde98c5c171fdd7d9a2cef9c0d6d7eed28a34e9d030ab7414954",
+        "type": "learner_launch",
+        "attempt": null,
+        "code": null
+      },
+      {
+        "offset": 23653,
+        "bytes": 381,
+        "sha256": "e036f1235a1ebe5ae12ac4a433801fbf9d6ddf2524473539c9dade4ac4046763",
+        "type": "learner_startup_attempt",
+        "attempt": 1,
+        "code": null
+      },
+      {
+        "offset": 27040,
+        "bytes": 77,
+        "sha256": "bc62d6403f8539b1a240f1e26af4e226fde4bd6804838e01e1a5d97d2af934e3",
+        "type": "thread.started",
+        "attempt": null,
+        "code": null
+      }
+    ],
+    "startup_attempts": 1,
+    "failed_startups_preserved": 0,
+    "no_model_or_manual_restart": true
+  },
+  "canonical_no_change_gate": {
+    "base": "f32876369a61ee7ead8193a53dcd652837060c6a",
+    "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261015-211145-s2/learner/runs/20261015-211149-fba8cb6c-a641-42b8-9fd1-5a6d71a62c46-strategy-proposal/report.md",
+    "dispositions": [
+      {
+        "id": "silent-proposal-08eaa60bcc449852",
+        "state": "waiting",
+        "reason": "缺F15不饮用及同入口、同后继留药至Boss的完整成对结果，无法校准持药价。"
+      },
+      {
+        "id": "silent-proposal-92920295a648b540",
+        "state": "waiting",
+        "reason": "缺保持抽序、生成与药栏一致的两战通关替线；已有开场扣血实现不覆盖连战与SL资源校准。"
+      },
+      {
+        "id": "silent-proposal-a327449c331efbc1",
+        "state": "waiting",
+        "reason": "缺攻防与沙坑双边界的完整受控后继及独立胜局，不能拟定新SL血价门槛。"
+      },
+      {
+        "id": "silent-proposal-a099e89437e942bb",
+        "state": "waiting",
+        "reason": "生成与容量已有实现；仍缺保留、穿插出刀、整候选实际派发和SL恢复的联合校准。"
+      },
+      {
+        "id": "silent-proposal-47910f82a1fdd98f",
+        "state": "waiting",
+        "reason": "开场4血子项已有实现；缺留药、路线、SL完整后继对照及未知回血、复活组合的结算顺序。"
+      },
+      {
+        "id": "silent-proposal-f1374df72d8e6a25",
+        "state": "waiting",
+        "reason": "缺隔离机制误差后的同入口、同预算未用、早用、留药成对整战，不能校准资源权重。"
+      },
+      {
+        "id": "silent-proposal-38a49e6c97f31eea",
+        "state": "waiting",
+        "reason": "普通紧勒已有限定实现；缺弃磨蚀、增益分源、再生、自动触发与SL恢复的联合消费者校准。"
+      },
+      {
+        "id": "silent-proposal-ef0e38a5dbd3bc07",
+        "state": "waiting",
+        "reason": "缺另一营火、事件、路线和用药时机的受控完整结果，不能由实际失败链拟合资源权重。"
+      },
+      {
+        "id": "silent-proposal-7f820c02d39bfaea",
+        "state": "waiting",
+        "reason": "缺同预算饱和排序校准、跨弃牌整候选执行归属及成对完整后继；六次失败不足确定新SL阈值。"
+      },
+      {
+        "id": "silent-proposal-04b6b430759815ed",
+        "state": "waiting",
+        "reason": "蟹朝向窄分支已有实现；缺油灯首次消费身份、跨动作、新战及SL恢复联合输入，以及其他X值、升级组合与能力整战后继。"
+      }
+    ]
+  },
+  "original_completion": {
+    "valid_result": true,
+    "base": "f32876369a61ee7ead8193a53dcd652837060c6a",
+    "proposal_count": 10,
+    "ledger_links": 31,
+    "material_assertions": 38,
+    "working_tree_clean": true,
+    "production_tests_run": false,
+    "new_commits": [],
+    "merged": null,
+    "report_sha256": "8b8f252c072f0a8f0b188f66f07524ab678b160ba92fb37b3c36804d7e0f7562",
+    "proposal_sha256": "1b9391ba763221ca4e6b0c4c87987dd923e2130db975818abfab2e6eb037d591"
+  },
+  "original_evidence_rows": 19929,
+  "original_material_assertions": 38,
+  "original_evidence_manifest_sha256": "c76167fccb7bb638216ffef80a7f26acddaf9225cfeed0aed876f333df8f6a12",
+  "original_pinned_live": "fe6462651b593b9831581c088deface9957a404f",
+  "source_leaves": 16,
+  "equal_leaves": 10,
+  "historical_name_comment_differences": 6,
+  "source_base_and_old_live_leaf_shas_and_ancestors_verified": true,
+  "no_transpilation_or_current_deployment_equivalence_claim": true,
+  "trace_only_cli_rows": 31,
+  "original_cli_ids_verified": true,
+  "original_material_checks_not_reexecuted": true,
+  "production_tests_not_run": true,
+  "native_gap": "Learner did not independently verify native model/effort. Ops now verified actual Sol6.1/xhigh, input/lease and original workspace-write/no-network; no runtime settings changed.",
+  "original_failures_and_limits": "Original EPERM and missing TypeScript7 transpile API attempts retained; no transpiled equivalence or product failure claim. Mixed ascensions, pending versus completed, first snapshots versus actionable/terminal frames and current-turn versus future sandpit windows remain separate. Full candidate execution and controlled potion/route follow-ups unknown.",
+  "no_new_source_merge_release_game_actions_or_learning_parent": true
+}

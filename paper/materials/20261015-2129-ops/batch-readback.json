@@ -1,0 +1,242 @@
+{
+  "batch": "20261015-211145-strategy-proposal",
+  "original_report": {
+    "task": "strategy-proposal",
+    "character": "silent",
+    "batch": "20261015-211145-strategy-proposal",
+    "base": "f32876369a61ee7ead8193a53dcd652837060c6a",
+    "runs": [
+      "751FN9QM9MHQ",
+      "KV0JHNJCKXLS",
+      "YQL8RZ8BWN1E",
+      "L9SGRBB5R698",
+      "PU80F84P6HPN",
+      "KEN58SH9SLZ6"
+    ],
+    "fixes": [],
+    "skipped": [
+      "十项原提案均有具体缺数据范围；已有窄实现不关闭宽提案。"
+    ],
+    "merged": null,
+    "tests": {
+      "tsc": null,
+      "vitest": null,
+      "cases": null
+    },
+    "code_proposals": [
+      "silent-proposal-366288801d9150d9",
+      "silent-proposal-85929bdfc8a3fc1b",
+      "silent-proposal-efd9f83ee9e1a6dc",
+      "silent-proposal-131042659448ae74",
+      "silent-proposal-990f054036609447",
+      "silent-proposal-e18d3f18e6cac2a0",
+      "silent-proposal-9733bb80f445aeae",
+      "silent-proposal-c51468c5e8ba6668",
+      "silent-proposal-86a7db08d1a31976",
+      "silent-proposal-e282a9131b99129a"
+    ],
+    "implementation_domains": [],
+    "proposal_results": [
+      {
+        "id": "silent-proposal-366288801d9150d9",
+        "state": "waiting",
+        "reason": "751 F17 T2/T7/T13同盘成本已核；缺完整回合执行归属、抽弃续问后的逐源实果及受控整战后继，不能设置额外失血门槛。"
+      },
+      {
+        "id": "silent-proposal-85929bdfc8a3fc1b",
+        "state": "waiting",
+        "reason": "751 F13 T3有药与整战无药模型均损8、8/8结束，但缺实际无药整战及留药至boss分支，不能将未知持有值置零。"
+      },
+      {
+        "id": "silent-proposal-efd9f83ee9e1a6dc",
+        "state": "waiting",
+        "reason": "751多输出付血和省血少输出均复核，六试同局均败；缺受控完整后继及独立后期验证，不改SL排序。"
+      },
+      {
+        "id": "silent-proposal-131042659448ae74",
+        "state": "waiting",
+        "reason": "持牌保守损血、未决弃牌及未知持药值已有展示；actual_turn仍null，逐源伤害、能力兑现及跨战无药结果未闭合。"
+      },
+      {
+        "id": "silent-proposal-990f054036609447",
+        "state": "waiting",
+        "reason": "KV F33第4/5试T5同指纹同零损，去掉毒药后敌净扣36→29；后轮动作不同，缺受控后继、回血逐源及路线休息反事实。"
+      },
+      {
+        "id": "silent-proposal-e18d3f18e6cac2a0",
+        "state": "waiting",
+        "reason": "巨兽阶段及末态资源已有live源码，但anchorRank仍沿原始占位HP排序；缺改序后的受控完整后继与结局校准。"
+      },
+      {
+        "id": "silent-proposal-9733bb80f445aeae",
+        "state": "waiting",
+        "reason": "YQL末试T10毒2→8，26血/13挡/41自爆不变；缺提前喝、不喝、留药及改变SL排序的受控整战分支。"
+      },
+      {
+        "id": "silent-proposal-c51468c5e8ba6668",
+        "state": "waiting",
+        "reason": "KEN七次耗药均有后帧槽位核验，三次原回执pending；缺随机选牌及重问后的完整收益归属、F15不喝和留药至boss对照。"
+      },
+      {
+        "id": "silent-proposal-86a7db08d1a31976",
+        "state": "waiting",
+        "reason": "KEN T10多损6仅多净扣2；T5省2却将步法延至T9。缺逐源完整归属、受控整战及独立留出，不能设置统一阈值。"
+      },
+      {
+        "id": "silent-proposal-e282a9131b99129a",
+        "state": "waiting",
+        "reason": "KEN六次SL同局均未胜；候选预测与单动作回执不能闭合能力后继或整轮实果，缺受控胜线及后期独立验证。"
+      }
+    ],
+    "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261015-211145/learner/runs/20261015-211149-d9f7f1b1-04c2-4f48-80ec-4751b7fb9979-strategy-proposal/report.md"
+  },
+  "native": {
+    "batch": "20261015-211145-strategy-proposal",
+    "thread": "01a13fb0-c4a7-7210-9c68-63af76c5305f",
+    "cwd": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261015-211145",
+    "event_log": "learner/runs/20261015-211149-d9f7f1b1-04c2-4f48-80ec-4751b7fb9979-strategy-proposal.jsonl",
+    "registered_launch_batch": "20261015-211145-strategy-proposal",
+    "original_lease": "e03d0f74d8a28678253b9936a4c9fae6a8dfbc280a5b8f477f5120b45155c4be",
+    "native_context": {
+      "source": "ops/codex-ops/accounts/codex1/learner/sessions/2026/10/15/rollout-2026-10-15T21-11-51-01a13fb0-c4a7-7210-9c68-63af76c5305f.jsonl",
+      "offset": 50242,
+      "bytes": 5148,
+      "sha256": "7806c9a913603d5c0cdba8439b3ae92eec249d0ed766bb2aecf0a2aecdf3f670",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "sandbox": {
+        "type": "workspace-write",
+        "writable_roots": [
+          "/home/dw/Projects/agent-sts2",
+          "/home/dw/Projects/agent-sts2/.git",
+          "/home/dw/Projects/agent-sts2/.git/worktrees/codex-strategy-silent-20261015-211145"
+        ],
+        "network_access": false,
+        "exclude_tmpdir_env_var": false,
+        "exclude_slash_tmp": false
+      },
+      "approval_policy": "never"
+    },
+    "native_user_input": {
+      "offset": 55390,
+      "bytes": 21447,
+      "sha256": "cedc4e20921a9eecd48501ff9b2226106a8a5b620262f100e07c9ecdec0cf7b3",
+      "input_sha256": "745a134905fa612eaa2e160adbff2d89193da45c3abb29a0ae2035589f872c54"
+    },
+    "original_header_events": [
+      {
+        "offset": 0,
+        "bytes": 23459,
+        "sha256": "16b98b0816f1231f7b41a203614d66adad988adfab772fa258e3c530466f4a90",
+        "type": "learner_launch",
+        "attempt": null,
+        "code": null
+      },
+      {
+        "offset": 23459,
+        "bytes": 378,
+        "sha256": "dc87e5c807db21f739e513ffbb4bfa938070d53422257c49c3b90d513e2df534",
+        "type": "learner_startup_attempt",
+        "attempt": 1,
+        "code": null
+      },
+      {
+        "offset": 26843,
+        "bytes": 77,
+        "sha256": "a14d5789c4a728e54b0d6ef945b2b664414911d380a804a4a2d8467c38d145d5",
+        "type": "thread.started",
+        "attempt": null,
+        "code": null
+      }
+    ],
+    "startup_attempts": 1,
+    "failed_startups_preserved": 0,
+    "no_model_or_manual_restart": true
+  },
+  "canonical_no_change_gate": {
+    "base": "f32876369a61ee7ead8193a53dcd652837060c6a",
+    "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261015-211145/learner/runs/20261015-211149-d9f7f1b1-04c2-4f48-80ec-4751b7fb9979-strategy-proposal/report.md",
+    "dispositions": [
+      {
+        "id": "silent-proposal-366288801d9150d9",
+        "state": "waiting",
+        "reason": "751 F17 T2/T7/T13同盘成本已核；缺完整回合执行归属、抽弃续问后的逐源实果及受控整战后继，不能设置额外失血门槛。"
+      },
+      {
+        "id": "silent-proposal-85929bdfc8a3fc1b",
+        "state": "waiting",
+        "reason": "751 F13 T3有药与整战无药模型均损8、8/8结束，但缺实际无药整战及留药至boss分支，不能将未知持有值置零。"
+      },
+      {
+        "id": "silent-proposal-efd9f83ee9e1a6dc",
+        "state": "waiting",
+        "reason": "751多输出付血和省血少输出均复核，六试同局均败；缺受控完整后继及独立后期验证，不改SL排序。"
+      },
+      {
+        "id": "silent-proposal-131042659448ae74",
+        "state": "waiting",
+        "reason": "持牌保守损血、未决弃牌及未知持药值已有展示；actual_turn仍null，逐源伤害、能力兑现及跨战无药结果未闭合。"
+      },
+      {
+        "id": "silent-proposal-990f054036609447",
+        "state": "waiting",
+        "reason": "KV F33第4/5试T5同指纹同零损，去掉毒药后敌净扣36→29；后轮动作不同，缺受控后继、回血逐源及路线休息反事实。"
+      },
+      {
+        "id": "silent-proposal-e18d3f18e6cac2a0",
+        "state": "waiting",
+        "reason": "巨兽阶段及末态资源已有live源码，但anchorRank仍沿原始占位HP排序；缺改序后的受控完整后继与结局校准。"
+      },
+      {
+        "id": "silent-proposal-9733bb80f445aeae",
+        "state": "waiting",
+        "reason": "YQL末试T10毒2→8，26血/13挡/41自爆不变；缺提前喝、不喝、留药及改变SL排序的受控整战分支。"
+      },
+      {
+        "id": "silent-proposal-c51468c5e8ba6668",
+        "state": "waiting",
+        "reason": "KEN七次耗药均有后帧槽位核验，三次原回执pending；缺随机选牌及重问后的完整收益归属、F15不喝和留药至boss对照。"
+      },
+      {
+        "id": "silent-proposal-86a7db08d1a31976",
+        "state": "waiting",
+        "reason": "KEN T10多损6仅多净扣2；T5省2却将步法延至T9。缺逐源完整归属、受控整战及独立留出，不能设置统一阈值。"
+      },
+      {
+        "id": "silent-proposal-e282a9131b99129a",
+        "state": "waiting",
+        "reason": "KEN六次SL同局均未胜；候选预测与单动作回执不能闭合能力后继或整轮实果，缺受控胜线及后期独立验证。"
+      }
+    ]
+  },
+  "original_completion": {
+    "base": "f32876369a61ee7ead8193a53dcd652837060c6a",
+    "git_clean": true,
+    "tracked_diff_bytes": 0,
+    "proposal_results": 10,
+    "evidence_rows": 8444,
+    "material_checks": 68,
+    "ledger_updates": 16,
+    "files": {
+      "proposal.md": "43ccbf31f96477018948d021eb8a7fd91fa98afc23a7a940c9dab28ed4de5374",
+      "report.md": "1dd8b1d2fdbca3fdd7b2872e68c3bca78679b8a815b64c7f9a2d4ee61815e52b",
+      "result.json": "c5dac9c9eb5b07a1aded9e9ed4417da1574867b39f96209890ee2ecda730fdf5"
+    }
+  },
+  "original_evidence_rows": 8444,
+  "original_material_assertions": 68,
+  "original_evidence_manifest_sha256": "5019f68494e1d9c12034cab8164e9547e4cbff62d1dabd8cd756da3d077ad4e6",
+  "original_pinned_live": "fe6462651b593b9831581c088deface9957a404f",
+  "source_leaves": 12,
+  "equal_leaves": 11,
+  "historical_name_comment_differences": 1,
+  "source_base_and_old_live_leaf_shas_and_ancestors_verified": true,
+  "no_transpilation_or_current_deployment_equivalence_claim": true,
+  "trace_only_cli_rows": 16,
+  "original_cli_ids_verified": true,
+  "original_material_checks_not_reexecuted": true,
+  "production_tests_not_run": true,
+  "native_gap": "Learner did not independently verify native model/effort. Ops now verified actual Sol6.1/xhigh, input/lease and original workspace-write/no-network; no runtime settings changed.",
+  "original_failures_and_limits": "Original T7 draft confused question damage9/15 with whole-turn12/18; delta6 unchanged. Original failure/v1 and corrected v2 retained. Actual turn/full follow-up, potion holding value and independent whole-fight comparisons remain unknown.",
+  "no_new_source_merge_release_game_actions_or_learning_parent": true
+}
