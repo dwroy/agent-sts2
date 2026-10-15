@@ -1,0 +1,11 @@
+{
+  "command": "nice -n 19 python3 ops/codex-ops/record-staging/20261015-1151/audit.py",
+  "exit": 1,
+  "stage": "read-only original material assertion",
+  "error": "AssertionError at original raw row count check",
+  "cause": "112917 main strategy saved its 6 run rows under evidence-extra/runs.evidence.jsonl; initial glob included only evidence/",
+  "observed_primary_rows": 8268,
+  "required_all_rows": 8274,
+  "correction": "include the original evidence-extra directory; no source, sample, assertion target, permissions, or outcome changed",
+  "original_raw_files_preserved": true
+}
