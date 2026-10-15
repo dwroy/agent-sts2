@@ -13,12 +13,21 @@ class AdaptiveHealth(unittest.TestCase):
             'mode': 'on', 'status': 'complete_adaptive', 'work': {'savedFraction': .5},
             'candidates': [{'key': 'a', 'samples': 200, 'rounds': 1, 'stop': 'leader'},
                            {'key': 'b', 'samples': 200, 'rounds': 1, 'stop': 'eliminated'}]}}}
-        value = h.adaptive_health({'loop': {'sim_adaptive': 'on'}}, [row, row])
+        value = h.adaptive_health({'loop': {'sim_adaptive': 'on', 'sim_adaptive_admission': 'accepted'}}, [row, row])
         self.assertEqual((value['observed'], value['complete_adaptive'], value['errors']), (1, 1, 0))
         self.assertIsNone(value['agreement'])
         self.assertIsNone(value['saved_fraction']['p50'])
         self.assertEqual(value['actual_saved_fraction']['p50'], .5)
         self.assertEqual(value['stop_counts'], {'leader': 1, 'eliminated': 1})
+        self.assertEqual(value['admission_state'], 'accepted')
+        self.assertNotIn('pending', value['admission'])
+
+    def test_admitted_source_rollback_stays_shadow(self):
+        value = h.adaptive_health({'loop': {'sim_adaptive': 'shadow', 'sim_adaptive_admission': 'accepted'}}, [])
+        self.assertEqual(value['mode'], 'shadow')
+        self.assertEqual(value['admission_state'], 'accepted')
+        self.assertIn('never auto-enable', value['admission'])
+        self.assertIsNone(value['actual_saved_fraction']['p50'])
 
     def test_unique_input_readback_does_not_claim_game_benefit_or_activation(self):
         def row(key, agreement, **extra):

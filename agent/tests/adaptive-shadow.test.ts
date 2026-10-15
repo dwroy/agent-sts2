@@ -69,10 +69,13 @@ it("keeps unresolved ties to the sample cap and rejects non-paired inputs", () =
 });
 
 
-it("records shadow errors without throwing into the decision path and keeps on requests behind admission", () => {
+it("records shadow errors without throwing and keeps admitted on, rollback and role switches explicit", () => {
   expect(safeAdaptiveShadow([], { lane: "b3", requested: 1000, allowS: false })).toMatchObject({ status: "error", mode: "shadow" });
-  expect(simAdaptivePolicy("SILENT", {})).toMatchObject({ mode: "shadow", requested: "shadow" });
-  expect(simAdaptivePolicy("SILENT", { SIM_ADAPTIVE: "on" })).toEqual({ mode: "shadow", requested: "on", admission: "pending" });
+  expect(simAdaptivePolicy("SILENT", {})).toEqual({ mode: "on", requested: "on", admission: "accepted" });
+  expect(simAdaptivePolicy("SILENT", { SIM_ADAPTIVE: "on" })).toEqual({ mode: "on", requested: "on", admission: "accepted" });
+  expect(simAdaptivePolicy("SILENT", { SIM_ADAPTIVE: "shadow" })).toEqual({ mode: "shadow", requested: "shadow", admission: "accepted" });
   expect(simAdaptivePolicy("SILENT", { SIM_ADAPTIVE: "off" }).mode).toBe("off");
-  for (const role of ["IRONCLAD", "REGENT"]) expect(simAdaptivePolicy(role, { SIM_ADAPTIVE: "on" }).mode).toBe("off");
+  expect(simAdaptivePolicy("SILENT", { SIM_ADAPTIVE: "invalid" }).mode).toBe("off");
+  for (const role of ["IRONCLAD", "REGENT"]) expect(simAdaptivePolicy(role, { SIM_ADAPTIVE: "on" }))
+    .toEqual({ mode: "off", requested: "off", admission: "not_applicable" });
 });

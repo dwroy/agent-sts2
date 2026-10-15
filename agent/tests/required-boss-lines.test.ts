@@ -18,7 +18,8 @@ afterEach(() => { Object.assign(bossLinesOptions, original); vi.restoreAllMocks(
 
 it("accepts an actually completed adaptive B2 result and reuses only its matching on-mode memo", () => {
   Object.assign(bossLinesOptions, { serial: true, now: () => 0 });
-  const policy = vi.spyOn(config, "simAdaptivePolicy").mockReturnValue({ mode: "on", requested: "on", admission: "pending" });
+  vi.stubEnv("SIM_ADAPTIVE", "on");
+  expect(config.simAdaptivePolicy("SILENT").mode).toBe("on");
   const input = board({ bossHp: 12 }), memo = new ComputeMemo("fixed-C2-B2");
   const solver = { ...input.solver, captureBossMargin: true };
   const args = { state: { raw: { run_id: "fixed-C2-B2" }, turn: 1, run: { floor: 1, ascension: 10, raw: { character_id: "SILENT" } } },
@@ -30,7 +31,7 @@ it("accepts an actually completed adaptive B2 result and reuses only its matchin
   const reused = bossLineSim(args);
   expect(reused).toMatchObject({ available: true, completion: { status: "complete_adaptive" } });
   expect(memo.hits).toBe(1);
-  policy.mockReturnValue({ mode: "off", requested: "off", admission: "pending" });
+  vi.stubEnv("SIM_ADAPTIVE", "off");
   expect(bossLineSim(args)).toMatchObject({ available: true, completion: { status: "complete" }, run: { samples: 600 } });
   expect(memo.hits).toBe(1);
 });
@@ -53,6 +54,7 @@ it("replays Ironclad Boss questions identically with S_COMBAT_RANK on or off", (
 });
 
 it("live Silent completes every Boss line beyond the budget while historical and other-role budgets stay intact", () => {
+  vi.stubEnv("SIM_ADAPTIVE", "off");
   Object.assign(bossLinesOptions, { serial: true, deadlineMs: 0, turnBudgetMs: 0 });
   const input = board({ bossHp: 12 });
   const solver = { ...input.solver, captureBossMargin: true };

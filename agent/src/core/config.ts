@@ -38,14 +38,14 @@ export function simFailurePolicy(character: string | null | undefined, env: Node
     retries: Number.isSafeInteger(retries) && retries > 0 ? retries : 2 };
 }
 
-/** C2 rollout stage: collect shadow evidence first. An on request is visible but cannot bypass admission. */
+/** Publish this default only after the original offline and two-run natural shadow admission. */
 export function simAdaptivePolicy(character: string | null | undefined, env: NodeJS.ProcessEnv = process.env): {
-  mode: "off" | "shadow" | "on"; requested: "off" | "shadow" | "on"; admission: "pending";
+  mode: "off" | "shadow" | "on"; requested: "off" | "shadow" | "on"; admission: "accepted" | "not_applicable";
 } {
-  if (characterKey(character ?? "") !== "silent") return { mode: "off", requested: "off", admission: "pending" };
-  const raw = env["SIM_ADAPTIVE"]?.trim().toLowerCase() ?? "shadow";
+  if (characterKey(character ?? "") !== "silent") return { mode: "off", requested: "off", admission: "not_applicable" };
+  const raw = env["SIM_ADAPTIVE"]?.trim().toLowerCase() ?? "on";
   const requested = raw === "shadow" || raw === "on" ? raw : "off";
-  return { mode: requested === "off" ? "off" : "shadow", requested, admission: "pending" };
+  return { mode: requested, requested, admission: "accepted" };
 }
 
 /** V5-S P1: resolve against the actual run character, including tools that do not call loadConfig. */
