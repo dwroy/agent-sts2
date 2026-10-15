@@ -1,0 +1,130 @@
+{
+  "at": "2026-10-15T10:58:43.032891+08:00",
+  "parent": "roy-20261014-s-decision",
+  "source_refs": [
+    {
+      "path": "paper/materials/20261015-s-adaptive-on/offline/report.json",
+      "sha256": "30087695e70437c26ffda0229e98d8860d77f0bcd38d2f92a81a93c65509512b"
+    },
+    {
+      "path": "paper/materials/20261015-s-adaptive-on/offline/extra-b2/manifest.json",
+      "sha256": "21d9e6d32d3282dd3d1c0d1c1700e4376f57f0c2c88a48fcf63ab907fe0ace1a"
+    }
+  ],
+  "expected_questions": 8,
+  "evaluated_questions": 3,
+  "missing": [
+    "1GN7WFBWC2E3-F33",
+    "1GN7WFBWC2E3-F48",
+    "X06YT1507E5M-F17",
+    "X06YT1507E5M-F33",
+    "X06YT1507E5M-F48"
+  ],
+  "unresolved": [],
+  "coverage_complete": false,
+  "observed_agreement": 1.0,
+  "offline_threshold_met": false,
+  "saved_fraction": {
+    "p50": 0.0,
+    "p90": 0.5599999999999999
+  },
+  "mismatches": [],
+  "cases": [
+    {
+      "id": "frozen-b3-32VS-F2",
+      "lane": "b3",
+      "source": {
+        "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-required-boss-evaluation/historical-probe-input.bin.gz",
+        "sha256": "c7c138216320a078aec1f9c9dedcbedf02556c4d1709b69ee68a29cf1461b877"
+      },
+      "boss": "SOUL_FYSH",
+      "ascension": 10,
+      "floor": 2,
+      "lowTrust": null,
+      "full": [
+        "card0"
+      ],
+      "partial": [
+        "card0"
+      ],
+      "agreement": true,
+      "work": {
+        "full": 4000,
+        "actual": 1200,
+        "savedFraction": 0.7
+      },
+      "evidence": {
+        "path": "paper/materials/20261015-s-adaptive-on/offline/report.json",
+        "sha256": "30087695e70437c26ffda0229e98d8860d77f0bcd38d2f92a81a93c65509512b"
+      }
+    },
+    {
+      "id": "frozen-b2-SOUL-FYSH",
+      "lane": "b2",
+      "source": {
+        "path": "/home/dw/Projects/agent-sts2/paper/materials/20261015-s-combat-rank/historical-b2/full-lines.json.gz",
+        "sha256": "5fa1ecc09ddc52535efcd12f08dd2a4b58e3f72274b9ab9cd6892506b5e43908"
+      },
+      "state": {
+        "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-s-decision/b2-state.json.gz",
+        "sha256": "34aa505a166db2e9c1c284593927a1e1c0c4bb1fedc2a1b7baff23e58d07a1dd"
+      },
+      "boss": "SOUL_FYSH",
+      "ascension": 10,
+      "floor": 17,
+      "lowTrust": null,
+      "full": [
+        "line:2"
+      ],
+      "partial": [
+        "line:2"
+      ],
+      "agreement": true,
+      "work": {
+        "full": 1800,
+        "actual": 1800,
+        "savedFraction": 0
+      },
+      "evidence": {
+        "path": "paper/materials/20261015-s-adaptive-on/offline/report.json",
+        "sha256": "30087695e70437c26ffda0229e98d8860d77f0bcd38d2f92a81a93c65509512b"
+      }
+    },
+    {
+      "id": "1GN7WFBWC2E3-F17",
+      "lane": "b2",
+      "source": {
+        "path": "/home/dw/Projects/agent-sts2/paper/materials/20261015-s-adaptive-on/offline/extra-b2/1GN7WFBWC2E3-F17.json.gz",
+        "sha256": "3073bde3ebfd12ed8ac3d4a60e7859ba4e0df25fbd3b9b5bbb3fbadf754b924f",
+        "raw_sha256": "a17bf0d5708dca50a0e7aa6379c67bb3c81b89ce829a814597e55f366339fa8a",
+        "original": {
+          "path": "logs/states.jsonl",
+          "offset": 12816778884,
+          "bytes": 35653
+        }
+      },
+      "boss": "THE_KIN",
+      "ascension": 10,
+      "floor": 17,
+      "agreement": true,
+      "full": [
+        "line:9"
+      ],
+      "partial": [
+        "line:9"
+      ],
+      "work": {
+        "full": 18000,
+        "shadow": 18000,
+        "savedFraction": 0,
+        "unit": "fight-sample-outcomes"
+      },
+      "excluded": null,
+      "evidence": {
+        "path": ".worktrees/s-adaptive-shadow-20261015/paper/materials/20261015-s-adaptive-on/extra-b2/1GN7WFBWC2E3-F17.json",
+        "sha256": "3f7b379c73f92d833f0fdaa93ac6fb9b3ea0ceabf18adf077a0949151e4e3236"
+      }
+    }
+  ],
+  "limits": "Only this frozen offline set. Missing/excluded cases prevent full-coverage admission. No natural-run acceptance, runtime saving, game calibration, or automatic on switch."
+}

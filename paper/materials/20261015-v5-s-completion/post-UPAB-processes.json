@@ -1,0 +1,111 @@
+{
+  "at": "2026-10-15T11:06:38.840031+08:00",
+  "root_autoplay": 1738396,
+  "processes": [
+    {
+      "pid": 1738396,
+      "birth": "86996299",
+      "state": "S",
+      "cpu_ticks": 5,
+      "depth": 0,
+      "argv_prefix": [
+        "bash",
+        "/home/dw/Projects/agent-sts2/ops/autoplay.sh",
+        "--tail-console"
+      ]
+    },
+    {
+      "pid": 1738416,
+      "birth": "86996304",
+      "state": "S",
+      "cpu_ticks": 1368775,
+      "depth": 1,
+      "argv_prefix": [
+        "tail",
+        "---disable-inotify",
+        "-n",
+        "80",
+        "-F"
+      ]
+    },
+    {
+      "pid": 702356,
+      "birth": "92516727",
+      "state": "S",
+      "cpu_ticks": 10707,
+      "depth": 1,
+      "argv_prefix": [
+        "python3",
+        "/home/dw/Projects/agent-sts2/ops/report.py",
+        "UPAB38G2PA02"
+      ]
+    },
+    {
+      "pid": 708942,
+      "birth": "92527402",
+      "state": "S",
+      "cpu_ticks": 0,
+      "depth": 2,
+      "argv_prefix": [
+        "bash",
+        "-c",
+        "/home/dw/Projects/agent-sts2/.worktrees/live/knowledge/builders/refresh.sh --character silent --fight-value >/dev/null 2>&1"
+      ]
+    },
+    {
+      "pid": 708944,
+      "birth": "92527402",
+      "state": "S",
+      "cpu_ticks": 0,
+      "depth": 3,
+      "argv_prefix": [
+        "bash",
+        "/home/dw/Projects/agent-sts2/.worktrees/live/knowledge/builders/refresh.sh",
+        "--character",
+        "silent",
+        "--fight-value"
+      ]
+    },
+    {
+      "pid": 708956,
+      "birth": "92527404",
+      "state": "R",
+      "cpu_ticks": 28399,
+      "depth": 4,
+      "argv_prefix": [
+        "python3",
+        "/home/dw/Projects/agent-sts2/.worktrees/live/knowledge/builders/build-fight-value.py",
+        "all",
+        "--character",
+        "silent"
+      ]
+    },
+    {
+      "pid": 708943,
+      "birth": "92527402",
+      "state": "S",
+      "cpu_ticks": 1,
+      "depth": 2,
+      "argv_prefix": [
+        "bash",
+        "/home/dw/Projects/agent-sts2/.worktrees/live/knowledge/builders/refresh.sh",
+        "--character",
+        "silent"
+      ]
+    },
+    {
+      "pid": 733994,
+      "birth": "92554230",
+      "state": "R",
+      "cpu_ticks": 1582,
+      "depth": 3,
+      "argv_prefix": [
+        "python3",
+        "/home/dw/Projects/agent-sts2/.worktrees/live/knowledge/builders/build-room-costs.py",
+        "--character",
+        "silent"
+      ]
+    }
+  ],
+  "action": "read-only; no process mutation"
+}

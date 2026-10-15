@@ -1,9 +1,9 @@
 {
-  "at": "2026-10-15T10:52:03.537971+08:00",
+  "at": "2026-10-15T11:05:34.855402+08:00",
   "goal": "完成v5-s计划文档除P4/P5外所有功能",
   "original_parent": "roy-20261014-s-decision",
   "goal_status": "active",
-  "goal_turn_classification": "progress",
+  "goal_turn_classification": "progress: previous turn integrated eval; current exact C2 host completion readback changes publication next action",
   "owner": "01a139d6-cfec-78e1-8739-e21ac426a354",
   "phases": {
     "P1": {
@@ -64,11 +64,14 @@
       },
       "prepared_on": {
         "worktree": "s-build-rank-20261015",
-        "base": "8b5b8f8982d160c52d3f3733cf92f0f8a9f0a0ad",
-        "uncommitted_two_files": true,
+        "source": "d3208ee214ca2661b637e0da4d4239a8979001fb",
+        "uncommitted_two_files": false,
         "full_session": 52909,
-        "log": "paper/materials/20261015-s-build-rank-on/sandbox-full.log",
-        "release": "not authorized by gate yet; do not merge before two complete natural shadow runs"
+        "full_result": "tsc0/427files4013+paths11 exit0; source unchanged since full start",
+        "gitleaks": 0,
+        "receipt": "paper/materials/20261015-s-build-rank-on/source-prepared.json",
+        "main_live_changed": false,
+        "gate": "two complete new natural shadow runs and actual selection; pending"
       }
     },
     "C2": {
@@ -85,7 +88,6 @@
       "remaining": [
         "complete offline final P2/P3 first-group >=95%, all mismatches and p50/p90 work",
         "two completed new natural shadow runs with complete question coverage and >=95% final-rank agreement",
-        "exact deployed combination host full result",
         "on admission/default, separate behavior publication and actual consumer"
       ],
       "main_live": "C2 preparation actually published shadow;23 live leaves verified; on gated; host/natural pending",
@@ -95,9 +97,11 @@
       "full_status": "rc0 427files4013+paths11; final two guards separatelytsc0/53passed",
       "offline": {
         "initial": "2/2 first-group agreement;B3work4000->1200;B2 1800->1800;p50.35/p90.63",
-        "additional": "6 new original B2 boards SHA frozen from logdb offsets, full offline comparisons running",
+        "additional": "1 of6 extra cases complete:1GN/F17 THE_KIN18000 outcomes, full/partialfirstline9 equal, saved0; remaining5 original process running",
         "extra_session": 35084,
-        "guard_change_after_full_start": "B2 shadow catch/B3 fixed-order precondition finaltsc0 and53cases passed; exact deployed host full pending"
+        "guard_change_after_full_start": "B2 shadow catch/B3 fixed-order precondition finaltsc0 and53cases passed; exact deployed host full pending",
+        "coverage_snapshot": "paper/materials/20261015-s-adaptive-on/offline-coverage-1100.json",
+        "admission": "3/8 observed, all3agree; full coverage false so threshold not met"
       },
       "source": "600915d133011c0eb1d063f61df9691bba4aba67",
       "main": "8b5b8f8982d160c52d3f3733cf92f0f8a9f0a0ad",
@@ -105,12 +109,14 @@
       "live": "d1c942783e267750dac79d6b780e16093dd7aa1d",
       "live_tree": "6ef9f0f8808ec51de400c70455fa7aa360f9c7bb",
       "host": {
-        "status": "actually running; result pending",
-        "worker": 606935,
-        "birth": "92328053",
+        "status": "passed",
         "tree": "6ef9f0f8808ec51de400c70455fa7aa360f9c7bb",
-        "batch": "20261015-051302-s2-strategy-proposal",
-        "receipt": "paper/materials/20261015-s-adaptive-on/watcher-host-start-readback.json"
+        "rc": 0,
+        "files": 478,
+        "passed": 4829,
+        "skipped": 2,
+        "seconds": 1532.56,
+        "receipt": "paper/materials/20261015-s-adaptive-on/watcher-final-host-readback.json"
       }
     }
   },
@@ -371,8 +377,17 @@
     "main": "f33cbc19acb33ecd8a6ea0430ff36b199054bb98",
     "full": "424files4002+paths11 exit0; final native-model Python9 pass; compositiontsc0/Python9",
     "report": "paper/materials/20261015-s-decision-eval/report-r2/evaluation.json",
-    "delivery": "ops actually read source/main, verified three-leaf candidate489e3c6f; watcher personally read/checks15reportrefs/12artifacts; publication waits original6ef host",
+    "delivery": "actually published three offline leaves; watcher verified source ancestry, exact live tree and leaf SHA",
     "scope": "700 native-bound rows/52compute/155Jev/2predictions(1censored)/0onoverrides; no causal or production validation claim",
-    "ops_readback": "paper/materials/20261015-s-decision-eval/watcher-ops-ready-readback.json"
+    "ops_readback": "paper/materials/20261015-s-decision-eval/watcher-ops-ready-readback.json",
+    "live": "9aefbaf476256caff190ef09880ee71cdd6443aa",
+    "live_tree": "489e3c6f5ba7ef1dcc4049ea22b81cd229731fba",
+    "host": {
+      "worker": 688118,
+      "birth": "92492268",
+      "status": "actually started, result pending",
+      "tree": "489e3c6f5ba7ef1dcc4049ea22b81cd229731fba"
+    },
+    "publication_readback": "paper/materials/20261015-s-decision-eval/watcher-publication-readback.json"
   }
 }

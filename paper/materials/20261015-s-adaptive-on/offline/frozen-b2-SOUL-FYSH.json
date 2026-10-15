@@ -1,0 +1,497 @@
+{
+  "id": "frozen-b2-SOUL-FYSH",
+  "lane": "b2",
+  "source": {
+    "path": "/home/dw/Projects/agent-sts2/paper/materials/20261015-s-combat-rank/historical-b2/full-lines.json.gz",
+    "sha256": "5fa1ecc09ddc52535efcd12f08dd2a4b58e3f72274b9ab9cd6892506b5e43908"
+  },
+  "state": {
+    "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-s-decision/b2-state.json.gz",
+    "sha256": "34aa505a166db2e9c1c284593927a1e1c0c4bb1fedc2a1b7baff23e58d07a1dd"
+  },
+  "boss": "SOUL_FYSH",
+  "ascension": 10,
+  "floor": 17,
+  "lowTrust": null,
+  "full": [
+    "line:2"
+  ],
+  "partial": [
+    "line:2"
+  ],
+  "agreement": true,
+  "work": {
+    "full": 1800,
+    "actual": 1800,
+    "savedFraction": 0
+  },
+  "details": {
+    "adaptive": {
+      "schema": "sim-adaptive-v1",
+      "mode": "on",
+      "status": "complete_adaptive",
+      "lane": "b2",
+      "rule": {
+        "version": "adaptive-v1",
+        "b3First": 300,
+        "b2First": 200,
+        "batch": 100,
+        "zElim": 3,
+        "zTie": 2,
+        "first": 200,
+        "requested": 600
+      },
+      "candidates": [
+        {
+          "key": "line:0",
+          "samples": 600,
+          "rounds": 5,
+          "stop": "max",
+          "baseline": false
+        },
+        {
+          "key": "line:1",
+          "samples": 600,
+          "rounds": 5,
+          "stop": "max",
+          "baseline": false
+        },
+        {
+          "key": "line:2",
+          "samples": 600,
+          "rounds": 5,
+          "stop": "max",
+          "baseline": false
+        }
+      ],
+      "final": {
+        "leader": "line:2",
+        "group": [
+          "line:0",
+          "line:1",
+          "line:2"
+        ]
+      },
+      "rounds": [
+        {
+          "n": 200,
+          "leader": "line:2",
+          "eliminated": []
+        },
+        {
+          "n": 300,
+          "leader": "line:0",
+          "eliminated": []
+        },
+        {
+          "n": 400,
+          "leader": "line:2",
+          "eliminated": []
+        },
+        {
+          "n": 500,
+          "leader": "line:2",
+          "eliminated": []
+        },
+        {
+          "n": 600,
+          "leader": "line:2",
+          "eliminated": []
+        }
+      ],
+      "evaluable": true,
+      "work": {
+        "full": 1800,
+        "actual": 1800,
+        "savedFraction": 0,
+        "unit": "unique-option-sample-equivalents"
+      },
+      "limits": "Actual prefixes only. All candidates remain available with their own sample count. Full-run agreement is an independent admission result, not observed during an early-stopped question."
+    },
+    "full_rank": {
+      "best": 2,
+      "tied": [],
+      "winTied": [
+        true,
+        true,
+        true
+      ],
+      "vsBest": [
+        {
+          "samples": 600,
+          "winDiff": -0.0017,
+          "winSe": 0.0037,
+          "hpLossDiff": -0.17,
+          "hpLossSe": 0.6148,
+          "onlyA": 2,
+          "onlyB": 3
+        },
+        {
+          "samples": 600,
+          "winDiff": -0.005,
+          "winSe": 0.0044,
+          "hpLossDiff": 5.5367,
+          "hpLossSe": 0.6338,
+          "onlyA": 2,
+          "onlyB": 5
+        },
+        null
+      ],
+      "order": [
+        2,
+        0,
+        1
+      ],
+      "sRanking": {
+        "schema": "s-combat-ranking-v1",
+        "used": true,
+        "reason": null,
+        "tie_se": 2,
+        "win_group": [
+          0,
+          1,
+          2
+        ],
+        "s_groups": [
+          [
+            2,
+            0
+          ],
+          [
+            1
+          ]
+        ],
+        "audits": [
+          {
+            "line": 0,
+            "audit": {
+              "schema": "s-sign-audit-v1",
+              "samples": 600,
+              "valid": 600,
+              "missing": 0,
+              "mismatches": 0,
+              "mismatch_rate": 0,
+              "passed": true,
+              "exceptions": [],
+              "groups": [
+                {
+                  "healing": null,
+                  "revived": false,
+                  "overkill": false,
+                  "samples": 600,
+                  "valid": 600,
+                  "missing": 0,
+                  "mismatches": 0,
+                  "mismatch_rate": 0,
+                  "passed": true,
+                  "exceptions": []
+                }
+              ],
+              "rankingEligible": true,
+              "limits": "Conditional simulation audit only. Missing attribution is not zero; unrecorded healing stays unknown. Not a calibration of real wins."
+            }
+          },
+          {
+            "line": 1,
+            "audit": {
+              "schema": "s-sign-audit-v1",
+              "samples": 600,
+              "valid": 600,
+              "missing": 0,
+              "mismatches": 0,
+              "mismatch_rate": 0,
+              "passed": true,
+              "exceptions": [],
+              "groups": [
+                {
+                  "healing": null,
+                  "revived": false,
+                  "overkill": false,
+                  "samples": 600,
+                  "valid": 600,
+                  "missing": 0,
+                  "mismatches": 0,
+                  "mismatch_rate": 0,
+                  "passed": true,
+                  "exceptions": []
+                }
+              ],
+              "rankingEligible": true,
+              "limits": "Conditional simulation audit only. Missing attribution is not zero; unrecorded healing stays unknown. Not a calibration of real wins."
+            }
+          },
+          {
+            "line": 2,
+            "audit": {
+              "schema": "s-sign-audit-v1",
+              "samples": 600,
+              "valid": 600,
+              "missing": 0,
+              "mismatches": 0,
+              "mismatch_rate": 0,
+              "passed": true,
+              "exceptions": [],
+              "groups": [
+                {
+                  "healing": null,
+                  "revived": false,
+                  "overkill": false,
+                  "samples": 600,
+                  "valid": 600,
+                  "missing": 0,
+                  "mismatches": 0,
+                  "mismatch_rate": 0,
+                  "passed": true,
+                  "exceptions": []
+                }
+              ],
+              "rankingEligible": true,
+              "limits": "Conditional simulation audit only. Missing attribution is not zero; unrecorded healing stays unknown. Not a calibration of real wins."
+            }
+          }
+        ],
+        "scores": [
+          {
+            "line": 0,
+            "mean": 0.06769285956252423
+          },
+          {
+            "line": 1,
+            "mean": 0.05577228859023282
+          },
+          {
+            "line": 2,
+            "mean": 0.06789998795927595
+          }
+        ],
+        "comparisons": [
+          {
+            "line": 0,
+            "leader": 2,
+            "mean": -0.0002071283967516553,
+            "se": 0.0014067105788188796,
+            "tied": true
+          },
+          {
+            "line": 1,
+            "leader": 2,
+            "mean": -0.012127699369043014,
+            "se": 0.0014400500803804952,
+            "tied": false
+          },
+          {
+            "line": 2,
+            "leader": 2,
+            "mean": 0,
+            "se": 0,
+            "tied": true
+          },
+          {
+            "line": 1,
+            "leader": 1,
+            "mean": 0,
+            "se": 0,
+            "tied": true
+          }
+        ],
+        "old_best": 2,
+        "best": 2
+      }
+    },
+    "partial_rank": {
+      "best": 2,
+      "tied": [],
+      "winTied": [
+        true,
+        true,
+        true
+      ],
+      "vsBest": [
+        {
+          "samples": 600,
+          "winDiff": -0.0017,
+          "winSe": 0.0037,
+          "hpLossDiff": -0.17,
+          "hpLossSe": 0.6148,
+          "onlyA": 2,
+          "onlyB": 3
+        },
+        {
+          "samples": 600,
+          "winDiff": -0.005,
+          "winSe": 0.0044,
+          "hpLossDiff": 5.5367,
+          "hpLossSe": 0.6338,
+          "onlyA": 2,
+          "onlyB": 5
+        },
+        null
+      ],
+      "order": [
+        2,
+        0,
+        1
+      ],
+      "sRanking": {
+        "schema": "s-combat-ranking-v1",
+        "used": true,
+        "reason": null,
+        "tie_se": 2,
+        "win_group": [
+          0,
+          1,
+          2
+        ],
+        "s_groups": [
+          [
+            2,
+            0
+          ],
+          [
+            1
+          ]
+        ],
+        "audits": [
+          {
+            "line": 0,
+            "audit": {
+              "schema": "s-sign-audit-v1",
+              "samples": 600,
+              "valid": 600,
+              "missing": 0,
+              "mismatches": 0,
+              "mismatch_rate": 0,
+              "passed": true,
+              "exceptions": [],
+              "groups": [
+                {
+                  "healing": null,
+                  "revived": false,
+                  "overkill": false,
+                  "samples": 600,
+                  "valid": 600,
+                  "missing": 0,
+                  "mismatches": 0,
+                  "mismatch_rate": 0,
+                  "passed": true,
+                  "exceptions": []
+                }
+              ],
+              "rankingEligible": true,
+              "limits": "Conditional simulation audit only. Missing attribution is not zero; unrecorded healing stays unknown. Not a calibration of real wins."
+            }
+          },
+          {
+            "line": 1,
+            "audit": {
+              "schema": "s-sign-audit-v1",
+              "samples": 600,
+              "valid": 600,
+              "missing": 0,
+              "mismatches": 0,
+              "mismatch_rate": 0,
+              "passed": true,
+              "exceptions": [],
+              "groups": [
+                {
+                  "healing": null,
+                  "revived": false,
+                  "overkill": false,
+                  "samples": 600,
+                  "valid": 600,
+                  "missing": 0,
+                  "mismatches": 0,
+                  "mismatch_rate": 0,
+                  "passed": true,
+                  "exceptions": []
+                }
+              ],
+              "rankingEligible": true,
+              "limits": "Conditional simulation audit only. Missing attribution is not zero; unrecorded healing stays unknown. Not a calibration of real wins."
+            }
+          },
+          {
+            "line": 2,
+            "audit": {
+              "schema": "s-sign-audit-v1",
+              "samples": 600,
+              "valid": 600,
+              "missing": 0,
+              "mismatches": 0,
+              "mismatch_rate": 0,
+              "passed": true,
+              "exceptions": [],
+              "groups": [
+                {
+                  "healing": null,
+                  "revived": false,
+                  "overkill": false,
+                  "samples": 600,
+                  "valid": 600,
+                  "missing": 0,
+                  "mismatches": 0,
+                  "mismatch_rate": 0,
+                  "passed": true,
+                  "exceptions": []
+                }
+              ],
+              "rankingEligible": true,
+              "limits": "Conditional simulation audit only. Missing attribution is not zero; unrecorded healing stays unknown. Not a calibration of real wins."
+            }
+          }
+        ],
+        "scores": [
+          {
+            "line": 0,
+            "mean": 0.06769285956252423
+          },
+          {
+            "line": 1,
+            "mean": 0.05577228859023282
+          },
+          {
+            "line": 2,
+            "mean": 0.06789998795927595
+          }
+        ],
+        "comparisons": [
+          {
+            "line": 0,
+            "leader": 2,
+            "mean": -0.0002071283967516553,
+            "se": 0.0014067105788188796,
+            "tied": true,
+            "samples": 600
+          },
+          {
+            "line": 1,
+            "leader": 2,
+            "mean": -0.012127699369043014,
+            "se": 0.0014400500803804952,
+            "tied": false,
+            "samples": 600
+          },
+          {
+            "line": 2,
+            "leader": 2,
+            "mean": 0,
+            "se": 0,
+            "tied": true,
+            "samples": 600
+          },
+          {
+            "line": 1,
+            "leader": 1,
+            "mean": 0,
+            "se": 0,
+            "tied": true,
+            "samples": 600
+          }
+        ],
+        "old_best": 2,
+        "best": 2
+      }
+    },
+    "scope": "Existing complete single-order B2 samples; no simulator rerun. No claim about missing multi-enemy order exports."
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "at": "2026-10-15T10:58:43.159053+08:00",
+  "actor": "watcher",
+  "session": "01a139d6-cfec-78e1-8739-e21ac426a354",
+  "parent": "roy-20261014-s-decision",
+  "evidence": [
+    {
+      "path": "paper/materials/20261015-s-decision-eval/ops-publication-receipt.json",
+      "sha256": "b0a57a3596d13c20974698a6e99f10bd2f3d3b18a0829e8253ff3e12002ce7ac"
+    },
+    {
+      "path": "paper/materials/20261015-s-decision-eval/ops-live-readback.json",
+      "sha256": "d2856c7acdb4ed19ce9503ec93362380fabf257ad81467613cb22dc541afdb23"
+    },
+    {
+      "path": "paper/materials/20261015-s-decision-eval/ops-combined-host-start-readback.json",
+      "sha256": "4cab1c4935d0d80d0455f960f1a6ce457d31a972d95cdcd33afca7182b4af5f2"
+    },
+    {
+      "path": "paper/materials/20261015-s-decision-eval/ops-natural-pending-readback.json",
+      "sha256": "93c3ab512155b3c5b8232c62c0ef5795dfdbafa058f1910ad1b457003a5e094e"
+    }
+  ],
+  "actual_live": "9aefbaf476256caff190ef09880ee71cdd6443aa",
+  "tree": "489e3c6f5ba7ef1dcc4049ea22b81cd229731fba",
+  "source_ancestor": true,
+  "only_three_source_leaves_match": true,
+  "behavior_number_added": false,
+  "host_request": {
+    "at": "2026-10-15 10:56:02 CST",
+    "batch": "20261015-051302-s2-strategy-proposal",
+    "command": [
+      "bash",
+      "ops/codex-ops-do.sh",
+      "learner-recheck",
+      "20261015-051302-s2-strategy-proposal"
+    ],
+    "request_pid": 688059,
+    "request_birth": "92492227",
+    "expected_live": "9aefbaf476256caff190ef09880ee71cdd6443aa",
+    "expected_tree": "489e3c6f5ba7ef1dcc4049ea22b81cd229731fba",
+    "expected_log": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261015-051302-s2-strategy-proposal.fallback-489e3c6f5ba7ef1dcc4049ea22b81cd229731fba.checks.log",
+    "stage": "request wrapper launched; actual host worker not yet read back",
+    "one_request_for_this_new_combination": true,
+    "previous_C2_full": "precise6ef rc0 accepted separately; not new489e pass",
+    "new_behavior_number": false,
+    "new_model_learner_or_game_action": false
+  },
+  "host_stage": "ops actual worker/log/lock startup read; full result still pending",
+  "natural_consumer_stage": "old UPAB 52046; new P1/P3 consumers and P2/C2 two full natural shadow/on remain pending"
+}

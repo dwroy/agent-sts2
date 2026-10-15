@@ -1,0 +1,67 @@
+{
+  "at": "2026-10-15T02:04:37.626Z",
+  "manifest_sha256": "ed387c9fd423a3ce5b5499671a703f5b0bef8d8a4fcb160586a1d50c3b8bdbc7",
+  "questions": 2,
+  "agreement": 1,
+  "savedFraction": {
+    "p50": 0.35,
+    "p90": 0.63
+  },
+  "mismatches": [],
+  "cases": [
+    {
+      "id": "frozen-b3-32VS-F2",
+      "lane": "b3",
+      "source": {
+        "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-v5-required-boss-evaluation/historical-probe-input.bin.gz",
+        "sha256": "c7c138216320a078aec1f9c9dedcbedf02556c4d1709b69ee68a29cf1461b877"
+      },
+      "boss": "SOUL_FYSH",
+      "ascension": 10,
+      "floor": 2,
+      "lowTrust": null,
+      "full": [
+        "card0"
+      ],
+      "partial": [
+        "card0"
+      ],
+      "agreement": true,
+      "work": {
+        "full": 4000,
+        "actual": 1200,
+        "savedFraction": 0.7
+      }
+    },
+    {
+      "id": "frozen-b2-SOUL-FYSH",
+      "lane": "b2",
+      "source": {
+        "path": "/home/dw/Projects/agent-sts2/paper/materials/20261015-s-combat-rank/historical-b2/full-lines.json.gz",
+        "sha256": "5fa1ecc09ddc52535efcd12f08dd2a4b58e3f72274b9ab9cd6892506b5e43908"
+      },
+      "state": {
+        "path": "/home/dw/Projects/agent-sts2/paper/materials/20261014-s-decision/b2-state.json.gz",
+        "sha256": "34aa505a166db2e9c1c284593927a1e1c0c4bb1fedc2a1b7baff23e58d07a1dd"
+      },
+      "boss": "SOUL_FYSH",
+      "ascension": 10,
+      "floor": 17,
+      "lowTrust": null,
+      "full": [
+        "line:2"
+      ],
+      "partial": [
+        "line:2"
+      ],
+      "agreement": true,
+      "work": {
+        "full": 1800,
+        "actual": 1800,
+        "savedFraction": 0
+      }
+    }
+  ],
+  "admission": "offline subset only; independent natural coverage still required",
+  "limits": "First-group equivalence under frozen conditional model inputs, not game calibration or a new learner study. No old R2/R3 result replaced."
+}

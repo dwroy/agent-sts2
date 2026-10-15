@@ -1,0 +1,181 @@
+{
+  "id": "1GN7WFBWC2E3-F17",
+  "run_id": "1GN7WFBWC2E3",
+  "floor": 17,
+  "source": {
+    "path": "/home/dw/Projects/agent-sts2/paper/materials/20261015-s-adaptive-on/offline/extra-b2/1GN7WFBWC2E3-F17.json.gz",
+    "sha256": "3073bde3ebfd12ed8ac3d4a60e7859ba4e0df25fbd3b9b5bbb3fbadf754b924f",
+    "raw_sha256": "a17bf0d5708dca50a0e7aa6379c67bb3c81b89ce829a814597e55f366339fa8a",
+    "original": {
+      "path": "logs/states.jsonl",
+      "offset": 12816778884,
+      "bytes": 35653
+    }
+  },
+  "boss": "THE_KIN",
+  "ascension": 10,
+  "low_trust": null,
+  "samples": 600,
+  "orders": 2,
+  "lines": 10,
+  "ms": 2430062.370258,
+  "adaptive": {
+    "schema": "sim-adaptive-shadow-v1",
+    "mode": "shadow",
+    "lane": "b2",
+    "rule": {
+      "version": "adaptive-v1",
+      "b3First": 300,
+      "b2First": 200,
+      "batch": 100,
+      "zElim": 3,
+      "zTie": 2,
+      "first": 200,
+      "requested": 600
+    },
+    "candidates": [
+      {
+        "key": "line:0",
+        "samples": 600,
+        "stop": "max",
+        "rounds": 5,
+        "baseline": false
+      },
+      {
+        "key": "line:1",
+        "samples": 600,
+        "stop": "max",
+        "rounds": 5,
+        "baseline": false
+      },
+      {
+        "key": "line:2",
+        "samples": 600,
+        "stop": "max",
+        "rounds": 5,
+        "baseline": false
+      },
+      {
+        "key": "line:3",
+        "samples": 600,
+        "stop": "max",
+        "rounds": 5,
+        "baseline": false
+      },
+      {
+        "key": "line:4",
+        "samples": 600,
+        "stop": "max",
+        "rounds": 5,
+        "baseline": false
+      },
+      {
+        "key": "line:5",
+        "samples": 600,
+        "stop": "max",
+        "rounds": 5,
+        "baseline": false
+      },
+      {
+        "key": "line:6",
+        "samples": 600,
+        "stop": "max",
+        "rounds": 5,
+        "baseline": false
+      },
+      {
+        "key": "line:7",
+        "samples": 600,
+        "stop": "max",
+        "rounds": 5,
+        "baseline": false
+      },
+      {
+        "key": "line:8",
+        "samples": 600,
+        "stop": "max",
+        "rounds": 5,
+        "baseline": false
+      },
+      {
+        "key": "line:9",
+        "samples": 600,
+        "stop": "max",
+        "rounds": 5,
+        "baseline": false
+      }
+    ],
+    "full": {
+      "leader": "line:9",
+      "group": [
+        "line:9"
+      ]
+    },
+    "shadow": {
+      "leader": "line:9",
+      "group": [
+        "line:9"
+      ]
+    },
+    "evaluable": true,
+    "agreement": true,
+    "work": {
+      "full": 18000,
+      "shadow": 18000,
+      "savedFraction": 0,
+      "unit": "fight-sample-outcomes"
+    },
+    "rounds": [
+      {
+        "n": 200,
+        "leader": "line:9",
+        "eliminated": []
+      },
+      {
+        "n": 300,
+        "leader": "line:9",
+        "eliminated": []
+      },
+      {
+        "n": 400,
+        "leader": "line:9",
+        "eliminated": []
+      },
+      {
+        "n": 500,
+        "leader": "line:9",
+        "eliminated": []
+      },
+      {
+        "n": 600,
+        "leader": "line:9",
+        "eliminated": []
+      }
+    ],
+    "limits": "Prefix replay only; no samples saved in shadow. S needs prefix sign/attribution and model trust gates. B2 wonLoss median retains its ordering but has no invented paired SE, so cannot eliminate. Whole-question admission requires independent offline and two-run natural coverage.",
+    "status": "produced",
+    "ms": 82.10759200016037,
+    "production_comparison": {
+      "metric": "deployed-ranking-first-group",
+      "full": [
+        "line:9"
+      ],
+      "partial": [
+        "line:9"
+      ],
+      "agreement": true
+    },
+    "input_key": "b2:5e0e72ac9dcb530798c8d4665b7b6f8e7fd631361eda32e82a9d3d93dce616d6"
+  },
+  "comparison": {
+    "metric": "deployed-ranking-first-group",
+    "full": [
+      "line:9"
+    ],
+    "partial": [
+      "line:9"
+    ],
+    "agreement": true
+  },
+  "scope": "Frozen historical board under current model; full run and retained-prefix rank comparison. No game/API/fit or original learner batch rerun."
+}
