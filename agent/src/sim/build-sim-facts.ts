@@ -45,7 +45,8 @@ import { silentBuildWinTies } from "./silent-build-win-ties.js";
 import { doubleBossPreparation } from "../knowledge/double-boss.js";
 import { withDoubleBossStart } from "./double-boss-start.js";
 import { BOSS_MARGIN_NOTE } from "./boss-margin.js";
-import { sReadinessMode, simAdaptivePolicy } from "../core/config.js";
+import { sReadinessMode, simAdaptivePolicy, sBuildRankMode } from "../core/config.js";
+import { BOSS_LINES_TIE_SE } from "./boss-lines.js";
 import { readinessText } from "./boss-readiness.js";
 
 /** The deck-building questions that get the simulation. */
@@ -550,14 +551,16 @@ export async function withBossSim(decision: Decision, env: DecisionEnv, setup: B
     }
     const budget = (setup.deadlineMs ?? BUILD_SIM_DEADLINE_MS) - (now() - started);
     const readinessMode = sReadinessMode(str(asRecord(state.run?.raw)["character_id"]));
+    const rankingMode = sBuildRankMode(str(asRecord(state.run?.raw)["character_id"]));
     if (required) {
       attempt = beginComputation(env.screenMemory, state, ask.label, memoKey("b3-failure-input", {
-        input: start.input, deckOptions, requested, seed: setup.seed ?? BUILD_SIM_SEED, readinessMode,
+        input: start.input, deckOptions, requested, seed: setup.seed ?? BUILD_SIM_SEED, readinessMode, rankingMode,
       }));
       wait = env.simWait?.start({ run: str(state.raw["run_id"]), floor: state.run?.floor ?? null, label: ask.label });
     }
     const adaptive = required && !attempt?.degraded && simAdaptivePolicy(str(asRecord(state.run?.raw)["character_id"])).mode === "shadow";
-    const result: CompareResult = await compareOptions(setup.runner, start.input, deckOptions, { samples: setup.samples ?? BUILD_SIM_SAMPLES, seed: setup.seed ?? BUILD_SIM_SEED, deadlineMs: Math.max(0, budget), ...(setup.now ? { now: setup.now } : {}), ...(diagnosticEnabled ? { quantitative: true, diagnostics: true } : {}), ...(required && !attempt?.degraded ? { requireComplete: true } : {}), ...(wait ? { onProgress: wait.progress } : {}), ...(adaptive ? { adaptive: { allowS: !continuation && !bossTrustReason(bossKey(bossId), "b3", state.run?.ascension, state.run?.floor) } } : {}), ...(readinessMode !== "off" ? { readiness: true } : {}) });
+    const result: CompareResult = await compareOptions(setup.runner, start.input, deckOptions, { samples: setup.samples ?? BUILD_SIM_SAMPLES, seed: setup.seed ?? BUILD_SIM_SEED, deadlineMs: Math.max(0, budget), ...(setup.now ? { now: setup.now } : {}), ...(diagnosticEnabled ? { quantitative: true, diagnostics: true } : {}), ...(required && !attempt?.degraded ? { requireComplete: true } : {}), ...(wait ? { onProgress: wait.progress } : {}), ...(adaptive ? { adaptive: { allowS: !continuation && !bossTrustReason(bossKey(bossId), "b3", state.run?.ascension, state.run?.floor) } } : {}), ...(readinessMode !== "off" ? { readiness: true } : {}),
+      ...(rankingMode !== "off" ? { buildRank: { lowTrust: continuation?.limitation ?? bossTrustReason(bossKey(bossId), "b3", state.run?.ascension, state.run?.floor), calibratedFloor: calibratedFloor(state.run?.ascension ?? 0), tieSe: BOSS_LINES_TIE_SE } } : {}) });
     sampled = result.samples;
     if (diagnostics) diagnostics = { ...diagnostics, ...result.diagnostics, boss: bossKey(bossId),
       samples: result.samples, requested: result.requested, minimumShown: Math.min(BUILD_SIM_MIN_SHOWN, result.requested),
@@ -578,6 +581,20 @@ export async function withBossSim(decision: Decision, env: DecisionEnv, setup: B
     const sims = new Map(result.options.map((sim) => [sim.key, sim]));
     const key = bossKey(bossId);
     const low = continuation?.limitation ?? bossTrustReason(key, "b3", state.run?.ascension, state.run?.floor);
+    const ranking = asRecord(result.buildRanking);
+    const rankingOn = rankingMode === "on" && ranking["status"] === "produced" && asArray(ranking["best_group"]).length > 0;
+    const candidateIdentity = plans.flatMap<{ key: string; choice_key: string; card_key: string | null }>((plan) => plan.group
+      ? plan.group.map((g) => ({ key: `${plan.key}|${g.key}`, choice_key: plan.key, card_key: g.key }))
+      : sims.has(plan.key) ? [{ key: plan.key, choice_key: plan.key, card_key: null }] : []);
+    const rankingFacts = rankingOn ? toJsonValue({ schema: "build-ranking-v1", best_group: ranking["best_group"],
+      win_saturated: ranking["win_saturated"], low_trust: ranking["low_trust"], candidates: candidateIdentity,
+      rows: ranking["rows"], not_simulated: Object.fromEntries(plans.filter((plan) => plan.none).map((plan) => [plan.key, plan.none!])),
+      limits: ranking["limits"], override: "选择不在best_group时填写ranking_override_reason（25词以内）。商店仅比较首个实际购买/删牌动作，不能将单项排序当整套购物组合收益。" }) : null;
+    const compactFight = (value: JsonValue): JsonValue => {
+      const compact = asRecord(compactQuantitativeFight(value));
+      if (rankingOn) delete compact["boss_relative_margin"];
+      return toJsonValue(compact);
+    };
     const readiness = result.readiness ? { ...result.readiness, trust: { ...result.readiness.trust,
       rankingEligible: result.readiness.trust.rankingEligible && !low, bossTrustReason: low ?? null } } : null;
     for (const sim of [result.base, ...result.options]) {
@@ -604,22 +621,22 @@ export async function withBossSim(decision: Decision, env: DecisionEnv, setup: B
       }
       const shown = JSON.parse(v) as Record<string, JsonValue>;
       const quantified = sims.get(k)?.quantitative;
-      if (quantitativeEnabled(state) && !plan.none && !plan.group && quantified) shown["quantitative_fight"] = compactQuantitativeFight(quantified);
+      if (quantitativeEnabled(state) && !plan.none && !plan.group && quantified) shown["quantitative_fight"] = compactFight(quantified);
       if (plan.none) shown["boss_sim"] = `${head}${plan.none}`;
       else if (plan.group) {
         shown["boss_sim"] = `${head}按 boss_sim_by_card 每张牌分别算；当前牌组胜率 ${pct(result.base.winCal)}${lowWin ? `，boss 平均剩血 ${Math.round(result.base.bossLeft)}` : ""}（${result.samples} 次模拟，校准后）`;
         shown["boss_sim_by_card"] = Object.fromEntries(plan.group.flatMap((g) => {
           const sim = sims.get(`${plan.key}|${g.key}`);
-          return sim ? [[g.key, cardLine(g.verb, g.name, sim, lowWin)]] : [];
+          return sim ? [[g.key, rankingOn ? `${g.verb} ${g.name}：胜率${pct(sim.winCal)}，赢局掉血中位${sim.hpLossWon ?? "—"}；配对排序见facts.build_ranking` : cardLine(g.verb, g.name, sim, lowWin)]] : [];
         }));
         if (quantitativeEnabled(state)) shown["quantitative_fight_by_card"] = Object.fromEntries(plan.group.flatMap((g) => {
           const quantified = sims.get(`${plan.key}|${g.key}`)?.quantitative;
-          return quantified ? [[g.key, compactQuantitativeFight(quantified)]] : [];
+          return quantified ? [[g.key, compactFight(quantified)]] : [];
         }));
       } else {
         const sim = sims.get(k);
-        if (sim) shown["boss_sim"] = `${simLine(head, result.base, sim, result.samples, lowWin)}${plan.note ? `；${plan.note}` : ""}`;
-        Object.assign(shown, winTies.get(k));
+        if (sim) shown["boss_sim"] = `${rankingOn ? `${head}胜率${pct(sim.winCal)}，赢局掉血中位${sim.hpLossWon ?? "—"}，约${sim.turns ?? "—"}回合；配对排序见facts.build_ranking` : simLine(head, result.base, sim, result.samples, lowWin)}${plan.note ? `；${plan.note}` : ""}`;
+        if (!rankingOn) Object.assign(shown, winTies.get(k));
       }
       if (!plan.none && plan.restHpReference && (sims.has(k) || plan.group?.some((g) => sims.has(`${k}|${g.key}`)))) {
         const reference = plan.restHpReference;
@@ -641,7 +658,7 @@ export async function withBossSim(decision: Decision, env: DecisionEnv, setup: B
     const b = result.base;
     const ms = Math.round(now() - started);
     const simFacts: Record<string, JsonValue> = {
-      ...(quantitativeEnabled(state) ? { quantitative_uncertainty: QUANTITATIVE_LIMITS, boss_margin_objective: BOSS_MARGIN_NOTE } : {}),
+      ...(quantitativeEnabled(state) ? { quantitative_uncertainty: QUANTITATIVE_LIMITS, ...(!rankingOn ? { boss_margin_objective: BOSS_MARGIN_NOTE } : {}) } : {}),
       // Not logged at this ascension: HP from the nearest one; damage, buffs and block moved by the measured change
       // between ascensions (monster-db moveDamageAt, amountAt), not the nearest one's as logged.
       boss: `${boss}：${start.boss.parts.map((p) => `${p.name} ${p.hp} 血`).join("、")}${start.boss.exact ? "" : `（A${state.run?.ascension ?? "?"} 没有这个 boss 的日志：数值取最近的 A${start.boss.asc}，伤害、增益和格挡按实测的进阶变化估算）`}`,
@@ -662,6 +679,7 @@ export async function withBossSim(decision: Decision, env: DecisionEnv, setup: B
     if (attempt?.degraded) simFacts["completion"] = `不完整（故障降级，n=${result.samples}）`;
     const completion = attempt?.finish(result.samples, result.requested);
     const record: Record<string, JsonValue> = {
+      ...(result.buildRanking ? { build_ranking: toJsonValue({ ...ranking, mode: rankingMode, delivered: rankingOn, candidates: candidateIdentity }) } : {}),
       ...(result.adaptive ? { adaptive: result.adaptive } : {}),
       ...(readiness ? { readiness: toJsonValue({ ...readiness, mode: readinessMode, ms: result.readinessMs ?? null,
         delivered: readinessMode === "on" && readiness.trust.rankingEligible }) } : {}),
@@ -699,6 +717,7 @@ export async function withBossSim(decision: Decision, env: DecisionEnv, setup: B
       decision: {
         ...ask,
         state: { ...ask.state, facts: { ...withSimFacts(facts, simFacts, false),
+          ...(rankingFacts ? { build_ranking: rankingFacts } : {}),
           ...(readinessMode === "on" && readiness ? { boss_readiness: readinessText(readiness) } : {}) } },
         questions: { ...ask.questions, [spec.question]: { ...question, instructions: `${question.instructions} ${continuation ? "boss_sim为F48→F49连续两战原始通关率及配对差，未经两战校准；HP/药水由第一战实际样本传递，全部选项保留，由Codex选择。" : BOSS_SIM_NOTE}`, criteria } },
       },

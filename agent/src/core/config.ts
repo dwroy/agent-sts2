@@ -23,6 +23,13 @@ export function sCombatRankEnabled(character: string | null | undefined, env: No
   return characterKey(character ?? "") === "silent" && (env["S_COMBAT_RANK"] ?? "on") === "on";
 }
 
+/** P2 starts with natural shadow validation; other roles retain the original question and schema. */
+export function sBuildRankMode(character: string | null | undefined, env: NodeJS.ProcessEnv = process.env): "off" | "shadow" | "on" {
+  if (characterKey(character ?? "") !== "silent") return "off";
+  const mode = env["S_BUILD_RANK"]?.trim().toLowerCase() ?? "shadow";
+  return mode === "shadow" || mode === "on" ? mode : "off";
+}
+
 /** Only Silent's live mandatory computation may use the approved fault exit. */
 export function simFailurePolicy(character: string | null | undefined, env: NodeJS.ProcessEnv = process.env): { enabled: boolean; retries: number } {
   const retries = Number(env["SIM_FAILURE_RETRIES"] ?? 2);

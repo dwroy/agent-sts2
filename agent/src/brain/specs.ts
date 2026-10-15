@@ -15,6 +15,7 @@ import { isRunPlanReply, RUN_PLAN_TASK_KEY } from "../memory/run-plan.js";
 import { checkRoute, isKeep, routeIds, routeMapFromView, type RouteMap } from "../sim/route-map.js";
 import type { JsonSchema } from "./tools/types.js";
 import type { AnswerSpec } from "./types.js";
+import { rankingOverrideProblems } from "../sim/build-ranking-choice.js";
 
 type Json = Record<string, unknown>;
 
@@ -31,6 +32,12 @@ const parse = (text: string | null | undefined): Json => {
 };
 
 const record = (value: unknown): Json => (isObject(value) ? value : {});
+
+const RANKING_REASON: JsonSchema = { type: "string", description: "If the selected candidate is outside facts.build_ranking.best_group, explain why in at most 25 words; otherwise empty." };
+function rankingOf(state: unknown): Json | null {
+  const value = record(record(record(state)["facts"])["build_ranking"]);
+  return value["schema"] === "build-ranking-v1" && Array.isArray(value["best_group"]) && value["best_group"].length ? value : null;
+}
 
 const list = (items: string[], max = 12): string => `${items.slice(0, max).join(", ")}${items.length > max ? ", ..." : ""}`;
 
@@ -105,6 +112,11 @@ export function pickSpec(label: string, options: Record<string, string | null>, 
   };
   const required = ["choice", "reason"];
   const st = record(state);
+  const ranking = rankingOf(state);
+  if (ranking) {
+    properties["ranking_override_reason"] = RANKING_REASON;
+    required.push("ranking_override_reason");
+  }
   const reviewMap = routeMapFromView(st["route_review"]);
   const actMap = reviewMap ? null : routeMapFromView(st["act_route"]);
   let route: { mode: "review" | "act"; map: RouteMap } | null = null;
@@ -143,7 +155,7 @@ export function pickSpec(label: string, options: Record<string, string | null>, 
     label,
     kind: "pick",
     schema: { type: "object", properties, required, additionalProperties: false },
-    ...(route ? { reask: true } : {}),
+    ...(route || ranking ? { reask: true } : {}),
     validate(answer: unknown): string[] {
       if (!isObject(answer)) return ["the answer is not a JSON object"];
       const problems: string[] = [];
@@ -165,7 +177,7 @@ export function pickSpec(label: string, options: Record<string, string | null>, 
         if (discard !== undefined && discard !== null && !Array.isArray(discard)) problems.push('"discard" is not a list');
         else if (choice.endsWith(DISCARD_SUFFIX) && (!Array.isArray(discard) || discard.length === 0)) problems.push(`${choice} discards potions first: "discard" must name 1 or more potion slot numbers`);
       }
-      return problems;
+      return [...problems, ...(ranking ? rankingOverrideProblems(ranking, answer) : [])];
     },
     softValidate(answer: unknown): string[] {
       if (!route || !isObject(answer)) return [];
@@ -251,8 +263,10 @@ export function shopPlanList(json: Record<string, unknown>): { list: unknown[]; 
 export function stableSchema(spec: AnswerSpec): JsonSchema {
   if (spec.kind === "pick") {
     const run = spec.schema.properties?.["run_plan"];
-    if (run?.properties?.["construction"]) return { ...STABLE_PICK_SCHEMA, properties: { ...STABLE_PICK_SCHEMA.properties, run_plan: run } };
-    return run ? STABLE_PICK_SCHEMA_WITH_RUN_PLAN : STABLE_PICK_SCHEMA;
+    const base = run?.properties?.["construction"] ? { ...STABLE_PICK_SCHEMA, properties: { ...STABLE_PICK_SCHEMA.properties, run_plan: run } }
+      : run ? STABLE_PICK_SCHEMA_WITH_RUN_PLAN : STABLE_PICK_SCHEMA;
+    return spec.schema.properties?.["ranking_override_reason"] ? { ...base, properties: { ...base.properties, ranking_override_reason: RANKING_REASON },
+      required: [...(base.required ?? []), "ranking_override_reason"] } : base;
   }
   const plan = spec.schema.properties?.["plan"];
   if (plan?.items?.enum) {
@@ -281,6 +295,7 @@ const STABLE_PICK_SCHEMA_WITH_RUN_PLAN: JsonSchema = { ...STABLE_PICK_SCHEMA, pr
 /** A shop visit as one ordered shopping list (screens/shop.ts parseShopPlan is the final judge). */
 export function shopPlanSpec(label: string, options: Record<string, string | null>, state: unknown): AnswerSpec {
   const st = record(state);
+  const ranking = rankingOf(state);
   const yourCards = Object.keys(record(st["your_cards"] ?? record(st["facts"])["your_cards"]));
   const prices: Record<string, number | null> = {};
   const affordable: Record<string, boolean> = {};
@@ -301,13 +316,15 @@ export function shopPlanSpec(label: string, options: Record<string, string | nul
   return {
     label,
     kind: "plan",
+    ...(ranking ? { reask: true } : {}),
     schema: {
       type: "object",
       properties: {
         plan: { type: "array", description: 'the steps in order: option keys, "remove:<card key>", discard_potionN; leaving is implied after the last step; [] buys nothing', items: { type: "string", enum: tokens } },
         reason: { type: "string", description: "max 40 words" },
+        ...(ranking ? { ranking_override_reason: RANKING_REASON } : {}),
       },
-      required: ["plan", "reason"],
+      required: ["plan", "reason", ...(ranking ? ["ranking_override_reason"] : [])],
       additionalProperties: false,
     },
     validate(answer: unknown): string[] {
@@ -333,7 +350,7 @@ export function shopPlanSpec(label: string, options: Record<string, string | nul
         if (i === 0 && affordable[step] === false) problems.push(`first step ${step} is not affordable now`);
       }
       if (removals > 1) problems.push("more than one card removal");
-      return problems;
+      return [...problems, ...(ranking ? rankingOverrideProblems(ranking, { ...answer, plan }, true) : [])];
     },
   };
 }

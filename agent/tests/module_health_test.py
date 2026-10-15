@@ -32,6 +32,21 @@ class Health(unittest.TestCase):
         self.assertTrue(h.combat_s_ranking_health(config, [combat(i, None) for i in (3, 4, 5)])['alert'])
         self.assertEqual(h.combat_s_ranking_health(CONFIG, [used])['expected'], 0)
 
+    def test_build_ranking_requires_actual_delivery_and_on_override_reasons(self):
+        config = {**CONFIG, 'loop': {'s_build_rank': 'shadow'}}
+        value = {'schema': 'build-ranking-v1', 'status': 'produced', 'selection': {'deviated': True}}
+        records = [row(1, None, boss_sim={'samples': 1000, 'build_ranking': value})]
+        shadow = h.build_ranking_health(config, records + records, [])
+        self.assertEqual((shadow['expected'], shadow['produced'], shadow['brain_delivered'], shadow['overrides']), (1, 1, 0, 1))
+        self.assertFalse(shadow['alert'])
+        config['loop']['s_build_rank'] = 'on'
+        self.assertTrue(h.build_ranking_health(config, records, [])['alert'])
+        value['selection']['ranking_override_reason'] = 'preserve route resource'
+        brains = [{'run_id': 'SILENT1', 'ts': '2026-10-13T13:01:00+00:00', 'payload': {'facts': {'build_ranking': value}}, 'accepted': True}]
+        result = h.build_ranking_health(config, records, brains)
+        self.assertEqual((result['brain_delivered'], result['brain_accepted'], result['reasons_present']), (1, 1, 1))
+        self.assertFalse(result['alert'])
+
     def test_computation_failures_and_degraded_b2_are_counted_once_and_alerted(self):
         def attempt(i, status, failure):
             return row(i, label='combat/plan', boss_sim={'completion': {
