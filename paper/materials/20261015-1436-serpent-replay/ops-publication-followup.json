@@ -1,0 +1,99 @@
+{
+  "task": "strategy-proposal",
+  "character": "silent",
+  "batch": "20261015-141302-s2-strategy-proposal",
+  "base": "e3ffc2301d9eb25a0fedf874d56710b938dc41a3",
+  "runs": [
+    "LYBHQ1X230ZB",
+    "H1T1F8ML9FUE",
+    "AD3QSC3P41JU"
+  ],
+  "fixes": [
+    {
+      "item": "c888545b80180da7：已观察A10蜃景重放中的群蛇触发窄子项",
+      "commit": "be9577c81a003aff0e69968c928e264f5173da7c",
+      "test": "agent/tests/silent-serpent-mirage-replay.test.ts",
+      "fails_without_fix": true
+    }
+  ],
+  "skipped": [],
+  "merged": "d488d29a09677776a6e7b419156e2fad17b70aa3",
+  "version": "V5-R356",
+  "tests": {
+    "tsc": 0,
+    "vitest": 0,
+    "cases": 4066,
+    "files": 432
+  },
+  "code_proposals": [
+    "silent-proposal-49bb659734d555e3",
+    "silent-proposal-179fd62ad9b2f71b",
+    "silent-proposal-2ae7436286228166",
+    "silent-proposal-de26499e8385f25b",
+    "silent-proposal-c888545b80180da7",
+    "silent-proposal-3b37b520b22f0eaf",
+    "silent-proposal-b259f9956e08088a",
+    "silent-proposal-34209e8b9f982e49",
+    "silent-proposal-015f25123c45671c",
+    "silent-proposal-01d7495835a3eb19"
+  ],
+  "implementation_domains": [
+    "combat"
+  ],
+  "proposal_results": [
+    {
+      "id": "silent-proposal-49bb659734d555e3",
+      "state": "waiting",
+      "reason": "LYB F29T6少损6HP候选未实打，缺同盘后场资源及完整结局，不能拟新终局权重。"
+    },
+    {
+      "id": "silent-proposal-179fd62ad9b2f71b",
+      "state": "duplicate",
+      "commit": "9b65f1bee0f26ced606ec256fc3d173db48caa3e",
+      "reason": "已核实际live祖先覆盖可见牌堆凋萎伤害同步、文本一致性及SL重置范围。"
+    },
+    {
+      "id": "silent-proposal-2ae7436286228166",
+      "state": "waiting",
+      "reason": "换线多付3HP属实；缺完整候选后继与未来收益比较，现有Prepared双弃投影不覆盖Survivor单弃保逃离策略。"
+    },
+    {
+      "id": "silent-proposal-de26499e8385f25b",
+      "state": "waiting",
+      "reason": "H1 F48未赢、F49未到；缺受控留药或换饮用时点的完整结局及消费者误差归因。"
+    },
+    {
+      "id": "silent-proposal-c888545b80180da7",
+      "state": "waiting",
+      "source_commit": "be9577c81a003aff0e69968c928e264f5173da7c",
+      "reason": "群蛇蜃景重放的已观察窄子项已由原源be9577c81精确live于V5-R356；原提案还包含其他组合/机制消费范围，保持waiting，不以局部修复整体implemented；精确宿主及新自然消费者另验。"
+    },
+    {
+      "id": "silent-proposal-3b37b520b22f0eaf",
+      "state": "waiting",
+      "reason": "基础制品及毒结算路径已有；末T4为0毒且下一轮未到，缺匹配后继和后期误差验证，不能关闭整战校准范围。"
+    },
+    {
+      "id": "silent-proposal-b259f9956e08088a",
+      "state": "waiting",
+      "reason": "凋萎缓存子项已有实现；饱和换线、单弃沙坑及纸伤多窗口消费缺完整后继和独立验证，不能整体duplicate。"
+    },
+    {
+      "id": "silent-proposal-34209e8b9f982e49",
+      "state": "waiting",
+      "reason": "H1末火回复到52后F48仍败，F49未到；缺替路线、留药及终局参数的受控联合结局。"
+    },
+    {
+      "id": "silent-proposal-015f25123c45671c",
+      "state": "waiting",
+      "reason": "AD的15→11空药接续属实；既有开场扣血模型不覆盖其完整遗物组合，且缺留药联合结果及独立校准。"
+    },
+    {
+      "id": "silent-proposal-01d7495835a3eb19",
+      "state": "waiting",
+      "reason": "少9伤换保8HP多活一轮仍败；缺旧dirty重规划完整输入及受控同抽序后继，不能拟新容差或SL门槛。"
+    }
+  ],
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261015-141302-s2/learner/runs/20261015-141311-161a38d5-8d5d-47ad-997d-7dad3d6bd315-strategy-proposal/report.md",
+  "ops_source_publication_receipt": "paper/materials/20261015-1436-serpent-replay/serpent-publication-receipt.json"
+}
