@@ -1,0 +1,12 @@
+{
+  "argv": [
+    "/home/dw/Projects/agent-sts2/data/logdb-venv/bin/python",
+    "/home/dw/Projects/agent-sts2/agent/tools/logdb/query.py",
+    "--json",
+    "--max-rows",
+    "100000",
+    "SELECT 'decisions' AS stream,off,len,ts,label FROM decisions WHERE run_id='DUB5VQQ6D6D1' UNION ALL SELECT 'brain' AS stream,off,len,ts,label FROM llm_calls_raw WHERE run_id='DUB5VQQ6D6D1' AND src='brain' UNION ALL SELECT 'run-config' AS stream,off,len,ts,'config' AS label FROM run_config WHERE run_id='DUB5VQQ6D6D1' UNION ALL SELECT 'runs' AS stream,off,len,ended AS ts,'finished' AS label FROM runs_raw WHERE run_id='DUB5VQQ6D6D1' ORDER BY ts,stream,off"
+  ],
+  "rc": 0,
+  "stderr": ""
+}

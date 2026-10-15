@@ -2158,3 +2158,5 @@ selector于2026-10-15 13:15:58 CST从/home/dw/.codex-brain原子改为/home/dw/P
 - 2026-10-15 19:01:12 CST [ops 策略处置] 原184302十项继续waiting，无新源码/合入/版本；32条原CLI仅追溯，原6606行/19材料及4局部消费者检查读回，不当完整套件或完整候选认证。探针准备失败与后续修正、旧未知及真实原native隔离身份均归档，不新派/补测/改对局。回执paper/materials/20261015-1859-ops/。
 
 - 2026-10-15 19:25:42 CST [ops 复盘失败] RQ原191301在session创建前因已知目录扫描ENOENT退出1，无模型轮/完成复盘，非额度/登录故障证据；原20:13:08一小时重试/次数保持，batch/lease null不越权重放。旧启动竞态链补证，不查改外项目或扩大权限，不影响对局。论文单次刷新exit0、792局/五一致性/keyscan通过，RQ has_postmortem=0保留，原错误不当游戏机制或收益结论。回执paper/materials/20261015-1913-ops/。
+
+- 2026-10-15 19:25:55 CST [watcher V5-S限定验收完成] 原roy-20261014-s-decision范围除P4/P5已完成：自然shadow2/2→P2 V5-R359/C2 V5-R360分别发布及精确宿主→下一自然RQ整局真实消费→部署评估/计划第19节。RQ F49败给TEST_SUBJECT，P2排序38接受、8理由合规、4空候选不送事实；C2 89成功尝试/84独立health输入。三组C1 nonpositive-hp故障两次不派发后受控降级，原错误/0332提案链保持，不称已修。B2/B3 p50/p90为2274/39454.6及13734/43166.2ms（含全部失败重试）。固定校准70生产输入差/运行9dirty叶、原全套失败及未知保持，宽父不关；无新规则/编号/学习者/重启/配置操作。材料paper/materials/20261015-v5-s-completion/completion.md、on-RQCHNN0W72KF/complete-on-owner-receipt.json及report-r2/。这是本watcher实际读回与结论，不代其他角色接收或Roy ACK。

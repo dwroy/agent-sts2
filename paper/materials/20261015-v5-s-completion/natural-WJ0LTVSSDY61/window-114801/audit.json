@@ -1,0 +1,5570 @@
+{
+  "at": "2026-10-15T11:48:08.209277+08:00",
+  "run_id": "WJ0LTVSSDY61",
+  "parent": "roy-20261014-s-decision",
+  "configurations": [
+    {
+      "ts": "2026-10-15T03:07:52.581Z",
+      "character": "SILENT",
+      "ascension": 10,
+      "code": {
+        "commit": "9aefbaf476256caff190ef09880ee71cdd6443aa",
+        "code": "9aefbaf+dirty",
+        "dirty": true,
+        "dirty_files": [
+          "knowledge/characters/silent/boss-damage.json",
+          "knowledge/characters/silent/construction-opportunities.json",
+          "knowledge/characters/silent/monster-records.json",
+          "knowledge/characters/silent/outcome-stats.json",
+          "knowledge/characters/silent/room-costs.json",
+          "knowledge/common/card-upgrades.json",
+          "knowledge/common/monster-db.json",
+          "knowledge/common/move-model.json",
+          "notes/fight-value-backtest-silent.md",
+          "notes/monster-db-check.md"
+        ],
+        "branch": "live",
+        "worktree": "live"
+      },
+      "loop": {
+        "mode": "play",
+        "combat_planner": "turn",
+        "build_decider": "deepseek",
+        "build_oneshot": "on",
+        "boss_sim_build": "on",
+        "s_readiness": "on",
+        "s_combat_rank": "on",
+        "s_build_rank": "shadow",
+        "sim_failure_exit": "on",
+        "sim_failure_retries": 2,
+        "sim_adaptive": "shadow",
+        "sim_adaptive_requested": "shadow",
+        "sim_adaptive_admission": "pending",
+        "boss_sim_completion": "required-full-paired-v1",
+        "boss_sim_build_requested": "on",
+        "combat_deepseek": "off",
+        "thief_facts": true,
+        "thief_cost": true,
+        "mech_rules": true,
+        "mech_move_rules": true,
+        "mech_death_move": true,
+        "passive_pieces": true,
+        "sandpit_start": true,
+        "fight_plan": "off",
+        "run_plan": "v1",
+        "run_plan_merge": true,
+        "escalation": [
+          "deepseek"
+        ],
+        "confidence": {
+          "act": 0.55,
+          "strong": 0.75
+        },
+        "run_start": "auto",
+        "character": "SILENT"
+      },
+      "process": {
+        "pid": 739370,
+        "started": "2026-10-15T03:07:44.932Z"
+      },
+      "_source": {
+        "path": "logs/run-config.jsonl",
+        "offset": 1737123,
+        "bytes": 5334,
+        "sha256": "dce194d6b73281a37aaa0d53e666ab80a45b1af66491f78642e0905f69c37f02"
+      }
+    }
+  ],
+  "source_refs": [
+    {
+      "path": "logs/run-config.jsonl",
+      "offset": 1737123,
+      "bytes": 5334,
+      "sha256": "dce194d6b73281a37aaa0d53e666ab80a45b1af66491f78642e0905f69c37f02"
+    },
+    {
+      "path": "logs/brain.jsonl",
+      "offset": 561338092,
+      "bytes": 47622,
+      "sha256": "0ce1147c523fa8c8e9cb5a271bc63120f4c8667fd0a2509389c235bee6574070"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1543954084,
+      "bytes": 66505,
+      "sha256": "52108882c89bcb94e1f3fc23bce093ddaae940574223425fe7df9ba6adbfc375"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1544020589,
+      "bytes": 1281,
+      "sha256": "1e7ca1db2596a2af0aa4dc8029e7f2443f02b7fcf96fddaf4bf3653194985adc"
+    },
+    {
+      "path": "logs/brain.jsonl",
+      "offset": 561385714,
+      "bytes": 23355,
+      "sha256": "add195f2d6641936eb747addf1a20d91e6f84590907927bdeae6c19f50abf05c"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1544021870,
+      "bytes": 11304,
+      "sha256": "7205265bde82802752a204cc1420c8081860766119dd51fee63c647bdf69cc7a"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1544033174,
+      "bytes": 14310,
+      "sha256": "aa2fff303b0a02060627adf8ea3d0d64bcff0ca80f97e0a481e6cde95c12ba19"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1544047484,
+      "bytes": 1570,
+      "sha256": "0b469755d95d80ec401121d4e91b73b2c218d73b0c10b98f1ff2b468e710d5bc"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1544049054,
+      "bytes": 1532,
+      "sha256": "1f6dde4b75d6b6a91e125b5b255b3ceb6ca8e1d1d82533eed2d57d7f842c8c68"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1544050586,
+      "bytes": 1438,
+      "sha256": "86be47cb7a5cde6d0cc4ef121f2b785c7d8eaf9537496de342c1bc77f62a84a6"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1544052024,
+      "bytes": 1265,
+      "sha256": "2c60c55ba4b1ae04ed8606962e4afedfdbc99256445e73ca42d6f293fe54de98"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1544053289,
+      "bytes": 25378,
+      "sha256": "e37acbd6e532ded65a2e0965f1f377609d99e37da900e5dbe19ce407a21d937d"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1544078667,
+      "bytes": 1247,
+      "sha256": "36c1b2f12276d943908a16856b470859ec96797777d5b7b5a1ec28a7d540cf0c"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1544079914,
+      "bytes": 12242,
+      "sha256": "2a79ba580f0975b4b93e770dbba6e0a3e948eda326e345349a549cea1ef3feb7"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1544092156,
+      "bytes": 1430,
+      "sha256": "dc0c706385709c6392d5df9294a119aab49dd05fd002c4e6b94d639e5d9c97a6"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1544093586,
+      "bytes": 3673,
+      "sha256": "bcef384f80ba16241d49857943d153d6b9e24de31bcbda52753cdf91f208f533"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1544097259,
+      "bytes": 1219,
+      "sha256": "fdf331df9dfdde7d68183725066a8cdf65e7dd5df4e56b955f065106bf8a5011"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1544098478,
+      "bytes": 1503,
+      "sha256": "b704467a8c5d4b975de2901d03cc61b7f6c4609e963c69cef97452f004489b11"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1544099981,
+      "bytes": 1505,
+      "sha256": "4f13d5af8597f08199b02bedcd94e8804b077908e5f665b9b196d851188cd55b"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1544101486,
+      "bytes": 1274,
+      "sha256": "35fbfe5787728dfa1856aae9b6429db660e80c498a4895153f67e1cc9b90fe5c"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1544102760,
+      "bytes": 38683,
+      "sha256": "5bab32e6db4906ced7f6327c9bf1179cca02bbcb4153a1e21558755a7c69da35"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1544141443,
+      "bytes": 1493,
+      "sha256": "c4e23ae2c34e1787a803fc6609d90f362f13f941e28466e6e874968bac03efd6"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1544142936,
+      "bytes": 1389,
+      "sha256": "4824478e6dcfd055c9937dc7761874f59a58ab708342fd7058e16dc5555ea6b2"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1544144325,
+      "bytes": 1355,
+      "sha256": "6ad1987c9178c838713b234f1d9406d8b2931e274b120be7548ac7f412e18dc0"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1544145680,
+      "bytes": 1180,
+      "sha256": "3e185e57abe550e6800dbd19cdd1690587d2fb9748d0bdf6390bf155ca85b55c"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1544146860,
+      "bytes": 1428,
+      "sha256": "8cdcebb5ee6e1b336cf187c122a06307d1cbf94c21720f4f7bfdd7739d9d138b"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1544148288,
+      "bytes": 1504,
+      "sha256": "112f7586e43b71a1c6c222f6965d80e797f54bf851c3cff46b6ad869d0d07dd4"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1544149792,
+      "bytes": 1254,
+      "sha256": "333024d0cf01b5f8bb2f72bd573da747748d830f188e77aedb0707bd9ac676d4"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1544151046,
+      "bytes": 1271,
+      "sha256": "78ab135471e7f6ca44364bb5020c2c214fa7313039578297c1ca9f4f1cdcb020"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1544152317,
+      "bytes": 1344,
+      "sha256": "dae588081b9e4a7149fda0656ede7ab93b90b1064074cc25389b511301bc5fad"
+    },
+    {
+      "path": "logs/brain.jsonl",
+      "offset": 561409069,
+      "bytes": 93234,
+      "sha256": "3dd139760c8e1b5a2038ff803eff62f65eb3f1347b75fd7d00172a21a447c2ab"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1544153661,
+      "bytes": 184491,
+      "sha256": "37d5da9e1f30f32454bd64b5f0e70a341574eb61e6639773269c6b9fb2008e6d"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1544338152,
+      "bytes": 1266,
+      "sha256": "93c00249db435170a5ec6e813cca45ed06c140b3598aa1d9566e246c86b7967e"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1544339418,
+      "bytes": 1913,
+      "sha256": "28d7723e819619c0d1f9c8714b694f786933489c4fc0b0f6b8e787bb03bc72b8"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1544341331,
+      "bytes": 29003,
+      "sha256": "14a8175e2cf2e9165357e9726d90f11c1744ab558cb95ce56e6da5ac077d9c0d"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1544370334,
+      "bytes": 1626,
+      "sha256": "ceb207e1da1cfa896f9e5b841e50cc834097e34db4fc6360b6117354eb3f74c8"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1544371960,
+      "bytes": 1588,
+      "sha256": "4953dcd079ccc82c4cbe298eb615abec1f5fa49ae5db29bb42e583cabd6d29f4"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1544373548,
+      "bytes": 1368,
+      "sha256": "6ee58920fe6ea2dde833139df2c07adebdb9e0738eff721857fd187c3c77e0cf"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1544374916,
+      "bytes": 37191,
+      "sha256": "0b450d78610b5e8ba98246f7761e2207c863605124a2ee6cacbbffbcc23af05a"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1544412107,
+      "bytes": 1578,
+      "sha256": "3e1dcb06e3d8d856e53e63cd41ed23a6d44d04d59dd9e4463745884ca6990c69"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1544413685,
+      "bytes": 1460,
+      "sha256": "a0309a4a091f5d140873f19f38980d326a4072fb0593c7170889287e93367276"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1544415145,
+      "bytes": 11098,
+      "sha256": "ba3390d7ce953a307f3e245fa1a69b31f8e4bbec7f84317527be247fa57a4f12"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1544426243,
+      "bytes": 1486,
+      "sha256": "48b7f3ad12581b2feb55fa099bd85ffebabf7abb5b9f54d0249226bc865c5168"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1544427729,
+      "bytes": 1503,
+      "sha256": "88518e8a651e619a78662215a3e352c57ac8eaaf55236d0cbc2110847f571547"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1544429232,
+      "bytes": 1468,
+      "sha256": "d47074aa6a9ca9729e8906092db3d30e24bc7d58218efb1ed64a786f16b50d7b"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1544430700,
+      "bytes": 1345,
+      "sha256": "1be0287e4fbd89c872eea1ac72a1d92b91863c45350e001ea591c79aeef8cb21"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1544432045,
+      "bytes": 20049,
+      "sha256": "70b051f01d63d69f8eb488a56516604bb7439f411ca37eafb2ae37907aca42f7"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1544452094,
+      "bytes": 1578,
+      "sha256": "ebb4c345d822fe9a1398ebbff02cda9d96de16208a65a1354ffa4a6c354d1cce"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1544453672,
+      "bytes": 1460,
+      "sha256": "614c596e582d47a074680d39c949a925eb0e3d9bab25218c700fb247cedec5b1"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1544455132,
+      "bytes": 1506,
+      "sha256": "8d4f1a7144def6ff44a7ecdf0e4fb6d9271773fe0964161bb073e2d1347f1bf0"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1544456638,
+      "bytes": 10908,
+      "sha256": "01f2ce8a2ab3b753f4dfbfaee5b2c20281dd9369993ba465798cf72f8e478534"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1544467546,
+      "bytes": 1507,
+      "sha256": "38a3ad8f73ba7cb79e2030f2a295d535b81c7fdb33b569dd3d4870328d9f0725"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1544469053,
+      "bytes": 1432,
+      "sha256": "bd8fe2003334302fb64647ecd9473e9c17f58431b96bb16c2a8d2888a27af524"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1544470485,
+      "bytes": 1263,
+      "sha256": "38a6506483bb72b02f40717f1a679add36f3dfce5e37239521d907c14eabfa8a"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1544471748,
+      "bytes": 1279,
+      "sha256": "476c320376b0d68727a5bbec77ebc16eed1bb708b830f9ad8812b16fdc6448cc"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1544473027,
+      "bytes": 1356,
+      "sha256": "30d4f90d57e073ca93eb1f7cde2fa7693adfc66fdc20da1fbc709cbbe149568a"
+    },
+    {
+      "path": "logs/brain.jsonl",
+      "offset": 561502303,
+      "bytes": 94262,
+      "sha256": "ccd8de59f8847a90a92572e374e2f9e0a85297542f900b32d8a0cfcf64e52957"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1544474383,
+      "bytes": 192446,
+      "sha256": "407dbf5a39bf91fa250cee109caf9332f3bca272fe1dd279315d4cc632ec026d"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1544666829,
+      "bytes": 1278,
+      "sha256": "10fa0b5222d8bbc521b03b66d9318bc3031a28697081aeebe2cf651515273ba7"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1544668107,
+      "bytes": 1916,
+      "sha256": "7675ac8197ff69eee3766860592cf1d6f22b6eea2add5840fcb324c977069bf5"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1544670023,
+      "bytes": 1261,
+      "sha256": "e95d4221327ebbeb0681ee3f98cbbead82f7f160455f54d776aa4b7e79dc2123"
+    },
+    {
+      "path": "logs/brain.jsonl",
+      "offset": 561596565,
+      "bytes": 275862,
+      "sha256": "605865ded81dbf2c4f99eb970710a288be729ae41942362b88a99729a4da9080"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1544671284,
+      "bytes": 664412,
+      "sha256": "2e90c31e07333cbeac4ba4adf9fc571de2bfb40ee876da9cad1e139117454b01"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1545335696,
+      "bytes": 1501,
+      "sha256": "158bac63ec690f3f66fa8ff62ba916fe16698b87853a09a52e8bb6fdbf54dcdb"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1545337197,
+      "bytes": 1408,
+      "sha256": "26bae1fd76ac1b3ec3a6a5e967577b19da92ddadc9abf5db1ae7d717cd740797"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1545338605,
+      "bytes": 1230,
+      "sha256": "a94f1f11b2beef88ba8c7b482539350f1359f419f3123bf20c14b55144905c3f"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1545339835,
+      "bytes": 1929,
+      "sha256": "bdab9738864442c1bfce85ab5e78a5400733ead9bb1a8aceeaa8ffab81284cb1"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1545341764,
+      "bytes": 59557,
+      "sha256": "339748f0ad2575b395b6aa78dce3b50a105096d19771bdf8be60e0027d6cf312"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1545401321,
+      "bytes": 1713,
+      "sha256": "4c729e6d055861583b12d2b09466801ea61449f47f2d2896b009675bfd744581"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1545403034,
+      "bytes": 29478,
+      "sha256": "dfa3762487ee1e92f7652c311fe8ed1a93535a885d88e6fffda45626f613bf4f"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1545432512,
+      "bytes": 1305,
+      "sha256": "48a7caaf51921ad88a394856208cdbf78b859343bc6021a2cb9f2857289e56cc"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1545433817,
+      "bytes": 1381,
+      "sha256": "aff4d1b6bfb9bab3af19ba712f01f41de860653ca4add85981f5a2e913fb469a"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1545435198,
+      "bytes": 1499,
+      "sha256": "b8441ade40d2d125cc7fb8a9cd323e7fcf5fff917292b86aaee6ac6dd757f050"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1545436697,
+      "bytes": 1505,
+      "sha256": "290ddf9721ad48a376fcc0c39665f8c7478d65dd874b4715cbbf7a01fc08191e"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1545438202,
+      "bytes": 1488,
+      "sha256": "e634a2d25c035cf66e51d080d6c85cd6841b27851cd54e7789d3065c1f543b46"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1545439690,
+      "bytes": 1352,
+      "sha256": "ee4d6b8dd617721153f3e4c63d3a8fbaeb535f647c07e9f0a64a2fb2ef733f34"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1545441042,
+      "bytes": 50901,
+      "sha256": "d798479e59982fbb82b04b733fe7561f3c4692f10c437daeac97bf5dd44d0047"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1545491943,
+      "bytes": 1530,
+      "sha256": "e991a45f519c611bd0a30efa96b96b1d74fda2f30f050f3f8f062e2025d4a559"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1545493473,
+      "bytes": 26437,
+      "sha256": "4d75c6880bfe3ecadc324ff41d54a94d876569d0b6a3c904aa4abf240bebc7e6"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1545519910,
+      "bytes": 2349,
+      "sha256": "2e21181cb3a038a09edb174ed0a27f154eb5f515fd3b23a8002efc87133aa19a"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1545522259,
+      "bytes": 1342,
+      "sha256": "48565438200d0d1cea0641e9770c4df70760cecdbdbce95a7ba8129f49a7da38"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1545523601,
+      "bytes": 32618,
+      "sha256": "4fff41f58ae82e2c124d246157a23cb888c987a047e4ceaa97fb9a0578bfacce"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1545556219,
+      "bytes": 1589,
+      "sha256": "76e4e62c2a05b3aaf2ac59873495d84aa1b5db9131e91a5696340dbe10be93e2"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1545557808,
+      "bytes": 1450,
+      "sha256": "379db44d67b8a08a7fd82b5f7bb91d5d0cac22a56078de7993fd7190191eebd3"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1545559258,
+      "bytes": 1334,
+      "sha256": "eafb68cf77ba4d88fae9fe3d9486d040c66131106f709ac96cbce6d36c964f2f"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1545560592,
+      "bytes": 1385,
+      "sha256": "77aba658f5a39aa90e49e7619af4c9bab66f8fdfb80e126496d2cf4991666c0b"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1545561977,
+      "bytes": 1283,
+      "sha256": "138e128ee5c488824c602ce981171d9054b3caeb407fb436ce967627b1763485"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1545563260,
+      "bytes": 1273,
+      "sha256": "acaa1ca814a756a7bc26d49440d78e651a5bbd011cc07962bbbfdce47740871d"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1545564533,
+      "bytes": 1356,
+      "sha256": "790f102f9ac9ab6d3a942444bf1500edfbd37629527c6bb60a44d8d20fd17979"
+    },
+    {
+      "path": "logs/brain.jsonl",
+      "offset": 561872427,
+      "bytes": 104886,
+      "sha256": "eb44f29ccc6f316b8df29d2b5d164b44fab6cf0a2eec7b64224010aafe8031de"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1545565889,
+      "bytes": 216211,
+      "sha256": "6adedaf547546a0ed381ba1e81eccf7e1a16dabf2a0a11b46d1b774711ede45f"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1545782100,
+      "bytes": 1295,
+      "sha256": "31c7e5effbe7367a5748681a522ab43b8f6a65fc31fd6ea509fae13ddaf23f8c"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1545783395,
+      "bytes": 1926,
+      "sha256": "5ff787e396146c5a1761959e3787589ee91640e22095688c5274e7246351cd97"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1545785321,
+      "bytes": 52873,
+      "sha256": "2b2ce00bd51fe3bf45168586c7b9bdc497a7bff2e7953202bfe50f9bd1107ef2"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1545838194,
+      "bytes": 43293,
+      "sha256": "0f09307dba903477adfbc2dac51c9227813af73c0c351b2cf6b96c9351eadb46"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1545881487,
+      "bytes": 1617,
+      "sha256": "b9c0fedc72eea785bba80c475113a385cd5f4f0f9b24279de5cd44211a66c411"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1545883104,
+      "bytes": 19626,
+      "sha256": "644e279cef90b9b957b26fd02bbc114d1cbbb980ba1178abb3665d50db69c069"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1545902730,
+      "bytes": 1580,
+      "sha256": "1495c56f6c9c569271aca4ce38a54eb7f8ac2cd2cb7e1149c2ef193d1d20d10b"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1545904310,
+      "bytes": 1341,
+      "sha256": "6c1abfa65db486fa5d3e0bdb8e79a0d81defbef7824ccf6b6fa08444a27448ee"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1545905651,
+      "bytes": 32915,
+      "sha256": "b5420f011e3330277d094d79fbf8e07e1e2b0d245f241ecc9cb3e0ea3b928350"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1545938566,
+      "bytes": 1557,
+      "sha256": "11110cdb0425ef03244737ac2e50db985ecdbe393dd8fdcf91a09993d0b19057"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1545940123,
+      "bytes": 12930,
+      "sha256": "dcc16c6c814fe93c6bb2b95116689f34cff167ce83e76cef17bf9f97fca06bf4"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1545953053,
+      "bytes": 1311,
+      "sha256": "24830b916babe7ac1570785e8c9c1d0ae73970ca6141295007e63c10b655f8ab"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1545954364,
+      "bytes": 25935,
+      "sha256": "8a5dc9fc50faabaef67d702293d2ec173c728029ac302019de04c6cb37da59b4"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1545980299,
+      "bytes": 1573,
+      "sha256": "d61572a2def21fa663185fcbd13eea5a718827c96ad24eca384d745ff82a4f6f"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1545981872,
+      "bytes": 1487,
+      "sha256": "85e9e5d096a70c8485d29f2ab209cf851d2ec46e7f88292b234ead10c10aea69"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1545983359,
+      "bytes": 3719,
+      "sha256": "45f1b41f47586e25a2297976cf26f3a6a71d91e125db89d23c629b233cc7646c"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1545987078,
+      "bytes": 1266,
+      "sha256": "631a0d4a222048dd2c2131834f7c8d4711231bd286e9432d62ba9c5e5692e9fa"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1545988344,
+      "bytes": 1512,
+      "sha256": "41f936662a5b3ece0f81ac45d8d6f10dd29fa3bba0f932272875ece3732b6b92"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1545989856,
+      "bytes": 1322,
+      "sha256": "aa0e298e12413079d6381d84188dfcd0cb74e77e3465b775044ee2d363d03b06"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1545991178,
+      "bytes": 1483,
+      "sha256": "7b112bb7bde3e189f974f8b527626982b6cdad68ddb25e2ba3c0debcc4c3e7db"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1545992661,
+      "bytes": 1558,
+      "sha256": "65594ca8e16bf5da5431f9320ba4346296fb32dea264d0ba2172ec6596e2917b"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1545994219,
+      "bytes": 1254,
+      "sha256": "1f5ad1912317a9619b04f895bf56b930d3c1ac6caff548d7ab1848e65b31ad02"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1545995473,
+      "bytes": 1271,
+      "sha256": "8bd376210784a4611b8acdb67b27ee3ab6702de62e8c7e9162a21a4f69b388cf"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1545996744,
+      "bytes": 1347,
+      "sha256": "1921036aedbea3251714c4018aa2fc258c215b0b020401da7c825a1374f62f9a"
+    },
+    {
+      "path": "logs/brain.jsonl",
+      "offset": 561977313,
+      "bytes": 113471,
+      "sha256": "a2c411d547bc93f2eae6a573f04b35b4af5a5ca3cec4d83d5242bcd5bb6a6616"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1545998091,
+      "bytes": 226847,
+      "sha256": "7f8a80603914108086c8fb9b3cd0cbdbe6afd9951ee645eb6b6fcacc4d6d4752"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1546224938,
+      "bytes": 1287,
+      "sha256": "561d56101f811be835f840ddffd6e5af7c6aec4fc1427bc526d7988385d037db"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1546226225,
+      "bytes": 1918,
+      "sha256": "a07f25c00facf86d7152106f0c38c1320d9cb85dbbbe74de0014799b53e28c5d"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1546228143,
+      "bytes": 55485,
+      "sha256": "d026a53ec260fdcbf51051996680c7b52b6573d12c6b9bd96eccced4f5e7fb0f"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1546283628,
+      "bytes": 1628,
+      "sha256": "36dfc91973979f47903b002454e4d3ea1c83c18bf8763d57f9a5471a7c90b791"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1546285256,
+      "bytes": 1590,
+      "sha256": "1cef1662b403815bcfa2bfd368d63a52e5ca1296226530e316334039929d0cd4"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1546286846,
+      "bytes": 1517,
+      "sha256": "b37f09bd2ff0f48dd6e53e29d778d5b842668000b9c582349d251da971f5146d"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1546288363,
+      "bytes": 5691,
+      "sha256": "d107818eed721c8aaa332c1dcf01277b644e6090a2785942561e4c3f87319799"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1546294054,
+      "bytes": 15439,
+      "sha256": "c57699d9b8160064124ea942d36ab1edbd415b5a578a414675a8794e9de66976"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1546309493,
+      "bytes": 49635,
+      "sha256": "44f10aaabc9dca799a40ca72624fd5b98db90ef3023343b993b904232310f749"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1546359128,
+      "bytes": 1481,
+      "sha256": "7e7c2e902919f44d3ba42c40516423d5f303c9ec7725cd3b7a51ef3df5721e73"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1546360609,
+      "bytes": 1582,
+      "sha256": "9e3462b2e5ce314610680fe9e0877f7030901a7969fb4c990aa15b9b05837a61"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1546362191,
+      "bytes": 1244,
+      "sha256": "9f0fb32d4cefb04127b7e5d0734f8c1be50c04a6813aa2ee8aed5035903f25fa"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1546363435,
+      "bytes": 15692,
+      "sha256": "512ae0143524ddcc41895e45eb9c609110f32c14a948f78c09c242149538221f"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1546379127,
+      "bytes": 19948,
+      "sha256": "f357b3ebfd14e59f50c6672da659388fb552329844d3a01a21d35929c7bc207a"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1546399075,
+      "bytes": 1503,
+      "sha256": "bff01b913ab2041654781d4a3245732ad592a3cf3388069389d174cee973039d"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1546400578,
+      "bytes": 1486,
+      "sha256": "abfef5de383d95806f308ab008077b4908991f4c315ace72488899a270558df1"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1546402064,
+      "bytes": 11732,
+      "sha256": "df00d0c8499c5f98e50df5d8751c3d0985acbd720acdd4c669e79bce918fd856"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1546413796,
+      "bytes": 41879,
+      "sha256": "ea7ce90870fae6be6d52a32ea52e05fe012b3a1a4601d508481dafa8962c58dc"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1546455675,
+      "bytes": 1603,
+      "sha256": "fc4a764f38cb048f11b6de66f1b16465e8d53ed2d3097368f0675be4c8f0ff01"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1546457278,
+      "bytes": 1481,
+      "sha256": "4bedb799a3b5902da5078525e2bee06293fe40ee6be3e31c2e330fbc75ed3442"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1546458759,
+      "bytes": 15219,
+      "sha256": "e20365b7c73a9ace35c531ed22732b13df105383e3663e40834905976ca4967b"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1546473978,
+      "bytes": 20497,
+      "sha256": "53f911ea2fb78e4d6aa462adea78edd42e798a66882b8c71c3cd74e1ee27e3b4"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1546494475,
+      "bytes": 1508,
+      "sha256": "39fd648343a84e9efbc9c5a946a2971d6df3f07e7ae41d833c4b2fe038569522"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1546495983,
+      "bytes": 1579,
+      "sha256": "28e1f8185637edcb5db04c581096393abd1822744884379bea72d889c9d049bd"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1546497562,
+      "bytes": 1544,
+      "sha256": "301babfd266be58166503e941b0267ab2a590ce61bdafa6f0094768289b4c14f"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1546499106,
+      "bytes": 11472,
+      "sha256": "a6adfaba480eb3def3677ded3526b9fa4255a09c80d40c6c641b1e5c7b5b3cb5"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1546510578,
+      "bytes": 1473,
+      "sha256": "544f0e628771e0cdb701adcc64679356f40f4b0e98c0cd7d6d6a98c23189dbc8"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1546512051,
+      "bytes": 1620,
+      "sha256": "825c5407980547b3b7179b3c21b0076244fad6debf24f24ec4307e780a1123e5"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1546513671,
+      "bytes": 1288,
+      "sha256": "953de31ae6464ae3f266da24e9440c76021776a55ed33d28dbb452c1fad8112d"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1546514959,
+      "bytes": 1262,
+      "sha256": "c87a6dd84ef550fa6b9566dc9fb3a1ab496c6fc33a5da9fe206f1ef6c106ad25"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1546516221,
+      "bytes": 1347,
+      "sha256": "56a06280eec5895be14905e5b61bfd3e19e738647d905220718ede934c389971"
+    },
+    {
+      "path": "logs/brain.jsonl",
+      "offset": 562090784,
+      "bytes": 119174,
+      "sha256": "ffebf57c842405adcfccbc06b356c5c754371d82c04db28cebd490b7e1714cbf"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1546517568,
+      "bytes": 228418,
+      "sha256": "f7959dd5ebf02fa78d82baf28228684e22adf9d6fc6aec34a544083987326a0f"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1546745986,
+      "bytes": 1269,
+      "sha256": "25cb007bfd5fa49229800164a2a99b292c1f0f05a94763aebfde317382d30018"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1546747255,
+      "bytes": 1919,
+      "sha256": "e1eac46323e5c8949ee450f1fbac1b275cc48673c2591cc4d9ea73b2526a3707"
+    },
+    {
+      "path": "logs/brain.jsonl",
+      "offset": 562209958,
+      "bytes": 280601,
+      "sha256": "278886d063b482b1f767037cd649084298a06138e454bff1543754a2cabee3da"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1546749174,
+      "bytes": 612336,
+      "sha256": "c6af93b1c726b4b0953a0cece3c43f4f26d319a116f6b1fc1054abacf5d4f0f9"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1547361510,
+      "bytes": 1162,
+      "sha256": "b396dfdcb84eb777ad11224e2c9145d6b62ec38cae4c1b08a61e5f63cfcca82a"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1547362672,
+      "bytes": 1922,
+      "sha256": "6bf1d6536b0f02555accaf52b7a1d42218c50589240090e11fc9dad1bf97bab0"
+    },
+    {
+      "path": "logs/brain.jsonl",
+      "offset": 562490559,
+      "bytes": 80658,
+      "sha256": "38dad0710221286a3b1029f4eb2a736827adf83d01e18d2d2435c28667f3a179"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1547364594,
+      "bytes": 129786,
+      "sha256": "ebf89550298de3b553a0a21f2e9b33a2834ae48551bf097c9302d77acac2e3ee"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1547494380,
+      "bytes": 1322,
+      "sha256": "e1fa8f5d3ecf947a53b50f1171abfa2c844769b7a5999e4505469d3bc2cf197d"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1547495702,
+      "bytes": 1925,
+      "sha256": "e58e3d51f8bb11fdb23228eab921ea3068766d56715ed272f00c5509ed2e3246"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1547497627,
+      "bytes": 1133,
+      "sha256": "46670db4ea727a86f978329490835a8e720d51e0df0241a2aafb4864448ebc63"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1547498760,
+      "bytes": 1243,
+      "sha256": "500b86aea0ab239337fd22fd327ef39d1dd32b658d46a264632de9d41b817217"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1547500003,
+      "bytes": 1122,
+      "sha256": "3d2d338208a15babe74c73122cf1cdd3bc71697c48dccecf71b26b044c6902ec"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1547501125,
+      "bytes": 1928,
+      "sha256": "b3a2f909f6c7fdaeec98a25083614e3dd2d309bfdd1bf2438a61423d61863c0c"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1547503053,
+      "bytes": 53385,
+      "sha256": "fa1c1fc821699147eb566b81cbdde28be214cdab84e8cc32f71d7eadd32b9026"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1547556438,
+      "bytes": 1601,
+      "sha256": "8c6927dab7503fe5331adf0028408701f1b7eae9823d9110016cb1063fdc62b4"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1547558039,
+      "bytes": 1560,
+      "sha256": "a738289a1a372b05d577252f05777240fa44dc06d2a91cd52d2fb884c017a44f"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1547559599,
+      "bytes": 1529,
+      "sha256": "3b1ebe18f796f10c010f30044693e0144f46cac5d93eb85d491c4d706cfa8822"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1547561128,
+      "bytes": 1548,
+      "sha256": "7739e395ad4ad3af0b348c5f4eedd279263aabcc59cda18612a3e5443e8990cc"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1547562676,
+      "bytes": 1483,
+      "sha256": "de6d6275040453bb2bf575941b1a7501f0848524a4005000730283848aab49ba"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1547564159,
+      "bytes": 2382,
+      "sha256": "9bcbdcc8809cedcc49062813c798a21b750e1f84bca5787cec4898e2b28d90c1"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1547566541,
+      "bytes": 1242,
+      "sha256": "5947e7473036c3228885ac6d96b137d15eef73b277ba09c22bfd720f0b123768"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1547567783,
+      "bytes": 1445,
+      "sha256": "9d72bed41d8ee6ff0066ad6bb967ce63fe62378426aa7d47daf1dd6078ede2af"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1547569228,
+      "bytes": 1447,
+      "sha256": "af605a228be51fc3cf1473e75dd282358ef4fe74b13fa10367e2bee584153ed7"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1547570675,
+      "bytes": 1433,
+      "sha256": "5bea6fd07395f3b515655aa8c0d1d4b3ad4e9210f0354d366c30b29ea8789957"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1547572108,
+      "bytes": 1392,
+      "sha256": "d46e3dd12b3c8d6c9b5bbdbc6e5f174c8dcc11747181108199058eed06e5a18d"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1547573500,
+      "bytes": 1243,
+      "sha256": "650ef8e803e0368a817cd5565adebca04cedad76333bc7f89287acc1109eadcc"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1547574743,
+      "bytes": 1446,
+      "sha256": "52a6e2e17026eee2006f0d61cf08ecab894341f611a0b557d3e1cf0aa8ef86b2"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1547576189,
+      "bytes": 1528,
+      "sha256": "6a320b09d2e2357fc6b105d86dc4bdc77345392c93cf0f59d149f6e5b3530397"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1547577717,
+      "bytes": 1254,
+      "sha256": "73ceca359a746d74cc1f0ff3778f75f4d3efcc8d658d9df77144134400210a98"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1547578971,
+      "bytes": 1336,
+      "sha256": "bf961edc2f307602c7cb2165e42a64ec90ad0e141686edbbb3e23d020e9e1ae3"
+    },
+    {
+      "path": "logs/brain.jsonl",
+      "offset": 562571217,
+      "bytes": 116994,
+      "sha256": "d00b22e84834c4a711b8ed3600e68675b9c35cc7e7b410dd84acd88ec47ec281"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1547580307,
+      "bytes": 227930,
+      "sha256": "120506229fe403506cdfe1f35d8627d80850668031dadbfcbefaa03bb70c1f7b"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1547808237,
+      "bytes": 1258,
+      "sha256": "74fc3d3dda5a4b7cb45c7ec7de1dae88995fb799e5491c2dfaa337774828ef06"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1547809495,
+      "bytes": 1885,
+      "sha256": "f652535bad890c8066238bcd38b3ca82a8210966c459583e0c5150a5649cb6ac"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1547811380,
+      "bytes": 17740,
+      "sha256": "d9e1bc533f65b635cce07ebcc9c05c94f01ffd4db0e78eff9c2a94ce07c5f444"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1547829120,
+      "bytes": 1590,
+      "sha256": "3d82f2241a14d75abeaaf85d4a812fc74225db3634d5480409594e0836a8ddb2"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1547830710,
+      "bytes": 1479,
+      "sha256": "69ea855ad85ad4645efedb6328c562a3c300d0d9c092700e7052065ad527e5a2"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1547832189,
+      "bytes": 1285,
+      "sha256": "d91a40f63b4f197c8314b127ad76065fafb8d089a4a6059eb01d6c0cf76ef1a4"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1547833474,
+      "bytes": 1551,
+      "sha256": "af6bd6677225a39bd8dc654712e89ffbbfae1b79076eb15c4ef939fe09268aa4"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1547835025,
+      "bytes": 1533,
+      "sha256": "52a54b7a20c169e2c4cb3e27c02e592468d0b591f033ef7263467860e256a5fa"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1547836558,
+      "bytes": 1507,
+      "sha256": "3960fdf83b69a8ec50f4649b5e782945dd69c61d277348139062f1f8c388ad38"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1547838065,
+      "bytes": 1521,
+      "sha256": "5921940b25cc777caa6c0ebb9f0002d2cdfa34d89a606c1799c25a9f358c0062"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1547839586,
+      "bytes": 2128,
+      "sha256": "de493b91a4bd70a72a0d3e10c528f922e2986535b7acdd4c16fa5d120a47db04"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1547841714,
+      "bytes": 1240,
+      "sha256": "18651f54223cdba3b47fe5263bdec0b11ee20525bc5f39636b5983982254a379"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1547842954,
+      "bytes": 39799,
+      "sha256": "c7209d87a5988a94e942551650bfceecd5c08dcf4dbfd8b21b9fcd9f3f047928"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1547882753,
+      "bytes": 1472,
+      "sha256": "47140fa6a3a7ae43c3f2b394646ab1e1fe3a814c400a5d2ca125dca8e576156f"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1547884225,
+      "bytes": 1518,
+      "sha256": "63e50df82b72a362ff7b621b84ea8f27bd50428c0f48acbf82cc80ba2248fa36"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1547885743,
+      "bytes": 1278,
+      "sha256": "7b609af4ba8273f456a8246310703891658ea2871a8a5a3d8dc88fce9ed79f1b"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1547887021,
+      "bytes": 14013,
+      "sha256": "3038444a5d9ee19a18d06028d97e02b397ff1ffc1364c22a9ff254a961280880"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1547901034,
+      "bytes": 1464,
+      "sha256": "2ad448031d7a4afffec378035f59fc0e6ea3a8159ad7bbd21f8d26a24cb93730"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1547902498,
+      "bytes": 1448,
+      "sha256": "981a41bcf1684b5a14b3dbbd83e01fc7da9afa15f9c244047f316da9322b09c8"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1547903946,
+      "bytes": 1494,
+      "sha256": "22f4411e526abfc4056d67c596e93cfcc1e8e279c4a6bbbde7213eee8d706199"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1547905440,
+      "bytes": 1260,
+      "sha256": "debf829e81eaa8f3300471e040e7d82a90f1cf91a7f4c4ffff09000654dff3ed"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1547906700,
+      "bytes": 38651,
+      "sha256": "f7b9b3c6a79582a9efbb34a8ddce83edc5f16af9dc60bafb6f0d1acecb0afd51"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1547945351,
+      "bytes": 2849,
+      "sha256": "d4f7d1ada47dc03cfcec99ebc96db87d78ed95297b6c0246013a48d5ef8a200d"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1547948200,
+      "bytes": 15916,
+      "sha256": "77cdc5d000ddd39897f2b497f1d095707d8b20aee0f1dce365afde7749989d22"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1547964116,
+      "bytes": 1447,
+      "sha256": "95b35bc9bca6f13207dc240105c941d729cb73d3dae6eb7ed502bdefb173f416"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1547965563,
+      "bytes": 1283,
+      "sha256": "a6621cb2d440cb7daa1c796fce2dc393bb559b4062c0d6afeaf548537923c661"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1547966846,
+      "bytes": 23146,
+      "sha256": "acd65d51d1b910cd82bd63f4d81c80d9e00dfd5ec2de943fda389796d6d6e576"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1547989992,
+      "bytes": 14061,
+      "sha256": "186682c4ebad3d615aea7eb7075a5310a08ed17fe7036e3b3ba7f80c3d538ed1"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1548004053,
+      "bytes": 1537,
+      "sha256": "be1966f9d5954bebd7b2645a319d2bf10c307ef369df39f6c45f647966fbef74"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1548005590,
+      "bytes": 1502,
+      "sha256": "4f51531efc26ffbec37cacbf06684665e2a9fa7f1a11f43e17ef818fef0a9a3e"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1548007092,
+      "bytes": 1494,
+      "sha256": "f957596bed233fa1e218da798c84b58913064a1a66a9ff32f443adb551d35e29"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1548008586,
+      "bytes": 1260,
+      "sha256": "16b42e60615a31dc7cf1367a6c6de0df74103962ed4a47024d4e7a583bd8185d"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1548009846,
+      "bytes": 1456,
+      "sha256": "4a32d92506b448e110d9addfc452106f0e993f3388a9a30955567e45c18289ec"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1548011302,
+      "bytes": 1331,
+      "sha256": "bd733bf1934c953c7fa919fee99d63bb6fc0da9d0683f614498dfa572f6499b3"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1548012633,
+      "bytes": 1229,
+      "sha256": "ad87875a127f4e8b1a8e5c7cdfde2fddd492689b817fb16b6baf4f8c798c1635"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1548013862,
+      "bytes": 1255,
+      "sha256": "69e2ec357aaa1d6ed48be977174fe4334f013072a8ad1797de5b14f2860801e6"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1548015117,
+      "bytes": 1269,
+      "sha256": "14c0bd1cce55412590e12b128e7247d0de97a4cd4e57d7bec2f9677e35982b44"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1548016386,
+      "bytes": 1337,
+      "sha256": "7ceb304682cfa0b1f5247e2b4975dd9b1a114830291d0f7fee9fd16aebe5661b"
+    },
+    {
+      "path": "logs/brain.jsonl",
+      "offset": 562688211,
+      "bytes": 122988,
+      "sha256": "9cabbe1f3fb23dc404aed591a7b591e1a2a4f51e8949fe37bf77582afcc90b8e"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1548017723,
+      "bytes": 233769,
+      "sha256": "6f95f7683a56424e15532d512c95b20bbc651af1d09bc18d45fcdeb552e73ee8"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1548251492,
+      "bytes": 1259,
+      "sha256": "a3d1b6e29738d718772f8377842f3fc444f07314d00f827bac1706bcff3148c5"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1548252751,
+      "bytes": 1897,
+      "sha256": "ab6e5ac436d5ea6bd72ffb6f96783f138714d688ffb71a85893e7670ab175101"
+    },
+    {
+      "path": "logs/brain.jsonl",
+      "offset": 562811199,
+      "bytes": 315013,
+      "sha256": "21f973d8a8215096cbc98851344a159a8fea73d818a2249d7d109e4c3af85095"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1548254648,
+      "bytes": 715283,
+      "sha256": "6620c3712f8b94a038c6c5ad5323edd0fc8431af517b0b461620cff56941d473"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1548969931,
+      "bytes": 1133,
+      "sha256": "53f3fddc9706d135967d08b472e4b9dcfd8ea4d621c4b6a65a2474f38e0f7722"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1548971064,
+      "bytes": 1898,
+      "sha256": "79a6978cd003ac690f24ad5878b585fe72c618893c5b9f25d564181b6f0fcd54"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1548972962,
+      "bytes": 21561,
+      "sha256": "d141e2b87a20e2eddd7e08b86a5e0ab042b8ca88b1ef8890b27e4f23b00ec5a8"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1548994523,
+      "bytes": 1589,
+      "sha256": "96b0f6d40cdd5d7a3164c4e5a71d05dbcbe5661b4e379e9ac0095177c18d3e3d"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1548996112,
+      "bytes": 1264,
+      "sha256": "da2087c5c9713e86eab13713e84f8e5a4a3b325def28892130019d8963e0ae42"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1548997376,
+      "bytes": 11586,
+      "sha256": "6228ea0d92737b23adba4aa519fee970c62324fa50010554073739c04d26d722"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1549008962,
+      "bytes": 1289,
+      "sha256": "7c962d4cb87a4f6328ddbc5bcd7212e9169d18a6a72b3753b5fdc0cbbd1e3d76"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1549010251,
+      "bytes": 23115,
+      "sha256": "3aa16f5ada59e33f7ed08e6fe0478d5a10e11b90a6ec4d8ad91e59c54105224e"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1549033366,
+      "bytes": 2826,
+      "sha256": "0491592246d78d30c5b7b5e54f3d00dad58dd64450a67bbdd13768ebd6d13f12"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1549036192,
+      "bytes": 16653,
+      "sha256": "2952d4197a546e759dcc040dfa732056dc098a62ba1f9b086b355a5cccde5086"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1549052845,
+      "bytes": 1457,
+      "sha256": "c8d7862dce853edf97ac9754ab4bd7fb55036fbfe0606c2ce3d8742e4d6c024a"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1549054302,
+      "bytes": 1411,
+      "sha256": "a721f4ddfe0001997dde875e65330f234b54aea10b2eb0904bc46eacf03a69e5"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1549055713,
+      "bytes": 1255,
+      "sha256": "4af76cd68fb4277a2c54da7d600ee45935b32eab0d631621400d39dc08281222"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1549056968,
+      "bytes": 19339,
+      "sha256": "1ad8751d4f0abb1b34ae2715d4373fa526f7d32bf01a1ce6a7a3287a370a4df6"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1549076307,
+      "bytes": 1468,
+      "sha256": "effd50b657a390024e1a1ba8e96731a6f8b3dc9745ffb92c1c627c32fb45e68a"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1549077775,
+      "bytes": 1495,
+      "sha256": "c60340a0ede04f1eaad2b697b9294d532e509a8bd4eb847e53d1ac2902dae4e4"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1549079270,
+      "bytes": 1255,
+      "sha256": "c0d957b9fa28ca87fab42a1b8f34a4f94b9b776b96441a77255e7eb9c5bf7b38"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1549080525,
+      "bytes": 1548,
+      "sha256": "7ca71fcbafbf390529d342da432b44f1795679db1389e1a2fdd9293f198558be"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1549082073,
+      "bytes": 1446,
+      "sha256": "bffbffef54ae477ab6dc7fa523556bcdc568020326da4e540554c84736bd38c8"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1549083519,
+      "bytes": 1473,
+      "sha256": "92ba104b001882fe79bd1669015fc505710f03d5cab45fd84b3fad5f0989f33f"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1549084992,
+      "bytes": 1435,
+      "sha256": "3b6e239d894594e33a0d5adfd3b1667c1f1289cc577dee7281c4b6224096864a"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1549086427,
+      "bytes": 1205,
+      "sha256": "eab31b6f4947491fa6e00ea28ceceb92efe4a7eff7d2912834b62a6601b30ba4"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1549087632,
+      "bytes": 1330,
+      "sha256": "eb85ae2098ead60e7ab6e839df0130738bedb45fe98ce52d7e1578521aad6426"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1549088962,
+      "bytes": 1268,
+      "sha256": "7cce8451f75fa36670af3c47651602aaaf376a5fe7149c31b1192225e49112a2"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1549090230,
+      "bytes": 1284,
+      "sha256": "d14e3f25e0554a6be31221853ead44f4f5727cd5dfbe7633d2ab2de298afb644"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1549091514,
+      "bytes": 1363,
+      "sha256": "dab2fa5dfdf06494ec1b3fa5ab12d3367d1e27217b34014dba469f577599f4a7"
+    },
+    {
+      "path": "logs/brain.jsonl",
+      "offset": 563126212,
+      "bytes": 113543,
+      "sha256": "2f58c20682855c77e6ab402d678ef76f84909e7bac27a6e5c35eb73421d4f9e4"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1549092877,
+      "bytes": 237639,
+      "sha256": "8931a421a2ba9bd3489ade11c311faa64aa6d86f1553816923d835947bf09697"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1549330516,
+      "bytes": 1285,
+      "sha256": "e57d76956804de52bc833ee3670a6ec1289cffe919caa44a2487a1e8c5c7ac37"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1549331801,
+      "bytes": 1931,
+      "sha256": "0c877e0eebd5694fb7d644f4dc99f45dd839ffe16aade53dcc505c9121728e93"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1549333732,
+      "bytes": 27116,
+      "sha256": "40de3c10f2ca86412b20b5b22144c83f0720efbf91ab3822bc82e4ea4b176ac4"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1549360848,
+      "bytes": 3173,
+      "sha256": "fe96eb374dcaf5c838981d78598a1cf89f130c95d6f63e3b1784eb2ae5c19a3a"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1549364021,
+      "bytes": 29658,
+      "sha256": "f5ab2f109c0a27d1294507890889423c9d3ff7c975b2f1c7d36c4f4fbf081ae7"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1549393679,
+      "bytes": 1555,
+      "sha256": "731f40574e29bbeb62773b56d60ad4eb2492b8787b6e6b551371995cdf6d8e6c"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1549395234,
+      "bytes": 8594,
+      "sha256": "54b5bc69ed49b22da9ec34936c762403408de835044a183c79ea4a8989f963a1"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1549403828,
+      "bytes": 14581,
+      "sha256": "e4b4864214ded07edb5cf9597f4f8618f40bc1643319892aa3a1535ea0c5ac5d"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1549418409,
+      "bytes": 2292,
+      "sha256": "e9378c5afb2f787a4343daab533a509f9febd3fc15b21272a37a692b57c30bbe"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1549420701,
+      "bytes": 1393,
+      "sha256": "f4fee872ad1d86dac63793e1124bdb6eac09288c7a4de8cb793d2ee3b819a117"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1549422094,
+      "bytes": 1266,
+      "sha256": "efad6d94d9cdbcb21be36d2709061f3f6cebb8f21df119bcedbba91962b176c7"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1549423360,
+      "bytes": 18776,
+      "sha256": "c3ee3803f9066d0458f182e385038c93f66c84fc21d5b1e4a6af5a8e1a4df05f"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1549442136,
+      "bytes": 1513,
+      "sha256": "e0a09d38229c6d2450659dc1e282a421301f3c881151f59d9f241d775a9d701d"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1549443649,
+      "bytes": 1390,
+      "sha256": "b4475f21acac2fd2620465c21daf1a3e83f292abb4185d9bab3b52b2b169b316"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1549445039,
+      "bytes": 1378,
+      "sha256": "faa7dc621e12ae3b072cbd9cf702192e0d87f5352c9402a7224f88ed1e9a4479"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1549446417,
+      "bytes": 1226,
+      "sha256": "0c10a80681481b8047325e36cb82085155903ffcc651dfb308a04e87ce7e479e"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1549447643,
+      "bytes": 30879,
+      "sha256": "1647f0bf1a7943e316071a36f48583f9bdf87c8a16821c9bed01def4151cef6c"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1549478522,
+      "bytes": 1515,
+      "sha256": "d3fb87bb4d7e3f39f3e4c6094aeeffe46c59c3cbe4a7580218a9da25c8a5db65"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1549480037,
+      "bytes": 1480,
+      "sha256": "9a9c12125276246b45f0416c1cd1fa2a9d27e6953663b255e9bb4ccbc86dd4ec"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1549481517,
+      "bytes": 1242,
+      "sha256": "cf2c85d9bb2c6dbac09180271a3d8affbab12196184b2608b5e0d77ad540faf6"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1549482759,
+      "bytes": 1569,
+      "sha256": "e94b515978d902472c0cdbbf16610efbb9f8df072a16e57d0d762e907208cdcc"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1549484328,
+      "bytes": 1425,
+      "sha256": "012f1fa16853a972877a471e126828b0b4b2e97333e93c613f0a06df9b7cd2a8"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1549485753,
+      "bytes": 1469,
+      "sha256": "e6dffa3fb0592935f0f51b7ad1161980599b7fda453079466325949739d6b67d"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1549487222,
+      "bytes": 1368,
+      "sha256": "1c4dc329fc18198914af1b29b2a2e35ddef0fb0e8d61e937dfa9d76a1ba006a9"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1549488590,
+      "bytes": 1238,
+      "sha256": "c74dad74969ac86876a1416641d33b661189f69a2af7cabdb8af08a09a887244"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1549489828,
+      "bytes": 1489,
+      "sha256": "510b3e18eb38d4c335aa1e5abaee78848b4c9105dbf93bfa85252c84966571be"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1549491317,
+      "bytes": 1538,
+      "sha256": "416fee5ec1e90192504d8980a166941edced6a4c8ae1455cbae307bd74cf9d9e"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1549492855,
+      "bytes": 1425,
+      "sha256": "6c7920e652ea4d8712d61199f3e637a4332c6ea1fe7d555786dafdc0fda972f9"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1549494280,
+      "bytes": 1257,
+      "sha256": "fa2567b8d2fa804160f5e058d5402058b384b880071c3e9f23698770048bdb6a"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1549495537,
+      "bytes": 1261,
+      "sha256": "c9c5beeb86ffe60c8cc6bbd17bce2058051e313dbc688f0d5c1982e478ea75b3"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1549496798,
+      "bytes": 1337,
+      "sha256": "c93f89e521bcdbfae0e585cb893599676e524826e77adfb452d6a149357b18c7"
+    },
+    {
+      "path": "logs/brain.jsonl",
+      "offset": 563239755,
+      "bytes": 119225,
+      "sha256": "f30a6c61526cf01a8b25cbf2f580a4969775c1a2e90a44a12e777cf3e64cf14d"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1549498135,
+      "bytes": 241733,
+      "sha256": "aedd3633d72291523b59739ce14bd91fdc892423f9832deebe558e75c45bf3d8"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1549739868,
+      "bytes": 1259,
+      "sha256": "0be9336ac08a09a4ee56b8ba25cf4e94611a72c977bf70d1e43f21a73af8a6d4"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1549741127,
+      "bytes": 1895,
+      "sha256": "227d3f428389b9b859ac8a37fdb2647002047e6b65b1f0526108a29b0fb25daf"
+    },
+    {
+      "path": "logs/brain.jsonl",
+      "offset": 563358980,
+      "bytes": 371477,
+      "sha256": "e1bcdef688045aac5b3aee034ba6cecd7bfa8ea81a8785e62cdb7e88c175c61f"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1549743022,
+      "bytes": 853461,
+      "sha256": "3555dcbf73e85f3a20c99696e4c954392f173d792d471a7093567c9c1f40bfe1"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1550596483,
+      "bytes": 1133,
+      "sha256": "0834e734f44160fc8c8466617070ba7b0691e809241442fe8beefc31359b9477"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1550597616,
+      "bytes": 1889,
+      "sha256": "1efcd84991c2279f68a2f6eb3e4441ccd58ceabff9e4fb7c590f061aeb30f539"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1550599505,
+      "bytes": 37699,
+      "sha256": "f79db4f9c721d9ac25a6ad1b82db0d5b3e4d9699394e05c5164896ab7dd83748"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1550637204,
+      "bytes": 1521,
+      "sha256": "04f88c73674295d8bba06cf8cfb0c85e6ade12e2a5925f75de99f0729adb9635"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1550638725,
+      "bytes": 1307,
+      "sha256": "a6b7632655c5f0b0baccd9d975102828c9f8ab94ac76de0a4e5e46dabdbbc589"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1550640032,
+      "bytes": 58492,
+      "sha256": "fb38ef4e55773830ca8adbb2195f13ecf906419040c5dd5e071da439b9093391"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1550698524,
+      "bytes": 1419,
+      "sha256": "11ca73590e77e9407aa5bb5392cbdf75e02afc4b0cf5def9a80cc28428f901a8"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1550699943,
+      "bytes": 1424,
+      "sha256": "6e631bb5193525a91427ff5d86254064557a7c1696f2b3567e5e46f62c58bb82"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1550701367,
+      "bytes": 3824,
+      "sha256": "e344b7fb61af698c87dc545ec14d33b529177828937cce629a9a4c933d33ddd9"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1550705191,
+      "bytes": 1217,
+      "sha256": "1694c6ef11ccec6c5c403efef8497a6328c0ad81d610f03858b8fda0d346d080"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1550706408,
+      "bytes": 38574,
+      "sha256": "045d25b2d46bd435fe7657b48216701d96fffbf2c42f61557f7cddad18ac8250"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1550744982,
+      "bytes": 1467,
+      "sha256": "e6810bf6b5a8df83cec30619681391248d4af8dedf30a47f04e4c2a050ec442b"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1550746449,
+      "bytes": 26821,
+      "sha256": "23b8bb33e0b94ef72c44315f0d452a80af55228c42dd882d3bc983f89cba596b"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1550773270,
+      "bytes": 1400,
+      "sha256": "59d2fece84b4342acfbbe1fbb0951229d444623c32a2d5d7fc21166be60b0f3c"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1550774670,
+      "bytes": 1431,
+      "sha256": "e486b07ae532277b5d40fdfc72229925ecbd903678d003f7868f40dfafbb5df9"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1550776101,
+      "bytes": 1237,
+      "sha256": "85028d9d985bd3460c04718d5dc61fe1d603eab3e638cf345722bdcd2780c83f"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1550777338,
+      "bytes": 27352,
+      "sha256": "cce407073813bdeb27e16ca755d7a7c70b94caf0818133e53246acadf74d630c"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1550804690,
+      "bytes": 1524,
+      "sha256": "d0e5943c0d5814efbae8da2d700b88e1f19e7282eeed739530ea04825f0f6718"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1550806214,
+      "bytes": 1415,
+      "sha256": "90242f5f3b2f3a1c3fa3b81a2d233e83946c0ec469f1bcb6096a06c98b6af457"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1550807629,
+      "bytes": 1279,
+      "sha256": "2477565e0c4658c64e2c3fdb40309b8348dd95f98d74e765a16d2f05cba1f551"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1550808908,
+      "bytes": 1628,
+      "sha256": "6aa8d7d397562f905c48c90dde0a5ebf31036bed6a6b6c7b650bceeeab622447"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1550810536,
+      "bytes": 1553,
+      "sha256": "70302c2a9056864f8f941d180adaf49aa3ec1a9a9bc7b1fca4333094fda81017"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1550812089,
+      "bytes": 1518,
+      "sha256": "d09a156c015a7ce3b4f81bf8fdf7e18e743803d35d9f181e2105005db9500678"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1550813607,
+      "bytes": 1421,
+      "sha256": "e3091c27aaef511a25fb170e3755f6bdb12774a5d59562ed3e52d29e878db919"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1550815028,
+      "bytes": 1241,
+      "sha256": "48955899da82e1d6d97c01d248b8b86e80853ba2a0debe5d8219db4f23bd3c7e"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1550816269,
+      "bytes": 36689,
+      "sha256": "695ae196c43f478556c40ff0c4c9b08a44bc8a4a20467d4aff175712cebe527e"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1550852958,
+      "bytes": 1486,
+      "sha256": "b27bdfa7b3378a399ed31b5654abc71b278b39b856c7392365db811fe4cf2db9"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1550854444,
+      "bytes": 1443,
+      "sha256": "5a6d56dac499d7ba1e63ced75e5307c12c8695e079f554f3dd2415216c605434"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1550855887,
+      "bytes": 1474,
+      "sha256": "940f86fc2b89226c4f4d50e4a3d29916afed6985059a44fbaefb8169492182bc"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1550857361,
+      "bytes": 1274,
+      "sha256": "e145a94fa4293daf4ba5f5c718701c4a8b9669f8fee9e621ab2797dcb280513f"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1550858635,
+      "bytes": 28161,
+      "sha256": "554e3d868128b3f0e821aaa0a03b80fb03698711af4f69b3995aef5866f9eea6"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1550886796,
+      "bytes": 1583,
+      "sha256": "b824c44575a16ba419217428763d4993b2d587a9097869434324ecc20619413e"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1550888379,
+      "bytes": 2658,
+      "sha256": "5715914bce42bcbcd65f689b3e4837391efd5748268b0ff246dcb9b090afbe40"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1550891037,
+      "bytes": 1438,
+      "sha256": "9c84076b7112e3fd9ff1e38ad5a3b935bf7c29bf91313627e7f43f7a22c10a40"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1550892475,
+      "bytes": 1522,
+      "sha256": "4c80c0ddba5bce8ef9958697a697a614dde3734db03082f88fb43b6ffc3efaca"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1550893997,
+      "bytes": 1229,
+      "sha256": "58af4f9bb5b7d95df004d3e632d55073cbbdb5a18c778e1f34ad81ab17fea6fc"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1550895226,
+      "bytes": 1262,
+      "sha256": "899f0d511aa7cea5f9f0158b08fdfa75fd0483830126dd3b776f23d9a74254a3"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1550896488,
+      "bytes": 33999,
+      "sha256": "2d3e6bf2289f5c99ffe0af7e407ac95bf620fc3f7de73d4919c8743b44370c1b"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1550930487,
+      "bytes": 1464,
+      "sha256": "182525fa74e82360cd079ad685efaa3cfafa50eb9e094933d3ce3fd6da03d276"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1550931951,
+      "bytes": 1290,
+      "sha256": "6fee8ae8430fb31901d578b786329bdc859dc6d8ccf5cbcb37bd6b15fe787628"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1550933241,
+      "bytes": 1273,
+      "sha256": "dd3599e55b1a1e01ef5b0ae96341fb511a01bf290232d4ac162b85d91c71a4f9"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1550934514,
+      "bytes": 1254,
+      "sha256": "568f1f4b0fbea5c258acb485b45c3a9fdc55b1c4af7573dd07b1cab7f9d571dd"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1550935768,
+      "bytes": 1337,
+      "sha256": "43ffb5e7b9c0267406abb3c63dd2b54b3550eb643c8e547eaa7bac1af11ed788"
+    },
+    {
+      "path": "logs/brain.jsonl",
+      "offset": 563730457,
+      "bytes": 32839,
+      "sha256": "fb318a8adc22b89a5761bb8bb982ba1f0071d91b808b73bdc907da63dfb2e3ea"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1550937105,
+      "bytes": 11702,
+      "sha256": "66002985830aac8bc3aa1fda2677d8219c2b60e0c8cd6947e0c279dfd8b77dbb"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1550948807,
+      "bytes": 1259,
+      "sha256": "f0cb059ba0cf92825b69ddc10e0281ec7aa445953dc5d90cd4a2d0e6f8a01a2d"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1550950066,
+      "bytes": 1239,
+      "sha256": "513b74bcd2ca634c1526fc3741e07e5f329e0e3b356e3e3afe85de535a6b746f"
+    },
+    {
+      "path": "logs/brain.jsonl",
+      "offset": 563763296,
+      "bytes": 46792,
+      "sha256": "acb2d0da02a3da655a19a435993a312d77dd73f4339bf5ab12664b2693d0ffc8"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1550951305,
+      "bytes": 21113,
+      "sha256": "5f1393d73d865a53267260cabe2a2897a6723e992229d71096e3955b87329632"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1550972418,
+      "bytes": 1283,
+      "sha256": "9925bf87f13fb9922cfe49906989c6562e107870939b12542924692c695366a7"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1550973701,
+      "bytes": 1988,
+      "sha256": "0c235a4654f10f74add056f3cb8ddd8bec38ab28b5e5a28c5cbc27635f6f9e1f"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1550975689,
+      "bytes": 22142,
+      "sha256": "676be978d92d039989f57c664fc3ce959232ae87e7639af937e0a2a610680cd6"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1550997831,
+      "bytes": 1527,
+      "sha256": "d27813e9316e9a4069e59b87608c6fae91d337aa7a9a838de49064e2c57c07b2"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1550999358,
+      "bytes": 1504,
+      "sha256": "8719141578decbfa77bbf6068c1e464d53f86127acab6ca7a457295f2c38b051"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1551000862,
+      "bytes": 1451,
+      "sha256": "167db9a963f252e3753e189f6cd8da71287642cf4e0eba6ec4618f15bb630b64"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1551002313,
+      "bytes": 1434,
+      "sha256": "1878ea46a5fd678a5477cd5feae06dddd60d6131ce6123a25bb96f2494e814c6"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1551003747,
+      "bytes": 1256,
+      "sha256": "c2b563f39688df89aec485e377d9cd4388f4e350acdc24b203324d8e54b68f55"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1551005003,
+      "bytes": 23959,
+      "sha256": "a033909a8a9ca4a98d4e8eb48ab34a29e8c303f74d9a3d4588b30182cee761a6"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1551028962,
+      "bytes": 1604,
+      "sha256": "cc140c7011236c795f5651639a3cac2f38094db567fac715148af6f299ac986a"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1551030566,
+      "bytes": 2712,
+      "sha256": "b10ff2e7764a35eff4fbe897584f3184b2483d0a087e9a937fe2f600723f0644"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1551033278,
+      "bytes": 12518,
+      "sha256": "98b5030df2b4b3bb88e085839d66f5c0a086c41402ab54858e5ddfa5b94c239f"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1551045796,
+      "bytes": 1244,
+      "sha256": "d9be3df2fa64930a68b386865f51f374374520a941d35cb51d93442d81f198f8"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1551047040,
+      "bytes": 21231,
+      "sha256": "21f7212fa2a795aa69bc9de34b88a1feda9f333f55cf0464af6a1abbb30c2919"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1551068271,
+      "bytes": 1439,
+      "sha256": "3bd3bdc4f5242b9a6a22cdee0aff9f3599f17d3ac2ac46fb377ada7e660b5c19"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1551069710,
+      "bytes": 1404,
+      "sha256": "79acd693d6030547d381e4d8f1cadcd9124adc59cb13f3e116a4727a9307eb1d"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1551071114,
+      "bytes": 1242,
+      "sha256": "ff2534f09f64964cec8a6600bb4acf7fbe19bec8962e6ad4d2c513c8bf4435a4"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1551072356,
+      "bytes": 13572,
+      "sha256": "3fd0ee3565a17accb8fd3f722a6fa9429d7ac8dec9317a257b57e22b17300b0a"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1551085928,
+      "bytes": 1432,
+      "sha256": "a9af12a82beadd0d7b5d9490c543cc1b4c74fe8ab8ee2ea843b6c5550d42ccb5"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1551087360,
+      "bytes": 1429,
+      "sha256": "005dac027798e672af1764b53512101c68cf1088738f64f456dc8efbeae3a6d2"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1551088789,
+      "bytes": 1261,
+      "sha256": "7dc0cdb2cdfb46512a6e60d4ff28a08a447bcbd0b81ef62f05c2fd8e8b9092b9"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1551090050,
+      "bytes": 1414,
+      "sha256": "7cad9623fee6cca12d4eb7697db8536103207a635fd7db88324d48ddde87b99d"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1551091464,
+      "bytes": 1562,
+      "sha256": "a3da183ef5df151cdec39b0eed63bb0a2bd37dd54bcd242b1da32356ef3af679"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1551093026,
+      "bytes": 1255,
+      "sha256": "24c4ab58659961a0a3c8c6d9613d44d261f3bb341ec6004e67c83279e6fbd0cc"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1551094281,
+      "bytes": 1337,
+      "sha256": "c1cdc9652506a5197fddc954af13b931baa8778f914d2f8741ce0aed46ee6158"
+    },
+    {
+      "path": "logs/brain.jsonl",
+      "offset": 563810088,
+      "bytes": 136983,
+      "sha256": "8b12a16814d5b009da2452241eba2644e765f546be3d1c634e61674915a35476"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1551095618,
+      "bytes": 271402,
+      "sha256": "f7a1c80c9b310583d7f88d98fe9f6d1e170b299c9c201995fdc6ae1bae0062aa"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1551367020,
+      "bytes": 1259,
+      "sha256": "b43ecf27b07fc9a5639d504ceaf0e37791f88d521b5c70be1f944be465d0037a"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1551368279,
+      "bytes": 1830,
+      "sha256": "ec39e8a0a82c7a61143b40c0f00aee449f5d99cd23ed8e103e1dae9ee479dce0"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1551370109,
+      "bytes": 1223,
+      "sha256": "b44f73f7f3c5695d1bb1b4b2dd926563a48f082b1a6d2cfd667c1f2b1c7b87e8"
+    },
+    {
+      "path": "logs/brain.jsonl",
+      "offset": 563947071,
+      "bytes": 661138,
+      "sha256": "01fa125e0529f6c67ac3ed0af27d1c743d52cd893d889079e032973045c80a40"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1551371332,
+      "bytes": 1557009,
+      "sha256": "13981b67c43d2cb2c095e7a6e93c2309a8d1608650c339762b979f5ca3ff3df6"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1552928341,
+      "bytes": 1467,
+      "sha256": "05559e34f8d90df3a42c26106df4bf6bbc98967c100eadd70a5c4fc19eed0497"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1552929808,
+      "bytes": 1480,
+      "sha256": "ec98db0dd5c7224cd75f95afd6d1f26222fbaf728eab9da93d52c8f4f3c4b3d6"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1552931288,
+      "bytes": 1492,
+      "sha256": "cdcbc2bbb747e0c8991ab4e5371f4de320cbfa7851ffe130ec552041fb63caf8"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1552932780,
+      "bytes": 1520,
+      "sha256": "d2c5e9c4b8f42b7bb25a976b3bb1171c394a73efba06f10974e0a34a114f2051"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1552934300,
+      "bytes": 1412,
+      "sha256": "f155b25fbc2239dedf70bdf6b2a77f7266932bdcb632bf91e78819799bde5fab"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1552935712,
+      "bytes": 1231,
+      "sha256": "51e50dbe52750582f17b6d46dacdb98d3287647c38e3c2efc562e4d4afb0ad73"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1552936943,
+      "bytes": 1881,
+      "sha256": "0fe3f0f20f2958ee9f451d4a29987766abd845a6a886a86a83a9f5f9174c5614"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1552938824,
+      "bytes": 62991,
+      "sha256": "5793d15c539acdbe321c2a4f90d317b15073f1692f75fd335c95f774a551ad6a"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1553001815,
+      "bytes": 1538,
+      "sha256": "1fa1ee3cee87311b332b466e2483783a7ef7324698dcbdc8eabb18befbd88791"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1553003353,
+      "bytes": 1613,
+      "sha256": "98bd2d766602a9ca20807bc6107292ca970ca924dd6b3477c969d695b3591751"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1553004966,
+      "bytes": 1507,
+      "sha256": "e4039a9c66684288409c4e4a935542a9f4dd23ebb8f0dd1ed7658dda87a19385"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1553006473,
+      "bytes": 1462,
+      "sha256": "9880b46d38aa75686ef9c19c4bab2369603765caf5463c2137956bed4fc03b88"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1553007935,
+      "bytes": 1535,
+      "sha256": "0121df47e5aa470e0a8b29d5d95c07c5d665ab82eed38868ba103cf75c97cd49"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1553009470,
+      "bytes": 1272,
+      "sha256": "d97e6af1975bc33de781055c53769cb76b325f54e5011682b871b778f94a798e"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1553010742,
+      "bytes": 2251,
+      "sha256": "d141a13f036c1c367a3327f9e398e8cb0b8a9e7dee2e51f09dfcca23627ea73b"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1553012993,
+      "bytes": 1266,
+      "sha256": "2034e578ba7689c3bae9016cc85e40a0a2cd19a4db462ba1d5e66925c01edea4"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1553014259,
+      "bytes": 1309,
+      "sha256": "13c31af12422ad09be70b8dca5b0c2a3856b0906a4abb9230225b3579e4c834c"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1553015568,
+      "bytes": 31385,
+      "sha256": "6236addc076deb4cb8aefa14f9bae0be06e89a39cd0c9dacb220e1fe435382a4"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1553046953,
+      "bytes": 1476,
+      "sha256": "676c703ec069bedc92aacff2ba295dbc882d79c554ef99f30fbdbb50c5deea57"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1553048429,
+      "bytes": 1284,
+      "sha256": "6a6021263028cfc7068969cd8df85e78d80a15e1a2c3594f849fefdd1acd1c1e"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1553049713,
+      "bytes": 1480,
+      "sha256": "d1355c2c495a898eff5371c8734614df05dacc42b5a9c713b8edac89cc55a77f"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1553051193,
+      "bytes": 1482,
+      "sha256": "16dee9d37c278625970acdada02e2059cf6428f2028f948dbd4c0be465095ae2"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1553052675,
+      "bytes": 1578,
+      "sha256": "5765425e179376e4f5b0adaf88b9e8eced65e853a14764e39e7447a924e8a438"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1553054253,
+      "bytes": 2467,
+      "sha256": "c1fd0309ba2c878f22acf8000996f7c50ac6db16c61070fae69dfa876ddbd7b8"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1553056720,
+      "bytes": 1208,
+      "sha256": "307af34b1fb01ade1e25d184311e13c1d25bc65f89469e5be604febf2ce73ca5"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1553057928,
+      "bytes": 1255,
+      "sha256": "1d629c6780459c5cc884d6f3c51c222dfe87664a70280fad5bb1fd5c8cb611ac"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1553059183,
+      "bytes": 1332,
+      "sha256": "b745766831a02912a0bda3c021309da07af8067d9ceff784b243262bdfa0c732"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1553060515,
+      "bytes": 1336,
+      "sha256": "5ca1450f111247d254f3e684be42a32aec77f30e151dca37a3be49dd2df467fd"
+    },
+    {
+      "path": "logs/brain.jsonl",
+      "offset": 564608209,
+      "bytes": 146372,
+      "sha256": "4fa659994bb0d350c0bf740eeb100b3f5d6e369763d0eeb2b483a502f38e7019"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1553061851,
+      "bytes": 299889,
+      "sha256": "33396b9bb487f23b33e0ec3b30fee5a3d8f639acf06a1bfa56f6300982bafb3e"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1553361740,
+      "bytes": 1258,
+      "sha256": "e3fe9d6578716ee850408bb9a322316afbdc7a1f43a2795e9844e131b3202842"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1553362998,
+      "bytes": 1838,
+      "sha256": "170472b5b41881c1518c124117577b8b13b963fb090bb62a41401a12de9f4267"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1553364836,
+      "bytes": 14633,
+      "sha256": "25c7b979a55174c412423e9a7a092cbc63c62abe1206aec68a09c3375bf9ec91"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1553379469,
+      "bytes": 1615,
+      "sha256": "770b74b499fe60d2a0298b411852c4595cd7625e69b0473c1212bc7d01a48424"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1553381084,
+      "bytes": 1458,
+      "sha256": "837c3ebfbc17a34d17689ae2591effc944955372d0de505514c08e5de6d6f4b0"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1553382542,
+      "bytes": 1545,
+      "sha256": "dcb8b4f288b5a881ccfe4ab5a94871579d10a53f5f1331dd1e2699531ef6204e"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1553384087,
+      "bytes": 1283,
+      "sha256": "c55b4c21ebfccd9ca047d3ce42b8ef0eccab0f1509a77bde1c62ccb9d97062c3"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1553385370,
+      "bytes": 1512,
+      "sha256": "aabf2eaaa323186fa531b616b13f6c041ddce16eef1563fce099eb2a810a092b"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1553386882,
+      "bytes": 1330,
+      "sha256": "b5a792863f48f521a6c228d0b80c6d45bfc5c4307077a9488440b1703a529350"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1553388212,
+      "bytes": 23245,
+      "sha256": "23dbe3b177e9eb4452f782767a25b9baaca95e4e881fe96838e45d66e2881ab8"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1553411457,
+      "bytes": 1563,
+      "sha256": "b98553037bf9319c73a89ccf23842f170958b236b759d9ffea716dd3c6b64ae0"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1553413020,
+      "bytes": 1295,
+      "sha256": "f51537f80d1a051fae99c4f1ddacecdff1a18f4879516e054154499f4cd7742c"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1553414315,
+      "bytes": 38958,
+      "sha256": "2934455974812aa0d1f69023a81be4421017588f48828f272367584995c3e2d8"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1553453273,
+      "bytes": 25867,
+      "sha256": "3308774aeb275bb218ce751bd29a454010d783aed059274735c0f0fec8d8809d"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1553479140,
+      "bytes": 1462,
+      "sha256": "cd4b5c642974d3588521ae446bcd09ef22d1076bea96f0a85ffc7db2e5cabd58"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1553480602,
+      "bytes": 1505,
+      "sha256": "49aa360086739fc4d567c6e9fb0d394af9801f2659523343c4bd20b13a0d3686"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1553482107,
+      "bytes": 1280,
+      "sha256": "7c59314f529559399edd93638755c0aeeb3a09ee00c4802ccb9ebf37e81d9301"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1553483387,
+      "bytes": 1478,
+      "sha256": "24f1fdd247bcfb023c309d8e1c479aa354fff2542d0a81fb7470d5297a0b4f32"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1553484865,
+      "bytes": 1505,
+      "sha256": "f4841316b7bad2890e99be734fc727f6194394a47a3de8d884e222af430c5c3b"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1553486370,
+      "bytes": 1504,
+      "sha256": "6ba2ff3c2d430e5924b406d8ad8d633bfcb65f8a93c8a230ca032c9b2142e6c3"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1553487874,
+      "bytes": 1342,
+      "sha256": "eab2680d465f8091b829d435cd7956744c6c44c79c26046405b3886e951199d0"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1553489216,
+      "bytes": 1764,
+      "sha256": "f11c432dff545080799d70eef3bfa4d56f09bc7139c5dabc8285597487c4ffa9"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1553490980,
+      "bytes": 1753,
+      "sha256": "06c14453ccb5e2e176b3f812d57316709825443efa982238a3acc3cddc7734d2"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1553492733,
+      "bytes": 1256,
+      "sha256": "c998e1f4240a07023b4e9a55cf03ebef988e65285c93c269e03177f19690e4af"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1553493989,
+      "bytes": 1272,
+      "sha256": "4f4f6b614a3ad1f9b738d31f994b00a1f393561924c302b6b538bab59043000c"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1553495261,
+      "bytes": 1346,
+      "sha256": "ad8324d901b4c0264a25f37cf6d524380c1255c4e5e3d7997bed1d0e2609f567"
+    },
+    {
+      "path": "logs/brain.jsonl",
+      "offset": 564754581,
+      "bytes": 147946,
+      "sha256": "42ec9d852512ad850cb3bc8949aa3943141947cda6d39aa26ef299527962713c"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1553496607,
+      "bytes": 297739,
+      "sha256": "1813f0350edaa4a0df4c0110f32856b915e2c3ab32056ff4453fac8cb723f0cf"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1553794346,
+      "bytes": 1268,
+      "sha256": "bbfb26f2b64c319eb961f2eb7f5d2c717fe67d29bb375c074d2b2b19302fb127"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1553795614,
+      "bytes": 1867,
+      "sha256": "09ff7de192a3d17dcede9949dd970d08dbe0bee067b2a2c1bf212ebf737c9669"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1553797481,
+      "bytes": 62202,
+      "sha256": "87a41930d8969508014a91e92552d2d7302ef5f9b0c2935e0c3fc8c0e22138f3"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1553859683,
+      "bytes": 1557,
+      "sha256": "f33c1cb0306f13872c79ce8737214e3b6cb03a161d2a1e79810e446850ea96e4"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1553861240,
+      "bytes": 1534,
+      "sha256": "9653679f728cb036f3fb3340dddb7f9f8d8eaa87fdf9f58017a7be78f8aa8407"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1553862774,
+      "bytes": 1520,
+      "sha256": "9b38a519a8671e08bd7588707edf091ad7218ce9d2c74ece8aa9293047451fbd"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1553864294,
+      "bytes": 1558,
+      "sha256": "225fe5f468c10e6225cdc7e988feadf0c853fd012169330c91a839015a5c472e"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1553865852,
+      "bytes": 1521,
+      "sha256": "7ca19925200939c8fd038a4c5d25f0ecf3feea1ce401876eb62c61a046294697"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1553867373,
+      "bytes": 1285,
+      "sha256": "7bac09073a27ceab95ecaa1a5f48527e7b4ee8aecec07e8c456a517786df9f28"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1553868658,
+      "bytes": 1394,
+      "sha256": "32066103ba8189a0690790be5ae092d68b02c784ae97af8e30a449d5088f09f3"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1553870052,
+      "bytes": 18701,
+      "sha256": "7dd35fef12b42fc0cb946210c9d89cd2ebfcc54f2a4ad2ac01f4db3b15caf9f8"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1553888753,
+      "bytes": 1542,
+      "sha256": "566eb07810c40738de32a69f96048e8b41034bf3ed75025f2eaa317056881d75"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1553890295,
+      "bytes": 1441,
+      "sha256": "54b5ec9ec6901e8435996dae8557d7848717e09f5f4c68f8b51d39cbc49c7ff9"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1553891736,
+      "bytes": 1417,
+      "sha256": "ad835c4e986eab9933a669681df60c2b9db894e30a3e3448222d1f257fe7f8a8"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1553893153,
+      "bytes": 1248,
+      "sha256": "be1c61fa913ac7f638efa756918a6615c45cea328642cfe1f268211f49598965"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1553894401,
+      "bytes": 1494,
+      "sha256": "0fb7fa5f8138186b0d598561af77a96ad56ec614ccf134c973e291cf07cd9fca"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1553895895,
+      "bytes": 1460,
+      "sha256": "79b9844ced3712a6265c30a0b7fa76c4179dc2e46069abc19d2b71b5f2c4acb1"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1553897355,
+      "bytes": 1446,
+      "sha256": "944cf8aa55632aad0abafab7b643a410d428770aafac5c001da942d2bade90c5"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1553898801,
+      "bytes": 1403,
+      "sha256": "2a20d66e6fab0e211a2a0482bb42d2906103f28d2f93c18c0cf414156443814e"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1553900204,
+      "bytes": 61808,
+      "sha256": "86229d56ac45c3c94941b3756707aafc55c3102be39e17419037bec9b8d17f5d"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1553962012,
+      "bytes": 1537,
+      "sha256": "e913a50e00f47e25ccba9a094593496d16abee227d83b155bd9ab6e974a9579e"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1553963549,
+      "bytes": 1592,
+      "sha256": "f932b47544b1e3eb611a8e69a985ecbff236a0259b9f4059996832ab45c68fd2"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1553965141,
+      "bytes": 1491,
+      "sha256": "ed2fd7b1880120dac31ab9e513b0494548da4a8db6d79a55dc8453082e2f5c97"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1553966632,
+      "bytes": 1346,
+      "sha256": "4676bb934787faf1ccb3b26b8930520156e1b7bf50b87c89497873edf3169f76"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1553967978,
+      "bytes": 30309,
+      "sha256": "00dfe6467b7ff387d6464d0fe41559c23c263ccd0e16ca7cebf3f7ceead85b1c"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1553998287,
+      "bytes": 2769,
+      "sha256": "54634742e585219bcb4ea56de0b90ed2875081b4db74ebdde3e7bf40479f91e8"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1554001056,
+      "bytes": 19454,
+      "sha256": "62fb1fdbee630b0b6ff92de18e4507da90d4dde53c25d762546014ca324d02b0"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1554020510,
+      "bytes": 1453,
+      "sha256": "64b92fae33c290846f9dbbe03834a2bfc10a2b479adf01caa75afbe8b209a970"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1554021963,
+      "bytes": 1322,
+      "sha256": "2152273b86258dce8ad5635d65bba77f968e7b1efc1a754fc4de9183ec9eced1"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1554023285,
+      "bytes": 25488,
+      "sha256": "8542eb4a686e5723deaec492a638d3b11f1b198efdd7716923fc9c25766d48a0"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1554048773,
+      "bytes": 1599,
+      "sha256": "f5b86b8a8ac0fb94889c83a9bf22fbf3612ebce9d2aaa8f8ae9e1628c88a2e19"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1554050372,
+      "bytes": 1590,
+      "sha256": "ba6daaaa6a9e53d9504f4ba26faccba7cbceda9473ba9e96fe9f61563bf4a609"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1554051962,
+      "bytes": 1535,
+      "sha256": "27a438ea6604fc5b1d1211cb09e95c578fde15cbc189b5fbd8758ee0af000ce3"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1554053497,
+      "bytes": 1442,
+      "sha256": "246016f33976355e32b62039118fb447a9b65e6fe30838e5e63a52df9ac6e4ea"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1554054939,
+      "bytes": 64738,
+      "sha256": "a3e4e54f4cd71f0b70073ecc6abfdd8ae846aa7978da0796cc2a5c185071d62e"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1554119677,
+      "bytes": 1557,
+      "sha256": "da09274d9740118c578de75d5b4e62f376ea0b8d03b58397212349eec3763a09"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1554121234,
+      "bytes": 1534,
+      "sha256": "e7cd22d6a557496777a8faa838fd567e1cbd7c25dca018e4d30d797ac117b567"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1554122768,
+      "bytes": 1520,
+      "sha256": "488cb4a048243d5a12eb37769e515c44917beb9921fa1732eb73fd3b753d507e"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1554124288,
+      "bytes": 1558,
+      "sha256": "f7710e5de8b43451d6b16f60d5c51a2cd070294d943f22c2ecfff63f07da9eb2"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1554125846,
+      "bytes": 1521,
+      "sha256": "5fdfc8167016b7df95b8b69885a58f3eb9bdc494350863ea3ddf9d0e0e473c0b"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1554127367,
+      "bytes": 1285,
+      "sha256": "73c2ccb3b0eaa56bb7cd3a51c4930ab46b3cdd07e03dd1d571b2a08d6fdcec8c"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1554128652,
+      "bytes": 1393,
+      "sha256": "bfb85a39118dd211dee539cf8395adc2edd2b903fbeb71f84f1d3f21a00aaec7"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1554130045,
+      "bytes": 15431,
+      "sha256": "608ccc506bb7ed906d67ca63520ac4d510becf8e7671ef992bc642422ed61baf"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1554145476,
+      "bytes": 1542,
+      "sha256": "deb4dedba6a04110f3537dffbb4deed0717812b7dd623bbf4bb35099f587282b"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1554147018,
+      "bytes": 1441,
+      "sha256": "1a97408eebee3ae6664f5a219bb0025fcb0aeeae6c1a90e04d7baa38ca2f5aa4"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1554148459,
+      "bytes": 1417,
+      "sha256": "5df727ec8c362aa444633863aca00de09c8ee3713b0b2525b1df37570702ee17"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1554149876,
+      "bytes": 1248,
+      "sha256": "5267c9135e84495a054d6aff9cbf14ff342345a925f01e35c94f07cb1583c4c0"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1554151124,
+      "bytes": 1494,
+      "sha256": "7a95060eb8bfcc4bdcd2057649b6424fcd58ec8c4fe2e768bcc5d980ce6f706a"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1554152618,
+      "bytes": 1460,
+      "sha256": "94c677649545ef8af2381c6f5868b814466cb1e59b85a2a5db7c882a4d9cd1a0"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1554154078,
+      "bytes": 1446,
+      "sha256": "0f8aebd2807249f196040219f87ad3c4e5748cf5c577b3b5a67fec132bc4645e"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1554155524,
+      "bytes": 1403,
+      "sha256": "c1559fb2c3cd04e1262974b13abf8f485578086cbfd38c7a4bf4249cda0ed607"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1554156927,
+      "bytes": 65196,
+      "sha256": "4fb4742306ead78c17f4e3707ad8e4550fa223513664dc22162c46670a807be9"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1554222123,
+      "bytes": 1622,
+      "sha256": "8916538fe67c947502c9533a9f52530aed077317ae62682885b71ea673f1a65b"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1554223745,
+      "bytes": 1510,
+      "sha256": "f12574349e56ef765cf94445070dbd4fc66dbe1b921e547519fdf9be518465a8"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1554225255,
+      "bytes": 1497,
+      "sha256": "b6356b0eee710b197a4d0d58dafcf89a255dce16f1f76176e0bd53083556ec06"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1554226752,
+      "bytes": 1552,
+      "sha256": "a943654ee57bb0bdc8fdf6a2820e1cc5488f13b0b31091bc73b171600dc921c5"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1554228304,
+      "bytes": 1349,
+      "sha256": "a32aabf7b1186dcf499779e0575b2778da388ba3f53d84379214fe34c69a20d4"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1554229653,
+      "bytes": 1455,
+      "sha256": "f01c3d4077bb24bb163582eb24883beb4a80eba90d6af63b3957e0f603e0f750"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1554231108,
+      "bytes": 1793,
+      "sha256": "6de06b0017d32a0b37ce9483d7bfea7ad1a172b1d9aad0f9fd84b562181ace2c"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1554232901,
+      "bytes": 1571,
+      "sha256": "3b83856bef56285ba72aa266eefaadbb30c5bef595883fbf6b650e873172eb2f"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1554234472,
+      "bytes": 1519,
+      "sha256": "4da6a0c603591045c66a4bf940531e3e6f337de3dfea42377d62d4c5f831e87f"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1554235991,
+      "bytes": 1553,
+      "sha256": "0f4a4bedba3c3fe5f98f65ed8184329fc590f2d3f3865d89b991c6a6aba2aabc"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1554237544,
+      "bytes": 1407,
+      "sha256": "bdc41ddfa318100ef83a8b585cd81e177eb6885b44c81259d0f20fabf794202f"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "offset": 1554238951,
+      "bytes": 1213,
+      "sha256": "e6ca0f2cd3ef61c57b6ada63bc563dce078205a3c5edaacf8406029ff9e8e0bc"
+    },
+    {
+      "path": "logs/runs.jsonl",
+      "offset": 333230,
+      "bytes": 477,
+      "sha256": "90c6f515ddafef6da6ece9872d59b9684462375dc6dfd643c9881af08a1e5ba1"
+    }
+  ],
+  "source_state_at_read": {
+    "decisions": {
+      "bad": 2,
+      "extractor": 1,
+      "file": "decisions.jsonl",
+      "head": "5ec4d712ff68d72c6a8390830c47181eb08a140c",
+      "head_len": 946,
+      "offset": 1554243817,
+      "rows": 397208,
+      "table": "decisions"
+    },
+    "brain": {
+      "bad": 1,
+      "extractor": 2,
+      "file": "brain.jsonl",
+      "head": "5aa0c70a9346b245815907c15e2e80189a0ff88d",
+      "head_len": 11698,
+      "offset": 564902527,
+      "rows": 14503,
+      "table": "llm_calls_raw"
+    },
+    "run-config": {
+      "bad": 0,
+      "extractor": 1,
+      "file": "run-config.jsonl",
+      "head": "433f578df72c006af1aee2cf2ccd86bdcc74bc3f",
+      "head_len": 1432,
+      "offset": 1747793,
+      "rows": 429,
+      "table": "run_config"
+    },
+    "runs": {
+      "bad": 0,
+      "extractor": 1,
+      "file": "runs.jsonl",
+      "head": "d20854916723386af602e1a2680db285aa0488d3",
+      "head_len": 279,
+      "offset": 333707,
+      "rows": 783,
+      "table": "runs_raw"
+    }
+  },
+  "boss_room_context": {
+    "path": "paper/materials/20261015-v5-s-completion/natural-WJ0LTVSSDY61/window-114801/fights-index.json",
+    "sha256": "e4687dc96e1ffd3645ca30589fb510722add829869667cd67bdab88a8bb8467c",
+    "boss_floors": [
+      17
+    ]
+  },
+  "indexed_counts": {
+    "decisions": 472,
+    "brain": 22,
+    "run-config": 1,
+    "runs": 1
+  },
+  "finished_rows": [
+    {
+      "run_id": "WJ0LTVSSDY61",
+      "ended": "2026-10-15T03:40:40.092Z",
+      "victory": false,
+      "floor": 23,
+      "character": "SILENT",
+      "ascension": 10,
+      "code": "current",
+      "decisions": 472,
+      "jev_calls": 92,
+      "deepseek_calls": 22,
+      "claude_calls": 0,
+      "tokens": 622070,
+      "ds_tokens_in": 4235683,
+      "ds_tokens_out": 25832,
+      "ds_cache_hit": 2051328,
+      "deciders": {
+        "codex": 30,
+        "code": 239,
+        "jev": 92,
+        "jev-plan": 111
+      },
+      "death_fight": [
+        "啃咬机"
+      ],
+      "death_fight_floor": 23,
+      "death_enemy_ids": [
+        "CHOMPER"
+      ],
+      "_source": {
+        "path": "logs/runs.jsonl",
+        "offset": 333230,
+        "bytes": 477,
+        "sha256": "90c6f515ddafef6da6ece9872d59b9684462375dc6dfd643c9881af08a1e5ba1"
+      }
+    }
+  ],
+  "finished_decision_count_matches": true,
+  "whole_run_candidate_for_review": true,
+  "coverage": {
+    "questions": [
+      {
+        "decision_id": "1f24a134-244e-4ea3-a869-157d4bfee952",
+        "label": "event/choose",
+        "floor": 1,
+        "ts": "2026-10-15T03:09:16.613Z",
+        "source": {
+          "path": "logs/decisions.jsonl",
+          "offset": 1543954084,
+          "bytes": 66505,
+          "sha256": "52108882c89bcb94e1f3fc23bce093ddaae940574223425fe7df9ba6adbfc375"
+        },
+        "lane": "b3",
+        "samples": 1000,
+        "requested": 1000,
+        "completion": {
+          "required": true,
+          "uniqueDecks": 2,
+          "originalDecks": 2,
+          "memoHit": false,
+          "status": "complete",
+          "attempt_id": "f7b07c8e-ce4b-42c5-b37b-6dae05288b4e",
+          "attempts": 1,
+          "reasons": [],
+          "samples": 1000,
+          "requested": 1000,
+          "failure": false,
+          "key": "sim-failure-v1:f1e7354af0ce995bdba77392bcbf069aca694e6de19bde9ea4858ba622bab7fe",
+          "latencyTargetMs": 11000,
+          "latencyTargetExceeded": false
+        },
+        "P2": {
+          "status": "produced",
+          "mode": "shadow",
+          "selection": {
+            "choice": "o1",
+            "card": null,
+            "candidate_keys": [
+              "o1"
+            ],
+            "target_pending": false,
+            "deviated": false,
+            "ranking_override_reason": null,
+            "mode": "shadow",
+            "scope": "current_choice_only"
+          },
+          "best_group": [
+            "o1"
+          ],
+          "not_simulated": {
+            "o0": "这个选项的效果没有换算成牌组或血量的变化：不模拟",
+            "o2": "这个选项的效果没有换算成牌组或血量的变化：不模拟"
+          }
+        },
+        "C2": {
+          "status": "produced",
+          "input_key": "required-b3-v1:39a0c3decbf830512f8c31dfef8a18f42ba0d56b731a111d2929fa641a971c5d",
+          "production_comparison": {
+            "metric": "deployed-ranking-first-group",
+            "full": [
+              "o1"
+            ],
+            "partial": [
+              "o1"
+            ],
+            "agreement": true
+          },
+          "work": {
+            "full": 2000,
+            "shadow": 600,
+            "savedFraction": 0.7,
+            "unit": "unique-option-sample-equivalents"
+          }
+        }
+      },
+      {
+        "decision_id": "fa643220-4560-4c21-b117-73f4a6182b8f",
+        "label": "reward/card",
+        "floor": 2,
+        "ts": "2026-10-15T03:11:12.156Z",
+        "source": {
+          "path": "logs/decisions.jsonl",
+          "offset": 1544153661,
+          "bytes": 184491,
+          "sha256": "37d5da9e1f30f32454bd64b5f0e70a341574eb61e6639773269c6b9fb2008e6d"
+        },
+        "lane": "b3",
+        "samples": 1000,
+        "requested": 1000,
+        "completion": {
+          "required": true,
+          "uniqueDecks": 4,
+          "originalDecks": 4,
+          "memoHit": false,
+          "status": "complete",
+          "attempt_id": "c8526062-d629-457c-99c7-1236387d3bfb",
+          "attempts": 1,
+          "reasons": [],
+          "samples": 1000,
+          "requested": 1000,
+          "failure": false,
+          "key": "sim-failure-v1:bb6cfcf07bf24b9c6e831c207d87939390fc983323fdbd0f1531f0346da8c2c0",
+          "latencyTargetMs": 11000,
+          "latencyTargetExceeded": false
+        },
+        "P2": {
+          "status": "produced",
+          "mode": "shadow",
+          "selection": {
+            "choice": "card1",
+            "card": null,
+            "candidate_keys": [
+              "card1"
+            ],
+            "target_pending": false,
+            "deviated": false,
+            "ranking_override_reason": null,
+            "mode": "shadow",
+            "scope": "current_choice_only"
+          },
+          "best_group": [
+            "card1"
+          ],
+          "not_simulated": {}
+        },
+        "C2": {
+          "status": "produced",
+          "input_key": "required-b3-v1:b3a0d119a7d2bc2cd939875f2846bfb0b2846808151f24663ece52074bc95d35",
+          "production_comparison": {
+            "metric": "deployed-ranking-first-group",
+            "full": [
+              "card1"
+            ],
+            "partial": [
+              "card1"
+            ],
+            "agreement": true
+          },
+          "work": {
+            "full": 4000,
+            "shadow": 2700,
+            "savedFraction": 0.32499999999999996,
+            "unit": "unique-option-sample-equivalents"
+          }
+        }
+      },
+      {
+        "decision_id": "dc4824cf-090c-47f9-b391-ee945871618d",
+        "label": "reward/card",
+        "floor": 3,
+        "ts": "2026-10-15T03:12:32.153Z",
+        "source": {
+          "path": "logs/decisions.jsonl",
+          "offset": 1544474383,
+          "bytes": 192446,
+          "sha256": "407dbf5a39bf91fa250cee109caf9332f3bca272fe1dd279315d4cc632ec026d"
+        },
+        "lane": "b3",
+        "samples": 1000,
+        "requested": 1000,
+        "completion": {
+          "required": true,
+          "uniqueDecks": 4,
+          "originalDecks": 4,
+          "memoHit": false,
+          "status": "complete",
+          "attempt_id": "6fdef5ae-ef79-4d27-aa10-e3d9477cc504",
+          "attempts": 1,
+          "reasons": [],
+          "samples": 1000,
+          "requested": 1000,
+          "failure": false,
+          "key": "sim-failure-v1:361deca8bd9f53a23b549b6077b612c78823a4155fe42294c3259500d3c72f68",
+          "latencyTargetMs": 11000,
+          "latencyTargetExceeded": false
+        },
+        "P2": {
+          "status": "produced",
+          "mode": "shadow",
+          "selection": {
+            "choice": "card0",
+            "card": null,
+            "candidate_keys": [
+              "card0"
+            ],
+            "target_pending": false,
+            "deviated": false,
+            "ranking_override_reason": null,
+            "mode": "shadow",
+            "scope": "current_choice_only"
+          },
+          "best_group": [
+            "card0",
+            "card1"
+          ],
+          "not_simulated": {}
+        },
+        "C2": {
+          "status": "produced",
+          "input_key": "required-b3-v1:2f363a9af935cc32397a3cd9f0369fa2db0ae70bf26483a8f7b3189cc2fde2f6",
+          "production_comparison": {
+            "metric": "deployed-ranking-first-group",
+            "full": [
+              "card0",
+              "card1"
+            ],
+            "partial": [
+              "card0",
+              "card1"
+            ],
+            "agreement": true
+          },
+          "work": {
+            "full": 4000,
+            "shadow": 3300,
+            "savedFraction": 0.17500000000000004,
+            "unit": "unique-option-sample-equivalents"
+          }
+        }
+      },
+      {
+        "decision_id": "a872de11-1b14-43cc-a0f4-033a4a34d99e",
+        "label": "shop/plan",
+        "floor": 4,
+        "ts": "2026-10-15T03:13:30.199Z",
+        "source": {
+          "path": "logs/decisions.jsonl",
+          "offset": 1544671284,
+          "bytes": 664412,
+          "sha256": "2e90c31e07333cbeac4ba4adf9fc571de2bfb40ee876da9cad1e139117454b01"
+        },
+        "lane": "b3",
+        "samples": 1000,
+        "requested": 1000,
+        "completion": {
+          "required": true,
+          "uniqueDecks": 16,
+          "originalDecks": 16,
+          "memoHit": false,
+          "status": "complete",
+          "attempt_id": "34aa3b9f-35e0-4034-8d14-d4ffa2938f2b",
+          "attempts": 1,
+          "reasons": [],
+          "samples": 1000,
+          "requested": 1000,
+          "failure": false,
+          "key": "sim-failure-v1:c88a30bb5358143e6f77fa0d254ac231f86762a39e0905639c7c021507db5aa2",
+          "latencyTargetMs": 11000,
+          "latencyTargetExceeded": true
+        },
+        "P2": {
+          "status": "produced",
+          "mode": "shadow",
+          "selection": {
+            "choice": "buy_card4",
+            "card": null,
+            "candidate_keys": [
+              "buy_card4"
+            ],
+            "target_pending": false,
+            "deviated": false,
+            "ranking_override_reason": null,
+            "mode": "shadow",
+            "scope": "first_purchase_or_removal_only"
+          },
+          "best_group": [
+            "buy_card4"
+          ],
+          "not_simulated": {
+            "buy_relic0": "现在的金币买不起：不模拟",
+            "buy_relic1": "现在的金币买不起：不模拟",
+            "buy_relic2": "现在的金币买不起：不模拟",
+            "buy_card6": "现在的金币买不起：不模拟",
+            "buy_potion0": "现在的金币买不起：不模拟",
+            "buy_potion1": "现在的金币买不起：不模拟",
+            "buy_potion2": "现在的金币买不起：不模拟"
+          }
+        },
+        "C2": {
+          "status": "produced",
+          "input_key": "required-b3-v1:fec8edbc9f71ddd141f74c9366d904c441ed940ad4728ad891bc8462b6f44f96",
+          "production_comparison": {
+            "metric": "deployed-ranking-first-group",
+            "full": [
+              "buy_card4"
+            ],
+            "partial": [
+              "buy_card4"
+            ],
+            "agreement": true
+          },
+          "work": {
+            "full": 16000,
+            "shadow": 4800,
+            "savedFraction": 0.7,
+            "unit": "unique-option-sample-equivalents"
+          }
+        }
+      },
+      {
+        "decision_id": "798d6f38-f182-436a-aee0-6c68bbbdda6d",
+        "label": "reward/card",
+        "floor": 5,
+        "ts": "2026-10-15T03:15:03.656Z",
+        "source": {
+          "path": "logs/decisions.jsonl",
+          "offset": 1545565889,
+          "bytes": 216211,
+          "sha256": "6adedaf547546a0ed381ba1e81eccf7e1a16dabf2a0a11b46d1b774711ede45f"
+        },
+        "lane": "b3",
+        "samples": 1000,
+        "requested": 1000,
+        "completion": {
+          "required": true,
+          "uniqueDecks": 4,
+          "originalDecks": 4,
+          "memoHit": false,
+          "status": "complete",
+          "attempt_id": "d1739c0a-99ab-4277-a6e0-3aa178186987",
+          "attempts": 1,
+          "reasons": [],
+          "samples": 1000,
+          "requested": 1000,
+          "failure": false,
+          "key": "sim-failure-v1:a6f0682fa98188810dd22c16f694eb3738be07f6964813eeefc26aea67ddc08b",
+          "latencyTargetMs": 11000,
+          "latencyTargetExceeded": true
+        },
+        "P2": {
+          "status": "produced",
+          "mode": "shadow",
+          "selection": {
+            "choice": "card2",
+            "card": null,
+            "candidate_keys": [
+              "card2"
+            ],
+            "target_pending": false,
+            "deviated": false,
+            "ranking_override_reason": null,
+            "mode": "shadow",
+            "scope": "current_choice_only"
+          },
+          "best_group": [
+            "card2"
+          ],
+          "not_simulated": {}
+        },
+        "C2": {
+          "status": "produced",
+          "input_key": "required-b3-v1:eff4640c5cf6dc396b6821f44da060082029ff23a37d5f37c6df12133cec6fd2",
+          "production_comparison": {
+            "metric": "deployed-ranking-first-group",
+            "full": [
+              "card2"
+            ],
+            "partial": [
+              "card2"
+            ],
+            "agreement": true
+          },
+          "work": {
+            "full": 4000,
+            "shadow": 3300,
+            "savedFraction": 0.17500000000000004,
+            "unit": "unique-option-sample-equivalents"
+          }
+        }
+      },
+      {
+        "decision_id": "a882f036-0633-4ee2-a3e8-1642d70f7ee3",
+        "label": "reward/card",
+        "floor": 6,
+        "ts": "2026-10-15T03:16:45.152Z",
+        "source": {
+          "path": "logs/decisions.jsonl",
+          "offset": 1545998091,
+          "bytes": 226847,
+          "sha256": "7f8a80603914108086c8fb9b3cd0cbdbe6afd9951ee645eb6b6fcacc4d6d4752"
+        },
+        "lane": "b3",
+        "samples": 1000,
+        "requested": 1000,
+        "completion": {
+          "required": true,
+          "uniqueDecks": 4,
+          "originalDecks": 4,
+          "memoHit": false,
+          "status": "complete",
+          "attempt_id": "464f251e-943b-494a-b49b-8790dc4c7ed2",
+          "attempts": 1,
+          "reasons": [],
+          "samples": 1000,
+          "requested": 1000,
+          "failure": false,
+          "key": "sim-failure-v1:f3f50ceff04403c85ad64330bbaf05b14b370e4c4334328ec1119ed1543ef866",
+          "latencyTargetMs": 11000,
+          "latencyTargetExceeded": false
+        },
+        "P2": {
+          "status": "produced",
+          "mode": "shadow",
+          "selection": {
+            "choice": "skip",
+            "card": null,
+            "candidate_keys": [
+              "skip"
+            ],
+            "target_pending": false,
+            "deviated": false,
+            "ranking_override_reason": null,
+            "mode": "shadow",
+            "scope": "current_choice_only"
+          },
+          "best_group": [
+            "skip"
+          ],
+          "not_simulated": {}
+        },
+        "C2": {
+          "status": "produced",
+          "input_key": "required-b3-v1:649c42fde3896b4af18c80ede9e826df7e337c67e5f48dcbeb6c926392fefc35",
+          "production_comparison": {
+            "metric": "deployed-ranking-first-group",
+            "full": [
+              "skip"
+            ],
+            "partial": [
+              "skip"
+            ],
+            "agreement": true
+          },
+          "work": {
+            "full": 4000,
+            "shadow": 2400,
+            "savedFraction": 0.4,
+            "unit": "unique-option-sample-equivalents"
+          }
+        }
+      },
+      {
+        "decision_id": "712f96b1-38a1-4ab1-8731-849eb7cf6944",
+        "label": "reward/card",
+        "floor": 7,
+        "ts": "2026-10-15T03:19:00.588Z",
+        "source": {
+          "path": "logs/decisions.jsonl",
+          "offset": 1546517568,
+          "bytes": 228418,
+          "sha256": "f7959dd5ebf02fa78d82baf28228684e22adf9d6fc6aec34a544083987326a0f"
+        },
+        "lane": "b3",
+        "samples": 1000,
+        "requested": 1000,
+        "completion": {
+          "required": true,
+          "uniqueDecks": 4,
+          "originalDecks": 4,
+          "memoHit": false,
+          "status": "complete",
+          "attempt_id": "f312b8d9-3f17-49dc-941d-508b4fe2cddd",
+          "attempts": 1,
+          "reasons": [],
+          "samples": 1000,
+          "requested": 1000,
+          "failure": false,
+          "key": "sim-failure-v1:22aa8a12e737158013390bcee5927fb30fa4d5d23e7b6cc090a0e546fadeec06",
+          "latencyTargetMs": 11000,
+          "latencyTargetExceeded": false
+        },
+        "P2": {
+          "status": "produced",
+          "mode": "shadow",
+          "selection": {
+            "choice": "card2",
+            "card": null,
+            "candidate_keys": [
+              "card2"
+            ],
+            "target_pending": false,
+            "deviated": false,
+            "ranking_override_reason": null,
+            "mode": "shadow",
+            "scope": "current_choice_only"
+          },
+          "best_group": [
+            "card2"
+          ],
+          "not_simulated": {}
+        },
+        "C2": {
+          "status": "produced",
+          "input_key": "required-b3-v1:8b77f3b75cf84f5d538a9ccebf25fc6d333f3e96c3005f7d4ce6506a076e756b",
+          "production_comparison": {
+            "metric": "deployed-ranking-first-group",
+            "full": [
+              "card2"
+            ],
+            "partial": [
+              "card2"
+            ],
+            "agreement": true
+          },
+          "work": {
+            "full": 4000,
+            "shadow": 1200,
+            "savedFraction": 0.7,
+            "unit": "unique-option-sample-equivalents"
+          }
+        }
+      },
+      {
+        "decision_id": "87ba2c3e-ceaa-4a37-bcaa-ff47f46796f8",
+        "label": "rest/plan",
+        "floor": 8,
+        "ts": "2026-10-15T03:19:51.063Z",
+        "source": {
+          "path": "logs/decisions.jsonl",
+          "offset": 1546749174,
+          "bytes": 612336,
+          "sha256": "c6af93b1c726b4b0953a0cece3c43f4f26d319a116f6b1fc1054abacf5d4f0f9"
+        },
+        "lane": "b3",
+        "samples": 1000,
+        "requested": 1000,
+        "completion": {
+          "required": true,
+          "uniqueDecks": 13,
+          "originalDecks": 13,
+          "memoHit": false,
+          "status": "complete",
+          "attempt_id": "cc7be2bb-bc07-439b-b165-5c979cfb863d",
+          "attempts": 1,
+          "reasons": [],
+          "samples": 1000,
+          "requested": 1000,
+          "failure": false,
+          "key": "sim-failure-v1:c25cd843d49b85b0ca2e0884341c5ca658782b5bd373b0e5ad3fb81922197171",
+          "latencyTargetMs": 11000,
+          "latencyTargetExceeded": true
+        },
+        "P2": {
+          "status": "produced",
+          "mode": "shadow",
+          "selection": {
+            "choice": "o0",
+            "card": null,
+            "candidate_keys": [
+              "o0"
+            ],
+            "target_pending": false,
+            "deviated": false,
+            "ranking_override_reason": null,
+            "mode": "shadow",
+            "scope": "current_choice_only"
+          },
+          "best_group": [
+            "o0"
+          ],
+          "not_simulated": {}
+        },
+        "C2": {
+          "status": "produced",
+          "input_key": "required-b3-v1:5edb980fd6fb3e6ba1044c6d9840ecc4a1a9d64dc35a46c1d033347dac3e4066",
+          "production_comparison": {
+            "metric": "deployed-ranking-first-group",
+            "full": [
+              "o0"
+            ],
+            "partial": [
+              "o0"
+            ],
+            "agreement": true
+          },
+          "work": {
+            "full": 13000,
+            "shadow": 3900,
+            "savedFraction": 0.7,
+            "unit": "unique-option-sample-equivalents"
+          }
+        }
+      },
+      {
+        "decision_id": "df1c59b8-04cc-48e3-bbc8-98f1a5fc070a",
+        "label": "event/choose",
+        "floor": 9,
+        "ts": "2026-10-15T03:20:18.472Z",
+        "source": {
+          "path": "logs/decisions.jsonl",
+          "offset": 1547364594,
+          "bytes": 129786,
+          "sha256": "ebf89550298de3b553a0a21f2e9b33a2834ae48551bf097c9302d77acac2e3ee"
+        },
+        "lane": "b3",
+        "samples": 1000,
+        "requested": 1000,
+        "completion": {
+          "required": true,
+          "uniqueDecks": 3,
+          "originalDecks": 3,
+          "memoHit": false,
+          "status": "complete",
+          "attempt_id": "b19e67f3-fd8a-4408-ac2e-7d0290c3a36d",
+          "attempts": 1,
+          "reasons": [],
+          "samples": 1000,
+          "requested": 1000,
+          "failure": false,
+          "key": "sim-failure-v1:b7df9a67f53a6ebad0197f271b85ee7ea2031d9e83fd627028d155851e8c391c",
+          "latencyTargetMs": 11000,
+          "latencyTargetExceeded": false
+        },
+        "P2": {
+          "status": "produced",
+          "mode": "shadow",
+          "selection": {
+            "choice": "o0",
+            "card": null,
+            "candidate_keys": [
+              "o0"
+            ],
+            "target_pending": false,
+            "deviated": false,
+            "ranking_override_reason": null,
+            "mode": "shadow",
+            "scope": "current_choice_only"
+          },
+          "best_group": [
+            "o0"
+          ],
+          "not_simulated": {}
+        },
+        "C2": {
+          "status": "produced",
+          "input_key": "required-b3-v1:250b7e7e81646a61e47b814d6cbd3e6ed180994a628515e68d05c62dd27da6de",
+          "production_comparison": {
+            "metric": "deployed-ranking-first-group",
+            "full": [
+              "o0"
+            ],
+            "partial": [
+              "o0"
+            ],
+            "agreement": true
+          },
+          "work": {
+            "full": 3000,
+            "shadow": 900,
+            "savedFraction": 0.7,
+            "unit": "unique-option-sample-equivalents"
+          }
+        }
+      },
+      {
+        "decision_id": "3e898bec-7c24-48da-bf6a-5e5ed6262f55",
+        "label": "reward/card",
+        "floor": 11,
+        "ts": "2026-10-15T03:21:23.418Z",
+        "source": {
+          "path": "logs/decisions.jsonl",
+          "offset": 1547580307,
+          "bytes": 227930,
+          "sha256": "120506229fe403506cdfe1f35d8627d80850668031dadbfcbefaa03bb70c1f7b"
+        },
+        "lane": "b3",
+        "samples": 1000,
+        "requested": 1000,
+        "completion": {
+          "required": true,
+          "uniqueDecks": 4,
+          "originalDecks": 4,
+          "memoHit": false,
+          "status": "complete",
+          "attempt_id": "ae97d3f7-6eb5-408c-b75d-100cedc70277",
+          "attempts": 1,
+          "reasons": [],
+          "samples": 1000,
+          "requested": 1000,
+          "failure": false,
+          "key": "sim-failure-v1:dfe27903e4c682773437e0cbef413181d2cbab68bda014e1a3f7b80d28558f1c",
+          "latencyTargetMs": 11000,
+          "latencyTargetExceeded": false
+        },
+        "P2": {
+          "status": "produced",
+          "mode": "shadow",
+          "selection": {
+            "choice": "card0",
+            "card": null,
+            "candidate_keys": [
+              "card0"
+            ],
+            "target_pending": false,
+            "deviated": true,
+            "ranking_override_reason": null,
+            "mode": "shadow",
+            "scope": "current_choice_only"
+          },
+          "best_group": [
+            "skip"
+          ],
+          "not_simulated": {}
+        },
+        "C2": {
+          "status": "produced",
+          "input_key": "required-b3-v1:c22703e608005f4817b36a1f426c8b3d0c4f3a4234cb673e5fdd27182e9b1c8e",
+          "production_comparison": {
+            "metric": "deployed-ranking-first-group",
+            "full": [
+              "skip"
+            ],
+            "partial": [
+              "skip"
+            ],
+            "agreement": true
+          },
+          "work": {
+            "full": 4000,
+            "shadow": 2300,
+            "savedFraction": 0.42500000000000004,
+            "unit": "unique-option-sample-equivalents"
+          }
+        }
+      },
+      {
+        "decision_id": "326c06e2-8212-4ace-9065-496494ad4f55",
+        "label": "reward/card",
+        "floor": 12,
+        "ts": "2026-10-15T03:23:43.552Z",
+        "source": {
+          "path": "logs/decisions.jsonl",
+          "offset": 1548017723,
+          "bytes": 233769,
+          "sha256": "6f95f7683a56424e15532d512c95b20bbc651af1d09bc18d45fcdeb552e73ee8"
+        },
+        "lane": "b3",
+        "samples": 1000,
+        "requested": 1000,
+        "completion": {
+          "required": true,
+          "uniqueDecks": 4,
+          "originalDecks": 4,
+          "memoHit": false,
+          "status": "complete",
+          "attempt_id": "3ba815a5-696e-4720-b488-dedcf8b0c0af",
+          "attempts": 1,
+          "reasons": [],
+          "samples": 1000,
+          "requested": 1000,
+          "failure": false,
+          "key": "sim-failure-v1:aa8d23c9ef8f7148e52944003799b84173be130ebbab67fcfb44ae4ff30aa1a3",
+          "latencyTargetMs": 11000,
+          "latencyTargetExceeded": false
+        },
+        "P2": {
+          "status": "produced",
+          "mode": "shadow",
+          "selection": {
+            "choice": "card0",
+            "card": null,
+            "candidate_keys": [
+              "card0"
+            ],
+            "target_pending": false,
+            "deviated": false,
+            "ranking_override_reason": null,
+            "mode": "shadow",
+            "scope": "current_choice_only"
+          },
+          "best_group": [
+            "card0"
+          ],
+          "not_simulated": {}
+        },
+        "C2": {
+          "status": "produced",
+          "input_key": "required-b3-v1:d6aa9ed0fcfd03013ea7cd491d92ca5e302a88482627affd5291caf909938c94",
+          "production_comparison": {
+            "metric": "deployed-ranking-first-group",
+            "full": [
+              "card0"
+            ],
+            "partial": [
+              "card0"
+            ],
+            "agreement": true
+          },
+          "work": {
+            "full": 4000,
+            "shadow": 1200,
+            "savedFraction": 0.7,
+            "unit": "unique-option-sample-equivalents"
+          }
+        }
+      },
+      {
+        "decision_id": "d397c542-bff7-4cc1-9bb2-62f731369ecb",
+        "label": "rest/plan",
+        "floor": 13,
+        "ts": "2026-10-15T03:24:16.062Z",
+        "source": {
+          "path": "logs/decisions.jsonl",
+          "offset": 1548254648,
+          "bytes": 715283,
+          "sha256": "6620c3712f8b94a038c6c5ad5323edd0fc8431af517b0b461620cff56941d473"
+        },
+        "lane": "b3",
+        "samples": 1000,
+        "requested": 1000,
+        "completion": {
+          "required": true,
+          "uniqueDecks": 15,
+          "originalDecks": 15,
+          "memoHit": false,
+          "status": "complete",
+          "attempt_id": "aab1c03c-c244-494f-b0a7-12db40c17ebc",
+          "attempts": 1,
+          "reasons": [],
+          "samples": 1000,
+          "requested": 1000,
+          "failure": false,
+          "key": "sim-failure-v1:2942ab6f957d2f3e93ba3e72ce9e8a9fe6a99ca066a9a9d7459626e36551c6bb",
+          "latencyTargetMs": 11000,
+          "latencyTargetExceeded": true
+        },
+        "P2": {
+          "status": "produced",
+          "mode": "shadow",
+          "selection": {
+            "choice": "o0",
+            "card": null,
+            "candidate_keys": [
+              "o0"
+            ],
+            "target_pending": false,
+            "deviated": false,
+            "ranking_override_reason": null,
+            "mode": "shadow",
+            "scope": "current_choice_only"
+          },
+          "best_group": [
+            "o0"
+          ],
+          "not_simulated": {}
+        },
+        "C2": {
+          "status": "produced",
+          "input_key": "required-b3-v1:6e8af241d9633fe6c81524d9bddbf119959ca08d151fab6e15a258090d1a0750",
+          "production_comparison": {
+            "metric": "deployed-ranking-first-group",
+            "full": [
+              "o0"
+            ],
+            "partial": [
+              "o0"
+            ],
+            "agreement": true
+          },
+          "work": {
+            "full": 15000,
+            "shadow": 4500,
+            "savedFraction": 0.7,
+            "unit": "unique-option-sample-equivalents"
+          }
+        }
+      },
+      {
+        "decision_id": "5358130d-514a-472d-b608-7b2fe579a57f",
+        "label": "reward/card",
+        "floor": 14,
+        "ts": "2026-10-15T03:25:55.262Z",
+        "source": {
+          "path": "logs/decisions.jsonl",
+          "offset": 1549092877,
+          "bytes": 237639,
+          "sha256": "8931a421a2ba9bd3489ade11c311faa64aa6d86f1553816923d835947bf09697"
+        },
+        "lane": "b3",
+        "samples": 1000,
+        "requested": 1000,
+        "completion": {
+          "required": true,
+          "uniqueDecks": 4,
+          "originalDecks": 4,
+          "memoHit": false,
+          "status": "complete",
+          "attempt_id": "cfd18370-5d38-4add-bd58-d7241bce150d",
+          "attempts": 1,
+          "reasons": [],
+          "samples": 1000,
+          "requested": 1000,
+          "failure": false,
+          "key": "sim-failure-v1:e3fed2952710cbac48261da29d21ab6a833f6c3163f8c23e8de20a86dd60ac4f",
+          "latencyTargetMs": 11000,
+          "latencyTargetExceeded": false
+        },
+        "P2": {
+          "status": "produced",
+          "mode": "shadow",
+          "selection": {
+            "choice": "card1",
+            "card": null,
+            "candidate_keys": [
+              "card1"
+            ],
+            "target_pending": false,
+            "deviated": true,
+            "ranking_override_reason": null,
+            "mode": "shadow",
+            "scope": "current_choice_only"
+          },
+          "best_group": [
+            "card0"
+          ],
+          "not_simulated": {}
+        },
+        "C2": {
+          "status": "produced",
+          "input_key": "required-b3-v1:086b0a80a8fbffe183ad5db33c740d4b4ca196dce2c5701f16650160dbcaae01",
+          "production_comparison": {
+            "metric": "deployed-ranking-first-group",
+            "full": [
+              "card0"
+            ],
+            "partial": [
+              "card0"
+            ],
+            "agreement": true
+          },
+          "work": {
+            "full": 4000,
+            "shadow": 4000,
+            "savedFraction": 0,
+            "unit": "unique-option-sample-equivalents"
+          }
+        }
+      },
+      {
+        "decision_id": "80b10293-ab90-4e68-b737-5dca081653cb",
+        "label": "reward/card",
+        "floor": 15,
+        "ts": "2026-10-15T03:28:07.848Z",
+        "source": {
+          "path": "logs/decisions.jsonl",
+          "offset": 1549498135,
+          "bytes": 241733,
+          "sha256": "aedd3633d72291523b59739ce14bd91fdc892423f9832deebe558e75c45bf3d8"
+        },
+        "lane": "b3",
+        "samples": 1000,
+        "requested": 1000,
+        "completion": {
+          "required": true,
+          "uniqueDecks": 4,
+          "originalDecks": 4,
+          "memoHit": false,
+          "status": "complete",
+          "attempt_id": "55ec21b5-6265-4d2e-8e2d-c5aa8875c819",
+          "attempts": 1,
+          "reasons": [],
+          "samples": 1000,
+          "requested": 1000,
+          "failure": false,
+          "key": "sim-failure-v1:0a64aeda82704406ea1d69096fc979533488d8f5ded0242d4e006ab6f6a66e40",
+          "latencyTargetMs": 11000,
+          "latencyTargetExceeded": false
+        },
+        "P2": {
+          "status": "produced",
+          "mode": "shadow",
+          "selection": {
+            "choice": "card2",
+            "card": null,
+            "candidate_keys": [
+              "card2"
+            ],
+            "target_pending": false,
+            "deviated": true,
+            "ranking_override_reason": null,
+            "mode": "shadow",
+            "scope": "current_choice_only"
+          },
+          "best_group": [
+            "skip"
+          ],
+          "not_simulated": {}
+        },
+        "C2": {
+          "status": "produced",
+          "input_key": "required-b3-v1:44ddf4ee20026bf4ca8f9c4840610ad1eceacaeca9c86854460e346cbb40646c",
+          "production_comparison": {
+            "metric": "deployed-ranking-first-group",
+            "full": [
+              "skip"
+            ],
+            "partial": [
+              "skip"
+            ],
+            "agreement": true
+          },
+          "work": {
+            "full": 4000,
+            "shadow": 3300,
+            "savedFraction": 0.17500000000000004,
+            "unit": "unique-option-sample-equivalents"
+          }
+        }
+      },
+      {
+        "decision_id": "cbcf5187-0e52-4bcb-8092-86738f34f6f9",
+        "label": "rest/plan",
+        "floor": 16,
+        "ts": "2026-10-15T03:28:42.512Z",
+        "source": {
+          "path": "logs/decisions.jsonl",
+          "offset": 1549743022,
+          "bytes": 853461,
+          "sha256": "3555dcbf73e85f3a20c99696e4c954392f173d792d471a7093567c9c1f40bfe1"
+        },
+        "lane": "b3",
+        "samples": 1000,
+        "requested": 1000,
+        "completion": {
+          "required": true,
+          "uniqueDecks": 17,
+          "originalDecks": 17,
+          "memoHit": false,
+          "status": "complete",
+          "attempt_id": "22a2f975-b4f5-449d-9106-4489e62a4465",
+          "attempts": 1,
+          "reasons": [],
+          "samples": 1000,
+          "requested": 1000,
+          "failure": false,
+          "key": "sim-failure-v1:f9cd271843e1be60bd8912c4866ecc69d3f146c29928ae2d7048cf374ad98554",
+          "latencyTargetMs": 11000,
+          "latencyTargetExceeded": true
+        },
+        "P2": {
+          "status": "produced",
+          "mode": "shadow",
+          "selection": {
+            "choice": "o0",
+            "card": null,
+            "candidate_keys": [
+              "o0"
+            ],
+            "target_pending": false,
+            "deviated": false,
+            "ranking_override_reason": null,
+            "mode": "shadow",
+            "scope": "current_choice_only"
+          },
+          "best_group": [
+            "o0"
+          ],
+          "not_simulated": {}
+        },
+        "C2": {
+          "status": "produced",
+          "input_key": "required-b3-v1:c9221d1b78d28b1bc9f5f1017afe2ccacae53b99226575c2c9cf8164d3d58744",
+          "production_comparison": {
+            "metric": "deployed-ranking-first-group",
+            "full": [
+              "o0"
+            ],
+            "partial": [
+              "o0"
+            ],
+            "agreement": true
+          },
+          "work": {
+            "full": 17000,
+            "shadow": 5100,
+            "savedFraction": 0.7,
+            "unit": "unique-option-sample-equivalents"
+          }
+        }
+      },
+      {
+        "decision_id": "09727b6d-a68b-464c-ae1f-289f64676b16",
+        "label": "combat/plan-choice",
+        "floor": 17,
+        "ts": "2026-10-15T03:28:53.822Z",
+        "source": {
+          "path": "logs/decisions.jsonl",
+          "offset": 1550599505,
+          "bytes": 37699,
+          "sha256": "f79db4f9c721d9ac25a6ad1b82db0d5b3e4d9699394e05c5164896ab7dd83748"
+        },
+        "lane": "b2",
+        "samples": 600,
+        "requested": 600,
+        "completion": {
+          "required": true,
+          "attempt_id": "29f9b27b-d23e-48e4-9260-d312b95f6d3d",
+          "status": "complete",
+          "attempts": 1,
+          "reasons": [],
+          "samples": 600,
+          "requested": 600,
+          "failure": false,
+          "key": "sim-failure-v1:610afc874ede778b16b906831f2a0f86ec99db8c98d87081a54c4ad798b71949"
+        },
+        "P2": null,
+        "C2": {
+          "status": "produced",
+          "input_key": "b2:9549461287ff88f80cd0d154755c5263ac99a5181aaaf60432965d2a8ebd7bc0",
+          "production_comparison": {
+            "metric": "deployed-ranking-first-group",
+            "full": [
+              "line:2"
+            ],
+            "partial": [
+              "line:2"
+            ],
+            "agreement": true
+          },
+          "work": {
+            "full": 1800,
+            "shadow": 600,
+            "savedFraction": 0.6666666666666667,
+            "unit": "fight-sample-outcomes"
+          }
+        }
+      },
+      {
+        "decision_id": "156177f2-71a6-4eb9-9e7d-06d0275e2b03",
+        "label": "combat/plan-choice",
+        "floor": 17,
+        "ts": "2026-10-15T03:29:08.851Z",
+        "source": {
+          "path": "logs/decisions.jsonl",
+          "offset": 1550640032,
+          "bytes": 58492,
+          "sha256": "fb38ef4e55773830ca8adbb2195f13ecf906419040c5dd5e071da439b9093391"
+        },
+        "lane": "b2",
+        "samples": 600,
+        "requested": 600,
+        "completion": {
+          "required": true,
+          "attempt_id": "5d1980e2-6581-40a5-abf5-9518b7d83388",
+          "status": "complete",
+          "attempts": 1,
+          "reasons": [],
+          "samples": 600,
+          "requested": 600,
+          "failure": false,
+          "key": "sim-failure-v1:518d6dd6b8cdf041fae719df3a5273e07228789e7ed46303445605813f2302e2"
+        },
+        "P2": null,
+        "C2": {
+          "status": "produced",
+          "input_key": "b2:54077210b4e82bc4e479895446d6e1401a8375bd7c8d100d8608c107f6a1765b",
+          "production_comparison": {
+            "metric": "deployed-ranking-first-group",
+            "full": [
+              "line:0"
+            ],
+            "partial": [
+              "line:0"
+            ],
+            "agreement": true
+          },
+          "work": {
+            "full": 3000,
+            "shadow": 1000,
+            "savedFraction": 0.6666666666666667,
+            "unit": "fight-sample-outcomes"
+          }
+        }
+      },
+      {
+        "decision_id": "4c5cc7a2-2825-422b-b443-7b80b7e8b640",
+        "label": "combat/plan-choice",
+        "floor": 17,
+        "ts": "2026-10-15T03:29:22.185Z",
+        "source": {
+          "path": "logs/decisions.jsonl",
+          "offset": 1550706408,
+          "bytes": 38574,
+          "sha256": "045d25b2d46bd435fe7657b48216701d96fffbf2c42f61557f7cddad18ac8250"
+        },
+        "lane": "b2",
+        "samples": 600,
+        "requested": 600,
+        "completion": {
+          "required": true,
+          "attempt_id": "4c950830-8154-4fe6-8e06-9d6a9aab1650",
+          "status": "complete",
+          "attempts": 1,
+          "reasons": [],
+          "samples": 600,
+          "requested": 600,
+          "failure": false,
+          "key": "sim-failure-v1:ab016e5d0389aa242fb1f7432127305c7d3ab49ca38aa3e4cac61a381cf7878c"
+        },
+        "P2": null,
+        "C2": {
+          "status": "produced",
+          "input_key": "b2:65c16662b4e2cd95ee12c23dae239ff686dfc6601516f2cdf432b4bbc73c5866",
+          "production_comparison": {
+            "metric": "deployed-ranking-first-group",
+            "full": [
+              "line:0"
+            ],
+            "partial": [
+              "line:0"
+            ],
+            "agreement": true
+          },
+          "work": {
+            "full": 1800,
+            "shadow": 1000,
+            "savedFraction": 0.4444444444444444,
+            "unit": "fight-sample-outcomes"
+          }
+        }
+      },
+      {
+        "decision_id": "b0bb508c-0017-4868-9ba0-81bccee80003",
+        "label": "combat/plan-choice",
+        "floor": 17,
+        "ts": "2026-10-15T03:29:28.672Z",
+        "source": {
+          "path": "logs/decisions.jsonl",
+          "offset": 1550746449,
+          "bytes": 26821,
+          "sha256": "23b8bb33e0b94ef72c44315f0d452a80af55228c42dd882d3bc983f89cba596b"
+        },
+        "lane": "b2",
+        "samples": 600,
+        "requested": 600,
+        "completion": {
+          "required": true,
+          "attempt_id": "7faea9d2-5707-4cf4-ae6b-c61413e887cd",
+          "status": "complete",
+          "attempts": 1,
+          "reasons": [],
+          "samples": 600,
+          "requested": 600,
+          "failure": false,
+          "key": "sim-failure-v1:90a6b60ae1af73df89c401d2a7fee9d76d771c5985f746fa21a1c17d249bce42"
+        },
+        "P2": null,
+        "C2": {
+          "status": "produced",
+          "input_key": "b2:48943f5b2ad2d4d2afc3d7a0f6e894124ab72ec8bb33a99ca57d77d9692f2480",
+          "production_comparison": {
+            "metric": "deployed-ranking-first-group",
+            "full": [
+              "line:0"
+            ],
+            "partial": [
+              "line:0"
+            ],
+            "agreement": true
+          },
+          "work": {
+            "full": 1200,
+            "shadow": 1000,
+            "savedFraction": 0.16666666666666663,
+            "unit": "fight-sample-outcomes"
+          }
+        }
+      },
+      {
+        "decision_id": "dc13a0d1-b72e-4c16-b6f6-aff369135421",
+        "label": "combat/plan-choice",
+        "floor": 17,
+        "ts": "2026-10-15T03:29:40.179Z",
+        "source": {
+          "path": "logs/decisions.jsonl",
+          "offset": 1550777338,
+          "bytes": 27352,
+          "sha256": "cce407073813bdeb27e16ca755d7a7c70b94caf0818133e53246acadf74d630c"
+        },
+        "lane": "b2",
+        "samples": 600,
+        "requested": 600,
+        "completion": {
+          "required": true,
+          "attempt_id": "13c37445-ce0c-4cc1-84ad-961a3bda5d99",
+          "status": "complete",
+          "attempts": 1,
+          "reasons": [],
+          "samples": 600,
+          "requested": 600,
+          "failure": false,
+          "key": "sim-failure-v1:c4f38d9406278c93fff58bac1bfadf6f0c91829c0c5367024debc1e5642b0b3a"
+        },
+        "P2": null,
+        "C2": {
+          "status": "produced",
+          "input_key": "b2:73cbb96b7fe66e475ee8140b96cedb1990bf7d87e963c964fe0b3ef741e6180d",
+          "production_comparison": {
+            "metric": "deployed-ranking-first-group",
+            "full": [
+              "line:1"
+            ],
+            "partial": [
+              "line:1"
+            ],
+            "agreement": true
+          },
+          "work": {
+            "full": 1200,
+            "shadow": 400,
+            "savedFraction": 0.6666666666666667,
+            "unit": "fight-sample-outcomes"
+          }
+        }
+      },
+      {
+        "decision_id": "58bd21f8-580d-4998-af99-2f8c06780a62",
+        "label": "combat/plan-choice",
+        "floor": 17,
+        "ts": "2026-10-15T03:30:02.488Z",
+        "source": {
+          "path": "logs/decisions.jsonl",
+          "offset": 1550816269,
+          "bytes": 36689,
+          "sha256": "695ae196c43f478556c40ff0c4c9b08a44bc8a4a20467d4aff175712cebe527e"
+        },
+        "lane": "b2",
+        "samples": 600,
+        "requested": 600,
+        "completion": {
+          "required": true,
+          "attempt_id": "23e28689-784d-44f3-b01e-432bb1bc2744",
+          "status": "complete",
+          "attempts": 1,
+          "reasons": [],
+          "samples": 600,
+          "requested": 600,
+          "failure": false,
+          "key": "sim-failure-v1:5277d7e1907892465ac94969f2811b21b20f8e93f3d6e111febf7afb7abc56c5"
+        },
+        "P2": null,
+        "C2": {
+          "status": "produced",
+          "input_key": "b2:b1159b15c5a96ad9302382a64cfc5d9bf4101e70320a3e8fccbf13f716c2b9a4",
+          "production_comparison": {
+            "metric": "deployed-ranking-first-group",
+            "full": [
+              "line:0"
+            ],
+            "partial": [
+              "line:0"
+            ],
+            "agreement": true
+          },
+          "work": {
+            "full": 1800,
+            "shadow": 800,
+            "savedFraction": 0.5555555555555556,
+            "unit": "fight-sample-outcomes"
+          }
+        }
+      },
+      {
+        "decision_id": "e0e8a3dc-50b4-4e2c-92fe-d35d983f612e",
+        "label": "combat/plan-choice",
+        "floor": 17,
+        "ts": "2026-10-15T03:30:13.889Z",
+        "source": {
+          "path": "logs/decisions.jsonl",
+          "offset": 1550858635,
+          "bytes": 28161,
+          "sha256": "554e3d868128b3f0e821aaa0a03b80fb03698711af4f69b3995aef5866f9eea6"
+        },
+        "lane": "b2",
+        "samples": 600,
+        "requested": 600,
+        "completion": {
+          "required": true,
+          "attempt_id": "25fee15d-bb8e-4fc2-a3ce-c7ef1190e4aa",
+          "status": "complete",
+          "attempts": 1,
+          "reasons": [],
+          "samples": 600,
+          "requested": 600,
+          "failure": false,
+          "key": "sim-failure-v1:a4ebbb1bbbf7f361eac9982e0737cfa6aabef03cd078c6a40638f9693359152b"
+        },
+        "P2": null,
+        "C2": {
+          "status": "produced",
+          "input_key": "b2:4c6d80e02999c5b585000cfe96a3d5dccaa911e40eccecdd2814ca8b3fc97901",
+          "production_comparison": {
+            "metric": "deployed-ranking-first-group",
+            "full": [
+              "line:1"
+            ],
+            "partial": [
+              "line:1"
+            ],
+            "agreement": true
+          },
+          "work": {
+            "full": 1200,
+            "shadow": 400,
+            "savedFraction": 0.6666666666666667,
+            "unit": "fight-sample-outcomes"
+          }
+        }
+      },
+      {
+        "decision_id": "89121b73-d0e6-41be-9602-40f24cf7afbe",
+        "label": "combat/plan-choice",
+        "floor": 17,
+        "ts": "2026-10-15T03:30:26.233Z",
+        "source": {
+          "path": "logs/decisions.jsonl",
+          "offset": 1550896488,
+          "bytes": 33999,
+          "sha256": "2d3e6bf2289f5c99ffe0af7e407ac95bf620fc3f7de73d4919c8743b44370c1b"
+        },
+        "lane": "b2",
+        "samples": 600,
+        "requested": 600,
+        "completion": {
+          "required": true,
+          "attempt_id": "189bd850-e0dd-4718-8b14-aa5e1b5f4e61",
+          "status": "complete",
+          "attempts": 1,
+          "reasons": [],
+          "samples": 600,
+          "requested": 600,
+          "failure": false,
+          "key": "sim-failure-v1:b59f79dcdeb5296c2ee7cc53ad549e03ee987feeb715fadb86d6c76e885c1315"
+        },
+        "P2": null,
+        "C2": {
+          "status": "produced",
+          "input_key": "b2:82b3b0195f8b7f3f33191fe366a35e274377a5b21a4bda5b0dc8349f384706e9",
+          "production_comparison": {
+            "metric": "deployed-ranking-first-group",
+            "full": [
+              "line:0",
+              "line:1"
+            ],
+            "partial": [
+              "line:0",
+              "line:1"
+            ],
+            "agreement": true
+          },
+          "work": {
+            "full": 1800,
+            "shadow": 1400,
+            "savedFraction": 0.2222222222222222,
+            "unit": "fight-sample-outcomes"
+          }
+        }
+      },
+      {
+        "decision_id": "586dee27-3aa7-4fd7-bbff-3fdb0290e3c3",
+        "label": "reward/card",
+        "floor": 19,
+        "ts": "2026-10-15T03:33:18.559Z",
+        "source": {
+          "path": "logs/decisions.jsonl",
+          "offset": 1551095618,
+          "bytes": 271402,
+          "sha256": "f7a1c80c9b310583d7f88d98fe9f6d1e170b299c9c201995fdc6ae1bae0062aa"
+        },
+        "lane": "b3",
+        "samples": 1000,
+        "requested": 1000,
+        "completion": {
+          "required": true,
+          "uniqueDecks": 4,
+          "originalDecks": 4,
+          "memoHit": false,
+          "status": "complete",
+          "attempt_id": "46bac880-2a0b-42d3-bc15-42aa06b63001",
+          "attempts": 1,
+          "reasons": [],
+          "samples": 1000,
+          "requested": 1000,
+          "failure": false,
+          "key": "sim-failure-v1:17b9f1e46402f68396a53eb58091ebdf8ed46f37b937d439026b6ea58d4eec49",
+          "latencyTargetMs": 11000,
+          "latencyTargetExceeded": false
+        },
+        "P2": {
+          "status": "produced",
+          "mode": "shadow",
+          "selection": {
+            "choice": "card0",
+            "card": null,
+            "candidate_keys": [
+              "card0"
+            ],
+            "target_pending": false,
+            "deviated": false,
+            "ranking_override_reason": null,
+            "mode": "shadow",
+            "scope": "current_choice_only"
+          },
+          "best_group": [
+            "card0"
+          ],
+          "not_simulated": {}
+        },
+        "C2": {
+          "status": "produced",
+          "input_key": "required-b3-v1:fd85c998a197939050f8119ffd81e06bd56a8e27b8166d48e37af5d8a59286d0",
+          "production_comparison": {
+            "metric": "deployed-ranking-first-group",
+            "full": [
+              "card0"
+            ],
+            "partial": [
+              "card0"
+            ],
+            "agreement": true
+          },
+          "work": {
+            "full": 4000,
+            "shadow": 1200,
+            "savedFraction": 0.7,
+            "unit": "unique-option-sample-equivalents"
+          }
+        }
+      },
+      {
+        "decision_id": "b8576b61-fe49-4eb8-90fd-88cdb7f9e0dc",
+        "label": "shop/plan",
+        "floor": 20,
+        "ts": "2026-10-15T03:35:10.861Z",
+        "source": {
+          "path": "logs/decisions.jsonl",
+          "offset": 1551371332,
+          "bytes": 1557009,
+          "sha256": "13981b67c43d2cb2c095e7a6e93c2309a8d1608650c339762b979f5ca3ff3df6"
+        },
+        "lane": "b3",
+        "samples": 1000,
+        "requested": 1000,
+        "completion": {
+          "required": true,
+          "uniqueDecks": 28,
+          "originalDecks": 28,
+          "memoHit": false,
+          "status": "complete",
+          "attempt_id": "4e88d0ef-9866-4e46-b68d-baa1522f8f1b",
+          "attempts": 1,
+          "reasons": [],
+          "samples": 1000,
+          "requested": 1000,
+          "failure": false,
+          "key": "sim-failure-v1:41258d4c09df98eb6811ed0c3f67d6a95f98420c04478fa7dc51e324af7939a3",
+          "latencyTargetMs": 11000,
+          "latencyTargetExceeded": true
+        },
+        "P2": {
+          "status": "produced",
+          "mode": "shadow",
+          "selection": {
+            "choice": "buy_card0",
+            "card": null,
+            "candidate_keys": [
+              "buy_card0"
+            ],
+            "target_pending": false,
+            "deviated": true,
+            "ranking_override_reason": null,
+            "mode": "shadow",
+            "scope": "first_purchase_or_removal_only"
+          },
+          "best_group": [
+            "buy_potion0"
+          ],
+          "not_simulated": {
+            "buy_relic1": "这件遗物在 boss 战里的效果没有建模：不模拟",
+            "buy_relic2": "这件遗物在 boss 战里的效果没有建模：不模拟",
+            "buy_potion1": "这瓶药不在模拟里（随机药水或效果没建模）：不模拟"
+          }
+        },
+        "C2": {
+          "status": "produced",
+          "input_key": "required-b3-v1:c65e7e88fd30f56c91f451ec96aa48dd593524d7733cc664a66d23064778924f",
+          "production_comparison": {
+            "metric": "deployed-ranking-first-group",
+            "full": [
+              "buy_potion0"
+            ],
+            "partial": [
+              "buy_potion0"
+            ],
+            "agreement": true
+          },
+          "work": {
+            "full": 28000,
+            "shadow": 15200,
+            "savedFraction": 0.4571428571428572,
+            "unit": "unique-option-sample-equivalents"
+          }
+        }
+      },
+      {
+        "decision_id": "e3169edd-50b4-4bca-9b1b-93e411de02d7",
+        "label": "reward/card",
+        "floor": 21,
+        "ts": "2026-10-15T03:36:23.456Z",
+        "source": {
+          "path": "logs/decisions.jsonl",
+          "offset": 1553061851,
+          "bytes": 299889,
+          "sha256": "33396b9bb487f23b33e0ec3b30fee5a3d8f639acf06a1bfa56f6300982bafb3e"
+        },
+        "lane": "b3",
+        "samples": 1000,
+        "requested": 1000,
+        "completion": {
+          "required": true,
+          "uniqueDecks": 4,
+          "originalDecks": 4,
+          "memoHit": false,
+          "status": "complete",
+          "attempt_id": "b6d89e8c-02bf-4d27-9e6f-6f86bdccadac",
+          "attempts": 1,
+          "reasons": [],
+          "samples": 1000,
+          "requested": 1000,
+          "failure": false,
+          "key": "sim-failure-v1:942995fbc7de9654b344c0c9205fce20d8f1fd819895aae1b68160e8605a92ae",
+          "latencyTargetMs": 11000,
+          "latencyTargetExceeded": false
+        },
+        "P2": {
+          "status": "produced",
+          "mode": "shadow",
+          "selection": {
+            "choice": "card2",
+            "card": null,
+            "candidate_keys": [
+              "card2"
+            ],
+            "target_pending": false,
+            "deviated": false,
+            "ranking_override_reason": null,
+            "mode": "shadow",
+            "scope": "current_choice_only"
+          },
+          "best_group": [
+            "card2"
+          ],
+          "not_simulated": {}
+        },
+        "C2": {
+          "status": "produced",
+          "input_key": "required-b3-v1:0d104bf42e6e04756f827e564ce314344520df5a7e3012d3cb6e4236dc89a5c2",
+          "production_comparison": {
+            "metric": "deployed-ranking-first-group",
+            "full": [
+              "card2"
+            ],
+            "partial": [
+              "card2"
+            ],
+            "agreement": true
+          },
+          "work": {
+            "full": 4000,
+            "shadow": 1200,
+            "savedFraction": 0.7,
+            "unit": "unique-option-sample-equivalents"
+          }
+        }
+      },
+      {
+        "decision_id": "fa7eb806-53c4-4d9b-82f4-0115073eb07a",
+        "label": "reward/card",
+        "floor": 22,
+        "ts": "2026-10-15T03:38:00.560Z",
+        "source": {
+          "path": "logs/decisions.jsonl",
+          "offset": 1553496607,
+          "bytes": 297739,
+          "sha256": "1813f0350edaa4a0df4c0110f32856b915e2c3ab32056ff4453fac8cb723f0cf"
+        },
+        "lane": "b3",
+        "samples": 1000,
+        "requested": 1000,
+        "completion": {
+          "required": true,
+          "uniqueDecks": 4,
+          "originalDecks": 4,
+          "memoHit": false,
+          "status": "complete",
+          "attempt_id": "ec45817f-81ec-4ef6-b3ac-9d93b0918268",
+          "attempts": 1,
+          "reasons": [],
+          "samples": 1000,
+          "requested": 1000,
+          "failure": false,
+          "key": "sim-failure-v1:0b2ca3be7bff090adc5836d776b95f7016b495973964d2f2bbf68be0657d0c3f",
+          "latencyTargetMs": 11000,
+          "latencyTargetExceeded": false
+        },
+        "P2": {
+          "status": "produced",
+          "mode": "shadow",
+          "selection": {
+            "choice": "card1",
+            "card": null,
+            "candidate_keys": [
+              "card1"
+            ],
+            "target_pending": false,
+            "deviated": false,
+            "ranking_override_reason": null,
+            "mode": "shadow",
+            "scope": "current_choice_only"
+          },
+          "best_group": [
+            "card1"
+          ],
+          "not_simulated": {}
+        },
+        "C2": {
+          "status": "produced",
+          "input_key": "required-b3-v1:23b73de0142dbf95649ef0d47b59f3b238a273676bfa16929b20ca676137da0c",
+          "production_comparison": {
+            "metric": "deployed-ranking-first-group",
+            "full": [
+              "card1"
+            ],
+            "partial": [
+              "card1"
+            ],
+            "agreement": true
+          },
+          "work": {
+            "full": 4000,
+            "shadow": 1600,
+            "savedFraction": 0.6,
+            "unit": "unique-option-sample-equivalents"
+          }
+        }
+      }
+    ],
+    "explicit_exclusions": [
+      {
+        "decision_id": "70262b4e-1a48-4ea6-8141-a92020259750",
+        "label": "reward/card",
+        "floor": 17,
+        "ts": "2026-10-15T03:30:48.980Z",
+        "source": {
+          "path": "logs/decisions.jsonl",
+          "offset": 1550937105,
+          "bytes": 11702,
+          "sha256": "66002985830aac8bc3aa1fda2677d8219c2b60e0c8cd6947e0c279dfd8b77dbb"
+        },
+        "lane": "b3",
+        "reason": "explicit_simulation_skip",
+        "detail": "act boss defeated; the next act's boss is not known yet"
+      }
+    ],
+    "issues": [],
+    "independent_comparisons": [
+      {
+        "lane": "b3",
+        "label": "event/choose",
+        "input_key": "required-b3-v1:39a0c3decbf830512f8c31dfef8a18f42ba0d56b731a111d2929fa641a971c5d",
+        "comparison": {
+          "metric": "deployed-ranking-first-group",
+          "full": [
+            "o1"
+          ],
+          "partial": [
+            "o1"
+          ],
+          "agreement": true
+        },
+        "work": {
+          "full": 2000,
+          "shadow": 600,
+          "savedFraction": 0.7,
+          "unit": "unique-option-sample-equivalents"
+        }
+      },
+      {
+        "lane": "b3",
+        "label": "reward/card",
+        "input_key": "required-b3-v1:b3a0d119a7d2bc2cd939875f2846bfb0b2846808151f24663ece52074bc95d35",
+        "comparison": {
+          "metric": "deployed-ranking-first-group",
+          "full": [
+            "card1"
+          ],
+          "partial": [
+            "card1"
+          ],
+          "agreement": true
+        },
+        "work": {
+          "full": 4000,
+          "shadow": 2700,
+          "savedFraction": 0.32499999999999996,
+          "unit": "unique-option-sample-equivalents"
+        }
+      },
+      {
+        "lane": "b3",
+        "label": "reward/card",
+        "input_key": "required-b3-v1:2f363a9af935cc32397a3cd9f0369fa2db0ae70bf26483a8f7b3189cc2fde2f6",
+        "comparison": {
+          "metric": "deployed-ranking-first-group",
+          "full": [
+            "card0",
+            "card1"
+          ],
+          "partial": [
+            "card0",
+            "card1"
+          ],
+          "agreement": true
+        },
+        "work": {
+          "full": 4000,
+          "shadow": 3300,
+          "savedFraction": 0.17500000000000004,
+          "unit": "unique-option-sample-equivalents"
+        }
+      },
+      {
+        "lane": "b3",
+        "label": "shop/plan",
+        "input_key": "required-b3-v1:fec8edbc9f71ddd141f74c9366d904c441ed940ad4728ad891bc8462b6f44f96",
+        "comparison": {
+          "metric": "deployed-ranking-first-group",
+          "full": [
+            "buy_card4"
+          ],
+          "partial": [
+            "buy_card4"
+          ],
+          "agreement": true
+        },
+        "work": {
+          "full": 16000,
+          "shadow": 4800,
+          "savedFraction": 0.7,
+          "unit": "unique-option-sample-equivalents"
+        }
+      },
+      {
+        "lane": "b3",
+        "label": "reward/card",
+        "input_key": "required-b3-v1:eff4640c5cf6dc396b6821f44da060082029ff23a37d5f37c6df12133cec6fd2",
+        "comparison": {
+          "metric": "deployed-ranking-first-group",
+          "full": [
+            "card2"
+          ],
+          "partial": [
+            "card2"
+          ],
+          "agreement": true
+        },
+        "work": {
+          "full": 4000,
+          "shadow": 3300,
+          "savedFraction": 0.17500000000000004,
+          "unit": "unique-option-sample-equivalents"
+        }
+      },
+      {
+        "lane": "b3",
+        "label": "reward/card",
+        "input_key": "required-b3-v1:649c42fde3896b4af18c80ede9e826df7e337c67e5f48dcbeb6c926392fefc35",
+        "comparison": {
+          "metric": "deployed-ranking-first-group",
+          "full": [
+            "skip"
+          ],
+          "partial": [
+            "skip"
+          ],
+          "agreement": true
+        },
+        "work": {
+          "full": 4000,
+          "shadow": 2400,
+          "savedFraction": 0.4,
+          "unit": "unique-option-sample-equivalents"
+        }
+      },
+      {
+        "lane": "b3",
+        "label": "reward/card",
+        "input_key": "required-b3-v1:8b77f3b75cf84f5d538a9ccebf25fc6d333f3e96c3005f7d4ce6506a076e756b",
+        "comparison": {
+          "metric": "deployed-ranking-first-group",
+          "full": [
+            "card2"
+          ],
+          "partial": [
+            "card2"
+          ],
+          "agreement": true
+        },
+        "work": {
+          "full": 4000,
+          "shadow": 1200,
+          "savedFraction": 0.7,
+          "unit": "unique-option-sample-equivalents"
+        }
+      },
+      {
+        "lane": "b3",
+        "label": "rest/plan",
+        "input_key": "required-b3-v1:5edb980fd6fb3e6ba1044c6d9840ecc4a1a9d64dc35a46c1d033347dac3e4066",
+        "comparison": {
+          "metric": "deployed-ranking-first-group",
+          "full": [
+            "o0"
+          ],
+          "partial": [
+            "o0"
+          ],
+          "agreement": true
+        },
+        "work": {
+          "full": 13000,
+          "shadow": 3900,
+          "savedFraction": 0.7,
+          "unit": "unique-option-sample-equivalents"
+        }
+      },
+      {
+        "lane": "b3",
+        "label": "event/choose",
+        "input_key": "required-b3-v1:250b7e7e81646a61e47b814d6cbd3e6ed180994a628515e68d05c62dd27da6de",
+        "comparison": {
+          "metric": "deployed-ranking-first-group",
+          "full": [
+            "o0"
+          ],
+          "partial": [
+            "o0"
+          ],
+          "agreement": true
+        },
+        "work": {
+          "full": 3000,
+          "shadow": 900,
+          "savedFraction": 0.7,
+          "unit": "unique-option-sample-equivalents"
+        }
+      },
+      {
+        "lane": "b3",
+        "label": "reward/card",
+        "input_key": "required-b3-v1:c22703e608005f4817b36a1f426c8b3d0c4f3a4234cb673e5fdd27182e9b1c8e",
+        "comparison": {
+          "metric": "deployed-ranking-first-group",
+          "full": [
+            "skip"
+          ],
+          "partial": [
+            "skip"
+          ],
+          "agreement": true
+        },
+        "work": {
+          "full": 4000,
+          "shadow": 2300,
+          "savedFraction": 0.42500000000000004,
+          "unit": "unique-option-sample-equivalents"
+        }
+      },
+      {
+        "lane": "b3",
+        "label": "reward/card",
+        "input_key": "required-b3-v1:d6aa9ed0fcfd03013ea7cd491d92ca5e302a88482627affd5291caf909938c94",
+        "comparison": {
+          "metric": "deployed-ranking-first-group",
+          "full": [
+            "card0"
+          ],
+          "partial": [
+            "card0"
+          ],
+          "agreement": true
+        },
+        "work": {
+          "full": 4000,
+          "shadow": 1200,
+          "savedFraction": 0.7,
+          "unit": "unique-option-sample-equivalents"
+        }
+      },
+      {
+        "lane": "b3",
+        "label": "rest/plan",
+        "input_key": "required-b3-v1:6e8af241d9633fe6c81524d9bddbf119959ca08d151fab6e15a258090d1a0750",
+        "comparison": {
+          "metric": "deployed-ranking-first-group",
+          "full": [
+            "o0"
+          ],
+          "partial": [
+            "o0"
+          ],
+          "agreement": true
+        },
+        "work": {
+          "full": 15000,
+          "shadow": 4500,
+          "savedFraction": 0.7,
+          "unit": "unique-option-sample-equivalents"
+        }
+      },
+      {
+        "lane": "b3",
+        "label": "reward/card",
+        "input_key": "required-b3-v1:086b0a80a8fbffe183ad5db33c740d4b4ca196dce2c5701f16650160dbcaae01",
+        "comparison": {
+          "metric": "deployed-ranking-first-group",
+          "full": [
+            "card0"
+          ],
+          "partial": [
+            "card0"
+          ],
+          "agreement": true
+        },
+        "work": {
+          "full": 4000,
+          "shadow": 4000,
+          "savedFraction": 0,
+          "unit": "unique-option-sample-equivalents"
+        }
+      },
+      {
+        "lane": "b3",
+        "label": "reward/card",
+        "input_key": "required-b3-v1:44ddf4ee20026bf4ca8f9c4840610ad1eceacaeca9c86854460e346cbb40646c",
+        "comparison": {
+          "metric": "deployed-ranking-first-group",
+          "full": [
+            "skip"
+          ],
+          "partial": [
+            "skip"
+          ],
+          "agreement": true
+        },
+        "work": {
+          "full": 4000,
+          "shadow": 3300,
+          "savedFraction": 0.17500000000000004,
+          "unit": "unique-option-sample-equivalents"
+        }
+      },
+      {
+        "lane": "b3",
+        "label": "rest/plan",
+        "input_key": "required-b3-v1:c9221d1b78d28b1bc9f5f1017afe2ccacae53b99226575c2c9cf8164d3d58744",
+        "comparison": {
+          "metric": "deployed-ranking-first-group",
+          "full": [
+            "o0"
+          ],
+          "partial": [
+            "o0"
+          ],
+          "agreement": true
+        },
+        "work": {
+          "full": 17000,
+          "shadow": 5100,
+          "savedFraction": 0.7,
+          "unit": "unique-option-sample-equivalents"
+        }
+      },
+      {
+        "lane": "b2",
+        "label": "combat/plan-choice",
+        "input_key": "b2:9549461287ff88f80cd0d154755c5263ac99a5181aaaf60432965d2a8ebd7bc0",
+        "comparison": {
+          "metric": "deployed-ranking-first-group",
+          "full": [
+            "line:2"
+          ],
+          "partial": [
+            "line:2"
+          ],
+          "agreement": true
+        },
+        "work": {
+          "full": 1800,
+          "shadow": 600,
+          "savedFraction": 0.6666666666666667,
+          "unit": "fight-sample-outcomes"
+        }
+      },
+      {
+        "lane": "b2",
+        "label": "combat/plan-choice",
+        "input_key": "b2:54077210b4e82bc4e479895446d6e1401a8375bd7c8d100d8608c107f6a1765b",
+        "comparison": {
+          "metric": "deployed-ranking-first-group",
+          "full": [
+            "line:0"
+          ],
+          "partial": [
+            "line:0"
+          ],
+          "agreement": true
+        },
+        "work": {
+          "full": 3000,
+          "shadow": 1000,
+          "savedFraction": 0.6666666666666667,
+          "unit": "fight-sample-outcomes"
+        }
+      },
+      {
+        "lane": "b2",
+        "label": "combat/plan-choice",
+        "input_key": "b2:65c16662b4e2cd95ee12c23dae239ff686dfc6601516f2cdf432b4bbc73c5866",
+        "comparison": {
+          "metric": "deployed-ranking-first-group",
+          "full": [
+            "line:0"
+          ],
+          "partial": [
+            "line:0"
+          ],
+          "agreement": true
+        },
+        "work": {
+          "full": 1800,
+          "shadow": 1000,
+          "savedFraction": 0.4444444444444444,
+          "unit": "fight-sample-outcomes"
+        }
+      },
+      {
+        "lane": "b2",
+        "label": "combat/plan-choice",
+        "input_key": "b2:48943f5b2ad2d4d2afc3d7a0f6e894124ab72ec8bb33a99ca57d77d9692f2480",
+        "comparison": {
+          "metric": "deployed-ranking-first-group",
+          "full": [
+            "line:0"
+          ],
+          "partial": [
+            "line:0"
+          ],
+          "agreement": true
+        },
+        "work": {
+          "full": 1200,
+          "shadow": 1000,
+          "savedFraction": 0.16666666666666663,
+          "unit": "fight-sample-outcomes"
+        }
+      },
+      {
+        "lane": "b2",
+        "label": "combat/plan-choice",
+        "input_key": "b2:73cbb96b7fe66e475ee8140b96cedb1990bf7d87e963c964fe0b3ef741e6180d",
+        "comparison": {
+          "metric": "deployed-ranking-first-group",
+          "full": [
+            "line:1"
+          ],
+          "partial": [
+            "line:1"
+          ],
+          "agreement": true
+        },
+        "work": {
+          "full": 1200,
+          "shadow": 400,
+          "savedFraction": 0.6666666666666667,
+          "unit": "fight-sample-outcomes"
+        }
+      },
+      {
+        "lane": "b2",
+        "label": "combat/plan-choice",
+        "input_key": "b2:b1159b15c5a96ad9302382a64cfc5d9bf4101e70320a3e8fccbf13f716c2b9a4",
+        "comparison": {
+          "metric": "deployed-ranking-first-group",
+          "full": [
+            "line:0"
+          ],
+          "partial": [
+            "line:0"
+          ],
+          "agreement": true
+        },
+        "work": {
+          "full": 1800,
+          "shadow": 800,
+          "savedFraction": 0.5555555555555556,
+          "unit": "fight-sample-outcomes"
+        }
+      },
+      {
+        "lane": "b2",
+        "label": "combat/plan-choice",
+        "input_key": "b2:4c6d80e02999c5b585000cfe96a3d5dccaa911e40eccecdd2814ca8b3fc97901",
+        "comparison": {
+          "metric": "deployed-ranking-first-group",
+          "full": [
+            "line:1"
+          ],
+          "partial": [
+            "line:1"
+          ],
+          "agreement": true
+        },
+        "work": {
+          "full": 1200,
+          "shadow": 400,
+          "savedFraction": 0.6666666666666667,
+          "unit": "fight-sample-outcomes"
+        }
+      },
+      {
+        "lane": "b2",
+        "label": "combat/plan-choice",
+        "input_key": "b2:82b3b0195f8b7f3f33191fe366a35e274377a5b21a4bda5b0dc8349f384706e9",
+        "comparison": {
+          "metric": "deployed-ranking-first-group",
+          "full": [
+            "line:0",
+            "line:1"
+          ],
+          "partial": [
+            "line:0",
+            "line:1"
+          ],
+          "agreement": true
+        },
+        "work": {
+          "full": 1800,
+          "shadow": 1400,
+          "savedFraction": 0.2222222222222222,
+          "unit": "fight-sample-outcomes"
+        }
+      },
+      {
+        "lane": "b3",
+        "label": "reward/card",
+        "input_key": "required-b3-v1:fd85c998a197939050f8119ffd81e06bd56a8e27b8166d48e37af5d8a59286d0",
+        "comparison": {
+          "metric": "deployed-ranking-first-group",
+          "full": [
+            "card0"
+          ],
+          "partial": [
+            "card0"
+          ],
+          "agreement": true
+        },
+        "work": {
+          "full": 4000,
+          "shadow": 1200,
+          "savedFraction": 0.7,
+          "unit": "unique-option-sample-equivalents"
+        }
+      },
+      {
+        "lane": "b3",
+        "label": "shop/plan",
+        "input_key": "required-b3-v1:c65e7e88fd30f56c91f451ec96aa48dd593524d7733cc664a66d23064778924f",
+        "comparison": {
+          "metric": "deployed-ranking-first-group",
+          "full": [
+            "buy_potion0"
+          ],
+          "partial": [
+            "buy_potion0"
+          ],
+          "agreement": true
+        },
+        "work": {
+          "full": 28000,
+          "shadow": 15200,
+          "savedFraction": 0.4571428571428572,
+          "unit": "unique-option-sample-equivalents"
+        }
+      },
+      {
+        "lane": "b3",
+        "label": "reward/card",
+        "input_key": "required-b3-v1:0d104bf42e6e04756f827e564ce314344520df5a7e3012d3cb6e4236dc89a5c2",
+        "comparison": {
+          "metric": "deployed-ranking-first-group",
+          "full": [
+            "card2"
+          ],
+          "partial": [
+            "card2"
+          ],
+          "agreement": true
+        },
+        "work": {
+          "full": 4000,
+          "shadow": 1200,
+          "savedFraction": 0.7,
+          "unit": "unique-option-sample-equivalents"
+        }
+      },
+      {
+        "lane": "b3",
+        "label": "reward/card",
+        "input_key": "required-b3-v1:23b73de0142dbf95649ef0d47b59f3b238a273676bfa16929b20ca676137da0c",
+        "comparison": {
+          "metric": "deployed-ranking-first-group",
+          "full": [
+            "card1"
+          ],
+          "partial": [
+            "card1"
+          ],
+          "agreement": true
+        },
+        "work": {
+          "full": 4000,
+          "shadow": 1600,
+          "savedFraction": 0.6,
+          "unit": "unique-option-sample-equivalents"
+        }
+      }
+    ],
+    "independent_count": 27,
+    "agreement": 1.0,
+    "mismatches": [],
+    "P2_target_pending": 0
+  },
+  "health": {
+    "P1": {
+      "mode": "on",
+      "expected": 19,
+      "produced": 19,
+      "missing": 0,
+      "eligible": 15,
+      "low_trust": 0,
+      "sign_rejected": 4,
+      "brain_delivered": 15,
+      "brain_accepted": 15,
+      "ms_max": 8.952871000001323,
+      "longest_missing_streak": 0,
+      "alert": false,
+      "limits": "Shadow is not brain delivery. Low trust and failed sign audit suppress facts without changing mandatory computation or old ranking."
+    },
+    "P2": {
+      "mode": "shadow",
+      "expected": 19,
+      "produced": 19,
+      "missing": 0,
+      "brain_delivered": 0,
+      "brain_accepted": 0,
+      "choices": 19,
+      "overrides": 4,
+      "reasons_present": 0,
+      "missing_reasons": 4,
+      "target_pending": 0,
+      "longest_missing_streak": 0,
+      "alert": false,
+      "limits": "Shadow choices do not require override reasons. Pending card targets and first shop actions do not certify complete plans or causal benefit."
+    },
+    "P3": {
+      "mode": "on",
+      "expected": 8,
+      "produced": 8,
+      "used": 8,
+      "fallback": 0,
+      "missing": 0,
+      "fallback_reasons": {},
+      "longest_missing_streak": 0,
+      "alert": false,
+      "limits": "S tie ranking is conditional on paired samples, sign audit and existing model trust; not game calibration or causal benefit."
+    },
+    "C2": {
+      "mode": "shadow",
+      "observed": 27,
+      "produced": 27,
+      "errors": 0,
+      "evaluable": 27,
+      "matched": 27,
+      "unknown": 0,
+      "complete_adaptive": 0,
+      "production_evaluable": 27,
+      "production_matched": 27,
+      "agreement": 1.0,
+      "production_agreement": 1.0,
+      "saved_fraction": {
+        "p50": 0.6666666666666667,
+        "p90": 0.7
+      },
+      "mismatches": [],
+      "actual_saved_fraction": {
+        "p50": null,
+        "p90": null
+      },
+      "candidate_samples": [],
+      "candidate_rounds": [],
+      "stop_counts": {},
+      "alert": false,
+      "admission": "pending offline coverage and at least two completed natural shadow runs; never auto-enable",
+      "limits": "Shadow estimates and actual on-mode sample work are separate. On-mode cannot observe full-run agreement; no elapsed-time saving or game benefit inferred."
+    }
+  },
+  "limits": "An ongoing run is never a complete shadow run. Terminal identity, all exclusions/unknown targets, native code, byte coverage and both completed runs require owner readback. This tool does not register an ACK or enable on."
+}

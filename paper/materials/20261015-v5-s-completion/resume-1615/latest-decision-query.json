@@ -1,0 +1,13 @@
+{
+  "argv": [
+    "/home/dw/Projects/agent-sts2/data/logdb-venv/bin/python",
+    "/home/dw/Projects/agent-sts2/agent/tools/logdb/query.py",
+    "--json",
+    "--max-rows",
+    "1000",
+    "--no-sync",
+    "SELECT run_id,ts,label,floor,off,len FROM decisions WHERE run_id='DUB5VQQ6D6D1' ORDER BY ts DESC LIMIT 1"
+  ],
+  "rc": 0,
+  "stderr": ""
+}

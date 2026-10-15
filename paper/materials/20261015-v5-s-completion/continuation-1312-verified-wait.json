@@ -1,0 +1,94 @@
+{
+  "at": "2026-10-15T13:12:20.748932+08:00",
+  "parent": "roy-20261014-s-decision",
+  "session": "01a13dcd-83d4-7c63-b233-f93cf878ecf4",
+  "previous_goal_turn_classification": "progress: C2 source fix, full acceptance and isolated commits completed",
+  "current_observation": "verified original host request and play/autoplay/ops processes; no duplicate work",
+  "processes": [
+    {
+      "pid": 1209905,
+      "present": true,
+      "birth": "93255482",
+      "state": "S",
+      "cwd": "/home/dw/Projects/agent-sts2"
+    },
+    {
+      "pid": 952170,
+      "present": true,
+      "birth": "92801432",
+      "state": "S",
+      "cwd": "/home/dw/Projects/agent-sts2/.worktrees/live/agent",
+      "brain_home": "/home/dw/.codex-brain",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh"
+    },
+    {
+      "pid": 1738396,
+      "present": true,
+      "birth": "86996299",
+      "state": "S",
+      "cwd": "/home/dw/Projects/agent-sts2"
+    },
+    {
+      "pid": 922271,
+      "present": true,
+      "birth": "71386382",
+      "state": "S",
+      "cwd": "/home/dw/Projects/agent-sts2"
+    }
+  ],
+  "brain_wait": {
+    "ts": "2026-10-15T05:12:15.076Z",
+    "state": "heartbeat",
+    "pid": 952170,
+    "run_id": "HLAWCGM3KHVB",
+    "question_id": "mv8zzy2h-952170-24",
+    "decision_type": "event/choose",
+    "reason": "quota: codex usage guard: the plan's included usage is not allowed now (ordinaryUsageAllowed false): further calls would draw on credits",
+    "since": "2026-10-15T04:59:15.047Z",
+    "retries": 6,
+    "next_retry": "2026-10-15T05:13:13.979Z",
+    "suspended_ms": 780029,
+    "budget_policy": "outage_time_excluded",
+    "original_budget_ms": 14400000
+  },
+  "brain_wait_source_sha256": "fcbf3175af91943764f8d97de2145e7f52ab5eb7424c1db7db357a3fe0959120",
+  "native_code_readback": {
+    "agent/src/brain/brain.ts": {
+      "native_commit": "fba193dfe31844e1dbde9f2ad7174427fcd446dc",
+      "sha256": "d88e56c4109a0af70a3ace619aeb176b1e69ef77bcc9bc1d5b4a68c01f872145",
+      "unchanged_in_current_main": true
+    },
+    "agent/src/brain/router.ts": {
+      "native_commit": "fba193dfe31844e1dbde9f2ad7174427fcd446dc",
+      "sha256": "32ea6ea4ce9f5baf795e640f430f917d9ebfd856668e00aed2aeaac70c865080",
+      "unchanged_in_current_main": true
+    },
+    "agent/src/brain/wait.ts": {
+      "native_commit": "fba193dfe31844e1dbde9f2ad7174427fcd446dc",
+      "sha256": "4d6c50b6be4310f3e5652b848e647b3f8a46ad7c9087a0d51c643752f9d03094",
+      "unchanged_in_current_main": true
+    }
+  },
+  "recovery_boundary": {
+    "observed": "Brain.preflight onRecovery closes over startup config.codex and recovers the same engine usage guard. ops/run.sh reads brain-home before starting the process and explicitly preserves existing environments.",
+    "inference": "Changing only the next-run selector does not move the already-paused HLAW process off its original gmail home.",
+    "owner": "Original ops; watcher does not change account, brain-home, runtime model or current process."
+  },
+  "original_host": {
+    "tree": "81a0481ad610252b405bf3e1da3fc6a01c8bc47b",
+    "request_pid": 1209905,
+    "request_birth": "93255482",
+    "request_live_at_readback": true,
+    "log": "ops/codex-ops/learner/20261015-051302-s2-strategy-proposal.fallback-81a0481ad610252b405bf3e1da3fc6a01c8bc47b.checks.log",
+    "observed_passed_file_rows": 225,
+    "terminal_summary": [],
+    "not_a_pass": true
+  },
+  "natural_gate": {
+    "accepted": 1,
+    "required": 2,
+    "current_run_complete": false
+  },
+  "no_configuration_process_or_admission_changed": true
+}

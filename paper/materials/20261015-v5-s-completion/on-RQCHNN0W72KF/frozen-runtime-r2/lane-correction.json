@@ -1,0 +1,96 @@
+{
+  "at": "2026-10-15T19:16:43.939181+08:00",
+  "run_id": "RQCHNN0W72KF",
+  "changes": [
+    {
+      "attempt_id": "0b5f5db6-047c-40c5-a7c3-27d45cf08d09",
+      "previous": "b3",
+      "label": "combat/plan",
+      "lane": "b2",
+      "source": {
+        "path": "logs/decisions.jsonl",
+        "offset": 1637924195,
+        "bytes": 2057,
+        "sha256": "2679065a09275195edf6e28b454f8d0193fe713785260bc87c4d845c7008e8df"
+      }
+    },
+    {
+      "attempt_id": "207a56d6-167a-42ea-a1f6-37ddb58806bc",
+      "previous": "b3",
+      "label": "combat/plan",
+      "lane": "b2",
+      "source": {
+        "path": "logs/decisions.jsonl",
+        "offset": 1637926252,
+        "bytes": 2234,
+        "sha256": "94e8fb1894b210d479f26d571c258a5422ece5907c7d5613525d6488c600905d"
+      }
+    },
+    {
+      "attempt_id": "3ed6c3e0-9ecd-41cb-b721-42673224532d",
+      "previous": "b3",
+      "label": "combat/plan-choice",
+      "lane": "b2",
+      "source": {
+        "path": "logs/decisions.jsonl",
+        "offset": 1637928486,
+        "bytes": 59071,
+        "sha256": "f5a04e4135bb7b6ef2cad78a4101aaa71d9eecdb438911af7e756657bbc49531"
+      }
+    },
+    {
+      "attempt_id": "96a38a72-0276-45a2-9776-4f33b8bb99d0",
+      "previous": "b3",
+      "label": "combat/plan",
+      "lane": "b2",
+      "source": {
+        "path": "logs/decisions.jsonl",
+        "offset": 1638301002,
+        "bytes": 2078,
+        "sha256": "3767f1abec1ba9dd4eadee1e3177db5edfd0d9541a530b3516230b70c7239ccb"
+      }
+    },
+    {
+      "attempt_id": "df84c3be-a2df-42c2-9901-b700fa85ab63",
+      "previous": "b3",
+      "label": "combat/plan",
+      "lane": "b2",
+      "source": {
+        "path": "logs/decisions.jsonl",
+        "offset": 1638303080,
+        "bytes": 2257,
+        "sha256": "df8d310baba8524a7114ab868be15b40b2a621b7dd3fc750c988fbe1c46d5bab"
+      }
+    },
+    {
+      "attempt_id": "b7bedaaf-756c-4b4a-bfb9-e6635c910895",
+      "previous": "b3",
+      "label": "combat/plan-choice",
+      "lane": "b2",
+      "source": {
+        "path": "logs/decisions.jsonl",
+        "offset": 1638305337,
+        "bytes": 45898,
+        "sha256": "772e83b524978370088a9ad19fd933a128b7d89bab88d816254683aecd6ba596"
+      }
+    }
+  ],
+  "reason": "available exists only on successful B2 results; failed combat/plan attempts must retain their original B2 lane. Original r1 inputs/reports remain unchanged.",
+  "source": {
+    "path": "/home/dw/Projects/agent-sts2/paper/materials/20261015-v5-s-completion/on-RQCHNN0W72KF/frozen-runtime/runtime.json",
+    "sha256": "52f2ab7c2a3ddc4a0c7bdefbc1acb9e9033cf6b2cb182ad2d4f90f1edd3d9cf0"
+  },
+  "correction_script": {
+    "path": "/home/dw/Projects/agent-sts2/paper/materials/20261015-v5-s-completion/correct-post-on-lanes.py",
+    "sha256": "15b7540ef9975495b02851c45d9fcef2c25c3eccdbfe39fc25aaf0b5546f4c02"
+  },
+  "first_freezer": {
+    "path": "/home/dw/Projects/agent-sts2/paper/materials/20261015-v5-s-completion/on-RQCHNN0W72KF/freezer-first.py",
+    "sha256": "544b5187c12a07eb9f449989ba367d2193c59cce9a8fc84c137fac728ffec536"
+  },
+  "corrected_freezer": {
+    "path": "/home/dw/Projects/agent-sts2/paper/materials/20261015-v5-s-completion/freeze-post-on-runtime.py",
+    "sha256": "0d94a00b7967fee7c891f9a816e9faf2a1243186e189c7531d96d5605142a6f5"
+  },
+  "no_query_simulation_api_or_production_change": true
+}

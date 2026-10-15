@@ -1,0 +1,13 @@
+{
+  "argv": [
+    "/home/dw/Projects/agent-sts2/data/logdb-venv/bin/python",
+    "/home/dw/Projects/agent-sts2/agent/tools/logdb/query.py",
+    "--json",
+    "--max-rows",
+    "100000",
+    "--no-sync",
+    "SELECT floor,min(act) AS act,count(DISTINCT act) AS act_count FROM frames WHERE run_id='RQCHNN0W72KF' GROUP BY floor ORDER BY floor"
+  ],
+  "rc": 0,
+  "stderr": ""
+}

@@ -1,0 +1,271 @@
+{
+  "at": "2026-10-15T19:20:31.521355+08:00",
+  "run_id": "RQCHNN0W72KF",
+  "protection_consumed": true,
+  "groups": [
+    {
+      "failure_key": "sim-failure-v1:d65a75f2da70371e94725b69b40033c072d144396e635f4a14b9912267c18e22",
+      "floor": 40,
+      "label": "rest/plan",
+      "attempts": [
+        {
+          "source": {
+            "path": "logs/decisions.jsonl",
+            "offset": 1632203915,
+            "bytes": 13885,
+            "sha256": "ba875e41d63753a069b6bb20aaff10ad57424c9ace2ad8b91a59ee45cc69eefd"
+          },
+          "completion": {
+            "required": true,
+            "attempt_id": "1133dcf8-b2e6-4e17-ab71-156fa69d90e4",
+            "status": "pending",
+            "attempts": 1,
+            "reasons": [
+              "simulation_error"
+            ],
+            "samples": 0,
+            "requested": 1000,
+            "failure": true,
+            "key": "sim-failure-v1:d65a75f2da70371e94725b69b40033c072d144396e635f4a14b9912267c18e22"
+          },
+          "error": "出错：build-sim worker: Error: missing successful first-fight resources: nonpositive-hp; seed=607614716; {\"won\":true,\"died\":false,\"turns\":23,\"captureResources\":true,\"",
+          "chosen": null,
+          "result": "not dispatched: required boss evaluation pending"
+        },
+        {
+          "source": {
+            "path": "logs/decisions.jsonl",
+            "offset": 1632217800,
+            "bytes": 13905,
+            "sha256": "fd723fcce54f3b5761bc10477af6ff86943171988f4788452c12663dfd2944d4"
+          },
+          "completion": {
+            "required": true,
+            "attempt_id": "a8576cbd-bff2-4f11-88c5-d05a059d5a8d",
+            "status": "pending",
+            "attempts": 2,
+            "reasons": [
+              "simulation_error",
+              "simulation_error"
+            ],
+            "samples": 0,
+            "requested": 1000,
+            "failure": true,
+            "key": "sim-failure-v1:d65a75f2da70371e94725b69b40033c072d144396e635f4a14b9912267c18e22"
+          },
+          "error": "出错：build-sim worker: Error: missing successful first-fight resources: nonpositive-hp; seed=607614716; {\"won\":true,\"died\":false,\"turns\":23,\"captureResources\":true,\"",
+          "chosen": null,
+          "result": "not dispatched: required boss evaluation pending"
+        },
+        {
+          "source": {
+            "path": "logs/decisions.jsonl",
+            "offset": 1632231705,
+            "bytes": 145033,
+            "sha256": "1f33b2ab098a53c6ef0430c4ede79736505d940f58e541162955e3fea6ecf9ad"
+          },
+          "completion": {
+            "required": true,
+            "attempt_id": "67292546-4f68-474b-a771-594d23475604",
+            "status": "degraded",
+            "attempts": 3,
+            "reasons": [
+              "simulation_error",
+              "simulation_error",
+              "below_minimum_samples"
+            ],
+            "samples": 42,
+            "requested": 1000,
+            "failure": true,
+            "key": "sim-failure-v1:d65a75f2da70371e94725b69b40033c072d144396e635f4a14b9912267c18e22"
+          },
+          "error": "只跑完 42 次模拟（不足 300 次），选项之间的差噪声太大，不给数字",
+          "chosen": {
+            "action": "choose_rest_option",
+            "option_index": 1
+          },
+          "result": "completed: Action completed."
+        }
+      ],
+      "no_fight_statistics_exposed": true,
+      "completed_first_action_only": true
+    },
+    {
+      "failure_key": "sim-failure-v1:9ec24a53da5e62bf71b286d869d115e3688e5d26fc7ef7c9c31f5edf8b594ff1",
+      "floor": 48,
+      "label": "combat/plan-choice",
+      "attempts": [
+        {
+          "source": {
+            "path": "logs/decisions.jsonl",
+            "offset": 1637924195,
+            "bytes": 2057,
+            "sha256": "2679065a09275195edf6e28b454f8d0193fe713785260bc87c4d845c7008e8df"
+          },
+          "completion": {
+            "required": true,
+            "attempt_id": "0b5f5db6-047c-40c5-a7c3-27d45cf08d09",
+            "status": "pending",
+            "attempts": 1,
+            "reasons": [
+              "error: Error: boss-lines worker: Error: missing successful first-fight resources: nonpositive-hp; seed=614798807; {\"won\":true,\"died\":false,\"turns\":22,\"captureResources"
+            ],
+            "samples": 0,
+            "requested": 600,
+            "failure": true,
+            "key": "sim-failure-v1:9ec24a53da5e62bf71b286d869d115e3688e5d26fc7ef7c9c31f5edf8b594ff1"
+          },
+          "error": "error: Error: boss-lines worker: Error: missing successful first-fight resources: nonpositive-hp; seed=614798807; {\"won\":true,\"died\":false,\"turns\":22,\"captureResources",
+          "chosen": null,
+          "result": "not dispatched: required boss evaluation pending"
+        },
+        {
+          "source": {
+            "path": "logs/decisions.jsonl",
+            "offset": 1637926252,
+            "bytes": 2234,
+            "sha256": "94e8fb1894b210d479f26d571c258a5422ece5907c7d5613525d6488c600905d"
+          },
+          "completion": {
+            "required": true,
+            "attempt_id": "207a56d6-167a-42ea-a1f6-37ddb58806bc",
+            "status": "pending",
+            "attempts": 2,
+            "reasons": [
+              "error: Error: boss-lines worker: Error: missing successful first-fight resources: nonpositive-hp; seed=614798807; {\"won\":true,\"died\":false,\"turns\":22,\"captureResources",
+              "error: Error: boss-lines worker: Error: missing successful first-fight resources: nonpositive-hp; seed=614798807; {\"won\":true,\"died\":false,\"turns\":22,\"captureResources"
+            ],
+            "samples": 0,
+            "requested": 600,
+            "failure": true,
+            "key": "sim-failure-v1:9ec24a53da5e62bf71b286d869d115e3688e5d26fc7ef7c9c31f5edf8b594ff1"
+          },
+          "error": "error: Error: boss-lines worker: Error: missing successful first-fight resources: nonpositive-hp; seed=614798807; {\"won\":true,\"died\":false,\"turns\":22,\"captureResources",
+          "chosen": null,
+          "result": "not dispatched: required boss evaluation pending"
+        },
+        {
+          "source": {
+            "path": "logs/decisions.jsonl",
+            "offset": 1637928486,
+            "bytes": 59071,
+            "sha256": "f5a04e4135bb7b6ef2cad78a4101aaa71d9eecdb438911af7e756657bbc49531"
+          },
+          "completion": {
+            "required": true,
+            "attempt_id": "3ed6c3e0-9ecd-41cb-b721-42673224532d",
+            "status": "degraded",
+            "attempts": 3,
+            "reasons": [
+              "error: Error: boss-lines worker: Error: missing successful first-fight resources: nonpositive-hp; seed=614798807; {\"won\":true,\"died\":false,\"turns\":22,\"captureResources",
+              "error: Error: boss-lines worker: Error: missing successful first-fight resources: nonpositive-hp; seed=614798807; {\"won\":true,\"died\":false,\"turns\":22,\"captureResources",
+              "不完整（故障降级，n=159）；不足 300 次，不给数字，按原 rollout 继续"
+            ],
+            "samples": 159,
+            "requested": 600,
+            "failure": true,
+            "key": "sim-failure-v1:9ec24a53da5e62bf71b286d869d115e3688e5d26fc7ef7c9c31f5edf8b594ff1"
+          },
+          "error": "不完整（故障降级，n=159）；不足 300 次，不给数字，按原 rollout 继续",
+          "chosen": {
+            "action": "play_card",
+            "card_index": 3
+          },
+          "result": "completed: Action completed."
+        }
+      ],
+      "no_fight_statistics_exposed": true,
+      "completed_first_action_only": true
+    },
+    {
+      "failure_key": "sim-failure-v1:052535896f8871ab5f7a0edec191e1637730fc372d4b99e1daba993c4d7c2404",
+      "floor": 48,
+      "label": "combat/plan-choice",
+      "attempts": [
+        {
+          "source": {
+            "path": "logs/decisions.jsonl",
+            "offset": 1638301002,
+            "bytes": 2078,
+            "sha256": "3767f1abec1ba9dd4eadee1e3177db5edfd0d9541a530b3516230b70c7239ccb"
+          },
+          "completion": {
+            "required": true,
+            "attempt_id": "96a38a72-0276-45a2-9776-4f33b8bb99d0",
+            "status": "pending",
+            "attempts": 1,
+            "reasons": [
+              "error: Error: boss-lines worker: Error: missing successful first-fight resources: nonpositive-hp; seed=46797397; {\"won\":true,\"died\":false,\"turns\":5,\"captureResources\":"
+            ],
+            "samples": 0,
+            "requested": 600,
+            "failure": true,
+            "key": "sim-failure-v1:052535896f8871ab5f7a0edec191e1637730fc372d4b99e1daba993c4d7c2404"
+          },
+          "error": "error: Error: boss-lines worker: Error: missing successful first-fight resources: nonpositive-hp; seed=46797397; {\"won\":true,\"died\":false,\"turns\":5,\"captureResources\":",
+          "chosen": null,
+          "result": "not dispatched: required boss evaluation pending"
+        },
+        {
+          "source": {
+            "path": "logs/decisions.jsonl",
+            "offset": 1638303080,
+            "bytes": 2257,
+            "sha256": "df8d310baba8524a7114ab868be15b40b2a621b7dd3fc750c988fbe1c46d5bab"
+          },
+          "completion": {
+            "required": true,
+            "attempt_id": "df84c3be-a2df-42c2-9901-b700fa85ab63",
+            "status": "pending",
+            "attempts": 2,
+            "reasons": [
+              "error: Error: boss-lines worker: Error: missing successful first-fight resources: nonpositive-hp; seed=46797397; {\"won\":true,\"died\":false,\"turns\":5,\"captureResources\":",
+              "error: Error: boss-lines worker: Error: missing successful first-fight resources: nonpositive-hp; seed=46797397; {\"won\":true,\"died\":false,\"turns\":5,\"captureResources\":"
+            ],
+            "samples": 0,
+            "requested": 600,
+            "failure": true,
+            "key": "sim-failure-v1:052535896f8871ab5f7a0edec191e1637730fc372d4b99e1daba993c4d7c2404"
+          },
+          "error": "error: Error: boss-lines worker: Error: missing successful first-fight resources: nonpositive-hp; seed=46797397; {\"won\":true,\"died\":false,\"turns\":5,\"captureResources\":",
+          "chosen": null,
+          "result": "not dispatched: required boss evaluation pending"
+        },
+        {
+          "source": {
+            "path": "logs/decisions.jsonl",
+            "offset": 1638305337,
+            "bytes": 45898,
+            "sha256": "772e83b524978370088a9ad19fd933a128b7d89bab88d816254683aecd6ba596"
+          },
+          "completion": {
+            "required": true,
+            "attempt_id": "b7bedaaf-756c-4b4a-bfb9-e6635c910895",
+            "status": "degraded",
+            "attempts": 3,
+            "reasons": [
+              "error: Error: boss-lines worker: Error: missing successful first-fight resources: nonpositive-hp; seed=46797397; {\"won\":true,\"died\":false,\"turns\":5,\"captureResources\":",
+              "error: Error: boss-lines worker: Error: missing successful first-fight resources: nonpositive-hp; seed=46797397; {\"won\":true,\"died\":false,\"turns\":5,\"captureResources\":",
+              "error: Error: boss-lines worker: Error: missing successful first-fight resources: nonpositive-hp; seed=46797397; {\"won\":true,\"died\":false,\"turns\":5,\"captureResources\":"
+            ],
+            "samples": 0,
+            "requested": 600,
+            "failure": true,
+            "key": "sim-failure-v1:052535896f8871ab5f7a0edec191e1637730fc372d4b99e1daba993c4d7c2404"
+          },
+          "error": "error: Error: boss-lines worker: Error: missing successful first-fight resources: nonpositive-hp; seed=46797397; {\"won\":true,\"died\":false,\"turns\":5,\"captureResources\":",
+          "chosen": {
+            "action": "play_card",
+            "card_index": 1,
+            "target_index": 1
+          },
+          "result": "completed: Action completed."
+        }
+      ],
+      "no_fight_statistics_exposed": true,
+      "completed_first_action_only": true
+    }
+  ],
+  "simulation_failures_remain_real": true,
+  "limits": "Nonpositive-HP successful-resource guard failures are retained for the original ops/learning chain. No new root-cause simulation, implementation, retry task, restart, or gameplay-model correctness claim."
+}

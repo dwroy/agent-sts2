@@ -1,0 +1,503 @@
+{
+  "at": "2026-10-15T16:29:26.064931+08:00",
+  "actor": "watcher codex1",
+  "session": "01a13dcd-83d4-7c63-b233-f93cf878ecf4",
+  "original_owner": "01a139d6-cfec-78e1-8739-e21ac426a354",
+  "parent": "roy-20261014-s-decision",
+  "run_id": "DUB5VQQ6D6D1",
+  "status": "second completed natural shadow run accepted for original P2/C2 gates",
+  "native_code": {
+    "commit": "534c3140f2e3a98fcd6380ce4447b00592cba026",
+    "code": "534c314+dirty",
+    "dirty": true,
+    "dirty_files": [
+      "knowledge/characters/silent/boss-damage.json",
+      "knowledge/characters/silent/construction-opportunities.json",
+      "knowledge/characters/silent/monster-records.json",
+      "knowledge/characters/silent/outcome-stats.json",
+      "knowledge/characters/silent/room-costs.json",
+      "knowledge/common/card-upgrades.json",
+      "knowledge/common/monster-db.json",
+      "knowledge/common/move-model.json",
+      "notes/fight-value-backtest-silent.md",
+      "notes/monster-db-check.md"
+    ],
+    "branch": "live",
+    "worktree": "live"
+  },
+  "native_config_source": {
+    "path": "logs/run-config.jsonl",
+    "offset": 1752864,
+    "bytes": 5396,
+    "sha256": "f996e66115b9e67475ee9ee8387806c3bda3c29cab59927ee218159a902b3945"
+  },
+  "terminal_source": {
+    "path": "logs/states.jsonl",
+    "offset": 13055179792,
+    "bytes": 28808,
+    "sha256": "443149ca17e706596963835317ea1e8a873b22e6896d622416716855ad99e94f"
+  },
+  "terminal_game_over": {
+    "is_victory": false,
+    "floor": 24,
+    "character_id": "SILENT",
+    "phase": "summary_animating",
+    "can_continue": false,
+    "can_return_to_main_menu": false,
+    "showing_summary": false,
+    "waiting_for_other_players": false,
+    "save_status": "pending",
+    "save_verified": false,
+    "save_error": null
+  },
+  "streams": {
+    "run-config": {
+      "rows": 1,
+      "start": 1752864,
+      "end": 1758260,
+      "contiguous_complete_lines": true
+    },
+    "decisions": {
+      "rows": 485,
+      "start": 1587861476,
+      "end": 1596657063,
+      "contiguous_complete_lines": true
+    },
+    "brain": {
+      "rows": 23,
+      "start": 577013501,
+      "end": 579850939,
+      "contiguous_complete_lines": true
+    },
+    "runs": {
+      "rows": 1,
+      "start": 334478,
+      "end": 335192,
+      "contiguous_complete_lines": true
+    }
+  },
+  "audit_ref": {
+    "path": "paper/materials/20261015-v5-s-completion/natural-DUB5VQQ6D6D1/audit.json",
+    "sha256": "462e469cf822070cffd823b45518cf8214471f471c72be19e9ddaad0455bd49b"
+  },
+  "account_model_admission_ref": {
+    "path": "paper/materials/20261015-v5-s-completion/natural-DUB5VQQ6D6D1/codex1-admission.json",
+    "sha256": "dc977bdeebaed3df30d197d4b5427639bea71337d5ec892dfd39ac763aee7da0"
+  },
+  "native_requests": {
+    "calls": 23,
+    "model": "gpt-6.1-sol",
+    "effort": "xhigh",
+    "account": "codex1",
+    "unknown": 0,
+    "fallback": 0,
+    "segments": 1,
+    "account_binding_method": "Native question IDs bind every request to the one original PID; its live immutable environment selects codex1, verified account/read maps that home, and pre-start authentication inode/ctime plus unchanged terminal metadata exclude an intervening account change. Native request logs bind model/effort/thread/turn. No credentials read."
+  },
+  "P2": {
+    "expected": 19,
+    "produced": 19,
+    "actual_choices_verified": 19,
+    "target_pending": 0,
+    "shadow_deviations": 5,
+    "reasons_required": false,
+    "choices": [
+      {
+        "decision_id": "6b8c973f-19cd-4289-9c7a-74d0fb4efdd8",
+        "floor": 1,
+        "label": "event/choose",
+        "choice": "o0",
+        "deviated": true,
+        "scope": "current_choice_only",
+        "chosen": {
+          "action": "choose_event_option",
+          "option_index": 0
+        },
+        "result": "completed: Action completed.",
+        "source": {
+          "path": "logs/decisions.jsonl",
+          "offset": 1587861476,
+          "bytes": 58428,
+          "sha256": "4a80bd38e2dfe9aef50d3ef42a4da6065a460dfe424c01d31cb2a0399fdbfa40"
+        }
+      },
+      {
+        "decision_id": "b88500ae-537c-470e-8b6a-f6225161deb2",
+        "floor": 2,
+        "label": "reward/card",
+        "choice": "card0",
+        "deviated": false,
+        "scope": "current_choice_only",
+        "chosen": {
+          "action": "choose_reward_card",
+          "option_index": 0
+        },
+        "result": "completed: Action completed.",
+        "source": {
+          "path": "logs/decisions.jsonl",
+          "offset": 1588031499,
+          "bytes": 166524,
+          "sha256": "e0586461dd25f69f8c5f2c91d8753a768cb157df473569e7a441667809b2563d"
+        }
+      },
+      {
+        "decision_id": "db4c4591-9bd0-4d1d-9ec3-30a57ee96896",
+        "floor": 3,
+        "label": "reward/card",
+        "choice": "card1",
+        "deviated": false,
+        "scope": "current_choice_only",
+        "chosen": {
+          "action": "choose_reward_card",
+          "option_index": 1
+        },
+        "result": "completed: Action completed.",
+        "source": {
+          "path": "logs/decisions.jsonl",
+          "offset": 1588366673,
+          "bytes": 173395,
+          "sha256": "755bbd4f2dd7664eb8d863fc5c28756e268dcd25e57969215666202711d6b7a8"
+        }
+      },
+      {
+        "decision_id": "2b474125-1c79-41d5-8116-9e7a925255ae",
+        "floor": 4,
+        "label": "reward/card",
+        "choice": "card0",
+        "deviated": false,
+        "scope": "current_choice_only",
+        "chosen": {
+          "action": "choose_reward_card",
+          "option_index": 0
+        },
+        "result": "completed: Action completed.",
+        "source": {
+          "path": "logs/decisions.jsonl",
+          "offset": 1588889219,
+          "bytes": 174304,
+          "sha256": "78494fdce039403657bebc19f5a8d692edf24c536d49f02b7a1783679c954527"
+        }
+      },
+      {
+        "decision_id": "d4b7d03d-b117-4d84-b423-20be9c7caf96",
+        "floor": 5,
+        "label": "reward/card",
+        "choice": "card2",
+        "deviated": false,
+        "scope": "current_choice_only",
+        "chosen": {
+          "action": "choose_reward_card",
+          "option_index": 2
+        },
+        "result": "completed: Action completed.",
+        "source": {
+          "path": "logs/decisions.jsonl",
+          "offset": 1589150031,
+          "bytes": 185656,
+          "sha256": "cddb9818bb78b0c36ccfdbc72afbb4a86595f852613bb766831a398a81630230"
+        }
+      },
+      {
+        "decision_id": "16c217fc-d282-4ee2-89d5-cb4fef0131bb",
+        "floor": 6,
+        "label": "event/choose",
+        "choice": "o0",
+        "deviated": true,
+        "scope": "current_choice_only",
+        "chosen": {
+          "action": "choose_event_option",
+          "option_index": 0
+        },
+        "result": "completed: Action completed.",
+        "source": {
+          "path": "logs/decisions.jsonl",
+          "offset": 1589338701,
+          "bytes": 102061,
+          "sha256": "fa0c14a9a90a5b6dcb09ffa38edb9ad44f2e037cff79407ff47bffcf380253af"
+        }
+      },
+      {
+        "decision_id": "408ee86a-e10c-4fd4-973d-f5aeb4d22a5e",
+        "floor": 7,
+        "label": "rest/plan",
+        "choice": "o0",
+        "deviated": true,
+        "scope": "current_choice_only",
+        "chosen": {
+          "action": "choose_rest_option",
+          "option_index": 0
+        },
+        "result": "completed: Action completed.",
+        "source": {
+          "path": "logs/decisions.jsonl",
+          "offset": 1589443819,
+          "bytes": 368105,
+          "sha256": "b365ee52596fe4054b1752a1e5239161f988f09b10fc8d91b06dbd48e072c251"
+        }
+      },
+      {
+        "decision_id": "60c332b0-03bb-4025-96de-69321d0c1fcc",
+        "floor": 8,
+        "label": "reward/card",
+        "choice": "card0",
+        "deviated": false,
+        "scope": "current_choice_only",
+        "chosen": {
+          "action": "choose_reward_card",
+          "option_index": 0
+        },
+        "result": "completed: Action completed.",
+        "source": {
+          "path": "logs/decisions.jsonl",
+          "offset": 1589931220,
+          "bytes": 185244,
+          "sha256": "1ae544c896dc3ca48f831a7cc00c9297de07e32d6c124b78835643a0d57cdcb9"
+        }
+      },
+      {
+        "decision_id": "f0cfad3b-f1aa-47d4-9dfd-095ebfa481a3",
+        "floor": 9,
+        "label": "rest/plan",
+        "choice": "o0",
+        "deviated": true,
+        "scope": "current_choice_only",
+        "chosen": {
+          "action": "choose_rest_option",
+          "option_index": 0
+        },
+        "result": "completed: Action completed.",
+        "source": {
+          "path": "logs/decisions.jsonl",
+          "offset": 1590122598,
+          "bytes": 412562,
+          "sha256": "8adb25541b874770cdd2205b7f6a69ded296fc725c9a25bf89e77505e2557530"
+        }
+      },
+      {
+        "decision_id": "055e7531-d03b-4ee4-b8c0-cd11ff04f9c1",
+        "floor": 11,
+        "label": "shop/plan",
+        "choice": "buy_card6",
+        "deviated": false,
+        "scope": "first_purchase_or_removal_only",
+        "chosen": {
+          "action": "buy_card",
+          "option_index": 6
+        },
+        "result": "completed: Action completed.",
+        "source": {
+          "path": "logs/decisions.jsonl",
+          "offset": 1590544181,
+          "bytes": 787294,
+          "sha256": "21bb5d00b0708a89be1490471abe5774785808a3bbfa60da283d8adb0456745d"
+        }
+      },
+      {
+        "decision_id": "a994c08a-c57c-44cf-b87d-117426990dd8",
+        "floor": 12,
+        "label": "reward/card",
+        "choice": "card0",
+        "deviated": false,
+        "scope": "current_choice_only",
+        "chosen": {
+          "action": "choose_reward_card",
+          "option_index": 0
+        },
+        "result": "completed: Action completed.",
+        "source": {
+          "path": "logs/decisions.jsonl",
+          "offset": 1591550188,
+          "bytes": 210889,
+          "sha256": "8ee60816c5f925c48cc0cc84ffecbd3aa14cddddf16936928f3427b28f77b6f7"
+        }
+      },
+      {
+        "decision_id": "ffb92b86-f1c0-4c68-a6a4-8623217ee276",
+        "floor": 13,
+        "label": "rest/plan",
+        "choice": "o0",
+        "deviated": false,
+        "scope": "current_choice_only",
+        "chosen": {
+          "action": "choose_rest_option",
+          "option_index": 0
+        },
+        "result": "completed: Action completed.",
+        "source": {
+          "path": "logs/decisions.jsonl",
+          "offset": 1591766392,
+          "bytes": 555633,
+          "sha256": "9d6919a61042df2f454b888c0f502c47fbb28401cffad313a6d65f5739d10c44"
+        }
+      },
+      {
+        "decision_id": "d019e274-b4f8-404c-b2b4-2d68fcbdbdfc",
+        "floor": 15,
+        "label": "reward/card",
+        "choice": "skip",
+        "deviated": false,
+        "scope": "current_choice_only",
+        "chosen": {
+          "action": "skip_reward_cards"
+        },
+        "result": "completed: Action completed.",
+        "source": {
+          "path": "logs/decisions.jsonl",
+          "offset": 1592471903,
+          "bytes": 212364,
+          "sha256": "329cca52edabcc937915a815366d2254ed282bfb697430e34190104579d284bb"
+        }
+      },
+      {
+        "decision_id": "1310dd87-95cd-4910-8574-a535a9a2c483",
+        "floor": 16,
+        "label": "rest/plan",
+        "choice": "o0",
+        "deviated": false,
+        "scope": "current_choice_only",
+        "chosen": {
+          "action": "choose_rest_option",
+          "option_index": 0
+        },
+        "result": "completed: Action completed.",
+        "source": {
+          "path": "logs/decisions.jsonl",
+          "offset": 1592687080,
+          "bytes": 555514,
+          "sha256": "d248bd70eb2057c46e843c7804fbadc9907b75f893442d678fb99ac5d6a4cc28"
+        }
+      },
+      {
+        "decision_id": "a45c2301-d362-4eac-9c95-bcee6c803702",
+        "floor": 19,
+        "label": "reward/card",
+        "choice": "skip",
+        "deviated": false,
+        "scope": "current_choice_only",
+        "chosen": {
+          "action": "skip_reward_cards"
+        },
+        "result": "completed: Action completed.",
+        "source": {
+          "path": "logs/decisions.jsonl",
+          "offset": 1594118700,
+          "bytes": 226051,
+          "sha256": "e8b807d6e263d71057227561e6d201ec3b66c90a1072696b290e2a498155a227"
+        }
+      },
+      {
+        "decision_id": "88aeb85f-7b16-4e9d-9996-41741aeb860b",
+        "floor": 20,
+        "label": "shop/plan",
+        "choice": "buy_card4",
+        "deviated": true,
+        "scope": "first_purchase_or_removal_only",
+        "chosen": {
+          "action": "buy_card",
+          "option_index": 4
+        },
+        "result": "completed: Action completed.",
+        "source": {
+          "path": "logs/decisions.jsonl",
+          "offset": 1594349079,
+          "bytes": 444648,
+          "sha256": "a7aaaa7fd8b813ae9b1680e574cb1b33e295b5ae32690e38e0417db48eaeb7d3"
+        }
+      },
+      {
+        "decision_id": "582a9994-21dc-4a51-830f-accd0a9bc23a",
+        "floor": 21,
+        "label": "reward/card",
+        "choice": "card0",
+        "deviated": false,
+        "scope": "current_choice_only",
+        "chosen": {
+          "action": "choose_reward_card",
+          "option_index": 0
+        },
+        "result": "completed: Action completed.",
+        "source": {
+          "path": "logs/decisions.jsonl",
+          "offset": 1594937968,
+          "bytes": 234438,
+          "sha256": "e9e5401464e561c32a4ec42d857c4fbf009773c51ce1d544c4699ac82b1c421e"
+        }
+      },
+      {
+        "decision_id": "e39f1cc1-b019-4d4e-9b21-f5e66af0c911",
+        "floor": 22,
+        "label": "reward/card",
+        "choice": "card1",
+        "deviated": false,
+        "scope": "current_choice_only",
+        "chosen": {
+          "action": "choose_reward_card",
+          "option_index": 1
+        },
+        "result": "completed: Action completed.",
+        "source": {
+          "path": "logs/decisions.jsonl",
+          "offset": 1595360698,
+          "bytes": 257549,
+          "sha256": "afe7a949b2773661c638a75e8ef8deeafcee7524beb6d3c502e0f8a7e9056cf5"
+        }
+      },
+      {
+        "decision_id": "8de22f6a-61e6-4f53-846d-2d686d48730a",
+        "floor": 23,
+        "label": "reward/card",
+        "choice": "card1",
+        "deviated": false,
+        "scope": "current_choice_only",
+        "chosen": {
+          "action": "choose_reward_card",
+          "option_index": 1
+        },
+        "result": "completed: Action completed.",
+        "source": {
+          "path": "logs/decisions.jsonl",
+          "offset": 1595801087,
+          "bytes": 251689,
+          "sha256": "d6528e64f3bfa1529d41306b055c300797897a995d128df79d9ca63645121a3b"
+        }
+      }
+    ]
+  },
+  "C2": {
+    "expected": 30,
+    "produced": 30,
+    "independent": 30,
+    "B3": 19,
+    "B2": 11,
+    "final_group_agreement": 1.0,
+    "mismatches": [],
+    "unknown": 0
+  },
+  "explicit_exclusions": [
+    {
+      "decision_id": "373e11cd-6ff6-44b3-a2d9-6511f74eea77",
+      "label": "reward/card",
+      "floor": 17,
+      "ts": "2026-10-15T08:05:58.253Z",
+      "source": {
+        "path": "logs/decisions.jsonl",
+        "offset": 1593934483,
+        "bytes": 11538,
+        "sha256": "0880a5e978eba20fcdd37ff620bd39d5be9ef5b3b397a6f505e9610d6a879390"
+      },
+      "lane": "b3",
+      "reason": "explicit_simulation_skip",
+      "detail": "act boss defeated; the next act's boss is not known yet"
+    }
+  ],
+  "accepted_gate": {
+    "accepted_runs": [
+      "WJ0LTVSSDY61",
+      "DUB5VQQ6D6D1"
+    ],
+    "completed": 2,
+    "required": 2,
+    "HLAWCGM3KHVB": "excluded mixed-account continuation"
+  },
+  "limits": "Actual terminal and contiguous full indexed streams verified; one explicit after-boss unknown-next-boss skip is not applicable. Shop choice binds first action only. No game benefit or realized on-mode savings inferred; releases and actual on consumers remain separate."
+}

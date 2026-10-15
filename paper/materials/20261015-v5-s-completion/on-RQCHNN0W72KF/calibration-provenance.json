@@ -1,0 +1,52 @@
+{
+  "at": "2026-10-15T17:56:30.531924+08:00",
+  "run_id": "RQCHNN0W72KF",
+  "native_commit": "3d066a583631b85acb208813c31510864007adac",
+  "native_tree": "bc98332b3e0580d5d76517204768e9592ac2ce9f",
+  "native_exact_host": {
+    "files": 484,
+    "passed": 4897,
+    "skipped": 2,
+    "tsc": 0,
+    "vitest": 0,
+    "log_sha256": "077364b6451779b93a7725d68899b066f089b2dd2ce99f50e1de29a77b4228b9"
+  },
+  "source_refs": [
+    {
+      "path": "paper/materials/20261015-1730-ops/calibration-readback.json",
+      "sha256": "97654148871abac036d0b82747a4293901fc3f13dbef992d02a43854ace604a7"
+    },
+    {
+      "path": "paper/materials/20261015-1730-ops/host-completion.json",
+      "sha256": "7535ed009fb63a14ac841f2362394e415df538eb49230b656bfb2f5ac8d4e917"
+    }
+  ],
+  "trust_blob": {
+    "path": "knowledge/characters/silent/boss-trust.json",
+    "bytes": 93132,
+    "sha256": "3b19e7c87f51b440f9835b4ae10c7481b23abe8d1426d883432749d09ac638ff"
+  },
+  "calibration": {
+    "release": "V5-R362",
+    "name": "S1.boss-calibration19",
+    "fixed_model": "7e1193cef9467416bc10c8e344a49f4fd98390c7",
+    "tune": 107,
+    "validation": 438,
+    "actual_production_different_inputs": 70,
+    "current_production_recalibration_claimed": false,
+    "wide_parent_closed": false
+  },
+  "limits": "Native3d/bc98332 itself has an exact hostfull0, distinct from old6a55 full1 and metadata-only R362 registration. Fixed-model trust is not production recalibration;70 inputs differ. This is provenance for original V5-S runtime evidence, not a new calibration/adoption-parent closure. Runtime starts with the recorded9 dirty knowledge/notes leaves; the base commit full0 is not an exact full check of that uncommitted snapshot. The70-input difference is the original ops calibration readback, not a new per-call re-audit.",
+  "runtime_dirty_files": [
+    "knowledge/characters/silent/boss-damage.json",
+    "knowledge/characters/silent/construction-opportunities.json",
+    "knowledge/characters/silent/monster-records.json",
+    "knowledge/characters/silent/outcome-stats.json",
+    "knowledge/characters/silent/room-costs.json",
+    "knowledge/common/card-upgrades.json",
+    "knowledge/common/monster-db.json",
+    "knowledge/common/move-model.json",
+    "notes/monster-db-check.md"
+  ],
+  "runtime_dirty_snapshot_independently_full_checked": false
+}

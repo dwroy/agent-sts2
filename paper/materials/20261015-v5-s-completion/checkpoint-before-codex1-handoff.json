@@ -1,0 +1,439 @@
+{
+  "at": "2026-10-15T11:53:43.112980+08:00",
+  "goal": "完成v5-s计划文档除P4/P5外所有功能",
+  "original_parent": "roy-20261014-s-decision",
+  "goal_status": "active",
+  "goal_turn_classification": "previous turn progress: P1 actual consumer + eval exact host/CLI + P2-on isolated source +3extra offline cases; current health and explicit-plan evidence verified, original jobs still live",
+  "owner": "01a139d6-cfec-78e1-8739-e21ac426a354",
+  "phases": {
+    "P1": {
+      "worktree": "s-readiness-on-20261015",
+      "full_session": 52898,
+      "log": "paper/materials/20261015-s-readiness-on/sandbox-single-worker.log",
+      "first_full": "420 files3968 cases;418 files3966 passed;2 failures (boss-sim timeout and SL timing-dependent digest), rc1 preserved",
+      "rechecks": "SL offending case passed; later single-worker full shows apotheosis timeout, whole7-case file isolated recheck passed",
+      "code": "Silent default S_READINESS on; existing role/trust/sign gates unchanged; docs section14",
+      "gate": "two prior completed natural shadow runs82/82,max14.59ms; additional original B3 audit28k KAISER valid,54k other groups unknown",
+      "gitleaks_source": 0,
+      "main_live": "published V5-R352; exact host passed; actual new native accepted brain payload readback verified",
+      "source": "18b94db307c39df96ab5e0e53ea666d65ead2aa1",
+      "main": "e4882c0c6db6e23c6deb3f2b1aa261653aa9e230",
+      "release": "V5-R352",
+      "live": "67863fac6d97452a235cb11fb2bd10c749880a3f",
+      "host_full": "final23501d185 tsc0/472files4798pass2skip",
+      "natural_consumer": "paper/materials/20261015-s-readiness-on/watcher-natural-consumer.json"
+    },
+    "P3": {
+      "worktree": "s-combat-rank-20261015",
+      "full_session": 65070,
+      "log": "paper/materials/20261015-s-combat-rank/sandbox-full.log",
+      "targeted": "19 cases passed; separate5 historical Ironclad boards every question/answer digest on/off equal",
+      "replay": "600x3 SOUL_FYSH current-model historical input,0 sign mismatches,old best2==new best2; full-lines.json.gz preserved",
+      "tool_typecheck": 0,
+      "code": "s-combat-rank.ts; rankLines opt-in policy; role config and run-config; live whole order, bestDry, text and log; health; docs section15",
+      "main_live": "V5-R353 published; exact combined host passed; WJ F17 native ranking/question/answer/returned first-action verified",
+      "source": "15a39dfbf1d132e6371a70141fa507a4ba53b88d",
+      "main": "3a7a82d93a1891609b0dce380619005d3e6fabf1",
+      "release": "V5-R353",
+      "live": "d2dda4b75d6eacf5c5fcdf6f5f1da8a28c1c6ede",
+      "full_result": "rc0;421files3982+paths11; root composition31cases0",
+      "host_full": "final23501d185 tsc0/472files4798pass2skip",
+      "natural_consumer": "paper/materials/20261015-s-combat-rank/watcher-natural-consumer.json"
+    },
+    "P2": {
+      "worktree": "s-build-rank-20261015",
+      "full_session": 26468,
+      "log": "paper/materials/20261015-s-build-rank/sandbox-full.log",
+      "targeted": "20 cases passed before subsequent replay/HP-mean refactor; full current source pending; new timing case added before full start",
+      "replay": "existing P0 frozen4000 S samples plus recorded HP paired means, historical32VS/F2 choicecard0 matchesnewbestcard0; no simulator/API rerun",
+      "tool_typecheck": 0,
+      "code": "build-rank.ts; build-ranking-choice.ts; compareOptions integration; shadow default/on facts merge; pick/shop/stable schema reason validation+reask; Brain/hand actual reason log; health; docs section16",
+      "timing_fix": "readinessMs captured before C2 shadow/P2, old new-natural74ms included shadow cost; original readings preserved",
+      "main_live": "shadow published; exact combined host full passed; two natural shadow runs/on admission pending",
+      "source": "f685e05173341c045b851a0986f5151b2f915816",
+      "main": "5e6e7c6d896fe44a506b2464aef45bc9965108a1",
+      "release": null,
+      "live": "0067156dd470452e5c53267a0dbe45d0c83b597b",
+      "full_result": "Source423files3988+paths11 rc0 before final minor refactor, final20cases0/root46+health17 separately. Exact deployed c9ae host475files4818pass2skip accepted. Preparedon d320 exact427files4013+paths11 rc0 separately.",
+      "host_full": {
+        "source": "paper/materials/20261015-s-build-rank/ops-final-host-acceptance.json",
+        "sha256": "2bd37380c58167e86fec489241a0baa56d29fd3f71312c97bb059a30df0a74bf",
+        "tsc": 0,
+        "vitest": 0,
+        "files": 475,
+        "passed": 4818,
+        "skipped": 2
+      },
+      "prepared_on": {
+        "worktree": "s-build-rank-20261015",
+        "source": "d3208ee214ca2661b637e0da4d4239a8979001fb",
+        "uncommitted_two_files": false,
+        "full_session": 52909,
+        "full_result": "tsc0/427files4013+paths11 exit0; source unchanged since full start",
+        "gitleaks": 0,
+        "receipt": "paper/materials/20261015-s-build-rank-on/source-prepared.json",
+        "main_live_changed": false,
+        "gate": "two complete new natural shadow runs and actual selection; pending"
+      },
+      "natural_shadow": "first complete WJ19/19 rankings and actual choices verified,4shadow deviations need no reason; second full run pending"
+    },
+    "C2": {
+      "worktree": "s-adaptive-shadow-20261015",
+      "resumed_head": "5e6e7c6d896fe44a506b2464aef45bc9965108a1",
+      "range_tests": {
+        "session": 23744,
+        "rc": 0,
+        "cases": 3,
+        "log": "paper/materials/20261015-s-adaptive-on/range-tests-agent.log"
+      },
+      "original_failed_command": "range-tests.log used root cwd, worker could not resolve tsx; corrected only cwd to agent, no source/assertion/timeout change",
+      "code": "actual B2/B3 incremental controller/ranges, own prefix counts, paired stats, memo/pending completion validation, health, production-ranking shadow comparison implemented; config still gates on to shadow",
+      "remaining": [
+        "complete offline final P2/P3 first-group >=95%, all mismatches and p50/p90 work",
+        "two completed new natural shadow runs with complete question coverage and >=95% final-rank agreement",
+        "on admission/default, separate behavior publication and actual consumer"
+      ],
+      "main_live": "C2 preparation actually published shadow;23 live leaves verified; on gated; host/natural pending",
+      "targeted": "9files53cases rc0, tsc0, health2 rc0",
+      "full_session": 29998,
+      "full_log": "paper/materials/20261015-s-adaptive-on/sandbox-full.log",
+      "full_status": "rc0 427files4013+paths11; final two guards separatelytsc0/53passed",
+      "offline": {
+        "initial": "2/2 first-group agreement;B3work4000->1200;B2 1800->1800;p50.35/p90.63",
+        "additional": "4 of6 extra cases completed, all final groups agree; remainingX06 F33/F48 original process still running",
+        "extra_session": 35084,
+        "guard_change_after_full_start": "Source full began before final two guards; finaltsc0/53fixed separate. Actual final6ef deployed host478files4829pass2skip tsc0 now accepted.",
+        "coverage_snapshot": "paper/materials/20261015-s-adaptive-on/offline-coverage-1136.json",
+        "admission": "6/8 evaluated;observed agreement1.0;full coveragefalse, offline gatepending"
+      },
+      "source": "600915d133011c0eb1d063f61df9691bba4aba67",
+      "main": "8b5b8f8982d160c52d3f3733cf92f0f8a9f0a0ad",
+      "source_uncommitted": false,
+      "live": "d1c942783e267750dac79d6b780e16093dd7aa1d",
+      "live_tree": "6ef9f0f8808ec51de400c70455fa7aa360f9c7bb",
+      "host": {
+        "status": "passed",
+        "tree": "6ef9f0f8808ec51de400c70455fa7aa360f9c7bb",
+        "rc": 0,
+        "files": 478,
+        "passed": 4829,
+        "skipped": 2,
+        "seconds": 1532.56,
+        "receipt": "paper/materials/20261015-s-adaptive-on/watcher-final-host-readback.json"
+      },
+      "natural_shadow": "first complete WJ27/27 final group matches,19B3+8B2, all indexed decisions contiguous and counts match; second full run pending"
+    }
+  },
+  "source_leaf_hashes": {
+    "s-readiness-on-20261015": [
+      {
+        "path": "agent/src/core/config.ts",
+        "sha256": "f103a716525baf0854893317e350adfa6e95166aafad1cc5a9e33ef3a4eb8ef6"
+      },
+      {
+        "path": "agent/tests/s-decision.test.ts",
+        "sha256": "211dfc998aeb54f938987e71c60581ee82bf3899c199ea516a212b3ca1a6373e"
+      }
+    ],
+    "s-combat-rank-20261015": [
+      {
+        "path": "agent/src/core/config.ts",
+        "sha256": "0cfcab97b18442284f32a761e2d25c94f870a12c72965e65ba836db35b8d5f53"
+      },
+      {
+        "path": "agent/src/eye/run-config.ts",
+        "sha256": "27e49d527a3bcd23e20a79e8029db35ca0d88590b4705720eef422bc0385e38f"
+      },
+      {
+        "path": "agent/src/reflex/combat-plan.ts",
+        "sha256": "181744a787a90a677f39671f663cf1b40649ff8e2bd56baf5d8eab4f4bfb567a"
+      },
+      {
+        "path": "agent/src/sim/boss-lines.ts",
+        "sha256": "67a9ac8ff1450d4fe2ad78c5eb73fdedf7d23e3e3a08093918517293e8f21eb9"
+      },
+      {
+        "path": "agent/src/sim/s-combat-rank.ts",
+        "sha256": "2378da8b5b6f601a80089fcb82559d0a44a97cc3bb5e8957a9955ac58784c02d"
+      },
+      {
+        "path": "agent/tests/boss-lines-planner.test.ts",
+        "sha256": "1910890fa3b5356a790202bd8b189790b7ab01eebd3a833d194a85878df024ff"
+      },
+      {
+        "path": "agent/tests/module_health_test.py",
+        "sha256": "e6fb55fc5c827eebfc546a09646b1b4d21090c41b43231736a96b77f33b8f18a"
+      },
+      {
+        "path": "agent/tests/required-boss-lines.test.ts",
+        "sha256": "62bc5bb82dbc1ad59920bc0a8e746520a8a7ea50944948d75e49c3852f27e196"
+      },
+      {
+        "path": "agent/tests/s-combat-rank.test.ts",
+        "sha256": "1c8442caadd79fd8360368a1016f27e59d70479b3180858af1c4c4a098021039"
+      },
+      {
+        "path": "agent/tools/s-combat-rank-replay.ts",
+        "sha256": "31e171d2a937fd6d6dacce4f0aa3da0af4e97c043ca497911c47520e27b1e246"
+      },
+      {
+        "path": "ops/module_health.py",
+        "sha256": "2b777e453771d5ab3cdffd6f009583564f426d663eda98b532850d5ed5bee14a"
+      }
+    ],
+    "s-build-rank-20261015": [
+      {
+        "path": "agent/src/brain/brain.ts",
+        "sha256": "d88e56c4109a0af70a3ace619aeb176b1e69ef77bcc9bc1d5b4a68c01f872145"
+      },
+      {
+        "path": "agent/src/brain/specs.ts",
+        "sha256": "ff40f7f669e3d527b6e5c061e69551dae5c0837204625f1f3f71046f4628102e"
+      },
+      {
+        "path": "agent/src/core/config.ts",
+        "sha256": "e177e576df58b65950d6cf8b214f66145e2bd03e34197686aa8a41cb81e9d7e4"
+      },
+      {
+        "path": "agent/src/eye/run-config.ts",
+        "sha256": "18d56c65ca1eb0371eb02e0ae27e4c04a2488d5b76ba0b7be245af1ff70baa07"
+      },
+      {
+        "path": "agent/src/hand/loop.ts",
+        "sha256": "98c1560fb63a5dac2aafc6ed58e65514c4d190f755fe2c4b3e43c1bc78238077"
+      },
+      {
+        "path": "agent/src/sim/build-rank.ts",
+        "sha256": "fbade25ad646d3d8d9c7c2faf3d5d7fdd45fe15e49697484dd46cb9c589d81a7"
+      },
+      {
+        "path": "agent/src/sim/build-ranking-choice.ts",
+        "sha256": "3a1342764fc7af9cf42e3ac29e260172fc45972b9bcb593d6df578823a7f0dbb"
+      },
+      {
+        "path": "agent/src/sim/build-sim-facts.ts",
+        "sha256": "4cc260804212b4db22afe4d7eb927cb38761e06152f03b71c92f52b234459e9a"
+      },
+      {
+        "path": "agent/src/sim/build-sim.ts",
+        "sha256": "2d3ddf32df8bae11a483c0797a105d4d42911be874f9c72d4f238b43abcc752d"
+      },
+      {
+        "path": "agent/tests/build-rank-integration.test.ts",
+        "sha256": "1c5de02cd82e73c477257052fc8a32e9cd85a4fe9bec31c81f487ffbcdaf7768"
+      },
+      {
+        "path": "agent/tests/build-rank-loop.test.ts",
+        "sha256": "3ddf2b5ae77cf9a594ed8bed2384972aeeb21c441e5c0d14b087c795aeaf5d87"
+      },
+      {
+        "path": "agent/tests/build-rank.test.ts",
+        "sha256": "44cdc2640ef88a79e43b08796375f9eb2122269e2bdfd35fe86c23b39f56bd2e"
+      },
+      {
+        "path": "agent/tests/module_health_test.py",
+        "sha256": "9021bceadd6852750fb51308516ce0cd9c6c1479a63ba054640ca5787571ef2a"
+      },
+      {
+        "path": "agent/tools/build-rank-replay.ts",
+        "sha256": "c8318f97ef09b9f37df1b6ebf79d72a564282974ddcc36ba969ae3d1abb225d4"
+      },
+      {
+        "path": "ops/module_health.py",
+        "sha256": "3611888e02b216e92fd003af29d3ed91c629e10a45081a9b6fec14708b4f96f4"
+      }
+    ],
+    "s-adaptive-shadow-20261015": [
+      {
+        "path": "agent/src/core/config.ts",
+        "sha256": "8c3b182447b93c70ae5a0a14749d9a5c600d92a2dfc6940b768c2d7d8578c066"
+      },
+      {
+        "path": "agent/src/reflex/combat-plan.ts",
+        "sha256": "b2fae78ce982037bcc848cf386464bbed8771bdd787f002dac868d741f26fad2"
+      },
+      {
+        "path": "agent/src/sim/boss-lines.ts",
+        "sha256": "d849a27c6e811693bf56001b89ae62e3eb3ba0033fc3dd237452fdba811ab0b4"
+      },
+      {
+        "path": "agent/src/sim/boss-margin.ts",
+        "sha256": "141f5b292ad2beb460143c598edc75b2e4a6b2e2b1754f94d8c0eb0c37073f1c"
+      },
+      {
+        "path": "agent/src/sim/build-rank.ts",
+        "sha256": "6e518c06d907e78491dbc957fbaf598fc3fd828275a15ae8c1f2ac8103c4ad91"
+      },
+      {
+        "path": "agent/src/sim/build-sim-facts.ts",
+        "sha256": "76010a8a62f0f62a0207cd2a66feb4a20ead6c33bac902bb3de05fb9e95487f0"
+      },
+      {
+        "path": "agent/src/sim/build-sim-pool.ts",
+        "sha256": "ba7e1373999a16ec179b5a8883b38e69a82e6ab6df6878c7a5e81407f71f905e"
+      },
+      {
+        "path": "agent/src/sim/build-sim.ts",
+        "sha256": "80df743c8dfedd73216d13eac75f4fee5a1563ab97ccb1cb0191b7ce7140f687"
+      },
+      {
+        "path": "agent/src/sim/computation-failure.ts",
+        "sha256": "d189714400e34629d564e0d49032685a5e4ed8299aa7e2e7679f59e522756f7b"
+      },
+      {
+        "path": "agent/src/sim/s-combat-rank.ts",
+        "sha256": "d24bda87a60415f968a9c0afa510d3c6e7d798a5af8647a082635ec44312de69"
+      },
+      {
+        "path": "agent/tests/adaptive_health_test.py",
+        "sha256": "9df9fd0eee6c39d5ba9ff402669543c3de75a19c3dae58ac8247032401a8ad00"
+      },
+      {
+        "path": "agent/tests/required-boss-lines.test.ts",
+        "sha256": "9aaacf4fdc5f497617d88362802d2a3ff9fa73d5ff26973d5e488b5c82adc85b"
+      },
+      {
+        "path": "agent/tests/s-combat-rank.test.ts",
+        "sha256": "5316a065708d73b07ab6f268d8aee2c2e683c74335ca9298b9ca910d3d7ba9c6"
+      },
+      {
+        "path": "ops/adaptive_health.py",
+        "sha256": "c070ab14f4ccde3303d390d8af8226a67ef6ca00b1d1b683d11ca2bc927d0d1e"
+      },
+      {
+        "path": "agent/src/sim/adaptive-decks.ts",
+        "sha256": "79bdcd15e3375caf9348fdf65b9ccd65f0421b0df6c98ca76f248122d9039db3"
+      },
+      {
+        "path": "agent/src/sim/adaptive-sampler.ts",
+        "sha256": "056cc2302e40a696210850c4bf9253f290439be92899d6f5a871251fb1e308f9"
+      },
+      {
+        "path": "agent/src/sim/sample-range.ts",
+        "sha256": "409d07fa4dfdfdc40eeb01bb66f3b8f36f0b9d64f32537106f648ad25c60d614"
+      },
+      {
+        "path": "agent/tests/adaptive-completion.test.ts",
+        "sha256": "9d810476ade7e826137c1f1b6b75ad139ad7fdf2b9ae31b6e2a0f67af58e3735"
+      },
+      {
+        "path": "agent/tests/adaptive-range.test.ts",
+        "sha256": "e69d66d992c54b8156f74d717aa29838daf71e9a5a69c8bd8be00a809067ec1c"
+      },
+      {
+        "path": "agent/tests/adaptive-sampler.test.ts",
+        "sha256": "6c77da7f28e59ffdf15aa7ec9b8d6b23f7b511ea58d587b50912e9561e5f6d7f"
+      }
+    ]
+  },
+  "source_changes_are_uncommitted": "No source changes uncommitted. P2-on d3208ee21 is committed only in its original worktree, not main/live; all deployed preparation sources already committed.",
+  "C1": "V5-R351 hostfull4784+2skip verified; two new native configs show on/retries2; firstcompletedX7 has4 normal attempts0fail. Fixed fault loop remains separate.",
+  "P0": "new p0-boss-trust.md and JSON inventory24 rows/current publishedfixed7e1193/F49n23. Original32 Jev report reused; no extra API or old30/54/144 reruns. Wider current-model calibration/real R3 adapter not closed.",
+  "C2_natural": "WJ complete first accepted natural run:472 decisions,19B3+8B2 full group27/27; second complete run pending",
+  "test_processes_verified_at_0920": {
+    "P1": {
+      "pid": 273020,
+      "start_ticks": 91726472,
+      "cpu_ticks": 163268
+    },
+    "P3": {
+      "pid": 277029,
+      "start_ticks": 91749018,
+      "cpu_ticks": 149738
+    },
+    "P2": {
+      "pid": 349504,
+      "start_ticks": 91848562,
+      "cpu_ticks": 57121
+    }
+  },
+  "next": [
+    "Continue original offline session35084/PID579151,birth92257692 through remaining frozen cases; see current coverage snapshot. Preserve all results/mismatches and p50/p90 work; no duplicate simulation.",
+    "Read WJ and subsequent original-autoplay natural runs by logdb offsets; prove two completed new P2/C2shadow runs with every applicable question and actual selection. C2 final production group>=95%; partial observations are not admission. P3 first actual Boss consumer is verified; preserve its singleton win-group/no-benefit limit.",
+    "Only after P2 two-run acceptance, refresh original P2 worktree by isolated composition, integrate prepared source d3208ee21 without exposing conflicts in main; originalops serial separate behavior release/host and on consumer.",
+    "After the original C2 offline process ends, prepare and test the on-default/admission switch only in its original isolated worktree. Keep it out of main/live until the full offline>=95% and two completed natural-shadow gates pass; then separate behavior publication and actual complete_adaptive consumer.",
+    "Update deployed evaluator with frozen post-on runtime evidence for final report; do not rerun old30/54/Jev144 or call model APIs for evaluation.",
+    "Keep original parent/R3 learning boundaries and excluded P4/P5 open. Preserve eval retention guard failure; do not rewrite allocation/source identity to force cleanup. No full tests repeated for unchanged passed trees."
+  ],
+  "P4_P5": "excluded, untouched",
+  "no_new_agents_or_learning_parents": true,
+  "P1_P3_host_full": {
+    "owner_batch": "20261015-051302-s2-strategy-proposal",
+    "pid": 431398,
+    "birth": "92049183",
+    "status": "passed exact deployed tree"
+  },
+  "latest_ops_readback": {
+    "actual_read": "paper/materials/20261015-s-decision-eval/ops-final-host-acceptance.json and ops-first-natural-startup-readback.json",
+    "watcher_proof": "paper/materials/20261015-s-decision-eval/watcher-final-host-and-consumer-readback.json",
+    "checked_live": "9aefbaf476256caff190ef09880ee71cdd6443aa",
+    "checked_tree": "489e3c6f5ba7ef1dcc4049ea22b81cd229731fba",
+    "host": "478files4829pass2skip/tsc0; exact original batch exit0",
+    "later_knowledge_refresh": "d53620042/tree84d54445 only8knowledge leaves; no exactfull claim for refreshed tree",
+    "new_natural": "WJ0LTVSSDY61/PID739370,birth92562120,originalautoplay;P1on/P3on/P2shadow/C2shadow",
+    "P1_consumer": "actual three eligible diagnostic payloads accepted, receipt saved; broader goal still open"
+  },
+  "notice_dc64": "08:25 actual native notice and both role ACK verified again; no duplicate notice/ACK",
+  "P0.2": "32 original cases/64 original gzip/raw SHAs verified;20 selected-case deviations,32 missingS/HPSE/whole-plan remain unknown; full mode retained, P4excluded",
+  "eval": {
+    "source": "1f6b9beece5e864c0451f469ddc974bae5a39d23",
+    "main": "f33cbc19acb33ecd8a6ea0430ff36b199054bb98",
+    "full": "424files4002+paths11 exit0; final native-model Python9 pass; compositiontsc0/Python9",
+    "report": "paper/materials/20261015-s-decision-eval/report-r2/evaluation.json",
+    "delivery": "actually published three offline leaves; watcher verified source ancestry, exact live tree and leaf SHA",
+    "scope": "700 native-bound rows/52compute/155Jev/2predictions(1censored)/0onoverrides; no causal or production validation claim",
+    "ops_readback": "paper/materials/20261015-s-decision-eval/watcher-ops-ready-readback.json",
+    "live": "9aefbaf476256caff190ef09880ee71cdd6443aa",
+    "live_tree": "489e3c6f5ba7ef1dcc4049ea22b81cd229731fba",
+    "host": {
+      "status": "passed",
+      "tree": "489e3c6f5ba7ef1dcc4049ea22b81cd229731fba",
+      "full": {
+        "tsc": 0,
+        "vitest": 0,
+        "files": 478,
+        "passed": 4829,
+        "skipped": 2,
+        "total": 4831,
+        "seconds": 771.19
+      },
+      "readback": "paper/materials/20261015-s-decision-eval/watcher-final-host-and-consumer-readback.json"
+    },
+    "publication_readback": "paper/materials/20261015-s-decision-eval/watcher-publication-readback.json",
+    "consumer": "deployed CLI reproduced frozen report-r2 exactly except generated_at; live-report-r3 rc0",
+    "status": "feature implemented/tested/main+live published/exact host passed/actual CLI consumed; runtime update after future on stays separate"
+  },
+  "verified_wait": {
+    "at": "2026-10-15T11:09:49.787882+08:00",
+    "processes": [
+      {
+        "pid": 579151,
+        "birth": "92257692",
+        "matches": true,
+        "state": "R",
+        "cpu_ticks": 286474
+      },
+      {
+        "pid": 688118,
+        "exists": false
+      },
+      {
+        "pid": 708956,
+        "birth": "92527404",
+        "matches": true,
+        "state": "R",
+        "cpu_ticks": 47436
+      }
+    ],
+    "offline_session": 35084,
+    "eval_full": "original051302-s2 exact489e, no duplicate full"
+  },
+  "natural_wait": {
+    "completed_new_shadow_runs": 1,
+    "accepted_runs": [
+      "WJ0LTVSSDY61"
+    ],
+    "receipt": "paper/materials/20261015-v5-s-completion/natural-WJ0LTVSSDY61/complete-shadow-owner-receipt.json",
+    "next": "same original autoplay second complete new natural run; no forced start"
+  }
+}

@@ -1,0 +1,190 @@
+diff --git a/agent/src/core/config.ts b/agent/src/core/config.ts
+index 0a007897a..e3a7d19c9 100644
+--- a/agent/src/core/config.ts
++++ b/agent/src/core/config.ts
+@@ -37,14 +37,14 @@ export function simFailurePolicy(character: string | null | undefined, env: Node
+     retries: Number.isSafeInteger(retries) && retries > 0 ? retries : 2 };
+ }
+ 
+-/** C2 rollout stage: collect shadow evidence first. An on request is visible but cannot bypass admission. */
++/** Publish this default only after the original offline and two-run natural shadow admission. */
+ export function simAdaptivePolicy(character: string | null | undefined, env: NodeJS.ProcessEnv = process.env): {
+-  mode: "off" | "shadow" | "on"; requested: "off" | "shadow" | "on"; admission: "pending";
++  mode: "off" | "shadow" | "on"; requested: "off" | "shadow" | "on"; admission: "accepted" | "not_applicable";
+ } {
+-  if (characterKey(character ?? "") !== "silent") return { mode: "off", requested: "off", admission: "pending" };
+-  const raw = env["SIM_ADAPTIVE"]?.trim().toLowerCase() ?? "shadow";
++  if (characterKey(character ?? "") !== "silent") return { mode: "off", requested: "off", admission: "not_applicable" };
++  const raw = env["SIM_ADAPTIVE"]?.trim().toLowerCase() ?? "on";
+   const requested = raw === "shadow" || raw === "on" ? raw : "off";
+-  return { mode: requested === "off" ? "off" : "shadow", requested, admission: "pending" };
++  return { mode: requested, requested, admission: "accepted" };
+ }
+ 
+ /** V5-S P1: resolve against the actual run character, including tools that do not call loadConfig. */
+diff --git a/agent/tests/adaptive-shadow.test.ts b/agent/tests/adaptive-shadow.test.ts
+index 14067ced7..8ca02bd17 100644
+--- a/agent/tests/adaptive-shadow.test.ts
++++ b/agent/tests/adaptive-shadow.test.ts
+@@ -69,10 +69,13 @@ it("keeps unresolved ties to the sample cap and rejects non-paired inputs", () =
+ });
+ 
+ 
+-it("records shadow errors without throwing into the decision path and keeps on requests behind admission", () => {
++it("records shadow errors without throwing and keeps admitted on, rollback and role switches explicit", () => {
+   expect(safeAdaptiveShadow([], { lane: "b3", requested: 1000, allowS: false })).toMatchObject({ status: "error", mode: "shadow" });
+-  expect(simAdaptivePolicy("SILENT", {})).toMatchObject({ mode: "shadow", requested: "shadow" });
+-  expect(simAdaptivePolicy("SILENT", { SIM_ADAPTIVE: "on" })).toEqual({ mode: "shadow", requested: "on", admission: "pending" });
++  expect(simAdaptivePolicy("SILENT", {})).toEqual({ mode: "on", requested: "on", admission: "accepted" });
++  expect(simAdaptivePolicy("SILENT", { SIM_ADAPTIVE: "on" })).toEqual({ mode: "on", requested: "on", admission: "accepted" });
++  expect(simAdaptivePolicy("SILENT", { SIM_ADAPTIVE: "shadow" })).toEqual({ mode: "shadow", requested: "shadow", admission: "accepted" });
+   expect(simAdaptivePolicy("SILENT", { SIM_ADAPTIVE: "off" }).mode).toBe("off");
+-  for (const role of ["IRONCLAD", "REGENT"]) expect(simAdaptivePolicy(role, { SIM_ADAPTIVE: "on" }).mode).toBe("off");
++  expect(simAdaptivePolicy("SILENT", { SIM_ADAPTIVE: "invalid" }).mode).toBe("off");
++  for (const role of ["IRONCLAD", "REGENT"]) expect(simAdaptivePolicy(role, { SIM_ADAPTIVE: "on" }))
++    .toEqual({ mode: "off", requested: "off", admission: "not_applicable" });
+ });
+diff --git a/agent/tests/adaptive-wiring.test.ts b/agent/tests/adaptive-wiring.test.ts
+index 47d10d9c5..3e8966df6 100644
+--- a/agent/tests/adaptive-wiring.test.ts
++++ b/agent/tests/adaptive-wiring.test.ts
+@@ -7,7 +7,7 @@ import { board as fightBoard } from "./boss-sim-fixture.js";
+ import { board, decide, env, setupOneshotTests } from "./oneshot-support.js";
+ import { FIXTURE_DB, FIXTURE_MM } from "./boss-sim-build-fixture.js";
+ import { setMonsterDbForTests } from "../src/knowledge/monster-db.js";
+-import { withBossSim } from "../src/sim/build-sim-facts.js";
++import { bossEvaluationPending, withBossSim } from "../src/sim/build-sim-facts.js";
+ import { fightSample, slimInput } from "../src/sim/boss-sim.js";
+ 
+ setupOneshotTests();
+@@ -67,3 +67,25 @@ it("B3 records the shadow result without changing the actual question sent to th
+   expect(shadow.record).toHaveProperty("adaptive.status", "produced");
+   expect(shadow.record).toHaveProperty("completion.status", "complete");
+ });
++
++it("the admitted B3 on switch reaches completion and P2 facts through the actual live adapter", async () => {
++  vi.stubEnv("SIM_ADAPTIVE", "on");
++  vi.stubEnv("S_BUILD_RANK", "on");
++  const e = env(board("xljq-f5-reward", "reward"), undefined, { requiredBossEvaluation: true });
++  const decision = decide(e);
++  e.state.run!.raw["character_id"] = "SILENT";
++  const sample = fightSample(slimInput({ ...fightBoard({ bossHp: 12 }), captureBossMargin: true }), null, 7);
++  const requests: DeckRunRequest[] = [];
++  const runner: DeckSimRunner = { run: async (request) => {
++    requests.push(request);
++    return { outcomes: request.decks.map(() => request.orders.map(() => Array.from({ length: request.samples }, () => sample))),
++      complete: Array.from({ length: request.samples }, (_, i) => i), timedOut: false, elapsedMs: 0, workers: 0 };
++  } };
++  const result = await withBossSim(decision, e, { runner, db: FIXTURE_DB, mm: FIXTURE_MM, samples: 4, now: () => 0 });
++  expect(requests).toHaveLength(1);
++  expect(requests[0]?.range).toEqual({ from: 0, to: 4 });
++  expect(result.record).toMatchObject({ completion: { status: "complete_adaptive" },
++    adaptive: { mode: "on", status: "complete_adaptive" }, build_ranking: { status: "produced", mode: "on" } });
++  expect(bossEvaluationPending(result.decision, e.state, result.record)).toBeNull();
++  expect(result.decision.kind === "ask" && result.decision.state["facts"]).toHaveProperty("build_ranking.schema", "build-ranking-v1");
++});
+diff --git a/agent/tests/adaptive_health_test.py b/agent/tests/adaptive_health_test.py
+index eab359281..68994daf5 100644
+--- a/agent/tests/adaptive_health_test.py
++++ b/agent/tests/adaptive_health_test.py
+@@ -13,12 +13,21 @@ class AdaptiveHealth(unittest.TestCase):
+             'mode': 'on', 'status': 'complete_adaptive', 'work': {'savedFraction': .5},
+             'candidates': [{'key': 'a', 'samples': 200, 'rounds': 1, 'stop': 'leader'},
+                            {'key': 'b', 'samples': 200, 'rounds': 1, 'stop': 'eliminated'}]}}}
+-        value = h.adaptive_health({'loop': {'sim_adaptive': 'on'}}, [row, row])
++        value = h.adaptive_health({'loop': {'sim_adaptive': 'on', 'sim_adaptive_admission': 'accepted'}}, [row, row])
+         self.assertEqual((value['observed'], value['complete_adaptive'], value['errors']), (1, 1, 0))
+         self.assertIsNone(value['agreement'])
+         self.assertIsNone(value['saved_fraction']['p50'])
+         self.assertEqual(value['actual_saved_fraction']['p50'], .5)
+         self.assertEqual(value['stop_counts'], {'leader': 1, 'eliminated': 1})
++        self.assertEqual(value['admission_state'], 'accepted')
++        self.assertNotIn('pending', value['admission'])
++
++    def test_admitted_source_rollback_stays_shadow(self):
++        value = h.adaptive_health({'loop': {'sim_adaptive': 'shadow', 'sim_adaptive_admission': 'accepted'}}, [])
++        self.assertEqual(value['mode'], 'shadow')
++        self.assertEqual(value['admission_state'], 'accepted')
++        self.assertIn('never auto-enable', value['admission'])
++        self.assertIsNone(value['actual_saved_fraction']['p50'])
+ 
+     def test_unique_input_readback_does_not_claim_game_benefit_or_activation(self):
+         def row(key, agreement, **extra):
+diff --git a/agent/tests/computation-failure-b3.test.ts b/agent/tests/computation-failure-b3.test.ts
+index cf275df49..032df93f9 100644
+--- a/agent/tests/computation-failure-b3.test.ts
++++ b/agent/tests/computation-failure-b3.test.ts
+@@ -50,15 +50,17 @@ it.each([0, 250, 320, "throw"] as const)("B3 fails twice then permits the bounde
+   else expect(value.record?.["base"]).toBeUndefined();
+ });
+ 
+-it("one failure followed by a successful full attempt resets the counter; off retains mandatory retries", async () => {
++it.each(["off", "shadow", "on"] as const)("one failure followed by a successful %s attempt resets the counter; failure-exit off retains mandatory retries", async (mode) => {
++  vi.stubEnv("SIM_ADAPTIVE", mode);
+   const { e, decision } = question();
+   let fail = true;
+   const runner: DeckSimRunner = { run: async (req) => { if (fail) throw new Error("fixed failure"); return result(req, req.samples); } };
+   const setup = { runner, samples: 4, db: FIXTURE_DB, mm: FIXTURE_MM, now: () => 0 };
+-  await withBossSim(decision, e, setup);
++  const failed = await withBossSim(decision, e, setup);
++  expect(failed.record).toMatchObject({ completion: { status: "pending", attempts: 1 } });
+   fail = false;
+   const good = await withBossSim(decision, e, setup);
+-  expect(good.record).toMatchObject({ completion: { status: "complete", attempts: 2 } });
++  expect(good.record).toMatchObject({ completion: { status: mode === "on" ? "complete_adaptive" : "complete", attempts: 2 } });
+   expect(e.screenMemory.simFailure).toBeUndefined();
+   expect(bossEvaluationPending(good.decision, e.state, good.record!)).toBeNull();
+   vi.stubEnv("SIM_FAILURE_EXIT", "off");
+diff --git a/agent/tests/required-boss-lines.test.ts b/agent/tests/required-boss-lines.test.ts
+index 6c1302bed..31a899479 100644
+--- a/agent/tests/required-boss-lines.test.ts
++++ b/agent/tests/required-boss-lines.test.ts
+@@ -18,7 +18,8 @@ afterEach(() => { Object.assign(bossLinesOptions, original); vi.restoreAllMocks(
+ 
+ it("accepts an actually completed adaptive B2 result and reuses only its matching on-mode memo", () => {
+   Object.assign(bossLinesOptions, { serial: true, now: () => 0 });
+-  const policy = vi.spyOn(config, "simAdaptivePolicy").mockReturnValue({ mode: "on", requested: "on", admission: "pending" });
++  vi.stubEnv("SIM_ADAPTIVE", "on");
++  expect(config.simAdaptivePolicy("SILENT").mode).toBe("on");
+   const input = board({ bossHp: 12 }), memo = new ComputeMemo("fixed-C2-B2");
+   const solver = { ...input.solver, captureBossMargin: true };
+   const args = { state: { raw: { run_id: "fixed-C2-B2" }, turn: 1, run: { floor: 1, ascension: 10, raw: { character_id: "SILENT" } } },
+@@ -30,7 +31,7 @@ it("accepts an actually completed adaptive B2 result and reuses only its matchin
+   const reused = bossLineSim(args);
+   expect(reused).toMatchObject({ available: true, completion: { status: "complete_adaptive" } });
+   expect(memo.hits).toBe(1);
+-  policy.mockReturnValue({ mode: "off", requested: "off", admission: "pending" });
++  vi.stubEnv("SIM_ADAPTIVE", "off");
+   expect(bossLineSim(args)).toMatchObject({ available: true, completion: { status: "complete" }, run: { samples: 600 } });
+   expect(memo.hits).toBe(1);
+ });
+@@ -53,6 +54,7 @@ it("replays Ironclad Boss questions identically with S_COMBAT_RANK on or off", (
+ });
+ 
+ it("live Silent completes every Boss line beyond the budget while historical and other-role budgets stay intact", () => {
++  vi.stubEnv("SIM_ADAPTIVE", "off");
+   Object.assign(bossLinesOptions, { serial: true, deadlineMs: 0, turnBudgetMs: 0 });
+   const input = board({ bossHp: 12 });
+   const solver = { ...input.solver, captureBossMargin: true };
+diff --git a/ops/adaptive_health.py b/ops/adaptive_health.py
+index 5abf85546..ff81161ae 100644
+--- a/ops/adaptive_health.py
++++ b/ops/adaptive_health.py
+@@ -4,6 +4,7 @@ from collections import Counter
+ 
+ def adaptive_health(config, records):
+     mode = (config.get('loop') or {}).get('sim_adaptive', 'off')
++    admission_state = (config.get('loop') or {}).get('sim_adaptive_admission', 'unknown')
+     counts = Counter(observed=0, produced=0, errors=0, evaluable=0, matched=0, unknown=0, complete_adaptive=0,
+                      production_evaluable=0, production_matched=0)
+     mismatches, saved, seen = [], [], set()
+@@ -77,5 +78,8 @@ def adaptive_health(config, records):
+             'actual_saved_fraction': {'p50': quantile(.5, actual_saved), 'p90': quantile(.9, actual_saved)},
+             'candidate_samples': sample_counts, 'candidate_rounds': rounds, 'stop_counts': dict(stops),
+             'alert': mode in ('shadow', 'on') and counts['errors'] >= 3,
+-            'admission': 'pending offline coverage and at least two completed natural shadow runs; never auto-enable',
++            'admission_state': admission_state,
++            'admission': (f'accepted source; runtime mode={mode}; never auto-enable' if admission_state == 'accepted'
++                          else 'not applicable to this character; never auto-enable' if admission_state == 'not_applicable'
++                          else 'pending offline coverage and at least two completed natural shadow runs; never auto-enable'),
+             'limits': 'Shadow estimates and actual on-mode sample work are separate. On-mode cannot observe full-run agreement; no elapsed-time saving or game benefit inferred.'}

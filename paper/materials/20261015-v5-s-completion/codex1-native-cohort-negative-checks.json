@@ -1,0 +1,31 @@
+{
+  "at": "2026-10-15T12:41:18.738070+08:00",
+  "scope": "Read-only native model audit rejection checks on in-memory WJ projections; no API, simulations or original evidence mutation.",
+  "cases": [
+    {
+      "name": "unknown_model",
+      "detected": true,
+      "reason": "fallback_or_unknown_native_cohort",
+      "original_bytes_modified": false
+    },
+    {
+      "name": "fallback_engine",
+      "detected": true,
+      "reason": "fallback_or_unknown_native_cohort",
+      "original_bytes_modified": false
+    },
+    {
+      "name": "missing_question_identity",
+      "detected": true,
+      "reason": "missing_native_question_identity",
+      "original_bytes_modified": false
+    },
+    {
+      "name": "unbound_request_trace",
+      "detected": true,
+      "reason": "missing_answered_native_request_trace",
+      "original_bytes_modified": false
+    }
+  ],
+  "passed": 4
+}

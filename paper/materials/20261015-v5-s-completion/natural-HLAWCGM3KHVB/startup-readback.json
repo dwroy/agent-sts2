@@ -1,0 +1,108 @@
+{
+  "at": "2026-10-15T12:04:20.893400+08:00",
+  "actor": "watcher",
+  "parent": "roy-20261014-s-decision",
+  "run_id": "HLAWCGM3KHVB",
+  "native_commit": "fba193dfe31844e1dbde9f2ad7174427fcd446dc",
+  "actual_process": {
+    "pid": 952170,
+    "started": "2026-10-15T03:47:38.171Z"
+  },
+  "configuration": {
+    "s_readiness": "on",
+    "s_combat_rank": "on",
+    "s_build_rank": "shadow",
+    "sim_adaptive": "shadow",
+    "sim_adaptive_admission": "pending"
+  },
+  "source": {
+    "path": "logs/run-config.jsonl",
+    "offset": 1742457,
+    "bytes": 5336,
+    "sha256": "2113a71a760013d5cfce0b52f4fc499ac908a06c5dc96b81dbe6cb3676b44931"
+  },
+  "model_source": "bdfbab2eb; publicationec74a49ce",
+  "runtime_code_identical_to_first_run": false,
+  "unchanged_statistics_and_controller_leaves": [
+    {
+      "path": "agent/src/core/config.ts",
+      "sha256": "f4f611fb777c81a566d2c578d7e32c62ddd887284ca27c1d408988c1f660f623"
+    },
+    {
+      "path": "agent/src/sim/adaptive-shadow.ts",
+      "sha256": "551f8446b0dbd708e6b7e84f3784a1f18ec3505d99ddb700f1c3129a6cbd41b5"
+    },
+    {
+      "path": "agent/src/sim/adaptive-sampler.ts",
+      "sha256": "056cc2302e40a696210850c4bf9253f290439be92899d6f5a871251fb1e308f9"
+    },
+    {
+      "path": "agent/src/sim/adaptive-decks.ts",
+      "sha256": "ed9c0cf257901a06bc8aff814ec71fa3f921ea6fa240b801f229576e7e28521b"
+    },
+    {
+      "path": "agent/src/sim/sample-range.ts",
+      "sha256": "409d07fa4dfdfdc40eeb01bb66f3b8f36f0b9d64f32537106f648ad25c60d614"
+    },
+    {
+      "path": "agent/src/sim/boss-lines.ts",
+      "sha256": "80d660762ec653a089218f02ac37c319e022f4f1d6a823fcf6d39350783890b9"
+    },
+    {
+      "path": "agent/src/sim/boss-margin.ts",
+      "sha256": "141f5b292ad2beb460143c598edc75b2e4a6b2e2b1754f94d8c0eb0c37073f1c"
+    },
+    {
+      "path": "agent/src/sim/build-rank.ts",
+      "sha256": "6e518c06d907e78491dbc957fbaf598fc3fd828275a15ae8c1f2ac8103c4ad91"
+    },
+    {
+      "path": "agent/src/sim/s-combat-rank.ts",
+      "sha256": "d24bda87a60415f968a9c0afa510d3c6e7d798a5af8647a082635ec44312de69"
+    },
+    {
+      "path": "agent/src/sim/build-sim.ts",
+      "sha256": "80df743c8dfedd73216d13eac75f4fee5a1563ab97ccb1cb0191b7ce7140f687"
+    },
+    {
+      "path": "agent/src/sim/build-sim-pool.ts",
+      "sha256": "ba7e1373999a16ec179b5a8883b38e69a82e6ab6df6878c7a5e81407f71f905e"
+    },
+    {
+      "path": "agent/src/sim/build-sim-facts.ts",
+      "sha256": "76010a8a62f0f62a0207cd2a66feb4a20ead6c33bac902bb3de05fb9e95487f0"
+    },
+    {
+      "path": "agent/src/sim/build-ranking-choice.ts",
+      "sha256": "3a1342764fc7af9cf42e3ac29e260172fc45972b9bcb593d6df578823a7f0dbb"
+    },
+    {
+      "path": "agent/src/sim/computation-failure.ts",
+      "sha256": "d189714400e34629d564e0d49032685a5e4ed8299aa7e2e7679f59e522756f7b"
+    },
+    {
+      "path": "agent/src/brain/brain.ts",
+      "sha256": "d88e56c4109a0af70a3ace619aeb176b1e69ef77bcc9bc1d5b4a68c01f872145"
+    },
+    {
+      "path": "agent/src/brain/specs.ts",
+      "sha256": "ff40f7f669e3d527b6e5c061e69551dae5c0837204625f1f3f71046f4628102e"
+    },
+    {
+      "path": "agent/src/hand/loop.ts",
+      "sha256": "98c1560fb63a5dac2aafc6ed58e65514c4d190f755fe2c4b3e43c1bc78238077"
+    },
+    {
+      "path": "agent/src/eye/run-config.ts",
+      "sha256": "619684de21a2d3bec5137b0b9870814a45f9077911815d1deb5414b136c88919"
+    }
+  ],
+  "changed_model_and_replan_paths": [
+    "agent/src/reflex/card-model.ts",
+    "agent/src/reflex/combat-plan.ts",
+    "agent/src/reflex/turn-solver.ts"
+  ],
+  "diff_sha256": "2a35c139a373f099e74887d49e2a72c27427fa054309ab74e1d2fad899299002",
+  "stage": "second natural shadow cohort in progress; no complete-run acceptance",
+  "limits": "Keep model versions separate. Each agreement compares full and prefix rankings within the same original question and model. No cross-model equivalence, game benefit, or replacement of the pinned offline/R3 inputs claimed."
+}

@@ -1,0 +1,32 @@
+diff --git a/agent/src/core/config.ts b/agent/src/core/config.ts
+index cbdfd7469..0a007897a 100644
+--- a/agent/src/core/config.ts
++++ b/agent/src/core/config.ts
+@@ -23,10 +23,10 @@ export function sCombatRankEnabled(character: string | null | undefined, env: No
+   return characterKey(character ?? "") === "silent" && (env["S_COMBAT_RANK"] ?? "on") === "on";
+ }
+ 
+-/** P2 starts with natural shadow validation; other roles retain the original question and schema. */
++/** Release this default only after P2's two natural shadow runs; other roles keep the original question and schema. */
+ export function sBuildRankMode(character: string | null | undefined, env: NodeJS.ProcessEnv = process.env): "off" | "shadow" | "on" {
+   if (characterKey(character ?? "") !== "silent") return "off";
+-  const mode = env["S_BUILD_RANK"]?.trim().toLowerCase() ?? "shadow";
++  const mode = env["S_BUILD_RANK"]?.trim().toLowerCase() ?? "on";
+   return mode === "shadow" || mode === "on" ? mode : "off";
+ }
+ 
+diff --git a/agent/tests/build-rank.test.ts b/agent/tests/build-rank.test.ts
+index 1119c9d4b..ff29430ca 100644
+--- a/agent/tests/build-rank.test.ts
++++ b/agent/tests/build-rank.test.ts
+@@ -76,7 +76,9 @@ describe("P2 paired construction ranking", () => {
+   });
+   it("requires actual paired samples and isolates other roles", () => {
+     expect(() => rank(samples(100), { short: samples(100).slice(1) })).toThrow("paired");
+-    expect(sBuildRankMode("SILENT", {})).toBe("shadow");
++    expect(sBuildRankMode("SILENT", {})).toBe("on");
++    expect(sBuildRankMode("SILENT", { S_BUILD_RANK: "shadow" })).toBe("shadow");
++    expect(sBuildRankMode("SILENT", { S_BUILD_RANK: "off" })).toBe("off");
+     expect(sBuildRankMode("SILENT", { S_BUILD_RANK: "on" })).toBe("on");
+     expect(sBuildRankMode("IRONCLAD", { S_BUILD_RANK: "on" })).toBe("off");
+   });

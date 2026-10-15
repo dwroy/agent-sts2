@@ -1,0 +1,100 @@
+{
+  "at": "2026-10-15T13:20:00.764609+08:00",
+  "parent": "roy-20261014-s-decision",
+  "session": "01a13dcd-83d4-7c63-b233-f93cf878ecf4",
+  "previous_goal_turn": "progress: final C2 source full and two isolated commits",
+  "this_goal_turn": "progress: exact on patches pass current-main apply-check; original pinned ops host and real guard/selector acceptance verified; current-process recovery boundary established",
+  "ops_receipts": [
+    {
+      "path": "paper/materials/20261015-silent-codex1-next-run/paid-host-readback.json",
+      "sha256": "d7ba978d3afbd21aa9a4daca2cef7c716587fd59d871618ce16604eacbdc9110"
+    },
+    {
+      "path": "paper/materials/20261015-silent-codex1-next-run/paid-host-client-exit.json",
+      "sha256": "15dcee1d3b36deb4e9459f138782970a679df7237760906eb3a6cdaf6cbb226e"
+    },
+    {
+      "path": "paper/materials/20261015-silent-codex1-next-run/paid-live-preflight.json",
+      "sha256": "63ea610faab3e2c8a7ea4840dd62f99576daa42adb4c3c4941269af8fbc931a1"
+    },
+    {
+      "path": "paper/materials/20261015-silent-codex1-next-run/paid-selector-activation.json",
+      "sha256": "c3b776932a1a2eed75fc9ead5389c869ad741800271dc03c822f7f31e56976a6"
+    },
+    {
+      "path": "paper/materials/20261015-silent-codex1-next-run/paid-completion.json",
+      "sha256": "59b18b21bd2b679b8b76857c0408710ad3886eb78a0e903994b85e5ae6dee02c"
+    }
+  ],
+  "host_exit": 0,
+  "host_tree": "81a0481ad610252b405bf3e1da3fc6a01c8bc47b",
+  "next_run_selector": "/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/brain",
+  "selector_activated_at": "2026-10-15 13:15:58 CST",
+  "selector_sha256": "7f21ec96dc15c3fa23dad4233b024b9ffec5223413879070dc2ca033cc6ad9fa",
+  "processes": [
+    {
+      "pid": 952170,
+      "present": true,
+      "birth": "92801432",
+      "state": "S",
+      "cwd": "/home/dw/Projects/agent-sts2/.worktrees/live/agent",
+      "brain_home": "/home/dw/.codex-brain",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh"
+    },
+    {
+      "pid": 1738396,
+      "present": true,
+      "birth": "86996299",
+      "state": "S",
+      "cwd": "/home/dw/Projects/agent-sts2"
+    },
+    {
+      "pid": 922271,
+      "present": true,
+      "birth": "71386382",
+      "state": "S",
+      "cwd": "/home/dw/Projects/agent-sts2"
+    },
+    {
+      "pid": 1209905,
+      "present": false
+    }
+  ],
+  "native_wait": {
+    "ts": "2026-10-15T05:20:00.090Z",
+    "state": "heartbeat",
+    "pid": 952170,
+    "run_id": "HLAWCGM3KHVB",
+    "question_id": "mv8zzy2h-952170-24",
+    "decision_type": "event/choose",
+    "reason": "quota: codex usage guard: the plan's included usage is not allowed now (ordinaryUsageAllowed false): further calls would draw on credits",
+    "since": "2026-10-15T04:59:15.047Z",
+    "retries": 8,
+    "next_retry": "2026-10-15T05:23:18.718Z",
+    "suspended_ms": 1245043,
+    "budget_policy": "outage_time_excluded",
+    "original_budget_ms": 14400000
+  },
+  "native_wait_sha256": "92e2af5d9712dc58d42523743e373b7d34fb77e05c1d540785fe8633d47026a7",
+  "natural_gate": {
+    "accepted": 1,
+    "required": 2,
+    "ready": false
+  },
+  "current_recovery_boundary": "The original HLAW process still retries its startup Gmail home. Next-run selector is now valid but cannot resume that process. Existing ops must handle the current pause within its authority; watcher changes no account/home/model/game process.",
+  "source_preparation": {
+    "P2": "d3208ee214ca2661b637e0da4d4239a8979001fb",
+    "C2": "8c6f294171ad7ce92e4a75e15646d7fdaa9eb2c1",
+    "source_full_passed": true,
+    "patch_manifest": "paper/materials/20261015-v5-s-completion/prepared-on-patches-r1/manifest.json",
+    "published": false
+  },
+  "scope_still_open": [
+    "second full eligible natural shadow run",
+    "separate P2-on/C2-on publication and exact final host",
+    "actual on consumers",
+    "post-on evaluation and completion documents"
+  ],
+  "P4_P5_excluded": true
+}

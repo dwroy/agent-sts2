@@ -1,0 +1,177 @@
+{
+  "at": "2026-10-15T17:54:57.896157+08:00",
+  "run_id": "RQCHNN0W72KF",
+  "floor": 17,
+  "scope": "first actual B2 on consumer; run ongoing",
+  "source": {
+    "path": "logs/decisions.jsonl",
+    "offset": 1618533683,
+    "bytes": 25770,
+    "sha256": "61659e6379348bb4c0e192af33064d4d4fe1027a99aa2bb1ef8e586fe0083a17"
+  },
+  "native_commit": "3d066a583631b85acb208813c31510864007adac",
+  "completion": {
+    "required": true,
+    "attempt_id": "78cb23de-0bec-4ab6-9ccc-b184e52ab0e4",
+    "status": "complete_adaptive",
+    "attempts": 1,
+    "reasons": [],
+    "samples": 200,
+    "requested": 600,
+    "failure": false,
+    "key": "sim-failure-v1:bfc0fba83f1d5329db1fea6753a56265fb475cdf910ced74370f5998508fd6e9"
+  },
+  "adaptive": {
+    "schema": "sim-adaptive-v1",
+    "mode": "on",
+    "status": "complete_adaptive",
+    "lane": "b2",
+    "rule": {
+      "version": "adaptive-v1",
+      "b3First": 300,
+      "b2First": 200,
+      "batch": 100,
+      "zElim": 3,
+      "zTie": 2,
+      "first": 200,
+      "requested": 600
+    },
+    "candidates": [
+      {
+        "key": "line:0",
+        "samples": 200,
+        "rounds": 1,
+        "stop": "leader",
+        "baseline": false
+      },
+      {
+        "key": "line:1",
+        "samples": 200,
+        "rounds": 1,
+        "stop": "eliminated",
+        "baseline": false
+      }
+    ],
+    "final": {
+      "leader": "line:0",
+      "group": [
+        "line:0"
+      ]
+    },
+    "rounds": [
+      {
+        "n": 200,
+        "leader": "line:0",
+        "eliminated": [
+          {
+            "key": "line:1",
+            "metric": {
+              "key": "win",
+              "difference": -0.215,
+              "se": 0.03463920281789544
+            }
+          }
+        ]
+      }
+    ],
+    "evaluable": true,
+    "work": {
+      "full": 1200,
+      "actual": 400,
+      "savedFraction": 0.6666666666666667,
+      "unit": "fight-sample-outcomes"
+    },
+    "limits": "Actual prefixes only. All candidates remain available with their own sample count. Full-run agreement is an independent admission result, not observed during an early-stopped question.",
+    "input_key": "b2:b9e4a02a0099ad942d82d8523a173bc30e4fb2a4bed84f698ebf8d73b7e317ce",
+    "candidate_keys": {
+      "line:0": "plan1",
+      "line:1": "p1"
+    }
+  },
+  "elapsed_ms": 1617,
+  "actual_questions": [
+    "plan"
+  ],
+  "actual_completed_action": {
+    "action": "play_card",
+    "card_index": 1,
+    "target_index": 0
+  },
+  "request_ids": [
+    "req_01a13ef907b67fd3b5999b483090ad6f"
+  ],
+  "selection_dispatch": {
+    "schema": 1,
+    "scope": "single_action_receipt",
+    "requested_action": {
+      "action": "play_card",
+      "card_index": 1,
+      "target_index": 0,
+      "option_index": null
+    },
+    "gated_action": {
+      "action": "play_card",
+      "card_index": 1,
+      "target_index": 0
+    },
+    "expected_identity": {
+      "card": {
+        "id": "NEUTRALIZE",
+        "upgraded": false
+      },
+      "target": {
+        "id": "LAGAVULIN_MATRIARCH"
+      },
+      "turn": 1,
+      "from": "decision"
+    },
+    "dispatch_status": "returned",
+    "not_dispatched_reason": null,
+    "returned_status": "completed",
+    "returned_stable": true,
+    "error_kind": null,
+    "state_effect_verified": false,
+    "whole_plan_executed": null,
+    "actual_turn": null
+  },
+  "health": {
+    "mode": "on",
+    "observed": 1,
+    "produced": 1,
+    "errors": 0,
+    "evaluable": 0,
+    "matched": 0,
+    "unknown": 0,
+    "complete_adaptive": 1,
+    "production_evaluable": 0,
+    "production_matched": 0,
+    "agreement": null,
+    "production_agreement": null,
+    "saved_fraction": {
+      "p50": null,
+      "p90": null
+    },
+    "mismatches": [],
+    "actual_saved_fraction": {
+      "p50": 0.6666666666666667,
+      "p90": 0.6666666666666667
+    },
+    "candidate_samples": [
+      200,
+      200
+    ],
+    "candidate_rounds": [
+      1,
+      1
+    ],
+    "stop_counts": {
+      "leader": 1,
+      "eliminated": 1
+    },
+    "alert": false,
+    "admission_state": "accepted",
+    "admission": "accepted source; runtime mode=on; never auto-enable",
+    "limits": "Shadow estimates and actual on-mode sample work are separate. On-mode cannot observe full-run agreement; no elapsed-time saving or game benefit inferred."
+  },
+  "full_run_quantiles": "pending terminal"
+}

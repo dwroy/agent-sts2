@@ -1,0 +1,38 @@
+{
+  "at": "2026-10-15T13:02:27.628812+08:00",
+  "script_sha256": "bc44b0e09c0dd175061b64c1024e8b68c94666564e51e7cfe25b43c144efec59",
+  "passed": 6,
+  "cases": [
+    {
+      "name": "unknown_model",
+      "detected": true,
+      "reason": "fallback_or_unknown_native_cohort"
+    },
+    {
+      "name": "fallback_engine",
+      "detected": true,
+      "reason": "fallback_or_unknown_native_cohort"
+    },
+    {
+      "name": "missing_question_identity",
+      "detected": true,
+      "reason": "missing_native_question_identity"
+    },
+    {
+      "name": "unbound_request_trace",
+      "detected": true,
+      "reason": "missing_answered_native_request_trace"
+    },
+    {
+      "name": "zero_attempt_guard",
+      "detected": true,
+      "reason": "zero_attempt_error_does_not_establish_model_consumption"
+    },
+    {
+      "name": "future_trace_cannot_certify_earlier_row",
+      "detected": true,
+      "reason": "missing_answered_native_request_trace"
+    }
+  ],
+  "limits": "In-memory projections only; native logs and historical reports unchanged; no simulations or model API calls."
+}

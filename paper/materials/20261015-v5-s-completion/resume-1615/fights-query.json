@@ -1,0 +1,13 @@
+{
+  "argv": [
+    "/home/dw/Projects/agent-sts2/data/logdb-venv/bin/python",
+    "/home/dw/Projects/agent-sts2/agent/tools/logdb/query.py",
+    "--json",
+    "--max-rows",
+    "1000",
+    "--no-sync",
+    "SELECT run_id,fight_no,floor,room,first_ts,last_ts,first_off,last_off FROM fights WHERE run_id IN ('HLAWCGM3KHVB','DUB5VQQ6D6D1') AND room='boss' ORDER BY run_id,fight_no"
+  ],
+  "rc": 0,
+  "stderr": ""
+}

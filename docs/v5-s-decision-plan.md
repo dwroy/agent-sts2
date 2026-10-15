@@ -504,3 +504,26 @@ shadow仍跑满样本，另外记录`production_comparison`，将各候选停止
 首稿冻结700行原生配置绑定的决策字节索引，含52次必需计算、155条Jev调用记录、2个有原尝试身份的T1模型预测（一项截断而排除、一项SL胜），尚无新on偏离记录。窗口是W1局中恢复后的R341祖先与X7的R351，不是配对实验或新阶段收益验收；只报告观察值。原32题Jev基线及64份原字节SHA已复核，不重跑旧研究/调用API，缺失S/配对SE与整计划执行仍为null。材料与覆盖边界在`paper/materials/20261015-s-decision-eval/`及`20261015-v5-s-completion/p0-jev-baseline-completeness.json`。
 
 本评估工具/首稿不关闭P1/P3新自然消费者、P2两自然shadow/on、C2完整离线/两自然shadow/on或原宽R3/P1/P2学习要求。实际发布、消费者和阶段验收以各自原回执为准。
+
+## 19. 限定目标完成验收（2026-10-15）
+
+Roy16:15恢复的原 `roy-20261014-s-decision` 目标，现完成C1/C2、P0/P1/P2/P3及评估交付，P4/P5排除。原owner与跨号接续身份不变。前节各阶段的pending是当时历史，本节以实际发布/自然消费和冻结报告补齐；原宽R2/R3、学习入库、生产校准与silent-0332修复链仍沿原owner开放。
+
+完整离线最终排序8/8一致；两自然shadow局WJ0LTVSSDY61与DUB5VQQ6D6D1分别27/27、30/30一致，适用题面和P2实际选择全覆盖。WJ沿原迁移前账号验收，DUB全23次原生Sol6.1/xhigh请求与codex1账号连续性联合验收；HLAW混合账号局排除，不充门槛。源码main集成56ee0a3bc已完成原组合检查。原ops分别发布P2 **V5-R359**（行为a013ee61，中间tree571bd2d0、C2仍shadow）与C2 **V5-R360**（行为18fba4f2，最终livefad271855/tree24de68ae），各自编号/规则双通知、源祖先/精确叶子和知识刷新读回齐。最终24de唯一原宿主tsc0/vitest0、483文件4891过2跳/697.69秒，中间571无独立全套绿，不重测未改树。
+
+下一自然on/on整局 **RQCHNN0W72KF** 于17:30:49启动、19:05:32 F49败给TEST_SUBJECT，772决策/53脑请求/207Jev原始字节连续覆盖。每个原生request/thread/turn均gpt-6.1-sol/xhigh，分别绑定当时存活的原PID2047994/birth94859754、codex1 home与开局前已固定且终局未变的认证元数据；无备用/未知片段，未读凭据。native3d066a58/treebc98332有独立精确host tsc0/vitest0、484文件4897过2跳/617.40秒；启动9个dirty知识/notes叶另记，不把基底full借给运行快照或R362仅编号树，旧6a55全套失败保持。
+
+P2产出/实际选择42/42：38道排序事实真实送脑并accepted，8次偏离理由逐项复核为21/21/15/21/18/20/20/14词；部署原纯选择映射/理由校验函数对全部38题0问题，与实际日志selection一致，无补问。另4题模式仍on但无可模拟候选，仅baseline完整1000样本，没有排序事实送脑、deviated=null；排除这些题的排序服从/偏离计数，实际动作均completed。C2有89个实际complete_adaptive尝试，按84个独立input_key统计的health为84/84、errors/unknown0；on未算完整反事实，agreement=null，不能声称on一致率95%。P1/P3缺失0，低可信及符号拒绝保持。
+
+C1在F40和F48两题共3组真实nonpositive-hp资源保护故障，均同key两次pending不派发、第三次degraded，样本42/159/0不足300，不给不可用的整场数字，实际首动作completed。原错误、种子/截断、9次尝试保留；正常受控出口不代表资源契约已修。F40由原ops18:40已纳入silent-0332/5aa2672链，本目标不另派研究/模拟或改变原修复范围。
+
+| 通道 | 实际尝试 | p50 ms | p90 ms | 最大 ms | 累计 ms |
+|---|---:|---:|---:|---:|---:|
+| B2 | 57 | 2274 | 39454.6 | 97585 | 663742 |
+| B3 | 45 | 13734 | 43166.2 | 140100 | 1050824 |
+
+102个尝试包含成功、baseline-only、失败重试和降级，未知耗时0；整局累计观察计算等待1,714,566ms。部署评估器SHA aa4d589c未改，实际CLI rc0，分位与独立算式一致。首稿6个失败B2因available字段误分类的脚本/报告保留，修正仅冻结元数据，另存report-r2，不重算游戏。样本工作节省p50=.517745/p90=.691879不是wall-time节省或收益。Jev207条token记录1,819,070、时延p50/p90=534/678.2ms，不作账单或不同窗口的因果推断。
+
+原P0的32题/64份SHA、缺S/配对SE/整计划执行与700行partial baseline边界保持。on的38选择按Boss分列，KAISER参考与实际F33 CRUSHER+ROCKET不符的15题结局未知，不强配；新5个T1条件预测只有2个首试结果可绑定，含Queen预测0但实际胜的反例，其余3个未知，首试/SL分列。R362固定107调参、验证415→438与模型/Platt/切点不变；生产70输入不同，本次不称当前生产模型重校准通过或关闭自然采用父。
+
+完整验收/原件链接见 [completion.md](../paper/materials/20261015-v5-s-completion/completion.md)、[最终owner回执](../paper/materials/20261015-v5-s-completion/on-RQCHNN0W72KF/complete-on-owner-receipt.json)、[部署评估输出](../paper/materials/20261015-v5-s-completion/on-RQCHNN0W72KF/report-r2/runtime-report.md)。本节完成的是原授权架构功能和运行证据交付，不声称胜率提升、通关或完整游戏模型正确；未改账号/home/模型/prompt，不新开任务。

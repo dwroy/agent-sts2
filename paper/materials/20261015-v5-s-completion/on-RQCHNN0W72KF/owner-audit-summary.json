@@ -1,0 +1,84 @@
+{
+  "at": "2026-10-15T19:20:31.524120+08:00",
+  "run_id": "RQCHNN0W72KF",
+  "parent": "roy-20261014-s-decision",
+  "original_owner": "01a139d6-cfec-78e1-8739-e21ac426a354",
+  "watcher": "01a13dcd-83d4-7c63-b233-f93cf878ecf4",
+  "complete_raw_decision_coverage": 772,
+  "native_codex1_sol_xhigh_calls": 53,
+  "P2_actual_on": 38,
+  "P2_no_modeled_offered_candidate": 4,
+  "P2_overrides": 8,
+  "C2_successful_attempts": 89,
+  "C2_independent_input_keys": 84,
+  "C2_duplicate_input_multiplicity": {
+    "1": 82,
+    "5": 1,
+    "2": 1
+  },
+  "C1_real_failure_groups": 3,
+  "computation": [
+    {
+      "cohort": "V5-S-P2-C2-on",
+      "lane": "b2",
+      "attempts": 57,
+      "wall_ms": {
+        "n": 57,
+        "p50": 2274.0,
+        "p90": 39454.6,
+        "max": 97585,
+        "sum": 663742
+      },
+      "unknown_ms": 0,
+      "degraded": 2,
+      "complete_adaptive": 51
+    },
+    {
+      "cohort": "V5-S-P2-C2-on",
+      "lane": "b3",
+      "attempts": 45,
+      "wall_ms": {
+        "n": 45,
+        "p50": 13734.0,
+        "p90": 43166.2,
+        "max": 140100,
+        "sum": 1050824
+      },
+      "unknown_ms": 0,
+      "degraded": 1,
+      "complete_adaptive": 38
+    }
+  ],
+  "observed_wait_ms": 1714566,
+  "source_refs": [
+    {
+      "path": "paper/materials/20261015-v5-s-completion/on-RQCHNN0W72KF/whole-run-account-admission.json",
+      "sha256": "52f7121bbdeabc7612d05bd8059c075caaa82da6c82d031d7b0922e231526bd9"
+    },
+    {
+      "path": "paper/materials/20261015-v5-s-completion/on-RQCHNN0W72KF/p2-consumer-inputs.json",
+      "sha256": "ce7fa2f1a10f08b1ffe754436f3e4bef22e57fd4731dde788dae50ace527694f"
+    },
+    {
+      "path": "paper/materials/20261015-v5-s-completion/on-RQCHNN0W72KF/c1-natural-failure-consumer.json",
+      "sha256": "47c5fbbf91965a88af4ff1eb0bf5b29e48957b31eca9359af3fd77f0f2b8d659"
+    },
+    {
+      "path": "paper/materials/20261015-v5-s-completion/on-RQCHNN0W72KF/report-r2/evaluation.json",
+      "sha256": "3b1ac48a92889ed6f4a9b00465c2f71491e3fe5900f010ac40e757503bcf1901"
+    },
+    {
+      "path": "paper/materials/20261015-v5-s-completion/on-RQCHNN0W72KF/evaluator-command-r2.json",
+      "sha256": "8c327b5259e8e996a37658b3db81ddc93e841eb00dc762cab2cfc9da20a72ab9"
+    },
+    {
+      "path": "paper/materials/20261015-v5-s-completion/on-RQCHNN0W72KF/whole-run-health.json",
+      "sha256": "f8faba76c5a0db9ff2ef8243e7023870983883ef6a309d6b25e6a2ab7203fe45"
+    },
+    {
+      "path": "paper/materials/20261015-v5-s-completion/on-RQCHNN0W72KF/calibration-provenance.json",
+      "sha256": "c7ff3e1fe666719881a1da0198f2dfad9c2cee3ed6bd13f2ecd02c1cb093b33d"
+    }
+  ],
+  "limits": "On-run has no full counterfactual agreement. Timing includes failures/retries/memo work and is descriptive; 84 health inputs differ from 89 successful attempt identities. Game outcome and model calibration remain separate."
+}

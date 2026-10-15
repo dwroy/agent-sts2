@@ -1,0 +1,55 @@
+{
+  "started_at": "2026-10-15T12:36:31.526763+08:00",
+  "original_failure_preserved": true,
+  "checks": [
+    {
+      "name": "targeted",
+      "argv": [
+        "nice",
+        "-n",
+        "19",
+        "npx",
+        "vitest",
+        "run",
+        "tests/adaptive-shadow.test.ts",
+        "tests/adaptive-wiring.test.ts",
+        "tests/adaptive-sampler.test.ts",
+        "tests/adaptive-range.test.ts",
+        "tests/adaptive-completion.test.ts",
+        "tests/required-boss-lines.test.ts",
+        "tests/required-boss-evaluation.test.ts",
+        "tests/computation-failure.test.ts",
+        "tests/computation-failure-b3.test.ts",
+        "tests/computation-failure-loop.test.ts",
+        "tests/sim-wait.test.ts",
+        "tests/build-rank.test.ts",
+        "tests/build-rank-integration.test.ts",
+        "tests/build-rank-loop.test.ts",
+        "--pool=threads",
+        "--maxWorkers=1"
+      ],
+      "cwd": "/home/dw/Projects/agent-sts2/.worktrees/s-adaptive-shadow-20261015/agent",
+      "rc": 0
+    },
+    {
+      "name": "health",
+      "argv": [
+        "nice",
+        "-n",
+        "19",
+        "python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "agent/tests",
+        "-p",
+        "adaptive_health_test.py"
+      ],
+      "cwd": "/home/dw/Projects/agent-sts2/.worktrees/s-adaptive-shadow-20261015",
+      "rc": 0
+    }
+  ],
+  "finished_at": "2026-10-15T12:37:15.285539+08:00"
+}

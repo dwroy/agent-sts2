@@ -1,0 +1,65 @@
+{
+  "at": "2026-10-15T13:13:15.280961+08:00",
+  "parent": "roy-20261014-s-decision",
+  "session": "01a13dcd-83d4-7c63-b233-f93cf878ecf4",
+  "scope": "Read-only narrow patch application preflight against current R355 main. No patch applied, staged, integrated, published or admitted.",
+  "base_main": "a936191941240393bf578b8824141c5b4c01f52e",
+  "base_live": "efed9b0a105c2f2c0d59089c8e938121f5ea8fc1",
+  "patches": [
+    {
+      "phase": "P2",
+      "source": "d3208ee214ca2661b637e0da4d4239a8979001fb",
+      "path": "paper/materials/20261015-v5-s-completion/prepared-on-patches-r1/p2-on.patch",
+      "sha256": "72a4d506ad5f8850f881667c10a33492f6824043c3c974893996ccd137d3fe8c",
+      "paths": [
+        "agent/src/core/config.ts",
+        "agent/tests/build-rank.test.ts"
+      ]
+    },
+    {
+      "phase": "C2",
+      "source": "8c6f294171ad7ce92e4a75e15646d7fdaa9eb2c1",
+      "path": "paper/materials/20261015-v5-s-completion/prepared-on-patches-r1/c2-on.patch",
+      "sha256": "b7545fe2c8460a8118fb32d5cd2abb09ff95f6fc30ad9402a193faf97da86996",
+      "paths": [
+        "agent/src/core/config.ts",
+        "agent/tests/adaptive-shadow.test.ts",
+        "agent/tests/adaptive-wiring.test.ts",
+        "agent/tests/adaptive_health_test.py",
+        "agent/tests/computation-failure-b3.test.ts",
+        "agent/tests/required-boss-lines.test.ts",
+        "ops/adaptive_health.py"
+      ]
+    }
+  ],
+  "apply_check": {
+    "argv": [
+      "git",
+      "apply",
+      "--check",
+      "paper/materials/20261015-v5-s-completion/prepared-on-patches-r1/p2-on.patch",
+      "paper/materials/20261015-v5-s-completion/prepared-on-patches-r1/c2-on.patch"
+    ],
+    "rc": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  "gitleaks_rc": 0,
+  "main_working_source_leaves_unchanged": {
+    "agent/src/core/config.ts": "482e107af0fd2fc8300dfbf04342bb6d067bf1eb5401eb0142368c9f936eb24e",
+    "agent/tests/adaptive-shadow.test.ts": "a3de371e7a875a4cf0bda56560d4f9223c8a508ad988597af677f73fd8d04554",
+    "agent/tests/adaptive-wiring.test.ts": "7c8f9c9f2882639b0fe8d911af439e03890873ab5334e07b0b5bef077094f30b",
+    "agent/tests/adaptive_health_test.py": "9df9fd0eee6c39d5ba9ff402669543c3de75a19c3dae58ac8247032401a8ad00",
+    "agent/tests/build-rank.test.ts": "44cdc2640ef88a79e43b08796375f9eb2122269e2bdfd35fe86c23b39f56bd2e",
+    "agent/tests/computation-failure-b3.test.ts": "61ce30242daf00d7b9edc5bfc319f773ec4ea99aa347605bb501a57171ef4d37",
+    "agent/tests/required-boss-lines.test.ts": "9aaacf4fdc5f497617d88362802d2a3ff9fa73d5ff26973d5e488b5c82adc85b",
+    "ops/adaptive_health.py": "c070ab14f4ccde3303d390d8af8226a67ef6ca00b1d1b683d11ca2bc927d0d1e"
+  },
+  "index_unchanged": true,
+  "natural_gate": {
+    "accepted": 1,
+    "required": 2,
+    "ready": false
+  },
+  "limits": "Original source full receipts remain authoritative for their exact sources. This preflight does not replace final integration checks or exact host acceptance. Recheck current code before any later integration; preserve paid-credit scope/history and knowledge."
+}

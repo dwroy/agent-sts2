@@ -1,0 +1,98 @@
+{
+  "at": "2026-10-15T12:20:39.314608+08:00",
+  "main": "b980c660021e9dc804a4890d1f58aa7420185077",
+  "live": "fba193dfe31844e1dbde9f2ad7174427fcd446dc",
+  "worktree": "/home/dw/Projects/agent-sts2/.worktrees/s-adaptive-shadow-20261015",
+  "head": "93cce82eebf435770a60913f22f5d690f5606ef8",
+  "merge_head": "d3208ee214ca2661b637e0da4d4239a8979001fb",
+  "root_index_paths": [],
+  "staged_dependency_paths": [
+    "agent/src/core/config.ts",
+    "agent/tests/build-rank.test.ts"
+  ],
+  "unstaged_c2_paths": [
+    "agent/src/core/config.ts",
+    "agent/tests/adaptive-shadow.test.ts",
+    "agent/tests/adaptive-wiring.test.ts",
+    "agent/tests/adaptive_health_test.py",
+    "agent/tests/required-boss-lines.test.ts",
+    "ops/adaptive_health.py"
+  ],
+  "working_file_sha256": [
+    {
+      "path": ".worktrees/s-adaptive-shadow-20261015/agent/src/core/config.ts",
+      "sha256": "06939041c2d6f07824ca1fe1d4d57c24e2701cb4fb892c9831c5fe412544ea11"
+    },
+    {
+      "path": ".worktrees/s-adaptive-shadow-20261015/agent/tests/adaptive-shadow.test.ts",
+      "sha256": "6b1200d2b3a3be7fa0df485245fc4dd91a93110da40e2b641d06112513959f7f"
+    },
+    {
+      "path": ".worktrees/s-adaptive-shadow-20261015/agent/tests/adaptive-wiring.test.ts",
+      "sha256": "8d940f31cee5f5de90f8b401226caa4bc528214ac3a95373d263982a4da9eb08"
+    },
+    {
+      "path": ".worktrees/s-adaptive-shadow-20261015/agent/tests/adaptive_health_test.py",
+      "sha256": "92a72b867dff593befff5b203e20591477cdc17ffbd80752f63342c7d3c8a504"
+    },
+    {
+      "path": ".worktrees/s-adaptive-shadow-20261015/agent/tests/required-boss-lines.test.ts",
+      "sha256": "89c9456330e143bed5dd8be637cb62c7469fdb0de86317ef6b206f319661641d"
+    },
+    {
+      "path": ".worktrees/s-adaptive-shadow-20261015/ops/adaptive_health.py",
+      "sha256": "a986097d444f0517b17bbe37da0f2a9b4504969bd535544033c0aadd3fd12339"
+    }
+  ],
+  "patches": [
+    {
+      "path": "paper/materials/20261015-v5-s-completion/handoff-c2-staged-dependency.patch",
+      "sha256": "72a4d506ad5f8850f881667c10a33492f6824043c3c974893996ccd137d3fe8c"
+    },
+    {
+      "path": "paper/materials/20261015-v5-s-completion/handoff-c2-uncommitted-on.patch",
+      "sha256": "0e0ffeac5c3a916c6a03d8cacc0d07af80ae4dcaecb3bda67fde6819fedeef22"
+    }
+  ],
+  "source_committed": false,
+  "full_started": false,
+  "targeted": {
+    "at": "2026-10-15T12:15:09.673366+08:00",
+    "targeted_rc": 1,
+    "health_rc": 0,
+    "files": [
+      "adaptive-shadow",
+      "adaptive-wiring",
+      "adaptive-sampler",
+      "adaptive-range",
+      "adaptive-completion",
+      "required-boss-lines",
+      "required-boss-evaluation",
+      "computation-failure",
+      "computation-failure-b3",
+      "computation-failure-loop",
+      "sim-wait",
+      "build-rank",
+      "build-rank-integration",
+      "build-rank-loop"
+    ]
+  },
+  "production_tsc_rc": 0,
+  "targeted_failure": {
+    "path": "agent/tests/computation-failure-b3.test.ts",
+    "line": 61,
+    "expected": "complete",
+    "actual": "complete_adaptive",
+    "attempts": 2,
+    "files_passed": 13,
+    "files_failed": 1,
+    "tests_passed": 64,
+    "tests_failed": 1,
+    "seconds": 65.95
+  },
+  "python_health": {
+    "rc": 0,
+    "tests": 3
+  },
+  "scope": "Prepared P2-on dependency staged; six C2-on changes unstaged. No main/live behavior change. Failed original logs preserved; no full started."
+}

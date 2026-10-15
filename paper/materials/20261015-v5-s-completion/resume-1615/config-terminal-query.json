@@ -1,0 +1,12 @@
+{
+  "argv": [
+    "/home/dw/Projects/agent-sts2/data/logdb-venv/bin/python",
+    "/home/dw/Projects/agent-sts2/agent/tools/logdb/query.py",
+    "--json",
+    "--max-rows",
+    "1000",
+    "SELECT 'run-config' AS stream,run_id,off,len,ts FROM run_config WHERE run_id IN ('HLAWCGM3KHVB','DUB5VQQ6D6D1') UNION ALL SELECT 'runs',run_id,off,len,ended FROM runs_raw WHERE run_id IN ('HLAWCGM3KHVB','DUB5VQQ6D6D1') ORDER BY ts,stream,off"
+  ],
+  "rc": 0,
+  "stderr": ""
+}

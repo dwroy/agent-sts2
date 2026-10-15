@@ -1,0 +1,39 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/s-adaptive-shadow-20261015/agent
+
+ ❯ tests/computation-failure-b3.test.ts (5 tests | 1 failed) 1113ms
+   × one failure followed by a successful full attempt resets the counter; off retains mandatory retries 96ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/computation-failure-b3.test.ts > one failure followed by a successful full attempt resets the counter; off retains mandatory retries
+AssertionError: expected { build_ranking: { …(15) }, …(19) } to match object { completion: { …(2) } }
+(105 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+    "completion": {
+      "attempts": 2,
+-     "status": "complete",
++     "status": "complete_adaptive",
+    },
+  }
+
+ ❯ tests/computation-failure-b3.test.ts:61:23
+     59|   fail = false;
+     60|   const good = await withBossSim(decision, e, setup);
+     61|   expect(good.record).toMatchObject({ completion: { status: "complete"…
+       |                       ^
+     62|   expect(e.screenMemory.simFailure).toBeUndefined();
+     63|   expect(bossEvaluationPending(good.decision, e.state, good.record!)).…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 13 passed (14)
+      Tests  1 failed | 64 passed (65)
+   Start at  12:14:03
+   Duration  65.95s (transform 11.58s, setup 5.90s, import 24.76s, tests 25.81s, environment 5ms)
+

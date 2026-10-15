@@ -1,0 +1,45 @@
+{
+  "at": "2026-10-15T19:24:45.839357+08:00",
+  "attempts": [
+    {
+      "workspace": "s-build-rank-20261015",
+      "argv": [
+        "/usr/bin/python3",
+        "ops/worktree_retention.py",
+        "complete",
+        "--workspace",
+        "s-build-rank-20261015",
+        "--source",
+        "d3208ee214ca2661b637e0da4d4239a8979001fb",
+        "--main-commit",
+        "16271871beb0ed3df1a6c997596e5e57faab027a",
+        "--live-commit",
+        "fe6462651b593b9831581c088deface9957a404f"
+      ],
+      "rc": 1,
+      "stdout": "{\"state\": \"retained\", \"reason\": \"source leaf not in recorded publication: agent/src/core/config.ts\"}\n",
+      "stderr": ""
+    },
+    {
+      "workspace": "s-adaptive-shadow-20261015",
+      "argv": [
+        "/usr/bin/python3",
+        "ops/worktree_retention.py",
+        "complete",
+        "--workspace",
+        "s-adaptive-shadow-20261015",
+        "--source",
+        "56ee0a3bc9c15c274e505f5769ec47677cb2ce37",
+        "--main-commit",
+        "16271871beb0ed3df1a6c997596e5e57faab027a",
+        "--live-commit",
+        "fe6462651b593b9831581c088deface9957a404f"
+      ],
+      "rc": 1,
+      "stdout": "{\"state\": \"retained\", \"reason\": \"source leaf not in recorded publication: agent/src/brain/engines/codex-usage.ts\"}\n",
+      "stderr": ""
+    }
+  ],
+  "no_source_identity_change_or_deletion": true,
+  "limits": "Exact leaf/HEAD/allocation gates remain authoritative; original source and evidence are retained. Feature completion does not bypass workspace reclamation. Previous evaluator retention leaf mismatch remains preserved, not repeated."
+}
