@@ -1,3 +1,4 @@
+import { completeAdaptiveLines } from "../sim/boss-lines.js";
 /**
  * Combat, turn-planned (phase 2). Division of labour:
  *
@@ -3856,7 +3857,7 @@ function planTurn(env: DecisionEnv): Decision | null {
         : { available: false, reason: "no draw/discard piles in the state", ms: 0 }
       : null;
   if (requiredBossComputation && bossSim) env.screenMemory.bossEvaluationRecord = simLog(bossSim, () => null);
-  if (requiredBossComputation && bossSim?.completion?.status !== "degraded" && (!bossSim?.available || bossSim.run.timedOut || bossSim.run.samples !== bossSim.run.requested)) {
+  if (requiredBossComputation && bossSim?.completion?.status !== "degraded" && (!bossSim?.available || bossSim.run.timedOut || (bossSim.run.samples !== bossSim.run.requested && !(bossSim.completion?.status === "complete_adaptive" && completeAdaptiveLines(bossSim.run))))) {
     env.screenMemory.bossEvaluationWait = `required boss evaluation pending: ${bossSim && !bossSim.available ? bossSim.reason : "complete paired samples unavailable"}`;
     return null;
   }

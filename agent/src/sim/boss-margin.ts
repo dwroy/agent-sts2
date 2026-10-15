@@ -33,15 +33,17 @@ export function marginOf(sample: MarginSample): number | null {
 }
 
 /** Every sample keeps its identity, including missing attribution and truncated/sequence fights. */
-export function summarizeBossMargin(samples: readonly MarginSample[], base: readonly MarginSample[], ids: readonly number[]) {
-  if (samples.length !== ids.length || base.length !== ids.length || new Set(ids).size !== ids.length) throw new Error("boss margin sample identity mismatch");
-  const values = (rows: readonly MarginSample[]) => rows.flatMap((s, i) => {
+export function summarizeBossMargin(samples: readonly MarginSample[], base: readonly MarginSample[], ids: readonly number[], baseIds: readonly number[] = ids) {
+  if (samples.length !== ids.length || base.length !== baseIds.length || new Set(ids).size !== ids.length
+      || new Set(baseIds).size !== baseIds.length) throw new Error("boss margin sample identity mismatch");
+  const values = (rows: readonly MarginSample[], identities: readonly number[]) => rows.flatMap((s, i) => {
     const value = marginOf(s);
-    return value === null ? [] : [{ sample: ids[i]!, value }];
+    return value === null ? [] : [{ sample: identities[i]!, value }];
   });
-  const option = values(samples), baseline = values(base);
+  const option = values(samples, ids), baseline = values(base, baseIds);
   const comparable = option.length === samples.length && baseline.length === base.length && samples.length > 0;
   return {
+    ...(baseIds !== ids ? { pairedIdentity: "explicit_sample_indices", referenceSamples: base.length } : {}),
     schema: "boss-relative-margin-v1", formula: "my_dpr/boss_hp-enemy_dpr/my_hp", unit: "reference_hp_fraction_per_turn",
     status: comparable ? "complete_conditional_model" : "unknown_or_incomplete_attribution",
     rankingEligible: comparable, samples: samples.length, valid: option.length, missing: samples.length - option.length,
