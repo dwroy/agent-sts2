@@ -1,0 +1,6 @@
+{
+  "initial_assumption": "all 72 existing reference paths must also have blobs in live tree",
+  "failed_path": "ops/worktree_storage.py",
+  "correction": "existing commit ancestry and source/base hashes remain required; root ops tools can be main consumers without a live runtime leaf. Missing live leaves must be ops paths whose current root bytes equal the audited base; no code deployed or check relaxed for runtime paths",
+  "failure_preserved": "ops/codex-ops/record-staging/20261015-1322/audit-fix-first.py.txt"
+}

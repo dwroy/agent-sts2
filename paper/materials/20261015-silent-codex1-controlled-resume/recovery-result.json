@@ -1,0 +1,173 @@
+{
+  "at": "2026-10-15 13:29:23 CST",
+  "state": "controlled_same_save_resume_verified",
+  "run": "HLAWCGM3KHVB",
+  "release_id": "V5-R355",
+  "actual_live_code": {
+    "commit": "efed9b0a105c2f2c0d59089c8e938121f5ea8fc1",
+    "code": "efed9b0+dirty",
+    "dirty": true,
+    "dirty_files": [
+      "notes/fight-value-backtest-silent.md",
+      "notes/monster-db-check.md"
+    ],
+    "branch": "live",
+    "worktree": "live"
+  },
+  "restart": true,
+  "same_floor_and_original_event_verified": true,
+  "old_controller": {
+    "pid": 952170,
+    "birth": "92801432",
+    "ppid": 952159,
+    "state": "S",
+    "cwd": "/home/dw/Projects/agent-sts2/.worktrees/live/agent",
+    "cmdline_sha256": "44f2d4bc38dcbd4fa0a0f03c3f618badb35c5e7d1ad8d7c9710a9fcef7c9ec95",
+    "environment": {
+      "BRAIN_CODEX_HOME": "/home/dw/.codex-brain",
+      "BRAIN_CODEX_MODEL": "gpt-6.1-sol",
+      "BRAIN_CODEX_EFFORT": "xhigh",
+      "STS2_WORKSPACE": "/home/dw/Projects/agent-sts2",
+      "STS2_BASE_URL": "http://127.0.0.1:8080",
+      "STS2_EXPECTED_PROCESS_ID": "34676",
+      "STS2_EXPECTED_NATIVE_PROFILE_ID": "1",
+      "LOGS": "/home/dw/Projects/agent-sts2/logs"
+    }
+  },
+  "original_autoplay": {
+    "pid": 1738396,
+    "birth": "86996299",
+    "ppid": 3138345,
+    "state": "S",
+    "cwd": "/home/dw/Projects/agent-sts2",
+    "cmdline_sha256": "4c38082f2289fa0f992a9f931ef8375dae3f7d7ba26008762f0652d0c51bcf52",
+    "environment": {}
+  },
+  "new_controller": {
+    "pid": 1296366,
+    "birth": "93390965",
+    "ppid": 1296355,
+    "cwd": "/home/dw/Projects/agent-sts2/.worktrees/live/agent",
+    "started": "2026-10-15T05:25:51.766Z",
+    "home": "/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/brain",
+    "explicit_paid_credit_scope": "main-silent-codex1-20261015"
+  },
+  "quota_admission_from_actual_new_run_config": {
+    "stop_pct": 100,
+    "every_calls": 3,
+    "every_min": 10,
+    "required": true,
+    "paid_credits": "main-silent-codex1-20261015",
+    "start": {
+      "engine": "codex",
+      "read_at": "2026-10-15T05:25:50.905Z",
+      "read_ms": 816,
+      "plan": "pro",
+      "used_pct": 100,
+      "window": "codex/primary",
+      "window_min": 10080,
+      "resets_at": "2026-10-20T04:58:44.000Z",
+      "credits": 43374.4617905,
+      "ordinary_usage_allowed": false,
+      "reached_type": "rate_limit_reached"
+    },
+    "last": {
+      "engine": "codex",
+      "read_at": "2026-10-15T05:25:50.905Z",
+      "read_ms": 816,
+      "plan": "pro",
+      "used_pct": 100,
+      "window": "codex/primary",
+      "window_min": 10080,
+      "resets_at": "2026-10-20T04:58:44.000Z",
+      "credits": 43374.4617905,
+      "ordinary_usage_allowed": false,
+      "reached_type": "rate_limit_reached"
+    },
+    "calls_since_read": 0
+  },
+  "codex_check": {
+    "bin": "/home/dw/.local/node/bin/codex",
+    "ok": true,
+    "version": "codex-cli 0.162.1"
+  },
+  "original_question": "mv8zzy2h-952170-24",
+  "new_question": "mv93iaso-1296366-1",
+  "first_accepted_at": "2026-10-15T05:26:27.341Z",
+  "first_accepted_label": "event/choose",
+  "first_accepted_choice": "o1",
+  "first_decision": {
+    "decision_id": "548bd5bd-5fd8-4a04-b769-3a3ddb141300",
+    "ts": "2026-10-15T05:26:27.344Z",
+    "observed_ts": "2026-10-15T05:25:55.045Z",
+    "chosen": {
+      "action": "choose_event_option",
+      "option_index": 1
+    },
+    "result": "completed: Action completed.",
+    "decider": "codex",
+    "fallback": false
+  },
+  "actual_new_native_session": {
+    "source": "ops/codex-ops/accounts/codex1/brain/sessions/2026/10/15/rollout-2026-10-15T13-26-06-01a13e06-5bb6-7443-a659-8547f53af76b.jsonl",
+    "frozen": "new-native-thread/rollout-2026-10-15T13-26-06-01a13e06-5bb6-7443-a659-8547f53af76b.jsonl.gz",
+    "bytes": 516494,
+    "sha256": "29c3119061a16f06575eefa176487d78a5ed4be6bb62cf859aec1244d6b3d41b",
+    "thread_id": "01a13e06-5bb6-7443-a659-8547f53af76b",
+    "session_cwd": "/tmp/jev-brain-codex-state/session-cwd/1296366-1792041966142",
+    "actual_model": "gpt-6.1-sol",
+    "actual_effort": "xhigh",
+    "actual_tier": "default",
+    "account_home_from_verified_controller": "/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/brain",
+    "account_identity_sha256": "68c5321817bf49b5a2e858b541b710066d179948bde150668e4e315cc438c4f8",
+    "old_cross_account_thread_not_reused": true
+  },
+  "raw_refs": [
+    {
+      "stream": "run-config",
+      "offset": 1747793,
+      "bytes": 5071,
+      "sha256": "148dcd7fbeeabb433a1fbe83c159e5e79ac48624dc04237d7623c38961282e38",
+      "frozen": "accepted-account-proofs/run-config-1747793.jsonl.gz"
+    },
+    {
+      "stream": "brain",
+      "offset": 568252764,
+      "bytes": 71236,
+      "sha256": "32f4acf4d429eb8a9b6d69ec5c0a8b9afa6da80d97cc36e4a9146f0722aca7d4",
+      "frozen": "accepted-account-proofs/brain-568252764.jsonl.gz"
+    },
+    {
+      "stream": "codex-calls",
+      "offset": 37910477,
+      "bytes": 4336,
+      "sha256": "b5cb5d55a914a8602186c0048128c87ab2092992edc185448820b34b65c31279",
+      "frozen": "accepted-account-proofs/codex-calls-37910477.jsonl.gz"
+    },
+    {
+      "stream": "decisions",
+      "offset": 1562495936,
+      "bytes": 99263,
+      "sha256": "68d9a93d477c11a12d8c39bee31973f4a3261bfd4919e3e04bd7f817f209c436",
+      "frozen": "accepted-account-proofs/decisions-1562495936.jsonl.gz"
+    },
+    {
+      "stream": "states",
+      "offset": 13016384563,
+      "bytes": 24981,
+      "sha256": "274f6722183d6a064631366c6987e08725b194bbf578a4368b5505b5e261ff22",
+      "frozen": "accepted-account-proofs/states-13016384563.jsonl.gz"
+    }
+  ],
+  "native_reverted_field": {
+    "value": true,
+    "meaning": "original session thread successfully reverted to base after the answered turn; not a rejected game decision",
+    "source": "agent/src/brain/engines/codex-session.ts SessionTurn.reverted and ask()"
+  },
+  "mode_switch_or_alternate_brain": false,
+  "whole_run_V5S_natural_admission": false,
+  "exclusion_reason": "mixed-account controlled continuation; raw outcomes and Codex engine provenance retained",
+  "next_whole_codex1_run": "pending ordinary autoplay after this saved run ends; not claimed started",
+  "current_run_game_result": "ongoing, not claimed won or ended",
+  "source_or_behavior_number_change": false
+}

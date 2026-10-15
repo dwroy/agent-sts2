@@ -62,7 +62,7 @@ import { normalisePick, parseAnswerText, promptWithReask } from "../message.js";
 import { lenientRoute, stableSchema } from "../specs.js";
 import type { AnswerSpec, BrainAnswer, BrainEngine, BrainRequest, ToolCallRecord } from "../types.js";
 import { CodexSession, configProblems, RpcError, SessionError, type SessionOptions, type SessionTurn } from "./codex-session.js";
-import { CodexUsageGuard, readCodexUsage, refreshCodexAuth, type CodexUsage, type UsageNote } from "./codex-usage.js";
+import { CodexUsageGuard, readCodexUsage, refreshCodexAuth, usageReadTimeout, type CodexUsage, type UsageNote } from "./codex-usage.js";
 import { AgentAbortedError, AgentStartError, agentEnv, makeWorkDir, removeDir, runAgent } from "./process.js";
 import { knowledgeCharacter } from "../../knowledge/files.js";
 import { CodexCacheObserver, PhysicalCallBudget, type CodexCacheObservation } from "./codex-cache.js";
@@ -820,8 +820,9 @@ export class CodexEngine implements BrainEngine {
     if (opts.beforePhysicalCall && opts.physicalCallLimit === undefined) throw new Error("persistent call claims require an isolated probe limit");
     this.physicalBudget = new PhysicalCallBudget(opts.physicalCallLimit);
     const { bin, home } = opts.codex;
-    const read = opts.readUsage ?? (() => readCodexUsage({ bin, home, env: codexEnv(bin, home), stateDir: join(this.stateDir, "usage") }));
-    const refreshAuth = opts.refreshAuth ?? (() => refreshCodexAuth({ bin, home, env: codexEnv(bin, home), stateDir: join(this.stateDir, "usage") }));
+    const timeoutMs = usageReadTimeout(opts.codex.usage);
+    const read = opts.readUsage ?? (() => readCodexUsage({ bin, home, env: codexEnv(bin, home), stateDir: join(this.stateDir, "usage"), timeoutMs }));
+    const refreshAuth = opts.refreshAuth ?? (() => refreshCodexAuth({ bin, home, env: codexEnv(bin, home), stateDir: join(this.stateDir, "usage"), timeoutMs }));
     this.usage = new CodexUsageGuard(opts.codex.usage, read, { note: (message) => this.opts.note?.(message), refreshAuth, ...(opts.now ? { now: opts.now } : {}) });
   }
 

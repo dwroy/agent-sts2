@@ -1,0 +1,63 @@
+{
+  "at": "2026-10-15 12:29:03 CST",
+  "status": "account/model/isolation verified; production quota admission blocked; selector not activated",
+  "identity": "actual account/read matched original codex1; Gmail and codex1 hashes distinct",
+  "model": "actual catalog gpt-6.1-sol supports xhigh; existing session args default; no new model turn requested",
+  "target_usage": {
+    "readAt": "2026-10-15T04:25:54.746Z",
+    "ms": 33405,
+    "plan": "pro",
+    "windows": [
+      {
+        "name": "codex/primary",
+        "usedPct": 100,
+        "windowMins": 10080,
+        "resetsAt": "2026-10-20T04:58:44.000Z"
+      }
+    ],
+    "credits": {
+      "hasCredits": true,
+      "unlimited": false,
+      "balance": 43894.4592665
+    },
+    "ordinaryUsageAllowed": false,
+    "reachedType": "rate_limit_reached",
+    "spendControlReached": false
+  },
+  "existing_guard": {
+    "passed": false,
+    "start_reason": "codex usage guard: the plan's included usage is not allowed now (ordinaryUsageAllowed false): further calls would draw on credits",
+    "before_call_error": "codex usage guard: the plan's included usage is not allowed now (ordinaryUsageAllowed false): further calls would draw on credits [quota]"
+  },
+  "code_evidence": {
+    "path": "agent/src/brain/engines/codex-usage.ts",
+    "lines": [
+      467,
+      479,
+      480,
+      481,
+      482
+    ],
+    "rule": "ordinaryUsageAllowed=false, any100%window, rate_limit_reached, and credit-balance decrease all stop the existing guard; no opt-in credit mode exists"
+  },
+  "why_selector_only_would_not_restore_codex": "new process would load codex1, then current guard rejects before the first model call",
+  "scope_to_clarify": "does requested only-main-brain-home scope permit a main-only paid-credit admission code change already economically authorized, while all other default guards remain unchanged?",
+  "selector_before_sha256": "cdbedaceb284ee73fc8249a9dc578e138c713a1f5242923ac80502e5d9a88d3f",
+  "selector_after_sha256": "cdbedaceb284ee73fc8249a9dc578e138c713a1f5242923ac80502e5d9a88d3f",
+  "selector_value": "/home/dw/.codex-brain",
+  "next_run_activation_time": null,
+  "current_process_untouched": {
+    "pid": 952170,
+    "birth": "92801432",
+    "state": "S",
+    "cwd": "/home/dw/Projects/agent-sts2/.worktrees/live/agent",
+    "run_id": "HLAWCGM3KHVB",
+    "started": "2026-10-15T03:47:38.171Z",
+    "run_config_code": "fba193dfe31844e1dbde9f2ad7174427fcd446dc"
+  },
+  "ops_learner_regent_other_space_touched": false,
+  "source_or_guard_changed": false,
+  "old_timeouts_are_slow_native_start_not_account_failure": "45s account/read initialized at26515ms and answered at27194ms; rateLimits read33405ms succeeded",
+  "no_model_turn_or_reset_credit_action": true,
+  "original_postmortem_task_completed_commit": "b980c660021e9dc804a4890d1f58aa7420185077"
+}

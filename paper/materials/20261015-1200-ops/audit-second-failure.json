@@ -1,0 +1,8 @@
+{
+  "exit": 1,
+  "stage": "read-only original state identity check",
+  "failure": "AttributeError: 'str' object has no attribute 'get'",
+  "cause": "raw states use a JSON string fingerprint containing the run id; state.run itself has no run id",
+  "correction": "parse the original JSON fingerprint and require every present explicit identity to equal WJ0LTVSSDY61; retain original payload, byte refs and exact equality checks",
+  "original_data_and_source_changed": false
+}

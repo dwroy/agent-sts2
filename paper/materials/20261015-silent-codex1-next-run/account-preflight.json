@@ -1,0 +1,61 @@
+{
+  "at": "2026-10-15T04:26:28.154Z",
+  "target_home": "/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/brain",
+  "target_account": {
+    "type": "chatgpt",
+    "planType": "pro",
+    "identity_sha256": "68c5321817bf49b5a2e858b541b710066d179948bde150668e4e315cc438c4f8"
+  },
+  "target_account_read_receipt": "paper/materials/20261015-silent-codex1-next-run/target-rpc-diagnostic.json",
+  "current_account": {
+    "method": "account/read",
+    "account_type": "chatgpt",
+    "plan_type": "promax",
+    "identity_field": "email",
+    "account_identity_sha256": "25950b27232743e6426de9e99afce1c29dcd28aea9fe16465a8f9fa326503024",
+    "requires_openai_auth": true
+  },
+  "auth_link_metadata_target": "/home/dw/.codex1/auth.json",
+  "no_AGENTS_home": true,
+  "model": "gpt-6.1-sol",
+  "effort": "xhigh",
+  "service_tier": "default",
+  "model_check": {
+    "ok": true,
+    "version": "codex-cli 0.162.1"
+  },
+  "explicit_session_args": {
+    "project_docs_disabled": true,
+    "xhigh": true,
+    "default_tier": true
+  },
+  "usage": {
+    "readAt": "2026-10-15T04:25:54.746Z",
+    "ms": 33405,
+    "plan": "pro",
+    "windows": [
+      {
+        "name": "codex/primary",
+        "usedPct": 100,
+        "windowMins": 10080,
+        "resetsAt": "2026-10-20T04:58:44.000Z"
+      }
+    ],
+    "credits": {
+      "hasCredits": true,
+      "unlimited": false,
+      "balance": 43894.4592665
+    },
+    "ordinaryUsageAllowed": false,
+    "reachedType": "rate_limit_reached",
+    "spendControlReached": false
+  },
+  "existing_guard": {
+    "passed": false,
+    "start_reason": "codex usage guard: the plan's included usage is not allowed now (ordinaryUsageAllowed false): further calls would draw on credits",
+    "before_call_error": "codex usage guard: the plan's included usage is not allowed now (ordinaryUsageAllowed false): further calls would draw on credits [quota]"
+  },
+  "credits_available": true,
+  "no_model_turn_or_reset_credit_action": true,
+  "no_selector_process_ops_learner_or_regent_change": true
+}

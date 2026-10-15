@@ -1,0 +1,163 @@
+{
+  "at": "2026-10-15 12:03:59 CST",
+  "batch": "20261015-114302",
+  "report": {
+    "task": "postmortem",
+    "appended": [
+      "WJ0LTVSSDY61"
+    ],
+    "skipped": [],
+    "bugs": [],
+    "ledger": {
+      "added": [],
+      "updated": [
+        "silent-0019",
+        "silent-0461",
+        "silent-0079",
+        "silent-0025",
+        "silent-0227"
+      ],
+      "repeats": [
+        "silent-0461",
+        "silent-0079"
+      ],
+      "check": 0
+    },
+    "code_proposals": [
+      "silent-proposal-552ae7eff7ba8b00",
+      "silent-proposal-739fdbdbd6561f61"
+    ],
+    "implementation_domains": [
+      "combat",
+      "sl"
+    ],
+    "report": "/home/dw/Projects/agent-sts2/learner/runs/20261015-114302-d50dec58-d82d-4691-a863-7992f66bdfea-postmortem/report.md"
+  },
+  "runtime": {
+    "batch": "20261015-114302",
+    "thread": "01a13da8-079f-70d3-8a90-07856f515cb2",
+    "cwd": "/home/dw/Projects/agent-sts2",
+    "event_log": "learner/runs/20261015-114302-d50dec58-d82d-4691-a863-7992f66bdfea-postmortem.jsonl",
+    "registered_launch_batch": null,
+    "original_lease": null,
+    "native_context": {
+      "source": "ops/codex-ops/accounts/codex1/learner/sessions/2026/10/15/rollout-2026-10-15T11-43-04-01a13da8-079f-70d3-8a90-07856f515cb2.jsonl",
+      "offset": 49155,
+      "bytes": 4620,
+      "sha256": "79055802f3caf006419bde29fc362272f597dc13ccd9d45d4f40bcab97bd9849",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "sandbox": {
+        "type": "workspace-write",
+        "writable_roots": [
+          "/home/dw/Projects/agent-sts2/.git"
+        ],
+        "network_access": false,
+        "exclude_tmpdir_env_var": false,
+        "exclude_slash_tmp": false
+      },
+      "approval_policy": "never"
+    },
+    "native_user_input": {
+      "offset": 53775,
+      "bytes": 15345,
+      "sha256": "37d13d5c5aae5462dad96f89e1a566867e27819447549922291a42fde59cc83e",
+      "input_sha256": "8035f0a9cd32a9b86343b244dcbe68cb03d63c702ac61a0502a4f5280a4c8079"
+    },
+    "original_header_events": [
+      {
+        "offset": 0,
+        "bytes": 16866,
+        "sha256": "d228adecca5120cd10b823bb00430cbcd24c354deed033bb725615b5ecd45df4",
+        "type": "learner_launch",
+        "attempt": null,
+        "code": null
+      },
+      {
+        "offset": 16866,
+        "bytes": 284,
+        "sha256": "f46258e2babf7418ede31dd6bdea3c5eb85d8ea24e289b0d798511f8000769e0",
+        "type": "learner_startup_attempt",
+        "attempt": 1,
+        "code": null
+      },
+      {
+        "offset": 20156,
+        "bytes": 77,
+        "sha256": "bac76730843703bfb5d81f8b03e5b7f470374ced4c7afa4fa45a387a5aeabc1e",
+        "type": "thread.started",
+        "attempt": null,
+        "code": null
+      }
+    ],
+    "startup_attempts": 1,
+    "failed_startups_preserved": 0,
+    "no_model_or_manual_restart": true
+  },
+  "canonical": {
+    "state": "done",
+    "rc": 0,
+    "proposal_audit_errors": []
+  },
+  "original_stream_counts": {
+    "states": 489,
+    "decisions": 472,
+    "sl-attempts": 5,
+    "run-config": 1,
+    "run-plans": 5,
+    "brain-run": 22
+  },
+  "original_stream_rows_verified": 994,
+  "actual_runtime_code": {
+    "commit": "9aefbaf476256caff190ef09880ee71cdd6443aa",
+    "code": "9aefbaf+dirty",
+    "dirty": true,
+    "dirty_files": [
+      "knowledge/characters/silent/boss-damage.json",
+      "knowledge/characters/silent/construction-opportunities.json",
+      "knowledge/characters/silent/monster-records.json",
+      "knowledge/characters/silent/outcome-stats.json",
+      "knowledge/characters/silent/room-costs.json",
+      "knowledge/common/card-upgrades.json",
+      "knowledge/common/monster-db.json",
+      "knowledge/common/move-model.json",
+      "notes/fight-value-backtest-silent.md",
+      "notes/monster-db-check.md"
+    ],
+    "branch": "live",
+    "worktree": "live"
+  },
+  "live_commit_at_readback": "fba193dfe31844e1dbde9f2ad7174427fcd446dc",
+  "original_fixed_numeric_assertions_reexecuted_read_only": true,
+  "old0461_scope": "old runtime does not have the new source ancestor; ordinary A10 partial fix already live; no R354 regression or new fix task inferred",
+  "existing_queue": "0461 and 0079 retain their original chains; no duplicate bug row",
+  "proposal_states": [
+    {
+      "id": "silent-proposal-552ae7eff7ba8b00",
+      "state": "implemented",
+      "proposal": "/home/dw/Projects/agent-sts2/learner/runs/20261015-114302-d50dec58-d82d-4691-a863-7992f66bdfea-postmortem/proposal-cloak.md",
+      "proposal_sha256": "12ebc99eafe9d4bcefd3f3bc102ea8d01ee344bf9e53b446c6a4b194a7497afa",
+      "implemented_commit": "bdfbab2eb6d4e3d3c9014928712365560e3da176"
+    },
+    {
+      "id": "silent-proposal-739fdbdbd6561f61",
+      "state": "pending",
+      "proposal": "/home/dw/Projects/agent-sts2/learner/runs/20261015-114302-d50dec58-d82d-4691-a863-7992f66bdfea-postmortem/proposal-sl-cost.md",
+      "proposal_sha256": "31e9f7965764058f3bd4bdc3117ffcac0ad2196933dee460ce8cb603ddac76a7",
+      "implemented_commit": null
+    }
+  ],
+  "new_rule_source_or_release": false,
+  "wide0461_and_strategy_parent_remain_open": true,
+  "no_new_independent_counterevidence_notice": true,
+  "actual_game_result": "A10 F23 defeat, old question/candidate/SL limitations retained",
+  "physical_old_lessons_prefix_verified": {
+    "bytes": 8774334,
+    "sha256": "5a27613a5aa6d6a27b13fa3832b03f519ce77b91433f5a4250cb2d6e98d1b28f"
+  },
+  "owned_lesson_bytes": 19061,
+  "owned_lesson_sha256": "a420b0c6c3f078b5139cfff879d3af5e06da01c2558675290cbc57e2d76f3540",
+  "owned_ledger_rows": 10,
+  "old_ledger_claim_prior_status_version_preserved": true,
+  "no_restart_account_model_budget_or_queue_change": true
+}

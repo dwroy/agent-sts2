@@ -1,0 +1,166 @@
+{
+  "command": [
+    "nice",
+    "-n",
+    "19",
+    "python3",
+    "ops/paper_dataset.py",
+    "--no-raw"
+  ],
+  "original_process_pid": 985128,
+  "calls": 1,
+  "actual_exit_code": 0,
+  "generated_at": "2026-10-15T04:00:58.179Z",
+  "source_cut_bytes": {
+    "decisions.jsonl": 1556007633,
+    "deepseek-reasoning.jsonl": 377746518,
+    "runs.jsonl": 333707,
+    "states.jsonl": 13008716395,
+    "fight-plans.jsonl": 2233957,
+    "run-plans.jsonl": 8005755,
+    "brain.jsonl": 565436899,
+    "sl-attempts.jsonl": 40310132,
+    "run-config.jsonl": 1747793
+  },
+  "all_decision_records": 397302,
+  "row_counts": {
+    "runs.csv": 788,
+    "decisions_by_label.csv": 26255,
+    "escalations.csv": 3600,
+    "fight_plans.csv": 1461,
+    "commits.csv": 6199
+  },
+  "five_consistency_checks": {
+    "decisions attributed + unattributed == play records": true,
+    "decisions_by_label sum == attributed decisions": true,
+    "escalations rows == records with escalation": true,
+    "every runs.jsonl id present in runs.csv": true,
+    "commits == git rev-list --all --count": true
+  },
+  "source_checks_passed": true,
+  "key_scan": "CLEAN",
+  "old_raw_count_warnings_preserved": [
+    [
+      "KF9HMZKTFC3V",
+      879,
+      880
+    ]
+  ],
+  "postmortem_run": {
+    "run_id": "WJ0LTVSSDY61",
+    "character": "SILENT",
+    "ascension": "10",
+    "outcome": "defeat",
+    "floor_max": "23",
+    "n_decisions": "472",
+    "has_postmortem": "1",
+    "performance_included": "1"
+  },
+  "actual_codex_accepted_questions": 22,
+  "owned_changes": [
+    {
+      "path": "paper/data/README.md",
+      "bytes": 14188,
+      "sha256": "3e57903761aa3b4aa49b1133fe89f49b5a6cd25bfbd1aa925881d243b083598e",
+      "owned_snapshot_file": "paper--data--README.md",
+      "new_file": false
+    },
+    {
+      "path": "paper/data/commits.csv",
+      "bytes": 934061,
+      "sha256": "cfcb2b35e1f0aa299710e0b48ab535e8f1050e7d33ae017573d55e1734f564f7",
+      "owned_snapshot_file": "paper--data--commits.csv",
+      "new_file": false
+    },
+    {
+      "path": "paper/data/cost-curve-silent.csv",
+      "bytes": 14071,
+      "sha256": "10d32e8971be743116fdea4312e5cad775f84f37678c575f73e608eca58afbb1",
+      "owned_snapshot_file": "paper--data--cost-curve-silent.csv",
+      "new_file": false
+    },
+    {
+      "path": "paper/data/cost-silent.csv",
+      "bytes": 396681,
+      "sha256": "3c3355971660bfc95f78db1d33483cbab88368557b59435ba31580dbec0ce8d6",
+      "owned_snapshot_file": "paper--data--cost-silent.csv",
+      "new_file": false
+    },
+    {
+      "path": "paper/data/cost-sources.json",
+      "bytes": 168519,
+      "sha256": "044c1021d28bfe628ae5689b967892670db677a8310d30d0595e8e939d2b80e6",
+      "owned_snapshot_file": "paper--data--cost-sources.json",
+      "new_file": false
+    },
+    {
+      "path": "paper/data/cost-unattributed.csv",
+      "bytes": 19114,
+      "sha256": "5b2b7b2e9cf0034a4dc5d8d29348f1f3ca1d7538815bf6fa94b222645b309688",
+      "owned_snapshot_file": "paper--data--cost-unattributed.csv",
+      "new_file": false
+    },
+    {
+      "path": "paper/data/decisions_by_label.csv",
+      "bytes": 1134814,
+      "sha256": "0b1f0e93d7ce52cc7f896ccee600d267515cea1f040824925090c1439575f865",
+      "owned_snapshot_file": "paper--data--decisions_by_label.csv",
+      "new_file": false
+    },
+    {
+      "path": "paper/data/learning-curve-ironclad.csv.before-20261015T040521210604Z",
+      "bytes": 103370,
+      "sha256": "45405e24c8358a99d977c28852cf3e705fddc4f1923f9a7b16ff727a849b082b",
+      "owned_snapshot_file": "paper--data--learning-curve-ironclad.csv.before-20261015T040521210604Z",
+      "new_file": true
+    },
+    {
+      "path": "paper/data/learning-curve-silent.csv",
+      "bytes": 63924,
+      "sha256": "f7579d0d0c438d05d8688a982e22237d90c0817a5c92ad80877384921cb727a8",
+      "owned_snapshot_file": "paper--data--learning-curve-silent.csv",
+      "new_file": false
+    },
+    {
+      "path": "paper/data/learning-curve-silent.csv.before-20261015T040521817160Z",
+      "bytes": 63745,
+      "sha256": "5c2a0efe550d1275c619161a727c1cbea64a40e388b3a8bd06ba4f543d7afb6f",
+      "owned_snapshot_file": "paper--data--learning-curve-silent.csv.before-20261015T040521817160Z",
+      "new_file": true
+    },
+    {
+      "path": "paper/data/runs.csv",
+      "bytes": 1282249,
+      "sha256": "4cf231dfeb022dcc896cd65d874e4259374bdd1097fc540f4b3849e9a9591ec0",
+      "owned_snapshot_file": "paper--data--runs.csv",
+      "new_file": false
+    },
+    {
+      "path": "paper/data/summary.json",
+      "bytes": 496293,
+      "sha256": "2145a2c96ef01e1da0c814f085e93fc3cd19d6a154838440666782ccdd8e7aea",
+      "owned_snapshot_file": "paper--data--summary.json",
+      "new_file": false
+    },
+    {
+      "path": "paper/data/verification.json",
+      "bytes": 587,
+      "sha256": "02e64cd4f20ede3b665d61ce26053b420dc677510b5484f6a2514ecd43548720",
+      "owned_snapshot_file": "paper--data--verification.json",
+      "new_file": false
+    },
+    {
+      "path": "paper/materials/silent/cost.md",
+      "bytes": 4193,
+      "sha256": "6b3a5eb301d2963cc5a605c14d786472ff6c9b81f20dfbf5e37142f560ff8b6a",
+      "owned_snapshot_file": "paper--materials--silent--cost.md",
+      "new_file": false
+    }
+  ],
+  "old_generated_outputs_preserved_under": "ops/codex-ops/record-staging/20261015-1200/paper-before",
+  "separate_cost_cuts_manifest_sha256": "044c1021d28bfe628ae5689b967892670db677a8310d30d0595e8e939d2b80e6",
+  "cost_is_existing_estimate_not_invoice_or_benefit": true,
+  "later_logs_or_record_commits_not_backfilled": true,
+  "raw_snapshot": false,
+  "new_game_rule_release_or_control_change": false
+}

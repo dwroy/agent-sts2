@@ -1789,6 +1789,17 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
     !player.unmovableArmed && !player.shadowmeldActive && !next.shadowmeld && !next.noBlock &&
     next.enemies.some((enemy) => enemy.alive) &&
     next.enemies.every((enemy) => !enemy.alive || (enemy.poison ?? 0) === 0);
+  // H1T1F8ML9FUE F45 T5, silent-0132: replayed Mirage consumes four shield and four HP.
+  // Certify only this measured modifier/poison window; other replay combinations stay unknown.
+  const serpentMirageReplay = card.serpentMirageReplay === true && card.cardId === "MIRAGE" &&
+    card.upgraded && card.replay === 1 && card.block === 3 && cost === 1 && !card.xCost &&
+    plays === 2 && !automatic && !twice && !twiceSkill && !axe &&
+    next.serpentForm === 4 && next.afterImage === 1 && player.frail &&
+    (player.dexterityNow ?? 0) === 0 && next.tempDex === 0 &&
+    !player.unmovableArmed && !player.shadowmeldActive && !next.shadowmeld && !next.noBlock &&
+    next.enemies.filter((enemy) => enemy.alive).length === 1 && next.enemies.every((enemy) =>
+      !enemy.alive || ((enemy.poison ?? 0) === 5 && enemy.block === 4 && enemy.artifact === 0 &&
+        !enemy.intangible && !(enemy.slippery ?? 0) && !(enemy.perHitCap ?? 0) && !enemy.reflect && !enemy.unmodelled));
   // silent-0467/0468: independent three Block, beside Permafrost's seven and later card triggers.
   // Only the observed first-Power, single manual play has an isolated modifier-free measurement.
   const enchantedAfterimage = card.afterimageEnchantBlock === 3 && card.block === 0 && cost === 1 &&
@@ -1845,9 +1856,9 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
       : enchantedAfterimage ? { ...card, block: card.afterimageEnchantBlock! } : verifiedCard;
     resolveEffects(next, card.handCondition !== undefined && !handConditionMet(next, card, card.handCondition) ? unconditioned(effects) : effects, target, player, cost, plays === 1 && !automatic);
     // 5PM F33 T2-T3: the existing power hits once after a manual card, apart from its attack/poison.
-    // New establishment does not trigger itself. Multi-target, replay and stacking remain unknown.
+    // New establishment does not trigger itself. Only the separately observed Mirage replay is added.
     if (card.type !== "Potion" && serpent !== null && serpent > 0) {
-      if (serpent === 4 && plays === 1 && serpentTargets.length === 1 && !automatic && card.target !== "random" && card.serpentForm === undefined) {
+      if (serpent === 4 && (plays === 1 || serpentMirageReplay) && serpentTargets.length === 1 && !automatic && card.target !== "random" && card.serpentForm === undefined) {
         const victim = serpentTargets[0]!;
         if (victim.alive) hitEnemyRaw(next, victim, 4);
       } else next.unknown = [...next.unknown, "群蛇形态（随机目标、自动出牌、重放或叠加未验证）"];

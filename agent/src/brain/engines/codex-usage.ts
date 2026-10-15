@@ -3,7 +3,9 @@
  *
  * The codex brain's usage guard (Roy 2026-10-03): the ChatGPT plan's rate-limit windows and credits read from codex
  * itself, so the brain stops before it eats Roy's weekly Codex window (shared with Roy's own Codex use) and never
- * spends credits. Measured on codex-cli 0.160.0 (experiments/brain-replay/codex-usage.md).
+ * spends credits by default. Roy's 2026-10-15 main-Silent/codex1 exception is explicitly scoped and logged;
+ * docs/main-silent-paid-credits.md describes its positive-balance and fail-closed requirements.
+ * Measured on codex-cli 0.160.0 (experiments/brain-replay/codex-usage.md).
  *
  * - The read: `codex exec --json` reports no limits. A short-lived `codex app-server --listen stdio://` answers the
  *   JSON-RPC `account/rateLimits/read` (newline-delimited JSON: initialize, the initialized notification, the read),
@@ -40,6 +42,7 @@ import { join } from "node:path";
 
 import type { BrainConfig } from "../../core/config.js";
 import { EngineFailure, withNotes } from "../router.js";
+import { MAIN_SILENT_CREDIT_SCOPE } from "./codex-credit-policy.js";
 
 type Json = Record<string, unknown>;
 
@@ -47,6 +50,10 @@ const isObject = (value: unknown): value is Json => typeof value === "object" &&
 
 /** How long one read may take (start-up, the backend's answer, the exit); measured about 0.9 s. */
 export const CODEX_USAGE_TIMEOUT_MS = 20_000;
+/** The authorized paid lane must allow the observed 27-34 s app-server startup under host load. */
+export function usageReadTimeout(settings: { paidCredits?: true }): number {
+  return settings.paidCredits ? 90_000 : CODEX_USAGE_TIMEOUT_MS;
+}
 /** After the answer (stdin closed), how long the app-server may take to exit before its process group is killed. */
 export const CODEX_USAGE_EXIT_GRACE_MS = 3_000;
 
@@ -390,6 +397,8 @@ export interface UsageStatus {
   every_calls: number;
   every_min: number;
   required: boolean;
+  /** Explicit, narrowly scoped paid-credit authorization; absent in every default lane. */
+  paid_credits?: typeof MAIN_SILENT_CREDIT_SCOPE;
   /** The process-start reading, and the latest. */
   start: UsageNote | null;
   last: UsageNote | null;
@@ -469,11 +478,22 @@ export class CodexUsageGuard {
    */
   verdict(usage: CodexUsage): string | null {
     const balance = usage.credits?.balance ?? null;
-    if (balance !== null && this.topBalance !== null && balance < this.topBalance) return `credits are being spent: the balance fell from ${this.topBalance} to ${balance} in this process`;
+    if (!this.settings.paidCredits && balance !== null && this.topBalance !== null && balance < this.topBalance) return `credits are being spent: the balance fell from ${this.topBalance} to ${balance} in this process`;
     return this.planVerdict(usage);
   }
 
   private planVerdict(usage: CodexUsage): string | null {
+    if (this.settings.paidCredits) {
+      // Paid authorization does not waive spend control, missing quota data or depleted credits.
+      if (usage.spendControlReached !== false) return "paid credits require an explicit spend-control allowance";
+      if (usage.reachedType && usage.reachedType !== "rate_limit_reached") return `paid credits refused by usage limit (${usage.reachedType})`;
+      if (!usage.plan || usage.windows.length === 0
+        || usage.windows.some((window) => !Number.isFinite(window.usedPct) || window.usedPct < 0)) return "paid credits require a readable plan and quota window";
+      if (usage.windows.some((window) => window.name.endsWith("/individual") && window.usedPct >= 100)) return "paid credits refused by individual spend limit";
+      const credits = usage.credits;
+      if (!credits?.hasCredits || credits.balance === null || !Number.isFinite(credits.balance) || credits.balance <= 0) return "paid credits require a known positive remaining balance";
+      return null;
+    }
     const pct = this.settings.stopPct;
     const full = usage.windows.filter((window) => window.usedPct >= 100);
     if (usage.ordinaryUsageAllowed === false) return "the plan's included usage is not allowed now (ordinaryUsageAllowed false): further calls would draw on credits";
@@ -581,7 +601,7 @@ export class CodexUsageGuard {
   /** A read that failed: said once (codex stays on), or under BRAIN_CODEX_USAGE_REQUIRED codex off until a read works. */
   private failedRead(message: string): void {
     this.unreadable = message;
-    if (this.settings.required) {
+    if (this.settings.required || this.settings.paidCredits) {
       const failures = (this.blocked?.failures ?? 0) + 1;
       const wait = USAGE_RETRY_MS[Math.min(failures, USAGE_RETRY_MS.length) - 1]!;
       const first = this.blocked === null;
@@ -672,6 +692,7 @@ export class CodexUsageGuard {
       plan: parsed.plan ?? this.last?.plan ?? null,
       credits: parsed.credits ?? this.last?.credits ?? null,
       ordinaryUsageAllowed: parsed.ordinaryUsageAllowed ?? this.last?.ordinaryUsageAllowed ?? null,
+      ...(this.settings.paidCredits ? { spendControlReached: parsed.spendControlReached ?? this.last?.spendControlReached ?? null } : {}),
     };
     this.pushes += 1;
     this.last = usage;
@@ -701,6 +722,7 @@ export class CodexUsageGuard {
       every_calls: this.settings.everyCalls,
       every_min: this.settings.everyMin,
       required: this.settings.required,
+      ...(this.settings.paidCredits ? { paid_credits: MAIN_SILENT_CREDIT_SCOPE } : {}),
       start: this.first ? usageNote(this.first) : null,
       last: this.last ? usageNote(this.last) : null,
       calls_since_read: this.callsSinceRead,

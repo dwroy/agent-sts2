@@ -113,6 +113,8 @@ export interface CardModel {
   afterimageEnchantBlock?: number;
   /** Silent A10 plain Serpent Form: observed four-point power, not damage on establishment. */
   serpentForm?: number;
+  /** H1T1F8ML9FUE A10 F45 T5: the three-Block Mirage replay, rechecked at play time. */
+  serpentMirageReplay?: true;
   /** Observed whole-hand discard. */
   discardsHand?: boolean;
   /** 32VSST9UX7MN A10, silent-0455: replace the hand; replan from the actual generated cards. */
@@ -914,6 +916,17 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
       const entry = mirageValues.find((v) => v["name"] === name);
       return entry !== undefined && ["base_value", "current_value", "enchanted_value"].every((field) => entry[field] === value);
     });
+  // The observed action supplied two four-damage triggers, separate from its two three-Block effects.
+  const serpentMirageReplay = character.toLowerCase() === "silent" && ascension === 10 && cardId === "MIRAGE" &&
+    bool(card["upgraded"]) && type === "Skill" && card["target_type"] === "Self" && !requiresTarget &&
+    numOrNull(card["energy_cost"]) === 1 && !bool(card["costs_x"]) && card["enchantment"] == null &&
+    str(card["rules_text"]) === "获得等量于所有敌人中毒层数总和的格挡。{InCombat: （获得{CalculatedBlock:diff()}点格挡）|}" &&
+    str(card["resolved_rules_text"]).replace(/\s+/g, "") === "获得等量于所有敌人中毒层数总和的格挡。（获得3点格挡）重放1。" &&
+    mirageValues.length === 3 && [["CalculatedBlock", 0, 3, 0], ["CalculationBase", 0, 0, 0], ["CalculationExtra", 1, 1, 1]]
+      .every(([name, base, current, enchanted]) => {
+        const value = mirageValues.find((entry) => entry["name"] === name);
+        return value?.["base_value"] === base && value?.["current_value"] === current && value?.["enchanted_value"] === enchanted;
+      });
   let vulnerable = madSapping ? dyn(card, "SappingVulnerable")! : dyn(card, "VulnerablePower") ?? 0;
   let weak = madSapping ? dyn(card, "SappingWeak")! : dyn(card, "WeakPower") ?? 0;
   let strength = madExpertise ? 2 : dyn(card, "StrengthPower") ?? 0;
@@ -1256,6 +1269,7 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
       ? { dodgeRollNextBlock: true } : {}),
     ...(mirage ? { blockFromPoison: true } : {}),
     ...(zeroPoisonMirage ? { observedZeroPoisonMirage: true } : {}),
+    ...(serpentMirageReplay ? { serpentMirageReplay: true as const } : {}),
     ...(!madExpertise && !madSapping && dynBase(card, "Block", true) !== null ? { blockBase: dynBase(card, "Block", true)! } : {}),
     vulnerable,
     weak,

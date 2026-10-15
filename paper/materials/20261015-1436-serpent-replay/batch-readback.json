@@ -1,0 +1,294 @@
+{
+  "batch": "20261015-141302-s2-strategy-proposal",
+  "original_report": {
+    "task": "strategy-proposal",
+    "character": "silent",
+    "batch": "20261015-141302-s2-strategy-proposal",
+    "base": "e3ffc2301d9eb25a0fedf874d56710b938dc41a3",
+    "runs": [
+      "LYBHQ1X230ZB",
+      "H1T1F8ML9FUE",
+      "AD3QSC3P41JU"
+    ],
+    "fixes": [
+      {
+        "item": "c888545b80180da7：已观察A10蜃景重放中的群蛇触发窄子项",
+        "commit": "be9577c81a003aff0e69968c928e264f5173da7c",
+        "test": "agent/tests/silent-serpent-mirage-replay.test.ts",
+        "fails_without_fix": true
+      }
+    ],
+    "skipped": [],
+    "merged": null,
+    "version": null,
+    "tests": {
+      "tsc": 0,
+      "vitest": 0,
+      "cases": 4066,
+      "files": 432
+    },
+    "code_proposals": [
+      "silent-proposal-49bb659734d555e3",
+      "silent-proposal-179fd62ad9b2f71b",
+      "silent-proposal-2ae7436286228166",
+      "silent-proposal-de26499e8385f25b",
+      "silent-proposal-c888545b80180da7",
+      "silent-proposal-3b37b520b22f0eaf",
+      "silent-proposal-b259f9956e08088a",
+      "silent-proposal-34209e8b9f982e49",
+      "silent-proposal-015f25123c45671c",
+      "silent-proposal-01d7495835a3eb19"
+    ],
+    "implementation_domains": [
+      "combat"
+    ],
+    "proposal_results": [
+      {
+        "id": "silent-proposal-49bb659734d555e3",
+        "state": "waiting",
+        "reason": "LYB F29T6少损6HP候选未实打，缺同盘后场资源及完整结局，不能拟新终局权重。"
+      },
+      {
+        "id": "silent-proposal-179fd62ad9b2f71b",
+        "state": "duplicate",
+        "commit": "9b65f1bee0f26ced606ec256fc3d173db48caa3e",
+        "reason": "已核实际live祖先覆盖可见牌堆凋萎伤害同步、文本一致性及SL重置范围。"
+      },
+      {
+        "id": "silent-proposal-2ae7436286228166",
+        "state": "waiting",
+        "reason": "换线多付3HP属实；缺完整候选后继与未来收益比较，现有Prepared双弃投影不覆盖Survivor单弃保逃离策略。"
+      },
+      {
+        "id": "silent-proposal-de26499e8385f25b",
+        "state": "waiting",
+        "reason": "H1 F48未赢、F49未到；缺受控留药或换饮用时点的完整结局及消费者误差归因。"
+      },
+      {
+        "id": "silent-proposal-c888545b80180da7",
+        "state": "waiting",
+        "source_commit": "be9577c81a003aff0e69968c928e264f5173da7c",
+        "reason": "群蛇重放窄子项证据充分、源码及自测完成；锁内预检四处并行记录冲突，工程受阻未live，不能标implemented。"
+      },
+      {
+        "id": "silent-proposal-3b37b520b22f0eaf",
+        "state": "waiting",
+        "reason": "基础制品及毒结算路径已有；末T4为0毒且下一轮未到，缺匹配后继和后期误差验证，不能关闭整战校准范围。"
+      },
+      {
+        "id": "silent-proposal-b259f9956e08088a",
+        "state": "waiting",
+        "reason": "凋萎缓存子项已有实现；饱和换线、单弃沙坑及纸伤多窗口消费缺完整后继和独立验证，不能整体duplicate。"
+      },
+      {
+        "id": "silent-proposal-34209e8b9f982e49",
+        "state": "waiting",
+        "reason": "H1末火回复到52后F48仍败，F49未到；缺替路线、留药及终局参数的受控联合结局。"
+      },
+      {
+        "id": "silent-proposal-015f25123c45671c",
+        "state": "waiting",
+        "reason": "AD的15→11空药接续属实；既有开场扣血模型不覆盖其完整遗物组合，且缺留药联合结果及独立校准。"
+      },
+      {
+        "id": "silent-proposal-01d7495835a3eb19",
+        "state": "waiting",
+        "reason": "少9伤换保8HP多活一轮仍败；缺旧dirty重规划完整输入及受控同抽序后继，不能拟新容差或SL门槛。"
+      }
+    ],
+    "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261015-141302-s2/learner/runs/20261015-141311-161a38d5-8d5d-47ad-997d-7dad3d6bd315-strategy-proposal/report.md"
+  },
+  "native": {
+    "batch": "20261015-141302-s2-strategy-proposal",
+    "thread": "01a13e31-91f4-7753-a219-b324dfdd91c5",
+    "cwd": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261015-141302-s2",
+    "event_log": "learner/runs/20261015-141311-161a38d5-8d5d-47ad-997d-7dad3d6bd315-strategy-proposal.jsonl",
+    "registered_launch_batch": "20261015-141302-s2-strategy-proposal",
+    "original_lease": "f3618db3ed34dc89e6f67fdbcda5f11acc65e003f31b918e190d43f5d2892f1e",
+    "native_context": {
+      "source": "ops/codex-ops/accounts/codex1/learner/sessions/2026/10/15/rollout-2026-10-15T14-13-18-01a13e31-91f4-7753-a219-b324dfdd91c5.jsonl",
+      "offset": 50287,
+      "bytes": 5166,
+      "sha256": "7c5af1c760326c23bbd9bfc811cac9b1519b4cf0781249420038e4857f9cb1d1",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "sandbox": {
+        "type": "workspace-write",
+        "writable_roots": [
+          "/home/dw/Projects/agent-sts2",
+          "/home/dw/Projects/agent-sts2/.git",
+          "/home/dw/Projects/agent-sts2/.git/worktrees/codex-strategy-silent-20261015-141302-s2"
+        ],
+        "network_access": false,
+        "exclude_tmpdir_env_var": false,
+        "exclude_slash_tmp": false
+      },
+      "approval_policy": "never"
+    },
+    "native_user_input": {
+      "offset": 55453,
+      "bytes": 21479,
+      "sha256": "6d2027df17c4806c479230df6b6fdcf4e7c202e1b7906ad29a57eed826e53d47",
+      "input_sha256": "548f934eceed912d78b8f6d3bc977a7d5fa6e1f8bd82c55e1fd79de87e4a2046"
+    },
+    "original_header_events": [
+      {
+        "offset": 0,
+        "bytes": 23471,
+        "sha256": "73598f32f4b233cdb6412b3d44322b53ba9f0edcd41bf933033db66a79ac8c2e",
+        "type": "learner_launch",
+        "attempt": null,
+        "code": null
+      },
+      {
+        "offset": 23471,
+        "bytes": 381,
+        "sha256": "624bb703012cfa72efbdace11689fb98e714fcb6ed8ffcb380857a89cb926b7b",
+        "type": "learner_startup_attempt",
+        "attempt": 1,
+        "code": null
+      },
+      {
+        "offset": 26865,
+        "bytes": 77,
+        "sha256": "95ab451da85028a2e412bbe5fe7ad27a3417f0dc99fc4c2bc922ee1e7c73e831",
+        "type": "thread.started",
+        "attempt": null,
+        "code": null
+      }
+    ],
+    "startup_attempts": 1,
+    "failed_startups_preserved": 0,
+    "no_model_or_manual_restart": true
+  },
+  "original_canonical": {
+    "state": "failed",
+    "rc": 0,
+    "merged": null,
+    "proposal_audit_errors": []
+  },
+  "source_worktree_clean": true,
+  "original_source": "be9577c81a003aff0e69968c928e264f5173da7c",
+  "original_no_live_report_and_record_conflicts_preserved": true,
+  "original_source_full": {
+    "tsc": 0,
+    "vitest": 0,
+    "files": 432,
+    "cases": 4066,
+    "source_log": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261015-141302-s2/learner/runs/20261015-141311-161a38d5-8d5d-47ad-997d-7dad3d6bd315-strategy-proposal/sandbox-before-commit.log",
+    "log_sha256": "2061690b4320e51d53ec0da328f74584e400efeb7f87840b96f31cfd3b7dd3f3",
+    "sandbox_coverage": "431 files4055 plus paths1 file11; no retry; host full pending"
+  },
+  "new_deployment": {
+    "main": "2427a8c58a64cd5ab1842dc0b339d2a50805f191",
+    "live": "d488d29a09677776a6e7b419156e2fad17b70aa3",
+    "tree": "a110b92280cad9bd8843dc286323b04756233840",
+    "release_id": "V5-R356"
+  },
+  "original_cli_rows": 29,
+  "original_raw_rows": 4314,
+  "raw_streams": [
+    {
+      "stream": "states",
+      "rows": 2136,
+      "source_size": 13030176396,
+      "frozen_sha256": "3fb6d305e58e0023f1b5ab54a5df99b174634f689b37e2c4ba7cf72498343089",
+      "by_run": {
+        "LYBHQ1X230ZB": 478,
+        "H1T1F8ML9FUE": 930,
+        "AD3QSC3P41JU": 728
+      },
+      "invalid_lines": 2
+    },
+    {
+      "stream": "decisions",
+      "rows": 2007,
+      "source_size": 1581998957,
+      "frozen_sha256": "31ae233864034116a4d48df5e0f00c4cc14faa5cf6a82995526b7a96ca9eece7",
+      "by_run": {
+        "LYBHQ1X230ZB": 455,
+        "H1T1F8ML9FUE": 844,
+        "AD3QSC3P41JU": 708
+      },
+      "invalid_lines": 2
+    },
+    {
+      "stream": "sl-attempts",
+      "rows": 23,
+      "source_size": 40419924,
+      "frozen_sha256": "de78372a6528d0eaab71eab185758fbde21a53da73d51e9e0c4933f0427f0697",
+      "by_run": {
+        "LYBHQ1X230ZB": 5,
+        "H1T1F8ML9FUE": 9,
+        "AD3QSC3P41JU": 9
+      },
+      "invalid_lines": 0
+    },
+    {
+      "stream": "run-config",
+      "rows": 3,
+      "source_size": 1752864,
+      "frozen_sha256": "743fffee16a50c95cabfe4b9748b3ff502e90a02ea1ac287757001c31c697a03",
+      "by_run": {
+        "LYBHQ1X230ZB": 1,
+        "H1T1F8ML9FUE": 1,
+        "AD3QSC3P41JU": 1
+      },
+      "invalid_lines": 0
+    },
+    {
+      "stream": "run-plans",
+      "rows": 22,
+      "source_size": 8036847,
+      "frozen_sha256": "31504f077de585d603fadd06bd0077eda282e28141e1eb3c8da576d174aebdb9",
+      "by_run": {
+        "LYBHQ1X230ZB": 4,
+        "H1T1F8ML9FUE": 9,
+        "AD3QSC3P41JU": 9
+      },
+      "invalid_lines": 0
+    },
+    {
+      "stream": "brain",
+      "rows": 120,
+      "source_size": 575871776,
+      "frozen_sha256": "01bfb157455dd4016d6243878bfedaa6daca261d8413b3276188dd178b1a911b",
+      "by_run": {
+        "LYBHQ1X230ZB": 28,
+        "H1T1F8ML9FUE": 49,
+        "AD3QSC3P41JU": 43
+      },
+      "invalid_lines": 1
+    },
+    {
+      "stream": "runs",
+      "rows": 3,
+      "source_size": 333707,
+      "frozen_sha256": "3be318e99dd441cc73bea5fb5fa513004ecc451bd3f531800bd533e679402213",
+      "by_run": {
+        "LYBHQ1X230ZB": 1,
+        "H1T1F8ML9FUE": 1,
+        "AD3QSC3P41JU": 1
+      },
+      "invalid_lines": 0
+    },
+    {
+      "stream": "fight-plans",
+      "rows": 0,
+      "source_size": 2233957,
+      "frozen_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "by_run": {},
+      "invalid_lines": 0
+    }
+  ],
+  "state_roles_and_ascension": {
+    "LYBHQ1X230ZB": 10,
+    "H1T1F8ML9FUE": 10,
+    "AD3QSC3P41JU": 10
+  },
+  "wide_c888_proposal_not_closed_by_narrow_fix": true,
+  "existing_duplicate_not_new_work": true,
+  "new_natural_consumption_and_host_pass": "pending; original fixed consumer and sandbox distinct",
+  "raw_dirty_historical_tree_not_reconstructed": true,
+  "source_small_artifacts": 55
+}
