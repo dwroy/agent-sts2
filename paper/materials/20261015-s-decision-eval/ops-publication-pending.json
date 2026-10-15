@@ -1,0 +1,22 @@
+{
+  "at": "2026-10-15 10:50:18 CST",
+  "source": "1f6b9beece5e864c0451f469ddc974bae5a39d23",
+  "stage": "actual ops receipt; three-leaf composition/fixed checks complete; not published",
+  "candidate_tree": "489e3c6f5ba7ef1dcc4049ea22b81cd229731fba",
+  "old_live": "d1c942783e267750dac79d6b780e16093dd7aa1d",
+  "live_lock_busy": true,
+  "lock_rows": [
+    "102: FLOCK  ADVISORY  WRITE 606935 08:30:372157 0 EOF"
+  ],
+  "original_host": {
+    "pid": 606935,
+    "birth": "92328053",
+    "tree": "6ef9f0f8808ec51de400c70455fa7aa360f9c7bb",
+    "result": "pending"
+  },
+  "pending_after_original_host_event": "Recheck original result and live identities, publish only three validated leaves under existing lock, then original serial recheck channel once for actual new combination.",
+  "no_new_learner_parent_model_API_job_or_game_action": true,
+  "no_wait_or_poll": true,
+  "prepared_reentry": "python3 ops/codex-ops/record-staging/20261015-1048/publish.py",
+  "reentry_guards": "nonblocking original lock; original precise6ef canonical host rc0; unchanged actual live/three leaves/knowledge; candidate hashes; no automatic job"
+}
