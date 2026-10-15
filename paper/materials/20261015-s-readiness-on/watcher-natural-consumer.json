@@ -1,0 +1,71 @@
+{
+  "at": "2026-10-15T11:15:40.333018+08:00",
+  "actor": "watcher",
+  "parent": "roy-20261014-s-decision",
+  "phase": "P1 actual on consumer readback",
+  "run": "WJ0LTVSSDY61",
+  "native_commit": "9aefbaf476256caff190ef09880ee71cdd6443aa",
+  "native_config_source": {
+    "path": "logs/run-config.jsonl",
+    "offset": 1737123,
+    "bytes": 5334,
+    "sha256": "dce194d6b73281a37aaa0d53e666ab80a45b1af66491f78642e0905f69c37f02"
+  },
+  "release": "V5-R352",
+  "accepted_payloads": [
+    {
+      "question_id": "mv8yknmw-739370-1",
+      "ts": "2026-10-15T03:09:16.604Z",
+      "label": "event/choose",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "accepted": true,
+      "payload_field": "facts.boss_readiness",
+      "field_sha256": "f23c5891ad86852713c701fa70bee5da540138ded19ce1e013f86e0ac09656b2",
+      "source": {
+        "path": "logs/brain.jsonl",
+        "offset": 561338092,
+        "bytes": 47622,
+        "sha256": "0ce1147c523fa8c8e9cb5a271bc63120f4c8667fd0a2509389c235bee6574070"
+      }
+    },
+    {
+      "question_id": "mv8yknmw-739370-3",
+      "ts": "2026-10-15T03:11:12.154Z",
+      "label": "reward/card",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "accepted": true,
+      "payload_field": "facts.boss_readiness",
+      "field_sha256": "5889bf2ed0fb468463f126e0a5876011eb0aeb8181c1e0a3adac67dca7264607",
+      "source": {
+        "path": "logs/brain.jsonl",
+        "offset": 561409069,
+        "bytes": 93234,
+        "sha256": "3dd139760c8e1b5a2038ff803eff62f65eb3f1347b75fd7d00172a21a447c2ab"
+      }
+    },
+    {
+      "question_id": "mv8yknmw-739370-4",
+      "ts": "2026-10-15T03:12:32.151Z",
+      "label": "reward/card",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "accepted": true,
+      "payload_field": "facts.boss_readiness",
+      "field_sha256": "857cd9df51159b04ba7513650f8bdb12aeae0797111c61d23b2768f89b20fe51",
+      "source": {
+        "path": "logs/brain.jsonl",
+        "offset": 561502303,
+        "bytes": 94262,
+        "sha256": "ccd8de59f8847a90a92572e374e2f9e0a85297542f900b32d8a0cfcf64e52957"
+      }
+    }
+  ],
+  "evidence_projection": {
+    "path": "paper/materials/20261015-v5-s-completion/natural-WJ0LTVSSDY61/first-consumer-projection.json",
+    "sha256": "47f3aff2b53ee9d996a8ba68b4ff19fedf90664312e62eafb06ffd510e28c9f9"
+  },
+  "result": "P1 deployment and actual eligible diagnostic consumer confirmed; prior two shadow/check gates retained",
+  "limits": "This proves payload delivery and accepted output, not use in reasoning or game benefit. P2/C2 two complete runs and on/P3 natural B2 remain separate; broad R3 parent stays open."
+}

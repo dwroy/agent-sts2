@@ -1,0 +1,2922 @@
+{
+  "at": "2026-10-15T11:13:51.280718+08:00",
+  "run_id": "WJ0LTVSSDY61",
+  "scope": "in-progress native readback; not full-run coverage",
+  "index": {
+    "path": "paper/materials/20261015-v5-s-completion/natural-WJ0LTVSSDY61/index-1114.json",
+    "sha256": "1c0a311fbe6b04a6840e9b738eaa530422603a263984e248de8fe4f12eccdc59"
+  },
+  "row_count": 61,
+  "rows": [
+    {
+      "stream": "run-config",
+      "ts": "2026-10-15T03:07:52.581Z",
+      "label": "config",
+      "source": {
+        "path": "logs/run-config.jsonl",
+        "offset": 1737123,
+        "bytes": 5334,
+        "sha256": "dce194d6b73281a37aaa0d53e666ab80a45b1af66491f78642e0905f69c37f02"
+      },
+      "character": "SILENT",
+      "ascension": 10,
+      "code": {
+        "commit": "9aefbaf476256caff190ef09880ee71cdd6443aa",
+        "code": "9aefbaf+dirty",
+        "dirty": true,
+        "dirty_files": [
+          "knowledge/characters/silent/boss-damage.json",
+          "knowledge/characters/silent/construction-opportunities.json",
+          "knowledge/characters/silent/monster-records.json",
+          "knowledge/characters/silent/outcome-stats.json",
+          "knowledge/characters/silent/room-costs.json",
+          "knowledge/common/card-upgrades.json",
+          "knowledge/common/monster-db.json",
+          "knowledge/common/move-model.json",
+          "notes/fight-value-backtest-silent.md",
+          "notes/monster-db-check.md"
+        ],
+        "branch": "live",
+        "worktree": "live"
+      },
+      "loop": {
+        "mode": "play",
+        "combat_planner": "turn",
+        "build_decider": "deepseek",
+        "build_oneshot": "on",
+        "boss_sim_build": "on",
+        "s_readiness": "on",
+        "s_combat_rank": "on",
+        "s_build_rank": "shadow",
+        "sim_failure_exit": "on",
+        "sim_failure_retries": 2,
+        "sim_adaptive": "shadow",
+        "sim_adaptive_requested": "shadow",
+        "sim_adaptive_admission": "pending",
+        "boss_sim_completion": "required-full-paired-v1",
+        "boss_sim_build_requested": "on",
+        "combat_deepseek": "off",
+        "thief_facts": true,
+        "thief_cost": true,
+        "mech_rules": true,
+        "mech_move_rules": true,
+        "mech_death_move": true,
+        "passive_pieces": true,
+        "sandpit_start": true,
+        "fight_plan": "off",
+        "run_plan": "v1",
+        "run_plan_merge": true,
+        "escalation": [
+          "deepseek"
+        ],
+        "confidence": {
+          "act": 0.55,
+          "strong": 0.75
+        },
+        "run_start": "auto",
+        "character": "SILENT"
+      },
+      "process": {
+        "pid": 739370,
+        "started": "2026-10-15T03:07:44.932Z"
+      }
+    },
+    {
+      "stream": "brain",
+      "ts": "2026-10-15T03:09:16.604Z",
+      "label": "event/choose",
+      "source": {
+        "path": "logs/brain.jsonl",
+        "offset": 561338092,
+        "bytes": 47622,
+        "sha256": "0ce1147c523fa8c8e9cb5a271bc63120f4c8667fd0a2509389c235bee6574070"
+      },
+      "question_id": "mv8yknmw-739370-1",
+      "accepted": true,
+      "model": "gpt-6.1-sol",
+      "engine": "codex",
+      "boss_readiness": "当前牌组Boss模拟胜率0%（原始0%）；输局1000例，Boss平均剩76%、死亡回合均值10.2；缺口中位：进攻+13.4/回合或防守+171.7有效血；敏感度：DPR+25%→0%，有效血+25%→0%（原始样本线性近似，仅诊断，不能排序；防守缺口未知0例）。",
+      "build_ranking": null,
+      "error_kind": null
+    },
+    {
+      "stream": "decisions",
+      "ts": "2026-10-15T03:09:16.613Z",
+      "label": "event/choose",
+      "source": {
+        "path": "logs/decisions.jsonl",
+        "offset": 1543954084,
+        "bytes": 66505,
+        "sha256": "52108882c89bcb94e1f3fc23bce093ddaae940574223425fe7df9ba6adbfc375"
+      },
+      "decision_id": "1f24a134-244e-4ea3-a869-157d4bfee952",
+      "floor": 1,
+      "boss": "VANTOM",
+      "samples": 1000,
+      "completion": {
+        "required": true,
+        "uniqueDecks": 2,
+        "originalDecks": 2,
+        "memoHit": false,
+        "status": "complete",
+        "attempt_id": "f7b07c8e-ce4b-42c5-b37b-6dae05288b4e",
+        "attempts": 1,
+        "reasons": [],
+        "samples": 1000,
+        "requested": 1000,
+        "failure": false,
+        "key": "sim-failure-v1:f1e7354af0ce995bdba77392bcbf069aca694e6de19bde9ea4858ba622bab7fe",
+        "latencyTargetMs": 11000,
+        "latencyTargetExceeded": false
+      },
+      "readiness": {
+        "schema": "boss-readiness-v1",
+        "samples": 1000,
+        "valid": 1000,
+        "missing": 0,
+        "reference": {
+          "myHp": 56,
+          "bossHp": 183,
+          "startTurn": 1,
+          "enemyIds": [
+            "VANTOM"
+          ],
+          "unknown": []
+        },
+        "win": {
+          "raw": 0,
+          "calibrated": 0,
+          "raw_interval95": [
+            2.168404344971009e-19,
+            0.0038267584855551234
+          ],
+          "calibrated_mc_interval95": [
+            2.168404344971009e-19,
+            0.0038267584855551234
+          ],
+          "interval_scope": "won_before_simulation_termination; mapped_MC_interval_is_not_calibration_uncertainty"
+        },
+        "loss": {
+          "n": 1000,
+          "bossLeftFraction": {
+            "n": 1000,
+            "mean": 0.7551803278688527,
+            "sd": 0.05589483461605419,
+            "meanSe": 0.0017675498682515438,
+            "p10": 0.6885245901639344,
+            "median": 0.7540983606557377,
+            "p90": 0.819672131147541,
+            "min": 0.5901639344262295,
+            "max": 0.9508196721311475
+          },
+          "deathTurn": {
+            "n": 1000,
+            "mean": 10.249,
+            "sd": 0.9632896381291177,
+            "meanSe": 0.030461893029273913,
+            "p10": 9,
+            "median": 10,
+            "p90": 11,
+            "min": 7,
+            "max": 14
+          }
+        },
+        "win_side": {
+          "n": 0,
+          "hpLeftFraction": {
+            "n": 0,
+            "mean": null,
+            "sd": null,
+            "meanSe": null,
+            "p10": null,
+            "median": null,
+            "p90": null,
+            "min": null,
+            "max": null
+          },
+          "turns": {
+            "n": 0,
+            "mean": null,
+            "sd": null,
+            "meanSe": null,
+            "p10": null,
+            "median": null,
+            "p90": null,
+            "min": null,
+            "max": null
+          }
+        },
+        "terms": {
+          "A": {
+            "n": 1000,
+            "mean": 0.023822232048461546,
+            "sd": 0.004838770268668873,
+            "meanSe": 0.00015301535123298524,
+            "p10": 0.01788375558867362,
+            "median": 0.023845007451564825,
+            "p90": 0.029806259314456032,
+            "min": 0.007025761124121781,
+            "max": 0.04189435336976321
+          },
+          "D": {
+            "n": 1000,
+            "mean": 0.09864201354201359,
+            "sd": 0.011593746597704983,
+            "meanSe": 0.0003666264586357562,
+            "p10": 0.09090909090909091,
+            "median": 0.09999999999999999,
+            "p90": 0.11111111111111112,
+            "min": 0.07142857142857142,
+            "max": 0.14285714285714285
+          }
+        },
+        "gap": {
+          "offense": {
+            "n": 1000,
+            "missing": 0,
+            "p25": 12.272727272727273,
+            "p50": 13.363636363636363,
+            "p75": 14.1
+          },
+          "defense": {
+            "n": 1000,
+            "missing": 0,
+            "p25": 144.94117647058823,
+            "p50": 171.73333333333332,
+            "p75": 228.66666666666669
+          }
+        },
+        "sensitivity": [
+          {
+            "relative": 0.1,
+            "extra_dpr": 0.4359468464868466,
+            "extra_hp": 5.6000000000000005,
+            "win_with_dpr": 0,
+            "win_with_hp": 0
+          },
+          {
+            "relative": 0.25,
+            "extra_dpr": 1.0898671162171165,
+            "extra_hp": 14,
+            "win_with_dpr": 0,
+            "win_with_hp": 0
+          },
+          {
+            "relative": 0.5,
+            "extra_dpr": 2.179734232434233,
+            "extra_hp": 28,
+            "win_with_dpr": 0,
+            "win_with_hp": 0
+          }
+        ],
+        "sensitivity_denominator": 1000,
+        "trust": {
+          "rankingEligible": true,
+          "bossTrustReason": null,
+          "sign_audit": {
+            "schema": "s-sign-audit-v1",
+            "samples": 1000,
+            "valid": 1000,
+            "missing": 0,
+            "mismatches": 0,
+            "mismatch_rate": 0,
+            "passed": true,
+            "exceptions": [],
+            "groups": [
+              {
+                "healing": null,
+                "revived": false,
+                "overkill": false,
+                "samples": 1000,
+                "valid": 1000,
+                "missing": 0,
+                "mismatches": 0,
+                "mismatch_rate": 0,
+                "passed": true,
+                "exceptions": []
+              }
+            ],
+            "rankingEligible": true,
+            "limits": "Conditional simulation audit only. Missing attribution is not zero; unrecorded healing stays unknown. Not a calibration of real wins."
+          }
+        },
+        "limits": "Linear constant-rate approximation for diagnosis only, never ranking. Extra damage changes fight duration; extra HP ignores scaling and play order. Missing or censored samples are not losses. Monte Carlo intervals exclude model and calibration uncertainty.",
+        "mode": "on",
+        "ms": 8.952871000001323,
+        "delivered": true
+      },
+      "build_ranking": {
+        "schema": "build-ranking-v1",
+        "status": "produced",
+        "best_group": [
+          "o1"
+        ],
+        "groups": [
+          [
+            "o1"
+          ]
+        ],
+        "better_than_current": [
+          "o1"
+        ],
+        "no_difference": [],
+        "worse_than_current": [],
+        "win_saturated": true,
+        "low_trust": null,
+        "rows": [
+          {
+            "key": "o1",
+            "rank": 1,
+            "group": "better_than_current",
+            "delta_win": {
+              "mean": 0,
+              "se": 0
+            },
+            "delta_s": {
+              "mean": 0.001115993356976965,
+              "se": 0.0005576353041418509
+            },
+            "delta_hp_loss": 0,
+            "delta_a": {
+              "mean": 0.0009741796151632218,
+              "se": 0.00021667792836226225
+            },
+            "delta_d": {
+              "mean": -0.0001418137418137415,
+              "se": 0.0004961878714521224
+            },
+            "main_source": "offense",
+            "s_eligible": true,
+            "s_reason": null
+          }
+        ],
+        "comparisons": [
+          {
+            "key": "o1",
+            "reference": "o1",
+            "metric": "win",
+            "mean": 0,
+            "se": 0
+          },
+          {
+            "key": "o1",
+            "reference": "o1",
+            "metric": "S",
+            "mean": 0,
+            "se": 0
+          }
+        ],
+        "limits": "同题同种子逐样本配对；先胜率、再合格S、最后配对掉血。只比较已模拟候选，未模拟选项保留未知；S不是胜率，缺口诊断不参与排序。大脑可偏离，但须说明理由。",
+        "mode": "shadow",
+        "delivered": false,
+        "candidates": [
+          {
+            "key": "o1",
+            "choice_key": "o1",
+            "card_key": null
+          }
+        ],
+        "selection": {
+          "choice": "o1",
+          "card": null,
+          "candidate_keys": [
+            "o1"
+          ],
+          "target_pending": false,
+          "deviated": false,
+          "ranking_override_reason": null,
+          "mode": "shadow",
+          "scope": "current_choice_only"
+        }
+      },
+      "adaptive": {
+        "schema": "sim-adaptive-shadow-v1",
+        "mode": "shadow",
+        "lane": "b3",
+        "rule": {
+          "version": "adaptive-v1",
+          "b3First": 300,
+          "b2First": 200,
+          "batch": 100,
+          "zElim": 3,
+          "zTie": 2,
+          "first": 300,
+          "requested": 1000
+        },
+        "candidates": [
+          {
+            "key": "@current",
+            "samples": 300,
+            "stop": "leader",
+            "rounds": 1,
+            "baseline": true
+          },
+          {
+            "key": "o1",
+            "samples": 300,
+            "stop": "leader",
+            "rounds": 1,
+            "baseline": false
+          }
+        ],
+        "full": {
+          "leader": "o1",
+          "group": [
+            "o1"
+          ]
+        },
+        "shadow": {
+          "leader": "o1",
+          "group": [
+            "o1"
+          ]
+        },
+        "evaluable": true,
+        "agreement": true,
+        "work": {
+          "full": 2000,
+          "shadow": 600,
+          "savedFraction": 0.7,
+          "unit": "unique-option-sample-equivalents"
+        },
+        "rounds": [
+          {
+            "n": 300,
+            "leader": "o1",
+            "eliminated": []
+          }
+        ],
+        "limits": "Prefix replay only; no samples saved in shadow. S needs prefix sign/attribution and model trust gates. B2 wonLoss median retains its ordering but has no invented paired SE, so cannot eliminate. Whole-question admission requires independent offline and two-run natural coverage.",
+        "status": "produced",
+        "ms": 1.216152000000875,
+        "production_comparison": {
+          "metric": "deployed-ranking-first-group",
+          "full": [
+            "o1"
+          ],
+          "partial": [
+            "o1"
+          ],
+          "agreement": true
+        },
+        "input_key": "required-b3-v1:39a0c3decbf830512f8c31dfef8a18f42ba0d56b731a111d2929fa641a971c5d",
+        "fixed_order_search_in_work": true
+      },
+      "s_ranking": null,
+      "result": "completed: Action completed.",
+      "request_ids": []
+    },
+    {
+      "stream": "decisions",
+      "ts": "2026-10-15T03:09:16.997Z",
+      "label": "event/leave",
+      "source": {
+        "path": "logs/decisions.jsonl",
+        "offset": 1544020589,
+        "bytes": 1281,
+        "sha256": "1e7ca1db2596a2af0aa4dc8029e7f2443f02b7fcf96fddaf4bf3653194985adc"
+      },
+      "decision_id": "5fe4a4f7-5f51-42c3-9abc-2d0729b7031e",
+      "floor": 1,
+      "boss": null,
+      "samples": null,
+      "completion": null,
+      "readiness": null,
+      "build_ranking": null,
+      "adaptive": null,
+      "s_ranking": null,
+      "result": "completed: Event proceeded.",
+      "request_ids": []
+    },
+    {
+      "stream": "brain",
+      "ts": "2026-10-15T03:09:50.156Z",
+      "label": "map/route-plan",
+      "source": {
+        "path": "logs/brain.jsonl",
+        "offset": 561385714,
+        "bytes": 23355,
+        "sha256": "add195f2d6641936eb747addf1a20d91e6f84590907927bdeae6c19f50abf05c"
+      },
+      "question_id": "mv8yknmw-739370-2",
+      "accepted": true,
+      "model": "gpt-6.1-sol",
+      "engine": "codex",
+      "boss_readiness": null,
+      "build_ranking": null,
+      "error_kind": null
+    },
+    {
+      "stream": "decisions",
+      "ts": "2026-10-15T03:09:50.158Z",
+      "label": "map/route-plan",
+      "source": {
+        "path": "logs/decisions.jsonl",
+        "offset": 1544021870,
+        "bytes": 11304,
+        "sha256": "7205265bde82802752a204cc1420c8081860766119dd51fee63c647bdf69cc7a"
+      },
+      "decision_id": "288a1cde-d3be-42dd-8cf0-214476035c27",
+      "floor": 1,
+      "boss": null,
+      "samples": null,
+      "completion": null,
+      "readiness": null,
+      "build_ranking": null,
+      "adaptive": null,
+      "s_ranking": null,
+      "result": "completed: Action completed.",
+      "request_ids": []
+    },
+    {
+      "stream": "decisions",
+      "ts": "2026-10-15T03:09:54.963Z",
+      "label": "combat/plan-choice",
+      "source": {
+        "path": "logs/decisions.jsonl",
+        "offset": 1544033174,
+        "bytes": 14310,
+        "sha256": "aa2fff303b0a02060627adf8ea3d0d64bcff0ca80f97e0a481e6cde95c12ba19"
+      },
+      "decision_id": "f627b6fe-88dd-4785-b6cb-017a0e962253",
+      "floor": 2,
+      "boss": null,
+      "samples": null,
+      "completion": null,
+      "readiness": null,
+      "build_ranking": null,
+      "adaptive": null,
+      "s_ranking": null,
+      "result": "completed: Action completed.",
+      "request_ids": [
+        "req_01a13d89c7b57cd9b65ad99547175be4"
+      ]
+    },
+    {
+      "stream": "decisions",
+      "ts": "2026-10-15T03:09:55.808Z",
+      "label": "combat/plan-continue",
+      "source": {
+        "path": "logs/decisions.jsonl",
+        "offset": 1544047484,
+        "bytes": 1570,
+        "sha256": "0b469755d95d80ec401121d4e91b73b2c218d73b0c10b98f1ff2b468e710d5bc"
+      },
+      "decision_id": "8e373dcc-fbe4-4c92-972f-652784f7d3fe",
+      "floor": 2,
+      "boss": null,
+      "samples": null,
+      "completion": null,
+      "readiness": null,
+      "build_ranking": null,
+      "adaptive": null,
+      "s_ranking": null,
+      "result": "completed: Action completed.",
+      "request_ids": []
+    },
+    {
+      "stream": "decisions",
+      "ts": "2026-10-15T03:09:56.707Z",
+      "label": "combat/plan-continue",
+      "source": {
+        "path": "logs/decisions.jsonl",
+        "offset": 1544049054,
+        "bytes": 1532,
+        "sha256": "1f6dde4b75d6b6a91e125b5b255b3ceb6ca8e1d1d82533eed2d57d7f842c8c68"
+      },
+      "decision_id": "33fa7cbc-55a0-4ec8-b7a5-9150a61e460e",
+      "floor": 2,
+      "boss": null,
+      "samples": null,
+      "completion": null,
+      "readiness": null,
+      "build_ranking": null,
+      "adaptive": null,
+      "s_ranking": null,
+      "result": "completed: Action completed.",
+      "request_ids": []
+    },
+    {
+      "stream": "decisions",
+      "ts": "2026-10-15T03:09:57.742Z",
+      "label": "combat/plan-continue",
+      "source": {
+        "path": "logs/decisions.jsonl",
+        "offset": 1544050586,
+        "bytes": 1438,
+        "sha256": "86be47cb7a5cde6d0cc4ef121f2b785c7d8eaf9537496de342c1bc77f62a84a6"
+      },
+      "decision_id": "899ee88b-1712-4165-8fe2-8348f3295176",
+      "floor": 2,
+      "boss": null,
+      "samples": null,
+      "completion": null,
+      "readiness": null,
+      "build_ranking": null,
+      "adaptive": null,
+      "s_ranking": null,
+      "result": "completed: Action completed.",
+      "request_ids": []
+    },
+    {
+      "stream": "decisions",
+      "ts": "2026-10-15T03:09:58.576Z",
+      "label": "combat/plan",
+      "source": {
+        "path": "logs/decisions.jsonl",
+        "offset": 1544052024,
+        "bytes": 1265,
+        "sha256": "2c60c55ba4b1ae04ed8606962e4afedfdbc99256445e73ca42d6f293fe54de98"
+      },
+      "decision_id": "03f8dc24-2c80-4536-b1ac-bd8184104f5e",
+      "floor": 2,
+      "boss": null,
+      "samples": null,
+      "completion": null,
+      "readiness": null,
+      "build_ranking": null,
+      "adaptive": null,
+      "s_ranking": null,
+      "result": "completed: Action completed.",
+      "request_ids": []
+    },
+    {
+      "stream": "decisions",
+      "ts": "2026-10-15T03:10:03.868Z",
+      "label": "combat/plan-choice",
+      "source": {
+        "path": "logs/decisions.jsonl",
+        "offset": 1544053289,
+        "bytes": 25378,
+        "sha256": "e37acbd6e532ded65a2e0965f1f377609d99e37da900e5dbe19ce407a21d937d"
+      },
+      "decision_id": "6255ccfe-79f6-468e-b5ab-67fd87489c07",
+      "floor": 2,
+      "boss": null,
+      "samples": null,
+      "completion": null,
+      "readiness": null,
+      "build_ranking": null,
+      "adaptive": null,
+      "s_ranking": null,
+      "result": "pending (unstable): Action queued but state is still transitioning.",
+      "request_ids": [
+        "req_01a13d89ea867fa089b453a1468aa87e"
+      ]
+    },
+    {
+      "stream": "decisions",
+      "ts": "2026-10-15T03:10:04.778Z",
+      "label": "selection/confirm",
+      "source": {
+        "path": "logs/decisions.jsonl",
+        "offset": 1544078667,
+        "bytes": 1247,
+        "sha256": "36c1b2f12276d943908a16856b470859ec96797777d5b7b5a1ec28a7d540cf0c"
+      },
+      "decision_id": "8b71a9c7-e013-4c8f-a5ba-be5b53083797",
+      "floor": 2,
+      "boss": null,
+      "samples": null,
+      "completion": null,
+      "readiness": null,
+      "build_ranking": null,
+      "adaptive": null,
+      "s_ranking": null,
+      "result": "completed: Action completed.",
+      "request_ids": []
+    },
+    {
+      "stream": "decisions",
+      "ts": "2026-10-15T03:10:05.974Z",
+      "label": "combat/plan-choice",
+      "source": {
+        "path": "logs/decisions.jsonl",
+        "offset": 1544079914,
+        "bytes": 12242,
+        "sha256": "2a79ba580f0975b4b93e770dbba6e0a3e948eda326e345349a549cea1ef3feb7"
+      },
+      "decision_id": "c293e4d5-12bb-4636-9d56-ab6df28e1e18",
+      "floor": 2,
+      "boss": null,
+      "samples": null,
+      "completion": null,
+      "readiness": null,
+      "build_ranking": null,
+      "adaptive": null,
+      "s_ranking": null,
+      "result": "completed: Action completed.",
+      "request_ids": [
+        "req_01a13d89f1fd7c1cb4620739d650f377"
+      ]
+    },
+    {
+      "stream": "decisions",
+      "ts": "2026-10-15T03:10:06.874Z",
+      "label": "combat/plan-continue",
+      "source": {
+        "path": "logs/decisions.jsonl",
+        "offset": 1544092156,
+        "bytes": 1430,
+        "sha256": "dc0c706385709c6392d5df9294a119aab49dd05fd002c4e6b94d639e5d9c97a6"
+      },
+      "decision_id": "02ef7ce3-e9b9-4d59-ba28-d0c2b5951ca4",
+      "floor": 2,
+      "boss": null,
+      "samples": null,
+      "completion": null,
+      "readiness": null,
+      "build_ranking": null,
+      "adaptive": null,
+      "s_ranking": null,
+      "result": "pending (unstable): Action queued but state is still transitioning.",
+      "request_ids": []
+    },
+    {
+      "stream": "decisions",
+      "ts": "2026-10-15T03:10:08.050Z",
+      "label": "selection/choose",
+      "source": {
+        "path": "logs/decisions.jsonl",
+        "offset": 1544093586,
+        "bytes": 3673,
+        "sha256": "bcef384f80ba16241d49857943d153d6b9e24de31bcbda52753cdf91f208f533"
+      },
+      "decision_id": "ea7900d3-6643-4e5b-9821-d68352ac7ba1",
+      "floor": 2,
+      "boss": null,
+      "samples": null,
+      "completion": null,
+      "readiness": null,
+      "build_ranking": null,
+      "adaptive": null,
+      "s_ranking": null,
+      "result": "completed: Action completed.",
+      "request_ids": [
+        "req_01a13d89fafa7ea7b9ac5ffcf356afd4"
+      ]
+    },
+    {
+      "stream": "decisions",
+      "ts": "2026-10-15T03:10:08.576Z",
+      "label": "combat/plan",
+      "source": {
+        "path": "logs/decisions.jsonl",
+        "offset": 1544097259,
+        "bytes": 1219,
+        "sha256": "fdf331df9dfdde7d68183725066a8cdf65e7dd5df4e56b955f065106bf8a5011"
+      },
+      "decision_id": "bef296d1-cbeb-4ab3-b835-6c2af8f977e2",
+      "floor": 2,
+      "boss": null,
+      "samples": null,
+      "completion": null,
+      "readiness": null,
+      "build_ranking": null,
+      "adaptive": null,
+      "s_ranking": null,
+      "result": "completed: Action completed.",
+      "request_ids": []
+    },
+    {
+      "stream": "decisions",
+      "ts": "2026-10-15T03:10:13.842Z",
+      "label": "combat/plan",
+      "source": {
+        "path": "logs/decisions.jsonl",
+        "offset": 1544098478,
+        "bytes": 1503,
+        "sha256": "b704467a8c5d4b975de2901d03cc61b7f6c4609e963c69cef97452f004489b11"
+      },
+      "decision_id": "a1c46054-f041-40cf-a2a5-e9e6c51eeb46",
+      "floor": 2,
+      "boss": null,
+      "samples": null,
+      "completion": null,
+      "readiness": null,
+      "build_ranking": null,
+      "adaptive": null,
+      "s_ranking": null,
+      "result": "completed: Action completed.",
+      "request_ids": []
+    },
+    {
+      "stream": "decisions",
+      "ts": "2026-10-15T03:10:14.741Z",
+      "label": "combat/plan-continue",
+      "source": {
+        "path": "logs/decisions.jsonl",
+        "offset": 1544099981,
+        "bytes": 1505,
+        "sha256": "4f13d5af8597f08199b02bedcd94e8804b077908e5f665b9b196d851188cd55b"
+      },
+      "decision_id": "ffb61dde-62b2-4043-b47b-a7febbff0336",
+      "floor": 2,
+      "boss": null,
+      "samples": null,
+      "completion": null,
+      "readiness": null,
+      "build_ranking": null,
+      "adaptive": null,
+      "s_ranking": null,
+      "result": "completed: Action completed.",
+      "request_ids": []
+    },
+    {
+      "stream": "decisions",
+      "ts": "2026-10-15T03:10:15.648Z",
+      "label": "combat/plan",
+      "source": {
+        "path": "logs/decisions.jsonl",
+        "offset": 1544101486,
+        "bytes": 1274,
+        "sha256": "35fbfe5787728dfa1856aae9b6429db660e80c498a4895153f67e1cc9b90fe5c"
+      },
+      "decision_id": "a3ac7e07-4944-43d0-b381-f1e0e1aa45f2",
+      "floor": 2,
+      "boss": null,
+      "samples": null,
+      "completion": null,
+      "readiness": null,
+      "build_ranking": null,
+      "adaptive": null,
+      "s_ranking": null,
+      "result": "completed: Action completed.",
+      "request_ids": []
+    },
+    {
+      "stream": "decisions",
+      "ts": "2026-10-15T03:10:20.740Z",
+      "label": "combat/plan-choice",
+      "source": {
+        "path": "logs/decisions.jsonl",
+        "offset": 1544102760,
+        "bytes": 38683,
+        "sha256": "5bab32e6db4906ced7f6327c9bf1179cca02bbcb4153a1e21558755a7c69da35"
+      },
+      "decision_id": "c8e8ee47-e246-4835-b0ed-c0269a5e4b7c",
+      "floor": 2,
+      "boss": null,
+      "samples": null,
+      "completion": null,
+      "readiness": null,
+      "build_ranking": null,
+      "adaptive": null,
+      "s_ranking": null,
+      "result": "completed: Action completed.",
+      "request_ids": [
+        "req_01a13d8a2c8a7e73b00ad2ebb0a4e5ca"
+      ]
+    },
+    {
+      "stream": "decisions",
+      "ts": "2026-10-15T03:10:21.777Z",
+      "label": "combat/plan-continue",
+      "source": {
+        "path": "logs/decisions.jsonl",
+        "offset": 1544141443,
+        "bytes": 1493,
+        "sha256": "c4e23ae2c34e1787a803fc6609d90f362f13f941e28466e6e874968bac03efd6"
+      },
+      "decision_id": "54b8e521-2d8d-400c-af5b-0996f4ef578b",
+      "floor": 2,
+      "boss": null,
+      "samples": null,
+      "completion": null,
+      "readiness": null,
+      "build_ranking": null,
+      "adaptive": null,
+      "s_ranking": null,
+      "result": "completed: Action completed.",
+      "request_ids": []
+    },
+    {
+      "stream": "decisions",
+      "ts": "2026-10-15T03:10:22.674Z",
+      "label": "combat/plan-continue",
+      "source": {
+        "path": "logs/decisions.jsonl",
+        "offset": 1544142936,
+        "bytes": 1389,
+        "sha256": "4824478e6dcfd055c9937dc7761874f59a58ab708342fd7058e16dc5555ea6b2"
+      },
+      "decision_id": "89d0e7a4-47fa-49bd-8980-a584f13e1e3c",
+      "floor": 2,
+      "boss": null,
+      "samples": null,
+      "completion": null,
+      "readiness": null,
+      "build_ranking": null,
+      "adaptive": null,
+      "s_ranking": null,
+      "result": "completed: Action completed.",
+      "request_ids": []
+    },
+    {
+      "stream": "decisions",
+      "ts": "2026-10-15T03:10:23.507Z",
+      "label": "combat/plan-continue",
+      "source": {
+        "path": "logs/decisions.jsonl",
+        "offset": 1544144325,
+        "bytes": 1355,
+        "sha256": "6ad1987c9178c838713b234f1d9406d8b2931e274b120be7548ac7f412e18dc0"
+      },
+      "decision_id": "fdc71ebf-c230-463f-9d06-8baaa208d8b5",
+      "floor": 2,
+      "boss": null,
+      "samples": null,
+      "completion": null,
+      "readiness": null,
+      "build_ranking": null,
+      "adaptive": null,
+      "s_ranking": null,
+      "result": "completed: Action completed.",
+      "request_ids": []
+    },
+    {
+      "stream": "decisions",
+      "ts": "2026-10-15T03:10:26.978Z",
+      "label": "combat/end_turn",
+      "source": {
+        "path": "logs/decisions.jsonl",
+        "offset": 1544145680,
+        "bytes": 1180,
+        "sha256": "3e185e57abe550e6800dbd19cdd1690587d2fb9748d0bdf6390bf155ca85b55c"
+      },
+      "decision_id": "1e684043-15ae-482e-ba76-af6da9337c31",
+      "floor": 2,
+      "boss": null,
+      "samples": null,
+      "completion": null,
+      "readiness": null,
+      "build_ranking": null,
+      "adaptive": null,
+      "s_ranking": null,
+      "result": "completed: Action completed.",
+      "request_ids": []
+    },
+    {
+      "stream": "decisions",
+      "ts": "2026-10-15T03:10:32.278Z",
+      "label": "combat/lethal",
+      "source": {
+        "path": "logs/decisions.jsonl",
+        "offset": 1544146860,
+        "bytes": 1428,
+        "sha256": "8cdcebb5ee6e1b336cf187c122a06307d1cbf94c21720f4f7bfdd7739d9d138b"
+      },
+      "decision_id": "18ac4e45-8340-4702-a974-24e2b7118117",
+      "floor": 2,
+      "boss": null,
+      "samples": null,
+      "completion": null,
+      "readiness": null,
+      "build_ranking": null,
+      "adaptive": null,
+      "s_ranking": null,
+      "result": "completed: Action completed.",
+      "request_ids": []
+    },
+    {
+      "stream": "decisions",
+      "ts": "2026-10-15T03:10:33.175Z",
+      "label": "combat/plan-continue",
+      "source": {
+        "path": "logs/decisions.jsonl",
+        "offset": 1544148288,
+        "bytes": 1504,
+        "sha256": "112f7586e43b71a1c6c222f6965d80e797f54bf851c3cff46b6ad869d0d07dd4"
+      },
+      "decision_id": "95beae27-0bf2-48d1-a0b8-69975bf88e16",
+      "floor": 2,
+      "boss": null,
+      "samples": null,
+      "completion": null,
+      "readiness": null,
+      "build_ranking": null,
+      "adaptive": null,
+      "s_ranking": null,
+      "result": "completed: Action completed.",
+      "request_ids": []
+    },
+    {
+      "stream": "decisions",
+      "ts": "2026-10-15T03:10:33.942Z",
+      "label": "reward/claim",
+      "source": {
+        "path": "logs/decisions.jsonl",
+        "offset": 1544149792,
+        "bytes": 1254,
+        "sha256": "333024d0cf01b5f8bb2f72bd573da747748d830f188e77aedb0707bd9ac676d4"
+      },
+      "decision_id": "f1cfe66d-fe49-4c45-9bcc-c89f143fc5aa",
+      "floor": 2,
+      "boss": null,
+      "samples": null,
+      "completion": null,
+      "readiness": null,
+      "build_ranking": null,
+      "adaptive": null,
+      "s_ranking": null,
+      "result": "completed: Action completed.",
+      "request_ids": []
+    },
+    {
+      "stream": "decisions",
+      "ts": "2026-10-15T03:10:34.136Z",
+      "label": "reward/claim",
+      "source": {
+        "path": "logs/decisions.jsonl",
+        "offset": 1544151046,
+        "bytes": 1271,
+        "sha256": "78ab135471e7f6ca44364bb5020c2c214fa7313039578297c1ca9f4f1cdcb020"
+      },
+      "decision_id": "aa52c7d1-61a0-4f31-81db-fff0019c4d5f",
+      "floor": 2,
+      "boss": null,
+      "samples": null,
+      "completion": null,
+      "readiness": null,
+      "build_ranking": null,
+      "adaptive": null,
+      "s_ranking": null,
+      "result": "completed: Action completed.",
+      "request_ids": []
+    },
+    {
+      "stream": "decisions",
+      "ts": "2026-10-15T03:10:34.337Z",
+      "label": "reward/claim",
+      "source": {
+        "path": "logs/decisions.jsonl",
+        "offset": 1544152317,
+        "bytes": 1344,
+        "sha256": "dae588081b9e4a7149fda0656ede7ab93b90b1064074cc25389b511301bc5fad"
+      },
+      "decision_id": "ff184f15-d113-4d62-ba39-22ee94427529",
+      "floor": 2,
+      "boss": null,
+      "samples": null,
+      "completion": null,
+      "readiness": null,
+      "build_ranking": null,
+      "adaptive": null,
+      "s_ranking": null,
+      "result": "completed: Action completed.",
+      "request_ids": []
+    },
+    {
+      "stream": "brain",
+      "ts": "2026-10-15T03:11:12.154Z",
+      "label": "reward/card",
+      "source": {
+        "path": "logs/brain.jsonl",
+        "offset": 561409069,
+        "bytes": 93234,
+        "sha256": "3dd139760c8e1b5a2038ff803eff62f65eb3f1347b75fd7d00172a21a447c2ab"
+      },
+      "question_id": "mv8yknmw-739370-3",
+      "accepted": true,
+      "model": "gpt-6.1-sol",
+      "engine": "codex",
+      "boss_readiness": "当前牌组Boss模拟胜率0%（原始0%）；输局1000例，Boss平均剩70%、死亡回合均值11.1；缺口中位：进攻+11.7/回合或防守+136.2有效血；敏感度：DPR+25%→0%，有效血+25%→0%（原始样本线性近似，仅诊断，不能排序；防守缺口未知0例）。",
+      "build_ranking": null,
+      "error_kind": null
+    },
+    {
+      "stream": "decisions",
+      "ts": "2026-10-15T03:11:12.156Z",
+      "label": "reward/card",
+      "source": {
+        "path": "logs/decisions.jsonl",
+        "offset": 1544153661,
+        "bytes": 184491,
+        "sha256": "37d5da9e1f30f32454bd64b5f0e70a341574eb61e6639773269c6b9fb2008e6d"
+      },
+      "decision_id": "fa643220-4560-4c21-b117-73f4a6182b8f",
+      "floor": 2,
+      "boss": "VANTOM",
+      "samples": 1000,
+      "completion": {
+        "required": true,
+        "uniqueDecks": 4,
+        "originalDecks": 4,
+        "memoHit": false,
+        "status": "complete",
+        "attempt_id": "c8526062-d629-457c-99c7-1236387d3bfb",
+        "attempts": 1,
+        "reasons": [],
+        "samples": 1000,
+        "requested": 1000,
+        "failure": false,
+        "key": "sim-failure-v1:bb6cfcf07bf24b9c6e831c207d87939390fc983323fdbd0f1531f0346da8c2c0",
+        "latencyTargetMs": 11000,
+        "latencyTargetExceeded": false
+      },
+      "readiness": {
+        "schema": "boss-readiness-v1",
+        "samples": 1000,
+        "valid": 1000,
+        "missing": 0,
+        "reference": {
+          "myHp": 57,
+          "bossHp": 183,
+          "startTurn": 1,
+          "enemyIds": [
+            "VANTOM"
+          ],
+          "unknown": []
+        },
+        "win": {
+          "raw": 0,
+          "calibrated": 0,
+          "raw_interval95": [
+            2.168404344971009e-19,
+            0.0038267584855551234
+          ],
+          "calibrated_mc_interval95": [
+            2.168404344971009e-19,
+            0.0038267584855551234
+          ],
+          "interval_scope": "won_before_simulation_termination; mapped_MC_interval_is_not_calibration_uncertainty"
+        },
+        "loss": {
+          "n": 1000,
+          "bossLeftFraction": {
+            "n": 1000,
+            "mean": 0.7022404371584702,
+            "sd": 0.058623207282711594,
+            "meanSe": 0.0018538285875753912,
+            "p10": 0.6229508196721312,
+            "median": 0.7049180327868853,
+            "p90": 0.7704918032786885,
+            "min": 0.48633879781420764,
+            "max": 0.8852459016393442
+          },
+          "deathTurn": {
+            "n": 1000,
+            "mean": 11.091999999999995,
+            "sd": 1.0012684647678356,
+            "meanSe": 0.03166288897966416,
+            "p10": 10,
+            "median": 11,
+            "p90": 13,
+            "min": 7,
+            "max": 14
+          }
+        },
+        "win_side": {
+          "n": 0,
+          "hpLeftFraction": {
+            "n": 0,
+            "mean": null,
+            "sd": null,
+            "meanSe": null,
+            "p10": null,
+            "median": null,
+            "p90": null,
+            "min": null,
+            "max": null
+          },
+          "turns": {
+            "n": 0,
+            "mean": null,
+            "sd": null,
+            "meanSe": null,
+            "p10": null,
+            "median": null,
+            "p90": null,
+            "min": null,
+            "max": null
+          }
+        },
+        "terms": {
+          "A": {
+            "n": 1000,
+            "mean": 0.026836394934755592,
+            "sd": 0.004662584551499773,
+            "meanSe": 0.00014744386965853936,
+            "p10": 0.020864381520119227,
+            "median": 0.026825633383010434,
+            "p90": 0.03278688524590164,
+            "min": 0.011922503725782413,
+            "max": 0.0448087431693989
+          },
+          "D": {
+            "n": 1000,
+            "mean": 0.09085745365745358,
+            "sd": 0.007992275741617809,
+            "meanSe": 0.0002527379503162366,
+            "p10": 0.07692307692307693,
+            "median": 0.09090909090909091,
+            "p90": 0.1,
+            "min": 0.07142857142857142,
+            "max": 0.14285714285714285
+          }
+        },
+        "gap": {
+          "offense": {
+            "n": 1000,
+            "missing": 0,
+            "p25": 10.909090909090908,
+            "p50": 11.727272727272727,
+            "p75": 12.545454545454545
+          },
+          "defense": {
+            "n": 1000,
+            "missing": 0,
+            "p25": 114,
+            "p50": 136.16666666666666,
+            "p75": 160.3125
+          }
+        },
+        "sensitivity": [
+          {
+            "relative": 0.1,
+            "extra_dpr": 0.4911060273060266,
+            "extra_hp": 5.7,
+            "win_with_dpr": 0,
+            "win_with_hp": 0
+          },
+          {
+            "relative": 0.25,
+            "extra_dpr": 1.2277650682650665,
+            "extra_hp": 14.25,
+            "win_with_dpr": 0,
+            "win_with_hp": 0
+          },
+          {
+            "relative": 0.5,
+            "extra_dpr": 2.455530136530133,
+            "extra_hp": 28.5,
+            "win_with_dpr": 0,
+            "win_with_hp": 0
+          }
+        ],
+        "sensitivity_denominator": 1000,
+        "trust": {
+          "rankingEligible": true,
+          "bossTrustReason": null,
+          "sign_audit": {
+            "schema": "s-sign-audit-v1",
+            "samples": 1000,
+            "valid": 1000,
+            "missing": 0,
+            "mismatches": 0,
+            "mismatch_rate": 0,
+            "passed": true,
+            "exceptions": [],
+            "groups": [
+              {
+                "healing": null,
+                "revived": false,
+                "overkill": false,
+                "samples": 1000,
+                "valid": 1000,
+                "missing": 0,
+                "mismatches": 0,
+                "mismatch_rate": 0,
+                "passed": true,
+                "exceptions": []
+              }
+            ],
+            "rankingEligible": true,
+            "limits": "Conditional simulation audit only. Missing attribution is not zero; unrecorded healing stays unknown. Not a calibration of real wins."
+          }
+        },
+        "limits": "Linear constant-rate approximation for diagnosis only, never ranking. Extra damage changes fight duration; extra HP ignores scaling and play order. Missing or censored samples are not losses. Monte Carlo intervals exclude model and calibration uncertainty.",
+        "mode": "on",
+        "ms": 6.163239999994403,
+        "delivered": true
+      },
+      "build_ranking": {
+        "schema": "build-ranking-v1",
+        "status": "produced",
+        "best_group": [
+          "card1"
+        ],
+        "groups": [
+          [
+            "card1"
+          ],
+          [
+            "card0",
+            "skip"
+          ],
+          [
+            "card2"
+          ]
+        ],
+        "better_than_current": [
+          "card1"
+        ],
+        "no_difference": [
+          "card0",
+          "skip"
+        ],
+        "worse_than_current": [
+          "card2"
+        ],
+        "win_saturated": true,
+        "low_trust": null,
+        "rows": [
+          {
+            "key": "card1",
+            "rank": 1,
+            "group": "better_than_current",
+            "delta_win": {
+              "mean": 0,
+              "se": 0
+            },
+            "delta_s": {
+              "mean": 0.001848518876387728,
+              "se": 0.0004193724158238529
+            },
+            "delta_hp_loss": 0,
+            "delta_a": {
+              "mean": 2.59636538325064e-05,
+              "se": 0.00021294487953627027
+            },
+            "delta_d": {
+              "mean": -0.0018225552225552264,
+              "se": 0.00035456412649365315
+            },
+            "main_source": "defense",
+            "s_eligible": true,
+            "s_reason": null
+          },
+          {
+            "key": "card0",
+            "rank": 2,
+            "group": "no_difference",
+            "delta_win": {
+              "mean": 0,
+              "se": 0
+            },
+            "delta_s": {
+              "mean": 0.0005252954695577647,
+              "se": 0.0004064629256275513
+            },
+            "delta_hp_loss": 0,
+            "delta_a": {
+              "mean": -0.0003895563452940501,
+              "se": 0.00020412759197736767
+            },
+            "delta_d": {
+              "mean": -0.000914851814851817,
+              "se": 0.00034012499786704304
+            },
+            "main_source": "defense",
+            "s_eligible": true,
+            "s_reason": null
+          },
+          {
+            "key": "skip",
+            "rank": 2,
+            "group": "no_difference",
+            "delta_win": {
+              "mean": 0,
+              "se": 0
+            },
+            "delta_s": {
+              "mean": 0,
+              "se": 0
+            },
+            "delta_hp_loss": 0,
+            "delta_a": {
+              "mean": 0,
+              "se": 0
+            },
+            "delta_d": {
+              "mean": 0,
+              "se": 0
+            },
+            "main_source": "both",
+            "s_eligible": true,
+            "s_reason": null
+          },
+          {
+            "key": "card2",
+            "rank": 3,
+            "group": "worse_than_current",
+            "delta_win": {
+              "mean": 0,
+              "se": 0
+            },
+            "delta_s": {
+              "mean": -0.0020339133847330545,
+              "se": 0.000421910628171128
+            },
+            "delta_hp_loss": 0,
+            "delta_a": {
+              "mean": 0.001434873384053712,
+              "se": 0.00020470811153041325
+            },
+            "delta_d": {
+              "mean": 0.0034687867687867697,
+              "se": 0.00036254174895929554
+            },
+            "main_source": "defense",
+            "s_eligible": true,
+            "s_reason": null
+          }
+        ],
+        "comparisons": [
+          {
+            "key": "card0",
+            "reference": "card0",
+            "metric": "win",
+            "mean": 0,
+            "se": 0
+          },
+          {
+            "key": "card1",
+            "reference": "card0",
+            "metric": "win",
+            "mean": 0,
+            "se": 0
+          },
+          {
+            "key": "card2",
+            "reference": "card0",
+            "metric": "win",
+            "mean": 0,
+            "se": 0
+          },
+          {
+            "key": "skip",
+            "reference": "card0",
+            "metric": "win",
+            "mean": 0,
+            "se": 0
+          },
+          {
+            "key": "card0",
+            "reference": "card1",
+            "metric": "S",
+            "mean": -0.001323223406829964,
+            "se": 0.0003844911087626978
+          },
+          {
+            "key": "card1",
+            "reference": "card1",
+            "metric": "S",
+            "mean": 0,
+            "se": 0
+          },
+          {
+            "key": "card2",
+            "reference": "card1",
+            "metric": "S",
+            "mean": -0.00388243226112079,
+            "se": 0.000349694717876
+          },
+          {
+            "key": "skip",
+            "reference": "card1",
+            "metric": "S",
+            "mean": -0.001848518876387728,
+            "se": 0.0004193724158238529
+          },
+          {
+            "key": "card0",
+            "reference": "card0",
+            "metric": "S",
+            "mean": 0,
+            "se": 0
+          },
+          {
+            "key": "card2",
+            "reference": "card0",
+            "metric": "S",
+            "mean": -0.002559208854290821,
+            "se": 0.00037027820143054296
+          },
+          {
+            "key": "skip",
+            "reference": "card0",
+            "metric": "S",
+            "mean": -0.0005252954695577647,
+            "se": 0.0004064629256275513
+          },
+          {
+            "key": "card2",
+            "reference": "card2",
+            "metric": "S",
+            "mean": 0,
+            "se": 0
+          }
+        ],
+        "limits": "同题同种子逐样本配对；先胜率、再合格S、最后配对掉血。只比较已模拟候选，未模拟选项保留未知；S不是胜率，缺口诊断不参与排序。大脑可偏离，但须说明理由。",
+        "mode": "shadow",
+        "delivered": false,
+        "candidates": [
+          {
+            "key": "card0",
+            "choice_key": "card0",
+            "card_key": null
+          },
+          {
+            "key": "card1",
+            "choice_key": "card1",
+            "card_key": null
+          },
+          {
+            "key": "card2",
+            "choice_key": "card2",
+            "card_key": null
+          },
+          {
+            "key": "skip",
+            "choice_key": "skip",
+            "card_key": null
+          }
+        ],
+        "selection": {
+          "choice": "card1",
+          "card": null,
+          "candidate_keys": [
+            "card1"
+          ],
+          "target_pending": false,
+          "deviated": false,
+          "ranking_override_reason": null,
+          "mode": "shadow",
+          "scope": "current_choice_only"
+        }
+      },
+      "adaptive": {
+        "schema": "sim-adaptive-shadow-v1",
+        "mode": "shadow",
+        "lane": "b3",
+        "rule": {
+          "version": "adaptive-v1",
+          "b3First": 300,
+          "b2First": 200,
+          "batch": 100,
+          "zElim": 3,
+          "zTie": 2,
+          "first": 300,
+          "requested": 1000
+        },
+        "candidates": [
+          {
+            "key": "@current",
+            "samples": 800,
+            "stop": "leader",
+            "rounds": 6,
+            "baseline": true
+          },
+          {
+            "key": "card0",
+            "samples": 800,
+            "stop": "eliminated",
+            "rounds": 6,
+            "baseline": false
+          },
+          {
+            "key": "card1",
+            "samples": 800,
+            "stop": "leader",
+            "rounds": 6,
+            "baseline": false
+          },
+          {
+            "key": "card2",
+            "samples": 300,
+            "stop": "eliminated",
+            "rounds": 1,
+            "baseline": false
+          },
+          {
+            "key": "skip",
+            "samples": 500,
+            "stop": "eliminated",
+            "rounds": 3,
+            "baseline": false
+          }
+        ],
+        "full": {
+          "leader": "card1",
+          "group": [
+            "card1"
+          ]
+        },
+        "shadow": {
+          "leader": "card1",
+          "group": [
+            "card1"
+          ]
+        },
+        "evaluable": true,
+        "agreement": true,
+        "work": {
+          "full": 4000,
+          "shadow": 2700,
+          "savedFraction": 0.32499999999999996,
+          "unit": "unique-option-sample-equivalents"
+        },
+        "rounds": [
+          {
+            "n": 300,
+            "leader": "card1",
+            "eliminated": [
+              {
+                "key": "card2",
+                "metric": {
+                  "key": "S",
+                  "difference": -0.004401407335833569,
+                  "se": 0.000669412839979325
+                }
+              }
+            ]
+          },
+          {
+            "n": 400,
+            "leader": "card1",
+            "eliminated": []
+          },
+          {
+            "n": 500,
+            "leader": "card1",
+            "eliminated": [
+              {
+                "key": "skip",
+                "metric": {
+                  "key": "S",
+                  "difference": -0.002182646497400595,
+                  "se": 0.0006188180181809109
+                }
+              }
+            ]
+          },
+          {
+            "n": 600,
+            "leader": "card1",
+            "eliminated": []
+          },
+          {
+            "n": 700,
+            "leader": "card1",
+            "eliminated": []
+          },
+          {
+            "n": 800,
+            "leader": "card1",
+            "eliminated": [
+              {
+                "key": "card0",
+                "metric": {
+                  "key": "S",
+                  "difference": -0.0014275283004791194,
+                  "se": 0.00042933003294325274
+                }
+              }
+            ]
+          }
+        ],
+        "limits": "Prefix replay only; no samples saved in shadow. S needs prefix sign/attribution and model trust gates. B2 wonLoss median retains its ordering but has no invented paired SE, so cannot eliminate. Whole-question admission requires independent offline and two-run natural coverage.",
+        "status": "produced",
+        "ms": 41.526087999984156,
+        "production_comparison": {
+          "metric": "deployed-ranking-first-group",
+          "full": [
+            "card1"
+          ],
+          "partial": [
+            "card1"
+          ],
+          "agreement": true
+        },
+        "input_key": "required-b3-v1:b3a0d119a7d2bc2cd939875f2846bfb0b2846808151f24663ece52074bc95d35",
+        "fixed_order_search_in_work": true
+      },
+      "s_ranking": null,
+      "result": "completed: Action completed.",
+      "request_ids": []
+    },
+    {
+      "stream": "decisions",
+      "ts": "2026-10-15T03:11:12.368Z",
+      "label": "reward/proceed",
+      "source": {
+        "path": "logs/decisions.jsonl",
+        "offset": 1544338152,
+        "bytes": 1266,
+        "sha256": "93c00249db435170a5ec6e813cca45ed06c140b3598aa1d9566e246c86b7967e"
+      },
+      "decision_id": "0ca0eb39-4a4d-469c-8ade-88e79ea6fe1f",
+      "floor": 2,
+      "boss": null,
+      "samples": null,
+      "completion": null,
+      "readiness": null,
+      "build_ranking": null,
+      "adaptive": null,
+      "s_ranking": null,
+      "result": "completed: Action completed.",
+      "request_ids": []
+    },
+    {
+      "stream": "decisions",
+      "ts": "2026-10-15T03:11:12.621Z",
+      "label": "map/route-follow",
+      "source": {
+        "path": "logs/decisions.jsonl",
+        "offset": 1544339418,
+        "bytes": 1913,
+        "sha256": "28d7723e819619c0d1f9c8714b694f786933489c4fc0b0f6b8e787bb03bc72b8"
+      },
+      "decision_id": "469a2aaf-59ab-4dbb-a43f-29d6c34364d1",
+      "floor": 2,
+      "boss": null,
+      "samples": null,
+      "completion": null,
+      "readiness": null,
+      "build_ranking": null,
+      "adaptive": null,
+      "s_ranking": null,
+      "result": "completed: Action completed.",
+      "request_ids": []
+    },
+    {
+      "stream": "decisions",
+      "ts": "2026-10-15T03:11:17.706Z",
+      "label": "combat/plan-choice",
+      "source": {
+        "path": "logs/decisions.jsonl",
+        "offset": 1544341331,
+        "bytes": 29003,
+        "sha256": "14a8175e2cf2e9165357e9726d90f11c1744ab558cb95ce56e6da5ac077d9c0d"
+      },
+      "decision_id": "40c00a53-d900-41fc-809d-68a722cfb88e",
+      "floor": 3,
+      "boss": null,
+      "samples": null,
+      "completion": null,
+      "readiness": null,
+      "build_ranking": null,
+      "adaptive": null,
+      "s_ranking": null,
+      "result": "completed: Action completed.",
+      "request_ids": [
+        "req_01a13d8b0b0374c795c7c4c52a4460ee"
+      ]
+    },
+    {
+      "stream": "decisions",
+      "ts": "2026-10-15T03:11:18.626Z",
+      "label": "combat/plan-continue",
+      "source": {
+        "path": "logs/decisions.jsonl",
+        "offset": 1544370334,
+        "bytes": 1626,
+        "sha256": "ceb207e1da1cfa896f9e5b841e50cc834097e34db4fc6360b6117354eb3f74c8"
+      },
+      "decision_id": "63ab4f06-c605-4252-9eb6-700d53c4a75b",
+      "floor": 3,
+      "boss": null,
+      "samples": null,
+      "completion": null,
+      "readiness": null,
+      "build_ranking": null,
+      "adaptive": null,
+      "s_ranking": null,
+      "result": "completed: Action completed.",
+      "request_ids": []
+    },
+    {
+      "stream": "decisions",
+      "ts": "2026-10-15T03:11:19.535Z",
+      "label": "combat/plan-continue",
+      "source": {
+        "path": "logs/decisions.jsonl",
+        "offset": 1544371960,
+        "bytes": 1588,
+        "sha256": "4953dcd079ccc82c4cbe298eb615abec1f5fa49ae5db29bb42e583cabd6d29f4"
+      },
+      "decision_id": "109a4d5b-59c0-4377-b4ab-8f55156b9441",
+      "floor": 3,
+      "boss": null,
+      "samples": null,
+      "completion": null,
+      "readiness": null,
+      "build_ranking": null,
+      "adaptive": null,
+      "s_ranking": null,
+      "result": "completed: Action completed.",
+      "request_ids": []
+    },
+    {
+      "stream": "decisions",
+      "ts": "2026-10-15T03:11:20.571Z",
+      "label": "combat/plan",
+      "source": {
+        "path": "logs/decisions.jsonl",
+        "offset": 1544373548,
+        "bytes": 1368,
+        "sha256": "6ee58920fe6ea2dde833139df2c07adebdb9e0738eff721857fd187c3c77e0cf"
+      },
+      "decision_id": "c9d48e2e-158e-42e4-afc4-61f950d410fc",
+      "floor": 3,
+      "boss": null,
+      "samples": null,
+      "completion": null,
+      "readiness": null,
+      "build_ranking": null,
+      "adaptive": null,
+      "s_ranking": null,
+      "result": "completed: Action completed.",
+      "request_ids": []
+    },
+    {
+      "stream": "decisions",
+      "ts": "2026-10-15T03:11:26.427Z",
+      "label": "combat/plan-choice",
+      "source": {
+        "path": "logs/decisions.jsonl",
+        "offset": 1544374916,
+        "bytes": 37191,
+        "sha256": "0b450d78610b5e8ba98246f7761e2207c863605124a2ee6cacbbffbcc23af05a"
+      },
+      "decision_id": "e8e49927-385f-4b65-b8a1-4b60f460fd85",
+      "floor": 3,
+      "boss": null,
+      "samples": null,
+      "completion": null,
+      "readiness": null,
+      "build_ranking": null,
+      "adaptive": null,
+      "s_ranking": null,
+      "result": "completed: Action completed.",
+      "request_ids": [
+        "req_01a13d8b2d107fe588209cdee6269d4a"
+      ]
+    },
+    {
+      "stream": "decisions",
+      "ts": "2026-10-15T03:11:27.335Z",
+      "label": "combat/plan-continue",
+      "source": {
+        "path": "logs/decisions.jsonl",
+        "offset": 1544412107,
+        "bytes": 1578,
+        "sha256": "3e1dcb06e3d8d856e53e63cd41ed23a6d44d04d59dd9e4463745884ca6990c69"
+      },
+      "decision_id": "db616af8-4ba0-4b41-8dcd-e43551cd6065",
+      "floor": 3,
+      "boss": null,
+      "samples": null,
+      "completion": null,
+      "readiness": null,
+      "build_ranking": null,
+      "adaptive": null,
+      "s_ranking": null,
+      "result": "completed: Action completed.",
+      "request_ids": []
+    },
+    {
+      "stream": "decisions",
+      "ts": "2026-10-15T03:11:28.237Z",
+      "label": "combat/plan-continue",
+      "source": {
+        "path": "logs/decisions.jsonl",
+        "offset": 1544413685,
+        "bytes": 1460,
+        "sha256": "a0309a4a091f5d140873f19f38980d326a4072fb0593c7170889287e93367276"
+      },
+      "decision_id": "36d04db2-6f08-4a95-83f5-d6407c7b9ee7",
+      "floor": 3,
+      "boss": null,
+      "samples": null,
+      "completion": null,
+      "readiness": null,
+      "build_ranking": null,
+      "adaptive": null,
+      "s_ranking": null,
+      "result": "completed: Action completed.",
+      "request_ids": []
+    },
+    {
+      "stream": "decisions",
+      "ts": "2026-10-15T03:11:29.540Z",
+      "label": "combat/plan-choice",
+      "source": {
+        "path": "logs/decisions.jsonl",
+        "offset": 1544415145,
+        "bytes": 11098,
+        "sha256": "ba3390d7ce953a307f3e245fa1a69b31f8e4bbec7f84317527be247fa57a4f12"
+      },
+      "decision_id": "d6e9e1d0-23ff-4927-a139-06942591253b",
+      "floor": 3,
+      "boss": null,
+      "samples": null,
+      "completion": null,
+      "readiness": null,
+      "build_ranking": null,
+      "adaptive": null,
+      "s_ranking": null,
+      "result": "completed: Action completed.",
+      "request_ids": [
+        "req_01a13d8b39557f52a897724a794be67f"
+      ]
+    },
+    {
+      "stream": "decisions",
+      "ts": "2026-10-15T03:11:34.336Z",
+      "label": "combat/plan",
+      "source": {
+        "path": "logs/decisions.jsonl",
+        "offset": 1544426243,
+        "bytes": 1486,
+        "sha256": "48b7f3ad12581b2feb55fa099bd85ffebabf7abb5b9f54d0249226bc865c5168"
+      },
+      "decision_id": "94ee5ac4-c2e1-495b-9fef-0888121ce9f2",
+      "floor": 3,
+      "boss": null,
+      "samples": null,
+      "completion": null,
+      "readiness": null,
+      "build_ranking": null,
+      "adaptive": null,
+      "s_ranking": null,
+      "result": "completed: Action completed.",
+      "request_ids": []
+    },
+    {
+      "stream": "decisions",
+      "ts": "2026-10-15T03:11:35.167Z",
+      "label": "combat/plan-continue",
+      "source": {
+        "path": "logs/decisions.jsonl",
+        "offset": 1544427729,
+        "bytes": 1503,
+        "sha256": "88518e8a651e619a78662215a3e352c57ac8eaaf55236d0cbc2110847f571547"
+      },
+      "decision_id": "7c413f5d-c76d-48ed-a661-0ee7311d4f97",
+      "floor": 3,
+      "boss": null,
+      "samples": null,
+      "completion": null,
+      "readiness": null,
+      "build_ranking": null,
+      "adaptive": null,
+      "s_ranking": null,
+      "result": "completed: Action completed.",
+      "request_ids": []
+    },
+    {
+      "stream": "decisions",
+      "ts": "2026-10-15T03:11:36.000Z",
+      "label": "combat/plan-continue",
+      "source": {
+        "path": "logs/decisions.jsonl",
+        "offset": 1544429232,
+        "bytes": 1468,
+        "sha256": "d47074aa6a9ca9729e8906092db3d30e24bc7d58218efb1ed64a786f16b50d7b"
+      },
+      "decision_id": "bf218906-f079-4240-811e-bf3ce0d71195",
+      "floor": 3,
+      "boss": null,
+      "samples": null,
+      "completion": null,
+      "readiness": null,
+      "build_ranking": null,
+      "adaptive": null,
+      "s_ranking": null,
+      "result": "completed: Action completed.",
+      "request_ids": []
+    },
+    {
+      "stream": "decisions",
+      "ts": "2026-10-15T03:11:36.869Z",
+      "label": "combat/plan",
+      "source": {
+        "path": "logs/decisions.jsonl",
+        "offset": 1544430700,
+        "bytes": 1345,
+        "sha256": "1be0287e4fbd89c872eea1ac72a1d92b91863c45350e001ea591c79aeef8cb21"
+      },
+      "decision_id": "ed1933db-5427-482b-974f-6f9b21a33ce9",
+      "floor": 3,
+      "boss": null,
+      "samples": null,
+      "completion": null,
+      "readiness": null,
+      "build_ranking": null,
+      "adaptive": null,
+      "s_ranking": null,
+      "result": "completed: Action completed.",
+      "request_ids": []
+    },
+    {
+      "stream": "decisions",
+      "ts": "2026-10-15T03:11:41.667Z",
+      "label": "combat/plan-choice",
+      "source": {
+        "path": "logs/decisions.jsonl",
+        "offset": 1544432045,
+        "bytes": 20049,
+        "sha256": "70b051f01d63d69f8eb488a56516604bb7439f411ca37eafb2ae37907aca42f7"
+      },
+      "decision_id": "aa4e8ae4-5cf4-4f9b-a884-f0737ee7c082",
+      "floor": 3,
+      "boss": null,
+      "samples": null,
+      "completion": null,
+      "readiness": null,
+      "build_ranking": null,
+      "adaptive": null,
+      "s_ranking": null,
+      "result": "completed: Action completed.",
+      "request_ids": [
+        "req_01a13d8b68a97de3bd2dfe3404cc18ef"
+      ]
+    },
+    {
+      "stream": "decisions",
+      "ts": "2026-10-15T03:11:42.569Z",
+      "label": "combat/plan-continue",
+      "source": {
+        "path": "logs/decisions.jsonl",
+        "offset": 1544452094,
+        "bytes": 1578,
+        "sha256": "ebb4c345d822fe9a1398ebbff02cda9d96de16208a65a1354ffa4a6c354d1cce"
+      },
+      "decision_id": "a21f745d-9aec-4ab6-9efb-894f2d66abd0",
+      "floor": 3,
+      "boss": null,
+      "samples": null,
+      "completion": null,
+      "readiness": null,
+      "build_ranking": null,
+      "adaptive": null,
+      "s_ranking": null,
+      "result": "completed: Action completed.",
+      "request_ids": []
+    },
+    {
+      "stream": "decisions",
+      "ts": "2026-10-15T03:11:43.468Z",
+      "label": "combat/plan-continue",
+      "source": {
+        "path": "logs/decisions.jsonl",
+        "offset": 1544453672,
+        "bytes": 1460,
+        "sha256": "614c596e582d47a074680d39c949a925eb0e3d9bab25218c700fb247cedec5b1"
+      },
+      "decision_id": "047ee956-2cb4-4301-800b-9793feb80257",
+      "floor": 3,
+      "boss": null,
+      "samples": null,
+      "completion": null,
+      "readiness": null,
+      "build_ranking": null,
+      "adaptive": null,
+      "s_ranking": null,
+      "result": "completed: Action completed.",
+      "request_ids": []
+    },
+    {
+      "stream": "decisions",
+      "ts": "2026-10-15T03:11:44.301Z",
+      "label": "combat/plan-continue",
+      "source": {
+        "path": "logs/decisions.jsonl",
+        "offset": 1544455132,
+        "bytes": 1506,
+        "sha256": "8d4f1a7144def6ff44a7ecdf0e4fb6d9271773fe0964161bb073e2d1347f1bf0"
+      },
+      "decision_id": "2a7cac0b-64d5-4368-9159-fc168c2a32a6",
+      "floor": 3,
+      "boss": null,
+      "samples": null,
+      "completion": null,
+      "readiness": null,
+      "build_ranking": null,
+      "adaptive": null,
+      "s_ranking": null,
+      "result": "completed: Action completed.",
+      "request_ids": []
+    },
+    {
+      "stream": "decisions",
+      "ts": "2026-10-15T03:11:45.699Z",
+      "label": "combat/plan-choice",
+      "source": {
+        "path": "logs/decisions.jsonl",
+        "offset": 1544456638,
+        "bytes": 10908,
+        "sha256": "01f2ce8a2ab3b753f4dfbfaee5b2c20281dd9369993ba465798cf72f8e478534"
+      },
+      "decision_id": "3cfc4514-6583-47df-8e0b-57f605b762ce",
+      "floor": 3,
+      "boss": null,
+      "samples": null,
+      "completion": null,
+      "readiness": null,
+      "build_ranking": null,
+      "adaptive": null,
+      "s_ranking": null,
+      "result": "completed: Action completed.",
+      "request_ids": [
+        "req_01a13d8b787578678c9b6ff2f79689df"
+      ]
+    },
+    {
+      "stream": "decisions",
+      "ts": "2026-10-15T03:11:51.005Z",
+      "label": "combat/lethal",
+      "source": {
+        "path": "logs/decisions.jsonl",
+        "offset": 1544467546,
+        "bytes": 1507,
+        "sha256": "38a3ad8f73ba7cb79e2030f2a295d535b81c7fdb33b569dd3d4870328d9f0725"
+      },
+      "decision_id": "2d0f3a27-6d77-4219-9ff9-8a59828269b9",
+      "floor": 3,
+      "boss": null,
+      "samples": null,
+      "completion": null,
+      "readiness": null,
+      "build_ranking": null,
+      "adaptive": null,
+      "s_ranking": null,
+      "result": "completed: Action completed.",
+      "request_ids": []
+    },
+    {
+      "stream": "decisions",
+      "ts": "2026-10-15T03:11:51.938Z",
+      "label": "combat/lethal",
+      "source": {
+        "path": "logs/decisions.jsonl",
+        "offset": 1544469053,
+        "bytes": 1432,
+        "sha256": "bd8fe2003334302fb64647ecd9473e9c17f58431b96bb16c2a8d2888a27af524"
+      },
+      "decision_id": "95ea27f7-0589-4966-ad51-4605c4c58edc",
+      "floor": 3,
+      "boss": null,
+      "samples": null,
+      "completion": null,
+      "readiness": null,
+      "build_ranking": null,
+      "adaptive": null,
+      "s_ranking": null,
+      "result": "completed: Action completed.",
+      "request_ids": []
+    },
+    {
+      "stream": "decisions",
+      "ts": "2026-10-15T03:11:52.704Z",
+      "label": "reward/claim",
+      "source": {
+        "path": "logs/decisions.jsonl",
+        "offset": 1544470485,
+        "bytes": 1263,
+        "sha256": "38a6506483bb72b02f40717f1a679add36f3dfce5e37239521d907c14eabfa8a"
+      },
+      "decision_id": "3412fd0b-1ac9-4abe-8c5b-ff19f9801cc9",
+      "floor": 3,
+      "boss": null,
+      "samples": null,
+      "completion": null,
+      "readiness": null,
+      "build_ranking": null,
+      "adaptive": null,
+      "s_ranking": null,
+      "result": "completed: Action completed.",
+      "request_ids": []
+    },
+    {
+      "stream": "decisions",
+      "ts": "2026-10-15T03:11:52.897Z",
+      "label": "reward/claim",
+      "source": {
+        "path": "logs/decisions.jsonl",
+        "offset": 1544471748,
+        "bytes": 1279,
+        "sha256": "476c320376b0d68727a5bbec77ebc16eed1bb708b830f9ad8812b16fdc6448cc"
+      },
+      "decision_id": "87c89c49-75aa-487b-a4e9-7f42dddce5fc",
+      "floor": 3,
+      "boss": null,
+      "samples": null,
+      "completion": null,
+      "readiness": null,
+      "build_ranking": null,
+      "adaptive": null,
+      "s_ranking": null,
+      "result": "completed: Action completed.",
+      "request_ids": []
+    },
+    {
+      "stream": "decisions",
+      "ts": "2026-10-15T03:11:53.097Z",
+      "label": "reward/claim",
+      "source": {
+        "path": "logs/decisions.jsonl",
+        "offset": 1544473027,
+        "bytes": 1356,
+        "sha256": "30d4f90d57e073ca93eb1f7cde2fa7693adfc66fdc20da1fbc709cbbe149568a"
+      },
+      "decision_id": "6ffe1380-1309-4c86-9243-dcb62cbc773a",
+      "floor": 3,
+      "boss": null,
+      "samples": null,
+      "completion": null,
+      "readiness": null,
+      "build_ranking": null,
+      "adaptive": null,
+      "s_ranking": null,
+      "result": "completed: Action completed.",
+      "request_ids": []
+    },
+    {
+      "stream": "brain",
+      "ts": "2026-10-15T03:12:32.151Z",
+      "label": "reward/card",
+      "source": {
+        "path": "logs/brain.jsonl",
+        "offset": 561502303,
+        "bytes": 94262,
+        "sha256": "ccd8de59f8847a90a92572e374e2f9e0a85297542f900b32d8a0cfcf64e52957"
+      },
+      "question_id": "mv8yknmw-739370-4",
+      "accepted": true,
+      "model": "gpt-6.1-sol",
+      "engine": "codex",
+      "boss_readiness": "当前牌组Boss模拟胜率0%（原始0%）；输局1000例，Boss平均剩44%、死亡回合均值11.3；缺口中位：进攻+7.6/回合或防守+47.5有效血；敏感度：DPR+25%→0%，有效血+25%→0%（原始样本线性近似，仅诊断，不能排序；防守缺口未知0例）。",
+      "build_ranking": null,
+      "error_kind": null
+    },
+    {
+      "stream": "decisions",
+      "ts": "2026-10-15T03:12:32.153Z",
+      "label": "reward/card",
+      "source": {
+        "path": "logs/decisions.jsonl",
+        "offset": 1544474383,
+        "bytes": 192446,
+        "sha256": "407dbf5a39bf91fa250cee109caf9332f3bca272fe1dd279315d4cc632ec026d"
+      },
+      "decision_id": "dc4824cf-090c-47f9-b391-ee945871618d",
+      "floor": 3,
+      "boss": "VANTOM",
+      "samples": 1000,
+      "completion": {
+        "required": true,
+        "uniqueDecks": 4,
+        "originalDecks": 4,
+        "memoHit": false,
+        "status": "complete",
+        "attempt_id": "6fdef5ae-ef79-4d27-aa10-e3d9477cc504",
+        "attempts": 1,
+        "reasons": [],
+        "samples": 1000,
+        "requested": 1000,
+        "failure": false,
+        "key": "sim-failure-v1:361deca8bd9f53a23b549b6077b612c78823a4155fe42294c3259500d3c72f68",
+        "latencyTargetMs": 11000,
+        "latencyTargetExceeded": false
+      },
+      "readiness": {
+        "schema": "boss-readiness-v1",
+        "samples": 1000,
+        "valid": 1000,
+        "missing": 0,
+        "reference": {
+          "myHp": 56,
+          "bossHp": 183,
+          "startTurn": 1,
+          "enemyIds": [
+            "VANTOM"
+          ],
+          "unknown": []
+        },
+        "win": {
+          "raw": 0,
+          "calibrated": 0,
+          "raw_interval95": [
+            2.168404344971009e-19,
+            0.0038267584855551234
+          ],
+          "calibrated_mc_interval95": [
+            2.168404344971009e-19,
+            0.0038267584855551234
+          ],
+          "interval_scope": "won_before_simulation_termination; mapped_MC_interval_is_not_calibration_uncertainty"
+        },
+        "loss": {
+          "n": 1000,
+          "bossLeftFraction": {
+            "n": 1000,
+            "mean": 0.4447431693989072,
+            "sd": 0.07337024262616891,
+            "meanSe": 0.002320170791778677,
+            "p10": 0.34426229508196726,
+            "median": 0.4590163934426229,
+            "p90": 0.5245901639344263,
+            "min": 0.17486338797814205,
+            "max": 0.7377049180327868
+          },
+          "deathTurn": {
+            "n": 1000,
+            "mean": 11.256999999999993,
+            "sd": 1.127928731446815,
+            "meanSe": 0.03566823829716322,
+            "p10": 10,
+            "median": 11,
+            "p90": 13,
+            "min": 7,
+            "max": 15
+          }
+        },
+        "win_side": {
+          "n": 0,
+          "hpLeftFraction": {
+            "n": 0,
+            "mean": null,
+            "sd": null,
+            "meanSe": null,
+            "p10": null,
+            "median": null,
+            "p90": null,
+            "min": null,
+            "max": null
+          },
+          "turns": {
+            "n": 0,
+            "mean": null,
+            "sd": null,
+            "meanSe": null,
+            "p10": null,
+            "median": null,
+            "p90": null,
+            "min": null,
+            "max": null
+          }
+        },
+        "terms": {
+          "A": {
+            "n": 1000,
+            "mean": 0.049366639492869006,
+            "sd": 0.004764678074552187,
+            "meanSe": 0.0001506723503305047,
+            "p10": 0.043219076005961254,
+            "median": 0.04918032786885246,
+            "p90": 0.05564828614008942,
+            "min": 0.03576751117734724,
+            "max": 0.06458022851465474
+          },
+          "D": {
+            "n": 1000,
+            "mean": 0.08966099456099469,
+            "sd": 0.008415230858161883,
+            "meanSe": 0.000266112965479249,
+            "p10": 0.07692307692307691,
+            "median": 0.09090909090909091,
+            "p90": 0.09999999999999999,
+            "min": 0.06666666666666667,
+            "max": 0.14285714285714285
+          }
+        },
+        "gap": {
+          "offense": {
+            "n": 1000,
+            "missing": 0,
+            "p25": 6.545454545454546,
+            "p50": 7.636363636363637,
+            "p75": 8.363636363636363
+          },
+          "defense": {
+            "n": 1000,
+            "missing": 0,
+            "p25": 38.888888888888886,
+            "p50": 47.515151515151516,
+            "p75": 54.19354838709677
+          }
+        },
+        "sensitivity": [
+          {
+            "relative": 0.1,
+            "extra_dpr": 0.9034095027195033,
+            "extra_hp": 5.6000000000000005,
+            "win_with_dpr": 0,
+            "win_with_hp": 0
+          },
+          {
+            "relative": 0.25,
+            "extra_dpr": 2.258523756798758,
+            "extra_hp": 14,
+            "win_with_dpr": 0,
+            "win_with_hp": 0.003
+          },
+          {
+            "relative": 0.5,
+            "extra_dpr": 4.517047513597516,
+            "extra_hp": 28,
+            "win_with_dpr": 0.08,
+            "win_with_hp": 0.078
+          }
+        ],
+        "sensitivity_denominator": 1000,
+        "trust": {
+          "rankingEligible": true,
+          "bossTrustReason": null,
+          "sign_audit": {
+            "schema": "s-sign-audit-v1",
+            "samples": 1000,
+            "valid": 1000,
+            "missing": 0,
+            "mismatches": 0,
+            "mismatch_rate": 0,
+            "passed": true,
+            "exceptions": [],
+            "groups": [
+              {
+                "healing": null,
+                "revived": false,
+                "overkill": false,
+                "samples": 1000,
+                "valid": 1000,
+                "missing": 0,
+                "mismatches": 0,
+                "mismatch_rate": 0,
+                "passed": true,
+                "exceptions": []
+              }
+            ],
+            "rankingEligible": true,
+            "limits": "Conditional simulation audit only. Missing attribution is not zero; unrecorded healing stays unknown. Not a calibration of real wins."
+          }
+        },
+        "limits": "Linear constant-rate approximation for diagnosis only, never ranking. Extra damage changes fight duration; extra HP ignores scaling and play order. Missing or censored samples are not losses. Monte Carlo intervals exclude model and calibration uncertainty.",
+        "mode": "on",
+        "ms": 3.687809999973979,
+        "delivered": true
+      },
+      "build_ranking": {
+        "schema": "build-ranking-v1",
+        "status": "produced",
+        "best_group": [
+          "card0",
+          "card1"
+        ],
+        "groups": [
+          [
+            "card0",
+            "card1"
+          ],
+          [
+            "card2",
+            "skip"
+          ]
+        ],
+        "better_than_current": [
+          "card0",
+          "card1"
+        ],
+        "no_difference": [
+          "card2",
+          "skip"
+        ],
+        "worse_than_current": [],
+        "win_saturated": true,
+        "low_trust": null,
+        "rows": [
+          {
+            "key": "card0",
+            "rank": 1,
+            "group": "better_than_current",
+            "delta_win": {
+              "mean": 0,
+              "se": 0
+            },
+            "delta_s": {
+              "mean": 0.004647966605343658,
+              "se": 0.0004027048698674744
+            },
+            "delta_hp_loss": 0,
+            "delta_a": {
+              "mean": 0.006736111793488839,
+              "se": 0.00021989035611411442
+            },
+            "delta_d": {
+              "mean": 0.002088145188145191,
+              "se": 0.0003600290327820187
+            },
+            "main_source": "offense",
+            "s_eligible": true,
+            "s_reason": null
+          },
+          {
+            "key": "card1",
+            "rank": 1,
+            "group": "better_than_current",
+            "delta_win": {
+              "mean": 0,
+              "se": 0
+            },
+            "delta_s": {
+              "mean": 0.005018298156003074,
+              "se": 0.0004194628084889501
+            },
+            "delta_hp_loss": 0,
+            "delta_a": {
+              "mean": 0.007187084924789846,
+              "se": 0.000250409631809688
+            },
+            "delta_d": {
+              "mean": 0.0021687867687867684,
+              "se": 0.00037744226939893406
+            },
+            "main_source": "offense",
+            "s_eligible": true,
+            "s_reason": null
+          },
+          {
+            "key": "card2",
+            "rank": 2,
+            "group": "no_difference",
+            "delta_win": {
+              "mean": 0,
+              "se": 0
+            },
+            "delta_s": {
+              "mean": 0.0007473938326397354,
+              "se": 0.0004103016707123474
+            },
+            "delta_hp_loss": 0,
+            "delta_a": {
+              "mean": -0.0006811775959316947,
+              "se": 0.00020473591495542034
+            },
+            "delta_d": {
+              "mean": -0.001428571428571428,
+              "se": 0.00036919072668488786
+            },
+            "main_source": "defense",
+            "s_eligible": true,
+            "s_reason": null
+          },
+          {
+            "key": "skip",
+            "rank": 2,
+            "group": "no_difference",
+            "delta_win": {
+              "mean": 0,
+              "se": 0
+            },
+            "delta_s": {
+              "mean": 0,
+              "se": 0
+            },
+            "delta_hp_loss": 0,
+            "delta_a": {
+              "mean": 0,
+              "se": 0
+            },
+            "delta_d": {
+              "mean": 0,
+              "se": 0
+            },
+            "main_source": "both",
+            "s_eligible": true,
+            "s_reason": null
+          }
+        ],
+        "comparisons": [
+          {
+            "key": "card0",
+            "reference": "card0",
+            "metric": "win",
+            "mean": 0,
+            "se": 0
+          },
+          {
+            "key": "card1",
+            "reference": "card0",
+            "metric": "win",
+            "mean": 0,
+            "se": 0
+          },
+          {
+            "key": "card2",
+            "reference": "card0",
+            "metric": "win",
+            "mean": 0,
+            "se": 0
+          },
+          {
+            "key": "skip",
+            "reference": "card0",
+            "metric": "win",
+            "mean": 0,
+            "se": 0
+          },
+          {
+            "key": "card0",
+            "reference": "card1",
+            "metric": "S",
+            "mean": -0.00037033155065942,
+            "se": 0.00026223084077353013
+          },
+          {
+            "key": "card1",
+            "reference": "card1",
+            "metric": "S",
+            "mean": 0,
+            "se": 0
+          },
+          {
+            "key": "card2",
+            "reference": "card1",
+            "metric": "S",
+            "mean": -0.004270904323363339,
+            "se": 0.0003238870746998873
+          },
+          {
+            "key": "skip",
+            "reference": "card1",
+            "metric": "S",
+            "mean": -0.005018298156003074,
+            "se": 0.0004194628084889501
+          },
+          {
+            "key": "card2",
+            "reference": "card2",
+            "metric": "S",
+            "mean": 0,
+            "se": 0
+          },
+          {
+            "key": "skip",
+            "reference": "card2",
+            "metric": "S",
+            "mean": -0.0007473938326397354,
+            "se": 0.0004103016707123474
+          }
+        ],
+        "limits": "同题同种子逐样本配对；先胜率、再合格S、最后配对掉血。只比较已模拟候选，未模拟选项保留未知；S不是胜率，缺口诊断不参与排序。大脑可偏离，但须说明理由。",
+        "mode": "shadow",
+        "delivered": false,
+        "candidates": [
+          {
+            "key": "card0",
+            "choice_key": "card0",
+            "card_key": null
+          },
+          {
+            "key": "card1",
+            "choice_key": "card1",
+            "card_key": null
+          },
+          {
+            "key": "card2",
+            "choice_key": "card2",
+            "card_key": null
+          },
+          {
+            "key": "skip",
+            "choice_key": "skip",
+            "card_key": null
+          }
+        ],
+        "selection": {
+          "choice": "card0",
+          "card": null,
+          "candidate_keys": [
+            "card0"
+          ],
+          "target_pending": false,
+          "deviated": false,
+          "ranking_override_reason": null,
+          "mode": "shadow",
+          "scope": "current_choice_only"
+        }
+      },
+      "adaptive": {
+        "schema": "sim-adaptive-shadow-v1",
+        "mode": "shadow",
+        "lane": "b3",
+        "rule": {
+          "version": "adaptive-v1",
+          "b3First": 300,
+          "b2First": 200,
+          "batch": 100,
+          "zElim": 3,
+          "zTie": 2,
+          "first": 300,
+          "requested": 1000
+        },
+        "candidates": [
+          {
+            "key": "@current",
+            "samples": 1000,
+            "stop": "max",
+            "rounds": 8,
+            "baseline": true
+          },
+          {
+            "key": "card0",
+            "samples": 1000,
+            "stop": "max",
+            "rounds": 8,
+            "baseline": false
+          },
+          {
+            "key": "card1",
+            "samples": 1000,
+            "stop": "max",
+            "rounds": 8,
+            "baseline": false
+          },
+          {
+            "key": "card2",
+            "samples": 300,
+            "stop": "eliminated",
+            "rounds": 1,
+            "baseline": false
+          },
+          {
+            "key": "skip",
+            "samples": 300,
+            "stop": "eliminated",
+            "rounds": 1,
+            "baseline": false
+          }
+        ],
+        "full": {
+          "leader": "card1",
+          "group": [
+            "card0",
+            "card1"
+          ]
+        },
+        "shadow": {
+          "leader": "card1",
+          "group": [
+            "card0",
+            "card1"
+          ]
+        },
+        "evaluable": true,
+        "agreement": true,
+        "work": {
+          "full": 4000,
+          "shadow": 3300,
+          "savedFraction": 0.17500000000000004,
+          "unit": "unique-option-sample-equivalents"
+        },
+        "rounds": [
+          {
+            "n": 300,
+            "leader": "card1",
+            "eliminated": [
+              {
+                "key": "card2",
+                "metric": {
+                  "key": "S",
+                  "difference": -0.0044333411983685225,
+                  "se": 0.0005656903994771617
+                }
+              },
+              {
+                "key": "skip",
+                "metric": {
+                  "key": "S",
+                  "difference": -0.005233553736285978,
+                  "se": 0.0007738839554643949
+                }
+              }
+            ]
+          },
+          {
+            "n": 400,
+            "leader": "card1",
+            "eliminated": []
+          },
+          {
+            "n": 500,
+            "leader": "card1",
+            "eliminated": []
+          },
+          {
+            "n": 600,
+            "leader": "card1",
+            "eliminated": []
+          },
+          {
+            "n": 700,
+            "leader": "card1",
+            "eliminated": []
+          },
+          {
+            "n": 800,
+            "leader": "card1",
+            "eliminated": []
+          },
+          {
+            "n": 900,
+            "leader": "card1",
+            "eliminated": []
+          },
+          {
+            "n": 1000,
+            "leader": "card1",
+            "eliminated": []
+          }
+        ],
+        "limits": "Prefix replay only; no samples saved in shadow. S needs prefix sign/attribution and model trust gates. B2 wonLoss median retains its ordering but has no invented paired SE, so cannot eliminate. Whole-question admission requires independent offline and two-run natural coverage.",
+        "status": "produced",
+        "ms": 38.857102000009036,
+        "production_comparison": {
+          "metric": "deployed-ranking-first-group",
+          "full": [
+            "card0",
+            "card1"
+          ],
+          "partial": [
+            "card0",
+            "card1"
+          ],
+          "agreement": true
+        },
+        "input_key": "required-b3-v1:2f363a9af935cc32397a3cd9f0369fa2db0ae70bf26483a8f7b3189cc2fde2f6",
+        "fixed_order_search_in_work": true
+      },
+      "s_ranking": null,
+      "result": "completed: Action completed.",
+      "request_ids": []
+    },
+    {
+      "stream": "decisions",
+      "ts": "2026-10-15T03:12:32.363Z",
+      "label": "reward/proceed",
+      "source": {
+        "path": "logs/decisions.jsonl",
+        "offset": 1544666829,
+        "bytes": 1278,
+        "sha256": "10fa0b5222d8bbc521b03b66d9318bc3031a28697081aeebe2cf651515273ba7"
+      },
+      "decision_id": "31604ba3-c412-4c40-81f0-b0ca23de55fb",
+      "floor": 3,
+      "boss": null,
+      "samples": null,
+      "completion": null,
+      "readiness": null,
+      "build_ranking": null,
+      "adaptive": null,
+      "s_ranking": null,
+      "result": "completed: Action completed.",
+      "request_ids": []
+    },
+    {
+      "stream": "decisions",
+      "ts": "2026-10-15T03:12:32.609Z",
+      "label": "map/route-follow",
+      "source": {
+        "path": "logs/decisions.jsonl",
+        "offset": 1544668107,
+        "bytes": 1916,
+        "sha256": "7675ac8197ff69eee3766860592cf1d6f22b6eea2add5840fcb324c977069bf5"
+      },
+      "decision_id": "91ab7dbd-20b2-4df3-bd10-0fe10754047a",
+      "floor": 3,
+      "boss": null,
+      "samples": null,
+      "completion": null,
+      "readiness": null,
+      "build_ranking": null,
+      "adaptive": null,
+      "s_ranking": null,
+      "result": "completed: Action completed.",
+      "request_ids": []
+    },
+    {
+      "stream": "decisions",
+      "ts": "2026-10-15T03:12:33.911Z",
+      "label": "shop/open",
+      "source": {
+        "path": "logs/decisions.jsonl",
+        "offset": 1544670023,
+        "bytes": 1261,
+        "sha256": "e95d4221327ebbeb0681ee3f98cbbead82f7f160455f54d776aa4b7e79dc2123"
+      },
+      "decision_id": "b3e0a649-2e78-40de-8a32-1b91b3cd4d50",
+      "floor": 4,
+      "boss": null,
+      "samples": null,
+      "completion": null,
+      "readiness": null,
+      "build_ranking": null,
+      "adaptive": null,
+      "s_ranking": null,
+      "result": "completed: Action completed.",
+      "request_ids": []
+    }
+  ]
+}

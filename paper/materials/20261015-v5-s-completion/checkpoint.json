@@ -1,9 +1,9 @@
 {
-  "at": "2026-10-15T11:05:34.855402+08:00",
+  "at": "2026-10-15T11:15:40.333018+08:00",
   "goal": "完成v5-s计划文档除P4/P5外所有功能",
   "original_parent": "roy-20261014-s-decision",
   "goal_status": "active",
-  "goal_turn_classification": "progress: previous turn integrated eval; current exact C2 host completion readback changes publication next action",
+  "goal_turn_classification": "progress: exact C2 host accepted, eval actually published, P2-on source tested/committed in isolation; first new offline case completed",
   "owner": "01a139d6-cfec-78e1-8739-e21ac426a354",
   "phases": {
     "P1": {
@@ -15,12 +15,13 @@
       "code": "Silent default S_READINESS on; existing role/trust/sign gates unchanged; docs section14",
       "gate": "two prior completed natural shadow runs82/82,max14.59ms; additional original B3 audit28k KAISER valid,54k other groups unknown",
       "gitleaks_source": 0,
-      "main_live": "published; next natural on consumer pending",
+      "main_live": "published V5-R352; exact host passed; actual new native accepted brain payload readback verified",
       "source": "18b94db307c39df96ab5e0e53ea666d65ead2aa1",
       "main": "e4882c0c6db6e23c6deb3f2b1aa261653aa9e230",
       "release": "V5-R352",
       "live": "67863fac6d97452a235cb11fb2bd10c749880a3f",
-      "host_full": "final23501d185 tsc0/472files4798pass2skip"
+      "host_full": "final23501d185 tsc0/472files4798pass2skip",
+      "natural_consumer": "paper/materials/20261015-s-readiness-on/watcher-natural-consumer.json"
     },
     "P3": {
       "worktree": "s-combat-rank-20261015",
@@ -72,7 +73,8 @@
         "receipt": "paper/materials/20261015-s-build-rank-on/source-prepared.json",
         "main_live_changed": false,
         "gate": "two complete new natural shadow runs and actual selection; pending"
-      }
+      },
+      "natural_shadow": "WJ first3 full B3 questions have produced ranking and actual recorded choice; current run ongoing, complete natural run count0"
     },
     "C2": {
       "worktree": "s-adaptive-shadow-20261015",
@@ -117,7 +119,8 @@
         "skipped": 2,
         "seconds": 1532.56,
         "receipt": "paper/materials/20261015-s-adaptive-on/watcher-final-host-readback.json"
-      }
+      },
+      "natural_shadow": "WJ first3 full B3 questions final P2 group matches3/3; subset only, complete natural run count0"
     }
   },
   "source_leaf_hashes": {
@@ -383,11 +386,61 @@
     "live": "9aefbaf476256caff190ef09880ee71cdd6443aa",
     "live_tree": "489e3c6f5ba7ef1dcc4049ea22b81cd229731fba",
     "host": {
-      "worker": 688118,
-      "birth": "92492268",
-      "status": "actually started, result pending",
-      "tree": "489e3c6f5ba7ef1dcc4049ea22b81cd229731fba"
+      "status": "passed",
+      "tree": "489e3c6f5ba7ef1dcc4049ea22b81cd229731fba",
+      "full": {
+        "tsc": 0,
+        "vitest": 0,
+        "files": 478,
+        "passed": 4829,
+        "skipped": 2,
+        "total": 4831,
+        "seconds": 771.19
+      },
+      "readback": "paper/materials/20261015-s-decision-eval/watcher-final-host-and-consumer-readback.json"
     },
-    "publication_readback": "paper/materials/20261015-s-decision-eval/watcher-publication-readback.json"
+    "publication_readback": "paper/materials/20261015-s-decision-eval/watcher-publication-readback.json",
+    "consumer": "deployed CLI reproduced frozen report-r2 exactly except generated_at; live-report-r3 rc0",
+    "status": "feature implemented/tested/main+live published/exact host passed/actual CLI consumed; runtime update after future on stays separate"
+  },
+  "verified_wait": {
+    "at": "2026-10-15T11:09:49.787882+08:00",
+    "processes": [
+      {
+        "pid": 579151,
+        "birth": "92257692",
+        "matches": true,
+        "state": "R",
+        "cpu_ticks": 286474
+      },
+      {
+        "pid": 688118,
+        "exists": false
+      },
+      {
+        "pid": 708956,
+        "birth": "92527404",
+        "matches": true,
+        "state": "R",
+        "cpu_ticks": 47436
+      }
+    ],
+    "offline_session": 35084,
+    "eval_full": "original051302-s2 exact489e, no duplicate full"
+  },
+  "natural_wait": {
+    "new_run": "WJ0LTVSSDY61",
+    "native_commit": "9aefbaf476256caff190ef09880ee71cdd6443aa",
+    "role": "SILENT",
+    "ascension": 10,
+    "configuration": {
+      "P1": "on",
+      "P3": "on",
+      "P2": "shadow",
+      "C2": "shadow"
+    },
+    "projection": "paper/materials/20261015-v5-s-completion/natural-WJ0LTVSSDY61/first-consumer-projection.json",
+    "completed_new_shadow_runs": 0,
+    "stage": "actual P1 accepted payload; P2/C2 partial records; P3 Boss not yet observed"
   }
 }
