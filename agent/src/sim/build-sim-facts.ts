@@ -38,7 +38,7 @@ import type { MoveModelData, RolloutInput } from "../reflex/rollout.js";
 import { actFirstFloor } from "./route-map.js";
 import { projectPath, restedHp } from "./route-projection.js";
 import { asArray, asRecord, bool, numOrNull, str, toJsonValue, type JsonValue } from "../core/util/json.js";
-import { FIGHT_START_RELICS, bossKey, passiveSimRelic, syntheticBossStart, type SyntheticStart } from "./boss-start.js";
+import { FIGHT_START_RELICS, SILENT_EARRING_OPENING_LIMIT, bossKey, passiveSimRelic, syntheticBossStart, type SyntheticStart } from "./boss-start.js";
 import { calibratedWinProb } from "./boss-sim.js";
 import { BUILD_SIM_CALIBRATION_SAMPLES, BUILD_SIM_DEADLINE_MS, BUILD_SIM_SAMPLES, BUILD_SIM_SEED, compareOptions, type CompareResult, type DeckOption, type OptionSim } from "./build-sim.js";
 import type { DeckSimRunner } from "./build-sim-pool.js";
@@ -276,7 +276,9 @@ function planOptions(label: string, options: SimOption[], env: DecisionEnv, star
   };
   const relicOf = (id: string, name: string): OptionPlan | Omit<OptionPlan, "key"> => {
     if (!FIGHT_START_RELICS[id] && !knownRelic(id)) return { none: "这件遗物在 boss 战里的效果没有建模：不模拟" };
-    return { change: rebuild((r) => void (r["relics"] = [...asArray(r["relics"]), { relic_id: id, name, stack: null, is_melted: false }])) };
+    return { change: rebuild((r) => void (r["relics"] = [...asArray(r["relics"]), { relic_id: id, name, stack: null, is_melted: false }])),
+      ...(id === "WHISPERING_EARRING" && character === "silent" && state.run?.ascension === 10
+        ? { note: SILENT_EARRING_OPENING_LIMIT } : {}) };
   };
   const potionOf = (raw: Record<string, unknown>): Omit<OptionPlan, "key"> => {
     const belt = asArray(run["potions"]).map(asRecord);
