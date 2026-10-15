@@ -781,6 +781,15 @@ export function enemySims(combat: Record<string, unknown>, asc?: number, charact
             ((enemy["enemy_id"] === "FLAIL_KNIGHT" && enemy["move_id"] === "RAM_MOVE" && hit["damage"] === 17) ||
              (enemy["enemy_id"] === "MAGI_KNIGHT" && enemy["move_id"] === "POWER_SHIELD_MOVE" && hit["damage"] === 7));
         }) ? { paperKraneNewWeak: (enemy["enemy_id"] === "FLAIL_KNIGHT" ? "ram" : "shield") as "ram" | "shield" } : {}),
+      // HLAWCGM3KHVB F49 T3, silent-0469: certify the observed 12x3 -> 7x3 endpoint, not a general rounding rule.
+      ...(paperKrane && enemy["enemy_id"] === "TORCH_HEAD_AMALGAM" && enemy["move_id"] === "BEAM_MOVE" &&
+        enemy["max_hp"] === 211 && powerAmount(asRecord(combat["player"]), "VULNERABLE_POWER") === 99 &&
+        powerAmount(enemy, "MINION_POWER") === 1 &&
+        asArray(enemy["powers"]).every((p) => str(asRecord(p)["power_id"]) === "MINION_POWER") &&
+        asArray(enemy["intents"]).length === 1 && asArray(enemy["intents"]).some((i) => {
+          const hit = asRecord(i);
+          return hit["intent_type"] === "Attack" && hit["hits"] === 3 && hit["damage"] === 12;
+        }) ? { paperKraneNewWeak: "beam" as const } : {}),
       // Q10YYQ5DUPJA A10 F48 T2/F49 T5, silent-0473: only these solo surviving forms were actively stunned.
       ...(character.toLowerCase() === "silent" && asc === 10 && living.length === 1 &&
         ((enemy["enemy_id"] === "AEONGLASS" && enemy["max_hp"] === 535 && enemy["move_id"] === "EYE_LASERS_MOVE" &&

@@ -142,8 +142,8 @@ export interface EnemySim {
   block: number;
   vulnerable: number;
   weak: number;
-  /** EBVT8UZM6P12 A10 F43: decision-turn Paper Krane certification for these two moves. */
-  paperKraneNewWeak?: "ram" | "shield";
+  /** EBVT8UZM6P12 F43 / HLAWCGM3KHVB F49 A10: observed decision-turn Paper Krane moves. */
+  paperKraneNewWeak?: "ram" | "shield" | "beam";
   /** Silent A10 PLOW_MOVE: observed Shackling under existing Weak, decision turn only. */
   weakShackling?: true;
   /** VLZ6CCT8AQ0A A10 F43 T2: existing Weak with the observed three-point Malaise loss. */
@@ -2509,7 +2509,8 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
   const debuffTargets = card.target === "all" ? next.enemies.filter((enemy) => enemy.alive) : targetEnemy ? [targetEnemy] : [];
   const paperKraneWeak = singleManualPlay && card.target === "single" &&
     ((card.paperKraneWeak === "neutralize" && card.upgraded && cost === 0 && card.damage === 4 && card.weak === 2) ||
-     (card.paperKraneWeak === "malaise" && !card.upgraded && card.xCost && (cost === 1 || cost === 2) && !card.malaiseBonus))
+     (card.paperKraneWeak === "malaise" && !card.upgraded && card.xCost && (cost === 1 || cost === 2) && !card.malaiseBonus) ||
+     (card.paperKraneWeak === "suckerPunch" && !card.upgraded && cost === 1 && card.damage === 6 && card.weak === 1))
     ? card.paperKraneWeak : undefined;
   for (const enemy of debuffTargets) {
     if (!enemy.alive) continue;
@@ -2963,7 +2964,15 @@ function incomingHits(sim: Sim, input: SolverInput): IncomingHit[] {
                (enemy.newlyWeakPaperKrane === "malaise" && enemy.weak === 1 && enemy.strengthDelta === -1))) ||
              (enemy.paperKraneNewWeak === "shield" && shown === 7 &&
               enemy.newlyWeakPaperKrane === "malaise" && enemy.weak === 2 && enemy.strengthDelta === -2));
-          amount = Math.floor(amount * (paperKrane ? 0.6 : 0.75));
+          // HLAWCGM3KHVB F49 T3: shown intent already includes Vulnerable; only this measured endpoint is certified.
+          const paperKraneBeam = enemy.paperKraneNewWeak === "beam" && enemy.newlyWeakPaperKrane === "suckerPunch" &&
+            !moved && !died && (start?.weak ?? 0) === 0 && enemy.weak === 1 &&
+            enemy.attacks.length === 1 && attack.hits === 3 && shown === 12 &&
+            enemy.strengthDelta === 0 && (enemy.tempStrengthLoss ?? 0) === 0 &&
+            player.vulnerable && !player.surrounded && player.facing == null &&
+            !player.colossus && !sim.colossus && !player.intangible && !sim.intangible &&
+            !(enemy.shrink ?? 0) && !enemy.newlyShrunk && sim.tainted === 0;
+          amount = paperKraneBeam ? 7 : Math.floor(amount * (paperKrane ? 0.6 : 0.75));
         }
         if (enemy.newlyShrunk) amount = Math.floor(amount * SHRINK_DAMAGE_FACTOR);
         if (halvedByColossus) amount = Math.floor(amount * 0.5);
