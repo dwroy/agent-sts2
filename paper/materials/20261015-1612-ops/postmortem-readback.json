@@ -1,0 +1,181 @@
+{
+  "batch": "20261015-154301",
+  "report": {
+    "task": "postmortem",
+    "appended": [
+      "HLAWCGM3KHVB"
+    ],
+    "skipped": [],
+    "bugs": [
+      {
+        "run": "HLAWCGM3KHVB",
+        "where": "agent/src/reflex/turn-solver.ts:2966",
+        "what": "已有纸鹤新施虚弱模型缺口扩展至聚合体：F49T3完整线预测损18，实际损12；原骑士窄修复没有覆盖该组合。",
+        "new": false
+      }
+    ],
+    "ledger": {
+      "added": [],
+      "updated": [
+        "silent-0110",
+        "silent-0469",
+        "silent-0228",
+        "silent-0005",
+        "silent-0070"
+      ],
+      "repeats": [
+        "silent-0469"
+      ],
+      "check": 0
+    },
+    "code_proposals": [
+      "silent-proposal-0cce435d0d61ac93",
+      "silent-proposal-66e3dea3a2315e7b",
+      "silent-proposal-b40a0f6fdd5eaa19"
+    ],
+    "implementation_domains": [
+      "combat",
+      "potion",
+      "terminal"
+    ],
+    "report": "/home/dw/Projects/agent-sts2/learner/runs/20261015-154303-11d38a52-ae2c-4f6a-b378-a891ad89f935-postmortem/report.md"
+  },
+  "native": {
+    "batch": "20261015-154301",
+    "thread": "01a13e83-d2b7-7641-9101-47df9ea273d4",
+    "cwd": "/home/dw/Projects/agent-sts2",
+    "event_log": "learner/runs/20261015-154303-11d38a52-ae2c-4f6a-b378-a891ad89f935-postmortem.jsonl",
+    "registered_launch_batch": null,
+    "original_lease": null,
+    "native_context": {
+      "source": "ops/codex-ops/accounts/codex1/learner/sessions/2026/10/15/rollout-2026-10-15T15-43-09-01a13e83-d2b7-7641-9101-47df9ea273d4.jsonl",
+      "offset": 49155,
+      "bytes": 4620,
+      "sha256": "c856d4cfe57b8a99663d8d69d9646a79591236f2b95933e30b2cd532802db04d",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "sandbox": {
+        "type": "workspace-write",
+        "writable_roots": [
+          "/home/dw/Projects/agent-sts2/.git"
+        ],
+        "network_access": false,
+        "exclude_tmpdir_env_var": false,
+        "exclude_slash_tmp": false
+      },
+      "approval_policy": "never"
+    },
+    "native_user_input": {
+      "offset": 53775,
+      "bytes": 15345,
+      "sha256": "385f00f748416e93eb04ab3ba88e4f3014c3b917823f49b59fd7901bae7422c6",
+      "input_sha256": "a506634eadb789279156620c30bec61d0bb42d15b29f2ccfe8a988ef1c23cc59"
+    },
+    "original_header_events": [
+      {
+        "offset": 0,
+        "bytes": 16866,
+        "sha256": "9b421232778dc8c6fc84c51aa595991d99b470f1fc51c0faadcced554225afaf",
+        "type": "learner_launch",
+        "attempt": null,
+        "code": null
+      },
+      {
+        "offset": 16866,
+        "bytes": 285,
+        "sha256": "90ac1faf5020157b79790935257d33eee411ce51427d863a8635d94efa0e1cdc",
+        "type": "learner_startup_attempt",
+        "attempt": 1,
+        "code": null
+      },
+      {
+        "offset": 19287,
+        "bytes": 77,
+        "sha256": "5b614b38bcc1a242379cf33db57c0b0d6717b1c82f4b8f2f9a8f7f16f7ee1140",
+        "type": "thread.started",
+        "attempt": null,
+        "code": null
+      }
+    ],
+    "startup_attempts": 1,
+    "failed_startups_preserved": 0,
+    "no_model_or_manual_restart": true
+  },
+  "stream_counts": {
+    "runs": 1,
+    "decisions": 902,
+    "states": 953,
+    "run-plans": 13,
+    "sl-attempts": 4,
+    "brain": 67,
+    "run-config": 2
+  },
+  "original_rows_verified": 1942,
+  "material_assertions_reexecuted_read_only": 1999,
+  "accepted_codex_rows": 57,
+  "failed_brain_records": 10,
+  "actual_process_codes": [
+    {
+      "commit": "fba193dfe31844e1dbde9f2ad7174427fcd446dc",
+      "code": "fba193d+dirty",
+      "dirty": true,
+      "dirty_files": [
+        "knowledge/characters/silent/boss-damage.json",
+        "knowledge/characters/silent/construction-opportunities.json",
+        "knowledge/characters/silent/monster-records.json",
+        "knowledge/characters/silent/outcome-stats.json",
+        "knowledge/characters/silent/room-costs.json",
+        "knowledge/common/card-upgrades.json",
+        "knowledge/common/monster-db.json",
+        "knowledge/common/move-model.json",
+        "notes/fight-value-backtest-silent.md",
+        "notes/monster-db-check.md"
+      ],
+      "branch": "live",
+      "worktree": "live"
+    },
+    {
+      "commit": "efed9b0a105c2f2c0d59089c8e938121f5ea8fc1",
+      "code": "efed9b0+dirty",
+      "dirty": true,
+      "dirty_files": [
+        "notes/fight-value-backtest-silent.md",
+        "notes/monster-db-check.md"
+      ],
+      "branch": "live",
+      "worktree": "live"
+    }
+  ],
+  "brain_model": "all recorded codex/gpt-6.1-sol/xhigh/default; no model substitution claimed",
+  "controlled_account_resume": "original same HLAW save at13:25, mixed account full run excluded from V5-S natural gate; original pre/post account receipts remain authoritative",
+  "old0469": "known Amalgam extension outside original Knight narrow scope, not a new blocking bug or proof of old Knight regression",
+  "new_queue_item_or_duplicate_fix": false,
+  "proposals": [
+    {
+      "id": "silent-proposal-0cce435d0d61ac93",
+      "state": "pending",
+      "proposal": "/home/dw/Projects/agent-sts2/learner/runs/20261015-154303-11d38a52-ae2c-4f6a-b378-a891ad89f935-postmortem/proposal-paperkrane.md",
+      "proposal_sha256": "ee95b853b60adb2188ac2ad8f2bf7d87230c9ba213a947e9d0cd1e882aafdd28"
+    },
+    {
+      "id": "silent-proposal-66e3dea3a2315e7b",
+      "state": "pending",
+      "proposal": "/home/dw/Projects/agent-sts2/learner/runs/20261015-154303-11d38a52-ae2c-4f6a-b378-a891ad89f935-postmortem/proposal-finale.md",
+      "proposal_sha256": "3c32b52eb0387934d82c28a17c37100cfd9a67dd7fce764fa9175a49163c8aff"
+    },
+    {
+      "id": "silent-proposal-b40a0f6fdd5eaa19",
+      "state": "pending",
+      "proposal": "/home/dw/Projects/agent-sts2/learner/runs/20261015-154303-11d38a52-ae2c-4f6a-b378-a891ad89f935-postmortem/proposal-resources.md",
+      "proposal_sha256": "0718c4c82420dca53694c498b7599e62d131eefae4d12bea1cd51f426db93c0f"
+    }
+  ],
+  "original_lesson_bytes": 21830,
+  "original_lesson_prefix": {
+    "bytes": 8793395,
+    "sha256": "4423fe5d608b7c621c777084675a58f574a968be1068614492e579518a95153c"
+  },
+  "original_ledger_rows": 9,
+  "original_T9_correction": "five following Shiv hits3 each=15 plus hook6; old draft retained; total turn29 unchanged",
+  "uncertainties": "full candidate execution, future alternatives, dirty knowledge, comparable boss clocks, pure game time, invoices remain unrecorded"
+}
