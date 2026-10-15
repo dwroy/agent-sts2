@@ -1,0 +1,568 @@
+{
+  "at": "2026-10-15T09:04:58.306685+08:00",
+  "rows": [
+    {
+      "source": "logs/run-config.jsonl",
+      "offset": 1726437,
+      "bytes": 5293,
+      "sha256": "b5d2db3fc68f481995d55551a45410bf67cbc07ddbc3b3cd7c463ae6ed4fcf37",
+      "row": {
+        "ts": "2026-10-15T00:28:26.559Z",
+        "run_id": "X7REGM0RUNSA",
+        "ascension": 10,
+        "character": "SILENT",
+        "floor": 1,
+        "restart": false,
+        "process": {
+          "pid": 224527,
+          "started": "2026-10-15T00:28:19.768Z"
+        },
+        "code": {
+          "commit": "52046a3deaa359adbafdd9e6d3e96c2527017f49",
+          "code": "52046a3+dirty",
+          "dirty": true,
+          "dirty_files": [
+            "knowledge/characters/silent/boss-damage.json",
+            "knowledge/characters/silent/construction-opportunities.json",
+            "knowledge/characters/silent/monster-records.json",
+            "knowledge/characters/silent/outcome-stats.json",
+            "knowledge/characters/silent/room-costs.json",
+            "knowledge/common/card-upgrades.json",
+            "knowledge/common/monster-db.json",
+            "knowledge/common/move-model.json",
+            "notes/fight-value-backtest-silent.md",
+            "notes/monster-db-check.md"
+          ],
+          "branch": "live",
+          "worktree": "live"
+        },
+        "brain": {
+          "active": true,
+          "engine": "codex",
+          "by_prefix": {},
+          "fallback": null,
+          "reask": null,
+          "tools": null,
+          "log": "/home/dw/Projects/agent-sts2/.worktrees/live/logs/brain.jsonl",
+          "engines": {
+            "codex": {
+              "model": "gpt-6.1-sol",
+              "model_by_prefix": {},
+              "timeout_ms": 600000,
+              "effort": "xhigh",
+              "reask": null,
+              "tools": false,
+              "max_calls": null
+            }
+          },
+          "codex": {
+            "mode": "session",
+            "service_tier": "default",
+            "context_window": 512000,
+            "auto_compact_token_limit": 460800,
+            "summary": "auto",
+            "stall_ms": 120000,
+            "first_token_ms": null,
+            "stall_retries": 1,
+            "schema_fields": "used",
+            "route_reason": "drop",
+            "route_pattern": true,
+            "accept_cut": true,
+            "max_field_chars": 600,
+            "max_answer_blanks": 100
+          }
+        },
+        "knowledge": {
+          "prefix": "full",
+          "ascension": 10,
+          "prefix_sha": "a7705a743e95",
+          "prefix_chars": 182356,
+          "prefix_tokens_est": {
+            "deepseek": 127649,
+            "claude": 176885
+          },
+          "system_sha": "cb906db1a6bf",
+          "system_chars": 184640,
+          "experience_version": "2026-10-13.8",
+          "prefix_note": "the prefix at this run's start; the brain re-renders it when the knowledge files or notes/lessons.md change (brain/knowledge.ts), so the prefix each call used is its brain.jsonl row's knowledge.prefix_sha"
+        },
+        "deepseek": {
+          "model": "deepseek-flash",
+          "max_calls": 300,
+          "timeout_ms": 300000,
+          "reasoning_effort": "max",
+          "combat_reasoning_effort": "high",
+          "effort_by_label": null
+        },
+        "jev": {
+          "enabled": true,
+          "model": "jev-latest",
+          "context": "v1",
+          "strict": true,
+          "prompt_log": "/home/dw/Projects/agent-sts2/.worktrees/live/logs/jev-prompts.jsonl"
+        },
+        "loop": {
+          "mode": "play",
+          "combat_planner": "turn",
+          "build_decider": "deepseek",
+          "build_oneshot": "on",
+          "boss_sim_build": "on",
+          "s_readiness": "shadow",
+          "sim_failure_exit": "on",
+          "sim_failure_retries": 2,
+          "sim_adaptive": "shadow",
+          "sim_adaptive_requested": "shadow",
+          "sim_adaptive_admission": "pending",
+          "boss_sim_completion": "required-full-paired-v1",
+          "boss_sim_build_requested": "on",
+          "combat_deepseek": "off",
+          "thief_facts": true,
+          "thief_cost": true,
+          "mech_rules": true,
+          "mech_move_rules": true,
+          "mech_death_move": true,
+          "passive_pieces": true,
+          "sandpit_start": true,
+          "fight_plan": "off",
+          "run_plan": "v1",
+          "run_plan_merge": true,
+          "escalation": [
+            "deepseek"
+          ],
+          "confidence": {
+            "act": 0.55,
+            "strong": 0.75
+          },
+          "run_start": "auto",
+          "character": "SILENT"
+        },
+        "operator_constraints": {
+          "id": "roy-20261013-v5-no-deck-cap",
+          "max_permanent_cards": null,
+          "activation": "V5: Roy removed the fixed permanent deck-size limit"
+        },
+        "construction": {
+          "architecture": "V5",
+          "schema": "construction-v1",
+          "mode": "shadow",
+          "policy": "observed-signature-completion",
+          "validation": "prospective-calibration-required",
+          "evaluation": "same-question-combat-facts"
+        },
+        "target_ascension": 11,
+        "target_ascension_mode": "climb",
+        "arm": null,
+        "sl": {
+          "enabled": true,
+          "boss_retries": 5,
+          "elite_retries": 3,
+          "act3_low_hp": true,
+          "act3_low_hp_pct": 50,
+          "act2_low_hp": true,
+          "act2_low_hp_pct": 50,
+          "retry_show_sim": true,
+          "retry_memo": true,
+          "retry_known_draws": true,
+          "retry_compute": {
+            "rollout_samples": 24,
+            "rollout_budget_ms": 20000,
+            "turn_budget_ms": 30000,
+            "mc_samples": 36,
+            "mc_budget_ms": 1200,
+            "boss_sim_samples": 1200
+          },
+          "judge_known_draws": true,
+          "judge_any_draw": true,
+          "reload_early": true,
+          "reload_on_revive": false,
+          "retry_known_inserts": true,
+          "retry_known_top": true,
+          "retry_explore": true,
+          "retry_explore_b2": true,
+          "retry_explore_boss_potions": true,
+          "retry_explore_order": true,
+          "retry_explore_replay": true,
+          "retry_explore_replay_plays": true,
+          "retry_explore_replay_deviate": true,
+          "retry_explore_key_counters": true,
+          "retry_explore_second": true,
+          "retry_explore_replay_order": true,
+          "retry_explore_replay_code": true,
+          "retry_explore_target_turn": true,
+          "retry_explore_rearm": true,
+          "retry_explore_wasted": true,
+          "retry_explore_anchor": true,
+          "retry_explore_canon": true,
+          "retry_explore_turn": true,
+          "retry_explore_whole": true,
+          "retry_explore_where": true,
+          "retry_explore_potion": true,
+          "retry_known_picks": true,
+          "retry_known_off_top": true,
+          "retry_known_hand_order": true,
+          "step_timeout_ms": 60000,
+          "log": "/home/dw/Projects/agent-sts2/.worktrees/live/logs/sl-attempts.jsonl",
+          "elites": [],
+          "elites_date": ""
+        },
+        "codex_check": {
+          "bin": "/home/dw/.local/node/bin/codex",
+          "ok": true,
+          "version": "codex-cli 0.162.1"
+        },
+        "codex_usage": {
+          "stop_pct": 100,
+          "every_calls": 3,
+          "every_min": 10,
+          "required": true,
+          "start": {
+            "engine": "codex",
+            "read_at": "2026-10-15T00:28:18.917Z",
+            "read_ms": 804,
+            "plan": "promax",
+            "used_pct": 77,
+            "window": "codex/primary",
+            "window_min": 10080,
+            "resets_at": "2026-10-20T05:21:29.000Z",
+            "credits": 0,
+            "ordinary_usage_allowed": true,
+            "reached_type": null
+          },
+          "last": {
+            "engine": "codex",
+            "read_at": "2026-10-15T00:28:18.917Z",
+            "read_ms": 804,
+            "plan": "promax",
+            "used_pct": 77,
+            "window": "codex/primary",
+            "window_min": 10080,
+            "resets_at": "2026-10-20T05:21:29.000Z",
+            "credits": 0,
+            "ordinary_usage_allowed": true,
+            "reached_type": null
+          },
+          "calls_since_read": 0
+        },
+        "config_sha": "83c760530e93"
+      }
+    },
+    {
+      "source": "logs/run-config.jsonl",
+      "offset": 1731730,
+      "bytes": 5393,
+      "sha256": "88782d58a512a270442966f3b994f90e623769b3724453243db29e595699332e",
+      "row": {
+        "ts": "2026-10-15T00:40:39.241Z",
+        "run_id": "UPAB38G2PA02",
+        "ascension": 10,
+        "character": "SILENT",
+        "floor": 1,
+        "restart": false,
+        "process": {
+          "pid": 231163,
+          "started": "2026-10-15T00:40:31.624Z"
+        },
+        "code": {
+          "commit": "52046a3deaa359adbafdd9e6d3e96c2527017f49",
+          "code": "52046a3+dirty",
+          "dirty": true,
+          "dirty_files": [
+            "knowledge/characters/silent/boss-damage.json",
+            "knowledge/characters/silent/construction-opportunities.json",
+            "knowledge/characters/silent/fight-value-gates.json",
+            "knowledge/characters/silent/fight-value.json",
+            "knowledge/characters/silent/monster-records.json",
+            "knowledge/characters/silent/outcome-stats.json",
+            "knowledge/characters/silent/room-costs.json",
+            "knowledge/common/card-upgrades.json",
+            "knowledge/common/monster-db.json",
+            "knowledge/common/move-model.json",
+            "notes/fight-value-backtest-silent.md",
+            "notes/monster-db-check.md"
+          ],
+          "branch": "live",
+          "worktree": "live"
+        },
+        "brain": {
+          "active": true,
+          "engine": "codex",
+          "by_prefix": {},
+          "fallback": null,
+          "reask": null,
+          "tools": null,
+          "log": "/home/dw/Projects/agent-sts2/.worktrees/live/logs/brain.jsonl",
+          "engines": {
+            "codex": {
+              "model": "gpt-6.1-sol",
+              "model_by_prefix": {},
+              "timeout_ms": 600000,
+              "effort": "xhigh",
+              "reask": null,
+              "tools": false,
+              "max_calls": null
+            }
+          },
+          "codex": {
+            "mode": "session",
+            "service_tier": "default",
+            "context_window": 512000,
+            "auto_compact_token_limit": 460800,
+            "summary": "auto",
+            "stall_ms": 120000,
+            "first_token_ms": null,
+            "stall_retries": 1,
+            "schema_fields": "used",
+            "route_reason": "drop",
+            "route_pattern": true,
+            "accept_cut": true,
+            "max_field_chars": 600,
+            "max_answer_blanks": 100
+          }
+        },
+        "knowledge": {
+          "prefix": "full",
+          "ascension": 10,
+          "prefix_sha": "5919527212a7",
+          "prefix_chars": 182354,
+          "prefix_tokens_est": {
+            "deepseek": 127648,
+            "claude": 176883
+          },
+          "system_sha": "e272725a3465",
+          "system_chars": 184638,
+          "experience_version": "2026-10-13.8",
+          "prefix_note": "the prefix at this run's start; the brain re-renders it when the knowledge files or notes/lessons.md change (brain/knowledge.ts), so the prefix each call used is its brain.jsonl row's knowledge.prefix_sha"
+        },
+        "deepseek": {
+          "model": "deepseek-flash",
+          "max_calls": 300,
+          "timeout_ms": 300000,
+          "reasoning_effort": "max",
+          "combat_reasoning_effort": "high",
+          "effort_by_label": null
+        },
+        "jev": {
+          "enabled": true,
+          "model": "jev-latest",
+          "context": "v1",
+          "strict": true,
+          "prompt_log": "/home/dw/Projects/agent-sts2/.worktrees/live/logs/jev-prompts.jsonl"
+        },
+        "loop": {
+          "mode": "play",
+          "combat_planner": "turn",
+          "build_decider": "deepseek",
+          "build_oneshot": "on",
+          "boss_sim_build": "on",
+          "s_readiness": "shadow",
+          "sim_failure_exit": "on",
+          "sim_failure_retries": 2,
+          "sim_adaptive": "shadow",
+          "sim_adaptive_requested": "shadow",
+          "sim_adaptive_admission": "pending",
+          "boss_sim_completion": "required-full-paired-v1",
+          "boss_sim_build_requested": "on",
+          "combat_deepseek": "off",
+          "thief_facts": true,
+          "thief_cost": true,
+          "mech_rules": true,
+          "mech_move_rules": true,
+          "mech_death_move": true,
+          "passive_pieces": true,
+          "sandpit_start": true,
+          "fight_plan": "off",
+          "run_plan": "v1",
+          "run_plan_merge": true,
+          "escalation": [
+            "deepseek"
+          ],
+          "confidence": {
+            "act": 0.55,
+            "strong": 0.75
+          },
+          "run_start": "auto",
+          "character": "SILENT"
+        },
+        "operator_constraints": {
+          "id": "roy-20261013-v5-no-deck-cap",
+          "max_permanent_cards": null,
+          "activation": "V5: Roy removed the fixed permanent deck-size limit"
+        },
+        "construction": {
+          "architecture": "V5",
+          "schema": "construction-v1",
+          "mode": "shadow",
+          "policy": "observed-signature-completion",
+          "validation": "prospective-calibration-required",
+          "evaluation": "same-question-combat-facts"
+        },
+        "target_ascension": 11,
+        "target_ascension_mode": "climb",
+        "arm": null,
+        "sl": {
+          "enabled": true,
+          "boss_retries": 5,
+          "elite_retries": 3,
+          "act3_low_hp": true,
+          "act3_low_hp_pct": 50,
+          "act2_low_hp": true,
+          "act2_low_hp_pct": 50,
+          "retry_show_sim": true,
+          "retry_memo": true,
+          "retry_known_draws": true,
+          "retry_compute": {
+            "rollout_samples": 24,
+            "rollout_budget_ms": 20000,
+            "turn_budget_ms": 30000,
+            "mc_samples": 36,
+            "mc_budget_ms": 1200,
+            "boss_sim_samples": 1200
+          },
+          "judge_known_draws": true,
+          "judge_any_draw": true,
+          "reload_early": true,
+          "reload_on_revive": false,
+          "retry_known_inserts": true,
+          "retry_known_top": true,
+          "retry_explore": true,
+          "retry_explore_b2": true,
+          "retry_explore_boss_potions": true,
+          "retry_explore_order": true,
+          "retry_explore_replay": true,
+          "retry_explore_replay_plays": true,
+          "retry_explore_replay_deviate": true,
+          "retry_explore_key_counters": true,
+          "retry_explore_second": true,
+          "retry_explore_replay_order": true,
+          "retry_explore_replay_code": true,
+          "retry_explore_target_turn": true,
+          "retry_explore_rearm": true,
+          "retry_explore_wasted": true,
+          "retry_explore_anchor": true,
+          "retry_explore_canon": true,
+          "retry_explore_turn": true,
+          "retry_explore_whole": true,
+          "retry_explore_where": true,
+          "retry_explore_potion": true,
+          "retry_known_picks": true,
+          "retry_known_off_top": true,
+          "retry_known_hand_order": true,
+          "step_timeout_ms": 60000,
+          "log": "/home/dw/Projects/agent-sts2/.worktrees/live/logs/sl-attempts.jsonl",
+          "elites": [],
+          "elites_date": ""
+        },
+        "codex_check": {
+          "bin": "/home/dw/.local/node/bin/codex",
+          "ok": true,
+          "version": "codex-cli 0.162.1"
+        },
+        "codex_usage": {
+          "stop_pct": 100,
+          "every_calls": 3,
+          "every_min": 10,
+          "required": true,
+          "start": {
+            "engine": "codex",
+            "read_at": "2026-10-15T00:40:30.721Z",
+            "read_ms": 843,
+            "plan": "promax",
+            "used_pct": 78,
+            "window": "codex/primary",
+            "window_min": 10080,
+            "resets_at": "2026-10-20T05:21:29.000Z",
+            "credits": 0,
+            "ordinary_usage_allowed": true,
+            "reached_type": null
+          },
+          "last": {
+            "engine": "codex",
+            "read_at": "2026-10-15T00:40:30.721Z",
+            "read_ms": 843,
+            "plan": "promax",
+            "used_pct": 78,
+            "window": "codex/primary",
+            "window_min": 10080,
+            "resets_at": "2026-10-20T05:21:29.000Z",
+            "credits": 0,
+            "ordinary_usage_allowed": true,
+            "reached_type": null
+          },
+          "calls_since_read": 0
+        },
+        "config_sha": "83c760530e93"
+      }
+    },
+    {
+      "source": "logs/runs.jsonl",
+      "offset": 332022,
+      "bytes": 514,
+      "sha256": "93dc1c769398285039c4bf3c1b6ca950871abfbd0e50870ab987a07d2ef894f2",
+      "row": {
+        "run_id": "X7REGM0RUNSA",
+        "ended": "2026-10-15T00:34:49.137Z",
+        "victory": false,
+        "floor": 5,
+        "character": "SILENT",
+        "ascension": 10,
+        "code": "current",
+        "decisions": 88,
+        "jev_calls": 14,
+        "deepseek_calls": 5,
+        "claude_calls": 0,
+        "tokens": 73091,
+        "ds_tokens_in": 807928,
+        "ds_tokens_out": 7950,
+        "ds_cache_hit": 136704,
+        "deciders": {
+          "codex": 5,
+          "code": 42,
+          "jev": 14,
+          "jev-plan": 27
+        },
+        "death_fight": [
+          "树枝史莱姆（中）",
+          "飞蝇菌子"
+        ],
+        "death_fight_floor": 5,
+        "death_enemy_ids": [
+          "FLYCONID",
+          "TWIG_SLIME_M"
+        ]
+      }
+    }
+  ],
+  "health": {
+    "path": "ops/codex-ops/module-health/X7REGM0RUNSA.json",
+    "sha256": "27d7ffaf6faaeb95cc612f0d342fe0f03a68aa53bc53ccad369f14efedce5d39",
+    "computation": {
+      "attempts": 4,
+      "failures": 0,
+      "degraded": 0,
+      "evidence": [],
+      "alert": false,
+      "scope": "B2/B3 computation service failures; degradation permits continuation, not fault resolution."
+    },
+    "adaptive": {
+      "mode": "shadow",
+      "observed": 3,
+      "produced": 3,
+      "errors": 0,
+      "evaluable": 3,
+      "matched": 3,
+      "unknown": 0,
+      "agreement": 1.0,
+      "saved_fraction": {
+        "p50": 0.0,
+        "p90": 0.4
+      },
+      "mismatches": [],
+      "alert": false,
+      "admission": "pending offline coverage and at least two completed natural shadow runs; never auto-enable",
+      "limits": "Estimated option-sample work only. Full samples actually ran; no elapsed-time saving or game benefit measured."
+    }
+  },
+  "C1": "Actual new run loaded on/retries2, four successful completed computations; fault branch verified separately by fixed loop tests.",
+  "C2": "One completed natural shadow run;3 observed comparisons matched,0 failures. Complete per-question coverage and second finished run still need verification. No actual time saving or activation claim.",
+  "P1_timing_issue": "Since C2 shadow, compareOptions readinessMs includes shadow computation. P2 implementation captures readiness end before adaptive/ranking work; original readings retained."
+}

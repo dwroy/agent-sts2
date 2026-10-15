@@ -1,0 +1,43 @@
+{
+  "at": "2026-10-15T10:50:18.027879+08:00",
+  "parent": "roy-20261014-s-decision",
+  "owner_session": "01a139d6-cfec-78e1-8739-e21ac426a354",
+  "purpose": "read-only future natural acceptance; no dispatch or auto-on",
+  "minimum_completed_runs": 2,
+  "cohort": {
+    "character": "SILENT",
+    "P1": "s_readiness=on, R352 source ancestor",
+    "P3": "s_combat_rank=on, R353 source ancestor",
+    "P2": "s_build_rank=shadow, f685e0517 source ancestor",
+    "C2": "sim_adaptive=shadow, 600915d13 source ancestor plus production_comparison source leaves"
+  },
+  "freeze": [
+    "all native run-config rows for each run, exact bytes/offset/length/SHA and recorded dirty_files",
+    "all decisions for the run from untruncated SQL export, not just rows containing adaptive or build_ranking",
+    "all brain calls for the run, including rejected answers/reasks, exact original bytes",
+    "actual terminal runs row and final state identity; original first/SL boundaries unchanged",
+    "logdb source manifest synced byte ends covering frozen inputs; no-sync stale views cannot establish absence"
+  ],
+  "P2_checks": [
+    "Classify every supported B3 label, retaining all missing/error/degraded/skipped questions and explicit reasons. Do not build expected denominator by filtering for build_ranking presence.",
+    "Each applicable completed numeric B3 question has produced build-ranking-v1; raw decision_id is primary identity. Reused results retain reuse/source-computation links.",
+    "Actual accepted choice must map to answer/selection_dispatch. target_pending remains pending; no inferred first target.",
+    "Shadow does not require override reasons. Later on requires actual brain payload, accepted answer and reason for each resolved deviation."
+  ],
+  "C2_checks": [
+    "Classify all required B2 and B3 computation attempts independently of adaptive field; failed/degraded and explicit unavailable cases stay listed.",
+    "All applicable completed full questions have produced adaptive data and boolean production_comparison.agreement using metric deployed-ranking-first-group. Internal agreement is not a substitute.",
+    "Deduplicate independent ranking questions by lane plus original input_key; separately retain every decision consumption/reuse link. Missing identity is unresolved.",
+    "Report all full and partial first groups, every mismatch, missing records, candidate sample counts, work p50/p90, and per-run completeness.",
+    "At least two actual complete new runs and >=95% final first-group agreement; offline full frozen set gate is separate. Unknown or incomplete coverage never becomes passing merely because observed rows agree."
+  ],
+  "P1_P3_consumers": [
+    "P1 actual native payload/accepted output; explicitly suppressed low-trust facts do not prove delivery of eligible diagnostics.",
+    "P3 actual rank/order in question, original selection and executed first action; fallback/trust remains visible. No whole-plan or causal benefit inference."
+  ],
+  "excluded_previous": [
+    "X7REGM0RUNSA old R351 lacks newly deployed final P2/P3 production comparison",
+    "UPAB38G2PA02 old52046 process is not new deployment consumption"
+  ],
+  "gate": "Original watcher decides after actual evidence readback; no new learning parent or routine user ACK."
+}
