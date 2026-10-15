@@ -18,6 +18,7 @@ import { Worker } from "node:worker_threads";
 import type { KillOrder, RolloutInput } from "../reflex/rollout.js";
 import { BOSS_SIM_MAX_TURNS, BOSS_SIM_MAX_WORKERS, defaultWorkers, fightSample, sampleSeed, slimInput, type FightSampleResult } from "./boss-sim.js";
 import { claimSimCores, leaveSimCores } from "./sim-pools.js";
+import { sampleSchedule, type SampleRange } from "./sample-range.js";
 
 /** Samples per task (one deck, one order): small enough that a deadline is kept to ~0.1 s. */
 export const BUILD_SIM_BLOCK = 8;
@@ -32,6 +33,10 @@ export interface DeckRunRequest {
   /** Kill orders to run every deck under (null: the solver's own targets). */
   orders: (KillOrder | null)[];
   samples: number;
+  /** Absolute [from,to) sample indices; omitted means the original full run. */
+  range?: SampleRange;
+  /** Original deck indices, so retained results and mixture stripes keep their identities. */
+  activeDecks?: readonly number[];
   seed: number;
   maxTurns?: number;
   scripts?: boolean;
@@ -92,9 +97,10 @@ export function slimDecks(base: RolloutInput, decks: Partial<RolloutInput>[]): {
 /** The tasks of a run in sample-major blocks, each block one task list per (deck, order). */
 export function taskChunks(req: DeckRunRequest): Task[][] {
   const chunks: Task[][] = [];
-  for (let from = 0; from < req.samples; from += BUILD_SIM_BLOCK) {
-    const to = Math.min(req.samples, from + BUILD_SIM_BLOCK);
-    for (let deck = 0; deck < req.decks.length; deck += 1) {
+  const schedule = sampleSchedule(req.samples, req.decks.length, req.range, req.activeDecks);
+  for (let from = schedule.from; from < schedule.to; from += BUILD_SIM_BLOCK) {
+    const to = Math.min(schedule.to, from + BUILD_SIM_BLOCK);
+    for (const deck of schedule.indices) {
       const stripe = req.stripes?.[deck] ?? null;
       for (let order = 0; order < req.orders.length; order += 1) {
         const tasks: Task[] = [];
@@ -109,14 +115,17 @@ export function taskChunks(req: DeckRunRequest): Task[][] {
 /** The samples every deck finished under every order (a deck only counts for the samples of its stripe). */
 export function completeSamples(req: DeckRunRequest, outcomes: (FightSampleResult | undefined)[][][]): number[] {
   const out: number[] = [];
-  for (let i = 0; i < req.samples; i += 1) {
-    let ok = true;
-    for (let deck = 0; deck < req.decks.length && ok; deck += 1) {
+  const schedule = sampleSchedule(req.samples, req.decks.length, req.range, req.activeDecks);
+  for (let i = schedule.from; i < schedule.to; i += 1) {
+    let ok = true, scheduled = false;
+    for (const deck of schedule.indices) {
+      if (!ok) break;
       const stripe = req.stripes?.[deck] ?? null;
       if (stripe && i % stripe.of !== stripe.at) continue;
+      scheduled = true;
       for (let order = 0; order < req.orders.length && ok; order += 1) if (!outcomes[deck]![order]![i]) ok = false;
     }
-    if (ok) out.push(i);
+    if (ok && scheduled) out.push(i);
   }
   return out;
 }
@@ -191,6 +200,7 @@ export class BuildSimPool implements DeckSimRunner {
   }
 
   run(req: DeckRunRequest): Promise<DeckRunResult> {
+    sampleSchedule(req.samples, req.decks.length, req.range, req.activeDecks);
     const queued = performance.now();
     const started = (req.now ?? (() => performance.now()))();
     const next = this.queue.then(() => this.runNow(req, started, performance.now() - queued));

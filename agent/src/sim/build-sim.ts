@@ -8,7 +8,7 @@
  */
 
 import { ADAPTIVE_RULE, safeAdaptiveShadow } from "./adaptive-shadow.js";
-import { toJsonValue } from "../core/util/json.js";
+import { asRecord, toJsonValue } from "../core/util/json.js";
 import type { RolloutInput } from "../reflex/rollout.js";
 import { BOSS_POLICY_THREAT, BOSS_SIM_LOOKAHEAD, calibratedWinProb, compareLines, fightOrders, summarizeLine, type BossSimLineResult, type FightSampleResult } from "./boss-sim.js";
 import type { DeckSimRunner, DeckRunResult } from "./build-sim-pool.js";
@@ -17,6 +17,8 @@ import { quantitativeFightFacts } from "./quantitative-facts.js";
 import { memoKey } from "./compute-memo.js";
 import { bossReadiness, type BossReadiness } from "./boss-readiness.js";
 import { buildRank } from "./build-rank.js";
+import { runAdaptiveDecks } from "./adaptive-decks.js";
+import { isAdaptiveComplete } from "./adaptive-sampler.js";
 
 /** Samples per deck (docs/boss-sim.md §8: 1000 per option gives a paired standard error of about 1-1.5 points). */
 export const BUILD_SIM_SAMPLES = 1000;
@@ -46,6 +48,8 @@ export interface DeckOption {
 }
 
 export interface OptionSim {
+  sampling?: { samples: number; stop: string; rounds: number };
+  pairedReference?: { samples: number; rawWin: number; calibratedWin: number; bossLeft: number };
   quantitative?: JsonValue;
   key: string;
   samples: number;
@@ -136,11 +140,17 @@ export function calibratedDiff(pOption: number, pBase: number, rawSe: number, sa
  * every kill order on the same seeds, until done or the deadline; the numbers come from the samples every deck
  * finished. Options with no change share the current deck's numbers. `hpOf` gives an option's entry HP (for the text).
  */
+export function completeAdaptiveBuild(result: CompareResult): boolean {
+  return !result.timedOut && result.samples === result.base.samples
+    && isAdaptiveComplete(result.adaptive, "b3", result.requested,
+      new Map([["@current", result.base.samples], ...result.options.map((option): [string, number] => [option.key, option.samples])]));
+}
+
 export async function compareOptions(
   runner: DeckSimRunner,
   base: RolloutInput,
   options: DeckOption[],
-  opts: { samples?: number; seed?: number; deadlineMs?: number; now?: () => number; quantitative?: boolean; diagnostics?: boolean; requireComplete?: boolean; adaptive?: { allowS: boolean }; onProgress?: import("./computation-wait.js").SimProgress; readiness?: boolean;
+  opts: { samples?: number; seed?: number; deadlineMs?: number; now?: () => number; quantitative?: boolean; diagnostics?: boolean; requireComplete?: boolean; adaptive?: { allowS: boolean; mode?: "shadow" | "on" }; onProgress?: import("./computation-wait.js").SimProgress; readiness?: boolean;
     buildRank?: { lowTrust: string | null; calibratedFloor: number; tieSe: number } } = {},
 ): Promise<CompareResult> {
   if (opts.quantitative) base = { ...base, captureBossMargin: true,
@@ -208,12 +218,15 @@ export async function compareOptions(
   }
   const orders = [order];
   const left = !required && opts.deadlineMs !== undefined ? Math.max(0, opts.deadlineMs - (now() - started)) : undefined;
-  const run = await runner.run({ ...(opts.onProgress ? { onProgress: opts.onProgress } : {}), base, decks, stripes, orders, samples, seed, ...(required ? { progressTimeoutMs: 120_000 } : {}), ...(opts.diagnostics ? { diagnostics: true } : {}), ...(left !== undefined ? { deadlineMs: left } : {}), ...(opts.now ? { now: opts.now } : {}) });
+  const request = { ...(opts.onProgress ? { onProgress: opts.onProgress } : {}), base, decks, stripes, orders, samples, seed, ...(required ? { progressTimeoutMs: 120_000 } : {}), ...(opts.diagnostics ? { diagnostics: true } : {}), ...(left !== undefined ? { deadlineMs: left } : {}), ...(opts.now ? { now: opts.now } : {}) };
+  if (opts.adaptive?.mode === "on" && !required) throw new Error("adaptive B3 requires complete computation");
+  const actual = opts.adaptive?.mode === "on" && options.length ? await runAdaptiveDecks(runner, request, deckOf, opts.adaptive.allowS) : null;
+  const run = actual?.run ?? await runner.run(request);
   const complete = run.complete;
-  if (required && (run.timedOut || complete.length !== samples || complete.some((id, i) => id !== i))) {
+  if (required && (run.timedOut || (!actual && complete.length !== samples) || complete.some((id, i) => id !== i))) {
     throw new Error(`required boss comparison incomplete: ${complete.length}/${samples}`);
   }
-  const summarize = (ids: number[]): BossSimLineResult & { order: string | null } => ({ ...summarizeLine(0, lineOf(run.outcomes, ids, 0, complete)), order: order?.label ?? null });
+  const summarize = (ids: number[], count = complete.length): BossSimLineResult & { order: string | null } => ({ ...summarizeLine(0, lineOf(run.outcomes, ids, 0, complete.slice(0, count))), order: order?.label ?? null });
   const hpOf = (change: Partial<RolloutInput> | null | undefined) => change?.solver?.player.hp ?? base.solver.player.hp;
   const baseLine = summarize([0]);
   const n = complete.length;
@@ -221,14 +234,18 @@ export async function compareOptions(
   const simOf = (key: string, line: BossSimLineResult & { order: string | null }, hp: number, isBase: boolean): OptionSim => {
     const ready = required ? measured.get(line) : undefined;
     if (ready) return { ...ready, key, hp };
-    const d = isBase ? null : compareLines(line, baseLine);
+    const reference = line.samples === baseLine.samples ? baseLine : summarize([0], line.samples);
+    const d = isBase ? null : compareLines(line, reference);
     const value: OptionSim = {
       key,
-      ...(opts.quantitative ? { quantitative: quantitativeFightFacts(line.outcomes, baseLine.outcomes, complete) } : {}),
-      samples: n,
+      ...(opts.quantitative ? { quantitative: quantitativeFightFacts(line.outcomes, reference.outcomes, complete.slice(0, line.samples)) } : {}),
+      samples: line.samples,
+      ...(actual ? { sampling: actual.counts.get(key === "current" ? "@current" : key),
+        pairedReference: { samples: reference.samples, rawWin: reference.winProb, bossLeft: mean(reference.outcomes.map((o) => o.enemyHpLeft)),
+          calibratedWin: base.continuation ? reference.winProb : calibratedWinProb(reference.winProb, BUILD_SIM_CALIBRATION_SAMPLES, "pre", base.meta.asc) } } : {}),
       win: r4(line.winProb),
       winCal: r4(base.continuation ? line.winProb : calibratedWinProb(line.winProb, BUILD_SIM_CALIBRATION_SAMPLES, "pre", base.meta.asc)),
-      diff: d ? { raw: d.winDiff, se: d.winSe, ...(base.continuation ? { cal: d.winDiff, calSe: d.winSe } : calibratedDiff(line.winProb, baseLine.winProb, d.winSe, BUILD_SIM_CALIBRATION_SAMPLES, base.meta.asc)), hpLoss: d.hpLossDiff, hpLossSe: d.hpLossSe, ...bossLeftDiff(line, baseLine) } : null,
+      diff: d ? { raw: d.winDiff, se: d.winSe, ...(base.continuation ? { cal: d.winDiff, calSe: d.winSe } : calibratedDiff(line.winProb, reference.winProb, d.winSe, BUILD_SIM_CALIBRATION_SAMPLES, base.meta.asc)), hpLoss: d.hpLossDiff, hpLossSe: d.hpLossSe, ...bossLeftDiff(line, reference) } : null,
       bossLeft: r4(mean(line.outcomes.map((o) => o.enemyHpLeft))),
       hpLossMean: r4(line.hpLoss.mean),
       hpLossWon: line.hpLossWon ? line.hpLossWon.median : null,
@@ -241,13 +258,21 @@ export async function compareOptions(
     return value;
   };
   const summaries = new Map<string, BossSimLineResult & { order: string | null }>();
+  const optionLines = new Map<string, BossSimLineResult>();
   const out = options.map((option) => {
     const ids = deckOf.get(option.key)!;
-    if (ids.length === 1 && ids[0] === 0) return simOf(option.key, baseLine, base.solver.player.hp, true);
-    const key = ids.join(",");
-    const line = summaries.get(key) ?? summarize(ids);
+    const count = actual?.counts.get(option.key)?.samples ?? n;
+    if (ids.length === 1 && ids[0] === 0 && count === n) {
+      optionLines.set(option.key, baseLine);
+      const value = simOf(option.key, baseLine, base.solver.player.hp, true);
+      return actual ? { ...value, sampling: actual.counts.get(option.key) } : value;
+    }
+    const key = `${ids.join(",")}:${count}`;
+    const line = summaries.get(key) ?? summarize(ids, count);
     summaries.set(key, line);
-    return simOf(option.key, line, option.mixture ? hpOf(option.mixture[0]) : hpOf(option.change), false);
+    optionLines.set(option.key, line);
+    const value = simOf(option.key, line, option.mixture ? hpOf(option.mixture[0]) : hpOf(option.change), false);
+    return actual ? { ...value, sampling: actual.counts.get(option.key) } : value;
   });
   const readinessStart = performance.now();
   const readiness = opts.readiness && opts.quantitative ? bossReadiness(baseLine.outcomes, {
@@ -255,7 +280,7 @@ export async function compareOptions(
     ...(base.continuation ? {} : { calibrate: (raw: number) => calibratedWinProb(raw, BUILD_SIM_CALIBRATION_SAMPLES, "pre", base.meta.asc) }),
   }) : undefined;
   const readinessMs = readiness ? performance.now() - readinessStart : undefined;
-  const adaptive = required && opts.adaptive && options.length && n === samples ? safeAdaptiveShadow([
+  const adaptive = !actual && required && opts.adaptive && options.length && n === samples ? safeAdaptiveShadow([
     { key: "@current", samples: baseLine.outcomes, baseline: true, workGroup: "0" },
     ...options.map((option) => ({ key: option.key, samples: summarize(deckOf.get(option.key)!).outcomes, workGroup: deckOf.get(option.key)!.join(",") })),
   ], { lane: "b3", requested: samples, allowS: opts.adaptive.allowS }) : null;
@@ -269,17 +294,46 @@ export async function compareOptions(
   if (opts.buildRank) {
     try {
       buildRanking = toJsonValue(buildRank(simOf("current", baseLine, base.solver.player.hp, true), out,
-        { base: baseLine.outcomes, options: new Map(options.map((option) => [option.key, summarize(deckOf.get(option.key)!).outcomes])) },
-        { ...opts.buildRank, calibrationSamples: BUILD_SIM_CALIBRATION_SAMPLES,
+        { base: baseLine.outcomes, options: new Map(options.map((option) => [option.key, optionLines.get(option.key)!.outcomes])) },
+        { ...opts.buildRank, allowPrefixes: !!actual, calibrationSamples: BUILD_SIM_CALIBRATION_SAMPLES,
           calibrate: (p) => base.continuation ? p : calibratedWinProb(p, BUILD_SIM_CALIBRATION_SAMPLES, "pre", base.meta.asc) }));
     } catch (error) {
       // A diagnostic failure cannot turn an otherwise completed computation into an infinite retry.
       buildRanking = { schema: "build-ranking-v1", status: "unavailable", reason: String(error).slice(0, 180) };
     }
   }
+  let productionComparison: JsonValue | undefined;
+  if (adaptive && "candidates" in adaptive && opts.buildRank && asRecord(buildRanking)["status"] === "produced") {
+    try {
+      const counts = new Map(adaptive.candidates.map((candidate) => [candidate.key, candidate.samples]));
+      const prefixBase = summarize([0], counts.get("@current")!);
+      const prefixOptions = options.map((option) => {
+        const line = summarize(deckOf.get(option.key)!, counts.get(option.key)!);
+        return { option, line, reference: summarize([0], line.samples) };
+      });
+      const shortened = buildRank({ ...simOf("current", baseLine, base.solver.player.hp, true), samples: prefixBase.samples },
+        prefixOptions.map(({ option, line, reference }) => {
+          const original = out.find((item) => item.key === option.key)!;
+          const d = compareLines(line, reference);
+          return { ...original, samples: line.samples, win: line.winProb, diff: { ...original.diff!, hpLoss: d.hpLossDiff } };
+        }), { base: prefixBase.outcomes, options: new Map(prefixOptions.map(({ option, line }) => [option.key, line.outcomes])) },
+        { ...opts.buildRank, allowPrefixes: true, calibrationSamples: BUILD_SIM_CALIBRATION_SAMPLES,
+          calibrate: (p) => base.continuation ? p : calibratedWinProb(p, BUILD_SIM_CALIBRATION_SAMPLES, "pre", base.meta.asc) });
+      const full = asRecord(buildRanking)["best_group"] as string[];
+      productionComparison = { metric: "deployed-ranking-first-group", full: [...full].sort(), partial: [...shortened.best_group].sort(),
+        agreement: JSON.stringify([...full].sort()) === JSON.stringify([...shortened.best_group].sort()) };
+    } catch (error) { productionComparison = { metric: "deployed-ranking-first-group", agreement: null, error: String(error).slice(0, 180) }; }
+  }
   const result: CompareResult = {
+    ...(actual ? { adaptive: toJsonValue({ ...actual.adaptive, input_key: cacheKey, fixed_order_search_in_work: true,
+      work: { ...actual.adaptive.work,
+        full: actual.adaptive.work.full + (allOrders.length > 1 ? Math.min(samples, BUILD_SIM_ORDER_SAMPLES) * allOrders.length : 0),
+        actual: actual.adaptive.work.actual + (allOrders.length > 1 ? Math.min(samples, BUILD_SIM_ORDER_SAMPLES) * allOrders.length : 0),
+        savedFraction: (actual.adaptive.work.full - actual.adaptive.work.actual) /
+          (actual.adaptive.work.full + (allOrders.length > 1 ? Math.min(samples, BUILD_SIM_ORDER_SAMPLES) * allOrders.length : 0)) } }) } : {}),
     ...(buildRanking ? { buildRanking } : {}),
-    ...(adaptive ? { adaptive: toJsonValue({ ...adaptive, input_key: cacheKey, fixed_order_search_in_work: true }) } : {}),
+    ...(adaptive ? { adaptive: toJsonValue({ ...adaptive, ...(productionComparison ? { production_comparison: productionComparison } : {}),
+      input_key: cacheKey, fixed_order_search_in_work: true }) } : {}),
     ...(readiness ? { readiness, readinessMs } : {}),
     ...(required ? { completion: { required: true as const, uniqueDecks: decks.length, originalDecks, memoHit: false } } : {}),
     ...(opts.diagnostics ? { diagnostics: { decks: decks.length, options: options.length, deckCards: base.piles.draw.length,

@@ -14,14 +14,14 @@ export interface CombatSRanking {
   s_groups: number[][];
   audits: { line: number; audit: ReturnType<typeof auditSigns> }[];
   scores: { line: number; mean: number }[];
-  comparisons: { line: number; leader: number; mean: number; se: number; tied: boolean }[];
+  comparisons: { line: number; leader: number; mean: number; se: number; tied: boolean; samples?: number }[];
   old_best: number;
   best: number;
 }
 
 /** Use anchored tie groups, so pairwise near-ties cannot make the sort comparator non-transitive. */
 export function rankByBossMargin(lines: BossSimLineResult[], old: LinesRank, tieSe: number,
-  lowTrust: string | null, second: (line: BossSimLineResult) => number): LinesRank {
+  lowTrust: string | null, second: (line: BossSimLineResult) => number, allowPrefixes = false): LinesRank {
   const group = lines.flatMap((_, i) => old.winTied[i] ? [i] : []);
   const diagnostic: CombatSRanking = { schema: "s-combat-ranking-v1", used: false, reason: null,
     tie_se: tieSe, win_group: group, s_groups: [], audits: group.map((i) => ({ line: i, audit: auditSigns(lines[i]!.outcomes) })),
@@ -31,13 +31,14 @@ export function rankByBossMargin(lines: BossSimLineResult[], old: LinesRank, tie
   if (!group.length) return fallback("no_eligible_line");
   if (diagnostic.audits.some(({ audit }) => !audit.rankingEligible)) return fallback("sign_or_attribution_rejected");
   const first = lines[group[0]!]!.outcomes;
-  if (first.length < 2 || group.some((i) => lines[i]!.outcomes.length !== first.length)) return fallback("unpaired_samples");
+  if (first.length < 2 || group.some((i) => lines[i]!.outcomes.length < 2 || (!allowPrefixes && lines[i]!.outcomes.length !== first.length))) return fallback("unpaired_samples");
   // Each scenario must use the same entry and window across lines. No pairing by aggregate means.
   const referenceKey = (sample: typeof first[number]) => {
     const ref = sample.bossMargin!.reference;
     return JSON.stringify([ref.bossHp, ref.myHp, [...ref.enemyIds].sort(), ref.startTurn ?? 1]);
   };
-  if (group.some((i) => lines[i]!.outcomes.some((sample, n) => referenceKey(sample) !== referenceKey(first[n]!)))) {
+  if (group.some((i) => lines[i]!.outcomes.slice(0, Math.min(first.length, lines[i]!.outcomes.length))
+    .some((sample, n) => referenceKey(sample) !== referenceKey(first[n]!)))) {
     return fallback("different_reference_or_window");
   }
   const values = new Map(group.map((i) => [i, lines[i]!.outcomes.map((sample) => marginOf(sample)!)]));
@@ -50,9 +51,10 @@ export function rankByBossMargin(lines: BossSimLineResult[], old: LinesRank, tie
   while (remaining.length) {
     const leader = [...remaining].sort((a, b) => cmp(means.get(b)!, means.get(a)!) || a - b)[0]!;
     const tied = remaining.filter((i) => {
-      const delta = summarizeSamples(values.get(i)!.map((v, n) => v - values.get(leader)![n]!));
+      const count = Math.min(values.get(i)!.length, values.get(leader)!.length);
+      const delta = summarizeSamples(values.get(i)!.slice(0, count).map((v, n) => v - values.get(leader)![n]!));
       const same = delta.mean! >= -tieSe * delta.meanSe!;
-      diagnostic.comparisons.push({ line: i, leader, mean: delta.mean!, se: delta.meanSe!, tied: same });
+      diagnostic.comparisons.push({ line: i, leader, mean: delta.mean!, se: delta.meanSe!, tied: same, ...(allowPrefixes ? { samples: count } : {}) });
       return same;
     }).sort(hpOrder);
     diagnostic.s_groups.push(tied);
