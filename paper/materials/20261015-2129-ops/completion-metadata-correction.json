@@ -1,0 +1,13 @@
+{
+  "at": "2026-10-15 21:34:38 CST",
+  "original_commit": "d004c52a0f88a5df5822af299ea9dc8a18ac2bda",
+  "original_completion_sha256": "43b25cc4a3ca0b0b631a91ebd4e5dfc2361431440866c29c2d2b41cf8286f009",
+  "corrected_completion_sha256": "4afd49cce1da495e419089a8ac3ea4ea193ecbe0485373109edd51623b886de6",
+  "previous_batches": [],
+  "corrected_batches": [
+    "20261015-211145-strategy-proposal",
+    "20261015-211145-s2-strategy-proposal"
+  ],
+  "cause": "Ops helper created each real per-batch receipt but omitted receipts.append(receipt), leaving only the aggregate batch-name list empty. Counts, individual readbacks, original artifacts, native verification and 47 trace-only ledger rows were unaffected. Original helper and original empty-list record remain in the prior commit.",
+  "scope": "Record metadata only; no rerun, source, ledger, runtime or game changes."
+}
