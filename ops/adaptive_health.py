@@ -4,6 +4,7 @@ from collections import Counter
 
 def adaptive_health(config, records):
     mode = (config.get('loop') or {}).get('sim_adaptive', 'off')
+    admission_state = (config.get('loop') or {}).get('sim_adaptive_admission', 'unknown')
     counts = Counter(observed=0, produced=0, errors=0, evaluable=0, matched=0, unknown=0, complete_adaptive=0,
                      production_evaluable=0, production_matched=0)
     mismatches, saved, seen = [], [], set()
@@ -77,5 +78,8 @@ def adaptive_health(config, records):
             'actual_saved_fraction': {'p50': quantile(.5, actual_saved), 'p90': quantile(.9, actual_saved)},
             'candidate_samples': sample_counts, 'candidate_rounds': rounds, 'stop_counts': dict(stops),
             'alert': mode in ('shadow', 'on') and counts['errors'] >= 3,
-            'admission': 'pending offline coverage and at least two completed natural shadow runs; never auto-enable',
+            'admission_state': admission_state,
+            'admission': (f'accepted source; runtime mode={mode}; never auto-enable' if admission_state == 'accepted'
+                          else 'not applicable to this character; never auto-enable' if admission_state == 'not_applicable'
+                          else 'pending offline coverage and at least two completed natural shadow runs; never auto-enable'),
             'limits': 'Shadow estimates and actual on-mode sample work are separate. On-mode cannot observe full-run agreement; no elapsed-time saving or game benefit inferred.'}

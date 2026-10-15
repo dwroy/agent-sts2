@@ -50,15 +50,17 @@ it.each([0, 250, 320, "throw"] as const)("B3 fails twice then permits the bounde
   else expect(value.record?.["base"]).toBeUndefined();
 });
 
-it("one failure followed by a successful full attempt resets the counter; off retains mandatory retries", async () => {
+it.each(["off", "shadow", "on"] as const)("one failure followed by a successful %s attempt resets the counter; failure-exit off retains mandatory retries", async (mode) => {
+  vi.stubEnv("SIM_ADAPTIVE", mode);
   const { e, decision } = question();
   let fail = true;
   const runner: DeckSimRunner = { run: async (req) => { if (fail) throw new Error("fixed failure"); return result(req, req.samples); } };
   const setup = { runner, samples: 4, db: FIXTURE_DB, mm: FIXTURE_MM, now: () => 0 };
-  await withBossSim(decision, e, setup);
+  const failed = await withBossSim(decision, e, setup);
+  expect(failed.record).toMatchObject({ completion: { status: "pending", attempts: 1 } });
   fail = false;
   const good = await withBossSim(decision, e, setup);
-  expect(good.record).toMatchObject({ completion: { status: "complete", attempts: 2 } });
+  expect(good.record).toMatchObject({ completion: { status: mode === "on" ? "complete_adaptive" : "complete", attempts: 2 } });
   expect(e.screenMemory.simFailure).toBeUndefined();
   expect(bossEvaluationPending(good.decision, e.state, good.record!)).toBeNull();
   vi.stubEnv("SIM_FAILURE_EXIT", "off");
