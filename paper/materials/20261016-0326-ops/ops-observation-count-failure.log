@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/ops/codex-ops/record-staging/20261016-0326/prepare.py", line 81, in <module>
+    recorded=next(v for v in summary if v['run']==x['run']);assert c==recorded,(c,recorded,dict(interval))
+                                                                   ^^^^^^^^^^^
+AssertionError: ({'run': 'VLZ6CCT8AQ0A', 'segments': 99, 'actions': 699, 'adjacent_action_endpoints': 0, 'terminal_endpoints': 0, 'turn_endpoints': 10, 'unknown_turns': 97, 'full_input_accepted': True, 'excluded_rows': 0}, {'run': 'VLZ6CCT8AQ0A', 'segments': 99, 'actions': 699, 'adjacent_action_endpoints': 77, 'terminal_endpoints': 0, 'turn_endpoints': 10, 'unknown_turns': 97, 'full_input_accepted': True, 'excluded_rows': 0}, {'room_or_attempt_changed_or_unknown': 618, None: 77, 'turn_boundary_unverified': 3, 'no_next_decision': 1})

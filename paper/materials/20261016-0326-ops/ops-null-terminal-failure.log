@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/ops/codex-ops/record-staging/20261016-0326/prepare.py", line 80, in <module>
+    c=dict(run=x['run'],segments=len(audit['segments']),actions=len(audit['observed_actions']),adjacent_action_endpoints=interval['adjacent_logged_observations'],terminal_endpoints=sum(row['terminal_observation']['status']=='observed_terminal_endpoints' for row in audit['observed_actions']),turn_endpoints=status['observed_turn_endpoints'],unknown_turns=status['unknown'],full_input_accepted=x['fullError'] is None,excluded_rows=len(missing))
+                                                                                                                                                                                     ~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/ops/codex-ops/record-staging/20261016-0326/prepare.py", line 80, in <genexpr>
+    c=dict(run=x['run'],segments=len(audit['segments']),actions=len(audit['observed_actions']),adjacent_action_endpoints=interval['adjacent_logged_observations'],terminal_endpoints=sum(row['terminal_observation']['status']=='observed_terminal_endpoints' for row in audit['observed_actions']),turn_endpoints=status['observed_turn_endpoints'],unknown_turns=status['unknown'],full_input_accepted=x['fullError'] is None,excluded_rows=len(missing))
+                                                                                                                                                                                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+TypeError: 'NoneType' object is not subscriptable
