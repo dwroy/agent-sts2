@@ -1,0 +1,507 @@
+{
+  "batch": "20261016-044302",
+  "original_report": {
+    "task": "postmortem",
+    "appended": [
+      "BGRC1SURKBJY"
+    ],
+    "skipped": [],
+    "bugs": [],
+    "ledger": {
+      "added": [],
+      "updated": [
+        "silent-0005",
+        "silent-0011",
+        "silent-0020",
+        "silent-0024",
+        "silent-0025",
+        "silent-0027",
+        "silent-0079",
+        "silent-0162",
+        "silent-0418"
+      ],
+      "repeats": [],
+      "check": 0
+    },
+    "code_proposals": [
+      "silent-proposal-c2485021e58e3c01"
+    ],
+    "implementation_domains": [
+      "combat",
+      "sl"
+    ],
+    "report": "/home/dw/Projects/agent-sts2/learner/runs/20261016-044305-02e02d4e-7627-48e9-8dc0-0a0e1fb7f1b5-postmortem/report.md"
+  },
+  "native": {
+    "batch": "20261016-044302",
+    "thread": "01a1414d-ea75-7860-af61-1a836cd2e2d6",
+    "cwd": "/home/dw/Projects/agent-sts2",
+    "event_log": "learner/runs/20261016-044305-02e02d4e-7627-48e9-8dc0-0a0e1fb7f1b5-postmortem.jsonl",
+    "registered_launch_batch": "20261016-044302",
+    "original_lease": "132cdef874e79518e2930511dbfda77d30ba97d24bcb595527d1dd50e67ce05f",
+    "native_context": {
+      "source": "ops/codex-ops/accounts/codex1/learner/sessions/2026/10/16/rollout-2026-10-16T04-43-07-01a1414d-ea75-7860-af61-1a836cd2e2d6.jsonl",
+      "offset": 49154,
+      "bytes": 4620,
+      "sha256": "4f986331f31d9754a1c0220cb23d826e7a1cfe69596093c853d8ed442905f561",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "sandbox": {
+        "type": "workspace-write",
+        "writable_roots": [
+          "/home/dw/Projects/agent-sts2/.git"
+        ],
+        "network_access": false,
+        "exclude_tmpdir_env_var": false,
+        "exclude_slash_tmp": false
+      },
+      "approval_policy": "never"
+    },
+    "native_user_input": {
+      "offset": 53774,
+      "bytes": 15344,
+      "sha256": "80224ca500910445c5bbce8e3ad577f883cc026aa223584f750b35a0aec7a4ff",
+      "input_sha256": "aac78b539709203af48e48a95660fca35d77bde15b3daf3037cbced2f46fe8ae"
+    },
+    "original_header_events": [
+      {
+        "offset": 0,
+        "bytes": 16866,
+        "sha256": "2d21a3972e82f024c1b79029cf68f081a55816fdc16d748058e7a7a2a93bf789",
+        "type": "learner_launch",
+        "attempt": null,
+        "code": null
+      },
+      {
+        "offset": 16866,
+        "bytes": 359,
+        "sha256": "f21158f3fa624637c44f2606a4780eaa18e907394d6a2026fa13e661dd4dc6aa",
+        "type": "learner_startup_attempt",
+        "attempt": 1,
+        "code": null
+      },
+      {
+        "offset": 20237,
+        "bytes": 77,
+        "sha256": "1861cc2e969ee46408dcc795e346f5626c84db39056a66d08a4c993a28d548e7",
+        "type": "thread.started",
+        "attempt": null,
+        "code": null
+      }
+    ],
+    "startup_attempts": 1,
+    "failed_startups_preserved": 0,
+    "no_model_or_manual_restart": true
+  },
+  "original_rows_checked": 1914,
+  "stream_counts": {
+    "states": 969,
+    "decisions": 875,
+    "sl-attempts": 6,
+    "run-config": 1,
+    "run-plans": 14,
+    "runs": 1,
+    "brain": 48
+  },
+  "raw_binding": "Learner original offsets independently read as original JSON with explicit run identity; source line numbers retained as learner-reported.",
+  "actual_accepted_codex": 48,
+  "original_run_row": {
+    "run_id": "BGRC1SURKBJY",
+    "ended": "2026-10-15T20:20:01.537Z",
+    "victory": false,
+    "floor": 48,
+    "character": "SILENT",
+    "ascension": 10,
+    "code": "current",
+    "decisions": 875,
+    "jev_calls": 217,
+    "deepseek_calls": 48,
+    "claude_calls": 0,
+    "tokens": 1927936,
+    "ds_tokens_in": 9042157,
+    "ds_tokens_out": 63356,
+    "ds_cache_hit": 5063936,
+    "brain_cost_accounting": {
+      "source": "brain.jsonl:run-plan",
+      "calls": 1,
+      "input_tokens": 149406,
+      "output_tokens": 2281,
+      "cache_hit_tokens": 0,
+      "by_engine": {
+        "codex": 1
+      },
+      "question_ids": [
+        "mv9wugwi-19560-48"
+      ],
+      "unresolved": []
+    },
+    "deciders": {
+      "codex": 65,
+      "code": 357,
+      "jev": 217,
+      "jev-plan": 236
+    },
+    "death_fight": [
+      "永世沙漏"
+    ],
+    "death_fight_floor": 48,
+    "death_enemy_ids": [
+      "AEONGLASS"
+    ]
+  },
+  "actual_run_config": {
+    "ts": "2026-10-15T19:07:16.963Z",
+    "run_id": "BGRC1SURKBJY",
+    "ascension": 10,
+    "character": "SILENT",
+    "floor": 1,
+    "restart": false,
+    "process": {
+      "pid": 19560,
+      "started": "2026-10-15T19:07:09.630Z"
+    },
+    "code": {
+      "commit": "e716bd28fd8eca9e4d76d066680304fd11935e37",
+      "code": "e716bd2+dirty",
+      "dirty": true,
+      "dirty_files": [
+        "knowledge/characters/silent/boss-damage.json",
+        "knowledge/characters/silent/construction-opportunities.json",
+        "knowledge/characters/silent/monster-records.json",
+        "knowledge/characters/silent/outcome-stats.json",
+        "knowledge/characters/silent/room-costs.json",
+        "knowledge/common/card-upgrades.json",
+        "knowledge/common/monster-db.json",
+        "knowledge/common/move-model.json",
+        "notes/fight-value-backtest-silent.md",
+        "notes/monster-db-check.md"
+      ],
+      "branch": "live",
+      "worktree": "live"
+    },
+    "brain": {
+      "active": true,
+      "engine": "codex",
+      "by_prefix": {},
+      "fallback": null,
+      "reask": null,
+      "tools": null,
+      "log": "/home/dw/Projects/agent-sts2/.worktrees/live/logs/brain.jsonl",
+      "engines": {
+        "codex": {
+          "model": "gpt-6.1-sol",
+          "model_by_prefix": {},
+          "timeout_ms": 600000,
+          "effort": "xhigh",
+          "reask": null,
+          "tools": false,
+          "max_calls": null
+        }
+      },
+      "codex": {
+        "mode": "session",
+        "service_tier": "default",
+        "context_window": 512000,
+        "auto_compact_token_limit": 460800,
+        "summary": "auto",
+        "stall_ms": 120000,
+        "first_token_ms": null,
+        "stall_retries": 1,
+        "schema_fields": "used",
+        "route_reason": "drop",
+        "route_pattern": true,
+        "accept_cut": true,
+        "max_field_chars": 600,
+        "max_answer_blanks": 100
+      }
+    },
+    "knowledge": {
+      "prefix": "full",
+      "ascension": 10,
+      "prefix_sha": "e32a572359ca",
+      "prefix_chars": 182403,
+      "prefix_tokens_est": {
+        "deepseek": 127682,
+        "claude": 176931
+      },
+      "system_sha": "c3112436cccb",
+      "system_chars": 184687,
+      "experience_version": "2026-10-13.8",
+      "prefix_note": "the prefix at this run's start; the brain re-renders it when the knowledge files or notes/lessons.md change (brain/knowledge.ts), so the prefix each call used is its brain.jsonl row's knowledge.prefix_sha"
+    },
+    "deepseek": {
+      "model": "deepseek-flash",
+      "max_calls": 300,
+      "timeout_ms": 300000,
+      "reasoning_effort": "max",
+      "combat_reasoning_effort": "high",
+      "effort_by_label": null
+    },
+    "jev": {
+      "enabled": true,
+      "model": "jev-latest",
+      "context": "v1",
+      "strict": true,
+      "prompt_log": "/home/dw/Projects/agent-sts2/.worktrees/live/logs/jev-prompts.jsonl"
+    },
+    "loop": {
+      "mode": "play",
+      "combat_planner": "turn",
+      "build_decider": "deepseek",
+      "build_oneshot": "on",
+      "boss_sim_build": "on",
+      "s_readiness": "on",
+      "s_combat_rank": "on",
+      "s_build_rank": "on",
+      "sim_failure_exit": "on",
+      "sim_failure_retries": 2,
+      "sim_adaptive": "on",
+      "sim_adaptive_requested": "on",
+      "sim_adaptive_admission": "accepted",
+      "boss_sim_completion": "required-full-paired-v1",
+      "boss_sim_build_requested": "on",
+      "combat_deepseek": "off",
+      "thief_facts": true,
+      "thief_cost": true,
+      "mech_rules": true,
+      "mech_move_rules": true,
+      "mech_death_move": true,
+      "passive_pieces": true,
+      "sandpit_start": true,
+      "fight_plan": "off",
+      "run_plan": "v1",
+      "run_plan_merge": true,
+      "escalation": [
+        "deepseek"
+      ],
+      "confidence": {
+        "act": 0.55,
+        "strong": 0.75
+      },
+      "run_start": "auto",
+      "character": "SILENT"
+    },
+    "operator_constraints": {
+      "id": "roy-20261013-v5-no-deck-cap",
+      "max_permanent_cards": null,
+      "activation": "V5: Roy removed the fixed permanent deck-size limit"
+    },
+    "construction": {
+      "architecture": "V5",
+      "schema": "construction-v1",
+      "mode": "shadow",
+      "policy": "observed-signature-completion",
+      "validation": "prospective-calibration-required",
+      "evaluation": "same-question-combat-facts"
+    },
+    "target_ascension": 11,
+    "target_ascension_mode": "climb",
+    "arm": null,
+    "sl": {
+      "enabled": true,
+      "boss_retries": 5,
+      "elite_retries": 3,
+      "act3_low_hp": true,
+      "act3_low_hp_pct": 50,
+      "act2_low_hp": true,
+      "act2_low_hp_pct": 50,
+      "retry_show_sim": true,
+      "retry_memo": true,
+      "retry_known_draws": true,
+      "retry_compute": {
+        "rollout_samples": 24,
+        "rollout_budget_ms": 20000,
+        "turn_budget_ms": 30000,
+        "mc_samples": 36,
+        "mc_budget_ms": 1200,
+        "boss_sim_samples": 1200
+      },
+      "judge_known_draws": true,
+      "judge_any_draw": true,
+      "reload_early": true,
+      "reload_on_revive": false,
+      "retry_known_inserts": true,
+      "retry_known_top": true,
+      "retry_explore": true,
+      "retry_explore_b2": true,
+      "retry_explore_boss_potions": true,
+      "retry_explore_order": true,
+      "retry_explore_replay": true,
+      "retry_explore_replay_plays": true,
+      "retry_explore_replay_deviate": true,
+      "retry_explore_key_counters": true,
+      "retry_explore_second": true,
+      "retry_explore_replay_order": true,
+      "retry_explore_replay_code": true,
+      "retry_explore_target_turn": true,
+      "retry_explore_rearm": true,
+      "retry_explore_wasted": true,
+      "retry_explore_anchor": true,
+      "retry_explore_canon": true,
+      "retry_explore_turn": true,
+      "retry_explore_whole": true,
+      "retry_explore_where": true,
+      "retry_explore_potion": true,
+      "retry_known_picks": true,
+      "retry_known_off_top": true,
+      "retry_known_hand_order": true,
+      "step_timeout_ms": 60000,
+      "log": "/home/dw/Projects/agent-sts2/.worktrees/live/logs/sl-attempts.jsonl",
+      "elites": [],
+      "elites_date": ""
+    },
+    "codex_check": {
+      "bin": "/home/dw/.local/node/bin/codex",
+      "ok": true,
+      "version": "codex-cli 0.162.1"
+    },
+    "codex_usage": {
+      "stop_pct": 100,
+      "every_calls": 3,
+      "every_min": 10,
+      "required": true,
+      "paid_credits": "main-silent-codex1-20261015",
+      "start": {
+        "engine": "codex",
+        "read_at": "2026-10-15T19:07:08.701Z",
+        "read_ms": 876,
+        "plan": "pro",
+        "used_pct": 24,
+        "window": "codex/primary",
+        "window_min": 10080,
+        "resets_at": "2026-10-22T06:13:44.000Z",
+        "credits": 43037.6069205,
+        "ordinary_usage_allowed": true,
+        "reached_type": null
+      },
+      "last": {
+        "engine": "codex",
+        "read_at": "2026-10-15T19:07:08.701Z",
+        "read_ms": 876,
+        "plan": "pro",
+        "used_pct": 24,
+        "window": "codex/primary",
+        "window_min": 10080,
+        "resets_at": "2026-10-22T06:13:44.000Z",
+        "credits": 43037.6069205,
+        "ordinary_usage_allowed": true,
+        "reached_type": null
+      },
+      "calls_since_read": 0
+    },
+    "config_sha": "e8cac02aea4d"
+  },
+  "source_reference": "e716bd28fd8eca9e4d76d066680304fd11935e37",
+  "source_reference_does_not_reconstruct_dirty_knowledge": true,
+  "post_append": {
+    "run": "BGRC1SURKBJY",
+    "lessons_prefix_bytes": 9006228,
+    "lessons_prefix_sha256": "37d9cb9a6d59239fdeea5b49279e955f5a34aa06d573cc49ecd77739a5bb8cb7",
+    "draft_sha256": "dcec045d6d0c7aa9a67d75a7d6241b1fcfd2399a428c5e03a5dc9a4eda3f68b0",
+    "erratum_sha256": "eb6d71813eda127fa994bf38ae03a322318424d4a4ae4a85e93c7164c0477617",
+    "only_own_append_since_prefix": true,
+    "source_head": "e716bd28fd8eca9e4d76d066680304fd11935e37",
+    "source_diff_bytes": 0,
+    "ledger_preserved_fields": [
+      "claim",
+      "first_run",
+      "prior",
+      "prior_runs",
+      "prior_note",
+      "status",
+      "version"
+    ],
+    "ledger_updated": [
+      "silent-0005",
+      "silent-0011",
+      "silent-0020",
+      "silent-0024",
+      "silent-0025",
+      "silent-0027",
+      "silent-0079",
+      "silent-0162",
+      "silent-0418"
+    ],
+    "ledger_roles": [
+      "support"
+    ],
+    "ledger_check": 0,
+    "proposal": "silent-proposal-c2485021e58e3c01",
+    "proposal_status": "pending",
+    "implementation": "未实现；独立strategy-proposal待核验",
+    "code_changed": false,
+    "tests": "纯记录任务，无需生产代码测试",
+    "erratum": "最优标记缺值6题的动作构成；计数及比例不变"
+  },
+  "original_lesson_bytes": 24470,
+  "original_draft_bytes": 24115,
+  "original_erratum_bytes": 355,
+  "old_lesson_prefix_preserved": true,
+  "original_ledger_rows": 17,
+  "new_ledger_ids": [],
+  "old_support_ids": [
+    "silent-0005",
+    "silent-0011",
+    "silent-0020",
+    "silent-0024",
+    "silent-0025",
+    "silent-0027",
+    "silent-0079",
+    "silent-0162",
+    "silent-0418"
+  ],
+  "repeats": [],
+  "original_proposals": [
+    {
+      "op": "add",
+      "id": "silent-proposal-c2485021e58e3c01",
+      "ts": "2026-10-16T04:58:16+08:00",
+      "character": "silent",
+      "ledger": [
+        "silent-0024",
+        "silent-0079",
+        "silent-0418",
+        "silent-0005",
+        "silent-0011",
+        "silent-0025",
+        "silent-0027",
+        "silent-0162"
+      ],
+      "runs": [
+        "BGRC1SURKBJY"
+      ],
+      "source_task": "postmortem",
+      "target_task": "strategy-proposal",
+      "domains": [
+        "combat",
+        "sl"
+      ],
+      "summary": "核验静默A10沙漏持牌／重放输入与SL换线完整兑现：第3试T4预测零损实损6、T7静态需损42与模型余血不一致；末试需损18且hpAfter−14正常作为反例，缺输入先保留行为。",
+      "proposal": "/home/dw/Projects/agent-sts2/learner/runs/20261016-044305-02e02d4e-7627-48e9-8dc0-0a0e1fb7f1b5-postmortem/proposal-aeonglass-observed-boundaries.md",
+      "rule_changes": false,
+      "authorization": "Roy-2026-10-07-learning",
+      "proposal_sha256": "dc46c7825fc76783a3350678c32f73600d468abe9139575da51e5efc397949eb",
+      "state": "pending"
+    }
+  ],
+  "current_proposal_state": "pending",
+  "new_bug": false,
+  "actual_brain_usage": {
+    "inputTokens": 9042157,
+    "outputTokens": 63356,
+    "cacheHitTokens": 5063936,
+    "reasoningTokens": 55590
+  },
+  "original_missing_best_actions": {
+    "use_potion": 1,
+    "play_card": 4,
+    "end_turn": 1
+  },
+  "limits": "Three terminal SL tails, per-hit/overkill, same-type entity generations, unchosen full successors, candidate realization and dirty knowledge snapshots remain unknown; no model root cause or strategy gain proven. R365 code at startup is not itself a matched Paper Krane/beam consumer. Jev cache, calibrated clocks, F49 combat, pure-combat time and paid invoices remain unknown.",
+  "material_failures_retained": [
+    "Initial missing chosen-field analysis failure, unsupported show CLI rc2 and report status-vs-state assertion preserved.",
+    "Original chapter sentence about6 missing-best actions remains; separate append-only erratum corrects1 potion/4 play/1 end-turn, counts unchanged."
+  ],
+  "protected_fold_verified_on_private_staged17_rows": true,
+  "parallel_physical_rows_preserved": "Only own chapter and17 original CLI rows staged; other root records and pre-existing whitespace differences remain physical/uncommitted."
+}
