@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/ops/codex-ops/record-staging/20261015-0902/audit.py", line 7, in <module>
+    bid='20261015-084302';out=(root/'ops/codex-ops/learner'/f'{bid}.out').read_text();report=json.loads(re.search(r'```json\s*(.*?)```',out,re.S)[1]);s=Path(report['report']).parent;runs=report['appended'];assert runs==['13CBGUPK6122','X7REGM0RUNSA'];native=runtime(bid,report,out);canonical=json.loads((root/'ops/codex-ops/learn.json').read_text())['batches'][bid];assert canonical['state']=='done' and canonical['rc']==0 and not canonical['proposal_audit_errors'];assert report['ledger']['added']==[] and report['ledger']['check']==0 and report['ledger']['repeats']==['silent-0295'];assert len(report['bugs'])==1 and report['bugs'][0]['new'] is False
+                                                                                                                                                                                                                                                                  ~~~~~~~^^^^^^^^^^^^^^^^
+  File "<string>", line 27, in runtime
+AssertionError
