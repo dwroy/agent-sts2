@@ -255,7 +255,12 @@ export function bossOpening(bossId: string, asc: number, db: MonsterDb, knowledg
   return { key, name: BOSS_NAMES[key] ?? nameOf(key, db, knowledge), asc: Number(found.key), exact: found.exact, parts };
 }
 
-/** The fight-start relics held and what they add on turn 1, and the fight relics not modelled at all. */
+/** XTSV1U9JD34T F49 T1, silent-0164: separate modelled energy from unknown opening control. */
+export const SILENT_EARRING_OPENING_LIMIT =
+  "低语耳环首轮接管未建模：模型仅计能量，模拟的自主开场不代表实盘能自由启动；接管内部顺序未知。" +
+  "XTSV1U9JD34T F49 T1首个稳定可行动帧仅进阶之灾、3能量、16挡；不能据此禁取遗物或认定整战无解（silent-0164）。";
+
+/** The fight-start relics held, their effects, and unmodelled fight effects (including partial relic models). */
 export function fightStartRelics(runRaw: Record<string, unknown>, knowledge?: Knowledge): { total: Required<FightStartRelic>; applied: string[]; unmodelled: string[] } {
   const total: Required<FightStartRelic> = { strength: 0, dexterity: 0, block: 0, vigor: 0, thorns: 0, plating: 0, energy: 0, draw: 0, enemyVulnerable: 0, enemyWeak: 0, enemyStrength: 0 };
   const applied: string[] = [];
@@ -263,6 +268,10 @@ export function fightStartRelics(runRaw: Record<string, unknown>, knowledge?: Kn
   for (const raw of asArray(runRaw["relics"]).map(asRecord)) {
     const id = str(raw["relic_id"]);
     const name = str(raw["name"], knowledge?.relic(id)?.name ?? id);
+    // XTSV1U9JD34T F49 T1, silent-0164: energy is modelled, automatic opening actions are not.
+    if (id === "WHISPERING_EARRING" && str(runRaw["character_id"]).toLowerCase() === "silent" && runRaw["ascension"] === 10) {
+      unmodelled.push(SILENT_EARRING_OPENING_LIMIT);
+    }
     const rule = FIGHT_START_RELICS[id];
     if (rule) {
       const effect = rule(typeof raw["stack"] === "number" ? (raw["stack"] as number) : null);
