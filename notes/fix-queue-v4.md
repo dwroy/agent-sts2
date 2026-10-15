@@ -1324,3 +1324,5 @@ Roy：「上线后进 F48 反而降低一半，这才是关键，要找问题。
 - 2026-10-15 11:30:10 CST 原infra-learner-launch-shared-main-config-race已沿101301源22efae554实际main/live祖先（fba193dfe31844e1dbde9f2ad7174427fcd446dc）；精确会话前同注册import错误有界恢复已部署，源4014与组合26固定项绿，实际部署树宿主结果pending。原两094301失败/无原生会话事实不改，上游main生命周期归因及新自然恢复未冒称完成；不再为相同补丁新派实现。记录paper/materials/20261015-1118-ops/report.md。
 
 - 2026-10-15 16:21:43 CST 运维 codex：[silent-0469原队列补证，非新bug/新派修] 原154301/HLAWCGM3KHVB Silent A10 F49T3，原学习者核完整三步线预测损18、实际损12，纸鹤新施虚弱聚合体多击/玩家易伤/突然一拳组合在原骑士窄修复范围外；不是原骑士窄修复回归或阻塞。既有0469/root条目保留，补入原silent-proposal-0cce435d0d61ac93、账本0469/0070与原postmortem材料，自动原策略链接续，不另建学习父/重复普通fix、不由ops加机制/减伤系数或改SL/药价。源帧s410805–410808、d398069及原源码位置turn-solver.ts:2966以原报告/证据为准；不改旧日志/范围或将同局样本当独立校准。回执paper/materials/20261015-1612-ops/postmortem-readback.json。
+
+- 2026-10-15 18:13:28 CST [原silent-0311非阻塞问题补复现] 仅转录原174301/2LZHP9BYFTHE学习者回报：SILENT A10 F38三台本体合278，旧首上限预算252、少26，定位rollout.ts:1721；原实际9de6d107与只读livefe646265该叶SHA相同，不把dirty整树冒已恢复。原bugs.new=false、正常结束F39，沿既有0311队列/共享租约与本局已登记silent-proposal-d2f24919ee64b90b继续，不另派或新增固定倍率，不归因整局败因或承诺转胜。资源后继提案silent-proposal-a30eeb768880d4aa沿原学习者链；原报告、固定帧及完整未知边界见paper/materials/20261015-1802-ops/。

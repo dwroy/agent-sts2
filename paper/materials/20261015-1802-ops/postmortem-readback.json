@@ -1,0 +1,189 @@
+{
+  "batch": "20261015-174301",
+  "run": "2LZHP9BYFTHE",
+  "original_report": {
+    "task": "postmortem",
+    "appended": [
+      "2LZHP9BYFTHE"
+    ],
+    "skipped": [],
+    "bugs": [
+      {
+        "run": "2LZHP9BYFTHE",
+        "where": "agent/src/reflex/rollout.ts:1721",
+        "what": "巨斧库存恢复沿用旧上限；本局三台278血，旧预算252，少26，silent-0311／fix-queue-v4:918已有。",
+        "new": false
+      }
+    ],
+    "ledger": {
+      "added": [],
+      "updated": [
+        "silent-0311",
+        "silent-0019",
+        "silent-0276",
+        "silent-0312",
+        "silent-0005",
+        "silent-0027",
+        "silent-0023",
+        "silent-0010",
+        "silent-0092"
+      ],
+      "repeats": [
+        "silent-0311"
+      ],
+      "check": 0
+    },
+    "code_proposals": [
+      "silent-proposal-d2f24919ee64b90b",
+      "silent-proposal-a30eeb768880d4aa"
+    ],
+    "implementation_domains": [
+      "combat",
+      "potion",
+      "sl",
+      "terminal"
+    ],
+    "report": "/home/dw/Projects/agent-sts2/learner/runs/20261015-174302-31081652-4a3d-4fbd-9e50-959dfd8e812f-postmortem/report.md"
+  },
+  "native": {
+    "batch": "20261015-174301",
+    "thread": "01a13ef1-9d3c-7f70-8641-be9f8327c5db",
+    "cwd": "/home/dw/Projects/agent-sts2",
+    "event_log": "learner/runs/20261015-174302-31081652-4a3d-4fbd-9e50-959dfd8e812f-postmortem.jsonl",
+    "registered_launch_batch": null,
+    "original_lease": null,
+    "native_context": {
+      "source": "ops/codex-ops/accounts/codex1/learner/sessions/2026/10/15/rollout-2026-10-15T17-43-04-01a13ef1-9d3c-7f70-8641-be9f8327c5db.jsonl",
+      "offset": 49154,
+      "bytes": 4620,
+      "sha256": "179e5d8f73f928d2b2c634ebb711584013ce06af6680038eeaf0e23215f8012a",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "sandbox": {
+        "type": "workspace-write",
+        "writable_roots": [
+          "/home/dw/Projects/agent-sts2/.git"
+        ],
+        "network_access": false,
+        "exclude_tmpdir_env_var": false,
+        "exclude_slash_tmp": false
+      },
+      "approval_policy": "never"
+    },
+    "native_user_input": {
+      "offset": 53774,
+      "bytes": 15345,
+      "sha256": "9c7b44527c04d11692d38ce93ccd5a695160a19bafe57eedd2b67425dcf617ef",
+      "input_sha256": "5db41f2be1ce9bdb7c4cf4ee37b7b649d9c59c478527dcfa6daaade6ec1d084a"
+    },
+    "original_header_events": [
+      {
+        "offset": 0,
+        "bytes": 16866,
+        "sha256": "ccc14e7628ea6a0417b2b5e2d11ee6fdbd9944b91f6676f1b6f881749837b31e",
+        "type": "learner_launch",
+        "attempt": null,
+        "code": null
+      },
+      {
+        "offset": 16866,
+        "bytes": 285,
+        "sha256": "0ede448e15cf64ccba74e5481f63624de69cfa079e519f03c6f3475e34c8475e",
+        "type": "learner_startup_attempt",
+        "attempt": 1,
+        "code": null
+      },
+      {
+        "offset": 20158,
+        "bytes": 77,
+        "sha256": "88298573535205ace73e89557786af23d71cefac1fe37eb365e1b9846409ecd2",
+        "type": "thread.started",
+        "attempt": null,
+        "code": null
+      }
+    ],
+    "startup_attempts": 1,
+    "failed_startups_preserved": 0,
+    "no_model_or_manual_restart": true
+  },
+  "original_rows_byte_JSON_identity_verified": 1606,
+  "stream_counts": {
+    "runs": 1,
+    "states": 810,
+    "decisions": 738,
+    "run-plans": 11,
+    "sl-attempts": 6,
+    "brain": 39,
+    "run-config": 1
+  },
+  "original_material_checks": 3314,
+  "material_checks_not_reexecuted": true,
+  "lesson_bytes": 22674,
+  "original_prefix_preserved": true,
+  "ledger_rows": 18,
+  "evidence_updates": 9,
+  "proposal_links": 9,
+  "repeat_bug": "silent-0311; existing nonblocking queue, no new dispatch",
+  "source_reference": {
+    "live": "fe6462651b593b9831581c088deface9957a404f",
+    "run_commit": "9de6d107c5dad20095a37e33695f8c18a963d081",
+    "leaves": [
+      {
+        "path": "agent/src/reflex/rollout.ts",
+        "sha256": "7a41b69fbdd3d2b37eec3d390405772983952d33f870d5d401a983835435397d",
+        "run_source_sha256": "7a41b69fbdd3d2b37eec3d390405772983952d33f870d5d401a983835435397d",
+        "same": true
+      },
+      {
+        "path": "agent/src/reflex/combat-plan.ts",
+        "sha256": "f795dfd8b059eb2fc7c0aebf949a87336fcc9c8ff8fe7d8ddb56ba93553db58e",
+        "run_source_sha256": "f795dfd8b059eb2fc7c0aebf949a87336fcc9c8ff8fe7d8ddb56ba93553db58e",
+        "same": true
+      }
+    ]
+  },
+  "actual_accepted_brain": 39,
+  "source_run_config": {
+    "code": {
+      "commit": "9de6d107c5dad20095a37e33695f8c18a963d081",
+      "code": "9de6d10+dirty",
+      "dirty": true,
+      "dirty_files": [
+        "knowledge/characters/silent/boss-damage.json",
+        "knowledge/characters/silent/construction-opportunities.json",
+        "knowledge/characters/silent/monster-records.json",
+        "knowledge/characters/silent/outcome-stats.json",
+        "knowledge/characters/silent/room-costs.json",
+        "knowledge/common/card-upgrades.json",
+        "knowledge/common/monster-db.json",
+        "knowledge/common/move-model.json",
+        "notes/fight-value-backtest-silent.md",
+        "notes/monster-db-check.md"
+      ],
+      "branch": "live",
+      "worktree": "live"
+    },
+    "s_build_rank": "shadow",
+    "sim_adaptive": "shadow",
+    "model": "gpt-6.1-sol",
+    "effort": "xhigh",
+    "service_tier": "default"
+  },
+  "no_new_bug": true,
+  "original_proposals": [
+    {
+      "id": "silent-proposal-d2f24919ee64b90b",
+      "state": "pending",
+      "proposal": "/home/dw/Projects/agent-sts2/learner/runs/20261015-174302-31081652-4a3d-4fbd-9e50-959dfd8e812f-postmortem/proposal-stock.md",
+      "proposal_sha256": "3adfd23b8c24938c7f72a7848b2263b4fbd401db204b4698a445b94670f84416"
+    },
+    {
+      "id": "silent-proposal-a30eeb768880d4aa",
+      "state": "pending",
+      "proposal": "/home/dw/Projects/agent-sts2/learner/runs/20261015-174302-31081652-4a3d-4fbd-9e50-959dfd8e812f-postmortem/proposal-resources.md",
+      "proposal_sha256": "931ff4fb2e1a99804d7f7b74871d4aae024354f0ab0d44d33291444dc8bcec25"
+    }
+  ],
+  "limits": "Gross damage/overkill, two first-try exits, full-candidate execution, alternative controlled outcomes, dirty knowledge, calibrated boss clock, pure combat time, Jev cache and paid invoices remain unrecorded. Old shadow run cannot demonstrate R359/R360 on benefits.",
+  "original_audit_error_preserved": "First final audit used status for a proposal queue state field; original CLI writes already succeeded, no duplicate registration."
+}
