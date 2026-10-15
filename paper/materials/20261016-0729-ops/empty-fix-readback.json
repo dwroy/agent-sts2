@@ -1,0 +1,215 @@
+{
+  "at": "2026-10-16 07:35:41 CST",
+  "batch": "20261016-071301-fix-batch",
+  "canonical_state": "failed",
+  "rc": 0,
+  "merged": null,
+  "original_report": {
+    "task": "fix-batch",
+    "base": "aefce170750769d997bfb088785f0aad88b1eb54",
+    "fixes": [],
+    "skipped": [
+      {
+        "item": "silent-0271：毒必胜提前返回遗漏保血候选",
+        "reason": "策略类，沿原独立提案"
+      },
+      {
+        "item": "silent-0279：SL抽序升级改标",
+        "reason": "策略类，沿原独立提案"
+      },
+      {
+        "item": "silent-0308：沙坑截止结束题面",
+        "reason": "策略类，沿原独立提案"
+      },
+      {
+        "item": "silent-0311：库存恢复血量预算",
+        "reason": "策略类，沿原独立提案"
+      },
+      {
+        "item": "silent-0320：同线新建UNMOVABLE",
+        "reason": "策略类，沿原独立提案"
+      },
+      {
+        "item": "silent-0322：升级神化同线升级",
+        "reason": "策略类，沿原独立提案"
+      },
+      {
+        "item": "silent-0329：饮药临时力量接线",
+        "reason": "策略类，沿原独立提案"
+      },
+      {
+        "item": "arch-funnel-guard",
+        "reason": "太大，独立架构任务"
+      },
+      {
+        "item": "arch-learning-priority",
+        "reason": "太大，独立架构任务"
+      },
+      {
+        "item": "arch-unified-resource-value",
+        "reason": "太大，独立架构任务"
+      },
+      {
+        "item": "inv-f33-regression",
+        "reason": "独立归因调查"
+      },
+      {
+        "item": "silent-0332：成功首战接续nonpositive-hp",
+        "reason": "证据不足，完整resources/steps与机制根因仍未知"
+      },
+      {
+        "item": "silent-0334：升级隐秘匕首模型",
+        "reason": "策略类，沿原独立提案"
+      },
+      {
+        "item": "silent-0339：尾巴误核销",
+        "reason": "策略类，沿原独立提案"
+      },
+      {
+        "item": "silent-0344：坚韧之环延迟格挡",
+        "reason": "策略类，沿原独立提案"
+      },
+      {
+        "item": "silent-0347：组装师攻击召唤",
+        "reason": "策略类，沿原独立提案"
+      },
+      {
+        "item": "silent-0349：已有虚弱后的减力",
+        "reason": "策略类，沿原独立提案"
+      },
+      {
+        "item": "core-build-notify-222802-rc2：历史发送事实",
+        "reason": "证据不足，后续诊断已修，历史发送事实未知"
+      },
+      {
+        "item": "silent-0362：背向攻击减力倍率",
+        "reason": "策略类，沿原独立提案"
+      },
+      {
+        "item": "silent-0365：未建模药水目标可达性",
+        "reason": "策略类，沿原独立提案"
+      },
+      {
+        "item": "框架外层时限与分段续验收尾",
+        "reason": "太大，精确续验入口已实现，宿主收尾继续"
+      },
+      {
+        "item": "调度公平性核查",
+        "reason": "证据不足，未证明永久饥饿"
+      },
+      {
+        "item": "silent-0481：技能药水生命周期措辞",
+        "reason": "题面知识，沿silent-proposal-686d4e759478eebb"
+      },
+      {
+        "item": "silent-0487：MAD_SCIENCE三段攻击模型",
+        "reason": "策略类，沿silent-proposal-0a0b31e284e6793e"
+      },
+      {
+        "item": "codex大脑缓存命中偏低",
+        "reason": "证据不足，缺当前同题受控请求对比；本任务不调用真实LLM或网络"
+      },
+      {
+        "item": "sandbox-glob-startup-race：上游目录生命周期及其他租约拒绝原因",
+        "reason": "注册保存屏障已修，上游目录删除者及完整生命周期未知"
+      },
+      {
+        "item": "named-card-facts-transport：事件入口之外范围",
+        "reason": "独立功能，已实现事件入口不关闭更宽范围"
+      },
+      {
+        "item": "boss模拟样本性能及v5-dpr-health宽范围",
+        "reason": "独立专项，保留原冻结输入与验收链"
+      },
+      {
+        "item": "rest-timeout-accepted-route-not-committed / silent-0446",
+        "reason": "策略与结构，沿silent-proposal-2d3aa8dfb27dbe3f"
+      },
+      {
+        "item": "silent-0469：纸鹤其他未知组合及整战收益",
+        "reason": "策略类，已有聚合体窄实现不关闭更宽范围"
+      }
+    ],
+    "merged": null,
+    "tests": {
+      "tsc": 0,
+      "vitest": 0,
+      "cases": 5,
+      "files": 5,
+      "scope": "targeted",
+      "full_sandbox": 130
+    },
+    "code_proposals": [],
+    "implementation_domains": [],
+    "report": "/home/dw/Projects/agent-sts2/learner/runs/20261016-071305-e225ab76-3c86-43d0-b1ce-41f73a44fd6b-fix-batch/report.md"
+  },
+  "native": {
+    "batch": "20261016-071301-fix-batch",
+    "thread": "01a141d7-4417-7dd0-8952-bf74f7002930",
+    "cwd": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261016-071301",
+    "event_log": "learner/runs/20261016-071305-e225ab76-3c86-43d0-b1ce-41f73a44fd6b-fix-batch.jsonl",
+    "registered_launch_batch": "20261016-071301-fix-batch",
+    "original_lease": "582f4568edefb38340061ddbafeb805c4318e0c505f3f85fd21b2424c519ae66",
+    "native_context": {
+      "source": "ops/codex-ops/accounts/codex1/learner/sessions/2026/10/16/rollout-2026-10-16T07-13-09-01a141d7-4417-7dd0-8952-bf74f7002930.jsonl",
+      "offset": 50164,
+      "bytes": 5118,
+      "sha256": "716e58cd90ab9a6e2c4a0959bf95254740ac4447326146d35aa953b79ef542ee",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "sandbox": {
+        "type": "workspace-write",
+        "writable_roots": [
+          "/home/dw/Projects/agent-sts2",
+          "/home/dw/Projects/agent-sts2/.git",
+          "/home/dw/Projects/agent-sts2/.git/worktrees/codex-fix-silent-20261016-071301"
+        ],
+        "network_access": false,
+        "exclude_tmpdir_env_var": false,
+        "exclude_slash_tmp": false
+      },
+      "approval_policy": "never"
+    },
+    "native_user_input": {
+      "offset": 55282,
+      "bytes": 13080,
+      "sha256": "aaf957c9adbbf7952931cd49dda8a7faa58b3f323fce8fb4cc63f6522843c9b3",
+      "input_sha256": "14e6e98f86bdcbaa3c481ff08722d3e5736361f517d95f92a93e2d86511c7e17"
+    },
+    "original_header_events": [
+      {
+        "offset": 0,
+        "bytes": 14892,
+        "sha256": "1780af732a4f51b43db1dd7b6b4133359cfc605a558f4933486f262a76040d39",
+        "type": "learner_launch",
+        "attempt": null,
+        "code": null
+      },
+      {
+        "offset": 14892,
+        "bytes": 369,
+        "sha256": "ceb1bd91575ce2f8604c46867df8782bd7499654bf3c8eaf8f7ee1f08dafe491",
+        "type": "learner_startup_attempt",
+        "attempt": 1,
+        "code": null
+      },
+      {
+        "offset": 18268,
+        "bytes": 77,
+        "sha256": "89cfc4b06f4681e2e0cdea7085253ab10dbf0ecdd6b2260d78d3c7e2400b4536",
+        "type": "thread.started",
+        "attempt": null,
+        "code": null
+      }
+    ],
+    "startup_attempts": 1,
+    "failed_startups_preserved": 0,
+    "no_model_or_manual_restart": true
+  },
+  "worktree_head": "aefce170750769d997bfb088785f0aad88b1eb54",
+  "tracked_changes": false,
+  "tests_scope": "five targeted tests only; duplicate sandbox deliberately interrupted130, never a full pass",
+  "new_source_or_merge": false,
+  "new_host_request": false,
+  "new_release": false
+}
