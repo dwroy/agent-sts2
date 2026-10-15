@@ -1,0 +1,233 @@
+{
+  "batch": "20261016-064301-s2-strategy-proposal",
+  "source": "7c43bbbb98f58ff3bfe9a68a04d8539ebb187d6a",
+  "source_parent": "84524bce1d7b57f42403b80e42082c62fc8cd158",
+  "source_checks": {
+    "sandbox_files": 439,
+    "sandbox_cases": 4115,
+    "focused_cases": 5,
+    "without_source_exit": 1,
+    "restored_exit": 0,
+    "gitleaks_exit": 0,
+    "evidence_checks": 26,
+    "evidence_rows": 12702,
+    "live_checks": null
+  },
+  "native": {
+    "batch": "20261016-064301-s2-strategy-proposal",
+    "thread": "01a141bb-c91f-7c60-a3f1-5dc3ed68e40f",
+    "cwd": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-064301-s2",
+    "event_log": "learner/runs/20261016-064305-3234cef3-e3a0-42c5-94fa-0d7e59388953-strategy-proposal.jsonl",
+    "registered_launch_batch": "20261016-064301-s2-strategy-proposal",
+    "original_lease": "932d772272e1a05f9a1ebeba59e09bbc452319d5b5cb743f551a0cf0a2417914",
+    "native_context": {
+      "source": "ops/codex-ops/accounts/codex1/learner/sessions/2026/10/16/rollout-2026-10-16T06-43-08-01a141bb-c91f-7c60-a3f1-5dc3ed68e40f.jsonl",
+      "offset": 50287,
+      "bytes": 5166,
+      "sha256": "328ff18bbd5691068b5181e1b2052d915e5d995e04660a9134f9129e7bb72e1a",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "sandbox": {
+        "type": "workspace-write",
+        "writable_roots": [
+          "/home/dw/Projects/agent-sts2",
+          "/home/dw/Projects/agent-sts2/.git",
+          "/home/dw/Projects/agent-sts2/.git/worktrees/codex-strategy-silent-20261016-064301-s2"
+        ],
+        "network_access": false,
+        "exclude_tmpdir_env_var": false,
+        "exclude_slash_tmp": false
+      },
+      "approval_policy": "never"
+    },
+    "native_user_input": {
+      "offset": 55453,
+      "bytes": 21570,
+      "sha256": "7b698bc4ca7143669875ce0cb6d81bec66683145747c4730b88c76c64881caed",
+      "input_sha256": "5603e8b5fbb70b33390f91edce84ae805da578ddd8ec51025708df91e863faeb"
+    },
+    "original_header_events": [
+      {
+        "offset": 0,
+        "bytes": 23653,
+        "sha256": "2a5793446d2b464243d24483cb836e3c9570b36af5ac0d0a12413c494124384a",
+        "type": "learner_launch",
+        "attempt": null,
+        "code": null
+      },
+      {
+        "offset": 23653,
+        "bytes": 380,
+        "sha256": "a9be92432f3aa734594549d02fd5336988f3adb8221193ab20830f204de3b521",
+        "type": "learner_startup_attempt",
+        "attempt": 1,
+        "code": null
+      },
+      {
+        "offset": 27046,
+        "bytes": 77,
+        "sha256": "5671d35d5e7c91e5ee214172bb6f0b5dcf50588f095d63db30271389db856a74",
+        "type": "thread.started",
+        "attempt": null,
+        "code": null
+      }
+    ],
+    "startup_attempts": 1,
+    "failed_startups_preserved": 0,
+    "no_model_or_manual_restart": true
+  },
+  "original_failed_state_preserved": true,
+  "original_merge_result": {
+    "source": "7c43bbbb98f58ff3bfe9a68a04d8539ebb187d6a",
+    "lock_acquired": true,
+    "live_mutated": false,
+    "merged": null,
+    "live_before": "92c3d22f191f0a79a4f0c56d29b189bd7185fca0",
+    "preflight_exit": 1,
+    "conflicts": [
+      "notes/fix-queue-v4.md",
+      "notes/for-roy.md",
+      "notes/lessons.md",
+      "notes/ops-handoff.md",
+      "ops/inbox-dev.md",
+      "paper/data/README.md",
+      "paper/data/commits.csv",
+      "paper/data/cost-curve-silent.csv",
+      "paper/data/cost-silent.csv",
+      "paper/data/cost-sources.json",
+      "paper/data/cost-unattributed.csv",
+      "paper/data/decisions_by_label.csv",
+      "paper/data/learning-curve-silent.csv",
+      "paper/data/runs.csv",
+      "paper/data/summary.json",
+      "paper/data/verification.json",
+      "paper/materials/decision-log.md",
+      "paper/materials/learning/ledger.jsonl",
+      "paper/materials/silent/cost.md"
+    ],
+    "source_is_live_ancestor": false,
+    "live_after": "92c3d22f191f0a79a4f0c56d29b189bd7185fca0",
+    "reason": "三方合并预检存在记录冲突，未进入任何live文件变更，交ops兜底。"
+  },
+  "original_report": {
+    "task": "strategy-proposal",
+    "character": "silent",
+    "batch": "20261016-064301-s2-strategy-proposal",
+    "base": "84524bce1d7b57f42403b80e42082c62fc8cd158",
+    "runs": [
+      "ZTRGYYMLR8SC",
+      "1LMBFGSMCWKU",
+      "9YT51CK8RC39",
+      "25226ZFLNR1J",
+      "TCFAHJ9K19VY",
+      "ULP4TN1GNHMK",
+      "61E2QS63Y9WU",
+      "K2JAGKVJAWZJ",
+      "79UCJ0K6R9C1",
+      "10GPK5XGHCK3"
+    ],
+    "fixes": [
+      {
+        "id": "silent-route-projection-provenance",
+        "proposal_id": "silent-proposal-9edfef7a6b2873c2",
+        "commit": "7c43bbbb98f58ff3bfe9a68a04d8539ebb187d6a",
+        "source_parent": "84524bce1d7b57f42403b80e42082c62fc8cd158",
+        "ledger": [
+          "silent-0019",
+          "silent-0020",
+          "silent-0021"
+        ],
+        "summary": "Silent A10路线投影来源字段局部实现；已自测，尚未合入live"
+      }
+    ],
+    "skipped": [],
+    "merged": null,
+    "tests": {
+      "tsc": 0,
+      "vitest": 0,
+      "cases": 0
+    },
+    "code_proposals": [
+      "silent-proposal-0b8ef30de463f317",
+      "silent-proposal-5367449b857450a7",
+      "silent-proposal-9b8890c2649a2734",
+      "silent-proposal-645ff7b72e0b9991",
+      "silent-proposal-68ef2857229d1287",
+      "silent-proposal-9edfef7a6b2873c2",
+      "silent-proposal-ff1d168227e369e0",
+      "silent-proposal-c64bdd50a949d16f",
+      "silent-proposal-243ad8dd038a4ff6",
+      "silent-proposal-9c3ff04261867dd2"
+    ],
+    "implementation_domains": [
+      "structure"
+    ],
+    "proposal_results": [
+      {
+        "id": "silent-proposal-0b8ef30de463f317",
+        "state": "waiting",
+        "reason": "已有药水缺表标记与覆甲分源；缺晚喝、留药及跨战持有价值的完整可比结果，SL恢复不算新瓶。"
+      },
+      {
+        "id": "silent-proposal-5367449b857450a7",
+        "state": "waiting",
+        "reason": "已有局部机制覆盖；刀扇多目标、铜钹多弃和随机目标的联合修饰缺少可隔离校准。"
+      },
+      {
+        "id": "silent-proposal-9b8890c2649a2734",
+        "state": "waiting",
+        "reason": "同局六试共享资源；缺原候选、替路线和晚喝药的完整受控出口，不能据局部省血调整护栏或SL。"
+      },
+      {
+        "id": "silent-proposal-645ff7b72e0b9991",
+        "state": "waiting",
+        "reason": "零毒升级蜃景窄实现已存在；缺尾端胜率校准和替线整战结果，0/8实赢不能当8死。"
+      },
+      {
+        "id": "silent-proposal-68ef2857229d1287",
+        "state": "waiting",
+        "reason": "两局只核实施毒当步加6且无即时HP伤害；缺联合修饰、多同型目标及完整后继校准。"
+      },
+      {
+        "id": "silent-proposal-9edfef7a6b2873c2",
+        "state": "waiting",
+        "reason": "路线投影来源字段已局部实现并自测；源码7c43bbbb98f58ff3bfe9a68a04d8539ebb187d6a因19个记录冲突未合live。历史缺decision_id、药水分类与联合消费者仍未完整。"
+      },
+      {
+        "id": "silent-proposal-ff1d168227e369e0",
+        "state": "waiting",
+        "reason": "零毒子项已有实现；升级正毒、爆发、暗影和逐击减损联合后继未隔离，三骑士T7额外伤源仍未知。"
+      },
+      {
+        "id": "silent-proposal-c64bdd50a949d16f",
+        "state": "waiting",
+        "reason": "原16挡数字已由纠正版取代，本批核实即时挡0→0、覆甲0→7；完整资源归属和饮药时机反事实仍缺。"
+      },
+      {
+        "id": "silent-proposal-243ad8dd038a4ff6",
+        "state": "waiting",
+        "reason": "同首29抽不覆盖洗牌后抽序，多动作差异未控；缺替目标、替路线和休息后继的完整对照。"
+      },
+      {
+        "id": "silent-proposal-9c3ff04261867dd2",
+        "state": "waiting",
+        "reason": "覆甲勘误已重新核实；缺能力实建、取得、弃药、饮用及SL恢复到终局的联合消费者和时点对照。"
+      }
+    ],
+    "version": null,
+    "merge_blocker": {
+      "live": "92c3d22f191f0a79a4f0c56d29b189bd7185fca0",
+      "conflict_count": 19,
+      "lock_acquired": true,
+      "live_mutated": false
+    },
+    "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-064301-s2/learner/runs/20261016-064305-3234cef3-e3a0-42c5-94fa-0d7e59388953-strategy-proposal/report.md"
+  },
+  "source_paths": [
+    "agent/src/hand/screens/route-plan.ts",
+    "agent/tests/silent-route-projection-evidence.json",
+    "agent/tests/silent-route-projection.test.ts"
+  ],
+  "original_cases_zero_placeholder_preserved": true,
+  "classification": "Silent A10 route projection provenance logging only. Existing route inputs, model text and decisions unchanged; ten wider proposals remain waiting. No game behavior or release increment."
+}
