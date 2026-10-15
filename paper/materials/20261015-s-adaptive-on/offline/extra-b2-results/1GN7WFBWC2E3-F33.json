@@ -1,0 +1,247 @@
+{
+  "id": "1GN7WFBWC2E3-F33",
+  "run_id": "1GN7WFBWC2E3",
+  "floor": 33,
+  "source": {
+    "path": "/home/dw/Projects/agent-sts2/paper/materials/20261015-s-adaptive-on/offline/extra-b2/1GN7WFBWC2E3-F33.json.gz",
+    "sha256": "ff339406bb4a24849ce1e5e9b5d3ce844018ed8f4cd680b5ee2857422ac799d4",
+    "raw_sha256": "a617cd5101baa0d205edc89fcb429c275f1e01a931ed1ac21263e971b2057834",
+    "original": {
+      "path": "logs/states.jsonl",
+      "offset": 12825893399,
+      "bytes": 42017
+    }
+  },
+  "boss": "KAISER_CRAB",
+  "ascension": 10,
+  "low_trust": "校准 Brier 0.173，高于整体 0.112 的 1.25 倍 0.140; 模拟每回合被打穿的血是实际的 1.31 倍",
+  "samples": 600,
+  "orders": 2,
+  "lines": 10,
+  "ms": 1088421.9566969997,
+  "adaptive": {
+    "schema": "sim-adaptive-shadow-v1",
+    "mode": "shadow",
+    "lane": "b2",
+    "rule": {
+      "version": "adaptive-v1",
+      "b3First": 300,
+      "b2First": 200,
+      "batch": 100,
+      "zElim": 3,
+      "zTie": 2,
+      "first": 200,
+      "requested": 600
+    },
+    "candidates": [
+      {
+        "key": "line:0",
+        "samples": 300,
+        "stop": "eliminated",
+        "rounds": 2,
+        "baseline": false
+      },
+      {
+        "key": "line:1",
+        "samples": 300,
+        "stop": "eliminated",
+        "rounds": 2,
+        "baseline": false
+      },
+      {
+        "key": "line:2",
+        "samples": 600,
+        "stop": "max",
+        "rounds": 5,
+        "baseline": false
+      },
+      {
+        "key": "line:3",
+        "samples": 300,
+        "stop": "eliminated",
+        "rounds": 2,
+        "baseline": false
+      },
+      {
+        "key": "line:4",
+        "samples": 200,
+        "stop": "eliminated",
+        "rounds": 1,
+        "baseline": false
+      },
+      {
+        "key": "line:5",
+        "samples": 300,
+        "stop": "eliminated",
+        "rounds": 2,
+        "baseline": false
+      },
+      {
+        "key": "line:6",
+        "samples": 200,
+        "stop": "eliminated",
+        "rounds": 1,
+        "baseline": false
+      },
+      {
+        "key": "line:7",
+        "samples": 200,
+        "stop": "eliminated",
+        "rounds": 1,
+        "baseline": false
+      },
+      {
+        "key": "line:8",
+        "samples": 200,
+        "stop": "eliminated",
+        "rounds": 1,
+        "baseline": false
+      },
+      {
+        "key": "line:9",
+        "samples": 600,
+        "stop": "max",
+        "rounds": 5,
+        "baseline": false
+      }
+    ],
+    "full": {
+      "leader": "line:2",
+      "group": [
+        "line:2"
+      ]
+    },
+    "shadow": {
+      "leader": "line:2",
+      "group": [
+        "line:2"
+      ]
+    },
+    "evaluable": true,
+    "agreement": true,
+    "work": {
+      "full": 18000,
+      "shadow": 9600,
+      "savedFraction": 0.4666666666666667,
+      "unit": "fight-sample-outcomes"
+    },
+    "rounds": [
+      {
+        "n": 200,
+        "leader": "line:2",
+        "eliminated": [
+          {
+            "key": "line:4",
+            "metric": {
+              "key": "win",
+              "difference": -0.065,
+              "se": 0.02135780370015779
+            }
+          },
+          {
+            "key": "line:6",
+            "metric": {
+              "key": "win",
+              "difference": -0.61,
+              "se": 0.03457567623250013
+            }
+          },
+          {
+            "key": "line:7",
+            "metric": {
+              "key": "win",
+              "difference": -0.105,
+              "se": 0.02495976662047832
+            }
+          },
+          {
+            "key": "line:8",
+            "metric": {
+              "key": "win",
+              "difference": -0.07,
+              "se": 0.02186068268001205
+            }
+          }
+        ]
+      },
+      {
+        "n": 300,
+        "leader": "line:2",
+        "eliminated": [
+          {
+            "key": "line:0",
+            "metric": {
+              "key": "win",
+              "difference": -0.03666666666666667,
+              "se": 0.011850361450944199
+            }
+          },
+          {
+            "key": "line:1",
+            "metric": {
+              "key": "win",
+              "difference": -0.05333333333333334,
+              "se": 0.01606378959978646
+            }
+          },
+          {
+            "key": "line:3",
+            "metric": {
+              "key": "win",
+              "difference": -0.05333333333333334,
+              "se": 0.01606378959978645
+            }
+          },
+          {
+            "key": "line:5",
+            "metric": {
+              "key": "win",
+              "difference": -0.056666666666666664,
+              "se": 0.017037131285452787
+            }
+          }
+        ]
+      },
+      {
+        "n": 400,
+        "leader": "line:2",
+        "eliminated": []
+      },
+      {
+        "n": 500,
+        "leader": "line:2",
+        "eliminated": []
+      },
+      {
+        "n": 600,
+        "leader": "line:2",
+        "eliminated": []
+      }
+    ],
+    "limits": "Prefix replay only; no samples saved in shadow. S needs prefix sign/attribution and model trust gates. B2 wonLoss median retains its ordering but has no invented paired SE, so cannot eliminate. Whole-question admission requires independent offline and two-run natural coverage.",
+    "status": "produced",
+    "ms": 29.983013999648392,
+    "production_comparison": {
+      "metric": "deployed-ranking-first-group",
+      "full": [
+        "line:2"
+      ],
+      "partial": [
+        "line:2"
+      ],
+      "agreement": true
+    },
+    "input_key": "b2:739d01723e12e384ba7d74483be90edcf3d43e01c74c5446efa58fb580a3cdbd"
+  },
+  "comparison": {
+    "metric": "deployed-ranking-first-group",
+    "full": [
+      "line:2"
+    ],
+    "partial": [
+      "line:2"
+    ],
+    "agreement": true
+  },
+  "scope": "Frozen historical board under current model; full run and retained-prefix rank comparison. No game/API/fit or original learner batch rerun."
+}

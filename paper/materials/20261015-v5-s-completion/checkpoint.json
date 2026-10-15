@@ -1,9 +1,9 @@
 {
-  "at": "2026-10-15T11:15:40.333018+08:00",
+  "at": "2026-10-15T11:35:10.793582+08:00",
   "goal": "完成v5-s计划文档除P4/P5外所有功能",
   "original_parent": "roy-20261014-s-decision",
   "goal_status": "active",
-  "goal_turn_classification": "progress: exact C2 host accepted, eval actually published, P2-on source tested/committed in isolation; first new offline case completed",
+  "goal_turn_classification": "previous turn progress: P1 actual consumer + eval exact host/CLI + P2-on isolated source +3extra offline cases; current health and explicit-plan evidence verified, original jobs still live",
   "owner": "01a139d6-cfec-78e1-8739-e21ac426a354",
   "phases": {
     "P1": {
@@ -31,13 +31,14 @@
       "replay": "600x3 SOUL_FYSH current-model historical input,0 sign mismatches,old best2==new best2; full-lines.json.gz preserved",
       "tool_typecheck": 0,
       "code": "s-combat-rank.ts; rankLines opt-in policy; role config and run-config; live whole order, bestDry, text and log; health; docs section15",
-      "main_live": "published; next natural on consumer pending",
+      "main_live": "V5-R353 published; exact combined host passed; WJ F17 native ranking/question/answer/returned first-action verified",
       "source": "15a39dfbf1d132e6371a70141fa507a4ba53b88d",
       "main": "3a7a82d93a1891609b0dce380619005d3e6fabf1",
       "release": "V5-R353",
       "live": "d2dda4b75d6eacf5c5fcdf6f5f1da8a28c1c6ede",
       "full_result": "rc0;421files3982+paths11; root composition31cases0",
-      "host_full": "final23501d185 tsc0/472files4798pass2skip"
+      "host_full": "final23501d185 tsc0/472files4798pass2skip",
+      "natural_consumer": "paper/materials/20261015-s-combat-rank/watcher-natural-consumer.json"
     },
     "P2": {
       "worktree": "s-build-rank-20261015",
@@ -53,7 +54,7 @@
       "main": "5e6e7c6d896fe44a506b2464aef45bc9965108a1",
       "release": null,
       "live": "0067156dd470452e5c53267a0dbe45d0c83b597b",
-      "full_result": "rc0;423files3988+paths11; final20cases0; root composition46+health17 rc0; old full began before final minor refactor; exact host combined pending",
+      "full_result": "Source423files3988+paths11 rc0 before final minor refactor, final20cases0/root46+health17 separately. Exact deployed c9ae host475files4818pass2skip accepted. Preparedon d320 exact427files4013+paths11 rc0 separately.",
       "host_full": {
         "source": "paper/materials/20261015-s-build-rank/ops-final-host-acceptance.json",
         "sha256": "2bd37380c58167e86fec489241a0baa56d29fd3f71312c97bb059a30df0a74bf",
@@ -99,11 +100,11 @@
       "full_status": "rc0 427files4013+paths11; final two guards separatelytsc0/53passed",
       "offline": {
         "initial": "2/2 first-group agreement;B3work4000->1200;B2 1800->1800;p50.35/p90.63",
-        "additional": "1 of6 extra cases complete:1GN/F17 THE_KIN18000 outcomes, full/partialfirstline9 equal, saved0; remaining5 original process running",
+        "additional": "3 of6 extra cases completed;THE_KIN18000->18000,KAISER18000->9600,AEONGLASS5400->5400; all original final groups agree;3 X06 cases still in original process",
         "extra_session": 35084,
-        "guard_change_after_full_start": "B2 shadow catch/B3 fixed-order precondition finaltsc0 and53cases passed; exact deployed host full pending",
-        "coverage_snapshot": "paper/materials/20261015-s-adaptive-on/offline-coverage-1100.json",
-        "admission": "3/8 observed, all3agree; full coverage false so threshold not met"
+        "guard_change_after_full_start": "Source full began before final two guards; finaltsc0/53fixed separate. Actual final6ef deployed host478files4829pass2skip tsc0 now accepted.",
+        "coverage_snapshot": "paper/materials/20261015-s-adaptive-on/offline-coverage-1119.json",
+        "admission": "5/8 evaluated,5/5 observed agreement;complete coveragefalse, offline threshold still pending"
       },
       "source": "600915d133011c0eb1d063f61df9691bba4aba67",
       "main": "8b5b8f8982d160c52d3f3733cf92f0f8a9f0a0ad",
@@ -325,10 +326,10 @@
       }
     ]
   },
-  "source_changes_are_uncommitted": "eval only; C2/P1/P2/P3 source committed",
+  "source_changes_are_uncommitted": "No source changes uncommitted. P2-on d3208ee21 is committed only in its original worktree, not main/live; all deployed preparation sources already committed.",
   "C1": "V5-R351 hostfull4784+2skip verified; two new native configs show on/retries2; firstcompletedX7 has4 normal attempts0fail. Fixed fault loop remains separate.",
   "P0": "new p0-boss-trust.md and JSON inventory24 rows/current publishedfixed7e1193/F49n23. Original32 Jev report reused; no extra API or old30/54/144 reruns. Wider current-model calibration/real R3 adapter not closed.",
-  "C2_natural": "initial-natural-consumption.json: X7REGM0RUNSA completed;3 shadowcomparisonsmatched. UPAB38G2PA02 started at00:40Z; not yet rechecked end. Need exact question denominator and latest outcomes.",
+  "C2_natural": "Old X7/UPAB R351 records stay excluded from new final-ranking admission. New WJ0LTVSSDY61 native9aef P2/C2shadow started; first3 B3 final comparisons3/3, current run ongoing; complete new shadow runs0.",
   "test_processes_verified_at_0920": {
     "P1": {
       "pid": 273020,
@@ -347,11 +348,12 @@
     }
   },
   "next": [
-    "Poll original full sessions; no restart merely for quiet output. Read actual summaries and only recheck actual failed files.",
-    "Finish code review/gitleaks; commit each approved feature after fixed checks; integrate main preserving foreign dirty records/index; original ops wJ:p5 handles separate P1/P3 release IDs and P2shadow no behaviour number.",
-    "Archive own proof files from worktrees to canonical root. Root P1 audit/index already exist identical; avoid overwriting untracked on Git merge. Source-only commits plus canonical record commit are possible.",
-    "C2 needs P2/P3 integrated final sorting as reference before its on gate. Do not declare range infrastructure as full C2.",
-    "Do not mark goal complete; publication, natural P1/P2/P3 consumers, two P2 shadow runs/on, complete eval, C2 controller/admission/on still open."
+    "Continue original offline session35084/PID579151,birth92257692; three X06 frozen cases remain. Preserve original cases and aggregate all8 results/mismatches and p50/p90 work; no duplicate simulation.",
+    "Read WJ and subsequent original-autoplay natural runs by logdb offsets; prove two completed new P2/C2shadow runs with every applicable question and actual selection. C2 final production group>=95%; partial observations are not admission. P3 first actual Boss consumer is verified; preserve its singleton win-group/no-benefit limit.",
+    "Only after P2 two-run acceptance, refresh original P2 worktree by isolated composition, integrate prepared source d3208ee21 without exposing conflicts in main; originalops serial separate behavior release/host and on consumer.",
+    "After the original C2 offline process ends, prepare and test the on-default/admission switch only in its original isolated worktree. Keep it out of main/live until the full offline>=95% and two completed natural-shadow gates pass; then separate behavior publication and actual complete_adaptive consumer.",
+    "Update deployed evaluator with frozen post-on runtime evidence for final report; do not rerun old30/54/Jev144 or call model APIs for evaluation.",
+    "Keep original parent/R3 learning boundaries and excluded P4/P5 open. Preserve eval retention guard failure; do not rewrite allocation/source identity to force cleanup. No full tests repeated for unchanged passed trees."
   ],
   "P4_P5": "excluded, untouched",
   "no_new_agents_or_learning_parents": true,
@@ -362,16 +364,14 @@
     "status": "passed exact deployed tree"
   },
   "latest_ops_readback": {
-    "at": "2026-10-15T10:49:08.313363+08:00",
-    "actual_read": [
-      "ops-publication-receipt.json",
-      "ops-host-transport-recovery.json",
-      "ops-combined-host-start-readback.json"
-    ],
-    "base": "paper/materials/20261015-s-adaptive-on",
-    "stage": "shadow deployed; unique606935/birth92328053 actually started, result pending",
-    "old_game": "UPAB old52046/R351; no restart/hotload",
-    "six_offline": "579151/birth92257692 still progressing; cpu_ticks148760 at10:47; no restart"
+    "actual_read": "paper/materials/20261015-s-decision-eval/ops-final-host-acceptance.json and ops-first-natural-startup-readback.json",
+    "watcher_proof": "paper/materials/20261015-s-decision-eval/watcher-final-host-and-consumer-readback.json",
+    "checked_live": "9aefbaf476256caff190ef09880ee71cdd6443aa",
+    "checked_tree": "489e3c6f5ba7ef1dcc4049ea22b81cd229731fba",
+    "host": "478files4829pass2skip/tsc0; exact original batch exit0",
+    "later_knowledge_refresh": "d53620042/tree84d54445 only8knowledge leaves; no exactfull claim for refreshed tree",
+    "new_natural": "WJ0LTVSSDY61/PID739370,birth92562120,originalautoplay;P1on/P3on/P2shadow/C2shadow",
+    "P1_consumer": "actual three eligible diagnostic payloads accepted, receipt saved; broader goal still open"
   },
   "notice_dc64": "08:25 actual native notice and both role ACK verified again; no duplicate notice/ACK",
   "P0.2": "32 original cases/64 original gzip/raw SHAs verified;20 selected-case deviations,32 missingS/HPSE/whole-plan remain unknown; full mode retained, P4excluded",
@@ -441,6 +441,6 @@
     },
     "projection": "paper/materials/20261015-v5-s-completion/natural-WJ0LTVSSDY61/first-consumer-projection.json",
     "completed_new_shadow_runs": 0,
-    "stage": "actual P1 accepted payload; P2/C2 partial records; P3 Boss not yet observed"
+    "stage": "P1 three accepted diagnostic payloads and P3 F17 ranking/answer/returned first action verified; P2/C2 full-run coverage still pending"
   }
 }

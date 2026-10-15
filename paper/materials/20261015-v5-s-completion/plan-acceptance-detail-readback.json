@@ -1,0 +1,56 @@
+{
+  "at": "2026-10-15T11:24:20.756377+08:00",
+  "parent": "roy-20261014-s-decision",
+  "scope": "read original evidence against explicit plan acceptance items; no full simulation or API rerun",
+  "P1_historical_two_sample_algebra": {
+    "path": "paper/materials/20261014-s-decision/frozen-b3/gap-check-verified.json",
+    "sha256": "6365cafad076435bdc8a11d610b83d7d6cc75a2e1df81a395a27e472a3fcd079",
+    "sample_count": 2,
+    "independent_arithmetic_matches": true
+  },
+  "P1_fixed_cases": {
+    "path": "agent/tests/s-decision.test.ts",
+    "sha256": "211dfc998aeb54f938987e71c60581ee82bf3899c199ea516a212b3ca1a6373e",
+    "coverage": [
+      "all wins",
+      "all losses",
+      "mixture",
+      "missing attribution",
+      "low trust",
+      "zero outgoing damage",
+      "role switches"
+    ]
+  },
+  "P3_historical_change_comparison": {
+    "path": "paper/materials/20261015-s-combat-rank/historical-b2/comparison.json",
+    "sha256": "adb651102d196f8f0bfec766ae205e38fd9322b541f6c956625ae69b13c18910",
+    "questions": 1,
+    "changed": 0,
+    "paired_new_minus_old": {
+      "difference": {
+        "n": 600,
+        "mean": 0,
+        "sd": 0,
+        "meanSe": 0,
+        "p10": 0,
+        "median": 0,
+        "p90": 0,
+        "min": 0,
+        "max": 0
+      },
+      "unmatchedBase": 0,
+      "unmatchedOption": 0
+    },
+    "limit": "Same frozen historical input under the current model, same samples for both rankings. No API, game action, model fit or historical/counterfactual outcome claim."
+  },
+  "P1_new_natural_health": {
+    "path": "paper/materials/20261015-v5-s-completion/natural-WJ0LTVSSDY61/first-health-readback.json",
+    "expected": 3,
+    "produced": 3,
+    "accepted": 3,
+    "missing": 0,
+    "max_ms": 8.952871000001323
+  },
+  "P3_current_natural": "still needs actual B2 encounter; current window had zero expected B2",
+  "open_goal": "P2/C2 complete natural runs/on and P3 consumer remain open"
+}

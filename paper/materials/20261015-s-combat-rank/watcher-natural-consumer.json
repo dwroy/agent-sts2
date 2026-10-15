@@ -1,0 +1,199 @@
+{
+  "at": "2026-10-15T11:31:39.866871+08:00",
+  "actor": "watcher",
+  "session": "01a139d6-cfec-78e1-8739-e21ac426a354",
+  "parent": "roy-20261014-s-decision",
+  "phase": "P3 natural on ranking consumer",
+  "release": "V5-R353",
+  "run_id": "WJ0LTVSSDY61",
+  "floor": 17,
+  "turn": 1,
+  "boss": "VANTOM",
+  "native_commit": "9aefbaf476256caff190ef09880ee71cdd6443aa",
+  "native_config": {
+    "path": "logs/run-config.jsonl",
+    "offset": 1737123,
+    "bytes": 5334,
+    "sha256": "dce194d6b73281a37aaa0d53e666ab80a45b1af66491f78642e0905f69c37f02"
+  },
+  "decision_id": "09727b6d-a68b-464c-ae1f-289f64676b16",
+  "decision_source": {
+    "path": "logs/decisions.jsonl",
+    "offset": 1550599505,
+    "bytes": 37699,
+    "sha256": "f79db4f9c721d9ac25a6ad1b82db0d5b3e4d9699394e05c5164896ab7dd83748"
+  },
+  "ranking": {
+    "schema": "s-combat-ranking-v1",
+    "used": true,
+    "reason": null,
+    "tie_se": 2,
+    "win_group": [
+      2
+    ],
+    "s_groups": [
+      [
+        2
+      ]
+    ],
+    "audits": [
+      {
+        "line": 2,
+        "audit": {
+          "schema": "s-sign-audit-v1",
+          "samples": 600,
+          "valid": 600,
+          "missing": 0,
+          "mismatches": 0,
+          "mismatch_rate": 0,
+          "passed": true,
+          "exceptions": [],
+          "groups": [
+            {
+              "healing": null,
+              "revived": false,
+              "overkill": false,
+              "samples": 600,
+              "valid": 600,
+              "missing": 0,
+              "mismatches": 0,
+              "mismatch_rate": 0,
+              "passed": true,
+              "exceptions": []
+            }
+          ],
+          "rankingEligible": true,
+          "limits": "Conditional simulation audit only. Missing attribution is not zero; unrecorded healing stays unknown. Not a calibration of real wins."
+        }
+      }
+    ],
+    "scores": [
+      {
+        "line": 2,
+        "mean": 0.024732975331517422
+      }
+    ],
+    "comparisons": [
+      {
+        "line": 2,
+        "leader": 2,
+        "mean": 0,
+        "se": 0,
+        "tied": true
+      }
+    ],
+    "old_best": 2,
+    "best": 2,
+    "candidate_keys": [
+      "plan1",
+      "plan2",
+      "plan3"
+    ]
+  },
+  "ranked": [
+    "plan3",
+    "plan2",
+    "plan1"
+  ],
+  "question_sha256": "733cbfd6a9445424e2bc03cefae87905ea2839cede3483e69b43270f32246102",
+  "question_best_key": "plan3",
+  "question_best_marker": true,
+  "jev_request_ids": [
+    "req_01a13d9b28017b0489375e50f4c5dc65"
+  ],
+  "actual_answer": "plan3",
+  "first_action": {
+    "action": "play_card",
+    "card_index": 0,
+    "target_index": 0
+  },
+  "first_action_receipt": {
+    "schema": 1,
+    "scope": "single_action_receipt",
+    "requested_action": {
+      "action": "play_card",
+      "card_index": 0,
+      "target_index": 0,
+      "option_index": null
+    },
+    "gated_action": {
+      "action": "play_card",
+      "card_index": 0,
+      "target_index": 0
+    },
+    "expected_identity": {
+      "card": {
+        "id": "STRIKE_SILENT",
+        "upgraded": false
+      },
+      "target": {
+        "id": "VANTOM"
+      },
+      "turn": 1,
+      "from": "decision"
+    },
+    "dispatch_status": "returned",
+    "not_dispatched_reason": null,
+    "returned_status": "completed",
+    "returned_stable": true,
+    "error_kind": null,
+    "state_effect_verified": false,
+    "whole_plan_executed": null,
+    "actual_turn": null
+  },
+  "following_native_actions": [
+    {
+      "decision_id": "ec7ca3cc-d8b9-489c-b19e-7a94e31b355f",
+      "label": "combat/plan-continue",
+      "chosen": {
+        "action": "play_card",
+        "card_index": 0
+      },
+      "result": "completed: Action completed.",
+      "source": {
+        "path": "logs/decisions.jsonl",
+        "offset": 1550637204,
+        "bytes": 1521,
+        "sha256": "04f88c73674295d8bba06cf8cfb0c85e6ade12e2a5925f75de99f0729adb9635"
+      }
+    },
+    {
+      "decision_id": "1129fc5d-23c5-43a7-b839-a47801179dc6",
+      "label": "combat/plan",
+      "chosen": {
+        "action": "end_turn"
+      },
+      "result": "completed: Action completed.",
+      "source": {
+        "path": "logs/decisions.jsonl",
+        "offset": 1550638725,
+        "bytes": 1307,
+        "sha256": "a6b7632655c5f0b0baccd9d975102828c9f8ab94ac76de0a4e5e46dabdbbc589"
+      }
+    }
+  ],
+  "health": {
+    "mode": "on",
+    "expected": 1,
+    "produced": 1,
+    "used": 1,
+    "fallback": 0,
+    "missing": 0,
+    "fallback_reasons": {},
+    "longest_missing_streak": 0,
+    "alert": false,
+    "limits": "S tie ranking is conditional on paired samples, sign audit and existing model trust; not game calibration or causal benefit."
+  },
+  "C2_shadow_comparison": {
+    "metric": "deployed-ranking-first-group",
+    "full": [
+      "line:2"
+    ],
+    "partial": [
+      "line:2"
+    ],
+    "agreement": true
+  },
+  "result": "actual on ranking, question marker, selected plan and returned first-action consumer verified",
+  "limits": "Win-rate group has one line; old_best==best. No observed ranking change or nontrivial S tie-break claimed. First-action receipt is not whole-plan execution or verified HP effect. C2 two-run/on and broad learning parent remain open."
+}

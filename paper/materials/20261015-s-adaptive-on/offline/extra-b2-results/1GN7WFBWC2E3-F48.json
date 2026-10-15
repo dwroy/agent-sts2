@@ -1,0 +1,222 @@
+{
+  "id": "1GN7WFBWC2E3-F48",
+  "run_id": "1GN7WFBWC2E3",
+  "floor": 48,
+  "source": {
+    "path": "/home/dw/Projects/agent-sts2/paper/materials/20261015-s-adaptive-on/offline/extra-b2/1GN7WFBWC2E3-F48.json.gz",
+    "sha256": "bb1a13ccaf79f615f5d94234a307c5106dd300c7f67ccddb164c5b826d9003d2",
+    "raw_sha256": "816b6180fd944d4afc5ec6b5887cd092c0040e4628442e0708d00b35e913f735",
+    "original": {
+      "path": "logs/states.jsonl",
+      "offset": 12833810702,
+      "bytes": 47525
+    }
+  },
+  "boss": "AEONGLASS",
+  "ascension": 10,
+  "low_trust": "仅4局F49、实际胜0；时间验证2局均败，连续模拟未校准，只作备战和出牌参考，不能判必死或触发SL。HP>60夹在样本边界；其他药水/遗物未建模影响不确定。",
+  "samples": 600,
+  "orders": 0,
+  "lines": 9,
+  "ms": 120379.40317700012,
+  "adaptive": {
+    "schema": "sim-adaptive-shadow-v1",
+    "mode": "shadow",
+    "lane": "b2",
+    "rule": {
+      "version": "adaptive-v1",
+      "b3First": 300,
+      "b2First": 200,
+      "batch": 100,
+      "zElim": 3,
+      "zTie": 2,
+      "first": 200,
+      "requested": 600
+    },
+    "candidates": [
+      {
+        "key": "line:0",
+        "samples": 600,
+        "stop": "max",
+        "rounds": 5,
+        "baseline": false
+      },
+      {
+        "key": "line:1",
+        "samples": 600,
+        "stop": "max",
+        "rounds": 5,
+        "baseline": false
+      },
+      {
+        "key": "line:2",
+        "samples": 600,
+        "stop": "max",
+        "rounds": 5,
+        "baseline": false
+      },
+      {
+        "key": "line:3",
+        "samples": 600,
+        "stop": "max",
+        "rounds": 5,
+        "baseline": false
+      },
+      {
+        "key": "line:4",
+        "samples": 600,
+        "stop": "max",
+        "rounds": 5,
+        "baseline": false
+      },
+      {
+        "key": "line:5",
+        "samples": 600,
+        "stop": "max",
+        "rounds": 5,
+        "baseline": false
+      },
+      {
+        "key": "line:6",
+        "samples": 600,
+        "stop": "max",
+        "rounds": 5,
+        "baseline": false
+      },
+      {
+        "key": "line:7",
+        "samples": 600,
+        "stop": "max",
+        "rounds": 5,
+        "baseline": false
+      },
+      {
+        "key": "line:8",
+        "samples": 600,
+        "stop": "max",
+        "rounds": 5,
+        "baseline": false
+      }
+    ],
+    "full": {
+      "leader": "line:0",
+      "group": [
+        "line:0",
+        "line:1",
+        "line:2",
+        "line:3",
+        "line:4",
+        "line:5",
+        "line:6",
+        "line:7",
+        "line:8"
+      ]
+    },
+    "shadow": {
+      "leader": "line:0",
+      "group": [
+        "line:0",
+        "line:1",
+        "line:2",
+        "line:3",
+        "line:4",
+        "line:5",
+        "line:6",
+        "line:7",
+        "line:8"
+      ]
+    },
+    "evaluable": true,
+    "agreement": true,
+    "work": {
+      "full": 5400,
+      "shadow": 5400,
+      "savedFraction": 0,
+      "unit": "fight-sample-outcomes"
+    },
+    "rounds": [
+      {
+        "n": 200,
+        "leader": "line:0",
+        "eliminated": []
+      },
+      {
+        "n": 300,
+        "leader": "line:0",
+        "eliminated": []
+      },
+      {
+        "n": 400,
+        "leader": "line:0",
+        "eliminated": []
+      },
+      {
+        "n": 500,
+        "leader": "line:0",
+        "eliminated": []
+      },
+      {
+        "n": 600,
+        "leader": "line:0",
+        "eliminated": []
+      }
+    ],
+    "limits": "Prefix replay only; no samples saved in shadow. S needs prefix sign/attribution and model trust gates. B2 wonLoss median retains its ordering but has no invented paired SE, so cannot eliminate. Whole-question admission requires independent offline and two-run natural coverage.",
+    "status": "produced",
+    "ms": 6.628028000239283,
+    "production_comparison": {
+      "metric": "deployed-ranking-first-group",
+      "full": [
+        "line:0",
+        "line:1",
+        "line:2",
+        "line:3",
+        "line:4",
+        "line:5",
+        "line:6",
+        "line:7",
+        "line:8"
+      ],
+      "partial": [
+        "line:0",
+        "line:1",
+        "line:2",
+        "line:3",
+        "line:4",
+        "line:5",
+        "line:6",
+        "line:7",
+        "line:8"
+      ],
+      "agreement": true
+    },
+    "input_key": "b2:d0d7f2356104ff5433ded6e2274768a696c255488501bdf2389d7627b4e97ed5"
+  },
+  "comparison": {
+    "metric": "deployed-ranking-first-group",
+    "full": [
+      "line:0",
+      "line:1",
+      "line:2",
+      "line:3",
+      "line:4",
+      "line:5",
+      "line:6",
+      "line:7",
+      "line:8"
+    ],
+    "partial": [
+      "line:0",
+      "line:1",
+      "line:2",
+      "line:3",
+      "line:4",
+      "line:5",
+      "line:6",
+      "line:7",
+      "line:8"
+    ],
+    "agreement": true
+  },
+  "scope": "Frozen historical board under current model; full run and retained-prefix rank comparison. No game/API/fit or original learner batch rerun."
+}
