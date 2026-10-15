@@ -1,0 +1,67 @@
+{
+  "at": "2026-10-15 22:40:55 CST",
+  "bundle": "20261015-2226-original-two-source-continuation",
+  "batches": [
+    "20261015-214302-fix-batch",
+    "20261015-214302-s2-strategy-proposal"
+  ],
+  "sources": [
+    "798af209b9a268b7dafab1440150f1b39cd5595d",
+    "a78bb40ef73af8bb15f40f7fa302dd33a76c2907"
+  ],
+  "current_main": "eca738ced244d594af4d3f501fa31390d39b3084",
+  "live_observed": "f92636aec0e099e656eb18d14ef73c7dc266ff55",
+  "previous_manual": "Original learner-merge codex-fix-silent-20261015-214302 event was consumed in this wake. No duplicate immediate manual request queued.",
+  "block": {
+    "kind": "new_active_knowledge_refresh_cycle",
+    "previous_owner_retention_has_released": true
+  },
+  "source_paths": {
+    "registration": [
+      "agent/tests/learner-registration-barrier.test.ts",
+      "ops/codex-ops-learner.sh",
+      "ops/tests/test_learner_registration_barrier.py"
+    ],
+    "controlled_opening": [
+      "agent/src/sim/boss-start.ts",
+      "agent/src/sim/build-sim-facts.ts",
+      "agent/tests/silent-controlled-opening-evidence.json",
+      "agent/tests/silent-controlled-opening.test.ts"
+    ]
+  },
+  "live_published": false,
+  "release_id": null,
+  "host_full_started": false,
+  "natural_consumers": "pending",
+  "next_steps": [
+    "Use original pending bundle after the existing lock owner naturally releases. Nonblocking guard only; if still busy, retain pending and do not immediately requeue or wait.",
+    "Do not rerun publish.py unchanged or re-integrate main. Main already has both exact source ancestors; preserve its parallel records.",
+    "In the original live lock, inspect active builders/current live/index and preserve all new knowledge bytes in their own refresh commit. Narrowly integrate3 registration leaves, then4 opening-disclosure leaves with three-way merges preserving historical comments and every other live source/config leaf. Bind both original source ancestors.",
+    "Allocate an actual new release_id only for the opening-disclosure behavior after deployment, using the latest complete registry under the lock. Registration sequencing alone does not consume a game behavior number. Add actual old/new/evidence/expectation/rollback dual notices and code/ledger provenance through original CLIs; do not rewrite the failed/mergednull originals.",
+    "Run combined fixed fixtures on the actual new live composition; request one precise final-tree host full through original214302-fix-batch channel. The same exact tree can cover both deltas; do not borrow old-tree green or repeat source full.",
+    "Validate next natural saved registration/lease and Silent A10 held/buy payload consumers. Do not dispatch a model, restart a game, change accounts/permissions or close broad parents just for validation. Retain both source workspaces until original publication/check/retention gates pass."
+  ],
+  "prior_request_receipt": "paper/materials/20261015-2216-ops/live-continuation-request.log",
+  "role_receipt": "Ops actually read both original reports; no watcher/Roy ACK or published version claimed.",
+  "latest_guard": {
+    "status": "live_lock_acquired_but_new_knowledge_builders_active_no_mutation",
+    "attempt_at": "2026-10-15 22:37:20 CST",
+    "builders": [
+      {
+        "pid": 3212455,
+        "birth": "96696900",
+        "task": "build-monster-db.py"
+      },
+      {
+        "pid": 3212456,
+        "birth": "96696900",
+        "task": "build-fight-value.py all --character silent"
+      }
+    ],
+    "original_retention_released": true,
+    "repeat_attempts_or_new_queue_requests": 0,
+    "host_started": false,
+    "release_id": null,
+    "receipt": "paper/materials/20261015-2236-ops/pending-live-handoff.json"
+  }
+}
