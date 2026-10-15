@@ -805,6 +805,8 @@ export interface Step {
 }
 
 export interface Outcome {
+  /** Multi-target poison was omitted; HP, damage and survival are conditional references. */
+  randomPoisonUnresolved?: true;
   /** Unplayed Shivs actually made by this line's observed Cunning drinks, for later-turn piles. */
   cunningShivsLeft?: CardModel[];
   /** Multi-target Kusarigama damage was omitted; this outcome is conditional, not a bound. */
@@ -1026,6 +1028,7 @@ export interface Plan {
 }
 
 interface Sim {
+  randomPoisonUnresolved?: true;
   traceDrawn?: number;
   pendingSelection?: boolean;
   escapePlanUnresolved?: true;
@@ -2474,7 +2477,13 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
   const poisoned = card.target === "all" ? next.enemies.filter((enemy) => enemy.alive) : targetEnemy ? [targetEnemy] : [];
   if ((card.poison ?? 0) > 0) {
     if (card.target === "random") {
-      for (let k = 0; k < card.hits; k += 1) {
+      // G8NHLL09DLBX F24 T5, silent-0295: all three applications missed the mother.
+      // Omitting unresolved poison is a reference, not a worst-case bound across phase interactions.
+      if (card.deferRandomPoison && !card.upgraded && cost === 2 && singleManualPlay && next.enemies.filter((enemy) => enemy.alive).length > 1) {
+        next.randomPoisonUnresolved = true;
+        next.pendingSelection = true;
+        next.unknown = [...next.unknown, "弹跳药瓶（随机施毒落点未展开；未计新增毒，损血、击杀与存活非保证）"];
+      } else for (let k = 0; k < card.hits; k += 1) {
         const victim = randomVictim(next);
         if (victim) applyDebuff(victim, "poison", card.poison!);
       }
@@ -3234,6 +3243,7 @@ function endBlockParts(sim: Sim, input: SolverInput, winsFight: boolean): { ethe
 }
 
 function fightEnded(sim: Sim, input: SolverInput): boolean {
+  if (sim.randomPoisonUnresolved) return false;
   if (sim.escapePlanUnresolved) return false;
   const pending = sim.enemies.some((enemy) => !enemy.alive && (enemy.revives ||
     (input.enemies.find((start) => start.index === enemy.index)!.hp > 0 &&
@@ -3750,6 +3760,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
         ...(input.player.tungstenRod && !rodVerified && !winsFight ? ["钨合金棍（自身失血或其他减损交互未验证）"] : []),
         ...(input.player.paelsLegionPreview && sim.tempDex !== 0 ? ["佩尔的士兵（方案内新增敏捷组合未验证）"] : []),
       ],
+      ...(sim.randomPoisonUnresolved ? { randomPoisonUnresolved: true as const } : {}),
       ...(sim.kusarigamaUnresolved ? { kusarigamaUnresolved: true as const } : {}),
       ...(sim.escapePlanUnresolved ? { escapePlanUnresolved: true as const } : {}),
       sandpitAfter,
@@ -3836,6 +3847,7 @@ function simKey(sim: Sim): string {
     + (sim.slothPlays > 0 ? `#sloth${sim.slothPlays}` : "")
     + (sim.noDraw ? "#noDraw" : "")
     + (sim.apotheosisApplied ? "#apotheosis" : "")
+    + (sim.randomPoisonUnresolved ? "#randomPoisonUnresolved" : "")
     + (sim.kusarigamaUnresolved ? "#kusarigamaUnresolved" : "")
     + (sim.escapePlanUnresolved ? "#escapePlanUnresolved" : "");
   const enemies = sim.enemies.map((enemy) => `${enemy.hp}/${enemy.block}/${enemy.vulnerable}/${enemy.weak}/${enemy.artifact}/${enemy.strengthDelta}/${enemy.slippery ?? 0}/${enemy.curlUp ?? 0}/${enemy.flutter ?? 0}/${enemy.sleepLost ?? 0}/${enemy.tempStrengthLoss ?? 0}/${enemy.demise ?? 0}/${enemy.shrink ?? 0}/${enemy.ravenousStunned ? 1 : 0}${enemy.strangle !== undefined ? `/strangle${enemy.strangle}` : ""}${enemy.cardStunned ? "/whistleStunned" : ""}`).join("|");
@@ -4132,7 +4144,7 @@ export function solveTurn(input: SolverInput): SolveResult {
     // replaces) a potion-free line, however close their scores. Otherwise a potion line scoring a hair
     // higher (lasting Dexterity, say) swallows "end turn" and the planner sees no dry line that survives,
     // so it drinks on its own as the "only line" (2CCM6XK4PB37 F15 T2, Dexterity Potion at 0 energy).
-    const signature = `${o.hpLoss}|${o.damageDealt}|${o.kills.join(",")}|${o.enemyHpAfter.map((enemy) => `${enemy.hp}:${enemy.vulnerable}:${enemy.weak}${enemy.poison ? `:p${enemy.poison}` : ""}`).join(",")}|${o.strengthGained}|${o.cardsDrawn}|${o.sandpitAfter ?? "-"}|${Math.round(plan.score)}|${[...potionSteps].sort().join(",")}${o.maulGrowth && !o.winsFight ? `|m${o.maulGrowth}` : ""}${sim.pendingSelection ? "|selection" : ""}${sim.kusarigamaUnresolved ? "|kusarigamaUnresolved" : ""}${sim.kunaiDexterity > 0 ? `|kunai${sim.kunaiDexterity}` : ""}${sim.kunaiUnknown ? "|kunaiUnknown" : ""}`;
+    const signature = `${o.hpLoss}|${o.damageDealt}|${o.kills.join(",")}|${o.enemyHpAfter.map((enemy) => `${enemy.hp}:${enemy.vulnerable}:${enemy.weak}${enemy.poison ? `:p${enemy.poison}` : ""}`).join(",")}|${o.strengthGained}|${o.cardsDrawn}|${o.sandpitAfter ?? "-"}|${Math.round(plan.score)}|${[...potionSteps].sort().join(",")}${o.maulGrowth && !o.winsFight ? `|m${o.maulGrowth}` : ""}${sim.pendingSelection ? "|selection" : ""}${sim.randomPoisonUnresolved ? "|randomPoisonUnresolved" : ""}${sim.kusarigamaUnresolved ? "|kusarigamaUnresolved" : ""}${sim.kunaiDexterity > 0 ? `|kunai${sim.kunaiDexterity}` : ""}${sim.kunaiUnknown ? "|kunaiUnknown" : ""}`;
     const existing = byOutcome.get(signature);
     // Same outcome: prefer the line drinking fewer potions (a potion reaching the same end state is a potion
     // wasted, even a costless one in a boss fight), then the shorter plan (fewer steps = fewer chances for the
