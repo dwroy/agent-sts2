@@ -2,6 +2,7 @@
 import { resolve } from "node:path";
 import { expect, it, vi } from "vitest";
 import evidence from "./silent-opening-evidence.json";
+import ad3Evidence from "./silent-opening-ad3-evidence.json";
 import { makeKnowledge } from "../src/knowledge/index.js";
 import { parseGameState } from "../src/hand/mod/schema.js";
 import { syntheticBossState, syntheticBossStart, type BossOpening } from "../src/sim/boss-start.js";
@@ -113,4 +114,60 @@ it("leaves blood-vial, unknown relic, automatic revive, melted and foreign-chara
     expect(observedRoyalPoisonOpeningLoss(state)).toBe(0);
     expect(syntheticBossState(state, knowledge, opening, 4, db, {}).state.run!.current_hp).toBe(4);
   }
+});
+
+it("reproduces AD3's five fresh openings without changing the observed or SL-restored board", () => {
+  for (const row of ad3Evidence) {
+    const state = parseGameState(row.state);
+    expect(observedRoyalPoisonOpeningLoss(state)).toBe(4);
+    expect(syntheticBossState(state, knowledge, opening, row.before_hp, db, {}).state.run!.current_hp).toBe(row.after_hp);
+    expect(state.run!.current_hp).toBe(row.before_hp);
+  }
+  // F48's 15 HP exit is the F49 room HP; the actual actionable/SL-restored state is already 11 HP.
+  const restored = board({ playerHp: 11 });
+  const first = board();
+  first.continuation = { variants: [], potions: [], source: "fixed", limitation: "fixed" };
+  const base = fightSample(board(), null, 1, 1, false);
+  expect(continuationInput(first, { ...base, won: true, resources: { hp: 11, revives: [], drunkKeys: [] } }, restored)
+    .input.solver.player.hp).toBe(11);
+});
+
+it("passes AD3's opening cost through a fresh boss and the same-sample continuation", () => {
+  const row = ad3Evidence.find((r) => r.floor === 49)!;
+  const range = { min: 111, max: 111, median: 111, n: 1 };
+  const fixedDb: MonsterDb = { monsters: { TEST_SUBJECT: {
+    name: { zh: "实验体" }, hp_by_asc: { "10": range },
+    moves: { FIXED_OPENING: { intents: { Attack: 1 }, turns_seen: { "1": 1 }, next: { FIXED_OPENING: 1 },
+      damage_by_asc: { "10": { base_per_hit: { "22": 1 }, hits: { "1": 1 }, shown: { "22x1": 1 } } } } },
+  } }, bosses: { TEST_SUBJECT: { "10": { fights: 1, parts: { TEST_SUBJECT: { ...range, count_per_fight: 1 } } } } }, encounters: {} };
+  const state = parseGameState(row.state);
+  const own = makeKnowledge({ cards: row.state.run.deck.map((c) => ({ id: c.card_id, name: c.name,
+    type: c.card_type, cost: c.energy_cost, description: c.resolved_rules_text, description_raw: c.rules_text, vars: c.dynamic_values })) }, "cache");
+  const start = syntheticBossStart(state, own, "TEST_SUBJECT_BOSS", row.before_hp, { db: fixedDb, mm: {} });
+  expect(start.input.openingHpLoss).toBe(4);
+  expect(start.input.solver.player.hp).toBe(11);
+  const first = board();
+  first.continuation = { variants: [], potions: [], source: "fixed", limitation: "fixed" };
+  const result = fightSample(board(), null, 1, 1, false);
+  const transferred = continuationInput(first, { ...result, won: true, resources: { hp: 15, revives: [], drunkKeys: [] } }, start.input);
+  expect(transferred.openingHpLoss).toBe(4);
+  expect(transferred.input.solver.player.hp).toBe(11);
+});
+
+it("limits the new branch to AD3's two complete relic sets and the original role/level guards", () => {
+  for (const change of [
+    (r: any) => { r.character_id = "IRONCLAD"; }, (r: any) => { r.ascension = 9; },
+    (r: any) => { r.relics.pop(); },
+    (r: any) => { r.relics.push({ relic_id: "BLOOD_VIAL" }); },
+    (r: any) => { r.relics.push({ relic_id: "UNOBSERVED_OPENING_RELIC" }); },
+    (r: any) => { r.relics.push(r.relics[0]); },
+    (r: any) => { r.relics.find((p: any) => p.relic_id === "VAMBRACE").is_melted = true; },
+    (r: any) => { r.potions.push({ occupied: true, potion_id: "FAIRY_IN_A_BOTTLE", usage: "Automatic" }); },
+  ]) {
+    const raw = structuredClone(ad3Evidence.at(-1)!.state); change(raw.run);
+    expect(observedRoyalPoisonOpeningLoss(parseGameState(raw))).toBe(0);
+  }
+  const raw = structuredClone(ad3Evidence.at(-1)!.state);
+  raw.run.relics.reverse();
+  expect(observedRoyalPoisonOpeningLoss(parseGameState(raw))).toBe(4);
 });
