@@ -8,7 +8,8 @@
 |---|---|
 | [V5 架构](v5-architecture.md) | 当前职责、必需 Boss 评估、核心公式、Jev 请求替换及发布/待实现边界 |
 | [V5 构筑模块](v5-construction.md) | 未来成型预测、当前候选战斗评估、结构化方向与校准入场 |
-| [V5 S 决策实施计划](v5-s-decision-plan.md) | **分阶段实施中**（`roy-20261014-s-decision`；P0/P1 shadow、C1 与 C2 shadow 接续）：必需计算故障出口与按需采样、S 排序、Boss 准备度诊断、Jev 平局仲裁的分阶段计划、验收与交接 |
+| [V5 S 决策实施计划](v5-s-decision-plan.md) | 2026-10-15 完成（`roy-20261014-s-decision`，P4/P5 未做）：必需计算故障出口与按需采样、S 排序、Boss 准备度诊断、Jev 平局仲裁的分阶段计划、验收与交接 |
+| [V5 全局构筑方向实施计划](v5-global-build-plan.md) | **2026-10-16 派发**（`roy-20261016-global-build`）：第三幕/最终 Boss 可信度与 S 验证 → 跨 Boss 全局评估 → 方向接入排序与前瞻校准 → 模板 → 路线 |
 | [量化计算与校准](quantitative-play.md) | 数值窗口、配对差、未知与日志/模型请求的不同用途 |
 | [V4 基础架构](v4-architecture.md) | V5 沿用的模块、Codex 大脑、知识/日志、学习闭环与 main/live |
 | [仓库布局](layout.md) | 模块路径、角色数据、工作区和运行目录 |
