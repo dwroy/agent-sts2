@@ -1,0 +1,191 @@
+{
+  "batch": "20261016-061302-fix-batch",
+  "evidence_key": "446327db6b216a9890bd98beec82bc07113bc140bfa107ee870c45b42b666167",
+  "canonical_state": "rejected",
+  "canonical_rc": 0,
+  "merged": null,
+  "reason": [
+    "overall validation coverage mismatch"
+  ],
+  "acceptance": {
+    "accepted": false,
+    "reasons": [
+      "overall validation coverage mismatch"
+    ],
+    "improved": [],
+    "near_rule": "excess reduced >=20% and remaining excess <=10% of fixed limit (leak <=0.03)",
+    "isolation": {
+      "passed": true,
+      "base": "e138b036a79709f6217272e631324fd3e77e2bff",
+      "head": "e138b036a79709f6217272e631324fd3e77e2bff",
+      "output_sha256": "1bce9c63060eb08d4225bb1facb368d0f52c6b9e1fc3ff80ca35350ad08d6bc0",
+      "candidate_sha256": "1bce9c63060eb08d4225bb1facb368d0f52c6b9e1fc3ff80ca35350ad08d6bc0",
+      "shared_changes": [],
+      "runner": "/home/dw/Projects/agent-sts2/learner/runs/20261016-061312-e713e995-d386-4486-a57a-ded73eada8ca-boss-sim-batch/acceptance/source-e138b036a79709f6217272e631324fd3e77e2bff/agent/tools/boss-sim/isolation.ts",
+      "outputs": [
+        "/home/dw/Projects/agent-sts2/learner/runs/20261016-061312-e713e995-d386-4486-a57a-ded73eada8ca-boss-sim-batch/acceptance/before.isolation.json",
+        "/home/dw/Projects/agent-sts2/learner/runs/20261016-061312-e713e995-d386-4486-a57a-ded73eada8ca-boss-sim-batch/acceptance/after.isolation.json"
+      ]
+    },
+    "character": "silent",
+    "boss": "THE_INSATIABLE",
+    "mode": "b4",
+    "inputs": {
+      "before": {
+        "path": "/home/dw/Projects/agent-sts2/learner/runs/20261016-061312-e713e995-d386-4486-a57a-ded73eada8ca-boss-sim-batch/before-trust.json",
+        "sha256": "2cf695f03348157bdbfd1aec496619a8af103034c745bd60903c0dc3a7483b68"
+      },
+      "after": {
+        "path": "/home/dw/Projects/agent-sts2/learner/runs/20261016-061312-e713e995-d386-4486-a57a-ded73eada8ca-boss-sim-batch/after-trust.json",
+        "sha256": "2cf695f03348157bdbfd1aec496619a8af103034c745bd60903c0dc3a7483b68"
+      }
+    }
+  },
+  "checks": {
+    "tsc": 0,
+    "tsc_evidence": "Original sandbox script advanced past its set -e tsc to Vitest RUN header.",
+    "vitest": 130,
+    "sandbox": 130,
+    "cases": 9,
+    "mechanic_fixture_fights": 9,
+    "mechanic_fixture_frames": 76,
+    "full_replay": 130,
+    "first_serial_replay": 130,
+    "no_candidate_withdrawal": true,
+    "withdrawal_reason": "No source candidate exists; a red/green withdrawal cannot be claimed.",
+    "note": "Only this task own offline replay/test sessions were interrupted, not live play or scheduler."
+  },
+  "native": {
+    "batch": "20261016-061302-fix-batch",
+    "thread": "01a141a0-6b21-77f0-9dfd-73db68f20a89",
+    "cwd": "/home/dw/Projects/agent-sts2/.worktrees/boss-sim-silent-the_insatiable-20261016-061302",
+    "event_log": "learner/runs/20261016-061312-e713e995-d386-4486-a57a-ded73eada8ca-boss-sim-batch.jsonl",
+    "registered_launch_batch": "20261016-061302-fix-batch",
+    "original_lease": "9c60aa05d7dea0d85390c2f9b9c207a20268b4149c7dee48c0cef117ddc3c112",
+    "native_context": {
+      "source": "ops/codex-ops/accounts/codex1/learner/sessions/2026/10/16/rollout-2026-10-16T06-13-14-01a141a0-6b21-77f0-9dfd-73db68f20a89.jsonl",
+      "offset": 50377,
+      "bytes": 5202,
+      "sha256": "aa5e68941cdec74736766d4d24165d529c0af181cac7abeb1d75a3b98cc8cc3d",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "sandbox": {
+        "type": "workspace-write",
+        "writable_roots": [
+          "/home/dw/Projects/agent-sts2",
+          "/home/dw/Projects/agent-sts2/.git",
+          "/home/dw/Projects/agent-sts2/.git/worktrees/boss-sim-silent-the_insatiable-20261016-061302"
+        ],
+        "network_access": false,
+        "exclude_tmpdir_env_var": false,
+        "exclude_slash_tmp": false
+      },
+      "approval_policy": "never"
+    },
+    "native_user_input": {
+      "offset": 55579,
+      "bytes": 9656,
+      "sha256": "08fe4970a611b27e5c3db6a62b252b36d00af7ecbdebfdd7638e3da686eab9a4",
+      "input_sha256": "3d8f9f97df8438e0403cb689342d82addbe7366513d3043fbf0094a51dc32640"
+    },
+    "original_header_events": [
+      {
+        "offset": 0,
+        "bytes": 11526,
+        "sha256": "36d831c0440a103021ccb12cba2388478b4d530bb38106d37dbf264d3e77d650",
+        "type": "learner_launch",
+        "attempt": null,
+        "code": null
+      },
+      {
+        "offset": 11526,
+        "bytes": 369,
+        "sha256": "ef1c000260a58927f8dce8962dac37a2bcf5aa9bc269456bfaceb3934de4b4a4",
+        "type": "learner_startup_attempt",
+        "attempt": 1,
+        "code": null
+      },
+      {
+        "offset": 14468,
+        "bytes": 77,
+        "sha256": "85cf7e5473feb93101729cfea8d2f021337d5d0293692147383b6c2c92198f35",
+        "type": "thread.started",
+        "attempt": null,
+        "code": null
+      }
+    ],
+    "startup_attempts": 1,
+    "failed_startups_preserved": 0,
+    "no_model_or_manual_restart": true
+  },
+  "source_base": "e138b036a79709f6217272e631324fd3e77e2bff",
+  "records_commit": "ecf8d687c8d54e328f53b9ebd0fd98fb0798042e",
+  "record_only_paths": [
+    "paper/materials/decision-log.md",
+    "paper/materials/silent/20261016-061302-boss-sim-b4-the_insatiable/acceptance-runner.json",
+    "paper/materials/silent/20261016-061302-boss-sim-b4-the_insatiable/acceptance.json",
+    "paper/materials/silent/20261016-061302-boss-sim-b4-the_insatiable/artifact-manifest.json",
+    "paper/materials/silent/20261016-061302-boss-sim-b4-the_insatiable/checks.json",
+    "paper/materials/silent/20261016-061302-boss-sim-b4-the_insatiable/completion-precheck.json",
+    "paper/materials/silent/20261016-061302-boss-sim-b4-the_insatiable/current-tune-pre.json",
+    "paper/materials/silent/20261016-061302-boss-sim-b4-the_insatiable/current-tune-t1.json",
+    "paper/materials/silent/20261016-061302-boss-sim-b4-the_insatiable/dispatch-evidence-location.json",
+    "paper/materials/silent/20261016-061302-boss-sim-b4-the_insatiable/dispatch-evidence.sha256",
+    "paper/materials/silent/20261016-061302-boss-sim-b4-the_insatiable/dispatch-old-val-pre.json",
+    "paper/materials/silent/20261016-061302-boss-sim-b4-the_insatiable/dispatch-old-val-t1.json",
+    "paper/materials/silent/20261016-061302-boss-sim-b4-the_insatiable/draft-failures.txt",
+    "paper/materials/silent/20261016-061302-boss-sim-b4-the_insatiable/gitleaks-first.json",
+    "paper/materials/silent/20261016-061302-boss-sim-b4-the_insatiable/gitleaks.exit",
+    "paper/materials/silent/20261016-061302-boss-sim-b4-the_insatiable/ledger-item.json",
+    "paper/materials/silent/20261016-061302-boss-sim-b4-the_insatiable/ledger-receipt.json",
+    "paper/materials/silent/20261016-061302-boss-sim-b4-the_insatiable/mechanic-fixtures-results.json",
+    "paper/materials/silent/20261016-061302-boss-sim-b4-the_insatiable/mechanic-fixtures.json",
+    "paper/materials/silent/20261016-061302-boss-sim-b4-the_insatiable/raw-target-summary.json",
+    "paper/materials/silent/20261016-061302-boss-sim-b4-the_insatiable/raw-turn-coverage.json",
+    "paper/materials/silent/20261016-061302-boss-sim-b4-the_insatiable/split-audit.json",
+    "paper/materials/silent/boss-sim-b4-THE_INSATIABLE-20261016-061302-fix-batch.md",
+    "paper/materials/silent/boss-sim-batch-summary-20261016-061302.md"
+  ],
+  "production_agent_tree_unchanged": true,
+  "ledger": [
+    {
+      "offset": 19864296,
+      "bytes": 2490,
+      "sha256": "54303401a421cba19c3092cea7813001629d8a97cdfba1593303172f62ed8640"
+    }
+  ],
+  "raw_scope": {
+    "attempts": 128,
+    "usable": 53,
+    "outcomes": {
+      "predicted_death": 75,
+      "died": 16,
+      "won": 37
+    },
+    "excluded": {
+      "SL predicted_death: censored, no actual win/loss; no observed completed outcome": 75
+    },
+    "frames": 5558,
+    "opening_hashes": 128
+  },
+  "fixed_split": {
+    "passed": true,
+    "tune_preserved": true,
+    "cutoff_preserved": true,
+    "old_val_preserved": true,
+    "new_val": [
+      "LTQ083RTNZJQ:17:1:13317171037",
+      "ATP5MCMJDMQY:17:1:13333132062"
+    ],
+    "tune_n": 107,
+    "val_n": 462
+  },
+  "replay_completed": 62,
+  "replay_requested": 1138,
+  "current_validation_coverage": 0,
+  "fixture_fights": 9,
+  "fixture_turn_frames": 76,
+  "disposition": "Original rejected/cooldown/bounded-retry state retained; no candidate, fallback merge, release, full rerun or new model dispatch.",
+  "not_equivalent_to": "No claim of complete validation, mechanism correctness or actual A11 coverage; old fixed-model trigger is not current-source validation. No new contradictory mechanism or role notification inferred.",
+  "calibration20": "Published independently as V5-R366; not rolled back by this no-candidate rejected B4 batch."
+}

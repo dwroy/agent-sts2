@@ -1,0 +1,129 @@
+{
+  "run_id": "DHYFWEN40SJ7",
+  "pending_no_dispatch": 2,
+  "degraded_zero_samples": true,
+  "requested": 600,
+  "minimum_unchanged": 300,
+  "no_whole_fight_numbers_attached": true,
+  "local_turn_rollout_history_fields_preserved": true,
+  "criteria_keys": {
+    "plan1": [
+      "plays",
+      "result",
+      "hp_lost",
+      "damage_dealt",
+      "enemies_after",
+      "block_gained",
+      "hp_after",
+      "hp_after_pct",
+      "dmg",
+      "lethal_now",
+      "enemy_threat_next",
+      "setup_turn",
+      "scaling_gained",
+      "block_wasted",
+      "potions_used",
+      "quantitative_turn",
+      "rollout",
+      "rollout_turns",
+      "history_estimate"
+    ],
+    "plan2": [
+      "plays",
+      "result",
+      "hp_lost",
+      "damage_dealt",
+      "enemies_after",
+      "block_gained",
+      "hp_after",
+      "hp_after_pct",
+      "dmg",
+      "lethal_now",
+      "enemy_threat_next",
+      "setup_turn",
+      "scaling_gained",
+      "block_wasted",
+      "potions_used",
+      "quantitative_turn",
+      "rollout",
+      "rollout_turns",
+      "history_estimate"
+    ],
+    "plan3": [
+      "plays",
+      "result",
+      "hp_lost",
+      "damage_dealt",
+      "enemies_after",
+      "block_gained",
+      "hp_after",
+      "hp_after_pct",
+      "dmg",
+      "lethal_now",
+      "enemy_threat_next",
+      "setup_turn",
+      "scaling_gained",
+      "block_wasted",
+      "potions_used",
+      "quantitative_turn",
+      "rollout",
+      "rollout_turns",
+      "history_estimate",
+      "rollout_best"
+    ]
+  },
+  "chosen": {
+    "action": "play_card",
+    "card_index": 0
+  },
+  "result": "completed: Action completed.",
+  "selection_dispatch": {
+    "schema": 1,
+    "scope": "single_action_receipt",
+    "requested_action": {
+      "action": "play_card",
+      "card_index": 0,
+      "target_index": null,
+      "option_index": null
+    },
+    "gated_action": {
+      "action": "play_card",
+      "card_index": 0
+    },
+    "expected_identity": {
+      "card": {
+        "id": "TRUE_GRIT",
+        "upgraded": false
+      },
+      "turn": 6,
+      "from": "decision"
+    },
+    "dispatch_status": "returned",
+    "not_dispatched_reason": null,
+    "returned_status": "completed",
+    "returned_stable": true,
+    "error_kind": null,
+    "state_effect_verified": false,
+    "whole_plan_executed": null,
+    "actual_turn": null
+  },
+  "request_ids": [
+    "req_01a141bd74187113958c619ca750d0d2"
+  ],
+  "decision_source": {
+    "offset": 1813935470,
+    "length": 16992,
+    "sha256": "b02ee7b9d4ea90b03e1cfb4b52fe87facf7912093a44bcc86eacd100ae31ba85"
+  },
+  "bounded_brain_log_does_not_include_this_combat_request": true,
+  "brain_acceptance_not_independently_claimed": true,
+  "full_resources_steps_and_root_cause": "unknown; original error suffix truncated",
+  "B3_full_computation_timing": {
+    "n": 43,
+    "p50_ms": 6318.0,
+    "p90_ms": 21166.000000000007,
+    "max_ms": 60090
+  },
+  "phase_simMs_separate": "See module-health-byte-readback.json; neither timing is a causal saving claim.",
+  "no_game_or_threshold_change": true
+}
