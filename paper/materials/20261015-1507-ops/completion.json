@@ -1,0 +1,60 @@
+{
+  "at": "2026-10-15 15:13:20 CST",
+  "empty_fix_batch": "20261015-144302-fix-batch",
+  "new_source": false,
+  "old_fixes_verified": 72,
+  "source_selected_tests": 16,
+  "original_canonical_state": "failed/rc0/mergednull retained",
+  "original_full_exit": 1,
+  "original_full_coverage": {
+    "files_passed": 481,
+    "files_failed": 1,
+    "tests_passed": 4870,
+    "tests_failed": 1,
+    "tests_skipped": 2
+  },
+  "decision": "retain narrow deployed fix, single failed case registered host supplement only",
+  "supplement_snapshot": {
+    "at": "2026-10-15 15:12:31 CST",
+    "manifest_sha256": "a1d5c31d6eb2bde3975fded1206ecc2b6a3210d0734be7a8eeb2ec8256f8aab2",
+    "pinned_live": {
+      "commit": "8c1935b9c672c5e9fdd676371e16988a8f0bc714",
+      "tree": "7e9b21378fb803dec3bf586d1f6e9be20b160008"
+    },
+    "stage": "registered broker continuation waiting on existing live lock; host command not started",
+    "actual_live_mutex_readback": [
+      {
+        "pid": 1538980,
+        "waiting": false,
+        "raw_lock_record": "55: FLOCK  ADVISORY  WRITE 1538980 08:30:372157 0 EOF",
+        "comm": "flock",
+        "cwd": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261015-141302",
+        "birth": "93952853"
+      },
+      {
+        "pid": 1574096,
+        "waiting": true,
+        "raw_lock_record": "55: -> FLOCK  ADVISORY  WRITE 1574096 08:30:372157 0 EOF",
+        "comm": "python3",
+        "cwd": "/home/dw/Projects/agent-sts2",
+        "birth": "94019702"
+      }
+    ],
+    "receipt_exists": false,
+    "receipt_path": "ops/codex-ops/learner/20261015-141302-s2-strategy-proposal.supplement-a1d5c31d6eb2bde3975fded1206ecc2b6a3210d0734be7a8eeb2ec8256f8aab2.json",
+    "actual_receipt": null,
+    "original_full_rc": 1,
+    "not_full_suite_pass": true,
+    "no_interruption_or_lock_takeover": true
+  },
+  "label_erratum": {
+    "preserved_registry_name": "V5.codex1-serpent-credits1",
+    "intended_descriptive_name": "V5.serpent-mirage-replay1",
+    "cause": "ops publication helper reused a descriptive label from the prior credit patch; actual source/four leaves/commit/release id correctly bind the Serpent replay change",
+    "actual_credit_changes_in_R356": false,
+    "policy": "preserve original registry name/history and canonical V5-R356; append this correction, no renumber or new behavior"
+  },
+  "no_new_release_or_model_task_or_full_suite_or_game_control": true,
+  "no_paper_refresh_postmortem_or_ledger_updates_for_these_events": true,
+  "pending": "registered supplement waits original live lock; future original scheduler event owns its actual result; original full is not made green"
+}

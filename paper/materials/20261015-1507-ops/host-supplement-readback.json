@@ -1,0 +1,33 @@
+{
+  "at": "2026-10-15 15:12:31 CST",
+  "manifest_sha256": "a1d5c31d6eb2bde3975fded1206ecc2b6a3210d0734be7a8eeb2ec8256f8aab2",
+  "pinned_live": {
+    "commit": "8c1935b9c672c5e9fdd676371e16988a8f0bc714",
+    "tree": "7e9b21378fb803dec3bf586d1f6e9be20b160008"
+  },
+  "stage": "registered broker continuation waiting on existing live lock; host command not started",
+  "actual_live_mutex_readback": [
+    {
+      "pid": 1538980,
+      "waiting": false,
+      "raw_lock_record": "55: FLOCK  ADVISORY  WRITE 1538980 08:30:372157 0 EOF",
+      "comm": "flock",
+      "cwd": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261015-141302",
+      "birth": "93952853"
+    },
+    {
+      "pid": 1574096,
+      "waiting": true,
+      "raw_lock_record": "55: -> FLOCK  ADVISORY  WRITE 1574096 08:30:372157 0 EOF",
+      "comm": "python3",
+      "cwd": "/home/dw/Projects/agent-sts2",
+      "birth": "94019702"
+    }
+  ],
+  "receipt_exists": false,
+  "receipt_path": "ops/codex-ops/learner/20261015-141302-s2-strategy-proposal.supplement-a1d5c31d6eb2bde3975fded1206ecc2b6a3210d0734be7a8eeb2ec8256f8aab2.json",
+  "actual_receipt": null,
+  "original_full_rc": 1,
+  "not_full_suite_pass": true,
+  "no_interruption_or_lock_takeover": true
+}
