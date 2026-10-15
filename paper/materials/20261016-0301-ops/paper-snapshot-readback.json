@@ -1,0 +1,154 @@
+{
+  "request": {
+    "at": "2026-10-16 03:02:55 CST",
+    "command": [
+      "nice",
+      "-n",
+      "19",
+      "python3",
+      "ops/paper_dataset.py",
+      "--no-raw"
+    ],
+    "pid": 16079,
+    "birth": "98293458",
+    "calls": 1,
+    "raw_snapshot": false,
+    "previous_outputs_preserved": "ops/codex-ops/record-staging/20261016-0301/paper-before",
+    "actual_exit_code": 0
+  },
+  "generated_at": "2026-10-15T19:02:55.332Z",
+  "source_cut_bytes": {
+    "decisions.jsonl": 1749500774,
+    "deepseek-reasoning.jsonl": 377746518,
+    "runs.jsonl": 341549,
+    "states.jsonl": 13275717409,
+    "fight-plans.jsonl": 2233957,
+    "run-plans.jsonl": 8289102,
+    "brain.jsonl": 623118451,
+    "sl-attempts.jsonl": 42034540,
+    "run-config.jsonl": 1807323
+  },
+  "five_checks": {
+    "decisions attributed + unattributed == play records": true,
+    "decisions_by_label sum == attributed decisions": true,
+    "escalations rows == records with escalation": true,
+    "every runs.jsonl id present in runs.csv": true,
+    "commits == git rev-list --all --count": true
+  },
+  "source_checks_passed": true,
+  "row_counts": {
+    "runs.csv": 798,
+    "decisions_by_label.csv": 26610,
+    "escalations.csv": 3600,
+    "fight_plans.csv": 1461,
+    "commits.csv": 6332
+  },
+  "total_decision_records": 404819,
+  "original_count_warnings": [
+    [
+      "KF9HMZKTFC3V",
+      879,
+      880
+    ]
+  ],
+  "run": {
+    "run_id": "TKAN594T9SKS",
+    "character": "SILENT",
+    "ascension": "10",
+    "outcome": "defeat",
+    "floor_max": "31",
+    "n_decisions": "537",
+    "has_postmortem": "1",
+    "performance_included": "1",
+    "brain_source": "{\"basis\": \"brain.jsonl accepted verdict; legacy answer != null, no error/problems; unique question_id+engine\", \"brain_rows\": 33, \"coverage\": \"all_logged_questions_resolved\", \"eligible\": true, \"embedded_answers\": {\"map/route\": 20, \"run-plan\": 7}, \"exclusion_reason\": null, \"failed_or_unaccepted_rows\": 0, \"first_success\": \"2026-10-15T17:32:14.506Z\", \"last_success\": \"2026-10-15T18:12:43.202Z\", \"policy\": \"codex-successful-brain-v1\", \"source\": \"codex\", \"successful_answers\": {\"codex\": 33}, \"successful_by_label\": {\"bundle/choose\": {\"codex\": 1}, \"event/act-plan\": {\"codex\": 1}, \"event/choose\": {\"codex\": 3}, \"event/plan\": {\"codex\": 3}, \"map/route-plan\": {\"codex\": 1}, \"rest/plan\": {\"codex\": 6}, \"reward/card\": {\"codex\": 14}, \"selection/add\": {\"codex\": 2}, \"shop/plan\": {\"codex\": 2}}, \"unknown_successes\": 0, \"unresolved_questions\": 0}"
+  },
+  "changed_outputs": [
+    {
+      "path": "paper/data/README.md",
+      "bytes": 14189,
+      "sha256": "27eacdcf51c613154c45536d30cc855d7c66b1e2690cf50766c29a1280898e2f",
+      "snapshot": "paper--data--README.md"
+    },
+    {
+      "path": "paper/data/commits.csv",
+      "bytes": 953899,
+      "sha256": "904ff766ca2da8490aa8bc86e439e409d0aab4ffb499b9bf255a539a9bc8ab8b",
+      "snapshot": "paper--data--commits.csv"
+    },
+    {
+      "path": "paper/data/cost-curve-silent.csv",
+      "bytes": 14245,
+      "sha256": "9f5ce1c0ffbb36bdaef72b5c7f06b16e5ca9374c1708d135adfe2ec382a7790f",
+      "snapshot": "paper--data--cost-curve-silent.csv"
+    },
+    {
+      "path": "paper/data/cost-silent.csv",
+      "bytes": 524710,
+      "sha256": "dbd0b85fa4eb44fc110e5f454d83aacfa18c133a6177c546e9e339f75a1f6b43",
+      "snapshot": "paper--data--cost-silent.csv"
+    },
+    {
+      "path": "paper/data/cost-sources.json",
+      "bytes": 179890,
+      "sha256": "028cd5f692f832d0dcd4a887c9375f8f25b49fa4a89e46d7b649e6a1f0638541",
+      "snapshot": "paper--data--cost-sources.json"
+    },
+    {
+      "path": "paper/data/cost-unattributed.csv",
+      "bytes": 18784,
+      "sha256": "d6c584f8b054c53a167aea9b73738463b968156dffcbe7bb7d23fc246cf23ea5",
+      "snapshot": "paper--data--cost-unattributed.csv"
+    },
+    {
+      "path": "paper/data/decisions_by_label.csv",
+      "bytes": 1149915,
+      "sha256": "b0ec6d708aa093b0bbde22df74d2a8a884964dfe00bdcee321e17b067464ba1a",
+      "snapshot": "paper--data--decisions_by_label.csv"
+    },
+    {
+      "path": "paper/data/learning-curve-ironclad.csv.before-20261015T190518585271Z",
+      "bytes": 103370,
+      "sha256": "45405e24c8358a99d977c28852cf3e705fddc4f1923f9a7b16ff727a849b082b",
+      "snapshot": "paper--data--learning-curve-ironclad.csv.before-20261015T190518585271Z"
+    },
+    {
+      "path": "paper/data/learning-curve-silent.csv",
+      "bytes": 65994,
+      "sha256": "2e3a2be0c8560dd5e3efbea0d633de1f7c49e94f0fda70ec759a4ba752317fb9",
+      "snapshot": "paper--data--learning-curve-silent.csv"
+    },
+    {
+      "path": "paper/data/learning-curve-silent.csv.before-20261015T190519159068Z",
+      "bytes": 65590,
+      "sha256": "bf2b78d06f6dcee175e56b8245b751803aaa0103ba3031bbc1f08f5373a13e77",
+      "snapshot": "paper--data--learning-curve-silent.csv.before-20261015T190519159068Z"
+    },
+    {
+      "path": "paper/data/runs.csv",
+      "bytes": 1299668,
+      "sha256": "c7a6dcff544f5a0328f544a6c56d96e367a56d3fe988befaedc090e9e9229bec",
+      "snapshot": "paper--data--runs.csv"
+    },
+    {
+      "path": "paper/data/summary.json",
+      "bytes": 511058,
+      "sha256": "10000102467c0fd7cc355d75afcffb6452d5b631e5e1bb5af5080f4707e0a898",
+      "snapshot": "paper--data--summary.json"
+    },
+    {
+      "path": "paper/data/verification.json",
+      "bytes": 587,
+      "sha256": "2fdd0c31ac9a5541b0c4a8e216072008ce9e5cdff9160838f1ecdf59ef03d8e4",
+      "snapshot": "paper--data--verification.json"
+    },
+    {
+      "path": "paper/materials/silent/cost.md",
+      "bytes": 4193,
+      "sha256": "3b23d45894738e3131b3d03bedf4d418a4b28b27b368a6ac92cf3548849aab45",
+      "snapshot": "paper--materials--silent--cost.md"
+    }
+  ],
+  "component_costs": "Separate immutable cuts and estimates, not invoices or credit conversions.",
+  "raw_snapshot": false,
+  "previous_outputs_preserved": "ops/codex-ops/record-staging/20261016-0301/paper-before"
+}

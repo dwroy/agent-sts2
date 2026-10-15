@@ -1,0 +1,304 @@
+[
+  {
+    "offset": 19362503,
+    "bytes": 1324,
+    "sha256": "b0443acd659fd7e84d7b5fb74e062918f3e055f33d4f8bc0e5d1f36c515ebbd7",
+    "row": {
+      "op": "add",
+      "id": "silent-0490",
+      "ts": "2026-10-16T02:55:59+08:00",
+      "by": "learner:postmortem",
+      "character": "silent",
+      "kind": "fight",
+      "claim": "静默A10本局胧光怪战后三次T2，烘焙手套按静态分50对中和48耗掉肾上腺素；加至2力量后实际只得12挡、两敌合17攻，4血完整需损5。增力与丢失零费抽能的代价须分账。未实打保留肾上腺素后的同抽序分支，不能证明换耗一牌就能活或把现象认作纯bug；需独立比较消耗后的整轮与未知抽牌边界。",
+      "evidence": [
+        {
+          "run": "TKAN594T9SKS",
+          "floor": 31,
+          "turn": 2,
+          "role": "support",
+          "note": "d404093/404105/404117均按肾上腺素50 vs 中和48耗前者；s417203/417216/417229为五候选选择前，后三轮实际防御+偏折12挡，中和令幻象17→12，主怪仍5攻。前三试判死未结算，末试s417234→417235实4→0，完整需求5。"
+        }
+      ],
+      "first_run": "TKAN594T9SKS",
+      "prior": "unknown",
+      "prior_runs": [],
+      "prior_note": "已用CLI按TOASTY_MITTENS、烘焙、肾上腺素、消耗肾上腺素查询，并按静默角色标题查更早复盘；旧0043记录增力机制，未找到低血消耗肾上腺素的同局面选择或受控后继，不能据未找到记录判学习前一直做错。",
+      "status": "observed",
+      "where": {
+        "lessons": [
+          "TKAN594T9SKS"
+        ]
+      },
+      "asc": 10
+    }
+  },
+  {
+    "offset": 19363827,
+    "bytes": 496,
+    "sha256": "83db90a612f132e06ead49489cd29d7884be8117196d7dbca643a69b9950754e",
+    "row": {
+      "op": "update",
+      "id": "silent-0167",
+      "ts": "2026-10-16T02:55:59+08:00",
+      "by": "learner:postmortem",
+      "evidence": [
+        {
+          "run": "TKAN594T9SKS",
+          "floor": 30,
+          "turn": 3,
+          "role": "support",
+          "note": "d404045两候选按钮单用预计损0/扣3、按钮接蛇咬预计损6/扣10；Jev选接蛇咬，s417152→417154污染0→3→6、意图18→27→36、30挡，后继53→47且敌118→108。单按钮未实打，不据该次赢战判可避免失误或repeat。"
+        }
+      ],
+      "where": {
+        "lessons": [
+          "TKAN594T9SKS"
+        ]
+      }
+    }
+  },
+  {
+    "offset": 19364323,
+    "bytes": 509,
+    "sha256": "9a818b1e091baa16823a4f231a7493de621f2de1c714e625c61fef99938c52e1",
+    "row": {
+      "op": "update",
+      "id": "silent-0019",
+      "ts": "2026-10-16T02:55:59+08:00",
+      "by": "learner:postmortem",
+      "evidence": [
+        {
+          "run": "TKAN594T9SKS",
+          "floor": 30,
+          "role": "support",
+          "note": "F28赢55→43并喝末瓶缚魂，F29休息43→64，F30棱柱赢64→4，F31无回血补药以4血空栏入场并末试T2阵亡。既定F32营火未到；全14场赢战及四终战尝试已逐资源登记。没有另一条路线/留药/少掉血的获胜对照，不记同错repeat。"
+        }
+      ],
+      "where": {
+        "lessons": [
+          "TKAN594T9SKS"
+        ]
+      }
+    }
+  },
+  {
+    "offset": 19364832,
+    "bytes": 491,
+    "sha256": "8ce07e171ab2de30452f529fadd47082653979d4b768b9b3b11b5ba030218d4c",
+    "row": {
+      "op": "update",
+      "id": "silent-0168",
+      "ts": "2026-10-16T02:55:59+08:00",
+      "by": "learner:postmortem",
+      "evidence": [
+        {
+          "run": "TKAN594T9SKS",
+          "floor": 30,
+          "turn": 5,
+          "role": "support",
+          "note": "s417139→417140建立毒雾2不增污染；T1两技能各增3。T4→T5火花3→6；T5手上技法/两斗篷令污染0→6→12→18、挡0→7→13→19，虚弱意图12→17→21→26，净损7。T6防御+8挡同时添6污染、13攻→19，净损11。"
+        }
+      ],
+      "where": {
+        "lessons": [
+          "TKAN594T9SKS"
+        ]
+      }
+    }
+  },
+  {
+    "offset": 19365323,
+    "bytes": 448,
+    "sha256": "515baad9eb6d4d28e9eb86b11a987f80a3777e0295382fadc4e5805f163c8a4b",
+    "row": {
+      "op": "update",
+      "id": "silent-0212",
+      "ts": "2026-10-16T02:55:59+08:00",
+      "by": "learner:postmortem",
+      "evidence": [
+        {
+          "run": "TKAN594T9SKS",
+          "floor": 30,
+          "turn": 3,
+          "role": "support",
+          "note": "s417152→417153按钮0→30挡并建NO_BLOCK_POWER2；T4 s417155为1，防御/斗篷均显示0挡，迷雾+尖啸后0挡仍损7；T5禁挡消失，手上技法与两斗篷实成19挡。不外推全部被动挡。"
+        }
+      ],
+      "where": {
+        "lessons": [
+          "TKAN594T9SKS"
+        ]
+      }
+    }
+  },
+  {
+    "offset": 19365771,
+    "bytes": 487,
+    "sha256": "2d946879bd8dcabdc14759c7b9dde0f37a46924202cffc50dbfa900c72cd5404",
+    "row": {
+      "op": "update",
+      "id": "silent-0043",
+      "ts": "2026-10-16T02:55:59+08:00",
+      "by": "learner:postmortem",
+      "evidence": [
+        {
+          "run": "TKAN594T9SKS",
+          "floor": 31,
+          "turn": 2,
+          "role": "support",
+          "note": "F30每轮手套消耗后力量1→8，进F31重新1→2；末试中和基础3+2力实扣5（幻象21→16），突然一拳基础8+2力再经易伤实扣15（主怪105→90）。消费后加力不增加12实挡，不把被耗肾上腺素当仍可用。"
+        }
+      ],
+      "where": {
+        "lessons": [
+          "TKAN594T9SKS"
+        ]
+      }
+    }
+  },
+  {
+    "offset": 19366258,
+    "bytes": 519,
+    "sha256": "d8c3ce9ffe5319929c5c2a0b2fc844dd169a61bc8129d8560a3e105c35174754",
+    "row": {
+      "op": "update",
+      "id": "silent-0039",
+      "ts": "2026-10-16T02:55:59+08:00",
+      "by": "learner:postmortem",
+      "evidence": [
+        {
+          "run": "TKAN594T9SKS",
+          "floor": 31,
+          "turn": 2,
+          "role": "support",
+          "note": "四次T1单129血胧光怪活体召唤21血寄生惧魔；末试T2幻象17攻由中和虚弱降12、主怪仍5，合17对12挡/4血，主怪死亡结算前90、毒后85而幻象16，两敌未杀。本局未到复现或成长时点，不延伸固定杀序或反推保留药水可赢。"
+        }
+      ],
+      "where": {
+        "lessons": [
+          "TKAN594T9SKS"
+        ]
+      }
+    }
+  },
+  {
+    "offset": 19366777,
+    "bytes": 363,
+    "sha256": "47ad6ce0452de372ed9629565dd4a38975da7dd42f860af7cf6b3cae90bcf3f8",
+    "row": {
+      "op": "update",
+      "id": "silent-0167",
+      "ts": "2026-10-16T02:57:13+08:00",
+      "by": "learner:postmortem",
+      "where": {
+        "proposal": [
+          "/home/dw/Projects/agent-sts2/learner/runs/20261016-024304-2171fa54-e23c-48e3-8585-bbe357639c29-postmortem/proposal-prism.md"
+        ]
+      },
+      "note": "代码提案 silent-proposal-d070d42faacd056f → task=strategy-proposal；Roy-2026-10-07-learning"
+    }
+  },
+  {
+    "offset": 19367140,
+    "bytes": 363,
+    "sha256": "be7537befd862f9bd21773f33e4a8bcb12b375821107d7c276f2d5af45920aa5",
+    "row": {
+      "op": "update",
+      "id": "silent-0168",
+      "ts": "2026-10-16T02:57:13+08:00",
+      "by": "learner:postmortem",
+      "where": {
+        "proposal": [
+          "/home/dw/Projects/agent-sts2/learner/runs/20261016-024304-2171fa54-e23c-48e3-8585-bbe357639c29-postmortem/proposal-prism.md"
+        ]
+      },
+      "note": "代码提案 silent-proposal-d070d42faacd056f → task=strategy-proposal；Roy-2026-10-07-learning"
+    }
+  },
+  {
+    "offset": 19367503,
+    "bytes": 363,
+    "sha256": "40427b37acc0567c24869695123a6da25eb636dcc9c164c49ed59eb1e502c421",
+    "row": {
+      "op": "update",
+      "id": "silent-0212",
+      "ts": "2026-10-16T02:57:13+08:00",
+      "by": "learner:postmortem",
+      "where": {
+        "proposal": [
+          "/home/dw/Projects/agent-sts2/learner/runs/20261016-024304-2171fa54-e23c-48e3-8585-bbe357639c29-postmortem/proposal-prism.md"
+        ]
+      },
+      "note": "代码提案 silent-proposal-d070d42faacd056f → task=strategy-proposal；Roy-2026-10-07-learning"
+    }
+  },
+  {
+    "offset": 19367866,
+    "bytes": 363,
+    "sha256": "b3885d85c13c18823332b4dfafd196cd4cb428bb537855b22f500b622d626924",
+    "row": {
+      "op": "update",
+      "id": "silent-0019",
+      "ts": "2026-10-16T02:57:13+08:00",
+      "by": "learner:postmortem",
+      "where": {
+        "proposal": [
+          "/home/dw/Projects/agent-sts2/learner/runs/20261016-024304-2171fa54-e23c-48e3-8585-bbe357639c29-postmortem/proposal-prism.md"
+        ]
+      },
+      "note": "代码提案 silent-proposal-d070d42faacd056f → task=strategy-proposal；Roy-2026-10-07-learning"
+    }
+  },
+  {
+    "offset": 19368229,
+    "bytes": 365,
+    "sha256": "3d1d7a7f506b529e7038b7c9734f0e1cd76f2cdbb52a085c8530b18d649520fe",
+    "row": {
+      "op": "update",
+      "id": "silent-0490",
+      "ts": "2026-10-16T02:57:14+08:00",
+      "by": "learner:postmortem",
+      "where": {
+        "proposal": [
+          "/home/dw/Projects/agent-sts2/learner/runs/20261016-024304-2171fa54-e23c-48e3-8585-bbe357639c29-postmortem/proposal-mittens.md"
+        ]
+      },
+      "note": "代码提案 silent-proposal-3072c09b63f43f92 → task=strategy-proposal；Roy-2026-10-07-learning"
+    }
+  },
+  {
+    "offset": 19368594,
+    "bytes": 365,
+    "sha256": "2dc0371fe346c2a2f260e661ece3e1fa08da3c6f48bb8bed963ea7249ed80d3c",
+    "row": {
+      "op": "update",
+      "id": "silent-0043",
+      "ts": "2026-10-16T02:57:14+08:00",
+      "by": "learner:postmortem",
+      "where": {
+        "proposal": [
+          "/home/dw/Projects/agent-sts2/learner/runs/20261016-024304-2171fa54-e23c-48e3-8585-bbe357639c29-postmortem/proposal-mittens.md"
+        ]
+      },
+      "note": "代码提案 silent-proposal-3072c09b63f43f92 → task=strategy-proposal；Roy-2026-10-07-learning"
+    }
+  },
+  {
+    "offset": 19368959,
+    "bytes": 365,
+    "sha256": "9f046c14b310f12904cd4b4e4be5261778072582ae46d3181deadb686645dafa",
+    "row": {
+      "op": "update",
+      "id": "silent-0039",
+      "ts": "2026-10-16T02:57:14+08:00",
+      "by": "learner:postmortem",
+      "where": {
+        "proposal": [
+          "/home/dw/Projects/agent-sts2/learner/runs/20261016-024304-2171fa54-e23c-48e3-8585-bbe357639c29-postmortem/proposal-mittens.md"
+        ]
+      },
+      "note": "代码提案 silent-proposal-3072c09b63f43f92 → task=strategy-proposal；Roy-2026-10-07-learning"
+    }
+  }
+]
