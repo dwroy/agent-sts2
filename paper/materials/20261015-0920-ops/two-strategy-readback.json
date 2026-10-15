@@ -1,0 +1,1026 @@
+{
+  "batches": [
+    {
+      "batch": "20261015-090117-strategy-proposal",
+      "runtime": {
+        "batch": "20261015-090117-strategy-proposal",
+        "thread": "01a13d14-1336-7660-ad53-55d520f59888",
+        "cwd": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261015-090117",
+        "event_log": "learner/runs/20261015-090126-14cab436-3c21-4b31-8c67-e04f2af00592-strategy-proposal.jsonl",
+        "registered_launch_batch": "20261015-090117-strategy-proposal",
+        "original_lease": "c24627efcc25325d7576af3de8ac87740bcedcb40cb5098d3a76fbeed79780ba",
+        "native_context": {
+          "source": "ops/codex-ops/accounts/codex1/learner/sessions/2026/10/15/rollout-2026-10-15T09-01-28-01a13d14-1336-7660-ad53-55d520f59888.jsonl",
+          "offset": 50241,
+          "bytes": 5148,
+          "sha256": "9d7c5093a57afe4c5b0b2ee20ebe0ba845bd0148238388bcf0d1f64248d1d07b",
+          "model": "gpt-6.1-sol",
+          "effort": "xhigh",
+          "sandbox": {
+            "type": "workspace-write",
+            "writable_roots": [
+              "/home/dw/Projects/agent-sts2",
+              "/home/dw/Projects/agent-sts2/.git",
+              "/home/dw/Projects/agent-sts2/.git/worktrees/codex-strategy-silent-20261015-090117"
+            ],
+            "network_access": false,
+            "exclude_tmpdir_env_var": false,
+            "exclude_slash_tmp": false
+          },
+          "approval_policy": "never"
+        },
+        "native_user_input": {
+          "offset": 55389,
+          "bytes": 21447,
+          "sha256": "8886a06579253aa456e6a10c244cbfa8f7558b8aa9437bc4d6b6de46fdf9a4ee",
+          "input_sha256": "4c690a57d0bcaa2e68158954da78f83f5a80df382213d7db3d9fcf820031fb67"
+        },
+        "original_header_events": [
+          {
+            "offset": 0,
+            "bytes": 23459,
+            "sha256": "a5417cc70ac89c095867a87cfec6770cf61e43791a6f181e998690ffabf13572",
+            "type": "learner_launch",
+            "attempt": null,
+            "code": null
+          },
+          {
+            "offset": 23459,
+            "bytes": 377,
+            "sha256": "507f375b1f91e16d0f1d3eed4d7e62c3b617ed42de0e99b8159f9bfc13fa4af0",
+            "type": "learner_startup_attempt",
+            "attempt": 1,
+            "code": null
+          },
+          {
+            "offset": 26842,
+            "bytes": 77,
+            "sha256": "89e710562998d04c2ea755e72e398d22bcdc33f9281b31f6eb0dfbd1d539b1d2",
+            "type": "thread.started",
+            "attempt": null,
+            "code": null
+          }
+        ],
+        "startup_attempts": 1,
+        "failed_startups_preserved": 0,
+        "no_model_or_manual_restart": true
+      },
+      "canonical": {
+        "state": "done",
+        "rc": 0,
+        "merged": null,
+        "proposal_audit_errors": []
+      },
+      "base": "2be88e7c612a29b5d67cbc0905fb8163bcb33976",
+      "completion_head": "2be88e7c612a29b5d67cbc0905fb8163bcb33976",
+      "completion_clean": true,
+      "current_workspace_retired": false,
+      "original_rows": 8444,
+      "stream_readback": [
+        {
+          "stream": "states",
+          "verified_rows": 4167,
+          "source_size": 12962698266,
+          "frozen_sha256": "1b74593cadfe044177b4c555480495c7cef63bb8d75976cd0fe53edea4281a94",
+          "counts": {
+            "L9SGRBB5R698": 653,
+            "PU80F84P6HPN": 1064,
+            "751FN9QM9MHQ": 624,
+            "KV0JHNJCKXLS": 686,
+            "YQL8RZ8BWN1E": 582,
+            "KEN58SH9SLZ6": 558
+          },
+          "unassigned_source_invalid_lines": 2
+        },
+        {
+          "stream": "decisions",
+          "verified_rows": 4071,
+          "source_size": 1518032465,
+          "frozen_sha256": "4339d083eb9f60e16bac838a69ed8d511652e1aad60221e69fdaaaed6719cfaf",
+          "counts": {
+            "L9SGRBB5R698": 635,
+            "PU80F84P6HPN": 1033,
+            "751FN9QM9MHQ": 615,
+            "KV0JHNJCKXLS": 669,
+            "YQL8RZ8BWN1E": 571,
+            "KEN58SH9SLZ6": 548
+          },
+          "unassigned_source_invalid_lines": 2
+        },
+        {
+          "stream": "sl-attempts",
+          "verified_rows": 43,
+          "source_size": 40088627,
+          "frozen_sha256": "d7f37542775ee826a026005f0c10246dccb32f7494197f7d6af10a6c788b30e0",
+          "counts": {
+            "L9SGRBB5R698": 6,
+            "PU80F84P6HPN": 12,
+            "751FN9QM9MHQ": 6,
+            "KV0JHNJCKXLS": 7,
+            "YQL8RZ8BWN1E": 6,
+            "KEN58SH9SLZ6": 6
+          },
+          "unassigned_source_invalid_lines": 0
+        },
+        {
+          "stream": "run-config",
+          "verified_rows": 6,
+          "source_size": 1737123,
+          "frozen_sha256": "160a9cc5bb8f6f2be607978ea43281624c647f55410eba98a96552b733ee1c0c",
+          "counts": {
+            "L9SGRBB5R698": 1,
+            "PU80F84P6HPN": 1,
+            "751FN9QM9MHQ": 1,
+            "KV0JHNJCKXLS": 1,
+            "YQL8RZ8BWN1E": 1,
+            "KEN58SH9SLZ6": 1
+          },
+          "unassigned_source_invalid_lines": 0
+        },
+        {
+          "stream": "run-plans",
+          "verified_rows": 21,
+          "source_size": 7958935,
+          "frozen_sha256": "77090bb5042d72a73b1cba4c077656896f7f7f45a9013d21bcfd17d5a87a8bbd",
+          "counts": {
+            "L9SGRBB5R698": 3,
+            "PU80F84P6HPN": 5,
+            "751FN9QM9MHQ": 2,
+            "KV0JHNJCKXLS": 5,
+            "YQL8RZ8BWN1E": 3,
+            "KEN58SH9SLZ6": 3
+          },
+          "unassigned_source_invalid_lines": 0
+        },
+        {
+          "stream": "brain",
+          "verified_rows": 130,
+          "source_size": 552674905,
+          "frozen_sha256": "7a47a8693d07c54103662c608bd1a03a85af0cdf8c06177f46f3fbb624c41c12",
+          "counts": {
+            "L9SGRBB5R698": 16,
+            "PU80F84P6HPN": 31,
+            "751FN9QM9MHQ": 15,
+            "KV0JHNJCKXLS": 32,
+            "YQL8RZ8BWN1E": 18,
+            "KEN58SH9SLZ6": 18
+          },
+          "unassigned_source_invalid_lines": 1
+        },
+        {
+          "stream": "runs",
+          "verified_rows": 6,
+          "source_size": 332536,
+          "frozen_sha256": "8a1992a135d83a19b3c566799bd5bc986e40bb00f9e82a5315988b1fac549623",
+          "counts": {
+            "L9SGRBB5R698": 1,
+            "PU80F84P6HPN": 1,
+            "751FN9QM9MHQ": 1,
+            "KV0JHNJCKXLS": 1,
+            "YQL8RZ8BWN1E": 1,
+            "KEN58SH9SLZ6": 1
+          },
+          "unassigned_source_invalid_lines": 0
+        },
+        {
+          "stream": "fight-plans",
+          "verified_rows": 0,
+          "source_size": 2233957,
+          "frozen_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "counts": {},
+          "unassigned_source_invalid_lines": 0
+        }
+      ],
+      "ascensions_by_run": {
+        "L9SGRBB5R698": 10,
+        "PU80F84P6HPN": 10,
+        "751FN9QM9MHQ": 10,
+        "KV0JHNJCKXLS": 10,
+        "YQL8RZ8BWN1E": 10,
+        "KEN58SH9SLZ6": 10
+      },
+      "historical_brain_sources": [
+        {
+          "engine": "deepseek",
+          "model": "deepseek-flash",
+          "effort": null,
+          "rows": 16
+        },
+        {
+          "engine": "codex",
+          "model": "gpt-6.1-sol",
+          "effort": "high",
+          "rows": 114
+        }
+      ],
+      "historical_dirty_full_bytes_not_recovered": true,
+      "material_verification": {
+        "original_material_checks": 48,
+        "original_fact_assertions_recomputed": 41,
+        "additional_original_checks_readback": 7,
+        "two_additional_fingerprints_directly_verified": true
+      },
+      "existing_partial_source_scope_readback": {
+        "base": "2be88e7c612a29b5d67cbc0905fb8163bcb33976",
+        "live": "52046a3deaa359adbafdd9e6d3e96c2527017f49",
+        "leaves": [
+          {
+            "path": "agent/src/reflex/silent-held-loss.ts",
+            "live_source_commit": "05cd292c6f01bb31e406473d3a9843e659d62b93",
+            "is_live_ancestor": true,
+            "base_sha256": "c60884d37a5386e21ea357cb6b0942bcc3c098366167dcde4506ae79541e9022",
+            "live_sha256": "c60884d37a5386e21ea357cb6b0942bcc3c098366167dcde4506ae79541e9022",
+            "same_leaf": true
+          },
+          {
+            "path": "agent/src/reflex/silent-potion-reference.ts",
+            "live_source_commit": "04921bd785ac6838066522f91ea0bb6ab95cb6a1",
+            "is_live_ancestor": true,
+            "base_sha256": "94399dd7279d6eaed91d139507baf6936a161cd61a792644a4ab7c5d9102a360",
+            "live_sha256": "94399dd7279d6eaed91d139507baf6936a161cd61a792644a4ab7c5d9102a360",
+            "same_leaf": true
+          },
+          {
+            "path": "agent/src/reflex/silent-sl-comparison.ts",
+            "live_source_commit": "a8b1f8be153fe4f3a34146117546c2178f2e446b",
+            "is_live_ancestor": true,
+            "base_sha256": "2fbb427662af78dd5428c70e0af9bb82dfe312d4ccffb33201da3c26dfdfc760",
+            "live_sha256": "2fbb427662af78dd5428c70e0af9bb82dfe312d4ccffb33201da3c26dfdfc760",
+            "same_leaf": true
+          },
+          {
+            "path": "agent/src/reflex/silent-sl-resource-comparison.ts",
+            "live_source_commit": "a8b1f8be153fe4f3a34146117546c2178f2e446b",
+            "is_live_ancestor": true,
+            "base_sha256": "30da6d7d0c065957c118b211d53ac40360bcf93c05861be3dd811da78f8a8c21",
+            "live_sha256": "30da6d7d0c065957c118b211d53ac40360bcf93c05861be3dd811da78f8a8c21",
+            "same_leaf": true
+          },
+          {
+            "path": "agent/src/reflex/silent-selection-audit.ts",
+            "live_source_commit": "05cd292c6f01bb31e406473d3a9843e659d62b93",
+            "is_live_ancestor": true,
+            "base_sha256": "2de2533b477546682ef601d0613bd1adb805e03b894f64347475bfa4e222e4db",
+            "live_sha256": "2de2533b477546682ef601d0613bd1adb805e03b894f64347475bfa4e222e4db",
+            "same_leaf": true
+          },
+          {
+            "path": "agent/src/reflex/silent-selection-dispatch.ts",
+            "live_source_commit": "bade647f9fe4c9103b40e2f26b26296692ad24b7",
+            "is_live_ancestor": true,
+            "base_sha256": "9301b47f0f6a2589ce210d7f3b9fd232854575154e1f77e471d164070003e6d6",
+            "live_sha256": "9301b47f0f6a2589ce210d7f3b9fd232854575154e1f77e471d164070003e6d6",
+            "same_leaf": true
+          },
+          {
+            "path": "agent/src/reflex/silent-hp-guard-audit.ts",
+            "live_source_commit": "a8b1f8be153fe4f3a34146117546c2178f2e446b",
+            "is_live_ancestor": true,
+            "base_sha256": "183a1c996ce965e05dc5735dc0f3b4f2e2ff65442c7e6779290716b0cd4bf858",
+            "live_sha256": "183a1c996ce965e05dc5735dc0f3b4f2e2ff65442c7e6779290716b0cd4bf858",
+            "same_leaf": true
+          },
+          {
+            "path": "agent/src/reflex/silent-giant-potion.ts",
+            "live_source_commit": "d5e20aa4dd44168ce30944dfcce74f8322144953",
+            "is_live_ancestor": true,
+            "base_sha256": "4f032ab6458326668c37361d33b7882e7f922bf07ad3f995abb6b5085de5a5d6",
+            "live_sha256": "4f032ab6458326668c37361d33b7882e7f922bf07ad3f995abb6b5085de5a5d6",
+            "same_leaf": true
+          },
+          {
+            "path": "agent/src/sl/attempts.ts",
+            "live_source_commit": "0d092f6b928a6221eabf3516abad25c48ceaac9c",
+            "is_live_ancestor": true,
+            "base_sha256": "f3f785f18c77ccc482a58b236d168780c8e010fb0bec12ec3e14ab61a8aca415",
+            "live_sha256": "f3f785f18c77ccc482a58b236d168780c8e010fb0bec12ec3e14ab61a8aca415",
+            "same_leaf": true
+          },
+          {
+            "path": "agent/src/sl/explore.ts",
+            "live_source_commit": "0d092f6b928a6221eabf3516abad25c48ceaac9c",
+            "is_live_ancestor": true,
+            "base_sha256": "2f37e85cc1c1c31e96a0d1b90db850893ec75b6cf5b4b84bf07bbb8de4e3ec43",
+            "live_sha256": "89875b8d7fa6470bf2fea69188c16125992f9736a6fa048123c26f7ae6c0d312",
+            "same_leaf": false
+          },
+          {
+            "path": "agent/src/reflex/combat-plan.ts",
+            "live_source_commit": "06c6e8c6da5d6e3d5764c2b506e30202a4ca70f4",
+            "is_live_ancestor": true,
+            "base_sha256": "1160c67ca777101a1a54a6eba7ed7d388d451736dc711d4805b32c8a844aeedf",
+            "live_sha256": "1160c67ca777101a1a54a6eba7ed7d388d451736dc711d4805b32c8a844aeedf",
+            "same_leaf": true
+          },
+          {
+            "path": "agent/src/hand/loop.ts",
+            "live_source_commit": "767ba5f1ca98e1ad72a1a5ba172836d0af13e97d",
+            "is_live_ancestor": true,
+            "base_sha256": "dbcd9ed0531ff46218c891c663f9ecb90aa554e071cb5c4aa464c14f6a14f575",
+            "live_sha256": "dbcd9ed0531ff46218c891c663f9ecb90aa554e071cb5c4aa464c14f6a14f575",
+            "same_leaf": true
+          },
+          {
+            "path": "agent/src/sl/controller.ts",
+            "live_source_commit": "0d092f6b928a6221eabf3516abad25c48ceaac9c",
+            "is_live_ancestor": true,
+            "base_sha256": "f8827b8d4c53d1139bbec174c0b13f19c99803b4dbd404310c2835a3d05c2ffc",
+            "live_sha256": "9544fff0338eaae22178986a75b1f2c63f648f6fbcebcfdccf97361b2733f0af",
+            "same_leaf": false
+          }
+        ]
+      },
+      "dispositions": [
+        {
+          "id": "silent-proposal-366288801d9150d9",
+          "state": "waiting",
+          "reason": "751 F17 T2/T7/T13血价已核；缺跨抽弃续问的完整候选实果、受控整战后继和独立验证，不能拟失血准入阈值。"
+        },
+        {
+          "id": "silent-proposal-85929bdfc8a3fc1b",
+          "state": "waiting",
+          "reason": "持牌保守项及持有价值未知已有展示；缺751 F13 T3无药、留药至boss的完整分支及弃牌后的整线归属。"
+        },
+        {
+          "id": "silent-proposal-efd9f83ee9e1a6dc",
+          "state": "waiting",
+          "reason": "局部预测及单动作回执已有，完整回合实果仍未知；六次同局未胜缺受控整战比较和独立校准。"
+        },
+        {
+          "id": "silent-proposal-131042659448ae74",
+          "state": "waiting",
+          "reason": "缺逐源伤害与能力兑现、抽弃重规划后的完整执行，以及跨战无药或留药对照。"
+        },
+        {
+          "id": "silent-proposal-990f054036609447",
+          "state": "waiting",
+          "reason": "KV F33 T5删毒净扣36→29且均零损已核；缺完整后继、独立回血毛伤核验及路线休息反事实。"
+        },
+        {
+          "id": "silent-proposal-e18d3f18e6cac2a0",
+          "state": "waiting",
+          "reason": "巨兽阶段展示已有，参考路径仍沿原排序；缺新排序的受控完整后继、资源校准及结局比较。"
+        },
+        {
+          "id": "silent-proposal-9733bb80f445aeae",
+          "state": "waiting",
+          "reason": "YQL F17 T10残壳毒2→8而血挡及41来袭不变已核；缺提前喝、不喝、留药与新排序的整战分支。"
+        },
+        {
+          "id": "silent-proposal-c51468c5e8ba6668",
+          "state": "waiting",
+          "reason": "KEN七次耗药及六次75血空栏入口已核；缺随机选牌、发光水续问后的完整收益归属及F15留药分支。"
+        },
+        {
+          "id": "silent-proposal-86a7db08d1a31976",
+          "state": "waiting",
+          "reason": "KEN T10多损6仅多净扣2、T5省2却延迟步法已核；缺完整逐源兑现、受控整战和独立验证。"
+        },
+        {
+          "id": "silent-proposal-e282a9131b99129a",
+          "state": "waiting",
+          "reason": "预测及单动作回执不能充作完整实果；缺跨续问候选归属、受控反事实与新局验证，不能拟统一血价。"
+        }
+      ],
+      "original_proposal_sha": [
+        {
+          "id": "silent-proposal-366288801d9150d9",
+          "path": "/home/dw/Projects/agent-sts2/learner/runs/20261007-191301-postmortem/proposal-sl-cost.md",
+          "sha256": "0ba601d50f1341977ec60627d24994e0755ef1cf396a60832000400c5805c524"
+        },
+        {
+          "id": "silent-proposal-85929bdfc8a3fc1b",
+          "path": "/home/dw/Projects/agent-sts2/learner/runs/20261007-191301-postmortem/proposal-combat-potion-facts.md",
+          "sha256": "d42d3f29d0d36b262352160a104dd8b97831ef9d8ecbbd4bce3dba367f9c8d68"
+        },
+        {
+          "id": "silent-proposal-efd9f83ee9e1a6dc",
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261007-193251-experience-update/proposal-sl-cost.md",
+          "sha256": "0065ae0291ac4675d0a895128c71c68b35602c3eb6b5887b92fca11891c29006"
+        },
+        {
+          "id": "silent-proposal-131042659448ae74",
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261007-193251-experience-update/proposal-combat-potion-facts.md",
+          "sha256": "b1ff1ca1e5d3da182f25af9b0040780e288a77e627b08c2fee262a17f8f49951"
+        },
+        {
+          "id": "silent-proposal-990f054036609447",
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261007-200255-experience-update/proposal-sl-accounting.md",
+          "sha256": "c7fa0a97eea334f338e208a6bae8e709dce021cd3157dd32cb3ca1a45900e053"
+        },
+        {
+          "id": "silent-proposal-e18d3f18e6cac2a0",
+          "path": "/home/dw/Projects/agent-sts2/learner/runs/20261007-201301-postmortem/phase-sl-proposal.md",
+          "sha256": "3cc66ab0b4fb05a0d6d4e62b514b13caf9e157eba4d781f5a60f76276047c821"
+        },
+        {
+          "id": "silent-proposal-9733bb80f445aeae",
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261007-203654-experience-update/proposal-giant-phase.md",
+          "sha256": "c0da0af7803a73b361bb98e358c2a5c12b8056a68c28614a592138e7cdd88382"
+        },
+        {
+          "id": "silent-proposal-c51468c5e8ba6668",
+          "path": "/home/dw/Projects/agent-sts2/learner/runs/20261007-204301-postmortem/proposal-resources.md",
+          "sha256": "168cc03750525c56cace3915f22ef4dd1cf768f87b17e70f5228964a168c8469"
+        },
+        {
+          "id": "silent-proposal-86a7db08d1a31976",
+          "path": "/home/dw/Projects/agent-sts2/learner/runs/20261007-204301-postmortem/proposal-combat-sl.md",
+          "sha256": "10de295b469f48281050aeb04a8ad6ccb2906e007d48386a6c8f769cc7600ac6"
+        },
+        {
+          "id": "silent-proposal-e282a9131b99129a",
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261007-214301-experience-update/proposal-sl-cost.md",
+          "sha256": "a88a2a95875b8fa04d80376a10a3ed59ede080db13ccb2a7e14c3ebfc1c34872"
+        }
+      ],
+      "original_ledger_trace_rows": 16,
+      "source_tests": {
+        "tsc": null,
+        "vitest": null,
+        "cases": null
+      },
+      "no_source_merge_release_experience_or_learning_parent_closed": true,
+      "original_failed_analysis_and_limits_kept": true
+    },
+    {
+      "batch": "20261015-090117-s2-strategy-proposal",
+      "runtime": {
+        "batch": "20261015-090117-s2-strategy-proposal",
+        "thread": "01a13d14-182a-7fc0-be93-40cb5c25fe63",
+        "cwd": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261015-090117-s2",
+        "event_log": "learner/runs/20261015-090126-ab74ba43-684a-469e-9558-642ac6669d5d-strategy-proposal.jsonl",
+        "registered_launch_batch": "20261015-090117-s2-strategy-proposal",
+        "original_lease": "43e29679537d174c8c5dbcc9311b01dc48a0ce8325dee13db15b493d1ec6b529",
+        "native_context": {
+          "source": "ops/codex-ops/accounts/codex1/learner/sessions/2026/10/15/rollout-2026-10-15T09-01-29-01a13d14-182a-7fc0-be93-40cb5c25fe63.jsonl",
+          "offset": 50283,
+          "bytes": 5166,
+          "sha256": "712006d6e7b790bc7a5b5ff9c590b4bde8d9bac27c997671c368f15eaaed8143",
+          "model": "gpt-6.1-sol",
+          "effort": "xhigh",
+          "sandbox": {
+            "type": "workspace-write",
+            "writable_roots": [
+              "/home/dw/Projects/agent-sts2",
+              "/home/dw/Projects/agent-sts2/.git",
+              "/home/dw/Projects/agent-sts2/.git/worktrees/codex-strategy-silent-20261015-090117-s2"
+            ],
+            "network_access": false,
+            "exclude_tmpdir_env_var": false,
+            "exclude_slash_tmp": false
+          },
+          "approval_policy": "never"
+        },
+        "native_user_input": {
+          "offset": 55449,
+          "bytes": 21571,
+          "sha256": "816e16d568fc095024e1c92c5de239297ad0ca66a205553eca7878cd1ce54637",
+          "input_sha256": "6159266e2da382103dbca2b9d7571addb9b83d79762e920fb55f9ed30d06d6f0"
+        },
+        "original_header_events": [
+          {
+            "offset": 0,
+            "bytes": 23653,
+            "sha256": "6d3d18c79b3e7f6144526dab342b3572ab60e43b70b4cb47c6b58899b6db0419",
+            "type": "learner_launch",
+            "attempt": null,
+            "code": null
+          },
+          {
+            "offset": 23653,
+            "bytes": 380,
+            "sha256": "88cd6927cb30726e118a5dc46b12dc713b57742574fb327625bfb12f6099d133",
+            "type": "learner_startup_attempt",
+            "attempt": 1,
+            "code": null
+          },
+          {
+            "offset": 27039,
+            "bytes": 77,
+            "sha256": "e3be1e853a7c83cb3c59d56befd98ad9fb62c19ca9afc1d64c9435705dfa0af7",
+            "type": "thread.started",
+            "attempt": null,
+            "code": null
+          }
+        ],
+        "startup_attempts": 1,
+        "failed_startups_preserved": 0,
+        "no_model_or_manual_restart": true
+      },
+      "canonical": {
+        "state": "done",
+        "rc": 0,
+        "merged": null,
+        "proposal_audit_errors": []
+      },
+      "base": "17e235df4df5fb6c00dbb832fb3ce35c868858db",
+      "completion_head": "17e235df4df5fb6c00dbb832fb3ce35c868858db",
+      "completion_clean": true,
+      "current_workspace_retired": false,
+      "original_rows": 19929,
+      "stream_readback": [
+        {
+          "stream": "states",
+          "verified_rows": 9815,
+          "source_size": 12962869878,
+          "frozen_sha256": "f7dc0333beb2289b31d6906b1fda6bc2cfef9adbe1890baad18f580bc4016d2d",
+          "counts": {
+            "K3676LU8B0UH": 830,
+            "SADL3CGYTGSR": 1151,
+            "F4QKG4J1AJJZ": 728,
+            "JLN5SK17W4FQ": 810,
+            "4D4J8USKCPAV": 546,
+            "S9UZAK0JP0C0": 861,
+            "NB8KCF6HRGVF": 484,
+            "LS8035TB32P3": 838,
+            "02HB4L0C3C67": 221,
+            "KEN58SH9SLZ6": 558,
+            "TXZ6RVMQA09D": 840,
+            "WQZVENQ7DTRP": 798,
+            "1913SE84AXQF": 413,
+            "Q6M2Y34MWKRE": 135,
+            "NHA2KW0RB7VP": 602
+          },
+          "unassigned_source_invalid_lines": 2
+        },
+        {
+          "stream": "decisions",
+          "verified_rows": 9448,
+          "source_size": 1518032465,
+          "frozen_sha256": "941f52538526de5320a48427b650ada30645f46a4d9d5e01a490434eedefdf2a",
+          "counts": {
+            "K3676LU8B0UH": 805,
+            "SADL3CGYTGSR": 1115,
+            "F4QKG4J1AJJZ": 703,
+            "JLN5SK17W4FQ": 790,
+            "4D4J8USKCPAV": 527,
+            "S9UZAK0JP0C0": 826,
+            "NB8KCF6HRGVF": 466,
+            "LS8035TB32P3": 816,
+            "02HB4L0C3C67": 211,
+            "KEN58SH9SLZ6": 548,
+            "TXZ6RVMQA09D": 762,
+            "WQZVENQ7DTRP": 766,
+            "1913SE84AXQF": 398,
+            "Q6M2Y34MWKRE": 131,
+            "NHA2KW0RB7VP": 584
+          },
+          "unassigned_source_invalid_lines": 2
+        },
+        {
+          "stream": "sl-attempts",
+          "verified_rows": 78,
+          "source_size": 40088627,
+          "frozen_sha256": "d9e4657e1b6731f0414ceb4e689231af18383bc5c764d4fee7d7c53b02dc8183",
+          "counts": {
+            "K3676LU8B0UH": 4,
+            "SADL3CGYTGSR": 10,
+            "F4QKG4J1AJJZ": 4,
+            "JLN5SK17W4FQ": 8,
+            "4D4J8USKCPAV": 6,
+            "S9UZAK0JP0C0": 10,
+            "NB8KCF6HRGVF": 1,
+            "LS8035TB32P3": 6,
+            "KEN58SH9SLZ6": 6,
+            "TXZ6RVMQA09D": 6,
+            "WQZVENQ7DTRP": 9,
+            "1913SE84AXQF": 1,
+            "NHA2KW0RB7VP": 7
+          },
+          "unassigned_source_invalid_lines": 0
+        },
+        {
+          "stream": "run-config",
+          "verified_rows": 15,
+          "source_size": 1737123,
+          "frozen_sha256": "282db183096bf2b0ab3c53362d30ca8a99517bf34a019094f8295856ed29edf6",
+          "counts": {
+            "K3676LU8B0UH": 1,
+            "SADL3CGYTGSR": 1,
+            "F4QKG4J1AJJZ": 1,
+            "JLN5SK17W4FQ": 1,
+            "4D4J8USKCPAV": 1,
+            "S9UZAK0JP0C0": 1,
+            "NB8KCF6HRGVF": 1,
+            "LS8035TB32P3": 1,
+            "02HB4L0C3C67": 1,
+            "KEN58SH9SLZ6": 1,
+            "TXZ6RVMQA09D": 1,
+            "WQZVENQ7DTRP": 1,
+            "1913SE84AXQF": 1,
+            "Q6M2Y34MWKRE": 1,
+            "NHA2KW0RB7VP": 1
+          },
+          "unassigned_source_invalid_lines": 0
+        },
+        {
+          "stream": "run-plans",
+          "verified_rows": 77,
+          "source_size": 7958935,
+          "frozen_sha256": "ccd0198a8b5903ef6734c0b106ab9eb494398452ee6ffdcc1c0f7feedb71ad21",
+          "counts": {
+            "K3676LU8B0UH": 7,
+            "SADL3CGYTGSR": 9,
+            "F4QKG4J1AJJZ": 7,
+            "JLN5SK17W4FQ": 5,
+            "4D4J8USKCPAV": 3,
+            "S9UZAK0JP0C0": 6,
+            "NB8KCF6HRGVF": 6,
+            "LS8035TB32P3": 6,
+            "02HB4L0C3C67": 2,
+            "KEN58SH9SLZ6": 3,
+            "TXZ6RVMQA09D": 9,
+            "WQZVENQ7DTRP": 4,
+            "1913SE84AXQF": 4,
+            "Q6M2Y34MWKRE": 1,
+            "NHA2KW0RB7VP": 5
+          },
+          "unassigned_source_invalid_lines": 0
+        },
+        {
+          "stream": "brain",
+          "verified_rows": 481,
+          "source_size": 552674905,
+          "frozen_sha256": "8a9ef14ceb58bd904d1d22a4a85d5085c1cc658d443735083b5aae2923a6e1e0",
+          "counts": {
+            "K3676LU8B0UH": 48,
+            "SADL3CGYTGSR": 54,
+            "F4QKG4J1AJJZ": 37,
+            "JLN5SK17W4FQ": 37,
+            "4D4J8USKCPAV": 16,
+            "S9UZAK0JP0C0": 33,
+            "NB8KCF6HRGVF": 31,
+            "LS8035TB32P3": 41,
+            "02HB4L0C3C67": 12,
+            "KEN58SH9SLZ6": 18,
+            "TXZ6RVMQA09D": 48,
+            "WQZVENQ7DTRP": 31,
+            "1913SE84AXQF": 31,
+            "Q6M2Y34MWKRE": 10,
+            "NHA2KW0RB7VP": 34
+          },
+          "unassigned_source_invalid_lines": 1
+        },
+        {
+          "stream": "runs",
+          "verified_rows": 15,
+          "source_size": 332536,
+          "frozen_sha256": "07abed128ee0a384dd4c1dd4860c79febc82d38d2cbde4a8550fdf0e52b5ab5f",
+          "counts": {
+            "K3676LU8B0UH": 1,
+            "SADL3CGYTGSR": 1,
+            "F4QKG4J1AJJZ": 1,
+            "JLN5SK17W4FQ": 1,
+            "4D4J8USKCPAV": 1,
+            "S9UZAK0JP0C0": 1,
+            "NB8KCF6HRGVF": 1,
+            "LS8035TB32P3": 1,
+            "02HB4L0C3C67": 1,
+            "KEN58SH9SLZ6": 1,
+            "TXZ6RVMQA09D": 1,
+            "WQZVENQ7DTRP": 1,
+            "1913SE84AXQF": 1,
+            "Q6M2Y34MWKRE": 1,
+            "NHA2KW0RB7VP": 1
+          },
+          "unassigned_source_invalid_lines": 0
+        },
+        {
+          "stream": "fight-plans",
+          "verified_rows": 0,
+          "source_size": 2233957,
+          "frozen_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "counts": {},
+          "unassigned_source_invalid_lines": 0
+        }
+      ],
+      "ascensions_by_run": {
+        "K3676LU8B0UH": 1,
+        "SADL3CGYTGSR": 7,
+        "F4QKG4J1AJJZ": 9,
+        "JLN5SK17W4FQ": 10,
+        "4D4J8USKCPAV": 10,
+        "S9UZAK0JP0C0": 10,
+        "NB8KCF6HRGVF": 10,
+        "LS8035TB32P3": 10,
+        "02HB4L0C3C67": 10,
+        "KEN58SH9SLZ6": 10,
+        "TXZ6RVMQA09D": 10,
+        "WQZVENQ7DTRP": 10,
+        "1913SE84AXQF": 10,
+        "Q6M2Y34MWKRE": 10,
+        "NHA2KW0RB7VP": 10
+      },
+      "historical_brain_sources": [
+        {
+          "engine": "codex",
+          "model": "gpt-6.1-sol",
+          "effort": "xhigh",
+          "rows": 48
+        },
+        {
+          "engine": "codex",
+          "model": "gpt-6.1-sol",
+          "effort": "high",
+          "rows": 433
+        }
+      ],
+      "historical_dirty_full_bytes_not_recovered": true,
+      "material_verification": {
+        "original_material_checks": 298,
+        "original_fact_assertions_recomputed": 298,
+        "all_9815_compact_state_projections_bound_to_original": true
+      },
+      "existing_partial_source_scope_readback": {
+        "base": "17e235df4df5fb6c00dbb832fb3ce35c868858db",
+        "live": "52046a3deaa359adbafdd9e6d3e96c2527017f49",
+        "commits": [
+          {
+            "commit": "6403fdcdadc803a092beb5165a068e22bf51c412",
+            "live_ancestor": true,
+            "files": [
+              "agent/src/reflex/card-model.ts",
+              "agent/src/reflex/combat-plan.ts",
+              "agent/src/reflex/rollout.ts",
+              "agent/src/reflex/turn-solver.ts",
+              "agent/src/sim/double-boss-start.ts",
+              "agent/tests/silent-cunning-evidence.json",
+              "agent/tests/silent-cunning-state.json",
+              "agent/tests/silent-cunning.test.ts"
+            ]
+          },
+          {
+            "commit": "15ea09ad75a421d4bd65a820c187c8ee188186c8",
+            "live_ancestor": false,
+            "files": [
+              "agent/src/reflex/card-model.ts",
+              "agent/src/reflex/combat-plan.ts",
+              "agent/src/reflex/rollout.ts",
+              "agent/src/reflex/turn-solver.ts",
+              "agent/src/sim/double-boss-start.ts",
+              "agent/tests/silent-cunning-evidence.json",
+              "agent/tests/silent-cunning-state.json",
+              "agent/tests/silent-cunning.test.ts"
+            ]
+          },
+          {
+            "commit": "e8b4bb320ae3068db5ebb6ce8c6fa91a9689178a",
+            "live_ancestor": true,
+            "files": [
+              "agent/src/reflex/continuation-value.ts",
+              "agent/src/reflex/rollout.ts",
+              "agent/src/sim/boss-sim.ts",
+              "agent/src/sim/boss-start.ts",
+              "agent/src/sim/double-boss-start.ts",
+              "agent/src/sim/silent-opening.ts",
+              "agent/tests/silent-opening-evidence.json",
+              "agent/tests/silent-opening.test.ts"
+            ]
+          },
+          {
+            "commit": "fc7042d1df0626e9e726f4bc912d9c6f626d908f",
+            "live_ancestor": false,
+            "files": [
+              "agent/src/reflex/continuation-value.ts",
+              "agent/src/reflex/rollout.ts",
+              "agent/src/sim/boss-sim.ts",
+              "agent/src/sim/boss-start.ts",
+              "agent/src/sim/double-boss-start.ts",
+              "agent/src/sim/silent-opening.ts",
+              "agent/tests/silent-opening-evidence.json",
+              "agent/tests/silent-opening.test.ts"
+            ]
+          },
+          {
+            "commit": "5c7105ff0294466da8319f2934beda05c6040794",
+            "live_ancestor": true,
+            "files": [
+              "agent/src/reflex/card-model.ts",
+              "agent/src/reflex/combat-plan.ts",
+              "agent/src/reflex/rollout.ts",
+              "agent/src/reflex/turn-solver.ts",
+              "agent/tests/silent-strangle-evidence.json",
+              "agent/tests/silent-strangle.test.ts"
+            ]
+          },
+          {
+            "commit": "ec29ea34b919344b707e57ba472ea210f9c39d62",
+            "live_ancestor": true,
+            "files": [
+              "agent/src/reflex/combat-plan.ts",
+              "agent/src/reflex/rollout.ts",
+              "agent/src/reflex/silent-crusher-facing.ts",
+              "agent/src/reflex/turn-solver.ts",
+              "agent/tests/silent-crusher-facing-evidence.json",
+              "agent/tests/silent-crusher-facing.test.ts"
+            ]
+          },
+          {
+            "commit": "f2c7cc1a7288893bceae0f0b20304a2b1fae5f57",
+            "live_ancestor": true,
+            "files": [
+              "agent/src/reflex/combat-plan.ts",
+              "agent/src/reflex/rollout.ts",
+              "agent/src/reflex/silent-crusher-facing.ts",
+              "agent/src/reflex/turn-solver.ts",
+              "agent/tests/silent-crusher-facing-evidence.json",
+              "agent/tests/silent-crusher-facing.test.ts"
+            ]
+          },
+          {
+            "commit": "c769739b97389fdc978b6515b83a38e3cd900f67",
+            "live_ancestor": true,
+            "files": [
+              "agent/src/reflex/combat-plan.ts",
+              "agent/src/reflex/silent-sl-comparison.ts",
+              "agent/tests/silent-sl-comparison-evidence.json",
+              "agent/tests/silent-sl-comparison.test.ts"
+            ]
+          },
+          {
+            "commit": "5604982e13890e0e2bc8bf8246272e8267321c0b",
+            "live_ancestor": true,
+            "files": [
+              "agent/src/reflex/combat-plan.ts",
+              "agent/src/reflex/silent-sl-resource-comparison.ts",
+              "agent/tests/silent-sl-resource-comparison.test.ts",
+              "agent/tests/silent-sl-resource-state.json"
+            ]
+          }
+        ],
+        "sources": [
+          {
+            "path": "agent/src/reflex/card-model.ts",
+            "base_sha256": "40ce2c99446269f65522465bb8c5166c2df5cfda40027a56530ac1b4fa3759d0",
+            "live_sha256": "84b3cff554b2c93bb75e4a35c92426e55c9e62de1c55aba443349708cb5e4bec",
+            "identical": false
+          },
+          {
+            "path": "agent/src/reflex/turn-solver.ts",
+            "base_sha256": "f9560834fa34582ed8fd9a26862862bde9a5bdf73703575d92291fa7cf9397c6",
+            "live_sha256": "f9560834fa34582ed8fd9a26862862bde9a5bdf73703575d92291fa7cf9397c6",
+            "identical": true
+          },
+          {
+            "path": "agent/src/sim/silent-opening.ts",
+            "base_sha256": "9d235d423d46513236caef9442e6aa275fa6444cd09db25a5408c42c0a6a2401",
+            "live_sha256": "9d235d423d46513236caef9442e6aa275fa6444cd09db25a5408c42c0a6a2401",
+            "identical": true
+          },
+          {
+            "path": "agent/src/reflex/silent-crusher-facing.ts",
+            "base_sha256": "78a90e120c688a8bae4ed80077ef12a862efa29b1d423160cca4cf72a13eed8e",
+            "live_sha256": "78a90e120c688a8bae4ed80077ef12a862efa29b1d423160cca4cf72a13eed8e",
+            "identical": true
+          },
+          {
+            "path": "agent/src/reflex/silent-sl-comparison.ts",
+            "base_sha256": "2fbb427662af78dd5428c70e0af9bb82dfe312d4ccffb33201da3c26dfdfc760",
+            "live_sha256": "2fbb427662af78dd5428c70e0af9bb82dfe312d4ccffb33201da3c26dfdfc760",
+            "identical": true
+          },
+          {
+            "path": "agent/src/reflex/silent-sl-resource-comparison.ts",
+            "base_sha256": "30da6d7d0c065957c118b211d53ac40360bcf93c05861be3dd811da78f8a8c21",
+            "live_sha256": "30da6d7d0c065957c118b211d53ac40360bcf93c05861be3dd811da78f8a8c21",
+            "identical": true
+          },
+          {
+            "path": "agent/src/reflex/combat-plan.ts",
+            "base_sha256": "1160c67ca777101a1a54a6eba7ed7d388d451736dc711d4805b32c8a844aeedf",
+            "live_sha256": "1160c67ca777101a1a54a6eba7ed7d388d451736dc711d4805b32c8a844aeedf",
+            "identical": true
+          },
+          {
+            "path": "agent/src/sl/explore.ts",
+            "base_sha256": "2f37e85cc1c1c31e96a0d1b90db850893ec75b6cf5b4b84bf07bbb8de4e3ec43",
+            "live_sha256": "89875b8d7fa6470bf2fea69188c16125992f9736a6fa048123c26f7ae6c0d312",
+            "identical": false
+          }
+        ]
+      },
+      "dispositions": [
+        {
+          "id": "silent-proposal-08eaa60bcc449852",
+          "state": "waiting",
+          "reason": "局部资源已能追溯；没有同入口资源、同后续抽牌下的不饮用/留药到Boss的整战对照。F15零净损同时已花两药，不能推出不喝也零损，或拟合新的持有价格。"
+        },
+        {
+          "id": "silent-proposal-92920295a648b540",
+          "state": "waiting",
+          "reason": "开场扣血与连战已有局部实现e8b4bb320ae3068db5ebb6ce8c6fa91a9689178a；缺固定后续抽牌、生成牌和药栏的连续通关替线。不能把省3血、首胜或低可信模拟0%改成新的SL门槛。"
+        },
+        {
+          "id": "silent-proposal-a327449c331efbc1",
+          "state": "waiting",
+          "reason": "现有候选比较已列血价/敌剩血/沙坑等预测；缺双边界完整受控后继与独立成功验证。多9血换15伤和4血换一沙坑回合均是局部取舍，不能拟成固定换线阈值或笼统禁逃离。"
+        },
+        {
+          "id": "silent-proposal-a099e89437e942bb",
+          "state": "waiting",
+          "reason": "6403fdcdadc803a092beb5165a068e22bf51c412已在live实现已观察进阶的确定生成与手位约束；原15ea09ad75a421d4bd65a820c187c8ee188186c8不是live祖先。整项仍缺计划妥当保留选择、穿插出刀的完整候选派发和SL恢复联合消费者验收，不能将容量子项当整个duplicate。"
+        },
+        {
+          "id": "silent-proposal-47910f82a1fdd98f",
+          "state": "waiting",
+          "reason": "e8b4bb320ae3068db5ebb6ce8c6fa91a9689178a确为live祖先；原fc7042d1df0626e9e726f4bc912d9c6f626d908f不是。缺留药、路线、SL全后继对照及未知回复/复活组合的结算次序，不能重复实现或关闭整个资源价值要求。"
+        },
+        {
+          "id": "silent-proposal-f1374df72d8e6a25",
+          "state": "waiting",
+          "reason": "缺隔离机制误差后同预算、同后续的未用/早用/留药成对整战结果。现有两条实际资源链能说明结转，不能独立校准药水持有价或终局权重；候选预测不当未执行线的真实收益。"
+        },
+        {
+          "id": "silent-proposal-38a49e6c97f31eea",
+          "state": "waiting",
+          "reason": "5c7105ff0294466da8319f2934beda05c6040794已实现普通紧勒受限分支；当前主动磨蚀模型已有。缺弃牌自动触发、增益分源、重接、逐击反伤及再生的完整联合消费者校准；普通无挡分支不能代表整项，也不外推升级/叠层/重放。"
+        },
+        {
+          "id": "silent-proposal-ef0e38a5dbd3bc07",
+          "state": "waiting",
+          "reason": "缺另一营火、事件、路线和用药时机的完整受控结果；路线条件改变与同条件模型误差须分开。两败不能拟出资源权重，也不能证明未抵达营火本可保证通关。"
+        },
+        {
+          "id": "silent-proposal-7f820c02d39bfaea",
+          "state": "waiting",
+          "reason": "c769739b97389fdc978b6515b83a38e3cd900f67及5604982e13890e0e2bc8bf8246272e8267321c0b已在live记录候选预测，且明确actual_turn_result=null/execution=unverified。缺同预算饱和排序校准、成对完整后继和整候选派发归属；弃牌重规划后不能把原题候选当整线执行。"
+        },
+        {
+          "id": "silent-proposal-04b6b430759815ed",
+          "state": "waiting",
+          "reason": "ec29ea34b919344b707e57ba472ea210f9c39d62和其重放f2c7cc1a7288893bceae0f0b20304a2b1fae5f57为live祖先，取整窄分支已存在。油灯仍缺可靠首次消费来源及跨动作/新战/SL恢复联合验证；现场放大不能套到每次施用，其他X值/升级/负面组合及能力整战后继仍未知。"
+        }
+      ],
+      "original_proposal_sha": [
+        {
+          "id": "silent-proposal-08eaa60bcc449852",
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261007-214301-experience-update/proposal-resources.md",
+          "sha256": "4d080ad9b9f1c93bff7bf169d59add7d863db358ca7e05ba10d95cdfb6b31016"
+        },
+        {
+          "id": "silent-proposal-92920295a648b540",
+          "path": "/home/dw/Projects/agent-sts2/learner/runs/20261007-214301-postmortem/proposal-sl-continuation-validation.md",
+          "sha256": "f9d04951c404f2d568d492c633e8baeb7ca5b4bee6826e20e9d5c2348c739bbf"
+        },
+        {
+          "id": "silent-proposal-a327449c331efbc1",
+          "path": "/home/dw/Projects/agent-sts2/learner/runs/20261007-221303-postmortem/sl-tradeoff-proposal.md",
+          "sha256": "e52c156a500b9e5f9d35e7b7e6922a91ee893b16576bc7d11f14e179c2e6a925"
+        },
+        {
+          "id": "silent-proposal-a099e89437e942bb",
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261007-223544-experience-update/proposal-cunning-capacity.md",
+          "sha256": "e02b6c6c93defbea23d60a515bf17be3c1c6ac3d3b47dd0e6da647cea92910c2"
+        },
+        {
+          "id": "silent-proposal-47910f82a1fdd98f",
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261007-223544-experience-update/proposal-continuation-sl.md",
+          "sha256": "d4ff2c80c60bdac273fbce918109b0a4634484006ec7e3b6b4516b9afede51bd"
+        },
+        {
+          "id": "silent-proposal-f1374df72d8e6a25",
+          "path": "/home/dw/Projects/agent-sts2/learner/runs/20261007-224302-postmortem/proposal-resource-value.md",
+          "sha256": "df1e14ed2c6b4b31c1dcbd1bd373702cff34a58332d4aab60f7e31dc44b395a0"
+        },
+        {
+          "id": "silent-proposal-38a49e6c97f31eea",
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261007-234302-experience-update/proposal-mechanisms.md",
+          "sha256": "6a07471e9049744900d49529a939a7014fb686810a0d7983e6c35eb65b5e8cb0"
+        },
+        {
+          "id": "silent-proposal-ef0e38a5dbd3bc07",
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261007-234302-experience-update/proposal-resources.md",
+          "sha256": "d37416e85fd4f9331fc5f652f5838eae9b528a76fe45b9c10aac07acfd572da5"
+        },
+        {
+          "id": "silent-proposal-7f820c02d39bfaea",
+          "path": "/home/dw/Projects/agent-sts2/learner/runs/20261007-234302-postmortem/proposal-saturated-sl.md",
+          "sha256": "bee54fe85711a177349f927c21f184b7112308ead5c74708b8f3b0b183ecf105"
+        },
+        {
+          "id": "silent-proposal-04b6b430759815ed",
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-004303-experience-update/proposal-mechanisms.md",
+          "sha256": "188d4daee0970bba6b59aa7c3498d9da76ef31aac4a42c69be2a86192cadab58"
+        }
+      ],
+      "original_ledger_trace_rows": 31,
+      "source_tests": {
+        "tsc": null,
+        "vitest": null,
+        "cases": null
+      },
+      "no_source_merge_release_experience_or_learning_parent_closed": true,
+      "original_failed_analysis_and_limits_kept": true
+    }
+  ],
+  "original_rows_across_two_tasks": 28373,
+  "cross_batch_overlap_not_independent_new_samples": true,
+  "waiting": 20,
+  "original_ledger_trace_rows": 47,
+  "all_existing_claim_first_prior_status_version_and_evidence_preserved": true,
+  "no_new_necessary_counterevidence_notice_in_original_reports": true,
+  "no_source_or_paper_regeneration_or_game_actions": true,
+  "owned_ledger_original_physical_order_preserved": true,
+  "owned_ledger_raw_sha256": "0aef152f54c7b7832d3e309df72a43313e4d6a9bd7a05cd46bb8a5e1b0f026cc"
+}
