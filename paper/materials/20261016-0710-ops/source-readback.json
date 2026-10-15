@@ -1,0 +1,285 @@
+{
+  "batch": "20261016-064301-fix-batch",
+  "source": "577f0bc424b7287910735cfdc86c253cc7ee8057",
+  "source_parent": "84524bce1d7b57f42403b80e42082c62fc8cd158",
+  "source_checks": {
+    "source": {
+      "files": 439,
+      "cases": 4111,
+      "phase_files": [
+        438,
+        1
+      ],
+      "phase_cases": [
+        4100,
+        11
+      ],
+      "exit": 0,
+      "tsc": 0,
+      "sha256": "47077ab54809252f186d552c76ab372c9d3b39b89cd0063a6b2c8239062c5424"
+    },
+    "live": null,
+    "red_exit": 1,
+    "green_exit": 0,
+    "targeted": {
+      "files": 6,
+      "cases": 6,
+      "exit": 0
+    },
+    "retry": false,
+    "source_commit": "577f0bc424b7287910735cfdc86c253cc7ee8057",
+    "live_commit": null
+  },
+  "native": {
+    "batch": "20261016-064301-fix-batch",
+    "thread": "01a141bb-cc09-7732-bf04-8652d59582db",
+    "cwd": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261016-064301",
+    "event_log": "learner/runs/20261016-064305-b38320f4-a88d-4543-abcd-2e5b154d3fbb-fix-batch.jsonl",
+    "registered_launch_batch": "20261016-064301-fix-batch",
+    "original_lease": "05ecaf12e46809c36cb370d93383802edf3e5fafd314619d05d8cb988eae1e8b",
+    "native_context": {
+      "source": "ops/codex-ops/accounts/codex1/learner/sessions/2026/10/16/rollout-2026-10-16T06-43-08-01a141bb-cc09-7732-bf04-8652d59582db.jsonl",
+      "offset": 50166,
+      "bytes": 5118,
+      "sha256": "39d8a4baf83edb556937f15f76283fe0576fc75ac5011ee366ab243900b1d6ce",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "sandbox": {
+        "type": "workspace-write",
+        "writable_roots": [
+          "/home/dw/Projects/agent-sts2",
+          "/home/dw/Projects/agent-sts2/.git",
+          "/home/dw/Projects/agent-sts2/.git/worktrees/codex-fix-silent-20261016-064301"
+        ],
+        "network_access": false,
+        "exclude_tmpdir_env_var": false,
+        "exclude_slash_tmp": false
+      },
+      "approval_policy": "never"
+    },
+    "native_user_input": {
+      "offset": 55284,
+      "bytes": 13081,
+      "sha256": "1b5c2ea40363dbfb7d7b36aa05db127d7c8acd9178dacd9184a0e31125d18fd9",
+      "input_sha256": "8b8f1692e09add6e662660f9aebe2ac029a246eb9e3a44aa225ffd18e13c9e58"
+    },
+    "original_header_events": [
+      {
+        "offset": 0,
+        "bytes": 14892,
+        "sha256": "9f387ba6dc018a1acfc1af27772036b06ed29a89f9ab30093881633e62ee4546",
+        "type": "learner_launch",
+        "attempt": null,
+        "code": null
+      },
+      {
+        "offset": 14892,
+        "bytes": 369,
+        "sha256": "e6be3e9276ed741c54beb2444c0a2a9f4174c45ac84dad6bf42a9c58a7584c3b",
+        "type": "learner_startup_attempt",
+        "attempt": 1,
+        "code": null
+      },
+      {
+        "offset": 18274,
+        "bytes": 77,
+        "sha256": "95b4a4ddf482200741b66978d19f1dd2013c5ff9dc1bba74c427a9c0019106c1",
+        "type": "thread.started",
+        "attempt": null,
+        "code": null
+      }
+    ],
+    "startup_attempts": 1,
+    "failed_startups_preserved": 0,
+    "no_model_or_manual_restart": true
+  },
+  "original_failed_state_preserved": true,
+  "original_merge_result": {
+    "branch": "codex-fix-silent-20261016-064301",
+    "item": "infra-feature-root-event-notice-path",
+    "source": "577f0bc424b7287910735cfdc86c253cc7ee8057",
+    "initial_live": "92c3d22f191f0a79a4f0c56d29b189bd7185fca0",
+    "refreshed_paths": [],
+    "overlap_paths": [],
+    "pre_merge": "92c3d22f191f0a79a4f0c56d29b189bd7185fca0",
+    "preflight_exit": 1,
+    "conflicts": [
+      "notes/fix-queue-v4.md",
+      "notes/for-roy.md",
+      "notes/lessons.md",
+      "notes/ops-handoff.md",
+      "ops/inbox-dev.md",
+      "paper/data/README.md",
+      "paper/data/commits.csv",
+      "paper/data/cost-curve-silent.csv",
+      "paper/data/cost-silent.csv",
+      "paper/data/cost-sources.json",
+      "paper/data/cost-unattributed.csv",
+      "paper/data/decisions_by_label.csv",
+      "paper/data/learning-curve-silent.csv",
+      "paper/data/runs.csv",
+      "paper/data/summary.json",
+      "paper/data/verification.json",
+      "paper/materials/decision-log.md",
+      "paper/materials/learning/ledger.jsonl",
+      "paper/materials/silent/cost.md"
+    ],
+    "merged": null,
+    "merge_not_started": true,
+    "test_exit": null,
+    "error": "live合并预检冲突，按任务要求停止，不覆盖记录/账本/生成表：notes/fix-queue-v4.md, notes/for-roy.md, notes/lessons.md, notes/ops-handoff.md, ops/inbox-dev.md, paper/data/README.md, paper/data/commits.csv, paper/data/cost-curve-silent.csv, paper/data/cost-silent.csv, paper/data/cost-sources.json, paper/data/cost-unattributed.csv, paper/data/decisions_by_label.csv, paper/data/learning-curve-silent.csv, paper/data/runs.csv, paper/data/summary.json, paper/data/verification.json, paper/materials/decision-log.md, paper/materials/learning/ledger.jsonl, paper/materials/silent/cost.md"
+  },
+  "original_report": {
+    "task": "fix-batch",
+    "base": "84524bce1d7b57f42403b80e42082c62fc8cd158",
+    "fixes": [
+      {
+        "item": "infra-feature-root-event-notice-path：合法根目录事件日志被通知注册拒绝",
+        "commit": "577f0bc424b7287910735cfdc86c253cc7ee8057",
+        "test": "agent/tests/feature-root-event-notice.test.ts",
+        "fails_without_fix": true
+      }
+    ],
+    "skipped": [
+      {
+        "item": "silent-0271：毒必胜提前返回遗漏保血候选",
+        "reason": "策略类/沿原独立提案，宽父保持"
+      },
+      {
+        "item": "silent-0279：SL抽序升级改标",
+        "reason": "策略类/沿原独立提案，宽父保持"
+      },
+      {
+        "item": "silent-0308：沙坑截止结束题面",
+        "reason": "策略类/沿原独立提案，宽父保持"
+      },
+      {
+        "item": "silent-0311：库存恢复血量预算",
+        "reason": "策略类/沿原独立提案，宽父保持"
+      },
+      {
+        "item": "silent-0320：同线新建UNMOVABLE",
+        "reason": "策略类/沿原独立提案，宽父保持"
+      },
+      {
+        "item": "silent-0322：升级神化同线升级",
+        "reason": "策略类/沿原独立提案，宽父保持"
+      },
+      {
+        "item": "silent-0329：饮药临时力量接线",
+        "reason": "策略类/沿原独立提案，宽父保持"
+      },
+      {
+        "item": "arch-funnel-guard",
+        "reason": "太大/独立架构或归因任务，普通纯bug批不混入；沿原owner继续。"
+      },
+      {
+        "item": "arch-learning-priority",
+        "reason": "太大/独立架构或归因任务，普通纯bug批不混入；沿原owner继续。"
+      },
+      {
+        "item": "arch-unified-resource-value",
+        "reason": "太大/独立架构或归因任务，普通纯bug批不混入；沿原owner继续。"
+      },
+      {
+        "item": "inv-f33-regression",
+        "reason": "太大/独立架构或归因任务，普通纯bug批不混入；沿原owner继续。"
+      },
+      {
+        "item": "silent-0332：成功首战接续nonpositive-hp",
+        "reason": "证据不足：契约分支可定位，资源/steps尾部及机制根因仍未知"
+      },
+      {
+        "item": "silent-0334：升级隐秘匕首模型",
+        "reason": "策略类/沿原独立提案，宽父保持"
+      },
+      {
+        "item": "silent-0339：尾巴误核销",
+        "reason": "策略类/沿原独立提案，宽父保持"
+      },
+      {
+        "item": "silent-0344：坚韧之环延迟格挡",
+        "reason": "策略类/沿原独立提案，宽父保持"
+      },
+      {
+        "item": "silent-0347：组装师攻击召唤",
+        "reason": "策略类/沿原独立提案，宽父保持"
+      },
+      {
+        "item": "silent-0349：已有虚弱后的减力",
+        "reason": "策略类/沿原独立提案，宽父保持"
+      },
+      {
+        "item": "core-build-notify-222802-rc2：历史发送事实",
+        "reason": "证据不足：后续诊断已修，原历史发送事实未知"
+      },
+      {
+        "item": "silent-0362：背向攻击减力倍率",
+        "reason": "策略类/沿原独立提案，宽父保持"
+      },
+      {
+        "item": "silent-0365：未建模药水目标可达性",
+        "reason": "策略类/沿原独立提案，宽父保持"
+      },
+      {
+        "item": "框架外层时限与分段续验收尾",
+        "reason": "太大/独立框架：精确续验入口已实现，宿主收尾范围继续"
+      },
+      {
+        "item": "调度公平性核查",
+        "reason": "证据不足：未证明永久饥饿，沿原框架核查"
+      },
+      {
+        "item": "silent-0481：技能药水生命周期措辞",
+        "reason": "策略类/题面知识：技能药水生命周期措辞仍在，沿 silent-proposal-686d4e759478eebb；刀舞窄修复不覆盖本项"
+      },
+      {
+        "item": "silent-0487：MAD_SCIENCE三段攻击模型",
+        "reason": "策略类：MAD_SCIENCE三段攻击模型；沿原silent-proposal-0a0b31e284e6793e独立策略链，不重复派发。"
+      },
+      {
+        "item": "codex大脑缓存命中偏低",
+        "reason": "证据不足：缺当前同题受控请求对比，本离线任务不调用真实LLM或网络。"
+      },
+      {
+        "item": "sandbox-glob-startup-race：上游目录生命周期及其他租约拒绝原因",
+        "reason": "证据不足：798af209注册保存屏障已是main/live祖先；上游目录删除者及完整生命周期仍未知。"
+      },
+      {
+        "item": "named-card-facts-transport：事件入口之外范围",
+        "reason": "太大/独立功能：42c920f34事件入口已实现，其余沿原架构owner。"
+      },
+      {
+        "item": "boss模拟样本性能及v5-dpr-health宽范围",
+        "reason": "太大/独立专项：保留原冻结输入、样本/预算和验收链，不以定向回归代替校准。"
+      },
+      {
+        "item": "rest-timeout-accepted-route-not-committed / silent-0446",
+        "reason": "策略类/结构：沿原silent-proposal-2d3aa8dfb27dbe3f，不无条件提交未确认动作。"
+      },
+      {
+        "item": "silent-0469：纸鹤其他未知组合/整战收益",
+        "reason": "策略类：本基线已含8d386fc76的已观察聚合体子项，不能关闭更宽组合/整战范围。"
+      },
+      {
+        "item": "live合入",
+        "reason": "持锁合并预检发现19个记录/账本/生成表冲突，按要求停止；源码已提交，未启动实际合并或合后测试。"
+      }
+    ],
+    "merged": null,
+    "tests": {
+      "tsc": 0,
+      "vitest": 0,
+      "cases": 4111
+    },
+    "code_proposals": [],
+    "implementation_domains": [],
+    "report": "/home/dw/Projects/agent-sts2/learner/runs/20261016-064305-b38320f4-a88d-4543-abcd-2e5b154d3fbb-fix-batch/report.md"
+  },
+  "source_paths": [
+    "agent/tests/feature-root-event-notice.test.ts",
+    "ops/learning_requests.py",
+    "ops/tests/test_feature_root_event_notice.py"
+  ],
+  "classification": "Offline authenticated notice-path compatibility, no game behavior or release increment."
+}

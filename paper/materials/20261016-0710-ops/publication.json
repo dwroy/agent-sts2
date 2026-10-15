@@ -1,0 +1,146 @@
+{
+  "at": "2026-10-16 07:16:35 CST",
+  "batch": "20261016-064301-fix-batch",
+  "source": "577f0bc424b7287910735cfdc86c253cc7ee8057",
+  "source_parent": "84524bce1d7b57f42403b80e42082c62fc8cd158",
+  "old_main": "7da6f7693325878a4b59113d630d219316a7f64a",
+  "main": "aefce170750769d997bfb088785f0aad88b1eb54",
+  "old_live": "92c3d22f191f0a79a4f0c56d29b189bd7185fca0",
+  "live": "2806f8bd8376e9e6e83c296226d9209b386d7292",
+  "tree": "251b0c366ffc51f54aaa8e3f1e0b8658d0b9d8ac",
+  "source_paths": [
+    {
+      "path": "agent/tests/feature-root-event-notice.test.ts",
+      "source_sha256": "73d7f2a918e5eb13958ff0daf90c9b164b17b69a752d2d04bf513ee2185259ff",
+      "live_sha256": "73d7f2a918e5eb13958ff0daf90c9b164b17b69a752d2d04bf513ee2185259ff"
+    },
+    {
+      "path": "ops/learning_requests.py",
+      "source_sha256": "b8f99ae5bfe559b8cb849a2d6804809d127af256e80e08c289950d33df71e5bd",
+      "live_sha256": "8cdba8beba39e4750a136fdea02505b1585326d0ab03d4b77b6bcf4d576f33d2"
+    },
+    {
+      "path": "ops/tests/test_feature_root_event_notice.py",
+      "source_sha256": "d394781b8ca316dd29cd1b3f79f27f147e02e30c8916313603c100ceb6e5d1ab",
+      "live_sha256": "d394781b8ca316dd29cd1b3f79f27f147e02e30c8916313603c100ceb6e5d1ab"
+    }
+  ],
+  "preserved_existing_script_difference": {
+    "path": "ops/learning_requests.py",
+    "classification": "Preserve the existing live absence of the unrelated five-line worktree-storage restore block; do not import it from main.",
+    "old_main_sha256": "9c635c9ba4e548164159863b986ee8efd863e267c9a0f65e199b2aea55586ebf",
+    "old_live_sha256": "d8d332d30e139057d5a0df25117e9314d3488bdf64dd7f2a4fab5ebaa59ddea4",
+    "new_source_sha256": "b8f99ae5bfe559b8cb849a2d6804809d127af256e80e08c289950d33df71e5bd",
+    "new_live_sha256": "8cdba8beba39e4750a136fdea02505b1585326d0ab03d4b77b6bcf4d576f33d2",
+    "three_way_merge_clean": true
+  },
+  "source_actual_main_live_ancestor": true,
+  "unrelated_dirty_preserved": {
+    "/home/dw/Projects/agent-sts2": {
+      "notes/fix-queue-v4.md": "c7b428860adc8b3d79d4e5bab4eade537d56d742206bf9956a7174b3fcc6a1f6",
+      "notes/for-dai.md": "e2a3e5d187bf87c98effa85a82d6b8ea84896d1d83e339cee0e97e0311d27060",
+      "notes/for-roy.md": "a3ab2329f2e87acef0d78ff37d70f99e2200c2913d188fb31622c9eaeb542423",
+      "notes/lessons.md": "0bd5d0162a85fba98c45ae69338b268ee77a93f08d664a9e447ada414e0f4b1d",
+      "notes/monster-db-check.md": "983ec60c859b09f49c798385ca5c6c71b0350b1d80a43a7e734f0d151eca25ae",
+      "notes/strategy-research-core-output-silent.json": "01680a455377f1911c4887cdc911dccc9614faac2164c73bb2d76a91234c4899",
+      "notes/strategy-research-core-reuse-silent.json": "90bd671ba8e1cf97f86a45258795c61e85c39de91c4f3a0959cd7870eef932e8",
+      "ops/autoplay.log": "e418468826afcb47ce6c6e4cd1898014830f95b6e2477e39a22daa657fa6b995",
+      "ops/inbox-dev.md": "bf0ae3b58fabdd96731a2e302afd2d730b32b8c82cdf4ece18b91f2c95d09473",
+      "ops/refresh.log": "2ac17e39ec7aea096d9a54a66af251bcc0c0593e41c1977a5fa4700cb5282f0f",
+      "ops/restarts.log": "5f56806adb7e1c5e8e5b4524319e773e3c227659a27fef90a358534cf3ae198f",
+      "ops/win-notified": "20dcea4741d76c6fe28d03df084abe0a371c3c3f273fb72cc8cfbbb78ce88e25",
+      "paper/materials/20261012-0853-fallback/host-recheck-request.log": "dc90d9e90852155de05f2dd8f1861dd7e51eabfaa70b47d266940230f609630c",
+      "paper/materials/20261013-multi-instance-climb/independent-ops-session.json": "b0efcd8cc3e377b4ed49b577c1116adbbd696c6b31f38125b9917e7ff7ac7df8",
+      "paper/materials/20261014-2057-ops/host-recheck-request.log": "5b355c407e5570ab92ebe6684f9c108ad9124996259b7667c185292932cf2e54",
+      "paper/materials/20261014-v5-construction-integration/progress.json": "1e21f70ded45347f198ca4f385c7842c47428ce7e11b3e41229c7813a0f5bd88",
+      "paper/materials/20261015-0118-ops/original-strategies-host-request.log": "8ab25c8e9afcc6fa2141f67f5bd9ad84ce7b2eff3e54b42ea5127793a8b680f6",
+      "paper/materials/20261015-0213-ops/R3-interface-confirmation.err": "8bf0bad0707ec098bbdcb0c1cffb580409023e8de15157550e386905d92a68e1",
+      "paper/materials/20261015-0213-ops/R3-interface-confirmation.out": "e02b3e38bc8376bf7f159b9d9a126ea3e3b2cbd38bb10f307c2395cf0b08913d",
+      "paper/materials/20261015-0725-ops/c1-c2-host-recheck-request.log": "fca68d016cb8f55333379f628da73680ed59454ce21e8f93d49246ac5b6edb85",
+      "paper/materials/20261015-1436-serpent-replay/serpent-host-request.log": "38d50d5b7e89b9145e73c253ecba86db40fc5e3eb62a2e32140883690e55ae3f",
+      "paper/materials/20261015-1547-publication/new-host-request.log": "7283ad593b4df72d4fb73b6dc60ebe7a524212cd27e7df33084ee86270d393e2",
+      "paper/materials/20261015-2249-ops/new-host-request.log": "4d7dcb4fcb3a1084c8f9dc076996750710adbdee62f7fe9428257577da85d4d5",
+      "paper/materials/20261015-2321-ops/new-host-request.log": "dd47a0d2d3b2151bf3e8c2c4f16581b81ab91e09a7fe5e75855e346f8a7cad4c",
+      "paper/materials/20261015-v5-s-completion/on-RQCHNN0W72KF/main-records-integration-first.out": "e52c2f2b9631ce24c20091b3a1ca99631f7e3c4243843dab05cfced641a0105b",
+      "paper/materials/20261016-0240-ops/new-host-request.log": "f833db16a5dd9a704bff4f253b7fa614840046ade47010cbe5b1e2dbc15ce4af",
+      "paper/materials/STATE-2026-10-15.md": "07fa212b6fae27f7c381f80782d3c267d5fddcce26a620288b0f8bb153a1ab32",
+      "paper/materials/decision-log.md": "1b101e47a87e60c2fa36d5d49db1d8c961f4a57e2c6afbb608a287b654459f53",
+      "paper/materials/experience-changelog-silent.md": "556efd63a4edbe50a5ae57fa60baf706605ffba3a82a688ee52376122252ee6f",
+      "paper/materials/ironclad/cost.md": "2423e1413ac567959e9a03a6c32f59924e2f55275cdbe5196da82de4d0444848",
+      "paper/materials/learning/ledger.jsonl": "e5caaab80006ed8c23c229720549a81674a332f33b4c0c385224b21376332eb3",
+      "paper/materials/none/cost.md": "f854ac7edd623263e38435b3b80e0466d562816b85964ddaf27cd8ea988049c0",
+      "paper/materials/unattributed/cost.md": "40a97b4cc281962bcb4d1caa56c35dbb8a34fd40f5b1144fb234fe0e6444c8f1"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/live": {
+      "notes/monster-db-check.md": "a6d88764aca01732443cc06e6468009c136ef99336b7bc60f61bc048f7212331"
+    }
+  },
+  "source_checks": {
+    "source": {
+      "files": 439,
+      "cases": 4111,
+      "phase_files": [
+        438,
+        1
+      ],
+      "phase_cases": [
+        4100,
+        11
+      ],
+      "exit": 0,
+      "tsc": 0,
+      "sha256": "47077ab54809252f186d552c76ab372c9d3b39b89cd0063a6b2c8239062c5424"
+    },
+    "live": null,
+    "red_exit": 1,
+    "green_exit": 0,
+    "targeted": {
+      "files": 6,
+      "cases": 6,
+      "exit": 0
+    },
+    "retry": false,
+    "source_commit": "577f0bc424b7287910735cfdc86c253cc7ee8057",
+    "live_commit": null
+  },
+  "original_merge_conflicts_preserved": {
+    "branch": "codex-fix-silent-20261016-064301",
+    "item": "infra-feature-root-event-notice-path",
+    "source": "577f0bc424b7287910735cfdc86c253cc7ee8057",
+    "initial_live": "92c3d22f191f0a79a4f0c56d29b189bd7185fca0",
+    "refreshed_paths": [],
+    "overlap_paths": [],
+    "pre_merge": "92c3d22f191f0a79a4f0c56d29b189bd7185fca0",
+    "preflight_exit": 1,
+    "conflicts": [
+      "notes/fix-queue-v4.md",
+      "notes/for-roy.md",
+      "notes/lessons.md",
+      "notes/ops-handoff.md",
+      "ops/inbox-dev.md",
+      "paper/data/README.md",
+      "paper/data/commits.csv",
+      "paper/data/cost-curve-silent.csv",
+      "paper/data/cost-silent.csv",
+      "paper/data/cost-sources.json",
+      "paper/data/cost-unattributed.csv",
+      "paper/data/decisions_by_label.csv",
+      "paper/data/learning-curve-silent.csv",
+      "paper/data/runs.csv",
+      "paper/data/summary.json",
+      "paper/data/verification.json",
+      "paper/materials/decision-log.md",
+      "paper/materials/learning/ledger.jsonl",
+      "paper/materials/silent/cost.md"
+    ],
+    "merged": null,
+    "merge_not_started": true,
+    "test_exit": null,
+    "error": "live合并预检冲突，按任务要求停止，不覆盖记录/账本/生成表：notes/fix-queue-v4.md, notes/for-roy.md, notes/lessons.md, notes/ops-handoff.md, ops/inbox-dev.md, paper/data/README.md, paper/data/commits.csv, paper/data/cost-curve-silent.csv, paper/data/cost-silent.csv, paper/data/cost-sources.json, paper/data/cost-unattributed.csv, paper/data/decisions_by_label.csv, paper/data/learning-curve-silent.csv, paper/data/runs.csv, paper/data/summary.json, paper/data/verification.json, paper/materials/decision-log.md, paper/materials/learning/ledger.jsonl, paper/materials/silent/cost.md"
+  },
+  "release_id": null,
+  "release_increment": false,
+  "existing_behavior_release": "V5-R366 unchanged",
+  "game_behavior_or_account_home_model_prompt_changed": false,
+  "host": "pending single original064301-fix-batch request"
+}
