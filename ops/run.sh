@@ -20,6 +20,13 @@ if [ -f "$ROOT/ops/codex-ops/brain-home" ]; then
   fi
   export BRAIN_CODEX_HOME="$selected_brain_home"
 fi
+# Roy 2026-10-15: only the selected main Silent login may admit paid credits. Config checks the role and source root.
+unset BRAIN_CODEX_PAID_CREDITS
+if [ "$ROOT" = /home/dw/Projects/agent-sts2 ] \
+  && [ "$LIVE" = "$ROOT/.worktrees/live" ] \
+  && [ "${BRAIN_CODEX_HOME:-}" = "$ROOT/ops/codex-ops/accounts/codex1/brain" ]; then
+  export BRAIN_CODEX_PAID_CREDITS=main-silent-codex1-20261015
+fi
 # Roy 2026-10-12: production Codex defaults apply even with a legacy scheduler environment.
 export BRAIN_CODEX_MODEL=gpt-6.1-sol BRAIN_CODEX_EFFORT=xhigh
 export PATH="$HOME/.local/node/bin:$PATH"
