@@ -58,8 +58,9 @@ describe("S sign audit and readiness algebra", () => {
     expect(value).toMatchObject({ samples: 2, valid: 1, missing: 1 });
     expect(value.sensitivity.every((point) => point.win_with_dpr === null)).toBe(true);
   });
-  it("resolves shadow by default and isolates every other character even with on requested", () => {
-    expect(sReadinessMode("SILENT", {})).toBe("shadow");
+  it("enables the accepted Silent diagnostic and isolates every other character even with on requested", () => {
+    expect(sReadinessMode("SILENT", {})).toBe("on");
+    expect(sReadinessMode("SILENT", { S_READINESS: "shadow" })).toBe("shadow");
     expect(sReadinessMode("SILENT", { S_READINESS: "off" })).toBe("off");
     expect(sReadinessMode("SILENT", { S_READINESS: "on" })).toBe("on");
     expect(sReadinessMode("SILENT", { S_READINESS: "typo" })).toBe("off");

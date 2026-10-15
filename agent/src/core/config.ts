@@ -38,7 +38,7 @@ export function simAdaptivePolicy(character: string | null | undefined, env: Nod
 /** V5-S P1: resolve against the actual run character, including tools that do not call loadConfig. */
 export function sReadinessMode(character: string | null | undefined, env: NodeJS.ProcessEnv = process.env): "off" | "shadow" | "on" {
   if (characterKey(character ?? "") !== "silent") return "off";
-  const value = env["S_READINESS"]?.trim().toLowerCase() ?? "shadow";
+  const value = env["S_READINESS"]?.trim().toLowerCase() ?? "on";
   return value === "on" || value === "shadow" ? value : "off";
 }
 
