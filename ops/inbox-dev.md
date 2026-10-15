@@ -2212,3 +2212,38 @@ selector于2026-10-15 13:15:58 CST从/home/dw/.codex-brain原子改为/home/dw/P
 - 2026-10-16 00:23:30 CST [运维 codex] 000021修复及两策略完成事件已核：无源码变更或合入受阻，fix原failed/rc0保留；两组20项waiting及具体缺口保持。原68项定向测试与策略材料复核分列，47所属追溯已核，未重复合入、发号或重派。回执paper/materials/20261016-0019-ops/。
 
 - 2026-10-16 01:00:56 CST [运维 codex] 原004302策略10项继续waiting，无源码变更或合入受阻；74项为材料检查、生产tests仍null，32所属追溯已核。首末预算差沿原报告边界保留，不当新实现或完整校准。回执paper/materials/20261016-0058-ops/。
+
+- 2026-10-16T01:03:45.045656 [ops学习通知/disagreement] silent-proposal-f16527e59b5cc1e0：{
+  "at": "2026-10-16 01:03:45 CST",
+  "proposal_id": "silent-proposal-f16527e59b5cc1e0",
+  "character": "silent",
+  "batch": "20261016-004302-s2-strategy-proposal",
+  "original_proposal": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-033315-experience-update/proposal-mechanisms.md",
+  "original_proposal_sha256": "a71d6c87441d33115c5a8f4d3e0103673fd07798805978646f3a3961fb749079",
+  "learner_exact_report_quote": "- 原ledger silent-0005已有一条RC61MFQM63Y6/F45的support注记，却同时提及另外两局；RC61实际结束F33，该层定位越界，不能用作RC F45支持。本批只追加溯源提示，不改原claim、首证、证据角色或状态；它不是基础机制反例，也不添加其他局的结论。",
+  "original_view": {
+    "run": "RC61MFQM63Y6",
+    "floor": 45,
+    "role": "support",
+    "note": "本角色原日志核实silent-footwork-block,silent-frail-card-block；PF90JTU0UZ5M A10四敏三挡27仍受自爆30；R3AJCGQGGMR4 A10巨斧T7石头1敏加普通步法2至3，脆弱下两防御各4→6共12，多4挡仍不足26，9血死；余像没打不预支逐牌挡。",
+    "added": "2026-10-08T22:55:26+08:00"
+  },
+  "different_conclusion": "旧silent-0005的RC61/F45定位超出该局F33终局，不能作为RC61 F45支持；注记提到的另外两局不因此变成RC61证据，基础机制没有被本次反驳。",
+  "evidence": {
+    "path": "paper/materials/20261016-0101-ops/ledger-location-evidence.json",
+    "sha256": "9c47ad3da436b0c8a7438ae936571d981fa54bb81071c9f09e3eb7b293b8e50e"
+  },
+  "affected_ledger_ids": [
+    "silent-0005"
+  ],
+  "affected_experience_ids": [
+    "silent-footwork-block",
+    "silent-frail-card-block"
+  ],
+  "next_step": "请现有watcher本人读原支持行、原run终局及学习者报告后明确告知Roy定位勘误和边界；保持旧行/claim/首证/先验/状态/版本及原提案，原owner按已有链核后续来源，不另造研究父项、重复实验或代其他角色ACK。",
+  "new_learning_parent": false,
+  "prepared_ops_source_only": true,
+  "no_other_role_ACK": true
+} 回执/home/dw/Projects/agent-sts2/ops/codex-ops/learning-notices/08473b2ce666b35ebdaca530.json；watcher须读取并告知Roy，尚未确认用户收到。<!-- learning-notice:08473b2ce666b35ebdaca530 -->
+
+- 2026-10-16 01:06:06 CST [运维 codex] 原004302-s2九waiting，一项原选/护栏/SL记录功能由既有cf72bd源码覆盖，无本批上线。45所属追溯已核；RC61/F45旧证据定位勘误已依原提案通知08473b2ce666b35ebdaca530实际转入现有watcher收件箱，watcher读取及Roy告知仍pending。回执paper/materials/20261016-0101-ops/。

@@ -1830,3 +1830,36 @@ selector于2026-10-15 13:15:58 CST从/home/dw/.codex-brain原子改为/home/dw/P
 - 2026-10-15 22:55:20 CST｜规则实际上线 V5-R363 / V5.silent-controlled-opening-disclosure1：旧：静默A10耳环在B3只算能量，持有/买入题面未披露首轮自动接管未模拟。新：仅上述已观察角色/进阶的持有和买入候选明确能量已算、首轮接管及内部顺序未知；不新增游戏判断/禁选，不改模拟数值、合法候选、样本、排序、HP/SL/药价或其他角色。证据/账本：XTSV1U9JD34T F47及F49T1接管后稳定帧23HP/16挡/3能/只余诅咒，silent-0164/e5ea36df；不能由接管后帧反推内部顺序、耗尽能量或整战收益。sourcea78bb40ef73af8bb15f40f7fa302dd33a76c2907，原撤码3失败4过、恢复7过，源完整434文件4088+paths11/tsc0；预期提高未建模边界可见性，不承诺胜率。实际behavior89ef69552f158743c4e9f5b6bbbf18cbd293261a→livee1e7ee853b627919a6d1eab51c0cdf263b0bb852/tree94a022bc32e07ca63daffcb56eedde5adfdfbb62，保10刷新知识、历史Dai/Roy文字及其他修复/并行记录。回退仅四源叶当前上下文逆补丁，保知识/其余发布。注册保存屏障source798af209三叶另以基础设施合入b3630f5b250ee37cdf309c9a7a887f5725f3a6f1，不另发行为号；不把历史ENOENT/null租约一律归因此竞态。新组合2文件8固定项0，原214302-fix单次宿主全检已请求、结果及自然注册/持有/买入消费者pending；原failed/rc0/mergednull、冲突/失败与九项waiting保留，不改当前局/账号home/模型/权限/prompt。回执paper/materials/20261015-2249-ops/。
 
 - 2026-10-15 23:27:04 CST｜规则实际上线 V5-R364 / V5.silent-pounce-coverage1：旧：已见静默A10猛扑+只因伤害已建模而known=true，免费技能效果缺口未标。新：仅VLZ原已观察升级/无附魔/2能/零星费/精确模板和21/23/16预览置known=false、记录unknownCards，伤害/成本仍按旧模型；其他角色/进阶/未观察预览维持现行行为，不新增免费传播、数值、禁选、HP/SL/药价或排序规则。证据/账本：VLZ6CCT8AQ0A F35T2、F37T3、F43T5三对原帧及0237/0238、89354805/283a1647；同局非独立校准。sourced3e57c77ef32346af9f59494914bcf2bce2de4ec，原撤3红1绿/恢复4绿、源436文件4093+paths11/tsc0/gitleaks0；预期提高未建模效果可见性，不宣称策略收益或整条神化已实现。实际behavior868d39671b8ac65c3c81d677a5190509e1dd838b→livecfa1c0be88147b4eac65c13d8c550b23ed4eef17/treef73356866790b5645e781161ee1ade655ff21066，三叶源祖先main/live绑定；回退仅这三叶当前上下文逆补丁、保现有知识/注释/R363及其他发布。原六记录冲突/failed/rc0/mergednull与十宽waiting保留。合后1文件4固定0，原224302策略通道单次宿主full已请求，结果/下一自然消费者pending；不重跑源full/当前局、不改账号home模型权限prompt。回执paper/materials/20261015-2321-ops/。
+
+- 2026-10-16T01:03:45.045656 [ops学习通知/disagreement] silent-proposal-f16527e59b5cc1e0：{
+  "at": "2026-10-16 01:03:45 CST",
+  "proposal_id": "silent-proposal-f16527e59b5cc1e0",
+  "character": "silent",
+  "batch": "20261016-004302-s2-strategy-proposal",
+  "original_proposal": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-033315-experience-update/proposal-mechanisms.md",
+  "original_proposal_sha256": "a71d6c87441d33115c5a8f4d3e0103673fd07798805978646f3a3961fb749079",
+  "learner_exact_report_quote": "- 原ledger silent-0005已有一条RC61MFQM63Y6/F45的support注记，却同时提及另外两局；RC61实际结束F33，该层定位越界，不能用作RC F45支持。本批只追加溯源提示，不改原claim、首证、证据角色或状态；它不是基础机制反例，也不添加其他局的结论。",
+  "original_view": {
+    "run": "RC61MFQM63Y6",
+    "floor": 45,
+    "role": "support",
+    "note": "本角色原日志核实silent-footwork-block,silent-frail-card-block；PF90JTU0UZ5M A10四敏三挡27仍受自爆30；R3AJCGQGGMR4 A10巨斧T7石头1敏加普通步法2至3，脆弱下两防御各4→6共12，多4挡仍不足26，9血死；余像没打不预支逐牌挡。",
+    "added": "2026-10-08T22:55:26+08:00"
+  },
+  "different_conclusion": "旧silent-0005的RC61/F45定位超出该局F33终局，不能作为RC61 F45支持；注记提到的另外两局不因此变成RC61证据，基础机制没有被本次反驳。",
+  "evidence": {
+    "path": "paper/materials/20261016-0101-ops/ledger-location-evidence.json",
+    "sha256": "9c47ad3da436b0c8a7438ae936571d981fa54bb81071c9f09e3eb7b293b8e50e"
+  },
+  "affected_ledger_ids": [
+    "silent-0005"
+  ],
+  "affected_experience_ids": [
+    "silent-footwork-block",
+    "silent-frail-card-block"
+  ],
+  "next_step": "请现有watcher本人读原支持行、原run终局及学习者报告后明确告知Roy定位勘误和边界；保持旧行/claim/首证/先验/状态/版本及原提案，原owner按已有链核后续来源，不另造研究父项、重复实验或代其他角色ACK。",
+  "new_learning_parent": false,
+  "prepared_ops_source_only": true,
+  "no_other_role_ACK": true
+} 回执/home/dw/Projects/agent-sts2/ops/codex-ops/learning-notices/08473b2ce666b35ebdaca530.json；watcher须读取并告知Roy，尚未确认用户收到。<!-- learning-notice:08473b2ce666b35ebdaca530 -->
