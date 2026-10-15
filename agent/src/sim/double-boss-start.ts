@@ -16,7 +16,7 @@ export function withDoubleBossStart(state: GameState, knowledge: Knowledge, inpu
   const linesEnabled = bossLinesOptions.enabled;
   const openingHpLoss = observedRoyalPoisonOpeningLoss(state);
   const value = openingHpLoss > 0 ? { ...model.value, openingHpLoss,
-    source: `${model.value.source}；TXZ6RVMQA09D A10已观察组合：下一战可操作前失去4生命` } : model.value;
+    source: `${model.value.source}；TXZ6RVMQA09D/AD3QSC3P41JU A10已观察组合：下一战可操作前失去4生命` } : model.value;
   let variants: NonNullable<RolloutInput["continuation"]>["variants"];
   // Building a board must not start nested whole-fight simulations, even after a boss becomes trusted.
   bossLinesOptions.enabled = false;
