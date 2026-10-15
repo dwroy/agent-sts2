@@ -2071,3 +2071,19 @@ tsc及2673例沙箱测试通过，推送动作专项2例/Python4例通过。当�
 实际阻塞：旧agent/src/brain/engines/codex-usage.ts会在ordinaryUsageAllowed=false、100%窗口或credits消费时阻断；本次真实读数下start/beforeCall均拒绝。Roy的credits使用已明确授权，需核清“仅主线brain-home”的改动范围是否包括只对主线增加paid-credit准入；具体最小方案和固定验收已写credit-admission-scope.md，尚未改代码/保护。selector保原/home/dw/.codex-brain，因此不能声称下一局已生效。
 
 HLAWCGM3KHVB/PID952170当前局保持；未来如旧局出现BRAIN_FALLBACK按指示照常结束并分账。Regent/其他space、ops/学习者账号均未改，未兑券/发模型请求、未读凭据或改prompt/预算/队列。预检及未激活回执：paper/materials/20261015-silent-codex1-next-run/account-preflight.json、target-rpc-diagnostic.json、activation-blocker.json。
+
+### 2026-10-15 13:03:15 CST 主线Silent credits准入源码已发布，账号selector待验收
+
+Roy12:34明确批准的主线限定规则变更已实际发布V5-R355 / V5.codex1-paid-credits1，source 8a29bc2f6dece282ca237b1be90f161e705d0708，live efed9b0a105c2f2c0d59089c8e938121f5ea8fc1，精确树81a0481ad610252b405bf3e1da3fc6a01c8bc47b；main a936191941240393bf578b8824141c5b4c01f52e。旧规则（Roy2026-10-03）：普通额度不允许、周窗口满或credits余额下降即拒绝。新规则：仅本主检出/live、Silent、指定codex1 brain home及启动器显式scope同时匹配时，允许正且有限credits余额使用；其他角色/space/Regent、ops/学习者默认禁止不变。余额零/负/缺失、额度读取失败、spend-control/个人消费限额或其他depleted拒绝仍拦截，不兑换重置券。仅该模式的只读额度RPC容许90秒（原20秒，已实测本机27–34秒慢启动），模型请求预算、gpt-6.1-sol/xhigh/default、候选/样本及全部V5-S开关不变。
+
+证据：原真实codex1周100%/credits43894.4592665读数和旧闸拒绝，user12:34明确授权；本源码tsc0、完整482文件4858过2既有跳过/exit0，94额度/恢复固定项、2启动器及16旧换号回归通过，扫描0。首轮验证误用线程池仅结束本人验证PID并保留130原件，未改断言/时限；live三处guard与一处shell历史Dai注释均保留，TS生成JS一致/精确shell注释差核，10项并行知识刷新保存。没有新游戏知识或学习账本条目，原父任务保持。预期：下局仅用已授权credits恢复Codex高层题可用性，不宣胜率/收益。回退：下次启动前恢复原brain-home，或仅逆向本八叶并按规则登记回退号；不动当前局、其他lane或原记录。
+
+当前selector仍/home/dw/.codex-brain，HLAWCGM3KHVB未中断或受控接续；宿主最终树full和新实际账号/守卫验收待完成，通过后才原子切selector、下一自然局生效。完整边界、源码与回执：paper/materials/20261015-silent-codex1-next-run/。
+
+### 2026-10-15 13:15:58 CST V5-R355宿主及实际codex1准入通过；主线下局selector已切换
+
+按Roy12:34授权，V5-R355/V5.codex1-paid-credits1实际live efed9b0a105c2f2c0d59089c8e938121f5ea8fc1、精确树81a0481ad610252b405bf3e1da3fc6a01c8bc47b完成唯一宿主完整tsc+vitest exit0：481 passed (481)文件、4856 passed | 2 skipped (4858)；没有借旧树绿。真实目标account/read匹配原codex1身份hash68c53218，plan=pro、周窗口100%、hasCredits=true/余额43493.1451005，重置2026-10-20T04:58:44.000Z；原错误/慢RPC与旧no-credits闸拒绝均保留。实际发布的CodexEngine默认额度读取路径和新guard.start()/beforeCall()已对该真实读数放行；gpt-6.1-sol/xhigh/default及无home AGENTS、project_docs禁载通过。未发模型turn或reset-credit请求，也未把预检当实战accepted答复。
+
+selector于2026-10-15 13:15:58 CST从/home/dw/.codex-brain原子改为/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/brain；生效边界是该时刻后下一次主线Silent自然控制器启动，已有进程保留原环境。原HLAW PID952170/birth92801432仍在，未受控接续/重启/改环境。实际下局新PID/原生模型请求/accepted消费者尚待自然启动读回，不冒称已发生。Regent/其他space、ops/学习者home、模型、服务档、候选/样本/预算/队列均未改。
+
+旧新规则、仅本lane显式positive-credit准入及耗尽/不可读/消费闸保护、原预算不动的90秒只读额度RPC、证据与回退沿13:03首通知；恢复旧selector仅影响以后启动，不操作当前局。根目录全部并行记录与10项知识刷新保留。真实发布/宿主/账号/selector回执：paper/materials/20261015-silent-codex1-next-run/paid-{publication-receipt,host-readback,live-preflight,selector-activation}.json。
