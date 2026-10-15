@@ -1,0 +1,49 @@
+{
+  "at": "2026-10-15 09:42:37 CST",
+  "request": {
+    "at": "2026-10-15 09:42:11 CST",
+    "batch": "20261015-051302-s2-strategy-proposal",
+    "command": [
+      "bash",
+      "ops/codex-ops-do.sh",
+      "learner-recheck",
+      "20261015-051302-s2-strategy-proposal"
+    ],
+    "request_pid": 431383,
+    "request_birth": "92049123",
+    "expected_live": "d2dda4b75d6eacf5c5fcdf6f5f1da8a28c1c6ede",
+    "expected_tree": "23501d1853c58c339c6fd6f216ed5f8d992e4792",
+    "expected_log": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261015-051302-s2-strategy-proposal.fallback-23501d1853c58c339c6fd6f216ed5f8d992e4792.checks.log",
+    "stage": "request process actually launched; worker lock/start and final result not yet confirmed",
+    "full_requests_for_final_combination": 1,
+    "earlier_P1_full_started": false,
+    "no_earlier_full_interrupted": true,
+    "new_learner_or_model_dispatch": false,
+    "game_restart": false
+  },
+  "lock_rows": [
+    "123: FLOCK  ADVISORY  WRITE 431398 08:30:372157 0 EOF"
+  ],
+  "owners": [
+    {
+      "pid": 431398,
+      "birth": "92049183",
+      "argv": [
+        "python3",
+        "/home/dw/Projects/agent-sts2/ops/codex-ops-learn.py",
+        "recheck",
+        "--batch",
+        "20261015-051302-s2-strategy-proposal"
+      ],
+      "expected_log_fds": [
+        "5"
+      ],
+      "cwd": "/home/dw/Projects/agent-sts2"
+    }
+  ],
+  "actually_started": true,
+  "full_result": "pending",
+  "original_earlier_checks_kept": true,
+  "one_final_combination_request": true,
+  "new_source_or_game_actions": false
+}
