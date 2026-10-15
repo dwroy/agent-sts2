@@ -1,0 +1,98 @@
+{
+  "at": "2026-10-15 22:55:20 CST",
+  "bundle": "20261015-2226-original-two-source-continuation",
+  "batches": [
+    "20261015-214302-fix-batch",
+    "20261015-214302-s2-strategy-proposal"
+  ],
+  "sources": [
+    "798af209b9a268b7dafab1440150f1b39cd5595d",
+    "a78bb40ef73af8bb15f40f7fa302dd33a76c2907"
+  ],
+  "live_published": true,
+  "release_id": "V5-R363",
+  "main": "7a302ef325e3c98f6c9c8d7fcb486c2812e9c462",
+  "actual_live": "e1e7ee853b627919a6d1eab51c0cdf263b0bb852",
+  "tree": "94a022bc32e07ca63daffcb56eedde5adfdfbb62",
+  "infrastructure_commit": "b3630f5b250ee37cdf309c9a7a887f5725f3a6f1",
+  "behavior_commit": "89ef69552f158743c4e9f5b6bbbf18cbd293261a",
+  "knowledge_refresh": [
+    {
+      "path": "knowledge/characters/silent/boss-damage.json",
+      "sha256": "d43a20f6761ec2767cd02d6e8f625b7dee02e657d35e0fe03d877ef40b21e33e"
+    },
+    {
+      "path": "knowledge/characters/silent/construction-opportunities.json",
+      "sha256": "6ace30c66af6523c63c14ee57176d8235c427717544826a63752bc6b1d104c5d"
+    },
+    {
+      "path": "knowledge/characters/silent/fight-value-gates.json",
+      "sha256": "0f9041e38b0680386cdba1cb996edf28cc53c79022e8628f3a08f838e7bbd5f9"
+    },
+    {
+      "path": "knowledge/characters/silent/fight-value.json",
+      "sha256": "cf9f9fc76d1783db8a3f21dac69d68ca8ef8ab117fb1deda2e3ed97c8ae4add5"
+    },
+    {
+      "path": "knowledge/characters/silent/monster-records.json",
+      "sha256": "ff1e3116e4ed16b91c73402a7113d0e2fb0be312ca116e2050cfa1591670c944"
+    },
+    {
+      "path": "knowledge/characters/silent/outcome-stats.json",
+      "sha256": "9d1556fcca84fc9f93545a47848f820bf61ce978340d51bad80bdb6e00fce9b6"
+    },
+    {
+      "path": "knowledge/characters/silent/room-costs.json",
+      "sha256": "c9a8d3b92c2090d920d5760d3b2bee10b4d8e6ca632ecd0f490a4e8ad443d332"
+    },
+    {
+      "path": "knowledge/common/card-upgrades.json",
+      "sha256": "c5c32f120617175bfbaf74290e16d6cabb6006780522ca31cf5416918e7f3b0e"
+    },
+    {
+      "path": "knowledge/common/monster-db.json",
+      "sha256": "ad1aca35cd0888b0ba9f68055a4feab43e276d1bd372eb7ae7fb73bb0f482b3a"
+    },
+    {
+      "path": "knowledge/common/move-model.json",
+      "sha256": "83f65535160b6501e421df6317df8a6e2b338fa995f74920f818ac00556f39a2"
+    }
+  ],
+  "original_blockers_retained": "original conflict and prior busy-builder/retention receipts unmodified",
+  "source_workspaces": "retained until original check/retention gates; no cleanup model",
+  "host": {
+    "at": "2026-10-15 22:52:53 CST",
+    "command": [
+      "bash",
+      "ops/codex-ops-do.sh",
+      "learner-recheck",
+      "20261015-214302-fix-batch"
+    ],
+    "original_batch": "20261015-214302-fix-batch",
+    "request_pid": 3280936,
+    "birth": "96793243",
+    "exact_live": "e1e7ee853b627919a6d1eab51c0cdf263b0bb852",
+    "exact_tree": "94a022bc32e07ca63daffcb56eedde5adfdfbb62",
+    "expected_log": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261015-214302-fix-batch.fallback-94a022bc32e07ca63daffcb56eedde5adfdfbb62.checks.log",
+    "new_combination_requests": 1,
+    "stage": "actual broker request process launched; worker and full result pending",
+    "source_deltas_covered": [
+      "798af209",
+      "a78bb40e"
+    ],
+    "new_learning_or_model_or_current_game_restart": false
+  },
+  "targeted": {
+    "live": "e1e7ee853b627919a6d1eab51c0cdf263b0bb852",
+    "tree": "94a022bc32e07ca63daffcb56eedde5adfdfbb62",
+    "exit_code": 0,
+    "files": 2,
+    "cases": 8,
+    "scope": "targeted only; no full-suite claim",
+    "log": "paper/materials/20261015-2249-ops/combined-targeted.log"
+  },
+  "natural_consumers": "pending next natural saved registration/lease and Silent A10 held/buy payload; no forced requests or restart",
+  "wide_parents": "remain open",
+  "actual_host_start": "paper/materials/20261015-2249-ops/host-start.json",
+  "host_result": "pending"
+}
