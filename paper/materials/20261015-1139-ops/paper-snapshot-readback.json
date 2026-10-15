@@ -1,0 +1,167 @@
+{
+  "command": "nice -n 19 python3 ops/paper_dataset.py --no-raw",
+  "calls": 1,
+  "actual_exit_code": 0,
+  "completion": "paper/materials/20261015-1139-ops/paper-dataset-result.json",
+  "generated_at": "2026-10-15T03:40:52.399Z",
+  "source_cut_bytes": {
+    "decisions.jsonl": 1554240164,
+    "deepseek-reasoning.jsonl": 377746518,
+    "runs.jsonl": 333230,
+    "states.jsonl": 13006237808,
+    "fight-plans.jsonl": 2233957,
+    "run-plans.jsonl": 7999701,
+    "brain.jsonl": 564902527,
+    "sl-attempts.jsonl": 40310132,
+    "run-config.jsonl": 1742457
+  },
+  "all_decision_records": 397205,
+  "row_counts": {
+    "runs.csv": 787,
+    "decisions_by_label.csv": 26241,
+    "escalations.csv": 3600,
+    "fight_plans.csv": 1461,
+    "commits.csv": 6197
+  },
+  "five_consistency_checks": {
+    "decisions attributed + unattributed == play records": true,
+    "decisions_by_label sum == attributed decisions": true,
+    "escalations rows == records with escalation": true,
+    "every runs.jsonl id present in runs.csv": true,
+    "commits == git rev-list --all --count": true
+  },
+  "source_checks_passed": true,
+  "key_scan": "CLEAN",
+  "old_warning_preserved": [
+    [
+      "KF9HMZKTFC3V",
+      879,
+      880
+    ]
+  ],
+  "postmortem_run": {
+    "run_id": "UPAB38G2PA02",
+    "character": "SILENT",
+    "ascension": "10",
+    "outcome": "victory",
+    "floor_max": "49",
+    "has_postmortem": "1",
+    "n_decisions": "826",
+    "performance_included": "1"
+  },
+  "actual_codex_accepted_questions": 54,
+  "generated_final_hp_and_first_attempt_fields": "raw generator values retained; actual terminal HP and SL use original victory receipt, no historical field rewrite",
+  "costs": "separately frozen cost cuts; existing estimate, not invoice or observed benefit",
+  "cost_cut_sources": 999,
+  "cost_cut_manifest_sha256": "127d4578df1d90517f366c4f779ac464702fcab4648162199e94b7013f52ffb6",
+  "cost_existing_bad_line_counts": {
+    "/home/dw/Projects/agent-sts2/logs/codex-calls.jsonl": 1,
+    "/home/dw/Projects/agent-sts2/logs/brain.jsonl": 1,
+    "/home/dw/Projects/agent-sts2/logs/jev-prompts.jsonl": 1,
+    "/home/dw/Projects/agent-sts2/paper/materials/session/codex/ops/rollout-01a12bec-c83f-7c21-b76f-eb8e5304eb8f.jsonl": 1
+  },
+  "owned_changes": [
+    {
+      "path": "paper/data/README.md",
+      "sha256": "e3b28b0818d3fac2d85c7bab257172e00fb36e7f7a601f1f2f495ee17779ac65",
+      "bytes": 14188,
+      "owned_snapshot_file": "paper--data--README.md",
+      "new_file": false
+    },
+    {
+      "path": "paper/data/commits.csv",
+      "sha256": "bf62363473c0c4ff381a43b889159a56ba25ddeac8b2bf40cfab3b7689112ecc",
+      "bytes": 933769,
+      "owned_snapshot_file": "paper--data--commits.csv",
+      "new_file": false
+    },
+    {
+      "path": "paper/data/cost-curve-silent.csv",
+      "sha256": "babd242d964f89051434190202b6d1576ee9211d9cedb84a5315a120572d2e4d",
+      "bytes": 14064,
+      "owned_snapshot_file": "paper--data--cost-curve-silent.csv",
+      "new_file": false
+    },
+    {
+      "path": "paper/data/cost-silent.csv",
+      "sha256": "989a517dde59a3301630d930d2fdb8b56e4ea596924fa74f41578c86e355b3f6",
+      "bytes": 394289,
+      "owned_snapshot_file": "paper--data--cost-silent.csv",
+      "new_file": false
+    },
+    {
+      "path": "paper/data/cost-sources.json",
+      "sha256": "127d4578df1d90517f366c4f779ac464702fcab4648162199e94b7013f52ffb6",
+      "bytes": 168243,
+      "owned_snapshot_file": "paper--data--cost-sources.json",
+      "new_file": false
+    },
+    {
+      "path": "paper/data/cost-unattributed.csv",
+      "sha256": "c2a86b9b389ddd109cb0831a7833ae5e063db7e693ad54f6c6bca58597501959",
+      "bytes": 18783,
+      "owned_snapshot_file": "paper--data--cost-unattributed.csv",
+      "new_file": false
+    },
+    {
+      "path": "paper/data/decisions_by_label.csv",
+      "sha256": "31db7d5b7c3965984e9aab7b3b7b90f67fa23ab081ab0d210de4b79d476fc971",
+      "bytes": 1134202,
+      "owned_snapshot_file": "paper--data--decisions_by_label.csv",
+      "new_file": false
+    },
+    {
+      "path": "paper/data/learning-curve-ironclad.csv.before-20261015T034323062652Z",
+      "sha256": "45405e24c8358a99d977c28852cf3e705fddc4f1923f9a7b16ff727a849b082b",
+      "bytes": 103370,
+      "owned_snapshot_file": "paper--data--learning-curve-ironclad.csv.before-20261015T034323062652Z",
+      "new_file": true
+    },
+    {
+      "path": "paper/data/learning-curve-silent.csv",
+      "sha256": "5c2a0efe550d1275c619161a727c1cbea64a40e388b3a8bd06ba4f543d7afb6f",
+      "bytes": 63745,
+      "owned_snapshot_file": "paper--data--learning-curve-silent.csv",
+      "new_file": false
+    },
+    {
+      "path": "paper/data/learning-curve-silent.csv.before-20261015T034323980536Z",
+      "sha256": "8b4ab67f8627f94ff48161fd1e82e0ccd60108ed157c2bf714044fc45e0195c9",
+      "bytes": 63566,
+      "owned_snapshot_file": "paper--data--learning-curve-silent.csv.before-20261015T034323980536Z",
+      "new_file": true
+    },
+    {
+      "path": "paper/data/runs.csv",
+      "sha256": "ff86156b0399de830e3fa17ec116694894dc4012d7b81e71ab82670a57b61c3c",
+      "bytes": 1280786,
+      "owned_snapshot_file": "paper--data--runs.csv",
+      "new_file": false
+    },
+    {
+      "path": "paper/data/summary.json",
+      "sha256": "e5bc068c7049122f0323a2355a6f2162145d5efa45febe79bc3d84f6eb23361e",
+      "bytes": 495571,
+      "owned_snapshot_file": "paper--data--summary.json",
+      "new_file": false
+    },
+    {
+      "path": "paper/data/verification.json",
+      "sha256": "691269984773fbd51ef6b6b59674a34e45c79217278abef81b47cceacac84a8e",
+      "bytes": 587,
+      "owned_snapshot_file": "paper--data--verification.json",
+      "new_file": false
+    },
+    {
+      "path": "paper/materials/silent/cost.md",
+      "sha256": "bb12e801ca11619f034d5ee785be98f3c51eb05fb6bc7c44ec9be67f791c299c",
+      "bytes": 4193,
+      "owned_snapshot_file": "paper--materials--silent--cost.md",
+      "new_file": false
+    }
+  ],
+  "preexisting_generated_outputs_preserved_under": "ops/codex-ops/record-staging/20261015-1139/paper-before/",
+  "later_live_log_growth_not_backfilled": true,
+  "no_raw_snapshot_generated": true,
+  "no_game_source_release_or_control_change": true
+}
