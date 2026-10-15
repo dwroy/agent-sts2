@@ -482,3 +482,13 @@ on时 `ranking_override_reason` 进入实际答案schema和stable schema；偏�
 历史对照复用原P0冻结的4,000条S样本与原配对HP均值，不重跑原R2研究、不重建未记录HP轨迹。原32VSST9UX7MN/F2题的新第一组为card0，与当时已接受脑答案相同；这1题仅为描述性对照，无总体一致率或收益结论。`build-rank-replay.ts`核每份输入SHA与原答案身份。另将readiness计时终点移到其纯汇总之后，避免混入后续C2影子/P2排序耗时；旧日志保持。
 
 检查及原输入绑定在 `paper/materials/20261015-s-build-rank/`。完整两局P2自然shadow、正式on独立发布与消费者读回仍须逐项验收；当前初始shadow不等于这些门槛已完成。
+
+## 18. 完整评估输出接续（2026-10-15）
+
+`eval/s_decision.py`保留原P0冻结报告入口，新增`--runtime <冻结JSON>`，接收`schema=s-decision-runtime-v1`、明确coverage、逐来源SHA与原生配置绑定的窗口。输出`evaluation.json`和`runtime-report.md`：必需B2/B3实际计算尝试的p50/p90/最大及逐局观察等待、Jev实际调用记录的token/时延、真实on排序偏离及明确绑定Boss尝试的描述性结果、按Boss/进阶分列的首试/SL校准。P4/P5明确排除。
+
+实际尝试/调用/问题分别去重；缺失值保留未知，未完成窗口不能冒作整局累计，shadow与目标未确定的选择不进入on偏离率。相同Boss尝试在选择组内去重；冲突结局不采用最后写入值，不借后续SL胜利倒填首试。时间戳按真实时区换算；原固定模型可信度报告不扩充成新生产校准。9个固定检查覆盖这些边界，并将不同原生源码提交的预测分组，避免混合模型校准。
+
+首稿冻结700行原生配置绑定的决策字节索引，含52次必需计算、155条Jev调用记录、2个有原尝试身份的T1模型预测（一项截断而排除、一项SL胜），尚无新on偏离记录。窗口是W1局中恢复后的R341祖先与X7的R351，不是配对实验或新阶段收益验收；只报告观察值。原32题Jev基线及64份原字节SHA已复核，不重跑旧研究/调用API，缺失S/配对SE与整计划执行仍为null。材料与覆盖边界在`paper/materials/20261015-s-decision-eval/`及`20261015-v5-s-completion/p0-jev-baseline-completeness.json`。
+
+本评估工具/首稿不关闭P1/P3新自然消费者、P2两自然shadow/on、C2完整离线/两自然shadow/on或原宽R3/P1/P2学习要求。实际发布、消费者和阶段验收以各自原回执为准。
