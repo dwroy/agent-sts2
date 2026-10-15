@@ -1,0 +1,308 @@
+{
+  "batch": "20261015-224302-strategy-proposal",
+  "original_report": {
+    "task": "strategy-proposal",
+    "character": "silent",
+    "batch": "20261015-224302-strategy-proposal",
+    "base": "7f6646a68cf8be641e0abfe93d4987e8ef610f98",
+    "runs": [
+      "VLZ6CCT8AQ0A",
+      "8JRE1C4H4Z2W",
+      "CA5KE8GFJ9X2",
+      "5PM6JAQG6FNQ",
+      "61E2QS63Y9WU",
+      "DUZUBAJ3A8GP"
+    ],
+    "fixes": [
+      {
+        "commit": "d3e57c77ef32346af9f59494914bcf2bce2de4ec",
+        "source_parent": "7f6646a68cf8be641e0abfe93d4987e8ef610f98",
+        "summary": "静默A10已观察猛扑+免费技能未建模的覆盖提示；原数值保留。",
+        "proposal_ids": [
+          "silent-proposal-89354805ee4d7e77",
+          "silent-proposal-283a164780d11e69"
+        ],
+        "ledger": [
+          "silent-0237",
+          "silent-0238"
+        ]
+      }
+    ],
+    "skipped": [],
+    "merged": null,
+    "tests": {
+      "tsc": 0,
+      "vitest": 0,
+      "cases": 4
+    },
+    "code_proposals": [
+      "silent-proposal-89354805ee4d7e77",
+      "silent-proposal-f2bfceddb1898dca",
+      "silent-proposal-283a164780d11e69",
+      "silent-proposal-ebbfe3b97548756d",
+      "silent-proposal-e5b87be50f28f311",
+      "silent-proposal-49632bc4878fb597",
+      "silent-proposal-66532328a585941f",
+      "silent-proposal-43a76a31ba7bdcfa",
+      "silent-proposal-5264153a4a4b0e5c",
+      "silent-proposal-bddfa690a84e03d0"
+    ],
+    "implementation_domains": [
+      "combat",
+      "structure"
+    ],
+    "proposal_results": [
+      {
+        "id": "silent-proposal-89354805ee4d7e77",
+        "state": "waiting",
+        "reason": "窄覆盖提示源码已自测，合入因记录冲突撤回；仍缺持续施放身份、免费技能费用传播和未覆盖升级/后继校准。"
+      },
+      {
+        "id": "silent-proposal-f2bfceddb1898dca",
+        "state": "waiting",
+        "reason": "缺模型覆盖完整后的同起点、同随机池、同总预算配对及稳定性曲线。"
+      },
+      {
+        "id": "silent-proposal-283a164780d11e69",
+        "state": "waiting",
+        "reason": "与893共享窄修复，尚未上线；完整施放身份、费用传播及后续交互仍未完成。"
+      },
+      {
+        "id": "silent-proposal-ebbfe3b97548756d",
+        "state": "waiting",
+        "reason": "缺十五条经验各自组合、期限及战斗/路线/休息消费者的联合校准。"
+      },
+      {
+        "id": "silent-proposal-e5b87be50f28f311",
+        "state": "waiting",
+        "reason": "缺跨重规划持续候选身份、整候选执行及成长分源；单动作回执不能认证整回合。"
+      },
+      {
+        "id": "silent-proposal-49632bc4878fb597",
+        "state": "waiting",
+        "reason": "缺力量、正负敏捷、虚弱与独立成长四路径的冻结联合调用校准。"
+      },
+      {
+        "id": "silent-proposal-66532328a585941f",
+        "state": "waiting",
+        "reason": "缺同HP、构筑、药水和完整抽序的启动次序整战配对及收益函数。"
+      },
+      {
+        "id": "silent-proposal-43a76a31ba7bdcfa",
+        "state": "waiting",
+        "reason": "缺同起始血量、构筑、完整抽序下另一条可核SL整战线路。"
+      },
+      {
+        "id": "silent-proposal-5264153a4a4b0e5c",
+        "state": "waiting",
+        "reason": "缺A10逐实体召唤、复现、退场及成长完整校准，以及另一focus整战后继。"
+      },
+      {
+        "id": "silent-proposal-bddfa690a84e03d0",
+        "state": "waiting",
+        "reason": "缺伤害唤醒、眩晕期限及恢复成长全链校准，以及同抽不同顺序的完整后继。"
+      }
+    ],
+    "release_id": null,
+    "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261015-224302/learner/runs/20261015-224306-fbfd5acb-deb4-452f-a98a-5119a0a723a3-strategy-proposal/report.md"
+  },
+  "source": "d3e57c77ef32346af9f59494914bcf2bce2de4ec",
+  "source_parent": "7f6646a68cf8be641e0abfe93d4987e8ef610f98",
+  "source_checks": {
+    "tsc": 0,
+    "sandbox_files": 436,
+    "sandbox_cases": 4093,
+    "paths_cases": 11,
+    "total": 4104,
+    "exit_code": 0
+  },
+  "original_checks": {
+    "exit_code": 0,
+    "tsc": 0,
+    "vitest": 0,
+    "sandbox_workers": 1,
+    "log_sha256": "5da6d53400854c69aec9da872fc254095ef67efb7262a8460eba462ebfd773fb",
+    "red_green": {
+      "withdrawn": 1,
+      "restored": 0,
+      "source_restored_sha256": "9e565558b5711302beb59463ed56203bdc234d3b6d5a00e948d8d46e0c23fcee"
+    }
+  },
+  "native": {
+    "batch": "20261015-224302-strategy-proposal",
+    "thread": "01a14004-547e-7491-9ac8-ff03b939a6d8",
+    "cwd": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261015-224302",
+    "event_log": "learner/runs/20261015-224306-fbfd5acb-deb4-452f-a98a-5119a0a723a3-strategy-proposal.jsonl",
+    "registered_launch_batch": "20261015-224302-strategy-proposal",
+    "original_lease": "7b6c35131c333eb6211a533eee0b14fe7eba399af111f9fec0aa8ffdd445d242",
+    "native_context": {
+      "source": "ops/codex-ops/accounts/codex1/learner/sessions/2026/10/15/rollout-2026-10-15T22-43-08-01a14004-547e-7491-9ac8-ff03b939a6d8.jsonl",
+      "offset": 50241,
+      "bytes": 5148,
+      "sha256": "f10000cfc53d28a61dc53441a460c634d2f355213aa15a8a008c23fd686c5535",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "sandbox": {
+        "type": "workspace-write",
+        "writable_roots": [
+          "/home/dw/Projects/agent-sts2",
+          "/home/dw/Projects/agent-sts2/.git",
+          "/home/dw/Projects/agent-sts2/.git/worktrees/codex-strategy-silent-20261015-224302"
+        ],
+        "network_access": false,
+        "exclude_tmpdir_env_var": false,
+        "exclude_slash_tmp": false
+      },
+      "approval_policy": "never"
+    },
+    "native_user_input": {
+      "offset": 55389,
+      "bytes": 21447,
+      "sha256": "6d6cc79037adf4451b3f05dce990b480a8254be821e5d607054f0fb0e46fe381",
+      "input_sha256": "22f6ca73c1de8157ddc1dd2a6ae3019d0a1f6efbdf84df15e8710e05d41b3bb9"
+    },
+    "original_header_events": [
+      {
+        "offset": 0,
+        "bytes": 23459,
+        "sha256": "19ea9f58a01da60e38f4a8d7d204df6c0d20264192ddf49f73a076ca5bbce61a",
+        "type": "learner_launch",
+        "attempt": null,
+        "code": null
+      },
+      {
+        "offset": 23459,
+        "bytes": 378,
+        "sha256": "f827388697a707785cdc1ed99abc0f3c407b484e2cdd9cfd9d9559851360f205",
+        "type": "learner_startup_attempt",
+        "attempt": 1,
+        "code": null
+      },
+      {
+        "offset": 26849,
+        "bytes": 77,
+        "sha256": "6dad363894f71e4ce5614bc005cb730970c330b63ddcac3f1c24ad30c040c2d1",
+        "type": "thread.started",
+        "attempt": null,
+        "code": null
+      }
+    ],
+    "startup_attempts": 1,
+    "failed_startups_preserved": 0,
+    "no_model_or_manual_restart": true
+  },
+  "source_three_leaves": [
+    "agent/src/reflex/card-model.ts",
+    "agent/tests/silent-pounce-coverage-evidence.json",
+    "agent/tests/silent-pounce-coverage.test.ts"
+  ],
+  "raw_fixture_refs_verified": [
+    {
+      "stream": "states",
+      "line": 275575,
+      "offset": 8484372142,
+      "bytes": 42527,
+      "sha256": "bbb9efb920c68c77ef66c85cc9e47820fb8125f78b60ae689e7e785b211d8778"
+    },
+    {
+      "stream": "states",
+      "line": 275576,
+      "offset": 8484414669,
+      "bytes": 41784,
+      "sha256": "1801c1c4935b995eec5b04ce57bc69e4e8173ea34218b49711f7585e7bb855c5"
+    },
+    {
+      "stream": "states",
+      "line": 275631,
+      "offset": 8486572813,
+      "bytes": 43381,
+      "sha256": "badbce308ca6167eb434e5e5d0453644c604ad480255a1cd2fd135931ed5e61d"
+    },
+    {
+      "stream": "states",
+      "line": 275632,
+      "offset": 8486616194,
+      "bytes": 42645,
+      "sha256": "99a6114e4f4d27fa51de2c504b75b5701e1be9cadcfbfba9beceb35140758959"
+    },
+    {
+      "stream": "states",
+      "line": 275701,
+      "offset": 8489299620,
+      "bytes": 42529,
+      "sha256": "963de6ccb42831e518db368bc3bf2f051c7f88fe63b51dfe9301dd9cc61e473e"
+    },
+    {
+      "stream": "states",
+      "line": 275702,
+      "offset": 8489342149,
+      "bytes": 41797,
+      "sha256": "d060a73e7d7b33cab971d102c3b920606081adf43ccbebd3c7dce9da95d882c3"
+    }
+  ],
+  "verified_material_artifact_names": [
+    "source-checks.json",
+    "source-sandbox.log",
+    "pounce-withdrawn.log",
+    "pounce-restored.log",
+    "proposal.md",
+    "report.md",
+    "ledger-updates.jsonl",
+    "ledger-verification.json",
+    "evidence-verification.json",
+    "material-checks.json",
+    "source-readback.json"
+  ],
+  "original_artifact_manifest_sha256": "eb810cbc5bbeb061f41e276631a8ade8042e4252259d9710ccb48c6845f3a56f",
+  "artifact_manifest_scope": "Selected original reports, proofs and logs only; unrelated generated sandbox credential-shaped fixtures were not read.",
+  "original_evidence_rows": 6995,
+  "original_material_checks": 20,
+  "owned_learner_trace_rows": 26,
+  "original_conflicts": {
+    "source": "d3e57c77ef32346af9f59494914bcf2bce2de4ec",
+    "base": "7f6646a68cf8be641e0abfe93d4987e8ef610f98",
+    "merged": null,
+    "phase": "merge_blocked",
+    "initial_head": "e1e7ee853b627919a6d1eab51c0cdf263b0bb852",
+    "initial_status": "M notes/fight-value-backtest-silent.md\n M notes/monster-db-check.md",
+    "refreshed_overlap": [],
+    "premerge": "e1e7ee853b627919a6d1eab51c0cdf263b0bb852",
+    "merge_exit": 1,
+    "conflicts": [
+      "notes/fix-queue-v4.md",
+      "notes/for-roy.md",
+      "notes/ops-handoff.md",
+      "ops/inbox-dev.md",
+      "paper/materials/decision-log.md",
+      "paper/materials/learning/ledger.jsonl"
+    ],
+    "failed_status": "M  agent/src/reflex/card-model.ts\nA  agent/tests/silent-pounce-coverage-evidence.json\nA  agent/tests/silent-pounce-coverage.test.ts\n M notes/fight-value-backtest-silent.md\nUU notes/fix-queue-v4.md\nUU notes/for-roy.md\n M notes/monster-db-check.md\nUU notes/ops-handoff.md\nUU ops/inbox-dev.md\nA  paper/materials/20261015-2159-ops/archive-gitleaks.log\nA  paper/materials/20261015-2159-ops/batch-readback.json\nA  paper/materials/20261015-2159-ops/completion.json\nA  paper/materials/20261015-2159-ops/final-gitleaks.log\nA  paper/materials/20261015-2159-ops/final-ledger-check.log\nA  paper/materials/20261015-2159-ops/helper-gitleaks.log\nA  paper/materials/20261015-2159-ops/ops-helper-manifest.json\nA  paper/materials/20261015-2159-ops/ops-helper-sources.tar.gz\nA  paper/materials/20261015-2159-ops/original-artifact-manifest.json\nA  paper/materials/20261015-2159-ops/original-artifacts.tar.gz\nA  paper/materials/20261015-2216-ops/archive-gitleaks.log\nA  paper/materials/20261015-2216-ops/completion.json\nA  paper/materials/20261015-2216-ops/final-gitleaks.log\nA  paper/materials/20261015-2216-ops/helper-gitleaks.log\nA  paper/materials/20261015-2216-ops/integration.json\nA  paper/materials/20261015-2216-ops/live-continuation-request.log\nA  paper/materials/20261015-2216-ops/ops-helper-manifest.json\nA  paper/materials/20261015-2216-ops/ops-helper-sources.tar.gz\nA  paper/materials/20261015-2216-ops/original-artifact-manifest.json\nA  paper/materials/20261015-2216-ops/original-artifacts.tar.gz\nA  paper/materials/20261015-2216-ops/pending-live-handoff.json\nA  paper/materials/20261015-2216-ops/source-gitleaks.log\nA  paper/materials/20261015-2226-ops/archive-gitleaks.log\nA  paper/materials/20261015-2226-ops/completion.json\nA  paper/materials/20261015-2226-ops/final-gitleaks.log\nA  paper/materials/20261015-2226-ops/final-ledger-check.log\nA  paper/materials/20261015-2226-ops/helper-gitleaks.log\nA  paper/materials/20261015-2226-ops/main-integration.json\nA  paper/materials/20261015-2226-ops/ops-helper-manifest.json\nA  paper/materials/20261015-2226-ops/ops-helper-sources.tar.gz\nA  paper/materials/20261015-2226-ops/original-artifact-manifest.json\nA  paper/materials/20261015-2226-ops/original-artifacts.tar.gz\nA  paper/materials/20261015-2226-ops/pending-live-handoff.json\nA  paper/materials/20261015-2226-ops/source-gitleaks.log\nA  paper/materials/20261015-2226-ops/strategy-readback.json\nA  paper/materials/20261015-2236-ops/archive-gitleaks.log\nA  paper/materials/20261015-2236-ops/batch-readback.json\nA  paper/materials/20261015-2236-ops/completion.json\nA  paper/materials/20261015-2236-ops/final-gitleaks.log\nA  paper/materials/20261015-2236-ops/final-ledger-check.log\nA  paper/materials/20261015-2236-ops/helper-gitleaks.log\nA  paper/materials/20261015-2236-ops/ops-helper-manifest.json\nA  paper/materials/20261015-2236-ops/ops-helper-sources.tar.gz\nA  paper/materials/20261015-2236-ops/original-artifact-manifest.json\nA  paper/materials/20261015-2236-ops/original-artifacts.tar.gz\nA  paper/materials/20261015-2236-ops/pending-live-handoff.json\nA  paper/materials/20261015-2236-ops/strategy-readback.json\nUU paper/materials/decision-log.md\nUU paper/materials/learning/ledger.jsonl",
+    "abort_exit": 0,
+    "final_head": "e1e7ee853b627919a6d1eab51c0cdf263b0bb852",
+    "final_status": "M notes/fight-value-backtest-silent.md\n M notes/monster-db-check.md"
+  },
+  "original_completion": {
+    "source": "d3e57c77ef32346af9f59494914bcf2bce2de4ec",
+    "source_parent": "7f6646a68cf8be641e0abfe93d4987e8ef610f98",
+    "source_files": 3,
+    "clean_worktree": true,
+    "live_snapshot": "e1e7ee853b627919a6d1eab51c0cdf263b0bb852",
+    "source_is_live_ancestor": false,
+    "proposal_results": 10,
+    "final_records_gitleaks": 0,
+    "source_sandbox": 0,
+    "live_sandbox": null,
+    "merge_aborted": true
+  },
+  "limits": [
+    "Only observed Silent A10 upgraded Pounce exact previews16/21/23 are marked unmodelled; damage/cost/rollout and legal candidates are retained. No missing free-cost behavior implementation or game-benefit claim.",
+    "Three frames are one VLZ run; not independent calibration. Other characters/ascensions and unobserved previews keep original source behavior.",
+    "Historical183 accepted Codex brain requests used high; current learner native context is xhigh. Neither history nor permissions changed.",
+    "Ten wide original proposals remain waiting. Existing Apotheosis/SL/source-identity/sampling calibration gaps are not closed by this disclosure.",
+    "Original noncombat TypeError, wrong relative path with shell-tail masking exit, obsolete paths, red fixtures and six record conflicts retained."
+  ],
+  "ops_initial_guard_failure": "Initial guard rejected two explicit status=proposed rows. Both exact IDs0237/0238 remain proposed before/after fold; all other protected fields and old histories/where preserved. Original26 CLI rows and failed guard retained without rewriting or duplicate CLI.",
+  "learner_row_scope": "24 where/note rows plus2 where/note/status=proposed idempotent rows; not falsely described as26 status-free rows",
+  "ops_publication_provenance_rows": 2,
+  "protected_fold_verified": true
+}
