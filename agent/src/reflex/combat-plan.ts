@@ -3898,7 +3898,7 @@ function planTurn(env: DecisionEnv): Decision | null {
   const tieNote = (plan: Plan): Record<string, JsonValue> => {
     if (tiedKeys.length === 0 || !rolloutTied.includes(plan)) return {};
     const others = tiedKeys.filter((key) => key !== keyOfShown(plan));
-    if (simRanks) return { rollout_tied: `tied for the best whole-fight simulation numbers with ${others.join(", ")} (the same simulated win rate and HP lost when won); the ranking picks none of them` };
+    if (simRanks) return { rollout_tied: `tied for the best whole-fight simulation numbers with ${others.join(", ")} (${simRanks.sRanking?.used ? "win rate and S within paired uncertainty, then the same HP lost when won" : "the same simulated win rate and HP lost when won"}); the ranking picks none of them` };
     const same = rollout?.available && rollout.saturated ? "every line loses all our HP; the same deaths, enemy HP left, turns alive and HP lost this turn" : "the same expected further HP loss, deaths and win chance";
     return { rollout_tied: `tied for the best rollout numbers with ${others.join(", ")} (${same}); the rollout picks none of them` };
   };
