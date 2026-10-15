@@ -1,0 +1,288 @@
+[
+  {
+    "offset": 19437629,
+    "bytes": 803,
+    "sha256": "1bbad7797b074691c19b82e9f3a53e303118aa7c54dae902ecd74f7a148a2f8e",
+    "row": {
+      "op": "update",
+      "id": "silent-0009",
+      "ts": "2026-10-16T03:27:02+08:00",
+      "by": "learner:postmortem",
+      "evidence": [
+        {
+          "run": "0BHQCPAF33N6",
+          "floor": 14,
+          "note": "Codex实际以毒药水POISON_POTION＋咕嘟冒泡BUBBLE_BUBBLE作为启毒计划，d404385；F17六次均直到判死轮T18/16/18/18/14/13才喝毒，之前目标无毒、冒泡施放0次，末试T7还将其弃掉d404800。六饮当步各实加6毒、敌血不变，前五次SL截断未结算，末试99→93后阵亡。重复的是启毒计划未兑现，而非本局空打冒泡；没有提前喝药后继胜线。",
+          "role": "repeat"
+        }
+      ],
+      "where": {
+        "lessons": [
+          "0BHQCPAF33N6"
+        ]
+      },
+      "note": "本角色A10复盘；保留原claim/首证/prior/status/version，不以重复启毒断点宣称提前施毒足以获胜；另交限定代码提案。"
+    }
+  },
+  {
+    "offset": 19438432,
+    "bytes": 859,
+    "sha256": "f73fc83cacc76b565c754265a6b4c5bcb34dbbb33199bba9911bac8f78e4c987",
+    "row": {
+      "op": "update",
+      "id": "silent-0472",
+      "ts": "2026-10-16T03:27:02+08:00",
+      "by": "learner:postmortem",
+      "evidence": [
+        {
+          "run": "0BHQCPAF33N6",
+          "floor": 17,
+          "turn": 9,
+          "note": "末试d404806，玩家22HP/3能量、仪式兽121HP：打击＋小刀14伤/损0，结束0伤/损0；五轮死亡24/24对20/24，整场真实1/1200胜对0/1200胜，题面均四舍五入0%。结束减攻击S=-0.024955±0.002202均值标准误；Jev0.67选结束，rollout_best_chosen=false，实无损且敌121不变。与旧实验体空过例相似，但本例并非选整场参考最优，只作不同Boss/参考分歧的support，不记repeat或已证保血收益，未实打攻击线后继。",
+          "role": "support"
+        }
+      ],
+      "where": {
+        "lessons": [
+          "0BHQCPAF33N6"
+        ]
+      },
+      "note": "保留原claim/首证/prior/observed；不从单步14伤或S差认定替线必胜，不改变固定出牌优先级。"
+    }
+  },
+  {
+    "offset": 19439291,
+    "bytes": 666,
+    "sha256": "cd87dc86f1b1b3ea898acd4558068dd951e17f4dd203aabd74d08ee18fd3e7e4",
+    "row": {
+      "op": "update",
+      "id": "silent-0020",
+      "ts": "2026-10-16T03:27:02+08:00",
+      "by": "learner:postmortem",
+      "evidence": [
+        {
+          "run": "0BHQCPAF33N6",
+          "floor": 16,
+          "note": "F5事件付9血56→47；F6/F7赢仍净损23/21到3。F8/12/16三次HEAL各+21合63，F14餐券另+15；F13胜35→28、进店43、F15胜43→32并喝复制药水、获带骨肉后没有额外回血，F16回到53、F17六次仍败。只证回复确实兑现缓冲；无另一事件/路线/锻造或留药的整战对照，support而非repeat。",
+          "role": "support"
+        }
+      ],
+      "where": {
+        "lessons": [
+          "0BHQCPAF33N6"
+        ]
+      },
+      "note": "完整赢战资源链和SL恢复分列；原claim/首证/prior/status/version保持。"
+    }
+  },
+  {
+    "offset": 19439957,
+    "bytes": 566,
+    "sha256": "811b14ebfca76165257fb48e932ec30170aacb012e329a26ac586196957865ec",
+    "row": {
+      "op": "update",
+      "id": "silent-0005",
+      "ts": "2026-10-16T03:27:02+08:00",
+      "by": "learner:postmortem",
+      "evidence": [
+        {
+          "run": "0BHQCPAF33N6",
+          "floor": 17,
+          "turn": 13,
+          "note": "末试T1普通灵动步法实建2敏捷，后续防御5→7、偏折4→6、斗篷6→8；T13实7血7挡仍对18攻死亡，完整需求11，缺4血。为同牌多次兑现敏捷的A10普通牌限定补证，不把原A0升级3敏捷改写为2，不宣称无敏捷或另一首选必能存活。s417891—417896、417939—417942。",
+          "role": "support"
+        }
+      ],
+      "where": {
+        "lessons": [
+          "0BHQCPAF33N6"
+        ]
+      }
+    }
+  },
+  {
+    "offset": 19440523,
+    "bytes": 710,
+    "sha256": "878a6ce716d84efa62f1a117e56c6e9e4b986ed0b221891c36fec2580e54b110",
+    "row": {
+      "op": "update",
+      "id": "silent-0133",
+      "ts": "2026-10-16T03:27:02+08:00",
+      "by": "learner:postmortem",
+      "evidence": [
+        {
+          "run": "0BHQCPAF33N6",
+          "floor": 17,
+          "turn": 5,
+          "note": "本局A10仪式兽横冲直撞PLOW_POWER显示160；末试T3力量2/22攻，T5力量6/26攻，实186→145后清横冲直撞及力量并STUNNED，当轮0挡损0。后段重加力量至T13力量8且虚弱1显示18攻，仍死亡。只补本局A10阈值160及跨阈值非击杀；原claim的150是A0实见，不改写为各进阶通则。s417902、417911—417916、417939。",
+          "role": "support"
+        }
+      ],
+      "where": {
+        "lessons": [
+          "0BHQCPAF33N6"
+        ]
+      },
+      "note": "进阶条件分账；原claim/首证/prior/shipped/version保持，160不作A0的反证。"
+    }
+  },
+  {
+    "offset": 19441233,
+    "bytes": 588,
+    "sha256": "dcbaab6b9b71c96c52c3f7c9676c63dab593fe24e8a5cdedd65c90817e282a45",
+    "row": {
+      "op": "update",
+      "id": "silent-0222",
+      "ts": "2026-10-16T03:27:02+08:00",
+      "by": "learner:postmortem",
+      "evidence": [
+        {
+          "run": "0BHQCPAF33N6",
+          "floor": 17,
+          "turn": 13,
+          "note": "末试RINGING_POWER1下打防御后余2能量，余三打击与连续反弹均playable=false/unplayable_reason=blocked_by_hook；随后仍可喝毒药水，敌99血当步不变、毒0→6，结束结算6至93而玩家死亡。s417939—417942、d404818—404820。支持一牌窗口与喝药分开核，不以此推首选防御/早喝的整战优劣。",
+          "role": "support"
+        }
+      ],
+      "where": {
+        "lessons": [
+          "0BHQCPAF33N6"
+        ]
+      }
+    }
+  },
+  {
+    "offset": 19441821,
+    "bytes": 699,
+    "sha256": "63b6249ad19b761dcaf10d6dce9d27fc63269c481b6adca36f793c471093866a",
+    "row": {
+      "op": "update",
+      "id": "silent-0278",
+      "ts": "2026-10-16T03:27:02+08:00",
+      "by": "learner:postmortem",
+      "evidence": [
+        {
+          "run": "0BHQCPAF33N6",
+          "floor": 17,
+          "note": "六次POISON_POTION均实加6毒、当步敌血不变，无异蛇头骨及人工制品；饮用前原帧s417637/417698/417767/417835/417889/417940与各后继一帧逐核。前五次喝后SL没有结算，末次T13毒6实际99→93后死亡。药水题仍未建模，既有6毒机制不等于已覆盖该首领，也没有早喝整战反事实。",
+          "role": "support"
+        }
+      ],
+      "where": {
+        "lessons": [
+          "0BHQCPAF33N6"
+        ]
+      },
+      "note": "六次是同局SL重复模板，不当六独立局；仅补来源与代码提案，不改旧机制或shipped状态。"
+    }
+  },
+  {
+    "offset": 19442520,
+    "bytes": 583,
+    "sha256": "1588acaa00eda2fb1000cfed38e05c8134b90acad9317d732bb48ab00ef4cb1d",
+    "row": {
+      "op": "update",
+      "id": "silent-0125",
+      "ts": "2026-10-16T03:27:02+08:00",
+      "by": "learner:postmortem",
+      "evidence": [
+        {
+          "run": "0BHQCPAF33N6",
+          "floor": 17,
+          "note": "首试仅两次HP护栏：T7 d404480模型损12/伤8→损0/伤27，实际34→34、179→152；T16 d404508模型损17/伤19→损0/伤0并2虚弱，实际19→19、敌68不变。后者五轮均8/8死亡，省17是未实打原线的模型差；前者省12且多19，放弃抽弃后继未验证。仅补旧保血与进度取舍观察，不记repeat或纯bug。",
+          "role": "support"
+        }
+      ],
+      "where": {
+        "lessons": [
+          "0BHQCPAF33N6"
+        ]
+      }
+    }
+  },
+  {
+    "offset": 19443103,
+    "bytes": 369,
+    "sha256": "215eaf2c533485f74147133913d6c841d05851a465e144b8ec4d5a3d3963d55a",
+    "row": {
+      "op": "update",
+      "id": "silent-0009",
+      "ts": "2026-10-16T03:28:16+08:00",
+      "by": "learner:postmortem",
+      "where": {
+        "proposal": [
+          "/home/dw/Projects/agent-sts2/learner/runs/20261016-031304-e7ac4d3a-2aa3-48d0-ae2e-b8f14adadb93-postmortem/proposal-poison-seed.md"
+        ]
+      },
+      "note": "代码提案 silent-proposal-b1b5a008afd9c5f4 → task=strategy-proposal；Roy-2026-10-07-learning"
+    }
+  },
+  {
+    "offset": 19443472,
+    "bytes": 369,
+    "sha256": "c0f6937cad7a5bd3cdbad23a117cc73e3c778addab8de797ebd288f902d7f217",
+    "row": {
+      "op": "update",
+      "id": "silent-0278",
+      "ts": "2026-10-16T03:28:16+08:00",
+      "by": "learner:postmortem",
+      "where": {
+        "proposal": [
+          "/home/dw/Projects/agent-sts2/learner/runs/20261016-031304-e7ac4d3a-2aa3-48d0-ae2e-b8f14adadb93-postmortem/proposal-poison-seed.md"
+        ]
+      },
+      "note": "代码提案 silent-proposal-b1b5a008afd9c5f4 → task=strategy-proposal；Roy-2026-10-07-learning"
+    }
+  },
+  {
+    "offset": 19443841,
+    "bytes": 369,
+    "sha256": "ae7331c131a5f96dddf0e25fc013a552ba60a08e5b96318eb2806de4e0690a91",
+    "row": {
+      "op": "update",
+      "id": "silent-0222",
+      "ts": "2026-10-16T03:28:16+08:00",
+      "by": "learner:postmortem",
+      "where": {
+        "proposal": [
+          "/home/dw/Projects/agent-sts2/learner/runs/20261016-031304-e7ac4d3a-2aa3-48d0-ae2e-b8f14adadb93-postmortem/proposal-poison-seed.md"
+        ]
+      },
+      "note": "代码提案 silent-proposal-b1b5a008afd9c5f4 → task=strategy-proposal；Roy-2026-10-07-learning"
+    }
+  },
+  {
+    "offset": 19444210,
+    "bytes": 380,
+    "sha256": "1c568fb354ba38dae0a76d223612f76c718a65d66f6d72a0f93cf0883fbfbf2e",
+    "row": {
+      "op": "update",
+      "id": "silent-0472",
+      "ts": "2026-10-16T03:28:17+08:00",
+      "by": "learner:postmortem",
+      "where": {
+        "proposal": [
+          "/home/dw/Projects/agent-sts2/learner/runs/20261016-031304-e7ac4d3a-2aa3-48d0-ae2e-b8f14adadb93-postmortem/proposal-reference-disagreement.md"
+        ]
+      },
+      "note": "代码提案 silent-proposal-4e06d8a8d75c0379 → task=strategy-proposal；Roy-2026-10-07-learning"
+    }
+  },
+  {
+    "offset": 19444590,
+    "bytes": 380,
+    "sha256": "87e80e7a263ae25966386b9682f10bcb6294f96a6db90639994f13a2c1b20cb2",
+    "row": {
+      "op": "update",
+      "id": "silent-0125",
+      "ts": "2026-10-16T03:28:17+08:00",
+      "by": "learner:postmortem",
+      "where": {
+        "proposal": [
+          "/home/dw/Projects/agent-sts2/learner/runs/20261016-031304-e7ac4d3a-2aa3-48d0-ae2e-b8f14adadb93-postmortem/proposal-reference-disagreement.md"
+        ]
+      },
+      "note": "代码提案 silent-proposal-4e06d8a8d75c0379 → task=strategy-proposal；Roy-2026-10-07-learning"
+    }
+  }
+]
