@@ -1,0 +1,10 @@
+{
+  "stage": "private record preparation",
+  "original_errors": [
+    "AssertionError: ('silent-0332', 'notes')",
+    "AssertionError: ('silent-0332', 'history')"
+  ],
+  "reason": "Ledger fold appends the permitted note and update to computed notes[] and history[]; initial broad guard incorrectly required equality of those derived histories.",
+  "correction": "Check original protected fields unchanged, plus exact prefix preservation of original notes/history. No original ledger rewrites, product code or runtime changes.",
+  "initial_scan": "First preparation aborted before final-files existed; missing-directory scan failure retained, not a completed scan"
+}

@@ -1,0 +1,250 @@
+{
+  "run": "RQCHNN0W72KF",
+  "alert_at": "2026-10-15T10:40:04.418121+00:00",
+  "classification": "existing silent-0332 first-fight resource contract recurrence; C1 natural fault exit verified; no restart required",
+  "trigger": {
+    "floor": 40,
+    "label": "rest/plan",
+    "branch": "nonpositive-hp",
+    "seed": 607614716,
+    "winning_sample": {
+      "won": true,
+      "died": false,
+      "turns": 23,
+      "captureResources": true
+    },
+    "full_resources_and_steps": "unavailable: original error truncation; no invented values or mechanism cause"
+  },
+  "attempts": [
+    {
+      "source": {
+        "offset": 1632203915,
+        "length": 13885,
+        "sha256": "ba875e41d63753a069b6bb20aaff10ad57424c9ace2ad8b91a59ee45cc69eefd"
+      },
+      "completion": {
+        "required": true,
+        "attempt_id": "1133dcf8-b2e6-4e17-ab71-156fa69d90e4",
+        "status": "pending",
+        "attempts": 1,
+        "reasons": [
+          "simulation_error"
+        ],
+        "samples": 0,
+        "requested": 1000,
+        "failure": true,
+        "key": "sim-failure-v1:d65a75f2da70371e94725b69b40033c072d144396e635f4a14b9912267c18e22"
+      },
+      "ms": 38079
+    },
+    {
+      "source": {
+        "offset": 1632217800,
+        "length": 13905,
+        "sha256": "fd723fcce54f3b5761bc10477af6ff86943171988f4788452c12663dfd2944d4"
+      },
+      "completion": {
+        "required": true,
+        "attempt_id": "a8576cbd-bff2-4f11-88c5-d05a059d5a8d",
+        "status": "pending",
+        "attempts": 2,
+        "reasons": [
+          "simulation_error",
+          "simulation_error"
+        ],
+        "samples": 0,
+        "requested": 1000,
+        "failure": true,
+        "key": "sim-failure-v1:d65a75f2da70371e94725b69b40033c072d144396e635f4a14b9912267c18e22"
+      },
+      "ms": 43159
+    },
+    {
+      "source": {
+        "offset": 1632231705,
+        "length": 145033,
+        "sha256": "1f33b2ab098a53c6ef0430c4ede79736505d940f58e541162955e3fea6ecf9ad"
+      },
+      "completion": {
+        "required": true,
+        "attempt_id": "67292546-4f68-474b-a771-594d23475604",
+        "status": "degraded",
+        "attempts": 3,
+        "reasons": [
+          "simulation_error",
+          "simulation_error",
+          "below_minimum_samples"
+        ],
+        "samples": 42,
+        "requested": 1000,
+        "failure": true,
+        "key": "sim-failure-v1:d65a75f2da70371e94725b69b40033c072d144396e635f4a14b9912267c18e22"
+      },
+      "ms": 11108
+    }
+  ],
+  "accepted_consumer": {
+    "brain_source": "F40-brain-sources.json",
+    "qid": "mv9c9451-2047994-45",
+    "actual_model": "gpt-6.1-sol",
+    "effort": "xhigh",
+    "accepted": true,
+    "choice": "o1:c19",
+    "no_boss_sim_numbers_in_options": true,
+    "no_build_ranking_or_readiness": true,
+    "actual_completed_choice_and_card_selection": true,
+    "actual_proceed": true
+  },
+  "construction_pipeline_at_original_cut": {
+    "enabled": true,
+    "evaluation_expected": 41,
+    "evaluation_attached": 41,
+    "evaluation_missing": 0,
+    "brain_evaluation": 41,
+    "accepted_evaluation": 41,
+    "accepted_choice_with_evaluation": 40,
+    "plan_due": 10,
+    "accepted_structured_plan": 10,
+    "missing_structured_plan": 0,
+    "saved_structured_plan": 10,
+    "plan_readback": 37,
+    "checkpoint_review_due": 6,
+    "probability_delivered": 0,
+    "admission": {
+      "missing_or_mismatched_prospective_calibration": 35
+    },
+    "evidence": [],
+    "alert": false,
+    "limits": "Payload delivery, accepted output and saved/read-back plans are distinct observations, not causal win-rate evidence. Missing calibration is pending, not a service failure."
+  },
+  "b3_at_original_cut": {
+    "attempts": 37,
+    "skipped": 2,
+    "produced_dpr": 33,
+    "coverage": 0.8918918918918919,
+    "failures": {
+      "simulation_error": 1
+    },
+    "unsupported": 3,
+    "applicable_attempts": 34,
+    "unsupported_only": 3,
+    "candidates": {
+      "observed": 266,
+      "unsupported": 30,
+      "with_dpr": 217,
+      "missing_dpr": 19
+    },
+    "applicable_coverage": 0.9705882352941176,
+    "longest_failure_streak": 1,
+    "trailing_failure_streak": 1,
+    "paired_samples_min": 300,
+    "ms_max": 140100
+  },
+  "adaptive_at_original_cut": {
+    "mode": "on",
+    "observed": 64,
+    "produced": 64,
+    "errors": 0,
+    "evaluable": 0,
+    "matched": 0,
+    "unknown": 0,
+    "complete_adaptive": 64,
+    "production_evaluable": 0,
+    "production_matched": 0,
+    "agreement": null,
+    "production_agreement": null,
+    "saved_fraction": {
+      "p50": null,
+      "p90": null
+    },
+    "mismatches": [],
+    "actual_saved_fraction": {
+      "p50": 0.6666666666666667,
+      "p90": 0.7
+    },
+    "stop_counts": {
+      "leader": 59,
+      "eliminated": 288,
+      "max": 80
+    },
+    "alert": false,
+    "admission_state": "accepted",
+    "admission": "accepted source; runtime mode=on; never auto-enable",
+    "limits": "Shadow estimates and actual on-mode sample work are separate. On-mode cannot observe full-run agreement; no elapsed-time saving or game benefit inferred."
+  },
+  "readiness_at_original_cut": {
+    "mode": "on",
+    "expected": 36,
+    "produced": 36,
+    "missing": 0,
+    "eligible": 31,
+    "low_trust": 5,
+    "sign_rejected": 5,
+    "brain_delivered": 31,
+    "brain_accepted": 31,
+    "ms_max": 5.398151999805123,
+    "longest_missing_streak": 0,
+    "alert": false,
+    "limits": "Shadow is not brain delivery. Low trust and failed sign audit suppress facts without changing mandatory computation or old ranking."
+  },
+  "combat_rank_at_original_cut": {
+    "mode": "on",
+    "expected": 31,
+    "produced": 31,
+    "used": 30,
+    "fallback": 1,
+    "missing": 0,
+    "fallback_reasons": {
+      "sign_or_attribution_rejected": 1
+    },
+    "longest_missing_streak": 0,
+    "alert": false,
+    "limits": "S tie ranking is conditional on paired samples, sign audit and existing model trust; not game calibration or causal benefit."
+  },
+  "long_calculation": {
+    "F39_ms": 140100,
+    "comparison_ms": 135971,
+    "workers": 24,
+    "samples": 1000,
+    "requested": 1000,
+    "queue_ms": 0,
+    "actual_console_progress_at_seconds": [
+      60,
+      120
+    ],
+    "interpretation": "progressing computation; 11 seconds is a performance target, no new timeout or worker/budget change; no CPU-load causal claim"
+  },
+  "existing_fix_chain": {
+    "ledger": "silent-0332",
+    "queue": "notes/fix-queue-v4.md",
+    "proposal": {
+      "op": "add",
+      "id": "silent-proposal-5aa2672bd7cd1bf4",
+      "ts": "2026-10-11T21:32:33+08:00",
+      "character": "silent",
+      "ledger": [
+        "silent-0332"
+      ],
+      "runs": [
+        "64VJC5XT2AT2"
+      ],
+      "source_task": "postmortem",
+      "target_task": "strategy-proposal",
+      "domains": [
+        "structure"
+      ],
+      "summary": "64VJC5XT2AT2 F47再次出现首战资源契约异常；沿0332复用诊断并等待固定触发样本",
+      "proposal": "/home/dw/Projects/agent-sts2/learner/runs/20261011-211302-postmortem/proposal-continuation-repeat.md",
+      "rule_changes": false,
+      "authorization": "Roy-2026-10-07-learning",
+      "proposal_sha256": "fef7286be60c5baa9aef77e2b732823e9d8570b4b33d4a3451b5489724c53169",
+      "state": "pending"
+    },
+    "dispatch": "existing automatic fix/strategy chain; no duplicate task, experiment, parent, session or new code owner",
+    "C1_C2_architecture_owner": "roy-20261014-s-decision / original watcher; no source implementation reassigned",
+    "v5_dpr_health": "original performance scope retained; no re-run of frozen R2/R3 or historical studies"
+  },
+  "disposition": "keep original health alert and root-cause defect open; append recurrence evidence to old queue/ledger. B3 >=300 unchanged; B2 on-mode 200 minimum is separate. Degradation is service continuation, not root-cause resolution.",
+  "no_source_tests_release_dataset_or_runtime_mutation": true,
+  "routine_watcher_Roy_notice": "not required by this event; no receiver/user ACK claimed"
+}
