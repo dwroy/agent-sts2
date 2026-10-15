@@ -1,0 +1,151 @@
+{
+  "at": "2026-10-15 15:55:04 CST",
+  "actual_official_releases": [
+    "V5-R357",
+    "V5-R358"
+  ],
+  "ledger_cli_rows": 4,
+  "only_where_note": true,
+  "old_status_and_experience_versions_preserved": true,
+  "original_batch_completion_unchanged": {
+    "state": "failed",
+    "rc": 0,
+    "merged": null,
+    "report": {
+      "task": "strategy-proposal",
+      "character": "silent",
+      "batch": "20261015-144302-strategy-proposal",
+      "base": "2427a8c58a64cd5ab1842dc0b339d2a50805f191",
+      "runs": [
+        "AD3QSC3P41JU",
+        "9DAS5L8YM1CN"
+      ],
+      "fixes": [
+        {
+          "commit": "ebf8c57ecd811cceeb85fa636d49abbbb4c65dc8",
+          "source_parent": "2427a8c58a64cd5ab1842dc0b339d2a50805f191",
+          "proposal_id": "silent-proposal-1f34e9d37b21ba71",
+          "ledger": [
+            "silent-0255",
+            "silent-0228"
+          ],
+          "runs": [
+            "AD3QSC3P41JU"
+          ],
+          "floors": [
+            39,
+            45,
+            46,
+            48,
+            49
+          ],
+          "turn": 1,
+          "summary": "仅扩展已观察的两套完整遗物组合，修正新战及同样本接续的开场4血损失。"
+        }
+      ],
+      "skipped": [
+        "silent-proposal-cb23be067a5f04c1",
+        "silent-proposal-53ed69feeb9898fe",
+        "silent-proposal-1f34e9d37b21ba71",
+        "silent-proposal-fc6618e0844f2007",
+        "silent-proposal-a86e7753ca2a347c",
+        "silent-proposal-438a0eb4516e7975"
+      ],
+      "merged": null,
+      "version": null,
+      "live_refresh_commit": "1e3f8d10bddc7bb97acad87cf37238490c4cfc5c",
+      "merge_blocker": {
+        "stage": "locked_merge_preflight",
+        "paths": [
+          "eval/versions.json"
+        ],
+        "actual_merge_attempted": false
+      },
+      "tests": {
+        "tsc": 0,
+        "vitest": 0,
+        "cases": 0
+      },
+      "code_proposals": [
+        "silent-proposal-cb23be067a5f04c1",
+        "silent-proposal-53ed69feeb9898fe",
+        "silent-proposal-1f34e9d37b21ba71",
+        "silent-proposal-756ddf20db14797f",
+        "silent-proposal-ec2b210f613d5e26",
+        "silent-proposal-fc6618e0844f2007",
+        "silent-proposal-f97980a3266f2665",
+        "silent-proposal-a86e7753ca2a347c",
+        "silent-proposal-14c20d7897195ef5",
+        "silent-proposal-438a0eb4516e7975"
+      ],
+      "implementation_domains": [
+        "combat",
+        "terminal"
+      ],
+      "proposal_results": [
+        {
+          "id": "silent-proposal-cb23be067a5f04c1",
+          "state": "waiting",
+          "reason": "缺原dirty源码及实际修饰组合的配对固定整线核验，局部实现不能覆盖整组提案。"
+        },
+        {
+          "id": "silent-proposal-53ed69feeb9898fe",
+          "state": "waiting",
+          "reason": "已有逐技能激怒接线；缺抽牌重规划后的完整同线回放，末轮预测差额原因未定，不拟护栏或SL阈值。"
+        },
+        {
+          "id": "silent-proposal-1f34e9d37b21ba71",
+          "state": "waiting",
+          "reason": "开场组合子项已本地提交并通过完整自测，因版本表冲突未合入；宽项留药、休息及路线联合结局仍缺受控样本。"
+        },
+        {
+          "id": "silent-proposal-756ddf20db14797f",
+          "state": "duplicate",
+          "commit": "6403fdcdadc803a092beb5165a068e22bf51c412",
+          "reason": "实际live祖先已覆盖狡诈确定生成、容量与升级小刀搜索；不包含早喝或留药整战价值。"
+        },
+        {
+          "id": "silent-proposal-ec2b210f613d5e26",
+          "state": "duplicate",
+          "commit": "5c7105ff0294466da8319f2934beda05c6040794",
+          "reason": "实际live祖先已覆盖普通单层紧勒后续逐牌2及后轮撤除；层数采用勘误版F23。"
+        },
+        {
+          "id": "silent-proposal-fc6618e0844f2007",
+          "state": "waiting",
+          "reason": "未执行防御候选缺完整后继至下一营火的配对轨迹及独立校准，不能拟终局血药权重。"
+        },
+        {
+          "id": "silent-proposal-f97980a3266f2665",
+          "state": "duplicate",
+          "commit": "5c7105ff0294466da8319f2934beda05c6040794",
+          "reason": "勘误后的狭义紧勒机制已由实际live祖先覆盖，原初稿与修正版均保留。"
+        },
+        {
+          "id": "silent-proposal-a86e7753ca2a347c",
+          "state": "waiting",
+          "reason": "缺磨蚀末击中间帧、宽组合配对回放及异线完整结局，不由同线四败推新规则。"
+        },
+        {
+          "id": "silent-proposal-14c20d7897195ef5",
+          "state": "duplicate",
+          "commit": "6403fdcdadc803a092beb5165a068e22bf51c412",
+          "reason": "原限定的狡诈确定生成与容量模型已有实际live实现，不扩展未观察组合或饮用时点。"
+        },
+        {
+          "id": "silent-proposal-438a0eb4516e7975",
+          "state": "waiting",
+          "reason": "紧勒子项已有实现；整组开信刀、冒泡、蛇咬及弃牌重规划的配对完整结果尚未补齐。"
+        }
+      ],
+      "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261015-144302/learner/runs/20261015-144311-ab1d7c01-2621-4bde-ac56-8f33b2b298bb-strategy-proposal/report.md"
+    },
+    "finished": "2026-10-15 15:36",
+    "pid": 1483276
+  },
+  "queue_stage": "original four old duplicate/six waiting mechanical resolution, broad1f34 kept waiting with actual narrow publication linked",
+  "overlapping_running_owners": [],
+  "no_new_parent_task_or_model": true,
+  "wide_original_proposal": "waiting, not closed by narrow source",
+  "natural_consumer": "pending"
+}
