@@ -1373,7 +1373,7 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
     const rawUpgrade = observedApotheosisUpgrade(card);
     if (rawUpgrade) {
       const upgraded = modelHandCard(rawUpgrade, fallbackIndex, knowledge, character, ascension);
-      if (cardId === "SNAKEBITE" || cardId === "MALAISE") model.apotheosisUpgradeText = upgraded.text;
+      if (cardId === "SNAKEBITE" || cardId === "MALAISE" || cardId === "DEADLY_POISON") model.apotheosisUpgradeText = upgraded.text;
       const fields = [...UPGRADE_FIELDS, "damageBase", "blockBase", "fasten", "enemyTempStrengthLoss", "poisonPerTurn", "poisonExtraTriggers", "dexterity", "poison", "malaiseBonus"] as const;
       model.apotheosisUpgrade = {};
       for (const field of fields) {
