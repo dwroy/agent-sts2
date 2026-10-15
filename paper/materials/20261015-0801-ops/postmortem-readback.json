@@ -1,0 +1,248 @@
+{
+  "runtime": {
+    "batch": "20261015-074302",
+    "thread": "01a13ccc-4c19-7c83-8ffa-ea1077f300a9",
+    "cwd": "/home/dw/Projects/agent-sts2",
+    "event_log": "learner/runs/20261015-074302-daf9c28c-d87a-4d3e-8723-e6ceba254cb1-postmortem.jsonl",
+    "registered_launch_batch": null,
+    "original_lease": null,
+    "native_context": {
+      "source": "ops/codex-ops/accounts/codex1/learner/sessions/2026/10/15/rollout-2026-10-15T07-43-04-01a13ccc-4c19-7c83-8ffa-ea1077f300a9.jsonl",
+      "offset": 49153,
+      "bytes": 4620,
+      "sha256": "a5180dcdfcc2c026deffccb8be2d3389a5312c004cde8fbcb2bf3ac33551b39c",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "sandbox": {
+        "type": "workspace-write",
+        "writable_roots": [
+          "/home/dw/Projects/agent-sts2/.git"
+        ],
+        "network_access": false,
+        "exclude_tmpdir_env_var": false,
+        "exclude_slash_tmp": false
+      },
+      "approval_policy": "never"
+    },
+    "native_user_input": {
+      "offset": 53773,
+      "bytes": 15345,
+      "sha256": "2e1aa9db8a2b388e1227ab0defeb113fff5db35bd9cb492d2caca9a4c6d03547",
+      "input_sha256": "5ccee872dfae0c2cc642c8311bb04783f10ddae92f21fa2eb198dcf020efae84"
+    },
+    "original_header_events": [
+      {
+        "offset": 0,
+        "bytes": 16866,
+        "sha256": "1e844fadb7d3f2ea03699e1d9058be856bc4d0cf5ddbfc64a9f23c8a4cd223b1",
+        "type": "learner_launch",
+        "attempt": null,
+        "code": null
+      },
+      {
+        "offset": 16866,
+        "bytes": 283,
+        "sha256": "593332bfac239e1e06130d3097d0185bd6de527f0f55b751a0174af600e2acf2",
+        "type": "learner_startup_attempt",
+        "attempt": 1,
+        "code": null
+      },
+      {
+        "offset": 20155,
+        "bytes": 77,
+        "sha256": "b2a31ef3c3d1001607ebd227867e0f2b6bb8f2f5f7edb826fd7503cd9326035d",
+        "type": "thread.started",
+        "attempt": null,
+        "code": null
+      }
+    ],
+    "startup_attempts": 1,
+    "failed_startups_preserved": 0,
+    "no_model_or_manual_restart": true
+  },
+  "report": {
+    "task": "postmortem",
+    "appended": [
+      "REEBQHPHSWGK"
+    ],
+    "skipped": [],
+    "bugs": [
+      {
+        "run": "REEBQHPHSWGK",
+        "where": "agent/src/reflex/card-model.ts:1028",
+        "what": "斗篷生成小刀仍被误作抽牌，复现已有silent-0461；fix-queue未列",
+        "new": false
+      }
+    ],
+    "ledger": {
+      "added": [
+        "silent-0483"
+      ],
+      "updated": [
+        "silent-0106",
+        "silent-0418",
+        "silent-0461",
+        "silent-0043",
+        "silent-0132",
+        "silent-0253",
+        "silent-0280",
+        "silent-0401"
+      ],
+      "repeats": [
+        "silent-0461"
+      ],
+      "check": 0
+    },
+    "code_proposals": [
+      "silent-proposal-78a5513e42f82f27",
+      "silent-proposal-243864a439e81a09",
+      "silent-proposal-84395fbde2c9d57c"
+    ],
+    "implementation_domains": [
+      "combat",
+      "potion"
+    ],
+    "report": "/home/dw/Projects/agent-sts2/learner/runs/20261015-074302-daf9c28c-d87a-4d3e-8723-e6ceba254cb1-postmortem/report.md"
+  },
+  "exact_original_rows": 1517,
+  "streams": [
+    {
+      "stream": "states.jsonl",
+      "rows": 741,
+      "frozen_sha256": "a527e750b422a26c1d4b8247311a2dcb888b7bd89da560c2ed842457b023dd5a"
+    },
+    {
+      "stream": "decisions.jsonl",
+      "rows": 717,
+      "frozen_sha256": "b6c6873ff2ce5f082e946f9c51b82a6324dd035517bd3defbf79656a268859cb"
+    },
+    {
+      "stream": "brain.jsonl",
+      "rows": 44,
+      "frozen_sha256": "369cd912cc9608fd446e683ae0db3e503e3b2219dfaf60768d8381f9b65cbd6e"
+    },
+    {
+      "stream": "run-plans.jsonl",
+      "rows": 11,
+      "frozen_sha256": "5ba0bae0fa25a9f82581c8e83979449df049af3f2f91bf8447b4d7c1b7177677"
+    },
+    {
+      "stream": "sl-attempts.jsonl",
+      "rows": 3,
+      "frozen_sha256": "7f9602cd43c49cb205808f4d263731f32a0a31cd383d4a1cc22cfc35ac394f98"
+    },
+    {
+      "stream": "run-config.jsonl",
+      "rows": 1,
+      "frozen_sha256": "17b68d23611691b2aa52b6ce3548d6046fbf70cd2d2abf2bc57645e6e6a05264"
+    }
+  ],
+  "lesson_append": {
+    "bytes": 23336,
+    "sha256": "365ae690b2d53cf86748ed546b7de0571d170e5bc89345680873ef91ebdd3caf",
+    "present_once": true
+  },
+  "original_LEDGER_CLI_results": [
+    {
+      "action": "update",
+      "id": "silent-0106",
+      "returncode": 0,
+      "stdout": "silent-0106\n",
+      "stderr": ""
+    },
+    {
+      "action": "update",
+      "id": "silent-0418",
+      "returncode": 0,
+      "stdout": "silent-0418\n",
+      "stderr": ""
+    },
+    {
+      "action": "update",
+      "id": "silent-0461",
+      "returncode": 0,
+      "stdout": "silent-0461\n",
+      "stderr": ""
+    },
+    {
+      "action": "update",
+      "id": "silent-0043",
+      "returncode": 0,
+      "stdout": "silent-0043\n",
+      "stderr": ""
+    },
+    {
+      "action": "update",
+      "id": "silent-0132",
+      "returncode": 0,
+      "stdout": "silent-0132\n",
+      "stderr": ""
+    },
+    {
+      "action": "update",
+      "id": "silent-0253",
+      "returncode": 0,
+      "stdout": "silent-0253\n",
+      "stderr": ""
+    },
+    {
+      "action": "update",
+      "id": "silent-0280",
+      "returncode": 0,
+      "stdout": "silent-0280\n",
+      "stderr": ""
+    },
+    {
+      "action": "update",
+      "id": "silent-0401",
+      "returncode": 0,
+      "stdout": "silent-0401\n",
+      "stderr": ""
+    },
+    {
+      "action": "add",
+      "returncode": 0,
+      "stdout": "silent-0483\n",
+      "stderr": ""
+    }
+  ],
+  "original_final_verification": {
+    "ledger_check": 0,
+    "ledger_entries": [
+      "silent-0483",
+      "silent-0106",
+      "silent-0418",
+      "silent-0461",
+      "silent-0043",
+      "silent-0132",
+      "silent-0253",
+      "silent-0280",
+      "silent-0401"
+    ],
+    "proposals": [
+      "silent-proposal-78a5513e42f82f27",
+      "silent-proposal-243864a439e81a09",
+      "silent-proposal-84395fbde2c9d57c"
+    ],
+    "proposal_original_state": "pending",
+    "lessons_header_count": 1,
+    "errata_needed": false,
+    "original_records_readback": 1517
+  },
+  "proposals": [
+    {
+      "id": "silent-proposal-78a5513e42f82f27",
+      "sha256": "26a8770f9446af549772bf2a976de5965f0988490d5bde79cb1ab3e0da8765f4"
+    },
+    {
+      "id": "silent-proposal-243864a439e81a09",
+      "sha256": "8b166452f581ef115c26e07dba126828348a1d6e57707ca40f3d03e8b9bf8675"
+    },
+    {
+      "id": "silent-proposal-84395fbde2c9d57c",
+      "sha256": "a157d0dce7fef64e2b12fef61e925823aca6f5476976f9a08ade9022b71f3e42"
+    }
+  ],
+  "bug_disposition": "old silent-0461 already notes/fix-queue-v4.md 2026-10-14 06:40 plus 2026-10-15 07:01 reference; add this recurrence to original chain, no new blocking bug or duplicate dispatch",
+  "gameplay_or_mechanism_discoveries": "remain original learner scope; unknown counterfactual preserved"
+}

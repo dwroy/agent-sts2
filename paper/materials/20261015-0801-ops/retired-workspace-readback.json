@@ -1,0 +1,24 @@
+{
+  "at": "2026-10-15 08:07:46 CST",
+  "ops_precheck_failure": "Git -C on retired artifact-only directory discovered main rather than the original workspace",
+  "original_retention_manifest": {
+    "path": "ops/codex-ops/retention/archives/20261015-074302-strategy-proposal.manifest.json",
+    "sha256": "a009220ffcdb05e6dedff5ce2ab5b94741cf30cce46211d00b7757513c526641",
+    "state": "checkout_reclaimed",
+    "proof": {
+      "task": "strategy-proposal",
+      "character": "silent",
+      "original_batch_state": "done",
+      "kind": "settled-report-only",
+      "no_experience_claim": true,
+      "worktree_head": "72286332ec835ee9929793543e435686935320ff",
+      "worktree_branch": "refs/heads/codex-strategy-silent-20261015-074302",
+      "discarded_python_cache": [],
+      "retire_checkout": true,
+      "compact_scratch": false
+    }
+  },
+  "correction": "bind the retained original clean final-verification and actual retention proof; do not treat main dirty records as learner edits",
+  "no_new_learner_failure": true,
+  "no_worktree_reset_or_recreation": true
+}
