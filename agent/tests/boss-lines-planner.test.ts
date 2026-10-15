@@ -180,6 +180,28 @@ describe("B2 off: the boss question as before", () => {
 });
 
 describe("B2 on: the boss question", () => {
+  it("P3 leaves every frozen Ironclad question and every answer resolution byte-equivalent", () => {
+    rolloutLiveOptions.now = () => 0;
+    potionMcOptions.now = () => 0;
+    bossLinesOptions.now = () => 0;
+    bossLinesOptions.enabled = true;
+    bossLinesOptions.serial = true;
+    bossLinesOptions.samples = 4;
+    bossLinesOptions.holdHp = () => null;
+    try {
+      for (const name of BOARDS) {
+        expect(loggedEnv(logged(name)).state.run?.raw["character_id"]).toBe("IRONCLAD");
+        vi.stubEnv("S_COMBAT_RANK", "off");
+        const off = digestOf(name, "off");
+        vi.stubEnv("S_COMBAT_RANK", "on");
+        expect(digestOf(name, "off"), name).toBe(off);
+      }
+    } finally {
+      vi.unstubAllEnvs();
+      bossLinesOptions.now = null;
+    }
+  }, 120_000);
+
   afterEach(() => {
     rolloutLiveOptions.now = null;
     potionMcOptions.now = null;

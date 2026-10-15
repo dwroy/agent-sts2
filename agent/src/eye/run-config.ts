@@ -38,7 +38,7 @@ import type { UsageStatus } from "../brain/engines/codex-usage.js";
 import { estimateTokens, prefixSizeWarning } from "../brain/knowledge.js";
 import type { EngineName } from "../brain/types.js";
 import type { AppConfig } from "../core/config.js";
-import { CODEX_CONTEXT_WINDOW, CODEX_AUTO_COMPACT_TOKENS, DEFAULT_CLAUDE_MODEL, sReadinessMode, simFailurePolicy, simAdaptivePolicy } from "../core/config.js";
+import { CODEX_CONTEXT_WINDOW, CODEX_AUTO_COMPACT_TOKENS, DEFAULT_CLAUDE_MODEL, sReadinessMode, simFailurePolicy, simAdaptivePolicy, sCombatRankEnabled } from "../core/config.js";
 import { isMenuRunId } from "../memory/journal-replay.js";
 import { str, type JsonValue } from "../core/util/json.js";
 import { resolveJevPromptLog } from "./jev-prompt-log.js";
@@ -172,6 +172,7 @@ export interface RunConfigRow {
     sim_adaptive?: string;
     sim_adaptive_requested?: string;
     sim_adaptive_admission?: string;
+    s_combat_rank?: "on" | "off";
     combat_deepseek: string;
     /** THIEF_FACTS (docs/thief.md): the thieves' facts, escape and kill-line coverage on the combat question. */
     thief_facts: boolean;
@@ -481,6 +482,7 @@ export function runConfigRow(
       build_oneshot: config.buildOneshot,
       boss_sim_build: characterKey(run.character) === "silent" ? "on" : config.bossSimBuild,
       s_readiness: sReadinessMode(run.character, env),
+      s_combat_rank: sCombatRankEnabled(run.character, env) ? "on" as const : "off" as const,
       sim_failure_exit: simFailurePolicy(run.character, env).enabled ? "on" as const : "off" as const,
       sim_failure_retries: simFailurePolicy(run.character, env).retries,
       sim_adaptive: simAdaptivePolicy(run.character, env).mode,

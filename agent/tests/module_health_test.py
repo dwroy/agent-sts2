@@ -19,6 +19,19 @@ def row(i, error='只跑完 24 次模拟（不足 300 次）', **extra):
 
 
 class Health(unittest.TestCase):
+    def test_combat_s_actual_use_fallback_and_missing_records(self):
+        config = {**CONFIG, 'loop': {'s_combat_rank': 'on'}}
+        def combat(i, ranking):
+            return row(i, label='combat/plan', boss_sim={'available': True, **({'s_ranking': ranking} if ranking else {})})
+        used = combat(1, {'schema': 's-combat-ranking-v1', 'used': True, 'reason': None})
+        low = combat(2, {'schema': 's-combat-ranking-v1', 'used': False, 'reason': 'low_trust'})
+        result = h.combat_s_ranking_health(config, [used, used, low])
+        self.assertEqual((result['expected'], result['produced'], result['used'], result['fallback']), (2, 2, 1, 1))
+        self.assertEqual(result['fallback_reasons'], {'low_trust': 1})
+        self.assertFalse(result['alert'])
+        self.assertTrue(h.combat_s_ranking_health(config, [combat(i, None) for i in (3, 4, 5)])['alert'])
+        self.assertEqual(h.combat_s_ranking_health(CONFIG, [used])['expected'], 0)
+
     def test_computation_failures_and_degraded_b2_are_counted_once_and_alerted(self):
         def attempt(i, status, failure):
             return row(i, label='combat/plan', boss_sim={'completion': {
