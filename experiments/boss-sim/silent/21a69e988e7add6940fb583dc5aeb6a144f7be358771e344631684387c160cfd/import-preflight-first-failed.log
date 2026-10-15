@@ -1,0 +1,99 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/agent
+
+ × tests/check-imports.test.ts > relative imports > all resolve 1029ms
+   → expected [ …(65) ] to deeply equal []
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/check-imports.test.ts > relative imports > all resolve
+AssertionError: expected [ …(65) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "learner/runs/20261012-134305-silent-boss-calibration/live-recheck-tree/agent/tests/batch-b.test.ts: ../tools/rollout-backtest.ts",
++   "learner/runs/20261012-134305-silent-boss-calibration/live-recheck-tree/agent/tests/check-imports.test.ts: ../tools/check-imports.js",
++   "learner/runs/20261012-134305-silent-boss-calibration/live-recheck-tree/agent/tests/codex-cache-probe.test.ts: ../../ops/codex-brain-cache-probe.js",
++   "learner/runs/20261012-134305-silent-boss-calibration/live-recheck-tree/agent/tests/codex-cache-probe.test.ts: ../../ops/codex/lib.js",
++   "learner/runs/20261012-134305-silent-boss-calibration/live-recheck-tree/agent/tests/codex-cache-probe.test.ts: ../../ops/codex-brain-cache-probe.ts",
++   "learner/runs/20261012-134305-silent-boss-calibration/live-recheck-tree/agent/tests/codex-fast.test.ts: ../../learner/lib/engines.js",
++   "learner/runs/20261012-134305-silent-boss-calibration/live-recheck-tree/agent/tests/codex-fast.test.ts: ../../ops/codex/lib.js",
++   "learner/runs/20261012-134305-silent-boss-calibration/live-recheck-tree/agent/tests/core-build-jobs.test.ts: ../../learner/lib/task.js",
++   "learner/runs/20261012-134305-silent-boss-calibration/live-recheck-tree/agent/tests/core-build-jobs.test.ts: ../../ops/codex/lib.js",
++   "learner/runs/20261012-134305-silent-boss-calibration/live-recheck-tree/agent/tests/deepseek-prompt-dump.test.ts: ../tools/deepseek-prompt-dump.js",
++   "learner/runs/20261012-134305-silent-boss-calibration/live-recheck-tree/agent/tests/fix-queue-v4-fix3.test.ts: ../tools/mechanics-align.js",
++   "learner/runs/20261012-134305-silent-boss-calibration/live-recheck-tree/agent/tests/learner-character.test.ts: ../../learner/lib/launcher.js",
++   "learner/runs/20261012-134305-silent-boss-calibration/live-recheck-tree/agent/tests/learner-character.test.ts: ../../learner/lib/runs.js",
++   "learner/runs/20261012-134305-silent-boss-calibration/live-recheck-tree/agent/tests/learner-character.test.ts: ../../learner/lib/task.js",
++   "learner/runs/20261012-134305-silent-boss-calibration/live-recheck-tree/agent/tests/learner-check-continuation.test.ts: ../../ops/codex/lib.js",
++   "learner/runs/20261012-134305-silent-boss-calibration/live-recheck-tree/agent/tests/learner-fallback-checks.test.ts: ../../ops/codex/lib.js",
++   "learner/runs/20261012-134305-silent-boss-calibration/live-recheck-tree/agent/tests/learner-jobs.test.ts: ../../ops/codex/lib.js",
++   "learner/runs/20261012-134305-silent-boss-calibration/live-recheck-tree/agent/tests/learner-keycheck-retry.test.ts: ../../learner/lib/engines.js",
++   "learner/runs/20261012-134305-silent-boss-calibration/live-recheck-tree/agent/tests/learner-learning-flow.test.ts: ../../learner/lib/task.js",
++   "learner/runs/20261012-134305-silent-boss-calibration/live-recheck-tree/agent/tests/learner-live-tasks.test.ts: ../../learner/lib/task.js",
++   "learner/runs/20261012-134305-silent-boss-calibration/live-recheck-tree/agent/tests/learner-paths.test.ts: ../../learner/lib/engines.js",
++   "learner/runs/20261012-134305-silent-boss-calibration/live-recheck-tree/agent/tests/learner-paths.test.ts: ../../learner/lib/launcher.js",
++   "learner/runs/20261012-134305-silent-boss-calibration/live-recheck-tree/agent/tests/learner-startup-recovery.test.ts: ../../learner/lib/launcher.js",
++   "learner/runs/20261012-134305-silent-boss-calibration/live-recheck-tree/agent/tests/learner-startup-recovery.test.ts: ../../learner/lib/startup-recovery.js",
++   "learner/runs/20261012-134305-silent-boss-calibration/live-recheck-tree/agent/tests/learner-startup-recovery.test.ts: ../../learner/lib/engines.js",
++   "learner/runs/20261012-134305-silent-boss-calibration/live-recheck-tree/agent/tests/learner-startup-recovery.test.ts: ../../learner/lib/engines.js",
++   "learner/runs/20261012-134305-silent-boss-calibration/live-recheck-tree/agent/tests/learner-strategy.test.ts: ../../learner/lib/task.js",
++   "learner/runs/20261012-134305-silent-boss-calibration/live-recheck-tree/agent/tests/learner-strategy.test.ts: ../../ops/codex/lib.js",
++   "learner/runs/20261012-134305-silent-boss-calibration/live-recheck-tree/agent/tests/learner.test.ts: ../../learner/lib/engines.js",
++   "learner/runs/20261012-134305-silent-boss-calibration/live-recheck-tree/agent/tests/learner.test.ts: ../../learner/lib/launcher.js",
++   "learner/runs/20261012-134305-silent-boss-calibration/live-recheck-tree/agent/tests/learner.test.ts: ../../learner/lib/summary.js",
++   "learner/runs/20261012-134305-silent-boss-calibration/live-recheck-tree/agent/tests/learner.test.ts: ../../learner/lib/task.js",
++   "learner/runs/20261012-134305-silent-boss-calibration/live-recheck-tree/agent/tests/learning-ledger.test.ts: ../../learner/lib/task.js",
++   "learner/runs/20261012-134305-silent-boss-calibration/live-recheck-tree/agent/tests/ops-action-list.test.ts: ../../ops/codex/lib.js",
++   "learner/runs/20261012-134305-silent-boss-calibration/live-recheck-tree/agent/tests/ops-assist.test.ts: ../../ops/codex/assist.js",
++   "learner/runs/20261012-134305-silent-boss-calibration/live-recheck-tree/agent/tests/ops-assist.test.ts: ../../ops/codex/lib.js",
++   "learner/runs/20261012-134305-silent-boss-calibration/live-recheck-tree/agent/tests/ops-autoplay-reload.test.ts: ../../ops/codex/lib.js",
++   "learner/runs/20261012-134305-silent-boss-calibration/live-recheck-tree/agent/tests/ops-codex.test.ts: ../../ops/codex/archive.js",
++   "learner/runs/20261012-134305-silent-boss-calibration/live-recheck-tree/agent/tests/ops-codex.test.ts: ../../ops/codex/main.js",
++   "learner/runs/20261012-134305-silent-boss-calibration/live-recheck-tree/agent/tests/ops-codex.test.ts: ../../ops/codex/lib.js",
++   "learner/runs/20261012-134305-silent-boss-calibration/live-recheck-tree/agent/tests/ops-deferred.test.ts: ../../ops/codex-ops.sh",
++   "learner/runs/20261012-134305-silent-boss-calibration/live-recheck-tree/agent/tests/ops-eval-metrics.test.ts: ../../ops/codex/lib.js",
++   "learner/runs/20261012-134305-silent-boss-calibration/live-recheck-tree/agent/tests/ops-herdr.test.ts: ../../ops/codex/herdr.js",
++   "learner/runs/20261012-134305-silent-boss-calibration/live-recheck-tree/agent/tests/ops-herdr.test.ts: ../../ops/codex/lib.js",
++   "learner/runs/20261012-134305-silent-boss-calibration/live-recheck-tree/agent/tests/ops-host-recovery.test.ts: ../../ops/codex/lib.js",
++   "learner/runs/20261012-134305-silent-boss-calibration/live-recheck-tree/agent/tests/ops-host-recovery.test.ts: ../../learner/lib/engines.js",
++   "learner/runs/20261012-134305-silent-boss-calibration/live-recheck-tree/agent/tests/ops-host-recovery.test.ts: ../../ops/codex/assist.js",
++   "learner/runs/20261012-134305-silent-boss-calibration/live-recheck-tree/agent/tests/ops-mod-state-broker.test.ts: ../../ops/codex/main.js",
++   "learner/runs/20261012-134305-silent-boss-calibration/live-recheck-tree/agent/tests/ops-redaction.test.ts: ../../learner/lib/launcher.js",
++   "learner/runs/20261012-134305-silent-boss-calibration/live-recheck-tree/agent/tests/ops-redaction.test.ts: ../../ops/codex/lib.js",
++   "learner/runs/20261012-134305-silent-boss-calibration/live-recheck-tree/agent/tests/ops-rollout-file.test.ts: ../../ops/codex/rollout-file.js",
++   "learner/runs/20261012-134305-silent-boss-calibration/live-recheck-tree/agent/tests/ops-rollout-file.test.ts: ../../ops/codex/lib.js",
++   "learner/runs/20261012-134305-silent-boss-calibration/live-recheck-tree/agent/tests/silent-boss-calibration-board.test.ts: ../tools/boss-sim/calibration-board.js",
++   "learner/runs/20261012-134305-silent-boss-calibration/live-recheck-tree/agent/tests/silent-boss-calibration-cli.test.ts: ../tools/boss-sim/backtest-runner.js",
++   "learner/runs/20261012-134305-silent-boss-calibration/live-recheck-tree/agent/tests/silent-boss-calibration-cli.test.ts: ../tools/boss-sim/backtest.js",
++   "learner/runs/20261012-134305-silent-boss-calibration/live-recheck-tree/agent/tests/silent-observed-intervals.test.ts: ../../learner/lib/selection-execution.js",
++   "learner/runs/20261012-134305-silent-boss-calibration/live-recheck-tree/agent/tests/silent-selection-execution.test.ts: ../../learner/lib/selection-execution.js",
++   "learner/runs/20261012-134305-silent-boss-calibration/live-recheck-tree/agent/tests/silent-selection-observation.test.ts: ../../learner/lib/selection-execution.js",
++   "learner/runs/20261012-134305-silent-boss-calibration/live-recheck-tree/agent/tests/silent-selection-terminal.test.ts: ../../learner/lib/selection-execution.js",
++   "learner/runs/20261012-134305-silent-boss-calibration/live-recheck-tree/agent/tests/strategy-concurrency.test.ts: ../../ops/codex/lib.js",
++   "learner/runs/20261012-134305-silent-boss-calibration/live-recheck-tree/agent/tests/strategy-concurrency.test.ts: ../../learner/lib/task.js",
++   "learner/runs/20261012-134305-silent-boss-calibration/live-recheck-tree/agent/tests/strategy-implementation-continuation.test.ts: ../../ops/codex/lib.js",
++   "learner/runs/20261012-134305-silent-boss-calibration/live-recheck-tree/agent/tests/strategy-implementation.test.ts: ../../ops/codex/lib.js",
++   "learner/runs/20261012-134305-silent-boss-calibration/live-recheck-tree/agent/tests/subscription-usage.test.ts: ../../ops/subscription-usage.js",
++   "learner/runs/20261012-134305-silent-boss-calibration/live-recheck-tree/agent/tests/subscription-usage.test.ts: ../../ops/codex/lib.js",
++ ]
+
+ ❯ tests/check-imports.test.ts:11:33
+      9| describe("relative imports", () => {
+     10|   it("all resolve", () => {
+     11|     expect(unresolvedImports()).toEqual([]);
+       |                                 ^
+     12|   });
+     13| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed (1)
+   Start at  16:37:10
+   Duration  1.48s (transform 250ms, setup 295ms, import 11ms, tests 1.03s, environment 0ms)
+
