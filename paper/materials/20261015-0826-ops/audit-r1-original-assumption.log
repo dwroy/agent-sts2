@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/ops/codex-ops/record-staging/20261015-0826/audit.py", line 13, in <module>
+    assert r['equal'];assert git('show',replay['source_commit']+':'+r['path'])==git('show',replay['deployed_commit']+':'+r['path']);assert git('show',replay['deployed_commit']+':'+r['path'])==git('show',head+':'+r['path'],cwd=live)
+                                                                                                                                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

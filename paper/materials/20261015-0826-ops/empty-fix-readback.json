@@ -1,0 +1,729 @@
+{
+  "batch": "20261015-081302-fix-batch",
+  "runtime": {
+    "batch": "20261015-081302-fix-batch",
+    "thread": "01a13ce7-cf13-7930-8cca-76da13bc9ea8",
+    "cwd": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261015-081302",
+    "event_log": "learner/runs/20261015-081305-8a32fd8d-ffb6-4d82-969b-f00f47272604-fix-batch.jsonl",
+    "registered_launch_batch": "20261015-081302-fix-batch",
+    "original_lease": "a57b7ff8f057432908f3465263bd7b2619ba2dcb6bc85964c034b79dbd004287",
+    "native_context": {
+      "source": "ops/codex-ops/accounts/codex1/learner/sessions/2026/10/15/rollout-2026-10-15T08-13-07-01a13ce7-cf13-7930-8cca-76da13bc9ea8.jsonl",
+      "offset": 50166,
+      "bytes": 5118,
+      "sha256": "5f86581fbd486c0ba9b8c3f7d0c5128a0ac0b2b8e8c7413feab3571cb8d62f4b",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "sandbox": {
+        "type": "workspace-write",
+        "writable_roots": [
+          "/home/dw/Projects/agent-sts2",
+          "/home/dw/Projects/agent-sts2/.git",
+          "/home/dw/Projects/agent-sts2/.git/worktrees/codex-fix-silent-20261015-081302"
+        ],
+        "network_access": false,
+        "exclude_tmpdir_env_var": false,
+        "exclude_slash_tmp": false
+      },
+      "approval_policy": "never"
+    },
+    "native_user_input": {
+      "offset": 55284,
+      "bytes": 13081,
+      "sha256": "7d4538a6ecb077a857f7fbc587132de9eb3ad88d3d0ada3c84e859dc9ad9ce66",
+      "input_sha256": "9488eee8075eff9cab9977eb0bffdad1d80ad6723123a83124cb91c2692ff580"
+    },
+    "original_header_events": [
+      {
+        "offset": 0,
+        "bytes": 14892,
+        "sha256": "c7ceeb1abde688318a7a7b9d4b76b93ad7715495fc0fdb794b0536618d5fca10",
+        "type": "learner_launch",
+        "attempt": null,
+        "code": null
+      },
+      {
+        "offset": 14892,
+        "bytes": 369,
+        "sha256": "6b02c812ab9df3f0009789802c50feca0cbd27f2e46db6aee42c8e7445446c49",
+        "type": "learner_startup_attempt",
+        "attempt": 1,
+        "code": null
+      },
+      {
+        "offset": 18267,
+        "bytes": 77,
+        "sha256": "2c80a6a94bd5c63d375642dc23f94100c6b9ed93c2cf6c2db76d56fa1e24ebcf",
+        "type": "thread.started",
+        "attempt": null,
+        "code": null
+      }
+    ],
+    "startup_attempts": 1,
+    "failed_startups_preserved": 0,
+    "no_model_or_manual_restart": true
+  },
+  "report": {
+    "task": "fix-batch",
+    "base": "8b1ed57810b7af38074e91eceb3c20bd7a7a5cfd",
+    "fixes": [],
+    "skipped": [
+      {
+        "item": "silent-0481、silent-0446及其余机制规则项",
+        "reason": "策略类，沿已有独立提案链处理"
+      },
+      {
+        "item": "缓存命中、调度公平性、目录竞态根因及旧通知恢复",
+        "reason": "证据不足，保留原行为和失败记录"
+      },
+      {
+        "item": "宽性能与架构任务",
+        "reason": "独立功能，不混入普通纯bug批次"
+      }
+    ],
+    "merged": null,
+    "tests": {
+      "tsc": 0,
+      "vitest": 0,
+      "cases": 142
+    },
+    "code_proposals": [],
+    "implementation_domains": [],
+    "report": "/home/dw/Projects/agent-sts2/learner/runs/20261015-081305-8a32fd8d-ffb6-4d82-969b-f00f47272604-fix-batch/report.md"
+  },
+  "queue_snapshot": {
+    "sha256": "ec6a403a3a89f080fb8fccb3ab972f7457c33d834afab80cca692176ea88b810",
+    "lines": 1318
+  },
+  "no_source_completion": {
+    "raw_state": {
+      "state": "failed",
+      "rc": 0,
+      "merged": null
+    },
+    "verify_empty_fix": null,
+    "original_worktree_head": "8b1ed57810b7af38074e91eceb3c20bd7a7a5cfd",
+    "worktree_clean": true,
+    "base_to_source_head_delta": 0,
+    "existing_live_source_path_difference_count": 153,
+    "existing_live_source_path_differences": [
+      "agent/src/brain/build-facts.ts",
+      "agent/src/brain/engines/claude.ts",
+      "agent/src/brain/engines/codex-session.ts",
+      "agent/src/brain/engines/codex-usage.ts",
+      "agent/src/brain/llm/deepseek-message.ts",
+      "agent/src/brain/llm/deepseek.ts",
+      "agent/src/brain/types.ts",
+      "agent/src/core/config.ts",
+      "agent/src/hand/screens/act-start.ts",
+      "agent/src/hand/screens/card-value.ts",
+      "agent/src/hand/screens/event.ts",
+      "agent/src/hand/screens/map.ts",
+      "agent/src/hand/screens/misc.ts",
+      "agent/src/hand/screens/oneshot.ts",
+      "agent/src/hand/screens/potion-discard.ts",
+      "agent/src/hand/screens/route-review.ts",
+      "agent/src/knowledge/mechanics.ts",
+      "agent/src/knowledge/move-model.ts",
+      "agent/src/knowledge/outcome-facts.ts",
+      "agent/src/knowledge/outcome-tables.ts",
+      "agent/src/knowledge/potion-equivalents.ts",
+      "agent/src/knowledge/relic-values.ts",
+      "agent/src/knowledge/render/potion-text.ts",
+      "agent/src/memory/ascension-target.ts",
+      "agent/src/memory/fight-plan.ts",
+      "agent/src/memory/run-journal.ts",
+      "agent/src/reflex/card-model.ts",
+      "agent/src/reflex/combat.ts",
+      "agent/src/reflex/jev-experience.ts",
+      "agent/src/reflex/passive-pieces.ts",
+      "agent/src/reflex/potion-cost.ts",
+      "agent/src/reflex/potion-mc.ts",
+      "agent/src/reflex/rollout-live.ts",
+      "agent/src/reflex/thief.ts",
+      "agent/src/sim/boss-clock.ts",
+      "agent/src/sim/boss-start.ts",
+      "agent/src/sim/route-map.ts",
+      "agent/src/sim/thief-card-hp.ts",
+      "agent/src/sim/thief-card-value.ts",
+      "agent/src/sl/controller.ts",
+      "agent/src/sl/draws.ts",
+      "agent/src/sl/elites.ts",
+      "agent/src/sl/explore.ts",
+      "agent/src/sl/judge.ts",
+      "agent/src/sl/random-target.ts",
+      "agent/src/sl/reload.ts",
+      "agent/tests/act-route-candidates.test.ts",
+      "agent/tests/asc-band-facts.test.ts",
+      "agent/tests/batch-j.test.ts",
+      "agent/tests/batch-k.test.ts",
+      "agent/tests/boss-sim-build.test.ts",
+      "agent/tests/brain-codex-usage.test.ts",
+      "agent/tests/build-decider.test.ts",
+      "agent/tests/combat-jev.test.ts",
+      "agent/tests/death-move-data/pinned-knowledge.json",
+      "agent/tests/deepseek-cache-layout.test.ts",
+      "agent/tests/experience.test.ts",
+      "agent/tests/fight-plan.test.ts",
+      "agent/tests/fix-queue-v4-fix3.test.ts",
+      "agent/tests/git_push_main_test.py",
+      "agent/tests/inferno-planner-data/pinned-knowledge.json",
+      "agent/tests/knowledge-check-a8w-builder.test.ts",
+      "agent/tests/knowledge-check-a8w-cards.test.ts",
+      "agent/tests/knowledge-check-a8w-experience.test.ts",
+      "agent/tests/knowledge-check-a8w-facts.test.ts",
+      "agent/tests/knowledge-check-a8w-guides.test.ts",
+      "agent/tests/knowledge-check-cards.test.ts",
+      "agent/tests/knowledge-check-facts.test.ts",
+      "agent/tests/knowledge-check-guides.test.ts",
+      "agent/tests/learner-learning-flow.test.ts",
+      "agent/tests/learner-strategy.test.ts",
+      "agent/tests/learner.test.ts",
+      "agent/tests/learning-roles.test.ts",
+      "agent/tests/logged-states/batch-n/boss-clock-self-damage.json",
+      "agent/tests/mech-move-data/pinned-knowledge.json",
+      "agent/tests/move-model-damage.test.ts",
+      "agent/tests/oneshot-act-start.test.ts",
+      "agent/tests/oneshot-rest-event.test.ts",
+      "agent/tests/oneshot-shop.test.ts",
+      "agent/tests/ops-codex.test.ts",
+      "agent/tests/outcome-asc.test.ts",
+      "agent/tests/potion-equivalents.test.ts",
+      "agent/tests/potion-mc.test.ts",
+      "agent/tests/potions-jev-call.test.ts",
+      "agent/tests/rest-pantograph.test.ts",
+      "agent/tests/rollout-ties.test.ts",
+      "agent/tests/rollout.test.ts",
+      "agent/tests/route-chain.test.ts",
+      "agent/tests/route-next-rest.test.ts",
+      "agent/tests/route-review.test.ts",
+      "agent/tests/run-plan-merge.test.ts",
+      "agent/tests/screens.test.ts",
+      "agent/tests/sl-any-draw-data/pinned-knowledge.json",
+      "agent/tests/sl-any-draw.test.ts",
+      "agent/tests/sl-early-data/pinned-knowledge.json",
+      "agent/tests/sl-early.test.ts",
+      "agent/tests/sl-explore-canon-data/pinned-knowledge.json",
+      "agent/tests/sl-explore-gaps-data/pinned-knowledge.json",
+      "agent/tests/sl-explore-potion-data/pinned-knowledge.json",
+      "agent/tests/sl-explore-whole-data/pinned-knowledge.json",
+      "agent/tests/sl-replay-data/pinned-knowledge.json",
+      "agent/tests/sl-retry-data/pinned-knowledge.json",
+      "agent/tests/sl.test.ts",
+      "agent/tests/target-options.test.ts",
+      "agent/tests/template-target-data/pinned-knowledge.json",
+      "agent/tests/thief-card-value.test.ts",
+      "agent/tests/turn-solver.test.ts",
+      "agent/tests/v1mf-bugfix.test.ts",
+      "agent/tests/worktree-storage.test.ts",
+      "agent/tools/act-route-candidates-replay.ts",
+      "agent/tools/potion-cost-replay.ts",
+      "agent/tools/potion-drink-audit.py",
+      "agent/tools/route-review-next-rest-replay.ts",
+      "eval/route-projection-split.py",
+      "knowledge/builders/build-monster-db.py",
+      "knowledge/builders/build-outcome-stats.py",
+      "knowledge/builders/build-potion-equivalents.py",
+      "knowledge/builders/characters.py",
+      "knowledge/builders/refresh-potion-equivalents.sh",
+      "learner/lib/engines.ts",
+      "learner/lib/launcher.ts",
+      "learner/lib/runs.ts",
+      "learner/lib/task.ts",
+      "learner/tasks/boss-sim-automation.md",
+      "learner/tasks/codex-brain-cache.md",
+      "learner/tasks/codex-only-brain.md",
+      "learner/tasks/experience-asc-audit.md",
+      "learner/tasks/experience-update.md",
+      "learner/tasks/fix-batch.md",
+      "learner/tasks/mechanics-audit.md",
+      "learner/tasks/postmortem.md",
+      "learner/tasks/silent-a10-regression.md",
+      "learner/tasks/silent-boss-calibration.md",
+      "learner/tasks/silent-double-boss.md",
+      "learner/tasks/strategy-proposal.md",
+      "ops/auto-relaunch.sh",
+      "ops/brain-latency.py",
+      "ops/codex-ops-actions.sh",
+      "ops/codex-ops-learner.sh",
+      "ops/codex/lib.ts",
+      "ops/codex/main.ts",
+      "ops/disk_capacity.py",
+      "ops/experience-pending.py",
+      "ops/learner_retention.py",
+      "ops/learning_requests.py",
+      "ops/run.sh",
+      "ops/stop-after-a8.sh",
+      "ops/stop-after.sh",
+      "ops/tests/test_silent_calibration_dispatch.py",
+      "ops/tests/test_worktree_storage.py",
+      "ops/worktree_checkout.py",
+      "ops/worktree_retention.py",
+      "ops/worktree_storage.py"
+    ],
+    "interpretation": "original exact-source no-change gate does not admit the empty report because base and live still differ; no new code was delivered. Preserve failed/rc0/mergednull; do not fabricate a merge, rollback, full check or learner retry"
+  },
+  "original_selected_tests": {
+    "tsc": 0,
+    "vitest": 0,
+    "files": 20,
+    "passed": 142,
+    "filtered_not_run": 34,
+    "python_fixed_cases": 3,
+    "python_exit": 0,
+    "full_suite_run": false,
+    "reruns": [],
+    "log_SHAs": {
+      "tsc.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "vitest-targeted.log": "2bcb8e5cf8e13a5ce4c7a3556bea2d96aee533c00b6673c20374538abf888df1",
+      "vitest-fixtures.log": "25da97e1cc162af3b0c80c9c50c1c39c38b10c87de6ac3791bbf4437aa1e0571",
+      "report-death-fight.log": "f2d3c0f51cb2904c6c980496c8a629a5dced4d759f3274a36162b38cd64efec2"
+    }
+  },
+  "existing_57_ancestry_and_source_references": [
+    {
+      "item": "silent-0254：无动作死亡战斗归因",
+      "source_commit": "3b48088dec5fc6eafe576a1296bbdadde43432ee",
+      "ancestor_in_report_base_and_actual_live": true,
+      "referenced_source_present": "ops/report.py"
+    },
+    {
+      "item": "codex-usage-credit-baseline-recovery：额度窗口恢复基线",
+      "source_commit": "5b56a452bb9be14d620b368ec46974c1b57901ca",
+      "ancestor_in_report_base_and_actual_live": true,
+      "referenced_source_present": "agent/src/brain/engines/codex-usage.ts"
+    },
+    {
+      "item": "ascension-up：请求进阶误报为实际进阶",
+      "source_commit": "8045d9fbf0a12523b1dbe39bbed8af06c7497b09",
+      "ancestor_in_report_base_and_actual_live": true,
+      "referenced_source_present": "ops/codex-ops-learn.py"
+    },
+    {
+      "item": "infra-target-options-fixed-fixture-timeout",
+      "source_commit": "bae9c45ccffefb284a1c6634526c8768a9f5f7a8",
+      "ancestor_in_report_base_and_actual_live": true,
+      "referenced_source_present": "agent/tests/target-option-fixture.ts"
+    },
+    {
+      "item": "infra-ledger-status-prefix-git-divergence",
+      "source_commit": "dd478f0b3e5a0f234f082972d21b203dbf8229d7",
+      "ancestor_in_report_base_and_actual_live": true,
+      "referenced_source_present": "learner/ledger.py"
+    },
+    {
+      "item": "infra-legacy-continuation-notice-ack-identity",
+      "source_commit": "368fccabd42eb72ffcea9a2fe6cbbb7c149326be",
+      "ancestor_in_report_base_and_actual_live": true,
+      "referenced_source_present": "ops/learning_requests.py"
+    },
+    {
+      "item": "infra-paper-krane-recorded-line-timeout",
+      "source_commit": "befc39e5ca0105f8ff96d47f817df44f0b2760f1",
+      "ancestor_in_report_base_and_actual_live": true,
+      "referenced_source_present": "agent/tests/silent-paper-krane.test.ts"
+    },
+    {
+      "item": "infra-learner-event-log-second-collision",
+      "source_commit": "b6ee3f8c29cc10d4652a67d14f0e0e394aa6ce6f",
+      "ancestor_in_report_base_and_actual_live": true,
+      "referenced_source_present": "learner/lib/launcher.ts"
+    },
+    {
+      "item": "strategy-proposal：报告 scratch 归属",
+      "source_commit": "5f04139cefe5c651dd5bf62f7e164014dbf5f23b",
+      "ancestor_in_report_base_and_actual_live": true,
+      "referenced_source_present": "learner/lib/launcher.ts"
+    },
+    {
+      "item": "silent-0459：独立 run-plan 请求成本漏计",
+      "source_commit": "799a5cd0caf9329b43c32376079218a9bd0c3e9e",
+      "ancestor_in_report_base_and_actual_live": true,
+      "referenced_source_present": "ops/report.py"
+    },
+    {
+      "item": "run-plan 证据提取未识别 run 字段",
+      "source_commit": "78e9b05929366d097a728761d693d790ff16ac87",
+      "ancestor_in_report_base_and_actual_live": true,
+      "referenced_source_present": "learner/extract_evidence.py"
+    },
+    {
+      "item": "postmortem-capacity-failure-proposal-repair-20261013",
+      "source_commit": "3fdcd77927f01b35c20c6c5c1fcfd790676032d2",
+      "ancestor_in_report_base_and_actual_live": true,
+      "referenced_source_present": "ops/codex-ops-learn.py"
+    },
+    {
+      "item": "blocked-experience-proposal-repair-dispatch",
+      "source_commit": "84366ad06ee4f978394c1b9489a82c83ea12bd36",
+      "ancestor_in_report_base_and_actual_live": true,
+      "referenced_source_present": "ops/proposal_dispatch.py"
+    },
+    {
+      "item": "learning-notice-ordinary-ack-registry-20261013：普通 ACK",
+      "source_commit": "672e198a4730012330f599068a0ef1efadb02002",
+      "ancestor_in_report_base_and_actual_live": true,
+      "referenced_source_present": "ops/learning_requests.py"
+    },
+    {
+      "item": "learning-notice-ordinary-ack-registry-20261013：前阶段回执校验",
+      "source_commit": "1594def2e1b65b665d3b345f31444194eb4d09e6",
+      "ancestor_in_report_base_and_actual_live": true,
+      "referenced_source_present": "ops/learning_requests.py"
+    },
+    {
+      "item": "learning-notice-ordinary-ack-registry-20261013：第二策略槽批号",
+      "source_commit": "15eb85e2934e428c5e299fc4a1aba456d92fd685",
+      "ancestor_in_report_base_and_actual_live": true,
+      "referenced_source_present": "ops/learning_requests.py"
+    },
+    {
+      "item": "feature 通知来源身份校验",
+      "source_commit": "38b2f572d90b3b97a23f9eae983f583287492f9a",
+      "ancestor_in_report_base_and_actual_live": true,
+      "referenced_source_present": "ops/learning_requests.py"
+    },
+    {
+      "item": "feature/B4 通知来源桥接",
+      "source_commit": "1dd4d434aef67f1d065dbdba23a875ae82741a88",
+      "ancestor_in_report_base_and_actual_live": true,
+      "referenced_source_present": "ops/learning_requests.py"
+    },
+    {
+      "item": "batch-f：包装/参数化测试超时静态解析",
+      "source_commit": "56c256dad0d33b231b82b53113d3bdd84f9bfa20",
+      "ancestor_in_report_base_and_actual_live": true,
+      "referenced_source_present": "agent/tests/batch-f.test.ts"
+    },
+    {
+      "item": "unassigned-strategy-proposal-resolution",
+      "source_commit": "3a98e213a826e94f9708af4b1a265e1892659f4e",
+      "ancestor_in_report_base_and_actual_live": true,
+      "referenced_source_present": "ops/proposal_dispatch.py"
+    },
+    {
+      "item": "host-fixed-test-timeouts-010547：eval 固定历史输入",
+      "source_commit": "d9881ba593b0b8d701ebbe1c95626c0ebdd554c7",
+      "ancestor_in_report_base_and_actual_live": true,
+      "referenced_source_present": "agent/tests/eval.test.ts"
+    },
+    {
+      "item": "host-fixed-test-timeouts-010547：Apotheosis 有界夹具",
+      "source_commit": "9e8c93555131c3347f9e809d9722a848a75c2692",
+      "ancestor_in_report_base_and_actual_live": true,
+      "referenced_source_present": "agent/tests/silent-apotheosis-reference.test.ts"
+    },
+    {
+      "item": "compute-memo-worker-data-signature",
+      "source_commit": "8fbb441eb61eef226eb7366f9612003480c83988",
+      "ancestor_in_report_base_and_actual_live": true,
+      "referenced_source_present": "agent/tests/compute-memo.test.ts"
+    },
+    {
+      "item": "rollout-live-best-test-determinism",
+      "source_commit": "bbc5b993a7524bbb8e80a975f204f8d193657b46",
+      "ancestor_in_report_base_and_actual_live": true,
+      "referenced_source_present": "agent/tests/rollout-live.test.ts"
+    },
+    {
+      "item": "host-targeted-check-continuation：已过覆盖的精确续验入口",
+      "source_commit": "24c2e3a75b5db6bac76d6c924f86b7fcd9438316",
+      "ancestor_in_report_base_and_actual_live": true,
+      "referenced_source_present": "ops/learner_check_continuation.py"
+    },
+    {
+      "item": "sandbox-glob-startup-race：会话前有界恢复",
+      "source_commit": "bc2c40e313cc36682196277c53c50e30744b88c5",
+      "ancestor_in_report_base_and_actual_live": true,
+      "referenced_source_present": "learner/lib/startup-recovery.ts"
+    },
+    {
+      "item": "sandbox-glob-startup-race：复盘租约绑定",
+      "source_commit": "d9983263ffecea1bed4e29d65e7f854a3d2e33d7",
+      "ancestor_in_report_base_and_actual_live": true,
+      "referenced_source_present": "learner/lib/startup-recovery.ts"
+    },
+    {
+      "item": "core-cycle-implementation-binding-entry",
+      "source_commit": "fc95760d4ff8a9cbd45577efdd79b1215bd2cb92",
+      "ancestor_in_report_base_and_actual_live": true,
+      "referenced_source_present": "ops/strategy_implementation_jobs.py"
+    },
+    {
+      "item": "ops-20261012-quantitative-continuation",
+      "source_commit": "b408252f87a77ee5389c4d90e52a9831c0873348",
+      "ancestor_in_report_base_and_actual_live": true,
+      "referenced_source_present": "ops/strategy_implementation_continuation.py"
+    },
+    {
+      "item": "named-card-facts-transport：已批准的事件入口子项",
+      "source_commit": "42c920f34d9dc1c783ce894659849ab37ed6fd1b",
+      "ancestor_in_report_base_and_actual_live": true,
+      "referenced_source_present": "agent/src/hand/screens/event.ts"
+    },
+    {
+      "item": "core-build-notify-222802-rc2：保留原生失败诊断子项",
+      "source_commit": "5c92f2aaf0b758a1a5e7d591745694004664f83a",
+      "ancestor_in_report_base_and_actual_live": true,
+      "referenced_source_present": "ops/core_build_jobs.py"
+    },
+    {
+      "item": "paper-dataset-git-consistency-race",
+      "source_commit": "16bfe0bd6ecaa91d04a91c01edc94cecc781f71f",
+      "ancestor_in_report_base_and_actual_live": true,
+      "referenced_source_present": "ops/paper_dataset.py"
+    },
+    {
+      "item": "boss-sim-codex-home-preflight",
+      "source_commit": "5921f8cd045853182c867a6430e75c3fcde00a87",
+      "ancestor_in_report_base_and_actual_live": true,
+      "referenced_source_present": "ops/report.py"
+    },
+    {
+      "item": "shared-experience-fixed-filesystem-snapshot-20261013",
+      "source_commit": "8390c62d76fc8c7d7b6b7292121a621f4666d39c",
+      "ancestor_in_report_base_and_actual_live": true,
+      "referenced_source_present": "agent/tests/historical-knowledge-fs.ts"
+    },
+    {
+      "item": "silent-deck-cap-consumer-fixture-isolation-20261013（原 c0999eaa 补丁的实际重放集成）",
+      "source_commit": "ec8c578b66bf5498372f1b779ae58a766dff8112",
+      "ancestor_in_report_base_and_actual_live": true,
+      "referenced_source_present": "agent/tests/silent-tail-resource.test.ts"
+    },
+    {
+      "item": "ops-stall-recovery-test-subprocess-timeout：首项异步夹具",
+      "source_commit": "95e7f050ef2abe5c85a0367555392652ad73fbfe",
+      "ancestor_in_report_base_and_actual_live": true,
+      "referenced_source_present": "agent/tests/ops-stall-recovery.test.ts"
+    },
+    {
+      "item": "ops-stall-recovery-test-subprocess-timeout：固定失败诊断",
+      "source_commit": "9b6459fd99f26b17689134e33aa85d6190e71d7d",
+      "ancestor_in_report_base_and_actual_live": true,
+      "referenced_source_present": "agent/tests/ops-stall-recovery.test.ts"
+    },
+    {
+      "item": "batch-c-fixed-fixture-timeout",
+      "source_commit": "5dd8a20c9d2dd4ed43120b1684e5577b993ac2ff",
+      "ancestor_in_report_base_and_actual_live": true,
+      "referenced_source_present": "agent/tests/batch-c.test.ts"
+    },
+    {
+      "item": "晚写复盘误计为上线后重犯",
+      "source_commit": "2610945b6a2f9ea02cf3a7cd4b5980d24814ac39",
+      "ancestor_in_report_base_and_actual_live": true,
+      "referenced_source_present": "learner/ledger.py"
+    },
+    {
+      "item": "学习账本 first_run/asc/prior_note 追加更正",
+      "source_commit": "87c89b7aea90c7275e0fbb04b1e4148a4209630c",
+      "ancestor_in_report_base_and_actual_live": true,
+      "referenced_source_present": "learner/ledger.py"
+    },
+    {
+      "item": "subscription-usage：未设置 TMPDIR",
+      "source_commit": "6bfbe3d2e2aa6e5e8c1969d5ee1cca08671ae02a",
+      "ancestor_in_report_base_and_actual_live": true,
+      "referenced_source_present": "agent/tests/subscription-usage.test.ts"
+    },
+    {
+      "item": "deepseek-prompt-dump：状态日志反向流式扫描",
+      "source_commit": "6ee8e2a2c1edc31492962137b96af8c6e1d12093",
+      "ancestor_in_report_base_and_actual_live": true,
+      "referenced_source_present": "agent/tools/deepseek-prompt-dump.ts"
+    },
+    {
+      "item": "固定药水测试隔离",
+      "source_commit": "e78352f784d39cf25671446348daaada6ef2060b",
+      "ancestor_in_report_base_and_actual_live": true,
+      "referenced_source_present": "agent/tests/potion-cost.test.ts"
+    },
+    {
+      "item": "单次 mod 超时 stall 误报",
+      "source_commit": "a4f4ec868d122dc92af510862c6240cf2eaff2b6",
+      "ancestor_in_report_base_and_actual_live": true,
+      "referenced_source_present": "ops/stall-check.sh"
+    },
+    {
+      "item": "学习状态锁被完整检查阻塞",
+      "source_commit": "233ede56047274ba53a4e1191a245fac816c37a8",
+      "ancestor_in_report_base_and_actual_live": true,
+      "referenced_source_present": "ops/codex-ops-learn.py"
+    },
+    {
+      "item": "学习者受阻后兜底完整检查入口",
+      "source_commit": "f670884a188a047bbd3f7f007c260ade62fae36a",
+      "ancestor_in_report_base_and_actual_live": true,
+      "referenced_source_present": "ops/learner_checks.py"
+    },
+    {
+      "item": "策略任务及自动派发入口",
+      "source_commit": "afd652a3f75df6e7403439f01c565220327884da",
+      "ancestor_in_report_base_and_actual_live": true,
+      "referenced_source_present": "ops/proposal_dispatch.py"
+    },
+    {
+      "item": "旧事件选项重复问大脑",
+      "source_commit": "25ce09bee5576b1adff8baf196fbe8b197a5ef11",
+      "ancestor_in_report_base_and_actual_live": true,
+      "referenced_source_present": "agent/src/hand/loop.ts"
+    },
+    {
+      "item": "silent-0153：普通隐秘匕首生成分支",
+      "source_commit": "b7f081fcc26da4506cb775739bb118cb6cbe4ecc",
+      "ancestor_in_report_base_and_actual_live": true,
+      "referenced_source_present": "agent/src/reflex/card-model.ts"
+    },
+    {
+      "item": "silent-0256：已观察的狡诈药水容量子项（实际源码提交）",
+      "source_commit": "6403fdcdadc803a092beb5165a068e22bf51c412",
+      "ancestor_in_report_base_and_actual_live": true,
+      "referenced_source_present": "agent/src/reflex/card-model.ts"
+    },
+    {
+      "item": "silent-0260：普通紧勒逐牌失血",
+      "source_commit": "5c7105ff0294466da8319f2934beda05c6040794",
+      "ancestor_in_report_base_and_actual_live": true,
+      "referenced_source_present": "agent/src/reflex/card-model.ts"
+    },
+    {
+      "item": "silent-0263：已观察的碾碎爪转向取整子项",
+      "source_commit": "ec29ea34b919344b707e57ba472ea210f9c39d62",
+      "ancestor_in_report_base_and_actual_live": true,
+      "referenced_source_present": "agent/src/reflex/silent-crusher-facing.ts"
+    },
+    {
+      "item": "silent-0266：SL 首牌身份",
+      "source_commit": "e784dd9f043bf87c29109573f48975f9903280d3",
+      "ancestor_in_report_base_and_actual_live": true,
+      "referenced_source_present": "agent/src/sl/explore.ts"
+    },
+    {
+      "item": "silent-0272：商店移除预览与真实选牌页核对",
+      "source_commit": "db20ec3cc6cd0e47ac014d0c523dd4ed1c781d26",
+      "ancestor_in_report_base_and_actual_live": true,
+      "referenced_source_present": "agent/src/hand/screens/shop.ts"
+    },
+    {
+      "item": "silent-0324：普通刀舞生成小刀",
+      "source_commit": "66c22ba7d87b8748690a4183fff838acd346bd3e",
+      "ancestor_in_report_base_and_actual_live": true,
+      "referenced_source_present": "agent/src/reflex/card-model.ts"
+    },
+    {
+      "item": "silent-0338：回合末防御事实来源注记",
+      "source_commit": "c1d84804956bedbd29a7f0e81294114e18415b9d",
+      "ancestor_in_report_base_and_actual_live": true,
+      "referenced_source_present": "agent/src/reflex/turn-solver.ts"
+    },
+    {
+      "item": "silent-0367：已用蜥蜴尾巴事实接线",
+      "source_commit": "5baf663d7e6678efa3690e5a48329c4f8baee109",
+      "ancestor_in_report_base_and_actual_live": true,
+      "referenced_source_present": "agent/src/brain/build-facts.ts"
+    }
+  ],
+  "replayed_fix": {
+    "source_commit": "c0999eaa251133454540e157b2d6fe641731ad65",
+    "deployed_commit": "ec8c578b66bf5498372f1b779ae58a766dff8112",
+    "source_is_ancestor": false,
+    "blob_comparison": [
+      {
+        "path": "agent/tests/historical-run-constraints-fixture.ts",
+        "equal": true
+      },
+      {
+        "path": "agent/tests/historical-run-constraints.test.ts",
+        "equal": true
+      },
+      {
+        "path": "agent/tests/silent-route-relic.test.ts",
+        "equal": true
+      },
+      {
+        "path": "agent/tests/silent-tail-resource.test.ts",
+        "equal": true
+      }
+    ],
+    "initial_guard_failure": "audit-initial-failure.log"
+  },
+  "replay_current_live_readback": [
+    {
+      "path": "agent/tests/historical-run-constraints-fixture.ts",
+      "source_equals_original_replay": true,
+      "original_replay_blob": "5f57f58cec4aee3deb924e86b18a2b69e08ba3fc",
+      "actual_live_blob": "5f57f58cec4aee3deb924e86b18a2b69e08ba3fc",
+      "unchanged_since_original_replay": true
+    },
+    {
+      "path": "agent/tests/historical-run-constraints.test.ts",
+      "source_equals_original_replay": true,
+      "original_replay_blob": "79f5c960a071b421bddd1ba1446103be3f7fa7a3",
+      "actual_live_blob": "63fee3d49083d9b237b078af746108c279ce52bc",
+      "unchanged_since_original_replay": false,
+      "subsequent_actual_live_patch": "fa0a436f9b283e83a322a6821b01696f22153a62",
+      "scope": "existing removal of the V5 permanent deck cap isolates the old historical fixture under the original V4 boundary; later change is retained, not overwritten with the old replay"
+    },
+    {
+      "path": "agent/tests/silent-route-relic.test.ts",
+      "source_equals_original_replay": true,
+      "original_replay_blob": "0b68fcf3fdd2791b45b68ac46e2fcf4578f7e18b",
+      "actual_live_blob": "0b68fcf3fdd2791b45b68ac46e2fcf4578f7e18b",
+      "unchanged_since_original_replay": true
+    },
+    {
+      "path": "agent/tests/silent-tail-resource.test.ts",
+      "source_equals_original_replay": true,
+      "original_replay_blob": "67da92eb996d7e0c8013f09b65bf02552c80a0b4",
+      "actual_live_blob": "67da92eb996d7e0c8013f09b65bf02552c80a0b4",
+      "unchanged_since_original_replay": true
+    }
+  ],
+  "ops_audit_original_assumption_failure": "audit-r1-original-assumption.log; old replay blobs were incorrectly assumed unchanged in all later live commits; corrected after verifying the existing fa0a436f9 follow-up, without changing source",
+  "existing_partial_and_wide_scope_not_closed": true,
+  "skipped_original_scopes": [
+    {
+      "item": "silent-0481：技能药水选牌生命周期措辞",
+      "reason": "策略类/题面游戏知识：当前 selection.ts:311/:333 仍有旧措辞；原 silent-proposal-686d4e759478eebb 已登记 strategy-proposal，本普通工具批不重复实现或新增提案。"
+    },
+    {
+      "item": "rest-timeout-accepted-route-not-committed / silent-0446",
+      "reason": "策略类/structure：当前 hand/loop.ts 仍只在 dispatch 成功后 applyResolved；已有 silent-proposal-2d3aa8dfb27dbe3f，超时后的实际动作确认/路线提交须按原独立提案验证，不无条件提交未确认动作。"
+    },
+    {
+      "item": "其余未闭合的出牌、机制、药水、SL、终局、路线与休息条目",
+      "reason": "策略类：沿队列已有 strategy-proposal 和原账本处理；游戏知识不能由本批工具审计补入。账本有已发布项，也有 observed/proposed 或只完成窄子项，未把经验发布当作整条代码修复。"
+    },
+    {
+      "item": "codex 大脑缓存命中偏低",
+      "reason": "证据不足：队列为旧命中率观察，缺当前原生调用的可控同题对比，离线且禁止真实 LLM 请求；不把命中率变化认定为缓存源码 bug。"
+    },
+    {
+      "item": "调度公平性核查",
+      "reason": "证据不足：原条目明确尚非永久饥饿证明；保留原 dispatch/seen_runs 核查与已获准框架迭代边界，不更改并发或队列状态。"
+    },
+    {
+      "item": "sandbox-glob-startup-race：目录生命周期上游根因",
+      "reason": "证据不足：有界恢复和复盘租约源码已在 base/live；目录移除者、自然恢复和上游生命周期仍未证，不取消凭据 deny 或放宽沙箱。"
+    },
+    {
+      "item": "core-build-notify-222802-rc2：原失败通知的发送/恢复事实",
+      "reason": "证据不足：诊断保存源码 5c92f2aaf 已部署；旧 rc2 无 stderr 不能事后重建原发送事实，不重发通知或改旧回执。"
+    },
+    {
+      "item": "named-card-facts-transport：事件入口之外的宽范围",
+      "reason": "策略类/独立功能：事件入口 42c920f34 已实现；其他入口/跨局及 P1/P2 仍属原独立架构任务，不扩大普通 bug 批次。"
+    },
+    {
+      "item": "boss 模拟样本/性能与 v5-dpr-health 的宽范围",
+      "reason": "太大/独立功能：原冻结输入与学习 owner 的专项仍开放，不混入本批或以低样本、扩预算、删候选掩盖问题。"
+    },
+    {
+      "item": "arch-funnel-guard / arch-learning-priority / arch-unified-resource-value / inv-f33-regression",
+      "reason": "策略类/独立架构及归因研究：已有获准独立任务；不在纯 bug 批次改变玩法、资源价格或派发优先级。"
+    }
+  ],
+  "new_source_live_version_queue_or_model_change": false,
+  "already_tested_live_C1_C2_tree": "99fc93ce; exact full accepted in prior original event, not this batch full suite"
+}
