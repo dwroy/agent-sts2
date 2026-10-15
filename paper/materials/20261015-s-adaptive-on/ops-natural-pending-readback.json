@@ -1,0 +1,58 @@
+{
+  "at": "2026-10-15 10:30:53 CST",
+  "deployed_source": "600915d133011c0eb1d063f61df9691bba4aba67",
+  "deployed_live": "d1c942783e267750dac79d6b780e16093dd7aa1d",
+  "deployed_tree": "6ef9f0f8808ec51de400c70455fa7aa360f9c7bb",
+  "latest_natural_silent_config": {
+    "offset": 1731730,
+    "bytes": 5393,
+    "sha256": "88782d58a512a270442966f3b994f90e623769b3724453243db29e595699332e",
+    "ts": "2026-10-15T00:40:39.241Z",
+    "run_id": "UPAB38G2PA02",
+    "code": {
+      "commit": "52046a3deaa359adbafdd9e6d3e96c2527017f49",
+      "code": "52046a3+dirty",
+      "dirty": true,
+      "dirty_files": [
+        "knowledge/characters/silent/boss-damage.json",
+        "knowledge/characters/silent/construction-opportunities.json",
+        "knowledge/characters/silent/fight-value-gates.json",
+        "knowledge/characters/silent/fight-value.json",
+        "knowledge/characters/silent/monster-records.json",
+        "knowledge/characters/silent/outcome-stats.json",
+        "knowledge/characters/silent/room-costs.json",
+        "knowledge/common/card-upgrades.json",
+        "knowledge/common/monster-db.json",
+        "knowledge/common/move-model.json",
+        "notes/fight-value-backtest-silent.md",
+        "notes/monster-db-check.md"
+      ],
+      "branch": "live",
+      "worktree": "live"
+    },
+    "loop": {
+      "s_readiness": "shadow",
+      "s_combat_rank": null,
+      "s_build_rank": null,
+      "sim_adaptive": "shadow",
+      "sim_adaptive_requested": "shadow",
+      "sim_adaptive_admission": "pending"
+    }
+  },
+  "original_config_stream_size": 1737123,
+  "runtime_policy": "shadow, explicit on downgraded to shadow/admission pending; other roles off",
+  "natural_admission": "pending two completed new eligible Silent runs; old X7/old UPAB shadow cannot satisfy new final-ranking field acceptance",
+  "eligibility": "actual new run-config source ancestry and clean deployed source bytes, real ended run, complete applicable-question inventory and per-question offsets/SHAs; dirty source or missing evidence remain unknown",
+  "required_per_question": [
+    "boss_sim.adaptive input_key/mode/status",
+    "per-candidate samples/stop/rounds/common prefix",
+    "internal agreement and production_comparison.agreement from real P2/P3 final first group recorded separately",
+    "complete applicable B2/B3 inventory compared with produced diagnostics, not just observed subset",
+    "P2 actual choice/override/target-pending records separately"
+  ],
+  "required_gate": "offline complete coverage >=95% final first-group agreement plus two complete new natural shadow runs >=95% and original owner admission; no automatic on",
+  "P2_and_C2_same_future_runs": "may share the two completed new runs, but complete coverage and each feature fields audited independently",
+  "current_on_mode_full_counterfactual_agreement": "not fabricated for early-stopped on runs",
+  "six_case_offline_replay": "original owner ongoing; not restarted or declared complete by ops",
+  "P1_P2_P3_consumers": "pending next eligible natural process; no restart or hot-load"
+}
