@@ -28,7 +28,7 @@ class LearnerLauncher(unittest.TestCase):
         (self.root / "ops").mkdir()
         (self.root / "agent/node_modules/.bin").mkdir(parents=True)
         (self.root / "bin").mkdir()
-        for name in ("paths.sh", "codex-ops-learner.sh", "codex-fast.sh", "codex-learner.sh", "codex-policy.sh"):
+        for name in ("paths.sh", "codex-ops-learner.sh", "learner_entry.py", "codex-fast.sh", "codex-learner.sh", "codex-policy.sh"):
             shutil.copy2(REPO / "ops" / name, self.root / "ops" / name)
         self.wrapper = self.root / "ops/codex-learner.sh"
         self.legacy_wrapper = self.root / "ops/codex-fast.sh"

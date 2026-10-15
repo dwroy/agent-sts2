@@ -273,7 +273,7 @@ class ImplementationBinding(unittest.TestCase):
     def test_host_wrapper_supplies_bound_task_to_fake_launcher_and_finishes_normally(self):
         self.bound()
         # Copy only the host code used by this fixture. No real launcher or model is present.
-        for relative in ("ops/codex-ops-learner.sh", "ops/paths.sh", "ops/disk_capacity.py", "ops/proposal_dispatch.py",
+        for relative in ("ops/codex-ops-learner.sh", "ops/learner_entry.py", "ops/paths.sh", "ops/disk_capacity.py", "ops/proposal_dispatch.py",
                          "ops/worktree_checkout.py", "ops/worktree_retention.py", "ops/learner_retention.py", "ops/learner_checks.py",
                          "ops/strategy_research_jobs.py", "learner/code_proposals.py"):
             self.write(relative, (REPO / relative).read_bytes())
