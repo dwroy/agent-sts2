@@ -1,0 +1,331 @@
+{
+  "batch": "20261015-141302-strategy-proposal",
+  "original_report": {
+    "task": "strategy-proposal",
+    "character": "silent",
+    "batch": "20261015-141302-strategy-proposal",
+    "base": "e3ffc2301d9eb25a0fedf874d56710b938dc41a3",
+    "runs": [
+      "G8NHLL09DLBX",
+      "LYBHQ1X230ZB"
+    ],
+    "fixes": [
+      {
+        "commit": "0bf701b583e905fcde2bc6d9b5ec1bc0d1131332",
+        "proposal_ids": [
+          "silent-proposal-982c99080350f43e",
+          "silent-proposal-eb6e17529c0f8cde"
+        ],
+        "summary": "静默A10普通多敌弹跳药瓶保留随机施毒不确定性，阻止伪确定斩杀并在真实落点后重规划"
+      }
+    ],
+    "skipped": [
+      "silent-proposal-aaefd918a706de14",
+      "silent-proposal-10c5c87568dcded1",
+      "silent-proposal-72e211c844b4564e",
+      "silent-proposal-1481fe327a22ddeb",
+      "silent-proposal-8e9beeee55eac364",
+      "silent-proposal-ce75cb821e8f2610",
+      "silent-proposal-6ba977a3f01df016",
+      "silent-proposal-2097f02b69dacfff"
+    ],
+    "merged": "8c1935b9c672c5e9fdd676371e16988a8f0bc714",
+    "publication_commit": "534c3140f2e3a98fcd6380ce4447b00592cba026",
+    "release_id": null,
+    "release_registration": "pending_ops",
+    "tests": {
+      "tsc": 0,
+      "vitest": 0,
+      "cases": 0
+    },
+    "test_counts": {
+      "fixed_regression": 14,
+      "withdrawn_source_failed": 4,
+      "source_sandbox": 4065,
+      "live_sandbox": 4078
+    },
+    "code_proposals": [
+      "silent-proposal-982c99080350f43e",
+      "silent-proposal-aaefd918a706de14",
+      "silent-proposal-eb6e17529c0f8cde",
+      "silent-proposal-10c5c87568dcded1",
+      "silent-proposal-72e211c844b4564e",
+      "silent-proposal-1481fe327a22ddeb",
+      "silent-proposal-8e9beeee55eac364",
+      "silent-proposal-ce75cb821e8f2610",
+      "silent-proposal-6ba977a3f01df016",
+      "silent-proposal-2097f02b69dacfff"
+    ],
+    "implementation_domains": [
+      "combat"
+    ],
+    "proposal_results": [
+      {
+        "id": "silent-proposal-982c99080350f43e",
+        "state": "implemented",
+        "commit": "0bf701b583e905fcde2bc6d9b5ec1bc0d1131332",
+        "reason": "已依据G8 F24末试T5反例实现限定修复；实际live祖先及组合自测已核。"
+      },
+      {
+        "id": "silent-proposal-aaefd918a706de14",
+        "state": "waiting",
+        "reason": "缺临时属性、自爆阶段和SL资源恢复的完整整线配对核验，以及保药替代整战结果。"
+      },
+      {
+        "id": "silent-proposal-eb6e17529c0f8cde",
+        "state": "implemented",
+        "commit": "0bf701b583e905fcde2bc6d9b5ec1bc0d1131332",
+        "reason": "共享普通多敌药瓶限定修复；未知升级、重放及其他角色进阶保旧，未声称展开全部随机分布。"
+      },
+      {
+        "id": "silent-proposal-10c5c87568dcded1",
+        "state": "waiting",
+        "reason": "缺五机制组合及速度、尖啸跨轮撤回的完整固定消费者校准。"
+      },
+      {
+        "id": "silent-proposal-72e211c844b4564e",
+        "state": "waiting",
+        "reason": "前三试判死后结算缺失，缺阶段与SL完整配对及替代换线整场轨迹。"
+      },
+      {
+        "id": "silent-proposal-1481fe327a22ddeb",
+        "state": "waiting",
+        "reason": "缺保药、替代路线及后置营火实到对照，不能标定持有价值或安全血线。"
+      },
+      {
+        "id": "silent-proposal-8e9beeee55eac364",
+        "state": "waiting",
+        "reason": "LYB F29T6损12候选未执行接续，不能由6血差拟合终局权重。"
+      },
+      {
+        "id": "silent-proposal-ce75cb821e8f2610",
+        "state": "waiting",
+        "reason": "缺完整修正组合、首次格挡消费与次轮复原的同帧消费者回放。"
+      },
+      {
+        "id": "silent-proposal-6ba977a3f01df016",
+        "state": "waiting",
+        "reason": "缺替代目标序、抽序完整执行及召唤、重放、SL整线对照；截断尝试不计已结毒伤。"
+      },
+      {
+        "id": "silent-proposal-2097f02b69dacfff",
+        "state": "waiting",
+        "reason": "缺本盘双敌成长、弱化、眩晕接续的完整当前固定回放与校准，不能以局部源码存在关闭整项。"
+      }
+    ],
+    "natural_consumer_verified": false,
+    "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261015-141302/learner/runs/20261015-141310-fb218adb-2faf-4bc0-a8aa-4ac943287bbb-strategy-proposal/report.md"
+  },
+  "native": {
+    "batch": "20261015-141302-strategy-proposal",
+    "thread": "01a13e31-8390-7f40-a86c-41f83a36f11a",
+    "cwd": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261015-141302",
+    "event_log": "learner/runs/20261015-141310-fb218adb-2faf-4bc0-a8aa-4ac943287bbb-strategy-proposal.jsonl",
+    "registered_launch_batch": "20261015-141302-strategy-proposal",
+    "original_lease": "539eab877e0835d00c973400e186c28262a4e584cae527dccbb64bd3fc460dfc",
+    "native_context": {
+      "source": "ops/codex-ops/accounts/codex1/learner/sessions/2026/10/15/rollout-2026-10-15T14-13-14-01a13e31-8390-7f40-a86c-41f83a36f11a.jsonl",
+      "offset": 50242,
+      "bytes": 5148,
+      "sha256": "1844596c06a88fff3e29eab2226070fcd4cdea0e6115c27e554f6bb53a3a2090",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "sandbox": {
+        "type": "workspace-write",
+        "writable_roots": [
+          "/home/dw/Projects/agent-sts2",
+          "/home/dw/Projects/agent-sts2/.git",
+          "/home/dw/Projects/agent-sts2/.git/worktrees/codex-strategy-silent-20261015-141302"
+        ],
+        "network_access": false,
+        "exclude_tmpdir_env_var": false,
+        "exclude_slash_tmp": false
+      },
+      "approval_policy": "never"
+    },
+    "native_user_input": {
+      "offset": 55390,
+      "bytes": 21395,
+      "sha256": "fd3e6c51f214775bba8e0206b047795bbf5094027202b41b2e8074664afea3a4",
+      "input_sha256": "f68b67947ed8e8d78bd9d516357f7962c93ffa8bd73ad946dc92f9dfef8a8c39"
+    },
+    "original_header_events": [
+      {
+        "offset": 0,
+        "bytes": 23355,
+        "sha256": "3ed69322c7757f7913e9d4ee55d30e47b037c932d65bf5494c8b84c1a232016d",
+        "type": "learner_launch",
+        "attempt": null,
+        "code": null
+      },
+      {
+        "offset": 23355,
+        "bytes": 378,
+        "sha256": "abfd42588ab711f54e2c0cdec6a610a7e3ffec9ad49139ccdd068470e3a5c3b3",
+        "type": "learner_startup_attempt",
+        "attempt": 1,
+        "code": null
+      },
+      {
+        "offset": 26746,
+        "bytes": 77,
+        "sha256": "ade316bb2eb2de3297bfb04829748307b329b1c53417158c6d75db5bab183b48",
+        "type": "thread.started",
+        "attempt": null,
+        "code": null
+      }
+    ],
+    "startup_attempts": 1,
+    "failed_startups_preserved": 0,
+    "no_model_or_manual_restart": true
+  },
+  "canonical_state_preserved": {
+    "state": "done",
+    "rc": 0,
+    "merged": "8c1935b9c672c5e9fdd676371e16988a8f0bc714",
+    "proposal_audit_errors": []
+  },
+  "source": "0bf701b583e905fcde2bc6d9b5ec1bc0d1131332",
+  "parent": "e3ffc2301d9eb25a0fedf874d56710b938dc41a3",
+  "source_paths": [
+    {
+      "path": "agent/src/reflex/card-model.ts",
+      "sha256": "28afe7729b971c1e5d037fce4349ebf3f62c3b24a611a077874314e0acc3fa8d"
+    },
+    {
+      "path": "agent/src/reflex/turn-solver.ts",
+      "sha256": "e360731a8335e839ec021e29e486b39c2cdafaad2b6ad57a7ce8fc6cc16a3e16"
+    },
+    {
+      "path": "agent/src/reflex/combat-plan.ts",
+      "sha256": "f795dfd8b059eb2fc7c0aebf949a87336fcc9c8ff8fe7d8ddb56ba93553db58e"
+    },
+    {
+      "path": "agent/src/reflex/rollout-live.ts",
+      "sha256": "3b716144c144b8fb8d969fae6f5b3beaf6ef575e69351668631ac97c4a9d9108"
+    },
+    {
+      "path": "agent/tests/silent-random-poison.test.ts",
+      "sha256": "4853145f108ab7e82d74b4ba4ce263b4da8142d65c9a788add686fd23edb012b"
+    },
+    {
+      "path": "agent/tests/silent-random-poison-evidence.json",
+      "sha256": "1683dc00b4fd9ceccb7a925f921a116dfe611877a30c8f095d88e4523875111d"
+    }
+  ],
+  "source_checks": {
+    "tsc": 0,
+    "vitest": 0,
+    "cases": 0,
+    "targeted_tests": 14,
+    "withdrawn_failed_tests": 4,
+    "restored_passed_tests": 14,
+    "sandbox_test_files": 431,
+    "sandbox_tests": 4054,
+    "path_test_files": 1,
+    "path_tests": 11,
+    "gitleaks": 0,
+    "source_manifest_unchanged": true,
+    "preliminary_unfrozen_check_exit": 1
+  },
+  "live_sandbox_cases": 4078,
+  "raw_rows_verified": 2481,
+  "state_identities": {
+    "G8NHLL09DLBX": 10,
+    "LYBHQ1X230ZB": 10
+  },
+  "raw_streams": [
+    {
+      "stream": "states",
+      "rows": 1225,
+      "source_size": 13030176396,
+      "frozen_sha256": "d1e2101dde3cbf04d70c98160af462547450201b4705022df88058be52c164b4",
+      "by_run": {
+        "G8NHLL09DLBX": 747,
+        "LYBHQ1X230ZB": 478
+      },
+      "invalid_lines": 2
+    },
+    {
+      "stream": "decisions",
+      "rows": 1181,
+      "source_size": 1583066398,
+      "frozen_sha256": "691a6135ca66f66b30957babccc36e51657693749fb08b007e4db9827b8cdb7b",
+      "by_run": {
+        "G8NHLL09DLBX": 726,
+        "LYBHQ1X230ZB": 455
+      },
+      "invalid_lines": 2
+    },
+    {
+      "stream": "sl-attempts",
+      "rows": 11,
+      "source_size": 40419924,
+      "frozen_sha256": "cacda340840c6bc1f8c2b03e5753b8e962bdba4995f50905c426fd1bde471b6b",
+      "by_run": {
+        "G8NHLL09DLBX": 6,
+        "LYBHQ1X230ZB": 5
+      },
+      "invalid_lines": 0
+    },
+    {
+      "stream": "run-config",
+      "rows": 2,
+      "source_size": 1752864,
+      "frozen_sha256": "cc785e7bf22f0ef57ab6c712e8a0af5cd5258be7a5969e4d47799d98d67a3daa",
+      "by_run": {
+        "G8NHLL09DLBX": 1,
+        "LYBHQ1X230ZB": 1
+      },
+      "invalid_lines": 0
+    },
+    {
+      "stream": "run-plans",
+      "rows": 7,
+      "source_size": 8036847,
+      "frozen_sha256": "e8c7020ce72d706a73a6b4756c05df9aca5cef7509b155a6ffc0627789b1b998",
+      "by_run": {
+        "G8NHLL09DLBX": 3,
+        "LYBHQ1X230ZB": 4
+      },
+      "invalid_lines": 0
+    },
+    {
+      "stream": "brain",
+      "rows": 53,
+      "source_size": 575871776,
+      "frozen_sha256": "d85f60533d969783267e271d4fccf5dffb370d51ca713bdb7030dbd1db3f962f",
+      "by_run": {
+        "G8NHLL09DLBX": 25,
+        "LYBHQ1X230ZB": 28
+      },
+      "invalid_lines": 1
+    },
+    {
+      "stream": "runs",
+      "rows": 2,
+      "source_size": 333707,
+      "frozen_sha256": "99c8664a549afe318326d4e03b5496a169f4f1025b10ca83cfa060aa83e5e88d",
+      "by_run": {
+        "G8NHLL09DLBX": 1,
+        "LYBHQ1X230ZB": 1
+      },
+      "invalid_lines": 0
+    },
+    {
+      "stream": "fight-plans",
+      "rows": 0,
+      "source_size": 2233957,
+      "frozen_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "by_run": {},
+      "invalid_lines": 0
+    }
+  ],
+  "original_cli_rows": 26,
+  "no_original_claim_evidence_first_run_prior_status_version_changes": true,
+  "old_physical_0295_proposed_vs_committed_shipped_divergence": "preserved, not reconciled by adopting successful where/note-only updates",
+  "two_narrow_implemented_eight_waiting": true,
+  "original_failed_checks_and_rejected_status_request_preserved": true,
+  "natural_consumer": "pending, not provided by fixed tests",
+  "new_learning_or_model_experiment": false
+}

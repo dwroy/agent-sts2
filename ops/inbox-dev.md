@@ -2097,3 +2097,15 @@ selector于2026-10-15 13:15:58 CST从/home/dw/.codex-brain原子改为/home/dw/P
 - 2026-10-15 15:13:20 CST [V5-R356 发布标签勘误及宿主失败处置] 上轮ops发布模板误留描述name=V5.codex1-serpent-credits1；正式release_id仍V5-R356，实际be9577c81→89238df4/d488d29a四源码/测试叶是已观察群蛇蜃景重放修复，未改任何账号或credits规则。意图描述为V5.serpent-mirage-replay1；保留eval原name/family/commit/source/历史和旧通知，追加本勘误，不新发行为号、不改规则或游戏知识。原树a110b922完整宿主仅build-facts删牌题60000ms超时（4870过/1失败/2跳）；不回滚，原失败和覆盖保留，原通道单worker仅补失败题、原断言与时限不变。因后继学习者独立Flask修复，manifest明确绑当前8c1935b9/tree7e9b2137；15:12:31进程1574096真实等原live锁，尚未开测/结果pending，不能称原树完整通过或负载因果已证。预期仅厘清发布来源与核对失败题，回退方法仍是上一实际发布通知的窄四叶逆向，未执行；不重启/抢锁/改账号或重复研究。原件与真实回执paper/materials/20261015-1507-ops/。
 
 - 2026-10-15 15:18:11 CST [ops 定向补验结果] 原141302-s2 manifest a1d5c31d补验实为tsc0、仅原build-facts删牌失败题1过/19过滤，15738.36ms且原60s不变，精确树7e9b2137。原a110b922完整检查exit1/4870过1超时2跳保持，补验后继含独立Flask改动，不称全套或最新live通过；保留已部署修复，无重测/回滚/新发布。此处仅关闭原补验pending，原宽提案/自然消费者不关闭，未另发Roy常规通知。最终原始receipt/日志/测试JSON与读回：paper/materials/20261015-1516-ops/。
+
+### 2026-10-15 15:16:53 CST 学习者规则变更已实际合入：静默随机施毒确定性边界
+
+- 旧规则：多敌弹跳药瓶复用最高HP+挡目标，将三次3毒集中母体并可自动combat/lethal。
+- 新规则：仅silent A10已见普通未附魔2费3毒×3、手动单次且支付2费的多敌窗口，随机新增毒不预支到任何目标；保留合法条件参考候选，损血/击杀/存活均非保证，暂停未定落点后的续牌并在真实状态重规划。单敌、其他角色/进阶、升级/费用变体/重放/自动施放保留原模型；药水持有价、SL判据和终局权重未改。
+- 证据与账本：G8NHLL09DLBX A10 F24末试T5，s297418母体29血20毒，s297419三幼虫各获3毒且母体不变，s297420母体仍9而玩家死；silent-0295/0007。原提案silent-proposal-982c99080350f43e / silent-proposal-eb6e17529c0f8cde；任务20261015-141302-strategy-proposal。
+- 实际提交与验证：source 0bf701b583e905fcde2bc6d9b5ec1bc0d1131332，live 8c1935b9c672c5e9fdd676371e16988a8f0bc714；固定14过/撤源码4失败/恢复14过，源tsc0/431文件4054项+paths11，实际live组合沙箱0，gitleaks0。原非冻结轮1失败保留；无排除宿主全套交原调度器，正式编号待ops持原锁核实际live祖先分配，账本shipped仍由ops核实。
+- 预期影响与限制：减少已见伪确定斩杀，未计毒是条件参考而非最坏界；不承诺挽救原局或胜率提升。64分配是同盘模型分支，不是64实盘或实盘概率。自然局实际消费仍待核，不关闭宽量化/学习父要求。
+- 回退：逆向source 0bf701b583e905fcde2bc6d9b5ec1bc0d1131332或对live合入8c1935b9c672c5e9fdd676371e16988a8f0bc714作首父回退，只撤本次六文件差异；保留R356及其他并行发布、刷新、原始证据与历史记录，由ops为实际回退另登记编号。
+- 材料：/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261015-141302/learner/runs/20261015-141310-fb218adb-2faf-4bc0-a8aa-4ac943287bbb-strategy-proposal/proposal.md；/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261015-141302/learner/runs/20261015-141310-fb218adb-2faf-4bc0-a8aa-4ac943287bbb-strategy-proposal/report.md。双写仅表示已落通知，未代填watcher/Roy确认。
+
+- 2026-10-15 15:37:42 CST [ops 实际合入读回] 原141302主策略source0bf701b58的两项普通药瓶窄修复已live8c1935b9，源自测4065/live组合4078与14固定/撤源码4失败恢复14过已核；本次仅六叶同步main91d96304e1939f416bdeb0e0909e1a9691d870a5，P2/C2-on准备源码留main、live开关与知识刷新不动。下述原15:16:53学习者规则通知的旧新/证据/影响/回退继续有效，本行仅补接手状态：原调度器已在be679d7e树持锁完整检查、结果pending，唯一正式编号待这把原锁释放后登记，不猜号或重复开检。原经验状态/版本不重写，八项waiting和自然消费者/宽父不关闭，未重启对局；实际源码/宿主开始/延后登记回执paper/materials/20261015-1530-flask-certainty/。只表示ops已核与双记录落盘，不代填watcher/Roy确认。
