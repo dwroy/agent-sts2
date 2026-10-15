@@ -1,0 +1,92 @@
+{
+  "batch": "20261015-191301",
+  "canonical_batch": {
+    "runs": [
+      "RQCHNN0W72KF"
+    ],
+    "pid": 2409349,
+    "started": "2026-10-15 19:13",
+    "state": "failed",
+    "reason": "tick",
+    "character": "silent",
+    "proposal_policy": "Roy-2026-10-07-learning",
+    "pane": "wJ:p137",
+    "rc": 1,
+    "finished": "2026-10-15 19:13",
+    "done": [],
+    "missing": [
+      "RQCHNN0W72KF"
+    ],
+    "proposal_audit_errors": [],
+    "proposal_audit_skipped": true
+  },
+  "canonical_run": {
+    "attempts": 1,
+    "batch": "20261015-191301",
+    "retry_at": 1792066388.6451228
+  },
+  "retry_at_CST": "2026-10-15T20:13:08.645123+08:00",
+  "classification": "existing sandbox-glob-startup-race before thread creation; no quota/login failure evidence",
+  "event_log": {
+    "path": "learner/runs/20261015-191301-5c362584-e14d-47b5-bbba-1910dc2e3f76-postmortem.jsonl",
+    "bytes": 20314,
+    "sha256": "2b7d07c2f6467fd400b2ea794a9c79ae73619b591fa10760514f460a7a2f1063"
+  },
+  "attempt": {
+    "type": "learner_startup_attempt",
+    "ts": "2026-10-15T11:13:03.617Z",
+    "pid": 2409937,
+    "attempt": 1,
+    "batch": null,
+    "lease": null,
+    "input_sha256": "b7cbaf2b1236092dba9d2062ccb28d93efcb311a0f648fbeb02379476df84a03",
+    "command_sha256": "e7da836ee0d84dfb1ee178923973e4724b6c0998804eafe1ce19c43c6fad7018"
+  },
+  "exit": {
+    "type": "learner_startup_exit",
+    "ts": "2026-10-15T11:13:07.308Z",
+    "pid": 2409937,
+    "attempt": 1,
+    "batch": null,
+    "lease": null,
+    "input_sha256": "b7cbaf2b1236092dba9d2062ccb28d93efcb311a0f648fbeb02379476df84a03",
+    "command_sha256": "e7da836ee0d84dfb1ee178923973e4724b6c0998804eafe1ce19c43c6fad7018",
+    "exit_code": 1,
+    "signal": null,
+    "timed_out": false,
+    "cancelled": false,
+    "retryable": true
+  },
+  "startup_native_telemetry_model": "gpt-6.1-sol/xhigh",
+  "actual_model_request": "none: no thread.started, model turn, tools or token usage; /models200 is not credit/quota evidence",
+  "no_completed_report_or_postmortem": true,
+  "no_learner_ledger_or_proposal_outputs": true,
+  "pre_existing_RQ_ledger": "earlier ops0332 recurrence trace only, not this failed learner output",
+  "existing_chain": {
+    "queue": "sandbox-glob-startup-race, notes/fix-queue-v4.md",
+    "prior_postmortem_lease_fix": "d9983263ffecea1bed4e29d65e7f854a3d2e33d7",
+    "lease_null_limit": "Do not infer which lease guard rejected, owner timing or directory deleter from null alone. No replay without valid lease.",
+    "scheduler_retry_preserved": "one-hour retry, attempts1, max3; no manual dispatch/reset",
+    "foreign_path_boundary": "foreign project paths only mentioned in original error; no outside reads/stats/mutations or attribution"
+  },
+  "source_readback": [
+    {
+      "path": "learner/lib/startup-recovery.ts",
+      "main_sha256": "b42dfc3d7f2f5ea9dd11a3aa7b5eca2ee30d62a68fbd6bdc52bb95e710e11262",
+      "live_sha256": "b42dfc3d7f2f5ea9dd11a3aa7b5eca2ee30d62a68fbd6bdc52bb95e710e11262",
+      "main": "16271871beb0ed3df1a6c997596e5e57faab027a",
+      "live": "fe6462651b593b9831581c088deface9957a404f",
+      "same": true
+    },
+    {
+      "path": "learner/lib/launcher.ts",
+      "main_sha256": "4085ab032a7e18210a4402cb3d06618eaea4dde2fc2777229ec0f68d5489cc77",
+      "live_sha256": "58a9e02f28476610363535724a9296981677c182022c3581f85f31251dce3828",
+      "main": "16271871beb0ed3df1a6c997596e5e57faab027a",
+      "live": "fe6462651b593b9831581c088deface9957a404f",
+      "same": false
+    }
+  ],
+  "ops_initial_guard_failure": "Initial bookkeeping guard incorrectly expected whole launcher.ts identical main/live; actual main root launcher is used, source hashes separately retained. No generator or learner was started by that failed guard.",
+  "no_source_runtime_account_model_or_prompt_mutation": true
+}
