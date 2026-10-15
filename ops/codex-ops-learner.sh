@@ -184,10 +184,17 @@ else
   fi
   # The launcher may retry only a proven pre-session failure under this same registration.
   export LEARNER_BATCH_ID="$batch" LEARNER_STATE_FILE="$DIR/learn.json"
-  # Use current instance policy for persistent old workspaces; task source and native cwd stay bound below.
-  nice -n 10 python3 "$OPS/learner_entry.py" "$ROOT" "$worktree" "$batch" "$DIR/learn.json" "$out" "$err" \
-    -- "$ROOT/agent/node_modules/.bin/tsx" "$ROOT/learner/run.ts" "${args[@]}"
-  rc=$?
+  # The parent spawns us before saving the registration. Wait for its state transaction
+  # before either entry point captures the lease; release the lock before running a learner.
+  if (flock -w 120 8) 8> "$DIR/learn.lock"; then
+    # Use current instance policy for persistent old workspaces; task source and native cwd stay bound below.
+    nice -n 10 python3 "$OPS/learner_entry.py" "$ROOT" "$worktree" "$batch" "$DIR/learn.json" "$out" "$err" \
+      -- "$ROOT/agent/node_modules/.bin/tsx" "$ROOT/learner/run.ts" "${args[@]}"
+    rc=$?
+  else
+    echo "learner registration lock wait timed out after 120 seconds; no model started" >> "$err"
+    rc=75
+  fi
 fi
 [ -n "$tailer" ] && { sleep 1; kill "$tailer" 2>/dev/null; }
 echo "$(date '+%F %T') learner batch $batch ($runs) exit $rc" >> "$DIR/scheduler.log"
