@@ -110,3 +110,14 @@ R363实际生产diff只增开场耳环缺覆盖说明和B3购入选项备注，�
 原证据沿`silent-proposal-5aa2672bd7cd1bf4`及已有原链，不新建重复父项/实验/学习者。Roy已另让ops优先原0332；本文不修改其源码、队列或状态。详细最小设计见 [joint-design.md](joint-design.md)。
 
 本任务2交付即停。建议Claude下一次只派“0332实际资源契约修复验收后，G1a接口上补F48联合shadow日志及固定测试”，自然门槛与转on另行指派；本轮无须Roy选择新参数。
+
+
+## 2026-10-16 22:52:05 CST 勘误与观察计数的解释限制
+
+依据学习者 `roy-20261016-sl-potion-retry/r1` 的原始证据（`ops/inbox-dev.md` 2026-10-16 22:49:29 条），本人逐条核验 VNSXWCWXR3VW F49 的12条实际饮药决策及饮前/后状态原行 SHA、局号/层/试次/回合与 completed 回执：原文“六试都使用相同T1药水事件”是笔误，**六次尝试实际均为肌肉药水（FLEX_POTION）T1、速度药水（SPEED_POTION）T2**。此处只追加更正，保留上文原稿、原截点、冻结输入及全部原观察计数。
+
+首试T2饮速度的原决策为 `logs/decisions.jsonl`，offset `1658235625`、length `1906`、SHA256 `d458472593b4a58f1a124da4667283a6a601b1cba3e177fd4b5378316d222bff`；饮前状态为 `logs/states.jsonl`，offset `13137316364`、length `41319`、SHA256 `2151c7566564475ba9bbf5bd6fd53fd9f3cdb1c7f6061597316a128519361974`。六试逐次原引用见原学习目录 `.worktrees/codex-strategy-silent-20261016-214302/learner/runs/20261016-214316-da6093a8-8cdb-4e1a-a90a-266ad732d7d1-strategy-proposal/sl-potion-retry-r1/potion-actions-and-slots.json`（SHA256 `f50a7b2ed2151d0adeb85c45b8d1ab987ca094cd9a996e224b8a1946b7bb1978`）。
+
+原饮用事件序列变化计数 **19/58→7/56、F48 7/17→1/20、F49 2/17→0/20 保持**。但后段F49的20次重试只来自 **4个独立run/floor**：9KP5S3317EEL与RQCHNN0W72KF各5次入场药栏为空，合10次；TCDUBRWMEMNA的5次仅持药瓶形石头，VNSXWCWXR3VW的5次持肌肉/速度两药。已按原 `retries.csv` 的20个start_frame_off核对原边界帧SHA与占用药槽；学习者对应 `selected-boundary-states.json` SHA256为 `92f1b8d824856dcd664d44326ef490ef667d16f632ac0cb02d87a8cf1336dae0`。**这不是20个独立的换药机会，空药栏也不代表有药而没有探索。**
+
+学习者进一步限定：药名＋回合摘要相同，不能推出同轮牌药先后或真实用药时点完全不变；VNS六试T2药前动作数为4/3/1/1/2/1，牌序、抽牌与入轮血量也有变化，六试仍败。不能由这些观察断言“换药机会减少导致救回下降”，也不把TCD F48一次石头延至T2仍败、后次T1胜但仅6血进入F49仍败当作药时单因。早饮、晚饮或留药的受控整战收益仍未知，本勘误不改变药价、SL门槛、线上行为或其他宽父状态。
