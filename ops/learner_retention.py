@@ -21,7 +21,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from learner_checks import read_report
 
 BATCH = re.compile(r"[0-9]{8}-[0-9]{6}(?:-(?:s2-)?(?:experience-update|fix-batch|strategy-proposal|ascension-audit))?")
-SCRATCH = re.compile(r"[0-9]{8}-[0-9]{6}-[a-z][a-z0-9-]*")
+SCRATCH = re.compile(r"[0-9]{8}-[0-9]{6}-(?:[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}-)?[a-z][a-z0-9-]*")
 SHA = re.compile(r"[0-9a-f]{40}")
 SMALL = 128 * 1024
 
