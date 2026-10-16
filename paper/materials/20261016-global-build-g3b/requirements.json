@@ -1,6 +1,6 @@
 {
   "schema": "global-build-g3b-requirements-v1",
-  "at": "2026-10-16T05:51:24.070303+00:00",
+  "at": "2026-10-16T05:59:30.634073+00:00",
   "parent": "roy-20261016-global-build",
   "phase": "G3b",
   "authorized_assignment": "assignment.native.jsonl",
@@ -12,19 +12,25 @@
       "requirement": "Freeze original R328+ shadow forecast rows and immutable cutoffs, role/asc/model/policy/template/attempt bindings; no forecast rerun",
       "state": "passed",
       "evidence": [
-        "inputs/manifest.json",
-        "input-audit.json",
-        "preregistration.json"
+        "inputs-r2/manifest.json",
+        "input-audit-r2.json",
+        "preregistration-r2.json",
+        "scope-correction.json",
+        "r2-superset-check.json"
       ]
     },
     {
       "id": "G3b.2",
       "requirement": "Original ops dispatch same original learner owner/thread to verify same-run actual option/route/policy/SL/signature endpoint from original frames",
-      "state": "transported-awaiting-actual-receipt-and-learner-delivery",
+      "state": "original-ops-actual-receipt-and-original-wrapper-started-native-first-reply-and-results-pending",
       "evidence": [
         "learner-input.md",
         "coordination/ops-request.txt",
-        "coordination/ops-transport.json"
+        "coordination/ops-transport.json",
+        "ops-dispatch/ops-received.json",
+        "ops-dispatch/ops-dispatch-receipt.json",
+        "learner-input-r2.md",
+        "coordination/r2-transport.json"
       ]
     },
     {
@@ -48,5 +54,6 @@
       "state": "pending-report",
       "evidence": []
     }
-  ]
+  ],
+  "input_revision": 2
 }

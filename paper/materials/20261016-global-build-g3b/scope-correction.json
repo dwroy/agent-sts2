@@ -1,0 +1,33 @@
+{
+  "at": "2026-10-16T05:57:00.695350+00:00",
+  "old_index_start": 1283926113,
+  "old_source_first_ts": "2026-10-13T19:11:59.776Z",
+  "earliest_raw_construction_source": {
+    "path": "logs/decisions.jsonl",
+    "off": 1224705936,
+    "len": 82189,
+    "sha256": "e4e8ff6cd611a4e18c8fdff3d73dc1b6e6985e6d518b5280f44b0a8ab0661a9f"
+  },
+  "earliest_raw_ts": "2026-10-13T11:38:42.421Z",
+  "earliest_run": "32VSST9UX7MN",
+  "mode": "shadow",
+  "status": "missing_route",
+  "first_literal_search_command": [
+    "nice",
+    "-n",
+    "19",
+    "rg",
+    "--byte-offset",
+    "--max-count",
+    "1",
+    "--only-matching",
+    "construction-v1",
+    "logs/decisions.jsonl"
+  ],
+  "first_literal_offset": 1224787526,
+  "missing_prefix_bytes": 59220177,
+  "old_inputs_unchanged": true,
+  "same_original_freeze_at": "2026-10-16T05:43:17.052214+00:00",
+  "source_of_index_discrepancy": "not diagnosed; no-sync index is not used as completeness proof",
+  "correction": "r2 includes all original construction rows from first actual JSONL occurrence to original frozen cutoff"
+}

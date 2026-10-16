@@ -9,13 +9,14 @@ from pathlib import Path
 
 BASE = Path(__file__).resolve().parent
 ROOT = BASE.parents[2]
+INPUTS = BASE / json.loads((BASE / 'active-input.json').read_bytes())['directory']
 
 
 def main():
-    manifest = json.loads((BASE / 'inputs/manifest.json').read_bytes())
+    manifest = json.loads((INPUTS / 'manifest.json').read_bytes())
     checks = []
     for name, expected in manifest['artifacts'].items():
-        path = BASE / 'inputs' / name
+        path = INPUTS / name
         actual = {'bytes': path.stat().st_size, 'sha256': hashlib.sha256(path.read_bytes()).hexdigest()}
         assert actual == expected, name
         checks.append({'path': str(path.relative_to(ROOT)), **actual})
@@ -26,7 +27,7 @@ def main():
     numeric = collections.Counter()
     pred_count = 0
     raw_sha_errors = []
-    with (ROOT / 'logs/decisions.jsonl').open('rb') as original, gzip.open(BASE / 'inputs/construction-records.jsonl.gz', 'rt') as stream:
+    with (ROOT / 'logs/decisions.jsonl').open('rb') as original, gzip.open(INPUTS / 'construction-records.jsonl.gz', 'rt') as stream:
         for record in map(json.loads, stream):
             source = record['_source']
             original.seek(source['off'])
@@ -48,7 +49,7 @@ def main():
     assert not raw_sha_errors, raw_sha_errors
     assert record_sources == index
     prediction_groups = collections.defaultdict(lambda: {'rows': 0, 'numeric': 0, 'runs': set(), 'bound_runs': set(), 'as_of_after_freeze': 0})
-    with gzip.open(BASE / 'inputs/predictions.jsonl.gz', 'rt') as stream:
+    with gzip.open(INPUTS / 'predictions.jsonl.gz', 'rt') as stream:
         for item in map(json.loads, stream):
             p = item['prediction']
             key = tuple(p.get(k) for k in ['core', 'ascension', 'metric', 'horizon', 'model', 'policy', 'template_sha256'])
@@ -68,7 +69,7 @@ def main():
                 group['as_of_after_freeze'] += as_of > dt.datetime.fromisoformat(manifest['at'])
             assert item['outcome'] is None
             pred_count += 1
-    groups = json.loads((BASE / 'inputs/prediction-groups.json').read_bytes())
+    groups = json.loads((INPUTS / 'prediction-groups.json').read_bytes())
     for g in groups:
         key = tuple(g.get(k) for k in ['core', 'ascension', 'metric', 'horizon', 'model', 'policy', 'template_sha256'])
         actual = prediction_groups[key]
@@ -79,7 +80,7 @@ def main():
         assert actual['as_of_after_freeze'] == 0
     assert pred_count == manifest['counts']['forecast_rows']
     result = {'at': dt.datetime.now(dt.timezone.utc).isoformat(),
-              'manifest_sha256': hashlib.sha256((BASE / 'inputs/manifest.json').read_bytes()).hexdigest(),
+              'manifest_sha256': hashlib.sha256((INPUTS / 'manifest.json').read_bytes()).hexdigest(),
               'artifact_checks': checks, 'original_construction_rows_sha_verified': len(index),
               'forecast_rows': pred_count, 'groups': len(groups), 'modes': dict(modes), 'config_modes': dict(config_modes),
               'roles_and_ascensions': [{'character': k[0], 'ascension': k[1], 'n': v} for k, v in roles.items()],
@@ -88,7 +89,7 @@ def main():
               'projection_consistent': True, 'source_prefix_references_valid': True,
               'gameplay_outcomes_or_policy_truth_inferred': False,
               'future_data_or_binding_backfill': False}
-    (BASE / 'input-audit.json').write_text(json.dumps(result, ensure_ascii=False, indent=2) + '\n')
+    (BASE / 'input-audit-r2.json').write_text(json.dumps(result, ensure_ascii=False, indent=2) + '\n')
     print(json.dumps({k: v for k, v in result.items() if k not in ('artifact_checks', 'repeated_native_decision_identities')}, ensure_ascii=False))
 
 

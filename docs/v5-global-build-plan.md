@@ -203,3 +203,6 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 当前明确派活仅G3b，不恢复Codex goal或自动执行整计划。watcher冻结R328以来CONSTRUCTION_MODE=shadow原预测至13:43:17 CST：41局、1371条construction、145264选项×核心×指标展开行，96个精确分组；1371原行SHA/原配置shadow与Silent A10、冻结产物SHA已核。只有conditionalSignature有数值；早期缺model/policy/template/as_of的25184展开行不倒填。当前34/28/17潜在绑定局（截止17/33/48）不等于合格结果。输入/截点/原件索引与入场线冻结在20261016-global-build-g3b/。同局实际选项、路线、completion-choice-v1遵从、SL和签名终点依协议交原ops→原量化/构筑owner核原帧，herdr transport0只是发送，标签尚未交付。之后只运行原eval/construction.py并按精确组报告；组件持有/实际施放/存活/整局结果分开，无通过组不建通过文件或改线上；交报告即停，不推进G3a/G3c/G5/G2自然门槛。
 
 另本人已读G2实际main2bfc/live9afbe/tree9e105发布与原131302组合宿主启动，纯shadow不新编号，R369 S保持/最新行为R370，宿主pending仍由原ops闭环，不重复full。d705四原提案/两原rationale/历史及当前源码已本人核，hpAfter−2是预计剩血不是损血2，已本原生用户可见明确告知并两个真实watcher CLI0，不代Roy ACK；旧dirty模型正确性/宽项不外推。
+
+
+2026-10-16 13:59 CST G3b输入范围勘误：额外核原JSONL首个construction-v1在off1224705936/2026-10-13T11:38:42.421Z，早于no-sync索引min(off)1283926113；索引不能当原日志全覆盖。旧inputs/及0324记录保持，inputs-r2/补回213条construction/6局，仍用原13:43:17截点/各源prefix边界；合47局1584 construction/167952展开/96组，1584原行SHA及原config shadow/Silent A10均核。原145264展开行在r2逐值不变，新增22688行全缺前瞻绑定；原潜在可绑定局34/28/17不变，不倒填或派重复核验。原ops实际已按r1启动原量化thread01a12c46/batch135539（wrapper PID457469，原回执首native回复尚未核），因此不热改/停重r1，原件结果可精确复用，补前缀只列元数据排除；r2已发原链登记。真实后继帧结果仍pending，不能称零通过已完成或把潜在局凑门槛。

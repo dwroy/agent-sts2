@@ -10,6 +10,7 @@ from pathlib import Path
 
 BASE = Path(__file__).resolve().parent
 ROOT = BASE.parents[2]
+INPUTS = BASE / json.loads((BASE / 'active-input.json').read_bytes())['directory']
 FIELDS = ('character', 'core', 'metric', 'horizon', 'model', 'policy', 'ascension', 'template_sha256')
 
 
@@ -26,9 +27,17 @@ def main():
     outcome_path = results / 'outcomes.jsonl'
     coverage_path = results / 'coverage.json'
     assert outcome_path.exists() and coverage_path.exists(), 'Original learner delivery required; never fabricate missing labels.'
-    manifest = json.loads((BASE / 'inputs/manifest.json').read_bytes())
+    manifest = json.loads((INPUTS / 'manifest.json').read_bytes())
     coverage = json.loads(coverage_path.read_bytes())
-    assert coverage['input_manifest_sha256'] == digest(BASE / 'inputs/manifest.json')
+    label_manifest = coverage['input_manifest_sha256']
+    current_manifest = digest(INPUTS / 'manifest.json')
+    metadata_only_prefix_rows = 0
+    if label_manifest != current_manifest:
+        superset = json.loads((BASE / 'r2-superset-check.json').read_bytes())
+        assert label_manifest == digest(BASE / 'inputs/manifest.json') == superset['r1_manifest_sha256']
+        assert current_manifest == superset['r2_manifest_sha256']
+        assert superset['extra_without_binding_gaps'] == 0 and superset['all_extra_r2_missing_binding']
+        metadata_only_prefix_rows = superset['extra_r2_rows']
     labels = {}
     for line in outcome_path.read_bytes().splitlines():
         if not line.strip():
@@ -37,13 +46,13 @@ def main():
         key = (row['source_off'], row['option'], row['core'], row['metric'])
         assert key not in labels, f'duplicate learner key {key}'
         labels[key] = row
-    out = BASE / 'evaluation'
+    out = BASE / 'evaluation-r2'
     out.mkdir(exist_ok=True)
     input_path = out / 'matched-input.jsonl'
     assert not input_path.exists(), 'Preserve prior evaluation input/results; use a separate revision directory.'
     totals, dispositions = collections.Counter(), collections.Counter()
     forecast_groups = {}
-    for row in json.loads((BASE / 'inputs/prediction-groups.json').read_bytes()):
+    for row in json.loads((INPUTS / 'prediction-groups.json').read_bytes()):
         row['character'] = 'silent'
         forecast_groups[group_key(row)] = row
     used = set()
@@ -64,7 +73,7 @@ def main():
         assert hashlib.sha256(raw).hexdigest() == ref['sha256'], ref
         verified_refs.add(key)
 
-    with input_path.open('w') as output, gzip.open(out / 'match-ledger.jsonl.gz', 'wt') as ledger, gzip.open(BASE / 'inputs/predictions.jsonl.gz', 'rt') as source:
+    with input_path.open('w') as output, gzip.open(out / 'match-ledger.jsonl.gz', 'wt') as ledger, gzip.open(INPUTS / 'predictions.jsonl.gz', 'rt') as source:
         for index, item in enumerate(map(json.loads, source)):
             p = item['prediction']
             key = (item['source']['off'], item['option'], p['core'], p['metric'])
@@ -139,7 +148,10 @@ def main():
                      'minimum_more_qualified_independent_runs': max(0, 10 - n), 'admitted': not failures,
                      'failures': failures, 'missing_data_limit': 'Minimum count deficit only; further data cannot guarantee both outcome classes or performance gates.'})
     result = {'at': dt.datetime.now(dt.timezone.utc).isoformat(), 'schema': 'g3b-admission-audit-v1',
-              'input_manifest_sha256': digest(BASE / 'inputs/manifest.json'), 'matched_input_sha256': report['input_sha256'],
+              'input_manifest_sha256': current_manifest, 'matched_input_sha256': report['input_sha256'],
+              'learner_label_manifest_sha256': label_manifest,
+              'prefix_rows_with_only_missing_binding_metadata': metadata_only_prefix_rows,
+              'old_learner_delivery_not_rewritten': True,
               'learner_outcomes_sha256': digest(outcome_path), 'learner_coverage_sha256': digest(coverage_path),
               'forecast_rows': totals['forecast_rows'], 'dispositions': dict(dispositions), 'verified_raw_references': len(verified_refs),
               'scored_groups': len(scored), 'admitted_groups': sum(row['admitted'] for row in rows), 'groups': rows,
