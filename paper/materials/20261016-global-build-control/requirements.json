@@ -1,6 +1,6 @@
 {
   "schema": "global-build-requirements-v1",
-  "at": "2026-10-16T12:23:13.666148+08:00",
+  "at": "2026-10-16T13:08:46.850832+08:00",
   "request_id": "roy-20261016-global-build",
   "owner_session": "01a13dcd-83d4-7c63-b233-f93cf878ecf4",
   "plan": "docs/v5-global-build-plan.md",
@@ -180,63 +180,103 @@
       {
         "id": "G2.1",
         "requirement": "paired current/future visible actual Boss or observed Silent Boss pools/frequencies; final sequence G1a",
-        "state": "pending",
-        "evidence": []
+        "state": "shadow-implementation-fixed-verified-full-pending; final/Act3/calibration/natural-gates-unknown",
+        "evidence": [
+          "paper/materials/20261016-global-build-g2/implementation-scope.md",
+          "paper/materials/20261016-global-build-g2/source-validation-r2/source-before-full.json",
+          "paper/materials/20261016-global-build-g2/wired-fixed-r1/checks.json",
+          "paper/materials/20261016-global-build-g2/wired-fixed-r3/checks.json",
+          "paper/materials/20261016-global-build-g2/precision-fixed-r1/checks.json"
+        ],
+        "current_assignment": "shadow implementation/fixed tests only; later natural/on delivery awaits Claude/herdr"
       },
       {
         "id": "G2.2",
         "requirement": "per-Boss DeltaW and trusted DeltaS; unknowns never zero",
-        "state": "pending",
-        "evidence": []
+        "state": "shadow-implementation-fixed-verified-full-pending; final/Act3/calibration/natural-gates-unknown",
+        "evidence": [
+          "paper/materials/20261016-global-build-g2/implementation-scope.md",
+          "paper/materials/20261016-global-build-g2/source-validation-r2/source-before-full.json",
+          "paper/materials/20261016-global-build-g2/wired-fixed-r1/checks.json",
+          "paper/materials/20261016-global-build-g2/wired-fixed-r3/checks.json",
+          "paper/materials/20261016-global-build-g2/precision-fixed-r1/checks.json"
+        ],
+        "current_assignment": "shadow implementation/fixed tests only; later natural/on delivery awaits Claude/herdr"
       },
       {
         "id": "G2.3",
         "requirement": "both sum DeltaP/P and product of conditional pass probabilities; select using G1b and shadow evidence",
-        "state": "pending",
-        "evidence": []
+        "state": "shadow-implementation-fixed-verified-full-pending; final/Act3/calibration/natural-gates-unknown",
+        "evidence": [
+          "paper/materials/20261016-global-build-g2/implementation-scope.md",
+          "paper/materials/20261016-global-build-g2/source-validation-r2/source-before-full.json",
+          "paper/materials/20261016-global-build-g2/wired-fixed-r1/checks.json",
+          "paper/materials/20261016-global-build-g2/wired-fixed-r3/checks.json",
+          "paper/materials/20261016-global-build-g2/precision-fixed-r1/checks.json"
+        ],
+        "current_assignment": "shadow implementation/fixed tests only; later natural/on delivery awaits Claude/herdr"
       },
       {
         "id": "G2.4",
         "requirement": "readiness history saved per B3 and consumed in plan questions",
-        "state": "pending",
-        "evidence": []
+        "state": "shadow-run-history-implemented-fixed; payload-consumer-deferred-until-explicit-assignment-and-admission",
+        "evidence": [
+          "paper/materials/20261016-global-build-g2/observer-fixed-r1/checks.json",
+          "paper/materials/20261016-global-build-g2/wired-fixed-r3/checks.json"
+        ],
+        "current_assignment": "shadow implementation/fixed tests only; later natural/on delivery awaits Claude/herdr"
       },
       {
         "id": "G2.5",
         "requirement": "reuse B3/C2 workers/memo, C1 failure exits, p50/p90 without stalls",
-        "state": "pending",
-        "evidence": []
+        "state": "shadow-implementation-fixed-verified-full-pending; final/Act3/calibration/natural-gates-unknown",
+        "evidence": [
+          "paper/materials/20261016-global-build-g2/implementation-scope.md",
+          "paper/materials/20261016-global-build-g2/source-validation-r2/source-before-full.json",
+          "paper/materials/20261016-global-build-g2/wired-fixed-r1/checks.json",
+          "paper/materials/20261016-global-build-g2/wired-fixed-r3/checks.json",
+          "paper/materials/20261016-global-build-g2/precision-fixed-r1/checks.json"
+        ],
+        "current_assignment": "shadow implementation/fixed tests only; later natural/on delivery awaits Claude/herdr"
       },
       {
         "id": "G2.6",
         "requirement": "off/shadow/on Silent-only config with actual run boundaries",
-        "state": "pending",
-        "evidence": []
+        "state": "shadow-implementation-fixed-verified-full-pending; final/Act3/calibration/natural-gates-unknown",
+        "evidence": [
+          "paper/materials/20261016-global-build-g2/implementation-scope.md",
+          "paper/materials/20261016-global-build-g2/source-validation-r2/source-before-full.json",
+          "paper/materials/20261016-global-build-g2/wired-fixed-r1/checks.json",
+          "paper/materials/20261016-global-build-g2/wired-fixed-r3/checks.json",
+          "paper/materials/20261016-global-build-g2/precision-fixed-r1/checks.json"
+        ],
+        "current_assignment": "shadow implementation/fixed tests only; later natural/on delivery awaits Claude/herdr"
       },
       {
         "id": "G2.7",
         "requirement": "at least2 complete naturalshadow runs, real future-Boss comparison, on release or Roy explicit alternative",
-        "state": "pending",
-        "evidence": []
+        "state": "not_started-awaiting-Claude-herdr-assignment; original2natural/report-gates-retained",
+        "evidence": [],
+        "current_assignment": "shadow implementation/fixed tests only; later natural/on delivery awaits Claude/herdr"
       }
     ],
     "G3a": [
       {
         "id": "G3a.1",
         "requirement": "option direction component-count progress from same-question construction_evaluation",
-        "state": "pending",
+        "state": "awaiting-explicit-Claude-herdr-assignment",
         "evidence": []
       },
       {
         "id": "G3a.2",
         "requirement": "mark best-group versus declared direction conflict; require actual answer reason responding without fixed weights",
-        "state": "pending",
+        "state": "awaiting-explicit-Claude-herdr-assignment",
         "evidence": []
       },
       {
         "id": "G3a.3",
         "requirement": "enabled independent release and actual consumer",
-        "state": "pending",
+        "state": "awaiting-explicit-Claude-herdr-assignment",
         "evidence": []
       }
     ],
@@ -244,19 +284,19 @@
       {
         "id": "G3b.1",
         "requirement": "original R328-shadow prospective predictions bound to learner-verified outcomes",
-        "state": "pending",
+        "state": "awaiting-explicit-Claude-herdr-assignment",
         "evidence": []
       },
       {
         "id": "G3b.2",
         "requirement": "eval/construction.py existing admission and ops-published construction-calibration.json",
-        "state": "pending",
+        "state": "awaiting-explicit-Claude-herdr-assignment",
         "evidence": []
       },
       {
         "id": "G3b.3",
         "requirement": "only admitted groups advisory; otherwise publish exact data deficits",
-        "state": "pending",
+        "state": "awaiting-explicit-Claude-herdr-assignment",
         "evidence": []
       }
     ],
@@ -264,13 +304,13 @@
       {
         "id": "G3c.1",
         "requirement": "checkpoint run-plan consumes per-direction global readiness trend and supports keep/pivot",
-        "state": "pending",
+        "state": "awaiting-explicit-Claude-herdr-assignment",
         "evidence": []
       },
       {
         "id": "G3c.2",
         "requirement": "enabled independent release and actual consumer",
-        "state": "pending",
+        "state": "awaiting-explicit-Claude-herdr-assignment",
         "evidence": []
       }
     ],
@@ -319,19 +359,19 @@
       {
         "id": "G5.1",
         "requirement": "recorded opportunity model route comparisons for direction-specific missing pieces and risk",
-        "state": "pending",
+        "state": "awaiting-explicit-Claude-herdr-assignment",
         "evidence": []
       },
       {
         "id": "G5.2",
         "requirement": "Silent-only shadow logging then at least2 complete natural runs and report before payload",
-        "state": "pending",
+        "state": "awaiting-explicit-Claude-herdr-assignment",
         "evidence": []
       },
       {
         "id": "G5.3",
         "requirement": "phase completion is actualshadow gate, no invented game weights",
-        "state": "pending",
+        "state": "awaiting-explicit-Claude-herdr-assignment",
         "evidence": []
       }
     ],
@@ -395,5 +435,15 @@
   "excluded": [
     "P4 Jev tie arbitration",
     "elite S sorting"
-  ]
+  ],
+  "current_assignment": {
+    "scope": [
+      "S sort keys shadow; original ops independent release",
+      "G2 shadow implementation and fixed tests"
+    ],
+    "owner": "01a13dcd-83d4-7c63-b233-f93cf878ecf4",
+    "goal": "cancelled_by_Roy",
+    "future_stages": "await explicit Claude herdr assignment; do not execute G3/G5/natural shadow gate autonomously",
+    "completion": "current two deliverables only; original broad requirements retained as history/future specification"
+  }
 }

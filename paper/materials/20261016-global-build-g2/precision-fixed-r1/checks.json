@@ -1,0 +1,41 @@
+{
+  "at": "2026-10-16T13:07:29.635429+08:00",
+  "nice": 19,
+  "max_workers": 2,
+  "checks": [
+    {
+      "argv": [
+        "npx",
+        "tsc",
+        "-p",
+        "tsconfig.json",
+        "--noEmit"
+      ],
+      "rc": 0,
+      "seconds": 1.33,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "npx",
+        "vitest",
+        "run",
+        "--maxWorkers=2",
+        "tests/global-build.test.ts",
+        "tests/global-build-observer.test.ts",
+        "tests/global-build-b3.test.ts",
+        "tests/global-build-health.test.ts",
+        "tests/global-build-integration.test.ts"
+      ],
+      "rc": 0,
+      "seconds": 7.32,
+      "log_sha256": "6ba874dfbe6c6eb2f80144e7670288e1734e7700466cc706ef27585da04188b3"
+    }
+  ],
+  "boundary_example": {
+    "one_third_plus_recorded_delta": 1.0000333333333333,
+    "two_thirds_minus_recorded_delta": -3.333333333332966e-05
+  },
+  "original_full": "source-validation/full.json rc143 unchanged source; explicitly interrupted for correction",
+  "production_changes": "only new G2 aggregation mean read and paired-sum source; original S/P1/C1/C2 unchanged"
+}

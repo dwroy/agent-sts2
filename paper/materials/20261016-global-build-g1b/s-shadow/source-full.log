@@ -1,0 +1,27 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/global-build-s-shadow-20261016/agent
+
+ ❯ tests/fix-queue-v4-shrink.test.ts (14 tests | 1 failed) 19507ms
+     × XC4T F9 T3: a later turn with the beetle alive is shrunk, its hand from the pile at base (unmarked): a Strike hits it for 4, not 2 16925ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/fix-queue-v4-shrink.test.ts > 6. the rollout's later turns: shrunk once while the beetle lives, not at all after it dies > XC4T F9 T3: a later turn with the beetle alive is shrunk, its hand from the pile at base (unmarked): a Strike hits it for 4, not 2
+Error: Test timed out in 15000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/fix-queue-v4-shrink.test.ts:228:3
+    226|   }
+    227|
+    228|   it("XC4T F9 T3: a later turn with the beetle alive is shrunk, its ha…
+       |   ^
+    229|     const solves = allSolves(fixture("xc4t-f9-t3-shrink", "t3"));
+    230|     const later = solves.filter(({ input }) => (input.turn ?? 0) > 3);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 491 passed (492)
+      Tests  1 failed | 4931 passed | 2 skipped (4934)
+   Start at  12:28:58
+   Duration  1484.23s (transform 49.93s, setup 71.09s, import 193.32s, tests 2564.06s, environment 71ms)
+

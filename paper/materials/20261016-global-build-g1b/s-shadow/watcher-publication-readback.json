@@ -1,0 +1,131 @@
+{
+  "at": "2026-10-16T13:04:08.783805+08:00",
+  "actor": "watcher",
+  "source": "655e1bb7967dcd9161eee96fe35cad2257e7af40",
+  "main": "8ecbe9356ff99c8f603f4eef814af250b97a5fe9",
+  "actual_live": "1ddaba4bca8350969bb2e8dda1265095cc86b61d",
+  "tree": "cb2128efc5073340865cce6321aa6e0463ca8c68",
+  "release_id": "V5-R369",
+  "behavior_commit": "5e89b11870c129fb4bba43aab08fbb8bfb9a5067",
+  "source_ancestors": true,
+  "leaf_readback": [
+    {
+      "path": "agent/src/core/config.ts",
+      "main_equals_source": true,
+      "live_equals_source": false,
+      "live_only_historical_attribution": true,
+      "live_sha256": "85b4a52539759ac25467886886618fd19641eb58f18690872205bca0fa83c010"
+    },
+    {
+      "path": "agent/src/eye/run-config.ts",
+      "main_equals_source": true,
+      "live_equals_source": true,
+      "live_only_historical_attribution": false,
+      "live_sha256": "5c07b972078eb26da451fbe6a16bd06db94980d1b1725e0241bd1fc8fdc2a9b7"
+    },
+    {
+      "path": "agent/src/sim/boss-lines.ts",
+      "main_equals_source": true,
+      "live_equals_source": true,
+      "live_only_historical_attribution": false,
+      "live_sha256": "e3d9a70923c1c7829962adbee7d44050d1a9e1ff550f1988a86784aec2250e9c"
+    },
+    {
+      "path": "agent/src/sim/build-rank.ts",
+      "main_equals_source": true,
+      "live_equals_source": true,
+      "live_only_historical_attribution": false,
+      "live_sha256": "7438f3d9433eb8357dea8cc9c82d8719fcdf35dc3bfee0e552388666d37fe84d"
+    },
+    {
+      "path": "agent/src/sim/build-sim-facts.ts",
+      "main_equals_source": true,
+      "live_equals_source": true,
+      "live_only_historical_attribution": false,
+      "live_sha256": "ad391afaf2240836efcb72635ac9b63ba514628643cb08dfe4e94b9c1fa0312c"
+    },
+    {
+      "path": "agent/src/sim/build-sim.ts",
+      "main_equals_source": true,
+      "live_equals_source": true,
+      "live_only_historical_attribution": false,
+      "live_sha256": "c6f744c5e511d631c70b22ffeefdb3ee211a35c71199b335b885735f81073576"
+    },
+    {
+      "path": "agent/src/sim/s-combat-rank.ts",
+      "main_equals_source": true,
+      "live_equals_source": true,
+      "live_only_historical_attribution": false,
+      "live_sha256": "6b6a5f33764f253e6f8fd606b772dd641953b118029e9df32d97c56e691893f8"
+    },
+    {
+      "path": "agent/tests/build-rank-integration.test.ts",
+      "main_equals_source": true,
+      "live_equals_source": true,
+      "live_only_historical_attribution": false,
+      "live_sha256": "c704a2825da9a509d0724234f0fd80ede1156d13548ae4b13a1cae6c3e5fbbb6"
+    },
+    {
+      "path": "agent/tests/build-rank.test.ts",
+      "main_equals_source": true,
+      "live_equals_source": true,
+      "live_only_historical_attribution": false,
+      "live_sha256": "ef14be841357ceb87ea4e8f2da0d1e469b01ba5351c61205e24aef1af068cb7f"
+    },
+    {
+      "path": "agent/tests/module_health_test.py",
+      "main_equals_source": true,
+      "live_equals_source": true,
+      "live_only_historical_attribution": false,
+      "live_sha256": "ac03070c51242c7f35a89e72b22e0d1509fd0489c9203f90f5a7cdee80f4baac"
+    },
+    {
+      "path": "agent/tests/required-boss-lines.test.ts",
+      "main_equals_source": true,
+      "live_equals_source": true,
+      "live_only_historical_attribution": false,
+      "live_sha256": "e5cfa6c6f5c707772ad65046989c1e874d3d6a24b8301b3b090e7ae2beb1bc0c"
+    },
+    {
+      "path": "agent/tests/s-combat-rank.test.ts",
+      "main_equals_source": true,
+      "live_equals_source": true,
+      "live_only_historical_attribution": false,
+      "live_sha256": "e81241f468151850930cdaafe0fe1947fe811c97644450d54b4bfb41d4fd74e8"
+    },
+    {
+      "path": "ops/module_health.py",
+      "main_equals_source": true,
+      "live_equals_source": true,
+      "live_only_historical_attribution": false,
+      "live_sha256": "69471c09be6b513a2f78ea8b9bbb8dc9dd0425f0e2e92a69b576f8a8b5be6fca"
+    }
+  ],
+  "version": {
+    "name": "V5.silent-s-sort-shadow1",
+    "family": "V5",
+    "character": "SILENT",
+    "commit": "5e89b11870c129fb4bba43aab08fbb8bfb9a5067",
+    "release_id": "V5-R369",
+    "release_status": "registered-primary-ops",
+    "source": "2026-10-16 13:01:27 CST; Roy12:19 via Claude, original roy-20261016-global-build/G1b. Source 655e1bb7967dcd9161eee96fe35cad2257e7af40; source base deae4ef43231875c8331739d470090227381e023. Old P2/P3 sorting consumed admitted paired S after win rate; new production uses original win/HP ordering, with S computations and counterfactual ranking retained in shadow. P2 table/reason contract remains on; P1, C2 allowS/completion/minimum samples, HP/SL/potion rules and other roles unchanged. G1b fixed report did not establish incremental predictive value, not proof that S has no value; original learning knowledge/status unchanged. Exact13 source leaves; final tsc0 and6 fixed files57 cases0; original full rc1 (492 files,4931 pass1 timeout2 skip) retained and unchanged original XC4T case passed alone under original15s limit; explicit ops source disposition accepted. New final-tree host result pending; no borrowed old-tree green or source full rerun. Expected removal of an unvalidated S sort influence while retaining diagnostics; no measured game benefit claim. Rollback current-context inverse of these13 leaves and retain knowledge/other releases/history. Evidence paper/materials/20261016-global-build-g1b/s-shadow/ and paper/materials/20261016-1254-ops/."
+  },
+  "dual_notice": {
+    "notes/for-roy.md": {
+      "matching_lines": 1,
+      "sha256_each": [
+        "fb613b36a7ac277280dc96fb0a7e415a10a90d797e9529c1500e19f3ac60d9ad"
+      ]
+    },
+    "ops/inbox-dev.md": {
+      "matching_lines": 1,
+      "sha256_each": [
+        "fb613b36a7ac277280dc96fb0a7e415a10a90d797e9529c1500e19f3ac60d9ad"
+      ]
+    }
+  },
+  "publication_receipt_sha256": "c8a514f1be57f1f6ba3707dbd0808034ca3de657d74731dd0bb742358ca06f98",
+  "host": "pending original exact-tree host; not source/old green",
+  "native_consumer": "not in current assignment; no run restart or observer",
+  "other_role_ACK": false
+}

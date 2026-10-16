@@ -171,3 +171,18 @@ watcher本人已读原075726 fallback815582终局及ops closure：tsc/vitest0，
 ### 2026-10-16 12:23:13 CST Roy12:19决定：S排序键shadow与G2先行
 
 Roy经Claude在本原生用户消息明确批准：只把P2/P3的S排序键退shadow，S计算/日志保留，胜率排序/P1/C2完成门槛等保持；交原ops独立发布/编号/双通知/精确树宿主。G2现在实现shadow和固定测试，无须等G1a自然；S只记录，胜率为主，第三幕低可信及最终Boss相关评估unknown。最终连战待G1a接口自然消费验收后再接，G2转on仍须2完整自然shadow及真实Boss对照报告。新授权优先于旧G1a/G1b完整依赖等待，旧blocked历史保持。两原异议44fc/48648已有真实本人两阶段，追加本次真实原生转达决定，不代Roy ACK。FD8已F27自然终局、28原生/28物理请求候选可核但无continuous消费，G1a门槛不借填。checkpoint恢复active继续原父；内置goal查询仍blocked，现有接口无active写入口，保原目标不重建。原文/offset/SHA见control/roy-1219-decision-readback.json。
+
+
+### 2026-10-16 12:54:10 CST Roy收窄当前派活与取消goal
+
+Roy经Claude明确取消Codex goal，以后仅沿Claude/herdr派活。本次只完成P2/P3 S键shadow并交原ops发布，以及G2 shadow实现与固定测试，完成两项或遇待决定事项即停。原计划与历史验收保留，G3/G5、G1a自然跟踪和G2两局/on验收均等待后续明确派活，不自行启动或等待。本次第三幕/最终连战仍unknown，不代Roy确认或改变其他宽父。
+
+
+### 2026-10-16 13:03:27 CST 两项窄交付检查与固定测试
+
+watcher沿Roy经Claude收窄派活：取消Codex goal，仅完成S键shadow交原ops发布与G2 shadow实现/固定测试，后续G3/G5/自然门槛等待Claude/herdr。原ops明确接受S精确13叶full1/唯一旧shrink原题不变补验0，source655e1bb已交独立发布；不称源full0。G2直接继承S源，16叶treea44a7a冻结，tsc0、8未变固定文件47项及最终12高层项通过，旧夹具失败保留；原唯一full13:01/session39677运行，未先认提交/live/宿主或收益。第三幕/最终连战/生产校准unknown，原宽父保持。控制档与原生决定见paper/materials/20261016-global-build-control/，源与失败证据见对应g1b/s-shadow、g2目录。
+
+
+### 2026-10-16 13:08:46 CST
+
+S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/live1ddaba4b/treecb2128，行为5e89b118；本人13叶/源祖先/统一编号/根双通知逐SHA读回，live config仅历史Roy/Dai文字差保留，原075726精确宿主RUN pending，不借旧绿。G2复核发现仅新聚合器将四位小数配对差加到精确前缀基准可能越0/1，13:06只停自己原Vitest PID4046312并保full143/292.81s，未动ops宿主；改为读取选项自身前缀概率、Σ项用原配对差，补0/1边界题。最新tsc0、5 G2文件30项/内含4Python0，新16叶treec19c9c从13:07:58唯一full-r2/session94174运行。原失败/精确中断源/新固定结果分目录保持；无G2提交或上线声称，不做新阶段/自然等待。
