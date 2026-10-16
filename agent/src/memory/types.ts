@@ -14,6 +14,8 @@ export interface DecisionEnv {
   /** Set by the live loop for Silent; archived replay callers keep their declared historical policy. */
   requiredBossEvaluation?: boolean;
   simWait?: import("../sim/computation-wait.js").SimWait;
+  /** Independent storage for bounded simulator failure envelopes, never model facts. */
+  simFailureDirectory?: string;
   state: GameState;
   knowledge: Knowledge;
   brief: RunBrief;

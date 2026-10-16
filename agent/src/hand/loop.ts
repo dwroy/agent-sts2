@@ -725,6 +725,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
     const env: DecisionEnv = {
       requiredBossEvaluation: str(asRecord(state.run?.raw)["character_id"]).toLowerCase() === "silent",
       simWait: fileSimWait(join(dirname(config.log.decisionLog), "sim-wait.json"), (message) => onEvent({ type: "note", message })),
+      simFailureDirectory: join(dirname(config.log.decisionLog), "sim-failures"),
       state,
       knowledge,
       brief,
@@ -925,7 +926,8 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
         }
         // B3 (BOSS_SIM_BUILD=on): each option of a deck-building question with the act boss simulated on its deck.
         if (options.buildSim) {
-          const simmed = await withBossSim(decision, env, options.buildSim);
+          const simmed = await withBossSim(decision, env, { ...options.buildSim,
+            failureDirectory: join(dirname(config.log.decisionLog), "sim-failures") });
           if (simmed.record) {
             decision = simmed.decision;
             question = decision.kind === "ask" ? decision.questions[spec.question] : question;

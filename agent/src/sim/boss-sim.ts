@@ -30,6 +30,7 @@ import { knowledgeCharacter } from "../knowledge/files.js";
 import { silentBossCalibration } from "./boss-trust.js";
 import type { BossMarginTrace } from "./boss-margin.js";
 import { continuousBossResult, type ContinuousBossResult, type ContinuousSample } from "./continuous-boss-result.js";
+import { captureContinuationFailure, ContinuationSampleError } from "./continuation-failure.js";
 
 /** The most turns a sample plays (the start turn included): logged A7-A9 boss fights ran 2-24 turns (median 9). */
 export const BOSS_SIM_MAX_TURNS = 30;
@@ -124,6 +125,8 @@ export interface BossSimOptions {
 
 /** One sample of one line, played to the fight's end. */
 export interface FightSampleResult {
+  /** Attached only to an invalid first success, before its unchanged contract rejection. */
+  failureTrajectory?: import("../reflex/rollout.js").TurnRecord[];
   bossMargin?: BossMarginTrace;
   coreWindow?: import("./core-window.js").CoreWindowResult;
   resources?: { hp: number; revives: import("../reflex/turn-solver.js").Revive[]; drunkKeys: string[] };
@@ -297,6 +300,7 @@ function singleFightSample(input: RolloutInput, plan: Plan | null, seed: number,
   const enemyHpLeft = won || !last ? 0 : last.hpLeft ? Object.values(last.hpLeft).reduce((sum, hp) => sum + hp, 0) : last.snap.E.reduce((sum, e) => sum + (e[5] ? Math.max(0, e[2]) : 0), 0);
   return {
     won,
+    ...(input.continuation && won && (!last?.resources || last.resources.hp <= 0) ? { failureTrajectory: records } : {}),
     ...(bossReference ? { bossMargin: { reference: bossReference,
       outgoingHp: records.reduce((sum, r) => sum + (r.outgoingHpDamage ?? r.dmg), 0),
       receivedHp: records.every((r) => typeof r.receivedHpDamage === "number" && Number.isFinite(r.receivedHpDamage))
@@ -326,7 +330,7 @@ function singleFightSample(input: RolloutInput, plan: Plan | null, seed: number,
 }
 
 /** Transfer the first sample's resources; no fresh HP, spent potion, or spent revive is restored. */
-export function continuationInput(input: RolloutInput, first: FightSampleResult, template: RolloutInput, sample?: { seed: number; plan: Plan | null }): { input: RolloutInput; potions: string[]; openingHpLoss: number } {
+export function continuationInput(input: RolloutInput, first: FightSampleResult, template: RolloutInput, sample?: { seed: number; plan: Plan | null; maxTurns?: number; scripts?: boolean; order?: KillOrder | null }): { input: RolloutInput; potions: string[]; openingHpLoss: number } {
   if (!input.continuation || !first.won || !first.resources || first.resources.hp <= 0) {
     // Keep failed samples unavailable, but distinguish missing capture from a nonpositive winning state.
     // Put the branch and seed first: build-sim facts retain only the start of an error message.
@@ -337,7 +341,8 @@ export function continuationInput(input: RolloutInput, first: FightSampleResult,
       resources: first.resources ?? null,
       steps: sample?.plan?.steps.map((step) => ({ cardId: step.cardId, cardIndex: step.cardIndex, target: step.target ?? null })) ?? null,
     };
-    throw new Error(`missing successful first-fight resources: ${reason}; seed=${sample?.seed ?? "unknown"}; ${JSON.stringify(details)}`);
+    throw new ContinuationSampleError(`missing successful first-fight resources: ${reason}; seed=${sample?.seed ?? "unknown"}; ${JSON.stringify(details)}`,
+      captureContinuationFailure(reason, sample?.seed ?? null, { input, first, sample: sample ?? null }));
   }
   const used = new Set(first.resources.drunkKeys);
   let fairies = (input.solver.player.revives ?? []).filter((r) => r.source === "FAIRY_IN_A_BOTTLE").length
@@ -370,7 +375,7 @@ export function fightSample(input: RolloutInput, plan: Plan | null, seed: number
   if (total <= 0) throw new Error("empty second-boss distribution");
   let position = sampleSeed(seed, 0) / 0x100000000 * total;
   const variant = next.variants.find((v) => (position -= v.count) < 0) ?? next.variants.at(-1)!;
-  const transferred = continuationInput(input, first, variant.input, { seed, plan });
+  const transferred = continuationInput(input, first, variant.input, { seed, plan, maxTurns, scripts, order });
   const second = singleFightSample(transferred.input, null, sampleSeed(seed, 1), maxTurns, scripts, null);
   return { ...second,
     ...(input.captureBossMargin ? { bossMargin: undefined } : {}),

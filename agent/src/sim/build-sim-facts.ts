@@ -52,6 +52,8 @@ import { BOSS_LINES_TIE_SE } from "./boss-lines.js";
 import { readinessText } from "./boss-readiness.js";
 import { globalBuildFailure, globalBuildForB3 } from "./global-build-b3.js";
 import type { GlobalBossPool } from "./global-build-pool.js";
+import { continuationFailureOf, preserveContinuationFailure } from "./continuation-failure.js";
+import { fingerprint } from "../hand/act/gate.js";
 
 /** The deck-building questions that get the simulation. */
 export const BUILD_SIM_LABELS = new Set([
@@ -101,6 +103,8 @@ export const BOSS_SIM_NOTE =
   "method and its limits; it replaces the act boss clock.";
 
 export interface BuildSimSetup {
+  /** The live controller's log directory; offline callers leave failure persistence unconfigured. */
+  failureDirectory?: string;
   runner: DeckSimRunner;
   samples?: number;
   seed?: number;
@@ -772,7 +776,19 @@ export async function withBossSim(decision: Decision, env: DecisionEnv, setup: B
       record,
     };
   } catch (error) {
-    return fail(`出错：${String(error instanceof Error ? error.message : error).slice(0, 160)}`);
+    const failed = fail(`出错：${String(error instanceof Error ? error.message : error).slice(0, 160)}`);
+    const failure = continuationFailureOf(error);
+    if (failure && str(state.run?.raw["character_id"]).toLowerCase() === "silent" && failed.record) {
+      const completion = asRecord(failed.record["completion"]);
+      const board = fingerprint(state);
+      failed.record["resource_failure"] = preserveContinuationFailure(failure, {
+        run: str(state.raw["run_id"]), character: "silent", floor: state.run?.floor ?? null,
+        turn: state.turn, label: ask.label, fingerprint: board,
+        question_key: str(completion["key"]) || memoKey("continuation-question", { board, label: ask.label, question }),
+        state: toJsonValue(state.raw), question: toJsonValue(question), completion: toJsonValue(completion),
+      }, setup.failureDirectory);
+    }
+    return failed;
   } finally {
     wait?.finish();
   }

@@ -10,6 +10,7 @@ import { parentPort } from "node:worker_threads";
 import type { KillOrder, RolloutInput } from "../reflex/rollout.js";
 import { fightSample } from "./boss-sim.js";
 import type { BuildWorkerReply, BuildWorkerRequest } from "./build-sim-pool.js";
+import { continuationFailureOf, type ContinuationFailure } from "./continuation-failure.js";
 
 interface Batch {
   base: RolloutInput;
@@ -45,10 +46,12 @@ parentPort!.on("message", (msg: BuildWorkerRequest) => {
   }
   const batch = batches.get(msg.batch);
   let reply: BuildWorkerReply;
+  let task: ContinuationFailure["task"];
   try {
     if (!batch) throw new Error(`no input for batch ${msg.batch}`);
     const results: Extract<BuildWorkerReply, { results: unknown }>["results"] = [];
     for (const [deck, order, i, seed] of msg.tasks) {
+      task = [deck, order, i, seed];
       // A sample already running stays whole; cancelled work produces no synthetic outcome.
       if (batch.cancelled && Atomics.load(batch.cancelled, 0)) break;
       const result: typeof results[number] = [deck, order, i, fightSample(inputOf(batch, deck), null, seed, batch.maxTurns, batch.scripts, batch.orders[order] ?? null)];
@@ -58,7 +61,9 @@ parentPort!.on("message", (msg: BuildWorkerRequest) => {
     }
     reply = { batch: msg.batch, results };
   } catch (error) {
-    reply = { batch: msg.batch, error: String(error instanceof Error ? error.stack ?? error.message : error).slice(0, 2000) };
+    const failure = continuationFailureOf(error);
+    reply = { batch: msg.batch, error: String(error instanceof Error ? error.stack ?? error.message : error).slice(0, 2000),
+      ...(failure ? { continuationFailure: { ...failure, ...(task ? { task } : {}) } } : {}) };
   }
   parentPort!.postMessage(reply);
 });

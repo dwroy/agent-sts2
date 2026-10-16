@@ -26,6 +26,7 @@ import { auditSigns } from "./s-sign.js";
 import { AdaptiveSampler, isAdaptiveComplete } from "./adaptive-sampler.js";
 import { sampleSchedule, type SampleRange } from "./sample-range.js";
 import { beginComputation, type SimAttempt, type SimCompletion } from "./computation-failure.js";
+import { ContinuationSampleError, continuationFailureOf, preserveContinuationFailure, type ContinuationFailure } from "./continuation-failure.js";
 import type { SimProgress, SimWait } from "./computation-wait.js";
 import { createHash } from "node:crypto";
 import { existsSync, readdirSync, readFileSync } from "node:fs";
@@ -209,12 +210,21 @@ export function bossSimInput(args: BossSimInputArgs): RolloutInput {
 
 // ---------------------------------------------------------------- the synchronous worker pool
 
+export interface LinesPair {
+  plan: Plan | null;
+  order: KillOrder | null;
+  /** Diagnostic identity in runLines' flattened line/order list; absent for direct pool callers. */
+  lineIndex?: number;
+  orderIndex?: number;
+}
+
 /** Messages to a worker (boss-lines-worker.ts). */
 export type LinesWorkerRequest =
-  | { type: "input"; job: number; input: RolloutInput; pairs: { plan: Plan | null; order: KillOrder | null }[]; maxTurns: number }
+  | { type: "input"; job: number; input: RolloutInput; pairs: LinesPair[]; maxTurns: number }
   | { type: "run"; job: number; tasks: [pair: number, sample: number, seed: number][] }
   | { type: "drop"; job: number };
-export type LinesWorkerReply = { job: number; results: [pair: number, sample: number, result: FightSampleResult][] } | { job: number; error: string };
+export type LinesWorkerReply = { job: number; results: [pair: number, sample: number, result: FightSampleResult][] }
+  | { job: number; error: string; continuationFailure?: ContinuationFailure };
 
 export interface PairsRun {
   /** outcomes[pair][sample]: undefined for a sample not finished by the deadline. */
@@ -300,7 +310,7 @@ export class BossLinesPool {
   }
 
   /** Every (pair, sample) to the fight's end, sample-major, until done or `deadlineMs` of wall clock. */
-  run(input: RolloutInput, pairs: { plan: Plan | null; order: KillOrder | null }[], samples: number, seed: number, deadlineMs: number, now: () => number = () => performance.now(), onProgress?: SimProgress, work?: PairWork): PairsRun {
+  run(input: RolloutInput, pairs: LinesPair[], samples: number, seed: number, deadlineMs: number, now: () => number = () => performance.now(), onProgress?: SimProgress, work?: PairWork): PairsRun {
     const started = now();
     const schedule = sampleSchedule(samples, pairs.length, work?.range, work?.activePairs);
     if (!schedule.indices.length || schedule.from === schedule.to) return {
@@ -320,6 +330,7 @@ export class BossLinesPool {
     let pending = chunks.length;
     let done = 0;
     let error: string | null = null;
+    let failure: ContinuationFailure | undefined;
     const give = (w: PoolWorker) => {
       const next = chunks.shift();
       if (!next) return;
@@ -339,7 +350,10 @@ export class BossLinesPool {
           w.busy = false;
           const reply = msg.message as LinesWorkerReply;
           if (reply.job === job) {
-            if ("error" in reply) error = reply.error;
+            if ("error" in reply) {
+              error = reply.error;
+              failure = reply.continuationFailure;
+            }
             else {
               for (const [pair, i, result] of reply.results) outcomes[pair]![i] = result;
               done += reply.results.length;
@@ -365,7 +379,10 @@ export class BossLinesPool {
     // Done or given up: the workers skip what is left of this job (they check the job slot between samples).
     Atomics.store(this.flag, 1, 0);
     for (const w of workers) w.worker.postMessage({ type: "drop", job } satisfies LinesWorkerRequest);
-    if (error !== null) throw new Error(`boss-lines worker: ${error}`);
+    if (error !== null) {
+      const message = `boss-lines worker: ${error}`;
+      throw failure ? new ContinuationSampleError(message, failure) : new Error(message);
+    }
     const complete: number[] = [];
     for (let i = schedule.from; i < schedule.to; i += 1) if (schedule.indices.every((pair) => outcomes[pair]![i] !== undefined)) complete.push(i);
     return { outcomes, complete, timedOut, elapsedMs: Math.round(now() - started), workers: workers.length, done };
@@ -478,7 +495,7 @@ export function runLines(
   opts: { samples: number; seed: number; deadlineMs: number; serial?: boolean; now?: () => number; adaptive?: { allowS: boolean; mode?: "shadow" | "on"; rankS?: boolean }; onProgress?: SimProgress; holdHp?: (potionId: string, input: RolloutInput) => number | null },
 ): LinesResult {
   const orders = fightOrders(input);
-  const pairs = lines.flatMap((plan) => [null, ...orders].map((order) => ({ plan, order })));
+  const pairs = lines.flatMap((plan, lineIndex) => [null, ...orders].map((order, orderIndex) => ({ plan, order, lineIndex, orderIndex })));
   const slim = linesInput(input, opts.holdHp);
   const now = opts.now ?? (() => performance.now());
   const per = orders.length + 1;
@@ -722,7 +739,7 @@ export interface LineSim {
   text: string;
 }
 
-export type BossLineSim = { completion?: SimCompletion } & (
+export type BossLineSim = { completion?: SimCompletion; resourceFailure?: Record<string, JsonValue> } & (
   | { available: false; reason: string; ms: number }
   | {
       available: true;
@@ -742,6 +759,8 @@ export type BossLineSim = { completion?: SimCompletion } & (
     });
 
 export interface BossLineSimArgs extends BossSimInputArgs {
+  /** Full failure envelopes are separate from model facts and the bounded unavailable reason. */
+  failureDirectory?: string;
   /** Live Silent controller policy; historical replays retain their frozen budgets unless explicitly opted in. */
   requiredComplete?: boolean;
   simWait?: SimWait;
@@ -865,7 +884,19 @@ export function bossLineSim(args: BossLineSimArgs): BossLineSim {
     bossLinesOptions.onSim?.(sim);
     return sim;
   } catch (error) {
-    return unavailable(`error: ${String(error).slice(0, 160)}`);
+    const sim = unavailable(`error: ${String(error).slice(0, 160)}`);
+    const failure = continuationFailureOf(error);
+    if (failure && String(args.state.run?.raw["character_id"] ?? "").toLowerCase() === "silent") {
+      sim.resourceFailure = preserveContinuationFailure(failure, {
+        run: String(args.state.raw["run_id"] ?? ""), character: "silent", floor: args.state.run?.floor ?? null,
+        turn: args.turn, label: "combat/plan", lane: "boss-lines",
+        question_key: sim.completion?.key ?? memoKey("continuation-b2-question", { state: args.state.raw, lines: args.lines, turn: args.turn }),
+        state: toJsonValue(args.state.raw),
+        question: toJsonValue({ solver: args.solver, piles: args.piles, randomPotions: args.randomPotions, lines: args.lines, samples, turn: args.turn }),
+        completion: toJsonValue(sim.completion),
+      }, args.failureDirectory);
+    }
+    return sim;
   } finally {
     wait?.finish();
   }
@@ -945,7 +976,8 @@ export function simNote(sim: BossLineSim): string {
 /** The decision log's record (log.boss_sim). */
 export function simLog(sim: BossLineSim, keyOf: (plan: Plan) => string | null, extra: Record<string, JsonValue> = {}): Record<string, JsonValue> {
   const completion: Record<string, JsonValue> = sim.completion ? { completion: { ...sim.completion } } : {};
-  if (!sim.available) return { available: false, reason: sim.reason, ms: sim.ms, ...completion, ...extra };
+  if (!sim.available) return { available: false, reason: sim.reason, ms: sim.ms, ...completion,
+    ...(sim.resourceFailure ? { resource_failure: sim.resourceFailure } : {}), ...extra };
   const lines: Record<string, JsonValue> = {};
   for (const [plan, line] of sim.byPlan) {
     const key = keyOf(plan);
