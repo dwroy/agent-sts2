@@ -1,0 +1,6 @@
+{
+  "at": "2026-10-16T11:26:22.297866+00:00",
+  "finding": "metadata observed is null for decision-associated physical state records; first observation can precede SL controller start by1ms; v1 retained only explicit true and missed112 attempt intervals",
+  "correction": "include observed != false using each raw observed_ts, start -50ms tolerance; exact same run/floor/time interval; no source cutoff/outcome or SL statistics change",
+  "v1_claim": "no physical-boundary completeness claim was made; prior outputs retained"
+}

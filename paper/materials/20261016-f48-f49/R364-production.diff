@@ -1,0 +1,23 @@
+diff --git a/agent/src/reflex/card-model.ts b/agent/src/reflex/card-model.ts
+index c8a994fee..18c62aea8 100644
+--- a/agent/src/reflex/card-model.ts
++++ b/agent/src/reflex/card-model.ts
+@@ -1155,6 +1155,18 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge:
+     damage !== null || block > 0 || mirage || vulnerable > 0 || weak > 0 || strength > 0 || tempStrength > 0 || energyGain > 0 || draw > 0 || delayedDamage > 0 || enemyTempStrengthLoss > 0 || poison > 0 || anticipate || calculatedGamble || hiddenDaggers || bladeDance || bulletTime;
+   let flatValue = 0;
+   let known = hasModelledEffect;
++  // VLZ6CCT8AQ0A F35 T2 / F37 T3 / F43 T5, silent-0237/0238: damage alone
++  // does not cover Pounce's observed FREE_SKILL_POWER. Keep the attack and flag its missing effect.
++  const pounceValues = asArray(card["dynamic_values"]).map(asRecord);
++  if (character.toLowerCase() === "silent" && ascension === 10 && cardId === "POUNCE" &&
++    type === "Attack" && bool(card["upgraded"]) && card["energy_cost"] === 2 &&
++    card["costs_x"] === false && card["star_costs_x"] === false && card["star_cost"] === 0 &&
++    card["enchantment"] == null && card["target_type"] === "AnyEnemy" && requiresTarget &&
++    template.replace(/\s+/g, "") === "造成{Damage:diff()}点伤害。你的下一张技能牌耗能变为0{energyPrefix:energyIcons(1)}。" &&
++    renderedText.replace(/\s+/g, "") === `造成${damage}点伤害。你的下一张技能牌耗能变为0res://images/packed/sprite_fonts/silent_energy_icon.png。` &&
++    pounceValues.length === 1 && pounceValues[0]?.["name"] === "Damage" &&
++    pounceValues[0]?.["base_value"] === 20 && pounceValues[0]?.["enchanted_value"] === 20 &&
++    [16, 21, 23].includes(num(pounceValues[0]?.["current_value"], NaN))) known = false;
+   let immediatePlays: CardModel["immediatePlays"];
+   let adds: CardModel[] | undefined;
+   if (hiddenDaggers || bladeDance || cloakAndDagger) {

@@ -1,0 +1,59 @@
+{
+  "schema": "f48-f49-requirements-v1",
+  "parent": "roy-20261016-global-build",
+  "owner": "01a13dcd-83d4-7c63-b233-f93cf878ecf4",
+  "at": "2026-10-16T11:35:48.508740+00:00",
+  "goal_status": "cancelled_by_Roy; no new goal",
+  "scope": "Roy19:16 task2 offline analysis/design only",
+  "requirements": [
+    {
+      "id": "F1",
+      "requirement": "SL11/19→3/16 decomposition: retries, potion-use events, saved verdict timing",
+      "state": "passed",
+      "evidence": [
+        "summary.json",
+        "retries.csv",
+        "death-without-certain-verdict.json",
+        "validation.json"
+      ]
+    },
+    {
+      "id": "F2",
+      "requirement": "R363/R364 static effect and original Boss-frame applicability",
+      "state": "passed-with-observed-state-boundary",
+      "evidence": [
+        "coverage-audit.json",
+        "R363-production.diff",
+        "R364-production.diff",
+        "source-audit.json"
+      ]
+    },
+    {
+      "id": "F3",
+      "requirement": "same-sample F48→F49 HP/potion/revival joint evaluation minimal shadow design",
+      "state": "design-delivered-only",
+      "evidence": [
+        "joint-design.md",
+        "resource-transitions.json"
+      ]
+    },
+    {
+      "id": "F4",
+      "requirement": "explicit F49 low trust/unknown; G1a natural and 0332 dependencies remain open",
+      "state": "passed",
+      "evidence": [
+        "report.md",
+        "joint-design.md"
+      ]
+    },
+    {
+      "id": "F5",
+      "requirement": "no A/B/model/play/API/simulation/task2 live behavior; stop after two scoped tasks",
+      "state": "obeyed; task1 exact source/full/publication pending",
+      "evidence": [
+        "assignment.json",
+        "paper/materials/20261016-v5s-p1p2-shadow/source-checks/checks.json"
+      ]
+    }
+  ]
+}
