@@ -57,6 +57,8 @@ def main():
         forecast_groups[group_key(row)] = row
     used = set()
     verified_refs = set()
+    input_dispositions = collections.defaultdict(collections.Counter)
+    preparation_gaps = collections.defaultdict(collections.Counter)
 
     def evidence_check(ref):
         if not isinstance(ref, dict) or not all(k in ref for k in ('path', 'off', 'len', 'sha256')):
@@ -107,6 +109,8 @@ def main():
                                     ensure_ascii=False, separators=(',', ':')) + '\n')
             totals['forecast_rows'] += 1
             dispositions[disposition] += 1
+            input_dispositions[group_key(p)][disposition] += 1
+            preparation_gaps[group_key(p)].update(item['preparation_gaps'])
     assert used == labels.keys(), 'Learner labels not found in frozen predictions'
     current = ROOT / 'eval/construction.py'
     snapshot = BASE / 'protocol-snapshot/eval/construction.py'
@@ -119,6 +123,12 @@ def main():
     report = json.loads((out / 'evaluator-report.json').read_bytes())
     assert report['input_sha256'] == digest(input_path)
     scored = {group_key(row): row for row in report['groups']}
+    excluded = {row['row']: row['reason'] for row in report['excluded']}
+    exclusion_reasons = collections.defaultdict(collections.Counter)
+    with gzip.open(out / 'match-ledger.jsonl.gz', 'rt') as stream:
+        for item in map(json.loads, stream):
+            if item['row'] in excluded:
+                exclusion_reasons[tuple(item['group'])][excluded[item['row']]] += 1
     rows = []
     for key, original in sorted(forecast_groups.items(), key=lambda pair: str(pair[0])):
         s = scored.get(key, {})
@@ -146,6 +156,9 @@ def main():
                      'n': s.get('n', 0), 'independent_runs': n, 'positives': s.get('positives', 0), 'negatives': s.get('negatives', 0),
                      'brier': s.get('brier'), 'baseline_brier': s.get('baseline_brier'), 'bias': s.get('bias'),
                      'minimum_more_qualified_independent_runs': max(0, 10 - n), 'admitted': not failures,
+                     'input_dispositions': dict(input_dispositions[key]),
+                     'missing_prediction_bindings': dict(preparation_gaps[key]),
+                     'evaluator_exclusions': dict(exclusion_reasons[key]),
                      'failures': failures, 'missing_data_limit': 'Minimum count deficit only; further data cannot guarantee both outcome classes or performance gates.'})
     result = {'at': dt.datetime.now(dt.timezone.utc).isoformat(), 'schema': 'g3b-admission-audit-v1',
               'input_manifest_sha256': current_manifest, 'matched_input_sha256': report['input_sha256'],

@@ -206,3 +206,9 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 
 
 2026-10-16 13:59 CST G3b输入范围勘误：额外核原JSONL首个construction-v1在off1224705936/2026-10-13T11:38:42.421Z，早于no-sync索引min(off)1283926113；索引不能当原日志全覆盖。旧inputs/及0324记录保持，inputs-r2/补回213条construction/6局，仍用原13:43:17截点/各源prefix边界；合47局1584 construction/167952展开/96组，1584原行SHA及原config shadow/Silent A10均核。原145264展开行在r2逐值不变，新增22688行全缺前瞻绑定；原潜在可绑定局34/28/17不变，不倒填或派重复核验。原ops实际已按r1启动原量化thread01a12c46/batch135539（wrapper PID457469，原回执首native回复尚未核），因此不热改/停重r1，原件结果可精确复用，补前缀只列元数据排除；r2已发原链登记。真实后继帧结果仍pending，不能称零通过已完成或把潜在局凑门槛。
+
+
+2026-10-16 14:10 CST 原G2宿主必要夹具修复：原131302精确9e105组合tsc0/full1（497文件496过1失败、4968过1失败2跳/804.97s）真实失败保留，唯一完整record比较中的node:os.loadavg真实宿主负载两次不同，原line60后断言未执行。原ops明确保live并交本人沿原WT修固定输入。本人仅测试叶两行source5bc8f025fe043cb8738cce57870354fa23fa84a1/tree13beb04a61db3e9e8fcee3586d5e7b8e8f784075，固定loadavg[1,1,1]，完整原文件去掉两行即原字节；生产源码、全部原比较/断言/时限不动。nice19 tsc0、原固定文件单worker12/12过16.68s、gitleaks0；未重源未变full。精确源已交原ops原131302唯一链窄合及实际新树宿主，transport0不冒接收或新组合绿，不新行为号/自然观察。材料20261016-global-build-g2/host-loadavg-fixture-fix/。G3b原线程核验照常在跑，不改其输入/另派模型。
+
+
+2026-10-16 14:16 CST 原G2一测试叶必要修复已实际main416e999e/livea9e687d9/treea55384c7，source5bc8f025f祖先及唯一叶f173e3c8本人核同；生产/知识/配置/R369R370/原断言时限保持，无新行为号。原131302唯一新宿主14:14:52 RUN/PID649303，结果待原事件，不借任何旧绿。更正原9e105统计表述：其wrapper独立tsc状态未持久化，只保无诊断前缀及整体full1，早先推导tsc0不作独立通过证据；新修复源明确tsc0/原12题0另行保留。旧full1及原本题后置断言未执行边界保持，材料G2/host-loadavg-fixture-fix/watcher-publication-readback.json。G3b同原owner真实后继核验继续，未热改输入或开其他阶段。
