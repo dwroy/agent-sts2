@@ -90,7 +90,7 @@ describe("P2 paired construction ranking", () => {
   });
   it("requires actual paired samples and isolates other roles", () => {
     expect(() => rank(samples(100), { short: samples(100).slice(1) })).toThrow("paired");
-    expect(sBuildRankMode("SILENT", {})).toBe("on");
+    expect(sBuildRankMode("SILENT", {})).toBe("shadow");
     expect(sBuildRankMode("SILENT", { S_BUILD_RANK: "shadow" })).toBe("shadow");
     expect(sBuildRankMode("SILENT", { S_BUILD_RANK: "off" })).toBe("off");
     expect(sBuildRankMode("SILENT", { S_BUILD_RANK: "on" })).toBe("on");

@@ -2823,6 +2823,15 @@
       "source": "2026-10-16 20:11:35 CST: Roy授权静默boss校准刷新；21新可用实际结局，327完局/1425尝试/588可用，固定107调参/481验证；数据源f2617b958e425817ca079ff25a5e95484b5096ba；silent-0497；固定模型/Platt/切点不变；paper/materials/silent/boss-sim-calibration.md; 数据源未改；首轮a14ebd05的原固定题60000ms超时已回退并保留原日志；原题原时限单独36568ms通过，本次完整合后重试通过。",
       "release_id": "V5-R371",
       "release_status": "registered-primary-ops"
+    },
+    {
+      "name": "V5.silent-p1-p2-shadow1",
+      "family": "V5",
+      "character": "SILENT",
+      "commit": "14310288c30f9adc0320d6f2d232059248432df7",
+      "release_id": "V5-R372",
+      "release_status": "registered-primary-ops",
+      "source": "2026-10-16 20:48:17 CST; Roy19:16 via Claude, diagnosis492a87d0b, exact source 70c61acfb118ab284bb950b32495177458a76b2d parent 5bda85450459a16912dec7882ccc3e480a06c23d. Old Silent S_READINESS and S_BUILD_RANK defaults on; new defaults shadow. Existing calculations/readiness/build ranking/S counterfactual logs remain, without default P1/P2 facts or ranking override reason. Explicit mode parsing, S sorting shadow, C1/C2, win/HP, SL/potion rules and other roles unchanged. Actual launch environment/path must show no explicit on override. Source tsc0/5files36cases0; original full1 499files498pass1environment failure/4976pass1failure4skip/2418.33s retained; missing existing venv corrected only by symlink and unchanged original wrapper1case0/Ran9 under20s. New final exact tree host pending on original075726 channel; no borrowed old green or repeat unchanged source full. Expected remove default P1/P2 delivered choice influence while retaining diagnostics; no win-rate benefit claim. Rollback only two defaults in current context, preserving knowledge/other releases/history; actual rollback is a distinct authorized behavior release. Existing every10-run segmented funnel only, no A/B/new observer, no task2 implementation or parent closure. Evidence paper/materials/20261016-v5s-p1p2-shadow/ and paper/materials/20261016-2003-ops/."
     }
   ],
   "release_numbering": {
@@ -5455,6 +5464,13 @@
         "commit": "8b65dafb808eb54e965fc1c6c613462fad82306c",
         "aliases": [
           "S1.boss-calibration21"
+        ]
+      },
+      {
+        "release_id": "V5-R372",
+        "commit": "14310288c30f9adc0320d6f2d232059248432df7",
+        "aliases": [
+          "V5.silent-p1-p2-shadow1"
         ]
       }
     ],
