@@ -20,3 +20,8 @@
 S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/live1ddaba4b/treecb2128，行为5e89b118；本人13叶/源祖先/统一编号/根双通知逐SHA读回，live config仅历史Roy/Dai文字差保留，原075726精确宿主RUN pending，不借旧绿。G2复核发现仅新聚合器将四位小数配对差加到精确前缀基准可能越0/1，13:06只停自己原Vitest PID4046312并保full143/292.81s，未动ops宿主；改为读取选项自身前缀概率、Σ项用原配对差，补0/1边界题。最新tsc0、5 G2文件30项/内含4Python0，新16叶treec19c9c从13:07:58唯一full-r2/session94174运行。原失败/精确中断源/新固定结果分目录保持；无G2提交或上线声称，不做新阶段/自然等待。
 
 最终冻结清单改为 `source-validation-r2/source-before-full.json`，原 `source-validation/full.json` 明确 rc143。当前5个G2文件30个TS项及4个Python用例均通过；另4个未变相邻文件30个TS项沿已有固定回执。原测试夹具错误及本次中断均保持，full-r2仍pending。
+
+
+## 2026-10-16 13:32:05 CST 实际源检查终局
+
+本轮两项窄派活源实现/检查交付：S已实际R369/source655e1bb→live1ddaba4b/treecb2128，原075726 canonical tsc/vitest0、491文件4930过2跳/1241.67s与原logSHA9d9bfd逐字核，源full1/原题补验0仍保留。G2仅shadow sourcee9922a6008b35c3b4427c423830f015252a3bcde/treec19c9c，tsc0、最终497文件4962过2跳/1158.06s，16叶和staged tree全程未变，gitleaks0；原full143及旧夹具失败原件保持。精确源已交原ops串行窄集成/新组合宿主，不预称main/live或借R369绿。第三幕/最终连战/生产校准/自然p50p90仍unknown；G2自然0，后续on及G3/G5等待Claude/herdr，无Codex goal/新观察器。cf9d71a363c299b6d24ae236来源勘误本人读原文/runs/报告并明确告知Roy，两个watcher CLI0，只更正7Z A7→A10来源，不改机制/账本claim或代Roy ACK。S回收complete注册因config历史文字叶差保留，未强制清理。

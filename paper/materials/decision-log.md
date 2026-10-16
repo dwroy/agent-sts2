@@ -3695,3 +3695,8 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
   原整分支预检30冲突均记录/账本/表/历史材料，未实际merge或产品源冲突；螺线及铁棒/速行者已证窄实现是技术阻塞，不统称缺机制证据。明确原ops可在原owner精确源码自测交付后持原锁窄合、保共享记录，毋须先整main带入或重复证明；无源码不能造兜底合入/上线，原队列/线程与waiting/旧预检保持，未新派模型/研究。7Z实际A10的来源勘误已独立冻结原runs及565状态与原提案A7原句，待按ops→watcher→Roy真实通知，不改原件/机制claim或代ACK。V5-R369精确host已独立闭环0，不拿它当本批生产检查/G2或自然校准；仅本批记录/原CLI归档提交，保并行记录/index/当前局/home账号模型prompt，原0332/校准/学习宽父保持。证据paper/materials/20261016-1322-ops/。
 
 - 2026-10-16 13:27:44 CST 运维codex沿原1322事件正式转达7Z进阶来源勘误noticecf9d71a363c299b6d24ae236，原问题/原文/原runs与565状态/证据SHA及下一步已实写根双收件，ops_forwarded实际CLI0；原watcher wJ:pJT/01a13dcd身份核后技术运输rc0，实收及Roy通知待其本人分阶段回执，不代ACK。V5-R369精确cb2128ef host0已同原通道回传；原已证源码窄合兜底路径已说明，源未交保持pending，不另派研究/学习/模型或自然监听，G2仅原owner现有交源职责。回执paper/materials/20261016-1322-ops/。
+
+
+- 2026-10-16 13:32:05 CST 当前两项派活收尾
+
+本轮两项窄派活源实现/检查交付：S已实际R369/source655e1bb→live1ddaba4b/treecb2128，原075726 canonical tsc/vitest0、491文件4930过2跳/1241.67s与原logSHA9d9bfd逐字核，源full1/原题补验0仍保留。G2仅shadow sourcee9922a6008b35c3b4427c423830f015252a3bcde/treec19c9c，tsc0、最终497文件4962过2跳/1158.06s，16叶和staged tree全程未变，gitleaks0；原full143及旧夹具失败原件保持。精确源已交原ops串行窄集成/新组合宿主，不预称main/live或借R369绿。第三幕/最终连战/生产校准/自然p50p90仍unknown；G2自然0，后续on及G3/G5等待Claude/herdr，无Codex goal/新观察器。cf9d71a363c299b6d24ae236来源勘误本人读原文/runs/报告并明确告知Roy，两个watcher CLI0，只更正7Z A7→A10来源，不改机制/账本claim或代Roy ACK。S回收complete注册因config历史文字叶差保留，未强制清理。
