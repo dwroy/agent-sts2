@@ -35,11 +35,14 @@ export interface BuildRanking {
   low_trust: string | null;
   rows: BuildRankRow[];
   comparisons: { key: string; reference: string; metric: "win" | "S"; mean: number; se: number }[];
+  s_sort?: "on" | "shadow";
+  shadow_s_ranking?: Pick<BuildRanking, "best_group" | "groups" | "rows" | "comparisons">;
   limits: string;
 }
 
 export function buildRank(base: OptionSim, options: readonly OptionSim[], samples: BuildRankSamples,
-  policy: { tieSe: number; calibratedFloor: number; lowTrust: string | null; calibrate: (win: number) => number; calibrationSamples?: number; allowPrefixes?: boolean }): BuildRanking {
+  policy: { tieSe: number; calibratedFloor: number; lowTrust: string | null; calibrate: (win: number) => number; calibrationSamples?: number; allowPrefixes?: boolean; sSort?: "on" | "shadow" }): BuildRanking {
+  const useS = policy.sSort !== "shadow";
   const n = samples.base.length, keys = options.map((option) => option.key);
   if (base.samples !== n) throw new Error("base sample count does not match ranking input");
   if (n < 2 || new Set(keys).size !== keys.length || options.some((option) => {
@@ -82,7 +85,7 @@ export function buildRank(base: OptionSim, options: readonly OptionSim[], sample
     const d = eligible ? short(paired(option.key, null, (sample) => term(sample, true))) : null;
     const winTied = Math.abs(deltaWin.mean) <= policy.tieSe * deltaWin.se;
     const direction = !winTied ? Math.sign(deltaWin.mean)
-      : deltaS && Math.abs(deltaS.mean) > policy.tieSe * deltaS.se ? Math.sign(deltaS.mean) : 0;
+      : useS && deltaS && Math.abs(deltaS.mean) > policy.tieSe * deltaS.se ? Math.sign(deltaS.mean) : 0;
     return { ...(policy.allowPrefixes ? { samples: rowsOf(option.key).length, paired_samples: commonN(option.key, null) } : {}),
       key: option.key, rank: 0, group: direction > 0 ? "better_than_current" : direction < 0 ? "worse_than_current" : "no_difference",
       delta_win: deltaWin, delta_s: deltaS, delta_hp_loss: option.diff?.hpLoss ?? 0,
@@ -107,7 +110,7 @@ export function buildRank(base: OptionSim, options: readonly OptionSim[], sample
     winGroups.push(winGroup);
     remaining = remaining.filter((key) => !winGroup.includes(key));
     let within = [...winGroup];
-    const allS = within.every((key) => byKey.get(key)!.s_eligible && canCompareS(key, leader));
+    const allS = useS && within.every((key) => byKey.get(key)!.s_eligible && canCompareS(key, leader));
     while (within.length) {
       const topS = allS ? [...within].sort((a, b) => cmp(scores.get(b)!, scores.get(a)!) || order.get(a)! - order.get(b)!)[0]! : within[0]!;
       const sGroup = within.filter((key) => {
@@ -130,12 +133,16 @@ export function buildRank(base: OptionSim, options: readonly OptionSim[], sample
     }
   }
   groups.forEach((group, i) => group.forEach((key) => { byKey.get(key)!.rank = i + 1; }));
+  const shadow = !useS ? buildRank(base, options, samples, { ...policy, sSort: "on" }) : null;
   return { schema: "build-ranking-v1", status: "produced", best_group: groups[0] ?? [], groups,
+    ...(policy.sSort ? { s_sort: policy.sSort } : {}),
+    ...(shadow ? { shadow_s_ranking: { best_group: shadow.best_group, groups: shadow.groups, rows: shadow.rows, comparisons: shadow.comparisons } } : {}),
     better_than_current: rows.filter((row) => row.group === "better_than_current").map((row) => row.key),
     no_difference: rows.filter((row) => row.group === "no_difference").map((row) => row.key),
     worse_than_current: rows.filter((row) => row.group === "worse_than_current").map((row) => row.key),
     win_saturated: options.length > 0 && (options.every((option) => option.win < policy.calibratedFloor) || winGroups.length === 1),
     low_trust: policy.lowTrust, rows: [...rows].sort((a, b) => a.rank - b.rank || order.get(a.key)! - order.get(b.key)!), comparisons,
-    limits: "同题同种子逐样本配对；先胜率、再合格S、最后配对掉血。只比较已模拟候选，未模拟选项保留未知；S不是胜率，缺口诊断不参与排序。大脑可偏离，但须说明理由。"
+    limits: (useS ? "同题同种子逐样本配对；先胜率、再合格S、最后配对掉血。" : "同题同种子逐样本配对；先胜率、再配对掉血。S仅保留计算与shadow日志，不参与分组或排序。")
+      + "只比较已模拟候选，未模拟选项保留未知；S不是胜率，缺口诊断不参与排序。大脑可偏离，但须说明理由。"
       + (policy.allowPrefixes ? "按需采样：各候选统计用自己的n；配对只用两者共有前缀，较短候选对基准的差不引用基准后续样本。" : "") };
 }

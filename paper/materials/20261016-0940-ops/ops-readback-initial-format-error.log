@@ -1,0 +1,6 @@
+2026-10-16 09:44:41 CST
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/ops/codex-ops/record-staging/20261016-0940/audit.py", line 37, in <module>
+    verify=json.loads((d/'verification.json').read_text());assert verify['total_rows']==6995 and verify['passed'] is True and len(verify['material_checks'])==31
+                                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

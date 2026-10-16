@@ -50,6 +50,8 @@ import { BOSS_MARGIN_NOTE } from "./boss-margin.js";
 import { sReadinessMode, simAdaptivePolicy, sBuildRankMode } from "../core/config.js";
 import { BOSS_LINES_TIE_SE } from "./boss-lines.js";
 import { readinessText } from "./boss-readiness.js";
+import { globalBuildFailure, globalBuildForB3 } from "./global-build-b3.js";
+import type { GlobalBossPool } from "./global-build-pool.js";
 
 /** The deck-building questions that get the simulation. */
 export const BUILD_SIM_LABELS = new Set([
@@ -108,6 +110,8 @@ export interface BuildSimSetup {
   /** The monster DB and move model (default the committed ones; tests give fixed ones). */
   db?: MonsterDb;
   mm?: MoveModelData;
+  /** Fixed callers must pair custom models with their own observed pool; no runtime data substitution. */
+  globalPool?: GlobalBossPool;
 }
 
 /** One option's simulation plan: its deck change, a per-card group (a removal, a smith), or why it is not simulated. */
@@ -121,6 +125,14 @@ interface OptionPlan {
   group?: { key: string; name: string; verb: string; change: Partial<RolloutInput>; mixture?: Partial<RolloutInput>[] }[];
   note?: string;
   none?: string;
+}
+
+function deckOptionsOf(plans: OptionPlan[]): DeckOption[] {
+  return plans.flatMap((plan): DeckOption[] => plan.group
+    ? plan.group.map((g) => ({ key: `${plan.key}|${g.key}`, change: g.mixture ? null : g.change, ...(g.mixture ? { mixture: g.mixture } : {}) }))
+    : plan.change !== undefined || plan.mixture
+      ? [{ key: plan.key, change: plan.change ?? null, ...(plan.mixture ? { mixture: plan.mixture } : {}) }]
+      : []);
 }
 
 type SimOption = { key: string; intent: ActionRequest; summary: JsonValue };
@@ -511,12 +523,14 @@ export async function withBossSim(decision: Decision, env: DecisionEnv, setup: B
   const requested = setup.samples ?? BUILD_SIM_SAMPLES;
   const fail = (why: string, code = "simulation_error"): BossSimOutcome => {
     const completion = attempt?.finish(sampled, requested, code);
+    const global = globalBuildFailure(env, required, "current_B3_failed");
     return {
       decision: { ...ask, state: { ...ask.state, facts: withSimFacts(facts, attempt?.degraded
         ? `不完整（故障降级，n=${sampled}）：${why}；本题不给模拟数字，按现有其他证据继续决策`
         : required ? `必需的boss评估未完成（${why}）；等待完整计算，不允许用空指标作选择`
         : `boss 模拟没有结果（${why}）：act_boss_clock 仍是 boss 时钟的估计`, true) } },
       record: { error: why, ms: Math.round(now() - started),
+        ...(global ? { global_build: global } : {}),
         ...(required ? { completion: completion ? { ...completion } : { required: true, status: "pending", latencyTargetMs: setup.deadlineMs ?? BUILD_SIM_DEADLINE_MS } } : {}),
         ...(diagnostics ? { diagnostics: { ...diagnostics, status: "failed", reason: code } } : {}) },
     };
@@ -528,12 +542,14 @@ export async function withBossSim(decision: Decision, env: DecisionEnv, setup: B
     // next act's boss is not known before its act starts: no simulation. The clock stays (bossClockJson marks it stale).
     if (actBossDefeated(state)) {
       const phase = observedBossPhase(state);
+      const global = globalBuildFailure(env, required, "current_B3_skipped");
       const note = phase
         ? String(phase["note"])
         : "本幕 boss 已经打完；下一幕的 boss 要到下一幕开始才知道，这道题不做 boss 模拟（act_boss_clock 也是刚打完的 boss）";
       return {
         decision: { ...ask, state: { ...ask.state, facts: withSimFacts(facts, note, true) } },
-        record: { skipped: phase ? "first boss defeated; the second boss is not observed yet" : "act boss defeated; the next act's boss is not known yet", boss: bossKey(bossId), ms: Math.round(now() - started) },
+        record: { skipped: phase ? "first boss defeated; the second boss is not observed yet" : "act boss defeated; the next act's boss is not known yet", boss: bossKey(bossId), ms: Math.round(now() - started),
+          ...(global ? { global_build: global } : {}) },
       };
     }
     const entry = routeEntry(env);
@@ -553,11 +569,7 @@ export async function withBossSim(decision: Decision, env: DecisionEnv, setup: B
       return continuation ? withDoubleBossStart(changed, knowledge, rebuilt, continuation, startOpts) : rebuilt;
     };
     const plans = planOptions(decision.label, spec.options!(), env, start, entry, rebuild);
-    const deckOptions: DeckOption[] = [];
-    for (const plan of plans) {
-      if (plan.group) for (const g of plan.group) deckOptions.push({ key: `${plan.key}|${g.key}`, change: g.mixture ? null : g.change, ...(g.mixture ? { mixture: g.mixture } : {}) });
-      else if (plan.change !== undefined || plan.mixture) deckOptions.push({ key: plan.key, change: plan.change ?? null, ...(plan.mixture ? { mixture: plan.mixture } : {}) });
-    }
+    const deckOptions = deckOptionsOf(plans);
     const budget = (setup.deadlineMs ?? BUILD_SIM_DEADLINE_MS) - (now() - started);
     const readinessMode = sReadinessMode(str(asRecord(state.run?.raw)["character_id"]));
     const rankingMode = sBuildRankMode(str(asRecord(state.run?.raw)["character_id"]));
@@ -570,7 +582,7 @@ export async function withBossSim(decision: Decision, env: DecisionEnv, setup: B
     }
     const adaptive = required && !attempt?.degraded && adaptiveMode !== "off";
     const result: CompareResult = await compareOptions(setup.runner, start.input, deckOptions, { samples: setup.samples ?? BUILD_SIM_SAMPLES, seed: setup.seed ?? BUILD_SIM_SEED, deadlineMs: Math.max(0, budget), ...(setup.now ? { now: setup.now } : {}), ...(diagnosticEnabled ? { quantitative: true, diagnostics: true } : {}), ...(required && !attempt?.degraded ? { requireComplete: true } : {}), ...(wait ? { onProgress: wait.progress } : {}), ...(adaptive ? { adaptive: { mode: adaptiveMode as "shadow" | "on", allowS: !continuation && !bossTrustReason(bossKey(bossId), "b3", state.run?.ascension, state.run?.floor) } } : {}), ...(readinessMode !== "off" ? { readiness: true } : {}),
-      ...(rankingMode !== "off" ? { buildRank: { lowTrust: continuation?.limitation ?? bossTrustReason(bossKey(bossId), "b3", state.run?.ascension, state.run?.floor), calibratedFloor: calibratedFloor(state.run?.ascension ?? 0), tieSe: BOSS_LINES_TIE_SE } } : {}) });
+      ...(rankingMode !== "off" ? { buildRank: { lowTrust: continuation?.limitation ?? bossTrustReason(bossKey(bossId), "b3", state.run?.ascension, state.run?.floor), calibratedFloor: calibratedFloor(state.run?.ascension ?? 0), tieSe: BOSS_LINES_TIE_SE, sSort: "shadow" } } : {}) });
     const adaptiveComplete = completeAdaptiveBuild(result);
     sampled = result.samples;
     if (diagnostics) diagnostics = { ...diagnostics, ...result.diagnostics, boss: bossKey(bossId),
@@ -723,7 +735,32 @@ export async function withBossSim(decision: Decision, env: DecisionEnv, setup: B
       if (lowWin) simFacts["low_win_rate"] = "连续两战原始通关率低；未使用单场胜率校准下限，不能据此证明必死。";
       record["objective"] = "F48_F49_continuous";
       record["calibration"] = "none";
+      record["continuous"] = toJsonValue({ base: b.continuous ?? null,
+        options: Object.fromEntries(result.options.map((sim) => [sim.key, sim.continuous ?? null])) });
     }
+    const global = await globalBuildForB3({ env, required, degraded: attempt?.degraded === true,
+      label: ask.label, bossId, input: start.input, options: deckOptions, current: result,
+      keys: ["@current", ...plans.flatMap((plan) => plan.group ? plan.group.map((g) => `${plan.key}|${g.key}`) : [plan.key])],
+      setup, ...(wait ? { progress: wait.progress } : {}), makeComparison: (target) => {
+        const raw = structuredClone(state.raw);
+        const run = asRecord(raw["run"]);
+        run["boss_id"] = target.boss;
+        run["act_id"] = String(target.act - 1);
+        const futureState = parseGameState(raw);
+        const futureEnv = { ...env, state: futureState };
+        // A conditional snapshot of today's resources, never a forecast of future route entry or rewards.
+        const snapshotEntry = { project: (hp: number) => hp, source: "fixed current HP/resources; future entry unknown", planned: false };
+        const futureStart = syntheticBossStart(futureState, knowledge, target.boss, hpNow, startOpts);
+        const futureRebuild = (edit: (run: Record<string, unknown>) => void): RolloutInput => {
+          const edited = structuredClone(raw);
+          edit(asRecord(edited["run"]));
+          return syntheticBossStart(parseGameState(edited), knowledge, target.boss, hpNow, startOpts).input;
+        };
+        return { input: futureStart.input,
+          options: deckOptionsOf(planOptions(ask.label, spec.options!(), futureEnv, futureStart, snapshotEntry, futureRebuild)) };
+      } });
+    if (global) record["global_build"] = toJsonValue({ ...asRecord(global), b3_plus_shadow_wall_ms: Math.round(now() - started),
+      timing_basis: "boss_sim.ms is original current B3 only; global wall_ms is supplementary; combined await reported separately" });
     return {
       decision: {
         ...ask,

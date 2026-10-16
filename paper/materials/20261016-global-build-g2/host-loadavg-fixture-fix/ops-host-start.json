@@ -1,0 +1,122 @@
+{
+  "at": "2026-10-16 14:14:52 CST",
+  "original_batch": "20261016-131302-strategy-proposal",
+  "source_fixture": "5bc8f025fe043cb8738cce57870354fa23fa84a1",
+  "live": "a9e687d9f0acccccddbfa92895d7966b58900658",
+  "tree": "a55384c744aa7a4cf18ac6b04e82b037526bd005",
+  "original_channel": "learner-recheck",
+  "action": [
+    "bash",
+    "ops/codex-ops-do.sh",
+    "learner-recheck",
+    "20261016-131302-strategy-proposal"
+  ],
+  "broker_exec_session": 11852,
+  "actual_worker": {
+    "pid": 649303,
+    "birth": 102312148,
+    "nice": 19,
+    "command": [
+      "python3",
+      "/home/dw/Projects/agent-sts2/ops/codex-ops-learn.py",
+      "recheck",
+      "--batch",
+      "20261016-131302-strategy-proposal"
+    ]
+  },
+  "actual_RUN": true,
+  "original_log": {
+    "path": "ops/codex-ops/learner/20261016-131302-strategy-proposal.fallback-a55384c744aa7a4cf18ac6b04e82b037526bd005.checks.log",
+    "prefix_bytes": 116,
+    "prefix_sha256": "69d9459d27587a47222c3a5b8795434a199a2711f5b1ce0e5e2ef34772e4fcaa"
+  },
+  "actual_twenty_source_leaves": [
+    {
+      "path": "agent/src/hand/screens/selection.ts",
+      "sha256": "22a6189aa879f51793e7bfcc3a18c983b77be5ea2d804049d5c3ad36e006bc60"
+    },
+    {
+      "path": "agent/src/hand/screens/silent-sandpit-discard.ts",
+      "sha256": "a79324d5d237b0be6ac6b02a8f8c5302236e93fe447e91842c58df3a3e8f6479"
+    },
+    {
+      "path": "agent/tests/silent-survivor-sandpit-discard.test.ts",
+      "sha256": "39427e2fa9c0eb3cd9228a39224ac31ac0c6243d2f90b88a03e732e66510c189"
+    },
+    {
+      "path": "agent/tests/silent-survivor-sandpit-evidence.json",
+      "sha256": "bcb53e9f5087a79633c07dcab908f973a2333e6e709ee6c1dbbe3956218965a0"
+    },
+    {
+      "path": "agent/src/core/global-build-config.ts",
+      "sha256": "89c0a8bfe54d7ed867a5210e265b482b1117d0edb959e02eeb27ce7c43252b3c"
+    },
+    {
+      "path": "agent/src/eye/run-config.ts",
+      "sha256": "d6bfff09f34b91968a9e53c9a1cd0d7ded814a67ae59412b607bec33b31fead1"
+    },
+    {
+      "path": "agent/src/memory/types.ts",
+      "sha256": "1b11c7b631dadea408db53b22c08d1619ef0588eff120d5e609f8279325e63bf"
+    },
+    {
+      "path": "agent/src/sim/build-sim-facts.ts",
+      "sha256": "ceda348dc59dad6c8d61de1a5a35e0bac02bdc4aa4df5659a8a4dc3d9d9a1c8c"
+    },
+    {
+      "path": "agent/src/sim/global-build-b3.ts",
+      "sha256": "112ddbaa7687117d9708e93409b7c5e89319505c60bf77e7085c8fa20c4cd96a"
+    },
+    {
+      "path": "agent/src/sim/global-build-observer.ts",
+      "sha256": "768b9f48b7306acf91caf37b75f2c2d94fbfba91ab594097d7fd935e7f0c6e09"
+    },
+    {
+      "path": "agent/src/sim/global-build-pool.ts",
+      "sha256": "3dd2396d59189bb246de8073c6a09091c3b5405495da8dc0c71d822caa48b349"
+    },
+    {
+      "path": "agent/src/sim/global-build.ts",
+      "sha256": "18e44d9858849400101d9a6b1f36626e9ea041f9c3529c5b561f0db77049c860"
+    },
+    {
+      "path": "agent/tests/global-build-b3.test.ts",
+      "sha256": "0afc03919cc1b78e97a42256982e0b1bc9cc9d13a5b5eb6b555f181ed50ddbea"
+    },
+    {
+      "path": "agent/tests/global-build-health.test.ts",
+      "sha256": "48e98a5fe7baae1f2213a9159f853e5e77a8c7b95183fea0acde5b8306f1b6d5"
+    },
+    {
+      "path": "agent/tests/global-build-integration.test.ts",
+      "sha256": "f173e3c8be375e89661d7fb089785c276d4642f74969feedf891127c3262d8c4"
+    },
+    {
+      "path": "agent/tests/global-build-observer.test.ts",
+      "sha256": "3f948fbf1f68f84c473dc8ae5ea4f7c27a79e262a611fca68057085fd1b7f0bb"
+    },
+    {
+      "path": "agent/tests/global-build.test.ts",
+      "sha256": "b010144031daa18da44a0b9ec90a4540231edd99555741087df1001e68351dbe"
+    },
+    {
+      "path": "agent/tests/global_build_health_test.py",
+      "sha256": "ee3660b3406e085bd693d89893c934a67044281ad12c5405e700068b591f0334"
+    },
+    {
+      "path": "ops/global_build_health.py",
+      "sha256": "a3b060c1fd5d4d6df7dfdf066f6617a5b7a20200428e4223d7e294b25453f8c1"
+    },
+    {
+      "path": "ops/module_health.py",
+      "sha256": "8832bc5128509407a96f8169d14e1ca3ff6febf3cb56a5971e03933e3d18ce07"
+    }
+  ],
+  "source_checks": "explicit source tsc0 and fixed integration file12/12 only",
+  "old_full_rc1_preserved": true,
+  "old_full_tree": "9e10585fd92e4abb4b7b1dab1974fc99b5c56b01",
+  "host_result": "pending original learner-checks event; not waited or polled",
+  "no_additional_pipeline_or_behavior_release": true,
+  "runtime_input_limit": "One-time source byte checks and registered HEAD/tree only; no claim of continuous knowledge-input immutability.",
+  "game_restart_account_home_model_prompt_changed": false
+}

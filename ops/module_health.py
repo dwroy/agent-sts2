@@ -19,6 +19,7 @@ import tempfile
 import sys
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from adaptive_health import adaptive_health
+from global_build_health import global_build_health
 
 LABELS = {'reward/card', 'shop/buy', 'shop/plan', 'rest/choose', 'rest/plan',
           'selection/upgrade', 'selection/remove', 'selection/transform', 'selection/add',
@@ -242,11 +243,11 @@ def readiness_pipeline(config, records, brains):
 def combat_s_ranking_health(config, records):
     """Count actual P3 consumption; low trust and rejected attribution are explicit fallbacks."""
     mode = obj(config.get('loop')).get('s_combat_rank', 'off')
-    counts = Counter(expected=0, produced=0, used=0, fallback=0, missing=0)
+    counts = Counter(expected=0, produced=0, used=0, fallback=0, missing=0, shadow_produced=0, shadow_invalid=0)
     reasons, seen = Counter(), set()
     streak = longest = 0
     for row in records:
-        if mode != 'on' or row.get('ts', '') < config.get('ts', ''):
+        if mode not in ('on', 'shadow') or row.get('ts', '') < config.get('ts', ''):
             continue
         sim = obj(row.get('boss_sim'))
         if sim.get('available') is not True:
@@ -264,12 +265,19 @@ def combat_s_ranking_health(config, records):
             continue
         streak = 0
         counts['produced'] += 1
+        if mode == 'shadow':
+            valid = value.get('mode') == 'shadow' and value.get('used') is False
+            counts['shadow_produced'] += valid
+            counts['shadow_invalid'] += not valid
+            if value.get('reason'):
+                reasons[value['reason']] += 1
+            continue
         counts['used'] += value.get('used') is True
         counts['fallback'] += value.get('used') is not True
         if value.get('reason'):
             reasons[value['reason']] += 1
     return {'mode': mode, **dict(counts), 'fallback_reasons': dict(reasons),
-            'longest_missing_streak': longest, 'alert': longest >= FAIL_STREAK,
+            'longest_missing_streak': longest, 'alert': longest >= FAIL_STREAK or counts['shadow_invalid'] > 0,
             'limits': 'S tie ranking is conditional on paired samples, sign audit and existing model trust; not game calibration or causal benefit.'}
 
 
@@ -424,6 +432,7 @@ def summarize(config, decisions, brains, coverage, plans=()):
     adaptive = adaptive_health(config, unique_records)
     s_combat = combat_s_ranking_health(config, unique_records)
     build_ranking = build_ranking_health(config, unique_records, all_brains)
+    global_build = global_build_health(config, unique_records, LABELS, FAIL_STREAK)
     return {'schema': 'module-health-v1', 'at': datetime.now(timezone.utc).isoformat(), 'run_id': rid,
             'character': 'SILENT', 'architecture': 'V5', 'construction_mode': obj(config.get('construction')).get('mode'),
             'simulation_enabled': enabled, 'coverage': coverage, 'complete': complete,
@@ -438,7 +447,8 @@ def summarize(config, decisions, brains, coverage, plans=()):
             'brain': {'observed_questions': len(brain_rows), 'questions_with_dpr': delivered,
                       'accepted_with_dpr': sum(r.get('accepted') is True and dpr_count(r.get('options')) > 0 for r in brain_rows),
                       'decision_use': 'unknown; delivery is not evidence of reasoning or a fixed DPR weight'},
-            'alert': (enabled and longest >= FAIL_STREAK) or pipeline['alert'] or readiness['alert'] or s_combat['alert'] or build_ranking['alert'] or computation['alert'] or adaptive['alert'], 'failures': evidence, 'diagnostics': phases,
+            'global_build': global_build,
+            'alert': (enabled and longest >= FAIL_STREAK) or pipeline['alert'] or readiness['alert'] or s_combat['alert'] or build_ranking['alert'] or computation['alert'] or adaptive['alert'] or global_build['alert'], 'failures': evidence, 'diagnostics': phases,
             'unsupported': unsupported,
             'scope': 'Service availability only; sample threshold, simulator validity and game policy unchanged.'}
 

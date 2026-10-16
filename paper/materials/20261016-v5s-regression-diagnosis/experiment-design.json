@@ -1,0 +1,37 @@
+{
+  "schema": "v5s-regression-unexecuted-comparison-v1",
+  "executed": false,
+  "parent": "roy-20261016-global-build",
+  "primary": "independent natural-run final victory including SL",
+  "sample_size": {
+    "A": 20,
+    "B": 20
+  },
+  "A": {
+    "S_READINESS": "on",
+    "S_BUILD_RANK": "on"
+  },
+  "B": {
+    "S_READINESS": "shadow",
+    "S_BUILD_RANK": "shadow"
+  },
+  "both": {
+    "S_BUILD_SORT": "shadow",
+    "S_COMBAT_RANK": "shadow",
+    "SIM_ADAPTIVE": "on",
+    "C1": "retain existing fault exit"
+  },
+  "allocation": "precommitted balanced random blocks of4; natural runs only; no selection based on cards, seed or outcomes",
+  "independent_counterfactual": "P1/P2 information-and-reason bundle only; cannot identify components separately",
+  "stop": "20 finished assigned natural runs/arm or preapproved budget limit; protocol integrity failure stops new allocation, not current games; no efficacy peeking",
+  "requires_separate_decision": [
+    "Whether to run at all and approve cost/scheduling",
+    "Pinned code/trust/knowledge and automatic publication handling",
+    "Any subsequent C2-only comparison or extension to60/arm"
+  ],
+  "idealized_fixed_design_power_A0_B012": {
+    "20": 0.08271937622873575,
+    "40": 0.533089035241708,
+    "60": 0.8611915327382952
+  }
+}

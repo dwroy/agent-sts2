@@ -1,0 +1,35 @@
+{
+  "at": "2026-10-16T09:42:12.829982+00:00",
+  "scope": "Watcher parser coverage correction, not a production failure",
+  "old_C1": {
+    "pre": {
+      "complete": 326
+    },
+    "post": {
+      "complete": 237,
+      "complete_adaptive": 1558,
+      "pending": 175,
+      "degraded": 86
+    },
+    "P1P3_before_R362": {
+      "complete": 203
+    },
+    "R362_before_R366": {
+      "complete_adaptive": 1031,
+      "complete": 21,
+      "pending": 18,
+      "degraded": 9
+    },
+    "R366_before_R369": {
+      "complete_adaptive": 217,
+      "complete": 10,
+      "pending": 157,
+      "degraded": 77
+    },
+    "R369+": {
+      "complete_adaptive": 310,
+      "complete": 3
+    }
+  },
+  "finding": "Original C1 label list missed shop/plan, including TCD F42. Use the existing module_health.LABELS union (plus legacy shop/open). Original projections unchanged."
+}

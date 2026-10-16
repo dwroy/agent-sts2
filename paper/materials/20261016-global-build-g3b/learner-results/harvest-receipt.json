@@ -1,0 +1,39 @@
+{
+  "raw_rows_read": {
+    "states": 29165,
+    "decisions": 27328,
+    "brain": 1481
+  },
+  "queries": [
+    {
+      "name": "states",
+      "query": "SELECT DISTINCT off,len FROM read_parquet(?) WHERE run_id IN (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) AND off>=0 AND off+len<=? ORDER BY off",
+      "parquet": "/home/dw/Projects/agent-sts2/data/logdb/frames/*.parquet",
+      "prefix_bytes": 13511578288,
+      "indexed_rows": 29165,
+      "raw_bytes": 1024281504
+    },
+    {
+      "name": "decisions",
+      "query": "SELECT DISTINCT off,len FROM read_parquet(?) WHERE run_id IN (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) AND off>=0 AND off+len<=? ORDER BY off",
+      "parquet": "/home/dw/Projects/agent-sts2/data/logdb/decisions/*.parquet",
+      "prefix_bytes": 1892101838,
+      "indexed_rows": 27328,
+      "raw_bytes": 608963696
+    },
+    {
+      "name": "brain",
+      "query": "SELECT DISTINCT off,len FROM read_parquet(?) WHERE run_id IN (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) AND off>=0 AND off+len<=? AND src='brain' ORDER BY off",
+      "parquet": "/home/dw/Projects/agent-sts2/data/logdb/llm_calls_raw/*.parquet",
+      "prefix_bytes": 666360899,
+      "indexed_rows": 1481,
+      "raw_bytes": 184435174
+    }
+  ],
+  "raw_referenced_rows_sha_checked": true,
+  "no_index_outcome_truth": true,
+  "retained_states": 17554,
+  "retained_decisions": 16183,
+  "retained_brain": 1481,
+  "retention_scope": "保留全部非战斗状态、战斗相邻回合端点与库存/HP/金币变化；保留所有锚点和非战斗决策及分支具名首施放见证。未声称完整施放总次数。"
+}

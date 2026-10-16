@@ -1,0 +1,356 @@
+diff --git a/agent/src/core/config.ts b/agent/src/core/config.ts
+index f7736f4ea..0860046ee 100644
+--- a/agent/src/core/config.ts
++++ b/agent/src/core/config.ts
+@@ -19,9 +19,17 @@ export type LogLevel = "debug" | "info" | "warn" | "error";
+ export type RunStart = "auto" | "continue" | "new";
+ export type JevContextVersion = "off" | "v1";
+ 
+-/** P3 changes only Silent's admitted Boss tie groups; other characters keep the legacy ranking. */
++/** Roy 2026-10-16: retain P3 diagnostics, but do not apply its S sort key. */
++export function sCombatRankMode(character: string | null | undefined, env: NodeJS.ProcessEnv = process.env): "off" | "shadow" {
++  if (characterKey(character ?? "") !== "silent") return "off";
++  const requested = env["S_COMBAT_RANK"] ?? "on";
++  return requested === "on" || requested === "shadow" ? "shadow" : "off";
++}
++
++/** Kept for callers checking actual S-sort consumption; the current release admits none. */
+ export function sCombatRankEnabled(character: string | null | undefined, env: NodeJS.ProcessEnv = process.env): boolean {
+-  return characterKey(character ?? "") === "silent" && (env["S_COMBAT_RANK"] ?? "on") === "on";
++  void character; void env;
++  return false;
+ }
+ 
+ /** Release this default only after P2's two natural shadow runs; other roles keep the original question and schema. */
+diff --git a/agent/src/eye/run-config.ts b/agent/src/eye/run-config.ts
+index 9519ff920..1a42f183c 100644
+--- a/agent/src/eye/run-config.ts
++++ b/agent/src/eye/run-config.ts
+@@ -38,7 +38,7 @@ import type { UsageStatus } from "../brain/engines/codex-usage.js";
+ import { estimateTokens, prefixSizeWarning } from "../brain/knowledge.js";
+ import type { EngineName } from "../brain/types.js";
+ import type { AppConfig } from "../core/config.js";
+-import { CODEX_CONTEXT_WINDOW, CODEX_AUTO_COMPACT_TOKENS, DEFAULT_CLAUDE_MODEL, sReadinessMode, simFailurePolicy, simAdaptivePolicy, sCombatRankEnabled, sBuildRankMode } from "../core/config.js";
++import { CODEX_CONTEXT_WINDOW, CODEX_AUTO_COMPACT_TOKENS, DEFAULT_CLAUDE_MODEL, sReadinessMode, simFailurePolicy, simAdaptivePolicy, sCombatRankMode, sBuildRankMode } from "../core/config.js";
+ import { isMenuRunId } from "../memory/journal-replay.js";
+ import { str, type JsonValue } from "../core/util/json.js";
+ import { resolveJevPromptLog } from "./jev-prompt-log.js";
+@@ -172,7 +172,8 @@ export interface RunConfigRow {
+     sim_adaptive?: string;
+     sim_adaptive_requested?: string;
+     sim_adaptive_admission?: string;
+-    s_combat_rank?: "on" | "off";
++    s_combat_rank?: "on" | "off" | "shadow";
++    s_build_sort?: "off" | "shadow";
+     s_build_rank?: "off" | "shadow" | "on";
+     combat_deepseek: string;
+     /** THIEF_FACTS (docs/thief.md): the thieves' facts, escape and kill-line coverage on the combat question. */
+@@ -483,8 +484,9 @@ export function runConfigRow(
+       build_oneshot: config.buildOneshot,
+       boss_sim_build: characterKey(run.character) === "silent" ? "on" : config.bossSimBuild,
+       s_readiness: sReadinessMode(run.character, env),
+-      s_combat_rank: sCombatRankEnabled(run.character, env) ? "on" as const : "off" as const,
++      s_combat_rank: sCombatRankMode(run.character, env),
+       s_build_rank: sBuildRankMode(run.character, env),
++      s_build_sort: sBuildRankMode(run.character, env) === "off" ? "off" as const : "shadow" as const,
+       sim_failure_exit: simFailurePolicy(run.character, env).enabled ? "on" as const : "off" as const,
+       sim_failure_retries: simFailurePolicy(run.character, env).retries,
+       sim_adaptive: simAdaptivePolicy(run.character, env).mode,
+diff --git a/agent/src/sim/boss-lines.ts b/agent/src/sim/boss-lines.ts
+index 21b8bede5..c27711235 100644
+--- a/agent/src/sim/boss-lines.ts
++++ b/agent/src/sim/boss-lines.ts
+@@ -20,7 +20,7 @@
+  */
+ 
+ import { ADAPTIVE_RULE, safeAdaptiveShadow } from "./adaptive-shadow.js";
+-import { simAdaptivePolicy, sCombatRankEnabled } from "../core/config.js";
++import { simAdaptivePolicy, sCombatRankEnabled, sCombatRankMode } from "../core/config.js";
+ import { rankByBossMargin, type CombatSRanking } from "./s-combat-rank.js";
+ import { auditSigns } from "./s-sign.js";
+ import { AdaptiveSampler, isAdaptiveComplete } from "./adaptive-sampler.js";
+@@ -580,8 +580,15 @@ export interface LinesRank {
+  * B2's ranking (Roy): the whole-fight win rate first, ties within `tieSe` standard errors, then the least `second`
+  * (wonLoss, the HP lost when won; the acceptance tool also ranks by the pre-V4.2 mean HP lost to compare).
+  */
+-export function rankLines(lines: BossSimLineResult[], tieSe = BOSS_LINES_TIE_SE, eligible: (i: number) => boolean = () => true, second: (line: BossSimLineResult) => number = wonLoss, sPolicy?: { lowTrust: string | null; allowPrefixes?: boolean }): LinesRank {
+-  if (sPolicy) return rankByBossMargin(lines, rankLines(lines, tieSe, eligible, second), tieSe, sPolicy.lowTrust, second, sPolicy.allowPrefixes);
++export function rankLines(lines: BossSimLineResult[], tieSe = BOSS_LINES_TIE_SE, eligible: (i: number) => boolean = () => true, second: (line: BossSimLineResult) => number = wonLoss, sPolicy?: { lowTrust: string | null; allowPrefixes?: boolean; mode?: "shadow" }): LinesRank {
++  if (sPolicy) {
++    const previous = rankLines(lines, tieSe, eligible, second);
++    const diagnostic = rankByBossMargin(lines, previous, tieSe, sPolicy.lowTrust, second, sPolicy.allowPrefixes);
++    if (sPolicy.mode === "shadow" && diagnostic.sRanking) return { ...previous,
++      sRanking: { ...diagnostic.sRanking, mode: "shadow", shadow_best: diagnostic.best,
++        shadow_used: diagnostic.sRanking.used, best: previous.best, used: false } };
++    return diagnostic;
++  }
+   const idx = lines.map((_, i) => i).filter(eligible);
+   if (idx.length === 0) return { best: -1, tied: [], vsBest: lines.map(() => null), winTied: lines.map(() => false) };
+   let top = idx[0]!;
+@@ -818,7 +825,8 @@ export function bossLineSim(args: BossLineSimArgs): BossLineSim {
+     if (attempt?.degraded && run.samples < 300) return unavailable(`不完整（故障降级，n=${run.samples}）；不足 300 次，不给数字，按原 rollout 继续`);
+     failed = { fight, count: 0 };
+     const eligible = (i: number) => (args.eligible ? args.eligible(args.lines[i]!) : true);
+-    const sPolicy = sCombatRankEnabled(String(args.state.run?.raw["character_id"] ?? "")) ? { lowTrust, allowPrefixes: adaptiveComplete } : undefined;
++    const sPolicy = sCombatRankMode(String(args.state.run?.raw["character_id"] ?? "")) === "shadow"
++      ? { lowTrust, allowPrefixes: adaptiveComplete, mode: "shadow" as const } : undefined;
+     const rank = rankLines(run.lines, BOSS_LINES_TIE_SE, eligible, wonLoss, sPolicy);
+     const dryRank = rankLines(run.lines, BOSS_LINES_TIE_SE, (i) => eligible(i) && !args.drinks(args.lines[i]!), wonLoss, sPolicy);
+     const turnNow = args.turn ?? 1;
+diff --git a/agent/src/sim/build-rank.ts b/agent/src/sim/build-rank.ts
+index c5157fcc6..83d0f34b3 100644
+--- a/agent/src/sim/build-rank.ts
++++ b/agent/src/sim/build-rank.ts
+@@ -35,11 +35,14 @@ export interface BuildRanking {
+   low_trust: string | null;
+   rows: BuildRankRow[];
+   comparisons: { key: string; reference: string; metric: "win" | "S"; mean: number; se: number }[];
++  s_sort?: "on" | "shadow";
++  shadow_s_ranking?: Pick<BuildRanking, "best_group" | "groups" | "rows" | "comparisons">;
+   limits: string;
+ }
+ 
+ export function buildRank(base: OptionSim, options: readonly OptionSim[], samples: BuildRankSamples,
+-  policy: { tieSe: number; calibratedFloor: number; lowTrust: string | null; calibrate: (win: number) => number; calibrationSamples?: number; allowPrefixes?: boolean }): BuildRanking {
++  policy: { tieSe: number; calibratedFloor: number; lowTrust: string | null; calibrate: (win: number) => number; calibrationSamples?: number; allowPrefixes?: boolean; sSort?: "on" | "shadow" }): BuildRanking {
++  const useS = policy.sSort !== "shadow";
+   const n = samples.base.length, keys = options.map((option) => option.key);
+   if (base.samples !== n) throw new Error("base sample count does not match ranking input");
+   if (n < 2 || new Set(keys).size !== keys.length || options.some((option) => {
+@@ -82,7 +85,7 @@ export function buildRank(base: OptionSim, options: readonly OptionSim[], sample
+     const d = eligible ? short(paired(option.key, null, (sample) => term(sample, true))) : null;
+     const winTied = Math.abs(deltaWin.mean) <= policy.tieSe * deltaWin.se;
+     const direction = !winTied ? Math.sign(deltaWin.mean)
+-      : deltaS && Math.abs(deltaS.mean) > policy.tieSe * deltaS.se ? Math.sign(deltaS.mean) : 0;
++      : useS && deltaS && Math.abs(deltaS.mean) > policy.tieSe * deltaS.se ? Math.sign(deltaS.mean) : 0;
+     return { ...(policy.allowPrefixes ? { samples: rowsOf(option.key).length, paired_samples: commonN(option.key, null) } : {}),
+       key: option.key, rank: 0, group: direction > 0 ? "better_than_current" : direction < 0 ? "worse_than_current" : "no_difference",
+       delta_win: deltaWin, delta_s: deltaS, delta_hp_loss: option.diff?.hpLoss ?? 0,
+@@ -107,7 +110,7 @@ export function buildRank(base: OptionSim, options: readonly OptionSim[], sample
+     winGroups.push(winGroup);
+     remaining = remaining.filter((key) => !winGroup.includes(key));
+     let within = [...winGroup];
+-    const allS = within.every((key) => byKey.get(key)!.s_eligible && canCompareS(key, leader));
++    const allS = useS && within.every((key) => byKey.get(key)!.s_eligible && canCompareS(key, leader));
+     while (within.length) {
+       const topS = allS ? [...within].sort((a, b) => cmp(scores.get(b)!, scores.get(a)!) || order.get(a)! - order.get(b)!)[0]! : within[0]!;
+       const sGroup = within.filter((key) => {
+@@ -130,12 +133,16 @@ export function buildRank(base: OptionSim, options: readonly OptionSim[], sample
+     }
+   }
+   groups.forEach((group, i) => group.forEach((key) => { byKey.get(key)!.rank = i + 1; }));
++  const shadow = !useS ? buildRank(base, options, samples, { ...policy, sSort: "on" }) : null;
+   return { schema: "build-ranking-v1", status: "produced", best_group: groups[0] ?? [], groups,
++    ...(policy.sSort ? { s_sort: policy.sSort } : {}),
++    ...(shadow ? { shadow_s_ranking: { best_group: shadow.best_group, groups: shadow.groups, rows: shadow.rows, comparisons: shadow.comparisons } } : {}),
+     better_than_current: rows.filter((row) => row.group === "better_than_current").map((row) => row.key),
+     no_difference: rows.filter((row) => row.group === "no_difference").map((row) => row.key),
+     worse_than_current: rows.filter((row) => row.group === "worse_than_current").map((row) => row.key),
+     win_saturated: options.length > 0 && (options.every((option) => option.win < policy.calibratedFloor) || winGroups.length === 1),
+     low_trust: policy.lowTrust, rows: [...rows].sort((a, b) => a.rank - b.rank || order.get(a.key)! - order.get(b.key)!), comparisons,
+-    limits: "同题同种子逐样本配对；先胜率、再合格S、最后配对掉血。只比较已模拟候选，未模拟选项保留未知；S不是胜率，缺口诊断不参与排序。大脑可偏离，但须说明理由。"
++    limits: (useS ? "同题同种子逐样本配对；先胜率、再合格S、最后配对掉血。" : "同题同种子逐样本配对；先胜率、再配对掉血。S仅保留计算与shadow日志，不参与分组或排序。")
++      + "只比较已模拟候选，未模拟选项保留未知；S不是胜率，缺口诊断不参与排序。大脑可偏离，但须说明理由。"
+       + (policy.allowPrefixes ? "按需采样：各候选统计用自己的n；配对只用两者共有前缀，较短候选对基准的差不引用基准后续样本。" : "") };
+ }
+diff --git a/agent/src/sim/build-sim-facts.ts b/agent/src/sim/build-sim-facts.ts
+index 2ecdb59fb..32e2e755c 100644
+--- a/agent/src/sim/build-sim-facts.ts
++++ b/agent/src/sim/build-sim-facts.ts
+@@ -570,7 +570,7 @@ export async function withBossSim(decision: Decision, env: DecisionEnv, setup: B
+     }
+     const adaptive = required && !attempt?.degraded && adaptiveMode !== "off";
+     const result: CompareResult = await compareOptions(setup.runner, start.input, deckOptions, { samples: setup.samples ?? BUILD_SIM_SAMPLES, seed: setup.seed ?? BUILD_SIM_SEED, deadlineMs: Math.max(0, budget), ...(setup.now ? { now: setup.now } : {}), ...(diagnosticEnabled ? { quantitative: true, diagnostics: true } : {}), ...(required && !attempt?.degraded ? { requireComplete: true } : {}), ...(wait ? { onProgress: wait.progress } : {}), ...(adaptive ? { adaptive: { mode: adaptiveMode as "shadow" | "on", allowS: !continuation && !bossTrustReason(bossKey(bossId), "b3", state.run?.ascension, state.run?.floor) } } : {}), ...(readinessMode !== "off" ? { readiness: true } : {}),
+-      ...(rankingMode !== "off" ? { buildRank: { lowTrust: continuation?.limitation ?? bossTrustReason(bossKey(bossId), "b3", state.run?.ascension, state.run?.floor), calibratedFloor: calibratedFloor(state.run?.ascension ?? 0), tieSe: BOSS_LINES_TIE_SE } } : {}) });
++      ...(rankingMode !== "off" ? { buildRank: { lowTrust: continuation?.limitation ?? bossTrustReason(bossKey(bossId), "b3", state.run?.ascension, state.run?.floor), calibratedFloor: calibratedFloor(state.run?.ascension ?? 0), tieSe: BOSS_LINES_TIE_SE, sSort: "shadow" } } : {}) });
+     const adaptiveComplete = completeAdaptiveBuild(result);
+     sampled = result.samples;
+     if (diagnostics) diagnostics = { ...diagnostics, ...result.diagnostics, boss: bossKey(bossId),
+diff --git a/agent/src/sim/build-sim.ts b/agent/src/sim/build-sim.ts
+index f5f9b48e7..6da6f39f5 100644
+--- a/agent/src/sim/build-sim.ts
++++ b/agent/src/sim/build-sim.ts
+@@ -153,7 +153,7 @@ export async function compareOptions(
+   base: RolloutInput,
+   options: DeckOption[],
+   opts: { samples?: number; seed?: number; deadlineMs?: number; now?: () => number; quantitative?: boolean; diagnostics?: boolean; requireComplete?: boolean; adaptive?: { allowS: boolean; mode?: "shadow" | "on" }; onProgress?: import("./computation-wait.js").SimProgress; readiness?: boolean;
+-    buildRank?: { lowTrust: string | null; calibratedFloor: number; tieSe: number } } = {},
++    buildRank?: { lowTrust: string | null; calibratedFloor: number; tieSe: number; sSort?: "on" | "shadow" } } = {},
+ ): Promise<CompareResult> {
+   if (opts.quantitative) base = { ...base, captureBossMargin: true,
+     ...(base.meta.asc === 10 ? { captureCore: true, captureResources: true } : {}) };
+diff --git a/agent/src/sim/s-combat-rank.ts b/agent/src/sim/s-combat-rank.ts
+index 4e7303343..044efa9de 100644
+--- a/agent/src/sim/s-combat-rank.ts
++++ b/agent/src/sim/s-combat-rank.ts
+@@ -17,6 +17,9 @@ export interface CombatSRanking {
+   comparisons: { line: number; leader: number; mean: number; se: number; tied: boolean; samples?: number }[];
+   old_best: number;
+   best: number;
++  mode?: "shadow";
++  shadow_best?: number;
++  shadow_used?: boolean;
+ }
+ 
+ /** Use anchored tie groups, so pairwise near-ties cannot make the sort comparator non-transitive. */
+diff --git a/agent/tests/build-rank-integration.test.ts b/agent/tests/build-rank-integration.test.ts
+index 4567b2066..bbbaba39a 100644
+--- a/agent/tests/build-rank-integration.test.ts
++++ b/agent/tests/build-rank-integration.test.ts
+@@ -52,6 +52,7 @@ it("on merges S into one ranking table and retains all legal options", async ()
+     }
+   }
+   expect(on.record?.build_ranking).toMatchObject({ mode: "on", delivered: true });
++  expect(on.record?.build_ranking).toMatchObject({ s_sort: "shadow", shadow_s_ranking: { best_group: expect.any(Array) } });
+ });
+ it("keeps Ironclad's complete original question and record identical", async () => {
+   const off = await question("off", "IRONCLAD"), on = await question("on", "IRONCLAD");
+diff --git a/agent/tests/build-rank.test.ts b/agent/tests/build-rank.test.ts
+index ff29430ca..8300fe122 100644
+--- a/agent/tests/build-rank.test.ts
++++ b/agent/tests/build-rank.test.ts
+@@ -19,14 +19,28 @@ function option(key: string, rows: FightSampleResult[]): OptionSim {
+   return { key, samples: rows.length, win, winCal: win, diff: null, bossLeft: 0, hpLossMean: 0, hpLossWon: null,
+     turns: 5, deathTurn: null, order: null, hp: 50 };
+ }
+-function rank(base: FightSampleResult[], variants: Record<string, FightSampleResult[]>, lowTrust: string | null = null) {
++function rank(base: FightSampleResult[], variants: Record<string, FightSampleResult[]>, lowTrust: string | null = null, sSort?: "on" | "shadow") {
+   return buildRank(option("base", base), Object.entries(variants).map(([key, rows]) => ({ ...option(key, rows),
+     diff: { raw: 0, se: 0, cal: 0, calSe: 0, bossLeft: 0, bossLeftSe: 0, hpLossSe: 0,
+       hpLoss: rows.reduce((sum, row) => sum + row.hpLoss, 0) / rows.length - base.reduce((sum, row) => sum + row.hpLoss, 0) / base.length } })),
+-    { base, options: new Map(Object.entries(variants)) }, { tieSe: 2, calibratedFloor: .05, lowTrust, calibrate: (p) => p });
++    { base, options: new Map(Object.entries(variants)) }, { tieSe: 2, calibratedFloor: .05, lowTrust, calibrate: (p) => p, ...(sSort ? { sSort } : {}) });
+ }
+ 
+ describe("P2 paired construction ranking", () => {
++  it("keeps S calculations and counterfactual groups in shadow without using S for production groups", () => {
++    const result = rank(samples(0, 20), { worse: samples(0, 10), better: samples(0, 80), same: samples(0, 20) }, null, "shadow");
++    expect(result.best_group).toEqual(["worse", "better", "same"]);
++    expect(result.no_difference).toEqual(["worse", "better", "same"]);
++    expect(result.comparisons.every((row) => row.metric === "win")).toBe(true);
++    expect(result.rows.find((row) => row.key === "better")!.delta_s!.mean).toBeCloseTo(.12);
++    expect(result.shadow_s_ranking!.best_group).toEqual(["better"]);
++    expect(result.shadow_s_ranking!.comparisons.some((row) => row.metric === "S")).toBe(true);
++  });
++  it("retains win ordering and the existing HP tie key in S shadow", () => {
++    expect(rank(samples(100, 100, 98), { stable: samples(100, 100, 98), volatile: samples(70, 99, 0) }, null, "shadow").best_group).toEqual(["stable"]);
++    const result = rank(samples(100), { slow: samples(100, 100, 40), preserved: samples(100, 100, 20) }, null, "shadow");
++    expect(result.best_group).toEqual(["preserved"]);
++  });
+   it("groups improvements, unchanged options and regressions against the same base", () => {
+     const result = rank(samples(50), { better: samples(90), same: samples(50), worse: samples(10) });
+     expect(result.best_group).toEqual(["better"]);
+diff --git a/agent/tests/module_health_test.py b/agent/tests/module_health_test.py
+index 551b707c9..12b04bea3 100644
+--- a/agent/tests/module_health_test.py
++++ b/agent/tests/module_health_test.py
+@@ -19,6 +19,16 @@ def row(i, error='只跑完 24 次模拟（不足 300 次）', **extra):
+ 
+ 
+ class Health(unittest.TestCase):
++    def test_combat_s_shadow_keeps_diagnostics_without_claiming_consumption(self):
++        config = {**CONFIG, 'loop': {'s_combat_rank': 'shadow'}}
++        ranking = {'schema': 's-combat-ranking-v1', 'mode': 'shadow', 'used': False, 'shadow_used': True}
++        record = row(1, label='combat/plan', boss_sim={'available': True, 's_ranking': ranking})
++        result = h.combat_s_ranking_health(config, [record])
++        self.assertEqual((result['expected'], result['produced'], result['used'], result['shadow_produced']), (1, 1, 0, 1))
++        self.assertFalse(result['alert'])
++        record['boss_sim']['s_ranking']['used'] = True
++        self.assertTrue(h.combat_s_ranking_health(config, [record])['alert'])
++
+     def test_combat_s_actual_use_fallback_and_missing_records(self):
+         config = {**CONFIG, 'loop': {'s_combat_rank': 'on'}}
+         def combat(i, ranking):
+diff --git a/agent/tests/required-boss-lines.test.ts b/agent/tests/required-boss-lines.test.ts
+index 31a899479..934831a08 100644
+--- a/agent/tests/required-boss-lines.test.ts
++++ b/agent/tests/required-boss-lines.test.ts
+@@ -69,6 +69,7 @@ it("live Silent completes every Boss line beyond the budget while historical and
+   expect(result.run).toMatchObject({ samples: 4, requested: 4, timedOut: false });
+   expect(result.byPlan.size).toBe(args.lines.length);
+   expect(result.sRanking?.schema).toBe("s-combat-ranking-v1");
++  expect(result.sRanking).toMatchObject({ mode: "shadow", used: false });
+   expect(simLog(result, (plan) => `plan${args.lines.indexOf(plan) + 1}`)).toHaveProperty("s_ranking.candidate_keys");
+   for (const line of result.byPlan.values()) {
+     expect(line.result.outcomes).toHaveLength(4);
+diff --git a/agent/tests/s-combat-rank.test.ts b/agent/tests/s-combat-rank.test.ts
+index 000be0182..fb7067c07 100644
+--- a/agent/tests/s-combat-rank.test.ts
++++ b/agent/tests/s-combat-rank.test.ts
+@@ -1,7 +1,7 @@
+ import { describe, expect, it } from "vitest";
+ import { rankLines, wonLoss } from "../src/sim/boss-lines.js";
+ import { summarizeLine, type FightSampleResult } from "../src/sim/boss-sim.js";
+-import { sCombatRankEnabled } from "../src/core/config.js";
++import { sCombatRankEnabled, sCombatRankMode } from "../src/core/config.js";
+ 
+ // Algebraic fixtures, not observations of any game mechanic or Boss.
+ function sample(won: boolean, outgoing: number, received: number, turns = 5): FightSampleResult {
+@@ -17,6 +17,15 @@ const ranked = (lines: ReturnType<typeof line>[], lowTrust: string | null = null
+   rankLines(lines, 2, eligible, wonLoss, { lowTrust });
+ 
+ describe("P3 paired S sorting", () => {
++  it("records the old S counterfactual while preserving every production win/HP ranking field", () => {
++    const lines = [line(0, sample(false, 20, 50)), line(1, sample(false, 80, 50))];
++    const previous = rankLines(lines);
++    const result = rankLines(lines, 2, () => true, wonLoss, { lowTrust: null, mode: "shadow" });
++    const { sRanking, ...production } = result;
++    expect(production).toEqual(previous);
++    expect(sRanking).toMatchObject({ mode: "shadow", used: false, best: previous.best, shadow_best: 1, shadow_used: true });
++    expect(sRanking!.scores).toHaveLength(2);
++  });
+   it("admits explicit adaptive prefixes while keeping own means and common-prefix differences", () => {
+     const a = line(0, Array.from({ length: 200 }, () => sample(false, 20, 50)));
+     const b = line(1, Array.from({ length: 600 }, (_, i) => sample(false, i < 200 ? 80 : 60, 50)));
+@@ -76,7 +85,11 @@ describe("P3 paired S sorting", () => {
+     expect(ranked(lines)).toMatchObject({ best: 0, tied: [0, 1], order: [0, 1] });
+   });
+   it("only enables Silent; off and every other character preserve the old rank result", () => {
+-    expect(sCombatRankEnabled("SILENT", {})).toBe(true);
++    expect(sCombatRankEnabled("SILENT", {})).toBe(false);
++    expect(sCombatRankMode("SILENT", {})).toBe("shadow");
++    expect(sCombatRankMode("SILENT", { S_COMBAT_RANK: "on" })).toBe("shadow");
++    expect(sCombatRankMode("SILENT", { S_COMBAT_RANK: "shadow" })).toBe("shadow");
++    expect(sCombatRankMode("SILENT", { S_COMBAT_RANK: "off" })).toBe("off");
+     expect(sCombatRankEnabled("SILENT", { S_COMBAT_RANK: "off" })).toBe(false);
+     expect(sCombatRankEnabled("SILENT", { S_COMBAT_RANK: "typo" })).toBe(false);
+     for (const role of ["IRONCLAD", "REGENT", "DEFECT", "NECROBINDER"]) {
+diff --git a/ops/module_health.py b/ops/module_health.py
+index 3320be8e6..e729466d7 100644
+--- a/ops/module_health.py
++++ b/ops/module_health.py
+@@ -242,11 +242,11 @@ def readiness_pipeline(config, records, brains):
+ def combat_s_ranking_health(config, records):
+     """Count actual P3 consumption; low trust and rejected attribution are explicit fallbacks."""
+     mode = obj(config.get('loop')).get('s_combat_rank', 'off')
+-    counts = Counter(expected=0, produced=0, used=0, fallback=0, missing=0)
++    counts = Counter(expected=0, produced=0, used=0, fallback=0, missing=0, shadow_produced=0, shadow_invalid=0)
+     reasons, seen = Counter(), set()
+     streak = longest = 0
+     for row in records:
+-        if mode != 'on' or row.get('ts', '') < config.get('ts', ''):
++        if mode not in ('on', 'shadow') or row.get('ts', '') < config.get('ts', ''):
+             continue
+         sim = obj(row.get('boss_sim'))
+         if sim.get('available') is not True:
+@@ -264,12 +264,19 @@ def combat_s_ranking_health(config, records):
+             continue
+         streak = 0
+         counts['produced'] += 1
++        if mode == 'shadow':
++            valid = value.get('mode') == 'shadow' and value.get('used') is False
++            counts['shadow_produced'] += valid
++            counts['shadow_invalid'] += not valid
++            if value.get('reason'):
++                reasons[value['reason']] += 1
++            continue
+         counts['used'] += value.get('used') is True
+         counts['fallback'] += value.get('used') is not True
+         if value.get('reason'):
+             reasons[value['reason']] += 1
+     return {'mode': mode, **dict(counts), 'fallback_reasons': dict(reasons),
+-            'longest_missing_streak': longest, 'alert': longest >= FAIL_STREAK,
++            'longest_missing_streak': longest, 'alert': longest >= FAIL_STREAK or counts['shadow_invalid'] > 0,
+             'limits': 'S tie ranking is conditional on paired samples, sign audit and existing model trust; not game calibration or causal benefit.'}
+ 
+ 

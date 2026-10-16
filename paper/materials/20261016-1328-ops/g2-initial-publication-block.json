@@ -1,0 +1,20 @@
+{
+  "recorded_at": "2026-10-16 13:34:31 CST",
+  "attempt_at": "2026-10-16 13:32:29 CST",
+  "source": "e9922a6008b35c3b4427c423830f015252a3bcde",
+  "stage": "before source/index/ref mutation",
+  "reason": "Original lock acquired nonblocking; active live knowledge builders prevented publication.",
+  "observed_processes": [
+    {
+      "pid": 197839,
+      "command": "python3 /home/dw/Projects/agent-sts2/.worktrees/live/knowledge/builders/build-fight-value.py all --character silent"
+    },
+    {
+      "pid": 214022,
+      "command": "python3 /home/dw/Projects/agent-sts2/.worktrees/live/knowledge/builders/build-card-upgrades.py"
+    }
+  ],
+  "source_or_tests_changed": false,
+  "repeated_source_full": false,
+  "independent_work_done_before_next_attempt": "Processed original131302-s2 evidence and notification provenance; no sleep or periodic polling"
+}

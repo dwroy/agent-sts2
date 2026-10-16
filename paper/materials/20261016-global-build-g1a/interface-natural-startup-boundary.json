@@ -1,0 +1,36 @@
+{
+  "at": "2026-10-16T09:30:14.858973+08:00",
+  "actor": "watcher",
+  "trigger": "actual interface publication key event, not periodic game polling",
+  "source": {
+    "path": "logs/run-config.jsonl",
+    "offset": 1834513,
+    "bytes": 5350,
+    "sha256": "c525f673769c1a6ee2a06f88bb5543564889ef1bfa9155f1f89c675c24768047"
+  },
+  "run_id": "FGKZALWSTQQ1",
+  "startup_ts": "2026-10-16T00:56:22.194Z",
+  "startup_code": {
+    "commit": "298e74fd3be01610f2b817b9ec5675d58a8241dd",
+    "code": "298e74f+dirty",
+    "dirty": true,
+    "dirty_files": [
+      "knowledge/characters/silent/boss-damage.json",
+      "knowledge/characters/silent/construction-opportunities.json",
+      "knowledge/characters/silent/monster-records.json",
+      "knowledge/characters/silent/outcome-stats.json",
+      "knowledge/characters/silent/room-costs.json",
+      "knowledge/common/card-upgrades.json",
+      "knowledge/common/monster-db.json",
+      "knowledge/common/move-model.json",
+      "notes/monster-db-check.md"
+    ],
+    "branch": "live",
+    "worktree": "live"
+  },
+  "code_includes_new_interface": false,
+  "new_natural_gate": false,
+  "admission": "latest startup predates new interface; excluded, do not restart or hot-modify; await actual next natural startup/event",
+  "brain_config_is_not_native_identity_proof": true,
+  "no_floor_or_game_action_polled": true
+}

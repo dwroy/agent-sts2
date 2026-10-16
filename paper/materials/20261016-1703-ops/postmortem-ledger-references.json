@@ -1,0 +1,282 @@
+[
+  {
+    "offset": 20943402,
+    "bytes": 704,
+    "sha256": "7a5107547f02f1f4a018451c737482c49d2145a80a99fb659566963a539bed66",
+    "row": {
+      "op": "update",
+      "id": "silent-0308",
+      "ts": "2026-10-16T16:57:18+08:00",
+      "by": "learner:postmortem",
+      "evidence": [
+        {
+          "run": "0YQJ9D1MC4NK",
+          "floor": 33,
+          "turn": 7,
+          "role": "repeat",
+          "note": "d412490—412494五道单动作题end_turn均lethal=false，末题预计50血11挡对21攻击后余40；s426131→426132沙坑1消失、玩家50→0、45毒结算后沙虫192→147。只读live a9e687d9 combat.ts:100/:252—255仍只合mod与HP损失；fix-queue-v4:912已有。未饮毒药水及SL保守拒判不当可抗截止或应强制SL证据。"
+        }
+      ],
+      "where": {
+        "lessons": [
+          "0YQJ9D1MC4NK"
+        ]
+      },
+      "note": "原单动作题面漏接沙坑截止的同错复现；不改claim、first_run、prior、status或version。"
+    }
+  },
+  {
+    "offset": 20944106,
+    "bytes": 808,
+    "sha256": "4a2e15152c81d14da72340e9000c7f48c4799b6118d21578a04835ec760166a0",
+    "row": {
+      "op": "update",
+      "id": "silent-0117",
+      "ts": "2026-10-16T16:57:19+08:00",
+      "by": "learner:postmortem",
+      "evidence": [
+        {
+          "run": "0YQJ9D1MC4NK",
+          "floor": 33,
+          "turn": 2,
+          "role": "support",
+          "note": "d412460选含狂乱逃离的9伤/0损/沙坑后4整线，d412461以0.36弃唯一手中逃离，s426098有4能量、该牌费用1、沙坑4，s426099已移除；实际T3首帧沙坑3。T3/T5各另实打一次逃离，T7仍归零。普通Prepared单弃/沙坑4不在现有双弃沙坑1或Survivor单弃沙坑2窄入口；相近早期窗口补证，不记旧沙坑1条件repeat，保留逃离后的整战未知。"
+        }
+      ],
+      "where": {
+        "lessons": [
+          "0YQJ9D1MC4NK"
+        ]
+      },
+      "note": "支持弃牌后须重验原后继及截止的有限结论；窗口不同，保留旧claim/首证/prior/上线状态，不认定既有窄入口失效。"
+    }
+  },
+  {
+    "offset": 20944914,
+    "bytes": 719,
+    "sha256": "75e351be64656f7145d47580712173dddefaecb161a3589df95e91ae46f88b8b",
+    "row": {
+      "op": "update",
+      "id": "silent-0125",
+      "ts": "2026-10-16T16:57:19+08:00",
+      "by": "learner:postmortem",
+      "evidence": [
+        {
+          "run": "0YQJ9D1MC4NK",
+          "floor": 33,
+          "turn": 5,
+          "role": "support",
+          "note": "d412479 hp_guard将打击/毒药+/逃离32伤损12余51改扫腿/毒药+/逃离26伤损1余62，预计保11血少6伤，力量变化0、沙坑后均2；两线五轮各8样本均7死0胜。s426116→426120替线实际271→245、63→62，T7仍沙坑处死50血。actual_outcome字段null，原线整场未执行，不把预测保血或少伤归为已证胜负原因。"
+        }
+      ],
+      "where": {
+        "lessons": [
+          "0YQJ9D1MC4NK"
+        ]
+      },
+      "note": "补HP护栏有真实血量与推进取舍的观察，不改阈值、不判纯bug、不记同错repeat。"
+    }
+  },
+  {
+    "offset": 20945633,
+    "bytes": 458,
+    "sha256": "97cf487de6467b587dd37c702b0512a3b499b5c5f8e15f0b06f77706b077ec39",
+    "row": {
+      "op": "update",
+      "id": "silent-0005",
+      "ts": "2026-10-16T16:57:20+08:00",
+      "by": "learner:postmortem",
+      "evidence": [
+        {
+          "run": "0YQJ9D1MC4NK",
+          "floor": 33,
+          "turn": 7,
+          "role": "support",
+          "note": "T1两普通步法各2敏捷到4，T4第三张再到6；T2扫腿实15=11+4、T5扫腿实17=11+6、T7防御实11=5+6。s426094/095/104/115/117/128核实，增敏须由后续挡牌兑现，50HP/11挡仍被沙坑截止处死。"
+        }
+      ],
+      "where": {
+        "lessons": [
+          "0YQJ9D1MC4NK"
+        ]
+      }
+    }
+  },
+  {
+    "offset": 20946091,
+    "bytes": 542,
+    "sha256": "6b14d9a519e7c6349cde624c1e404100d72e22dfbd0d4ca7955bce3431fcfe83",
+    "row": {
+      "op": "update",
+      "id": "silent-0011",
+      "ts": "2026-10-16T16:57:21+08:00",
+      "by": "learner:postmortem",
+      "evidence": [
+        {
+          "run": "0YQJ9D1MC4NK",
+          "floor": 33,
+          "turn": 7,
+          "role": "support",
+          "note": "毒雾能力T2升级版3、T3第二升级版累到6、T6普通版累到8；T4/T5/T6/T7轮初毒分别8+6=14、13+6=19、25+6=31、37+8=45。T5毒药+另加7到26、T6蛇咬另加7到38；七轮已结毒0/0/9/14/26/38/45=132，直接推进62后敌剩147。s426103—426132，不预支未结毒或未饮药。"
+        }
+      ],
+      "where": {
+        "lessons": [
+          "0YQJ9D1MC4NK"
+        ]
+      }
+    }
+  },
+  {
+    "offset": 20946633,
+    "bytes": 518,
+    "sha256": "c1379461612ce51d49a7901d3916f55d0322babe80eca0af1401f2b135ff9d3a",
+    "row": {
+      "op": "update",
+      "id": "silent-0018",
+      "ts": "2026-10-16T16:57:21+08:00",
+      "by": "learner:postmortem",
+      "evidence": [
+        {
+          "run": "0YQJ9D1MC4NK",
+          "floor": 33,
+          "turn": 7,
+          "role": "support",
+          "note": "T3逃离使沙坑3→4、T5使2→3；T7结束前50HP/11挡对21攻、毒45，单攻击账可余40，但s426132玩家0、挡11、沙坑消失，敌192经45毒到147。没有实际喝毒药水或SL恢复；支持沙坑与攻击独立截止，保留更多逃离后的整战未实测。"
+        }
+      ],
+      "where": {
+        "lessons": [
+          "0YQJ9D1MC4NK"
+        ]
+      }
+    }
+  },
+  {
+    "offset": 20947151,
+    "bytes": 517,
+    "sha256": "db0a8acf87464f927634c2fd118a6a40305035976c6cc409f66a476ffb38ce1e",
+    "row": {
+      "op": "update",
+      "id": "silent-0046",
+      "ts": "2026-10-16T16:57:22+08:00",
+      "by": "learner:postmortem",
+      "evidence": [
+        {
+          "run": "0YQJ9D1MC4NK",
+          "floor": 33,
+          "turn": 7,
+          "role": "support",
+          "note": "s426128→426129实际尖啸将敌STRENGTH_POWER3变−3、建立PIERCING_WAIL_POWER6；同LUNGING_BITE_MOVE且虚弱2时意图25→21，少4威胁。该步零新增挡；之后因沙坑死，未观察次轮力量恢复，仅补即时减力部分，不外推持续时长或胜因。"
+        }
+      ],
+      "where": {
+        "lessons": [
+          "0YQJ9D1MC4NK"
+        ]
+      }
+    }
+  },
+  {
+    "offset": 20947668,
+    "bytes": 374,
+    "sha256": "54483169e5b96d99ec15d2d5e47113c7e2afe209a6bb049a63703530da6cccfa",
+    "row": {
+      "op": "update",
+      "id": "silent-0308",
+      "ts": "2026-10-16T16:58:51+08:00",
+      "by": "learner:postmortem",
+      "where": {
+        "proposal": [
+          "/home/dw/Projects/agent-sts2/learner/runs/20261016-164311-1a72de12-5262-47fd-8f02-58adfeb40795-postmortem/proposal-sandpit-terminal.md"
+        ]
+      },
+      "note": "代码提案 silent-proposal-3707a98930a03d83 → task=strategy-proposal；Roy-2026-10-07-learning"
+    }
+  },
+  {
+    "offset": 20948042,
+    "bytes": 374,
+    "sha256": "ded150551aa06bcc4e0b59148ed75bb54e76b99cc1a939fd387f2020617935b3",
+    "row": {
+      "op": "update",
+      "id": "silent-0018",
+      "ts": "2026-10-16T16:58:51+08:00",
+      "by": "learner:postmortem",
+      "where": {
+        "proposal": [
+          "/home/dw/Projects/agent-sts2/learner/runs/20261016-164311-1a72de12-5262-47fd-8f02-58adfeb40795-postmortem/proposal-sandpit-terminal.md"
+        ]
+      },
+      "note": "代码提案 silent-proposal-3707a98930a03d83 → task=strategy-proposal；Roy-2026-10-07-learning"
+    }
+  },
+  {
+    "offset": 20948416,
+    "bytes": 377,
+    "sha256": "8362c407763a9b13c5ea9dd608c2aab8621de7d04656ee25c8d97922ceec5fe5",
+    "row": {
+      "op": "update",
+      "id": "silent-0117",
+      "ts": "2026-10-16T16:58:52+08:00",
+      "by": "learner:postmortem",
+      "where": {
+        "proposal": [
+          "/home/dw/Projects/agent-sts2/learner/runs/20261016-164311-1a72de12-5262-47fd-8f02-58adfeb40795-postmortem/proposal-escape-continuation.md"
+        ]
+      },
+      "note": "代码提案 silent-proposal-a4af65d94c109b89 → task=strategy-proposal；Roy-2026-10-07-learning"
+    }
+  },
+  {
+    "offset": 20948793,
+    "bytes": 377,
+    "sha256": "11e91f68199589f99b87e2a7cd0153d27da2451300d41fe3388af15f21626abf",
+    "row": {
+      "op": "update",
+      "id": "silent-0018",
+      "ts": "2026-10-16T16:58:52+08:00",
+      "by": "learner:postmortem",
+      "where": {
+        "proposal": [
+          "/home/dw/Projects/agent-sts2/learner/runs/20261016-164311-1a72de12-5262-47fd-8f02-58adfeb40795-postmortem/proposal-escape-continuation.md"
+        ]
+      },
+      "note": "代码提案 silent-proposal-a4af65d94c109b89 → task=strategy-proposal；Roy-2026-10-07-learning"
+    }
+  },
+  {
+    "offset": 20949170,
+    "bytes": 375,
+    "sha256": "7f6049197940afc2d6765462a751101d15df33e734928dd235e156441c225d98",
+    "row": {
+      "op": "update",
+      "id": "silent-0125",
+      "ts": "2026-10-16T16:58:53+08:00",
+      "by": "learner:postmortem",
+      "where": {
+        "proposal": [
+          "/home/dw/Projects/agent-sts2/learner/runs/20261016-164311-1a72de12-5262-47fd-8f02-58adfeb40795-postmortem/proposal-hp-guard-deadline.md"
+        ]
+      },
+      "note": "代码提案 silent-proposal-e0784c4fc708da8e → task=strategy-proposal；Roy-2026-10-07-learning"
+    }
+  },
+  {
+    "offset": 20949545,
+    "bytes": 375,
+    "sha256": "11e967ea6d0e5982defd1100222466ae8f41be4c51eb234b71be1c22d59c8231",
+    "row": {
+      "op": "update",
+      "id": "silent-0018",
+      "ts": "2026-10-16T16:58:53+08:00",
+      "by": "learner:postmortem",
+      "where": {
+        "proposal": [
+          "/home/dw/Projects/agent-sts2/learner/runs/20261016-164311-1a72de12-5262-47fd-8f02-58adfeb40795-postmortem/proposal-hp-guard-deadline.md"
+        ]
+      },
+      "note": "代码提案 silent-proposal-e0784c4fc708da8e → task=strategy-proposal；Roy-2026-10-07-learning"
+    }
+  }
+]

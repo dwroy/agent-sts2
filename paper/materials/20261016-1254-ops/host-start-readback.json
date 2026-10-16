@@ -1,0 +1,147 @@
+{
+  "at": "2026-10-16 13:04:04 CST",
+  "original_batch": "20261016-075726-strategy-proposal",
+  "source": "655e1bb7967dcd9161eee96fe35cad2257e7af40",
+  "release_id": "V5-R369",
+  "live": "1ddaba4bca8350969bb2e8dda1265095cc86b61d",
+  "tree": "cb2128efc5073340865cce6321aa6e0463ca8c68",
+  "action": [
+    "bash",
+    "ops/codex-ops-do.sh",
+    "learner-recheck",
+    "20261016-075726-strategy-proposal"
+  ],
+  "broker_exec_session": 20466,
+  "actual_worker": {
+    "pid": 4048961,
+    "birth": 101887203,
+    "nice": 19,
+    "command": [
+      "python3",
+      "/home/dw/Projects/agent-sts2/ops/codex-ops-learn.py",
+      "recheck",
+      "--batch",
+      "20261016-075726-strategy-proposal"
+    ]
+  },
+  "actual_RUN": true,
+  "tsc_phase": "original command sequences tsc before observed Vitest RUN; final combined rc pending",
+  "max_vitest_workers": 2,
+  "original_log": {
+    "path": "ops/codex-ops/learner/20261016-075726-strategy-proposal.fallback-cb2128efc5073340865cce6321aa6e0463ca8c68.checks.log",
+    "prefix_bytes": 116,
+    "prefix_sha256": "69d9459d27587a47222c3a5b8795434a199a2711f5b1ce0e5e2ef34772e4fcaa"
+  },
+  "status": "started; final result pending original learner-checks",
+  "previous815582_green": "only previous composition; not evidence for this new tree",
+  "single_original_channel": true,
+  "source_full_repeated": false,
+  "thirteen_runtime_leaves": [
+    {
+      "path": "agent/src/core/config.ts",
+      "sha256": "85b4a52539759ac25467886886618fd19641eb58f18690872205bca0fa83c010"
+    },
+    {
+      "path": "agent/src/eye/run-config.ts",
+      "sha256": "5c07b972078eb26da451fbe6a16bd06db94980d1b1725e0241bd1fc8fdc2a9b7"
+    },
+    {
+      "path": "agent/src/sim/boss-lines.ts",
+      "sha256": "e3d9a70923c1c7829962adbee7d44050d1a9e1ff550f1988a86784aec2250e9c"
+    },
+    {
+      "path": "agent/src/sim/build-rank.ts",
+      "sha256": "7438f3d9433eb8357dea8cc9c82d8719fcdf35dc3bfee0e552388666d37fe84d"
+    },
+    {
+      "path": "agent/src/sim/build-sim-facts.ts",
+      "sha256": "ad391afaf2240836efcb72635ac9b63ba514628643cb08dfe4e94b9c1fa0312c"
+    },
+    {
+      "path": "agent/src/sim/build-sim.ts",
+      "sha256": "c6f744c5e511d631c70b22ffeefdb3ee211a35c71199b335b885735f81073576"
+    },
+    {
+      "path": "agent/src/sim/s-combat-rank.ts",
+      "sha256": "6b6a5f33764f253e6f8fd606b772dd641953b118029e9df32d97c56e691893f8"
+    },
+    {
+      "path": "agent/tests/build-rank-integration.test.ts",
+      "sha256": "c704a2825da9a509d0724234f0fd80ede1156d13548ae4b13a1cae6c3e5fbbb6"
+    },
+    {
+      "path": "agent/tests/build-rank.test.ts",
+      "sha256": "ef14be841357ceb87ea4e8f2da0d1e469b01ba5351c61205e24aef1af068cb7f"
+    },
+    {
+      "path": "agent/tests/module_health_test.py",
+      "sha256": "ac03070c51242c7f35a89e72b22e0d1509fd0489c9203f90f5a7cdee80f4baac"
+    },
+    {
+      "path": "agent/tests/required-boss-lines.test.ts",
+      "sha256": "e5cfa6c6f5c707772ad65046989c1e874d3d6a24b8301b3b090e7ae2beb1bc0c"
+    },
+    {
+      "path": "agent/tests/s-combat-rank.test.ts",
+      "sha256": "e81241f468151850930cdaafe0fe1947fe811c97644450d54b4bfb41d4fd74e8"
+    },
+    {
+      "path": "ops/module_health.py",
+      "sha256": "69471c09be6b513a2f78ea8b9bbb8dc9dd0425f0e2e92a69b576f8a8b5be6fca"
+    }
+  ],
+  "publication_knowledge_current_readback": [
+    {
+      "path": "knowledge/characters/silent/boss-damage.json",
+      "sha256": "4f6b76441221f97fd99c4305d589f399a505152fae0ab3a5d0c06f022a6eb834",
+      "same_publication_bytes": true
+    },
+    {
+      "path": "knowledge/characters/silent/construction-opportunities.json",
+      "sha256": "1219ea61b52407fbeb077c9230de917ee642cdfd93b40462e9b16163733874cb",
+      "same_publication_bytes": true
+    },
+    {
+      "path": "knowledge/characters/silent/fight-value-gates.json",
+      "sha256": "0be1aeb8581d18a8767b80343e3090ab64b6191118730d37e24c6d2ed204cecb",
+      "same_publication_bytes": true
+    },
+    {
+      "path": "knowledge/characters/silent/fight-value.json",
+      "sha256": "efaa97e95571e925ad1719320b75825dd1e2e96c99f3661bdbfe3c1f856b9e01",
+      "same_publication_bytes": true
+    },
+    {
+      "path": "knowledge/characters/silent/monster-records.json",
+      "sha256": "9f1f67eab1d83beb4224779cdd115f452f0288ed7221101d0853d661a8474b6c",
+      "same_publication_bytes": true
+    },
+    {
+      "path": "knowledge/characters/silent/outcome-stats.json",
+      "sha256": "4567b50cd1dd7a8d19fb49cace1539499080ee61b7eb5165c5db71c2c92a114e",
+      "same_publication_bytes": true
+    },
+    {
+      "path": "knowledge/characters/silent/room-costs.json",
+      "sha256": "4899033acc991b932b077b1f80df0a608181c45fbb46d3ebf4971f4141cc2d11",
+      "same_publication_bytes": true
+    },
+    {
+      "path": "knowledge/common/card-upgrades.json",
+      "sha256": "1f6a634bb0b1f462caf6762560233f0917ae85411f4d2329284e8e8e78c4ba0b",
+      "same_publication_bytes": true
+    },
+    {
+      "path": "knowledge/common/monster-db.json",
+      "sha256": "8fa0dd92e9354fc0d4d439da18c3800e9ffdfcfb42710c57fa179aae2eec626b",
+      "same_publication_bytes": true
+    },
+    {
+      "path": "knowledge/common/move-model.json",
+      "sha256": "e9d7c394d7f49dd7d3197a07de6979c0e5c193ce7443bba41d8dac86e3391062",
+      "same_publication_bytes": true
+    }
+  ],
+  "working_diff_under_agent_learner_ops_knowledge": [],
+  "limits": "Registered host pins actual HEAD/tree. These are one-time observed bytes, not proof that every runtime knowledge input remains immutable throughout the full call. No polling or new observer installed."
+}

@@ -1,0 +1,9 @@
+{
+  "at": "2026-10-16 14:03:18 CST",
+  "rc": 1,
+  "phase": "ops-startup-readback",
+  "original_script_sha256": "c0658b1fcbd2ae80fa4dc8e0cdd41a5436ec7d14b7bb79c703d2c9fe038e6eda",
+  "failed_assertion": "ack input SHA == startup input SHA == launch recorded prompt SHA",
+  "correction": "Launcher recorded task prompt differs from final native prepared input; bind native user bytes to authenticated startup/ACK input SHA. Preserve both hashes separately.",
+  "no_learner_input_or_registry_change": true
+}

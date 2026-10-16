@@ -1,0 +1,5 @@
+【原roy-20261016-global-build/G3b评分报告与具体发布边界；非新任务】
+watcher本人已读原135539最终报告、ops-delivery三回执与81产物原归档，原canonical failed/rc0/mergednull历史保持；原件不重归档/不重核已核帧。权威r2为47局1584锚点167952展开，只有原r1的184标签进入未改eval/construction.py，实际rc0，12可评分组中3组过原闸：Silent A10 conditionalSignature P/F17（23独立局、24记录、2正22负、Brier0 vs baseline0.0763889），P/F33（14局16记录、5正11负、0 vs0.21484375），D/F33（14局16记录、3正13负、0 vs0.15234375），bias均0，精确模型/政策/template及原输入SHA见ops-publication-request.json。
+发现具体范围问题：184标签全在F16/F32/F47，原学习者policy.choices_checked全部0，原概率只有0/1，没有更早有剩余选择窗口的合格标签；所以Brier0不证明前瞻供给预测能力。现有admission.ts/adapter.ts仅按horizon等组键放行，无anchor floor/剩余窗口限制，直接整组advisory会用于未核更早窗口。本人才核源代码，无新增机制或阈值；3组统计通过状态保留。
+请只实收原报告/三个精确统计通过组及此边界，当前保shadow，不创建construction-calibration.json、不改配置或派实现/full/实验。建议Roy/Claude先决定是否接受这一整组外推；如要限制窗口或补证另行明确派活。watcher交报告及待决问题即停，不推进G3a/G3c/G5/G2自然/on或宽父；此不是要求你新调查/借旧绿。报告report.md、groups.csv、observations.csv、evaluation-r2/supported-window-metadata.json、ops-publication-request.json均在paper/materials/20261016-global-build-g3b/。
+G2原a55384宿主aggregate0及单测试叶修复本人已核，9e105 full1保持，不重复full。原学习者政策差异不等于实际策略更差或机制反例；四模板仍candidate/functional未知，0332及宽父不关闭。本次运输不代ops实收或Roy ACK。

@@ -1,0 +1,416 @@
+{
+  "at": "2026-10-16 12:21:51 CST",
+  "batch": "20261016-121302-fix-batch",
+  "canonical_state": "failed",
+  "canonical_rc": 0,
+  "original_failed_rc0_and_retry_history_retained": true,
+  "report": {
+    "task": "fix-batch",
+    "base": "f12269c7f9f2018d0e0c94339803dfb7d33138d3",
+    "fixes": [],
+    "skipped": [
+      {
+        "item": "silent-0271：毒必胜提前返回遗漏保血候选",
+        "reason": "策略类，沿原独立提案"
+      },
+      {
+        "item": "silent-0279：SL抽序升级改标",
+        "reason": "策略类，沿原独立提案"
+      },
+      {
+        "item": "silent-0308：沙坑截止结束题面",
+        "reason": "策略类，沿原独立提案"
+      },
+      {
+        "item": "silent-0311：库存恢复血量预算",
+        "reason": "策略类，沿原独立提案"
+      },
+      {
+        "item": "silent-0320：同线新建UNMOVABLE",
+        "reason": "策略类，沿原独立提案"
+      },
+      {
+        "item": "silent-0322：升级神化同线升级",
+        "reason": "策略类，沿原独立提案"
+      },
+      {
+        "item": "silent-0329：饮药临时力量接线",
+        "reason": "策略类，沿原独立提案"
+      },
+      {
+        "item": "arch-funnel-guard",
+        "reason": "太大，属于独立架构任务"
+      },
+      {
+        "item": "arch-learning-priority",
+        "reason": "太大，属于独立架构任务"
+      },
+      {
+        "item": "arch-unified-resource-value",
+        "reason": "太大，属于独立架构任务"
+      },
+      {
+        "item": "inv-f33-regression",
+        "reason": "太大，属于独立归因任务"
+      },
+      {
+        "item": "silent-0332：成功首战接续nonpositive-hp",
+        "reason": "证据不足，完整resources/steps及机制根因仍未知"
+      },
+      {
+        "item": "silent-0334：升级隐秘匕首模型",
+        "reason": "策略类，沿原独立提案"
+      },
+      {
+        "item": "silent-0339：尾巴误核销",
+        "reason": "策略类，沿原独立提案"
+      },
+      {
+        "item": "silent-0344：坚韧之环延迟格挡",
+        "reason": "策略类，沿原独立提案"
+      },
+      {
+        "item": "silent-0347：组装师攻击召唤",
+        "reason": "策略类，沿原独立提案"
+      },
+      {
+        "item": "silent-0349：已有虚弱后的减力",
+        "reason": "策略类，沿原独立提案"
+      },
+      {
+        "item": "core-build-notify-222802-rc2：历史发送事实",
+        "reason": "证据不足，后续诊断已修，原历史发送事实未知"
+      },
+      {
+        "item": "silent-0362：背向攻击减力倍率",
+        "reason": "策略类，沿原独立提案"
+      },
+      {
+        "item": "silent-0365：未建模药水目标可达性",
+        "reason": "策略类，沿原独立提案"
+      },
+      {
+        "item": "框架外层时限与分段续验收尾",
+        "reason": "太大，精确续验入口已实现，宿主收尾沿原框架继续"
+      },
+      {
+        "item": "调度公平性核查",
+        "reason": "证据不足，尚未证明永久饥饿"
+      },
+      {
+        "item": "silent-0481：技能药水生命周期措辞",
+        "reason": "策略类题面知识，沿silent-proposal-686d4e759478eebb"
+      },
+      {
+        "item": "silent-0487：MAD_SCIENCE三段攻击模型",
+        "reason": "策略类，沿silent-proposal-0a0b31e284e6793e"
+      },
+      {
+        "item": "codex大脑缓存命中偏低",
+        "reason": "证据不足，缺当前同题受控请求对比"
+      },
+      {
+        "item": "sandbox-glob-startup-race：上游目录生命周期及其他租约拒绝原因",
+        "reason": "证据不足，注册保存屏障已上线，上游目录删除者及完整生命周期仍未知"
+      },
+      {
+        "item": "named-card-facts-transport：事件入口之外范围",
+        "reason": "太大，事件入口已实现，其余沿原架构任务"
+      },
+      {
+        "item": "boss模拟样本性能及v5-dpr-health宽范围",
+        "reason": "太大，属于独立性能及校准专项"
+      },
+      {
+        "item": "rest-timeout-accepted-route-not-committed / silent-0446",
+        "reason": "策略类及结构问题，沿silent-proposal-2d3aa8dfb27dbe3f"
+      },
+      {
+        "item": "silent-0469：纸鹤其他未知组合/整战收益",
+        "reason": "策略类，已观察聚合体子项已修，其他组合及整战收益未验证"
+      }
+    ],
+    "merged": null,
+    "tests": {
+      "tsc": 0,
+      "vitest": 0,
+      "cases": 10
+    },
+    "code_proposals": [],
+    "implementation_domains": [],
+    "report": "/home/dw/Projects/agent-sts2/learner/runs/20261016-121313-1b58f023-1f86-4b08-9156-596b9b7151d0-fix-batch/report.md"
+  },
+  "native": {
+    "batch": "20261016-121302-fix-batch",
+    "thread": "01a142ea-21cd-75b2-8672-b14d4c25178c",
+    "cwd": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261016-121302",
+    "event_log": "learner/runs/20261016-121313-1b58f023-1f86-4b08-9156-596b9b7151d0-fix-batch.jsonl",
+    "registered_launch_batch": "20261016-121302-fix-batch",
+    "original_lease": "d25124ce0a6a7867b1f28a5b4b1a8ba9179a43bc5da73e31f2887b58c6157517",
+    "native_context": {
+      "source": "ops/codex-ops/accounts/codex1/learner/sessions/2026/10/16/rollout-2026-10-16T12-13-22-01a142ea-21cd-75b2-8672-b14d4c25178c.jsonl",
+      "offset": 50165,
+      "bytes": 5118,
+      "sha256": "26522af2d74f8a88369ca11fb4860c8186668793d56eb5ca94a91f1154a676fa",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "sandbox": {
+        "type": "workspace-write",
+        "writable_roots": [
+          "/home/dw/Projects/agent-sts2",
+          "/home/dw/Projects/agent-sts2/.git",
+          "/home/dw/Projects/agent-sts2/.git/worktrees/codex-fix-silent-20261016-121302"
+        ],
+        "network_access": false,
+        "exclude_tmpdir_env_var": false,
+        "exclude_slash_tmp": false
+      },
+      "approval_policy": "never"
+    },
+    "native_user_input": {
+      "offset": 55283,
+      "bytes": 13081,
+      "sha256": "1d4a42cd606bddbee25216b6ac76b37b4fd24b4efce1bde7f99865edbef16480",
+      "input_sha256": "8ff545be4fb12a4493837f6ffff36a80d45d4f1c87a85b854260e0b2efe99fd2"
+    },
+    "original_header_events": [
+      {
+        "offset": 0,
+        "bytes": 14892,
+        "sha256": "94cd9cf08522d262be998f1d7bd29393d86515217d48161ad3e7f7b7b9011081",
+        "type": "learner_launch",
+        "attempt": null,
+        "code": null
+      },
+      {
+        "offset": 14892,
+        "bytes": 370,
+        "sha256": "bf345700e67b8b2d3330e3b503c149711d81b9f508618733e3d6eae1a144d1b0",
+        "type": "learner_startup_attempt",
+        "attempt": 1,
+        "code": null
+      },
+      {
+        "offset": 18275,
+        "bytes": 77,
+        "sha256": "672a773a4b1c8614c4c9351d94cffe120cbb63367dc1a0ffd336fd11ea1d239a",
+        "type": "thread.started",
+        "attempt": null,
+        "code": null
+      }
+    ],
+    "startup_attempts": 1,
+    "failed_startups_preserved": 0,
+    "no_model_or_manual_restart": true
+  },
+  "worktree_clean": true,
+  "existing_fixes_actual_base_live_ancestors": 79,
+  "source_test_SHA_verified": 381,
+  "same_as_prior": true,
+  "changed_tracked_path_since_prior": "ops/inbox-dev.md only; no production source change",
+  "queue_unchecked": 42,
+  "queue_same_as_prior": false,
+  "only_new_queue_text": "original0332 recurrence; unchecked entry texts unchanged",
+  "unresolved_items": 30,
+  "no_new_source_or_commit_or_submission_merge_blocker": true,
+  "original_tests": {
+    "tsc": 0,
+    "vitest": 0,
+    "cases": 10,
+    "files": 2,
+    "scope": "targeted",
+    "full_sandbox_run": false,
+    "reruns": [],
+    "logs": [
+      "tsc.log",
+      "tsc.exit",
+      "targeted.log",
+      "targeted.exit"
+    ]
+  },
+  "full_suite_not_run": true,
+  "original_0332_evidence": {
+    "run": "TCDUBRWMEMNA",
+    "floor": 40,
+    "turn": null,
+    "seed": 76490739,
+    "proposal": "silent-proposal-5aa2672bd7cd1bf4",
+    "summary_source": "/home/dw/Projects/agent-sts2/paper/materials/20261016-1145-ops/module-health-byte-readback.json",
+    "summary_sha256": "f9480bc9ddf8d35ff486e59ac27e01769da394ed4ed2d127a1457bfaba331cb9",
+    "original_decisions_checked": [
+      {
+        "source": {
+          "offset": 1884827880,
+          "length": 12331,
+          "sha256": "17b1efea0d46f76f2b213c0da6274cdf07792476095ce90d57fc3116c735785d"
+        },
+        "actual_run": "TCDUBRWMEMNA",
+        "summary_error": "出错：build-sim worker: Error: missing successful first-fight resources: nonpositive-hp; seed=76490739; {\"won\":true,\"died\":false,\"turns\":12,\"captureResources\":true,\"c",
+        "sha_matches": true,
+        "record_keys": [
+          "ts",
+          "mode",
+          "screen",
+          "session",
+          "floor",
+          "turn",
+          "label",
+          "decider",
+          "fingerprint",
+          "questions",
+          "rationale",
+          "confidence",
+          "fallback",
+          "reasked",
+          "no_jev",
+          "reused_answer",
+          "request_ids",
+          "latency_ms",
+          "usage",
+          "boss_sim",
+          "run_id",
+          "observed_ts",
+          "result"
+        ]
+      },
+      {
+        "source": {
+          "offset": 1884840211,
+          "length": 12353,
+          "sha256": "f12a7ec925e907d2cdec86c47ec5ded9b8cff7cfe2230910a915feebb362e170"
+        },
+        "actual_run": "TCDUBRWMEMNA",
+        "summary_error": "出错：build-sim worker: Error: missing successful first-fight resources: nonpositive-hp; seed=76490739; {\"won\":true,\"died\":false,\"turns\":12,\"captureResources\":true,\"c",
+        "sha_matches": true,
+        "record_keys": [
+          "ts",
+          "mode",
+          "screen",
+          "session",
+          "floor",
+          "turn",
+          "label",
+          "decider",
+          "fingerprint",
+          "questions",
+          "rationale",
+          "confidence",
+          "fallback",
+          "reasked",
+          "no_jev",
+          "reused_answer",
+          "request_ids",
+          "latency_ms",
+          "usage",
+          "boss_sim",
+          "run_id",
+          "observed_ts",
+          "result"
+        ]
+      },
+      {
+        "source": {
+          "offset": 1884852564,
+          "length": 124632,
+          "sha256": "96f08cadfdfcdc0314d968ff2c1419d58d4d0f0e1d5eff0a0b3bf56f501ea25a"
+        },
+        "actual_run": "TCDUBRWMEMNA",
+        "summary_error": "只跑完 14 次模拟（不足 300 次），选项之间的差噪声太大，不给数字",
+        "sha_matches": true,
+        "record_keys": [
+          "ts",
+          "mode",
+          "screen",
+          "session",
+          "floor",
+          "turn",
+          "label",
+          "decision_id",
+          "decider",
+          "fingerprint",
+          "questions",
+          "chosen",
+          "expect",
+          "rationale",
+          "confidence",
+          "fallback",
+          "reasked",
+          "no_jev",
+          "reused_answer",
+          "request_ids",
+          "latency_ms",
+          "usage",
+          "deepseek",
+          "boss_sim",
+          "route_review",
+          "sl_attempt",
+          "sl_reloads",
+          "run_id",
+          "observed_ts",
+          "journal",
+          "result"
+        ]
+      }
+    ],
+    "limitation": "原error在captureResources之后截断，完整resources/steps仍缺失；C1出口不构成根因修复。仅核现有冻结窗口，不读后续运行。"
+  },
+  "archived": [
+    {
+      "path": "learner/runs/20261016-121313-1b58f023-1f86-4b08-9156-596b9b7151d0-fix-batch/gitleaks.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "learner/runs/20261016-121313-1b58f023-1f86-4b08-9156-596b9b7151d0-fix-batch/result.json",
+      "bytes": 5128,
+      "sha256": "10b4fdb9e576ffafaf7cc4466033262a4351c83a428a7f88496df1c37e21521b"
+    },
+    {
+      "path": "learner/runs/20261016-121313-1b58f023-1f86-4b08-9156-596b9b7151d0-fix-batch/tsc.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "learner/runs/20261016-121313-1b58f023-1f86-4b08-9156-596b9b7151d0-fix-batch/report.md",
+      "bytes": 25886,
+      "sha256": "2b21c4f6289266e97c0f2610a4e6f0b11250c3083fb2bdaaf641cad1d385e35a"
+    },
+    {
+      "path": "learner/runs/20261016-121313-1b58f023-1f86-4b08-9156-596b9b7151d0-fix-batch/gitleaks.exit",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "learner/runs/20261016-121313-1b58f023-1f86-4b08-9156-596b9b7151d0-fix-batch/queue-readonly-snapshot.md",
+      "bytes": 424919,
+      "sha256": "5d62ff73938433162d80d1421c90c3be919ee8e6e03a63d58a22e6698fceb9be"
+    },
+    {
+      "path": "learner/runs/20261016-121313-1b58f023-1f86-4b08-9156-596b9b7151d0-fix-batch/targeted.log",
+      "bytes": 268,
+      "sha256": "0dd4aeb5dcb039e2027728a37bf945608d9e25778c774b7abc7ed98ab2b2432c"
+    },
+    {
+      "path": "learner/runs/20261016-121313-1b58f023-1f86-4b08-9156-596b9b7151d0-fix-batch/audit.json",
+      "bytes": 336999,
+      "sha256": "19ec7d62f085da3a172f4185ce86bad85ae69c7cd4a3d544495eb7d4d0139a6e"
+    },
+    {
+      "path": "learner/runs/20261016-121313-1b58f023-1f86-4b08-9156-596b9b7151d0-fix-batch/tsc.exit",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "learner/runs/20261016-121313-1b58f023-1f86-4b08-9156-596b9b7151d0-fix-batch/queue-diff-from-prior.patch",
+      "bytes": 3709,
+      "sha256": "ef2d21afd7866726378c76453145f63a55384ff6c447f8b45ca64af1db9400fc"
+    },
+    {
+      "path": "learner/runs/20261016-121313-1b58f023-1f86-4b08-9156-596b9b7151d0-fix-batch/targeted.exit",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    }
+  ],
+  "no_ledger_mutation_dispatch_or_host_request": true,
+  "wide_parents": "open; no new source does not close unresolved queue, S decision or G1a natural acceptance"
+}

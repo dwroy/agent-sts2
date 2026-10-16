@@ -1,0 +1,464 @@
+{
+  "at": "2026-10-16 16:05:02 CST",
+  "batch": "20261016-154302",
+  "original_report": {
+    "task": "postmortem",
+    "appended": [
+      "DYB7KFG723QM"
+    ],
+    "skipped": [],
+    "bugs": [],
+    "ledger": {
+      "added": [],
+      "updated": [
+        "silent-0278",
+        "silent-0125",
+        "silent-0020",
+        "silent-0017",
+        "silent-0220",
+        "silent-0050"
+      ],
+      "repeats": [],
+      "check": 0
+    },
+    "code_proposals": [
+      "silent-proposal-ffe3352c6e731b4e",
+      "silent-proposal-3831d77f739c3f36"
+    ],
+    "implementation_domains": [
+      "combat",
+      "potion",
+      "terminal"
+    ],
+    "report": "/home/dw/Projects/agent-sts2/learner/runs/20261016-154309-4bfd7422-1b8e-40a7-a541-d956574bbdf5-postmortem/report.md"
+  },
+  "native": {
+    "batch": "20261016-154302",
+    "thread": "01a143aa-3eef-73c2-8f06-bab3a7c5ee8c",
+    "cwd": "/home/dw/Projects/agent-sts2",
+    "event_log": "learner/runs/20261016-154309-4bfd7422-1b8e-40a7-a541-d956574bbdf5-postmortem.jsonl",
+    "registered_launch_batch": "20261016-154302",
+    "original_lease": "599d1eeeea9e2f0968b5b40ee496b6b6979bdf1e4a1fe86352e7047b7bc70e3c",
+    "native_context": {
+      "source": "ops/codex-ops/accounts/codex1/learner/sessions/2026/10/16/rollout-2026-10-16T15-43-13-01a143aa-3eef-73c2-8f06-bab3a7c5ee8c.jsonl",
+      "offset": 49155,
+      "bytes": 4620,
+      "sha256": "65ceb1f1b2a717de879bedf633237b674299ddb87ee4b301c01d70dc720076b0",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "sandbox": {
+        "type": "workspace-write",
+        "writable_roots": [
+          "/home/dw/Projects/agent-sts2/.git"
+        ],
+        "network_access": false,
+        "exclude_tmpdir_env_var": false,
+        "exclude_slash_tmp": false
+      },
+      "approval_policy": "never"
+    },
+    "native_user_input": {
+      "offset": 53775,
+      "bytes": 15345,
+      "sha256": "5a759f46ddbbce2e5023657f3b1237214dd66e772df5c010e5b2364212db5727",
+      "input_sha256": "390d02b18a78f8e8e436fad96ed5450feffc994e20a7298ed6cdebc779e23422"
+    },
+    "original_header_events": [
+      {
+        "offset": 0,
+        "bytes": 16866,
+        "sha256": "9d52441d4e0d382f8b6365cfa01635d9bbbc4a192ccd2b5e6c4feda72bbf1991",
+        "type": "learner_launch",
+        "attempt": null,
+        "code": null
+      },
+      {
+        "offset": 16866,
+        "bytes": 360,
+        "sha256": "77b0a55d71c318b15b67d3b2fffdfc08d96587629d678e2f2922c29cfa0d1531",
+        "type": "learner_startup_attempt",
+        "attempt": 1,
+        "code": null
+      },
+      {
+        "offset": 19804,
+        "bytes": 77,
+        "sha256": "6926c920633048f00f672927667e1369360bc888d9478a8b74be4f788dde1ee9",
+        "type": "thread.started",
+        "attempt": null,
+        "code": null
+      }
+    ],
+    "startup_attempts": 1,
+    "failed_startups_preserved": 0,
+    "no_model_or_manual_restart": true
+  },
+  "original_rows": 1437,
+  "stream_counts": {
+    "states": 710,
+    "decisions": 699,
+    "brain": 16,
+    "run-config": 1,
+    "run-plans": 4,
+    "sl-attempts": 6,
+    "runs": 1
+  },
+  "successful_codex": 16,
+  "original_bytes_JSON_and_explicit_identity_verified": true,
+  "source_lines_remain_learner_reported": true,
+  "lesson_bytes": 20190,
+  "lesson_native_calls": [
+    {
+      "offset": 1811652,
+      "bytes": 1436,
+      "sha256": "982c68bc7c8049428101ed9d586f486a7c93511d958c022d17a4926e4c1a5d2a",
+      "call_id": "call_b3bed9b599a74fc5ab01cd64f4901499"
+    }
+  ],
+  "lesson_prefix_preserved": true,
+  "scoped_ledger_rows": 11,
+  "original_run": {
+    "run_id": "DYB7KFG723QM",
+    "ended": "2026-10-16T07:39:05.072Z",
+    "victory": false,
+    "floor": 17,
+    "character": "SILENT",
+    "ascension": 10,
+    "code": "current",
+    "decisions": 699,
+    "jev_calls": 319,
+    "deepseek_calls": 16,
+    "claude_calls": 0,
+    "tokens": 2894074,
+    "ds_tokens_in": 2844121,
+    "ds_tokens_out": 20017,
+    "ds_cache_hit": 1418752,
+    "deciders": {
+      "codex": 19,
+      "code": 101,
+      "jev": 319,
+      "jev-plan": 260
+    },
+    "death_fight": [
+      "瀑布巨兽"
+    ],
+    "death_fight_floor": 17,
+    "death_enemy_ids": [
+      "WATERFALL_GIANT"
+    ]
+  },
+  "actual_config": {
+    "ts": "2026-10-16T06:47:42.660Z",
+    "run_id": "DYB7KFG723QM",
+    "ascension": 10,
+    "character": "SILENT",
+    "floor": 1,
+    "restart": false,
+    "process": {
+      "pid": 1055879,
+      "started": "2026-10-16T06:47:34.476Z"
+    },
+    "code": {
+      "commit": "a9e687d9f0acccccddbfa92895d7966b58900658",
+      "code": "a9e687d+dirty",
+      "dirty": true,
+      "dirty_files": [
+        "knowledge/characters/silent/boss-damage.json",
+        "knowledge/characters/silent/construction-opportunities.json",
+        "knowledge/characters/silent/monster-records.json",
+        "knowledge/characters/silent/outcome-stats.json",
+        "knowledge/characters/silent/room-costs.json",
+        "knowledge/common/card-upgrades.json",
+        "knowledge/common/monster-db.json",
+        "knowledge/common/move-model.json",
+        "notes/fight-value-backtest-silent.md",
+        "notes/monster-db-check.md"
+      ],
+      "branch": "live",
+      "worktree": "live"
+    },
+    "brain": {
+      "active": true,
+      "engine": "codex",
+      "by_prefix": {},
+      "fallback": null,
+      "reask": null,
+      "tools": null,
+      "log": "/home/dw/Projects/agent-sts2/.worktrees/live/logs/brain.jsonl",
+      "engines": {
+        "codex": {
+          "model": "gpt-6.1-sol",
+          "model_by_prefix": {},
+          "timeout_ms": 600000,
+          "effort": "xhigh",
+          "reask": null,
+          "tools": false,
+          "max_calls": null
+        }
+      },
+      "codex": {
+        "mode": "session",
+        "service_tier": "default",
+        "context_window": 512000,
+        "auto_compact_token_limit": 460800,
+        "summary": "auto",
+        "stall_ms": 120000,
+        "first_token_ms": null,
+        "stall_retries": 1,
+        "schema_fields": "used",
+        "route_reason": "drop",
+        "route_pattern": true,
+        "accept_cut": true,
+        "max_field_chars": 600,
+        "max_answer_blanks": 100
+      }
+    },
+    "knowledge": {
+      "prefix": "full",
+      "ascension": 10,
+      "prefix_sha": "8cd3b9fc80b8",
+      "prefix_chars": 185211,
+      "prefix_tokens_est": {
+        "deepseek": 129648,
+        "claude": 179655
+      },
+      "system_sha": "e3743f68c1e4",
+      "system_chars": 187495,
+      "experience_version": "2026-10-16.2",
+      "prefix_note": "the prefix at this run's start; the brain re-renders it when the knowledge files or notes/lessons.md change (brain/knowledge.ts), so the prefix each call used is its brain.jsonl row's knowledge.prefix_sha"
+    },
+    "deepseek": {
+      "model": "deepseek-flash",
+      "max_calls": 300,
+      "timeout_ms": 300000,
+      "reasoning_effort": "max",
+      "combat_reasoning_effort": "high",
+      "effort_by_label": null
+    },
+    "jev": {
+      "enabled": true,
+      "model": "jev-latest",
+      "context": "v1",
+      "strict": true,
+      "prompt_log": "/home/dw/Projects/agent-sts2/.worktrees/live/logs/jev-prompts.jsonl"
+    },
+    "loop": {
+      "mode": "play",
+      "combat_planner": "turn",
+      "build_decider": "deepseek",
+      "build_oneshot": "on",
+      "boss_sim_build": "on",
+      "s_readiness": "on",
+      "s_combat_rank": "shadow",
+      "s_build_rank": "on",
+      "global_build_eval": "shadow",
+      "global_build_requested": "shadow",
+      "global_build_admission": "pending_two_natural_shadow",
+      "s_build_sort": "shadow",
+      "sim_failure_exit": "on",
+      "sim_failure_retries": 2,
+      "sim_adaptive": "on",
+      "sim_adaptive_requested": "on",
+      "sim_adaptive_admission": "accepted",
+      "boss_sim_completion": "required-full-paired-v1",
+      "boss_sim_build_requested": "on",
+      "combat_deepseek": "off",
+      "thief_facts": true,
+      "thief_cost": true,
+      "mech_rules": true,
+      "mech_move_rules": true,
+      "mech_death_move": true,
+      "passive_pieces": true,
+      "sandpit_start": true,
+      "fight_plan": "off",
+      "run_plan": "v1",
+      "run_plan_merge": true,
+      "escalation": [
+        "deepseek"
+      ],
+      "confidence": {
+        "act": 0.55,
+        "strong": 0.75
+      },
+      "run_start": "auto",
+      "character": "SILENT"
+    },
+    "operator_constraints": {
+      "id": "roy-20261013-v5-no-deck-cap",
+      "max_permanent_cards": null,
+      "activation": "V5: Roy removed the fixed permanent deck-size limit"
+    },
+    "construction": {
+      "architecture": "V5",
+      "schema": "construction-v1",
+      "mode": "shadow",
+      "policy": "observed-signature-completion",
+      "validation": "prospective-calibration-required",
+      "evaluation": "same-question-combat-facts"
+    },
+    "target_ascension": 11,
+    "target_ascension_mode": "climb",
+    "arm": null,
+    "sl": {
+      "enabled": true,
+      "boss_retries": 5,
+      "elite_retries": 3,
+      "act3_low_hp": true,
+      "act3_low_hp_pct": 50,
+      "act2_low_hp": true,
+      "act2_low_hp_pct": 50,
+      "retry_show_sim": true,
+      "retry_memo": true,
+      "retry_known_draws": true,
+      "retry_compute": {
+        "rollout_samples": 24,
+        "rollout_budget_ms": 20000,
+        "turn_budget_ms": 30000,
+        "mc_samples": 36,
+        "mc_budget_ms": 1200,
+        "boss_sim_samples": 1200
+      },
+      "judge_known_draws": true,
+      "judge_any_draw": true,
+      "reload_early": true,
+      "reload_on_revive": false,
+      "retry_known_inserts": true,
+      "retry_known_top": true,
+      "retry_explore": true,
+      "retry_explore_b2": true,
+      "retry_explore_boss_potions": true,
+      "retry_explore_order": true,
+      "retry_explore_replay": true,
+      "retry_explore_replay_plays": true,
+      "retry_explore_replay_deviate": true,
+      "retry_explore_key_counters": true,
+      "retry_explore_second": true,
+      "retry_explore_replay_order": true,
+      "retry_explore_replay_code": true,
+      "retry_explore_target_turn": true,
+      "retry_explore_rearm": true,
+      "retry_explore_wasted": true,
+      "retry_explore_anchor": true,
+      "retry_explore_canon": true,
+      "retry_explore_turn": true,
+      "retry_explore_whole": true,
+      "retry_explore_where": true,
+      "retry_explore_potion": true,
+      "retry_known_picks": true,
+      "retry_known_off_top": true,
+      "retry_known_hand_order": true,
+      "step_timeout_ms": 60000,
+      "log": "/home/dw/Projects/agent-sts2/.worktrees/live/logs/sl-attempts.jsonl",
+      "elites": [],
+      "elites_date": ""
+    },
+    "codex_check": {
+      "bin": "/home/dw/.local/node/bin/codex",
+      "ok": true,
+      "version": "codex-cli 0.162.1"
+    },
+    "codex_usage": {
+      "stop_pct": 100,
+      "every_calls": 3,
+      "every_min": 10,
+      "required": true,
+      "paid_credits": "main-silent-codex1-20261015",
+      "start": {
+        "engine": "codex",
+        "read_at": "2026-10-16T06:47:33.585Z",
+        "read_ms": 835,
+        "plan": "pro",
+        "used_pct": 55,
+        "window": "codex/primary",
+        "window_min": 10080,
+        "resets_at": "2026-10-22T06:13:44.000Z",
+        "credits": 43037.6069205,
+        "ordinary_usage_allowed": true,
+        "reached_type": null
+      },
+      "last": {
+        "engine": "codex",
+        "read_at": "2026-10-16T06:47:33.585Z",
+        "read_ms": 835,
+        "plan": "pro",
+        "used_pct": 55,
+        "window": "codex/primary",
+        "window_min": 10080,
+        "resets_at": "2026-10-22T06:13:44.000Z",
+        "credits": 43037.6069205,
+        "ordinary_usage_allowed": true,
+        "reached_type": null
+      },
+      "calls_since_read": 0
+    },
+    "config_sha": "77cd3892a659"
+  },
+  "registered_proposals": [
+    {
+      "offset": 3689464,
+      "bytes": 852,
+      "sha256": "033a5a9bab3f630644d836e2747c6caefb3d1a2a198298d0080a10491da5e9e6",
+      "row": {
+        "op": "add",
+        "id": "silent-proposal-ffe3352c6e731b4e",
+        "ts": "2026-10-16T16:00:35+08:00",
+        "character": "silent",
+        "source_task": "postmortem",
+        "target_task": "strategy-proposal",
+        "domains": [
+          "combat",
+          "potion",
+          "terminal"
+        ],
+        "summary": "DYB7KFG723QM A10 F17十二次毒药水实加6毒：限定本局修饰条件接入施毒事实／同线模型，分离残壳毒、本体进度和59自爆；早喝收益缺完整后继，不改强制时点或SL。",
+        "ledger": [
+          "silent-0278",
+          "silent-0017",
+          "silent-0020"
+        ],
+        "runs": [
+          "DYB7KFG723QM"
+        ],
+        "proposal": "/home/dw/Projects/agent-sts2/learner/runs/20261016-154309-4bfd7422-1b8e-40a7-a541-d956574bbdf5-postmortem/proposal-giant-potion.md",
+        "rule_changes": true,
+        "authorization": "Roy-2026-10-07-learning",
+        "proposal_sha256": "78d0dd8fa862b398ddba943e0e3e0e20db06f609bc38be21a7b271bd001aadd8",
+        "state": "pending"
+      }
+    },
+    {
+      "offset": 3690316,
+      "bytes": 788,
+      "sha256": "9e5993ab4ae9a3b7c5a45ca2df112612e831e017e201328eb2a4ec5af8ba7945",
+      "row": {
+        "op": "add",
+        "id": "silent-proposal-3831d77f739c3f36",
+        "ts": "2026-10-16T16:01:00+08:00",
+        "character": "silent",
+        "source_task": "postmortem",
+        "target_task": "strategy-proposal",
+        "domains": [
+          "combat"
+        ],
+        "summary": "DYB7KFG723QM A10 F14T1护栏预测省8血少11含毒伤、五轮同0死但结束5/8对0/8；先核后缀实际兑现与完整后继，证据不足保留护栏，不从单局改阈值。",
+        "ledger": [
+          "silent-0125",
+          "silent-0020"
+        ],
+        "runs": [
+          "DYB7KFG723QM"
+        ],
+        "proposal": "/home/dw/Projects/agent-sts2/learner/runs/20261016-154309-4bfd7422-1b8e-40a7-a541-d956574bbdf5-postmortem/proposal-guard-trade.md",
+        "rule_changes": true,
+        "authorization": "Roy-2026-10-07-learning",
+        "proposal_sha256": "4d233806bc0b288f193772fec0baabdd64592a6b8bd8454e6ba3617763f11cd7",
+        "state": "pending"
+      }
+    }
+  ],
+  "original_40_material_checks_preserved": true,
+  "new_bug": false,
+  "no_fix_queue_addition_needed": true,
+  "original_owners_and_unknowns_preserved": true,
+  "scoped_private_fold_protected_fields_and_prior_prefixes_verified": true
+}

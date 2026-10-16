@@ -1,0 +1,31 @@
+{
+  "at": "2026-10-16T13:01:01.484824+08:00",
+  "nice": 19,
+  "max_workers": 2,
+  "checks": [
+    {
+      "argv": [
+        "npx",
+        "tsc",
+        "-p",
+        "tsconfig.json",
+        "--noEmit"
+      ],
+      "rc": 0,
+      "seconds": 3.48,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "npx",
+        "vitest",
+        "run",
+        "--maxWorkers=2",
+        "tests/global-build-integration.test.ts"
+      ],
+      "rc": 0,
+      "seconds": 9.65,
+      "log_sha256": "89c86106a18f4240bf536481956e6b9b92bcc945d008d9263c2b20e9eb3205c4"
+    }
+  ]
+}

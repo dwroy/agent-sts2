@@ -1,0 +1,328 @@
+[
+  {
+    "offset": 20724600,
+    "bytes": 671,
+    "sha256": "e8aa82d15f052c564ad4c3d8671ef9ebf87dd9da41b03cb39a261c393741a180",
+    "row": {
+      "op": "update",
+      "id": "silent-0020",
+      "ts": "2026-10-16T14:57:46+08:00",
+      "by": "learner:postmortem",
+      "where": {
+        "lessons": [
+          "4Z2GCLA4DU52"
+        ]
+      },
+      "evidence": [
+        {
+          "run": "4Z2GCLA4DU52",
+          "floor": 16,
+          "note": "F9休息47→68；F10已得皇家枕头，F16休息45→70、实际回25；F17首试九轮胜70→14。跨幕到58，F19及F21赢战净耗21和4，33血进F24后四试败，F25后置营火未到。商店没有回血；只补资源缓冲观察，不认定另选路线/前战留药能赢。",
+          "role": "support"
+        }
+      ],
+      "note": "本次只追加同角色资源链证据，F10枕头/F11金纸层数已在复盘尾勘误；保留原claim、first_run、prior、status、version。"
+    }
+  },
+  {
+    "offset": 20725271,
+    "bytes": 844,
+    "sha256": "948c11fd55822593d6cb2f4d82bbb4b8f755a91afbb1204cd0a78348573f4e10",
+    "row": {
+      "op": "update",
+      "id": "silent-0079",
+      "ts": "2026-10-16T14:57:46+08:00",
+      "by": "learner:postmortem",
+      "where": {
+        "lessons": [
+          "4Z2GCLA4DU52"
+        ]
+      },
+      "evidence": [
+        {
+          "run": "4Z2GCLA4DU52",
+          "floor": 24,
+          "turn": 1,
+          "note": "第二/三试同入口33HP、同群攻/小刀/打击/明耀后，第二试打生存者到14挡、实损14，第三试SL去生存者仅6挡、实损22；下一轮三段同29/28/17、均净扣76，实多8血无当轮新增伤。两候选24/24死；后续随机毒和动作不同，三试T3仍判死，不把全死等风险或首轮血价当受控整战收益。s424826—424851，d411220/411235/411238/411239。",
+          "role": "support"
+        }
+      ],
+      "note": "已知死亡饱和下换线血价的支持证据；SL探索为已知失败路径换支，未证明违反某项选择规则，不登记策略重犯。旧首证/prior/status/version保持。"
+    }
+  },
+  {
+    "offset": 20726115,
+    "bytes": 756,
+    "sha256": "256711e49fd88f9f181a12f11614d3d20a7c9e7e5d5072ab21868231f7f8bdfe",
+    "row": {
+      "op": "update",
+      "id": "silent-0365",
+      "ts": "2026-10-16T14:57:46+08:00",
+      "by": "learner:postmortem",
+      "where": {
+        "lessons": [
+          "4Z2GCLA4DU52"
+        ]
+      },
+      "evidence": [
+        {
+          "run": "4Z2GCLA4DU52",
+          "floor": 24,
+          "turn": 1,
+          "note": "19道整线题在状态指纹及observed_ts配对后均有槽0毒药合法[0,1,2]，却只p0->e0/e1；首d411206/s424811、末试T2 d411266/s424875均漏后段。当前live a9e687d9 combat-plan.ts:3838 Math.min(2)及3974 targets.slice(0,2)；fix-queue.md未列、fix-queue-v4.md:1022已有。单动作第二/三试T2及末试T3实际投后段，不证明整线入口修复或另选能赢。",
+          "role": "repeat"
+        }
+      ],
+      "note": "既有合法目标覆盖缺口再次实见，保留原claim/first_run/prior/status/version；本次不改生产代码。"
+    }
+  },
+  {
+    "offset": 20726871,
+    "bytes": 720,
+    "sha256": "db87cfbc64fcc65ab9e9c2aab7f9bb071092ac430b5fa0b262c9396989d61ba8",
+    "row": {
+      "op": "update",
+      "id": "silent-0418",
+      "ts": "2026-10-16T14:57:46+08:00",
+      "by": "learner:postmortem",
+      "where": {
+        "lessons": [
+          "4Z2GCLA4DU52"
+        ]
+      },
+      "evidence": [
+        {
+          "run": "4Z2GCLA4DU52",
+          "floor": 24,
+          "turn": 1,
+          "note": "首试初稿d411206预计9损/58直伤/19挡，抽牌、生刀后重问实16挡/12损，直伤58另荆棘12使净扣70；不是同线模型偏差。全局九次HP guard各预测省8/伤差0均在二至四试T1重问，SL随后可再改；candidate/guard/SL/实际要分账，不能合计72或把94/99最优回答率当完整执行率。",
+          "role": "support"
+        }
+      ],
+      "note": "只补分段执行归因证据，不将actual_outcome=null或原journal初答文本直接诊断为新纯bug；保留旧结论及状态。"
+    }
+  },
+  {
+    "offset": 20727591,
+    "bytes": 664,
+    "sha256": "7b4d7e558a24e1f6f1899ec87804c1498a53545ea15fbc52ef3481e546dd5566",
+    "row": {
+      "op": "update",
+      "id": "silent-0044",
+      "ts": "2026-10-16T14:57:46+08:00",
+      "by": "learner:postmortem",
+      "where": {
+        "lessons": [
+          "4Z2GCLA4DU52"
+        ]
+      },
+      "evidence": [
+        {
+          "run": "4Z2GCLA4DU52",
+          "floor": 24,
+          "turn": 1,
+          "note": "铜质鳞片建立荆棘3。末试T1卡牌后敌32/34/26→下轮29/28/23，逐体反3/6/3共12；T2反3/3/6共12，与4直伤合净扣16。T3玩家仅2血时只见前段26→23一次反3并死，不能预支余下多击反伤；仅支持逐击触发，不沿用旧磨蚀4荆棘数值。s424869—424883。",
+          "role": "support"
+        }
+      ],
+      "note": "本局换来源/层数的同机制观察，不改变旧claim及版本，不凭反伤兑现判定全战能赢。"
+    }
+  },
+  {
+    "offset": 20728255,
+    "bytes": 579,
+    "sha256": "983f1b36db63bbb3ed9eaaaec23a0fa6caf56005b1b9e08ddf504c2803793533",
+    "row": {
+      "op": "update",
+      "id": "silent-0249",
+      "ts": "2026-10-16T14:57:46+08:00",
+      "by": "learner:postmortem",
+      "where": {
+        "lessons": [
+          "4Z2GCLA4DU52"
+        ]
+      },
+      "evidence": [
+        {
+          "run": "4Z2GCLA4DU52",
+          "floor": 24,
+          "turn": 1,
+          "note": "四试各T1实饮明耀并建RADIANCE_POWER3，末试T2/T3现场2/1层；T3六能量同时混有佩尔之泪条件，不能全归明耀或当自动防御。s424866→424867、424872、424876。SL恢复同瓶不算新药。",
+          "role": "support"
+        }
+      ],
+      "note": "只补已建层数/有限持续窗口，不拟新回能公式或喝药门槛，旧首证/prior/状态保持。"
+    }
+  },
+  {
+    "offset": 20728834,
+    "bytes": 573,
+    "sha256": "c78ec216ce250d99c5b3326f787b7e5e9fe85c5c5ed0492757b7804f89804d9d",
+    "row": {
+      "op": "update",
+      "id": "silent-0278",
+      "ts": "2026-10-16T14:57:46+08:00",
+      "by": "learner:postmortem",
+      "where": {
+        "lessons": [
+          "4Z2GCLA4DU52"
+        ]
+      },
+      "evidence": [
+        {
+          "run": "4Z2GCLA4DU52",
+          "floor": 24,
+          "turn": 3,
+          "note": "末试d411272向后段喝毒药，s424881→424882为12→18毒、本体仍2/48；下一GAME_OVER后段0。实加6毒不等于当步打6，彼时前中仍26/21，未执行其他目标/早喝受控分支，不据此制定药价或必喝规则。",
+          "role": "support"
+        }
+      ],
+      "note": "与合法目标遗漏0365分账；仅补原先施毒不即时扣本体的事实。"
+    }
+  },
+  {
+    "offset": 20729407,
+    "bytes": 679,
+    "sha256": "f5f5e94d97ef33d7d347c037728df4c5360012e2df2335e0d973596a5613ba76",
+    "row": {
+      "op": "update",
+      "id": "silent-0064",
+      "ts": "2026-10-16T14:57:46+08:00",
+      "by": "learner:postmortem",
+      "where": {
+        "lessons": [
+          "4Z2GCLA4DU52"
+        ]
+      },
+      "evidence": [
+        {
+          "run": "4Z2GCLA4DU52",
+          "floor": 24,
+          "turn": 3,
+          "note": "末试后段s424882为2HP、18毒、2力量，GAME_OVER s424883后段0且只余接续25，旧毒/力量消失；前中23/21存活。第三试T2也见后段归零、只留接续。本局没有实际恢复25的后继帧，不增加未发生的回血、不把暂死当永久退场或定统一杀序。",
+          "role": "support"
+        }
+      ],
+      "note": "只补已观察的后段死亡清状态边界，不把本局当重接25的新正例，旧claim/first_run/prior/status/version保持。"
+    }
+  },
+  {
+    "offset": 20730086,
+    "bytes": 372,
+    "sha256": "8ebabf316a11587f5b3a7e5d54dc117d7bdb07c0a121323ab8f5401716801526",
+    "row": {
+      "op": "update",
+      "id": "silent-0365",
+      "ts": "2026-10-16T14:59:31+08:00",
+      "by": "learner:postmortem",
+      "where": {
+        "proposal": [
+          "/home/dw/Projects/agent-sts2/learner/runs/20261016-144305-8c43422c-3cbf-4fb6-833a-9b2ee8808fb3-postmortem/proposal-potion-targets.md"
+        ]
+      },
+      "note": "代码提案 silent-proposal-3adbcaf2f490177f → task=strategy-proposal；Roy-2026-10-07-learning"
+    }
+  },
+  {
+    "offset": 20730458,
+    "bytes": 372,
+    "sha256": "6ef5a228283c09aefe151635893eb6b5bda3911be448c280b01b4623134ca4b5",
+    "row": {
+      "op": "update",
+      "id": "silent-0278",
+      "ts": "2026-10-16T14:59:31+08:00",
+      "by": "learner:postmortem",
+      "where": {
+        "proposal": [
+          "/home/dw/Projects/agent-sts2/learner/runs/20261016-144305-8c43422c-3cbf-4fb6-833a-9b2ee8808fb3-postmortem/proposal-potion-targets.md"
+        ]
+      },
+      "note": "代码提案 silent-proposal-3adbcaf2f490177f → task=strategy-proposal；Roy-2026-10-07-learning"
+    }
+  },
+  {
+    "offset": 20730830,
+    "bytes": 370,
+    "sha256": "1e02a77582b7d970b34091ae97ae841f93e9b9b9f536541383fc6e1c07e048ad",
+    "row": {
+      "op": "update",
+      "id": "silent-0079",
+      "ts": "2026-10-16T14:59:32+08:00",
+      "by": "learner:postmortem",
+      "where": {
+        "proposal": [
+          "/home/dw/Projects/agent-sts2/learner/runs/20261016-144305-8c43422c-3cbf-4fb6-833a-9b2ee8808fb3-postmortem/proposal-sl-resources.md"
+        ]
+      },
+      "note": "代码提案 silent-proposal-55de9e01ae08a402 → task=strategy-proposal；Roy-2026-10-07-learning"
+    }
+  },
+  {
+    "offset": 20731200,
+    "bytes": 370,
+    "sha256": "fb7ccc48c87c7dce9634b03da218f71811e5b48aaa28a7e8271e7a4e95e7d673",
+    "row": {
+      "op": "update",
+      "id": "silent-0418",
+      "ts": "2026-10-16T14:59:32+08:00",
+      "by": "learner:postmortem",
+      "where": {
+        "proposal": [
+          "/home/dw/Projects/agent-sts2/learner/runs/20261016-144305-8c43422c-3cbf-4fb6-833a-9b2ee8808fb3-postmortem/proposal-sl-resources.md"
+        ]
+      },
+      "note": "代码提案 silent-proposal-55de9e01ae08a402 → task=strategy-proposal；Roy-2026-10-07-learning"
+    }
+  },
+  {
+    "offset": 20731570,
+    "bytes": 370,
+    "sha256": "5bd730694fd264ca45dbef0da1c2d3695b35d4bd3b4067ce45a44acdf7c9530f",
+    "row": {
+      "op": "update",
+      "id": "silent-0044",
+      "ts": "2026-10-16T14:59:32+08:00",
+      "by": "learner:postmortem",
+      "where": {
+        "proposal": [
+          "/home/dw/Projects/agent-sts2/learner/runs/20261016-144305-8c43422c-3cbf-4fb6-833a-9b2ee8808fb3-postmortem/proposal-sl-resources.md"
+        ]
+      },
+      "note": "代码提案 silent-proposal-55de9e01ae08a402 → task=strategy-proposal；Roy-2026-10-07-learning"
+    }
+  },
+  {
+    "offset": 20731940,
+    "bytes": 370,
+    "sha256": "dfa6cea10bb5c06b1181d584022b839c22a5d13ce5b7ad8e7c52e6f79fd71256",
+    "row": {
+      "op": "update",
+      "id": "silent-0249",
+      "ts": "2026-10-16T14:59:32+08:00",
+      "by": "learner:postmortem",
+      "where": {
+        "proposal": [
+          "/home/dw/Projects/agent-sts2/learner/runs/20261016-144305-8c43422c-3cbf-4fb6-833a-9b2ee8808fb3-postmortem/proposal-sl-resources.md"
+        ]
+      },
+      "note": "代码提案 silent-proposal-55de9e01ae08a402 → task=strategy-proposal；Roy-2026-10-07-learning"
+    }
+  },
+  {
+    "offset": 20732310,
+    "bytes": 370,
+    "sha256": "29b47bd367aa740bda047594aec2c10b34854114b9c499786bfd039330cf832c",
+    "row": {
+      "op": "update",
+      "id": "silent-0064",
+      "ts": "2026-10-16T14:59:32+08:00",
+      "by": "learner:postmortem",
+      "where": {
+        "proposal": [
+          "/home/dw/Projects/agent-sts2/learner/runs/20261016-144305-8c43422c-3cbf-4fb6-833a-9b2ee8808fb3-postmortem/proposal-sl-resources.md"
+        ]
+      },
+      "note": "代码提案 silent-proposal-55de9e01ae08a402 → task=strategy-proposal；Roy-2026-10-07-learning"
+    }
+  }
+]

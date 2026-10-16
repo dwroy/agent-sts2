@@ -1,0 +1,215 @@
+from pathlib import Path
+import collections
+import hashlib
+import importlib.util
+import json
+import re
+import subprocess
+import sys
+import tarfile
+
+sys.dont_write_bytecode = True
+root = r = Path.cwd()
+p = r/'ops/codex-ops/record-staging/20261016-1429'
+pub = r/'paper/materials/20261016-1429-ops'
+sha = lambda raw: hashlib.sha256(raw).hexdigest()
+
+
+def write(path, value):
+    path.write_text(json.dumps(value,ensure_ascii=False,indent=2)+'\n')
+
+
+def ref(path):
+    raw=path.read_bytes()
+    return dict(path=str(path.relative_to(r)),bytes=len(raw),sha256=sha(raw))
+
+
+def report_for(bid):
+    output=(r/'ops/codex-ops/learner'/(bid+'.out')).read_text()
+    report=json.loads(re.findall(r'```json\s*(\{[\s\S]*?\})\s*```',output)[-1])
+    return report,output
+
+
+spec=importlib.util.spec_from_file_location('evidence_identity',r/'learner/extract_evidence.py')
+extract=importlib.util.module_from_spec(spec)
+spec.loader.exec_module(extract)
+spec=importlib.util.spec_from_file_location('proposal_queue',r/'learner/code_proposals.py')
+proposals=importlib.util.module_from_spec(spec)
+spec.loader.exec_module(proposals)
+queue=proposals.fold(r/proposals.QUEUE)
+state=json.loads((r/'ops/codex-ops/learn.json').read_bytes())
+exec((r/'ops/codex-ops/record-staging/20261016-0611/readonly-runtime.py').read_text())
+lessons=(r/'notes/lessons.md').read_bytes()
+postmortems=[]
+own_lessons=[]
+dirs={}
+all_refs=[]
+for bid,run in [('20261016-134301','TCDUBRWMEMNA'),('20261016-141302','1L4RRN6AN5SQ')]:
+    report,output=report_for(bid)
+    batch=state['batches'][bid]
+    scratch=Path(report['report']).parent
+    dirs[run]=scratch
+    assert batch['state']=='done' and batch['rc']==0 and batch['done']==[run] and batch['missing']==[]
+    assert report['task']=='postmortem' and report['appended']==[run] and report['ledger']['added']==[]
+    assert report['ledger']['check']==0 and all(x['new'] is False for x in report['bugs'])
+    native=runtime(bid,report,output)
+    counts=collections.Counter()
+    evidence=[]
+    if run=='TCDUBRWMEMNA':
+        manifest=json.loads((scratch/'source-manifest.json').read_bytes())
+        handles={}
+        try:
+            for item in manifest:
+                source=Path(item['source'])
+                assert source.parent==r/'logs'
+                if source not in handles:handles[source]=source.open('rb')
+                stream=handles[source]
+                stream.seek(item['offset'])
+                raw=stream.read(item['bytes'])
+                row=json.loads(raw)
+                assert sha(raw)==item['sha256'] and extract.run_identity(row)==run
+                if source.stem=='states':
+                    assert (row['state']['run']['character_id'],row['state']['run']['ascension'])==('SILENT',10)
+                counts[source.stem]+=1
+                evidence.append(dict(stream=source.stem,offset=item['offset'],bytes=len(raw),sha256=sha(raw)))
+        finally:
+            for stream in handles.values():stream.close()
+        assert len(evidence)==2839
+        before=json.loads((scratch/'before-append-prefixes.json').read_bytes())['notes/lessons.md']
+        assert sha(lessons[:before['bytes']])==before['sha256']
+        section=(scratch/'lesson-final.md').read_bytes()
+        assert len(section)==25436 and lessons[before['bytes']:before['bytes']+len(section)]==section
+    else:
+        for name in ['states','decisions','run-config','run-plans','brain','jev-prompts']:
+            selected=[json.loads(line) for line in (scratch/(name+'.jsonl')).read_bytes().splitlines() if line.strip()]
+            byline={}
+            with (r/'logs'/(name+'.jsonl')).open('rb') as original:
+                for item in selected:
+                    if '_offset' not in item:
+                        assert '_line' in item
+                        byline[item['_line']]=item
+                        continue
+                    original.seek(item['_offset'])
+                    raw=original.readline()
+                    row=json.loads(raw)
+                    assert row=={k:v for k,v in item.items() if k not in ['_offset','_line']}
+                    assert extract.run_identity(row)==run
+                    counts[name]+=1
+                    evidence.append(dict(stream=name,offset=item['_offset'],bytes=len(raw),sha256=sha(raw)))
+            if byline:
+                with (r/'logs'/(name+'.jsonl')).open('rb') as original:
+                    for line,raw in enumerate(original,1):
+                        if line in byline:
+                            row=json.loads(raw)
+                            assert row=={k:v for k,v in byline[line].items() if k not in ['_line','_offset']}
+                            assert extract.run_identity(row)==run
+                            evidence.append(dict(stream=name,source_line=line,bytes=len(raw),sha256=sha(raw)))
+                            counts[name]+=1
+                        if line>=max(byline):break
+            assert counts[name]==len(selected)
+        assert sum(counts.values())==516
+        inputs=json.loads((scratch/'input-checks.json').read_bytes())
+        before=next(x for x in inputs if x.get('shared')=='notes/lessons.md')
+        assert sha(lessons[:before['prefix_bytes']])==before['prefix_sha256']
+        begin=before['prefix_bytes']
+        assert re.match(rb'\s*## 1L4RRN6AN5SQ',lessons[begin:])
+        heading=lessons.index(b'## '+run.encode(),begin)
+        next_heading=lessons.find(b'\n## ',heading+3)
+        section=lessons[begin:next_heading if next_heading>=0 else len(lessons)]
+    assert lessons.count(b'## '+run.encode())==1
+    (p/(run+'-owned-lessons.md')).write_bytes(section)
+    own_lessons.append(dict(path='notes/lessons.md',text=section.decode()))
+    brain=[json.loads(line) for line in (scratch/'brain.jsonl').read_bytes().splitlines() if line.strip()]
+    assert len(brain)==(51 if run=='TCDUBRWMEMNA' else 10)
+    assert all(row['engine']=='codex' and row['model']=='gpt-6.1-sol' and row['effort']=='xhigh' and row['accepted'] is True for row in brain)
+    linked=[]
+    for ident in report['code_proposals']:
+        item=queue[ident]
+        assert item['character']=='silent' and item['target_task']=='strategy-proposal'
+        assert run in item['runs'] and sha(Path(item['proposal']).read_bytes())==item['proposal_sha256']
+        linked.append({key:item.get(key) for key in ['id','state','proposal','proposal_sha256','runs','target_task']})
+    postmortems.append(dict(batch=bid,run=run,original_report=report,native=native,original_rows=len(evidence),
+        stream_counts=dict(counts),lesson_bytes=len(section),lesson_sha256=sha(section),old_lesson_prefix_verified=True,
+        actual_accepted_codex_brain_rows=len(brain),new_bug=False,old_bug=report['bugs'],original_proposals=linked,
+        source_dirty_and_counterfactual_limitations_preserved=True))
+    all_refs.append(dict(run=run,refs=evidence))
+    allow={'report.md','report.json','post-write-checks.json','before-append-prefixes.json','numeric-checks.json',
+        'verification.json','input-checks.json','source-manifest.json','ledger-check.txt','ledger-check.exit',
+        'ledger-check-exit.txt','ledger-updates.jsonl','lesson-final.md','final-audit.txt','run-config.jsonl'}
+    with tarfile.open(pub/(run+'-original-materials.tar.gz'),'w:gz') as archive:
+        for f in scratch.iterdir():
+            if f.is_file() and (f.name in allow or f.name.startswith('proposal-')):
+                archive.add(f,arcname=f.name)
+        for suffix in ['out','err']:
+            f=r/'ops/codex-ops/learner'/(bid+'.'+suffix)
+            archive.add(f,arcname=bid+'.'+suffix)
+bid='20261016-140405-strategy-proposal'
+batch=state['batches'][bid]
+report=batch['report']
+wt=Path(batch['worktree'])
+scratch=Path(report['report']).parent
+assert batch['state']=='done' and batch['rc']==0 and batch['merged'] is None and report['fixes']==[] and report['merged'] is None
+assert len(report['proposal_results'])==10 and all(x['state']=='waiting' for x in report['proposal_results'])
+assert report['tests']==dict(tsc=None,vitest=None,cases=None)
+assert subprocess.check_output(['git','-C',str(wt),'rev-parse','HEAD'],text=True).strip()==report['base']
+assert not subprocess.check_output(['git','-C',str(wt),'status','--porcelain','--untracked-files=no']).strip()
+native=runtime(bid,report,(r/'ops/codex-ops/learner'/(bid+'.out')).read_text(),worktree=wt)
+cli=json.loads((scratch/'ledger-cli-receipt.json').read_bytes())
+assert cli['exit_code']==0 and cli['requested_updates']==16 and cli['prefix_preserved']
+strategy_rows=[]
+with (r/'paper/materials/learning/ledger.jsonl').open('rb') as ledger:
+    for item in cli['actual_update_rows']:
+        ledger.seek(item['offset'])
+        raw=ledger.read(item['bytes'])
+        value=json.loads(raw)
+        assert sha(raw)==item['sha256'] and value['by']=='learner:strategy-proposal' and value['op']=='update'
+        assert set(value).issubset({'op','id','ts','by','where','note'})
+        strategy_rows.append(raw)
+assert len(strategy_rows)==16
+strategy=dict(batch=bid,original_report=report,native=native,HEAD_equals_base=True,
+    tracked_source_knowledge_and_index_clean=True,ten_proposals_waiting=True,own_CLI_trace_rows=16,
+    no_source_commit_release_or_production_tests=True,original_failed_audits_and_unknowns_preserved=True)
+with tarfile.open(pub/'strategy-original-materials.tar.gz','w:gz') as archive:
+    for name in ['report.md','result.json','proposal.md','assigned-proposals.json','ledger-cli-receipt.json',
+                 'source-readback.json','runtime-readback.json','evidence-verification.json','consumer-readback-r3.json','analysis-first-failures.json']:
+        f=scratch/name
+        if f.is_file():archive.add(f,arcname=name)
+post_rows=[]
+ledger_refs=[]
+with (r/'paper/materials/learning/ledger.jsonl').open('rb') as ledger:
+    while raw:=ledger.readline():
+        value=json.loads(raw)
+        if value.get('by')!='learner:postmortem':continue
+        run=None
+        for item in postmortems:
+            name=item['run']
+            if value.get('id') in item['original_report']['ledger']['updated'] and (
+                any(e.get('run')==name for e in value.get('evidence',[])) or
+                str(dirs[name]) in raw.decode() or name in value.get('where',{}).get('lessons',[])):
+                run=name
+                break
+        if not run:continue
+        assert value['op']=='update' and set(value).issubset({'op','id','ts','by','where','note','evidence'})
+        assert all(e['run']==run and e['role'] in ['support','repeat'] for e in value.get('evidence',[]))
+        post_rows.append(raw)
+        ledger_refs.append(dict(run=run,offset=ledger.tell()-len(raw),bytes=len(raw),sha256=sha(raw),row=value))
+assert post_rows
+(p/'own-ledger-rows.jsonl').write_bytes(b''.join(post_rows+strategy_rows))
+at=subprocess.check_output(['date','+%Y-%m-%d %H:%M:%S %Z'],text=True).strip()
+write(pub/'postmortem-original-row-references.json',all_refs)
+write(pub/'postmortem-ledger-row-references.json',ledger_refs)
+write(pub/'postmortem-readback.json',dict(at=at,postmortems=postmortems,original_row_count=sum(x['original_rows'] for x in postmortems),
+    ledger_rows=len(post_rows),new_bug=False,repeats_remain_original_0332_and_0481=True,
+    original_fix_queue_not_listed_text_preserved_but_both_already_present=True,no_duplicate_learning_or_game_rule_change=True))
+write(pub/'strategy-readback.json',strategy)
+cause=r/'paper/materials/20261016-global-build-g3b/scope-query-diagnosis.json'
+diagnosis=json.loads(cause.read_bytes())
+assert diagnosis['rc']==0 and diagnosis['stdout']['rows']==[['TIMESTAMP','Asia/Shanghai',1222381317,1283926113]]
+assert sha((r/'agent/tools/logdb/extract.py').read_bytes())==diagnosis['schema_source_sha256']
+cause_readback=dict(at=at,source=ref(cause),diagnosis=diagnosis,
+    conclusion='Watcher input-preparation SQL mixed UTC-naive TIMESTAMP and TIMESTAMPTZ; prior selected range omitted8h. This is not proof of missing logdb/index data or a production bug.',
+    original_r1_r2_inputs_labels_registration_unchanged=True,no_SQL_rerun_new_model_implementation_or_investigation=True)
+write(pub/'g3b-scope-cause-readback.json',cause_readback)
+write(r/'paper/materials/20261016-global-build-g3b/ops-dispatch/scope-preparation-cause-readback.json',cause_readback)
+write(p/'lesson-appends.json',own_lessons)
+print(json.dumps(dict(postmortems=2,raw_rows=sum(x['original_rows'] for x in postmortems),postmortem_ledger_rows=len(post_rows),strategy_trace_rows=16,waiting=10,new_bug=False),ensure_ascii=False),flush=True)

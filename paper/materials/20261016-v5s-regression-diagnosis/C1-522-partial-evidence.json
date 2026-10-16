@@ -1,0 +1,52 @@
+{
+  "at": "2026-10-16T09:45:32.437295+00:00",
+  "source": {
+    "path": "logs/decisions.jsonl",
+    "off": 1890019927,
+    "len": 74224,
+    "sha256": "7d173c094da7db0ae9eed554dbed110c616383cdd85e875b103a711bd168fa5f"
+  },
+  "run_id": "TCDUBRWMEMNA",
+  "label": "combat/plan-choice",
+  "floor": 48,
+  "turn": 8,
+  "samples": 522,
+  "requested": 1200,
+  "low_trust": true,
+  "available": true,
+  "completion": {
+    "required": true,
+    "attempt_id": "d61baaac-bc13-4b89-bd6a-49341c47d1f3",
+    "status": "degraded",
+    "attempts": 3,
+    "reasons": [
+      "error: Error: boss-lines worker: Error: missing successful first-fight resources: nonpositive-hp; seed=434724799; {\"won\":true,\"died\":false,\"turns\":5,\"captureResources\"",
+      "error: Error: boss-lines worker: Error: missing successful first-fight resources: nonpositive-hp; seed=434724799; {\"won\":true,\"died\":false,\"turns\":5,\"captureResources\""
+    ],
+    "samples": 522,
+    "requested": 1200,
+    "failure": false,
+    "key": "sim-failure-v1:2eafc5adec72308341b0750b2b41503643d53ce0e1e2dc4eb431d8f865a84843"
+  },
+  "question_numeric_fields": {
+    "plan1": {
+      "whole_fight_sim": "不完整（故障降级，n=522）；低可信连战模拟：F48→F49连续通关 0%（原始、未校准）；胜F48 0/522，其中死F49 0、未完成F49 0；每条样本传递实际剩余HP/药水，522样本；不是必死或SL判据。"
+    },
+    "plan2": {
+      "whole_fight_sim": "不完整（故障降级，n=522）；低可信连战模拟：F48→F49连续通关 0%（原始、未校准）；胜F48 0/522，其中死F49 0、未完成F49 0；每条样本传递实际剩余HP/药水，522样本；不是必死或SL判据。"
+    },
+    "plan3": {
+      "whole_fight_sim": "不完整（故障降级，n=522）；低可信连战模拟：F48→F49连续通关 0%（原始、未校准）；胜F48 0/522，其中死F49 0、未完成F49 0；每条样本传递实际剩余HP/药水，522样本；不是必死或SL判据。"
+    },
+    "plan4": {
+      "whole_fight_sim": "不完整（故障降级，n=522）；低可信连战模拟：F48→F49连续通关 0%（原始、未校准）；胜F48 0/522，其中死F49 0、未完成F49 0；每条样本传递实际剩余HP/药水，522样本；不是必死或SL判据。"
+    },
+    "plan5": {
+      "whole_fight_sim": "不完整（故障降级，n=522）；低可信连战模拟：F48→F49连续通关 0%（原始、未校准）；胜F48 0/522，其中死F49 0、未完成F49 0；每条样本传递实际剩余HP/药水，522样本；不是必死或SL判据。"
+    },
+    "plan6": {
+      "whole_fight_sim": "不完整（故障降级，n=522）；低可信连战模拟：F48→F49连续通关 0%（原始、未校准）；胜F48 3/522，其中死F49 3、未完成F49 0；每条样本传递实际剩余HP/药水，522样本；不是必死或SL判据。"
+    }
+  },
+  "source_rule": "agent/src/sim/boss-lines.ts: degraded>=300 can retain explicitly incomplete figures, and existing low-trust suppression remains"
+}

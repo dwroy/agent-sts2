@@ -17,6 +17,9 @@ export interface CombatSRanking {
   comparisons: { line: number; leader: number; mean: number; se: number; tied: boolean; samples?: number }[];
   old_best: number;
   best: number;
+  mode?: "shadow";
+  shadow_best?: number;
+  shadow_used?: boolean;
 }
 
 /** Use anchored tie groups, so pairwise near-ties cannot make the sort comparator non-transitive. */

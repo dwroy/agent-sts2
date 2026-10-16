@@ -1,0 +1,12 @@
+{
+  "first_scan_rc": 1,
+  "rule": "generic-api-key",
+  "public_field": "canonical.key",
+  "meaning": "Scheduler deduplication digest, not an authentication key; ops/learner_jobs.py fix_key hashes queue text and accepted entries.",
+  "evidence_source": "ops/learner_jobs.py",
+  "evidence_sha256": "6011e4d84f580824ec60b4e0bb9a2c1f8379037961722b532b3754d8922211b1",
+  "original_scheduler_state_unchanged": true,
+  "first_scan_originals_preserved": true,
+  "change": "Public readback field renamed scheduler_dedup_identity; value and original reports unchanged.",
+  "rerun_reason": "Public record bytes changed; rescan required before commit."
+}

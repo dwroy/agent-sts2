@@ -1,0 +1,149 @@
+{
+  "at": "2026-10-16 14:08:29 CST",
+  "event": "2026-10-16 13:56 CST learner-checks",
+  "original_batch": "20261016-131302-strategy-proposal",
+  "live": "9afbe4075ac8d941da6f1a47020e046aa2d5d8be",
+  "tree": "9e10585fd92e4abb4b7b1dab1974fc99b5c56b01",
+  "canonical": {
+    "rc": 1,
+    "log": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261016-131302-strategy-proposal.fallback-9e10585fd92e4abb4b7b1dab1974fc99b5c56b01.checks.log",
+    "merged": "9afbe4075ac8d941da6f1a47020e046aa2d5d8be",
+    "tree": "9e10585fd92e4abb4b7b1dab1974fc99b5c56b01",
+    "commits": [
+      "39a3bdb948c13f4d84e2c644c9a08a9a3543c16b"
+    ]
+  },
+  "original_log": {
+    "path": "ops/codex-ops/learner/20261016-131302-strategy-proposal.fallback-9e10585fd92e4abb4b7b1dab1974fc99b5c56b01.checks.log",
+    "bytes": 118131,
+    "sha256": "87a81949fbfb7040cc02cff03262dfe7b377da71eabc0dbd2bbc8f9bba6dc0ed"
+  },
+  "tsc_rc": 0,
+  "tsc_evidence": "Original full command chains successful tsc before Vitest; Vitest actually ran.",
+  "vitest_rc": 1,
+  "files": {
+    "total": 497,
+    "passed": 496,
+    "failed": 1
+  },
+  "tests": {
+    "total": 4971,
+    "passed": 4968,
+    "failed": 1,
+    "skipped": 2
+  },
+  "duration_seconds": 804.97,
+  "failed_case": "tests/global-build-integration.test.ts > keeps the actual u6ru-f22-shop/open question and current C1/C2/P2 facts identical to off",
+  "failed_line": 59,
+  "observed_only_assertion_diff": {
+    "field": "record diagnostics loadAverage",
+    "off": [
+      9.43,
+      15.31,
+      18.61
+    ],
+    "shadow": [
+      9.87,
+      15.3,
+      18.6
+    ]
+  },
+  "prior_assertions_passed": [
+    "off.record has no error",
+    "shadow.record has no error",
+    "JSON.stringify(shadow.decision) == JSON.stringify(off.decision)"
+  ],
+  "subsequent_assertions": "This case line60 onward not executed after failed line59; not claimed passed.",
+  "diagnosis": "Fixture does not freeze node:os loadavg(), while comparing entire health records from two sequential calls; observed difference is current host load, not a shown decision difference.",
+  "disposition": "retain live; send deterministic test-input repair to original G2 owner; preserve full rc1, do not auto rollback or rerun unchanged full",
+  "source_owner": "01a13dcd-83d4-7c63-b233-f93cf878ecf4",
+  "source": "e9922a6008b35c3b4427c423830f015252a3bcde",
+  "needed_fix": "Only test fixture node:os loadavg input; keep full record equality, all assertions, 15s/time budgets and production code unchanged.",
+  "pinned_twenty_source_leaves": [
+    {
+      "path": "agent/src/hand/screens/selection.ts",
+      "sha256": "22a6189aa879f51793e7bfcc3a18c983b77be5ea2d804049d5c3ad36e006bc60"
+    },
+    {
+      "path": "agent/src/hand/screens/silent-sandpit-discard.ts",
+      "sha256": "a79324d5d237b0be6ac6b02a8f8c5302236e93fe447e91842c58df3a3e8f6479"
+    },
+    {
+      "path": "agent/tests/silent-survivor-sandpit-discard.test.ts",
+      "sha256": "39427e2fa9c0eb3cd9228a39224ac31ac0c6243d2f90b88a03e732e66510c189"
+    },
+    {
+      "path": "agent/tests/silent-survivor-sandpit-evidence.json",
+      "sha256": "bcb53e9f5087a79633c07dcab908f973a2333e6e709ee6c1dbbe3956218965a0"
+    },
+    {
+      "path": "agent/src/core/global-build-config.ts",
+      "sha256": "89c0a8bfe54d7ed867a5210e265b482b1117d0edb959e02eeb27ce7c43252b3c"
+    },
+    {
+      "path": "agent/src/eye/run-config.ts",
+      "sha256": "d6bfff09f34b91968a9e53c9a1cd0d7ded814a67ae59412b607bec33b31fead1"
+    },
+    {
+      "path": "agent/src/memory/types.ts",
+      "sha256": "1b11c7b631dadea408db53b22c08d1619ef0588eff120d5e609f8279325e63bf"
+    },
+    {
+      "path": "agent/src/sim/build-sim-facts.ts",
+      "sha256": "ceda348dc59dad6c8d61de1a5a35e0bac02bdc4aa4df5659a8a4dc3d9d9a1c8c"
+    },
+    {
+      "path": "agent/src/sim/global-build-b3.ts",
+      "sha256": "112ddbaa7687117d9708e93409b7c5e89319505c60bf77e7085c8fa20c4cd96a"
+    },
+    {
+      "path": "agent/src/sim/global-build-observer.ts",
+      "sha256": "768b9f48b7306acf91caf37b75f2c2d94fbfba91ab594097d7fd935e7f0c6e09"
+    },
+    {
+      "path": "agent/src/sim/global-build-pool.ts",
+      "sha256": "3dd2396d59189bb246de8073c6a09091c3b5405495da8dc0c71d822caa48b349"
+    },
+    {
+      "path": "agent/src/sim/global-build.ts",
+      "sha256": "18e44d9858849400101d9a6b1f36626e9ea041f9c3529c5b561f0db77049c860"
+    },
+    {
+      "path": "agent/tests/global-build-b3.test.ts",
+      "sha256": "0afc03919cc1b78e97a42256982e0b1bc9cc9d13a5b5eb6b555f181ed50ddbea"
+    },
+    {
+      "path": "agent/tests/global-build-health.test.ts",
+      "sha256": "48e98a5fe7baae1f2213a9159f853e5e77a8c7b95183fea0acde5b8306f1b6d5"
+    },
+    {
+      "path": "agent/tests/global-build-integration.test.ts",
+      "sha256": "9188dd9cac5e4b6d7d16f97d3dbd8564f4ac36cf2465382a0054f77edd19777a"
+    },
+    {
+      "path": "agent/tests/global-build-observer.test.ts",
+      "sha256": "3f948fbf1f68f84c473dc8ae5ea4f7c27a79e262a611fca68057085fd1b7f0bb"
+    },
+    {
+      "path": "agent/tests/global-build.test.ts",
+      "sha256": "b010144031daa18da44a0b9ec90a4540231edd99555741087df1001e68351dbe"
+    },
+    {
+      "path": "agent/tests/global_build_health_test.py",
+      "sha256": "ee3660b3406e085bd693d89893c934a67044281ad12c5405e700068b591f0334"
+    },
+    {
+      "path": "ops/global_build_health.py",
+      "sha256": "a3b060c1fd5d4d6df7dfdf066f6617a5b7a20200428e4223d7e294b25453f8c1"
+    },
+    {
+      "path": "ops/module_health.py",
+      "sha256": "8832bc5128509407a96f8169d14e1ca3ff6febf3cb56a5971e03933e3d18ce07"
+    }
+  ],
+  "no_new_behavior_release": true,
+  "no_game_restart_or_account_home_model_prompt_change": true,
+  "repair_started": false,
+  "repair_owner_received": false,
+  "no_other_role_ACK": true
+}

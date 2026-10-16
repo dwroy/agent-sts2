@@ -1,0 +1,308 @@
+{
+  "at": "2026-10-16T09:18:33.422432+00:00",
+  "freeze_sha256": "9f9c4367661acc0bb4073c664868227a2a61dd57ead53383008c27bfb513c36a",
+  "queries": {
+    "fights": "SELECT * FROM fights WHERE run_id IN ('YP428GT9ZLL3','WA7FRJ7UABCV','4U3WNL3JRRCX','1269Y20SKHUM','E5L15SK6ZHZB','4YPGHGJD393H','8AGEGLG40SV3','EEVP0QTLMSX9','LKC9YXKZWTKR','Q9FM7A80E4BZ','6ZGMGEQ5YDVK','EBVT8UZM6P12','Q10YYQ5DUPJA','9GTFF6DC500L','QRZX1S9USYWP','W1YY8PEWGUF9','YUWMCVH6MFUH','Y2K25VFDU95P','1GN7WFBWC2E3','X06YT1507E5M','2E4UQ1BZTQWB','REEBQHPHSWGK','13CBGUPK6122','X7REGM0RUNSA','UPAB38G2PA02','WJ0LTVSSDY61','HLAWCGM3KHVB','DUB5VQQ6D6D1','2LZHP9BYFTHE','RQCHNN0W72KF','VNSXWCWXR3VW','PTGQF9BEQ6G1','A3X30TN54LSH','ZE2DNC29WWHB','JWK2C8LE4SFV','TKAN594T9SKS','0BHQCPAF33N6','BGRC1SURKBJY','LTQ083RTNZJQ','ATP5MCMJDMQY','DHYFWEN40SJ7','9KP5S3317EEL','FGKZALWSTQQ1','FD8NZAHU7SNY','TCDUBRWMEMNA','1L4RRN6AN5SQ','4Z2GCLA4DU52','DYB7KFG723QM','0YQJ9D1MC4NK') AND last_off < 13577176067 ORDER BY run_id,first_off",
+    "frames": "SELECT off,len,ts,observed_ts,observed,run_id,screen,in_combat,turn,floor,hp,max_hp,deck_size,deck,relics,potions,player_hp,enemies,incoming,go_victory,go_floor,map_node,boss_id FROM frames WHERE run_id IN ('YP428GT9ZLL3','WA7FRJ7UABCV','4U3WNL3JRRCX','1269Y20SKHUM','E5L15SK6ZHZB','4YPGHGJD393H','8AGEGLG40SV3','EEVP0QTLMSX9','LKC9YXKZWTKR','Q9FM7A80E4BZ','6ZGMGEQ5YDVK','EBVT8UZM6P12','Q10YYQ5DUPJA','9GTFF6DC500L','QRZX1S9USYWP','W1YY8PEWGUF9','YUWMCVH6MFUH','Y2K25VFDU95P','1GN7WFBWC2E3','X06YT1507E5M','2E4UQ1BZTQWB','REEBQHPHSWGK','13CBGUPK6122','X7REGM0RUNSA','UPAB38G2PA02','WJ0LTVSSDY61','HLAWCGM3KHVB','DUB5VQQ6D6D1','2LZHP9BYFTHE','RQCHNN0W72KF','VNSXWCWXR3VW','PTGQF9BEQ6G1','A3X30TN54LSH','ZE2DNC29WWHB','JWK2C8LE4SFV','TKAN594T9SKS','0BHQCPAF33N6','BGRC1SURKBJY','LTQ083RTNZJQ','ATP5MCMJDMQY','DHYFWEN40SJ7','9KP5S3317EEL','FGKZALWSTQQ1','FD8NZAHU7SNY','TCDUBRWMEMNA','1L4RRN6AN5SQ','4Z2GCLA4DU52','DYB7KFG723QM','0YQJ9D1MC4NK') AND off+len <= 13577176067 ORDER BY off",
+    "decisions-index": "SELECT off,len,run_id,label,floor,turn,ts FROM decisions WHERE run_id IN ('YP428GT9ZLL3','WA7FRJ7UABCV','4U3WNL3JRRCX','1269Y20SKHUM','E5L15SK6ZHZB','4YPGHGJD393H','8AGEGLG40SV3','EEVP0QTLMSX9','LKC9YXKZWTKR','Q9FM7A80E4BZ','6ZGMGEQ5YDVK','EBVT8UZM6P12','Q10YYQ5DUPJA','9GTFF6DC500L','QRZX1S9USYWP','W1YY8PEWGUF9','YUWMCVH6MFUH','Y2K25VFDU95P','1GN7WFBWC2E3','X06YT1507E5M','2E4UQ1BZTQWB','REEBQHPHSWGK','13CBGUPK6122','X7REGM0RUNSA','UPAB38G2PA02','WJ0LTVSSDY61','HLAWCGM3KHVB','DUB5VQQ6D6D1','2LZHP9BYFTHE','RQCHNN0W72KF','VNSXWCWXR3VW','PTGQF9BEQ6G1','A3X30TN54LSH','ZE2DNC29WWHB','JWK2C8LE4SFV','TKAN594T9SKS','0BHQCPAF33N6','BGRC1SURKBJY','LTQ083RTNZJQ','ATP5MCMJDMQY','DHYFWEN40SJ7','9KP5S3317EEL','FGKZALWSTQQ1','FD8NZAHU7SNY','TCDUBRWMEMNA','1L4RRN6AN5SQ','4Z2GCLA4DU52','DYB7KFG723QM','0YQJ9D1MC4NK') AND off+len <= 1998416819 ORDER BY off",
+    "brain-index": "SELECT off,len,run_id,label,ts FROM llm_calls_raw WHERE src='brain' AND run_id IN ('YP428GT9ZLL3','WA7FRJ7UABCV','4U3WNL3JRRCX','1269Y20SKHUM','E5L15SK6ZHZB','4YPGHGJD393H','8AGEGLG40SV3','EEVP0QTLMSX9','LKC9YXKZWTKR','Q9FM7A80E4BZ','6ZGMGEQ5YDVK','EBVT8UZM6P12','Q10YYQ5DUPJA','9GTFF6DC500L','QRZX1S9USYWP','W1YY8PEWGUF9','YUWMCVH6MFUH','Y2K25VFDU95P','1GN7WFBWC2E3','X06YT1507E5M','2E4UQ1BZTQWB','REEBQHPHSWGK','13CBGUPK6122','X7REGM0RUNSA','UPAB38G2PA02','WJ0LTVSSDY61','HLAWCGM3KHVB','DUB5VQQ6D6D1','2LZHP9BYFTHE','RQCHNN0W72KF','VNSXWCWXR3VW','PTGQF9BEQ6G1','A3X30TN54LSH','ZE2DNC29WWHB','JWK2C8LE4SFV','TKAN594T9SKS','0BHQCPAF33N6','BGRC1SURKBJY','LTQ083RTNZJQ','ATP5MCMJDMQY','DHYFWEN40SJ7','9KP5S3317EEL','FGKZALWSTQQ1','FD8NZAHU7SNY','TCDUBRWMEMNA','1L4RRN6AN5SQ','4Z2GCLA4DU52','DYB7KFG723QM','0YQJ9D1MC4NK') AND off+len <= 678912275 ORDER BY off",
+    "sl-index": "SELECT off,len,run_id,floor,attempt,result FROM sl_attempts WHERE run_id IN ('YP428GT9ZLL3','WA7FRJ7UABCV','4U3WNL3JRRCX','1269Y20SKHUM','E5L15SK6ZHZB','4YPGHGJD393H','8AGEGLG40SV3','EEVP0QTLMSX9','LKC9YXKZWTKR','Q9FM7A80E4BZ','6ZGMGEQ5YDVK','EBVT8UZM6P12','Q10YYQ5DUPJA','9GTFF6DC500L','QRZX1S9USYWP','W1YY8PEWGUF9','YUWMCVH6MFUH','Y2K25VFDU95P','1GN7WFBWC2E3','X06YT1507E5M','2E4UQ1BZTQWB','REEBQHPHSWGK','13CBGUPK6122','X7REGM0RUNSA','UPAB38G2PA02','WJ0LTVSSDY61','HLAWCGM3KHVB','DUB5VQQ6D6D1','2LZHP9BYFTHE','RQCHNN0W72KF','VNSXWCWXR3VW','PTGQF9BEQ6G1','A3X30TN54LSH','ZE2DNC29WWHB','JWK2C8LE4SFV','TKAN594T9SKS','0BHQCPAF33N6','BGRC1SURKBJY','LTQ083RTNZJQ','ATP5MCMJDMQY','DHYFWEN40SJ7','9KP5S3317EEL','FGKZALWSTQQ1','FD8NZAHU7SNY','TCDUBRWMEMNA','1L4RRN6AN5SQ','4Z2GCLA4DU52','DYB7KFG723QM','0YQJ9D1MC4NK') AND off+len <= 43590194 ORDER BY off"
+  },
+  "query_threads": 2,
+  "raw_projection_rows": {
+    "decisions": 33177,
+    "brains": 1742,
+    "sl": 295
+  },
+  "decision_coverage": {
+    "YP428GT9ZLL3": {
+      "indexed_decisions": 243,
+      "finished_summary_decisions": 243,
+      "equal": true
+    },
+    "WA7FRJ7UABCV": {
+      "indexed_decisions": 1287,
+      "finished_summary_decisions": 1287,
+      "equal": true
+    },
+    "4U3WNL3JRRCX": {
+      "indexed_decisions": 647,
+      "finished_summary_decisions": 647,
+      "equal": true
+    },
+    "1269Y20SKHUM": {
+      "indexed_decisions": 1273,
+      "finished_summary_decisions": 1273,
+      "equal": true
+    },
+    "E5L15SK6ZHZB": {
+      "indexed_decisions": 656,
+      "finished_summary_decisions": 656,
+      "equal": true
+    },
+    "4YPGHGJD393H": {
+      "indexed_decisions": 275,
+      "finished_summary_decisions": 275,
+      "equal": true
+    },
+    "8AGEGLG40SV3": {
+      "indexed_decisions": 614,
+      "finished_summary_decisions": 614,
+      "equal": true
+    },
+    "EEVP0QTLMSX9": {
+      "indexed_decisions": 950,
+      "finished_summary_decisions": 950,
+      "equal": true
+    },
+    "LKC9YXKZWTKR": {
+      "indexed_decisions": 798,
+      "finished_summary_decisions": 798,
+      "equal": true
+    },
+    "Q9FM7A80E4BZ": {
+      "indexed_decisions": 515,
+      "finished_summary_decisions": 515,
+      "equal": true
+    },
+    "6ZGMGEQ5YDVK": {
+      "indexed_decisions": 822,
+      "finished_summary_decisions": 822,
+      "equal": true
+    },
+    "EBVT8UZM6P12": {
+      "indexed_decisions": 737,
+      "finished_summary_decisions": 737,
+      "equal": true
+    },
+    "Q10YYQ5DUPJA": {
+      "indexed_decisions": 977,
+      "finished_summary_decisions": 977,
+      "equal": true
+    },
+    "9GTFF6DC500L": {
+      "indexed_decisions": 936,
+      "finished_summary_decisions": 936,
+      "equal": true
+    },
+    "QRZX1S9USYWP": {
+      "indexed_decisions": 413,
+      "finished_summary_decisions": 413,
+      "equal": true
+    },
+    "W1YY8PEWGUF9": {
+      "indexed_decisions": 841,
+      "finished_summary_decisions": 841,
+      "equal": true
+    },
+    "YUWMCVH6MFUH": {
+      "indexed_decisions": 702,
+      "finished_summary_decisions": 702,
+      "equal": true
+    },
+    "Y2K25VFDU95P": {
+      "indexed_decisions": 162,
+      "finished_summary_decisions": 162,
+      "equal": true
+    },
+    "1GN7WFBWC2E3": {
+      "indexed_decisions": 836,
+      "finished_summary_decisions": 836,
+      "equal": true
+    },
+    "X06YT1507E5M": {
+      "indexed_decisions": 1048,
+      "finished_summary_decisions": 1048,
+      "equal": true
+    },
+    "2E4UQ1BZTQWB": {
+      "indexed_decisions": 450,
+      "finished_summary_decisions": 450,
+      "equal": true
+    },
+    "REEBQHPHSWGK": {
+      "indexed_decisions": 717,
+      "finished_summary_decisions": 717,
+      "equal": true
+    },
+    "13CBGUPK6122": {
+      "indexed_decisions": 673,
+      "finished_summary_decisions": 673,
+      "equal": true
+    },
+    "X7REGM0RUNSA": {
+      "indexed_decisions": 88,
+      "finished_summary_decisions": 88,
+      "equal": true
+    },
+    "UPAB38G2PA02": {
+      "indexed_decisions": 826,
+      "finished_summary_decisions": 826,
+      "equal": true
+    },
+    "WJ0LTVSSDY61": {
+      "indexed_decisions": 472,
+      "finished_summary_decisions": 472,
+      "equal": true
+    },
+    "HLAWCGM3KHVB": {
+      "indexed_decisions": 902,
+      "finished_summary_decisions": 902,
+      "equal": true
+    },
+    "DUB5VQQ6D6D1": {
+      "indexed_decisions": 485,
+      "finished_summary_decisions": 485,
+      "equal": true
+    },
+    "2LZHP9BYFTHE": {
+      "indexed_decisions": 738,
+      "finished_summary_decisions": 738,
+      "equal": true
+    },
+    "RQCHNN0W72KF": {
+      "indexed_decisions": 772,
+      "finished_summary_decisions": 772,
+      "equal": true
+    },
+    "VNSXWCWXR3VW": {
+      "indexed_decisions": 810,
+      "finished_summary_decisions": 810,
+      "equal": true
+    },
+    "PTGQF9BEQ6G1": {
+      "indexed_decisions": 835,
+      "finished_summary_decisions": 835,
+      "equal": true
+    },
+    "A3X30TN54LSH": {
+      "indexed_decisions": 195,
+      "finished_summary_decisions": 195,
+      "equal": true
+    },
+    "ZE2DNC29WWHB": {
+      "indexed_decisions": 564,
+      "finished_summary_decisions": 564,
+      "equal": true
+    },
+    "JWK2C8LE4SFV": {
+      "indexed_decisions": 1048,
+      "finished_summary_decisions": 1048,
+      "equal": true
+    },
+    "TKAN594T9SKS": {
+      "indexed_decisions": 537,
+      "finished_summary_decisions": 537,
+      "equal": true
+    },
+    "0BHQCPAF33N6": {
+      "indexed_decisions": 695,
+      "finished_summary_decisions": 695,
+      "equal": true
+    },
+    "BGRC1SURKBJY": {
+      "indexed_decisions": 875,
+      "finished_summary_decisions": 875,
+      "equal": true
+    },
+    "LTQ083RTNZJQ": {
+      "indexed_decisions": 544,
+      "finished_summary_decisions": 544,
+      "equal": true
+    },
+    "ATP5MCMJDMQY": {
+      "indexed_decisions": 260,
+      "finished_summary_decisions": 260,
+      "equal": true
+    },
+    "DHYFWEN40SJ7": {
+      "indexed_decisions": 1152,
+      "finished_summary_decisions": 1152,
+      "equal": true
+    },
+    "9KP5S3317EEL": {
+      "indexed_decisions": 862,
+      "finished_summary_decisions": 862,
+      "equal": true
+    },
+    "FGKZALWSTQQ1": {
+      "indexed_decisions": 461,
+      "finished_summary_decisions": 461,
+      "equal": true
+    },
+    "FD8NZAHU7SNY": {
+      "indexed_decisions": 393,
+      "finished_summary_decisions": 393,
+      "equal": true
+    },
+    "TCDUBRWMEMNA": {
+      "indexed_decisions": 1267,
+      "finished_summary_decisions": 1267,
+      "equal": true
+    },
+    "1L4RRN6AN5SQ": {
+      "indexed_decisions": 219,
+      "finished_summary_decisions": 219,
+      "equal": true
+    },
+    "4Z2GCLA4DU52": {
+      "indexed_decisions": 390,
+      "finished_summary_decisions": 390,
+      "equal": true
+    },
+    "DYB7KFG723QM": {
+      "indexed_decisions": 699,
+      "finished_summary_decisions": 699,
+      "equal": true
+    },
+    "0YQJ9D1MC4NK": {
+      "indexed_decisions": 516,
+      "finished_summary_decisions": 516,
+      "equal": true
+    }
+  },
+  "all_decision_counts_match": true,
+  "files": [
+    {
+      "path": "inputs/brain-index.jsonl.gz",
+      "bytes": 32553,
+      "sha256": "30c60d07b20bb43b9033a4d76444292d93c862a1200a8e4acfbc065e15426c2a"
+    },
+    {
+      "path": "inputs/brains.jsonl.gz",
+      "bytes": 10056824,
+      "sha256": "08c4c3170cd0e831822c57efda62df2df4ab5504a7faec0748854f32820bde7a"
+    },
+    {
+      "path": "inputs/decisions-index.jsonl.gz",
+      "bytes": 516574,
+      "sha256": "d9d1a3330e271ea020a259a73ef92444b53f0f7a3f8d20928d896d3a82dfe651"
+    },
+    {
+      "path": "inputs/decisions.jsonl.gz",
+      "bytes": 71844208,
+      "sha256": "28d3bdb7fc8b0a3d997a2b41b555a6a4e18d1e478818a64a742d9a5f7d823f31"
+    },
+    {
+      "path": "inputs/fights.jsonl.gz",
+      "bytes": 59153,
+      "sha256": "8d1a56317a6d382d80b1080eb6bc05eaaa43467f1b1d8017298e1651d24fc208"
+    },
+    {
+      "path": "inputs/frames.jsonl.gz",
+      "bytes": 1176882,
+      "sha256": "bf71bec4d7f22fde11332b72a12b93d0598cfaa31a323bc09b64e57042bcbd3d"
+    },
+    {
+      "path": "inputs/sl-index.jsonl.gz",
+      "bytes": 4341,
+      "sha256": "48e9b4390be5eaecdd4cbe44397842c05ee500e03a762670665a78462164888e"
+    },
+    {
+      "path": "inputs/sl.jsonl.gz",
+      "bytes": 691245,
+      "sha256": "578f66d1b44a7915f27aee9138a9fe9449daa5d0bdff2cb20d25d12d2bb40ddb"
+    }
+  ],
+  "limits": "Frozen table exports are reproducible inputs. Brain/decision/SL originals retain SHA-bound offsets; no predictions recomputed, no model calls. Fight view can merge SL attempts: first-attempt outcomes are separately resolved from sl-attempts, never inferred from this view alone."
+}

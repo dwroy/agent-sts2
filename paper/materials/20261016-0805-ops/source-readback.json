@@ -1,0 +1,244 @@
+{
+  "batch": "20261016-071301-strategy-proposal",
+  "source": "1698adc96ba434a46942321e0237b70657e625b2",
+  "source_parent": "7da6f7693325878a4b59113d630d219316a7f64a",
+  "source_checks": {
+    "tsc": 0,
+    "vitest": 0,
+    "cases": 4113,
+    "files": 438,
+    "script_exit": 0,
+    "source_removed": {
+      "exit": 1,
+      "failed": 3,
+      "passed": 6
+    },
+    "source_restored": {
+      "exit": 0,
+      "passed": 9
+    },
+    "targeted": {
+      "exit": 0,
+      "files": 2,
+      "passed": 148
+    },
+    "gitleaks": 0,
+    "sandbox_log_sha256": "ae858c4bd5c1603e1b592d404ae82c2eeb86b69d0463b5df62a5c11f03a0586e",
+    "limits": "固定排除列表遵循原沙箱脚本；不冒称沙箱外完整检查或自然消费者验证。"
+  },
+  "native": {
+    "batch": "20261016-071301-strategy-proposal",
+    "thread": "01a141d7-3e0c-73a2-a785-0ef45e3b25c1",
+    "cwd": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-071301",
+    "event_log": "learner/runs/20261016-071305-63db5e45-b531-4c32-a443-7e893e9961bd-strategy-proposal.jsonl",
+    "registered_launch_batch": "20261016-071301-strategy-proposal",
+    "original_lease": "8894a44c26db56d8fedcb541fe1052c11c30da56cb597f3c64adf9c5e9a61491",
+    "native_context": {
+      "source": "ops/codex-ops/accounts/codex1/learner/sessions/2026/10/16/rollout-2026-10-16T07-13-07-01a141d7-3e0c-73a2-a785-0ef45e3b25c1.jsonl",
+      "offset": 50242,
+      "bytes": 5148,
+      "sha256": "c7ea436d60cbe9d96465bfa711ae76f51b318502b4989a2a4b50365cc1e1972f",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "sandbox": {
+        "type": "workspace-write",
+        "writable_roots": [
+          "/home/dw/Projects/agent-sts2",
+          "/home/dw/Projects/agent-sts2/.git",
+          "/home/dw/Projects/agent-sts2/.git/worktrees/codex-strategy-silent-20261016-071301"
+        ],
+        "network_access": false,
+        "exclude_tmpdir_env_var": false,
+        "exclude_slash_tmp": false
+      },
+      "approval_policy": "never"
+    },
+    "native_user_input": {
+      "offset": 55390,
+      "bytes": 21499,
+      "sha256": "d2e37450cbc280eb903941956241a83291de824fe9d289c52b3b4b8d762208fb",
+      "input_sha256": "3a6bd5381f7d72f1cd1dfcce777d8bc2d0b6ab8e8134ab910b62a7d259ab5040"
+    },
+    "original_header_events": [
+      {
+        "offset": 0,
+        "bytes": 23563,
+        "sha256": "c3500d4508d401678861482ad4bd6527e99563e3eb0c16e67cddb16279674f52",
+        "type": "learner_launch",
+        "attempt": null,
+        "code": null
+      },
+      {
+        "offset": 23563,
+        "bytes": 377,
+        "sha256": "f67038e19932f4399e3ca21dd193744a77c2158036b551f5280972e6d1871427",
+        "type": "learner_startup_attempt",
+        "attempt": 1,
+        "code": null
+      },
+      {
+        "offset": 26946,
+        "bytes": 77,
+        "sha256": "ed11693abdc71e90a999e65ca6003c7b4f3cb65a82ac14e6e79030c8ff93f7c6",
+        "type": "thread.started",
+        "attempt": null,
+        "code": null
+      }
+    ],
+    "startup_attempts": 1,
+    "failed_startups_preserved": 0,
+    "no_model_or_manual_restart": true
+  },
+  "original_failed_state_preserved": true,
+  "original_merge_result": {
+    "source": "1698adc96ba434a46942321e0237b70657e625b2",
+    "merged": null,
+    "version": null,
+    "behavior_change": false,
+    "live_before_refresh": "098fbea4b753b9786d4da84072dac574d0975a37",
+    "status_before": " M notes/fight-value-backtest-silent.md\n M notes/monster-db-check.md\n",
+    "source_paths": [
+      "agent/src/reflex/combat-plan.ts",
+      "agent/src/reflex/rollout-live.ts",
+      "agent/src/reflex/silent-sl-resource-comparison.ts",
+      "agent/src/reflex/turn-solver.ts",
+      "agent/tests/silent-sl-prism-resource-evidence.json",
+      "agent/tests/silent-sl-resource-comparison.test.ts"
+    ],
+    "refreshed_paths": [],
+    "pre_merge": "098fbea4b753b9786d4da84072dac574d0975a37",
+    "merge_exit": 1,
+    "conflicts": [
+      "notes/fix-queue-v4.md",
+      "notes/for-roy.md",
+      "notes/ops-handoff.md",
+      "ops/inbox-dev.md",
+      "paper/materials/decision-log.md",
+      "paper/materials/learning/ledger.jsonl"
+    ],
+    "abort_exit": 0,
+    "live_after_failed_merge": "098fbea4b753b9786d4da84072dac574d0975a37",
+    "error": "live merge failed; original conflict/refusal kept in live-merge.log",
+    "state": "blocked"
+  },
+  "original_report": {
+    "task": "strategy-proposal",
+    "character": "silent",
+    "batch": "20261016-071301-strategy-proposal",
+    "base": "7da6f7693325878a4b59113d630d219316a7f64a",
+    "runs": [
+      "K2JAGKVJAWZJ",
+      "10GPK5XGHCK3",
+      "UJ0K3G10609Y",
+      "NEWRFAYKTQHR",
+      "79UCJ0K6R9C1",
+      "9YBKCNBFP0X5",
+      "UACFSW4VDDLD",
+      "4Y94N8RDPGPM",
+      "TCFAHJ9K19VY",
+      "UMVLWER4CD98"
+    ],
+    "fixes": [
+      {
+        "id": "silent-proposal-aff5ac3bb7cdb81b",
+        "commit": "1698adc96ba434a46942321e0237b70657e625b2",
+        "summary": "补齐Silent A10 SL饱和、污染及毒层资源审计；已提交，实际live合入受记录冲突阻塞"
+      }
+    ],
+    "skipped": [
+      "silent-proposal-650ea306e8627f9e",
+      "silent-proposal-60e68d681e861d1c",
+      "silent-proposal-9aa48a84227bcdb5",
+      "silent-proposal-7cfd0f9b6b0fbbda",
+      "silent-proposal-e6f9cb57c1204036",
+      "silent-proposal-6353ffbadaaac619",
+      "silent-proposal-9e5d50fdd7bf1fbd",
+      "silent-proposal-20b9df170d51b280",
+      "silent-proposal-91cc7fd647077569"
+    ],
+    "merged": null,
+    "tests": {
+      "tsc": 0,
+      "vitest": 0,
+      "cases": 4113
+    },
+    "code_proposals": [
+      "silent-proposal-650ea306e8627f9e",
+      "silent-proposal-aff5ac3bb7cdb81b",
+      "silent-proposal-60e68d681e861d1c",
+      "silent-proposal-9aa48a84227bcdb5",
+      "silent-proposal-7cfd0f9b6b0fbbda",
+      "silent-proposal-e6f9cb57c1204036",
+      "silent-proposal-6353ffbadaaac619",
+      "silent-proposal-9e5d50fdd7bf1fbd",
+      "silent-proposal-20b9df170d51b280",
+      "silent-proposal-91cc7fd647077569"
+    ],
+    "implementation_domains": [
+      "combat",
+      "sl"
+    ],
+    "proposal_results": [
+      {
+        "id": "silent-proposal-650ea306e8627f9e",
+        "state": "waiting",
+        "reason": "48次脑调用与71次含复用决策已核；关联宽提案的组合证据和当时dirty知识输入仍未完整还原，不能以来源勘误冒称源码全部实现。"
+      },
+      {
+        "id": "silent-proposal-aff5ac3bb7cdb81b",
+        "state": "waiting",
+        "reason": "源码1698adc96ba434a46942321e0237b70657e625b2已通过源沙箱检查；live合入因6个记录文件冲突失败，已abort。待运维保留并行记录后兜底合入，不登记implemented或shipped。"
+      },
+      {
+        "id": "silent-proposal-60e68d681e861d1c",
+        "state": "waiting",
+        "reason": "感染先付持牌伤再结毒已有窄覆盖；毒药水不同入口、头骨/制品组合及后继消费者仍缺同条件验证。领域沿勘误为combat/potion。"
+      },
+      {
+        "id": "silent-proposal-9aa48a84227bcdb5",
+        "state": "waiting",
+        "reason": "缺固定同资源/种子的替代路线、饮药时点整战配对及独立留出，不能拟留药、路线或终局权重。"
+      },
+      {
+        "id": "silent-proposal-7cfd0f9b6b0fbbda",
+        "state": "waiting",
+        "reason": "六局24次普通坚韧施放及额度快照已核；缺恢复/跨SL施放额度状态及升级、重放、叠层组合证据，不能以当前敏捷重建旧额度。"
+      },
+      {
+        "id": "silent-proposal-e6f9cb57c1204036",
+        "state": "waiting",
+        "reason": "保留对60e68的combat/potion领域更正，不重复实现；关联毒水入口及头骨/制品组合仍缺同条件消费者验证。"
+      },
+      {
+        "id": "silent-proposal-6353ffbadaaac619",
+        "state": "waiting",
+        "reason": "12血空药接续已核；复活独立充能未可观测，缺固定资源/种子的两战配对及按局留出校准。"
+      },
+      {
+        "id": "silent-proposal-9e5d50fdd7bf1fbd",
+        "state": "waiting",
+        "reason": "缺原八局完整复活状态、固定两战血药配对和独立留出；首战胜后后场败不能用于拟合留药或终局参数。"
+      },
+      {
+        "id": "silent-proposal-20b9df170d51b280",
+        "state": "waiting",
+        "reason": "已有部分机制窄实现，但缺原六类范围的联合同盘消费者核验；截断出口和后继牌序变化不能支持单因胜负或新杀序。"
+      },
+      {
+        "id": "silent-proposal-91cc7fd647077569",
+        "state": "waiting",
+        "reason": "冻结13局55试5赢、真正重打12场54试4赢已复算；未定位消耗旧错误分母的具体生产源码，不能以经验数据更正冒称源码duplicate。"
+      }
+    ],
+    "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-071301/learner/runs/20261016-071305-63db5e45-b531-4c32-a443-7e893e9961bd-strategy-proposal/report.md"
+  },
+  "source_paths": [
+    "agent/src/reflex/combat-plan.ts",
+    "agent/src/reflex/rollout-live.ts",
+    "agent/src/reflex/silent-sl-resource-comparison.ts",
+    "agent/src/reflex/turn-solver.ts",
+    "agent/tests/silent-sl-prism-resource-evidence.json",
+    "agent/tests/silent-sl-resource-comparison.test.ts"
+  ],
+  "classification": "Silent A10 SL resource comparison audit metadata only: saturation, play-time Tainted and modeled post-turn poison; keep unknowns and potion-median boundaries. Existing choice, ranking and dispatch unchanged; noEffectTwin excludes the added audit metadata. All ten wider proposals remain waiting; no new game behavior release."
+}

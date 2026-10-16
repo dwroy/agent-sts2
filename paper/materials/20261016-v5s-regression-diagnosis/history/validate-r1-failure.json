@@ -1,0 +1,27 @@
+{
+  "at": "2026-10-16T09:45:02.781879+00:00",
+  "rc": 1,
+  "assertion": "all C1 degraded records have fewer than300 or no samples",
+  "actual_exception_rows": [
+    {
+      "cohort": "post",
+      "epoch": "R366_before_R369",
+      "run_id": "TCDUBRWMEMNA",
+      "floor": "48",
+      "ts": "2026-10-16T05:21:47.922Z",
+      "label": "combat/plan-choice",
+      "source_off": "1890019927",
+      "source_len": "74224",
+      "source_sha256": "7d173c094da7db0ae9eed554dbed110c616383cdd85e875b103a711bd168fa5f",
+      "lane": "b2",
+      "actual_boss_room": "True",
+      "status": "degraded",
+      "failure": "False",
+      "samples": "522",
+      "key": "sim-failure-v1:2eafc5adec72308341b0750b2b41503643d53ce0e1e2dc4eb431d8f865a84843",
+      "reasons": "[\"error: Error: boss-lines worker: Error: missing successful first-fight resources: nonpositive-hp; seed=434724799; {\\\"won\\\":true,\\\"died\\\":false,\\\"turns\\\":5,\\\"captureResources\\\"\", \"error: Error: boss-lines worker: Error: missing successful first-fight resources: nonpositive-hp; seed=434724799; {\\\"won\\\":true,\\\"died\\\":false,\\\"turns\\\":5,\\\"captureResources\\\"\"]",
+      "error": ""
+    }
+  ],
+  "scope": "Offline report consistency failure; original runtime data unchanged; inspect completion and record-number suppression rather than weakening check blindly"
+}

@@ -1,0 +1,30 @@
+{
+  "at": "2026-10-16T12:45:08.528748+08:00",
+  "worktree": "/home/dw/Projects/agent-sts2/.worktrees/global-build-g2-shadow-20261016",
+  "checks": [
+    {
+      "argv": [
+        "npx",
+        "tsc",
+        "-p",
+        "tsconfig.json",
+        "--noEmit"
+      ],
+      "rc": 0,
+      "seconds": 6.45
+    },
+    {
+      "argv": [
+        "npx",
+        "vitest",
+        "run",
+        "--maxWorkers=2",
+        "tests/global-build.test.ts",
+        "tests/global-build-observer.test.ts",
+        "tests/global-build-b3.test.ts"
+      ],
+      "rc": 1,
+      "seconds": 18.82
+    }
+  ]
+}

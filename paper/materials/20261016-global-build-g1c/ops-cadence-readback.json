@@ -1,0 +1,216 @@
+{
+  "at": "2026-10-16 08:55:13 CST",
+  "actor": "ops",
+  "status": "completed actual archive and deployed hook readback",
+  "readback_passed": true,
+  "source": "9579e378f0c3cd668d6301c0fa1ea4bd15a2ff13",
+  "deployed_main": "c50387b8863fac7e5d46db3e06a8076cc8f6a834",
+  "deployed_live": "298e74fd3be01610f2b817b9ec5675d58a8241dd",
+  "deployment_tree": "bea85e8a062dd69dafe93ac0f2aea6f0b1180814",
+  "source_leaves": [
+    {
+      "path": "eval/global_build_funnel.py",
+      "sha256": "3da1a548f0badbbffa2346c2f4b050c6ef92a3141ebdb7f21d0c8d90f803239d"
+    },
+    {
+      "path": "ops/global_build_funnel.py",
+      "sha256": "3bdf00363d7b41a052bd1c49203e688c0257fcd6b7d2e5c2bec785e7c9fcf9d2"
+    },
+    {
+      "path": "ops/report.py",
+      "sha256": "0a38fe3b3d4bea8b4a21a8c6a09d346f0e2eedb10dacbc2f1b278eeb608b5d0c"
+    },
+    {
+      "path": "agent/tests/global-build-funnel.test.ts",
+      "sha256": "3f8dd9e7c23b1f4caa2d360ca205d677824c1fc999624f50aa8cb1a6d46826b4"
+    },
+    {
+      "path": "agent/tests/global_build_funnel_test.py",
+      "sha256": "42ab6ee905a33055720a7addc953b8605067dbc43e10da679e8d04b74fedc24d"
+    }
+  ],
+  "hook": {
+    "root_report": "ops/report.py",
+    "source_sha256": "0a38fe3b3d4bea8b4a21a8c6a09d346f0e2eedb10dacbc2f1b278eeb608b5d0c",
+    "function_line": 559,
+    "actual_ended_run_caller": "ops/autoplay.sh",
+    "caller_uses_root_ops": true,
+    "nonblocking_nice19_subprocess": true,
+    "no_timer_or_model": true
+  },
+  "actual_invocations": 1,
+  "archive": "paper/materials/20261016-085400-global-build-g1c-through-000040",
+  "state": {
+    "last_completed_boundary": 40,
+    "archive": "paper/materials/20261016-085400-global-build-g1c-through-000040",
+    "decision_notified": true,
+    "run_ids_through_boundary": [
+      "32VSST9UX7MN",
+      "YP428GT9ZLL3",
+      "WA7FRJ7UABCV",
+      "4U3WNL3JRRCX",
+      "1269Y20SKHUM",
+      "E5L15SK6ZHZB",
+      "4YPGHGJD393H",
+      "8AGEGLG40SV3",
+      "EEVP0QTLMSX9",
+      "LKC9YXKZWTKR",
+      "Q9FM7A80E4BZ",
+      "6ZGMGEQ5YDVK",
+      "EBVT8UZM6P12",
+      "Q10YYQ5DUPJA",
+      "9GTFF6DC500L",
+      "QRZX1S9USYWP",
+      "YUWMCVH6MFUH",
+      "Y2K25VFDU95P",
+      "1GN7WFBWC2E3",
+      "X06YT1507E5M",
+      "2E4UQ1BZTQWB",
+      "REEBQHPHSWGK",
+      "13CBGUPK6122",
+      "X7REGM0RUNSA",
+      "UPAB38G2PA02",
+      "WJ0LTVSSDY61",
+      "HLAWCGM3KHVB",
+      "DUB5VQQ6D6D1",
+      "2LZHP9BYFTHE",
+      "RQCHNN0W72KF",
+      "VNSXWCWXR3VW",
+      "PTGQF9BEQ6G1",
+      "A3X30TN54LSH",
+      "ZE2DNC29WWHB",
+      "JWK2C8LE4SFV",
+      "TKAN594T9SKS",
+      "0BHQCPAF33N6",
+      "BGRC1SURKBJY",
+      "LTQ083RTNZJQ",
+      "ATP5MCMJDMQY"
+    ]
+  },
+  "manifest": {
+    "path": "paper/materials/20261016-085400-global-build-g1c-through-000040/input-manifest.json",
+    "sha256": "178c054f9955a99e82f056e3afcfa64a09fc368172096bdfd580afdedbb5606d"
+  },
+  "decision_marker": "G1c-archive:paper/materials/20261016-085400-global-build-g1c-through-000040",
+  "decision_exact_count": 1,
+  "decision_row": {
+    "offset": 2936287,
+    "bytes": 413,
+    "sha256": "689e2018e66468f6c2785907d22b46072b40f3099fdeef5e9a85bc471e4d7579"
+  },
+  "boundaries": [
+    10,
+    20,
+    30,
+    40
+  ],
+  "blocks": [
+    {
+      "first": 1,
+      "last": 10,
+      "n": 10,
+      "complete": true
+    },
+    {
+      "first": 11,
+      "last": 20,
+      "n": 10,
+      "complete": true
+    },
+    {
+      "first": 21,
+      "last": 30,
+      "n": 10,
+      "complete": true
+    },
+    {
+      "first": 31,
+      "last": 40,
+      "n": 10,
+      "complete": true
+    },
+    {
+      "first": 41,
+      "last": 42,
+      "n": 2,
+      "complete": false
+    }
+  ],
+  "evidence": [
+    {
+      "path": "paper/materials/20261016-global-build-g1c/ops-cadence-command.json",
+      "bytes": 728,
+      "sha256": "0ca41429d7c71ce0acdabdb118177c1c6495dfaeb870ed73960789227652397b"
+    },
+    {
+      "path": "paper/materials/20261016-global-build-g1c/ops-cadence-run.stdout",
+      "bytes": 829,
+      "sha256": "6ba7e3c6110ad887bbbd3977e0829f2e74c5f11ec4c520a37eb72986bf95157e"
+    },
+    {
+      "path": "paper/materials/20261016-global-build-g1c/ops-cadence-run.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "paper/materials/20261016-global-build-g1c/ops-cadence-exit.json",
+      "bytes": 10,
+      "sha256": "b9a9f2b527e57115b6394e4f7ca2815f12b8b015ef9d11a3cb26ab186741d5e4"
+    },
+    {
+      "path": "ops/codex-ops/global-build-funnel/state.json",
+      "bytes": 896,
+      "sha256": "6f96c7efdbca28d286ea66a7353a20d592be7a1bd79b6389ede3c22992744649"
+    },
+    {
+      "path": "paper/materials/20261016-085400-global-build-g1c-through-000040/run_config.json",
+      "bytes": 1842715,
+      "sha256": "d7550349a9a28e5d574d046e0f02f2f670c52efb75f554f8af1350aa48d5789e"
+    },
+    {
+      "path": "paper/materials/20261016-085400-global-build-g1c-through-000040/fights.json",
+      "bytes": 645178,
+      "sha256": "89c31c64cd66e348879560cf7161f8b112586e5a2d2b83edfe770f11bf121adc"
+    },
+    {
+      "path": "paper/materials/20261016-085400-global-build-g1c-through-000040/input-manifest.json",
+      "bytes": 1509,
+      "sha256": "178c054f9955a99e82f056e3afcfa64a09fc368172096bdfd580afdedbb5606d"
+    },
+    {
+      "path": "paper/materials/20261016-085400-global-build-g1c-through-000040/funnel.md",
+      "bytes": 6399,
+      "sha256": "c775211e2aec9c84f8126328c63cd06252c5c07300b997e99acebe2913d5e622"
+    },
+    {
+      "path": "paper/materials/20261016-085400-global-build-g1c-through-000040/funnel.json",
+      "bytes": 221814,
+      "sha256": "7a8d83852cc3c295c934ca57c98317a3e057023a485407952e009856408a69db"
+    },
+    {
+      "path": "paper/materials/20261016-085400-global-build-g1c-through-000040/logdb-manifest.json",
+      "bytes": 528410,
+      "sha256": "5ac7409e17a8f9809b1f218c1a81325ed7ff2511596f43685c800ec8f4d36118"
+    },
+    {
+      "path": "paper/materials/20261016-085400-global-build-g1c-through-000040/sl_attempts.json",
+      "bytes": 1017135,
+      "sha256": "2953d60c5f122837ba97f0f441ec3c3bc9798d65ae47a8766e0a2dd25bd697a0"
+    },
+    {
+      "path": "paper/materials/20261016-085400-global-build-g1c-through-000040/runs-since-20261012.json",
+      "bytes": 53563,
+      "sha256": "9f8ccabe6876235e8300034cb0d3541e0b81bf74f478bab757794efee6412b3c"
+    },
+    {
+      "path": "paper/materials/20261016-085400-global-build-g1c-through-000040/floors.json",
+      "bytes": 773894,
+      "sha256": "4bb494896d253aa59b3d5158a9be486d119e51d7718ea1277194ad83da3c4ca9"
+    }
+  ],
+  "old_snapshot_modified": false,
+  "shared_old_first_floor_victory": 24,
+  "old_passed_flags_differences_retained": 16,
+  "scope": "Only actual read-only initial archive and installed root end-event hook; does not prove future automatic ten-run invocation, natural game use, source/account admission or causal benefit",
+  "host": "pending independent G1a075726 final-composition channel; no G4 host substitution"
+}

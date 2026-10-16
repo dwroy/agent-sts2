@@ -1,0 +1,13 @@
+diff --git a/agent/tests/global-build-integration.test.ts b/agent/tests/global-build-integration.test.ts
+index fe1fc73ef..de985728a 100644
+--- a/agent/tests/global-build-integration.test.ts
++++ b/agent/tests/global-build-integration.test.ts
+@@ -9,6 +9,8 @@ import type { GlobalBossPool } from "../src/sim/global-build-pool.js";
+ 
+ vi.mock("../src/sim/boss-trust.js", async (original) => ({ ...await original<object>(), bossTrustReason: () => null }));
+ vi.mock("node:crypto", async (original) => ({ ...await original<object>(), randomUUID: () => "00000000-0000-4000-8000-000000000000" }));
++// Sequential record comparisons must observe the same host-health input.
++vi.mock("node:os", async (original) => ({ ...await original<object>(), loadavg: (): [number, number, number] => [1, 1, 1] }));
+ setupOneshotTests();
+ beforeEach(() => vi.spyOn(performance, "now").mockReturnValue(0));
+ afterEach(() => { vi.unstubAllEnvs(); vi.restoreAllMocks(); });

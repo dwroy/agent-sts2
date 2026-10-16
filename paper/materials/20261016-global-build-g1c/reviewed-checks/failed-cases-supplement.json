@@ -1,0 +1,37 @@
+{
+ "full_result_remains_rc1": true,
+ "only_the_two_failed_cases_rechecked": true,
+ "source_unchanged": true,
+ "results": [
+  {
+   "name": "component-usage-supplement",
+   "args": [
+    "npx",
+    "vitest",
+    "run",
+    "tests/component-usage.test.ts",
+    "--maxWorkers=1"
+   ],
+   "start": "2026-10-16T08:33:46.451286+08:00",
+   "rc": 0,
+   "seconds": 12.09,
+   "log": "paper/materials/20261016-global-build-g1c/reviewed-checks/component-usage-supplement.log"
+  },
+  {
+   "name": "brain-timeout-supplement",
+   "args": [
+    "npx",
+    "vitest",
+    "run",
+    "tests/brain-codex.test.ts",
+    "-t",
+    "stalled twice: the question fails as a timeout and the fallback answers it",
+    "--maxWorkers=1"
+   ],
+   "start": "2026-10-16T08:33:58.537791+08:00",
+   "rc": 0,
+   "seconds": 5.68,
+   "log": "paper/materials/20261016-global-build-g1c/reviewed-checks/brain-timeout-supplement.log"
+  }
+ ]
+}
