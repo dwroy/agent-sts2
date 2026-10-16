@@ -1,0 +1,124 @@
+{
+  "at": "2026-10-16 20:14:47 CST",
+  "source": "70c61acfb118ab284bb950b32495177458a76b2d",
+  "source_tree": "4db0775de294ed580b041f279689cb26827fb57b",
+  "earlier_lock_owner_observation": {
+    "at": "2026-10-16 20:09:50 CST",
+    "lock_path": "ops/live-merge.lock",
+    "holders": [
+      {
+        "holder_pid": 4029530,
+        "process_chain": [
+          {
+            "pid": 4029530,
+            "ppid": 4029528,
+            "birth_ticks": 104282662,
+            "executable": "bash",
+            "cwd": "/home/dw/Projects/agent-sts2/.worktrees/live/agent"
+          },
+          {
+            "pid": 4029528,
+            "ppid": 4029527,
+            "birth_ticks": 104282654,
+            "executable": "bash",
+            "cwd": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration"
+          },
+          {
+            "pid": 4029527,
+            "ppid": 4029526,
+            "birth_ticks": 104282649,
+            "executable": "codex",
+            "cwd": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration"
+          },
+          {
+            "pid": 4029526,
+            "ppid": 4029168,
+            "birth_ticks": 104282649,
+            "executable": "bwrap",
+            "cwd": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration"
+          },
+          {
+            "pid": 4029168,
+            "ppid": 2963201,
+            "birth_ticks": 104282410,
+            "executable": "codex",
+            "cwd": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration"
+          },
+          {
+            "pid": 2963201,
+            "ppid": 2963151,
+            "birth_ticks": 103688264,
+            "executable": "codex",
+            "cwd": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration"
+          },
+          {
+            "pid": 2963151,
+            "ppid": 2961574,
+            "birth_ticks": 103688258,
+            "executable": "node",
+            "cwd": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration"
+          },
+          {
+            "pid": 2961574,
+            "ppid": 2961509,
+            "birth_ticks": 103688027,
+            "executable": "node",
+            "cwd": "/home/dw/Projects/agent-sts2"
+          },
+          {
+            "pid": 2961509,
+            "ppid": 2961413,
+            "birth_ticks": 103688022,
+            "executable": "node",
+            "cwd": "/home/dw/Projects/agent-sts2"
+          },
+          {
+            "pid": 2961413,
+            "ppid": 2960955,
+            "birth_ticks": 103688009,
+            "executable": "python3.14",
+            "cwd": "/home/dw/Projects/agent-sts2"
+          }
+        ],
+        "registered_owners": []
+      }
+    ],
+    "no_environment_or_credentials_read": true
+  },
+  "original_calibration_owner": {
+    "task": "fix-batch",
+    "learner_task": "silent-boss-calibration",
+    "state": "running",
+    "pid": 2960951,
+    "worktree": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration",
+    "feature_request": "silent-calibration-07aa1edd6a01a56d8fc5441f"
+  },
+  "actual_publication_attempt": {
+    "at": "2026-10-16 20:12:02 CST",
+    "live_lock_acquired": true,
+    "result": "stopped by predecessor calibration completion/numbering guard before source/ref/ordinary-index/version mutation",
+    "assertion": "preceding calibration publication numbering must be resolved on its original completion event first",
+    "new_gitleaks_only": true
+  },
+  "source_received_receipt": {
+    "path": "paper/materials/20261016-2003-ops/source-commit-received.json",
+    "sha256": "d942fc49c3bd2e3b492bbb0c70ecb73105bede76c5ffa440a5406f46aa365077"
+  },
+  "same_pending_readback": {
+    "path": "ops/codex-ops/pending-integrations/20261016-1916-p1p2-shadow.json",
+    "sha256": "17d73c82fb892c11c5daeac700681a6275803586ee8a9cb659bc1139c9af79ac"
+  },
+  "resume_script": {
+    "path": "ops/codex-ops/record-staging/20261016-2003/publish.py",
+    "sha256": "caa3f99c04a1c188b80972b9d802004e4b8d5b94e8e8334dbea4d58af2212f98"
+  },
+  "user_explicitly_retained_predecessor_gate": true,
+  "no_gate_bypass_or_new_publication_channel": true,
+  "old_pending_null_snapshot_preserved": "ops/codex-ops/record-staging/20261016-2003/pending-integration-before-source-receipt.json",
+  "current_pending_source_not_null": true,
+  "release_id": null,
+  "published": false,
+  "host_started": false,
+  "retention_not_yet_eligible": true,
+  "next": "on original calibration completion/checks event resolve its numbering, then original live lock four-leaf integration, actual launch mode override readback, release ID, post-date root dual rule notice, exact final-tree host through original075726 channel, and original retention complete program"
+}

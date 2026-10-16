@@ -2657,3 +2657,7 @@ selector于2026-10-15 13:15:58 CST从/home/dw/.codex-brain原子改为/home/dw/P
 - 2026-10-16 19:55:19 CST [ops DQSH393WPZW0复盘闭环] 无新纯bug；六旧账本support及三原提案登记已核，打法/机制与缺证沿原策略链。论文唯一刷新exit0/814局，本局676决策/35成功Codex/has_postmortem1及五一致性、keyscan通过；收场逐步模拟/受控后继和完整dirty知识仍未知。原0332/P1P2及宽父保持，回执paper/materials/20261016-1940-ops/。
 
 - 2026-10-16 19:58:38 CST [ops 194022两批处置] fix无新增源码或待兜底补丁，原failed/rc0历史保留、32宽项沿旧owner；策略十项继续waiting，16原CLI仅追溯。无合入/版本/补测，0332原优先链及P1/P2待交源保持；回执paper/materials/20261016-1955-ops/batch-readback.json。
+
+- 2026-10-16 20:05:43 CST [ops P1/P2 shadow源补验处置，尚未发布] 已接受未变四叶源的环境补验作为集成依据：原full1/945dcb保留，唯一缺venv退出127由原题补验0覆盖，原断言/20s/九Python题不改，不重源full。原owner可只提交四叶再交sourceSHA；源处置paper/materials/20261016-v5s-p1p2-shadow/ops-source-disposition.json，候选tree4db0775de294ed580b041f279689cb26827fb57b。尚未live集成/分号，不代其他角色ACK；发布时仍须核真实启动覆写及独立编号/双通知/精确树宿主。
+
+- 2026-10-16 20:14:47 CST [ops 已实收70c61acf，原前置闸保持] 精确四叶source/tree4db及父祖先、真实实收和恢复脚本已登记同一原pending，旧null状态已修正且原快照保留。原live锁/前序校准completion与编号阻止发布，原事件后续同锁窄合/独立号/根双通知/精确host/retention；目前未发布或发检查，不重源full、不代ACK。证据paper/materials/20261016-2003-ops/publication-deferred-readback.json。
