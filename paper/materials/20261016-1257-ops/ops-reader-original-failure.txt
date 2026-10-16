@@ -1,0 +1,7 @@
+Original ops read-only reader failed after verifying all 16 streams/40855 rows and original artifacts/source ancestry. No production or learner files changed.
+Traceback (most recent call last):
+  File "ops/codex-ops/record-staging/20261016-1257/prepare.py", line 83, in <module>
+    assert any(rid in (d / "original-proposals" / (x["id"] + ".md")).read_text() for x in originals)
+AssertionError
+
+Cause: an ops-only overly narrow scope assertion required all extra run IDs to appear in the Markdown body. All thirteen are explicitly in the original selected proposal runs arrays. Corrected only this ops reader predicate; no learner input, report or original evidence edited.

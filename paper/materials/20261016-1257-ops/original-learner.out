@@ -1,0 +1,125 @@
+已逐项核对：1 项已有 live 实现，9 项因具体证据缺口保留 waiting。无新增源码、提交或合入；28 项材料检查通过，tsc/vitest 未运行。
+
+[完整报告](/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-124302/learner/runs/20261016-124312-d9c66dd5-8765-47bd-b09b-845493213d19-strategy-proposal/report.md) · [提案与证据](/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-124302/learner/runs/20261016-124312-d9c66dd5-8765-47bd-b09b-845493213d19-strategy-proposal/proposal.md)
+
+```json
+{
+  "task": "strategy-proposal",
+  "character": "silent",
+  "batch": "20261016-124302-strategy-proposal",
+  "base": "4e43de497d9035b45161e6d397df6a11054ec25a",
+  "runs": [
+    "K2JAGKVJAWZJ",
+    "10GPK5XGHCK3",
+    "UJ0K3G10609Y",
+    "NEWRFAYKTQHR",
+    "79UCJ0K6R9C1",
+    "9YBKCNBFP0X5",
+    "UACFSW4VDDLD",
+    "4Y94N8RDPGPM",
+    "TCFAHJ9K19VY",
+    "UMVLWER4CD98"
+  ],
+  "fixes": [],
+  "skipped": [
+    "silent-proposal-650ea306e8627f9e",
+    "silent-proposal-60e68d681e861d1c",
+    "silent-proposal-9aa48a84227bcdb5",
+    "silent-proposal-7cfd0f9b6b0fbbda",
+    "silent-proposal-e6f9cb57c1204036",
+    "silent-proposal-6353ffbadaaac619",
+    "silent-proposal-9e5d50fdd7bf1fbd",
+    "silent-proposal-20b9df170d51b280",
+    "silent-proposal-91cc7fd647077569"
+  ],
+  "merged": null,
+  "tests": {
+    "tsc": null,
+    "vitest": null,
+    "cases": null
+  },
+  "code_proposals": [
+    "silent-proposal-650ea306e8627f9e",
+    "silent-proposal-aff5ac3bb7cdb81b",
+    "silent-proposal-60e68d681e861d1c",
+    "silent-proposal-9aa48a84227bcdb5",
+    "silent-proposal-7cfd0f9b6b0fbbda",
+    "silent-proposal-e6f9cb57c1204036",
+    "silent-proposal-6353ffbadaaac619",
+    "silent-proposal-9e5d50fdd7bf1fbd",
+    "silent-proposal-20b9df170d51b280",
+    "silent-proposal-91cc7fd647077569"
+  ],
+  "implementation_domains": [
+    "combat",
+    "potion",
+    "sl",
+    "terminal"
+  ],
+  "proposal_results": [
+    {
+      "id": "silent-proposal-650ea306e8627f9e",
+      "state": "waiting",
+      "reason": "48次脑调用与71次含复用决策已核；未定位消费错误计数的生产源码，关联宽机制仍缺历史dirty源码与知识联合快照。"
+    },
+    {
+      "id": "silent-proposal-aff5ac3bb7cdb81b",
+      "state": "duplicate",
+      "commit": "1698adc96ba434a46942321e0237b70657e625b2",
+      "reason": "原提案要求的棱柱SL资源日志已实现且为实际live祖先；固定原盘面核得损血+5、伤害-7、格挡-7、污染-3、剩余毒量-7，保留预测与执行分账。"
+    },
+    {
+      "id": "silent-proposal-60e68d681e861d1c",
+      "state": "waiting",
+      "reason": "持牌伤先于毒结算已有窄实现；仍缺毒瓶多入口及头骨、制品条件的同盘完整消费者对照。"
+    },
+    {
+      "id": "silent-proposal-9aa48a84227bcdb5",
+      "state": "waiting",
+      "reason": "实际资源链可核，但未执行替代路线、饮药时点及整战结果没有同条件配对，不能拟合估值参数。"
+    },
+    {
+      "id": "silent-proposal-7cfd0f9b6b0fbbda",
+      "state": "waiting",
+      "reason": "已核坚韧之环施放11挡后跨轮仍11挡；缺穿过重问及SL恢复的施放额度与剩余轮次联合入口，不能用当前敏捷重算。"
+    },
+    {
+      "id": "silent-proposal-e6f9cb57c1204036",
+      "state": "waiting",
+      "reason": "已遵循combat/potion领域更正；仍承接原感染提案的毒瓶多入口及组合消费者缺口。"
+    },
+    {
+      "id": "silent-proposal-6353ffbadaaac619",
+      "state": "waiting",
+      "reason": "12HP空药交接及禁抽、苦无既有实现已核；缺独立复活充能真值、固定种子两战配对和按局留出校准。"
+    },
+    {
+      "id": "silent-proposal-9e5d50fdd7bf1fbd",
+      "state": "waiting",
+      "reason": "八局前后战HP及逐槽药水连续已核；缺保药或改线的受控两战结果、复活真值及独立留出，不能由后战全败拟权重。"
+    },
+    {
+      "id": "silent-proposal-20b9df170d51b280",
+      "state": "waiting",
+      "reason": "部分机制已有live源码；六类机制组合仍缺完整同条件消费者认证，截断尝试及后继手牌变化不能支持单因转胜或固定杀序。"
+    },
+    {
+      "id": "silent-proposal-91cc7fd647077569",
+      "state": "waiting",
+      "reason": "已保存原13局55试5赢、真正重打12场54试4赢的冻结勘误；未重算全部13局，也未定位消费该固定分母的生产源码。"
+    }
+  ],
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-124302/learner/runs/20261016-124312-d9c66dd5-8765-47bd-b09b-845493213d19-strategy-proposal/report.md"
+}
+```
+
+== 学习者 codex / strategy-proposal ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a14305-8baf-7d03-89ca-8ad8ec53e5b3
+轮数：1；工具调用：command_execution×84 file_change×3
+token：输入 184.4k、输出 35.3k（其中推理 10.1k）、cache 读 4510.1k、cache 写 0（命中 96.1%）
+成本：未提供
+耗时：861.0 s（墙钟）
+时间：首个事件 24.1 s、模型首个输出 28.2 s、首次工具 33.1 s、末次工具结束 818.9 s；工具内共 827.4 s，其余（模型生成、推理、网络）9.5 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-124302）；模型的工具调用 exec×37；/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/learner/sessions/2026/10/16/rollout-2026-10-16T12-43-19-01a14305-8baf-7d03-89ca-8ad8ec53e5b3.jsonl
+日志：/home/dw/Projects/agent-sts2/learner/runs/20261016-124312-d9c66dd5-8765-47bd-b09b-845493213d19-strategy-proposal.jsonl
