@@ -153,7 +153,7 @@ export async function compareOptions(
   base: RolloutInput,
   options: DeckOption[],
   opts: { samples?: number; seed?: number; deadlineMs?: number; now?: () => number; quantitative?: boolean; diagnostics?: boolean; requireComplete?: boolean; adaptive?: { allowS: boolean; mode?: "shadow" | "on" }; onProgress?: import("./computation-wait.js").SimProgress; readiness?: boolean;
-    buildRank?: { lowTrust: string | null; calibratedFloor: number; tieSe: number } } = {},
+    buildRank?: { lowTrust: string | null; calibratedFloor: number; tieSe: number; sSort?: "on" | "shadow" } } = {},
 ): Promise<CompareResult> {
   if (opts.quantitative) base = { ...base, captureBossMargin: true,
     ...(base.meta.asc === 10 ? { captureCore: true, captureResources: true } : {}) };

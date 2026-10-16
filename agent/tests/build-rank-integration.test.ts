@@ -52,6 +52,7 @@ it("on merges S into one ranking table and retains all legal options", async () 
     }
   }
   expect(on.record?.build_ranking).toMatchObject({ mode: "on", delivered: true });
+  expect(on.record?.build_ranking).toMatchObject({ s_sort: "shadow", shadow_s_ranking: { best_group: expect.any(Array) } });
 });
 it("keeps Ironclad's complete original question and record identical", async () => {
   const off = await question("off", "IRONCLAD"), on = await question("on", "IRONCLAD");

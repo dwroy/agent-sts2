@@ -19,6 +19,16 @@ def row(i, error='只跑完 24 次模拟（不足 300 次）', **extra):
 
 
 class Health(unittest.TestCase):
+    def test_combat_s_shadow_keeps_diagnostics_without_claiming_consumption(self):
+        config = {**CONFIG, 'loop': {'s_combat_rank': 'shadow'}}
+        ranking = {'schema': 's-combat-ranking-v1', 'mode': 'shadow', 'used': False, 'shadow_used': True}
+        record = row(1, label='combat/plan', boss_sim={'available': True, 's_ranking': ranking})
+        result = h.combat_s_ranking_health(config, [record])
+        self.assertEqual((result['expected'], result['produced'], result['used'], result['shadow_produced']), (1, 1, 0, 1))
+        self.assertFalse(result['alert'])
+        record['boss_sim']['s_ranking']['used'] = True
+        self.assertTrue(h.combat_s_ranking_health(config, [record])['alert'])
+
     def test_combat_s_actual_use_fallback_and_missing_records(self):
         config = {**CONFIG, 'loop': {'s_combat_rank': 'on'}}
         def combat(i, ranking):
