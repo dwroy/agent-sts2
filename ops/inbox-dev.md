@@ -2623,3 +2623,5 @@ selector于2026-10-15 13:15:58 CST从/home/dw/.codex-brain原子改为/home/dw/P
 - 2026-10-16 17:17:22 CST [ops 1713三事件处置] 两策略批共20项均waiting、42原CLI仅追溯；修复批无新fix或合入阻塞，原canonical failed/rc0保持。三批均无源码/生产测试或上线，保原失败/缺口和宽父，不补测/造版本或重复派发，live不动。回执paper/materials/20261016-1713-ops/batch-readback.json。
 
 - 2026-10-16 17:22:39 CST [ops 171301 fix处置] 无新增修复/源码或合入阻塞；388文件同前批、80原修复已在base/live，生产测试未运行。0308/0332等原链及旧失败保持，无重复派发/版本/补测，live不动。回执paper/materials/20261016-1720-ops/batch-readback.json。
+
+- 2026-10-16 17:26:02 CST [ops 171301策略处置] 十项均waiting，无源码/合入阻塞或生产测试；31原CLI仅追溯，旧知识/证据/状态保持。实际Sol6.1/xhigh符合Roy 10-12要求，保原任务high措辞差异，不调整运行；不造版本/补测或重复派发，live及宽父不动。回执paper/materials/20261016-1723-ops/batch-readback.json。
