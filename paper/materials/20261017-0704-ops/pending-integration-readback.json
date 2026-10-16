@@ -78,7 +78,7 @@
   "original_report_failed_rc0_retained": true,
   "no_other_role_ACK": true,
   "no_current_game_home_model_prompt_change": true,
-  "status": "source published; one final combined live-tree check requested through original051302",
+  "status": "published; exact final combined-tree host actually running on original051302 channel",
   "host_requested": true,
   "ledger": [
     "silent-0018",
@@ -109,5 +109,58 @@
     "intermediate_R377_tree_not_claimed_checked": true
   },
   "source_received": true,
-  "source_ancestry_verified": true
+  "source_ancestry_verified": true,
+  "host_full_started": {
+    "at": "2026-10-17 07:12:11 CST",
+    "request": {
+      "at": "2026-10-17 07:10:57 CST",
+      "requester_pid": 2644049,
+      "birth_ticks": "108421718",
+      "channel": "original learner-recheck 20261017-051302-strategy-proposal",
+      "batch": "20261017-051302-strategy-proposal",
+      "covered_publications": [
+        "V5-R377",
+        "V5-R378"
+      ],
+      "required_sources": [
+        "3dbdc27becba54c8ca4fe722102b1c562794f48b",
+        "92fb9f15b24c9fc4f1bf31ca4cd3190a9cba7cdb",
+        "c4d99c1be01c01359988afc2b85ecada99c9b133",
+        "6c306a49710731da372989ae03ec09eb0a425bb1"
+      ],
+      "live": "c7eadf02a06985d9120b1a1c9a60847cccc1adaa",
+      "tree": "401ad6f9da9bfacbc7dc7b391e870a022d14ff74",
+      "request_started": true,
+      "actual_worker_not_yet_verified": true,
+      "completion_pending": true,
+      "intermediate_R377_tree_not_claimed_checked": true,
+      "requester_output_retained_at": "ops/codex-ops/record-staging/20261017-0704/host-request.log",
+      "public_request_log_is_startup_snapshot_only": true
+    },
+    "actual_workers": [
+      {
+        "pid": 2644065,
+        "argv": [
+          "python3",
+          "/home/dw/Projects/agent-sts2/ops/codex-ops-learn.py",
+          "recheck",
+          "--batch",
+          "20261017-051302-strategy-proposal"
+        ],
+        "cwd": "/home/dw/Projects/agent-sts2",
+        "birth_ticks": "108421733"
+      }
+    ],
+    "actual_full_log": "ops/codex-ops/learner/20261017-051302-strategy-proposal.fallback-401ad6f9da9bfacbc7dc7b391e870a022d14ff74.checks.log",
+    "log_exists": true,
+    "log_bytes_at_readback": 616,
+    "final_live": "c7eadf02a06985d9120b1a1c9a60847cccc1adaa",
+    "final_tree": "401ad6f9da9bfacbc7dc7b391e870a022d14ff74",
+    "complete_result_pending": true,
+    "no_full0_or_natural_consumption_claim": true
+  },
+  "actual_current_live": "c7eadf02a06985d9120b1a1c9a60847cccc1adaa",
+  "actual_current_tree": "401ad6f9da9bfacbc7dc7b391e870a022d14ff74",
+  "actual_host_worker_verified": true,
+  "original_wider_states_retained": true
 }
