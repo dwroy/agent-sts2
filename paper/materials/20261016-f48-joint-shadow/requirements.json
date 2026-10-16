@@ -1,0 +1,60 @@
+{
+  "schema": "f48-joint-shadow-requirements-v1",
+  "parent": "roy-20261016-global-build",
+  "assignment": "Roy22:19 via Claude; f48-joint-shadow-v1 only",
+  "owner_session": "01a13dcd-83d4-7c63-b233-f93cf878ecf4",
+  "at": "2026-10-16T22:47:35.072018+08:00",
+  "requirements": [
+    {
+      "id": "J1",
+      "requirement": "Silent F48 log only; no question/ranking/SL/potion changes; other-role equivalence",
+      "state": "fixed-passed"
+    },
+    {
+      "id": "J2",
+      "requirement": "Reuse continuous-boss-result-v1 and existing worker/memo/C2 schedules; no additional samples or workers",
+      "state": "fixed-passed"
+    },
+    {
+      "id": "J3",
+      "requirement": "Invalid resource contracts and incomplete samples unknown with reasons/null values; F49 low-trust and production/joint calibration unknown",
+      "state": "fixed-passed"
+    },
+    {
+      "id": "J4",
+      "requirement": "Sample resource distributions and seed-paired comparisons; C2 unmatched prefixes unknown, no filled-in losses",
+      "state": "fixed-passed"
+    },
+    {
+      "id": "J5",
+      "requirement": "Fixed tests, production tsc and unique unchanged-source sandbox full; preserve failures",
+      "state": "original_ops_accepted_unchanged_source_combined_evidence; full1 preserved",
+      "evidence": [
+        "fixed-checks.json",
+        "source-full-result.json",
+        "source-supplement.json",
+        "watcher-ops-disposition-readback.json"
+      ]
+    },
+    {
+      "id": "J6",
+      "requirement": "Exact source handoff to original ops for narrow integration/classification/exact-tree host; no natural acceptance",
+      "state": "scoped exact-source handoff transported; actual integration/host owned by original ops",
+      "evidence": [
+        "source-commit.json",
+        "ops-source-delivery-transport.json"
+      ]
+    }
+  ],
+  "natural_acceptance": "not assigned; waits 0332 root fix acceptance and explicit Claude assignment",
+  "excluded": [
+    "0332 root repair",
+    "natural observer",
+    "G2 natural acceptance",
+    "G3a/G3c/G5",
+    "new game/model/simulation batch",
+    "online configuration changes"
+  ],
+  "watcher_scope_complete": true,
+  "deployment_complete": false
+}

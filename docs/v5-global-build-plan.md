@@ -248,3 +248,13 @@ Roy经Claude明确不做A/B，旧40局实验建议只作历史保留、从未执
 P1/P2独立四叶source70c61acfb/tree4db0775de已原ops正式实收并由本人核四SHA/接收回执。tsc0/36固定0，源full1仅WT缺现有Python路径；未变原题环境补验0/九Pythoncase断言全执行，原ops接受，full1保持不冒整套0。实际发布尚未发生：前序已live校准completion/编号闸未解，20:12原锁内预检先于本源/index/ref/version写入退出；同pending登记精确source和恢复脚本，原ops随原事件继续独立号/双通知/精确树宿主与retention，不另开通道或重复源full。见20261016-v5s-p1p2-shadow/completion.md与watcher-ops-pending-readback.json。
 
 F48→F49离线报告/设计main10e5e3e10已交，原统计与未知边界保持，未实施设计。原ops已核既有50边界/下次60的10局漏斗与root hook，不新监听。watcher源/报告范围交付后停下；发布仍原ops待续，0332/G1a自然/F49生产与联合校准/宽父不关闭，无新Roy参数待决，后续实现/其他阶段等Claude派活。
+
+
+### 2026-10-16 22:19 Roy决定：F48联合shadow实施
+
+本次明确覆盖joint-design.md末尾“先等0332”的旧建议：现即实施f48-joint-shadow-v1，仅Silent F48日志，复用G1a同样本结果，不增加模拟预算/worker，保C2提前停止。无效资源契约/配对不足记unknown且不填概率，F49低可信、生产/联合校准及联合S未知；不进题面、排序、SL或用药。独立WT及七叶/固定回归/唯一源full与原ops精确交付见20261016-f48-joint-shadow/{requirements,checkpoint}.json。自然验收仍待0332根修复验收通过后由Claude另派，本次交源/报告即停，未启动自然观察或其他阶段。
+
+
+### 2026-10-16 22:46:31 CST F48联合shadow源交付停点
+
+实现七叶source7ca593f9e/tree473039a3c，详见20261016-f48-joint-shadow/completion.md。tsc0/63固定0、唯一源full1仅旧fake learner paneCount题，原题1过26未选与未到paths11项补验0；原ops实际原生接受未变组合证据后提交并交精确source。全部失败、原时限和断言保留，不重未变整套或冒全套0。实际新source接收/main-live窄集成/按性质核号/精确组合host由原ops接续，不把运输当实收或旧树绿借新树。只日志，无额外模拟/worker；资源/配对不足及F49科学边界unknown，其他角色固定题等价。当前watcher限定源交付完成后停，根0332及自然门槛不关；自然验收仍待根修复验收通过后Claude另派，没有新Roy设计待决。

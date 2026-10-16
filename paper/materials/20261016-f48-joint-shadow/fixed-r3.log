@@ -1,0 +1,36 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-f48-joint-shadow-20261016/agent
+
+ ❯ tests/f48-joint-integration.test.ts (13 tests | 1 failed) 1110ms
+   × preserves the actual C2 stop schedule and leaves its unmatched joint coverage unknown 216ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/f48-joint-integration.test.ts > preserves the actual C2 stop schedule and leaves its unmatched joint coverage unknown
+AssertionError: expected [ 300, 300 ] to deeply equal [ 300, 1000 ]
+
+- Expected
++ Received
+
+  [
+    300,
+-   1000,
++   300,
+  ]
+
+ ❯ tests/f48-joint-integration.test.ts:83:47
+     81|   expect(JSON.stringify(newWorker.run.mock.calls)).toBe(JSON.stringify…
+     82|   const { f48JointShadow: joint, ...rest } = after; expect(rest).toEqu…
+     83|   expect(after.options.map((o) => o.samples)).toEqual([300, 1000]);
+       |                                               ^
+     84|   const bad = (joint!.candidates as any[]).find((c) => c.candidate_key…
+     85|   expect(bad.paired_comparison).toMatchObject({ complete_pairs: 300, m…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 6 passed (7)
+      Tests  1 failed | 62 passed (63)
+   Start at  22:31:22
+   Duration  19.02s (transform 14.95s, setup 4.26s, import 17.21s, tests 13.95s, environment 1ms)
+

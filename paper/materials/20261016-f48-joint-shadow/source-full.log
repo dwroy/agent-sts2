@@ -1,0 +1,38 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-f48-joint-shadow-20261016/agent
+
+ ❯ tests/ops-herdr.test.ts (27 tests | 1 failed) 81953ms
+     × shows verified live learner 20261010-164301-strategy-proposal beside ops and closes its reused viewer on exit 28559ms
+....
+----------------------------------------------------------------------
+Ran 4 tests in 0.001s
+
+OK
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/ops-herdr.test.ts > ops/herdr-host.sh (fake herdr) > shows verified live learner 20261010-164301-strategy-proposal beside ops and closes its reused viewer on exit
+AssertionError: expected [ 'w1:p1', 'w1:p2', 'w1:p4' ] to have a length of 4 but got 3
+
+- Expected
++ Received
+
+- 4
++ 3
+
+ ❯ tests/ops-herdr.test.ts:232:44
+    230|       writeRecord(state, id);
+    231|       expect(runner(batch).status).toBe(1);
+    232|       expect(Object.keys(w.state().panes)).toHaveLength(paneCount);
+       |                                            ^
+    233|     }
+    234|     writeRecord("running", pid);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 453 passed (454)
+      Tests  1 failed | 4203 passed (4204)
+   Start at  22:33:22
+   Duration  483.45s (transform 32.99s, setup 33.84s, import 92.93s, tests 1730.53s, environment 53ms)
+

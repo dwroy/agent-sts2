@@ -1,0 +1,652 @@
+diff --git a/agent/src/sim/boss-lines.ts b/agent/src/sim/boss-lines.ts
+index fb4a96352..e3bd04c2c 100644
+--- a/agent/src/sim/boss-lines.ts
++++ b/agent/src/sim/boss-lines.ts
+@@ -72,6 +72,7 @@ import { identityToken, memoKey, type ComputeMemo } from "./compute-memo.js";
+ import { claimSimCores, leaveSimCores } from "./sim-pools.js";
+ import { withDoubleBossStart } from "./double-boss-start.js";
+ import { firstDoubleBoss } from "../knowledge/double-boss.js";
++import { f48JointScope, f48JointShadow } from "./f48-joint-shadow.js";
+ 
+ /** Samples per line (docs/boss-sim.md §8: 600 give a paired win-rate standard error of ~1-2 points). */
+ export const BOSS_LINES_SAMPLES = 600;
+@@ -739,7 +740,7 @@ export interface LineSim {
+   text: string;
+ }
+ 
+-export type BossLineSim = { completion?: SimCompletion; resourceFailure?: Record<string, JsonValue> } & (
++export type BossLineSim = { completion?: SimCompletion; resourceFailure?: Record<string, JsonValue>; f48JointShadow?: Record<string, unknown> } & (
+   | { available: false; reason: string; ms: number }
+   | {
+       available: true;
+@@ -796,17 +797,19 @@ export function bossLineSim(args: BossLineSimArgs): BossLineSim {
+   let wait: ReturnType<SimWait["start"]> | undefined;
+   let sampled = 0;
+   const samples = args.samples ?? bossLinesOptions.samples;
++  const jointScope = f48JointScope(args.state);
+   const unavailable = (reason: string): BossLineSim => ({ available: false, reason, ms: ms(),
++    ...(jointScope ? { f48JointShadow: f48JointShadow(jointScope, [], undefined, { reason }) } : {}),
+     ...(attempt ? { completion: attempt.finish(sampled, samples, reason) } : {}) });
+   try {
+-    if (args.lines.length === 0) return { available: false, reason: "no line", ms: ms() };
++    if (args.lines.length === 0) return unavailable("no line");
+     // The turn's budget over its questions (a re-plan after a draw asks again).
+     const fight = `${String(args.state.raw["run_id"] ?? "")}:${args.state.run?.floor ?? "?"}`;
+-    if (!required && failed.fight === fight && failed.count >= BOSS_LINES_MAX_FAILURES) return { available: false, reason: `off for this fight: ${failed.count} questions in a row got no sample from the worker pool`, ms: ms() };
++    if (!required && failed.fight === fight && failed.count >= BOSS_LINES_MAX_FAILURES) return unavailable(`off for this fight: ${failed.count} questions in a row got no sample from the worker pool`);
+     const turnKey = `${fight}:${args.turn ?? "?"}`;
+     const memo = args.memory.bossLines?.turn === turnKey ? args.memory.bossLines : { turn: turnKey, spentMs: 0 };
+     let left = required ? Infinity : Math.min(bossLinesOptions.deadlineMs, bossLinesOptions.turnBudgetMs - memo.spentMs);
+-    if (left < bossLinesOptions.minMs) return { available: false, reason: `this turn's ${Math.round(bossLinesOptions.turnBudgetMs / 1000)} s for the simulation is spent`, ms: ms() };
++    if (left < bossLinesOptions.minMs) return unavailable(`this turn's ${Math.round(bossLinesOptions.turnBudgetMs / 1000)} s for the simulation is spent`);
+     const input = bossSimInput(args);
+     const boss = bossKeyOf(input.enemies.map((e) => e.id));
+     const lowTrust = input.continuation?.limitation ?? (boss ? bossTrustReason(boss, "b2", args.state.run?.ascension, args.state.run?.floor) : null);
+@@ -868,6 +871,9 @@ export function bossLineSim(args: BossLineSimArgs): BossLineSim {
+     const showPlan = args.turn === null || args.turn <= 1 || (args.turn - 1) % BOSS_LINES_PLAN_EVERY === 0;
+     const plan = showPlan && rank.best >= 0 ? fightPlanText(input, run.lines[rank.best]!, turnNow) : null;
+     const sim: BossLineSim = {
++      ...(jointScope ? { f48JointShadow: f48JointShadow(jointScope, run.lines.map((line, i) => ({
++        key: `line:${i}`, input: args.lines[i], outcomes: line.outcomes, requested: samples, order: line.order,
++      })), input) } : {}),
+       ...(attempt ? { completion: attempt.finish(run.samples, samples, undefined, adaptiveComplete) } : {}),
+       available: true,
+       byPlan,
+@@ -895,6 +901,8 @@ export function bossLineSim(args: BossLineSimArgs): BossLineSim {
+         question: toJsonValue({ solver: args.solver, piles: args.piles, randomPotions: args.randomPotions, lines: args.lines, samples, turn: args.turn }),
+         completion: toJsonValue(sim.completion),
+       }, args.failureDirectory);
++      if (jointScope) sim.f48JointShadow = f48JointShadow(jointScope, [], undefined,
++        { reason: `resource_contract_failure:${failure.reason}`, reference: sim.resourceFailure });
+     }
+     return sim;
+   } finally {
+@@ -975,7 +983,8 @@ export function simNote(sim: BossLineSim): string {
+ 
+ /** The decision log's record (log.boss_sim). */
+ export function simLog(sim: BossLineSim, keyOf: (plan: Plan) => string | null, extra: Record<string, JsonValue> = {}): Record<string, JsonValue> {
+-  const completion: Record<string, JsonValue> = sim.completion ? { completion: { ...sim.completion } } : {};
++  const completion: Record<string, JsonValue> = { ...(sim.completion ? { completion: { ...sim.completion } } : {}),
++    ...(sim.f48JointShadow ? { f48_joint_shadow: toJsonValue(sim.f48JointShadow) } : {}) };
+   if (!sim.available) return { available: false, reason: sim.reason, ms: sim.ms, ...completion,
+     ...(sim.resourceFailure ? { resource_failure: sim.resourceFailure } : {}), ...extra };
+   const lines: Record<string, JsonValue> = {};
+diff --git a/agent/src/sim/build-sim-facts.ts b/agent/src/sim/build-sim-facts.ts
+index d90f76ee3..57b38c516 100644
+--- a/agent/src/sim/build-sim-facts.ts
++++ b/agent/src/sim/build-sim-facts.ts
+@@ -3,6 +3,7 @@ import { completeAdaptiveBuild } from "./build-sim.js";
+ import { beginComputation, type SimAttempt } from "./computation-failure.js";
+ import { memoKey } from "./compute-memo.js";
+ import { availableParallelism, loadavg } from "node:os";
++import { f48JointScope, f48JointShadow } from "./f48-joint-shadow.js";
+ /**
+  * B3 (Roy 2026-09-30): a deck-building question's options, each with the act boss fought to the end in simulation with
+  * the deck (and HP) that option leaves. Added to DeepSeek's question after the screen builds it (the loop awaits it;
+@@ -525,6 +526,7 @@ export async function withBossSim(decision: Decision, env: DecisionEnv, setup: B
+   let wait: ReturnType<NonNullable<DecisionEnv["simWait"]>["start"]> | undefined;
+   let sampled = 0;
+   const requested = setup.samples ?? BUILD_SIM_SAMPLES;
++  const jointScope = f48JointScope(state);
+   const fail = (why: string, code = "simulation_error"): BossSimOutcome => {
+     const completion = attempt?.finish(sampled, requested, code);
+     const global = globalBuildFailure(env, required, "current_B3_failed");
+@@ -534,6 +536,7 @@ export async function withBossSim(decision: Decision, env: DecisionEnv, setup: B
+         : required ? `必需的boss评估未完成（${why}）；等待完整计算，不允许用空指标作选择`
+         : `boss 模拟没有结果（${why}）：act_boss_clock 仍是 boss 时钟的估计`, true) } },
+       record: { error: why, ms: Math.round(now() - started),
++        ...(jointScope ? { f48_joint_shadow: toJsonValue(f48JointShadow(jointScope, [], undefined, { reason: why })) } : {}),
+         ...(global ? { global_build: global } : {}),
+         ...(required ? { completion: completion ? { ...completion } : { required: true, status: "pending", latencyTargetMs: setup.deadlineMs ?? BUILD_SIM_DEADLINE_MS } } : {}),
+         ...(diagnostics ? { diagnostics: { ...diagnostics, status: "failed", reason: code } } : {}) },
+@@ -553,6 +556,8 @@ export async function withBossSim(decision: Decision, env: DecisionEnv, setup: B
+       return {
+         decision: { ...ask, state: { ...ask.state, facts: withSimFacts(facts, note, true) } },
+         record: { skipped: phase ? "first boss defeated; the second boss is not observed yet" : "act boss defeated; the next act's boss is not known yet", boss: bossKey(bossId), ms: Math.round(now() - started),
++          ...(jointScope ? { f48_joint_shadow: toJsonValue(f48JointShadow(jointScope, [], undefined,
++            { reason: "first_boss_defeated; no_new_simulation" })) } : {}),
+           ...(global ? { global_build: global } : {}) },
+       };
+     }
+@@ -586,6 +591,7 @@ export async function withBossSim(decision: Decision, env: DecisionEnv, setup: B
+     }
+     const adaptive = required && !attempt?.degraded && adaptiveMode !== "off";
+     const result: CompareResult = await compareOptions(setup.runner, start.input, deckOptions, { samples: setup.samples ?? BUILD_SIM_SAMPLES, seed: setup.seed ?? BUILD_SIM_SEED, deadlineMs: Math.max(0, budget), ...(setup.now ? { now: setup.now } : {}), ...(diagnosticEnabled ? { quantitative: true, diagnostics: true } : {}), ...(required && !attempt?.degraded ? { requireComplete: true } : {}), ...(wait ? { onProgress: wait.progress } : {}), ...(adaptive ? { adaptive: { mode: adaptiveMode as "shadow" | "on", allowS: !continuation && !bossTrustReason(bossKey(bossId), "b3", state.run?.ascension, state.run?.floor) } } : {}), ...(readinessMode !== "off" ? { readiness: true } : {}),
++      ...(jointScope ? { f48JointScope: jointScope } : {}),
+       ...(rankingMode !== "off" ? { buildRank: { lowTrust: continuation?.limitation ?? bossTrustReason(bossKey(bossId), "b3", state.run?.ascension, state.run?.floor), calibratedFloor: calibratedFloor(state.run?.ascension ?? 0), tieSe: BOSS_LINES_TIE_SE, sSort: "shadow" } } : {}) });
+     const adaptiveComplete = completeAdaptiveBuild(result);
+     sampled = result.samples;
+@@ -706,6 +712,7 @@ export async function withBossSim(decision: Decision, env: DecisionEnv, setup: B
+     if (attempt?.degraded) simFacts["completion"] = `不完整（故障降级，n=${result.samples}）`;
+     const completion = attempt?.finish(result.samples, result.requested, undefined, adaptiveComplete);
+     const record: Record<string, JsonValue> = {
++      ...(result.f48JointShadow ? { f48_joint_shadow: toJsonValue(result.f48JointShadow) } : {}),
+       ...(result.buildRanking ? { build_ranking: toJsonValue({ ...ranking, mode: rankingMode, delivered: rankingOn, candidates: candidateIdentity }) } : {}),
+       ...(result.adaptive ? { adaptive: result.adaptive } : {}),
+       ...(readiness ? { readiness: toJsonValue({ ...readiness, mode: readinessMode, ms: result.readinessMs ?? null,
+@@ -787,6 +794,8 @@ export async function withBossSim(decision: Decision, env: DecisionEnv, setup: B
+         question_key: str(completion["key"]) || memoKey("continuation-question", { board, label: ask.label, question }),
+         state: toJsonValue(state.raw), question: toJsonValue(question), completion: toJsonValue(completion),
+       }, setup.failureDirectory);
++      if (jointScope) failed.record["f48_joint_shadow"] = toJsonValue(f48JointShadow(jointScope, [], undefined,
++        { reason: `resource_contract_failure:${failure.reason}`, reference: failed.record["resource_failure"] }));
+     }
+     return failed;
+   } finally {
+diff --git a/agent/src/sim/build-sim.ts b/agent/src/sim/build-sim.ts
+index 6da6f39f5..17b0efff3 100644
+--- a/agent/src/sim/build-sim.ts
++++ b/agent/src/sim/build-sim.ts
+@@ -20,6 +20,7 @@ import { buildRank } from "./build-rank.js";
+ import { runAdaptiveDecks } from "./adaptive-decks.js";
+ import { isAdaptiveComplete } from "./adaptive-sampler.js";
+ import { continuousBossResult, type ContinuousBossResult } from "./continuous-boss-result.js";
++import { f48JointShadow, type F48JointScope } from "./f48-joint-shadow.js";
+ 
+ /** Samples per deck (docs/boss-sim.md §8: 1000 per option gives a paired standard error of about 1-1.5 points). */
+ export const BUILD_SIM_SAMPLES = 1000;
+@@ -77,6 +78,7 @@ export interface OptionSim {
+ }
+ 
+ export interface CompareResult {
++  f48JointShadow?: Record<string, unknown>;
+   buildRanking?: JsonValue;
+   adaptive?: JsonValue;
+   readiness?: BossReadiness;
+@@ -153,6 +155,7 @@ export async function compareOptions(
+   base: RolloutInput,
+   options: DeckOption[],
+   opts: { samples?: number; seed?: number; deadlineMs?: number; now?: () => number; quantitative?: boolean; diagnostics?: boolean; requireComplete?: boolean; adaptive?: { allowS: boolean; mode?: "shadow" | "on" }; onProgress?: import("./computation-wait.js").SimProgress; readiness?: boolean;
++    f48JointScope?: F48JointScope;
+     buildRank?: { lowTrust: string | null; calibratedFloor: number; tieSe: number; sSort?: "on" | "shadow" } } = {},
+ ): Promise<CompareResult> {
+   if (opts.quantitative) base = { ...base, captureBossMargin: true,
+@@ -165,6 +168,10 @@ export async function compareOptions(
+   const cached = cacheKey ? completeComparisons.get(runner) : undefined;
+   if (cached?.key === cacheKey) {
+     const result = structuredClone(cached.result);
++    // Logging never invalidates the compute memo or asks the runner for missing diagnostics.
++    if (!opts.f48JointScope) delete result.f48JointShadow;
++    else if (!result.f48JointShadow) result.f48JointShadow = f48JointShadow(opts.f48JointScope, [], base,
++      { reason: "memo_predates_joint_shadow; no_extra_computation" });
+     result.completion = { ...result.completion!, memoHit: true, originalComputeMs: result.elapsedMs };
+     result.elapsedMs = 0;
+     return result;
+@@ -328,6 +335,11 @@ export async function compareOptions(
+     } catch (error) { productionComparison = { metric: "deployed-ranking-first-group", agreement: null, error: String(error).slice(0, 180) }; }
+   }
+   const result: CompareResult = {
++    ...(opts.f48JointScope ? { f48JointShadow: f48JointShadow(opts.f48JointScope, [
++      { key: "@current", outcomes: baseLine.outcomes, requested: samples, order: order?.label ?? null, input: base },
++      ...options.map((option) => ({ key: option.key, outcomes: optionLines.get(option.key)!.outcomes,
++        requested: samples, order: order?.label ?? null, input: option })),
++    ], base) } : {}),
+     ...(actual ? { adaptive: toJsonValue({ ...actual.adaptive, input_key: cacheKey, fixed_order_search_in_work: true,
+       work: { ...actual.adaptive.work,
+         full: actual.adaptive.work.full + (allOrders.length > 1 ? Math.min(samples, BUILD_SIM_ORDER_SAMPLES) * allOrders.length : 0),
+diff --git a/agent/src/sim/f48-joint-shadow.ts b/agent/src/sim/f48-joint-shadow.ts
+new file mode 100644
+index 000000000..3afe6f9d2
+--- /dev/null
++++ b/agent/src/sim/f48-joint-shadow.ts
+@@ -0,0 +1,184 @@
++/** Log-only summaries of existing continuous samples. Never schedules or scores a fight. */
++import { createHash } from "node:crypto";
++import { serialize } from "node:v8";
++import type { GameState } from "../hand/mod/schema.js";
++import type { RolloutInput } from "../reflex/rollout.js";
++import type { FightSampleResult } from "./boss-sim.js";
++import { continuousBossResult, type ContinuousSample } from "./continuous-boss-result.js";
++
++export interface F48JointScope {
++  character: string;
++  floor: number | null;
++  ascension: number | null;
++}
++export interface F48JointCandidate {
++  key: string;
++  outcomes: FightSampleResult[];
++  /** Original goal, including samples C2 did not run. */
++  requested: number;
++  order: string | null;
++  input?: unknown;
++}
++type RecordValue = Record<string, unknown>;
++
++export function f48JointScope(state: GameState): F48JointScope | undefined {
++  const character = String(state.run?.raw["character_id"] ?? "").toLowerCase();
++  return character === "silent" && state.run?.floor === 48
++    ? { character, floor: 48, ascension: state.run.ascension ?? null } : undefined;
++}
++
++function digest(value: unknown): string {
++  // Unlike JSON, the hash retains undefined and nonfinite input values.
++  return createHash("sha256").update(serialize(value)).digest("hex");
++}
++function distribution(values: unknown[]): { state: unknown; n: number }[] {
++  const counts = new Map<string, { state: unknown; n: number }>();
++  for (const value of values) {
++    const key = JSON.stringify(value);
++    const entry = counts.get(key) ?? { state: value, n: 0 };
++    entry.n++; counts.set(key, entry);
++  }
++  return [...counts.entries()].sort(([a], [b]) => a.localeCompare(b)).map(([, value]) => value);
++}
++function hpDistribution(values: number[]): RecordValue {
++  const sorted = values.slice().sort((a, b) => a - b);
++  const q = (p: number): number | null => {
++    if (!sorted.length) return null;
++    const at = (sorted.length - 1) * p, lo = Math.floor(at), hi = Math.ceil(at);
++    return sorted[lo]! + (sorted[hi]! - sorted[lo]!) * (at - lo);
++  };
++  return { n: sorted.length, min: sorted[0] ?? null, p10: q(.1), p50: q(.5), p90: q(.9) };
++}
++function resourcesValid(r: ContinuousSample["firstResources"], positive: boolean): boolean {
++  return !!r && Number.isFinite(r.hp) && (positive ? r.hp > 0 : r.hp >= 0)
++    && Array.isArray(r.potionSlots) && r.potionSlots.every((p) => typeof p === "string" && /^POTION:[^:]+:\d+$/.test(p))
++    && new Set(r.potionSlots).size === r.potionSlots.length
++    && Array.isArray(r.revives) && r.revives.every((v) => typeof v.source === "string" && Number.isFinite(v.hp) && v.hp > 0);
++}
++function same(a: unknown, b: unknown): boolean { return digest(a) === digest(b); }
++
++/** Invalid resources never acquire a numeric probability or an invented fresh resource state. */
++function sampleStatus(o: FightSampleResult): { reason: string | null; joint: number | null } {
++  const s = o.sequence;
++  if (!s) return { reason: "missing_continuous_sample", joint: null };
++  if (!Number.isInteger(s.seed) || s.seed! < 0 || s.seed! > 0xffffffff) return { reason: "missing_sample_seed", joint: null };
++  if (s.firstCapped !== false || s.firstTimeUp !== false) return { reason: "unfinished_first_fight", joint: null };
++  if (!s.firstWon) return s.firstDied === true
++    ? { reason: null, joint: 0 } : { reason: "unknown_first_fight", joint: null };
++  if (s.firstDied !== false || !resourcesValid(s.firstResources, true)
++      || !Number.isFinite(s.firstHp) || s.firstHp !== s.firstResources!.hp) {
++    return { reason: "invalid_first_resource_contract", joint: null };
++  }
++  if (!resourcesValid(s.secondEntry, false) || !Number.isFinite(s.openingHpLoss) || s.openingHpLoss! < 0
++      || s.secondEntry!.hp !== s.firstResources!.hp - s.openingHpLoss!
++      || !same(s.secondEntry!.revives, s.firstResources!.revives)
++      || !same(s.secondEntry!.potionSlots, s.firstResources!.potionSlots)
++      || !same(s.firstPotions, s.firstResources!.potionSlots)) {
++    return { reason: "invalid_second_entry_contract", joint: null };
++  }
++  if (!s.secondBoss) return { reason: "missing_second_boss_variant", joint: null };
++  if (o.capped || o.timeUp) return { reason: o.timeUp ? "second_time_up" : "second_capped", joint: null };
++  if (s.secondWon === s.secondDied || s.secondWon !== o.won || s.secondDied !== o.died) {
++    return { reason: "unknown_second_outcome", joint: null };
++  }
++  if (!o.resources || !resourcesValid({ ...o.resources, potionSlots: [] }, o.won)) {
++    return { reason: "invalid_second_exit_contract", joint: null };
++  }
++  return { reason: null, joint: s.secondWon ? 1 : 0 };
++}
++
++const trust = {
++  F49: "low_trust", production_calibration: "unknown", joint_calibration: "unknown", joint_S: "unknown",
++  reason: "learner_quality_objection; frozen_model_validation_does_not_calibrate_current_production",
++} as const;
++const unknownResources = ["unobserved_transition_rewards", "actual_second_opening_unknown", "unmodelled_opening_charges",
++  "physical_spent_slots_not_captured_by_G1a", "actual_resource_use_not_inferred_from_holdings"];
++
++/** Best-effort logging cannot change a completed decision into a failed computation. */
++export function f48JointShadow(scope: F48JointScope | undefined, candidates: F48JointCandidate[], input?: RolloutInput,
++  failure?: { reason: string; reference?: unknown }): RecordValue | undefined {
++  if (scope?.character !== "silent" || scope.floor !== 48) return undefined;
++  const header = { schema: "f48-joint-shadow-v1", mode: "shadow", delivered: false, scope,
++    trust, extra_simulation_samples: 0, extra_workers: 0,
++    runtime_binding: "enclosing_run_config_and_decision_record; no retrospective_identity_fill",
++    actual_run_result: "unknown" };
++  try {
++    if (failure || !input?.continuation || !candidates.length) return { ...header, status: "unknown",
++      reason: failure?.reason ?? "existing_continuous_computation_unavailable", candidates: [],
++      failure: failure ?? null, paired_comparison: null, continuous: null };
++    const inputHash = digest(input);
++    const checked = candidates.map((c) => {
++      const seen = new Set<number>();
++      const statuses = c.outcomes.map((o) => {
++        const status = sampleStatus(o), seed = o.sequence?.seed;
++        if (seed !== undefined && seen.has(seed)) return { reason: "duplicate_sample_seed", joint: null };
++        if (seed !== undefined) seen.add(seed);
++        return status;
++      });
++      const good = c.outcomes.filter((_, i) => !statuses[i]!.reason);
++      // F49 censoring must not discard a valid F48 exit from the resource distribution.
++      const firstWins = c.outcomes.flatMap((o, i) => o.sequence?.firstWon
++        && (statuses[i]!.reason === null || ["second_capped", "second_time_up", "unknown_second_outcome", "invalid_second_exit_contract"].includes(statuses[i]!.reason!))
++        ? [o.sequence] : []);
++      const continuous = continuousBossResult(c.outcomes, c.requested, true)!;
++      const bad = statuses.filter((s) => s.reason).length;
++      const missing = Math.max(0, c.requested - c.outcomes.length);
++      // Preserve the G1a denominators/counts. Suppress values and unsafe traces for invalid samples.
++      const safeContinuous = { ...continuous, traces: good.flatMap((o) => o.sequence ? [o.sequence] : []).slice(0, 3),
++        ...(bad ? Object.fromEntries((["first", "secondGivenFirstWin", "joint"] as const).map((key) => [key,
++          { ...continuous[key], value: null, unknown: Math.max(continuous[key].unknown, bad), reason: "invalid_or_unknown_sample_contract" }])) : {}) };
++      const reasons = distribution(statuses.flatMap((s) => s.reason ? [s.reason] : []));
++      return { c, statuses, continuous: safeContinuous, record: {
++        candidate_key: c.key, candidate_input_sha256: digest({ inputHash, candidate: c.input ?? c.key, order: c.order }),
++        policy: { order: c.order, source: "unchanged_existing_solver_and_continuation_policy" },
++        sample_seed_manifest_sha256: digest(c.outcomes.map((o) => o.sequence?.seed ?? null)),
++        samples: c.outcomes.length, requested: c.requested, missing_samples: missing, unknown_samples: bad,
++        unknown_reasons: reasons, status: safeContinuous.joint.value === null ? "unknown" : "produced",
++        continuous: safeContinuous,
++        exit_resources: { scope: "F48_winning_complete_samples", n: firstWins.length,
++          hp: hpDistribution(firstWins.map((s) => s.firstResources!.hp)), max_hp: null,
++          potion_slot_states: distribution(firstWins.map((s) => s.firstResources!.potionSlots)),
++          remaining_revive_states: distribution(firstWins.map((s) => s.firstResources!.revives)),
++          opening_hp_loss: distribution(firstWins.map((s) => s.openingHpLoss)),
++          simulated_F49_entry_hp: hpDistribution(firstWins.map((s) => s.secondEntry!.hp)),
++          spent_slots: null, actual_revive_use: null, opening_charge_states: null,
++          unknown: [...unknownResources, "max_hp_not_returned_by_G1a"] },
++        second_outcomes: distribution(c.outcomes.map((o, i) => statuses[i]!.reason ?? (!o.sequence!.firstWon ? "not_entered"
++          : o.won ? "won" : "died"))),
++        second_exit_resources: { scope: "existing_F49_returned_state", traces: good.filter((o) => o.sequence!.firstWon).slice(0, 3)
++          .map((o) => ({ seed: o.sequence!.seed, boss: o.sequence!.secondBoss, won: o.won, died: o.died,
++            resources: o.resources ?? null, actual_potion_or_revive_use: "unknown" })) },
++      } };
++    });
++    const reference = checked[0]!;
++    const records = checked.map((row) => {
++      const bySeed = new Map(reference.c.outcomes.map((o, i) => [o.sequence?.seed, i]));
++      const differences: number[] = [];
++      let mismatch = 0;
++      row.c.outcomes.forEach((o, i) => {
++        const ri = bySeed.get(o.sequence?.seed), other = ri === undefined ? undefined : reference.c.outcomes[ri];
++        const a = row.statuses[i]!, b = ri === undefined ? undefined : reference.statuses[ri];
++        if (!other || a.joint === null || b?.joint == null) return;
++        if (o.sequence!.firstWon && other.sequence!.firstWon && o.sequence!.secondBoss !== other.sequence!.secondBoss) { mismatch++; return; }
++        differences.push(a.joint - b.joint);
++      });
++      const n = differences.length;
++      const complete = n === row.c.requested && n === reference.c.requested && !mismatch
++        && row.continuous.joint.value !== null && reference.continuous.joint.value !== null;
++      const mean = n ? differences.reduce((s, d) => s + d, 0) / n : null;
++      const se = n > 1 ? Math.sqrt(differences.reduce((s, d) => s + (d - mean!) ** 2, 0) / (n - 1) / n) : null;
++      return { ...row.record, paired_comparison: { reference: reference.c.key, complete_pairs: n,
++        missing_pairs: Math.max(0, row.c.requested - n), reference_unmatched: Math.max(0, reference.c.outcomes.length - n),
++        candidate_unmatched: Math.max(0, row.c.outcomes.length - n), variant_mismatches: mismatch,
++        status: complete && n > 1 ? "produced" : "unknown",
++        reason: complete && n > 1 ? null : "insufficient_complete_paired_coverage_or_unknown_joint",
++        delta_joint_raw: complete && n > 1 ? mean : null, mc_se: complete && n > 1 ? se : null,
++        delta_joint_vector: differences, interval_scope: "frozen_simulation_MC_error_only; not_production_calibration" } };
++    });
++    return { ...header, status: records.every((r) => r.status === "produced" && r.paired_comparison.status === "produced") ? "produced" : "unknown",
++      input_sha256: inputHash, variant_distribution_sha256: digest(input.continuation.variants.map((v) => ({ boss: v.boss, count: v.count }))),
++      source: input.continuation.source, limitations: input.continuation.limitation, candidates: records, failure: null };
++  } catch {
++    return { ...header, status: "unknown", reason: "shadow_aggregation_failed", candidates: [], continuous: null, paired_comparison: null };
++  }
++}
+diff --git a/agent/tests/f48-joint-fixture.ts b/agent/tests/f48-joint-fixture.ts
+new file mode 100644
+index 000000000..14b4f17fc
+--- /dev/null
++++ b/agent/tests/f48-joint-fixture.ts
+@@ -0,0 +1,24 @@
++/** Synthetic returned samples only; no game claims or stochastic simulation. */
++import { board } from "./boss-sim-fixture.js";
++import type { FightSampleResult } from "../src/sim/boss-sim.js";
++import type { F48JointCandidate } from "../src/sim/f48-joint-shadow.js";
++export const scope = { character: "silent", floor: 48, ascension: 10 };
++export function jointInput() {
++  const input = board({ bossHp: 12 });
++  input.continuation = { variants: [{ boss: "FIXED_SECOND", count: 1, input: board() }],
++    potions: [{ key: "POTION:BLOCK_POTION:0", id: "BLOCK_POTION" }, { key: "POTION:BLOCK_POTION:1", id: "BLOCK_POTION" }],
++    source: "synthetic fixture", limitation: "unknown production calibration" };
++  return input;
++}
++export function sample(seed: number, hp: number, won: boolean): FightSampleResult {
++  const slots = ["POTION:BLOCK_POTION:1"];
++  return { won, died: !won, capped: false, timeUp: false, turns: 2, hpLoss: 1,
++    revived: 0, drunk: [], enemyHpLeft: won ? 0 : 8, lossByTurn: [1], dmgByTurn: [12],
++    incomingByTurn: [1], enemyLossByTurn: [12], policyTurns: 1, policyNodes: 1,
++    resources: { hp: won ? 5 : 0, revives: [], drunkKeys: [] },
++    sequence: { seed, firstWon: true, firstDied: false, firstCapped: false, firstTimeUp: false,
++      firstHp: hp, firstPotions: slots.slice(), firstTurns: 1, secondBoss: "FIXED_SECOND", secondWon: won, secondDied: !won,
++      firstResources: { hp, revives: [], potionSlots: slots.slice() }, secondEntry: { hp: hp - 2, revives: [], potionSlots: slots.slice() }, openingHpLoss: 2 } };
++}
++export const candidate = (key: string, outcomes: FightSampleResult[], requested = outcomes.length): F48JointCandidate =>
++  ({ key, outcomes, requested, order: null });
+diff --git a/agent/tests/f48-joint-integration.test.ts b/agent/tests/f48-joint-integration.test.ts
+new file mode 100644
+index 000000000..a082f462c
+--- /dev/null
++++ b/agent/tests/f48-joint-integration.test.ts
+@@ -0,0 +1,152 @@
++import { afterEach, beforeEach, expect, it, vi } from "vitest";
++import * as shadow from "../src/sim/f48-joint-shadow.js";
++import { bossLineSim, bossLinesOptions, BossLinesPool, releaseBossLinesPool, simLog, type BossLineSimArgs } from "../src/sim/boss-lines.js";
++import { compareOptions } from "../src/sim/build-sim.js";
++import { withBossSim } from "../src/sim/build-sim-facts.js";
++import { createScreenMemory } from "../src/memory/types.js";
++import { captureContinuationFailure, ContinuationSampleError } from "../src/sim/continuation-failure.js";
++import { sampleSeed } from "../src/sim/boss-sim.js";
++import type { DeckSimRunner } from "../src/sim/build-sim-pool.js";
++import { board as simBoard } from "./boss-sim-fixture.js";
++import { board, decide, env, setupOneshotTests } from "./oneshot-support.js";
++import { FIXTURE_DB, FIXTURE_MM } from "./boss-sim-build-fixture.js";
++import { jointInput, sample, scope } from "./f48-joint-fixture.js";
++import * as doubleBoss from "../src/knowledge/double-boss.js";
++
++// Freeze board adapters and the absent observed continuation model. No runtime knowledge or simulation is consulted.
++vi.mock("../src/reflex/rollout-live.js", async (original) => ({
++  ...await original<typeof import("../src/reflex/rollout-live.js")>(),
++  boardRolloutInput: () => ({ ...simBoard({ bossHp: 12 }), handBase: [] }),
++  fightMetaOf: () => simBoard({ bossHp: 12 }).meta, fightRelicsOf: () => ({}),
++}));
++vi.mock("../src/knowledge/double-boss.js", async (original) => ({ ...await original<object>(),
++  firstDoubleBoss: () => null, doubleBossFor: () => null }));
++vi.mock("../src/sim/double-boss-start.js", async (original) => ({ ...await original<object>(),
++  withDoubleBossStart: (_state: unknown, _knowledge: unknown, input: ReturnType<typeof jointInput>) =>
++    ({ ...input, continuation: jointInput().continuation }) }));
++vi.mock("../src/sim/boss-trust.js", async (original) => ({ ...await original<object>(), bossTrustReason: () => null }));
++vi.mock("node:crypto", async (original) => ({ ...await original<object>(), randomUUID: () => "00000000-0000-4000-8000-000000000000" }));
++vi.mock("node:os", async (original) => ({ ...await original<object>(), loadavg: () => [1, 1, 1] }));
++setupOneshotTests();
++const original = { ...bossLinesOptions };
++const fixedNow = () => 0;
++beforeEach(() => {
++  vi.spyOn(performance, "now").mockReturnValue(0);
++  vi.stubEnv("GLOBAL_BUILD_EVAL", "off"); vi.stubEnv("SIM_ADAPTIVE", "off");
++  Object.assign(bossLinesOptions, { serial: false, now: () => 0 });
++});
++afterEach(() => { Object.assign(bossLinesOptions, original); vi.restoreAllMocks(); vi.unstubAllEnvs(); releaseBossLinesPool(); });
++
++function runner(): DeckSimRunner {
++  return { run: vi.fn(async (req) => ({
++    outcomes: req.decks.map(() => req.orders.map(() => Array.from({ length: req.samples }, (_, i) => sample(sampleSeed(req.seed, i), 8 + i, i % 2 === 0)))),
++    complete: Array.from({ length: req.samples }, (_, i) => i), timedOut: false, elapsedMs: 0, workers: 0,
++  })) };
++}
++
++it("B3 aggregates existing returned outcomes and reuses its original memo with no extra worker call", async () => {
++  const worker = runner(), input = jointInput();
++  const options = [{ key: "skip", change: null }];
++  const first = await compareOptions(worker, input, options, { samples: 2, requireComplete: true, f48JointScope: scope });
++  const second = await compareOptions(worker, input, options, { samples: 2, requireComplete: true, f48JointScope: scope });
++  expect(first.f48JointShadow).toMatchObject({ schema: "f48-joint-shadow-v1", status: "produced" });
++  expect(second.f48JointShadow).toEqual(first.f48JointShadow);
++  expect(second.completion?.memoHit).toBe(true); expect(worker.run).toHaveBeenCalledTimes(1);
++  const without = await compareOptions(worker, input, options, { samples: 2, requireComplete: true });
++  expect(without).not.toHaveProperty("f48JointShadow"); expect(worker.run).toHaveBeenCalledTimes(1);
++});
++
++it("does not invalidate a preexisting memo to fill shadow coverage", async () => {
++  const worker = runner(), input = jointInput();
++  await compareOptions(worker, input, [], { samples: 2, requireComplete: true });
++  const next = await compareOptions(worker, input, [], { samples: 2, requireComplete: true, f48JointScope: scope });
++  expect(next.f48JointShadow).toMatchObject({ status: "unknown", reason: "memo_predates_joint_shadow; no_extra_computation" });
++  expect(worker.run).toHaveBeenCalledTimes(1);
++});
++
++it("preserves the actual C2 stop schedule and leaves its unmatched joint coverage unknown", async () => {
++  const input = jointInput();
++  const edit = (hp: number, block = 0) => ({ solver: { ...input.solver, player: { ...input.solver.player, hp, block } } });
++  const options = [{ key: "bad", change: edit(10) }, { key: "good", change: edit(80) }, { key: "good_tie", change: edit(80, 1) }];
++  const workers = () => ({ run: vi.fn(async (req: Parameters<DeckSimRunner["run"]>[0]) => {
++    const from = req.range?.from ?? 0, to = req.range?.to ?? req.samples;
++    return { outcomes: req.decks.map((deck) => req.orders.map(() => Array.from({ length: req.samples }, (_, i) =>
++      i < from || i >= to ? undefined : sample(sampleSeed(req.seed, i), 8, i % 100 < (deck.solver?.player.hp ?? (i < 300 ? 40 : 60)))))),
++      complete: Array.from({ length: to - from }, (_, i) => from + i), timedOut: false, elapsedMs: 0, workers: 0 };
++  }) });
++  const oldWorker = workers(), newWorker = workers();
++  const settings = { samples: 1000, requireComplete: true, adaptive: { mode: "on" as const, allowS: false } };
++  const before = await compareOptions(oldWorker, input, options, settings);
++  const after = await compareOptions(newWorker, input, options, { ...settings, f48JointScope: scope });
++  expect(JSON.stringify(newWorker.run.mock.calls)).toBe(JSON.stringify(oldWorker.run.mock.calls));
++  const { f48JointShadow: joint, ...rest } = after; expect(rest).toEqual(before);
++  expect(after.options.map((o) => o.samples)).toEqual([300, 1000, 1000]);
++  const bad = (joint!.candidates as any[]).find((c) => c.candidate_key === "bad");
++  expect(bad.paired_comparison).toMatchObject({ complete_pairs: 300, missing_pairs: 700, status: "unknown", delta_joint_raw: null });
++});
++
++it.each(["SILENT", "IRONCLAD", "REGENT", "DEFECT", "NECROBINDER"])("keeps the actual %s F48 B3 question and runner requests equivalent", async (character) => {
++  const raw = board("xljq-f5-reward", "reward"), before = decide(env(raw));
++  Object.assign(raw.run as object, { character_id: character, floor: 48, act_id: "0", boss_id: "SOUL_FYSH_BOSS" });
++  const question = async () => {
++    const worker = runner();
++    const outcome = await withBossSim(before, { ...env(structuredClone(raw)), requiredBossEvaluation: character === "SILENT" },
++      { runner: worker, samples: 2, db: FIXTURE_DB, mm: FIXTURE_MM, now: fixedNow });
++    return { ...outcome, calls: vi.mocked(worker.run).mock.calls };
++  };
++  const disabled = vi.spyOn(shadow, "f48JointScope").mockReturnValue(undefined);
++  const baseline = await question(); disabled.mockRestore();
++  const actual = await question();
++  expect(actual.record).not.toHaveProperty("error");
++  expect(JSON.stringify(actual.decision)).toBe(JSON.stringify(baseline.decision)); expect(actual.calls).toEqual(baseline.calls);
++  const { f48_joint_shadow: joint, ...record } = actual.record!;
++  expect(record).toEqual(baseline.record);
++  if (character === "SILENT") expect(joint).toMatchObject({ schema: "f48-joint-shadow-v1", status: "unknown", delivered: false });
++  else expect(joint).toBeUndefined();
++  expect(JSON.stringify(actual.decision)).not.toContain("f48-joint-shadow");
++});
++
++function b2Args(character: string): BossLineSimArgs {
++  const input = simBoard({ bossHp: 12 });
++  return { state: { raw: { run_id: "fixed-F48-shadow" }, turn: 1, run: { floor: 48, ascension: 10, raw: { character_id: character } } },
++    knowledge: {}, memory: createScreenMemory("COMBAT"), solver: input.solver, piles: input.piles, randomPotions: [],
++    lines: input.plans.slice(0, 2), turn: 1, drinks: () => false, samples: 2 } as unknown as BossLineSimArgs;
++}
++it.each(["SILENT", "IRONCLAD", "REGENT"])("keeps %s F48 B2 text, order and pool requests identical while logging only the eligible role", (character) => {
++  const pool = vi.spyOn(BossLinesPool.prototype, "run").mockImplementation((input, pairs, count, seed) => ({
++    outcomes: pairs.map(() => Array.from({ length: count }, (_, i) => sample(sampleSeed(seed, i), 8 + i, true))),
++    complete: Array.from({ length: count }, (_, i) => i), timedOut: false, elapsedMs: 0, workers: 0, done: count * pairs.length,
++  }));
++  const disabled = vi.spyOn(shadow, "f48JointScope").mockReturnValue(undefined);
++  const baseline = bossLineSim(b2Args(character)); disabled.mockRestore();
++  const actual = bossLineSim(b2Args(character)); expect(actual.available).toBe(true); expect(baseline.available).toBe(true);
++  const { f48JointShadow: joint, ...rest } = actual;
++  expect(rest).toEqual(baseline); expect(pool.mock.calls[1]).toEqual(pool.mock.calls[0]);
++  const record = simLog(actual, () => "p1");
++  if (character === "SILENT") expect(record.f48_joint_shadow).toMatchObject({ status: "unknown", delivered: false });
++  else { expect(joint).toBeUndefined(); expect(record).not.toHaveProperty("f48_joint_shadow"); }
++});
++
++it("retains C1 pending and the 0332 failure reference as unknown without adding samples or numeric rates", () => {
++  const args = { ...b2Args("SILENT"), requiredComplete: true };
++  const failure = captureContinuationFailure("nonpositive-hp", 1, { synthetic: true });
++  const pool = vi.spyOn(BossLinesPool.prototype, "run").mockImplementation(() => { throw new ContinuationSampleError("nonpositive-hp", failure); });
++  const result = bossLineSim(args), log = simLog(result, () => "p1");
++  expect(result).toMatchObject({ available: false, completion: { status: "pending", samples: 0 } });
++  expect(log.f48_joint_shadow).toMatchObject({ status: "unknown", continuous: null,
++    failure: { reason: "resource_contract_failure:nonpositive-hp", reference: { status: "unconfigured" } } });
++  expect(pool).toHaveBeenCalledTimes(1); expect(log).not.toHaveProperty("lines");
++});
++
++it("logs an existing continuous B2 computation without adding calls or exposing the diagnostic in its line text", () => {
++  vi.spyOn(doubleBoss, "firstDoubleBoss").mockReturnValue({} as never);
++  const pool = vi.spyOn(BossLinesPool.prototype, "run").mockImplementation((_input, pairs, count, seed) => ({
++    outcomes: pairs.map(() => Array.from({ length: count }, (_, i) => sample(sampleSeed(seed, i), 8 + i, true))),
++    complete: Array.from({ length: count }, (_, i) => i), timedOut: false, elapsedMs: 0, workers: 0, done: count * pairs.length,
++  }));
++  const result = bossLineSim(b2Args("SILENT"));
++  expect(result.available).toBe(true);
++  expect(simLog(result, () => "p1").f48_joint_shadow).toMatchObject({ status: "produced", delivered: false });
++  if (result.available) for (const line of result.byPlan.values()) expect(line.text).not.toContain("f48-joint-shadow");
++  expect(pool).toHaveBeenCalledTimes(1);
++});
+diff --git a/agent/tests/f48-joint-shadow.test.ts b/agent/tests/f48-joint-shadow.test.ts
+new file mode 100644
+index 000000000..dd1093711
+--- /dev/null
++++ b/agent/tests/f48-joint-shadow.test.ts
+@@ -0,0 +1,82 @@
++import { expect, it } from "vitest";
++import { f48JointShadow } from "../src/sim/f48-joint-shadow.js";
++import { continuousBossResult } from "../src/sim/continuous-boss-result.js";
++import { candidate, jointInput, sample, scope } from "./f48-joint-fixture.js";
++
++const rows = (record: any): any[] => record.candidates;
++it("uses returned sample resources, not an average-HP continuation, and retains the G1a rates", () => {
++  const a = [sample(11, 8, false), sample(12, 18, true)], b = [sample(11, 13, false), sample(12, 13, false)];
++  const original = structuredClone(a), record = f48JointShadow(scope, [candidate("a", a), candidate("b", b)], jointInput())!;
++  const [one, two] = rows(record);
++  expect(record).toMatchObject({ schema: "f48-joint-shadow-v1", mode: "shadow", delivered: false,
++    extra_workers: 0, extra_simulation_samples: 0, trust: { F49: "low_trust", joint_calibration: "unknown", joint_S: "unknown" } });
++  expect(one.continuous).toEqual(continuousBossResult(a, 2, true));
++  expect(one.exit_resources.hp).toEqual({ n: 2, min: 8, p10: 9, p50: 13, p90: 17 });
++  expect(two.exit_resources.hp.p50).toBe(13);
++  expect(one.continuous.joint.value).toBe(.5); expect(two.continuous.joint.value).toBe(0);
++  expect(two.paired_comparison).toMatchObject({ complete_pairs: 2, delta_joint_vector: [0, -1], delta_joint_raw: -.5, mc_se: .5 });
++  expect(a).toEqual(original);
++});
++
++it("keeps physical duplicate-id slots distinct, spent revives absent and the recorded opening loss applied once", () => {
++  const [row] = rows(f48JointShadow(scope, [candidate("a", [sample(1, 8, true), sample(2, 18, false)])], jointInput()));
++  expect(row.exit_resources).toMatchObject({ potion_slot_states: [{ state: ["POTION:BLOCK_POTION:1"], n: 2 }],
++    remaining_revive_states: [{ state: [], n: 2 }], opening_hp_loss: [{ state: 2, n: 2 }],
++    simulated_F49_entry_hp: { min: 6, p50: 11 }, spent_slots: null, actual_revive_use: null, opening_charge_states: null });
++  expect(row.exit_resources.unknown).toContain("unobserved_transition_rewards");
++  expect(JSON.stringify(row)).not.toContain('"hp":20');
++});
++
++it.each(["missing", "zero", "NaN", "restored_revive", "double_opening_loss"])("keeps invalid %s resources unknown with no unsafe trace or numeric rate", (kind) => {
++  const o = sample(1, 8, true);
++  if (kind === "missing") o.sequence!.firstResources = null;
++  if (kind === "zero") o.sequence!.firstHp = o.sequence!.firstResources!.hp = 0;
++  if (kind === "NaN") o.sequence!.firstHp = o.sequence!.firstResources!.hp = NaN;
++  if (kind === "restored_revive") o.sequence!.secondEntry!.revives.push({ source: "LIZARD_TAIL", hp: 8, name: "fixed" });
++  if (kind === "double_opening_loss") o.sequence!.secondEntry!.hp -= 2;
++  const [row] = rows(f48JointShadow(scope, [candidate("a", [o])], jointInput()));
++  for (const rate of [row.continuous.first, row.continuous.secondGivenFirstWin, row.continuous.joint]) expect(rate.value).toBeNull();
++  expect(row.continuous.traces).toEqual([]); expect(row.unknown_samples).toBe(1);
++  expect(row.exit_resources.hp).toMatchObject({ n: 0, p50: null }); expect(row.paired_comparison.delta_joint_raw).toBeNull();
++});
++
++it.each(["capped", "timeUp"] as const)("retains a valid F48 exit when F49 is %s while withholding the joint rate", (kind) => {
++  const o = sample(1, 8, false); o.died = false; o[kind] = true; o.sequence!.secondDied = false;
++  const [row] = rows(f48JointShadow(scope, [candidate("a", [o])], jointInput()));
++  expect(row.continuous.joint.value).toBeNull(); expect(row.exit_resources.hp).toMatchObject({ n: 1, min: 8 });
++  expect(row.second_outcomes).toEqual([{ state: kind === "capped" ? "second_capped" : "second_time_up", n: 1 }]);
++});
++
++it("preserves C2 prefix gaps and pairs by seed, not array position or a filled-in loss", () => {
++  const ref = [sample(1, 8, true), sample(2, 9, false), sample(3, 10, true)];
++  const partial = [sample(2, 9, true), sample(1, 8, true)];
++  const [base, short] = rows(f48JointShadow(scope, [candidate("base", ref), candidate("early", partial, 3)], jointInput()));
++  expect(base.continuous.joint.samples).toBe(3);
++  expect(short.continuous.joint).toMatchObject({ value: null, samples: 3, unknown: 1 });
++  expect(short.paired_comparison).toMatchObject({ status: "unknown", complete_pairs: 2, missing_pairs: 1,
++    delta_joint_vector: [1, 0], delta_joint_raw: null, mc_se: null });
++});
++
++it("rejects different second-boss variants and duplicate seed identities", () => {
++  const ref = [sample(1, 8, true), sample(2, 9, false)], changed = structuredClone(ref);
++  changed[0]!.sequence!.secondBoss = "DIFFERENT";
++  const [, bad] = rows(f48JointShadow(scope, [candidate("a", ref), candidate("b", changed)], jointInput()));
++  expect(bad.paired_comparison).toMatchObject({ status: "unknown", variant_mismatches: 1, delta_joint_raw: null });
++  const [duplicate] = rows(f48JointShadow(scope, [candidate("a", [ref[0]!, ref[0]!])], jointInput()));
++  expect(duplicate.unknown_reasons).toContainEqual({ state: "duplicate_sample_seed", n: 1 });
++});
++
++it("keeps no-first-win and no-computation cases unknown without inventing conditional zeros", () => {
++  const o = sample(1, 8, false); Object.assign(o.sequence!, { firstWon: false, firstDied: true, firstResources: null,
++    secondEntry: null, firstHp: 0, secondWon: null, secondDied: null });
++  const [row] = rows(f48JointShadow(scope, [candidate("a", [o])], jointInput()));
++  expect(row.continuous.first.value).toBe(0); expect(row.continuous.secondGivenFirstWin.value).toBeNull();
++  expect(row.continuous.joint.value).toBeNull();
++  expect(f48JointShadow(scope, [], undefined, { reason: "resource_contract_failure:nonpositive-hp", reference: { sha256: "fixed" } }))
++    .toMatchObject({ status: "unknown", continuous: null, failure: { reason: "resource_contract_failure:nonpositive-hp" } });
++});
++
++it.each(["ironclad", "regent", "defect", "necrobinder"])("is entirely absent for %s even with supplied continuous samples", (character) => {
++  expect(f48JointShadow({ ...scope, character }, [candidate("a", [sample(1, 8, true)])], jointInput())).toBeUndefined();
++  expect(f48JointShadow({ ...scope, floor: 49 }, [], jointInput())).toBeUndefined();
++});

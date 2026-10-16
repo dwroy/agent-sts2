@@ -1,6 +1,6 @@
 {
   "schema": "global-build-requirements-v1",
-  "at": "2026-10-16T09:49:19.564633+00:00",
+  "at": "2026-10-16T22:47:35.072018+08:00",
   "request_id": "roy-20261016-global-build",
   "owner_session": "01a13dcd-83d4-7c63-b233-f93cf878ecf4",
   "plan": "docs/v5-global-build-plan.md",
@@ -467,19 +467,15 @@
   ],
   "current_assignment": {
     "scope": [
-      "S sort keys shadow; original ops independent release",
-      "G2 shadow implementation and fixed tests"
+      "f48-joint-shadow-v1 implementation/fixed tests/source handoff only"
     ],
     "owner": "01a13dcd-83d4-7c63-b233-f93cf878ecf4",
     "goal": "cancelled_by_Roy",
-    "future_stages": "await explicit Claude herdr assignment; do not execute G3/G5/natural shadow gate autonomously",
-    "completion": "current two deliverables only; original broad requirements retained as history/future specification",
-    "state": "completed current source implementation/fixed/full test handoff; stopped",
-    "S": "actualR369+exactcb2128 host0",
-    "G2": "actual source e992 + one-test5bc8 deployed a9e687/treea55384; exact host aggregate0; natural/on unassigned",
-    "stop": "no autonomous future phase or natural observer; await Claude/herdr"
+    "state": "scoped source implementation/checks/handoff completed; stopped",
+    "completion": "source implementation/checks/handoff and report; then stop",
+    "future_stages": "await explicit Claude assignment; no natural acceptance before 0332 fix acceptance"
   },
-  "active_assignment": "V5-S regression diagnosis report complete; stopped; experiment not executed",
+  "active_assignment": "Roy22:19 f48-joint-shadow-v1 source/report delivered; stopped",
   "G3b_assignment": [
     {
       "id": "G3b.1",
@@ -614,5 +610,32 @@
     "ops_source_received": true,
     "actual_publication": "pending preceding calibration completion/numbering gate; original ops owns continuation",
     "new_Roy_decision_required": false
+  },
+  "prior_current_assignments": [
+    {
+      "scope": [
+        "S sort keys shadow; original ops independent release",
+        "G2 shadow implementation and fixed tests"
+      ],
+      "owner": "01a13dcd-83d4-7c63-b233-f93cf878ecf4",
+      "goal": "cancelled_by_Roy",
+      "future_stages": "await explicit Claude herdr assignment; do not execute G3/G5/natural shadow gate autonomously",
+      "completion": "current two deliverables only; original broad requirements retained as history/future specification",
+      "state": "completed current source implementation/fixed/full test handoff; stopped",
+      "S": "actualR369+exactcb2128 host0",
+      "G2": "actual source e992 + one-test5bc8 deployed a9e687/treea55384; exact host aggregate0; natural/on unassigned",
+      "stop": "no autonomous future phase or natural observer; await Claude/herdr"
+    }
+  ],
+  "roy_2219": {
+    "requirements": "paper/materials/20261016-f48-joint-shadow/requirements.json",
+    "checkpoint": "paper/materials/20261016-f48-joint-shadow/checkpoint.json",
+    "0332_root_fix_required_before_implementation": false,
+    "0332_root_fix_required_before_natural_acceptance": true,
+    "natural_acceptance_assigned": false,
+    "watcher_scope": "complete; stopped after exact source transport",
+    "source": "7ca593f9e018f7b4d8c0df1b3da530fa1d1c6502",
+    "actual_publication": "pending original ops actual receipt/integration/host",
+    "completion": "paper/materials/20261016-f48-joint-shadow/completion.md"
   }
 }

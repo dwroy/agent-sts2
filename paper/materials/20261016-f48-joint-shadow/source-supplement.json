@@ -1,0 +1,44 @@
+{
+  "results": [
+    {
+      "name": "original-failed-case",
+      "argv": [
+        "nice",
+        "-n",
+        "19",
+        "npx",
+        "vitest",
+        "run",
+        "tests/ops-herdr.test.ts",
+        "--pool=forks",
+        "--maxWorkers=1",
+        "-t",
+        "shows verified live learner 20261010-164301-strategy-proposal beside ops"
+      ],
+      "rc": 0,
+      "seconds": 7.965,
+      "log_sha256": "35c0556be7b9abe6db17e59d31186fc7ac846acc6cfaf4c59e70dc63b5b2db16"
+    },
+    {
+      "name": "paths-not-reached",
+      "argv": [
+        "nice",
+        "-n",
+        "19",
+        "npx",
+        "vitest",
+        "run",
+        "tests/paths.test.ts",
+        "--pool=forks",
+        "--maxWorkers=1"
+      ],
+      "rc": 0,
+      "seconds": 4.806,
+      "log_sha256": "e98bb57283f2bb8eada6d00d329e81b6f82dacb4861f4ffc178431234498ba4b"
+    }
+  ],
+  "source_and_knowledge_unchanged": true,
+  "new_full": false,
+  "original_full_rc": 1,
+  "no_assertion_timeout_exclusion_changes": true
+}
