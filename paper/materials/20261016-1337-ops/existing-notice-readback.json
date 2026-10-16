@@ -1,0 +1,51 @@
+{
+  "at": "2026-10-16 13:40:43 CST",
+  "notice": {
+    "id": "d70532ef14bf73d453bdbc83",
+    "kind": "disagreement",
+    "request_id": "silent-proposal-01d7495835a3eb19",
+    "message": "{\n  \"proposal_id\": \"silent-proposal-01d7495835a3eb19\",\n  \"original_proposal_sha256\": \"9282fefa7c494597de6d0ddd65d725fb5e8f07abf9b538b9f46b001e78e3d93e\",\n  \"batch\": \"20261016-131302-s2-strategy-proposal\",\n  \"character\": \"silent\",\n  \"kind\": \"disagreement\",\n  \"question\": {\n    \"claim\": \"01d749、cb23、53ed、1f34原Markdown将AD末轮rationale解释成预计损2、实际需损5的差额。\",\n    \"finding\": \"d292362/292364写keeps the most HP (-2)；原a340c1ec及当前源码均打印hpAfter。3HP、18挡、23攻对应预计剩血-2，不能将这两行当少算3伤的证据；不据此外推原dirty模型全部正确。\",\n    \"evidence\": [\n      \"/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-131302-s2/learner/runs/20261016-131312-a836172c-d88a-4579-8473-eb327287e91e-strategy-proposal/least-loss-semantics.json\",\n      \"/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-131302-s2/learner/runs/20261016-131312-a836172c-d88a-4579-8473-eb327287e91e-strategy-proposal/selected-decisions.json\",\n      \"/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-131302-s2/learner/runs/20261016-131312-a836172c-d88a-4579-8473-eb327287e91e-strategy-proposal/state-projections.json\",\n      \"/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-131302-s2/learner/runs/20261016-131312-a836172c-d88a-4579-8473-eb327287e91e-strategy-proposal/evidence-audit.json\"\n    ],\n    \"ledger\": [\n      \"silent-0079\",\n      \"silent-0028\",\n      \"silent-0011\",\n      \"silent-0048\"\n    ],\n    \"proposal_ids\": [\n      \"silent-proposal-01d7495835a3eb19\",\n      \"silent-proposal-cb23be067a5f04c1\",\n      \"silent-proposal-53ed69feeb9898fe\",\n      \"silent-proposal-1f34e9d37b21ba71\"\n    ],\n    \"recommendation\": \"ops保留四份历史原文，追加解释勘误并沿既有ops→watcher→Roy转达；移除误读差额作为缺陷依据。完整重规划/受控后继要求继续waiting，不关闭宽父。\"\n  },\n  \"delivery_state\": \"待ops实际转达；未创建根通知、未代填ops/watcher/Roy的ACK\",\n  \"source_artifacts\": [\n    {\n      \"path\": \"/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-131302-s2/learner/runs/20261016-131312-a836172c-d88a-4579-8473-eb327287e91e-strategy-proposal/least-loss-semantics.json\",\n      \"sha256\": \"5ff2b37b4dcfe178701b9d9f340583e732a5acf41a889b2bba83233b8ef36bbd\"\n    },\n    {\n      \"path\": \"/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-131302-s2/learner/runs/20261016-131312-a836172c-d88a-4579-8473-eb327287e91e-strategy-proposal/selected-decisions.json\",\n      \"sha256\": \"788c48faedc98d91dd35174e5f28566a9c38a5fee049d89c28fdc5832fdf6af0\"\n    },\n    {\n      \"path\": \"/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-131302-s2/learner/runs/20261016-131312-a836172c-d88a-4579-8473-eb327287e91e-strategy-proposal/state-projections.json\",\n      \"sha256\": \"2a48b122f99f3a65e5102a2413f0d1e6c3ec8961c62356fb5cec148947f288e8\"\n    },\n    {\n      \"path\": \"/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-131302-s2/learner/runs/20261016-131312-a836172c-d88a-4579-8473-eb327287e91e-strategy-proposal/evidence-audit.json\",\n      \"sha256\": \"d89d5e3fd55eb42a29a27fd8934118bc23c4d8ea344fdf8acc157e10c0be8643\"\n    }\n  ],\n  \"at\": \"2026-10-16 13:36:17 CST\",\n  \"original_proposal\": \"/home/dw/Projects/agent-sts2/learner/runs/20261008-151301-postmortem/proposal-combat.md\",\n  \"original_view\": [\n    {\n      \"id\": \"silent-proposal-01d7495835a3eb19\",\n      \"source\": \"/home/dw/Projects/agent-sts2/learner/runs/20261008-151301-postmortem/proposal-combat.md\",\n      \"sha256\": \"9282fefa7c494597de6d0ddd65d725fb5e8f07abf9b538b9f46b001e78e3d93e\",\n      \"exact_original_lines\": [\n        \"领域：combat、sl。授权Roy-2026-10-07-learning，未实现、未上线。\",\n        \"末轮逐技能跟踪抽牌、能量、格挡、激怒、虚弱和尚未结算毒；对待抽后重问，比较原题整线和已实际执行的前缀。验证末轮rationale预计损2与实际完整需损5的差额，并在运行版本来源和调用输入闭合后决定是缺模型还是重规划／截断差异。现在只读当前源码和日志不能确定纯bug；不让调度器按纯基础设施修复。\"\n      ]\n    },\n    {\n      \"id\": \"silent-proposal-cb23be067a5f04c1\",\n      \"source\": \"/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-153440-experience-update/proposal-modifiers.md\",\n      \"sha256\": \"0c335abd90d0afe5853ed127053296ca9208c3cb81d66d7d193ea44100e8ac82\",\n      \"exact_original_lines\": [\n        \"来源任务：experience-update / 20261008-153440；实现任务：独立strategy-proposal。角色silent，本批策略只观察A10，机制范围与历史各阶证据见changes.json/update-summary.json。授权Roy-2026-10-07-learning不提供游戏事实；其他角色及未观察进阶保持等价。本经验任务不改打法源码，不登记implemented/shipped。\",\n        \"机制：F17 T2/T3双毒雾+合6，T8玩家力敏−2/敌力2仍继续毒输出，38→11/T11胜。F48 T1建雾6、T3补到8；T3后99减益与魂缚在场，T6敌毒32+41=73、蜃景脆弱后54挡挡住36攻；T8聚合体44血46毒退场，其31攻击未结算。T9女王6×5=30，牌挡13+水盆4实损13。T10爆发+层2→1→0，尖啸重放使敌力2→−10、攻22→9，防御重放实6挡+水盆4零损；次轮力回2。F21敏捷药实＋2而换战撤，F49无玩家常驻力量/敏捷。局部机制兑现不等单能力整战胜因。\",\n        \"缺数据：完整dirty源码、前五SL实际退出/致死结算、部分敌退场末击毛伤、后续实验体阶段、本角色boss时钟输出、联合通关预测、受控留药/换线/改休息整场结局，以及末轮推演损2与实际需损5差额的确定原因。证据不足保留现行为，不凭rationale定新纯bug。\",\n        \"- silent-lagavulin-siphon-poison-sl；适用[0, 20]；支持/反例15/0；族母吸取压缩直接伤/牌挡，已建毒按现场层数结算。机制：已见每次玩家力敏各−2、敌力+2，负力量不减技能毒层。搭配：到手能力、来袭和可活轮共同核，重打抽牌改变另列。决定胜负的战斗：15支持/0反例，单项胜因未控（n=15）。典型案例：GXNKW8X1XYJP重打36→2毒胜；AD3QSC3P41JU A10 T2/T3建双毒雾+合6，T8力敏各−2、敌力2，毒仍兑现，T11以38→11胜。\"\n      ]\n    },\n    {\n      \"id\": \"silent-proposal-53ed69feeb9898fe\",\n      \"source\": \"/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-153440-experience-update/proposal-enrage.md\",\n      \"sha256\": \"f8c860cbaf5ba93b27d98d536fd220b254e6514dd9c19033f7604484b23aa395\",\n      \"exact_original_lines\": [\n        \"来源任务：experience-update / 20261008-153440；实现任务：独立strategy-proposal。角色silent，本批策略只观察A10，机制范围与历史各阶证据见changes.json/update-summary.json。授权Roy-2026-10-07-learning不提供游戏事实；其他角色及未观察进阶保持等价。本经验任务不改打法源码，不登记implemented/shipped。\",\n        \"机制：F17 T2/T3双毒雾+合6，T8玩家力敏−2/敌力2仍继续毒输出，38→11/T11胜。F48 T1建雾6、T3补到8；T3后99减益与魂缚在场，T6敌毒32+41=73、蜃景脆弱后54挡挡住36攻；T8聚合体44血46毒退场，其31攻击未结算。T9女王6×5=30，牌挡13+水盆4实损13。T10爆发+层2→1→0，尖啸重放使敌力2→−10、攻22→9，防御重放实6挡+水盆4零损；次轮力回2。F21敏捷药实＋2而换战撤，F49无玩家常驻力量/敏捷。局部机制兑现不等单能力整战胜因。\",\n        \"缺数据：完整dirty源码、前五SL实际退出/致死结算、部分敌退场末击毛伤、后续实验体阶段、本角色boss时钟输出、联合通关预测、受控留药/换线/改休息整场结局，以及末轮推演损2与实际需损5差额的确定原因。证据不足保留现行为，不凭rationale定新纯bug。\"\n      ]\n    },\n    {\n      \"id\": \"silent-proposal-1f34e9d37b21ba71\",\n      \"source\": \"/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-153440-experience-update/proposal-resources.md\",\n      \"sha256\": \"79a49cd2ef7238a3dcf33ed556d5cde7071efe83b7b22efb77dd7539c2e65c27\",\n      \"exact_original_lines\": [\n        \"来源任务：experience-update / 20261008-153440；实现任务：独立strategy-proposal。角色silent，本批策略只观察A10，机制范围与历史各阶证据见changes.json/update-summary.json。授权Roy-2026-10-07-learning不提供游戏事实；其他角色及未观察进阶保持等价。本经验任务不改打法源码，不登记implemented/shipped。\",\n        \"机制：F17 T2/T3双毒雾+合6，T8玩家力敏−2/敌力2仍继续毒输出，38→11/T11胜。F48 T1建雾6、T3补到8；T3后99减益与魂缚在场，T6敌毒32+41=73、蜃景脆弱后54挡挡住36攻；T8聚合体44血46毒退场，其31攻击未结算。T9女王6×5=30，牌挡13+水盆4实损13。T10爆发+层2→1→0，尖啸重放使敌力2→−10、攻22→9，防御重放实6挡+水盆4零损；次轮力回2。F21敏捷药实＋2而换战撤，F49无玩家常驻力量/敏捷。局部机制兑现不等单能力整战胜因。\",\n        \"缺数据：完整dirty源码、前五SL实际退出/致死结算、部分敌退场末击毛伤、后续实验体阶段、本角色boss时钟输出、联合通关预测、受控留药/换线/改休息整场结局，以及末轮推演损2与实际需损5差额的确定原因。证据不足保留现行为，不凭rationale定新纯bug。\"\n      ]\n    }\n  ],\n  \"different_conclusion\": \"d292362/292364写keeps the most HP (-2)；原a340c1ec及当前源码均打印hpAfter。3HP、18挡、23攻对应预计剩血-2，不能将这两行当少算3伤的证据；不据此外推原dirty模型全部正确。\",\n  \"evidence\": {\n    \"path\": \"paper/materials/20261016-1328-ops/semantic-original-records.json\",\n    \"sha256\": \"9f6cd92a1c8351f3ad116bb4d0c5a34cd0e5100707a012ba3dda5a144f9b102a\"\n  },\n  \"affected_ledger_ids\": [\n    \"silent-0079\",\n    \"silent-0028\",\n    \"silent-0011\",\n    \"silent-0048\"\n  ],\n  \"affected_experience_ids\": [],\n  \"next_step\": \"ops保留四份历史原文，追加解释勘误并沿既有ops→watcher→Roy转达；移除误读差额作为缺陷依据。完整重规划/受控后继要求继续waiting，不关闭宽父。\",\n  \"new_learning_parent\": false,\n  \"prepared_ops_source_only\": true,\n  \"no_other_role_ACK\": true\n}",
+    "request_sha256": "9282fefa7c494597de6d0ddd65d725fb5e8f07abf9b538b9f46b001e78e3d93e",
+    "created_at": 1792128977.3000176,
+    "route": [
+      "learner",
+      "ops",
+      "watcher",
+      "Roy"
+    ],
+    "ops_forwarded": {
+      "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/learning-notices/receipts/d70532ef14bf73d453bdbc83.ops-forwarded.json",
+      "sha256": "8a639e22bd26792cb00a77498754cb804b2b9ed831a7fa9868ae06627d87e78d",
+      "at": 1792128977.544574
+    },
+    "watcher_received": false,
+    "roy_notified": false,
+    "last_queued_at": 1792128977.3100314,
+    "last_queue": "/home/dw/Projects/agent-sts2/ops/codex-ops/queue/1792128977309816656-learning-attention.md",
+    "notification_only": true,
+    "registered_learning_request": false,
+    "character": "silent",
+    "source_batch": "20261016-131302-s2-strategy-proposal",
+    "source_evidence": {
+      "path": "paper/materials/20261016-1328-ops/ordinary-proposal-source.json",
+      "sha256": "ee14506d63be1295f7a17a9855087ef0931fb97535521ba6b36a20523cad6e50"
+    }
+  },
+  "previous_actual_transport": {
+    "at": "2026-10-16 13:36:17 CST",
+    "target": "wJ:pJT",
+    "owner": "01a13dcd-83d4-7c63-b233-f93cf878ecf4",
+    "notice_id": "d70532ef14bf73d453bdbc83",
+    "owner_identity_verified": true,
+    "rc": 0,
+    "message_sha256": "9d2fbad1303aaaff72a61eaf182114bc675bcfdbc20a5763b1765381a9c99eef",
+    "response": "{\"id\":\"cli:agent:prompt\",\"result\":{\"agent\":{\"agent\":\"codex\",\"agent_session\":{\"agent\":\"codex\",\"kind\":\"id\",\"source\":\"herdr:codex\",\"value\":\"01a13dcd-83d4-7c63-b233-f93cf878ecf4\"},\"agent_status\":\"done\",\"cwd\":\"/home/dw/Projects/agent-sts2\",\"focused\":true,\"foreground_cwd\":\"/home/dw/Projects/agent-sts2\",\"pane_id\":\"wJ:pJT\",\"revision\":2546,\"state_change_seq\":4846,\"tab_id\":\"wJ:tJT\",\"terminal_id\":\"term_65d8d1d9ed27a2a7\",\"terminal_title\":\"接续 V5-S 目标并读取交接材料 | agent-sts2\",\"terminal_title_stripped\":\"接续 V5-S 目标并读取交接材料 | agent-sts2\",\"workspace_id\":\"wJ\"},\"type\":\"agent_prompted\"}}\n",
+    "status": "transported only",
+    "watcher_received": null,
+    "roy_notified": null,
+    "Roy_ACK": null
+  },
+  "source_and_evidence_SHA_verified": true,
+  "no_duplicate_ops_ACK_or_new_notice": true,
+  "no_other_role_ACK": true
+}

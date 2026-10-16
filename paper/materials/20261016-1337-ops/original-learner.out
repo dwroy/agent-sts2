@@ -1,0 +1,117 @@
+已提交 `39a3bdb948c13f4d84e2c644c9a08a9a3543c16b`：补充生存者弃牌时的沙坑与逃离资源提示，证据为 H1T1F8ML9FUE、F33 T6，实施账本 `silent-0495`。
+
+类型检查、沙箱 442 文件／4,134 用例及 gitleaks 均通过；撤源后 2 例失败，恢复后定向 21 例通过。
+
+**未合入 live**：锁内预检发现 25 个历史冲突，按任务要求停止部署。十个原提案的完整范围继续 waiting，无新版本或 shipped 登记。工作树干净。
+
+[完整报告](/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-131302/learner/runs/20261016-131311-fc0a1a8e-ca24-4674-b2a3-8c4699552c04-strategy-proposal/report.md) · [提案与证据](/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-131302/learner/runs/20261016-131311-fc0a1a8e-ca24-4674-b2a3-8c4699552c04-strategy-proposal/proposal.md)
+
+```json
+{
+  "task": "strategy-proposal",
+  "character": "silent",
+  "batch": "20261016-131302-strategy-proposal",
+  "base": "ca9f61f7396ebdf181843f7099c177d3ca865fae",
+  "runs": ["G8NHLL09DLBX", "LYBHQ1X230ZB", "H1T1F8ML9FUE"],
+  "fixes": [
+    {
+      "id": "silent-survivor-sandpit-facts",
+      "commit": "39a3bdb948c13f4d84e2c644c9a08a9a3543c16b",
+      "source_parent": "ca9f61f7396ebdf181843f7099c177d3ca865fae",
+      "proposal_id": "silent-proposal-2ae7436286228166",
+      "ledger": ["silent-0117", "silent-0018", "silent-0495"],
+      "run": "H1T1F8ML9FUE",
+      "floor": 33,
+      "turn": 6,
+      "scope": "生存者沙坑2单弃牌事实子项；原大提案仍waiting"
+    }
+  ],
+  "skipped": [],
+  "merged": null,
+  "version": null,
+  "tests": {"tsc": 0, "vitest": 0, "cases": 0},
+  "test_counts": {
+    "sandbox_files": 442,
+    "sandbox_passed": 4134,
+    "targeted_passed": 21,
+    "without_source_failed": 2
+  },
+  "code_proposals": [
+    "silent-proposal-1481fe327a22ddeb",
+    "silent-proposal-8e9beeee55eac364",
+    "silent-proposal-ce75cb821e8f2610",
+    "silent-proposal-6ba977a3f01df016",
+    "silent-proposal-2097f02b69dacfff",
+    "silent-proposal-49bb659734d555e3",
+    "silent-proposal-2ae7436286228166",
+    "silent-proposal-de26499e8385f25b",
+    "silent-proposal-c888545b80180da7",
+    "silent-proposal-3b37b520b22f0eaf"
+  ],
+  "implementation_domains": ["combat"],
+  "proposal_results": [
+    {
+      "id": "silent-proposal-1481fe327a22ddeb",
+      "state": "waiting",
+      "reason": "G8缺保药、替代路线及后置营火实到对照，不能拟留药价格或安全血线。"
+    },
+    {
+      "id": "silent-proposal-8e9beeee55eac364",
+      "state": "waiting",
+      "reason": "LYB F29T6损12留10候选未实际执行接续，6血差不足拟终局权重。"
+    },
+    {
+      "id": "silent-proposal-ce75cb821e8f2610",
+      "state": "waiting",
+      "reason": "缺全修正组合、首次格挡消费和次轮复原的完整同帧消费者回放。"
+    },
+    {
+      "id": "silent-proposal-6ba977a3f01df016",
+      "state": "waiting",
+      "reason": "LYB缺替代目标及抽序完整执行、召唤重放SL整线校准；截断尝试不补毒结算。"
+    },
+    {
+      "id": "silent-proposal-2097f02b69dacfff",
+      "state": "waiting",
+      "reason": "缺LYB双敌成长、弱化、眩晕接续的完整消费者误差校准。"
+    },
+    {
+      "id": "silent-proposal-49bb659734d555e3",
+      "state": "waiting",
+      "reason": "LYB少损6HP候选未实打，缺同盘后场资源和完整结局对照。"
+    },
+    {
+      "id": "silent-proposal-2ae7436286228166",
+      "state": "waiting",
+      "reason": "生存者沙坑事实子项已自测提交，但25个历史冲突阻止live合入；原饱和SL候选后继、未来能力收益与整战对照仍缺。"
+    },
+    {
+      "id": "silent-proposal-de26499e8385f25b",
+      "state": "waiting",
+      "reason": "H1 F48未赢、F49未到，缺受控留药或换饮时点的完整结局及消费者误差归因。"
+    },
+    {
+      "id": "silent-proposal-c888545b80180da7",
+      "state": "waiting",
+      "reason": "群蛇蜃景重放窄子项已有live祖先be9577c81a003aff0e69968c928e264f5173da7c；其他修正组合及临时层撤回消费未核齐。"
+    },
+    {
+      "id": "silent-proposal-3b37b520b22f0eaf",
+      "state": "waiting",
+      "reason": "H1末T4建毒雾与触媒时0毒且下轮未到，缺匹配后继及后期误差验证。"
+    }
+  ],
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-131302/learner/runs/20261016-131311-fc0a1a8e-ca24-4674-b2a3-8c4699552c04-strategy-proposal/report.md"
+}
+```
+
+== 学习者 codex / strategy-proposal ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a14321-4699-7763-9a90-88404cfd6b4c
+轮数：1；工具调用：command_execution×76 file_change×6
+token：输入 195.4k、输出 51.6k（其中推理 20.3k）、cache 读 8380.4k、cache 写 0（命中 97.7%）
+成本：未提供
+耗时：1354.9 s（墙钟）
+时间：首个事件 43.6 s、模型首个输出 48.6 s、首次工具 54.1 s、末次工具结束 1319.5 s；工具内共 1146.2 s，其余（模型生成、推理、网络）165.1 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-131302）；模型的工具调用 exec×65；/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/learner/sessions/2026/10/16/rollout-2026-10-16T13-13-36-01a14321-4699-7763-9a90-88404cfd6b4c.jsonl
+日志：/home/dw/Projects/agent-sts2/learner/runs/20261016-131311-fc0a1a8e-ca24-4674-b2a3-8c4699552c04-strategy-proposal.jsonl
