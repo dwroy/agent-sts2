@@ -1,0 +1,31 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261016-183355/agent
+
+....
+----------------------------------------------------------------------
+Ran 4 tests in 0.001s
+
+OK
+ ❯ tests/global-build-health.test.ts (1 test | 1 failed) 123ms
+   × checks G2 shadow coverage, retained unknowns and real observation timing on fixed inputs 122ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/global-build-health.test.ts > checks G2 shadow coverage, retained unknowns and real observation timing on fixed inputs
+Error: spawnSync /usr/bin/python3 EPERM
+ ❯ tests/global-build-health.test.ts:6:18
+      4|
+      5| it("checks G2 shadow coverage, retained unknowns and real observation …
+      6|   const result = execFileSync("/usr/bin/python3", ["-B", fileURLToPath…
+       |                  ^
+      7|   expect(result).toBe("");
+      8| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 451 passed (452)
+      Tests  1 failed | 4172 passed (4173)
+   Start at  20:50:50
+   Duration  1531.54s (transform 23.04s, setup 41.27s, import 101.45s, tests 1293.60s, environment 56ms)
+
