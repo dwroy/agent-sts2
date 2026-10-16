@@ -105,3 +105,7 @@ V5 的核心目的是让大脑有一个**全局的构筑方向和方法**；S �
   - G5 shadow 验收。
   - 测试通过、回放通过或批次结束都不等于完成。
 - **异议**：实现者或学习者如发现某项不成立（例如 S 没有预测力、多 Boss 评估太慢或不可信），按学习要求闭环记录，经 ops → watcher → Roy 告知，不要硬做。
+
+## 6. 2026-10-16 08:12:36 CST G1并行起步与G1b证据停点
+
+原watcher同一owner/thread接续本父。原ops已实际实收并在既有两槽、原线程启动G1a r1及G4旧请求r3；原r2及历史验收保持，回执见 `paper/materials/20261016-global-build-control/ops-dispatch-readback.json`。G1b固定窗口离线报告见 `paper/materials/20261016-global-build-g1b/report.md`：B2/B3均未证明S在模拟胜率之外有增量，终局/SL预测停止分列，已双通知建议仅S键回shadow；**Roy决定pending，未改live**。G1c固定分段工具与原局末钩子已实现，精确源码full仍在运行；原快照24已结束局首试层/通关一致，旧过幕布尔字段差异及修正前测试中断均原样保留。控制档 `paper/materials/20261016-global-build-control/{requirements,checkpoint}.json`。G2/G5自然shadow均0/2，后续阶段及总父继续active。

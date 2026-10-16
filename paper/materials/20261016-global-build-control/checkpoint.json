@@ -1,0 +1,67 @@
+{
+  "schema": "global-build-checkpoint-v1",
+  "at": "2026-10-16T08:09:09.273340+08:00",
+  "parent": "roy-20261016-global-build",
+  "original_owner": "01a13dcd-83d4-7c63-b233-f93cf878ecf4",
+  "current_owner": "01a13dcd-83d4-7c63-b233-f93cf878ecf4",
+  "account": "codex1",
+  "goal_status": "active",
+  "goal_complete": false,
+  "plan_base": "50e2da099a5e1745878070ea960f3160324f2217",
+  "phase": "G1a/G1b/G1c startup; G4 parallel",
+  "previous_goal_turn_classification": "progress: approved plan and fixed inputs inspected; complete dependency/evidence checklist frozen; original handoff prefix+all new lines verified",
+  "worktrees": {
+    "G1c": {
+      "path": ".worktrees/global-build-g1c-20261016",
+      "base": "50e2da099a5e1745878070ea960f3160324f2217",
+      "state": "implementation in progress"
+    }
+  },
+  "ops_dispatch": {
+    "state": "received and original-thread started; watcher read back",
+    "target": "wJ:p5",
+    "existing_terminal": "term_65d18dccdc7e311",
+    "evidence": [
+      "ops-received.json",
+      "ops-dispatch-readback.json"
+    ]
+  },
+  "gates": {
+    "G1b_Roy_S_decision": "required; pending",
+    "G2_shadow_complete_runs": 0,
+    "G5_shadow_complete_runs": 0
+  },
+  "next": [
+    "G1b held-out analysis and coverage report",
+    "G1c integration and meaningful fixed verification",
+    "Read G1a/G4 learner results on original completion events"
+  ],
+  "constraints": [
+    {
+      "id": "cross-cutting.7",
+      "requirement": "no play/account/model/home/ops-prompt changes; no new research sessions; nice and <=4 processes per offline item",
+      "state": "pending",
+      "evidence": []
+    },
+    {
+      "id": "cross-cutting.8",
+      "requirement": "exclude P4 Jev tie arbitration and elite S sorting; do not close unrelated learning/calibration/0332 parents",
+      "state": "pending",
+      "evidence": []
+    }
+  ],
+  "G1b": {
+    "frozen_manifest": "paper/materials/20261016-global-build-g1b/inputs/manifest.json",
+    "preregistered": "paper/materials/20261016-global-build-g1b/preregistration.md",
+    "state": "report delivered; Roy S decision pending; no live changes",
+    "report": "paper/materials/20261016-global-build-g1b/report.md",
+    "recommendation": "only P2/P3 S sort key -> shadow; no action until Roy",
+    "dual_notice": "paper/materials/20261016-global-build-g1b/objection-dual-notice.txt"
+  },
+  "G1c": {
+    "state": "fixed ten-run reporter and post-run cadence implemented; source full running; audit corrections under review",
+    "source_worktree": ".worktrees/global-build-g1c-20261016",
+    "fixed_funnel": "paper/materials/20261016-global-build-g1c/fixed-funnel.json",
+    "first_attempt_snapshot_overlap": "24 finished runs match floor/victory; legacy passed_act flags differ, preserve old snapshot; UPAB was unfinished at old cutoff"
+  }
+}
