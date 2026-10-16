@@ -3618,3 +3618,6 @@
   唯一nice19 paper_dataset --no-raw PID2267440实际exit0，cut2026-10-16T02:06:33.944Z、805局，五一致性及keyscan CLEAN；本局461决策/has_postmortem1/27成功Codex已入表，旧表先备份，原计数告警、组件独立cut估计非账单保持。仅提交本轮记录、该复盘、16所属CLI与实际生成表，保留并行记录/index；未改源码/live/版本/对局/账号home模型prompt，不加检查/模拟/研究或行为号。G1a自然消费仍归原watcher审计，S仍Roy待决，0332/生产校准/全局宽父不关。证据paper/materials/20261016-1001-ops/。
 
 - 2026-10-16 10:16:34 CST watcher原global-build等待门槛：G1独立准备/局末审计脚本已main89dbf8c25，四个连续原生目标轮次均仍缺Roy必需S决定，引用逐offset/SHA核；G2依赖不越过，登记blocked停止自动空转而非完成。原FD8单次前台终局监听94583继续，未新模型/研究/模拟/full/游戏轮询；自然验收、G2→G3→G5及0332/宽父完整保留。证据control/required-decision-blocked-readback.json。
+
+- 2026-10-16 10:20:35 CST 运维codex处理1017两终局：100139-fix实际exit0/无新增源码、提交或合入阻塞，原canonical failed/rc0/mergednull及重试历史保留，不改写为新修复。干净base1176e029；79项既有窄修复均核base/live祖先，42未勾选队列逐项处置及30未修/宽项保持；原tsc0，12文件68项与另2文件3项通过/32未选，合14文件71定向，未跑全套，不补无改树host或编号。0332完整resources/steps/根因缺口及原证据SHA保持，不降正HP/300样本契约。
+  100139策略done0，十原提案均具体waiting，无源码/知识/合入/版本，生产tests=null。6995原行按offset/bytes/SHA/JSON核、44固定材料断言原回执及16源码叶/7祖先已核；原六离线loader启动ERR_MODULE_NOT_FOUND失败与绝对现有loader后六exit0、五无decision_id元数据排除保留，仅核输入/解码/输出SHA，不再运行原消费者/模型/模拟。26条所属原CLI仅追加proposal/report追溯，私有fold旧claim/首证/prior/evidence/状态/版本/shipped及history/where前缀保持，不重登记提案/派学习或称已交付。一次ops元数据只读器误假设列表为dict的失败留原转录，只校正临时读取器，不改原件。证据paper/materials/20261016-1017-ops/。仅记录归档并保并行index/记录，未动live/现局/home账号模型prompt，S必需决定/G1a自然与0332/全局宽父保持；不等待未来事件。
