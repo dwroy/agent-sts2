@@ -1,0 +1,1006 @@
+{
+  "batch": "20261017-071301",
+  "run": "CVJ4MLQF4CSY",
+  "runtime": {
+    "batch": "20261017-071301",
+    "thread": "01a146fd-b09c-7291-8478-f211dc2b7805",
+    "cwd": "/home/dw/Projects/agent-sts2",
+    "event_log": "learner/runs/20261017-071308-91bb674c-8ecc-4c95-8f74-ee33d5eb9f96-postmortem.jsonl",
+    "registered_launch_batch": "20261017-071301",
+    "original_lease": "e2932226903d24c74b03cab96be722f9a1107b56187cea4f93d79dd9f14a2a26",
+    "native_context": {
+      "source": "ops/codex-ops/accounts/codex1/learner/sessions/2026/10/17/rollout-2026-10-17T07-13-13-01a146fd-b09c-7291-8478-f211dc2b7805.jsonl",
+      "offset": 49292,
+      "bytes": 4654,
+      "sha256": "6737889101d5a89c84867f51c42837b13a64792e69329b4585251ece7aa41562",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "sandbox": {
+        "type": "workspace-write",
+        "writable_roots": [
+          "/home/dw/Projects/agent-sts2/.git"
+        ],
+        "network_access": false,
+        "exclude_tmpdir_env_var": false,
+        "exclude_slash_tmp": false
+      },
+      "approval_policy": "never"
+    },
+    "native_user_input": {
+      "offset": 56529,
+      "bytes": 15343,
+      "sha256": "146246e3d6a6d3ee166257da7488191f21d1b429b7bbebda324de66e595cc296",
+      "input_sha256": "1942b2e5bea1d83175e87b5620f21a41d9766c2b15911dfa9ae8b8ee9c1bd029"
+    },
+    "original_header_events": [
+      {
+        "offset": 0,
+        "bytes": 16866,
+        "sha256": "6d69bfe40a99f9522f9e511d2123872d7a39c1d8f883318ed70e40a7d84ec6d1",
+        "type": "learner_launch",
+        "attempt": null,
+        "code": null
+      },
+      {
+        "offset": 16866,
+        "bytes": 360,
+        "sha256": "8e3deb65fadf80482cad10f03ca31921c33c2c98ef40395e27fd7bfb79ab1326",
+        "type": "learner_startup_attempt",
+        "attempt": 1,
+        "code": null
+      },
+      {
+        "offset": 20238,
+        "bytes": 77,
+        "sha256": "f29e7db7ed453e4a00fd633ad7b8ec15d57402991bb84e14cca282129715e822",
+        "type": "thread.started",
+        "attempt": null,
+        "code": null
+      }
+    ],
+    "startup_attempts": 1,
+    "failed_startups_preserved": 0,
+    "no_model_or_manual_restart": true
+  },
+  "report": {
+    "task": "postmortem",
+    "appended": [
+      "CVJ4MLQF4CSY"
+    ],
+    "skipped": [],
+    "bugs": [],
+    "ledger": {
+      "added": [],
+      "updated": [
+        "silent-0057",
+        "silent-0079",
+        "silent-0090"
+      ],
+      "repeats": [
+        "silent-0057",
+        "silent-0079"
+      ],
+      "check": 0
+    },
+    "code_proposals": [
+      "silent-proposal-715deb6feba772ee",
+      "silent-proposal-f6d76d15ce93e43f",
+      "silent-proposal-5ce99b6a4eb02b40"
+    ],
+    "implementation_domains": [
+      "combat",
+      "sl",
+      "terminal"
+    ],
+    "report": "/home/dw/Projects/agent-sts2/learner/runs/20261017-071308-91bb674c-8ecc-4c95-8f74-ee33d5eb9f96-postmortem/report.md"
+  },
+  "new_bugs": [],
+  "lesson_bytes": 24724,
+  "old_lesson_prefix": {
+    "bytes": 9375406,
+    "sha256": "9cfe4c465ca46c10e6120262f0b0b68ef96bae18bfaf326624874b7e0e705486"
+  },
+  "postwrite_checks": 102,
+  "actual_original_raw_refs_verified": [
+    {
+      "source": "states.jsonl",
+      "line": 430073,
+      "offset": 13699724113,
+      "bytes": 17382,
+      "sha256": "f2e592323100756f80da8f80c958bf4e21b9fa6ca24bc50a95e65d47994c4573"
+    },
+    {
+      "source": "states.jsonl",
+      "line": 430100,
+      "offset": 13700327648,
+      "bytes": 21296,
+      "sha256": "0a42efa1a635accdeb89ff7d48e861029365417d520510ae12d35911a359084e"
+    },
+    {
+      "source": "states.jsonl",
+      "line": 430101,
+      "offset": 13700348944,
+      "bytes": 15619,
+      "sha256": "d48fd1b2b9c7f9ecad12ac577d7e20bf747cbd8147921e2d1f10527c614d72de"
+    },
+    {
+      "source": "states.jsonl",
+      "line": 430106,
+      "offset": 13700450973,
+      "bytes": 18937,
+      "sha256": "b274a3ebf7d84931969f798ad2cb43af9a062802c241cf635587ab1805495849"
+    },
+    {
+      "source": "states.jsonl",
+      "line": 430124,
+      "offset": 13700857864,
+      "bytes": 20918,
+      "sha256": "3e82a51be58e717c9d57105243860925f98a0b1a73fc581a516cc337c231b380"
+    },
+    {
+      "source": "states.jsonl",
+      "line": 430125,
+      "offset": 13700878782,
+      "bytes": 16462,
+      "sha256": "71672fddcc44e7f8dbfa98e81e55e9e0302b609abe9716ac465e3c60dc39c431"
+    },
+    {
+      "source": "states.jsonl",
+      "line": 430130,
+      "offset": 13700984213,
+      "bytes": 19567,
+      "sha256": "ece87df3f9e309aef06828769c8a445416a88fb659383b05e7ac677a5d437094"
+    },
+    {
+      "source": "states.jsonl",
+      "line": 430147,
+      "offset": 13701379142,
+      "bytes": 23255,
+      "sha256": "63e7d1c94c3f48c4ba51a9d24c3518800ef524a544ae87334b5c1455e6841219"
+    },
+    {
+      "source": "states.jsonl",
+      "line": 430148,
+      "offset": 13701402397,
+      "bytes": 17291,
+      "sha256": "7c5d1cb3193cc8a49d749d6a4a0458d28ec24c599709c04f47bebd54d4640ee7"
+    },
+    {
+      "source": "states.jsonl",
+      "line": 430154,
+      "offset": 13701529663,
+      "bytes": 20478,
+      "sha256": "f79fb6bd234848c3a3067332c8b2665badc370494e15d9c969d1916c5ca4a1eb"
+    },
+    {
+      "source": "states.jsonl",
+      "line": 430171,
+      "offset": 13701946428,
+      "bytes": 25218,
+      "sha256": "6d944587da83e7fc7d741114b2ba7fdb9a82e217b208688c87368ce7513f975d"
+    },
+    {
+      "source": "states.jsonl",
+      "line": 430172,
+      "offset": 13701971646,
+      "bytes": 17897,
+      "sha256": "649545739f2862edd1d7547fe048b83f79512601b73a791c09d0350ad1f558b1"
+    },
+    {
+      "source": "states.jsonl",
+      "line": 430197,
+      "offset": 13702514686,
+      "bytes": 20430,
+      "sha256": "1e62d8d1dd4cfa7ff9e51641461422cc47285db53e4264e8cad7177cff881658"
+    },
+    {
+      "source": "states.jsonl",
+      "line": 430227,
+      "offset": 13703245551,
+      "bytes": 24071,
+      "sha256": "bd65a891c8c2c31f0d9f9f8ea1ae2b480ea135bcd625a92bcecb550c3f03014c"
+    },
+    {
+      "source": "states.jsonl",
+      "line": 430228,
+      "offset": 13703269622,
+      "bytes": 17845,
+      "sha256": "eb324c2dde1e5b20719718248613857fc3152e3a62cc97b66dc7addaef4ddc48"
+    },
+    {
+      "source": "states.jsonl",
+      "line": 430234,
+      "offset": 13703400490,
+      "bytes": 21456,
+      "sha256": "5e4dc0851abfbe0a15de9bb9efb79e7d459e4fbb9fd014a724285986fcf163d1"
+    },
+    {
+      "source": "states.jsonl",
+      "line": 430248,
+      "offset": 13703757847,
+      "bytes": 24224,
+      "sha256": "09a500eb8475c34fb08da80b7b62a9bb1f68af3203596f385d67b21c7fd4b5f2"
+    },
+    {
+      "source": "states.jsonl",
+      "line": 430249,
+      "offset": 13703782071,
+      "bytes": 18749,
+      "sha256": "ad76e689e8ce8e72445f24e0f2f4857c142bb9f39ed5676e0214ee4769eb7313"
+    },
+    {
+      "source": "states.jsonl",
+      "line": 430273,
+      "offset": 13704383062,
+      "bytes": 24357,
+      "sha256": "25ff5335f6a3050f778727f661c572b7e8078440019b257492637920187c32c9"
+    },
+    {
+      "source": "states.jsonl",
+      "line": 430322,
+      "offset": 13705792069,
+      "bytes": 28142,
+      "sha256": "6820443f10226fb3ffde389cf272ba42698d1e14500bf5279eeb62c37729b2e8"
+    },
+    {
+      "source": "states.jsonl",
+      "line": 430323,
+      "offset": 13705820211,
+      "bytes": 20486,
+      "sha256": "8c243d1c4df7de9c2736db964dc4c5861672e9e321c64be3ecf77ef5305a948e"
+    },
+    {
+      "source": "states.jsonl",
+      "line": 430331,
+      "offset": 13706018091,
+      "bytes": 25538,
+      "sha256": "14b03f39a476b134e60e33ef9c8f66cf75c90431d7fd721bf46db14a06c208d1"
+    },
+    {
+      "source": "states.jsonl",
+      "line": 430352,
+      "offset": 13706619199,
+      "bytes": 28869,
+      "sha256": "7aa827355fa847aaa52e505fcb99e6f0208d2537d4ba9f179378a3be0b28e3fd"
+    },
+    {
+      "source": "states.jsonl",
+      "line": 430353,
+      "offset": 13706648068,
+      "bytes": 20944,
+      "sha256": "a8e2f1a9f5202a3b24db8ffce0d57e31995536889aeb41114270136e05c6e09d"
+    },
+    {
+      "source": "states.jsonl",
+      "line": 430366,
+      "offset": 13706962173,
+      "bytes": 26222,
+      "sha256": "c6475f21d7a91fe00d01e5f62078e1e640a98e9bba4bf5bcaa9903abb2e6d962"
+    },
+    {
+      "source": "states.jsonl",
+      "line": 430392,
+      "offset": 13707741747,
+      "bytes": 31335,
+      "sha256": "5815dc06423e9bd15d2800024a7fa980e6eaaaac59094edd6b8953c0d29ce9e2"
+    },
+    {
+      "source": "states.jsonl",
+      "line": 430393,
+      "offset": 13707773082,
+      "bytes": 21793,
+      "sha256": "d219e71e09dba6ce877a122079c1c20105639b181eb5feab3cb27acc9c84bcab"
+    },
+    {
+      "source": "states.jsonl",
+      "line": 430399,
+      "offset": 13707924330,
+      "bytes": 27904,
+      "sha256": "1b455f37072096a4827d3a8778acd3427025156170c5067c9e26dab74663fba3"
+    },
+    {
+      "source": "states.jsonl",
+      "line": 430422,
+      "offset": 13708622479,
+      "bytes": 30697,
+      "sha256": "5fae4879593f4bbeddc33b2a8337926db982687320dcab51d6deba3808befccf"
+    },
+    {
+      "source": "states.jsonl",
+      "line": 430423,
+      "offset": 13708653176,
+      "bytes": 21798,
+      "sha256": "febc441f4d229b257147e07c2066d8062729de70cf3c5fe44d7a24b4bef78d59"
+    },
+    {
+      "source": "states.jsonl",
+      "line": 430438,
+      "offset": 13709044953,
+      "bytes": 27990,
+      "sha256": "eb14a30ee2776747686ad3349842b09785764259a3b0c4027aa1682f00c87987"
+    },
+    {
+      "source": "states.jsonl",
+      "line": 430467,
+      "offset": 13710027388,
+      "bytes": 35672,
+      "sha256": "7f08071492d6b898f4c12b39641c98ec9c548500430e94ea43a9f968b0db41af"
+    },
+    {
+      "source": "states.jsonl",
+      "line": 430468,
+      "offset": 13710063060,
+      "bytes": 23003,
+      "sha256": "0be2900792f6952c1f8339806ff72f91cf522e5691ad92658d5064831f7c80e3"
+    },
+    {
+      "source": "states.jsonl",
+      "line": 430488,
+      "offset": 13710606505,
+      "bytes": 30076,
+      "sha256": "65b5901b2564d70234624383f01ae79d6a4f10b313116309924f8d49461f0795"
+    },
+    {
+      "source": "states.jsonl",
+      "line": 430513,
+      "offset": 13711493873,
+      "bytes": 34351,
+      "sha256": "da3fe8ec92d169233bbf88605d3a6aa1f748f191efe328132f254ec92d47210d"
+    },
+    {
+      "source": "states.jsonl",
+      "line": 430514,
+      "offset": 13711528224,
+      "bytes": 23996,
+      "sha256": "1d437a67e260a60613f0bc30398de2bafff0acf0e6813dd28f34fd4f180f87c4"
+    },
+    {
+      "source": "states.jsonl",
+      "line": 430519,
+      "offset": 13711668188,
+      "bytes": 30945,
+      "sha256": "bce5fdac56f0fd27d23c675ea812a84d471243a451908e1e65d00506cb567248"
+    },
+    {
+      "source": "states.jsonl",
+      "line": 430535,
+      "offset": 13712217087,
+      "bytes": 32568,
+      "sha256": "776c78d730aa05693b66babfc4ea4c7766f0677be4ea83542bb8d7ac5b3b3f87"
+    },
+    {
+      "source": "states.jsonl",
+      "line": 430536,
+      "offset": 13712249655,
+      "bytes": 24134,
+      "sha256": "23be46bbd8731cf4843a43f5f0f4228130f9a666dafd7fc5277d8097266eda78"
+    },
+    {
+      "source": "states.jsonl",
+      "line": 430546,
+      "offset": 13712529852,
+      "bytes": 29610,
+      "sha256": "6e258bc3b6cda74a7da7042650bd72b918e14868870470c6bb639efc14ce915f"
+    },
+    {
+      "source": "states.jsonl",
+      "line": 430609,
+      "offset": 13714617207,
+      "bytes": 31912,
+      "sha256": "fdcf426141caecf6464ff4699665a8d0f2d7d29e55e971ddb40cf8db92df13e4"
+    },
+    {
+      "source": "states.jsonl",
+      "line": 430610,
+      "offset": 13714649119,
+      "bytes": 24138,
+      "sha256": "a368ab4be45412b648aee4c7c3e2c58172e4a7436d88ebea20c92d311e97d360"
+    },
+    {
+      "source": "states.jsonl",
+      "line": 430619,
+      "offset": 13714901396,
+      "bytes": 31801,
+      "sha256": "0ad098e44df312c81fb3cae6497f5ee444494faab922cd41589c6451907be0bc"
+    },
+    {
+      "source": "states.jsonl",
+      "line": 430637,
+      "offset": 13715558346,
+      "bytes": 36797,
+      "sha256": "a7cb61e28f64ecb883c4e29172c05b883b8713d085a80178c1da710acf6ae8df"
+    },
+    {
+      "source": "states.jsonl",
+      "line": 430638,
+      "offset": 13715595143,
+      "bytes": 24987,
+      "sha256": "e624809b55cea110265f10aacdbdc113c8494f76859d7fda0b9be18d919a101a"
+    },
+    {
+      "source": "states.jsonl",
+      "line": 430651,
+      "offset": 13715990906,
+      "bytes": 35175,
+      "sha256": "412f1935c0d165fea319c7a18a0cee0b5dfd5ee90abfa0c5dca19df75f10f5ac"
+    },
+    {
+      "source": "states.jsonl",
+      "line": 430669,
+      "offset": 13716704163,
+      "bytes": 38778,
+      "sha256": "4ba64be5e7daffb2ae29eb97317a109b2611f59288e57f471605d7c66f3e3d44"
+    },
+    {
+      "source": "states.jsonl",
+      "line": 430670,
+      "offset": 13716742941,
+      "bytes": 27289,
+      "sha256": "9c6f1d15544b70f3a69ee54c52ea6502a9d83ea7f581fbe16d00ecaca14b362d"
+    },
+    {
+      "source": "states.jsonl",
+      "line": 430681,
+      "offset": 13717076360,
+      "bytes": 34962,
+      "sha256": "b86fb0a3b65f69c3f9a39722c890f065d765b9aaca1be673ce9bb14eed64663c"
+    },
+    {
+      "source": "states.jsonl",
+      "line": 430691,
+      "offset": 13717476876,
+      "bytes": 40278,
+      "sha256": "d77a4126855fa6ddc4268530428f04eb1e72616b4f78aad3a171deaf78dd00ca"
+    },
+    {
+      "source": "states.jsonl",
+      "line": 430692,
+      "offset": 13717517154,
+      "bytes": 25938,
+      "sha256": "75c37d30eee6203be0031ee619ba0595f0fe5b6c69a9936b484302ae7204f162"
+    },
+    {
+      "source": "states.jsonl",
+      "line": 430710,
+      "offset": 13718106873,
+      "bytes": 38235,
+      "sha256": "370971a97ccb108a2dc02e8eb361cf94c4251fd3ef0e68cfc0e8e1580c5aff61"
+    },
+    {
+      "source": "states.jsonl",
+      "line": 430749,
+      "offset": 13719763754,
+      "bytes": 43949,
+      "sha256": "bc9229953e9ab9f5c5f8e1577897f489b43a9bd73d94086af37ea7c311454be8"
+    },
+    {
+      "source": "states.jsonl",
+      "line": 430750,
+      "offset": 13719807703,
+      "bytes": 29308,
+      "sha256": "f334c8e024f1fca4419af841e1bb324b3adf4d61a15f9af29b37d8c6780acd19"
+    },
+    {
+      "source": "states.jsonl",
+      "line": 430759,
+      "offset": 13720098434,
+      "bytes": 38891,
+      "sha256": "e3a41568103154f877dffe13298e5fc75da92703cfdc4b7bb973076bcff5b3fa"
+    },
+    {
+      "source": "states.jsonl",
+      "line": 430772,
+      "offset": 13720660319,
+      "bytes": 42895,
+      "sha256": "c6a0c31be293ca61ac4d3b37090f363db955c4b4770f12d9075662cf88928e4a"
+    },
+    {
+      "source": "states.jsonl",
+      "line": 430773,
+      "offset": 13720703214,
+      "bytes": 29606,
+      "sha256": "fd1620fb4e048fd6fa1b7a825dc667608e7b2e1dd1be05197378023eeca20af6"
+    },
+    {
+      "source": "states.jsonl",
+      "line": 430781,
+      "offset": 13720971553,
+      "bytes": 37714,
+      "sha256": "edb4cd1b8f8d777562eb130bdc6a44bbe6ba82c9784e8710a1ec5fca8bba77bc"
+    },
+    {
+      "source": "states.jsonl",
+      "line": 430838,
+      "offset": 13723468187,
+      "bytes": 47990,
+      "sha256": "7793d89521e44fc7f44f99bf5c3c296631b6647e77953323d0e4a25c067e49e1"
+    },
+    {
+      "source": "states.jsonl",
+      "line": 430839,
+      "offset": 13723516177,
+      "bytes": 43362,
+      "sha256": "61bb9ec03b22d6ca275ff2e7edb587e1cdbb2bc30280e31b9b92137077932cc0"
+    },
+    {
+      "source": "states.jsonl",
+      "line": 430848,
+      "offset": 13723897444,
+      "bytes": 38345,
+      "sha256": "0d0f2924de43ced731abbb291c5d1154cb114aa4d3785279165939eef3bcaa41"
+    },
+    {
+      "source": "states.jsonl",
+      "line": 430896,
+      "offset": 13725987398,
+      "bytes": 47746,
+      "sha256": "9e5b6ebe0d8f7c1b09119f39aa892cec4d3c55ecb2c301e1250d4bf294e63e73"
+    },
+    {
+      "source": "states.jsonl",
+      "line": 430897,
+      "offset": 13726035144,
+      "bytes": 43362,
+      "sha256": "c8a678b0308e8b1354656d8e622b18c863aee89cbe954a47d8faf9622d74a1be"
+    },
+    {
+      "source": "states.jsonl",
+      "line": 430905,
+      "offset": 13726377654,
+      "bytes": 38345,
+      "sha256": "714b03b2211de9add10c4f51b7961aa652ed303cffcf50de9153d39d14ef7c5d"
+    },
+    {
+      "source": "states.jsonl",
+      "line": 430946,
+      "offset": 13728178442,
+      "bytes": 47116,
+      "sha256": "13496c0929464ee1adea588cc1f3c922a6aa28e96ec545e3aa99d937a413b4e1"
+    },
+    {
+      "source": "states.jsonl",
+      "line": 430947,
+      "offset": 13728225558,
+      "bytes": 43362,
+      "sha256": "c8d51e79a8ea34b01cd25d4e277c2615f47a40cc74655ac9c74070a24572c54e"
+    },
+    {
+      "source": "states.jsonl",
+      "line": 430964,
+      "offset": 13728940940,
+      "bytes": 43968,
+      "sha256": "14fcd9aa09550545f9f4528ef87dc8c3e1820fc7ca7020eb44a2193ddc1aa09f"
+    },
+    {
+      "source": "states.jsonl",
+      "line": 430965,
+      "offset": 13728984908,
+      "bytes": 44821,
+      "sha256": "9e4ab854d77db4066cd96d9aa45038ddedcfa1c030739ebbdc8cf1a53717e29b"
+    },
+    {
+      "source": "states.jsonl",
+      "line": 431007,
+      "offset": 13730822853,
+      "bytes": 44384,
+      "sha256": "d40c0ed4f87ada7f01a82bb14c7d23d3e48c7a1f20444c1100fe141410260642"
+    },
+    {
+      "source": "states.jsonl",
+      "line": 431008,
+      "offset": 13730867237,
+      "bytes": 43362,
+      "sha256": "cfe760724c84f594ed43a3b67482942562374df17b6eed3f728a820732c6c3c0"
+    },
+    {
+      "source": "states.jsonl",
+      "line": 431030,
+      "offset": 13731800357,
+      "bytes": 43905,
+      "sha256": "8056f3b8d5221d8bc817587cbac3af002cfc4c05c97af4772ca7b295ed19d9b5"
+    },
+    {
+      "source": "states.jsonl",
+      "line": 431036,
+      "offset": 13732058918,
+      "bytes": 39920,
+      "sha256": "f7f9fb36a6bbb0d785a31db28c847289f651b4905d52d0e7108166d72e72d648"
+    },
+    {
+      "source": "states.jsonl",
+      "line": 431037,
+      "offset": 13732098838,
+      "bytes": 44453,
+      "sha256": "aca0d0b62c9eddd23bc5b864500d827f8307e6eaea24f833c51854762b01b3f8"
+    },
+    {
+      "source": "states.jsonl",
+      "line": 431041,
+      "offset": 13732276757,
+      "bytes": 45905,
+      "sha256": "10d9d0a3df832e8d8f03ed133cdae4c6a05ccb5527623bc51756605bba7195bd"
+    },
+    {
+      "source": "states.jsonl",
+      "line": 431076,
+      "offset": 13733839866,
+      "bytes": 44077,
+      "sha256": "e532c72e213535e13040e84942b12a9f66ca3af134b2d1898fa4e513ce85020e"
+    },
+    {
+      "source": "states.jsonl",
+      "line": 431077,
+      "offset": 13733883943,
+      "bytes": 43362,
+      "sha256": "bab9d21ffe5569e379eada55256c294757661356d35aebeaa5e0b3497488b4db"
+    },
+    {
+      "source": "states.jsonl",
+      "line": 431099,
+      "offset": 13734817063,
+      "bytes": 43905,
+      "sha256": "262127d60a54afbf7271890bddf941bb087d2c22a23ca80fa5d5fd1349a6d317"
+    },
+    {
+      "source": "states.jsonl",
+      "line": 431104,
+      "offset": 13735036364,
+      "bytes": 39970,
+      "sha256": "7b75192d16f21ffbb071a31792cbe17a35edb395862b1a01985b184c6c34f11a"
+    },
+    {
+      "source": "states.jsonl",
+      "line": 431105,
+      "offset": 13735076334,
+      "bytes": 44503,
+      "sha256": "4cb9534d9723856e9a2837cb5707ba30a8156dcd4e3b906df26c25415c481cad"
+    },
+    {
+      "source": "states.jsonl",
+      "line": 431109,
+      "offset": 13735255513,
+      "bytes": 45955,
+      "sha256": "fba7f57626b322bd287f52c19a243dd486edb529809981007e5559fdcb5b59f7"
+    },
+    {
+      "source": "states.jsonl",
+      "line": 431120,
+      "offset": 13735739978,
+      "bytes": 45713,
+      "sha256": "310e49e2b64de3cfb922c318da8daf67f09af8f2e13cda177eac08f69c768849"
+    },
+    {
+      "source": "states.jsonl",
+      "line": 431121,
+      "offset": 13735785691,
+      "bytes": 45697,
+      "sha256": "fca4c62b29fb2e53fc8abdf0d2106d0e099132b52b92aa0e0e7e0965244fa325"
+    },
+    {
+      "source": "states.jsonl",
+      "line": 431122,
+      "offset": 13735831388,
+      "bytes": 44676,
+      "sha256": "8764edbffcc624695afb7e21cfdddefa022da7681078d8194e9fdaad23f37ab4"
+    },
+    {
+      "source": "states.jsonl",
+      "line": 431123,
+      "offset": 13735876064,
+      "bytes": 46907,
+      "sha256": "01c36163dee9ee16535e4d0382d34721fc2401805877d5f9e1b33b5cbd4db704"
+    },
+    {
+      "source": "states.jsonl",
+      "line": 431124,
+      "offset": 13735922971,
+      "bytes": 43480,
+      "sha256": "d87bb1502c09f306f24fba90a2bb2dfb3c5f2a23bf7353d85bdcd10a6136572d"
+    },
+    {
+      "source": "states.jsonl",
+      "line": 431125,
+      "offset": 13735966451,
+      "bytes": 40596,
+      "sha256": "049cc5096c5626c1dc2e26e579704153bdf4a65241b5595e60ab9b5526a5915d"
+    },
+    {
+      "source": "decisions.jsonl",
+      "line": 416715,
+      "offset": 2096823563,
+      "bytes": 56955,
+      "sha256": "3400e74986742bd257174c5f4e82290ac9487a51bc00b27bf1514fbfd38e1cb5"
+    },
+    {
+      "source": "decisions.jsonl",
+      "line": 416996,
+      "offset": 2106699470,
+      "bytes": 119610,
+      "sha256": "edcc7f50deeac48423ca972f362a16febeeff2bb09b87f69a5a503d75aaa620f"
+    },
+    {
+      "source": "decisions.jsonl",
+      "line": 417147,
+      "offset": 2112652338,
+      "bytes": 116835,
+      "sha256": "2a58951cbc8d532e67343e369fc10f00262e811a97930a7192c755939c3f39a9"
+    },
+    {
+      "source": "decisions.jsonl",
+      "line": 417162,
+      "offset": 2113073618,
+      "bytes": 1625,
+      "sha256": "e9722610bb56c4619d690f375dbd15a31717e5c1b7bd76958e1afc657e6743e9"
+    },
+    {
+      "source": "decisions.jsonl",
+      "line": 417165,
+      "offset": 2113083172,
+      "bytes": 1391,
+      "sha256": "5c93f2a8a0de747898122031c613190fed2fea61943aae798bcf92545810929b"
+    },
+    {
+      "source": "decisions.jsonl",
+      "line": 417166,
+      "offset": 2113084563,
+      "bytes": 1218,
+      "sha256": "05f9f3d9e676301d61810780137b16b01457a8cfbb1e4e6bb87ed61347b5288b"
+    }
+  ],
+  "actual_proposal_rows_verified": {
+    "silent-proposal-715deb6feba772ee": {
+      "row": {
+        "op": "add",
+        "id": "silent-proposal-715deb6feba772ee",
+        "ts": "2026-10-17T07:28:44+08:00",
+        "character": "silent",
+        "ledger": [
+          "silent-0057"
+        ],
+        "runs": [
+          "CVJ4MLQF4CSY"
+        ],
+        "source_task": "postmortem",
+        "target_task": "strategy-proposal",
+        "domains": [
+          "combat"
+        ],
+        "summary": "群蛇／步法主轴的建立与实际后继分开核验",
+        "proposal": "/home/dw/Projects/agent-sts2/learner/runs/20261017-071308-91bb674c-8ecc-4c95-8f74-ee33d5eb9f96-postmortem/proposal-startup.md",
+        "rule_changes": true,
+        "authorization": "Roy-2026-10-07-learning",
+        "proposal_sha256": "4b0d9cf2e93cdb368ed16d546750928f625b0441892ccefe0e21724ff1239de2",
+        "state": "pending"
+      },
+      "line": 5665,
+      "offset": 4038558,
+      "bytes": 641,
+      "sha256": "0c899fb14d0e523f98eed5937513b98837b98c42e8c1e66103017b09963e5754"
+    },
+    "silent-proposal-f6d76d15ce93e43f": {
+      "row": {
+        "op": "add",
+        "id": "silent-proposal-f6d76d15ce93e43f",
+        "ts": "2026-10-17T07:28:48+08:00",
+        "character": "silent",
+        "ledger": [
+          "silent-0079"
+        ],
+        "runs": [
+          "CVJ4MLQF4CSY"
+        ],
+        "source_task": "postmortem",
+        "target_task": "strategy-proposal",
+        "domains": [
+          "combat",
+          "sl"
+        ],
+        "summary": "死亡样本饱和下的SL血价与启动损失验证",
+        "proposal": "/home/dw/Projects/agent-sts2/learner/runs/20261017-071308-91bb674c-8ecc-4c95-8f74-ee33d5eb9f96-postmortem/proposal-sl-blood-price.md",
+        "rule_changes": true,
+        "authorization": "Roy-2026-10-07-learning",
+        "proposal_sha256": "6a8f910da8bce280158bc8f3ed1aee17f2c7fa97f568310ac8e061c0d580b9af",
+        "state": "pending"
+      },
+      "line": 5666,
+      "offset": 4039199,
+      "bytes": 650,
+      "sha256": "185414dae1c32e781aba889515b20cbf3d937ae706bfc6dbd5ac38d7dcd57ca1"
+    },
+    "silent-proposal-5ce99b6a4eb02b40": {
+      "row": {
+        "op": "add",
+        "id": "silent-proposal-5ce99b6a4eb02b40",
+        "ts": "2026-10-17T07:28:53+08:00",
+        "character": "silent",
+        "ledger": [
+          "silent-0090"
+        ],
+        "runs": [
+          "CVJ4MLQF4CSY"
+        ],
+        "source_task": "postmortem",
+        "target_task": "strategy-proposal",
+        "domains": [
+          "combat",
+          "terminal"
+        ],
+        "summary": "聚合体退场与女王本体终局分别核验",
+        "proposal": "/home/dw/Projects/agent-sts2/learner/runs/20261017-071308-91bb674c-8ecc-4c95-8f74-ee33d5eb9f96-postmortem/proposal-queen-terminal.md",
+        "rule_changes": true,
+        "authorization": "Roy-2026-10-07-learning",
+        "proposal_sha256": "58bd27d8010c5e42210972db8b438be35f40a7d7c8fa58dc2185d98c0a672aa9",
+        "state": "pending"
+      },
+      "line": 5667,
+      "offset": 4039849,
+      "bytes": 651,
+      "sha256": "0f592ad0ffda1fe85e8e8e64b57f46d868c9eb88f83cc7606be19018a57ba135"
+    }
+  },
+  "original_ledger_rows_verified": [
+    {
+      "offset": 22205349,
+      "bytes": 756,
+      "sha256": "ecfc38062677ea9f2023a408538ad5f92e9fb36416d35d24563cda12c76a3409",
+      "row": {
+        "op": "update",
+        "id": "silent-0057",
+        "ts": "2026-10-17T07:27:51+08:00",
+        "by": "learner:postmortem",
+        "evidence": [
+          {
+            "run": "CVJ4MLQF4CSY",
+            "floor": 48,
+            "turn": 7,
+            "role": "repeat",
+            "note": "A10：F33取群蛇，F34/F47构筑将其列为主轴。末试T1已在手，T7才由least-loss实际建立；此前两步法也未建立，末轮只1血。永冻7挡、生存者6挡，群蛇触发4仅令女王格挡20→16，本体不减，仍死亡；s431077/431120—431125、d417162—417165。复发限于主轴未在可活窗口兑现，不声称早建必胜。"
+          }
+        ],
+        "where": {
+          "lessons": [
+            "CVJ4MLQF4CSY"
+          ]
+        },
+        "note": "本次仅追加本局证据及复盘去向；原claim/first_run/prior/status/version保持，S1.exp188/V4-R301；独立strategy-proposal接续。"
+      }
+    },
+    {
+      "offset": 22206105,
+      "bytes": 968,
+      "sha256": "c1bda1c1cd6ffafb8662fd5d9b509906524cc4a5e558dc9feb30a691d4d43f36",
+      "row": {
+        "op": "update",
+        "id": "silent-0079",
+        "ts": "2026-10-17T07:27:51+08:00",
+        "by": "learner:postmortem",
+        "evidence": [
+          {
+            "run": "CVJ4MLQF4CSY",
+            "floor": 48,
+            "turn": 1,
+            "role": "repeat",
+            "note": "A10女王第3试SL省掉究极防御；与第2试首轮已见扣敌同为43，玩家67→49而原67→58，多损9、未多扣血，s430839—430848/430897—430905，sl2360。"
+          },
+          {
+            "run": "CVJ4MLQF4CSY",
+            "floor": 48,
+            "turn": 4,
+            "role": "repeat",
+            "note": "末试d417147将Jev0.89选择的步法+改三攻击及计划复制，两候选五轮均8/8死亡，预测损11→20/伤27→84/持久8→0；只执行三攻，实扣60/损20。同起点第5试先步法后攻击实扣55/损15，真实多5伤、多损5；末试T7死亡，参考第5试T10判死。非受控整战，不称原线必胜。"
+          }
+        ],
+        "where": {
+          "lessons": [
+            "CVJ4MLQF4CSY"
+          ]
+        },
+        "note": "本次两个局部重复证据不作为两个独立局；只追加，不改原claim/首证/prior/状态/版本，S1.exp203/V4-R322。"
+      }
+    },
+    {
+      "offset": 22207073,
+      "bytes": 688,
+      "sha256": "cdaa0bf2769f4843477ed0d7b39943dbbef718d93f0b9a9ba997050a4bcd6812",
+      "row": {
+        "op": "update",
+        "id": "silent-0090",
+        "ts": "2026-10-17T07:27:51+08:00",
+        "by": "learner:postmortem",
+        "evidence": [
+          {
+            "run": "CVJ4MLQF4CSY",
+            "floor": 48,
+            "turn": 10,
+            "role": "support",
+            "note": "A10女王第4/5试T9末→T10先退聚合体，但女王T10首仍162/110、末见128/95，玩家3/4血后判死。第5试T1背刺/致命毒药指聚合体，T2毒药水仍给女王；末试结毒后双敌262/50都在。支持保留目标条件和本体剩伤，不规定统一首杀；s431003—431007/431072—431076/431125。"
+          }
+        ],
+        "where": {
+          "lessons": [
+            "CVJ4MLQF4CSY"
+          ]
+        },
+        "note": "补support而非repeat；无胜利顺序对照，不改原claim/首证/prior/状态/版本，S1.exp187/V4-R299。"
+      }
+    },
+    {
+      "offset": 22207761,
+      "bytes": 365,
+      "sha256": "d4d5d11ca4f95e30b3b7643d54734367953381efd9ce6c84e55a0d17dae01d22",
+      "row": {
+        "op": "update",
+        "id": "silent-0057",
+        "ts": "2026-10-17T07:28:44+08:00",
+        "by": "learner:postmortem",
+        "where": {
+          "proposal": [
+            "/home/dw/Projects/agent-sts2/learner/runs/20261017-071308-91bb674c-8ecc-4c95-8f74-ee33d5eb9f96-postmortem/proposal-startup.md"
+          ]
+        },
+        "note": "代码提案 silent-proposal-715deb6feba772ee → task=strategy-proposal；Roy-2026-10-07-learning"
+      }
+    },
+    {
+      "offset": 22208126,
+      "bytes": 372,
+      "sha256": "70bd6794c093868db74358935ea5c8c77fd8b56bbf10b8082c1df8e7babb3219",
+      "row": {
+        "op": "update",
+        "id": "silent-0079",
+        "ts": "2026-10-17T07:28:48+08:00",
+        "by": "learner:postmortem",
+        "where": {
+          "proposal": [
+            "/home/dw/Projects/agent-sts2/learner/runs/20261017-071308-91bb674c-8ecc-4c95-8f74-ee33d5eb9f96-postmortem/proposal-sl-blood-price.md"
+          ]
+        },
+        "note": "代码提案 silent-proposal-f6d76d15ce93e43f → task=strategy-proposal；Roy-2026-10-07-learning"
+      }
+    },
+    {
+      "offset": 22208498,
+      "bytes": 372,
+      "sha256": "fa9ef3b001f03423adf939bde057e50e4c3dfaea46840c5210b433ec56dcd3be",
+      "row": {
+        "op": "update",
+        "id": "silent-0090",
+        "ts": "2026-10-17T07:28:52+08:00",
+        "by": "learner:postmortem",
+        "where": {
+          "proposal": [
+            "/home/dw/Projects/agent-sts2/learner/runs/20261017-071308-91bb674c-8ecc-4c95-8f74-ee33d5eb9f96-postmortem/proposal-queen-terminal.md"
+          ]
+        },
+        "note": "代码提案 silent-proposal-5ce99b6a4eb02b40 → task=strategy-proposal；Roy-2026-10-07-learning"
+      }
+    }
+  ],
+  "original_ledger_roles": [
+    {
+      "id": "silent-0057",
+      "roles": [
+        "repeat"
+      ],
+      "independent_runs": 1
+    },
+    {
+      "id": "silent-0079",
+      "roles": [
+        "repeat",
+        "repeat"
+      ],
+      "independent_runs": 1
+    },
+    {
+      "id": "silent-0090",
+      "roles": [
+        "support"
+      ],
+      "independent_runs": 1
+    }
+  ],
+  "protected_fields_unchanged": true,
+  "no_new_ops_game_knowledge": true,
+  "no_wider_parent_closed": true
+}
