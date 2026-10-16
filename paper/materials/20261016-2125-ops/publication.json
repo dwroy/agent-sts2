@@ -1,0 +1,296 @@
+{
+  "at": "2026-10-16 21:30:50 CST",
+  "request_id": "silent-0332",
+  "revision": 3,
+  "source": "8f02483abe28583a81f9c00e456be889353ffa47",
+  "r2_source": "a8b202e34e94b11a340a8733800f7018688371b8",
+  "knowledge_source": "79f65431cb8fcb998219d9c334777d432fb8fed1",
+  "old_main": "12d5ef3b917bc8e9017a9fc6cdfb4d8f493d372b",
+  "main": "32e47decdc3e706482f9c5ddeff77504c3f43d28",
+  "old_live": "c783c6c83d09e669f49518a4536ae5bc3766c2a2",
+  "knowledge_refresh_commit": "ec3b7fe0dade97f452c776492e9b5e85e062ebd7",
+  "knowledge_refresh": [
+    {
+      "path": "knowledge/characters/silent/boss-damage.json",
+      "sha256": "89c4438c4d9be93b980dd1d3deb3f075be251e781884fe512fbf69da150accc3"
+    },
+    {
+      "path": "knowledge/characters/silent/construction-opportunities.json",
+      "sha256": "936bed0b1bab59a049346dc772e6f9e0af5a4fb6eb25a8e6b15c67d1059c4aa4"
+    },
+    {
+      "path": "knowledge/characters/silent/fight-value-gates.json",
+      "sha256": "11cbb253ff501948319a659b8da1e70cf06bd099c82dfc4a8e6290e2880f5211"
+    },
+    {
+      "path": "knowledge/characters/silent/fight-value.json",
+      "sha256": "eef01d2e516923230f1d41e81fc18f407157c95ef625fe7ef13ada3cf6938276"
+    },
+    {
+      "path": "knowledge/characters/silent/monster-records.json",
+      "sha256": "cf81391c66e5cba7fdc1ce7bf16138b487f9815a9764e24895de3d816c06b7f3"
+    },
+    {
+      "path": "knowledge/characters/silent/outcome-stats.json",
+      "sha256": "810ccbf9412f9bad168ada6f46a31061ad4c29908cafcc1cb1074a5e98b87761"
+    },
+    {
+      "path": "knowledge/characters/silent/room-costs.json",
+      "sha256": "884ba13175fdbb2b8ec2d2629432e763691979536d3170a2126b54f1014eb814"
+    },
+    {
+      "path": "knowledge/common/card-upgrades.json",
+      "sha256": "a4b2c63d5c97471918ee62f075555e6db3cb44d9cbe78d8e1e5896cbb09e71de"
+    },
+    {
+      "path": "knowledge/common/monster-db.json",
+      "sha256": "25a5538752f9ffa6c8ac2e1421a0166a1a1345aee00374527ceccce530cbb902"
+    },
+    {
+      "path": "knowledge/common/move-model.json",
+      "sha256": "71540aa9b097d0f40d875d0fa3a959ee9d961c0b2c6937b878f8c7dc91b09a66"
+    }
+  ],
+  "behavior_commit": "e8cec286c156f4777ca0d73be099e8290ef7695d",
+  "release_id": "V5-R373",
+  "name": "V5.silent-continuation-failure-capture1",
+  "live": "a0dcde7e6eaf30b3b3edab996a2c7408ab072ea9",
+  "tree": "247acab41b7806c0df5a4b5e124e8ce5898a55de",
+  "leaves": [
+    {
+      "lane": "main",
+      "path": "agent/src/hand/loop.ts",
+      "source_sha256": "46145b219fff847095b13e8866888f41b776f245a31f4b5c93402ecf3aa604df",
+      "installed_sha256": "46145b219fff847095b13e8866888f41b776f245a31f4b5c93402ecf3aa604df",
+      "historical_attribution_preserved": false
+    },
+    {
+      "lane": "main",
+      "path": "agent/src/memory/types.ts",
+      "source_sha256": "5c075dbcbb6661a888526898b98c5cc3204dcdb8402b9feaebf702b3c41ac278",
+      "installed_sha256": "5c075dbcbb6661a888526898b98c5cc3204dcdb8402b9feaebf702b3c41ac278",
+      "historical_attribution_preserved": false
+    },
+    {
+      "lane": "main",
+      "path": "agent/src/reflex/combat-plan.ts",
+      "source_sha256": "33573bc1d7e25a87127f3cf9fe786118c43a9c512c0725121ae44885d130181c",
+      "installed_sha256": "33573bc1d7e25a87127f3cf9fe786118c43a9c512c0725121ae44885d130181c",
+      "historical_attribution_preserved": false
+    },
+    {
+      "lane": "main",
+      "path": "agent/src/reflex/rollout.ts",
+      "source_sha256": "f845fbe3666c7bb52701367e1f02984f8774937c63c24307c814539670dcd86c",
+      "installed_sha256": "f845fbe3666c7bb52701367e1f02984f8774937c63c24307c814539670dcd86c",
+      "historical_attribution_preserved": false
+    },
+    {
+      "lane": "main",
+      "path": "agent/src/sim/boss-lines-worker.ts",
+      "source_sha256": "87dc9451302b7c9ef98b2db60e312c5164ef52c42922635594ed26fe01192ed9",
+      "installed_sha256": "87dc9451302b7c9ef98b2db60e312c5164ef52c42922635594ed26fe01192ed9",
+      "historical_attribution_preserved": false
+    },
+    {
+      "lane": "main",
+      "path": "agent/src/sim/boss-lines.ts",
+      "source_sha256": "44db9ab26493b68e99300d8f81859475c03af36a9841ba6098b52ed9598c7c3e",
+      "installed_sha256": "44db9ab26493b68e99300d8f81859475c03af36a9841ba6098b52ed9598c7c3e",
+      "historical_attribution_preserved": false
+    },
+    {
+      "lane": "main",
+      "path": "agent/src/sim/boss-sim.ts",
+      "source_sha256": "f30a0c5bdd66d63b7ccd962947735ca2dfded2eaec76dd364f5e90fec0aafac6",
+      "installed_sha256": "f30a0c5bdd66d63b7ccd962947735ca2dfded2eaec76dd364f5e90fec0aafac6",
+      "historical_attribution_preserved": false
+    },
+    {
+      "lane": "main",
+      "path": "agent/src/sim/build-sim-facts.ts",
+      "source_sha256": "1d95482c4223aeaf09b289557d48a8df57b72113e40286d521061edc955eb087",
+      "installed_sha256": "1d95482c4223aeaf09b289557d48a8df57b72113e40286d521061edc955eb087",
+      "historical_attribution_preserved": false
+    },
+    {
+      "lane": "main",
+      "path": "agent/src/sim/build-sim-pool.ts",
+      "source_sha256": "a00561e2add14dd094232cb85de7ff8f53fc63458722dbd3ab558df5dc8975f1",
+      "installed_sha256": "a00561e2add14dd094232cb85de7ff8f53fc63458722dbd3ab558df5dc8975f1",
+      "historical_attribution_preserved": false
+    },
+    {
+      "lane": "main",
+      "path": "agent/src/sim/build-sim-worker.ts",
+      "source_sha256": "96da42adc6e9d2e230d5b36cbe6dc30e55ba4c87dbb93a55bfa1bb7aaaa1e087",
+      "installed_sha256": "96da42adc6e9d2e230d5b36cbe6dc30e55ba4c87dbb93a55bfa1bb7aaaa1e087",
+      "historical_attribution_preserved": false
+    },
+    {
+      "lane": "main",
+      "path": "agent/src/sim/continuation-failure.ts",
+      "source_sha256": "4d8bb38c69aba5d7870be5c1f6547d92fe0558d1b252792079e81cd68fa7d519",
+      "installed_sha256": "4d8bb38c69aba5d7870be5c1f6547d92fe0558d1b252792079e81cd68fa7d519",
+      "historical_attribution_preserved": false
+    },
+    {
+      "lane": "main",
+      "path": "agent/tests/continuation-failure-b2-planner.test.ts",
+      "source_sha256": "110a7b362b90b88f00c955a8839c8d0448767a92157b22718fd62eedd20c6eed",
+      "installed_sha256": "110a7b362b90b88f00c955a8839c8d0448767a92157b22718fd62eedd20c6eed",
+      "historical_attribution_preserved": false
+    },
+    {
+      "lane": "main",
+      "path": "agent/tests/continuation-failure-b2-worker.test.ts",
+      "source_sha256": "c096c2abe34cbf78cd70f7c00508ab206ab46f3e22df208120f4d6edcfc20cc6",
+      "installed_sha256": "c096c2abe34cbf78cd70f7c00508ab206ab46f3e22df208120f4d6edcfc20cc6",
+      "historical_attribution_preserved": false
+    },
+    {
+      "lane": "main",
+      "path": "agent/tests/continuation-failure-b3.test.ts",
+      "source_sha256": "3687ebbaaeff8f71f9aad6afcc8281d1e5f8c7ea4e5e424e21a97acf9b038815",
+      "installed_sha256": "3687ebbaaeff8f71f9aad6afcc8281d1e5f8c7ea4e5e424e21a97acf9b038815",
+      "historical_attribution_preserved": false
+    },
+    {
+      "lane": "main",
+      "path": "agent/tests/continuation-failure-worker.test.ts",
+      "source_sha256": "374f0971c6f9475245791ede253cd3ff12b58944109abd285284601462fdade2",
+      "installed_sha256": "374f0971c6f9475245791ede253cd3ff12b58944109abd285284601462fdade2",
+      "historical_attribution_preserved": false
+    },
+    {
+      "lane": "main",
+      "path": "agent/tests/continuation-failure.test.ts",
+      "source_sha256": "30c2c68f9f950b701527dd42449c2fcf42d51f4aa401f3f1355503493c109e19",
+      "installed_sha256": "30c2c68f9f950b701527dd42449c2fcf42d51f4aa401f3f1355503493c109e19",
+      "historical_attribution_preserved": false
+    },
+    {
+      "lane": "live",
+      "path": "agent/src/hand/loop.ts",
+      "source_sha256": "46145b219fff847095b13e8866888f41b776f245a31f4b5c93402ecf3aa604df",
+      "installed_sha256": "46145b219fff847095b13e8866888f41b776f245a31f4b5c93402ecf3aa604df",
+      "historical_attribution_preserved": false
+    },
+    {
+      "lane": "live",
+      "path": "agent/src/memory/types.ts",
+      "source_sha256": "5c075dbcbb6661a888526898b98c5cc3204dcdb8402b9feaebf702b3c41ac278",
+      "installed_sha256": "5c075dbcbb6661a888526898b98c5cc3204dcdb8402b9feaebf702b3c41ac278",
+      "historical_attribution_preserved": false
+    },
+    {
+      "lane": "live",
+      "path": "agent/src/reflex/combat-plan.ts",
+      "source_sha256": "33573bc1d7e25a87127f3cf9fe786118c43a9c512c0725121ae44885d130181c",
+      "installed_sha256": "33573bc1d7e25a87127f3cf9fe786118c43a9c512c0725121ae44885d130181c",
+      "historical_attribution_preserved": false
+    },
+    {
+      "lane": "live",
+      "path": "agent/src/reflex/rollout.ts",
+      "source_sha256": "f845fbe3666c7bb52701367e1f02984f8774937c63c24307c814539670dcd86c",
+      "installed_sha256": "f845fbe3666c7bb52701367e1f02984f8774937c63c24307c814539670dcd86c",
+      "historical_attribution_preserved": false
+    },
+    {
+      "lane": "live",
+      "path": "agent/src/sim/boss-lines-worker.ts",
+      "source_sha256": "87dc9451302b7c9ef98b2db60e312c5164ef52c42922635594ed26fe01192ed9",
+      "installed_sha256": "87dc9451302b7c9ef98b2db60e312c5164ef52c42922635594ed26fe01192ed9",
+      "historical_attribution_preserved": false
+    },
+    {
+      "lane": "live",
+      "path": "agent/src/sim/boss-lines.ts",
+      "source_sha256": "44db9ab26493b68e99300d8f81859475c03af36a9841ba6098b52ed9598c7c3e",
+      "installed_sha256": "44db9ab26493b68e99300d8f81859475c03af36a9841ba6098b52ed9598c7c3e",
+      "historical_attribution_preserved": false
+    },
+    {
+      "lane": "live",
+      "path": "agent/src/sim/boss-sim.ts",
+      "source_sha256": "f30a0c5bdd66d63b7ccd962947735ca2dfded2eaec76dd364f5e90fec0aafac6",
+      "installed_sha256": "f30a0c5bdd66d63b7ccd962947735ca2dfded2eaec76dd364f5e90fec0aafac6",
+      "historical_attribution_preserved": false
+    },
+    {
+      "lane": "live",
+      "path": "agent/src/sim/build-sim-facts.ts",
+      "source_sha256": "1d95482c4223aeaf09b289557d48a8df57b72113e40286d521061edc955eb087",
+      "installed_sha256": "1d95482c4223aeaf09b289557d48a8df57b72113e40286d521061edc955eb087",
+      "historical_attribution_preserved": false
+    },
+    {
+      "lane": "live",
+      "path": "agent/src/sim/build-sim-pool.ts",
+      "source_sha256": "a00561e2add14dd094232cb85de7ff8f53fc63458722dbd3ab558df5dc8975f1",
+      "installed_sha256": "a00561e2add14dd094232cb85de7ff8f53fc63458722dbd3ab558df5dc8975f1",
+      "historical_attribution_preserved": false
+    },
+    {
+      "lane": "live",
+      "path": "agent/src/sim/build-sim-worker.ts",
+      "source_sha256": "96da42adc6e9d2e230d5b36cbe6dc30e55ba4c87dbb93a55bfa1bb7aaaa1e087",
+      "installed_sha256": "96da42adc6e9d2e230d5b36cbe6dc30e55ba4c87dbb93a55bfa1bb7aaaa1e087",
+      "historical_attribution_preserved": false
+    },
+    {
+      "lane": "live",
+      "path": "agent/src/sim/continuation-failure.ts",
+      "source_sha256": "4d8bb38c69aba5d7870be5c1f6547d92fe0558d1b252792079e81cd68fa7d519",
+      "installed_sha256": "4d8bb38c69aba5d7870be5c1f6547d92fe0558d1b252792079e81cd68fa7d519",
+      "historical_attribution_preserved": false
+    },
+    {
+      "lane": "live",
+      "path": "agent/tests/continuation-failure-b2-planner.test.ts",
+      "source_sha256": "110a7b362b90b88f00c955a8839c8d0448767a92157b22718fd62eedd20c6eed",
+      "installed_sha256": "110a7b362b90b88f00c955a8839c8d0448767a92157b22718fd62eedd20c6eed",
+      "historical_attribution_preserved": false
+    },
+    {
+      "lane": "live",
+      "path": "agent/tests/continuation-failure-b2-worker.test.ts",
+      "source_sha256": "c096c2abe34cbf78cd70f7c00508ab206ab46f3e22df208120f4d6edcfc20cc6",
+      "installed_sha256": "c096c2abe34cbf78cd70f7c00508ab206ab46f3e22df208120f4d6edcfc20cc6",
+      "historical_attribution_preserved": false
+    },
+    {
+      "lane": "live",
+      "path": "agent/tests/continuation-failure-b3.test.ts",
+      "source_sha256": "3687ebbaaeff8f71f9aad6afcc8281d1e5f8c7ea4e5e424e21a97acf9b038815",
+      "installed_sha256": "3687ebbaaeff8f71f9aad6afcc8281d1e5f8c7ea4e5e424e21a97acf9b038815",
+      "historical_attribution_preserved": false
+    },
+    {
+      "lane": "live",
+      "path": "agent/tests/continuation-failure-worker.test.ts",
+      "source_sha256": "374f0971c6f9475245791ede253cd3ff12b58944109abd285284601462fdade2",
+      "installed_sha256": "374f0971c6f9475245791ede253cd3ff12b58944109abd285284601462fdade2",
+      "historical_attribution_preserved": false
+    },
+    {
+      "lane": "live",
+      "path": "agent/tests/continuation-failure.test.ts",
+      "source_sha256": "30c2c68f9f950b701527dd42449c2fcf42d51f4aa401f3f1355503493c109e19",
+      "installed_sha256": "30c2c68f9f950b701527dd42449c2fcf42d51f4aa401f3f1355503493c109e19",
+      "historical_attribution_preserved": false
+    }
+  ],
+  "knowledge_entry": "silent-0332-continuation-contract-boundary",
+  "knowledge_entry_sha256": "b8701fdb9e5f72671d5e1699be2fe00407ab72826ebe9c99ba886609b92de231",
+  "experience_version": "2026-10-16.3",
+  "prior236_preserved": true,
+  "only_diagnostic_delivery": true,
+  "root_fixed": false,
+  "source_full_rc": 1,
+  "host_source_supplement_rc": 0,
+  "new_final_host": "pending original075726 unique channel",
+  "other_role_ACK": false,
+  "source_ancestors_verified_after_install": true
+}

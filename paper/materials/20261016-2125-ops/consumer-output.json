@@ -1,0 +1,51 @@
+{
+  "request_id": "silent-0332",
+  "revision": 3,
+  "character": "silent",
+  "experience_version": "2026-10-16.3",
+  "entry": {
+    "id": "silent-0332-continuation-contract-boundary",
+    "scope": "general:simulation",
+    "name": "连续Boss评估的资源契约与缺证边界",
+    "asc": [
+      10,
+      10
+    ],
+    "lesson": "限定：A10连续Boss评估的nonpositive-hp与won=true/died=false并存，只是内部结果矛盾，不是合法成功接续，也不是0%通关率。RQCHNN0W72KF F40 seed607614716两次pending后第三次42/1000，低于300而明确不给数字；TCDUBRWMEMNA F40 seed76490739前缀显示12轮成功但HP非正，第三次14/1000。旧原件缺完整worker输入、末资源和逐步轨迹，不能从截断文字确定结算来源或V5-S连败因果。保正HP与真实剩余资源契约；C1降级可推进、诊断部署及固定封套测试通过都不等于0332根缺陷已修，更不证明收益。仅核这两局A10，其他组合仍未知。",
+    "evidence": [
+      "RQCHNN0W72KF",
+      "TCDUBRWMEMNA"
+    ],
+    "n_support": 2,
+    "n_contradict": 0,
+    "confidence": "high",
+    "last_seen": "2026-10-16",
+    "status": "active",
+    "ledger": [
+      "silent-0332"
+    ],
+    "code_proposals": [
+      "silent-proposal-0b28f52e415d80d1",
+      "silent-proposal-ecbd4b68c5fad954",
+      "silent-proposal-5aa2672bd7cd1bf4",
+      "silent-proposal-f4e0f382dd79714b",
+      "silent-proposal-b02a70a29a4ff6b1",
+      "silent-proposal-0c0d4600bc7aa80b"
+    ],
+    "limitations": [
+      "只支持错误可见性、降级与缺证边界，不支持任何未选线路的获益或结算机制。",
+      "合成故障注入只检验封套通道，不冒充历史失败样本精确复现。"
+    ]
+  },
+  "source_root": "/home/dw/Projects/agent-sts2/.worktrees/live",
+  "knowledge_dir": "/home/dw/Projects/agent-sts2/.worktrees/live/knowledge",
+  "renderer": "queryExperience",
+  "loaded": true,
+  "rendered_complete_lesson": true,
+  "applicable_A10": true,
+  "excluded_A9": true,
+  "excluded_Ironclad": true,
+  "kind": "fixed-consumer",
+  "natural_adoption": "unknown",
+  "root_repair": "not established"
+}

@@ -1,0 +1,76 @@
+{
+  "at": "2026-10-16 21:27:58 CST",
+  "actor": "ops",
+  "decision": "Accept unchanged r3 diagnostic source for fallback commit, using original full1 plus host compilation0 and original Python wrapper/previously unreached paths0",
+  "source_tree": "b6b17fa10550fbd7d16ffe399a070248d7525589",
+  "source_files": [
+    {
+      "path": "agent/src/hand/loop.ts",
+      "sha256": "46145b219fff847095b13e8866888f41b776f245a31f4b5c93402ecf3aa604df"
+    },
+    {
+      "path": "agent/src/memory/types.ts",
+      "sha256": "5c075dbcbb6661a888526898b98c5cc3204dcdb8402b9feaebf702b3c41ac278"
+    },
+    {
+      "path": "agent/src/reflex/combat-plan.ts",
+      "sha256": "33573bc1d7e25a87127f3cf9fe786118c43a9c512c0725121ae44885d130181c"
+    },
+    {
+      "path": "agent/src/sim/boss-lines-worker.ts",
+      "sha256": "87dc9451302b7c9ef98b2db60e312c5164ef52c42922635594ed26fe01192ed9"
+    },
+    {
+      "path": "agent/src/sim/boss-lines.ts",
+      "sha256": "44db9ab26493b68e99300d8f81859475c03af36a9841ba6098b52ed9598c7c3e"
+    },
+    {
+      "path": "agent/src/sim/continuation-failure.ts",
+      "sha256": "4d8bb38c69aba5d7870be5c1f6547d92fe0558d1b252792079e81cd68fa7d519"
+    },
+    {
+      "path": "agent/tests/continuation-failure-b2-planner.test.ts",
+      "sha256": "110a7b362b90b88f00c955a8839c8d0448767a92157b22718fd62eedd20c6eed"
+    },
+    {
+      "path": "agent/tests/continuation-failure-b2-worker.test.ts",
+      "sha256": "c096c2abe34cbf78cd70f7c00508ab206ab46f3e22df208120f4d6edcfc20cc6"
+    }
+  ],
+  "original_full_rc": 1,
+  "host_supplement": [
+    {
+      "name": "tsc",
+      "args": [
+        "npx",
+        "tsc",
+        "-p",
+        "tsconfig.json",
+        "--noEmit"
+      ],
+      "rc": 0,
+      "seconds": 2.0963759999722242,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "original-python-wrapper-and-unreached-paths",
+      "args": [
+        "npx",
+        "vitest",
+        "run",
+        "tests/global-build-health.test.ts",
+        "tests/paths.test.ts",
+        "--pool=forks",
+        "--maxWorkers=1"
+      ],
+      "rc": 0,
+      "seconds": 5.101872941013426,
+      "log_sha256": "9d0822708f5b89cefb0d75e6363838dd2ae2b8852019d3bd09a0f111c54f95d6"
+    }
+  ],
+  "source_full_not_repeated": true,
+  "no_test_source_assertion_timeout_or_exclusion_changed": true,
+  "limited_to_diagnostic_delivery": true,
+  "resource_root_repair": false,
+  "live_integration_and_new_final_tree_host_still_required": true
+}

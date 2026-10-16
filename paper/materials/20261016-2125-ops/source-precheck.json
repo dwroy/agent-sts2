@@ -1,0 +1,86 @@
+{
+  "at": "2026-10-16 21:27:50 CST",
+  "request": "silent-0332",
+  "revision": 3,
+  "handoff": {
+    "request_id": "silent-0332",
+    "revision": 3,
+    "input_sha256": "551dc2ee758367dbe1d3087352b1267083ec18ca4e946d469c193fc695f7ffa2",
+    "integration_owner": "original ops",
+    "code_commit": null,
+    "source_parent": "a8b202e34e94b11a340a8733800f7018688371b8",
+    "prerequisite_r2_code_commit": "a8b202e34e94b11a340a8733800f7018688371b8",
+    "knowledge_commit": "79f65431cb8fcb998219d9c334777d432fb8fed1",
+    "current_staged_tree": "b6b17fa10550fbd7d16ffe399a070248d7525589",
+    "source_patch": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261016-183355/learner/runs/silent-0332-r3/source.patch",
+    "source_patch_sha256": "8b81ba5900ff3c1992504beb7518f5950dbfcaf6e0c45807b82816cd9884a693",
+    "source_files": [
+      {
+        "path": "agent/src/hand/loop.ts",
+        "sha256": "46145b219fff847095b13e8866888f41b776f245a31f4b5c93402ecf3aa604df"
+      },
+      {
+        "path": "agent/src/memory/types.ts",
+        "sha256": "5c075dbcbb6661a888526898b98c5cc3204dcdb8402b9feaebf702b3c41ac278"
+      },
+      {
+        "path": "agent/src/reflex/combat-plan.ts",
+        "sha256": "33573bc1d7e25a87127f3cf9fe786118c43a9c512c0725121ae44885d130181c"
+      },
+      {
+        "path": "agent/src/sim/boss-lines-worker.ts",
+        "sha256": "87dc9451302b7c9ef98b2db60e312c5164ef52c42922635594ed26fe01192ed9"
+      },
+      {
+        "path": "agent/src/sim/boss-lines.ts",
+        "sha256": "44db9ab26493b68e99300d8f81859475c03af36a9841ba6098b52ed9598c7c3e"
+      },
+      {
+        "path": "agent/src/sim/continuation-failure.ts",
+        "sha256": "4d8bb38c69aba5d7870be5c1f6547d92fe0558d1b252792079e81cd68fa7d519"
+      },
+      {
+        "path": "agent/tests/continuation-failure-b2-planner.test.ts",
+        "sha256": "110a7b362b90b88f00c955a8839c8d0448767a92157b22718fd62eedd20c6eed"
+      },
+      {
+        "path": "agent/tests/continuation-failure-b2-worker.test.ts",
+        "sha256": "c096c2abe34cbf78cd70f7c00508ab206ab46f3e22df208120f4d6edcfc20cc6"
+      }
+    ],
+    "source_compilation_exit": 0,
+    "source_full_exit": 1,
+    "source_full_files": 452,
+    "source_full_cases": 4173,
+    "source_full_failed": 1,
+    "source_full_log": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261016-183355/learner/runs/silent-0332-r3/source-sandbox.log",
+    "source_full_log_sha256": "19fb988bf751d578d76fcbe88949aa7179f03d8cd2f80a5b1e1b103f85aa7102",
+    "source_full_error": "tests/global-build-health.test.ts:6 spawnSync /usr/bin/python3 EPERM; inner four Python checks OK",
+    "source_unchanged_since_full_start": true,
+    "full_rerun": false,
+    "targeted_exit": 0,
+    "targeted_cases": 14,
+    "without_wiring_exit": 1,
+    "without_wiring_failed": 6,
+    "without_wiring_passed": 1,
+    "gitleaks": 0,
+    "code_commit_blocked_by_required_sandbox_entry": true,
+    "commit_message": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261016-183355/learner/runs/silent-0332-r3/source-commit-message.txt",
+    "last_read_live": "c783c6c83d09e669f49518a4536ae5bc3766c2a2",
+    "live_mutated": false,
+    "whole_branch_merge_allowed": false,
+    "original_21_shared_record_conflicts": "retained r2 evidence; no new whole-branch merge attempted",
+    "release_or_dual_rule_notice_created": false,
+    "actual_release_and_exact_final_tree_host_owner": "ops under original live lock after calibration/P1-P2 serial gate",
+    "root_cause_fixed": false,
+    "real_complete_failure_available": false,
+    "consumer_receipt": null,
+    "next_step": "原ops核8叶/暂存树/patch及失败原件，在同一窄兜底链补核sandbox受限的Python封装后提交原样源码；依原live锁保护知识刷新/历史/索引和校准/P1-P2闸窄集成已接收的r2诊断源a8、本B2扩展及限定经验79。不得整支merge或把source-only当live；实际组合精确树宿主/编号/通知/经验消费者由原ops核实。原0332下一步仍需首个真实完整失败封套及首处分歧，不能以诊断交付关根要求。"
+  },
+  "no_active_writer": true,
+  "original_staged_tree_verified": true,
+  "source_scope_and_artifacts_verified": true,
+  "original_full_rc": 1,
+  "root_fix": false,
+  "no_current_game_or_account_change": true
+}
