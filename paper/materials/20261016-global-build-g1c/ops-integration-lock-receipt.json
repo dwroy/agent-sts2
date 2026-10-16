@@ -1,0 +1,36 @@
+{
+  "at": "2026-10-16 08:39:09 CST",
+  "actor": "ops",
+  "status": "accepted source; integration blocked by original live lock",
+  "source": "9579e378f0c3cd668d6301c0fa1ea4bd15a2ff13",
+  "base": "50e2da099a5e1745878070ea960f3160324f2217",
+  "paths": {
+    "eval/global_build_funnel.py": "3da1a548f0badbbffa2346c2f4b050c6ef92a3141ebdb7f21d0c8d90f803239d",
+    "ops/global_build_funnel.py": "3bdf00363d7b41a052bd1c49203e688c0257fcd6b7d2e5c2bec785e7c9fcf9d2",
+    "ops/report.py": "0a38fe3b3d4bea8b4a21a8c6a09d346f0e2eedb10dacbc2f1b278eeb608b5d0c",
+    "agent/tests/global-build-funnel.test.ts": "3f8dd9e7c23b1f4caa2d360ca205d677824c1fc999624f50aa8cb1a6d46826b4",
+    "agent/tests/global_build_funnel_test.py": "42ab6ee905a33055720a7addc953b8605067dbc43e10da679e8d04b74fedc24d"
+  },
+  "lock": "ops/live-merge.lock",
+  "lock_rows": [
+    "22: FLOCK  ADVISORY  WRITE 1338900 08:30:372157 0 EOF"
+  ],
+  "original_G4_tree": "adb0266d517d31a17f3b14d07143bea924f95eca",
+  "original_channel": "20261016-071301-strategy-proposal",
+  "host_log": {
+    "path": "ops/codex-ops/learner/20261016-071301-strategy-proposal.fallback-adb0266d517d31a17f3b14d07143bea924f95eca.checks.log",
+    "observed_bytes": 30754,
+    "observed_sha256": "6793157856756b8ffcf304ebdc75d109a66f54d92f734aa72ad7ad37f42171d5",
+    "RUN_observed": true
+  },
+  "any_main_live_HEAD_index_or_source_mutation": false,
+  "helper_or_report_started": false,
+  "source_full_repeated": false,
+  "source_full_rc": 1,
+  "two_supplements_rc": [
+    0,
+    0
+  ],
+  "next": "Original adb0 learner-checks completion wakes ops; reacquire same live lock once and execute this immutable five-leaf integration, then deployed helper once and final combined-tree host along same channel. No timer, repeated waiting or new learner.",
+  "scope": "No game behavior version, S decision or account/home/model/prompt/game change"
+}

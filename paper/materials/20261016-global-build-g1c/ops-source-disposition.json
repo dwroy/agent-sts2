@@ -1,0 +1,123 @@
+{
+  "at": "2026-10-16 08:38:12 CST",
+  "actor": "ops",
+  "parent": "roy-20261016-global-build",
+  "phase": "G1c",
+  "source": "9579e378f0c3cd668d6301c0fa1ea4bd15a2ff13",
+  "base": "50e2da099a5e1745878070ea960f3160324f2217",
+  "status": "accepted for narrow integration after reading original full failure and both scoped supplements",
+  "decision": "Accept unchanged source; no rollback, assertion/time-limit change, repeated source full, new fix/research/model experiment. Preserve full rc1, accept two actual failed-case green supplements with original bounds. Integrated-tree host remains a separate pending check through the existing serial channel after G4 adb0.",
+  "classification": "Read-only evaluation and existing post-run archive hook, no game behavior change and no release increment",
+  "full": {
+    "tsc": 0,
+    "vitest": 1,
+    "files_passed": 490,
+    "files_failed": 2,
+    "tests_passed": 4920,
+    "tests_failed": 2,
+    "tests_skipped": 4,
+    "duration_seconds": 1315.51
+  },
+  "failure_dispositions": [
+    {
+      "test": "brain-codex stalled twice",
+      "finding": "Existing fixture regex requires first token and turn.started at0s, actual both1s. Actual fallback engine, timeout and two-run semantics match. Neither this fixture nor brain source/assertion/time budget changed.",
+      "supplement": "Exact failed case rc0; remaining30 cases skipped in that scoped call, not full0"
+    },
+    {
+      "test": "component-usage",
+      "finding": "Missing existing logdb venv link in newly allocated isolated tree, exit127. Symlink to original project venv verified; no dependency install or source change.",
+      "supplement": "Original one-case file rc0"
+    }
+  ],
+  "source_unchanged_all_five_leaves": true,
+  "failed_tests_match_base_bytes": true,
+  "files": [
+    {
+      "path": "eval/global_build_funnel.py",
+      "sha256": "3da1a548f0badbbffa2346c2f4b050c6ef92a3141ebdb7f21d0c8d90f803239d"
+    },
+    {
+      "path": "ops/global_build_funnel.py",
+      "sha256": "3bdf00363d7b41a052bd1c49203e688c0257fcd6b7d2e5c2bec785e7c9fcf9d2"
+    },
+    {
+      "path": "ops/report.py",
+      "sha256": "0a38fe3b3d4bea8b4a21a8c6a09d346f0e2eedb10dacbc2f1b278eeb608b5d0c"
+    },
+    {
+      "path": "agent/tests/global-build-funnel.test.ts",
+      "sha256": "3f8dd9e7c23b1f4caa2d360ca205d677824c1fc999624f50aa8cb1a6d46826b4"
+    },
+    {
+      "path": "agent/tests/global_build_funnel_test.py",
+      "sha256": "42ab6ee905a33055720a7addc953b8605067dbc43e10da679e8d04b74fedc24d"
+    }
+  ],
+  "evidence": [
+    {
+      "path": "paper/materials/20261016-global-build-g1c/source-candidate.json",
+      "bytes": 1143,
+      "sha256": "211f95fa3f9d402d8e0f2219df933af32e977a451bc51b9c0de952f324cee35d"
+    },
+    {
+      "path": "paper/materials/20261016-global-build-g1c/source-candidate.patch",
+      "bytes": 34916,
+      "sha256": "66c961e7c3747ec67657da10b878ee5e6715adeb90a8e4ff064f49c4e54e7b5b"
+    },
+    {
+      "path": "paper/materials/20261016-global-build-g1c/reviewed-checks/checks.json",
+      "bytes": 1145,
+      "sha256": "7bd68975e75a0f2f477ad56e784be8f61112e3f77ad7ad862f30d9c9866ffca0"
+    },
+    {
+      "path": "paper/materials/20261016-global-build-g1c/reviewed-checks/vitest.log",
+      "bytes": 2279,
+      "sha256": "2c957909faac3cf5e540cd30bddeb9b1de6a3b13186ec366701c84f78b72baf6"
+    },
+    {
+      "path": "paper/materials/20261016-global-build-g1c/reviewed-checks/tsc.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "paper/materials/20261016-global-build-g1c/reviewed-checks/environment-repair.json",
+      "bytes": 705,
+      "sha256": "34294671ab3c7fe481c4a4b572869e289e1bff65bf62aa5be174f7614206e737"
+    },
+    {
+      "path": "paper/materials/20261016-global-build-g1c/reviewed-checks/failed-cases-supplement.json",
+      "bytes": 900,
+      "sha256": "13d98f11290524b08b25f353da1bc41f59841b96ad2f75e7c49c0697367c2969"
+    },
+    {
+      "path": "paper/materials/20261016-global-build-g1c/reviewed-checks/brain-timeout-supplement.log",
+      "bytes": 272,
+      "sha256": "3fb92538572bafc2c94548353c9979eafc1b0641dd4c109e3d60d49f98d3a03a"
+    },
+    {
+      "path": "paper/materials/20261016-global-build-g1c/reviewed-checks/component-usage-supplement.log",
+      "bytes": 258,
+      "sha256": "dea39562ae08f2ff6626f3b9a714b9e5c822de3f1841e2bc14c38e12ba6fffa5"
+    },
+    {
+      "path": "paper/materials/20261016-global-build-g1c/design-and-validation.md",
+      "bytes": 2874,
+      "sha256": "226c955e3abb6e8a03497a453559b0d24fda9ead14cbf95cc8c4e391703ddc65"
+    },
+    {
+      "path": "paper/materials/20261016-global-build-g1c/ops-snapshot-agreement.json",
+      "bytes": 3050,
+      "sha256": "fed03badc3c00f790f89d1e049bc3a1909b3aa4b4bfd8213d64351f1d0467c35"
+    },
+    {
+      "path": "paper/materials/20261016-global-build-g1c/gitleaks-source.json",
+      "bytes": 3,
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    }
+  ],
+  "integration": "pending original lock; no source mutation yet",
+  "cadence": "Run only deployed same helper once after integration; never replay report.py; actual archive and marker required",
+  "S_decision": "Roy pending, no changes",
+  "other_actor_ACK": false
+}

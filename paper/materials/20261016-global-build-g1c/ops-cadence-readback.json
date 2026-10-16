@@ -1,0 +1,20 @@
+{
+  "at": "2026-10-16 08:39:09 CST",
+  "actor": "ops",
+  "status": "pending actual integration; helper not started",
+  "integrated": false,
+  "archive": null,
+  "manifest": null,
+  "state": null,
+  "decision_marker": null,
+  "readback_passed": false,
+  "reason": "Preserve original G4 adb0 full check holding live lock; execute only deployed same helper after integration, not old report.py",
+  "original_source_hook": {
+    "file": "ops/report.py",
+    "caller": "ops/autoplay.sh REFRESH_WAIT=1 at actual ended-run boundary",
+    "function": "global_build_funnel(run_char)",
+    "helper": "nice -n19 <root>/data/logdb-venv/bin/python <root>/ops/global_build_funnel.py --root <root> --character silent",
+    "source_sha256": "0a38fe3b3d4bea8b4a21a8c6a09d346f0e2eedb10dacbc2f1b278eeb608b5d0c"
+  },
+  "source_hook_is_live_consumption": false
+}
