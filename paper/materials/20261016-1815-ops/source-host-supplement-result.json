@@ -1,0 +1,54 @@
+{
+  "request": {
+    "at": "2026-10-16 18:17:32 CST",
+    "operator": "original main ops host, not learner sandbox",
+    "batch": "20261016-174303-fix-batch",
+    "base": "c75756fe60168c410f1eb4e611433176ed7ec194",
+    "staged_tree": "35d6fcb967da4c0b2a83aae4f3d864181b01c26a",
+    "files": {
+      "agent/tests/ops-stall-between-runs.test.ts": "b94169b2e32042e4fe724129cb23e74a3a736db2aea4c3bfee36fb2009bc88a2",
+      "ops/stall-check.sh": "b07d14af42be12d77d4f20c49502a4740c9a760a9f531833dc794ee3e55a046f"
+    },
+    "original_sandbox_full_exit": 1,
+    "original_failure": "global-build-health.test.ts spawnSync /usr/bin/python3 EPERM",
+    "source_sandbox_failure_preserved": true,
+    "unchanged_source_full_not_repeated": true
+  },
+  "checks": [
+    {
+      "command": [
+        "npx",
+        "tsc",
+        "-p",
+        "tsconfig.json",
+        "--noEmit"
+      ],
+      "pid": 3148279,
+      "birth_ticks": "103781186",
+      "rc": 0,
+      "log": "paper/materials/20261016-1815-ops/source-host-tsc.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": [
+        "npx",
+        "vitest",
+        "run",
+        "tests/global-build-health.test.ts",
+        "tests/ops-stall-between-runs.test.ts",
+        "tests/ops-stall-recovery.test.ts",
+        "--maxWorkers=1"
+      ],
+      "pid": 3150444,
+      "birth_ticks": "103782407",
+      "rc": 0,
+      "log": "paper/materials/20261016-1815-ops/source-host-targeted.log",
+      "sha256": "71bd4b4c54e9bc981dc71ba7024af409e35cbf197eed095f7a86d9bb688d557a"
+    }
+  ],
+  "source_unchanged": true,
+  "original_sandbox_full_exit": 1,
+  "only_selected_host_tests": true,
+  "no_new_behavior_release": true,
+  "no_game_model_or_learner_invocation": true
+}
