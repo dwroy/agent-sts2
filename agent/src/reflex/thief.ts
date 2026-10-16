@@ -180,6 +180,8 @@ export interface LootValue {
   text: string;
   /** Its derivation in a few numbers, for each option's fact ("boss win 46% → 38% without it, 1 HP ≈ 0.7 points"). */
   short: string;
+  /** Silent A10's observed unknown card conversion must remain unknown in each option's text. */
+  showUnknownHp?: true;
 }
 
 function powerOf(enemy: Record<string, unknown>, id: string): number {
@@ -303,9 +305,12 @@ export function withLoot(thieves: Thief[], state: GameState, cardValue: ThiefCar
     }
   }
   const fight = thiefFightOf(state);
+  const silentA10 = str(asRecord(state.run?.raw)["character_id"]).toLowerCase() === "silent" && state.run?.ascension === 10;
   return thieves.map((thief) => ({
     ...thief,
-    loot: thief.cards !== undefined ? cardLoot(cardValue, fight) : goldLoot(thief.gold, actOf(state), state.run?.ascension ?? 0, file, error),
+    loot: thief.cards !== undefined
+      ? { ...cardLoot(cardValue, fight), ...(silentA10 ? { showUnknownHp: true as const } : {}) }
+      : goldLoot(thief.gold, actOf(state), state.run?.ascension ?? 0, file, error),
   }));
 }
 
@@ -457,7 +462,12 @@ export function thiefFact(plan: Plan, thieves: Thief[], samplesOf: (thief: Thief
  */
 export function lootCostText(plan: Plan, thief: Thief, lost: { lost: number; samples: number } | null): string {
   const loot = thief.loot!;
-  if (loot.hp === null) return `loot cost 0 (${loot.text})`;
+  if (loot.hp === null) {
+    // LY83ZMTFVKJH A10 F20 T2, silent-0314: measured boss progress is not a converted player HP price.
+    if (loot.showUnknownHp) return `loot cost unknown HP（血价未知；${loot.text}）；${lost
+      ? `lost in ${lost.lost}/${lost.samples} samples` : "后续丢牌样本未知"}`;
+    return `loot cost 0 (${loot.text})`;
+  }
   const what = `${thief.cards !== undefined ? lootText(thief) : `${thief.gold ?? "?"} gold`} ≈ ${round1(loot.hp)} HP (${loot.short})`;
   if (lost) return `loot cost ${round1((loot.hp * lost.lost) / Math.max(1, lost.samples))} HP: ${what} × lost in ${lost.lost}/${lost.samples} samples`;
   const now = lastTurnLoot(plan, [thief]);
