@@ -1,0 +1,355 @@
+{
+  "at": "2026-10-16 09:47:10 CST",
+  "batch": "20261016-091302",
+  "run": "9KP5S3317EEL",
+  "report": {
+    "task": "postmortem",
+    "appended": [
+      "9KP5S3317EEL"
+    ],
+    "skipped": [],
+    "bugs": [],
+    "ledger": {
+      "added": [],
+      "updated": [
+        "silent-0228",
+        "silent-0005",
+        "silent-0046",
+        "silent-0027",
+        "silent-0028"
+      ],
+      "repeats": [],
+      "check": 0
+    },
+    "code_proposals": [
+      "silent-proposal-c6bff546c18c557b"
+    ],
+    "implementation_domains": [
+      "combat",
+      "terminal"
+    ],
+    "report": "/home/dw/Projects/agent-sts2/learner/runs/20261016-091311-53fd01a1-c5ca-4f32-8cac-17148a5419ba-postmortem/report.md"
+  },
+  "native": {
+    "batch": "20261016-091302",
+    "thread": "01a14245-38bc-78a3-899e-db01464f0f60",
+    "cwd": "/home/dw/Projects/agent-sts2",
+    "event_log": "learner/runs/20261016-091311-53fd01a1-c5ca-4f32-8cac-17148a5419ba-postmortem.jsonl",
+    "registered_launch_batch": "20261016-091302",
+    "original_lease": "4c9660c0a1b0f9c78a4daa7a1c25775a55ef68a57eadb1c5d9d9d85e46010333",
+    "native_context": {
+      "source": "ops/codex-ops/accounts/codex1/learner/sessions/2026/10/16/rollout-2026-10-16T09-13-15-01a14245-38bc-78a3-899e-db01464f0f60.jsonl",
+      "offset": 49155,
+      "bytes": 4620,
+      "sha256": "8e24feae37e9a2064addf31207bb4b62352161ac46d14c5c8dfbce992c20c180",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "sandbox": {
+        "type": "workspace-write",
+        "writable_roots": [
+          "/home/dw/Projects/agent-sts2/.git"
+        ],
+        "network_access": false,
+        "exclude_tmpdir_env_var": false,
+        "exclude_slash_tmp": false
+      },
+      "approval_policy": "never"
+    },
+    "native_user_input": {
+      "offset": 53775,
+      "bytes": 15345,
+      "sha256": "97493cd105b6257dac6864c7b1085ef4c429367ef9425ddd2b4a2e833783a10e",
+      "input_sha256": "5b272426cc12b01e1fd5a975146b86be7f4cc648f44ca043896e3a195edbc078"
+    },
+    "original_header_events": [
+      {
+        "offset": 0,
+        "bytes": 16866,
+        "sha256": "b7a2a1d85a65d147075f47220338d5a541e16e9eeed3e880043dfdbc2a81ee08",
+        "type": "learner_launch",
+        "attempt": null,
+        "code": null
+      },
+      {
+        "offset": 16866,
+        "bytes": 360,
+        "sha256": "03921cbcc74fd200f9ab0c5669b0139e507987a2c9d6a8842ddcb46ee8901fd0",
+        "type": "learner_startup_attempt",
+        "attempt": 1,
+        "code": null
+      },
+      {
+        "offset": 20238,
+        "bytes": 77,
+        "sha256": "fd02951e29a5c20a3e3fac40a9ed80ee2dccad2faf1d29651610e14cea4b295d",
+        "type": "thread.started",
+        "attempt": null,
+        "code": null
+      }
+    ],
+    "startup_attempts": 1,
+    "failed_startups_preserved": 0,
+    "no_model_or_manual_restart": true
+  },
+  "lesson_prefix": {
+    "bytes": 9095267,
+    "sha256": "d2c8318445a5ac4465a70ca24afa354643fa2047addb1fef17adedf88fe8f791"
+  },
+  "lesson_append_bytes": 23011,
+  "lesson_sha256": "97d98b8cbe9c62e828a86f12c7ce7dbf339a0f439a91c9e2d926b1a6d380e29c",
+  "lesson_exactly_once_and_old_prefix_preserved": true,
+  "source_raw_rows_SHA_JSON_verified": 1827,
+  "own_ledger_updates": [
+    {
+      "offset": 20093755,
+      "bytes": 708,
+      "sha256": "9892114667decff6afc9501676c151b3889ae3a3ff5f87d89cfa876ef36daa5f",
+      "row": {
+        "op": "update",
+        "id": "silent-0228",
+        "ts": "2026-10-16T09:28:14+08:00",
+        "by": "learner:postmortem",
+        "evidence": [
+          {
+            "run": "9KP5S3317EEL",
+            "floor": 48,
+            "turn": 11,
+            "role": "support",
+            "note": "F42胜战59→7，经F43/47休息，F48第四试61/68→3/68胜、槽0幸运补剂已饮；s421808→421810无恢复进入F49。六试T1均3HP0挡对聚合体24，末次实际死，两敌319/419、209/211。大脑已明确两王与重启，没有受控更佳整线，不由失败指认同一决策错误repeat。"
+          }
+        ],
+        "where": {
+          "lessons": [
+            "9KP5S3317EEL"
+          ]
+        },
+        "note": "三条复盘经验第1条；补实盘连战资源证据，保持原claim/first_run/prior/status/version，不冒称新实现或自然消费验证。"
+      }
+    },
+    {
+      "offset": 20094463,
+      "bytes": 602,
+      "sha256": "92e4b729fac7ec92edd9484f097f7b96ad8e54735f0d3d9bc1968d067b13bb15",
+      "row": {
+        "op": "update",
+        "id": "silent-0005",
+        "ts": "2026-10-16T09:28:14+08:00",
+        "by": "learner:postmortem",
+        "evidence": [
+          {
+            "run": "9KP5S3317EEL",
+            "floor": 48,
+            "turn": 4,
+            "role": "support",
+            "note": "末试两步法+于T1/T3建立6敏捷，T4冲刺+19挡、生存者14挡共33，基础13+8=21、增12，抵11×3；T6只有防御11挡对虚弱8×5=40、损29，T9四攻击余像4挡对33又损29。s421772—421803；能力有兑现，未证明拿牌或施放本身错误。"
+          }
+        ],
+        "where": {
+          "lessons": [
+            "9KP5S3317EEL"
+          ]
+        },
+        "note": "复盘第2条及机制补证；旧知识支持，保留原先验与发布状态。"
+      }
+    },
+    {
+      "offset": 20095065,
+      "bytes": 613,
+      "sha256": "c2d1ada101d696a76a04f2dcf438574322c1846ee918910df67a69f50b97df35",
+      "row": {
+        "op": "update",
+        "id": "silent-0046",
+        "ts": "2026-10-16T09:28:14+08:00",
+        "by": "learner:postmortem",
+        "evidence": [
+          {
+            "run": "9KP5S3317EEL",
+            "floor": 48,
+            "turn": 5,
+            "role": "support",
+            "note": "末试T5尖啸敌力0→−6，11×4=44→5×4=20，中和+虚弱后3×4=12，12挡零损；T6负力消失仍虚弱、8×5=40，对11挡损29。T8另一尖啸33→15、17挡全挡，T9恢复后对33损29。s421777—421803/d408460—408481，无其他整线对照。"
+          }
+        ],
+        "where": {
+          "lessons": [
+            "9KP5S3317EEL"
+          ]
+        },
+        "note": "复盘第3条及机制补证；实际当轮减力有效，不将胜负当同一用牌错误repeat。"
+      }
+    },
+    {
+      "offset": 20095678,
+      "bytes": 566,
+      "sha256": "dc42d6a1317b7e70681f3330c15b971739bea9cc54d183dfc00e28b132da55cb",
+      "row": {
+        "op": "update",
+        "id": "silent-0027",
+        "ts": "2026-10-16T09:28:14+08:00",
+        "by": "learner:postmortem",
+        "evidence": [
+          {
+            "run": "9KP5S3317EEL",
+            "floor": 48,
+            "turn": 2,
+            "role": "support",
+            "note": "末试T1触媒+建立ACCELERANT_POWER2，T2末19毒、敌65，下一帧T3敌8：19+18+17毒54，加抱抱先生T3的3，共57；T3敌8/16毒且玩家0挡，结毒先结束一段，51攻击未执行；T4二段旧毒清。s421763—421772。"
+          }
+        ],
+        "where": {
+          "lessons": [
+            "9KP5S3317EEL"
+          ]
+        },
+        "note": "机制为既有三次毒触发与阶段清毒补证，不新建mechanic条目。"
+      }
+    },
+    {
+      "offset": 20096244,
+      "bytes": 584,
+      "sha256": "9d264fd7ea19da8141ab350bfbb606514860738981e02967b0f4f00f646ed9dc",
+      "row": {
+        "op": "update",
+        "id": "silent-0028",
+        "ts": "2026-10-16T09:28:14+08:00",
+        "by": "learner:postmortem",
+        "evidence": [
+          {
+            "run": "9KP5S3317EEL",
+            "floor": 48,
+            "turn": 2,
+            "role": "support",
+            "note": "末试一段T2三张技能敌力3→6→9→12，同招意图19→22→25→28；T1/T3步法及触媒、涂毒能力不加敌力。T4进入二段后旧力量和激怒消失。s421765—421772；只补本局A10激怒3条件，不外推其他进阶。"
+          }
+        ],
+        "where": {
+          "lessons": [
+            "9KP5S3317EEL"
+          ]
+        },
+        "note": "机制既有能力/技能及阶段边界补证，不新增常数或固定打法规则。"
+      }
+    },
+    {
+      "offset": 20096828,
+      "bytes": 357,
+      "sha256": "8e9b624ba134f8326f801d8c6446202e6b9c9226e064e1e50f92b5d3f047d931",
+      "row": {
+        "op": "update",
+        "id": "silent-0228",
+        "ts": "2026-10-16T09:29:36+08:00",
+        "by": "learner:postmortem",
+        "where": {
+          "proposal": [
+            "/home/dw/Projects/agent-sts2/learner/runs/20261016-091311-53fd01a1-c5ca-4f32-8cac-17148a5419ba-postmortem/proposal.md"
+          ]
+        },
+        "note": "代码提案 silent-proposal-c6bff546c18c557b → task=strategy-proposal；Roy-2026-10-07-learning"
+      }
+    },
+    {
+      "offset": 20097185,
+      "bytes": 357,
+      "sha256": "c925edd63e49d2dbe8d28b61741e5ec5d4f0376cae4dd390a854f7f9466e3083",
+      "row": {
+        "op": "update",
+        "id": "silent-0005",
+        "ts": "2026-10-16T09:29:36+08:00",
+        "by": "learner:postmortem",
+        "where": {
+          "proposal": [
+            "/home/dw/Projects/agent-sts2/learner/runs/20261016-091311-53fd01a1-c5ca-4f32-8cac-17148a5419ba-postmortem/proposal.md"
+          ]
+        },
+        "note": "代码提案 silent-proposal-c6bff546c18c557b → task=strategy-proposal；Roy-2026-10-07-learning"
+      }
+    },
+    {
+      "offset": 20097542,
+      "bytes": 357,
+      "sha256": "710f5fbd569176411cd20fa3401e91307b5169cb6bdb2639a1197757fd3cf212",
+      "row": {
+        "op": "update",
+        "id": "silent-0046",
+        "ts": "2026-10-16T09:29:36+08:00",
+        "by": "learner:postmortem",
+        "where": {
+          "proposal": [
+            "/home/dw/Projects/agent-sts2/learner/runs/20261016-091311-53fd01a1-c5ca-4f32-8cac-17148a5419ba-postmortem/proposal.md"
+          ]
+        },
+        "note": "代码提案 silent-proposal-c6bff546c18c557b → task=strategy-proposal；Roy-2026-10-07-learning"
+      }
+    },
+    {
+      "offset": 20097899,
+      "bytes": 357,
+      "sha256": "3b232cb36f23b22a65d9042c072841462e92ea764a37c3e8c8b9842247643195",
+      "row": {
+        "op": "update",
+        "id": "silent-0027",
+        "ts": "2026-10-16T09:29:36+08:00",
+        "by": "learner:postmortem",
+        "where": {
+          "proposal": [
+            "/home/dw/Projects/agent-sts2/learner/runs/20261016-091311-53fd01a1-c5ca-4f32-8cac-17148a5419ba-postmortem/proposal.md"
+          ]
+        },
+        "note": "代码提案 silent-proposal-c6bff546c18c557b → task=strategy-proposal；Roy-2026-10-07-learning"
+      }
+    },
+    {
+      "offset": 20098256,
+      "bytes": 357,
+      "sha256": "08e45bf3d3004b5f2574a368234470bb8b7f8689aee8e785402422b3be9a4faa",
+      "row": {
+        "op": "update",
+        "id": "silent-0028",
+        "ts": "2026-10-16T09:29:36+08:00",
+        "by": "learner:postmortem",
+        "where": {
+          "proposal": [
+            "/home/dw/Projects/agent-sts2/learner/runs/20261016-091311-53fd01a1-c5ca-4f32-8cac-17148a5419ba-postmortem/proposal.md"
+          ]
+        },
+        "note": "代码提案 silent-proposal-c6bff546c18c557b → task=strategy-proposal；Roy-2026-10-07-learning"
+      }
+    }
+  ],
+  "five_support_old_claim_prior_status_version_and_evidence_prefix_preserved": true,
+  "original_code_proposal_registry": [
+    {
+      "op": "add",
+      "id": "silent-proposal-c6bff546c18c557b",
+      "ts": "2026-10-16T09:29:36+08:00",
+      "character": "silent",
+      "ledger": [
+        "silent-0228",
+        "silent-0005",
+        "silent-0046",
+        "silent-0027",
+        "silent-0028"
+      ],
+      "runs": [
+        "9KP5S3317EEL"
+      ],
+      "source_task": "postmortem",
+      "target_task": "strategy-proposal",
+      "domains": [
+        "combat",
+        "terminal"
+      ],
+      "summary": "核验本局连战3HP空药入口、敏捷具名挡牌兑现和尖啸恢复窗口；复用现有连战接口，缺完整候选时保留原规则，不以局部差额拟合血价或声称能通关。",
+      "proposal": "/home/dw/Projects/agent-sts2/learner/runs/20261016-091311-53fd01a1-c5ca-4f32-8cac-17148a5419ba-postmortem/proposal.md",
+      "rule_changes": false,
+      "authorization": "Roy-2026-10-07-learning",
+      "proposal_sha256": "ed314e115c7100c95e96fc5853e141c6b1f778274141ffd481cb03dda17778e5",
+      "state": "pending"
+    }
+  ],
+  "new_pure_bug": false,
+  "no_fix_queue_or_duplicate_learner_action": true,
+  "old_code_version": "2806f8bd with9 dirty knowledge/record leaves; not an interface815582 natural consumer",
+  "unknowns": "Full candidate execution, unchosen complete successors, phase/last-hit attribution, actual bill, complete dirty inputs remain unknown",
+  "wide_parents": "open"
+}
