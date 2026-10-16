@@ -2693,3 +2693,5 @@ selector于2026-10-15 13:15:58 CST从/home/dw/.codex-brain原子改为/home/dw/P
 - 2026-10-16 22:30:21 CST [ops实收Roy22:19／SL药水学习接续已实际收到] 已登记 **roy-20261016-sl-potion-retry r1**，绑定原214302相关SL/持药学习者thread **01a144f3-f753-7881-afd9-9567174ea8e3**、原WT/home/lease；原槽释放后实际启动 **20261016-222815-strategy-proposal／PID1057680**，原生Sol6.1/xhigh、workspace-write/no-network及同线程首真实回复/输入SHA已核，非排队冒实收。冻结原报告/attempts/retries及17:15:44截点，19/58→7/56、F48 7/17→1/20、F49 2/17→0/20及救回11/19→3/16只作观察；要求学习者据局号/原帧判断换药顺序或保留药水，允许异议，区分空药栏/短窗口、事件与耗瓶、已执行与未执行替线，缺证保持未知。沿实际live经验、消费者、ops→watcher→Roy闭环，尚无学习结论或完成声明，不代角色ACK。证据paper/materials/20261016-2219-ops/sl-potion-native-received.json；0332根修复优先级不变。
 
 - 2026-10-16 22:34:05 CST [ops 221302-s2策略实收] 十项waiting、无源码/知识变更或合入阻塞；已核24条原CLI只补追溯并保护旧知识字段。37项材料核验不充生产测试，缺完整后继/资源归属/联合校准继续待新局，无新版本/补测/重复学习；0332与原SL药水222815链不变。回执paper/materials/20261016-2225-ops/batch-readback.json。
+
+- 2026-10-16 22:37:07 CST [ops 221302主策略实收] 十项waiting、无源码/知识修改或合入阻塞；46条原账本追溯已核，保护旧知识/状态。完整后继和联合校准仍缺，60+3材料检查不冒生产测试，不新增版本/补测/学习，原0332及SL药水222815链保持。回执paper/materials/20261016-2234-ops/batch-readback.json。
