@@ -1,0 +1,399 @@
+{
+  "at": "2026-10-16 08:45:28 CST",
+  "result": null,
+  "request": {
+    "id": "roy-20261016-global-build-g1a",
+    "state": "pending",
+    "attempts": [
+      "20261016-075726-strategy-proposal"
+    ],
+    "pending_since": 1792111528.7383187,
+    "request_sha256": "fbecefe615baf160ac00b4c3a45f76257b4dff8f50fcecfb0ddcd9264c84cf10",
+    "revision": 1,
+    "request_path": "/home/dw/Projects/agent-sts2/notes/learning-requests/roy-20261016-global-build-g1a.json",
+    "batch": "20261016-075726-strategy-proposal",
+    "started_at": 1792108648.9307773,
+    "reason": "consumer readback missing or mismatched",
+    "notices": [
+      "dd77c5ff4823204fad9f6ae6",
+      "44fc95c93f6df419f94e2314"
+    ],
+    "questions": [
+      {
+        "claim": "数量增加即可使Boss模型可信",
+        "finding": "三幕三个Boss数量已达标但质量闸失败；复用原THE_INSATIABLE新增样本后撤可信的反证。",
+        "evidence": [
+          "R366校准表",
+          "VNSXWCWXR3VW F33 attempt1 T1–7"
+        ],
+        "recommendation": "保持四闸，数量缺口与质量缺口分列，不承诺固定新增场数。",
+        "existing_entry_ids": [
+          "silent-0484",
+          "silent-0491"
+        ]
+      },
+      {
+        "claim": "将R366固定校准表用于当前生产可信度",
+        "finding": "原生产70项、本轮冻结生产71项输入指纹不同；没有生产模型重新校准证据。",
+        "evidence": [
+          "production-boundary.json",
+          "原R366 live-model-changes.json"
+        ],
+        "recommendation": "限定固定对象；当前生产可信度保持unknown，后续先冻结新对象。",
+        "existing_entry_ids": [
+          "silent-0491"
+        ]
+      },
+      {
+        "claim": "用旧double-boss曲线或平均出口HP表示联合胜率",
+        "finding": "旧四局0胜、8192模拟不是独立实战校准；六局存在开场资源变化，7S8已有后场SL胜。",
+        "evidence": [
+          "continuous-resource-contract.json",
+          "7S8HCC0M6G9W F48→49",
+          "64VJC5XT2AT2 F48→49"
+        ],
+        "recommendation": "使用实际端点和条件；联合率缺证保留unknown，通用接口交原watcher。",
+        "existing_entry_ids": [
+          "silent-double-boss-resource-handoff",
+          "silent-0228"
+        ]
+      }
+    ],
+    "checkpoint": "原075726已结束rc0，旧failed/blocked原因仅consumer receipt经验全库版本g1a-r1与G4后当前2026-10-16.2不符；五要求对象canonical SHA全相等、旧probe5文件SHA全核，原结果和旧receipt不可改。ops本人诊断见主根paper/materials/20261016-global-build-g1a/ops-recovery/ops-received.json。只沿本原thread补当前live同一固定消费者一次并保存全新输入/输出/command/receipt及原五项coverage，生成新的completion report；原f5e9旧receipt/input/output/report和原failed状态不改，不以旧输出只改version充新读回。消费者逻辑保持，仅为本次真实运行冻结current experience_version字段与实际HEAD/tree，五原对象及脚本内容不改；不研究/重校准/重模拟/源full或新模型实验，不重新merge或更新经验version。当前live含五对象且源祖先，实际publication3394/b2b保留，编号由ops锁内补录，不得冒用G4 R367或其检查。本轮三原learning_result.questions已由ops沿原注册父正式disagreement通知，保持原文，回执ops-recovery/questions-forwarding.json；不要另写变体通知，不代其他角色ACK。通用连战接口/自然消费/0332/宽父仍watcher原职责。只知识可读闭环不等生产重校准/自然效果。",
+    "retry_receipt": {
+      "path": "/home/dw/Projects/agent-sts2/paper/materials/20261016-global-build-g1a/ops-recovery/owner-resume-reason.json",
+      "sha256": "b1946f6a9f04a738d15198c9bdc5a5b2d4202ec28cbb66058dc4e149a167ab21",
+      "at": 1792111528.5581334
+    },
+    "retry_at": 0
+  },
+  "batch": {
+    "task": "strategy-proposal",
+    "character": "silent",
+    "runs": [],
+    "key": "learning:roy-20261016-global-build-g1a",
+    "state": "failed",
+    "pid": 1153952,
+    "pane": "wJ:p15Q",
+    "worktree": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration",
+    "learning_request": "roy-20261016-global-build-g1a",
+    "learning_revision": 1,
+    "learning_input": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261016-075726-strategy-proposal.learning-input.json",
+    "learning_input_sha256": "fbecefe615baf160ac00b4c3a45f76257b4dff8f50fcecfb0ddcd9264c84cf10",
+    "learning_request_sha256": "fbecefe615baf160ac00b4c3a45f76257b4dff8f50fcecfb0ddcd9264c84cf10",
+    "proposal_policy": "Roy-2026-10-07-learning",
+    "consumed": true,
+    "consumption_receipt": {
+      "event_log": "/home/dw/Projects/agent-sts2/learner/runs/20261016-075730-d3f193ef-32e0-442d-943c-69fa2a12035c-20261016-075726-strategy-proposal.task.jsonl",
+      "type": "learner_resume_ack",
+      "ts": "2026-10-15T23:57:47.260Z",
+      "thread_id": "01a1415e-a511-7131-be7c-a2dc691c847f",
+      "input_sha256": "79ab223a08d1df0b4eab4292cb65264f8f99b83b339485b4f6b83b818caecfe5",
+      "command_sha256": "86218c8a7fac026b6f93a065ccf3d9bc26e53d81ff0996e67361edacfb71d895",
+      "batch": "20261016-075726-strategy-proposal",
+      "first_message_sha256": "42a78be235b74dc0b1c11b59707ddd350a9788b98b3c1e47b4d4dd5dd894f8cb"
+    },
+    "finished": "2026-10-16T08:30:21.395926",
+    "rc": 0,
+    "report": {
+      "task": "strategy-proposal",
+      "character": "silent",
+      "base": "50e2da099a5e1745878070ea960f3160324f2217",
+      "fixes": [
+        {
+          "item": "Roy已授权G1a：静默Boss校准边界经验入库与连续Boss资源契约",
+          "commit": "28161b2d2a31e95587999fc6e5028acd727cecb2",
+          "test": "30原帧、70原行SHA、24四闸行；候选及live五条经验消费者、角色与进阶隔离、提案链、gitleaks通过",
+          "fails_without_fix": false,
+          "nature": "知识功能；无生产源码或策略阈值改动",
+          "ledger": [
+            "silent-0494"
+          ]
+        }
+      ],
+      "merged": "b2bdb0b1dbc7ec9a39909595238b00efbb718321",
+      "publication": "3394e7912f2b4bec3715761858f831f3fa6040dd",
+      "fixed_release_tree": "de12005a2b4dde0db4adbd83c116e7e9914038cc",
+      "version": "V5.silent-g1a-knowledge1",
+      "experience_version": "2026-10-16.g1a-r1",
+      "release_id": null,
+      "release_id_status": "由ops核实际发布后统一登记；无需Roy再次批准",
+      "tests": {
+        "candidate_consumer": 0,
+        "live_consumer": 0,
+        "readback_entries": 5,
+        "character_and_ascension_isolation": true,
+        "raw_states_sha": 30,
+        "run_sl_rows_sha": 70,
+        "four_gate_rows": 24,
+        "unchanged_other_entries": 231,
+        "proposal_chain": 0,
+        "gitleaks": 0,
+        "ledger_check": "494项，0问题",
+        "tsc_vitest_this_revision": "仅数据改动，按要求复用原精确树检查，未重跑全套",
+        "preserved_failures": [
+          "初次审计组合实体名映射错误，已修正并保留记录",
+          "tsx IPC被沙箱拒绝；同一探针使用Node loader通过",
+          "首次发布因审计log暂存被拒而回退，保留刷新；修正后发布成功"
+        ],
+        "external_full": "交原调度器完成外部检查"
+      },
+      "code_proposals": [
+        "silent-proposal-08156445e1c13d33"
+      ],
+      "implementation_domains": [
+        "structure"
+      ],
+      "proposal_results": [
+        {
+          "id": "silent-proposal-08156445e1c13d33",
+          "status": "waiting",
+          "reason": "本轮经验已发布且消费通过；当前生产重校准和联合率仍缺证，未冒标源码接口implemented。通用连战接口由原watcher负责，不重复派原研究。"
+        }
+      ],
+      "boss_trust": {
+        "AEONGLASS": {
+          "validation_n": 34,
+          "independent_runs": 34,
+          "quantity_deficit": 0,
+          "trusted": false,
+          "b2": {
+            "brier": 0.1898,
+            "win_rate_gap": 0.173,
+            "leak_ratio": 3.957,
+            "failed": [
+              "brier",
+              "gap",
+              "leak"
+            ]
+          },
+          "b3": {
+            "brier": 0.2029,
+            "win_rate_gap": 0.175,
+            "leak_ratio": 4.038,
+            "failed": [
+              "brier",
+              "gap",
+              "leak"
+            ]
+          }
+        },
+        "QUEEN": {
+          "validation_n": 29,
+          "independent_runs": 29,
+          "quantity_deficit": 0,
+          "trusted": false,
+          "b2": {
+            "brier": 0.241,
+            "win_rate_gap": 0.309,
+            "leak_ratio": 1.019,
+            "failed": [
+              "brier",
+              "gap"
+            ]
+          },
+          "b3": {
+            "brier": 0.229,
+            "win_rate_gap": 0.282,
+            "leak_ratio": 1.119,
+            "failed": [
+              "brier",
+              "gap"
+            ]
+          }
+        },
+        "TEST_SUBJECT": {
+          "validation_n": 27,
+          "independent_runs": 27,
+          "quantity_deficit": 0,
+          "trusted": false,
+          "b2": {
+            "brier": 0.1784,
+            "win_rate_gap": 0.166,
+            "leak_ratio": 3.603,
+            "failed": [
+              "brier",
+              "gap",
+              "leak"
+            ]
+          },
+          "b3": {
+            "brier": 0.1693,
+            "win_rate_gap": 0.136,
+            "leak_ratio": 3.469,
+            "failed": [
+              "brier",
+              "leak"
+            ]
+          }
+        },
+        "quality_sample_deficit": "未知；不能保证固定新增场数即可通过质量闸"
+      },
+      "fixed_and_production": {
+        "model_commit": "7e1193cef9467416bc10c8e344a49f4fd98390c7",
+        "tune": 107,
+        "validation": 460,
+        "effective_validation": 458,
+        "original_production_input_differences": 70,
+        "g1a_frozen_production_input_differences": 71,
+        "production_recalibrated": false,
+        "simulations_run_this_revision": 0
+      },
+      "a10": {
+        "b2_gap": 0.035,
+        "b3_gap": 0.039,
+        "b2_leak_ratio": 1.313,
+        "b3_leak_ratio": 1.329,
+        "f49_n": 29,
+        "f49_b2_gap": 0.3,
+        "f49_b3_gap": 0.256,
+        "f49_b2_leak_ratio": 2.681,
+        "f49_b3_leak_ratio": 2.774,
+        "trusted": false
+      },
+      "cadence": {
+        "entry": "agent/tools/boss-sim/refresh-silent.py",
+        "trigger": "升阶或新增20场实际boss结局，保持固定切点与调参keys",
+        "executed_this_revision": false,
+        "reason": "复用R366，未复派原周期校准或重跑107/460模拟"
+      },
+      "commits": [
+        "c5de2c42bcb944822c36dd0efecff11e541baf76",
+        "ef6831db40cb90733bcedced3760dbe53a2f8e88",
+        "28161b2d2a31e95587999fc6e5028acd727cecb2",
+        "fa48e9f1cca4c6ee030df58f842c2ce39f055acd",
+        "b2bdb0b1dbc7ec9a39909595238b00efbb718321",
+        "3394e7912f2b4bec3715761858f831f3fa6040dd",
+        "b342d47ba211a252085749e8c254e5d68ce20327"
+      ],
+      "rolled_back_commit": "4d2a9ad50cf4e66eab60cefc717edf6df284fe4d",
+      "ledger": {
+        "id": "silent-0494",
+        "kind": "fight",
+        "learner_status": "proposed",
+        "shipped": "由ops核实际发布登记"
+      },
+      "resource_contract": {
+        "path": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/paper/materials/20261016-global-build-g1a/continuous-resource-contract.json",
+        "sha256": "e59180c3357ff3110d6cd51a18db98ef4a93a58252aee1839e08e15298d89469"
+      },
+      "report": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261016-global-build-g1a-r1/report.md",
+      "materials": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/paper/materials/20261016-global-build-g1a/completion.md",
+      "learning_result": {
+        "request_id": "roy-20261016-global-build-g1a",
+        "revision": 1,
+        "input_sha256": "66f3ad3a272f4fe74f12d0832ea220be57f5aade9e2f89a0a1044e261166ff5b",
+        "outcome": "complete",
+        "coverage": {
+          "global-g1a-low-trust-per-boss": [
+            {
+              "id": "silent-g1a-aeonglass-calibration-boundary",
+              "sha256": "bf95e0534e1d7d691dba202d6a3ba483bc0b6a48aba2a4e7d3cc0a63d50abe4d"
+            },
+            {
+              "id": "silent-g1a-queen-calibration-boundary",
+              "sha256": "f497eaccb79dfe345d42a0d5ac09250162e1c127bac34c1a204ae6154354d75f"
+            },
+            {
+              "id": "silent-g1a-test-subject-calibration-boundary",
+              "sha256": "ccd1f6ea53fce14d883083a9613e4234d9f5cbeb3e6b27311e72c57ac45233a1"
+            }
+          ],
+          "global-g1a-fixed-and-production-inputs": [
+            {
+              "id": "silent-g1a-fixed-production-boundary",
+              "sha256": "abcdf3106b8597fc9dd265899ad5cb02553509c26a8d99f8e556dd1ffb12cc2b"
+            }
+          ],
+          "global-g1a-continuous-resource-contract": [
+            {
+              "id": "silent-double-boss-resource-handoff",
+              "sha256": "cc6d2758d72f736e19ff31bc303440929cc8d40e2e69f2d3ce0ebae9239ad5d2"
+            }
+          ],
+          "global-g1a-experience-live-consumer": [
+            {
+              "id": "silent-double-boss-resource-handoff",
+              "sha256": "cc6d2758d72f736e19ff31bc303440929cc8d40e2e69f2d3ce0ebae9239ad5d2"
+            },
+            {
+              "id": "silent-g1a-aeonglass-calibration-boundary",
+              "sha256": "bf95e0534e1d7d691dba202d6a3ba483bc0b6a48aba2a4e7d3cc0a63d50abe4d"
+            },
+            {
+              "id": "silent-g1a-queen-calibration-boundary",
+              "sha256": "f497eaccb79dfe345d42a0d5ac09250162e1c127bac34c1a204ae6154354d75f"
+            },
+            {
+              "id": "silent-g1a-test-subject-calibration-boundary",
+              "sha256": "ccd1f6ea53fce14d883083a9613e4234d9f5cbeb3e6b27311e72c57ac45233a1"
+            },
+            {
+              "id": "silent-g1a-fixed-production-boundary",
+              "sha256": "abcdf3106b8597fc9dd265899ad5cb02553509c26a8d99f8e556dd1ffb12cc2b"
+            }
+          ],
+          "global-g1a-unknowns-and-objections": [
+            {
+              "id": "silent-g1a-fixed-production-boundary",
+              "sha256": "abcdf3106b8597fc9dd265899ad5cb02553509c26a8d99f8e556dd1ffb12cc2b"
+            },
+            {
+              "id": "silent-double-boss-resource-handoff",
+              "sha256": "cc6d2758d72f736e19ff31bc303440929cc8d40e2e69f2d3ce0ebae9239ad5d2"
+            }
+          ]
+        },
+        "consumer_receipt": {
+          "path": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/paper/materials/20261016-global-build-g1a/validation/consumer-receipt.json",
+          "sha256": "f5e9d51ac128110bd8ce39bea9dd5beb6e5395003b0622da11c898dd801f168f"
+        },
+        "questions": [
+          {
+            "claim": "数量增加即可使Boss模型可信",
+            "finding": "三幕三个Boss数量已达标但质量闸失败；复用原THE_INSATIABLE新增样本后撤可信的反证。",
+            "evidence": [
+              "R366校准表",
+              "VNSXWCWXR3VW F33 attempt1 T1–7"
+            ],
+            "recommendation": "保持四闸，数量缺口与质量缺口分列，不承诺固定新增场数。",
+            "existing_entry_ids": [
+              "silent-0484",
+              "silent-0491"
+            ]
+          },
+          {
+            "claim": "将R366固定校准表用于当前生产可信度",
+            "finding": "原生产70项、本轮冻结生产71项输入指纹不同；没有生产模型重新校准证据。",
+            "evidence": [
+              "production-boundary.json",
+              "原R366 live-model-changes.json"
+            ],
+            "recommendation": "限定固定对象；当前生产可信度保持unknown，后续先冻结新对象。",
+            "existing_entry_ids": [
+              "silent-0491"
+            ]
+          },
+          {
+            "claim": "用旧double-boss曲线或平均出口HP表示联合胜率",
+            "finding": "旧四局0胜、8192模拟不是独立实战校准；六局存在开场资源变化，7S8已有后场SL胜。",
+            "evidence": [
+              "continuous-resource-contract.json",
+              "7S8HCC0M6G9W F48→49",
+              "64VJC5XT2AT2 F48→49"
+            ],
+            "recommendation": "使用实际端点和条件；联合率缺证保留unknown，通用接口交原watcher。",
+            "existing_entry_ids": [
+              "silent-double-boss-resource-handoff",
+              "silent-0228"
+            ]
+          }
+        ],
+        "scope": "仅本轮五项知识交付完成：已进入live并经固定消费者读回。双通知已实际追加，未代填watcher/Roy ACK；不关闭原校准、0332、通用连战接口、自然效果或global-build父要求。"
+      }
+    }
+  },
+  "original_075726_failed_report_unchanged": true,
+  "first_reply_not_inferred": true,
+  "scope": "Existing two slots, exact original owner/thread and frozen r1 input; current-version fixed probe only"
+}

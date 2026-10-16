@@ -1,0 +1,30 @@
+{
+ "logdb_manifest_sha256": "5ac7409e17a8f9809b1f218c1a81325ed7ff2511596f43685c800ec8f4d36118",
+ "exports": {
+  "runs-since-20261012": {
+   "sql": "SELECT r.*, c.commit AS cfg_commit FROM runs r LEFT JOIN (SELECT run_id,commit FROM run_config QUALIFY row_number() OVER (PARTITION BY run_id ORDER BY off)=1) c USING(run_id) WHERE r.character='SILENT' AND r.ascension=10 AND r.finished AND r.started >= TIMESTAMP '2026-10-12 00:00:00' ORDER BY r.started,r.run_id",
+   "sha256": "9f8ccabe6876235e8300034cb0d3541e0b81bf74f478bab757794efee6412b3c",
+   "rows": 80
+  },
+  "run_config": {
+   "sql": "SELECT * FROM run_config WHERE character='SILENT' AND ascension=10 ORDER BY off",
+   "sha256": "d7550349a9a28e5d574d046e0f02f2f670c52efb75f554f8af1350aa48d5789e",
+   "rows": 291
+  },
+  "fights": {
+   "sql": "SELECT * FROM fights WHERE character='SILENT' AND ascension=10 AND first_ts >= TIMESTAMP '2026-10-12 00:00:00' ORDER BY run_id,fight_no",
+   "sha256": "89c31c64cd66e348879560cf7161f8b112586e5a2d2b83edfe770f11bf121adc",
+   "rows": 1216
+  },
+  "floors": {
+   "sql": "SELECT * FROM floors WHERE ascension=10 AND first_ts >= TIMESTAMP '2026-10-12 00:00:00' ORDER BY run_id,floor",
+   "sha256": "4bb494896d253aa59b3d5158a9be486d119e51d7718ea1277194ad83da3c4ca9",
+   "rows": 2615
+  },
+  "sl_attempts": {
+   "sql": "SELECT * FROM sl_attempts WHERE ts >= TIMESTAMP '2026-10-12 00:00:00' ORDER BY run_id,ts,off",
+   "sha256": "2953d60c5f122837ba97f0f441ec3c3bc9798d65ae47a8766e0a2dd25bd697a0",
+   "rows": 488
+  }
+ }
+}

@@ -1,0 +1,68 @@
+{
+  "at": "2026-10-16 08:44:10 CST",
+  "actor": "ops",
+  "status": "received and independently read back",
+  "original_batch": "20261016-075726-strategy-proposal",
+  "request_id": "roy-20261016-global-build-g1a",
+  "revision": 1,
+  "original_state": "failed/blocked with rc0 retained",
+  "guard_predicates": {
+    "request_id": true,
+    "revision": true,
+    "character": true,
+    "kind": true,
+    "status": true,
+    "experience_version": false
+  },
+  "old_consumer_experience_version": "2026-10-16.g1a-r1",
+  "current_experience_version": "2026-10-16.2",
+  "five_required_objects": {
+    "silent-g1a-aeonglass-calibration-boundary": "bf95e0534e1d7d691dba202d6a3ba483bc0b6a48aba2a4e7d3cc0a63d50abe4d",
+    "silent-g1a-queen-calibration-boundary": "f497eaccb79dfe345d42a0d5ac09250162e1c127bac34c1a204ae6154354d75f",
+    "silent-g1a-test-subject-calibration-boundary": "ccd1f6ea53fce14d883083a9613e4234d9f5cbeb3e6b27311e72c57ac45233a1",
+    "silent-g1a-fixed-production-boundary": "abcdf3106b8597fc9dd265899ad5cb02553509c26a8d99f8e556dd1ffb12cc2b",
+    "silent-double-boss-resource-handoff": "cc6d2758d72f736e19ff31bc303440929cc8d40e2e69f2d3ce0ebae9239ad5d2"
+  },
+  "old_probe_all_five_artifacts_verified": true,
+  "original_blocked_notice_role_receipts": [
+    {
+      "stage": "ops_forwarded",
+      "actor": "ops",
+      "receipt": {
+        "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/learning-notices/receipts/dd77c5ff4823204fad9f6ae6.ops-forwarded.json",
+        "sha256": "8751a5b90f8d9ce322c6db6c249a9cd3640ae0a81711fd4fc48dd4a916042f96",
+        "at": 1792110621.4194784
+      }
+    },
+    {
+      "stage": "watcher_received",
+      "actor": "watcher",
+      "receipt": {
+        "path": "/home/dw/Projects/agent-sts2/paper/materials/20261016-global-build-g1a/watcher-notices/dd77c5ff4823204fad9f6ae6.watcher_received.receipt.json",
+        "sha256": "97adc2f4e2165ef40e57c9472edab858cf567ac6305aa2c45c29703dd45e3ff7",
+        "at": 1792111329.9792817
+      }
+    },
+    {
+      "stage": "roy_notified",
+      "actor": "watcher",
+      "receipt": {
+        "path": "/home/dw/Projects/agent-sts2/paper/materials/20261016-global-build-g1a/watcher-notices/dd77c5ff4823204fad9f6ae6.roy_notified.receipt.json",
+        "sha256": "c59fe009d7a9cbb42223559c4622b4ff7622695ef69318b89f99964091f144b6",
+        "at": 1792111330.197846
+      }
+    }
+  ],
+  "no_other_actor_ACK_calls": true,
+  "evidence": [
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/paper/materials/20261016-global-build-g1a/validation/consumer-receipt.json",
+      "sha256": "f5e9d51ac128110bd8ce39bea9dd5beb6e5395003b0622da11c898dd801f168f"
+    },
+    {
+      "path": "paper/materials/20261016-global-build-g1a/watcher-consumer-version-race.json",
+      "sha256": "6fd933fee7449678ba28f603d3c6611d37869ea5dd244bde1c04e1303aaa736d"
+    }
+  ],
+  "next": "Same original owner/thread current-version fixed probe only; retain old input/output/report/failed state. No new simulation, calibration, source full, model experiment or broader parent closure."
+}
