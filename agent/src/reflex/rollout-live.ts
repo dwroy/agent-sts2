@@ -632,7 +632,7 @@ export function noEffectTwin(plan: Plan, plans: Plan[]): Plan | null {
       .map((step) => `${step.cardId}|${step.cardIndex}|${step.target ?? "-"}`)
       .join(">");
   // The drink's cost is not an effect: the outcome without it (potionCost) is what must be the same.
-  const turn = (line: Plan): string => JSON.stringify({ ...line.outcome, potionCost: undefined });
+  const turn = (line: Plan): string => JSON.stringify({ ...line.outcome, potionCost: undefined, taintedGained: undefined });
   return plans.find((other) => other !== plan && !drinks(other) && cards(other) === cards(plan) && turn(other) === turn(plan)) ?? null;
 }
 

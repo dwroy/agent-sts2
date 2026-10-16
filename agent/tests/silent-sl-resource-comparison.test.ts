@@ -9,7 +9,10 @@ import { setMonsterDbForTests } from "../src/knowledge/monster-db.js";
 import { setMoveModelForTests } from "../src/knowledge/move-model.js";
 import { buildRunBrief } from "../src/memory/run-brief.js";
 import { createScreenMemory, type AskDecision, type DecisionEnv } from "../src/memory/types.js";
-import { planCombatTurn } from "../src/reflex/combat-plan.js";
+import { enemySims, planCombatTurn } from "../src/reflex/combat-plan.js";
+import { modelHandCard } from "../src/reflex/card-model.js";
+import { replaySteps, type SolverInput } from "../src/reflex/turn-solver.js";
+import { noEffectTwin } from "../src/reflex/rollout-live.js";
 import { silentSlResourceComparison } from "../src/reflex/silent-sl-resource-comparison.js";
 import { bossLinesOptions } from "../src/sim/boss-lines.js";
 import type { SlExploreEnv } from "../src/sl/explore.js";
@@ -129,4 +132,59 @@ it("records the deviation and later-turn avoidance in the same prediction scope"
   const avoidance = planner({ avoid: { point, tried: { canon: [], loose: [] }, attempts: [1, 2] } }).resolve(answer);
   expect(asRecord(asRecord(avoidance.log?.sl_explore).avoid).resource_comparison).toMatchObject({
     scope: "current_turn_prediction", original_stage: "after_plan_guards_before_sl" });
+});
+
+function prism() {
+  const raw = JSON.parse(readFileSync(new URL("./silent-sl-prism-resource-evidence.json", import.meta.url), "utf8")).board;
+  const knowledge = makeKnowledge({ cards: raw.run.deck.map((c: { card_id: string; card_type: string }) => ({ id: c.card_id, type: c.card_type })) }, "cache");
+  const player = raw.combat.player;
+  const input: SolverInput = {
+    hand: raw.combat.hand.map((c: { index: number }) => modelHandCard(c, c.index, knowledge, "silent", 10)),
+    player: { hp: player.current_hp, maxHp: player.max_hp, block: player.block, energy: player.energy,
+      weak: false, vulnerable: false, intangible: false },
+    enemies: enemySims(raw.combat, 10, "silent"), fightKind: "elite", turn: 2,
+  };
+  const sequence = (ids: string[]) => ids.map((id) => {
+    const c = input.hand.find((card) => card.cardId === id)!;
+    return { cardIndex: c.index, cardId: c.cardId, name: c.name, upgraded: c.upgraded, target: c.target === "single" ? 0 : null };
+  });
+  const original = replaySteps(input, sequence(["SLICE", "STRIKE_SILENT", "DEADLY_POISON", "MIRAGE"]))!;
+  const replacement = replaySteps(input, sequence(["MIRAGE", "SLICE", "STRIKE_SILENT"]))!;
+  return { raw, state: parseGameState(raw), original, replacement };
+}
+
+it("keeps the Prism's observed 5 HP / -7 damage / -7 Block / -3 Tainted / -7 poison costs under saturated deaths", () => {
+  const { state, original, replacement } = prism();
+  expect(original.outcome).toMatchObject({ hpLoss: 3, damageDealt: 30, blockGained: 11, taintedGained: 6,
+    enemyHpAfter: [{ hp: 121, poison: 10 }] });
+  expect(replacement.outcome).toMatchObject({ hpLoss: 8, damageDealt: 23, blockGained: 4, taintedGained: 3,
+    enemyHpAfter: [{ hp: 128, poison: 3 }] });
+  const before = JSON.stringify([original, replacement]);
+  const record = asRecord(silentSlResourceComparison(state, original, replacement, { ...noMedians, saturated: true }).resource_comparison);
+  expect(record).toMatchObject({ rollout_saturated: true, observed_tainted_before_plays: 0,
+    original: { tainted_gained_during_plays: 6, enemy_poison_after_turn: { "0": 10 }, execution: "unverified" },
+    replacement: { tainted_gained_during_plays: 3, enemy_poison_after_turn: { "0": 3 }, execution: "unverified" },
+    delta: { hp_loss: 5, damage_dealt: -7, block_gained: -7, tainted_gained_during_plays: -3, enemy_poison_after_turn: { "0": -7 } } });
+  expect(JSON.stringify([original, replacement])).toBe(before);
+});
+
+it("keeps missing Tainted/poison forecasts and sampled medians unknown, and never interprets existing Tainted as newly gained", () => {
+  const { raw, original, replacement } = prism();
+  raw.combat.player.powers.push({ power_id: "TAINTED_POWER", amount: 3 });
+  const observed = parseGameState(raw);
+  const record = asRecord(silentSlResourceComparison(observed, original, replacement, { ...noMedians, saturated: false }).resource_comparison);
+  expect(record).toMatchObject({ rollout_saturated: false, observed_tainted_before_plays: 3,
+    original: { tainted_gained_during_plays: 6 }, delta: { tainted_gained_during_plays: -3 } });
+  const missing = comparison(line(0, 0), line(0, 0));
+  expect(missing).toMatchObject({ rollout_saturated: null, original: { tainted_gained_during_plays: null, enemy_poison_after_turn: null },
+    delta: { tainted_gained_during_plays: null, enemy_poison_after_turn: null } });
+  const median = asRecord(silentSlResourceComparison(observed, original, replacement, { original: false, replacement: true, saturated: true }).resource_comparison);
+  expect(median).toMatchObject({ delta: { tainted_gained_during_plays: null, enemy_poison_after_turn: null } });
+});
+
+it("keeps an audit annotation out of the existing no-effect potion equivalence", () => {
+  const { original } = prism();
+  const annotated = { ...original, steps: [...original.steps, { cardId: "POTION:FIXED_AUDIT:0", cardIndex: 99, name: "fixed audit marker", upgraded: false, target: null }],
+    outcome: { ...original.outcome, taintedGained: 123 } };
+  expect(noEffectTwin(annotated, [original, annotated])).toBe(original);
 });
