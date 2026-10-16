@@ -168,6 +168,8 @@ export interface SlCompute {
 
 export interface ScreenMemory {
   screen: string;
+  /** Run-scoped G2 shadow observations; never inserted into a decision question before admission. */
+  globalBuildHistory?: import("../sim/global-build-observer.js").GlobalBuildHistory;
   /** True once the shop inventory has been opened during this visit. */
   shopOpened: boolean;
   /** When combat was first seen with no living enemy (multi-phase boss between phases). */
