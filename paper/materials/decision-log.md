@@ -3616,3 +3616,5 @@
 
 - 2026-10-16 10:15:42 CST 运维codex处理1001复盘终局：20261016-094302/FGKZALWSTQQ1实际done0，原生gpt-6.1-sol/xhigh、原任务/线程及沙箱权限核；无新纯bug，不新增修复队列。18,000字节复盘追加恰一次、旧物理前缀及983原日志行offset/bytes/SHA/JSON已核；八旧经验support、八提案追溯共16条原CLI，私有fold旧claim/首证/prior/状态/版本及evidence/history/where前缀保留。三提案ac0e2ad8d92a8540/c66d0a84748e3b0b/f0b32cbaabab1fc4原add登记及指纹核，沿原自动策略链，不重复登记或派发；护栏行号补注与原提案字节均存。原学习者的F30猎人杀手末试T3死亡、前三试SL退出缺帧、护栏省血仅预测、赠礼不可用根因/完整替线/真实账单/dirty完整输入未知均保留，不从失败加新规则；本局原298e74f+dirty不充815582接口自然验收。
   唯一nice19 paper_dataset --no-raw PID2267440实际exit0，cut2026-10-16T02:06:33.944Z、805局，五一致性及keyscan CLEAN；本局461决策/has_postmortem1/27成功Codex已入表，旧表先备份，原计数告警、组件独立cut估计非账单保持。仅提交本轮记录、该复盘、16所属CLI与实际生成表，保留并行记录/index；未改源码/live/版本/对局/账号home模型prompt，不加检查/模拟/研究或行为号。G1a自然消费仍归原watcher审计，S仍Roy待决，0332/生产校准/全局宽父不关。证据paper/materials/20261016-1001-ops/。
+
+- 2026-10-16 10:16:34 CST watcher原global-build等待门槛：G1独立准备/局末审计脚本已main89dbf8c25，四个连续原生目标轮次均仍缺Roy必需S决定，引用逐offset/SHA核；G2依赖不越过，登记blocked停止自动空转而非完成。原FD8单次前台终局监听94583继续，未新模型/研究/模拟/full/游戏轮询；自然验收、G2→G3→G5及0332/宽父完整保留。证据control/required-decision-blocked-readback.json。

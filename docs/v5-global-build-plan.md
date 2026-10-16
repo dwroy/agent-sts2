@@ -163,3 +163,6 @@ watcher本人已读原075726 fallback815582终局及ops closure：tsc/vitest0，
 新自然FD8NZAHU7SNY于09:43:34.983启动，code0e7998b含接口，PID2036739/birth100696238；启动原件、8生成知识JSON+2notes dirty清单和原codex1 home/auth链接及目标inode/ctime元数据已冻结，未读凭据内容。当前Sol6.1/xhigh/codex1启动绑定可核，逐native全窗口、真实continuous端点传递、health与耗时仍待终局，不把启动候选当通过。八JSON原字节逐SHA存档，ctime均早于开局。三叶monster-records/common monster-db/move-model的mtime在宿主Vitest末段；mtime不证明实际测试读取，六源码相同也不推导全库输入不变。ops本人已用原执行器/固定fixture和12项原日志说明部分显式synthetic输入，整491文件实际读取字节/时刻仍unknown；保canonical rc0，不称FD8 dirty全树已检或生产重校准，不申请新full/probe。边界双方真实回执见G1a/interface-watcher-runtime-boundary-readback.json。
 
 原owner仅启动一次前台终局日志监听session94583/worker2183344（读runs.jsonl，到FD8终局退出），启动回执和每日志下界已留；无分钟查局、定时器/新模型或游戏调用，不重复监听或重启对局。G1a自然仍0；G1c/G4/知识窄交付完成，G1b S决定仍Roy待回，G2→G3→G5依赖、总父与0332宽父保持。
+
+
+2026-10-16 10:16:34 CST 停点：原生四个连续目标轮次的最终回报均明确S仍待Roy决定，已本人按offset/bytes/SHA读回。G1独立准备及局末审计脚本已完成并合main89dbf8c25；G2按本计划仍依赖G1a自然验收与G1b必需决定，不越过。为遵守credits限制，目标登记blocked以停止自动空转，未标完成；原FD8前台终局监听94583保持，不新轮询/调度器/模型。原生决定或既有终局/关键Boss事件到达后沿同owner/父继续可推进部分，完整G2→G3→G5/最终论文范围保持。证据control/required-decision-blocked-readback.json及G1a/natural-audit-readiness.json。
