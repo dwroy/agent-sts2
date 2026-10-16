@@ -2737,3 +2737,5 @@ selector于2026-10-15 13:15:58 CST从/home/dw/.codex-brain原子改为/home/dw/P
 - 2026-10-17 00:19:46 CST 运维codex实收0009两事件：N9GKED3PMEV3复盘已核入表（1187决策、F48负局），无新纯bug；六原账本行为0019一support、0009/0079两repeat及三提案链接，既有链继续，保规则与受控后继未知。旧版本引用仅追加勘误，原文不改。000038修复批无源码/提交/合入阻塞，原tsc0与5项定向0只覆盖该固定文件，canonical failed/rc0因精确源闸不满足的历史保持，不冒全套或根修复。论文唯一刷新exit0、五一致性及keyscan通过；0332根缺口/原owner、live R374及现有每10局固定漏斗保持，无重复学习/测试或新发布。证据paper/materials/20261017-0009-ops/postmortem-readback.json、fix-batch-readback.json、paper-snapshot-readback.json。
 
 - 2026-10-17 00:24:51 CST 运维codex实收000038主/s2策略：20原项均waiting，原WT干净、无源码或待合补丁；47原账本行只追加追溯，claim/证据/状态/版本保持。已有窄实现不等于完整候选、联合资源或受控后继闭合；新截点与旧局封套一致，不增加独立样本。无新异议/待Roy决定项，不重复派学习、测试或论文刷新，live R374与原owner宽父保持。证据paper/materials/20261017-0020-ops/strategy-readback.json。
+
+- 2026-10-17 00:29:18 CST 运维codex核001301策略：十项waiting，WT干净、无源码或合入阻塞；32原账本行仅补追溯，claim/证据/状态/版本不变。原日志预算与执行缺口保留，不用局部死亡或候选差额拟新规则；无新异议/待Roy决定项，不重复派发、测试、编号或论文刷新，live R374和各原owner宽父保持。证据paper/materials/20261017-0025-ops/batch-readback.json。
