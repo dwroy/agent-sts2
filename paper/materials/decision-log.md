@@ -3983,3 +3983,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-17 04:52:14 CST 运维codex补记0441原通道补验终局：tsc0/Herdr原题0，eval及药水原题仍超时，supplement1与原full1各保；决定保R376并将两未完成验证留下一现有普通fix槽，原034302在跑不热改/复派。原保留时限/断言/覆盖，不冒完整0或开启再次补验。回收原owner2159733在独立核查期间自然退出，无信号；原pending随后单次正常取得锁，正在按原archive/SHA读回流程回收已发布旧经验提取副本，不越锁/删原日志。前一批59原追溯记录已mainc0e6024，下一记录仅追加本真实终局及容量结果。
 
 - 2026-10-17 05:00:18 CST 运维codex完成0441容量接续：原maintenance owner2159733自然退出后单次按同原锁/归档读回流程执行有界回收；6个已发布/完整host0且本角色经验入库已核旧批1179包提取副本，每包归档SHA和原报告/原生流保留再核，净减5.58GiB、现余5.14GiB，未完/缺报告证明样本保留。4个已完成普通fix的原Git历史cache thin均already_thin/额外0，未删任何checkout或原日志/经验账本/原生流，未碰外仓/home/tmp或杀owner。前序pending/临界原记录保留，最新retention控制回执completed，不建立新清理管线/模型；原0332/其他宽父及R376、两个未完超时验证的普通fix pending保持。仅补终局记录，59批次追溯已mainc0e6024，本提交不重复追加账本。证据paper/materials/20261017-0441-ops/。
+
+- 2026-10-17 05:03:40 CST 运维codex处理0501补验完成事件：原021302精确树67da9b35的原回执44189163逐JSON及log/选中报告SHA核，与已提交0441终局完全一致；原完整full1/定向1及Herdr通过、eval/药水两项超时各保。延续保V5-R376/现有普通fix槽pending处置，未称派发或实收，未重测/复派/回滚/重复账本/刷新论文；原canonical失败历史、源WT和0332/所有宽父保持。仅事件去重读回，证据paper/materials/20261017-0501-ops/event-dedup-readback.json。
