@@ -2603,3 +2603,5 @@ selector于2026-10-15 13:15:58 CST从/home/dw/.codex-brain原子改为/home/dw/P
   现有整组admission/adapter按horizon等键，无锚点层数/剩余窗口限制，直接advisory会外推到未核更早窗口——这是原watcher此次已核的具体边界，不是新统计阈值或机制反证。当前保shadow，不建construction-calibration.json、不改配置或派实现/模型/实验/full。待Roy/Claude决定是否接受整组外推；若需窗口限制或补证，另行明确派活，本次报告后停。原报告及ops-publication-request在paper/materials/20261016-global-build-g3b/，本ops实收回执ops-score-received/ops-score-receipt.json。不代Roy ACK，不关闭0332或任何宽父。
 
 - 2026-10-16 15:50:35 CST [ops 154302 fix处置] 已核无新源码/提交或合入阻塞；388相关文件与前批同SHA、80旧修复均为base/live祖先。生产tsc/vitest未运行（null/cases0），不重检/造版本，原canonical failed/rc0/mergednull保持。0332/0365等原链及G3b shadow/外推待决保持，无重复派发或live改动。证据paper/materials/20261016-1549-ops/fix-readback.json。
+
+- 2026-10-16 15:55:54 CST [ops 154302策略处置] 十项均waiting，无源码或合入阻塞，生产测试三项null；26条原CLI仅追溯追加，受保护旧知识/状态保持。原证据不足、失败与宽父保留，不造版本/补测或重复派发；live不动。回执paper/materials/20261016-1554-ops/batch-readback.json。
