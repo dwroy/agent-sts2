@@ -1105,6 +1105,15 @@ function sandpitOf(living: Record<string, unknown>[], names: string[]): { name: 
 }
 
 export function judgeEndTurn(state: GameState, context: JudgeContext): DeathVerdict {
+  return judgeEndTurnWithScope(state, context, false);
+}
+
+/** Ending now is one option, not proof that every remaining card/potion choice dies. */
+export function judgeCurrentEndTurn(state: GameState, context: JudgeContext): DeathVerdict {
+  return judgeEndTurnWithScope(state, context, true);
+}
+
+function judgeEndTurnWithScope(state: GameState, context: JudgeContext, currentOnly: boolean): DeathVerdict {
   const combat = asRecord(state.raw["combat"]);
   const player = asRecord(combat["player"]);
   const run = asRecord(state.raw["run"]);
@@ -1459,6 +1468,8 @@ export function judgeEndTurn(state: GameState, context: JudgeContext): DeathVerd
   }
   const blastNote = blast ? ` (${blast.name}'s blast: the husk explodes for ${blast.damage} as the turn ends, after the end-of-turn block)` : "";
   const lethal = `${bySandpit ? `${sandpitText} (our count lives: ` : ""}${incoming} incoming${blastNote}${byHeld ? ` + ${heldText}${combat["end_turn_will_kill_player"] !== true ? " (the mod does not count them)" : ""}` : ""} vs ${hp} HP + ${block} block + ${endBlock} end-of-turn block${regen > 0 ? ` + ${regen} Regen` : ""}${exactly ? ` (${relicText})` : ""}${byStart ? `, ${startText}` : ""}${bySandpit ? ")" : ""}${endNote}${reviveNote}`;
+  // Keep every existing uncertainty guard above; only the availability tier differs for this option.
+  if (currentOnly) return verdict(true, "rules", `ending now; ${lethal}`);
   if (playable.length === 0 && drinkable.length === 0) return verdict(true, "rules", `nothing left to play or drink; ${lethal}`);
   if (context.label === LEAST_LOSS_LABEL) {
     // A revive held: the planner's lines spend it in its one order of the losses (turn-solver reviveThrough: the held cards'
