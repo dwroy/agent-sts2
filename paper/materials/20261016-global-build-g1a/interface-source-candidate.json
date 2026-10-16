@@ -1,0 +1,60 @@
+{
+  "at": "2026-10-16T09:22:03.623467+08:00",
+  "parent": "roy-20261016-global-build",
+  "phase": "G1a interface",
+  "owner_session": "01a13dcd-83d4-7c63-b233-f93cf878ecf4",
+  "worktree": ".worktrees/global-build-g1a-interface-20261016",
+  "source_commit": null,
+  "source_status": "six leaves staged; awaiting original ops check-failure disposition before source commit",
+  "base": "6476cb0d9c0d73785b0894184d793a80cb145467",
+  "staged_tree": "a602689590f05aba144dacc51dfaa0f312edd393",
+  "files": {
+    "agent/src/sim/continuous-boss-result.ts": "29ee6ece9d6d0b219a83d700ad320f4d4d1bcda5a7c9de040d096d6ba427ec79",
+    "agent/src/sim/boss-sim.ts": "e392cfd675fe877a359fed8d3d54fbe637fa7465471a8bb5e63d409863a4a663",
+    "agent/src/sim/build-sim.ts": "d62e466432b5c36e85313058ac862ffca92981f8529373cd31483bed4a99b407",
+    "agent/src/sim/build-sim-facts.ts": "c634b2229334feeb17f059a47d5aac8a6fd4abdd6e28e58aa5df6238e13b16e5",
+    "agent/src/sim/boss-lines.ts": "8e953ae7511e23bbe15c2035858c246e476110031a9d3a5c265d0952e2197be5",
+    "agent/tests/silent-double-boss.test.ts": "5d9a9523081870b699e94c8c1a408513a9c01916814edd7cb3681d8d505320e8"
+  },
+  "patch": "interface-validation/source.patch",
+  "patch_sha256": "2ca07a645c8e1f8e13a79345c00f8507c3a77bc1f34dae55e6501ad37b2be621",
+  "checks": {
+    "tsc": 0,
+    "focused_fixed": {
+      "rc": 0,
+      "passed": 12
+    },
+    "full": {
+      "rc": 1,
+      "files_passed": 490,
+      "files_failed": 1,
+      "tests_passed": 4927,
+      "tests_failed": 1,
+      "tests_skipped": 2,
+      "seconds": 1386.49,
+      "log_sha256": "afb230a41990117a627a01d254a07eaf0e6ec76778b44229e6a35ec1e29345ca"
+    },
+    "single_failed_fixed_case_supplement": {
+      "rc": 0,
+      "tests_passed": 1,
+      "tests_skipped": 30,
+      "log_sha256": "cc2aa85e0df0834da52b09f4b9116fd8f63568d3962f6be4ebad06f37834787b"
+    },
+    "failure": "unchanged brain-codex router abort evidence max_gap_ms356 <500; full stops before later stderr/redaction asserts, supplement covers complete case",
+    "brain_test_sha256": "36b6ab8ae87bf19dd0544199afe2747516e21d5de17a092b96f8ed39bdb31fb9",
+    "source_unchanged_after_full_and_supplement": true,
+    "assertions_or_timeouts_changed": false,
+    "source_gitleaks_rc": 0
+  },
+  "integration_preview": "interface-validation/integration-preview.json",
+  "behavior": "logs only; same sampling/ranking/question payload and C1/C2 exits; unknown unobserved resources/calibration/S",
+  "new_behavior_id_needed": false,
+  "knowledge_releases_preserved": [
+    "V5-R367",
+    "V5-R368"
+  ],
+  "natural_gate": false,
+  "model_calls": 0,
+  "game_actions": 0,
+  "main_live_mutations_by_this_packet": false
+}

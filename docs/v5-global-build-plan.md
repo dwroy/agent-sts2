@@ -137,3 +137,20 @@ G4同owner083055实际live固定消费者原件96文件已精确归档（learner
 ### 2026-10-16 09:17:27 CST G1a知识原owner完成、工程门槛保持
 
 原090514已同thread完成，仅复用ops真实当前5/5回执及五对象，不重做探针/研究/模拟/full。watcher完整读completion/verification、重核原始native context Sol6.1/xhigh及所有SHA/生产src无差，10原件精确归档learner-technical-closure-r1.tar.gz。新增交付c6b11205b8914ac254145bd9本人两个CLI0，原要求程序completed；不代Roy ACK。知识验收见G1a/knowledge-phase-acceptance.json。通用接口及新自然消费者仍active；原ops723482独立full已真实RUN，新接口自身full26653继续，已观察一个brain router timeout固定case失败，终局/断言证据待全检结束，不先称通过、不改测试/时限。新原件扫描的唯一generic-api-key命中已核为protected-artifacts-before中secret-scan-receipt.json文件的真实SHA值，原扫描rc1保留，仅该fingerprint例外复扫0；不打印或更改凭据。G4窄阶段完成、G1c部署归档已核，S待Roy仍不越G2依赖，原0332/宽父不关。
+
+
+### 2026-10-16 09:23:07 CST G1a接口新源full真实终局与窄补验
+
+新接口六叶staged tree a602689590f05aba144dacc51dfaa0f312edd393（base6476，尚未源提交）：tsc0、12固定题通过；全量491文件490过/1失败，4927测试过/1失败/2跳，1386.49s，原full rc1保留。唯一brain-codex router abort evidence题max_gap_ms356<原500ms，前置trace断言通过、后置脱敏断言该full未执行；只补同一原题1过30跳rc0，4.19s覆盖完整断言，六叶及原测试SHA/断言/1500ms限时均未改。不重未变源full或源模拟，不称full0。完整候选source-candidate与log/SHA及已有自然验收预登记交原ops，实际herdr transport0，接收/明确失败处置待其本人；接受后原WT源提交并由原ops持锁窄合，不抢原723482 host，不借旧树绿。接口仅日志，不改行为/编号或S。G1a知识要求/G4完成是既有窄交付；接口新自然0、总父及0332宽父保持，S决定仍待Roy。
+
+
+### 2026-10-16 09:24:16 CST G1c精确组合宿主完成
+
+原075726唯一fallback已真实终局rc0，live ef4b07a64db0fb76eea7990b768fb8d3be47a4b4/tree72348224953659783286d3d75039772bed56a94c，491文件4925测试过2跳/783.87s；原batch failed历史保持，本人只读取独立fallback结果与原log。G1c五源叶与该精确树逐SHA相同，既有真实部署、初始40局归档/尾2、manifest/state/唯一marker及根局末hook已核，G1c范围完成，见G1c/phase-acceptance.json。未来第50局自动事件未观察，不改称已执行；不重调用helper/report.py或借该绿给尚未集成的新接口。G1a知识/G4窄交付完成；新接口原full1+仅失败原题补验0仍交ops明确处置，S仍待Roy，G2–G5后续范围及全局/0332父保持。
+
+
+### 2026-10-16 09:33:56 CST G1a接口源提交与实际main/live窄集成
+
+原ops本人明确接受未变源单题补验，实际处置interface-ops-source-disposition.json；watcher才在原WT仅六叶提交bca06096b08b1e9bf0e11fda3e1f87fe4d83ec07/treea602，原full1不改。原ops持锁窄合main72e1d25ed016d6193f293b7a5f57c4f9eee78fa6/live0e7998bfa8df267dcf8835a57949bdb982c9feb0/tree815582403e14d7c501724fc5d8ee416b82beb3bf，源均真实祖先；本人两边工作副本/已发布叶24次SHA核同、差分均仅六叶，知识/config/版本和并行dirty保持，无新行为号。新815582完整host沿原075726唯一通道RUN，PID1871154/birth100604903本人09:32确认活跃，未给终局、未借723482/adb0绿。
+
+仅在此实际发布关键事件读最新原run-config：FGKZALWSTQQ1于08:56:22启动、code298e74fd（9dirty均旧记录已保存），不含新接口，明确排除，不重启或热改。新自然消费门槛仍0；随后只在真实下一自然启动/关键Boss/局末核源与资源消费及health。G1c已实际归档40/尾2与精确723482 full0而范围完成；G4和G1a知识窄要求完成；G1b S决定仍Roy待回，G2/G3/G5不越依赖，总父及0332宽父保持。
