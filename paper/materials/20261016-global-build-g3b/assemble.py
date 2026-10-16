@@ -81,6 +81,13 @@ def main():
             key = (item['source']['off'], item['option'], p['core'], p['metric'])
             label = labels.get(key)
             disposition = label.get('disposition', 'unverified') if label else 'unverified'
+            default_reason = 'No matched original-learner outcome supplied'
+            if not label and item['preparation_gaps']:
+                disposition = 'missing_binding'
+                default_reason = 'Original forecast binding incomplete; metadata exclusion, no gameplay outcome inferred'
+            elif not label and p['value'] is None:
+                disposition = 'unknown_probability'
+                default_reason = 'Original logged probability is null; not replaced with component possession or survival'
             o = {}
             if label:
                 used.add(key)
@@ -105,7 +112,8 @@ def main():
             normalized = {'prediction': p, 'outcome': o}
             output.write(json.dumps(normalized, ensure_ascii=False, separators=(',', ':')) + '\n')
             ledger.write(json.dumps({'row': index, 'key': key, 'group': group_key(p), 'disposition': disposition,
-                                     'preparation_gaps': item['preparation_gaps'], 'reason': label.get('reason') if label else 'No matched original-learner outcome supplied'},
+                                     'preparation_gaps': item['preparation_gaps'], 'reason': label.get('reason') if label else default_reason,
+                                     'verification_ref': label.get('verification_ref') if label else None},
                                     ensure_ascii=False, separators=(',', ':')) + '\n')
             totals['forecast_rows'] += 1
             dispositions[disposition] += 1
@@ -122,6 +130,10 @@ def main():
     assert run.returncode == 0, run.stderr
     report = json.loads((out / 'evaluator-report.json').read_bytes())
     assert report['input_sha256'] == digest(input_path)
+    archive = out / 'matched-input.jsonl.gz'
+    with input_path.open('rb') as source, archive.open('wb') as raw_archive, gzip.GzipFile(fileobj=raw_archive, mode='wb', mtime=0) as compressed:
+        while chunk := source.read(1024 * 1024):
+            compressed.write(chunk)
     scored = {group_key(row): row for row in report['groups']}
     excluded = {row['row']: row['reason'] for row in report['excluded']}
     exclusion_reasons = collections.defaultdict(collections.Counter)
@@ -162,6 +174,7 @@ def main():
                      'failures': failures, 'missing_data_limit': 'Minimum count deficit only; further data cannot guarantee both outcome classes or performance gates.'})
     result = {'at': dt.datetime.now(dt.timezone.utc).isoformat(), 'schema': 'g3b-admission-audit-v1',
               'input_manifest_sha256': current_manifest, 'matched_input_sha256': report['input_sha256'],
+              'matched_input_gzip_sha256': digest(archive),
               'learner_label_manifest_sha256': label_manifest,
               'prefix_rows_with_only_missing_binding_metadata': metadata_only_prefix_rows,
               'old_learner_delivery_not_rewritten': True,

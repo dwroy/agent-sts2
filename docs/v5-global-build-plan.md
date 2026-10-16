@@ -212,3 +212,14 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 
 
 2026-10-16 14:16 CST 原G2一测试叶必要修复已实际main416e999e/livea9e687d9/treea55384c7，source5bc8f025f祖先及唯一叶f173e3c8本人核同；生产/知识/配置/R369R370/原断言时限保持，无新行为号。原131302唯一新宿主14:14:52 RUN/PID649303，结果待原事件，不借任何旧绿。更正原9e105统计表述：其wrapper独立tsc状态未持久化，只保无诊断前缀及整体full1，早先推导tsc0不作独立通过证据；新修复源明确tsc0/原12题0另行保留。旧full1及原本题后置断言未执行边界保持，材料G2/host-loadavg-fixture-fix/watcher-publication-readback.json。G3b同原owner真实后继核验继续，未热改输入或开其他阶段。
+
+
+2026-10-16 14:41:11 CST 原G2精确宿主与本轮必要夹具修复闭环：原131302 fallback livea9e687d9/treea55384c7整体rc0，497文件4969过2跳/916.35s、logSHA734e5a45f125a74dc77b166c5ce18e314863300f71645851705d215e54b79d4d本人核。aggregate0按原wrapper逻辑推出a(tsc)/b(Vitest)均0，未伪造独立命令日志；原9e105 full1/其未单存tsc及canonical源failed-rc0历史保持。R369/R370与知识/生产源码不动，不新编号或重跑，不将此当G2/G1a自然、生产校准、0332/宽父完成。
+G3b范围原因已补确证scope-query-diagnosis.json：watcher初版用TIMESTAMPTZ常量比较UTC-naive TIMESTAMP列，Asia/Shanghai隐式转换使筛选晚8h；属本人的输入准备错误，并非已证索引缺数/生产bug。旧未知原因/首版及失败原件保留，权威r2原JSONL全集/原13:43:17截点和原绑定预测/门槛不变，不重核已核窗口或另派调查。当前原量化1371锚点后继核验已写数据，在整理正式报告，尚未评分或发布通过文件。
+
+
+### 2026-10-16 15:40:24 CST G3b评分交付与advisory窗口边界
+
+原量化135539限定证据已本人读回，原81产物SHA归档与ops12222原引用核验保持，旧canonical failed/rc0/mergednull不改；r2机械补前缀无新结局。权威47局1584锚点167952展开中184实际匹配，未改eval/construction.py只跑一次rc0；12可评分conditionalSignature组里Silent A10 P/F17（23独立局、Brier0/基线0.076389）、P/F33（14局、0/0.214844）、D/F33（14局、0/0.152344）过原统计线，bias均0；其余9组不通过，F48每核心最低还缺5合格独立局，R/S等还缺正类及Brier增益。96库存组/缺口完整见G3b/report.md、groups.csv，持有/真实施放/存活/整局结果另列observations.csv，signature不升格核心功能。
+
+实际支持仅F16/F32/F47且全部policy.choices_checked=0、概率0/1。现有admission.ts/adapter.ts没有锚点或剩余机会窗口准入维度，直接整组advisory会外推到未核更早楼层。原统计线与3pass不改，报告及三个精确组已向原ops真实发送rc0（非本人接收ACK）；建议保shadow，请Roy/Claude决定是否接受外推，或另派窗口隔离/前瞻补证，本轮不实现或补样本。未创建construction-calibration.json或改线上配置/编号；后续若决定发布，仍原ops单独行为号/双通知/精确树宿主。原G2 a55384宿主0/一测试叶修复闭环与9e105 full1分别保持，无新full/观察器/模型/goal，不推进G2自然/on、G3a/G3c/G5或关闭0332/量化/其他宽父。

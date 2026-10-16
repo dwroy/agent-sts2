@@ -1,0 +1,347 @@
+"""Deterministic forensic joins of frozen actions, routes and inventory. No forecasting/evaluator."""
+import bisect,collections,datetime as dt,gzip,hashlib,json,re,subprocess
+from pathlib import Path
+ROOT=Path('/home/dw/Projects/agent-sts2');B=ROOT/'paper/materials/20261016-global-build-g3b';O=Path(__file__).resolve().parent
+M=json.loads((B/'inputs/manifest.json').read_text());CUT=dt.datetime.fromisoformat(M['at']).timestamp()
+DISPATCH_SHA='090156079b1e5da5efe292c5be3249cd4a517bd933be9865b1b39983422248de'
+def jload(p):return json.loads(Path(p).read_text())
+def readgz(p):
+ with gzip.open(p,'rt') as f:return [json.loads(l) for l in f]
+def dump(n,x):(O/n).write_text(json.dumps(x,ensure_ascii=False,indent=2)+'\n')
+def tm(x):
+ try:return dt.datetime.fromisoformat(x.replace('Z','+00:00')).timestamp()
+ except (TypeError,ValueError,AttributeError):return None
+def enc(x):return json.dumps(x,ensure_ascii=False,separators=(',',':'))+'\n'
+def inv(s):return collections.Counter((x['id'],bool(x['upgraded'])) for x in s.get('deck',[]))
+def shortref(x):return x['source'] if x else None
+used={}
+def refs(*xs):
+ out=[]
+ for x in xs:
+  if not x:continue
+  r=x.get('source',x)
+  if all(k in r for k in ['path','off','len','sha256']):used[(r['path'],r['off'])]=r;out.append(r)
+ return list({(r['path'],r['off']):r for r in out}.values())
+H=jload(O/'historical-source-manifest.json');templates_by_commit={}
+for h in H:
+ if h['source_path'].endswith('/construction-templates.json'):
+  v=jload(h['saved_copy'])['templates'];digest=hashlib.sha256(json.dumps(v,ensure_ascii=False,separators=(',',':')).encode()).hexdigest();templates_by_commit[h['commit']]=(v,digest)
+assert len({x[1] for x in templates_by_commit.values()})==1
+cores={x['id']:x for x in next(iter(templates_by_commit.values()))[0]}
+def missing(s,core):
+ answer=[]
+ for r in core['requirements']:
+  found=[]
+  for x in s['deck']:
+   if any(t['kind']=='card' and t['id']==x['id'] and (not t.get('upgraded') or x['upgraded']) for t in r['any']):found.append('card:'+x['id'])
+  for rid in s.get('relics',[]):
+   if any(t['kind']=='relic' and t['id']==rid for t in r['any']):found.append('relic:'+rid)
+  n=len(set(found)) if r.get('distinct') else len(found);gap=max(0,r['count']-n)
+  if gap:answer.append({'id':r['id'],'count':gap})
+ return answer
+def distance(s,core):return sum(x['count'] for x in missing(s,core))
+A=readgz(B/'inputs/construction-records.jsonl.gz');assert len(A)==1371
+D=readgz(O/'decisions-summary.jsonl.gz');S=readgz(O/'states-summary.jsonl.gz');BRA=readgz(O/'brain-summary.jsonl.gz')
+dbyoff={x['source']['off']:x for x in D};assert {a['_source']['off'] for a in A}<=set(dbyoff)
+sbyrun=collections.defaultdict(list);byfp=collections.defaultdict(list);dbyrun=collections.defaultdict(list);bby=collections.defaultdict(list)
+for x in S:
+ x['_t']=tm(x['observed_at']);assert x['_t'] is None or x['_t']<=CUT
+ if x['_t'] is not None:sbyrun[x['run']].append(x);byfp[(x['run'],x['fingerprint'])].append(x)
+for a in sbyrun.values():a.sort(key=lambda x:(x['_t'],x['source']['off']))
+for x in D:x['_t']=tm(x['ts']);dbyrun[x['run_id']].append(x)
+for a in dbyrun.values():a.sort(key=lambda x:(x['_t'],x['source']['off']))
+for x in BRA:x['_t']=tm(x['ts']);bby[(x['run_id'],x['label'])].append(x)
+for name,path in [('runs','runs.json'),('sl','sl-attempts.json')]:
+ data=jload(B/'inputs'/path)
+ for x in data:x['source']={'path':M['source_bounds']['runs' if name=='runs' else 'sl-attempts']['path'],**x['_source']}
+ if name=='runs':RUN={x['row']['run_id']:x for x in data}
+ else:SL=data
+CONFIG=jload(B/'inputs/run-config.json')
+for z in CONFIG:z['source']={'path':M['source_bounds']['run-config']['path'],**z['_source']}
+slbyrun=collections.defaultdict(list)
+for x in SL:slbyrun[x['row']['run_id']].append(x)
+rawcache={}
+def raw_state(s):
+ off=s['source']['off']
+ if off not in rawcache:
+  r=s['source'];bound=M['source_bounds']['states'];assert r['off']+r['len']<=bound['complete_prefix_bytes']
+  with (ROOT/r['path']).open('rb') as f:f.seek(r['off']);raw=f.read(r['len'])
+  assert hashlib.sha256(raw).hexdigest()==r['sha256'];rawcache[off]=json.loads(raw)['state']
+ return rawcache[off]
+def before(d,limit=None):
+ limit=limit if limit is not None else d['_t'];a=[s for s in byfp[(d['run_id'],d.get('fingerprint'))] if s['_t']<=limit]
+ return max(a,key=lambda s:(s['_t'],s['source']['off'])) if a else None
+def post(d,pre):
+ if not pre:return None
+ for x in sbyrun[d['run_id']]:
+  if x['_t']>d['_t'] and x['floor']==d['floor'] and x['fingerprint']!=d['fingerprint']:return x
+ return None
+def accepted(d):
+ choice=(d.get('deepseek') or {}).get('choice');found=[b for b in bby[(d['run_id'],d['label'])] if b.get('accepted') is True and abs(b['_t']-d['_t'])<5 and (b.get('answer') or {}).get('choice')==choice]
+ return found[0] if len(found)==1 else None
+initial={};events={}
+def event(d):
+ if d['source']['off'] in events:return events[d['source']['off']]
+ pre=before(d);after=post(d,pre);act=(d.get('chosen') or {});kind=act.get('action');idx=act.get('option_index');e={'source':d['source'],'run':d['run_id'],'floor':d['floor'],'t':d['_t'],'kind':kind,'before':pre,'after':after,'target':None,'offers':None,'price':None,'reason':None,'completed':str(d.get('result','')).startswith('completed:')}
+ if pre and kind in ['choose_reward_card','skip_reward_cards','buy_card']:
+  raw=raw_state(pre);field='shop' if kind=='buy_card' else 'reward';items=(raw.get(field) or {}).get('cards' if field=='shop' else 'card_options') or []
+  offered=[]
+  for i,item in enumerate(items):
+   # The historical builder records revealed cards; sold/unavailable stock is not an offer.
+   if any(item.get(k) is True for k in ['is_sold','sold','purchased','is_purchased']):continue
+   if any(item.get(k) is False for k in ['is_available','available','can_buy','can_select','is_stocked']):continue
+   price=item.get('price',0) if field=='shop' else 0
+   if not isinstance(price,(int,float)):continue
+   offered.append({'id':item.get('card_id'),'upgraded':bool(item.get('upgraded')),'index':item.get('index',i),'price':price,'native':{k:v for k,v in item.items() if isinstance(v,(bool,int,float))}})
+  e['offers']=offered;e['target']=next((x for x in offered if x['index']==idx),None);e['price']=(e['target'] or {}).get('price')
+ elif pre and kind=='select_deck_card':
+  raw=raw_state(pre);items=(raw.get('selection') or {}).get('cards') or [];target=next((x for i,x in enumerate(items) if x.get('index',i)==idx),None)
+  e['target']={'id':target.get('card_id'),'upgraded':bool(target.get('upgraded')),'index':idx,'price':0} if target else None
+  e['observed_upgrade']=bool(after and len(after['deck'])==len(pre['deck']) and collections.Counter(x['id'] for x in after['deck'])==collections.Counter(x['id'] for x in pre['deck']) and sum(bool(x['upgraded']) for x in after['deck'])==sum(bool(x['upgraded']) for x in pre['deck'])+1)
+ if not pre:e['reason']='no_exact_pre_action_observed_frame'
+ elif not e['completed']:e['reason']='dispatch_not_completed'
+ events[d['source']['off']]=e;return e
+for d in D:
+ if (d.get('chosen') or {}).get('action') in ['choose_reward_card','skip_reward_cards','buy_card','buy_relic','buy_potion','remove_card_at_shop','select_deck_card','choose_rest_option','choose_event_option']:event(d)
+def actual_initial(a):
+ d=dbyoff[a['_source']['off']];b=accepted(d);pre=before(d,tm(a['construction'].get('as_of')) or tm(d.get('observed_ts')) or d['_t']);after=post(d,pre);key=(d.get('deepseek') or {}).get('choice');fore=a['construction'].get('forecasts') or {};proof=refs(d,b,pre,after);reason=None
+ if not b:reason='accepted_answer_not_uniquely_bound'
+ elif not str(d.get('result','')).startswith('completed:'):reason='initial_dispatch_not_completed'
+ elif key=='current':reason='current_is_counterfactual_not_actual_skip'
+ if reason is None and key not in fore:
+  # Generic shop-remove or smith first selects a service, then an actual unique card.
+  kids=[x for x in dbyrun[d['run_id']] if x['_t']>d['_t'] and x['floor']==d['floor'] and (x.get('chosen') or {}).get('action')=='select_deck_card']
+  resolved=None
+  if kids and any(k.startswith(str(key)+'|c') for k in fore):
+   child=kids[0];ce=event(child);target=ce['target'];bp=ce['before']
+   if target and bp and pre and inv(bp)==inv(pre) and ce['completed'] and accepted(child):
+    options=[x for x in pre['deck'] if x['id']==target['id'] and x['upgraded']==target['upgraded']]
+    if len(options)==1:
+     proposed=str(key)+'|c'+str(options[0]['index'])
+     if proposed in fore:resolved=proposed;after=ce['after'];proof=refs(d,b,pre,child,accepted(child),ce['before'],after)
+  if resolved:key=resolved
+  else:reason='selected_key_or_service_card_not_exactly_resolved'
+ if reason is None and re.search(r'[|:]c\d+$',str(key)):
+  target_index=int(re.search(r'c(\d+)$',str(key)).group(1));original=next((x for x in pre['deck'] if x['index']==target_index),None) if pre else None
+  children=[x for x in dbyrun[d['run_id']] if x['_t']>d['_t'] and x['floor']==d['floor'] and (x.get('chosen') or {}).get('action')=='select_deck_card']
+  if children and original:
+   child=children[0];ce=event(child);target=ce['target'];unique=sum(x['id']==original['id'] and x['upgraded']==original['upgraded'] for x in pre['deck'])==1
+   if ce['completed'] and unique and target and target['id']==original['id'] and target['upgraded']==original['upgraded'] and ce['before'] and inv(ce['before'])==inv(pre) and ce['after']:
+    after=ce['after'];proof=refs(d,b,pre,child,ce['before'],after)
+   else:reason='composite_service_target_not_exactly_bound_to_executed_child'
+  else:reason='composite_service_missing_executed_child'
+ if reason is None and (pre is None or after is None):reason='missing_original_before_or_actual_successor_frame'
+ if reason is None:
+  kind=(d.get('chosen') or {}).get('action');e=event(d);delta=inv(after)-inv(pre);removed=inv(pre)-inv(after)
+  if kind in ['choose_reward_card','buy_card']:
+   target=e['target'];ok=target is not None and delta and not removed and all(k==(target['id'],target['upgraded']) for k in delta)
+  elif kind in ['skip_reward_cards','leave_shop','leave_room','close_shop_inventory']:ok=inv(pre)==inv(after)
+  elif kind=='select_deck_card':ok=inv(pre)!=inv(after) and e['target'] is not None
+  elif re.search(r'[|:]c\d+$',str(key)):ok=inv(pre)!=inv(after)
+  elif kind=='choose_rest_option':
+   projected=((a['construction'].get('evaluation') or {}).get('options') or {}).get(key,{}).get('inventory') or {}
+   actual={'cards':len(after['deck']),'upgraded':sum(bool(x['upgraded']) for x in after['deck']),'gold':after['gold'],'hp':after['hp'],'maxHp':after['max_hp']}
+   ok=bool(projected) and all(actual.get(k)==v for k,v in projected.items() if k in actual)
+  elif kind=='choose_event_option' and re.match(r'^o'+str((d.get('chosen') or {}).get('option_index'))+r'(?:$|:|\|)',str(key)):ok=True
+  elif not isinstance(fore.get(key),list) and kind in ['buy_relic','buy_potion','discard_potion']:ok=True
+  else:ok=False
+  if not ok:reason='actual_inventory_transition_not_exactly_matched_to_projected_option'
+ return {'key':key if reason is None else None,'claimed_key':key,'status':'verified' if reason is None else 'unknown','reason':reason,'evidence':proof,'brain':b,'before':pre,'after':after}
+# Post-boss completion and node-entry are kept distinct. No death is assigned false.
+windows={}
+for run in M['selected_runs']:
+ ss=sbyrun[run]
+ for h in [17,33,48]:
+  arrival=next((s for s in ss if s['floor']==h and s['hp'] is not None and s['hp']>0),None)
+  wins=sorted([z for z in slbyrun[run] if z['row'].get('floor')==h and z['row'].get('result')=='won'],key=lambda z:tm(z['row'].get('ended_at')) or CUT+1)
+  end=None;win=None
+  for z in wins:
+   t=tm(z['row'].get('ended_at'))
+   if t is None:continue
+   end=next((s for s in ss if s['floor']==h and s['_t']>=t and s['hp'] is not None and s['hp']>0 and s['screen']!='COMBAT'),None)
+   if end:win=z;break
+  windows[(run,h)]={'entry':arrival,'endpoint':end,'boss_win':win,'run_result':RUN.get(run)}
+MOVES=collections.defaultdict(list)
+for md in D:
+ if (md.get('chosen') or {}).get('action')!='choose_map_node' or not str(md.get('result','')).startswith('completed:'):continue
+ mp=before(md);av=(mp.get('map') or {}).get('available_nodes',[]) if mp else []
+ target=next((v for v in av if v.get('index')==md['chosen'].get('option_index')),None)
+ if not target or mp.get('act') is None:continue
+ act=int(mp['act'])+1;base={1:1,2:18,3:34}.get(act)
+ if base is None:continue
+ floor=base+target['row'];following=next((z for z in sbyrun[md['run_id']] if z['_t']>md['_t'] and z['floor']==floor),None)
+ if following:MOVES[md['run_id']].append({'node':f"r{target['row']}c{target['col']}",'row':target['row'],'act':act,'floor':floor,'t':following['_t'],'evidence':refs(md,mp,following)})
+def route_for(a,ini,end):
+ b=ini['brain'];c=a['construction'];h=c.get('horizon');pre=ini['before'];evidence=[];plan=None;rv=None;plan_source=b;continuity=[];recovery='same_question_snapshot';partial=(b or {}).get('memory_route')
+ if b:
+  for r in b.get('route_fields',[]):
+   if r['json_path'].endswith('.route_review') and isinstance(r['value'],dict) and isinstance(r['value'].get('plan'),str):rv=r['value'];plan=rv['plan'];break
+ if not plan and partial:
+  made=re.search(r'按\s*F(\d+)\s*的路线',partial);asof=tm(c.get('as_of')) or tm(a['ts'])
+  candidates=[]
+  if made:
+   for past in BRA:
+    if past['run_id']!=a['run_id'] or not past.get('accepted') or past['_t']>asof or (past.get('answer') or {}).get('route') not in [None,'keep']:continue
+    for field in past.get('route_fields',[]):
+     v=field.get('value')
+     if not field['json_path'].endswith('.route_review') or not isinstance(v,dict) or not isinstance(v.get('plan'),str):continue
+     made_past=re.search(r'计划在\s*F(\d+)\s*定',v.get('vs_plan',''))
+     if made_past and made_past.group(1)==made.group(1):candidates.append((past,v))
+  for past,v in sorted(candidates,key=lambda z:z[0]['_t'],reverse=True):
+   mid=[z for z in dbyrun[a['run_id']] if past['_t']<z['_t']<=asof]
+   revisions=[z for z in mid if z.get('label')=='map/route-change' or ((z.get('route_review') or {}).get('outcome') not in [None,'keep','kept']) or ((z.get('deepseek') or {}).get('route') not in [None,'keep'])]
+   restarts=[z for z in CONFIG if z['row'].get('run_id')==a['run_id'] and z['row'].get('restart') and past['_t']<(tm(z['row'].get('ts')) or 0)<=asof]
+   if revisions or restarts:continue
+   # Current memory's declared plan revision and an earlier, unchanged full snapshot agree.
+   plan=v['plan'];rv=v;plan_source=past;continuity=refs(*[z for z in mid if z.get('route_review') or (z.get('deepseek') or {}).get('route')]);recovery='earlier_snapshot_same_memory_revision_no_intervening_change';break
+ if not plan:return {'status':'unknown','reason':'only_room_type_summary_without_bound_coordinate_plan' if partial else 'original_question_actPlan_not_recovered','partial_memory_route':partial,'planned':[],'observed':[],'evidence':refs(b)}
+ act=int(pre['act'])+1 if pre and pre.get('act') is not None else ({17:1,33:2,48:3}.get(h));base={1:1,2:18,3:34}.get(act)
+ if base is None:return {'status':'unknown','reason':'original_act_unknown','planned':[],'observed':[],'evidence':refs(b)}
+ expected=[]
+ for part in plan.split('→'):
+  hit=re.search(r'r(\d+)c(\d+)',part)
+  if hit:
+   row,col=map(int,hit.groups());floor=base+row
+   if floor>a['floor']:
+    expected.append({'id':f'r{row}c{col}','floor':floor,'row':row,'col':col,'kind':'fight' if any(t in part for t in ['Boss','普通战','精英']) else 'shop' if '商店' in part else 'rest' if '休息' in part else 'unknown'})
+    if 'Boss' in part:break
+ if not expected or expected[-1]['floor']!=h:return {'status':'unknown','reason':'historical_constructionRoute_horizon_not_reconstructed','planned':expected,'observed':[],'evidence':refs(b)}
+ start=tm(c.get('as_of')) or tm(a['ts']);stop=end['_t'] if end else CUT;observed=[];missing_nodes=[];changed=[]
+ for node in expected:
+  witness=None;others=[]
+  for s in sbyrun[a['run_id']]:
+   if not(start<=s['_t']<=stop) or str(s.get('act'))!=str(act-1) or not s.get('map'):continue
+   seen=[v for v in s['map'].get('nodes',[]) if v.get('row')==node['row'] and v.get('visited')]
+   if any(v.get('col')==node['col'] for v in seen):witness=s;break
+   if seen:others.append((s,seen))
+  moves=[z for z in MOVES[a['run_id']] if z['act']==act and z['row']==node['row'] and start<z['t']<=stop]
+  matching=next((z for z in moves if z['node']==node['id']),None)
+  different=next((z for z in moves if z['node']!=node['id']),None)
+  if witness:observed.append({'node':node['id'],'floor':node['floor'],'evidence':refs(witness)[0]});evidence.extend(refs(witness))
+  elif matching:observed.append({'node':node['id'],'floor':node['floor'],'evidence':matching['evidence'],'native_action_and_observed_successor':True});evidence.extend(matching['evidence'])
+  elif not others:missing_nodes.append(node['id'])
+  if different:changed.append({'node':node['id'],'actual':[different['node']],'evidence':different['evidence']});evidence.extend(different['evidence'])
+  elif others:changed.append({'node':node['id'],'actual':[f"r{v['row']}c{v['col']}" for v in others[0][1]],'evidence':refs(others[0][0])});evidence.extend(refs(others[0][0]))
+ status='changed' if changed else 'same' if not missing_nodes else 'unknown'
+ return {'status':status,'reason':'actual_node_differs' if changed else 'missing_observed_route_nodes' if missing_nodes else None,'planned':expected,'observed':observed,'changed':changed,'missing_nodes':missing_nodes,'evidence':refs(b,plan_source,*continuity,*evidence),'plan_text':plan,'plan_recovery':recovery,'current_memory_route':partial,'plan_snapshot_ts':(plan_source or {}).get('ts')}
+def choice_policy(d,core):
+ e=events.get(d['source']['off']);kind=(d.get('chosen') or {}).get('action');pre=e['before'] if e else None
+ if not e or not pre or not e['completed']:return {'status':'unknown','reason':'actual_choice_or_pre_frame_missing','evidence':refs(d,pre)}
+ initial_dist=distance(pre,core)
+ if kind in ['choose_reward_card','buy_card','skip_reward_cards'] and e['offers'] is not None:
+  best=None;score=initial_dist;cost=float('inf')
+  for offer in e['offers']:
+   if not isinstance(pre.get('gold'),(int,float)) or offer['price']<0 or pre['gold']<offer['price']:continue
+   hypothetical=pre|{'deck':pre['deck']+[offer]};value=distance(hypothetical,core)
+   if value<score or(value==score and value<initial_dist and offer['price']<cost):best=offer;score=value;cost=offer['price']
+  tied=[]
+  if best:
+   for offer in e['offers']:
+    if offer['price']==best['price'] and isinstance(pre.get('gold'),(int,float)) and pre['gold']>=offer['price'] and distance(pre|{'deck':pre['deck']+[offer]},core)==score:tied.append(offer)
+  if kind!='skip_reward_cards' and e['target'] in tied and len(tied)>1:return {'status':'unknown','reason':'equal_distance_price_tie_action_array_order_not_independently_bound','evidence':refs(d,pre,e['after'])}
+  actual=e['target'];same=best is None if kind=='skip_reward_cards' else best is not None and actual is not None and actual['index']==best['index']
+  return {'status':'same' if same else 'changed','reason':None if same else 'actual_choice_differs_from_completionChoice','expected':best or {'kind':'skip'},'actual':actual or {'kind':kind},'distance_before':initial_dist,'evidence':refs(d,pre,e['after'])}
+ if kind=='select_deck_card' and e.get('observed_upgrade') and e['after']:
+  if distance(e['after'],core)>=initial_dist:return {'status':'changed','reason':'upgrade_does_not_reduce_original_signature_distance_policy_would_skip','evidence':refs(d,pre,e['after'])}
+ if kind in ['buy_relic','buy_potion','remove_card_at_shop']:return {'status':'changed','reason':'future_shop_policy_only_considers_revealed_card_add_actions','evidence':refs(d,pre)}
+ return {'status':'unknown','reason':'choice_not_fully_expressible_in_declared_future_policy','evidence':refs(d,pre,e.get('after'))}
+anchor_rows=[];core_rows=[];stats=collections.Counter();policy_witnesses=[]
+for ai,a in enumerate(A):
+ off=a['_source']['off'];d=dbyoff[off];assert d['source']==a['_source'];c=a['construction'];h=c.get('horizon');start=tm(c.get('as_of')) or tm(a['ts']);ini=actual_initial(a);initial[off]=ini
+ w=windows.get((a['run_id'],h),{});end=w.get('endpoint');end=end if end and end['_t']>start else None;entry=w.get('entry');entry=entry if entry and entry['_t']>start else None;winw=w.get('boss_win') if end else None;rr=RUN.get(a['run_id']);stop=end['_t'] if end else CUT
+ route=route_for(a,ini,end);later=[x for x in dbyrun[a['run_id']] if x['_t']>d['_t'] and x['_t']<=stop and x.get('floor') is not None and x['floor']<=h] if isinstance(h,int) else []
+ same_room_extra=[x for x in later if x['floor']==a['floor'] and (x.get('chosen') or {}).get('action') in ['buy_card','buy_relic','buy_potion','remove_card_at_shop','choose_reward_card'] and ini['after'] is not None and x['_t']>=ini['after']['_t']]
+ future_later=[x for x in later if isinstance(x.get('floor'),int) and x['floor']>a['floor']]
+ reloads=[x for x in later if isinstance(x.get('sl_reloads'),int) and x['sl_reloads']>0]
+ slrows=[x for x in slbyrun[a['run_id']] if (tm(x['row'].get('ended_at')) or CUT+1)>start and (tm(x['row'].get('ended_at')) or CUT+1)<=stop and x['row'].get('floor',999)<=h] if isinstance(h,int) else []
+ sl_branch={'status':'unknown' if reloads or any(not isinstance(x['row'].get('attempt'),int) or x['row']['attempt']>1 for x in slrows) else 'same','logged_attempt':[a['sl_attempt'],a['sl_reloads']],'reason':'reload_or_multiple_attempt_window_not_proven_single_branch' if reloads else None,'evidence':refs(d,*reloads[:2],*slrows)}
+ restarts=[z for z in CONFIG if z['row'].get('run_id')==a['run_id'] and z['row'].get('restart') and start<(tm(z['row'].get('ts')) or 0)<=stop]
+ physical=[z for z in sbyrun[a['run_id']] if start<=z['_t']<=stop];regressions=[]
+ for old,new in zip(physical,physical[1:]):
+  if old['floor'] is not None and new['floor'] is not None and new['floor']<old['floor']:regressions.extend(refs(old,new))
+  elif old['screen']==new['screen']=='COMBAT' and old['floor']==new['floor'] and isinstance(old.get('turn'),int) and isinstance(new.get('turn'),int) and new['turn']<old['turn']:regressions.extend(refs(old,new))
+ if restarts or regressions:sl_branch.update(status='unknown',reason='restart_or_nonmonotone_physical_branch_requires_closure',evidence=refs(*sl_branch['evidence'],*restarts,*regressions))
+ # Unknown projected nodes must have a closed resource transition, not a filled zero.
+ unknown_nodes=[n for n in route.get('planned',[]) if n['kind']=='unknown'];transition_gaps=[]
+ for n in unknown_nodes:
+  ss=[s for s in sbyrun[a['run_id']] if s['floor']==n['floor'] and start<s['_t']<=stop]
+  if len(ss)<2:transition_gaps.append({'floor':n['floor'],'reason':'unknown_node_missing_before_after','evidence':refs(*ss)});continue
+  first,last=ss[0],ss[-1]
+  if inv(first)!=inv(last) or first['relics']!=last['relics'] or first['gold']!=last['gold']:transition_gaps.append({'floor':n['floor'],'reason':'unmodelled_node_changed_inventory_relic_or_gold','evidence':refs(first,last)})
+ ar={'source_off':off,'run':a['run_id'],'decision':a['decision_id'],'floor':a['floor'],'horizon':h,'status':c.get('status'),'binding':{k:c.get(k) for k in ['forecast_model','forecast_policy','template_sha256','as_of']},
+ 'initial_option':{k:v for k,v in ini.items() if k not in ['brain','before','after']}|{'before_frame':shortref(ini['before']),'after_frame':shortref(ini['after'])},'route':route,'sl':sl_branch,'transition_gaps':transition_gaps,'same_room_extra_transactions':refs(*same_room_extra),
+ 'endpoint':{'entry_frame':shortref(entry),'completion_frame':shortref(end),'completion_witness':(winw or {}).get('source'),'observed_at':end['observed_at'] if end else None,'complete':bool(end),'definition':'after declared terminal Boss fight, first observed alive noncombat frame on exact horizon; entry inventory is a separate observation'},
+ 'forecast_option_keys':list(c.get('forecasts') or {}),'unsupported_options':[k for k,v in (c.get('forecasts') or {}).items() if not isinstance(v,list)],'source':a['_source']}
+ anchor_rows.append(ar);refs(a['_source'],rr,(winw or {}),entry,end)
+ for cid,core in cores.items():
+  relevant=[x for x in future_later if (x.get('chosen') or {}).get('action') in ['choose_reward_card','skip_reward_cards','buy_card','buy_relic','buy_potion','remove_card_at_shop'] or ((x.get('chosen') or {}).get('action')=='select_deck_card' and (events.get(x['source']['off']) or {}).get('observed_upgrade') and x['floor'] in {n['floor'] for n in route.get('planned',[]) if n['kind']=='rest'})]
+  checks=[choice_policy(x,core) for x in relevant];changed=next((x for x in checks if x['status']=='changed'),None);unknown=next((x for x in checks if x['status']=='unknown'),None);policy_status='changed' if changed else 'unknown' if unknown else 'same'
+  # Rest services with no resolved child cannot be silently certified as the skip/heal fallback.
+  unresolved_rests=[x for x in future_later if str(x.get('label','')).startswith('rest/') and not any(y['floor']==x['floor'] and y['_t']>=x['_t'] and (events.get(y['source']['off']) or {}).get('observed_upgrade') for y in relevant)]
+  if not changed and unresolved_rests:policy_status='unknown';unknown={'reason':'rest_fallback_or_service_choice_not_fully_resolved','evidence':refs(unresolved_rests[0])}
+  casts={};cast_proxies={};ids={r['id'] for req in core['requirements'] for r in req['any'] if r['kind']=='card'}
+  for x in later:
+   if (x.get('chosen') or {}).get('action')!='play_card' or not str(x.get('result','')).startswith('completed:'):continue
+   try:fp=json.loads(x['fingerprint']);parts=fp.get('hand','').split('|');mapping={z.split(':')[0]:z.split(':')[1] for z in parts if ':' in z};card=mapping.get(str(x['chosen'].get('card_index')))
+   except (ValueError,TypeError):continue
+   if card in ids and card not in casts:
+    cast_before=before(x);cast_after=post(x,cast_before);fresh=max((z for z in sbyrun[x['run_id']] if z['_t']<=x['_t']),key=lambda z:(z['_t'],z['source']['off']),default=None)
+    if cast_before and cast_after and fresh and fresh['fingerprint']==x['fingerprint'] and x.get('sl_reloads')==0:
+     casts[card]={'completed_dispatch_at_least_once':True,'evidence':refs(x,cast_before,cast_after),'attempt':x['sl_attempt'],'reloads':x['sl_reloads'],'total_count':None,'effect_resolution_and_functional':None}
+    elif card not in cast_proxies:cast_proxies[card]={'reported_card_from_logged_fingerprint':card,'completed_API_dispatch':True,'actual_card_or_branch_binding':None,'reason':'no_fresh_exact_before_after_pair_or_SL_context_unclosed','evidence':refs(x,cast_before,cast_after),'attempt':x['sl_attempt'],'reloads':x['sl_reloads']}
+  obs={'components':{'entry':{'missing':missing(entry,core),'signature_present':not missing(entry,core),'evidence':refs(entry)} if entry else None,'completed_horizon':{'missing':missing(end,core),'signature_present':not missing(end,core),'evidence':refs(end)} if end else None,'template_source_commit':a['config']['code']['commit'],'source_template_digest':templates_by_commit[a['config']['code']['commit']][1]},
+   'actual_casts':casts,'cast_dispatch_proxies':cast_proxies,'actual_casts_scope':'已列牌仅证明在所示SL分支至少一次具名completed出牌；未列牌与总次数为unknown，不证明未施放/全部效果/同实例循环','survival':{'entry_alive':True if entry and entry['hp']>0 else None,'terminal_node_completed_alive':True if end else None,'evidence':refs(entry,end,winw)},
+   'run_result':{'summary_after_prediction':bool((tm(rr['row'].get('ended')) or 0)>start),'same_prospective_SL_branch_verified':None,'victory':rr['row']['victory'],'ended':rr['row']['ended'],'floor':rr['row']['floor'],'evidence':refs(rr)} if rr else {'victory':None,'reason':'no_run_summary_before_frozen_cutoff'},'functional':None,'aliveAndFunctional':None,'terminalWin_prediction':None}
+  gaps=[k for k in ['forecast_model','forecast_policy','template_sha256','as_of'] if not c.get(k)];template_ok=c.get('template_sha256')==templates_by_commit[a['config']['code']['commit']][1]
+  reason=None;disposition='unverified'
+  if gaps:disposition='missing_binding';reason='missing_native_'+','.join(gaps)
+  elif ini['status']!='verified':reason=ini['reason']
+  elif not isinstance((c.get('forecasts') or {}).get(ini['key']),list):reason='actual_selected_option_unsupported_in_original_forecast'
+  elif same_room_extra:reason='same_room_extra_transactions_outside_original_future_route_steps'
+  elif not end:disposition='censored';reason='death_or_no_complete_terminal_node_before_cutoff' if rr else 'not_completed_at_frozen_cutoff'
+  elif route['status']=='changed':disposition='route_changed';reason=route['reason']
+  elif policy_status=='changed':disposition='policy_changed';reason=changed['reason']
+  elif sl_branch['status']!='same':disposition='sl_unknown';reason='SL_branch_not_closed'
+  elif route['status']!='same':reason=route['reason']
+  elif transition_gaps:reason='unknown_route_node_resource_condition_not_closed'
+  elif policy_status!='same':reason=unknown['reason']
+  elif not template_ok:reason='original_template_digest_mismatch'
+  else:disposition='matched';reason='all_frozen_conditions_verified'
+  ver={'initial_option':ini['evidence'],'route':route['evidence'],'policy':refs(*(z for x in checks for z in x['evidence'])),'sl':sl_branch['evidence'],'endpoint':refs(end,winw)}
+  if not ver['policy']:ver['policy']=refs(d,end)
+  cr={'source_off':off,'core':cid,'disposition':disposition,'reason':reason,'policy':{'status':policy_status,'choices_checked':len(checks),'first_deviation':changed,'first_unknown':unknown},'observations':obs,'verification':ver}
+  if disposition=='matched':
+   cr['outcome']={'character':'silent','run':a['run_id'],'decision':a['decision_id'],'core':cid,'metric':'conditionalSignature','horizon':h,'model':c['forecast_model'],'policy':c['forecast_policy'],'attempt':json.dumps([a['sl_attempt'],a['sl_reloads']],separators=(',',':')),'ascension':10,'template_sha256':c['template_sha256'],'complete':True,'followed_policy':True,'followed_route':True,'value':not missing(end,core),'observed_at':end['observed_at'],'evidence':refs(*[z for arr in ver.values() for z in arr])}
+  core_rows.append(cr);stats[disposition]+=1
+ if (ai+1)%200==0:print('anchors_verified',ai+1,flush=True)
+# All conditionalSignature option keys remain explicit; other null metrics have exact compressed coverage rules.
+coreby={(x['source_off'],x['core']):x for x in core_rows};groups={};disps=collections.Counter();conditional_rows=0;other_rows=0
+with (O/'outcomes.jsonl').open('w') as out,gzip.GzipFile(str(O/'expanded-row-coverage.jsonl.gz'),'wb',compresslevel=6,mtime=0) as compressed:
+ with gzip.open(B/'inputs/predictions.jsonl.gz','rt') as predictions:
+  for line in predictions:
+   item=json.loads(line);p=item['prediction'];off=item['source']['off'];cr=coreby[(off,p['core'])];ini=initial[off];key=(p['core'],p['ascension'],p['metric'],p['horizon'],p['model'],p['policy'],p['template_sha256']);g=groups.setdefault(key,{'candidate_rows':0,'numeric_rows':0,'actual_matched_rows':0,'runs':set(),'matched_runs':set(),'dispositions':collections.Counter(),'exclusion_reasons':collections.Counter()});g['candidate_rows']+=1;g['runs'].add(p['run']);g['numeric_rows']+=isinstance(p['value'],(int,float)) and not isinstance(p['value'],bool)
+   actual=ini['status']=='verified' and item['option']==ini['key'];disposition=cr['disposition'] if actual else 'unselected' if ini['status']=='verified' else 'unverified'
+   reason=cr['reason'] if actual else 'original_option_not_actually_selected' if ini['status']=='verified' else ini['reason']
+   if item['preparation_gaps'] and actual:disposition='missing_binding';reason='native_binding_absent_not_backfilled'
+   if (p['metric']!='conditionalSignature' or p['value'] is None) and disposition!='unselected':disposition='unverified';reason='logged_metric_probability_unknown_no_label_substitution'
+   row={'source_off':off,'option':item['option'],'core':p['core'],'metric':p['metric'],'disposition':disposition,'reason':reason,'preparation_gaps':item['preparation_gaps'],'verification_ref':{'path':'anchor-core-verification.jsonl.gz','source_off':off,'core':p['core']}}
+   if disposition=='matched':row.update(outcome=cr['outcome'],observations=cr['observations'],verification=cr['verification']);g['actual_matched_rows']+=1;g['matched_runs'].add(p['run'])
+   g['dispositions'][disposition]+=1;g['exclusion_reasons'][reason]+=1;disps[disposition]+=1
+   if p['metric']=='conditionalSignature':out.write(enc(row));conditional_rows+=1
+   else:compressed.write(enc({'source_off':off,'option':item['option'],'core':p['core'],'metric':p['metric'],'disposition':disposition,'reason':reason}).encode());other_rows+=1
+assert conditional_rows+other_rows==145264
+with (O/'anchors.jsonl').open('w') as f:
+ for x in anchor_rows:f.write(enc(x))
+with gzip.open(O/'anchor-core-verification.jsonl.gz','wt',compresslevel=6) as f:
+ for x in core_rows:f.write(enc(x))
+with (O/'referenced-raw-manifest.jsonl').open('w') as f:
+ for k,v in sorted(used.items()):f.write(enc(v))
+grouprows=[]
+for k,g in sorted(groups.items(),key=lambda x:str(x[0])):
+ row=dict(zip(['core','ascension','metric','horizon','model','policy','template_sha256'],k));row.update({kk:vv for kk,vv in g.items() if kk not in ['runs','matched_runs']});row['character']='silent';row['independent_candidate_runs']=len(g['runs']);row['candidate_runs']=sorted(g['runs']);row['independent_matched_runs']=len(g['matched_runs']);row['matched_runs']=sorted(g['matched_runs']);grouprows.append(row)
+requirements=['initial-option','actual-route','completion-choice-policy','sl-branch','original-template-endpoint','separate-observations','all-anchor-coverage']
+dump('coverage.json',{'input_manifest_sha256':hashlib.sha256((B/'inputs/manifest.json').read_bytes()).hexdigest(),'dispatch_input_sha256':DISPATCH_SHA,'coverage':{x:True for x in requirements},'coverage_definition':'true表示已逐锚点检查并记录证据或排除/未知，不表示样本全部满足条件','owner':{'role':'quantitative','thread':'01a12c46-fef2-7282-b689-1fd8b4e0450b','parent_batch':'20261012-024317-strategy-proposal','source_head':'51e0c1f475f842b355172f1f2a6f320cae9fb58d'},'shared_verification_contract':'每条verification_ref按(source_off,core)连接anchor-core-verification.jsonl.gz中的observations/verification；matched行另含完整直接字段','scope':'exact original r1 1371 anchors, not all historical R328 records','anchors_expected':1371,'anchors_processed':len(anchor_rows),'anchor_source_bytes_verified':len(anchor_rows),'anchor_source_offs':[x['source_off'] for x in anchor_rows],'unprocessed_anchor_source_offs':[],'unresolved_anchor_source_offs':[x['source_off'] for x in anchor_rows if x['initial_option']['status']!='verified' or x['route']['status']!='same' or not x['endpoint']['complete']],
+ 'runs':M['selected_runs'],'expanded_rows':145264,'outcomes_rows':conditional_rows,'compressed_other_metric_rows':other_rows,'compressed_rule':'expanded-row-coverage.jsonl.gz explicitly preserves [source_off,option,core,metric] for every non-conditionalSignature row; all logged null metrics stay unknown','anchor_core_dispositions':stats,'expanded_dispositions':disps,'groups':grouprows,'unsupported_options':2454,'missing_route_anchors':sum(x['status']=='missing_route' for x in anchor_rows),'original_run_plans_projection_empty':True,
+ 'verification_not_universal_negative':True,'functional_unknown':True,'evaluator_run':False,'advisory_changed':False,'parent_complete':False,'cutoff':M['at'],'source_bounds':M['source_bounds']})
+dump('extraction-receipt.json',{'at':subprocess.check_output(['date','+%Y-%m-%d %H:%M:%S %Z'],text=True).strip(),'anchors':len(anchor_rows),'initial_option_counts':dict(collections.Counter(x['initial_option']['status'] for x in anchor_rows)),'route_counts':dict(collections.Counter(x['route']['status'] for x in anchor_rows)),'anchor_core_dispositions':stats,'referenced_raw_rows':len(used),'groups':len(grouprows),'matched_option_rows':sum(x['actual_matched_rows'] for x in grouprows),'new_forecasts_simulations_or_API_calls':0})
+print(json.dumps({'anchors':len(anchor_rows),'conditional_rows':conditional_rows,'other_rows':other_rows,'anchor_core_dispositions':stats},ensure_ascii=False))

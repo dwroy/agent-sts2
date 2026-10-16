@@ -1,0 +1,3899 @@
+{
+  "at": "2026-10-16T07:30:35.754576+00:00",
+  "schema": "g3b-admission-audit-v1",
+  "input_manifest_sha256": "8d44fbaa26a20b5f13e73f82e78f7c9a9cf51e1f750bb8b7eb55ff66c668a07c",
+  "matched_input_sha256": "cce077bcdb15dcbb209cfd457d497ae630270545e636357ebe762d5f7216d8c7",
+  "matched_input_gzip_sha256": "c8ee7e900d2b2c0550eae12c1deec97651991d1d369e2a38c1d9b869c1e4795b",
+  "learner_label_manifest_sha256": "588276ef299dd6802bfe3e7e69e5ad07a506a91eb81bd034bdf30b10824d6ecb",
+  "prefix_rows_with_only_missing_binding_metadata": 22688,
+  "old_learner_delivery_not_rewritten": true,
+  "learner_outcomes_sha256": "7cef06724c2b3a3569fe771456b3a33f9412f916f8228f8c1ec68c6a71bb93d1",
+  "learner_coverage_sha256": "53150ee747ff704a69ff5d40c514686bfe3f06e504bcd17b52d096ef227085bd",
+  "forecast_rows": 167952,
+  "dispositions": {
+    "missing_binding": 42000,
+    "unselected": 22440,
+    "unverified": 10882,
+    "unknown_probability": 90060,
+    "route_changed": 380,
+    "policy_changed": 1381,
+    "matched": 184,
+    "sl_unknown": 109,
+    "censored": 516
+  },
+  "verified_raw_references": 506,
+  "scored_groups": 12,
+  "admitted_groups": 3,
+  "groups": [
+    {
+      "character": "silent",
+      "core": "D",
+      "metric": "aliveAndFunctional",
+      "horizon": 17,
+      "model": "observed-opportunity-window4-v1",
+      "policy": "completion-choice-v1",
+      "ascension": 10,
+      "template_sha256": "76e91c950bfd87d820093bdd7dd4b3f11db15256ea2b6e0bb41b9f1ec89f998c",
+      "forecast_rows": 3057,
+      "numeric_prediction_rows": 0,
+      "potential_bound_runs": 0,
+      "n": 0,
+      "independent_runs": 0,
+      "positives": 0,
+      "negatives": 0,
+      "brier": null,
+      "baseline_brier": null,
+      "bias": null,
+      "minimum_more_qualified_independent_runs": 10,
+      "admitted": false,
+      "input_dispositions": {
+        "unknown_probability": 3057
+      },
+      "missing_prediction_bindings": {},
+      "evaluator_exclusions": {
+        "identity mismatch": 3057
+      },
+      "failures": [
+        "metric_not_eligible_for_advisory",
+        "all_logged_probabilities_unknown",
+        "fewer_than_10_qualified_independent_runs",
+        "missing_positive_or_negative_outcomes",
+        "no_qualified_labels_to_score"
+      ],
+      "missing_data_limit": "Minimum count deficit only; further data cannot guarantee both outcome classes or performance gates."
+    },
+    {
+      "character": "silent",
+      "core": "D",
+      "metric": "aliveAndFunctional",
+      "horizon": 17,
+      "model": null,
+      "policy": null,
+      "ascension": 10,
+      "template_sha256": null,
+      "forecast_rows": 1260,
+      "numeric_prediction_rows": 0,
+      "potential_bound_runs": 0,
+      "n": 0,
+      "independent_runs": 0,
+      "positives": 0,
+      "negatives": 0,
+      "brier": null,
+      "baseline_brier": null,
+      "bias": null,
+      "minimum_more_qualified_independent_runs": 10,
+      "admitted": false,
+      "input_dispositions": {
+        "missing_binding": 1260
+      },
+      "missing_prediction_bindings": {
+        "model": 1260,
+        "policy": 1260,
+        "template_sha256": 1260,
+        "as_of": 1260
+      },
+      "evaluator_exclusions": {
+        "identity mismatch": 1260
+      },
+      "failures": [
+        "metric_not_eligible_for_advisory",
+        "all_logged_probabilities_unknown",
+        "missing_prospective_binding",
+        "fewer_than_10_qualified_independent_runs",
+        "missing_positive_or_negative_outcomes",
+        "no_qualified_labels_to_score"
+      ],
+      "missing_data_limit": "Minimum count deficit only; further data cannot guarantee both outcome classes or performance gates."
+    },
+    {
+      "character": "silent",
+      "core": "D",
+      "metric": "aliveAndFunctional",
+      "horizon": 33,
+      "model": "observed-opportunity-window4-v1",
+      "policy": "completion-choice-v1",
+      "ascension": 10,
+      "template_sha256": "76e91c950bfd87d820093bdd7dd4b3f11db15256ea2b6e0bb41b9f1ec89f998c",
+      "forecast_rows": 2661,
+      "numeric_prediction_rows": 0,
+      "potential_bound_runs": 0,
+      "n": 0,
+      "independent_runs": 0,
+      "positives": 0,
+      "negatives": 0,
+      "brier": null,
+      "baseline_brier": null,
+      "bias": null,
+      "minimum_more_qualified_independent_runs": 10,
+      "admitted": false,
+      "input_dispositions": {
+        "unknown_probability": 2661
+      },
+      "missing_prediction_bindings": {},
+      "evaluator_exclusions": {
+        "identity mismatch": 2661
+      },
+      "failures": [
+        "metric_not_eligible_for_advisory",
+        "all_logged_probabilities_unknown",
+        "fewer_than_10_qualified_independent_runs",
+        "missing_positive_or_negative_outcomes",
+        "no_qualified_labels_to_score"
+      ],
+      "missing_data_limit": "Minimum count deficit only; further data cannot guarantee both outcome classes or performance gates."
+    },
+    {
+      "character": "silent",
+      "core": "D",
+      "metric": "aliveAndFunctional",
+      "horizon": 33,
+      "model": null,
+      "policy": null,
+      "ascension": 10,
+      "template_sha256": null,
+      "forecast_rows": 1029,
+      "numeric_prediction_rows": 0,
+      "potential_bound_runs": 0,
+      "n": 0,
+      "independent_runs": 0,
+      "positives": 0,
+      "negatives": 0,
+      "brier": null,
+      "baseline_brier": null,
+      "bias": null,
+      "minimum_more_qualified_independent_runs": 10,
+      "admitted": false,
+      "input_dispositions": {
+        "missing_binding": 1029
+      },
+      "missing_prediction_bindings": {
+        "model": 1029,
+        "policy": 1029,
+        "template_sha256": 1029,
+        "as_of": 1029
+      },
+      "evaluator_exclusions": {
+        "identity mismatch": 1029
+      },
+      "failures": [
+        "metric_not_eligible_for_advisory",
+        "all_logged_probabilities_unknown",
+        "missing_prospective_binding",
+        "fewer_than_10_qualified_independent_runs",
+        "missing_positive_or_negative_outcomes",
+        "no_qualified_labels_to_score"
+      ],
+      "missing_data_limit": "Minimum count deficit only; further data cannot guarantee both outcome classes or performance gates."
+    },
+    {
+      "character": "silent",
+      "core": "D",
+      "metric": "aliveAndFunctional",
+      "horizon": 48,
+      "model": "observed-opportunity-window4-v1",
+      "policy": "completion-choice-v1",
+      "ascension": 10,
+      "template_sha256": "76e91c950bfd87d820093bdd7dd4b3f11db15256ea2b6e0bb41b9f1ec89f998c",
+      "forecast_rows": 1787,
+      "numeric_prediction_rows": 0,
+      "potential_bound_runs": 0,
+      "n": 0,
+      "independent_runs": 0,
+      "positives": 0,
+      "negatives": 0,
+      "brier": null,
+      "baseline_brier": null,
+      "bias": null,
+      "minimum_more_qualified_independent_runs": 10,
+      "admitted": false,
+      "input_dispositions": {
+        "unknown_probability": 1787
+      },
+      "missing_prediction_bindings": {},
+      "evaluator_exclusions": {
+        "identity mismatch": 1787
+      },
+      "failures": [
+        "metric_not_eligible_for_advisory",
+        "all_logged_probabilities_unknown",
+        "fewer_than_10_qualified_independent_runs",
+        "missing_positive_or_negative_outcomes",
+        "no_qualified_labels_to_score"
+      ],
+      "missing_data_limit": "Minimum count deficit only; further data cannot guarantee both outcome classes or performance gates."
+    },
+    {
+      "character": "silent",
+      "core": "D",
+      "metric": "aliveAndFunctional",
+      "horizon": 48,
+      "model": null,
+      "policy": null,
+      "ascension": 10,
+      "template_sha256": null,
+      "forecast_rows": 703,
+      "numeric_prediction_rows": 0,
+      "potential_bound_runs": 0,
+      "n": 0,
+      "independent_runs": 0,
+      "positives": 0,
+      "negatives": 0,
+      "brier": null,
+      "baseline_brier": null,
+      "bias": null,
+      "minimum_more_qualified_independent_runs": 10,
+      "admitted": false,
+      "input_dispositions": {
+        "missing_binding": 703
+      },
+      "missing_prediction_bindings": {
+        "model": 703,
+        "policy": 703,
+        "template_sha256": 703,
+        "as_of": 703
+      },
+      "evaluator_exclusions": {
+        "identity mismatch": 703
+      },
+      "failures": [
+        "metric_not_eligible_for_advisory",
+        "all_logged_probabilities_unknown",
+        "missing_prospective_binding",
+        "fewer_than_10_qualified_independent_runs",
+        "missing_positive_or_negative_outcomes",
+        "no_qualified_labels_to_score"
+      ],
+      "missing_data_limit": "Minimum count deficit only; further data cannot guarantee both outcome classes or performance gates."
+    },
+    {
+      "character": "silent",
+      "core": "D",
+      "metric": "conditionalSignature",
+      "horizon": 17,
+      "model": "observed-opportunity-window4-v1",
+      "policy": "completion-choice-v1",
+      "ascension": 10,
+      "template_sha256": "76e91c950bfd87d820093bdd7dd4b3f11db15256ea2b6e0bb41b9f1ec89f998c",
+      "forecast_rows": 3057,
+      "numeric_prediction_rows": 3057,
+      "potential_bound_runs": 34,
+      "n": 24,
+      "independent_runs": 23,
+      "positives": 0,
+      "negatives": 24,
+      "brier": 0.0,
+      "baseline_brier": 0.0,
+      "bias": 0.0,
+      "minimum_more_qualified_independent_runs": 0,
+      "admitted": false,
+      "input_dispositions": {
+        "unselected": 2215,
+        "route_changed": 88,
+        "unverified": 512,
+        "policy_changed": 175,
+        "matched": 24,
+        "sl_unknown": 6,
+        "censored": 37
+      },
+      "missing_prediction_bindings": {},
+      "evaluator_exclusions": {
+        "identity mismatch": 3033
+      },
+      "failures": [
+        "missing_positive_or_negative_outcomes",
+        "brier_not_better_than_constant_baseline"
+      ],
+      "missing_data_limit": "Minimum count deficit only; further data cannot guarantee both outcome classes or performance gates."
+    },
+    {
+      "character": "silent",
+      "core": "D",
+      "metric": "conditionalSignature",
+      "horizon": 17,
+      "model": null,
+      "policy": null,
+      "ascension": 10,
+      "template_sha256": null,
+      "forecast_rows": 1260,
+      "numeric_prediction_rows": 1260,
+      "potential_bound_runs": 0,
+      "n": 0,
+      "independent_runs": 0,
+      "positives": 0,
+      "negatives": 0,
+      "brier": null,
+      "baseline_brier": null,
+      "bias": null,
+      "minimum_more_qualified_independent_runs": 10,
+      "admitted": false,
+      "input_dispositions": {
+        "missing_binding": 637,
+        "unselected": 287,
+        "unverified": 336
+      },
+      "missing_prediction_bindings": {
+        "model": 1260,
+        "policy": 1260,
+        "template_sha256": 1260,
+        "as_of": 1260
+      },
+      "evaluator_exclusions": {
+        "identity mismatch": 1260
+      },
+      "failures": [
+        "missing_prospective_binding",
+        "fewer_than_10_qualified_independent_runs",
+        "missing_positive_or_negative_outcomes",
+        "no_qualified_labels_to_score"
+      ],
+      "missing_data_limit": "Minimum count deficit only; further data cannot guarantee both outcome classes or performance gates."
+    },
+    {
+      "character": "silent",
+      "core": "D",
+      "metric": "conditionalSignature",
+      "horizon": 33,
+      "model": "observed-opportunity-window4-v1",
+      "policy": "completion-choice-v1",
+      "ascension": 10,
+      "template_sha256": "76e91c950bfd87d820093bdd7dd4b3f11db15256ea2b6e0bb41b9f1ec89f998c",
+      "forecast_rows": 2661,
+      "numeric_prediction_rows": 2661,
+      "potential_bound_runs": 28,
+      "n": 16,
+      "independent_runs": 14,
+      "positives": 3,
+      "negatives": 13,
+      "brier": 0.0,
+      "baseline_brier": 0.15234375,
+      "bias": 0.0,
+      "minimum_more_qualified_independent_runs": 0,
+      "admitted": true,
+      "input_dispositions": {
+        "unselected": 1590,
+        "route_changed": 6,
+        "unverified": 881,
+        "policy_changed": 115,
+        "matched": 16,
+        "censored": 47,
+        "sl_unknown": 6
+      },
+      "missing_prediction_bindings": {},
+      "evaluator_exclusions": {
+        "identity mismatch": 2645
+      },
+      "failures": [],
+      "missing_data_limit": "Minimum count deficit only; further data cannot guarantee both outcome classes or performance gates."
+    },
+    {
+      "character": "silent",
+      "core": "D",
+      "metric": "conditionalSignature",
+      "horizon": 33,
+      "model": null,
+      "policy": null,
+      "ascension": 10,
+      "template_sha256": null,
+      "forecast_rows": 1029,
+      "numeric_prediction_rows": 1029,
+      "potential_bound_runs": 0,
+      "n": 0,
+      "independent_runs": 0,
+      "positives": 0,
+      "negatives": 0,
+      "brier": null,
+      "baseline_brier": null,
+      "bias": null,
+      "minimum_more_qualified_independent_runs": 10,
+      "admitted": false,
+      "input_dispositions": {
+        "missing_binding": 549,
+        "unselected": 176,
+        "unverified": 304
+      },
+      "missing_prediction_bindings": {
+        "model": 1029,
+        "policy": 1029,
+        "template_sha256": 1029,
+        "as_of": 1029
+      },
+      "evaluator_exclusions": {
+        "identity mismatch": 1029
+      },
+      "failures": [
+        "missing_prospective_binding",
+        "fewer_than_10_qualified_independent_runs",
+        "missing_positive_or_negative_outcomes",
+        "no_qualified_labels_to_score"
+      ],
+      "missing_data_limit": "Minimum count deficit only; further data cannot guarantee both outcome classes or performance gates."
+    },
+    {
+      "character": "silent",
+      "core": "D",
+      "metric": "conditionalSignature",
+      "horizon": 48,
+      "model": "observed-opportunity-window4-v1",
+      "policy": "completion-choice-v1",
+      "ascension": 10,
+      "template_sha256": "76e91c950bfd87d820093bdd7dd4b3f11db15256ea2b6e0bb41b9f1ec89f998c",
+      "forecast_rows": 1787,
+      "numeric_prediction_rows": 1787,
+      "potential_bound_runs": 17,
+      "n": 6,
+      "independent_runs": 5,
+      "positives": 3,
+      "negatives": 3,
+      "brier": 0.0,
+      "baseline_brier": 0.25,
+      "bias": 0.0,
+      "minimum_more_qualified_independent_runs": 5,
+      "admitted": false,
+      "input_dispositions": {
+        "unselected": 1219,
+        "policy_changed": 52,
+        "unverified": 448,
+        "sl_unknown": 16,
+        "matched": 6,
+        "censored": 45,
+        "route_changed": 1
+      },
+      "missing_prediction_bindings": {},
+      "evaluator_exclusions": {
+        "identity mismatch": 1781
+      },
+      "failures": [
+        "fewer_than_10_qualified_independent_runs"
+      ],
+      "missing_data_limit": "Minimum count deficit only; further data cannot guarantee both outcome classes or performance gates."
+    },
+    {
+      "character": "silent",
+      "core": "D",
+      "metric": "conditionalSignature",
+      "horizon": 48,
+      "model": null,
+      "policy": null,
+      "ascension": 10,
+      "template_sha256": null,
+      "forecast_rows": 703,
+      "numeric_prediction_rows": 703,
+      "potential_bound_runs": 0,
+      "n": 0,
+      "independent_runs": 0,
+      "positives": 0,
+      "negatives": 0,
+      "brier": null,
+      "baseline_brier": null,
+      "bias": null,
+      "minimum_more_qualified_independent_runs": 10,
+      "admitted": false,
+      "input_dispositions": {
+        "missing_binding": 338,
+        "unselected": 123,
+        "unverified": 242
+      },
+      "missing_prediction_bindings": {
+        "model": 703,
+        "policy": 703,
+        "template_sha256": 703,
+        "as_of": 703
+      },
+      "evaluator_exclusions": {
+        "identity mismatch": 703
+      },
+      "failures": [
+        "missing_prospective_binding",
+        "fewer_than_10_qualified_independent_runs",
+        "missing_positive_or_negative_outcomes",
+        "no_qualified_labels_to_score"
+      ],
+      "missing_data_limit": "Minimum count deficit only; further data cannot guarantee both outcome classes or performance gates."
+    },
+    {
+      "character": "silent",
+      "core": "D",
+      "metric": "signature",
+      "horizon": 17,
+      "model": "observed-opportunity-window4-v1",
+      "policy": "completion-choice-v1",
+      "ascension": 10,
+      "template_sha256": "76e91c950bfd87d820093bdd7dd4b3f11db15256ea2b6e0bb41b9f1ec89f998c",
+      "forecast_rows": 3057,
+      "numeric_prediction_rows": 0,
+      "potential_bound_runs": 0,
+      "n": 0,
+      "independent_runs": 0,
+      "positives": 0,
+      "negatives": 0,
+      "brier": null,
+      "baseline_brier": null,
+      "bias": null,
+      "minimum_more_qualified_independent_runs": 10,
+      "admitted": false,
+      "input_dispositions": {
+        "unknown_probability": 3057
+      },
+      "missing_prediction_bindings": {},
+      "evaluator_exclusions": {
+        "identity mismatch": 3057
+      },
+      "failures": [
+        "metric_not_eligible_for_advisory",
+        "all_logged_probabilities_unknown",
+        "fewer_than_10_qualified_independent_runs",
+        "missing_positive_or_negative_outcomes",
+        "no_qualified_labels_to_score"
+      ],
+      "missing_data_limit": "Minimum count deficit only; further data cannot guarantee both outcome classes or performance gates."
+    },
+    {
+      "character": "silent",
+      "core": "D",
+      "metric": "signature",
+      "horizon": 17,
+      "model": null,
+      "policy": null,
+      "ascension": 10,
+      "template_sha256": null,
+      "forecast_rows": 1260,
+      "numeric_prediction_rows": 0,
+      "potential_bound_runs": 0,
+      "n": 0,
+      "independent_runs": 0,
+      "positives": 0,
+      "negatives": 0,
+      "brier": null,
+      "baseline_brier": null,
+      "bias": null,
+      "minimum_more_qualified_independent_runs": 10,
+      "admitted": false,
+      "input_dispositions": {
+        "missing_binding": 1260
+      },
+      "missing_prediction_bindings": {
+        "model": 1260,
+        "policy": 1260,
+        "template_sha256": 1260,
+        "as_of": 1260
+      },
+      "evaluator_exclusions": {
+        "identity mismatch": 1260
+      },
+      "failures": [
+        "metric_not_eligible_for_advisory",
+        "all_logged_probabilities_unknown",
+        "missing_prospective_binding",
+        "fewer_than_10_qualified_independent_runs",
+        "missing_positive_or_negative_outcomes",
+        "no_qualified_labels_to_score"
+      ],
+      "missing_data_limit": "Minimum count deficit only; further data cannot guarantee both outcome classes or performance gates."
+    },
+    {
+      "character": "silent",
+      "core": "D",
+      "metric": "signature",
+      "horizon": 33,
+      "model": "observed-opportunity-window4-v1",
+      "policy": "completion-choice-v1",
+      "ascension": 10,
+      "template_sha256": "76e91c950bfd87d820093bdd7dd4b3f11db15256ea2b6e0bb41b9f1ec89f998c",
+      "forecast_rows": 2661,
+      "numeric_prediction_rows": 0,
+      "potential_bound_runs": 0,
+      "n": 0,
+      "independent_runs": 0,
+      "positives": 0,
+      "negatives": 0,
+      "brier": null,
+      "baseline_brier": null,
+      "bias": null,
+      "minimum_more_qualified_independent_runs": 10,
+      "admitted": false,
+      "input_dispositions": {
+        "unknown_probability": 2661
+      },
+      "missing_prediction_bindings": {},
+      "evaluator_exclusions": {
+        "identity mismatch": 2661
+      },
+      "failures": [
+        "metric_not_eligible_for_advisory",
+        "all_logged_probabilities_unknown",
+        "fewer_than_10_qualified_independent_runs",
+        "missing_positive_or_negative_outcomes",
+        "no_qualified_labels_to_score"
+      ],
+      "missing_data_limit": "Minimum count deficit only; further data cannot guarantee both outcome classes or performance gates."
+    },
+    {
+      "character": "silent",
+      "core": "D",
+      "metric": "signature",
+      "horizon": 33,
+      "model": null,
+      "policy": null,
+      "ascension": 10,
+      "template_sha256": null,
+      "forecast_rows": 1029,
+      "numeric_prediction_rows": 0,
+      "potential_bound_runs": 0,
+      "n": 0,
+      "independent_runs": 0,
+      "positives": 0,
+      "negatives": 0,
+      "brier": null,
+      "baseline_brier": null,
+      "bias": null,
+      "minimum_more_qualified_independent_runs": 10,
+      "admitted": false,
+      "input_dispositions": {
+        "missing_binding": 1029
+      },
+      "missing_prediction_bindings": {
+        "model": 1029,
+        "policy": 1029,
+        "template_sha256": 1029,
+        "as_of": 1029
+      },
+      "evaluator_exclusions": {
+        "identity mismatch": 1029
+      },
+      "failures": [
+        "metric_not_eligible_for_advisory",
+        "all_logged_probabilities_unknown",
+        "missing_prospective_binding",
+        "fewer_than_10_qualified_independent_runs",
+        "missing_positive_or_negative_outcomes",
+        "no_qualified_labels_to_score"
+      ],
+      "missing_data_limit": "Minimum count deficit only; further data cannot guarantee both outcome classes or performance gates."
+    },
+    {
+      "character": "silent",
+      "core": "D",
+      "metric": "signature",
+      "horizon": 48,
+      "model": "observed-opportunity-window4-v1",
+      "policy": "completion-choice-v1",
+      "ascension": 10,
+      "template_sha256": "76e91c950bfd87d820093bdd7dd4b3f11db15256ea2b6e0bb41b9f1ec89f998c",
+      "forecast_rows": 1787,
+      "numeric_prediction_rows": 0,
+      "potential_bound_runs": 0,
+      "n": 0,
+      "independent_runs": 0,
+      "positives": 0,
+      "negatives": 0,
+      "brier": null,
+      "baseline_brier": null,
+      "bias": null,
+      "minimum_more_qualified_independent_runs": 10,
+      "admitted": false,
+      "input_dispositions": {
+        "unknown_probability": 1787
+      },
+      "missing_prediction_bindings": {},
+      "evaluator_exclusions": {
+        "identity mismatch": 1787
+      },
+      "failures": [
+        "metric_not_eligible_for_advisory",
+        "all_logged_probabilities_unknown",
+        "fewer_than_10_qualified_independent_runs",
+        "missing_positive_or_negative_outcomes",
+        "no_qualified_labels_to_score"
+      ],
+      "missing_data_limit": "Minimum count deficit only; further data cannot guarantee both outcome classes or performance gates."
+    },
+    {
+      "character": "silent",
+      "core": "D",
+      "metric": "signature",
+      "horizon": 48,
+      "model": null,
+      "policy": null,
+      "ascension": 10,
+      "template_sha256": null,
+      "forecast_rows": 703,
+      "numeric_prediction_rows": 0,
+      "potential_bound_runs": 0,
+      "n": 0,
+      "independent_runs": 0,
+      "positives": 0,
+      "negatives": 0,
+      "brier": null,
+      "baseline_brier": null,
+      "bias": null,
+      "minimum_more_qualified_independent_runs": 10,
+      "admitted": false,
+      "input_dispositions": {
+        "missing_binding": 703
+      },
+      "missing_prediction_bindings": {
+        "model": 703,
+        "policy": 703,
+        "template_sha256": 703,
+        "as_of": 703
+      },
+      "evaluator_exclusions": {
+        "identity mismatch": 703
+      },
+      "failures": [
+        "metric_not_eligible_for_advisory",
+        "all_logged_probabilities_unknown",
+        "missing_prospective_binding",
+        "fewer_than_10_qualified_independent_runs",
+        "missing_positive_or_negative_outcomes",
+        "no_qualified_labels_to_score"
+      ],
+      "missing_data_limit": "Minimum count deficit only; further data cannot guarantee both outcome classes or performance gates."
+    },
+    {
+      "character": "silent",
+      "core": "D",
+      "metric": "terminalWin",
+      "horizon": 17,
+      "model": "observed-opportunity-window4-v1",
+      "policy": "completion-choice-v1",
+      "ascension": 10,
+      "template_sha256": "76e91c950bfd87d820093bdd7dd4b3f11db15256ea2b6e0bb41b9f1ec89f998c",
+      "forecast_rows": 3057,
+      "numeric_prediction_rows": 0,
+      "potential_bound_runs": 0,
+      "n": 0,
+      "independent_runs": 0,
+      "positives": 0,
+      "negatives": 0,
+      "brier": null,
+      "baseline_brier": null,
+      "bias": null,
+      "minimum_more_qualified_independent_runs": 10,
+      "admitted": false,
+      "input_dispositions": {
+        "unknown_probability": 3057
+      },
+      "missing_prediction_bindings": {},
+      "evaluator_exclusions": {
+        "identity mismatch": 3057
+      },
+      "failures": [
+        "metric_not_eligible_for_advisory",
+        "all_logged_probabilities_unknown",
+        "fewer_than_10_qualified_independent_runs",
+        "missing_positive_or_negative_outcomes",
+        "no_qualified_labels_to_score"
+      ],
+      "missing_data_limit": "Minimum count deficit only; further data cannot guarantee both outcome classes or performance gates."
+    },
+    {
+      "character": "silent",
+      "core": "D",
+      "metric": "terminalWin",
+      "horizon": 17,
+      "model": null,
+      "policy": null,
+      "ascension": 10,
+      "template_sha256": null,
+      "forecast_rows": 1260,
+      "numeric_prediction_rows": 0,
+      "potential_bound_runs": 0,
+      "n": 0,
+      "independent_runs": 0,
+      "positives": 0,
+      "negatives": 0,
+      "brier": null,
+      "baseline_brier": null,
+      "bias": null,
+      "minimum_more_qualified_independent_runs": 10,
+      "admitted": false,
+      "input_dispositions": {
+        "missing_binding": 1260
+      },
+      "missing_prediction_bindings": {
+        "model": 1260,
+        "policy": 1260,
+        "template_sha256": 1260,
+        "as_of": 1260
+      },
+      "evaluator_exclusions": {
+        "identity mismatch": 1260
+      },
+      "failures": [
+        "metric_not_eligible_for_advisory",
+        "all_logged_probabilities_unknown",
+        "missing_prospective_binding",
+        "fewer_than_10_qualified_independent_runs",
+        "missing_positive_or_negative_outcomes",
+        "no_qualified_labels_to_score"
+      ],
+      "missing_data_limit": "Minimum count deficit only; further data cannot guarantee both outcome classes or performance gates."
+    },
+    {
+      "character": "silent",
+      "core": "D",
+      "metric": "terminalWin",
+      "horizon": 33,
+      "model": "observed-opportunity-window4-v1",
+      "policy": "completion-choice-v1",
+      "ascension": 10,
+      "template_sha256": "76e91c950bfd87d820093bdd7dd4b3f11db15256ea2b6e0bb41b9f1ec89f998c",
+      "forecast_rows": 2661,
+      "numeric_prediction_rows": 0,
+      "potential_bound_runs": 0,
+      "n": 0,
+      "independent_runs": 0,
+      "positives": 0,
+      "negatives": 0,
+      "brier": null,
+      "baseline_brier": null,
+      "bias": null,
+      "minimum_more_qualified_independent_runs": 10,
+      "admitted": false,
+      "input_dispositions": {
+        "unknown_probability": 2661
+      },
+      "missing_prediction_bindings": {},
+      "evaluator_exclusions": {
+        "identity mismatch": 2661
+      },
+      "failures": [
+        "metric_not_eligible_for_advisory",
+        "all_logged_probabilities_unknown",
+        "fewer_than_10_qualified_independent_runs",
+        "missing_positive_or_negative_outcomes",
+        "no_qualified_labels_to_score"
+      ],
+      "missing_data_limit": "Minimum count deficit only; further data cannot guarantee both outcome classes or performance gates."
+    },
+    {
+      "character": "silent",
+      "core": "D",
+      "metric": "terminalWin",
+      "horizon": 33,
+      "model": null,
+      "policy": null,
+      "ascension": 10,
+      "template_sha256": null,
+      "forecast_rows": 1029,
+      "numeric_prediction_rows": 0,
+      "potential_bound_runs": 0,
+      "n": 0,
+      "independent_runs": 0,
+      "positives": 0,
+      "negatives": 0,
+      "brier": null,
+      "baseline_brier": null,
+      "bias": null,
+      "minimum_more_qualified_independent_runs": 10,
+      "admitted": false,
+      "input_dispositions": {
+        "missing_binding": 1029
+      },
+      "missing_prediction_bindings": {
+        "model": 1029,
+        "policy": 1029,
+        "template_sha256": 1029,
+        "as_of": 1029
+      },
+      "evaluator_exclusions": {
+        "identity mismatch": 1029
+      },
+      "failures": [
+        "metric_not_eligible_for_advisory",
+        "all_logged_probabilities_unknown",
+        "missing_prospective_binding",
+        "fewer_than_10_qualified_independent_runs",
+        "missing_positive_or_negative_outcomes",
+        "no_qualified_labels_to_score"
+      ],
+      "missing_data_limit": "Minimum count deficit only; further data cannot guarantee both outcome classes or performance gates."
+    },
+    {
+      "character": "silent",
+      "core": "D",
+      "metric": "terminalWin",
+      "horizon": 48,
+      "model": "observed-opportunity-window4-v1",
+      "policy": "completion-choice-v1",
+      "ascension": 10,
+      "template_sha256": "76e91c950bfd87d820093bdd7dd4b3f11db15256ea2b6e0bb41b9f1ec89f998c",
+      "forecast_rows": 1787,
+      "numeric_prediction_rows": 0,
+      "potential_bound_runs": 0,
+      "n": 0,
+      "independent_runs": 0,
+      "positives": 0,
+      "negatives": 0,
+      "brier": null,
+      "baseline_brier": null,
+      "bias": null,
+      "minimum_more_qualified_independent_runs": 10,
+      "admitted": false,
+      "input_dispositions": {
+        "unknown_probability": 1787
+      },
+      "missing_prediction_bindings": {},
+      "evaluator_exclusions": {
+        "identity mismatch": 1787
+      },
+      "failures": [
+        "metric_not_eligible_for_advisory",
+        "all_logged_probabilities_unknown",
+        "fewer_than_10_qualified_independent_runs",
+        "missing_positive_or_negative_outcomes",
+        "no_qualified_labels_to_score"
+      ],
+      "missing_data_limit": "Minimum count deficit only; further data cannot guarantee both outcome classes or performance gates."
+    },
+    {
+      "character": "silent",
+      "core": "D",
+      "metric": "terminalWin",
+      "horizon": 48,
+      "model": null,
+      "policy": null,
+      "ascension": 10,
+      "template_sha256": null,
+      "forecast_rows": 703,
+      "numeric_prediction_rows": 0,
+      "potential_bound_runs": 0,
+      "n": 0,
+      "independent_runs": 0,
+      "positives": 0,
+      "negatives": 0,
+      "brier": null,
+      "baseline_brier": null,
+      "bias": null,
+      "minimum_more_qualified_independent_runs": 10,
+      "admitted": false,
+      "input_dispositions": {
+        "missing_binding": 703
+      },
+      "missing_prediction_bindings": {
+        "model": 703,
+        "policy": 703,
+        "template_sha256": 703,
+        "as_of": 703
+      },
+      "evaluator_exclusions": {
+        "identity mismatch": 703
+      },
+      "failures": [
+        "metric_not_eligible_for_advisory",
+        "all_logged_probabilities_unknown",
+        "missing_prospective_binding",
+        "fewer_than_10_qualified_independent_runs",
+        "missing_positive_or_negative_outcomes",
+        "no_qualified_labels_to_score"
+      ],
+      "missing_data_limit": "Minimum count deficit only; further data cannot guarantee both outcome classes or performance gates."
+    },
+    {
+      "character": "silent",
+      "core": "P",
+      "metric": "aliveAndFunctional",
+      "horizon": 17,
+      "model": "observed-opportunity-window4-v1",
+      "policy": "completion-choice-v1",
+      "ascension": 10,
+      "template_sha256": "76e91c950bfd87d820093bdd7dd4b3f11db15256ea2b6e0bb41b9f1ec89f998c",
+      "forecast_rows": 3057,
+      "numeric_prediction_rows": 0,
+      "potential_bound_runs": 0,
+      "n": 0,
+      "independent_runs": 0,
+      "positives": 0,
+      "negatives": 0,
+      "brier": null,
+      "baseline_brier": null,
+      "bias": null,
+      "minimum_more_qualified_independent_runs": 10,
+      "admitted": false,
+      "input_dispositions": {
+        "unknown_probability": 3057
+      },
+      "missing_prediction_bindings": {},
+      "evaluator_exclusions": {
+        "identity mismatch": 3057
+      },
+      "failures": [
+        "metric_not_eligible_for_advisory",
+        "all_logged_probabilities_unknown",
+        "fewer_than_10_qualified_independent_runs",
+        "missing_positive_or_negative_outcomes",
+        "no_qualified_labels_to_score"
+      ],
+      "missing_data_limit": "Minimum count deficit only; further data cannot guarantee both outcome classes or performance gates."
+    },
+    {
+      "character": "silent",
+      "core": "P",
+      "metric": "aliveAndFunctional",
+      "horizon": 17,
+      "model": null,
+      "policy": null,
+      "ascension": 10,
+      "template_sha256": null,
+      "forecast_rows": 1260,
+      "numeric_prediction_rows": 0,
+      "potential_bound_runs": 0,
+      "n": 0,
+      "independent_runs": 0,
+      "positives": 0,
+      "negatives": 0,
+      "brier": null,
+      "baseline_brier": null,
+      "bias": null,
+      "minimum_more_qualified_independent_runs": 10,
+      "admitted": false,
+      "input_dispositions": {
+        "missing_binding": 1260
+      },
+      "missing_prediction_bindings": {
+        "model": 1260,
+        "policy": 1260,
+        "template_sha256": 1260,
+        "as_of": 1260
+      },
+      "evaluator_exclusions": {
+        "identity mismatch": 1260
+      },
+      "failures": [
+        "metric_not_eligible_for_advisory",
+        "all_logged_probabilities_unknown",
+        "missing_prospective_binding",
+        "fewer_than_10_qualified_independent_runs",
+        "missing_positive_or_negative_outcomes",
+        "no_qualified_labels_to_score"
+      ],
+      "missing_data_limit": "Minimum count deficit only; further data cannot guarantee both outcome classes or performance gates."
+    },
+    {
+      "character": "silent",
+      "core": "P",
+      "metric": "aliveAndFunctional",
+      "horizon": 33,
+      "model": "observed-opportunity-window4-v1",
+      "policy": "completion-choice-v1",
+      "ascension": 10,
+      "template_sha256": "76e91c950bfd87d820093bdd7dd4b3f11db15256ea2b6e0bb41b9f1ec89f998c",
+      "forecast_rows": 2661,
+      "numeric_prediction_rows": 0,
+      "potential_bound_runs": 0,
+      "n": 0,
+      "independent_runs": 0,
+      "positives": 0,
+      "negatives": 0,
+      "brier": null,
+      "baseline_brier": null,
+      "bias": null,
+      "minimum_more_qualified_independent_runs": 10,
+      "admitted": false,
+      "input_dispositions": {
+        "unknown_probability": 2661
+      },
+      "missing_prediction_bindings": {},
+      "evaluator_exclusions": {
+        "identity mismatch": 2661
+      },
+      "failures": [
+        "metric_not_eligible_for_advisory",
+        "all_logged_probabilities_unknown",
+        "fewer_than_10_qualified_independent_runs",
+        "missing_positive_or_negative_outcomes",
+        "no_qualified_labels_to_score"
+      ],
+      "missing_data_limit": "Minimum count deficit only; further data cannot guarantee both outcome classes or performance gates."
+    },
+    {
+      "character": "silent",
+      "core": "P",
+      "metric": "aliveAndFunctional",
+      "horizon": 33,
+      "model": null,
+      "policy": null,
+      "ascension": 10,
+      "template_sha256": null,
+      "forecast_rows": 1029,
+      "numeric_prediction_rows": 0,
+      "potential_bound_runs": 0,
+      "n": 0,
+      "independent_runs": 0,
+      "positives": 0,
+      "negatives": 0,
+      "brier": null,
+      "baseline_brier": null,
+      "bias": null,
+      "minimum_more_qualified_independent_runs": 10,
+      "admitted": false,
+      "input_dispositions": {
+        "missing_binding": 1029
+      },
+      "missing_prediction_bindings": {
+        "model": 1029,
+        "policy": 1029,
+        "template_sha256": 1029,
+        "as_of": 1029
+      },
+      "evaluator_exclusions": {
+        "identity mismatch": 1029
+      },
+      "failures": [
+        "metric_not_eligible_for_advisory",
+        "all_logged_probabilities_unknown",
+        "missing_prospective_binding",
+        "fewer_than_10_qualified_independent_runs",
+        "missing_positive_or_negative_outcomes",
+        "no_qualified_labels_to_score"
+      ],
+      "missing_data_limit": "Minimum count deficit only; further data cannot guarantee both outcome classes or performance gates."
+    },
+    {
+      "character": "silent",
+      "core": "P",
+      "metric": "aliveAndFunctional",
+      "horizon": 48,
+      "model": "observed-opportunity-window4-v1",
+      "policy": "completion-choice-v1",
+      "ascension": 10,
+      "template_sha256": "76e91c950bfd87d820093bdd7dd4b3f11db15256ea2b6e0bb41b9f1ec89f998c",
+      "forecast_rows": 1787,
+      "numeric_prediction_rows": 0,
+      "potential_bound_runs": 0,
+      "n": 0,
+      "independent_runs": 0,
+      "positives": 0,
+      "negatives": 0,
+      "brier": null,
+      "baseline_brier": null,
+      "bias": null,
+      "minimum_more_qualified_independent_runs": 10,
+      "admitted": false,
+      "input_dispositions": {
+        "unknown_probability": 1787
+      },
+      "missing_prediction_bindings": {},
+      "evaluator_exclusions": {
+        "identity mismatch": 1787
+      },
+      "failures": [
+        "metric_not_eligible_for_advisory",
+        "all_logged_probabilities_unknown",
+        "fewer_than_10_qualified_independent_runs",
+        "missing_positive_or_negative_outcomes",
+        "no_qualified_labels_to_score"
+      ],
+      "missing_data_limit": "Minimum count deficit only; further data cannot guarantee both outcome classes or performance gates."
+    },
+    {
+      "character": "silent",
+      "core": "P",
+      "metric": "aliveAndFunctional",
+      "horizon": 48,
+      "model": null,
+      "policy": null,
+      "ascension": 10,
+      "template_sha256": null,
+      "forecast_rows": 703,
+      "numeric_prediction_rows": 0,
+      "potential_bound_runs": 0,
+      "n": 0,
+      "independent_runs": 0,
+      "positives": 0,
+      "negatives": 0,
+      "brier": null,
+      "baseline_brier": null,
+      "bias": null,
+      "minimum_more_qualified_independent_runs": 10,
+      "admitted": false,
+      "input_dispositions": {
+        "missing_binding": 703
+      },
+      "missing_prediction_bindings": {
+        "model": 703,
+        "policy": 703,
+        "template_sha256": 703,
+        "as_of": 703
+      },
+      "evaluator_exclusions": {
+        "identity mismatch": 703
+      },
+      "failures": [
+        "metric_not_eligible_for_advisory",
+        "all_logged_probabilities_unknown",
+        "missing_prospective_binding",
+        "fewer_than_10_qualified_independent_runs",
+        "missing_positive_or_negative_outcomes",
+        "no_qualified_labels_to_score"
+      ],
+      "missing_data_limit": "Minimum count deficit only; further data cannot guarantee both outcome classes or performance gates."
+    },
+    {
+      "character": "silent",
+      "core": "P",
+      "metric": "conditionalSignature",
+      "horizon": 17,
+      "model": "observed-opportunity-window4-v1",
+      "policy": "completion-choice-v1",
+      "ascension": 10,
+      "template_sha256": "76e91c950bfd87d820093bdd7dd4b3f11db15256ea2b6e0bb41b9f1ec89f998c",
+      "forecast_rows": 3057,
+      "numeric_prediction_rows": 3057,
+      "potential_bound_runs": 34,
+      "n": 24,
+      "independent_runs": 23,
+      "positives": 2,
+      "negatives": 22,
+      "brier": 0.0,
+      "baseline_brier": 0.07638888888888888,
+      "bias": 0.0,
+      "minimum_more_qualified_independent_runs": 0,
+      "admitted": true,
+      "input_dispositions": {
+        "unselected": 2215,
+        "route_changed": 88,
+        "unverified": 512,
+        "policy_changed": 176,
+        "matched": 24,
+        "sl_unknown": 5,
+        "censored": 37
+      },
+      "missing_prediction_bindings": {},
+      "evaluator_exclusions": {
+        "identity mismatch": 3033
+      },
+      "failures": [],
+      "missing_data_limit": "Minimum count deficit only; further data cannot guarantee both outcome classes or performance gates."
+    },
+    {
+      "character": "silent",
+      "core": "P",
+      "metric": "conditionalSignature",
+      "horizon": 17,
+      "model": null,
+      "policy": null,
+      "ascension": 10,
+      "template_sha256": null,
+      "forecast_rows": 1260,
+      "numeric_prediction_rows": 1260,
+      "potential_bound_runs": 0,
+      "n": 0,
+      "independent_runs": 0,
+      "positives": 0,
+      "negatives": 0,
+      "brier": null,
+      "baseline_brier": null,
+      "bias": null,
+      "minimum_more_qualified_independent_runs": 10,
+      "admitted": false,
+      "input_dispositions": {
+        "missing_binding": 637,
+        "unselected": 287,
+        "unverified": 336
+      },
+      "missing_prediction_bindings": {
+        "model": 1260,
+        "policy": 1260,
+        "template_sha256": 1260,
+        "as_of": 1260
+      },
+      "evaluator_exclusions": {
+        "identity mismatch": 1260
+      },
+      "failures": [
+        "missing_prospective_binding",
+        "fewer_than_10_qualified_independent_runs",
+        "missing_positive_or_negative_outcomes",
+        "no_qualified_labels_to_score"
+      ],
+      "missing_data_limit": "Minimum count deficit only; further data cannot guarantee both outcome classes or performance gates."
+    },
+    {
+      "character": "silent",
+      "core": "P",
+      "metric": "conditionalSignature",
+      "horizon": 33,
+      "model": "observed-opportunity-window4-v1",
+      "policy": "completion-choice-v1",
+      "ascension": 10,
+      "template_sha256": "76e91c950bfd87d820093bdd7dd4b3f11db15256ea2b6e0bb41b9f1ec89f998c",
+      "forecast_rows": 2661,
+      "numeric_prediction_rows": 2661,
+      "potential_bound_runs": 28,
+      "n": 16,
+      "independent_runs": 14,
+      "positives": 5,
+      "negatives": 11,
+      "brier": 0.0,
+      "baseline_brier": 0.21484375,
+      "bias": 0.0,
+      "minimum_more_qualified_independent_runs": 0,
+      "admitted": true,
+      "input_dispositions": {
+        "unselected": 1590,
+        "route_changed": 6,
+        "unverified": 881,
+        "policy_changed": 115,
+        "matched": 16,
+        "censored": 47,
+        "sl_unknown": 6
+      },
+      "missing_prediction_bindings": {},
+      "evaluator_exclusions": {
+        "identity mismatch": 2645
+      },
+      "failures": [],
+      "missing_data_limit": "Minimum count deficit only; further data cannot guarantee both outcome classes or performance gates."
+    },
+    {
+      "character": "silent",
+      "core": "P",
+      "metric": "conditionalSignature",
+      "horizon": 33,
+      "model": null,
+      "policy": null,
+      "ascension": 10,
+      "template_sha256": null,
+      "forecast_rows": 1029,
+      "numeric_prediction_rows": 1029,
+      "potential_bound_runs": 0,
+      "n": 0,
+      "independent_runs": 0,
+      "positives": 0,
+      "negatives": 0,
+      "brier": null,
+      "baseline_brier": null,
+      "bias": null,
+      "minimum_more_qualified_independent_runs": 10,
+      "admitted": false,
+      "input_dispositions": {
+        "missing_binding": 549,
+        "unselected": 176,
+        "unverified": 304
+      },
+      "missing_prediction_bindings": {
+        "model": 1029,
+        "policy": 1029,
+        "template_sha256": 1029,
+        "as_of": 1029
+      },
+      "evaluator_exclusions": {
+        "identity mismatch": 1029
+      },
+      "failures": [
+        "missing_prospective_binding",
+        "fewer_than_10_qualified_independent_runs",
+        "missing_positive_or_negative_outcomes",
+        "no_qualified_labels_to_score"
+      ],
+      "missing_data_limit": "Minimum count deficit only; further data cannot guarantee both outcome classes or performance gates."
+    },
+    {
+      "character": "silent",
+      "core": "P",
+      "metric": "conditionalSignature",
+      "horizon": 48,
+      "model": "observed-opportunity-window4-v1",
+      "policy": "completion-choice-v1",
+      "ascension": 10,
+      "template_sha256": "76e91c950bfd87d820093bdd7dd4b3f11db15256ea2b6e0bb41b9f1ec89f998c",
+      "forecast_rows": 1787,
+      "numeric_prediction_rows": 1787,
+      "potential_bound_runs": 17,
+      "n": 6,
+      "independent_runs": 5,
+      "positives": 2,
+      "negatives": 4,
+      "brier": 0.0,
+      "baseline_brier": 0.22222222222222224,
+      "bias": 0.0,
+      "minimum_more_qualified_independent_runs": 5,
+      "admitted": false,
+      "input_dispositions": {
+        "unselected": 1219,
+        "policy_changed": 52,
+        "unverified": 448,
+        "sl_unknown": 16,
+        "matched": 6,
+        "censored": 45,
+        "route_changed": 1
+      },
+      "missing_prediction_bindings": {},
+      "evaluator_exclusions": {
+        "identity mismatch": 1781
+      },
+      "failures": [
+        "fewer_than_10_qualified_independent_runs"
+      ],
+      "missing_data_limit": "Minimum count deficit only; further data cannot guarantee both outcome classes or performance gates."
+    },
+    {
+      "character": "silent",
+      "core": "P",
+      "metric": "conditionalSignature",
+      "horizon": 48,
+      "model": null,
+      "policy": null,
+      "ascension": 10,
+      "template_sha256": null,
+      "forecast_rows": 703,
+      "numeric_prediction_rows": 703,
+      "potential_bound_runs": 0,
+      "n": 0,
+      "independent_runs": 0,
+      "positives": 0,
+      "negatives": 0,
+      "brier": null,
+      "baseline_brier": null,
+      "bias": null,
+      "minimum_more_qualified_independent_runs": 10,
+      "admitted": false,
+      "input_dispositions": {
+        "missing_binding": 338,
+        "unselected": 123,
+        "unverified": 242
+      },
+      "missing_prediction_bindings": {
+        "model": 703,
+        "policy": 703,
+        "template_sha256": 703,
+        "as_of": 703
+      },
+      "evaluator_exclusions": {
+        "identity mismatch": 703
+      },
+      "failures": [
+        "missing_prospective_binding",
+        "fewer_than_10_qualified_independent_runs",
+        "missing_positive_or_negative_outcomes",
+        "no_qualified_labels_to_score"
+      ],
+      "missing_data_limit": "Minimum count deficit only; further data cannot guarantee both outcome classes or performance gates."
+    },
+    {
+      "character": "silent",
+      "core": "P",
+      "metric": "signature",
+      "horizon": 17,
+      "model": "observed-opportunity-window4-v1",
+      "policy": "completion-choice-v1",
+      "ascension": 10,
+      "template_sha256": "76e91c950bfd87d820093bdd7dd4b3f11db15256ea2b6e0bb41b9f1ec89f998c",
+      "forecast_rows": 3057,
+      "numeric_prediction_rows": 0,
+      "potential_bound_runs": 0,
+      "n": 0,
+      "independent_runs": 0,
+      "positives": 0,
+      "negatives": 0,
+      "brier": null,
+      "baseline_brier": null,
+      "bias": null,
+      "minimum_more_qualified_independent_runs": 10,
+      "admitted": false,
+      "input_dispositions": {
+        "unknown_probability": 3057
+      },
+      "missing_prediction_bindings": {},
+      "evaluator_exclusions": {
+        "identity mismatch": 3057
+      },
+      "failures": [
+        "metric_not_eligible_for_advisory",
+        "all_logged_probabilities_unknown",
+        "fewer_than_10_qualified_independent_runs",
+        "missing_positive_or_negative_outcomes",
+        "no_qualified_labels_to_score"
+      ],
+      "missing_data_limit": "Minimum count deficit only; further data cannot guarantee both outcome classes or performance gates."
+    },
+    {
+      "character": "silent",
+      "core": "P",
+      "metric": "signature",
+      "horizon": 17,
+      "model": null,
+      "policy": null,
+      "ascension": 10,
+      "template_sha256": null,
+      "forecast_rows": 1260,
+      "numeric_prediction_rows": 0,
+      "potential_bound_runs": 0,
+      "n": 0,
+      "independent_runs": 0,
+      "positives": 0,
+      "negatives": 0,
+      "brier": null,
+      "baseline_brier": null,
+      "bias": null,
+      "minimum_more_qualified_independent_runs": 10,
+      "admitted": false,
+      "input_dispositions": {
+        "missing_binding": 1260
+      },
+      "missing_prediction_bindings": {
+        "model": 1260,
+        "policy": 1260,
+        "template_sha256": 1260,
+        "as_of": 1260
+      },
+      "evaluator_exclusions": {
+        "identity mismatch": 1260
+      },
+      "failures": [
+        "metric_not_eligible_for_advisory",
+        "all_logged_probabilities_unknown",
+        "missing_prospective_binding",
+        "fewer_than_10_qualified_independent_runs",
+        "missing_positive_or_negative_outcomes",
+        "no_qualified_labels_to_score"
+      ],
+      "missing_data_limit": "Minimum count deficit only; further data cannot guarantee both outcome classes or performance gates."
+    },
+    {
+      "character": "silent",
+      "core": "P",
+      "metric": "signature",
+      "horizon": 33,
+      "model": "observed-opportunity-window4-v1",
+      "policy": "completion-choice-v1",
+      "ascension": 10,
+      "template_sha256": "76e91c950bfd87d820093bdd7dd4b3f11db15256ea2b6e0bb41b9f1ec89f998c",
+      "forecast_rows": 2661,
+      "numeric_prediction_rows": 0,
+      "potential_bound_runs": 0,
+      "n": 0,
+      "independent_runs": 0,
+      "positives": 0,
+      "negatives": 0,
+      "brier": null,
+      "baseline_brier": null,
+      "bias": null,
+      "minimum_more_qualified_independent_runs": 10,
+      "admitted": false,
+      "input_dispositions": {
+        "unknown_probability": 2661
+      },
+      "missing_prediction_bindings": {},
+      "evaluator_exclusions": {
+        "identity mismatch": 2661
+      },
+      "failures": [
+        "metric_not_eligible_for_advisory",
+        "all_logged_probabilities_unknown",
+        "fewer_than_10_qualified_independent_runs",
+        "missing_positive_or_negative_outcomes",
+        "no_qualified_labels_to_score"
+      ],
+      "missing_data_limit": "Minimum count deficit only; further data cannot guarantee both outcome classes or performance gates."
+    },
+    {
+      "character": "silent",
+      "core": "P",
+      "metric": "signature",
+      "horizon": 33,
+      "model": null,
+      "policy": null,
+      "ascension": 10,
+      "template_sha256": null,
+      "forecast_rows": 1029,
+      "numeric_prediction_rows": 0,
+      "potential_bound_runs": 0,
+      "n": 0,
+      "independent_runs": 0,
+      "positives": 0,
+      "negatives": 0,
+      "brier": null,
+      "baseline_brier": null,
+      "bias": null,
+      "minimum_more_qualified_independent_runs": 10,
+      "admitted": false,
+      "input_dispositions": {
+        "missing_binding": 1029
+      },
+      "missing_prediction_bindings": {
+        "model": 1029,
+        "policy": 1029,
+        "template_sha256": 1029,
+        "as_of": 1029
+      },
+      "evaluator_exclusions": {
+        "identity mismatch": 1029
+      },
+      "failures": [
+        "metric_not_eligible_for_advisory",
+        "all_logged_probabilities_unknown",
+        "missing_prospective_binding",
+        "fewer_than_10_qualified_independent_runs",
+        "missing_positive_or_negative_outcomes",
+        "no_qualified_labels_to_score"
+      ],
+      "missing_data_limit": "Minimum count deficit only; further data cannot guarantee both outcome classes or performance gates."
+    },
+    {
+      "character": "silent",
+      "core": "P",
+      "metric": "signature",
+      "horizon": 48,
+      "model": "observed-opportunity-window4-v1",
+      "policy": "completion-choice-v1",
+      "ascension": 10,
+      "template_sha256": "76e91c950bfd87d820093bdd7dd4b3f11db15256ea2b6e0bb41b9f1ec89f998c",
+      "forecast_rows": 1787,
+      "numeric_prediction_rows": 0,
+      "potential_bound_runs": 0,
+      "n": 0,
+      "independent_runs": 0,
+      "positives": 0,
+      "negatives": 0,
+      "brier": null,
+      "baseline_brier": null,
+      "bias": null,
+      "minimum_more_qualified_independent_runs": 10,
+      "admitted": false,
+      "input_dispositions": {
+        "unknown_probability": 1787
+      },
+      "missing_prediction_bindings": {},
+      "evaluator_exclusions": {
+        "identity mismatch": 1787
+      },
+      "failures": [
+        "metric_not_eligible_for_advisory",
+        "all_logged_probabilities_unknown",
+        "fewer_than_10_qualified_independent_runs",
+        "missing_positive_or_negative_outcomes",
+        "no_qualified_labels_to_score"
+      ],
+      "missing_data_limit": "Minimum count deficit only; further data cannot guarantee both outcome classes or performance gates."
+    },
+    {
+      "character": "silent",
+      "core": "P",
+      "metric": "signature",
+      "horizon": 48,
+      "model": null,
+      "policy": null,
+      "ascension": 10,
+      "template_sha256": null,
+      "forecast_rows": 703,
+      "numeric_prediction_rows": 0,
+      "potential_bound_runs": 0,
+      "n": 0,
+      "independent_runs": 0,
+      "positives": 0,
+      "negatives": 0,
+      "brier": null,
+      "baseline_brier": null,
+      "bias": null,
+      "minimum_more_qualified_independent_runs": 10,
+      "admitted": false,
+      "input_dispositions": {
+        "missing_binding": 703
+      },
+      "missing_prediction_bindings": {
+        "model": 703,
+        "policy": 703,
+        "template_sha256": 703,
+        "as_of": 703
+      },
+      "evaluator_exclusions": {
+        "identity mismatch": 703
+      },
+      "failures": [
+        "metric_not_eligible_for_advisory",
+        "all_logged_probabilities_unknown",
+        "missing_prospective_binding",
+        "fewer_than_10_qualified_independent_runs",
+        "missing_positive_or_negative_outcomes",
+        "no_qualified_labels_to_score"
+      ],
+      "missing_data_limit": "Minimum count deficit only; further data cannot guarantee both outcome classes or performance gates."
+    },
+    {
+      "character": "silent",
+      "core": "P",
+      "metric": "terminalWin",
+      "horizon": 17,
+      "model": "observed-opportunity-window4-v1",
+      "policy": "completion-choice-v1",
+      "ascension": 10,
+      "template_sha256": "76e91c950bfd87d820093bdd7dd4b3f11db15256ea2b6e0bb41b9f1ec89f998c",
+      "forecast_rows": 3057,
+      "numeric_prediction_rows": 0,
+      "potential_bound_runs": 0,
+      "n": 0,
+      "independent_runs": 0,
+      "positives": 0,
+      "negatives": 0,
+      "brier": null,
+      "baseline_brier": null,
+      "bias": null,
+      "minimum_more_qualified_independent_runs": 10,
+      "admitted": false,
+      "input_dispositions": {
+        "unknown_probability": 3057
+      },
+      "missing_prediction_bindings": {},
+      "evaluator_exclusions": {
+        "identity mismatch": 3057
+      },
+      "failures": [
+        "metric_not_eligible_for_advisory",
+        "all_logged_probabilities_unknown",
+        "fewer_than_10_qualified_independent_runs",
+        "missing_positive_or_negative_outcomes",
+        "no_qualified_labels_to_score"
+      ],
+      "missing_data_limit": "Minimum count deficit only; further data cannot guarantee both outcome classes or performance gates."
+    },
+    {
+      "character": "silent",
+      "core": "P",
+      "metric": "terminalWin",
+      "horizon": 17,
+      "model": null,
+      "policy": null,
+      "ascension": 10,
+      "template_sha256": null,
+      "forecast_rows": 1260,
+      "numeric_prediction_rows": 0,
+      "potential_bound_runs": 0,
+      "n": 0,
+      "independent_runs": 0,
+      "positives": 0,
+      "negatives": 0,
+      "brier": null,
+      "baseline_brier": null,
+      "bias": null,
+      "minimum_more_qualified_independent_runs": 10,
+      "admitted": false,
+      "input_dispositions": {
+        "missing_binding": 1260
+      },
+      "missing_prediction_bindings": {
+        "model": 1260,
+        "policy": 1260,
+        "template_sha256": 1260,
+        "as_of": 1260
+      },
+      "evaluator_exclusions": {
+        "identity mismatch": 1260
+      },
+      "failures": [
+        "metric_not_eligible_for_advisory",
+        "all_logged_probabilities_unknown",
+        "missing_prospective_binding",
+        "fewer_than_10_qualified_independent_runs",
+        "missing_positive_or_negative_outcomes",
+        "no_qualified_labels_to_score"
+      ],
+      "missing_data_limit": "Minimum count deficit only; further data cannot guarantee both outcome classes or performance gates."
+    },
+    {
+      "character": "silent",
+      "core": "P",
+      "metric": "terminalWin",
+      "horizon": 33,
+      "model": "observed-opportunity-window4-v1",
+      "policy": "completion-choice-v1",
+      "ascension": 10,
+      "template_sha256": "76e91c950bfd87d820093bdd7dd4b3f11db15256ea2b6e0bb41b9f1ec89f998c",
+      "forecast_rows": 2661,
+      "numeric_prediction_rows": 0,
+      "potential_bound_runs": 0,
+      "n": 0,
+      "independent_runs": 0,
+      "positives": 0,
+      "negatives": 0,
+      "brier": null,
+      "baseline_brier": null,
+      "bias": null,
+      "minimum_more_qualified_independent_runs": 10,
+      "admitted": false,
+      "input_dispositions": {
+        "unknown_probability": 2661
+      },
+      "missing_prediction_bindings": {},
+      "evaluator_exclusions": {
+        "identity mismatch": 2661
+      },
+      "failures": [
+        "metric_not_eligible_for_advisory",
+        "all_logged_probabilities_unknown",
+        "fewer_than_10_qualified_independent_runs",
+        "missing_positive_or_negative_outcomes",
+        "no_qualified_labels_to_score"
+      ],
+      "missing_data_limit": "Minimum count deficit only; further data cannot guarantee both outcome classes or performance gates."
+    },
+    {
+      "character": "silent",
+      "core": "P",
+      "metric": "terminalWin",
+      "horizon": 33,
+      "model": null,
+      "policy": null,
+      "ascension": 10,
+      "template_sha256": null,
+      "forecast_rows": 1029,
+      "numeric_prediction_rows": 0,
+      "potential_bound_runs": 0,
+      "n": 0,
+      "independent_runs": 0,
+      "positives": 0,
+      "negatives": 0,
+      "brier": null,
+      "baseline_brier": null,
+      "bias": null,
+      "minimum_more_qualified_independent_runs": 10,
+      "admitted": false,
+      "input_dispositions": {
+        "missing_binding": 1029
+      },
+      "missing_prediction_bindings": {
+        "model": 1029,
+        "policy": 1029,
+        "template_sha256": 1029,
+        "as_of": 1029
+      },
+      "evaluator_exclusions": {
+        "identity mismatch": 1029
+      },
+      "failures": [
+        "metric_not_eligible_for_advisory",
+        "all_logged_probabilities_unknown",
+        "missing_prospective_binding",
+        "fewer_than_10_qualified_independent_runs",
+        "missing_positive_or_negative_outcomes",
+        "no_qualified_labels_to_score"
+      ],
+      "missing_data_limit": "Minimum count deficit only; further data cannot guarantee both outcome classes or performance gates."
+    },
+    {
+      "character": "silent",
+      "core": "P",
+      "metric": "terminalWin",
+      "horizon": 48,
+      "model": "observed-opportunity-window4-v1",
+      "policy": "completion-choice-v1",
+      "ascension": 10,
+      "template_sha256": "76e91c950bfd87d820093bdd7dd4b3f11db15256ea2b6e0bb41b9f1ec89f998c",
+      "forecast_rows": 1787,
+      "numeric_prediction_rows": 0,
+      "potential_bound_runs": 0,
+      "n": 0,
+      "independent_runs": 0,
+      "positives": 0,
+      "negatives": 0,
+      "brier": null,
+      "baseline_brier": null,
+      "bias": null,
+      "minimum_more_qualified_independent_runs": 10,
+      "admitted": false,
+      "input_dispositions": {
+        "unknown_probability": 1787
+      },
+      "missing_prediction_bindings": {},
+      "evaluator_exclusions": {
+        "identity mismatch": 1787
+      },
+      "failures": [
+        "metric_not_eligible_for_advisory",
+        "all_logged_probabilities_unknown",
+        "fewer_than_10_qualified_independent_runs",
+        "missing_positive_or_negative_outcomes",
+        "no_qualified_labels_to_score"
+      ],
+      "missing_data_limit": "Minimum count deficit only; further data cannot guarantee both outcome classes or performance gates."
+    },
+    {
+      "character": "silent",
+      "core": "P",
+      "metric": "terminalWin",
+      "horizon": 48,
+      "model": null,
+      "policy": null,
+      "ascension": 10,
+      "template_sha256": null,
+      "forecast_rows": 703,
+      "numeric_prediction_rows": 0,
+      "potential_bound_runs": 0,
+      "n": 0,
+      "independent_runs": 0,
+      "positives": 0,
+      "negatives": 0,
+      "brier": null,
+      "baseline_brier": null,
+      "bias": null,
+      "minimum_more_qualified_independent_runs": 10,
+      "admitted": false,
+      "input_dispositions": {
+        "missing_binding": 703
+      },
+      "missing_prediction_bindings": {
+        "model": 703,
+        "policy": 703,
+        "template_sha256": 703,
+        "as_of": 703
+      },
+      "evaluator_exclusions": {
+        "identity mismatch": 703
+      },
+      "failures": [
+        "metric_not_eligible_for_advisory",
+        "all_logged_probabilities_unknown",
+        "missing_prospective_binding",
+        "fewer_than_10_qualified_independent_runs",
+        "missing_positive_or_negative_outcomes",
+        "no_qualified_labels_to_score"
+      ],
+      "missing_data_limit": "Minimum count deficit only; further data cannot guarantee both outcome classes or performance gates."
+    },
+    {
+      "character": "silent",
+      "core": "R",
+      "metric": "aliveAndFunctional",
+      "horizon": 17,
+      "model": "observed-opportunity-window4-v1",
+      "policy": "completion-choice-v1",
+      "ascension": 10,
+      "template_sha256": "76e91c950bfd87d820093bdd7dd4b3f11db15256ea2b6e0bb41b9f1ec89f998c",
+      "forecast_rows": 3057,
+      "numeric_prediction_rows": 0,
+      "potential_bound_runs": 0,
+      "n": 0,
+      "independent_runs": 0,
+      "positives": 0,
+      "negatives": 0,
+      "brier": null,
+      "baseline_brier": null,
+      "bias": null,
+      "minimum_more_qualified_independent_runs": 10,
+      "admitted": false,
+      "input_dispositions": {
+        "unknown_probability": 3057
+      },
+      "missing_prediction_bindings": {},
+      "evaluator_exclusions": {
+        "identity mismatch": 3057
+      },
+      "failures": [
+        "metric_not_eligible_for_advisory",
+        "all_logged_probabilities_unknown",
+        "fewer_than_10_qualified_independent_runs",
+        "missing_positive_or_negative_outcomes",
+        "no_qualified_labels_to_score"
+      ],
+      "missing_data_limit": "Minimum count deficit only; further data cannot guarantee both outcome classes or performance gates."
+    },
+    {
+      "character": "silent",
+      "core": "R",
+      "metric": "aliveAndFunctional",
+      "horizon": 17,
+      "model": null,
+      "policy": null,
+      "ascension": 10,
+      "template_sha256": null,
+      "forecast_rows": 1260,
+      "numeric_prediction_rows": 0,
+      "potential_bound_runs": 0,
+      "n": 0,
+      "independent_runs": 0,
+      "positives": 0,
+      "negatives": 0,
+      "brier": null,
+      "baseline_brier": null,
+      "bias": null,
+      "minimum_more_qualified_independent_runs": 10,
+      "admitted": false,
+      "input_dispositions": {
+        "missing_binding": 1260
+      },
+      "missing_prediction_bindings": {
+        "model": 1260,
+        "policy": 1260,
+        "template_sha256": 1260,
+        "as_of": 1260
+      },
+      "evaluator_exclusions": {
+        "identity mismatch": 1260
+      },
+      "failures": [
+        "metric_not_eligible_for_advisory",
+        "all_logged_probabilities_unknown",
+        "missing_prospective_binding",
+        "fewer_than_10_qualified_independent_runs",
+        "missing_positive_or_negative_outcomes",
+        "no_qualified_labels_to_score"
+      ],
+      "missing_data_limit": "Minimum count deficit only; further data cannot guarantee both outcome classes or performance gates."
+    },
+    {
+      "character": "silent",
+      "core": "R",
+      "metric": "aliveAndFunctional",
+      "horizon": 33,
+      "model": "observed-opportunity-window4-v1",
+      "policy": "completion-choice-v1",
+      "ascension": 10,
+      "template_sha256": "76e91c950bfd87d820093bdd7dd4b3f11db15256ea2b6e0bb41b9f1ec89f998c",
+      "forecast_rows": 2661,
+      "numeric_prediction_rows": 0,
+      "potential_bound_runs": 0,
+      "n": 0,
+      "independent_runs": 0,
+      "positives": 0,
+      "negatives": 0,
+      "brier": null,
+      "baseline_brier": null,
+      "bias": null,
+      "minimum_more_qualified_independent_runs": 10,
+      "admitted": false,
+      "input_dispositions": {
+        "unknown_probability": 2661
+      },
+      "missing_prediction_bindings": {},
+      "evaluator_exclusions": {
+        "identity mismatch": 2661
+      },
+      "failures": [
+        "metric_not_eligible_for_advisory",
+        "all_logged_probabilities_unknown",
+        "fewer_than_10_qualified_independent_runs",
+        "missing_positive_or_negative_outcomes",
+        "no_qualified_labels_to_score"
+      ],
+      "missing_data_limit": "Minimum count deficit only; further data cannot guarantee both outcome classes or performance gates."
+    },
+    {
+      "character": "silent",
+      "core": "R",
+      "metric": "aliveAndFunctional",
+      "horizon": 33,
+      "model": null,
+      "policy": null,
+      "ascension": 10,
+      "template_sha256": null,
+      "forecast_rows": 1029,
+      "numeric_prediction_rows": 0,
+      "potential_bound_runs": 0,
+      "n": 0,
+      "independent_runs": 0,
+      "positives": 0,
+      "negatives": 0,
+      "brier": null,
+      "baseline_brier": null,
+      "bias": null,
+      "minimum_more_qualified_independent_runs": 10,
+      "admitted": false,
+      "input_dispositions": {
+        "missing_binding": 1029
+      },
+      "missing_prediction_bindings": {
+        "model": 1029,
+        "policy": 1029,
+        "template_sha256": 1029,
+        "as_of": 1029
+      },
+      "evaluator_exclusions": {
+        "identity mismatch": 1029
+      },
+      "failures": [
+        "metric_not_eligible_for_advisory",
+        "all_logged_probabilities_unknown",
+        "missing_prospective_binding",
+        "fewer_than_10_qualified_independent_runs",
+        "missing_positive_or_negative_outcomes",
+        "no_qualified_labels_to_score"
+      ],
+      "missing_data_limit": "Minimum count deficit only; further data cannot guarantee both outcome classes or performance gates."
+    },
+    {
+      "character": "silent",
+      "core": "R",
+      "metric": "aliveAndFunctional",
+      "horizon": 48,
+      "model": "observed-opportunity-window4-v1",
+      "policy": "completion-choice-v1",
+      "ascension": 10,
+      "template_sha256": "76e91c950bfd87d820093bdd7dd4b3f11db15256ea2b6e0bb41b9f1ec89f998c",
+      "forecast_rows": 1787,
+      "numeric_prediction_rows": 0,
+      "potential_bound_runs": 0,
+      "n": 0,
+      "independent_runs": 0,
+      "positives": 0,
+      "negatives": 0,
+      "brier": null,
+      "baseline_brier": null,
+      "bias": null,
+      "minimum_more_qualified_independent_runs": 10,
+      "admitted": false,
+      "input_dispositions": {
+        "unknown_probability": 1787
+      },
+      "missing_prediction_bindings": {},
+      "evaluator_exclusions": {
+        "identity mismatch": 1787
+      },
+      "failures": [
+        "metric_not_eligible_for_advisory",
+        "all_logged_probabilities_unknown",
+        "fewer_than_10_qualified_independent_runs",
+        "missing_positive_or_negative_outcomes",
+        "no_qualified_labels_to_score"
+      ],
+      "missing_data_limit": "Minimum count deficit only; further data cannot guarantee both outcome classes or performance gates."
+    },
+    {
+      "character": "silent",
+      "core": "R",
+      "metric": "aliveAndFunctional",
+      "horizon": 48,
+      "model": null,
+      "policy": null,
+      "ascension": 10,
+      "template_sha256": null,
+      "forecast_rows": 703,
+      "numeric_prediction_rows": 0,
+      "potential_bound_runs": 0,
+      "n": 0,
+      "independent_runs": 0,
+      "positives": 0,
+      "negatives": 0,
+      "brier": null,
+      "baseline_brier": null,
+      "bias": null,
+      "minimum_more_qualified_independent_runs": 10,
+      "admitted": false,
+      "input_dispositions": {
+        "missing_binding": 703
+      },
+      "missing_prediction_bindings": {
+        "model": 703,
+        "policy": 703,
+        "template_sha256": 703,
+        "as_of": 703
+      },
+      "evaluator_exclusions": {
+        "identity mismatch": 703
+      },
+      "failures": [
+        "metric_not_eligible_for_advisory",
+        "all_logged_probabilities_unknown",
+        "missing_prospective_binding",
+        "fewer_than_10_qualified_independent_runs",
+        "missing_positive_or_negative_outcomes",
+        "no_qualified_labels_to_score"
+      ],
+      "missing_data_limit": "Minimum count deficit only; further data cannot guarantee both outcome classes or performance gates."
+    },
+    {
+      "character": "silent",
+      "core": "R",
+      "metric": "conditionalSignature",
+      "horizon": 17,
+      "model": "observed-opportunity-window4-v1",
+      "policy": "completion-choice-v1",
+      "ascension": 10,
+      "template_sha256": "76e91c950bfd87d820093bdd7dd4b3f11db15256ea2b6e0bb41b9f1ec89f998c",
+      "forecast_rows": 3057,
+      "numeric_prediction_rows": 3057,
+      "potential_bound_runs": 34,
+      "n": 24,
+      "independent_runs": 23,
+      "positives": 0,
+      "negatives": 24,
+      "brier": 0.0,
+      "baseline_brier": 0.0,
+      "bias": 0.0,
+      "minimum_more_qualified_independent_runs": 0,
+      "admitted": false,
+      "input_dispositions": {
+        "unselected": 2215,
+        "route_changed": 88,
+        "unverified": 512,
+        "policy_changed": 176,
+        "matched": 24,
+        "sl_unknown": 5,
+        "censored": 37
+      },
+      "missing_prediction_bindings": {},
+      "evaluator_exclusions": {
+        "identity mismatch": 3033
+      },
+      "failures": [
+        "missing_positive_or_negative_outcomes",
+        "brier_not_better_than_constant_baseline"
+      ],
+      "missing_data_limit": "Minimum count deficit only; further data cannot guarantee both outcome classes or performance gates."
+    },
+    {
+      "character": "silent",
+      "core": "R",
+      "metric": "conditionalSignature",
+      "horizon": 17,
+      "model": null,
+      "policy": null,
+      "ascension": 10,
+      "template_sha256": null,
+      "forecast_rows": 1260,
+      "numeric_prediction_rows": 1260,
+      "potential_bound_runs": 0,
+      "n": 0,
+      "independent_runs": 0,
+      "positives": 0,
+      "negatives": 0,
+      "brier": null,
+      "baseline_brier": null,
+      "bias": null,
+      "minimum_more_qualified_independent_runs": 10,
+      "admitted": false,
+      "input_dispositions": {
+        "missing_binding": 637,
+        "unselected": 287,
+        "unverified": 336
+      },
+      "missing_prediction_bindings": {
+        "model": 1260,
+        "policy": 1260,
+        "template_sha256": 1260,
+        "as_of": 1260
+      },
+      "evaluator_exclusions": {
+        "identity mismatch": 1260
+      },
+      "failures": [
+        "missing_prospective_binding",
+        "fewer_than_10_qualified_independent_runs",
+        "missing_positive_or_negative_outcomes",
+        "no_qualified_labels_to_score"
+      ],
+      "missing_data_limit": "Minimum count deficit only; further data cannot guarantee both outcome classes or performance gates."
+    },
+    {
+      "character": "silent",
+      "core": "R",
+      "metric": "conditionalSignature",
+      "horizon": 33,
+      "model": "observed-opportunity-window4-v1",
+      "policy": "completion-choice-v1",
+      "ascension": 10,
+      "template_sha256": "76e91c950bfd87d820093bdd7dd4b3f11db15256ea2b6e0bb41b9f1ec89f998c",
+      "forecast_rows": 2661,
+      "numeric_prediction_rows": 2661,
+      "potential_bound_runs": 28,
+      "n": 16,
+      "independent_runs": 14,
+      "positives": 0,
+      "negatives": 16,
+      "brier": 0.0,
+      "baseline_brier": 0.0,
+      "bias": 0.0,
+      "minimum_more_qualified_independent_runs": 0,
+      "admitted": false,
+      "input_dispositions": {
+        "unselected": 1590,
+        "route_changed": 6,
+        "unverified": 880,
+        "policy_changed": 116,
+        "matched": 16,
+        "censored": 47,
+        "sl_unknown": 6
+      },
+      "missing_prediction_bindings": {},
+      "evaluator_exclusions": {
+        "identity mismatch": 2645
+      },
+      "failures": [
+        "missing_positive_or_negative_outcomes",
+        "brier_not_better_than_constant_baseline"
+      ],
+      "missing_data_limit": "Minimum count deficit only; further data cannot guarantee both outcome classes or performance gates."
+    },
+    {
+      "character": "silent",
+      "core": "R",
+      "metric": "conditionalSignature",
+      "horizon": 33,
+      "model": null,
+      "policy": null,
+      "ascension": 10,
+      "template_sha256": null,
+      "forecast_rows": 1029,
+      "numeric_prediction_rows": 1029,
+      "potential_bound_runs": 0,
+      "n": 0,
+      "independent_runs": 0,
+      "positives": 0,
+      "negatives": 0,
+      "brier": null,
+      "baseline_brier": null,
+      "bias": null,
+      "minimum_more_qualified_independent_runs": 10,
+      "admitted": false,
+      "input_dispositions": {
+        "missing_binding": 549,
+        "unselected": 176,
+        "unverified": 304
+      },
+      "missing_prediction_bindings": {
+        "model": 1029,
+        "policy": 1029,
+        "template_sha256": 1029,
+        "as_of": 1029
+      },
+      "evaluator_exclusions": {
+        "identity mismatch": 1029
+      },
+      "failures": [
+        "missing_prospective_binding",
+        "fewer_than_10_qualified_independent_runs",
+        "missing_positive_or_negative_outcomes",
+        "no_qualified_labels_to_score"
+      ],
+      "missing_data_limit": "Minimum count deficit only; further data cannot guarantee both outcome classes or performance gates."
+    },
+    {
+      "character": "silent",
+      "core": "R",
+      "metric": "conditionalSignature",
+      "horizon": 48,
+      "model": "observed-opportunity-window4-v1",
+      "policy": "completion-choice-v1",
+      "ascension": 10,
+      "template_sha256": "76e91c950bfd87d820093bdd7dd4b3f11db15256ea2b6e0bb41b9f1ec89f998c",
+      "forecast_rows": 1787,
+      "numeric_prediction_rows": 1787,
+      "potential_bound_runs": 17,
+      "n": 6,
+      "independent_runs": 5,
+      "positives": 0,
+      "negatives": 6,
+      "brier": 0.0,
+      "baseline_brier": 0.0,
+      "bias": 0.0,
+      "minimum_more_qualified_independent_runs": 5,
+      "admitted": false,
+      "input_dispositions": {
+        "unselected": 1219,
+        "policy_changed": 52,
+        "unverified": 448,
+        "sl_unknown": 16,
+        "matched": 6,
+        "censored": 45,
+        "route_changed": 1
+      },
+      "missing_prediction_bindings": {},
+      "evaluator_exclusions": {
+        "identity mismatch": 1781
+      },
+      "failures": [
+        "fewer_than_10_qualified_independent_runs",
+        "missing_positive_or_negative_outcomes",
+        "brier_not_better_than_constant_baseline"
+      ],
+      "missing_data_limit": "Minimum count deficit only; further data cannot guarantee both outcome classes or performance gates."
+    },
+    {
+      "character": "silent",
+      "core": "R",
+      "metric": "conditionalSignature",
+      "horizon": 48,
+      "model": null,
+      "policy": null,
+      "ascension": 10,
+      "template_sha256": null,
+      "forecast_rows": 703,
+      "numeric_prediction_rows": 703,
+      "potential_bound_runs": 0,
+      "n": 0,
+      "independent_runs": 0,
+      "positives": 0,
+      "negatives": 0,
+      "brier": null,
+      "baseline_brier": null,
+      "bias": null,
+      "minimum_more_qualified_independent_runs": 10,
+      "admitted": false,
+      "input_dispositions": {
+        "missing_binding": 338,
+        "unselected": 123,
+        "unverified": 242
+      },
+      "missing_prediction_bindings": {
+        "model": 703,
+        "policy": 703,
+        "template_sha256": 703,
+        "as_of": 703
+      },
+      "evaluator_exclusions": {
+        "identity mismatch": 703
+      },
+      "failures": [
+        "missing_prospective_binding",
+        "fewer_than_10_qualified_independent_runs",
+        "missing_positive_or_negative_outcomes",
+        "no_qualified_labels_to_score"
+      ],
+      "missing_data_limit": "Minimum count deficit only; further data cannot guarantee both outcome classes or performance gates."
+    },
+    {
+      "character": "silent",
+      "core": "R",
+      "metric": "signature",
+      "horizon": 17,
+      "model": "observed-opportunity-window4-v1",
+      "policy": "completion-choice-v1",
+      "ascension": 10,
+      "template_sha256": "76e91c950bfd87d820093bdd7dd4b3f11db15256ea2b6e0bb41b9f1ec89f998c",
+      "forecast_rows": 3057,
+      "numeric_prediction_rows": 0,
+      "potential_bound_runs": 0,
+      "n": 0,
+      "independent_runs": 0,
+      "positives": 0,
+      "negatives": 0,
+      "brier": null,
+      "baseline_brier": null,
+      "bias": null,
+      "minimum_more_qualified_independent_runs": 10,
+      "admitted": false,
+      "input_dispositions": {
+        "unknown_probability": 3057
+      },
+      "missing_prediction_bindings": {},
+      "evaluator_exclusions": {
+        "identity mismatch": 3057
+      },
+      "failures": [
+        "metric_not_eligible_for_advisory",
+        "all_logged_probabilities_unknown",
+        "fewer_than_10_qualified_independent_runs",
+        "missing_positive_or_negative_outcomes",
+        "no_qualified_labels_to_score"
+      ],
+      "missing_data_limit": "Minimum count deficit only; further data cannot guarantee both outcome classes or performance gates."
+    },
+    {
+      "character": "silent",
+      "core": "R",
+      "metric": "signature",
+      "horizon": 17,
+      "model": null,
+      "policy": null,
+      "ascension": 10,
+      "template_sha256": null,
+      "forecast_rows": 1260,
+      "numeric_prediction_rows": 0,
+      "potential_bound_runs": 0,
+      "n": 0,
+      "independent_runs": 0,
+      "positives": 0,
+      "negatives": 0,
+      "brier": null,
+      "baseline_brier": null,
+      "bias": null,
+      "minimum_more_qualified_independent_runs": 10,
+      "admitted": false,
+      "input_dispositions": {
+        "missing_binding": 1260
+      },
+      "missing_prediction_bindings": {
+        "model": 1260,
+        "policy": 1260,
+        "template_sha256": 1260,
+        "as_of": 1260
+      },
+      "evaluator_exclusions": {
+        "identity mismatch": 1260
+      },
+      "failures": [
+        "metric_not_eligible_for_advisory",
+        "all_logged_probabilities_unknown",
+        "missing_prospective_binding",
+        "fewer_than_10_qualified_independent_runs",
+        "missing_positive_or_negative_outcomes",
+        "no_qualified_labels_to_score"
+      ],
+      "missing_data_limit": "Minimum count deficit only; further data cannot guarantee both outcome classes or performance gates."
+    },
+    {
+      "character": "silent",
+      "core": "R",
+      "metric": "signature",
+      "horizon": 33,
+      "model": "observed-opportunity-window4-v1",
+      "policy": "completion-choice-v1",
+      "ascension": 10,
+      "template_sha256": "76e91c950bfd87d820093bdd7dd4b3f11db15256ea2b6e0bb41b9f1ec89f998c",
+      "forecast_rows": 2661,
+      "numeric_prediction_rows": 0,
+      "potential_bound_runs": 0,
+      "n": 0,
+      "independent_runs": 0,
+      "positives": 0,
+      "negatives": 0,
+      "brier": null,
+      "baseline_brier": null,
+      "bias": null,
+      "minimum_more_qualified_independent_runs": 10,
+      "admitted": false,
+      "input_dispositions": {
+        "unknown_probability": 2661
+      },
+      "missing_prediction_bindings": {},
+      "evaluator_exclusions": {
+        "identity mismatch": 2661
+      },
+      "failures": [
+        "metric_not_eligible_for_advisory",
+        "all_logged_probabilities_unknown",
+        "fewer_than_10_qualified_independent_runs",
+        "missing_positive_or_negative_outcomes",
+        "no_qualified_labels_to_score"
+      ],
+      "missing_data_limit": "Minimum count deficit only; further data cannot guarantee both outcome classes or performance gates."
+    },
+    {
+      "character": "silent",
+      "core": "R",
+      "metric": "signature",
+      "horizon": 33,
+      "model": null,
+      "policy": null,
+      "ascension": 10,
+      "template_sha256": null,
+      "forecast_rows": 1029,
+      "numeric_prediction_rows": 0,
+      "potential_bound_runs": 0,
+      "n": 0,
+      "independent_runs": 0,
+      "positives": 0,
+      "negatives": 0,
+      "brier": null,
+      "baseline_brier": null,
+      "bias": null,
+      "minimum_more_qualified_independent_runs": 10,
+      "admitted": false,
+      "input_dispositions": {
+        "missing_binding": 1029
+      },
+      "missing_prediction_bindings": {
+        "model": 1029,
+        "policy": 1029,
+        "template_sha256": 1029,
+        "as_of": 1029
+      },
+      "evaluator_exclusions": {
+        "identity mismatch": 1029
+      },
+      "failures": [
+        "metric_not_eligible_for_advisory",
+        "all_logged_probabilities_unknown",
+        "missing_prospective_binding",
+        "fewer_than_10_qualified_independent_runs",
+        "missing_positive_or_negative_outcomes",
+        "no_qualified_labels_to_score"
+      ],
+      "missing_data_limit": "Minimum count deficit only; further data cannot guarantee both outcome classes or performance gates."
+    },
+    {
+      "character": "silent",
+      "core": "R",
+      "metric": "signature",
+      "horizon": 48,
+      "model": "observed-opportunity-window4-v1",
+      "policy": "completion-choice-v1",
+      "ascension": 10,
+      "template_sha256": "76e91c950bfd87d820093bdd7dd4b3f11db15256ea2b6e0bb41b9f1ec89f998c",
+      "forecast_rows": 1787,
+      "numeric_prediction_rows": 0,
+      "potential_bound_runs": 0,
+      "n": 0,
+      "independent_runs": 0,
+      "positives": 0,
+      "negatives": 0,
+      "brier": null,
+      "baseline_brier": null,
+      "bias": null,
+      "minimum_more_qualified_independent_runs": 10,
+      "admitted": false,
+      "input_dispositions": {
+        "unknown_probability": 1787
+      },
+      "missing_prediction_bindings": {},
+      "evaluator_exclusions": {
+        "identity mismatch": 1787
+      },
+      "failures": [
+        "metric_not_eligible_for_advisory",
+        "all_logged_probabilities_unknown",
+        "fewer_than_10_qualified_independent_runs",
+        "missing_positive_or_negative_outcomes",
+        "no_qualified_labels_to_score"
+      ],
+      "missing_data_limit": "Minimum count deficit only; further data cannot guarantee both outcome classes or performance gates."
+    },
+    {
+      "character": "silent",
+      "core": "R",
+      "metric": "signature",
+      "horizon": 48,
+      "model": null,
+      "policy": null,
+      "ascension": 10,
+      "template_sha256": null,
+      "forecast_rows": 703,
+      "numeric_prediction_rows": 0,
+      "potential_bound_runs": 0,
+      "n": 0,
+      "independent_runs": 0,
+      "positives": 0,
+      "negatives": 0,
+      "brier": null,
+      "baseline_brier": null,
+      "bias": null,
+      "minimum_more_qualified_independent_runs": 10,
+      "admitted": false,
+      "input_dispositions": {
+        "missing_binding": 703
+      },
+      "missing_prediction_bindings": {
+        "model": 703,
+        "policy": 703,
+        "template_sha256": 703,
+        "as_of": 703
+      },
+      "evaluator_exclusions": {
+        "identity mismatch": 703
+      },
+      "failures": [
+        "metric_not_eligible_for_advisory",
+        "all_logged_probabilities_unknown",
+        "missing_prospective_binding",
+        "fewer_than_10_qualified_independent_runs",
+        "missing_positive_or_negative_outcomes",
+        "no_qualified_labels_to_score"
+      ],
+      "missing_data_limit": "Minimum count deficit only; further data cannot guarantee both outcome classes or performance gates."
+    },
+    {
+      "character": "silent",
+      "core": "R",
+      "metric": "terminalWin",
+      "horizon": 17,
+      "model": "observed-opportunity-window4-v1",
+      "policy": "completion-choice-v1",
+      "ascension": 10,
+      "template_sha256": "76e91c950bfd87d820093bdd7dd4b3f11db15256ea2b6e0bb41b9f1ec89f998c",
+      "forecast_rows": 3057,
+      "numeric_prediction_rows": 0,
+      "potential_bound_runs": 0,
+      "n": 0,
+      "independent_runs": 0,
+      "positives": 0,
+      "negatives": 0,
+      "brier": null,
+      "baseline_brier": null,
+      "bias": null,
+      "minimum_more_qualified_independent_runs": 10,
+      "admitted": false,
+      "input_dispositions": {
+        "unknown_probability": 3057
+      },
+      "missing_prediction_bindings": {},
+      "evaluator_exclusions": {
+        "identity mismatch": 3057
+      },
+      "failures": [
+        "metric_not_eligible_for_advisory",
+        "all_logged_probabilities_unknown",
+        "fewer_than_10_qualified_independent_runs",
+        "missing_positive_or_negative_outcomes",
+        "no_qualified_labels_to_score"
+      ],
+      "missing_data_limit": "Minimum count deficit only; further data cannot guarantee both outcome classes or performance gates."
+    },
+    {
+      "character": "silent",
+      "core": "R",
+      "metric": "terminalWin",
+      "horizon": 17,
+      "model": null,
+      "policy": null,
+      "ascension": 10,
+      "template_sha256": null,
+      "forecast_rows": 1260,
+      "numeric_prediction_rows": 0,
+      "potential_bound_runs": 0,
+      "n": 0,
+      "independent_runs": 0,
+      "positives": 0,
+      "negatives": 0,
+      "brier": null,
+      "baseline_brier": null,
+      "bias": null,
+      "minimum_more_qualified_independent_runs": 10,
+      "admitted": false,
+      "input_dispositions": {
+        "missing_binding": 1260
+      },
+      "missing_prediction_bindings": {
+        "model": 1260,
+        "policy": 1260,
+        "template_sha256": 1260,
+        "as_of": 1260
+      },
+      "evaluator_exclusions": {
+        "identity mismatch": 1260
+      },
+      "failures": [
+        "metric_not_eligible_for_advisory",
+        "all_logged_probabilities_unknown",
+        "missing_prospective_binding",
+        "fewer_than_10_qualified_independent_runs",
+        "missing_positive_or_negative_outcomes",
+        "no_qualified_labels_to_score"
+      ],
+      "missing_data_limit": "Minimum count deficit only; further data cannot guarantee both outcome classes or performance gates."
+    },
+    {
+      "character": "silent",
+      "core": "R",
+      "metric": "terminalWin",
+      "horizon": 33,
+      "model": "observed-opportunity-window4-v1",
+      "policy": "completion-choice-v1",
+      "ascension": 10,
+      "template_sha256": "76e91c950bfd87d820093bdd7dd4b3f11db15256ea2b6e0bb41b9f1ec89f998c",
+      "forecast_rows": 2661,
+      "numeric_prediction_rows": 0,
+      "potential_bound_runs": 0,
+      "n": 0,
+      "independent_runs": 0,
+      "positives": 0,
+      "negatives": 0,
+      "brier": null,
+      "baseline_brier": null,
+      "bias": null,
+      "minimum_more_qualified_independent_runs": 10,
+      "admitted": false,
+      "input_dispositions": {
+        "unknown_probability": 2661
+      },
+      "missing_prediction_bindings": {},
+      "evaluator_exclusions": {
+        "identity mismatch": 2661
+      },
+      "failures": [
+        "metric_not_eligible_for_advisory",
+        "all_logged_probabilities_unknown",
+        "fewer_than_10_qualified_independent_runs",
+        "missing_positive_or_negative_outcomes",
+        "no_qualified_labels_to_score"
+      ],
+      "missing_data_limit": "Minimum count deficit only; further data cannot guarantee both outcome classes or performance gates."
+    },
+    {
+      "character": "silent",
+      "core": "R",
+      "metric": "terminalWin",
+      "horizon": 33,
+      "model": null,
+      "policy": null,
+      "ascension": 10,
+      "template_sha256": null,
+      "forecast_rows": 1029,
+      "numeric_prediction_rows": 0,
+      "potential_bound_runs": 0,
+      "n": 0,
+      "independent_runs": 0,
+      "positives": 0,
+      "negatives": 0,
+      "brier": null,
+      "baseline_brier": null,
+      "bias": null,
+      "minimum_more_qualified_independent_runs": 10,
+      "admitted": false,
+      "input_dispositions": {
+        "missing_binding": 1029
+      },
+      "missing_prediction_bindings": {
+        "model": 1029,
+        "policy": 1029,
+        "template_sha256": 1029,
+        "as_of": 1029
+      },
+      "evaluator_exclusions": {
+        "identity mismatch": 1029
+      },
+      "failures": [
+        "metric_not_eligible_for_advisory",
+        "all_logged_probabilities_unknown",
+        "missing_prospective_binding",
+        "fewer_than_10_qualified_independent_runs",
+        "missing_positive_or_negative_outcomes",
+        "no_qualified_labels_to_score"
+      ],
+      "missing_data_limit": "Minimum count deficit only; further data cannot guarantee both outcome classes or performance gates."
+    },
+    {
+      "character": "silent",
+      "core": "R",
+      "metric": "terminalWin",
+      "horizon": 48,
+      "model": "observed-opportunity-window4-v1",
+      "policy": "completion-choice-v1",
+      "ascension": 10,
+      "template_sha256": "76e91c950bfd87d820093bdd7dd4b3f11db15256ea2b6e0bb41b9f1ec89f998c",
+      "forecast_rows": 1787,
+      "numeric_prediction_rows": 0,
+      "potential_bound_runs": 0,
+      "n": 0,
+      "independent_runs": 0,
+      "positives": 0,
+      "negatives": 0,
+      "brier": null,
+      "baseline_brier": null,
+      "bias": null,
+      "minimum_more_qualified_independent_runs": 10,
+      "admitted": false,
+      "input_dispositions": {
+        "unknown_probability": 1787
+      },
+      "missing_prediction_bindings": {},
+      "evaluator_exclusions": {
+        "identity mismatch": 1787
+      },
+      "failures": [
+        "metric_not_eligible_for_advisory",
+        "all_logged_probabilities_unknown",
+        "fewer_than_10_qualified_independent_runs",
+        "missing_positive_or_negative_outcomes",
+        "no_qualified_labels_to_score"
+      ],
+      "missing_data_limit": "Minimum count deficit only; further data cannot guarantee both outcome classes or performance gates."
+    },
+    {
+      "character": "silent",
+      "core": "R",
+      "metric": "terminalWin",
+      "horizon": 48,
+      "model": null,
+      "policy": null,
+      "ascension": 10,
+      "template_sha256": null,
+      "forecast_rows": 703,
+      "numeric_prediction_rows": 0,
+      "potential_bound_runs": 0,
+      "n": 0,
+      "independent_runs": 0,
+      "positives": 0,
+      "negatives": 0,
+      "brier": null,
+      "baseline_brier": null,
+      "bias": null,
+      "minimum_more_qualified_independent_runs": 10,
+      "admitted": false,
+      "input_dispositions": {
+        "missing_binding": 703
+      },
+      "missing_prediction_bindings": {
+        "model": 703,
+        "policy": 703,
+        "template_sha256": 703,
+        "as_of": 703
+      },
+      "evaluator_exclusions": {
+        "identity mismatch": 703
+      },
+      "failures": [
+        "metric_not_eligible_for_advisory",
+        "all_logged_probabilities_unknown",
+        "missing_prospective_binding",
+        "fewer_than_10_qualified_independent_runs",
+        "missing_positive_or_negative_outcomes",
+        "no_qualified_labels_to_score"
+      ],
+      "missing_data_limit": "Minimum count deficit only; further data cannot guarantee both outcome classes or performance gates."
+    },
+    {
+      "character": "silent",
+      "core": "S",
+      "metric": "aliveAndFunctional",
+      "horizon": 17,
+      "model": "observed-opportunity-window4-v1",
+      "policy": "completion-choice-v1",
+      "ascension": 10,
+      "template_sha256": "76e91c950bfd87d820093bdd7dd4b3f11db15256ea2b6e0bb41b9f1ec89f998c",
+      "forecast_rows": 3057,
+      "numeric_prediction_rows": 0,
+      "potential_bound_runs": 0,
+      "n": 0,
+      "independent_runs": 0,
+      "positives": 0,
+      "negatives": 0,
+      "brier": null,
+      "baseline_brier": null,
+      "bias": null,
+      "minimum_more_qualified_independent_runs": 10,
+      "admitted": false,
+      "input_dispositions": {
+        "unknown_probability": 3057
+      },
+      "missing_prediction_bindings": {},
+      "evaluator_exclusions": {
+        "identity mismatch": 3057
+      },
+      "failures": [
+        "metric_not_eligible_for_advisory",
+        "all_logged_probabilities_unknown",
+        "fewer_than_10_qualified_independent_runs",
+        "missing_positive_or_negative_outcomes",
+        "no_qualified_labels_to_score"
+      ],
+      "missing_data_limit": "Minimum count deficit only; further data cannot guarantee both outcome classes or performance gates."
+    },
+    {
+      "character": "silent",
+      "core": "S",
+      "metric": "aliveAndFunctional",
+      "horizon": 17,
+      "model": null,
+      "policy": null,
+      "ascension": 10,
+      "template_sha256": null,
+      "forecast_rows": 1260,
+      "numeric_prediction_rows": 0,
+      "potential_bound_runs": 0,
+      "n": 0,
+      "independent_runs": 0,
+      "positives": 0,
+      "negatives": 0,
+      "brier": null,
+      "baseline_brier": null,
+      "bias": null,
+      "minimum_more_qualified_independent_runs": 10,
+      "admitted": false,
+      "input_dispositions": {
+        "missing_binding": 1260
+      },
+      "missing_prediction_bindings": {
+        "model": 1260,
+        "policy": 1260,
+        "template_sha256": 1260,
+        "as_of": 1260
+      },
+      "evaluator_exclusions": {
+        "identity mismatch": 1260
+      },
+      "failures": [
+        "metric_not_eligible_for_advisory",
+        "all_logged_probabilities_unknown",
+        "missing_prospective_binding",
+        "fewer_than_10_qualified_independent_runs",
+        "missing_positive_or_negative_outcomes",
+        "no_qualified_labels_to_score"
+      ],
+      "missing_data_limit": "Minimum count deficit only; further data cannot guarantee both outcome classes or performance gates."
+    },
+    {
+      "character": "silent",
+      "core": "S",
+      "metric": "aliveAndFunctional",
+      "horizon": 33,
+      "model": "observed-opportunity-window4-v1",
+      "policy": "completion-choice-v1",
+      "ascension": 10,
+      "template_sha256": "76e91c950bfd87d820093bdd7dd4b3f11db15256ea2b6e0bb41b9f1ec89f998c",
+      "forecast_rows": 2661,
+      "numeric_prediction_rows": 0,
+      "potential_bound_runs": 0,
+      "n": 0,
+      "independent_runs": 0,
+      "positives": 0,
+      "negatives": 0,
+      "brier": null,
+      "baseline_brier": null,
+      "bias": null,
+      "minimum_more_qualified_independent_runs": 10,
+      "admitted": false,
+      "input_dispositions": {
+        "unknown_probability": 2661
+      },
+      "missing_prediction_bindings": {},
+      "evaluator_exclusions": {
+        "identity mismatch": 2661
+      },
+      "failures": [
+        "metric_not_eligible_for_advisory",
+        "all_logged_probabilities_unknown",
+        "fewer_than_10_qualified_independent_runs",
+        "missing_positive_or_negative_outcomes",
+        "no_qualified_labels_to_score"
+      ],
+      "missing_data_limit": "Minimum count deficit only; further data cannot guarantee both outcome classes or performance gates."
+    },
+    {
+      "character": "silent",
+      "core": "S",
+      "metric": "aliveAndFunctional",
+      "horizon": 33,
+      "model": null,
+      "policy": null,
+      "ascension": 10,
+      "template_sha256": null,
+      "forecast_rows": 1029,
+      "numeric_prediction_rows": 0,
+      "potential_bound_runs": 0,
+      "n": 0,
+      "independent_runs": 0,
+      "positives": 0,
+      "negatives": 0,
+      "brier": null,
+      "baseline_brier": null,
+      "bias": null,
+      "minimum_more_qualified_independent_runs": 10,
+      "admitted": false,
+      "input_dispositions": {
+        "missing_binding": 1029
+      },
+      "missing_prediction_bindings": {
+        "model": 1029,
+        "policy": 1029,
+        "template_sha256": 1029,
+        "as_of": 1029
+      },
+      "evaluator_exclusions": {
+        "identity mismatch": 1029
+      },
+      "failures": [
+        "metric_not_eligible_for_advisory",
+        "all_logged_probabilities_unknown",
+        "missing_prospective_binding",
+        "fewer_than_10_qualified_independent_runs",
+        "missing_positive_or_negative_outcomes",
+        "no_qualified_labels_to_score"
+      ],
+      "missing_data_limit": "Minimum count deficit only; further data cannot guarantee both outcome classes or performance gates."
+    },
+    {
+      "character": "silent",
+      "core": "S",
+      "metric": "aliveAndFunctional",
+      "horizon": 48,
+      "model": "observed-opportunity-window4-v1",
+      "policy": "completion-choice-v1",
+      "ascension": 10,
+      "template_sha256": "76e91c950bfd87d820093bdd7dd4b3f11db15256ea2b6e0bb41b9f1ec89f998c",
+      "forecast_rows": 1787,
+      "numeric_prediction_rows": 0,
+      "potential_bound_runs": 0,
+      "n": 0,
+      "independent_runs": 0,
+      "positives": 0,
+      "negatives": 0,
+      "brier": null,
+      "baseline_brier": null,
+      "bias": null,
+      "minimum_more_qualified_independent_runs": 10,
+      "admitted": false,
+      "input_dispositions": {
+        "unknown_probability": 1787
+      },
+      "missing_prediction_bindings": {},
+      "evaluator_exclusions": {
+        "identity mismatch": 1787
+      },
+      "failures": [
+        "metric_not_eligible_for_advisory",
+        "all_logged_probabilities_unknown",
+        "fewer_than_10_qualified_independent_runs",
+        "missing_positive_or_negative_outcomes",
+        "no_qualified_labels_to_score"
+      ],
+      "missing_data_limit": "Minimum count deficit only; further data cannot guarantee both outcome classes or performance gates."
+    },
+    {
+      "character": "silent",
+      "core": "S",
+      "metric": "aliveAndFunctional",
+      "horizon": 48,
+      "model": null,
+      "policy": null,
+      "ascension": 10,
+      "template_sha256": null,
+      "forecast_rows": 703,
+      "numeric_prediction_rows": 0,
+      "potential_bound_runs": 0,
+      "n": 0,
+      "independent_runs": 0,
+      "positives": 0,
+      "negatives": 0,
+      "brier": null,
+      "baseline_brier": null,
+      "bias": null,
+      "minimum_more_qualified_independent_runs": 10,
+      "admitted": false,
+      "input_dispositions": {
+        "missing_binding": 703
+      },
+      "missing_prediction_bindings": {
+        "model": 703,
+        "policy": 703,
+        "template_sha256": 703,
+        "as_of": 703
+      },
+      "evaluator_exclusions": {
+        "identity mismatch": 703
+      },
+      "failures": [
+        "metric_not_eligible_for_advisory",
+        "all_logged_probabilities_unknown",
+        "missing_prospective_binding",
+        "fewer_than_10_qualified_independent_runs",
+        "missing_positive_or_negative_outcomes",
+        "no_qualified_labels_to_score"
+      ],
+      "missing_data_limit": "Minimum count deficit only; further data cannot guarantee both outcome classes or performance gates."
+    },
+    {
+      "character": "silent",
+      "core": "S",
+      "metric": "conditionalSignature",
+      "horizon": 17,
+      "model": "observed-opportunity-window4-v1",
+      "policy": "completion-choice-v1",
+      "ascension": 10,
+      "template_sha256": "76e91c950bfd87d820093bdd7dd4b3f11db15256ea2b6e0bb41b9f1ec89f998c",
+      "forecast_rows": 3057,
+      "numeric_prediction_rows": 3057,
+      "potential_bound_runs": 34,
+      "n": 24,
+      "independent_runs": 23,
+      "positives": 0,
+      "negatives": 24,
+      "brier": 0.0,
+      "baseline_brier": 0.0,
+      "bias": 0.0,
+      "minimum_more_qualified_independent_runs": 0,
+      "admitted": false,
+      "input_dispositions": {
+        "unselected": 2215,
+        "route_changed": 88,
+        "unverified": 511,
+        "policy_changed": 177,
+        "matched": 24,
+        "sl_unknown": 5,
+        "censored": 37
+      },
+      "missing_prediction_bindings": {},
+      "evaluator_exclusions": {
+        "identity mismatch": 3033
+      },
+      "failures": [
+        "missing_positive_or_negative_outcomes",
+        "brier_not_better_than_constant_baseline"
+      ],
+      "missing_data_limit": "Minimum count deficit only; further data cannot guarantee both outcome classes or performance gates."
+    },
+    {
+      "character": "silent",
+      "core": "S",
+      "metric": "conditionalSignature",
+      "horizon": 17,
+      "model": null,
+      "policy": null,
+      "ascension": 10,
+      "template_sha256": null,
+      "forecast_rows": 1260,
+      "numeric_prediction_rows": 1260,
+      "potential_bound_runs": 0,
+      "n": 0,
+      "independent_runs": 0,
+      "positives": 0,
+      "negatives": 0,
+      "brier": null,
+      "baseline_brier": null,
+      "bias": null,
+      "minimum_more_qualified_independent_runs": 10,
+      "admitted": false,
+      "input_dispositions": {
+        "missing_binding": 637,
+        "unselected": 287,
+        "unverified": 336
+      },
+      "missing_prediction_bindings": {
+        "model": 1260,
+        "policy": 1260,
+        "template_sha256": 1260,
+        "as_of": 1260
+      },
+      "evaluator_exclusions": {
+        "identity mismatch": 1260
+      },
+      "failures": [
+        "missing_prospective_binding",
+        "fewer_than_10_qualified_independent_runs",
+        "missing_positive_or_negative_outcomes",
+        "no_qualified_labels_to_score"
+      ],
+      "missing_data_limit": "Minimum count deficit only; further data cannot guarantee both outcome classes or performance gates."
+    },
+    {
+      "character": "silent",
+      "core": "S",
+      "metric": "conditionalSignature",
+      "horizon": 33,
+      "model": "observed-opportunity-window4-v1",
+      "policy": "completion-choice-v1",
+      "ascension": 10,
+      "template_sha256": "76e91c950bfd87d820093bdd7dd4b3f11db15256ea2b6e0bb41b9f1ec89f998c",
+      "forecast_rows": 2661,
+      "numeric_prediction_rows": 2661,
+      "potential_bound_runs": 28,
+      "n": 16,
+      "independent_runs": 14,
+      "positives": 0,
+      "negatives": 16,
+      "brier": 0.0,
+      "baseline_brier": 0.0,
+      "bias": 0.0,
+      "minimum_more_qualified_independent_runs": 0,
+      "admitted": false,
+      "input_dispositions": {
+        "unselected": 1590,
+        "route_changed": 6,
+        "unverified": 878,
+        "policy_changed": 118,
+        "matched": 16,
+        "censored": 47,
+        "sl_unknown": 6
+      },
+      "missing_prediction_bindings": {},
+      "evaluator_exclusions": {
+        "identity mismatch": 2645
+      },
+      "failures": [
+        "missing_positive_or_negative_outcomes",
+        "brier_not_better_than_constant_baseline"
+      ],
+      "missing_data_limit": "Minimum count deficit only; further data cannot guarantee both outcome classes or performance gates."
+    },
+    {
+      "character": "silent",
+      "core": "S",
+      "metric": "conditionalSignature",
+      "horizon": 33,
+      "model": null,
+      "policy": null,
+      "ascension": 10,
+      "template_sha256": null,
+      "forecast_rows": 1029,
+      "numeric_prediction_rows": 1029,
+      "potential_bound_runs": 0,
+      "n": 0,
+      "independent_runs": 0,
+      "positives": 0,
+      "negatives": 0,
+      "brier": null,
+      "baseline_brier": null,
+      "bias": null,
+      "minimum_more_qualified_independent_runs": 10,
+      "admitted": false,
+      "input_dispositions": {
+        "missing_binding": 549,
+        "unselected": 176,
+        "unverified": 304
+      },
+      "missing_prediction_bindings": {
+        "model": 1029,
+        "policy": 1029,
+        "template_sha256": 1029,
+        "as_of": 1029
+      },
+      "evaluator_exclusions": {
+        "identity mismatch": 1029
+      },
+      "failures": [
+        "missing_prospective_binding",
+        "fewer_than_10_qualified_independent_runs",
+        "missing_positive_or_negative_outcomes",
+        "no_qualified_labels_to_score"
+      ],
+      "missing_data_limit": "Minimum count deficit only; further data cannot guarantee both outcome classes or performance gates."
+    },
+    {
+      "character": "silent",
+      "core": "S",
+      "metric": "conditionalSignature",
+      "horizon": 48,
+      "model": "observed-opportunity-window4-v1",
+      "policy": "completion-choice-v1",
+      "ascension": 10,
+      "template_sha256": "76e91c950bfd87d820093bdd7dd4b3f11db15256ea2b6e0bb41b9f1ec89f998c",
+      "forecast_rows": 1787,
+      "numeric_prediction_rows": 1787,
+      "potential_bound_runs": 17,
+      "n": 6,
+      "independent_runs": 5,
+      "positives": 0,
+      "negatives": 6,
+      "brier": 0.0,
+      "baseline_brier": 0.0,
+      "bias": 0.0,
+      "minimum_more_qualified_independent_runs": 5,
+      "admitted": false,
+      "input_dispositions": {
+        "unselected": 1219,
+        "policy_changed": 57,
+        "unverified": 443,
+        "sl_unknown": 16,
+        "matched": 6,
+        "censored": 45,
+        "route_changed": 1
+      },
+      "missing_prediction_bindings": {},
+      "evaluator_exclusions": {
+        "identity mismatch": 1781
+      },
+      "failures": [
+        "fewer_than_10_qualified_independent_runs",
+        "missing_positive_or_negative_outcomes",
+        "brier_not_better_than_constant_baseline"
+      ],
+      "missing_data_limit": "Minimum count deficit only; further data cannot guarantee both outcome classes or performance gates."
+    },
+    {
+      "character": "silent",
+      "core": "S",
+      "metric": "conditionalSignature",
+      "horizon": 48,
+      "model": null,
+      "policy": null,
+      "ascension": 10,
+      "template_sha256": null,
+      "forecast_rows": 703,
+      "numeric_prediction_rows": 703,
+      "potential_bound_runs": 0,
+      "n": 0,
+      "independent_runs": 0,
+      "positives": 0,
+      "negatives": 0,
+      "brier": null,
+      "baseline_brier": null,
+      "bias": null,
+      "minimum_more_qualified_independent_runs": 10,
+      "admitted": false,
+      "input_dispositions": {
+        "missing_binding": 338,
+        "unselected": 123,
+        "unverified": 242
+      },
+      "missing_prediction_bindings": {
+        "model": 703,
+        "policy": 703,
+        "template_sha256": 703,
+        "as_of": 703
+      },
+      "evaluator_exclusions": {
+        "identity mismatch": 703
+      },
+      "failures": [
+        "missing_prospective_binding",
+        "fewer_than_10_qualified_independent_runs",
+        "missing_positive_or_negative_outcomes",
+        "no_qualified_labels_to_score"
+      ],
+      "missing_data_limit": "Minimum count deficit only; further data cannot guarantee both outcome classes or performance gates."
+    },
+    {
+      "character": "silent",
+      "core": "S",
+      "metric": "signature",
+      "horizon": 17,
+      "model": "observed-opportunity-window4-v1",
+      "policy": "completion-choice-v1",
+      "ascension": 10,
+      "template_sha256": "76e91c950bfd87d820093bdd7dd4b3f11db15256ea2b6e0bb41b9f1ec89f998c",
+      "forecast_rows": 3057,
+      "numeric_prediction_rows": 0,
+      "potential_bound_runs": 0,
+      "n": 0,
+      "independent_runs": 0,
+      "positives": 0,
+      "negatives": 0,
+      "brier": null,
+      "baseline_brier": null,
+      "bias": null,
+      "minimum_more_qualified_independent_runs": 10,
+      "admitted": false,
+      "input_dispositions": {
+        "unknown_probability": 3057
+      },
+      "missing_prediction_bindings": {},
+      "evaluator_exclusions": {
+        "identity mismatch": 3057
+      },
+      "failures": [
+        "metric_not_eligible_for_advisory",
+        "all_logged_probabilities_unknown",
+        "fewer_than_10_qualified_independent_runs",
+        "missing_positive_or_negative_outcomes",
+        "no_qualified_labels_to_score"
+      ],
+      "missing_data_limit": "Minimum count deficit only; further data cannot guarantee both outcome classes or performance gates."
+    },
+    {
+      "character": "silent",
+      "core": "S",
+      "metric": "signature",
+      "horizon": 17,
+      "model": null,
+      "policy": null,
+      "ascension": 10,
+      "template_sha256": null,
+      "forecast_rows": 1260,
+      "numeric_prediction_rows": 0,
+      "potential_bound_runs": 0,
+      "n": 0,
+      "independent_runs": 0,
+      "positives": 0,
+      "negatives": 0,
+      "brier": null,
+      "baseline_brier": null,
+      "bias": null,
+      "minimum_more_qualified_independent_runs": 10,
+      "admitted": false,
+      "input_dispositions": {
+        "missing_binding": 1260
+      },
+      "missing_prediction_bindings": {
+        "model": 1260,
+        "policy": 1260,
+        "template_sha256": 1260,
+        "as_of": 1260
+      },
+      "evaluator_exclusions": {
+        "identity mismatch": 1260
+      },
+      "failures": [
+        "metric_not_eligible_for_advisory",
+        "all_logged_probabilities_unknown",
+        "missing_prospective_binding",
+        "fewer_than_10_qualified_independent_runs",
+        "missing_positive_or_negative_outcomes",
+        "no_qualified_labels_to_score"
+      ],
+      "missing_data_limit": "Minimum count deficit only; further data cannot guarantee both outcome classes or performance gates."
+    },
+    {
+      "character": "silent",
+      "core": "S",
+      "metric": "signature",
+      "horizon": 33,
+      "model": "observed-opportunity-window4-v1",
+      "policy": "completion-choice-v1",
+      "ascension": 10,
+      "template_sha256": "76e91c950bfd87d820093bdd7dd4b3f11db15256ea2b6e0bb41b9f1ec89f998c",
+      "forecast_rows": 2661,
+      "numeric_prediction_rows": 0,
+      "potential_bound_runs": 0,
+      "n": 0,
+      "independent_runs": 0,
+      "positives": 0,
+      "negatives": 0,
+      "brier": null,
+      "baseline_brier": null,
+      "bias": null,
+      "minimum_more_qualified_independent_runs": 10,
+      "admitted": false,
+      "input_dispositions": {
+        "unknown_probability": 2661
+      },
+      "missing_prediction_bindings": {},
+      "evaluator_exclusions": {
+        "identity mismatch": 2661
+      },
+      "failures": [
+        "metric_not_eligible_for_advisory",
+        "all_logged_probabilities_unknown",
+        "fewer_than_10_qualified_independent_runs",
+        "missing_positive_or_negative_outcomes",
+        "no_qualified_labels_to_score"
+      ],
+      "missing_data_limit": "Minimum count deficit only; further data cannot guarantee both outcome classes or performance gates."
+    },
+    {
+      "character": "silent",
+      "core": "S",
+      "metric": "signature",
+      "horizon": 33,
+      "model": null,
+      "policy": null,
+      "ascension": 10,
+      "template_sha256": null,
+      "forecast_rows": 1029,
+      "numeric_prediction_rows": 0,
+      "potential_bound_runs": 0,
+      "n": 0,
+      "independent_runs": 0,
+      "positives": 0,
+      "negatives": 0,
+      "brier": null,
+      "baseline_brier": null,
+      "bias": null,
+      "minimum_more_qualified_independent_runs": 10,
+      "admitted": false,
+      "input_dispositions": {
+        "missing_binding": 1029
+      },
+      "missing_prediction_bindings": {
+        "model": 1029,
+        "policy": 1029,
+        "template_sha256": 1029,
+        "as_of": 1029
+      },
+      "evaluator_exclusions": {
+        "identity mismatch": 1029
+      },
+      "failures": [
+        "metric_not_eligible_for_advisory",
+        "all_logged_probabilities_unknown",
+        "missing_prospective_binding",
+        "fewer_than_10_qualified_independent_runs",
+        "missing_positive_or_negative_outcomes",
+        "no_qualified_labels_to_score"
+      ],
+      "missing_data_limit": "Minimum count deficit only; further data cannot guarantee both outcome classes or performance gates."
+    },
+    {
+      "character": "silent",
+      "core": "S",
+      "metric": "signature",
+      "horizon": 48,
+      "model": "observed-opportunity-window4-v1",
+      "policy": "completion-choice-v1",
+      "ascension": 10,
+      "template_sha256": "76e91c950bfd87d820093bdd7dd4b3f11db15256ea2b6e0bb41b9f1ec89f998c",
+      "forecast_rows": 1787,
+      "numeric_prediction_rows": 0,
+      "potential_bound_runs": 0,
+      "n": 0,
+      "independent_runs": 0,
+      "positives": 0,
+      "negatives": 0,
+      "brier": null,
+      "baseline_brier": null,
+      "bias": null,
+      "minimum_more_qualified_independent_runs": 10,
+      "admitted": false,
+      "input_dispositions": {
+        "unknown_probability": 1787
+      },
+      "missing_prediction_bindings": {},
+      "evaluator_exclusions": {
+        "identity mismatch": 1787
+      },
+      "failures": [
+        "metric_not_eligible_for_advisory",
+        "all_logged_probabilities_unknown",
+        "fewer_than_10_qualified_independent_runs",
+        "missing_positive_or_negative_outcomes",
+        "no_qualified_labels_to_score"
+      ],
+      "missing_data_limit": "Minimum count deficit only; further data cannot guarantee both outcome classes or performance gates."
+    },
+    {
+      "character": "silent",
+      "core": "S",
+      "metric": "signature",
+      "horizon": 48,
+      "model": null,
+      "policy": null,
+      "ascension": 10,
+      "template_sha256": null,
+      "forecast_rows": 703,
+      "numeric_prediction_rows": 0,
+      "potential_bound_runs": 0,
+      "n": 0,
+      "independent_runs": 0,
+      "positives": 0,
+      "negatives": 0,
+      "brier": null,
+      "baseline_brier": null,
+      "bias": null,
+      "minimum_more_qualified_independent_runs": 10,
+      "admitted": false,
+      "input_dispositions": {
+        "missing_binding": 703
+      },
+      "missing_prediction_bindings": {
+        "model": 703,
+        "policy": 703,
+        "template_sha256": 703,
+        "as_of": 703
+      },
+      "evaluator_exclusions": {
+        "identity mismatch": 703
+      },
+      "failures": [
+        "metric_not_eligible_for_advisory",
+        "all_logged_probabilities_unknown",
+        "missing_prospective_binding",
+        "fewer_than_10_qualified_independent_runs",
+        "missing_positive_or_negative_outcomes",
+        "no_qualified_labels_to_score"
+      ],
+      "missing_data_limit": "Minimum count deficit only; further data cannot guarantee both outcome classes or performance gates."
+    },
+    {
+      "character": "silent",
+      "core": "S",
+      "metric": "terminalWin",
+      "horizon": 17,
+      "model": "observed-opportunity-window4-v1",
+      "policy": "completion-choice-v1",
+      "ascension": 10,
+      "template_sha256": "76e91c950bfd87d820093bdd7dd4b3f11db15256ea2b6e0bb41b9f1ec89f998c",
+      "forecast_rows": 3057,
+      "numeric_prediction_rows": 0,
+      "potential_bound_runs": 0,
+      "n": 0,
+      "independent_runs": 0,
+      "positives": 0,
+      "negatives": 0,
+      "brier": null,
+      "baseline_brier": null,
+      "bias": null,
+      "minimum_more_qualified_independent_runs": 10,
+      "admitted": false,
+      "input_dispositions": {
+        "unknown_probability": 3057
+      },
+      "missing_prediction_bindings": {},
+      "evaluator_exclusions": {
+        "identity mismatch": 3057
+      },
+      "failures": [
+        "metric_not_eligible_for_advisory",
+        "all_logged_probabilities_unknown",
+        "fewer_than_10_qualified_independent_runs",
+        "missing_positive_or_negative_outcomes",
+        "no_qualified_labels_to_score"
+      ],
+      "missing_data_limit": "Minimum count deficit only; further data cannot guarantee both outcome classes or performance gates."
+    },
+    {
+      "character": "silent",
+      "core": "S",
+      "metric": "terminalWin",
+      "horizon": 17,
+      "model": null,
+      "policy": null,
+      "ascension": 10,
+      "template_sha256": null,
+      "forecast_rows": 1260,
+      "numeric_prediction_rows": 0,
+      "potential_bound_runs": 0,
+      "n": 0,
+      "independent_runs": 0,
+      "positives": 0,
+      "negatives": 0,
+      "brier": null,
+      "baseline_brier": null,
+      "bias": null,
+      "minimum_more_qualified_independent_runs": 10,
+      "admitted": false,
+      "input_dispositions": {
+        "missing_binding": 1260
+      },
+      "missing_prediction_bindings": {
+        "model": 1260,
+        "policy": 1260,
+        "template_sha256": 1260,
+        "as_of": 1260
+      },
+      "evaluator_exclusions": {
+        "identity mismatch": 1260
+      },
+      "failures": [
+        "metric_not_eligible_for_advisory",
+        "all_logged_probabilities_unknown",
+        "missing_prospective_binding",
+        "fewer_than_10_qualified_independent_runs",
+        "missing_positive_or_negative_outcomes",
+        "no_qualified_labels_to_score"
+      ],
+      "missing_data_limit": "Minimum count deficit only; further data cannot guarantee both outcome classes or performance gates."
+    },
+    {
+      "character": "silent",
+      "core": "S",
+      "metric": "terminalWin",
+      "horizon": 33,
+      "model": "observed-opportunity-window4-v1",
+      "policy": "completion-choice-v1",
+      "ascension": 10,
+      "template_sha256": "76e91c950bfd87d820093bdd7dd4b3f11db15256ea2b6e0bb41b9f1ec89f998c",
+      "forecast_rows": 2661,
+      "numeric_prediction_rows": 0,
+      "potential_bound_runs": 0,
+      "n": 0,
+      "independent_runs": 0,
+      "positives": 0,
+      "negatives": 0,
+      "brier": null,
+      "baseline_brier": null,
+      "bias": null,
+      "minimum_more_qualified_independent_runs": 10,
+      "admitted": false,
+      "input_dispositions": {
+        "unknown_probability": 2661
+      },
+      "missing_prediction_bindings": {},
+      "evaluator_exclusions": {
+        "identity mismatch": 2661
+      },
+      "failures": [
+        "metric_not_eligible_for_advisory",
+        "all_logged_probabilities_unknown",
+        "fewer_than_10_qualified_independent_runs",
+        "missing_positive_or_negative_outcomes",
+        "no_qualified_labels_to_score"
+      ],
+      "missing_data_limit": "Minimum count deficit only; further data cannot guarantee both outcome classes or performance gates."
+    },
+    {
+      "character": "silent",
+      "core": "S",
+      "metric": "terminalWin",
+      "horizon": 33,
+      "model": null,
+      "policy": null,
+      "ascension": 10,
+      "template_sha256": null,
+      "forecast_rows": 1029,
+      "numeric_prediction_rows": 0,
+      "potential_bound_runs": 0,
+      "n": 0,
+      "independent_runs": 0,
+      "positives": 0,
+      "negatives": 0,
+      "brier": null,
+      "baseline_brier": null,
+      "bias": null,
+      "minimum_more_qualified_independent_runs": 10,
+      "admitted": false,
+      "input_dispositions": {
+        "missing_binding": 1029
+      },
+      "missing_prediction_bindings": {
+        "model": 1029,
+        "policy": 1029,
+        "template_sha256": 1029,
+        "as_of": 1029
+      },
+      "evaluator_exclusions": {
+        "identity mismatch": 1029
+      },
+      "failures": [
+        "metric_not_eligible_for_advisory",
+        "all_logged_probabilities_unknown",
+        "missing_prospective_binding",
+        "fewer_than_10_qualified_independent_runs",
+        "missing_positive_or_negative_outcomes",
+        "no_qualified_labels_to_score"
+      ],
+      "missing_data_limit": "Minimum count deficit only; further data cannot guarantee both outcome classes or performance gates."
+    },
+    {
+      "character": "silent",
+      "core": "S",
+      "metric": "terminalWin",
+      "horizon": 48,
+      "model": "observed-opportunity-window4-v1",
+      "policy": "completion-choice-v1",
+      "ascension": 10,
+      "template_sha256": "76e91c950bfd87d820093bdd7dd4b3f11db15256ea2b6e0bb41b9f1ec89f998c",
+      "forecast_rows": 1787,
+      "numeric_prediction_rows": 0,
+      "potential_bound_runs": 0,
+      "n": 0,
+      "independent_runs": 0,
+      "positives": 0,
+      "negatives": 0,
+      "brier": null,
+      "baseline_brier": null,
+      "bias": null,
+      "minimum_more_qualified_independent_runs": 10,
+      "admitted": false,
+      "input_dispositions": {
+        "unknown_probability": 1787
+      },
+      "missing_prediction_bindings": {},
+      "evaluator_exclusions": {
+        "identity mismatch": 1787
+      },
+      "failures": [
+        "metric_not_eligible_for_advisory",
+        "all_logged_probabilities_unknown",
+        "fewer_than_10_qualified_independent_runs",
+        "missing_positive_or_negative_outcomes",
+        "no_qualified_labels_to_score"
+      ],
+      "missing_data_limit": "Minimum count deficit only; further data cannot guarantee both outcome classes or performance gates."
+    },
+    {
+      "character": "silent",
+      "core": "S",
+      "metric": "terminalWin",
+      "horizon": 48,
+      "model": null,
+      "policy": null,
+      "ascension": 10,
+      "template_sha256": null,
+      "forecast_rows": 703,
+      "numeric_prediction_rows": 0,
+      "potential_bound_runs": 0,
+      "n": 0,
+      "independent_runs": 0,
+      "positives": 0,
+      "negatives": 0,
+      "brier": null,
+      "baseline_brier": null,
+      "bias": null,
+      "minimum_more_qualified_independent_runs": 10,
+      "admitted": false,
+      "input_dispositions": {
+        "missing_binding": 703
+      },
+      "missing_prediction_bindings": {
+        "model": 703,
+        "policy": 703,
+        "template_sha256": 703,
+        "as_of": 703
+      },
+      "evaluator_exclusions": {
+        "identity mismatch": 703
+      },
+      "failures": [
+        "metric_not_eligible_for_advisory",
+        "all_logged_probabilities_unknown",
+        "missing_prospective_binding",
+        "fewer_than_10_qualified_independent_runs",
+        "missing_positive_or_negative_outcomes",
+        "no_qualified_labels_to_score"
+      ],
+      "missing_data_limit": "Minimum count deficit only; further data cannot guarantee both outcome classes or performance gates."
+    }
+  ],
+  "publication_file_created": false,
+  "publication_authority": "Original ops only; this is an offline analysis report",
+  "gameplay_truth_author": "Original learner; watcher checks source and prediction bindings only"
+}
