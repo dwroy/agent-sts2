@@ -1,0 +1,121 @@
+from pathlib import Path
+import hashlib, importlib.util, json, re, subprocess, sys, tarfile
+
+sys.dont_write_bytecode = True
+root = r = Path.cwd()
+p = r / 'ops/codex-ops/record-staging/20261017-0704'
+pub = r / 'paper/materials/20261017-0704-ops'
+sha = lambda raw: hashlib.sha256(raw).hexdigest()
+load = lambda f: json.loads(f.read_bytes())
+git = lambda *args: subprocess.check_output(['git', *args], stderr=subprocess.PIPE)
+def digest(f):
+    h = hashlib.sha256()
+    with f.open('rb') as handle:
+        for raw in iter(lambda: handle.read(1048576), b''): h.update(raw)
+    return h.hexdigest()
+
+bid = '20261017-044302-s2-strategy-proposal'
+b = load(r / 'ops/codex-ops/learn.json')['batches'][bid]
+report = b['report']; s = Path(report['report']).parent; wt = Path(b['worktree'])
+source = report['fixes'][0]['commit']; base = report['base']
+assert source == '6c306a49710731da372989ae03ec09eb0a425bb1'
+assert b['state'] == 'failed' and b['rc'] == 0 and b['merged'] is None and b['proposal_audit_errors'] == []
+assert git('-C',str(wt),'rev-parse','HEAD').decode().strip() == source
+assert not git('-C',str(wt),'status','--porcelain','--untracked-files=all').strip()
+assert git('rev-parse',source+'^').decode().strip() == base
+scratch_report = load(s/'result.json')
+assert {k:v for k,v in report.items() if k != 'proposal_results'} == {k:v for k,v in scratch_report.items() if k != 'proposal_results'}
+for a,z in zip(report['proposal_results'],scratch_report['proposal_results']):
+    assert {k:v for k,v in a.items() if k != 'reason'} == {k:v for k,v in z.items() if k != 'reason'}
+exec((r/'ops/codex-ops/record-staging/20261016-0557/readonly-runtime.py').read_text())
+out = r/'ops/codex-ops/learner'/(bid+'.out')
+native = runtime(bid,report,out.read_text(),worktree=wt)
+paths = git('diff','--name-only',base,source).decode().splitlines()
+leaves = load(s/'source-leaves.json'); assert len(leaves) == len(paths) == 4
+files = {}
+for entry in leaves:
+    path = entry['path']; raw = git('show',source+':'+path)
+    assert raw == (wt/path).read_bytes() and sha(raw) == entry['sha256']
+    files[path] = sha(raw)
+assert set(files) == set(paths)
+for name in ['sandbox-check.exit','sandbox-check-r2.exit']: assert (s/name).read_text().strip() == '1'
+for name in ['sandbox-check-r3.exit','gitleaks-final.exit','global-build-health-python-r2.exit']: assert (s/name).read_text().strip() == '0'
+assert '4234 passed' in (s/'sandbox-check-r3.log').read_text() and '2312.67s' in (s/'sandbox-check-r3.log').read_text()
+wrapper = load(p/'source-host-wrapper.vitest.json')
+assert wrapper['success'] and wrapper['numPassedTests'] == 1 and wrapper['numFailedTests'] == 0
+assert (p/'source-host-wrapper.rc').read_text().strip() == '0'
+assert 'Ran 4 tests' in (pub/'source-host-wrapper.log').read_text()
+fixture = load(wt/'agent/tests/silent-dagger-sandpit-evidence.json')
+frames = []
+def refs(value):
+    if isinstance(value,dict):
+        if all(k in value for k in ['source','offset','bytes','sha256','row']): yield value
+        else:
+            for child in value.values(): yield from refs(child)
+    elif isinstance(value,list):
+        for child in value: yield from refs(child)
+for entry in refs(fixture):
+    f = Path(entry['source']); assert f.is_relative_to(r/'logs')
+    with f.open('rb') as handle:
+        handle.seek(entry['offset']); raw = handle.read(entry['bytes'])
+    assert sha(raw) == entry['sha256'] and json.loads(raw) == entry['row']
+    frames.append({k:entry[k] for k in ['source','offset','bytes','sha256','line','run_id']})
+assert len(frames) == 3
+artifacts = load(s/'artifacts-manifest.json')
+for entry in artifacts:
+    f = Path(entry['path']); assert f.is_relative_to(s)
+    assert f.stat().st_size == entry['bytes'] and digest(f) == entry['sha256'], entry['path']
+compressed = load(s/'evidence-compression.json')
+assert len(compressed) == 8
+for entry in compressed:
+    f = s/'evidence'/entry['compressed_name']
+    assert digest(f) == entry['compressed_sha256']
+proposals = load(s/'assigned-proposals.json'); assert len(proposals) == 10
+for entry in proposals:
+    assert digest(Path(entry['proposal'])) == entry['proposal_sha256']
+    assert digest(s/(entry['id']+'.original.md')) == entry['proposal_sha256']
+for entry in report['proposal_results']:
+    if entry['state'] == 'duplicate': git('-C','.worktrees/live','merge-base','--is-ancestor',entry['commit'],'HEAD')
+cli = load(s/'ledger-update-proof.json'); physical = (r/'paper/materials/learning/ledger.jsonl').read_bytes()
+assert cli['cli_exit'] == 0 and sha(physical[:cli['prefix_bytes']]) == cli['prefix_sha256']
+requests = [json.loads(x) for x in (s/'ledger-update-input.jsonl').read_bytes().splitlines()]
+assert len(requests) == len(cli['owned_updates']) == 23
+own = []
+for entry,request in zip(cli['owned_updates'],requests):
+    raw = physical[entry['offset']:entry['offset']+entry['bytes']]; row=json.loads(raw)
+    assert sha(raw) == entry['sha256'] and all(row.get(k) == v for k,v in request.items())
+    assert set(row) <= {'op','id','ts','by','where','note'} and row['op'] == 'update'
+    own.append((entry['offset'],raw))
+owned = b''.join(raw for offset,raw in sorted(own)); (p/'own-ledger-rows.jsonl').write_bytes(owned)
+spec = importlib.util.spec_from_file_location('ledger_guard',r/'learner/ledger.py'); ledger=importlib.util.module_from_spec(spec);spec.loader.exec_module(ledger)
+ids = {json.loads(x)['id'] for x in owned.splitlines()}
+def fold(raw): return ledger.fold([(n,row) for n,line in enumerate(raw.splitlines(),1) if (row:=json.loads(line)).get('id') in ids])
+old_raw=git('show','HEAD:paper/materials/learning/ledger.jsonl');old,new=fold(old_raw),fold(old_raw+owned)
+for ident in ids:
+    for key in ['character','kind','claim','first_run','asc','prior','prior_note','prior_runs','evidence','status','version','shipped_at','effect']:
+        assert old[ident].get(key)==new[ident].get(key),(ident,key)
+at=subprocess.check_output(['date','+%Y-%m-%d %H:%M:%S %Z']).decode().strip()
+info=dict(source=source,base=base,tree=git('rev-parse',source+'^{tree}').decode().strip(),files=files)
+(pub/'source-commit.json').write_text(json.dumps(info,indent=2)+'\n')
+(pub/'ops-source-disposition.json').write_text(json.dumps(dict(at=at,accepted=True,source=source,
+    rationale='Final unchanged source original sandbox entry0 with demonstrated EPERM wrapper excluded, same original wrapper host1case/Python4case0; preserve original1 and parallel-timeout1. Exact final combined host required.',
+    no_source_full_repeat_or_assertion_timeout_change=True,exact_final_live_full_required=True),indent=2)+'\n')
+record=dict(at=at,batch=bid,report=report,scratch_report=scratch_report,native=native,source=info,
+    source_received=True,original_complete_rc=1,parallel_recheck_rc=1,final_sandbox_rc=0,
+    final_sandbox_main_cases=4234,final_paths_cases=11,unchanged_original_wrapper_host_rc=0,
+    original_frames_verified=frames,artifacts=artifacts,compressed_evidence_sha_verified=compressed,
+    whole_evidence_raw_reverification_not_repeated=True,evidence=load(s/'evidence-verification.json'),
+    consumer_summary=load(s/'selection-consumer-summary.json'),producer=load(s/'dagger-producer-readback.json'),
+    cli=cli,own_trace_rows=23,protected_ledger_fields_preserved=True,
+    narrow_source_does_not_complete_two_original_wide_proposals=True,
+    original_failures_unknowns_model_permissions_and_other_role_ack_unchanged=True)
+(pub/'source-readback.json').write_text(json.dumps(record,ensure_ascii=False,indent=2)+'\n')
+pending=dict(at=at,batch=bid,source=source,source_commit=source,source_parent=base,source_tree=info['tree'],files=files,
+    owner_thread=native['thread'],worktree=str(wt),status='source received and accepted; original051302 publication ordered first',
+    live=None,release_id=None,host_requested=False,no_other_role_ACK=True,
+    ordered_after='20261017-051302-strategy-proposal',wide_proposals_remain_waiting=True)
+(r/'ops/codex-ops/pending-integrations'/f'{bid}.json').write_text(json.dumps(pending,indent=2)+'\n')
+with tarfile.open(pub/'original-source-materials.tar.gz','w:gz') as bundle:
+    for f in sorted([x for x in s.iterdir() if x.is_file()]+[out,out.with_suffix('.err')]):
+        if f.stat().st_size<1600000: bundle.add(f,arcname=str(f.relative_to(r)),recursive=False)
+print(json.dumps(dict(source=source,leaves=4,frames=len(frames),artifacts=len(artifacts),trace_rows=23,accepted=True)),flush=True)

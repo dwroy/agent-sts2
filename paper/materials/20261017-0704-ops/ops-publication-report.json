@@ -1,0 +1,152 @@
+{
+  "task": "strategy-proposal",
+  "character": "silent",
+  "batch": "20261017-044302-s2-strategy-proposal",
+  "base": "edff4b9a3f6a9a8061c077a5ce731781fc7d4c79",
+  "runs": [
+    "R3AJCGQGGMR4",
+    "LRN0HPZ0FZS1",
+    "T082DRCUHRRD",
+    "R0HEV5E3QT6G",
+    "ZZMYZ5UBCG72",
+    "10GPK5XGHCK3",
+    "UACFSW4VDDLD",
+    "53FLQ68CETW0",
+    "SADL3CGYTGSR",
+    "VLV17NUSFS61"
+  ],
+  "fixes": [
+    {
+      "id": "silent-dagger-throw-sandpit-context",
+      "commit": "6c306a49710731da372989ae03ec09eb0a425bb1",
+      "description": "Silent A10沙坑2的投掷匕首单弃牌窗口展示弃后逃离与当前费用；保留全部候选。",
+      "runs": [
+        "R3AJCGQGGMR4"
+      ],
+      "floor": 33,
+      "turn": 5,
+      "ledger": [
+        "silent-0018",
+        "silent-0117"
+      ],
+      "proposal_ids": [
+        "silent-proposal-e4263c03267cf4cf",
+        "silent-proposal-267864aef9c1f322"
+      ]
+    }
+  ],
+  "skipped": [],
+  "merged": "c7eadf02a06985d9120b1a1c9a60847cccc1adaa",
+  "version": "S1.dagger-throw-sandpit-context1",
+  "tests": {
+    "tsc": 0,
+    "vitest": 0,
+    "cases": 30
+  },
+  "validation": {
+    "initial_sandbox_exit": 1,
+    "initial_files_passed": 456,
+    "initial_cases_passed": 4234,
+    "initial_failed_file": "tests/global-build-health.test.ts",
+    "initial_failure": "spawnSync /usr/bin/python3 EPERM",
+    "parallel_recheck_exit": 1,
+    "parallel_recheck_workers": 4,
+    "parallel_recheck_timeout_cases": 6,
+    "parallel_recheck_files_passed": 453,
+    "parallel_recheck_cases_passed": 4228,
+    "sandbox_recheck_exit": 0,
+    "sandbox_recheck_workers": 1,
+    "sandbox_recheck_main_files": 456,
+    "sandbox_recheck_main_cases": 4234,
+    "sandbox_recheck_paths_cases": 11,
+    "sandbox_recheck_extra_exclusions": [
+      "tests/global-build-health.test.ts"
+    ],
+    "unchanged_python_test_exit": 0,
+    "unchanged_python_cases": 4
+  },
+  "code_proposals": [
+    "silent-proposal-d04933cbd408d85b",
+    "silent-proposal-e4263c03267cf4cf",
+    "silent-proposal-574d0359cc102419",
+    "silent-proposal-8e5765c4bfbaba5b",
+    "silent-proposal-267864aef9c1f322",
+    "silent-proposal-bc357cb8bcee3b22",
+    "silent-proposal-0337be0b6a07fbdc",
+    "silent-proposal-40167a3d9d4a7110",
+    "silent-proposal-78fce763f2bc9f73",
+    "silent-proposal-0277e542bf135198"
+  ],
+  "implementation_domains": [
+    "combat"
+  ],
+  "proposal_results": [
+    {
+      "id": "silent-proposal-d04933cbd408d85b",
+      "state": "waiting",
+      "reason": "已核R3 F45T2/T6的77→90→99及清旧毒；13局的恢复序列不构成同阶恢复分布。当前rollout库存分支仍沿用旧maxHp，需未来机体HP的不确定性契约及跨台清除路径的固定消费者核证；不能将事后266写成事前确定需求。"
+    },
+    {
+      "id": "silent-proposal-e4263c03267cf4cf",
+      "state": "waiting",
+      "reason": "ops verified narrow Dagger Throw discard fact source6c306a49 actually live as V5-R378; original complete combat/SL policy and controlled-successor evidence still missing, so the whole proposal remains waiting."
+    },
+    {
+      "id": "silent-proposal-574d0359cc102419",
+      "state": "waiting",
+      "reason": "局部力敏、脆弱、触媒、涂毒和旧毒清除事实已核；末T7的9血12挡对26与新5毒实际12分账。库存未来血量、药水持有/施放时点及跨阶段联合资源尚无完整候选执行与整战校准，不用败局推出所有局部机制有bug。"
+    },
+    {
+      "id": "silent-proposal-8e5765c4bfbaba5b",
+      "state": "waiting",
+      "reason": "R3 F37/39/43三胜的净耗20/24/45及F44羽毛6→30、HEAL至52已核；F40条件35/p75 23与实际6并非同一已兑现资源。缺未走路线/回血或锻造的受控整场结果及逐来源资源到原题面完整投影，保留5样本房间代价门槛。"
+    },
+    {
+      "id": "silent-proposal-267864aef9c1f322",
+      "state": "waiting",
+      "reason": "ops verified narrow Dagger Throw discard fact source6c306a49 actually live as V5-R378; original complete combat/SL policy and controlled-successor evidence still missing, so the whole proposal remains waiting."
+    },
+    {
+      "id": "silent-proposal-bc357cb8bcee3b22",
+      "state": "waiting",
+      "reason": "13局各有库存2/1/0的不同上限，分A0/A2/A3/A6/A7/A10核对；A10仅4局库存遭遇。尚无同阶恢复概率分布与跨台受控模拟，已见新上限读入不等未来上限已知，与d049共享缺口，不新造父项。"
+    },
+    {
+      "id": "silent-proposal-0337be0b6a07fbdc",
+      "state": "duplicate",
+      "reason": "原提案仅纠正110→99持有后房数，规则不变；本批R3 F29取得后8房首帧均1敏原字节核实，原131项断言/99房材料保留，未把其余10支持局冒成本批全量重算。现有生产源码已读现场DEXTERITY_POWER/FRAIL_POWER，源码71af970600794f87a993df428cdde14dd7809dd7为实际live祖先，无新增规则可实施。",
+      "commit": "71af970600794f87a993df428cdde14dd7809dd7"
+    },
+    {
+      "id": "silent-proposal-40167a3d9d4a7110",
+      "state": "waiting",
+      "reason": "M0 F17六试未赢；滑溜逐击及毒结算限伤、末T7两敏三挡20对32仍死已核。缺药生成牌实际施放、增益建立与跨轮资源联合后继的完整核证；不把拥有闪亮/步法或5毒当已兑现胜果。"
+    },
+    {
+      "id": "silent-proposal-78fce763f2bc9f73",
+      "state": "waiting",
+      "reason": "M0八胜净耗83、三次回血63及事件自损7，与F12条件boss64/实到29分账；缺未走精英或锻造路线整场反事实及题面完整资源来源映射，单次35差值不能拟为统一模型偏差或路线权重。"
+    },
+    {
+      "id": "silent-proposal-0277e542bf135198",
+      "state": "waiting",
+      "reason": "M0 F17同盘T9的19血/敌97下，换防御+为打击使全轮净清19→25、损0→9；六试0胜，后继也变。缺完整保血线胜果及稳定候选执行/后继控制，不据饱和24/24死亡拟统一禁攻或SL阈值。"
+    }
+  ],
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-044302-s2/learner/runs/20261017-044309-263391a8-2e4c-45d2-a9ce-ea4522058985-strategy-proposal/ops-publication-report.md",
+  "merge_blocked": {
+    "reason": "live整支合并预检存在六份共享记录内容冲突；按任务停止，四文件净补丁apply --check为0。",
+    "source_patch": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-044302-s2/learner/runs/20261017-044309-263391a8-2e4c-45d2-a9ce-ea4522058985-strategy-proposal/source.patch",
+    "details": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-044302-s2/learner/runs/20261017-044309-263391a8-2e4c-45d2-a9ce-ea4522058985-strategy-proposal/live-preflight-final.stdout.txt",
+    "live_head": "51511b28e8fa085adbd30f232e625ebee058fe59",
+    "lock_confirmed": true
+  },
+  "status": "published by primary ops",
+  "producer": "primary_ops",
+  "release_id": "V5-R378",
+  "source_report_retained": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-044302-s2/learner/runs/20261017-044309-263391a8-2e4c-45d2-a9ce-ea4522058985-strategy-proposal/report.md",
+  "source_report_sha256": "e75b22eee18e00985bca37967cf3a3019dd8a3a6d796458d519f2a4615dee947",
+  "final_host": "one final combined live tree requested through original051302 channel; pending",
+  "final_combined_live": "c7eadf02a06985d9120b1a1c9a60847cccc1adaa",
+  "final_combined_tree": "401ad6f9da9bfacbc7dc7b391e870a022d14ff74"
+}
