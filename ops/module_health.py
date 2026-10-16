@@ -19,6 +19,7 @@ import tempfile
 import sys
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from adaptive_health import adaptive_health
+from global_build_health import global_build_health
 
 LABELS = {'reward/card', 'shop/buy', 'shop/plan', 'rest/choose', 'rest/plan',
           'selection/upgrade', 'selection/remove', 'selection/transform', 'selection/add',
@@ -431,6 +432,7 @@ def summarize(config, decisions, brains, coverage, plans=()):
     adaptive = adaptive_health(config, unique_records)
     s_combat = combat_s_ranking_health(config, unique_records)
     build_ranking = build_ranking_health(config, unique_records, all_brains)
+    global_build = global_build_health(config, unique_records, LABELS, FAIL_STREAK)
     return {'schema': 'module-health-v1', 'at': datetime.now(timezone.utc).isoformat(), 'run_id': rid,
             'character': 'SILENT', 'architecture': 'V5', 'construction_mode': obj(config.get('construction')).get('mode'),
             'simulation_enabled': enabled, 'coverage': coverage, 'complete': complete,
@@ -445,7 +447,8 @@ def summarize(config, decisions, brains, coverage, plans=()):
             'brain': {'observed_questions': len(brain_rows), 'questions_with_dpr': delivered,
                       'accepted_with_dpr': sum(r.get('accepted') is True and dpr_count(r.get('options')) > 0 for r in brain_rows),
                       'decision_use': 'unknown; delivery is not evidence of reasoning or a fixed DPR weight'},
-            'alert': (enabled and longest >= FAIL_STREAK) or pipeline['alert'] or readiness['alert'] or s_combat['alert'] or build_ranking['alert'] or computation['alert'] or adaptive['alert'], 'failures': evidence, 'diagnostics': phases,
+            'global_build': global_build,
+            'alert': (enabled and longest >= FAIL_STREAK) or pipeline['alert'] or readiness['alert'] or s_combat['alert'] or build_ranking['alert'] or computation['alert'] or adaptive['alert'] or global_build['alert'], 'failures': evidence, 'diagnostics': phases,
             'unsupported': unsupported,
             'scope': 'Service availability only; sample threshold, simulator validity and game policy unchanged.'}
 
