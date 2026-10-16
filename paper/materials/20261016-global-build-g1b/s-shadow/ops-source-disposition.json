@@ -1,0 +1,274 @@
+{
+  "schema": "global-build-source-disposition-v1",
+  "at": "2026-10-16 12:58:00 CST",
+  "actor": "ops",
+  "parent": "roy-20261016-global-build",
+  "phase": "G1b P2/P3 S-sort shadow",
+  "original_owner": "01a13dcd-83d4-7c63-b233-f93cf878ecf4",
+  "decision": "accepted unchanged 13-leaf source with exact failed-case supplement as source integration basis",
+  "source_commit_by_original_owner_authorized": true,
+  "source_commit": null,
+  "source_candidate": {
+    "path": "paper/materials/20261016-global-build-g1b/s-shadow/source-candidate.json",
+    "sha256": "b09f8619b73fdb476b82773fbd1ebd7738c51e03fc4e7bb97af2574f4f04ba29"
+  },
+  "base": "deae4ef43231875c8331739d470090227381e023",
+  "staged_tree": "a6e75fd508b09861ab8dfab9344c8162fcf5a6fb",
+  "patch_sha256": "8b1cf089df21c58ca1f862874c91611886eb3b0c94feef56386a2c91ea557f73",
+  "leaves": [
+    {
+      "path": "agent/src/core/config.ts",
+      "bytes": 86277,
+      "sha256": "95987ec4c3247e719a1d5c30efabd5a53338581456d71824d21b9ae8d9014348",
+      "staged_worktree_full_start_and_supplement_equal": true
+    },
+    {
+      "path": "agent/src/eye/run-config.ts",
+      "bytes": 31726,
+      "sha256": "5c07b972078eb26da451fbe6a16bd06db94980d1b1725e0241bd1fc8fdc2a9b7",
+      "staged_worktree_full_start_and_supplement_equal": true
+    },
+    {
+      "path": "agent/src/sim/boss-lines.ts",
+      "bytes": 59094,
+      "sha256": "e3d9a70923c1c7829962adbee7d44050d1a9e1ff550f1988a86784aec2250e9c",
+      "staged_worktree_full_start_and_supplement_equal": true
+    },
+    {
+      "path": "agent/src/sim/build-rank.ts",
+      "bytes": 9992,
+      "sha256": "7438f3d9433eb8357dea8cc9c82d8719fcdf35dc3bfee0e552388666d37fe84d",
+      "staged_worktree_full_start_and_supplement_equal": true
+    },
+    {
+      "path": "agent/src/sim/build-sim-facts.ts",
+      "bytes": 54900,
+      "sha256": "ad391afaf2240836efcb72635ac9b63ba514628643cb08dfe4e94b9c1fa0312c",
+      "staged_worktree_full_start_and_supplement_equal": true
+    },
+    {
+      "path": "agent/src/sim/build-sim.ts",
+      "bytes": 22871,
+      "sha256": "c6f744c5e511d631c70b22ffeefdb3ee211a35c71199b335b885735f81073576",
+      "staged_worktree_full_start_and_supplement_equal": true
+    },
+    {
+      "path": "agent/src/sim/s-combat-rank.ts",
+      "bytes": 4569,
+      "sha256": "6b6a5f33764f253e6f8fd606b772dd641953b118029e9df32d97c56e691893f8",
+      "staged_worktree_full_start_and_supplement_equal": true
+    },
+    {
+      "path": "agent/tests/build-rank-integration.test.ts",
+      "bytes": 5431,
+      "sha256": "c704a2825da9a509d0724234f0fd80ede1156d13548ae4b13a1cae6c3e5fbbb6",
+      "staged_worktree_full_start_and_supplement_equal": true
+    },
+    {
+      "path": "agent/tests/build-rank.test.ts",
+      "bytes": 9189,
+      "sha256": "ef14be841357ceb87ea4e8f2da0d1e469b01ba5351c61205e24aef1af068cb7f",
+      "staged_worktree_full_start_and_supplement_equal": true
+    },
+    {
+      "path": "agent/tests/module_health_test.py",
+      "bytes": 22130,
+      "sha256": "ac03070c51242c7f35a89e72b22e0d1509fd0489c9203f90f5a7cdee80f4baac",
+      "staged_worktree_full_start_and_supplement_equal": true
+    },
+    {
+      "path": "agent/tests/required-boss-lines.test.ts",
+      "bytes": 7008,
+      "sha256": "e5cfa6c6f5c707772ad65046989c1e874d3d6a24b8301b3b090e7ae2beb1bc0c",
+      "staged_worktree_full_start_and_supplement_equal": true
+    },
+    {
+      "path": "agent/tests/s-combat-rank.test.ts",
+      "bytes": 6761,
+      "sha256": "e81241f468151850930cdaafe0fe1947fe811c97644450d54b4bfb41d4fd74e8",
+      "staged_worktree_full_start_and_supplement_equal": true
+    },
+    {
+      "path": "ops/module_health.py",
+      "bytes": 28765,
+      "sha256": "69471c09be6b513a2f78ea8b9bbb8dc9dd0425f0e2e92a69b576f8a8b5be6fca",
+      "staged_worktree_full_start_and_supplement_equal": true
+    }
+  ],
+  "source_index_entries_sha256": "5c0d91ed8e5ab4f8f1f6c33ba42ec8956746642a61c2357b2480f4840243a200",
+  "protected_test_and_timeout_config": {
+    "agent/tests/fix-queue-v4-shrink.test.ts": {
+      "bytes": 14745,
+      "sha256": "13da4e23fafdc7fd42fbd85f57c96d93aa82bf9a196f3c04c4d71af47b7f0a56",
+      "same_original_base": true
+    },
+    "agent/vitest.config.ts": {
+      "bytes": 905,
+      "sha256": "5852d531cbf81c915dbdbb962f47e50661507469d61c22204afd649460e2c46e",
+      "same_original_base": true
+    }
+  },
+  "checks": {
+    "final_tsc": 0,
+    "fixed": {
+      "files": 6,
+      "cases": 57,
+      "rc": 0
+    },
+    "original_first_tsc": {
+      "rc": 1,
+      "reason": "RunConfigRow did not yet include shadow union; corrected before frozen full start; original fixed-0.log retained"
+    },
+    "full": {
+      "rc": 1,
+      "files_passed": 491,
+      "files_failed": 1,
+      "cases_passed": 4931,
+      "cases_failed": 1,
+      "cases_skipped": 2,
+      "vitest_seconds": 1484.23,
+      "wrapper_seconds": 1485.51,
+      "log_sha256": "508e43e0f801c660ca46ae516522d3b9fd4399356281b2b37c6dd1dc24256326",
+      "command": [
+        "npx",
+        "vitest",
+        "run",
+        "--maxWorkers=2"
+      ]
+    },
+    "only_full_failure": {
+      "file": "agent/tests/fix-queue-v4-shrink.test.ts",
+      "line": 228,
+      "test": "XC4T F9 T3: a later turn with the beetle alive",
+      "kind": "15000ms timeout",
+      "observed_ms": 16925
+    },
+    "supplement": {
+      "rc": 0,
+      "passed": 1,
+      "unselected": 13,
+      "vitest_seconds": 12.97,
+      "wrapper_seconds": 16.51,
+      "actual_test_ms": 7700,
+      "command": [
+        "npx",
+        "vitest",
+        "run",
+        "tests/fix-queue-v4-shrink.test.ts",
+        "--testNamePattern",
+        "XC4T F9 T3: a later turn with the beetle alive",
+        "--maxWorkers=1"
+      ],
+      "log_sha256": "5ac9b9edfb29846127049e241a469929429b781819369fc2a113b7598e2c8c41"
+    },
+    "assertions_source_or_15000ms_limit_changed_after_full_start": false,
+    "source_full_repeated_by_ops": false,
+    "original_source_gitleaks": []
+  },
+  "rationale": "The only full failure is elapsed timeout in an unchanged original Ironclad local solver/rollout fixture. The exact same complete case subsequently passed all assertions under one worker within its unchanged 15s limit. Reviewed 13-leaf diff and fixed tests constrain the authorized change to Silent S-sort use and counterfactual diagnostics; do not infer a proven load root cause or full-suite rc0.",
+  "behavior_scope": {
+    "S_sort_only": "P2 production sSort=shadow; P3 production win/HP ranking retained with shadow S ranking logged",
+    "S_calculation_and_counterfactual_logs_retained": true,
+    "win_HP_order_P1_C2_completion_and_other_roles_retained": true,
+    "C2_detail": "allowS stopping rule/completion unchanged; rankS/production comparison follows actual disabled S-sort; memo identity includes policy",
+    "independent_behavior_release_required_after_actual_integration": true,
+    "G2_not_in_this_source": true
+  },
+  "read_only_preview": {
+    "heads": {
+      "main": "f2b0a81e89b39f65611dc8f1fabd101d941f73b1",
+      "live": "0e7998bfa8df267dcf8835a57949bdb982c9feb0"
+    },
+    "leaves": [
+      {
+        "path": "agent/src/core/config.ts",
+        "main_equals_base": true,
+        "live_equals_base": false,
+        "live_historical_attribution_only": true
+      },
+      {
+        "path": "agent/src/eye/run-config.ts",
+        "main_equals_base": true,
+        "live_equals_base": true,
+        "live_historical_attribution_only": false
+      },
+      {
+        "path": "agent/src/sim/boss-lines.ts",
+        "main_equals_base": true,
+        "live_equals_base": true,
+        "live_historical_attribution_only": false
+      },
+      {
+        "path": "agent/src/sim/build-rank.ts",
+        "main_equals_base": true,
+        "live_equals_base": true,
+        "live_historical_attribution_only": false
+      },
+      {
+        "path": "agent/src/sim/build-sim-facts.ts",
+        "main_equals_base": true,
+        "live_equals_base": true,
+        "live_historical_attribution_only": false
+      },
+      {
+        "path": "agent/src/sim/build-sim.ts",
+        "main_equals_base": true,
+        "live_equals_base": true,
+        "live_historical_attribution_only": false
+      },
+      {
+        "path": "agent/src/sim/s-combat-rank.ts",
+        "main_equals_base": true,
+        "live_equals_base": true,
+        "live_historical_attribution_only": false
+      },
+      {
+        "path": "agent/tests/build-rank-integration.test.ts",
+        "main_equals_base": true,
+        "live_equals_base": true,
+        "live_historical_attribution_only": false
+      },
+      {
+        "path": "agent/tests/build-rank.test.ts",
+        "main_equals_base": true,
+        "live_equals_base": true,
+        "live_historical_attribution_only": false
+      },
+      {
+        "path": "agent/tests/module_health_test.py",
+        "main_equals_base": true,
+        "live_equals_base": true,
+        "live_historical_attribution_only": false
+      },
+      {
+        "path": "agent/tests/required-boss-lines.test.ts",
+        "main_equals_base": true,
+        "live_equals_base": true,
+        "live_historical_attribution_only": false
+      },
+      {
+        "path": "agent/tests/s-combat-rank.test.ts",
+        "main_equals_base": true,
+        "live_equals_base": true,
+        "live_historical_attribution_only": false
+      },
+      {
+        "path": "ops/module_health.py",
+        "main_equals_base": true,
+        "live_equals_base": true,
+        "live_historical_attribution_only": false
+      }
+    ],
+    "final_integration_requires_original_live_lock_recheck": true
+  },
+  "operations": {
+    "source_code_index_or_HEAD_mutated_by_ops": false,
+    "main_live_code_or_refs_mutated_by_ops": false,
+    "game_restart_account_home_model_prompt_mutated": false,
+    "new_learner_research_simulation_or_test_started": false,
+    "other_role_ACK": false
+  },
+  "next": "Original owner may commit only these exact13 leaves and return source SHA. Then original ops narrowly integrates main/live under original live-merge.lock preserving knowledge/parallel records/history, assigns actual independent behavior release, writes rule dual notices and checks exact final tree through original host channel. No previous green tree substitutes for the new composition.",
+  "current_task_scope": "S-shadow source disposition and later publication; G2 delivered separately; no G3/G5, new goal, natural observer or on-gate waiting initiated. Follow later explicit assignments for those phases.",
+  "wide_parents": "Original G1a natural/0332/calibration/learning parents unchanged; source disposition is not scientific or production acceptance"
+}
