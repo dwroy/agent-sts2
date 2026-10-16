@@ -1,0 +1,62 @@
+{
+  "at": "2026-10-16 20:13:19 CST",
+  "status": "exact original-owner source received; publication deferred by preceding calibration completion and numbering gate",
+  "owner": "01a13dcd-83d4-7c63-b233-f93cf878ecf4",
+  "authorization": {
+    "path": "paper/materials/20261016-1916-ops/roy-1916-authorization.txt",
+    "sha256": "df84a116facf7a741043f6335f21c7acd96c914fbf782de416f2996cc70ae018"
+  },
+  "scope": "Silent P1 S_READINESS and P2 S_BUILD_RANK on to shadow only; keep computing and logs, S sorting shadow, C1/C2 and other arrangements",
+  "pre_delivery_receipt": {
+    "path": "paper/materials/20261016-1916-ops/p1p2-source-pre-delivery-received.json",
+    "sha256": "5956dd15310bcbca12c8b01a1cbea63b24c926e8bc8a1dd7ec3c6630ed85bd9e"
+  },
+  "source": "70c61acfb118ab284bb950b32495177458a76b2d",
+  "live": "3f81fcbbdd04a57a38c17c2dcb8cb200ad7bb938",
+  "release_id": null,
+  "no_current_game_mutation": true,
+  "source_disposition": {
+    "path": "paper/materials/20261016-v5s-p1p2-shadow/ops-source-disposition.json",
+    "sha256": "795811e6ccc0f0044ac03ecd4ee38fce336fc15cd017e59b9278eca837bb9f59"
+  },
+  "candidate_tree": "4db0775de294ed580b041f279689cb26827fb57b",
+  "source_commit": "70c61acfb118ab284bb950b32495177458a76b2d",
+  "source_tree": "4db0775de294ed580b041f279689cb26827fb57b",
+  "source_parent": "5bda85450459a16912dec7882ccc3e480a06c23d",
+  "source_paths": {
+    "agent/src/core/config.ts": "e0715d76fa13a32de1d0eddbf5ce452b9a11255d7b52882f38d794a3dc4a2ec3",
+    "agent/tests/build-rank-integration.test.ts": "904ba4a85bdaa69f6c6d7c40968422cce757144a54340aaf1fac5bc11c9454c4",
+    "agent/tests/build-rank.test.ts": "e44a98569f74f1a5fc05c2dc05e4177a7a9d15981cf4a8321b9013f9e68d3d19",
+    "agent/tests/s-decision.test.ts": "cd9f0a5af27872b7903a17343ee7aa7850730da7fb23fbdf8224d7883d4be573"
+  },
+  "source_received": {
+    "path": "paper/materials/20261016-2003-ops/source-commit-received.json",
+    "sha256": "d942fc49c3bd2e3b492bbb0c70ecb73105bede76c5ffa440a5406f46aa365077"
+  },
+  "source_manifest": {
+    "path": "paper/materials/20261016-v5s-p1p2-shadow/source-commit.json",
+    "sha256": "9433f2e9c8fdc21154f4e316b5cbd78fb49564cab6decc2d4acf6266ca7e50f4"
+  },
+  "ancestry": {
+    "source_parent_equals_frozen_base": true,
+    "source_is_original_worktree_head": true,
+    "source_in_main": false,
+    "source_in_live": false
+  },
+  "resume_script": {
+    "path": "ops/codex-ops/record-staging/20261016-2003/publish.py",
+    "sha256": "caa3f99c04a1c188b80972b9d802004e4b8d5b94e8e8334dbea4d58af2212f98"
+  },
+  "publication_gate": {
+    "original_owner_batch": "20261016-180157-fix-batch",
+    "prior_live_calibration": "8b65dafb808eb54e965fc1c6c613462fad82306c",
+    "reason": "preceding already-live calibration completion and release numbering unresolved; user explicitly retains gate",
+    "last_attempt": "original live lock acquired at20:12; stopped by predecessor-numbering assertion before source/index/ref/version mutation",
+    "resume_trigger": "original calibration completion/checks event; resolve preceding numbering under original live lock, then execute this same one-shot publication script",
+    "no_bypass_or_new_channel": true
+  },
+  "main": "240de4434e86658a72ef1a07cce8439720520633",
+  "host_request_started": false,
+  "retention_registration": "only after actual main/live publication; no early completion or removal",
+  "watcher_received_or_roy_ACK_registered_by_ops": false
+}
