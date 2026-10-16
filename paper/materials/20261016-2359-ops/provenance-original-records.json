@@ -1,0 +1,241 @@
+{
+  "at": "2026-10-17 00:02:13 CST",
+  "original_proposal": {
+    "op": "add",
+    "id": "silent-proposal-578e415a259e6835",
+    "ts": "2026-10-16T21:40:58+08:00",
+    "character": "silent",
+    "ledger": [
+      "silent-0005",
+      "silent-0006",
+      "silent-0018",
+      "silent-0079",
+      "silent-0019",
+      "silent-0020",
+      "silent-0021",
+      "silent-0125",
+      "silent-0023",
+      "silent-0027",
+      "silent-0046",
+      "silent-0016"
+    ],
+    "runs": [
+      "8JRE1C4H4Z2W"
+    ],
+    "source_task": "experience-update",
+    "target_task": "strategy-proposal",
+    "domains": [
+      "combat",
+      "sl",
+      "structure"
+    ],
+    "summary": "核验静默沙虫同指纹SL实付血价、已建攻防与毒结算、候选及资源分账；证据不足保留原选择规则",
+    "proposal": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261007-173847-experience-update/proposal-mechanisms-sl-resources.md",
+    "experience": [
+      "silent-footwork-block",
+      "silent-strength-weak-observation",
+      "silent-insatiable-dual-clock",
+      "silent-route-hp-observation",
+      "silent-rest-buffer-observation",
+      "silent-deck-burst-observation",
+      "silent-accelerant-triggers",
+      "silent-afterimage-per-card-block",
+      "silent-piercing-wail-temporary-strength",
+      "silent-vajra-opening-strength"
+    ],
+    "rule_changes": false,
+    "authorization": "Roy-2026-10-07-learning",
+    "proposal_sha256": "e13a77ede19196a05647125bcb3c4481ed36ddf98e9e7e2889817f10c9fa190a",
+    "state": "waiting",
+    "reason": "缺跨抽弃、生成、用药与重问的整候选连续归属、逐来源能力兑现及联合资源消费者；单动作回执不足证明整候选完成。",
+    "commit": null,
+    "seen_runs": 329,
+    "batch": "code-proposals:silent-proposal-c20b5139dd0dff71,silent-proposal-ae9e692d680e3819,silent-proposal-52f1e1bd2e7db0ed,silent-proposal-6dd8bbff876be528,silent-proposal-578e415a259e6835,silent-proposal-c0767768bf6a7ab1,silent-proposal-a46bdb7fe711d79a,silent-proposal-1044224808015e5c,silent-proposal-7cbc6005db712ba9,silent-proposal-c59f592f1427a67e:329"
+  },
+  "original_exact_line": "- silent-vajra-opening-strength → silent-0016；支持10局、反例0，适用[0, 20]。",
+  "learner_question": {
+    "proposal_id": "silent-proposal-578e415a259e6835",
+    "batch": "20261016-234303-s2-strategy-proposal",
+    "character": "silent",
+    "original_proposal_sha256": "e13a77ede19196a05647125bcb3c4481ed36ddf98e9e7e2889817f10c9fa190a",
+    "kind": "provenance-disagreement",
+    "claim": "原578e提案将silent-vajra-opening-strength对应silent-0016。",
+    "finding": "silent-0016的原add与当前claim均为护喉甲覆甲，where.experience原链接silent-gorget-plating；不能用它证明金刚杵力量。",
+    "experience_ids": [
+      "silent-vajra-opening-strength",
+      "silent-gorget-plating"
+    ],
+    "evidence": [
+      "silent-proposal-578e415a259e6835.original.md",
+      "ledger-selected.json",
+      "experience-selected.json",
+      "ledger-link-question-evidence.json"
+    ],
+    "recommendation": "运维核本报告后，经既有ops→watcher→Roy通知原文；后续只用CLI追加正确账本链接，保留原提案和首证，不把数据纠错当策略收益。",
+    "delivery": "待运维接续；本批仅在授权scratch和ledger追溯中保存，未写根通知状态或代填任何ACK。"
+  },
+  "learner_raw_add_evidence": {
+    "source": "/home/dw/Projects/agent-sts2/paper/materials/learning/ledger.jsonl",
+    "line": 22,
+    "offset": 20214,
+    "bytes": 1164,
+    "sha256": "fcaf915d59d146e141439032340cfa5d9a0b08089bef75437aa359207e61855b",
+    "row": {
+      "op": "add",
+      "id": "silent-0016",
+      "ts": "2026-10-05T00:16:47+08:00",
+      "by": "learner:experience-update",
+      "character": "silent",
+      "kind": "mechanic",
+      "claim": "护喉甲的开场覆甲不能当作整场固定格挡。机制：本局开场PLATING_POWER=4，后段已无覆甲；只观察到层数耗尽，未验证完整减层条件。搭配：覆甲层数、灵动步法的敏捷与卡牌格挡分别记录，后段使用实际层数。决定胜负的战斗：A0沙虫末回合已无覆甲，仍缺生存量（n=1）。典型案例：C48LLXBGKXQ9 F33第6次T1覆甲4、T5已消失，T11只有卡牌格挡26，2血对32伤害死亡。",
+      "evidence": [
+        {
+          "run": "C48LLXBGKXQ9",
+          "floor": 33,
+          "role": "support",
+          "note": "本轮从本局复盘与日志重新核对；详细数值和口径见首构建变更记录。",
+          "turn": 5
+        }
+      ],
+      "first_run": "C48LLXBGKXQ9",
+      "prior": "unknown",
+      "prior_note": "静默猎手首个已结束的局，没有更早同角色的可比局面；不借其他角色判断先验。",
+      "status": "proposed",
+      "where": {
+        "experience": [
+          "silent-gorget-plating"
+        ],
+        "commits": [
+          "__COMMIT__"
+        ],
+        "changelog": [
+          "__TITLE__"
+        ],
+        "lessons": [
+          "C48LLXBGKXQ9"
+        ]
+      },
+      "asc": 0
+    }
+  },
+  "original_add_rows": [
+    {
+      "offset": 20214,
+      "bytes": 1164,
+      "sha256": "fcaf915d59d146e141439032340cfa5d9a0b08089bef75437aa359207e61855b",
+      "row": {
+        "op": "add",
+        "id": "silent-0016",
+        "ts": "2026-10-05T00:16:47+08:00",
+        "by": "learner:experience-update",
+        "character": "silent",
+        "kind": "mechanic",
+        "claim": "护喉甲的开场覆甲不能当作整场固定格挡。机制：本局开场PLATING_POWER=4，后段已无覆甲；只观察到层数耗尽，未验证完整减层条件。搭配：覆甲层数、灵动步法的敏捷与卡牌格挡分别记录，后段使用实际层数。决定胜负的战斗：A0沙虫末回合已无覆甲，仍缺生存量（n=1）。典型案例：C48LLXBGKXQ9 F33第6次T1覆甲4、T5已消失，T11只有卡牌格挡26，2血对32伤害死亡。",
+        "evidence": [
+          {
+            "run": "C48LLXBGKXQ9",
+            "floor": 33,
+            "role": "support",
+            "note": "本轮从本局复盘与日志重新核对；详细数值和口径见首构建变更记录。",
+            "turn": 5
+          }
+        ],
+        "first_run": "C48LLXBGKXQ9",
+        "prior": "unknown",
+        "prior_note": "静默猎手首个已结束的局，没有更早同角色的可比局面；不借其他角色判断先验。",
+        "status": "proposed",
+        "where": {
+          "experience": [
+            "silent-gorget-plating"
+          ],
+          "commits": [
+            "__COMMIT__"
+          ],
+          "changelog": [
+            "__TITLE__"
+          ],
+          "lessons": [
+            "C48LLXBGKXQ9"
+          ]
+        },
+        "asc": 0
+      }
+    },
+    {
+      "offset": 137433,
+      "bytes": 1829,
+      "sha256": "0767f4475c1bc0fb2e5d16f9a43e957f67a50877edfac89a0f136288082b1968",
+      "row": {
+        "op": "add",
+        "id": "silent-0049",
+        "ts": "2026-10-05T05:32:59+08:00",
+        "by": "learner:experience-update",
+        "character": "silent",
+        "kind": "mechanic",
+        "claim": "金刚杵在已观察战斗开场提供1力量，增伤按随后实际攻击段数兑现，不提供格挡。机制：无其他修正时打击6→7、冲刺10→11；力量可被族母每次削2，初始1不足抵消两次灵魂吸取。搭配：多段放大每点力量，持续毒与防御独立计算，不能把增伤来源等同整战战力。决定胜负的战斗：A0/A1各一局见开场1力，实验体与族母均有败线，未隔离遗物胜因（n=2）。典型案例：R0HEV5E3QT6G F12开场1力，F48/2非凡技艺再1→3；E6AVMMVCSRPC F13 T3打击实7、冲刺实11，F17 T6/T10后1→−1→−3，末线仍败。",
+        "evidence": [
+          {
+            "run": "R0HEV5E3QT6G",
+            "role": "support",
+            "floor": 12,
+            "note": "本轮重抽本角色相邻状态核对；R0HEV5E3QT6G F12开场1力，F48/2非凡技艺再1→3；E6AVMMVCSRPC F13 T3打击实7、冲刺实11，F17 T6/T10后1→−1→−3，末线仍败。"
+          },
+          {
+            "run": "E6AVMMVCSRPC",
+            "role": "support",
+            "floor": 13,
+            "note": "本轮重抽本角色相邻状态核对；R0HEV5E3QT6G F12开场1力，F48/2非凡技艺再1→3；E6AVMMVCSRPC F13 T3打击实7、冲刺实11，F17 T6/T10后1→−1→−3，末线仍败。"
+          }
+        ],
+        "first_run": "R0HEV5E3QT6G",
+        "prior": "unknown",
+        "prior_note": "此前静默局没有金刚杵；R0已实见开场1力量，但旧账本0035记录的是暗影步双倍机制，不能当成已总结金刚杵的构筑经验。",
+        "status": "proposed",
+        "where": {
+          "experience": [
+            "silent-vajra-opening-strength"
+          ],
+          "commits": [
+            "cf3de82416d6b831cb36d5ce3869e424f88566ba"
+          ],
+          "changelog": [
+            "2026-10-05 静默猎手 第五次增量：1 局 A1（version 2026-10-05.5，分支 exp-silent，cf3de824）"
+          ]
+        },
+        "asc": 0
+      }
+    }
+  ],
+  "current_link_matches": [
+    {
+      "id": "silent-0012",
+      "claim": "本局同族力量在多击中逐击体现：同族信徒#1单击在力量2/4/6时为7/9/11，双击力量2时4×2、力量6时8×2，总差8。同族神官三连击从力量0的3×3变为力量2的5×3；随后中和给虚弱，显示回到3×3。本条只扩展本局同族证据，不把此前沙虫数值移植到同族。",
+      "first_run": "Y6GM2CHWJBEY",
+      "where_experience": [
+        "silent-strength-weak-observation",
+        "silent-kin-poison-sl-observation",
+        "silent-frail-card-block",
+        "silent-vajra-opening-strength"
+      ]
+    },
+    {
+      "id": "silent-0016",
+      "claim": "护喉甲的开场覆甲不能当作整场固定格挡。机制：本局开场PLATING_POWER=4，后段已无覆甲；只观察到层数耗尽，未验证完整减层条件。搭配：覆甲层数、灵动步法的敏捷与卡牌格挡分别记录，后段使用实际层数。决定胜负的战斗：A0沙虫末回合已无覆甲，仍缺生存量（n=1）。典型案例：C48LLXBGKXQ9 F33第6次T1覆甲4、T5已消失，T11只有卡牌格挡26，2血对32伤害死亡。",
+      "first_run": "C48LLXBGKXQ9",
+      "where_experience": [
+        "silent-gorget-plating",
+        "silent-vajra-opening-strength",
+        "silent-eternal-armor-finite-plating"
+      ]
+    },
+    {
+      "id": "silent-0049",
+      "claim": "金刚杵在已观察战斗开场提供1力量，增伤按随后实际攻击段数兑现，不提供格挡。机制：无其他修正时打击6→7、冲刺10→11；力量可被族母每次削2，初始1不足抵消两次灵魂吸取。搭配：多段放大每点力量，持续毒与防御独立计算，不能把增伤来源等同整战战力。决定胜负的战斗：A0/A1各一局见开场1力，实验体与族母均有败线，未隔离遗物胜因（n=2）。典型案例：R0HEV5E3QT6G F12开场1力，F48/2非凡技艺再1→3；E6AVMMVCSRPC F13 T3打击实7、冲刺实11，F17 T6/T10后1→−1→−3，末线仍败。",
+      "first_run": "R0HEV5E3QT6G",
+      "where_experience": [
+        "silent-vajra-opening-strength"
+      ]
+    }
+  ],
+  "mechanical_mapping": "Existing0049 original add explicitly describes Vajra and maps that experience;0016 original add is Gorget. Historical accumulated where links do not change original claims. No new mechanism or first-evidence derivation."
+}
