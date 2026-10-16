@@ -32,10 +32,10 @@ export function sCombatRankEnabled(character: string | null | undefined, env: No
   return false;
 }
 
-/** Release this default only after P2's two natural shadow runs; other roles keep the original question and schema. */
+/** Roy 2026-10-16: retain P2 calculations and counterfactuals without delivering the ranking table by default. */
 export function sBuildRankMode(character: string | null | undefined, env: NodeJS.ProcessEnv = process.env): "off" | "shadow" | "on" {
   if (characterKey(character ?? "") !== "silent") return "off";
-  const mode = env["S_BUILD_RANK"]?.trim().toLowerCase() ?? "on";
+  const mode = env["S_BUILD_RANK"]?.trim().toLowerCase() ?? "shadow";
   return mode === "shadow" || mode === "on" ? mode : "off";
 }
 
@@ -56,10 +56,10 @@ export function simAdaptivePolicy(character: string | null | undefined, env: Nod
   return { mode: requested, requested, admission: "accepted" };
 }
 
-/** V5-S P1: resolve against the actual run character, including tools that do not call loadConfig. */
+/** Roy 2026-10-16: retain P1 calculations without delivering readiness to the brain by default. */
 export function sReadinessMode(character: string | null | undefined, env: NodeJS.ProcessEnv = process.env): "off" | "shadow" | "on" {
   if (characterKey(character ?? "") !== "silent") return "off";
-  const value = env["S_READINESS"]?.trim().toLowerCase() ?? "on";
+  const value = env["S_READINESS"]?.trim().toLowerCase() ?? "shadow";
   return value === "on" || value === "shadow" ? value : "off";
 }
 
