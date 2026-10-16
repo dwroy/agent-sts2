@@ -1,0 +1,892 @@
+{
+  "at": "2026-10-16 20:45:28 CST",
+  "batch": "20261016-180157-fix-batch",
+  "source": "f2617b958e425817ca079ff25a5e95484b5096ba",
+  "source_parent": "098e5a7de1aaf06ad0671121b671a0558c04e289",
+  "original_publication": "3f81fcbbdd04a57a38c17c2dcb8cb200ad7bb938",
+  "behavior_commit": "8b65dafb808eb54e965fc1c6c613462fad82306c",
+  "name": "S1.boss-calibration21",
+  "release_id": "V5-R371",
+  "original_entry": {
+    "name": "S1.boss-calibration21",
+    "family": "Silent",
+    "commit": "8b65dafb808eb54e965fc1c6c613462fad82306c",
+    "source": "2026-10-16 20:11:35 CST: Roy授权静默boss校准刷新；21新可用实际结局，327完局/1425尝试/588可用，固定107调参/481验证；数据源f2617b958e425817ca079ff25a5e95484b5096ba；silent-0497；固定模型/Platt/切点不变；paper/materials/silent/boss-sim-calibration.md; 数据源未改；首轮a14ebd05的原固定题60000ms超时已回退并保留原日志；原题原时限单独36568ms通过，本次完整合后重试通过。"
+  },
+  "old_main": "b6831d57742f707c3970d197d30b856316cf0835",
+  "main": "d42810c8699593371f95e1be3faa0e45d9e00174",
+  "old_live": "3f81fcbbdd04a57a38c17c2dcb8cb200ad7bb938",
+  "live": "e1abf7aa9cc69852ff1c954242a8fa36f127bc2f",
+  "tree": "7502422f49eefa496c96a0b9784e7ddd2b9f48c6",
+  "source_leaves": [
+    {
+      "path": "knowledge/characters/silent/boss-trust.json",
+      "bytes": 96864,
+      "sha256": "8afbe6dbbf68f2a7ca73a7d0d43fa702b1061ba16fa10db1a10fb3f8d0e502c5",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "paper/materials/silent/boss-sim-calibration.md",
+      "bytes": 209739,
+      "sha256": "6ebd065a938c0b3bedbfa5fb4e46796b4c88b4df6bc026d18c102d4356c770ab",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/audit-sources.py",
+      "bytes": 4062,
+      "sha256": "8c1cd9d1a5a9ac550462f4578e6c4caf40649f61e8803198150217e1745ed22e",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/audit-versions.py",
+      "bytes": 2183,
+      "sha256": "82f3c7e4fdc16af38f1ff17940b081bc80e6e0bde170ee5182f26eed1bc29da7",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/backfill-frozen.py",
+      "bytes": 2667,
+      "sha256": "b3facff564e2592e1c5f9279f37ebc2c5dbe67ac29bfdaf0623146ecf2259399",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/backfill.exit",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/backfill.log",
+      "bytes": 618,
+      "sha256": "90285e5dca934769e0fd002d636fcf13a3260151f368582d22ad82366c70bfc8",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/boss-input-audit.log",
+      "bytes": 67,
+      "sha256": "bc967e1aea29e05121f0620f783845eb81de9912d7c8c1f0d4a4c3347ab12749",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/boss-trust-table.json",
+      "bytes": 4684,
+      "sha256": "8b69569dd5c96a85aa4f45d0a339b7c12cf27495ac976f15cdadb4ee76183236",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/boss-trust.json",
+      "bytes": 96864,
+      "sha256": "8afbe6dbbf68f2a7ca73a7d0d43fa702b1061ba16fa10db1a10fb3f8d0e502c5",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/cadence-snapshot.json",
+      "bytes": 30638,
+      "sha256": "3d8a4e3a35aa4c6ac460a669d2f38e3087c9e5391a83b55626b49cfb410bcd81",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/calibration-finish.exit",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/calibration-finish.log",
+      "bytes": 1352,
+      "sha256": "a2db865f6c34407f292002d7261e3e9a00ffd2179b984552f4c7d26f85b4f433",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/candidate-consumer-read.json",
+      "bytes": 3685,
+      "sha256": "37cc6f38a19d5985f9c6fec53c6664bab294b8911e6c435639c4afdf27b711b8",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/candidate-consumer.exit",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/candidate-consumer.log",
+      "bytes": 106,
+      "sha256": "1afdfeafd85fd4301a5fb7dc9c5118cf99d0fc35b7f7724d18eebf28f1fe0b2d",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/completed.json",
+      "bytes": 10939,
+      "sha256": "4fccb509379518c105da7ece9598cac565baa84844dd31bf104a57cfb5b4ae51",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/control-replay-comparison.json",
+      "bytes": 385,
+      "sha256": "39de6d1cdb89446acb27ed1917c2998db3aef75b8272879d1bd1e361e2c542bf",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/extract.exit",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/extract.log",
+      "bytes": 10107,
+      "sha256": "9eca655ff238744e4ddeccc604963726acab84b0d5d56971a1d8db66c675ea89",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/extraction.json",
+      "bytes": 12849,
+      "sha256": "d5e14705e25950aa8fbd63e9a6ac4c897a46481665c05afd2ab3ff47b5bc349f",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/fight-code-provenance.json",
+      "bytes": 1716855,
+      "sha256": "d63df67e242a0abde869d63b28097c274b94dcdc72138e8eba93f3fbc476d4dc",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/fights.jsonl",
+      "bytes": 25264166,
+      "sha256": "5281c6381320e734cc558b3b93ce97032b09748f01ab185cd41bd354d2659a6e",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/finalize-publication.py",
+      "bytes": 8903,
+      "sha256": "5bf5be8d80446ff5f3ad99bd2147154e1271ced8161a869f1f4c23c7be25fd1d",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/finish.py",
+      "bytes": 7092,
+      "sha256": "77442844863fd168c2a0f301f46b2703d62bafe02e9a87a27717d4ffe746cd13",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/first-hit-identifiers.json",
+      "bytes": 2750,
+      "sha256": "2e90db9897913b1125070c09832a74d422b577cf867480b4b3a09bb60c286964",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/fixed-model-code-vs-source.patch",
+      "bytes": 684606,
+      "sha256": "e534cb8c318249866d11d71a01cc87c14cabdbd25351931f38c910e3dd9588d7",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/generated-report.md",
+      "bytes": 205582,
+      "sha256": "99b11f3bd62058206dede4280103e613537c11ba8b8151cb21c009e76074a222",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/global_build_funnel_test.py.stderr",
+      "bytes": 112,
+      "sha256": "6b80f1f7116fee7db8b792cc8801e6602ae419af1c2d8fa423134d3232861b75",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/global_build_funnel_test.py.stdout",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/global_build_health_test.py.stderr",
+      "bytes": 102,
+      "sha256": "feabb4add9e2ca3374e538560634d1ec97dc4f4ce89aab12f3d726e36ea9b2f6",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/global_build_health_test.py.stdout",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/historical-copy-preservation.json",
+      "bytes": 179617,
+      "sha256": "14ff0256de465f4b9e428e7f1889ef6f0e617d3d7ed5ab4094a76ade5562ee57",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/historical-copy-restored.json",
+      "bytes": 315,
+      "sha256": "0c2df8da03538947aaeeb3d7239d3c200a91c1a8522a84ae9e198b4bc5d5e263",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/idempotency-audit.json",
+      "bytes": 280,
+      "sha256": "f4671373190fc8397aaeee6b610874030fcd8434bbdf1b1180f4d88f58767fc3",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/import-preflight.exit",
+      "bytes": 2,
+      "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/import-preflight.log",
+      "bytes": 8978,
+      "sha256": "f3086270517f95a73a0d196c44b5cffa06fe7e0f9886a82cb64bbb621a831217",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/index-lag-recovery.json",
+      "bytes": 660,
+      "sha256": "affe715b05296603056a0e10a409c20c6fb57ff4b7867d7fd76a82c8fb0c1c17",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/initial-extraction.json",
+      "bytes": 12977,
+      "sha256": "c7886a2660a12b4a9f4f5258f7296356126741bf0dcd53f1c9a0997e64341241",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/initial-fight-code-provenance.json",
+      "bytes": 1710051,
+      "sha256": "25c9327806ea03eaba251e98f46fdd15dd02dd2b0a06e25bd8a1a42f33eec512",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/initial-missing-indexed-frames.json",
+      "bytes": 1540,
+      "sha256": "e02fb3f2bc28ffcc25a3002e424ed5615bace692104fc0980c73e3a71f99c288",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/initial-source-audit-summary.json",
+      "bytes": 323,
+      "sha256": "5ee9bd5a033f13ab6ad6ea475cfc4741288b37b9a50c427e7d0c742d72e55b2f",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/initial-version-audit-summary.json",
+      "bytes": 3898,
+      "sha256": "330289acf15bb7666ff4511d38f6084079aff53ed505f62ea8828aeb1ae05a39",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/input-audit-summary.json",
+      "bytes": 1110,
+      "sha256": "67f44d7e6e15f3f0933cb7aef4a52aafde9951b3f05ad6f2aeb972b17a71a409",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/ledger-add.log",
+      "bytes": 12,
+      "sha256": "bafc40e734f0b0d660a046c69fe4f8271d14b04e36cbd0371e0d1907a74afafe",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/ledger-item.json",
+      "bytes": 5979,
+      "sha256": "c3aef9601eb442393413a20df36da22e93f8e9ef8a3250338ad8d3aa5fc17233",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/main-merge-conflict-resolution.json",
+      "bytes": 772,
+      "sha256": "6b236d204489471d1ece7387bded4e40617f2aaa102372c7f129b9225d1a6e78",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/main-sandbox.exit",
+      "bytes": 4,
+      "sha256": "f5bde7eb9f6c71611dc5726e8aca3eb4eba3e386da49e0a4ed5c295a90a73a0d",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/main-sandbox.log",
+      "bytes": 593,
+      "sha256": "7eb6ef2bc46c11b5a7ac6499b928c18caec3b675f0e835b7363287879eb28fdd",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/main-supported-sandbox.exit",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/main-supported-sandbox.log",
+      "bytes": 660699,
+      "sha256": "d2b4fb889793a37448f85cac35652545dfb07f41cf3d6db22bcf2c7ae1f52488",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/merge-main-inputs.json",
+      "bytes": 183,
+      "sha256": "a8d6bca68e7794d4d767fbc75d5710c84f5c4b6f78a3556a996d2a1b7b9a44b2",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/merge-main-sandbox.exit",
+      "bytes": 4,
+      "sha256": "f5bde7eb9f6c71611dc5726e8aca3eb4eba3e386da49e0a4ed5c295a90a73a0d",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/merge-main-sandbox.log",
+      "bytes": 86,
+      "sha256": "5675ba064c37b03154e29505a5f5ac607af000373f7c17f6e7965ab3769c07f7",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/missing-indexed-frames.json",
+      "bytes": 3,
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/model-changes.json",
+      "bytes": 21713,
+      "sha256": "350dc90015f49a646669f8221cc3050f7e5a646231292ba514f7cd90e28d279b",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/model-input-audit.json",
+      "bytes": 69192,
+      "sha256": "05e03074b8570077d6e8f9b73a41c8eb9b7e4bd786ee403f7c70d3572385223a",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/model-restoration.json",
+      "bytes": 47823,
+      "sha256": "5bf59915f7cdb89ae5b72b81bbde973e9afbbd03017ed4d42d3d5c6f3bec7065",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/new-outcome-integrity.json",
+      "bytes": 8131,
+      "sha256": "ce5bb773ebd5b67b5d2b6b3cefffec562fcc4b13a56163c8aac6fbff056513ce",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/notify.py",
+      "bytes": 4444,
+      "sha256": "ec7589d813b2f16e6630d3d75fd0ee3634855781a0bd77350618982bba883747",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/opening-audit.json",
+      "bytes": 224727,
+      "sha256": "fe1d8221ef533023a2276a34ba0746c49046d7e4b3700b6b5ceadefa2ecf3f97",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/opening-source-integrity.json",
+      "bytes": 277729,
+      "sha256": "7f98cd91037d3d5e3f9d0ee7a277c5500e303a059105077d6a56a0ab05794b9e",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/package.py",
+      "bytes": 6687,
+      "sha256": "470f57f26d7ebf1d65a68088c5ba63e58cfacdf0dbb1e2686b5c85b72a759cf7",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/pinned-input-integrity.json",
+      "bytes": 27832,
+      "sha256": "c751f1b46ff41120b8dbd904f0a5da148e96083521bd30fca079b0e8a7f1e2fb",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/prepare-data.py",
+      "bytes": 2197,
+      "sha256": "e78e9613237eb52a5f6d7e8781e5b38dc15e6572d261087b2bab9a25e7cd55a6",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/preserve-history.py",
+      "bytes": 2622,
+      "sha256": "6f1c1f46a8a3dab8320b6930702c30f2c8d855c8d1275d655c9ac1fc02df1dc5",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/previous-report.md",
+      "bytes": 203577,
+      "sha256": "521ccd61c0cc64738003b94bcaff3b06d65b4d12a18fd44233323066f145f38b",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/previous-trust.json",
+      "bytes": 95139,
+      "sha256": "8861873eb161d86520e46a2227ac324732a31d7b35b9cd15944a3d008bcbbeca",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/provenance.json",
+      "bytes": 28137,
+      "sha256": "9ff2e18a46992d9a6d9225498d8013e28db81615b22a57d09a85a96bf2340c7d",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/publish.py",
+      "bytes": 11150,
+      "sha256": "1af6b01beabd8f7bfa4a5684c26c89d1eb0c6ef57ba65a8106dcd369c5210db5",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/python-automation.exit",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/python-automation.log",
+      "bytes": 21990,
+      "sha256": "8cccb77a9684a2ac9943c6169499a94c5118f9f3af1320fc4f0c071ab9d3f52a",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/python-dispatch.exit",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/python-dispatch.log",
+      "bytes": 8855,
+      "sha256": "56ad68f575a24a6a6cdd4ba57830c283e84c53424a3f4a79324dfd486fccbe22",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/python-fixtures.exit",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/python-fixtures.log",
+      "bytes": 3729,
+      "sha256": "0a8d39ceb3eff2f062c0b1422d0751c3c3dfc11c80259d503a85dfd1fdfb4a9e",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/read-consumer.mts",
+      "bytes": 2004,
+      "sha256": "3e65073e2de53141c588463d04f8517fdd5f32c8a7639a53c6933434335201a1",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/refresh-command.json",
+      "bytes": 1403,
+      "sha256": "de786be444bd5fecb4b1b4b107cb4a495dec3ca759057ac49a653f0960f80cc5",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/refresh.exit",
+      "bytes": 4,
+      "sha256": "f5bde7eb9f6c71611dc5726e8aca3eb4eba3e386da49e0a4ed5c295a90a73a0d",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/refresh.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/replay-checkpoint.json",
+      "bytes": 233,
+      "sha256": "38a6607621a5c3d1d77b0150ad99b5dd27337577a5603de6e39ac1504114ea32",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/replay-identifiers.json",
+      "bytes": 783,
+      "sha256": "125bbaefa5f9a8a024af00d01e859189738cb94775584e1e2d2047f7457420e0",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/replay-resume-pre.exit",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/replay-resume.exit",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/replay-resume.log",
+      "bytes": 388,
+      "sha256": "b47c762d3413815341af3d24c61b60f61f5fe2cef84900f3ccf66216e830f824",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/replay.exit",
+      "bytes": 4,
+      "sha256": "f5bde7eb9f6c71611dc5726e8aca3eb4eba3e386da49e0a4ed5c295a90a73a0d",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/replay.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/report-final.py",
+      "bytes": 8399,
+      "sha256": "a3219b02971c1d85a30a37dabf5dd040f2381d3ff48452ea612ff1bc3afe5da4",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/report.draft.md",
+      "bytes": 2078,
+      "sha256": "8d8bef218ce95dd0d954a84957d594dc390abcf576c19233fbacd647e0438f06",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/report.md",
+      "bytes": 209739,
+      "sha256": "6ebd065a938c0b3bedbfa5fb4e46796b4c88b4df6bc026d18c102d4356c770ab",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/restore-model.log",
+      "bytes": 216,
+      "sha256": "926b6466dbb17fcf8d9a6bccf381f4d5a0f07065bc15eb1e2977964f807231db",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/restore-model.py",
+      "bytes": 1812,
+      "sha256": "4c6e7c8ca97b5c9cfd4e2f5371fdbaf6140daa366d03191399284d038a2450ac",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/results.jsonl",
+      "bytes": 5208354,
+      "sha256": "ac6a93085cb46f148cc482bd7ca1a5401bfa0a9202acfe41156d5f215bd83829",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/resume-all-identifiers.json",
+      "bytes": 275,
+      "sha256": "b1373cb10dbd0470a784cd8a2d2ab3967b2213aafe63bb0beca4fd7bbc3a0842",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/resume-identifiers.json",
+      "bytes": 275,
+      "sha256": "9f8e178600e34105e6746834c951c13526532c96872a58bc1c29afec6f355910",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/resume-pre-identifiers.json",
+      "bytes": 37,
+      "sha256": "389ad8235b633b13ff4d48ae1498cc74b537beff6cbedf8bf575128f7514ef82",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/reuse-audit.json",
+      "bytes": 632,
+      "sha256": "3971922df68c011d1c86be15341d5014cc5628ce4eb0bc41b5d73161d46f6e75",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/runs-snapshot.jsonl",
+      "bytes": 158164,
+      "sha256": "92bcf77c87edc137910a5e1d8a7f651ce5eae94823bc25df3e69566f0718244a",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/runtime-code-unchanged.json",
+      "bytes": 191,
+      "sha256": "99d2ade21184c0c80b4955b8f0fd58ab79fc0b6a40621cddd06e997892dc0cde",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/sandbox-limits.md",
+      "bytes": 692,
+      "sha256": "5eff54ebefeb0cbb882382ca8c14518585d7256dd6c26f2676bd38c692e41db4",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/sandbox-python-wrapper-equivalents.json",
+      "bytes": 151,
+      "sha256": "f2e650730d77439429ecf3437625e38a61474b99a3796735f0adcaff748ecadd",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/setup.py",
+      "bytes": 2043,
+      "sha256": "79b0544112b96725dbf5eb15217e30c56970499fcf55f4b88bab8a81fb093c25",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/sl-snapshot.jsonl",
+      "bytes": 36007081,
+      "sha256": "e5c9421dba36328eee5ec46bc0c7ea862bf33416a094bb18d3e4ae286ba28e00",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/source-audit-summary.json",
+      "bytes": 323,
+      "sha256": "982581bca3b745cb4c0947516879a01f7b71ea666927e542d204693197da201b",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/source-sandbox.exit",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/source-sandbox.log",
+      "bytes": 4405,
+      "sha256": "c086a4e82f2396599ab67d83f9fa4d252fa72034c0626a63b01e067318cf5dca",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/sources.jsonl",
+      "bytes": 1285919,
+      "sha256": "cf38e8afd051adb39c2734312ad0db5a0fedd67ec154fe37b5df3f636e73074b",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/split.json",
+      "bytes": 20509,
+      "sha256": "8c50bf5e28adcb09cdfe458ee0957dff0393333f31946b73a44025fa408ce5c0",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/summarize.log",
+      "bytes": 2570,
+      "sha256": "c333e99778b7bb089dae25ec664f4c82e253fb30fbc691eb5ad0315cb0691fd2",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/summarize.py",
+      "bytes": 6933,
+      "sha256": "96d010b085bf12b4b214d13f57dc464c483908b50881452267919e10eedc005f",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/summary.json",
+      "bytes": 3252,
+      "sha256": "93f5bc7fbd92b4aaa8a069dadf0ce389e6675cf21e7327a909a0bdc0a2ebd39f",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/tests-summary.json",
+      "bytes": 1133,
+      "sha256": "2612c5063fac74e3eb583a67276f7c20586b0fea4370f0b3819f1aab445f5213",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/trust-changes.json",
+      "bytes": 91,
+      "sha256": "7e4b5603c1c91df39d962d73b19fd799fd8fc4eab3c5a562c3f34d1dd45ac3d6",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/turns.jsonl",
+      "bytes": 164858,
+      "sha256": "3580ee65f6f9a4dac6cff2c3ecc3de7b7f9f394c125a49198e11c97220cf25d9",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/verify-publication.py",
+      "bytes": 2694,
+      "sha256": "b989f72471894df9d6ddfdf5927f3073241558b558a488257c0a763c59e45ff2",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/version-audit-summary.json",
+      "bytes": 3836,
+      "sha256": "6dd053bd650aa7731bd34c9291667d74931edcbd2f5a034e329adcfd2e19f756",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    }
+  ],
+  "host_tested_commit": "3f81fcbbdd04a57a38c17c2dcb8cb200ad7bb938",
+  "host_tested_tree": "8ecee7cbe5526f10f90ccbe4a65f517707d5ee03",
+  "host_rc": 1,
+  "host_failed_case_supplement_rc": 0,
+  "original_full1_preserved": true,
+  "current_live_delta_from_host": [
+    "eval/versions.json"
+  ],
+  "production_and_data_equal_host": true,
+  "no_new_host_request": true,
+  "foreign_dirty": {
+    "/home/dw/Projects/agent-sts2": {
+      "notes/fix-queue-v4.md": "1ac6dc966809b4908249fe9bef76b88320e9e6a82c867a58a84f635191350b4d",
+      "notes/for-dai.md": "e2a3e5d187bf87c98effa85a82d6b8ea84896d1d83e339cee0e97e0311d27060",
+      "notes/for-roy.md": "eb0cae51cd9a789c7d04bdc5c20cb7ff7b60218b955aab307cd537e01a5f7862",
+      "notes/lessons.md": "3293549d0a99deb4c8ec1042ee6b42e23685b1888b505607ae78c1475a13ff62",
+      "notes/monster-db-check.md": "983ec60c859b09f49c798385ca5c6c71b0350b1d80a43a7e734f0d151eca25ae",
+      "notes/strategy-research-core-output-silent.json": "01680a455377f1911c4887cdc911dccc9614faac2164c73bb2d76a91234c4899",
+      "notes/strategy-research-core-reuse-silent.json": "90bd671ba8e1cf97f86a45258795c61e85c39de91c4f3a0959cd7870eef932e8",
+      "ops/autoplay.log": "7eadb3bfd9d81ebf59a7518760cd495bb7f5ee32664b4569aff1aa63e395b0d2",
+      "ops/inbox-dev.md": "56bb3d538fe42bf6aaada27ed411c874683076c5ebca5c7880df6701d8706451",
+      "ops/refresh.log": "6910e63529f3e63eef094b49fa863ff50ce40cedb44d578a06e93723adedb3cb",
+      "ops/restarts.log": "5f56806adb7e1c5e8e5b4524319e773e3c227659a27fef90a358534cf3ae198f",
+      "ops/win-notified": "20dcea4741d76c6fe28d03df084abe0a371c3c3f273fb72cc8cfbbb78ce88e25",
+      "paper/materials/20261012-0853-fallback/host-recheck-request.log": "dc90d9e90852155de05f2dd8f1861dd7e51eabfaa70b47d266940230f609630c",
+      "paper/materials/20261013-multi-instance-climb/independent-ops-session.json": "b0efcd8cc3e377b4ed49b577c1116adbbd696c6b31f38125b9917e7ff7ac7df8",
+      "paper/materials/20261014-2057-ops/host-recheck-request.log": "5b355c407e5570ab92ebe6684f9c108ad9124996259b7667c185292932cf2e54",
+      "paper/materials/20261014-v5-construction-integration/progress.json": "1e21f70ded45347f198ca4f385c7842c47428ce7e11b3e41229c7813a0f5bd88",
+      "paper/materials/20261015-0118-ops/original-strategies-host-request.log": "8ab25c8e9afcc6fa2141f67f5bd9ad84ce7b2eff3e54b42ea5127793a8b680f6",
+      "paper/materials/20261015-0213-ops/R3-interface-confirmation.err": "8bf0bad0707ec098bbdcb0c1cffb580409023e8de15157550e386905d92a68e1",
+      "paper/materials/20261015-0213-ops/R3-interface-confirmation.out": "e02b3e38bc8376bf7f159b9d9a126ea3e3b2cbd38bb10f307c2395cf0b08913d",
+      "paper/materials/20261015-0725-ops/c1-c2-host-recheck-request.log": "fca68d016cb8f55333379f628da73680ed59454ce21e8f93d49246ac5b6edb85",
+      "paper/materials/20261015-1436-serpent-replay/serpent-host-request.log": "38d50d5b7e89b9145e73c253ecba86db40fc5e3eb62a2e32140883690e55ae3f",
+      "paper/materials/20261015-1547-publication/new-host-request.log": "7283ad593b4df72d4fb73b6dc60ebe7a524212cd27e7df33084ee86270d393e2",
+      "paper/materials/20261015-2249-ops/new-host-request.log": "4d7dcb4fcb3a1084c8f9dc076996750710adbdee62f7fe9428257577da85d4d5",
+      "paper/materials/20261015-2321-ops/new-host-request.log": "dd47a0d2d3b2151bf3e8c2c4f16581b81ab91e09a7fe5e75855e346f8a7cad4c",
+      "paper/materials/20261015-v5-s-completion/on-RQCHNN0W72KF/main-records-integration-first.out": "e52c2f2b9631ce24c20091b3a1ca99631f7e3c4243843dab05cfced641a0105b",
+      "paper/materials/20261016-0240-ops/new-host-request.log": "f833db16a5dd9a704bff4f253b7fa614840046ade47010cbe5b1e2dbc15ce4af",
+      "paper/materials/20261016-0805-ops/host-recheck-request.log": "dcacffbb06efe2b853404127f34e619e71c59ff129bfeca2e750c4af719b52fe",
+      "paper/materials/20261016-1337-ops/final-combined-host-request.log": "038ade2caf4672f694144cdaaf96b0f8d57dea08a1de35bec97459723a52cd73",
+      "paper/materials/decision-log.md": "45776833bafebdf286f0c21d6089019f9e9ad27debc03b1f851dded7fafe4d16",
+      "paper/materials/experience-changelog-silent.md": "556efd63a4edbe50a5ae57fa60baf706605ffba3a82a688ee52376122252ee6f",
+      "paper/materials/ironclad/cost.md": "bd00005882867b03b1639633641eebece471c10bb99e1ae8eff1a8aad50f6a4f",
+      "paper/materials/learning/ledger.jsonl": "d71a314fb5e6c21590d8072700f7ab8ba19f730a6403f3581d108f0e8f7a4965",
+      "paper/materials/none/cost.md": "312cd611d1186ed2c02ab2e22aeaf9cbc14f090b33eacbcfd5b0cbca67140dde",
+      "paper/materials/unattributed/cost.md": "12a6ab4a5c1c6ed6ff62e16241a2c910c1d2e39bd7a2ed134fbde1c840574ef0"
+    },
+    "/home/dw/Projects/agent-sts2/.worktrees/live": {
+      "notes/monster-db-check.md": "0c664fccfffdb651ca730f1ea5209aea035abdea1a2ca14e8b017de3ced3cb49"
+    }
+  },
+  "natural_consumer": "pending",
+  "notice_registration": "original dual inbox spans verified; no new trust-membership reversal or additional science claim",
+  "game_account_model_home_budget_changed": false,
+  "source_actual_ancestor_main_live": true,
+  "all_unrelated_dirty_preserved": true,
+  "ordinary_indices_empty": true
+}
