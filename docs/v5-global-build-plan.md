@@ -132,3 +132,8 @@ G4同owner083055实际live固定消费者原件96文件已精确归档（learner
 
 
 2026-10-16 09:04:20 CST 补读原learn.json机械结果：G4 r3已completed；原071301 fallback_checks明确adb0/86a4 rc0，原终局日志490文件/4924测试过2跳，737.27s。本人冻结host-adb0-terminal.log并记录phase-acceptance.json，G4范围完成，不关闭全局父/原宽父，不将该绿借给G1a+G1c后继树。
+
+
+### 2026-10-16 09:17:27 CST G1a知识原owner完成、工程门槛保持
+
+原090514已同thread完成，仅复用ops真实当前5/5回执及五对象，不重做探针/研究/模拟/full。watcher完整读completion/verification、重核原始native context Sol6.1/xhigh及所有SHA/生产src无差，10原件精确归档learner-technical-closure-r1.tar.gz。新增交付c6b11205b8914ac254145bd9本人两个CLI0，原要求程序completed；不代Roy ACK。知识验收见G1a/knowledge-phase-acceptance.json。通用接口及新自然消费者仍active；原ops723482独立full已真实RUN，新接口自身full26653继续，已观察一个brain router timeout固定case失败，终局/断言证据待全检结束，不先称通过、不改测试/时限。新原件扫描的唯一generic-api-key命中已核为protected-artifacts-before中secret-scan-receipt.json文件的真实SHA值，原扫描rc1保留，仅该fingerprint例外复扫0；不打印或更改凭据。G4窄阶段完成、G1c部署归档已核，S待Roy仍不越G2依赖，原0332/宽父不关。

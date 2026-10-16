@@ -1,0 +1,15 @@
+# G1a 同原owner消费者闭环接续
+
+request=roy-20261016-global-build-g1a，revision=1，输入SHA=66f3ad3a272f4fe74f12d0832ea220be57f5aade9e2f89a0a1044e261166ff5b。原批050119、原thread=01a1415e-a511-7131-be7c-a2dc691c847f；前次075726的failed/blocked与原报告保留。
+
+当前live读回为 ef4b07a64db0fb76eea7990b768fb8d3be47a4b4 / tree 72348224953659783286d3d75039772bed56a94c，经验库版本 2026-10-16.2，全库SHA f297a356ef1afcd4b6c9819294cad98b4473a8c0fdf17c6d8e0c0b796a8f478c。五个原对象canonical SHA与原coverage、运维回执全部一致。
+
+直接复用ops于08:46:22执行的原脚本真实探针：tested commit 86a4a119eb8e7e1e61be9fda957edd74a70e96f5 / tree adb0266d517d31a17f3b14d07143bea924f95eca。其后到当前HEAD的agent/src差异为空；输入只比旧输入改变真实经验库版本，五对象和脚本内容不变。5/5 load/render/query及角色、进阶隔离通过，实际输入/输出/command/log/脚本五份SHA均核。没有再执行同一探针，没有改旧输出的version冒充新运行。
+
+所用新回执为 /home/dw/Projects/agent-sts2/paper/materials/20261016-global-build-g1a/ops-recovery/current-consumer-receipt.json，SHA 621860c8c6316358b1e730f52d40f3fe1003803f645e14ef9ad6d5066f7c451c；旧f5e9回执原样保留。只读调用当前verify_experience对本次新report.json通过，没有调用finish或编辑注册/旧failed状态。
+
+既有实际经验合入 b2bdb0b1dbc7ec9a39909595238b00efbb718321、发布 3394e7912f2b4bec3715761858f831f3fa6040dd 均为当前live祖先；运维已登记G1a为V5-R368。未重新merge、更新经验版本、登记新账本/提案或借用G4 R367检查。
+
+三原questions逐值复用ops原件，正式disagreement通知44fc95c93f6df419f94e2314的原文与实际转发范围SHA已核；不另发变体通知、不代其他角色ACK。
+
+本次complete仅表示五项知识均在live并有当前版本真实固定消费者读回。固定读回不证明自然采用、收益、生产模型重校准或两场联合率；通用连战接口、自然消费、0332及宽父保持原watcher职责。
