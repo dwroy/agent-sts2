@@ -20,6 +20,7 @@ import { buildRank } from "./build-rank.js";
 import { runAdaptiveDecks } from "./adaptive-decks.js";
 import { isAdaptiveComplete } from "./adaptive-sampler.js";
 import { continuousBossResult, type ContinuousBossResult } from "./continuous-boss-result.js";
+import { f48JointShadow, type F48JointScope } from "./f48-joint-shadow.js";
 
 /** Samples per deck (docs/boss-sim.md §8: 1000 per option gives a paired standard error of about 1-1.5 points). */
 export const BUILD_SIM_SAMPLES = 1000;
@@ -77,6 +78,7 @@ export interface OptionSim {
 }
 
 export interface CompareResult {
+  f48JointShadow?: Record<string, unknown>;
   buildRanking?: JsonValue;
   adaptive?: JsonValue;
   readiness?: BossReadiness;
@@ -153,6 +155,7 @@ export async function compareOptions(
   base: RolloutInput,
   options: DeckOption[],
   opts: { samples?: number; seed?: number; deadlineMs?: number; now?: () => number; quantitative?: boolean; diagnostics?: boolean; requireComplete?: boolean; adaptive?: { allowS: boolean; mode?: "shadow" | "on" }; onProgress?: import("./computation-wait.js").SimProgress; readiness?: boolean;
+    f48JointScope?: F48JointScope;
     buildRank?: { lowTrust: string | null; calibratedFloor: number; tieSe: number; sSort?: "on" | "shadow" } } = {},
 ): Promise<CompareResult> {
   if (opts.quantitative) base = { ...base, captureBossMargin: true,
@@ -165,6 +168,10 @@ export async function compareOptions(
   const cached = cacheKey ? completeComparisons.get(runner) : undefined;
   if (cached?.key === cacheKey) {
     const result = structuredClone(cached.result);
+    // Logging never invalidates the compute memo or asks the runner for missing diagnostics.
+    if (!opts.f48JointScope) delete result.f48JointShadow;
+    else if (!result.f48JointShadow) result.f48JointShadow = f48JointShadow(opts.f48JointScope, [], base,
+      { reason: "memo_predates_joint_shadow; no_extra_computation" });
     result.completion = { ...result.completion!, memoHit: true, originalComputeMs: result.elapsedMs };
     result.elapsedMs = 0;
     return result;
@@ -328,6 +335,11 @@ export async function compareOptions(
     } catch (error) { productionComparison = { metric: "deployed-ranking-first-group", agreement: null, error: String(error).slice(0, 180) }; }
   }
   const result: CompareResult = {
+    ...(opts.f48JointScope ? { f48JointShadow: f48JointShadow(opts.f48JointScope, [
+      { key: "@current", outcomes: baseLine.outcomes, requested: samples, order: order?.label ?? null, input: base },
+      ...options.map((option) => ({ key: option.key, outcomes: optionLines.get(option.key)!.outcomes,
+        requested: samples, order: order?.label ?? null, input: option })),
+    ], base) } : {}),
     ...(actual ? { adaptive: toJsonValue({ ...actual.adaptive, input_key: cacheKey, fixed_order_search_in_work: true,
       work: { ...actual.adaptive.work,
         full: actual.adaptive.work.full + (allOrders.length > 1 ? Math.min(samples, BUILD_SIM_ORDER_SAMPLES) * allOrders.length : 0),

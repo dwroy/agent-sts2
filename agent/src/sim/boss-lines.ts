@@ -72,6 +72,7 @@ import { identityToken, memoKey, type ComputeMemo } from "./compute-memo.js";
 import { claimSimCores, leaveSimCores } from "./sim-pools.js";
 import { withDoubleBossStart } from "./double-boss-start.js";
 import { firstDoubleBoss } from "../knowledge/double-boss.js";
+import { f48JointScope, f48JointShadow } from "./f48-joint-shadow.js";
 
 /** Samples per line (docs/boss-sim.md §8: 600 give a paired win-rate standard error of ~1-2 points). */
 export const BOSS_LINES_SAMPLES = 600;
@@ -739,7 +740,7 @@ export interface LineSim {
   text: string;
 }
 
-export type BossLineSim = { completion?: SimCompletion; resourceFailure?: Record<string, JsonValue> } & (
+export type BossLineSim = { completion?: SimCompletion; resourceFailure?: Record<string, JsonValue>; f48JointShadow?: Record<string, unknown> } & (
   | { available: false; reason: string; ms: number }
   | {
       available: true;
@@ -796,17 +797,19 @@ export function bossLineSim(args: BossLineSimArgs): BossLineSim {
   let wait: ReturnType<SimWait["start"]> | undefined;
   let sampled = 0;
   const samples = args.samples ?? bossLinesOptions.samples;
+  const jointScope = f48JointScope(args.state);
   const unavailable = (reason: string): BossLineSim => ({ available: false, reason, ms: ms(),
+    ...(jointScope ? { f48JointShadow: f48JointShadow(jointScope, [], undefined, { reason }) } : {}),
     ...(attempt ? { completion: attempt.finish(sampled, samples, reason) } : {}) });
   try {
-    if (args.lines.length === 0) return { available: false, reason: "no line", ms: ms() };
+    if (args.lines.length === 0) return unavailable("no line");
     // The turn's budget over its questions (a re-plan after a draw asks again).
     const fight = `${String(args.state.raw["run_id"] ?? "")}:${args.state.run?.floor ?? "?"}`;
-    if (!required && failed.fight === fight && failed.count >= BOSS_LINES_MAX_FAILURES) return { available: false, reason: `off for this fight: ${failed.count} questions in a row got no sample from the worker pool`, ms: ms() };
+    if (!required && failed.fight === fight && failed.count >= BOSS_LINES_MAX_FAILURES) return unavailable(`off for this fight: ${failed.count} questions in a row got no sample from the worker pool`);
     const turnKey = `${fight}:${args.turn ?? "?"}`;
     const memo = args.memory.bossLines?.turn === turnKey ? args.memory.bossLines : { turn: turnKey, spentMs: 0 };
     let left = required ? Infinity : Math.min(bossLinesOptions.deadlineMs, bossLinesOptions.turnBudgetMs - memo.spentMs);
-    if (left < bossLinesOptions.minMs) return { available: false, reason: `this turn's ${Math.round(bossLinesOptions.turnBudgetMs / 1000)} s for the simulation is spent`, ms: ms() };
+    if (left < bossLinesOptions.minMs) return unavailable(`this turn's ${Math.round(bossLinesOptions.turnBudgetMs / 1000)} s for the simulation is spent`);
     const input = bossSimInput(args);
     const boss = bossKeyOf(input.enemies.map((e) => e.id));
     const lowTrust = input.continuation?.limitation ?? (boss ? bossTrustReason(boss, "b2", args.state.run?.ascension, args.state.run?.floor) : null);
@@ -868,6 +871,9 @@ export function bossLineSim(args: BossLineSimArgs): BossLineSim {
     const showPlan = args.turn === null || args.turn <= 1 || (args.turn - 1) % BOSS_LINES_PLAN_EVERY === 0;
     const plan = showPlan && rank.best >= 0 ? fightPlanText(input, run.lines[rank.best]!, turnNow) : null;
     const sim: BossLineSim = {
+      ...(jointScope ? { f48JointShadow: f48JointShadow(jointScope, run.lines.map((line, i) => ({
+        key: `line:${i}`, input: args.lines[i], outcomes: line.outcomes, requested: samples, order: line.order,
+      })), input) } : {}),
       ...(attempt ? { completion: attempt.finish(run.samples, samples, undefined, adaptiveComplete) } : {}),
       available: true,
       byPlan,
@@ -895,6 +901,8 @@ export function bossLineSim(args: BossLineSimArgs): BossLineSim {
         question: toJsonValue({ solver: args.solver, piles: args.piles, randomPotions: args.randomPotions, lines: args.lines, samples, turn: args.turn }),
         completion: toJsonValue(sim.completion),
       }, args.failureDirectory);
+      if (jointScope) sim.f48JointShadow = f48JointShadow(jointScope, [], undefined,
+        { reason: `resource_contract_failure:${failure.reason}`, reference: sim.resourceFailure });
     }
     return sim;
   } finally {
@@ -975,7 +983,8 @@ export function simNote(sim: BossLineSim): string {
 
 /** The decision log's record (log.boss_sim). */
 export function simLog(sim: BossLineSim, keyOf: (plan: Plan) => string | null, extra: Record<string, JsonValue> = {}): Record<string, JsonValue> {
-  const completion: Record<string, JsonValue> = sim.completion ? { completion: { ...sim.completion } } : {};
+  const completion: Record<string, JsonValue> = { ...(sim.completion ? { completion: { ...sim.completion } } : {}),
+    ...(sim.f48JointShadow ? { f48_joint_shadow: toJsonValue(sim.f48JointShadow) } : {}) };
   if (!sim.available) return { available: false, reason: sim.reason, ms: sim.ms, ...completion,
     ...(sim.resourceFailure ? { resource_failure: sim.resourceFailure } : {}), ...extra };
   const lines: Record<string, JsonValue> = {};
