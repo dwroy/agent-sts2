@@ -1,0 +1,98 @@
+{
+  "at": "2026-10-16 20:32:57 CST",
+  "actor": "ops",
+  "decision": "accept unchanged ten-leaf B3 diagnostic source for commit using original full1 plus host compilation0 and exact two failed original cases0",
+  "original_full_rc": 1,
+  "original_full_summary": "450 files448passed2failed;4166cases4164passed2failed;1788.02s",
+  "original_full_sha256": "997ac90f2ede275862ccdb369278b595d1f2944b8c599a31387f3444c6500287",
+  "host_supplement": {
+    "results": [
+      {
+        "name": "tsc",
+        "argv": [
+          "npx",
+          "tsc",
+          "-p",
+          "tsconfig.json",
+          "--noEmit"
+        ],
+        "rc": 0,
+        "seconds": 3.857238941011019
+      },
+      {
+        "name": "original-failed-cases",
+        "argv": [
+          "npx",
+          "vitest",
+          "run",
+          "tests/fix-queue-v4-shrink.test.ts",
+          "tests/global-build-health.test.ts",
+          "--pool=forks",
+          "--maxWorkers=1",
+          "-t",
+          "XC4T F9 T3|checks G2 shadow coverage"
+        ],
+        "rc": 0,
+        "seconds": 16.385808254941367
+      }
+    ],
+    "seconds": 20.24318214599043,
+    "original_source_full": 1,
+    "new_full": false,
+    "maxWorkers": 1,
+    "nice": 19
+  },
+  "host_logs": {
+    "host-tsc.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "host-original-failed-cases.log": "578f0ab2f5de1abc8ef201f8aa21346f24e4b1e13801d7f4592d1ca11eaeeae8"
+  },
+  "source_leaves": [
+    {
+      "path": "agent/src/hand/loop.ts",
+      "sha256": "962ec25cfeb3c3eb8cf15a7a5d813732b36085ed4841adc8e20780b8fc7cf21e"
+    },
+    {
+      "path": "agent/src/reflex/rollout.ts",
+      "sha256": "f845fbe3666c7bb52701367e1f02984f8774937c63c24307c814539670dcd86c"
+    },
+    {
+      "path": "agent/src/sim/boss-sim.ts",
+      "sha256": "f30a0c5bdd66d63b7ccd962947735ca2dfded2eaec76dd364f5e90fec0aafac6"
+    },
+    {
+      "path": "agent/src/sim/build-sim-facts.ts",
+      "sha256": "1d95482c4223aeaf09b289557d48a8df57b72113e40286d521061edc955eb087"
+    },
+    {
+      "path": "agent/src/sim/build-sim-pool.ts",
+      "sha256": "a00561e2add14dd094232cb85de7ff8f53fc63458722dbd3ab558df5dc8975f1"
+    },
+    {
+      "path": "agent/src/sim/build-sim-worker.ts",
+      "sha256": "96da42adc6e9d2e230d5b36cbe6dc30e55ba4c87dbb93a55bfa1bb7aaaa1e087"
+    },
+    {
+      "path": "agent/src/sim/continuation-failure.ts",
+      "sha256": "c62096c4f05f2d49b37a726f4751dd5465d54cbc47499fef482d47752d4699eb"
+    },
+    {
+      "path": "agent/tests/continuation-failure-b3.test.ts",
+      "sha256": "3687ebbaaeff8f71f9aad6afcc8281d1e5f8c7ea4e5e424e21a97acf9b038815"
+    },
+    {
+      "path": "agent/tests/continuation-failure-worker.test.ts",
+      "sha256": "374f0971c6f9475245791ede253cd3ff12b58944109abd285284601462fdade2"
+    },
+    {
+      "path": "agent/tests/continuation-failure.test.ts",
+      "sha256": "30c2c68f9f950b701527dd42449c2fcf42d51f4aa401f3f1355503493c109e19"
+    }
+  ],
+  "staged_tree": "938e0fef8219cefe9876c57ae8da25245e6fafdd",
+  "source_tests_or_timeouts_modified": false,
+  "new_full_run": false,
+  "game_root_cause_fixed": false,
+  "coverage_limit": "B3 build-sim typed envelope only. YZW combat/plan B2 boss-lines still truncates worker payload and unavailable errors; same-owner narrow continuation required, no claim of covering this recurrence or resource-contract repair.",
+  "live_published": false,
+  "gitleaks": 0
+}

@@ -1,0 +1,1117 @@
+{
+  "at": "2026-10-16 20:35:41 CST",
+  "run_id": "YZWV37N2MU6N",
+  "alert": {
+    "path": "ops/codex-ops/module-health/YZWV37N2MU6N-alert.json",
+    "bytes": 84675,
+    "sha256": "e3e81e39236483d9f02b776a1fdf62c7ef682d96de9ae64ea31239e698ac9755"
+  },
+  "exact_summary_recomputed": true,
+  "source_windows": {
+    "decisions": {
+      "path": "logs/decisions.jsonl",
+      "start": 2017427724,
+      "end": 2050951271,
+      "window_sha256": "736caa34570fbb4a2b082c9a8c2602907bb8d3bd1fd378aae8ca41aed30764a8",
+      "rows": 774,
+      "selected_sha256": "9156031cecf579c78e06b1c0c02cd9198c8e2fe11a504d8239c877ffa42ec404",
+      "stream_complete": false
+    },
+    "brain": {
+      "path": "logs/brain.jsonl",
+      "start": 661225438,
+      "end": 694631068,
+      "window_sha256": "64d64aa4a65318068d5bbe9c9f7a3bd873d3e77b2d5758686969e940720ca2f4",
+      "rows": 50,
+      "selected_sha256": "7e050f452b4139a91d9b295e9f1cfee29eee28a5432a4e95b37b0b10d2cbd12e",
+      "stream_complete": false
+    },
+    "plans": {
+      "path": "logs/run-plans.jsonl",
+      "start": 4449802,
+      "end": 8642971,
+      "window_sha256": "f379b4af5f38ebe40101b8774852669c15d44ea3b55d1f60fe26fffff8cc5a86",
+      "rows": 9,
+      "selected_sha256": "0125867fd4e23f2ed1cbb34b2b55469f40db7cfef022759c0e285f529be1837a",
+      "stream_complete": false
+    },
+    "config": {
+      "path": "logs/run-config.jsonl",
+      "start": 0,
+      "end": 1895188,
+      "window_sha256": "e8993d5151187cb91e4e568c416295ec618a6a545d50b8ca5ec074a6c694faaa",
+      "rows": 1,
+      "selected_sha256": "02def0befa9da36e76ad8bce0badb3d50dfd184a489ab9d0678d8f0777a6454f",
+      "stream_complete": true
+    }
+  },
+  "run_coverage_complete": true,
+  "stream_tail_flags_not_run_coverage": true,
+  "computation": {
+    "attempts": 90,
+    "failures": 24,
+    "degraded": 8,
+    "evidence": [
+      {
+        "ts": "2026-10-16T12:22:29.037Z",
+        "label": "combat/plan",
+        "floor": 48,
+        "source": {
+          "offset": 2050677182,
+          "length": 2024,
+          "sha256": "b0e120c0cf2b514e4de251f0a9f7586a442fe020654b633c26032055135cab63"
+        },
+        "completion": {
+          "required": true,
+          "attempt_id": "505928a9-283c-4697-b9ea-32369251acac",
+          "status": "pending",
+          "attempts": 1,
+          "reasons": [
+            "error: Error: boss-lines worker: Error: missing successful first-fight resources: nonpositive-hp; seed=3301069012; {\"won\":true,\"died\":false,\"turns\":9,\"captureResources"
+          ],
+          "samples": 0,
+          "requested": 600,
+          "failure": true,
+          "key": "sim-failure-v1:d0def267d3c1d7eec7b9ed4d1ff4c9f18c2f2e6a672f86f2240f83c00f3029aa"
+        }
+      },
+      {
+        "ts": "2026-10-16T12:22:35.946Z",
+        "label": "combat/plan",
+        "floor": 48,
+        "source": {
+          "offset": 2050679206,
+          "length": 2201,
+          "sha256": "6ef9fe0b1e4b8de64f0c04d1220770c4ed608c540ef1bcf023f087cac042f2a8"
+        },
+        "completion": {
+          "required": true,
+          "attempt_id": "474f8cf1-4917-4d79-bf27-378a0e7b35f3",
+          "status": "pending",
+          "attempts": 2,
+          "reasons": [
+            "error: Error: boss-lines worker: Error: missing successful first-fight resources: nonpositive-hp; seed=3301069012; {\"won\":true,\"died\":false,\"turns\":9,\"captureResources",
+            "error: Error: boss-lines worker: Error: missing successful first-fight resources: nonpositive-hp; seed=2246005149; {\"won\":true,\"died\":false,\"turns\":10,\"captureResource"
+          ],
+          "samples": 0,
+          "requested": 600,
+          "failure": true,
+          "key": "sim-failure-v1:d0def267d3c1d7eec7b9ed4d1ff4c9f18c2f2e6a672f86f2240f83c00f3029aa"
+        }
+      },
+      {
+        "ts": "2026-10-16T12:22:43.849Z",
+        "label": "combat/plan-choice",
+        "floor": 48,
+        "source": {
+          "offset": 2050681407,
+          "length": 21857,
+          "sha256": "68e5dd4d81202472d065d717a6f12e48cbf4347d2f46dc1c0c9e23690a77a58d"
+        },
+        "completion": {
+          "required": true,
+          "attempt_id": "2dcd432f-ce14-4b67-8ddd-2239ae79455c",
+          "status": "degraded",
+          "attempts": 3,
+          "reasons": [
+            "error: Error: boss-lines worker: Error: missing successful first-fight resources: nonpositive-hp; seed=3301069012; {\"won\":true,\"died\":false,\"turns\":9,\"captureResources",
+            "error: Error: boss-lines worker: Error: missing successful first-fight resources: nonpositive-hp; seed=2246005149; {\"won\":true,\"died\":false,\"turns\":10,\"captureResource",
+            "error: Error: boss-lines worker: Error: missing successful first-fight resources: nonpositive-hp; seed=3301069012; {\"won\":true,\"died\":false,\"turns\":9,\"captureResources"
+          ],
+          "samples": 0,
+          "requested": 600,
+          "failure": true,
+          "key": "sim-failure-v1:d0def267d3c1d7eec7b9ed4d1ff4c9f18c2f2e6a672f86f2240f83c00f3029aa"
+        }
+      },
+      {
+        "ts": "2026-10-16T12:23:00.179Z",
+        "label": "combat/plan",
+        "floor": 48,
+        "source": {
+          "offset": 2050716086,
+          "length": 2034,
+          "sha256": "01b4801d381f2abbf77c45cc54c6194157f5dc04a5b11f1d2aa2da3455a6cee6"
+        },
+        "completion": {
+          "required": true,
+          "attempt_id": "eadc0d89-d967-4ec4-83ed-dac9feaee674",
+          "status": "pending",
+          "attempts": 1,
+          "reasons": [
+            "error: Error: boss-lines worker: Error: missing successful first-fight resources: nonpositive-hp; seed=2590828005; {\"won\":true,\"died\":false,\"turns\":8,\"captureResources"
+          ],
+          "samples": 0,
+          "requested": 600,
+          "failure": true,
+          "key": "sim-failure-v1:f155e93fb43ddf145718fc4d57e1684b543a5221b83fb23d824d7731163e23d4"
+        }
+      },
+      {
+        "ts": "2026-10-16T12:23:01.913Z",
+        "label": "combat/plan",
+        "floor": 48,
+        "source": {
+          "offset": 2050718120,
+          "length": 2211,
+          "sha256": "ea726374a4e43dcc752b91c66f13e9cb462981bccdbc00a383f00d36b22858b9"
+        },
+        "completion": {
+          "required": true,
+          "attempt_id": "b04bbdf6-ae30-4de8-915b-e992a2bfa667",
+          "status": "pending",
+          "attempts": 2,
+          "reasons": [
+            "error: Error: boss-lines worker: Error: missing successful first-fight resources: nonpositive-hp; seed=2590828005; {\"won\":true,\"died\":false,\"turns\":8,\"captureResources",
+            "error: Error: boss-lines worker: Error: missing successful first-fight resources: nonpositive-hp; seed=2590828005; {\"won\":true,\"died\":false,\"turns\":8,\"captureResources"
+          ],
+          "samples": 0,
+          "requested": 600,
+          "failure": true,
+          "key": "sim-failure-v1:f155e93fb43ddf145718fc4d57e1684b543a5221b83fb23d824d7731163e23d4"
+        }
+      },
+      {
+        "ts": "2026-10-16T12:23:04.362Z",
+        "label": "combat/plan-choice",
+        "floor": 48,
+        "source": {
+          "offset": 2050720331,
+          "length": 15052,
+          "sha256": "ddfab9029cd1d92fe5cc0116f7df11cc249aad0352f8c77a806e8c3e768c93bf"
+        },
+        "completion": {
+          "required": true,
+          "attempt_id": "ee348fd9-9186-496e-917f-8bf60d264aec",
+          "status": "degraded",
+          "attempts": 3,
+          "reasons": [
+            "error: Error: boss-lines worker: Error: missing successful first-fight resources: nonpositive-hp; seed=2590828005; {\"won\":true,\"died\":false,\"turns\":8,\"captureResources",
+            "error: Error: boss-lines worker: Error: missing successful first-fight resources: nonpositive-hp; seed=2590828005; {\"won\":true,\"died\":false,\"turns\":8,\"captureResources",
+            "error: Error: boss-lines worker: Error: missing successful first-fight resources: nonpositive-hp; seed=2590828005; {\"won\":true,\"died\":false,\"turns\":8,\"captureResources"
+          ],
+          "samples": 0,
+          "requested": 600,
+          "failure": true,
+          "key": "sim-failure-v1:f155e93fb43ddf145718fc4d57e1684b543a5221b83fb23d824d7731163e23d4"
+        }
+      },
+      {
+        "ts": "2026-10-16T12:23:18.971Z",
+        "label": "combat/plan",
+        "floor": 48,
+        "source": {
+          "offset": 2050742946,
+          "length": 2042,
+          "sha256": "7636bc5decd9130dbd15f9e17f85215512e09e9a145652ff9d6b4f4089a34411"
+        },
+        "completion": {
+          "required": true,
+          "attempt_id": "c6fe780b-7203-4fbd-9e17-4c7d6827d6d1",
+          "status": "pending",
+          "attempts": 1,
+          "reasons": [
+            "error: Error: boss-lines worker: Error: missing successful first-fight resources: nonpositive-hp; seed=765179473; {\"won\":true,\"died\":false,\"turns\":7,\"captureResources\""
+          ],
+          "samples": 0,
+          "requested": 600,
+          "failure": true,
+          "key": "sim-failure-v1:00b5f7e0e6fb15cf32d19b75cb5889bcf3a0a6b000cbfaf95f6f553e8db037d4"
+        }
+      },
+      {
+        "ts": "2026-10-16T12:23:21.136Z",
+        "label": "combat/plan",
+        "floor": 48,
+        "source": {
+          "offset": 2050744988,
+          "length": 2220,
+          "sha256": "7c007b69d2d1bdffc908e7369482e54292f97ea7b0c4e0328376583f125cef91"
+        },
+        "completion": {
+          "required": true,
+          "attempt_id": "f78df7b6-d2f0-4422-9ee0-3b44c1865176",
+          "status": "pending",
+          "attempts": 2,
+          "reasons": [
+            "error: Error: boss-lines worker: Error: missing successful first-fight resources: nonpositive-hp; seed=765179473; {\"won\":true,\"died\":false,\"turns\":7,\"captureResources\"",
+            "error: Error: boss-lines worker: Error: missing successful first-fight resources: nonpositive-hp; seed=765179473; {\"won\":true,\"died\":false,\"turns\":7,\"captureResources\""
+          ],
+          "samples": 0,
+          "requested": 600,
+          "failure": true,
+          "key": "sim-failure-v1:00b5f7e0e6fb15cf32d19b75cb5889bcf3a0a6b000cbfaf95f6f553e8db037d4"
+        }
+      },
+      {
+        "ts": "2026-10-16T12:23:23.883Z",
+        "label": "combat/plan-choice",
+        "floor": 48,
+        "source": {
+          "offset": 2050747208,
+          "length": 24944,
+          "sha256": "6ac9cdcf734eee224a017f77df7de8b849460e9cf21b24979b7b727ec5884810"
+        },
+        "completion": {
+          "required": true,
+          "attempt_id": "2a75eb6b-bcb8-4c55-9c99-6eb64dd946a0",
+          "status": "degraded",
+          "attempts": 3,
+          "reasons": [
+            "error: Error: boss-lines worker: Error: missing successful first-fight resources: nonpositive-hp; seed=765179473; {\"won\":true,\"died\":false,\"turns\":7,\"captureResources\"",
+            "error: Error: boss-lines worker: Error: missing successful first-fight resources: nonpositive-hp; seed=765179473; {\"won\":true,\"died\":false,\"turns\":7,\"captureResources\"",
+            "error: Error: boss-lines worker: Error: missing successful first-fight resources: nonpositive-hp; seed=765179473; {\"won\":true,\"died\":false,\"turns\":7,\"captureResources\""
+          ],
+          "samples": 0,
+          "requested": 600,
+          "failure": true,
+          "key": "sim-failure-v1:00b5f7e0e6fb15cf32d19b75cb5889bcf3a0a6b000cbfaf95f6f553e8db037d4"
+        }
+      },
+      {
+        "ts": "2026-10-16T12:23:26.689Z",
+        "label": "combat/plan",
+        "floor": 48,
+        "source": {
+          "offset": 2050773792,
+          "length": 1995,
+          "sha256": "fbeb1f7f979df6194c2762277f88f6e818f1c341332afa57f754f7963088c251"
+        },
+        "completion": {
+          "required": true,
+          "attempt_id": "7993f302-3f74-48ec-a566-f703fb7d00b0",
+          "status": "pending",
+          "attempts": 1,
+          "reasons": [
+            "error: Error: boss-lines worker: Error: missing successful first-fight resources: nonpositive-hp; seed=3406431176; {\"won\":true,\"died\":false,\"turns\":9,\"captureResources"
+          ],
+          "samples": 0,
+          "requested": 600,
+          "failure": true,
+          "key": "sim-failure-v1:b9abcf2ea21ea545922fab292b35189497167496008d20004a38cfe05531ec9d"
+        }
+      },
+      {
+        "ts": "2026-10-16T12:23:27.963Z",
+        "label": "combat/plan",
+        "floor": 48,
+        "source": {
+          "offset": 2050775787,
+          "length": 2172,
+          "sha256": "6d46467a73a788567f96a034a3d1f9dcdb549582f46013da2c6695407c3d210c"
+        },
+        "completion": {
+          "required": true,
+          "attempt_id": "28a8c5f9-e811-476d-aa5c-abc880a836d4",
+          "status": "pending",
+          "attempts": 2,
+          "reasons": [
+            "error: Error: boss-lines worker: Error: missing successful first-fight resources: nonpositive-hp; seed=3406431176; {\"won\":true,\"died\":false,\"turns\":9,\"captureResources",
+            "error: Error: boss-lines worker: Error: missing successful first-fight resources: nonpositive-hp; seed=3406431176; {\"won\":true,\"died\":false,\"turns\":9,\"captureResources"
+          ],
+          "samples": 0,
+          "requested": 600,
+          "failure": true,
+          "key": "sim-failure-v1:b9abcf2ea21ea545922fab292b35189497167496008d20004a38cfe05531ec9d"
+        }
+      },
+      {
+        "ts": "2026-10-16T12:23:30.153Z",
+        "label": "combat/plan-choice",
+        "floor": 48,
+        "source": {
+          "offset": 2050777959,
+          "length": 13453,
+          "sha256": "b690f569513a9319dc3f5dce4146e39315b2517c5448f39259104dda80c53e52"
+        },
+        "completion": {
+          "required": true,
+          "attempt_id": "3d207b46-90aa-4b7e-966f-7f5c9d9855ee",
+          "status": "degraded",
+          "attempts": 3,
+          "reasons": [
+            "error: Error: boss-lines worker: Error: missing successful first-fight resources: nonpositive-hp; seed=3406431176; {\"won\":true,\"died\":false,\"turns\":9,\"captureResources",
+            "error: Error: boss-lines worker: Error: missing successful first-fight resources: nonpositive-hp; seed=3406431176; {\"won\":true,\"died\":false,\"turns\":9,\"captureResources",
+            "error: Error: boss-lines worker: Error: missing successful first-fight resources: nonpositive-hp; seed=3406431176; {\"won\":true,\"died\":false,\"turns\":9,\"captureResources"
+          ],
+          "samples": 0,
+          "requested": 600,
+          "failure": true,
+          "key": "sim-failure-v1:b9abcf2ea21ea545922fab292b35189497167496008d20004a38cfe05531ec9d"
+        }
+      },
+      {
+        "ts": "2026-10-16T12:23:32.112Z",
+        "label": "combat/plan",
+        "floor": 48,
+        "source": {
+          "offset": 2050791412,
+          "length": 1976,
+          "sha256": "561e95f0897b972bb0f7ffd712d6efbeaa632601683a522cc4661abea46536ee"
+        },
+        "completion": {
+          "required": true,
+          "attempt_id": "da66b84d-04d7-44b7-884f-f2c4ad5ab908",
+          "status": "pending",
+          "attempts": 1,
+          "reasons": [
+            "error: Error: boss-lines worker: Error: missing successful first-fight resources: nonpositive-hp; seed=3406431176; {\"won\":true,\"died\":false,\"turns\":9,\"captureResources"
+          ],
+          "samples": 0,
+          "requested": 600,
+          "failure": true,
+          "key": "sim-failure-v1:9d49516549bf2a57d52f1991147f5f121549276c0c75618e4d212f0427ecb37c"
+        }
+      },
+      {
+        "ts": "2026-10-16T12:23:33.848Z",
+        "label": "combat/plan",
+        "floor": 48,
+        "source": {
+          "offset": 2050793388,
+          "length": 2154,
+          "sha256": "a67822d0caa904217672aef709f0877a4dba2e6b3c6e5164389e91047678a48d"
+        },
+        "completion": {
+          "required": true,
+          "attempt_id": "562c7a12-bf4b-4071-b06c-8ff4e9787b47",
+          "status": "pending",
+          "attempts": 2,
+          "reasons": [
+            "error: Error: boss-lines worker: Error: missing successful first-fight resources: nonpositive-hp; seed=3406431176; {\"won\":true,\"died\":false,\"turns\":9,\"captureResources",
+            "error: Error: boss-lines worker: Error: missing successful first-fight resources: nonpositive-hp; seed=3406431176; {\"won\":true,\"died\":false,\"turns\":9,\"captureResources"
+          ],
+          "samples": 0,
+          "requested": 600,
+          "failure": true,
+          "key": "sim-failure-v1:9d49516549bf2a57d52f1991147f5f121549276c0c75618e4d212f0427ecb37c"
+        }
+      },
+      {
+        "ts": "2026-10-16T12:23:36.189Z",
+        "label": "combat/plan-choice",
+        "floor": 48,
+        "source": {
+          "offset": 2050795542,
+          "length": 14245,
+          "sha256": "be879c7719228dbdf884393a552634c5c926631a5d51b949afda54f21769f29a"
+        },
+        "completion": {
+          "required": true,
+          "attempt_id": "145d0aa0-bb76-4e27-a891-61ac90708ee9",
+          "status": "degraded",
+          "attempts": 3,
+          "reasons": [
+            "error: Error: boss-lines worker: Error: missing successful first-fight resources: nonpositive-hp; seed=3406431176; {\"won\":true,\"died\":false,\"turns\":9,\"captureResources",
+            "error: Error: boss-lines worker: Error: missing successful first-fight resources: nonpositive-hp; seed=3406431176; {\"won\":true,\"died\":false,\"turns\":9,\"captureResources",
+            "error: Error: boss-lines worker: Error: missing successful first-fight resources: nonpositive-hp; seed=3406431176; {\"won\":true,\"died\":false,\"turns\":9,\"captureResources"
+          ],
+          "samples": 0,
+          "requested": 600,
+          "failure": true,
+          "key": "sim-failure-v1:9d49516549bf2a57d52f1991147f5f121549276c0c75618e4d212f0427ecb37c"
+        }
+      },
+      {
+        "ts": "2026-10-16T12:23:48.552Z",
+        "label": "combat/plan",
+        "floor": 48,
+        "source": {
+          "offset": 2050814220,
+          "length": 2027,
+          "sha256": "5c90ea825ac364b14419867e68bba2a610fbaf81e0e4bd32906d436e11752ec6"
+        },
+        "completion": {
+          "required": true,
+          "attempt_id": "dcf83f86-e428-4025-8ae8-375cb3c61957",
+          "status": "pending",
+          "attempts": 1,
+          "reasons": [
+            "error: Error: boss-lines worker: Error: missing successful first-fight resources: nonpositive-hp; seed=1580782644; {\"won\":true,\"died\":false,\"turns\":7,\"captureResources"
+          ],
+          "samples": 0,
+          "requested": 600,
+          "failure": true,
+          "key": "sim-failure-v1:36f23271ef422cd40f378f04160f043404c2ce8b0ea309ff1e05e1a287a2c641"
+        }
+      },
+      {
+        "ts": "2026-10-16T12:23:50.008Z",
+        "label": "combat/plan",
+        "floor": 48,
+        "source": {
+          "offset": 2050816247,
+          "length": 2204,
+          "sha256": "1b54fa265dcd05adf7d8647f3950098fc4426e411ff88992a9ebf2e3febf12d5"
+        },
+        "completion": {
+          "required": true,
+          "attempt_id": "da7f08a2-edba-4534-be0b-57eb9a13f3f0",
+          "status": "pending",
+          "attempts": 2,
+          "reasons": [
+            "error: Error: boss-lines worker: Error: missing successful first-fight resources: nonpositive-hp; seed=1580782644; {\"won\":true,\"died\":false,\"turns\":7,\"captureResources",
+            "error: Error: boss-lines worker: Error: missing successful first-fight resources: nonpositive-hp; seed=1580782644; {\"won\":true,\"died\":false,\"turns\":7,\"captureResources"
+          ],
+          "samples": 0,
+          "requested": 600,
+          "failure": true,
+          "key": "sim-failure-v1:36f23271ef422cd40f378f04160f043404c2ce8b0ea309ff1e05e1a287a2c641"
+        }
+      },
+      {
+        "ts": "2026-10-16T12:23:52.447Z",
+        "label": "combat/plan-choice",
+        "floor": 48,
+        "source": {
+          "offset": 2050818451,
+          "length": 19119,
+          "sha256": "12636f6a26ac6d14a012a16cbf85b0c74a1e6d9c59c2dfe7ab692f9983331831"
+        },
+        "completion": {
+          "required": true,
+          "attempt_id": "58ff7702-9249-4b8d-b9e8-8e09d6af338c",
+          "status": "degraded",
+          "attempts": 3,
+          "reasons": [
+            "error: Error: boss-lines worker: Error: missing successful first-fight resources: nonpositive-hp; seed=1580782644; {\"won\":true,\"died\":false,\"turns\":7,\"captureResources",
+            "error: Error: boss-lines worker: Error: missing successful first-fight resources: nonpositive-hp; seed=1580782644; {\"won\":true,\"died\":false,\"turns\":7,\"captureResources",
+            "error: Error: boss-lines worker: Error: missing successful first-fight resources: nonpositive-hp; seed=1580782644; {\"won\":true,\"died\":false,\"turns\":7,\"captureResources"
+          ],
+          "samples": 0,
+          "requested": 600,
+          "failure": true,
+          "key": "sim-failure-v1:36f23271ef422cd40f378f04160f043404c2ce8b0ea309ff1e05e1a287a2c641"
+        }
+      },
+      {
+        "ts": "2026-10-16T12:24:09.342Z",
+        "label": "combat/plan",
+        "floor": 48,
+        "source": {
+          "offset": 2050846674,
+          "length": 2027,
+          "sha256": "24301c1ead50c0d9bace4a3eb3ecfe5c2cca4c3635cfae0e2d8314d7dc3c8f5d"
+        },
+        "completion": {
+          "required": true,
+          "attempt_id": "ab6c7ec6-01c7-4012-afb7-400ed018b672",
+          "status": "pending",
+          "attempts": 1,
+          "reasons": [
+            "error: Error: boss-lines worker: Error: missing successful first-fight resources: nonpositive-hp; seed=2950019043; {\"won\":true,\"died\":false,\"turns\":5,\"captureResources"
+          ],
+          "samples": 0,
+          "requested": 600,
+          "failure": true,
+          "key": "sim-failure-v1:addd5b79a46c2e30e7f2fec915cdf3d8b1bcd2d8e8c9dd66bf173aefce706b7e"
+        }
+      },
+      {
+        "ts": "2026-10-16T12:24:11.939Z",
+        "label": "combat/plan",
+        "floor": 48,
+        "source": {
+          "offset": 2050848701,
+          "length": 2204,
+          "sha256": "01bf6210fe3cdadd266a7cbbe07c10fb2d9d9012fed1e690647db3f1bd66fe18"
+        },
+        "completion": {
+          "required": true,
+          "attempt_id": "253993b1-5257-4da2-8602-caeb522ec623",
+          "status": "pending",
+          "attempts": 2,
+          "reasons": [
+            "error: Error: boss-lines worker: Error: missing successful first-fight resources: nonpositive-hp; seed=2950019043; {\"won\":true,\"died\":false,\"turns\":5,\"captureResources",
+            "error: Error: boss-lines worker: Error: missing successful first-fight resources: nonpositive-hp; seed=2950019043; {\"won\":true,\"died\":false,\"turns\":5,\"captureResources"
+          ],
+          "samples": 0,
+          "requested": 600,
+          "failure": true,
+          "key": "sim-failure-v1:addd5b79a46c2e30e7f2fec915cdf3d8b1bcd2d8e8c9dd66bf173aefce706b7e"
+        }
+      },
+      {
+        "ts": "2026-10-16T12:24:15.108Z",
+        "label": "combat/plan-choice",
+        "floor": 48,
+        "source": {
+          "offset": 2050850905,
+          "length": 51863,
+          "sha256": "3ffa2e350835c75590aff58b0c778201f919ecb62b77ac485f60b625724d52db"
+        },
+        "completion": {
+          "required": true,
+          "attempt_id": "dd7040b9-21d1-41d6-bd9d-e3c5b7c579df",
+          "status": "degraded",
+          "attempts": 3,
+          "reasons": [
+            "error: Error: boss-lines worker: Error: missing successful first-fight resources: nonpositive-hp; seed=2950019043; {\"won\":true,\"died\":false,\"turns\":5,\"captureResources",
+            "error: Error: boss-lines worker: Error: missing successful first-fight resources: nonpositive-hp; seed=2950019043; {\"won\":true,\"died\":false,\"turns\":5,\"captureResources",
+            "error: Error: boss-lines worker: Error: missing successful first-fight resources: nonpositive-hp; seed=2950019043; {\"won\":true,\"died\":false,\"turns\":5,\"captureResources"
+          ],
+          "samples": 0,
+          "requested": 600,
+          "failure": true,
+          "key": "sim-failure-v1:addd5b79a46c2e30e7f2fec915cdf3d8b1bcd2d8e8c9dd66bf173aefce706b7e"
+        }
+      },
+      {
+        "ts": "2026-10-16T12:24:24.568Z",
+        "label": "combat/plan",
+        "floor": 48,
+        "source": {
+          "offset": 2050905894,
+          "length": 2001,
+          "sha256": "b4fb1e1aea90babd13968539b3d5a7f5d0075b479be0eace0b7d5b7d2693151b"
+        },
+        "completion": {
+          "required": true,
+          "attempt_id": "5b78fc49-b53c-42d5-b0f7-799453a4ce28",
+          "status": "pending",
+          "attempts": 1,
+          "reasons": [
+            "error: Error: boss-lines worker: Error: missing successful first-fight resources: nonpositive-hp; seed=772363564; {\"won\":true,\"died\":false,\"turns\":5,\"captureResources\""
+          ],
+          "samples": 0,
+          "requested": 600,
+          "failure": true,
+          "key": "sim-failure-v1:c64215d955a33231e2b174237906c87c3aa982b312b1ab9743d3fa7fff3d29cf"
+        }
+      },
+      {
+        "ts": "2026-10-16T12:24:27.953Z",
+        "label": "combat/plan",
+        "floor": 48,
+        "source": {
+          "offset": 2050907895,
+          "length": 2179,
+          "sha256": "994611b77d4546341ca518b0bf476a3d8e9d9bb0250294cf14d2bbace001b308"
+        },
+        "completion": {
+          "required": true,
+          "attempt_id": "e304f73c-27d4-4231-8270-212f8f428b98",
+          "status": "pending",
+          "attempts": 2,
+          "reasons": [
+            "error: Error: boss-lines worker: Error: missing successful first-fight resources: nonpositive-hp; seed=772363564; {\"won\":true,\"died\":false,\"turns\":5,\"captureResources\"",
+            "error: Error: boss-lines worker: Error: missing successful first-fight resources: nonpositive-hp; seed=772363564; {\"won\":true,\"died\":false,\"turns\":5,\"captureResources\""
+          ],
+          "samples": 0,
+          "requested": 600,
+          "failure": true,
+          "key": "sim-failure-v1:c64215d955a33231e2b174237906c87c3aa982b312b1ab9743d3fa7fff3d29cf"
+        }
+      },
+      {
+        "ts": "2026-10-16T12:24:31.696Z",
+        "label": "combat/plan-choice",
+        "floor": 48,
+        "source": {
+          "offset": 2050910074,
+          "length": 17602,
+          "sha256": "8afd9e5b8717a5b5a605d2c19299a881f6b7e123f5e223546352d23ee23c7c78"
+        },
+        "completion": {
+          "required": true,
+          "attempt_id": "40df3bc8-2ae3-4d2d-883f-16f155550ef0",
+          "status": "degraded",
+          "attempts": 3,
+          "reasons": [
+            "error: Error: boss-lines worker: Error: missing successful first-fight resources: nonpositive-hp; seed=772363564; {\"won\":true,\"died\":false,\"turns\":5,\"captureResources\"",
+            "error: Error: boss-lines worker: Error: missing successful first-fight resources: nonpositive-hp; seed=772363564; {\"won\":true,\"died\":false,\"turns\":5,\"captureResources\"",
+            "error: Error: boss-lines worker: Error: missing successful first-fight resources: nonpositive-hp; seed=772363564; {\"won\":true,\"died\":false,\"turns\":5,\"captureResources\""
+          ],
+          "samples": 0,
+          "requested": 600,
+          "failure": true,
+          "key": "sim-failure-v1:c64215d955a33231e2b174237906c87c3aa982b312b1ab9743d3fa7fff3d29cf"
+        }
+      }
+    ],
+    "alert": true,
+    "scope": "B2/B3 computation service failures; degradation permits continuation, not fault resolution."
+  },
+  "groups": [
+    {
+      "key": "sim-failure-v1:d0def267d3c1d7eec7b9ed4d1ff4c9f18c2f2e6a672f86f2240f83c00f3029aa",
+      "statuses": [
+        "pending",
+        "pending",
+        "degraded"
+      ],
+      "sources": [
+        {
+          "offset": 2050677182,
+          "length": 2024,
+          "sha256": "b0e120c0cf2b514e4de251f0a9f7586a442fe020654b633c26032055135cab63"
+        },
+        {
+          "offset": 2050679206,
+          "length": 2201,
+          "sha256": "6ef9fe0b1e4b8de64f0c04d1220770c4ed608c540ef1bcf023f087cac042f2a8"
+        },
+        {
+          "offset": 2050681407,
+          "length": 21857,
+          "sha256": "68e5dd4d81202472d065d717a6f12e48cbf4347d2f46dc1c0c9e23690a77a58d"
+        }
+      ],
+      "floor": 48,
+      "samples": 0,
+      "requested": 600,
+      "action": {
+        "action": "play_card",
+        "card_index": 0
+      },
+      "decider": "jev",
+      "result": "pending (unstable): Action queued but state is still transitioning.",
+      "whole_fight_DPR_facts": 0,
+      "error": null,
+      "diagnostics": null,
+      "ms": 5792
+    },
+    {
+      "key": "sim-failure-v1:f155e93fb43ddf145718fc4d57e1684b543a5221b83fb23d824d7731163e23d4",
+      "statuses": [
+        "pending",
+        "pending",
+        "degraded"
+      ],
+      "sources": [
+        {
+          "offset": 2050716086,
+          "length": 2034,
+          "sha256": "01b4801d381f2abbf77c45cc54c6194157f5dc04a5b11f1d2aa2da3455a6cee6"
+        },
+        {
+          "offset": 2050718120,
+          "length": 2211,
+          "sha256": "ea726374a4e43dcc752b91c66f13e9cb462981bccdbc00a383f00d36b22858b9"
+        },
+        {
+          "offset": 2050720331,
+          "length": 15052,
+          "sha256": "ddfab9029cd1d92fe5cc0116f7df11cc249aad0352f8c77a806e8c3e768c93bf"
+        }
+      ],
+      "floor": 48,
+      "samples": 0,
+      "requested": 600,
+      "action": {
+        "action": "play_card",
+        "card_index": 0,
+        "target_index": 0
+      },
+      "decider": "jev",
+      "result": "completed: Action completed.",
+      "whole_fight_DPR_facts": 0,
+      "error": null,
+      "diagnostics": null,
+      "ms": 835
+    },
+    {
+      "key": "sim-failure-v1:00b5f7e0e6fb15cf32d19b75cb5889bcf3a0a6b000cbfaf95f6f553e8db037d4",
+      "statuses": [
+        "pending",
+        "pending",
+        "degraded"
+      ],
+      "sources": [
+        {
+          "offset": 2050742946,
+          "length": 2042,
+          "sha256": "7636bc5decd9130dbd15f9e17f85215512e09e9a145652ff9d6b4f4089a34411"
+        },
+        {
+          "offset": 2050744988,
+          "length": 2220,
+          "sha256": "7c007b69d2d1bdffc908e7369482e54292f97ea7b0c4e0328376583f125cef91"
+        },
+        {
+          "offset": 2050747208,
+          "length": 24944,
+          "sha256": "6ac9cdcf734eee224a017f77df7de8b849460e9cf21b24979b7b727ec5884810"
+        }
+      ],
+      "floor": 48,
+      "samples": 0,
+      "requested": 600,
+      "action": {
+        "action": "play_card",
+        "card_index": 0,
+        "target_index": 0
+      },
+      "decider": "jev",
+      "result": "completed: Action completed.",
+      "whole_fight_DPR_facts": 0,
+      "error": null,
+      "diagnostics": null,
+      "ms": 1157
+    },
+    {
+      "key": "sim-failure-v1:b9abcf2ea21ea545922fab292b35189497167496008d20004a38cfe05531ec9d",
+      "statuses": [
+        "pending",
+        "pending",
+        "degraded"
+      ],
+      "sources": [
+        {
+          "offset": 2050773792,
+          "length": 1995,
+          "sha256": "fbeb1f7f979df6194c2762277f88f6e818f1c341332afa57f754f7963088c251"
+        },
+        {
+          "offset": 2050775787,
+          "length": 2172,
+          "sha256": "6d46467a73a788567f96a034a3d1f9dcdb549582f46013da2c6695407c3d210c"
+        },
+        {
+          "offset": 2050777959,
+          "length": 13453,
+          "sha256": "b690f569513a9319dc3f5dce4146e39315b2517c5448f39259104dda80c53e52"
+        }
+      ],
+      "floor": 48,
+      "samples": 0,
+      "requested": 600,
+      "action": {
+        "action": "play_card",
+        "card_index": 0
+      },
+      "decider": "jev",
+      "result": "completed: Action completed.",
+      "whole_fight_DPR_facts": 0,
+      "error": null,
+      "diagnostics": null,
+      "ms": 834
+    },
+    {
+      "key": "sim-failure-v1:9d49516549bf2a57d52f1991147f5f121549276c0c75618e4d212f0427ecb37c",
+      "statuses": [
+        "pending",
+        "pending",
+        "degraded"
+      ],
+      "sources": [
+        {
+          "offset": 2050791412,
+          "length": 1976,
+          "sha256": "561e95f0897b972bb0f7ffd712d6efbeaa632601683a522cc4661abea46536ee"
+        },
+        {
+          "offset": 2050793388,
+          "length": 2154,
+          "sha256": "a67822d0caa904217672aef709f0877a4dba2e6b3c6e5164389e91047678a48d"
+        },
+        {
+          "offset": 2050795542,
+          "length": 14245,
+          "sha256": "be879c7719228dbdf884393a552634c5c926631a5d51b949afda54f21769f29a"
+        }
+      ],
+      "floor": 48,
+      "samples": 0,
+      "requested": 600,
+      "action": {
+        "action": "play_card",
+        "card_index": 0,
+        "target_index": 0
+      },
+      "decider": "jev",
+      "result": "completed: Action completed.",
+      "whole_fight_DPR_facts": 0,
+      "error": null,
+      "diagnostics": null,
+      "ms": 906
+    },
+    {
+      "key": "sim-failure-v1:36f23271ef422cd40f378f04160f043404c2ce8b0ea309ff1e05e1a287a2c641",
+      "statuses": [
+        "pending",
+        "pending",
+        "degraded"
+      ],
+      "sources": [
+        {
+          "offset": 2050814220,
+          "length": 2027,
+          "sha256": "5c90ea825ac364b14419867e68bba2a610fbaf81e0e4bd32906d436e11752ec6"
+        },
+        {
+          "offset": 2050816247,
+          "length": 2204,
+          "sha256": "1b54fa265dcd05adf7d8647f3950098fc4426e411ff88992a9ebf2e3febf12d5"
+        },
+        {
+          "offset": 2050818451,
+          "length": 19119,
+          "sha256": "12636f6a26ac6d14a012a16cbf85b0c74a1e6d9c59c2dfe7ab692f9983331831"
+        }
+      ],
+      "floor": 48,
+      "samples": 0,
+      "requested": 600,
+      "action": {
+        "action": "play_card",
+        "card_index": 0,
+        "target_index": 0
+      },
+      "decider": "jev",
+      "result": "completed: Action completed.",
+      "whole_fight_DPR_facts": 0,
+      "error": null,
+      "diagnostics": null,
+      "ms": 822
+    },
+    {
+      "key": "sim-failure-v1:addd5b79a46c2e30e7f2fec915cdf3d8b1bcd2d8e8c9dd66bf173aefce706b7e",
+      "statuses": [
+        "pending",
+        "pending",
+        "degraded"
+      ],
+      "sources": [
+        {
+          "offset": 2050846674,
+          "length": 2027,
+          "sha256": "24301c1ead50c0d9bace4a3eb3ecfe5c2cca4c3635cfae0e2d8314d7dc3c8f5d"
+        },
+        {
+          "offset": 2050848701,
+          "length": 2204,
+          "sha256": "01bf6210fe3cdadd266a7cbbe07c10fb2d9d9012fed1e690647db3f1bd66fe18"
+        },
+        {
+          "offset": 2050850905,
+          "length": 51863,
+          "sha256": "3ffa2e350835c75590aff58b0c778201f919ecb62b77ac485f60b625724d52db"
+        }
+      ],
+      "floor": 48,
+      "samples": 0,
+      "requested": 600,
+      "action": {
+        "action": "play_card",
+        "card_index": 0,
+        "target_index": 0
+      },
+      "decider": "jev",
+      "result": "completed: Action completed.",
+      "whole_fight_DPR_facts": 0,
+      "error": null,
+      "diagnostics": null,
+      "ms": 1525
+    },
+    {
+      "key": "sim-failure-v1:c64215d955a33231e2b174237906c87c3aa982b312b1ab9743d3fa7fff3d29cf",
+      "statuses": [
+        "pending",
+        "pending",
+        "degraded"
+      ],
+      "sources": [
+        {
+          "offset": 2050905894,
+          "length": 2001,
+          "sha256": "b4fb1e1aea90babd13968539b3d5a7f5d0075b479be0eace0b7d5b7d2693151b"
+        },
+        {
+          "offset": 2050907895,
+          "length": 2179,
+          "sha256": "994611b77d4546341ca518b0bf476a3d8e9d9bb0250294cf14d2bbace001b308"
+        },
+        {
+          "offset": 2050910074,
+          "length": 17602,
+          "sha256": "8afd9e5b8717a5b5a605d2c19299a881f6b7e123f5e223546352d23ee23c7c78"
+        }
+      ],
+      "floor": 48,
+      "samples": 0,
+      "requested": 600,
+      "action": {
+        "action": "play_card",
+        "card_index": 2,
+        "target_index": 0
+      },
+      "decider": "jev",
+      "result": "completed: Action completed.",
+      "whole_fight_DPR_facts": 0,
+      "error": null,
+      "diagnostics": null,
+      "ms": 2257
+    }
+  ],
+  "B2_whole": {
+    "n": 48,
+    "p50_ms": 1478.0,
+    "p90_ms": 9548.70000000002,
+    "max_ms": 31504,
+    "total_ms": 192849
+  },
+  "B3_whole": {
+    "n": 42,
+    "p50_ms": 11901.5,
+    "p90_ms": 29581.799999999996,
+    "max_ms": 43847,
+    "total_ms": 595320
+  },
+  "phase_simMs": {
+    "n": 42,
+    "p50_ms": 11793.5,
+    "p90_ms": 29498.799999999992,
+    "max_ms": 43410,
+    "total_ms": 587195
+  },
+  "adaptive": {
+    "mode": "on",
+    "observed": 64,
+    "complete_adaptive": 64,
+    "produced": 64,
+    "errors": 0,
+    "unknown": 0,
+    "agreement": null,
+    "production_agreement": null,
+    "actual_saved_fraction": {
+      "p50": 0.35,
+      "p90": 0.7
+    },
+    "stop_counts": {
+      "leader": 35,
+      "eliminated": 320,
+      "max": 172
+    }
+  },
+  "construction_pipeline": {
+    "enabled": true,
+    "evaluation_expected": 48,
+    "evaluation_attached": 48,
+    "evaluation_missing": 0,
+    "brain_evaluation": 48,
+    "accepted_evaluation": 48,
+    "accepted_choice_with_evaluation": 47,
+    "plan_due": 7,
+    "accepted_structured_plan": 7,
+    "missing_structured_plan": 0,
+    "saved_structured_plan": 7,
+    "plan_readback": 45,
+    "checkpoint_review_due": 5,
+    "probability_delivered": 0,
+    "admission": {
+      "missing_or_mismatched_prospective_calibration": 41
+    },
+    "evidence": [],
+    "alert": false,
+    "limits": "Payload delivery, accepted output and saved/read-back plans are distinct observations, not causal win-rate evidence. Missing calibration is pending, not a service failure."
+  },
+  "s_readiness": {
+    "mode": "on",
+    "expected": 42,
+    "produced": 42,
+    "missing": 0,
+    "eligible": 15,
+    "low_trust": 27,
+    "sign_rejected": 27,
+    "brain_delivered": 15,
+    "brain_accepted": 15,
+    "ms_max": 26.167267999990145,
+    "longest_missing_streak": 0,
+    "alert": false,
+    "limits": "Shadow is not brain delivery. Low trust and failed sign audit suppress facts without changing mandatory computation or old ranking."
+  },
+  "s_build_rank": {
+    "mode": "on",
+    "expected": 42,
+    "produced": 42,
+    "missing": 0,
+    "brain_delivered": 40,
+    "brain_accepted": 40,
+    "choices": 42,
+    "overrides": 7,
+    "reasons_present": 7,
+    "missing_reasons": 0,
+    "target_pending": 0,
+    "longest_missing_streak": 0,
+    "alert": false,
+    "limits": "Shadow choices do not require override reasons. Pending card targets and first shop actions do not certify complete plans or causal benefit."
+  },
+  "s_combat_rank": {
+    "mode": "shadow",
+    "expected": 24,
+    "produced": 24,
+    "used": 0,
+    "fallback": 0,
+    "missing": 0,
+    "shadow_produced": 24,
+    "shadow_invalid": 0,
+    "fallback_reasons": {
+      "low_trust": 17
+    },
+    "longest_missing_streak": 0,
+    "alert": false,
+    "limits": "S tie ranking is conditional on paired samples, sign audit and existing model trust; not game calibration or causal benefit."
+  },
+  "global_build": {
+    "mode": "shadow",
+    "expected": 42,
+    "covered": 42,
+    "missing": 0,
+    "invalid_shadow": 0,
+    "observations": 42,
+    "memo_hits": 0,
+    "current_dependency_unknown": 0,
+    "service_failures": 0,
+    "partial": 15,
+    "unknown": 27,
+    "unknown_reasons": {
+      "offered_candidate_not_modeled": 12,
+      "验证集 21 场（战前起点）：校准 Brier 0.182，高于整体 0.120 的 1.25 倍 0.151": 29,
+      "Act3_quality_gate_and_production_trust_unknown": 100
+    },
+    "longest_missing_streak": 0,
+    "wall_ms": {
+      "n": 42,
+      "p50": 19.5,
+      "p90": 18973.699999999997,
+      "max": 37278
+    },
+    "computation_wall_ms": {
+      "n": 42,
+      "p50": 19.5,
+      "p90": 18973.699999999997,
+      "max": 37278
+    },
+    "memo_wall_ms": {
+      "n": 0,
+      "p50": null,
+      "p90": null,
+      "max": null
+    },
+    "future_target_wall_ms": {
+      "n": 30,
+      "p50": 7779.0,
+      "p90": 11430.7,
+      "max": 28135
+    },
+    "evidence": [],
+    "alert": false,
+    "admission": "pending two complete natural shadow runs and real later-Boss comparison report; never auto-enable",
+    "limits": "Declared Act3/final unknowns are coverage limitations, not zero predictions or service failures. Times are observed wall clocks with duplicate observation IDs excluded, not CPU time or a causal speedup. No calibration, whole-run win probability or role ACK inferred."
+  },
+  "existing_owner": {
+    "request": "silent-0332",
+    "revision": 2,
+    "thread": "01a14446-c89c-7223-b9ff-4ad093ccc130",
+    "batch": "20261016-192940-strategy-proposal",
+    "state": "done",
+    "outcome": "blocked"
+  },
+  "limits": [
+    "Eight B2 protective exits are not eight independent games or a resource fix. Failed full resources/trajectory remain truncated and unknown.",
+    "Original ops all-degraded-actions-completed assumption rejected: seven completed and one pending unstable; no completion inferred for that one. Minimum300 unchanged;0/600 has no whole-fight DPR facts. C2 actual sample work saving is not elapsed-time saving or on-mode agreement.",
+    "Construction missing prospective calibration is pending scientific evidence, not a wiring service failure.",
+    "Routine module-health notice not sent to watcher/Roy; only original0332 blocked notice is forwarded. No restart or duplicate learner."
+  ]
+}
