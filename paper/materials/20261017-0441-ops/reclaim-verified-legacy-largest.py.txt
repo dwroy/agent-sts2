@@ -1,0 +1,104 @@
+from pathlib import Path
+import json, os, re, shutil, subprocess, sys
+sys.dont_write_bytecode = True
+r = Path.cwd()
+p = r / 'ops/codex-ops/record-staging/20261017-0441'
+previous = r / 'ops/codex-ops/record-staging/20261017-0313'
+sys.path.insert(0, str(r/'ops'))
+import learner_retention as retention
+import worktree_retention as workspaces
+retention.require_host_process_view()
+state_dir = r/'ops/codex-ops'
+rows = retention.load(previous/'checked-exp-candidates.json')
+rows = [x for x in rows if x['batch'] < '20261008' and x['batch'].startswith(('20261006','20261007'))]
+usage = {}
+for line in (previous/'learner-usage.tsv').read_text().splitlines():
+    parts=line.split('\t',1)
+    if len(parts)==2: usage[Path(parts[1]).name]=int(parts[0])
+rows.sort(key=lambda x:usage.get(x['batch'],0), reverse=True)
+result = dict(at=retention.stamp(), free_before=shutil.disk_usage(r).free, results=[], retained=[])
+retention.atomic(p/'legacy-reclamation-largest-running.json', result)
+with retention.locks([state_dir/'retention.lock']):
+    for candidate in rows:
+        if len(result['results']) >= 4:
+            break
+        bid=candidate['batch'];scratch=r/'learner/runs'/bid
+        if not scratch.is_dir():
+            continue
+        try:
+            state=retention.load(state_dir/'learn.json');batch=state['batches'][bid]
+            if batch.get('state') != 'done' or batch.get('rc') != 0:
+                raise ValueError('unfinished batch retained')
+            if any(batch.get(k) for k in ['learning_request','research_request','implementation_request','feature_request','boss_sim','checks_pending','proposal_repair_needed','proposal_audit_errors']):
+                raise ValueError('pending request or verification retained')
+            for item in state.get('learning_requests',{}).values():
+                if bid in [item.get('original_batch'),item.get('batch'),item.get('verified_batch')] or bid in item.get('attempts',[]):
+                    raise ValueError('original continuation owner retained')
+            if workspaces.active(scratch, ignore_pid=os.getpid()):
+                raise ValueError('active scratch retained')
+            event=scratch.with_suffix('.jsonl')
+            with event.open('rb') as f: launch_raw=f.readline(131073)
+            launch=json.loads(launch_raw);params=launch['params']
+            assert launch['type']=='learner_launch' and launch['task']==batch['task']=='experience-update'
+            assert launch['cwd']==batch['worktree']==str(r/'.worktrees/exp')
+            assert params['scratch']==str(scratch) and params['project_root']==str(r)
+            assert params['merge']=='live' and params['merge_dir']==str(r/'.worktrees/live')
+            assert params['character']==batch['character']=='silent'
+            report=retention.load(scratch/'report.json');source=report['commit'];check=retention.successful_checks(batch)
+            assert report['task']=='experience-update' and report['tests']['tsc']==report['tests']['vitest']==0
+            assert (scratch/'commit.txt').read_text().strip()==source
+            assert retention.ancestor(r,source) and retention.ancestor(r/'.worktrees/live',source)
+            assert check and retention.check_log_completed(r,check) and retention.ancestor(r/'.worktrees/live',check['merged'])
+            assert subprocess.run(['git','-C',str(r), 'merge-base','--is-ancestor',source,check['merged']],capture_output=True).returncode==0
+            exp=retention.checked_experience(str(r/'.worktrees/live'),check['merged'],'silent')
+            assert exp and set(batch['runs']) <= retention.evidence_runs(exp)
+            caches=[]
+            for folder in scratch.iterdir():
+                if folder.is_symlink() or not folder.is_dir() or not re.fullmatch('[0-9A-Z]{12}',folder.name):
+                    continue
+                for name in ['states.jsonl','decisions.jsonl','sl-attempts.jsonl','run-plans.jsonl','brain.jsonl','fight-plans.jsonl','runs.jsonl','run-config.jsonl']:
+                    f=folder/name
+                    if not f.is_file() or f.is_symlink() or f.stat().st_size==0:
+                        continue
+                    # These are fixed extraction copies under a source run directory, not the source logs.
+                    assert f.is_relative_to(scratch) and not f.is_relative_to(r/'logs')
+                    caches.append(f)
+            if not caches:
+                continue
+            total=0;archives=[]
+            for number,f in enumerate(caches):
+                if workspaces.active(scratch,ignore_pid=os.getpid()):
+                    raise ValueError('owner appeared; remaining copies retained')
+                base=state_dir/'retention/storage/legacy-verified-extraction-copies'/bid/(str(number)+'-'+f.parent.name+'-'+f.stem)
+                if base.with_suffix('.manifest.json').exists():
+                    continue
+                proof=dict(kind='published-checked-legacy-experience-extraction-copy',batch=bid,
+                    original_launch=str(event.relative_to(r)),original_launch_header_sha256=__import__('hashlib').sha256(launch_raw).hexdigest(),
+                    original_scratch=str(scratch.relative_to(r)),source=source,full_check=check,
+                    original_report=str((scratch/'report.json').relative_to(r)),original_report_sha256=retention.sha_file(scratch/'report.json'),
+                    original_game_logs_root=str(r/'logs'),source_logs_not_selected=True,
+                    legacy_main_scratch_binding_verified=True,source_run=f.parent.name,
+                    original_task_and_request_state_unchanged=True)
+                manifest,mp=retention.archive(r,base,scratch,[f],proof)
+                assert retention.sha_file(f)==manifest['files'][0]['sha256']
+                assert not workspaces.active(scratch,ignore_pid=os.getpid())
+                f.unlink()
+                manifest.update(state='extraction_copy_compressed',reclaimed_at=retention.stamp(),
+                    source_game_logs_original_report_event_and_ledger_retained=True)
+                retention.atomic(mp,manifest)
+                total+=manifest['files'][0]['bytes']-manifest['archive_bytes']
+                archives.append(str(mp.relative_to(r)))
+                if number % 8 == 0:
+                    retention.atomic(p/'legacy-reclamation-largest-progress.json',dict(batch=bid,archives=len(archives),compressed_net_bytes=total,free_bytes=shutil.disk_usage(r).free))
+            result['results'].append(dict(batch=bid,source=source,archives=archives,compressed_net_bytes=total,
+                original_report_and_event_retained=True,task_state_unchanged=True))
+            retention.atomic(p/'legacy-reclamation-largest-running.json',result)
+            print(json.dumps(dict(batch=bid,archives=len(archives),compressed_net_bytes=total,free_bytes=shutil.disk_usage(r).free)),flush=True)
+            if shutil.disk_usage(r).free >= 12*1024**3:
+                break
+        except (AssertionError,ValueError,KeyError,OSError,subprocess.SubprocessError) as error:
+            result['retained'].append(dict(batch=bid,reason=str(error)))
+    result.update(at_finished=retention.stamp(),free_after=shutil.disk_usage(r).free)
+    result['available_bytes_delta']=result['free_after']-result['free_before']
+    retention.atomic(p/'legacy-reclamation-largest-result.json',result)
+    print(json.dumps(dict(finished=True,batches=len(result['results']),free_bytes=result['free_after'],net_delta=result['available_bytes_delta'],retained=len(result['retained']))),flush=True)

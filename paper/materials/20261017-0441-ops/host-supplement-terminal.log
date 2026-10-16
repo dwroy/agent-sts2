@@ -1,0 +1,85 @@
+
+[1m[30m[46m RUN [49m[39m[22m [36mv4.1.11 [39m[90m/home/dw/Projects/agent-sts2/.worktrees/live/agent[39m
+
+ [31m❯[39m tests/eval.test.ts [2m([22m[2m5 tests[22m[2m | [22m[31m1 failed[39m[2m | [22m[33m4 skipped[39m[2m)[22m[33m 172331[2mms[22m[39m
+     [2m[90m↓[39m[22m passes tests/eval_metrics_test.py (without the venv only the algorithm tests run)
+[31m     [31m×[31m passes tests/eval_calibration_test.py (without the venv only the algorithm tests run)[39m[33m 172328[2mms[22m[39m
+     [2m[90m↓[39m[22m prints the unchanged bossClock of each logged board, at the HP given, and the estimate at the real length
+     [2m[90m↓[39m[22m lists the cards and relics whose game-data text gives lasting Strength, as the deck profile reads them
+     [2m[90m↓[39m[22m tools/eval/strength-sources.ts prints the same ids as JSON
+
+[31m⎯⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 1 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[41m[1m FAIL [22m[49m tests/eval.test.ts[2m > [22mtools/eval (Python)[2m > [22mpasses tests/eval_calibration_test.py (without the venv only the algorithm tests run)
+[31m[1mError[22m: Test timed out in 120000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".[39m
+[36m [2m❯[22m tests/eval.test.ts:[2m32:3[22m[39m
+    [90m 30|[39m   }[33m,[39m [34m120_000[39m)[33m;[39m
+    [90m 31|[39m
+    [90m 32|[39m   it("passes tests/eval_calibration_test.py (without the venv only the…
+    [90m   |[39m   [31m^[39m
+    [90m 33|[39m     const out = spawnSync(HAVE_VENV ? VENV : "python3", [join(ROOT, "t…
+    [90m 34|[39m     [34mexpect[39m(out[33m.[39mstatus[33m,[39m out[33m.[39mstderr)[33m.[39m[34mtoBe[39m([34m0[39m)[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯[22m[39m
+
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[31m1 failed[39m[22m[2m | [22m[33m4 skipped[39m[90m (5)[39m
+[2m   Start at [22m 04:43:47
+[2m   Duration [22m 176.84s[2m (transform 3.38s, setup 3.17s, import 996ms, tests 172.33s, environment 0ms)[22m
+
+JSON report written to /home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261017-021302-strategy-proposal.supplement-44189163928f354d2b50e2061ddd50ecb5fb7c1c950f7a289adb255774d88390.0.vitest.json
+
+[1m[30m[46m RUN [49m[39m[22m [36mv4.1.11 [39m[90m/home/dw/Projects/agent-sts2/.worktrees/live/agent[39m
+
+ [32m✓[39m tests/ops-herdr.test.ts [2m([22m[2m27 tests[22m[2m | [22m[33m26 skipped[39m[2m)[22m[33m 5724[2mms[22m[39m
+     [33m[2m✓[22m[39m new learner tabs follow the live ops pane when workspace labels are duplicated [33m 5714[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m1 passed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[32m1 passed[39m[22m[2m | [22m[33m26 skipped[39m[90m (27)[39m
+[2m   Start at [22m 04:46:44
+[2m   Duration [22m 8.23s[2m (transform 1.86s, setup 840ms, import 1.48s, tests 5.72s, environment 0ms)[22m
+
+JSON report written to /home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261017-021302-strategy-proposal.supplement-44189163928f354d2b50e2061ddd50ecb5fb7c1c950f7a289adb255774d88390.1.vitest.json
+
+[1m[30m[46m RUN [49m[39m[22m [36mv4.1.11 [39m[90m/home/dw/Projects/agent-sts2/.worktrees/live/agent[39m
+
+ [31m❯[39m tests/potions-jev-call.test.ts [2m([22m[2m14 tests[22m[2m | [22m[31m1 failed[39m[2m | [22m[33m13 skipped[39m[2m)[22m[33m 64948[2mms[22m[39m
+     [2m[90m↓[39m[22m every potion the planner hands the solver costs nothing to drink
+     [2m[90m↓[39m[22m a potion line reaching the same end state never replaces or dominates the potion-free line
+     [2m[90m↓[39m[22m both belt potions are on a shown line, next to potion-free lines
+     [2m[90m↓[39m[22m withPotionLines adds the best line of an uncovered potion, replacing a redundant option at the limit
+     [2m[90m↓[39m[22m synthetic boards: no auto-drink on a survivable turn; the no-answer fallback is potion-free
+     [2m[90m↓[39m[22m the HP guard and the low-confidence dominance swap never switch Jev's potion-free pick to a potion line
+[31m     [31m×[31m logged boards: an auto-act that drinks is a lethal, a pending drink of Jev's line, or a turn where every potion-free line dies[39m[33m 64945[2mms[22m[39m
+     [2m[90m↓[39m[22m slots, act boss and the potion facts are on every plan question
+     [2m[90m↓[39m[22m each held potion's worth in this act's boss fight (potion-equivalents.json), facts only: the options are the same
+     [2m[90m↓[39m[22m a Foul Potion line is shown and its hp_lost includes the 12 to us
+     [2m[90m↓[39m[22m potionLethalLines: one line per set of potions spent, fewest potions first; none when a dry lethal exists
+     [2m[90m↓[39m[22m synthetic board: only the Fire Potion wins, so code asks; a dry lethal is still auto-played
+     [2m[90m↓[39m[22m a line opening with a drink: once the belt shows it drunk (the hand the same), the line goes on
+     [2m[90m↓[39m[22m a drink in the middle of a line: the card after it is played on
+
+[31m⎯⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 1 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[41m[1m FAIL [22m[49m tests/potions-jev-call.test.ts[2m > [22mcode's own auto-acts never drink while a potion-free line survives[2m > [22mlogged boards: an auto-act that drinks is a lethal, a pending drink of Jev's line, or a turn where every potion-free line dies
+[31m[1mError[22m: Test timed out in 60000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".[39m
+[36m [2m❯[22m tests/potions-jev-call.test.ts:[2m185:3[22m[39m
+    [90m183|[39m   })[33m;[39m
+    [90m184|[39m
+    [90m185|[39m   it("logged boards: an auto-act that drinks is a lethal, a pending dr…
+    [90m   |[39m   [31m^[39m
+    [90m186|[39m     const DIR = join(dirname(fileURLToPath(import.meta.url)), "logged-…
+    [90m187|[39m     [35mconst[39m boards [33m=[39m [34mreaddirSync[39m([33mDIR[39m)
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯[22m[39m
+
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[31m1 failed[39m[22m[2m | [22m[33m13 skipped[39m[90m (14)[39m
+[2m   Start at [22m 04:46:53
+[2m   Duration [22m 82.10s[2m (transform 14.82s, setup 938ms, import 15.89s, tests 64.95s, environment 0ms)[22m
+
+JSON report written to /home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261017-021302-strategy-proposal.supplement-44189163928f354d2b50e2061ddd50ecb5fb7c1c950f7a289adb255774d88390.2.vitest.json
