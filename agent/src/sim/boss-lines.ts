@@ -523,7 +523,7 @@ export function runLines(
     let pick: (BossSimLineResult & { order: string | null }) | null = null;
     for (let k = 0; k < per; k += 1) {
       const pair = li * per + k;
-      const res = { ...summarizeLine(li, ids.map((i) => run.outcomes[pair]![i]!)), order: k === 0 ? null : orders[k - 1]!.label };
+      const res = { ...summarizeLine(li, ids.map((i) => run.outcomes[pair]![i]!), ownSamples?.[li] ?? opts.samples), order: k === 0 ? null : orders[k - 1]!.label };
       if (!pick || res.winProb > pick.winProb || (res.winProb === pick.winProb && wonLoss(res) < wonLoss(pick))) pick = res;
     }
     return pick!;
@@ -953,6 +953,7 @@ export function simLog(sim: BossLineSim, keyOf: (plan: Plan) => string | null, e
       won_loss: line.result.hpLossWon?.median ?? null,
       order: line.result.order,
       ...(line.result.sequence ? { sequence: { first_wins: line.result.sequence.firstWins, won_first_died_second: line.result.sequence.firstWinSecondDeaths, second_unfinished: line.result.sequence.secondUnfinished } } : {}),
+      ...(line.result.continuous ? { continuous: toJsonValue(line.result.continuous) } : {}),
     };
   }
   return {
