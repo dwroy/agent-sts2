@@ -23,6 +23,7 @@ export interface ContinuationFailure {
   capture: "complete" | "oversize" | "unserializable";
   runtime: { node: string; v8: string };
   task?: readonly [deck: number, order: number, sample: number, seed: number];
+  lineTask?: { job: number; pair: number; line: number | null; order: number | null; sample: number; seed: number };
 }
 
 const digest = (value: string | Buffer): string => createHash("sha256").update(value).digest("hex");

@@ -725,6 +725,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
     const env: DecisionEnv = {
       requiredBossEvaluation: str(asRecord(state.run?.raw)["character_id"]).toLowerCase() === "silent",
       simWait: fileSimWait(join(dirname(config.log.decisionLog), "sim-wait.json"), (message) => onEvent({ type: "note", message })),
+      simFailureDirectory: join(dirname(config.log.decisionLog), "sim-failures"),
       state,
       knowledge,
       brief,
