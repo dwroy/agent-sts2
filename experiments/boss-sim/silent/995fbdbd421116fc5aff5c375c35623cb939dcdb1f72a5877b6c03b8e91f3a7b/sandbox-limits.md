@@ -1,0 +1,1 @@
+标准入口已运行；首次因导入预检发现历史不完整副本65个引用，受控中断130。第二次保全1096条历史文件/链接后重跑，观察到新增main测试global-build-health.test.ts的execFileSync包装返回EPERM（其Python子程序已经成功4项），受控中断130。global-build-funnel.test.ts使用同类spawnSync。两个实际Python固定夹具均直接执行exit0、stdout为空。最终仍使用原tools/test-sandbox.sh，只在命令行排除这两个受沙箱限制的包装；原固定排除名单、源码、测试断言、时限均未改。完整无排除检查由原调度器在沙箱外执行；不把标准入口130/包装EPERM报为通过。
