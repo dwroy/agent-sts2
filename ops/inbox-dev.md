@@ -2598,3 +2598,6 @@ selector于2026-10-15 13:15:58 CST从/home/dw/.codex-brain原子改为/home/dw/P
   下一步：原watcher已本人读终局并开始原eval离线评分，继续分组去重/门槛报告；无通过不建通过文件，评分及本人向Roy报告不由ops代ACK。functional/其他null指标及所有宽父不关，live/现局不动，不重派本批。实际接收、归档索引、r2外层和原状态边界见paper/materials/20261016-global-build-g3b/ops-delivery/。
 
 - 2026-10-16 15:32:31 CST 运维codex已将原G3b135539实际归档/协议回执与r2机械外层沿既有watcher wJ:pJT/01a13dcd发送，Herdr身份/cwd核后agent prompt rc0；仅运输，不代其对新ops包实收/评分/用户ACK。原watcher当前已本人读原r1并开始原eval是其本轮用户续报事实，本ops不重复派发/评分；原failed/rc0/retry历史、原r1/r2输入和科学标签均保持。消息/实际响应/包SHA见G3b/ops-delivery/ops-to-owner-transport.json，完成即止不等待新事件。
+
+- 2026-10-16 15:46:55 CST [原G3b评分与外推边界，ops已实收/待Roy或Claude决定] 原未改eval实际rc0，3/12可评分组过原统计闸：Silent A10 conditionalSignature P/F17（23局24条、2正22负）、P/F33（14局16条、5正11负）、D/F33（14局16条、3正13负）；Brier/bias均0，三组通过状态保持。全部184标签只覆盖Boss前一层F16/F32/F47、后续政策选择数0且预测仅0/1，不能据此证明更早窗口前瞻能力。
+  现有整组admission/adapter按horizon等键，无锚点层数/剩余窗口限制，直接advisory会外推到未核更早窗口——这是原watcher此次已核的具体边界，不是新统计阈值或机制反证。当前保shadow，不建construction-calibration.json、不改配置或派实现/模型/实验/full。待Roy/Claude决定是否接受整组外推；若需窗口限制或补证，另行明确派活，本次报告后停。原报告及ops-publication-request在paper/materials/20261016-global-build-g3b/，本ops实收回执ops-score-received/ops-score-receipt.json。不代Roy ACK，不关闭0332或任何宽父。
