@@ -3,6 +3,7 @@ import { completeAdaptiveBuild } from "./build-sim.js";
 import { beginComputation, type SimAttempt } from "./computation-failure.js";
 import { memoKey } from "./compute-memo.js";
 import { availableParallelism, loadavg } from "node:os";
+import { f48JointScope, f48JointShadow } from "./f48-joint-shadow.js";
 /**
  * B3 (Roy 2026-09-30): a deck-building question's options, each with the act boss fought to the end in simulation with
  * the deck (and HP) that option leaves. Added to DeepSeek's question after the screen builds it (the loop awaits it;
@@ -525,6 +526,7 @@ export async function withBossSim(decision: Decision, env: DecisionEnv, setup: B
   let wait: ReturnType<NonNullable<DecisionEnv["simWait"]>["start"]> | undefined;
   let sampled = 0;
   const requested = setup.samples ?? BUILD_SIM_SAMPLES;
+  const jointScope = f48JointScope(state);
   const fail = (why: string, code = "simulation_error"): BossSimOutcome => {
     const completion = attempt?.finish(sampled, requested, code);
     const global = globalBuildFailure(env, required, "current_B3_failed");
@@ -534,6 +536,7 @@ export async function withBossSim(decision: Decision, env: DecisionEnv, setup: B
         : required ? `必需的boss评估未完成（${why}）；等待完整计算，不允许用空指标作选择`
         : `boss 模拟没有结果（${why}）：act_boss_clock 仍是 boss 时钟的估计`, true) } },
       record: { error: why, ms: Math.round(now() - started),
+        ...(jointScope ? { f48_joint_shadow: toJsonValue(f48JointShadow(jointScope, [], undefined, { reason: why })) } : {}),
         ...(global ? { global_build: global } : {}),
         ...(required ? { completion: completion ? { ...completion } : { required: true, status: "pending", latencyTargetMs: setup.deadlineMs ?? BUILD_SIM_DEADLINE_MS } } : {}),
         ...(diagnostics ? { diagnostics: { ...diagnostics, status: "failed", reason: code } } : {}) },
@@ -553,6 +556,8 @@ export async function withBossSim(decision: Decision, env: DecisionEnv, setup: B
       return {
         decision: { ...ask, state: { ...ask.state, facts: withSimFacts(facts, note, true) } },
         record: { skipped: phase ? "first boss defeated; the second boss is not observed yet" : "act boss defeated; the next act's boss is not known yet", boss: bossKey(bossId), ms: Math.round(now() - started),
+          ...(jointScope ? { f48_joint_shadow: toJsonValue(f48JointShadow(jointScope, [], undefined,
+            { reason: "first_boss_defeated; no_new_simulation" })) } : {}),
           ...(global ? { global_build: global } : {}) },
       };
     }
@@ -586,6 +591,7 @@ export async function withBossSim(decision: Decision, env: DecisionEnv, setup: B
     }
     const adaptive = required && !attempt?.degraded && adaptiveMode !== "off";
     const result: CompareResult = await compareOptions(setup.runner, start.input, deckOptions, { samples: setup.samples ?? BUILD_SIM_SAMPLES, seed: setup.seed ?? BUILD_SIM_SEED, deadlineMs: Math.max(0, budget), ...(setup.now ? { now: setup.now } : {}), ...(diagnosticEnabled ? { quantitative: true, diagnostics: true } : {}), ...(required && !attempt?.degraded ? { requireComplete: true } : {}), ...(wait ? { onProgress: wait.progress } : {}), ...(adaptive ? { adaptive: { mode: adaptiveMode as "shadow" | "on", allowS: !continuation && !bossTrustReason(bossKey(bossId), "b3", state.run?.ascension, state.run?.floor) } } : {}), ...(readinessMode !== "off" ? { readiness: true } : {}),
+      ...(jointScope ? { f48JointScope: jointScope } : {}),
       ...(rankingMode !== "off" ? { buildRank: { lowTrust: continuation?.limitation ?? bossTrustReason(bossKey(bossId), "b3", state.run?.ascension, state.run?.floor), calibratedFloor: calibratedFloor(state.run?.ascension ?? 0), tieSe: BOSS_LINES_TIE_SE, sSort: "shadow" } } : {}) });
     const adaptiveComplete = completeAdaptiveBuild(result);
     sampled = result.samples;
@@ -706,6 +712,7 @@ export async function withBossSim(decision: Decision, env: DecisionEnv, setup: B
     if (attempt?.degraded) simFacts["completion"] = `不完整（故障降级，n=${result.samples}）`;
     const completion = attempt?.finish(result.samples, result.requested, undefined, adaptiveComplete);
     const record: Record<string, JsonValue> = {
+      ...(result.f48JointShadow ? { f48_joint_shadow: toJsonValue(result.f48JointShadow) } : {}),
       ...(result.buildRanking ? { build_ranking: toJsonValue({ ...ranking, mode: rankingMode, delivered: rankingOn, candidates: candidateIdentity }) } : {}),
       ...(result.adaptive ? { adaptive: result.adaptive } : {}),
       ...(readiness ? { readiness: toJsonValue({ ...readiness, mode: readinessMode, ms: result.readinessMs ?? null,
@@ -787,6 +794,8 @@ export async function withBossSim(decision: Decision, env: DecisionEnv, setup: B
         question_key: str(completion["key"]) || memoKey("continuation-question", { board, label: ask.label, question }),
         state: toJsonValue(state.raw), question: toJsonValue(question), completion: toJsonValue(completion),
       }, setup.failureDirectory);
+      if (jointScope) failed.record["f48_joint_shadow"] = toJsonValue(f48JointShadow(jointScope, [], undefined,
+        { reason: `resource_contract_failure:${failure.reason}`, reference: failed.record["resource_failure"] }));
     }
     return failed;
   } finally {
