@@ -3350,6 +3350,10 @@ function planTurn(env: DecisionEnv): Decision | null {
   //    estimate may be pessimistic (random draws, unmodelled relics) — and let potions come first.
   // Every simulated line dies, but a random potion may not: the least-loss line goes to the question.
   let allDie: Plan | null = null;
+  // L704 F48 T6 / Y5H4 F33 T10, silent-0300: ordinary Gamble can redraw at zero energy.
+  // Only this observed character/ascension opts in; replay supplies the actual remaining hand size.
+  const redrawInput = character.toLowerCase() === "silent" && ascension === 10 && !noDraw
+    ? solvedInput as SolverInput | null : null;
   const unresolvedPoisonLines = solved.plans.filter((plan) => plan.outcome.randomPoisonUnresolved);
   if (best.outcome.dies && unresolvedPoisonLines.length === 0) {
     // Pael's Eye: the first turn a fight ends with no card played, the hand is exhausted and an extra
@@ -3364,11 +3368,12 @@ function planTurn(env: DecisionEnv): Decision | null {
     // A random potion some sample of which lives: Jev's question, the least-loss line next to it.
     const randomLives = mcSources.size > 0 && randomPotions().some((mc) => mc.plans.some((plan) => plan !== null && !plan.outcome.dies));
     if (potionsNow.length > 0 && !randomLives) return planCombatPerCard(env);
-    if (randomLives) allDie = leastLossPlan(solved.plans, hand, playerSim.hp);
+    if (randomLives) allDie = leastLossPlan(solved.plans, hand, playerSim.hp, redrawInput);
   }
   if (best.outcome.dies && allDie === null && unresolvedPoisonLines.length === 0) {
-    const leastLoss = leastLossPlan(solved.plans, hand, playerSim.hp);
-    const drawing = leastLoss.steps[0] !== undefined && hand.some((card) => card.index === leastLoss.steps[0]!.cardIndex && drawsCards(card));
+    const leastLoss = leastLossPlan(solved.plans, hand, playerSim.hp, redrawInput);
+    const drawing = leastLoss.steps[0] !== undefined && hand.some((card) => card.index === leastLoss.steps[0]!.cardIndex &&
+      (drawsCards(card) || (redrawInput !== null && card.drawDiscardedHand && leastLoss.outcome.cardsDrawn > 0)));
     commit(env, state.turn, leastLoss, hand, "code");
     const decision: Decision = {
       kind: "act",
@@ -4828,7 +4833,7 @@ export function pickNote(shown: Plan[], chosen: Plan, picked: Plan): string {
  * the draw pile killed the 37 HP left (about 89% over 4 draws). CRRPX F48 T10 won the same way by
  * luck. Otherwise, the line that keeps the most HP.
  */
-export function leastLossPlan(allPlans: Plan[], hand: CardModel[], hp = Infinity): Plan {
+export function leastLossPlan(allPlans: Plan[], hand: CardModel[], hp = Infinity, redrawInput: SolverInput | null = null): Plan {
   // A line that kills us on our own turn (a card's HP cost) never goes first while one reaches the end of the turn:
   // the death comes either way, but only at the end of the turn can SL reload, and the enemy turn may still go
   // otherwise than simulated (JSA5K8YZ9RXV F48 T6: 2 HP, every line dead to the Queen's 12x5; least-loss played Blood
@@ -4841,7 +4846,7 @@ export function leastLossPlan(allPlans: Plan[], hand: CardModel[], hp = Infinity
   const pitSafe = (plan: Plan) => plan.outcome.sandpitAfter === null || plan.outcome.sandpitAfter > 0;
   const deadline = pool.some(pitSafe) && pool.some((plan) => !pitSafe(plan));
   const plans = deadline ? pool.filter(pitSafe) : pool;
-  const picked = leastLossOf(plans, hand, hp);
+  const picked = leastLossOf(plans, hand, hp, redrawInput, deadline);
   const escape = deadline ? picked.steps.findIndex((step) => step.cardId === "FRANTIC_ESCAPE") : -1;
   return escape > 0 ? stepFirst(picked, escape, hand) : picked;
 }
@@ -4858,13 +4863,34 @@ export function stepFirst<T extends Pick<Plan, "steps">>(plan: T, at: number, ha
   return { ...plan, steps: [...plan.steps.slice(0, lead), plan.steps[at]!, ...plan.steps.slice(lead, at), ...plan.steps.slice(at + 1)] };
 }
 
-function leastLossOf(plans: Plan[], hand: CardModel[], hp: number): Plan {
+function leastLossOf(plans: Plan[], hand: CardModel[], hp: number, redrawInput: SolverInput | null, deadline: boolean): Plan {
   // A drawing card whose own HP cost kills us is no draw (2VW5 F28 T7: Offering at 5 HP played first). Nor is one whose draw
   // waits on the hand (CARD_CONDITIONS, Restlessness: moved first, it draws nothing; AKK09TEEEXKD F17 T10).
   const drawAt = (plan: Plan): number =>
     plan.steps.findIndex((step) => hand.some((card) => card.index === step.cardIndex && drawsCards(card) && card.hpLoss < hp && card.handCondition === undefined));
   const drawing = plans.filter((plan) => drawAt(plan) >= 0);
-  if (drawing.length === 0) return plans.reduce((a, b) => (b.outcome.hpAfter > a.outcome.hpAfter ? b : a));
+  if (drawing.length === 0) {
+    const redraws: Plan[] = [];
+    if (redrawInput !== null && !redrawInput.player.noDraw) {
+      for (const card of hand.filter((entry) => entry.playable && entry.cardId === "CALCULATED_GAMBLE" && !entry.upgraded && entry.drawDiscardedHand)) {
+        const step: Step = { cardIndex: card.index, cardId: card.cardId, name: card.name, upgraded: false, target: null, targetName: null };
+        for (const plan of plans) {
+          // Preserve compulsory leading plays and the Sandpit payment, then read the new hand.
+          // No old-hand continuation survives Gamble's discard; do not move those stale steps with it.
+          const prefix = plan.steps.filter((entry) => entry.cardIndex !== card.index &&
+            (hand.some((held) => held.index === entry.cardIndex && held.playFirst) || isPlayFirst(entry.cardId) ||
+              (deadline && entry.cardId === "FRANTIC_ESCAPE")));
+          const before = replaySteps(redrawInput, prefix);
+          const next = replaySteps(redrawInput, [...prefix, step]);
+          if (before && next && !next.outcome.diesOwnTurn && next.outcome.cardsDrawn > before.outcome.cardsDrawn &&
+            (!deadline || (next.outcome.sandpitAfter !== null && next.outcome.sandpitAfter > 0))) redraws.push(next);
+        }
+      }
+    }
+    if (redraws.length > 0) return redraws.reduce((a, b) => b.outcome.damageDealt > a.outcome.damageDealt ||
+      (b.outcome.damageDealt === a.outcome.damageDealt && b.outcome.hpAfter > a.outcome.hpAfter) ? b : a);
+    return plans.reduce((a, b) => (b.outcome.hpAfter > a.outcome.hpAfter ? b : a));
+  }
   const most = drawing.reduce((a, b) =>
     b.outcome.damageDealt > a.outcome.damageDealt || (b.outcome.damageDealt === a.outcome.damageDealt && b.outcome.hpAfter > a.outcome.hpAfter) ? b : a,
   );
