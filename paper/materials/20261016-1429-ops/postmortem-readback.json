@@ -1,0 +1,330 @@
+{
+  "at": "2026-10-16 14:38:37 CST",
+  "postmortems": [
+    {
+      "batch": "20261016-134301",
+      "run": "TCDUBRWMEMNA",
+      "original_report": {
+        "task": "postmortem",
+        "appended": [
+          "TCDUBRWMEMNA"
+        ],
+        "skipped": [],
+        "bugs": [
+          {
+            "run": "TCDUBRWMEMNA",
+            "where": "agent/src/sim/boss-sim.ts:340",
+            "what": "成功首战样本非正HP资源契约失败；旧silent-0332重现，fix-queue主表未列，根因仍未知",
+            "new": false
+          }
+        ],
+        "ledger": {
+          "added": [],
+          "updated": [
+            "silent-0005",
+            "silent-0023",
+            "silent-0024",
+            "silent-0046",
+            "silent-0071",
+            "silent-0165",
+            "silent-0228",
+            "silent-0327",
+            "silent-0332",
+            "silent-0418"
+          ],
+          "repeats": [
+            "silent-0024",
+            "silent-0332"
+          ],
+          "check": 0
+        },
+        "code_proposals": [
+          "silent-proposal-397b12597f0a738c",
+          "silent-proposal-6ba4ceaa5a0b9e2e",
+          "silent-proposal-0c0d4600bc7aa80b"
+        ],
+        "implementation_domains": [
+          "combat",
+          "potion",
+          "sl",
+          "terminal",
+          "structure"
+        ],
+        "report": "/home/dw/Projects/agent-sts2/learner/runs/20261016-134307-060a21bf-5223-4f06-9614-504b5f3deb55-postmortem/report.md"
+      },
+      "native": {
+        "batch": "20261016-134301",
+        "thread": "01a1433c-59b2-7e51-874a-03687e104dac",
+        "cwd": "/home/dw/Projects/agent-sts2",
+        "event_log": "learner/runs/20261016-134307-060a21bf-5223-4f06-9614-504b5f3deb55-postmortem.jsonl",
+        "registered_launch_batch": "20261016-134301",
+        "original_lease": "96a75006f47ee86193945c930958b0e85f015f8d08b28deb75df6fa5b7cf76fe",
+        "native_context": {
+          "source": "ops/codex-ops/accounts/codex1/learner/sessions/2026/10/16/rollout-2026-10-16T13-43-11-01a1433c-59b2-7e51-874a-03687e104dac.jsonl",
+          "offset": 49155,
+          "bytes": 4620,
+          "sha256": "ca46e24302dd67d2f9f81d3c5f6a96ed7e1af426dbeb9c13f0348167020fe36b",
+          "model": "gpt-6.1-sol",
+          "effort": "xhigh",
+          "sandbox": {
+            "type": "workspace-write",
+            "writable_roots": [
+              "/home/dw/Projects/agent-sts2/.git"
+            ],
+            "network_access": false,
+            "exclude_tmpdir_env_var": false,
+            "exclude_slash_tmp": false
+          },
+          "approval_policy": "never"
+        },
+        "native_user_input": {
+          "offset": 53775,
+          "bytes": 15345,
+          "sha256": "f1c27f72239b604b5b0d324f6ab161254d5678fe29ba23ee64fbf1e3374482db",
+          "input_sha256": "26a86034f5b7816dd4342430c091de136a827154a4a6fef893c5843f4bd48452"
+        },
+        "original_header_events": [
+          {
+            "offset": 0,
+            "bytes": 16866,
+            "sha256": "034b6ddd02e18b4f962ce8fd56f9a238bc63b4d35fbd0cfd6eef87969471fbd3",
+            "type": "learner_launch",
+            "attempt": null,
+            "code": null
+          },
+          {
+            "offset": 16866,
+            "bytes": 359,
+            "sha256": "cc62d5eecec9e116a3acb438744ecae4083e5f3e5d34e311853c1901d4a79c23",
+            "type": "learner_startup_attempt",
+            "attempt": 1,
+            "code": null
+          },
+          {
+            "offset": 19803,
+            "bytes": 77,
+            "sha256": "d258111d00a086357ef765133dc96a441da80cfd3118c12ec3d40d3dd30c733d",
+            "type": "thread.started",
+            "attempt": null,
+            "code": null
+          }
+        ],
+        "startup_attempts": 1,
+        "failed_startups_preserved": 0,
+        "no_model_or_manual_restart": true
+      },
+      "original_rows": 2839,
+      "stream_counts": {
+        "decisions": 1267,
+        "states": 1496,
+        "run-plans": 11,
+        "sl-attempts": 13,
+        "brain": 51,
+        "run-config": 1
+      },
+      "lesson_bytes": 25436,
+      "lesson_sha256": "2db3f345336a14ec6fdae199c39a7f298bf02d41beed9fefa913bacea3d07e09",
+      "old_lesson_prefix_verified": true,
+      "actual_accepted_codex_brain_rows": 51,
+      "new_bug": false,
+      "old_bug": [
+        {
+          "run": "TCDUBRWMEMNA",
+          "where": "agent/src/sim/boss-sim.ts:340",
+          "what": "成功首战样本非正HP资源契约失败；旧silent-0332重现，fix-queue主表未列，根因仍未知",
+          "new": false
+        }
+      ],
+      "original_proposals": [
+        {
+          "id": "silent-proposal-397b12597f0a738c",
+          "state": "pending",
+          "proposal": "/home/dw/Projects/agent-sts2/learner/runs/20261016-134307-060a21bf-5223-4f06-9614-504b5f3deb55-postmortem/proposal-resources.md",
+          "proposal_sha256": "cd90b110d583734169a2748418af25ec6e2e7d9abee3e97a363bd824b7d5a435",
+          "runs": [
+            "TCDUBRWMEMNA"
+          ],
+          "target_task": "strategy-proposal"
+        },
+        {
+          "id": "silent-proposal-6ba4ceaa5a0b9e2e",
+          "state": "pending",
+          "proposal": "/home/dw/Projects/agent-sts2/learner/runs/20261016-134307-060a21bf-5223-4f06-9614-504b5f3deb55-postmortem/proposal-discard.md",
+          "proposal_sha256": "817544eecd5d333babc916df7d5cfdb5b6f3d86ea824bc02c19ac598cb637195",
+          "runs": [
+            "TCDUBRWMEMNA"
+          ],
+          "target_task": "strategy-proposal"
+        },
+        {
+          "id": "silent-proposal-0c0d4600bc7aa80b",
+          "state": "pending",
+          "proposal": "/home/dw/Projects/agent-sts2/learner/runs/20261016-134307-060a21bf-5223-4f06-9614-504b5f3deb55-postmortem/proposal-contract.md",
+          "proposal_sha256": "8df3af8405d1376b66c2c1e2de4682aa4b493e4364abcdfa74561a227eed5d21",
+          "runs": [
+            "TCDUBRWMEMNA"
+          ],
+          "target_task": "strategy-proposal"
+        }
+      ],
+      "source_dirty_and_counterfactual_limitations_preserved": true
+    },
+    {
+      "batch": "20261016-141302",
+      "run": "1L4RRN6AN5SQ",
+      "original_report": {
+        "task": "postmortem",
+        "appended": [
+          "1L4RRN6AN5SQ"
+        ],
+        "skipped": [],
+        "bugs": [
+          {
+            "run": "1L4RRN6AN5SQ",
+            "where": "agent/src/hand/screens/selection.ts:313",
+            "what": "战内选牌仍把本回合评价写成牌仅存在本回合；复现旧账本silent-0481，另见同文件:335；fix-queue未列，未证明造成选牌或死亡。",
+            "new": false
+          }
+        ],
+        "ledger": {
+          "added": [],
+          "updated": [
+            "silent-0020",
+            "silent-0418",
+            "silent-0481",
+            "silent-0016",
+            "silent-0045",
+            "silent-0262"
+          ],
+          "repeats": [
+            "silent-0481"
+          ],
+          "check": 0
+        },
+        "code_proposals": [
+          "silent-proposal-c89465046641d6ed",
+          "silent-proposal-8ce6e2bc1b55860a"
+        ],
+        "implementation_domains": [
+          "combat",
+          "potion",
+          "structure"
+        ],
+        "report": "/home/dw/Projects/agent-sts2/learner/runs/20261016-141311-42f743b7-2e7e-4026-8a65-90864f007f59-postmortem/report.md"
+      },
+      "native": {
+        "batch": "20261016-141302",
+        "thread": "01a14357-e977-7013-8b64-de08a4cf02a6",
+        "cwd": "/home/dw/Projects/agent-sts2",
+        "event_log": "learner/runs/20261016-141311-42f743b7-2e7e-4026-8a65-90864f007f59-postmortem.jsonl",
+        "registered_launch_batch": "20261016-141302",
+        "original_lease": "6ced4a7478db859efe373768426f70022a33f0549ae898495f56a74ad3e96a0f",
+        "native_context": {
+          "source": "ops/codex-ops/accounts/codex1/learner/sessions/2026/10/16/rollout-2026-10-16T14-13-17-01a14357-e977-7013-8b64-de08a4cf02a6.jsonl",
+          "offset": 49155,
+          "bytes": 4620,
+          "sha256": "c32923f27e190165d43afbb4ee773f575260d1f4ae44e13fc7c9800cf81d18c6",
+          "model": "gpt-6.1-sol",
+          "effort": "xhigh",
+          "sandbox": {
+            "type": "workspace-write",
+            "writable_roots": [
+              "/home/dw/Projects/agent-sts2/.git"
+            ],
+            "network_access": false,
+            "exclude_tmpdir_env_var": false,
+            "exclude_slash_tmp": false
+          },
+          "approval_policy": "never"
+        },
+        "native_user_input": {
+          "offset": 53775,
+          "bytes": 15344,
+          "sha256": "768167e11cdd514531e81505f389587db6fb8de2ddf5d97f8ee356b60f6f904a",
+          "input_sha256": "a5b54fe8cf5e59a7fb351e295430be38c23962cd7c68f6a00d84e29da182396a"
+        },
+        "original_header_events": [
+          {
+            "offset": 0,
+            "bytes": 16866,
+            "sha256": "1a072d58c8d4b1494e43619036726409233cd5e33b79639defd227050b9e8068",
+            "type": "learner_launch",
+            "attempt": null,
+            "code": null
+          },
+          {
+            "offset": 16866,
+            "bytes": 359,
+            "sha256": "676768180a07ce5d84baffd784ae8f191e5fe9bd6c3b7315516c3a22bb349d1c",
+            "type": "learner_startup_attempt",
+            "attempt": 1,
+            "code": null
+          },
+          {
+            "offset": 20238,
+            "bytes": 77,
+            "sha256": "029de907e1b8a41f54b149965af200ce4e31cc520f4935f94fb24fb05455a3d0",
+            "type": "thread.started",
+            "attempt": null,
+            "code": null
+          }
+        ],
+        "startup_attempts": 1,
+        "failed_startups_preserved": 0,
+        "no_model_or_manual_restart": true
+      },
+      "original_rows": 516,
+      "stream_counts": {
+        "states": 225,
+        "decisions": 219,
+        "run-config": 1,
+        "run-plans": 3,
+        "brain": 10,
+        "jev-prompts": 58
+      },
+      "lesson_bytes": 15346,
+      "lesson_sha256": "bc8bf8425b4eb36e1d2a7a88d15b7032441201d99551a00c0ba4cb020011df9e",
+      "old_lesson_prefix_verified": true,
+      "actual_accepted_codex_brain_rows": 10,
+      "new_bug": false,
+      "old_bug": [
+        {
+          "run": "1L4RRN6AN5SQ",
+          "where": "agent/src/hand/screens/selection.ts:313",
+          "what": "战内选牌仍把本回合评价写成牌仅存在本回合；复现旧账本silent-0481，另见同文件:335；fix-queue未列，未证明造成选牌或死亡。",
+          "new": false
+        }
+      ],
+      "original_proposals": [
+        {
+          "id": "silent-proposal-c89465046641d6ed",
+          "state": "pending",
+          "proposal": "/home/dw/Projects/agent-sts2/learner/runs/20261016-141311-42f743b7-2e7e-4026-8a65-90864f007f59-postmortem/proposal-selection-lifetime.md",
+          "proposal_sha256": "d2f30778c627a80674f8751d7176e5b6178b0bb3f6a7055d7ae3b92921bd1e14",
+          "runs": [
+            "1L4RRN6AN5SQ"
+          ],
+          "target_task": "strategy-proposal"
+        },
+        {
+          "id": "silent-proposal-8ce6e2bc1b55860a",
+          "state": "pending",
+          "proposal": "/home/dw/Projects/agent-sts2/learner/runs/20261016-141311-42f743b7-2e7e-4026-8a65-90864f007f59-postmortem/proposal-observed-continuations.md",
+          "proposal_sha256": "05d502dd19e489e2dd30f8ba26c8545c467d86ec83783adca17666b0bba5cefc",
+          "runs": [
+            "1L4RRN6AN5SQ"
+          ],
+          "target_task": "strategy-proposal"
+        }
+      ],
+      "source_dirty_and_counterfactual_limitations_preserved": true
+    }
+  ],
+  "original_row_count": 3355,
+  "ledger_rows": 31,
+  "new_bug": false,
+  "repeats_remain_original_0332_and_0481": true,
+  "original_fix_queue_not_listed_text_preserved_but_both_already_present": true,
+  "no_duplicate_learning_or_game_rule_change": true,
+  "scoped_private_fold_protected_fields_and_prior_prefixes_verified": true
+}
