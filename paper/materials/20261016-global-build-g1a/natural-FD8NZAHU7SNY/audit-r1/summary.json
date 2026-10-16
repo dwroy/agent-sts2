@@ -1,0 +1,84 @@
+{
+  "at": "2026-10-16T12:20:49.611843+08:00",
+  "parent": "roy-20261016-global-build",
+  "run_id": "FD8NZAHU7SNY",
+  "script": {
+    "path": "paper/materials/20261016-global-build-g1a/audit-natural-terminal.py",
+    "sha256": "62c2a8f456c68869ba56e9ca1cd1d068de6721196206e14260242e4806b05159"
+  },
+  "health_sources": [
+    {
+      "path": "ops/module_health.py",
+      "sha256": "9d0efa79880726f05809614a2b062ea6e6d9f0c74caedea1d25556770d297224"
+    },
+    {
+      "path": "ops/adaptive_health.py",
+      "sha256": "a986097d444f0517b17bbe37da0f2a9b4504969bd535544033c0aadd3fd12339"
+    }
+  ],
+  "terminal": {
+    "run_id": "FD8NZAHU7SNY",
+    "ended": "2026-10-16T02:21:01.823Z",
+    "victory": false,
+    "floor": 27,
+    "character": "SILENT",
+    "ascension": 10,
+    "code": "current",
+    "decisions": 393,
+    "jev_calls": 80,
+    "deepseek_calls": 28,
+    "claude_calls": 0,
+    "tokens": 534907,
+    "ds_tokens_in": 5145436,
+    "ds_tokens_out": 30078,
+    "ds_cache_hit": 2219648,
+    "brain_cost_accounting": {
+      "source": "brain.jsonl:run-plan",
+      "calls": 1,
+      "input_tokens": 145461,
+      "output_tokens": 1807,
+      "cache_hit_tokens": 0,
+      "by_engine": {
+        "codex": 1
+      },
+      "question_ids": [
+        "mvab02wt-2036739-17"
+      ],
+      "unresolved": []
+    },
+    "deciders": {
+      "codex": 35,
+      "code": 182,
+      "jev": 80,
+      "jev-plan": 96
+    },
+    "death_fight": [
+      "蜂群术士"
+    ],
+    "death_fight_floor": 27,
+    "death_enemy_ids": [
+      "ENTOMANCER"
+    ],
+    "_source": {
+      "path": "logs/runs.jsonl",
+      "offset": 345747,
+      "bytes": 711,
+      "sha256": "52f4d3bf8eb3ba25a8094b917f6289632f608b5c5a8abe60b2e3a28b024737b0"
+    }
+  },
+  "counts": {
+    "decisions": 393,
+    "brain": 28,
+    "codex-calls": 28,
+    "run-config": 1,
+    "runs": 1
+  },
+  "native_candidate": true,
+  "continuous_candidate": false,
+  "malformed_matching_rows": 0,
+  "source_six_leaves_verified": true,
+  "dirty_runtime_whole_tree_checked_or_production_recalibrated": false,
+  "natural_gate_registered": false,
+  "owner_health_failure_and_complete_window_review_required": true,
+  "limits": "This tool only freezes evidence and proposes candidates. Owner reviews all exclusions and service failures before acceptance. Original source full1/one-case0, host0 and runtime knowledge scope remain separate. Roy S decision and all wider parents unchanged."
+}

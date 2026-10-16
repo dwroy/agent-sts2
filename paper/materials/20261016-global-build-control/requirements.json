@@ -1,6 +1,6 @@
 {
   "schema": "global-build-requirements-v1",
-  "at": "2026-10-16T10:06:49.874986+08:00",
+  "at": "2026-10-16T12:23:13.666148+08:00",
   "request_id": "roy-20261016-global-build",
   "owner_session": "01a13dcd-83d4-7c63-b233-f93cf878ecf4",
   "plan": "docs/v5-global-build-plan.md",
@@ -119,10 +119,11 @@
       {
         "id": "G1b.5",
         "requirement": "deliver report and obtain Roy decision on S; no unilateral rollback; objections dual-notified",
-        "state": "report-delivered-Roy-decision-pending",
+        "state": "completed-report-and-actual-Roy-decision-S-shadow-approved",
         "evidence": [
           "paper/materials/20261016-global-build-g1b/report.md",
-          "paper/materials/20261016-global-build-g1b/analysis.json"
+          "paper/materials/20261016-global-build-g1b/analysis.json",
+          "paper/materials/20261016-global-build-control/roy-1219-decision-readback.json"
         ]
       }
     ],
@@ -387,8 +388,9 @@
   },
   "goal_complete": false,
   "Roy_decisions": {
-    "S_policy": null,
-    "G2_on_or_alternative": null
+    "S_policy": "Roy12:19 approved P2/P3 S-sort shadow only; G2 probability-first/S record-only",
+    "G2_on_or_alternative": null,
+    "G2_shadow_start": "Roy12:19 permits implement/test/deploy shadow before G1a natural; final sequence unknown until accepted"
   },
   "excluded": [
     "P4 Jev tie arbitration",

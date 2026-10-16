@@ -166,3 +166,8 @@ watcher本人已读原075726 fallback815582终局及ops closure：tsc/vitest0，
 
 
 2026-10-16 10:16:34 CST 停点：原生四个连续目标轮次的最终回报均明确S仍待Roy决定，已本人按offset/bytes/SHA读回。G1独立准备及局末审计脚本已完成并合main89dbf8c25；G2按本计划仍依赖G1a自然验收与G1b必需决定，不越过。为遵守credits限制，目标登记blocked以停止自动空转，未标完成；原FD8前台终局监听94583保持，不新轮询/调度器/模型。原生决定或既有终局/关键Boss事件到达后沿同owner/父继续可推进部分，完整G2→G3→G5/最终论文范围保持。证据control/required-decision-blocked-readback.json及G1a/natural-audit-readiness.json。
+
+
+### 2026-10-16 12:23:13 CST Roy12:19决定：S排序键shadow与G2先行
+
+Roy经Claude在本原生用户消息明确批准：只把P2/P3的S排序键退shadow，S计算/日志保留，胜率排序/P1/C2完成门槛等保持；交原ops独立发布/编号/双通知/精确树宿主。G2现在实现shadow和固定测试，无须等G1a自然；S只记录，胜率为主，第三幕低可信及最终Boss相关评估unknown。最终连战待G1a接口自然消费验收后再接，G2转on仍须2完整自然shadow及真实Boss对照报告。新授权优先于旧G1a/G1b完整依赖等待，旧blocked历史保持。两原异议44fc/48648已有真实本人两阶段，追加本次真实原生转达决定，不代Roy ACK。FD8已F27自然终局、28原生/28物理请求候选可核但无continuous消费，G1a门槛不借填。checkpoint恢复active继续原父；内置goal查询仍blocked，现有接口无active写入口，保原目标不重建。原文/offset/SHA见control/roy-1219-decision-readback.json。
