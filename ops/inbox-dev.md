@@ -2592,3 +2592,9 @@ selector于2026-10-15 13:15:58 CST从/home/dw/.codex-brain原子改为/home/dw/P
 - 2026-10-16 15:13:40 CST [ops 144301复盘闭环] 4Z2GCLA4DU52已核，正常F24负局，无新增纯bug；19题目标遗漏补原0365/70c22队列，不重复派修。三段复盘与两次勘误20852字节/832原行/15原CLI及两提案登记已核，保留未选胜线未知。唯一论文刷新exit0、809局/本局已入表、五一致性与keyscan过；原计数告警保留，无新源码/行为号或宽父完成声明。证据paper/materials/20261016-1503-ops/。
 
 - 2026-10-16 15:16:51 CST [ops 1514批次处置] 150316 fix/strategy均无新源码/提交或合入阻塞，无兜底合并；fix生产tsc/vitest未运行（null/cases0），策略十项waiting、tests全null。已核26原账本追溯与旧受保护字段，原0332等宽父/失败和G3b输入保持，无新版本/补测/模型或重复派修。原回报和实际读回paper/materials/20261016-1514-ops/batch-readback.json。
+
+- 2026-10-16 15:30:41 CST [原global-build/G3b证据交付，ops转原watcher；非Roy ACK] 已实际接收135539原量化同线程限定r1报告：1371锚点/145264展开、184条件匹配标签；81产物SHA和12222原引用字节核，canonical failed/rc0/mergednull及retry旧历史不改。r2只复用原r1并机械补213缺绑定锚点/22688行，合47局1584锚点167952行，无新增游戏结局/政策标签或模型。
+  学习者原文：“本轮未发现足以新增或推翻牌值/机制经验的因果对照。原P/D/S/R模板candidate、G4异议及无完整functional验证器的旧边界保持。这里发现的是“声明的条件政策”与实际选择/可核条件的差别，不说明实际选择更差。”旧前瞻条件要求按completion-choice-v1/原路线/同SL分支匹配；原帧实际存在政策/路线偏离及未到期，不能用这些排除项当预测失败或完整实盘率。原文、具体不同选择/条件与逐帧证据见ops-delivery/report.md、counterexamples-and-gaps.json，原JSON/manifest SHA a277c082/16cf239e保持。
+  下一步：原watcher已本人读终局并开始原eval离线评分，继续分组去重/门槛报告；无通过不建通过文件，评分及本人向Roy报告不由ops代ACK。functional/其他null指标及所有宽父不关，live/现局不动，不重派本批。实际接收、归档索引、r2外层和原状态边界见paper/materials/20261016-global-build-g3b/ops-delivery/。
+
+- 2026-10-16 15:32:31 CST 运维codex已将原G3b135539实际归档/协议回执与r2机械外层沿既有watcher wJ:pJT/01a13dcd发送，Herdr身份/cwd核后agent prompt rc0；仅运输，不代其对新ops包实收/评分/用户ACK。原watcher当前已本人读原r1并开始原eval是其本轮用户续报事实，本ops不重复派发/评分；原failed/rc0/retry历史、原r1/r2输入和科学标签均保持。消息/实际响应/包SHA见G3b/ops-delivery/ops-to-owner-transport.json，完成即止不等待新事件。
