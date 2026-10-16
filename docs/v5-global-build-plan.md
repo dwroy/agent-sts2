@@ -118,3 +118,17 @@ V5 的核心目的是让大脑有一个**全局的构筑方向和方法**；S �
 ### 2026-10-16 08:37:51 CST G1c实际源检查与G4上线接续
 
 G1c精确源9579e378f已交原ops（未合main/live）：tsc0；492文件full为490过/2失败、4920过/2失败/4跳、1315.51s。原超时固定题0s/1s正则及新WT缺原项目venv分别为两失败；只补现有venv链接，不改源码/断言/限时，两失败原题窄补验各0，原full rc1保留，不称full0；按原失败处置交ops给明确集成决定，不重复未变源full。13项新固定检查通过；精确SHA、原失败/中断和补验同G1c/reviewed-checks目录。G4实际R367已live86a4a119/treeadb0266，四对象与源相等、四模板字节保持已本人核；同owner083055固定live消费者与原071301精确宿主仍pending。G1b S决定仍仅Roy待回，不自行改；原其他父保持。
+
+
+## 8. 2026-10-16 09:00:43 CST G1a接口新源码与G1c/G4实际读回
+
+G1a知识原发布3394e7912已由原ops独立补登V5-R368，0494 shipped，不重排旧版本；当前版本2026-10-16.2的同逻辑新实际probe5/5与隔离通过，本人逐SHA读回，旧receipt/failed保留，原owner同线程技术completion仍在原两槽pending，不当作已实收。三项科学异议44fc95c93f6df419f94e2314已绑定之前本原生三项告知，两watcher CLI0，不重发或代Roy ACK。
+
+通用接口在独立global-build-g1a-interface-20261016实现continuous-boss-result-v1：同一首战样本的实际HP、药槽、剩余复活资源和已知开场扣除随原worker流程进入次战；首战/次战条件/联合原始结果分列，缺样本/截断/无首胜分母及联合S/校准保持unknown。只增加B2/B3日志，不改变当前题面、排序、采样/C2完成或其他角色；奖励后状态与真实次战可操作状态明确未知。tsc0及12固定题通过，新源码full运行中，尚未源提交/合入或自然消费；旧RQ只作基线。
+
+G1c五叶已实际合main c50387b8/live298e74fd/treebea85e8，由原ops只调用已部署helper一次，真实归档paper/materials/20261016-085400-global-build-g1c-through-000040，四个10局块及尾2、manifest/state/唯一marker1和根局末hook逐SHA核；本人25项校验一致。原full1/两补验原件不改，未重跑report.py或旧source full。未来下一边界的自动调用尚未观察；最终G1a+G1c宿主待原刷新WIP完成后原075726唯一通道，不借adb0绿。
+
+G4同owner083055实际live固定消费者原件96文件已精确归档（learner-live-readback-r3.tar.gz），17证据SHA、231库存/12新段/15旧段通过；交付notice78536182bb2bb9c78390cd34的本人两CLI0，非Roy ACK。原adb0精确full0仅结其树，不能给后继树。G4固定经验交付不称自然采用或收益。G1b S决定仍pending，不自行改S或越过G2依赖，总父及0332/更宽父保持active。
+
+
+2026-10-16 09:04:20 CST 补读原learn.json机械结果：G4 r3已completed；原071301 fallback_checks明确adb0/86a4 rc0，原终局日志490文件/4924测试过2跳，737.27s。本人冻结host-adb0-terminal.log并记录phase-acceptance.json，G4范围完成，不关闭全局父/原宽父，不将该绿借给G1a+G1c后继树。
