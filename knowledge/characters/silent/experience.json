@@ -1,6 +1,6 @@
 {
-  "version": "2026-10-16.2",
-  "_about": "静默猎手第190次增量；0C3AR6J0Z8LD为silent/A10。旧245局同口径复算后增至246局；截至2026-10-12T11:24:36.626Z，全引擎观察不当纯Codex爬塔成绩。新增1、更新15（均加证据）、退役0；保留原证据、反例与冻结专题边界。沙漏五次判死截断及一次实死，同盘局部省血不证整战胜利，毒未结不记实伤。只更新经验；源码经独立strategy-proposal，离线渲染不等真实采用。；原owner接续roy-20261012-concrete-core-decklists/r2：复用已冻结两胜局和8臂512个条件样本，5条去重追加限定结论；未增删条目、不改原冻结分母，模型偏差和自然采用未验证。；第196次增量：3WWHBRG66B7F、7LXWF33J5SAD为silent/A10；保留live五条并行限定及前批未合入产出，旧252局同口径复算后254局。压短8条单局重复叙述，新增终点推进观察/招架盾，支持数不等整战因果；独立策略提案，不改打法源码。；第201次增量：VGNDNGPFYRE3为silent/A10，旧260局重算一致后261局，事件/胜战/营火血价和实际建立分账；新增0、更新17、退役0，保留并行经验及冻结专题。离线渲染不等自然采用，源码由独立strategy-proposal实施。",
+  "version": "2026-10-16.3",
+  "_about": "静默猎手第190次增量；0C3AR6J0Z8LD为silent/A10。旧245局同口径复算后增至246局；截至2026-10-12T11:24:36.626Z，全引擎观察不当纯Codex爬塔成绩。新增1、更新15（均加证据）、退役0；保留原证据、反例与冻结专题边界。沙漏五次判死截断及一次实死，同盘局部省血不证整战胜利，毒未结不记实伤。只更新经验；源码经独立strategy-proposal，离线渲染不等真实采用。；原owner接续roy-20261012-concrete-core-decklists/r2：复用已冻结两胜局和8臂512个条件样本，5条去重追加限定结论；未增删条目、不改原冻结分母，模型偏差和自然采用未验证。；第196次增量：3WWHBRG66B7F、7LXWF33J5SAD为silent/A10；保留live五条并行限定及前批未合入产出，旧252局同口径复算后254局。压短8条单局重复叙述，新增终点推进观察/招架盾，支持数不等整战因果；独立策略提案，不改打法源码。；第201次增量：VGNDNGPFYRE3为silent/A10，旧260局重算一致后261局，事件/胜战/营火血价和实际建立分账；新增0、更新17、退役0，保留并行经验及冻结专题。离线渲染不等自然采用，源码由独立strategy-proposal实施。；silent-0332/r2限定入库：仅记录RQ/TCD两局A10的资源契约故障、降级和缺证边界，不改旧证据/支持计数，不宣称根修复、连败因果或收益。六原提案沿原链，诊断源码与实际live交付另验。",
   "entries": [
     {
       "id": "silent-knife-trap-count",
@@ -8590,6 +8590,40 @@
       "confidence": "low",
       "last_seen": "2026-10-15",
       "status": "active"
+    },
+    {
+      "id": "silent-0332-continuation-contract-boundary",
+      "scope": "general:simulation",
+      "name": "连续Boss评估的资源契约与缺证边界",
+      "asc": [
+        10,
+        10
+      ],
+      "lesson": "限定：A10连续Boss评估的nonpositive-hp与won=true/died=false并存，只是内部结果矛盾，不是合法成功接续，也不是0%通关率。RQCHNN0W72KF F40 seed607614716两次pending后第三次42/1000，低于300而明确不给数字；TCDUBRWMEMNA F40 seed76490739前缀显示12轮成功但HP非正，第三次14/1000。旧原件缺完整worker输入、末资源和逐步轨迹，不能从截断文字确定结算来源或V5-S连败因果。保正HP与真实剩余资源契约；C1降级可推进、诊断部署及固定封套测试通过都不等于0332根缺陷已修，更不证明收益。仅核这两局A10，其他组合仍未知。",
+      "evidence": [
+        "RQCHNN0W72KF",
+        "TCDUBRWMEMNA"
+      ],
+      "n_support": 2,
+      "n_contradict": 0,
+      "confidence": "high",
+      "last_seen": "2026-10-16",
+      "status": "active",
+      "ledger": [
+        "silent-0332"
+      ],
+      "code_proposals": [
+        "silent-proposal-0b28f52e415d80d1",
+        "silent-proposal-ecbd4b68c5fad954",
+        "silent-proposal-5aa2672bd7cd1bf4",
+        "silent-proposal-f4e0f382dd79714b",
+        "silent-proposal-b02a70a29a4ff6b1",
+        "silent-proposal-0c0d4600bc7aa80b"
+      ],
+      "limitations": [
+        "只支持错误可见性、降级与缺证边界，不支持任何未选线路的获益或结算机制。",
+        "合成故障注入只检验封套通道，不冒充历史失败样本精确复现。"
+      ]
     }
   ]
 }
