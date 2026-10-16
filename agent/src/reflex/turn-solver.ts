@@ -908,6 +908,8 @@ export interface Outcome {
   vulnerableApplied: number;
   weakApplied: number;
   strengthGained: number;
+  /** Added Tainted before the enemy turn, only with an observed Vital Spark source; audit metadata, not a ranking axis. */
+  taintedGained?: number;
   cardsDrawn: number;
   unknownCards: string[];
   /** A verified ordinary Silent Apotheosis was actually played on this line. */
@@ -3768,6 +3770,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
       vulnerableApplied: sim.vulnerableApplied,
       weakApplied: sim.weakApplied,
       strengthGained: sim.permStrength,
+      ...(input.enemies.some((enemy) => enemy.hp > 0 && (enemy.vitalSpark ?? 0) > 0) ? { taintedGained: sim.tainted } : {}),
       cardsDrawn: sim.cardsDrawn,
       ...(sim.steps.some((step) => step.cardId.startsWith("POTION:CUNNING_POTION:")) ? {
         cunningShivsLeft: [...sim.hand, ...sim.held, ...sim.locked].filter((entry) =>

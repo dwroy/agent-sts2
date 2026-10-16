@@ -4299,7 +4299,7 @@ function planTurn(env: DecisionEnv): Decision | null {
         const loggedTag = logged ? { logged: true as const } : {};
         const loggedLog: Record<string, JsonValue> = logged ? { logged: true, plays: [...replay.plays!], ...(reordered ? { reordered: true } : {}) } : {};
         const log: JsonValue = { replay: { point: replay.point, reference: replay.reference, line: replay.line, original: pick.text, overridden: ref !== null, reason, ...loggedLog,
-          ...silentSlResourceComparison(state, pick.plan ?? pick.rated ?? null, ref?.plan ?? null, { original: pick.plan === null && pick.rated != null, replacement: ref !== null && mcAll.has(ref.plan) }),
+          ...silentSlResourceComparison(state, pick.plan ?? pick.rated ?? null, ref?.plan ?? null, { original: pick.plan === null && pick.rated != null, replacement: ref !== null && mcAll.has(ref.plan), saturated: rollout?.available ? rollout.saturated === true : null }),
           ...comparisonOf(ref?.plan ?? null, ref !== null && mcAll.has(ref.plan)) } };
         // SL_RETRY_EXPLORE_REPLAY_DEVIATE: neither its line nor its plays can be played here (or they die this turn and the
         // answer does not): the attempt leaves the path here, so it deviates here (the lines failed attempts played on this
@@ -4361,7 +4361,7 @@ function planTurn(env: DecisionEnv): Decision | null {
       };
       const rep = choice.replacement;
       const resources = silentSlResourceComparison(state, pick.plan ?? pick.rated ?? null, rep?.plan ?? null,
-        { original: pick.plan === null && pick.rated != null, replacement: rep !== null && mcOf.has(rep.plan) });
+        { original: pick.plan === null && pick.rated != null, replacement: rep !== null && mcOf.has(rep.plan), saturated: rollout?.available ? rollout.saturated === true : null });
       // A boss fight with a sub-switch on: what weighed "not worse", and B2's numbers of the two lines when it did
       // (calibrated win rates, the replacement's paired difference to the pick ± its standard error). Off, or out of a boss
       // fight (where neither changes anything): the row as before them.
