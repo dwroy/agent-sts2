@@ -3866,6 +3866,7 @@ function planTurn(env: DecisionEnv): Decision | null {
             lines: [...shown, ...mcMedians],
             requiredComplete: requiredBossComputation,
             ...(env.simWait ? { simWait: env.simWait } : {}),
+            ...(env.simFailureDirectory ? { failureDirectory: env.simFailureDirectory } : {}),
             turn: state.turn ?? null,
             drinks: drinksPotion,
             ...(slCompute ? { samples: slCompute.bossSimSamples } : {}),

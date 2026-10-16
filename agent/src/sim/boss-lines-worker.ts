@@ -7,14 +7,14 @@
 
 import { parentPort, workerData, type MessagePort } from "node:worker_threads";
 
-import type { KillOrder, RolloutInput } from "../reflex/rollout.js";
-import type { Plan } from "../reflex/turn-solver.js";
+import type { RolloutInput } from "../reflex/rollout.js";
 import { fightSample, type FightSampleResult } from "./boss-sim.js";
-import type { LinesWorkerReply, LinesWorkerRequest } from "./boss-lines.js";
+import type { LinesPair, LinesWorkerReply, LinesWorkerRequest } from "./boss-lines.js";
+import { continuationFailureOf, type ContinuationFailure } from "./continuation-failure.js";
 
 const { port, signal } = workerData as { port: MessagePort; signal: SharedArrayBuffer };
 const flag = new Int32Array(signal);
-const jobs = new Map<number, { input: RolloutInput; pairs: { plan: Plan | null; order: KillOrder | null }[]; maxTurns: number }>();
+const jobs = new Map<number, { input: RolloutInput; pairs: LinesPair[]; maxTurns: number }>();
 
 function reply(message: LinesWorkerReply): void {
   port.postMessage(message);
@@ -36,16 +36,20 @@ parentPort!.on("message", (msg: LinesWorkerRequest) => {
     reply({ job: msg.job, results: [] });
     return;
   }
+  let lineTask: ContinuationFailure["lineTask"];
   try {
     const results: [pair: number, sample: number, result: FightSampleResult][] = [];
     for (const [pair, i, seed] of msg.tasks) {
       // The planner gave up on this job (its deadline): the rest of the chunk is not needed.
       if (Atomics.load(flag, 1) !== msg.job) break;
-      const { plan, order } = job.pairs[pair]!;
+      const { plan, order, lineIndex, orderIndex } = job.pairs[pair]!;
+      lineTask = { job: msg.job, pair, line: lineIndex ?? null, order: orderIndex ?? null, sample: i, seed };
       results.push([pair, i, fightSample(job.input, plan, seed, job.maxTurns, true, order)]);
     }
     reply({ job: msg.job, results });
   } catch (error) {
-    reply({ job: msg.job, error: String(error instanceof Error ? error.stack ?? error.message : error).slice(0, 2000) });
+    const failure = continuationFailureOf(error);
+    reply({ job: msg.job, error: String(error instanceof Error ? error.stack ?? error.message : error).slice(0, 2000),
+      ...(failure ? { continuationFailure: { ...failure, ...(lineTask ? { lineTask } : {}) } } : {}) });
   }
 });
