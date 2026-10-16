@@ -66,6 +66,8 @@ export interface CardModel {
   preciseCutSevenHand?: boolean;
   /** Q6/Y6, silent-0260/0261: ordinary Strangle establishes the observed two-stack turn power. */
   strangle?: number;
+  /** LY83 A10 F21 T10: this upgraded follow-up has an observed ordinary Strangle trigger. */
+  observedStrangleFollowup?: true;
   /** MAUL's observed Increase: every copy gains this much damage after this play (silent-0056/0058). */
   maulIncrease?: number;
   /** Observed Shadowmeld (both versions): later card Block in this turn is doubled. */
@@ -1242,6 +1244,8 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
   }
 
   const model: CardModel = {
+    ...(character.toLowerCase() === "silent" && ascension === 10 && cardId === "DAGGER_SPRAY" &&
+      bool(card["upgraded"]) ? { observedStrangleFollowup: true as const } : {}),
     index,
     key: `c${index}`,
     cardId,

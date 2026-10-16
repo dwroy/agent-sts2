@@ -2035,7 +2035,9 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
   if (card.type !== "Potion") for (const prior of strangled) {
     const enemy = next.enemies.find((entry) => entry.index === prior.index && entry.alive);
     if (!enemy) continue;
-    if (card.strangle !== undefined || plays !== 1 || automatic || card.upgraded || !["Attack", "Skill"].includes(card.type)) {
+    // LY83ZMTFVKJH A10 F21 T10, silent-0260/0261: upgraded Dagger Spray's two hits trigger one two-HP loss.
+    const observedUpgrade = card.observedStrangleFollowup === true && card.cardId === "DAGGER_SPRAY" && card.type === "Attack" && card.hits === 2;
+    if (card.strangle !== undefined || plays !== 1 || automatic || (card.upgraded && !observedUpgrade) || !["Attack", "Skill"].includes(card.type)) {
       enemy.strangle = null;
       next.unknown = [...next.unknown, "紧勒（后续牌型、升级、叠加、重放或自动出牌未验证）"];
     } else if (!prior.verified || !strangleLossVerified(enemy) || next.hp <= 0) {
