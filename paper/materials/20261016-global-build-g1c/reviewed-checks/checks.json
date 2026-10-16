@@ -1,0 +1,40 @@
+{
+ "state": "failed",
+ "source_files": {
+  "eval/global_build_funnel.py": "3da1a548f0badbbffa2346c2f4b050c6ef92a3141ebdb7f21d0c8d90f803239d",
+  "ops/global_build_funnel.py": "3bdf00363d7b41a052bd1c49203e688c0257fcd6b7d2e5c2bec785e7c9fcf9d2",
+  "ops/report.py": "0a38fe3b3d4bea8b4a21a8c6a09d346f0e2eedb10dacbc2f1b278eeb608b5d0c",
+  "agent/tests/global-build-funnel.test.ts": "3f8dd9e7c23b1f4caa2d360ca205d677824c1fc999624f50aa8cb1a6d46826b4",
+  "agent/tests/global_build_funnel_test.py": "42ab6ee905a33055720a7addc953b8605067dbc43e10da679e8d04b74fedc24d"
+ },
+ "results": [
+  {
+   "name": "tsc",
+   "args": [
+    "npx",
+    "tsc",
+    "-p",
+    "tsconfig.json",
+    "--noEmit"
+   ],
+   "start": "2026-10-16T08:11:09.348243+08:00",
+   "rc": 0,
+   "seconds": 1.39,
+   "log": "paper/materials/20261016-global-build-g1c/reviewed-checks/tsc.log"
+  },
+  {
+   "name": "vitest",
+   "args": [
+    "npx",
+    "vitest",
+    "run",
+    "--maxWorkers=1"
+   ],
+   "start": "2026-10-16T08:11:10.738239+08:00",
+   "rc": 1,
+   "seconds": 1315.51,
+   "log": "paper/materials/20261016-global-build-g1c/reviewed-checks/vitest.log"
+  }
+ ],
+ "source_unchanged": true
+}

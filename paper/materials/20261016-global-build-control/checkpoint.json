@@ -1,6 +1,6 @@
 {
   "schema": "global-build-checkpoint-v1",
-  "at": "2026-10-16T08:31:45.683487+08:00",
+  "at": "2026-10-16T08:45:20.952953+08:00",
   "parent": "roy-20261016-global-build",
   "original_owner": "01a13dcd-83d4-7c63-b233-f93cf878ecf4",
   "current_owner": "01a13dcd-83d4-7c63-b233-f93cf878ecf4",
@@ -8,13 +8,18 @@
   "goal_status": "active",
   "goal_complete": false,
   "plan_base": "50e2da099a5e1745878070ea960f3160324f2217",
-  "phase": "G1a/G4 original learners running; G1b Roy S decision pending; G1c reviewed source full running",
-  "previous_goal_turn_classification": "progress: G4 report/source and original notices read; four actual watcher/Roy-notified CLI stages passed; original ops precise integration packet actually sent; G1a/own source full verified live",
+  "phase": "G1c source9579 delivered for original ops failure disposition/integration; G1a owner running; G4 R367 deployed, actual owner live consumer/host pending; G1b Roy decision pending",
+  "previous_goal_turn_classification": "progress: G1c full completed, two original failures isolated/pass and original ops accepted unchanged source; G4 actual R367 hashes verified; G1a report delivered/version race diagnosed, native notice CLI0, original ops notified; dedicated interface worktree allocated",
   "worktrees": {
     "G1c": {
       "path": ".worktrees/global-build-g1c-20261016",
       "base": "50e2da099a5e1745878070ea960f3160324f2217",
       "state": "implementation in progress"
+    },
+    "G1a-interface": {
+      "path": ".worktrees/global-build-g1a-interface-20261016",
+      "base": "6476cb0d9c0d73785b0894184d793a80cb145467",
+      "state": "allocated; existing dependencies linked; no new source yet"
     }
   },
   "ops_dispatch": {
@@ -32,9 +37,9 @@
     "G5_shadow_complete_runs": 0
   },
   "next": [
-    "Read reviewed exact source full result; fix only evidenced failure or commit/integrate unchanged green source",
-    "Deliver original ops precise G1c source plus old snapshot flags limitation and obtain actual cadence readback",
-    "Await Roy S decision and original G1a/G4 completion events; do not change S keys or start G2 before dependencies"
+    "Implement G1a generic sequence result/actual resource trace interface from archived learner contract, fixed tests, natural consumer gate",
+    "Read original ops events for G1c integration+initial archive, G1a numbering/current fixed consumer, G4 original live consumer/host",
+    "Await Roy S policy decision; do not change S or start dependent G2"
   ],
   "constraints": [
     {
@@ -68,12 +73,20 @@
     "first_attempt_snapshot_overlap": "24 finished runs match floor/victory; legacy passed_act flags differ, preserve old snapshot; UPAB was unfinished at old cutoff",
     "checks": "paper/materials/20261016-global-build-g1c/reviewed-checks/checks.json",
     "checks_session_id": 35127,
-    "source_state": "tsc0; same full still running, two failures already observed (brain timeout fixture + missing isolated venv). venv linked without source change; full not green; wait terminal and original ops disposition, do not rerun unchanged full",
+    "source_state": "ops accepted unchanged source+two passing supplements, original full rc1 retained; no more source full",
     "previous_obsolete_full": "source-review-interruption.json; own test PID stopped, rc143 preserved",
-    "pending": "commit/integrate source only after exact checks, then original ops every-ten actual archive"
+    "pending": "commit/integrate source only after exact checks, then original ops every-ten actual archive",
+    "source_commit": "9579e378f0c3cd668d6301c0fa1ea4bd15a2ff13",
+    "source_candidate": "paper/materials/20261016-global-build-g1c/source-candidate.json",
+    "source_full_session_terminal": true,
+    "main_live_merged": false,
+    "ops_transport": "paper/materials/20261016-global-build-g1c/ops-integration-send.json",
+    "ops_disposition": "paper/materials/20261016-global-build-g1c/ops-source-disposition.json",
+    "integration_state": "unique pending waits G4 adb0 host live lock; no main/live integration or archive yet",
+    "cadence_readback": "paper/materials/20261016-global-build-g1c/ops-cadence-readback.json"
   },
   "G4": {
-    "state": "source learning/report delivered; original request blocked pending ops integration/live consumer; not complete",
+    "state": "V5-R367 actual live86a4/treeadb0 deployed and watcher object hashes verified; owner083055 live consumer and exact host pending",
     "source": "f79983e1cae6ec066814e8085959638bc827106c",
     "report_commit": "cef3c5adc84655dfd04a605647fd4d634ca6c017",
     "report": ".worktrees/codex-strategy-silent-20261012-140741/learner/runs/20261016-global-build-g4-r3/report.md",
@@ -85,6 +98,23 @@
     "ops_transport": "paper/materials/20261016-global-build-g4/watcher-ops-integration-send.json",
     "Roy_ACK": false,
     "report_archive": "paper/materials/20261016-global-build-g4/learner-archive-r3-manifest.json",
-    "archive_verification": "paper/materials/20261016-global-build-g4/learner-archive-r3-verification.json"
+    "archive_verification": "paper/materials/20261016-global-build-g4/learner-archive-r3-verification.json",
+    "release_id": "V5-R367",
+    "actual_live": "86a4a119eb8e7e1e61be9fda957edd74a70e96f5",
+    "actual_tree": "adb0266d517d31a17f3b14d07143bea924f95eca",
+    "publication": "paper/materials/20261016-global-build-g4/ops-publication/publication.json",
+    "watcher_actual_readback": "paper/materials/20261016-global-build-g4/watcher-publication-readback.json",
+    "owner_live_consumer_batch": "20261016-083055-strategy-proposal",
+    "host": "original071301 exact adb0 pending; no historical tree green borrowed"
+  },
+  "G1a": {
+    "knowledge_report": "paper/materials/20261016-global-build-g1a/learner-report-r1.md",
+    "archive": "paper/materials/20261016-global-build-g1a/learner-knowledge-r1-manifest.json",
+    "knowledge_state": "five entries historically live consumed; current program closure blocked only whole-version race, exact five entries still match; original ops/owner notified",
+    "version_race": "paper/materials/20261016-global-build-g1a/watcher-consumer-version-race.json",
+    "notice_dd77": "watcher_received0 / roy_notified0; no RoyACK",
+    "interface_state": "existing pipeline audited; implement structured two-fight result/resource diagnostics in new isolated WT using learner-confirmed scope; raw joint/S calibration unknown",
+    "interface_scope": "paper/materials/20261016-global-build-g1a/interface-implementation-scope.md",
+    "new_natural_consumers": 0
   }
 }

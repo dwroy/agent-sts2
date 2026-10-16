@@ -1,0 +1,48 @@
+{
+  "state": "failed",
+  "worktree": "/home/dw/Projects/agent-sts2/.worktrees/global-build-g1c-20261016",
+  "results": [
+    {
+      "name": "tsc",
+      "args": [
+        "npx",
+        "tsc",
+        "-p",
+        "tsconfig.json",
+        "--noEmit"
+      ],
+      "start": "2026-10-16T08:05:05.668320+08:00",
+      "rc": 0,
+      "seconds": 1.21,
+      "log": "paper/materials/20261016-global-build-g1c/tsc.log"
+    },
+    {
+      "name": "vitest",
+      "args": [
+        "npx",
+        "vitest",
+        "run",
+        "--maxWorkers=2",
+        "--minWorkers=1"
+      ],
+      "start": "2026-10-16T08:05:06.876507+08:00",
+      "rc": 1,
+      "seconds": 0.37,
+      "log": "paper/materials/20261016-global-build-g1c/vitest.log"
+    },
+    {
+      "name": "vitest-full",
+      "args": [
+        "npx",
+        "vitest",
+        "run",
+        "--maxWorkers=1"
+      ],
+      "start": "2026-10-16T08:05:39.933550+08:00",
+      "rc": 143,
+      "seconds": 226.28,
+      "log": "paper/materials/20261016-global-build-g1c/vitest-full.log"
+    }
+  ],
+  "cli_rejection_preserved": "source-checks-cli-rejected.json"
+}
