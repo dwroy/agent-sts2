@@ -2639,3 +2639,5 @@ selector于2026-10-15 13:15:58 CST从/home/dw/.codex-brain原子改为/home/dw/P
 - 2026-10-16 18:24:43 CST [ops 180157-s2策略处置] 十项继续waiting，无源码/提交或合入阻塞；30条原账本仅追溯，旧知识/证据/状态保持，无本策略版本或补测。完整联合校准/后继仍缺，宽父保持；同wake监测修复另记。回执paper/materials/20261016-1815-ops/strategy-readback.json。
 
 - 2026-10-16 18:26:28 CST [运维 codex] 局间静默误报补丁已兜底提交并窄合main/live，保10份刷新、无新行为号/重启。原沙箱完整检查EPERM失败保留，宿主tsc和14项定向通过；精确新树c02e2ffda79312e3b22b438b501c68b4d1882873完整宿主已实际启动，结果待learner-checks。回执paper/materials/20261016-1815-ops/。
+
+- 2026-10-16 18:31:44 CST [ops 180157主策略处置] 十项继续waiting，无源码改动或提交/合入阻塞；26原账本仅追溯，旧知识/证据/状态保持。6995原封套/37材料检查及六旧消费者输出核同，完整执行/联合校准仍缺，无新版本或补测。实际native gpt-6.1-sol/xhigh；保live与宽父。回执paper/materials/20261016-1827-ops/batch-readback.json。
