@@ -2739,3 +2739,5 @@ selector于2026-10-15 13:15:58 CST从/home/dw/.codex-brain原子改为/home/dw/P
 - 2026-10-17 00:24:51 CST 运维codex实收000038主/s2策略：20原项均waiting，原WT干净、无源码或待合补丁；47原账本行只追加追溯，claim/证据/状态/版本保持。已有窄实现不等于完整候选、联合资源或受控后继闭合；新截点与旧局封套一致，不增加独立样本。无新异议/待Roy决定项，不重复派学习、测试或论文刷新，live R374与原owner宽父保持。证据paper/materials/20261017-0020-ops/strategy-readback.json。
 
 - 2026-10-17 00:29:18 CST 运维codex核001301策略：十项waiting，WT干净、无源码或合入阻塞；32原账本行仅补追溯，claim/证据/状态/版本不变。原日志预算与执行缺口保留，不用局部死亡或候选差额拟新规则；无新异议/待Roy决定项，不重复派发、测试、编号或论文刷新，live R374和各原owner宽父保持。证据paper/materials/20261017-0025-ops/batch-readback.json。
+
+- 2026-10-17 00:34:44 CST 运维codex实收001301-s2：十项waiting、WT干净且无源码或合入阻塞；46原账本行只补追溯，claim/证据/状态/版本保持。六旧离线消费者只读复用；旧误标计数及更正均保，144轮/1097动作端点不等完整候选或自然收益。无新异议/待Roy决定项，不重复派发、测试或论文刷新；live R374及原owner宽父保持。证据paper/materials/20261017-0030-ops/batch-readback.json。
