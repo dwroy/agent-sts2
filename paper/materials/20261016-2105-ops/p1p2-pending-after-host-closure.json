@@ -1,0 +1,144 @@
+{
+  "at": "2026-10-16 20:13:19 CST",
+  "status": "published V5-R372; exact final-tree complete host tsc0+vitest0 received",
+  "owner": "01a13dcd-83d4-7c63-b233-f93cf878ecf4",
+  "authorization": {
+    "path": "paper/materials/20261016-1916-ops/roy-1916-authorization.txt",
+    "sha256": "df84a116facf7a741043f6335f21c7acd96c914fbf782de416f2996cc70ae018"
+  },
+  "scope": "Silent P1 S_READINESS and P2 S_BUILD_RANK on to shadow only; keep computing and logs, S sorting shadow, C1/C2 and other arrangements",
+  "pre_delivery_receipt": {
+    "path": "paper/materials/20261016-1916-ops/p1p2-source-pre-delivery-received.json",
+    "sha256": "5956dd15310bcbca12c8b01a1cbea63b24c926e8bc8a1dd7ec3c6630ed85bd9e"
+  },
+  "source": "70c61acfb118ab284bb950b32495177458a76b2d",
+  "live": "c783c6c83d09e669f49518a4536ae5bc3766c2a2",
+  "release_id": "V5-R372",
+  "no_current_game_mutation": true,
+  "source_disposition": {
+    "path": "paper/materials/20261016-v5s-p1p2-shadow/ops-source-disposition.json",
+    "sha256": "795811e6ccc0f0044ac03ecd4ee38fce336fc15cd017e59b9278eca837bb9f59"
+  },
+  "candidate_tree": "4db0775de294ed580b041f279689cb26827fb57b",
+  "source_commit": "70c61acfb118ab284bb950b32495177458a76b2d",
+  "source_tree": "4db0775de294ed580b041f279689cb26827fb57b",
+  "source_parent": "5bda85450459a16912dec7882ccc3e480a06c23d",
+  "source_paths": {
+    "agent/src/core/config.ts": "e0715d76fa13a32de1d0eddbf5ce452b9a11255d7b52882f38d794a3dc4a2ec3",
+    "agent/tests/build-rank-integration.test.ts": "904ba4a85bdaa69f6c6d7c40968422cce757144a54340aaf1fac5bc11c9454c4",
+    "agent/tests/build-rank.test.ts": "e44a98569f74f1a5fc05c2dc05e4177a7a9d15981cf4a8321b9013f9e68d3d19",
+    "agent/tests/s-decision.test.ts": "cd9f0a5af27872b7903a17343ee7aa7850730da7fb23fbdf8224d7883d4be573"
+  },
+  "source_received": {
+    "path": "paper/materials/20261016-2003-ops/source-commit-received.json",
+    "sha256": "d942fc49c3bd2e3b492bbb0c70ecb73105bede76c5ffa440a5406f46aa365077"
+  },
+  "source_manifest": {
+    "path": "paper/materials/20261016-v5s-p1p2-shadow/source-commit.json",
+    "sha256": "9433f2e9c8fdc21154f4e316b5cbd78fb49564cab6decc2d4acf6266ca7e50f4"
+  },
+  "ancestry": {
+    "source_parent_equals_frozen_base": true,
+    "source_is_original_worktree_head": true,
+    "source_in_main": false,
+    "source_in_live": false
+  },
+  "resume_script": {
+    "path": "ops/codex-ops/record-staging/20261016-2003/publish.py",
+    "sha256": "af70d4c781c317b45bfe590eff69135c3922bdcb16e83fafa45650ad4b1f3eea",
+    "prior_sha256": "caa3f99c04a1c188b80972b9d802004e4b8d5b94e8e8334dbea4d58af2212f98",
+    "guard_update_receipt": "paper/materials/20261016-2042-ops/p1p2-recovery-guard-update.json"
+  },
+  "publication_gate": {
+    "original_owner_batch": "20261016-180157-fix-batch",
+    "prior_live_calibration": "8b65dafb808eb54e965fc1c6c613462fad82306c",
+    "reason": "original calibration completion and numbering resolved; original full1 retained with accepted exact-case supplement0; same P1 P2 publisher eligible for its own launch-mode guard",
+    "last_attempt": "original live lock acquired at20:12; stopped by predecessor-numbering assertion before source/index/ref/version mutation",
+    "resume_trigger": "original calibration completion/checks event; resolve preceding numbering under original live lock, then execute this same one-shot publication script",
+    "no_bypass_or_new_channel": true,
+    "completion_received": {
+      "batch": "20261016-180157-fix-batch",
+      "state": "done",
+      "rc": 0,
+      "merged": "8b65dafb808eb54e965fc1c6c613462fad82306c",
+      "receipt": "paper/materials/20261016-2020-ops/calibration-readback.json"
+    },
+    "host": {
+      "batch": "20261016-180157-fix-batch",
+      "worker_pid": 248914,
+      "birth": "104514051",
+      "ppid": "2960955",
+      "cwd": "/home/dw/Projects/agent-sts2",
+      "actual_live_lock_held": true,
+      "tree": "8ecee7cbe5526f10f90ccbe4a65f517707d5ee03",
+      "log": "ops/codex-ops/learner/20261016-180157-fix-batch.fallback-8ecee7cbe5526f10f90ccbe4a65f517707d5ee03.checks.log",
+      "observed_bytes": 14373,
+      "observed_sha256": "fce6317bf73fb0eb40f77edfc210bee455652891e4bbe681843d92c09f8ee314",
+      "result": "pending original scheduler learner-checks event",
+      "checks_pending": true,
+      "new_request_sent": false
+    },
+    "calibration_pending": "ops/codex-ops/pending-integrations/20261016-180157-calibration-numbering.json",
+    "calibration_resolved_at": "2026-10-16 20:47:58 CST",
+    "calibration_release_id": "V5-R371",
+    "calibration_receipt": "paper/materials/20261016-2042-ops/publication.json"
+  },
+  "main": "55240f9b14f9c66899136f84f7faabe66b3b4cf5",
+  "host_request_started": true,
+  "retention_registration": {
+    "state": "retained",
+    "reason": "source leaf not in recorded publication: agent/src/core/config.ts"
+  },
+  "watcher_received_or_roy_ACK_registered_by_ops": false,
+  "last_gate_readback_at": "2026-10-16 20:26:52 CST",
+  "published_at": "2026-10-16 20:49:27 CST",
+  "behavior_commit": "14310288c30f9adc0320d6f2d232059248432df7",
+  "tree": "26ae1a140a205e401d2b2b9309d8c1f960cd5fe6",
+  "source_in_main": true,
+  "source_in_live": true,
+  "publication_receipt": "paper/materials/20261016-2042-ops/p1p2-publication.json",
+  "launch_mode_receipt": "paper/materials/20261016-2042-ops/p1p2-launch-mode-readback.json",
+  "host_start_receipt": "paper/materials/20261016-2042-ops/p1p2-host-start-readback.json",
+  "host": {
+    "at": "2026-10-16 20:50:25 CST",
+    "batch": "20261016-075726-strategy-proposal",
+    "worker_pid": 504824,
+    "birth": "104694227",
+    "ppid": "438438",
+    "cwd": "/home/dw/Projects/agent-sts2",
+    "actual_live_lock_held": true,
+    "live": "c783c6c83d09e669f49518a4536ae5bc3766c2a2",
+    "tree": "26ae1a140a205e401d2b2b9309d8c1f960cd5fe6",
+    "log": "ops/codex-ops/learner/20261016-075726-strategy-proposal.fallback-26ae1a140a205e401d2b2b9309d8c1f960cd5fe6.checks.log",
+    "observed_bytes": 116,
+    "observed_SHA": "69d9459d27587a47222c3a5b8795434a199a2711f5b1ce0e5e2ef34772e4fcaa",
+    "vitest_RUN_seen": true,
+    "actual_result": "pending original learner-checks event",
+    "new_final_tree_request_count": 1,
+    "source_full_repeated": false,
+    "prior_calibration_full_original1_preserved": true
+  },
+  "post_publication_ancestry": {
+    "source_in_main": true,
+    "source_in_live": true,
+    "main": "55240f9b14f9c66899136f84f7faabe66b3b4cf5",
+    "live": "c783c6c83d09e669f49518a4536ae5bc3766c2a2"
+  },
+  "host_completed_at": "2026-10-16 21:12:38 CST",
+  "host_complete": true,
+  "host_rc": 0,
+  "host_completion_receipt": "paper/materials/20261016-v5s-p1p2-shadow/ops-host-closure.json",
+  "natural_consumer_or_benefit_claimed": false,
+  "host_completion": {
+    "batch": "20261016-075726-strategy-proposal",
+    "live": "c783c6c83d09e669f49518a4536ae5bc3766c2a2",
+    "tree": "26ae1a140a205e401d2b2b9309d8c1f960cd5fe6",
+    "rc": 0,
+    "files_passed": 498,
+    "cases_passed": 4977,
+    "cases_skipped": 2,
+    "seconds": 952.59,
+    "log_sha256": "1ee5e68dc686d3ce3d380a0a69a6c2ed9e065c33e7e23e8d4c0bfad4381d8c44",
+    "canonical_original_history_preserved": true
+  }
+}
