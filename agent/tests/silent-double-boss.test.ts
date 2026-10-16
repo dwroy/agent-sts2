@@ -6,7 +6,8 @@ import { modelPotion } from "../src/reflex/card-model.js";
 import { potionCostFrom, potionCostOptions } from "../src/reflex/potion-cost.js";
 import { rolloutDecision, type RolloutInput } from "../src/reflex/rollout.js";
 import { solveTurn, weightsFor } from "../src/reflex/turn-solver.js";
-import { BossSimPool, continuationInput, fightSample, runBossSim, slimInput } from "../src/sim/boss-sim.js";
+import { BossSimPool, continuationInput, fightSample, runBossSim, slimInput, summarizeLine } from "../src/sim/boss-sim.js";
+import { continuousBossResult } from "../src/sim/continuous-boss-result.js";
 import { compareOptions } from "../src/sim/build-sim.js";
 import { SerialDeckRunner } from "../src/sim/build-sim-pool.js";
 import { hpAfterRoom, roomCostModel } from "../src/sim/route-projection.js";
@@ -97,6 +98,45 @@ describe("Silent observed double boss", () => {
     const summary = runBossSim(input,[plan],{ samples:3,maxTurns:5,potionHold:0 }).lines[0]!;
     expect(summary.sequence).toEqual({ firstWins:3,firstWinSecondDeaths:3,secondUnfinished:0 });
     expect(summary.winProb).toBe(0);
+    expect(summary.continuous).toMatchObject({ first: { value:1 }, secondGivenFirstWin: { value:0 }, joint: { value:0 },
+      calibration: { status:"unknown",singleFightMapApplied:false }, S: { status:"unknown",value:null } });
+    expect(summary.continuous!.traces).toHaveLength(3);
+    expect(new Set(summary.continuous!.traces.map((s) => s.seed)).size).toBe(3);
+    expect(paired.sequence).toMatchObject({ seed:7, firstResources:{ hp:8,potionSlots:[],revives:[] },
+      secondEntry:{ hp:8,potionSlots:[],revives:[] },openingHpLoss:0 });
+    expect(summary.continuous!.resourceModel).toMatchObject({ rewardsBetweenFights:"unknown",actualSecondOpening:"unknown" });
+  });
+
+  it("keeps missing, capped and unobserved conditional outcomes unknown rather than zero", () => {
+    const { input,plan } = sequence();
+    const lostSecond = fightSample(input,plan,7,5);
+    expect(continuousBossResult([lostSecond],2)!.joint).toMatchObject({ value:null,unknown:1,reason:"missing_or_unfinished_first_samples" });
+    const cappedSecond = { ...lostSecond, died:false,capped:true,sequence:{ ...lostSecond.sequence!,secondDied:false } };
+    expect(continuousBossResult([cappedSecond])!.secondGivenFirstWin).toMatchObject({ value:null,unknown:1 });
+    const missingResources = { ...lostSecond,sequence:{ ...lostSecond.sequence!,firstResources:null } };
+    expect(continuousBossResult([missingResources])!.joint.value).toBeNull();
+    const failedFirst = { ...lostSecond,sequence:{ ...lostSecond.sequence!,firstWon:false,firstDied:true,secondWon:null,secondDied:null,secondEntry:null } };
+    const noFirstWin = continuousBossResult([failedFirst])!;
+    expect(noFirstWin.first.value).toBe(0);
+    expect(noFirstWin.secondGivenFirstWin).toMatchObject({ value:null,samples:0,reason:"no_first_win_samples" });
+    expect(noFirstWin.joint.value).toBeNull();
+    expect(continuousBossResult([],0,true)!.joint).toMatchObject({ value:null,reason:"no_samples" });
+    expect(continuousBossResult([fightSample({ ...input,continuation:undefined },plan,7,5)])).toBeUndefined();
+  });
+
+  it("shows each terminal HP separately from the constructed second entry, without granting rewards", () => {
+    const { input,plan,second } = sequence();
+    second.openingHpLoss = 2;
+    const low = fightSample(input,plan,7,5);
+    const highInput = { ...input,solver:{ ...input.solver,player:{ ...input.solver.player,hp:30 } } };
+    const highPlan = solveTurn(highInput.solver).plans.find((p) => p.outcome.winsFight)!;
+    const high = fightSample(highInput,highPlan,11,5);
+    const diagnostic = summarizeLine(0,[low,high]).continuous!;
+    expect(diagnostic.traces.map((s) => [s.firstResources?.hp,s.secondEntry?.hp,s.openingHpLoss])).toEqual([[8,6,2],[18,16,2]]);
+    expect(diagnostic.calibration.status).toBe("unknown");
+    expect(diagnostic.S.value).toBeNull();
+    expect(() => continuationInput(input,{ ...low,won:true,resources:undefined },second)).toThrow("no-resources");
+    expect(() => continuationInput(input,{ ...low,won:true,resources:{ hp:0,revives:[],drunkKeys:[] } },second)).toThrow("nonpositive-hp");
   });
 
   it("keeps duplicate-id slots distinct and spends an automatic revive once", () => {
@@ -121,9 +161,11 @@ describe("Silent observed double boss", () => {
     try {
       const parallel = await pool.run(input,[plan],{ samples:2,maxTurns:5,potionHold:0 });
       expect(parallel.lines[0]!.sequence?.firstWinSecondDeaths).toBe(2);
+      expect(parallel.lines[0]!.continuous!.traces.map((s) => s.secondEntry?.hp)).toEqual([8,8]);
     } finally { await pool.close(); }
     const result = await compareOptions(new SerialDeckRunner(),input,[],{ samples:2,deadlineMs:1e8 });
     expect(result.base.winCal).toBe(result.base.win);
+    expect(result.base.continuous).toMatchObject({ joint:{ value:0 },calibration:{ status:"unknown" },S:{ value:null } });
   });
 
   it("keeps shipped silent-0163's post-boss route HP unknown", () => {

@@ -723,6 +723,8 @@ export async function withBossSim(decision: Decision, env: DecisionEnv, setup: B
       if (lowWin) simFacts["low_win_rate"] = "连续两战原始通关率低；未使用单场胜率校准下限，不能据此证明必死。";
       record["objective"] = "F48_F49_continuous";
       record["calibration"] = "none";
+      record["continuous"] = toJsonValue({ base: b.continuous ?? null,
+        options: Object.fromEntries(result.options.map((sim) => [sim.key, sim.continuous ?? null])) });
     }
     return {
       decision: {
