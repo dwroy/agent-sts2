@@ -1,0 +1,50 @@
+{
+  "scope": "Initial requested-line identity only, not full turn execution; downstream actual play differs from simulator policy.",
+  "matched_T1": 79,
+  "same_initial_requested_line": 71,
+  "changed_initial_requested_line": 8,
+  "cohorts": {
+    "pre": {
+      "all": {
+        "n": 31,
+        "mean_prediction": 0.6023548387096773,
+        "first_completed_win_rate": 0.6774193548387096,
+        "brier": 0.1869361612903226,
+        "constant_baseline_brier": 0.21852237252861603,
+        "bias": -0.07506451612903227,
+        "definition": "First attempt completed win; confirmed SL abandonment is a non-completion, not an observed death."
+      },
+      "trusted": {
+        "n": 21,
+        "mean_prediction": 0.6891904761904761,
+        "first_completed_win_rate": 0.7619047619047619,
+        "brier": 0.13307309523809524,
+        "constant_baseline_brier": 0.18140589569161,
+        "bias": -0.07271428571428572,
+        "definition": "First attempt completed win; confirmed SL abandonment is a non-completion, not an observed death."
+      },
+      "excluded_changed": 6
+    },
+    "post": {
+      "all": {
+        "n": 40,
+        "mean_prediction": 0.50115,
+        "first_completed_win_rate": 0.675,
+        "brier": 0.19590885,
+        "constant_baseline_brier": 0.219375,
+        "bias": -0.17385,
+        "definition": "First attempt completed win; confirmed SL abandonment is a non-completion, not an observed death."
+      },
+      "trusted": {
+        "n": 22,
+        "mean_prediction": 0.7000000000000001,
+        "first_completed_win_rate": 0.8636363636363636,
+        "brier": 0.13497318181818183,
+        "constant_baseline_brier": 0.11776859504132231,
+        "bias": -0.16363636363636364,
+        "definition": "First attempt completed win; confirmed SL abandonment is a non-completion, not an observed death."
+      },
+      "excluded_changed": 2
+    }
+  }
+}

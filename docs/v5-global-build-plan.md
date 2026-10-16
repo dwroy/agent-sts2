@@ -223,3 +223,12 @@ G3b范围原因已补确证scope-query-diagnosis.json：watcher初版用TIMESTAM
 原量化135539限定证据已本人读回，原81产物SHA归档与ops12222原引用核验保持，旧canonical failed/rc0/mergednull不改；r2机械补前缀无新结局。权威47局1584锚点167952展开中184实际匹配，未改eval/construction.py只跑一次rc0；12可评分conditionalSignature组里Silent A10 P/F17（23独立局、Brier0/基线0.076389）、P/F33（14局、0/0.214844）、D/F33（14局、0/0.152344）过原统计线，bias均0；其余9组不通过，F48每核心最低还缺5合格独立局，R/S等还缺正类及Brier增益。96库存组/缺口完整见G3b/report.md、groups.csv，持有/真实施放/存活/整局结果另列observations.csv，signature不升格核心功能。
 
 实际支持仅F16/F32/F47且全部policy.choices_checked=0、概率0/1。现有admission.ts/adapter.ts没有锚点或剩余机会窗口准入维度，直接整组advisory会外推到未核更早楼层。原统计线与3pass不改，报告及三个精确组已向原ops真实发送rc0（非本人接收ACK）；建议保shadow，请Roy/Claude决定是否接受外推，或另派窗口隔离/前瞻补证，本轮不实现或补样本。未创建construction-calibration.json或改线上配置/编号；后续若决定发布，仍原ops单独行为号/双通知/精确树宿主。原G2 a55384宿主0/一测试叶修复闭环与9e105 full1分别保持，无新full/观察器/模型/goal，不推进G2自然/on、G3a/G3c/G5或关闭0332/量化/其他宽父。
+
+
+### 2026-10-16 17:49:19 CST V5-S 连败离线诊断完成（原global-build健康派活）
+
+冻结17:15:44 CST原源字节：前25局3胜/后24局0胜，后Boss33/46、F49 0/5复现；本明确开局窗口前Boss44/52而非43/51，原主张/全部49局ID及来源敏感性保留。33177原决策覆盖一致、98场Boss；首试33/52→30/46未降，首试未完成后救回11/19→3/16；F49后四个纯Codex样本入口仅3/4/6/11血。不能据小样本/同期17项发布把退化归因单一开关，独立整局Fisher单侧p=0.124837。
+
+P1实际送达及P2最佳组/理由分布、Jev答选和resolver请求改线、87 C1降级（86不给数字/低于300，1个522/1200按原规则明确不完整低可信）、C2淘汰、进Boss HP/牌组规模和R354–R370实际进程段已逐项输出；初始线一致的T1前31/后40场作为预测主表，8个resolver改线另列，完整逐牌兑现未知。报告/脚本/截止与原件SHA见20261016-v5s-regression-diagnosis/report.md。R362/R366 Platt系数不变/生产未重校准边界保留，不增加游戏知识或重复派修。
+
+建议另行批准40自然局A/B各20：只对P1/P2新信息及理由消费on与shadow作对照，P3 S保持shadow、C2两组on；固定分配/输入和预算/协议停止线，样本量仅探索、不承诺显著，未执行。当前限定任务完成即停，无新Codex goal、play/模型/API/模拟/线上配置或生产源码变更；G2自然、G3b后续/G3a/G3c/G5和原0332/量化/学习宽父保持。

@@ -1,6 +1,6 @@
 {
   "schema": "global-build-checkpoint-v1",
-  "at": "2026-10-16T07:40:24.166995+00:00",
+  "at": "2026-10-16T09:49:19.564633+00:00",
   "parent": "roy-20261016-global-build",
   "original_owner": "01a13dcd-83d4-7c63-b233-f93cf878ecf4",
   "current_owner": "01a13dcd-83d4-7c63-b233-f93cf878ecf4",
@@ -47,9 +47,8 @@
     "G5_shadow_complete_runs": 0
   },
   "next": [
-    "G3b report delivered; exact three statistical passing groups sent to original ops; unsupported earlier-window advisory is pending Roy/Claude decision",
-    "Keep shadow/config unchanged until decision; original ops serial publication and host only if authorized for this specific extrapolation",
-    "Do not start G2 natural/on, G3a/G3c/G5 or close wide parents"
+    "Wait for explicit Claude/Roy task; do not execute the suggested experiment",
+    "G3b remains shadow and window extrapolation pending; G2 natural/G3a/G3c/G5 unassigned; wide parents preserved"
   ],
   "constraints": [
     {
@@ -247,7 +246,7 @@
     "own_ops_observation": "paper/materials/20261016-global-build-g2/watcher-last-ops-readback.json"
   },
   "current_native_identity": "paper/materials/20261016-global-build-control/roy-1219-current-native-identity.json",
-  "assignment_status": "G3b report complete; concrete decision pending; watcher stops",
+  "assignment_status": "Health diagnosis report complete, watcher stopped; no active Codex goal",
   "learning_notice_cf9": {
     "watcher_received": "actual CLI0",
     "roy_notified": "actual native commentary+CLI0",
@@ -255,10 +254,10 @@
     "evidence": "paper/materials/20261016-watcher-notice-cf9d71a363c299b6d24ae236/cli-readback.json"
   },
   "current_assignment": {
-    "phase": "G3b",
-    "state": "report-delivered; pending concrete publication-scope decision; stop",
-    "evidence": "paper/materials/20261016-global-build-g3b/checkpoint.json",
-    "stop": "No new phase or Codex goal; wait Claude/Roy decision or assignment"
+    "phase": "V5-S regression system-health diagnosis",
+    "state": "scoped offline report complete; stopped",
+    "evidence": "paper/materials/20261016-v5s-regression-diagnosis/checkpoint.json",
+    "experiment_executed": false
   },
   "G3b": {
     "schema": "global-build-g3b-checkpoint-v1",
@@ -369,5 +368,11 @@
       "log_sha256": "734e5a45f125a74dc77b166c5ce18e314863300f71645851705d215e54b79d4d"
     },
     "host_closure": "paper/materials/20261016-global-build-g2/host-loadavg-fixture-fix/watcher-host-closure-readback.json"
+  },
+  "health_diagnosis": {
+    "state": "complete-scoped-offline-report; stopped, experiment unexecuted",
+    "report": "paper/materials/20261016-v5s-regression-diagnosis/report.md",
+    "freeze": "2026-10-16T09:15:44.451306+00:00",
+    "commit": "see diagnosis/final-record-commit.json after actual commit"
   }
 }
