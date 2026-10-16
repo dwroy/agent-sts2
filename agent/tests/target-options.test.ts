@@ -125,7 +125,10 @@ describe("per-target options (EZ2L F48 T2: Queen + Torch Head Amalgam)", () => {
   });
 
   it("Jev's picking an Amalgam-focus line plays it (no swap to a Queen line with more damage)", () => {
-    const decision = ez2l() as AskDecision;
+    setExperienceForTests(LESSONS);
+    const decision = withTargetOptionFixture((budgetMs) => ez2l({ budgetMs })) as AskDecision;
+    // Transport replays must restore the production work budget before resolving the answer.
+    expect(rolloutLiveOptions.budgetMs).toBe(ROLLOUT_BUDGET_MS);
     const criteria = criteriaOf(decision);
     const key = planKeys(criteria).find((k) => String(facts(criteria, k)["focus"] ?? "").includes(AMALGAM))!;
     for (const confidence of [0.9, 0.2]) {
@@ -140,7 +143,7 @@ describe("per-target options (EZ2L F48 T2: Queen + Torch Head Amalgam)", () => {
 
   it("gives Jev DeepSeek's whole plan (boss prep and kill order included) and the top 4 lessons about these enemies", () => {
     setExperienceForTests(LESSONS);
-    const decision = ez2l() as AskDecision;
+    const decision = withTargetOptionFixture((budgetMs) => ez2l({ budgetMs })) as AskDecision;
     const state = decision.jevView!.state;
     const plan = String(state["deepseek_plan"]);
     expect(plan).toMatch(/^DeepSeek's run plan \(F44; advice, not orders\): /);
