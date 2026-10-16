@@ -2677,3 +2677,5 @@ selector于2026-10-15 13:15:58 CST从/home/dw/.codex-brain原子改为/home/dw/P
 - 2026-10-16 21:12:38 CST [V5-R372 P1/P2默认shadow精确宿主闭环] 原075726通道livec783c6c83d09e669f49518a4536ae5bc3766c2a2/tree26ae1a140a205e401d2b2b9309d8c1f960cd5fe6完整tsc+vitest exit0，498文件/4977通过2跳/952.59s；原pending及阶段ops-host-closure已实写，无重复full/加号。原source full1+环境补验0、校准8ece full1+31a481定向补验0各自保持，后者本事件与上轮实收字节相同。两个Silent默认on→shadow、显式模式解析与S计算/日志/C1C2/胜率HP/SL药水/其他角色边界及回退沿原实际上线双通知；现局加载配置不动，不冒新自然消费或收益，只用既有每10局分段漏斗。原WT config历史署名差仍retained、不删；0332 revision3原优先链与全部宽父保持，不做A/B或新派。204302两批均无待兜底补丁，fix原failed/rc0历史及策略十waiting保持，32CLI只补追溯。证据paper/materials/20261016-2105-ops/p1p2-host-closure.json、batch-readback.json。
 
 - 2026-10-16 21:22:38 CST [ops 211301-fix实收] 无新增源码或待合入补丁，原failed/rc0历史保留；33项沿旧队列，超时根因unknown，原full1/选题补验0及首次核查失败原件均保留。无测试重跑、合入、编号或重复派发；0332原优先链不变。证据paper/materials/20261016-2120-ops/batch-readback.json。
+
+- 2026-10-16 21:24:53 CST [ops 211301主策略实收] 十项继续waiting，无源码改动、提交或合入阻塞；26原CLI仅补追溯。旧消费者缺ID失败/有界排除、持续候选和受控后继缺口保持，不造测试、合入或版本；0332原优先链及全部宽父不变。回执paper/materials/20261016-2123-ops/batch-readback.json。
