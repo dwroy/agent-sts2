@@ -2111,3 +2111,5 @@ selector于2026-10-15 13:15:58 CST从/home/dw/.codex-brain原子改为/home/dw/P
 
 - 2026-10-16 15:46:55 CST [原G3b评分与外推边界，ops已实收/待Roy或Claude决定] 原未改eval实际rc0，3/12可评分组过原统计闸：Silent A10 conditionalSignature P/F17（23局24条、2正22负）、P/F33（14局16条、5正11负）、D/F33（14局16条、3正13负）；Brier/bias均0，三组通过状态保持。全部184标签只覆盖Boss前一层F16/F32/F47、后续政策选择数0且预测仅0/1，不能据此证明更早窗口前瞻能力。
   现有整组admission/adapter按horizon等键，无锚点层数/剩余窗口限制，直接advisory会外推到未核更早窗口——这是原watcher此次已核的具体边界，不是新统计阈值或机制反证。当前保shadow，不建construction-calibration.json、不改配置或派实现/模型/实验/full。待Roy/Claude决定是否接受整组外推；若需窗口限制或补证，另行明确派活，本次报告后停。原报告及ops-publication-request在paper/materials/20261016-global-build-g3b/，本ops实收回执ops-score-received/ops-score-receipt.json。不代Roy ACK，不关闭0332或任何宽父。
+
+- 2026-10-16 19:24:55 CST [Roy19:16决定 ops实收/0332优先登记] 不做A/B。P1/P2四叶预交付已读回，源完整结论与提交待watcher交付，未上线/编号；原发布链保留。0332已以原缺陷ID注册revision2，原183355-fix owner/thread01a14446-c89c-7223-b9ff-4ad093ccc130同codex1 home接续，实际pending/batchnull；两槽占用，现有reconcile先于普通提案获下一空槽，无扩槽/热改。保正HP/300/C1契约，根因由学习者据证定位，登记不等已启动/实收；P1/P2实际发布后按原50→60固定十局漏斗及真实配置分段观察。回执paper/materials/20261016-1916-ops/ops-priority-closure.json，不代watcher或Roy ACK。

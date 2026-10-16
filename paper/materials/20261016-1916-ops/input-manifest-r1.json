@@ -1,0 +1,192 @@
+{
+  "authorization": {
+    "path": "paper/materials/20261016-1916-ops/roy-1916-authorization.txt",
+    "sha256": "df84a116facf7a741043f6335f21c7acd96c914fbf782de416f2996cc70ae018"
+  },
+  "diagnosis": {
+    "path": "paper/materials/20261016-v5s-regression-diagnosis/report.md",
+    "sha256": "d90ad9ddb13db6303c1476a87fdba847ba19371ea9d56a08f658a4bd884626ff"
+  },
+  "diagnosis_source_commit": "492a87d0b",
+  "linked_existing_proposals": [
+    {
+      "op": "add",
+      "id": "silent-proposal-0b28f52e415d80d1",
+      "ts": "2026-10-09T09:29:31+08:00",
+      "character": "silent",
+      "ledger": [
+        "silent-0332"
+      ],
+      "runs": [
+        "VAC6Z1PZ1QJG"
+      ],
+      "source_task": "postmortem",
+      "target_task": "strategy-proposal",
+      "domains": [
+        "structure",
+        "terminal"
+      ],
+      "summary": "诊断F47双boss成功首战正HP资源契约失败，保留真实剩余资源及不可用结果，缺触发样本不猜根因",
+      "proposal": "/home/dw/Projects/agent-sts2/learner/runs/20261009-091302-postmortem/proposal-vac-continuation.md",
+      "rule_changes": false,
+      "authorization": "Roy-2026-10-07-learning",
+      "proposal_sha256": "6231f4ca56b5ad1153f33e42653e4cad0218365b8d3c22e88c692d4fb70c17f3",
+      "state": "pending"
+    },
+    {
+      "op": "add",
+      "id": "silent-proposal-ecbd4b68c5fad954",
+      "ts": "2026-10-09T23:40:14+08:00",
+      "character": "silent",
+      "ledger": [
+        "silent-0332"
+      ],
+      "runs": [
+        "VAC6Z1PZ1QJG"
+      ],
+      "source_task": "fix-batch",
+      "target_task": "strategy-proposal",
+      "domains": [
+        "structure"
+      ],
+      "summary": "silent-0332 的诊断子项：在保留接续契约失败与模拟不可用的同时，保存失败分支、seed、首战资源和卡牌身份；原资源接续根因未修，完整提案仍待核实。",
+      "proposal": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261009-231302/learner/runs/20261009-231309-fix-batch/proposal-continuation-diagnostics.md",
+      "rule_changes": false,
+      "proposal_sha256": "0da7734e427ff1c2ff1ba5e1e25820a28dd700f166f1bf38f7797ece19a27ab4",
+      "state": "pending"
+    },
+    {
+      "op": "add",
+      "id": "silent-proposal-5aa2672bd7cd1bf4",
+      "ts": "2026-10-11T21:32:33+08:00",
+      "character": "silent",
+      "ledger": [
+        "silent-0332"
+      ],
+      "runs": [
+        "64VJC5XT2AT2"
+      ],
+      "source_task": "postmortem",
+      "target_task": "strategy-proposal",
+      "domains": [
+        "structure"
+      ],
+      "summary": "64VJC5XT2AT2 F47再次出现首战资源契约异常；沿0332复用诊断并等待固定触发样本",
+      "proposal": "/home/dw/Projects/agent-sts2/learner/runs/20261011-211302-postmortem/proposal-continuation-repeat.md",
+      "rule_changes": false,
+      "authorization": "Roy-2026-10-07-learning",
+      "proposal_sha256": "fef7286be60c5baa9aef77e2b732823e9d8570b4b33d4a3451b5489724c53169",
+      "state": "pending"
+    },
+    {
+      "op": "add",
+      "id": "silent-proposal-f4e0f382dd79714b",
+      "ts": "2026-10-15T21:07:55+08:00",
+      "character": "silent",
+      "ledger": [
+        "silent-0228",
+        "silent-0485",
+        "silent-0332",
+        "silent-0028",
+        "silent-0027"
+      ],
+      "runs": [
+        "RQCHNN0W72KF"
+      ],
+      "source_task": "postmortem",
+      "target_task": "strategy-proposal",
+      "domains": [
+        "combat",
+        "potion",
+        "terminal",
+        "structure"
+      ],
+      "summary": "用RQ固定帧核连续王资源与巨像当轮条件；旧0332补完整失败样本诊断，缺根因保持等待",
+      "proposal": "/home/dw/Projects/agent-sts2/learner/runs/20261015-204302-3d780a35-a078-4b93-bcea-905a0e394efe-postmortem/proposal-RQCHNN0W72KF.md",
+      "rule_changes": false,
+      "authorization": "Roy-2026-10-07-learning",
+      "proposal_sha256": "ca2914a953e2f1d49d5d3399482fd27cfcf3e194d97fb12573c9fd7eda5517dc",
+      "state": "pending"
+    },
+    {
+      "op": "add",
+      "id": "silent-proposal-b02a70a29a4ff6b1",
+      "ts": "2026-10-16T07:56:00+08:00",
+      "character": "silent",
+      "ledger": [
+        "silent-0332"
+      ],
+      "runs": [
+        "DHYFWEN40SJ7"
+      ],
+      "source_task": "postmortem",
+      "target_task": "strategy-proposal",
+      "domains": [
+        "structure",
+        "terminal"
+      ],
+      "summary": "DHYFWEN40SJ7六组nonpositive-hp补证沿silent-0332/原5aa2672接续：完整失败资源缺失则waiting，不改正HP契约或将降级出口当根因修复。",
+      "proposal": "/home/dw/Projects/agent-sts2/learner/runs/20261016-074307-fa536ee1-15bc-4016-b9d9-94d196f8c7d8-postmortem/proposal-resource-contract.md",
+      "rule_changes": false,
+      "authorization": "Roy-2026-10-07-learning",
+      "proposal_sha256": "73524213703fd4f8ffa95037bdbaa3d2d5456f2300c124b00fdbf6e45f343afc",
+      "state": "pending"
+    },
+    {
+      "op": "add",
+      "id": "silent-proposal-0c0d4600bc7aa80b",
+      "ts": "2026-10-16T14:01:22+08:00",
+      "character": "silent",
+      "ledger": [
+        "silent-0332"
+      ],
+      "runs": [
+        "TCDUBRWMEMNA"
+      ],
+      "source_task": "postmortem",
+      "target_task": "strategy-proposal",
+      "domains": [
+        "structure"
+      ],
+      "summary": "沿silent-0332补TCDUBRWMEMNA八题非正HP成功样本完整封套与固定复现；根因未明，保正HP及300门槛",
+      "proposal": "/home/dw/Projects/agent-sts2/learner/runs/20261016-134307-060a21bf-5223-4f06-9614-504b5f3deb55-postmortem/proposal-contract.md",
+      "rule_changes": false,
+      "authorization": "Roy-2026-10-07-learning",
+      "proposal_sha256": "8df3af8405d1376b66c2c1e2de4682aa4b493e4364abcdfa74561a227eed5d21",
+      "state": "pending"
+    }
+  ],
+  "original_owner": {
+    "batch": "20261016-183355-fix-batch",
+    "worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261016-183355",
+    "thread_id": "01a14446-c89c-7223-b9ff-4ad093ccc130",
+    "learner_home": "/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/learner",
+    "original_log": {
+      "path": "learner/runs/20261016-183403-64766a9a-6fde-4c7f-b500-daf047c80fd1-fix-batch.jsonl",
+      "sha256": "b616ba657680f6173eb597c59e26db46461c86ecf4b6e25506db0e9177214642"
+    },
+    "native_context": {
+      "source": "ops/codex-ops/accounts/codex1/learner/sessions/2026/10/16/rollout-2026-10-16T18-34-12-01a14446-c89c-7223-b9ff-4ad093ccc130.jsonl",
+      "offset": 50166,
+      "bytes": 5118,
+      "sha256": "d6aafed973567b51c01a53bd396a6406debb926b07a3c164cdeadbce04f8337d",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "sandbox": {
+        "type": "workspace-write",
+        "writable_roots": [
+          "/home/dw/Projects/agent-sts2",
+          "/home/dw/Projects/agent-sts2/.git",
+          "/home/dw/Projects/agent-sts2/.git/worktrees/codex-fix-silent-20261016-183355"
+        ],
+        "network_access": false,
+        "exclude_tmpdir_env_var": false,
+        "exclude_slash_tmp": false
+      },
+      "approval_policy": "never"
+    }
+  },
+  "original_defect": "silent-0332",
+  "no_previous_registered_learning_request_for_this_defect": true,
+  "original_failed_rc0_history_retained": true
+}
