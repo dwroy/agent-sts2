@@ -2605,3 +2605,5 @@ selector于2026-10-15 13:15:58 CST从/home/dw/.codex-brain原子改为/home/dw/P
 - 2026-10-16 15:50:35 CST [ops 154302 fix处置] 已核无新源码/提交或合入阻塞；388相关文件与前批同SHA、80旧修复均为base/live祖先。生产tsc/vitest未运行（null/cases0），不重检/造版本，原canonical failed/rc0/mergednull保持。0332/0365等原链及G3b shadow/外推待决保持，无重复派发或live改动。证据paper/materials/20261016-1549-ops/fix-readback.json。
 
 - 2026-10-16 15:55:54 CST [ops 154302策略处置] 十项均waiting，无源码或合入阻塞，生产测试三项null；26条原CLI仅追溯追加，受保护旧知识/状态保持。原证据不足、失败与宽父保留，不造版本/补测或重复派发；live不动。回执paper/materials/20261016-1554-ops/batch-readback.json。
+
+- 2026-10-16 15:58:12 CST [ops 154302-s2策略处置] 十项均waiting，无源码/合入阻塞或生产测试；30原CLI只补追溯，旧知识/状态和原读回失败/截点限制均保持。回执paper/materials/20261016-1556-ops/batch-readback.json；live及宽父不动，不新增版本/补测或重复派发。
