@@ -1,0 +1,52 @@
+{
+  "schema": "global-build-g3b-requirements-v1",
+  "at": "2026-10-16T05:51:24.070303+00:00",
+  "parent": "roy-20261016-global-build",
+  "phase": "G3b",
+  "authorized_assignment": "assignment.native.jsonl",
+  "owner": "01a13dcd-83d4-7c63-b233-f93cf878ecf4",
+  "scope": "Offline calibration report only; no new Codex goal/G3a/G3c/G5/G2 natural checks",
+  "requirements": [
+    {
+      "id": "G3b.1",
+      "requirement": "Freeze original R328+ shadow forecast rows and immutable cutoffs, role/asc/model/policy/template/attempt bindings; no forecast rerun",
+      "state": "passed",
+      "evidence": [
+        "inputs/manifest.json",
+        "input-audit.json",
+        "preregistration.json"
+      ]
+    },
+    {
+      "id": "G3b.2",
+      "requirement": "Original ops dispatch same original learner owner/thread to verify same-run actual option/route/policy/SL/signature endpoint from original frames",
+      "state": "transported-awaiting-actual-receipt-and-learner-delivery",
+      "evidence": [
+        "learner-input.md",
+        "coordination/ops-request.txt",
+        "coordination/ops-transport.json"
+      ]
+    },
+    {
+      "id": "G3b.3",
+      "requirement": "Run unchanged eval/construction.py with matched outcomes; exact per-stratum independent runs, Brier/base/bias, exclusions and data gaps",
+      "state": "pending-learner-evidence",
+      "evidence": []
+    },
+    {
+      "id": "G3b.4",
+      "requirement": "Separate component possession, actual casts, survival, functional unknown and full-run results; never signature-to-core equivalence",
+      "state": "contract-frozen-pending-actual-evidence",
+      "evidence": [
+        "learner-input.md",
+        "preregistration.json"
+      ]
+    },
+    {
+      "id": "G3b.5",
+      "requirement": "Only conditionalSignature groups passing original gate may go to original ops; no passing file when none pass; report and stop scoped phase",
+      "state": "pending-report",
+      "evidence": []
+    }
+  ]
+}

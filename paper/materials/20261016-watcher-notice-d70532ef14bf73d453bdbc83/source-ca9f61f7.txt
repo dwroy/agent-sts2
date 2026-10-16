@@ -1,0 +1,9 @@
+    const decision: Decision = {
+      kind: "act",
+      label: "combat/least-loss",
+      intent: firstIntent(leastLoss, hand, env),
+      rationale: drawing
+        ? `every simulated line dies; drawing first for a kill or block the hand does not have (then re-planning), on the most-damage line (dmg ${leastLoss.outcome.damageDealt}): ${leastLoss.steps.map(stepText).join(", ")}`
+        : `every simulated line dies; playing the one that keeps the most HP (${leastLoss.outcome.hpAfter}): ${leastLoss.steps.map(stepText).join(", ") || "end turn"}`,
+    };
+    const boundInput = solvedInput as SolverInput | null;
