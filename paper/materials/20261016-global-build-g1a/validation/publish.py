@@ -141,7 +141,7 @@ try:
     receipt={'request_id':state['request_id'],'revision':1,'character':'silent','experience_version':live_exp['version'],'kind':'fixed-consumer','status':'passed','live_commit':state['merged'],'tested_tree':state['tested_tree'],'evidence':evidence,'entries':refs,'scope':'Actual production loader/render/query readback; no natural use, joint interface or outcome effect claim.'}
     (validation/'consumer-receipt.json').write_text(json.dumps(receipt,ensure_ascii=False,indent=2)+'\n')
     docs=[PAPER+'/validation/'+name for name in ['live-consumer-output.json','live-consumer.log','live-consumer-command.json','consumer-receipt.json']]
-    git('add','--sparse','--',*docs,cwd=WORK)
+    git('add','--sparse','--force','--',*docs,cwd=WORK)
     state['receipt_source']=commit('Record actual G1a live experience consumer receipt','receipt',cwd=WORK)
     git('merge','--no-ff','--no-commit','-s','ours',state['receipt_source'])
     git('restore','--source',state['receipt_source'],'--staged','--worktree','--ignore-skip-worktree-bits','--',*docs)
@@ -168,6 +168,7 @@ except BaseException as error:
     (OUT/'failed-live-diff.patch').write_text(run(['git','diff','HEAD'],check=False).stdout)
     if run(['git','rev-parse','--verify','MERGE_HEAD'],check=False).returncode==0: git('merge','--abort')
     if state['merged'] and not state['publication']:
+        state['rolled_back_commit']=state['merged']
         git('reset','--mixed',before_code)
         affected=paths+[PAPER+'/validation/'+n for n in ['live-consumer-output.json','live-consumer.log','live-consumer-command.json','consumer-receipt.json']]+['eval/versions.json','paper/materials/decision-log.md']
         existing=[p for p in affected if p in old]
