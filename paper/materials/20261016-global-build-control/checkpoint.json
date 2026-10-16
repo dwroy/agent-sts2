@@ -1,6 +1,6 @@
 {
   "schema": "global-build-checkpoint-v1",
-  "at": "2026-10-16T08:09:09.273340+08:00",
+  "at": "2026-10-16T08:31:45.683487+08:00",
   "parent": "roy-20261016-global-build",
   "original_owner": "01a13dcd-83d4-7c63-b233-f93cf878ecf4",
   "current_owner": "01a13dcd-83d4-7c63-b233-f93cf878ecf4",
@@ -8,8 +8,8 @@
   "goal_status": "active",
   "goal_complete": false,
   "plan_base": "50e2da099a5e1745878070ea960f3160324f2217",
-  "phase": "G1a/G1b/G1c startup; G4 parallel",
-  "previous_goal_turn_classification": "progress: approved plan and fixed inputs inspected; complete dependency/evidence checklist frozen; original handoff prefix+all new lines verified",
+  "phase": "G1a/G4 original learners running; G1b Roy S decision pending; G1c reviewed source full running",
+  "previous_goal_turn_classification": "progress: G4 report/source and original notices read; four actual watcher/Roy-notified CLI stages passed; original ops precise integration packet actually sent; G1a/own source full verified live",
   "worktrees": {
     "G1c": {
       "path": ".worktrees/global-build-g1c-20261016",
@@ -32,9 +32,9 @@
     "G5_shadow_complete_runs": 0
   },
   "next": [
-    "G1b held-out analysis and coverage report",
-    "G1c integration and meaningful fixed verification",
-    "Read G1a/G4 learner results on original completion events"
+    "Read reviewed exact source full result; fix only evidenced failure or commit/integrate unchanged green source",
+    "Deliver original ops precise G1c source plus old snapshot flags limitation and obtain actual cadence readback",
+    "Await Roy S decision and original G1a/G4 completion events; do not change S keys or start G2 before dependencies"
   ],
   "constraints": [
     {
@@ -56,12 +56,35 @@
     "state": "report delivered; Roy S decision pending; no live changes",
     "report": "paper/materials/20261016-global-build-g1b/report.md",
     "recommendation": "only P2/P3 S sort key -> shadow; no action until Roy",
-    "dual_notice": "paper/materials/20261016-global-build-g1b/objection-dual-notice.txt"
+    "dual_notice": "paper/materials/20261016-global-build-g1b/objection-dual-notice.txt",
+    "main_commit": "beab16fd234d1a730a6d6b9132ca479bb5d2781e",
+    "ops_received": "paper/materials/20261016-global-build-g1b/ops-received.json",
+    "watcher_actual_readback": "paper/materials/20261016-global-build-g1b/watcher-ops-receipt-readback.json"
   },
   "G1c": {
     "state": "fixed ten-run reporter and post-run cadence implemented; source full running; audit corrections under review",
     "source_worktree": ".worktrees/global-build-g1c-20261016",
-    "fixed_funnel": "paper/materials/20261016-global-build-g1c/fixed-funnel.json",
-    "first_attempt_snapshot_overlap": "24 finished runs match floor/victory; legacy passed_act flags differ, preserve old snapshot; UPAB was unfinished at old cutoff"
+    "fixed_funnel": "paper/materials/20261016-global-build-g1c/fixed-funnel-reviewed.json",
+    "first_attempt_snapshot_overlap": "24 finished runs match floor/victory; legacy passed_act flags differ, preserve old snapshot; UPAB was unfinished at old cutoff",
+    "checks": "paper/materials/20261016-global-build-g1c/reviewed-checks/checks.json",
+    "checks_session_id": 35127,
+    "source_state": "tsc0; same full still running, two failures already observed (brain timeout fixture + missing isolated venv). venv linked without source change; full not green; wait terminal and original ops disposition, do not rerun unchanged full",
+    "previous_obsolete_full": "source-review-interruption.json; own test PID stopped, rc143 preserved",
+    "pending": "commit/integrate source only after exact checks, then original ops every-ten actual archive"
+  },
+  "G4": {
+    "state": "source learning/report delivered; original request blocked pending ops integration/live consumer; not complete",
+    "source": "f79983e1cae6ec066814e8085959638bc827106c",
+    "report_commit": "cef3c5adc84655dfd04a605647fd4d634ca6c017",
+    "report": ".worktrees/codex-strategy-silent-20261012-140741/learner/runs/20261016-global-build-g4-r3/report.md",
+    "notices": {
+      "48648a0af1e3e62eaf8bca9d": "watcher_received0/roy_notified0",
+      "823a7d336ca57361b5f99faf": "watcher_received0/roy_notified0"
+    },
+    "receipt": "paper/materials/20261016-global-build-g4/watcher-notices/cli-readback.json",
+    "ops_transport": "paper/materials/20261016-global-build-g4/watcher-ops-integration-send.json",
+    "Roy_ACK": false,
+    "report_archive": "paper/materials/20261016-global-build-g4/learner-archive-r3-manifest.json",
+    "archive_verification": "paper/materials/20261016-global-build-g4/learner-archive-r3-verification.json"
   }
 }

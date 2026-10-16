@@ -109,3 +109,7 @@ V5 的核心目的是让大脑有一个**全局的构筑方向和方法**；S �
 ## 6. 2026-10-16 08:12:36 CST G1并行起步与G1b证据停点
 
 原watcher同一owner/thread接续本父。原ops已实际实收并在既有两槽、原线程启动G1a r1及G4旧请求r3；原r2及历史验收保持，回执见 `paper/materials/20261016-global-build-control/ops-dispatch-readback.json`。G1b固定窗口离线报告见 `paper/materials/20261016-global-build-g1b/report.md`：B2/B3均未证明S在模拟胜率之外有增量，终局/SL预测停止分列，已双通知建议仅S键回shadow；**Roy决定pending，未改live**。G1c固定分段工具与原局末钩子已实现，精确源码full仍在运行；原快照24已结束局首试层/通关一致，旧过幕布尔字段差异及修正前测试中断均原样保留。控制档 `paper/materials/20261016-global-build-control/{requirements,checkpoint}.json`。G2/G5自然shadow均0/2，后续阶段及总父继续active。
+
+## 7. 2026-10-16 08:31:45 CST G4源报告交付及异议本人闭环
+
+原模板请求r3的075639批已rc0交付，但experience-live要求仍blocked：源f79983e1c四原经验已完成源端231库存/12新段/15旧段及负对照，自测无源码变化，实际live/编号/消费者仍缺。watcher已完整读取原报告和精确单叶发布包，向Roy本原生会话明确转达“R零主选不识别无效”和“方向声明/持有签名不等于合格核心”；标准notice 48648a0af1e3e62eaf8bca9d、823a7d336ca57361b5f99faf的两个watcher阶段均实际CLI0，不代Roy ACK。原报告143个证据/脚本文件按字节归档到 `paper/materials/20261016-global-build-g4/learner-archive-r3.tar.gz` 并逐SHA核，旧失败/原r2保持。原ops继续原合入阻塞事件，未派新研究；G4及总父未关闭。
