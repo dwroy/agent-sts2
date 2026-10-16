@@ -69,6 +69,7 @@ it("live Silent completes every Boss line beyond the budget while historical and
   expect(result.run).toMatchObject({ samples: 4, requested: 4, timedOut: false });
   expect(result.byPlan.size).toBe(args.lines.length);
   expect(result.sRanking?.schema).toBe("s-combat-ranking-v1");
+  expect(result.sRanking).toMatchObject({ mode: "shadow", used: false });
   expect(simLog(result, (plan) => `plan${args.lines.indexOf(plan) + 1}`)).toHaveProperty("s_ranking.candidate_keys");
   for (const line of result.byPlan.values()) {
     expect(line.result.outcomes).toHaveLength(4);

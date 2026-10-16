@@ -19,9 +19,17 @@ export type LogLevel = "debug" | "info" | "warn" | "error";
 export type RunStart = "auto" | "continue" | "new";
 export type JevContextVersion = "off" | "v1";
 
-/** P3 changes only Silent's admitted Boss tie groups; other characters keep the legacy ranking. */
+/** Roy 2026-10-16: retain P3 diagnostics, but do not apply its S sort key. */
+export function sCombatRankMode(character: string | null | undefined, env: NodeJS.ProcessEnv = process.env): "off" | "shadow" {
+  if (characterKey(character ?? "") !== "silent") return "off";
+  const requested = env["S_COMBAT_RANK"] ?? "on";
+  return requested === "on" || requested === "shadow" ? "shadow" : "off";
+}
+
+/** Kept for callers checking actual S-sort consumption; the current release admits none. */
 export function sCombatRankEnabled(character: string | null | undefined, env: NodeJS.ProcessEnv = process.env): boolean {
-  return characterKey(character ?? "") === "silent" && (env["S_COMBAT_RANK"] ?? "on") === "on";
+  void character; void env;
+  return false;
 }
 
 /** Release this default only after P2's two natural shadow runs; other roles keep the original question and schema. */

@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { rankLines, wonLoss } from "../src/sim/boss-lines.js";
 import { summarizeLine, type FightSampleResult } from "../src/sim/boss-sim.js";
-import { sCombatRankEnabled } from "../src/core/config.js";
+import { sCombatRankEnabled, sCombatRankMode } from "../src/core/config.js";
 
 // Algebraic fixtures, not observations of any game mechanic or Boss.
 function sample(won: boolean, outgoing: number, received: number, turns = 5): FightSampleResult {
@@ -17,6 +17,15 @@ const ranked = (lines: ReturnType<typeof line>[], lowTrust: string | null = null
   rankLines(lines, 2, eligible, wonLoss, { lowTrust });
 
 describe("P3 paired S sorting", () => {
+  it("records the old S counterfactual while preserving every production win/HP ranking field", () => {
+    const lines = [line(0, sample(false, 20, 50)), line(1, sample(false, 80, 50))];
+    const previous = rankLines(lines);
+    const result = rankLines(lines, 2, () => true, wonLoss, { lowTrust: null, mode: "shadow" });
+    const { sRanking, ...production } = result;
+    expect(production).toEqual(previous);
+    expect(sRanking).toMatchObject({ mode: "shadow", used: false, best: previous.best, shadow_best: 1, shadow_used: true });
+    expect(sRanking!.scores).toHaveLength(2);
+  });
   it("admits explicit adaptive prefixes while keeping own means and common-prefix differences", () => {
     const a = line(0, Array.from({ length: 200 }, () => sample(false, 20, 50)));
     const b = line(1, Array.from({ length: 600 }, (_, i) => sample(false, i < 200 ? 80 : 60, 50)));
@@ -76,7 +85,11 @@ describe("P3 paired S sorting", () => {
     expect(ranked(lines)).toMatchObject({ best: 0, tied: [0, 1], order: [0, 1] });
   });
   it("only enables Silent; off and every other character preserve the old rank result", () => {
-    expect(sCombatRankEnabled("SILENT", {})).toBe(true);
+    expect(sCombatRankEnabled("SILENT", {})).toBe(false);
+    expect(sCombatRankMode("SILENT", {})).toBe("shadow");
+    expect(sCombatRankMode("SILENT", { S_COMBAT_RANK: "on" })).toBe("shadow");
+    expect(sCombatRankMode("SILENT", { S_COMBAT_RANK: "shadow" })).toBe("shadow");
+    expect(sCombatRankMode("SILENT", { S_COMBAT_RANK: "off" })).toBe("off");
     expect(sCombatRankEnabled("SILENT", { S_COMBAT_RANK: "off" })).toBe(false);
     expect(sCombatRankEnabled("SILENT", { S_COMBAT_RANK: "typo" })).toBe(false);
     for (const role of ["IRONCLAD", "REGENT", "DEFECT", "NECROBINDER"]) {

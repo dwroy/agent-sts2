@@ -20,7 +20,7 @@
  */
 
 import { ADAPTIVE_RULE, safeAdaptiveShadow } from "./adaptive-shadow.js";
-import { simAdaptivePolicy, sCombatRankEnabled } from "../core/config.js";
+import { simAdaptivePolicy, sCombatRankEnabled, sCombatRankMode } from "../core/config.js";
 import { rankByBossMargin, type CombatSRanking } from "./s-combat-rank.js";
 import { auditSigns } from "./s-sign.js";
 import { AdaptiveSampler, isAdaptiveComplete } from "./adaptive-sampler.js";
@@ -580,8 +580,15 @@ export interface LinesRank {
  * B2's ranking (Roy): the whole-fight win rate first, ties within `tieSe` standard errors, then the least `second`
  * (wonLoss, the HP lost when won; the acceptance tool also ranks by the pre-V4.2 mean HP lost to compare).
  */
-export function rankLines(lines: BossSimLineResult[], tieSe = BOSS_LINES_TIE_SE, eligible: (i: number) => boolean = () => true, second: (line: BossSimLineResult) => number = wonLoss, sPolicy?: { lowTrust: string | null; allowPrefixes?: boolean }): LinesRank {
-  if (sPolicy) return rankByBossMargin(lines, rankLines(lines, tieSe, eligible, second), tieSe, sPolicy.lowTrust, second, sPolicy.allowPrefixes);
+export function rankLines(lines: BossSimLineResult[], tieSe = BOSS_LINES_TIE_SE, eligible: (i: number) => boolean = () => true, second: (line: BossSimLineResult) => number = wonLoss, sPolicy?: { lowTrust: string | null; allowPrefixes?: boolean; mode?: "shadow" }): LinesRank {
+  if (sPolicy) {
+    const previous = rankLines(lines, tieSe, eligible, second);
+    const diagnostic = rankByBossMargin(lines, previous, tieSe, sPolicy.lowTrust, second, sPolicy.allowPrefixes);
+    if (sPolicy.mode === "shadow" && diagnostic.sRanking) return { ...previous,
+      sRanking: { ...diagnostic.sRanking, mode: "shadow", shadow_best: diagnostic.best,
+        shadow_used: diagnostic.sRanking.used, best: previous.best, used: false } };
+    return diagnostic;
+  }
   const idx = lines.map((_, i) => i).filter(eligible);
   if (idx.length === 0) return { best: -1, tied: [], vsBest: lines.map(() => null), winTied: lines.map(() => false) };
   let top = idx[0]!;
@@ -818,7 +825,8 @@ export function bossLineSim(args: BossLineSimArgs): BossLineSim {
     if (attempt?.degraded && run.samples < 300) return unavailable(`不完整（故障降级，n=${run.samples}）；不足 300 次，不给数字，按原 rollout 继续`);
     failed = { fight, count: 0 };
     const eligible = (i: number) => (args.eligible ? args.eligible(args.lines[i]!) : true);
-    const sPolicy = sCombatRankEnabled(String(args.state.run?.raw["character_id"] ?? "")) ? { lowTrust, allowPrefixes: adaptiveComplete } : undefined;
+    const sPolicy = sCombatRankMode(String(args.state.run?.raw["character_id"] ?? "")) === "shadow"
+      ? { lowTrust, allowPrefixes: adaptiveComplete, mode: "shadow" as const } : undefined;
     const rank = rankLines(run.lines, BOSS_LINES_TIE_SE, eligible, wonLoss, sPolicy);
     const dryRank = rankLines(run.lines, BOSS_LINES_TIE_SE, (i) => eligible(i) && !args.drinks(args.lines[i]!), wonLoss, sPolicy);
     const turnNow = args.turn ?? 1;
