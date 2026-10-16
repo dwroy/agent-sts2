@@ -2459,3 +2459,116 @@ selector于2026-10-15 13:15:58 CST从/home/dw/.codex-brain原子改为/home/dw/P
   "prepared_ops_source_only": true,
   "no_other_role_ACK": true
 } 回执/home/dw/Projects/agent-sts2/ops/codex-ops/learning-notices/cf9d71a363c299b6d24ae236.json；watcher须读取并告知Roy，尚未确认用户收到。<!-- learning-notice:cf9d71a363c299b6d24ae236 -->
+
+- 2026-10-16T13:36:17.300939 [ops学习通知/disagreement] silent-proposal-01d7495835a3eb19：{
+  "proposal_id": "silent-proposal-01d7495835a3eb19",
+  "original_proposal_sha256": "9282fefa7c494597de6d0ddd65d725fb5e8f07abf9b538b9f46b001e78e3d93e",
+  "batch": "20261016-131302-s2-strategy-proposal",
+  "character": "silent",
+  "kind": "disagreement",
+  "question": {
+    "claim": "01d749、cb23、53ed、1f34原Markdown将AD末轮rationale解释成预计损2、实际需损5的差额。",
+    "finding": "d292362/292364写keeps the most HP (-2)；原a340c1ec及当前源码均打印hpAfter。3HP、18挡、23攻对应预计剩血-2，不能将这两行当少算3伤的证据；不据此外推原dirty模型全部正确。",
+    "evidence": [
+      "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-131302-s2/learner/runs/20261016-131312-a836172c-d88a-4579-8473-eb327287e91e-strategy-proposal/least-loss-semantics.json",
+      "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-131302-s2/learner/runs/20261016-131312-a836172c-d88a-4579-8473-eb327287e91e-strategy-proposal/selected-decisions.json",
+      "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-131302-s2/learner/runs/20261016-131312-a836172c-d88a-4579-8473-eb327287e91e-strategy-proposal/state-projections.json",
+      "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-131302-s2/learner/runs/20261016-131312-a836172c-d88a-4579-8473-eb327287e91e-strategy-proposal/evidence-audit.json"
+    ],
+    "ledger": [
+      "silent-0079",
+      "silent-0028",
+      "silent-0011",
+      "silent-0048"
+    ],
+    "proposal_ids": [
+      "silent-proposal-01d7495835a3eb19",
+      "silent-proposal-cb23be067a5f04c1",
+      "silent-proposal-53ed69feeb9898fe",
+      "silent-proposal-1f34e9d37b21ba71"
+    ],
+    "recommendation": "ops保留四份历史原文，追加解释勘误并沿既有ops→watcher→Roy转达；移除误读差额作为缺陷依据。完整重规划/受控后继要求继续waiting，不关闭宽父。"
+  },
+  "delivery_state": "待ops实际转达；未创建根通知、未代填ops/watcher/Roy的ACK",
+  "source_artifacts": [
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-131302-s2/learner/runs/20261016-131312-a836172c-d88a-4579-8473-eb327287e91e-strategy-proposal/least-loss-semantics.json",
+      "sha256": "5ff2b37b4dcfe178701b9d9f340583e732a5acf41a889b2bba83233b8ef36bbd"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-131302-s2/learner/runs/20261016-131312-a836172c-d88a-4579-8473-eb327287e91e-strategy-proposal/selected-decisions.json",
+      "sha256": "788c48faedc98d91dd35174e5f28566a9c38a5fee049d89c28fdc5832fdf6af0"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-131302-s2/learner/runs/20261016-131312-a836172c-d88a-4579-8473-eb327287e91e-strategy-proposal/state-projections.json",
+      "sha256": "2a48b122f99f3a65e5102a2413f0d1e6c3ec8961c62356fb5cec148947f288e8"
+    },
+    {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-131302-s2/learner/runs/20261016-131312-a836172c-d88a-4579-8473-eb327287e91e-strategy-proposal/evidence-audit.json",
+      "sha256": "d89d5e3fd55eb42a29a27fd8934118bc23c4d8ea344fdf8acc157e10c0be8643"
+    }
+  ],
+  "at": "2026-10-16 13:36:17 CST",
+  "original_proposal": "/home/dw/Projects/agent-sts2/learner/runs/20261008-151301-postmortem/proposal-combat.md",
+  "original_view": [
+    {
+      "id": "silent-proposal-01d7495835a3eb19",
+      "source": "/home/dw/Projects/agent-sts2/learner/runs/20261008-151301-postmortem/proposal-combat.md",
+      "sha256": "9282fefa7c494597de6d0ddd65d725fb5e8f07abf9b538b9f46b001e78e3d93e",
+      "exact_original_lines": [
+        "领域：combat、sl。授权Roy-2026-10-07-learning，未实现、未上线。",
+        "末轮逐技能跟踪抽牌、能量、格挡、激怒、虚弱和尚未结算毒；对待抽后重问，比较原题整线和已实际执行的前缀。验证末轮rationale预计损2与实际完整需损5的差额，并在运行版本来源和调用输入闭合后决定是缺模型还是重规划／截断差异。现在只读当前源码和日志不能确定纯bug；不让调度器按纯基础设施修复。"
+      ]
+    },
+    {
+      "id": "silent-proposal-cb23be067a5f04c1",
+      "source": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-153440-experience-update/proposal-modifiers.md",
+      "sha256": "0c335abd90d0afe5853ed127053296ca9208c3cb81d66d7d193ea44100e8ac82",
+      "exact_original_lines": [
+        "来源任务：experience-update / 20261008-153440；实现任务：独立strategy-proposal。角色silent，本批策略只观察A10，机制范围与历史各阶证据见changes.json/update-summary.json。授权Roy-2026-10-07-learning不提供游戏事实；其他角色及未观察进阶保持等价。本经验任务不改打法源码，不登记implemented/shipped。",
+        "机制：F17 T2/T3双毒雾+合6，T8玩家力敏−2/敌力2仍继续毒输出，38→11/T11胜。F48 T1建雾6、T3补到8；T3后99减益与魂缚在场，T6敌毒32+41=73、蜃景脆弱后54挡挡住36攻；T8聚合体44血46毒退场，其31攻击未结算。T9女王6×5=30，牌挡13+水盆4实损13。T10爆发+层2→1→0，尖啸重放使敌力2→−10、攻22→9，防御重放实6挡+水盆4零损；次轮力回2。F21敏捷药实＋2而换战撤，F49无玩家常驻力量/敏捷。局部机制兑现不等单能力整战胜因。",
+        "缺数据：完整dirty源码、前五SL实际退出/致死结算、部分敌退场末击毛伤、后续实验体阶段、本角色boss时钟输出、联合通关预测、受控留药/换线/改休息整场结局，以及末轮推演损2与实际需损5差额的确定原因。证据不足保留现行为，不凭rationale定新纯bug。",
+        "- silent-lagavulin-siphon-poison-sl；适用[0, 20]；支持/反例15/0；族母吸取压缩直接伤/牌挡，已建毒按现场层数结算。机制：已见每次玩家力敏各−2、敌力+2，负力量不减技能毒层。搭配：到手能力、来袭和可活轮共同核，重打抽牌改变另列。决定胜负的战斗：15支持/0反例，单项胜因未控（n=15）。典型案例：GXNKW8X1XYJP重打36→2毒胜；AD3QSC3P41JU A10 T2/T3建双毒雾+合6，T8力敏各−2、敌力2，毒仍兑现，T11以38→11胜。"
+      ]
+    },
+    {
+      "id": "silent-proposal-53ed69feeb9898fe",
+      "source": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-153440-experience-update/proposal-enrage.md",
+      "sha256": "f8c860cbaf5ba93b27d98d536fd220b254e6514dd9c19033f7604484b23aa395",
+      "exact_original_lines": [
+        "来源任务：experience-update / 20261008-153440；实现任务：独立strategy-proposal。角色silent，本批策略只观察A10，机制范围与历史各阶证据见changes.json/update-summary.json。授权Roy-2026-10-07-learning不提供游戏事实；其他角色及未观察进阶保持等价。本经验任务不改打法源码，不登记implemented/shipped。",
+        "机制：F17 T2/T3双毒雾+合6，T8玩家力敏−2/敌力2仍继续毒输出，38→11/T11胜。F48 T1建雾6、T3补到8；T3后99减益与魂缚在场，T6敌毒32+41=73、蜃景脆弱后54挡挡住36攻；T8聚合体44血46毒退场，其31攻击未结算。T9女王6×5=30，牌挡13+水盆4实损13。T10爆发+层2→1→0，尖啸重放使敌力2→−10、攻22→9，防御重放实6挡+水盆4零损；次轮力回2。F21敏捷药实＋2而换战撤，F49无玩家常驻力量/敏捷。局部机制兑现不等单能力整战胜因。",
+        "缺数据：完整dirty源码、前五SL实际退出/致死结算、部分敌退场末击毛伤、后续实验体阶段、本角色boss时钟输出、联合通关预测、受控留药/换线/改休息整场结局，以及末轮推演损2与实际需损5差额的确定原因。证据不足保留现行为，不凭rationale定新纯bug。"
+      ]
+    },
+    {
+      "id": "silent-proposal-1f34e9d37b21ba71",
+      "source": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-153440-experience-update/proposal-resources.md",
+      "sha256": "79a49cd2ef7238a3dcf33ed556d5cde7071efe83b7b22efb77dd7539c2e65c27",
+      "exact_original_lines": [
+        "来源任务：experience-update / 20261008-153440；实现任务：独立strategy-proposal。角色silent，本批策略只观察A10，机制范围与历史各阶证据见changes.json/update-summary.json。授权Roy-2026-10-07-learning不提供游戏事实；其他角色及未观察进阶保持等价。本经验任务不改打法源码，不登记implemented/shipped。",
+        "机制：F17 T2/T3双毒雾+合6，T8玩家力敏−2/敌力2仍继续毒输出，38→11/T11胜。F48 T1建雾6、T3补到8；T3后99减益与魂缚在场，T6敌毒32+41=73、蜃景脆弱后54挡挡住36攻；T8聚合体44血46毒退场，其31攻击未结算。T9女王6×5=30，牌挡13+水盆4实损13。T10爆发+层2→1→0，尖啸重放使敌力2→−10、攻22→9，防御重放实6挡+水盆4零损；次轮力回2。F21敏捷药实＋2而换战撤，F49无玩家常驻力量/敏捷。局部机制兑现不等单能力整战胜因。",
+        "缺数据：完整dirty源码、前五SL实际退出/致死结算、部分敌退场末击毛伤、后续实验体阶段、本角色boss时钟输出、联合通关预测、受控留药/换线/改休息整场结局，以及末轮推演损2与实际需损5差额的确定原因。证据不足保留现行为，不凭rationale定新纯bug。"
+      ]
+    }
+  ],
+  "different_conclusion": "d292362/292364写keeps the most HP (-2)；原a340c1ec及当前源码均打印hpAfter。3HP、18挡、23攻对应预计剩血-2，不能将这两行当少算3伤的证据；不据此外推原dirty模型全部正确。",
+  "evidence": {
+    "path": "paper/materials/20261016-1328-ops/semantic-original-records.json",
+    "sha256": "9f6cd92a1c8351f3ad116bb4d0c5a34cd0e5100707a012ba3dda5a144f9b102a"
+  },
+  "affected_ledger_ids": [
+    "silent-0079",
+    "silent-0028",
+    "silent-0011",
+    "silent-0048"
+  ],
+  "affected_experience_ids": [],
+  "next_step": "ops保留四份历史原文，追加解释勘误并沿既有ops→watcher→Roy转达；移除误读差额作为缺陷依据。完整重规划/受控后继要求继续waiting，不关闭宽父。",
+  "new_learning_parent": false,
+  "prepared_ops_source_only": true,
+  "no_other_role_ACK": true
+} 回执/home/dw/Projects/agent-sts2/ops/codex-ops/learning-notices/d70532ef14bf73d453bdbc83.json；watcher须读取并告知Roy，尚未确认用户收到。<!-- learning-notice:d70532ef14bf73d453bdbc83 -->
+
+- 2026-10-16 13:36:17 CST 运维codex实收G2精确源e9922a60/treec19c9c/parent655e1bb，仅16叶及最终tsc0/497文件4962过2跳full0核，原full143/修正前夹具失败和新旧SHA分别保留；不重源full。两次原锁窄发布尝试13:32:29/13:34:31因现有live知识刷新仍跑，均先于任何main/live/index/源变更退出，G2仍未上线/未发最终host/未分行为号，实际live1ddaba4b/R369保持。ops-source-received.json与唯一pending-integrations/global-build-g2-shadow.json已冻结精确恢复脚本/SHA；下一原调度事件在刷新完成后再核原锁/知识并窄合，实际新组合仅原075726宿主一次，不借cb2128绿、不轮询/打断现局刷新或另建模型/研究/管线。
+  AD预计剩血-2误读的新noticed70532ef14bf73d453bdbc83已将原四提案/原行/源码字节/差异/下一步实写双收件，ops_forwarded CLI0；原cf9d7之7Z通知去重保同一回执，两通知的watcher/Roy阶段仍待其本人。原watcher wJ:pJT身份核后技术运输rc0，含G2实际pending状态，不代用户或其他角色ACK。原0332/校准/学习宽父保持，G2/S两项之外不推进G3/G5/goal/自然/on等待，当前局/home账号模型prompt不动。证据paper/materials/20261016-1328-ops/。

@@ -1,0 +1,105 @@
+10 项均保留 `waiting`：已有窄实现已核实，剩余范围缺完整对照证据。本批未改源码、提交或合入，未运行生产测试，工作树干净。
+
+已纠正“预计损 2 血”的误读：日志实际表示预计剩血 −2。勘误及 34 条账本追溯已保存，待运维转达。
+
+[提案](learner/runs/20261016-131312-a836172c-d88a-4579-8473-eb327287e91e-strategy-proposal/proposal.md) · [完整报告](learner/runs/20261016-131312-a836172c-d88a-4579-8473-eb327287e91e-strategy-proposal/report.md)
+
+```json
+{
+  "task": "strategy-proposal",
+  "character": "silent",
+  "batch": "20261016-131302-s2-strategy-proposal",
+  "base": "ca9f61f7396ebdf181843f7099c177d3ca865fae",
+  "runs": ["H1T1F8ML9FUE", "AD3QSC3P41JU", "9DAS5L8YM1CN"],
+  "fixes": [],
+  "skipped": [],
+  "merged": null,
+  "tests": {"tsc": null, "vitest": null, "cases": null},
+  "code_proposals": [
+    "silent-proposal-b259f9956e08088a",
+    "silent-proposal-34209e8b9f982e49",
+    "silent-proposal-015f25123c45671c",
+    "silent-proposal-01d7495835a3eb19",
+    "silent-proposal-cb23be067a5f04c1",
+    "silent-proposal-53ed69feeb9898fe",
+    "silent-proposal-1f34e9d37b21ba71",
+    "silent-proposal-fc6618e0844f2007",
+    "silent-proposal-a86e7753ca2a347c",
+    "silent-proposal-438a0eb4516e7975"
+  ],
+  "implementation_domains": [],
+  "proposal_results": [
+    {
+      "id": "silent-proposal-b259f9956e08088a",
+      "state": "waiting",
+      "reason": "凋萎缓存已有live实现；饱和换线、单弃保逃离及纸伤消费仍缺完整候选后继和独立验证。"
+    },
+    {
+      "id": "silent-proposal-34209e8b9f982e49",
+      "state": "waiting",
+      "reason": "末火回复至52后仍败，F49未到；缺替路线、留药及受控联合结局，不能拟新权重。"
+    },
+    {
+      "id": "silent-proposal-015f25123c45671c",
+      "state": "waiting",
+      "reason": "AD完整开场组合已由live祖先ebf8c57ecd811cceeb85fa636d49abbbb4c65dc8覆盖；宽项仍缺受控留药比较及联合校准。"
+    },
+    {
+      "id": "silent-proposal-01d7495835a3eb19",
+      "state": "waiting",
+      "reason": "保血线多活一轮仍败；缺同抽序完整后继。原rationale的-2是预计剩血，不是预计损2，不能据此拟护栏或SL参数。"
+    },
+    {
+      "id": "silent-proposal-cb23be067a5f04c1",
+      "state": "waiting",
+      "reason": "已有局部机制接线；缺整组修饰组合的固定整线归属和受控后继，不能认整体校准或拟留药时点。"
+    },
+    {
+      "id": "silent-proposal-53ed69feeb9898fe",
+      "state": "waiting",
+      "reason": "逐技能激怒已有live实现；缺抽牌重规划至最终派发的完整对照。原损2/损5差额属于HP字段误读。"
+    },
+    {
+      "id": "silent-proposal-1f34e9d37b21ba71",
+      "state": "waiting",
+      "reason": "开场扣血子项已实际live；留药、休息、路线及连续boss联合结果仍缺受控样本，不关闭宽项。"
+    },
+    {
+      "id": "silent-proposal-fc6618e0844f2007",
+      "state": "waiting",
+      "reason": "防御候选未执行，缺到下一营火的完整配对后继与独立校准，不能拟终局血药权重。"
+    },
+    {
+      "id": "silent-proposal-a86e7753ca2a347c",
+      "state": "waiting",
+      "reason": "缺磨蚀末击中间帧、宽组合回放及异线完整结果；同线四败不足推出新规则。"
+    },
+    {
+      "id": "silent-proposal-438a0eb4516e7975",
+      "state": "waiting",
+      "reason": "紧勒已有live祖先5c7105ff0294466da8319f2934beda05c6040794；整组开信刀、冒泡、蛇咬及确定弃牌后的完整结果尚未闭合。"
+    }
+  ],
+  "questions": [
+    {
+      "claim": "四份原提案将AD末轮解释成预计损2、实际需损5的差额。",
+      "finding": "原日志和源码表明-2是hpAfter，与3HP、18挡对23攻一致；该文本不支持少算3伤的结论。",
+      "evidence": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-131302-s2/learner/runs/20261016-131312-a836172c-d88a-4579-8473-eb327287e91e-strategy-proposal/least-loss-semantics.json",
+      "recommendation": "保留历史原文，追加勘误，由ops经watcher告知Roy；通知目前待转达，完整后继要求继续waiting。"
+    }
+  ],
+  "notification_request": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-131302-s2/learner/runs/20261016-131312-a836172c-d88a-4579-8473-eb327287e91e-strategy-proposal/notification-request.json",
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-131302-s2/learner/runs/20261016-131312-a836172c-d88a-4579-8473-eb327287e91e-strategy-proposal/report.md"
+}
+```
+
+== 学习者 codex / strategy-proposal ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a14321-0b14-7191-8f92-648ec3565b72
+轮数：1；工具调用：command_execution×66 file_change×3
+token：输入 197.1k、输出 32.6k（其中推理 8458）、cache 读 5167.5k、cache 写 0（命中 96.3%）
+成本：未提供
+耗时：783.1 s（墙钟）
+时间：首个事件 25.7 s、模型首个输出 31.4 s、首次工具 36.2 s、末次工具结束 749.6 s；工具内共 469.2 s，其余（模型生成、推理、网络）288.1 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-131302-s2）；模型的工具调用 exec×38；/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/learner/sessions/2026/10/16/rollout-2026-10-16T13-13-21-01a14321-0b14-7191-8f92-648ec3565b72.jsonl
+日志：/home/dw/Projects/agent-sts2/learner/runs/20261016-131312-a836172c-d88a-4579-8473-eb327287e91e-strategy-proposal.jsonl

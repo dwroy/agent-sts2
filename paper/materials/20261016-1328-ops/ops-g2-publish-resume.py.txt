@@ -1,0 +1,87 @@
+from pathlib import Path
+import fcntl,hashlib,json,os,subprocess,tarfile
+r=Path.cwd();live=r/'.worktrees/live';p=r/'ops/codex-ops/record-staging/20261016-1328';pub=r/'paper/materials/20261016-1328-ops';phase=r/'paper/materials/20261016-global-build-g2'
+sha=lambda raw:hashlib.sha256(raw).hexdigest()
+template=(r/'ops/codex-ops/record-staging/20261016-1254/publish.py').read_text()
+exec(template[template.index('def git('):template.index("phase=r/")].replace('.ops-poison.tmp','.ops-g2.tmp'))
+def write(path,value):path.write_text(json.dumps(value,ensure_ascii=False,indent=2)+'\n')
+source='e9922a6008b35c3b4427c423830f015252a3bcde';base='655e1bb7967dcd9161eee96fe35cad2257e7af40'
+candidate=json.loads((phase/'source-commit.json').read_text());frozen=json.loads((phase/'source-validation-r2/source-before-full.json').read_text());full=json.loads((phase/'source-validation-r2/full.json').read_text());fixed=json.loads((phase/'precision-fixed-r1/checks.json').read_text())
+assert candidate['source']==source and candidate['base']==base and git('rev-parse',source+'^').decode().strip()==base
+assert git('rev-parse',source+'^{tree}').decode().strip()==candidate['tree']==frozen['staged_tree']
+paths=git('diff-tree','--no-commit-id','--name-only','-r',source).decode().splitlines()
+assert len(paths)==16 and set(paths)==set(candidate['paths'])==set(frozen['paths'])
+assert candidate['paths']==frozen['paths'] and full['rc']==0 and full['source_unchanged'] and full['staged_tree_unchanged']
+assert all(x['rc']==0 for x in fixed['checks']) and candidate['tsc_rc']==0 and candidate['gitleaks_rc']==0
+rawlog=(phase/'source-validation-r2/full.log').read_bytes();assert sha(rawlog)==full['log_sha256']==candidate['raw_log_sha256']
+assert b'497 passed' in rawlog and b'4962 passed' in rawlog and b'2 skipped' in rawlog and b'1158.06s' in rawlog
+assert json.loads((phase/'source-validation-r2/gitleaks.json').read_text())==[]
+assert json.loads((phase/'source-validation/full.json').read_text())['rc']==143
+wt=r/'.worktrees/global-build-g2-shadow-20261016'
+assert git('rev-parse','HEAD',cwd=wt).decode().strip()==source and not git('status','--porcelain','--untracked-files=no',cwd=wt).strip()
+for path in paths:
+    assert git('ls-tree',source,'--',path).decode().startswith('100644 blob ')
+    assert sha(blob(source,path))==candidate['paths'][path]==sha((wt/path).read_bytes())
+assert not (pub/'g2-publication.json').exists()
+with (r/'ops/live-merge.lock').open('a') as lock:
+    fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB)
+    at=subprocess.check_output(['date','+%Y-%m-%d %H:%M:%S %Z']).decode().strip();print(at,flush=True)
+    mh=git('rev-parse','HEAD').decode().strip();lh=git('rev-parse','HEAD',cwd=live).decode().strip()
+    assert subprocess.run(['pgrep','-f','/home/dw/Projects/agent-sts2/(.worktrees/live/)?knowledge/builders/build-'],capture_output=True).returncode==1
+    snapshots={};values={};leaves=[]
+    for cwd in [r,live]:
+        assert not git('diff','--cached','--name-only',cwd=cwd).strip() and not git('ls-files','-u',cwd=cwd).strip()
+        snapshots[str(cwd)]=git('ls-files','--stage','-z',cwd=cwd)
+    for path in paths:
+        old=blob(base,path);desired=blob(source,path);a=blob(mh,path);b=blob(lh,path,live)
+        assert a==b==old,('parallel source difference',path)
+        for cwd,previous in [(r,a),(live,b)]:
+            f=cwd/path;assert (f.read_bytes() if f.exists() else None)==previous
+        values[path]=desired;leaves.append(dict(path=path,source_sha256=sha(desired),main_sha256=sha(desired),live_sha256=sha(desired)))
+        f=p/'composition-scan'/path;f.parent.mkdir(parents=True,exist_ok=True);f.write_bytes(desired)
+    versions={str(cwd):blob(head,'eval/versions.json',cwd) for cwd,head in [(r,mh),(live,lh)]}
+    for cwd in [r,live]:
+        entries=json.loads(versions[str(cwd)]);assert (cwd/'eval/versions.json').read_bytes()==versions[str(cwd)]
+        reg=[x for x in entries['versions'] if x.get('release_id')=='V5-R369'];assert len(reg)==1 and reg[0]['commit']=='5e89b11870c129fb4bba43aab08fbb8bfb9a5067'
+    refresh={path:(live/path).read_bytes() for path in git('diff','--name-only','HEAD','--','knowledge',cwd=live).decode().splitlines()}
+    for path,raw in refresh.items():
+        f=p/'composition-scan'/path;f.parent.mkdir(parents=True,exist_ok=True);f.write_bytes(raw)
+    with (pub/'g2-composition-gitleaks.log').open('wb') as out:
+        scan=subprocess.run(['nice','-n','19','gitleaks','dir',str(p/'composition-scan'),'--redact','--no-banner','--report-format','json','--report-path',str(p/'composition-gitleaks.json')],stdout=out,stderr=subprocess.STDOUT,env={**os.environ,'GOMAXPROCS':'1'})
+    assert scan.returncode==0 and json.loads((p/'composition-gitleaks.json').read_text())==[]
+    le={**os.environ,'GIT_INDEX_FILE':str(p/'live-g2.index')};git('read-tree',lh,cwd=live,env=le)
+    for path,raw in refresh.items():stage(path,raw,le,live)
+    rt=git('write-tree',cwd=live,env=le).decode().strip()
+    refreshed=commit(rt,[lh],'Preserve live knowledge refresh before G2 diagnostics',live) if refresh else lh
+    for path,raw in values.items():stage(path,raw,le,live)
+    tree=git('write-tree',cwd=live,env=le).decode().strip()
+    deployed=commit(tree,[refreshed,source],'Deploy exact Silent G2 shadow diagnostics without decision consumption',live)
+    me={**os.environ,'GIT_INDEX_FILE':str(p/'main-g2.index')};git('read-tree',mh,env=me)
+    for path,raw in values.items():stage(path,raw,me,r)
+    mt=git('write-tree',env=me).decode().strip();main=commit(mt,[mh,source],'Integrate exact G2 shadow source while retaining S-shadow behavior',r)
+    receipt=dict(at=at,parent='roy-20261016-global-build',source=source,source_parent=base,source_tree=candidate['tree'],old_main=mh,main=main,old_live=lh,knowledge_refresh_commit=refreshed,knowledge_refresh=[dict(path=path,sha256=sha(raw)) for path,raw in refresh.items()],actual_live=deployed,tree=tree,leaves=leaves,release_id=None,behavior_release_unchanged='V5-R369',classification='Diagnostic shadow: only log/memory/run-config/health and supplemental model evaluation; never delivered into questions or consumed for ranking. No new behavior number per docs/eval.md. Existing versions bytes and numbering retained.',source_tsc_rc=0,source_full_rc=0,source_full_files=497,source_full_passed=4962,source_full_skipped=2,source_full_vitest_s=1158.06,source_full_wrapper_s=full['seconds'],source_full_log_sha256=sha(rawlog),old_source_full_rc143_preserved=True,source_full_not_rerun=True,host='pending one exact new-composition full through original075726 channel, not cb2128 green',mode='Silent default shadow; explicit on remains capped shadow; other roles off',limits='Only current resource/deck conditional snapshots. S recorded only. Act3 quality/production calibration/final sequence unknown. G1a natural and later2natural+actualBoss gates not performed.',unchanged='R369/P1/C1/C2/current B3/P2 production ranking; all unrelated source, knowledge, historical attribution, parallel records/index',game_restart_home_account_model_prompt_changed=False,new_goal_G3_G5_natural_observer_or_research=False,other_role_ACK=False)
+    write(p/'intended-g2-publication.json',receipt)
+    locks=locks_for([(r,me),(live,le)])
+    try:
+        assert git('rev-parse','HEAD').decode().strip()==mh and git('rev-parse','HEAD',cwd=live).decode().strip()==lh
+        for cwd in [r,live]:assert git('ls-files','--stage','-z',cwd=cwd)==snapshots[str(cwd)]
+        assert subprocess.run(['pgrep','-f','/home/dw/Projects/agent-sts2/(.worktrees/live/)?knowledge/builders/build-'],capture_output=True).returncode==1
+        for path,raw in refresh.items():assert (live/path).read_bytes()==raw
+        for path in paths:
+            for cwd,head in [(r,mh),(live,lh)]:
+                f=cwd/path;assert (f.read_bytes() if f.exists() else None)==blob(head,path,cwd)
+        git('update-ref','-m','ops: exact G2 diagnostic shadow publication','HEAD',deployed,lh,cwd=live)
+        for path,raw in values.items():install(live,path,raw)
+        git('update-ref','-m','ops: integrate exact G2 shadow source','HEAD',main,mh)
+        for path,raw in values.items():install(r,path,raw)
+        for idx,lp in locks:os.replace(lp,idx)
+    finally:
+        for _,lp in locks:
+            if lp.exists():lp.unlink()
+    assert set(git('diff','--name-only',refreshed,deployed,cwd=live).decode().splitlines())==set(paths)
+    for cwd in [r,live]:
+        assert not git('diff','--cached','--name-only',cwd=cwd).strip();git('merge-base','--is-ancestor',source,'HEAD',cwd=cwd)
+        assert blob('HEAD','eval/versions.json',cwd)==versions[str(cwd)]
+    receipt['source_ancestor_main_and_live_verified']=True
+    write(pub/'g2-publication.json',receipt);write(phase/'ops-publication.json',receipt)
+    print(json.dumps(dict(published=True,source=source,live=deployed,tree=tree,main=main,new_behavior_release=None,behavior_release_unchanged='V5-R369',knowledge_refresh=len(refresh),host='pending')),flush=True)
