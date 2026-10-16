@@ -1,0 +1,75 @@
+{
+  "task": "strategy-proposal",
+  "character": "silent",
+  "batch": "20261017-021302-strategy-proposal",
+  "status": "published by ops",
+  "base": "da15f934556e33c01b4cdf00e8bf144a0ddc681c",
+  "runs": [
+    "TCDUBRWMEMNA",
+    "1L4RRN6AN5SQ",
+    "4Z2GCLA4DU52",
+    "DYB7KFG723QM",
+    "0YQJ9D1MC4NK",
+    "7X58G3LSHZ3U",
+    "JH49PP3EYJH8",
+    "DQSH393WPZW0",
+    "YZWV37N2MU6N",
+    "N9GKED3PMEV3"
+  ],
+  "fixes": [
+    {
+      "name": "Silent A10单动作沙坑截止事实接线",
+      "commit": "1ffc0746d7de299fbb7856d397af9da0ab899558",
+      "source_parent": "da15f934556e33c01b4cdf00e8bf144a0ddc681c",
+      "proposal_id": "silent-proposal-3707a98930a03d83",
+      "ledger": [
+        "silent-0308",
+        "silent-0018"
+      ],
+      "evidence": [
+        {
+          "run": "0YQJ9D1MC4NK",
+          "floor": 33,
+          "turn": 7
+        }
+      ],
+      "state": "published by ops"
+    }
+  ],
+  "skipped": [
+    {
+      "item": "live-merge",
+      "reason": "live锁等待45秒未取得；最新live快照52a1bfb17f6383617df5ce96102a7d881fe24626与源码整支预检仍有4项共享记录冲突。按任务停止，不覆盖记录；交ops四叶窄集成，不是游戏证据不足。"
+    }
+  ],
+  "merged": "f1a334a372c9ea63fdfda78378a83f36b317d42b",
+  "version": "S1.single-action-sandpit-deadline1",
+  "tests": {
+    "tsc": 0,
+    "vitest": 0,
+    "cases": 4229
+  },
+  "test_scope": "最终沙箱入口额外排除已确认EPERM的global-build-health包装器，其原Python4项另验通过；首轮EPERM与第二轮ENOSPC失败保留。撤源码9失败/6通过，恢复37通过；合后及沙箱外检查未运行。",
+  "code_proposals": [
+    "silent-proposal-3707a98930a03d83"
+  ],
+  "implementation_domains": [
+    "combat",
+    "terminal"
+  ],
+  "proposal_results": [
+    {
+      "id": "silent-proposal-3707a98930a03d83",
+      "state": "implemented",
+      "commit": "1ffc0746d7de299fbb7856d397af9da0ab899558",
+      "reason": "ops verified actual four-leaf live V5-R376 publication after learner lock/record conflicts; source tests and failures retained, final exact host pending; no all-options-dead or wider closure claim."
+    }
+  ],
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-021302/learner/runs/20261017-021312-d253e5a0-fd1f-4c3a-b2c8-783bc4ee4421-strategy-proposal/ops-publication-report.md",
+  "proposal": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-021302/learner/runs/20261017-021312-d253e5a0-fd1f-4c3a-b2c8-783bc4ee4421-strategy-proposal/proposal.md",
+  "producer": "primary_ops",
+  "release_id": "V5-R376",
+  "source_report_retained": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261017-021302-strategy-proposal.out",
+  "source_report_sha256": "901d0895bf1471cebfe759d7608d026983532b6c28f9b56fc2e8d05020cb83e0",
+  "final_host": "requested through original learner-recheck; pending"
+}
