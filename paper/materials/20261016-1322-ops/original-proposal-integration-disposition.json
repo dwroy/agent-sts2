@@ -1,0 +1,67 @@
+{
+  "at": "2026-10-16 13:26:41 CST",
+  "batch": "20261016-124302-s2-strategy-proposal",
+  "original_thread": "01a14305-8c88-7250-811c-64c4fee412cc",
+  "original_worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-124302-s2",
+  "original_source_base": "4e43de497d9035b45161e6d397df6a11054ec25a",
+  "original_preflight": {
+    "command": [
+      "git",
+      "merge-tree",
+      "--write-tree",
+      "4e43de497d9035b45161e6d397df6a11054ec25a",
+      "0e7998bfa8df267dcf8835a57949bdb982c9feb0"
+    ],
+    "refs": {
+      "HEAD": "4e43de497d9035b45161e6d397df6a11054ec25a",
+      "main": "4e43de497d9035b45161e6d397df6a11054ec25a",
+      "live": "0e7998bfa8df267dcf8835a57949bdb982c9feb0"
+    },
+    "returncode": 1,
+    "conflicts": [
+      "CONFLICT (modify/delete): docs/v5-global-build-plan.md deleted in 0e7998bfa8df267dcf8835a57949bdb982c9feb0 and modified in 4e43de497d9035b45161e6d397df6a11054ec25a.  Version 4e43de497d9035b45161e6d397df6a11054ec25a of docs/v5-global-build-plan.md left in tree.",
+      "CONFLICT (content): Merge conflict in notes/fix-queue-v4.md",
+      "CONFLICT (content): Merge conflict in notes/for-roy.md",
+      "CONFLICT (content): Merge conflict in notes/lessons.md",
+      "CONFLICT (content): Merge conflict in notes/ops-handoff.md",
+      "CONFLICT (content): Merge conflict in ops/inbox-dev.md",
+      "CONFLICT (content): Merge conflict in paper/data/README.md",
+      "CONFLICT (content): Merge conflict in paper/data/commits.csv",
+      "CONFLICT (content): Merge conflict in paper/data/cost-curve-silent.csv",
+      "CONFLICT (content): Merge conflict in paper/data/cost-silent.csv",
+      "CONFLICT (content): Merge conflict in paper/data/cost-sources.json",
+      "CONFLICT (content): Merge conflict in paper/data/cost-unattributed.csv",
+      "CONFLICT (content): Merge conflict in paper/data/decisions_by_label.csv",
+      "CONFLICT (content): Merge conflict in paper/data/learning-curve-silent.csv",
+      "CONFLICT (content): Merge conflict in paper/data/runs.csv",
+      "CONFLICT (content): Merge conflict in paper/data/summary.json",
+      "CONFLICT (content): Merge conflict in paper/data/verification.json",
+      "CONFLICT (directory rename split): Unclear where to rename paper/materials/20261016-global-build-control to; it was renamed to multiple other directories, with no destination getting a majority of the files.",
+      "CONFLICT (modify/delete): paper/materials/20261016-global-build-control/checkpoint.json deleted in 0e7998bfa8df267dcf8835a57949bdb982c9feb0 and modified in 4e43de497d9035b45161e6d397df6a11054ec25a.  Version 4e43de497d9035b45161e6d397df6a11054ec25a of paper/materials/20261016-global-build-control/checkpoint.json left in tree.",
+      "CONFLICT (modify/delete): paper/materials/20261016-global-build-control/requirements.json deleted in 0e7998bfa8df267dcf8835a57949bdb982c9feb0 and modified in 4e43de497d9035b45161e6d397df6a11054ec25a.  Version 4e43de497d9035b45161e6d397df6a11054ec25a of paper/materials/20261016-global-build-control/requirements.json left in tree.",
+      "CONFLICT (file location): paper/materials/20261016-global-build-g1a/validation/consumer-receipt.json added in 0e7998bfa8df267dcf8835a57949bdb982c9feb0 inside a directory that was renamed in 4e43de497d9035b45161e6d397df6a11054ec25a, suggesting it should perhaps be moved to paper/materials/20261016-global-build-g1a/ops-recovery/consumer-receipt.json.",
+      "CONFLICT (file location): paper/materials/20261016-global-build-g1a/validation/live-consumer-command.json added in 0e7998bfa8df267dcf8835a57949bdb982c9feb0 inside a directory that was renamed in 4e43de497d9035b45161e6d397df6a11054ec25a, suggesting it should perhaps be moved to paper/materials/20261016-global-build-g1a/ops-recovery/live-consumer-command.json.",
+      "CONFLICT (file location): paper/materials/20261016-global-build-g1a/validation/live-consumer-output.json added in 0e7998bfa8df267dcf8835a57949bdb982c9feb0 inside a directory that was renamed in 4e43de497d9035b45161e6d397df6a11054ec25a, suggesting it should perhaps be moved to paper/materials/20261016-global-build-g1a/ops-recovery/live-consumer-output.json.",
+      "CONFLICT (file location): paper/materials/20261016-global-build-g1a/validation/live-consumer.log added in 0e7998bfa8df267dcf8835a57949bdb982c9feb0 inside a directory that was renamed in 4e43de497d9035b45161e6d397df6a11054ec25a, suggesting it should perhaps be moved to paper/materials/20261016-global-build-g1a/ops-recovery/live-consumer.log.",
+      "CONFLICT (modify/delete): paper/materials/20261016-global-build-g1c/ops-cadence-readback.json deleted in 0e7998bfa8df267dcf8835a57949bdb982c9feb0 and modified in 4e43de497d9035b45161e6d397df6a11054ec25a.  Version 4e43de497d9035b45161e6d397df6a11054ec25a of paper/materials/20261016-global-build-g1c/ops-cadence-readback.json left in tree.",
+      "CONFLICT (modify/delete): paper/materials/20261016-global-build-g1c/ops-integration-lock-receipt.json deleted in 0e7998bfa8df267dcf8835a57949bdb982c9feb0 and modified in 4e43de497d9035b45161e6d397df6a11054ec25a.  Version 4e43de497d9035b45161e6d397df6a11054ec25a of paper/materials/20261016-global-build-g1c/ops-integration-lock-receipt.json left in tree.",
+      "CONFLICT (modify/delete): paper/materials/STATE-2026-10-15.md deleted in 0e7998bfa8df267dcf8835a57949bdb982c9feb0 and modified in 4e43de497d9035b45161e6d397df6a11054ec25a.  Version 4e43de497d9035b45161e6d397df6a11054ec25a of paper/materials/STATE-2026-10-15.md left in tree.",
+      "CONFLICT (content): Merge conflict in paper/materials/decision-log.md",
+      "CONFLICT (content): Merge conflict in paper/materials/learning/ledger.jsonl",
+      "CONFLICT (content): Merge conflict in paper/materials/silent/cost.md"
+    ],
+    "mutated_worktree": false,
+    "not_a_live_merge": true
+  },
+  "no_source_submitted": true,
+  "source_merge_implemented": false,
+  "narrow_fallback_available": true,
+  "decision": "The 30 whole-branch record conflicts are an integration obstacle, not missing mechanism evidence. Ops will retain records and accept the exact original proposal source patch after its original owner fixed tests, using the original live lock and narrow source-only integration. No whole-main publication is required before code implementation. This receipt is not an implementation or a dispatch.",
+  "existing_proposal_ids": [
+    "silent-proposal-9c3554ff02a3119c",
+    "silent-proposal-9e77e1e88c0cecd4",
+    "silent-proposal-e406c9312e1c329a"
+  ],
+  "next": "Existing proposal scheduler/original owner continues the already evidenced narrow scope and delivers source. No new parent, duplicate learner, repeated mechanism proof or unsubmitted merge. Original waiting and preflight records retained.",
+  "status": "awaiting exact tested source on original learning chain"
+}

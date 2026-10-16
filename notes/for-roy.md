@@ -1957,3 +1957,36 @@ selector于2026-10-15 13:15:58 CST从/home/dw/.codex-brain原子改为/home/dw/P
 - 2026-10-16 13:02:38 CST 规则变更实际发布 **V5-R369**（Roy12:19授权、原roy-20261016-global-build/G1b S键shadow；source 655e1bb7967dcd9161eee96fe35cad2257e7af40 → live 1ddaba4bca8350969bb2e8dda1265095cc86b61d，tree cb2128efc5073340865cce6321aa6e0463ca8c68）。旧规则：Silent P2构筑/P3 Boss战斗在胜率主键后可消费合格S键分组/排序；新规则：仅这两个S排序键退shadow，实际胜率/HP排序保持，S计算、配对统计及原S排序反事实日志保留。P2排序表/理由约束仍on，P1、C2 allowS停止与complete_adaptive/300样本门槛、HP/SL/药水规则及其他角色不变；C2实际production比较及memo随S不消费同步。依据Roy原生转达决定、G1b固定数据报告未证明S增量（不等于证明S无效）、精确13叶源与本ops失败处置；不新增游戏知识/账本shipped。
   源final tsc0/6文件57定向0；原full1（492文件4931过1超时2跳）及同一shrink原题单worker补验0/原15秒和断言未改均保留，未重源full、不借旧815582绿。本人持原ops/live-merge.lock核实际live并分配本独立行为号；只窄合13叶与版本，10知识刷新保存于25e05e104bc1f357a93062296b9f0c15516b0caa，唯一config Roy/Dai历史差异及所有并行记录/index保留，main 8ecbe9356ff99c8f603f4eef814af250b97a5fe9。预期：去除未经增量验证的S对实际排序的影响，保留后续研究诊断，不宣称实盘收益；回退：以当前上下文反向撤本13叶S键补丁，保知识、其他发布/历史注释及R369原登记，实际回退另按行为发布流程记号。
   当前对局未重启/热改，账号home模型prompt不动；下一自然进程才加载，不把源码发布当自然消费。只请求原075726唯一宿主通道对新最终树full，结果pending，启动/完成另存原host回执；本条不称全套通过。G2另源，本轮不做G3/G5/goal/自然观察或等待on门槛，不新派实现/研究/学习者/模拟。原0332/自然/校准/学习入库宽父不关闭，不代任何其他角色ACK。回执G1b/s-shadow/ops-publication.json及paper/materials/20261016-1254-ops/。
+
+- 2026-10-16 13:25:01 CST 运维codex处理1322原075726 learner-checks：实际V5-R369/source655e1bb→live1ddaba4b/treecb2128ef原唯一宿主完整tsc+vitest exit0，491文件4930项通过/2跳、1241.67s；同批同树唯一fallback记录、完整log SHA9d9bfd2834ee2caa2aa551e5a6031c5013cf0f7ee34f5db5750424c9a48c1c58、实际13叶/源祖先与release行为5e89b118绑定核。仅结本发布精确最终树host，不借旧815582绿、不重跑/另建检查；原源full1/同题补验0、canonical failed/rc0及全部旧记录保持。新自然消费、生产校准及G2/0332/学习宽父不由此关闭；当前局/账号home模型prompt不动，无新goal/G3/G5或自然监听等待。正式回执paper/materials/20261016-global-build-g1b/s-shadow/ops-host-closure.json。
+
+- 2026-10-16T13:27:44.683773 [ops学习通知/disagreement] silent-proposal-e6559caa25d704e3：{
+  "at": "2026-10-16 13:27:44 CST",
+  "proposal_id": "silent-proposal-e6559caa25d704e3",
+  "character": "silent",
+  "batch": "20261016-124302-s2-strategy-proposal",
+  "original_proposal": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261008-130540-experience-update/proposal-resources.md",
+  "original_proposal_sha256": "7c5e84ba38573b47949fafb4c0c134b97f29946011a961a814d4e58d4f562cdb",
+  "learner_exact_report_quote": "来源标注勘误：20261008的多份原提案共同正文将7ZUC4VPMDS41写在A7组；runs原567行及选中states均为A10。实际五局炼制分组为ZE8 A5、6EV A6、VLV A7、7Z/T0 A10。原提案原字节和SHA不改。当前炼制经验lesson没有上述“A7”句，本批不修改经验，也不把来源勘误当机制反例或新增独立支持。需ops→watcher→Roy传达本勘误；本报告与账本链接是待递交材料，不代表其他角色已实收或Roy确认。",
+  "original_view": "炼制：五局27实际执行，空槽净添一瓶、动作前后HP不变；ZE8F192FKX24 A5、6EV5V6PJJS9D A6、VLV17NUSFS61/7ZUC4VPMDS41 A7和新局A10。新F35T2生成速度、F45T3稳定血清、F46T2虚弱、F48第五试T4稳定血清。F48第3/5试T4同38HP/197敌血/同手，护栏原含炼制损17伤13→挡线损10伤13；另次重问单炼制损21→抽挡损10伤9。前试实际本轮损5无补药，后试SL撤护栏实炼制、损15，T5携血清23HP0挡判死。后续抽弃同变、10HP差不是单牌价。血清文本保留手牌，非立即挡/回复；未实用该瓶不能认可救命，随机产物未知不得预选。共10次护栏记录/9次最终按护栏，不累计重问候选差为独立实盘节血。",
+  "different_conclusion": "原多份提案将7ZUC4VPMDS41与VLV并列A7；原runs第567行及7Z全部565选中状态均为A10。炼制五来源应分ZE8 A5/6EV A6/VLV A7/7Z与T0 A10；来源勘误，不是基础机制反例，不增独立样本或改变药价/策略参数。",
+  "evidence": {
+    "path": "paper/materials/20261016-1322-ops/identity-correction-evidence.json",
+    "sha256": "3bfb983f529df022e676d6fb15c0101908a0b37c91c15841b752a74af1b6cc80"
+  },
+  "affected_ledger_ids": [
+    "silent-0125",
+    "silent-0294",
+    "silent-0276",
+    "silent-0259",
+    "silent-0243",
+    "silent-0020",
+    "silent-0019",
+    "silent-0021"
+  ],
+  "affected_experience_ids": [],
+  "next_step": "现有watcher本人读原提案A7原句、原runs及本批报告后明确告知Roy来源勘误和边界；旧原文/claim/首证/证据/状态/版本保持，不代Roy ACK，不另建学习父或重复实验。原已证窄源码因记录冲突尚未实施，沿原proposal owner/队列交精确自测源给ops窄合兜底，其他宽项按原缺口waiting。",
+  "new_learning_parent": false,
+  "prepared_ops_source_only": true,
+  "no_other_role_ACK": true
+} 回执/home/dw/Projects/agent-sts2/ops/codex-ops/learning-notices/cf9d71a363c299b6d24ae236.json；watcher须读取并告知Roy，尚未确认用户收到。<!-- learning-notice:cf9d71a363c299b6d24ae236 -->
