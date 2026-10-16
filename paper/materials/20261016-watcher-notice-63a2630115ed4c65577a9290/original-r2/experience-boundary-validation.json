@@ -1,0 +1,75 @@
+{
+  "experience_id": "silent-0332-continuation-contract-boundary",
+  "canonical_sha256": "b8701fdb9e5f72671d5e1699be2fe00407ab72826ebe9c99ba886609b92de231",
+  "deployed": false,
+  "confidence": "high",
+  "evidence": [
+    "RQCHNN0W72KF",
+    "TCDUBRWMEMNA"
+  ],
+  "ledger_protected_before": {
+    "id": "silent-0332",
+    "claim": "本局F47休息题的双boss模拟在成功首战样本进入接续时未满足正HP资源契约，continuationInput抛出missing successful first-fight resources，单样本异常使整题没有可用选项模拟数字。当前可定位契约失败和传播位置，缺少触发样本，尚不能区分资源缺失与非正HP，亦未定位游戏机制根因。",
+    "first_run": "VAC6Z1PZ1QJG",
+    "asc": 10,
+    "prior": "unknown",
+    "prior_note": "按first-fight、接续、资源及精确错误串检索本角色账本与更早静默复盘，无此接口失败的可比记录；已有双boss资源价值及毒勝搜索缺口不是本项，未据未核原日志声称更早完全不存在。",
+    "status": "proposed",
+    "version": "S1.legacy17-1",
+    "evidence": [
+      {
+        "run": "VAC6Z1PZ1QJG",
+        "floor": 47,
+        "note": "d309293 boss_sim.error为build-sim worker的missing successful first-fight resources；live agent/src/sim/boss-sim.ts:334在first.won后，:340调用，:311检验资源或正HP并抛错。实际丢毒药、42→67并补两药，后续正常结束，无卡死。",
+        "role": "support",
+        "added": "2026-10-09T09:27:43+08:00"
+      },
+      {
+        "run": "64VJC5XT2AT2",
+        "floor": 47,
+        "role": "repeat",
+        "note": "d354609 boss_sim.error再次为missing successful first-fight resources，6123ms，未提供样本/胜率/配对差。当前live boss-sim.ts:319/349、build-sim-worker.ts:49/52、build-sim-pool.ts:225、build-sim-facts.ts:629定位契约失败和传播。缺种子/触发末资源，不能判根因；fix-queue.md未列，已有0332诊断提案，不新建或冒称修复。",
+        "added": "2026-10-11T21:30:28+08:00"
+      },
+      {
+        "run": "RQCHNN0W72KF",
+        "floor": 40,
+        "turn": null,
+        "role": "repeat",
+        "note": "d399911—399913：同seed607614716两次nonpositive-hp，won=true/died=false/23turns，第三次42<300不给数字；旧资源契约故障重现，完整resources/steps截断。",
+        "added": "2026-10-15T21:05:09+08:00"
+      },
+      {
+        "run": "RQCHNN0W72KF",
+        "floor": 48,
+        "turn": 1,
+        "role": "repeat",
+        "note": "d400001—400003及400026—400028：seed614798807/46797397各两次pending后第三次degraded，样本159/0不足300不给整场数字。live boss-sim.ts:328/:338契约失败；fix-queue-v4.md已有，根因未知。",
+        "added": "2026-10-15T21:05:09+08:00"
+      },
+      {
+        "run": "DHYFWEN40SJ7",
+        "floor": 48,
+        "turn": 6,
+        "role": "repeat",
+        "note": "d407218—407220首试T6 seed3510836362成功首战won=true/died=false/14turns却nonpositive-hp；另d407287—407289次试T5 seed3067835433/15turns，d407361—407363、407444—407446、407521—407523、407605—407607第三至六试T5 seed599473647/14turns。六组每组两pending无chosen/request，第三degraded样本0，保留回合推演后动作completed。只读live098fbea的boss-sim.ts:328/:338/:369为契约/抛错/接续位置，完整resources与steps截断、机制根因未知。",
+        "added": "2026-10-16T07:54:53+08:00"
+      },
+      {
+        "run": "TCDUBRWMEMNA",
+        "floor": 40,
+        "note": "d410002/003与后续F42/43/44/45/46事件/46奖励/47共16条无动作nonpositive-hp重试；八题第三次samples为14/6/0/69/57/252/0/14。F40 seed76490739 won=true/died=false/12turns，F47 seed1221591606/14turns。live boss-sim.ts:330/333/340与开局0e7998b源码相同，完整resources/steps与机制根因仍未知；不降正HP/300门槛。",
+        "role": "repeat",
+        "added": "2026-10-16T13:59:42+08:00"
+      }
+    ]
+  },
+  "predeploy_consumer": {
+    "exit": 0,
+    "source": "worktree and isolated fixture knowledge; not live",
+    "input_sha256": "e6b18b1228657825dd9e809f5ffd60598430bc0fce93835a9d461f6dd2adfb4d",
+    "output_sha256": "27d12df887cf0c28ce0f9fb9a01f4327bfd3df045d9f887fb975ccdd17b5c03a",
+    "render_sha256": "25707edbdd5b51616ee3b43dd05051c419084aad6be142a57aeff019aface6e6"
+  },
+  "live_consumer_receipt": null
+}
