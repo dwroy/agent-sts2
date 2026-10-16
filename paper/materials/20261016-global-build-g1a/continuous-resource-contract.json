@@ -3,6 +3,13 @@
   "character": "silent",
   "ascension": 10,
   "scope": "Observed F48 victory -> F49 only; six already-studied ended runs, not independent calibration or general two-battle API",
+  "observation_labels": {
+    "first_post_victory": "First indexed noncombat snapshot after the winning combat; direct post-victory persistent resources",
+    "first_exit": "Last noncombat snapshot before F49 (usually MAP); keep distinct from immediate victory and rewards",
+    "first_last_combat": "Last logged combat frame; not necessarily a terminal frame",
+    "second_entry": "First indexed F49 snapshot",
+    "second_first_actionable": "First indexed ready T1; not certified untouched opening"
+  },
   "resource_names": [
     "hp",
     "max_hp",
@@ -281,6 +288,239 @@
             "bytes": 49957,
             "sha256": "39910180dc8234d17487d60ad2c2232ce96c6b3afa26e043f7abafabf76509cb",
             "frozen_path": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/paper/materials/20261016-global-build-g1a/raw/JMH5C51RLN4E-first_exit.json"
+          }
+        },
+        "first_post_victory": {
+          "ts": "2026-10-05T23:53:48.310Z",
+          "floor": 48,
+          "screen": "REWARD",
+          "in_combat": false,
+          "turn": 13,
+          "hp": 8,
+          "max_hp": 60,
+          "combat_hp": 8,
+          "block": 0,
+          "energy": 4,
+          "gold": 119,
+          "cards_played_this_turn": 0,
+          "action_readiness": {
+            "can_use_combat_actions": false,
+            "reason": "combat_screen_unavailable",
+            "actions_settled": true,
+            "running_action_type": null,
+            "ready_action_type": null,
+            "modal_open": false,
+            "modal_type": null,
+            "player_actions_disabled": false,
+            "is_paused": false,
+            "local_ready_to_end_turn": true,
+            "all_players_ready_to_end_turn": true,
+            "ending_turn_phase_one": false,
+            "ending_turn_phase_two": false,
+            "end_turn_kick": "",
+            "combat_in_progress": false,
+            "combat_over_or_ending": true,
+            "combat_room_mode": null,
+            "hand_in_card_play": null,
+            "hand_in_card_selection": null,
+            "hand_mode": null,
+            "local_turn_ready": false,
+            "snapshot_stable": false,
+            "player_action_phase": false
+          },
+          "deck": [
+            {
+              "card_id": "ACCELERANT",
+              "upgraded": true,
+              "count": 1
+            },
+            {
+              "card_id": "ASCENDERS_BANE",
+              "upgraded": false,
+              "count": 1
+            },
+            {
+              "card_id": "BACKFLIP",
+              "upgraded": false,
+              "count": 2
+            },
+            {
+              "card_id": "BATTLE_TRANCE",
+              "upgraded": false,
+              "count": 1
+            },
+            {
+              "card_id": "DAGGER_THROW",
+              "upgraded": false,
+              "count": 1
+            },
+            {
+              "card_id": "DEADLY_POISON",
+              "upgraded": false,
+              "count": 1
+            },
+            {
+              "card_id": "DEFEND_SILENT",
+              "upgraded": false,
+              "count": 3
+            },
+            {
+              "card_id": "DEFEND_SILENT",
+              "upgraded": true,
+              "count": 2
+            },
+            {
+              "card_id": "DEFLECT",
+              "upgraded": true,
+              "count": 1
+            },
+            {
+              "card_id": "ECHOING_SLASH",
+              "upgraded": false,
+              "count": 1
+            },
+            {
+              "card_id": "FINISHER",
+              "upgraded": false,
+              "count": 1
+            },
+            {
+              "card_id": "FOOTWORK",
+              "upgraded": true,
+              "count": 2
+            },
+            {
+              "card_id": "JUGGERNAUT",
+              "upgraded": true,
+              "count": 1
+            },
+            {
+              "card_id": "LEG_SWEEP",
+              "upgraded": true,
+              "count": 2
+            },
+            {
+              "card_id": "MAD_SCIENCE",
+              "upgraded": false,
+              "count": 1
+            },
+            {
+              "card_id": "MEMENTO_MORI",
+              "upgraded": false,
+              "count": 1
+            },
+            {
+              "card_id": "NEUTRALIZE",
+              "upgraded": false,
+              "count": 1
+            },
+            {
+              "card_id": "NOXIOUS_FUMES",
+              "upgraded": true,
+              "count": 2
+            },
+            {
+              "card_id": "POISONED_STAB",
+              "upgraded": false,
+              "count": 1
+            },
+            {
+              "card_id": "SHADOWMELD",
+              "upgraded": true,
+              "count": 1
+            },
+            {
+              "card_id": "SHRUG_IT_OFF",
+              "upgraded": false,
+              "count": 1
+            },
+            {
+              "card_id": "STRIKE_SILENT",
+              "upgraded": false,
+              "count": 1
+            },
+            {
+              "card_id": "STRIKE_SILENT",
+              "upgraded": true,
+              "count": 1
+            },
+            {
+              "card_id": "SURVIVOR",
+              "upgraded": false,
+              "count": 1
+            },
+            {
+              "card_id": "WELL_LAID_PLANS",
+              "upgraded": false,
+              "count": 1
+            }
+          ],
+          "potions": [
+            {
+              "slot": 0,
+              "id": null
+            },
+            {
+              "slot": 1,
+              "id": null
+            }
+          ],
+          "relics": [
+            {
+              "id": "RING_OF_THE_SNAKE",
+              "stack": null,
+              "is_melted": false
+            },
+            {
+              "id": "WINGED_BOOTS",
+              "stack": null,
+              "is_melted": false
+            },
+            {
+              "id": "ETERNAL_FEATHER",
+              "stack": null,
+              "is_melted": false
+            },
+            {
+              "id": "AKABEKO",
+              "stack": null,
+              "is_melted": false
+            },
+            {
+              "id": "PAELS_TEARS",
+              "stack": null,
+              "is_melted": false
+            },
+            {
+              "id": "MEAL_TICKET",
+              "stack": null,
+              "is_melted": false
+            },
+            {
+              "id": "WHISPERING_EARRING",
+              "stack": null,
+              "is_melted": false
+            },
+            {
+              "id": "BAG_OF_MARBLES",
+              "stack": null,
+              "is_melted": false
+            },
+            {
+              "id": "BRONZE_SCALES",
+              "stack": null,
+              "is_melted": false
+            }
+          ],
+          "powers": [],
+          "enemies": [],
+          "next_boss_metadata": "TEST_SUBJECT_BOSS",
+          "source": {
+            "path": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "offset": 7443348142,
+            "bytes": 32736,
+            "sha256": "8041d419aca1ca80eed8a33306d5d11ddc01216dc1fb4595f7b40e3bd24fa919",
+            "frozen_path": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/paper/materials/20261016-global-build-g1a/raw/JMH5C51RLN4E-first_post_victory.json"
           }
         },
         "first_last_combat": {
@@ -6337,6 +6577,309 @@
             "bytes": 53166,
             "sha256": "d66f126ad700789e885911a48390a9a49aa2ed0d8879e1575c312d764a999fa7",
             "frozen_path": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/paper/materials/20261016-global-build-g1a/raw/9TG1RP5LFAAK-first_exit.json"
+          }
+        },
+        "first_post_victory": {
+          "ts": "2026-10-06T00:42:57.771Z",
+          "floor": 48,
+          "screen": "REWARD",
+          "in_combat": false,
+          "turn": 16,
+          "hp": 17,
+          "max_hp": 84,
+          "combat_hp": 17,
+          "block": 0,
+          "energy": 0,
+          "gold": 177,
+          "cards_played_this_turn": 2,
+          "action_readiness": {
+            "can_use_combat_actions": false,
+            "reason": "combat_screen_unavailable",
+            "actions_settled": true,
+            "running_action_type": null,
+            "ready_action_type": null,
+            "modal_open": false,
+            "modal_type": null,
+            "player_actions_disabled": false,
+            "is_paused": false,
+            "local_ready_to_end_turn": true,
+            "all_players_ready_to_end_turn": true,
+            "ending_turn_phase_one": false,
+            "ending_turn_phase_two": false,
+            "end_turn_kick": "",
+            "combat_in_progress": false,
+            "combat_over_or_ending": true,
+            "combat_room_mode": null,
+            "hand_in_card_play": null,
+            "hand_in_card_selection": null,
+            "hand_mode": null,
+            "local_turn_ready": true,
+            "snapshot_stable": false,
+            "player_action_phase": false
+          },
+          "deck": [
+            {
+              "card_id": "ADRENALINE",
+              "upgraded": false,
+              "count": 1
+            },
+            {
+              "card_id": "AFTERIMAGE",
+              "upgraded": false,
+              "count": 1
+            },
+            {
+              "card_id": "ASCENDERS_BANE",
+              "upgraded": false,
+              "count": 1
+            },
+            {
+              "card_id": "BACKFLIP",
+              "upgraded": false,
+              "count": 1
+            },
+            {
+              "card_id": "BACKFLIP",
+              "upgraded": true,
+              "count": 1
+            },
+            {
+              "card_id": "BOUNCING_FLASK",
+              "upgraded": false,
+              "count": 1
+            },
+            {
+              "card_id": "BUBBLE_BUBBLE",
+              "upgraded": false,
+              "count": 1
+            },
+            {
+              "card_id": "CALCULATED_GAMBLE",
+              "upgraded": false,
+              "count": 1
+            },
+            {
+              "card_id": "DEADLY_POISON",
+              "upgraded": true,
+              "count": 2
+            },
+            {
+              "card_id": "DEFEND_SILENT",
+              "upgraded": false,
+              "count": 5
+            },
+            {
+              "card_id": "DEFLECT",
+              "upgraded": false,
+              "count": 1
+            },
+            {
+              "card_id": "DODGE_AND_ROLL",
+              "upgraded": false,
+              "count": 1
+            },
+            {
+              "card_id": "ECHOING_SLASH",
+              "upgraded": false,
+              "count": 1
+            },
+            {
+              "card_id": "ESCAPE_PLAN",
+              "upgraded": true,
+              "count": 1
+            },
+            {
+              "card_id": "FOOTWORK",
+              "upgraded": false,
+              "count": 1
+            },
+            {
+              "card_id": "FOOTWORK",
+              "upgraded": true,
+              "count": 1
+            },
+            {
+              "card_id": "HAZE",
+              "upgraded": true,
+              "count": 1
+            },
+            {
+              "card_id": "NEUTRALIZE",
+              "upgraded": true,
+              "count": 1
+            },
+            {
+              "card_id": "NIGHTMARE",
+              "upgraded": false,
+              "count": 1
+            },
+            {
+              "card_id": "NOXIOUS_FUMES",
+              "upgraded": false,
+              "count": 1
+            },
+            {
+              "card_id": "POISONED_STAB",
+              "upgraded": false,
+              "count": 1
+            },
+            {
+              "card_id": "PRECISE_CUT",
+              "upgraded": false,
+              "count": 1
+            },
+            {
+              "card_id": "PREDATOR",
+              "upgraded": false,
+              "count": 1
+            },
+            {
+              "card_id": "PRODUCTION",
+              "upgraded": false,
+              "count": 1
+            },
+            {
+              "card_id": "ROLLING_BOULDER",
+              "upgraded": false,
+              "count": 1
+            },
+            {
+              "card_id": "SHADOWMELD",
+              "upgraded": false,
+              "count": 1
+            },
+            {
+              "card_id": "STRIKE_SILENT",
+              "upgraded": true,
+              "count": 1
+            },
+            {
+              "card_id": "SUCKER_PUNCH",
+              "upgraded": true,
+              "count": 1
+            },
+            {
+              "card_id": "SURVIVOR",
+              "upgraded": false,
+              "count": 1
+            },
+            {
+              "card_id": "THINKING_AHEAD",
+              "upgraded": false,
+              "count": 1
+            },
+            {
+              "card_id": "ULTIMATE_DEFEND",
+              "upgraded": false,
+              "count": 1
+            }
+          ],
+          "potions": [
+            {
+              "slot": 0,
+              "id": "POISON_POTION"
+            },
+            {
+              "slot": 1,
+              "id": null
+            }
+          ],
+          "relics": [
+            {
+              "id": "RING_OF_THE_SNAKE",
+              "stack": null,
+              "is_melted": false
+            },
+            {
+              "id": "GOLDEN_PEARL",
+              "stack": null,
+              "is_melted": false
+            },
+            {
+              "id": "MEMBERSHIP_CARD",
+              "stack": null,
+              "is_melted": false
+            },
+            {
+              "id": "REGAL_PILLOW",
+              "stack": null,
+              "is_melted": false
+            },
+            {
+              "id": "TUNING_FORK",
+              "stack": 3,
+              "is_melted": false
+            },
+            {
+              "id": "PAELS_TEARS",
+              "stack": null,
+              "is_melted": false
+            },
+            {
+              "id": "NUNCHAKU",
+              "stack": 6,
+              "is_melted": false
+            },
+            {
+              "id": "STRIKE_DUMMY",
+              "stack": null,
+              "is_melted": false
+            },
+            {
+              "id": "SIGNET_RING",
+              "stack": null,
+              "is_melted": false
+            },
+            {
+              "id": "BIG_MUSHROOM",
+              "stack": null,
+              "is_melted": false
+            },
+            {
+              "id": "GREMLIN_HORN",
+              "stack": null,
+              "is_melted": false
+            },
+            {
+              "id": "BAG_OF_MARBLES",
+              "stack": null,
+              "is_melted": false
+            },
+            {
+              "id": "VAJRA",
+              "stack": null,
+              "is_melted": false
+            },
+            {
+              "id": "SNECKO_SKULL",
+              "stack": null,
+              "is_melted": false
+            },
+            {
+              "id": "ETERNAL_FEATHER",
+              "stack": null,
+              "is_melted": false
+            },
+            {
+              "id": "BELT_BUCKLE",
+              "stack": null,
+              "is_melted": false
+            },
+            {
+              "id": "HORN_CLEAT",
+              "stack": null,
+              "is_melted": false
+            }
+          ],
+          "powers": [],
+          "enemies": [],
+          "next_boss_metadata": "TEST_SUBJECT_BOSS",
+          "source": {
+            "path": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "offset": 7473583198,
+            "bytes": 36239,
+            "sha256": "d8854898e0d09bd38d317909802720316dc2bb54dd667aadd39d8024992c4cde",
+            "frozen_path": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/paper/materials/20261016-global-build-g1a/raw/9TG1RP5LFAAK-first_post_victory.json"
           }
         },
         "first_last_combat": {
@@ -13378,6 +13921,279 @@
             "bytes": 51580,
             "sha256": "72e287589533033a31bd2c1b4853a8c2d94d3666cbd00cb64ca322fc04f053cb",
             "frozen_path": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/paper/materials/20261016-global-build-g1a/raw/ZVYUL2YP3518-first_exit.json"
+          }
+        },
+        "first_post_victory": {
+          "ts": "2026-10-06T15:19:03.890Z",
+          "floor": 48,
+          "screen": "COMBAT",
+          "in_combat": false,
+          "turn": 10,
+          "hp": 50,
+          "max_hp": 83,
+          "combat_hp": 50,
+          "block": 0,
+          "energy": 4,
+          "gold": 1,
+          "cards_played_this_turn": 0,
+          "action_readiness": {
+            "can_use_combat_actions": false,
+            "reason": "combat_not_in_progress",
+            "actions_settled": true,
+            "running_action_type": null,
+            "ready_action_type": null,
+            "modal_open": false,
+            "modal_type": null,
+            "player_actions_disabled": false,
+            "is_paused": false,
+            "local_ready_to_end_turn": true,
+            "all_players_ready_to_end_turn": true,
+            "ending_turn_phase_one": false,
+            "ending_turn_phase_two": false,
+            "end_turn_kick": "",
+            "combat_in_progress": false,
+            "combat_over_or_ending": true,
+            "combat_room_mode": "ActiveCombat",
+            "hand_in_card_play": false,
+            "hand_in_card_selection": false,
+            "hand_mode": "Play",
+            "local_turn_ready": false,
+            "snapshot_stable": false,
+            "player_action_phase": false
+          },
+          "deck": [
+            {
+              "card_id": "ACCELERANT",
+              "upgraded": false,
+              "count": 1
+            },
+            {
+              "card_id": "ACCURACY",
+              "upgraded": false,
+              "count": 1
+            },
+            {
+              "card_id": "ADRENALINE",
+              "upgraded": true,
+              "count": 1
+            },
+            {
+              "card_id": "ANTICIPATE",
+              "upgraded": true,
+              "count": 1
+            },
+            {
+              "card_id": "ASCENDERS_BANE",
+              "upgraded": false,
+              "count": 1
+            },
+            {
+              "card_id": "BACKFLIP",
+              "upgraded": false,
+              "count": 2
+            },
+            {
+              "card_id": "CALCULATED_GAMBLE",
+              "upgraded": false,
+              "count": 1
+            },
+            {
+              "card_id": "CLOAK_AND_DAGGER",
+              "upgraded": false,
+              "count": 1
+            },
+            {
+              "card_id": "CLOAK_AND_DAGGER",
+              "upgraded": true,
+              "count": 1
+            },
+            {
+              "card_id": "DEADLY_POISON",
+              "upgraded": true,
+              "count": 1
+            },
+            {
+              "card_id": "DEFEND_SILENT",
+              "upgraded": false,
+              "count": 5
+            },
+            {
+              "card_id": "DEFLECT",
+              "upgraded": false,
+              "count": 1
+            },
+            {
+              "card_id": "FAN_OF_KNIVES",
+              "upgraded": false,
+              "count": 1
+            },
+            {
+              "card_id": "FLASH_OF_STEEL",
+              "upgraded": false,
+              "count": 1
+            },
+            {
+              "card_id": "FOOTWORK",
+              "upgraded": true,
+              "count": 1
+            },
+            {
+              "card_id": "GREED",
+              "upgraded": false,
+              "count": 1
+            },
+            {
+              "card_id": "HAZE",
+              "upgraded": true,
+              "count": 1
+            },
+            {
+              "card_id": "LEADING_STRIKE",
+              "upgraded": false,
+              "count": 1
+            },
+            {
+              "card_id": "METAMORPHOSIS",
+              "upgraded": false,
+              "count": 1
+            },
+            {
+              "card_id": "NEUTRALIZE",
+              "upgraded": false,
+              "count": 1
+            },
+            {
+              "card_id": "NOXIOUS_FUMES",
+              "upgraded": false,
+              "count": 1
+            },
+            {
+              "card_id": "NOXIOUS_FUMES",
+              "upgraded": true,
+              "count": 1
+            },
+            {
+              "card_id": "PIERCING_WAIL",
+              "upgraded": false,
+              "count": 2
+            },
+            {
+              "card_id": "POISONED_STAB",
+              "upgraded": false,
+              "count": 2
+            },
+            {
+              "card_id": "PREDATOR",
+              "upgraded": false,
+              "count": 1
+            },
+            {
+              "card_id": "PREPARED",
+              "upgraded": true,
+              "count": 1
+            },
+            {
+              "card_id": "PURITY",
+              "upgraded": false,
+              "count": 1
+            },
+            {
+              "card_id": "STRIKE_SILENT",
+              "upgraded": false,
+              "count": 4
+            },
+            {
+              "card_id": "SURVIVOR",
+              "upgraded": false,
+              "count": 1
+            },
+            {
+              "card_id": "TORIC_TOUGHNESS",
+              "upgraded": false,
+              "count": 1
+            }
+          ],
+          "potions": [
+            {
+              "slot": 0,
+              "id": null
+            },
+            {
+              "slot": 1,
+              "id": "POISON_POTION"
+            }
+          ],
+          "relics": [
+            {
+              "id": "RING_OF_THE_SNAKE",
+              "stack": null,
+              "is_melted": false
+            },
+            {
+              "id": "CURSED_PEARL",
+              "stack": null,
+              "is_melted": false
+            },
+            {
+              "id": "REGAL_PILLOW",
+              "stack": null,
+              "is_melted": false
+            },
+            {
+              "id": "TUNING_FORK",
+              "stack": 9,
+              "is_melted": false
+            },
+            {
+              "id": "ETERNAL_FEATHER",
+              "stack": null,
+              "is_melted": false
+            },
+            {
+              "id": "PUMPKIN_CANDLE",
+              "stack": 3,
+              "is_melted": false
+            },
+            {
+              "id": "AMETHYST_AUBERGINE",
+              "stack": null,
+              "is_melted": false
+            },
+            {
+              "id": "CHOSEN_CHEESE",
+              "stack": null,
+              "is_melted": false
+            },
+            {
+              "id": "SAI",
+              "stack": null,
+              "is_melted": false
+            },
+            {
+              "id": "ODDLY_SMOOTH_STONE",
+              "stack": null,
+              "is_melted": false
+            },
+            {
+              "id": "ANCHOR",
+              "stack": null,
+              "is_melted": false
+            },
+            {
+              "id": "FORGOTTEN_SOUL",
+              "stack": null,
+              "is_melted": false
+            }
+          ],
+          "powers": [],
+          "enemies": [],
+          "next_boss_metadata": "QUEEN_BOSS",
+          "source": {
+            "path": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "offset": 7917337950,
+            "bytes": 35646,
+            "sha256": "37d7e0a41b9a7c583344596aae779dedae35b53363b9f673aedecefac34c6d53",
+            "frozen_path": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/paper/materials/20261016-global-build-g1a/raw/ZVYUL2YP3518-first_post_victory.json"
           }
         },
         "first_last_combat": {
@@ -23514,6 +24330,274 @@
             "frozen_path": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/paper/materials/20261016-global-build-g1a/raw/TDLBRNA0R05B-first_exit.json"
           }
         },
+        "first_post_victory": {
+          "ts": "2026-10-07T02:39:09.732Z",
+          "floor": 48,
+          "screen": "REWARD",
+          "in_combat": false,
+          "turn": 10,
+          "hp": 2,
+          "max_hp": 70,
+          "combat_hp": 2,
+          "block": 0,
+          "energy": 1,
+          "gold": 442,
+          "cards_played_this_turn": 2,
+          "action_readiness": {
+            "can_use_combat_actions": false,
+            "reason": "combat_screen_unavailable",
+            "actions_settled": true,
+            "running_action_type": null,
+            "ready_action_type": null,
+            "modal_open": false,
+            "modal_type": null,
+            "player_actions_disabled": false,
+            "is_paused": false,
+            "local_ready_to_end_turn": true,
+            "all_players_ready_to_end_turn": true,
+            "ending_turn_phase_one": false,
+            "ending_turn_phase_two": false,
+            "end_turn_kick": "",
+            "combat_in_progress": false,
+            "combat_over_or_ending": true,
+            "combat_room_mode": null,
+            "hand_in_card_play": null,
+            "hand_in_card_selection": null,
+            "hand_mode": null,
+            "local_turn_ready": true,
+            "snapshot_stable": false,
+            "player_action_phase": false
+          },
+          "deck": [
+            {
+              "card_id": "ACROBATICS",
+              "upgraded": true,
+              "count": 1
+            },
+            {
+              "card_id": "AFTERIMAGE",
+              "upgraded": true,
+              "count": 1
+            },
+            {
+              "card_id": "ANOINTED",
+              "upgraded": false,
+              "count": 1
+            },
+            {
+              "card_id": "ASCENDERS_BANE",
+              "upgraded": false,
+              "count": 1
+            },
+            {
+              "card_id": "BACKFLIP",
+              "upgraded": false,
+              "count": 3
+            },
+            {
+              "card_id": "BUBBLE_BUBBLE",
+              "upgraded": false,
+              "count": 2
+            },
+            {
+              "card_id": "CALCULATED_GAMBLE",
+              "upgraded": false,
+              "count": 1
+            },
+            {
+              "card_id": "CLOAK_AND_DAGGER",
+              "upgraded": false,
+              "count": 2
+            },
+            {
+              "card_id": "CLUMSY",
+              "upgraded": false,
+              "count": 1
+            },
+            {
+              "card_id": "DEADLY_POISON",
+              "upgraded": true,
+              "count": 1
+            },
+            {
+              "card_id": "DEFEND_SILENT",
+              "upgraded": false,
+              "count": 4
+            },
+            {
+              "card_id": "EXPOSE",
+              "upgraded": true,
+              "count": 1
+            },
+            {
+              "card_id": "FLECHETTES",
+              "upgraded": false,
+              "count": 2
+            },
+            {
+              "card_id": "FOOTWORK",
+              "upgraded": true,
+              "count": 1
+            },
+            {
+              "card_id": "MALAISE",
+              "upgraded": true,
+              "count": 1
+            },
+            {
+              "card_id": "NEUTRALIZE",
+              "upgraded": false,
+              "count": 1
+            },
+            {
+              "card_id": "NOXIOUS_FUMES",
+              "upgraded": false,
+              "count": 1
+            },
+            {
+              "card_id": "NOXIOUS_FUMES",
+              "upgraded": true,
+              "count": 1
+            },
+            {
+              "card_id": "PINPOINT",
+              "upgraded": false,
+              "count": 1
+            },
+            {
+              "card_id": "POISONED_STAB",
+              "upgraded": true,
+              "count": 1
+            },
+            {
+              "card_id": "REFLEX",
+              "upgraded": false,
+              "count": 1
+            },
+            {
+              "card_id": "STRIKE_SILENT",
+              "upgraded": false,
+              "count": 2
+            },
+            {
+              "card_id": "SURVIVOR",
+              "upgraded": false,
+              "count": 1
+            },
+            {
+              "card_id": "THINKING_AHEAD",
+              "upgraded": false,
+              "count": 1
+            },
+            {
+              "card_id": "TORIC_TOUGHNESS",
+              "upgraded": false,
+              "count": 1
+            },
+            {
+              "card_id": "UNTOUCHABLE",
+              "upgraded": false,
+              "count": 1
+            }
+          ],
+          "potions": [
+            {
+              "slot": 0,
+              "id": "POISON_POTION"
+            },
+            {
+              "slot": 1,
+              "id": null
+            }
+          ],
+          "relics": [
+            {
+              "id": "RING_OF_THE_SNAKE",
+              "stack": null,
+              "is_melted": false
+            },
+            {
+              "id": "SMALL_CAPSULE",
+              "stack": null,
+              "is_melted": false
+            },
+            {
+              "id": "ANCHOR",
+              "stack": null,
+              "is_melted": false
+            },
+            {
+              "id": "FESTIVE_POPPER",
+              "stack": null,
+              "is_melted": false
+            },
+            {
+              "id": "KUSARIGAMA",
+              "stack": null,
+              "is_melted": false
+            },
+            {
+              "id": "VERY_HOT_COCOA",
+              "stack": null,
+              "is_melted": false
+            },
+            {
+              "id": "BAG_OF_PREPARATION",
+              "stack": null,
+              "is_melted": false
+            },
+            {
+              "id": "GORGET",
+              "stack": null,
+              "is_melted": false
+            },
+            {
+              "id": "JUZU_BRACELET",
+              "stack": null,
+              "is_melted": false
+            },
+            {
+              "id": "PENDULUM",
+              "stack": 0,
+              "is_melted": false
+            },
+            {
+              "id": "SIGNET_RING",
+              "stack": null,
+              "is_melted": false
+            },
+            {
+              "id": "MEMBERSHIP_CARD",
+              "stack": null,
+              "is_melted": false
+            },
+            {
+              "id": "FROZEN_EGG",
+              "stack": null,
+              "is_melted": false
+            },
+            {
+              "id": "LANTERN",
+              "stack": null,
+              "is_melted": false
+            },
+            {
+              "id": "BLOOD_VIAL",
+              "stack": null,
+              "is_melted": false
+            }
+          ],
+          "powers": [],
+          "enemies": [],
+          "next_boss_metadata": "QUEEN_BOSS",
+          "source": {
+            "path": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "offset": 8325213503,
+            "bytes": 33922,
+            "sha256": "585fd9d998d64f4497fd680dbad40d90fed960bd23c4635e3b62caf2f1373b56",
+            "frozen_path": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/paper/materials/20261016-global-build-g1a/raw/TDLBRNA0R05B-first_post_victory.json"
+          }
+        },
         "first_last_combat": {
           "ts": "2026-10-07T02:39:07.074Z",
           "floor": 48,
@@ -32862,6 +33946,314 @@
             "frozen_path": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/paper/materials/20261016-global-build-g1a/raw/64VJC5XT2AT2-first_exit.json"
           }
         },
+        "first_post_victory": {
+          "ts": "2026-10-11T12:40:38.894Z",
+          "floor": 48,
+          "screen": "COMBAT",
+          "in_combat": false,
+          "turn": 13,
+          "hp": 3,
+          "max_hp": 116,
+          "combat_hp": 3,
+          "block": 0,
+          "energy": 2,
+          "gold": 381,
+          "cards_played_this_turn": 1,
+          "action_readiness": {
+            "can_use_combat_actions": false,
+            "reason": "combat_not_in_progress",
+            "actions_settled": true,
+            "running_action_type": null,
+            "ready_action_type": null,
+            "modal_open": false,
+            "modal_type": null,
+            "player_actions_disabled": false,
+            "is_paused": false,
+            "local_ready_to_end_turn": true,
+            "all_players_ready_to_end_turn": true,
+            "ending_turn_phase_one": false,
+            "ending_turn_phase_two": false,
+            "end_turn_kick": "",
+            "combat_in_progress": false,
+            "combat_over_or_ending": true,
+            "combat_room_mode": "ActiveCombat",
+            "hand_in_card_play": false,
+            "hand_in_card_selection": false,
+            "hand_mode": "Play",
+            "local_turn_ready": true,
+            "snapshot_stable": false,
+            "player_action_phase": false
+          },
+          "deck": [
+            {
+              "card_id": "ACROBATICS",
+              "upgraded": false,
+              "count": 1
+            },
+            {
+              "card_id": "ANTICIPATE",
+              "upgraded": true,
+              "count": 1
+            },
+            {
+              "card_id": "ASCENDERS_BANE",
+              "upgraded": false,
+              "count": 1
+            },
+            {
+              "card_id": "BACKFLIP",
+              "upgraded": false,
+              "count": 1
+            },
+            {
+              "card_id": "BACKFLIP",
+              "upgraded": true,
+              "count": 1
+            },
+            {
+              "card_id": "CALCULATED_GAMBLE",
+              "upgraded": false,
+              "count": 1
+            },
+            {
+              "card_id": "CLOAK_AND_DAGGER",
+              "upgraded": false,
+              "count": 2
+            },
+            {
+              "card_id": "DASH",
+              "upgraded": false,
+              "count": 2
+            },
+            {
+              "card_id": "DEADLY_POISON",
+              "upgraded": false,
+              "count": 2
+            },
+            {
+              "card_id": "DEFEND_SILENT",
+              "upgraded": false,
+              "count": 4
+            },
+            {
+              "card_id": "DODGE_AND_ROLL",
+              "upgraded": true,
+              "count": 1
+            },
+            {
+              "card_id": "FAN_OF_KNIVES",
+              "upgraded": false,
+              "count": 1
+            },
+            {
+              "card_id": "FOOTWORK",
+              "upgraded": true,
+              "count": 1
+            },
+            {
+              "card_id": "HAZE",
+              "upgraded": true,
+              "count": 1
+            },
+            {
+              "card_id": "HIDDEN_GEM",
+              "upgraded": false,
+              "count": 1
+            },
+            {
+              "card_id": "JACK_OF_ALL_TRADES",
+              "upgraded": false,
+              "count": 1
+            },
+            {
+              "card_id": "MAD_SCIENCE",
+              "upgraded": false,
+              "count": 1
+            },
+            {
+              "card_id": "NEUTRALIZE",
+              "upgraded": false,
+              "count": 1
+            },
+            {
+              "card_id": "NOXIOUS_FUMES",
+              "upgraded": true,
+              "count": 1
+            },
+            {
+              "card_id": "PHANTOM_BLADES",
+              "upgraded": false,
+              "count": 2
+            },
+            {
+              "card_id": "PIERCING_WAIL",
+              "upgraded": false,
+              "count": 1
+            },
+            {
+              "card_id": "PINPOINT",
+              "upgraded": false,
+              "count": 1
+            },
+            {
+              "card_id": "PREDATOR",
+              "upgraded": false,
+              "count": 1
+            },
+            {
+              "card_id": "PURITY",
+              "upgraded": false,
+              "count": 1
+            },
+            {
+              "card_id": "SCRAWL",
+              "upgraded": false,
+              "count": 1
+            },
+            {
+              "card_id": "SCRAWL",
+              "upgraded": true,
+              "count": 1
+            },
+            {
+              "card_id": "SHADOWMELD",
+              "upgraded": true,
+              "count": 2
+            },
+            {
+              "card_id": "SNAKEBITE",
+              "upgraded": false,
+              "count": 1
+            },
+            {
+              "card_id": "STRIKE_SILENT",
+              "upgraded": false,
+              "count": 5
+            },
+            {
+              "card_id": "SUCKER_PUNCH",
+              "upgraded": false,
+              "count": 2
+            },
+            {
+              "card_id": "SURVIVOR",
+              "upgraded": false,
+              "count": 1
+            }
+          ],
+          "potions": [
+            {
+              "slot": 0,
+              "id": null
+            },
+            {
+              "slot": 1,
+              "id": null
+            }
+          ],
+          "relics": [
+            {
+              "id": "RING_OF_THE_SNAKE",
+              "stack": null,
+              "is_melted": false
+            },
+            {
+              "id": "STONE_HUMIDIFIER",
+              "stack": null,
+              "is_melted": false
+            },
+            {
+              "id": "CHOSEN_CHEESE",
+              "stack": null,
+              "is_melted": false
+            },
+            {
+              "id": "TUNING_FORK",
+              "stack": 6,
+              "is_melted": false
+            },
+            {
+              "id": "FESTIVE_POPPER",
+              "stack": null,
+              "is_melted": false
+            },
+            {
+              "id": "PANTOGRAPH",
+              "stack": null,
+              "is_melted": false
+            },
+            {
+              "id": "NUTRITIOUS_SOUP",
+              "stack": null,
+              "is_melted": false
+            },
+            {
+              "id": "ICE_CREAM",
+              "stack": null,
+              "is_melted": false
+            },
+            {
+              "id": "PARRYING_SHIELD",
+              "stack": null,
+              "is_melted": false
+            },
+            {
+              "id": "LORDS_PARASOL",
+              "stack": null,
+              "is_melted": false
+            },
+            {
+              "id": "RED_MASK",
+              "stack": null,
+              "is_melted": false
+            },
+            {
+              "id": "GORGET",
+              "stack": null,
+              "is_melted": false
+            },
+            {
+              "id": "STRIKE_DUMMY",
+              "stack": null,
+              "is_melted": false
+            },
+            {
+              "id": "BLOOD_VIAL",
+              "stack": null,
+              "is_melted": false
+            },
+            {
+              "id": "ORRERY",
+              "stack": null,
+              "is_melted": false
+            },
+            {
+              "id": "BAG_OF_PREPARATION",
+              "stack": null,
+              "is_melted": false
+            },
+            {
+              "id": "BRONZE_SCALES",
+              "stack": null,
+              "is_melted": false
+            },
+            {
+              "id": "LEES_WAFFLE",
+              "stack": null,
+              "is_melted": false
+            }
+          ],
+          "powers": [],
+          "enemies": [],
+          "next_boss_metadata": "AEONGLASS_BOSS",
+          "source": {
+            "path": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "offset": 11465742668,
+            "bytes": 41144,
+            "sha256": "304150f20d0bb2394568da7c69fe604f7fc21fc613a43c38eb9683d0ac154b6d",
+            "frozen_path": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/paper/materials/20261016-global-build-g1a/raw/64VJC5XT2AT2-first_post_victory.json"
+          }
+        },
         "first_last_combat": {
           "ts": "2026-10-11T12:40:37.576Z",
           "floor": 48,
@@ -41813,6 +43205,279 @@
             "bytes": 52828,
             "sha256": "1547dbb4185e4a079f2ea47a8ec7fab034a319decd80e2d538a0308b7f6ffa9d",
             "frozen_path": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/paper/materials/20261016-global-build-g1a/raw/7S8HCC0M6G9W-first_exit.json"
+          }
+        },
+        "first_post_victory": {
+          "ts": "2026-10-10T13:29:33.923Z",
+          "floor": 48,
+          "screen": "REWARD",
+          "in_combat": false,
+          "turn": 7,
+          "hp": 64,
+          "max_hp": 122,
+          "combat_hp": 64,
+          "block": 0,
+          "energy": 2,
+          "gold": 39,
+          "cards_played_this_turn": 1,
+          "action_readiness": {
+            "can_use_combat_actions": false,
+            "reason": "combat_screen_unavailable",
+            "actions_settled": true,
+            "running_action_type": null,
+            "ready_action_type": null,
+            "modal_open": false,
+            "modal_type": null,
+            "player_actions_disabled": false,
+            "is_paused": false,
+            "local_ready_to_end_turn": true,
+            "all_players_ready_to_end_turn": true,
+            "ending_turn_phase_one": false,
+            "ending_turn_phase_two": false,
+            "end_turn_kick": "",
+            "combat_in_progress": false,
+            "combat_over_or_ending": true,
+            "combat_room_mode": null,
+            "hand_in_card_play": null,
+            "hand_in_card_selection": null,
+            "hand_mode": null,
+            "local_turn_ready": true,
+            "snapshot_stable": false,
+            "player_action_phase": false
+          },
+          "deck": [
+            {
+              "card_id": "ACCELERANT",
+              "upgraded": true,
+              "count": 1
+            },
+            {
+              "card_id": "ACROBATICS",
+              "upgraded": true,
+              "count": 1
+            },
+            {
+              "card_id": "ADRENALINE",
+              "upgraded": true,
+              "count": 1
+            },
+            {
+              "card_id": "ASCENDERS_BANE",
+              "upgraded": false,
+              "count": 1
+            },
+            {
+              "card_id": "BACKFLIP",
+              "upgraded": true,
+              "count": 1
+            },
+            {
+              "card_id": "BACKSTAB",
+              "upgraded": false,
+              "count": 1
+            },
+            {
+              "card_id": "BOUNCING_FLASK",
+              "upgraded": true,
+              "count": 2
+            },
+            {
+              "card_id": "DASH",
+              "upgraded": false,
+              "count": 1
+            },
+            {
+              "card_id": "DEADLY_POISON",
+              "upgraded": true,
+              "count": 1
+            },
+            {
+              "card_id": "DEFEND_SILENT",
+              "upgraded": false,
+              "count": 5
+            },
+            {
+              "card_id": "DEFLECT",
+              "upgraded": true,
+              "count": 2
+            },
+            {
+              "card_id": "ENLIGHTENMENT",
+              "upgraded": true,
+              "count": 2
+            },
+            {
+              "card_id": "FLICK_FLACK",
+              "upgraded": false,
+              "count": 1
+            },
+            {
+              "card_id": "FOOTWORK",
+              "upgraded": true,
+              "count": 1
+            },
+            {
+              "card_id": "HAZE",
+              "upgraded": true,
+              "count": 1
+            },
+            {
+              "card_id": "LEADING_STRIKE",
+              "upgraded": false,
+              "count": 1
+            },
+            {
+              "card_id": "LEG_SWEEP",
+              "upgraded": true,
+              "count": 1
+            },
+            {
+              "card_id": "MIRAGE",
+              "upgraded": true,
+              "count": 1
+            },
+            {
+              "card_id": "NEUTRALIZE",
+              "upgraded": true,
+              "count": 1
+            },
+            {
+              "card_id": "OUTBREAK",
+              "upgraded": true,
+              "count": 1
+            },
+            {
+              "card_id": "PIERCING_WAIL",
+              "upgraded": true,
+              "count": 3
+            },
+            {
+              "card_id": "POISONED_STAB",
+              "upgraded": false,
+              "count": 1
+            },
+            {
+              "card_id": "PREDATOR",
+              "upgraded": false,
+              "count": 1
+            },
+            {
+              "card_id": "SEEKER_STRIKE",
+              "upgraded": false,
+              "count": 1
+            },
+            {
+              "card_id": "SLICE",
+              "upgraded": false,
+              "count": 1
+            },
+            {
+              "card_id": "STRIKE_SILENT",
+              "upgraded": false,
+              "count": 4
+            },
+            {
+              "card_id": "SURVIVOR",
+              "upgraded": false,
+              "count": 1
+            }
+          ],
+          "potions": [
+            {
+              "slot": 0,
+              "id": null
+            },
+            {
+              "slot": 1,
+              "id": null
+            }
+          ],
+          "relics": [
+            {
+              "id": "RING_OF_THE_SNAKE",
+              "stack": null,
+              "is_melted": false
+            },
+            {
+              "id": "STONE_HUMIDIFIER",
+              "stack": null,
+              "is_melted": false
+            },
+            {
+              "id": "PETRIFIED_TOAD",
+              "stack": null,
+              "is_melted": false
+            },
+            {
+              "id": "TOXIC_EGG",
+              "stack": null,
+              "is_melted": false
+            },
+            {
+              "id": "SEAL_OF_GOLD",
+              "stack": null,
+              "is_melted": false
+            },
+            {
+              "id": "BELLOWS",
+              "stack": null,
+              "is_melted": false
+            },
+            {
+              "id": "MERCURY_HOURGLASS",
+              "stack": null,
+              "is_melted": false
+            },
+            {
+              "id": "POLLINOUS_CORE",
+              "stack": 3,
+              "is_melted": false
+            },
+            {
+              "id": "LIZARD_TAIL",
+              "stack": null,
+              "is_melted": false
+            },
+            {
+              "id": "SIGNET_RING",
+              "stack": null,
+              "is_melted": false
+            },
+            {
+              "id": "VENERABLE_TEA_SET",
+              "stack": null,
+              "is_melted": false
+            },
+            {
+              "id": "MINIATURE_TENT",
+              "stack": null,
+              "is_melted": false
+            },
+            {
+              "id": "RED_MASK",
+              "stack": null,
+              "is_melted": false
+            },
+            {
+              "id": "STRAWBERRY",
+              "stack": null,
+              "is_melted": false
+            },
+            {
+              "id": "BAG_OF_PREPARATION",
+              "stack": null,
+              "is_melted": false
+            }
+          ],
+          "powers": [],
+          "enemies": [],
+          "next_boss_metadata": "QUEEN_BOSS",
+          "source": {
+            "path": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+            "offset": 10978651413,
+            "bytes": 35544,
+            "sha256": "b315a4e72110722c4f8a48412095b70cfc02fc1dc927ca8ba4755feb2b9ddd33",
+            "frozen_path": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/paper/materials/20261016-global-build-g1a/raw/7S8HCC0M6G9W-first_post_victory.json"
           }
         },
         "first_last_combat": {

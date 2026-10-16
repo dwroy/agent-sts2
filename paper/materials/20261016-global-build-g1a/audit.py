@@ -150,6 +150,7 @@ def main():
             exits = [f for f in before if not f['in_combat']]
             last_combat = [f for f in before if f['in_combat']][-1]
             exit_frame = exits[-1] if exits else None
+            post_victory = next((f for f in exits if f['off'] > last_combat['off']), None)
             # First actionable F49 T1, without treating a later SL reset as a new run.
             ready = []
             for f in frames:
@@ -159,7 +160,7 @@ def main():
                 if ((raw['state'].get('combat') or {}).get('action_readiness') or {}).get('can_use_combat_actions'):
                     ready.append(f)
                     break
-            chosen = {'first_exit': exit_frame, 'first_last_combat': last_combat, 'second_entry': first49, 'second_first_actionable': ready[0] if ready else None}
+            chosen = {'first_exit': exit_frame, 'first_post_victory': post_victory, 'first_last_combat': last_combat, 'second_entry': first49, 'second_first_actionable': ready[0] if ready else None}
             observations = {}
             for label, frame in chosen.items():
                 if frame is None:
@@ -184,6 +185,7 @@ def main():
                               'limitation': 'Endpoint observations; first actionable means first indexed ready snapshot, not a certified untouched opening. Opening/reward triggers can change HP/deck/potions/powers. No unobserved transition, trigger order or charge state inferred.'})
     save('continuous-resource-contract.json', {'schema': 'silent-continuous-boss-evidence-v1', 'character': 'silent', 'ascension': 10,
          'scope': 'Observed F48 victory -> F49 only; six already-studied ended runs, not independent calibration or general two-battle API',
+         'observation_labels': {'first_post_victory': 'First indexed noncombat snapshot after the winning combat; direct post-victory persistent resources', 'first_exit': 'Last noncombat snapshot before F49 (usually MAP); keep distinct from immediate victory and rewards', 'first_last_combat': 'Last logged combat frame; not necessarily a terminal frame', 'second_entry': 'First indexed F49 snapshot', 'second_first_actionable': 'First indexed ready T1; not certified untouched opening'},
          'resource_names': ['hp','max_hp','deck','potions','relics','gold','block','energy','powers'],
          'contract': {
              'hp': {'status': 'observed', 'rule': 'Use actual post-victory and next actionable HP separately; no generic act-transition heal inferred.'},

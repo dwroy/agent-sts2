@@ -63,7 +63,7 @@ def notification():
     (OUT/'notification.json').write_text(json.dumps({'at':at,'evidence':records,'scope':'Actual append/readback only; no watcher/Roy ACK.'},ensure_ascii=False,indent=2)+'\n')
 
 
-assert json.loads((OUT/'validation.json').read_text())['raw_state_sha']==24
+assert json.loads((OUT/'validation.json').read_text())['raw_state_sha']==30
 assert json.loads((OUT/'candidate-consumer-output.json').read_text())['experience_version']=='2026-10-16.g1a-r1'
 assert json.loads((OUT/'check-experience.json').read_text())['missing']==[]
 paths=git('diff','--name-only',BASE,SOURCE,cwd=WORK).splitlines()
@@ -152,7 +152,7 @@ try:
     items.append({'name':state['version'],'family':'V5','character':'SILENT','commit':state['merged'],'source':at+'; G1a r1 Silent experience2026-10-16.g1a-r1, ledger silent-0494; source '+SOURCE+'; 4 new calibration boundary entries and 1 bounded resource handoff; fixed consumers5/role/asc passed; data only, no new simulation or thresholds; R366 fixed107/460 and old70/current71 input differences retained. Official release id by ops; no natural use/effect or parent completion claim.'})
     versions_path.write_text(json.dumps(versions,ensure_ascii=False,indent=2)+'\n')
     with (LIVE/'paper/materials/decision-log.md').open('a') as h:
-        h.write(f'\n- {at} 学习者G1a r1实际入库：source{SOURCE}→live{state["merged"]}，经验2026-10-16.g1a-r1/{state["version"]}，silent-0494；三幕34/29/27例质量仍失败、固定/生产70/71输入差分列，六局既有资源端点和联合率unknown；真实固定消费者5条及角色/进阶隔离通过，24原帧/70结局身份原行SHA、24四闸行核。仅数据，复用原检查，不重跑模型/全套，非自然采用/胜率提升；保刷新与其他源码/知识/脏记录；通用连战接口/自然消费归watcher，校准/0332/global-build父不关闭。\n')
+        h.write(f'\n- {at} 学习者G1a r1实际入库：source{SOURCE}→live{state["merged"]}，经验2026-10-16.g1a-r1/{state["version"]}，silent-0494；三幕34/29/27例质量仍失败、固定/生产70/71输入差分列，六局既有资源端点和联合率unknown；真实固定消费者5条及角色/进阶隔离通过，30原帧/70结局身份原行SHA、24四闸行核。仅数据，复用原检查，不重跑模型/全套，非自然采用/胜率提升；保刷新与其他源码/知识/脏记录；通用连战接口/自然消费归watcher，校准/0332/global-build父不关闭。\n')
     git('add','--sparse','--','eval/versions.json','paper/materials/decision-log.md')
     state['publication']=commit('Record G1a knowledge version and actual consumer readback','publication')
     state['fixed_release_tree']=git('rev-parse','HEAD^{tree}')
