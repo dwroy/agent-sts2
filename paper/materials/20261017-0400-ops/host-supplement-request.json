@@ -1,0 +1,62 @@
+{
+  "schema": 1,
+  "batch": "20261017-014302-s2-strategy-proposal",
+  "task": "strategy-proposal",
+  "worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-014302-s2",
+  "original": {
+    "merged": "52a1bfb17f6383617df5ce96102a7d881fe24626",
+    "tree": "8db5f0479fd1577974272bb6086b5a8005cfc436",
+    "log_sha256": "ce897c2dc229164ad09569f2e36ddc6e09e49216a654c12ea0e1e2d107baebd1",
+    "coverage": {
+      "passed": [],
+      "failed": [
+        "tests/build-facts-audit.test.ts"
+      ],
+      "skipped": [],
+      "summary": {
+        "files": {
+          "failed": 1,
+          "passed": 505
+        },
+        "tests": {
+          "failed": 1,
+          "passed": 5026,
+          "skipped": 2
+        }
+      },
+      "failed_tests": {
+        "tests/build-facts-audit.test.ts": [
+          "V4 M2 audit: build questions carry facts, not code's scores selection/remove with the boss simulation: facts, not scores; every option still listed"
+        ]
+      }
+    }
+  },
+  "live": {
+    "commit": "52a1bfb17f6383617df5ce96102a7d881fe24626",
+    "tree": "8db5f0479fd1577974272bb6086b5a8005cfc436"
+  },
+  "sources": [
+    "66b05734c8ee8e632345fb5c1c3a672296ab7ad5"
+  ],
+  "inputs": [
+    {
+      "path": "agent/tests/build-facts-audit.test.ts",
+      "source": "66b05734c8ee8e632345fb5c1c3a672296ab7ad5"
+    }
+  ],
+  "selection": [
+    {
+      "file": "tests/build-facts-audit.test.ts",
+      "tests": [
+        "V4 M2 audit: build questions carry facts, not code's scores selection/remove with the boss simulation: facts, not scores; every option still listed"
+      ],
+      "reason": "failed"
+    }
+  ],
+  "receipts": [
+    {
+      "path": "paper/materials/20261017-0400-ops/host-failure-disposition.json",
+      "sha256": "f234f8d5f621ecf432c91abfbe5e07c0d7b41c01f1e7218024b235608a970783"
+    }
+  ]
+}
