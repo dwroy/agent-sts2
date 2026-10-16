@@ -1,0 +1,256 @@
+from pathlib import Path
+import datetime as dt
+import fcntl
+import hashlib
+import json
+import os
+import subprocess
+import sys
+import time
+
+sys.dont_write_bytecode = True
+root = Path(__file__).resolve().parents[4]
+private = Path(__file__).resolve().parent
+phase = root / 'paper/materials/20261016-global-build-g3b'
+public = phase / 'ops-dispatch'
+state_dir = root / 'ops/codex-ops'
+parent = '20261012-024317-strategy-proposal'
+thread = '01a12c46-fef2-7282-b689-1fd8b4e0450b'
+tree = root / '.worktrees/codex-strategy-silent-20261012-024317'
+supplement = 'global-build-g3b-20261016-successor-frames'
+sys.path.insert(0, str(root / 'ops'))
+import learner_jobs
+
+
+def sha(raw):
+    return hashlib.sha256(raw).hexdigest()
+
+
+def date():
+    return subprocess.check_output(['date', '+%Y-%m-%d %H:%M:%S %Z'], text=True).strip()
+
+
+def save(path, value):
+    path.parent.mkdir(parents=True, exist_ok=True)
+    temp = path.with_name(path.name + '.ops-' + str(os.getpid()) + '.tmp')
+    temp.write_text(json.dumps(value, ensure_ascii=False, indent=2) + '\n')
+    os.replace(temp, path)
+
+
+def ref(path):
+    path = Path(path)
+    raw = path.read_bytes()
+    return dict(path=str(path.relative_to(root)), bytes=len(raw), sha256=sha(raw))
+
+
+def alive(pid):
+    if not isinstance(pid, int) or pid <= 0:
+        return False
+    try:
+        os.kill(pid, 0)
+        return True
+    except ProcessLookupError:
+        return False
+
+
+def verify():
+    assert ref(phase / 'learner-input.md')['sha256'] == 'aff9f3238929dd5ef41accfaafc6ebc778b209bbeeb05d63493938f53be49e9f'
+    manifest_ref = ref(phase / 'inputs/manifest.json')
+    assert manifest_ref['sha256'] == '588276ef299dd6802bfe3e7e69e5ad07a506a91eb81bd034bdf30b10824d6ecb'
+    manifest = json.loads((phase / 'inputs/manifest.json').read_bytes())
+    coordination = ref(phase / 'coordination/anchor-index.json')
+    assert coordination['sha256'] == '724e2996f7634079901a6ff25838f4a15b5e8a2b85a012714ae500015a40791d'
+    artifacts = []
+    for name, expected in manifest['artifacts'].items():
+        item = ref(phase / 'inputs' / name)
+        assert all(item[key] == expected[key] for key in ['bytes', 'sha256'])
+        artifacts.append(item)
+    count = 0
+    with (root / 'logs/decisions.jsonl').open('rb') as source:
+        for item in manifest['raw_construction_record_index']:
+            assert item['path'] == 'logs/decisions.jsonl'
+            assert item['off'] + item['len'] <= manifest['source_bounds']['decisions']['complete_prefix_bytes']
+            source.seek(item['off'])
+            raw = source.read(item['len'])
+            assert sha(raw) == item['sha256']
+            count += 1
+    assert count == 1371
+    bounds = []
+    for name, item in manifest['source_bounds'].items():
+        st = (root / item['path']).stat()
+        assert st.st_size >= item['complete_prefix_bytes']
+        assert st.st_ino == item['inode'] and st.st_dev == item['device']
+        bounds.append(dict(stream=name, **item, current_size_at_ops_read=st.st_size))
+    original = tree / 'learner/runs/20261012-024330-strategy-proposal.jsonl'
+    original_ref = ref(original)
+    assert original_ref['sha256'] == '05f714b76491fa0faf2872b2a2011b1efe8d8c4c8e8e66244949b31d7ff25687'
+    launch = []
+    threads = set()
+    for raw in original.read_bytes().splitlines():
+        event = json.loads(raw)
+        if event.get('type') == 'learner_launch':
+            launch.append(event)
+        if event.get('type') == 'thread.started':
+            threads.add(event.get('thread_id'))
+    assert len(launch) == 1 and launch[0]['engine'] == 'codex' and launch[0]['cwd'] == str(tree)
+    assert threads == {thread}
+    command = launch[0]['command']
+    original_model = command[command.index('--model') + 1]
+    assert (state_dir / 'codex-home').read_text().strip() == str(state_dir / 'accounts/codex1/learner')
+    notice = json.loads((state_dir / 'learning-notices/d70532ef14bf73d453bdbc83.json').read_text())
+    stages = {}
+    for key in ['ops_forwarded', 'watcher_received', 'roy_notified']:
+        item = notice[key]
+        path = Path(item['path'])
+        if not path.is_absolute():
+            path = root / path
+        assert path.resolve().is_relative_to(root) and sha(path.read_bytes()) == item['sha256']
+        stages[key] = item
+    result = dict(at=date(), manifest=manifest_ref, input=ref(phase / 'learner-input.md'),
+        artifacts=artifacts, indexed_original_rows_SHA_verified=count, source_bounds=bounds,
+        optional_coordination_index=coordination, coordination_is_metadata_only_not_labels=True,
+        game_knowledge_labels_derived_by_ops=False, original_owner_log=original_ref,
+        original_thread=thread, original_model_history_retained=original_model,
+        requested_resume_model='gpt-6.1-sol', effort='xhigh', service_tier='default',
+        existing_learner_wrapper_and_permissions_retained=True, d705_existing_stages=stages,
+        no_duplicate_notice_or_role_ACK=True, Roy_ACK=None)
+    save(public / 'ops-input-owner-readback.json', result)
+    return result
+
+
+def prepare(readback):
+    frozen_path = public / 'input-r1.json'
+    if frozen_path.exists():
+        frozen = json.loads(frozen_path.read_bytes())
+        assert frozen['supplement_id'] == supplement and frozen['same_thread'] == thread
+        assert frozen['input'] == ref(phase / 'learner-input.md') and frozen['manifest'] == ref(phase / 'inputs/manifest.json')
+        return ref(frozen_path), ref(public / 'task-r1/strategy-proposal.md')
+    frozen = dict(at=date(), supplement_id=supplement, revision=1, phase='G3b-prospective-successor-frames',
+        parent_request_id='roy-20261016-global-build',
+        original_learning_request='roy-20261011-silent-core-cycle-quantitative-learning',
+        linked_request='roy-20261012-concrete-core-decklists', parent_batch=parent, same_thread=thread,
+        worktree=str(tree.relative_to(root)), original_owner_role='quantitative',
+        original_owner_log=readback['original_owner_log'], input=ref(phase / 'learner-input.md'),
+        manifest=ref(phase / 'inputs/manifest.json'), artifacts=readback['artifacts'],
+        authorization=[ref(phase / 'assignment.txt'), ref(phase / 'assignment.native.jsonl')],
+        requirements=['initial-option', 'actual-route', 'completion-choice-policy', 'sl-branch',
+                      'original-template-endpoint', 'separate-observations', 'all-anchor-coverage'],
+        no_new_learning_parent=True, old_revisions_and_wide_parents_unchanged=True,
+        only_fixed_offline_evidence=True, no_simulation_game_API_or_extra_model_calls=True,
+        output_directory='learner-results', owner_only_one_pass_then_stop=True)
+    save(frozen_path, frozen)
+    frozen_ref = ref(frozen_path)
+    task = '''---
+title: 原量化owner G3b前瞻预测后继帧有界核实
+tools: Read, Grep, Glob, Bash, Edit, Write
+effort.codex: xhigh
+timeout_min: 240
+max_turns: 800
+---
+# 同一原量化线程接续；只交固定离线真实后继帧核验
+
+你仍是原 roy-20261011-silent-core-cycle-quantitative-learning / 024317 owner，原线程01a12c46。本次属于已授权原父roy-20261016-global-build的G3b，既有G4原线程只作来源，不另派同题owner，不重复旧研究/模拟。原51e0工作树、旧报告及failed/rc0历史保持，不合旧分支到main/live。当前模型统一gpt-6.1-sol/xhigh/default、原codex1 learner home与沙箱不扩权。自己完成，不另派辅助/子agent。
+
+先读本仓库AGENTS/README/最新STATE/decision-log/learning-protocol及主根docs/v5-construction.md。以下独立新补充优先于旧轮要求；不因旧任务描述重启实现、实验或经验发布。原宽父、G4资格及0332保持。
+
+冻结补充：FROZEN_JSON
+
+实际input文件SHA=FROZEN_SHA。逐项核冻结引用，使用主根绝对路径读取input-r1/learner-input及manifest。原始日志仅可使用各source_bounds的complete_prefix_bytes以内字节，不借当前追加帧补截止。不得重新运行任何预测、历史模拟、模型实验/API、游戏API/play、源码full或安装依赖；只允许本次原线程本身的必要学习推理，不能另开模型会话。离线命令nice19，每项至多4进程，无自然监听/轮询等候。
+
+用户追加的coordination/anchor-index.json（SHA724e2996f7634079901a6ff25838f4a15b5e8a2b85a012714ae500015a40791d）仅为同1371锚点的可选轻量索引，不改变冻结input/manifest或要求。可用它按窗口去重读取；它的chosen元数据不是实际动作/政策/结局真值，必须核原帧。input-audit/template-binding-check可复用已核结果；早期缺绑定不得倒填。
+
+只在本WT的{{scratch}}/learner-results写本轮report.md、outcomes.jsonl、coverage.json、确定性提取脚本和逐原帧manifest；不得改主根/线上源码、经验、construction-calibration.json、配置、注册或通知ACK，不自动提交/合live。原树旧代码不代表R328以来计算语义：按预测原source SHA经git show只读历史completionChoice/route/template，不能用当前模板替换。缺真实路径/模型/政策/模板/as_of或证据就明确排除，不能修补输入造标签。
+
+必须本人完整读取被冻结learner-input.md并逐项执行。覆盖1371锚点，按窗口共享证据；145264展开行不是独立样本，无需逐行重复研究。初始实际选项、真实路线、completion-choice-v1后继合法选择、SL分支与原模板签名终点均附原帧offset/len/SHA；current不能当实际skip，attempt的null不能补1；未选候选不得占同identity，政策/路线改变、截点前未到期/死亡、未知事件、分支不闭合如实排除。拥有组件/实际施放/存活/整局结果分列，functional仍unknown。没有合格组只交实际缺口，不凑10局或创建通过文件。report/outcomes/coverage以learner-input合同为准；watcher后续运行原eval/construction.py，不由你推进advisory、G3a/G3c/G5或G2自然门槛。
+
+已有run-plans.json为空是原投影事实，不可补造；可按manifest以内原完整决策中已保存计划核，仍缺证就列缺口。与旧知识冲突须原文/证据/旧知识ID/不同结论和下一步，交ops→原watcher→Roy，不代ACK。
+
+完成此限定报告即停；若核验范围未完成须如实列未完锚点及新增产物，不称全否定。最后strategy-proposal JSON保原格式：task/character/base/runs/fixes=[]/merged=null/tests={tsc:null,vitest:null,cases:null}/code_proposals=[]/implementation_domains=[]/proposal_results=[]/report真实路径；parent_complete=false，附continuation_result{supplement_id,parent_batch,phase:G3b-prospective-successor-frames,input_manifest_sha256:FROZEN_SHA,outcome:complete|continue|blocked,coverage,inputs/results原件refs,checkpoint,next_step}。complete只表示本轮真实证据报告交付，不关闭原学习/量化宽父，不等校准通过或任何角色已接受；不要伪造commit/test/用户确认以绕通用报告守卫。
+'''.replace('FROZEN_JSON', json.dumps(frozen, ensure_ascii=False, indent=2)).replace('FROZEN_SHA', frozen_ref['sha256'])
+    task_path = public / 'task-r1/strategy-proposal.md'
+    task_path.parent.mkdir(parents=True, exist_ok=True)
+    task_path.write_text(task)
+    return frozen_ref, ref(task_path)
+
+
+def register(frozen_ref, task_ref):
+    pending = state_dir / 'pending-integrations/global-build-g3b-original-quantitative.json'
+    with (state_dir / 'learner' / (tree.name + '.lock')).open('a') as lease:
+        try:
+            fcntl.flock(lease, fcntl.LOCK_EX | fcntl.LOCK_NB)
+            lease_free = True
+        except BlockingIOError:
+            lease_free = False
+        with (state_dir / 'learn.lock').open('a') as lock:
+            fcntl.flock(lock, fcntl.LOCK_EX)
+            state = json.loads((state_dir / 'learn.json').read_bytes())
+            prior = state['batches'][parent]
+            assert prior['worktree'] == str(tree) and prior['character'] == 'silent'
+            assert prior['state'] == 'failed' and prior['rc'] == 0 and not alive(prior['pid'])
+            history = state['batches']['20261014-215252-strategy-proposal']
+            assert history['resume_thread'] == thread and history['continuation_parent_batch'] == parent
+            g4 = state['learning_requests']['roy-20261012-concrete-core-decklists']
+            assert g4['revision'] == 3 and g4['state'] == 'completed'
+            active = [dict(batch=bid, pid=b['pid'], worktree=b.get('worktree')) for bid,b in state['batches'].items()
+                      if b.get('task') == 'strategy-proposal' and b.get('state') == 'running' and alive(b.get('pid'))]
+            existing = [(bid,b) for bid,b in state['batches'].items() if b.get('continuation_supplement_id') == supplement]
+            external = learner_jobs.external_writer(str(tree))
+            owned_running = any(x['worktree'] == str(tree) for x in active)
+            head = subprocess.check_output(['git','-C',str(tree),'rev-parse','HEAD'],text=True).strip()
+            assert head == '51e0c1f475f842b355172f1f2a6f320cae9fb58d'
+            assert not subprocess.check_output(['git','-C',str(tree),'status','--porcelain','--untracked-files=no']).strip()
+            receipt = dict(at=date(), parent_request_id='roy-20261016-global-build', phase='G3b',
+                supplement_id=supplement, revision=1, original_request='roy-20261011-silent-core-cycle-quantitative-learning',
+                original_batch=parent, thread=thread, worktree=str(tree), source_HEAD=head,
+                G4_trace=dict(thread='01a12eba-13a8-7550-ac47-692d3d19bed1', revision=3, state=g4['state'], changed=False),
+                frozen_input=frozen_ref, task=task_ref, strategy_slot_limit=2, active_strategy_slots=active,
+                lease_free_at_check=lease_free, external_writer=external,
+                requested_model='gpt-6.1-sol', effort='xhigh', service_tier='default',
+                learner_home=(state_dir/'codex-home').read_text().strip(),
+                batch=None, pid=None, pane=None, actually_started=False, learner_received=False,
+                native_first_reply_verified=False, watcher_received=None, Roy_ACK=None,
+                original_runner='ops/codex-ops/record-staging/20261014-2121/resume-next.py run <registered-batch>',
+                no_old_revision_hot_edit=True, no_new_learning_parent_or_slot=True, no_live_or_game_change=True)
+            if existing:
+                bid,b = existing[-1]
+                receipt.update(state='existing_continuation_preserved', batch=bid, pid=b.get('pid'), pane=b.get('pane'), actually_started=True)
+            elif len(active) >= 2 or not lease_free or external or owned_running:
+                receipt.update(state='pending_existing_slot_or_lease', reason='原两策略槽已满' if len(active)>=2 else '原owner lease或writer仍占用',
+                    next_gate='原任务自然释放槽与owner lease后，原ops运行同一register.py；持learn.lock复核再用原runner同thread启动，不扩槽、不hot改输入。')
+            else:
+                batch_id = dt.datetime.now().strftime('%Y%m%d-%H%M%S') + '-strategy-proposal'
+                assert batch_id not in state['batches']
+                fcntl.flock(lease, fcntl.LOCK_UN)
+                argv=['nice','-n','19','python3','-B',str(root/receipt['original_runner'].split(' run ')[0]),'run',batch_id]
+                pid,pane = learner_jobs.start_learner(argv,str(root),str(root/'ops'),str(state_dir),'learner-'+batch_id)
+                state['batches'][batch_id]=dict(task='strategy-proposal',character='silent',runs=[],
+                    key='continuation:quantitative:'+frozen_ref['sha256'],state='running',pid=pid,pane=pane,
+                    worktree=str(tree),original_owner_role='quantitative',continuation_parent_batch=parent,
+                    resume_thread=thread,continuation_supplement_id=supplement,continuation_input=frozen_ref,
+                    continuation_task=task_ref,proposal_policy='Roy-2026-10-07-learning',
+                    reason='authorized-G3b-fixed-prospective-successor-frame-continuation')
+                save(state_dir/'learn.json',state)
+                receipt.update(state='wrapper_started_native_consumption_pending',batch=batch_id,pid=pid,pane=pane,
+                    actually_started=True,launch_command=argv)
+            save(public/'ops-dispatch-receipt.json',receipt)
+            save(pending,receipt)
+    received = dict(at=date(),status='ops_received_and_original_owner_resolved',owner=thread,original_batch=parent,
+        frozen_input=frozen_ref,input_manifest=ref(phase/'inputs/manifest.json'),
+        disposition=ref(public/'ops-dispatch-receipt.json'),learner_received=receipt['learner_received'],
+        no_watchers_or_Roy_ACK_by_ops=True)
+    save(public/'ops-received.json',received)
+    if receipt['state']=='pending_existing_slot_or_lease' and not (public/'ops-pending-event.json').exists():
+        event=state_dir/'queue'/(str(time.time_ns())+'-manual.md')
+        event.write_text('原roy-20261016-global-build/G3b后继帧核验已本人接收/冻结并核原量化owner01a12c46；仅因原两策略槽或lease满而pending，无新模型启动。回执paper/materials/20261016-global-build-g3b/ops-dispatch/ops-dispatch-receipt.json。原owner/父/输入r1不变；下次原槽自然释放后运行 nice -n 19 python3 -B ops/codex-ops/record-staging/20261016-g3b-intake/register.py，原learn.lock复核后复用20261014-2121原runner同thread启动。缺槽继续pending且不要重复排事件/轮询，不扩槽或热改旧revision。实际启动后核原生第一回复再称实收，按用户合同交learner-results；不新派研究/模拟/API/其他阶段。\n')
+        save(public/'ops-pending-event.json',dict(at=date(),event=ref(event),status='queued_only_not_dispatch_or_ACK'))
+    print(json.dumps({k:receipt[k] for k in ['state','thread','revision','batch','pid','actually_started','learner_received','active_strategy_slots']},ensure_ascii=False))
+
+
+if __name__ == '__main__':
+    if (public / 'input-r2-registration.json').exists():
+        print(json.dumps(dict(state='r2_scope_addendum_registered_do_not_requeue_r1',
+            receipt=str((public/'ops-current-receipt.json').relative_to(root)))))
+        raise SystemExit(0)
+    checked=verify()
+    frozen_ref,task_ref=prepare(checked)
+    register(frozen_ref,task_ref)

@@ -1,0 +1,182 @@
+from pathlib import Path
+import fcntl
+import hashlib
+import json
+import os
+import subprocess
+import sys
+
+sys.dont_write_bytecode = True
+r = Path.cwd()
+private = r / 'ops/codex-ops/record-staging/20261016-g3b-intake'
+phase = r / 'paper/materials/20261016-global-build-g3b'
+pub = phase / 'ops-dispatch'
+state_dir = r / 'ops/codex-ops'
+sha = lambda raw: hashlib.sha256(raw).hexdigest()
+
+
+def date():
+    return subprocess.check_output(['date', '+%Y-%m-%d %H:%M:%S %Z'], text=True).strip()
+
+
+def ref(path):
+    raw = path.read_bytes()
+    return dict(path=str(path.relative_to(r)), bytes=len(raw), sha256=sha(raw))
+
+
+def write(path, value):
+    path.parent.mkdir(parents=True, exist_ok=True)
+    raw = (json.dumps(value, ensure_ascii=False, indent=2) + '\n').encode()
+    temp = path.with_name(path.name + '.ops-' + str(os.getpid()) + '.tmp')
+    temp.write_bytes(raw)
+    os.replace(temp, path)
+
+
+dispatch = json.loads((pub/'ops-dispatch-receipt.json').read_bytes())
+batch = dispatch['batch']
+thread = dispatch['thread']
+tree = Path(dispatch['worktree'])
+assert batch == '20261016-135539-strategy-proposal'
+for item in [dispatch['task'], dispatch['frozen_input']]:
+    assert sha((r/item['path']).read_bytes()) == item['sha256']
+log = r / 'learner/runs/20261016-135541-9b95a56c-ddfa-4e65-b94d-cbe7a5f57947-strategy-proposal.jsonl'
+selected = {}
+first_reply = None
+with log.open('rb') as source:
+    while raw := source.readline():
+        item = json.loads(raw)
+        kind = item.get('type')
+        if kind in ['learner_launch','learner_startup_attempt','thread.started','learner_resume_ack']:
+            selected[kind] = dict(source=dict(path=str(log.relative_to(r)),off=source.tell()-len(raw),
+                len=len(raw),sha256=sha(raw)), value=item)
+        if first_reply is None and kind == 'item.completed' and item.get('item',{}).get('type') == 'agent_message':
+            first_reply = dict(source=dict(path=str(log.relative_to(r)),off=source.tell()-len(raw),
+                len=len(raw),sha256=sha(raw)), text=item['item']['text'])
+        if first_reply and 'learner_resume_ack' in selected:
+            break
+start = selected['learner_startup_attempt']['value']
+ack = selected['learner_resume_ack']['value']
+launch = selected['learner_launch']['value']
+assert selected['thread.started']['value']['thread_id'] == thread
+assert ack['batch'] == start['batch'] == batch and ack['thread_id'] == thread
+assert ack['input_sha256'] == start['input_sha256'] == sha(launch['prompt'].encode())
+assert ack['command_sha256'] == start['command_sha256']
+assert sha(first_reply['text'].encode()) == ack['first_message_sha256']
+assert dispatch['frozen_input']['sha256'] in launch['prompt']
+assert launch['cwd'] == str(tree)
+assert launch['command'][1:3] == ['exec','resume'] and launch['command'][-2:] == [thread,'-']
+native = list((state_dir/'accounts/codex1/learner/sessions').glob('**/*'+thread+'.jsonl'))
+assert len(native) == 1
+context = None
+matched_input = None
+matched_reply = None
+with native[0].open('rb') as source:
+    while raw := source.readline():
+        item = json.loads(raw)
+        payload = item.get('payload',{})
+        source_ref = dict(path=str(native[0].relative_to(r)),off=source.tell()-len(raw),len=len(raw),sha256=sha(raw))
+        if item.get('type') == 'turn_context' and matched_input is None:
+            context = dict(source=source_ref, value={key:payload.get(key) for key in
+                ['cwd','model','effort','sandbox_policy','approval_policy']})
+        if item.get('type') != 'response_item':
+            continue
+        if payload.get('role') == 'user':
+            text = ''.join(x.get('text','') for x in payload.get('content',[]) if x.get('type') == 'input_text')
+            if sha(text.encode()) == start['input_sha256']:
+                matched_input = dict(source=source_ref,input_sha256=sha(text.encode()))
+        elif payload.get('role') == 'assistant' and matched_input:
+            text = ''.join(x.get('text','') for x in payload.get('content',[]) if x.get('type') == 'output_text')
+            if sha(text.encode()) == ack['first_message_sha256']:
+                matched_reply = dict(source=source_ref,message_sha256=sha(text.encode()))
+                break
+assert context and matched_input and matched_reply
+value = context['value']
+assert value['cwd'] == str(tree) and value['model'] == 'gpt-6.1-sol' and value['effort'] == 'xhigh'
+assert value['sandbox_policy']['type'] == 'workspace-write' and value['sandbox_policy']['network_access'] is False
+assert value['approval_policy'] == 'never'
+native_pid = 458300
+args = (Path('/proc')/str(native_pid)/'cmdline').read_bytes().decode().split('\0')
+config = {args[i+1].split('=',1)[0]:json.loads(args[i+1].split('=',1)[1]) for i,v in enumerate(args[:-1])
+    if v == '-c' and '=' in args[i+1] and args[i+1].split('=',1)[0] in
+    ['model','model_reasoning_effort','service_tier','default_permissions','approval_policy']}
+assert config == dict(default_permissions='learner',approval_policy='never',model='gpt-6.1-sol',
+    model_reasoning_effort='xhigh',service_tier='default')
+stat = (Path('/proc')/str(native_pid)/'stat').read_text().split(') ')[1].split()
+assert int(stat[16]) == 19
+selected['learner_launch'] = dict(source=selected['learner_launch']['source'],
+    value=dict(engine=launch['engine'],task=launch['task'],cwd=launch['cwd'],params=launch['params'],
+               prompt_sha256=sha(launch['prompt'].encode()),command_sha256=start['command_sha256']))
+at = date()
+write(pub/'startup-r1-readback.json',dict(at=at,batch=batch,wrapper_pid=dispatch['pid'],thread=thread,
+    original_batch=dispatch['original_batch'],worktree=str(tree),revision=1,
+    frozen_input=dispatch['frozen_input'],task=dispatch['task'],header_events=selected,first_real_reply=first_reply,
+    native_context=context,native_input=matched_input,native_first_reply=matched_reply,
+    actual_native_config=config,native_pid=native_pid,native_birth_ticks=stat[19],nice=19,
+    actual_started=True,learner_received=True,first_reply_at=ack['ts'],
+    old_Astra_history_untouched=True,current_Sol6_1_xhigh_default_and_original_sandbox_verified=True,
+    outputs_pending=True,r1_report_not_yet_accepted=True,watcher_received=None,Roy_ACK=None))
+support_ref = ref(phase/'support-run-plans.json')
+assert support_ref['sha256'] == '428c528027ca2865c8d28079b88a6d530a68ec9d294a259f4a64e9d93c6276d5'
+support = json.loads((phase/'support-run-plans.json').read_bytes())
+assert len(support) == 383
+manifest = json.loads((phase/'inputs-r2/manifest.json').read_bytes())
+with (r/'logs/run-plans.jsonl').open('rb') as source:
+    for item in support:
+        loc = item['_source']
+        assert loc['path'] == 'logs/run-plans.jsonl'
+        assert loc['off'] + loc['len'] <= manifest['source_bounds']['run-plans']['complete_prefix_bytes']
+        source.seek(loc['off'])
+        raw = source.read(loc['len'])
+        assert sha(raw) == loc['sha256'] and json.loads(raw) == item['row']
+        assert item['row']['run'] in manifest['selected_runs']
+write(pub/'support-run-plans-readback.json',dict(at=date(),support=support_ref,
+    original_receipt=ref(phase/'support-run-plans-receipt.json'),original_rows_byte_SHA_JSON_verified=383,
+    original_cutoff=manifest['source_bounds']['run-plans']['complete_prefix_bytes'],
+    preserved_empty_projections=[ref(phase/'inputs/run-plans.json'),ref(phase/'inputs-r2/run-plans.json')],
+    empty_projection_does_not_mean_no_plans=True,no_route_policy_or_outcome_labels=True,
+    no_hot_edit_or_additional_learner_call=True))
+scope = json.loads((pub/'r2-prefix-coverage-addendum.json').read_bytes())
+assert scope['new_eligible_prediction_rows'] == 0 and scope['added_anchors'] == 213
+at = date()
+packet = dict(at=at,schema='original-owner-offline-supplement-v1',parent_request_id='roy-20261016-global-build',
+    original_request='roy-20261011-silent-core-cycle-quantitative-learning',linked_request='roy-20261012-concrete-core-decklists',
+    supplement_id=dispatch['supplement_id'],revision=2,owner=thread,original_batch=dispatch['original_batch'],
+    original_worktree=str(tree),active_r1_batch=batch,
+    contract=ref(phase/'learner-input-r2.md'),manifest=ref(phase/'inputs-r2/manifest.json'),
+    active_input=ref(phase/'active-input.json'),scope_correction=ref(phase/'scope-correction.json'),
+    superset=ref(pub/'r2-input-readback.json'),scope_coverage=ref(pub/'r2-prefix-coverage-addendum.json'),
+    optional_original_plans=ref(pub/'support-run-plans-readback.json'),
+    old_r1_input_and_task=[dispatch['frozen_input'],dispatch['task']],
+    mode='mechanical-scope-addendum-await-original-r1-results',
+    no_r2_learner_started=True,no_active_r1_input_revision_changed=True,
+    no_new_model_required_for_prefix_metadata=True,learner_received_r2=False,
+    next_step='原r1终局后原样保报告/结果；同owner链复用已核帧并加本213锚点缺绑定范围补充，机械组装r2覆盖1584锚点的独立外层材料，引用而不改r1原件。若真实报告仍有证据未完，沿原owner如实交缺口，不重复已核窗口，不因新范围另开模型。watcher运行原eval汇总；没有原r1结果不称完成/校准通过。',
+    gates_unchanged=True,wide_parents_open=True,no_live_calibration_game_or_other_phase_change=True)
+write(pub/'input-r2-registration.json',packet)
+with (state_dir/'learn.lock').open('a') as lock:
+    fcntl.flock(lock,fcntl.LOCK_EX)
+    state=json.loads((state_dir/'learn.json').read_bytes())
+    active=state['batches'][batch]
+    assert active['continuation_input'] == dispatch['frozen_input'] and active['continuation_task'] == dispatch['task']
+    assert active['resume_thread'] == thread
+    record=dict(at=date(),state='r1_running_r2_scope_addendum_registered_awaiting_original_results',
+        parent_request_id=packet['parent_request_id'],phase='G3b',owner=thread,original_batch=dispatch['original_batch'],
+        active_revision=1,active_batch=batch,actual_wrapper_pid=dispatch['pid'],
+        first_real_reply_verified=True,learner_received_r1=True,startup=ref(pub/'startup-r1-readback.json'),
+        current_authoritative_input_revision=2,revision2=ref(pub/'input-r2-registration.json'),
+        queued_r2_model_job=False,learner_received_r2=False,
+        next_gate=packet['next_step'],old_registered_batch_and_G4_revision_unchanged=True,
+        watcher_received=None,Roy_ACK=None)
+    write(state_dir/'pending-integrations/global-build-g3b-original-quantitative.json',record)
+write(pub/'ops-current-receipt.json',record)
+(pub/'ops-register-r1.py.txt').write_bytes((private/'register.py').read_bytes())
+line=(f'\n- {at} 运维codex实际接收原global-build/G3b：核原量化024317/01a12c46原生线程与G4/01a12eba分离、旧failed/rc0和G4 r3完成原件保持；持原lease/learn.lock复核时一原槽自然释放，以nice19原runner同thread启动135539/PID457469，13:55:57.461原生首回复/输入SHA及Sol6.1/xhigh/default、原workspace-write/network-disabled实核，非仅排队。r1任务/输入保持；收到r2补前缀后核同13:43:17 source bounds、原1371锚点和145264展开行逐字节完全相同，新213锚点/22688展开行均无新增可准入绑定，范围47局1584锚点，新增run差集6而前缀实际7局（含4YPG原局5条）。不另开r2模型：登记同owner范围补充，待原r1真实结果原样复用并机械加缺绑定统计，未冒结果/全覆盖完成/校准通过。383原计划逐offset/len/SHA/JSON核，旧空投影保留且不称无计划；原ops首审把前缀去重7误要求6的断言失败/原脚本保留后改为真实集合差6，原输入未改。d705两watcher阶段本人原回执SHA核全，未重复告知或代Roy ACK。未改live/账号/home/模型/prompt/现局，未重复模拟/API/源full或宽父关闭；G2唯一组合宿主仍待原终局事件。证据paper/materials/20261016-global-build-g3b/ops-dispatch/。\n')
+appends=[]
+for path in ['paper/materials/decision-log.md','notes/ops-handoff.md','ops/inbox-dev.md']:
+    with (r/path).open('ab') as target:target.write(line.encode())
+    appends.append(dict(path=path,text=line))
+write(private/'own-appends.json',appends)
+write(private/'extra-owned-paths.json',[])
+(private/'own-ledger-rows.jsonl').write_bytes(b'')
+print(json.dumps(dict(batch=batch,received=True,first_reply=ack['ts'],revision2=2,
+    new_learner_calls_for_r2=0,scope_addendum_ready=True,r1_results='pending',wide_parents='open')))
