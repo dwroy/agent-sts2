@@ -48,6 +48,7 @@ import { ascensionMode, resolveTargetAscension } from "../memory/ascension-targe
 import { SILENT_DECK_CONSTRAINT, V5_DECK_POLICY } from "../memory/run-constraints.js";
 import { constructionMode } from "../construction/adapter.js";
 import { constructionEvaluationEnabled } from "../construction/consumer.js";
+import { globalBuildPolicy } from "../core/global-build-config.js";
 
 /** The repository this module runs from (core/paths.ts PROJECT_ROOT: the checkout's root). */
 export const REPO_ROOT = PROJECT_ROOT;
@@ -175,6 +176,9 @@ export interface RunConfigRow {
     s_combat_rank?: "on" | "off" | "shadow";
     s_build_sort?: "off" | "shadow";
     s_build_rank?: "off" | "shadow" | "on";
+    global_build_eval?: "off" | "shadow";
+    global_build_requested?: "off" | "shadow" | "on";
+    global_build_admission?: "pending_two_natural_shadow" | "not_applicable";
     combat_deepseek: string;
     /** THIEF_FACTS (docs/thief.md): the thieves' facts, escape and kill-line coverage on the combat question. */
     thief_facts: boolean;
@@ -486,6 +490,9 @@ export function runConfigRow(
       s_readiness: sReadinessMode(run.character, env),
       s_combat_rank: sCombatRankMode(run.character, env),
       s_build_rank: sBuildRankMode(run.character, env),
+      global_build_eval: globalBuildPolicy(run.character, env).mode,
+      global_build_requested: globalBuildPolicy(run.character, env).requested,
+      global_build_admission: globalBuildPolicy(run.character, env).admission,
       s_build_sort: sBuildRankMode(run.character, env) === "off" ? "off" as const : "shadow" as const,
       sim_failure_exit: simFailurePolicy(run.character, env).enabled ? "on" as const : "off" as const,
       sim_failure_retries: simFailurePolicy(run.character, env).retries,
