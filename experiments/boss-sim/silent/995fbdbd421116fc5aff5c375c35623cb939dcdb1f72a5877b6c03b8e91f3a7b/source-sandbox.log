@@ -1,0 +1,45 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/agent
+
+ ✓ tests/silent-boss-calibration.test.ts > Silent boss calibration > uses Silent's own start/pre parameters and ascension, never Ironclad's 4ms
+ ✓ tests/silent-boss-calibration.test.ts > Silent boss calibration > a missing Silent fit returns raw and keeps missing-data bosses low 2ms
+ ✓ tests/silent-boss-calibration.test.ts > Silent boss calibration > Ironclad probabilities remain equivalent after character switches 1ms
+ ✓ tests/silent-boss-calibration.test.ts > Silent boss calibration > B2 first-attempt gating and B3 reasons consume their own table and A10 scope 2ms
+ ✓ tests/silent-boss-calibration.test.ts > Silent boss calibration > B3 paired differences, errors and calibrated floor use the same ascension map 1ms
+ ✓ tests/boss-trust.test.ts > B4 the trusted bosses, from the validation data > the data file's lists follow its own criteria, per consumer's start point; the few-fight bosses stay low 8ms
+ ✓ tests/boss-trust.test.ts > B4 the trusted bosses, from the validation data > without the data file every boss is low trust 1ms
+ ✓ tests/silent-boss-calibration-board.test.ts > uses nearest ascension HP/damage while retaining actual player resources and opening modifiers 4ms
+
+ Test Files  3 passed (3)
+      Tests  8 passed (8)
+   Start at  18:57:05
+   Duration  4.54s (transform 3.36s, setup 580ms, import 3.49s, tests 28ms, environment 0ms)
+
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/agent
+
+ ✓ tests/paths.test.ts > the project root > is this checkout's root: agent/ (with this test), knowledge/ and the logs/ and data/ beside them 2ms
+ ✓ tests/paths.test.ts > the project root > resolves a relative path against itself whatever the cwd; an absolute one stays 2ms
+ ✓ tests/paths.test.ts > the project root > the workspace (notes/, ops/) is STS2_WORKSPACE, else the project root 1ms
+ ✓ tests/paths.test.ts > paths from the environment > a relative one (an .env's DECISION_LOG=logs/decisions.jsonl) resolves against the project root, not the cwd 4ms
+ ✓ tests/paths.test.ts > paths from the environment > an absolute one is used as given 2ms
+ ✓ tests/paths.test.ts > paths from the environment > the defaults are the project's logs/ (where the old code root kept them) 1ms
+ ✓ tests/paths.test.ts > the knowledge files > every data file is where its loader looks: common/ or characters/<character>/ 3ms
+ ✓ tests/paths.test.ts > the knowledge files > nothing in the data directories is outside that map (a file a loader would not find) 1ms
+ ✓ tests/paths.test.ts > the knowledge files > the default guide and handbook (v3's system prompt) exist and reach DeepSeek's system prompt 61ms
+ ✓ tests/paths.test.ts > the tool servers' and log database's defaults > the MCP server runs this package's tsx on its own source 1ms
+ ✓ tests/paths.test.ts > the tool servers' and log database's defaults > the log database's query script is in agent/tools/logdb 0ms
+ ✓ tests/silent-boss-calibration.test.ts > Silent boss calibration > uses Silent's own start/pre parameters and ascension, never Ironclad's 3ms
+ ✓ tests/silent-boss-calibration.test.ts > Silent boss calibration > a missing Silent fit returns raw and keeps missing-data bosses low 1ms
+ ✓ tests/silent-boss-calibration.test.ts > Silent boss calibration > Ironclad probabilities remain equivalent after character switches 1ms
+ ✓ tests/silent-boss-calibration.test.ts > Silent boss calibration > B2 first-attempt gating and B3 reasons consume their own table and A10 scope 1ms
+ ✓ tests/silent-boss-calibration.test.ts > Silent boss calibration > B3 paired differences, errors and calibrated floor use the same ascension map 1ms
+ ✓ tests/boss-trust.test.ts > B4 the trusted bosses, from the validation data > the data file's lists follow its own criteria, per consumer's start point; the few-fight bosses stay low 7ms
+ ✓ tests/boss-trust.test.ts > B4 the trusted bosses, from the validation data > without the data file every boss is low trust 0ms
+ ✓ tests/silent-boss-calibration-board.test.ts > uses nearest ascension HP/damage while retaining actual player resources and opening modifiers 3ms
+
+ Test Files  4 passed (4)
+      Tests  19 passed (19)
+   Start at  18:57:11
+   Duration  5.11s (transform 3.13s, setup 710ms, import 3.67s, tests 103ms, environment 0ms)
+
