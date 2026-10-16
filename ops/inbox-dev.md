@@ -2619,3 +2619,5 @@ selector于2026-10-15 13:15:58 CST从/home/dw/.codex-brain原子改为/home/dw/P
 - 2026-10-16 17:02:17 CST [ops 164302-s2策略处置] 十项均waiting，无源码/合入阻塞或生产测试；30原CLI仅追溯，旧知识/证据/状态保持。原材料定位失败及修正保留，不造合入/版本/补测或重复派发，live及宽父不动。回执paper/materials/20261016-1659-ops/batch-readback.json。
 
 - 2026-10-16 17:12:49 CST [ops 0YQJ9D1MC4NK复盘闭环] 无新增纯bug，原0308沙坑截止漏接复现已补原队列、三提案沿原链，不重复派修或改变护栏/SL规则。所属复盘/13CLI已核，论文唯一刷新exit0/811局，本局516决策/35成功Codex/has_postmortem1及五一致性/keyscan过；原未知与告警保持。回执paper/materials/20261016-1703-ops/。
+
+- 2026-10-16 17:17:22 CST [ops 1713三事件处置] 两策略批共20项均waiting、42原CLI仅追溯；修复批无新fix或合入阻塞，原canonical failed/rc0保持。三批均无源码/生产测试或上线，保原失败/缺口和宽父，不补测/造版本或重复派发，live不动。回执paper/materials/20261016-1713-ops/batch-readback.json。
