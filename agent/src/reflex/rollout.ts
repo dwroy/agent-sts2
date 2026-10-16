@@ -1349,6 +1349,8 @@ interface Piles {
 
 /** One sample's trajectory: per simulated turn, the HP lost that turn and the end-of-our-turn snapshot. */
 export interface TurnRecord {
+  /** Only continuous-fight diagnostics consume this; never used by the policy or the result's score. */
+  resourceAudit?: { startHp: number; steps: Plan["steps"]; outcome: Plan["outcome"]; wonBeforeResources: boolean; hpAfterResources: number };
   receivedHpDamage?: number | null;
   /** Same-window HP removed, including applied retaliation and a terminal start-of-turn carry. */
   outgoingHpDamage?: number;
@@ -2313,6 +2315,7 @@ function applyPlan(
   player.doubleDamageNext = false;
   const allDown = () => enemies.every((e) => !e.alive || e.base.illusion === true || (e.base.minion === true && enemies.some((x) => !x.base.minion && !x.alive)));
   let won = o.winsFight || allDown();
+  const wonBeforeResources = won;
   // The enemy turn: HP from the outcome; enemies gain their move's Strength and Block, debuffs wear off, next move.
   // A revive the line spent (Fairy in a Bottle, Lizard Tail): we go on at its HP, and it is gone for the sample
   // (a Fairy leaves the belt).
@@ -2548,6 +2551,8 @@ function applyPlan(
   const gone = input.escapes ? enemies.filter((e) => e.gone).map((e) => e.index) : [];
   return {
     loss: startHp - player.hp + (o.revived?.reviveHp ?? 0),
+    ...(fullFight && input.continuation ? { resourceAudit: { startHp, steps: plan.steps, outcome: o,
+      wonBeforeResources, hpAfterResources: player.hp } } : {}),
     ...(input.captureResources || input.continuation || input.solver.continuationValue ? { resources: { hp: player.hp, revives: player.revives.slice(), drunkKeys: plan.steps.filter(isPotion).map((step) => step.cardId) } } : {}),
     enemyPart: o.incomingAfterBlock,
     ...(input.captureBossMargin ? { receivedHpDamage: o.receivedHpDamage ?? null,
