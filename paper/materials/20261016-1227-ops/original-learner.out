@@ -1,0 +1,43 @@
+10 项提案均因具体证据缺口保留 `waiting`。已核验 19,523 条原记录，19 项材料检查通过，并经 CLI 补齐 29 条账本追溯。未改源码、未合入、未运行生产测试；工作树干净。
+
+[报告](/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-121302/learner/runs/20261016-121311-d352c146-f131-421e-b5e1-1c90002b49ad-strategy-proposal/report.md) · [逐项提案及验证要求](/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-121302/learner/runs/20261016-121311-d352c146-f131-421e-b5e1-1c90002b49ad-strategy-proposal/proposal.md)
+
+```json
+{
+  "task": "strategy-proposal",
+  "character": "silent",
+  "batch": "20261016-121302-strategy-proposal",
+  "base": "f12269c7f9f2018d0e0c94339803dfb7d33138d3",
+  "runs": ["2PVLGRBGUX9S","DPYF2BAA3DKT","GXNKW8X1XYJP","UMVLWER4CD98","VLZ6CCT8AQ0A","VN7RQJMJEFMX","YF0LXT1QSTGG","ZE8F192FKX24","PD9AYQVMLQW6","L2TSFU62Z57Z"],
+  "fixes": [],
+  "skipped": ["silent-proposal-2631859b524e0652","silent-proposal-b13fda1dfeb37927","silent-proposal-d7b8d36cf3d0303d","silent-proposal-c873d6543c414f92","silent-proposal-dfbf51502f30c9b1","silent-proposal-c2888032d1337388","silent-proposal-042ee2299084b528","silent-proposal-8cd3db3bad5f34f1","silent-proposal-43fe170707574455","silent-proposal-3f5a665dca133a8c"],
+  "merged": null,
+  "tests": {"tsc": null, "vitest": null, "cases": null},
+  "code_proposals": ["silent-proposal-2631859b524e0652","silent-proposal-b13fda1dfeb37927","silent-proposal-d7b8d36cf3d0303d","silent-proposal-c873d6543c414f92","silent-proposal-dfbf51502f30c9b1","silent-proposal-c2888032d1337388","silent-proposal-042ee2299084b528","silent-proposal-8cd3db3bad5f34f1","silent-proposal-43fe170707574455","silent-proposal-3f5a665dca133a8c"],
+  "implementation_domains": ["combat","potion","sl","terminal","structure"],
+  "proposal_results": [
+    {"id":"silent-proposal-2631859b524e0652","state":"waiting","reason":"抑制版本变化与假inserted已核；缺多副本、真实插牌/洗牌消歧负例及known-draw消费者完整验证。"},
+    {"id":"silent-proposal-b13fda1dfeb37927","state":"waiting","reason":"复活后局部保血与输出代价已核；缺复活逐击入伤、退出帧及提前饮药或替路线的整战后继。"},
+    {"id":"silent-proposal-d7b8d36cf3d0303d","state":"waiting","reason":"单弃窄修复bf423c173d3be348a4ad714e1d26516df619ff41已在live；新增凋萎实体、选择完成时点和完整同输入消费者回放仍缺，不能整包判duplicate。"},
+    {"id":"silent-proposal-c873d6543c414f92","state":"waiting","reason":"护栏保留及被SL撤回已核；缺跨抽弃重问的稳定候选父子链，以及实饮、自动消耗、SL恢复的完整归属。"},
+    {"id":"silent-proposal-dfbf51502f30c9b1","state":"waiting","reason":"七伤线五轮死亡14/24、结束线11/24，侧步未建模；缺完整替线及后继兑现，不足以调整终局排序。"},
+    {"id":"silent-proposal-c2888032d1337388","state":"waiting","reason":"尚未完成十五账本机制入口的联合消费者校准；覆甲减层、力量对滚石与换战能力边界仍未隔离。"},
+    {"id":"silent-proposal-042ee2299084b528","state":"waiting","reason":"双Boss同样本资源诊断已有实现；真实次战开场、奖励及联合校准仍未知，缺路线和休息消费者的完整验证。"},
+    {"id":"silent-proposal-8cd3db3bad5f34f1","state":"waiting","reason":"有限全败预测后仍发生抽牌重问与续活；缺原候选完整执行和原线整战反事实，不足以修改SL边界。"},
+    {"id":"silent-proposal-43fe170707574455","state":"waiting","reason":"同族当前快照已有实现；退场后序号重排，缺稳定实例身份、精确退场边界与构筑组件兑现链。"},
+    {"id":"silent-proposal-3f5a665dca133a8c","state":"waiting","reason":"三次护栏局部端点已核；缺跨重问归属及原线、替线整战受控后继，不能把局部合省血视为因果收益。"}
+  ],
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-121302/learner/runs/20261016-121311-d352c146-f131-421e-b5e1-1c90002b49ad-strategy-proposal/report.md"
+}
+```
+
+== 学习者 codex / strategy-proposal ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a142ea-0104-7fe2-a4db-45d69ac4a8fe
+轮数：1；工具调用：command_execution×53 file_change×4
+token：输入 179.5k、输出 31.1k（其中推理 8876）、cache 读 4532.7k、cache 写 0（命中 96.2%）
+成本：未提供
+耗时：827.7 s（墙钟）
+时间：首个事件 21.6 s、模型首个输出 26.8 s、首次工具 31.4 s、末次工具结束 789.1 s；工具内共 951.5 s，其余（模型生成、推理、网络）-145.4 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-121302）；模型的工具调用 exec×37；/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/learner/sessions/2026/10/16/rollout-2026-10-16T12-13-14-01a142ea-0104-7fe2-a4db-45d69ac4a8fe.jsonl
+日志：/home/dw/Projects/agent-sts2/learner/runs/20261016-121311-d352c146-f131-421e-b5e1-1c90002b49ad-strategy-proposal.jsonl
