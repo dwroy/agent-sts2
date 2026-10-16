@@ -35,8 +35,15 @@ if [ "$recent" -ge 4 ]; then
   cause=$(grep -h "stopped:" $(ls -t "$LOGDIR"/console/*.log | head -3) 2>/dev/null | tail -1 | cut -c1-160)
   why="${why:+$why; }play restarted $recent times in 5 min${cause:+ ($cause)}"
 fi
-# DeepSeek thinking can keep the console quiet for up to its 5 min timeout; allow 7 min.
-[ "$quiet" -gt 420 ] && why="${why:+$why; }console silent ${quiet}s"
+# A finalized run's console stays quiet while its scoped report/refresh runs.
+# The stale-decision check below still bounds post-run work that stops progressing.
+reporting_finished_run=0
+if [ "$running" -eq 0 ] && [ "$between" -eq 1 ] && \
+  tail -n 20 "$console" | grep -qE 'stopped: run [0-9]+ ended \((victory|defeat)\); stopping as requested'; then
+  reporting_finished_run=1
+fi
+# Brain work may keep the console quiet for up to its timeout; allow 7 min.
+[ "$quiet" -gt 420 ] && [ "$reporting_finished_run" -eq 0 ] && why="${why:+$why; }console silent ${quiet}s"
 [ "$no_decision" -gt 900 ] && why="${why:+$why; }no decision for ${no_decision}s"
 
 if [ -z "$why" ]; then
