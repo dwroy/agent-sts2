@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Read frozen raw Boss hands and audit the exact R364 disclosure predicate."""
+"""Read frozen raw Boss hands and audit necessary observed-hand conditions for the R364 disclosure predicate."""
 import gzip
 import hashlib
 import json
@@ -84,7 +84,7 @@ def main():
                   frame_offset_list_sha256=hashlib.sha256(json.dumps(covered_offs).encode()).hexdigest(),
                   by_run=dict(by_run), actual_config_sources=config_code,
                   scope='Observed hands only; not an execution trace of the private least-loss facts or unseen draw/search states. No model/simulation called.',
-                  static_effect='R364 known=false can veto early least-loss reload and mark outcomes unknown; does not itself change HP/cost/damage or force death. R363 adds B3 disclosure, no direct SL judge input.')
+                  static_effect='R364 known=false can veto early least-loss reload and mark outcomes unknown; does not itself change HP/cost/damage or force death. R363 adds opening/build disclosure, no direct SL judge input.')
     (HERE/'coverage-audit.json').write_text(json.dumps(result, ensure_ascii=False, indent=2)+'\n')
     print(json.dumps({k: result[k] for k in ['frames', 'hand_cards', 'pounce_occurrences', 'r364_matches']}))
 

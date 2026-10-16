@@ -1,6 +1,6 @@
 {
   "schema": "f48-f49-checkpoint-v1",
-  "at": "2026-10-16T11:35:48.508740+00:00",
+  "at": "2026-10-16T20:15:33.719423+08:00",
   "parent": "roy-20261016-global-build",
   "original_owner": "01a13dcd-83d4-7c63-b233-f93cf878ecf4",
   "current_owner": "01a13dcd-83d4-7c63-b233-f93cf878ecf4",
@@ -9,7 +9,7 @@
   "effort": "xhigh",
   "source_cutoff": "2026-10-16T09:15:44.451306+00:00",
   "task2": "report/design complete; no implementation",
-  "task1": "four-leaf independent WT source full running, no source commit/publication yet",
+  "task1": "watcher source70c61acfb scope delivered; original ops actual exact-source receipt read; publication waiting preceding calibration completion/numbering gate",
   "worktree": ".worktrees/codex-v5s-p1p2-shadow-20261016",
   "full_session": 49080,
   "source_checks": "paper/materials/20261016-v5s-p1p2-shadow/source-checks/",
@@ -21,9 +21,28 @@
     "unobserved transition resources"
   ],
   "next": [
-    "Finish original source full and deliver exact source to original ops",
-    "Read original ops release/ID/dual notice/exact host receipts",
-    "Finish records and stop; do not implement task2 or launch other phases"
+    "Original ops follows existing calibration completion event, then same one-shot pending publication and exact host",
+    "Watcher waits explicit Claude assignment; do not implement joint design or start new phases"
   ],
-  "A_B": "explicitly rejected by Roy19:16; never run"
+  "A_B": "explicitly rejected by Roy19:16; never run",
+  "source_full_session_terminal": true,
+  "source_full_session": 49080,
+  "source_full_rc": 1,
+  "source_supplement_rc": 0,
+  "source_commit": "70c61acfb118ab284bb950b32495177458a76b2d",
+  "source_tree": "4db0775de294ed580b041f279689cb26827fb57b",
+  "watcher_state": "stopped_after_scoped_source_and_report_delivery",
+  "source_received_by_original_ops": true,
+  "source_in_main": false,
+  "source_in_live": false,
+  "release_id": null,
+  "new_host_started": false,
+  "publication_gate": {
+    "original_owner_batch": "20261016-180157-fix-batch",
+    "prior_live_calibration": "8b65dafb808eb54e965fc1c6c613462fad82306c",
+    "reason": "preceding already-live calibration completion and release numbering unresolved; user explicitly retains gate",
+    "last_attempt": "original live lock acquired at20:12; stopped by predecessor-numbering assertion before source/index/ref/version mutation",
+    "resume_trigger": "original calibration completion/checks event; resolve preceding numbering under original live lock, then execute this same one-shot publication script",
+    "no_bypass_or_new_channel": true
+  }
 }

@@ -241,3 +241,10 @@ Roy经Claude明确不做A/B，旧40局实验建议只作历史保留、从未执
 当前四叶候选tsc0/36固定题0，源唯一full运行中；源提交、实际发布及宿主结果以`20261016-v5s-p1p2-shadow/checkpoint.json`为准，不借旧树绿。任务2报告/可复现脚本/原17:15:44截点见`20261016-f48-f49/report.md`与`joint-design.md`，295原SL行SHA/98场Boss/212次尝试已核，R363/R364新增条件未在后段Boss观察中命中。F48条件救回前后同2/5，F49入口3/4/6/11HP及出场资源分布是后续重点；不把实际药水事件次数当消耗槽数。
 
 复用G1a同样本接口，F49低可信/生产与联合校准unknown、0332正HP资源契约根因和自然消费门槛均保持。任务2没有实现或新研究/模拟；原owner/宽父不关闭。完成这两项即停，G2自然、G3b后续/G3a/G3c/G5仍等Claude另派。
+
+
+### 2026-10-16 20:15:33 CST 两项源/报告交付停点
+
+P1/P2独立四叶source70c61acfb/tree4db0775de已原ops正式实收并由本人核四SHA/接收回执。tsc0/36固定0，源full1仅WT缺现有Python路径；未变原题环境补验0/九Pythoncase断言全执行，原ops接受，full1保持不冒整套0。实际发布尚未发生：前序已live校准completion/编号闸未解，20:12原锁内预检先于本源/index/ref/version写入退出；同pending登记精确source和恢复脚本，原ops随原事件继续独立号/双通知/精确树宿主与retention，不另开通道或重复源full。见20261016-v5s-p1p2-shadow/completion.md与watcher-ops-pending-readback.json。
+
+F48→F49离线报告/设计main10e5e3e10已交，原统计与未知边界保持，未实施设计。原ops已核既有50边界/下次60的10局漏斗与root hook，不新监听。watcher源/报告范围交付后停下；发布仍原ops待续，0332/G1a自然/F49生产与联合校准/宽父不关闭，无新Roy参数待决，后续实现/其他阶段等Claude派活。

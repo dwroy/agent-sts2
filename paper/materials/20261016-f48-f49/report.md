@@ -79,7 +79,7 @@ nice -n 19 python3 paper/materials/20261016-f48-f49/death_timing.py
 |BGRC/F48/4|许愿未知抽牌；MINIATURE_CANNON、斗篷与匕首等不精确，抽后仍有HP的线|第四试即真死，不是用尽六次；非R364新增猛扑条件|
 |0YQ/F33/1|`0 playable card(s) and 1 potion(s) left`|已沿silent-0308原链；未证该药能救，不在此修改判死/用药|
 
-R363实际生产diff只增B3开场耳环缺覆盖说明和购入选项备注，不改判官/费用/伤害。R364把**特定已观察升级猛扑**的 `known` 设false，伤害和费用保留。不能笼统说它“仅文案、对判死绝无影响”：`cardChance(!known)`→`leastLossFacts.chance`→`judgeLeastLossNow` 会阻止首牌前确定重载，superset不精确性也能阻止确定结论；正常end_turn仍走原判官。
+R363实际生产diff只增开场耳环缺覆盖说明和B3购入选项备注，不改判官/费用/伤害。R364把**特定已观察升级猛扑**的 `known` 设false，伤害和费用保留。不能笼统说它“仅文案、对判死绝无影响”：`cardChance(!known)`→`leastLossFacts.chance`→`judgeLeastLossNow` 会阻止首牌前确定重载，superset不精确性也能阻止确定结论；正常end_turn仍走原判官。
 
 但是，本原后24局的全部 **5,201个Boss原始战斗帧、21,969个手牌出现** 中，猛扑出现44次，全部是BGRC的**未升级**版本，R364必要条件命中0；低语耳环持有帧0。R363/R364首次实际含源码进程是JWK，不能按发布时间倒填更早局。`coverage-audit.json`和44条原帧引用保留原字节。未见手牌不等于穷尽未观察抽牌/搜索内部状态，但当前没有这两个新增标记导致Boss SL退化的实证。不得据此取消未知防护或降低必死门槛。
 
