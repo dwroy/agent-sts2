@@ -19,6 +19,7 @@ import { bossReadiness, type BossReadiness } from "./boss-readiness.js";
 import { buildRank } from "./build-rank.js";
 import { runAdaptiveDecks } from "./adaptive-decks.js";
 import { isAdaptiveComplete } from "./adaptive-sampler.js";
+import { continuousBossResult, type ContinuousBossResult } from "./continuous-boss-result.js";
 
 /** Samples per deck (docs/boss-sim.md §8: 1000 per option gives a paired standard error of about 1-1.5 points). */
 export const BUILD_SIM_SAMPLES = 1000;
@@ -48,6 +49,7 @@ export interface DeckOption {
 }
 
 export interface OptionSim {
+  continuous?: ContinuousBossResult;
   sampling?: { samples: number; stop: string; rounds: number };
   pairedReference?: { samples: number; rawWin: number; calibratedWin: number; bossLeft: number };
   quantitative?: JsonValue;
@@ -238,6 +240,7 @@ export async function compareOptions(
     const d = isBase ? null : compareLines(line, reference);
     const value: OptionSim = {
       key,
+      ...(base.continuation ? { continuous: continuousBossResult(line.outcomes, actual ? line.samples : samples, true) } : {}),
       ...(opts.quantitative ? { quantitative: quantitativeFightFacts(line.outcomes, reference.outcomes, complete.slice(0, line.samples)) } : {}),
       samples: line.samples,
       ...(actual ? { sampling: actual.counts.get(key === "current" ? "@current" : key),

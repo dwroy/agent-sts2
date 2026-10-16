@@ -29,6 +29,7 @@ import type { Plan } from "../reflex/turn-solver.js";
 import { knowledgeCharacter } from "../knowledge/files.js";
 import { silentBossCalibration } from "./boss-trust.js";
 import type { BossMarginTrace } from "./boss-margin.js";
+import { continuousBossResult, type ContinuousBossResult, type ContinuousSample } from "./continuous-boss-result.js";
 
 /** The most turns a sample plays (the start turn included): logged A7-A9 boss fights ran 2-24 turns (median 9). */
 export const BOSS_SIM_MAX_TURNS = 30;
@@ -126,7 +127,7 @@ export interface FightSampleResult {
   bossMargin?: BossMarginTrace;
   coreWindow?: import("./core-window.js").CoreWindowResult;
   resources?: { hp: number; revives: import("../reflex/turn-solver.js").Revive[]; drunkKeys: string[] };
-  sequence?: { firstWon: boolean; firstHp: number | null; firstPotions: string[]; secondBoss: string | null; firstTurns: number; secondWon: boolean | null; secondDied: boolean | null };
+  sequence?: ContinuousSample;
   won: boolean;
   died: boolean;
   /** Stopped at maxTurns (or the policy had no line) with the fight still on: neither won nor lost. */
@@ -176,6 +177,7 @@ export interface Dist {
 }
 
 export interface BossSimLineResult {
+  continuous?: ContinuousBossResult;
   sequence?: { firstWins: number; firstWinSecondDeaths: number; secondUnfinished: number };
   /** Index of the line in the lines given. */
   line: number;
@@ -360,7 +362,9 @@ export function fightSample(input: RolloutInput, plan: Plan | null, seed: number
   const first = singleFightSample(input, plan, seed, maxTurns, scripts, order);
   const next = input.continuation;
   if (!next) return first;
-  const initial = { firstWon: first.won, firstHp: first.resources?.hp ?? null, firstPotions: [] as string[], secondBoss: null as string | null, firstTurns: first.turns, secondWon: null as boolean | null, secondDied: null as boolean | null };
+  const initial: ContinuousSample = { seed, firstWon: first.won, firstDied: first.died, firstCapped: first.capped, firstTimeUp: first.timeUp,
+    firstHp: first.resources?.hp ?? null, firstPotions: [], secondBoss: null, firstTurns: first.turns, secondWon: null, secondDied: null,
+    firstResources: null, secondEntry: null, openingHpLoss: null };
   if (!first.won) return { ...first, sequence: initial };
   const total = next.variants.reduce((s,v) => s + v.count, 0);
   if (total <= 0) throw new Error("empty second-boss distribution");
@@ -379,7 +383,10 @@ export function fightSample(input: RolloutInput, plan: Plan | null, seed: number
     powers: [...(first.powers ?? []), ...(second.powers ?? []).map(([t,id]): [number,string] => [t+first.turns,id])],
     drinks: [...(first.drinks ?? []), ...(second.drinks ?? []).map(([t,id]): [number,string] => [t+first.turns,id])],
     kills: [...(first.kills ?? []), ...(second.kills ?? []).map(([t,id,index]): [number,string,number] => [t+first.turns,id,index])],
-    sequence: { ...initial, firstPotions: transferred.potions, secondBoss: variant.boss, secondWon: second.won, secondDied: second.died },
+    sequence: { ...initial, firstPotions: transferred.potions, secondBoss: variant.boss, secondWon: second.won, secondDied: second.died,
+      firstResources: { hp: first.resources!.hp, revives: first.resources!.revives.slice(), potionSlots: transferred.potions.slice() },
+      secondEntry: { hp: transferred.input.solver.player.hp, revives: (transferred.input.solver.player.revives ?? []).slice(), potionSlots: transferred.potions.slice() },
+      openingHpLoss: transferred.openingHpLoss },
   };
 }
 
@@ -467,7 +474,7 @@ function perTurnOf(outcomes: FightSampleResult[]): BossSimLineResult["perTurn"] 
 }
 
 /** A line's numbers from its samples (by sample index). */
-export function summarizeLine(line: number, outcomes: FightSampleResult[]): BossSimLineResult {
+export function summarizeLine(line: number, outcomes: FightSampleResult[], expectedSamples = outcomes.length): BossSimLineResult {
   const won = outcomes.filter((o) => o.won);
   const dead = outcomes.filter((o) => o.died);
   const deathTurns: Record<number, number> = {};
@@ -475,8 +482,10 @@ export function summarizeLine(line: number, outcomes: FightSampleResult[]): Boss
   const potions: Record<string, number> = {};
   for (const o of outcomes) for (const id of new Set(o.drunk)) potions[id] = (potions[id] ?? 0) + 1;
   const unwon = outcomes.filter((o) => !o.won);
+  const continuous = continuousBossResult(outcomes, expectedSamples);
   return {
     line,
+    ...(continuous ? { continuous } : {}),
     ...(outcomes.some((o) => o.sequence) ? { sequence: {
       firstWins: outcomes.filter((o) => o.sequence?.firstWon).length,
       firstWinSecondDeaths: outcomes.filter((o) => o.sequence?.firstWon && o.sequence.secondDied).length,
