@@ -1602,3 +1602,5 @@
 - 2026-10-16 09:12:06 CST 原ops0855闭环接续：G4窄r3 completed与五notice三角色真实回执已核；两旧host0仅d570/adb0。G1a原r1已实际同线程启动090514（首回复/原生模型权限已核），技术completion待原事件；原075726精确组合723482（liveef4b07a64db0fb76eea7990b768fb8d3be47a4b4，含G1c及十已完成知识刷新）host PID1677469/birth100495438已RUN，待唯一learner-checks，不复派/重复full。pending-integrations两个状态已更新。084302无源码/79定向+3Python0，旧failed不改。材料paper/materials/20261016-0855-ops/；S仍Roy待定，0332及宽父open、当前对局不动。
 
 - 2026-10-16 09:14:43 CST 0855补充：G1a原090514技术completion已done/rc0，五coverage与621860消费者五原证据SHA由ops实核；新增c6b11205b8914ac254145bd9已实际转达原watcher，ops_forwarded本人CLI0，其后两阶段仍待watcher本人。原075726精确723482宿主仍待唯一learner-checks。见0855-ops/g1a-owner-completion-readback.json，不重研究/探针/full/发布，不关闭宽父。
+
+- 2026-10-16 09:15:43 CST 0855收尾实核：新增G1a交付notice c6b11205b8914ac254145bd9现已由原watcher本人完成两个阶段；ops逐角色JSON和实际原生证据SHA读回通过，未代填。程序G1a r1已completed，仅知识限定范围；G4 r3同为窄完成。精确723482宿主仍pending原075726事件，0332/通用接口/自然消费/生产校准及全局宽父、S待Roy决定不随此关闭。证据paper/materials/20261016-0855-ops/g1a-delivery-final-readback.json。
