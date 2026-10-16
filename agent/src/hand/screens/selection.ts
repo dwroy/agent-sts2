@@ -204,6 +204,8 @@ export function planSelection(env: DecisionEnv): Decision | null {
   const sandpitFacts = sandpitDiscardFacts(state, source?.action === "play_card" && source.id === "PREPARED" &&
     source.turn === state.turn && source.fight === facingFightOf(state),
     source?.action === "play_card" && source.id === "SURVIVOR" &&
+    source.turn === state.turn && source.fight === facingFightOf(state),
+    source?.action === "play_card" && source.id === "DAGGER_THROW" &&
     source.turn === state.turn && source.fight === facingFightOf(state));
   const discardFacts = survivorDiscardFacts(state, source?.action === "play_card" && source.id === "SURVIVOR" &&
     source.turn === state.turn && source.fight === facingFightOf(state));

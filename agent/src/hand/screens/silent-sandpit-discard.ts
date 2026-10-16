@@ -1,12 +1,12 @@
 import { asArray, asRecord, bool, numOrNull, str, type JsonValue } from "../../core/util/json.js";
 import type { GameState } from "../mod/schema.js";
 
-/** C7GNN3DDFUFY T7 / H1T1F8ML9FUE T6, A10 F33, silent-0117: observed discard windows. */
-export function sandpitDiscardFacts(state: GameState, currentPrepared: boolean, currentSurvivor = false): {
+/** C7GNN3DDFUFY T7 / H1T1F8ML9FUE T6 / R3AJCGQGGMR4 T5, A10 F33, silent-0117. */
+export function sandpitDiscardFacts(state: GameState, currentPrepared: boolean, currentSurvivor = false, currentDaggerThrow = false): {
   context: JsonValue; options: Map<number, JsonValue>;
 } | null {
   const selection = asRecord(state.raw["selection"]);
-  const picks = currentPrepared ? 2 : currentSurvivor ? 1 : 0;
+  const picks = currentPrepared ? 2 : currentSurvivor || currentDaggerThrow ? 1 : 0;
   if (!picks || !state.in_combat || state.run?.ascension !== 10 ||
       str(asRecord(state.run.raw)["character_id"]).toUpperCase() !== "SILENT" ||
       selection["kind"] !== "combat_hand_select" || !/丢弃|discard/i.test(str(selection["prompt"])) ||
