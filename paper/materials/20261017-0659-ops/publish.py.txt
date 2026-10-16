@@ -1,0 +1,131 @@
+from pathlib import Path
+import fcntl, hashlib, json, os, re, subprocess
+r = Path.cwd()
+exec((r / 'ops/codex-ops/record-staging/20261016-2003/publish.py').read_text().split('phase=r/')[0])
+p = r / 'ops/codex-ops/record-staging/20261017-0659'
+pub = r / 'paper/materials/20261017-0659-ops'
+load = lambda f: json.loads(f.read_bytes())
+def write(f, v): f.write_text(json.dumps(v, ensure_ascii=False, indent=2) + '\n')
+info = load(pub / 'source-commit.json')
+source, base = info['source'], info['base']
+paths = list(info['files'])
+assert len(paths) == 10 and load(pub / 'ops-source-disposition.json')['accepted']
+assert git('rev-parse', source + '^').decode().strip() == info['source_commits']['strangle']['commit']
+assert git('merge-base', '--is-ancestor', base, source) == b''
+assert git('rev-parse', source + '^{tree}').decode().strip() == info['tree']
+assert set(git('diff', '--name-only', base, source).decode().splitlines()) == set(paths)
+assert not (pub / 'publication.json').exists()
+def builder_active():
+    return subprocess.run(['pgrep', '-f', 'knowledge/builders/buil[d]-'], capture_output=True).returncode != 1
+with (r / 'ops/live-merge.lock').open('a') as lock:
+    try: fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+    except BlockingIOError:
+        write(pub / 'publication-lock-blocked.json', dict(source=source, source_received=True, publication_started=False, reason='original live lock busy; no polling'))
+        raise SystemExit(75)
+    at = subprocess.check_output(['date', '+%Y-%m-%d %H:%M:%S %Z'], text=True).strip()
+    assert not builder_active()
+    mh, lh = git('rev-parse', 'HEAD').decode().strip(), git('rev-parse', 'HEAD', cwd=live).decode().strip()
+    assert lh == '51511b28e8fa085adbd30f232e625ebee058fe59'
+    snapshots, indexes, datasets = {}, {}, {}
+    for cwd in [r, live]:
+        assert not git('ls-files', '-u', cwd=cwd).strip()
+        snapshots[str(cwd)] = git('ls-files', '--stage', '-z', cwd=cwd)
+        index = Path(git('rev-parse', '--git-path', 'index', cwd=cwd).decode().strip())
+        indexes[str(cwd)] = (index if index.is_absolute() else cwd / index).read_bytes()
+        for path in paths + ['eval/versions.json']:
+            assert blob('', path, cwd) == blob('HEAD', path, cwd)
+        raw = blob('HEAD', 'eval/versions.json', cwd)
+        assert (cwd / 'eval/versions.json').read_bytes() == raw
+        datasets[str(cwd)] = json.loads(raw)
+    releases = datasets[str(r)]['release_numbering']['releases']
+    assert releases == datasets[str(live)]['release_numbering']['releases']
+    nums = [int(re.fullmatch(r'V\d+-R(\d+)', x['release_id'])[1]) for x in releases]
+    assert nums == list(range(max(nums) + 1)) and max(nums) == 376
+    values, leaves = {}, []
+    for lane, cwd, head in [('main', r, mh), ('live', live, lh)]:
+        values[lane] = {}
+        for path in paths:
+            before, old, desired = blob(base, path), blob(head, path, cwd), blob(source, path)
+            assert sha(desired) == info['files'][path]
+            f = cwd / path
+            assert (f.read_bytes() if f.exists() else None) == old
+            if old == before:
+                merged = desired
+            else:
+                assert lane == 'live' and old.replace(b'Dai', b'Roy') == before.replace(b'Dai', b'Roy')
+                folder = p / 'merge-inputs' / path.replace('/', '__')
+                folder.mkdir(parents=True, exist_ok=True)
+                for key, raw in [('live', old), ('base', before), ('source', desired)]: (folder / key).write_bytes(raw)
+                check = subprocess.run(['git', 'merge-file', '--stdout', str(folder/'live'), str(folder/'base'), str(folder/'source')], capture_output=True)
+                assert check.returncode == 0
+                merged = check.stdout
+                assert merged.replace(b'Dai', b'Roy') == desired.replace(b'Dai', b'Roy')
+            values[lane][path] = merged
+            leaves.append(dict(lane=lane, path=path, sha256=sha(merged), source_sha256=sha(desired), historical_attribution_only=merged != desired))
+    refresh = {path: (live / path).read_bytes() for path in git('diff', '--name-only', 'HEAD', '--', 'knowledge', cwd=live).decode().splitlines()}
+    for lane, data in {**values, 'preserved-live-refresh': refresh}.items():
+        for path, raw in data.items():
+            f = p / 'composition-scan' / lane / path
+            f.parent.mkdir(parents=True, exist_ok=True)
+            f.write_bytes(raw)
+    with (pub / 'composition-gitleaks.log').open('wb') as out:
+        scan = subprocess.run(['nice', '-n', '19', 'gitleaks', 'dir', str(p / 'composition-scan'), '--redact', '--no-banner', '--report-format', 'json', '--report-path', str(p / 'composition-gitleaks.json')], stdout=out, stderr=subprocess.STDOUT, env={**os.environ, 'GOMAXPROCS': '1'})
+    assert scan.returncode == 0 and load(p / 'composition-gitleaks.json') == []
+    le = {**os.environ, 'GIT_INDEX_FILE': str(p / 'live.index')}
+    git('read-tree', lh, env=le, cwd=live)
+    for path, raw in refresh.items(): stage(path, raw, le, live)
+    rt = git('write-tree', env=le, cwd=live).decode().strip()
+    fresh = commit(rt, [lh], 'Preserve refreshed live knowledge before observed Rod Strangle and thief publication', live) if refresh else lh
+    for path, raw in values['live'].items(): stage(path, raw, le, live)
+    bt = git('write-tree', env=le, cwd=live).decode().strip()
+    assert set(git('diff', '--name-only', rt, bt, cwd=live).decode().splitlines()) == set(paths)
+    behavior = commit(bt, [fresh, source], 'Publish observed Silent A10 observed Rod Strangle and thief deadline facts', live)
+    rid, name = f'V5-R{max(nums)+1:03d}', 'S1.observed-rod-strangle-thief1'
+    note = at + '; ' + 'Original batch20261017-051302-strategy-proposal; three sources3dbdc27becba54c8ca4fe722102b1c562794f48b/92fb9f15b24c9fc4f1bf31ca4cd3190a9cba7cdb/c4d99c1be01c01359988afc2b85ecada99c9b133, four original proposals90a4/6330/04cb/c3ef. One actual behavior publication contains all three patches, one shared release number. Old: Rod always made Sandpit termination uncertain; upgraded follow-ups always made ordinary Strangle unknown; null card HP conversion printed loot cost0. New only observed Silent A10 scope: empty-hand THRASH_MOVE_2/Sandpit1 and observed unique relic/power categories use known terminal death despite Rod, preserving all other guards; upgraded Dagger Spray two-hit follow-up supports one ordinary Strangle trigger with replay/automatic/other upgrades unknown; null card HP price prints unknown while measured progress and candidate keys/numeric cost remain. Z91JN3S3PQX2 F33T13 d299963/s307493-494, LY83ZMTFVKJH F21T7/T10 s308030-308044 and F20T2 d300426/s307971-307973; ledger0313/0018/0178,0260/0261,0314/0315. First sandbox1/EPERM and second1/target timeouts retained; unfrozen changing-source third1 superseded, not acceptance. Final exact tree246bb5b92bd922505b166d354282828618d750e6 sandbox tsc0/458files4256pass0 plus paths11pass0/1188.01s with only demonstrated EPERM wrapper explicitly excluded; final40fixedpass0 and ablations retained. Same unchanged wrapper host1case/Python4case0 accepted; final new live exact full remains pending original051302 channel, no borrowed old green or source full repeat. Learner disclosed one accidental old other-role fixture exposure, stopped using it; new numeric fixtures all verified Silent original frames, this experimental limitation retained. Other roles/unobserved ascensions, HP/potion/SL thresholds, ordinary known pricing, C1/C2 and all wide parents unchanged; no claim about independent attack-order16 actual damage, mandatory potions, full-candidate policy or win benefit. Expected observed local calculation/unknown risk accuracy. Rollback inverse only these ten leaves in current context preserving knowledge and other releases, actual rollback receives new behavior number. Evidence paper/materials/20261017-0659-ops/.'
+    entry = dict(name=name, family='V5', character='SILENT', commit=behavior, release_id=rid, release_status='registered-primary-ops', source=note)
+    versions = {}
+    for key, data in datasets.items():
+        old = json.loads(json.dumps(data))
+        data['versions'].append(entry)
+        data['release_numbering']['releases'].append(dict(release_id=rid, commit=behavior, aliases=[name]))
+        assert data['versions'][:-1] == old['versions'] and data['release_numbering']['releases'][:-1] == old['release_numbering']['releases']
+        versions[key] = (json.dumps(data, ensure_ascii=False, indent=2) + '\n').encode()
+    stage('eval/versions.json', versions[str(live)], le, live)
+    ft = git('write-tree', env=le, cwd=live).decode().strip()
+    final = commit(ft, [behavior], f'Register observed Rod Strangle and thief deadline as {rid}', live)
+    me = {**os.environ, 'GIT_INDEX_FILE': str(p / 'main.index')}
+    git('read-tree', mh, env=me)
+    for path, raw in values['main'].items(): stage(path, raw, me, r)
+    stage('eval/versions.json', versions[str(r)], me, r)
+    mt = git('write-tree', env=me).decode().strip()
+    main = commit(mt, [mh, source], f'Integrate original three-patch Silent source and register {rid}', r)
+    rec = dict(at=at, batch='20261017-051302-strategy-proposal', source=source, source_parent=base, source_tree=info['tree'], old_main=mh, main=main, old_live=lh, knowledge_refresh_commit=fresh, knowledge_refresh=[dict(path=k, sha256=sha(v)) for k,v in refresh.items()], behavior_commit=behavior, actual_live=final, tree=ft, release_id=rid, name=name, leaves=leaves, source_full_rc=1, source_host_supplement_rc=0, host='pending original batch exact final-tree full', original_report_failed_rc0_retained=True, no_other_role_ACK=True, no_current_game_home_model_prompt_change=True)
+    write(p / 'intended-publication.json', rec)
+    preserved = []
+    for cwd, lane in [(r, 'main'), (live, 'live')]:
+        f = p / (lane + '-preserved.index')
+        f.write_bytes(indexes[str(cwd)])
+        env = {**os.environ, 'GIT_INDEX_FILE': str(f)}
+        for path, raw in {**values[lane], **(refresh if lane == 'live' else {})}.items(): stage(path, raw, env, cwd)
+        stage('eval/versions.json', versions[str(cwd)], env, cwd)
+        preserved.append((cwd, env))
+    locks = locks_for(preserved)
+    try:
+        assert git('rev-parse','HEAD').decode().strip()==mh and git('rev-parse','HEAD',cwd=live).decode().strip()==lh and not builder_active()
+        for cwd in [r, live]: assert git('ls-files','--stage','-z',cwd=cwd)==snapshots[str(cwd)]
+        for path, raw in refresh.items(): assert (live/path).read_bytes()==raw
+        git('update-ref','-m','ops: publish original observed Rod Strangle and thief publication','HEAD',final,lh,cwd=live)
+        for path, raw in values['live'].items(): install(live,path,raw)
+        install(live,'eval/versions.json',versions[str(live)])
+        git('update-ref','-m','ops: narrow integrate observed Rod Strangle and thief source','HEAD',main,mh)
+        for path, raw in values['main'].items(): install(r,path,raw)
+        install(r,'eval/versions.json',versions[str(r)])
+        for idx, lp in locks: os.replace(lp,idx)
+    finally:
+        for _, lp in locks:
+            if lp.exists(): lp.unlink()
+    for cwd in [r, live]: git('merge-base','--is-ancestor',source,'HEAD',cwd=cwd)
+    assert set(git('diff','--name-only',fresh,final,cwd=live).decode().splitlines())==set(paths)|{'eval/versions.json'}
+    write(pub/'publication.json',rec)
+    write(r/'ops/codex-ops/pending-integrations/20261017-051302-strategy-proposal.json',dict(**rec,status='source published; exact final host and ledger shipped closure pending',host_requested=False,ledger=['silent-0313','silent-0260','silent-0261','silent-0314','silent-0315'],root_0332_fixed=False))
+    print(json.dumps(dict(release=rid,main=main,live=final,tree=ft,knowledge_refresh=len(refresh))),flush=True)

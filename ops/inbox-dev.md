@@ -2771,3 +2771,5 @@ selector于2026-10-15 13:15:58 CST从/home/dw/.codex-brain原子改为/home/dw/P
 - 2026-10-17 05:03:40 CST ops：0501补验事件已实读，回执与已提交0441终局完全一致；保留V5-R376，原full1/定向1不改，Herdr通过、eval/药水两项仍超时，沿现有普通fix槽pending接续。未重复测试/派发或代他人ACK；原双通知与失败处置仍见paper/materials/20261017-0441-ops/host-checks-closure.json，本次去重读回见paper/materials/20261017-0501-ops/event-dedup-readback.json。
 
 - 2026-10-17 05:08:56 CST ops：044302策略批已核无源码修改；9项按具体证据缺口waiting，14f仅既有live覆甲剩层模型duplicate，未新增上线/版本或生产测试。19条CLI追溯已核只增链接/备注，原结论/证据/首证/状态/版本保持；原报告与72产物SHA、33原帧、实际Sol6.1/xhigh沙箱身份及既有源码祖先均已读回。当前R376和原两项超时修复pending、0332根缺口及所有宽父保持；不新派学习/模型/模拟，不改现局。原件与ops回执paper/materials/20261017-0506-ops/。
+
+- 2026-10-17 07:03:53 CST ops：051302三项源码已实收验收，四原提案关联源3dbdc27b/92fb9f15/c4d99c1b；最终十叶tree246bb5b9原沙箱tsc0、458文件4256项0+paths11项0，原EPERM包装器宿主1题/内部4项补验0；此前full1/超时/改源未冻结失败及隔离偏差均保。发布单次取锁被原retention sweep PID2596857阻挡，尚未合main/live、无编号/shipped或新组合host；完整源/SHA/原owner线程及恢复脚本已落同一pending，等后续实际wake接锁空闲继续，不新派学习或重源full。六项真正缺证仍waiting，0332及宽父/当前局不变。25条原账本CLI只增追溯，与运维实收记录一起提交。回执paper/materials/20261017-0659-ops/。

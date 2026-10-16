@@ -1,0 +1,500 @@
+{
+  "at": "2026-10-17 07:02:10 CST",
+  "batch": "20261017-051302-strategy-proposal",
+  "report": {
+    "task": "strategy-proposal",
+    "character": "silent",
+    "batch": "20261017-051302-strategy-proposal",
+    "base": "e5fc1a2d90b67b2a0dff253e9b0ba89fd3310aea",
+    "runs": [
+      "M0GY0A4M2F7H",
+      "Z91JN3S3PQX2",
+      "LY83ZMTFVKJH"
+    ],
+    "fixes": [
+      {
+        "proposal_id": "silent-proposal-90a4a4981be3c760",
+        "commit": "3dbdc27becba54c8ca4fe722102b1c562794f48b",
+        "source_parent": "e5fc1a2d90b67b2a0dff253e9b0ba89fd3310aea"
+      },
+      {
+        "proposal_id": "silent-proposal-6330c4ade7528ec9",
+        "commit": "3dbdc27becba54c8ca4fe722102b1c562794f48b",
+        "source_parent": "e5fc1a2d90b67b2a0dff253e9b0ba89fd3310aea"
+      },
+      {
+        "proposal_id": "silent-proposal-04cbbf6b3a547aea",
+        "commit": "92fb9f15b24c9fc4f1bf31ca4cd3190a9cba7cdb",
+        "source_parent": "3dbdc27becba54c8ca4fe722102b1c562794f48b"
+      },
+      {
+        "proposal_id": "silent-proposal-c3ef922a9a5f8285",
+        "commit": "c4d99c1be01c01359988afc2b85ecada99c9b133",
+        "source_parent": "92fb9f15b24c9fc4f1bf31ca4cd3190a9cba7cdb"
+      }
+    ],
+    "skipped": [
+      "silent-proposal-2d711af284735508",
+      "silent-proposal-1de0737d94ac87f5",
+      "silent-proposal-16f7cf00059df9a0",
+      "silent-proposal-ab3bf902b22662f4",
+      "silent-proposal-089bd208926f8962",
+      "silent-proposal-9849e537607099bd"
+    ],
+    "merged": null,
+    "tests": {
+      "tsc": 0,
+      "vitest": 0,
+      "cases": 0
+    },
+    "code_proposals": [
+      "silent-proposal-2d711af284735508",
+      "silent-proposal-1de0737d94ac87f5",
+      "silent-proposal-90a4a4981be3c760",
+      "silent-proposal-16f7cf00059df9a0",
+      "silent-proposal-ab3bf902b22662f4",
+      "silent-proposal-6330c4ade7528ec9",
+      "silent-proposal-089bd208926f8962",
+      "silent-proposal-9849e537607099bd",
+      "silent-proposal-04cbbf6b3a547aea",
+      "silent-proposal-c3ef922a9a5f8285"
+    ],
+    "implementation_domains": [
+      "combat",
+      "sl",
+      "terminal",
+      "structure"
+    ],
+    "proposal_results": [
+      {
+        "id": "silent-proposal-2d711af284735508",
+        "state": "waiting",
+        "reason": "F17T9同底板替线实多扣6敌血、多损9自身血，但原/替完整后继未配对；末试T3药时点与牌序同时变化。已有候选/SL审计不能证明跨抽牌完整执行，缺可信整战配对，不改探索或HP门槛。"
+      },
+      {
+        "id": "silent-proposal-1de0737d94ac87f5",
+        "state": "waiting",
+        "reason": "F33T3已存在建滚石候选、随后另喝挡药；T5/T11护栏预计共省22血、少26伤，原线均未整场执行。缺支付能力后的受控抽牌/截止后继及整战比较，不能由T9启动较晚统一改setup/护栏。"
+      },
+      {
+        "id": "silent-proposal-90a4a4981be3c760",
+        "state": "waiting",
+        "reason": "源码已完成并提交 3dbdc27becba54c8ca4fe722102b1c562794f48b，最终固定回归与沙箱入口通过；缺实际live祖先源码提交/合入回执：锁内预检仍有六个共享记录冲突，按边界未合入，不冒称implemented或shipped。"
+      },
+      {
+        "id": "silent-proposal-16f7cf00059df9a0",
+        "state": "waiting",
+        "reason": "F33T12毒0→6当步敌HP136不变、随后结6+5；M末试无色生成闪亮登场未打而后弃。缺生成药产物与后继执行的完整配对/分布、普通毒药及阻挡组合的统一消费者校准；保留饮后重算与未知退路，不拟喝留门槛。"
+      },
+      {
+        "id": "silent-proposal-ab3bf902b22662f4",
+        "state": "waiting",
+        "reason": "步法/尖啸/滚石/抱抱/余像在原帧可核，但复合提案要求支付、建立、轮初与后继来源联合核算。现有局部模型及审计不构成整组消费者通过；本局无提前能力的同盘受控整战后继，不拟永远先能力规则。"
+      },
+      {
+        "id": "silent-proposal-6330c4ade7528ec9",
+        "state": "waiting",
+        "reason": "源码已完成并提交 3dbdc27becba54c8ca4fe722102b1c562794f48b，最终固定回归与沙箱入口通过；缺实际live祖先源码提交/合入回执：锁内预检仍有六个共享记录冲突，按边界未合入，不冒称implemented或shipped。"
+      },
+      {
+        "id": "silent-proposal-089bd208926f8962",
+        "state": "waiting",
+        "reason": "资源等式56−95+113−29+34=79与护栏预测22/26须分开；原线未整场执行、早期路线预测条件后来改变。已有护栏/路线审计不闭合能力支付、截止及条件营火的联合消费者配对，缺固定原/替线完整后继。"
+      },
+      {
+        "id": "silent-proposal-9849e537607099bd",
+        "state": "waiting",
+        "reason": "F12加2敏、F28加1能抽2且HP不变、F33施6毒均是局部观察；药效正确不证明新喝留/购买策略。缺三药与生成/重算路径的统一固定消费者对照及未观察药池边界，不新设药价/时点。"
+      },
+      {
+        "id": "silent-proposal-04cbbf6b3a547aea",
+        "state": "waiting",
+        "reason": "源码已完成并提交 92fb9f15b24c9fc4f1bf31ca4cd3190a9cba7cdb，最终固定回归与沙箱入口通过；缺实际live祖先源码提交/合入回执：锁内预检仍有六个共享记录冲突，按边界未合入，不冒称implemented或shipped。"
+      },
+      {
+        "id": "silent-proposal-c3ef922a9a5f8285",
+        "state": "waiting",
+        "reason": "源码已完成并提交 c4d99c1be01c01359988afc2b85ecada99c9b133，最终固定回归与沙箱入口通过；缺实际live祖先源码提交/合入回执：锁内预检仍有六个共享记录冲突，按边界未合入，不冒称implemented或shipped。"
+      }
+    ],
+    "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-051302/learner/runs/20261017-051311-348c0c33-dd1d-495a-bc7d-bb8a84d23288-strategy-proposal/report.md"
+  },
+  "native": {
+    "batch": "20261017-051302-strategy-proposal",
+    "thread": "01a1468f-e1ed-70b3-8803-76d623c851c3",
+    "cwd": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-051302",
+    "event_log": "learner/runs/20261017-051311-348c0c33-dd1d-495a-bc7d-bb8a84d23288-strategy-proposal.jsonl",
+    "registered_launch_batch": "20261017-051302-strategy-proposal",
+    "original_lease": "006c43fcf8a35eb9a313107fcf824eca952f5de324122f3195d14b0e468fb251",
+    "native_context": {
+      "source": "ops/codex-ops/accounts/codex1/learner/sessions/2026/10/17/rollout-2026-10-17T05-13-17-01a1468f-e1ed-70b3-8803-76d623c851c3.jsonl",
+      "offset": 50378,
+      "bytes": 5182,
+      "sha256": "209189887007d8ffe535f73c10be7b44b469a99f9eabe62825eed35be6804817",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "sandbox": {
+        "type": "workspace-write",
+        "writable_roots": [
+          "/home/dw/Projects/agent-sts2",
+          "/home/dw/Projects/agent-sts2/.git",
+          "/home/dw/Projects/agent-sts2/.git/worktrees/codex-strategy-silent-20261017-051302"
+        ],
+        "network_access": false,
+        "exclude_tmpdir_env_var": false,
+        "exclude_slash_tmp": false
+      },
+      "approval_policy": "never"
+    },
+    "native_user_input": {
+      "offset": 58423,
+      "bytes": 21408,
+      "sha256": "5fc01c64382902e53d16ace20db3bca2d9756e86f20b76745b239d419511c20a",
+      "input_sha256": "8391bdc4b5fb86186dac64b4ae7bbf4add1bfc0ee457c52f421d477e2fee21da"
+    },
+    "original_header_events": [
+      {
+        "offset": 0,
+        "bytes": 23381,
+        "sha256": "0b6883dc3fd1cc7295ddf35a62d7f84cd8189edf1f31edf7129c8aa8fcf5c8c2",
+        "type": "learner_launch",
+        "attempt": null,
+        "code": null
+      },
+      {
+        "offset": 23381,
+        "bytes": 378,
+        "sha256": "0d243f4283c924108454b1a46ec2c520f3766173920d7d37cc084b572c4ecab4",
+        "type": "learner_startup_attempt",
+        "attempt": 1,
+        "code": null
+      },
+      {
+        "offset": 26338,
+        "bytes": 77,
+        "sha256": "be69eb665f5395db565c297d29722817463b6155a6eb07f707315620aa2d84ab",
+        "type": "thread.started",
+        "attempt": null,
+        "code": null
+      }
+    ],
+    "startup_attempts": 1,
+    "failed_startups_preserved": 0,
+    "no_model_or_manual_restart": true
+  },
+  "source_received": true,
+  "source": {
+    "source": "c4d99c1be01c01359988afc2b85ecada99c9b133",
+    "base": "e5fc1a2d90b67b2a0dff253e9b0ba89fd3310aea",
+    "tree": "246bb5b92bd922505b166d354282828618d750e6",
+    "files": {
+      "agent/src/reflex/card-model.ts": "b94e5748ec3f5792120408dd06f6c8e2d00516bd0a05ce1a70882c4c7419fc75",
+      "agent/src/reflex/thief.ts": "b114a8937a3580e27a4c8f45600720d7a6d808ecf4ec2e0a05737163fd301c94",
+      "agent/src/reflex/turn-solver.ts": "86403224078a7e9d8402c2a487424548923ad7abbd4c65a8544e5be538857a09",
+      "agent/src/sl/judge.ts": "a3c2770ed23cb2d6e28eba8472558955e2e84ded8e966dc9d7f9c19eb63d3f2b",
+      "agent/tests/silent-rod-sandpit-evidence.json": "65df63d378c4dc6b9be65a600cdae8b0f9cafbb9a53c4efd87a5d2f8042c629f",
+      "agent/tests/silent-rod-sandpit.test.ts": "c30adf47ce01ae877e72fc5e3334c6df144eecfe00690cee48f0b46fe3dbde40",
+      "agent/tests/silent-strangle-ly-evidence.json": "1fbf57ae01020915a5faa2cd27ab8c70964eceaf3ac2396e603379979dd2865c",
+      "agent/tests/silent-strangle-ly.test.ts": "487ec51e9481afb8056222add0fb9556f718735ebb974b8b35c5553cc1a548f4",
+      "agent/tests/silent-thief-unknown-evidence.json": "3b70f47bf89e09963977fccfc712f1f10f1d097f8476227ae0d216bb727cc90f",
+      "agent/tests/silent-thief-unknown.test.ts": "7fb3bb3794717ac22d666cfd321f2ccc4576c4b0601d2c0e6eea491ae3833cb9"
+    },
+    "source_commits": {
+      "rod": {
+        "commit": "3dbdc27becba54c8ca4fe722102b1c562794f48b",
+        "parent": "e5fc1a2d90b67b2a0dff253e9b0ba89fd3310aea"
+      },
+      "strangle": {
+        "commit": "92fb9f15b24c9fc4f1bf31ca4cd3190a9cba7cdb",
+        "parent": "3dbdc27becba54c8ca4fe722102b1c562794f48b"
+      },
+      "thief": {
+        "commit": "c4d99c1be01c01359988afc2b85ecada99c9b133",
+        "parent": "92fb9f15b24c9fc4f1bf31ca4cd3190a9cba7cdb"
+      }
+    }
+  },
+  "original_full_failures": [
+    1,
+    1,
+    1
+  ],
+  "final_source_sandbox_rc": 0,
+  "final_source_sandbox_files": 458,
+  "final_source_sandbox_cases": 4256,
+  "final_paths_cases": 11,
+  "source_host_wrapper_cases": 1,
+  "source_host_wrapper_underlying_python_cases": 4,
+  "source_host_wrapper_rc": 0,
+  "superseded_unfrozen_run_retained": {
+    "state": "superseded",
+    "reason": "A synthetic extra unknown relic exposed an insufficient scope guard. Source changes during the old run invalidate it as a frozen-tree acceptance result. Final r2 source is verified separately; preserve all old outputs.",
+    "previous_source": {
+      "agent/src/sl/judge.ts": "5bc443dd2937630edb10c0a021c69070f2d65cbadd9ec83b65446dd596cbb621",
+      "agent/src/reflex/thief.ts": "b114a8937a3580e27a4c8f45600720d7a6d808ecf4ec2e0a05737163fd301c94",
+      "agent/src/reflex/card-model.ts": "b94e5748ec3f5792120408dd06f6c8e2d00516bd0a05ce1a70882c4c7419fc75",
+      "agent/src/reflex/turn-solver.ts": "86403224078a7e9d8402c2a487424548923ad7abbd4c65a8544e5be538857a09"
+    },
+    "new_judge_sha256": "a3c2770ed23cb2d6e28eba8472558955e2e84ded8e966dc9d7f9c19eb63d3f2b"
+  },
+  "original_failure_logs_preserved": true,
+  "formal_fixture_raw_frames": [
+    {
+      "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+      "offset": 9543920854,
+      "bytes": 33172,
+      "sha256": "6fdedb27f37d6e8738f5034026aefe96a89eef2748a00c10ce24b38d0e4a57ba",
+      "line": 307493,
+      "run_id": "Z91JN3S3PQX2"
+    },
+    {
+      "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+      "offset": 9543954026,
+      "bytes": 33270,
+      "sha256": "3cf7e483d2796cb78c05b78432418e16f2e6a5fbb6c7a207d831cd10feb0e986",
+      "line": 307494,
+      "run_id": "Z91JN3S3PQX2"
+    },
+    {
+      "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+      "offset": 9559212588,
+      "bytes": 29528,
+      "sha256": "ebccf6126289ff368df6ac7a4dbc6ae2aaa9d39be55cbaaf8cf321ac1ad8ffe6",
+      "line": 308030,
+      "run_id": "LY83ZMTFVKJH"
+    },
+    {
+      "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+      "offset": 9559242116,
+      "bytes": 28621,
+      "sha256": "70f71ab2e403956593c4ca522c1b4d1d8c09715755b10e1d3094c9318f74ed3c",
+      "line": 308031,
+      "run_id": "LY83ZMTFVKJH"
+    },
+    {
+      "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+      "offset": 9559270737,
+      "bytes": 27815,
+      "sha256": "baa0a8237ad5f02fcf843fcbcbdd479d3b3c27f753f4504a01a2e5cd6480840e",
+      "line": 308032,
+      "run_id": "LY83ZMTFVKJH"
+    },
+    {
+      "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+      "offset": 9559551179,
+      "bytes": 35567,
+      "sha256": "fa164d8a7d727c8fae61426ccc762c27352246b0b0a3225ce42bcc8194a0e415",
+      "line": 308041,
+      "run_id": "LY83ZMTFVKJH"
+    },
+    {
+      "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+      "offset": 9559586746,
+      "bytes": 34660,
+      "sha256": "9e30a7142b4a0b28b75ba91436b74ea36cae7553456b6ea6af432fd9928889e6",
+      "line": 308042,
+      "run_id": "LY83ZMTFVKJH"
+    },
+    {
+      "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+      "offset": 9559621406,
+      "bytes": 34249,
+      "sha256": "f63c843d781c009c34ba498abec61114051f51af3c0847d2f39016555346a85f",
+      "line": 308043,
+      "run_id": "LY83ZMTFVKJH"
+    },
+    {
+      "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+      "offset": 9559655655,
+      "bytes": 32915,
+      "sha256": "effa5d043bcad0919e02cafb5821eceedecbc5dbb8e9c10f52cacdf3b676145f",
+      "line": 308044,
+      "run_id": "LY83ZMTFVKJH"
+    },
+    {
+      "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+      "offset": 9557367446,
+      "bytes": 30753,
+      "sha256": "709f3769699ac8482e049635afffeb3f34f9780039fe99021f969879f525f9a0",
+      "line": 307971,
+      "run_id": "LY83ZMTFVKJH"
+    },
+    {
+      "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+      "offset": 9557398199,
+      "bytes": 27242,
+      "sha256": "6cf2e4f6fa198846fb1b5cc45504a351978fdbfb732fcfaa3714f4c064dee891",
+      "line": 307972,
+      "run_id": "LY83ZMTFVKJH"
+    },
+    {
+      "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+      "offset": 9557425441,
+      "bytes": 31227,
+      "sha256": "9fb3690c26b76da0cc26fef91f4f16a97ac8ba878489e2a3e2270fd3db34bbb7",
+      "line": 307973,
+      "run_id": "LY83ZMTFVKJH"
+    },
+    {
+      "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+      "offset": 9558079829,
+      "bytes": 22097,
+      "sha256": "791c5c0cf5d834807fcbe2dd27c901d087b4a25405df4485d0fe34daf8326099",
+      "line": 307994,
+      "run_id": "LY83ZMTFVKJH"
+    },
+    {
+      "source": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+      "offset": 9559937368,
+      "bytes": 28240,
+      "sha256": "7d7a5b9434508a1087ba24808185cb52c08f72e870ed52122ea5bd4220f129c1",
+      "line": 308053,
+      "run_id": "LY83ZMTFVKJH"
+    },
+    {
+      "source": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+      "offset": 792481848,
+      "bytes": 11896,
+      "sha256": "547226e4c4a32e8cbc22a4fd61f0b2478dfdbecb71fd2a45a091a9843edd9561",
+      "line": 300426,
+      "run_id": "LY83ZMTFVKJH"
+    }
+  ],
+  "evidence": [
+    {
+      "folder": "evidence",
+      "stream": "states",
+      "source_size": 13731331481,
+      "counts": {
+        "M0GY0A4M2F7H": 539,
+        "Z91JN3S3PQX2": 505,
+        "LY83ZMTFVKJH": 556
+      },
+      "invalid_lines": 2,
+      "incomplete_lines": 0,
+      "output_sha256": "4456139d87e8c6383abdd2b280d9167cda714b7c60644bf84a0e2bd90f82567b"
+    },
+    {
+      "folder": "evidence",
+      "stream": "decisions",
+      "source_size": 2110681310,
+      "counts": {
+        "M0GY0A4M2F7H": 526,
+        "Z91JN3S3PQX2": 481,
+        "LY83ZMTFVKJH": 538
+      },
+      "invalid_lines": 2,
+      "incomplete_lines": 0,
+      "output_sha256": "a697cc23e0e6fccb207c09ddb82278dd017536124f3f4a9f1d7a183b03539c9d"
+    },
+    {
+      "folder": "evidence",
+      "stream": "sl-attempts",
+      "source_size": 44460183,
+      "counts": {
+        "M0GY0A4M2F7H": 6,
+        "Z91JN3S3PQX2": 2,
+        "LY83ZMTFVKJH": 3
+      },
+      "invalid_lines": 0,
+      "incomplete_lines": 0,
+      "output_sha256": "94d83841be498aa9f6af388b841b7ed9e527ac701bac62fbafdb549b9b3c0f36"
+    },
+    {
+      "folder": "evidence",
+      "stream": "run-config",
+      "source_size": 1911407,
+      "counts": {
+        "M0GY0A4M2F7H": 1,
+        "Z91JN3S3PQX2": 1,
+        "LY83ZMTFVKJH": 1
+      },
+      "invalid_lines": 0,
+      "incomplete_lines": 0,
+      "output_sha256": "e97e7a2c935b8a4e614451e011845b45ba7719db282178ab9729c1e0b456b334"
+    },
+    {
+      "folder": "evidence",
+      "stream": "run-plans",
+      "source_size": 8723742,
+      "counts": {
+        "M0GY0A4M2F7H": 3,
+        "Z91JN3S3PQX2": 6,
+        "LY83ZMTFVKJH": 4
+      },
+      "invalid_lines": 0,
+      "incomplete_lines": 0,
+      "output_sha256": "fdb38b1365053bddb28c58e108d065c5846ca29556971b54aa85876f1fa913e9"
+    },
+    {
+      "folder": "evidence",
+      "stream": "brain",
+      "source_size": 709741394,
+      "counts": {
+        "M0GY0A4M2F7H": 18,
+        "Z91JN3S3PQX2": 31,
+        "LY83ZMTFVKJH": 19
+      },
+      "invalid_lines": 2,
+      "incomplete_lines": 0,
+      "output_sha256": "0e0667586f4109a24eda1614b0ac9590b37420f826e0c192281c4c17161c17e8"
+    },
+    {
+      "folder": "evidence",
+      "stream": "runs",
+      "source_size": 353455,
+      "counts": {
+        "M0GY0A4M2F7H": 1,
+        "Z91JN3S3PQX2": 1,
+        "LY83ZMTFVKJH": 1
+      },
+      "invalid_lines": 0,
+      "incomplete_lines": 0,
+      "output_sha256": "e1543ed090668550ec21959266a201476debef890394625f916f6f0abf46d24b"
+    },
+    {
+      "folder": "evidence",
+      "stream": "fight-plans",
+      "source_size": 2233957,
+      "counts": {
+        "M0GY0A4M2F7H": 0,
+        "Z91JN3S3PQX2": 0,
+        "LY83ZMTFVKJH": 0
+      },
+      "invalid_lines": 0,
+      "incomplete_lines": 0,
+      "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "folder": "evidence-counterexamples",
+      "stream": "decisions",
+      "source_size": 2111898324,
+      "counts": {
+        "PU80F84P6HPN": 1033,
+        "5X2GHKJ89PN1": 929,
+        "NB8KCF6HRGVF": 466
+      },
+      "invalid_lines": 2,
+      "incomplete_lines": 0,
+      "output_sha256": "8dee035538d3f522c1efff52ed728cf35881ccddbe98aeb4464c97bd4bc957f9"
+    },
+    {
+      "folder": "evidence-counterexamples",
+      "stream": "runs",
+      "source_size": 353455,
+      "counts": {
+        "PU80F84P6HPN": 1,
+        "5X2GHKJ89PN1": 1,
+        "NB8KCF6HRGVF": 1
+      },
+      "invalid_lines": 0,
+      "incomplete_lines": 0,
+      "output_sha256": "83f1d9534fb8ef386414fc57568840a767148488ca226cee52485ceed4792d61"
+    }
+  ],
+  "original_proposals_sha_verified": 10,
+  "ledger_trace_rows": 25,
+  "ledger_protected_fields_preserved": true,
+  "original_other_role_fixture_exposure_deviation_retained": true,
+  "no_source_full_repeat_no_new_game_knowledge_no_other_role_ack": true
+}
