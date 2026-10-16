@@ -1,0 +1,62 @@
+{
+  "schema": 1,
+  "batch": "20261016-174303-fix-batch",
+  "task": "fix-batch",
+  "worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261016-174303",
+  "original": {
+    "merged": "c0cab0352b6c1a487e116d845350bf483dc60c9c",
+    "tree": "c02e2ffda79312e3b22b438b501c68b4d1882873",
+    "log_sha256": "08e92ebb4d25c00a98d749df29a0e3e83af5b4eae10254e1f90df6f5ea5b612f",
+    "coverage": {
+      "passed": [],
+      "failed": [
+        "tests/learner-launch-failures.test.ts"
+      ],
+      "skipped": [],
+      "summary": {
+        "files": {
+          "failed": 1,
+          "passed": 497
+        },
+        "tests": {
+          "failed": 1,
+          "passed": 4974,
+          "skipped": 2
+        }
+      },
+      "failed_tests": {
+        "tests/learner-launch-failures.test.ts": [
+          "nested learner launches preserve the native CLI and learner-only policy and missing failed reports keep their original failure"
+        ]
+      }
+    }
+  },
+  "live": {
+    "commit": "c0cab0352b6c1a487e116d845350bf483dc60c9c",
+    "tree": "c02e2ffda79312e3b22b438b501c68b4d1882873"
+  },
+  "sources": [
+    "21a9c52484f04d510bd397959c958ec9767f1d2d"
+  ],
+  "inputs": [
+    {
+      "path": "agent/tests/learner-launch-failures.test.ts",
+      "source": "21a9c52484f04d510bd397959c958ec9767f1d2d"
+    }
+  ],
+  "selection": [
+    {
+      "file": "tests/learner-launch-failures.test.ts",
+      "tests": [
+        "nested learner launches preserve the native CLI and learner-only policy and missing failed reports keep their original failure"
+      ],
+      "reason": "failed"
+    }
+  ],
+  "receipts": [
+    {
+      "path": "paper/materials/20261016-1848-ops/host-failure-disposition.json",
+      "sha256": "8faf2caddaf77830da3131824ac9f19802ddf3681f9ea2f7af33e4f3ece028d5"
+    }
+  ]
+}

@@ -1,0 +1,43 @@
+{
+  "at": "2026-10-16 18:50:30 CST",
+  "batch": "20261016-174303-fix-batch",
+  "original_full": {
+    "rc": 1,
+    "log": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261016-174303-fix-batch.fallback-c02e2ffda79312e3b22b438b501c68b4d1882873.checks.log",
+    "log_sha256": "08e92ebb4d25c00a98d749df29a0e3e83af5b4eae10254e1f90df6f5ea5b612f",
+    "live": "c0cab0352b6c1a487e116d845350bf483dc60c9c",
+    "tree": "c02e2ffda79312e3b22b438b501c68b4d1882873",
+    "coverage": {
+      "passed": [],
+      "failed": [
+        "tests/learner-launch-failures.test.ts"
+      ],
+      "skipped": [],
+      "summary": {
+        "files": {
+          "failed": 1,
+          "passed": 497
+        },
+        "tests": {
+          "failed": 1,
+          "passed": 4974,
+          "skipped": 2
+        }
+      },
+      "failed_tests": {
+        "tests/learner-launch-failures.test.ts": [
+          "nested learner launches preserve the native CLI and learner-only policy and missing failed reports keep their original failure"
+        ]
+      }
+    }
+  },
+  "decision": "Retain the isolated monitoring fix; rerun only the single original failing fixed wrapper under original assertions and 30000ms child limit, through original pinned learner-recheck continuation.",
+  "reason": "The full log shows spawnSync returned status=null after 30104ms; no demonstrated causal link to the monitoring change. Root cause of the timing remains unknown.",
+  "scope": "Selected failed wrapper plus required tsc only; never rewrite the original full1 or sandbox full1.",
+  "no_rollback": true,
+  "no_source_test_assertion_or_timeout_change": true,
+  "no_game_or_model_calls": true,
+  "independent_original_tsc_exit_not_persisted": true,
+  "original_summary_counts_not_individually_named_passed_files": true,
+  "ops_initial_coverage_assumption_preserved": true
+}

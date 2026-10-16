@@ -1,0 +1,185 @@
+{
+  "at": "2026-10-16 18:53:01 CST",
+  "original_full": {
+    "rc": 1,
+    "log": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261016-174303-fix-batch.fallback-c02e2ffda79312e3b22b438b501c68b4d1882873.checks.log",
+    "merged": "c0cab0352b6c1a487e116d845350bf483dc60c9c",
+    "tree": "c02e2ffda79312e3b22b438b501c68b4d1882873",
+    "commits": [
+      "21a9c52484f04d510bd397959c958ec9767f1d2d"
+    ],
+    "ops_publication_proof": {
+      "at": "2026-10-16 18:24:00 CST",
+      "batch": "20261016-174303-fix-batch",
+      "source": "21a9c52484f04d510bd397959c958ec9767f1d2d",
+      "merged": "c0cab0352b6c1a487e116d845350bf483dc60c9c",
+      "tree": "c02e2ffda79312e3b22b438b501c68b4d1882873",
+      "publication": "paper/materials/20261016-1815-ops/publication.json",
+      "publication_sha256": "ce1629d25b2f39eb8c362b3a035761b2aa6d796019aa5fedde9437d41c436388",
+      "original_report_sha256": "06697213a76b20501497c280bf1be059c007b60e7c18476b9fd001ea76db0973",
+      "original_report_retained": true,
+      "original_report_has_no_committed_source": true,
+      "disposition": "Main ops committed original staged source after sandbox EPERM supplement; use actual publication proof, without changing original completion.",
+      "original_checks_and_live_locks": true,
+      "full_command": "export PATH=\"$HOME/.local/node/bin:$PATH\"; nice -n 19 npx tsc -p tsconfig.json --noEmit; a=$?; nice -n 19 npx vitest run --maxWorkers=2; b=$?; [ \"$a\" = 0 ] && [ \"$b\" = 0 ]",
+      "full_command_sha256": "896f046db998a1dfe91b22baa98cc341ed6a90cadb542495c08419fcc4040210",
+      "log": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261016-174303-fix-batch.fallback-c02e2ffda79312e3b22b438b501c68b4d1882873.checks.log"
+    },
+    "started": "2026-10-16 18:24:00 CST",
+    "finished": "2026-10-16 18:43:07 CST",
+    "log_sha256": "08e92ebb4d25c00a98d749df29a0e3e83af5b4eae10254e1f90df6f5ea5b612f"
+  },
+  "accepted_supplement": {
+    "manifest_sha256": "38e18091619153c18cc46a06448f152ef6a0f9401435e2b9124418dbcd55612c",
+    "batch": "20261016-174303-fix-batch",
+    "state": "completed",
+    "environment": "host",
+    "scope": "selected tests only",
+    "full_suite": false,
+    "live": {
+      "commit": "c0cab0352b6c1a487e116d845350bf483dc60c9c",
+      "tree": "c02e2ffda79312e3b22b438b501c68b4d1882873"
+    },
+    "original": {
+      "merged": "c0cab0352b6c1a487e116d845350bf483dc60c9c",
+      "tree": "c02e2ffda79312e3b22b438b501c68b4d1882873",
+      "log_sha256": "08e92ebb4d25c00a98d749df29a0e3e83af5b4eae10254e1f90df6f5ea5b612f",
+      "coverage": {
+        "passed": [],
+        "failed": [
+          "tests/learner-launch-failures.test.ts"
+        ],
+        "skipped": [],
+        "summary": {
+          "files": {
+            "failed": 1,
+            "passed": 497
+          },
+          "tests": {
+            "failed": 1,
+            "passed": 4974,
+            "skipped": 2
+          }
+        },
+        "failed_tests": {
+          "tests/learner-launch-failures.test.ts": [
+            "nested learner launches preserve the native CLI and learner-only policy and missing failed reports keep their original failure"
+          ]
+        }
+      }
+    },
+    "original_log": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261016-174303-fix-batch.fallback-c02e2ffda79312e3b22b438b501c68b4d1882873.checks.log",
+    "sources": [
+      "21a9c52484f04d510bd397959c958ec9767f1d2d"
+    ],
+    "inputs": [
+      {
+        "path": "agent/tests/learner-launch-failures.test.ts",
+        "source": "21a9c52484f04d510bd397959c958ec9767f1d2d"
+      }
+    ],
+    "selection": [
+      {
+        "file": "tests/learner-launch-failures.test.ts",
+        "tests": [
+          "nested learner launches preserve the native CLI and learner-only policy and missing failed reports keep their original failure"
+        ],
+        "reason": "failed"
+      }
+    ],
+    "evidence": [
+      {
+        "path": "paper/materials/20261016-1848-ops/host-failure-disposition.json",
+        "sha256": "8faf2caddaf77830da3131824ac9f19802ddf3681f9ea2f7af33e4f3ece028d5"
+      }
+    ],
+    "results": [
+      {
+        "name": "tsc",
+        "rc": 0,
+        "process_rc": 0,
+        "status": "passed"
+      },
+      {
+        "name": "tests/learner-launch-failures.test.ts",
+        "rc": 0,
+        "process_rc": 0,
+        "status": "passed",
+        "report_sha256": "2cdebcd929f0d09e8c4327d977b7b9e0825856a7a6b7f8a88d408bbdec3196f5",
+        "counts": {
+          "numTotalTests": 1,
+          "numPassedTests": 1,
+          "numFailedTests": 0,
+          "numPendingTests": 0
+        },
+        "report": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261016-174303-fix-batch.supplement-38e18091619153c18cc46a06448f152ef6a0f9401435e2b9124418dbcd55612c.0.vitest.json"
+      }
+    ],
+    "rc": 0,
+    "log": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261016-174303-fix-batch.supplement-38e18091619153c18cc46a06448f152ef6a0f9401435e2b9124418dbcd55612c.log",
+    "log_sha256": "f88fd7faf3692038027c2a5281fc3ab4c6387dbff27ddf728dbdd3a029ea1be1"
+  },
+  "unchanged_validation_inputs": [
+    {
+      "path": "agent/tests/learner-launch-failures.test.ts",
+      "sha256": "58dcd330f5cc6368ba1b37793c25af8501d253c65c576091d126c7ec55d72864",
+      "bytes": 491
+    },
+    {
+      "path": "ops/tests/test_learner_launch_failures.py",
+      "sha256": "4e2f477760d1bf286a17aaea54ffb90e0e88dc2efd7e7cc063cd6015e30a838d",
+      "bytes": 14620
+    },
+    {
+      "path": "ops/tests/fixtures/legacy-codex-ops-learner.sh",
+      "sha256": "05a9e415572faedcd5193b829aed72325e19a5fca978d8b940ae8f4365370bb1",
+      "bytes": 8677
+    },
+    {
+      "path": "ops/paths.sh",
+      "sha256": "93889ea58e5af5e61b348257961f0664d5307cfaf051b36b54524d00aa8081b2",
+      "bytes": 921
+    },
+    {
+      "path": "ops/codex-ops-learner.sh",
+      "sha256": "88ffea70a4c3bbeaff46a1a82c87529e30b0a1e41faec00201ff7063f7a6ed70",
+      "bytes": 11918
+    },
+    {
+      "path": "ops/learner_entry.py",
+      "sha256": "a77f9f94d7137ef14e59326c568528618f1aa64f16b9d7fea8eca018f51a93ce",
+      "bytes": 5249
+    },
+    {
+      "path": "ops/codex-fast.sh",
+      "sha256": "ffad23077a62432ce5fcdd33c3be5c04b46da705b82026b3be6b5f51d6290f3d",
+      "bytes": 2024
+    },
+    {
+      "path": "ops/codex-learner.sh",
+      "sha256": "ecc8b017d804f1a74fc0539538815e4ce446b52f271dac6d8d4fe1acde0952de",
+      "bytes": 619
+    },
+    {
+      "path": "ops/codex-policy.sh",
+      "sha256": "8b6ac33436bb9c4523951737d866d43a791df934ca617f2e023f2cc7047010e8",
+      "bytes": 1147
+    },
+    {
+      "path": "ops/learner_checks.py",
+      "sha256": "f3e20b5e1b1f2731c67b9380b588fc928494206452dc857d950a01e346d1934c",
+      "bytes": 18178
+    }
+  ],
+  "decision": "Retain live; accept original full coverage plus the narrowly scoped unchanged-input supplement. Original full rc1 stays rc1; no whole-suite rc0 claim.",
+  "root_cause_of_original_timing_unknown": true,
+  "no_code_assertion_or_30000ms_timeout_change": true,
+  "no_new_full_or_model_or_game_task": true,
+  "only_original_failed_test_rerun": true,
+  "selected_wrapper_python_tests": 15,
+  "python_count_proven_by_unchanged_passing_wrapper_assertion": true,
+  "separate_python_stdout_not_emitted_by_wrapper": true,
+  "ops_initial_raw_log_output_assumption_preserved": true,
+  "live": "c0cab0352b6c1a487e116d845350bf483dc60c9c",
+  "tree": "c02e2ffda79312e3b22b438b501c68b4d1882873"
+}
