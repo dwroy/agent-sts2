@@ -1,0 +1,1024 @@
+{
+  "at": "2026-10-16 10:56:02 CST",
+  "batch": "20261016-104302-strategy-proposal",
+  "report": {
+    "task": "strategy-proposal",
+    "character": "silent",
+    "batch": "20261016-104302-strategy-proposal",
+    "base": "15aa330a851086c77b40492228813fd756f6904a",
+    "runs": [
+      "VLZ6CCT8AQ0A",
+      "8JRE1C4H4Z2W",
+      "CA5KE8GFJ9X2",
+      "5PM6JAQG6FNQ",
+      "61E2QS63Y9WU",
+      "DUZUBAJ3A8GP"
+    ],
+    "fixes": [],
+    "skipped": [],
+    "merged": null,
+    "tests": {
+      "tsc": null,
+      "vitest": null,
+      "cases": null
+    },
+    "code_proposals": [
+      "silent-proposal-89354805ee4d7e77",
+      "silent-proposal-f2bfceddb1898dca",
+      "silent-proposal-283a164780d11e69",
+      "silent-proposal-ebbfe3b97548756d",
+      "silent-proposal-e5b87be50f28f311",
+      "silent-proposal-49632bc4878fb597",
+      "silent-proposal-66532328a585941f",
+      "silent-proposal-43a76a31ba7bdcfa",
+      "silent-proposal-5264153a4a4b0e5c",
+      "silent-proposal-bddfa690a84e03d0"
+    ],
+    "implementation_domains": [],
+    "proposal_results": [
+      {
+        "id": "silent-proposal-89354805ee4d7e77",
+        "state": "waiting",
+        "reason": "缺跨抽牌、药水、重规划及SL的本战实际施放持续归属；actual_cast_this_fight仍为null，未覆盖升级交互尚未校准。"
+      },
+      {
+        "id": "silent-proposal-f2bfceddb1898dca",
+        "state": "waiting",
+        "reason": "缺同起点、同随机池、同总预算的完整模型MC配对、候选稳定性曲线及留药后继；两个药水题指纹不同。"
+      },
+      {
+        "id": "silent-proposal-283a164780d11e69",
+        "state": "waiting",
+        "reason": "同源神化经验链仍缺实际施放持续归属及升级交互校准；已有窄传播不足以认定整项duplicate。"
+      },
+      {
+        "id": "silent-proposal-ebbfe3b97548756d",
+        "state": "waiting",
+        "reason": "缺十五经验子项的联合生产校准、状态期限和战斗/路线/休息消费者逐源归属；六局原帧不足以验收整项。"
+      },
+      {
+        "id": "silent-proposal-e5b87be50f28f311",
+        "state": "waiting",
+        "reason": "缺跨重规划持续候选身份、完整执行认证和成长逐源兑现；现有净端点不足以改变SL血价或HP护栏。"
+      },
+      {
+        "id": "silent-proposal-49632bc4878fb597",
+        "state": "waiting",
+        "reason": "蚌战未观察正敏捷；缺力量、正负敏捷、虚弱与独立成长的联合冻结生产校准，历史dirty输入不能仅凭提交复原。"
+      },
+      {
+        "id": "silent-proposal-66532328a585941f",
+        "state": "waiting",
+        "reason": "缺同起始HP、牌组、药水及完整抽序下不同启动顺序的整战对照与收益函数；无毒冒泡局部无效不能拟合启动权重。"
+      },
+      {
+        "id": "silent-proposal-43a76a31ba7bdcfa",
+        "state": "waiting",
+        "reason": "缺同起始HP、构筑和完整抽序的SL整战配对及另一条已核后继；首试胜利不足以修改SL范围或阈值。"
+      },
+      {
+        "id": "silent-proposal-5264153a4a4b0e5c",
+        "state": "waiting",
+        "reason": "缺A10召唤、成长、退场与复现的全链生产校准及另一focus完整后继；现有召唤源码不足以证明固定杀序收益。"
+      },
+      {
+        "id": "silent-proposal-bddfa690a84e03d0",
+        "state": "waiting",
+        "reason": "缺伤害唤醒、眩晕接续与成长全链生产校准及同抽换序后继；四次相关失败不足以拟合血价或固定杀序。"
+      }
+    ],
+    "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-104302/learner/runs/20261016-104307-6a052580-a805-46ee-a1bb-b1142b126f9d-strategy-proposal/report.md"
+  },
+  "native": {
+    "batch": "20261016-104302-strategy-proposal",
+    "thread": "01a14297-8d46-7633-8827-dbd1612e4cc4",
+    "cwd": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-104302",
+    "event_log": "learner/runs/20261016-104307-6a052580-a805-46ee-a1bb-b1142b126f9d-strategy-proposal.jsonl",
+    "registered_launch_batch": "20261016-104302-strategy-proposal",
+    "original_lease": "8d5403838d3d491ece52f6711361150a1d7c344148828face6db09629a33bd95",
+    "native_context": {
+      "source": "ops/codex-ops/accounts/codex1/learner/sessions/2026/10/16/rollout-2026-10-16T10-43-10-01a14297-8d46-7633-8827-dbd1612e4cc4.jsonl",
+      "offset": 50241,
+      "bytes": 5148,
+      "sha256": "d4277a9a315c7296f7b6ee76ffa64dba4881b8df21e1b37b086f29990261ff5c",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "sandbox": {
+        "type": "workspace-write",
+        "writable_roots": [
+          "/home/dw/Projects/agent-sts2",
+          "/home/dw/Projects/agent-sts2/.git",
+          "/home/dw/Projects/agent-sts2/.git/worktrees/codex-strategy-silent-20261016-104302"
+        ],
+        "network_access": false,
+        "exclude_tmpdir_env_var": false,
+        "exclude_slash_tmp": false
+      },
+      "approval_policy": "never"
+    },
+    "native_user_input": {
+      "offset": 55389,
+      "bytes": 21447,
+      "sha256": "7033f8ca942503d305982a501eb5649f9c7d906c4bd6a3dcef557b6281697273",
+      "input_sha256": "7db24fa8287d370bbfb891e9307227a9ed8cc096d59948c51626b1b4093f6425"
+    },
+    "original_header_events": [
+      {
+        "offset": 0,
+        "bytes": 23459,
+        "sha256": "7a5a574ef5fb16f9b93695a8f3d793de1ce7cd8f4a84d179a271a4cd232003ad",
+        "type": "learner_launch",
+        "attempt": null,
+        "code": null
+      },
+      {
+        "offset": 23459,
+        "bytes": 378,
+        "sha256": "0e6816b2ec55e43d607af00e05d85d77c7dbc87b8cdb3dd587b4d87aaab4ae13",
+        "type": "learner_startup_attempt",
+        "attempt": 1,
+        "code": null
+      },
+      {
+        "offset": 26849,
+        "bytes": 77,
+        "sha256": "98f592bf8c028bca5fdd0101c3ad704fa196bd263f7f61a66a6dc4bfc0f7fd4c",
+        "type": "thread.started",
+        "attempt": null,
+        "code": null
+      }
+    ],
+    "startup_attempts": 1,
+    "failed_startups_preserved": 0,
+    "no_model_or_manual_restart": true
+  },
+  "worktree_clean": true,
+  "final": {
+    "recorded_at": "2026-10-16T10:52:52+08:00",
+    "base": "15aa330a851086c77b40492228813fd756f6904a",
+    "head": "15aa330a851086c77b40492228813fd756f6904a",
+    "git_status_porcelain": "",
+    "source_or_knowledge_changes": false,
+    "source_commit": null,
+    "merged": null,
+    "release_id": null,
+    "production_tests": {
+      "tsc": null,
+      "vitest": null,
+      "cases": null
+    },
+    "verified_evidence_rows": 6995,
+    "material_checks_passed": 44,
+    "proposal_results": 10,
+    "own_ledger_appends": 26,
+    "protected_ledger_items_verified": 26,
+    "gitleaks": {
+      "exit_code": 0,
+      "findings": 0,
+      "scope": "本批报告、提案、账本CLI输入、结果JSON及材料核验脚本",
+      "input_sha256": "0cbbde624ed1a70b289c9c0ab90f5aa48ba139635112c22887fad1282944f03d"
+    },
+    "artifacts": [
+      {
+        "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-104302/learner/runs/20261016-104307-6a052580-a805-46ee-a1bb-b1142b126f9d-strategy-proposal/report.md",
+        "bytes": 8898,
+        "sha256": "a904e9973ee4975ed717cfa014ca0d2d5686e24f961a83070a3f1412a23e4874"
+      },
+      {
+        "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-104302/learner/runs/20261016-104307-6a052580-a805-46ee-a1bb-b1142b126f9d-strategy-proposal/proposal.md",
+        "bytes": 12910,
+        "sha256": "52cd215bc458dac4cb46e0c51205fbd5d066f3f0cc5e8149796dffba562f3abc"
+      },
+      {
+        "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-104302/learner/runs/20261016-104307-6a052580-a805-46ee-a1bb-b1142b126f9d-strategy-proposal/result.json",
+        "bytes": 3539,
+        "sha256": "8162843b1605a83c42c8e2779d46b40e849095853e34b6770e120ab62cf80e4c"
+      },
+      {
+        "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-104302/learner/runs/20261016-104307-6a052580-a805-46ee-a1bb-b1142b126f9d-strategy-proposal/dispatch.json",
+        "bytes": 1208,
+        "sha256": "42272de525b61da5b03f648e69419a2c38e027de07ad42dc6e64e2f376a4c9d3"
+      },
+      {
+        "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-104302/learner/runs/20261016-104307-6a052580-a805-46ee-a1bb-b1142b126f9d-strategy-proposal/evidence/evidence-manifest.json",
+        "bytes": 3035,
+        "sha256": "aebb481c6ad77de930c97c50ae9ad457f9f54b1f43d2ead51d35220ea6bb4b65"
+      },
+      {
+        "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-104302/learner/runs/20261016-104307-6a052580-a805-46ee-a1bb-b1142b126f9d-strategy-proposal/evidence-verification.json",
+        "bytes": 3649,
+        "sha256": "9541239ec8ce92b92158740a8844ecd553d3900810588811c11fafd801a3d778"
+      },
+      {
+        "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-104302/learner/runs/20261016-104307-6a052580-a805-46ee-a1bb-b1142b126f9d-strategy-proposal/prior-evidence-comparison.json",
+        "bytes": 1894,
+        "sha256": "0132bdc0a9658721ad7095bc14a14582bc92dc45db5a0a47048a4ab60dbaa204"
+      },
+      {
+        "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-104302/learner/runs/20261016-104307-6a052580-a805-46ee-a1bb-b1142b126f9d-strategy-proposal/prior-audit-readback.json",
+        "bytes": 3985,
+        "sha256": "d81b65f5486748e205a7eed8751c222811caad06160d11058209fa9c687dec46"
+      },
+      {
+        "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-104302/learner/runs/20261016-104307-6a052580-a805-46ee-a1bb-b1142b126f9d-strategy-proposal/source-verification.json",
+        "bytes": 6563,
+        "sha256": "18f214bc6cd6be6546a5182687dee02d1b2f4f139e4571b1b54a1bcfc79b241d"
+      },
+      {
+        "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-104302/learner/runs/20261016-104307-6a052580-a805-46ee-a1bb-b1142b126f9d-strategy-proposal/original-proposals-manifest.json",
+        "bytes": 4965,
+        "sha256": "fca6cc54de9f5f2478b7db68ef91b29348e29c7ea19247606796a7a9a85a8681"
+      },
+      {
+        "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-104302/learner/runs/20261016-104307-6a052580-a805-46ee-a1bb-b1142b126f9d-strategy-proposal/fact-checks.json",
+        "bytes": 10610,
+        "sha256": "7a2b3e1f446832965ef7fd21f8695c27baf0d0339e15ae8f84b0f66da7d9bc74"
+      },
+      {
+        "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-104302/learner/runs/20261016-104307-6a052580-a805-46ee-a1bb-b1142b126f9d-strategy-proposal/ledger-updates.jsonl",
+        "bytes": 24945,
+        "sha256": "5b5ac1358323b329729dae62c113b43ae105b9b81f77070733b8882aa796ed57"
+      },
+      {
+        "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-104302/learner/runs/20261016-104307-6a052580-a805-46ee-a1bb-b1142b126f9d-strategy-proposal/ledger-cli.stdout.txt",
+        "bytes": 312,
+        "sha256": "9a42775d1304ed41a39763c3f2455b36222ba887bf6e482fbff8e5cd2fc4677c"
+      },
+      {
+        "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-104302/learner/runs/20261016-104307-6a052580-a805-46ee-a1bb-b1142b126f9d-strategy-proposal/ledger-append-readback.json",
+        "bytes": 37183,
+        "sha256": "fdc3fca99a4b471ecd302080de4e4454095a291689d5cf1aacb2b4dd7198cfdb"
+      },
+      {
+        "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-104302/learner/runs/20261016-104307-6a052580-a805-46ee-a1bb-b1142b126f9d-strategy-proposal/gitleaks.json",
+        "bytes": 3,
+        "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+      }
+    ]
+  },
+  "selected_evidence": [
+    {
+      "stream": "states",
+      "selected_bytes": 122090537,
+      "sha256": "cd1b0c37e4bf65315d68d6a20ae720881a1b0d182823e71f2453bb64bcd167db",
+      "identical_to_previous_ops_verified_envelope": true,
+      "old_source_size": 13440225269,
+      "new_source_size": 13451310086,
+      "original_folder": "evidence",
+      "current_folder": "evidence"
+    },
+    {
+      "stream": "decisions",
+      "selected_bytes": 12281852,
+      "sha256": "29a1f0e0eecf66561b4e873e73eb3b4b543e0b9aacb0eb88b017375a48f5ff6e",
+      "identical_to_previous_ops_verified_envelope": true,
+      "old_source_size": 1861557943,
+      "new_source_size": 1871383236,
+      "original_folder": "evidence",
+      "current_folder": "evidence"
+    },
+    {
+      "stream": "sl-attempts",
+      "selected_bytes": 490424,
+      "sha256": "745e5030c3fd785d34c8770ca4ae34616b0a0bed934cc2cb38776cabe297f716",
+      "identical_to_previous_ops_verified_envelope": true,
+      "old_source_size": 42844622,
+      "new_source_size": 42868755,
+      "original_folder": "evidence",
+      "current_folder": "evidence"
+    },
+    {
+      "stream": "run-config",
+      "selected_bytes": 31055,
+      "sha256": "c6e94a50ce23454309c66ac76f1619c33678040caea3154b9a7be236e650b590",
+      "identical_to_previous_ops_verified_envelope": true,
+      "old_source_size": 1845250,
+      "new_source_size": 1850737,
+      "original_folder": "evidence",
+      "current_folder": "evidence"
+    },
+    {
+      "stream": "run-plans",
+      "selected_bytes": 71855,
+      "sha256": "b43fd878a38f6d715e0cab0edc3d7801d2e183d51f766bdd2bb21e9d0557591b",
+      "identical_to_previous_ops_verified_envelope": true,
+      "old_source_size": 8461971,
+      "new_source_size": 8479389,
+      "original_folder": "evidence",
+      "current_folder": "evidence"
+    },
+    {
+      "stream": "brain",
+      "selected_bytes": 6898976,
+      "sha256": "bf5c8eb02754671a620ad5b2c254059376b5c91c885be65a0b553bec27f2643d",
+      "identical_to_previous_ops_verified_envelope": true,
+      "old_source_size": 657439677,
+      "new_source_size": 660890981,
+      "original_folder": "evidence",
+      "current_folder": "evidence"
+    },
+    {
+      "stream": "runs",
+      "selected_bytes": 3966,
+      "sha256": "da2c049a73c4f4b2b2584f53ca94e76cd1bc0281a9020b4b409d33f889438e66",
+      "identical_to_previous_ops_verified_envelope": true,
+      "old_source_size": 345747,
+      "new_source_size": 346458,
+      "original_folder": "evidence-extra",
+      "current_folder": "evidence"
+    },
+    {
+      "stream": "fight-plans",
+      "selected_bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "identical_to_previous_ops_verified_envelope": true,
+      "old_source_size": 2233957,
+      "new_source_size": 2233957,
+      "original_folder": "evidence-extra",
+      "current_folder": "evidence"
+    }
+  ],
+  "prior_raw_6995_ops_readback": "paper/materials/20261016-1017-ops/two-batch-readbacks.json",
+  "old_consumers": {
+    "prior_report": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-100139/learner/runs/20261016-100144-384b9bde-2323-4e8e-925b-f88aeaea2458-strategy-proposal/report.md",
+    "source_paths_unchanged": 16,
+    "audits": [
+      {
+        "run_id": "CA5KE8GFJ9X2",
+        "input_sha256": "90a4eec265bad15e28de62795d03f643cdf60c4ce3929104cab238ce61ea7b81",
+        "decoded_sha256": "e04439ea72bd77ed6ae03aea9602e3b27941fd038cc8d7d4bc7b8f5284a14e90",
+        "output_sha256": "6178ec06b831d1ad0098c2c500577718d4db052a760048d4706888f95e9e2ebd",
+        "output": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-100139/learner/runs/20261016-100144-384b9bde-2323-4e8e-925b-f88aeaea2458-strategy-proposal/CA5KE8GFJ9X2.audit-r2.json",
+        "prior_exit_code": 0,
+        "rerun_this_batch": false,
+        "unknown_full_candidates": 41
+      },
+      {
+        "run_id": "61E2QS63Y9WU",
+        "input_sha256": "da0e591b4fd0ca41fe97e3a0f693b396bac6bae0cdda8c9bfd1d4fbdafb4dc5d",
+        "decoded_sha256": "9181abd2b18177f31007e6a4dcd06c4a749d32257d480bebb4ed8d5411886e57",
+        "output_sha256": "6621317be310f403996cb1efd4625cbf0dcf829825f8f916252f7d19581da9cc",
+        "output": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-100139/learner/runs/20261016-100144-384b9bde-2323-4e8e-925b-f88aeaea2458-strategy-proposal/61E2QS63Y9WU.audit-r2.json",
+        "prior_exit_code": 0,
+        "rerun_this_batch": false,
+        "unknown_full_candidates": 63
+      },
+      {
+        "run_id": "5PM6JAQG6FNQ",
+        "input_sha256": "e3e29c4e1a30671038b6b7c132f1e51cea72bc15258e8f0fd894a2eb8edd8246",
+        "decoded_sha256": "8402e20bda16fe3b500c5a77e1d8b8a728e7c3789f3dd6fefa730f0d9ef6f176",
+        "output_sha256": "fc21da81d35767ec9362eaf3e45af2a3b8e5291a8a6803580f666adf533bcd8f",
+        "output": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-100139/learner/runs/20261016-100144-384b9bde-2323-4e8e-925b-f88aeaea2458-strategy-proposal/5PM6JAQG6FNQ.audit-r2.json",
+        "prior_exit_code": 0,
+        "rerun_this_batch": false,
+        "unknown_full_candidates": 83
+      },
+      {
+        "run_id": "DUZUBAJ3A8GP",
+        "input_sha256": "d5738809d16be6fd818ed1dd7ac7ec477cef2a3749ba32607153433a6e6803cc",
+        "decoded_sha256": "170a66a0475f033be92f7e9eafd837472cb7f9a56614d5d758d452abce74f95c",
+        "output_sha256": "0a74d209d6785604eab9394abf59722238c602aceb3fde2eaa146f19276d947f",
+        "output": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-100139/learner/runs/20261016-100144-384b9bde-2323-4e8e-925b-f88aeaea2458-strategy-proposal/DUZUBAJ3A8GP.audit-r2.json",
+        "prior_exit_code": 0,
+        "rerun_this_batch": false,
+        "unknown_full_candidates": 77
+      },
+      {
+        "run_id": "VLZ6CCT8AQ0A",
+        "input_sha256": "9bb615214ba402b069ebd93d432e75999863ba27bab211c7ee21e7601e75ada2",
+        "decoded_sha256": "76712df3ef69a810362fb1ef91c8683c7e9617c691372fb7578e66ad37d27f3a",
+        "output_sha256": "3c7d062ea1add6a56e46d4d114d2afcc9b096af351a01680a18fb7ccb32d0992",
+        "output": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-100139/learner/runs/20261016-100144-384b9bde-2323-4e8e-925b-f88aeaea2458-strategy-proposal/VLZ6CCT8AQ0A.audit-r2.json",
+        "prior_exit_code": 0,
+        "rerun_this_batch": false,
+        "unknown_full_candidates": 99
+      },
+      {
+        "run_id": "8JRE1C4H4Z2W",
+        "input_sha256": "9ac67206c078176432a890415c76f80f0e5cbefc967dfa5417ae61023798c4c2",
+        "decoded_sha256": "5329bb0a3ad5f52e5699e60490f8099d9c22ae5c873b8357457731f811ffc1f2",
+        "output_sha256": "0f1e62c216534658d8dd98b5f7273cb95d0c662cf10867dd9c76e6e5b3e021a0",
+        "output": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-100139/learner/runs/20261016-100144-384b9bde-2323-4e8e-925b-f88aeaea2458-strategy-proposal/8JRE1C4H4Z2W.audit-r2.json",
+        "prior_exit_code": 0,
+        "rerun_this_batch": false,
+        "unknown_full_candidates": 113
+      }
+    ]
+  },
+  "original_source": {
+    "base": "15aa330a851086c77b40492228813fd756f6904a",
+    "live_snapshot": "0e7998bfa8df267dcf8835a57949bdb982c9feb0",
+    "paths": [
+      {
+        "path": "agent/src/reflex/card-model.ts",
+        "base_sha256": "287115627e5bc3f93da8283620a9b255df880286d4e8e1408009d9f8c87a45c7",
+        "live_sha256": "2baebe174f6c55b11323edc6fda53bfee6712202e92d791b4b5080e322ff911d",
+        "base_equals_prior_checked_source": true,
+        "live_equals_base": false
+      },
+      {
+        "path": "agent/src/reflex/turn-solver.ts",
+        "base_sha256": "0421e85f36d00b067e0787e9ff5fb6f70d18f3597d73f0fd2ffb34388274cde2",
+        "live_sha256": "0421e85f36d00b067e0787e9ff5fb6f70d18f3597d73f0fd2ffb34388274cde2",
+        "base_equals_prior_checked_source": true,
+        "live_equals_base": true
+      },
+      {
+        "path": "agent/src/reflex/rollout.ts",
+        "base_sha256": "7a41b69fbdd3d2b37eec3d390405772983952d33f870d5d401a983835435397d",
+        "live_sha256": "7a41b69fbdd3d2b37eec3d390405772983952d33f870d5d401a983835435397d",
+        "base_equals_prior_checked_source": true,
+        "live_equals_base": true
+      },
+      {
+        "path": "agent/src/reflex/rollout-live.ts",
+        "base_sha256": "30ff27d414592f8e111be4a709a6c7595165f1e4d0684d72bb8c5d9bf933d978",
+        "live_sha256": "cce1ccddd2a203280d082676b61753ffe320d41230c7411242cd16d9d1a1c345",
+        "base_equals_prior_checked_source": true,
+        "live_equals_base": false
+      },
+      {
+        "path": "agent/src/reflex/combat-plan.ts",
+        "base_sha256": "07243eaa93ac19f563b7d9a484472002f16ad818217613e580975cb7b9f86630",
+        "live_sha256": "07243eaa93ac19f563b7d9a484472002f16ad818217613e580975cb7b9f86630",
+        "base_equals_prior_checked_source": true,
+        "live_equals_base": true
+      },
+      {
+        "path": "agent/src/reflex/silent-apotheosis.ts",
+        "base_sha256": "87db52f6ea630ea9e851469c6dcf713d2995a9528952629521750bb45092eb60",
+        "live_sha256": "87db52f6ea630ea9e851469c6dcf713d2995a9528952629521750bb45092eb60",
+        "base_equals_prior_checked_source": true,
+        "live_equals_base": true
+      },
+      {
+        "path": "agent/src/reflex/silent-apotheosis-reference.ts",
+        "base_sha256": "96fdadf221286c9e21a11d78e7200b320da6c8db7717e9edf1915e4a5b739803",
+        "live_sha256": "96fdadf221286c9e21a11d78e7200b320da6c8db7717e9edf1915e4a5b739803",
+        "base_equals_prior_checked_source": true,
+        "live_equals_base": true
+      },
+      {
+        "path": "agent/src/reflex/silent-selection-audit.ts",
+        "base_sha256": "2de2533b477546682ef601d0613bd1adb805e03b894f64347475bfa4e222e4db",
+        "live_sha256": "2de2533b477546682ef601d0613bd1adb805e03b894f64347475bfa4e222e4db",
+        "base_equals_prior_checked_source": true,
+        "live_equals_base": true
+      },
+      {
+        "path": "agent/src/reflex/silent-hp-guard-audit.ts",
+        "base_sha256": "183a1c996ce965e05dc5735dc0f3b4f2e2ff65442c7e6779290716b0cd4bf858",
+        "live_sha256": "183a1c996ce965e05dc5735dc0f3b4f2e2ff65442c7e6779290716b0cd4bf858",
+        "base_equals_prior_checked_source": true,
+        "live_equals_base": true
+      },
+      {
+        "path": "agent/src/reflex/silent-sl-resource-comparison.ts",
+        "base_sha256": "94cddd06952eb10e92f6756e426de20969a26e7525c32f4fc06a61ccb134f65f",
+        "live_sha256": "94cddd06952eb10e92f6756e426de20969a26e7525c32f4fc06a61ccb134f65f",
+        "base_equals_prior_checked_source": true,
+        "live_equals_base": true
+      },
+      {
+        "path": "learner/audit-selection.ts",
+        "base_sha256": "f24ca05a02f19ecad35109c76e09405a5baca29e51df66c41e3ad77252ba25bb",
+        "live_sha256": "f24ca05a02f19ecad35109c76e09405a5baca29e51df66c41e3ad77252ba25bb",
+        "base_equals_prior_checked_source": true,
+        "live_equals_base": true
+      },
+      {
+        "path": "learner/lib/selection-execution.ts",
+        "base_sha256": "4ef06b464b5e645aea8eec3be78ef7bb3d0030b38de590cc11d84f8e76d80c5a",
+        "live_sha256": "4ef06b464b5e645aea8eec3be78ef7bb3d0030b38de590cc11d84f8e76d80c5a",
+        "base_equals_prior_checked_source": true,
+        "live_equals_base": true
+      },
+      {
+        "path": "learner/lib/selection-observation.ts",
+        "base_sha256": "458c52b56d5582078243207364f413e308c3f71717379edcfcc8a126ee1df259",
+        "live_sha256": "458c52b56d5582078243207364f413e308c3f71717379edcfcc8a126ee1df259",
+        "base_equals_prior_checked_source": true,
+        "live_equals_base": true
+      },
+      {
+        "path": "learner/lib/selection-terminal.ts",
+        "base_sha256": "f559992c66f7fe490587b4f4306ddac0ce9ecffd2bc47b292923d51f1e9a6421",
+        "live_sha256": "f559992c66f7fe490587b4f4306ddac0ce9ecffd2bc47b292923d51f1e9a6421",
+        "base_equals_prior_checked_source": true,
+        "live_equals_base": true
+      },
+      {
+        "path": "learner/lib/selection-turn.ts",
+        "base_sha256": "038f6ec416103ef5ce75136a7d8a09f40b1a1ac341356d7cfa9b5b6e4300b703",
+        "live_sha256": "038f6ec416103ef5ce75136a7d8a09f40b1a1ac341356d7cfa9b5b6e4300b703",
+        "base_equals_prior_checked_source": true,
+        "live_equals_base": true
+      },
+      {
+        "path": "agent/src/knowledge/monster-db.ts",
+        "base_sha256": "e56258e59c607c7853e5a740ad0ada2facb326d162e352839b458c9505cbc1c2",
+        "live_sha256": "e56258e59c607c7853e5a740ad0ada2facb326d162e352839b458c9505cbc1c2",
+        "base_equals_prior_checked_source": true,
+        "live_equals_base": true
+      }
+    ],
+    "source_commits": [
+      {
+        "commit": "772b839f8ada31664cb764ea9ad3bdb03da27f64",
+        "live_ancestor": true,
+        "subject": "Model observed Silent Apotheosis upgrades"
+      },
+      {
+        "commit": "3aa6c03a83c5cdcdea29c43e3caa130bcce9bd17",
+        "live_ancestor": true,
+        "subject": "ops: replay checked Silent Apotheosis candidate facts"
+      },
+      {
+        "commit": "b2805be4ba44b7375c7908d873889372cc3cfe6c",
+        "live_ancestor": true,
+        "subject": "Propagate observed Silent Apotheosis Malaise upgrade"
+      },
+      {
+        "commit": "ba23ca693151fa8c6f7fe035e640dc30f05ccd75",
+        "live_ancestor": true,
+        "subject": "Propagate observed Silent Deadly Poison upgrade"
+      },
+      {
+        "commit": "05cd292c6f01bb31e406473d3a9843e659d62b93",
+        "live_ancestor": true,
+        "subject": "Replay tested held-loss candidate facts on current live"
+      },
+      {
+        "commit": "a8b1f8be153fe4f3a34146117546c2178f2e446b",
+        "live_ancestor": true,
+        "subject": "Integrate repaired legacy learning deltas and bounded continuation adapter"
+      },
+      {
+        "commit": "cf72bd21148059f111f760cc98a727369e34a47e",
+        "live_ancestor": true,
+        "subject": "Integrate checked offline Silent potion observation tool"
+      }
+    ]
+  },
+  "original_proposals": [
+    {
+      "id": "silent-proposal-89354805ee4d7e77",
+      "original": "/home/dw/Projects/agent-sts2/learner/runs/20261007-154302-postmortem/proposal-apotheosis.md",
+      "copy": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-104302/learner/runs/20261016-104307-6a052580-a805-46ee-a1bb-b1142b126f9d-strategy-proposal/silent-proposal-89354805ee4d7e77.original.md",
+      "sha256": "ab6488e1b2e17415061c372d3efa10dbba468de2574f784088e1a967358df76d"
+    },
+    {
+      "id": "silent-proposal-f2bfceddb1898dca",
+      "original": "/home/dw/Projects/agent-sts2/learner/runs/20261007-154302-postmortem/proposal-budget-and-clock.md",
+      "copy": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-104302/learner/runs/20261016-104307-6a052580-a805-46ee-a1bb-b1142b126f9d-strategy-proposal/silent-proposal-f2bfceddb1898dca.original.md",
+      "sha256": "fc9f3dfdb7df5f99a57ff6c1a7e7f08f9e5e6514dde8cd1013e04995d912eb26"
+    },
+    {
+      "id": "silent-proposal-283a164780d11e69",
+      "original": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261007-164302-experience-update/proposal-apotheosis.md",
+      "copy": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-104302/learner/runs/20261016-104307-6a052580-a805-46ee-a1bb-b1142b126f9d-strategy-proposal/silent-proposal-283a164780d11e69.original.md",
+      "sha256": "78e23dae4213fa5b07bda1a0799bbbe0c94567c889db235b40560f523608e637"
+    },
+    {
+      "id": "silent-proposal-ebbfe3b97548756d",
+      "original": "/home/dw/Projects/agent-sts2/.worktrees/exp/learner/runs/20261007-164302-experience-update/proposal-mechanisms-and-resources.md",
+      "copy": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-104302/learner/runs/20261016-104307-6a052580-a805-46ee-a1bb-b1142b126f9d-strategy-proposal/silent-proposal-ebbfe3b97548756d.original.md",
+      "sha256": "08eaeed02365ece6b99ec54adb8ead6688d7323d6f59f30c1cb5996f41c552e2"
+    },
+    {
+      "id": "silent-proposal-e5b87be50f28f311",
+      "original": "/home/dw/Projects/agent-sts2/learner/runs/20261007-164302-postmortem/proposal-combat-sl-audit.md",
+      "copy": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-104302/learner/runs/20261016-104307-6a052580-a805-46ee-a1bb-b1142b126f9d-strategy-proposal/silent-proposal-e5b87be50f28f311.original.md",
+      "sha256": "5e713a9a6a50830d4ff7c2aba1c2af90487cc8d03e4881555257b43161632709"
+    },
+    {
+      "id": "silent-proposal-49632bc4878fb597",
+      "original": "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261007-170245-strategy-proposal/silent-strength-weak-observation.md",
+      "copy": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-104302/learner/runs/20261016-104307-6a052580-a805-46ee-a1bb-b1142b126f9d-strategy-proposal/silent-proposal-49632bc4878fb597.original.md",
+      "sha256": "aac4fddf0f24862a3fb8e289d000a312358c3bb9ee3d624602bf755d0b5409a2"
+    },
+    {
+      "id": "silent-proposal-66532328a585941f",
+      "original": "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261007-170245-strategy-proposal/silent-deck-burst-observation.md",
+      "copy": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-104302/learner/runs/20261016-104307-6a052580-a805-46ee-a1bb-b1142b126f9d-strategy-proposal/silent-proposal-66532328a585941f.original.md",
+      "sha256": "56a0a04049f43aa425242d11caa305a1bb869fc6b4fc38d0138e9f6edad44831"
+    },
+    {
+      "id": "silent-proposal-43a76a31ba7bdcfa",
+      "original": "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261007-170245-strategy-proposal/silent-lagavulin-siphon-poison-sl.md",
+      "copy": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-104302/learner/runs/20261016-104307-6a052580-a805-46ee-a1bb-b1142b126f9d-strategy-proposal/silent-proposal-43a76a31ba7bdcfa.original.md",
+      "sha256": "f4a38e2d7ee0b5d205a3168cc58dfec442046d7be3a89701054b3dcb7fdf0a6c"
+    },
+    {
+      "id": "silent-proposal-5264153a4a4b0e5c",
+      "original": "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261007-170245-strategy-proposal/silent-obscura-summon-growth.md",
+      "copy": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-104302/learner/runs/20261016-104307-6a052580-a805-46ee-a1bb-b1142b126f9d-strategy-proposal/silent-proposal-5264153a4a4b0e5c.original.md",
+      "sha256": "b32fb321d95e941c095993cdde0d011354c689718ffe2a3b2428fe68c444ec02"
+    },
+    {
+      "id": "silent-proposal-bddfa690a84e03d0",
+      "original": "/home/dw/Projects/agent-sts2/.worktrees/codex-dev/learner/runs/20261007-170245-strategy-proposal/silent-slumbering-beetle-wake-growth.md",
+      "copy": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-104302/learner/runs/20261016-104307-6a052580-a805-46ee-a1bb-b1142b126f9d-strategy-proposal/silent-proposal-bddfa690a84e03d0.original.md",
+      "sha256": "b9f90f13d558011142b4bfc459efdfd4680dd297206c182c9c48d86f4c32e780"
+    }
+  ],
+  "original_ledger_append_receipts": [
+    {
+      "line": 26995,
+      "offset": 20225763,
+      "bytes": 1143,
+      "sha256": "45917cf7b2a76ba499ecf90e907fb90c6e93ffd2b1c5a6f9f7fed58c2d82dec5"
+    },
+    {
+      "line": 26996,
+      "offset": 20226906,
+      "bytes": 960,
+      "sha256": "6d0e6fe31f7fa6972be9c018b2bc98061c66474daffe1a76a1aae40ad93c1c52"
+    },
+    {
+      "line": 26997,
+      "offset": 20227866,
+      "bytes": 948,
+      "sha256": "16bbd32fa41475824356673d80f7f2ab1edb1c8bb4b01a51f559ba2623447898"
+    },
+    {
+      "line": 26998,
+      "offset": 20228814,
+      "bytes": 948,
+      "sha256": "e7f3dcec1c3862b0ead2375f7d840589677c0a51310bec77631fb3b6bb6faad9"
+    },
+    {
+      "line": 26999,
+      "offset": 20229762,
+      "bytes": 938,
+      "sha256": "772c5838d16f12d78d9dde84574f8be05b4729c9448f3e1156bf52cbc7ca959e"
+    },
+    {
+      "line": 27000,
+      "offset": 20230700,
+      "bytes": 1131,
+      "sha256": "f6705d645fe5df3370071fff6b39a980cbb13675dccf77d117d5f5b4537caa5f"
+    },
+    {
+      "line": 27001,
+      "offset": 20231831,
+      "bytes": 948,
+      "sha256": "3a2a5b26c2af8a4287e501059ee5d936fa55867b4d784703a93183ce87deeda7"
+    },
+    {
+      "line": 27002,
+      "offset": 20232779,
+      "bytes": 1322,
+      "sha256": "1282cf9acb1f48613d604d50492fc06e990c60ea61a6978dddcf6236167df35b"
+    },
+    {
+      "line": 27003,
+      "offset": 20234101,
+      "bytes": 1123,
+      "sha256": "7a46983fcf56e6b5bda99c975bb00ea3b42eca8a55352705b2d7bc7492d0558b"
+    },
+    {
+      "line": 27004,
+      "offset": 20235224,
+      "bytes": 937,
+      "sha256": "4400708d8eb35b7a99e50236d34be2de3b5e140ea0a3613391ca52384ff7f7aa"
+    },
+    {
+      "line": 27005,
+      "offset": 20236161,
+      "bytes": 951,
+      "sha256": "5fe4e4d4f37b9bd00dc0031a4789c4183baf71212b172dc55fa3fe9c2c6dd0ba"
+    },
+    {
+      "line": 27006,
+      "offset": 20237112,
+      "bytes": 948,
+      "sha256": "23addfc5628f3158455890fb428a3053db9813f16dca3db57fc918170e1b92d0"
+    },
+    {
+      "line": 27007,
+      "offset": 20238060,
+      "bytes": 948,
+      "sha256": "25beb382039224c9d7a5bc53f0690bdc1e6ceac39bd3368e05a4cbdb863cead2"
+    },
+    {
+      "line": 27008,
+      "offset": 20239008,
+      "bytes": 948,
+      "sha256": "e2d62d7f3d5a5f2f1cf9513eaaf88c97e3a9858b7daa5386a201aec0fddc1a23"
+    },
+    {
+      "line": 27009,
+      "offset": 20239956,
+      "bytes": 948,
+      "sha256": "bc451f8d516972e8be0e9146c599b0cfd49904f9477716da84f3e518c153cdc9"
+    },
+    {
+      "line": 27010,
+      "offset": 20240904,
+      "bytes": 1122,
+      "sha256": "2a0144152e3577140d1ef9e5c8b5b0dc154071d6fe0b586469755464ed06f82b"
+    },
+    {
+      "line": 27011,
+      "offset": 20242026,
+      "bytes": 1131,
+      "sha256": "17d115c7e4c9bef1a31c16dc7b76b9e88ceabbfafd53713817ecf3541babc872"
+    },
+    {
+      "line": 27012,
+      "offset": 20243157,
+      "bytes": 938,
+      "sha256": "075f7228126315a744b4e94f972dc5bc0b0fdd560c7688f75157745aadde5321"
+    },
+    {
+      "line": 27013,
+      "offset": 20244095,
+      "bytes": 946,
+      "sha256": "48ed46d707ca95d2281d0b687fd139cdf102bead2a69196f130e546edcccd251"
+    },
+    {
+      "line": 27014,
+      "offset": 20245041,
+      "bytes": 948,
+      "sha256": "47407c530d7520208ad9f76f13a18f0eaf9fb8ea60958710370565f4ced7c344"
+    },
+    {
+      "line": 27015,
+      "offset": 20245989,
+      "bytes": 945,
+      "sha256": "3164a449328041d6e55baa003c7035dfd7f2fe655b82d6d2311c9c324f8058b3"
+    },
+    {
+      "line": 27016,
+      "offset": 20246934,
+      "bytes": 948,
+      "sha256": "09e57f80d5c6f3bc93cf1603703258bf283ac16bf05634947b4b48442ec420f4"
+    },
+    {
+      "line": 27017,
+      "offset": 20247882,
+      "bytes": 951,
+      "sha256": "7b6e8f11f785a5a4acf1083963d977b1a0f0cc2a91a06b19884f2e68ef94dcc8"
+    },
+    {
+      "line": 27018,
+      "offset": 20248833,
+      "bytes": 957,
+      "sha256": "e66b6c0616b867c13fe44315025d5901a8a1dd25cd6bbd3b35999209321a1df5"
+    },
+    {
+      "line": 27019,
+      "offset": 20249790,
+      "bytes": 1122,
+      "sha256": "460d3f78153b8724bf975769f352269445b6199c218ed39c22532c8888f7dc5f"
+    },
+    {
+      "line": 27020,
+      "offset": 20250912,
+      "bytes": 1122,
+      "sha256": "871ea15380106b5a978ba366e486357f18a7aba9c104bc6a68ba2c41daa737e4"
+    }
+  ],
+  "old_protected_fields_and_all_prefixes_preserved": true,
+  "artifacts": [
+    {
+      "path": ".worktrees/codex-strategy-silent-20261016-104302/learner/runs/20261016-104307-6a052580-a805-46ee-a1bb-b1142b126f9d-strategy-proposal/final-verification.json",
+      "bytes": 5559,
+      "sha256": "dd9780169fe15facd1457b3c90ee94bbe87db7127088e676ac1339ee4ab91b9c"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261016-104302/learner/runs/20261016-104307-6a052580-a805-46ee-a1bb-b1142b126f9d-strategy-proposal/verify.stdout.txt",
+      "bytes": 2753,
+      "sha256": "084aac10d0ae471ded24e89b349b691a373821d99eaba20738a7689bdcb8141c"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261016-104302/learner/runs/20261016-104307-6a052580-a805-46ee-a1bb-b1142b126f9d-strategy-proposal/fact-checks.json",
+      "bytes": 10610,
+      "sha256": "7a2b3e1f446832965ef7fd21f8695c27baf0d0339e15ae8f84b0f66da7d9bc74"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261016-104302/learner/runs/20261016-104307-6a052580-a805-46ee-a1bb-b1142b126f9d-strategy-proposal/build-delivery.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261016-104302/learner/runs/20261016-104307-6a052580-a805-46ee-a1bb-b1142b126f9d-strategy-proposal/result.json",
+      "bytes": 3539,
+      "sha256": "8162843b1605a83c42c8e2779d46b40e849095853e34b6770e120ab62cf80e4c"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261016-104302/learner/runs/20261016-104307-6a052580-a805-46ee-a1bb-b1142b126f9d-strategy-proposal/runs.json",
+      "bytes": 97,
+      "sha256": "1293e37849f18090c8558a71c67ade6c99240a537ae470f1aea9956da5688940"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261016-104302/learner/runs/20261016-104307-6a052580-a805-46ee-a1bb-b1142b126f9d-strategy-proposal/ledger-cli.stdout.txt",
+      "bytes": 312,
+      "sha256": "9a42775d1304ed41a39763c3f2455b36222ba887bf6e482fbff8e5cd2fc4677c"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261016-104302/learner/runs/20261016-104307-6a052580-a805-46ee-a1bb-b1142b126f9d-strategy-proposal/silent-proposal-f2bfceddb1898dca.original.md",
+      "bytes": 4444,
+      "sha256": "fc9f3dfdb7df5f99a57ff6c1a7e7f08f9e5e6514dde8cd1013e04995d912eb26"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261016-104302/learner/runs/20261016-104307-6a052580-a805-46ee-a1bb-b1142b126f9d-strategy-proposal/silent-proposal-49632bc4878fb597.original.md",
+      "bytes": 2611,
+      "sha256": "aac4fddf0f24862a3fb8e289d000a312358c3bb9ee3d624602bf755d0b5409a2"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261016-104302/learner/runs/20261016-104307-6a052580-a805-46ee-a1bb-b1142b126f9d-strategy-proposal/source-verification.json",
+      "bytes": 6563,
+      "sha256": "18f214bc6cd6be6546a5182687dee02d1b2f4f139e4571b1b54a1bcfc79b241d"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261016-104302/learner/runs/20261016-104307-6a052580-a805-46ee-a1bb-b1142b126f9d-strategy-proposal/prior-evidence-comparison.json",
+      "bytes": 1894,
+      "sha256": "0132bdc0a9658721ad7095bc14a14582bc92dc45db5a0a47048a4ab60dbaa204"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261016-104302/learner/runs/20261016-104307-6a052580-a805-46ee-a1bb-b1142b126f9d-strategy-proposal/silent-proposal-283a164780d11e69.original.md",
+      "bytes": 4874,
+      "sha256": "78e23dae4213fa5b07bda1a0799bbbe0c94567c889db235b40560f523608e637"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261016-104302/learner/runs/20261016-104307-6a052580-a805-46ee-a1bb-b1142b126f9d-strategy-proposal/silent-proposal-e5b87be50f28f311.original.md",
+      "bytes": 6215,
+      "sha256": "5e713a9a6a50830d4ff7c2aba1c2af90487cc8d03e4881555257b43161632709"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261016-104302/learner/runs/20261016-104307-6a052580-a805-46ee-a1bb-b1142b126f9d-strategy-proposal/queue-original.json",
+      "bytes": 10114,
+      "sha256": "ccdb5017ccb0b0c21ada79a3c000a6d2e99f00019f5bcdcd394dc61812d53417"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261016-104302/learner/runs/20261016-104307-6a052580-a805-46ee-a1bb-b1142b126f9d-strategy-proposal/report.md",
+      "bytes": 8898,
+      "sha256": "a904e9973ee4975ed717cfa014ca0d2d5686e24f961a83070a3f1412a23e4874"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261016-104302/learner/runs/20261016-104307-6a052580-a805-46ee-a1bb-b1142b126f9d-strategy-proposal/silent-proposal-43a76a31ba7bdcfa.original.md",
+      "bytes": 2543,
+      "sha256": "f4a38e2d7ee0b5d205a3168cc58dfec442046d7be3a89701054b3dcb7fdf0a6c"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261016-104302/learner/runs/20261016-104307-6a052580-a805-46ee-a1bb-b1142b126f9d-strategy-proposal/build-delivery.stdout.txt",
+      "bytes": 108,
+      "sha256": "527dfe2fedf5e6efc2da6bb85282c9438d14c4ce20924585b2e83e3fd44fcf44"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261016-104302/learner/runs/20261016-104307-6a052580-a805-46ee-a1bb-b1142b126f9d-strategy-proposal/ledger-reference.json",
+      "bytes": 57268,
+      "sha256": "9081f7e781adaf331b7b32f77483d6976aa61ac24faf5c79ff6397e84b440976"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261016-104302/learner/runs/20261016-104307-6a052580-a805-46ee-a1bb-b1142b126f9d-strategy-proposal/fact-checks.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261016-104302/learner/runs/20261016-104307-6a052580-a805-46ee-a1bb-b1142b126f9d-strategy-proposal/verify_evidence.py",
+      "bytes": 3944,
+      "sha256": "245d68dfa138e8530ae1753979f9a80d31e023397da4ba30cf8f6e3b2fa1a574"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261016-104302/learner/runs/20261016-104307-6a052580-a805-46ee-a1bb-b1142b126f9d-strategy-proposal/runs-verification.json",
+      "bytes": 4651,
+      "sha256": "c37b2ea01297f369014f59fd7f99c9681e04a0f0b4a21a2ea08eebf0523e58fb"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261016-104302/learner/runs/20261016-104307-6a052580-a805-46ee-a1bb-b1142b126f9d-strategy-proposal/check_facts.py",
+      "bytes": 5958,
+      "sha256": "62a664649435d472b0fc3ce95cec4548c33277bc051e6ad735c9cb5a62c1bd3f"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261016-104302/learner/runs/20261016-104307-6a052580-a805-46ee-a1bb-b1142b126f9d-strategy-proposal/gitleaks.json",
+      "bytes": 3,
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261016-104302/learner/runs/20261016-104307-6a052580-a805-46ee-a1bb-b1142b126f9d-strategy-proposal/original-proposals-manifest.json",
+      "bytes": 4965,
+      "sha256": "fca6cc54de9f5f2478b7db68ef91b29348e29c7ea19247606796a7a9a85a8681"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261016-104302/learner/runs/20261016-104307-6a052580-a805-46ee-a1bb-b1142b126f9d-strategy-proposal/queue-folded.json",
+      "bytes": 17927,
+      "sha256": "a9109a58d056e5489b91debafdc4692a11ac0941d5174659940274e86cfd61bd"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261016-104302/learner/runs/20261016-104307-6a052580-a805-46ee-a1bb-b1142b126f9d-strategy-proposal/dispatch.json",
+      "bytes": 1208,
+      "sha256": "42272de525b61da5b03f648e69419a2c38e027de07ad42dc6e64e2f376a4c9d3"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261016-104302/learner/runs/20261016-104307-6a052580-a805-46ee-a1bb-b1142b126f9d-strategy-proposal/ledger-append-readback.json",
+      "bytes": 37183,
+      "sha256": "fdc3fca99a4b471ecd302080de4e4454095a291689d5cf1aacb2b4dd7198cfdb"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261016-104302/learner/runs/20261016-104307-6a052580-a805-46ee-a1bb-b1142b126f9d-strategy-proposal/ledger-update-time.txt",
+      "bytes": 26,
+      "sha256": "560e512c42e21d223324a96fa0e0b2d3e0bde30caa632c28eb7ed79fc5a8d10a"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261016-104302/learner/runs/20261016-104307-6a052580-a805-46ee-a1bb-b1142b126f9d-strategy-proposal/ledger-cli.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261016-104302/learner/runs/20261016-104307-6a052580-a805-46ee-a1bb-b1142b126f9d-strategy-proposal/silent-proposal-89354805ee4d7e77.original.md",
+      "bytes": 4462,
+      "sha256": "ab6488e1b2e17415061c372d3efa10dbba468de2574f784088e1a967358df76d"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261016-104302/learner/runs/20261016-104307-6a052580-a805-46ee-a1bb-b1142b126f9d-strategy-proposal/silent-proposal-66532328a585941f.original.md",
+      "bytes": 2501,
+      "sha256": "56a0a04049f43aa425242d11caa305a1bb869fc6b4fc38d0138e9f6edad44831"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261016-104302/learner/runs/20261016-104307-6a052580-a805-46ee-a1bb-b1142b126f9d-strategy-proposal/silent-proposal-5264153a4a4b0e5c.original.md",
+      "bytes": 2541,
+      "sha256": "b32fb321d95e941c095993cdde0d011354c689718ffe2a3b2428fe68c444ec02"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261016-104302/learner/runs/20261016-104307-6a052580-a805-46ee-a1bb-b1142b126f9d-strategy-proposal/silent-proposal-bddfa690a84e03d0.original.md",
+      "bytes": 2582,
+      "sha256": "b9f90f13d558011142b4bfc459efdfd4680dd297206c182c9c48d86f4c32e780"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261016-104302/learner/runs/20261016-104307-6a052580-a805-46ee-a1bb-b1142b126f9d-strategy-proposal/audit-r2-receipts.json",
+      "bytes": 11559,
+      "sha256": "fb3262b2238ac5db3a120741cdf627bb13004900ce8d4d87264c659a2cf9b63e"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261016-104302/learner/runs/20261016-104307-6a052580-a805-46ee-a1bb-b1142b126f9d-strategy-proposal/fact-checks.stdout.txt",
+      "bytes": 43,
+      "sha256": "169843cb5db0fac0103637acba1501d78f551c55c48770af19c631536174138b"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261016-104302/learner/runs/20261016-104307-6a052580-a805-46ee-a1bb-b1142b126f9d-strategy-proposal/verify.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261016-104302/learner/runs/20261016-104307-6a052580-a805-46ee-a1bb-b1142b126f9d-strategy-proposal/silent-proposal-ebbfe3b97548756d.original.md",
+      "bytes": 4696,
+      "sha256": "08eaeed02365ece6b99ec54adb8ead6688d7323d6f59f30c1cb5996f41c552e2"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261016-104302/learner/runs/20261016-104307-6a052580-a805-46ee-a1bb-b1142b126f9d-strategy-proposal/proposal.md",
+      "bytes": 12910,
+      "sha256": "52cd215bc458dac4cb46e0c51205fbd5d066f3f0cc5e8149796dffba562f3abc"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261016-104302/learner/runs/20261016-104307-6a052580-a805-46ee-a1bb-b1142b126f9d-strategy-proposal/evidence-verification.json",
+      "bytes": 3649,
+      "sha256": "9541239ec8ce92b92158740a8844ecd553d3900810588811c11fafd801a3d778"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261016-104302/learner/runs/20261016-104307-6a052580-a805-46ee-a1bb-b1142b126f9d-strategy-proposal/delivery-scan.txt",
+      "bytes": 78788,
+      "sha256": "0cbbde624ed1a70b289c9c0ab90f5aa48ba139635112c22887fad1282944f03d"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261016-104302/learner/runs/20261016-104307-6a052580-a805-46ee-a1bb-b1142b126f9d-strategy-proposal/gitleaks.stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261016-104302/learner/runs/20261016-104307-6a052580-a805-46ee-a1bb-b1142b126f9d-strategy-proposal/source-base-live.patch",
+      "bytes": 5631,
+      "sha256": "68802d91c2dda4b9ebcb63b5f785c173c3ac89029cd572e11eee5260e451424f"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261016-104302/learner/runs/20261016-104307-6a052580-a805-46ee-a1bb-b1142b126f9d-strategy-proposal/extract-manifest.stdout.json",
+      "bytes": 2457,
+      "sha256": "c840444a8ba625569fa43833a9400ea41cb3a1e96cc8f6d93162c3d4be610df3"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261016-104302/learner/runs/20261016-104307-6a052580-a805-46ee-a1bb-b1142b126f9d-strategy-proposal/gitleaks.stderr.txt",
+      "bytes": 80,
+      "sha256": "0fc4944094e91f5d90a1ddc0f923e458d843e2100c7ffd318255cce341aa1470"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261016-104302/learner/runs/20261016-104307-6a052580-a805-46ee-a1bb-b1142b126f9d-strategy-proposal/ledger-updates.jsonl",
+      "bytes": 24945,
+      "sha256": "5b5ac1358323b329729dae62c113b43ae105b9b81f77070733b8882aa796ed57"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261016-104302/learner/runs/20261016-104307-6a052580-a805-46ee-a1bb-b1142b126f9d-strategy-proposal/prior-audit-readback.json",
+      "bytes": 3985,
+      "sha256": "d81b65f5486748e205a7eed8751c222811caad06160d11058209fa9c687dec46"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261016-104302/learner/runs/20261016-104307-6a052580-a805-46ee-a1bb-b1142b126f9d-strategy-proposal/build_delivery.py",
+      "bytes": 18587,
+      "sha256": "81440cbd93bbdc12c3ce904bd2edccb3b7138a1325b4535549a8fb786e317a57"
+    }
+  ],
+  "no_new_source_merge_version_or_production_tests": true,
+  "no_new_simulation_model_or_probe_call": true,
+  "wide_parents": "open; S remains Roy decision and G1a natural consumer remains original watcher responsibility"
+}
