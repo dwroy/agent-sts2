@@ -1,0 +1,82 @@
+{
+  "schema": "f48-joint-shadow-source-disposition-v1",
+  "at": "2026-10-16 22:45:48 CST",
+  "actor": "ops",
+  "parent": "roy-20261016-global-build",
+  "original_owner": "01a13dcd-83d4-7c63-b233-f93cf878ecf4",
+  "accepted": true,
+  "decision": "Accept the exact unchanged seven-leaf staged source, original sandbox full rc1 plus unchanged original failed-case rc0 and paths11 rc0, as source commit and subsequent narrow integration basis",
+  "source_commit_by_original_owner_authorized": true,
+  "source_commit": null,
+  "base": "59bab95ae7b62682793961bb4b7f643b7fbcc5d2",
+  "candidate_tree": "473039a3c991936675a2474849f47c45eaa3d0d3",
+  "leaves": [
+    {
+      "path": "agent/src/sim/boss-lines.ts",
+      "sha256": "632d329f9a28ea715fb8ae5bcdb97e938ef0e12847f786371ac3054cf0294b15",
+      "bytes": 61520,
+      "index_and_physical_equal": true
+    },
+    {
+      "path": "agent/src/sim/build-sim-facts.ts",
+      "sha256": "d78e267bd96c66462f75cfa2d46635e02ea7477930469db2b9adb8d3b3415a99",
+      "bytes": 59142,
+      "index_and_physical_equal": true
+    },
+    {
+      "path": "agent/src/sim/build-sim.ts",
+      "sha256": "d408296646bc8e6e0a95bb2602c489e364e8d2d9686736e9e0455a6fb405d389",
+      "bytes": 23758,
+      "index_and_physical_equal": true
+    },
+    {
+      "path": "agent/src/sim/f48-joint-shadow.ts",
+      "sha256": "bc541fa7b7c992f053d6e5cce7aa3b8586a58d18c4cd0994e195709279915463",
+      "bytes": 11889,
+      "index_and_physical_equal": true
+    },
+    {
+      "path": "agent/tests/f48-joint-fixture.ts",
+      "sha256": "a4ec703de21ff82e278ec878dbf7e6f5e1ed3066d551ff2f4aa60e477fcb246e",
+      "bytes": 1710,
+      "index_and_physical_equal": true
+    },
+    {
+      "path": "agent/tests/f48-joint-integration.test.ts",
+      "sha256": "e42ef26cfc02da7faeca1cbb2aba2f85607a21e4d7584f6415b6ab7f34c2bdd5",
+      "bytes": 11059,
+      "index_and_physical_equal": true
+    },
+    {
+      "path": "agent/tests/f48-joint-shadow.test.ts",
+      "sha256": "087b5a169de6bfa17bf5bd69292541d3584658068fc46efb0ba8423ae0ec22b1",
+      "bytes": 6149,
+      "index_and_physical_equal": true
+    }
+  ],
+  "patch_sha256": "1477238f46b3602688d82c261b2d0a13d1ea5d9e6b1bfb1539571e5a8b1b6869",
+  "source_original_full_rc": 1,
+  "original_failed_case_supplement_rc": 0,
+  "paths11_supplement_rc": 0,
+  "combination_is_not_whole_suite_rc0": true,
+  "failed_test_root_cause_unconfirmed": true,
+  "rationale": "The sole failure is a preexisting, byte-unchanged fake learner pane-lifecycle assertion; same full suite otherwise453 files/4203 cases pass, exact original case later passes without changed source/assertions/timing/exclusions, paths11 passes; source log-only scope has fixed integration equivalence checks and protected leaves unchanged",
+  "review_receipt": {
+    "path": "paper/materials/20261016-2243-ops/source-review-readback.json",
+    "bytes": 21304,
+    "sha256": "ba13f0c2c65226813da6e52991fd039ff4cf590814405ed980c79bbcec3e9543"
+  },
+  "next": "Original owner commits only these seven exact staged leaves and delivers full source SHA; ops records actual source receipt before any later gate, then under original live lock narrow-integrates while preserving parallel knowledge/records/index/R371-R373 and requests one exact actual final-combination host through existing unique channel",
+  "release_classification": "Provisionally diagnostic/log-only: no gameplay behavior release ID preallocated. Confirm actual integrated diff under original live lock; behavior change would require separate numbering and rule dual notices",
+  "publication_started": false,
+  "release_id": null,
+  "host_requested": false,
+  "no_repeat_unchanged_source_full": true,
+  "no_new_model_research_simulation_or_observer": true,
+  "no_current_game_account_home_model_prompt_change": true,
+  "natural_acceptance": "Not started; Claude must separately assign after0332 root repair acceptance",
+  "original_0332_priority_and_broad_parents_preserved": true,
+  "no_other_role_ACK": true,
+  "watcher_received": false,
+  "roy_ACK_claimed": false
+}
