@@ -1,0 +1,40 @@
+{
+  "at": "2026-10-17 02:16:12 CST",
+  "batch": "20261017-014302-s2-strategy-proposal",
+  "original_thread": "01a145cf-9dbf-7bb3-9ec0-8529747520a9",
+  "original_worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-014302-s2",
+  "source": "66b05734c8ee8e632345fb5c1c3a672296ab7ad5",
+  "source_commit": "66b05734c8ee8e632345fb5c1c3a672296ab7ad5",
+  "source_tree": "b825d9a35d6c502e7639aecd1ab94833f992a2da",
+  "source_parent": "a0e2fff7b979314585252a095ae0e20c8045a6ba",
+  "source_files": {
+    "agent/src/reflex/combat-plan.ts": "c63343769d53e1244f9efec4d247bb78c62ed54e6b16f79e4645196f71e2ba18",
+    "agent/tests/silent-gamble-least-loss.test.ts": "4ea0f74fd1e39ff7b2d6ebdb50542e82a5118c0e4ac8d2a00aa2e84be77bdbe4",
+    "agent/tests/silent-gamble-least-loss-evidence.json": "fdf7eba211797590c325e892a436227b9bac0a56c2e7d3f290ec40e36f3a9ad1"
+  },
+  "source_received": true,
+  "source_committed_by": "main ops fallback of original learner staged bytes",
+  "source_disposition": "paper/materials/20261017-0210-ops/ops-source-disposition.json",
+  "publication_started": false,
+  "release_id": null,
+  "host_requested": false,
+  "status": "exact source received and committed; pending original live lock held by retention worker",
+  "blocker": {
+    "pid": 1808066,
+    "project_fds": [
+      "/home/dw/Projects/agent-sts2/ops/codex-ops/retention-worker.log",
+      "/home/dw/Projects/agent-sts2/ops/codex-ops/retention-worker.log",
+      "/home/dw/Projects/agent-sts2/ops/codex-ops/retention.lock",
+      "/home/dw/Projects/agent-sts2/ops/codex-ops/learn.lock",
+      "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/codex-strategy-silent-20261010-050327.lock",
+      "/home/dw/Projects/agent-sts2/ops/live-merge.lock"
+    ]
+  },
+  "resume_command": "nice -n 19 python3 ops/codex-ops/record-staging/20261017-0210/publish.py",
+  "host_after_publication": "nice -n 19 python3 ops/codex-ops/record-staging/20261017-0210/host-full.py",
+  "next_step": "Next scheduler wake may resume once on original lock; after actual publication allocate one number under lock, dual rule notice, run exactly one original batch final-tree host with publication proof, then shipped and retention closure. Do not rerun unchanged source full or start learner/model.",
+  "original_canonical_failed_rc0_and_full1_preserved": true,
+  "ledger": "silent-0300",
+  "proposal_id": "silent-proposal-1cb36e182078a20e",
+  "other_role_ACK": false
+}

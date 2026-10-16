@@ -1,0 +1,60 @@
+{
+  "at": "2026-10-17 02:13:31 CST",
+  "actor": "ops",
+  "accepted": true,
+  "batch": "20261017-014302-s2-strategy-proposal",
+  "candidate_tree": "b825d9a35d6c502e7639aecd1ab94833f992a2da",
+  "files": {
+    "agent/src/reflex/combat-plan.ts": "c63343769d53e1244f9efec4d247bb78c62ed54e6b16f79e4645196f71e2ba18",
+    "agent/tests/silent-gamble-least-loss.test.ts": "4ea0f74fd1e39ff7b2d6ebdb50542e82a5118c0e4ac8d2a00aa2e84be77bdbe4",
+    "agent/tests/silent-gamble-least-loss-evidence.json": "fdf7eba211797590c325e892a436227b9bac0a56c2e7d3f290ec40e36f3a9ad1"
+  },
+  "original_source_validation": {
+    "source_tsc_exit": 0,
+    "sandbox_exit": 1,
+    "sandbox_vitest_exit": 1,
+    "passed_files": 454,
+    "failed_files": 1,
+    "passed_cases": 4210,
+    "failed_cases": 1,
+    "duration_seconds": 787.45,
+    "failure": "tests/global-build-health.test.ts: spawnSync /usr/bin/python3 EPERM",
+    "unchanged_failed_test_and_entry": true,
+    "wrapper_supplement_exit": 1,
+    "direct_python_exit": 0,
+    "direct_python_cases": 4,
+    "paths_supplement_exit": 0,
+    "paths_cases": 11,
+    "fixed_restored_exit": 0,
+    "fixed_passed_cases": 7,
+    "without_source_exit": 1,
+    "without_source_failed_cases": 2,
+    "without_source_passed_cases": 5,
+    "gitleaks_exit": 0
+  },
+  "source_host_supplement": {
+    "at": "2026-10-17 02:11:49 CST",
+    "rc": 0,
+    "pid": 1812509,
+    "argv": [
+      "nice",
+      "-n",
+      "19",
+      "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-014302-s2/agent/node_modules/.bin/vitest",
+      "run",
+      "tests/global-build-health.test.ts",
+      "--maxWorkers",
+      "1"
+    ],
+    "source_tree": "b825d9a35d6c502e7639aecd1ab94833f992a2da",
+    "three_source_sha_unchanged": true,
+    "log_sha256": "2bd77eca030b473b07ef40528cf474196e22a8ddedc86e57396e4dc46c61427a",
+    "original_source_full_rc": 1,
+    "not_full_suite": true,
+    "learner_permissions_unchanged": true
+  },
+  "decision": "Accept original unchanged source with host original-wrapper supplement0 for sandbox EPERM; preserve full1, not full0.",
+  "new_final_live_full": "required once on original batch checks/live locks using existing FULL_CHECK_COMMAND; ops source proof leaves original report intact",
+  "learner_permissions_unchanged": true,
+  "no_other_role_ACK": true
+}

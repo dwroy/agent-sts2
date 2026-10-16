@@ -2751,3 +2751,5 @@ selector于2026-10-15 13:15:58 CST从/home/dw/.codex-brain原子改为/home/dw/P
 - 2026-10-17 01:30:58 CST 运维codex核011303-s2：十项waiting，WT干净且无源码或合入阻塞；30原账本行只补追溯。现有生存者/蜃景/凋萎窄源及旧编号已核，不关闭完整候选与受控整战宽项；原tsx沙箱失败1和同工具node-import材料读回0分列保留，不充生产测试。无新异议/待Roy决定项，不重复派发、测试、编号或论文刷新；live R374及原owner宽父保持。证据paper/materials/20261017-0128-ops/batch-readback.json。
 
 - 2026-10-17 01:57:39 CST 运维codex核014302主策略：十项waiting、WT干净，无源码或合入阻塞；28原账本行仅补追溯，claim/证据/状态/版本保持。三离线消费者只观察局部端点，不替代完整候选/受控整战；AD剩血−2旧勘误的原通知三阶段回执已核，不重复告知或代ACK。无新发布或补测，live R374及原owner宽父保持。证据paper/materials/20261017-0155-ops/batch-readback.json。
+
+- 2026-10-17 02:18:13 CST 计算下注窄源已由ops兜底提交66b05734c8ee8e632345fb5c1c3a672296ab7ad5：原full1唯一沙箱EPERM及固定撤源2败/恢复7过保留，宿主原失败封套1项/Python4项0，三叶不变、gitleaks0。原live锁由retention-worker1808066持有，单次集成exit75，未上线/编号/启动最终host，live仍R374；精确源已独立实收并登记同014302-s2 pending，下一唤醒优先原锁接续窄合、实际核号/规则双通知及同batch唯一精确组合host，不重复源full。原failed/rc0/commitnull回报和0300 proposed保持，尚非shipped或宽父完成。证据paper/materials/20261017-0210-ops/。

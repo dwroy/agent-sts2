@@ -1,0 +1,120 @@
+from pathlib import Path
+import fcntl, hashlib, json, os, re, subprocess
+r = Path.cwd()
+exec((r / 'ops/codex-ops/record-staging/20261016-2003/publish.py').read_text().split('phase=r/')[0])
+p = r / 'ops/codex-ops/record-staging/20261017-0210'
+pub = r / 'paper/materials/20261017-0210-ops'
+load = lambda f: json.loads(f.read_bytes())
+def write(f, v): f.write_text(json.dumps(v, ensure_ascii=False, indent=2) + '\n')
+info = load(pub / 'source-commit.json')
+source, base = info['source'], info['base']
+paths = list(info['files'])
+assert len(paths) == 3 and load(pub / 'ops-source-disposition.json')['accepted']
+assert git('rev-parse', source + '^').decode().strip() == base
+assert git('rev-parse', source + '^{tree}').decode().strip() == info['tree']
+assert set(git('diff', '--name-only', base, source).decode().splitlines()) == set(paths)
+assert not (pub / 'publication.json').exists()
+def builder_active():
+    return subprocess.run(['pgrep', '-f', '/home/dw/Projects/agent-sts2/(.worktrees/live/)?knowledge/builders/build-'], capture_output=True).returncode != 1
+with (r / 'ops/live-merge.lock').open('a') as lock:
+    try: fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+    except BlockingIOError:
+        write(pub / 'publication-lock-blocked.json', dict(source=source, source_received=True, publication_started=False, reason='original live lock busy; no polling'))
+        raise SystemExit(75)
+    at = subprocess.check_output(['date', '+%Y-%m-%d %H:%M:%S %Z'], text=True).strip()
+    assert not builder_active()
+    mh, lh = git('rev-parse', 'HEAD').decode().strip(), git('rev-parse', 'HEAD', cwd=live).decode().strip()
+    assert lh == '5e70fa3dd1c5f8f1e5b00b9ac70083a68d93b922'
+    snapshots, indexes, datasets = {}, {}, {}
+    for cwd in [r, live]:
+        assert not git('ls-files', '-u', cwd=cwd).strip()
+        snapshots[str(cwd)] = git('ls-files', '--stage', '-z', cwd=cwd)
+        index = Path(git('rev-parse', '--git-path', 'index', cwd=cwd).decode().strip())
+        indexes[str(cwd)] = (index if index.is_absolute() else cwd / index).read_bytes()
+        for path in paths + ['eval/versions.json']:
+            assert blob('', path, cwd) == blob('HEAD', path, cwd)
+        raw = blob('HEAD', 'eval/versions.json', cwd)
+        assert (cwd / 'eval/versions.json').read_bytes() == raw
+        datasets[str(cwd)] = json.loads(raw)
+    releases = datasets[str(r)]['release_numbering']['releases']
+    assert releases == datasets[str(live)]['release_numbering']['releases']
+    nums = [int(re.fullmatch(r'V\d+-R(\d+)', x['release_id'])[1]) for x in releases]
+    assert nums == list(range(max(nums) + 1)) and max(nums) == 374
+    values, leaves = {}, []
+    for lane, cwd, head in [('main', r, mh), ('live', live, lh)]:
+        values[lane] = {}
+        for path in paths:
+            before, old, desired = blob(base, path), blob(head, path, cwd), blob(source, path)
+            assert sha(desired) == info['files'][path]
+            f = cwd / path
+            assert (f.read_bytes() if f.exists() else None) == old
+            assert old == before, (lane, path, 'parallel source requires explicit narrow merge')
+            values[lane][path] = desired
+            leaves.append(dict(lane=lane, path=path, sha256=sha(desired)))
+    refresh = {path: (live / path).read_bytes() for path in git('diff', '--name-only', 'HEAD', '--', 'knowledge', cwd=live).decode().splitlines()}
+    for lane, data in {**values, 'preserved-live-refresh': refresh}.items():
+        for path, raw in data.items():
+            f = p / 'composition-scan' / lane / path
+            f.parent.mkdir(parents=True, exist_ok=True)
+            f.write_bytes(raw)
+    with (pub / 'composition-gitleaks.log').open('wb') as out:
+        scan = subprocess.run(['nice', '-n', '19', 'gitleaks', 'dir', str(p / 'composition-scan'), '--redact', '--no-banner', '--report-format', 'json', '--report-path', str(p / 'composition-gitleaks.json')], stdout=out, stderr=subprocess.STDOUT, env={**os.environ, 'GOMAXPROCS': '1'})
+    assert scan.returncode == 0 and load(p / 'composition-gitleaks.json') == []
+    le = {**os.environ, 'GIT_INDEX_FILE': str(p / 'live.index')}
+    git('read-tree', lh, env=le, cwd=live)
+    for path, raw in refresh.items(): stage(path, raw, le, live)
+    rt = git('write-tree', env=le, cwd=live).decode().strip()
+    fresh = commit(rt, [lh], 'Preserve refreshed live knowledge before ordinary Gamble fallback', live) if refresh else lh
+    for path, raw in values['live'].items(): stage(path, raw, le, live)
+    bt = git('write-tree', env=le, cwd=live).decode().strip()
+    assert set(git('diff', '--name-only', rt, bt, cwd=live).decode().splitlines()) == set(paths)
+    behavior = commit(bt, [fresh, source], 'Publish observed Silent A10 ordinary Gamble least-loss redraw', live)
+    rid, name = f'V5-R{max(nums)+1:03d}', 'S1.gamble-least-loss-redraw1'
+    note = (at + '; original batch20261017-014302-s2-strategy-proposal/source ' + source + ', proposal silent-proposal-1cb36e182078a20e, ledger silent-0300. Evidence Y5H4CFAQ2WTG A10 F33T10 states301111-301114/decision293850; L704TLETMZBM A10 F48T6 states256459-256462/decision251114 is historical discovery, not a claim that its current fixed model still ends. Old least-loss draw detection omitted ordinary Calculated Gamble at zero energy. New Silent A10/no No Draw fallback only after existing direct draw priority: replay actual remaining-hand discard/redraw, keep compulsory leading plays and Sandpit payment, stop stale old-hand continuation and read real new hand. Upgraded/unobserved ascensions/other characters, SL/HP/potion/terminal thresholds unchanged. Fixed7pass, source ablation2fail/5pass then restored7pass, tsc0; source sandbox454files4210pass1old Python spawn EPERM failure/787.45s and unchanged wrapper failure retained. Main ops host original wrapper1pass/Python4pass; same three SHA; accepted environmental supplement, not source full0. Final exact live full pending on original batch checks/live locks, no borrowed older green or repeat source full. Expected preserve observed redraw opportunity, no restored-win/future draw/payoff claim. Rollback inverse only these three leaves in current context, keep knowledge/history/parallel releases; actual rollback gets new release. Evidence paper/materials/20261017-0210-ops/.')
+    entry = dict(name=name, family='V5', character='SILENT', commit=behavior, release_id=rid, release_status='registered-primary-ops', source=note)
+    versions = {}
+    for key, data in datasets.items():
+        old = json.loads(json.dumps(data))
+        data['versions'].append(entry)
+        data['release_numbering']['releases'].append(dict(release_id=rid, commit=behavior, aliases=[name]))
+        assert data['versions'][:-1] == old['versions'] and data['release_numbering']['releases'][:-1] == old['release_numbering']['releases']
+        versions[key] = (json.dumps(data, ensure_ascii=False, indent=2) + '\n').encode()
+    stage('eval/versions.json', versions[str(live)], le, live)
+    ft = git('write-tree', env=le, cwd=live).decode().strip()
+    final = commit(ft, [behavior], f'Register ordinary Gamble redraw as {rid}', live)
+    me = {**os.environ, 'GIT_INDEX_FILE': str(p / 'main.index')}
+    git('read-tree', mh, env=me)
+    for path, raw in values['main'].items(): stage(path, raw, me, r)
+    stage('eval/versions.json', versions[str(r)], me, r)
+    mt = git('write-tree', env=me).decode().strip()
+    main = commit(mt, [mh, source], f'Integrate original Gamble source and register {rid}', r)
+    rec = dict(at=at, batch='20261017-014302-s2-strategy-proposal', source=source, source_parent=base, source_tree=info['tree'], old_main=mh, main=main, old_live=lh, knowledge_refresh_commit=fresh, knowledge_refresh=[dict(path=k, sha256=sha(v)) for k,v in refresh.items()], behavior_commit=behavior, actual_live=final, tree=ft, release_id=rid, name=name, leaves=leaves, source_full_rc=1, source_host_supplement_rc=0, host='pending original batch exact final-tree full', original_report_failed_rc0_retained=True, no_other_role_ACK=True, no_current_game_home_model_prompt_change=True)
+    write(p / 'intended-publication.json', rec)
+    preserved = []
+    for cwd, lane in [(r, 'main'), (live, 'live')]:
+        f = p / (lane + '-preserved.index')
+        f.write_bytes(indexes[str(cwd)])
+        env = {**os.environ, 'GIT_INDEX_FILE': str(f)}
+        for path, raw in {**values[lane], **(refresh if lane == 'live' else {})}.items(): stage(path, raw, env, cwd)
+        stage('eval/versions.json', versions[str(cwd)], env, cwd)
+        preserved.append((cwd, env))
+    locks = locks_for(preserved)
+    try:
+        assert git('rev-parse','HEAD').decode().strip()==mh and git('rev-parse','HEAD',cwd=live).decode().strip()==lh and not builder_active()
+        for cwd in [r, live]: assert git('ls-files','--stage','-z',cwd=cwd)==snapshots[str(cwd)]
+        for path, raw in refresh.items(): assert (live/path).read_bytes()==raw
+        git('update-ref','-m','ops: publish original ordinary Gamble fallback','HEAD',final,lh,cwd=live)
+        for path, raw in values['live'].items(): install(live,path,raw)
+        install(live,'eval/versions.json',versions[str(live)])
+        git('update-ref','-m','ops: narrow integrate ordinary Gamble source','HEAD',main,mh)
+        for path, raw in values['main'].items(): install(r,path,raw)
+        install(r,'eval/versions.json',versions[str(r)])
+        for idx, lp in locks: os.replace(lp,idx)
+    finally:
+        for _, lp in locks:
+            if lp.exists(): lp.unlink()
+    for cwd in [r, live]: git('merge-base','--is-ancestor',source,'HEAD',cwd=cwd)
+    assert set(git('diff','--name-only',fresh,final,cwd=live).decode().splitlines())==set(paths)|{'eval/versions.json'}
+    write(pub/'publication.json',rec)
+    write(r/'ops/codex-ops/pending-integrations/20261017-014302-s2-strategy-proposal.json',dict(**rec,status='source published; exact final host and ledger shipped closure pending',host_requested=False,ledger='silent-0300',root_0332_fixed=False))
+    print(json.dumps(dict(release=rid,main=main,live=final,tree=ft,knowledge_refresh=len(refresh))),flush=True)

@@ -1,0 +1,71 @@
+from pathlib import Path
+import fcntl, hashlib, importlib.util, json, os, subprocess, sys
+sys.dont_write_bytecode=True
+r=Path('/home/dw/Projects/agent-sts2');p=r/'ops/codex-ops/record-staging/20261017-0210';pub=r/'paper/materials/20261017-0210-ops'
+bid='20261017-014302-s2-strategy-proposal';out_dir=r/'ops/codex-ops/learner';live=r/'.worktrees/live'
+sha=lambda raw:hashlib.sha256(raw).hexdigest()
+sys.path.insert(0,str(r/'ops'))
+spec=importlib.util.spec_from_file_location('original_ops_learning',r/'ops/codex-ops-learn.py')
+ops=importlib.util.module_from_spec(spec);spec.loader.exec_module(ops)
+from learner_checks import FULL_CHECK_COMMAND, read_report
+git=lambda *args:subprocess.check_output(['git','-C',str(live),*args])
+publication=json.loads((pub/'publication.json').read_text());source=publication['source']
+original_path=out_dir/(bid+'.out');original_sha=sha(original_path.read_bytes())
+original=read_report(str(original_path))
+assert original['task']=='strategy-proposal' and len(original['fixes'])==1 and original['fixes'][0]['commit']is None and original['merged']is None
+assert original['fixes'][0]['staged_tree']=='b825d9a35d6c502e7639aecd1ab94833f992a2da'
+with (r/'ops/codex-ops'/f'{bid}.checks.lock').open('a') as checks_lock:
+    fcntl.flock(checks_lock,fcntl.LOCK_EX|fcntl.LOCK_NB)
+    with (r/'ops/live-merge.lock').open('a') as live_lock:
+        fcntl.flock(live_lock,fcntl.LOCK_EX|fcntl.LOCK_NB)
+        merged,tree=git('rev-parse','HEAD','HEAD^{tree}').decode().splitlines()
+        assert (merged,tree)==(publication['actual_live'],publication['tree'])
+        subprocess.run(['git','-C',str(live),'merge-base','--is-ancestor',source,merged],check=True)
+        for leaf in publication['leaves']:
+            if leaf['lane']=='live': assert sha((live/leaf['path']).read_bytes())==leaf['sha256']
+        assert not git('ls-files','-u').strip()
+        log=out_dir/f'{bid}.fallback-{tree}.checks.log'
+        assert not log.exists()
+        at=subprocess.check_output(['date','+%Y-%m-%d %H:%M:%S %Z'],text=True).strip()
+        proof=dict(at=at,batch=bid,source=source,merged=merged,tree=tree,
+                   publication=str((pub/'publication.json').relative_to(r)),
+                   publication_sha256=sha((pub/'publication.json').read_bytes()),
+                   original_report_sha256=original_sha,original_report_retained=True,
+                   original_report_has_no_committed_source=True,
+                   disposition='Main ops committed original staged source after sandbox EPERM supplement; use actual publication proof, without changing original completion.',
+                   original_checks_and_live_locks=True,full_command=FULL_CHECK_COMMAND,
+                   full_command_sha256=sha(FULL_CHECK_COMMAND.encode()),log=str(log))
+        with ops.state_lock():
+            state=ops.load_state();batch=state['batches'][bid]
+            assert batch['worktree']==str(r/'.worktrees/codex-strategy-silent-20261017-014302-s2')
+            assert batch['state']=='failed' and batch['rc']==0 and batch['merged']is None
+            assert not any(v.get('tree')==tree for v in batch.get('fallback_checks',[]))
+            batch['ops_fallback_publication']=proof;batch['checks_pending']=True;ops.save_state(state)
+        (out_dir/f'{bid}.ops-publication-proof.json').write_text(json.dumps(proof,ensure_ascii=False,indent=2)+'\n')
+        with log.open('wb') as output:
+            proc=subprocess.Popen(['bash','-c',FULL_CHECK_COMMAND],cwd=live/'agent',stdout=output,stderr=subprocess.STDOUT)
+            birth=Path(f'/proc/{proc.pid}/stat').read_text().rsplit(') ',1)[1].split()[19]
+            started=dict(**proof,executor_pid=os.getpid(),command_pid=proc.pid,birth_ticks=birth,
+                         state='running',test_result='pending; startup is not completion')
+            (pub/'host-full-started.json').write_text(json.dumps(started,ensure_ascii=False,indent=2)+'\n')
+            print(json.dumps(dict(started=True,pid=proc.pid,batch=bid,tree=tree)),flush=True)
+            try:rc=proc.wait(timeout=3600)
+            except subprocess.TimeoutExpired:
+                # Stop only our fixed check process group, never a game or learner process.
+                proc.kill();proc.wait();rc=124
+        at_done=subprocess.check_output(['date','+%Y-%m-%d %H:%M:%S %Z'],text=True).strip()
+        assert sha(original_path.read_bytes())==original_sha
+        entry=dict(rc=rc,log=str(log),merged=merged,tree=tree,commits=[source],
+                   ops_publication_proof=proof,started=at,finished=at_done,log_sha256=sha(log.read_bytes()))
+        with ops.state_lock():
+            state=ops.load_state();batch=state['batches'][bid]
+            assert batch['task']=='strategy-proposal' and batch['worktree']==str(r/'.worktrees/codex-strategy-silent-20261017-014302-s2')
+            assert not any(v.get('tree')==tree for v in batch.get('fallback_checks',[]))
+            batch.setdefault('fallback_checks',[]).append(entry);batch['checks']=entry;batch['checks_pending']=False
+            ops.save_state(state)
+        (out_dir/f'{bid}.ops-full-{tree}.json').write_text(json.dumps(entry,ensure_ascii=False,indent=2)+'\n')
+        message=f'批次 {bid} 已核实ops兜底合入 live {merged}，树 {tree}；沙箱外完整 tsc + vitest exit {rc}；日志 {log}。原fixes.commit=null/未提交回报及sandbox full1保持，以真实ops source {source} / publication回执补源证明。'
+        if rc:
+            message+='运维会话决定回滚还是派修复，不自动回滚。';ops.inbox(message)
+        ops.enqueue('learner-checks',message)
+        print(json.dumps(dict(finished=True,rc=rc,tree=tree,event='learner-checks')),flush=True)
