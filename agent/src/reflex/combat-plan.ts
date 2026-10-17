@@ -1894,6 +1894,27 @@ function handAfterPlay(played: CardModel | undefined, hand: CardModel[], musicBo
   return left.map((card) => (card.type === "Attack" ? { ...card, cardId: "GIANT_ROCK", upgraded: played.upgraded } : card));
 }
 
+/** 2Q6ZYZ6JHM0M F5 T1 / F8 T1,T5: preserve facts when generated cards invalidate execution indices. */
+function discardReference(env: DecisionEnv, step: Step | undefined, hand: CardModel[], remaining: Step[],
+  prediction: CombatPlanMemo["selectionReference"], originDecisionId?: string | null): Pick<NonNullable<ScreenMemory["plannedAfter"]>, "discardReference"> {
+  const played = step && cardFor(step, hand);
+  if (!played || played.cardId !== "HIDDEN_DAGGERS" || played.upgraded || played.discardCount !== 2 ||
+    !str(env.state.raw["run_id"]) || str(env.state.raw["run_id"]) === "run_unknown" ||
+    env.state.turn === null || env.state.run?.floor === null ||
+    str(asRecord(env.state.run?.raw)["character_id"]).toLowerCase() !== "silent" || env.state.run?.ascension !== 10 ||
+    asArray(asRecord(env.state.raw["combat"])["enemies"]).filter((enemy) => asRecord(enemy)["is_alive"] !== false).length !== 1) return {};
+  const pool = hand.filter((card) => card !== played);
+  const held: Step[] = [];
+  // Match distinct, already observed copies. Missing/generated steps remain conditional, never real hand cards.
+  for (const next of [...remaining].sort((a, b) => Number(b.cost !== undefined) - Number(a.cost !== undefined))) {
+    const at = pool.findIndex((card) => card.cardId === next.cardId && card.upgraded === next.upgraded &&
+      (next.cost === undefined || card.cost === next.cost));
+    if (at >= 0) { held.push(next); pool.splice(at, 1); }
+  }
+  return { discardReference: { fight: facingFightOf(env.state), cardIndex: played.index, held,
+    assumedDiscards: step!.discards ?? null, prediction: prediction ?? null, originDecisionId } };
+}
+
 function commit(env: DecisionEnv, turn: number | null, plan: Plan, hand: CardModel[], via: CombatPlanMemo["via"]): void {
   // SL_RETRY_EXPLORE: code's own line of this decision (planCombatTurn notes it; nothing else reads it).
   slCommitted = plan;
@@ -1905,7 +1926,9 @@ function commit(env: DecisionEnv, turn: number | null, plan: Plan, hand: CardMod
   // A one-step line Jev (or the escalator) chose is kept too, with nothing left: its end is "stop here"
   // (lineDone), not a fresh plan (9Q7V F17 T14: after Jev's "One-Two Punch" alone, code re-planned and
   // played the Sword Boomerang Jev had turned down, killing the Giant into its blast).
-  env.screenMemory.plannedAfter = { turn, steps: plan.steps.slice(1), lethal: plan.outcome.winsFight };
+  env.screenMemory.plannedAfter = { turn, steps: plan.steps.slice(1), lethal: plan.outcome.winsFight,
+    ...discardReference(env, first, hand, plan.steps.slice(1),
+      { hp_lost: plan.outcome.hpLoss, damage_dealt: plan.outcome.damageDealt, block_gained: plan.outcome.blockGained }) };
   // A line's later drinks go with the rest of the line: when it is cut short (a draw, a random exhaust, a
   // hand the plan did not expect) the re-plan offers the potion again beside the new hand, and whoever
   // decides that turn decides the drink (XMK1 F33 T3: Battle Trance drew three cards, the stale Blood
@@ -3120,7 +3143,8 @@ function planTurn(env: DecisionEnv): Decision | null {
       noteIntent(env, intent, nextCard);
       if (next.discards) env.screenMemory.gambleDiscards = { turn: memo.turn, cardIds: next.discards };
       notePotionTake(env, memo.turn, next);
-      env.screenMemory.plannedAfter = { turn: memo.turn, steps: memo.remaining.slice(1), lethal: memo.lethal };
+      env.screenMemory.plannedAfter = { turn: memo.turn, steps: memo.remaining.slice(1), lethal: memo.lethal,
+        ...discardReference(env, next, hand, memo.remaining.slice(1), memo.selectionReference, memo.selectionDecisionId ?? null) };
       // The last step of a chosen line leaves a memo with nothing left: its end is "stop here" (lineDone).
       // A potion step keeps the hand and is checked on the belt (beltAfter), a card step on the hand.
       const { potions: _checked, afterSelection: _resumed, upgradeAll: _forged, take: _taken, ...kept } = memo;
