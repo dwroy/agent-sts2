@@ -1,0 +1,82 @@
+from pathlib import Path
+import csv, hashlib, json, re, subprocess
+
+r = Path.cwd(); p = r / 'ops/codex-ops/record-staging/20261017-1328'
+pub = r / 'paper/materials/20261017-1328-ops'
+load = lambda f: json.loads(f.read_bytes())
+sha = lambda raw: hashlib.sha256(raw).hexdigest()
+def write(f, v): f.write_text(json.dumps(v, ensure_ascii=False, indent=2) + '\n')
+
+assert not (pub / 'ops-closure.json').exists()
+result = load(pub / 'paper-dataset-result.json')
+assert result['actual_exit_code'] == 0 and result['calls'] == 1
+log = (pub / 'paper-dataset.log').read_text()
+assert 'key scan: CLEAN (no sk-<key> patterns)' in log
+before = {x['path']: x for x in load(p / 'paper-before.json')}
+outputs = []
+for ref in load(p / 'paper-after.json'):
+    raw = (p / 'paper-after' / ref['path']).read_bytes()
+    assert sha(raw) == ref['sha256'] and len(raw) == ref['bytes']
+    if ref['path'] not in before or before[ref['path']]['sha256'] != ref['sha256']:
+        outputs.append(ref)
+frozen = lambda path: (p / 'paper-after' / path).read_bytes()
+summary = json.loads(frozen('paper/data/summary.json'))
+verified = json.loads(frozen('paper/data/verification.json'))
+checks = {k: v for k, v in verified['checks'].items() if isinstance(v, bool)}
+assert len(checks) == 5 and all(checks.values()) and summary['source_checks_passed'] is True
+cut = re.match(r'^cut at (\S+): ', log).group(1)
+assert summary['generated_at'] == cut
+runs = list(csv.DictReader(frozen('paper/data/runs.csv').decode().splitlines()))
+row = next(x for x in runs if x['run_id'] == '5H83F3J0XSTE')
+expected = dict(character='SILENT', ascension='10', outcome='defeat', floor_max='48',
+                has_postmortem='1', n_decisions='840')
+assert all(row[k] == value for k, value in expected.items()), {k: row.get(k) for k in expected}
+selected = {k: row.get(k) for k in ['run_id', 'character', 'ascension', 'outcome', 'floor_max',
+                                  'n_decisions', 'has_postmortem', 'performance_included', 'brain_source']}
+write(pub / 'paper-snapshot-readback.json', dict(request=result, generated_at=cut,
+    source_cut_bytes=summary['source_cut_bytes'], five_checks=checks, source_checks_passed=True,
+    row_counts=verified['row_counts'], original_count_warnings=verified['checks']['runs.jsonl decision-count mismatches'],
+    selected_run=selected, changed_outputs=outputs, raw_snapshot=False,
+    before_and_after_frozen_bytes_preserved=True,
+    historical_before_snapshots_not_copied_or_deleted=True,
+    cost_boundary='Independent immutable component cuts and estimates, not actual billed cost or service-tier assertions',
+    experiment_boundary='This run contains R380 blocking and R382 same-save recovery; not a pure R380/H1 natural pass.'))
+
+post = load(pub / 'postmortem-readback.json')
+assert len(post['original_ledger_rows']) == 5 and post['new_pure_bugs'] == []
+assert len((p / 'own-ledger-rows.jsonl').read_bytes().splitlines()) == 5
+live = r / '.worktrees/live'
+head, tree = subprocess.check_output(['git', '-C', str(live), 'rev-parse', 'HEAD', 'HEAD^{tree}'], text=True).splitlines()
+release = json.loads(subprocess.check_output(['git', '-C', str(live), 'show', 'HEAD:eval/versions.json']))['release_numbering']['releases'][-1]['release_id']
+state = load(r / 'ops/codex-ops/learn.json')
+h0 = state['learning_requests']['roy-20261017-human-pace-h0']
+at = subprocess.check_output(['date', '+%Y-%m-%d %H:%M:%S %Z'], text=True).strip()
+print(at, flush=True)
+text = (f'\n- {at} 运维codex处理1328复盘完成：原131302 done0/done齐/missing空/提案audit空，5H83F3J0XSTE为Silent A10/F48败；原报告bugs=[]，无新的纯bug，故不追加重复fix队列项或重启/派修复。原24679字节复盘与9456486字节旧前缀SHA4cb60c9cd5cc8fbbab19888fab59445c72d74df2159c26920612781c9082826d逐字核，原1811引用封套文件指纹及前后材料核验passed保留，ops未重跑求解/消费者/模拟。三条既有经验0028/0046/0020各新增一条本局support；六次SL只作同一局，不增加独立分母。五条现成CLI行（3增证+2提案追溯）按offset/len/SHA及fold保护字段核；旧claim/首证/进阶/prior/status/version/shipped和原evidence前缀保持，没有由ops添游戏知识/规则或重写学习结论。\n'
+ '  原CLI提案silent-proposal-62dcbda7e1e8aa08的Markdown SHA470e8f7a3c4257b70882090813976b27e6006bc47953e8e770f86c8f2c5bc0c6与原add pending核，关联F48末试T1—T5、0028/0046、combat，仍缺同后继对照，保持原行为；由既有策略队列派发，本wake不重复派模型、不冒implemented/live经验/shipped或另设编号。26小原件已压缩并逐SHA读回，原日志/大资源/经验/账本不删。实际原生session01a14847/modelgpt-6.1-sol/xhigh、workspace-write/禁网/never及原输入租约元数据核，不只凭默认配置或输出摘要，不读取凭据/改权限。\n'
+ f'  唯一nice19 python3 ops/paper_dataset.py --no-raw实际exit0，PID{result["pid"]}/cut{cut}、本cut{len(runs)}局，5H83决策840/has_postmortem=1；五一致性及keyscan CLEAN，原计数告警、独立费用cut/估计仍留，不称真实账单。{len(outputs)}个变化输出按本次前后冻结原字节入主目录私有index，历史.before由原程序保留，未重复制大原流。运行边界：5H83以R380 dbd416+dirty启动，F48曾因严格Jev超时出口阻塞；原ops按已记录纯bug链同存档恢复到R382/6fbb后终局。本局不是全程同代码/纯R380自然验收通过，不把paper战绩字段当实验归组或0332根修复；原watcher/H1单次自然审计职责不变。\n'
+ f'  live读回{head}/tree{tree}/{release}仅是当前发布元数据，本wake未改live/现局/home/账号/模型/prompt/env、未用game API或重启，无源码/tsc/vitest/源full/发布/号/新观察器。H0原130158接续state={h0["state"]}与0332同优先、481验证/六目标质量及根缺口保持，H2+未派；不借既有宿主0作自然/校准门槛。仅本局lessons/5账本行/1原提案CLI和本次生成表/ops记录提交，保所有并行输入与普通index；结束不sleep/轮询等未来事件。证据paper/materials/20261017-1328-ops/。\n')
+appends = load(p / 'lesson-appends.json')
+for path in ['paper/materials/decision-log.md', 'notes/ops-handoff.md', 'ops/inbox-dev.md', 'notes/for-roy.md']:
+    with (r / path).open('ab') as stream: stream.write(text.encode())
+    appends.append(dict(path=path, text=text))
+write(p / 'own-appends.json', appends)
+write(p / 'paper-owned-manifest.json', outputs)
+write(pub / 'ops-closure.json', dict(at=at, events=1, run='5H83F3J0XSTE',
+      original_batch_rc=0, new_pure_bugs=[], original_ledger_rows=5, support_rows=3,
+      lesson_owned_bytes=24679, original_proposal='silent-proposal-62dcbda7e1e8aa08',
+      proposal_state='pending', paper_rc=0, changed_outputs=len(outputs), selected_run=selected,
+      actual_live=head, tree=tree, release=release, source_or_runtime_mutation=False,
+      production_tests_or_new_release=False, natural_or_H0_or_0332_acceptance_claim=False,
+      no_other_role_ACK=True))
+for name in ['audit.py', 'paper.py', 'finish.py']:
+    (pub / (name + '.txt')).write_bytes((p / name).read_bytes())
+seal = (r / 'ops/codex-ops/record-staging/20261017-1325/seal.py').read_text()
+seal = seal.replace('20261017-1325', '20261017-1328').replace('== 26', '== 5').replace('owned_ledger_rows=26', 'owned_ledger_rows=5')
+seal = seal.replace('Record unchanged-source strategy report and original trace links', 'Archive 5H83 postmortem and refresh the paper dataset')
+seal = seal.replace('ops: archive131302 unchanged-source strategy and waiting dispositions', 'ops: record5H83 postmortem and one no-raw paper refresh')
+seal = seal.replace('One unchanged-source strategy batch:10waiting,26 original trace-only ledger rows,10 mechanical queue resolutions. Original artifacts and consumer rejection history preserved; no new source/test/consumer/simulation/model/game action. H0 existing130158 continuation and wider gaps remain separate.',
+    'One completed5H83 postmortem,3 original support rows and2 proposal links,1 pending proposal. One no-raw paper dataset0 with frozen changed outputs. No new pure bug/source/test/live publication/game action; mixed R380/R382 runtime and original H0/0332/H1 acceptance gaps preserved.')
+(p / 'seal.py').write_text(seal)
+print(json.dumps(dict(postmortem='5H83F3J0XSTE', new_pure_bugs=0, ledger_rows=5,
+      paper_rc=0, changed_outputs=len(outputs), source_changed=False)), flush=True)

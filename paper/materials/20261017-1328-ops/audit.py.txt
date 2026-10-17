@@ -1,0 +1,117 @@
+from pathlib import Path
+import collections, copy, hashlib, importlib.util, json, re, subprocess, tarfile
+
+r = root = Path.cwd(); p = r / 'ops/codex-ops/record-staging/20261017-1328'
+pub = r / 'paper/materials/20261017-1328-ops'
+load = lambda f: json.loads(f.read_bytes())
+sha = lambda raw: hashlib.sha256(raw).hexdigest()
+def write(f, v): f.write_text(json.dumps(v, ensure_ascii=False, indent=2) + '\n')
+bid = '20261017-131302'; run = '5H83F3J0XSTE'
+state = load(r / 'ops/codex-ops/learn.json'); b = state['batches'][bid]
+out = r / 'ops/codex-ops/learner' / (bid + '.out')
+report = json.loads(re.findall(r'```json\s*([\s\S]*?)```', out.read_text())[-1])
+scratch = Path(report['report']).parent
+assert b['state'] == 'done' and b['rc'] == 0 and b['done'] == [run] and b['missing'] == []
+assert b['proposal_audit_errors'] == [] and b['proposal_audit_skipped'] is False
+assert report == load(scratch / 'report.json') and report['appended'] == [run]
+assert report['bugs'] == [] and report['ledger']['added'] == []
+assert report['ledger']['check'] == 0 and report['ledger']['repeats'] == []
+assert set(report['ledger']['updated']) == {'silent-0028', 'silent-0046', 'silent-0020'}
+exec((r / 'ops/codex-ops/record-staging/20261016-0557/readonly-runtime.py').read_text())
+native = runtime(bid, report, out.read_text())
+prefix = load(scratch / 'lessons-prefix.json')
+chunk = (scratch / 'lesson-draft.md').read_bytes()
+lessons = (r / 'notes/lessons.md').read_bytes()
+assert sha(lessons[:prefix['bytes']]) == prefix['sha256']
+assert lessons[prefix['bytes']:prefix['bytes'] + len(chunk)] == chunk and lessons.count(chunk) == 1
+assert len(chunk) == 24679 and sha(chunk) == '47a6b38860a43ec9a3b3924283b98a517610d7817dc1895fcb615de51464c6a4'
+assert lessons.count(b'\n## ' + run.encode() + b'\xef\xbc\x88') == 1
+append_check = load(scratch / 'append-verification.json')
+assert append_check['original_prefix_unchanged'] and append_check['appended_draft_exactly_once']
+assert append_check['ledger_preserved_claim_prior_status_version']
+verified = load(scratch / 'verification-after.json')
+assert verified == load(scratch / 'verification-before.json')
+assert verified['key_assertions'] == 'passed' and verified['lesson_sha256'] == sha(chunk)
+bindings = []
+for stream in ['decisions', 'states', 'brain', 'run-plans', 'run-config', 'sl-attempts']:
+    f = scratch / (stream + '.jsonl'); raw = f.read_bytes()
+    count = len(raw.splitlines())
+    assert count == verified['raw_offset_readback'][stream]
+    bindings.append(dict(path=str(f.relative_to(r)), bytes=len(raw), sha256=sha(raw),
+                         original_verified_envelopes=count))
+assert sum(x['original_verified_envelopes'] for x in bindings) == 1811
+
+physical = (r / 'paper/materials/learning/ledger.jsonl').read_bytes()
+ids = set(report['ledger']['updated']); rows = []; owned = []; offset = 0
+for line in physical.splitlines(keepends=True):
+    value = json.loads(line)
+    if value.get('id') in ids and value.get('by') == 'learner:postmortem' and (
+            str(scratch).encode() in line or run.encode() in line):
+        assert value['op'] == 'update'
+        assert set(value) <= {'op', 'id', 'ts', 'by', 'evidence', 'where', 'note'}
+        rows.append(dict(offset=offset, bytes=len(line), sha256=sha(line), row=value))
+        owned.append(line)
+    offset += len(line)
+assert len(rows) == 5 and sum('evidence' in x['row'] for x in rows) == 3
+spec = importlib.util.spec_from_file_location('ledger_guard', r / 'learner/ledger.py')
+ledger = importlib.util.module_from_spec(spec); spec.loader.exec_module(ledger)
+before = [(i, json.loads(line)) for i, line in enumerate(physical[:rows[0]['offset']].splitlines(), 1)
+          if json.loads(line).get('id') in ids]
+folded = ledger.fold(before); saved = copy.deepcopy(folded)
+for ref in rows: ledger.apply(folded, ref['row'])
+original_fields = load(scratch / 'ledger-before-fields.json')
+evidence = []
+for ident in ids:
+    for field in ['character', 'claim', 'first_run', 'asc', 'prior', 'prior_note', 'prior_runs',
+                  'status', 'version', 'shipped_at', 'effect']:
+        assert saved[ident].get(field) == folded[ident].get(field), (ident, field)
+    for field, value in original_fields[ident].items(): assert saved[ident].get(field) == value
+    old = saved[ident]['evidence']; current = folded[ident]['evidence']
+    assert current[:len(old)] == old
+    extra = current[len(old):]
+    assert len(extra) == 1 and extra[0]['run'] == run and extra[0]['role'] == 'support'
+    evidence.append(dict(id=ident, new_evidence=extra))
+(p / 'own-ledger-rows.jsonl').write_bytes(b''.join(owned))
+appends = [dict(path='notes/lessons.md', text=chunk.decode())]
+proposal_rows = []
+for line in (r / 'paper/materials/learning/code-proposals.jsonl').read_bytes().splitlines(keepends=True):
+    value = json.loads(line)
+    if value.get('id') not in report['code_proposals']: continue
+    assert value['op'] == 'add' and value['character'] == 'silent'
+    assert value['source_task'] == 'postmortem' and value['target_task'] == 'strategy-proposal'
+    assert value['state'] == 'pending' and value['runs'] == [run] and value['rule_changes'] is False
+    assert sha(Path(value['proposal']).read_bytes()) == value['proposal_sha256']
+    proposal_rows.append(value)
+    appends.append(dict(path='paper/materials/learning/code-proposals.jsonl', text=line.decode()))
+assert len(proposal_rows) == 1 and proposal_rows[0]['id'] == 'silent-proposal-62dcbda7e1e8aa08'
+
+files = {out, out.with_suffix('.err')}
+for f in scratch.iterdir():
+    if f.is_file() and f.stat().st_size < 800000 and f.suffix in ['.md', '.json', '.py', '.txt', '.sh']:
+        files.add(f)
+manifest = []
+with tarfile.open(pub / 'original-small-reports.tar.gz', 'w:gz', compresslevel=6) as tar:
+    for f in sorted(files):
+        raw = f.read_bytes(); name = str(f.relative_to(r)); tar.add(f, arcname=name, recursive=False)
+        manifest.append(dict(path=name, bytes=len(raw), sha256=sha(raw)))
+with tarfile.open(pub / 'original-small-reports.tar.gz') as tar:
+    for ref in manifest: assert sha(tar.extractfile(ref['path']).read()) == ref['sha256']
+at = subprocess.check_output(['date', '+%Y-%m-%d %H:%M:%S %Z'], text=True).strip()
+write(pub / 'original-small-reports-manifest.json', dict(files=manifest,
+      archive_sha256=sha((pub / 'original-small-reports.tar.gz').read_bytes()),
+      actual_readback_verified=True, originals_deleted=False))
+write(pub / 'postmortem-readback.json', dict(at=at, batch=bid, run=run, canonical=b,
+      report=report, runtime=native, new_pure_bugs=[], original_lesson_prefix=prefix,
+      lesson_append_bytes=len(chunk), lesson_append_sha256=sha(chunk),
+      original_material_verification=verified, derived_evidence_fingerprints=bindings,
+      no_repeat_original_raw_frame_or_solver_or_consumer_by_ops=True,
+      original_ledger_rows=rows, original_ledger_new_support=evidence,
+      protected_fields_and_old_evidence_preserved=True,
+      original_proposal_add=proposal_rows[0], no_new_dispatch_by_ops=True,
+      mixed_R380_R382_runtime_not_pure_R380_natural_acceptance=True,
+      new_live_experience_or_game_behavior_not_claimed=True,
+      complete_dirty_runtime_missing_and_scientific_gaps_preserved=True))
+write(p / 'lesson-appends.json', appends)
+write(p / 'extra-owned-paths.json', [])
+print(json.dumps(dict(postmortem=run, original_ledger_rows=5, new_support=3,
+      new_pure_bugs=0, original_proposal_pending=1, archived_files=len(manifest))), flush=True)
