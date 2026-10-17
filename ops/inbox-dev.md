@@ -2844,3 +2844,5 @@ selector于2026-10-15 13:15:58 CST从/home/dw/.codex-brain原子改为/home/dw/P
   回退：原ops持live锁，在当时上下文仅逆向本H1补丁，保R379、并行知识/源码/历史记录和版本顺序；真实行为回退另记发布号和双通知，不整树回旧base、不带撤回0e4f。当前已加载对局不重启/热改，账号/home/模型/prompt/env均不改；首个实际生效自然局尚未知，须后续原run-config证明，磁盘合并不等于已采用。阶段源交付/发布不等于H1自然门槛完成，不代Roy或其他角色ACK。回执paper/materials/20261017-human-pace-h1/ops-receipts/ops-publication.json。
 
 - 2026-10-17 10:53:59 CST H1已实收并发布V5-R380，source7af803c06e/livedbd41616420f62e6502e9cb6c5827e852a6b4949/treed68e817428a59b28dfd53c3d9dfb34819f711e56；根规则双通知已写。唯一原075726精确宿主PID3300696已实际RUN，结果pending；收到终局事件后另写验收结果。首个实际生效局未知，后续由原run-config证明，当前局未重启/热改。H0/0332优先及所有科学/自然门槛保持，不重派模型、源full或新增观察。回执paper/materials/20261017-human-pace-h1/ops-receipts/ops-closure.json。
+
+- 2026-10-17 11:02:01 CST 原104302策略批已读回：十项保留waiting，无源码提交或合入阻塞；31行原CLI追溯、71产物及62小原件归档。原30项为纠正后的材料核验，不是生产测试；16局进阶及完整候选/整战后继缺口保持。未改live/V5-R380、当前局或H1原唯一宿主，不新补测/分号/派发。回执paper/materials/20261017-1059-ops/strategy-readback.json。
