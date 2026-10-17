@@ -62,6 +62,7 @@ import { planCombat as planCombatPerCard } from "./combat.js";
 import { fightKey, fightPlanJson, planFit, planOffersPotion, type FightPlan } from "../memory/fight-plan.js";
 import { permafrostBlock } from "./permafrost.js";
 import { silentKunai } from "./silent-kunai.js";
+import { silentHelicalDart } from "./silent-helical-dart.js";
 import { observedSlothReplay, recordStateFightPlays } from "./fight-plays.js";
 import { RELIC_VALUES } from "../knowledge/relic-values.js";
 import { forcedEliteWithin } from "../hand/screens/rest.js";
@@ -2947,6 +2948,7 @@ function planTurn(env: DecisionEnv): Decision | null {
   const legionPreview = paelsLegionPreview(state.run?.raw, combat);
   const firstPowerBlock = permafrostBlock(env.screenMemory, state);
   const kunai = silentKunai(state);
+  const helicalDart = silentHelicalDart(state);
   const razorSnakebiteScope = observedRazorSnakebiteScope(state.run?.raw, combat, state.run?.ascension ?? null);
   const playerSim: PlayerSim = {
     ...(str(asRecord(state.run?.raw)["character_id"]).toLowerCase() === "silent" && (ascension === 0 || ascension === 10) &&
@@ -2973,6 +2975,7 @@ function planTurn(env: DecisionEnv): Decision | null {
     frail: powerAmount(player, "FRAIL_POWER") > 0,
     dexterityNow: powerAmount(player, "DEXTERITY_POWER"),
     ...(kunai !== undefined ? { kunai } : {}),
+    ...(helicalDart !== undefined ? { helicalDart } : {}),
     intangible: powerAmount(player, "INTANGIBLE_POWER") > 0,
     // -1 on us, never above 0: `> 0` never turned it on (XC4TNGZU4KT9 F9 T3 planned 16 and a kill, dealt 14).
     shrunk,

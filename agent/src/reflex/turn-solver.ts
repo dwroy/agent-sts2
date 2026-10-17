@@ -370,6 +370,8 @@ export interface PlayerSim {
   dexterityNow?: number;
   /** Silent A10 ordinary manual attacks only; counter read from the observed, consistent relic stack. */
   kunai?: { count: number };
+  /** Silent A10 observed Helical Dart scope; the entry amount is already in displayed Block. */
+  helicalDart?: { temporary: number };
   /** Takes 50% less from enemy attacks? (Intangible etc. — not modelled beyond this flag.) */
   intangible: boolean;
   /**
@@ -977,6 +979,8 @@ export interface Outcome {
   permafrostBlockLeft?: number;
   /** Dexterity established by observed Kunai triggers, retained by later turns of this fight. */
   kunaiDexterityGained?: number;
+  /** New Helical Dart Dexterity expires at this turn's end, separately from permanent gains. */
+  helicalDexterityGained?: number;
   /** Drinks in the line whose effect may outlast this turn (turnOnlyDrink): such a line is never "no effect". */
   lastingDrinks?: number;
   /**
@@ -1058,6 +1062,7 @@ interface Sim {
   /** Dexterity gained this turn (Speed Potion): added to every block card played after it. */
   tempDex: number;
   kunaiDexterity: number;
+  helicalDexterity: number;
   kunaiUnknown: boolean;
   /** Only Fasten gained within this line; existing Fasten is already in displayed Block. */
   fasten: number;
@@ -1881,6 +1886,15 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
     }
     if (card.type === "Attack") {
       attackRelics(next, player);
+      // T0 F48 T2/T4: one new Dexterity after an explicit Shiv, never retroactive Block.
+      if (player.helicalDart && card.cardId === "SHIV") {
+        if (card.observedHelicalShiv && plays === 1 && !automatic && next.enemies.length === 1 &&
+            !player.frail && !player.unmovableArmed && !player.shadowmeldActive && !next.shadowmeld &&
+            !player.kunai && !player.shuriken && !player.tender) {
+          next.tempDex += 1;
+          next.helicalDexterity += 1;
+        } else next.unknown = [...next.unknown, "螺线飞镖（自动、重放或组合触发未验证）"];
+      }
       // The gain comes after the Attack; existing Block and this card's own Block are never backfilled.
       if (player.kunai) {
         if (plays !== 1 || automatic) {
@@ -3812,6 +3826,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
       ...(input.player.tuningFork && input.player.tuningFork.every > 0 ? { tuningForkCount: (input.player.tuningFork.count + sim.relicSkills) % input.player.tuningFork.every } : {}),
       ...(input.player.permafrostBlock !== undefined ? { permafrostBlockLeft: sim.permafrostBlock } : {}),
       ...(sim.kunaiDexterity > 0 ? { kunaiDexterityGained: sim.kunaiDexterity } : {}),
+      ...(sim.helicalDexterity > 0 ? { helicalDexterityGained: sim.helicalDexterity } : {}),
       ...(sim.lastingDrinks > 0 ? { lastingDrinks: sim.lastingDrinks } : {}),
       ...(sim.potionCost > 0 ? { potionCost: sim.potionCost } : {}),
       ...(sim.potionHeal > 0 ? { potionHeal: sim.potionHeal } : {}),
@@ -4017,6 +4032,7 @@ function rootSim(input: SolverInput, weights: Weights): Sim {
     flat: 0,
     tempDex: 0,
     kunaiDexterity: 0,
+    helicalDexterity: 0,
     kunaiUnknown: false,
     fasten: 0,
     shadowmeld: false,
