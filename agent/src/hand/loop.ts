@@ -1909,7 +1909,7 @@ async function runLoopWithBudgets(options: LoopOptions): Promise<LoopStats> {
     // Lizard Tail: a fight won before our next turn after this end of turn was won in the enemy turn.
     noteLizardTailEndTurn(screenMemory, state, resolved.intent);
     // The potion or card a card choice that follows comes from (its offer may be free this turn).
-    noteCardSource(screenMemory, state, resolved.intent);
+    noteCardSource(screenMemory, state, resolved.intent, decisionId);
     // A combat action went out on this turn: its later actions are not held for the turn-start settle.
     noteTurnActed(screenMemory, state, resolved.intent);
     // Closing an inspection overlay leaves the underlying decision unexecuted (7PWU F47).
