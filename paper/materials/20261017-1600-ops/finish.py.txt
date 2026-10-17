@@ -1,0 +1,50 @@
+from pathlib import Path
+import csv,hashlib,json,re,subprocess
+r=Path.cwd();p=r/'ops/codex-ops/record-staging/20261017-1600';pub=r/'paper/materials/20261017-1600-ops'
+load=lambda f:json.loads(f.read_bytes());sha=lambda raw:hashlib.sha256(raw).hexdigest()
+def write(f,v):f.write_text(json.dumps(v,ensure_ascii=False,indent=2)+'\n')
+assert not (pub/'ops-closure.json').exists()
+result=load(pub/'paper-dataset-result.json');assert result['actual_exit_code']==0 and result['calls']==1
+log=(pub/'paper-dataset.log').read_text();assert 'key scan: CLEAN (no sk-<key> patterns)' in log
+before={x['path']:x for x in load(p/'paper-before.json')};outputs=[]
+for ref in load(p/'paper-after.json'):
+ raw=(p/'paper-after'/ref['path']).read_bytes();assert sha(raw)==ref['sha256'] and len(raw)==ref['bytes']
+ if ref['path'] not in before or before[ref['path']]['sha256']!=ref['sha256']:outputs.append(ref)
+frozen=lambda path:(p/'paper-after'/path).read_bytes()
+summary=json.loads(frozen('paper/data/summary.json'));verified=json.loads(frozen('paper/data/verification.json'))
+checks={k:v for k,v in verified['checks'].items() if isinstance(v,bool)}
+assert len(checks)==5 and all(checks.values()) and summary['source_checks_passed'] is True
+cut=re.match(r'^cut at (\S+): ',log).group(1);assert summary['generated_at']==cut
+runs=list(csv.DictReader(frozen('paper/data/runs.csv').decode().splitlines()));run='2PQK67ULZY90';row=next(x for x in runs if x['run_id']==run)
+expected=dict(character='SILENT',ascension='10',outcome='defeat',floor_max='40',has_postmortem='1',n_decisions='857')
+assert all(row[k]==v for k,v in expected.items()),{k:row.get(k) for k in expected}
+selected={k:row.get(k) for k in ['run_id','character','ascension','outcome','floor_max','n_decisions','has_postmortem','performance_included','brain_source']}
+write(pub/'paper-snapshot-readback.json',dict(request=result,generated_at=cut,source_cut_bytes=summary['source_cut_bytes'],five_checks=checks,
+ source_checks_passed=True,row_counts=verified['row_counts'],original_count_warnings=verified['checks']['runs.jsonl decision-count mismatches'],
+ selected_run=selected,changed_outputs=outputs,raw_snapshot=False,before_after_frozen_bytes_preserved=True,
+ cost_boundary='Immutable component cuts and estimates, not billed cost.',
+ experiment_boundary='Actual startup5782a41+dirty, not later R384. No restored dirty knowledge or new full-runtime calibration/natural causal comparison.'))
+post=load(pub/'postmortem-readback.json');assert len(post['original_ledger_rows'])==10 and post['new_pure_bugs']==[]
+assert len(post['original_ledger_new_support'])==5 and sum(len(x['new_evidence']) for x in post['original_ledger_new_support'])==6
+assert post['lesson_append_bytes']==21817 and post['raw_offset_json_integrity_verified']==1813
+state=load(r/'ops/codex-ops/learn.json');h0=state['learning_requests']['roy-20261017-human-pace-h0']
+at=subprocess.check_output(['date','+%Y-%m-%d %H:%M:%S %Z'],text=True).strip();print(at,flush=True)
+text=f'''\n- {at} 运维codex处理1600原154302复盘完成：done0/done齐/missing空/audit空，2PQK67ULZY90为Silent A10/F40败；原bugs=[]，无新纯bug，不重复派修复或追加同队列。原21817字节复盘在9506025字节旧前缀SHA079e6e8048ce1afe0c6ba8808efc334959f9caf078361edebd8a3bc4e6f776d5后仅追加一次；六流1813条原抽取逐offset/原JSON机械核同并冻结原行len/SHA，ops不重游戏分析/求解/消费者。五原support更新含六端点（0418两个，其余0020/0385/0194/0348各一），另五提案追溯共十行已核，原claim/首证/prior/进阶/status/version/shipped与旧证据前缀保持；同局SL不扩独立分母。\n  原提案silent-proposal-23b18480a56b7604/Markdown SHA5057ff46a8278d18130a2538db77d473ec3f7200e9e9713a281a4fbdfdd5ea42按CLI登记pending，F8T2/F40T1—T3关联combat/potion/sl及五账本；完整执行归属、替线后继和毛伤等缺口仍由原策略链处理，未改在线规则/经验或冒implemented/shipped。33小原件已压缩逐SHA实读，原大数据/资源/日志/账本快照不删。原source-reference载启动5782a41/R383+dirty、runs.code字面current；复盘所见live7b61→19988/R384不作本局运行版本，脏知识完整字节未恢复。原末试T3死亡/护栏一次及两阶段校验分别保持，502账本检查0问题，不把局末失败或原F33告警另造游戏缺陷。原151301 R384工程宿主只按原事件接续，不因复盘而复制检查或关闭0332。\n  唯一nice19 python3 ops/paper_dataset.py --no-raw实rc0，PID{result['pid']}/cut{cut}、{len(runs)}局，本局857决策/has_postmortem1；五一致性与keyscan CLEAN，原计数警告/费用独立cut及估计边界保持。{len(outputs)}个变化输出按本次前后冻结字节提交，保原.before快照，不复制原日志。此为论文数据刷新，不认定质量校准、自然收益或R384首个生效局。\n  本wake无源码/tsc/vitest/源full/新发布/号、game API/重启/当前局/home账号模型promptenv变动，不另派模型/研究/自然监听；Boss60与H2仍原watcher后源待交。H0原130158当前{h0['state']}与0332原owner同优先，质量/资源根缺口及全部宽父保持。只本局lessons/十CLI行/一原提案、本次生成表及自有根双收件/decision/handoff/归档经gitleaks私有index提交，保并行知识/记录和普通index；结束不sleep/轮询未来事件。证据paper/materials/20261017-1600-ops/；不代其他角色ACK。\n'''
+appends=load(p/'lesson-appends.json')
+for path in ['paper/materials/decision-log.md','notes/ops-handoff.md','ops/inbox-dev.md','notes/for-roy.md']:
+ with (r/path).open('a') as stream:stream.write(text)
+ appends.append(dict(path=path,text=text))
+write(p/'own-appends.json',appends);write(p/'paper-owned-manifest.json',outputs)
+write(pub/'ops-closure.json',dict(at=at,event='learner-done',run=run,original_batch_rc=0,new_pure_bugs=[],original_ledger_rows=10,support_rows=5,support_endpoints=6,
+ lesson_owned_bytes=21817,original_proposal='silent-proposal-23b18480a56b7604',original_proposal_registration='pending',paper_rc=0,
+ changed_outputs=len(outputs),selected_run=selected,source_or_runtime_mutation=False,production_tests_or_new_release=False,
+ natural_or_H0_or_0332_acceptance_claim=False,no_other_role_ACK=True))
+for name in ['audit.py','paper.py','finish.py']:(pub/(name+'.txt')).write_bytes((p/name).read_bytes())
+seal=(r/'ops/codex-ops/record-staging/20261017-1340/seal.py').read_text().replace('20261017-1340','20261017-1600')
+seal=seal.replace('len(ownrows.splitlines()) == 30','len(ownrows.splitlines()) == 10').replace('owned_ledger_rows=30','owned_ledger_rows=10')
+seal=seal.replace('Archive bounded consumer report and waiting proposal dispositions','Archive2PQK postmortem and refresh no-raw paper dataset')
+seal=seal.replace('ops: archive132758 report and preserve original waiting scopes','ops: archive2PQK postmortem and one no-raw paper refresh')
+a=seal.index("              host='One unchanged-source strategy batch:");b=seal.index('              wider_parents=',a)
+seal=seal[:a]+"              host='One completed2PQK postmortem:5 support rows with6 endpoints plus5 proposal links,1 original pending proposal,21817 lesson bytes. One no-raw fixed-cut paper refresh0 with frozen outputs. No new pure bug/source/test/game action/version or duplicate R384 host; startup5782+dirty and H0/0332 wider gaps preserved.',\n"+seal[b:]
+(p/'seal.py').write_text(seal)
+print(json.dumps(dict(postmortem=run,new_pure_bugs=0,ledger_rows=10,paper_rc=0,changed_outputs=len(outputs),source_changed=False)),flush=True)
