@@ -1,0 +1,13 @@
+{
+  "reason": "Original rollout.test.ts architecture guard requires rollout references outside sim/ to enter only through rollout-live.ts. Its assertion is unchanged.",
+  "original_source_full_exit": 1,
+  "helper_declaration_and_body_sha256": "d47a7213bbddd9ac39ee24de55e2133f3dd34844a433da6f86f9a4a156ff691b",
+  "old_adapter_sha256": "e1dd8bf733725bb1131c6f61f8745c71625f468543a5d36e711c0f854463e5a2",
+  "new_adapter_sha256": "02f0d5e55fb7d92ce073542cc97f2e7e164c623c70caa1a463696455f983a4ed",
+  "pure_helper_text_identical": true,
+  "outside_helper_only_change": "Removed the erased type-only-helper module import and inserted its exact declaration into the existing adapter. Call site, move data, arithmetic and RNG are unchanged.",
+  "new_test_change": "Import path only; all eight assertions and numeric cases unchanged.",
+  "old_helper_snapshot": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261017-human-pace-h0-r1/prototype-silent-boss-weak.ts.txt",
+  "old_helper_sha256": "9eff84e6da34b8a99b6b8e09f9300f2351c18f289cba0cf8732b58234a66a139",
+  "scope": "Fixed full-sample numerical equivalence; no H1 partial-budget timing or cache guarantee."
+}

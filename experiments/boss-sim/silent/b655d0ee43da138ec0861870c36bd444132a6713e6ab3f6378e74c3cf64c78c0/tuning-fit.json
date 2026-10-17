@@ -1,0 +1,136 @@
+{
+  "t1": {
+    "candidate_tuning_keys": 107,
+    "successful": 106,
+    "platt": {
+      "a": 2.029,
+      "b": 0.4301,
+      "c": 0.0
+    },
+    "selection": {
+      "rule": "tune group n>=10 and |gap|>0.15; asc term only if 3-fold whole-run tune CV Brier improves >=0.005",
+      "base_tune_residuals": {
+        "A0–4": {
+          "n": 38,
+          "gap": 0.0040000000000000036,
+          "brier": 0.1327,
+          "mean_pred": 0.767,
+          "actual_win": 0.763,
+          "leak_ratio": 1.238
+        },
+        "A5–9": {
+          "n": 52,
+          "gap": -0.015000000000000013,
+          "brier": 0.0879,
+          "mean_pred": 0.793,
+          "actual_win": 0.808,
+          "leak_ratio": 1.196
+        },
+        "A10": {
+          "n": 16,
+          "gap": 0.039000000000000035,
+          "brier": 0.138,
+          "mean_pred": 0.664,
+          "actual_win": 0.625,
+          "leak_ratio": 1.399
+        }
+      },
+      "systematic": false,
+      "selected_ascension": false
+    },
+    "tuning_residuals": {
+      "A0–4": {
+        "n": 38,
+        "gap": 0.0040000000000000036,
+        "brier": 0.1327,
+        "mean_pred": 0.767,
+        "actual_win": 0.763,
+        "leak_ratio": 1.238
+      },
+      "A5–9": {
+        "n": 52,
+        "gap": -0.015000000000000013,
+        "brier": 0.0879,
+        "mean_pred": 0.793,
+        "actual_win": 0.808,
+        "leak_ratio": 1.196
+      },
+      "A10": {
+        "n": 16,
+        "gap": 0.039000000000000035,
+        "brier": 0.138,
+        "mean_pred": 0.664,
+        "actual_win": 0.625,
+        "leak_ratio": 1.399
+      }
+    },
+    "validation_used": false
+  },
+  "pre": {
+    "candidate_tuning_keys": 107,
+    "successful": 106,
+    "platt": {
+      "a": 2.2191,
+      "b": 0.4802,
+      "c": 0.0
+    },
+    "selection": {
+      "rule": "tune group n>=10 and |gap|>0.15; asc term only if 3-fold whole-run tune CV Brier improves >=0.005",
+      "base_tune_residuals": {
+        "A0–4": {
+          "n": 38,
+          "gap": 0.006000000000000005,
+          "brier": 0.1319,
+          "mean_pred": 0.769,
+          "actual_win": 0.763,
+          "leak_ratio": 1.301
+        },
+        "A5–9": {
+          "n": 52,
+          "gap": -0.014000000000000012,
+          "brier": 0.0914,
+          "mean_pred": 0.794,
+          "actual_win": 0.808,
+          "leak_ratio": 1.263
+        },
+        "A10": {
+          "n": 16,
+          "gap": 0.030000000000000027,
+          "brier": 0.1387,
+          "mean_pred": 0.655,
+          "actual_win": 0.625,
+          "leak_ratio": 1.434
+        }
+      },
+      "systematic": false,
+      "selected_ascension": false
+    },
+    "tuning_residuals": {
+      "A0–4": {
+        "n": 38,
+        "gap": 0.006000000000000005,
+        "brier": 0.1319,
+        "mean_pred": 0.769,
+        "actual_win": 0.763,
+        "leak_ratio": 1.301
+      },
+      "A5–9": {
+        "n": 52,
+        "gap": -0.014000000000000012,
+        "brier": 0.0914,
+        "mean_pred": 0.794,
+        "actual_win": 0.808,
+        "leak_ratio": 1.263
+      },
+      "A10": {
+        "n": 16,
+        "gap": 0.030000000000000027,
+        "brier": 0.1387,
+        "mean_pred": 0.655,
+        "actual_win": 0.625,
+        "leak_ratio": 1.434
+      }
+    },
+    "validation_used": false
+  }
+}
