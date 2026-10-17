@@ -230,6 +230,148 @@ class FlowTests(unittest.TestCase):
         self.tick()
         self.assertEqual(self.record()['state'], 'blocked')
 
+    def recovery_fixture(self):
+        self.home = self.directory / 'accounts/new/learner'
+        (self.directory / 'codex-home').write_text(str(self.home) + '\n')
+        self.transaction = 'codex-next-test'
+        switch = {'id': self.transaction, 'phase': 'complete',
+                  'source': {'learner_home': self.req['learner_home']},
+                  'target': {'learner_home': str(self.home), 'model': 'gpt-6.1-sol', 'effort': 'xhigh'},
+                  'receipts': {'verification': {'ok': True}}}
+        self.switch_path = self.directory / 'llm-switches' / self.transaction / 'state.json'
+        flow.atomic(self.switch_path, switch)
+        original = self.path.read_bytes()
+        frozen = self.artifact('frozen-request.json', original.decode())
+        self.recovery_proof = self.artifact('explicit-recovery.json', json.dumps({
+            'request_id': self.req['id'], 'transaction': self.transaction,
+            'original_request_sha256': flow.digest(original), 'reason': 'Completed authorized account drain'}))
+        self.req['revision'] += 1
+        self.req['account_transition'] = {'mode': 'new-account-continuation',
+            'transaction': self.transaction, 'source_home': '/fake/learner', 'target_home': str(self.home),
+            'original_request': frozen, 'receipt': self.recovery_proof}
+        self.write_request()
+
+    def fresh_event_fixture(self):
+        self.recovery_fixture()
+        self.new_thread = 'aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee'
+        self.new_batch = '20261018-001700-strategy-proposal'
+        command = ['codex', 'exec', '--json', '-']
+        self.fresh_events = [
+            {'type': 'learner_launch', 'engine': 'codex', 'cwd': str(self.tree), 'command': command},
+            {'type': 'learner_startup_attempt', 'batch': self.new_batch, 'input_sha256': 'a' * 64,
+             'command_sha256': flow.digest(json.dumps([command[0], command[1:], str(self.tree)],
+                                  separators=(',', ':')).encode())},
+            {'type': 'thread.started', 'thread_id': self.new_thread},
+            {'type': 'item.completed', 'item': {'type': 'agent_message', 'text': 'Continue original fixed work'}}]
+        self.fresh_path = self.root / 'learner/runs/fresh.jsonl'
+        self.fresh_path.parent.mkdir(parents=True)
+        self.fresh_path.write_text(''.join(json.dumps(e) + '\n' for e in self.fresh_events))
+        self.native = self.home / 'sessions' / ('rollout-' + self.new_thread + '.jsonl')
+        self.native.parent.mkdir(parents=True)
+        self.native.write_text(json.dumps({'type': 'session_meta', 'payload': {'id': self.new_thread}}) + '\n' +
+            json.dumps({'type': 'turn_context', 'payload': {'model': 'gpt-6.1-sol', 'effort': 'xhigh',
+                        'sandbox_policy': {'type': 'workspace-write'}}}) + '\n')
+
+    def test_account_mismatch_does_not_implicitly_create_thread(self):
+        (self.directory / 'codex-home').write_text('/new/account\n')
+        with self.assertRaisesRegex(ValueError, 'explicit'):
+            flow.account_plan(self.root, self.directory, self.req, {})
+
+    def test_completed_explicit_handoff_preserves_original_identity_and_reserves_once(self):
+        old = copy.deepcopy(self.req)
+        self.recovery_fixture()
+        self.assertIsNotNone(self.tick())
+        rec = self.record()
+        self.assertEqual(rec['account_bootstrap_batch'], rec['batch'])
+        self.assertIsNone(flow.account_plan(self.root, self.directory, self.req, rec, rec['batch'])['thread_id'])
+        with self.assertRaisesRegex(ValueError, 'already reserved'):
+            flow.account_plan(self.root, self.directory, self.req, rec)
+        for key in ('thread_id', 'original_batch', 'learner_home', 'original_log', 'input', 'requirements'):
+            self.assertEqual(self.req[key], old[key])
+
+    def test_incomplete_or_wrong_target_handoff_cannot_dispatch(self):
+        for field, value in [('phase', 'verifying'), ('target', {'learner_home': '/different/home'})]:
+            with self.subTest(field=field):
+                self.recovery_fixture() if not hasattr(self, 'home') else None
+                switch = json.loads(self.switch_path.read_text());original = copy.deepcopy(switch)
+                switch[field] = value;flow.atomic(self.switch_path, switch)
+                with self.assertRaises((ValueError, KeyError)):
+                    flow.account_plan(self.root, self.directory, self.req, {})
+                flow.atomic(self.switch_path, original)
+        self.tick()
+        self.assertEqual(len(self.starts), 1)
+
+    def test_new_account_consumption_requires_actual_reply_startup_and_native_identity(self):
+        self.fresh_event_fixture()
+        receipt = flow.new_account_receipt(self.root, self.fresh_path, self.new_batch, self.req, str(self.home))
+        self.assertEqual(receipt['thread_id'], self.new_thread)
+        self.assertFalse(receipt['cross_account_resume'])
+        self.assertEqual(flow.account_plan(self.root, self.directory, self.req,
+                         {'account_identity': receipt})['thread_id'], self.new_thread)
+        for index, replacement in [(3, {'type': 'turn.completed'}),
+                                   (2, {'type': 'thread.started', 'thread_id': self.thread}),
+                                   (1, {'type': 'learner_startup_attempt', 'batch': 'other'})]:
+            broken = copy.deepcopy(self.fresh_events);broken[index] = replacement
+            self.fresh_path.write_text(''.join(json.dumps(e) + '\n' for e in broken))
+            with self.assertRaises(ValueError):
+                flow.new_account_receipt(self.root, self.fresh_path, self.new_batch, self.req, str(self.home))
+        with self.assertRaisesRegex(ValueError, 'SHA mismatch'):
+            flow.account_plan(self.root, self.directory, self.req, {'account_identity': receipt})
+
+    def test_fresh_continuation_rejects_foreign_rollout_model_and_resume_command(self):
+        self.fresh_event_fixture()
+        self.native.write_text(self.native.read_text().replace('gpt-6.1-sol', 'different-model'))
+        with self.assertRaisesRegex(ValueError, 'native model'):
+            flow.new_account_receipt(self.root, self.fresh_path, self.new_batch, self.req, str(self.home))
+        self.fresh_events[0]['command'].insert(2, 'resume')
+        self.fresh_path.write_text(''.join(json.dumps(e) + '\n' for e in self.fresh_events))
+        with self.assertRaisesRegex(ValueError, 'authenticated'):
+            flow.new_account_receipt(self.root, self.fresh_path, self.new_batch, self.req, str(self.home))
+
+    def test_recover_account_cli_increments_revision_without_fabricating_thread(self):
+        self.recovery_fixture()
+        old = json.loads(flow.artifact(self.root, self.req['account_transition']['original_request']))
+        flow.atomic(self.path, old)
+        self.state['learning_requests'] = {old['id']: {'state': 'blocked', 'attempts': []}}
+        flow.atomic(self.directory / 'learn.json', self.state)
+        with patch.dict(os.environ, {'CODEX_OPS_ROOT': str(self.root)}), patch.object(sys, 'argv', [
+                'flow', 'recover-account', '--request', old['id'], '--receipt', str(self.root / self.recovery_proof['path'])]):
+            self.assertEqual(flow.main(), 0)
+        current = json.loads(self.path.read_text())
+        self.assertEqual(current['revision'], old['revision'] + 1)
+        self.assertEqual(current['thread_id'], old['thread_id'])
+        self.assertEqual(flow.artifact(self.root, current['account_transition']['original_request']),
+                         (json.dumps(old, ensure_ascii=False, indent=2) + '\n').encode())
+        record = json.loads((self.directory / 'learn.json').read_text())['learning_requests'][old['id']]
+        self.assertEqual(record['state'], 'pending')
+        self.assertNotIn('account_identity', record)
+
+    def test_fresh_wrapper_uses_normal_launcher_and_then_resumes_real_new_identity(self):
+        self.fresh_event_fixture()
+        self.tick('20261018-001700')
+        flow.atomic(self.directory / 'learn.json', self.state)
+        template = self.root / 'learner/tasks/learning-followup.md'
+        template.parent.mkdir(parents=True)
+        template.write_text('这是同一学习者线程的后续输入。\nLEARNING_REQUEST_JSON\nLEARNING_INPUT_TEXT\nLEARNING_CHECKPOINT')
+        calls = []
+
+        def child(argv, **kwargs):
+            calls.append((argv, kwargs['env']))
+            kwargs['stderr'].write('日志 ' + str(self.fresh_path) + '\n')
+            kwargs['stderr'].flush()
+            return type('Result', (), {'returncode': 0})()
+
+        with patch('learning_requests.subprocess.run', side_effect=child), patch('learner_checks.read_report', return_value=self.report()):
+            self.assertEqual(flow.run(self.root, self.directory, self.new_batch), 0)
+        self.assertNotIn('--resume-thread', calls[0][0])
+        self.assertEqual(calls[0][1]['LEARNER_CODEX_HOME'], str(self.home))
+        result = json.loads((self.directory / 'learn.json').read_text())
+        rec = result['learning_requests'][self.req['id']]
+        self.assertEqual(rec['account_identity']['thread_id'], self.new_thread)
+        self.assertTrue(result['batches'][self.new_batch]['consumed'])
+        self.assertEqual(rec['state'], 'pending')
+        self.assertEqual(flow.account_plan(self.root, self.directory, self.req, rec)['thread_id'], self.new_thread)
+
 
 if __name__ == '__main__':
     unittest.main()

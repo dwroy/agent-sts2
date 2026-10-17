@@ -372,6 +372,101 @@ def read_request(root, path):
     return req, raw
 
 
+def account_plan(root, state_dir, req, record, batch_id=None):
+    """A completed, explicit account handoff may start one new semantic continuation."""
+    home = (Path(state_dir) / "codex-home").read_text().strip()
+    transition = req.get("account_transition", {})
+    if transition.get("mode") != "new-account-continuation":
+        if home != req["learner_home"]:
+            raise ValueError("learner account changed; explicit original-thread recovery required")
+        return {"home": home, "thread_id": req["thread_id"]}
+    transaction = transition.get("transaction", "")
+    if not ID.fullmatch(transaction):
+        raise ValueError("invalid account handoff transaction")
+    switch = json.loads((Path(state_dir) / "llm-switches" / transaction / "state.json").read_bytes())
+    receipt = json.loads(artifact(root, transition["receipt"]))
+    original = json.loads(artifact(root, transition["original_request"]))
+    if (switch.get("phase") != "complete" or switch.get("id") != transaction
+            or switch["source"]["learner_home"] != transition.get("source_home")
+            or switch["target"]["learner_home"] != home or transition.get("target_home") != home
+            or switch["target"].get("model") != "gpt-6.1-sol" or switch["target"].get("effort") != "xhigh"
+            or not switch.get("receipts", {}).get("verification", {}).get("ok")
+            or receipt.get("request_id") != req["id"] or receipt.get("transaction") != transaction
+            or receipt.get("original_request_sha256") != transition["original_request"]["sha256"]
+            or not receipt.get("reason") or original["revision"] >= req["revision"]
+            or any(original.get(k) != req.get(k) for k in
+                   ("id", "character", "original_batch", "worktree", "thread_id", "learner_home", "original_log"))):
+        raise ValueError("explicit account recovery provenance mismatch")
+    identity = record.get("account_identity", {})
+    if identity.get("home") == home:
+        artifact(root, identity["event_log"])
+        if not UUID.fullmatch(identity.get("thread_id", "")) or identity["thread_id"] == req["thread_id"]:
+            raise ValueError("invalid recovered account thread")
+        return {"home": home, "thread_id": identity["thread_id"]}
+    reserved = record.get("account_bootstrap_batch")
+    if reserved and reserved != batch_id:
+        raise ValueError("new-account launch already reserved; reconcile its real first reply before retry")
+    return {"home": home, "thread_id": None}
+
+
+def new_account_receipt(root, event_path, batch_id, req, home):
+    """Authenticate a real fresh thread and reply, without copying encrypted sessions."""
+    path = Path(event_path).resolve()
+    tree = (Path(root) / req["worktree"]).resolve()
+    if (path.suffix != ".jsonl" or path.parent not in (Path(root).resolve() / "learner/runs", tree / "learner/runs")):
+        raise ValueError("new account event log outside project")
+    launch = attempt = thread = message = None
+    offset = 0
+    with path.open("rb") as events:
+        for raw in events:
+            event = json.loads(raw)
+            if event.get("type") == "learner_launch":
+                if launch is not None:
+                    raise ValueError("ambiguous new account launch")
+                launch = event
+            elif event.get("type") == "learner_startup_attempt":
+                attempt = event
+            elif event.get("type") == "thread.started":
+                if thread is not None or not attempt:
+                    raise ValueError("ambiguous new account thread")
+                thread = event.get("thread_id")
+            elif (thread and message is None and event.get("type") == "item.completed"
+                  and event.get("item", {}).get("type") == "agent_message"):
+                message = {"offset": offset, "bytes": len(raw), "sha256": digest(raw),
+                           "text_sha256": digest(str(event["item"]["text"]).encode())}
+            offset += len(raw)
+    command = (launch or {}).get("command", [])
+    expected = digest(json.dumps([command[0], command[1:], str((Path(root) / req["worktree"]).resolve())],
+                                 ensure_ascii=False, separators=(",", ":")).encode()) if command else ""
+    if (not UUID.fullmatch(thread or "") or thread == req["thread_id"] or not message
+            or not launch or launch.get("engine") != "codex"
+            or launch.get("cwd") != str((Path(root) / req["worktree"]).resolve())
+            or len(command) < 2 or command[1] != "exec" or command[2:3] == ["resume"]
+            or not attempt or attempt.get("batch") != batch_id or attempt.get("command_sha256") != expected
+            or not re.fullmatch(r"[0-9a-f]{64}", attempt.get("input_sha256", ""))):
+        raise ValueError("missing authenticated new-account first reply")
+    native = list((Path(home) / "sessions").glob("**/*" + thread + ".jsonl"))
+    if len(native) != 1:
+        raise ValueError("new-account native rollout not uniquely located")
+    meta = context = None
+    with native[0].open() as events:
+        for line in events:
+            event = json.loads(line)
+            if event.get("type") == "session_meta":
+                meta = event["payload"]
+            if event.get("type") == "turn_context":
+                context = event["payload"]
+                break
+    if (not meta or meta.get("id") != thread or not context
+            or context.get("model") != "gpt-6.1-sol" or context.get("effort") != "xhigh"):
+        raise ValueError("new account native model/thread mismatch")
+    return {"home": home, "thread_id": thread, "batch": batch_id,
+            "event_log": {"path": str(path), "sha256": digest(path.read_bytes())},
+            "first_message": message, "input_sha256": attempt["input_sha256"], "command_sha256": expected,
+            "native_rollout": str(native[0]), "model": context["model"], "effort": context["effort"],
+            "sandbox_policy": context.get("sandbox_policy"), "cross_account_resume": False}
+
+
 def notify(root, state_dir, record, kind, message):
     """A durable outbox plus an ops event; delivery ACK is a separate fact."""
     token = digest(canonical([record.get("request_sha256"), kind, message]))[:24]
@@ -499,6 +594,10 @@ def reconcile(state, root, scripts, character, alive, stamp, start, limit=2):
             batch_id = stamp + "-strategy-proposal"
             if batch_id in state["batches"]:
                 continue
+            if req.get("account_transition", {}).get("mode") == "new-account-continuation":
+                plan = account_plan(root, state_dir, req, rec)
+                if plan["thread_id"] is None:
+                    rec["account_bootstrap_batch"] = batch_id
             snapshot = state_dir / "learner" / (batch_id + ".learning-input.json")
             atomic(snapshot, req)
             pid, pane = start(["nice", "-n", "19", "python3", str(Path(scripts) / "learning_requests.py"),
@@ -634,13 +733,14 @@ def run(root, state_dir, batch_id):
         req = json.loads(artifact(root, {"path": batch["learning_input"], "sha256": batch["learning_input_sha256"]}))
         rec = state["learning_requests"][req["id"]]
         checkpoint = rec.get("checkpoint", "初次接续，复用原报告并补剩余验收。")
+        plan = account_plan(root, state_dir, req, rec, batch_id)
     tree = Path(batch["worktree"])
     # The original owner lease is held through the entire resumed process.
     with (Path(state_dir) / "learner" / (tree.name + ".lock")).open("a") as lease:
         fcntl.flock(lease, fcntl.LOCK_EX | fcntl.LOCK_NB)
         home = (Path(state_dir) / "codex-home").read_text().strip()
-        if home != req["learner_home"]:
-            raise ValueError("learner account changed; explicit original-thread recovery required")
+        if home != plan["home"]:
+            raise ValueError("learner account selector changed after admission")
         if (Path(root) / "ops/worktree_storage.py").is_file():
             import worktree_storage
             original = req["original_batch"]
@@ -650,6 +750,8 @@ def run(root, state_dir, batch_id):
         template = (Path(root) / "learner/tasks/learning-followup.md").read_text()
         prompt = template.replace("LEARNING_REQUEST_JSON", json.dumps(req, ensure_ascii=False, indent=2))
         prompt = prompt.replace("LEARNING_INPUT_TEXT", payload).replace("LEARNING_CHECKPOINT", checkpoint)
+        if plan["thread_id"] is None:
+            prompt = prompt.replace("这是同一学习者线程的后续输入。", "这是已授权换号后的原任务新账号接续；旧线程ID仅作历史出处，不跨账号resume。")
         taskfile = Path(state_dir) / "learner" / (batch_id + ".task.md")
         taskfile.write_text(prompt)
         env = dict(os.environ)
@@ -660,12 +762,15 @@ def run(root, state_dir, batch_id):
         err = Path(state_dir) / "learner" / (batch_id + ".err")
         argv = [str(Path(root) / "agent/node_modules/.bin/tsx"), str(Path(root) / "learner/run.ts"),
                 "--engine", "codex", "--task", str(taskfile), "--character", req["character"],
-                "--cwd", str(tree), "--resume-thread", req["thread_id"]]
+                "--cwd", str(tree)]
+        if plan["thread_id"] is not None:
+            argv += ["--resume-thread", plan["thread_id"]]
         with out.open("x") as stdout, err.open("x") as stderr:
             rc = subprocess.run(argv, cwd=root, env=env, stdout=stdout, stderr=stderr).returncode
         from learner_checks import read_report
         report = read_report(str(out))
         acknowledgement = None
+        consumption_error = None
         match = re.search(r"日志 (\S+\.jsonl)", err.read_text())
         if match:
             event_path = Path(match[1]).resolve()
@@ -673,24 +778,34 @@ def run(root, state_dir, batch_id):
                 with event_path.open() as events:
                     for line in events:
                         event = json.loads(line)
-                        if (event.get("type") == "learner_resume_ack" and event.get("thread_id") == req["thread_id"]
+                        if (event.get("type") == "learner_resume_ack" and event.get("thread_id") == plan["thread_id"]
                                 and event.get("batch") == batch_id):
                             acknowledgement = {"event_log": str(event_path), **event}
                             break
+                if plan["thread_id"] is None:
+                    try:
+                        acknowledgement = new_account_receipt(root, event_path, batch_id, req, home)
+                    except (OSError, ValueError, KeyError, TypeError) as error:
+                        acknowledgement = None
+                        consumption_error = str(error)
         with locked(state_dir) as state:
             current = state["batches"][batch_id]
             current["consumed"] = acknowledgement is not None
             current["consumption_receipt"] = acknowledgement
+            if consumption_error:
+                current["account_consumption_error"] = consumption_error
+            if acknowledgement is not None and plan["thread_id"] is None:
+                state["learning_requests"][req["id"]]["account_identity"] = acknowledgement
             if rc == 0 and acknowledgement is None:
                 rc = 1
-                current["consumption_error"] = "missing same-thread first real model reply receipt"
+                current["consumption_error"] = "missing authenticated first real model reply receipt"
             finish(state, root, state_dir, batch_id, rc, report)
     return rc
 
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("action", choices=("run", "ack", "retry", "register-feature"))
+    parser.add_argument("action", choices=("run", "ack", "retry", "recover-account", "register-feature"))
     parser.add_argument("--batch")
     parser.add_argument("--notice")
     parser.add_argument("--stage", choices=("ops_forwarded", "watcher_received", "roy_notified"))
@@ -735,7 +850,36 @@ def main():
         parser.error("receipt must be an existing project file")
     proof = {"path": str(receipt), "sha256": digest(receipt.read_bytes()), "at": time.time()}
     with locked(state_dir) as state:
-        if args.action == "retry":
+        if args.action == "recover-account":
+            if not ID.fullmatch(args.request or ""):
+                parser.error("valid original request ID required")
+            path = root / "notes/learning-requests" / (args.request + ".json")
+            req, raw = read_request(root, path)
+            rec = state["learning_requests"][args.request]
+            payload = json.loads(receipt.read_bytes())
+            if (rec["state"] not in ("blocked", "questioned", "pending")
+                    or payload.get("request_id") != req["id"] or not payload.get("reason")
+                    or not ID.fullmatch(payload.get("transaction", ""))
+                    or payload.get("original_request_sha256") != digest(raw)
+                    or any(b.get("state") == "running" and b.get("worktree") == str((root / req["worktree"]).resolve())
+                           for b in state["batches"].values())):
+                parser.error("stopped original request and explicit recovery receipt required")
+            archive = state_dir / "learning-request-history" / req["id"] / (digest(raw) + ".json")
+            archive.parent.mkdir(parents=True, exist_ok=True)
+            if archive.exists() and archive.read_bytes() != raw:
+                parser.error("original request archive changed")
+            archive.write_bytes(raw)
+            switch = json.loads((state_dir / "llm-switches" / payload["transaction"] / "state.json").read_bytes())
+            req["revision"] += 1
+            req["account_transition"] = {"mode": "new-account-continuation", "transaction": payload["transaction"],
+                "source_home": rec.get("account_identity", {}).get("home", req["learner_home"]),
+                "target_home": switch["target"]["learner_home"], "receipt": proof,
+                "original_request": {"path": str(archive), "sha256": digest(raw)}}
+            account_plan(root, state_dir, req, rec)
+            atomic(path, req)
+            rec.update(state="pending", pending_since=time.time(), retry_at=0, retry_receipt=proof,
+                       reason="显式账号接续已登记；保留原要求/失败，首回复及新UUID待实际启动")
+        elif args.action == "retry":
             rec = state["learning_requests"][args.request]
             if rec["state"] not in ("blocked", "questioned"):
                 parser.error("only a stopped incomplete request can be resumed")
