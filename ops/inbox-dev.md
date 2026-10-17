@@ -3203,3 +3203,5 @@ selector于2026-10-15 13:15:58 CST从/home/dw/.codex-brain原子改为/home/dw/P
 - 2026-10-18 00:11 [运维 codex] codex3新ops 01a14a9f-38e7-78e2-95d0-ba274d4b3e19已接管，原生gpt-6.1-sol/xhigh/host已核；本轮仅核回五事件和保存原待办，LLM_DRAIN/PAUSE仍归原控制器，未启动/停止/派发。H2精确宿主0，三最高优先与regent暂停保持；接续见notes/codex3-ops-takeover-20261018.md。
 
 - 2026-10-18 00:45 [运维 codex] 已恢复autoplay/PID2027082，并回填J5E7A3MS9NSH与W96复盘学习者的codex3真实消费。换号学习接续阻塞已修合main/live；按Roy00:32先H0(r2→r3仅账号)、0332(r3→r4仅账号)，但003109/PID2076638与003109-s2/PID2076783仍占原两槽，两项目前pending/dispatched=false，尚无新批次、线程或首回复；未拿旧批号冒充。支撑映射r1后排，待H0/0332实跑后首槽释放再派；首答回填待真实启动，接续见notes/codex3-ops-resume-20261018.md。
+
+- 2026-10-18 00:50 [运维 codex] 续00:45接续状态：原003109登记PID2076638已退出，另一PID2076783仍活；原reconcile尝试遇learn.lock忙，未抢锁/额外开批。尚未独立核到H0/0332的新实际批次、线程或首回复，不能以PID退出称已派发；下一原完成事件按startup-watch回填，支撑仍后排。
