@@ -83,6 +83,10 @@ def main(argv=None):
     fights = read_jsonl(dataset / "fights.jsonl")
     split_data = frozen_split(fights, previous.get("split") if previous else None)
     versions = {side: sorted({r.get("code") for r in fights if r["key"] in set(split_data[side])}) for side in ("tune", "val")}
+    automatic_extension = previous and not args.results and not args.provenance
+    if automatic_extension:
+        from pinned_silent import extend
+        args.results, args.provenance = extend(ROOT, scratch, dataset, fights, previous, Path(args.game_data).resolve())
     if args.provenance:
         provenance = json.loads(Path(args.provenance).read_text())
     else:
@@ -132,6 +136,10 @@ def main(argv=None):
     if result.returncode:
         return result.returncode
     data = json.loads(trust_path.read_text())
+    if previous and provenance.get("model_sha256") == previous["source"].get("model_sha256"):
+        for start in ("t1", "pre"):
+            if data["overall"][start]["platt"] != previous["overall"][start]["platt"] or data["selection"][start] != previous["selection"][start]:
+                raise RuntimeError("fixed-model tuning changed; retain evidence, do not publish")
     data["refresh"] = {**c, "due": False, "artifact": identity, "rule": "ascension or 20 new actual-outcome boss attempts; scheduler tick at :13/:43 and learner finish events"}
     write_json(trust_path, data)
     sources = read_jsonl(dataset / "sources.jsonl")
@@ -141,6 +149,9 @@ def main(argv=None):
     # Raw/log sources stay immutable; retain compact reproducible inputs/results with each report.
     for name in ("fights.jsonl", "sources.jsonl", "turns.jsonl", "extraction.json"):
         (archive / name).write_bytes((dataset / name).read_bytes())
+    if automatic_extension:
+        for name in ("opening-audit.json", "model-input-audit.json", "corrected-opening-keys.json", "replay-keys.json"):
+            (archive / name).write_bytes((scratch / "pinned-extension" / name).read_bytes())
     # Archive only this character's metadata; the original log-prefix hashes stay in extraction.json.
     run_rows = [r for r in read_jsonl(dataset / "runs-snapshot.jsonl") if r.get("character") == "SILENT" and r.get("ended")]
     ids = set(extraction.get("eligible_run_ids", [r["run_id"] for r in run_rows]))

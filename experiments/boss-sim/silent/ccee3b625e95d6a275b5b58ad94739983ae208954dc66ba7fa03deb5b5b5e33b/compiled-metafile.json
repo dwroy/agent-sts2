@@ -1,0 +1,2778 @@
+{
+  "inputs": {
+    "src/core/paths.ts": {
+      "bytes": 2176,
+      "imports": [
+        {
+          "path": "node:path",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:url",
+          "kind": "import-statement",
+          "external": true
+        }
+      ],
+      "format": "esm"
+    },
+    "src/core/util/json.ts": {
+      "bytes": 5273,
+      "imports": [],
+      "format": "esm"
+    },
+    "src/knowledge/enchant-text.ts": {
+      "bytes": 6206,
+      "imports": [
+        {
+          "path": "src/core/util/json.ts",
+          "kind": "import-statement",
+          "original": "../core/util/json.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/knowledge/potion-values.ts": {
+      "bytes": 3254,
+      "imports": [
+        {
+          "path": "src/core/util/json.ts",
+          "kind": "import-statement",
+          "original": "../core/util/json.js"
+        },
+        {
+          "path": "src/knowledge/enchant-text.ts",
+          "kind": "import-statement",
+          "original": "./enchant-text.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/knowledge/index.ts": {
+      "bytes": 10242,
+      "imports": [
+        {
+          "path": "node:fs/promises",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:path",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "src/core/paths.ts",
+          "kind": "import-statement",
+          "original": "../core/paths.js"
+        },
+        {
+          "path": "src/core/util/json.ts",
+          "kind": "import-statement",
+          "original": "../core/util/json.js"
+        },
+        {
+          "path": "src/knowledge/potion-values.ts",
+          "kind": "import-statement",
+          "original": "./potion-values.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/hand/mod/schema.ts": {
+      "bytes": 19160,
+      "imports": [],
+      "format": "esm"
+    },
+    "src/reflex/continuation-value.ts": {
+      "bytes": 980,
+      "imports": [],
+      "format": "esm"
+    },
+    "src/core/util/data-version.ts": {
+      "bytes": 552,
+      "imports": [],
+      "format": "esm"
+    },
+    "src/knowledge/files.ts": {
+      "bytes": 5446,
+      "imports": [
+        {
+          "path": "node:path",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "src/core/paths.ts",
+          "kind": "import-statement",
+          "original": "../core/paths.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/knowledge/monster-db.ts": {
+      "bytes": 77336,
+      "imports": [
+        {
+          "path": "node:fs",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "src/core/util/data-version.ts",
+          "kind": "import-statement",
+          "original": "../core/util/data-version.js"
+        },
+        {
+          "path": "src/knowledge/files.ts",
+          "kind": "import-statement",
+          "original": "./files.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/knowledge/move-model.ts": {
+      "bytes": 9035,
+      "imports": [
+        {
+          "path": "node:fs",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "src/core/util/json.ts",
+          "kind": "import-statement",
+          "original": "../core/util/json.js"
+        },
+        {
+          "path": "src/knowledge/monster-db.ts",
+          "kind": "import-statement",
+          "original": "./monster-db.js"
+        },
+        {
+          "path": "src/core/util/data-version.ts",
+          "kind": "import-statement",
+          "original": "../core/util/data-version.js"
+        },
+        {
+          "path": "src/knowledge/files.ts",
+          "kind": "import-statement",
+          "original": "./files.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/sl/draws.ts": {
+      "bytes": 66032,
+      "imports": [
+        {
+          "path": "src/core/util/json.ts",
+          "kind": "import-statement",
+          "original": "../core/util/json.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/knowledge/card-upgrades.ts": {
+      "bytes": 1602,
+      "imports": [
+        {
+          "path": "node:fs",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "src/core/util/data-version.ts",
+          "kind": "import-statement",
+          "original": "../core/util/data-version.js"
+        },
+        {
+          "path": "src/knowledge/files.ts",
+          "kind": "import-statement",
+          "original": "./files.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/reflex/silent-apotheosis.ts": {
+      "bytes": 2284,
+      "imports": [
+        {
+          "path": "src/core/util/json.ts",
+          "kind": "import-statement",
+          "original": "../core/util/json.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/reflex/card-model.ts": {
+      "bytes": 105164,
+      "imports": [
+        {
+          "path": "src/knowledge/card-upgrades.ts",
+          "kind": "import-statement",
+          "original": "../knowledge/card-upgrades.js"
+        },
+        {
+          "path": "src/reflex/silent-apotheosis.ts",
+          "kind": "import-statement",
+          "original": "./silent-apotheosis.js"
+        },
+        {
+          "path": "src/core/util/json.ts",
+          "kind": "import-statement",
+          "original": "../core/util/json.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/knowledge/outcome-tables.ts": {
+      "bytes": 5858,
+      "imports": [],
+      "format": "esm"
+    },
+    "src/knowledge/experience.ts": {
+      "bytes": 22978,
+      "imports": [
+        {
+          "path": "node:fs",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "src/sim/boss-clock.ts",
+          "kind": "import-statement",
+          "original": "../sim/boss-clock.js"
+        },
+        {
+          "path": "src/core/util/json.ts",
+          "kind": "import-statement",
+          "original": "../core/util/json.js"
+        },
+        {
+          "path": "src/knowledge/monster-db.ts",
+          "kind": "import-statement",
+          "original": "./monster-db.js"
+        },
+        {
+          "path": "src/knowledge/outcome-tables.ts",
+          "kind": "import-statement",
+          "original": "./outcome-tables.js"
+        },
+        {
+          "path": "src/core/util/data-version.ts",
+          "kind": "import-statement",
+          "original": "../core/util/data-version.js"
+        },
+        {
+          "path": "src/knowledge/files.ts",
+          "kind": "import-statement",
+          "original": "./files.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/knowledge/boss-phase.ts": {
+      "bytes": 3504,
+      "imports": [
+        {
+          "path": "src/core/util/json.ts",
+          "kind": "import-statement",
+          "original": "../core/util/json.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/knowledge/room-costs.ts": {
+      "bytes": 2428,
+      "imports": [
+        {
+          "path": "node:fs",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "src/core/util/data-version.ts",
+          "kind": "import-statement",
+          "original": "../core/util/data-version.js"
+        },
+        {
+          "path": "src/knowledge/files.ts",
+          "kind": "import-statement",
+          "original": "./files.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/hand/screens/card-value.ts": {
+      "bytes": 21257,
+      "imports": [
+        {
+          "path": "src/sim/boss-clock.ts",
+          "kind": "import-statement",
+          "original": "../../sim/boss-clock.js"
+        },
+        {
+          "path": "src/knowledge/files.ts",
+          "kind": "import-statement",
+          "original": "../../knowledge/files.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/reflex/passive-pieces.ts": {
+      "bytes": 22410,
+      "imports": [
+        {
+          "path": "src/core/util/json.ts",
+          "kind": "import-statement",
+          "original": "../core/util/json.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/sim/route-projection.ts": {
+      "bytes": 13410,
+      "imports": [
+        {
+          "path": "src/knowledge/monster-db.ts",
+          "kind": "import-statement",
+          "original": "../knowledge/monster-db.js"
+        },
+        {
+          "path": "src/knowledge/room-costs.ts",
+          "kind": "import-statement",
+          "original": "../knowledge/room-costs.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/sim/boss-clock.ts": {
+      "bytes": 116621,
+      "imports": [
+        {
+          "path": "node:fs",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "src/knowledge/experience.ts",
+          "kind": "import-statement",
+          "original": "../knowledge/experience.js"
+        },
+        {
+          "path": "src/knowledge/outcome-tables.ts",
+          "kind": "import-statement",
+          "original": "../knowledge/outcome-tables.js"
+        },
+        {
+          "path": "src/knowledge/boss-phase.ts",
+          "kind": "import-statement",
+          "original": "../knowledge/boss-phase.js"
+        },
+        {
+          "path": "src/knowledge/monster-db.ts",
+          "kind": "import-statement",
+          "original": "../knowledge/monster-db.js"
+        },
+        {
+          "path": "src/knowledge/room-costs.ts",
+          "kind": "import-statement",
+          "original": "../knowledge/room-costs.js"
+        },
+        {
+          "path": "src/core/util/json.ts",
+          "kind": "import-statement",
+          "original": "../core/util/json.js"
+        },
+        {
+          "path": "src/reflex/card-model.ts",
+          "kind": "import-statement",
+          "original": "../reflex/card-model.js"
+        },
+        {
+          "path": "src/hand/screens/card-value.ts",
+          "kind": "import-statement",
+          "original": "../hand/screens/card-value.js"
+        },
+        {
+          "path": "src/reflex/passive-pieces.ts",
+          "kind": "import-statement",
+          "original": "../reflex/passive-pieces.js"
+        },
+        {
+          "path": "src/sim/route-projection.ts",
+          "kind": "import-statement",
+          "original": "./route-projection.js"
+        },
+        {
+          "path": "src/core/util/data-version.ts",
+          "kind": "import-statement",
+          "original": "../core/util/data-version.js"
+        },
+        {
+          "path": "src/knowledge/files.ts",
+          "kind": "import-statement",
+          "original": "../knowledge/files.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/reflex/fight-value.ts": {
+      "bytes": 5462,
+      "imports": [
+        {
+          "path": "node:fs",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "src/knowledge/files.ts",
+          "kind": "import-statement",
+          "original": "../knowledge/files.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/reflex/turn-solver.ts": {
+      "bytes": 234995,
+      "imports": [
+        {
+          "path": "src/reflex/card-model.ts",
+          "kind": "import-statement",
+          "original": "./card-model.js"
+        },
+        {
+          "path": "src/reflex/continuation-value.ts",
+          "kind": "import-statement",
+          "original": "./continuation-value.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/reflex/potion-mc.ts": {
+      "bytes": 22291,
+      "imports": [
+        {
+          "path": "src/sl/draws.ts",
+          "kind": "import-statement",
+          "original": "../sl/draws.js"
+        },
+        {
+          "path": "src/reflex/card-model.ts",
+          "kind": "import-statement",
+          "original": "./card-model.js"
+        },
+        {
+          "path": "src/reflex/turn-solver.ts",
+          "kind": "import-statement",
+          "original": "./turn-solver.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/reflex/rollout.ts": {
+      "bytes": 209517,
+      "imports": [
+        {
+          "path": "node:fs",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "src/reflex/continuation-value.ts",
+          "kind": "import-statement",
+          "original": "./continuation-value.js"
+        },
+        {
+          "path": "src/knowledge/move-model.ts",
+          "kind": "import-statement",
+          "original": "../knowledge/move-model.js"
+        },
+        {
+          "path": "src/sl/draws.ts",
+          "kind": "import-statement",
+          "original": "../sl/draws.js"
+        },
+        {
+          "path": "src/reflex/card-model.ts",
+          "kind": "import-statement",
+          "original": "./card-model.js"
+        },
+        {
+          "path": "src/sim/boss-clock.ts",
+          "kind": "import-statement",
+          "original": "../sim/boss-clock.js"
+        },
+        {
+          "path": "src/reflex/fight-value.ts",
+          "kind": "import-statement",
+          "original": "./fight-value.js"
+        },
+        {
+          "path": "src/reflex/passive-pieces.ts",
+          "kind": "import-statement",
+          "original": "./passive-pieces.js"
+        },
+        {
+          "path": "src/reflex/potion-mc.ts",
+          "kind": "import-statement",
+          "original": "./potion-mc.js"
+        },
+        {
+          "path": "src/reflex/turn-solver.ts",
+          "kind": "import-statement",
+          "original": "./turn-solver.js"
+        },
+        {
+          "path": "src/knowledge/files.ts",
+          "kind": "import-statement",
+          "original": "../knowledge/files.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/knowledge/render/data.ts": {
+      "bytes": 15810,
+      "imports": [
+        {
+          "path": "node:fs",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:path",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "src/sim/boss-clock.ts",
+          "kind": "import-statement",
+          "original": "../../sim/boss-clock.js"
+        },
+        {
+          "path": "src/core/paths.ts",
+          "kind": "import-statement",
+          "original": "../../core/paths.js"
+        },
+        {
+          "path": "src/knowledge/files.ts",
+          "kind": "import-statement",
+          "original": "../files.js"
+        },
+        {
+          "path": "src/knowledge/monster-db.ts",
+          "kind": "import-statement",
+          "original": "../monster-db.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/knowledge/potion-equivalents.ts": {
+      "bytes": 15872,
+      "imports": [
+        {
+          "path": "node:fs",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:path",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "src/knowledge/potion-values.ts",
+          "kind": "import-statement",
+          "original": "./potion-values.js"
+        },
+        {
+          "path": "src/knowledge/render/data.ts",
+          "kind": "import-statement",
+          "original": "./render/data.js"
+        },
+        {
+          "path": "src/knowledge/files.ts",
+          "kind": "import-statement",
+          "original": "./files.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/reflex/potion-cost.ts": {
+      "bytes": 10304,
+      "imports": [
+        {
+          "path": "src/knowledge/potion-equivalents.ts",
+          "kind": "import-statement",
+          "original": "../knowledge/potion-equivalents.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/sim/boss-trust.ts": {
+      "bytes": 5526,
+      "imports": [
+        {
+          "path": "node:fs",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "src/knowledge/files.ts",
+          "kind": "import-statement",
+          "original": "../knowledge/files.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/sim/boss-sim.ts": {
+      "bytes": 39382,
+      "imports": [
+        {
+          "path": "node:os",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:worker_threads",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "src/reflex/rollout.ts",
+          "kind": "import-statement",
+          "original": "../reflex/rollout.js"
+        },
+        {
+          "path": "src/reflex/potion-cost.ts",
+          "kind": "import-statement",
+          "original": "../reflex/potion-cost.js"
+        },
+        {
+          "path": "src/knowledge/files.ts",
+          "kind": "import-statement",
+          "original": "../knowledge/files.js"
+        },
+        {
+          "path": "src/sim/boss-trust.ts",
+          "kind": "import-statement",
+          "original": "./boss-trust.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/core/config.ts": {
+      "bytes": 82216,
+      "imports": [
+        {
+          "path": "node:fs",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:path",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "src/core/paths.ts",
+          "kind": "import-statement",
+          "original": "./paths.js"
+        },
+        {
+          "path": "src/knowledge/files.ts",
+          "kind": "import-statement",
+          "original": "../knowledge/files.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/knowledge/relic-values.ts": {
+      "bytes": 2927,
+      "imports": [
+        {
+          "path": "src/core/util/json.ts",
+          "kind": "import-statement",
+          "original": "../core/util/json.js"
+        },
+        {
+          "path": "src/knowledge/potion-values.ts",
+          "kind": "import-statement",
+          "original": "./potion-values.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/memory/deck.ts": {
+      "bytes": 7185,
+      "imports": [
+        {
+          "path": "src/knowledge/enchant-text.ts",
+          "kind": "import-statement",
+          "original": "../knowledge/enchant-text.js"
+        },
+        {
+          "path": "src/knowledge/potion-values.ts",
+          "kind": "import-statement",
+          "original": "../knowledge/potion-values.js"
+        },
+        {
+          "path": "src/knowledge/relic-values.ts",
+          "kind": "import-statement",
+          "original": "../knowledge/relic-values.js"
+        },
+        {
+          "path": "src/core/util/json.ts",
+          "kind": "import-statement",
+          "original": "../core/util/json.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/memory/run-brief.ts": {
+      "bytes": 7227,
+      "imports": [
+        {
+          "path": "src/knowledge/potion-values.ts",
+          "kind": "import-statement",
+          "original": "../knowledge/potion-values.js"
+        },
+        {
+          "path": "src/knowledge/relic-values.ts",
+          "kind": "import-statement",
+          "original": "../knowledge/relic-values.js"
+        },
+        {
+          "path": "src/core/util/json.ts",
+          "kind": "import-statement",
+          "original": "../core/util/json.js"
+        },
+        {
+          "path": "src/memory/deck.ts",
+          "kind": "import-statement",
+          "original": "./deck.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/memory/types.ts": {
+      "bytes": 33061,
+      "imports": [],
+      "format": "esm"
+    },
+    "src/reflex/jev/questions.ts": {
+      "bytes": 2245,
+      "imports": [],
+      "format": "esm"
+    },
+    "src/reflex/silent-phase-reference.ts": {
+      "bytes": 2211,
+      "imports": [
+        {
+          "path": "src/core/util/json.ts",
+          "kind": "import-statement",
+          "original": "../core/util/json.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/reflex/silent-loss-reference.ts": {
+      "bytes": 1901,
+      "imports": [
+        {
+          "path": "src/core/util/json.ts",
+          "kind": "import-statement",
+          "original": "../core/util/json.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/reflex/silent-simulation-reference.ts": {
+      "bytes": 4681,
+      "imports": [
+        {
+          "path": "src/core/util/json.ts",
+          "kind": "import-statement",
+          "original": "../core/util/json.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/memory/narrow.ts": {
+      "bytes": 9923,
+      "imports": [
+        {
+          "path": "src/knowledge/potion-values.ts",
+          "kind": "import-statement",
+          "original": "../knowledge/potion-values.js"
+        },
+        {
+          "path": "src/core/util/json.ts",
+          "kind": "import-statement",
+          "original": "../core/util/json.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/knowledge/jev-hints.ts": {
+      "bytes": 3430,
+      "imports": [
+        {
+          "path": "node:fs",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "src/sim/boss-clock.ts",
+          "kind": "import-statement",
+          "original": "../sim/boss-clock.js"
+        },
+        {
+          "path": "src/knowledge/monster-db.ts",
+          "kind": "import-statement",
+          "original": "./monster-db.js"
+        },
+        {
+          "path": "src/knowledge/files.ts",
+          "kind": "import-statement",
+          "original": "./files.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/reflex/start-loss.ts": {
+      "bytes": 3199,
+      "imports": [
+        {
+          "path": "src/core/util/json.ts",
+          "kind": "import-statement",
+          "original": "../core/util/json.js"
+        },
+        {
+          "path": "src/reflex/turn-solver.ts",
+          "kind": "import-statement",
+          "original": "./turn-solver.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/reflex/jev/answers.ts": {
+      "bytes": 2643,
+      "imports": [
+        {
+          "path": "src/core/util/json.ts",
+          "kind": "import-statement",
+          "original": "../../core/util/json.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/reflex/damage.ts": {
+      "bytes": 4017,
+      "imports": [],
+      "format": "esm"
+    },
+    "src/reflex/combat.ts": {
+      "bytes": 20830,
+      "imports": [
+        {
+          "path": "src/reflex/jev/answers.ts",
+          "kind": "import-statement",
+          "original": "./jev/answers.js"
+        },
+        {
+          "path": "src/reflex/jev/questions.ts",
+          "kind": "import-statement",
+          "original": "./jev/questions.js"
+        },
+        {
+          "path": "src/memory/narrow.ts",
+          "kind": "import-statement",
+          "original": "../memory/narrow.js"
+        },
+        {
+          "path": "src/memory/narrow.ts",
+          "kind": "import-statement",
+          "original": "../memory/narrow.js"
+        },
+        {
+          "path": "src/memory/run-brief.ts",
+          "kind": "import-statement",
+          "original": "../memory/run-brief.js"
+        },
+        {
+          "path": "src/reflex/card-model.ts",
+          "kind": "import-statement",
+          "original": "./card-model.js"
+        },
+        {
+          "path": "src/reflex/damage.ts",
+          "kind": "import-statement",
+          "original": "./damage.js"
+        },
+        {
+          "path": "src/reflex/start-loss.ts",
+          "kind": "import-statement",
+          "original": "./start-loss.js"
+        },
+        {
+          "path": "src/core/util/json.ts",
+          "kind": "import-statement",
+          "original": "../core/util/json.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/memory/deck-profile.ts": {
+      "bytes": 4510,
+      "imports": [
+        {
+          "path": "src/reflex/card-model.ts",
+          "kind": "import-statement",
+          "original": "../reflex/card-model.js"
+        },
+        {
+          "path": "src/core/util/json.ts",
+          "kind": "import-statement",
+          "original": "../core/util/json.js"
+        },
+        {
+          "path": "src/memory/deck.ts",
+          "kind": "import-statement",
+          "original": "./deck.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/memory/run-plan.ts": {
+      "bytes": 13887,
+      "imports": [
+        {
+          "path": "node:fs",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:path",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "src/memory/deck.ts",
+          "kind": "import-statement",
+          "original": "./deck.js"
+        },
+        {
+          "path": "src/memory/deck-profile.ts",
+          "kind": "import-statement",
+          "original": "./deck-profile.js"
+        },
+        {
+          "path": "src/sim/boss-clock.ts",
+          "kind": "import-statement",
+          "original": "../sim/boss-clock.js"
+        },
+        {
+          "path": "src/knowledge/boss-phase.ts",
+          "kind": "import-statement",
+          "original": "../knowledge/boss-phase.js"
+        },
+        {
+          "path": "src/core/util/json.ts",
+          "kind": "import-statement",
+          "original": "../core/util/json.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/memory/run-journal.ts": {
+      "bytes": 50678,
+      "imports": [
+        {
+          "path": "src/knowledge/experience.ts",
+          "kind": "import-statement",
+          "original": "../knowledge/experience.js"
+        },
+        {
+          "path": "src/knowledge/monster-db.ts",
+          "kind": "import-statement",
+          "original": "../knowledge/monster-db.js"
+        },
+        {
+          "path": "src/knowledge/files.ts",
+          "kind": "import-statement",
+          "original": "../knowledge/files.js"
+        },
+        {
+          "path": "src/sim/boss-clock.ts",
+          "kind": "import-statement",
+          "original": "../sim/boss-clock.js"
+        },
+        {
+          "path": "src/memory/run-plan.ts",
+          "kind": "import-statement",
+          "original": "./run-plan.js"
+        },
+        {
+          "path": "src/core/util/json.ts",
+          "kind": "import-statement",
+          "original": "../core/util/json.js"
+        },
+        {
+          "path": "src/memory/deck.ts",
+          "kind": "import-statement",
+          "original": "./deck.js"
+        },
+        {
+          "path": "src/memory/deck-profile.ts",
+          "kind": "import-statement",
+          "original": "./deck-profile.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/memory/fight-plan.ts": {
+      "bytes": 16324,
+      "imports": [
+        {
+          "path": "node:fs",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:path",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "src/memory/deck.ts",
+          "kind": "import-statement",
+          "original": "./deck.js"
+        },
+        {
+          "path": "src/memory/run-journal.ts",
+          "kind": "import-statement",
+          "original": "./run-journal.js"
+        },
+        {
+          "path": "src/core/util/json.ts",
+          "kind": "import-statement",
+          "original": "../core/util/json.js"
+        },
+        {
+          "path": "src/knowledge/potion-values.ts",
+          "kind": "import-statement",
+          "original": "../knowledge/potion-values.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/reflex/permafrost.ts": {
+      "bytes": 3666,
+      "imports": [
+        {
+          "path": "src/core/util/json.ts",
+          "kind": "import-statement",
+          "original": "../core/util/json.js"
+        },
+        {
+          "path": "src/memory/fight-plan.ts",
+          "kind": "import-statement",
+          "original": "../memory/fight-plan.js"
+        },
+        {
+          "path": "src/reflex/card-model.ts",
+          "kind": "import-statement",
+          "original": "./card-model.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/reflex/fight-plays.ts": {
+      "bytes": 5237,
+      "imports": [
+        {
+          "path": "src/core/util/json.ts",
+          "kind": "import-statement",
+          "original": "../core/util/json.js"
+        },
+        {
+          "path": "src/reflex/card-model.ts",
+          "kind": "import-statement",
+          "original": "./card-model.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/knowledge/outcome-facts.ts": {
+      "bytes": 12023,
+      "imports": [
+        {
+          "path": "src/knowledge/experience.ts",
+          "kind": "import-statement",
+          "original": "./experience.js"
+        },
+        {
+          "path": "src/knowledge/outcome-tables.ts",
+          "kind": "import-statement",
+          "original": "./outcome-tables.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/brain/labels.ts": {
+      "bytes": 1228,
+      "imports": [],
+      "format": "esm"
+    },
+    "src/hand/screens/potion-discard.ts": {
+      "bytes": 16168,
+      "imports": [
+        {
+          "path": "src/reflex/jev/questions.ts",
+          "kind": "import-statement",
+          "original": "../../reflex/jev/questions.js"
+        },
+        {
+          "path": "src/knowledge/potion-values.ts",
+          "kind": "import-statement",
+          "original": "../../knowledge/potion-values.js"
+        },
+        {
+          "path": "src/core/util/json.ts",
+          "kind": "import-statement",
+          "original": "../../core/util/json.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/hand/screens/pick.ts": {
+      "bytes": 17839,
+      "imports": [
+        {
+          "path": "src/reflex/jev/questions.ts",
+          "kind": "import-statement",
+          "original": "../../reflex/jev/questions.js"
+        },
+        {
+          "path": "src/knowledge/outcome-facts.ts",
+          "kind": "import-statement",
+          "original": "../../knowledge/outcome-facts.js"
+        },
+        {
+          "path": "src/core/util/json.ts",
+          "kind": "import-statement",
+          "original": "../../core/util/json.js"
+        },
+        {
+          "path": "src/brain/labels.ts",
+          "kind": "import-statement",
+          "original": "../../brain/labels.js"
+        },
+        {
+          "path": "src/hand/screens/potion-discard.ts",
+          "kind": "import-statement",
+          "original": "./potion-discard.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/knowledge/double-boss.ts": {
+      "bytes": 3482,
+      "imports": [
+        {
+          "path": "node:fs",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "src/core/util/json.ts",
+          "kind": "import-statement",
+          "original": "../core/util/json.js"
+        },
+        {
+          "path": "src/knowledge/files.ts",
+          "kind": "import-statement",
+          "original": "./files.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/brain/build-facts.ts": {
+      "bytes": 6326,
+      "imports": [
+        {
+          "path": "src/knowledge/relic-values.ts",
+          "kind": "import-statement",
+          "original": "../knowledge/relic-values.js"
+        },
+        {
+          "path": "src/knowledge/potion-values.ts",
+          "kind": "import-statement",
+          "original": "../knowledge/potion-values.js"
+        },
+        {
+          "path": "src/memory/deck-profile.ts",
+          "kind": "import-statement",
+          "original": "../memory/deck-profile.js"
+        },
+        {
+          "path": "src/core/util/json.ts",
+          "kind": "import-statement",
+          "original": "../core/util/json.js"
+        },
+        {
+          "path": "src/sim/boss-clock.ts",
+          "kind": "import-statement",
+          "original": "../sim/boss-clock.js"
+        },
+        {
+          "path": "src/knowledge/double-boss.ts",
+          "kind": "import-statement",
+          "original": "../knowledge/double-boss.js"
+        },
+        {
+          "path": "src/knowledge/boss-phase.ts",
+          "kind": "import-statement",
+          "original": "../knowledge/boss-phase.js"
+        },
+        {
+          "path": "src/memory/fight-plan.ts",
+          "kind": "import-statement",
+          "original": "../memory/fight-plan.js"
+        },
+        {
+          "path": "src/memory/run-plan.ts",
+          "kind": "import-statement",
+          "original": "../memory/run-plan.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/hand/screens/oneshot.ts": {
+      "bytes": 25619,
+      "imports": [
+        {
+          "path": "src/knowledge/card-upgrades.ts",
+          "kind": "import-statement",
+          "original": "../../knowledge/card-upgrades.js"
+        },
+        {
+          "path": "src/knowledge/outcome-facts.ts",
+          "kind": "import-statement",
+          "original": "../../knowledge/outcome-facts.js"
+        },
+        {
+          "path": "src/knowledge/enchant-text.ts",
+          "kind": "import-statement",
+          "original": "../../knowledge/enchant-text.js"
+        },
+        {
+          "path": "src/memory/deck.ts",
+          "kind": "import-statement",
+          "original": "../../memory/deck.js"
+        },
+        {
+          "path": "src/core/util/json.ts",
+          "kind": "import-statement",
+          "original": "../../core/util/json.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/hand/screens/selection.ts": {
+      "bytes": 61065,
+      "imports": [
+        {
+          "path": "src/core/util/json.ts",
+          "kind": "import-statement",
+          "original": "../../core/util/json.js"
+        },
+        {
+          "path": "src/memory/run-plan.ts",
+          "kind": "import-statement",
+          "original": "../../memory/run-plan.js"
+        },
+        {
+          "path": "src/memory/deck.ts",
+          "kind": "import-statement",
+          "original": "../../memory/deck.js"
+        },
+        {
+          "path": "src/memory/run-brief.ts",
+          "kind": "import-statement",
+          "original": "../../memory/run-brief.js"
+        },
+        {
+          "path": "src/hand/screens/pick.ts",
+          "kind": "import-statement",
+          "original": "./pick.js"
+        },
+        {
+          "path": "src/brain/build-facts.ts",
+          "kind": "import-statement",
+          "original": "../../brain/build-facts.js"
+        },
+        {
+          "path": "src/hand/screens/card-value.ts",
+          "kind": "import-statement",
+          "original": "./card-value.js"
+        },
+        {
+          "path": "src/knowledge/move-model.ts",
+          "kind": "import-statement",
+          "original": "../../knowledge/move-model.js"
+        },
+        {
+          "path": "src/reflex/card-model.ts",
+          "kind": "import-statement",
+          "original": "../../reflex/card-model.js"
+        },
+        {
+          "path": "src/reflex/combat-plan.ts",
+          "kind": "import-statement",
+          "original": "../../reflex/combat-plan.js"
+        },
+        {
+          "path": "src/hand/screens/oneshot.ts",
+          "kind": "import-statement",
+          "original": "./oneshot.js"
+        },
+        {
+          "path": "src/knowledge/outcome-facts.ts",
+          "kind": "import-statement",
+          "original": "../../knowledge/outcome-facts.js"
+        },
+        {
+          "path": "src/reflex/card-model.ts",
+          "kind": "import-statement",
+          "original": "../../reflex/card-model.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/sim/route-map.ts": {
+      "bytes": 58311,
+      "imports": [
+        {
+          "path": "src/sim/route-projection.ts",
+          "kind": "import-statement",
+          "original": "./route-projection.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/hand/screens/route-plan.ts": {
+      "bytes": 12925,
+      "imports": [
+        {
+          "path": "src/core/util/json.ts",
+          "kind": "import-statement",
+          "original": "../../core/util/json.js"
+        },
+        {
+          "path": "src/sim/route-map.ts",
+          "kind": "import-statement",
+          "original": "../../sim/route-map.js"
+        },
+        {
+          "path": "src/sim/route-projection.ts",
+          "kind": "import-statement",
+          "original": "../../sim/route-projection.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/hand/screens/map.ts": {
+      "bytes": 53128,
+      "imports": [
+        {
+          "path": "src/reflex/jev/questions.ts",
+          "kind": "import-statement",
+          "original": "../../reflex/jev/questions.js"
+        },
+        {
+          "path": "src/core/util/json.ts",
+          "kind": "import-statement",
+          "original": "../../core/util/json.js"
+        },
+        {
+          "path": "src/memory/run-plan.ts",
+          "kind": "import-statement",
+          "original": "../../memory/run-plan.js"
+        },
+        {
+          "path": "src/memory/run-brief.ts",
+          "kind": "import-statement",
+          "original": "../../memory/run-brief.js"
+        },
+        {
+          "path": "src/hand/screens/pick.ts",
+          "kind": "import-statement",
+          "original": "./pick.js"
+        },
+        {
+          "path": "src/brain/build-facts.ts",
+          "kind": "import-statement",
+          "original": "../../brain/build-facts.js"
+        },
+        {
+          "path": "src/sim/route-projection.ts",
+          "kind": "import-statement",
+          "original": "../../sim/route-projection.js"
+        },
+        {
+          "path": "src/sim/route-map.ts",
+          "kind": "import-statement",
+          "original": "../../sim/route-map.js"
+        },
+        {
+          "path": "src/hand/screens/route-plan.ts",
+          "kind": "import-statement",
+          "original": "./route-plan.js"
+        },
+        {
+          "path": "src/hand/screens/oneshot.ts",
+          "kind": "import-statement",
+          "original": "./oneshot.js"
+        },
+        {
+          "path": "src/hand/screens/potion-discard.ts",
+          "kind": "import-statement",
+          "original": "./potion-discard.js"
+        },
+        {
+          "path": "src/hand/screens/route-plan.ts",
+          "kind": "import-statement",
+          "original": "./route-plan.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/hand/screens/route-review.ts": {
+      "bytes": 13194,
+      "imports": [
+        {
+          "path": "src/core/util/json.ts",
+          "kind": "import-statement",
+          "original": "../../core/util/json.js"
+        },
+        {
+          "path": "src/sim/route-map.ts",
+          "kind": "import-statement",
+          "original": "../../sim/route-map.js"
+        },
+        {
+          "path": "src/hand/screens/map.ts",
+          "kind": "import-statement",
+          "original": "./map.js"
+        },
+        {
+          "path": "src/hand/screens/oneshot.ts",
+          "kind": "import-statement",
+          "original": "./oneshot.js"
+        },
+        {
+          "path": "src/hand/screens/route-plan.ts",
+          "kind": "import-statement",
+          "original": "./route-plan.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/hand/screens/rest.ts": {
+      "bytes": 35602,
+      "imports": [
+        {
+          "path": "src/core/util/json.ts",
+          "kind": "import-statement",
+          "original": "../../core/util/json.js"
+        },
+        {
+          "path": "src/sim/boss-clock.ts",
+          "kind": "import-statement",
+          "original": "../../sim/boss-clock.js"
+        },
+        {
+          "path": "src/memory/run-plan.ts",
+          "kind": "import-statement",
+          "original": "../../memory/run-plan.js"
+        },
+        {
+          "path": "src/memory/deck.ts",
+          "kind": "import-statement",
+          "original": "../../memory/deck.js"
+        },
+        {
+          "path": "src/memory/run-brief.ts",
+          "kind": "import-statement",
+          "original": "../../memory/run-brief.js"
+        },
+        {
+          "path": "src/hand/screens/pick.ts",
+          "kind": "import-statement",
+          "original": "./pick.js"
+        },
+        {
+          "path": "src/brain/build-facts.ts",
+          "kind": "import-statement",
+          "original": "../../brain/build-facts.js"
+        },
+        {
+          "path": "src/hand/screens/oneshot.ts",
+          "kind": "import-statement",
+          "original": "./oneshot.js"
+        },
+        {
+          "path": "src/hand/screens/selection.ts",
+          "kind": "import-statement",
+          "original": "./selection.js"
+        },
+        {
+          "path": "src/hand/screens/map.ts",
+          "kind": "import-statement",
+          "original": "./map.js"
+        },
+        {
+          "path": "src/hand/screens/route-review.ts",
+          "kind": "import-statement",
+          "original": "./route-review.js"
+        },
+        {
+          "path": "src/hand/screens/route-plan.ts",
+          "kind": "import-statement",
+          "original": "./route-plan.js"
+        },
+        {
+          "path": "src/sim/route-projection.ts",
+          "kind": "import-statement",
+          "original": "../../sim/route-projection.js"
+        },
+        {
+          "path": "src/hand/screens/potion-discard.ts",
+          "kind": "import-statement",
+          "original": "./potion-discard.js"
+        },
+        {
+          "path": "src/knowledge/outcome-facts.ts",
+          "kind": "import-statement",
+          "original": "../../knowledge/outcome-facts.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/sim/compute-memo.ts": {
+      "bytes": 9509,
+      "imports": [
+        {
+          "path": "node:crypto",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:v8",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "src/knowledge/monster-db.ts",
+          "kind": "import-statement",
+          "original": "../knowledge/monster-db.js"
+        },
+        {
+          "path": "src/reflex/card-model.ts",
+          "kind": "import-statement",
+          "original": "../reflex/card-model.js"
+        },
+        {
+          "path": "src/reflex/passive-pieces.ts",
+          "kind": "import-statement",
+          "original": "../reflex/passive-pieces.js"
+        },
+        {
+          "path": "src/reflex/potion-cost.ts",
+          "kind": "import-statement",
+          "original": "../reflex/potion-cost.js"
+        },
+        {
+          "path": "src/core/util/data-version.ts",
+          "kind": "import-statement",
+          "original": "../core/util/data-version.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/sim/thief-card-hp.ts": {
+      "bytes": 10568,
+      "imports": [],
+      "format": "esm"
+    },
+    "src/reflex/thief.ts": {
+      "bytes": 29344,
+      "imports": [
+        {
+          "path": "src/knowledge/potion-equivalents.ts",
+          "kind": "import-statement",
+          "original": "../knowledge/potion-equivalents.js"
+        },
+        {
+          "path": "src/sim/thief-card-hp.ts",
+          "kind": "import-statement",
+          "original": "../sim/thief-card-hp.js"
+        },
+        {
+          "path": "src/core/util/json.ts",
+          "kind": "import-statement",
+          "original": "../core/util/json.js"
+        },
+        {
+          "path": "src/memory/fight-plan.ts",
+          "kind": "import-statement",
+          "original": "../memory/fight-plan.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/reflex/rollout-live.ts": {
+      "bytes": 74495,
+      "imports": [
+        {
+          "path": "node:fs",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "src/sim/compute-memo.ts",
+          "kind": "import-statement",
+          "original": "../sim/compute-memo.js"
+        },
+        {
+          "path": "src/knowledge/monster-db.ts",
+          "kind": "import-statement",
+          "original": "../knowledge/monster-db.js"
+        },
+        {
+          "path": "src/core/util/json.ts",
+          "kind": "import-statement",
+          "original": "../core/util/json.js"
+        },
+        {
+          "path": "src/sim/boss-clock.ts",
+          "kind": "import-statement",
+          "original": "../sim/boss-clock.js"
+        },
+        {
+          "path": "src/reflex/card-model.ts",
+          "kind": "import-statement",
+          "original": "./card-model.js"
+        },
+        {
+          "path": "src/reflex/fight-value.ts",
+          "kind": "import-statement",
+          "original": "./fight-value.js"
+        },
+        {
+          "path": "src/reflex/passive-pieces.ts",
+          "kind": "import-statement",
+          "original": "./passive-pieces.js"
+        },
+        {
+          "path": "src/reflex/rollout.ts",
+          "kind": "import-statement",
+          "original": "./rollout.js"
+        },
+        {
+          "path": "src/reflex/thief.ts",
+          "kind": "import-statement",
+          "original": "./thief.js"
+        },
+        {
+          "path": "src/reflex/turn-solver.ts",
+          "kind": "import-statement",
+          "original": "./turn-solver.js"
+        },
+        {
+          "path": "src/knowledge/files.ts",
+          "kind": "import-statement",
+          "original": "../knowledge/files.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/knowledge/mechanics.ts": {
+      "bytes": 22673,
+      "imports": [],
+      "format": "esm"
+    },
+    "src/reflex/jev-experience.ts": {
+      "bytes": 21004,
+      "imports": [
+        {
+          "path": "src/knowledge/experience.ts",
+          "kind": "import-statement",
+          "original": "../knowledge/experience.js"
+        },
+        {
+          "path": "src/knowledge/monster-db.ts",
+          "kind": "import-statement",
+          "original": "../knowledge/monster-db.js"
+        },
+        {
+          "path": "src/core/util/json.ts",
+          "kind": "import-statement",
+          "original": "../core/util/json.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/sim/sim-pools.ts": {
+      "bytes": 1336,
+      "imports": [],
+      "format": "esm"
+    },
+    "src/sim/double-boss-start.ts": {
+      "bytes": 4246,
+      "imports": [
+        {
+          "path": "src/core/util/json.ts",
+          "kind": "import-statement",
+          "original": "../core/util/json.js"
+        },
+        {
+          "path": "src/knowledge/double-boss.ts",
+          "kind": "import-statement",
+          "original": "../knowledge/double-boss.js"
+        },
+        {
+          "path": "src/hand/mod/schema.ts",
+          "kind": "import-statement",
+          "original": "../hand/mod/schema.js"
+        },
+        {
+          "path": "src/memory/narrow.ts",
+          "kind": "import-statement",
+          "original": "../memory/narrow.js"
+        },
+        {
+          "path": "src/reflex/card-model.ts",
+          "kind": "import-statement",
+          "original": "../reflex/card-model.js"
+        },
+        {
+          "path": "src/reflex/combat-plan.ts",
+          "kind": "import-statement",
+          "original": "../reflex/combat-plan.js"
+        },
+        {
+          "path": "src/sim/boss-start.ts",
+          "kind": "import-statement",
+          "original": "./boss-start.js"
+        },
+        {
+          "path": "src/sim/boss-lines.ts",
+          "kind": "import-statement",
+          "original": "./boss-lines.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/sim/boss-lines.ts": {
+      "bytes": 46168,
+      "imports": [
+        {
+          "path": "node:crypto",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:fs",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:path",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:os",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:worker_threads",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "src/reflex/rollout-live.ts",
+          "kind": "import-statement",
+          "original": "../reflex/rollout-live.js"
+        },
+        {
+          "path": "src/sim/boss-sim.ts",
+          "kind": "import-statement",
+          "original": "./boss-sim.js"
+        },
+        {
+          "path": "src/knowledge/files.ts",
+          "kind": "import-statement",
+          "original": "../knowledge/files.js"
+        },
+        {
+          "path": "src/sim/boss-trust.ts",
+          "kind": "import-statement",
+          "original": "./boss-trust.js"
+        },
+        {
+          "path": "src/sim/compute-memo.ts",
+          "kind": "import-statement",
+          "original": "./compute-memo.js"
+        },
+        {
+          "path": "src/sim/sim-pools.ts",
+          "kind": "import-statement",
+          "original": "./sim-pools.js"
+        },
+        {
+          "path": "src/sim/double-boss-start.ts",
+          "kind": "import-statement",
+          "original": "./double-boss-start.js"
+        },
+        {
+          "path": "src/knowledge/double-boss.ts",
+          "kind": "import-statement",
+          "original": "../knowledge/double-boss.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/sl/explore.ts": {
+      "bytes": 97136,
+      "imports": [
+        {
+          "path": "node:crypto",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "src/core/util/json.ts",
+          "kind": "import-statement",
+          "original": "../core/util/json.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/sl/random-target.ts": {
+      "bytes": 1913,
+      "imports": [
+        {
+          "path": "src/core/util/json.ts",
+          "kind": "import-statement",
+          "original": "../core/util/json.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/sl/judge.ts": {
+      "bytes": 123612,
+      "imports": [
+        {
+          "path": "src/reflex/combat-plan.ts",
+          "kind": "import-statement",
+          "original": "../reflex/combat-plan.js"
+        },
+        {
+          "path": "src/reflex/card-model.ts",
+          "kind": "import-statement",
+          "original": "../reflex/card-model.js"
+        },
+        {
+          "path": "src/reflex/passive-pieces.ts",
+          "kind": "import-statement",
+          "original": "../reflex/passive-pieces.js"
+        },
+        {
+          "path": "src/reflex/start-loss.ts",
+          "kind": "import-statement",
+          "original": "../reflex/start-loss.js"
+        },
+        {
+          "path": "src/reflex/turn-solver.ts",
+          "kind": "import-statement",
+          "original": "../reflex/turn-solver.js"
+        },
+        {
+          "path": "src/core/util/json.ts",
+          "kind": "import-statement",
+          "original": "../core/util/json.js"
+        },
+        {
+          "path": "src/sl/random-target.ts",
+          "kind": "import-statement",
+          "original": "./random-target.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/reflex/combat-plan.ts": {
+      "bytes": 347024,
+      "imports": [
+        {
+          "path": "src/reflex/jev/questions.ts",
+          "kind": "import-statement",
+          "original": "./jev/questions.js"
+        },
+        {
+          "path": "src/reflex/silent-phase-reference.ts",
+          "kind": "import-statement",
+          "original": "./silent-phase-reference.js"
+        },
+        {
+          "path": "src/reflex/silent-loss-reference.ts",
+          "kind": "import-statement",
+          "original": "./silent-loss-reference.js"
+        },
+        {
+          "path": "src/reflex/silent-simulation-reference.ts",
+          "kind": "import-statement",
+          "original": "./silent-simulation-reference.js"
+        },
+        {
+          "path": "src/memory/narrow.ts",
+          "kind": "import-statement",
+          "original": "../memory/narrow.js"
+        },
+        {
+          "path": "src/memory/run-brief.ts",
+          "kind": "import-statement",
+          "original": "../memory/run-brief.js"
+        },
+        {
+          "path": "src/knowledge/jev-hints.ts",
+          "kind": "import-statement",
+          "original": "../knowledge/jev-hints.js"
+        },
+        {
+          "path": "src/knowledge/move-model.ts",
+          "kind": "import-statement",
+          "original": "../knowledge/move-model.js"
+        },
+        {
+          "path": "src/reflex/card-model.ts",
+          "kind": "import-statement",
+          "original": "./card-model.js"
+        },
+        {
+          "path": "src/reflex/potion-mc.ts",
+          "kind": "import-statement",
+          "original": "./potion-mc.js"
+        },
+        {
+          "path": "src/reflex/turn-solver.ts",
+          "kind": "import-statement",
+          "original": "./turn-solver.js"
+        },
+        {
+          "path": "src/core/util/json.ts",
+          "kind": "import-statement",
+          "original": "../core/util/json.js"
+        },
+        {
+          "path": "src/reflex/passive-pieces.ts",
+          "kind": "import-statement",
+          "original": "./passive-pieces.js"
+        },
+        {
+          "path": "src/reflex/start-loss.ts",
+          "kind": "import-statement",
+          "original": "./start-loss.js"
+        },
+        {
+          "path": "src/reflex/combat.ts",
+          "kind": "import-statement",
+          "original": "./combat.js"
+        },
+        {
+          "path": "src/memory/fight-plan.ts",
+          "kind": "import-statement",
+          "original": "../memory/fight-plan.js"
+        },
+        {
+          "path": "src/reflex/permafrost.ts",
+          "kind": "import-statement",
+          "original": "./permafrost.js"
+        },
+        {
+          "path": "src/reflex/fight-plays.ts",
+          "kind": "import-statement",
+          "original": "./fight-plays.js"
+        },
+        {
+          "path": "src/knowledge/relic-values.ts",
+          "kind": "import-statement",
+          "original": "../knowledge/relic-values.js"
+        },
+        {
+          "path": "src/hand/screens/rest.ts",
+          "kind": "import-statement",
+          "original": "../hand/screens/rest.js"
+        },
+        {
+          "path": "src/sim/boss-clock.ts",
+          "kind": "import-statement",
+          "original": "../sim/boss-clock.js"
+        },
+        {
+          "path": "src/reflex/rollout-live.ts",
+          "kind": "import-statement",
+          "original": "./rollout-live.js"
+        },
+        {
+          "path": "src/knowledge/experience.ts",
+          "kind": "import-statement",
+          "original": "../knowledge/experience.js"
+        },
+        {
+          "path": "src/knowledge/potion-equivalents.ts",
+          "kind": "import-statement",
+          "original": "../knowledge/potion-equivalents.js"
+        },
+        {
+          "path": "src/reflex/potion-cost.ts",
+          "kind": "import-statement",
+          "original": "./potion-cost.js"
+        },
+        {
+          "path": "src/knowledge/monster-db.ts",
+          "kind": "import-statement",
+          "original": "../knowledge/monster-db.js"
+        },
+        {
+          "path": "src/knowledge/mechanics.ts",
+          "kind": "import-statement",
+          "original": "../knowledge/mechanics.js"
+        },
+        {
+          "path": "src/reflex/jev-experience.ts",
+          "kind": "import-statement",
+          "original": "./jev-experience.js"
+        },
+        {
+          "path": "src/sim/boss-lines.ts",
+          "kind": "import-statement",
+          "original": "../sim/boss-lines.js"
+        },
+        {
+          "path": "src/knowledge/double-boss.ts",
+          "kind": "import-statement",
+          "original": "../knowledge/double-boss.js"
+        },
+        {
+          "path": "src/sim/compute-memo.ts",
+          "kind": "import-statement",
+          "original": "../sim/compute-memo.js"
+        },
+        {
+          "path": "node:os",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "src/reflex/thief.ts",
+          "kind": "import-statement",
+          "original": "./thief.js"
+        },
+        {
+          "path": "src/sl/draws.ts",
+          "kind": "import-statement",
+          "original": "../sl/draws.js"
+        },
+        {
+          "path": "src/sl/explore.ts",
+          "kind": "import-statement",
+          "original": "../sl/explore.js"
+        },
+        {
+          "path": "src/sl/judge.ts",
+          "kind": "import-statement",
+          "original": "../sl/judge.js"
+        },
+        {
+          "path": "src/sl/random-target.ts",
+          "kind": "import-statement",
+          "original": "../sl/random-target.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/sim/boss-start.ts": {
+      "bytes": 28379,
+      "imports": [
+        {
+          "path": "node:fs",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "src/core/config.ts",
+          "kind": "import-statement",
+          "original": "../core/config.js"
+        },
+        {
+          "path": "src/knowledge/monster-db.ts",
+          "kind": "import-statement",
+          "original": "../knowledge/monster-db.js"
+        },
+        {
+          "path": "src/hand/mod/schema.ts",
+          "kind": "import-statement",
+          "original": "../hand/mod/schema.js"
+        },
+        {
+          "path": "src/memory/run-brief.ts",
+          "kind": "import-statement",
+          "original": "../memory/run-brief.js"
+        },
+        {
+          "path": "src/memory/types.ts",
+          "kind": "import-statement",
+          "original": "../memory/types.js"
+        },
+        {
+          "path": "src/reflex/combat-plan.ts",
+          "kind": "import-statement",
+          "original": "../reflex/combat-plan.js"
+        },
+        {
+          "path": "src/sim/boss-clock.ts",
+          "kind": "import-statement",
+          "original": "./boss-clock.js"
+        },
+        {
+          "path": "src/reflex/card-model.ts",
+          "kind": "import-statement",
+          "original": "../reflex/card-model.js"
+        },
+        {
+          "path": "src/reflex/passive-pieces.ts",
+          "kind": "import-statement",
+          "original": "../reflex/passive-pieces.js"
+        },
+        {
+          "path": "src/reflex/potion-cost.ts",
+          "kind": "import-statement",
+          "original": "../reflex/potion-cost.js"
+        },
+        {
+          "path": "src/reflex/rollout-live.ts",
+          "kind": "import-statement",
+          "original": "../reflex/rollout-live.js"
+        },
+        {
+          "path": "src/reflex/turn-solver.ts",
+          "kind": "import-statement",
+          "original": "../reflex/turn-solver.js"
+        },
+        {
+          "path": "src/core/util/json.ts",
+          "kind": "import-statement",
+          "original": "../core/util/json.js"
+        },
+        {
+          "path": "src/knowledge/files.ts",
+          "kind": "import-statement",
+          "original": "../knowledge/files.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "tools/boss-sim/backtest-board.ts": {
+      "bytes": 7540,
+      "imports": [
+        {
+          "path": "node:fs",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "src/core/config.ts",
+          "kind": "import-statement",
+          "original": "../../src/core/config.js"
+        },
+        {
+          "path": "src/memory/narrow.ts",
+          "kind": "import-statement",
+          "original": "../../src/memory/narrow.js"
+        },
+        {
+          "path": "src/memory/run-brief.ts",
+          "kind": "import-statement",
+          "original": "../../src/memory/run-brief.js"
+        },
+        {
+          "path": "src/memory/types.ts",
+          "kind": "import-statement",
+          "original": "../../src/memory/types.js"
+        },
+        {
+          "path": "src/reflex/combat-plan.ts",
+          "kind": "import-statement",
+          "original": "../../src/reflex/combat-plan.js"
+        },
+        {
+          "path": "src/sim/boss-lines.ts",
+          "kind": "import-statement",
+          "original": "../../src/sim/boss-lines.js"
+        },
+        {
+          "path": "src/reflex/card-model.ts",
+          "kind": "import-statement",
+          "original": "../../src/reflex/card-model.js"
+        },
+        {
+          "path": "src/reflex/rollout-live.ts",
+          "kind": "import-statement",
+          "original": "../../src/reflex/rollout-live.js"
+        },
+        {
+          "path": "src/reflex/turn-solver.ts",
+          "kind": "import-statement",
+          "original": "../../src/reflex/turn-solver.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "tools/boss-sim/pre-fight.ts": {
+      "bytes": 1174,
+      "imports": [
+        {
+          "path": "src/hand/mod/schema.ts",
+          "kind": "import-statement",
+          "original": "../../src/hand/mod/schema.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "tools/boss-sim/calibration-board.ts": {
+      "bytes": 2006,
+      "imports": [
+        {
+          "path": "src/knowledge/monster-db.ts",
+          "kind": "import-statement",
+          "original": "../../src/knowledge/monster-db.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "tools/boss-sim/backtest-runner.ts": {
+      "bytes": 15824,
+      "imports": [
+        {
+          "path": "node:fs",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:path",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "src/knowledge/index.ts",
+          "kind": "import-statement",
+          "original": "../../src/knowledge/index.js"
+        },
+        {
+          "path": "src/hand/mod/schema.ts",
+          "kind": "import-statement",
+          "original": "../../src/hand/mod/schema.js"
+        },
+        {
+          "path": "src/sim/boss-sim.ts",
+          "kind": "import-statement",
+          "original": "../../src/sim/boss-sim.js"
+        },
+        {
+          "path": "src/sim/boss-clock.ts",
+          "kind": "import-statement",
+          "original": "../../src/sim/boss-clock.js"
+        },
+        {
+          "path": "src/reflex/fight-value.ts",
+          "kind": "import-statement",
+          "original": "../../src/reflex/fight-value.js"
+        },
+        {
+          "path": "src/reflex/rollout.ts",
+          "kind": "import-statement",
+          "original": "../../src/reflex/rollout.js"
+        },
+        {
+          "path": "src/sim/boss-start.ts",
+          "kind": "import-statement",
+          "original": "../../src/sim/boss-start.js"
+        },
+        {
+          "path": "src/knowledge/monster-db.ts",
+          "kind": "import-statement",
+          "original": "../../src/knowledge/monster-db.js"
+        },
+        {
+          "path": "tools/boss-sim/backtest-board.ts",
+          "kind": "import-statement",
+          "original": "./backtest-board.js"
+        },
+        {
+          "path": "tools/boss-sim/pre-fight.ts",
+          "kind": "import-statement",
+          "original": "./pre-fight.js"
+        },
+        {
+          "path": "tools/boss-sim/calibration-board.ts",
+          "kind": "import-statement",
+          "original": "./calibration-board.js"
+        },
+        {
+          "path": "src/core/paths.ts",
+          "kind": "import-statement",
+          "original": "../../src/core/paths.js"
+        },
+        {
+          "path": "src/knowledge/files.ts",
+          "kind": "import-statement",
+          "original": "../../src/knowledge/files.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "tools/boss-sim/backtest.ts": {
+      "bytes": 297,
+      "imports": [
+        {
+          "path": "tools/boss-sim/backtest-runner.ts",
+          "kind": "dynamic-import",
+          "original": "./backtest-runner.js"
+        }
+      ],
+      "format": "esm"
+    }
+  },
+  "outputs": {
+    "../../published-compiled/backtest.mjs": {
+      "imports": [
+        {
+          "path": "node:path",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:url",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:path",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:fs",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:fs",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:fs",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:fs",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:fs",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:fs",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:fs",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:fs",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:fs",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:path",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:fs",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:fs",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:path",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:fs",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:fs",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:crypto",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:v8",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:fs",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:crypto",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:fs",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:path",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:os",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:worker_threads",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:os",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:fs",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:fs",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:path",
+          "kind": "import-statement",
+          "external": true
+        }
+      ],
+      "exports": [],
+      "entryPoint": "tools/boss-sim/backtest.ts",
+      "inputs": {
+        "src/core/paths.ts": {
+          "bytesInOutput": 757
+        },
+        "src/core/util/json.ts": {
+          "bytesInOutput": 1940
+        },
+        "src/knowledge/enchant-text.ts": {
+          "bytesInOutput": 2865
+        },
+        "src/knowledge/potion-values.ts": {
+          "bytesInOutput": 2192
+        },
+        "src/knowledge/index.ts": {
+          "bytesInOutput": 4071
+        },
+        "src/hand/mod/schema.ts": {
+          "bytesInOutput": 6498
+        },
+        "src/reflex/continuation-value.ts": {
+          "bytesInOutput": 680
+        },
+        "src/core/util/data-version.ts": {
+          "bytesInOutput": 171
+        },
+        "src/knowledge/files.ts": {
+          "bytesInOutput": 2153
+        },
+        "src/knowledge/monster-db.ts": {
+          "bytesInOutput": 31975
+        },
+        "src/knowledge/move-model.ts": {
+          "bytesInOutput": 4210
+        },
+        "src/sl/draws.ts": {
+          "bytesInOutput": 857
+        },
+        "src/knowledge/card-upgrades.ts": {
+          "bytesInOutput": 511
+        },
+        "src/reflex/silent-apotheosis.ts": {
+          "bytesInOutput": 1982
+        },
+        "src/reflex/card-model.ts": {
+          "bytesInOutput": 57115
+        },
+        "src/knowledge/outcome-tables.ts": {
+          "bytesInOutput": 2184
+        },
+        "src/knowledge/experience.ts": {
+          "bytesInOutput": 6742
+        },
+        "src/knowledge/boss-phase.ts": {
+          "bytesInOutput": 109
+        },
+        "src/knowledge/room-costs.ts": {
+          "bytesInOutput": 580
+        },
+        "src/hand/screens/card-value.ts": {
+          "bytesInOutput": 136
+        },
+        "src/reflex/passive-pieces.ts": {
+          "bytesInOutput": 6291
+        },
+        "src/sim/route-projection.ts": {
+          "bytesInOutput": 1718
+        },
+        "src/sim/boss-clock.ts": {
+          "bytesInOutput": 64317
+        },
+        "src/reflex/fight-value.ts": {
+          "bytesInOutput": 2348
+        },
+        "src/reflex/turn-solver.ts": {
+          "bytesInOutput": 109643
+        },
+        "src/reflex/potion-mc.ts": {
+          "bytesInOutput": 12700
+        },
+        "src/reflex/rollout.ts": {
+          "bytesInOutput": 108132
+        },
+        "src/knowledge/render/data.ts": {
+          "bytesInOutput": 416
+        },
+        "src/knowledge/potion-equivalents.ts": {
+          "bytesInOutput": 7094
+        },
+        "src/reflex/potion-cost.ts": {
+          "bytesInOutput": 4778
+        },
+        "src/sim/boss-trust.ts": {
+          "bytesInOutput": 3134
+        },
+        "src/sim/boss-sim.ts": {
+          "bytesInOutput": 17537
+        },
+        "src/core/config.ts": {
+          "bytesInOutput": 34629
+        },
+        "src/knowledge/relic-values.ts": {
+          "bytesInOutput": 1140
+        },
+        "src/memory/deck.ts": {
+          "bytesInOutput": 4858
+        },
+        "src/memory/run-brief.ts": {
+          "bytesInOutput": 5033
+        },
+        "src/memory/types.ts": {
+          "bytesInOutput": 208
+        },
+        "src/reflex/jev/questions.ts": {
+          "bytesInOutput": 627
+        },
+        "src/reflex/silent-phase-reference.ts": {
+          "bytesInOutput": 2083
+        },
+        "src/reflex/silent-loss-reference.ts": {
+          "bytesInOutput": 1829
+        },
+        "src/reflex/silent-simulation-reference.ts": {
+          "bytesInOutput": 4701
+        },
+        "src/memory/narrow.ts": {
+          "bytesInOutput": 6871
+        },
+        "src/knowledge/jev-hints.ts": {
+          "bytesInOutput": 1596
+        },
+        "src/reflex/start-loss.ts": {
+          "bytesInOutput": 1261
+        },
+        "src/reflex/jev/answers.ts": {
+          "bytesInOutput": 301
+        },
+        "src/reflex/damage.ts": {
+          "bytesInOutput": 1312
+        },
+        "src/reflex/combat.ts": {
+          "bytesInOutput": 15840
+        },
+        "src/memory/deck-profile.ts": {
+          "bytesInOutput": 150
+        },
+        "src/memory/run-plan.ts": {
+          "bytesInOutput": 2179
+        },
+        "src/memory/run-journal.ts": {
+          "bytesInOutput": 258
+        },
+        "src/memory/fight-plan.ts": {
+          "bytesInOutput": 3036
+        },
+        "src/reflex/permafrost.ts": {
+          "bytesInOutput": 2003
+        },
+        "src/reflex/fight-plays.ts": {
+          "bytesInOutput": 2290
+        },
+        "src/knowledge/outcome-facts.ts": {
+          "bytesInOutput": 148
+        },
+        "src/brain/labels.ts": {
+          "bytesInOutput": 80
+        },
+        "src/hand/screens/potion-discard.ts": {
+          "bytesInOutput": 168
+        },
+        "src/hand/screens/pick.ts": {
+          "bytesInOutput": 194
+        },
+        "src/knowledge/double-boss.ts": {
+          "bytesInOutput": 1989
+        },
+        "src/brain/build-facts.ts": {
+          "bytesInOutput": 297
+        },
+        "src/hand/screens/oneshot.ts": {
+          "bytesInOutput": 200
+        },
+        "src/hand/screens/selection.ts": {
+          "bytesInOutput": 373
+        },
+        "src/sim/route-map.ts": {
+          "bytesInOutput": 113
+        },
+        "src/hand/screens/route-plan.ts": {
+          "bytesInOutput": 163
+        },
+        "src/hand/screens/map.ts": {
+          "bytesInOutput": 1465
+        },
+        "src/hand/screens/route-review.ts": {
+          "bytesInOutput": 197
+        },
+        "src/hand/screens/rest.ts": {
+          "bytesInOutput": 1350
+        },
+        "src/sim/compute-memo.ts": {
+          "bytesInOutput": 4432
+        },
+        "src/sim/thief-card-hp.ts": {
+          "bytesInOutput": 1976
+        },
+        "src/reflex/thief.ts": {
+          "bytesInOutput": 14187
+        },
+        "src/reflex/rollout-live.ts": {
+          "bytesInOutput": 38983
+        },
+        "src/knowledge/mechanics.ts": {
+          "bytesInOutput": 7104
+        },
+        "src/reflex/jev-experience.ts": {
+          "bytesInOutput": 11671
+        },
+        "src/sim/sim-pools.ts": {
+          "bytesInOutput": 425
+        },
+        "src/sim/double-boss-start.ts": {
+          "bytesInOutput": 3467
+        },
+        "src/sim/boss-lines.ts": {
+          "bytesInOutput": 27884
+        },
+        "src/sl/explore.ts": {
+          "bytesInOutput": 11322
+        },
+        "src/sl/random-target.ts": {
+          "bytesInOutput": 652
+        },
+        "src/sl/judge.ts": {
+          "bytesInOutput": 1362
+        },
+        "src/reflex/combat-plan.ts": {
+          "bytesInOutput": 210143
+        },
+        "src/sim/boss-start.ts": {
+          "bytesInOutput": 16571
+        },
+        "tools/boss-sim/backtest-board.ts": {
+          "bytesInOutput": 4575
+        },
+        "tools/boss-sim/pre-fight.ts": {
+          "bytesInOutput": 656
+        },
+        "tools/boss-sim/calibration-board.ts": {
+          "bytesInOutput": 1541
+        },
+        "tools/boss-sim/backtest-runner.ts": {
+          "bytesInOutput": 10693
+        },
+        "tools/boss-sim/backtest.ts": {
+          "bytesInOutput": 209
+        }
+      },
+      "bytes": 935595
+    }
+  }
+}

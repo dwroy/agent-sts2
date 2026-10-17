@@ -1,0 +1,212 @@
+diff --git a/agent/tools/boss-sim/calib.py b/agent/tools/boss-sim/calib.py
+index 566ec9b22..0cb5e151a 100644
+--- a/agent/tools/boss-sim/calib.py
++++ b/agent/tools/boss-sim/calib.py
+@@ -38,7 +38,7 @@ def turns_of(path):
+     return out
+ 
+ 
+-def leak(rows, turns):
++def leak(rows, turns, *, exact=False):
+     """Sums over (fight, turn) of the sim's mean per-turn numbers and the log's, turns LEAK_TURNS from the start."""
+     s_enemy = a_enemy = s_loss = a_loss = 0.0
+     n = 0
+@@ -59,7 +59,7 @@ def leak(rows, turns):
+             a_loss += here[3]
+             n += 1
+     return {"n": n, "sim_enemy": round(s_enemy / n, 2) if n else None, "actual_enemy": round(a_enemy / n, 2) if n else None,
+-            "enemy_ratio": round(s_enemy / a_enemy, 3) if a_enemy else None,
++            "enemy_ratio": (s_enemy / a_enemy if exact else round(s_enemy / a_enemy, 3)) if a_enemy else None,
+             "sim_loss": round(s_loss / n, 2) if n else None, "actual_loss": round(a_loss / n, 2) if n else None,
+             "loss_ratio": round(s_loss / a_loss, 3) if a_loss else None}
+ 
+@@ -116,7 +116,7 @@ def platt(rows, ab):
+     return out
+ 
+ 
+-def block(rows, turns):
++def block(rows, turns, *, exact=False):
+     rows = [r for r in rows if r.get("sim")]
+     if not rows:
+         return None
+@@ -126,15 +126,15 @@ def block(rows, turns):
+     worst = max((abs(b["pred"] - b["actual"]) for b in bk if b["n"] >= 20), default=None)
+     return {
+         "n": len(rows),
+-        "actual_win": round(statistics.fmean(y for _, y in pairs), 3),
+-        "mean_pred": round(statistics.fmean(p for p, _ in pairs), 3),
+-        "brier": round(brier(pairs), 4),
++        "actual_win": statistics.fmean(y for _, y in pairs) if exact else round(statistics.fmean(y for _, y in pairs), 3),
++        "mean_pred": statistics.fmean(p for p, _ in pairs) if exact else round(statistics.fmean(p for p, _ in pairs), 3),
++        "brier": brier(pairs) if exact else round(brier(pairs), 4),
+         "auc": round(auc(pairs), 3) if auc(pairs) is not None else None,
+         "const_brier": round(brier([(statistics.fmean(y for _, y in pairs), y) for _, y in pairs]), 4),
+         "buckets": bk,
+         "worst_bucket_n20": round(worst, 3) if worst is not None else None,
+         "won_loss_err": errs([r["sim"]["hpLossWon"]["median"] - r["actual"]["hpLoss"] for r in won]),
+-        "leak": leak(rows, turns),
++        "leak": leak(rows, turns, exact=exact),
+     }
+ 
+ 
+diff --git a/agent/tools/boss-sim/silent_calibration.py b/agent/tools/boss-sim/silent_calibration.py
+index d1c004d34..9ed5a4570 100644
+--- a/agent/tools/boss-sim/silent_calibration.py
++++ b/agent/tools/boss-sim/silent_calibration.py
+@@ -165,16 +165,21 @@ def calibrate(results, fights, turns, split_data, provenance):
+         m = model or {"a": 0, "b": 1, "c": 0}
+         mapped_val = mapped(val, m)
+         overall = block(mapped_val, turns)
++        # Display rounding must never admit a boss that exceeds an original threshold.
++        exact_overall = block(mapped_val, turns, exact=True)
++        overall_brier = exact_overall["brier"] if exact_overall else 0
+         out["overall"][start] = {**(overall or {"n": 0, "brier": None}), "platt": model, "tune_n": len(tune)}
+         residual = {side: residuals(rows, m, turns) for side, rows in (("tune", tune), ("val", val))}
+         out["residuals"][start] = residual
+         a10 = residual["val"]["A10"]
+-        if a10["n"] < 10 or a10["gap"] is None or abs(a10["gap"]) > 0.15:
++        exact_a10 = block([r for r in mapped_val if r["asc"] == 10], turns, exact=True)
++        a10_gap = exact_a10["mean_pred"] - exact_a10["actual_win"] if exact_a10 else None
++        if a10["n"] < 10 or a10_gap is None or abs(a10_gap) > 0.15:
+             out["ascension_low"][use]["10"] = f"A10验证 n={a10['n']}，残差={a10['gap']}；F49为独立战，不是整局通关"
+         max_asc = max(provenance.get("completed_max_asc", 10), max((r["asc"] for r in fights), default=10))
+         for asc in range(11, max_asc + 1):
+             scope = [r for r in mapped_val if r["asc"] == asc]
+-            metrics = block(scope, turns)
++            metrics = block(scope, turns, exact=True)
+             gap = metrics["mean_pred"] - metrics["actual_win"] if metrics else None
+             if len(scope) < 10 or gap is None or abs(gap) > 0.15:
+                 out["ascension_low"][use][str(asc)] = f"A{asc}验证 n={len(scope)}，残差={gap}；新进阶验证不足或偏差超标，保持低信度"
+@@ -182,22 +187,28 @@ def calibrate(results, fights, turns, split_data, provenance):
+                   for side, rows in (("tune", tune), ("val", val))}
+         out["stage_metrics"][start] = {"F49": stages}
+         f49 = stages["val"] or {"n": 0, "brier": 1, "mean_pred": 0, "actual_win": 0, "leak": {"enemy_ratio": None}}
+-        stage_fails = judge(f49, overall["brier"] if overall else 0)
++        exact_f49 = block([r for r in mapped_val if r.get("floor") == 49], turns, exact=True) or f49
++        stage_fails = judge(exact_f49, overall_brier, exact=True)
+         if f49["leak"].get("enemy_ratio") is None:
+             stage_fails.append(("leak_missing", "missing leak", "打穿比无记录"))
+         if stage_fails:
+             out["stage_low"][use]["49"] = "F49独立战：" + "; ".join(f[2] for f in stage_fails)
+         for enc, key in BOSS_KEYS.items():
+-            b = block([r for r in mapped_val if r["enc"] == enc], turns)
++            boss_rows = [r for r in mapped_val if r["enc"] == enc]
++            b = block(boss_rows, turns)
+             b = b or {"n": 0, "brier": 1.0, "mean_pred": 0.0, "actual_win": 0.0, "leak": {"enemy_ratio": None, "n": 0}}
+-            fails = judge(b, overall["brier"] if overall else 0)
++            exact_boss = block(boss_rows, turns, exact=True) or b
++            fails = judge(exact_boss, overall_brier, exact=True)
+             if b["leak"].get("enemy_ratio") is None:
+                 fails.append(("leak_missing", "HP-through-block ratio unavailable", "被打穿的血比值不足，不能准入"))
+             if model is None:
+                 fails.append(("calibration", "global calibration unavailable", "整体校准不足"))
+             item = {"n": b["n"], "missing": max(0, 10 - b["n"]), "brier": b["brier"], "mean_pred": b["mean_pred"],
+                     "actual_win": b["actual_win"], "leak_ratio": b["leak"].get("enemy_ratio"), "leak_turns": b["leak"].get("n", 0),
+-                    "failed": [f[0] for f in fails]}
++                    "failed": [f[0] for f in fails],
++                    "admission": {"brier": exact_boss["brier"], "brier_limit": out["criteria"]["brier_ratio"] * overall_brier,
++                                  "gap": exact_boss["mean_pred"] - exact_boss["actual_win"],
++                                  "leak_ratio": exact_boss["leak"].get("enemy_ratio")}}
+             out["bosses"].setdefault(key, {"name": NAMES[enc]})[start] = item
+             if fails:
+                 out["low_trust_b2" if use == "b2" else "low_confidence_b3"][key] = "; ".join(f[2] for f in fails)
+@@ -236,10 +247,12 @@ def render(data, sources, extraction):
+             for group, b in groups.items():
+                 lines.append(f"| {side} | {group} | {b['n']} | {b.get('mean_pred')} | {b.get('actual_win')} | {b['gap']} | {b.get('brier')} | {b.get('leak_ratio')} |")
+         lines += ["", "原准入标准：验证≥10、Brier≤整体1.25倍、胜率差≤15个百分点、打穿比0.7–1.3；缺指标也保持低可信。", "",
+-                  "| boss | 验证 n | 还差 | Brier | 预测/实际 | 打穿比 | 失败指标 | 可信 |", "|---|---|---|---|---|---|---|---|"]
++                  "准入比较使用未取整指标；显示取整不能放宽门槛。JSON的admission保留完整精度。", "",
++                  "| boss | 验证 n | 还差 | Brier/门槛（显示6位） | 预测/实际 | 打穿比 | 失败指标 | 可信 |", "|---|---|---|---|---|---|---|---|"]
+         for key, entry in sorted(data["bosses"].items()):
+             b = entry[start]
+-            lines.append(f"| {entry['name']} ({key}) | {b['n']} | {b['missing']} | {b['brier']} | {b['mean_pred']}/{b['actual_win']} | {b['leak_ratio']} | {','.join(b['failed']) or '无'} | {'低' if b['failed'] else '达标'} |")
++            exact = b["admission"]
++            lines.append(f"| {entry['name']} ({key}) | {b['n']} | {b['missing']} | {exact['brier']:.6f}/{exact['brier_limit']:.6f} | {b['mean_pred']}/{b['actual_win']} | {b['leak_ratio']} | {','.join(b['failed']) or '无'} | {'低' if b['failed'] else '达标'} |")
+         lines += ["", f"A10 附加限制：`{json.dumps(data['ascension_low'][use], ensure_ascii=False)}`。", ""]
+         lines += [f"F49单独调参/验证指标（同一整体映射）：`{json.dumps(data['stage_metrics'][start], ensure_ascii=False)}`。验证还差 {max(0, 10 - ((data['stage_metrics'][start]['F49']['val'] or {}).get('n', 0)))} 场；范围限制：`{json.dumps(data['stage_low'][use], ensure_ascii=False)}`。", ""]
+     lines += ["## 定期刷新", "", "运维调度 tick（每小时 :13/:43，另在学习批次完成事件检查）读取已完成的静默局和 boss 尝试；升阶或新增20次实际结局 boss尝试时启动独占校准任务。SL截断不凑20场。入口 agent/tools/boss-sim/refresh-silent.py；旧切点/调参keys固定，新局只进验证；生成独立内容指纹目录，重复输入跳过，旧报告和来源留存。达标名单由 trust.py --character silent 自动生成，仍由学习者依锁内测试/合入流程发布和增加唯一版本，运维核实际后登记shipped。只写静默 boss-trust，不刷新其他角色数据。", "",
+diff --git a/agent/tools/boss-sim/test_silent_calibration.py b/agent/tools/boss-sim/test_silent_calibration.py
+index 27b62cafc..078157903 100644
+--- a/agent/tools/boss-sim/test_silent_calibration.py
++++ b/agent/tools/boss-sim/test_silent_calibration.py
+@@ -1,12 +1,14 @@
+ """Fixed fixtures only: isolation, censoring, chronological holdout, calibration and refresh."""
+ import datetime as dt
+ import json
++import math
+ from pathlib import Path
+ import tempfile
+ import unittest
+ from unittest.mock import patch
+ 
+ from character_extract import attempt_frames, finished_runs
++from calib import block
+ from silent_calibration import cadence, calibrate, fit, frozen_split, prediction, residuals, select_model
+ from trust import judge
+ 
+@@ -115,6 +117,39 @@ class Calibration(unittest.TestCase):
+         self.assertIn("验证 n=1", d["ascension_low"]["b3"]["11"])
+         self.assertIn("验证 n=0", d["ascension_low"]["b2"]["12"])
+ 
++    def test_display_rounding_cannot_admit_a_boss_above_the_original_brier_limit(self):
++        fs, rs, ts = rows()
++        split = frozen_split(fs)
++        val = set(split["val"])
++        target = set(split["val"][:10])
++        for row in rs:
++            if row["key"] not in val:
++                continue
++            won = int(row["key"].split(":")[0][3:]) % 2 == 0
++            error = 0.14639716573405037 if row["key"] in target else 0.08775099380765989
++            row["actual"]["won"] = won
++            row["sim"]["winProb"] = 1 - math.sqrt(error) if won else math.sqrt(error)
++            row["enc"] = "THE_INSATIABLE" if row["key"] in target else "WATERFALL_GIANT"
++        with patch("silent_calibration.select_model", return_value=({"a": 0, "b": 1, "c": 0}, {})):
++            data = calibrate(rs, fs, ts, split, {})
++        for start in ("t1", "pre"):
++            item = data["bosses"]["THE_INSATIABLE"][start]
++            self.assertEqual(item["failed"], ["brier"])
++            self.assertGreater(item["admission"]["brier"], item["admission"]["brier_limit"])
++            # Legacy/other-character consumers keep their existing display-based behavior.
++            rounded = {**item, "leak": {"enemy_ratio": item["leak_ratio"]}}
++            self.assertEqual(judge(rounded, data["overall"][start]["brier"]), [])
++
++    def test_exact_leak_comparison_preserves_the_legacy_rounded_default(self):
++        _, rs, ts = rows(1)
++        rs[0]["sim"]["perTurn"] = [[1, 3, 5, 8, 3.90012]] * 8
++        rounded = block(rs[:1], ts)
++        exact = block(rs[:1], ts, exact=True)
++        self.assertEqual(rounded["leak"]["enemy_ratio"], 1.3)
++        self.assertGreater(exact["leak"]["enemy_ratio"], 1.3)
++        self.assertNotIn("leak", [f[0] for f in judge(rounded, 1)])
++        self.assertIn("leak", [f[0] for f in judge(exact, 1, exact=True)])
++
+     def test_f49_scope_stays_low_when_boss_overall_can_pass(self):
+         fs, rs, ts = rows()
+         old = fs[-1]["key"]
+diff --git a/agent/tools/boss-sim/trust.py b/agent/tools/boss-sim/trust.py
+index 70e85ab6a..8b8162129 100644
+--- a/agent/tools/boss-sim/trust.py
++++ b/agent/tools/boss-sim/trust.py
+@@ -63,16 +63,17 @@ NAMES = {
+ }
+ 
+ 
+-def judge(b, overall_brier):
++def judge(b, overall_brier, *, exact=False):
+     """The criteria a boss's block fails, as (key, English, Chinese) reasons; [] when trusted."""
+     fails = []
+     n = b["n"]
+     if n < MIN_FIGHTS:
+         fails.append(("n", f"only {n} validation fights (at least {MIN_FIGHTS} needed)", f"验证集只有 {n} 场（至少要 {MIN_FIGHTS} 场）"))
+-    limit = round(BRIER_RATIO * overall_brier, 4)
++    limit = BRIER_RATIO * overall_brier if exact else round(BRIER_RATIO * overall_brier, 4)
+     if b["brier"] > limit:
+-        fails.append(("brier", f"calibrated Brier {b['brier']:.3f} over {limit:.3f} ({BRIER_RATIO}x the overall {overall_brier:.3f})",
+-                      f"校准 Brier {b['brier']:.3f}，高于整体 {overall_brier:.3f} 的 {BRIER_RATIO} 倍 {limit:.3f}"))
++        digits = 6 if exact else 3
++        fails.append(("brier", f"calibrated Brier {b['brier']:.{digits}f} over {limit:.{digits}f} ({BRIER_RATIO}x the overall {overall_brier:.{digits}f})",
++                      f"校准 Brier {b['brier']:.{digits}f}，高于整体 {overall_brier:.{digits}f} 的 {BRIER_RATIO} 倍 {limit:.{digits}f}"))
+     gap = b["mean_pred"] - b["actual_win"]
+     if abs(gap) > MAX_GAP:
+         side = "too optimistic" if gap > 0 else "too pessimistic"

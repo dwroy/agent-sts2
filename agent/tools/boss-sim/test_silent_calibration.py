@@ -1,14 +1,18 @@
 """Fixed fixtures only: isolation, censoring, chronological holdout, calibration and refresh."""
 import datetime as dt
+import hashlib
 import json
+import math
 from pathlib import Path
 import tempfile
 import unittest
 from unittest.mock import patch
 
 from character_extract import attempt_frames, finished_runs
+from calib import block
 from silent_calibration import cadence, calibrate, fit, frozen_split, prediction, residuals, select_model
 from trust import judge
+from pinned_silent import merge_replays, restore_model
 
 
 def rows(n=60):
@@ -115,6 +119,78 @@ class Calibration(unittest.TestCase):
         self.assertIn("验证 n=1", d["ascension_low"]["b3"]["11"])
         self.assertIn("验证 n=0", d["ascension_low"]["b2"]["12"])
 
+    def test_display_rounding_cannot_admit_a_boss_above_the_original_brier_limit(self):
+        fs, rs, ts = rows()
+        split = frozen_split(fs)
+        val = set(split["val"])
+        target = set(split["val"][:10])
+        for row in rs:
+            if row["key"] not in val:
+                continue
+            won = int(row["key"].split(":")[0][3:]) % 2 == 0
+            error = 0.14639716573405037 if row["key"] in target else 0.08775099380765989
+            row["actual"]["won"] = won
+            row["sim"]["winProb"] = 1 - math.sqrt(error) if won else math.sqrt(error)
+            row["enc"] = "THE_INSATIABLE" if row["key"] in target else "WATERFALL_GIANT"
+        with patch("silent_calibration.select_model", return_value=({"a": 0, "b": 1, "c": 0}, {})):
+            data = calibrate(rs, fs, ts, split, {})
+        for start in ("t1", "pre"):
+            item = data["bosses"]["THE_INSATIABLE"][start]
+            self.assertEqual(item["failed"], ["brier"])
+            self.assertGreater(item["admission"]["brier"], item["admission"]["brier_limit"])
+            # Legacy/other-character consumers keep their existing display-based behavior.
+            rounded = {**item, "leak": {"enemy_ratio": item["leak_ratio"]}}
+            self.assertEqual(judge(rounded, data["overall"][start]["brier"]), [])
+
+    def test_exact_leak_comparison_preserves_the_legacy_rounded_default(self):
+        _, rs, ts = rows(1)
+        rs[0]["sim"]["perTurn"] = [[1, 3, 5, 8, 3.90012]] * 8
+        rounded = block(rs[:1], ts)
+        exact = block(rs[:1], ts, exact=True)
+        self.assertEqual(rounded["leak"]["enemy_ratio"], 1.3)
+        self.assertGreater(exact["leak"]["enemy_ratio"], 1.3)
+        self.assertNotIn("leak", [f[0] for f in judge(rounded, 1)])
+        self.assertIn("leak", [f[0] for f in judge(exact, 1, exact=True)])
+
+    def test_pinned_extension_keeps_input_indices_and_rejects_changed_controls(self):
+        fs, rs, _ = rows(4)
+        historical = fs[:2]
+        original = [r for r in rs if r["key"] in {f["key"] for f in historical}]
+        controls = [historical[0]["key"]]
+        replayed = [r for r in rs if r["key"] != historical[1]["key"]]
+        self.assertEqual(merge_replays(fs, historical, original, replayed, controls), rs)
+        changed = [{**r, "sim": {**r["sim"], "winProb": 0.01}} if r["key"] in controls else r for r in replayed]
+        with self.assertRaisesRegex(ValueError, "control differs"):
+            merge_replays(fs, historical, original, changed, controls)
+        with self.assertRaisesRegex(ValueError, "input/order"):
+            merge_replays(list(reversed(fs)), historical, original, replayed, controls)
+        with self.assertRaisesRegex(ValueError, "foreign/missing"):
+            merge_replays(fs, historical, original, [{**replayed[0], "character": "ironclad"}, *replayed[1:]], controls)
+        with self.assertRaisesRegex(ValueError, "incomplete/duplicate"):
+            merge_replays(fs, historical, original, replayed + [replayed[0]], controls)
+
+    def test_pinned_manifest_hashes_and_role_paths_are_checked_before_replay(self):
+        raw = b"fixed source fixture"
+        with tempfile.TemporaryDirectory() as name:
+            root = Path(name)
+            (root / "agent/node_modules").mkdir(parents=True)
+            game = root / "game-data.json"
+            game.write_bytes(raw)
+            source = {"simulator_base": "f" * 40, "input_files": {
+                "agent/src/fixture.ts": hashlib.sha256(raw).hexdigest(), str(game): hashlib.sha256(raw).hexdigest()}}
+            with patch("pinned_silent.subprocess.check_output", return_value=raw):
+                self.assertEqual(restore_model(root, root / "model", source, game), source["input_files"])
+            self.assertTrue((root / "model/agent/node_modules").is_symlink())
+            for path in ("knowledge/characters/ironclad/x.json", "../outside", "/denied.env"):
+                bad = {**source, "input_files": {path: hashlib.sha256(raw).hexdigest()}}
+                with patch("pinned_silent.subprocess.check_output") as git:
+                    with self.assertRaisesRegex(ValueError, "unsupported"):
+                        restore_model(root, root / "unsafe", bad, game)
+                    git.assert_not_called()
+            with patch("pinned_silent.subprocess.check_output", return_value=b"changed"):
+                with self.assertRaisesRegex(ValueError, "hash differs"):
+                    restore_model(root, root / "changed", source, game)
+
     def test_f49_scope_stays_low_when_boss_overall_can_pass(self):
         fs, rs, ts = rows()
         old = fs[-1]["key"]
@@ -197,6 +273,16 @@ class Calibration(unittest.TestCase):
             self.assertEqual((root / "silent-trust.json").read_bytes(), trust_bytes)
             self.assertTrue((root / "report.md").exists())
             self.assertEqual(len(list((root / "artifacts").glob("*/completed.json"))), 1)
+            previous = root / "previous.json"
+            previous.write_text(json.dumps(data))
+            automatic = list(args)
+            for flag in ("--results", "--provenance"):
+                index = automatic.index(flag)
+                del automatic[index:index + 2]
+            automatic += ["--previous", str(previous), "--force"]
+            with patch("pinned_silent.extend", return_value=(str(root / "results.jsonl"), str(root / "provenance.json"))) as extension:
+                self.assertEqual(module.main(automatic), 0)
+                extension.assert_called_once()
             for target in ("other-worktree/knowledge/characters/ironclad/boss-trust.json", "knowledge/common/monster-db.json",
                            "other-worktree/knowledge/characters/silent/boss-trust.json"):
                 foreign = args[:]
