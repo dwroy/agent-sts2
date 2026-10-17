@@ -56,7 +56,7 @@ function inventoryKey(state: BuildState): string {
 export interface DirectionMetric {
   status: "computed" | "partial" | "unknown"; reason: string | null;
   win: number | null; win_se: number | null; s: { mean: number; se: number } | null;
-  samples: number; requested: number; continuous?: ContinuousBossResult;
+  samples: number; requested: number; continuous?: ContinuousBossResult; model_limits?: string[];
 }
 export type DirectionEvaluator = (target: GlobalBossTarget, variant: DirectionVariant,
   budget: DecisionBudget) => Promise<DirectionMetric>;
@@ -75,6 +75,7 @@ export function summarizeDirection(rows: readonly DirectionPrediction[], variant
     const sKnown = known && selected.every((row) => row.result.s !== null);
     return { variant: variant.key, win: known ? selected.reduce((p, row) => p + row.target.frequency * row.result.win!, 0) : null,
       S: sKnown ? selected.reduce((s, row) => s + row.target.frequency * row.result.s!.mean, 0) : null,
+      model_limits: [...new Set(selected.flatMap((row) => row.result.model_limits ?? []))],
       unknown: reasons, scope: "observed_weighted_fixed_inventory_raw_simulation" };
   });
 }

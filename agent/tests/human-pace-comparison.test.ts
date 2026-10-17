@@ -43,3 +43,20 @@ it("refuses invalid resource contracts and unknown components rather than fillin
   expect(() => directionStart(environment, { ...current, hp: 0 }, target, setup)).toThrow("invalid_inventory_resource_contract");
   expect(() => directionStart(environment, { ...current, cards: [...current.cards, { id: "NOT_A_MODEL", upgraded: false }] }, target, setup)).toThrow("unmodelled_core_component");
 });
+
+it("allows only labelled Act2 partial-model benchmarks for unchanged held relics", () => {
+  const { environment } = fixture();
+  (environment.state.run!.raw as any).relics = [{ relic_id: "UNKNOWN_HELD", name: "fixed held relic", description: "each turn effect" }];
+  // directionStart clones state.raw, so update the corresponding original frame too.
+  (environment.state.raw.run as any).relics = (environment.state.run!.raw as any).relics;
+  const current = constructionState(environment), limits: string[] = [];
+  const setup = { runner: { run: vi.fn() }, db: FIXTURE_DB, mm: FIXTURE_MM };
+  const before = JSON.stringify(environment.state.raw);
+  expect(() => directionStart(environment, current, target, setup)).toThrow("hypothetical_inventory_has_unmodelled_relics");
+  expect(directionStart(environment, current, target, setup, limits)).toBeDefined();
+  expect(limits.join(" ")).toContain("effects_do_not_assume_cancellation");
+  expect(limits.join(" ")).toContain("fixed held relic");
+  expect(() => directionStart(environment, { ...current, relics: [...current.relics, "NEW_RELIC"] }, target, setup, [])).toThrow("hypothetical_inventory_has_unmodelled_relics");
+  expect(() => directionStart(environment, current, { ...target, act: 3 }, setup, [])).toThrow("hypothetical_inventory_has_unmodelled_relics");
+  expect(JSON.stringify(environment.state.raw)).toBe(before);
+});
