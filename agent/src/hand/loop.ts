@@ -1,4 +1,5 @@
 import { prepareObservedCandidates } from "./pace-precompute.js";
+import { HumanPaceShadow } from "../sim/human-pace-observer.js";
 import { setPaceSolverScope } from "../reflex/pace-solver-cache.js";
 import { currentDecisionBudget, withDecisionBudget, enterDecisionBudget, DecisionBudgetLedger, DecisionBudgetExpired, outsideDecisionBudget, shadowBudgetAvailable, budgetUnknown, type BudgetKind } from "../core/decision-budget.js";
 /**
@@ -294,6 +295,7 @@ async function runLoopWithBudgets(options: LoopOptions): Promise<LoopStats> {
   const maxRuns = options.maxRuns ?? 1;
   const maxMinutes = options.maxMinutes ?? 60;
   const rawLog = createDecisionLog(config.log.decisionLog);
+  const humanPaceShadow = new HumanPaceShadow(config.log.decisionLog);
   const log = { path: rawLog.path, close: () => rawLog.close(), write(row: DecisionRecord) {
     const budget = currentDecisionBudget(); budget?.pause();
     rawLog.write(budget ? { ...row, time_budget: budget.record() } : row);
@@ -904,6 +906,7 @@ async function runLoopWithBudgets(options: LoopOptions): Promise<LoopStats> {
     const codeBaseline = gateCodeBaseline && decision.kind === "ask";
     if (codeBaseline && decision.kind === "ask" && decision.deepseek) decision = decision.deepseek.baseline;
     const decisionId = randomUUID();
+    const humanPaceCardInput = humanPaceShadow.capture(decision, env);
     let resolved: ResolvedAction;
     let jevLatency = 0;
     let deepseekLatency = 0;
@@ -1768,6 +1771,8 @@ async function runLoopWithBudgets(options: LoopOptions): Promise<LoopStats> {
       logRouteChange(record.ts, "shadow (not dispatched)");
       logState(state, stateFingerprint, record.ts);
       onEvent({ type: "decision", record, totals: totals() });
+      if (!options.signal?.aborted) await humanPaceShadow.observe(env, record, screenMemory.runPlan,
+        humanPaceCardInput, options.buildSim, jev);
       await sleep(pollIntervalMs);
       continue;
     }
@@ -1953,6 +1958,8 @@ async function runLoopWithBudgets(options: LoopOptions): Promise<LoopStats> {
     logRouteChange(record.ts, "route plan changed (no game action)");
     logState(state, stateFingerprint, record.ts);
     onEvent({ type: "decision", record, totals: totals() });
+    if (!options.signal?.aborted) await humanPaceShadow.observe(env, record, screenMemory.runPlan,
+      humanPaceCardInput, options.buildSim, jev);
     await sleep(60);
   }
 
