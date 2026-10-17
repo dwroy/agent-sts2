@@ -1,0 +1,27 @@
+{
+  "at": "2026-10-18 01:13:13 CST",
+  "command": [
+    "nice",
+    "-n",
+    "19",
+    "python3",
+    "ops/worktree_retention.py",
+    "complete",
+    "--root",
+    "/home/dw/Projects/agent-sts2",
+    "--state-dir",
+    "/home/dw/Projects/agent-sts2/ops/codex-ops",
+    "--workspace",
+    "h1-l2-budget-fix-20261018",
+    "--source",
+    "ef092f1c9189bdbb549e46fd604eb342cb025bdf",
+    "--main-commit",
+    "75d5f9e33083fe0f41eb3fcf1a2380f2884e7112",
+    "--live-commit",
+    "bbc7cfcca32bcf303324c10d540b348b912418a0"
+  ],
+  "returncode": 1,
+  "stdout": "{\"state\": \"retained\", \"reason\": \"[Errno 11] Resource temporarily unavailable\"}\n",
+  "stderr": "",
+  "scope": "only source worktree completion registration; automatic original retention enforces owner/dirty/material gates; no manual removal and no parent closure"
+}

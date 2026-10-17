@@ -2364,3 +2364,8 @@ H0/0332已实际占原两槽：20261018-005332-strategy-proposal / 20261018-0053
 
 ### 2026-10-18 01:09:58 CST 七事件复盘与通知收尾
 W96复盘和003109普通fix/两策略已核，仅复盘与73条原CLI/两pending提案和20waiting处置入本轮记录，无新源码/合入/号/补测；fix canonical failed/rc0及原只读audit保护失败保留。唯一paper截点2026-10-17T16:59:51.899Z实际0，五检查/keyscan通过，本局has_postmortem1。H0/0332已在20261018-005332、005345原批codex3新线程运行，不能按这些旧准入通知重复派发；支撑r1等首个上述槽释放。三notice b705fd9af5fab8fa6aa7fd1d/7f0e05860ac9f2f13d7747f7/452b2fab28be1b86288c097a已向原watcher pane wJ:pJT/session01a14aae-4b03-7cf1-9185-34dc3bed786f提交提醒0，尚不能把agent_prompted当watcher/Roy ACK，后续只认本人CLI真实证据；不新建提醒者或监听。R389宿主终局和sourceWT retention仍待原learner-checks，不借本轮paper/ledger绿，不重source full或重启局；各宽父未关闭。原件与本轮核回见paper/materials/20261018-0058-ops/。
+
+### 2026-10-18 01:17:07 CST R389宿主终局、0332缺证与映射首槽
+R389原精确8ba5f0a7宿主533/5234过2跳、tsc0/vitest0，logSHA及8叶固定源核回；ops-host-terminal.json在原H1目录。源WT complete原锁忙1，原ef源码后已有cd1f7caf文档后代，必须用正确当前HEAD登记（执行叶不变/预检通过），命令和单次原manual重试见pending-integrations/20261018-h1-l2-budget-fix.json及paper/materials/20261018-0111-ops/h1-retention-corrected-intent.json；不重未变源full/清锁/重置WT，登记只收源WT，不关human-pace父。
+0332科学r3账号r4已真实完成原批005345并因缺真实封套blocked；根修复未完成、六提案waiting，V5-R373诊断/限定经验消费者读取与根结论分列。当前logs/sim-failures不存在，未来只在原自然完局/复盘/卡死/人工处理见resource_failure.complete时保存不可变文件、原payload SHA及真实输入/首战末resources/steps/outcome/resourceAudit，核完整后沿原请求/新账号UUID01a14ac8-affa-70d0-96e0-e9c6b36a5453续办；无证不重开模型/局/模拟/新监听。持续待办ops/codex-ops/0332-real-failure-handoff.json；通知741c已原watcher prompt0，watcher/Roy须本人CLI实证，不能将运输算实收。
+该批真实退出后首槽现已给支撑映射：科学r1仅账号r2，实际20261018-011241-strategy-proposal/新codex3 01a14ada-1fe1-71f1-b823-19a0c3c49cf1/6.1-sol xhigh原沙箱首回复已核，回执在本轮目录；不能再按旧support blocked通知重派，H0仍005332。三个父要求及main-push原宽缺口开放，当前局/模型/home未改。
