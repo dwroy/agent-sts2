@@ -1345,7 +1345,7 @@ async function runLoopWithBudgets(options: LoopOptions): Promise<LoopStats> {
     } else if (!jev || codeBaseline || currentDecisionBudget()?.remaining() === 0) {
       // No-Jev mode, or a board the gate kept refusing: the resolver sees an empty answer set and takes its
       // deterministic path.
-      resolved = decision.resolve({});
+      resolved = decision.resolve({}, currentDecisionBudget()?.remaining() === 0 ? { budgetExpired: true } : undefined);
       if (currentDecisionBudget()?.remaining() === 0) { currentDecisionBudget()?.useFallback("deadline_current_code_candidate"); resolved = { ...resolved, fallback: true }; }
       if (codeBaseline) resolved = { ...resolved, fallback: true, rationale: `code baseline after ${gateRejections} gate refusals on this board: ${resolved.rationale}` };
     } else {
@@ -1526,7 +1526,7 @@ async function runLoopWithBudgets(options: LoopOptions): Promise<LoopStats> {
       } catch (error) {
         if (error instanceof DecisionBudgetExpired) {
           currentDecisionBudget()?.useFallback("Jev_deadline_current_candidate");
-          resolved = { ...decision.resolve(firstAnswers), fallback: true };
+          resolved = { ...decision.resolve(firstAnswers, { budgetExpired: true }), fallback: true };
         } else {
         if (isBrainBlocked(error)) throw error;
         const failure = classifyFailure(error);
