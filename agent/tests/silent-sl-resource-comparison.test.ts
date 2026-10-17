@@ -188,3 +188,50 @@ it("keeps an audit annotation out of the existing no-effect potion equivalence",
     outcome: { ...original.outcome, taintedGained: 123 } };
   expect(noEffectTwin(annotated, [original, annotated])).toBe(original);
 });
+
+function sandpitLines() {
+  // WQZ F33 T7, states:282330. Replay both legal lines on this one frozen board.
+  const raw = JSON.parse(readFileSync(new URL("./silent-sl-sandpit-state.json", import.meta.url), "utf8"));
+  const knowledge = makeKnowledge({ cards: raw.run.deck.map((c: { card_id: string; card_type: string }) => ({ id: c.card_id, type: c.card_type })) }, "cache");
+  const player = raw.combat.player;
+  const input: SolverInput = {
+    hand: raw.combat.hand.map((c: { index: number }) => modelHandCard(c, c.index, knowledge, "silent", 10)),
+    player: { hp: player.current_hp, maxHp: player.max_hp, block: player.block, energy: player.energy,
+      weak: false, vulnerable: false, intangible: false },
+    enemies: enemySims(raw.combat, 10, "silent"), fightKind: "boss", turn: 7,
+  };
+  const replay = (indices: number[]) => replaySteps(input, indices.map((index) => {
+    const card = input.hand.find((c) => c.index === index)!;
+    return { cardIndex: index, cardId: card.cardId, name: card.name, upgraded: card.upgraded,
+      target: card.target === "single" ? 0 : null };
+  }))!;
+  // End at Survivor's discard boundary; no continuation is certified before that choice.
+  return { state: parseGameState(raw), original: replay([2, 5, 3, 4]), replacement: replay([0, 2, 3, 4]) };
+}
+
+it("keeps the Sandpit extension separate from its four-HP cost on the frozen WQZ board", () => {
+  const { state, original, replacement } = sandpitLines();
+  expect(original.outcome).toMatchObject({ hpLoss: 0, damageDealt: 24, sandpitAfter: 3, winsFight: false });
+  expect(replacement.outcome).toMatchObject({ hpLoss: 4, damageDealt: 24, sandpitAfter: 4, winsFight: false });
+  const before = JSON.stringify([state.raw, original, replacement]);
+  const record = asRecord(silentSlResourceComparison(state, original, replacement, { ...noMedians, saturated: true }).resource_comparison);
+  expect(record).toMatchObject({
+    original: { sandpit_after_enemy_turn: 3, wins_fight: false, execution: "unverified" },
+    replacement: { sandpit_after_enemy_turn: 4, wins_fight: false, execution: "unverified" },
+    delta: { hp_loss: 4, damage_dealt: 0, sandpit_after_enemy_turn: 1 },
+  });
+  expect(JSON.stringify([state.raw, original, replacement])).toBe(before);
+});
+
+it("keeps missing, terminal and sampled Sandpit differences unknown instead of treating null as zero", () => {
+  const { state, original, replacement } = sandpitLines();
+  const won = { ...replacement, outcome: { ...replacement.outcome, winsFight: true, sandpitAfter: null } };
+  const record = asRecord(silentSlResourceComparison(state, original, won, noMedians).resource_comparison);
+  expect(record).toMatchObject({ replacement: { sandpit_after_enemy_turn: null, wins_fight: true },
+    delta: { sandpit_after_enemy_turn: null } });
+  expect(comparison(line(0, 0), line(0, 0))).toMatchObject({
+    original: { sandpit_after_enemy_turn: null, wins_fight: null }, delta: { sandpit_after_enemy_turn: null } });
+  const median = asRecord(silentSlResourceComparison(state, original, replacement, { original: false, replacement: true }).resource_comparison);
+  expect(median).toMatchObject({ replacement: { sandpit_after_enemy_turn: 4, random_potion_median: true },
+    delta: { sandpit_after_enemy_turn: null } });
+});
