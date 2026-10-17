@@ -1,0 +1,44 @@
+{
+  "at": "2026-10-18 01:19:09 CST",
+  "manual_event": "2026-10-18 01:18",
+  "actual_command_rc": 0,
+  "attempts_this_round": 1,
+  "completion_record": {
+    "path": "ops/codex-ops/retention/workspaces/h1-l2-budget-fix-20261018.json",
+    "bytes": 1121,
+    "sha256": "2ddf1dac39c62095a0342faae579d0fe907a22a9f5c3daa9ece140fe1a353118",
+    "value": {
+      "schema": "workspace-lifecycle-v1",
+      "root": "/home/dw/Projects/agent-sts2",
+      "worktree": "/home/dw/Projects/agent-sts2/.worktrees/h1-l2-budget-fix-20261018",
+      "state": "accepted",
+      "at": "2026-10-18T01:18:35+08:00",
+      "acceptance": {
+        "source": "cd1f7caf1ca24d59c3ffbbd8c23d028b992f78b0",
+        "base": "9f3d5745be89496398555a5a1eeda2abb995a438",
+        "main_commit": "75d5f9e33083fe0f41eb3fcf1a2380f2884e7112",
+        "live_commit": "bbc7cfcca32bcf303324c10d540b348b912418a0",
+        "verified_source_paths": [
+          "agent/src/brain/router.ts",
+          "agent/src/core/decision-budget.ts",
+          "agent/src/hand/loop.ts",
+          "agent/src/sim/build-sim-facts.ts",
+          "agent/src/sim/build-sim.ts",
+          "agent/src/sim/global-build-b3.ts",
+          "agent/tests/human-pace-budget.test.ts",
+          "agent/tests/human-pace-l2-preparation.test.ts"
+        ],
+        "scope": "workspace-only; no parent request or gameplay claim closed",
+        "allocation_receipt": "ops/codex-ops/retention/allocations/h1-l2-budget-fix-20261018.json",
+        "allocation_sha256": "4145278598cf194d20d8684c91196bcc43e8520be7d70d0dedad119fe1eef198"
+      }
+    }
+  },
+  "delivered_behavior_source": "ef092f1c9189bdbb549e46fd604eb342cb025bdf",
+  "release_id": "V5-R389",
+  "scope": "source workspace completion registration only; automatic original retention owns actual archival/removal",
+  "actual_checkout_removed_by_this_ops": false,
+  "parent_completed": false,
+  "source_tests_rerun": false,
+  "new_learner_or_game": false
+}

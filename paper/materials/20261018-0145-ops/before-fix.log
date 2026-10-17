@@ -1,0 +1,55 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/step/agent
+
+ ❯ tests/human-pace-strict-combat-stall.test.ts (3 tests | 3 failed) 80ms
+   × dispatches one legal combat action through both gates when the budget expires before request 60ms
+   × dispatches one legal combat action through both gates when the budget expires during request 14ms
+   × uses existing candidates only on explicit expiry while preserving ordinary strict behavior 5ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/human-pace-strict-combat-stall.test.ts > dispatches one legal combat action through both gates when the budget expires before request
+ FAIL  tests/human-pace-strict-combat-stall.test.ts > dispatches one legal combat action through both gates when the budget expires during request
+AssertionError: expected +0 to be 1 // Object.is equality
+
+- Expected
++ Received
+
+- 1
++ 0
+
+ ❯ tests/human-pace-strict-combat-stall.test.ts:47:25
+     45|       jevRetryDelaysMs: [], signal: controller.signal,
+     46|       onEvent: (event) => { if (event.type === "wait") controller.abor…
+     47|     expect(result.acts).toBe(1); expect(actions).toHaveLength(1);
+       |                         ^
+     48|     expect(["play_card", "end_turn", "use_potion"]).toContain(actions[…
+     49|     expect(asks).toBe(when === "before request" ? 0 : 1);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  tests/human-pace-strict-combat-stall.test.ts > uses existing candidates only on explicit expiry while preserving ordinary strict behavior
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ tests/human-pace-strict-combat-stall.test.ts:64:29
+     62|   expect(strict.resolve({}).intent).toBeNull();
+     63|   const fallback = strict.resolve({}, { budgetExpired: true });
+     64|   expect(fallback.fallback).toBe(true);
+       |                             ^
+     65|   expect(fallback.intent).toEqual(ordinary.resolve({}).intent);
+     66|   expect(fallback.rationale).toContain("human-pace deadline");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  3 failed (3)
+   Start at  01:49:13
+   Duration  3.06s (transform 2.33s, setup 417ms, import 2.40s, tests 80ms, environment 0ms)
+

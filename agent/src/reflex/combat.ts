@@ -352,14 +352,14 @@ export function planCombat(env: DecisionEnv): Decision | null {
         lethal: "I would probably die",
       }),
     },
-    resolve(answers) {
+    resolve(answers, context) {
       const answer = answers["play"];
-      // Strict mode: an unusable answer means we cannot act on Jev's decision. Ask again next
-      // iteration rather than quietly choosing for it.
+      // Strict mode waits for an unusable answer unless the loop explicitly reports expiry.
+      // An exhausted turn budget cannot recover by asking again on the same board.
       const unusable = (why: string): ResolvedAction =>
-        strict
+        strict && !context?.budgetExpired
           ? { intent: null, rationale: `${why} (trust-jev: waiting to ask again instead of choosing in code)`, confidence: null, fallback: false }
-          : fallbackResolve(why, null);
+          : fallbackResolve(context?.budgetExpired ? `human-pace deadline without a usable Jev answer (${why})` : why, null);
 
       if (!answer || answer.type !== "choice") return unusable("no usable answer from Jev");
       const chosen = byKey.get(answer.choice);

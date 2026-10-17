@@ -1,0 +1,129 @@
+{
+  "at": "2026-10-18 01:54:48 CST",
+  "batch": "20261016-075726-strategy-proposal",
+  "event": "stall20261018-0145",
+  "source": "0218061b77036147bca9e83c1f066c24888f7ecf",
+  "source_parent": "dddad5d67b673b6fb157bf1b73c5e32e45c3c676",
+  "source_tree": "cf109f345ceeddc964339a019e64d694f01fdc5a",
+  "old_main": "9423243d7f5e851781fd603d78af10efd0a368f3",
+  "old_live": "12efa5b4caeba72b9c33f796801ff46759193b8b",
+  "main": "db30ba4251999e5d9361b71cd1efded77863d2a9",
+  "actual_live": "729d475251ef7badc592f32c0211bca14d02ba49",
+  "tree": "772c50f82a7a3cfb431e236b464bc32bdfb7f020",
+  "behavior_commit": "2d37e094a4ec1b4dda83501686ba0b5810d7cb0b",
+  "behavior_tree": "5ed81670a18d7f8404298546b006288f8c7e3ee3",
+  "release_id": "V5-R390",
+  "name": "V5.human-pace-strict-combat-deadline-recovery",
+  "paths": [
+    "agent/src/reflex/combat.ts",
+    "agent/tests/human-pace-strict-combat-stall.test.ts",
+    "agent/tests/human-pace-strict-combat-stall.json"
+  ],
+  "composition": [
+    {
+      "lane": "main",
+      "path": "agent/src/reflex/combat.ts",
+      "source_sha256": "847f6b60a546e6569c142c8cc75fe4062232a646d1bd9891c5a672e48f73499a",
+      "composed_sha256": "f2f6aaceda51b61b0a67b1919d5ccb649c25a8a10111f1a4cdd4e360677973c4",
+      "source_equal": false,
+      "only_existing_attribution_difference": true
+    },
+    {
+      "lane": "main",
+      "path": "agent/tests/human-pace-strict-combat-stall.test.ts",
+      "source_sha256": "c8e94661ae49f1973597c924efef4d3e441a5c0063caca1a355e92bc8c8ade5b",
+      "composed_sha256": "c8e94661ae49f1973597c924efef4d3e441a5c0063caca1a355e92bc8c8ade5b",
+      "source_equal": true,
+      "only_existing_attribution_difference": false
+    },
+    {
+      "lane": "main",
+      "path": "agent/tests/human-pace-strict-combat-stall.json",
+      "source_sha256": "24c61b640d90020d7825a9f9952c2a0bc7992f88e5a938cc5ff739cdeed94298",
+      "composed_sha256": "24c61b640d90020d7825a9f9952c2a0bc7992f88e5a938cc5ff739cdeed94298",
+      "source_equal": true,
+      "only_existing_attribution_difference": false
+    },
+    {
+      "lane": "live",
+      "path": "agent/src/reflex/combat.ts",
+      "source_sha256": "847f6b60a546e6569c142c8cc75fe4062232a646d1bd9891c5a672e48f73499a",
+      "composed_sha256": "847f6b60a546e6569c142c8cc75fe4062232a646d1bd9891c5a672e48f73499a",
+      "source_equal": true,
+      "only_existing_attribution_difference": false
+    },
+    {
+      "lane": "live",
+      "path": "agent/tests/human-pace-strict-combat-stall.test.ts",
+      "source_sha256": "c8e94661ae49f1973597c924efef4d3e441a5c0063caca1a355e92bc8c8ade5b",
+      "composed_sha256": "c8e94661ae49f1973597c924efef4d3e441a5c0063caca1a355e92bc8c8ade5b",
+      "source_equal": true,
+      "only_existing_attribution_difference": false
+    },
+    {
+      "lane": "live",
+      "path": "agent/tests/human-pace-strict-combat-stall.json",
+      "source_sha256": "24c61b640d90020d7825a9f9952c2a0bc7992f88e5a938cc5ff739cdeed94298",
+      "composed_sha256": "24c61b640d90020d7825a9f9952c2a0bc7992f88e5a938cc5ff739cdeed94298",
+      "source_equal": true,
+      "only_existing_attribution_difference": false
+    }
+  ],
+  "knowledge_refresh_commit": "d1bfc2fe31c776f2eb7526ad908e5beede4e169e",
+  "knowledge_refresh": [
+    {
+      "path": "knowledge/characters/silent/boss-damage.json",
+      "sha256": "59fb4278503047fcdb8d51a26036f8d54bf8bc66bfd3bfc350c40208e38e7988"
+    },
+    {
+      "path": "knowledge/characters/silent/construction-opportunities.json",
+      "sha256": "7c462bdef3b05db2d204e87fc623feaa68739a67e76d39cdd0386c24f67d31f6"
+    },
+    {
+      "path": "knowledge/characters/silent/fight-value-gates.json",
+      "sha256": "f863ae19a857a0a8b08923a058457174840e609f7323e080f3020b35aa5cc8c1"
+    },
+    {
+      "path": "knowledge/characters/silent/fight-value.json",
+      "sha256": "a2b3dd0b5a709d18a33db75848496e46b144c5c7103bbd2bdd6b7bb4740b1fe2"
+    },
+    {
+      "path": "knowledge/characters/silent/monster-records.json",
+      "sha256": "3c2fa8bbb223ab139930fe64639e3a29f7e0b66af1f8dfd330bccc2711254c6f"
+    },
+    {
+      "path": "knowledge/characters/silent/outcome-stats.json",
+      "sha256": "57fa707bdcfb7f91e9e7886b44505114c82ae2ad3591f11192322559c6e0e17b"
+    },
+    {
+      "path": "knowledge/characters/silent/potion-equivalents.json",
+      "sha256": "752580ba511f7e7a2bf82d21e15004a9580fb7214ab922360dc20ffea67e4171"
+    },
+    {
+      "path": "knowledge/characters/silent/room-costs.json",
+      "sha256": "20a09267a05743af2cd45af456f3fd1694677306e99c47d5994e6a088153da06"
+    },
+    {
+      "path": "knowledge/common/card-upgrades.json",
+      "sha256": "42104e63e60da83492e6b79047dac330bf9f7a9885627954ec4025867db8135c"
+    },
+    {
+      "path": "knowledge/common/monster-db.json",
+      "sha256": "a8074ea31fa859dd3d728ecadb0c8ef3031472ee8418980599fe22e1e48f425c"
+    },
+    {
+      "path": "knowledge/common/move-model.json",
+      "sha256": "87a821b1522e950a59fae0030f8165544670331d1c637f6d0e1dcfbd7165932b"
+    }
+  ],
+  "source_sandbox_rc": 0,
+  "composition_gitleaks": 0,
+  "published": true,
+  "host_complete": false,
+  "host_rc": null,
+  "other_learner_changes_preserved": true,
+  "other_learner_completion_processed": false,
+  "current_game_restarted": false,
+  "parent_completed": false,
+  "ledger_shipped": false
+}

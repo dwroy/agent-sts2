@@ -1,0 +1,170 @@
+{
+  "generated_at": "2026-10-17T18:41:52.803Z",
+  "source_cut_bytes": {
+    "decisions.jsonl": 2400951813,
+    "deepseek-reasoning.jsonl": 377746518,
+    "runs.jsonl": 366518,
+    "states.jsonl": 14133285753,
+    "fight-plans.jsonl": 2233957,
+    "run-plans.jsonl": 9131094,
+    "brain.jsonl": 784901937,
+    "sl-attempts.jsonl": 46594376,
+    "run-config.jsonl": 2027701
+  },
+  "checks": {
+    "decisions attributed + unattributed == play records": true,
+    "decisions_by_label sum == attributed decisions": true,
+    "escalations rows == records with escalation": true,
+    "every runs.jsonl id present in runs.csv": true,
+    "commits == git rev-list --all --count": true
+  },
+  "counts": {
+    "runs.csv": 834,
+    "decisions_by_label.csv": 27830,
+    "escalations.csv": 3600,
+    "fight_plans.csv": 1461,
+    "commits.csv": 6915
+  },
+  "selected_run": {
+    "run_id": "0NMF36KX3F7Y",
+    "start_ts": "2026-10-17T17:10:23.088Z",
+    "end_ts": "2026-10-17T18:04:25.214Z",
+    "duration_min": "54.0",
+    "floor_max": "17",
+    "act_reached": "1",
+    "outcome": "defeat",
+    "victory": "0",
+    "outcome_source": "runs.jsonl",
+    "finished": "1",
+    "character": "SILENT",
+    "ascension": "10",
+    "code_version": "current",
+    "code_version_source": "runs.jsonl",
+    "code_version_console": "729d47525+dirty",
+    "code_versions_all": "bbc7cfcca+dirty 729d47525+dirty",
+    "n_decisions": "451",
+    "n_shadow": "0",
+    "decider_inferred": "0",
+    "n_code": "92",
+    "n_jev": "189",
+    "n_deepseek": "0",
+    "n_claude": "0",
+    "n_code_fallback": "24",
+    "n_jev_plan": "128",
+    "n_deepseek_plan": "0",
+    "n_claude_plan": "0",
+    "jev_calls": "205",
+    "jev_in_tokens": "4135752",
+    "jev_out_tokens": "35969",
+    "jev_cost_usd": "0.175212",
+    "jev_latency_p50_ms": "424",
+    "ds_calls": "0",
+    "ds_in": "0",
+    "ds_cache_hit": "0",
+    "ds_out": "0",
+    "ds_reasoning": "0",
+    "ds_total_tokens": "0",
+    "ds_calls_no_token_split": "0",
+    "ds_cost_usd": "0",
+    "ds_latency_p50_s": "",
+    "ds_overrides": "0",
+    "fight_plans": "0",
+    "fight_plan_errors": "0",
+    "fight_plan_cost_usd": "0",
+    "fight_plan_latency_p50_s": "",
+    "claude_calls": "0",
+    "claude_latency_p50_s": "",
+    "hp_guard_count": "0",
+    "escalation_chain": "none",
+    "era": "deepseek_memory",
+    "learning_loop": "1",
+    "death_enemy": "同族信徒/同族神官",
+    "death_enemy_ids": "KIN_FOLLOWER/KIN_PRIEST",
+    "final_hp": "0",
+    "max_hp": "70",
+    "bosses_seen": "THE_KIN_BOSS",
+    "has_postmortem": "1",
+    "postmortem_heading": "0NMF36KX3F7Y（A10，静默猎手，第17层，死于一幕boss同族信徒 KIN_FOLLOWER／同族神官 KIN_PRIEST：六试均34/70血、三药进场，前五试T9／T6／T5／T6／T5判死读档；末试T5以10血12挡对11＋6＋9＝26攻击阵亡，完整需损14，毒结算后两信徒42／49血、神官130/199血，未杀任一敌人）",
+    "preloop_listed": "0",
+    "n_run_notes": "1",
+    "autoplay_finished_lines": "1",
+    "in_runs_jsonl": "1",
+    "brain_source": "{\"basis\": \"brain.jsonl accepted verdict; legacy answer != null, no error/problems; unique question_id+engine\", \"brain_rows\": 17, \"coverage\": \"all_logged_questions_resolved\", \"eligible\": true, \"embedded_answers\": {\"map/route\": 10, \"run-plan\": 4}, \"exclusion_reason\": null, \"failed_or_unaccepted_rows\": 0, \"first_success\": \"2026-10-17T17:10:23.078Z\", \"last_success\": \"2026-10-17T17:34:21.540Z\", \"policy\": \"codex-successful-brain-v1\", \"source\": \"codex\", \"successful_answers\": {\"codex\": 17}, \"successful_by_label\": {\"event/choose\": {\"codex\": 2}, \"map/route-plan\": {\"codex\": 1}, \"rest/plan\": {\"codex\": 3}, \"reward/card\": {\"codex\": 9}, \"run-plan\": {\"codex\": 1}, \"shop/plan\": {\"codex\": 1}}, \"unknown_successes\": 0, \"unresolved_questions\": 0}",
+    "first_attempt": "{\"death_floor\": 17, \"floor\": 17, \"passed_act1\": false, \"passed_act2\": false, \"reloads\": 0, \"sl_rows\": 6, \"victory\": false}",
+    "performance_policy": "codex-successful-brain-v1",
+    "performance_included": "1",
+    "performance_exclusion_reason": ""
+  },
+  "changed_outputs": [
+    {
+      "path": "paper/data/README.md",
+      "bytes": 14189,
+      "sha256": "a1302935213ae2bfb7387e0a458fa3af0908b69f324144aa66cc182692425ab8"
+    },
+    {
+      "path": "paper/data/commits.csv",
+      "bytes": 1040962,
+      "sha256": "936510a7c6d82e4ff373895ac3c0a517783ad9eb6f0e7efdb6fda0c2d5258e35"
+    },
+    {
+      "path": "paper/data/cost-curve-silent.csv",
+      "bytes": 14936,
+      "sha256": "b3c22ba0f7f3752594121fe691bb9587a84e28f406cf02c90473bc94f933ef14"
+    },
+    {
+      "path": "paper/data/cost-silent.csv",
+      "bytes": 939510,
+      "sha256": "a562e8473ef5e18aab6b31539d8cdd6b578bb64c243f8058fdf5fdd7434f20e3"
+    },
+    {
+      "path": "paper/data/cost-sources.json",
+      "bytes": 251392,
+      "sha256": "6aeba99c89a4a5f4612c1067b46b5e3a207c5452baf38a89a7018b6f8fa0b75d"
+    },
+    {
+      "path": "paper/data/cost-unattributed.csv",
+      "bytes": 20313,
+      "sha256": "ddec9b8aed1a8573ee6fc09d0a50905d7b71b8ad0507b2552ff69067dd3b6608"
+    },
+    {
+      "path": "paper/data/decisions_by_label.csv",
+      "bytes": 1202622,
+      "sha256": "3b1b194e0b1143ce22754377b10e485bc15045a711b04e626f9b0b1517ab0f4f"
+    },
+    {
+      "path": "paper/data/learning-curve-silent.csv",
+      "bytes": 72948,
+      "sha256": "f442bc497067123ce6098c44668b91a908b0f80e12d7cd183b4f4d9982343a44"
+    },
+    {
+      "path": "paper/data/runs.csv",
+      "bytes": 1362216,
+      "sha256": "7667a1e2ff008be169468ba565ed1db08dc967160ceeeacf24d66bbd6e3ea083"
+    },
+    {
+      "path": "paper/data/summary.json",
+      "bytes": 562916,
+      "sha256": "ab363130d63fe160aca3c99b13753687abadb337239ae7cac4d6a4387d2dae41"
+    },
+    {
+      "path": "paper/data/verification.json",
+      "bytes": 587,
+      "sha256": "7b55f1146bd33fb8e40b073b111c52319440b7338bbffdc7e28a9658bea0ae7c"
+    },
+    {
+      "path": "paper/materials/silent/cost.md",
+      "bytes": 4200,
+      "sha256": "97da984c3423d3bb3a0dd44d83eb8c0daf99bd69606c6b785034a02c26e92807"
+    }
+  ],
+  "actual_exit_code": 0,
+  "raw_snapshot": false,
+  "count_warnings": [
+    [
+      "KF9HMZKTFC3V",
+      879,
+      880
+    ]
+  ],
+  "cost_is_estimate_not_bill": true
+}

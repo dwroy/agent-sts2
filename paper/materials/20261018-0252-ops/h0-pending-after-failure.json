@@ -1,0 +1,171 @@
+{
+  "at": "2026-10-18 02:09:20 CST",
+  "request_id": "roy-20261017-human-pace-h0",
+  "revision": 3,
+  "batch": "20261018-005332-strategy-proposal",
+  "source": "68bc24926d814c94a5c2472aa2bd512a99d1673c",
+  "source_parent": "75d5f9e33083fe0f41eb3fcf1a2380f2884e7112",
+  "source_worktree": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration",
+  "source_worktree_head": "f4c72b75f9dfff52f58f44e5f077823f53103b52",
+  "paths": [
+    "agent/src/reflex/rollout-live.ts",
+    "agent/src/reflex/rollout.ts",
+    "agent/tests/silent-aeonglass-intensity.test.ts",
+    "knowledge/characters/silent/experience.json"
+  ],
+  "owned_experience_ids": [
+    "silent-g1a-test-subject-calibration-boundary",
+    "silent-g1a-aeonglass-calibration-boundary",
+    "silent-g1a-queen-calibration-boundary",
+    "silent-h0-kaiser-crab-calibration-boundary",
+    "silent-h0-knowledge-demon-calibration-boundary",
+    "silent-h0-insatiable-calibration-boundary",
+    "silent-g1a-fixed-production-boundary",
+    "silent-h0-end-turn-measurement-boundary",
+    "silent-aeonglass-intensity-observed-turns"
+  ],
+  "source_qualification_rc": 0,
+  "prepared_composition_receipt": "paper/materials/20261018-0158-ops/h0-fixed-source-received.json",
+  "source_full_not_repeated": true,
+  "original_negative_results_preserved": true,
+  "merged": "ab4c5f91272f6e6b5450e5f16ea7df5a5195fb38",
+  "live_consumer": null,
+  "coverage_not_filled": true,
+  "ledger_id": "silent-0507",
+  "shipped_registered": false,
+  "official_release_id": "V5-R392",
+  "parent_completed": false,
+  "observed_original_lock_busy_at": "2026-10-18 02:00:52 CST",
+  "next": "Await the single original exact-name supplement event; preserve original full1. Fixture stability stays in original ordinary fix queue, do not hot-edit active owner input or add another full/model/observer. Verify exact result/scope before any narrow0507 acceptance; every wider parent stays open.",
+  "last_ops_attempt": {
+    "at": "2026-10-18 02:15:23 CST",
+    "rc": 75,
+    "reason": "original live lock busy",
+    "receipt": "paper/materials/20261018-0210-ops/h0-publication-blocked.json",
+    "source_or_live_mutated": false
+  },
+  "observed_refresh_guard": "paper/materials/20261018-0210-ops/h0-refresh-precheck.json",
+  "published": true,
+  "publication": "523fbcd34667a531e40e58aae877062fc3d9b99e",
+  "main": "d8d25fcc6542ad703a7aa183ef5bdd95d5dc0563",
+  "actual_live": "523fbcd34667a531e40e58aae877062fc3d9b99e",
+  "tree": "414ea8b173ca04165fc84193f9828e4b136a17e9",
+  "actual_live_consumer": {
+    "path": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261018-human-pace-h0-r3/ops-live-0227-receipt.json",
+    "sha256": "8a406c2e81434caee08b7231e1dc75f2a95e0584350c7dc203a574d30f831eb5"
+  },
+  "merged_sandbox": {
+    "rc": 75,
+    "started": false,
+    "reason": "original retention worker holds live lock",
+    "receipt": "paper/materials/20261018-0227-ops/h0-combined-sandbox-result.json"
+  },
+  "host": {
+    "batch": "20261016-075726-strategy-proposal",
+    "requested_pid": 2604918,
+    "requested_live": "523fbcd34667a531e40e58aae877062fc3d9b99e",
+    "intended_tree": "414ea8b173ca04165fc84193f9828e4b136a17e9",
+    "actual_checked_tree": "414ea8b173ca04165fc84193f9828e4b136a17e9",
+    "rc": 1,
+    "route": "one original existing075726 action; do not add a duplicate full",
+    "log": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261016-075726-strategy-proposal.fallback-414ea8b173ca04165fc84193f9828e4b136a17e9.checks.log",
+    "log_sha256": "d70b7619c8e35e140b324120c5244a00c513e0395472d1619b254d423bfb7ab1"
+  },
+  "last_ops_disposition": {
+    "at": "2026-10-18 02:54:57 CST",
+    "original_check": {
+      "rc": 1,
+      "log": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261016-075726-strategy-proposal.fallback-414ea8b173ca04165fc84193f9828e4b136a17e9.checks.log",
+      "merged": "523fbcd34667a531e40e58aae877062fc3d9b99e",
+      "tree": "414ea8b173ca04165fc84193f9828e4b136a17e9",
+      "commits": [
+        "28161b2d2a31e95587999fc6e5028acd727cecb2",
+        "b2bdb0b1dbc7ec9a39909595238b00efbb718321"
+      ],
+      "log_sha256": "d70b7619c8e35e140b324120c5244a00c513e0395472d1619b254d423bfb7ab1",
+      "coverage": {
+        "passed": [],
+        "failed": [
+          "tests/brain-codex.test.ts",
+          "tests/rollout-live.test.ts"
+        ],
+        "skipped": [],
+        "summary": {
+          "files": {
+            "failed": 2,
+            "passed": 534
+          },
+          "tests": {
+            "failed": 2,
+            "passed": 5246,
+            "skipped": 2
+          }
+        },
+        "failed_tests": {
+          "tests/brain-codex.test.ts": [
+            "codex runs watched: retries, stalls, timeouts and their trace stalled twice: the question fails as a timeout and the fallback answers it"
+          ],
+          "tests/rollout-live.test.ts": [
+            "rollout facts on Jev's combat question every option of a logged board carries the rollout and history facts; the decision log gets the rollout"
+          ]
+        }
+      }
+    },
+    "decision": "preserve live; route fixture stability to original ordinary fix queue; one exact-name supplement on original channel",
+    "reason": "Observed failures are a hard-coded zero-second startup-clock assertion and a fixed-board 30000ms timeout. No H0 state/numeric mismatch is shown; product or load causality remains unproved.",
+    "failure_lines": [
+      {
+        "path": "agent/tests/brain-codex.test.ts",
+        "line": 371,
+        "expected": "first token/last event at 0 s",
+        "observed": "first token/last event at 1 s; fallback and two attempts otherwise match"
+      },
+      {
+        "path": "agent/tests/rollout-live.test.ts",
+        "line": 57,
+        "observed": "30000ms deadline; 45935ms observed, no numeric assertion failure"
+      }
+    ],
+    "original_failure_and_coverage_preserved": true,
+    "no_repeat_full": true,
+    "source_sandbox_not_borrowed_as_live_green": true,
+    "original_source_four_leaves_exact": true,
+    "current_nine_consumer_objects_exact": true,
+    "consumer_receipt_sha256": "8a406c2e81434caee08b7231e1dc75f2a95e0584350c7dc203a574d30f831eb5",
+    "active_original_fix_owner": [
+      {
+        "batch": "20261018-021301-fix-batch",
+        "pid": 2517887,
+        "worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261018-021301"
+      }
+    ],
+    "test_or_production_timeouts_changed": false,
+    "source_or_knowledge_modified": false,
+    "new_release": false,
+    "ledger_shipped": false,
+    "parent_closed": false
+  },
+  "supplement": {
+    "at": "2026-10-18 02:54:57 CST",
+    "command": [
+      "nice",
+      "-n",
+      "19",
+      "bash",
+      "ops/codex-ops-actions.sh",
+      "learner-recheck",
+      "20261016-075726-strategy-proposal:64c1f88cff9ced6315cb79523ae465e30d1013857a261882512ecfb2f9c60070"
+    ],
+    "pid": 2707611,
+    "birth": "115524082",
+    "actual_started": true,
+    "manifest_sha256": "64c1f88cff9ced6315cb79523ae465e30d1013857a261882512ecfb2f9c60070",
+    "actual_test_start_not_assumed": true,
+    "terminal_rc": null,
+    "expected_live": {
+      "commit": "523fbcd34667a531e40e58aae877062fc3d9b99e",
+      "tree": "414ea8b173ca04165fc84193f9828e4b136a17e9"
+    },
+    "no_new_full": true
+  }
+}

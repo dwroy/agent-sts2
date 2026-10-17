@@ -1,0 +1,176 @@
+{
+  "batch": "20261018-021301-fix-batch",
+  "canonical_state": "failed",
+  "canonical_rc": 0,
+  "source": "4c16dab0457a61e22ef06b27e367d146cb99bab3",
+  "parent": "9ed8ac27c45992bf48e6526c38bd77c8bbfa8132",
+  "source_tree": "39dad825195bdeb03a77712471497d03664eb28f",
+  "paths": [
+    {
+      "path": "agent/tests/learner-report-fixes-shape.test.ts",
+      "blob": "bf414387c6ee46db8e0368852d59f063585b5a53",
+      "sha256": "6e46a0a801d731401b411bfe5674fd327205a0bf20671068543ce3bc4ea6d65e"
+    },
+    {
+      "path": "ops/learner_checks.py",
+      "blob": "b6b1bab5c6348898787b1ca74ec7836d189728a5",
+      "sha256": "cbdea748ca8796d53df48ec616850c4c522fdd0ee3cfaeac0383f8be92fb633b"
+    },
+    {
+      "path": "ops/tests/test_learner_report_fixes_shape.py",
+      "blob": "00bdc1555e38a91c1cffdad3b28f331c201d5b6b",
+      "sha256": "f4ebe4913cde0de98452020f7f60c44ccff970f2b2419e2094838bc7f163cc81"
+    }
+  ],
+  "source_sandbox_rc": 0,
+  "source_sandbox_files": 486,
+  "source_sandbox_cases": 4441,
+  "source_full_not_repeated_by_ops": true,
+  "initial_source_sandbox_rc": 1,
+  "initial_source_timeout": "continuation-failure-b2-planner.test.ts",
+  "unchanged_timeout_case_rerun_rc": 0,
+  "source_ablation_rc": 1,
+  "restored_rc": 0,
+  "invalid_initial_ablation_preserved": true,
+  "already_fixed_ancestors_verified": 45,
+  "historical_merge_conflicts": 19,
+  "original_report": {
+    "task": "fix-batch",
+    "base": "9ed8ac27c45992bf48e6526c38bd77c8bbfa8132",
+    "fixes": [
+      {
+        "item": "ops-learner-recheck-report-fixes-shape-20261018：兼容显式源码的描述型fixes并保留拒绝守卫",
+        "commit": "4c16dab0457a61e22ef06b27e367d146cb99bab3",
+        "test": "agent/tests/learner-report-fixes-shape.test.ts",
+        "fails_without_fix": true
+      }
+    ],
+    "skipped": [
+      {
+        "item": "出牌、药水、SL、终局、路线及角色机制条目（0256/0260/0263/0266/0308/0311/0317/0319/0320/0322/0324/0329/0334/0339/0344/0347/0349/0362/0365/0481/0487，另含XTSV1U9JD34T终局与GXNKW8X1XYJP抽牌身份）",
+        "reason": "策略类；沿已有独立strategy-proposal链处理，不重复派发或补入开发者游戏知识。"
+      },
+      {
+        "item": "silent-0339续证：BXU0CKWKH2RU尾巴误核销",
+        "reason": "策略类；已有58ab473f6c814061/c232010cd405fe44原提案链，保留当前行为和原证据。"
+      },
+      {
+        "item": "silent-0332 nonpositive-hp实际资源契约根因",
+        "reason": "证据不足；原专用owner链仍未闭环，诊断及样本身份窄修不等于根因修复。"
+      },
+      {
+        "item": "U5W7NUE925NK F15/F16两次原G2缺DPR告警的完整根因",
+        "reason": "证据不足；原未来样本数组及配对DPR分母未保存，仅修有固定复现的严格零前缀边界，不将其冒作两次实盘根因。"
+      },
+      {
+        "item": "sandbox-glob-startup-race目录生命周期与磁盘压力宽项",
+        "reason": "证据不足；已有启动恢复/租约/回收窄修，目录删除归属与上游时序未确定。"
+      },
+      {
+        "item": "arch-funnel-guard / arch-learning-priority / arch-unified-resource-value / inv-f33-regression及调度公平性调查",
+        "reason": "独立架构、策略或归因任务，范围太大，超出普通纯bug批次。"
+      },
+      {
+        "item": "core-build-notify-222802-rc2旧原生通知恢复",
+        "reason": "证据不足；stderr持久化已修，旧送达状态未证，不重发可能已送达的通知。"
+      },
+      {
+        "item": "Codex缓存实测、DPR/B2性能及历史宿主超时根因",
+        "reason": "证据不足或独立性能调查；固定测试确定性子项已修，不代表自然性能根因已解决。"
+      },
+      {
+        "item": "原20261018-011241报告的recheck接续",
+        "reason": "证据不足：固定原报告的9ae48941源码不是所报dddad5d67发布提交祖先；六叶相同不代替祖先证明。原报告/状态/recheck2保留，未重复075726已验宿主，格式修复不冒称原批full0。"
+      },
+      {
+        "item": "ops-learner-recheck-report-fixes-shape-20261018补证：窄cherry-pick提案验收",
+        "reason": "太大：原Markdown没有机器JSON、原输出缺runs/base；独立原注册/原报告/六叶源码及发布/真实宿主回执协议超出本批格式修复。不造祖先、不改原报告/提案ID/seen_runs/租约或ACK，保留pending。"
+      },
+      {
+        "item": "infra-h0-414-host-fixed-test-stability-20261018",
+        "reason": "证据不足；02:54本批启动后追加，原条目明确不热改当前任务输入、下一原空槽接续。固定进程秒数/rollout工作量需独立核验，保留原宿主full1与后续补验范围；本批源端0不冒充该live0。"
+      }
+    ],
+    "merged": null,
+    "tests": {
+      "tsc": 0,
+      "vitest": 0,
+      "files": 486,
+      "cases": 4441,
+      "initial_vitest": 1,
+      "rerun": [
+        "agent/tests/continuation-failure-b2-planner.test.ts"
+      ]
+    },
+    "code_proposals": [],
+    "implementation_domains": [],
+    "report": "/home/dw/Projects/agent-sts2/learner/runs/20261018-021306-a4687a0f-0a61-4671-be4c-f205a3519b0d-fix-batch/report.md"
+  },
+  "native": {
+    "batch": "20261018-021301-fix-batch",
+    "thread": "01a14b11-661f-74e1-82ec-cd4e87d238f0",
+    "cwd": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261018-021301",
+    "event_log": "learner/runs/20261018-021306-a4687a0f-0a61-4671-be4c-f205a3519b0d-fix-batch.jsonl",
+    "registered_launch_batch": "20261018-021301-fix-batch",
+    "original_lease": "9c1282397140cb8be26aa9de44aedbd4c3f61a5abf996977e10a02889bbb9b52",
+    "native_context": {
+      "source": "ops/codex-ops/accounts/codex3/learner/sessions/2026/10/18/rollout-2026-10-18T02-13-13-01a14b11-661f-74e1-82ec-cd4e87d238f0.jsonl",
+      "offset": 50305,
+      "bytes": 5152,
+      "sha256": "a5af47e228adb6506163a114d2035e6e5390c95a08fa7a5b8835044ffa3f13b9",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "sandbox": {
+        "type": "workspace-write",
+        "writable_roots": [
+          "/home/dw/Projects/agent-sts2",
+          "/home/dw/Projects/agent-sts2/.git",
+          "/home/dw/Projects/agent-sts2/.git/worktrees/codex-fix-silent-20261018-021301"
+        ],
+        "network_access": false,
+        "exclude_tmpdir_env_var": false,
+        "exclude_slash_tmp": false
+      },
+      "approval_policy": "never"
+    },
+    "native_user_input": {
+      "offset": 58300,
+      "bytes": 13081,
+      "sha256": "e7ca7c6582a02d25a77c3c36315078eebe7a2af4139bc4172be2f7a80a0ffd4e",
+      "input_sha256": "faa196ee9f5349d106f5016d795d4684007b4555f320e9c21a9756b03e8c6f29"
+    },
+    "original_header_events": [
+      {
+        "offset": 0,
+        "bytes": 14892,
+        "sha256": "2557cc8f7c74f2ec598ae85ff248629798b879783492292e0166d52a8ce4ea18",
+        "type": "learner_launch",
+        "attempt": null,
+        "code": null
+      },
+      {
+        "offset": 14892,
+        "bytes": 370,
+        "sha256": "df4f6a35a16f5688756b9a796db1ed82be9eef149fcbe6d6867681e3e0b73606",
+        "type": "learner_startup_attempt",
+        "attempt": 1,
+        "code": null
+      },
+      {
+        "offset": 18275,
+        "bytes": 77,
+        "sha256": "48219ca8009afaa9a6e59d6082ccd270ff0b2328d440b8de42ea40885bd14892",
+        "type": "thread.started",
+        "attempt": null,
+        "code": null
+      }
+    ],
+    "startup_attempts": 1,
+    "failed_startups_preserved": 0,
+    "no_model_or_manual_restart": true
+  },
+  "archived_files": 51,
+  "no_game_knowledge_or_runtime_behavior_change": true,
+  "no_eval_release_or_ledger_entry_required": true,
+  "original_support_cherry_pick_protocol_not_fixed": true
+}

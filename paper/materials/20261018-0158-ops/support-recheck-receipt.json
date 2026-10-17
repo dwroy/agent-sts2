@@ -1,0 +1,26 @@
+{
+  "at": "2026-10-18 02:05:13 CST",
+  "batch": "20261018-011241-strategy-proposal",
+  "command": [
+    "nice",
+    "-n",
+    "19",
+    "bash",
+    "ops/codex-ops-actions.sh",
+    "learner-recheck",
+    "20261018-011241-strategy-proposal"
+  ],
+  "actual_rc": 2,
+  "report_sha256": "80db955e17d8091dba170c45152d49d5129e6f894fd9920260783afea0a2cf5d",
+  "actual_source": "9ae48941c8d1495b2d4048aa40feee9713d54784",
+  "actual_merged": "dddad5d67b673b6fb157bf1b73c5e32e45c3c676",
+  "fixes_types": [
+    "str"
+  ],
+  "blocking_field": "ops/learner_checks.py:235 requires every fixes item to be a dict with commit; raw completed learner report uses strings plus source_commit/merged",
+  "original_report_preserved": true,
+  "original_done_or_failures_not_rewritten": true,
+  "new_full_started": false,
+  "existing_exact_host": "20261016-075726-strategy-proposal/772c50f82a7a3cfb431e236b464bc32bdfb7f020 remains sole current combination check",
+  "next": "Keep pending for original ops after current exact host; repair mechanical report compatibility via existing workflow, do not fabricate check green, source ancestry, or another learner task"
+}

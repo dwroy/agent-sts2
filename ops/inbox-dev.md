@@ -3205,3 +3205,125 @@ selector于2026-10-15 13:15:58 CST从/home/dw/.codex-brain原子改为/home/dw/P
 - 2026-10-18 00:45 [运维 codex] 已恢复autoplay/PID2027082，并回填J5E7A3MS9NSH与W96复盘学习者的codex3真实消费。换号学习接续阻塞已修合main/live；按Roy00:32先H0(r2→r3仅账号)、0332(r3→r4仅账号)，但003109/PID2076638与003109-s2/PID2076783仍占原两槽，两项目前pending/dispatched=false，尚无新批次、线程或首回复；未拿旧批号冒充。支撑映射r1后排，待H0/0332实跑后首槽释放再派；首答回填待真实启动，接续见notes/codex3-ops-resume-20261018.md。
 
 - 2026-10-18 00:50 [运维 codex] 续00:45接续状态：原003109登记PID2076638已退出，另一PID2076783仍活；原reconcile尝试遇learn.lock忙，未抢锁/额外开批。尚未独立核到H0/0332的新实际批次、线程或首回复，不能以PID退出称已派发；下一原完成事件按startup-watch回填，支撑仍后排。
+- 2026-10-18 00:57 [运维 codex] V5-R389 已窄合八叶：Silent L2 旧为共享90秒扣B3/G2/构筑后余量，新为每次路由独立90秒、同次验证/重问/等待共截止，shadow独立扣时并恢复父余量；B3原截止/样本/C1C2/SL药水、H2/Jev事后60/5/1、模型和其他角色保持。证据source ef092f1c9189bdbb549e46fd604eb342cb025bdf，六局217题/14截止定位、固定时钟217/217，tsc0/源码沙箱4429过/固定32过；actual_ms为共享+独立总计，按shared_actual_ms/independent_actual_ms及stage.scope分别验收，不能与父共享90秒直接比较。main 75d5f9e33083fe0f41eb3fcf1a2380f2884e7112，live bbc7cfcca32bcf303324c10d540b348b912418a0，树 8ba5f0a7d1359cdcff832d647d1c639ee5f956ff；原075726宿主PID2221959已开、结果待回报，不借源码绿作live绿。预期恢复L2完整额度，不冒称自然耗时或胜率改善；回退只反向此八叶预算增量，保知识/其他发布/历史，实际回退再编号。没有游戏知识/ledger shipped，H0/0332/human-pace父不关闭；不重启当前J5E7A3MS9NSH。实收/发布/宿主回执见paper/materials/20261018-h1-l2-budget-fix/ops-*.json。
+- 2026-10-18 00:57 [运维 codex] roy-20261017-human-pace-h0 原科学r2沿显式账号接续r3已实际启动：批次20261018-005332-strategy-proposal，全新codex3线程01a14ac8-7b11-7ab3-9511-eb44b8ebf5fd（非跨号resume），原生gpt-6.1-sol/xhigh/原workspace-write沙箱；首个回复：我会先核对本次接续身份、冻结输入和原阶段产物，再按六项验收逐一查证；保留原证据、失败和缓存。所有修改只在当前工作树进行，验证后按授权完成经验入库与窄合 live。
+。读回回执paper/materials/20261018-0013-ops-resume/roy-20261017-human-pace-h0-new-account-first-reply.json；支撑映射r1等两项中首个槽释放，父要求不关闭。
+- 2026-10-18 00:57 [运维 codex] silent-0332 原科学r3沿显式账号接续r4已实际启动：批次20261018-005345-strategy-proposal，全新codex3线程01a14ac8-affa-70d0-96e0-e9c6b36a5453（非跨号resume），原生gpt-6.1-sol/xhigh/原workspace-write沙箱；首个回复：我会先核对原报告、冻结输入和当前源码，补齐 B2 诊断传递与固定验证，并保留已有失败记录。实际上线仍按指定的 ops 窄合入流程交接。
+。读回回执paper/materials/20261018-0013-ops-resume/silent-0332-new-account-first-reply.json；支撑映射r1等两项中首个槽释放，父要求不关闭。
+- 2026-10-18 00:58 [运维 codex] 首回复单行回填（上一条保留原文换行，本条只纠正呈现、不另起批次）：roy-20261017-human-pace-h0 批次 20261018-005332-strategy-proposal，codex3线程 01a14ac8-7b11-7ab3-9511-eb44b8ebf5fd，实际首回复「我会先核对本次接续身份、冻结输入和原阶段产物，再按六项验收逐一查证；保留原证据、失败和缓存。所有修改只在当前工作树进行，验证后按授权完成经验入库与窄合 live。」；原生gpt-6.1-sol/xhigh、原沙箱已核，支撑映射r1仍等上述首个槽释放，父要求保持开放。
+- 2026-10-18 00:58 [运维 codex] 首回复单行回填（上一条保留原文换行，本条只纠正呈现、不另起批次）：silent-0332 批次 20261018-005345-strategy-proposal，codex3线程 01a14ac8-affa-70d0-96e0-e9c6b36a5453，实际首回复「我会先核对原报告、冻结输入和当前源码，补齐 B2 诊断传递与固定验证，并保留已有失败记录。实际上线仍按指定的 ops 窄合入流程交接。」；原生gpt-6.1-sol/xhigh、原沙箱已核，支撑映射r1仍等上述首个槽释放，父要求保持开放。
+- 2026-10-18 01:02 [运维 codex] 学习通知b705fd9af5fab8fa6aa7fd1d/7f0e05860ac9f2f13d7747f7/452b2fab28be1b86288c097a的ops实际双收件原文及SHA回执已核；H0旧准入阻塞已由codex3新线程真实首回复恢复，支撑映射原r1仍依Roy00:32等待H0/0332首个槽释放，科学要求及原证据保持。已向现有watcher wJ:pJT/session01a14aae-4b03-7cf1-9185-34dc3bed786f提交原文、恢复差异、证据及下一步，Herdr agent_prompted/exit0只证明提交，watcher本人实收和告知Roy仍待其回执、不代ACK；见paper/materials/20261018-0058-ops/watcher-send-receipt.json。
+- 2026-10-18 01:09 [运维 codex] 本轮待提交记录发现原Git账本漏silent-0451原add（已有两update）及本轮20waiting所需原提案add；工作目录完整账本0问题。已按物理原行offset/bytes/SHA只恢复必要原件并保原基线失败，候选账本检查0、20waiting/两pending读回通过；未写新游戏知识/改原历史或并行记录。证据paper/materials/20261018-0058-ops/record-candidate-checks.json。
+- 2026-10-18 01:17 [运维 codex] 0332通知741c985a71dba374bf6fd16e已核原文/原ops双收件SHA及r4报告：既有V5-R373诊断和限定经验当前消费者可读，仍缺YZW/RQ/TCD指定seed真实失败的完整输入、首战末resources及逐轮steps/outcome/resourceAudit；logs/sim-failures本次核仍不存在，18份有限健康摘要不等于全部历史无异常或根修复。已向原watcher wJ:pJT/01a14aae实际prompt提交0（运输不代实收/Roy ACK）；仅沿既有自然完局/复盘/卡死/人工处理取得首个完整不可变封套后接续原0332请求，新证据前不为0332重开模型/局/模拟/监听，六提案及父开放。证据paper/materials/20261018-0111-ops/0332-notice-readback.json和watcher-send-receipt.json。
+- 2026-10-18 01:17 [运维 codex] 按Roy00:32顺序，0332原批005345实际done0/PID退出释放首槽后，支撑件映射原科学r1仅账号接续为r2，实际启动批次20261018-011241-strategy-proposal、codex3全新线程01a14ada-1fe1-71f1-b823-19a0c3c49cf1（非跨号resume）、原生gpt-6.1-sol/xhigh/原沙箱已核；实际首回复「我会先核对当前协议、原任务产物和 live 状态，再查四套模板的逐条对局证据；证据不足的关系会保留未知，并记录可入库的限定或反证结论。」。原owner/WT/输入/失败保留，H0继续005332，父要求未关闭。回执paper/materials/20261018-0111-ops/support-new-account-first-reply.json。
+- 2026-10-18 01:17 [运维 codex] V5-R389原八叶ef092f1c精确live bbc7cfcca32bcf303324c10d540b348b912418a0/tree8ba5f0a7d1359cdcff832d647d1c639ee5f956ff的唯一075726宿主tsc0、533文件5234过2跳/0（702.72秒，原logSHA已核），不重源码full/补测/编号，也不冒当前局已消费；本人终局paper/materials/20261018-h1-l2-budget-fix/ops-host-terminal.json。原WT complete因retention.lock忙1未登记；WT后续cd1f7caf仅文档后代，原八叶SHA未变且只读acceptance预检通过，已以正确HEAD命令留原ops一次manual重试ops/codex-ops/queue/1792257317109872409-manual.md，不重置WT/手删/称已回收/关闭human-pace父。
+
+- 2026-10-18 01:51:26 CST [运维 codex] 卡死已定位：0NMF36KX3F7Y F17/T3，mod就绪、原局仍在；循环传入预算到期标记，但通用单动作战斗解析器忽略，严格模式在同一耗尽回合无限等空回答。step补丁只接通现有到期兜底；固定现场修前3项失败、修后5文件33项通过，完整检查进行中，未改配置/打法/模型/SL或放弃存档。证据 paper/materials/20261018-0145-ops/。
+
+- 2026-10-18 01:55:08 CST [运维 codex] 通用阻塞修复已合main/live，V5-R390，source 0218061b7703，live 729d475251ef。旧：0NMF36KX3F7Y F17/T3在明确预算耗尽后仍走strict空回答等待，25polls后停住；新：单动作战斗解析器仅在明确budgetExpired且回答不可用时采用原有兜底候选，未到期等待/有效回答/原排序与候选、预算、模型、药水/SL不变；铁甲无到期上下文路径保持等价。证据为现场固定快照及修前三项失败、修后5文件33项通过、源码tsc/完整沙箱入口0；新live组合宿主完整检查仍待原075726通道，不借源码绿或历史live绿。预期恢复同一存档推进，未宣称胜率改善；并行支撑映射学习及自动知识刷新原样保留，不因本修复关闭其要求。回退只反向此resolver增量和两固定测试叶，保留知识、其他发布及历史，实际行为回退另编号；无新游戏知识/账本shipped，H0/0332/support/human-pace/main-push父保持。证据paper/materials/20261018-0145-ops/。
+
+- 2026-10-18 01:57:29 CST [运维 codex] 卡死处置：0NMF36KX3F7Y F17/T3截止空回答死等已以V5-R390修复；原broker play-stop0仅停驱动PID[2280361, 2280372]，原autoplay2027082和游戏34676保留，已发原play-stop0；单次回读尚未足以确认接续，不等待/轮询，留待后续正常事件核实，现场回读screen=COMBAT/floor=17/turn=3。源码tsc/沙箱484文件4438项0，合入后原入口定向23项0；最终live 729d475251ef/tree 772c50f82a7a已沿原075726发起唯一完整宿主检查PID2463137，结果待learner-checks，源WT回收登记亦保pending，不冒称全绿或自然胜利。
+
+- 2026-10-18 01:49:54 CST H0/r3 原任务学习者交付/异议转运维：request roy-20261017-human-pace-h0，固定input SHA 1e1c259a15f1824119d0009747a89a60f60171705cb051b6c627597804bceea7；新codex3实际原生线程 01a14ac8-7b11-7ab3-9511-eb44b8ebf5fd，Sol6.1/xhigh与原WT实核，首回复offset/SHA见 /home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261018-human-pace-h0-r3/native-first-reply-offsets.json。保原owner/历史，不跨号resume，不代改注册或任何ACK。
+  固定源码 68bc24926d814c94a5c2472aa2bd512a99d1673c，4个拥有叶（2源码/1固定回归/经验JSON），源tsc0、官方sandbox484文件4432项0、负向1/正向0、gitleaks0。原源full1仅历史不完整测试副本/旧失败编译草稿的66个导入，原件和逐SHA文本保留，不改断言/时限/排除表。9个候选对象真实生产函数预检0，经验更新环节链bb1df77cdb2d4c9d通过，原7b288c9c2015bb29和首次链失败保留；账本silent-0507仍proposed。
+  旧现行实现：沙漏加大力度每次固定加4力量。新候选窄修：仅Silent A10、单沙漏535HP/凋萎存在6/原表力量4，whole-fight绝对T3/6/9/12加4/5/6/7；其他角色/阶/未知签名/短rollout/T15+沿旧路，保R386/R388及全部权重、费用、药水、SL、阈值。证据原cut内67个已就绪窗/31局，各回合30/25/10/2窗；另14未就绪、1临时力量恢复混杂保留。25226ZFLNR1J、UMVLWER4CD98、RMNXHZKV716Y及所有原offset/len/SHA在intensity-evidence/readiness。
+  认真检验所得反例：新固定full模型765690dcf638承接89717d20b447，原107/481/Platt训练/200样本/原588行seed/四闸不变，只重算2调参+35验证共74行，复用1102行，原6错误行完全保留。沙漏T1 Brier .1731→.1794、leak4.078→4.125；pre .1841→.1855、leak4.204→4.252。T1平均gap虽缩至+.140，仍失败Brier/leak；pre仍三闸失败。六目标仍低可信，不能说物理状态窄修等于概率质量改善。当前H1有限前缀/刷新输入不同，不替换生产trust，不关0332/宽父，不开自然验收/H2 on/H3+。预期仅修已见力量状态；不宣称自然胜率收益。若实际发布后回退，只逆向本次2源码/1固定回归和9个拥有经验对象，保此前修复与刷新，再由ops按实际行为核新号。
+  实际未上线：两次窄合均live-merge.lock busy，未改live任何文件；merged/publication均null。固定源 68bc24926d814c94a5c2472aa2bd512a99d1673c 和复现命令 python3 /home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261018-human-pace-h0-r3/publish.py 68bc24926d814c94a5c2472aa2bd512a99d1673c 已备；只在原锁可用、刷新重叠预检及实际新组合通过后交付，不能把候选消费者当live回执或把源码自测当组合绿色。正式版本/consumer receipt/implemented/shipped尚未登记；由原ops为合入受阻兜底，科学缺口仍原H0接续。
+  进一步端点收窄：实验体两处初筛差的下一帧仍选牌/未就绪，当前不支持再修换相；女王13个已就绪窗聚合体力量少1（A2三窗/A10十窗），帝王蟹2个已就绪窗力量高6，留原H0逐actor/招式/恢复路径隔离；知识恶魔和无厌沙虫局部字段相符不证明全牌堆/抽牌/策略/资源。完整报告 /home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261018-human-pace-h0-r3/report.md，questions原文如下，沿ops→watcher→Roy转交；本次仅实际双追加读回，不声称ops/watcher/Roy已确认：
+[
+  {
+    "claim": "旧full模型将沙漏加大力度每次固定按4力量处理；r1沙漏边界尚未定位新的A10机制。",
+    "finding": "原cut内67个已就绪/无恢复混杂窗口支持T3/6/9/12增4/5/6/7。窄修有状态证据，但同固定校准的Brier与穿透比点估计变差，不能说六Boss可信度已修好。",
+    "evidence": [
+      "25226ZFLNR1J F48 T3/T6",
+      "UMVLWER4CD98 T9",
+      "RMNXHZKV716Y T12",
+      "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261018-human-pace-h0-r3/intensity-evidence.json",
+      "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261018-human-pace-h0-r3/intensity-readiness.json",
+      "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261018-human-pace-h0-r3/before-after.json"
+    ],
+    "recommendation": "只发布已见状态修正及反证经验，保原四闸和低可信；继续分离端点、状态牌/抽牌、策略与资源差异。",
+    "existing_entry_ids": [
+      "silent-g1a-aeonglass-calibration-boundary",
+      "silent-aeonglass-intensity-observed-turns"
+    ]
+  },
+  {
+    "claim": "本轮后继字段初筛中的2处实验体最大HP/弱化差可能意味着新的换相错误。",
+    "finding": "两处原下一帧均未就绪并处于选牌，不足以认定机制错误；不据此推翻R386已见阶段能力修正。",
+    "evidence": [
+      "T082DRCUHRRD A0 F48 T8→T9",
+      "YZWV37N2MU6N A10 F48 T4→T5",
+      "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261018-human-pace-h0-r3/successor-readiness.json"
+    ],
+    "recommendation": "先在原cut内取首次已就绪且未打牌的后继帧，再隔离轮初毒/选牌结算。",
+    "existing_entry_ids": [
+      "silent-g1a-test-subject-calibration-boundary",
+      "silent-test-subject-phase-reset",
+      "silent-h0-end-turn-measurement-boundary"
+    ]
+  },
+  {
+    "claim": "旧Queen/Crab整场推进已包含当前看见的全部敌方力量变化。",
+    "finding": "新控制assay中女王13个已就绪窗聚合体力量少1，帝王蟹2个已就绪窗力量高6；这些状态差需继续逐actor/招式/临时恢复隔离，尚不能归咎一个倍率。",
+    "evidence": [
+      "ZZMYZ5UBCG72 A2",
+      "ZVYUL2YP3518 A10",
+      "5X2GHKJ89PN1 A10",
+      "CVJ4MLQF4CSY A10",
+      "9TG1RP5LFAAK A10 T6",
+      "T082DRCUHRRD A0 T8",
+      "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261018-human-pace-h0-r3/successor-state-assay.json",
+      "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261018-human-pace-h0-r3/successor-readiness.json"
+    ],
+    "recommendation": "沿原H0 owner先审Queen已就绪清洁窗口的盟友加力路径及Crab当前/后继招式效果，再决定最窄规则；纸鹤A2不扩A10。",
+    "existing_entry_ids": [
+      "silent-g1a-queen-calibration-boundary",
+      "silent-h0-kaiser-crab-calibration-boundary",
+      "silent-paper-krane-weak-multihit"
+    ]
+  }
+]
+
+
+## 2026-10-18 01:50:09 CST Silent 支撑件映射 r2 已窄合 live；请原ops核号、宿主、shipped及逐项异议转达
+
+request_id=roy-20261017-human-pace-support-mapping，revision=2；input SHA 929bac6527586d12e5693ffd09e04ef55e467bf2fb78427739003eb60347f5ea。原批/原报告/失败保留，codex3新线程01a14ada-1fe1-71f1-b823-19a0c3c49cf1接续，不跨号resume。
+
+六叶源9ae48941c8d1495b2d4048aa40feee9713d54784；实际live祖先 dddad5d67b673b6fb157bf1b73c5e32e45c3c676，源码树 1250cecdfc7e38bf15d07113bfc768bf63be8ca7。源码/经验六叶逐字同源，未stage或覆盖13项既有并行刷新/记录差异；本树main只作为开发基线同步，源提交仍请ops窄集成main。源端sandbox 484文件4437项、live合后sandbox均0，原tsc及固定排除入口不变；双重数据负对照和单文件源码消融exit1、恢复0。实际live默认loader/H2 shadow/Jev投影/full prefix固定读回40项过，consumer-receipt.json SHA 4a4eaea47335712bf38f11e0c870ebd5daf49adb5edc97caf98ff5eae143025d，保实际输入/输出，model_calls=0、game_actions=0。
+
+逐项旧/新关系（每项仅Silent A10一局局部观察、低置信；原高置信/支持数仍仅对应旧核心观察）：
+- P旧H2支撑未知；新普通后空翻为P的挡/过牌局部支撑：HNX4A2WBC34W F48第3试T3，付1，余像1在场总挡1→7并抽两牌；不能把6全算牌面，T8实死。
+- D旧H2支撑未知；新普通生存者为D的后继挡局部支撑：25226ZFLNR1J F48首试T4，5敏时付1、挡10→23且完成弃牌；T8判死截断，不冒称实死或替代双步法/原挡输出。
+- S旧H2支撑未知；新普通后空翻为S的挡/过牌局部支撑：YF0LXT1QSTGG F48第6试T3，5敏且牌面带保留时付1、挡0→10、抽防御/余像；抽到余像不等建立，T5实死。
+- R旧H2支撑未知；新普通肾上腺素为R的局部供能/过牌支撑：L704TLETMZBM F48第3试T3，爆发1在场0费能量0→2、手牌8→10；不能外推无重放供能/抽牌值，T6实死。
+
+原P/D/S/R模板字节与candidate保持。后空翻在D仍是原核心挡；R旧具体牌表的核心命名不能直接改现行签名。升级、替代、必要充分性、移除反事实和净胜率未知。新映射不补核心、不加排序分；H2仍shadow，未开启on/新局/观察器/H3+。预期仅提高已观察关系的可读/可追溯性，不报自然采用或胜率改善。回退只撤本次六叶补丁及四经验新增段，保留其他并行经验和原件，不整库回旧日期。
+
+ledger=silent-0508仍proposed；proposal=silent-proposal-048d6591d2a81b7e。版本专题V5.silent-template-support-observations1已追加实际commit，正式release_id请ops统一沿原live锁核配；原宿主完整检查及实际shipped由ops确认。请逐项将questions.json中的限定/异议经ops→原watcher或其已授权新账号接续→Roy转达，并保留各角色独立实际回执。学习者不编辑注册、learn.json、learning-notices或任何ACK；本文件追加和事件入队不代表watcher已读/Roy已收到。
+
+材料/报告：/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-140741/learner/runs/20261018-support-mapping-r2/report.md；差异/证据：changes-final.json、support-analysis.json、coverage.json、live-integration.json；实际消费者回执：/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-140741/learner/runs/20261018-support-mapping-r2/consumer-receipt.json。父human-pace、自然采用及宽量化要求继续开放。
+
+- 2026-10-18T01:53:46.752954 [ops学习通知/disagreement] roy-20261017-human-pace-support-mapping：[{"claim": "旧R-BANDAGES具体历史牌表把普通肾上腺素列为核心组件；现行R模板签名要求抽弃与收益遗物。", "finding": "两处核心描述层级不同。四例支持各自普通版本的局部支撑关系，每项仅1局、低置信；P/S/R最终实死，D判死截断。尚未识别必要性、升级、替代或整战净收益，不能继承旧核心经验的累计支持数和高置信。", "evidence": ["HNX4A2WBC34W A10 F48第3试T3", "25226ZFLNR1J A10 F48首试T4", "YF0LXT1QSTGG A10 F48第6试T3", "L704TLETMZBM A10 F48第3试T3", "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-140741/learner/runs/20261018-support-mapping-r2/support-analysis.json"], "existing_entry_ids": ["silent-core-poison-defense-observation", "silent-core-dexterity-defense-observation", "silent-core-shiv-defense-observation", "silent-core-discard-relic-observation"], "recommendation": "保留原签名和candidate；新增关系明确n=1、低置信。双通知已实际追加，ops→watcher→Roy独立送达回执仍待确认。自然采用、升级/替代对照及整战收益待证，未开启H2-on；父要求不因本次固定交付关闭。"}] 回执/home/dw/Projects/agent-sts2/ops/codex-ops/learning-notices/55453a168937d7a5f3cb6d5f.json；watcher须读取并告知Roy，尚未确认用户收到。<!-- learning-notice:55453a168937d7a5f3cb6d5f -->
+
+- 2026-10-18T01:53:46.761334 [ops学习通知/awaiting_delivery] roy-20261017-human-pace-support-mapping：经验已核live及消费者读取，待ops→watcher→Roy交付回执；ops核批20261018-011241-strategy-proposal的源码测试/提案/版本台账并沿learner-recheck补宿主检查 回执/home/dw/Projects/agent-sts2/ops/codex-ops/learning-notices/53de7f5fe287e32ec86f84b3.json；watcher须读取并告知Roy，尚未确认用户收到。<!-- learning-notice:53de7f5fe287e32ec86f84b3 -->
+
+- 2026-10-18T01:57:11.503522 [ops学习通知/disagreement] roy-20261017-human-pace-h0：[{"claim": "旧full模型将沙漏加大力度每次固定按4力量处理。", "finding": "67个已就绪窗口支持T3/T6/T9/T12增加4/5/6/7力量。但修后固定样本T1 Brier由0.1731变为0.1794，穿透比由4.078变为4.125；状态修正未带来质量改善。", "evidence": ["25226ZFLNR1J F48 T3/T6", "UMVLWER4CD98 T9", "RMNXHZKV716Y T12", "learner/runs/20261018-human-pace-h0-r3/intensity-evidence.json", "learner/runs/20261018-human-pace-h0-r3/intensity-readiness.json", "learner/runs/20261018-human-pace-h0-r3/before-after.json"], "recommendation": "保留已证窄修、反证结果、原四闸和低可信，继续隔离剩余误差。", "existing_entry_ids": ["silent-g1a-aeonglass-calibration-boundary"]}, {"claim": "本轮两处实验体后继字段差可能意味着新的换相错误。", "finding": "两处下一帧均未就绪且正在选牌，不足以认定机制错误。", "evidence": ["T082DRCUHRRD F48 T8→T9", "YZWV37N2MU6N F48 T4→T5", "learner/runs/20261018-human-pace-h0-r3/successor-readiness.json"], "recommendation": "先取得首次已就绪且未打牌的后继帧，保留R386阶段能力修正。", "existing_entry_ids": ["silent-test-subject-phase-reset", "silent-g1a-test-subject-calibration-boundary"]}, {"claim": "旧Queen/Crab整场推进中的力量状态。", "finding": "女王13个已就绪窗口聚合体力量少1；帝王蟹2个已就绪窗口力量高6，尚未隔离具体actor和推进路径。", "evidence": ["ZZMYZ5UBCG72、ZVYUL2YP3518、5X2GHKJ89PN1、CVJ4MLQF4CSY", "9TG1RP5LFAAK T6、T082DRCUHRRD T8", "learner/runs/20261018-human-pace-h0-r3/successor-state-assay.json", "learner/runs/20261018-human-pace-h0-r3/successor-readiness.json"], "recommendation": "沿原H0继续隔离盟友加力、当前/后继招式及临时恢复，不从差额直接改倍率。", "existing_entry_ids": ["silent-g1a-queen-calibration-boundary", "silent-h0-kaiser-crab-calibration-boundary"]}] 回执/home/dw/Projects/agent-sts2/ops/codex-ops/learning-notices/d88fa47f5100836b6e7fc792.json；watcher须读取并告知Roy，尚未确认用户收到。<!-- learning-notice:d88fa47f5100836b6e7fc792 -->
+
+- 2026-10-18T01:57:11.513001 [ops学习通知/blocked] roy-20261017-human-pace-h0：两次live-merge.lock busy，本任务未修改live。固定源已完成实现、74行增量计算、1102行缓存复用及源码自测；9条r3候选尚未进入live，因此coverage不冒填，无r3实际live消费者回执。六目标仍低可信。异议及固定源已双追加收件文件并读回，未代填下游确认。 回执/home/dw/Projects/agent-sts2/ops/codex-ops/learning-notices/99f96a62170721199619094d.json；watcher须读取并告知Roy，尚未确认用户收到。<!-- learning-notice:99f96a62170721199619094d -->
+
+- 2026-10-18 02:09:20 CST [运维 codex] 0158旧stall已核恢复：原局0NMF36KX3F7Y、新控制台20261018-015613-729d47525已有真实战斗动作并按原SL到第4试，原游戏34676/autoplay2027082保留；单次stall-check OK，本轮未再重启。支撑映射六叶逐字同源并窄同步main 58f813b4df9c，当前live生产verify_experience及8个探针原件SHA通过、main tsc/18项0；仅固定读取，未宣称自然采用或胜率改善。
+
+- 2026-10-18 02:09:20 CST [运维 codex] 支撑映射/四条学习异议已实际提交现有watcher wJ:pJT/01a14aae，技术prompt0，watcher实收/Roy可见回复仍须本人ACK。H0固定四叶68bc24926d81/源码4432项0及九候选已实收并按当前main/live预合成，未live、无r3 live消费者，不标shipped。02:00原live锁单次仍忙于075726/772c50f8精确宿主，本轮未等锁/再试/另派模型；支撑漏登编号、ledger shipped与H0原source合入均保pending至原检查完成事件。支撑原批recheck已实跑2：fixes为字符串而入口要commit对象，未启动重复full；原报告/失败不改，普通纯运维队列留机械兼容待办，不能借源码绿或伪造该批full。两项逐项限定/反证原文及四notice已归档，不关闭H0/0332/support/human-pace/main-push父。证据paper/materials/20261018-0158-ops/。
+
+- 2026-10-18 02:21:09 CST [运维 codex] 支撑映射历史实际发布dddad5d67（原2026-10-18 01:50:06）现已补登V5-R391；本次登记只改版本元数据，main历史versions列表/旧编号/经验顺序保持。旧H2四模板支撑未知；新P/S普通后空翻、D普通生存者、R爆发条件下普通肾上腺素均只记录原学习者四局A10各n1低置信局部观察，原核心模板/candidate/排序分与H2 shadow保持，不能继承旧核心高置信分母、外推升级/替代/必要性或净胜率；P/S/R实死、D判死截断原限制不改。证据/账本silent-0508及原提案048d6591，六叶source9ae48941与精确live729d4752/772c50f8逐SHA同、原075726完整tsc0/535文件5245过2跳，当前生产五要求/8实际探针SHA及40固定消费者0；不证明自然采用或胜率改善。根CLI已shipped；version字段记已核消费组合R390专题，组件号R391由完整发布映射定位，避免补入main历史列表改变旧统计。预期只提高可读性/可追溯性；回退只撤六叶补丁及四经验新增段，保其他并行知识/发布/原件，实际行为回退另编号。两条原notice中55453a已有watcher及Roy真实回执、53de7f只有watcher实收，Roy交付由现有watcher补；ops已技术prompt0交终局，不代ACK。原批recheck2及原提案队列pending仍是运维兼容待办，未改原报告或冒记其full0/implemented；H0/0332/human-pace/main-push宽父不据此关闭。证据paper/materials/20261018-0210-ops/。
+
+- 2026-10-18 02:21:09 CST [运维 codex] V5-R390卡死修复完整验收0已核，原step回收登记accepted0；旧换号恢复WT也沿原complete仅重试一次accepted0，均不称已删除或关父。H0原四叶68bc2492的一次实际发布在2026-10-18 02:15:23 CST被原live锁忙拒绝75、main/live源码未动；之前知识刷新活跃守卫也保留，已更新原pending，等下一正常事件沿原锁接续，不强解/等待/轮询或再派模型。
+
+- 2026-10-18 02:29:41 CST [运维 codex] H0/r3固定源68bc24926d81已沿原锁窄四叶合main d8d25fcc6542/live 523fbcd34667，登记V5-R392，保10叶并行知识刷新和支撑映射全部对象。旧full把沙漏各次加力固定4；新仅学习者已证Silent A10/单沙漏535HP/凋萎存在6/旧表值4的whole-fight签名，在绝对T3/6/9/12用4/5/6/7；其他角色/进阶/未知签名/短rollout/T15+、R386/R388边界、出牌/药水/SL/费用/排序/原四闸保持。证据67已就绪无恢复混杂窗/31局与原账本0507，源码4432项0及原full1不改；固定107/481切分、Platt/200/seed保留，仅原74增量/1102复用，不重跑校准。状态修正不等于质量改善，T1 Brier0.1731→0.1794、leak4.078→4.125的反证和六目标低可信保持，不宣称自然收益/联合通关率。预期只修已见窄状态；回退只三源码/固定测试叶与九原经验对象，保支撑/其它知识和发布历史，实际行为回退另编号。新实际组合检查及消费者/唯一精确宿主仍待，不借旧绿、不标0507 shipped/六目标或H0/0332/human-pace/main-push宽父完成。证据paper/materials/20261018-0227-ops/及原learner/runs/20261018-human-pace-h0-r3/。
+
+- 2026-10-18 02:36:56 CST [运维 codex] H0 V5-R392当前live九原经验对象已通过真实loader/render/query读回0，输入/输出/canonical SHA/文件读取守卫全核；固定可读性，不证明自然采用或Boss质量改善。新组合sandbox原入口因live锁忙75未启动，已只读核持锁者为原现场回收PID2576803，未强解/停进程。原075726唯一新组合完整宿主请求已实际启动PID2604918，待取得原锁执行及后续learner-checks，不冒称已进检查或全绿、不重复源full/107-481校准/模型。0507暂不shipped，H0/0332/human-pace/main-push宽父不关；此前67就绪状态证据与Brier/leak变差反证、六目标低可信及未知字段保持。现有watcher原native01a14aae已技术prompt0收到本次进展提示，实收/Roy通知须本人真实回执。原source/blocked报告/两次旧锁忙/初full失败保留；本轮原普通021301批十项另均waiting，无源码或测试/发布，不能借H0窄源关闭其缺口。证据paper/materials/20261018-0227-ops/。
+
+- 2026-10-18 02:54:57 CST [运维 codex] H0 V5-R392精确tree414ea8b173ca04165fc84193f9828e4b136a17e9完整宿主失败：仅brain-codex固定进程首事件0秒预期变1秒、rollout固定题原30秒超时；534文件/5246项过、2败/2跳，原失败保留。当前未见H0状态/数值断言回归，决定保live并沿原普通fixture修复队列处理；已有原fix批在途不热改/重复派，原通道仅注册两失败精确题一次补验，不重full/改断言时限或游戏预算。九对象实际消费者SHA仍核同，但0507暂不shipped、H0/0332/human-pace/main-push父不关；不称完整绿或根因已定。证据paper/materials/20261018-0252-ops/。
+
+- 2026-10-18 03:05:55 CST [运维 codex] H0已发布窄修V5-R392现完成窄交付登记：silent-0507 CLI shipped，专题S1.silent-h0-aeonglass-intensity1。旧full每次按4；学习者源68bc2492仅在Silent A10/单AEONGLASS535/凋萎存在6/原表4的whole-fight已见T3/6/9/12改4/5/6/7，其他角色/阶/短rollout/T15+及出牌药水SL/四闸不改。证据67就绪无恢复混杂窗/31局（25226ZFLNR1J、UMVLWER4CD98、RMNXHZKV716Y等），不补支持数或新局。原tree414ea8完整检查1（534文件/5246项过、2失败2跳）保留；原时限/断言两失败题补验各约2.2秒过、tsc0，不能写full0或CPU单因。后续自动四统计叶刷新live090b64eb/treef2e88不借旧树绿，当前production loader/render/query九对象输入/输出/read-guard实读0，model/game0。预期仅恢复已见状态；T1 Brier0.1731→0.1794/leak4.078→4.125反证与六目标低可信、F48→F49联合/自然采用/胜率改善未知保持。回退只撤三代码/测试叶及九原对象本增量，保支撑映射/并行知识/其他发布和历史，实际行为回退另编号。本轮不新增规则或号码；根宽H0/0332/human-pace/main-push不关，原H0 r3已仅retry入原优先队列，沿已核codex3同thread01a14ac8/原输入/切分/缓存处理剩余原要求，queued非dispatched或首回复，不另开账号/owner/模型或回收未完研究WT。原blocked报告/7b宽提案/bb协议待办和实际下游ACK保持，证据paper/materials/20261018-0300-ops/。

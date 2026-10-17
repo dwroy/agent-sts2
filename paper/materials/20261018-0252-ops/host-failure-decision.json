@@ -1,0 +1,74 @@
+{
+  "at": "2026-10-18 02:54:57 CST",
+  "original_check": {
+    "rc": 1,
+    "log": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261016-075726-strategy-proposal.fallback-414ea8b173ca04165fc84193f9828e4b136a17e9.checks.log",
+    "merged": "523fbcd34667a531e40e58aae877062fc3d9b99e",
+    "tree": "414ea8b173ca04165fc84193f9828e4b136a17e9",
+    "commits": [
+      "28161b2d2a31e95587999fc6e5028acd727cecb2",
+      "b2bdb0b1dbc7ec9a39909595238b00efbb718321"
+    ],
+    "log_sha256": "d70b7619c8e35e140b324120c5244a00c513e0395472d1619b254d423bfb7ab1",
+    "coverage": {
+      "passed": [],
+      "failed": [
+        "tests/brain-codex.test.ts",
+        "tests/rollout-live.test.ts"
+      ],
+      "skipped": [],
+      "summary": {
+        "files": {
+          "failed": 2,
+          "passed": 534
+        },
+        "tests": {
+          "failed": 2,
+          "passed": 5246,
+          "skipped": 2
+        }
+      },
+      "failed_tests": {
+        "tests/brain-codex.test.ts": [
+          "codex runs watched: retries, stalls, timeouts and their trace stalled twice: the question fails as a timeout and the fallback answers it"
+        ],
+        "tests/rollout-live.test.ts": [
+          "rollout facts on Jev's combat question every option of a logged board carries the rollout and history facts; the decision log gets the rollout"
+        ]
+      }
+    }
+  },
+  "decision": "preserve live; route fixture stability to original ordinary fix queue; one exact-name supplement on original channel",
+  "reason": "Observed failures are a hard-coded zero-second startup-clock assertion and a fixed-board 30000ms timeout. No H0 state/numeric mismatch is shown; product or load causality remains unproved.",
+  "failure_lines": [
+    {
+      "path": "agent/tests/brain-codex.test.ts",
+      "line": 371,
+      "expected": "first token/last event at 0 s",
+      "observed": "first token/last event at 1 s; fallback and two attempts otherwise match"
+    },
+    {
+      "path": "agent/tests/rollout-live.test.ts",
+      "line": 57,
+      "observed": "30000ms deadline; 45935ms observed, no numeric assertion failure"
+    }
+  ],
+  "original_failure_and_coverage_preserved": true,
+  "no_repeat_full": true,
+  "source_sandbox_not_borrowed_as_live_green": true,
+  "original_source_four_leaves_exact": true,
+  "current_nine_consumer_objects_exact": true,
+  "consumer_receipt_sha256": "8a406c2e81434caee08b7231e1dc75f2a95e0584350c7dc203a574d30f831eb5",
+  "active_original_fix_owner": [
+    {
+      "batch": "20261018-021301-fix-batch",
+      "pid": 2517887,
+      "worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261018-021301"
+    }
+  ],
+  "test_or_production_timeouts_changed": false,
+  "source_or_knowledge_modified": false,
+  "new_release": false,
+  "ledger_shipped": false,
+  "parent_closed": false
+}
