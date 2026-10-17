@@ -1,0 +1,300 @@
+{
+  "at": "2026-10-18 07:36:00 CST",
+  "batch": "20261018-070101-fix-batch",
+  "source": "9aec57cd7bf8d6c5f67bdaa6b5b9bc115df73239",
+  "parent": "77c91f11ab6932c8b7871c1b06fe87adebfa381e",
+  "source_tree": "82bbe52b5d9c2879d7a63cdacf1b8052faff2cc4",
+  "paths": [
+    {
+      "path": "agent/tests/learner-report-resources.test.ts",
+      "bytes": 1870,
+      "sha256": "7409c2730fa117835224fe11e4c91e50719ac7fa5ecec9b320ff805fbf4fc5cc",
+      "blob": "d55bf79da46ebb7bb606d037d8d7b17c93a88844"
+    },
+    {
+      "path": "ops/learner_checks.py",
+      "bytes": 20093,
+      "sha256": "5bda1f3f34d9fce062b4d50d2fba0c0d8c8e8a6d6db5734b2e007c94dfdc10bc",
+      "blob": "dfaf42ebef8ddc19e504f16b5c39e7206366bf4f"
+    }
+  ],
+  "source_sandbox_rc": 0,
+  "source_files": 491,
+  "source_cases": 4451,
+  "source_original_tsc": 0,
+  "source_ablation_rc": 1,
+  "source_ablation_cases_failed": 4,
+  "source_restored_rc": 0,
+  "source_restored_cases": 19,
+  "source_full_not_repeated": true,
+  "source_native": {
+    "batch": "20261018-070101-fix-batch",
+    "thread": "01a14c19-98bc-7763-a4f4-f276b8218b8e",
+    "cwd": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261018-070101",
+    "event_log": "learner/runs/20261018-070106-aa0ced7b-5680-4d77-8851-79c8fbe908bf-fix-batch.jsonl",
+    "registered_launch_batch": "20261018-070101-fix-batch",
+    "original_lease": "929b399562f4711ca6df8ce18bc88b9790b97c2db3f9a43eacfaba2755549d9b",
+    "native_context": {
+      "source": "ops/codex-ops/accounts/codex3/learner/sessions/2026/10/18/rollout-2026-10-18T07-01-48-01a14c19-98bc-7763-a4f4-f276b8218b8e.jsonl",
+      "offset": 50305,
+      "bytes": 5152,
+      "sha256": "9928eda93e48f519d619b41f4edc7463f3ef4b63374e33e668da64dd83059a31",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "sandbox": {
+        "type": "workspace-write",
+        "writable_roots": [
+          "/home/dw/Projects/agent-sts2",
+          "/home/dw/Projects/agent-sts2/.git",
+          "/home/dw/Projects/agent-sts2/.git/worktrees/codex-fix-silent-20261018-070101"
+        ],
+        "network_access": false,
+        "exclude_tmpdir_env_var": false,
+        "exclude_slash_tmp": false
+      },
+      "approval_policy": "never"
+    },
+    "native_user_input": {
+      "offset": 58300,
+      "bytes": 13081,
+      "sha256": "1a9ad979d50191ff3697a481447d6578e8d0d638c747da67aaf4568b1bf1c12d",
+      "input_sha256": "3d0d918a25083767d1777246d29b8346178ebfb3f5eaf3b992cc58e11bc36d30"
+    },
+    "original_header_events": [
+      {
+        "offset": 0,
+        "bytes": 14892,
+        "sha256": "8cb8ed4b984a693f6afa510050582df1d649d1ba4d383e197a9f242f55e78939",
+        "type": "learner_launch",
+        "attempt": null,
+        "code": null
+      },
+      {
+        "offset": 14892,
+        "bytes": 370,
+        "sha256": "9b7d17f208d83137e360c396cf8815a1661a2cc1ce7002c57178a5196a8b2c85",
+        "type": "learner_startup_attempt",
+        "attempt": 1,
+        "code": null
+      },
+      {
+        "offset": 17455,
+        "bytes": 448,
+        "sha256": "30f73a1fa2b5495f19d46b0486a221c10f7d6b7f5276f8927e9384ba9e89f2f5",
+        "type": "learner_startup_exit",
+        "attempt": 1,
+        "code": null
+      },
+      {
+        "offset": 17903,
+        "bytes": 371,
+        "sha256": "783b02ab89cb2375d9dd895a872407c2cab2cb96cdcb55d3dfe03882cd100e81",
+        "type": "learner_startup_retry",
+        "attempt": 1,
+        "code": null
+      },
+      {
+        "offset": 18274,
+        "bytes": 370,
+        "sha256": "2256cb20e2f413d46c96108a3003b545d54240d79d26a7f0c161268c0e773fb0",
+        "type": "learner_startup_attempt",
+        "attempt": 2,
+        "code": null
+      },
+      {
+        "offset": 21659,
+        "bytes": 77,
+        "sha256": "07f0d4d5672e3b780eb4c3e680e8a7aee18448e4c1b78229ff2195577b49e375",
+        "type": "thread.started",
+        "attempt": null,
+        "code": null
+      }
+    ],
+    "startup_attempts": 2,
+    "failed_startups_preserved": 1,
+    "no_model_or_manual_restart": true
+  },
+  "report": {
+    "task": "fix-batch",
+    "base": "77c91f11ab6932c8b7871c1b06fe87adebfa381e",
+    "fixes": [
+      {
+        "item": "a406-fixed-deadlines：read_report未显式关闭文件",
+        "commit": "9aec57cd7bf8d6c5f67bdaa6b5b9bc115df73239",
+        "test": "agent/tests/learner-report-resources.test.ts",
+        "fails_without_fix": true
+      }
+    ],
+    "skipped": [
+      {
+        "item": "出牌、药水、SL、终局、路线及角色机制条目",
+        "reason": "策略类，沿已有独立strategy-proposal链处理。"
+      },
+      {
+        "item": "silent-0332及G2缺DPR完整根因",
+        "reason": "证据不足，现有诊断修复不等于根因修复。"
+      },
+      {
+        "item": "目录生命周期、磁盘压力、通知恢复、缓存及性能归因",
+        "reason": "证据不足或独立调查，保留原失败和已有处理链。"
+      },
+      {
+        "item": "架构调整、调度公平性及窄cherry-pick验收协议",
+        "reason": "超出普通纯bug范围；原报告缺身份字段，不能放宽验收守卫。"
+      },
+      {
+        "item": "infra-paper-dataset-concurrent-gzip-keyscan-20261018",
+        "reason": "已有已测源码dee6386621e8122d123a3cd0017c3e4c199f524e，待原流程集成，不重复实现。"
+      },
+      {
+        "item": "a406-fixed-deadlines五处消费夹具边界",
+        "reason": "已有已测源码2a778b13ac1ead79afef957d4708c1df5dfd3757，待原流程集成；本批文件关闭修复不证明超时根因。"
+      }
+    ],
+    "merged": null,
+    "tests": {
+      "tsc": 0,
+      "vitest": 0,
+      "files": 491,
+      "cases": 4451
+    },
+    "code_proposals": [],
+    "implementation_domains": [],
+    "report": "/home/dw/Projects/agent-sts2/learner/runs/20261018-070106-aa0ced7b-5680-4d77-8851-79c8fbe908bf-fix-batch/report.md"
+  },
+  "original_full_report": {
+    "task": "fix-batch",
+    "base": "77c91f11ab6932c8b7871c1b06fe87adebfa381e",
+    "fixes": [
+      {
+        "item": "infra-h0-414-host-fixed-test-stability-20261018 / a406-fixed-deadlines：read_report未关闭文件（ResourceWarning）",
+        "commit": "9aec57cd7bf8d6c5f67bdaa6b5b9bc115df73239",
+        "test": "agent/tests/learner-report-resources.test.ts",
+        "fails_without_fix": true
+      }
+    ],
+    "skipped": [
+      {
+        "item": "出牌、药水、SL、终局、路线及角色机制条目（0256/0260/0263/0266/0308/0311/0317/0319/0320/0322/0324/0329/0334/0339/0344/0347/0349/0362/0365/0481/0487，另含XTSV1U9JD34T终局与GXNKW8X1XYJP抽牌身份）",
+        "reason": "策略类；沿已有独立strategy-proposal链处理，不重复派发或补入开发者游戏知识。"
+      },
+      {
+        "item": "silent-0339续证：BXU0CKWKH2RU尾巴误核销",
+        "reason": "策略类；已有58ab473f6c814061/c232010cd405fe44原提案链，保留当前行为和原证据。"
+      },
+      {
+        "item": "silent-0332 nonpositive-hp实际资源契约根因",
+        "reason": "证据不足；原专用owner链仍未闭环，诊断及样本身份窄修不等于根因修复。"
+      },
+      {
+        "item": "U5W7NUE925NK F15/F16两次原G2缺DPR告警的完整根因",
+        "reason": "证据不足；原未来样本数组及配对DPR分母未保存，此前窄修只覆盖有固定复现的严格零前缀边界，不将其冒作两次实盘根因。"
+      },
+      {
+        "item": "sandbox-glob-startup-race目录生命周期与磁盘压力宽项",
+        "reason": "证据不足；已有启动恢复/租约/回收窄修，目录删除归属与上游时序未确定。"
+      },
+      {
+        "item": "arch-funnel-guard / arch-learning-priority / arch-unified-resource-value / inv-f33-regression及调度公平性调查",
+        "reason": "独立架构、策略或归因任务，范围太大，超出普通纯bug批次。"
+      },
+      {
+        "item": "core-build-notify-222802-rc2旧原生通知恢复",
+        "reason": "证据不足；stderr持久化已修，旧送达状态未证，不重发可能已送达的通知。"
+      },
+      {
+        "item": "Codex缓存实测、DPR/B2性能及历史宿主超时根因",
+        "reason": "证据不足或独立性能调查；固定测试确定性子项已修，不代表自然性能根因已解决。"
+      },
+      {
+        "item": "原20261018-011241报告的recheck接续",
+        "reason": "证据不足：固定原报告的9ae48941源码不是所报dddad5d67发布提交祖先；六叶相同不代替祖先证明。原报告/状态/recheck2保留，未重复075726已验宿主，格式修复不冒称原批full0。"
+      },
+      {
+        "item": "ops-learner-recheck-report-fixes-shape-20261018补证：窄cherry-pick提案验收",
+        "reason": "太大：原Markdown没有机器JSON、原输出缺runs/base；独立原注册/原报告/六叶源码及发布/真实宿主回执协议超出本批格式修复。不造祖先、不改原报告/提案ID/seen_runs/租约或ACK，保留pending。"
+      },
+      {
+        "item": "infra-h0-414-host-fixed-test-stability-20261018 的生产性能及原full1归因",
+        "reason": "证据不足；已合入的固定测试修复不证明CPU或产品性能根因已解决，保留原失败历史。"
+      },
+      {
+        "item": "silent-0461：9W38TRGPJW9Q F17T10普通斗篷及0511/0512药水窗口补证",
+        "reason": "策略类；先前批次已收到05:16:47追加的旧项证据，沿既有f4eb/7338、c440ae480782dca0和c734f60b55906bae独立策略链，不重复实现或添加机制。"
+      },
+      {
+        "item": "infra-paper-dataset-concurrent-gzip-keyscan-20261018",
+        "reason": "已有原owner源码dee6386621e8122d123a3cd0017c3e4c199f524e并完成自测，当前基线未含；队列明确禁止重复实现，保留原运输链。"
+      },
+      {
+        "item": "infra-h0-414-host-fixed-test-stability-20261018 / a406-fixed-deadlines 五处消费夹具边界",
+        "reason": "已有原批已测源码 2a778b13ac1ead79afef957d4708c1df5dfd3757；当前基线/live未含，沿原ops pending集成，不重复实现。本批仅修独立可复现的read_report文件关闭缺陷，不宣称修复原五题超时或负载根因。"
+      }
+    ],
+    "merged": null,
+    "tests": {
+      "tsc": 0,
+      "vitest": 0,
+      "files": 491,
+      "cases": 4451
+    },
+    "code_proposals": [],
+    "implementation_domains": [],
+    "report": "/home/dw/Projects/agent-sts2/learner/runs/20261018-070106-aa0ced7b-5680-4d77-8851-79c8fbe908bf-fix-batch/report.md"
+  },
+  "original_canonical_state": "failed",
+  "original_rc": 0,
+  "original_merge": {
+    "merged": null,
+    "before": "49bec5ed231e34eb4b63cd3519972ec6f72f8320",
+    "source": "9aec57cd7bf8d6c5f67bdaa6b5b9bc115df73239",
+    "own_paths": [
+      "agent/tests/learner-report-resources.test.ts",
+      "ops/learner_checks.py"
+    ],
+    "knowledge_overlap": [],
+    "notes_before": {
+      "notes/fight-value-backtest-silent.md": "abda0653418997b43487df599793e0cf699d2ce6c2236f2a33ba194a4b7791c9",
+      "notes/monster-db-check.md": "7b4e9f7ece7087869525e32198b983526f37330567d5bdf9a7b886df5942e902"
+    },
+    "merge_rc": 1,
+    "conflicts": [
+      "notes/fix-queue-v4.md",
+      "notes/for-roy.md",
+      "notes/lessons.md",
+      "notes/ops-handoff.md",
+      "ops/inbox-dev.md",
+      "paper/data/README.md",
+      "paper/data/commits.csv",
+      "paper/data/cost-curve-silent.csv",
+      "paper/data/cost-silent.csv",
+      "paper/data/cost-sources.json",
+      "paper/data/cost-unattributed.csv",
+      "paper/data/decisions_by_label.csv",
+      "paper/data/learning-curve-silent.csv",
+      "paper/data/runs.csv",
+      "paper/data/summary.json",
+      "paper/data/verification.json",
+      "paper/materials/decision-log.md",
+      "paper/materials/learning/code-proposals.jsonl",
+      "paper/materials/learning/ledger.jsonl",
+      "paper/materials/silent/cost.md"
+    ],
+    "abort_rc": 0,
+    "after": "49bec5ed231e34eb4b63cd3519972ec6f72f8320",
+    "notes_after": {
+      "notes/fight-value-backtest-silent.md": "abda0653418997b43487df599793e0cf699d2ce6c2236f2a33ba194a4b7791c9",
+      "notes/monster-db-check.md": "7b4e9f7ece7087869525e32198b983526f37330567d5bdf9a7b886df5942e902"
+    },
+    "error": "live merge failed; stop without resolving historical conflicts"
+  },
+  "original_historical_conflicts": 20,
+  "known_fixes_already_ancestors": 48,
+  "known_timeout_causality_not_proved": true,
+  "source_scope": "Only close completion report handles; parsing, missing/read-error results, gameplay, model budgets and timeout guards retain their behavior. Original host timeout causality remains unknown.",
+  "scope": "Deterministic closure of completion report handles only, preserving parsing and empty-result behavior. No gameplay or model behavior changes.",
+  "new_release": false,
+  "new_ledger_shipped": false,
+  "archived_files": 24,
+  "source_worktree_retention_pending": true
+}
