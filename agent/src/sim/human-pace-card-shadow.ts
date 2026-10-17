@@ -19,9 +19,10 @@ import { BOSS_LINES_TIE_SE } from "./boss-lines.js";
 import { createHash } from "node:crypto";
 import { rankShadowCards, shadowPlanCoverage } from "./human-pace-card-policy.js";
 import { shadowCardList } from "./human-pace-plan-shadow.js";
+import { cardSupport, loadConstructionSupport, parseConstructionSupport } from "../construction/support.js";
 
 export interface CardShadowInput {
-  options: { key: string; id: string | null; state: BuildState | null }[]; current: BuildState; priorPlan: RunPlan | null;
+  options: { key: string; id: string | null; upgraded?: boolean | null; state: BuildState | null }[]; current: BuildState; priorPlan: RunPlan | null;
 }
 export function captureCardShadow(decision: AskDecision, env: DecisionEnv): CardShadowInput {
   const current = constructionState(env), offers = asArray(asRecord(env.state.raw["reward"])["card_options"]).map(asRecord);
@@ -30,7 +31,8 @@ export function captureCardShadow(decision: AskDecision, env: DecisionEnv): Card
     options: constructionOptions(decision, env, current).map((option) => {
     const intent = listed.find((row) => row.key === option.key)?.intent;
     const card = intent?.action === "choose_reward_card" ? offers.find((row, i) => (row["index"] ?? i) === intent.option_index) : undefined;
-    return { ...option, id: card ? str(card["card_id"]) : null };
+    return { ...option, id: card ? str(card["card_id"]) : null,
+      upgraded: typeof card?.["upgraded"] === "boolean" ? card["upgraded"] : null };
   }) };
 }
 export interface ShadowDifference { mean: number; se: number }
@@ -58,7 +60,7 @@ function aggregate(targets: readonly CardTargetPrediction[], key: string, metric
 
 export async function evaluateCardShadow(args: {
   input: CardShadowInput; env: DecisionEnv; cores: readonly CoreTemplate[]; plan: RunPlan | null;
-  pool: GlobalBossPool; originalB3: unknown; setup: BuildSimSetup | null; now?: () => number;
+  pool: GlobalBossPool; originalB3: unknown; setup: BuildSimSetup | null; now?: () => number; supportData?: unknown;
 }) {
   const { input, env } = args, keys = input.options.map((row) => row.key), ascension = env.state.run?.ascension ?? 0;
   const budget = new DecisionBudget("H2_card", "routine", args.now, 5000);
@@ -109,6 +111,9 @@ export async function evaluateCardShadow(args: {
     }
     budget.pause();
     const primary = args.plan?.construction?.primary ?? "uncommitted", currentCore = args.cores.find((core) => core.id === primary);
+    const character = str(asRecord(env.state.raw["run"])["character_id"]).toLowerCase();
+    const support = args.supportData === undefined ? loadConstructionSupport(character, args.cores)
+      : parseConstructionSupport(args.supportData, character, args.cores);
     const belongs = (core: CoreTemplate, id: string) => core.requirements.some((r) => r.any.some((c) => c.kind === "card" && c.id === id));
     const planReferences = shadowCardList([...(args.plan?.want ?? []), ...(args.plan?.avoid ?? [])], env.knowledge);
     const nextOptions = asRecord(b3["options"]), degraded = ["pending", "degraded"].includes(str(asRecord(b3["completion"])["status"]));
@@ -123,7 +128,7 @@ export async function evaluateCardShadow(args: {
         || !!currentCore && belongs(currentCore, option.id));
       const coverage = shadowPlanCoverage(primary, !!args.plan, covered);
       return { key: option.key, card: option.id, core_component: option.id === null ? false : currentCore ? belongs(currentCore, option.id) : null,
-        support_component: null, support_reason: "learner_templates_have_no_separate_support_mapping", template_membership: matching,
+        ...cardSupport(support, currentCore, option, ascension), template_membership: matching,
         target_delta_win: targetDelta, target_delta_S: targetS, next_boss_delta_win: nextDelta,
         next_boss_trust: bossTrustReason(str(b3["boss"]), "b3", ascension),
         dilution: { deck_before: input.current.cards.length, deck_after: option.state?.cards.length ?? null,
@@ -146,7 +151,7 @@ export async function evaluateCardShadow(args: {
       plan_status: shadowPlanCoverage(primary, !!args.plan, false).status,
       initial_direction_needed: primary === "uncommitted" || !args.plan,
       rows, predictions, budget_ms: 5000, time_budget: budget.record(), target_basis: "Act2_until_H0_H3_admission; Act3_and_joint_unknown",
-      limits: "反事实只读；目标组按本角色观察记录加权（含重试），非生成概率。S不参与排序；组件标签仅沿学习者模板，支撑件定义未给则unknown。新增槽比例不是实际抽牌/稀释因果。候选差只对当前完整资源快照有效，不预测实际整局结果。" };
+      limits: "反事实只读；目标组按本角色观察记录加权（含重试），非生成概率。S不参与排序；核心和支撑分列，支撑只标已见局部关系，不完成核心、不加排序分；缺证/未观察升级为unknown。新增槽比例不是实际抽牌/稀释因果。候选差只对当前完整资源快照有效，不预测实际整局结果。" };
   });
 }
 
@@ -155,6 +160,10 @@ export async function askCardShadow(facts: Awaited<ReturnType<typeof evaluateCar
   const started = now(), budget = new DecisionBudget("H2_jev_card", "routine", now, 1000);
   const state = { direction: facts.primary, missing: facts.missing, facts: facts.rows.map((row) => ({
     key: row.key, card: row.card, core: row.core_component, support: row.support_component,
+    support_reason: row.support_reason,
+    support_observations: row.support_observations.map((o) => ({ id: o.id, confidence: o.confidence, effect: o.effect,
+      conditions: o.conditions, necessary: o.necessary, substitutes: o.substitutes, upgrade_comparison: o.upgrade_comparison,
+      experience: o.experience, evidence: o.evidence.map(({ sources: _sources, ...anchor }) => anchor) })),
     template_membership: row.template_membership,
     target_win_delta: row.target_delta_win, target_S_delta_record_only: row.target_delta_S,
     next_boss_win_delta: row.next_boss_delta_win, next_boss_trust: row.next_boss_trust ? "low_trust" : "table_pass_only_production_trust_unknown", dilution: row.dilution })),
