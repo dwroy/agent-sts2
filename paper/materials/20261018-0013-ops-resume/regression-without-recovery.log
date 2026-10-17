@@ -1,0 +1,75 @@
+EEusage: flow [-h] [--batch BATCH] [--notice NOTICE]
+            [--stage {ops_forwarded,watcher_received,roy_notified}]
+            [--request REQUEST] [--receipt RECEIPT] [--source SOURCE]
+            [--kind {disagreement,blocked}]
+            {run,ack,retry,register-feature}
+flow: error: argument action: invalid choice: 'recover-account' (choose from run, ack, retry, register-feature)
+E
+======================================================================
+ERROR: test_account_mismatch_does_not_implicitly_create_thread (__main__.FlowTests.test_account_mismatch_does_not_implicitly_create_thread)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/ops/codex-ops/record-staging/20261018-0013-resume/recovery-baseline/ops/tests/test_learning_requests.py", line 278, in test_account_mismatch_does_not_implicitly_create_thread
+    flow.account_plan(self.root, self.directory, self.req, {})
+    ^^^^^^^^^^^^^^^^^
+AttributeError: module 'learning_requests' has no attribute 'account_plan'
+
+======================================================================
+ERROR: test_new_account_consumption_requires_actual_reply_startup_and_native_identity (__main__.FlowTests.test_new_account_consumption_requires_actual_reply_startup_and_native_identity)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/ops/codex-ops/record-staging/20261018-0013-resume/recovery-baseline/ops/tests/test_learning_requests.py", line 306, in test_new_account_consumption_requires_actual_reply_startup_and_native_identity
+    receipt = flow.new_account_receipt(self.root, self.fresh_path, self.new_batch, self.req, str(self.home))
+              ^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'learning_requests' has no attribute 'new_account_receipt'
+
+======================================================================
+ERROR: test_recover_account_cli_increments_revision_without_fabricating_thread (__main__.FlowTests.test_recover_account_cli_increments_revision_without_fabricating_thread)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/usr/lib/python3.14/argparse.py", line 2055, in _parse_known_args2
+    namespace, args = self._parse_known_args(args, namespace, intermixed)
+                      ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/argparse.py", line 2287, in _parse_known_args
+    positionals_end_index = consume_positionals(start_index)
+  File "/usr/lib/python3.14/argparse.py", line 2262, in consume_positionals
+    take_action(action, args)
+    ~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/argparse.py", line 2116, in take_action
+    argument_values = self._get_values(action, argument_strings)
+  File "/usr/lib/python3.14/argparse.py", line 2633, in _get_values
+    self._check_value(action, value)
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/argparse.py", line 2708, in _check_value
+    raise ArgumentError(action, msg % args)
+argparse.ArgumentError: argument action: invalid choice: 'recover-account' (choose from run, ack, retry, register-feature)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/ops/codex-ops/record-staging/20261018-0013-resume/recovery-baseline/ops/tests/test_learning_requests.py", line 339, in test_recover_account_cli_increments_revision_without_fabricating_thread
+    self.assertEqual(flow.main(), 0)
+                     ~~~~~~~~~^^
+  File "/home/dw/Projects/agent-sts2/ops/codex-ops/record-staging/20261018-0013-resume/recovery-baseline/ops/learning_requests.py", line 701, in main
+    args = parser.parse_args()
+  File "/usr/lib/python3.14/argparse.py", line 2016, in parse_args
+    args, argv = self.parse_known_args(args, namespace)
+                 ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/argparse.py", line 2026, in parse_known_args
+    return self._parse_known_args2(args, namespace, intermixed=False)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/argparse.py", line 2057, in _parse_known_args2
+    self.error(str(err))
+    ~~~~~~~~~~^^^^^^^^^^
+  File "/usr/lib/python3.14/argparse.py", line 2797, in error
+    self.exit(2, _('%(prog)s: error: %(message)s\n') % args)
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/argparse.py", line 2784, in exit
+    _sys.exit(status)
+    ~~~~~~~~~^^^^^^^^
+SystemExit: 2
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.013s
+
+FAILED (errors=3)

@@ -1,0 +1,1708 @@
+{
+  "at": "2026-10-16T09:42:20.076371+00:00",
+  "cutoff": "2026-10-16T09:15:44.451306+00:00",
+  "summaries": {
+    "pre": {
+      "runs": 25,
+      "victories": 3,
+      "run_deaths": {
+        "unknown_room": 1,
+        "boss": 8,
+        "hallway": 6,
+        "elite": 7
+      },
+      "boss_final": {
+        "n": 44,
+        "d": 52,
+        "rate": 0.8461538461538461
+      },
+      "boss_by_floor": {
+        "17": {
+          "final": {
+            "n": 20,
+            "d": 21,
+            "rate": 0.9523809523809523
+          },
+          "entry_hp": {
+            "n": 21,
+            "mean": 59.285714285714285,
+            "median": 60.0,
+            "p25": 51.0,
+            "p75": 69.0
+          },
+          "hp_fraction": {
+            "n": 21,
+            "mean": 0.8086430026556076,
+            "median": 0.8214285714285714,
+            "p25": 0.7285714285714285,
+            "p75": 0.8857142857142857
+          },
+          "deck_size": {
+            "n": 21,
+            "mean": 22.761904761904763,
+            "median": 23.0,
+            "p25": 21.0,
+            "p75": 24.0
+          },
+          "first_results": {
+            "predicted_death": 5,
+            "won": 16
+          }
+        },
+        "33": {
+          "final": {
+            "n": 15,
+            "d": 16,
+            "rate": 0.9375
+          },
+          "entry_hp": {
+            "n": 16,
+            "mean": 63.9375,
+            "median": 62.5,
+            "p25": 53.0,
+            "p75": 74.5
+          },
+          "hp_fraction": {
+            "n": 16,
+            "mean": 0.8250337677098513,
+            "median": 0.7988095238095239,
+            "p25": 0.7535714285714286,
+            "p75": 0.9791061879297174
+          },
+          "deck_size": {
+            "n": 16,
+            "mean": 30.5,
+            "median": 30.0,
+            "p25": 29.0,
+            "p75": 32.0
+          },
+          "first_results": {
+            "won": 12,
+            "predicted_death": 4
+          }
+        },
+        "48": {
+          "final": {
+            "n": 6,
+            "d": 9,
+            "rate": 0.6666666666666666
+          },
+          "entry_hp": {
+            "n": 9,
+            "mean": 72.66666666666667,
+            "median": 68.0,
+            "p25": 64.0,
+            "p75": 76.0
+          },
+          "hp_fraction": {
+            "n": 9,
+            "mean": 0.9351578179164386,
+            "median": 1.0,
+            "p25": 0.8735632183908046,
+            "p75": 1.0
+          },
+          "deck_size": {
+            "n": 9,
+            "mean": 37.666666666666664,
+            "median": 37.0,
+            "p25": 37.0,
+            "p75": 40.0
+          },
+          "first_results": {
+            "predicted_death": 5,
+            "won": 4
+          }
+        },
+        "49": {
+          "final": {
+            "n": 3,
+            "d": 6,
+            "rate": 0.5
+          },
+          "entry_hp": {
+            "n": 6,
+            "mean": 38.5,
+            "median": 29.0,
+            "p25": 21.5,
+            "p75": 53.75
+          },
+          "hp_fraction": {
+            "n": 6,
+            "mean": 0.4778950216450217,
+            "median": 0.39107142857142857,
+            "p25": 0.315625,
+            "p75": 0.6938311688311688
+          },
+          "deck_size": {
+            "n": 6,
+            "mean": 37.0,
+            "median": 37.0,
+            "p25": 35.5,
+            "p75": 39.25
+          },
+          "first_results": {
+            "predicted_death": 5,
+            "won": 1
+          }
+        }
+      },
+      "first_results": {
+        "predicted_death": 19,
+        "won": 33
+      },
+      "prediction_score": {
+        "n": 37,
+        "mean_prediction": 0.6128378378378379,
+        "first_completed_win_rate": 0.7027027027027027,
+        "brier": 0.16911008108108108,
+        "constant_baseline_brier": 0.2089116143170197,
+        "bias": -0.08986486486486488,
+        "definition": "First attempt completed win; confirmed SL abandonment is a non-completion, not an observed death."
+      },
+      "prediction_trusted_score": {
+        "n": 26,
+        "mean_prediction": 0.7105769230769231,
+        "first_completed_win_rate": 0.8076923076923077,
+        "brier": 0.12525334615384615,
+        "constant_baseline_brier": 0.15532544378698224,
+        "bias": -0.09711538461538463,
+        "definition": "First attempt completed win; confirmed SL abandonment is a non-completion, not an observed death."
+      },
+      "prediction_actual_death_only_score": {
+        "n": 26,
+        "mean_prediction": 0.7441538461538462,
+        "first_completed_win_rate": 1.0,
+        "brier": 0.15898946153846155,
+        "constant_baseline_brier": 0.0,
+        "bias": -0.25584615384615383,
+        "definition": "First attempt completed win; confirmed SL abandonment is a non-completion, not an observed death."
+      },
+      "jev_exact_first": {
+        "n": 584,
+        "d": 633,
+        "rate": 0.9225908372827805
+      },
+      "jev_exact_all": {
+        "n": 1185,
+        "d": 1267,
+        "rate": 0.9352801894238358
+      },
+      "jev_best_group_all": {
+        "n": 1185,
+        "d": 1267,
+        "rate": 0.9352801894238358
+      },
+      "P2_valid_choices": 0,
+      "P2_best_group": {
+        "n": 0,
+        "d": 0,
+        "rate": null
+      },
+      "P2_missing_reason": 0,
+      "P2_by_mode": {
+        "shadow": {
+          "best_group": {
+            "n": 0,
+            "d": 0,
+            "rate": null
+          },
+          "choices": 0
+        },
+        "on": {
+          "best_group": {
+            "n": 0,
+            "d": 0,
+            "rate": null
+          },
+          "choices": 0
+        }
+      },
+      "choices": {
+        "rest/plan": {
+          "choices": {
+            "o1:c14": 2,
+            "o0": 101,
+            "o1:c19": 5,
+            "o1:c24": 3,
+            "o1:c16": 4,
+            "o1:c13": 5,
+            "o1:c8": 2,
+            "o1:c22": 3,
+            "o1:c21": 2,
+            "o1:c29": 2,
+            "o1:c20": 4,
+            "o1:c26": 3,
+            "o1:c17": 3,
+            "o1:c25": 4,
+            "o1:c28": 3,
+            "o1:c18": 4,
+            "o1:c23": 3,
+            "o1:c15": 2,
+            "o1:c11": 1,
+            "o1:c5": 1,
+            "o1:c4": 1,
+            "o1:c27": 1,
+            "o1:c10": 3,
+            "o1:c30": 1,
+            "o1:c9": 1,
+            "o1:c31": 1,
+            "o1:c32": 1,
+            "o1:c35": 1,
+            "o0:c19": 1,
+            "o0:c24": 1,
+            "o0:c29": 1,
+            "o0:c31": 1,
+            "o0:c16": 1
+          },
+          "P1_received": 0,
+          "unlinked": 0
+        },
+        "reward/card": {
+          "choices": {
+            "card1": 113,
+            "card2": 111,
+            "card0": 112,
+            "skip": 51,
+            "card3": 2
+          },
+          "P1_received": 0,
+          "unlinked": 0
+        }
+      },
+      "C1": {
+        "complete": 374
+      },
+      "C2_on": {
+        "computations": 0,
+        "with_elimination": 0,
+        "eliminated_candidates": 0
+      },
+      "P3": {
+        "observed": 0,
+        "used": 0,
+        "best_changed": 0,
+        "fallback_reasons": {}
+      },
+      "low_trust": {
+        "b2": {
+          "n": 505,
+          "d": 1153,
+          "rate": 0.43798785776235905
+        },
+        "b3": {
+          "n": 112,
+          "d": 222,
+          "rate": 0.5045045045045045
+        }
+      }
+    },
+    "post": {
+      "runs": 24,
+      "victories": 0,
+      "run_deaths": {
+        "unknown_room": 2,
+        "boss": 13,
+        "elite": 4,
+        "hallway": 5
+      },
+      "boss_final": {
+        "n": 33,
+        "d": 46,
+        "rate": 0.717391304347826
+      },
+      "boss_by_floor": {
+        "17": {
+          "final": {
+            "n": 19,
+            "d": 22,
+            "rate": 0.8636363636363636
+          },
+          "entry_hp": {
+            "n": 22,
+            "mean": 63.63636363636363,
+            "median": 63.5,
+            "p25": 53.25,
+            "p75": 70.0
+          },
+          "hp_fraction": {
+            "n": 22,
+            "mean": 0.8641090589720952,
+            "median": 0.8655844155844157,
+            "p25": 0.7607142857142857,
+            "p75": 1.0
+          },
+          "deck_size": {
+            "n": 22,
+            "mean": 22.59090909090909,
+            "median": 23.0,
+            "p25": 21.25,
+            "p75": 24.0
+          },
+          "first_results": {
+            "predicted_death": 3,
+            "won": 18,
+            "died": 1
+          }
+        },
+        "33": {
+          "final": {
+            "n": 9,
+            "d": 11,
+            "rate": 0.8181818181818182
+          },
+          "entry_hp": {
+            "n": 11,
+            "mean": 66.63636363636364,
+            "median": 66.0,
+            "p25": 62.0,
+            "p75": 74.0
+          },
+          "hp_fraction": {
+            "n": 11,
+            "mean": 0.862787982745166,
+            "median": 0.9,
+            "p25": 0.7564593301435407,
+            "p75": 0.9819277108433735
+          },
+          "deck_size": {
+            "n": 11,
+            "mean": 29.09090909090909,
+            "median": 28.0,
+            "p25": 26.5,
+            "p75": 32.0
+          },
+          "first_results": {
+            "died": 1,
+            "won": 9,
+            "predicted_death": 1
+          }
+        },
+        "48": {
+          "final": {
+            "n": 5,
+            "d": 8,
+            "rate": 0.625
+          },
+          "entry_hp": {
+            "n": 8,
+            "mean": 72.125,
+            "median": 72.5,
+            "p25": 65.5,
+            "p75": 81.0
+          },
+          "hp_fraction": {
+            "n": 8,
+            "mean": 0.9520249066643149,
+            "median": 1.0,
+            "p25": 0.9484026369168357,
+            "p75": 1.0
+          },
+          "deck_size": {
+            "n": 8,
+            "mean": 35.625,
+            "median": 35.5,
+            "p25": 33.75,
+            "p75": 38.0
+          },
+          "first_results": {
+            "predicted_death": 5,
+            "won": 3
+          }
+        },
+        "49": {
+          "final": {
+            "n": 0,
+            "d": 5,
+            "rate": 0.0
+          },
+          "entry_hp": {
+            "n": 5,
+            "mean": 20.2,
+            "median": 6.0,
+            "p25": 4.0,
+            "p75": 11.0
+          },
+          "hp_fraction": {
+            "n": 5,
+            "mean": 0.24313615881135062,
+            "median": 0.08,
+            "p25": 0.05714285714285714,
+            "p75": 0.15942028985507245
+          },
+          "deck_size": {
+            "n": 5,
+            "mean": 36.2,
+            "median": 38.0,
+            "p25": 34.0,
+            "p75": 38.0
+          },
+          "first_results": {
+            "predicted_death": 4,
+            "died": 1
+          }
+        }
+      },
+      "first_results": {
+        "predicted_death": 13,
+        "won": 30,
+        "died": 3
+      },
+      "prediction_score": {
+        "n": 42,
+        "mean_prediction": 0.4955,
+        "first_completed_win_rate": 0.6666666666666666,
+        "brier": 0.19122826190476191,
+        "constant_baseline_brier": 0.22222222222222224,
+        "bias": -0.17116666666666666,
+        "definition": "First attempt completed win; confirmed SL abandonment is a non-completion, not an observed death."
+      },
+      "prediction_trusted_score": {
+        "n": 23,
+        "mean_prediction": 0.6953478260869566,
+        "first_completed_win_rate": 0.8695652173913043,
+        "brier": 0.13630691304347825,
+        "constant_baseline_brier": 0.11342155009451797,
+        "bias": -0.17421739130434782,
+        "definition": "First attempt completed win; confirmed SL abandonment is a non-completion, not an observed death."
+      },
+      "prediction_actual_death_only_score": {
+        "n": 31,
+        "mean_prediction": 0.6529354838709678,
+        "first_completed_win_rate": 0.9032258064516129,
+        "brier": 0.24878545161290322,
+        "constant_baseline_brier": 0.08740894901144643,
+        "bias": -0.25029032258064515,
+        "definition": "First attempt completed win; confirmed SL abandonment is a non-completion, not an observed death."
+      },
+      "jev_exact_first": {
+        "n": 496,
+        "d": 570,
+        "rate": 0.8701754385964913
+      },
+      "jev_exact_all": {
+        "n": 1059,
+        "d": 1190,
+        "rate": 0.8899159663865546
+      },
+      "jev_best_group_all": {
+        "n": 1059,
+        "d": 1190,
+        "rate": 0.8899159663865546
+      },
+      "P2_valid_choices": 622,
+      "P2_best_group": {
+        "n": 501,
+        "d": 622,
+        "rate": 0.8054662379421221
+      },
+      "P2_missing_reason": 0,
+      "P2_by_mode": {
+        "shadow": {
+          "best_group": {
+            "n": 88,
+            "d": 115,
+            "rate": 0.7652173913043478
+          },
+          "choices": 120
+        },
+        "on": {
+          "best_group": {
+            "n": 413,
+            "d": 507,
+            "rate": 0.814595660749507
+          },
+          "choices": 549
+        }
+      },
+      "choices": {
+        "rest/plan": {
+          "choices": {
+            "o0": 101,
+            "o1:c16": 4,
+            "o1:c21": 4,
+            "o0:c7": 1,
+            "o0:c22": 1,
+            "o0:c27": 1,
+            "o0:c21": 1,
+            "o0:c10": 1,
+            "o0:c31": 1,
+            "o1:c14": 5,
+            "o1:c17": 3,
+            "o1:c19": 2,
+            "o1:c11": 1,
+            "o1:c25": 4,
+            "o1:c15": 4,
+            "o1:c10": 4,
+            "o1:c13": 2,
+            "o1:c20": 3,
+            "o1:c22": 2,
+            "o1:c18": 2,
+            "o1:c26": 1,
+            "o1:c24": 1,
+            "o1:c29": 1,
+            "o1:c27": 1
+          },
+          "P1_received": 61,
+          "unlinked": 0
+        },
+        "reward/card": {
+          "choices": {
+            "card1": 97,
+            "card0": 109,
+            "card2": 92,
+            "skip": 43
+          },
+          "P1_received": 145,
+          "unlinked": 0
+        }
+      },
+      "C1": {
+        "complete": 258,
+        "complete_adaptive": 1645,
+        "pending": 177,
+        "degraded": 87
+      },
+      "C2_on": {
+        "computations": 1473,
+        "with_elimination": 755,
+        "eliminated_candidates": 3868
+      },
+      "P3": {
+        "observed": 1235,
+        "used": 457,
+        "best_changed": 53,
+        "fallback_reasons": {
+          "sign_or_attribution_rejected": 133,
+          "low_trust": 609,
+          "null": 36
+        }
+      },
+      "low_trust": {
+        "b2": {
+          "n": 609,
+          "d": 1235,
+          "rate": 0.4931174089068826
+        },
+        "b3": {
+          "n": 242,
+          "d": 669,
+          "rate": 0.3617339312406577
+        }
+      }
+    },
+    "P1P3_before_R362": {
+      "runs": 4,
+      "victories": 0,
+      "run_deaths": {
+        "unknown_room": 1,
+        "boss": 1,
+        "elite": 1,
+        "hallway": 1
+      },
+      "boss_final": {
+        "n": 7,
+        "d": 8,
+        "rate": 0.875
+      },
+      "boss_by_floor": {
+        "17": {
+          "final": {
+            "n": 4,
+            "d": 4,
+            "rate": 1.0
+          },
+          "entry_hp": {
+            "n": 4,
+            "mean": 73.75,
+            "median": 70.5,
+            "p25": 63.5,
+            "p75": 80.75
+          },
+          "hp_fraction": {
+            "n": 4,
+            "mean": 0.8962043111527648,
+            "median": 0.8898112197081269,
+            "p25": 0.8246753246753247,
+            "p75": 0.9613402061855669
+          },
+          "deck_size": {
+            "n": 4,
+            "mean": 21.75,
+            "median": 21.5,
+            "p25": 20.0,
+            "p75": 23.25
+          },
+          "first_results": {
+            "won": 4
+          }
+        },
+        "33": {
+          "final": {
+            "n": 2,
+            "d": 2,
+            "rate": 1.0
+          },
+          "entry_hp": {
+            "n": 2,
+            "mean": 73.0,
+            "median": 73.0,
+            "p25": 69.5,
+            "p75": 76.5
+          },
+          "hp_fraction": {
+            "n": 2,
+            "mean": 0.829296131896005,
+            "median": 0.829296131896005,
+            "p25": 0.7620164870006342,
+            "p75": 0.896575776791376
+          },
+          "deck_size": {
+            "n": 2,
+            "mean": 26.5,
+            "median": 26.5,
+            "p25": 25.75,
+            "p75": 27.25
+          },
+          "first_results": {
+            "won": 2
+          }
+        },
+        "48": {
+          "final": {
+            "n": 1,
+            "d": 1,
+            "rate": 1.0
+          },
+          "entry_hp": {
+            "n": 1,
+            "mean": 84.0,
+            "median": 84.0,
+            "p25": 84.0,
+            "p75": 84.0
+          },
+          "hp_fraction": {
+            "n": 1,
+            "mean": 0.9655172413793104,
+            "median": 0.9655172413793104,
+            "p25": 0.9655172413793104,
+            "p75": 0.9655172413793104
+          },
+          "deck_size": {
+            "n": 1,
+            "mean": 34.0,
+            "median": 34.0,
+            "p25": 34.0,
+            "p75": 34.0
+          },
+          "first_results": {
+            "won": 1
+          }
+        },
+        "49": {
+          "final": {
+            "n": 0,
+            "d": 1,
+            "rate": 0.0
+          },
+          "entry_hp": {
+            "n": 1,
+            "mean": 77.0,
+            "median": 77.0,
+            "p25": 77.0,
+            "p75": 77.0
+          },
+          "hp_fraction": {
+            "n": 1,
+            "mean": 0.875,
+            "median": 0.875,
+            "p25": 0.875,
+            "p75": 0.875
+          },
+          "deck_size": {
+            "n": 1,
+            "mean": 34.0,
+            "median": 34.0,
+            "p25": 34.0,
+            "p75": 34.0
+          },
+          "first_results": {
+            "died": 1
+          }
+        }
+      },
+      "first_results": {
+        "won": 7,
+        "died": 1
+      },
+      "prediction_score": {
+        "n": 7,
+        "mean_prediction": 0.5871428571428572,
+        "first_completed_win_rate": 0.8571428571428571,
+        "brier": 0.2581094285714286,
+        "constant_baseline_brier": 0.12244897959183677,
+        "bias": -0.26999999999999996,
+        "definition": "First attempt completed win; confirmed SL abandonment is a non-completion, not an observed death."
+      },
+      "prediction_trusted_score": {
+        "n": 4,
+        "mean_prediction": 0.7475,
+        "first_completed_win_rate": 1.0,
+        "brier": 0.1936195,
+        "constant_baseline_brier": 0.0,
+        "bias": -0.25249999999999995,
+        "definition": "First attempt completed win; confirmed SL abandonment is a non-completion, not an observed death."
+      },
+      "prediction_actual_death_only_score": {
+        "n": 7,
+        "mean_prediction": 0.5871428571428572,
+        "first_completed_win_rate": 0.8571428571428571,
+        "brier": 0.2581094285714286,
+        "constant_baseline_brier": 0.12244897959183677,
+        "bias": -0.26999999999999996,
+        "definition": "First attempt completed win; confirmed SL abandonment is a non-completion, not an observed death."
+      },
+      "jev_exact_first": {
+        "n": 76,
+        "d": 85,
+        "rate": 0.8941176470588236
+      },
+      "jev_exact_all": {
+        "n": 76,
+        "d": 85,
+        "rate": 0.8941176470588236
+      },
+      "jev_best_group_all": {
+        "n": 76,
+        "d": 85,
+        "rate": 0.8941176470588236
+      },
+      "P2_valid_choices": 115,
+      "P2_best_group": {
+        "n": 88,
+        "d": 115,
+        "rate": 0.7652173913043478
+      },
+      "P2_missing_reason": 0,
+      "P2_by_mode": {
+        "shadow": {
+          "best_group": {
+            "n": 88,
+            "d": 115,
+            "rate": 0.7652173913043478
+          },
+          "choices": 120
+        },
+        "on": {
+          "best_group": {
+            "n": 0,
+            "d": 0,
+            "rate": null
+          },
+          "choices": 0
+        }
+      },
+      "choices": {
+        "rest/plan": {
+          "choices": {
+            "o0": 20,
+            "o1:c16": 1,
+            "o1:c21": 1,
+            "o0:c7": 1,
+            "o0:c22": 1,
+            "o0:c27": 1,
+            "o0:c21": 1,
+            "o0:c10": 1,
+            "o0:c31": 1,
+            "o1:c14": 1,
+            "o1:c17": 1
+          },
+          "P1_received": 8,
+          "unlinked": 0
+        },
+        "reward/card": {
+          "choices": {
+            "card1": 16,
+            "card0": 21,
+            "card2": 18,
+            "skip": 9
+          },
+          "P1_received": 20,
+          "unlinked": 0
+        }
+      },
+      "C1": {
+        "complete": 216
+      },
+      "C2_on": {
+        "computations": 0,
+        "with_elimination": 0,
+        "eliminated_candidates": 0
+      },
+      "P3": {
+        "observed": 96,
+        "used": 22,
+        "best_changed": 0,
+        "fallback_reasons": {
+          "sign_or_attribution_rejected": 29,
+          "low_trust": 45
+        }
+      },
+      "low_trust": {
+        "b2": {
+          "n": 45,
+          "d": 96,
+          "rate": 0.46875
+        },
+        "b3": {
+          "n": 44,
+          "d": 120,
+          "rate": 0.36666666666666664
+        }
+      }
+    },
+    "R362_before_R366": {
+      "runs": 12,
+      "victories": 0,
+      "run_deaths": {
+        "boss": 8,
+        "elite": 1,
+        "unknown_room": 1,
+        "hallway": 2
+      },
+      "boss_final": {
+        "n": 16,
+        "d": 24,
+        "rate": 0.6666666666666666
+      },
+      "boss_by_floor": {
+        "17": {
+          "final": {
+            "n": 9,
+            "d": 11,
+            "rate": 0.8181818181818182
+          },
+          "entry_hp": {
+            "n": 11,
+            "mean": 64.36363636363636,
+            "median": 69.0,
+            "p25": 56.5,
+            "p75": 70.0
+          },
+          "hp_fraction": {
+            "n": 11,
+            "mean": 0.8919702071217223,
+            "median": 0.9753086419753086,
+            "p25": 0.7681818181818182,
+            "p75": 1.0
+          },
+          "deck_size": {
+            "n": 11,
+            "mean": 22.545454545454547,
+            "median": 23.0,
+            "p25": 21.5,
+            "p75": 23.5
+          },
+          "first_results": {
+            "predicted_death": 2,
+            "died": 1,
+            "won": 8
+          }
+        },
+        "33": {
+          "final": {
+            "n": 5,
+            "d": 6,
+            "rate": 0.8333333333333334
+          },
+          "entry_hp": {
+            "n": 6,
+            "mean": 67.83333333333333,
+            "median": 68.0,
+            "p25": 61.5,
+            "p75": 74.5
+          },
+          "hp_fraction": {
+            "n": 6,
+            "mean": 0.8767744958293738,
+            "median": 0.8919642857142858,
+            "p25": 0.8314935064935065,
+            "p75": 0.978125
+          },
+          "deck_size": {
+            "n": 6,
+            "mean": 27.666666666666668,
+            "median": 27.5,
+            "p25": 26.25,
+            "p75": 28.75
+          },
+          "first_results": {
+            "won": 5,
+            "predicted_death": 1
+          }
+        },
+        "48": {
+          "final": {
+            "n": 2,
+            "d": 5,
+            "rate": 0.4
+          },
+          "entry_hp": {
+            "n": 5,
+            "mean": 71.4,
+            "median": 70.0,
+            "p25": 67.0,
+            "p75": 80.0
+          },
+          "hp_fraction": {
+            "n": 5,
+            "mean": 0.9507246376811593,
+            "median": 1.0,
+            "p25": 1.0,
+            "p75": 1.0
+          },
+          "deck_size": {
+            "n": 5,
+            "mean": 34.6,
+            "median": 34.0,
+            "p25": 33.0,
+            "p75": 37.0
+          },
+          "first_results": {
+            "predicted_death": 3,
+            "won": 2
+          }
+        },
+        "49": {
+          "final": {
+            "n": 0,
+            "d": 2,
+            "rate": 0.0
+          },
+          "entry_hp": {
+            "n": 2,
+            "mean": 7.5,
+            "median": 7.5,
+            "p25": 5.75,
+            "p75": 9.25
+          },
+          "hp_fraction": {
+            "n": 2,
+            "mean": 0.10828157349896479,
+            "median": 0.1082815734989648,
+            "p25": 0.08271221532091097,
+            "p75": 0.13385093167701861
+          },
+          "deck_size": {
+            "n": 2,
+            "mean": 34.5,
+            "median": 34.5,
+            "p25": 32.75,
+            "p75": 36.25
+          },
+          "first_results": {
+            "predicted_death": 2
+          }
+        }
+      },
+      "first_results": {
+        "predicted_death": 8,
+        "died": 1,
+        "won": 15
+      },
+      "prediction_score": {
+        "n": 23,
+        "mean_prediction": 0.464,
+        "first_completed_win_rate": 0.6086956521739131,
+        "brier": 0.20517182608695653,
+        "constant_baseline_brier": 0.2381852551984877,
+        "bias": -0.14469565217391306,
+        "definition": "First attempt completed win; confirmed SL abandonment is a non-completion, not an observed death."
+      },
+      "prediction_trusted_score": {
+        "n": 12,
+        "mean_prediction": 0.6080833333333333,
+        "first_completed_win_rate": 0.75,
+        "brier": 0.15711241666666667,
+        "constant_baseline_brier": 0.1875,
+        "bias": -0.14191666666666666,
+        "definition": "First attempt completed win; confirmed SL abandonment is a non-completion, not an observed death."
+      },
+      "prediction_actual_death_only_score": {
+        "n": 15,
+        "mean_prediction": 0.6736,
+        "first_completed_win_rate": 0.9333333333333333,
+        "brier": 0.29331453333333335,
+        "constant_baseline_brier": 0.06222222222222221,
+        "bias": -0.2597333333333333,
+        "definition": "First attempt completed win; confirmed SL abandonment is a non-completion, not an observed death."
+      },
+      "jev_exact_first": {
+        "n": 270,
+        "d": 317,
+        "rate": 0.8517350157728707
+      },
+      "jev_exact_all": {
+        "n": 612,
+        "d": 713,
+        "rate": 0.8583450210378681
+      },
+      "jev_best_group_all": {
+        "n": 612,
+        "d": 713,
+        "rate": 0.8583450210378681
+      },
+      "P2_valid_choices": 325,
+      "P2_best_group": {
+        "n": 265,
+        "d": 325,
+        "rate": 0.8153846153846154
+      },
+      "P2_missing_reason": 0,
+      "P2_by_mode": {
+        "shadow": {
+          "best_group": {
+            "n": 0,
+            "d": 0,
+            "rate": null
+          },
+          "choices": 0
+        },
+        "on": {
+          "best_group": {
+            "n": 265,
+            "d": 325,
+            "rate": 0.8153846153846154
+          },
+          "choices": 351
+        }
+      },
+      "choices": {
+        "rest/plan": {
+          "choices": {
+            "o0": 55,
+            "o1:c19": 1,
+            "o1:c11": 1,
+            "o1:c21": 2,
+            "o1:c25": 1,
+            "o1:c14": 3,
+            "o1:c15": 1,
+            "o1:c10": 3,
+            "o1:c13": 2,
+            "o1:c20": 2,
+            "o1:c22": 1,
+            "o1:c16": 3,
+            "o1:c17": 1,
+            "o1:c18": 1,
+            "o1:c26": 1
+          },
+          "P1_received": 30,
+          "unlinked": 0
+        },
+        "reward/card": {
+          "choices": {
+            "card2": 41,
+            "card0": 53,
+            "skip": 27,
+            "card1": 52
+          },
+          "P1_received": 72,
+          "unlinked": 0
+        }
+      },
+      "C1": {
+        "complete_adaptive": 1086,
+        "complete": 26,
+        "pending": 18,
+        "degraded": 9
+      },
+      "C2_on": {
+        "computations": 951,
+        "with_elimination": 538,
+        "eliminated_candidates": 2733
+      },
+      "P3": {
+        "observed": 761,
+        "used": 385,
+        "best_changed": 50,
+        "fallback_reasons": {
+          "sign_or_attribution_rejected": 94,
+          "low_trust": 282
+        }
+      },
+      "low_trust": {
+        "b2": {
+          "n": 282,
+          "d": 761,
+          "rate": 0.37056504599211565
+        },
+        "b3": {
+          "n": 125,
+          "d": 351,
+          "rate": 0.3561253561253561
+        }
+      }
+    },
+    "R366_before_R369": {
+      "runs": 4,
+      "victories": 0,
+      "run_deaths": {
+        "boss": 2,
+        "hallway": 1,
+        "elite": 1
+      },
+      "boss_final": {
+        "n": 8,
+        "d": 10,
+        "rate": 0.8
+      },
+      "boss_by_floor": {
+        "17": {
+          "final": {
+            "n": 4,
+            "d": 4,
+            "rate": 1.0
+          },
+          "entry_hp": {
+            "n": 4,
+            "mean": 57.5,
+            "median": 54.5,
+            "p25": 53.25,
+            "p75": 58.75
+          },
+          "hp_fraction": {
+            "n": 4,
+            "mean": 0.8070488721804512,
+            "median": 0.7785714285714286,
+            "p25": 0.7463345864661655,
+            "p75": 0.8392857142857143
+          },
+          "deck_size": {
+            "n": 4,
+            "mean": 22.75,
+            "median": 23.0,
+            "p25": 21.75,
+            "p75": 24.0
+          },
+          "first_results": {
+            "won": 4
+          }
+        },
+        "33": {
+          "final": {
+            "n": 2,
+            "d": 2,
+            "rate": 1.0
+          },
+          "entry_hp": {
+            "n": 2,
+            "mean": 58.5,
+            "median": 58.5,
+            "p25": 52.75,
+            "p75": 64.25
+          },
+          "hp_fraction": {
+            "n": 2,
+            "mean": 0.8357142857142856,
+            "median": 0.8357142857142856,
+            "p25": 0.7535714285714286,
+            "p75": 0.9178571428571428
+          },
+          "deck_size": {
+            "n": 2,
+            "mean": 32.0,
+            "median": 32.0,
+            "p25": 32.0,
+            "p75": 32.0
+          },
+          "first_results": {
+            "won": 2
+          }
+        },
+        "48": {
+          "final": {
+            "n": 2,
+            "d": 2,
+            "rate": 1.0
+          },
+          "entry_hp": {
+            "n": 2,
+            "mean": 68.0,
+            "median": 68.0,
+            "p25": 64.5,
+            "p75": 71.5
+          },
+          "hp_fraction": {
+            "n": 2,
+            "mean": 0.9485294117647058,
+            "median": 0.9485294117647058,
+            "p25": 0.9227941176470589,
+            "p75": 0.9742647058823529
+          },
+          "deck_size": {
+            "n": 2,
+            "mean": 39.0,
+            "median": 39.0,
+            "p25": 38.5,
+            "p75": 39.5
+          },
+          "first_results": {
+            "predicted_death": 2
+          }
+        },
+        "49": {
+          "final": {
+            "n": 0,
+            "d": 2,
+            "rate": 0.0
+          },
+          "entry_hp": {
+            "n": 2,
+            "mean": 4.5,
+            "median": 4.5,
+            "p25": 3.75,
+            "p75": 5.25
+          },
+          "hp_fraction": {
+            "n": 2,
+            "mean": 0.062058823529411763,
+            "median": 0.062058823529411763,
+            "p25": 0.05308823529411765,
+            "p75": 0.07102941176470588
+          },
+          "deck_size": {
+            "n": 2,
+            "mean": 39.0,
+            "median": 39.0,
+            "p25": 38.5,
+            "p75": 39.5
+          },
+          "first_results": {
+            "predicted_death": 2
+          }
+        }
+      },
+      "first_results": {
+        "won": 6,
+        "predicted_death": 4
+      },
+      "prediction_score": {
+        "n": 8,
+        "mean_prediction": 0.494,
+        "first_completed_win_rate": 0.75,
+        "brier": 0.17222774999999999,
+        "constant_baseline_brier": 0.1875,
+        "bias": -0.256,
+        "definition": "First attempt completed win; confirmed SL abandonment is a non-completion, not an observed death."
+      },
+      "prediction_trusted_score": {
+        "n": 5,
+        "mean_prediction": 0.7847999999999999,
+        "first_completed_win_rate": 1.0,
+        "brier": 0.0866076,
+        "constant_baseline_brier": 0.0,
+        "bias": -0.2152,
+        "definition": "First attempt completed win; confirmed SL abandonment is a non-completion, not an observed death."
+      },
+      "prediction_actual_death_only_score": {
+        "n": 6,
+        "mean_prediction": 0.6586666666666666,
+        "first_completed_win_rate": 1.0,
+        "brier": 0.22963699999999998,
+        "constant_baseline_brier": 0.0,
+        "bias": -0.3413333333333333,
+        "definition": "First attempt completed win; confirmed SL abandonment is a non-completion, not an observed death."
+      },
+      "jev_exact_first": {
+        "n": 72,
+        "d": 86,
+        "rate": 0.8372093023255814
+      },
+      "jev_exact_all": {
+        "n": 141,
+        "d": 155,
+        "rate": 0.9096774193548387
+      },
+      "jev_best_group_all": {
+        "n": 141,
+        "d": 155,
+        "rate": 0.9096774193548387
+      },
+      "P2_valid_choices": 111,
+      "P2_best_group": {
+        "n": 91,
+        "d": 111,
+        "rate": 0.8198198198198198
+      },
+      "P2_missing_reason": 0,
+      "P2_by_mode": {
+        "shadow": {
+          "best_group": {
+            "n": 0,
+            "d": 0,
+            "rate": null
+          },
+          "choices": 0
+        },
+        "on": {
+          "best_group": {
+            "n": 91,
+            "d": 111,
+            "rate": 0.8198198198198198
+          },
+          "choices": 124
+        }
+      },
+      "choices": {
+        "rest/plan": {
+          "choices": {
+            "o1:c15": 3,
+            "o1:c10": 1,
+            "o1:c22": 1,
+            "o0": 17,
+            "o1:c24": 1,
+            "o1:c17": 1,
+            "o1:c25": 2,
+            "o1:c21": 1,
+            "o1:c29": 1,
+            "o1:c27": 1
+          },
+          "P1_received": 15,
+          "unlinked": 0
+        },
+        "reward/card": {
+          "choices": {
+            "card2": 21,
+            "card1": 21,
+            "card0": 17,
+            "skip": 5
+          },
+          "P1_received": 34,
+          "unlinked": 0
+        }
+      },
+      "C1": {
+        "complete_adaptive": 238,
+        "complete": 13,
+        "pending": 159,
+        "degraded": 78
+      },
+      "C2_on": {
+        "computations": 219,
+        "with_elimination": 145,
+        "eliminated_candidates": 802
+      },
+      "P3": {
+        "observed": 128,
+        "used": 50,
+        "best_changed": 3,
+        "fallback_reasons": {
+          "low_trust": 68,
+          "sign_or_attribution_rejected": 10
+        }
+      },
+      "low_trust": {
+        "b2": {
+          "n": 68,
+          "d": 128,
+          "rate": 0.53125
+        },
+        "b3": {
+          "n": 39,
+          "d": 124,
+          "rate": 0.31451612903225806
+        }
+      }
+    },
+    "R369+": {
+      "runs": 4,
+      "victories": 0,
+      "run_deaths": {
+        "hallway": 1,
+        "elite": 1,
+        "boss": 2
+      },
+      "boss_final": {
+        "n": 2,
+        "d": 4,
+        "rate": 0.5
+      },
+      "boss_by_floor": {
+        "17": {
+          "final": {
+            "n": 2,
+            "d": 3,
+            "rate": 0.6666666666666666
+          },
+          "entry_hp": {
+            "n": 3,
+            "mean": 55.666666666666664,
+            "median": 51.0,
+            "p25": 48.5,
+            "p75": 60.5
+          },
+          "hp_fraction": {
+            "n": 3,
+            "mean": 0.7952380952380952,
+            "median": 0.7285714285714285,
+            "p25": 0.6928571428571428,
+            "p75": 0.8642857142857143
+          },
+          "deck_size": {
+            "n": 3,
+            "mean": 23.666666666666668,
+            "median": 24.0,
+            "p25": 23.5,
+            "p75": 24.0
+          },
+          "first_results": {
+            "won": 2,
+            "predicted_death": 1
+          }
+        },
+        "33": {
+          "final": {
+            "n": 0,
+            "d": 1,
+            "rate": 0.0
+          },
+          "entry_hp": {
+            "n": 1,
+            "mean": 63.0,
+            "median": 63.0,
+            "p25": 63.0,
+            "p75": 63.0
+          },
+          "hp_fraction": {
+            "n": 1,
+            "mean": 0.9,
+            "median": 0.9,
+            "p25": 0.9,
+            "p75": 0.9
+          },
+          "deck_size": {
+            "n": 1,
+            "mean": 37.0,
+            "median": 37.0,
+            "p25": 37.0,
+            "p75": 37.0
+          },
+          "first_results": {
+            "died": 1
+          }
+        },
+        "48": {
+          "final": {
+            "n": 0,
+            "d": 0,
+            "rate": null
+          },
+          "entry_hp": {
+            "n": 0,
+            "mean": null,
+            "median": null,
+            "p25": null,
+            "p75": null
+          },
+          "hp_fraction": {
+            "n": 0,
+            "mean": null,
+            "median": null,
+            "p25": null,
+            "p75": null
+          },
+          "deck_size": {
+            "n": 0,
+            "mean": null,
+            "median": null,
+            "p25": null,
+            "p75": null
+          },
+          "first_results": {}
+        },
+        "49": {
+          "final": {
+            "n": 0,
+            "d": 0,
+            "rate": null
+          },
+          "entry_hp": {
+            "n": 0,
+            "mean": null,
+            "median": null,
+            "p25": null,
+            "p75": null
+          },
+          "hp_fraction": {
+            "n": 0,
+            "mean": null,
+            "median": null,
+            "p25": null,
+            "p75": null
+          },
+          "deck_size": {
+            "n": 0,
+            "mean": null,
+            "median": null,
+            "p25": null,
+            "p75": null
+          },
+          "first_results": {}
+        }
+      },
+      "first_results": {
+        "won": 2,
+        "died": 1,
+        "predicted_death": 1
+      },
+      "prediction_score": {
+        "n": 4,
+        "mean_prediction": 0.51925,
+        "first_completed_win_rate": 0.5,
+        "brier": 0.03201175,
+        "constant_baseline_brier": 0.25,
+        "bias": 0.019250000000000003,
+        "definition": "First attempt completed win; confirmed SL abandonment is a non-completion, not an observed death."
+      },
+      "prediction_trusted_score": {
+        "n": 2,
+        "mean_prediction": 0.891,
+        "first_completed_win_rate": 1.0,
+        "brier": 0.021096999999999994,
+        "constant_baseline_brier": 0.0,
+        "bias": -0.10899999999999999,
+        "definition": "First attempt completed win; confirmed SL abandonment is a non-completion, not an observed death."
+      },
+      "prediction_actual_death_only_score": {
+        "n": 3,
+        "mean_prediction": 0.6916666666666668,
+        "first_completed_win_rate": 0.6666666666666666,
+        "brier": 0.042681,
+        "constant_baseline_brier": 0.22222222222222224,
+        "bias": 0.025000000000000005,
+        "definition": "First attempt completed win; confirmed SL abandonment is a non-completion, not an observed death."
+      },
+      "jev_exact_first": {
+        "n": 78,
+        "d": 82,
+        "rate": 0.9512195121951219
+      },
+      "jev_exact_all": {
+        "n": 230,
+        "d": 237,
+        "rate": 0.9704641350210971
+      },
+      "jev_best_group_all": {
+        "n": 230,
+        "d": 237,
+        "rate": 0.9704641350210971
+      },
+      "P2_valid_choices": 71,
+      "P2_best_group": {
+        "n": 57,
+        "d": 71,
+        "rate": 0.8028169014084507
+      },
+      "P2_missing_reason": 0,
+      "P2_by_mode": {
+        "shadow": {
+          "best_group": {
+            "n": 0,
+            "d": 0,
+            "rate": null
+          },
+          "choices": 0
+        },
+        "on": {
+          "best_group": {
+            "n": 57,
+            "d": 71,
+            "rate": 0.8028169014084507
+          },
+          "choices": 74
+        }
+      },
+      "choices": {
+        "rest/plan": {
+          "choices": {
+            "o0": 9,
+            "o1:c14": 1,
+            "o1:c20": 1,
+            "o1:c18": 1,
+            "o1:c19": 1,
+            "o1:c25": 1
+          },
+          "P1_received": 8,
+          "unlinked": 0
+        },
+        "reward/card": {
+          "choices": {
+            "card0": 18,
+            "card2": 12,
+            "card1": 8,
+            "skip": 2
+          },
+          "P1_received": 19,
+          "unlinked": 0
+        }
+      },
+      "C1": {
+        "complete_adaptive": 321,
+        "complete": 3
+      },
+      "C2_on": {
+        "computations": 303,
+        "with_elimination": 72,
+        "eliminated_candidates": 333
+      },
+      "P3": {
+        "observed": 250,
+        "used": 0,
+        "best_changed": 0,
+        "fallback_reasons": {
+          "null": 36,
+          "low_trust": 214
+        }
+      },
+      "low_trust": {
+        "b2": {
+          "n": 214,
+          "d": 250,
+          "rate": 0.856
+        },
+        "b3": {
+          "n": 34,
+          "d": 74,
+          "rate": 0.4594594594594595
+        }
+      }
+    }
+  },
+  "brain_choice_links": {
+    "total": 1053,
+    "matched_exact_reason_and_label": 1053
+  },
+  "single_sided_fisher_pre_higher_win_rate": 0.12483716891011724,
+  "engine_sensitivity": {
+    "pre": {
+      "runs": 24,
+      "wins": 3,
+      "boss_final": {
+        "n": 42,
+        "d": 50,
+        "rate": 0.84
+      }
+    },
+    "post": {
+      "runs": 23,
+      "wins": 0,
+      "boss_final": {
+        "n": 30,
+        "d": 42,
+        "rate": 0.7142857142857143
+      }
+    }
+  },
+  "descriptive_only": true,
+  "first_attempt_limits": "Predicted-death SL exits are recorded separately from observed deaths. Binary first-completion labels require a confirmed reload or later logged attempt. Strict observed-only scores are selection biased and separately shown.",
+  "counterfactual_limits": "No unchosen action outcome, C2 full-run comparison in on mode, mechanism discovery, or causal attribution is invented."
+}

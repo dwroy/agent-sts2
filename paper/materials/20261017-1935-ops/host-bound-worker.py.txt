@@ -1,0 +1,20 @@
+from pathlib import Path
+import argparse,hashlib,importlib.util,json,sys
+r=Path.cwd();p=r/'ops/codex-ops/record-staging/20261017-1935';pub=r/'paper/materials/20261017-1935-ops'
+binding=json.loads((pub/'host-report-binding.json').read_bytes())
+sys.path.insert(0,str(r/'ops'))
+import learner_checks
+sha=lambda raw:hashlib.sha256(raw).hexdigest()
+assert sha((r/binding['original_out_path']).read_bytes())==binding['original_out_sha256']
+assert sha((r/'ops/learner_checks.py').read_bytes())==binding['original_checks_module_sha256']
+assert learner_checks.FULL_CHECK_COMMAND==binding['full_check_command']
+assert learner_checks.read_report(str(r/binding['original_out_path']))==binding['original_report']
+def bound_read(path):
+    assert Path(path).resolve()==(r/binding['original_out_path']).resolve()
+    assert sha(Path(path).read_bytes())==binding['original_out_sha256']
+    return binding['normalized_operand']
+learner_checks.read_report=bound_read
+spec=importlib.util.spec_from_file_location('original_ops_learn',r/'ops/codex-ops-learn.py');module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module)
+rc=module.cmd_recheck(argparse.Namespace(batch=binding['batch']))
+(pub/'host-adapter-terminal.json').write_text(json.dumps(dict(rc=rc,original_out_sha256_unchanged=sha((r/binding['original_out_path']).read_bytes())==binding['original_out_sha256'],original_check_pipeline=True),indent=2)+'\n')
+raise SystemExit(rc)

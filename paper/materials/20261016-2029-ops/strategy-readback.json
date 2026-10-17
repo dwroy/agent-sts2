@@ -1,0 +1,707 @@
+{
+  "at": "2026-10-16 20:35:42 CST",
+  "batch": "20261016-201302-strategy-proposal",
+  "state": "done",
+  "rc": 0,
+  "merged": null,
+  "original_report": {
+    "task": "strategy-proposal",
+    "character": "silent",
+    "batch": "20261016-201302-strategy-proposal",
+    "base": "240de4434e86658a72ef1a07cce8439720520633",
+    "runs": [
+      "KEN58SH9SLZ6",
+      "TXZ6RVMQA09D",
+      "WQZVENQ7DTRP",
+      "02HB4L0C3C67",
+      "4D4J8USKCPAV",
+      "F4QKG4J1AJJZ",
+      "JLN5SK17W4FQ",
+      "LS8035TB32P3",
+      "NB8KCF6HRGVF",
+      "S9UZAK0JP0C0"
+    ],
+    "fixes": [],
+    "skipped": [],
+    "merged": null,
+    "tests": {
+      "tsc": null,
+      "vitest": null,
+      "cases": null
+    },
+    "code_proposals": [
+      "silent-proposal-08eaa60bcc449852",
+      "silent-proposal-92920295a648b540",
+      "silent-proposal-a327449c331efbc1",
+      "silent-proposal-a099e89437e942bb",
+      "silent-proposal-47910f82a1fdd98f",
+      "silent-proposal-f1374df72d8e6a25",
+      "silent-proposal-38a49e6c97f31eea",
+      "silent-proposal-ef0e38a5dbd3bc07",
+      "silent-proposal-7f820c02d39bfaea",
+      "silent-proposal-04b6b430759815ed"
+    ],
+    "implementation_domains": [
+      "combat",
+      "potion",
+      "sl",
+      "terminal"
+    ],
+    "proposal_results": [
+      {
+        "id": "silent-proposal-08eaa60bcc449852",
+        "state": "waiting",
+        "reason": "缺F15不饮用及相同入口、后继下留药至Boss的完整成对结果，零净损且耗两药不能拟合持药价。"
+      },
+      {
+        "id": "silent-proposal-92920295a648b540",
+        "state": "waiting",
+        "reason": "缺保持抽序、生成牌、药栏和后续选择一致的连续两战替线与联合校准，少损3也少伤9不证明通关改善。"
+      },
+      {
+        "id": "silent-proposal-a327449c331efbc1",
+        "state": "waiting",
+        "reason": "缺攻击、格挡与沙坑两条边界的受控整战后继和独立验证，不能将9血换15伤拟成固定阈值或改SL门槛。"
+      },
+      {
+        "id": "silent-proposal-a099e89437e942bb",
+        "state": "waiting",
+        "reason": "生成及穿插子模型已有live源码祖先；缺计划妥当保留容量、跨重问完整候选派发及SL恢复的联合消费者校准，不能关闭整项。"
+      },
+      {
+        "id": "silent-proposal-47910f82a1fdd98f",
+        "state": "waiting",
+        "reason": "王室猛毒开场与连战传递已有受限实现；缺未知回血/复活组合顺序和留药、路线、SL受控整战后继及联合资源校准。"
+      },
+      {
+        "id": "silent-proposal-f1374df72d8e6a25",
+        "state": "waiting",
+        "reason": "缺隔离机制误差后的同入口、同预算不用/早用/留药整战及下一战成对结果，不能据低信心候选拟新权重。"
+      },
+      {
+        "id": "silent-proposal-38a49e6c97f31eea",
+        "state": "waiting",
+        "reason": "普通紧勒受限公式已有live源码祖先；缺弃磨蚀、增益分源、再生、自动触发与SL恢复的联合消费者校准及受控整战后继。"
+      },
+      {
+        "id": "silent-proposal-ef0e38a5dbd3bc07",
+        "state": "waiting",
+        "reason": "缺另一营火、事件、路线及用药时机的受控完整结果，两条观察性失败链不足校准路线或终局权重。"
+      },
+      {
+        "id": "silent-proposal-7f820c02d39bfaea",
+        "state": "waiting",
+        "reason": "缺同预算饱和排序校准、跨弃牌完整候选执行归属及成对整战后继，六次失败仅一个独立局。"
+      },
+      {
+        "id": "silent-proposal-04b6b430759815ed",
+        "state": "waiting",
+        "reason": "蟹朝向取整子实现已有live源码祖先；缺油灯首次消费跨动作、新战/SL恢复的联合输入与未覆盖X值/升级组合、能力整战后继。"
+      }
+    ],
+    "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-201302/learner/runs/20261016-201307-1ca47641-25b0-4fab-b087-73a37c838be4-strategy-proposal/report.md"
+  },
+  "native": {
+    "batch": "20261016-201302-strategy-proposal",
+    "thread": "01a144a1-6766-7072-8df6-f8eb415720d5",
+    "cwd": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-201302",
+    "event_log": "learner/runs/20261016-201307-1ca47641-25b0-4fab-b087-73a37c838be4-strategy-proposal.jsonl",
+    "registered_launch_batch": "20261016-201302-strategy-proposal",
+    "original_lease": "f9f634931dc832ceb0919af3c48ae084bd4988148828769fbe3b463c1abf8265",
+    "native_context": {
+      "source": "ops/codex-ops/accounts/codex1/learner/sessions/2026/10/16/rollout-2026-10-16T20-13-10-01a144a1-6766-7072-8df6-f8eb415720d5.jsonl",
+      "offset": 50242,
+      "bytes": 5148,
+      "sha256": "278611d8b060a1173188b3a92cf8ff301963bff239265dfa3c481c3c5a3cfc02",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "sandbox": {
+        "type": "workspace-write",
+        "writable_roots": [
+          "/home/dw/Projects/agent-sts2",
+          "/home/dw/Projects/agent-sts2/.git",
+          "/home/dw/Projects/agent-sts2/.git/worktrees/codex-strategy-silent-20261016-201302"
+        ],
+        "network_access": false,
+        "exclude_tmpdir_env_var": false,
+        "exclude_slash_tmp": false
+      },
+      "approval_policy": "never"
+    },
+    "native_user_input": {
+      "offset": 55390,
+      "bytes": 21498,
+      "sha256": "ce6fd7e162bf5950b6c96aef68d35543061858e78bd1484bdcd9d1c89a89bb3a",
+      "input_sha256": "eed63b95f3640e79590a6b4ac50be24478c9a9a65d72a93a62b16b9b0585a3a4"
+    },
+    "original_header_events": [
+      {
+        "offset": 0,
+        "bytes": 23563,
+        "sha256": "2886456d978ce039402e30d7756838197ae1f77aa1ccd75fe3227e2429d4052e",
+        "type": "learner_launch",
+        "attempt": null,
+        "code": null
+      },
+      {
+        "offset": 23563,
+        "bytes": 377,
+        "sha256": "ebf7d0b525639c5f2f2959f7ae51743d2726133d87a88b7363814174c339d13a",
+        "type": "learner_startup_attempt",
+        "attempt": 1,
+        "code": null
+      },
+      {
+        "offset": 26952,
+        "bytes": 77,
+        "sha256": "027f19f3ee9b77bd7f2146aa42e892113b3e0973afc3b9692d2bd0632f794f20",
+        "type": "thread.started",
+        "attempt": null,
+        "code": null
+      }
+    ],
+    "startup_attempts": 1,
+    "failed_startups_preserved": 0,
+    "no_model_or_manual_restart": true
+  },
+  "source_audit": {
+    "base": "240de4434e86658a72ef1a07cce8439720520633",
+    "prior_base": "a73af7b4ee4839cfd2f54677b86ff5d610e29936",
+    "live_head": "3f81fcbbdd04a57a38c17c2dcb8cb200ad7bb938",
+    "paths": [
+      {
+        "path": "agent/src/reflex/card-model.ts",
+        "base_sha256": "287115627e5bc3f93da8283620a9b255df880286d4e8e1408009d9f8c87a45c7",
+        "prior_sha256": "287115627e5bc3f93da8283620a9b255df880286d4e8e1408009d9f8c87a45c7",
+        "live_sha256": "2baebe174f6c55b11323edc6fda53bfee6712202e92d791b4b5080e322ff911d",
+        "live_physical_sha256": "2baebe174f6c55b11323edc6fda53bfee6712202e92d791b4b5080e322ff911d",
+        "same_prior": true,
+        "same_live": false,
+        "live_physical_matches_head": true
+      },
+      {
+        "path": "agent/src/reflex/turn-solver.ts",
+        "base_sha256": "0421e85f36d00b067e0787e9ff5fb6f70d18f3597d73f0fd2ffb34388274cde2",
+        "prior_sha256": "0421e85f36d00b067e0787e9ff5fb6f70d18f3597d73f0fd2ffb34388274cde2",
+        "live_sha256": "0421e85f36d00b067e0787e9ff5fb6f70d18f3597d73f0fd2ffb34388274cde2",
+        "live_physical_sha256": "0421e85f36d00b067e0787e9ff5fb6f70d18f3597d73f0fd2ffb34388274cde2",
+        "same_prior": true,
+        "same_live": true,
+        "live_physical_matches_head": true
+      },
+      {
+        "path": "agent/src/reflex/combat-plan.ts",
+        "base_sha256": "07243eaa93ac19f563b7d9a484472002f16ad818217613e580975cb7b9f86630",
+        "prior_sha256": "07243eaa93ac19f563b7d9a484472002f16ad818217613e580975cb7b9f86630",
+        "live_sha256": "07243eaa93ac19f563b7d9a484472002f16ad818217613e580975cb7b9f86630",
+        "live_physical_sha256": "07243eaa93ac19f563b7d9a484472002f16ad818217613e580975cb7b9f86630",
+        "same_prior": true,
+        "same_live": true,
+        "live_physical_matches_head": true
+      },
+      {
+        "path": "agent/src/reflex/rollout.ts",
+        "base_sha256": "7a41b69fbdd3d2b37eec3d390405772983952d33f870d5d401a983835435397d",
+        "prior_sha256": "7a41b69fbdd3d2b37eec3d390405772983952d33f870d5d401a983835435397d",
+        "live_sha256": "7a41b69fbdd3d2b37eec3d390405772983952d33f870d5d401a983835435397d",
+        "live_physical_sha256": "7a41b69fbdd3d2b37eec3d390405772983952d33f870d5d401a983835435397d",
+        "same_prior": true,
+        "same_live": true,
+        "live_physical_matches_head": true
+      },
+      {
+        "path": "agent/src/reflex/rollout-live.ts",
+        "base_sha256": "30ff27d414592f8e111be4a709a6c7595165f1e4d0684d72bb8c5d9bf933d978",
+        "prior_sha256": "30ff27d414592f8e111be4a709a6c7595165f1e4d0684d72bb8c5d9bf933d978",
+        "live_sha256": "cce1ccddd2a203280d082676b61753ffe320d41230c7411242cd16d9d1a1c345",
+        "live_physical_sha256": "cce1ccddd2a203280d082676b61753ffe320d41230c7411242cd16d9d1a1c345",
+        "same_prior": true,
+        "same_live": false,
+        "live_physical_matches_head": true
+      },
+      {
+        "path": "agent/src/reflex/potion-cost.ts",
+        "base_sha256": "b0a952df65e6af5ddd99742b9894367dff086052ef810865e85fe73c0c06c0b2",
+        "prior_sha256": "b0a952df65e6af5ddd99742b9894367dff086052ef810865e85fe73c0c06c0b2",
+        "live_sha256": "cc09b1012495d6ed582c2566d6a1096343a1820f22e0306ada2e75878d14e01e",
+        "live_physical_sha256": "cc09b1012495d6ed582c2566d6a1096343a1820f22e0306ada2e75878d14e01e",
+        "same_prior": true,
+        "same_live": false,
+        "live_physical_matches_head": true
+      },
+      {
+        "path": "agent/src/reflex/continuation-value.ts",
+        "base_sha256": "002277b50728ab8fd405799c0a3345e5dcb788ba8f37d5489b5fbcd9623029bb",
+        "prior_sha256": "002277b50728ab8fd405799c0a3345e5dcb788ba8f37d5489b5fbcd9623029bb",
+        "live_sha256": "002277b50728ab8fd405799c0a3345e5dcb788ba8f37d5489b5fbcd9623029bb",
+        "live_physical_sha256": "002277b50728ab8fd405799c0a3345e5dcb788ba8f37d5489b5fbcd9623029bb",
+        "same_prior": true,
+        "same_live": true,
+        "live_physical_matches_head": true
+      },
+      {
+        "path": "agent/src/reflex/silent-sl-resource-comparison.ts",
+        "base_sha256": "94cddd06952eb10e92f6756e426de20969a26e7525c32f4fc06a61ccb134f65f",
+        "prior_sha256": "94cddd06952eb10e92f6756e426de20969a26e7525c32f4fc06a61ccb134f65f",
+        "live_sha256": "94cddd06952eb10e92f6756e426de20969a26e7525c32f4fc06a61ccb134f65f",
+        "live_physical_sha256": "94cddd06952eb10e92f6756e426de20969a26e7525c32f4fc06a61ccb134f65f",
+        "same_prior": true,
+        "same_live": true,
+        "live_physical_matches_head": true
+      },
+      {
+        "path": "agent/src/sim/silent-opening.ts",
+        "base_sha256": "f3baa27bfac07d9f60995e37b7bbe31f7fa5baa63f18dd4fda3bc8d2c09bf502",
+        "prior_sha256": "f3baa27bfac07d9f60995e37b7bbe31f7fa5baa63f18dd4fda3bc8d2c09bf502",
+        "live_sha256": "f3baa27bfac07d9f60995e37b7bbe31f7fa5baa63f18dd4fda3bc8d2c09bf502",
+        "live_physical_sha256": "f3baa27bfac07d9f60995e37b7bbe31f7fa5baa63f18dd4fda3bc8d2c09bf502",
+        "same_prior": true,
+        "same_live": true,
+        "live_physical_matches_head": true
+      },
+      {
+        "path": "agent/src/sim/boss-start.ts",
+        "base_sha256": "01ef66ce210a3d022f1e28e34188b7005c7a88aa2b020e6f242f4030a95aee02",
+        "prior_sha256": "01ef66ce210a3d022f1e28e34188b7005c7a88aa2b020e6f242f4030a95aee02",
+        "live_sha256": "35bb060b332fd8d81b2d3c72e3765545368fdd140588d6915a4b83e9a908a226",
+        "live_physical_sha256": "35bb060b332fd8d81b2d3c72e3765545368fdd140588d6915a4b83e9a908a226",
+        "same_prior": true,
+        "same_live": false,
+        "live_physical_matches_head": true
+      },
+      {
+        "path": "agent/src/sim/boss-sim.ts",
+        "base_sha256": "e392cfd675fe877a359fed8d3d54fbe637fa7465471a8bb5e63d409863a4a663",
+        "prior_sha256": "e392cfd675fe877a359fed8d3d54fbe637fa7465471a8bb5e63d409863a4a663",
+        "live_sha256": "e392cfd675fe877a359fed8d3d54fbe637fa7465471a8bb5e63d409863a4a663",
+        "live_physical_sha256": "e392cfd675fe877a359fed8d3d54fbe637fa7465471a8bb5e63d409863a4a663",
+        "same_prior": true,
+        "same_live": true,
+        "live_physical_matches_head": true
+      },
+      {
+        "path": "agent/src/sim/double-boss-start.ts",
+        "base_sha256": "3241dedb92ff1ff9803df3786f15e65e669e7371756cca8668fb8c57771e97eb",
+        "prior_sha256": "3241dedb92ff1ff9803df3786f15e65e669e7371756cca8668fb8c57771e97eb",
+        "live_sha256": "3241dedb92ff1ff9803df3786f15e65e669e7371756cca8668fb8c57771e97eb",
+        "live_physical_sha256": "3241dedb92ff1ff9803df3786f15e65e669e7371756cca8668fb8c57771e97eb",
+        "same_prior": true,
+        "same_live": true,
+        "live_physical_matches_head": true
+      },
+      {
+        "path": "agent/src/sl/explore.ts",
+        "base_sha256": "2f37e85cc1c1c31e96a0d1b90db850893ec75b6cf5b4b84bf07bbb8de4e3ec43",
+        "prior_sha256": "2f37e85cc1c1c31e96a0d1b90db850893ec75b6cf5b4b84bf07bbb8de4e3ec43",
+        "live_sha256": "89875b8d7fa6470bf2fea69188c16125992f9736a6fa048123c26f7ae6c0d312",
+        "live_physical_sha256": "89875b8d7fa6470bf2fea69188c16125992f9736a6fa048123c26f7ae6c0d312",
+        "same_prior": true,
+        "same_live": false,
+        "live_physical_matches_head": true
+      },
+      {
+        "path": "agent/tests/silent-cunning.test.ts",
+        "base_sha256": "41247716a0155c3e3b8cb013c432128db4aa0c6dff1324332e1698b1fafcf4e1",
+        "prior_sha256": "41247716a0155c3e3b8cb013c432128db4aa0c6dff1324332e1698b1fafcf4e1",
+        "live_sha256": "41247716a0155c3e3b8cb013c432128db4aa0c6dff1324332e1698b1fafcf4e1",
+        "live_physical_sha256": "41247716a0155c3e3b8cb013c432128db4aa0c6dff1324332e1698b1fafcf4e1",
+        "same_prior": true,
+        "same_live": true,
+        "live_physical_matches_head": true
+      },
+      {
+        "path": "agent/tests/silent-strangle.test.ts",
+        "base_sha256": "48271a9e67b6f2dda6f2c8462f1684035a5d695be9ac099a8e9f3d50539bbe9c",
+        "prior_sha256": "48271a9e67b6f2dda6f2c8462f1684035a5d695be9ac099a8e9f3d50539bbe9c",
+        "live_sha256": "48271a9e67b6f2dda6f2c8462f1684035a5d695be9ac099a8e9f3d50539bbe9c",
+        "live_physical_sha256": "48271a9e67b6f2dda6f2c8462f1684035a5d695be9ac099a8e9f3d50539bbe9c",
+        "same_prior": true,
+        "same_live": true,
+        "live_physical_matches_head": true
+      },
+      {
+        "path": "agent/tests/silent-opening.test.ts",
+        "base_sha256": "a52584a2f61968f48af0791c9a330cfa2c0e75f558428e34d3c19abd469aa759",
+        "prior_sha256": "a52584a2f61968f48af0791c9a330cfa2c0e75f558428e34d3c19abd469aa759",
+        "live_sha256": "a52584a2f61968f48af0791c9a330cfa2c0e75f558428e34d3c19abd469aa759",
+        "live_physical_sha256": "a52584a2f61968f48af0791c9a330cfa2c0e75f558428e34d3c19abd469aa759",
+        "same_prior": true,
+        "same_live": true,
+        "live_physical_matches_head": true
+      },
+      {
+        "path": "agent/tests/silent-sl-resource-comparison.test.ts",
+        "base_sha256": "58c7c27795a3de30a8ddd5d65c245e79270acd024f1673c65f8562da17eac761",
+        "prior_sha256": "58c7c27795a3de30a8ddd5d65c245e79270acd024f1673c65f8562da17eac761",
+        "live_sha256": "58c7c27795a3de30a8ddd5d65c245e79270acd024f1673c65f8562da17eac761",
+        "live_physical_sha256": "58c7c27795a3de30a8ddd5d65c245e79270acd024f1673c65f8562da17eac761",
+        "same_prior": true,
+        "same_live": true,
+        "live_physical_matches_head": true
+      },
+      {
+        "path": "agent/src/reflex/silent-crusher-facing.ts",
+        "base_sha256": "78a90e120c688a8bae4ed80077ef12a862efa29b1d423160cca4cf72a13eed8e",
+        "prior_sha256": "78a90e120c688a8bae4ed80077ef12a862efa29b1d423160cca4cf72a13eed8e",
+        "live_sha256": "78a90e120c688a8bae4ed80077ef12a862efa29b1d423160cca4cf72a13eed8e",
+        "live_physical_sha256": "78a90e120c688a8bae4ed80077ef12a862efa29b1d423160cca4cf72a13eed8e",
+        "same_prior": true,
+        "same_live": true,
+        "live_physical_matches_head": true
+      },
+      {
+        "path": "agent/tests/silent-crusher-facing.test.ts",
+        "base_sha256": "36a79c9ad761b0f70ecb9145f48028feac833fb410cb7a8f11606cc8b7d3d2c2",
+        "prior_sha256": "36a79c9ad761b0f70ecb9145f48028feac833fb410cb7a8f11606cc8b7d3d2c2",
+        "live_sha256": "36a79c9ad761b0f70ecb9145f48028feac833fb410cb7a8f11606cc8b7d3d2c2",
+        "live_physical_sha256": "36a79c9ad761b0f70ecb9145f48028feac833fb410cb7a8f11606cc8b7d3d2c2",
+        "same_prior": true,
+        "same_live": true,
+        "live_physical_matches_head": true
+      }
+    ],
+    "ancestor_checks": [
+      {
+        "commit": "e1a467e18a0dfa8d99046a24ff4c0e1af59278c8",
+        "subject": "feat(silent): value resources and simulate continuous A10 bosses",
+        "base_ancestor": true,
+        "live_ancestor": true
+      },
+      {
+        "commit": "5b56a452bb9be14d620b368ec46974c1b57901ca",
+        "subject": "Integrate verified live dependencies into main while retaining main-only fixes",
+        "base_ancestor": true,
+        "live_ancestor": true
+      },
+      {
+        "commit": "66283dd9982bdd7f480da7a4d9bfefea0572a9ac",
+        "subject": "Sync repaired legacy learning and continuation adapter to main",
+        "base_ancestor": true,
+        "live_ancestor": true
+      },
+      {
+        "commit": "1698adc96ba434a46942321e0237b70657e625b2",
+        "subject": "Complete Silent SL resource comparison audit",
+        "base_ancestor": true,
+        "live_ancestor": true
+      },
+      {
+        "commit": "ebf8c57ecd811cceeb85fa636d49abbbb4c65dc8",
+        "subject": "Extend observed Silent opening HP combinations",
+        "base_ancestor": true,
+        "live_ancestor": true
+      },
+      {
+        "commit": "6403fdcdadc803a092beb5165a068e22bf51c412",
+        "subject": "Model observed Silent Cunning Potion generation and hand capacity",
+        "base_ancestor": true,
+        "live_ancestor": true
+      },
+      {
+        "commit": "15ea09ad75a421d4bd65a820c187c8ee188186c8",
+        "subject": "Model observed Silent Cunning Potion generation and hand capacity",
+        "base_ancestor": false,
+        "live_ancestor": false
+      },
+      {
+        "commit": "5c7105ff0294466da8319f2934beda05c6040794",
+        "subject": "Model observed ordinary Strangle losses for Silent",
+        "base_ancestor": true,
+        "live_ancestor": true
+      },
+      {
+        "commit": "2f775ca45e96288fbf47aab98872d21ce236ef8b",
+        "subject": "Record Crusher source ancestry after verified main leaf sync",
+        "base_ancestor": true,
+        "live_ancestor": true
+      },
+      {
+        "commit": "10c53de98c54b118660b8a478bbdedba548dd1c8",
+        "subject": "ops: mechanically synchronize published experience84 without record conflicts",
+        "base_ancestor": true,
+        "live_ancestor": true
+      },
+      {
+        "commit": "ec29ea34b919344b707e57ba472ea210f9c39d62",
+        "subject": "Fix observed Silent Crusher facing rounding",
+        "base_ancestor": true,
+        "live_ancestor": true
+      }
+    ]
+  },
+  "artifacts_verified": 55,
+  "proposals_SHA_verified": 10,
+  "all_ten_waiting": true,
+  "material_checks": 37,
+  "bounded_original_frames_verified": 80,
+  "raw_index_rows": 19929,
+  "raw_index_SHA_verified": true,
+  "raw_index_scope": "Preserved prior-envelope fingerprints and current bounded frames verified; no new full-history extraction or consumer execution.",
+  "ledger_original_CLI_rows": 31,
+  "old_knowledge_evidence_status_version_and_prefixes_preserved": true,
+  "tests_not_run": true,
+  "no_source_or_merge_block": true,
+  "archives": [
+    {
+      "path": ".worktrees/codex-strategy-silent-20261016-201302/learner/runs/20261016-201307-1ca47641-25b0-4fab-b087-73a37c838be4-strategy-proposal/artifact-manifest.json",
+      "bytes": 8186,
+      "sha256": "d3d6f01bc509a3714e7a4c7bee7d00f2555796609ebee6d6c3eae47d71ae9982"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261016-201302/learner/runs/20261016-201307-1ca47641-25b0-4fab-b087-73a37c838be4-strategy-proposal/base-live-source.patch",
+      "bytes": 9947,
+      "sha256": "a27930b7e6b5f9fa05a59f114b443046a9b47dfc3acb80721735e15b80c04548"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261016-201302/learner/runs/20261016-201307-1ca47641-25b0-4fab-b087-73a37c838be4-strategy-proposal/bounded-observations-r1.json",
+      "bytes": 32275,
+      "sha256": "137d0670c62690dbab51879d4112570eb87add7092cce99a82ed02cb63459388"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261016-201302/learner/runs/20261016-201307-1ca47641-25b0-4fab-b087-73a37c838be4-strategy-proposal/bounded-observations.json",
+      "bytes": 36208,
+      "sha256": "64c87229aa7f5098b3baacfb7f264c26886663443b516cacf6f479de91dcc47c"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261016-201302/learner/runs/20261016-201307-1ca47641-25b0-4fab-b087-73a37c838be4-strategy-proposal/completion-check.json",
+      "bytes": 318,
+      "sha256": "845023b2573d55183cab805b92e0546fb277fc637a0df7262e640bf6a784c2f3"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261016-201302/learner/runs/20261016-201307-1ca47641-25b0-4fab-b087-73a37c838be4-strategy-proposal/dispatch.json",
+      "bytes": 1287,
+      "sha256": "8070203898abea89069d7d6053037376bd2b2ed26bcf46e04de04a3df5ce205e"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261016-201302/learner/runs/20261016-201307-1ca47641-25b0-4fab-b087-73a37c838be4-strategy-proposal/evidence-reuse-audit.json",
+      "bytes": 7473,
+      "sha256": "4b4a8aa437dd0d5215870b8d7f25e774ea9accf07e9444c3dcabb0581e34ace4"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261016-201302/learner/runs/20261016-201307-1ca47641-25b0-4fab-b087-73a37c838be4-strategy-proposal/extract-plans.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261016-201302/learner/runs/20261016-201307-1ca47641-25b0-4fab-b087-73a37c838be4-strategy-proposal/extract-plans.stdout.json",
+      "bytes": 475,
+      "sha256": "a5636046399649728711e35c7192bab5907a2110d66eea8c0b78d6c4ac89483e"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261016-201302/learner/runs/20261016-201307-1ca47641-25b0-4fab-b087-73a37c838be4-strategy-proposal/extraction-command.json",
+      "bytes": 755,
+      "sha256": "f50d68984cc51c2130dd3153fa38e7f06c2deb647208332459a33ec85e9899be"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261016-201302/learner/runs/20261016-201307-1ca47641-25b0-4fab-b087-73a37c838be4-strategy-proposal/finish_report.py",
+      "bytes": 15376,
+      "sha256": "adba8c88b936b6fc0a722560cda95d08fd727ed9c675e13a3ceb99545c3068c1"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261016-201302/learner/runs/20261016-201307-1ca47641-25b0-4fab-b087-73a37c838be4-strategy-proposal/lamp-observed-fields.json",
+      "bytes": 1722,
+      "sha256": "16c6353b4e161594a17e0903b1b11516b9bc63f8629be8b1c6f4f64ff273e78a"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261016-201302/learner/runs/20261016-201307-1ca47641-25b0-4fab-b087-73a37c838be4-strategy-proposal/ledger-append-audit.json",
+      "bytes": 35992,
+      "sha256": "63cd626a8962b623a0507b759796e066ec778a6484d3ae47080648374691acfa"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261016-201302/learner/runs/20261016-201307-1ca47641-25b0-4fab-b087-73a37c838be4-strategy-proposal/ledger-cli.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261016-201302/learner/runs/20261016-201307-1ca47641-25b0-4fab-b087-73a37c838be4-strategy-proposal/ledger-cli.stdout.txt",
+      "bytes": 372,
+      "sha256": "55ed246016304b091b272e53e5d8083dbbd979cb2281370874521b5b0f51cd26"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261016-201302/learner/runs/20261016-201307-1ca47641-25b0-4fab-b087-73a37c838be4-strategy-proposal/ledger-link.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261016-201302/learner/runs/20261016-201307-1ca47641-25b0-4fab-b087-73a37c838be4-strategy-proposal/ledger-link.stdout.txt",
+      "bytes": 150,
+      "sha256": "3dbd2b35e038a2edc5b96afa8380e7c97421a76f385356bf6db18b428825c1c6"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261016-201302/learner/runs/20261016-201307-1ca47641-25b0-4fab-b087-73a37c838be4-strategy-proposal/ledger-update-input.jsonl",
+      "bytes": 22980,
+      "sha256": "d02ce60d5f83c845aaece12428ab74caba0f6659120fb88cfa32178acf2fa2f5"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261016-201302/learner/runs/20261016-201307-1ca47641-25b0-4fab-b087-73a37c838be4-strategy-proposal/link_ledger.py",
+      "bytes": 4248,
+      "sha256": "5d53edb52e103c094bddfe1fea98e6b8323c0521c259e2e0b0c6a029193cc67a"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261016-201302/learner/runs/20261016-201307-1ca47641-25b0-4fab-b087-73a37c838be4-strategy-proposal/prior-base-source.patch",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261016-201302/learner/runs/20261016-201307-1ca47641-25b0-4fab-b087-73a37c838be4-strategy-proposal/proposal-audit.json",
+      "bytes": 4636,
+      "sha256": "6524c06b3eeba17f0c94a97dbfd34ee10ada2545b61242b4ecd81aea5bb41598"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261016-201302/learner/runs/20261016-201307-1ca47641-25b0-4fab-b087-73a37c838be4-strategy-proposal/proposal.md",
+      "bytes": 14670,
+      "sha256": "be6b2f6b961aa723ee1c2ca0c169ffa2b5cff8593ff19bcd9b695ca21f2551cb"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261016-201302/learner/runs/20261016-201307-1ca47641-25b0-4fab-b087-73a37c838be4-strategy-proposal/proposals-input.json",
+      "bytes": 17388,
+      "sha256": "02d4f472e456845b10553f8a17efd7155112699b5991e801e4b81849fd58e676"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261016-201302/learner/runs/20261016-201307-1ca47641-25b0-4fab-b087-73a37c838be4-strategy-proposal/raw-index-audit.json",
+      "bytes": 236,
+      "sha256": "351b80aceeb5a88960e8085cb94a24ce3e92c0362a5a514aabb9724f65d12252"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261016-201302/learner/runs/20261016-201307-1ca47641-25b0-4fab-b087-73a37c838be4-strategy-proposal/report-generation.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261016-201302/learner/runs/20261016-201307-1ca47641-25b0-4fab-b087-73a37c838be4-strategy-proposal/report-generation.stdout.txt",
+      "bytes": 254,
+      "sha256": "c38db81317a9f654dd571d4ec70d183aef6dc1040b01beac553f8fb69c456083"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261016-201302/learner/runs/20261016-201307-1ca47641-25b0-4fab-b087-73a37c838be4-strategy-proposal/report.md",
+      "bytes": 21708,
+      "sha256": "1b5e65434870ad2f1f938e02ed04cf57c8d80db55bb24fceb91c50367f539256"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261016-201302/learner/runs/20261016-201307-1ca47641-25b0-4fab-b087-73a37c838be4-strategy-proposal/result.json",
+      "bytes": 3721,
+      "sha256": "d4c40f874c3020365c6b40bde2cb96f351bb5c38ec37a876a5e151a5e13e8cc8"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261016-201302/learner/runs/20261016-201307-1ca47641-25b0-4fab-b087-73a37c838be4-strategy-proposal/retain-index.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261016-201302/learner/runs/20261016-201307-1ca47641-25b0-4fab-b087-73a37c838be4-strategy-proposal/retain-index.stdout.json",
+      "bytes": 94,
+      "sha256": "9b7b63c700a8cde4cd0cd5dca497f14c1031cddd717e5c84a45f88f4af67f4b3"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261016-201302/learner/runs/20261016-201307-1ca47641-25b0-4fab-b087-73a37c838be4-strategy-proposal/retain_index.py",
+      "bytes": 1329,
+      "sha256": "34e92ac020a0bc9361a5c481da1e24366db52a1a84185065a5286dd725c86b9c"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261016-201302/learner/runs/20261016-201307-1ca47641-25b0-4fab-b087-73a37c838be4-strategy-proposal/review.py",
+      "bytes": 12191,
+      "sha256": "b5554049a9b1a04d0f30922b14e66383bedc48f74dcff0f5b1586b8f54ca7f52"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261016-201302/learner/runs/20261016-201307-1ca47641-25b0-4fab-b087-73a37c838be4-strategy-proposal/review.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261016-201302/learner/runs/20261016-201307-1ca47641-25b0-4fab-b087-73a37c838be4-strategy-proposal/review.stdout.json",
+      "bytes": 233,
+      "sha256": "315e9d76f2aa200b050fc577814ec113bdc5551c4c9d5391e024146dec8d63fd"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261016-201302/learner/runs/20261016-201307-1ca47641-25b0-4fab-b087-73a37c838be4-strategy-proposal/runs-identity.json",
+      "bytes": 8252,
+      "sha256": "c6d7611c775536df2bc30fb1ed0d03827bfbda17e5375c54252e5eb9838b0fe4"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261016-201302/learner/runs/20261016-201307-1ca47641-25b0-4fab-b087-73a37c838be4-strategy-proposal/selected-decisions.json",
+      "bytes": 12125,
+      "sha256": "0d2194246e5ba7bfc8548818a90d8601dfa8fbb06313efe9e39147648ec1a283"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261016-201302/learner/runs/20261016-201307-1ca47641-25b0-4fab-b087-73a37c838be4-strategy-proposal/silent-proposal-04b6b430759815ed.md.txt",
+      "bytes": 3726,
+      "sha256": "188d4daee0970bba6b59aa7c3498d9da76ef31aac4a42c69be2a86192cadab58"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261016-201302/learner/runs/20261016-201307-1ca47641-25b0-4fab-b087-73a37c838be4-strategy-proposal/silent-proposal-08eaa60bcc449852.md.txt",
+      "bytes": 2740,
+      "sha256": "4d080ad9b9f1c93bff7bf169d59add7d863db358ca7e05ba10d95cdfb6b31016"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261016-201302/learner/runs/20261016-201307-1ca47641-25b0-4fab-b087-73a37c838be4-strategy-proposal/silent-proposal-38a49e6c97f31eea.md.txt",
+      "bytes": 11254,
+      "sha256": "6a07471e9049744900d49529a939a7014fb686810a0d7983e6c35eb65b5e8cb0"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261016-201302/learner/runs/20261016-201307-1ca47641-25b0-4fab-b087-73a37c838be4-strategy-proposal/silent-proposal-47910f82a1fdd98f.md.txt",
+      "bytes": 3352,
+      "sha256": "d4ff2c80c60bdac273fbce918109b0a4634484006ec7e3b6b4516b9afede51bd"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261016-201302/learner/runs/20261016-201307-1ca47641-25b0-4fab-b087-73a37c838be4-strategy-proposal/silent-proposal-7f820c02d39bfaea.md.txt",
+      "bytes": 3524,
+      "sha256": "bee54fe85711a177349f927c21f184b7112308ead5c74708b8f3b0b183ecf105"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261016-201302/learner/runs/20261016-201307-1ca47641-25b0-4fab-b087-73a37c838be4-strategy-proposal/silent-proposal-92920295a648b540.md.txt",
+      "bytes": 3232,
+      "sha256": "f9d04951c404f2d568d492c633e8baeb7ca5b4bee6826e20e9d5c2348c739bbf"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261016-201302/learner/runs/20261016-201307-1ca47641-25b0-4fab-b087-73a37c838be4-strategy-proposal/silent-proposal-a099e89437e942bb.md.txt",
+      "bytes": 2620,
+      "sha256": "e02b6c6c93defbea23d60a515bf17be3c1c6ac3d3b47dd0e6da647cea92910c2"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261016-201302/learner/runs/20261016-201307-1ca47641-25b0-4fab-b087-73a37c838be4-strategy-proposal/silent-proposal-a327449c331efbc1.md.txt",
+      "bytes": 3723,
+      "sha256": "e52c156a500b9e5f9d35e7b7e6922a91ee893b16576bc7d11f14e179c2e6a925"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261016-201302/learner/runs/20261016-201307-1ca47641-25b0-4fab-b087-73a37c838be4-strategy-proposal/silent-proposal-ef0e38a5dbd3bc07.md.txt",
+      "bytes": 4998,
+      "sha256": "d37416e85fd4f9331fc5f652f5838eae9b528a76fe45b9c10aac07acfd572da5"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261016-201302/learner/runs/20261016-201307-1ca47641-25b0-4fab-b087-73a37c838be4-strategy-proposal/silent-proposal-f1374df72d8e6a25.md.txt",
+      "bytes": 4118,
+      "sha256": "df1e14ed2c6b4b31c1dcbd1bd373702cff34a58332d4aab60f7e31dc44b395a0"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261016-201302/learner/runs/20261016-201307-1ca47641-25b0-4fab-b087-73a37c838be4-strategy-proposal/source-audit.json",
+      "bytes": 12476,
+      "sha256": "008ca3f54834e37655ad66eef3b88d19a9246f2b9a5eb44ed5baa218f40d3430"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261016-201302/learner/runs/20261016-201307-1ca47641-25b0-4fab-b087-73a37c838be4-strategy-proposal/supplement.py",
+      "bytes": 3012,
+      "sha256": "a9f49420f6af252694f4229768ca30dcef567fe420c78666e4a80287bb92e8fb"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261016-201302/learner/runs/20261016-201307-1ca47641-25b0-4fab-b087-73a37c838be4-strategy-proposal/supplement.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".worktrees/codex-strategy-silent-20261016-201302/learner/runs/20261016-201307-1ca47641-25b0-4fab-b087-73a37c838be4-strategy-proposal/supplement.stdout.json",
+      "bytes": 91,
+      "sha256": "a08e0439f3d15ed28f7f3afdba066242f4bff9abd9ec2a2247a38e095494ba2d"
+    },
+    {
+      "path": "ops/codex-ops/learner/20261016-201302-strategy-proposal.err",
+      "bytes": 7860,
+      "sha256": "e7ff62f410ec5a6c6a0dd2a6ef5108526415ccfc2d9c1aa26b4a65b0f493ccbb"
+    },
+    {
+      "path": "ops/codex-ops/learner/20261016-201302-strategy-proposal.out",
+      "bytes": 5251,
+      "sha256": "19c0324fad733ecf3ae1858acd528762333e1a57e859820c9e0bf6c345cd045d"
+    }
+  ],
+  "service_tier_not_independently_verified": true
+}

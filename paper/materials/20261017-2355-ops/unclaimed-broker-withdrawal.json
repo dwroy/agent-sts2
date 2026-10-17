@@ -1,0 +1,15 @@
+{
+  "at": "2026-10-17 23:58:48 CST",
+  "actor": "original ops",
+  "request": "1792252632913815113-1990458",
+  "request_sha256": "0be5212f53dfe2314868612c54d2f3db15167b6b2d6af637ed180760759d170d",
+  "claimed": false,
+  "action_executed": false,
+  "method": "Atomically moved only own still-unclaimed request; no signal or worker interruption",
+  "reason": "No broker attached to this transported source turn; use authorized primary host with the same original allow-listed action",
+  "old_waiter_pid": 1990458,
+  "waiter_natural_response": {
+    "code": 75,
+    "out": "Original ops withdrew its still-unclaimed request before execution; no host check was run by this request. The same existing action will run once directly on the authorized primary host.\n"
+  }
+}

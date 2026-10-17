@@ -1,0 +1,139 @@
+{
+  "at": "2026-10-16 09:24:47 CST",
+  "actor": "ops",
+  "parent": "roy-20261016-global-build",
+  "phase": "G1a interface",
+  "original_owner": "01a13dcd-83d4-7c63-b233-f93cf878ecf4",
+  "source_candidate": {
+    "path": "paper/materials/20261016-global-build-g1a/interface-source-candidate.json",
+    "sha256": "ef6ea2df0af0ec09622502942f103e495b67b1547b8f91bdc9c63fa781c3d110"
+  },
+  "source_commit": null,
+  "source_status": "six exact leaves staged, owner commit pending",
+  "base": "6476cb0d9c0d73785b0894184d793a80cb145467",
+  "staged_tree": "a602689590f05aba144dacc51dfaa0f312edd393",
+  "leaves": [
+    {
+      "path": "agent/src/sim/continuous-boss-result.ts",
+      "sha256": "29ee6ece9d6d0b219a83d700ad320f4d4d1bcda5a7c9de040d096d6ba427ec79",
+      "bytes": 3810,
+      "staged_and_worktree_equal": true,
+      "main_equals_base": true,
+      "live_equals_base": true
+    },
+    {
+      "path": "agent/src/sim/boss-sim.ts",
+      "sha256": "e392cfd675fe877a359fed8d3d54fbe637fa7465471a8bb5e63d409863a4a663",
+      "bytes": 42240,
+      "staged_and_worktree_equal": true,
+      "main_equals_base": true,
+      "live_equals_base": true
+    },
+    {
+      "path": "agent/src/sim/build-sim.ts",
+      "sha256": "d62e466432b5c36e85313058ac862ffca92981f8529373cd31483bed4a99b407",
+      "bytes": 22846,
+      "staged_and_worktree_equal": true,
+      "main_equals_base": true,
+      "live_equals_base": true
+    },
+    {
+      "path": "agent/src/sim/build-sim-facts.ts",
+      "sha256": "c634b2229334feeb17f059a47d5aac8a6fd4abdd6e28e58aa5df6238e13b16e5",
+      "bytes": 54883,
+      "staged_and_worktree_equal": true,
+      "main_equals_base": true,
+      "live_equals_base": true
+    },
+    {
+      "path": "agent/src/sim/boss-lines.ts",
+      "sha256": "8e953ae7511e23bbe15c2035858c246e476110031a9d3a5c265d0952e2197be5",
+      "bytes": 58690,
+      "staged_and_worktree_equal": true,
+      "main_equals_base": true,
+      "live_equals_base": true
+    },
+    {
+      "path": "agent/tests/silent-double-boss.test.ts",
+      "sha256": "5d9a9523081870b699e94c8c1a408513a9c01916814edd7cb3681d8d505320e8",
+      "bytes": 13830,
+      "staged_and_worktree_equal": true,
+      "main_equals_base": true,
+      "live_equals_base": true
+    }
+  ],
+  "read_only_preview": {
+    "heads": {
+      "main": "b4b960c54b40f65ff012cbd80e0f6ac0ec10f5af",
+      "live": "ef4b07a64db0fb76eea7990b768fb8d3be47a4b4"
+    },
+    "final_integration_requires_same_live_lock_recheck": true
+  },
+  "decision": "accepted unchanged source with exact failed-case supplement as source integration basis",
+  "source_commit_by_original_owner_authorized": true,
+  "checks": {
+    "tsc": 0,
+    "fixed_interface_cases": 12,
+    "full_rc": 1,
+    "full_files_passed": 490,
+    "full_files_failed": 1,
+    "full_cases_passed": 4927,
+    "full_cases_failed": 1,
+    "full_cases_skipped": 2,
+    "full_duration_seconds": 1386.49,
+    "full_log_sha256": "afb230a41990117a627a01d254a07eaf0e6ec76778b44229e6a35ec1e29345ca",
+    "only_failure": {
+      "file": "agent/tests/brain-codex.test.ts",
+      "line": 396,
+      "assertion": "max_gap_ms >=500",
+      "actual": 356,
+      "prior_outcome_thread_events_assertions": "executed and passed before failed assertion",
+      "later_stderr_redaction_assertions": "not executed in the failing full call; complete original case passed in the supplement"
+    },
+    "supplement": {
+      "rc": 0,
+      "cases_passed": 1,
+      "cases_skipped": 30,
+      "duration_seconds": 4.19,
+      "log_sha256": "cc2aa85e0df0834da52b09f4b9116fd8f63568d3962f6be4ebad06f37834787b"
+    },
+    "six_leaves_and_original_brain_test_SHA_unchanged": true,
+    "assertions_deadlines_or_dependencies_changed": false,
+    "source_full_repeated_by_ops": false
+  },
+  "rationale": "Failure is an elapsed silence threshold in an unchanged fake router abort test; unrelated to the six simulation diagnostic leaves. Exact unchanged full case subsequently passes, including later stderr/redaction assertions. Accept scoped verification, retain full rc1 and scheduling/load explanation as evidence consistent, not a proven production root cause.",
+  "behavior": {
+    "diagnostics_only": true,
+    "new_behavior_release": false,
+    "changes_to_prompt_ranking_sampling_C2_or_other_roles": false,
+    "joint_calibration_S_rewards_and_actual_opening": "unknown; do not infer mechanisms or calibration"
+  },
+  "original_host": {
+    "batch": "20261016-075726-strategy-proposal",
+    "tree": "72348224953659783286d3d75039772bed56a94c",
+    "previous_tree_result": [
+      {
+        "rc": 0,
+        "log": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261016-075726-strategy-proposal.fallback-72348224953659783286d3d75039772bed56a94c.checks.log",
+        "merged": "ef4b07a64db0fb76eea7990b768fb8d3be47a4b4",
+        "tree": "72348224953659783286d3d75039772bed56a94c",
+        "commits": [
+          "28161b2d2a31e95587999fc6e5028acd727cecb2",
+          "b2bdb0b1dbc7ec9a39909595238b00efbb718321"
+        ]
+      }
+    ],
+    "status": "terminal recorded, await original event handling",
+    "not_admission_for_new_interface": true,
+    "lock_acquired_by_this_disposition": false
+  },
+  "operations": {
+    "source_index_or_source_code_changed": false,
+    "main_live_code_or_refs_changed": false,
+    "game_restart_or_account_home_model_prompt_change": false,
+    "new_learner_probe_model_simulation_dependency_install": false,
+    "other_role_ACK": false
+  },
+  "next": "Original owner may commit only the exact six leaves. After original723482 terminal event and committed source delivery, original ops rechecks under the same serial live lock, narrowly integrates main/live preserving knowledge, parallel records and R367/R368, then requests exactly one new final-tree host full through the existing chain. New natural diagnostic consumer remains pending; no old tree green is substituted.",
+  "wide_parents": "0332 and global-build/interface/natural/production calibration remain open; S remains Roy decision"
+}

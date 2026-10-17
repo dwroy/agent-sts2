@@ -1,0 +1,294 @@
+diff --git a/agent/src/sim/boss-lines.ts b/agent/src/sim/boss-lines.ts
+index 0d929b4ef..21b8bede5 100644
+--- a/agent/src/sim/boss-lines.ts
++++ b/agent/src/sim/boss-lines.ts
+@@ -523,7 +523,7 @@ export function runLines(
+     let pick: (BossSimLineResult & { order: string | null }) | null = null;
+     for (let k = 0; k < per; k += 1) {
+       const pair = li * per + k;
+-      const res = { ...summarizeLine(li, ids.map((i) => run.outcomes[pair]![i]!)), order: k === 0 ? null : orders[k - 1]!.label };
++      const res = { ...summarizeLine(li, ids.map((i) => run.outcomes[pair]![i]!), ownSamples?.[li] ?? opts.samples), order: k === 0 ? null : orders[k - 1]!.label };
+       if (!pick || res.winProb > pick.winProb || (res.winProb === pick.winProb && wonLoss(res) < wonLoss(pick))) pick = res;
+     }
+     return pick!;
+@@ -953,6 +953,7 @@ export function simLog(sim: BossLineSim, keyOf: (plan: Plan) => string | null, e
+       won_loss: line.result.hpLossWon?.median ?? null,
+       order: line.result.order,
+       ...(line.result.sequence ? { sequence: { first_wins: line.result.sequence.firstWins, won_first_died_second: line.result.sequence.firstWinSecondDeaths, second_unfinished: line.result.sequence.secondUnfinished } } : {}),
++      ...(line.result.continuous ? { continuous: toJsonValue(line.result.continuous) } : {}),
+     };
+   }
+   return {
+diff --git a/agent/src/sim/boss-sim.ts b/agent/src/sim/boss-sim.ts
+index 68a0820fb..d71038a8a 100644
+--- a/agent/src/sim/boss-sim.ts
++++ b/agent/src/sim/boss-sim.ts
+@@ -29,6 +29,7 @@ import type { Plan } from "../reflex/turn-solver.js";
+ import { knowledgeCharacter } from "../knowledge/files.js";
+ import { silentBossCalibration } from "./boss-trust.js";
+ import type { BossMarginTrace } from "./boss-margin.js";
++import { continuousBossResult, type ContinuousBossResult, type ContinuousSample } from "./continuous-boss-result.js";
+ 
+ /** The most turns a sample plays (the start turn included): logged A7-A9 boss fights ran 2-24 turns (median 9). */
+ export const BOSS_SIM_MAX_TURNS = 30;
+@@ -126,7 +127,7 @@ export interface FightSampleResult {
+   bossMargin?: BossMarginTrace;
+   coreWindow?: import("./core-window.js").CoreWindowResult;
+   resources?: { hp: number; revives: import("../reflex/turn-solver.js").Revive[]; drunkKeys: string[] };
+-  sequence?: { firstWon: boolean; firstHp: number | null; firstPotions: string[]; secondBoss: string | null; firstTurns: number; secondWon: boolean | null; secondDied: boolean | null };
++  sequence?: ContinuousSample;
+   won: boolean;
+   died: boolean;
+   /** Stopped at maxTurns (or the policy had no line) with the fight still on: neither won nor lost. */
+@@ -176,6 +177,7 @@ export interface Dist {
+ }
+ 
+ export interface BossSimLineResult {
++  continuous?: ContinuousBossResult;
+   sequence?: { firstWins: number; firstWinSecondDeaths: number; secondUnfinished: number };
+   /** Index of the line in the lines given. */
+   line: number;
+@@ -360,7 +362,9 @@ export function fightSample(input: RolloutInput, plan: Plan | null, seed: number
+   const first = singleFightSample(input, plan, seed, maxTurns, scripts, order);
+   const next = input.continuation;
+   if (!next) return first;
+-  const initial = { firstWon: first.won, firstHp: first.resources?.hp ?? null, firstPotions: [] as string[], secondBoss: null as string | null, firstTurns: first.turns, secondWon: null as boolean | null, secondDied: null as boolean | null };
++  const initial: ContinuousSample = { seed, firstWon: first.won, firstDied: first.died, firstCapped: first.capped, firstTimeUp: first.timeUp,
++    firstHp: first.resources?.hp ?? null, firstPotions: [], secondBoss: null, firstTurns: first.turns, secondWon: null, secondDied: null,
++    firstResources: null, secondEntry: null, openingHpLoss: null };
+   if (!first.won) return { ...first, sequence: initial };
+   const total = next.variants.reduce((s,v) => s + v.count, 0);
+   if (total <= 0) throw new Error("empty second-boss distribution");
+@@ -379,7 +383,10 @@ export function fightSample(input: RolloutInput, plan: Plan | null, seed: number
+     powers: [...(first.powers ?? []), ...(second.powers ?? []).map(([t,id]): [number,string] => [t+first.turns,id])],
+     drinks: [...(first.drinks ?? []), ...(second.drinks ?? []).map(([t,id]): [number,string] => [t+first.turns,id])],
+     kills: [...(first.kills ?? []), ...(second.kills ?? []).map(([t,id,index]): [number,string,number] => [t+first.turns,id,index])],
+-    sequence: { ...initial, firstPotions: transferred.potions, secondBoss: variant.boss, secondWon: second.won, secondDied: second.died },
++    sequence: { ...initial, firstPotions: transferred.potions, secondBoss: variant.boss, secondWon: second.won, secondDied: second.died,
++      firstResources: { hp: first.resources!.hp, revives: first.resources!.revives.slice(), potionSlots: transferred.potions.slice() },
++      secondEntry: { hp: transferred.input.solver.player.hp, revives: (transferred.input.solver.player.revives ?? []).slice(), potionSlots: transferred.potions.slice() },
++      openingHpLoss: transferred.openingHpLoss },
+   };
+ }
+ 
+@@ -467,7 +474,7 @@ function perTurnOf(outcomes: FightSampleResult[]): BossSimLineResult["perTurn"]
+ }
+ 
+ /** A line's numbers from its samples (by sample index). */
+-export function summarizeLine(line: number, outcomes: FightSampleResult[]): BossSimLineResult {
++export function summarizeLine(line: number, outcomes: FightSampleResult[], expectedSamples = outcomes.length): BossSimLineResult {
+   const won = outcomes.filter((o) => o.won);
+   const dead = outcomes.filter((o) => o.died);
+   const deathTurns: Record<number, number> = {};
+@@ -475,8 +482,10 @@ export function summarizeLine(line: number, outcomes: FightSampleResult[]): Boss
+   const potions: Record<string, number> = {};
+   for (const o of outcomes) for (const id of new Set(o.drunk)) potions[id] = (potions[id] ?? 0) + 1;
+   const unwon = outcomes.filter((o) => !o.won);
++  const continuous = continuousBossResult(outcomes, expectedSamples);
+   return {
+     line,
++    ...(continuous ? { continuous } : {}),
+     ...(outcomes.some((o) => o.sequence) ? { sequence: {
+       firstWins: outcomes.filter((o) => o.sequence?.firstWon).length,
+       firstWinSecondDeaths: outcomes.filter((o) => o.sequence?.firstWon && o.sequence.secondDied).length,
+diff --git a/agent/src/sim/build-sim-facts.ts b/agent/src/sim/build-sim-facts.ts
+index b2eafc47a..2ecdb59fb 100644
+--- a/agent/src/sim/build-sim-facts.ts
++++ b/agent/src/sim/build-sim-facts.ts
+@@ -723,6 +723,8 @@ export async function withBossSim(decision: Decision, env: DecisionEnv, setup: B
+       if (lowWin) simFacts["low_win_rate"] = "连续两战原始通关率低；未使用单场胜率校准下限，不能据此证明必死。";
+       record["objective"] = "F48_F49_continuous";
+       record["calibration"] = "none";
++      record["continuous"] = toJsonValue({ base: b.continuous ?? null,
++        options: Object.fromEntries(result.options.map((sim) => [sim.key, sim.continuous ?? null])) });
+     }
+     return {
+       decision: {
+diff --git a/agent/src/sim/build-sim.ts b/agent/src/sim/build-sim.ts
+index 48c5dec2b..f5f9b48e7 100644
+--- a/agent/src/sim/build-sim.ts
++++ b/agent/src/sim/build-sim.ts
+@@ -19,6 +19,7 @@ import { bossReadiness, type BossReadiness } from "./boss-readiness.js";
+ import { buildRank } from "./build-rank.js";
+ import { runAdaptiveDecks } from "./adaptive-decks.js";
+ import { isAdaptiveComplete } from "./adaptive-sampler.js";
++import { continuousBossResult, type ContinuousBossResult } from "./continuous-boss-result.js";
+ 
+ /** Samples per deck (docs/boss-sim.md §8: 1000 per option gives a paired standard error of about 1-1.5 points). */
+ export const BUILD_SIM_SAMPLES = 1000;
+@@ -48,6 +49,7 @@ export interface DeckOption {
+ }
+ 
+ export interface OptionSim {
++  continuous?: ContinuousBossResult;
+   sampling?: { samples: number; stop: string; rounds: number };
+   pairedReference?: { samples: number; rawWin: number; calibratedWin: number; bossLeft: number };
+   quantitative?: JsonValue;
+@@ -238,6 +240,7 @@ export async function compareOptions(
+     const d = isBase ? null : compareLines(line, reference);
+     const value: OptionSim = {
+       key,
++      ...(base.continuation ? { continuous: continuousBossResult(line.outcomes, actual ? line.samples : samples, true) } : {}),
+       ...(opts.quantitative ? { quantitative: quantitativeFightFacts(line.outcomes, reference.outcomes, complete.slice(0, line.samples)) } : {}),
+       samples: line.samples,
+       ...(actual ? { sampling: actual.counts.get(key === "current" ? "@current" : key),
+diff --git a/agent/src/sim/continuous-boss-result.ts b/agent/src/sim/continuous-boss-result.ts
+new file mode 100644
+index 000000000..74eadc554
+--- /dev/null
++++ b/agent/src/sim/continuous-boss-result.ts
+@@ -0,0 +1,82 @@
++import type { Revive } from "../reflex/turn-solver.js";
++import type { FightSampleResult } from "./boss-sim.js";
++
++/** Captured simulation state, not rewards or a verified next-combat opening. */
++export interface ContinuousResources {
++  hp: number;
++  revives: Revive[];
++  potionSlots: string[];
++}
++
++export interface ContinuousSample {
++  firstWon: boolean;
++  firstHp: number | null;
++  firstPotions: string[];
++  secondBoss: string | null;
++  firstTurns: number;
++  secondWon: boolean | null;
++  secondDied: boolean | null;
++  seed?: number;
++  firstDied?: boolean;
++  firstCapped?: boolean;
++  firstTimeUp?: boolean;
++  firstResources?: ContinuousResources | null;
++  secondEntry?: ContinuousResources | null;
++  openingHpLoss?: number | null;
++}
++
++export interface ContinuousRate {
++  value: number | null;
++  wins: number;
++  samples: number;
++  unknown: number;
++  reason: string | null;
++}
++
++export interface ContinuousBossResult {
++  schema: "continuous-boss-result-v1";
++  scope: "raw_simulation";
++  samples: number;
++  expectedSamples: number;
++  missingSamples: number;
++  first: ContinuousRate;
++  secondGivenFirstWin: ContinuousRate;
++  joint: ContinuousRate;
++  calibration: { status: "unknown"; singleFightMapApplied: false };
++  S: { status: "unknown"; value: null };
++  resourceModel: {
++    transfer: "same_sample";
++    rewardsBetweenFights: "unknown";
++    actualSecondOpening: "unknown";
++    unobservedOpeningEffects: "unknown";
++  };
++  /** At most three deterministic samples, for consumer readback without logging all outcomes. */
++  traces: ContinuousSample[];
++}
++
++/** Raw two-stage rates never borrow a single-fight calibration or an independent second-fight rate. */
++export function continuousBossResult(outcomes: FightSampleResult[], expectedSamples = outcomes.length, required = false): ContinuousBossResult | undefined {
++  if (!required && !outcomes.some((outcome) => outcome.sequence)) return undefined;
++  const missingSamples = Math.max(0, expectedSamples - outcomes.length);
++  const firstWins = outcomes.filter((outcome) => outcome.sequence?.firstWon);
++  const firstUnknown = outcomes.filter(({ sequence: s }) => !s || s.firstCapped !== false || s.firstTimeUp !== false
++    || (!s.firstWon && s.firstDied !== true)).length + missingSamples;
++  const secondUnknown = firstWins.filter(({ sequence: s, capped, timeUp }) => !s?.firstResources || !s.secondEntry
++    || (s.secondWon !== true && s.secondDied !== true) || capped || timeUp
++    || s.firstHp === null || !Number.isFinite(s.firstHp) || s.firstHp <= 0).length;
++  const secondWins = firstWins.filter(({ sequence: s }) => s?.secondWon).length;
++  const rate = (wins: number, samples: number, unknown: number, reason: string | null): ContinuousRate => ({
++    value: reason ? null : wins / samples, wins, samples, unknown, reason,
++  });
++  const firstReason = !expectedSamples ? "no_samples" : firstUnknown ? "missing_or_unfinished_first_samples" : null;
++  const secondReason = firstReason ?? (!firstWins.length ? "no_first_win_samples" : secondUnknown ? "missing_resources_or_unfinished_second_samples" : null);
++  return {
++    schema: "continuous-boss-result-v1", scope: "raw_simulation", samples: outcomes.length, expectedSamples, missingSamples,
++    first: rate(firstWins.length, expectedSamples, firstUnknown, firstReason),
++    secondGivenFirstWin: rate(secondWins, firstWins.length, secondUnknown, secondReason),
++    joint: rate(secondWins, expectedSamples, firstUnknown + secondUnknown, secondReason),
++    calibration: { status: "unknown", singleFightMapApplied: false }, S: { status: "unknown", value: null },
++    resourceModel: { transfer: "same_sample", rewardsBetweenFights: "unknown", actualSecondOpening: "unknown", unobservedOpeningEffects: "unknown" },
++    traces: outcomes.flatMap((outcome) => outcome.sequence ? [outcome.sequence] : []).slice(0, 3),
++  };
++}
+diff --git a/agent/tests/silent-double-boss.test.ts b/agent/tests/silent-double-boss.test.ts
+index 5b3c17a19..5ef9d056b 100644
+--- a/agent/tests/silent-double-boss.test.ts
++++ b/agent/tests/silent-double-boss.test.ts
+@@ -6,7 +6,8 @@ import { modelPotion } from "../src/reflex/card-model.js";
+ import { potionCostFrom, potionCostOptions } from "../src/reflex/potion-cost.js";
+ import { rolloutDecision, type RolloutInput } from "../src/reflex/rollout.js";
+ import { solveTurn, weightsFor } from "../src/reflex/turn-solver.js";
+-import { BossSimPool, continuationInput, fightSample, runBossSim, slimInput } from "../src/sim/boss-sim.js";
++import { BossSimPool, continuationInput, fightSample, runBossSim, slimInput, summarizeLine } from "../src/sim/boss-sim.js";
++import { continuousBossResult } from "../src/sim/continuous-boss-result.js";
+ import { compareOptions } from "../src/sim/build-sim.js";
+ import { SerialDeckRunner } from "../src/sim/build-sim-pool.js";
+ import { hpAfterRoom, roomCostModel } from "../src/sim/route-projection.js";
+@@ -97,6 +98,45 @@ describe("Silent observed double boss", () => {
+     const summary = runBossSim(input,[plan],{ samples:3,maxTurns:5,potionHold:0 }).lines[0]!;
+     expect(summary.sequence).toEqual({ firstWins:3,firstWinSecondDeaths:3,secondUnfinished:0 });
+     expect(summary.winProb).toBe(0);
++    expect(summary.continuous).toMatchObject({ first: { value:1 }, secondGivenFirstWin: { value:0 }, joint: { value:0 },
++      calibration: { status:"unknown",singleFightMapApplied:false }, S: { status:"unknown",value:null } });
++    expect(summary.continuous!.traces).toHaveLength(3);
++    expect(new Set(summary.continuous!.traces.map((s) => s.seed)).size).toBe(3);
++    expect(paired.sequence).toMatchObject({ seed:7, firstResources:{ hp:8,potionSlots:[],revives:[] },
++      secondEntry:{ hp:8,potionSlots:[],revives:[] },openingHpLoss:0 });
++    expect(summary.continuous!.resourceModel).toMatchObject({ rewardsBetweenFights:"unknown",actualSecondOpening:"unknown" });
++  });
++
++  it("keeps missing, capped and unobserved conditional outcomes unknown rather than zero", () => {
++    const { input,plan } = sequence();
++    const lostSecond = fightSample(input,plan,7,5);
++    expect(continuousBossResult([lostSecond],2)!.joint).toMatchObject({ value:null,unknown:1,reason:"missing_or_unfinished_first_samples" });
++    const cappedSecond = { ...lostSecond, died:false,capped:true,sequence:{ ...lostSecond.sequence!,secondDied:false } };
++    expect(continuousBossResult([cappedSecond])!.secondGivenFirstWin).toMatchObject({ value:null,unknown:1 });
++    const missingResources = { ...lostSecond,sequence:{ ...lostSecond.sequence!,firstResources:null } };
++    expect(continuousBossResult([missingResources])!.joint.value).toBeNull();
++    const failedFirst = { ...lostSecond,sequence:{ ...lostSecond.sequence!,firstWon:false,firstDied:true,secondWon:null,secondDied:null,secondEntry:null } };
++    const noFirstWin = continuousBossResult([failedFirst])!;
++    expect(noFirstWin.first.value).toBe(0);
++    expect(noFirstWin.secondGivenFirstWin).toMatchObject({ value:null,samples:0,reason:"no_first_win_samples" });
++    expect(noFirstWin.joint.value).toBeNull();
++    expect(continuousBossResult([],0,true)!.joint).toMatchObject({ value:null,reason:"no_samples" });
++    expect(continuousBossResult([fightSample({ ...input,continuation:undefined },plan,7,5)])).toBeUndefined();
++  });
++
++  it("shows each terminal HP separately from the constructed second entry, without granting rewards", () => {
++    const { input,plan,second } = sequence();
++    second.openingHpLoss = 2;
++    const low = fightSample(input,plan,7,5);
++    const highInput = { ...input,solver:{ ...input.solver,player:{ ...input.solver.player,hp:30 } } };
++    const highPlan = solveTurn(highInput.solver).plans.find((p) => p.outcome.winsFight)!;
++    const high = fightSample(highInput,highPlan,11,5);
++    const diagnostic = summarizeLine(0,[low,high]).continuous!;
++    expect(diagnostic.traces.map((s) => [s.firstResources?.hp,s.secondEntry?.hp,s.openingHpLoss])).toEqual([[8,6,2],[18,16,2]]);
++    expect(diagnostic.calibration.status).toBe("unknown");
++    expect(diagnostic.S.value).toBeNull();
++    expect(() => continuationInput(input,{ ...low,won:true,resources:undefined },second)).toThrow("no-resources");
++    expect(() => continuationInput(input,{ ...low,won:true,resources:{ hp:0,revives:[],drunkKeys:[] } },second)).toThrow("nonpositive-hp");
+   });
+ 
+   it("keeps duplicate-id slots distinct and spends an automatic revive once", () => {
+@@ -121,9 +161,11 @@ describe("Silent observed double boss", () => {
+     try {
+       const parallel = await pool.run(input,[plan],{ samples:2,maxTurns:5,potionHold:0 });
+       expect(parallel.lines[0]!.sequence?.firstWinSecondDeaths).toBe(2);
++      expect(parallel.lines[0]!.continuous!.traces.map((s) => s.secondEntry?.hp)).toEqual([8,8]);
+     } finally { await pool.close(); }
+     const result = await compareOptions(new SerialDeckRunner(),input,[],{ samples:2,deadlineMs:1e8 });
+     expect(result.base.winCal).toBe(result.base.win);
++    expect(result.base.continuous).toMatchObject({ joint:{ value:0 },calibration:{ status:"unknown" },S:{ value:null } });
+   });
+ 
+   it("keeps shipped silent-0163's post-boss route HP unknown", () => {

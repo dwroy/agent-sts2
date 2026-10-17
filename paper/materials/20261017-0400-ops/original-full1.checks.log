@@ -1,0 +1,38 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/live/agent
+
+....
+----------------------------------------------------------------------
+Ran 4 tests in 0.001s
+
+OK
+ ❯ tests/build-facts-audit.test.ts (20 tests | 1 failed) 74244ms
+     × selection/remove with the boss simulation: facts, not scores; every option still listed 61074ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/build-facts-audit.test.ts > V4 M2 audit: build questions carry facts, not code's scores > selection/remove with the boss simulation: facts, not scores; every option still listed
+AssertionError: expected 'undefined' to match /^打本幕 boss（/
+
+- Expected:
+/^打本幕 boss（/
+
++ Received:
+"undefined"
+
+ ❯ tests/build-facts-audit.test.ts:269:92
+    267|       expect(view.label).toBe(label);
+    268|       expect(Object.keys(view.options)).toEqual(Object.keys(audit(befo…
+    269|       for (const option of Object.values(view.options)) expect(String(…
+       |                                                                                            ^
+    270|       expect(view.facts["act_boss_sim"]).toEqual(expect.objectContaini…
+    271|       expect(view.facts["act_boss_clock"]).toBeUndefined();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 505 passed (506)
+      Tests  1 failed | 5026 passed | 2 skipped (5029)
+   Start at  03:29:51
+   Duration  1679.09s (transform 59.20s, setup 116.02s, import 285.03s, tests 2755.22s, environment 108ms)
+

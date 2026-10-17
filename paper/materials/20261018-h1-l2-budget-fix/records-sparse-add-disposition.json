@@ -1,0 +1,21 @@
+{
+  "at": "2026-10-18T00:51:32.147471+08:00",
+  "initial_add_rc": 1,
+  "reason": "git add rejected explicitly excluded cold materials without --sparse; no material file entered the index",
+  "partial_record_commit": "8322d23d1",
+  "partial_scope": "decision-log only; source ef092f1c9 unchanged",
+  "recovery": "add only the same owned material files with --sparse; leave sparse rules and other paths unchanged",
+  "record_whitespace_precheck": {
+    "rc": 2,
+    "reason": "csv.writer CRLF and untouched original test-log blank lines; source code check already0",
+    "preservation": "raw CSV/log byte SHA retained",
+    "check": [
+      "git",
+      "-c",
+      "core.whitespace=cr-at-eol,-blank-at-eof",
+      "diff",
+      "--cached",
+      "--check"
+    ]
+  }
+}

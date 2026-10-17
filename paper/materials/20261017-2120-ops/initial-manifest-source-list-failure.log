@@ -1,0 +1,12 @@
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/ops/codex-ops/record-staging/20261017-2120/prepare-supplement.py", line 66, in <module>
+    c.validate(bid, state, str(r), str(dest.parent), digest)
+    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/ops/learner_check_continuation.py", line 152, in validate
+    require(isinstance(item, dict) and set(item) == {"path", "source"} and item["path"] in required_inputs
+    ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+            and item["path"] not in seen_inputs and item["source"] in sources, "invalid source snapshot")
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/ops/learner_check_continuation.py", line 37, in require
+    raise ValueError(message)
+ValueError: invalid source snapshot

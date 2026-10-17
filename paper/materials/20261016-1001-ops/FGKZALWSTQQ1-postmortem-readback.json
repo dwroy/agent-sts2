@@ -1,0 +1,713 @@
+{
+  "at": "2026-10-16 10:11:04 CST",
+  "batch": "20261016-094302",
+  "run": "FGKZALWSTQQ1",
+  "report": {
+    "task": "postmortem",
+    "appended": [
+      "FGKZALWSTQQ1"
+    ],
+    "skipped": [],
+    "bugs": [],
+    "ledger": {
+      "added": [],
+      "updated": [
+        "silent-0019",
+        "silent-0125",
+        "silent-0232",
+        "silent-0253",
+        "silent-0005",
+        "silent-0011",
+        "silent-0027",
+        "silent-0294"
+      ],
+      "repeats": [],
+      "check": 0
+    },
+    "code_proposals": [
+      "silent-proposal-ac0e2ad8d92a8540",
+      "silent-proposal-c66d0a84748e3b0b",
+      "silent-proposal-f0b32cbaabab1fc4"
+    ],
+    "implementation_domains": [
+      "combat",
+      "potion",
+      "sl",
+      "terminal",
+      "structure"
+    ],
+    "report": "/home/dw/Projects/agent-sts2/learner/runs/20261016-094307-58c77163-4611-4d9e-891a-e97f11b26e1f-postmortem/report.md"
+  },
+  "native": {
+    "batch": "20261016-094302",
+    "thread": "01a14260-b35f-72b3-927d-08065ce9806e",
+    "cwd": "/home/dw/Projects/agent-sts2",
+    "event_log": "learner/runs/20261016-094307-58c77163-4611-4d9e-891a-e97f11b26e1f-postmortem.jsonl",
+    "registered_launch_batch": "20261016-094302",
+    "original_lease": "66f704218182b8704e1116a6376e81fbe80210d24ba6eae30cbbe9552b3bb365",
+    "native_context": {
+      "source": "ops/codex-ops/accounts/codex1/learner/sessions/2026/10/16/rollout-2026-10-16T09-43-16-01a14260-b35f-72b3-927d-08065ce9806e.jsonl",
+      "offset": 49155,
+      "bytes": 4620,
+      "sha256": "d1469318d6025e4db6902a3a604380303694587e64b94fefab096dfe409dc4c3",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "sandbox": {
+        "type": "workspace-write",
+        "writable_roots": [
+          "/home/dw/Projects/agent-sts2/.git"
+        ],
+        "network_access": false,
+        "exclude_tmpdir_env_var": false,
+        "exclude_slash_tmp": false
+      },
+      "approval_policy": "never"
+    },
+    "native_user_input": {
+      "offset": 53775,
+      "bytes": 15345,
+      "sha256": "6e8561967c9708ecb41a147dca911f7ad20e22f56437a89284075c1d08ed6127",
+      "input_sha256": "36c1e53d62626042883614c609f9030f3780ee1e57ee92f5a838ccb306a4f3f4"
+    },
+    "original_header_events": [
+      {
+        "offset": 0,
+        "bytes": 16866,
+        "sha256": "3aeb0872bba04f69a19bf29f32178107fbe267c049269cfa3166562313a1e1b0",
+        "type": "learner_launch",
+        "attempt": null,
+        "code": null
+      },
+      {
+        "offset": 16866,
+        "bytes": 360,
+        "sha256": "327a9f927580f51e1c95069cff8a9af701b89b0bfda5ae7dfd260a865260c2f1",
+        "type": "learner_startup_attempt",
+        "attempt": 1,
+        "code": null
+      },
+      {
+        "offset": 19450,
+        "bytes": 438,
+        "sha256": "1f57cfe0fbdbec08f8d7ae3751f59f1dbc059786ab1b206d34f4190d60d97cb8",
+        "type": "learner_startup_exit",
+        "attempt": 1,
+        "code": null
+      },
+      {
+        "offset": 19888,
+        "bytes": 361,
+        "sha256": "ea6cdb2f909b1a60c31e08395fc4105ed1e5d2c8fb9030ad04ced74099dac85b",
+        "type": "learner_startup_retry",
+        "attempt": 1,
+        "code": null
+      },
+      {
+        "offset": 20249,
+        "bytes": 360,
+        "sha256": "0a25219cf33f2889fe2b62e3023203f59db63fba52fc67eba3b045eaaa3156dd",
+        "type": "learner_startup_attempt",
+        "attempt": 2,
+        "code": null
+      },
+      {
+        "offset": 23620,
+        "bytes": 77,
+        "sha256": "fd97db4a841970fa085809000949cb81344668c7aff327183d5b544c257cac59",
+        "type": "thread.started",
+        "attempt": null,
+        "code": null
+      }
+    ],
+    "startup_attempts": 2,
+    "failed_startups_preserved": 1,
+    "no_model_or_manual_restart": true
+  },
+  "lesson_prefix": {
+    "path": "/home/dw/Projects/agent-sts2/notes/lessons.md",
+    "bytes": 9118278,
+    "sha256": "621c2dc03ab0314c6dc7346ef3d4398a1bf91da2b4ed6c1a353b97c36cdb43dc",
+    "lesson_bytes": 18000,
+    "lesson_sha256": "6224e9a6b7785daf8c3aed56431d41bf8f0acf3cdc4749944e87f38813af556d"
+  },
+  "lesson_append_bytes": 18000,
+  "lesson_sha256": "6224e9a6b7785daf8c3aed56431d41bf8f0acf3cdc4749944e87f38813af556d",
+  "lesson_exactly_once_and_old_prefix_preserved": true,
+  "source_raw_rows_SHA_JSON_verified": 983,
+  "learner_original_checks": 1007,
+  "own_ledger_updates": [
+    {
+      "offset": 20164233,
+      "bytes": 496,
+      "sha256": "fd2ea27b24f54c95e03f29cebd584bed93661c09ed91b04c6fee8e53945e23b3",
+      "row": {
+        "op": "update",
+        "id": "silent-0019",
+        "ts": "2026-10-16T09:57:25+08:00",
+        "by": "learner:postmortem",
+        "evidence": [
+          {
+            "run": "FGKZALWSTQQ1",
+            "floor": 27,
+            "note": "d408870/871在F25新增精英前火后又为商店改回早精英，投F29入口62；F28实际补至76，s422205→422235千足虫胜后76→15，F30四试均15血入场未到店/火。只支持连续资源观察，无未走路线胜负反事实，不登记决策重犯。",
+            "role": "support"
+          }
+        ],
+        "where": {
+          "lessons": [
+            "FGKZALWSTQQ1"
+          ]
+        }
+      }
+    },
+    {
+      "offset": 20164729,
+      "bytes": 490,
+      "sha256": "c907afa3802f8665589db2489615f9035d16cdf6f004b7b2ad3e2053c700cf21",
+      "row": {
+        "op": "update",
+        "id": "silent-0125",
+        "ts": "2026-10-16T09:57:25+08:00",
+        "by": "learner:postmortem",
+        "evidence": [
+          {
+            "run": "FGKZALWSTQQ1",
+            "floor": 14,
+            "turn": 3,
+            "note": "d408684/688护栏T3/T4候选预测省12/6血、少7/1伤，末毒9→2/10→3；五轮8样本获胜6→1/8→5且均零死亡，实损各6。F29T3/T4另省血预测9/6而伤不变，实损13/11；总33仅预测差，无原线实战对照、不改血价。",
+            "role": "support"
+          }
+        ],
+        "where": {
+          "lessons": [
+            "FGKZALWSTQQ1"
+          ]
+        }
+      }
+    },
+    {
+      "offset": 20165219,
+      "bytes": 534,
+      "sha256": "1b3e6fea91daa631f0f5bace3db465f3d077e2893f5fff61efc525c4de92df2f",
+      "row": {
+        "op": "update",
+        "id": "silent-0232",
+        "ts": "2026-10-16T09:57:25+08:00",
+        "by": "learner:postmortem",
+        "evidence": [
+          {
+            "run": "FGKZALWSTQQ1",
+            "floor": 30,
+            "turn": 2,
+            "note": "末试s422316→422325：1敏捷打普通步法后实2，后空翻7挡、防御5、生存者7，柔嫩1使牌后属性逐减，合19挡零损；次轮敏捷回3。T3五牌后力量−5/敏捷−2，两打击实8/7，8挡仍不足24攻及15血。饮明耀未额外减属性；无换序整战胜局。",
+            "role": "support"
+          }
+        ],
+        "where": {
+          "lessons": [
+            "FGKZALWSTQQ1"
+          ]
+        }
+      }
+    },
+    {
+      "offset": 20165753,
+      "bytes": 438,
+      "sha256": "910d115cf434c87acabf3dd2425b4c1e84d30f731324cbd7557e49fef2c161f3",
+      "row": {
+        "op": "update",
+        "id": "silent-0253",
+        "ts": "2026-10-16T09:57:25+08:00",
+        "by": "learner:postmortem",
+        "evidence": [
+          {
+            "run": "FGKZALWSTQQ1",
+            "floor": 29,
+            "turn": 1,
+            "note": "d408881，s422210→422213：先有12挡和1敏捷，饮速度使敏捷1→6、速度层5，防御实加11到23；次轮速度消失、敏捷回1，回合末28攻实损5。不制定留药/饮药门槛。",
+            "role": "support"
+          }
+        ],
+        "where": {
+          "lessons": [
+            "FGKZALWSTQQ1"
+          ]
+        }
+      }
+    },
+    {
+      "offset": 20166191,
+      "bytes": 457,
+      "sha256": "8b8c05be02bb3f3b13d952042dbdd0d8e8aa20da0d37cabe919f2daef38ffa45",
+      "row": {
+        "op": "update",
+        "id": "silent-0005",
+        "ts": "2026-10-16T09:57:25+08:00",
+        "by": "learner:postmortem",
+        "evidence": [
+          {
+            "run": "FGKZALWSTQQ1",
+            "floor": 30,
+            "turn": 3,
+            "note": "普通步法建立2敏捷与石头开场1合3；末试T2柔嫩临减后次轮恢复3，s422325→422326防御5基值实得8挡。只补普通版加成及临时负属性分账，不将3敏捷当足够覆盖24攻或必胜。",
+            "role": "support"
+          }
+        ],
+        "where": {
+          "lessons": [
+            "FGKZALWSTQQ1"
+          ]
+        }
+      }
+    },
+    {
+      "offset": 20166648,
+      "bytes": 478,
+      "sha256": "c04edbf54283b38299b83f1c1c7cccce97e7ed89a8ef9fe03e10b8a0f1dccfd6",
+      "row": {
+        "op": "update",
+        "id": "silent-0011",
+        "ts": "2026-10-16T09:57:25+08:00",
+        "by": "learner:postmortem",
+        "evidence": [
+          {
+            "run": "FGKZALWSTQQ1",
+            "floor": 29,
+            "turn": 2,
+            "note": "d408887，s422217普通毒雾建NOXIOUS_FUMES_POWER2，敌未当步挂毒；s422218下一轮三段各2毒，T4存活段3毒/前段另受蛇咬，T5仍活中后各4毒。末次F30T1经SL未打毒雾，后继5毒不可按已有该能力外推。",
+            "role": "support"
+          }
+        ],
+        "where": {
+          "lessons": [
+            "FGKZALWSTQQ1"
+          ]
+        }
+      }
+    },
+    {
+      "offset": 20167126,
+      "bytes": 422,
+      "sha256": "3ea7dca929d56e61b22c81c486cae4720320a58c7b175f11601be042c64bd721",
+      "row": {
+        "op": "update",
+        "id": "silent-0027",
+        "ts": "2026-10-16T09:57:25+08:00",
+        "by": "learner:postmortem",
+        "evidence": [
+          {
+            "run": "FGKZALWSTQQ1",
+            "floor": 30,
+            "turn": 3,
+            "note": "末试d408990建ACCELERANT_POWER1，s422329/331敌65血5毒，结束至s422332实65→56、毒5→3，等于5+4=9；玩家15血8挡对24攻阵亡，未结未来毒不能当既成伤害。",
+            "role": "support"
+          }
+        ],
+        "where": {
+          "lessons": [
+            "FGKZALWSTQQ1"
+          ]
+        }
+      }
+    },
+    {
+      "offset": 20167548,
+      "bytes": 529,
+      "sha256": "68fe0832ec3a85356f5893bdaa2993caa35039003054f8396cd2816f3ac70501",
+      "row": {
+        "op": "update",
+        "id": "silent-0294",
+        "ts": "2026-10-16T09:57:25+08:00",
+        "by": "learner:postmortem",
+        "evidence": [
+          {
+            "run": "FGKZALWSTQQ1",
+            "floor": 29,
+            "turn": 5,
+            "note": "升级炼制s422228→422229空槽0补明耀、HP15不变；F30四试T3各在空槽补马萨雷斯的赠礼（s422263/286/308/330），后帧can_use=false、没有饮弃，不能当即时防御。四次为同房SL复现、不算独立随机样本；不可用根因及提前炼制收益未知。",
+            "role": "support"
+          }
+        ],
+        "where": {
+          "lessons": [
+            "FGKZALWSTQQ1"
+          ]
+        }
+      }
+    },
+    {
+      "offset": 20168077,
+      "bytes": 363,
+      "sha256": "644ddc2172cd0f637ad6661a857b906270b10bf89c3880ff73886fe9bed0a53f",
+      "row": {
+        "op": "update",
+        "id": "silent-0019",
+        "ts": "2026-10-16T09:59:36+08:00",
+        "by": "learner:postmortem",
+        "where": {
+          "proposal": [
+            "/home/dw/Projects/agent-sts2/learner/runs/20261016-094307-58c77163-4611-4d9e-891a-e97f11b26e1f-postmortem/proposal-route.md"
+          ]
+        },
+        "note": "代码提案 silent-proposal-ac0e2ad8d92a8540 → task=strategy-proposal；Roy-2026-10-07-learning"
+      }
+    },
+    {
+      "offset": 20168440,
+      "bytes": 363,
+      "sha256": "fa4585e93fe8cc4cf2cc7af0f83c0372568295b791dddbeccc24dbd0d3ba899e",
+      "row": {
+        "op": "update",
+        "id": "silent-0125",
+        "ts": "2026-10-16T09:59:39+08:00",
+        "by": "learner:postmortem",
+        "where": {
+          "proposal": [
+            "/home/dw/Projects/agent-sts2/learner/runs/20261016-094307-58c77163-4611-4d9e-891a-e97f11b26e1f-postmortem/proposal-guard.md"
+          ]
+        },
+        "note": "代码提案 silent-proposal-c66d0a84748e3b0b → task=strategy-proposal；Roy-2026-10-07-learning"
+      }
+    },
+    {
+      "offset": 20168803,
+      "bytes": 363,
+      "sha256": "d525643a609dae923c0f81bb119ca82ffa6556a1b4af2b0f5a3fee6326e73e9a",
+      "row": {
+        "op": "update",
+        "id": "silent-0253",
+        "ts": "2026-10-16T09:59:39+08:00",
+        "by": "learner:postmortem",
+        "where": {
+          "proposal": [
+            "/home/dw/Projects/agent-sts2/learner/runs/20261016-094307-58c77163-4611-4d9e-891a-e97f11b26e1f-postmortem/proposal-guard.md"
+          ]
+        },
+        "note": "代码提案 silent-proposal-c66d0a84748e3b0b → task=strategy-proposal；Roy-2026-10-07-learning"
+      }
+    },
+    {
+      "offset": 20169166,
+      "bytes": 363,
+      "sha256": "f98d9dcc9fa57eaa1977c554715be9cfe4ac4ecb10ba23e36013dff1fe568cec",
+      "row": {
+        "op": "update",
+        "id": "silent-0011",
+        "ts": "2026-10-16T09:59:39+08:00",
+        "by": "learner:postmortem",
+        "where": {
+          "proposal": [
+            "/home/dw/Projects/agent-sts2/learner/runs/20261016-094307-58c77163-4611-4d9e-891a-e97f11b26e1f-postmortem/proposal-guard.md"
+          ]
+        },
+        "note": "代码提案 silent-proposal-c66d0a84748e3b0b → task=strategy-proposal；Roy-2026-10-07-learning"
+      }
+    },
+    {
+      "offset": 20169529,
+      "bytes": 364,
+      "sha256": "ea81f5f1ca49b899bc311017f0fbc974badae6efe0baefa6e721ad46d45e9b0b",
+      "row": {
+        "op": "update",
+        "id": "silent-0232",
+        "ts": "2026-10-16T09:59:42+08:00",
+        "by": "learner:postmortem",
+        "where": {
+          "proposal": [
+            "/home/dw/Projects/agent-sts2/learner/runs/20261016-094307-58c77163-4611-4d9e-891a-e97f11b26e1f-postmortem/proposal-hunter.md"
+          ]
+        },
+        "note": "代码提案 silent-proposal-f0b32cbaabab1fc4 → task=strategy-proposal；Roy-2026-10-07-learning"
+      }
+    },
+    {
+      "offset": 20169893,
+      "bytes": 364,
+      "sha256": "a3ab75d56998380d20f9d8f5b6c82b290f15dbf2755e164a8de974b5aec761e7",
+      "row": {
+        "op": "update",
+        "id": "silent-0005",
+        "ts": "2026-10-16T09:59:42+08:00",
+        "by": "learner:postmortem",
+        "where": {
+          "proposal": [
+            "/home/dw/Projects/agent-sts2/learner/runs/20261016-094307-58c77163-4611-4d9e-891a-e97f11b26e1f-postmortem/proposal-hunter.md"
+          ]
+        },
+        "note": "代码提案 silent-proposal-f0b32cbaabab1fc4 → task=strategy-proposal；Roy-2026-10-07-learning"
+      }
+    },
+    {
+      "offset": 20170257,
+      "bytes": 364,
+      "sha256": "7b2782827e69be415881de3a42ee3a838ac850c5360d5ac54d838d6b187f8519",
+      "row": {
+        "op": "update",
+        "id": "silent-0027",
+        "ts": "2026-10-16T09:59:42+08:00",
+        "by": "learner:postmortem",
+        "where": {
+          "proposal": [
+            "/home/dw/Projects/agent-sts2/learner/runs/20261016-094307-58c77163-4611-4d9e-891a-e97f11b26e1f-postmortem/proposal-hunter.md"
+          ]
+        },
+        "note": "代码提案 silent-proposal-f0b32cbaabab1fc4 → task=strategy-proposal；Roy-2026-10-07-learning"
+      }
+    },
+    {
+      "offset": 20170621,
+      "bytes": 364,
+      "sha256": "eb83f54a5c8c47d188c0e085792459c7cfc7549ec5c202433e42ca3369713fd1",
+      "row": {
+        "op": "update",
+        "id": "silent-0294",
+        "ts": "2026-10-16T09:59:42+08:00",
+        "by": "learner:postmortem",
+        "where": {
+          "proposal": [
+            "/home/dw/Projects/agent-sts2/learner/runs/20261016-094307-58c77163-4611-4d9e-891a-e97f11b26e1f-postmortem/proposal-hunter.md"
+          ]
+        },
+        "note": "代码提案 silent-proposal-f0b32cbaabab1fc4 → task=strategy-proposal；Roy-2026-10-07-learning"
+      }
+    }
+  ],
+  "eight_support_entries": [
+    "silent-0019",
+    "silent-0125",
+    "silent-0232",
+    "silent-0253",
+    "silent-0005",
+    "silent-0011",
+    "silent-0027",
+    "silent-0294"
+  ],
+  "original_code_proposal_registrations": [
+    {
+      "op": "add",
+      "id": "silent-proposal-ac0e2ad8d92a8540",
+      "ts": "2026-10-16T09:59:36+08:00",
+      "character": "silent",
+      "ledger": [
+        "silent-0019"
+      ],
+      "runs": [
+        "FGKZALWSTQQ1"
+      ],
+      "source_task": "postmortem",
+      "target_task": "strategy-proposal",
+      "domains": [
+        "structure"
+      ],
+      "summary": "核对撤回精英前营火后连续战斗资源与未来商店依据，保留全部路线和现行排序",
+      "proposal": "/home/dw/Projects/agent-sts2/learner/runs/20261016-094307-58c77163-4611-4d9e-891a-e97f11b26e1f-postmortem/proposal-route.md",
+      "rule_changes": false,
+      "authorization": "Roy-2026-10-07-learning",
+      "proposal_sha256": "019f525d211733580fb27dccbc54c525fc0264e17953737244c53394f92c1337",
+      "state": "pending"
+    },
+    {
+      "op": "add",
+      "id": "silent-proposal-c66d0a84748e3b0b",
+      "ts": "2026-10-16T09:59:39+08:00",
+      "character": "silent",
+      "ledger": [
+        "silent-0125",
+        "silent-0253",
+        "silent-0011"
+      ],
+      "runs": [
+        "FGKZALWSTQQ1"
+      ],
+      "source_task": "postmortem",
+      "target_task": "strategy-proposal",
+      "domains": [
+        "combat",
+        "potion"
+      ],
+      "summary": "把四次HP护栏候选省血、施毒及实际重问后继分账，缺反事实不改护栏或药价",
+      "proposal": "/home/dw/Projects/agent-sts2/learner/runs/20261016-094307-58c77163-4611-4d9e-891a-e97f11b26e1f-postmortem/proposal-guard.md",
+      "rule_changes": false,
+      "authorization": "Roy-2026-10-07-learning",
+      "proposal_sha256": "33aa8f5034c027e0e5484e78fd9b3c8db7872b96f0e6dbe2436e80b7106e0c22",
+      "state": "pending"
+    },
+    {
+      "op": "add",
+      "id": "silent-proposal-f0b32cbaabab1fc4",
+      "ts": "2026-10-16T09:59:43+08:00",
+      "character": "silent",
+      "ledger": [
+        "silent-0232",
+        "silent-0005",
+        "silent-0027",
+        "silent-0294"
+      ],
+      "runs": [
+        "FGKZALWSTQQ1"
+      ],
+      "source_task": "postmortem",
+      "target_task": "strategy-proposal",
+      "domains": [
+        "combat",
+        "potion",
+        "sl",
+        "terminal"
+      ],
+      "summary": "固定核验柔嫩下19/8挡、残毒、炼制不可用产物与SL真实末态，缺胜局对照保留现行规则",
+      "proposal": "/home/dw/Projects/agent-sts2/learner/runs/20261016-094307-58c77163-4611-4d9e-891a-e97f11b26e1f-postmortem/proposal-hunter.md",
+      "rule_changes": false,
+      "authorization": "Roy-2026-10-07-learning",
+      "proposal_sha256": "9929837e901ac9d5b1292aded94c1949e8f5d23a6d4b485fe55a9bf22fc7b346",
+      "state": "pending"
+    }
+  ],
+  "initial_registration_state_not_current_dispatch_claim": true,
+  "guard_source_line_supplement_preserves_registered_bytes": true,
+  "original_artifacts": [
+    {
+      "path": "learner/runs/20261016-094307-58c77163-4611-4d9e-891a-e97f11b26e1f-postmortem/report.md",
+      "bytes": 2316,
+      "sha256": "10be0f7ce7d1f9e00f0400f98909c3ab617e6d405073302e1b3246c5df1eae7f"
+    },
+    {
+      "path": "learner/runs/20261016-094307-58c77163-4611-4d9e-891a-e97f11b26e1f-postmortem/result.json",
+      "bytes": 741,
+      "sha256": "cfdc348d6f02c8c038fdf81882b20c06bcfc3de402871dca74ed4bf96e29fbf6"
+    },
+    {
+      "path": "learner/runs/20261016-094307-58c77163-4611-4d9e-891a-e97f11b26e1f-postmortem/lesson.md",
+      "bytes": 18000,
+      "sha256": "6224e9a6b7785daf8c3aed56431d41bf8f0acf3cdc4749944e87f38813af556d"
+    },
+    {
+      "path": "learner/runs/20261016-094307-58c77163-4611-4d9e-891a-e97f11b26e1f-postmortem/verification.json",
+      "bytes": 1097,
+      "sha256": "34205762a3a9cfcc8bc524389dcf869bc02f2fa4e7c09e265b038117be7ca4db"
+    },
+    {
+      "path": "learner/runs/20261016-094307-58c77163-4611-4d9e-891a-e97f11b26e1f-postmortem/final-readback.json",
+      "bytes": 679,
+      "sha256": "bb4961c91aafb7d5e47c06350de4154c5e5742dccf31190cb5aa0c085e0ad1d7"
+    },
+    {
+      "path": "learner/runs/20261016-094307-58c77163-4611-4d9e-891a-e97f11b26e1f-postmortem/append-before.json",
+      "bytes": 274,
+      "sha256": "21cfd9d1e66ce78c761da3d99425051fd36d818d39b000535b2f12c6a120e3e8"
+    },
+    {
+      "path": "learner/runs/20261016-094307-58c77163-4611-4d9e-891a-e97f11b26e1f-postmortem/proposal-route.md",
+      "bytes": 2681,
+      "sha256": "019f525d211733580fb27dccbc54c525fc0264e17953737244c53394f92c1337"
+    },
+    {
+      "path": "learner/runs/20261016-094307-58c77163-4611-4d9e-891a-e97f11b26e1f-postmortem/proposal-route.json",
+      "bytes": 540,
+      "sha256": "f1e7b1fc077395b6f2ce3a1f3fda2ad94ddfd12950ab980ba9d585fcf1828d1d"
+    },
+    {
+      "path": "learner/runs/20261016-094307-58c77163-4611-4d9e-891a-e97f11b26e1f-postmortem/proposal-route.cli",
+      "bytes": 33,
+      "sha256": "0e90a46e560e949ffc9209638edce00306012cf529dfb2bee9926dd0d82e84f0"
+    },
+    {
+      "path": "learner/runs/20261016-094307-58c77163-4611-4d9e-891a-e97f11b26e1f-postmortem/proposal-guard.md",
+      "bytes": 3156,
+      "sha256": "33aa8f5034c027e0e5484e78fd9b3c8db7872b96f0e6dbe2436e80b7106e0c22"
+    },
+    {
+      "path": "learner/runs/20261016-094307-58c77163-4611-4d9e-891a-e97f11b26e1f-postmortem/proposal-guard.json",
+      "bytes": 585,
+      "sha256": "18dea004f37d2db3043b75206a7d5f7d559c9fca0ad397c4e30d47bbf43f8841"
+    },
+    {
+      "path": "learner/runs/20261016-094307-58c77163-4611-4d9e-891a-e97f11b26e1f-postmortem/proposal-guard.cli",
+      "bytes": 33,
+      "sha256": "d0b989fb51751b55f10ed87a71cb135c174f64e23e3d6490cc0c06c329f39241"
+    },
+    {
+      "path": "learner/runs/20261016-094307-58c77163-4611-4d9e-891a-e97f11b26e1f-postmortem/proposal-hunter.md",
+      "bytes": 3689,
+      "sha256": "9929837e901ac9d5b1292aded94c1949e8f5d23a6d4b485fe55a9bf22fc7b346"
+    },
+    {
+      "path": "learner/runs/20261016-094307-58c77163-4611-4d9e-891a-e97f11b26e1f-postmortem/proposal-hunter.json",
+      "bytes": 644,
+      "sha256": "11b76f0fd6249767da3acac83518731e82ab54627dd9a89d7b0ceacb8123a3d7"
+    },
+    {
+      "path": "learner/runs/20261016-094307-58c77163-4611-4d9e-891a-e97f11b26e1f-postmortem/proposal-hunter.cli",
+      "bytes": 33,
+      "sha256": "e319fb106cce0a650f3db2e3053b0dd38542cd65c9725f43e072f9a5bfe5d163"
+    },
+    {
+      "path": "learner/runs/20261016-094307-58c77163-4611-4d9e-891a-e97f11b26e1f-postmortem/proposal-guard-readback.md",
+      "bytes": 515,
+      "sha256": "f9b726ef9164b9539b5937b24e0c749d5dbfaef637206c8c1e8b8e8b8645265f"
+    },
+    {
+      "path": "learner/runs/20261016-094307-58c77163-4611-4d9e-891a-e97f11b26e1f-postmortem/verify.py",
+      "bytes": 5530,
+      "sha256": "c3ed291def400786a05c2578e2b853584edb46219e66b807021cedd6f5e44539"
+    },
+    {
+      "path": "learner/runs/20261016-094307-58c77163-4611-4d9e-891a-e97f11b26e1f-postmortem/audit.py",
+      "bytes": 2522,
+      "sha256": "505a83db913872b7410e954c082208abcdb07bc70521ae0a7724a814762c64c2"
+    },
+    {
+      "path": "learner/runs/20261016-094307-58c77163-4611-4d9e-891a-e97f11b26e1f-postmortem/extract.py",
+      "bytes": 1388,
+      "sha256": "9b278bac2a69a1f0048a7937f67ce086dde63067b7dc0eb057b64e5084d84df9"
+    },
+    {
+      "path": "learner/runs/20261016-094307-58c77163-4611-4d9e-891a-e97f11b26e1f-postmortem/details.py",
+      "bytes": 3257,
+      "sha256": "a49d7ce4ea4f92129d177ca0f097ba1dcf8e649f093dcb7f9e20d7f356fca0bf"
+    },
+    {
+      "path": "learner/runs/20261016-094307-58c77163-4611-4d9e-891a-e97f11b26e1f-postmortem/append.sh",
+      "bytes": 18065,
+      "sha256": "8eca9bb619fc936e8ce409d584efaf721b915a6e387721f843214ea754011805"
+    },
+    {
+      "path": "learner/runs/20261016-094307-58c77163-4611-4d9e-891a-e97f11b26e1f-postmortem/ledger-find.txt",
+      "bytes": 3466,
+      "sha256": "4daa81237c41499ac5c994e4ff79fd881dc007e5e04ae14ae2bbe8e0a652cc87"
+    },
+    {
+      "path": "learner/runs/20261016-094307-58c77163-4611-4d9e-891a-e97f11b26e1f-postmortem/ledger-check.txt",
+      "bytes": 94,
+      "sha256": "2273c0d29c9c18d55f8373c0b88adc95a534a98d53e2251170c3306dcdbbfa46"
+    },
+    {
+      "path": "learner/runs/20261016-094307-58c77163-4611-4d9e-891a-e97f11b26e1f-postmortem/live-source.diff",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "learner/runs/20261016-094307-58c77163-4611-4d9e-891a-e97f11b26e1f-postmortem/FGKZALWSTQQ1-resources.json",
+      "bytes": 533431,
+      "sha256": "fe56eba52cf486646a7900402968c440175e92a28cf7fff9e1de6103fb631342"
+    },
+    {
+      "path": "learner/runs/20261016-094307-58c77163-4611-4d9e-891a-e97f11b26e1f-postmortem/runs.jsonl",
+      "bytes": 521,
+      "sha256": "52686e8641b296b8cf4638f08564372c2362c8239a3fad3880406e01734185b3"
+    },
+    {
+      "path": "learner/runs/20261016-094307-58c77163-4611-4d9e-891a-e97f11b26e1f-postmortem/run-config.jsonl",
+      "bytes": 5785,
+      "sha256": "e1a6846914b73d727edd24cfafa83bfba0ee82d0a1be4c63eeeab897b930a465"
+    }
+  ],
+  "original_ledger_before": {
+    "path": "learner/runs/20261016-094307-58c77163-4611-4d9e-891a-e97f11b26e1f-postmortem/ledger-before.json",
+    "sha256": "e12de360484795b536d2e8d3fd1eab1f7bec4d91d8f125be0b00e790947e0235"
+  },
+  "new_pure_bug": false,
+  "no_fix_queue_or_duplicate_learner_action": true,
+  "run_source": "298e74fd3be01610f2b817b9ec5675d58a8241dd+dirty; not an interface815582 natural consumer",
+  "unknowns": "First three interrupted exit frames, unchosen full successors, F22 healing attribution, gift potion root cause, pure combat duration, actual invoices and complete dirty inputs remain unknown. Guard saved-HP values are predictions, not measured causal savings.",
+  "wide_parents": "open; S decision remains Roy"
+}

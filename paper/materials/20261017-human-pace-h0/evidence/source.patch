@@ -1,0 +1,80 @@
+diff --git a/agent/src/reflex/rollout-live.ts b/agent/src/reflex/rollout-live.ts
+index 50b5fb892..b9d5b22cc 100644
+--- a/agent/src/reflex/rollout-live.ts
++++ b/agent/src/reflex/rollout-live.ts
+@@ -321,6 +321,38 @@ export function enemyTable(id: string, asc: number, db: MonsterMoves, mm: MoveMo
+ 
+ // ---------------------------------------------------------------- board
+ 
++/**
++ * ZZMYZ5UBCG72, Silent A2 F48 T2-T7: the held Paper Krane says 40%, and the already-Weak Amalgam
++ * shows 10x1 / 7x3 / 13x1 / 14x1 / 4x3 / 16x1 in these six contexts. Only these measured later-turn
++ * contexts are covered. New Weak applied during a solver line, other Strength, ascensions and monsters
++ * retain their existing paths; this is not a general Paper Krane or rounding model.
++ */
++export function withObservedSilentBossWeak(
++  table: EnemyTable,
++  id: string,
++  context: { character: string; asc: number; relics: readonly unknown[] },
++): EnemyTable {
++  if (context.character.toLowerCase() !== "silent" || context.asc !== 2 || id !== "TORCH_HEAD_AMALGAM") return table;
++  if (!context.relics.some((value) => {
++    const relic = value as { relic_id?: string; is_melted?: boolean } | null;
++    return relic?.relic_id === "PAPER_KRANE" && relic.is_melted === false;
++  })) return table;
++  const observed = [
++    { move: "TACKLE_2_MOVE", damage: 18, hits: 1, contexts: [[0, false]] },
++    { move: "BEAM_MOVE", damage: 8, hits: 3, contexts: [[0, true], [-3, true]] },
++    { move: "TACKLE_3_MOVE", damage: 14, hits: 1, contexts: [[1, true], [4, true]] },
++    { move: "TACKLE_4_MOVE", damage: 14, hits: 1, contexts: [[2, true]] },
++  ] as const;
++  const moves = { ...table.moves };
++  for (const row of observed) {
++    const move = moves[row.move];
++    // A refreshed table with different base values is a new, unvalidated object.
++    if (!move || move.shown || move.damage !== row.damage || move.hits !== row.hits || move.growth) continue;
++    moves[row.move] = { ...move, observedWeak: row.contexts.map(([strength, playerVulnerable]) => ({ strength, playerVulnerable, scale: 0.6 })) };
++  }
++  return { ...table, moves };
++}
++
+ /** The observed living summon adds its first attack to next turn's threat, from the current ascension's DB. */
+ export function summonThreatAt(enemyId: string, move: string, asc: number, present: readonly string[], vulnerable: boolean, db: MonsterMoves = monsterMoves(), mm: MoveModelData = moveModelData()): number {
+   return (summonsAt(enemyId, move, asc, db) ?? []).filter((spawn) => !present.includes(spawn.id)).reduce((sum, spawn) => {
+@@ -845,7 +877,10 @@ export function boardRolloutInput(
+   }
+   for (const id of new Set([...enemies.map((e) => e.id), ...Object.values(spawns).flatMap((list) => list.map((spawn) => spawn.id)), ...Object.values(summons).flatMap((moves) => Object.values(moves).flatMap((list) => list.map((spawn) => spawn.id)))])) {
+     const table = enemyTable(id, asc, db, mm);
+-    if (table) tables[id] = table;
++    if (table) tables[id] = withObservedSilentBossWeak(table, id, {
++      character: str(asRecord(state.run?.raw)["character_id"]), asc,
++      relics: asArray(asRecord(state.run?.raw)["relics"]),
++    });
+   }
+   // The status cards the enemies' moves can add (and the stand-in for one the DB does not name).
+   const statusIds = new Set<string>([UNKNOWN_STATUS, "DAZED", "WOUND", "WITHER"]);
+diff --git a/agent/src/reflex/rollout.ts b/agent/src/reflex/rollout.ts
+index 53611cd1a..0c032398e 100644
+--- a/agent/src/reflex/rollout.ts
++++ b/agent/src/reflex/rollout.ts
+@@ -485,6 +485,8 @@ export interface EnemyMove {
+    * average over the logged facings, which the whole fight must not scale by the back attack's 1.5 again.
+    */
+   faceDamage?: number;
++  /** Exact character/ascension contexts attached by the board adapter from actual Silent evidence. */
++  observedWeak?: { strength: number; playerVulnerable: boolean; scale: 0.6 }[];
+   /** Whole fights only (B4): the Sandpit count the move starts on its user (the Insatiable's Liquify Ground: 4). */
+   sandpit?: number;
+   /**
+@@ -1389,7 +1391,10 @@ export interface TurnRecord {
+ 
+ function moveAttack(enemy: SimEnemy, table: EnemyTable | undefined, move: string | null, playerVulnerable: boolean, fight: { fullFight: boolean; faced: boolean } = { fullFight: false, faced: false }): { damage: number; hits: number }[] {
+   const m = move && table ? table.moves[move] : undefined;
+-  const scale = (enemy.weak > 0 ? 0.75 : 1) * (enemy.shrink > 0 ? SHRINK_DAMAGE_FACTOR : 1) * (playerVulnerable ? 1.5 : 1);
++  const measured = enemy.vigor === 0 && enemy.shrink === 0
++    ? m?.observedWeak?.find((point) => point.strength === enemy.strength && point.playerVulnerable === playerVulnerable)?.scale
++    : undefined;
++  const scale = (enemy.weak > 0 ? measured ?? 0.75 : 1) * (enemy.shrink > 0 ? SHRINK_DAMAGE_FACTOR : 1) * (playerVulnerable ? 1.5 : 1);
+   if (!m) return enemy.shown.map((a) => ({ damage: Math.floor((a.damage / (enemy.shownScale ?? 1)) * scale), hits: a.hits }));
+   if (m.damage <= 0) return [];
+   // A whole fight's growing move (Multi Claw): a hit more for each earlier use in this phase; the Pressure Gun's hit grows.

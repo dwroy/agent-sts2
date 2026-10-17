@@ -1,0 +1,55 @@
+{
+  "at": "2026-10-17 15:34:31 CST",
+  "batch": "20261017-151301-fix-batch",
+  "source": "660b194c950f017e356a4b3da952e127c7e5c768",
+  "source_commit": "660b194c950f017e356a4b3da952e127c7e5c768",
+  "source_tree": "a3a172184c4cdbd18493665b99a15e4bb2b30342",
+  "published": false,
+  "release_id": null,
+  "main": "f5916ebfdd2a6ba9ee42071c7dee95cf4b2fe3f5",
+  "actual_live": "7b61eaa636148221cbfc166067662e481ac7e0a7",
+  "previous_behavior_release": "V5-R383",
+  "stage": "Original live lock acquired nonblocking; first builder-active guard rejected before reading/staging publication inputs or changing any refs/files/index/version.",
+  "integration_attempt_rc": 1,
+  "guard": "assert not builder_active()",
+  "active_builder_metadata": [
+    {
+      "pid": 71947,
+      "ppid": 71934,
+      "start_ticks": "111411181",
+      "builder_scripts": [
+        "/home/dw/Projects/agent-sts2/.worktrees/live/knowledge/builders/build-fight-value.py"
+      ],
+      "cwd": "/home/dw/Projects/agent-sts2"
+    },
+    {
+      "pid": 94357,
+      "ppid": 71933,
+      "start_ticks": "111437642",
+      "builder_scripts": [
+        "/home/dw/Projects/agent-sts2/.worktrees/live/knowledge/builders/build-room-costs.py"
+      ],
+      "cwd": "/home/dw/Projects/agent-sts2"
+    }
+  ],
+  "original_learner_refresh_commit": "7b61eaa636148221cbfc166067662e481ac7e0a7",
+  "recovery_command": [
+    "nice",
+    "-n",
+    "19",
+    "python3",
+    "/home/dw/Projects/agent-sts2/ops/codex-ops/record-staging/20261017-1531/publish.py"
+  ],
+  "original_host_command_after_actual_publication": [
+    "nice",
+    "-n",
+    "19",
+    "python3",
+    "/home/dw/Projects/agent-sts2/ops/codex-ops/record-staging/20261017-1531/start-host.py"
+  ],
+  "root_and_live_source_index_versions_untouched": true,
+  "host_started": false,
+  "source_full_repeated": false,
+  "current_game_restarted": false,
+  "no_other_role_ACK": true
+}

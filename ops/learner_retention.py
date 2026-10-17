@@ -21,7 +21,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from learner_checks import read_report
 
 BATCH = re.compile(r"[0-9]{8}-[0-9]{6}(?:-(?:s2-)?(?:experience-update|fix-batch|strategy-proposal|ascension-audit))?")
-SCRATCH = re.compile(r"[0-9]{8}-[0-9]{6}-[a-z][a-z0-9-]*")
+SCRATCH = re.compile(r"[0-9]{8}-[0-9]{6}-(?:[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}-)?[a-z][a-z0-9-]*")
 SHA = re.compile(r"[0-9a-f]{40}")
 SMALL = 128 * 1024
 
@@ -174,6 +174,71 @@ def checked_experience(live, commit, character):
         return None
 
 
+def legacy_experience_scratch(root, state_dir, tree, batch_id, batch, report):
+    """Bind an old root-level experience scratch to its original launch and completion."""
+    if (batch.get("task") != "experience-update" or batch.get("state") != "done"
+            or tree != root / ".worktrees" / "exp"):
+        raise ValueError("legacy scratch owner retained")
+    scratch = safe_path(root, root / "learner/runs" / batch_id)
+    event = safe_path(root, scratch.with_suffix(".jsonl"))
+    saved = safe_path(root, scratch / "report.json")
+    commit_file = safe_path(root, scratch / "commit.txt")
+    output = safe_path(root, state_dir / "learner" / (batch_id + ".out"))
+    if (not scratch.is_dir() or not SCRATCH.fullmatch(scratch.name)
+            or any(not path.is_file() or path.stat().st_size > limit for path, limit in
+                   [(saved, 1048576), (commit_file, 256), (output, 2097152)])):
+        raise ValueError("legacy scratch completion missing or oversized")
+    with event.open("rb") as handle:
+        header = handle.readline(131073)
+        if len(header) > 131072:
+            raise ValueError("legacy launch header oversized")
+        launch = json.loads(header)
+        thread, thread_raw = None, b""
+        for _ in range(32):
+            line = handle.readline(131073)
+            if not line or len(line) > 131072:
+                break
+            row = json.loads(line)
+            if isinstance(row, dict) and row.get("type") == "thread.started":
+                thread, thread_raw = row.get("thread_id"), line
+                break
+    params = launch.get("params") if isinstance(launch, dict) else None
+    if (not isinstance(params, dict) or launch.get("type") != "learner_launch"
+            or launch.get("task") != "experience-update" or launch.get("cwd") != str(tree)
+            or params.get("worktree") != str(tree) or params.get("scratch") != str(scratch)
+            or params.get("project_root") != str(root) or params.get("character") != batch.get("character")
+            or params.get("merge") != "live"
+            or params.get("merge_dir") != str(safe_path(root, os.environ.get("STS2_LIVE") or root / ".worktrees/live"))
+            or not isinstance(params.get("runs"), str)
+            or not isinstance(batch.get("runs"), list)
+            or set(params["runs"].split(",")) != set(batch["runs"])):
+        raise ValueError("legacy original launch binding mismatch")
+    output_raw, saved_raw, commit_raw = output.read_bytes(), saved.read_bytes(), commit_file.read_bytes()
+    output_text = output_raw.decode()
+    if (not isinstance(thread, str) or not re.fullmatch(r"[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}", thread)
+            or not re.search(r"(?:^|[；;])会话[：:]\s*" + re.escape(thread) + r"\s*$", output_text, re.M)
+            or not re.search(r"^日志[：:]\s*" + re.escape(str(event)) + r"\s*$", output_text, re.M)):
+        raise ValueError("legacy original thread/output binding missing")
+    preserved = json.loads(saved_raw)
+    tests = report.get("tests", {})
+    # Descriptive mechanism wording can differ; publication identity and checks must agree.
+    if (not isinstance(preserved, dict)
+            or any(preserved.get(key) != report.get(key) for key in ("task", "commit", "merged", "version", "tests", "fixes"))
+            or not isinstance(report.get("commit"), str) or not SHA.fullmatch(report["commit"])
+            or commit_raw.decode().strip() != report["commit"]
+            or not isinstance(tests, dict)
+            or any(type(tests.get(key)) is not int or tests[key] != 0 for key in ("tsc", "vitest"))
+            or type(tests.get("cases")) is not int or tests["cases"] <= 0):
+        raise ValueError("legacy original report/source binding mismatch")
+    return scratch, {"legacy_binding": {
+        "event": str(event.relative_to(root)), "launch_sha256": hashlib.sha256(header).hexdigest(),
+        "thread": thread, "thread_sha256": hashlib.sha256(thread_raw).hexdigest(),
+        "output_sha256": hashlib.sha256(output_raw).hexdigest(),
+        "report_sha256": hashlib.sha256(saved_raw).hexdigest(),
+        "commit_sha256": hashlib.sha256(commit_raw).hexdigest(),
+    }}
+
+
 def admission(root, state_dir, state, batch_id, check_ignored=True):
     if not BATCH.fullmatch(batch_id):
         raise ValueError("invalid batch identity")
@@ -197,14 +262,17 @@ def admission(root, state_dir, state, batch_id, check_ignored=True):
     report = read_report(str(state_dir / "learner" / (batch_id + ".out")))
     if not report or report.get("task") != task:
         raise ValueError("original final report missing")
-    scratch = safe_path(root, report.get("report", ""))
-    scratch = scratch.parent
-    if scratch.parent != tree / "learner/runs" or not SCRATCH.fullmatch(scratch.name) or not scratch.is_dir():
-        raise ValueError("scratch ownership not bound to original report")
+    binding = {}
+    if task == "experience-update" and not report.get("report"):
+        scratch, binding = legacy_experience_scratch(root, state_dir, tree, batch_id, batch, report)
+    else:
+        scratch = safe_path(root, report.get("report", "")).parent
+        if scratch.parent != tree / "learner/runs" or not SCRATCH.fullmatch(scratch.name) or not scratch.is_dir():
+            raise ValueError("scratch ownership not bound to original report")
     character = batch.get("character")
     if not re.fullmatch("[a-z][a-z0-9_]*", character or ""):
         raise ValueError("character binding missing")
-    proof = {"task": task, "character": character, "original_batch_state": batch["state"]}
+    proof = {"task": task, "character": character, "original_batch_state": batch["state"], **binding}
     fixes = report.get("fixes", [])
     if not isinstance(fixes, list) or any(not isinstance(fix, dict) for fix in fixes):
         raise ValueError("legacy/malformed fixes report retained")
@@ -435,7 +503,7 @@ def reclaim(root, state_dir, batch_id, apply=False, state=None):
     state = state or load(state_dir / "learn.json")
     batch, tree, scratch, proof = admission(root, state_dir, state, batch_id)
     target = tree if proof["retire_checkout"] else scratch
-    if active_cwd(target):
+    if active_cwd(target) or (proof.get("legacy_binding") and active_cwd(tree)):
         raise ValueError("active process cwd retained")
     files = files_under(root, scratch)
     estimate = {"batch": batch_id, "worktree": str(tree.relative_to(root)), "scratch": str(scratch.relative_to(root)),
@@ -448,7 +516,8 @@ def reclaim(root, state_dir, batch_id, apply=False, state=None):
     with locks(leases):
         with locks([state_dir / "learn.lock"]):
             _, _, _, current_proof = admission(root, state_dir, load(state_dir / "learn.json"), batch_id)
-            if current_proof != proof or active_cwd(target):
+            if (current_proof != proof or active_cwd(target)
+                    or (proof.get("legacy_binding") and active_cwd(tree))):
                 raise ValueError("owner/proof changed; retained")
         base = state_dir / "retention" / "archives" / batch_id
         before_space = shutil.disk_usage(root).free
@@ -467,7 +536,8 @@ def reclaim(root, state_dir, batch_id, apply=False, state=None):
             project_small(root, manifest, staging)
             with locks([state_dir / "learn.lock"]):
                 _, _, _, current_proof = admission(root, state_dir, load(state_dir / "learn.json"), batch_id)
-                if current_proof != proof or active_cwd(target):
+                if (current_proof != proof or active_cwd(target)
+                        or (proof.get("legacy_binding") and active_cwd(tree))):
                     raise ValueError("owner changed before deletion; archive retained")
                 # Original root logs, native sessions, out/err, checks and learned knowledge are outside scratch.
                 shutil.rmtree(scratch)

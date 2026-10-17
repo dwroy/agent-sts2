@@ -19,15 +19,23 @@ export type LogLevel = "debug" | "info" | "warn" | "error";
 export type RunStart = "auto" | "continue" | "new";
 export type JevContextVersion = "off" | "v1";
 
-/** P3 changes only Silent's admitted Boss tie groups; other characters keep the legacy ranking. */
-export function sCombatRankEnabled(character: string | null | undefined, env: NodeJS.ProcessEnv = process.env): boolean {
-  return characterKey(character ?? "") === "silent" && (env["S_COMBAT_RANK"] ?? "on") === "on";
+/** Roy 2026-10-16: retain P3 diagnostics, but do not apply its S sort key. */
+export function sCombatRankMode(character: string | null | undefined, env: NodeJS.ProcessEnv = process.env): "off" | "shadow" {
+  if (characterKey(character ?? "") !== "silent") return "off";
+  const requested = env["S_COMBAT_RANK"] ?? "on";
+  return requested === "on" || requested === "shadow" ? "shadow" : "off";
 }
 
-/** Release this default only after P2's two natural shadow runs; other roles keep the original question and schema. */
+/** Kept for callers checking actual S-sort consumption; the current release admits none. */
+export function sCombatRankEnabled(character: string | null | undefined, env: NodeJS.ProcessEnv = process.env): boolean {
+  void character; void env;
+  return false;
+}
+
+/** Roy 2026-10-16: retain P2 calculations and counterfactuals without delivering the ranking table by default. */
 export function sBuildRankMode(character: string | null | undefined, env: NodeJS.ProcessEnv = process.env): "off" | "shadow" | "on" {
   if (characterKey(character ?? "") !== "silent") return "off";
-  const mode = env["S_BUILD_RANK"]?.trim().toLowerCase() ?? "on";
+  const mode = env["S_BUILD_RANK"]?.trim().toLowerCase() ?? "shadow";
   return mode === "shadow" || mode === "on" ? mode : "off";
 }
 
@@ -48,10 +56,10 @@ export function simAdaptivePolicy(character: string | null | undefined, env: Nod
   return { mode: requested, requested, admission: "accepted" };
 }
 
-/** V5-S P1: resolve against the actual run character, including tools that do not call loadConfig. */
+/** Roy 2026-10-16: retain P1 calculations without delivering readiness to the brain by default. */
 export function sReadinessMode(character: string | null | undefined, env: NodeJS.ProcessEnv = process.env): "off" | "shadow" | "on" {
   if (characterKey(character ?? "") !== "silent") return "off";
-  const value = env["S_READINESS"]?.trim().toLowerCase() ?? "on";
+  const value = env["S_READINESS"]?.trim().toLowerCase() ?? "shadow";
   return value === "on" || value === "shadow" ? value : "off";
 }
 

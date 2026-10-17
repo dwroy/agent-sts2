@@ -1,3 +1,5 @@
+import { PreparedSolverDone } from "./pace-solver-cache.js";
+import { currentDecisionBudget } from "../core/decision-budget.js";
 import { completeAdaptiveLines } from "../sim/boss-lines.js";
 /**
  * Combat, turn-planned (phase 2). Division of labour:
@@ -62,6 +64,7 @@ import { planCombat as planCombatPerCard } from "./combat.js";
 import { fightKey, fightPlanJson, planFit, planOffersPotion, type FightPlan } from "../memory/fight-plan.js";
 import { permafrostBlock } from "./permafrost.js";
 import { silentKunai } from "./silent-kunai.js";
+import { silentHelicalDart } from "./silent-helical-dart.js";
 import { observedSlothReplay, recordStateFightPlays } from "./fight-plays.js";
 import { RELIC_VALUES } from "../knowledge/relic-values.js";
 import { forcedEliteWithin } from "../hand/screens/rest.js";
@@ -1891,6 +1894,27 @@ function handAfterPlay(played: CardModel | undefined, hand: CardModel[], musicBo
   return left.map((card) => (card.type === "Attack" ? { ...card, cardId: "GIANT_ROCK", upgraded: played.upgraded } : card));
 }
 
+/** 2Q6ZYZ6JHM0M F5 T1 / F8 T1,T5: preserve facts when generated cards invalidate execution indices. */
+function discardReference(env: DecisionEnv, step: Step | undefined, hand: CardModel[], remaining: Step[],
+  prediction: CombatPlanMemo["selectionReference"], originDecisionId?: string | null): Pick<NonNullable<ScreenMemory["plannedAfter"]>, "discardReference"> {
+  const played = step && cardFor(step, hand);
+  if (!played || played.cardId !== "HIDDEN_DAGGERS" || played.upgraded || played.discardCount !== 2 ||
+    !str(env.state.raw["run_id"]) || str(env.state.raw["run_id"]) === "run_unknown" ||
+    env.state.turn === null || env.state.run?.floor === null ||
+    str(asRecord(env.state.run?.raw)["character_id"]).toLowerCase() !== "silent" || env.state.run?.ascension !== 10 ||
+    asArray(asRecord(env.state.raw["combat"])["enemies"]).filter((enemy) => asRecord(enemy)["is_alive"] !== false).length !== 1) return {};
+  const pool = hand.filter((card) => card !== played);
+  const held: Step[] = [];
+  // Match distinct, already observed copies. Missing/generated steps remain conditional, never real hand cards.
+  for (const next of [...remaining].sort((a, b) => Number(b.cost !== undefined) - Number(a.cost !== undefined))) {
+    const at = pool.findIndex((card) => card.cardId === next.cardId && card.upgraded === next.upgraded &&
+      (next.cost === undefined || card.cost === next.cost));
+    if (at >= 0) { held.push(next); pool.splice(at, 1); }
+  }
+  return { discardReference: { fight: facingFightOf(env.state), cardIndex: played.index, held,
+    assumedDiscards: step!.discards ?? null, prediction: prediction ?? null, originDecisionId } };
+}
+
 function commit(env: DecisionEnv, turn: number | null, plan: Plan, hand: CardModel[], via: CombatPlanMemo["via"]): void {
   // SL_RETRY_EXPLORE: code's own line of this decision (planCombatTurn notes it; nothing else reads it).
   slCommitted = plan;
@@ -1902,7 +1926,9 @@ function commit(env: DecisionEnv, turn: number | null, plan: Plan, hand: CardMod
   // A one-step line Jev (or the escalator) chose is kept too, with nothing left: its end is "stop here"
   // (lineDone), not a fresh plan (9Q7V F17 T14: after Jev's "One-Two Punch" alone, code re-planned and
   // played the Sword Boomerang Jev had turned down, killing the Giant into its blast).
-  env.screenMemory.plannedAfter = { turn, steps: plan.steps.slice(1), lethal: plan.outcome.winsFight };
+  env.screenMemory.plannedAfter = { turn, steps: plan.steps.slice(1), lethal: plan.outcome.winsFight,
+    ...discardReference(env, first, hand, plan.steps.slice(1),
+      { hp_lost: plan.outcome.hpLoss, damage_dealt: plan.outcome.damageDealt, block_gained: plan.outcome.blockGained }) };
   // A line's later drinks go with the rest of the line: when it is cut short (a draw, a random exhaust, a
   // hand the plan did not expect) the re-plan offers the potion again beside the new hand, and whoever
   // decides that turn decides the drink (XMK1 F33 T3: Battle Trance drew three cards, the stale Blood
@@ -2328,7 +2354,8 @@ export function withSlRetryFallback<T>(env: DecisionEnv, plan: (env: DecisionEnv
   if (!sl || (sl.knownDraws === undefined && sl.compute === undefined)) return plan(env);
   try {
     return plan(env);
-  } catch {
+  } catch (error) {
+    if (error instanceof PreparedSolverDone) throw error;
     const { knownDraws: _known, compute: _compute, ...plain } = sl;
     return plan({ ...env, sl: plain });
   }
@@ -2836,19 +2863,22 @@ export function withMechFallback<T>(env: DecisionEnv, plan: (env: DecisionEnv) =
   if (env.mechRules === false) return plan(env);
   try {
     return plan(env);
-  } catch {
+  } catch (error) {
+    if (error instanceof PreparedSolverDone) throw error;
     // MECH_DEATH_MOVE on: first without the death rules (the other learned rules kept).
     if (env.mechDeathMove !== false) {
       try {
         return plan({ ...env, mechDeathMove: false });
-      } catch {
+      } catch (error) {
+    if (error instanceof PreparedSolverDone) throw error;
         // as with the move rules off too, below
       }
     }
     if (env.mechMoveRules !== false) {
       try {
         return plan({ ...env, mechMoveRules: false, mechDeathMove: false });
-      } catch {
+      } catch (error) {
+    if (error instanceof PreparedSolverDone) throw error;
         // as with both off, below
       }
     }
@@ -2947,6 +2977,7 @@ function planTurn(env: DecisionEnv): Decision | null {
   const legionPreview = paelsLegionPreview(state.run?.raw, combat);
   const firstPowerBlock = permafrostBlock(env.screenMemory, state);
   const kunai = silentKunai(state);
+  const helicalDart = silentHelicalDart(state);
   const razorSnakebiteScope = observedRazorSnakebiteScope(state.run?.raw, combat, state.run?.ascension ?? null);
   const playerSim: PlayerSim = {
     ...(str(asRecord(state.run?.raw)["character_id"]).toLowerCase() === "silent" && (ascension === 0 || ascension === 10) &&
@@ -2973,6 +3004,7 @@ function planTurn(env: DecisionEnv): Decision | null {
     frail: powerAmount(player, "FRAIL_POWER") > 0,
     dexterityNow: powerAmount(player, "DEXTERITY_POWER"),
     ...(kunai !== undefined ? { kunai } : {}),
+    ...(helicalDart !== undefined ? { helicalDart } : {}),
     intangible: powerAmount(player, "INTANGIBLE_POWER") > 0,
     // -1 on us, never above 0: `> 0` never turned it on (XC4TNGZU4KT9 F9 T3 planned 16 and a kill, dealt 14).
     shrunk,
@@ -3039,6 +3071,12 @@ function planTurn(env: DecisionEnv): Decision | null {
     // silent-0177/0178: only Silent enemy-hit evidence; keep Ironclad's model unchanged.
     ...(str(asRecord(state.run?.raw)["character_id"]).toLowerCase() === "silent" && relicIds.includes("TUNGSTEN_ROD") ? { tungstenRod: true } : {}),
     vigor,
+    // J2VR2DFJG8K4 A10 F22 T1, silent-0504/0505: source identity is required for the narrow solver rule.
+    ...(character.toLowerCase() === "silent" && state.run?.ascension === 10 &&
+      asArray(asRecord(state.run?.raw)["relics"]).some((entry) => {
+        const relic = asRecord(entry);
+        return relic["relic_id"] === "AKABEKO" && relic["is_melted"] === false;
+      }) ? { akabekoSkewer: true as const } : {}),
     ...(penNib !== undefined ? { penNib } : {}),
     noBlock: powerAmount(player, "NO_BLOCK_POWER") > 0,
     tender: powerAmount(player, "TENDER_POWER"),
@@ -3111,7 +3149,8 @@ function planTurn(env: DecisionEnv): Decision | null {
       noteIntent(env, intent, nextCard);
       if (next.discards) env.screenMemory.gambleDiscards = { turn: memo.turn, cardIds: next.discards };
       notePotionTake(env, memo.turn, next);
-      env.screenMemory.plannedAfter = { turn: memo.turn, steps: memo.remaining.slice(1), lethal: memo.lethal };
+      env.screenMemory.plannedAfter = { turn: memo.turn, steps: memo.remaining.slice(1), lethal: memo.lethal,
+        ...discardReference(env, next, hand, memo.remaining.slice(1), memo.selectionReference, memo.selectionDecisionId ?? null) };
       // The last step of a chosen line leaves a memo with nothing left: its end is "stop here" (lineDone).
       // A potion step keeps the hand and is checked on the belt (beltAfter), a card step on the hand.
       const { potions: _checked, afterSelection: _resumed, upgradeAll: _forged, take: _taken, ...kept } = memo;
@@ -3340,6 +3379,11 @@ function planTurn(env: DecisionEnv): Decision | null {
     });
   const best = solved.plans[0];
   if (!best) return planCombatPerCard(env);
+  if (currentDecisionBudget() && solved.timedOut && best.outcome.dies) {
+    // A deadline is no proof that every legal continuation dies. Keep the existing per-card/SL gates.
+    currentDecisionBudget()!.useFallback("partial_solver_existing_card_layer_no_death_proof");
+    return planCombatPerCard(env);
+  }
 
   const endNow = solved.plans.find((plan) => plan.steps.length === 0);
   const modSaysLethal = bool(combat["end_turn_will_kill_player"]);
@@ -3350,6 +3394,10 @@ function planTurn(env: DecisionEnv): Decision | null {
   //    estimate may be pessimistic (random draws, unmodelled relics) — and let potions come first.
   // Every simulated line dies, but a random potion may not: the least-loss line goes to the question.
   let allDie: Plan | null = null;
+  // L704 F48 T6 / Y5H4 F33 T10, silent-0300: ordinary Gamble can redraw at zero energy.
+  // Only this observed character/ascension opts in; replay supplies the actual remaining hand size.
+  const redrawInput = character.toLowerCase() === "silent" && ascension === 10 && !noDraw
+    ? solvedInput as SolverInput | null : null;
   const unresolvedPoisonLines = solved.plans.filter((plan) => plan.outcome.randomPoisonUnresolved);
   if (best.outcome.dies && unresolvedPoisonLines.length === 0) {
     // Pael's Eye: the first turn a fight ends with no card played, the hand is exhausted and an extra
@@ -3364,11 +3412,12 @@ function planTurn(env: DecisionEnv): Decision | null {
     // A random potion some sample of which lives: Jev's question, the least-loss line next to it.
     const randomLives = mcSources.size > 0 && randomPotions().some((mc) => mc.plans.some((plan) => plan !== null && !plan.outcome.dies));
     if (potionsNow.length > 0 && !randomLives) return planCombatPerCard(env);
-    if (randomLives) allDie = leastLossPlan(solved.plans, hand, playerSim.hp);
+    if (randomLives) allDie = leastLossPlan(solved.plans, hand, playerSim.hp, redrawInput);
   }
   if (best.outcome.dies && allDie === null && unresolvedPoisonLines.length === 0) {
-    const leastLoss = leastLossPlan(solved.plans, hand, playerSim.hp);
-    const drawing = leastLoss.steps[0] !== undefined && hand.some((card) => card.index === leastLoss.steps[0]!.cardIndex && drawsCards(card));
+    const leastLoss = leastLossPlan(solved.plans, hand, playerSim.hp, redrawInput);
+    const drawing = leastLoss.steps[0] !== undefined && hand.some((card) => card.index === leastLoss.steps[0]!.cardIndex &&
+      (drawsCards(card) || (redrawInput !== null && card.drawDiscardedHand && leastLoss.outcome.cardsDrawn > 0)));
     commit(env, state.turn, leastLoss, hand, "code");
     const decision: Decision = {
       kind: "act",
@@ -3755,8 +3804,8 @@ function planTurn(env: DecisionEnv): Decision | null {
   const costsOn = potionCostOptions.enabled && potionsAll.length > 0;
   // The SL retry compute memo (src/sim/compute-memo.ts): a retried fight's rollouts and B2 runs on a board an earlier
   // attempt planned come back from it, the same numbers; any other fight has none.
-  const computeMemo: ComputeMemo | null = env.sl ? computeMemoFor(`${String(state.raw["run_id"] ?? "")}:${fightKey(state)}`) : null;
-  if (!env.sl) dropComputeMemo();
+  const computeMemo: ComputeMemo | null = env.sl || currentDecisionBudget() ? computeMemoFor(`${String(state.raw["run_id"] ?? "")}:${fightKey(state)}`) : null;
+  if (!env.sl && !currentDecisionBudget()) dropComputeMemo();
   const noPotionBase = costsOn && kind !== "boss" && allDie === null ? options.find((plan) => !drinksPotion(plan)) : undefined;
   const noPotionCopy: Plan | undefined = noPotionBase ? { ...noPotionBase } : undefined;
   const runRollout = (escapes: boolean): LiveRollout | null =>
@@ -3866,6 +3915,7 @@ function planTurn(env: DecisionEnv): Decision | null {
             lines: [...shown, ...mcMedians],
             requiredComplete: requiredBossComputation,
             ...(env.simWait ? { simWait: env.simWait } : {}),
+            ...(env.simFailureDirectory ? { failureDirectory: env.simFailureDirectory } : {}),
             turn: state.turn ?? null,
             drinks: drinksPotion,
             ...(slCompute ? { samples: slCompute.bossSimSamples } : {}),
@@ -3874,7 +3924,7 @@ function planTurn(env: DecisionEnv): Decision | null {
         : { available: false, reason: "no draw/discard piles in the state", ms: 0 }
       : null;
   if (requiredBossComputation && bossSim) env.screenMemory.bossEvaluationRecord = simLog(bossSim, () => null);
-  if (requiredBossComputation && bossSim?.completion?.status !== "degraded" && (!bossSim?.available || bossSim.run.timedOut || (bossSim.run.samples !== bossSim.run.requested && !(bossSim.completion?.status === "complete_adaptive" && completeAdaptiveLines(bossSim.run))))) {
+  if (requiredBossComputation && (!currentDecisionBudget() || bossSim?.completion?.status === "pending") && bossSim?.completion?.status !== "degraded" && (!bossSim?.available || bossSim.run.timedOut || (bossSim.run.samples !== bossSim.run.requested && !(bossSim.completion?.status === "complete_adaptive" && completeAdaptiveLines(bossSim.run))))) {
     env.screenMemory.bossEvaluationWait = `required boss evaluation pending: ${bossSim && !bossSim.available ? bossSim.reason : "complete paired samples unavailable"}`;
     return null;
   }
@@ -4299,7 +4349,7 @@ function planTurn(env: DecisionEnv): Decision | null {
         const loggedTag = logged ? { logged: true as const } : {};
         const loggedLog: Record<string, JsonValue> = logged ? { logged: true, plays: [...replay.plays!], ...(reordered ? { reordered: true } : {}) } : {};
         const log: JsonValue = { replay: { point: replay.point, reference: replay.reference, line: replay.line, original: pick.text, overridden: ref !== null, reason, ...loggedLog,
-          ...silentSlResourceComparison(state, pick.plan ?? pick.rated ?? null, ref?.plan ?? null, { original: pick.plan === null && pick.rated != null, replacement: ref !== null && mcAll.has(ref.plan) }),
+          ...silentSlResourceComparison(state, pick.plan ?? pick.rated ?? null, ref?.plan ?? null, { original: pick.plan === null && pick.rated != null, replacement: ref !== null && mcAll.has(ref.plan), saturated: rollout?.available ? rollout.saturated === true : null }),
           ...comparisonOf(ref?.plan ?? null, ref !== null && mcAll.has(ref.plan)) } };
         // SL_RETRY_EXPLORE_REPLAY_DEVIATE: neither its line nor its plays can be played here (or they die this turn and the
         // answer does not): the attempt leaves the path here, so it deviates here (the lines failed attempts played on this
@@ -4361,7 +4411,7 @@ function planTurn(env: DecisionEnv): Decision | null {
       };
       const rep = choice.replacement;
       const resources = silentSlResourceComparison(state, pick.plan ?? pick.rated ?? null, rep?.plan ?? null,
-        { original: pick.plan === null && pick.rated != null, replacement: rep !== null && mcOf.has(rep.plan) });
+        { original: pick.plan === null && pick.rated != null, replacement: rep !== null && mcOf.has(rep.plan), saturated: rollout?.available ? rollout.saturated === true : null });
       // A boss fight with a sub-switch on: what weighed "not worse", and B2's numbers of the two lines when it did
       // (calibrated win rates, the replacement's paired difference to the pick ± its standard error). Off, or out of a boss
       // fight (where neither changes anything): the row as before them.
@@ -4741,9 +4791,9 @@ export function runRandomPotions(sources: PotionMcSource[], solver: SolverInput 
   const out: PotionMc[] = [];
   let spent = 0;
   // SL_RETRY_COMPUTE: a retried fight's budget and samples (potionMcOptions' otherwise).
-  const total = opts.budgetMs ?? potionMcOptions.budgetMs;
+  const total = Math.min(opts.budgetMs ?? potionMcOptions.budgetMs, currentDecisionBudget()?.remaining() ?? Infinity);
   sources.forEach((source, index) => {
-    const budget = Math.max(0, (total - spent) / (sources.length - index));
+    const budget = Math.max(0, Math.min((total - spent) / (sources.length - index), currentDecisionBudget()?.remaining() ?? Infinity));
     const mc = opts.samples !== undefined ? runPotionMc(dry, source, dryBest, seedOf(`${boardKey}:${source.potionId}:${source.slot}`), budget, opts.samples) : runPotionMc(dry, source, dryBest, seedOf(`${boardKey}:${source.potionId}:${source.slot}`), budget);
     spent += mc.ms;
     out.push(mc);
@@ -4827,7 +4877,7 @@ export function pickNote(shown: Plan[], chosen: Plan, picked: Plan): string {
  * the draw pile killed the 37 HP left (about 89% over 4 draws). CRRPX F48 T10 won the same way by
  * luck. Otherwise, the line that keeps the most HP.
  */
-export function leastLossPlan(allPlans: Plan[], hand: CardModel[], hp = Infinity): Plan {
+export function leastLossPlan(allPlans: Plan[], hand: CardModel[], hp = Infinity, redrawInput: SolverInput | null = null): Plan {
   // A line that kills us on our own turn (a card's HP cost) never goes first while one reaches the end of the turn:
   // the death comes either way, but only at the end of the turn can SL reload, and the enemy turn may still go
   // otherwise than simulated (JSA5K8YZ9RXV F48 T6: 2 HP, every line dead to the Queen's 12x5; least-loss played Blood
@@ -4840,7 +4890,7 @@ export function leastLossPlan(allPlans: Plan[], hand: CardModel[], hp = Infinity
   const pitSafe = (plan: Plan) => plan.outcome.sandpitAfter === null || plan.outcome.sandpitAfter > 0;
   const deadline = pool.some(pitSafe) && pool.some((plan) => !pitSafe(plan));
   const plans = deadline ? pool.filter(pitSafe) : pool;
-  const picked = leastLossOf(plans, hand, hp);
+  const picked = leastLossOf(plans, hand, hp, redrawInput, deadline);
   const escape = deadline ? picked.steps.findIndex((step) => step.cardId === "FRANTIC_ESCAPE") : -1;
   return escape > 0 ? stepFirst(picked, escape, hand) : picked;
 }
@@ -4857,13 +4907,34 @@ export function stepFirst<T extends Pick<Plan, "steps">>(plan: T, at: number, ha
   return { ...plan, steps: [...plan.steps.slice(0, lead), plan.steps[at]!, ...plan.steps.slice(lead, at), ...plan.steps.slice(at + 1)] };
 }
 
-function leastLossOf(plans: Plan[], hand: CardModel[], hp: number): Plan {
+function leastLossOf(plans: Plan[], hand: CardModel[], hp: number, redrawInput: SolverInput | null, deadline: boolean): Plan {
   // A drawing card whose own HP cost kills us is no draw (2VW5 F28 T7: Offering at 5 HP played first). Nor is one whose draw
   // waits on the hand (CARD_CONDITIONS, Restlessness: moved first, it draws nothing; AKK09TEEEXKD F17 T10).
   const drawAt = (plan: Plan): number =>
     plan.steps.findIndex((step) => hand.some((card) => card.index === step.cardIndex && drawsCards(card) && card.hpLoss < hp && card.handCondition === undefined));
   const drawing = plans.filter((plan) => drawAt(plan) >= 0);
-  if (drawing.length === 0) return plans.reduce((a, b) => (b.outcome.hpAfter > a.outcome.hpAfter ? b : a));
+  if (drawing.length === 0) {
+    const redraws: Plan[] = [];
+    if (redrawInput !== null && !redrawInput.player.noDraw) {
+      for (const card of hand.filter((entry) => entry.playable && entry.cardId === "CALCULATED_GAMBLE" && !entry.upgraded && entry.drawDiscardedHand)) {
+        const step: Step = { cardIndex: card.index, cardId: card.cardId, name: card.name, upgraded: false, target: null, targetName: null };
+        for (const plan of plans) {
+          // Preserve compulsory leading plays and the Sandpit payment, then read the new hand.
+          // No old-hand continuation survives Gamble's discard; do not move those stale steps with it.
+          const prefix = plan.steps.filter((entry) => entry.cardIndex !== card.index &&
+            (hand.some((held) => held.index === entry.cardIndex && held.playFirst) || isPlayFirst(entry.cardId) ||
+              (deadline && entry.cardId === "FRANTIC_ESCAPE")));
+          const before = replaySteps(redrawInput, prefix);
+          const next = replaySteps(redrawInput, [...prefix, step]);
+          if (before && next && !next.outcome.diesOwnTurn && next.outcome.cardsDrawn > before.outcome.cardsDrawn &&
+            (!deadline || (next.outcome.sandpitAfter !== null && next.outcome.sandpitAfter > 0))) redraws.push(next);
+        }
+      }
+    }
+    if (redraws.length > 0) return redraws.reduce((a, b) => b.outcome.damageDealt > a.outcome.damageDealt ||
+      (b.outcome.damageDealt === a.outcome.damageDealt && b.outcome.hpAfter > a.outcome.hpAfter) ? b : a);
+    return plans.reduce((a, b) => (b.outcome.hpAfter > a.outcome.hpAfter ? b : a));
+  }
   const most = drawing.reduce((a, b) =>
     b.outcome.damageDealt > a.outcome.damageDealt || (b.outcome.damageDealt === a.outcome.damageDealt && b.outcome.hpAfter > a.outcome.hpAfter) ? b : a,
   );

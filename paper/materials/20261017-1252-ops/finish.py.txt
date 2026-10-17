@@ -1,0 +1,69 @@
+from pathlib import Path
+import hashlib, json, subprocess
+
+r = Path.cwd(); p = r / 'ops/codex-ops/record-staging/20261017-1252'
+pub = r / 'paper/materials/20261017-1252-ops'
+sha = lambda raw: hashlib.sha256(raw).hexdigest()
+load = lambda f: json.loads(f.read_bytes())
+def write(f, v): f.write_text(json.dumps(v, ensure_ascii=False, indent=2) + '\n')
+
+host = load(pub / 'combined-host-terminal.json')
+sync = load(pub / 'main-source-sync.json')
+notice = load(pub / 'notice-delivery-readback.json')
+cli = load(pub / 'ops-ledger-cli.json')
+state = load(r / 'ops/codex-ops/learn.json')
+parent = state['learning_requests']['roy-20261017-human-pace-h0']
+assert parent['state'] == 'pending' and isinstance(parent['checkpoint'], str)
+assert state['batches']['20261017-095852-strategy-proposal']['state'] == 'failed'
+assert state['batches']['20261017-095852-strategy-proposal']['rc'] == 0
+assert all(x['rc'] == 0 for x in cli)
+assert subprocess.check_output(['git', '-C', str(r / '.worktrees/live'), 'rev-parse', 'HEAD'], text=True).strip() == host['actual_live']
+retention = load(pub / 'r382-retention-registration.json')
+pending_file = r / 'ops/codex-ops/pending-integrations/20261017-h1-strict-pick-stall.json'
+pending = load(pending_file)
+if retention['rc']:
+    assert 'Resource temporarily unavailable' in retention['stdout']
+    pending.update(retention_registration_pending=True,
+           retention_original_command=retention['argv'],
+           retention_pending_reason='Original live lock busy; completion registration retained for a later original ops event; no manual deletion or expanded cleanup.')
+    write(pending_file, pending)
+write(pub / 'r382-pending-final.json', pending)
+at = subprocess.check_output(['date', '+%Y-%m-%d %H:%M:%S %Z'], text=True).strip()
+print(at, flush=True)
+
+text = (f'\n- {at} 运维codex处理1252两事件：原H0批095852唯一完整宿主已终局0，实际live {host["actual_live"]}/tree {host["tree"]}，tsc0、Vitest523文件5156过2跳/798.55s，原log SHA {host["log_sha256"]}；canonical唯一fallback row、H0 source fe795/行为086f和卡死source b3b973均为该树祖先。它同时闭环既有V5-R381与V5-R382工程检查，不另起075726同树full、不重未变源full、不借旧树绿或把unit检查当模型重新校准/自然验收。原095852 engine0/canonical failed/mergednull及旧失败/原report均保持；完整宿主通过由本独立完成回执补证，不改历史来凑completed。\n'
+ f'  持原live锁后仅main窄同步H0源：两生产rollout叶和新固定test以原base54e36→sourcefe795补丁三路接入，最终执行叶与已检live仅既有Roy/Dai历史注释差，保H1和并行代码；9经验对象逐canonical SHA核同原真实生产加载/渲染/查询receipt和本宿主输入，五修订/四新增，其余经验及根字段保留。146份原冻结H0纸面/调参产物按source原字节入main，38份已有原件复用，不读回重算原帧/调参。main source同步提交 {sync["main_after"]}；live未改，无新行为号/发布/宿主/当前局操作，main组合不冒称就是原live宿主树。第一次全versions字节守卫因历史main403/live383条不同而在任何变更前拒绝，后核统一编号表与R381/R382当前条目相同，两个历史列表均原样保留、不覆盖或重编号。\n'
+ '  实际上线台账：原H0知识版本2026-10-17.h0-r1/S1.silent-h0-boss-model1/V5-R381，CLI将silent-0500仅A2纸鹤一独立局/六已见上下文窄源、silent-0501仅八条量测/校准边界经验登记shipped，两CLI0；不是六目标质量过闸/根因修复。12条原学习者账本原行（含旧193/162/161/31误计及后续203/179/178/24更正）与四条原提案CLI注册按offset/length/SHA机械实收，原6ddd及初稿历史、实际71c816 implemented和7b0bad宽项未完成均保留，不手改队列状态或新增独立支持、prior、claim和首证。只提交这些原行与两ops上线行，保所有并行学习记录。\n'
+ '  notice c0bfa0409caf81100261c2d1是上轮已正式转达的同三异议，本wake逐原report JSON核原文不变：高leak未隔离敌招因果；A2纸鹤窄证据不外推A10/新施虚弱；UJ0K组合挡残差不关闭0332。本人现已读回该notice及26d旧协议notice的三阶段实际回执及各引用原生字节SHA：ops_forwarded由ops原发送登记，watcher_received/roy_notified由原watcher本人登记，角色/notice/证据原件均匹配。故本次去重，不重发异议/再叫模型，不代填其他角色ACK；watcher已通知Roy不等Roy同意结论或Roy ACK。原科学异议/旧输入/失败/范围保持。\n'
+ '  H0父仍pending，原r1/request/input/thread/home/权限不变，已有checkpoint是原对象无损序列化；两个124302策略槽仍原占用，不扩槽/热改/重复派学习者。后续仍仅原481 validation keys/962行及未隔离原帧缺口；原107调参214行、276输入/241编译闭包、种子/Platt/四闸保持，不发空trust、不把纸面经验shipped当校准通过。H0与0332同优先，0332原完整输入/末资源/首分歧/根修复未知，H1部分预算/自然效果和F49联合率未知，原单次自然审计仍watcher职责，不开新自然监听/实验/H2+或关闭宽父。\n'
+ '  原R382 pending已记实际完整host0；仅对完成的独立ops卡死修复WT尝试现有retention complete登记，原live锁忙返回retained/rc1，真实回执及原命令保留到同pending，未声称登记或清理成功，不抢锁/手删/等待轮询。H0未完成WT/原始日志/缓存/模型/经验/账本/报告均保。无learner-done，不重复paper_dataset；本wake不改现局/home/账号/模型/prompt/env，不重启/手选/游戏API，结束不sleep或轮询。证据paper/materials/20261017-1252-ops/。\n')
+appends = []
+for item in load(p / 'own-appends.json'):
+    if item['path'] == 'paper/materials/learning/code-proposals.jsonl':
+        appends.extend(dict(path=item['path'], text=line) for line in item['text'].splitlines(keepends=True))
+    else:
+        appends.append(item)
+for path in ['ops/inbox-dev.md', 'notes/for-roy.md', 'paper/materials/decision-log.md', 'notes/ops-handoff.md']:
+    with (r / path).open('ab') as f: f.write(text.encode())
+    appends.append(dict(path=path, text=text))
+write(p / 'own-appends.json', appends)
+write(pub / 'ops-closure.json', dict(at=at, events=2, host=host, main_source_sync=sync,
+      ledger_original_rows=12, ledger_new_ops_ship_rows=2, original_proposal_cli_rows=4,
+      notice_delivery_complete=notice, repeated_watchers_or_models=False,
+      current_H0_state=parent['state'], actual_new_H0_dispatch=False,
+      original_H0_request='roy-20261017-human-pace-h0', remaining_validation_keys=481,
+      parent_or_0332_or_natural_acceptance_complete=False,
+      new_source_or_full_or_behavior_number=False, retention=retention,
+      no_game_or_config_action=True, no_other_role_ACK_by_ops=True))
+for name in ['audit.py', 'main-sync.py', 'register.py', 'finish.py']:
+    (pub / (name + '.txt')).write_bytes((p / name).read_bytes())
+seal = (r / 'ops/codex-ops/record-staging/20261017-1243/seal.py').read_text()
+seal = seal.replace('20261017-1243', '20261017-1252').replace('== 16', '== 14').replace('owned_ledger_rows=16', 'owned_ledger_rows=14')
+seal = seal.replace('Record H0 checkpoint recovery and completed diagnostic host', 'Record H0 source delivery and exact R381 R382 host closure')
+seal = seal.replace('ops: record H0 original-thread checkpoint recovery and stale stall', 'ops: record H0 source delivery, actor receipts and combined host0')
+seal = seal.replace('Old e5 diagnostic full0 closed; R381/R382 original H0 combined host still RUN. No new source/host or restart. H0 checkpoint object losslessly serialized and original request pending existing slots; actual original-watcher send0, other role ACK separate.',
+    'R381/R382 exact original H0 combined live host completed0; narrow H0 source/data synchronized to main only. Two phase-scoped shipped rows, twelve original H0 rows and four proposal registrations preserved. Both original watcher notices have verified personal receipt/notification. H0 original continuation remains pending; no repeated host/source full or game action.')
+(p / 'seal.py').write_text(seal)
+print(json.dumps(dict(events=2, exact_host_rc=0, main_sync=sync['main_after'],
+      notice_stages_verified=True, source_phase_shipped=True, H0='pending',
+      ledger_rows=14, no_retests_or_new_dispatch=True)), flush=True)

@@ -1,0 +1,136 @@
+{
+  "at": "2026-10-17 07:47:56 CST",
+  "free_before": 154451238912,
+  "batch_limit": 1,
+  "guard": "Age >=24h, original owner_guard/active/clean/source/publication/archive SHA and lock checks; no bypass",
+  "results": [
+    {
+      "workspace": "codex-account-drain-20261011",
+      "source": "7d7aa8a3a09491af79789f3e9d7bec2d6e4a1b1e",
+      "age_seconds": 218827.02561974525,
+      "source_ancestors_in_both": true,
+      "original_owner_refs_absent": true,
+      "unique_bytes": 1432,
+      "unique_files": 4,
+      "calls": [
+        {
+          "command": [
+            "nice",
+            "-n",
+            "19",
+            "python3",
+            "ops/worktree_retention.py",
+            "complete",
+            "--root",
+            "/home/dw/Projects/agent-sts2",
+            "--workspace",
+            "codex-account-drain-20261011",
+            "--source",
+            "7d7aa8a3a09491af79789f3e9d7bec2d6e4a1b1e",
+            "--main-commit",
+            "796ca4d992af31242874bc5105a3164380fca7af",
+            "--live-commit",
+            "079dc2f156601556d48727cb14ad48fb95994afd"
+          ],
+          "rc": 0,
+          "output": "paper/materials/20261017-0738-ops/codex-account-drain-20261011.0.cli.json",
+          "sha256": "619cbc392d9c53c11762627ea3ed56524b4eb0390a2884a72898020ca374daf1"
+        },
+        {
+          "command": [
+            "nice",
+            "-n",
+            "19",
+            "python3",
+            "ops/worktree_retention.py",
+            "sweep",
+            "--root",
+            "/home/dw/Projects/agent-sts2",
+            "--workspace",
+            "codex-account-drain-20261011",
+            "--apply",
+            "--limit",
+            "1"
+          ],
+          "rc": 0,
+          "output": "paper/materials/20261017-0738-ops/codex-account-drain-20261011.1.cli.json",
+          "sha256": "120d1b1a35c527230266018b7d8fd88ed965783a097c7ee07400ccdb8a74e3c4"
+        }
+      ],
+      "state": "reclaimed",
+      "manifest": "ops/codex-ops/retention/worktree-archives/codex-account-drain-20261011.manifest.json",
+      "manifest_sha256": "c1a190733b71c1283a16cd1c2d0622c8e8cec1b3d414da64bd3ddb3093cc4516",
+      "available_bytes_delta": 97558528,
+      "archive_sha256": "ea9ff73a3627555ac8501740e8948a5f4923131012d235ce4029fc32e878f38c",
+      "sha_readback_verified": true,
+      "branch_preserved": true,
+      "original_logs_reports_kept": true
+    },
+    {
+      "workspace": "codex-astra-normal-512k",
+      "source": "e9b3a6ceb9d296aa7126c32b4c2e99b6a902896a",
+      "age_seconds": 218290.15134382248,
+      "source_ancestors_in_both": true,
+      "original_owner_refs_absent": true,
+      "unique_bytes": 0,
+      "unique_files": 0,
+      "calls": [
+        {
+          "command": [
+            "nice",
+            "-n",
+            "19",
+            "python3",
+            "ops/worktree_retention.py",
+            "complete",
+            "--root",
+            "/home/dw/Projects/agent-sts2",
+            "--workspace",
+            "codex-astra-normal-512k",
+            "--source",
+            "e9b3a6ceb9d296aa7126c32b4c2e99b6a902896a",
+            "--main-commit",
+            "e9b3a6ceb9d296aa7126c32b4c2e99b6a902896a",
+            "--live-commit",
+            "e9b3a6ceb9d296aa7126c32b4c2e99b6a902896a"
+          ],
+          "rc": 0,
+          "output": "paper/materials/20261017-0738-ops/codex-astra-normal-512k.0.cli.json",
+          "sha256": "be495d9dc27fdc481f9bad522271532d33cc82ee21d99db08079d7c4d65d5bed"
+        },
+        {
+          "command": [
+            "nice",
+            "-n",
+            "19",
+            "python3",
+            "ops/worktree_retention.py",
+            "sweep",
+            "--root",
+            "/home/dw/Projects/agent-sts2",
+            "--workspace",
+            "codex-astra-normal-512k",
+            "--apply",
+            "--limit",
+            "1"
+          ],
+          "rc": 0,
+          "output": "paper/materials/20261017-0738-ops/codex-astra-normal-512k.1.cli.json",
+          "sha256": "35e56179a71fda948946240d01d82a68b9f6bd2b5676d655753fd038e9cabe45"
+        }
+      ],
+      "state": "reclaimed",
+      "manifest": "ops/codex-ops/retention/worktree-archives/codex-astra-normal-512k.manifest.json",
+      "manifest_sha256": "ef37243dda51a17e79c2dcca44c064eba1fee55a4a9b304c2efdad537f230bf4",
+      "available_bytes_delta": 93937664,
+      "archive_sha256": "3bcd904fa97115eed5db24bce481b6d30e9ee1f9aa976e01531fe7dc8446daac",
+      "sha_readback_verified": true,
+      "branch_preserved": true,
+      "original_logs_reports_kept": true
+    }
+  ],
+  "finished_at": "2026-10-17 07:48:00 CST",
+  "free_after": 154642612224,
+  "reclaimed": 2,
+  "reported_reclaimed_delta": 191496192
+}

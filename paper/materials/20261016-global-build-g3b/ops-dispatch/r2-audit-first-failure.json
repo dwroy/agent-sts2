@@ -1,0 +1,27 @@
+{
+  "at": "2026-10-16 14:01:00 CST",
+  "rc": 1,
+  "failed_assertion": "len(set(item['run'] for item in anchors)) == 6",
+  "original_script_sha256": "955e9cc2265a76c2deb7e4522562c4cb8459f2558596626b2fbb5179d3e07aed",
+  "actual_prefix_unique_runs": 7,
+  "actual_prefix_runs": [
+    "1269Y20SKHUM",
+    "32VSST9UX7MN",
+    "4U3WNL3JRRCX",
+    "4YPGHGJD393H",
+    "E5L15SK6ZHZB",
+    "WA7FRJ7UABCV",
+    "YP428GT9ZLL3"
+  ],
+  "actual_added_runs": [
+    "1269Y20SKHUM",
+    "32VSST9UX7MN",
+    "4U3WNL3JRRCX",
+    "E5L15SK6ZHZB",
+    "WA7FRJ7UABCV",
+    "YP428GT9ZLL3"
+  ],
+  "reason": "Ops audit conflated all prefix runs with newly added runs; r2 says six additional runs, not six total prefix runs.",
+  "original_frozen_inputs_unchanged": true,
+  "no_game_outcomes_or_full_check_claim": true
+}

@@ -1,0 +1,7 @@
+{
+  "scope": "Ops mechanical receipt parser only, not learner/product failure",
+  "first_readback_rc": 1,
+  "error": "ValueError: not enough values to unpack (expected 2, got 1)",
+  "reason": "Four material refs use prior/audit-output-<run>.json paths, while the initial parser assumed all strings were stream:line references",
+  "correction": "Classify numeric and stream:line refs as raw rows; resolve four prior material paths against original consumer artifact manifest and verify exact SHA; do not rerun consumers or change original material"
+}

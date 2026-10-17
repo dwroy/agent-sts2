@@ -1,0 +1,6 @@
+{
+  "initial_version_probe": "npx --prefix <worktree>/agent vitest --version",
+  "outcome": "new sparse worktree had no node_modules; npx emitted package-not-found/install warning; interrupted before version/test result, rc130; no dependency change authorized or accepted",
+  "correction": "symlink existing repository node_modules; all subsequent commands npm_config_offline=true npx --no-install",
+  "native_test_scope": "fixed local fixtures only"
+}

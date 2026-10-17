@@ -1,0 +1,116 @@
+from pathlib import Path
+import hashlib, json, re, subprocess, sys
+
+r = Path.cwd()
+p = r / 'ops/codex-ops/record-staging/20261017-1252'
+pub = r / 'paper/materials/20261017-1252-ops'
+sha = lambda raw: hashlib.sha256(raw).hexdigest()
+load = lambda f: json.loads(f.read_bytes())
+def write(f, v): f.write_text(json.dumps(v, ensure_ascii=False, indent=2) + '\n')
+def git(*args): return subprocess.check_output(['git', *args], stderr=subprocess.PIPE)
+
+sys.path.insert(0, str(r / 'ops'))
+import learning_requests as lr
+
+state = load(r / 'ops/codex-ops/learn.json')
+bid = '20261017-095852-strategy-proposal'
+b = state['batches'][bid]
+check = b['fallback_checks'][0]
+expected_live = '6fbbd82abd6d407dbaf93f82639b7f927efa54a0'
+expected_tree = 'ddb2ddfbb0934a8b0e70d9f0ebabddd935d78294'
+assert b['state'] == 'failed' and b['rc'] == 0 and b.get('merged') is None
+assert len(b['fallback_checks']) == 1 and check['rc'] == 0
+assert check['merged'] == expected_live and check['tree'] == expected_tree
+assert git('rev-parse', expected_live + '^{tree}').decode().strip() == expected_tree
+raw = Path(check['log']).read_bytes()
+text = re.sub(rb'\x1b\[[0-9;]*m', b'', raw).decode()
+for required in ['Test Files  523 passed (523)', '5156 passed', '2 skipped', '798.55s', '12:38:47']:
+    assert required in text, required
+sources = ['fe7952b44911a65c0c50c39f48be2e28ef5a38ff',
+           '086f17c016a64bf5c06bdc3e101832c60a21fcdb',
+           'b3b9734d85defbdbd1b73ab85fab9ea2f636affd']
+for source in sources:
+    git('merge-base', '--is-ancestor', source, expected_live)
+versions = json.loads(git('show', expected_live + ':eval/versions.json'))
+registered = [x for x in versions['versions'] if x.get('release_id') in ['V5-R381', 'V5-R382']]
+assert len(registered) == 2
+at = subprocess.check_output(['date', '+%Y-%m-%d %H:%M:%S %Z'], text=True).strip()
+host = dict(at=at, batch=bid, canonical_check=check, actual_live=expected_live,
+            tree=expected_tree, log_bytes=len(raw), log_sha256=sha(raw),
+            tsc=0, vitest=0, files=523, passed=5156, skipped=2,
+            duration_seconds=798.55, start_local='12:38:47',
+            registered_releases=registered, verified_source_ancestors=sources,
+            original_canonical=dict(state=b['state'], rc=b['rc'], merged=b.get('merged')),
+            source_full_repeated=False, new_host_started=False,
+            exact_live_unit_check_not_model_calibration_or_natural_acceptance=True)
+write(pub / 'combined-host-terminal.json', host)
+
+consumer = load(r / 'paper/materials/20261017-1205-ops/h0-original-consumer-receipt.json')
+assert consumer['status'] == 'passed' and consumer['kind'] == 'fixed-consumer'
+assert consumer['experience_version'] == '2026-10-17.h0-r1'
+evidence = []
+for row in consumer['evidence']:
+    f = Path(row['path'])
+    assert f.resolve().is_relative_to(r) and sha(f.read_bytes()) == row['sha256']
+    evidence.append(dict(**row, bytes=f.stat().st_size))
+exp = json.loads(git('show', expected_live + ':knowledge/characters/silent/experience.json'))
+entries = {x['id']: x for x in exp['entries']}
+assert exp['version'] == consumer['experience_version']
+for row in consumer['entries']:
+    assert sha(lr.canonical(entries[row['id']])) == row['sha256']
+write(pub / 'h0-consumer-readback.json', dict(at=at, original_receipt=consumer,
+      verified_evidence=evidence, exact_current_host_objects=consumer['entries'],
+      actual_phase_only=True, new_consumer_run=False, full_parent_complete=False))
+
+notices = []
+for ident in ['26d0e3c374537273810f6808', 'c0bfa0409caf81100261c2d1']:
+    f = r / 'ops/codex-ops/learning-notices' / (ident + '.json')
+    n = load(f)
+    assert n['request_id'] == 'roy-20261017-human-pace-h0'
+    if ident.startswith('c0bfa'):
+        assert json.loads(n['message']) == b['report']['learning_result']['questions']
+    proof = []
+    for stage in ['ops_forwarded', 'watcher_received', 'roy_notified']:
+        ref = n[stage]
+        receipt = Path(ref['path'])
+        receipt_raw = receipt.read_bytes()
+        assert receipt.resolve().is_relative_to(r) and sha(receipt_raw) == ref['sha256']
+        parsed = json.loads(receipt_raw)
+        assert parsed['notice_id'] == ident and parsed['stage'] == stage
+        assert parsed['actor'] == ('ops' if stage == 'ops_forwarded' else 'watcher')
+        target = Path(parsed['evidence']['path'])
+        target = target if target.is_absolute() else r / target
+        assert target.resolve().is_relative_to(r)
+        target_raw = target.read_bytes()
+        assert sha(target_raw) == parsed['evidence']['sha256']
+        dest = pub / 'notice-originals' / ident / (stage + '.json')
+        dest.parent.mkdir(parents=True, exist_ok=True)
+        dest.write_bytes(receipt_raw)
+        saved = dest.with_name(stage + '.evidence' + target.suffix)
+        saved.write_bytes(target_raw)
+        proof.append(dict(stage=stage, actor=parsed['actor'], receipt=ref,
+                          verified_evidence=parsed['evidence'], evidence_bytes=len(target_raw)))
+    write(pub / 'notice-originals' / ident / 'notice.json', n)
+    notices.append(dict(notice_id=ident, verified_stages=proof))
+write(pub / 'notice-delivery-readback.json', dict(at=at, notices=notices,
+      event_deduplicated=True, repeated_prompt=False, ops_filled_other_role_ACK=False,
+      meaning='Watcher personally registered receipt and Roy notification; not Roy ACK or scientific agreement.'))
+
+pending_path = r / 'ops/codex-ops/pending-integrations/20261017-h1-strict-pick-stall.json'
+pending = load(pending_path)
+write(pub / 'r382-pending-before.json', pending)
+assert pending['source'] == sources[-1] and pending['published']
+pending.update(completed_at=at, host_complete=True, host_rc=0,
+               host_batch=bid, actual_live=expected_live, tree=expected_tree,
+               host_terminal_receipt=str((pub / 'combined-host-terminal.json').relative_to(r)),
+               state='Published; original unique combined-tree host completed0; same-save recovery history retained')
+write(pending_path, pending)
+write(pub / 'r382-pending-after.json', pending)
+write(p / 'own-appends.json', [])
+(p / 'own-ledger-rows.jsonl').write_bytes(b'')
+write(p / 'paper-owned-manifest.json', [])
+write(p / 'extra-owned-paths.json', [])
+print(json.dumps(dict(host_rc=0, files=523, passed=5156, skipped=2,
+      log_sha256=sha(raw), actual_watcher_stages=2, notices=len(notices),
+      current_H0_state=state['learning_requests']['roy-20261017-human-pace-h0']['state'],
+      new_tests_or_model_dispatch=False)), flush=True)

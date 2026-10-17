@@ -1,0 +1,222 @@
+from pathlib import Path
+import fcntl
+import hashlib
+import json
+import os
+import re
+import subprocess
+import sys
+
+r = Path.cwd()
+p = r / 'ops/codex-ops/record-staging/20261017-2015'
+pub = r / 'paper/materials/20261017-2015-ops'
+pub.mkdir(parents=True, exist_ok=True)
+sys.path.insert(0, str(r / 'ops'))
+from learner_checks import read_report
+
+sha = lambda raw: hashlib.sha256(raw).hexdigest()
+load = lambda path: json.loads(path.read_bytes())
+def write(path, value):
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(value, ensure_ascii=False, indent=2) + '\n')
+def git(*args, cwd=r, env=None, data=None):
+    return subprocess.check_output(['git', '-C', str(cwd), *args], input=data, env=env, stderr=subprocess.PIPE)
+def blob(ref, path):
+    return git('show', ref + ':' + path)
+
+bid = '20261017-170116-fix-batch'
+source = '71ad52c19c884365ec42d3300bc1a3c7a035c7e0'
+behavior = '40676b554916d88ea006a2e76cf03a9e3e106840'
+publication = '3d691cff96dedd19855b00f4e9d448c43fe1d219'
+tree = '24be6da5dcc38e9ff9145233b23a0fa475c5ff51'
+scratch = r / 'learner/runs/20261017-170120-62ee45ff-d6c7-407f-88be-efad3ce5199b-silent-boss-calibration'
+wt = r / '.worktrees/silent-boss-calibration'
+live = r / '.worktrees/live'
+out = r / f'ops/codex-ops/learner/{bid}.out'
+rep = read_report(str(out))
+state = load(r / 'ops/codex-ops/learn.json')['batches'][bid]
+assert rep['fixes'][0]['commit'] == source and rep['merged'] == publication
+assert state['state'] == 'done' and state['rc'] == 0 and state['merged'] == publication
+assert state['proposal_audit_errors'] == [] and state['checks_pending']
+assert git('rev-parse', publication + '^{tree}').decode().strip() == tree
+main_head = git('rev-parse', 'HEAD').decode().strip()
+live_head = git('rev-parse', 'HEAD', cwd=live).decode().strip()
+assert live_head == publication
+for ref in [source, behavior, publication, '31db98183b162f9e2213884f6b8ab518fe6ff89b']:
+    git('merge-base', '--is-ancestor', ref, live_head)
+assert subprocess.run(['git', 'merge-base', '--is-ancestor', source, main_head], capture_output=True).returncode == 1
+
+original = load(scratch / 'live-publication.json')
+owned = original['owned_paths'] if 'owned_paths' in original else None
+if owned is None:
+    owned = [
+        'knowledge/characters/silent/boss-trust.json',
+        'paper/materials/silent/boss-sim-calibration.md',
+        'experiments/boss-sim/silent/ccee3b625e95d6a275b5b58ad94739983ae208954dc66ba7fa03deb5b5b5e33b',
+        'docs/boss-sim.md',
+        *['agent/tools/boss-sim/' + name for name in [
+            'calib.py', 'trust.py', 'silent_calibration.py', 'test_silent_calibration.py',
+            'refresh-silent.py', 'pinned_silent.py']],
+    ]
+assert len(owned) == 10 and all(isinstance(x, str) for x in owned)
+leaf_paths = git('ls-tree', '-r', '--name-only', source, '--', *owned).decode().splitlines()
+leaves = []
+for path in leaf_paths:
+    raw = blob(source, path)
+    deployed = blob(publication, path)
+    attribution_only = path == 'docs/boss-sim.md' and raw.replace(b'Roy', b'Dai') == deployed.replace(b'Roy', b'Dai')
+    assert raw == (wt / path).read_bytes() and deployed == (live / path).read_bytes(), path
+    assert raw == deployed or attribution_only, path
+    leaves.append(dict(path=path, source_blob=git('rev-parse', source + ':' + path).decode().strip(),
+                       bytes=len(raw), sha256=sha(raw), deployed_sha256=sha(deployed),
+                       historical_attribution_only=bool(raw != deployed and attribution_only),
+                       publication_and_current_live_equal=True))
+ironclad = 'knowledge/characters/ironclad'
+assert git('rev-parse', '31db98183b162f9e2213884f6b8ab518fe6ff89b:' + ironclad) == git('rev-parse', publication + ':' + ironclad)
+old_agent = set(git('ls-tree', '-r', '--name-only', '31db98183b162f9e2213884f6b8ab518fe6ff89b', '--', 'agent').decode().splitlines())
+changed_agent = git('diff', '--name-only', '31db98183b162f9e2213884f6b8ab518fe6ff89b', publication, '--', 'agent').decode().splitlines()
+assert set(changed_agent) <= {x for x in leaf_paths if x.startswith('agent/tools/boss-sim/')}
+protected = []
+for path in sorted(old_agent - set(changed_agent)):
+    assert git('rev-parse', publication + ':' + path) == git('rev-parse', '31db98183b162f9e2213884f6b8ab518fe6ff89b:' + path)
+    protected.append(path)
+write(pub / 'source-live-readback.json', dict(batch=bid, source=source,
+    source_parent=git('rev-parse', source + '^').decode().strip(),
+    source_tree=git('rev-parse', source + '^{tree}').decode().strip(),
+    actual_behavior_commit=behavior, actual_publication=publication, tree=tree,
+    main_before=main_head, main_source_sync_complete=False, source_is_live_ancestor=True,
+    owned_paths=owned, actual_owned_leaves=leaves, source_wt_and_publication_live_verified=True,
+    only_source_live_difference='docs/boss-sim.md historical Roy/Dai attribution retained from each branch',
+    changed_agent_paths=changed_agent, unchanged_agent_leaves=len(protected),
+    ironclad_knowledge_tree=git('rev-parse', publication + ':' + ironclad).decode().strip(),
+    existing_H0_H1_H2_R384_R385_R386_R387_preserved=True,
+    consumer_readback=load(scratch / 'live-consumer-readback-receipt.json'),
+    original_full_source_rc=0, original_live_sandbox_rc=0, host_rc=None,
+    no_repeated_tests_calibration_simulation_or_consumers=True))
+
+names = [
+    'report.md', 'final-result.json', 'source-checks.json', 'source-final-sandbox.receipt.json',
+    'source-final-sandbox.log', 'source-sandbox.log', 'source-full-recheck-summary.json',
+    'source-full-recheck.receipt.json', 'source-full-recheck.log', 'source-selected-recheck.receipt.json',
+    'source-selected-recheck.log', 'precision-without-change.log', 'python-final-fixed.log',
+    'live-publication.json', 'final-verification.json', 'final-handoff.json',
+    'root-rule-notifications.json', 'native-request.json', 'source-gitleaks-gate.json',
+    'gitleaks-checksum-false-positive.json', 'legacy-default-equivalence.json',
+    'automatic-pinned-receipt.json', 'published-idempotency-receipt.json',
+    'source-consumer-readback.json', 'live-consumer-readback.json',
+    'live-consumer-readback-receipt.json', 'live-sandbox.log', 'live-python-fixed.log',
+    'published-provenance.json', 'published-consumer-change.json',
+    'ledger-proposed.json', 'ledger-final-proposed.json', 'ledger-actual-live-proposed.json',
+]
+archived = []
+for name in names:
+    src = scratch / name
+    raw = src.read_bytes()
+    assert len(raw) < 200000
+    dest = pub / 'originals' / name
+    dest.parent.mkdir(exist_ok=True)
+    dest.write_bytes(raw)
+    assert dest.read_bytes() == raw
+    archived.append(dict(source=str(src.relative_to(r)), archived=str(dest.relative_to(r)),
+                         bytes=len(raw), sha256=sha(raw)))
+for suffix in ['out', 'err']:
+    src = r / f'ops/codex-ops/learner/{bid}.{suffix}'
+    raw = src.read_bytes()
+    dest = pub / ('original-' + suffix + '.txt')
+    dest.write_bytes(raw)
+    archived.append(dict(source=str(src.relative_to(r)), archived=str(dest.relative_to(r)), bytes=len(raw), sha256=sha(raw)))
+write(pub / 'original-archive-manifest.json', archived)
+
+native_path = r / 'learner/runs/20261017-170120-62ee45ff-d6c7-407f-88be-efad3ce5199b-silent-boss-calibration.jsonl'
+with native_path.open() as f:
+    launch = json.loads(f.readline())
+    startup = json.loads(f.readline())
+    native = json.loads(f.readline())
+assert launch['task'] == 'silent-boss-calibration' and launch['engine'] == 'codex'
+assert launch['command'][launch['command'].index('--model') + 1] == 'gpt-6.1-sol'
+assert 'model_reasoning_effort="xhigh"' in launch['command']
+assert 'model=gpt-6.1-sol' in native['text'] and 'reasoning_effort="xhigh"' in native['text']
+assert startup['batch'] == bid and startup['input_sha256'] == load(scratch / 'native-request.json')['input_sha256']
+write(pub / 'native-owner-readback.json', dict(batch=bid, task=launch['task'], cwd=launch['cwd'],
+    model='gpt-6.1-sol', effort='xhigh', native_conversation_id=re.search(r'conversation.id=([0-9a-f-]+)', native['text'])[1],
+    startup_pid=startup['pid'], input_sha256=startup['input_sha256'], original_native_stream=str(native_path.relative_to(r)),
+    original_request_sha256=sha((scratch / 'native-request.json').read_bytes()), permissions_unchanged=True))
+
+own_appends = []
+notices = load(scratch / 'root-rule-notifications.json')
+for path, entry in notices['notices'].items():
+    with (r / path).open('rb') as f:
+        f.seek(entry['offset'])
+        raw = f.read(entry['bytes'])
+    assert sha(raw) == entry['sha256']
+    own_appends.append(dict(path=path, text=raw.decode()))
+    dest = pub / ('learner-rule-notice-' + path.split('/')[0] + '.md')
+    dest.write_bytes(raw)
+rows = []
+for line in (r / 'paper/materials/learning/ledger.jsonl').read_bytes().splitlines(keepends=True):
+    if json.loads(line).get('id') == 'silent-0506': rows.append(line)
+assert len(rows) == 3 and json.loads(rows[-1])['status'] == 'proposed'
+(p / 'own-ledger-rows.jsonl').write_bytes(b''.join(rows))
+write(pub / 'ledger-and-notices-readback.json', dict(ledger_id='silent-0506', original_rows=3,
+    raw_rows_sha256=sha(b''.join(rows)), status='proposed', no_ops_shipped_yet=True,
+    actual_learner_dual_notices=notices, notices_sha256_verified=True, other_roles_ACK_not_inferred=True))
+
+at = subprocess.check_output(['date', '+%Y-%m-%d %H:%M:%S %Z'], text=True).strip()
+pending_path = r / f'ops/codex-ops/pending-integrations/{bid}.json'
+assert not pending_path.exists()
+pending = dict(at=at, batch=bid, task='silent-boss-calibration', transport_task='fix-batch',
+    status='actual source and live publication received; original exact-tree host gate pending',
+    source=source, source_commit=source, source_parent=git('rev-parse', source + '^').decode().strip(),
+    source_tree=git('rev-parse', source + '^{tree}').decode().strip(),
+    actual_behavior_commit=behavior, original_publication=publication, actual_live=live_head,
+    fixed_release_tree=tree, original_version_name=rep['publication']['registry_name'],
+    release_id=None, official_numbering_complete=False, source_sync_complete=False,
+    ledger_id='silent-0506', ledger_shipped=False, source_receipt=str((pub / 'source-live-readback.json').relative_to(r)),
+    code_and_artifact_paths=owned, expanded_source_leaves=leaf_paths,
+    original_host_batch=bid, original_host_tree=tree, host_started=True, host_complete=False, host_rc=None,
+    host_log=f'ops/codex-ops/learner/{bid}.fallback-{tree}.checks.log',
+    no_source_full_or_calibration_repeat=True, no_other_role_ACK=True,
+    first_effective_run=None, six_target_quality_pass=False, f49_quality_pass=False,
+    h0_h1_current_model_calibration=False, root0332_fixed=False,
+    next_step='On original learner-checks terminal event, preserve that exact24be result; acquire original live lock and builder gate, narrowly sync owned source/artifact blobs to current main preserving other work/index, register already-live40676 behavior in current V5 registry and dual notices. If final metadata changes tree, use only this same original batch serial recheck for actual final tree. CLI0506 shipped only after bounded actual deployment/consumer/host closure; no new learner, calibration, model, observer or current game changes.',
+    recovery_contract=str((pub / 'continuation-contract.md').relative_to(r)))
+write(pending_path, pending)
+write(pub / 'actual-receipt-before-gate.json', pending)
+
+lock_path = r / 'ops/live-merge.lock'
+with lock_path.open('a') as lock:
+    try:
+        fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        acquired = True
+    except BlockingIOError:
+        acquired = False
+    inode = str(lock_path.stat().st_ino)
+    lock_lines = [line for line in Path('/proc/locks').read_text().splitlines()
+                  if len(line.split()) > 5 and line.split()[5].split(':')[-1] == inode]
+    holders = []
+    for line in lock_lines:
+        pid = int(line.split()[4])
+        try:
+            proc = Path('/proc') / str(pid)
+            args = (proc / 'cmdline').read_bytes().split(b'\0')
+            assert b'recheck' in args and bid.encode() in args
+            holders.append(dict(pid=pid, birth_ticks=(proc / 'stat').read_text().split(') ', 1)[1].split()[19],
+                                command=[x.decode() for x in args if x], original_batch=True))
+        except FileNotFoundError:
+            holders.append(dict(pid=pid, already_exited=True))
+    receipt = dict(at=at, nonblocking=True, acquired=acquired, exit=0 if acquired else 75,
+        actual_delivery_registered_before_gate=True, lock=str(lock_path.relative_to(r)),
+        original_lock_lines=lock_lines, holders=holders, main_live_unmodified=True,
+        tests_or_new_model_not_started=True, existing_original_host_result=None,
+        scope='One gate attempt only; do not wait, poll or steal the existing original exact-tree check lock.')
+    write(pub / 'live-lock-gate.json', receipt)
+assert not acquired, 'Gate is clear: continue original authorized integration rather than ending pending.'
+pending['status'] = 'actual delivery received; main sync and official number blocked by original exact24be host live lock'
+pending['gate_receipt'] = str((pub / 'live-lock-gate.json').relative_to(r))
+write(pending_path, pending)
+write(pub / 'pending-readback.json', pending)
+write(p / 'own-appends.json', own_appends)
+write(p / 'extra-owned-paths.json', [])
+write(p / 'paper-owned-manifest.json', [])
+print(json.dumps(dict(at=at, owned_leaves=len(leaves), protected_agent_leaves=len(protected),
+                     archived=len(archived), source_received=True, gate=receipt, ledger_rows=3), ensure_ascii=False))

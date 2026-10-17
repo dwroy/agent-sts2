@@ -1,0 +1,57 @@
+from pathlib import Path
+import hashlib,json,os,subprocess
+
+r=Path.cwd();p=r/'ops/codex-ops/record-staging/20261017-1935';pub=r/'paper/materials/20261017-1935-ops'
+info=json.loads((pub/'publication.json').read_bytes());bid=info['batch'];source=info['source']
+out=r/'ops/codex-ops/learner'/(bid+'.out');sha=lambda raw:hashlib.sha256(raw).hexdigest()
+assert not (pub/'host-action-start.json').exists()
+import sys
+sys.path.insert(0,str(r/'ops'))
+import learner_checks
+original=learner_checks.read_report(str(out))
+assert original['fixes']==[source] and original['merged'] is None and original['tests']==dict(tsc=0,vitest=0,cases=4410)
+assert original['base']==info['source_parent']
+assert all(x['state']=='waiting' for x in original['proposal_results'])
+normalized={**original,'fixes':[dict(id='silent-proposal-72e0c8b41d2f5ab8',commit=source,source_parent=info['source_parent'],scope='Original evidence-bounded Akabeko Skewer repair; shape normalization by ops, not a new learner report')]}
+log=r/'ops/codex-ops/learner'/(bid+'.fallback-'+info['tree']+'.checks.log');assert not log.exists()
+binding=dict(batch=bid,source=source,parent=info['source_parent'],actual_live=info['actual_live'],tree=info['tree'],
+    original_out_path=str(out.relative_to(r)),original_out_sha256=sha(out.read_bytes()),original_report=original,normalized_operand=normalized,
+    full_check_command=learner_checks.FULL_CHECK_COMMAND,original_checks_module_sha256=sha((r/'ops/learner_checks.py').read_bytes()),
+    standard_broker_action_rc=2,reason='Original fixes is one verified commit string; original cmd_recheck expects fix objects',
+    original_report_canonical_state_and_product_files_unchanged=True,normalization_only_in_this_private_process=True,
+    identical_source_identity_all_ancestry_and_exact_tree_guards_retained=True,no_new_test_pipeline=True)
+(pub/'host-report-binding.json').write_text(json.dumps(binding,ensure_ascii=False,indent=2)+'\n')
+worker='''from pathlib import Path
+import argparse,hashlib,importlib.util,json,sys
+r=Path.cwd();p=r/'ops/codex-ops/record-staging/20261017-1935';pub=r/'paper/materials/20261017-1935-ops'
+binding=json.loads((pub/'host-report-binding.json').read_bytes())
+sys.path.insert(0,str(r/'ops'))
+import learner_checks
+sha=lambda raw:hashlib.sha256(raw).hexdigest()
+assert sha((r/binding['original_out_path']).read_bytes())==binding['original_out_sha256']
+assert sha((r/'ops/learner_checks.py').read_bytes())==binding['original_checks_module_sha256']
+assert learner_checks.FULL_CHECK_COMMAND==binding['full_check_command']
+assert learner_checks.read_report(str(r/binding['original_out_path']))==binding['original_report']
+def bound_read(path):
+    assert Path(path).resolve()==(r/binding['original_out_path']).resolve()
+    assert sha(Path(path).read_bytes())==binding['original_out_sha256']
+    return binding['normalized_operand']
+learner_checks.read_report=bound_read
+spec=importlib.util.spec_from_file_location('original_ops_learn',r/'ops/codex-ops-learn.py');module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module)
+rc=module.cmd_recheck(argparse.Namespace(batch=binding['batch']))
+(pub/'host-adapter-terminal.json').write_text(json.dumps(dict(rc=rc,original_out_sha256_unchanged=sha((r/binding['original_out_path']).read_bytes())==binding['original_out_sha256'],original_check_pipeline=True),indent=2)+'\\n')
+raise SystemExit(rc)
+'''
+(p/'host-bound-worker.py').write_text(worker)
+at=subprocess.check_output(['date','+%Y-%m-%d %H:%M:%S %Z'],text=True).strip()
+cmd=['nice','-n','19','python3',str(p/'host-bound-worker.py')]
+with (p/'host-action.log').open('wb') as stream:process=subprocess.Popen(cmd,cwd=r,stdout=stream,stderr=subprocess.STDOUT,start_new_session=True)
+stat=Path(f'/proc/{process.pid}/stat').read_text().split(') ',1)[1].split()
+receipt=dict(at=at,batch=bid,command=cmd,pid=process.pid,birth_ticks=stat[19],actual_live=info['actual_live'],tree=info['tree'],canonical_log=str(log.relative_to(r)),
+    report_binding='paper/materials/20261017-1935-ops/host-report-binding.json',route='Existing cmd_recheck, original checks/learn/live locks, canonical full command, fallback_checks state and learner-checks event; only private shape adapter',
+    actual_subprocess_started=True,full_result=None,source_full_not_repeated=True,other_role_ACK=False)
+(pub/'host-action-start.json').write_text(json.dumps(receipt,ensure_ascii=False,indent=2)+'\n')
+pending=r/'ops/codex-ops/pending-integrations/20261017-191302-strategy-proposal.json';data=json.loads(pending.read_bytes());data.update(host_requested=True,host_started=True,host_report_binding=receipt['report_binding'],host_start_receipt=str((pub/'host-action-start.json').relative_to(r)),
+    original_completion_preserved=True,next_step='On original learner-checks event verify exact V5-R387 tree, then use root CLI to ship0504/0505 and original unassigned proposal proof; original waiting and failed/rc0/mergednull remain until explicit verified closure')
+pending.write_text(json.dumps(data,ensure_ascii=False,indent=2)+'\n')
+print(json.dumps(dict(pid=process.pid,tree=info['tree'],full_result=None,private_shape_binding=True)),flush=True)

@@ -1,0 +1,2 @@
+
+- 2026-10-17T12:54:42.945449+08:00 原watcher本人读26d0e3c374537273810f6808与c0bfa0409caf81100261c2d1、H0原phase/report/五checkpoint产物并逐17原帧/命令offset/SHA核回；原checkpoint对象与scheduler字符串无损相同，协议类型失败不冒科学失败，原owner/thread/r1和481未验证保持。已在原用户可见native回复明确告知Roy：高leak不等招式因果，203/179/178/24及17旧last时点边界；A2纸鹤仅1局四招六上下文不外推A10/新施虚弱；UJ净损5对11不证明组合挡或关闭0332。两notice的watcher_received/roy_notified四CLI均0、三阶段全链SHA读回，只有本人两字段变化，不代RoyACK；证据paper/materials/20261017-watcher-h0-notices/formal-readback.json。H0原12:46回执pending不冒新首回复，不新派模型/实现/研究/探针。

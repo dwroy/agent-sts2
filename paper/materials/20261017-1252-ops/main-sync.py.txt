@@ -1,0 +1,171 @@
+from pathlib import Path
+import fcntl, hashlib, json, os, re, subprocess, sys
+
+r = Path.cwd(); live = r / '.worktrees/live'
+p = r / 'ops/codex-ops/record-staging/20261017-1252'
+pub = r / 'paper/materials/20261017-1252-ops'
+sha = lambda raw: hashlib.sha256(raw).hexdigest()
+load = lambda f: json.loads(f.read_bytes())
+def write(f, v): f.write_text(json.dumps(v, ensure_ascii=False, indent=2) + '\n')
+def git(*a, env=None, data=None):
+    return subprocess.check_output(['git', *a], env=env, input=data, stderr=subprocess.PIPE)
+def blob(ref, path):
+    answer = subprocess.run(['git', 'show', ref + ':' + path], capture_output=True)
+    assert answer.returncode in [0, 128]
+    return answer.stdout if answer.returncode == 0 else None
+def stage(path, raw, env):
+    oid = git('hash-object', '-w', '--stdin', data=raw).decode().strip()
+    git('update-index', '--add', '--cacheinfo', '100644', oid, path, env=env)
+def physical(path): return (r / path).read_bytes() if (r / path).is_file() else None
+
+sys.path.insert(0, str(r / 'ops'))
+import learning_requests as lr
+
+assert not (pub / 'main-source-sync.json').exists()
+host = load(pub / 'combined-host-terminal.json')
+publication = load(r / 'paper/materials/20261017-1205-ops/h0-original-publication.json')
+source = publication['source']; base = git('rev-parse', source + '^').decode().strip()
+assert base == '54e36d0830ab640130557b62a078b25954912ff4'
+core = ['agent/src/reflex/rollout.ts', 'agent/src/reflex/rollout-live.ts',
+        'agent/tests/silent-boss-weak.test.ts']
+experience_path = 'knowledge/characters/silent/experience.json'
+artifacts = [x for x in publication['owned_paths'] if x.startswith((
+    'paper/materials/20261017-human-pace-h0/', 'experiments/boss-sim/silent/'))]
+assert set(publication['owned_paths']) == set(core + artifacts + [experience_path, 'paper/materials/decision-log.md'])
+with (r / 'ops/live-merge.lock').open('a') as lock:
+    try:
+        fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+    except BlockingIOError:
+        at = subprocess.check_output(['date', '+%Y-%m-%d %H:%M:%S %Z'], text=True).strip()
+        write(pub / 'main-sync-lock-pending.json', dict(at=at, source_received=source,
+              actual_host_complete=True, main_sync_pending=True, publication_not_repeated=True))
+        raise SystemExit(75)
+    head = git('rev-parse', 'HEAD').decode().strip()
+    lh = git('-C', str(live), 'rev-parse', 'HEAD').decode().strip()
+    git('merge-base', '--is-ancestor', host['actual_live'], lh)
+    after_host = git('diff', '--name-only', host['actual_live'], lh).decode().splitlines()
+    assert all(x.startswith('knowledge/') for x in after_host), after_host
+    main_versions = json.loads(blob(head, 'eval/versions.json'))
+    live_versions = json.loads(blob(lh, 'eval/versions.json'))
+    assert main_versions['release_numbering'] == live_versions['release_numbering']
+    assert [x for x in main_versions['versions'] if x.get('release_id') in ['V5-R381', 'V5-R382']] == [x for x in live_versions['versions'] if x.get('release_id') in ['V5-R381', 'V5-R382']]
+    assert not git('ls-files', '-u').strip()
+    original_index_entries = git('ls-files', '--stage', '-z')
+    idx = Path(git('rev-parse', '--git-path', 'index').decode().strip())
+    idx = idx if idx.is_absolute() else r / idx
+    original_index = idx.read_bytes()
+    before = {}
+    for path in core + [experience_path] + artifacts:
+        old = blob(head, path); actual = physical(path)
+        assert blob('', path) == old, path
+        assert actual == old or (old is None and actual == blob(source, path)), path
+        before[path] = actual
+    private = {**os.environ, 'GIT_INDEX_FILE': str(p / 'source-sync.index')}
+    git('read-tree', head, env=private)
+    patch = git('diff', '--binary', base, source, '--', *core)
+    (pub / 'h0-exact-core.patch').write_bytes(patch)
+    applied = subprocess.run(['git', 'apply', '--cached', '--3way', '--whitespace=nowarn', '-'],
+                             input=patch, env=private, capture_output=True)
+    (pub / 'main-source-apply.log').write_bytes(applied.stdout + applied.stderr)
+    assert applied.returncode == 0 and not git('ls-files', '-u', env=private).strip()
+    temp_tree = git('write-tree', env=private).decode().strip()
+    values = {}; leaves = []
+    norm = lambda raw: re.sub(rb'\b(?:Roy|Dai)\b', b'Roy', raw)
+    for path in core:
+        final = blob(temp_tree, path); live_raw = blob(lh, path)
+        assert norm(final) == norm(live_raw), path
+        values[path] = final
+        leaves.append(dict(path=path, old_main_sha256=sha(before[path]) if before[path] is not None else None,
+             source_sha256=sha(blob(source, path)), final_main_sha256=sha(final),
+             tested_live_sha256=sha(live_raw), live_difference_only_historical_attribution=final != live_raw,
+             H1_and_parallel_code_preserved=True))
+
+    current = json.loads(blob(head, experience_path))
+    desired = json.loads(blob(source, experience_path))
+    source_entries = {x['id']: x for x in desired['entries']}
+    live_exp = json.loads(blob(lh, experience_path))
+    live_entries = {x['id']: x for x in live_exp['entries']}
+    consumer = load(pub / 'h0-consumer-readback.json')['original_receipt']
+    owned_ids = {x['id'] for x in consumer['entries']}
+    changed_ids = {x['id'] for x in desired['entries']
+                   if x != next((y for y in current['entries'] if y['id'] == x['id']), None)}
+    assert changed_ids == owned_ids
+    assert len(owned_ids) == 9 and live_exp['version'] == desired['version']
+    for row in consumer['entries']:
+        assert sha(lr.canonical(source_entries[row['id']])) == row['sha256']
+        assert sha(lr.canonical(live_entries[row['id']])) == row['sha256']
+    original_entries = {x['id']: x for x in current['entries']}
+    current['entries'] = [source_entries[x['id']] if x['id'] in owned_ids else x for x in current['entries']]
+    current['entries'] += [x for x in desired['entries'] if x['id'] in owned_ids and x['id'] not in original_entries]
+    current['version'] = desired['version']
+    assert all(x == original_entries[x['id']] for x in current['entries'] if x['id'] not in owned_ids)
+    values[experience_path] = (json.dumps(current, ensure_ascii=False, indent=2) + '\n').encode()
+    assert json.loads(values[experience_path]) == live_exp
+    artifact_proof = []
+    for path in artifacts:
+        raw = blob(source, path); assert raw is not None
+        old = blob(head, path)
+        assert old is None or old == raw, path
+        if old != raw:
+            values[path] = raw
+            artifact_proof.append(dict(path=path, bytes=len(raw), sha256=sha(raw)))
+
+    scan = p / 'source-scan'; scan.mkdir(exist_ok=True)
+    for path, raw in values.items():
+        dst = scan / path; dst.parent.mkdir(parents=True, exist_ok=True); dst.write_bytes(raw)
+        stage(path, raw, private)
+    with (pub / 'source-gitleaks.log').open('wb') as log:
+        checked = subprocess.run(['nice', '-n', '19', 'gitleaks', 'dir', str(scan), '--redact', '--no-banner',
+             '--report-format', 'json', '--report-path', str(p / 'source-gitleaks.json')],
+             stdout=log, stderr=subprocess.STDOUT, env={**os.environ, 'GOMAXPROCS': '1'})
+    assert checked.returncode == 0 and load(p / 'source-gitleaks.json') == []
+    tree = git('write-tree', env=private).decode().strip()
+    changed = git('diff', '--name-only', head, tree).decode().splitlines()
+    assert set(changed) == set(values)
+    at = subprocess.check_output(['date', '+%Y-%m-%d %H:%M:%S %Z'], text=True).strip()
+    commit = git('commit-tree', tree, '-p', head, '-p', source, data=(
+        'Synchronize validated H0 source and bounded experience into main\n\n'
+        'Keep the existing R381/R382 live publication and exact combined host result; '
+        '481-key validation and all wider parents remain open.\n\n'
+        'Co-Authored-By: Codex gpt-6.1-sol <noreply@openai.com>\n').encode()).decode().strip()
+    preserved = p / 'source-normal-preserved.index'; preserved.write_bytes(original_index)
+    normal = {**os.environ, 'GIT_INDEX_FILE': str(preserved)}
+    for path, raw in values.items(): stage(path, raw, normal)
+    index_lock = Path(str(idx) + '.lock'); fd = os.open(index_lock, os.O_CREAT | os.O_EXCL | os.O_WRONLY, 0o600)
+    try:
+        with os.fdopen(fd, 'wb') as target:
+            target.write(preserved.read_bytes()); target.flush(); os.fsync(target.fileno())
+        assert git('rev-parse', 'HEAD').decode().strip() == head
+        assert git('ls-files', '--stage', '-z') == original_index_entries
+        assert git('-C', str(live), 'rev-parse', 'HEAD').decode().strip() == lh
+        for path, raw in before.items(): assert physical(path) == raw, path
+        git('update-ref', '-m', 'ops: sync exact H0 source phase after original combined host0', 'HEAD', commit, head)
+        for path, raw in values.items():
+            target = r / path; target.parent.mkdir(parents=True, exist_ok=True)
+            temp = target.with_name(target.name + '.ops-h0-sync.tmp')
+            assert not temp.exists(); temp.write_bytes(raw); temp.chmod(0o644); os.replace(temp, target)
+        os.replace(index_lock, idx)
+    finally:
+        if index_lock.exists(): index_lock.unlink()
+    git('merge-base', '--is-ancestor', source, 'HEAD')
+    assert git('-C', str(live), 'rev-parse', 'HEAD').decode().strip() == lh
+    receipt = dict(at=at, source=source, source_base=base,
+         source_tree=git('rev-parse', source + '^{tree}').decode().strip(),
+         main_before=head, main_after=commit, main_tree=tree,
+         actual_live_unchanged=lh, tested_live=host['actual_live'], tested_tree=host['tree'],
+         post_host_knowledge_refresh_paths=after_host, code_leaves=leaves,
+         experience_objects=consumer['entries'], experience_version=current['version'],
+         source_artifacts_copied=artifact_proof, added_artifacts=len(artifact_proof),
+         original_unchanged_artifacts_reused=len(artifacts)-len(artifact_proof),
+         original_source_decision_log_retained_in_Git_without_overwrite=True,
+         historical_version_lists_preserved=dict(main_entries=len(main_versions['versions']), live_entries=len(live_versions['versions']), unified_numbering_equal=True, current_R381_R382_entries_equal=True),
+         initial_full_versions_byte_guard_rejected_before_mutation=True,
+         paths=changed, exact_core_patch_sha256=sha(patch), live_lock_acquired=True,
+         private_index=True, foreign_normal_index_preserved=True, gitleaks=0,
+         new_tests_or_behavior_number=False,
+         main_tree_not_claimed_as_original_live_host_tree=True,
+         H0_calibration_or_0332_or_natural_acceptance_complete=False)
+    write(pub / 'main-source-sync.json', receipt)
+    print(json.dumps(dict(main_commit=commit, code_leaves=len(core), experience_objects=9,
+          added_original_artifacts=len(artifact_proof), live_unchanged=True, gitleaks=0,
+          new_behavior_or_checks=False)), flush=True)

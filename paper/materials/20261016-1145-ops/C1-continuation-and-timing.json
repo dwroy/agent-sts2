@@ -1,0 +1,265 @@
+{
+  "at": "2026-10-16 11:50:14 CST",
+  "run_id": "TCDUBRWMEMNA",
+  "F40": {
+    "pending_no_dispatch": 2,
+    "degraded": {
+      "required": true,
+      "attempt_id": "d06e535f-a19d-493f-ae92-d274a37e4b23",
+      "status": "degraded",
+      "attempts": 3,
+      "reasons": [
+        "simulation_error",
+        "simulation_error",
+        "below_minimum_samples"
+      ],
+      "samples": 14,
+      "requested": 1000,
+      "failure": true,
+      "key": "sim-failure-v1:f312e8e10a007f2514c0ef60edfdf4a4fde5388f44e9a2f3731224582862b674"
+    },
+    "computation_ms": 11116,
+    "diagnostics_ms": 11014,
+    "source": {
+      "offset": 1884852564,
+      "length": 124632,
+      "sha256": "96f08cadfdfcdc0314d968ff2c1419d58d4d0f0e1d5eff0a0b3bf56f501ea25a"
+    },
+    "brain_source": {
+      "offset": 665507748,
+      "length": 65203,
+      "sha256": "e1bae335ec0db32363f2adbd0c7531e4cfdda9037cd129365a989c1dff008dbb"
+    },
+    "question_id": "mvacm2c2-2518740-42",
+    "accepted": true,
+    "brain_model": "gpt-6.1-sol",
+    "brain_effort": "xhigh",
+    "whole_fight_metrics_in_options": 0,
+    "absent_facts": [
+      "boss_readiness",
+      "build_ranking"
+    ],
+    "incomplete_fact": "不完整（故障降级，n=14）：只跑完 14 次模拟（不足 300 次），选项之间的差噪声太大，不给数字；本题不给模拟数字，按现有其他证据继续决策",
+    "action": {
+      "action": "choose_rest_option",
+      "option_index": 1
+    },
+    "decision_id": "79855fdd-8cd9-4fbc-8afc-ad172ef9e757",
+    "result": "completed: Action completed.",
+    "later_completed_actions": [
+      {
+        "ts": "2026-10-16T03:46:30.975Z",
+        "floor": 40,
+        "label": "selection/upgrade",
+        "chosen": {
+          "action": "select_deck_card",
+          "option_index": 20
+        },
+        "result": "completed: Action completed.",
+        "source": {
+          "offset": 1884977196,
+          "length": 1556,
+          "sha256": "3efb530b5b267a59c25ada6a85c68678d68c751bc6d085d18b12d664115f7de5"
+        }
+      },
+      {
+        "ts": "2026-10-16T03:46:31.552Z",
+        "floor": 40,
+        "label": "rest/proceed",
+        "chosen": {
+          "action": "proceed"
+        },
+        "result": "completed: Action completed.",
+        "source": {
+          "offset": 1884978752,
+          "length": 1187,
+          "sha256": "de1dda31c4e344f55eb1a588586feb30287b2064640a2113a05a87f64372767c"
+        }
+      },
+      {
+        "ts": "2026-10-16T03:46:31.798Z",
+        "floor": 40,
+        "label": "map/route-follow",
+        "chosen": {
+          "action": "choose_map_node",
+          "option_index": 0
+        },
+        "result": "completed: Action completed.",
+        "source": {
+          "offset": 1884979939,
+          "length": 1896,
+          "sha256": "53894e154adab48ecbae9dc9fc3ff6a154fd9a732b8fa9fe8d8f2921e17f60f0"
+        }
+      },
+      {
+        "ts": "2026-10-16T03:46:33.041Z",
+        "floor": 41,
+        "label": "chest/open",
+        "chosen": {
+          "action": "open_chest"
+        },
+        "result": "completed: Action completed.",
+        "source": {
+          "offset": 1884981835,
+          "length": 1157,
+          "sha256": "964ada5762a541c06117fc38cdbb067a4c1a74883ea9bd7ff8a5f259cfe56604"
+        }
+      },
+      {
+        "ts": "2026-10-16T03:46:33.276Z",
+        "floor": 41,
+        "label": "chest/relic",
+        "chosen": {
+          "action": "choose_treasure_relic",
+          "option_index": 0
+        },
+        "result": "completed: Action completed.",
+        "source": {
+          "offset": 1884982992,
+          "length": 1269,
+          "sha256": "ea040757218dda126845d7cc7f51fd73a8256690e8a7e6ef454d10aca68a985b"
+        }
+      },
+      {
+        "ts": "2026-10-16T03:46:33.562Z",
+        "floor": 41,
+        "label": "chest/proceed",
+        "chosen": {
+          "action": "proceed"
+        },
+        "result": "completed: Action completed.",
+        "source": {
+          "offset": 1884984261,
+          "length": 1147,
+          "sha256": "b1300a308bdefc186c84ef143ff961f6c7428adf8b13a5e06ef954810aecee73"
+        }
+      },
+      {
+        "ts": "2026-10-16T03:46:33.787Z",
+        "floor": 41,
+        "label": "map/route-follow",
+        "chosen": {
+          "action": "choose_map_node",
+          "option_index": 0
+        },
+        "result": "completed: Action completed.",
+        "source": {
+          "offset": 1884985408,
+          "length": 1885,
+          "sha256": "83e1ab4e8ef35b61f51134adb357ac89294a6187b58be8e361458e4369f07be4"
+        }
+      },
+      {
+        "ts": "2026-10-16T03:46:35.091Z",
+        "floor": 42,
+        "label": "shop/open",
+        "chosen": {
+          "action": "open_shop_inventory"
+        },
+        "result": "completed: Action completed.",
+        "source": {
+          "offset": 1884987293,
+          "length": 1278,
+          "sha256": "b96ccdbf21a64b8ab37153b6dfabc406bc4e607f66dad7c50bb4cbc19eae80bb"
+        }
+      }
+    ]
+  },
+  "F42": {
+    "seed": 2613337256,
+    "states": [
+      "pending",
+      "pending"
+    ],
+    "samples": [
+      0,
+      0
+    ],
+    "requested": 1000,
+    "last_observed_ts": "2026-10-16T03:47:21.079Z",
+    "continuation_after_cut": "pending; not polled or inferred"
+  },
+  "initial_alert_B3_whole_computation": {
+    "n": 36,
+    "p50_ms": 11378.0,
+    "p90_ms": 66125.5,
+    "max_ms": 227841
+  },
+  "initial_alert_B3_phase_simMs": {
+    "n": 35,
+    "p50_ms": 11007.0,
+    "p90_ms": 64355.20000000005,
+    "max_ms": 227790
+  },
+  "longest_B3": [
+    {
+      "ts": "2026-10-16T03:18:27.224Z",
+      "floor": 32,
+      "label": "rest/plan",
+      "ms": 227841,
+      "diagnostics": {
+        "schema": "build-sim-health-v1",
+        "status": "produced",
+        "availableCpus": 32,
+        "loadAverage": [
+          34.77,
+          24.04,
+          19.59
+        ],
+        "decks": 15,
+        "options": 14,
+        "deckCards": 32,
+        "deadlineMs": 10972.680726000108,
+        "orderSearch": {
+          "samples": 100,
+          "elapsedMs": 5173,
+          "timedOut": false,
+          "workers": 24,
+          "deadlineMs": null,
+          "pool": {
+            "queueMs": 0,
+            "coldStart": false,
+            "preparationMs": 0,
+            "firstReplyMs": 138,
+            "chunksPlanned": 39,
+            "chunksDispatched": 39,
+            "chunksCompleted": 39,
+            "outcomesCompleted": 300
+          }
+        },
+        "comparison": {
+          "samples": 1000,
+          "elapsedMs": 221941,
+          "timedOut": false,
+          "workers": 24,
+          "deadlineMs": null,
+          "pool": {
+            "queueMs": 0,
+            "coldStart": false,
+            "preparationMs": 11,
+            "firstReplyMs": 168,
+            "chunksPlanned": 1935,
+            "chunksDispatched": 1935,
+            "chunksCompleted": 1935,
+            "outcomesCompleted": 15000
+          }
+        },
+        "boss": "KAISER_CRAB",
+        "samples": 1000,
+        "requested": 1000,
+        "minimumShown": 300,
+        "timedOut": false,
+        "simMs": 227790,
+        "workers": 24
+      },
+      "source": {
+        "offset": 1879651803,
+        "length": 770534,
+        "sha256": "4eb23de213706368fdb2a2e81b26cd478617215ac688ccbdc815696f8d88e25b"
+      }
+    }
+  ],
+  "load_average_is_observation_not_cause": true,
+  "sample_work_saving_is_not_time_saving": true,
+  "no_game_threshold_restart_or_source_change": true
+}

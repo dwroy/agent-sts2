@@ -1,0 +1,5500 @@
+{
+  "examples": [
+    {
+      "kind": "policy_changed",
+      "anchor": {
+        "source_off": 1346228196,
+        "run": "Q10YYQ5DUPJA",
+        "decision": "e5de5a51-0d1e-4c7b-b373-de5739b0b965",
+        "floor": 12,
+        "horizon": 17,
+        "status": "predicted",
+        "binding": {
+          "forecast_model": "observed-opportunity-window4-v1",
+          "forecast_policy": "completion-choice-v1",
+          "template_sha256": "76e91c950bfd87d820093bdd7dd4b3f11db15256ea2b6e0bb41b9f1ec89f998c",
+          "as_of": "2026-10-14T03:25:05.834Z"
+        },
+        "initial_option": {
+          "key": "o0",
+          "claimed_key": "o0",
+          "status": "verified",
+          "reason": null,
+          "evidence": [
+            {
+              "path": "logs/decisions.jsonl",
+              "off": 1346228196,
+              "len": 99804,
+              "sha256": "9687262eef914db3521e8c799661232d3e6647014295b78613ff31f163dd0ac0"
+            },
+            {
+              "path": "logs/brain.jsonl",
+              "off": 495098283,
+              "len": 44046,
+              "sha256": "aa8216724313ee338487d21466e46d905f85673f2e6416dea0c4b90bf8551bb7"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12661717488,
+              "len": 19432,
+              "sha256": "e80d5096cb5f798f423150773849ce02f9160341e48b5b076d6889327fa3ca49"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12661736920,
+              "len": 18561,
+              "sha256": "65a8225263020846d1a0dc463737de916da63d3e99dc235582478ccf4cf74b6c"
+            }
+          ],
+          "before_frame": {
+            "path": "logs/states.jsonl",
+            "off": 12661717488,
+            "len": 19432,
+            "sha256": "e80d5096cb5f798f423150773849ce02f9160341e48b5b076d6889327fa3ca49"
+          },
+          "after_frame": {
+            "path": "logs/states.jsonl",
+            "off": 12661736920,
+            "len": 18561,
+            "sha256": "65a8225263020846d1a0dc463737de916da63d3e99dc235582478ccf4cf74b6c"
+          }
+        },
+        "route": {
+          "status": "same",
+          "reason": null,
+          "planned": [
+            {
+              "id": "r12c2",
+              "floor": 13,
+              "row": 12,
+              "col": 2,
+              "kind": "fight"
+            },
+            {
+              "id": "r13c2",
+              "floor": 14,
+              "row": 13,
+              "col": 2,
+              "kind": "shop"
+            },
+            {
+              "id": "r14c1",
+              "floor": 15,
+              "row": 14,
+              "col": 1,
+              "kind": "fight"
+            },
+            {
+              "id": "r15c0",
+              "floor": 16,
+              "row": 15,
+              "col": 0,
+              "kind": "rest"
+            },
+            {
+              "id": "r16c3",
+              "floor": 17,
+              "row": 16,
+              "col": 3,
+              "kind": "fight"
+            }
+          ],
+          "observed": [
+            {
+              "node": "r12c2",
+              "floor": 13,
+              "evidence": {
+                "path": "logs/states.jsonl",
+                "off": 12662512209,
+                "len": 42736,
+                "sha256": "75e5be2e5b13ade307d56c7cb752739727fdf44c318f20d413f1f92dd0a9f513"
+              }
+            },
+            {
+              "node": "r13c2",
+              "floor": 14,
+              "evidence": {
+                "path": "logs/states.jsonl",
+                "off": 12662746590,
+                "len": 42629,
+                "sha256": "71d5b27ba936c591deb0dfa9d9fe5bc9a9d5f2d2999f826db59a995ce1f085a8"
+              }
+            },
+            {
+              "node": "r14c1",
+              "floor": 15,
+              "evidence": {
+                "path": "logs/states.jsonl",
+                "off": 12663059167,
+                "len": 45530,
+                "sha256": "c8eda4b37f8b4b3e3a89305dc3a6778a83cc70acaae0aae3421ea155bc75681c"
+              }
+            },
+            {
+              "node": "r15c0",
+              "floor": 16,
+              "evidence": {
+                "path": "logs/states.jsonl",
+                "off": 12663149130,
+                "len": 43176,
+                "sha256": "d37bc765ce06e5f4d66bacc2ba276dbc60b746660678cc1689b1e0dde0570d8a"
+              }
+            },
+            {
+              "node": "r16c3",
+              "floor": 17,
+              "evidence": [
+                {
+                  "path": "logs/decisions.jsonl",
+                  "off": 1346988684,
+                  "len": 1640,
+                  "sha256": "28c421c3ace856aacb5a0c0bb3a165512957dd66af482df8050ae82911008f6e"
+                },
+                {
+                  "path": "logs/states.jsonl",
+                  "off": 12663149130,
+                  "len": 43176,
+                  "sha256": "d37bc765ce06e5f4d66bacc2ba276dbc60b746660678cc1689b1e0dde0570d8a"
+                },
+                {
+                  "path": "logs/states.jsonl",
+                  "off": 12663192306,
+                  "len": 30289,
+                  "sha256": "40a26830543504e2989c5e55c20330aaf1bea5b9918a8b97f7873248924a4fd1"
+                }
+              ],
+              "native_action_and_observed_successor": true
+            }
+          ],
+          "changed": [],
+          "missing_nodes": [],
+          "evidence": [
+            {
+              "path": "logs/brain.jsonl",
+              "off": 495098283,
+              "len": 44046,
+              "sha256": "aa8216724313ee338487d21466e46d905f85673f2e6416dea0c4b90bf8551bb7"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12662512209,
+              "len": 42736,
+              "sha256": "75e5be2e5b13ade307d56c7cb752739727fdf44c318f20d413f1f92dd0a9f513"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12662746590,
+              "len": 42629,
+              "sha256": "71d5b27ba936c591deb0dfa9d9fe5bc9a9d5f2d2999f826db59a995ce1f085a8"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12663059167,
+              "len": 45530,
+              "sha256": "c8eda4b37f8b4b3e3a89305dc3a6778a83cc70acaae0aae3421ea155bc75681c"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12663149130,
+              "len": 43176,
+              "sha256": "d37bc765ce06e5f4d66bacc2ba276dbc60b746660678cc1689b1e0dde0570d8a"
+            },
+            {
+              "path": "logs/decisions.jsonl",
+              "off": 1346988684,
+              "len": 1640,
+              "sha256": "28c421c3ace856aacb5a0c0bb3a165512957dd66af482df8050ae82911008f6e"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12663192306,
+              "len": 30289,
+              "sha256": "40a26830543504e2989c5e55c20330aaf1bea5b9918a8b97f7873248924a4fd1"
+            }
+          ],
+          "plan_text": "r12c2 普通战 → r13c2 商店 → r14c1 普通战 → r15c0 休息 → r16c3 Boss",
+          "plan_recovery": "same_question_snapshot",
+          "current_memory_route": "本幕进度（按 F9 的路线）: 已走 3/8 [宝问休] | 下一步 怪（预计 HP 74%） | 剩余 5: 怪→店→怪→休→王",
+          "plan_snapshot_ts": "2026-10-14T03:25:29.232Z"
+        },
+        "sl": {
+          "status": "same",
+          "logged_attempt": [
+            null,
+            0
+          ],
+          "reason": null,
+          "evidence": [
+            {
+              "path": "logs/decisions.jsonl",
+              "off": 1346228196,
+              "len": 99804,
+              "sha256": "9687262eef914db3521e8c799661232d3e6647014295b78613ff31f163dd0ac0"
+            },
+            {
+              "path": "logs/sl-attempts.jsonl",
+              "off": 38569777,
+              "len": 21988,
+              "sha256": "0aa4263a8fcbaac05fb61644c46a58752fd9a69a51dede1f3117c8a11b43513c"
+            }
+          ]
+        },
+        "transition_gaps": [],
+        "same_room_extra_transactions": [],
+        "endpoint": {
+          "entry_frame": {
+            "path": "logs/states.jsonl",
+            "off": 12663192306,
+            "len": 30289,
+            "sha256": "40a26830543504e2989c5e55c20330aaf1bea5b9918a8b97f7873248924a4fd1"
+          },
+          "completion_frame": {
+            "path": "logs/states.jsonl",
+            "off": 12665049321,
+            "len": 24337,
+            "sha256": "31963bfe05e5d6fffd105b5f14297f3e363f542f29ada3b463318a75b825e1a0"
+          },
+          "completion_witness": {
+            "path": "logs/sl-attempts.jsonl",
+            "off": 38569777,
+            "len": 21988,
+            "sha256": "0aa4263a8fcbaac05fb61644c46a58752fd9a69a51dede1f3117c8a11b43513c"
+          },
+          "observed_at": "2026-10-14T03:32:55.593Z",
+          "complete": true,
+          "definition": "after terminal Boss fight: native in_combat=false, before any completed noncombat action/reward mutation on exact horizon; entry inventory is separate"
+        },
+        "forecast_option_keys": [
+          "current",
+          "o0",
+          "o1:c0",
+          "o1:c6",
+          "o1:c10",
+          "o1:c11",
+          "o1:c13",
+          "o1:c15",
+          "o1:c16",
+          "o1:c17",
+          "o1:c18",
+          "o1:c19",
+          "o1:c20"
+        ],
+        "unsupported_options": [],
+        "source": {
+          "path": "logs/decisions.jsonl",
+          "off": 1346228196,
+          "len": 99804,
+          "sha256": "9687262eef914db3521e8c799661232d3e6647014295b78613ff31f163dd0ac0"
+        }
+      },
+      "core_verification": {
+        "source_off": 1346228196,
+        "core": "P",
+        "disposition": "policy_changed",
+        "reason": "actual_choice_differs_from_completionChoice",
+        "policy": {
+          "status": "changed",
+          "choices_checked": 6,
+          "first_deviation": {
+            "status": "changed",
+            "reason": "actual_choice_differs_from_completionChoice",
+            "expected": {
+              "kind": "skip"
+            },
+            "actual": {
+              "id": "EXPOSE",
+              "upgraded": false,
+              "index": 2,
+              "price": 0,
+              "native": {
+                "index": 2,
+                "upgraded": false,
+                "energy_cost": 0
+              }
+            },
+            "distance_before": 3,
+            "evidence": [
+              {
+                "path": "logs/decisions.jsonl",
+                "off": 1346449119,
+                "len": 172018,
+                "sha256": "b9a6aa5fb129524b6a9a159f91e9676522d1380cf2a131d0ad0f302bf1ca1149"
+              },
+              {
+                "path": "logs/states.jsonl",
+                "off": 12662467892,
+                "len": 22762,
+                "sha256": "6cf46b97b0602c479d6a9b22e7983518d463fab6b046e0ee89a16a61c0734663"
+              },
+              {
+                "path": "logs/states.jsonl",
+                "off": 12662490654,
+                "len": 21555,
+                "sha256": "e45919c4417c706bae216d2e62072dabe6086d878d88923cf49e1a0b3fc0c06e"
+              }
+            ]
+          },
+          "first_unknown": null
+        },
+        "observations": {
+          "components": {
+            "entry": {
+              "missing": [
+                {
+                  "id": "accelerant",
+                  "count": 1
+                }
+              ],
+              "signature_present": false,
+              "evidence": [
+                {
+                  "path": "logs/states.jsonl",
+                  "off": 12663192306,
+                  "len": 30289,
+                  "sha256": "40a26830543504e2989c5e55c20330aaf1bea5b9918a8b97f7873248924a4fd1"
+                }
+              ]
+            },
+            "completed_horizon": {
+              "missing": [
+                {
+                  "id": "accelerant",
+                  "count": 1
+                }
+              ],
+              "signature_present": false,
+              "evidence": [
+                {
+                  "path": "logs/states.jsonl",
+                  "off": 12665049321,
+                  "len": 24337,
+                  "sha256": "31963bfe05e5d6fffd105b5f14297f3e363f542f29ada3b463318a75b825e1a0"
+                }
+              ]
+            },
+            "template_source_commit": "908f043bb01b6c7c1406bed6394df36f41528a56",
+            "source_template_digest": "76e91c950bfd87d820093bdd7dd4b3f11db15256ea2b6e0bb41b9f1ec89f998c"
+          },
+          "actual_casts": {},
+          "cast_dispatch_proxies": {
+            "POISONED_STAB": {
+              "reported_card_from_logged_fingerprint": "POISONED_STAB",
+              "completed_API_dispatch": true,
+              "actual_card_or_branch_binding": null,
+              "reason": "no_fresh_exact_before_after_pair_or_SL_context_unclosed",
+              "evidence": [
+                {
+                  "path": "logs/decisions.jsonl",
+                  "off": 1346806375,
+                  "len": 1672,
+                  "sha256": "c88b14315d824e1bc7e6fd7144ac105e5bb5169488a1f133c28d2d61d404b850"
+                }
+              ],
+              "attempt": null,
+              "reloads": 0
+            },
+            "FOOTWORK": {
+              "reported_card_from_logged_fingerprint": "FOOTWORK",
+              "completed_API_dispatch": true,
+              "actual_card_or_branch_binding": null,
+              "reason": "no_fresh_exact_before_after_pair_or_SL_context_unclosed",
+              "evidence": [
+                {
+                  "path": "logs/decisions.jsonl",
+                  "off": 1347280259,
+                  "len": 1433,
+                  "sha256": "dda21848a5c3bd5bca2362bb7c92d4d4faa103146011ad7df0390a360757a9de"
+                }
+              ],
+              "attempt": 1,
+              "reloads": 0
+            }
+          },
+          "actual_casts_scope": "已列牌仅证明在所示SL分支至少一次具名completed出牌；未列牌与总次数为unknown，不证明未施放/全部效果/同实例循环",
+          "survival": {
+            "entry_alive": true,
+            "terminal_node_completed_alive": true,
+            "evidence": [
+              {
+                "path": "logs/states.jsonl",
+                "off": 12663192306,
+                "len": 30289,
+                "sha256": "40a26830543504e2989c5e55c20330aaf1bea5b9918a8b97f7873248924a4fd1"
+              },
+              {
+                "path": "logs/states.jsonl",
+                "off": 12665049321,
+                "len": 24337,
+                "sha256": "31963bfe05e5d6fffd105b5f14297f3e363f542f29ada3b463318a75b825e1a0"
+              },
+              {
+                "path": "logs/sl-attempts.jsonl",
+                "off": 38569777,
+                "len": 21988,
+                "sha256": "0aa4263a8fcbaac05fb61644c46a58752fd9a69a51dede1f3117c8a11b43513c"
+              }
+            ]
+          },
+          "run_result": {
+            "summary_after_prediction": true,
+            "same_prospective_SL_branch_verified": null,
+            "victory": false,
+            "ended": "2026-10-14T04:45:17.826Z",
+            "floor": 49,
+            "evidence": [
+              {
+                "path": "logs/runs.jsonl",
+                "off": 326478,
+                "len": 490,
+                "sha256": "2bb43f29c298de324ff35ba24e18f4dc30872236249899bff94ed37c57a1a460"
+              }
+            ]
+          },
+          "functional": null,
+          "aliveAndFunctional": null,
+          "terminalWin_prediction": null
+        },
+        "verification": {
+          "initial_option": [
+            {
+              "path": "logs/decisions.jsonl",
+              "off": 1346228196,
+              "len": 99804,
+              "sha256": "9687262eef914db3521e8c799661232d3e6647014295b78613ff31f163dd0ac0"
+            },
+            {
+              "path": "logs/brain.jsonl",
+              "off": 495098283,
+              "len": 44046,
+              "sha256": "aa8216724313ee338487d21466e46d905f85673f2e6416dea0c4b90bf8551bb7"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12661717488,
+              "len": 19432,
+              "sha256": "e80d5096cb5f798f423150773849ce02f9160341e48b5b076d6889327fa3ca49"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12661736920,
+              "len": 18561,
+              "sha256": "65a8225263020846d1a0dc463737de916da63d3e99dc235582478ccf4cf74b6c"
+            }
+          ],
+          "route": [
+            {
+              "path": "logs/brain.jsonl",
+              "off": 495098283,
+              "len": 44046,
+              "sha256": "aa8216724313ee338487d21466e46d905f85673f2e6416dea0c4b90bf8551bb7"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12662512209,
+              "len": 42736,
+              "sha256": "75e5be2e5b13ade307d56c7cb752739727fdf44c318f20d413f1f92dd0a9f513"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12662746590,
+              "len": 42629,
+              "sha256": "71d5b27ba936c591deb0dfa9d9fe5bc9a9d5f2d2999f826db59a995ce1f085a8"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12663059167,
+              "len": 45530,
+              "sha256": "c8eda4b37f8b4b3e3a89305dc3a6778a83cc70acaae0aae3421ea155bc75681c"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12663149130,
+              "len": 43176,
+              "sha256": "d37bc765ce06e5f4d66bacc2ba276dbc60b746660678cc1689b1e0dde0570d8a"
+            },
+            {
+              "path": "logs/decisions.jsonl",
+              "off": 1346988684,
+              "len": 1640,
+              "sha256": "28c421c3ace856aacb5a0c0bb3a165512957dd66af482df8050ae82911008f6e"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12663192306,
+              "len": 30289,
+              "sha256": "40a26830543504e2989c5e55c20330aaf1bea5b9918a8b97f7873248924a4fd1"
+            }
+          ],
+          "policy": [
+            {
+              "path": "logs/decisions.jsonl",
+              "off": 1346449119,
+              "len": 172018,
+              "sha256": "b9a6aa5fb129524b6a9a159f91e9676522d1380cf2a131d0ad0f302bf1ca1149"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12662467892,
+              "len": 22762,
+              "sha256": "6cf46b97b0602c479d6a9b22e7983518d463fab6b046e0ee89a16a61c0734663"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12662490654,
+              "len": 21555,
+              "sha256": "e45919c4417c706bae216d2e62072dabe6086d878d88923cf49e1a0b3fc0c06e"
+            },
+            {
+              "path": "logs/decisions.jsonl",
+              "off": 1346625274,
+              "len": 168820,
+              "sha256": "f396eee2a2964c6a57335642fc1004fe8057da9eb92df619b61b6e01ce3436e0"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12662581769,
+              "len": 26974,
+              "sha256": "1e88227816760691570ab9c852e5595660954069a053e61eeb58afc4e249732e"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12662608743,
+              "len": 27209,
+              "sha256": "c6ff49ea85c54af98c75222e80343b922225dacd6f3376b44b31062eafe1412d"
+            },
+            {
+              "path": "logs/decisions.jsonl",
+              "off": 1346794094,
+              "len": 1540,
+              "sha256": "5bb837534ef5abead5fbc768e83a8042cdb10bae606d4f3df24930e084e1bf18"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12662635952,
+              "len": 27407,
+              "sha256": "d4239d03afd17282f9adea08c4f247b6813d91fd49bb28e276e16ed089c13534"
+            },
+            {
+              "path": "logs/decisions.jsonl",
+              "off": 1346795634,
+              "len": 1521,
+              "sha256": "44bc3c39fdfc06b8e85c67ee23e625951f1f348578c6f506576c9e101080dcee"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12662663359,
+              "len": 27689,
+              "sha256": "49efafc9c2aed59541ffad1d1ed3b018b3d8f0156dfe97e313337735ee94c33b"
+            },
+            {
+              "path": "logs/decisions.jsonl",
+              "off": 1346797155,
+              "len": 1524,
+              "sha256": "d555a93bfaeb4f640073d9cc4e31ff9e203c59614f7ce028c4eb2ff8d4bd770d"
+            },
+            {
+              "path": "logs/decisions.jsonl",
+              "off": 1346812233,
+              "len": 43758,
+              "sha256": "114a1767da4c089565dd552123c9f6d38e1ad7dff8bb9bf899b1a29df3f1a515"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12663009208,
+              "len": 25604,
+              "sha256": "29cee3cfa630b705f3e19becc81495f6af1baef451ae26094b710a030d1e7d7a"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12663034812,
+              "len": 24355,
+              "sha256": "6520314e51ca497b671d2ec3772f109f2d494c5bbf5759e901ec356f60fc4935"
+            }
+          ],
+          "sl": [
+            {
+              "path": "logs/decisions.jsonl",
+              "off": 1346228196,
+              "len": 99804,
+              "sha256": "9687262eef914db3521e8c799661232d3e6647014295b78613ff31f163dd0ac0"
+            },
+            {
+              "path": "logs/sl-attempts.jsonl",
+              "off": 38569777,
+              "len": 21988,
+              "sha256": "0aa4263a8fcbaac05fb61644c46a58752fd9a69a51dede1f3117c8a11b43513c"
+            }
+          ],
+          "endpoint": [
+            {
+              "path": "logs/states.jsonl",
+              "off": 12665049321,
+              "len": 24337,
+              "sha256": "31963bfe05e5d6fffd105b5f14297f3e363f542f29ada3b463318a75b825e1a0"
+            },
+            {
+              "path": "logs/sl-attempts.jsonl",
+              "off": 38569777,
+              "len": 21988,
+              "sha256": "0aa4263a8fcbaac05fb61644c46a58752fd9a69a51dede1f3117c8a11b43513c"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "kind": "route_changed",
+      "anchor": {
+        "source_off": 1343692014,
+        "run": "Q10YYQ5DUPJA",
+        "decision": "e63672ce-7132-4753-8752-9504bea89430",
+        "floor": 2,
+        "horizon": 17,
+        "status": "predicted",
+        "binding": {
+          "forecast_model": "observed-opportunity-window4-v1",
+          "forecast_policy": "completion-choice-v1",
+          "template_sha256": "76e91c950bfd87d820093bdd7dd4b3f11db15256ea2b6e0bb41b9f1ec89f998c",
+          "as_of": "2026-10-14T03:07:21.863Z"
+        },
+        "initial_option": {
+          "key": "card1",
+          "claimed_key": "card1",
+          "status": "verified",
+          "reason": null,
+          "evidence": [
+            {
+              "path": "logs/decisions.jsonl",
+              "off": 1343692014,
+              "len": 134817,
+              "sha256": "75e362bd9a41e8b61d5fa556432ce87d53efb314c5c2a3184fa111f619dcc74d"
+            },
+            {
+              "path": "logs/brain.jsonl",
+              "off": 494304750,
+              "len": 68408,
+              "sha256": "5656cf7a6a5c8de7d86ac23c79987bd18cd63b13856ab041ff6de06b1be99c02"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12658063335,
+              "len": 16810,
+              "sha256": "1254608a81ec2adfa041ef27b5af857b0eb0378ecdbed4527322fdc148cc1342"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12658080145,
+              "len": 15316,
+              "sha256": "f90d000a64be9f0d8b4191371d9c840c4ca0bdc3aa3bac9045717c183b042aaf"
+            }
+          ],
+          "before_frame": {
+            "path": "logs/states.jsonl",
+            "off": 12658063335,
+            "len": 16810,
+            "sha256": "1254608a81ec2adfa041ef27b5af857b0eb0378ecdbed4527322fdc148cc1342"
+          },
+          "after_frame": {
+            "path": "logs/states.jsonl",
+            "off": 12658080145,
+            "len": 15316,
+            "sha256": "f90d000a64be9f0d8b4191371d9c840c4ca0bdc3aa3bac9045717c183b042aaf"
+          }
+        },
+        "route": {
+          "status": "changed",
+          "reason": "actual_node_differs",
+          "planned": [
+            {
+              "id": "r2c2",
+              "floor": 3,
+              "row": 2,
+              "col": 2,
+              "kind": "fight"
+            },
+            {
+              "id": "r3c2",
+              "floor": 4,
+              "row": 3,
+              "col": 2,
+              "kind": "fight"
+            },
+            {
+              "id": "r4c1",
+              "floor": 5,
+              "row": 4,
+              "col": 1,
+              "kind": "fight"
+            },
+            {
+              "id": "r5c0",
+              "floor": 6,
+              "row": 5,
+              "col": 0,
+              "kind": "unknown"
+            },
+            {
+              "id": "r6c0",
+              "floor": 7,
+              "row": 6,
+              "col": 0,
+              "kind": "rest"
+            },
+            {
+              "id": "r7c0",
+              "floor": 8,
+              "row": 7,
+              "col": 0,
+              "kind": "fight"
+            },
+            {
+              "id": "r8c0",
+              "floor": 9,
+              "row": 8,
+              "col": 0,
+              "kind": "unknown"
+            },
+            {
+              "id": "r9c0",
+              "floor": 10,
+              "row": 9,
+              "col": 0,
+              "kind": "unknown"
+            },
+            {
+              "id": "r10c1",
+              "floor": 11,
+              "row": 10,
+              "col": 1,
+              "kind": "unknown"
+            },
+            {
+              "id": "r11c1",
+              "floor": 12,
+              "row": 11,
+              "col": 1,
+              "kind": "rest"
+            },
+            {
+              "id": "r12c1",
+              "floor": 13,
+              "row": 12,
+              "col": 1,
+              "kind": "fight"
+            },
+            {
+              "id": "r13c2",
+              "floor": 14,
+              "row": 13,
+              "col": 2,
+              "kind": "shop"
+            },
+            {
+              "id": "r14c1",
+              "floor": 15,
+              "row": 14,
+              "col": 1,
+              "kind": "fight"
+            },
+            {
+              "id": "r15c0",
+              "floor": 16,
+              "row": 15,
+              "col": 0,
+              "kind": "rest"
+            },
+            {
+              "id": "r16c3",
+              "floor": 17,
+              "row": 16,
+              "col": 3,
+              "kind": "fight"
+            }
+          ],
+          "observed": [
+            {
+              "node": "r2c2",
+              "floor": 3,
+              "evidence": {
+                "path": "logs/states.jsonl",
+                "off": 12658716569,
+                "len": 37573,
+                "sha256": "6a4f96694480e826e545cf77e17af26d83aa48dc2bd7731c944fb843565b6e9b"
+              }
+            },
+            {
+              "node": "r3c2",
+              "floor": 4,
+              "evidence": {
+                "path": "logs/states.jsonl",
+                "off": 12659192304,
+                "len": 38427,
+                "sha256": "34cd149fc6c72813de2760509facfe41fa054d25437d52a66bce33c1bab97774"
+              }
+            },
+            {
+              "node": "r4c1",
+              "floor": 5,
+              "evidence": {
+                "path": "logs/states.jsonl",
+                "off": 12659774408,
+                "len": 39148,
+                "sha256": "06b4549a87752c2abc4e1e4adc2cc7ff9d41c4e1f5faa5bdf05c1bceb94acfe7"
+              }
+            },
+            {
+              "node": "r5c0",
+              "floor": 6,
+              "evidence": {
+                "path": "logs/states.jsonl",
+                "off": 12659868236,
+                "len": 37189,
+                "sha256": "da5bde234564a009c7aea0637c6c30ca07b579123f715250a90f73e2d3b41a55"
+              }
+            },
+            {
+              "node": "r6c0",
+              "floor": 7,
+              "evidence": {
+                "path": "logs/states.jsonl",
+                "off": 12659962033,
+                "len": 37178,
+                "sha256": "d8453b3e37807bfaa8fe77c533c345f4b09a0485a833bb9de23f8a599570f870"
+              }
+            },
+            {
+              "node": "r8c0",
+              "floor": 9,
+              "evidence": {
+                "path": "logs/states.jsonl",
+                "off": 12661462481,
+                "len": 40658,
+                "sha256": "d03664365a438fa90674cf6b1ffefd9d526016373abc5f4d71aa7b7a18a37032"
+              }
+            },
+            {
+              "node": "r9c0",
+              "floor": 10,
+              "evidence": {
+                "path": "logs/states.jsonl",
+                "off": 12661554509,
+                "len": 38775,
+                "sha256": "0965f5a4328b7b11c98c10cdbd76c0a4465a1c771ef78769e7235954dac61347"
+              }
+            },
+            {
+              "node": "r10c1",
+              "floor": 11,
+              "evidence": {
+                "path": "logs/states.jsonl",
+                "off": 12661677331,
+                "len": 40157,
+                "sha256": "cea9da47fa03f8dd3de14d2b5cd5eb44ada06caad7686c4e86b708a46f0af31b"
+              }
+            },
+            {
+              "node": "r11c1",
+              "floor": 12,
+              "evidence": {
+                "path": "logs/states.jsonl",
+                "off": 12661755481,
+                "len": 40145,
+                "sha256": "0cfa4febe4af444614a9c02dd26d711f49256e6becd522c71a7fec5d49ac4cc3"
+              }
+            },
+            {
+              "node": "r13c2",
+              "floor": 14,
+              "evidence": {
+                "path": "logs/states.jsonl",
+                "off": 12662746590,
+                "len": 42629,
+                "sha256": "71d5b27ba936c591deb0dfa9d9fe5bc9a9d5f2d2999f826db59a995ce1f085a8"
+              }
+            },
+            {
+              "node": "r14c1",
+              "floor": 15,
+              "evidence": {
+                "path": "logs/states.jsonl",
+                "off": 12663059167,
+                "len": 45530,
+                "sha256": "c8eda4b37f8b4b3e3a89305dc3a6778a83cc70acaae0aae3421ea155bc75681c"
+              }
+            },
+            {
+              "node": "r15c0",
+              "floor": 16,
+              "evidence": {
+                "path": "logs/states.jsonl",
+                "off": 12663149130,
+                "len": 43176,
+                "sha256": "d37bc765ce06e5f4d66bacc2ba276dbc60b746660678cc1689b1e0dde0570d8a"
+              }
+            },
+            {
+              "node": "r16c3",
+              "floor": 17,
+              "evidence": [
+                {
+                  "path": "logs/decisions.jsonl",
+                  "off": 1346988684,
+                  "len": 1640,
+                  "sha256": "28c421c3ace856aacb5a0c0bb3a165512957dd66af482df8050ae82911008f6e"
+                },
+                {
+                  "path": "logs/states.jsonl",
+                  "off": 12663149130,
+                  "len": 43176,
+                  "sha256": "d37bc765ce06e5f4d66bacc2ba276dbc60b746660678cc1689b1e0dde0570d8a"
+                },
+                {
+                  "path": "logs/states.jsonl",
+                  "off": 12663192306,
+                  "len": 30289,
+                  "sha256": "40a26830543504e2989c5e55c20330aaf1bea5b9918a8b97f7873248924a4fd1"
+                }
+              ],
+              "native_action_and_observed_successor": true
+            }
+          ],
+          "changed": [
+            {
+              "node": "r7c0",
+              "actual": [
+                "r7c1"
+              ],
+              "evidence": [
+                {
+                  "path": "logs/decisions.jsonl",
+                  "off": 1345159404,
+                  "len": 1710,
+                  "sha256": "3237cec51bf0b088690483799714f7c22af60c8ca7d067bd56c951e3208dfcb8"
+                },
+                {
+                  "path": "logs/states.jsonl",
+                  "off": 12659962033,
+                  "len": 37178,
+                  "sha256": "d8453b3e37807bfaa8fe77c533c345f4b09a0485a833bb9de23f8a599570f870"
+                },
+                {
+                  "path": "logs/states.jsonl",
+                  "off": 12659999211,
+                  "len": 21883,
+                  "sha256": "9e71bbcf43204aef7cb4844cb87bd4a0313a3c19947eec42d912810457296f24"
+                }
+              ]
+            },
+            {
+              "node": "r12c1",
+              "actual": [
+                "r12c2"
+              ],
+              "evidence": [
+                {
+                  "path": "logs/decisions.jsonl",
+                  "off": 1346329171,
+                  "len": 1648,
+                  "sha256": "36072f9b15d797956034d41f4b31fdfcdbdec4a3b41edbbca70afa5ce1d6260b"
+                },
+                {
+                  "path": "logs/states.jsonl",
+                  "off": 12661755481,
+                  "len": 40145,
+                  "sha256": "0cfa4febe4af444614a9c02dd26d711f49256e6becd522c71a7fec5d49ac4cc3"
+                },
+                {
+                  "path": "logs/states.jsonl",
+                  "off": 12661795626,
+                  "len": 25746,
+                  "sha256": "9a3b17df391299d01bada220c52ee1e7b2a83580b53476ad95a489570412826f"
+                }
+              ]
+            }
+          ],
+          "missing_nodes": [],
+          "evidence": [
+            {
+              "path": "logs/brain.jsonl",
+              "off": 494304750,
+              "len": 68408,
+              "sha256": "5656cf7a6a5c8de7d86ac23c79987bd18cd63b13856ab041ff6de06b1be99c02"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12658716569,
+              "len": 37573,
+              "sha256": "6a4f96694480e826e545cf77e17af26d83aa48dc2bd7731c944fb843565b6e9b"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12659192304,
+              "len": 38427,
+              "sha256": "34cd149fc6c72813de2760509facfe41fa054d25437d52a66bce33c1bab97774"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12659774408,
+              "len": 39148,
+              "sha256": "06b4549a87752c2abc4e1e4adc2cc7ff9d41c4e1f5faa5bdf05c1bceb94acfe7"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12659868236,
+              "len": 37189,
+              "sha256": "da5bde234564a009c7aea0637c6c30ca07b579123f715250a90f73e2d3b41a55"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12659962033,
+              "len": 37178,
+              "sha256": "d8453b3e37807bfaa8fe77c533c345f4b09a0485a833bb9de23f8a599570f870"
+            },
+            {
+              "path": "logs/decisions.jsonl",
+              "off": 1345159404,
+              "len": 1710,
+              "sha256": "3237cec51bf0b088690483799714f7c22af60c8ca7d067bd56c951e3208dfcb8"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12659999211,
+              "len": 21883,
+              "sha256": "9e71bbcf43204aef7cb4844cb87bd4a0313a3c19947eec42d912810457296f24"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12661462481,
+              "len": 40658,
+              "sha256": "d03664365a438fa90674cf6b1ffefd9d526016373abc5f4d71aa7b7a18a37032"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12661554509,
+              "len": 38775,
+              "sha256": "0965f5a4328b7b11c98c10cdbd76c0a4465a1c771ef78769e7235954dac61347"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12661677331,
+              "len": 40157,
+              "sha256": "cea9da47fa03f8dd3de14d2b5cd5eb44ada06caad7686c4e86b708a46f0af31b"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12661755481,
+              "len": 40145,
+              "sha256": "0cfa4febe4af444614a9c02dd26d711f49256e6becd522c71a7fec5d49ac4cc3"
+            },
+            {
+              "path": "logs/decisions.jsonl",
+              "off": 1346329171,
+              "len": 1648,
+              "sha256": "36072f9b15d797956034d41f4b31fdfcdbdec4a3b41edbbca70afa5ce1d6260b"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12661795626,
+              "len": 25746,
+              "sha256": "9a3b17df391299d01bada220c52ee1e7b2a83580b53476ad95a489570412826f"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12662746590,
+              "len": 42629,
+              "sha256": "71d5b27ba936c591deb0dfa9d9fe5bc9a9d5f2d2999f826db59a995ce1f085a8"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12663059167,
+              "len": 45530,
+              "sha256": "c8eda4b37f8b4b3e3a89305dc3a6778a83cc70acaae0aae3421ea155bc75681c"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12663149130,
+              "len": 43176,
+              "sha256": "d37bc765ce06e5f4d66bacc2ba276dbc60b746660678cc1689b1e0dde0570d8a"
+            },
+            {
+              "path": "logs/decisions.jsonl",
+              "off": 1346988684,
+              "len": 1640,
+              "sha256": "28c421c3ace856aacb5a0c0bb3a165512957dd66af482df8050ae82911008f6e"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12663192306,
+              "len": 30289,
+              "sha256": "40a26830543504e2989c5e55c20330aaf1bea5b9918a8b97f7873248924a4fd1"
+            }
+          ],
+          "plan_text": "r2c2 普通战 → r3c2 普通战 → r4c1 普通战 → r5c0 问号 → r6c0 休息 → r7c0 精英 → r8c0 问号 → r9c0 宝箱 → r10c1 问号 → r11c1 休息 → r12c1 精英 → r13c2 商店 → r14c1 普通战 → r15c0 休息 → r16c3 Boss",
+          "plan_recovery": "same_question_snapshot",
+          "current_memory_route": "本幕进度（按 F1 的路线）: 已走 1/16 [怪] | 下一步 怪（预计 HP 76%） | 剩余 15: 怪→怪→怪→问→休→精→问→宝→问→休→精→店→怪→休→王",
+          "plan_snapshot_ts": "2026-10-14T03:08:11.742Z"
+        },
+        "sl": {
+          "status": "same",
+          "logged_attempt": [
+            null,
+            0
+          ],
+          "reason": null,
+          "evidence": [
+            {
+              "path": "logs/decisions.jsonl",
+              "off": 1343692014,
+              "len": 134817,
+              "sha256": "75e362bd9a41e8b61d5fa556432ce87d53efb314c5c2a3184fa111f619dcc74d"
+            },
+            {
+              "path": "logs/sl-attempts.jsonl",
+              "off": 38569777,
+              "len": 21988,
+              "sha256": "0aa4263a8fcbaac05fb61644c46a58752fd9a69a51dede1f3117c8a11b43513c"
+            }
+          ]
+        },
+        "transition_gaps": [
+          {
+            "floor": 9,
+            "reason": "unmodelled_node_changed_inventory_relic_or_gold",
+            "evidence": [
+              {
+                "path": "logs/states.jsonl",
+                "off": 12660766941,
+                "len": 22216,
+                "sha256": "a5cc05f41ba736d6962e6cefac5b38dd06ed0c09dda72f2b6564fe8e6042bdab"
+              },
+              {
+                "path": "logs/states.jsonl",
+                "off": 12661462481,
+                "len": 40658,
+                "sha256": "d03664365a438fa90674cf6b1ffefd9d526016373abc5f4d71aa7b7a18a37032"
+              }
+            ]
+          },
+          {
+            "floor": 10,
+            "reason": "unmodelled_node_changed_inventory_relic_or_gold",
+            "evidence": [
+              {
+                "path": "logs/states.jsonl",
+                "off": 12661503139,
+                "len": 16977,
+                "sha256": "ed74eb0c4d211a216c7cd5d62d6739d25dbbb1d9061cd3400157d69dc8a6a6e5"
+              },
+              {
+                "path": "logs/states.jsonl",
+                "off": 12661554509,
+                "len": 38775,
+                "sha256": "0965f5a4328b7b11c98c10cdbd76c0a4465a1c771ef78769e7235954dac61347"
+              }
+            ]
+          },
+          {
+            "floor": 11,
+            "reason": "unmodelled_node_changed_inventory_relic_or_gold",
+            "evidence": [
+              {
+                "path": "logs/states.jsonl",
+                "off": 12661593284,
+                "len": 18975,
+                "sha256": "212ca462eea2365105d06c7e1009b49621ba4e7312410fc9f0c0431abf8b67eb"
+              },
+              {
+                "path": "logs/states.jsonl",
+                "off": 12661677331,
+                "len": 40157,
+                "sha256": "cea9da47fa03f8dd3de14d2b5cd5eb44ada06caad7686c4e86b708a46f0af31b"
+              }
+            ]
+          }
+        ],
+        "same_room_extra_transactions": [],
+        "endpoint": {
+          "entry_frame": {
+            "path": "logs/states.jsonl",
+            "off": 12663192306,
+            "len": 30289,
+            "sha256": "40a26830543504e2989c5e55c20330aaf1bea5b9918a8b97f7873248924a4fd1"
+          },
+          "completion_frame": {
+            "path": "logs/states.jsonl",
+            "off": 12665049321,
+            "len": 24337,
+            "sha256": "31963bfe05e5d6fffd105b5f14297f3e363f542f29ada3b463318a75b825e1a0"
+          },
+          "completion_witness": {
+            "path": "logs/sl-attempts.jsonl",
+            "off": 38569777,
+            "len": 21988,
+            "sha256": "0aa4263a8fcbaac05fb61644c46a58752fd9a69a51dede1f3117c8a11b43513c"
+          },
+          "observed_at": "2026-10-14T03:32:55.593Z",
+          "complete": true,
+          "definition": "after terminal Boss fight: native in_combat=false, before any completed noncombat action/reward mutation on exact horizon; entry inventory is separate"
+        },
+        "forecast_option_keys": [
+          "current",
+          "card0",
+          "card1",
+          "card2",
+          "skip"
+        ],
+        "unsupported_options": [],
+        "source": {
+          "path": "logs/decisions.jsonl",
+          "off": 1343692014,
+          "len": 134817,
+          "sha256": "75e362bd9a41e8b61d5fa556432ce87d53efb314c5c2a3184fa111f619dcc74d"
+        }
+      },
+      "core_verification": {
+        "source_off": 1343692014,
+        "core": "P",
+        "disposition": "route_changed",
+        "reason": "actual_node_differs",
+        "policy": {
+          "status": "changed",
+          "choices_checked": 12,
+          "first_deviation": {
+            "status": "changed",
+            "reason": "actual_choice_differs_from_completionChoice",
+            "expected": {
+              "kind": "skip"
+            },
+            "actual": {
+              "id": "PRECISE_CUT",
+              "upgraded": false,
+              "index": 1,
+              "price": 0,
+              "native": {
+                "index": 1,
+                "upgraded": false,
+                "energy_cost": 0
+              }
+            },
+            "distance_before": 3,
+            "evidence": [
+              {
+                "path": "logs/decisions.jsonl",
+                "off": 1344019741,
+                "len": 141329,
+                "sha256": "667bab0824732d4b53e110596d3c8b64ca401618d6c10bcabda343c29d7fee9e"
+              },
+              {
+                "path": "logs/states.jsonl",
+                "off": 12658682839,
+                "len": 17400,
+                "sha256": "f59645c3e05c90ead55aef158fe4322d0bc3ab763da3191b96bf619f8e1a7df1"
+              },
+              {
+                "path": "logs/states.jsonl",
+                "off": 12658700239,
+                "len": 16330,
+                "sha256": "4faa41358b6acb52960e26116ed876ece4bedeb2b1e297ef4ddafeaf1f5bbe43"
+              }
+            ]
+          },
+          "first_unknown": null
+        },
+        "observations": {
+          "components": {
+            "entry": {
+              "missing": [
+                {
+                  "id": "accelerant",
+                  "count": 1
+                }
+              ],
+              "signature_present": false,
+              "evidence": [
+                {
+                  "path": "logs/states.jsonl",
+                  "off": 12663192306,
+                  "len": 30289,
+                  "sha256": "40a26830543504e2989c5e55c20330aaf1bea5b9918a8b97f7873248924a4fd1"
+                }
+              ]
+            },
+            "completed_horizon": {
+              "missing": [
+                {
+                  "id": "accelerant",
+                  "count": 1
+                }
+              ],
+              "signature_present": false,
+              "evidence": [
+                {
+                  "path": "logs/states.jsonl",
+                  "off": 12665049321,
+                  "len": 24337,
+                  "sha256": "31963bfe05e5d6fffd105b5f14297f3e363f542f29ada3b463318a75b825e1a0"
+                }
+              ]
+            },
+            "template_source_commit": "908f043bb01b6c7c1406bed6394df36f41528a56",
+            "source_template_digest": "76e91c950bfd87d820093bdd7dd4b3f11db15256ea2b6e0bb41b9f1ec89f998c"
+          },
+          "actual_casts": {},
+          "cast_dispatch_proxies": {
+            "POISONED_STAB": {
+              "reported_card_from_logged_fingerprint": "POISONED_STAB",
+              "completed_API_dispatch": true,
+              "actual_card_or_branch_binding": null,
+              "reason": "no_fresh_exact_before_after_pair_or_SL_context_unclosed",
+              "evidence": [
+                {
+                  "path": "logs/decisions.jsonl",
+                  "off": 1346806375,
+                  "len": 1672,
+                  "sha256": "c88b14315d824e1bc7e6fd7144ac105e5bb5169488a1f133c28d2d61d404b850"
+                }
+              ],
+              "attempt": null,
+              "reloads": 0
+            },
+            "FOOTWORK": {
+              "reported_card_from_logged_fingerprint": "FOOTWORK",
+              "completed_API_dispatch": true,
+              "actual_card_or_branch_binding": null,
+              "reason": "no_fresh_exact_before_after_pair_or_SL_context_unclosed",
+              "evidence": [
+                {
+                  "path": "logs/decisions.jsonl",
+                  "off": 1347280259,
+                  "len": 1433,
+                  "sha256": "dda21848a5c3bd5bca2362bb7c92d4d4faa103146011ad7df0390a360757a9de"
+                }
+              ],
+              "attempt": 1,
+              "reloads": 0
+            }
+          },
+          "actual_casts_scope": "已列牌仅证明在所示SL分支至少一次具名completed出牌；未列牌与总次数为unknown，不证明未施放/全部效果/同实例循环",
+          "survival": {
+            "entry_alive": true,
+            "terminal_node_completed_alive": true,
+            "evidence": [
+              {
+                "path": "logs/states.jsonl",
+                "off": 12663192306,
+                "len": 30289,
+                "sha256": "40a26830543504e2989c5e55c20330aaf1bea5b9918a8b97f7873248924a4fd1"
+              },
+              {
+                "path": "logs/states.jsonl",
+                "off": 12665049321,
+                "len": 24337,
+                "sha256": "31963bfe05e5d6fffd105b5f14297f3e363f542f29ada3b463318a75b825e1a0"
+              },
+              {
+                "path": "logs/sl-attempts.jsonl",
+                "off": 38569777,
+                "len": 21988,
+                "sha256": "0aa4263a8fcbaac05fb61644c46a58752fd9a69a51dede1f3117c8a11b43513c"
+              }
+            ]
+          },
+          "run_result": {
+            "summary_after_prediction": true,
+            "same_prospective_SL_branch_verified": null,
+            "victory": false,
+            "ended": "2026-10-14T04:45:17.826Z",
+            "floor": 49,
+            "evidence": [
+              {
+                "path": "logs/runs.jsonl",
+                "off": 326478,
+                "len": 490,
+                "sha256": "2bb43f29c298de324ff35ba24e18f4dc30872236249899bff94ed37c57a1a460"
+              }
+            ]
+          },
+          "functional": null,
+          "aliveAndFunctional": null,
+          "terminalWin_prediction": null
+        },
+        "verification": {
+          "initial_option": [
+            {
+              "path": "logs/decisions.jsonl",
+              "off": 1343692014,
+              "len": 134817,
+              "sha256": "75e362bd9a41e8b61d5fa556432ce87d53efb314c5c2a3184fa111f619dcc74d"
+            },
+            {
+              "path": "logs/brain.jsonl",
+              "off": 494304750,
+              "len": 68408,
+              "sha256": "5656cf7a6a5c8de7d86ac23c79987bd18cd63b13856ab041ff6de06b1be99c02"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12658063335,
+              "len": 16810,
+              "sha256": "1254608a81ec2adfa041ef27b5af857b0eb0378ecdbed4527322fdc148cc1342"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12658080145,
+              "len": 15316,
+              "sha256": "f90d000a64be9f0d8b4191371d9c840c4ca0bdc3aa3bac9045717c183b042aaf"
+            }
+          ],
+          "route": [
+            {
+              "path": "logs/brain.jsonl",
+              "off": 494304750,
+              "len": 68408,
+              "sha256": "5656cf7a6a5c8de7d86ac23c79987bd18cd63b13856ab041ff6de06b1be99c02"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12658716569,
+              "len": 37573,
+              "sha256": "6a4f96694480e826e545cf77e17af26d83aa48dc2bd7731c944fb843565b6e9b"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12659192304,
+              "len": 38427,
+              "sha256": "34cd149fc6c72813de2760509facfe41fa054d25437d52a66bce33c1bab97774"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12659774408,
+              "len": 39148,
+              "sha256": "06b4549a87752c2abc4e1e4adc2cc7ff9d41c4e1f5faa5bdf05c1bceb94acfe7"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12659868236,
+              "len": 37189,
+              "sha256": "da5bde234564a009c7aea0637c6c30ca07b579123f715250a90f73e2d3b41a55"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12659962033,
+              "len": 37178,
+              "sha256": "d8453b3e37807bfaa8fe77c533c345f4b09a0485a833bb9de23f8a599570f870"
+            },
+            {
+              "path": "logs/decisions.jsonl",
+              "off": 1345159404,
+              "len": 1710,
+              "sha256": "3237cec51bf0b088690483799714f7c22af60c8ca7d067bd56c951e3208dfcb8"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12659999211,
+              "len": 21883,
+              "sha256": "9e71bbcf43204aef7cb4844cb87bd4a0313a3c19947eec42d912810457296f24"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12661462481,
+              "len": 40658,
+              "sha256": "d03664365a438fa90674cf6b1ffefd9d526016373abc5f4d71aa7b7a18a37032"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12661554509,
+              "len": 38775,
+              "sha256": "0965f5a4328b7b11c98c10cdbd76c0a4465a1c771ef78769e7235954dac61347"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12661677331,
+              "len": 40157,
+              "sha256": "cea9da47fa03f8dd3de14d2b5cd5eb44ada06caad7686c4e86b708a46f0af31b"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12661755481,
+              "len": 40145,
+              "sha256": "0cfa4febe4af444614a9c02dd26d711f49256e6becd522c71a7fec5d49ac4cc3"
+            },
+            {
+              "path": "logs/decisions.jsonl",
+              "off": 1346329171,
+              "len": 1648,
+              "sha256": "36072f9b15d797956034d41f4b31fdfcdbdec4a3b41edbbca70afa5ce1d6260b"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12661795626,
+              "len": 25746,
+              "sha256": "9a3b17df391299d01bada220c52ee1e7b2a83580b53476ad95a489570412826f"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12662746590,
+              "len": 42629,
+              "sha256": "71d5b27ba936c591deb0dfa9d9fe5bc9a9d5f2d2999f826db59a995ce1f085a8"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12663059167,
+              "len": 45530,
+              "sha256": "c8eda4b37f8b4b3e3a89305dc3a6778a83cc70acaae0aae3421ea155bc75681c"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12663149130,
+              "len": 43176,
+              "sha256": "d37bc765ce06e5f4d66bacc2ba276dbc60b746660678cc1689b1e0dde0570d8a"
+            },
+            {
+              "path": "logs/decisions.jsonl",
+              "off": 1346988684,
+              "len": 1640,
+              "sha256": "28c421c3ace856aacb5a0c0bb3a165512957dd66af482df8050ae82911008f6e"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12663192306,
+              "len": 30289,
+              "sha256": "40a26830543504e2989c5e55c20330aaf1bea5b9918a8b97f7873248924a4fd1"
+            }
+          ],
+          "policy": [
+            {
+              "path": "logs/decisions.jsonl",
+              "off": 1344019741,
+              "len": 141329,
+              "sha256": "667bab0824732d4b53e110596d3c8b64ca401618d6c10bcabda343c29d7fee9e"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12658682839,
+              "len": 17400,
+              "sha256": "f59645c3e05c90ead55aef158fe4322d0bc3ab763da3191b96bf619f8e1a7df1"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12658700239,
+              "len": 16330,
+              "sha256": "4faa41358b6acb52960e26116ed876ece4bedeb2b1e297ef4ddafeaf1f5bbe43"
+            },
+            {
+              "path": "logs/decisions.jsonl",
+              "off": 1344298175,
+              "len": 146053,
+              "sha256": "dea963d21346e5c8deac5ffab59e438091c21a2212232fcd72a262644828cf2c"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12659156238,
+              "len": 18874,
+              "sha256": "9030119d1892a5943a5a00a2713e17f9ce8a0fcbcccb814e7ef6ba48cb116524"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12659175112,
+              "len": 17192,
+              "sha256": "44c1e41e3c1dfddfcde7ed1b3ff5324debb08fa7f0a930d552bba987e150b50c"
+            },
+            {
+              "path": "logs/decisions.jsonl",
+              "off": 1344625938,
+              "len": 147672,
+              "sha256": "4915ad789b5e90e1b4195bd235b8729df376991f4abfce54a4201102aa9bd1be"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12659737144,
+              "len": 19163,
+              "sha256": "a913bcdfb5142297ea2c1066a5be32f00ba82e4bb3b3a5585417860e30cffa06"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12659756307,
+              "len": 18101,
+              "sha256": "0281a16c3124e95132215918722d7f9c14072febeac6fc0acb27991c8ba63fd3"
+            },
+            {
+              "path": "logs/decisions.jsonl",
+              "off": 1345156717,
+              "len": 1517,
+              "sha256": "6afd44c9f7eed1d6127d32b3256fd302eb10ec5bca5b028a2246530f07dc224f"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12659921865,
+              "len": 24598,
+              "sha256": "5dd6c9ed12f96114ae2511f6848e402cc48157d4b3b9d58ffa7ba54576658b07"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12659946463,
+              "len": 15570,
+              "sha256": "586aec766bf5cd631e95921aa31ff9e91111155cc25bd25b8ae367d75d726862"
+            },
+            {
+              "path": "logs/decisions.jsonl",
+              "off": 1345427854,
+              "len": 156659,
+              "sha256": "f0af57426aecbba91d0c7465dd71a1afc33e24f0694ae4ba6e859cbe8fe1fd4b"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12660688058,
+              "len": 20075,
+              "sha256": "df397081bd95b4dc90230b6a0ae0296ca31e92daa2188878844a8ffe95fb9c14"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12660708133,
+              "len": 18718,
+              "sha256": "4fb85a688fe656c9297d5eea35c30bebd7fde02f30fa40f3ce9c52fe685748ab"
+            },
+            {
+              "path": "logs/decisions.jsonl",
+              "off": 1345748399,
+              "len": 160500,
+              "sha256": "e25907ce843286a6c20e85976ce102da07d9cd7940febada0ee7fa0f43fe2e79"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12661421962,
+              "len": 20892,
+              "sha256": "e1c04fc13283fcddc189406f4b2acc88697968a927ce447e3a6c80d6a1401787"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12661442854,
+              "len": 19627,
+              "sha256": "414e7be8f67da118440c15b9f108993f2516f4f39dfdc79a590cb894e45444bc"
+            },
+            {
+              "path": "logs/decisions.jsonl",
+              "off": 1346449119,
+              "len": 172018,
+              "sha256": "b9a6aa5fb129524b6a9a159f91e9676522d1380cf2a131d0ad0f302bf1ca1149"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12662467892,
+              "len": 22762,
+              "sha256": "6cf46b97b0602c479d6a9b22e7983518d463fab6b046e0ee89a16a61c0734663"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12662490654,
+              "len": 21555,
+              "sha256": "e45919c4417c706bae216d2e62072dabe6086d878d88923cf49e1a0b3fc0c06e"
+            },
+            {
+              "path": "logs/decisions.jsonl",
+              "off": 1346625274,
+              "len": 168820,
+              "sha256": "f396eee2a2964c6a57335642fc1004fe8057da9eb92df619b61b6e01ce3436e0"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12662581769,
+              "len": 26974,
+              "sha256": "1e88227816760691570ab9c852e5595660954069a053e61eeb58afc4e249732e"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12662608743,
+              "len": 27209,
+              "sha256": "c6ff49ea85c54af98c75222e80343b922225dacd6f3376b44b31062eafe1412d"
+            },
+            {
+              "path": "logs/decisions.jsonl",
+              "off": 1346794094,
+              "len": 1540,
+              "sha256": "5bb837534ef5abead5fbc768e83a8042cdb10bae606d4f3df24930e084e1bf18"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12662635952,
+              "len": 27407,
+              "sha256": "d4239d03afd17282f9adea08c4f247b6813d91fd49bb28e276e16ed089c13534"
+            },
+            {
+              "path": "logs/decisions.jsonl",
+              "off": 1346795634,
+              "len": 1521,
+              "sha256": "44bc3c39fdfc06b8e85c67ee23e625951f1f348578c6f506576c9e101080dcee"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12662663359,
+              "len": 27689,
+              "sha256": "49efafc9c2aed59541ffad1d1ed3b018b3d8f0156dfe97e313337735ee94c33b"
+            },
+            {
+              "path": "logs/decisions.jsonl",
+              "off": 1346797155,
+              "len": 1524,
+              "sha256": "d555a93bfaeb4f640073d9cc4e31ff9e203c59614f7ce028c4eb2ff8d4bd770d"
+            },
+            {
+              "path": "logs/decisions.jsonl",
+              "off": 1346812233,
+              "len": 43758,
+              "sha256": "114a1767da4c089565dd552123c9f6d38e1ad7dff8bb9bf899b1a29df3f1a515"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12663009208,
+              "len": 25604,
+              "sha256": "29cee3cfa630b705f3e19becc81495f6af1baef451ae26094b710a030d1e7d7a"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12663034812,
+              "len": 24355,
+              "sha256": "6520314e51ca497b671d2ec3772f109f2d494c5bbf5759e901ec356f60fc4935"
+            }
+          ],
+          "sl": [
+            {
+              "path": "logs/decisions.jsonl",
+              "off": 1343692014,
+              "len": 134817,
+              "sha256": "75e362bd9a41e8b61d5fa556432ce87d53efb314c5c2a3184fa111f619dcc74d"
+            },
+            {
+              "path": "logs/sl-attempts.jsonl",
+              "off": 38569777,
+              "len": 21988,
+              "sha256": "0aa4263a8fcbaac05fb61644c46a58752fd9a69a51dede1f3117c8a11b43513c"
+            }
+          ],
+          "endpoint": [
+            {
+              "path": "logs/states.jsonl",
+              "off": 12665049321,
+              "len": 24337,
+              "sha256": "31963bfe05e5d6fffd105b5f14297f3e363f542f29ada3b463318a75b825e1a0"
+            },
+            {
+              "path": "logs/sl-attempts.jsonl",
+              "off": 38569777,
+              "len": 21988,
+              "sha256": "0aa4263a8fcbaac05fb61644c46a58752fd9a69a51dede1f3117c8a11b43513c"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "kind": "sl_unknown",
+      "anchor": {
+        "source_off": 1351991558,
+        "run": "Q10YYQ5DUPJA",
+        "decision": "71e6972f-ecef-4a1c-9318-a29da2ff0e58",
+        "floor": 40,
+        "horizon": 48,
+        "status": "predicted",
+        "binding": {
+          "forecast_model": "observed-opportunity-window4-v1",
+          "forecast_policy": "completion-choice-v1",
+          "template_sha256": "76e91c950bfd87d820093bdd7dd4b3f11db15256ea2b6e0bb41b9f1ec89f998c",
+          "as_of": "2026-10-14T04:16:24.106Z"
+        },
+        "initial_option": {
+          "key": "o1:c25",
+          "claimed_key": "o1:c25",
+          "status": "verified",
+          "reason": null,
+          "evidence": [
+            {
+              "path": "logs/decisions.jsonl",
+              "off": 1351991558,
+              "len": 142980,
+              "sha256": "541513232d8c4611d0419202ed93b10e8a66a92c1442b7dcb83603f91b32dcf8"
+            },
+            {
+              "path": "logs/brain.jsonl",
+              "off": 496851154,
+              "len": 68511,
+              "sha256": "17e8fe7cf3e03e2fc184bd542bc96740a8b614bfc5db83aa3aa82aa8cf4ce466"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12681015102,
+              "len": 33305,
+              "sha256": "a720ddcbb5149c9cf569c616b3c642781cbf48d96dbcdc467b1b7a34869e311c"
+            },
+            {
+              "path": "logs/decisions.jsonl",
+              "off": 1352134538,
+              "len": 1547,
+              "sha256": "ab6763c287bd9474578a61df66a6fcdd037d28a7b7b0d90cf7578f94f10a08de"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12681048407,
+              "len": 48507,
+              "sha256": "9fe92821dae6f8db8010e3159dbf89f5bd407b59e1df8271b01b9896a6d87c3c"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12681096914,
+              "len": 32305,
+              "sha256": "d41564ecb07697cd337cf300bd1383bc1bb250461927f7389679990962a1f1c3"
+            }
+          ],
+          "before_frame": {
+            "path": "logs/states.jsonl",
+            "off": 12681015102,
+            "len": 33305,
+            "sha256": "a720ddcbb5149c9cf569c616b3c642781cbf48d96dbcdc467b1b7a34869e311c"
+          },
+          "after_frame": {
+            "path": "logs/states.jsonl",
+            "off": 12681096914,
+            "len": 32305,
+            "sha256": "d41564ecb07697cd337cf300bd1383bc1bb250461927f7389679990962a1f1c3"
+          }
+        },
+        "route": {
+          "status": "same",
+          "reason": null,
+          "planned": [
+            {
+              "id": "r7c3",
+              "floor": 41,
+              "row": 7,
+              "col": 3,
+              "kind": "unknown"
+            },
+            {
+              "id": "r8c4",
+              "floor": 42,
+              "row": 8,
+              "col": 4,
+              "kind": "fight"
+            },
+            {
+              "id": "r9c4",
+              "floor": 43,
+              "row": 9,
+              "col": 4,
+              "kind": "rest"
+            },
+            {
+              "id": "r10c5",
+              "floor": 44,
+              "row": 10,
+              "col": 5,
+              "kind": "fight"
+            },
+            {
+              "id": "r11c5",
+              "floor": 45,
+              "row": 11,
+              "col": 5,
+              "kind": "unknown"
+            },
+            {
+              "id": "r12c6",
+              "floor": 46,
+              "row": 12,
+              "col": 6,
+              "kind": "unknown"
+            },
+            {
+              "id": "r13c6",
+              "floor": 47,
+              "row": 13,
+              "col": 6,
+              "kind": "rest"
+            },
+            {
+              "id": "r14c3",
+              "floor": 48,
+              "row": 14,
+              "col": 3,
+              "kind": "fight"
+            }
+          ],
+          "observed": [
+            {
+              "node": "r7c3",
+              "floor": 41,
+              "evidence": {
+                "path": "logs/states.jsonl",
+                "off": 12681277840,
+                "len": 51396,
+                "sha256": "baaa1fb36735862c2f5fcb6aba2d2aa5086afe59a872b76bd98a64427416420a"
+              }
+            },
+            {
+              "node": "r8c4",
+              "floor": 42,
+              "evidence": {
+                "path": "logs/states.jsonl",
+                "off": 12682094739,
+                "len": 53745,
+                "sha256": "22d221e908cc0c3f2b25e21b2a4f6aeb95c424f559248b2bc70e8ef6938cb849"
+              }
+            },
+            {
+              "node": "r9c4",
+              "floor": 43,
+              "evidence": {
+                "path": "logs/states.jsonl",
+                "off": 12682214321,
+                "len": 51081,
+                "sha256": "4efeb90ecd47a045e3846aa9a886d2fdb1f521c677aeb6a08a9115300ab1ac31"
+              }
+            },
+            {
+              "node": "r10c5",
+              "floor": 44,
+              "evidence": {
+                "path": "logs/states.jsonl",
+                "off": 12683487257,
+                "len": 53764,
+                "sha256": "676886bfc587d79221298ec3e4f93a4075bba7fbf15cc5f1abc47b4a94aa20cc"
+              }
+            },
+            {
+              "node": "r11c5",
+              "floor": 45,
+              "evidence": {
+                "path": "logs/states.jsonl",
+                "off": 12683609372,
+                "len": 51609,
+                "sha256": "8eff5f07f4f16e005b1844a1162b4d9a80f15a2890371934184007cf7c324db6"
+              }
+            },
+            {
+              "node": "r12c6",
+              "floor": 46,
+              "evidence": {
+                "path": "logs/states.jsonl",
+                "off": 12683812023,
+                "len": 51810,
+                "sha256": "683ba984a4b47842e8d31cfd875e86ab5635dcdd9496723c8b7a66808ceb3203"
+              }
+            },
+            {
+              "node": "r13c6",
+              "floor": 47,
+              "evidence": {
+                "path": "logs/states.jsonl",
+                "off": 12683931156,
+                "len": 51796,
+                "sha256": "f47a37c8212e492cbd9cdb42d7c9e8851fd9428c3de7d3b83bdb69222482da67"
+              }
+            },
+            {
+              "node": "r14c3",
+              "floor": 48,
+              "evidence": [
+                {
+                  "path": "logs/decisions.jsonl",
+                  "off": 1353180354,
+                  "len": 1884,
+                  "sha256": "58c4d34b78829d76b6029c8bad09c872275c842c54ee17ec37dd2ce680d5f60e"
+                },
+                {
+                  "path": "logs/states.jsonl",
+                  "off": 12683931156,
+                  "len": 51796,
+                  "sha256": "f47a37c8212e492cbd9cdb42d7c9e8851fd9428c3de7d3b83bdb69222482da67"
+                },
+                {
+                  "path": "logs/states.jsonl",
+                  "off": 12683982952,
+                  "len": 45292,
+                  "sha256": "e77ea9228a9927276aa99598a1fac6da5a2d9ac6ec044510417d13de8774c97e"
+                }
+              ],
+              "native_action_and_observed_successor": true
+            }
+          ],
+          "changed": [],
+          "missing_nodes": [],
+          "evidence": [
+            {
+              "path": "logs/brain.jsonl",
+              "off": 496851154,
+              "len": 68511,
+              "sha256": "17e8fe7cf3e03e2fc184bd542bc96740a8b614bfc5db83aa3aa82aa8cf4ce466"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12681277840,
+              "len": 51396,
+              "sha256": "baaa1fb36735862c2f5fcb6aba2d2aa5086afe59a872b76bd98a64427416420a"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12682094739,
+              "len": 53745,
+              "sha256": "22d221e908cc0c3f2b25e21b2a4f6aeb95c424f559248b2bc70e8ef6938cb849"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12682214321,
+              "len": 51081,
+              "sha256": "4efeb90ecd47a045e3846aa9a886d2fdb1f521c677aeb6a08a9115300ab1ac31"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12683487257,
+              "len": 53764,
+              "sha256": "676886bfc587d79221298ec3e4f93a4075bba7fbf15cc5f1abc47b4a94aa20cc"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12683609372,
+              "len": 51609,
+              "sha256": "8eff5f07f4f16e005b1844a1162b4d9a80f15a2890371934184007cf7c324db6"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12683812023,
+              "len": 51810,
+              "sha256": "683ba984a4b47842e8d31cfd875e86ab5635dcdd9496723c8b7a66808ceb3203"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12683931156,
+              "len": 51796,
+              "sha256": "f47a37c8212e492cbd9cdb42d7c9e8851fd9428c3de7d3b83bdb69222482da67"
+            },
+            {
+              "path": "logs/decisions.jsonl",
+              "off": 1353180354,
+              "len": 1884,
+              "sha256": "58c4d34b78829d76b6029c8bad09c872275c842c54ee17ec37dd2ce680d5f60e"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12683982952,
+              "len": 45292,
+              "sha256": "e77ea9228a9927276aa99598a1fac6da5a2d9ac6ec044510417d13de8774c97e"
+            }
+          ],
+          "plan_text": "r7c3 宝箱 → r8c4 普通战 → r9c4 休息 → r10c5 普通战 → r11c5 问号 → r12c6 问号 → r13c6 休息 → r14c3 Boss → r15c3 Boss",
+          "plan_recovery": "same_question_snapshot",
+          "current_memory_route": "本幕进度（按 F34 的路线）: 已走 6/15 [怪怪店问怪休] | 下一步 宝（预计 HP 54%） | 剩余 9: 宝→怪→休→怪→问→问→休→王→王",
+          "plan_snapshot_ts": "2026-10-14T04:17:27.917Z"
+        },
+        "sl": {
+          "status": "unknown",
+          "logged_attempt": [
+            null,
+            0
+          ],
+          "reason": "restart_or_nonmonotone_physical_branch_requires_closure",
+          "evidence": [
+            {
+              "path": "logs/decisions.jsonl",
+              "off": 1351991558,
+              "len": 142980,
+              "sha256": "541513232d8c4611d0419202ed93b10e8a66a92c1442b7dcb83603f91b32dcf8"
+            },
+            {
+              "path": "logs/decisions.jsonl",
+              "off": 1353666713,
+              "len": 70288,
+              "sha256": "d163544e7fc1bcd0064210c309877275bc5edb10600a37210b3ca7fcad81331f"
+            },
+            {
+              "path": "logs/decisions.jsonl",
+              "off": 1353737001,
+              "len": 1556,
+              "sha256": "ed8ec11a32e2eeee6f84c9b5b9b49de99530d11216d881987c13ea32a1ca3ecc"
+            },
+            {
+              "path": "logs/sl-attempts.jsonl",
+              "off": 38634709,
+              "len": 27779,
+              "sha256": "878ebddb73d5bfd013c614e63b5a58a17bcbc7fe605f125e7b7a767935c99bf9"
+            },
+            {
+              "path": "logs/sl-attempts.jsonl",
+              "off": 38662488,
+              "len": 43410,
+              "sha256": "817a0372d3958e47cc016795935dca77d5697af9a2184ecd30136f030d8f5827"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12686228386,
+              "len": 51534,
+              "sha256": "5403a3ee7e0edf33ace23cb043a5b06ed3638fff6a5e743ec611a4d728d7e909"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12686279920,
+              "len": 51723,
+              "sha256": "17897a832554818dd741c6d7a6df8d03dbaa1df8f0662275df92ca24c47d0de0"
+            }
+          ]
+        },
+        "transition_gaps": [
+          {
+            "floor": 41,
+            "reason": "unmodelled_node_changed_inventory_relic_or_gold",
+            "evidence": [
+              {
+                "path": "logs/states.jsonl",
+                "off": 12681180140,
+                "len": 32403,
+                "sha256": "5e2f5b7edbefd1bb288553600d7651efa1355e43862bb12ee2efbfffe74ef3a6"
+              },
+              {
+                "path": "logs/states.jsonl",
+                "off": 12681277840,
+                "len": 51396,
+                "sha256": "baaa1fb36735862c2f5fcb6aba2d2aa5086afe59a872b76bd98a64427416420a"
+              }
+            ]
+          },
+          {
+            "floor": 45,
+            "reason": "unmodelled_node_changed_inventory_relic_or_gold",
+            "evidence": [
+              {
+                "path": "logs/states.jsonl",
+                "off": 12683541021,
+                "len": 34568,
+                "sha256": "1c4306e2009b5063eddcd07786c7f2e46c16530aa954ba8401f7660060c68351"
+              },
+              {
+                "path": "logs/states.jsonl",
+                "off": 12683609372,
+                "len": 51609,
+                "sha256": "8eff5f07f4f16e005b1844a1162b4d9a80f15a2890371934184007cf7c324db6"
+              }
+            ]
+          },
+          {
+            "floor": 46,
+            "reason": "unmodelled_node_changed_inventory_relic_or_gold",
+            "evidence": [
+              {
+                "path": "logs/states.jsonl",
+                "off": 12683660981,
+                "len": 33799,
+                "sha256": "767a656d7fbb0c2706883351513a33296e55715aec96a23347c36034f5febaf4"
+              },
+              {
+                "path": "logs/states.jsonl",
+                "off": 12683812023,
+                "len": 51810,
+                "sha256": "683ba984a4b47842e8d31cfd875e86ab5635dcdd9496723c8b7a66808ceb3203"
+              }
+            ]
+          }
+        ],
+        "same_room_extra_transactions": [],
+        "endpoint": {
+          "entry_frame": {
+            "path": "logs/states.jsonl",
+            "off": 12683982952,
+            "len": 45292,
+            "sha256": "e77ea9228a9927276aa99598a1fac6da5a2d9ac6ec044510417d13de8774c97e"
+          },
+          "completion_frame": {
+            "path": "logs/states.jsonl",
+            "off": 12689188443,
+            "len": 35223,
+            "sha256": "91c49b51b2c7d29d2020bcb4c2828a42bcdc951970daa77c6b5401d3c69cb025"
+          },
+          "completion_witness": {
+            "path": "logs/sl-attempts.jsonl",
+            "off": 38662488,
+            "len": 43410,
+            "sha256": "817a0372d3958e47cc016795935dca77d5697af9a2184ecd30136f030d8f5827"
+          },
+          "observed_at": "2026-10-14T04:33:51.591Z",
+          "complete": true,
+          "definition": "after terminal Boss fight: native in_combat=false, before any completed noncombat action/reward mutation on exact horizon; entry inventory is separate"
+        },
+        "forecast_option_keys": [
+          "current",
+          "o0",
+          "o1:c0",
+          "o1:c6",
+          "o1:c11",
+          "o1:c13",
+          "o1:c16",
+          "o1:c17",
+          "o1:c18",
+          "o1:c19",
+          "o1:c20",
+          "o1:c21",
+          "o1:c23",
+          "o1:c24",
+          "o1:c25",
+          "o1:c26",
+          "o1:c27",
+          "o1:c28",
+          "o1:c29",
+          "o1:c30"
+        ],
+        "unsupported_options": [],
+        "source": {
+          "path": "logs/decisions.jsonl",
+          "off": 1351991558,
+          "len": 142980,
+          "sha256": "541513232d8c4611d0419202ed93b10e8a66a92c1442b7dcb83603f91b32dcf8"
+        }
+      },
+      "core_verification": {
+        "source_off": 1351991558,
+        "core": "P",
+        "disposition": "sl_unknown",
+        "reason": "SL_branch_not_closed",
+        "policy": {
+          "status": "unknown",
+          "choices_checked": 2,
+          "first_deviation": null,
+          "first_unknown": {
+            "reason": "rest_fallback_or_service_choice_not_fully_resolved",
+            "evidence": [
+              {
+                "path": "logs/decisions.jsonl",
+                "off": 1352441876,
+                "len": 136515,
+                "sha256": "901f8b63a4081b8e81bb39bdbe1a43efc2b41a4a37b971f447366e6583c7ef31"
+              }
+            ]
+          }
+        },
+        "observations": {
+          "components": {
+            "entry": {
+              "missing": [],
+              "signature_present": true,
+              "evidence": [
+                {
+                  "path": "logs/states.jsonl",
+                  "off": 12683982952,
+                  "len": 45292,
+                  "sha256": "e77ea9228a9927276aa99598a1fac6da5a2d9ac6ec044510417d13de8774c97e"
+                }
+              ]
+            },
+            "completed_horizon": {
+              "missing": [],
+              "signature_present": true,
+              "evidence": [
+                {
+                  "path": "logs/states.jsonl",
+                  "off": 12689188443,
+                  "len": 35223,
+                  "sha256": "91c49b51b2c7d29d2020bcb4c2828a42bcdc951970daa77c6b5401d3c69cb025"
+                }
+              ]
+            },
+            "template_source_commit": "908f043bb01b6c7c1406bed6394df36f41528a56",
+            "source_template_digest": "76e91c950bfd87d820093bdd7dd4b3f11db15256ea2b6e0bb41b9f1ec89f998c"
+          },
+          "actual_casts": {},
+          "cast_dispatch_proxies": {
+            "FOOTWORK": {
+              "reported_card_from_logged_fingerprint": "FOOTWORK",
+              "completed_API_dispatch": true,
+              "actual_card_or_branch_binding": null,
+              "reason": "no_fresh_exact_before_after_pair_or_SL_context_unclosed",
+              "evidence": [
+                {
+                  "path": "logs/decisions.jsonl",
+                  "off": 1352649300,
+                  "len": 1624,
+                  "sha256": "2b24dd7cd98199061a07324fc6f892ac650dd0eb11f6b8e2a4b311423d902a06"
+                }
+              ],
+              "attempt": null,
+              "reloads": 0
+            },
+            "DEADLY_POISON": {
+              "reported_card_from_logged_fingerprint": "DEADLY_POISON",
+              "completed_API_dispatch": true,
+              "actual_card_or_branch_binding": null,
+              "reason": "no_fresh_exact_before_after_pair_or_SL_context_unclosed",
+              "evidence": [
+                {
+                  "path": "logs/decisions.jsonl",
+                  "off": 1352716909,
+                  "len": 1722,
+                  "sha256": "e06ca44cc605b3bcb18009090cd4575aaf3afa9ed069bd0de0951781fd7b560a"
+                }
+              ],
+              "attempt": null,
+              "reloads": 0
+            },
+            "ACCELERANT": {
+              "reported_card_from_logged_fingerprint": "ACCELERANT",
+              "completed_API_dispatch": true,
+              "actual_card_or_branch_binding": null,
+              "reason": "no_fresh_exact_before_after_pair_or_SL_context_unclosed",
+              "evidence": [
+                {
+                  "path": "logs/decisions.jsonl",
+                  "off": 1352743456,
+                  "len": 21618,
+                  "sha256": "d22d22584c5d1253e1a320e9eff2e12e6a6ff44a8b0f20b90c1a525833079714"
+                }
+              ],
+              "attempt": null,
+              "reloads": 0
+            },
+            "BOUNCING_FLASK": {
+              "reported_card_from_logged_fingerprint": "BOUNCING_FLASK",
+              "completed_API_dispatch": true,
+              "actual_card_or_branch_binding": null,
+              "reason": "no_fresh_exact_before_after_pair_or_SL_context_unclosed",
+              "evidence": [
+                {
+                  "path": "logs/decisions.jsonl",
+                  "off": 1352824920,
+                  "len": 1691,
+                  "sha256": "b6330b6a0fe9a86eb51806166d5a4276a5a6aa4bf818a93b11584407d3201869"
+                }
+              ],
+              "attempt": null,
+              "reloads": 0
+            },
+            "POISONED_STAB": {
+              "reported_card_from_logged_fingerprint": "POISONED_STAB",
+              "completed_API_dispatch": true,
+              "actual_card_or_branch_binding": null,
+              "reason": "no_fresh_exact_before_after_pair_or_SL_context_unclosed",
+              "evidence": [
+                {
+                  "path": "logs/decisions.jsonl",
+                  "off": 1353458713,
+                  "len": 1536,
+                  "sha256": "5586ce93210a89a6d398e66ccf2777917250c8f751ff7d5c2492b9781af71c0d"
+                }
+              ],
+              "attempt": 1,
+              "reloads": 0
+            }
+          },
+          "actual_casts_scope": "已列牌仅证明在所示SL分支至少一次具名completed出牌；未列牌与总次数为unknown，不证明未施放/全部效果/同实例循环",
+          "survival": {
+            "entry_alive": true,
+            "terminal_node_completed_alive": true,
+            "evidence": [
+              {
+                "path": "logs/states.jsonl",
+                "off": 12683982952,
+                "len": 45292,
+                "sha256": "e77ea9228a9927276aa99598a1fac6da5a2d9ac6ec044510417d13de8774c97e"
+              },
+              {
+                "path": "logs/states.jsonl",
+                "off": 12689188443,
+                "len": 35223,
+                "sha256": "91c49b51b2c7d29d2020bcb4c2828a42bcdc951970daa77c6b5401d3c69cb025"
+              },
+              {
+                "path": "logs/sl-attempts.jsonl",
+                "off": 38662488,
+                "len": 43410,
+                "sha256": "817a0372d3958e47cc016795935dca77d5697af9a2184ecd30136f030d8f5827"
+              }
+            ]
+          },
+          "run_result": {
+            "summary_after_prediction": true,
+            "same_prospective_SL_branch_verified": null,
+            "victory": false,
+            "ended": "2026-10-14T04:45:17.826Z",
+            "floor": 49,
+            "evidence": [
+              {
+                "path": "logs/runs.jsonl",
+                "off": 326478,
+                "len": 490,
+                "sha256": "2bb43f29c298de324ff35ba24e18f4dc30872236249899bff94ed37c57a1a460"
+              }
+            ]
+          },
+          "functional": null,
+          "aliveAndFunctional": null,
+          "terminalWin_prediction": null
+        },
+        "verification": {
+          "initial_option": [
+            {
+              "path": "logs/decisions.jsonl",
+              "off": 1351991558,
+              "len": 142980,
+              "sha256": "541513232d8c4611d0419202ed93b10e8a66a92c1442b7dcb83603f91b32dcf8"
+            },
+            {
+              "path": "logs/brain.jsonl",
+              "off": 496851154,
+              "len": 68511,
+              "sha256": "17e8fe7cf3e03e2fc184bd542bc96740a8b614bfc5db83aa3aa82aa8cf4ce466"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12681015102,
+              "len": 33305,
+              "sha256": "a720ddcbb5149c9cf569c616b3c642781cbf48d96dbcdc467b1b7a34869e311c"
+            },
+            {
+              "path": "logs/decisions.jsonl",
+              "off": 1352134538,
+              "len": 1547,
+              "sha256": "ab6763c287bd9474578a61df66a6fcdd037d28a7b7b0d90cf7578f94f10a08de"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12681048407,
+              "len": 48507,
+              "sha256": "9fe92821dae6f8db8010e3159dbf89f5bd407b59e1df8271b01b9896a6d87c3c"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12681096914,
+              "len": 32305,
+              "sha256": "d41564ecb07697cd337cf300bd1383bc1bb250461927f7389679990962a1f1c3"
+            }
+          ],
+          "route": [
+            {
+              "path": "logs/brain.jsonl",
+              "off": 496851154,
+              "len": 68511,
+              "sha256": "17e8fe7cf3e03e2fc184bd542bc96740a8b614bfc5db83aa3aa82aa8cf4ce466"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12681277840,
+              "len": 51396,
+              "sha256": "baaa1fb36735862c2f5fcb6aba2d2aa5086afe59a872b76bd98a64427416420a"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12682094739,
+              "len": 53745,
+              "sha256": "22d221e908cc0c3f2b25e21b2a4f6aeb95c424f559248b2bc70e8ef6938cb849"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12682214321,
+              "len": 51081,
+              "sha256": "4efeb90ecd47a045e3846aa9a886d2fdb1f521c677aeb6a08a9115300ab1ac31"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12683487257,
+              "len": 53764,
+              "sha256": "676886bfc587d79221298ec3e4f93a4075bba7fbf15cc5f1abc47b4a94aa20cc"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12683609372,
+              "len": 51609,
+              "sha256": "8eff5f07f4f16e005b1844a1162b4d9a80f15a2890371934184007cf7c324db6"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12683812023,
+              "len": 51810,
+              "sha256": "683ba984a4b47842e8d31cfd875e86ab5635dcdd9496723c8b7a66808ceb3203"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12683931156,
+              "len": 51796,
+              "sha256": "f47a37c8212e492cbd9cdb42d7c9e8851fd9428c3de7d3b83bdb69222482da67"
+            },
+            {
+              "path": "logs/decisions.jsonl",
+              "off": 1353180354,
+              "len": 1884,
+              "sha256": "58c4d34b78829d76b6029c8bad09c872275c842c54ee17ec37dd2ce680d5f60e"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12683982952,
+              "len": 45292,
+              "sha256": "e77ea9228a9927276aa99598a1fac6da5a2d9ac6ec044510417d13de8774c97e"
+            }
+          ],
+          "policy": [
+            {
+              "path": "logs/decisions.jsonl",
+              "off": 1352220385,
+              "len": 218329,
+              "sha256": "92b9dfc6d73e3d5e5c4f016b769ba0627f13b5634c2019e029d7e1508675cae2"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12682022218,
+              "len": 37240,
+              "sha256": "d1c76479661e847623f40f49aae9dce627c8ebfc0deb4d8ba744a275a9a7d6e0"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12682059458,
+              "len": 35281,
+              "sha256": "d359919cf043b44114122b130056bbfbdec5121be1804c13fddb94b05359ff1f"
+            },
+            {
+              "path": "logs/decisions.jsonl",
+              "off": 1352836511,
+              "len": 42217,
+              "sha256": "04739e0456ed7b6f4a6b84d6e9a72e50df5564476405b9bbf9a410e6ef939296"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12683414549,
+              "len": 37237,
+              "sha256": "8764bbab6c4df3e9a23335f5ab11db7bd663b73c4bceffa956a32e5a23630787"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12683451786,
+              "len": 35471,
+              "sha256": "2b02bcb1633f16e96be1d8055e1da3d37ac86c4e1b3039493c15ecf8062f7984"
+            }
+          ],
+          "sl": [
+            {
+              "path": "logs/decisions.jsonl",
+              "off": 1351991558,
+              "len": 142980,
+              "sha256": "541513232d8c4611d0419202ed93b10e8a66a92c1442b7dcb83603f91b32dcf8"
+            },
+            {
+              "path": "logs/decisions.jsonl",
+              "off": 1353666713,
+              "len": 70288,
+              "sha256": "d163544e7fc1bcd0064210c309877275bc5edb10600a37210b3ca7fcad81331f"
+            },
+            {
+              "path": "logs/decisions.jsonl",
+              "off": 1353737001,
+              "len": 1556,
+              "sha256": "ed8ec11a32e2eeee6f84c9b5b9b49de99530d11216d881987c13ea32a1ca3ecc"
+            },
+            {
+              "path": "logs/sl-attempts.jsonl",
+              "off": 38634709,
+              "len": 27779,
+              "sha256": "878ebddb73d5bfd013c614e63b5a58a17bcbc7fe605f125e7b7a767935c99bf9"
+            },
+            {
+              "path": "logs/sl-attempts.jsonl",
+              "off": 38662488,
+              "len": 43410,
+              "sha256": "817a0372d3958e47cc016795935dca77d5697af9a2184ecd30136f030d8f5827"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12686228386,
+              "len": 51534,
+              "sha256": "5403a3ee7e0edf33ace23cb043a5b06ed3638fff6a5e743ec611a4d728d7e909"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12686279920,
+              "len": 51723,
+              "sha256": "17897a832554818dd741c6d7a6df8d03dbaa1df8f0662275df92ca24c47d0de0"
+            }
+          ],
+          "endpoint": [
+            {
+              "path": "logs/states.jsonl",
+              "off": 12689188443,
+              "len": 35223,
+              "sha256": "91c49b51b2c7d29d2020bcb4c2828a42bcdc951970daa77c6b5401d3c69cb025"
+            },
+            {
+              "path": "logs/sl-attempts.jsonl",
+              "off": 38662488,
+              "len": 43410,
+              "sha256": "817a0372d3958e47cc016795935dca77d5697af9a2184ecd30136f030d8f5827"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "kind": "censored",
+      "anchor": {
+        "source_off": 1374589078,
+        "run": "QRZX1S9USYWP",
+        "decision": "7f4967f2-af6e-48a0-b370-37cf14de3f8e",
+        "floor": 19,
+        "horizon": 33,
+        "status": "predicted",
+        "binding": {
+          "forecast_model": "observed-opportunity-window4-v1",
+          "forecast_policy": "completion-choice-v1",
+          "template_sha256": "76e91c950bfd87d820093bdd7dd4b3f11db15256ea2b6e0bb41b9f1ec89f998c",
+          "as_of": "2026-10-14T06:58:25.611Z"
+        },
+        "initial_option": {
+          "key": "card2",
+          "claimed_key": "card2",
+          "status": "verified",
+          "reason": null,
+          "evidence": [
+            {
+              "path": "logs/decisions.jsonl",
+              "off": 1374589078,
+              "len": 187666,
+              "sha256": "5d0e65f8b5a4cd6baae300502a54b8480e3793e19a74122ccae4d425e868b3a1"
+            },
+            {
+              "path": "logs/brain.jsonl",
+              "off": 502658572,
+              "len": 91632,
+              "sha256": "b317c97b0a595a263e533e117930ead20dc9a185ebaaf1157163e403559f2fe5"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12743573513,
+              "len": 25155,
+              "sha256": "6578de69702bdd85395c6e15f9f02372a909c1b787de65075f4498d56dbd5329"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12743598668,
+              "len": 23878,
+              "sha256": "299c83b29879ab6d43b26bc6f22e3780c747bbab4349270a057f8aad2a625cb4"
+            }
+          ],
+          "before_frame": {
+            "path": "logs/states.jsonl",
+            "off": 12743573513,
+            "len": 25155,
+            "sha256": "6578de69702bdd85395c6e15f9f02372a909c1b787de65075f4498d56dbd5329"
+          },
+          "after_frame": {
+            "path": "logs/states.jsonl",
+            "off": 12743598668,
+            "len": 23878,
+            "sha256": "299c83b29879ab6d43b26bc6f22e3780c747bbab4349270a057f8aad2a625cb4"
+          }
+        },
+        "route": {
+          "status": "unknown",
+          "reason": "missing_observed_route_nodes",
+          "planned": [
+            {
+              "id": "r2c5",
+              "floor": 20,
+              "row": 2,
+              "col": 5,
+              "kind": "fight"
+            },
+            {
+              "id": "r3c5",
+              "floor": 21,
+              "row": 3,
+              "col": 5,
+              "kind": "unknown"
+            },
+            {
+              "id": "r4c5",
+              "floor": 22,
+              "row": 4,
+              "col": 5,
+              "kind": "shop"
+            },
+            {
+              "id": "r5c4",
+              "floor": 23,
+              "row": 5,
+              "col": 4,
+              "kind": "fight"
+            },
+            {
+              "id": "r6c5",
+              "floor": 24,
+              "row": 6,
+              "col": 5,
+              "kind": "fight"
+            },
+            {
+              "id": "r7c5",
+              "floor": 25,
+              "row": 7,
+              "col": 5,
+              "kind": "fight"
+            },
+            {
+              "id": "r8c6",
+              "floor": 26,
+              "row": 8,
+              "col": 6,
+              "kind": "unknown"
+            },
+            {
+              "id": "r9c6",
+              "floor": 27,
+              "row": 9,
+              "col": 6,
+              "kind": "rest"
+            },
+            {
+              "id": "r10c6",
+              "floor": 28,
+              "row": 10,
+              "col": 6,
+              "kind": "fight"
+            },
+            {
+              "id": "r11c6",
+              "floor": 29,
+              "row": 11,
+              "col": 6,
+              "kind": "rest"
+            },
+            {
+              "id": "r12c5",
+              "floor": 30,
+              "row": 12,
+              "col": 5,
+              "kind": "shop"
+            },
+            {
+              "id": "r13c5",
+              "floor": 31,
+              "row": 13,
+              "col": 5,
+              "kind": "fight"
+            },
+            {
+              "id": "r14c4",
+              "floor": 32,
+              "row": 14,
+              "col": 4,
+              "kind": "rest"
+            },
+            {
+              "id": "r15c3",
+              "floor": 33,
+              "row": 15,
+              "col": 3,
+              "kind": "fight"
+            }
+          ],
+          "observed": [
+            {
+              "node": "r2c5",
+              "floor": 20,
+              "evidence": {
+                "path": "logs/states.jsonl",
+                "off": 12744255266,
+                "len": 43988,
+                "sha256": "6c81fc1179cfc7b797496a3258f6afea6082e2f899577cac65382f58819305f4"
+              }
+            },
+            {
+              "node": "r3c5",
+              "floor": 21,
+              "evidence": {
+                "path": "logs/states.jsonl",
+                "off": 12744368205,
+                "len": 41633,
+                "sha256": "9bd1a2a96e8fbf35e2b0ac25d13f231691e9091939108a969ce56245ea4dc0fe"
+              }
+            },
+            {
+              "node": "r4c5",
+              "floor": 22,
+              "evidence": {
+                "path": "logs/states.jsonl",
+                "off": 12744557934,
+                "len": 42379,
+                "sha256": "8fe548a76bc0e341549c877596316aecf0e5049d8b0d285c1aff99395012a3ca"
+              }
+            },
+            {
+              "node": "r5c4",
+              "floor": 23,
+              "evidence": {
+                "path": "logs/states.jsonl",
+                "off": 12745741047,
+                "len": 46078,
+                "sha256": "a888f1f1179e86aa32819427c569ea315707c4f4177bf8afbedf47709bcb5fb0"
+              }
+            },
+            {
+              "node": "r6c5",
+              "floor": 24,
+              "evidence": [
+                {
+                  "path": "logs/decisions.jsonl",
+                  "off": 1375865401,
+                  "len": 1889,
+                  "sha256": "eb34e199d79569f16dd3194b9379d06a896d32cf963e3c7fdb680da243fe5134"
+                },
+                {
+                  "path": "logs/states.jsonl",
+                  "off": 12745741047,
+                  "len": 46078,
+                  "sha256": "a888f1f1179e86aa32819427c569ea315707c4f4177bf8afbedf47709bcb5fb0"
+                },
+                {
+                  "path": "logs/states.jsonl",
+                  "off": 12745787125,
+                  "len": 32061,
+                  "sha256": "398602fe351affdaa41ad15949464d7d4ad1de3f065ba7acacf6dc5f9e9fc463"
+                }
+              ],
+              "native_action_and_observed_successor": true
+            }
+          ],
+          "changed": [],
+          "missing_nodes": [
+            "r7c5",
+            "r8c6",
+            "r9c6",
+            "r10c6",
+            "r11c6",
+            "r12c5",
+            "r13c5",
+            "r14c4",
+            "r15c3"
+          ],
+          "evidence": [
+            {
+              "path": "logs/brain.jsonl",
+              "off": 502658572,
+              "len": 91632,
+              "sha256": "b317c97b0a595a263e533e117930ead20dc9a185ebaaf1157163e403559f2fe5"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12744255266,
+              "len": 43988,
+              "sha256": "6c81fc1179cfc7b797496a3258f6afea6082e2f899577cac65382f58819305f4"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12744368205,
+              "len": 41633,
+              "sha256": "9bd1a2a96e8fbf35e2b0ac25d13f231691e9091939108a969ce56245ea4dc0fe"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12744557934,
+              "len": 42379,
+              "sha256": "8fe548a76bc0e341549c877596316aecf0e5049d8b0d285c1aff99395012a3ca"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12745741047,
+              "len": 46078,
+              "sha256": "a888f1f1179e86aa32819427c569ea315707c4f4177bf8afbedf47709bcb5fb0"
+            },
+            {
+              "path": "logs/decisions.jsonl",
+              "off": 1375865401,
+              "len": 1889,
+              "sha256": "eb34e199d79569f16dd3194b9379d06a896d32cf963e3c7fdb680da243fe5134"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12745787125,
+              "len": 32061,
+              "sha256": "398602fe351affdaa41ad15949464d7d4ad1de3f065ba7acacf6dc5f9e9fc463"
+            }
+          ],
+          "plan_text": "r2c5 普通战 → r3c5 问号 → r4c5 商店 → r5c4 普通战 → r6c5 普通战 → r7c5 普通战 → r8c6 宝箱 → r9c6 休息 → r10c6 普通战 → r11c6 休息 → r12c5 商店 → r13c5 精英 → r14c4 休息 → r15c3 Boss",
+          "plan_recovery": "same_question_snapshot",
+          "current_memory_route": "本幕进度（按 F18 的路线）: 已走 1/15 [怪] | 下一步 怪（预计 HP 67%） | 剩余 14: 怪→问→店→怪→怪→怪→宝→休→怪→休→店→精→休→王",
+          "plan_snapshot_ts": "2026-10-14T06:59:32.120Z"
+        },
+        "sl": {
+          "status": "unknown",
+          "logged_attempt": [
+            null,
+            0
+          ],
+          "reason": "restart_or_nonmonotone_physical_branch_requires_closure",
+          "evidence": [
+            {
+              "path": "logs/decisions.jsonl",
+              "off": 1374589078,
+              "len": 187666,
+              "sha256": "5d0e65f8b5a4cd6baae300502a54b8480e3793e19a74122ccae4d425e868b3a1"
+            },
+            {
+              "path": "logs/decisions.jsonl",
+              "off": 1375904003,
+              "len": 24252,
+              "sha256": "73b0dd45083b9c1ea649277051550ac41838cfbfd630af8d66bd1452d0d96a92"
+            },
+            {
+              "path": "logs/decisions.jsonl",
+              "off": 1375928255,
+              "len": 1929,
+              "sha256": "c0dd43af0d9f87efc17ae58dd1e8cee951314fe16966b58554a374372e8fa990"
+            },
+            {
+              "path": "logs/sl-attempts.jsonl",
+              "off": 39053939,
+              "len": 9628,
+              "sha256": "ec11ecd4ab5769fbd4e15c660033cbc1fa29920ba7bc24626bb7b9153eaa26bd"
+            },
+            {
+              "path": "logs/sl-attempts.jsonl",
+              "off": 39063567,
+              "len": 17900,
+              "sha256": "fdf38e2bdf43a0071fb41a3c900456c0ecb3e1d42185d6a5b5cc6606d8d9a8b2"
+            },
+            {
+              "path": "logs/sl-attempts.jsonl",
+              "off": 39081467,
+              "len": 5184,
+              "sha256": "a7d3ea83b0b94abf78957c58c6d62cf46e75d188f5e1f5785a400cdcf802f531"
+            },
+            {
+              "path": "logs/sl-attempts.jsonl",
+              "off": 39086651,
+              "len": 6682,
+              "sha256": "1c996f86bbf4c35f03df66e9cc9555c004400bb54ce0deb0560f0e627cbc2ce6"
+            },
+            {
+              "path": "logs/sl-attempts.jsonl",
+              "off": 39093333,
+              "len": 10882,
+              "sha256": "5e6ffa7631c4af04c8c209d2abe38f7b2c3af67084274106e93f764a2630c8d4"
+            },
+            {
+              "path": "logs/sl-attempts.jsonl",
+              "off": 39104215,
+              "len": 11998,
+              "sha256": "7ff26daa210396ebd0b3165bcdfb64b1056fa99b7880e5621ef66f61426355b5"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12746385928,
+              "len": 34518,
+              "sha256": "4f82fecefef7da30c29fe1881c0ad145e444aa357c505f57fe4d94d4993598b1"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12746420446,
+              "len": 38749,
+              "sha256": "9444becbe61c4e575f695e0c20ded95433f4589db0a25274a96f667293679019"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12746987188,
+              "len": 34518,
+              "sha256": "7c19b1b6f8776cb18f01e3fc0d5fb4d1715086e56cc18d646bd933c2fc58f0e6"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12747021706,
+              "len": 38749,
+              "sha256": "ef561f4a44e1b8f1e159279b9d5a575371f414361c6cdb9c7c4be80e85d45558"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12747710298,
+              "len": 34201,
+              "sha256": "6d692b5bb77e30000a2ff51a867259dc047a9e745333e8bfd9c4a58d5a57c9c9"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12747744499,
+              "len": 38749,
+              "sha256": "ea3da08cc28326757ceca6feda4e35a5b8de6164195d729eec55a730332d0bf7"
+            }
+          ]
+        },
+        "transition_gaps": [
+          {
+            "floor": 26,
+            "reason": "unknown_node_missing_before_after",
+            "evidence": []
+          }
+        ],
+        "same_room_extra_transactions": [],
+        "endpoint": {
+          "entry_frame": null,
+          "completion_frame": null,
+          "completion_witness": null,
+          "observed_at": null,
+          "complete": false,
+          "definition": "after terminal Boss fight: native in_combat=false, before any completed noncombat action/reward mutation on exact horizon; entry inventory is separate"
+        },
+        "forecast_option_keys": [
+          "current",
+          "card0",
+          "card1",
+          "card2",
+          "skip"
+        ],
+        "unsupported_options": [],
+        "source": {
+          "path": "logs/decisions.jsonl",
+          "off": 1374589078,
+          "len": 187666,
+          "sha256": "5d0e65f8b5a4cd6baae300502a54b8480e3793e19a74122ccae4d425e868b3a1"
+        }
+      },
+      "core_verification": {
+        "source_off": 1374589078,
+        "core": "P",
+        "disposition": "censored",
+        "reason": "death_or_no_complete_terminal_node_before_cutoff",
+        "policy": {
+          "status": "changed",
+          "choices_checked": 4,
+          "first_deviation": {
+            "status": "changed",
+            "reason": "actual_choice_differs_from_completionChoice",
+            "expected": {
+              "kind": "skip"
+            },
+            "actual": {
+              "id": "BLADE_DANCE",
+              "upgraded": true,
+              "index": 2,
+              "price": 0,
+              "native": {
+                "index": 2,
+                "upgraded": true,
+                "energy_cost": 1
+              }
+            },
+            "distance_before": 1,
+            "evidence": [
+              {
+                "path": "logs/decisions.jsonl",
+                "off": 1374913163,
+                "len": 190527,
+                "sha256": "5444ce4533ce02c55b6e6aa6ca7b35d54af9355e71cf0735715d3110c1b88583"
+              },
+              {
+                "path": "logs/states.jsonl",
+                "off": 12744204766,
+                "len": 25855,
+                "sha256": "16f7b6e64817f0d6ea9379c80ee9d855449781e2414ce6d873706804d24330c6"
+              },
+              {
+                "path": "logs/states.jsonl",
+                "off": 12744230621,
+                "len": 24645,
+                "sha256": "15fda4aa2a95f211b34f876ce913a1084bca4890c4b79f82491ba9a238ae4015"
+              }
+            ]
+          },
+          "first_unknown": null
+        },
+        "observations": {
+          "components": {
+            "entry": null,
+            "completed_horizon": null,
+            "template_source_commit": "4d55ff9b4e2d6ed9cb701712ab63dba76ac67dac",
+            "source_template_digest": "76e91c950bfd87d820093bdd7dd4b3f11db15256ea2b6e0bb41b9f1ec89f998c"
+          },
+          "actual_casts": {
+            "FOOTWORK": {
+              "completed_dispatch_at_least_once": true,
+              "evidence": [
+                {
+                  "path": "logs/decisions.jsonl",
+                  "off": 1375884896,
+                  "len": 13136,
+                  "sha256": "afa3fdcd295eb0058a6a52ba51c543df2aa076f3a72f9c62ddf4ce6bd0492904"
+                },
+                {
+                  "path": "logs/states.jsonl",
+                  "off": 12746238537,
+                  "len": 38100,
+                  "sha256": "e3f9feb4d1e61048e57636d38be46390638854911996cce4385f2286123e8c23"
+                },
+                {
+                  "path": "logs/states.jsonl",
+                  "off": 12746385928,
+                  "len": 34518,
+                  "sha256": "4f82fecefef7da30c29fe1881c0ad145e444aa357c505f57fe4d94d4993598b1"
+                }
+              ],
+              "attempt": 1,
+              "reloads": 0,
+              "total_count": null,
+              "effect_resolution_and_functional": null
+            }
+          },
+          "cast_dispatch_proxies": {
+            "POISONED_STAB": {
+              "reported_card_from_logged_fingerprint": "POISONED_STAB",
+              "completed_API_dispatch": true,
+              "actual_card_or_branch_binding": null,
+              "reason": "no_fresh_exact_before_after_pair_or_SL_context_unclosed",
+              "evidence": [
+                {
+                  "path": "logs/decisions.jsonl",
+                  "off": 1374903584,
+                  "len": 1541,
+                  "sha256": "66ce121da33dc22ce0385ebb5f886139e6933e380ec79b5d050c3fc7827dc4f3"
+                }
+              ],
+              "attempt": 1,
+              "reloads": 0
+            }
+          },
+          "actual_casts_scope": "已列牌仅证明在所示SL分支至少一次具名completed出牌；未列牌与总次数为unknown，不证明未施放/全部效果/同实例循环",
+          "survival": {
+            "entry_alive": null,
+            "terminal_node_completed_alive": null,
+            "evidence": []
+          },
+          "run_result": {
+            "summary_after_prediction": true,
+            "same_prospective_SL_branch_verified": null,
+            "victory": false,
+            "ended": "2026-10-14T07:10:05.234Z",
+            "floor": 24,
+            "evidence": [
+              {
+                "path": "logs/runs.jsonl",
+                "off": 327433,
+                "len": 485,
+                "sha256": "edd547b202847599db8f85dbf9acbf6f8903f0277c82b89b5025398fcd39ffcd"
+              }
+            ]
+          },
+          "functional": null,
+          "aliveAndFunctional": null,
+          "terminalWin_prediction": null
+        },
+        "verification": {
+          "initial_option": [
+            {
+              "path": "logs/decisions.jsonl",
+              "off": 1374589078,
+              "len": 187666,
+              "sha256": "5d0e65f8b5a4cd6baae300502a54b8480e3793e19a74122ccae4d425e868b3a1"
+            },
+            {
+              "path": "logs/brain.jsonl",
+              "off": 502658572,
+              "len": 91632,
+              "sha256": "b317c97b0a595a263e533e117930ead20dc9a185ebaaf1157163e403559f2fe5"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12743573513,
+              "len": 25155,
+              "sha256": "6578de69702bdd85395c6e15f9f02372a909c1b787de65075f4498d56dbd5329"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12743598668,
+              "len": 23878,
+              "sha256": "299c83b29879ab6d43b26bc6f22e3780c747bbab4349270a057f8aad2a625cb4"
+            }
+          ],
+          "route": [
+            {
+              "path": "logs/brain.jsonl",
+              "off": 502658572,
+              "len": 91632,
+              "sha256": "b317c97b0a595a263e533e117930ead20dc9a185ebaaf1157163e403559f2fe5"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12744255266,
+              "len": 43988,
+              "sha256": "6c81fc1179cfc7b797496a3258f6afea6082e2f899577cac65382f58819305f4"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12744368205,
+              "len": 41633,
+              "sha256": "9bd1a2a96e8fbf35e2b0ac25d13f231691e9091939108a969ce56245ea4dc0fe"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12744557934,
+              "len": 42379,
+              "sha256": "8fe548a76bc0e341549c877596316aecf0e5049d8b0d285c1aff99395012a3ca"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12745741047,
+              "len": 46078,
+              "sha256": "a888f1f1179e86aa32819427c569ea315707c4f4177bf8afbedf47709bcb5fb0"
+            },
+            {
+              "path": "logs/decisions.jsonl",
+              "off": 1375865401,
+              "len": 1889,
+              "sha256": "eb34e199d79569f16dd3194b9379d06a896d32cf963e3c7fdb680da243fe5134"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12745787125,
+              "len": 32061,
+              "sha256": "398602fe351affdaa41ad15949464d7d4ad1de3f065ba7acacf6dc5f9e9fc463"
+            }
+          ],
+          "policy": [
+            {
+              "path": "logs/decisions.jsonl",
+              "off": 1374913163,
+              "len": 190527,
+              "sha256": "5444ce4533ce02c55b6e6aa6ca7b35d54af9355e71cf0735715d3110c1b88583"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12744204766,
+              "len": 25855,
+              "sha256": "16f7b6e64817f0d6ea9379c80ee9d855449781e2414ce6d873706804d24330c6"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12744230621,
+              "len": 24645,
+              "sha256": "15fda4aa2a95f211b34f876ce913a1084bca4890c4b79f82491ba9a238ae4015"
+            },
+            {
+              "path": "logs/decisions.jsonl",
+              "off": 1375186794,
+              "len": 176126,
+              "sha256": "6140507086da3e840035f2a5f2f72603d9563bca289092aeba01d22526aae642"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12744439148,
+              "len": 29419,
+              "sha256": "03d75f9e6f7b100d010a6d01efbdc359e1f543cff7ee05bff8d0909e5fd858c4"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12744468567,
+              "len": 29697,
+              "sha256": "568e1538e058b2341cc12cac58f19910033258bcb60d9a35b12421438ee71ca1"
+            },
+            {
+              "path": "logs/decisions.jsonl",
+              "off": 1375362920,
+              "len": 1554,
+              "sha256": "84ccb083011b5bad3962143723758aafd25f46240d8c13ccfd623d2803a03cd7"
+            },
+            {
+              "path": "logs/decisions.jsonl",
+              "off": 1375663894,
+              "len": 200227,
+              "sha256": "f664e86d497ea3a5ea8ba4681c7b8a8473413bf86703f0b82535318204574cd3"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12745685574,
+              "len": 28559,
+              "sha256": "7b443584453e4a3286f9c5c890f39ef24d46253a1e864b60e2078e709c69ab56"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12745714133,
+              "len": 26914,
+              "sha256": "5578635eca9800f00a340b1e586dd0bae347d89480aaaee4cfee96edd47baffd"
+            }
+          ],
+          "sl": [
+            {
+              "path": "logs/decisions.jsonl",
+              "off": 1374589078,
+              "len": 187666,
+              "sha256": "5d0e65f8b5a4cd6baae300502a54b8480e3793e19a74122ccae4d425e868b3a1"
+            },
+            {
+              "path": "logs/decisions.jsonl",
+              "off": 1375904003,
+              "len": 24252,
+              "sha256": "73b0dd45083b9c1ea649277051550ac41838cfbfd630af8d66bd1452d0d96a92"
+            },
+            {
+              "path": "logs/decisions.jsonl",
+              "off": 1375928255,
+              "len": 1929,
+              "sha256": "c0dd43af0d9f87efc17ae58dd1e8cee951314fe16966b58554a374372e8fa990"
+            },
+            {
+              "path": "logs/sl-attempts.jsonl",
+              "off": 39053939,
+              "len": 9628,
+              "sha256": "ec11ecd4ab5769fbd4e15c660033cbc1fa29920ba7bc24626bb7b9153eaa26bd"
+            },
+            {
+              "path": "logs/sl-attempts.jsonl",
+              "off": 39063567,
+              "len": 17900,
+              "sha256": "fdf38e2bdf43a0071fb41a3c900456c0ecb3e1d42185d6a5b5cc6606d8d9a8b2"
+            },
+            {
+              "path": "logs/sl-attempts.jsonl",
+              "off": 39081467,
+              "len": 5184,
+              "sha256": "a7d3ea83b0b94abf78957c58c6d62cf46e75d188f5e1f5785a400cdcf802f531"
+            },
+            {
+              "path": "logs/sl-attempts.jsonl",
+              "off": 39086651,
+              "len": 6682,
+              "sha256": "1c996f86bbf4c35f03df66e9cc9555c004400bb54ce0deb0560f0e627cbc2ce6"
+            },
+            {
+              "path": "logs/sl-attempts.jsonl",
+              "off": 39093333,
+              "len": 10882,
+              "sha256": "5e6ffa7631c4af04c8c209d2abe38f7b2c3af67084274106e93f764a2630c8d4"
+            },
+            {
+              "path": "logs/sl-attempts.jsonl",
+              "off": 39104215,
+              "len": 11998,
+              "sha256": "7ff26daa210396ebd0b3165bcdfb64b1056fa99b7880e5621ef66f61426355b5"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12746385928,
+              "len": 34518,
+              "sha256": "4f82fecefef7da30c29fe1881c0ad145e444aa357c505f57fe4d94d4993598b1"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12746420446,
+              "len": 38749,
+              "sha256": "9444becbe61c4e575f695e0c20ded95433f4589db0a25274a96f667293679019"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12746987188,
+              "len": 34518,
+              "sha256": "7c19b1b6f8776cb18f01e3fc0d5fb4d1715086e56cc18d646bd933c2fc58f0e6"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12747021706,
+              "len": 38749,
+              "sha256": "ef561f4a44e1b8f1e159279b9d5a575371f414361c6cdb9c7c4be80e85d45558"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12747710298,
+              "len": 34201,
+              "sha256": "6d692b5bb77e30000a2ff51a867259dc047a9e745333e8bfd9c4a58d5a57c9c9"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12747744499,
+              "len": 38749,
+              "sha256": "ea3da08cc28326757ceca6feda4e35a5b8de6164195d729eec55a730332d0bf7"
+            }
+          ],
+          "endpoint": []
+        }
+      }
+    },
+    {
+      "kind": "unverified",
+      "anchor": {
+        "source_off": 1344776745,
+        "run": "Q10YYQ5DUPJA",
+        "decision": "a9d1ec62-05d5-4f05-9860-a161092bd968",
+        "floor": 6,
+        "horizon": 17,
+        "status": "predicted",
+        "binding": {
+          "forecast_model": "observed-opportunity-window4-v1",
+          "forecast_policy": "completion-choice-v1",
+          "template_sha256": "76e91c950bfd87d820093bdd7dd4b3f11db15256ea2b6e0bb41b9f1ec89f998c",
+          "as_of": "2026-10-14T03:13:01.083Z"
+        },
+        "initial_option": {
+          "key": null,
+          "claimed_key": "o0:c5",
+          "status": "unknown",
+          "reason": "composite_service_target_not_exactly_bound_to_executed_child",
+          "evidence": [
+            {
+              "path": "logs/decisions.jsonl",
+              "off": 1344776745,
+              "len": 62782,
+              "sha256": "57b9cbe9067503423e094c416556dec2763d3ebf78a9ec355b2e758155b89dae"
+            },
+            {
+              "path": "logs/brain.jsonl",
+              "off": 494583659,
+              "len": 54167,
+              "sha256": "281f81b83fae104010e2eb3bc5252b6264cd0c5df9bcfe5d233caa2aaa5d1791"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12659813556,
+              "len": 16987,
+              "sha256": "2f16d18131912fbcfc17a2e56af72ba1ac8197f384d8dd6ada54fa16d732f3d1"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12659830543,
+              "len": 21281,
+              "sha256": "94c1638c7b567daf529f3a9036581e41175c35cc19d64dfa44585a55315a97e6"
+            }
+          ],
+          "before_frame": {
+            "path": "logs/states.jsonl",
+            "off": 12659813556,
+            "len": 16987,
+            "sha256": "2f16d18131912fbcfc17a2e56af72ba1ac8197f384d8dd6ada54fa16d732f3d1"
+          },
+          "after_frame": {
+            "path": "logs/states.jsonl",
+            "off": 12659830543,
+            "len": 21281,
+            "sha256": "94c1638c7b567daf529f3a9036581e41175c35cc19d64dfa44585a55315a97e6"
+          }
+        },
+        "route": {
+          "status": "changed",
+          "reason": "actual_node_differs",
+          "planned": [
+            {
+              "id": "r6c0",
+              "floor": 7,
+              "row": 6,
+              "col": 0,
+              "kind": "rest"
+            },
+            {
+              "id": "r7c0",
+              "floor": 8,
+              "row": 7,
+              "col": 0,
+              "kind": "fight"
+            },
+            {
+              "id": "r8c0",
+              "floor": 9,
+              "row": 8,
+              "col": 0,
+              "kind": "unknown"
+            },
+            {
+              "id": "r9c0",
+              "floor": 10,
+              "row": 9,
+              "col": 0,
+              "kind": "unknown"
+            },
+            {
+              "id": "r10c1",
+              "floor": 11,
+              "row": 10,
+              "col": 1,
+              "kind": "unknown"
+            },
+            {
+              "id": "r11c1",
+              "floor": 12,
+              "row": 11,
+              "col": 1,
+              "kind": "rest"
+            },
+            {
+              "id": "r12c2",
+              "floor": 13,
+              "row": 12,
+              "col": 2,
+              "kind": "fight"
+            },
+            {
+              "id": "r13c2",
+              "floor": 14,
+              "row": 13,
+              "col": 2,
+              "kind": "shop"
+            },
+            {
+              "id": "r14c1",
+              "floor": 15,
+              "row": 14,
+              "col": 1,
+              "kind": "fight"
+            },
+            {
+              "id": "r15c0",
+              "floor": 16,
+              "row": 15,
+              "col": 0,
+              "kind": "rest"
+            },
+            {
+              "id": "r16c3",
+              "floor": 17,
+              "row": 16,
+              "col": 3,
+              "kind": "fight"
+            }
+          ],
+          "observed": [
+            {
+              "node": "r6c0",
+              "floor": 7,
+              "evidence": {
+                "path": "logs/states.jsonl",
+                "off": 12659962033,
+                "len": 37178,
+                "sha256": "d8453b3e37807bfaa8fe77c533c345f4b09a0485a833bb9de23f8a599570f870"
+              }
+            },
+            {
+              "node": "r8c0",
+              "floor": 9,
+              "evidence": {
+                "path": "logs/states.jsonl",
+                "off": 12661462481,
+                "len": 40658,
+                "sha256": "d03664365a438fa90674cf6b1ffefd9d526016373abc5f4d71aa7b7a18a37032"
+              }
+            },
+            {
+              "node": "r9c0",
+              "floor": 10,
+              "evidence": {
+                "path": "logs/states.jsonl",
+                "off": 12661554509,
+                "len": 38775,
+                "sha256": "0965f5a4328b7b11c98c10cdbd76c0a4465a1c771ef78769e7235954dac61347"
+              }
+            },
+            {
+              "node": "r10c1",
+              "floor": 11,
+              "evidence": {
+                "path": "logs/states.jsonl",
+                "off": 12661677331,
+                "len": 40157,
+                "sha256": "cea9da47fa03f8dd3de14d2b5cd5eb44ada06caad7686c4e86b708a46f0af31b"
+              }
+            },
+            {
+              "node": "r11c1",
+              "floor": 12,
+              "evidence": {
+                "path": "logs/states.jsonl",
+                "off": 12661755481,
+                "len": 40145,
+                "sha256": "0cfa4febe4af444614a9c02dd26d711f49256e6becd522c71a7fec5d49ac4cc3"
+              }
+            },
+            {
+              "node": "r12c2",
+              "floor": 13,
+              "evidence": {
+                "path": "logs/states.jsonl",
+                "off": 12662512209,
+                "len": 42736,
+                "sha256": "75e5be2e5b13ade307d56c7cb752739727fdf44c318f20d413f1f92dd0a9f513"
+              }
+            },
+            {
+              "node": "r13c2",
+              "floor": 14,
+              "evidence": {
+                "path": "logs/states.jsonl",
+                "off": 12662746590,
+                "len": 42629,
+                "sha256": "71d5b27ba936c591deb0dfa9d9fe5bc9a9d5f2d2999f826db59a995ce1f085a8"
+              }
+            },
+            {
+              "node": "r14c1",
+              "floor": 15,
+              "evidence": {
+                "path": "logs/states.jsonl",
+                "off": 12663059167,
+                "len": 45530,
+                "sha256": "c8eda4b37f8b4b3e3a89305dc3a6778a83cc70acaae0aae3421ea155bc75681c"
+              }
+            },
+            {
+              "node": "r15c0",
+              "floor": 16,
+              "evidence": {
+                "path": "logs/states.jsonl",
+                "off": 12663149130,
+                "len": 43176,
+                "sha256": "d37bc765ce06e5f4d66bacc2ba276dbc60b746660678cc1689b1e0dde0570d8a"
+              }
+            },
+            {
+              "node": "r16c3",
+              "floor": 17,
+              "evidence": [
+                {
+                  "path": "logs/decisions.jsonl",
+                  "off": 1346988684,
+                  "len": 1640,
+                  "sha256": "28c421c3ace856aacb5a0c0bb3a165512957dd66af482df8050ae82911008f6e"
+                },
+                {
+                  "path": "logs/states.jsonl",
+                  "off": 12663149130,
+                  "len": 43176,
+                  "sha256": "d37bc765ce06e5f4d66bacc2ba276dbc60b746660678cc1689b1e0dde0570d8a"
+                },
+                {
+                  "path": "logs/states.jsonl",
+                  "off": 12663192306,
+                  "len": 30289,
+                  "sha256": "40a26830543504e2989c5e55c20330aaf1bea5b9918a8b97f7873248924a4fd1"
+                }
+              ],
+              "native_action_and_observed_successor": true
+            }
+          ],
+          "changed": [
+            {
+              "node": "r7c0",
+              "actual": [
+                "r7c1"
+              ],
+              "evidence": [
+                {
+                  "path": "logs/decisions.jsonl",
+                  "off": 1345159404,
+                  "len": 1710,
+                  "sha256": "3237cec51bf0b088690483799714f7c22af60c8ca7d067bd56c951e3208dfcb8"
+                },
+                {
+                  "path": "logs/states.jsonl",
+                  "off": 12659962033,
+                  "len": 37178,
+                  "sha256": "d8453b3e37807bfaa8fe77c533c345f4b09a0485a833bb9de23f8a599570f870"
+                },
+                {
+                  "path": "logs/states.jsonl",
+                  "off": 12659999211,
+                  "len": 21883,
+                  "sha256": "9e71bbcf43204aef7cb4844cb87bd4a0313a3c19947eec42d912810457296f24"
+                }
+              ]
+            }
+          ],
+          "missing_nodes": [],
+          "evidence": [
+            {
+              "path": "logs/brain.jsonl",
+              "off": 494583659,
+              "len": 54167,
+              "sha256": "281f81b83fae104010e2eb3bc5252b6264cd0c5df9bcfe5d233caa2aaa5d1791"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12659962033,
+              "len": 37178,
+              "sha256": "d8453b3e37807bfaa8fe77c533c345f4b09a0485a833bb9de23f8a599570f870"
+            },
+            {
+              "path": "logs/decisions.jsonl",
+              "off": 1345159404,
+              "len": 1710,
+              "sha256": "3237cec51bf0b088690483799714f7c22af60c8ca7d067bd56c951e3208dfcb8"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12659999211,
+              "len": 21883,
+              "sha256": "9e71bbcf43204aef7cb4844cb87bd4a0313a3c19947eec42d912810457296f24"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12661462481,
+              "len": 40658,
+              "sha256": "d03664365a438fa90674cf6b1ffefd9d526016373abc5f4d71aa7b7a18a37032"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12661554509,
+              "len": 38775,
+              "sha256": "0965f5a4328b7b11c98c10cdbd76c0a4465a1c771ef78769e7235954dac61347"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12661677331,
+              "len": 40157,
+              "sha256": "cea9da47fa03f8dd3de14d2b5cd5eb44ada06caad7686c4e86b708a46f0af31b"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12661755481,
+              "len": 40145,
+              "sha256": "0cfa4febe4af444614a9c02dd26d711f49256e6becd522c71a7fec5d49ac4cc3"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12662512209,
+              "len": 42736,
+              "sha256": "75e5be2e5b13ade307d56c7cb752739727fdf44c318f20d413f1f92dd0a9f513"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12662746590,
+              "len": 42629,
+              "sha256": "71d5b27ba936c591deb0dfa9d9fe5bc9a9d5f2d2999f826db59a995ce1f085a8"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12663059167,
+              "len": 45530,
+              "sha256": "c8eda4b37f8b4b3e3a89305dc3a6778a83cc70acaae0aae3421ea155bc75681c"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12663149130,
+              "len": 43176,
+              "sha256": "d37bc765ce06e5f4d66bacc2ba276dbc60b746660678cc1689b1e0dde0570d8a"
+            },
+            {
+              "path": "logs/decisions.jsonl",
+              "off": 1346988684,
+              "len": 1640,
+              "sha256": "28c421c3ace856aacb5a0c0bb3a165512957dd66af482df8050ae82911008f6e"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12663192306,
+              "len": 30289,
+              "sha256": "40a26830543504e2989c5e55c20330aaf1bea5b9918a8b97f7873248924a4fd1"
+            }
+          ],
+          "plan_text": "r6c0 休息 → r7c0 精英 → r8c0 问号 → r9c0 宝箱 → r10c1 问号 → r11c1 休息 → r12c2 普通战 → r13c2 商店 → r14c1 普通战 → r15c0 休息 → r16c3 Boss",
+          "plan_recovery": "same_question_snapshot",
+          "current_memory_route": "本幕进度（按 F3 的路线）: 已走 3/14 [怪怪问] | 下一步 休（预计 HP 50%） | 剩余 11: 休→精→问→宝→问→休→怪→店→怪→休→王",
+          "plan_snapshot_ts": "2026-10-14T03:14:22.953Z"
+        },
+        "sl": {
+          "status": "same",
+          "logged_attempt": [
+            null,
+            0
+          ],
+          "reason": null,
+          "evidence": [
+            {
+              "path": "logs/decisions.jsonl",
+              "off": 1344776745,
+              "len": 62782,
+              "sha256": "57b9cbe9067503423e094c416556dec2763d3ebf78a9ec355b2e758155b89dae"
+            },
+            {
+              "path": "logs/sl-attempts.jsonl",
+              "off": 38569777,
+              "len": 21988,
+              "sha256": "0aa4263a8fcbaac05fb61644c46a58752fd9a69a51dede1f3117c8a11b43513c"
+            }
+          ]
+        },
+        "transition_gaps": [
+          {
+            "floor": 9,
+            "reason": "unmodelled_node_changed_inventory_relic_or_gold",
+            "evidence": [
+              {
+                "path": "logs/states.jsonl",
+                "off": 12660766941,
+                "len": 22216,
+                "sha256": "a5cc05f41ba736d6962e6cefac5b38dd06ed0c09dda72f2b6564fe8e6042bdab"
+              },
+              {
+                "path": "logs/states.jsonl",
+                "off": 12661462481,
+                "len": 40658,
+                "sha256": "d03664365a438fa90674cf6b1ffefd9d526016373abc5f4d71aa7b7a18a37032"
+              }
+            ]
+          },
+          {
+            "floor": 10,
+            "reason": "unmodelled_node_changed_inventory_relic_or_gold",
+            "evidence": [
+              {
+                "path": "logs/states.jsonl",
+                "off": 12661503139,
+                "len": 16977,
+                "sha256": "ed74eb0c4d211a216c7cd5d62d6739d25dbbb1d9061cd3400157d69dc8a6a6e5"
+              },
+              {
+                "path": "logs/states.jsonl",
+                "off": 12661554509,
+                "len": 38775,
+                "sha256": "0965f5a4328b7b11c98c10cdbd76c0a4465a1c771ef78769e7235954dac61347"
+              }
+            ]
+          },
+          {
+            "floor": 11,
+            "reason": "unmodelled_node_changed_inventory_relic_or_gold",
+            "evidence": [
+              {
+                "path": "logs/states.jsonl",
+                "off": 12661593284,
+                "len": 18975,
+                "sha256": "212ca462eea2365105d06c7e1009b49621ba4e7312410fc9f0c0431abf8b67eb"
+              },
+              {
+                "path": "logs/states.jsonl",
+                "off": 12661677331,
+                "len": 40157,
+                "sha256": "cea9da47fa03f8dd3de14d2b5cd5eb44ada06caad7686c4e86b708a46f0af31b"
+              }
+            ]
+          }
+        ],
+        "same_room_extra_transactions": [],
+        "endpoint": {
+          "entry_frame": {
+            "path": "logs/states.jsonl",
+            "off": 12663192306,
+            "len": 30289,
+            "sha256": "40a26830543504e2989c5e55c20330aaf1bea5b9918a8b97f7873248924a4fd1"
+          },
+          "completion_frame": {
+            "path": "logs/states.jsonl",
+            "off": 12665049321,
+            "len": 24337,
+            "sha256": "31963bfe05e5d6fffd105b5f14297f3e363f542f29ada3b463318a75b825e1a0"
+          },
+          "completion_witness": {
+            "path": "logs/sl-attempts.jsonl",
+            "off": 38569777,
+            "len": 21988,
+            "sha256": "0aa4263a8fcbaac05fb61644c46a58752fd9a69a51dede1f3117c8a11b43513c"
+          },
+          "observed_at": "2026-10-14T03:32:55.593Z",
+          "complete": true,
+          "definition": "after terminal Boss fight: native in_combat=false, before any completed noncombat action/reward mutation on exact horizon; entry inventory is separate"
+        },
+        "forecast_option_keys": [
+          "current",
+          "o0:c0",
+          "o0:c5",
+          "o1"
+        ],
+        "unsupported_options": [
+          "o0:c0",
+          "o0:c5",
+          "o1"
+        ],
+        "source": {
+          "path": "logs/decisions.jsonl",
+          "off": 1344776745,
+          "len": 62782,
+          "sha256": "57b9cbe9067503423e094c416556dec2763d3ebf78a9ec355b2e758155b89dae"
+        }
+      },
+      "core_verification": {
+        "source_off": 1344776745,
+        "core": "P",
+        "disposition": "unverified",
+        "reason": "composite_service_target_not_exactly_bound_to_executed_child",
+        "policy": {
+          "status": "changed",
+          "choices_checked": 9,
+          "first_deviation": {
+            "status": "changed",
+            "reason": "upgrade_does_not_reduce_original_signature_distance_policy_would_skip",
+            "evidence": [
+              {
+                "path": "logs/decisions.jsonl",
+                "off": 1345156717,
+                "len": 1517,
+                "sha256": "6afd44c9f7eed1d6127d32b3256fd302eb10ec5bca5b028a2246530f07dc224f"
+              },
+              {
+                "path": "logs/states.jsonl",
+                "off": 12659921865,
+                "len": 24598,
+                "sha256": "5dd6c9ed12f96114ae2511f6848e402cc48157d4b3b9d58ffa7ba54576658b07"
+              },
+              {
+                "path": "logs/states.jsonl",
+                "off": 12659946463,
+                "len": 15570,
+                "sha256": "586aec766bf5cd631e95921aa31ff9e91111155cc25bd25b8ae367d75d726862"
+              }
+            ]
+          },
+          "first_unknown": null
+        },
+        "observations": {
+          "components": {
+            "entry": {
+              "missing": [
+                {
+                  "id": "accelerant",
+                  "count": 1
+                }
+              ],
+              "signature_present": false,
+              "evidence": [
+                {
+                  "path": "logs/states.jsonl",
+                  "off": 12663192306,
+                  "len": 30289,
+                  "sha256": "40a26830543504e2989c5e55c20330aaf1bea5b9918a8b97f7873248924a4fd1"
+                }
+              ]
+            },
+            "completed_horizon": {
+              "missing": [
+                {
+                  "id": "accelerant",
+                  "count": 1
+                }
+              ],
+              "signature_present": false,
+              "evidence": [
+                {
+                  "path": "logs/states.jsonl",
+                  "off": 12665049321,
+                  "len": 24337,
+                  "sha256": "31963bfe05e5d6fffd105b5f14297f3e363f542f29ada3b463318a75b825e1a0"
+                }
+              ]
+            },
+            "template_source_commit": "908f043bb01b6c7c1406bed6394df36f41528a56",
+            "source_template_digest": "76e91c950bfd87d820093bdd7dd4b3f11db15256ea2b6e0bb41b9f1ec89f998c"
+          },
+          "actual_casts": {},
+          "cast_dispatch_proxies": {
+            "POISONED_STAB": {
+              "reported_card_from_logged_fingerprint": "POISONED_STAB",
+              "completed_API_dispatch": true,
+              "actual_card_or_branch_binding": null,
+              "reason": "no_fresh_exact_before_after_pair_or_SL_context_unclosed",
+              "evidence": [
+                {
+                  "path": "logs/decisions.jsonl",
+                  "off": 1346806375,
+                  "len": 1672,
+                  "sha256": "c88b14315d824e1bc7e6fd7144ac105e5bb5169488a1f133c28d2d61d404b850"
+                }
+              ],
+              "attempt": null,
+              "reloads": 0
+            },
+            "FOOTWORK": {
+              "reported_card_from_logged_fingerprint": "FOOTWORK",
+              "completed_API_dispatch": true,
+              "actual_card_or_branch_binding": null,
+              "reason": "no_fresh_exact_before_after_pair_or_SL_context_unclosed",
+              "evidence": [
+                {
+                  "path": "logs/decisions.jsonl",
+                  "off": 1347280259,
+                  "len": 1433,
+                  "sha256": "dda21848a5c3bd5bca2362bb7c92d4d4faa103146011ad7df0390a360757a9de"
+                }
+              ],
+              "attempt": 1,
+              "reloads": 0
+            }
+          },
+          "actual_casts_scope": "已列牌仅证明在所示SL分支至少一次具名completed出牌；未列牌与总次数为unknown，不证明未施放/全部效果/同实例循环",
+          "survival": {
+            "entry_alive": true,
+            "terminal_node_completed_alive": true,
+            "evidence": [
+              {
+                "path": "logs/states.jsonl",
+                "off": 12663192306,
+                "len": 30289,
+                "sha256": "40a26830543504e2989c5e55c20330aaf1bea5b9918a8b97f7873248924a4fd1"
+              },
+              {
+                "path": "logs/states.jsonl",
+                "off": 12665049321,
+                "len": 24337,
+                "sha256": "31963bfe05e5d6fffd105b5f14297f3e363f542f29ada3b463318a75b825e1a0"
+              },
+              {
+                "path": "logs/sl-attempts.jsonl",
+                "off": 38569777,
+                "len": 21988,
+                "sha256": "0aa4263a8fcbaac05fb61644c46a58752fd9a69a51dede1f3117c8a11b43513c"
+              }
+            ]
+          },
+          "run_result": {
+            "summary_after_prediction": true,
+            "same_prospective_SL_branch_verified": null,
+            "victory": false,
+            "ended": "2026-10-14T04:45:17.826Z",
+            "floor": 49,
+            "evidence": [
+              {
+                "path": "logs/runs.jsonl",
+                "off": 326478,
+                "len": 490,
+                "sha256": "2bb43f29c298de324ff35ba24e18f4dc30872236249899bff94ed37c57a1a460"
+              }
+            ]
+          },
+          "functional": null,
+          "aliveAndFunctional": null,
+          "terminalWin_prediction": null
+        },
+        "verification": {
+          "initial_option": [
+            {
+              "path": "logs/decisions.jsonl",
+              "off": 1344776745,
+              "len": 62782,
+              "sha256": "57b9cbe9067503423e094c416556dec2763d3ebf78a9ec355b2e758155b89dae"
+            },
+            {
+              "path": "logs/brain.jsonl",
+              "off": 494583659,
+              "len": 54167,
+              "sha256": "281f81b83fae104010e2eb3bc5252b6264cd0c5df9bcfe5d233caa2aaa5d1791"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12659813556,
+              "len": 16987,
+              "sha256": "2f16d18131912fbcfc17a2e56af72ba1ac8197f384d8dd6ada54fa16d732f3d1"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12659830543,
+              "len": 21281,
+              "sha256": "94c1638c7b567daf529f3a9036581e41175c35cc19d64dfa44585a55315a97e6"
+            }
+          ],
+          "route": [
+            {
+              "path": "logs/brain.jsonl",
+              "off": 494583659,
+              "len": 54167,
+              "sha256": "281f81b83fae104010e2eb3bc5252b6264cd0c5df9bcfe5d233caa2aaa5d1791"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12659962033,
+              "len": 37178,
+              "sha256": "d8453b3e37807bfaa8fe77c533c345f4b09a0485a833bb9de23f8a599570f870"
+            },
+            {
+              "path": "logs/decisions.jsonl",
+              "off": 1345159404,
+              "len": 1710,
+              "sha256": "3237cec51bf0b088690483799714f7c22af60c8ca7d067bd56c951e3208dfcb8"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12659999211,
+              "len": 21883,
+              "sha256": "9e71bbcf43204aef7cb4844cb87bd4a0313a3c19947eec42d912810457296f24"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12661462481,
+              "len": 40658,
+              "sha256": "d03664365a438fa90674cf6b1ffefd9d526016373abc5f4d71aa7b7a18a37032"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12661554509,
+              "len": 38775,
+              "sha256": "0965f5a4328b7b11c98c10cdbd76c0a4465a1c771ef78769e7235954dac61347"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12661677331,
+              "len": 40157,
+              "sha256": "cea9da47fa03f8dd3de14d2b5cd5eb44ada06caad7686c4e86b708a46f0af31b"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12661755481,
+              "len": 40145,
+              "sha256": "0cfa4febe4af444614a9c02dd26d711f49256e6becd522c71a7fec5d49ac4cc3"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12662512209,
+              "len": 42736,
+              "sha256": "75e5be2e5b13ade307d56c7cb752739727fdf44c318f20d413f1f92dd0a9f513"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12662746590,
+              "len": 42629,
+              "sha256": "71d5b27ba936c591deb0dfa9d9fe5bc9a9d5f2d2999f826db59a995ce1f085a8"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12663059167,
+              "len": 45530,
+              "sha256": "c8eda4b37f8b4b3e3a89305dc3a6778a83cc70acaae0aae3421ea155bc75681c"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12663149130,
+              "len": 43176,
+              "sha256": "d37bc765ce06e5f4d66bacc2ba276dbc60b746660678cc1689b1e0dde0570d8a"
+            },
+            {
+              "path": "logs/decisions.jsonl",
+              "off": 1346988684,
+              "len": 1640,
+              "sha256": "28c421c3ace856aacb5a0c0bb3a165512957dd66af482df8050ae82911008f6e"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12663192306,
+              "len": 30289,
+              "sha256": "40a26830543504e2989c5e55c20330aaf1bea5b9918a8b97f7873248924a4fd1"
+            }
+          ],
+          "policy": [
+            {
+              "path": "logs/decisions.jsonl",
+              "off": 1345156717,
+              "len": 1517,
+              "sha256": "6afd44c9f7eed1d6127d32b3256fd302eb10ec5bca5b028a2246530f07dc224f"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12659921865,
+              "len": 24598,
+              "sha256": "5dd6c9ed12f96114ae2511f6848e402cc48157d4b3b9d58ffa7ba54576658b07"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12659946463,
+              "len": 15570,
+              "sha256": "586aec766bf5cd631e95921aa31ff9e91111155cc25bd25b8ae367d75d726862"
+            },
+            {
+              "path": "logs/decisions.jsonl",
+              "off": 1345427854,
+              "len": 156659,
+              "sha256": "f0af57426aecbba91d0c7465dd71a1afc33e24f0694ae4ba6e859cbe8fe1fd4b"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12660688058,
+              "len": 20075,
+              "sha256": "df397081bd95b4dc90230b6a0ae0296ca31e92daa2188878844a8ffe95fb9c14"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12660708133,
+              "len": 18718,
+              "sha256": "4fb85a688fe656c9297d5eea35c30bebd7fde02f30fa40f3ce9c52fe685748ab"
+            },
+            {
+              "path": "logs/decisions.jsonl",
+              "off": 1345748399,
+              "len": 160500,
+              "sha256": "e25907ce843286a6c20e85976ce102da07d9cd7940febada0ee7fa0f43fe2e79"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12661421962,
+              "len": 20892,
+              "sha256": "e1c04fc13283fcddc189406f4b2acc88697968a927ce447e3a6c80d6a1401787"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12661442854,
+              "len": 19627,
+              "sha256": "414e7be8f67da118440c15b9f108993f2516f4f39dfdc79a590cb894e45444bc"
+            },
+            {
+              "path": "logs/decisions.jsonl",
+              "off": 1346449119,
+              "len": 172018,
+              "sha256": "b9a6aa5fb129524b6a9a159f91e9676522d1380cf2a131d0ad0f302bf1ca1149"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12662467892,
+              "len": 22762,
+              "sha256": "6cf46b97b0602c479d6a9b22e7983518d463fab6b046e0ee89a16a61c0734663"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12662490654,
+              "len": 21555,
+              "sha256": "e45919c4417c706bae216d2e62072dabe6086d878d88923cf49e1a0b3fc0c06e"
+            },
+            {
+              "path": "logs/decisions.jsonl",
+              "off": 1346625274,
+              "len": 168820,
+              "sha256": "f396eee2a2964c6a57335642fc1004fe8057da9eb92df619b61b6e01ce3436e0"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12662581769,
+              "len": 26974,
+              "sha256": "1e88227816760691570ab9c852e5595660954069a053e61eeb58afc4e249732e"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12662608743,
+              "len": 27209,
+              "sha256": "c6ff49ea85c54af98c75222e80343b922225dacd6f3376b44b31062eafe1412d"
+            },
+            {
+              "path": "logs/decisions.jsonl",
+              "off": 1346794094,
+              "len": 1540,
+              "sha256": "5bb837534ef5abead5fbc768e83a8042cdb10bae606d4f3df24930e084e1bf18"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12662635952,
+              "len": 27407,
+              "sha256": "d4239d03afd17282f9adea08c4f247b6813d91fd49bb28e276e16ed089c13534"
+            },
+            {
+              "path": "logs/decisions.jsonl",
+              "off": 1346795634,
+              "len": 1521,
+              "sha256": "44bc3c39fdfc06b8e85c67ee23e625951f1f348578c6f506576c9e101080dcee"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12662663359,
+              "len": 27689,
+              "sha256": "49efafc9c2aed59541ffad1d1ed3b018b3d8f0156dfe97e313337735ee94c33b"
+            },
+            {
+              "path": "logs/decisions.jsonl",
+              "off": 1346797155,
+              "len": 1524,
+              "sha256": "d555a93bfaeb4f640073d9cc4e31ff9e203c59614f7ce028c4eb2ff8d4bd770d"
+            },
+            {
+              "path": "logs/decisions.jsonl",
+              "off": 1346812233,
+              "len": 43758,
+              "sha256": "114a1767da4c089565dd552123c9f6d38e1ad7dff8bb9bf899b1a29df3f1a515"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12663009208,
+              "len": 25604,
+              "sha256": "29cee3cfa630b705f3e19becc81495f6af1baef451ae26094b710a030d1e7d7a"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12663034812,
+              "len": 24355,
+              "sha256": "6520314e51ca497b671d2ec3772f109f2d494c5bbf5759e901ec356f60fc4935"
+            }
+          ],
+          "sl": [
+            {
+              "path": "logs/decisions.jsonl",
+              "off": 1344776745,
+              "len": 62782,
+              "sha256": "57b9cbe9067503423e094c416556dec2763d3ebf78a9ec355b2e758155b89dae"
+            },
+            {
+              "path": "logs/sl-attempts.jsonl",
+              "off": 38569777,
+              "len": 21988,
+              "sha256": "0aa4263a8fcbaac05fb61644c46a58752fd9a69a51dede1f3117c8a11b43513c"
+            }
+          ],
+          "endpoint": [
+            {
+              "path": "logs/states.jsonl",
+              "off": 12665049321,
+              "len": 24337,
+              "sha256": "31963bfe05e5d6fffd105b5f14297f3e363f542f29ada3b463318a75b825e1a0"
+            },
+            {
+              "path": "logs/sl-attempts.jsonl",
+              "off": 38569777,
+              "len": 21988,
+              "sha256": "0aa4263a8fcbaac05fb61644c46a58752fd9a69a51dede1f3117c8a11b43513c"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "kind": "components_present_but_not_qualified_label",
+      "anchor": {
+        "source_off": 1310026531,
+        "run": "LKC9YXKZWTKR",
+        "decision": "41ab7b9a-3ae0-45c5-8094-7183f41207e5",
+        "floor": 19,
+        "horizon": 33,
+        "status": "predicted",
+        "binding": {
+          "forecast_model": null,
+          "forecast_policy": null,
+          "template_sha256": null,
+          "as_of": null
+        },
+        "initial_option": {
+          "key": "card3",
+          "claimed_key": "card3",
+          "status": "verified",
+          "reason": null,
+          "evidence": [
+            {
+              "path": "logs/decisions.jsonl",
+              "off": 1310026531,
+              "len": 43453,
+              "sha256": "7889fd67f2cc9c2494ff80329e6fab15c91e0d4881e3df6012cc3b1274d1ea3a"
+            },
+            {
+              "path": "logs/brain.jsonl",
+              "off": 487377256,
+              "len": 35142,
+              "sha256": "255a88fb6fafa9898917441d35f83485abef867dcfea6ac0eecd8c589564764b"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12559323233,
+              "len": 26509,
+              "sha256": "8f311855bd030c4f71345d01f55e28fea0ddf4a4b6f6408d46a76bbcbee9addf"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12559349742,
+              "len": 24273,
+              "sha256": "95673e68f785d476e262e5e10d2e0536e5cf1f6f0170318b47d1ee4744c336ac"
+            }
+          ],
+          "before_frame": {
+            "path": "logs/states.jsonl",
+            "off": 12559323233,
+            "len": 26509,
+            "sha256": "8f311855bd030c4f71345d01f55e28fea0ddf4a4b6f6408d46a76bbcbee9addf"
+          },
+          "after_frame": {
+            "path": "logs/states.jsonl",
+            "off": 12559349742,
+            "len": 24273,
+            "sha256": "95673e68f785d476e262e5e10d2e0536e5cf1f6f0170318b47d1ee4744c336ac"
+          }
+        },
+        "route": {
+          "status": "same",
+          "reason": null,
+          "planned": [
+            {
+              "id": "r2c2",
+              "floor": 20,
+              "row": 2,
+              "col": 2,
+              "kind": "unknown"
+            },
+            {
+              "id": "r3c2",
+              "floor": 21,
+              "row": 3,
+              "col": 2,
+              "kind": "unknown"
+            },
+            {
+              "id": "r4c3",
+              "floor": 22,
+              "row": 4,
+              "col": 3,
+              "kind": "unknown"
+            },
+            {
+              "id": "r5c3",
+              "floor": 23,
+              "row": 5,
+              "col": 3,
+              "kind": "unknown"
+            },
+            {
+              "id": "r6c3",
+              "floor": 24,
+              "row": 6,
+              "col": 3,
+              "kind": "rest"
+            },
+            {
+              "id": "r7c3",
+              "floor": 25,
+              "row": 7,
+              "col": 3,
+              "kind": "fight"
+            },
+            {
+              "id": "r8c2",
+              "floor": 26,
+              "row": 8,
+              "col": 2,
+              "kind": "unknown"
+            },
+            {
+              "id": "r9c1",
+              "floor": 27,
+              "row": 9,
+              "col": 1,
+              "kind": "fight"
+            },
+            {
+              "id": "r10c0",
+              "floor": 28,
+              "row": 10,
+              "col": 0,
+              "kind": "rest"
+            },
+            {
+              "id": "r11c0",
+              "floor": 29,
+              "row": 11,
+              "col": 0,
+              "kind": "unknown"
+            },
+            {
+              "id": "r12c0",
+              "floor": 30,
+              "row": 12,
+              "col": 0,
+              "kind": "fight"
+            },
+            {
+              "id": "r13c0",
+              "floor": 31,
+              "row": 13,
+              "col": 0,
+              "kind": "shop"
+            },
+            {
+              "id": "r14c0",
+              "floor": 32,
+              "row": 14,
+              "col": 0,
+              "kind": "rest"
+            },
+            {
+              "id": "r15c3",
+              "floor": 33,
+              "row": 15,
+              "col": 3,
+              "kind": "fight"
+            }
+          ],
+          "observed": [
+            {
+              "node": "r2c2",
+              "floor": 20,
+              "evidence": {
+                "path": "logs/states.jsonl",
+                "off": 12559488069,
+                "len": 41531,
+                "sha256": "e3da83c5d427d0599de491d2bd0776e5b67cf9da85417e12ddd44efc6568e2f4"
+              }
+            },
+            {
+              "node": "r3c2",
+              "floor": 21,
+              "evidence": {
+                "path": "logs/states.jsonl",
+                "off": 12559595743,
+                "len": 41807,
+                "sha256": "25c919811c8e45419350df1e5704f06fd4354d4b6fe5fc184466bae75b654cf3"
+              }
+            },
+            {
+              "node": "r4c3",
+              "floor": 22,
+              "evidence": {
+                "path": "logs/states.jsonl",
+                "off": 12559685503,
+                "len": 42354,
+                "sha256": "48b609c29651a2bc8244bbb535e20e370b56cad3b4c5650da69128549f780885"
+              }
+            },
+            {
+              "node": "r5c3",
+              "floor": 23,
+              "evidence": {
+                "path": "logs/states.jsonl",
+                "off": 12559800158,
+                "len": 42450,
+                "sha256": "805bf76acf4d35e463e0e8950c14adcbe172bf6e1fb4c303e89d7a34f0d5dc76"
+              }
+            },
+            {
+              "node": "r6c3",
+              "floor": 24,
+              "evidence": {
+                "path": "logs/states.jsonl",
+                "off": 12559888961,
+                "len": 42442,
+                "sha256": "92d9647b220dee4c35cb6266ab7ce7355d64fc97c5afb24d0a804378878048eb"
+              }
+            },
+            {
+              "node": "r7c3",
+              "floor": 25,
+              "evidence": {
+                "path": "logs/states.jsonl",
+                "off": 12561119240,
+                "len": 45103,
+                "sha256": "e447a9049258ce7a983f1702623b9a8696db69e16a647fc57aebc0620edadc68"
+              }
+            },
+            {
+              "node": "r8c2",
+              "floor": 26,
+              "evidence": {
+                "path": "logs/states.jsonl",
+                "off": 12561234357,
+                "len": 43440,
+                "sha256": "ed46944c3cb2b27c63ece0f5fd790f4fdfd5364d06cad7aae8fd51f4c4e8f450"
+              }
+            },
+            {
+              "node": "r9c1",
+              "floor": 27,
+              "evidence": {
+                "path": "logs/states.jsonl",
+                "off": 12562551931,
+                "len": 45671,
+                "sha256": "b9a87286e30fe51d09a5c7ee38be31a3f96f713369d0f3a584222acc712aeab5"
+              }
+            },
+            {
+              "node": "r10c0",
+              "floor": 28,
+              "evidence": {
+                "path": "logs/states.jsonl",
+                "off": 12562683573,
+                "len": 43326,
+                "sha256": "1639d0c5ca833bd82d469ea016899bbfa378bbc79fcab76d78481b72cc2987d1"
+              }
+            },
+            {
+              "node": "r11c0",
+              "floor": 29,
+              "evidence": {
+                "path": "logs/states.jsonl",
+                "off": 12563681149,
+                "len": 46530,
+                "sha256": "5ec476a7c34465a4d819a137fcd97a93ce3b123a4896fbc55238d1ccffb639f8"
+              }
+            },
+            {
+              "node": "r12c0",
+              "floor": 30,
+              "evidence": {
+                "path": "logs/states.jsonl",
+                "off": 12565097863,
+                "len": 47165,
+                "sha256": "6a87ebe1f29dc3fa1f354a5c1e568a2664411a5135fdfb2cdc7ef4a8cb628814"
+              }
+            },
+            {
+              "node": "r13c0",
+              "floor": 31,
+              "evidence": {
+                "path": "logs/states.jsonl",
+                "off": 12565444369,
+                "len": 46245,
+                "sha256": "01d1b1bb2cf15f025c245c59ff92160f165f9b0d861eebdf73ff00131dc663c1"
+              }
+            },
+            {
+              "node": "r14c0",
+              "floor": 32,
+              "evidence": {
+                "path": "logs/states.jsonl",
+                "off": 12565544645,
+                "len": 46231,
+                "sha256": "a6ae01075ccb69126aaaad10557206b56e8beab87dd520f21794994157dec1cf"
+              }
+            },
+            {
+              "node": "r15c3",
+              "floor": 33,
+              "evidence": [
+                {
+                  "path": "logs/decisions.jsonl",
+                  "off": 1311821516,
+                  "len": 1888,
+                  "sha256": "5af0dc7c37f8c386150599d492c968731a627878378b648a1a30c11a27f61d7d"
+                },
+                {
+                  "path": "logs/states.jsonl",
+                  "off": 12565544645,
+                  "len": 46231,
+                  "sha256": "a6ae01075ccb69126aaaad10557206b56e8beab87dd520f21794994157dec1cf"
+                },
+                {
+                  "path": "logs/states.jsonl",
+                  "off": 12565590876,
+                  "len": 35933,
+                  "sha256": "d6baf290a0e5f49ca8c4963ed18ef5ea74cd948acf6cac956fc98ad58fd5365d"
+                }
+              ],
+              "native_action_and_observed_successor": true
+            }
+          ],
+          "changed": [],
+          "missing_nodes": [],
+          "evidence": [
+            {
+              "path": "logs/brain.jsonl",
+              "off": 487377256,
+              "len": 35142,
+              "sha256": "255a88fb6fafa9898917441d35f83485abef867dcfea6ac0eecd8c589564764b"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12559488069,
+              "len": 41531,
+              "sha256": "e3da83c5d427d0599de491d2bd0776e5b67cf9da85417e12ddd44efc6568e2f4"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12559595743,
+              "len": 41807,
+              "sha256": "25c919811c8e45419350df1e5704f06fd4354d4b6fe5fc184466bae75b654cf3"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12559685503,
+              "len": 42354,
+              "sha256": "48b609c29651a2bc8244bbb535e20e370b56cad3b4c5650da69128549f780885"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12559800158,
+              "len": 42450,
+              "sha256": "805bf76acf4d35e463e0e8950c14adcbe172bf6e1fb4c303e89d7a34f0d5dc76"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12559888961,
+              "len": 42442,
+              "sha256": "92d9647b220dee4c35cb6266ab7ce7355d64fc97c5afb24d0a804378878048eb"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12561119240,
+              "len": 45103,
+              "sha256": "e447a9049258ce7a983f1702623b9a8696db69e16a647fc57aebc0620edadc68"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12561234357,
+              "len": 43440,
+              "sha256": "ed46944c3cb2b27c63ece0f5fd790f4fdfd5364d06cad7aae8fd51f4c4e8f450"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12562551931,
+              "len": 45671,
+              "sha256": "b9a87286e30fe51d09a5c7ee38be31a3f96f713369d0f3a584222acc712aeab5"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12562683573,
+              "len": 43326,
+              "sha256": "1639d0c5ca833bd82d469ea016899bbfa378bbc79fcab76d78481b72cc2987d1"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12563681149,
+              "len": 46530,
+              "sha256": "5ec476a7c34465a4d819a137fcd97a93ce3b123a4896fbc55238d1ccffb639f8"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12565097863,
+              "len": 47165,
+              "sha256": "6a87ebe1f29dc3fa1f354a5c1e568a2664411a5135fdfb2cdc7ef4a8cb628814"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12565444369,
+              "len": 46245,
+              "sha256": "01d1b1bb2cf15f025c245c59ff92160f165f9b0d861eebdf73ff00131dc663c1"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12565544645,
+              "len": 46231,
+              "sha256": "a6ae01075ccb69126aaaad10557206b56e8beab87dd520f21794994157dec1cf"
+            },
+            {
+              "path": "logs/decisions.jsonl",
+              "off": 1311821516,
+              "len": 1888,
+              "sha256": "5af0dc7c37f8c386150599d492c968731a627878378b648a1a30c11a27f61d7d"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12565590876,
+              "len": 35933,
+              "sha256": "d6baf290a0e5f49ca8c4963ed18ef5ea74cd948acf6cac956fc98ad58fd5365d"
+            }
+          ],
+          "plan_text": "r2c2 问号 → r3c2 问号 → r4c3 问号 → r5c3 问号 → r6c3 休息 → r7c3 普通战 → r8c2 宝箱 → r9c1 普通战 → r10c0 休息 → r11c0 问号 → r12c0 普通战 → r13c0 商店 → r14c0 休息 → r15c3 Boss",
+          "plan_recovery": "same_question_snapshot",
+          "current_memory_route": "本幕进度（按 F18 的路线）: 已走 1/15 [怪] | 下一步 问（预计 HP 66%） | 剩余 14: 问→问→问→问→休→怪→宝→怪→休→问→怪→店→休→王",
+          "plan_snapshot_ts": "2026-10-13T22:34:53.950Z"
+        },
+        "sl": {
+          "status": "same",
+          "logged_attempt": [
+            null,
+            0
+          ],
+          "reason": null,
+          "evidence": [
+            {
+              "path": "logs/decisions.jsonl",
+              "off": 1310026531,
+              "len": 43453,
+              "sha256": "7889fd67f2cc9c2494ff80329e6fab15c91e0d4881e3df6012cc3b1274d1ea3a"
+            },
+            {
+              "path": "logs/sl-attempts.jsonl",
+              "off": 37963631,
+              "len": 37269,
+              "sha256": "d64f25013c085469357785d802c93a2c6893ca1267f01de28ebf55365ccfbc5c"
+            }
+          ]
+        },
+        "transition_gaps": [
+          {
+            "floor": 21,
+            "reason": "unmodelled_node_changed_inventory_relic_or_gold",
+            "evidence": [
+              {
+                "path": "logs/states.jsonl",
+                "off": 12559529600,
+                "len": 21904,
+                "sha256": "e46bef95166335c55678fa27bb718a9f2a2b11629c65abd6d7c24fd8cacfb50c"
+              },
+              {
+                "path": "logs/states.jsonl",
+                "off": 12559595743,
+                "len": 41807,
+                "sha256": "25c919811c8e45419350df1e5704f06fd4354d4b6fe5fc184466bae75b654cf3"
+              }
+            ]
+          },
+          {
+            "floor": 22,
+            "reason": "unmodelled_node_changed_inventory_relic_or_gold",
+            "evidence": [
+              {
+                "path": "logs/states.jsonl",
+                "off": 12559637550,
+                "len": 24751,
+                "sha256": "d65f523824ff8d3b45e0c81a706cec3522e6785a88057f862b41e732f8c1a99e"
+              },
+              {
+                "path": "logs/states.jsonl",
+                "off": 12559685503,
+                "len": 42354,
+                "sha256": "48b609c29651a2bc8244bbb535e20e370b56cad3b4c5650da69128549f780885"
+              }
+            ]
+          },
+          {
+            "floor": 23,
+            "reason": "unmodelled_node_changed_inventory_relic_or_gold",
+            "evidence": [
+              {
+                "path": "logs/states.jsonl",
+                "off": 12559727857,
+                "len": 23218,
+                "sha256": "b866576cd2ef7683852e8054ac9e3c4f5674e073f6c84275c14c441af05b80d5"
+              },
+              {
+                "path": "logs/states.jsonl",
+                "off": 12559800158,
+                "len": 42450,
+                "sha256": "805bf76acf4d35e463e0e8950c14adcbe172bf6e1fb4c303e89d7a34f0d5dc76"
+              }
+            ]
+          },
+          {
+            "floor": 26,
+            "reason": "unmodelled_node_changed_inventory_relic_or_gold",
+            "evidence": [
+              {
+                "path": "logs/states.jsonl",
+                "off": 12561164343,
+                "len": 23162,
+                "sha256": "5157668c60e515403980b0395bd5d04520f7da437f53cf10f797d4e908820059"
+              },
+              {
+                "path": "logs/states.jsonl",
+                "off": 12561234357,
+                "len": 43440,
+                "sha256": "ed46944c3cb2b27c63ece0f5fd790f4fdfd5364d06cad7aae8fd51f4c4e8f450"
+              }
+            ]
+          },
+          {
+            "floor": 29,
+            "reason": "unmodelled_node_changed_inventory_relic_or_gold",
+            "evidence": [
+              {
+                "path": "logs/states.jsonl",
+                "off": 12562726899,
+                "len": 32902,
+                "sha256": "a1523bdd58b6d9e30c39157e365e7c5ffeb41267fa245aadc6d3fe8da210a170"
+              },
+              {
+                "path": "logs/states.jsonl",
+                "off": 12563681149,
+                "len": 46530,
+                "sha256": "5ec476a7c34465a4d819a137fcd97a93ce3b123a4896fbc55238d1ccffb639f8"
+              }
+            ]
+          }
+        ],
+        "same_room_extra_transactions": [],
+        "endpoint": {
+          "entry_frame": {
+            "path": "logs/states.jsonl",
+            "off": 12565590876,
+            "len": 35933,
+            "sha256": "d6baf290a0e5f49ca8c4963ed18ef5ea74cd948acf6cac956fc98ad58fd5365d"
+          },
+          "completion_frame": {
+            "path": "logs/states.jsonl",
+            "off": 12567115653,
+            "len": 29341,
+            "sha256": "555e9f659f2e7649a159446b3f3673c62a4e34adc6af5ab20fade5874d3c6668"
+          },
+          "completion_witness": {
+            "path": "logs/sl-attempts.jsonl",
+            "off": 37963631,
+            "len": 37269,
+            "sha256": "d64f25013c085469357785d802c93a2c6893ca1267f01de28ebf55365ccfbc5c"
+          },
+          "observed_at": "2026-10-13T22:55:29.181Z",
+          "complete": true,
+          "definition": "after terminal Boss fight: native in_combat=false, before any completed noncombat action/reward mutation on exact horizon; entry inventory is separate"
+        },
+        "forecast_option_keys": [
+          "current",
+          "card0",
+          "card1",
+          "card2",
+          "card3",
+          "skip"
+        ],
+        "unsupported_options": [],
+        "source": {
+          "path": "logs/decisions.jsonl",
+          "off": 1310026531,
+          "len": 43453,
+          "sha256": "7889fd67f2cc9c2494ff80329e6fab15c91e0d4881e3df6012cc3b1274d1ea3a"
+        }
+      },
+      "core_verification": {
+        "source_off": 1310026531,
+        "core": "P",
+        "disposition": "missing_binding",
+        "reason": "missing_native_forecast_model,forecast_policy,template_sha256,as_of",
+        "policy": {
+          "status": "changed",
+          "choices_checked": 10,
+          "first_deviation": {
+            "status": "changed",
+            "reason": "actual_choice_differs_from_completionChoice",
+            "expected": {
+              "kind": "skip"
+            },
+            "actual": {
+              "id": "FOOTWORK",
+              "upgraded": false,
+              "index": 3,
+              "price": 0,
+              "native": {
+                "index": 3,
+                "upgraded": false,
+                "energy_cost": 1
+              }
+            },
+            "distance_before": 0,
+            "evidence": [
+              {
+                "path": "logs/decisions.jsonl",
+                "off": 1310797802,
+                "len": 44006,
+                "sha256": "b7900d2937640808fdee700c30c4014177ebe17c309da8e8493af3c570edf9ec"
+              },
+              {
+                "path": "logs/states.jsonl",
+                "off": 12562496972,
+                "len": 28692,
+                "sha256": "df0762529561ca7cf558c19bba038c40528c81f8b6566bbe8704635d8093b609"
+              },
+              {
+                "path": "logs/states.jsonl",
+                "off": 12562525664,
+                "len": 26267,
+                "sha256": "bb6acf83cac17e8bc8aceeb29e6080cd063bd3b9aa263e3e6891e85e766b1cf9"
+              }
+            ]
+          },
+          "first_unknown": null
+        },
+        "observations": {
+          "components": {
+            "entry": {
+              "missing": [],
+              "signature_present": true,
+              "evidence": [
+                {
+                  "path": "logs/states.jsonl",
+                  "off": 12565590876,
+                  "len": 35933,
+                  "sha256": "d6baf290a0e5f49ca8c4963ed18ef5ea74cd948acf6cac956fc98ad58fd5365d"
+                }
+              ]
+            },
+            "completed_horizon": {
+              "missing": [],
+              "signature_present": true,
+              "evidence": [
+                {
+                  "path": "logs/states.jsonl",
+                  "off": 12567115653,
+                  "len": 29341,
+                  "sha256": "555e9f659f2e7649a159446b3f3673c62a4e34adc6af5ab20fade5874d3c6668"
+                }
+              ]
+            },
+            "template_source_commit": "caa27990d46ac612a54eea03135b7152ccf93e9b",
+            "source_template_digest": "76e91c950bfd87d820093bdd7dd4b3f11db15256ea2b6e0bb41b9f1ec89f998c"
+          },
+          "actual_casts": {
+            "NOXIOUS_FUMES": {
+              "completed_dispatch_at_least_once": true,
+              "evidence": [
+                {
+                  "path": "logs/decisions.jsonl",
+                  "off": 1310649343,
+                  "len": 55833,
+                  "sha256": "36779a459eac94f9b7f4bc675c03f59b649e14081b01317cbef60dab4b3710b7"
+                },
+                {
+                  "path": "logs/states.jsonl",
+                  "off": 12561565041,
+                  "len": 36022,
+                  "sha256": "fadde2c8a9c0428d3ac6ed701ab69e040ff28122a244bc4fd93b372611eef550"
+                },
+                {
+                  "path": "logs/states.jsonl",
+                  "off": 12561636095,
+                  "len": 34050,
+                  "sha256": "bc7d7b719768c2058ebd98e8b28fd9a6b05d84db47f8b199c61f2d5e32f69171"
+                }
+              ],
+              "attempt": null,
+              "reloads": 0,
+              "total_count": null,
+              "effect_resolution_and_functional": null
+            },
+            "POISONED_STAB": {
+              "completed_dispatch_at_least_once": true,
+              "evidence": [
+                {
+                  "path": "logs/decisions.jsonl",
+                  "off": 1311322125,
+                  "len": 34181,
+                  "sha256": "fe2fc84ae3e1786ec28fed0a8bb504e1c47e82d65461b3b3a257b78dcb8d4753"
+                },
+                {
+                  "path": "logs/states.jsonl",
+                  "off": 12564027838,
+                  "len": 38261,
+                  "sha256": "6affe29be8263d60d1a95c09dae171972b07f7c1f670685995c72f77e060fb51"
+                },
+                {
+                  "path": "logs/states.jsonl",
+                  "off": 12564175655,
+                  "len": 34649,
+                  "sha256": "07983f3d3f8971c347436d393c9731437d1d07badfb6633383f1a3e47288616b"
+                }
+              ],
+              "attempt": null,
+              "reloads": 0,
+              "total_count": null,
+              "effect_resolution_and_functional": null
+            },
+            "DEADLY_POISON": {
+              "completed_dispatch_at_least_once": true,
+              "evidence": [
+                {
+                  "path": "logs/decisions.jsonl",
+                  "off": 1312225444,
+                  "len": 50902,
+                  "sha256": "b2b6a0cba143407377408225763d95efea1165b9b7519ba1431ea9f19a812ec8"
+                },
+                {
+                  "path": "logs/states.jsonl",
+                  "off": 12566674165,
+                  "len": 40362,
+                  "sha256": "ebd58e54d5e22ce65999a1e7f4bb2be048e5f248545cc5d8465e03b4f864b00c"
+                },
+                {
+                  "path": "logs/states.jsonl",
+                  "off": 12566792886,
+                  "len": 37623,
+                  "sha256": "b2b71a73859dc7a5464381d7014b0e89804b21f84b340960c70866d5811e1581"
+                }
+              ],
+              "attempt": 1,
+              "reloads": 0,
+              "total_count": null,
+              "effect_resolution_and_functional": null
+            }
+          },
+          "cast_dispatch_proxies": {
+            "POISONED_STAB": {
+              "reported_card_from_logged_fingerprint": "POISONED_STAB",
+              "completed_API_dispatch": true,
+              "actual_card_or_branch_binding": null,
+              "reason": "no_fresh_exact_before_after_pair_or_SL_context_unclosed",
+              "evidence": [
+                {
+                  "path": "logs/decisions.jsonl",
+                  "off": 1310252475,
+                  "len": 30649,
+                  "sha256": "df2ed94119fef7f5dfd8712f22029fa25ebcfe2c899501dbb6d673fb192a8988"
+                }
+              ],
+              "attempt": null,
+              "reloads": 0
+            },
+            "FOOTWORK": {
+              "reported_card_from_logged_fingerprint": "FOOTWORK",
+              "completed_API_dispatch": true,
+              "actual_card_or_branch_binding": null,
+              "reason": "no_fresh_exact_before_after_pair_or_SL_context_unclosed",
+              "evidence": [
+                {
+                  "path": "logs/decisions.jsonl",
+                  "off": 1310302235,
+                  "len": 1524,
+                  "sha256": "4367bf5bb8276e1e80440da682eb9362ed2e25696d8ccb82383c94fd107627c6"
+                }
+              ],
+              "attempt": null,
+              "reloads": 0
+            },
+            "NOXIOUS_FUMES": {
+              "reported_card_from_logged_fingerprint": "NOXIOUS_FUMES",
+              "completed_API_dispatch": true,
+              "actual_card_or_branch_binding": null,
+              "reason": "no_fresh_exact_before_after_pair_or_SL_context_unclosed",
+              "evidence": [
+                {
+                  "path": "logs/decisions.jsonl",
+                  "off": 1310316422,
+                  "len": 1546,
+                  "sha256": "a36ae6d0ea26c5659256e60d327a5283742f3e6acce80eb30b7135c9e0622655"
+                }
+              ],
+              "attempt": null,
+              "reloads": 0
+            },
+            "ACCELERANT": {
+              "reported_card_from_logged_fingerprint": "ACCELERANT",
+              "completed_API_dispatch": true,
+              "actual_card_or_branch_binding": null,
+              "reason": "no_fresh_exact_before_after_pair_or_SL_context_unclosed",
+              "evidence": [
+                {
+                  "path": "logs/decisions.jsonl",
+                  "off": 1310724599,
+                  "len": 1474,
+                  "sha256": "44ee5de9667541e2ceb141da3309aea4905c6b25b7a1e9c778a01ad3123a36a0"
+                }
+              ],
+              "attempt": null,
+              "reloads": 0
+            }
+          },
+          "actual_casts_scope": "已列牌仅证明在所示SL分支至少一次具名completed出牌；未列牌与总次数为unknown，不证明未施放/全部效果/同实例循环",
+          "survival": {
+            "entry_alive": true,
+            "terminal_node_completed_alive": true,
+            "evidence": [
+              {
+                "path": "logs/states.jsonl",
+                "off": 12565590876,
+                "len": 35933,
+                "sha256": "d6baf290a0e5f49ca8c4963ed18ef5ea74cd948acf6cac956fc98ad58fd5365d"
+              },
+              {
+                "path": "logs/states.jsonl",
+                "off": 12567115653,
+                "len": 29341,
+                "sha256": "555e9f659f2e7649a159446b3f3673c62a4e34adc6af5ab20fade5874d3c6668"
+              },
+              {
+                "path": "logs/sl-attempts.jsonl",
+                "off": 37963631,
+                "len": 37269,
+                "sha256": "d64f25013c085469357785d802c93a2c6893ca1267f01de28ebf55365ccfbc5c"
+              }
+            ]
+          },
+          "run_result": {
+            "summary_after_prediction": true,
+            "same_prospective_SL_branch_verified": null,
+            "victory": true,
+            "ended": "2026-10-13T23:18:06.860Z",
+            "floor": 49,
+            "evidence": [
+              {
+                "path": "logs/runs.jsonl",
+                "off": 324404,
+                "len": 465,
+                "sha256": "e5b72549c94b12da9bdd5224029edcc2c65d8fd53407a3885685d004d01208b1"
+              }
+            ]
+          },
+          "functional": null,
+          "aliveAndFunctional": null,
+          "terminalWin_prediction": null
+        },
+        "verification": {
+          "initial_option": [
+            {
+              "path": "logs/decisions.jsonl",
+              "off": 1310026531,
+              "len": 43453,
+              "sha256": "7889fd67f2cc9c2494ff80329e6fab15c91e0d4881e3df6012cc3b1274d1ea3a"
+            },
+            {
+              "path": "logs/brain.jsonl",
+              "off": 487377256,
+              "len": 35142,
+              "sha256": "255a88fb6fafa9898917441d35f83485abef867dcfea6ac0eecd8c589564764b"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12559323233,
+              "len": 26509,
+              "sha256": "8f311855bd030c4f71345d01f55e28fea0ddf4a4b6f6408d46a76bbcbee9addf"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12559349742,
+              "len": 24273,
+              "sha256": "95673e68f785d476e262e5e10d2e0536e5cf1f6f0170318b47d1ee4744c336ac"
+            }
+          ],
+          "route": [
+            {
+              "path": "logs/brain.jsonl",
+              "off": 487377256,
+              "len": 35142,
+              "sha256": "255a88fb6fafa9898917441d35f83485abef867dcfea6ac0eecd8c589564764b"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12559488069,
+              "len": 41531,
+              "sha256": "e3da83c5d427d0599de491d2bd0776e5b67cf9da85417e12ddd44efc6568e2f4"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12559595743,
+              "len": 41807,
+              "sha256": "25c919811c8e45419350df1e5704f06fd4354d4b6fe5fc184466bae75b654cf3"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12559685503,
+              "len": 42354,
+              "sha256": "48b609c29651a2bc8244bbb535e20e370b56cad3b4c5650da69128549f780885"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12559800158,
+              "len": 42450,
+              "sha256": "805bf76acf4d35e463e0e8950c14adcbe172bf6e1fb4c303e89d7a34f0d5dc76"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12559888961,
+              "len": 42442,
+              "sha256": "92d9647b220dee4c35cb6266ab7ce7355d64fc97c5afb24d0a804378878048eb"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12561119240,
+              "len": 45103,
+              "sha256": "e447a9049258ce7a983f1702623b9a8696db69e16a647fc57aebc0620edadc68"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12561234357,
+              "len": 43440,
+              "sha256": "ed46944c3cb2b27c63ece0f5fd790f4fdfd5364d06cad7aae8fd51f4c4e8f450"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12562551931,
+              "len": 45671,
+              "sha256": "b9a87286e30fe51d09a5c7ee38be31a3f96f713369d0f3a584222acc712aeab5"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12562683573,
+              "len": 43326,
+              "sha256": "1639d0c5ca833bd82d469ea016899bbfa378bbc79fcab76d78481b72cc2987d1"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12563681149,
+              "len": 46530,
+              "sha256": "5ec476a7c34465a4d819a137fcd97a93ce3b123a4896fbc55238d1ccffb639f8"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12565097863,
+              "len": 47165,
+              "sha256": "6a87ebe1f29dc3fa1f354a5c1e568a2664411a5135fdfb2cdc7ef4a8cb628814"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12565444369,
+              "len": 46245,
+              "sha256": "01d1b1bb2cf15f025c245c59ff92160f165f9b0d861eebdf73ff00131dc663c1"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12565544645,
+              "len": 46231,
+              "sha256": "a6ae01075ccb69126aaaad10557206b56e8beab87dd520f21794994157dec1cf"
+            },
+            {
+              "path": "logs/decisions.jsonl",
+              "off": 1311821516,
+              "len": 1888,
+              "sha256": "5af0dc7c37f8c386150599d492c968731a627878378b648a1a30c11a27f61d7d"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12565590876,
+              "len": 35933,
+              "sha256": "d6baf290a0e5f49ca8c4963ed18ef5ea74cd948acf6cac956fc98ad58fd5365d"
+            }
+          ],
+          "policy": [
+            {
+              "path": "logs/decisions.jsonl",
+              "off": 1310392485,
+              "len": 115573,
+              "sha256": "71210baf9887f9f238d9b7095e4494192ff7bb7097fed59fa61ead8c058f7f21"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12561065588,
+              "len": 27788,
+              "sha256": "0ce53e7537c0989db7c91fc52766c6e34f91b94a3f8fe5958c91720e6f49414c"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12561093376,
+              "len": 25864,
+              "sha256": "7d665a79733cf2a5bfca86e7fbae5433f1badc25b5cb62f32eaacf36eefc1838"
+            },
+            {
+              "path": "logs/decisions.jsonl",
+              "off": 1310797802,
+              "len": 44006,
+              "sha256": "b7900d2937640808fdee700c30c4014177ebe17c309da8e8493af3c570edf9ec"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12562496972,
+              "len": 28692,
+              "sha256": "df0762529561ca7cf558c19bba038c40528c81f8b6566bbe8704635d8093b609"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12562525664,
+              "len": 26267,
+              "sha256": "bb6acf83cac17e8bc8aceeb29e6080cd063bd3b9aa263e3e6891e85e766b1cf9"
+            },
+            {
+              "path": "logs/decisions.jsonl",
+              "off": 1310925683,
+              "len": 1497,
+              "sha256": "4bbd75d4181da09ae72c8cab5174afbe97976c33a9979a65822e4738b6dbfa7b"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12562622117,
+              "len": 37811,
+              "sha256": "11d12310fbc5e4becfd52345dfd38ad9bc58024a9248ceb75c7a959dca8ce213"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12562659928,
+              "len": 23645,
+              "sha256": "93ad42a21d5418f9635e058b1573d46fa5737d4c88ea85e88f5ac55f07a6529d"
+            },
+            {
+              "path": "logs/decisions.jsonl",
+              "off": 1311166235,
+              "len": 35492,
+              "sha256": "75b6a4884ef43d34cb253685c727e527faa1dc13180dc64b507e04bad1230e16"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12563625625,
+              "len": 28437,
+              "sha256": "2c192df80acfc32d45957b00ffdd8ffea1aa91a0c67bde3faad2fa0f99f8b5d1"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12563654062,
+              "len": 27087,
+              "sha256": "defffd09c88453cb79ada3c38c6bd092cca54a52ebb70f3c9060826beb8b9964"
+            },
+            {
+              "path": "logs/decisions.jsonl",
+              "off": 1311516020,
+              "len": 41884,
+              "sha256": "2843e50450f5a3ed700b60f75d5f7e8c2092353aa723089ff19232ac16eaa956"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12565040055,
+              "len": 30074,
+              "sha256": "447161243cb984976145200a78b3ded7f1ca51c8d3833956611f8c6c3270ea38"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12565070129,
+              "len": 27734,
+              "sha256": "8da5fff3c7361a83e70f2a74ad17a13568a738d3eaa1f57cbde9cf9bc69d2585"
+            },
+            {
+              "path": "logs/decisions.jsonl",
+              "off": 1311562305,
+              "len": 140126,
+              "sha256": "2a67a5d8bcc81abfb1394d33b1cc19452473985746602b3cd6fbe8b2931e3673"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12565177104,
+              "len": 32226,
+              "sha256": "7f6bd582f68d5252d8e44e39d1eb67e8b37f7b8c444ee5a1584f043a1a854c2e"
+            },
+            {
+              "path": "logs/decisions.jsonl",
+              "off": 1311703949,
+              "len": 1540,
+              "sha256": "8f92320051b4e968b558f1c24fb666795db4e5d69c6837471fdb44047d77f024"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12565250561,
+              "len": 31750,
+              "sha256": "850cd6132470e4a6f66a691eaa4b9c04d68f920d34548d1a3814f892b9311b7e"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12565282311,
+              "len": 32021,
+              "sha256": "223a5dbc190b3638f51d1b60e62c43b84a055220b3dd252d9a4b8d28075f825c"
+            },
+            {
+              "path": "logs/decisions.jsonl",
+              "off": 1311705489,
+              "len": 1527,
+              "sha256": "6afbdaa429c2002b800e786d463ec6e648b9fade5b328d51eff475663afd590d"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12565314332,
+              "len": 32258,
+              "sha256": "6cb2ac6671c43f8ada4fc9da40f4fc2bb1d675cf561dec3f4168164030a3d07d"
+            },
+            {
+              "path": "logs/decisions.jsonl",
+              "off": 1311707016,
+              "len": 1511,
+              "sha256": "77a889540861ae666e7445c521a4d62e147f9043670caec2071e5c71b4fc7f4d"
+            },
+            {
+              "path": "logs/states.jsonl",
+              "off": 12565346590,
+              "len": 32535,
+              "sha256": "155a4a65f761411fc47609e508b08dab6c2ad891ab9e4950dcefceca04945126"
+            },
+            {
+              "path": "logs/decisions.jsonl",
+              "off": 1311708527,
+              "len": 1537,
+              "sha256": "c4af3732cd9fc1a9d4b0ff39455468d8e84ea80367b27ff1591adb3164f4706a"
+            }
+          ],
+          "sl": [
+            {
+              "path": "logs/decisions.jsonl",
+              "off": 1310026531,
+              "len": 43453,
+              "sha256": "7889fd67f2cc9c2494ff80329e6fab15c91e0d4881e3df6012cc3b1274d1ea3a"
+            },
+            {
+              "path": "logs/sl-attempts.jsonl",
+              "off": 37963631,
+              "len": 37269,
+              "sha256": "d64f25013c085469357785d802c93a2c6893ca1267f01de28ebf55365ccfbc5c"
+            }
+          ],
+          "endpoint": [
+            {
+              "path": "logs/states.jsonl",
+              "off": 12567115653,
+              "len": 29341,
+              "sha256": "555e9f659f2e7649a159446b3f3673c62a4e34adc6af5ab20fade5874d3c6668"
+            },
+            {
+              "path": "logs/sl-attempts.jsonl",
+              "off": 37963631,
+              "len": 37269,
+              "sha256": "d64f25013c085469357785d802c93a2c6893ca1267f01de28ebf55365ccfbc5c"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "old_knowledge_changed": false,
+  "functional_or_game_value_claim": null,
+  "route": "原ops→原watcher→Roy；未代填ACK",
+  "distinction": "原completionChoice是声明的条件政策；实际政策不同不证明实际选择较差，不推翻旧牌值经验。P/D/S/R原模板candidate与G4未验证边界保持。"
+}

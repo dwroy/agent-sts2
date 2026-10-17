@@ -1,0 +1,91 @@
+{
+  "at": "2026-10-17 23:33:52 CST",
+  "read_only": true,
+  "processes": [
+    {
+      "pid": 922264,
+      "ppid": 1753540,
+      "birth": "71386378",
+      "cwd": "/home/dw/Projects/agent-sts2",
+      "executable": "node",
+      "source_session_present": true
+    },
+    {
+      "pid": 922271,
+      "ppid": 922264,
+      "birth": "71386382",
+      "cwd": "/home/dw/Projects/agent-sts2",
+      "executable": "codex",
+      "source_session_present": true
+    },
+    {
+      "pid": 922551,
+      "ppid": 922271,
+      "birth": "71387666",
+      "cwd": "/home/dw/Projects/agent-sts2",
+      "executable": "codex-code-mode-host",
+      "source_session_present": false
+    },
+    {
+      "pid": 1843187,
+      "ppid": 1472531,
+      "birth": "100587949",
+      "cwd": "/home/dw/Projects/agent-sts2/.worktrees/regent-climb",
+      "executable": "node",
+      "source_session_present": false
+    },
+    {
+      "pid": 1843224,
+      "ppid": 1843187,
+      "birth": "100587959",
+      "cwd": "/home/dw/Projects/agent-sts2/.worktrees/regent-climb",
+      "executable": "codex",
+      "source_session_present": false
+    },
+    {
+      "pid": 1849145,
+      "ppid": 1843224,
+      "birth": "100590334",
+      "cwd": "/home/dw/Projects/agent-sts2/.worktrees/regent-climb",
+      "executable": "codex-code-mode-host",
+      "source_session_present": false
+    }
+  ],
+  "flags": [
+    {
+      "path": "ops/codex-ops/PAUSE",
+      "bytes": 16,
+      "sha256": "df5a90aa78be286b4fc83c641d249419441a8a4e3fe50a0333b6e56be3ab6289",
+      "mtime": 1792251077.407863
+    },
+    {
+      "path": "ops/codex-ops/LLM_DRAIN",
+      "bytes": 16,
+      "sha256": "df5a90aa78be286b4fc83c641d249419441a8a4e3fe50a0333b6e56be3ab6289",
+      "mtime": 1792251077.4073915
+    },
+    {
+      "path": ".worktrees/regent-climb/ops/STOP",
+      "bytes": 174,
+      "sha256": "1df3fcbc93e77d5d1ee203b161e9f4b151cf533b375c38eae4d7e71b9302f08c",
+      "mtime": 1792155277.5056963
+    },
+    {
+      "path": ".worktrees/regent-climb/ops/codex-ops/PAUSE",
+      "bytes": 174,
+      "sha256": "1df3fcbc93e77d5d1ee203b161e9f4b151cf533b375c38eae4d7e71b9302f08c",
+      "mtime": 1792155277.7308717
+    },
+    {
+      "path": ".worktrees/regent-climb/ops/codex-ops/LLM_DRAIN",
+      "bytes": 174,
+      "sha256": "1df3fcbc93e77d5d1ee203b161e9f4b151cf533b375c38eae4d7e71b9302f08c",
+      "mtime": 1792155277.5059645
+    }
+  ],
+  "regent_not_in_transaction": true,
+  "source_ops_persistent_child": 922551,
+  "controller_snapshot_scope_conflict": true,
+  "no_kill_restart_config_permission_or_flags_change": true,
+  "drain_claim": "not empty; controller owner must resolve process ownership scope before activation"
+}

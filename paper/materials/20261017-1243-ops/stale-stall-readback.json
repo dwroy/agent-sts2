@@ -1,0 +1,63 @@
+{
+  "at": "2026-10-17 12:49:53 CST",
+  "old_event_console": "logs/console/20261017-110031-dbd416164+dirty.log",
+  "recovered_console": "logs/console/20261017-123827-6fbbd82ab.log",
+  "recovery_receipt": "paper/materials/20261017-1205-ops/controller-recovery-readback.json",
+  "terminal": {
+    "run_id": "5H83F3J0XSTE",
+    "ended": "2026-10-17T04:43:37.219Z",
+    "victory": false,
+    "floor": 48,
+    "character": "SILENT",
+    "ascension": 10,
+    "code": "current",
+    "decisions": 840,
+    "jev_calls": 184,
+    "deepseek_calls": 50,
+    "claude_calls": 0,
+    "tokens": 1641772,
+    "ds_tokens_in": 9503564,
+    "ds_tokens_out": 63622,
+    "ds_cache_hit": 5724288,
+    "brain_cost_accounting": {
+      "source": "brain.jsonl:run-plan",
+      "calls": 2,
+      "input_tokens": 296700,
+      "output_tokens": 3558,
+      "cache_hit_tokens": 0,
+      "by_engine": {
+        "codex": 2
+      },
+      "question_ids": [
+        "mvbt78de-3319441-18",
+        "mvbt78de-3319441-36"
+      ],
+      "unresolved": []
+    },
+    "deciders": {
+      "codex": 66,
+      "code": 366,
+      "jev": 184,
+      "jev-plan": 215,
+      "code-fallback": 9
+    },
+    "death_fight": [
+      "实验体 #C93"
+    ],
+    "death_fight_floor": 48,
+    "death_enemy_ids": [
+      "TEST_SUBJECT"
+    ]
+  },
+  "old_controller3319441_and_recovered3646148_exited": true,
+  "guard_history": "First current-process guard saw recovered PID already exited naturally; read actual terminal console/run record rather than treating absence as a new stall.",
+  "console_tail_ref": {
+    "path": "logs/console/20261017-123827-6fbbd82ab.log",
+    "offset": 59222,
+    "bytes": 18000,
+    "sha256": "3dccdc8203b2c8b93a129cdd1149fe0e404764a8c330c69a8c0f7c5ae7e2bf56"
+  },
+  "stale_duplicate_alert": true,
+  "new_manual_game_action_or_restart": false,
+  "scope": "5H83 continued after R382 and ended defeat F48 12:43:37.219; mixed runtime/intervention boundary is not a pure R380 natural pass; no learner-done processing or paper regeneration in this wake"
+}

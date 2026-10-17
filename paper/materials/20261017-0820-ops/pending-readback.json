@@ -1,0 +1,52 @@
+{
+  "at": "2026-10-17 08:21:59 CST",
+  "parent": "roy-20261016-global-build",
+  "kind": "performance-priority-handoff",
+  "status": "watcher localized measured delay primarily to existing B2 worker; minimal log-shadow pause source still in progress",
+  "suspected_source": "7ca593f9e018f7b4d8c0df1b3da530fa1d1c6502",
+  "original_publication": "paper/materials/20261016-f48-joint-shadow/ops-publication.json",
+  "original_publication_sha256": "8711dbb3fe59b84b760721c8dcc18054847cf3ab6db7e890c17c96c0f3d7b88d",
+  "actual_live_readback": "08e9a15b79882302eb7bfe38e7ddddc2e40b2dbd",
+  "source_is_live_ancestor": true,
+  "observation_origin": "Claude08:15 relayed by user; ops did not independently remeasure or establish causality",
+  "reported_observations": {
+    "CVJ4MLQF4CSY_F48_minutes": 326,
+    "N9GKED3PMEV3_F48_minutes": 16,
+    "current_run": "DC32RW0A80V1",
+    "current_floor_reported": 33
+  },
+  "cause_confirmed": false,
+  "new_source": null,
+  "prioritize_after_actual_source_delivery": true,
+  "serialization": "existing live-merge.lock and original publication/checks channel; preserve running check/knowledge/index and original failed histories",
+  "stall_constraint": "For DC32RW0A80V1 and this suspected F48 slow-compute symptom, treat long calculation as performance, not a stall restart trigger. Do not restart or replace the game because of elapsed computation time. This does not fabricate a root cause or replace independent fault evidence.",
+  "existing_watcher_investigation_only": true,
+  "new_model_or_learner_or_simulation_or_observer": false,
+  "runtime_configuration_or_game_changed": false,
+  "other_role_ACK": false,
+  "source_worktree": ".worktrees/codex-f48-shadow-pause-20261017",
+  "diagnostic_owner": "existing watcher original thread",
+  "reported_primary_delay": "B2 run.elapsedMs before joint aggregation; pausing joint logging is a separate user-authorized diagnostic pause and is not claimed to fix B2 slowness",
+  "reported_b2_ms": {
+    "CVJ4MLQF4CSY": 18650118,
+    "N9GKED3PMEV3": 369468
+  },
+  "reported_b2_results_and_pairs": {
+    "CVJ4MLQF4CSY": {
+      "results": 1575300,
+      "pairs": 1452
+    },
+    "N9GKED3PMEV3": {
+      "results": 228600,
+      "pairs": 208
+    }
+  },
+  "reported_CVJ4_other_ms": 34456,
+  "reported_b3_F48": false,
+  "reported_g2_global_supplement_wall_ms": 230193,
+  "requested_minimal_change": "Two leaves: F48 joint shadow default off with explicit F48_JOINT_SHADOW=shadow opt-in, no B2 budget/ranking/C2/SL/potion changes",
+  "current_loaded_process_boundary": "Do not restart DC32RW0A80V1. A disk publication does not change already loaded code; new default must be verified on later process load. No current-run pause effect claimed.",
+  "receipt": "paper/materials/20261017-0820-ops/watcher-progress-readback.json",
+  "no_new_dispatch_or_tests": true,
+  "receipt_sha256": "f8812866fe361df34b49955d17665fa72325f2ce3567516fb38f38275a481d0f"
+}

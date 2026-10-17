@@ -1,0 +1,147 @@
+{
+  "historical_code": "5782a41c4b1db735e3eba8e769e0ad52c356f136",
+  "source_fix": "660b194c950f017e356a4b3da952e127c7e5c768",
+  "source_blobs": [
+    {
+      "commit": "5782a41c4b1db735e3eba8e769e0ad52c356f136",
+      "path": "agent/src/sim/boss-lines.ts",
+      "sha256": "510033feed1fb9429d5979fb3032dac306cccbd03517441d60a1b407cdf11a75"
+    },
+    {
+      "commit": "5782a41c4b1db735e3eba8e769e0ad52c356f136",
+      "path": "agent/src/sim/boss-margin.ts",
+      "sha256": "141f5b292ad2beb460143c598edc75b2e4a6b2e2b1754f94d8c0eb0c37073f1c"
+    },
+    {
+      "commit": "660b194c950f017e356a4b3da952e127c7e5c768",
+      "path": "agent/src/sim/boss-lines.ts",
+      "sha256": "bd3174609f2f71de360ea686a57659f9ba7a136b63bad6fbd9c69f05ff4ccdd4"
+    },
+    {
+      "commit": "660b194c950f017e356a4b3da952e127c7e5c768",
+      "path": "agent/tests/human-pace-sampling.test.ts",
+      "sha256": "eb4793d2a725988ff4516fa36c04e6c9b9738c992d23f98fcc8aaf95c643d076"
+    }
+  ],
+  "historical_error_refs": [
+    {
+      "path": "logs/decisions.jsonl",
+      "off": 2246606757,
+      "len": 2052,
+      "sha256": "bc59f4f2d9bb2e52d6ab1e2238d7e0b41cbbd6b0e7315f85390687ed1170fd6f"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "off": 2246608809,
+      "len": 2094,
+      "sha256": "83e355f5010b1048cafabb442493ab792484989f8cd1a3851e492a210081c514"
+    },
+    {
+      "path": "logs/decisions.jsonl",
+      "off": 2246610903,
+      "len": 58640,
+      "sha256": "a6a8e5dc512d3145eb5040ca52144726af2cda1a351a5c7c3e9d04c12d0dce8d"
+    }
+  ],
+  "original_ops_receipt": {
+    "path": "paper/materials/20261017-1531-ops/ops-source-received.json",
+    "sha256": "e84af42f57bf937d56166d2c78b52635effabb6ef950124354d8a23bdd6a6ff1"
+  },
+  "original_source_checks": {
+    "original_validation": {
+      "base": "5bd559de30f6a23739f3748426ab5be2321ecd0c",
+      "source": "660b194c950f017e356a4b3da952e127c7e5c768",
+      "source_worktree_clean": true,
+      "source_sandbox": {
+        "exit": 0,
+        "tsc": 0,
+        "vitest": 0,
+        "files": 474,
+        "cases": 4373,
+        "segments": [
+          {
+            "files": 473,
+            "cases": 4362
+          },
+          {
+            "files": 1,
+            "cases": 11
+          }
+        ]
+      },
+      "negative_control": {
+        "only_source_stashed": "agent/src/sim/boss-lines.ts",
+        "exit": 1,
+        "failed": 1,
+        "passed": 11,
+        "total": 12
+      },
+      "restored": {
+        "exit": 0,
+        "files": 1,
+        "cases": 12
+      },
+      "reruns_due_to_timeouts": [],
+      "live": {
+        "lock": "/home/dw/Projects/agent-sts2/ops/live-merge.lock",
+        "preflight_exit": 42,
+        "merge_tree_exit": 1,
+        "refresh_commit": "7b61eaa636148221cbfc166067662e481ac7e0a7",
+        "conflicts": [
+          "CONFLICT (modify/delete): docs/human-pace-plan.md deleted in HEAD and modified in codex-fix-silent-20261017-151301.  Version codex-fix-silent-20261017-151301 of docs/human-pace-plan.md left in tree.",
+          "CONFLICT (content): Merge conflict in notes/fix-queue-v4.md",
+          "CONFLICT (content): Merge conflict in notes/for-roy.md",
+          "CONFLICT (content): Merge conflict in notes/lessons.md",
+          "CONFLICT (content): Merge conflict in notes/ops-handoff.md",
+          "CONFLICT (content): Merge conflict in ops/inbox-dev.md",
+          "CONFLICT (content): Merge conflict in paper/data/README.md",
+          "CONFLICT (content): Merge conflict in paper/data/commits.csv",
+          "CONFLICT (content): Merge conflict in paper/data/cost-curve-silent.csv",
+          "CONFLICT (content): Merge conflict in paper/data/cost-silent.csv",
+          "CONFLICT (content): Merge conflict in paper/data/cost-sources.json",
+          "CONFLICT (content): Merge conflict in paper/data/cost-unattributed.csv",
+          "CONFLICT (content): Merge conflict in paper/data/decisions_by_label.csv",
+          "CONFLICT (content): Merge conflict in paper/data/learning-curve-silent.csv",
+          "CONFLICT (content): Merge conflict in paper/data/runs.csv",
+          "CONFLICT (content): Merge conflict in paper/data/summary.json",
+          "CONFLICT (content): Merge conflict in paper/data/verification.json",
+          "CONFLICT (modify/delete): paper/materials/20261017-human-pace-control/checkpoint.json deleted in HEAD and modified in codex-fix-silent-20261017-151301.  Version codex-fix-silent-20261017-151301 of paper/materials/20261017-human-pace-control/checkpoint.json left in tree.",
+          "CONFLICT (modify/delete): paper/materials/20261017-human-pace-h1/checkpoint.json deleted in HEAD and modified in codex-fix-silent-20261017-151301.  Version codex-fix-silent-20261017-151301 of paper/materials/20261017-human-pace-h1/checkpoint.json left in tree.",
+          "CONFLICT (modify/delete): paper/materials/20261017-human-pace-h1/natural/checkpoint.json deleted in HEAD and modified in codex-fix-silent-20261017-151301.  Version codex-fix-silent-20261017-151301 of paper/materials/20261017-human-pace-h1/natural/checkpoint.json left in tree.",
+          "CONFLICT (modify/delete): paper/materials/20261017-human-pace-h1/natural/report.md deleted in HEAD and modified in codex-fix-silent-20261017-151301.  Version codex-fix-silent-20261017-151301 of paper/materials/20261017-human-pace-h1/natural/report.md left in tree.",
+          "CONFLICT (content): Merge conflict in paper/materials/decision-log.md",
+          "CONFLICT (modify/delete): paper/materials/learning/code-proposals.jsonl deleted in HEAD and modified in codex-fix-silent-20261017-151301.  Version codex-fix-silent-20261017-151301 of paper/materials/learning/code-proposals.jsonl left in tree.",
+          "CONFLICT (content): Merge conflict in paper/materials/learning/ledger.jsonl",
+          "CONFLICT (content): Merge conflict in paper/materials/silent/cost.md"
+        ],
+        "merged": null,
+        "source_merged": false,
+        "post_merge_tests": null,
+        "release_id": null
+      },
+      "ledger": {
+        "bug_infra_matches": 0,
+        "appends": 0,
+        "shipped": false
+      },
+      "secret_scans": {
+        "source_patch": 0,
+        "refresh_patch": 0
+      },
+      "limits": [
+        "Original failure rows omit both sample arrays; fixed results reproduce the caller path, not the complete dirty runtime.",
+        "The production edit changes only independent reference IDs for unequal prefixes; no sample allocation, ordering, S use, thresholds, budget, potion or SL policy change.",
+        "Ironclad does not enable quantitativeEnabled/captureBossMargin; equal-length and completed-adaptive paths preserve their existing identity behavior."
+      ]
+    },
+    "source_full_log_sha256": "f668b316fb3d748632f8336317a7234371d754ec170d7842105d8dfa322fd49b",
+    "source_full_repeated": false,
+    "prior_original_failure_cases": 3,
+    "prior_fixes_verified_ancestors": 40
+  },
+  "pure_bug": "The B2 caller supplies independent reference IDs only for adaptiveComplete; a later deadline after C2 elimination is not adaptiveComplete and may leave unequal prefixes. The guard correctly rejects a reference whose outcomes length differs from the default IDs borrowed from the candidate. Fix passes independently generated dense prefix IDs on unequal lengths, without padding/truncating outcomes.",
+  "known_root_scope": "Caller bug reproduced by fixed actual B2/C2 entry, withdrawal fails; original runtime arrays are not recoverable, no assertion that reference214 was the historical dimension.",
+  "identity_guard_and_C1_not_relaxed": true,
+  "no_reimplementation_or_repeated_unchanged_source_full": true,
+  "current_budget_combination_new_source_full": "one new combined source full session22686 running"
+}

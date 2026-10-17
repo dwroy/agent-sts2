@@ -1,0 +1,69 @@
+{
+  "at": "2026-10-17 12:15:11 CST",
+  "state": "Source frozen; own one full suite running. No source commit/publication/controller restart yet",
+  "staged_tree": "d5d4c274b55499cad3dd2d60c780fbd947975c08",
+  "source": null,
+  "source_commit": null,
+  "worktree": ".worktrees/ops-h1-strict-pick-stall-20261017",
+  "source_full_processes": [
+    {
+      "pid": 3570058,
+      "birth_ticks": "110235553",
+      "args": [
+        "bash",
+        "-c",
+        "export PATH=\"$HOME/.local/node/bin:$PATH\"; nice -n 19 npx tsc -p tsconfig.json --noEmit > /home/dw/Projects/agent-sts2/paper/materials/20261017-1205-ops/source-tsc.log 2>&1; a=$?; nice -n 19 npx vitest run --maxWorkers=1 > /home/dw/Projects/agent-sts2/paper/materials/20261017-1205-ops/source-full.log 2>&1; b=$?; printf \"tsc=%s vitest=%s\\n\" \"$a\" \"$b\"; test \"$a\" = 0 -a \"$b\" = 0"
+      ],
+      "state": "S"
+    },
+    {
+      "pid": 3571014,
+      "birth_ticks": "110236525",
+      "args": [
+        "npm exec vitest run --maxWorkers=1"
+      ],
+      "state": "S"
+    },
+    {
+      "pid": 3571057,
+      "birth_ticks": "110236567",
+      "args": [
+        "sh",
+        "-c",
+        "vitest run --maxWorkers=1"
+      ],
+      "state": "S"
+    },
+    {
+      "pid": 3571058,
+      "birth_ticks": "110236568",
+      "args": [
+        "node",
+        "/home/dw/Projects/agent-sts2/.worktrees/ops-h1-strict-pick-stall-20261017/agent/node_modules/.bin/vitest",
+        "run",
+        "--maxWorkers=1"
+      ],
+      "state": "S"
+    },
+    {
+      "pid": 3572067,
+      "birth_ticks": "110237278",
+      "args": [
+        "/home/dw/.local/node/bin/node",
+        "--experimental-import-meta-resolve",
+        "--require",
+        "/home/dw/Projects/agent-sts2/agent/node_modules/vitest/suppress-warnings.cjs",
+        "--conditions",
+        "node",
+        "--conditions",
+        "development",
+        "/home/dw/Projects/agent-sts2/agent/node_modules/vitest/dist/workers/forks.js"
+      ],
+      "state": "R"
+    }
+  ],
+  "published": false,
+  "host_complete": false,
+  "priority": "Blocking role-neutral H1 deadline loop; original live lock and publication serial channel preserved",
+  "no_other_role_ACK": true
+}

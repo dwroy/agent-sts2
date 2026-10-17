@@ -1,0 +1,131 @@
+{
+  "request": {
+    "at": "2026-10-17 13:28:32 CST",
+    "command": [
+      "nice",
+      "-n",
+      "19",
+      "python3",
+      "ops/paper_dataset.py",
+      "--no-raw"
+    ],
+    "pid": 3859230,
+    "birth": "110687229",
+    "calls": 1,
+    "raw_snapshot": false,
+    "previous_outputs_preserved": "ops/codex-ops/record-staging/20261017-1328/paper-before",
+    "actual_exit_code": 0
+  },
+  "generated_at": "2026-10-17T05:28:33.058Z",
+  "source_cut_bytes": {
+    "decisions.jsonl": 2214052737,
+    "deepseek-reasoning.jsonl": 377746518,
+    "runs.jsonl": 356728,
+    "states.jsonl": 13874000151,
+    "fight-plans.jsonl": 2233957,
+    "run-plans.jsonl": 8866403,
+    "brain.jsonl": 736678110,
+    "sl-attempts.jsonl": 45190317,
+    "run-config.jsonl": 1944926
+  },
+  "five_checks": {
+    "decisions attributed + unattributed == play records": true,
+    "decisions_by_label sum == attributed decisions": true,
+    "escalations rows == records with escalation": true,
+    "every runs.jsonl id present in runs.csv": true,
+    "commits == git rev-list --all --count": true
+  },
+  "source_checks_passed": true,
+  "row_counts": {
+    "runs.csv": 821,
+    "decisions_by_label.csv": 27374,
+    "escalations.csv": 3600,
+    "fight_plans.csv": 1461,
+    "commits.csv": 6750
+  },
+  "original_count_warnings": [
+    [
+      "KF9HMZKTFC3V",
+      879,
+      880
+    ]
+  ],
+  "selected_run": {
+    "run_id": "5H83F3J0XSTE",
+    "character": "SILENT",
+    "ascension": "10",
+    "outcome": "defeat",
+    "floor_max": "48",
+    "n_decisions": "840",
+    "has_postmortem": "1",
+    "performance_included": "1",
+    "brain_source": "{\"basis\": \"brain.jsonl accepted verdict; legacy answer != null, no error/problems; unique question_id+engine\", \"brain_rows\": 50, \"coverage\": \"all_logged_questions_resolved\", \"eligible\": true, \"embedded_answers\": {\"map/route\": 27, \"run-plan\": 14}, \"exclusion_reason\": null, \"failed_or_unaccepted_rows\": 0, \"first_success\": \"2026-10-17T03:01:48.856Z\", \"last_success\": \"2026-10-17T04:00:37.260Z\", \"policy\": \"codex-successful-brain-v1\", \"source\": \"codex\", \"successful_answers\": {\"codex\": 50}, \"successful_by_label\": {\"bundle/choose\": {\"codex\": 1}, \"event/act-plan\": {\"codex\": 2}, \"event/choose\": {\"codex\": 8}, \"event/plan\": {\"codex\": 2}, \"map/route-plan\": {\"codex\": 1}, \"rest/plan\": {\"codex\": 9}, \"reward/card\": {\"codex\": 19}, \"run-plan\": {\"codex\": 2}, \"selection/add\": {\"codex\": 1}, \"selection/remove\": {\"codex\": 2}, \"shop/plan\": {\"codex\": 3}}, \"unknown_successes\": 0, \"unresolved_questions\": 0}"
+  },
+  "changed_outputs": [
+    {
+      "path": "paper/data/README.md",
+      "bytes": 14189,
+      "sha256": "6feccce931f3e32b7d5a868e84346addefe5dc9d6328006ffd7e5cd529a92f67"
+    },
+    {
+      "path": "paper/data/commits.csv",
+      "bytes": 1016027,
+      "sha256": "7cc3f85d43305db0367dd4c7ffe26c1f3bf382983d7af3dd7c64f062294473ba"
+    },
+    {
+      "path": "paper/data/cost-curve-silent.csv",
+      "bytes": 14701,
+      "sha256": "bde70dbd2d041d5778f5a5506853f641d498bcecd6ae2e9592cab9ee2530406c"
+    },
+    {
+      "path": "paper/data/cost-silent.csv",
+      "bytes": 840697,
+      "sha256": "d8f30068c2bce1c9bb23a5f655b984626df0b4f7594e19c13f9ebff853003a2f"
+    },
+    {
+      "path": "paper/data/cost-sources.json",
+      "bytes": 240959,
+      "sha256": "54d90096eb1f13d23f59b2fcb3a0fbe85c796eb0e3848fa4277a2c2a52d6f955"
+    },
+    {
+      "path": "paper/data/cost-unattributed.csv",
+      "bytes": 19374,
+      "sha256": "7a26048c495fdf6440bd68722fe07089d77a21f10306ed994608793d6a02818d"
+    },
+    {
+      "path": "paper/data/decisions_by_label.csv",
+      "bytes": 1182766,
+      "sha256": "cbc73a23117ec0bc3bbbf6180dc15e8788db26d7861a4f047aeac1965cac9d66"
+    },
+    {
+      "path": "paper/data/learning-curve-silent.csv",
+      "bytes": 70075,
+      "sha256": "7425ba86ad6289c612fd494d126872433cb62abac455e1aff26b7710a0ede6a2"
+    },
+    {
+      "path": "paper/data/runs.csv",
+      "bytes": 1338843,
+      "sha256": "dde61bbc9c3fb444a9c0966b7bb60ad183f116bb8549115af93344184fd4cc88"
+    },
+    {
+      "path": "paper/data/summary.json",
+      "bytes": 547289,
+      "sha256": "739ac0b7e80b59bc49575902f3d67d8461e2554a22fedaea0a499b0ec7471c21"
+    },
+    {
+      "path": "paper/data/verification.json",
+      "bytes": 587,
+      "sha256": "a31ce80bbbca59c33aac59d3d6c205b47d869755f99789ef62df1cd1937b9e14"
+    },
+    {
+      "path": "paper/materials/silent/cost.md",
+      "bytes": 4199,
+      "sha256": "43665d341ee32be8d6a6336e18366fd3d8bcd187eeb8b8a58580c85a1b06af55"
+    }
+  ],
+  "raw_snapshot": false,
+  "before_and_after_frozen_bytes_preserved": true,
+  "historical_before_snapshots_not_copied_or_deleted": true,
+  "cost_boundary": "Independent immutable component cuts and estimates, not actual billed cost or service-tier assertions",
+  "experiment_boundary": "This run contains R380 blocking and R382 same-save recovery; not a pure R380/H1 natural pass."
+}

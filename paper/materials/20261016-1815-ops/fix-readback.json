@@ -1,0 +1,849 @@
+{
+  "at": "2026-10-16 18:26:28 CST",
+  "original_canonical": {
+    "task": "fix-batch",
+    "character": "silent",
+    "runs": [],
+    "scheduler_dedup_identity": "b0599a46d124fb28aec6becf465bd4b6d7f0e4a7283d9eac951e2f6016a04cd0",
+    "pid": 2742284,
+    "state": "failed",
+    "reason": "tick",
+    "worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261016-174303",
+    "proposal_policy": "Roy-2026-10-07-learning",
+    "pane": "wJ:p17M",
+    "finished": "2026-10-16 18:15",
+    "rc": 0,
+    "merged": null,
+    "proposal_audit_errors": [],
+    "report": {
+      "task": "fix-batch",
+      "base": "c75756fe60168c410f1eb4e611433176ed7ec194",
+      "fixes": [],
+      "skipped": [
+        {
+          "item": "infra-stall-between-run-quiet：正常完局报告期间的静默误报",
+          "reason": "纯工具修复与固定测试已写好，未提交/未合入：规定沙箱入口exit1，唯一失败为既有global-build-health.test.ts:6同步封装spawnSync /usr/bin/python3 EPERM；Python内4项通过。遵守提交前入口必须exit0的要求，保留补丁与现场交原运维沙箱外复验后提交/合入；不增排除、不改无关测试或断言。"
+        },
+        {
+          "item": "silent-0271：毒必胜提前返回遗漏保血候选",
+          "reason": "策略类/沿原独立提案，宽父保持"
+        },
+        {
+          "item": "silent-0279：SL抽序升级改标",
+          "reason": "策略类/沿原独立提案，宽父保持"
+        },
+        {
+          "item": "silent-0308：沙坑截止结束题面",
+          "reason": "策略类：当前combat.ts的end_turn致死计算仍未接沙坑截止，guardSandpit无可打逃离即返回；本轮核0YQJ9D1MC4NK F33T7七条原始记录SHA及五道决策身份，沿原0ff91bb5da98a252/本局3707a98930a03d83独立策略链，不重复派发。"
+        },
+        {
+          "item": "silent-0311：库存恢复血量预算",
+          "reason": "策略类/沿原独立提案，宽父保持"
+        },
+        {
+          "item": "silent-0320：同线新建UNMOVABLE",
+          "reason": "策略类/沿原独立提案，宽父保持"
+        },
+        {
+          "item": "silent-0322：升级神化同线升级",
+          "reason": "策略类/沿原独立提案，宽父保持"
+        },
+        {
+          "item": "silent-0329：饮药临时力量接线",
+          "reason": "策略类/沿原独立提案，宽父保持"
+        },
+        {
+          "item": "arch-funnel-guard",
+          "reason": "太大/独立架构或归因任务，普通纯bug批不混入；沿原owner继续。"
+        },
+        {
+          "item": "arch-learning-priority",
+          "reason": "太大/独立架构或归因任务，普通纯bug批不混入；沿原owner继续。"
+        },
+        {
+          "item": "arch-unified-resource-value",
+          "reason": "太大/独立架构或归因任务，普通纯bug批不混入；沿原owner继续。"
+        },
+        {
+          "item": "inv-f33-regression",
+          "reason": "太大/独立架构或归因任务，普通纯bug批不混入；沿原owner继续。"
+        },
+        {
+          "item": "silent-0332：成功首战接续nonpositive-hp",
+          "reason": "证据不足：本轮核TCDUBRWMEMNA F40两条nonpositive-hp原错误的seed76490739及后一低样本降级原行，三段SHA均匹配；完整resources/steps仍截断、根因未知，沿原5aa2672/0c0d链，保正HP/300样本契约。"
+        },
+        {
+          "item": "silent-0334：升级隐秘匕首模型",
+          "reason": "策略类/沿原独立提案，宽父保持"
+        },
+        {
+          "item": "silent-0339：尾巴误核销",
+          "reason": "策略类/沿原独立提案，宽父保持"
+        },
+        {
+          "item": "silent-0344：坚韧之环延迟格挡",
+          "reason": "策略类/沿原独立提案，宽父保持"
+        },
+        {
+          "item": "silent-0347：组装师攻击召唤",
+          "reason": "策略类/沿原独立提案，宽父保持"
+        },
+        {
+          "item": "silent-0349：已有虚弱后的减力",
+          "reason": "策略类/沿原独立提案，宽父保持"
+        },
+        {
+          "item": "core-build-notify-222802-rc2：历史发送事实",
+          "reason": "证据不足：后续诊断已修，原历史发送事实未知"
+        },
+        {
+          "item": "silent-0362：背向攻击减力倍率",
+          "reason": "策略类/沿原独立提案，宽父保持"
+        },
+        {
+          "item": "silent-0365：未建模药水目标可达性",
+          "reason": "策略类：当前targets.slice(0, 2)仍在；新增4Z2GCLA4DU52 F24证据及3adbcaf2f490177f已沿原70c22e94eda8f8a9策略链，不重复实现或派发。"
+        },
+        {
+          "item": "框架外层时限与分段续验收尾",
+          "reason": "太大/独立框架：精确续验入口已实现，宿主收尾范围继续"
+        },
+        {
+          "item": "调度公平性核查",
+          "reason": "证据不足：未证明永久饥饿，沿原框架核查"
+        },
+        {
+          "item": "silent-0481：技能药水生命周期措辞",
+          "reason": "策略类/题面知识：当前生命周期措辞仍在；沿既有686d4e759478eebb及本局c89465046641d6ed独立提案，未补游戏规则。"
+        },
+        {
+          "item": "silent-0487：MAD_SCIENCE三段攻击模型",
+          "reason": "策略类：MAD_SCIENCE三段攻击模型；沿原silent-proposal-0a0b31e284e6793e独立策略链，不重复派发。"
+        },
+        {
+          "item": "codex大脑缓存命中偏低",
+          "reason": "证据不足：缺当前同题受控请求对比，本离线任务不调用真实LLM或网络。"
+        },
+        {
+          "item": "sandbox-glob-startup-race：上游目录生命周期及其他租约拒绝原因",
+          "reason": "证据不足：798af209注册保存屏障已是main/live祖先；上游目录删除者及完整生命周期仍未知。"
+        },
+        {
+          "item": "named-card-facts-transport：事件入口之外范围",
+          "reason": "太大/独立功能：42c920f34事件入口已实现，其余沿原架构owner。"
+        },
+        {
+          "item": "boss模拟样本性能及v5-dpr-health宽范围",
+          "reason": "太大/独立专项：保留原冻结输入、样本/预算和验收链，不以定向回归代替校准。"
+        },
+        {
+          "item": "rest-timeout-accepted-route-not-committed / silent-0446",
+          "reason": "策略类/结构：沿原silent-proposal-2d3aa8dfb27dbe3f，不无条件提交未确认动作。"
+        },
+        {
+          "item": "silent-0469：纸鹤其他未知组合/整战收益",
+          "reason": "策略类：本基线已含8d386fc76的已观察聚合体子项，不能关闭更宽组合/整战范围。"
+        }
+      ],
+      "merged": null,
+      "tests": {
+        "tsc": 0,
+        "vitest": 1,
+        "files": 448,
+        "cases": 4170,
+        "passed": 4169,
+        "failed": 1
+      },
+      "code_proposals": [],
+      "implementation_domains": [],
+      "report": "/home/dw/Projects/agent-sts2/learner/runs/20261016-174314-32e7f6b9-0c15-4c43-89b3-9c843eb5e8e8-fix-batch/report.md",
+      "uncommitted_fixes": [
+        {
+          "item": "infra-stall-between-run-quiet：正常完局报告期间的静默误报",
+          "commit": null,
+          "test": "agent/tests/ops-stall-between-runs.test.ts",
+          "fails_without_fix": true,
+          "patch": "/home/dw/Projects/agent-sts2/learner/runs/20261016-174314-32e7f6b9-0c15-4c43-89b3-9c843eb5e8e8-fix-batch/worktree.diff",
+          "patch_sha256": "3570574b7f222d8df4078fb32454cdfa02e5115f67e275c553ab2dfbc8ec48f0",
+          "files": [
+            "ops/stall-check.sh",
+            "agent/tests/ops-stall-between-runs.test.ts"
+          ],
+          "evidence": {
+            "run": "7X58G3LSHZ3U",
+            "floor": 24,
+            "turn": null,
+            "phase": "normal run finalization/report"
+          }
+        }
+      ]
+    },
+    "retry_at": 1792149324.1170034,
+    "ops_fallback_publication": {
+      "at": "2026-10-16 18:24:00 CST",
+      "batch": "20261016-174303-fix-batch",
+      "source": "21a9c52484f04d510bd397959c958ec9767f1d2d",
+      "merged": "c0cab0352b6c1a487e116d845350bf483dc60c9c",
+      "tree": "c02e2ffda79312e3b22b438b501c68b4d1882873",
+      "publication": "paper/materials/20261016-1815-ops/publication.json",
+      "publication_sha256": "ce1629d25b2f39eb8c362b3a035761b2aa6d796019aa5fedde9437d41c436388",
+      "original_report_sha256": "06697213a76b20501497c280bf1be059c007b60e7c18476b9fd001ea76db0973",
+      "original_report_retained": true,
+      "original_report_has_no_committed_source": true,
+      "disposition": "Main ops committed original staged source after sandbox EPERM supplement; use actual publication proof, without changing original completion.",
+      "original_checks_and_live_locks": true,
+      "full_command": "export PATH=\"$HOME/.local/node/bin:$PATH\"; nice -n 19 npx tsc -p tsconfig.json --noEmit; a=$?; nice -n 19 npx vitest run --maxWorkers=2; b=$?; [ \"$a\" = 0 ] && [ \"$b\" = 0 ]",
+      "full_command_sha256": "896f046db998a1dfe91b22baa98cc341ed6a90cadb542495c08419fcc4040210",
+      "log": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261016-174303-fix-batch.fallback-c02e2ffda79312e3b22b438b501c68b4d1882873.checks.log"
+    },
+    "checks_pending": true
+  },
+  "original_report": {
+    "task": "fix-batch",
+    "base": "c75756fe60168c410f1eb4e611433176ed7ec194",
+    "fixes": [],
+    "skipped": [
+      {
+        "item": "infra-stall-between-run-quiet：正常完局报告期间的静默误报",
+        "reason": "纯工具修复与固定测试已写好，未提交/未合入：规定沙箱入口exit1，唯一失败为既有global-build-health.test.ts:6同步封装spawnSync /usr/bin/python3 EPERM；Python内4项通过。遵守提交前入口必须exit0的要求，保留补丁与现场交原运维沙箱外复验后提交/合入；不增排除、不改无关测试或断言。"
+      },
+      {
+        "item": "silent-0271：毒必胜提前返回遗漏保血候选",
+        "reason": "策略类/沿原独立提案，宽父保持"
+      },
+      {
+        "item": "silent-0279：SL抽序升级改标",
+        "reason": "策略类/沿原独立提案，宽父保持"
+      },
+      {
+        "item": "silent-0308：沙坑截止结束题面",
+        "reason": "策略类：当前combat.ts的end_turn致死计算仍未接沙坑截止，guardSandpit无可打逃离即返回；本轮核0YQJ9D1MC4NK F33T7七条原始记录SHA及五道决策身份，沿原0ff91bb5da98a252/本局3707a98930a03d83独立策略链，不重复派发。"
+      },
+      {
+        "item": "silent-0311：库存恢复血量预算",
+        "reason": "策略类/沿原独立提案，宽父保持"
+      },
+      {
+        "item": "silent-0320：同线新建UNMOVABLE",
+        "reason": "策略类/沿原独立提案，宽父保持"
+      },
+      {
+        "item": "silent-0322：升级神化同线升级",
+        "reason": "策略类/沿原独立提案，宽父保持"
+      },
+      {
+        "item": "silent-0329：饮药临时力量接线",
+        "reason": "策略类/沿原独立提案，宽父保持"
+      },
+      {
+        "item": "arch-funnel-guard",
+        "reason": "太大/独立架构或归因任务，普通纯bug批不混入；沿原owner继续。"
+      },
+      {
+        "item": "arch-learning-priority",
+        "reason": "太大/独立架构或归因任务，普通纯bug批不混入；沿原owner继续。"
+      },
+      {
+        "item": "arch-unified-resource-value",
+        "reason": "太大/独立架构或归因任务，普通纯bug批不混入；沿原owner继续。"
+      },
+      {
+        "item": "inv-f33-regression",
+        "reason": "太大/独立架构或归因任务，普通纯bug批不混入；沿原owner继续。"
+      },
+      {
+        "item": "silent-0332：成功首战接续nonpositive-hp",
+        "reason": "证据不足：本轮核TCDUBRWMEMNA F40两条nonpositive-hp原错误的seed76490739及后一低样本降级原行，三段SHA均匹配；完整resources/steps仍截断、根因未知，沿原5aa2672/0c0d链，保正HP/300样本契约。"
+      },
+      {
+        "item": "silent-0334：升级隐秘匕首模型",
+        "reason": "策略类/沿原独立提案，宽父保持"
+      },
+      {
+        "item": "silent-0339：尾巴误核销",
+        "reason": "策略类/沿原独立提案，宽父保持"
+      },
+      {
+        "item": "silent-0344：坚韧之环延迟格挡",
+        "reason": "策略类/沿原独立提案，宽父保持"
+      },
+      {
+        "item": "silent-0347：组装师攻击召唤",
+        "reason": "策略类/沿原独立提案，宽父保持"
+      },
+      {
+        "item": "silent-0349：已有虚弱后的减力",
+        "reason": "策略类/沿原独立提案，宽父保持"
+      },
+      {
+        "item": "core-build-notify-222802-rc2：历史发送事实",
+        "reason": "证据不足：后续诊断已修，原历史发送事实未知"
+      },
+      {
+        "item": "silent-0362：背向攻击减力倍率",
+        "reason": "策略类/沿原独立提案，宽父保持"
+      },
+      {
+        "item": "silent-0365：未建模药水目标可达性",
+        "reason": "策略类：当前targets.slice(0, 2)仍在；新增4Z2GCLA4DU52 F24证据及3adbcaf2f490177f已沿原70c22e94eda8f8a9策略链，不重复实现或派发。"
+      },
+      {
+        "item": "框架外层时限与分段续验收尾",
+        "reason": "太大/独立框架：精确续验入口已实现，宿主收尾范围继续"
+      },
+      {
+        "item": "调度公平性核查",
+        "reason": "证据不足：未证明永久饥饿，沿原框架核查"
+      },
+      {
+        "item": "silent-0481：技能药水生命周期措辞",
+        "reason": "策略类/题面知识：当前生命周期措辞仍在；沿既有686d4e759478eebb及本局c89465046641d6ed独立提案，未补游戏规则。"
+      },
+      {
+        "item": "silent-0487：MAD_SCIENCE三段攻击模型",
+        "reason": "策略类：MAD_SCIENCE三段攻击模型；沿原silent-proposal-0a0b31e284e6793e独立策略链，不重复派发。"
+      },
+      {
+        "item": "codex大脑缓存命中偏低",
+        "reason": "证据不足：缺当前同题受控请求对比，本离线任务不调用真实LLM或网络。"
+      },
+      {
+        "item": "sandbox-glob-startup-race：上游目录生命周期及其他租约拒绝原因",
+        "reason": "证据不足：798af209注册保存屏障已是main/live祖先；上游目录删除者及完整生命周期仍未知。"
+      },
+      {
+        "item": "named-card-facts-transport：事件入口之外范围",
+        "reason": "太大/独立功能：42c920f34事件入口已实现，其余沿原架构owner。"
+      },
+      {
+        "item": "boss模拟样本性能及v5-dpr-health宽范围",
+        "reason": "太大/独立专项：保留原冻结输入、样本/预算和验收链，不以定向回归代替校准。"
+      },
+      {
+        "item": "rest-timeout-accepted-route-not-committed / silent-0446",
+        "reason": "策略类/结构：沿原silent-proposal-2d3aa8dfb27dbe3f，不无条件提交未确认动作。"
+      },
+      {
+        "item": "silent-0469：纸鹤其他未知组合/整战收益",
+        "reason": "策略类：本基线已含8d386fc76的已观察聚合体子项，不能关闭更宽组合/整战范围。"
+      }
+    ],
+    "merged": null,
+    "tests": {
+      "tsc": 0,
+      "vitest": 1,
+      "files": 448,
+      "cases": 4170,
+      "passed": 4169,
+      "failed": 1
+    },
+    "code_proposals": [],
+    "implementation_domains": [],
+    "report": "/home/dw/Projects/agent-sts2/learner/runs/20261016-174314-32e7f6b9-0c15-4c43-89b3-9c843eb5e8e8-fix-batch/report.md",
+    "uncommitted_fixes": [
+      {
+        "item": "infra-stall-between-run-quiet：正常完局报告期间的静默误报",
+        "commit": null,
+        "test": "agent/tests/ops-stall-between-runs.test.ts",
+        "fails_without_fix": true,
+        "patch": "/home/dw/Projects/agent-sts2/learner/runs/20261016-174314-32e7f6b9-0c15-4c43-89b3-9c843eb5e8e8-fix-batch/worktree.diff",
+        "patch_sha256": "3570574b7f222d8df4078fb32454cdfa02e5115f67e275c553ab2dfbc8ec48f0",
+        "files": [
+          "ops/stall-check.sh",
+          "agent/tests/ops-stall-between-runs.test.ts"
+        ],
+        "evidence": {
+          "run": "7X58G3LSHZ3U",
+          "floor": 24,
+          "turn": null,
+          "phase": "normal run finalization/report"
+        }
+      }
+    ]
+  },
+  "native": {
+    "batch": "20261016-174303-fix-batch",
+    "thread": "01a14418-4b10-71d1-aa8b-6e0bff30884c",
+    "cwd": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261016-174303",
+    "event_log": "learner/runs/20261016-174314-32e7f6b9-0c15-4c43-89b3-9c843eb5e8e8-fix-batch.jsonl",
+    "registered_launch_batch": "20261016-174303-fix-batch",
+    "original_lease": "d1a2f4cf8816ff2a9bc2165497c17f9577254995bbb7001d96a311d25547a585",
+    "native_context": {
+      "source": "ops/codex-ops/accounts/codex1/learner/sessions/2026/10/16/rollout-2026-10-16T17-43-25-01a14418-4b10-71d1-aa8b-6e0bff30884c.jsonl",
+      "offset": 50167,
+      "bytes": 5118,
+      "sha256": "8f206ccfc18edcb92a3a0e64ec2d413921696c9d3337ed231e7e30b072631087",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "sandbox": {
+        "type": "workspace-write",
+        "writable_roots": [
+          "/home/dw/Projects/agent-sts2",
+          "/home/dw/Projects/agent-sts2/.git",
+          "/home/dw/Projects/agent-sts2/.git/worktrees/codex-fix-silent-20261016-174303"
+        ],
+        "network_access": false,
+        "exclude_tmpdir_env_var": false,
+        "exclude_slash_tmp": false
+      },
+      "approval_policy": "never"
+    },
+    "native_user_input": {
+      "offset": 55285,
+      "bytes": 13081,
+      "sha256": "4f6e2037cf8043bc011f234feedfc44f5d2f3d7eb1c75f5184f730492e1501f9",
+      "input_sha256": "cab830f468d39cf625cc863fdd3493f8bab13df5ca065c6f85686bd9e29d7f85"
+    },
+    "original_header_events": [
+      {
+        "offset": 0,
+        "bytes": 14892,
+        "sha256": "7ce1f2051fdb768a5b67edec3739c5106416c1c0095298d8404cf9d805b5d4b5",
+        "type": "learner_launch",
+        "attempt": null,
+        "code": null
+      },
+      {
+        "offset": 14892,
+        "bytes": 370,
+        "sha256": "04272f469a6ccfb3692506354e86cf9bd90da4067cf1f789f3d9142154ef9308",
+        "type": "learner_startup_attempt",
+        "attempt": 1,
+        "code": null
+      },
+      {
+        "offset": 18275,
+        "bytes": 77,
+        "sha256": "30a9a807bfddcf48a2c0ea7c23739120e887b1a04b29814a0def4343c07d0b69",
+        "type": "thread.started",
+        "attempt": null,
+        "code": null
+      }
+    ],
+    "startup_attempts": 1,
+    "failed_startups_preserved": 0,
+    "no_model_or_manual_restart": true
+  },
+  "source": {
+    "at": "2026-10-16 18:19:46 CST",
+    "source": "21a9c52484f04d510bd397959c958ec9767f1d2d",
+    "parent": "c75756fe60168c410f1eb4e611433176ed7ec194",
+    "tree": "35d6fcb967da4c0b2a83aae4f3d864181b01c26a",
+    "files": {
+      "agent/tests/ops-stall-between-runs.test.ts": "b94169b2e32042e4fe724129cb23e74a3a736db2aea4c3bfee36fb2009bc88a2",
+      "ops/stall-check.sh": "b07d14af42be12d77d4f20c49502a4740c9a760a9f531833dc794ee3e55a046f"
+    },
+    "source_checks": {
+      "request": {
+        "at": "2026-10-16 18:17:32 CST",
+        "operator": "original main ops host, not learner sandbox",
+        "batch": "20261016-174303-fix-batch",
+        "base": "c75756fe60168c410f1eb4e611433176ed7ec194",
+        "staged_tree": "35d6fcb967da4c0b2a83aae4f3d864181b01c26a",
+        "files": {
+          "agent/tests/ops-stall-between-runs.test.ts": "b94169b2e32042e4fe724129cb23e74a3a736db2aea4c3bfee36fb2009bc88a2",
+          "ops/stall-check.sh": "b07d14af42be12d77d4f20c49502a4740c9a760a9f531833dc794ee3e55a046f"
+        },
+        "original_sandbox_full_exit": 1,
+        "original_failure": "global-build-health.test.ts spawnSync /usr/bin/python3 EPERM",
+        "source_sandbox_failure_preserved": true,
+        "unchanged_source_full_not_repeated": true
+      },
+      "checks": [
+        {
+          "command": [
+            "npx",
+            "tsc",
+            "-p",
+            "tsconfig.json",
+            "--noEmit"
+          ],
+          "pid": 3148279,
+          "birth_ticks": "103781186",
+          "rc": 0,
+          "log": "paper/materials/20261016-1815-ops/source-host-tsc.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "command": [
+            "npx",
+            "vitest",
+            "run",
+            "tests/global-build-health.test.ts",
+            "tests/ops-stall-between-runs.test.ts",
+            "tests/ops-stall-recovery.test.ts",
+            "--maxWorkers=1"
+          ],
+          "pid": 3150444,
+          "birth_ticks": "103782407",
+          "rc": 0,
+          "log": "paper/materials/20261016-1815-ops/source-host-targeted.log",
+          "sha256": "71bd4b4c54e9bc981dc71ba7024af409e35cbf197eed095f7a86d9bb688d557a"
+        }
+      ],
+      "source_unchanged": true,
+      "original_sandbox_full_exit": 1,
+      "only_selected_host_tests": true,
+      "no_new_behavior_release": true,
+      "no_game_model_or_learner_invocation": true
+    },
+    "source_disposition": {
+      "at": "2026-10-16 18:19:46 CST",
+      "decision": "Accept unchanged-source host supplement for sandbox EPERM; preserve original sandbox full rc1.",
+      "original_sandbox": {
+        "tsc": 0,
+        "vitest": 1,
+        "files": 448,
+        "passed": 4169,
+        "failed": 1
+      },
+      "host_supplement": {
+        "tsc": 0,
+        "files": 3,
+        "passed": 14,
+        "python_cases": 4
+      },
+      "scope": "Only finalized console, no play controller, scoped report; 900-second stale decision and other guards retained.",
+      "new_final_live_full": "required once through original batch checks/live locks and normal host command",
+      "learner_permissions_unchanged": true,
+      "original_report_unchanged": true,
+      "no_game_behavior_release": true
+    },
+    "gitleaks": 0,
+    "only_original_two_leaves": true
+  },
+  "publication": {
+    "at": "2026-10-16 18:22:05 CST",
+    "source": "21a9c52484f04d510bd397959c958ec9767f1d2d",
+    "parent": "c75756fe60168c410f1eb4e611433176ed7ec194",
+    "source_tree": "35d6fcb967da4c0b2a83aae4f3d864181b01c26a",
+    "old_main": "be32e58f86041aa257d24764ec476e6171f386ff",
+    "main": "be509d964ae96cfd34eb166c35825cdaf731ed05",
+    "old_live": "a9e687d9f0acccccddbfa92895d7966b58900658",
+    "knowledge_refresh_commit": "5976cfacc8c60d42d9b8e42e3753d4dcccbdefa7",
+    "knowledge_refresh": [
+      {
+        "path": "knowledge/characters/silent/boss-damage.json",
+        "sha256": "cd6462a5cbd0d83fa4a6d2ecf815b31d77e5166c3508a8744c891defc9dd2095"
+      },
+      {
+        "path": "knowledge/characters/silent/construction-opportunities.json",
+        "sha256": "c56fc00813aa1822ab125eebb7204da8f303917b1f3aef1091773a89ef9ba0ab"
+      },
+      {
+        "path": "knowledge/characters/silent/fight-value-gates.json",
+        "sha256": "5281fae279c522cf901f56c22f40ffdd0bc3c3a3ce890a9c84e6c29c09391e37"
+      },
+      {
+        "path": "knowledge/characters/silent/fight-value.json",
+        "sha256": "545d2bfaf260ab328745ef78a0c73b4c09f7f7772693327c9135eba2e0154f35"
+      },
+      {
+        "path": "knowledge/characters/silent/monster-records.json",
+        "sha256": "23c9d589a82083435585e17b4ab894462ee6ab54d7e2368f3ec1e389e618a0e1"
+      },
+      {
+        "path": "knowledge/characters/silent/outcome-stats.json",
+        "sha256": "7af938bbe6f388786683dd878ed9b4c09025b87525c275790d48ced4b585172a"
+      },
+      {
+        "path": "knowledge/characters/silent/room-costs.json",
+        "sha256": "0ad295cb824b12f784ffe54974478ae2ea7b582429be942e78cc6ff2fab448e9"
+      },
+      {
+        "path": "knowledge/common/card-upgrades.json",
+        "sha256": "bf3c225c6456690b5a139f7e544143bb8219e5fc1ce2e974eee29c1fbcfd9147"
+      },
+      {
+        "path": "knowledge/common/monster-db.json",
+        "sha256": "efa7a42a14ccb41167a2f4c85d92cab5d83a7ac998a0c7039576d29ecbddab25"
+      },
+      {
+        "path": "knowledge/common/move-model.json",
+        "sha256": "5020ef3f100452c3e9b82f51a114e21b5d7c81b68d168ac8dd2d1ba3f7f71607"
+      }
+    ],
+    "actual_live": "c0cab0352b6c1a487e116d845350bf483dc60c9c",
+    "tree": "c02e2ffda79312e3b22b438b501c68b4d1882873",
+    "leaves": [
+      {
+        "path": "agent/tests/ops-stall-between-runs.test.ts",
+        "mode": "100644",
+        "sha256": "b94169b2e32042e4fe724129cb23e74a3a736db2aea4c3bfee36fb2009bc88a2"
+      },
+      {
+        "path": "ops/stall-check.sh",
+        "mode": "100755",
+        "sha256": "b07d14af42be12d77d4f20c49502a4740c9a760a9f531833dc794ee3e55a046f"
+      }
+    ],
+    "source_sandbox_full_exit": 1,
+    "source_host_supplement": {
+      "request": {
+        "at": "2026-10-16 18:17:32 CST",
+        "operator": "original main ops host, not learner sandbox",
+        "batch": "20261016-174303-fix-batch",
+        "base": "c75756fe60168c410f1eb4e611433176ed7ec194",
+        "staged_tree": "35d6fcb967da4c0b2a83aae4f3d864181b01c26a",
+        "files": {
+          "agent/tests/ops-stall-between-runs.test.ts": "b94169b2e32042e4fe724129cb23e74a3a736db2aea4c3bfee36fb2009bc88a2",
+          "ops/stall-check.sh": "b07d14af42be12d77d4f20c49502a4740c9a760a9f531833dc794ee3e55a046f"
+        },
+        "original_sandbox_full_exit": 1,
+        "original_failure": "global-build-health.test.ts spawnSync /usr/bin/python3 EPERM",
+        "source_sandbox_failure_preserved": true,
+        "unchanged_source_full_not_repeated": true
+      },
+      "checks": [
+        {
+          "command": [
+            "npx",
+            "tsc",
+            "-p",
+            "tsconfig.json",
+            "--noEmit"
+          ],
+          "pid": 3148279,
+          "birth_ticks": "103781186",
+          "rc": 0,
+          "log": "paper/materials/20261016-1815-ops/source-host-tsc.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "command": [
+            "npx",
+            "vitest",
+            "run",
+            "tests/global-build-health.test.ts",
+            "tests/ops-stall-between-runs.test.ts",
+            "tests/ops-stall-recovery.test.ts",
+            "--maxWorkers=1"
+          ],
+          "pid": 3150444,
+          "birth_ticks": "103782407",
+          "rc": 0,
+          "log": "paper/materials/20261016-1815-ops/source-host-targeted.log",
+          "sha256": "71bd4b4c54e9bc981dc71ba7024af409e35cbf197eed095f7a86d9bb688d557a"
+        }
+      ],
+      "source_unchanged": true,
+      "original_sandbox_full_exit": 1,
+      "only_selected_host_tests": true,
+      "no_new_behavior_release": true,
+      "no_game_model_or_learner_invocation": true
+    },
+    "gitleaks": 0,
+    "no_new_behavior_release": true,
+    "game_code_config_knowledge_rules_unchanged": true,
+    "original_reports_and_failed_history_preserved": true,
+    "foreign_index_and_parallel_records_preserved": true,
+    "host": "pending original batch exact-tree full check",
+    "no_restart_or_account_home_model_prompt_change": true
+  },
+  "host_started": {
+    "at": "2026-10-16 18:24:00 CST",
+    "batch": "20261016-174303-fix-batch",
+    "source": "21a9c52484f04d510bd397959c958ec9767f1d2d",
+    "merged": "c0cab0352b6c1a487e116d845350bf483dc60c9c",
+    "tree": "c02e2ffda79312e3b22b438b501c68b4d1882873",
+    "publication": "paper/materials/20261016-1815-ops/publication.json",
+    "publication_sha256": "ce1629d25b2f39eb8c362b3a035761b2aa6d796019aa5fedde9437d41c436388",
+    "original_report_sha256": "06697213a76b20501497c280bf1be059c007b60e7c18476b9fd001ea76db0973",
+    "original_report_retained": true,
+    "original_report_has_no_committed_source": true,
+    "disposition": "Main ops committed original staged source after sandbox EPERM supplement; use actual publication proof, without changing original completion.",
+    "original_checks_and_live_locks": true,
+    "full_command": "export PATH=\"$HOME/.local/node/bin:$PATH\"; nice -n 19 npx tsc -p tsconfig.json --noEmit; a=$?; nice -n 19 npx vitest run --maxWorkers=2; b=$?; [ \"$a\" = 0 ] && [ \"$b\" = 0 ]",
+    "full_command_sha256": "896f046db998a1dfe91b22baa98cc341ed6a90cadb542495c08419fcc4040210",
+    "log": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261016-174303-fix-batch.fallback-c02e2ffda79312e3b22b438b501c68b4d1882873.checks.log",
+    "executor_pid": 3226501,
+    "command_pid": 3226509,
+    "birth_ticks": "103820020",
+    "state": "running",
+    "test_result": "pending; startup is not completion"
+  },
+  "source_sandbox_full_exit": 1,
+  "source_host_selected_tests_passed": 14,
+  "source_host_tsc": 0,
+  "unchanged_original_full_not_repeated": true,
+  "baseline_files_verified": 388,
+  "existing_fix_ancestors_verified": 80,
+  "original_0332_and_0308_evidence_verified": true,
+  "source_patch_sha_verified": true,
+  "original_materials": [
+    {
+      "path": "learner/runs/20261016-174314-32e7f6b9-0c15-4c43-89b3-9c843eb5e8e8-fix-batch/audit.json",
+      "bytes": 177811,
+      "sha256": "b0e0b228b5687c1aedddef07d2e096fd0c15063a1057ae6dc67d33f6812ada9c"
+    },
+    {
+      "path": "learner/runs/20261016-174314-32e7f6b9-0c15-4c43-89b3-9c843eb5e8e8-fix-batch/audit.py",
+      "bytes": 5482,
+      "sha256": "a4b5bb10b6f933c7f43f932f8845e5ae2f57e8b2e074dc57159a848980377fdd"
+    },
+    {
+      "path": "learner/runs/20261016-174314-32e7f6b9-0c15-4c43-89b3-9c843eb5e8e8-fix-batch/commit-message.txt",
+      "bytes": 413,
+      "sha256": "083c9e7077004add9f0d287ab6a4390a8450f31579821c26be39e63e54f73483"
+    },
+    {
+      "path": "learner/runs/20261016-174314-32e7f6b9-0c15-4c43-89b3-9c843eb5e8e8-fix-batch/evidence-0308-readback.json",
+      "bytes": 2897,
+      "sha256": "b71a43c874e2b4657f6f95631ec541b0d022371ea8b7cb3e8fd01cbde5de580b"
+    },
+    {
+      "path": "learner/runs/20261016-174314-32e7f6b9-0c15-4c43-89b3-9c843eb5e8e8-fix-batch/evidence-0332-readback.json",
+      "bytes": 1925,
+      "sha256": "638e725a0c8742913faf1f36c0dcf71671dacd42bc65a72814a75917af9c74a9"
+    },
+    {
+      "path": "learner/runs/20261016-174314-32e7f6b9-0c15-4c43-89b3-9c843eb5e8e8-fix-batch/gitleaks-source.json",
+      "bytes": 3,
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    {
+      "path": "learner/runs/20261016-174314-32e7f6b9-0c15-4c43-89b3-9c843eb5e8e8-fix-batch/gitleaks-source.log",
+      "bytes": 106,
+      "sha256": "52ac1983e0fec7a3308a6ebee5cd29c40d8ffc210423e1a7a5409e49108f51fc"
+    },
+    {
+      "path": "learner/runs/20261016-174314-32e7f6b9-0c15-4c43-89b3-9c843eb5e8e8-fix-batch/global-health-diagnostic.log",
+      "bytes": 1141,
+      "sha256": "bd18bfb56d3d1a22fbe995d7629cf44ca5a23eac113f7b4ee97b8ac9ff2cc3b8"
+    },
+    {
+      "path": "learner/runs/20261016-174314-32e7f6b9-0c15-4c43-89b3-9c843eb5e8e8-fix-batch/global-health-python.stderr",
+      "bytes": 102,
+      "sha256": "feabb4add9e2ca3374e538560634d1ec97dc4f4ce89aab12f3d726e36ea9b2f6"
+    },
+    {
+      "path": "learner/runs/20261016-174314-32e7f6b9-0c15-4c43-89b3-9c843eb5e8e8-fix-batch/global-health-python.stdout",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "learner/runs/20261016-174314-32e7f6b9-0c15-4c43-89b3-9c843eb5e8e8-fix-batch/jev-sts2-settle-1792145242007-439eb70b3b83e.jev-prompts.jsonl",
+      "bytes": 9794,
+      "sha256": "92a9e075cfa4d150850e54cc99b7c26f0182709a592f8e0ce8729ed4b3652f31"
+    },
+    {
+      "path": "learner/runs/20261016-174314-32e7f6b9-0c15-4c43-89b3-9c843eb5e8e8-fix-batch/jev-sts2-settle-1792145242007-439eb70b3b83e.run-config.jsonl",
+      "bytes": 3523,
+      "sha256": "872b89048a87dd23c7c2abd9db77b16078b7012c077c3f0c3aa49a29d2898bfd"
+    },
+    {
+      "path": "learner/runs/20261016-174314-32e7f6b9-0c15-4c43-89b3-9c843eb5e8e8-fix-batch/jev-sts2-settle-1792145242007-439eb70b3b83e.states.jsonl",
+      "bytes": 11798,
+      "sha256": "61a7fe3b643b3653db44f4b8e7736ca1e8b670acdc884473d5bd83e9d7481a58"
+    },
+    {
+      "path": "learner/runs/20261016-174314-32e7f6b9-0c15-4c43-89b3-9c843eb5e8e8-fix-batch/jev-sts2-settle-1792145242129-484e3ed1847a2.jev-prompts.jsonl",
+      "bytes": 4717,
+      "sha256": "9f9b2fe41ca899e9d60833d460bddf5a34afaca8623389e91d90c2902406ca64"
+    },
+    {
+      "path": "learner/runs/20261016-174314-32e7f6b9-0c15-4c43-89b3-9c843eb5e8e8-fix-batch/jev-sts2-settle-1792145242129-484e3ed1847a2.run-config.jsonl",
+      "bytes": 3523,
+      "sha256": "12d5611a1b0a660ebb8860ccfca1c3d075fec1308d56054ff0c6d83f9d32f7bc"
+    },
+    {
+      "path": "learner/runs/20261016-174314-32e7f6b9-0c15-4c43-89b3-9c843eb5e8e8-fix-batch/jev-sts2-settle-1792145242129-484e3ed1847a2.states.jsonl",
+      "bytes": 5571,
+      "sha256": "a88836d68236e2558b5115fce7cd12c0f81411e602495090ea5aecbe85dce4e5"
+    },
+    {
+      "path": "learner/runs/20261016-174314-32e7f6b9-0c15-4c43-89b3-9c843eb5e8e8-fix-batch/make-blocked-report.py",
+      "bytes": 6606,
+      "sha256": "24757d07fcf6ab8081b838af9bf61c93e381b614854d07928e8fe4b1dc3934b6"
+    },
+    {
+      "path": "learner/runs/20261016-174314-32e7f6b9-0c15-4c43-89b3-9c843eb5e8e8-fix-batch/make-report.py",
+      "bytes": 4028,
+      "sha256": "ddd3f74e7758850acde6f31d78fcb27bf94fcc33937033f77e7ec492e47557a0"
+    },
+    {
+      "path": "learner/runs/20261016-174314-32e7f6b9-0c15-4c43-89b3-9c843eb5e8e8-fix-batch/merge-live.py",
+      "bytes": 5840,
+      "sha256": "75ffb22d57a27c5e8abdc503ea97067b5ecadf5ab551f93fff92942e3f4cc485"
+    },
+    {
+      "path": "learner/runs/20261016-174314-32e7f6b9-0c15-4c43-89b3-9c843eb5e8e8-fix-batch/paths-followup.log",
+      "bytes": 266,
+      "sha256": "2d03d3c0ca989ece37c1f72d86cdd93da1af8d1cfea10f8ba9505bd5f6bfa4d3"
+    },
+    {
+      "path": "learner/runs/20261016-174314-32e7f6b9-0c15-4c43-89b3-9c843eb5e8e8-fix-batch/queue-readonly-snapshot.md",
+      "bytes": 429411,
+      "sha256": "4b746b7fdd325e3e4f50576582efdb377f402185357dc8eea169338532e61de7"
+    },
+    {
+      "path": "learner/runs/20261016-174314-32e7f6b9-0c15-4c43-89b3-9c843eb5e8e8-fix-batch/report.md",
+      "bytes": 30397,
+      "sha256": "41c9d3139ca15db8272ed258fada7d5a5a296df13049f4c7cc7813c742be3124"
+    },
+    {
+      "path": "learner/runs/20261016-174314-32e7f6b9-0c15-4c43-89b3-9c843eb5e8e8-fix-batch/result.json",
+      "bytes": 6909,
+      "sha256": "255a842d2f969edcad39bd12d1335946fa292c8eb150ba213b0d43c0c74304fc"
+    },
+    {
+      "path": "learner/runs/20261016-174314-32e7f6b9-0c15-4c43-89b3-9c843eb5e8e8-fix-batch/source-sandbox-exit.json",
+      "bytes": 17,
+      "sha256": "5cc319f54b05a38799195a491c303aa686eab7caccfdbbf1e8b8c07405cb7392"
+    },
+    {
+      "path": "learner/runs/20261016-174314-32e7f6b9-0c15-4c43-89b3-9c843eb5e8e8-fix-batch/source-sandbox.log",
+      "bytes": 1187,
+      "sha256": "8797b6ace298498110d5df35c1d996d9fa7873064e577f1c66bce4136188ab77"
+    },
+    {
+      "path": "learner/runs/20261016-174314-32e7f6b9-0c15-4c43-89b3-9c843eb5e8e8-fix-batch/source.diff",
+      "bytes": 6184,
+      "sha256": "3570574b7f222d8df4078fb32454cdfa02e5115f67e275c553ab2dfbc8ec48f0"
+    },
+    {
+      "path": "learner/runs/20261016-174314-32e7f6b9-0c15-4c43-89b3-9c843eb5e8e8-fix-batch/stall-evidence-readback.json",
+      "bytes": 3743,
+      "sha256": "257d5263d27da710f8dfbb6c6ed702abf92979d95b5a6c34d5de53b9caed80a2"
+    },
+    {
+      "path": "learner/runs/20261016-174314-32e7f6b9-0c15-4c43-89b3-9c843eb5e8e8-fix-batch/targeted-fixed.log",
+      "bytes": 266,
+      "sha256": "ebfec7ab6fbb03684fd600afd8a6b76f67d4f9158e0a66fbe95f088fdf5cf8a2"
+    },
+    {
+      "path": "learner/runs/20261016-174314-32e7f6b9-0c15-4c43-89b3-9c843eb5e8e8-fix-batch/targeted-restored.log",
+      "bytes": 264,
+      "sha256": "179c4cd79b3d13380cb5868649879947dcb4e70a5e1c99c855005820c7cf1754"
+    },
+    {
+      "path": "learner/runs/20261016-174314-32e7f6b9-0c15-4c43-89b3-9c843eb5e8e8-fix-batch/targeted-without-fix.log",
+      "bytes": 2887,
+      "sha256": "c2f73937978aaf5213df96de30f7a51238e23f501585529143ced3198179d7c4"
+    },
+    {
+      "path": "learner/runs/20261016-174314-32e7f6b9-0c15-4c43-89b3-9c843eb5e8e8-fix-batch/test-summary.json",
+      "bytes": 633,
+      "sha256": "cfdebb6df304d5a3a4f78056a61cf71185edbf877e850116e97a3657d9e22fcd"
+    },
+    {
+      "path": "learner/runs/20261016-174314-32e7f6b9-0c15-4c43-89b3-9c843eb5e8e8-fix-batch/worktree.diff",
+      "bytes": 6184,
+      "sha256": "3570574b7f222d8df4078fb32454cdfa02e5115f67e275c553ab2dfbc8ec48f0"
+    },
+    {
+      "path": "ops/codex-ops/learner/20261016-174303-fix-batch.err",
+      "bytes": 15514,
+      "sha256": "6eec8b796e6a1fe13d6fc540c0f8500008c2ebf343a26153e35f523ca5e8c696"
+    },
+    {
+      "path": "ops/codex-ops/learner/20261016-174303-fix-batch.out",
+      "bytes": 8611,
+      "sha256": "06697213a76b20501497c280bf1be059c007b60e7c18476b9fd001ea76db0973"
+    }
+  ],
+  "original_reports_and_canonical_failed_rc0_preserved": true,
+  "full_new_combination": "running, result pending",
+  "no_new_game_behavior_release": true,
+  "no_game_restart_or_new_learner": true
+}

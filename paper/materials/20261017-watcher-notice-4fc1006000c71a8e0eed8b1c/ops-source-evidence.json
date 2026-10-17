@@ -1,0 +1,44 @@
+{
+  "proposal_id": "silent-proposal-3f82387e2e179703",
+  "batch": "20261017-211302-s2-strategy-proposal",
+  "original_proposal_sha256": "8bdf5f3c4ef752be9a4d494397f8214fc58e524f6a8c682c1a3be41bb791eab3",
+  "character": "silent",
+  "related_proposal_ids": [
+    "silent-proposal-df37594e9b12debf"
+  ],
+  "original_proposal": "/home/dw/Projects/agent-sts2/learner/runs/20261008-014304-postmortem/proposal-sl-power-cost.md",
+  "original_report": ".worktrees/codex-strategy-silent-20261017-211302-s2/learner/runs/20261017-211308-467e97fd-f41e-4362-9f55-3492813e96f4-strategy-proposal/report.md",
+  "original_report_sha256": "a4ff84948a6f8188164becc0fffdbcdcee694fd6f07d61c48e2b9c22c2bb7ce0",
+  "old_claim_original": "证据局号：RC61MFQM63Y6 F33首试与末次T1（decisions:279021、279197，states:285314—285321、285491—285497），决策指纹相同、初始52/70和槽0格挡药水相同。原线两打击、带毒刺击并喝药，实挡16、扣敌30、损4；SL替线用普通触媒代替一打击，同样喝药，实挡12、扣敌23、损8。两候选五轮均24/24死亡，却存在少7伤、多4HP代价。触媒建立1层，使3毒扣3+2=5、余毒1，毒收益确有兑现；少掉9攻击伤与4折扇挡也真实发生。末次T3对火箭5毒触发5+4=9，但T4仍31HP/6挡面对38激光，净损需求32，实死；首试后续T7判死，后面行动不同，不单因归T1或否定触媒一般价值。",
+  "learner_disagreement_original": "RC原提案中“首末同为五轮24/24”不能当受控预算：原decisions279021为3轮2样本，279197为5轮24样本；即时同指纹差额仍成立。这与队列已有“首末题预算不同”的waiting限制一致，不能为了支持规则修改而抹去。关联silent-0079及第7/9项；本报告显式交ops沿既有ops→watcher→Roy链呈报此限制，不代填其他角色送达/已知回执，不把排队算送达。本批无已绑定的学习入库父request，不自行编辑根请求或造通知ACK。",
+  "original_budget_check": {
+    "name": "RC首末推演预算不能混同",
+    "passed": true,
+    "detail": {
+      "首次": "3-turn rollout (2 samples) (later turns may use the potions still held): expected further HP loss 52, fight over within 3 turns in 0/2, expected turns to the end (surviving samples) ~11.5; every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 3 turns (this line 0/2), then the fight's progress: least enemy HP left (this line ~366, at T3 or at our death), then most turns alive (this line ~3), then least HP lost this turn (this line 4) [cut to fit the time budget: horizon 3, samples 2 per kill order]",
+      "末次": "5-turn rollout (24 samples) (later turns may use the potions still held): expected further HP loss 52, fight over within 5 turns in 0/24, dead within 5 turns in 24/24 (~turn 4); every line loses all our HP here, so the expected loss does not separate them: the lines are ranked by fewest dead within 5 turns (this line 24/24), then the fight's progress: least enemy HP left (this line ~340, at T5 or at our death), then most turns alive (this line ~4), then least HP lost this turn (this line 8)"
+    }
+  },
+  "raw_refs": [
+    {
+      "source": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+      "line": 279021,
+      "offset": 714353010,
+      "bytes": 32984,
+      "sha256": "2bd810e2a2b2b7e38c2c55a3c9d729617e3df6b2497468b43b3799206b13aa98",
+      "run_id": "RC61MFQM63Y6"
+    },
+    {
+      "source": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+      "line": 279197,
+      "offset": 715247141,
+      "bytes": 25077,
+      "sha256": "cfc7fe16cebc707a74288e36090f4040528bf59761af4e0fcde205e2aba06d28",
+      "run_id": "RC61MFQM63Y6"
+    }
+  ],
+  "evidence_ledger_ids": [
+    "silent-0079"
+  ],
+  "next_step": "Only original watcher reads this limitation and informs Roy, then independently records watcher_received/roy_notified with actual role evidence. Keep same ten proposals waiting; no new learning parent, implementation, model experiment, consumer, simulation or natural observer; do not change SL thresholds or weights."
+}

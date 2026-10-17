@@ -1,0 +1,49 @@
+from pathlib import Path
+import fcntl, hashlib, json, os, subprocess, sys
+sys.dont_write_bytecode = True
+r=Path.cwd();p=r/'ops/codex-ops/record-staging/20261017-1815';pub=r/'paper/materials/20261017-1815-ops'
+sys.path.insert(0,str(r/'ops'))
+import learner_retention as retention
+import worktree_retention as workspaces
+assert (pub/'completed.json').is_file() and not (pub/'restore-current-verification.json').exists()
+c=retention.load(pub/'consumer-restore-readback.json');mp=retention.safe_path(r,c['manifest']);m=retention.load(mp)
+item=m['files'][0];f=retention.safe_path(r,item['path']);scratch=retention.safe_path(r,m['scratch'])
+command=['nice','-n','19','python3',str(p/'restore-compressed-copies.py'),'--manifest',str(mp.relative_to(r))]
+sentinel=b'Owned recovery conflict fixture; preserve until its creator removes it.\n'
+temp=f.with_name(f.name+'.retention-restore')
+with (r/'ops/codex-ops/retention.lock').open('a') as gate:
+    fcntl.flock(gate,fcntl.LOCK_EX)
+    with retention.locks([r/'ops/codex-ops'/(m['proof']['batch']+'.checks.lock')]):
+        assert not workspaces.active(scratch,ignore_pid=os.getpid()) and not f.exists() and not temp.exists()
+        with temp.open('xb') as fixture: fixture.write(sentinel)
+        fixture_id=temp.stat().st_ino
+        negative=subprocess.run(command,cwd=r,capture_output=True,text=True)
+        (pub/'restore-conflict.stdout').write_text(negative.stdout);(pub/'restore-conflict.stderr').write_text(negative.stderr)
+        assert negative.returncode!=0 and temp.read_bytes()==sentinel and temp.stat().st_ino==fixture_id and not f.exists()
+        temp.unlink()  # Remove only this invocation's verified fixed-data fixture.
+        positive=subprocess.run(command,cwd=r,capture_output=True,text=True)
+        assert positive.returncode==0 and retention.sha_file(f)==item['sha256']
+        consumer=c['before']['command']
+        out=p/'consumer-current-restore.json';err=pub/'consumer-current-restore.stderr'
+        with out.open('wb') as output,err.open('wb') as stderr:
+            result=subprocess.run(consumer,cwd=r,stdout=output,stderr=stderr,env={**os.environ,'GOMAXPROCS':'1'})
+        assert result.returncode==0 and retention.sha_file(out)==c['before']['output_sha256']
+        assert retention.sha_file(r/m['archive'])==m['archive_sha256']
+        assert not workspaces.active(scratch,ignore_pid=os.getpid())
+        assert retention.sha_file(f)==item['sha256'];f.unlink()
+        fd=os.open(f.parent,os.O_DIRECTORY|os.O_RDONLY)
+        try:os.fsync(fd)
+        finally:os.close(fd)
+at=subprocess.check_output(['date','+%Y-%m-%d %H:%M:%S %Z'],text=True).strip()
+receipt=dict(at=at,current_script_sha256=retention.sha_file(p/'restore-compressed-copies.py'),
+    initial_consumer_proof_sha256=retention.sha_file(pub/'consumer-restore-readback.json'),
+    manifest=c['manifest'],existing_temporary_file_refused_and_preserved=True,
+    negative_exit_code=negative.returncode,positive_restore_exit=positive.returncode,actual_consumer_exit=result.returncode,
+    exact_restored_input_SHA=item['sha256'],exact_consumer_output_SHA=c['before']['output_sha256'],
+    restored_copy_reclaimed_under_original_locks=True,own_fixture_only_removed=True,no_task_model_or_game_change=True)
+retention.atomic(pub/'restore-current-verification.json',receipt)
+revision=retention.load(pub/'restore-script-revision.json')
+revision.update(fixed_data_conflict_and_positive_readback_to_follow_after_worker=False,
+    current_restore_verified=True,current_verification='restore-current-verification.json')
+retention.atomic(pub/'restore-script-revision.json',revision)
+print(json.dumps(dict(conflict_preserved=True,restore_rc=0,actual_consumer_rc=0,exact_output_SHA_equal=True)),flush=True)

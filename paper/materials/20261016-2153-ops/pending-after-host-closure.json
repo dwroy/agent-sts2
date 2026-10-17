@@ -1,0 +1,112 @@
+{
+  "at": "2026-10-16 20:39:39 CST",
+  "request_id": "silent-0332",
+  "original_owner": {
+    "batch": "20261016-183355-fix-batch",
+    "thread": "01a14446-c89c-7223-b9ff-4ad093ccc130",
+    "worktree": ".worktrees/codex-fix-silent-20261016-183355",
+    "learner_home": "/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/learner"
+  },
+  "source": "a8b202e34e94b11a340a8733800f7018688371b8",
+  "source_tree": "938e0fef8219cefe9876c57ae8da25245e6fafdd",
+  "source_parent": "79f65431cb8fcb998219d9c334777d432fb8fed1",
+  "source_leaves": [
+    {
+      "path": "agent/src/hand/loop.ts",
+      "sha256": "962ec25cfeb3c3eb8cf15a7a5d813732b36085ed4841adc8e20780b8fc7cf21e"
+    },
+    {
+      "path": "agent/src/reflex/rollout.ts",
+      "sha256": "f845fbe3666c7bb52701367e1f02984f8774937c63c24307c814539670dcd86c"
+    },
+    {
+      "path": "agent/src/sim/boss-sim.ts",
+      "sha256": "f30a0c5bdd66d63b7ccd962947735ca2dfded2eaec76dd364f5e90fec0aafac6"
+    },
+    {
+      "path": "agent/src/sim/build-sim-facts.ts",
+      "sha256": "1d95482c4223aeaf09b289557d48a8df57b72113e40286d521061edc955eb087"
+    },
+    {
+      "path": "agent/src/sim/build-sim-pool.ts",
+      "sha256": "a00561e2add14dd094232cb85de7ff8f53fc63458722dbd3ab558df5dc8975f1"
+    },
+    {
+      "path": "agent/src/sim/build-sim-worker.ts",
+      "sha256": "96da42adc6e9d2e230d5b36cbe6dc30e55ba4c87dbb93a55bfa1bb7aaaa1e087"
+    },
+    {
+      "path": "agent/src/sim/continuation-failure.ts",
+      "sha256": "c62096c4f05f2d49b37a726f4751dd5465d54cbc47499fef482d47752d4699eb"
+    },
+    {
+      "path": "agent/tests/continuation-failure-b3.test.ts",
+      "sha256": "3687ebbaaeff8f71f9aad6afcc8281d1e5f8c7ea4e5e424e21a97acf9b038815"
+    },
+    {
+      "path": "agent/tests/continuation-failure-worker.test.ts",
+      "sha256": "374f0971c6f9475245791ede253cd3ff12b58944109abd285284601462fdade2"
+    },
+    {
+      "path": "agent/tests/continuation-failure.test.ts",
+      "sha256": "30c2c68f9f950b701527dd42449c2fcf42d51f4aa401f3f1355503493c109e19"
+    }
+  ],
+  "knowledge_commit": "79f65431cb8fcb998219d9c334777d432fb8fed1",
+  "source_only": false,
+  "live": "a0dcde7e6eaf30b3b3edab996a2c7408ab072ea9",
+  "original_r2_full": 1,
+  "ops_host_supplement": 0,
+  "original_live_consumer": 1,
+  "root_fix": false,
+  "new_revision": 3,
+  "batch": "20261016-203731-strategy-proposal",
+  "state": "r2+r3 diagnostics and bounded experience actual live/fixed consumer/complete exact host0; root repair remains blocked",
+  "next_step": "Receive existing075726 exact new-tree host event; retain original r3 blocked report and root failure-history. Wait event-driven for first real complete failure envelope, then same original owner locates first divergence; no duplicate model or full while waiting.",
+  "original_request_r2_preserved": "paper/materials/20261016-2029-ops/request-r2-preserved.json",
+  "original_notification": "63a2630115ed4c65577a9290",
+  "source_r3": "8f02483abe28583a81f9c00e456be889353ffa47",
+  "r3_source_tree": "b6b17fa10550fbd7d16ffe399a070248d7525589",
+  "release_id": "V5-R373",
+  "live_tree": "247acab41b7806c0df5a4b5e124e8ce5898a55de",
+  "main": "32e47decdc3e706482f9c5ddeff77504c3f43d28",
+  "publication": "paper/materials/20261016-2125-ops/publication.json",
+  "fixed_consumer": "paper/materials/20261016-2125-ops/consumer-receipt.json",
+  "diagnostic_source_only": false,
+  "host_request_started": true,
+  "host": {
+    "at": "2026-10-16 21:35:18 CST",
+    "batch": "20261016-075726-strategy-proposal",
+    "worker_pid": 813867,
+    "birth": "104953138",
+    "ppid": "798137",
+    "cwd": "/home/dw/Projects/agent-sts2",
+    "actual_live_lock_held": true,
+    "live": "a0dcde7e6eaf30b3b3edab996a2c7408ab072ea9",
+    "tree": "247acab41b7806c0df5a4b5e124e8ce5898a55de",
+    "log": "ops/codex-ops/learner/20261016-075726-strategy-proposal.fallback-247acab41b7806c0df5a4b5e124e8ce5898a55de.checks.log",
+    "observed_bytes": 116,
+    "observed_sha256": "69d9459d27587a47222c3a5b8795434a199a2711f5b1ce0e5e2ef34772e4fcaa",
+    "vitest_RUN_seen": true,
+    "actual_result": "pending original learner-checks event",
+    "new_final_tree_request_count": 1,
+    "source_full_repeated": false,
+    "source_proof": "publication.json binds original0332 r2/r3 source; reused existing075726 locked full-check channel, no new pipeline"
+  },
+  "host_start_receipt": "paper/materials/20261016-2125-ops/final-host-start-readback.json",
+  "host_complete": true,
+  "host_rc": 0,
+  "host_completed_at": "2026-10-16 21:58:56 CST",
+  "host_completion_receipt": "paper/materials/20261016-2125-ops/ops-host-closure.json",
+  "host_completion": {
+    "batch": "20261016-075726-strategy-proposal",
+    "live": "a0dcde7e6eaf30b3b3edab996a2c7408ab072ea9",
+    "tree": "247acab41b7806c0df5a4b5e124e8ce5898a55de",
+    "rc": 0,
+    "files_passed": 503,
+    "cases_passed": 4991,
+    "cases_skipped": 2,
+    "seconds": 1249.73,
+    "log_sha256": "8dad1a151b977eab245a2d8a95b0aa1812a792da2bbd6c3b03e7fd182b2cf56b"
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "results": [
+    {
+      "name": "tsc",
+      "argv": [
+        "npx",
+        "tsc",
+        "-p",
+        "tsconfig.json",
+        "--noEmit"
+      ],
+      "rc": 0,
+      "seconds": 3.857238941011019
+    },
+    {
+      "name": "original-failed-cases",
+      "argv": [
+        "npx",
+        "vitest",
+        "run",
+        "tests/fix-queue-v4-shrink.test.ts",
+        "tests/global-build-health.test.ts",
+        "--pool=forks",
+        "--maxWorkers=1",
+        "-t",
+        "XC4T F9 T3|checks G2 shadow coverage"
+      ],
+      "rc": 0,
+      "seconds": 16.385808254941367
+    }
+  ],
+  "seconds": 20.24318214599043,
+  "original_source_full": 1,
+  "new_full": false,
+  "maxWorkers": 1,
+  "nice": 19
+}

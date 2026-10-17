@@ -1,0 +1,51 @@
+from pathlib import Path
+import hashlib,json,subprocess
+
+r=Path.cwd();p=r/'ops/codex-ops/record-staging/20261017-1953';pub=r/'paper/materials/20261017-1953-ops'
+load=lambda f:json.loads(f.read_bytes());sha=lambda raw:hashlib.sha256(raw).hexdigest()
+def write(f,v):f.write_text(json.dumps(v,ensure_ascii=False,indent=2)+'\n')
+assert not (pub/'ops-closure.json').exists()
+host=load(pub/'r387-host-terminal.json');shipped=load(pub/'r387-ledger-shipped.json');resolution=load(pub/'original-proposal-resolution.json');collection=load(pub/'collection-summary.json')
+assert host['tsc']==host['vitest']==shipped['exit_code']==0 and len(shipped['own_rows'])==2
+assert resolution['resolution_row']['state']=='implemented' and resolution['original_id_preserved']
+assert collection['ledger_rows']==46 and collection['queue_appends']==10
+data=load(pub/'batches-readback.json');b=data['batches'][0];s=Path(b['report']['report']).parent
+final=load(s/'final-audit.json');assert all(final['checks'].values()) and len(final['streams'])==8
+for path,expected in final['artifact_hashes'].items():assert sha((s/path).read_bytes())==expected
+material=load(s/'material-validation.json');assert material['case_count']==48 and material['failed_cases']==[] and material['physical_count']==124 and material['physical_failures']==0
+for ref in material['physical_refs']:
+    source=Path(ref['source']);assert source.is_relative_to(r/'logs')
+    with source.open('rb') as stream:stream.seek(ref['offset']);raw=stream.read(ref['bytes'])
+    assert sha(raw)==ref['sha256']
+audit=load(s/'ledger-readback-audit.json');physical=(r/'paper/materials/learning/ledger.jsonl').read_bytes()
+assert audit['passed'] and audit['cli_exit']==0 and audit['update_count']==46 and audit['exact_fold_readback']
+assert sha(physical[:audit['prefix_size']])==audit['prefix_sha256']
+write(pub/'strategy-final-audit-readback.json',dict(original_final_audit=final,material_counts=dict(cases=48,physical_references=124,failures=0),six_artifact_SHA_verified=True,physical_references_SHA_verified=True,original_ledger_readback=audit,old_ledger_prefix_current_SHA_matches=True,no_ops_consumer_simulation_or_source_test=True))
+trace=(p/'own-ledger-rows.jsonl').read_bytes();ship=(p/'ship-owned-rows.jsonl').read_bytes();assert len(trace.splitlines())==46 and len(ship.splitlines())==2
+(p/'own-ledger-rows.jsonl').write_bytes(trace+ship)
+(pub/'ops-helper-first-error.log').write_bytes((p/'close-r387-first-error.log').read_bytes())
+write(pub/'ops-helper-recovery.json',dict(first_readback_guard='Actual live behavior merge was incorrectly required as main ancestor',corrected_guard='Verify source in both main/live; actual behavior merge only in live; verify main four exact code leaves and actual behavior version mapping separately',first_guard_failed_before_any_ledger_or_queue_mutation=True,original_error_preserved=True,no_product_or_scientific_failure=True))
+for name in ['close-r387.py','finish.py']:(pub/(name+'.txt')).write_bytes((p/name).read_bytes())
+at=subprocess.check_output(['date','+%Y-%m-%d %H:%M:%S %Z'],text=True).strip()
+message=f'''\n- {at} 运维codex处理1953两事件：**V5-R387精确树工程验收通过**。原191302唯一actual live31db98183b162f9e2213884f6b8ab518fe6ff89b/tree6f81a7e61707c0f2b91647ed7963f04014fc31b3完整tsc0/Vitest0，531文件5217过2跳、834.88s、19:39:09开始，log SHA{host['log_sha256']}；原fallback_checks与仅格式绑定的原检查函数回执核同，原source d959e176/四源码测试叶main/live SHA、live实际行为及两边版本映射核回。main采用独立窄集成父链，故只核source为两边祖先、实际行为为live祖先，另核main四叶与版本；不为图形一致而并整棵live。首个辅助错误在任何账本/队列修改前，原失败及更正回执分列。原source481/4410、12固定与撤修红/恢复绿、旧broker协议拒2和canonical failed/rc0/mergednull均保留，不重全检/消费者/模型。\n  根CLI已将silent-0504/0505登记shipped，eval name S1.silent-akabeko-skewer1，对外V5-R387；仅状态/版本/真实提交和回执追溯变化，claim/首证/prior/evidence/effect逐项不动、账本check0。原普通批次72e提案仍须通过独立实际部署证明：已在原scratch新建明确署名ops的ops-actual-publication-V5-R387.md，另存根Git同字节副本，逐SHA绑定原注册Markdown、source、实际live/full0和原任务身份，调用原proposal_dispatch.resolve/unassigned_proof通过，**原同ID silent-proposal-72e0c8b41d2f5ab8已implemented，绑定实际源码commit=d959e176**；无新提案/父项/线程/派发租约/seen_runs，原learner report/out/JSON及原waiting回报完全未改，不把ops回执当学习者新完成或其他角色ACK。原pending已host_complete/0、两shipped和同ID实际源码交付闭环。\n  这只确认学习者已证Silent A10未熔化赤牛8活力、升级串刺手动支付2且基础11/牌面19无修饰签名30→38，整张耗一次；一局两相关失败SL不当两独立样本，不认整场Boss模型可信度/自然收益、未知组合或其他角色覆盖。19:39旧新/证据/预期/回退双通知保持，本次补实际宿主0；首个生效局仍未知，不回填旧启动局。H0六Boss低可信、0332根资源及其他宽父不关，不手删原owner工作树。\n  原194302策略done0/mergednull/audit空，十项均waiting，未改源码/经验、tests三null。原八流22424封套、124物理锚点逐offset/len/SHA核，原48材料一致性与六产物SHA/14最终门禁读回；这些不是生产源码测试或完整消费者校准。46根CLI仅where/note追溯、23115689字节旧前缀保持，十原调度处置和46小原件压缩读回；不以既有窄实现拼成宽提案完成，亦不重复源测试/校准/消费者/paper。\n  本轮48条账本行（46追溯＋2shipped）、十一队列行（十waiting＋同ID实际源码实现）及自有归档/根记录经gitleaks私有index提交，保普通index/并行记录。当前局/home账号模型prompt不动，不扩学习者权限、开启模型或自然监听、代RoyACK；结束不sleep/轮询。证据paper/materials/20261017-1953-ops/。\n'''
+appends=load(p/'collected-appends.json')+load(p/'resolution-appends.json')
+for path in ['ops/inbox-dev.md','notes/for-roy.md','notes/ops-handoff.md']:
+    with (r/path).open('a') as stream:stream.write(message)
+    appends.append(dict(path=path,text=message))
+decision=f'\n- {at} 运维codex：V5-R387原191302精确6f81a7e树完整宿主531/5217过2跳0，两账本CLI shipped、原72e同ID经ops独立部署回执及原unassigned证明implemented；原failed0null/learner原件不改。194302十策略waiting及46追溯核回，无重测/paper/模型或现局改动，保宽父/普通index。证据paper/materials/20261017-1953-ops/。\n'
+with (r/'paper/materials/decision-log.md').open('a') as stream:stream.write(decision)
+appends.append(dict(path='paper/materials/decision-log.md',text=decision))
+write(p/'own-appends.json',appends);write(p/'paper-owned-manifest.json',[]);write(p/'extra-owned-paths.json',[])
+write(pub/'ops-closure.json',dict(at=at,events=2,release_id='V5-R387',exact_host_rc=0,files=531,passed=5217,skipped=2,
+    shipped=['silent-0504','silent-0505'],original_proposal_same_id_implemented='silent-proposal-72e0c8b41d2f5ab8',
+    original_learner_and_canonical_history_unchanged=True,ops_actual_deployment_receipt_used_with_original_proof=True,
+    strategy_waiting=10,strategy_trace_rows=46,total_owned_ledger_rows=48,no_full_consumer_calibration_paper_model_or_game_repeated=True,
+    first_effective_run=None,whole_fight_or_natural_success=False,root0332_fixed=False,other_role_ACK=False))
+seal=(r/'ops/codex-ops/record-staging/20261017-1340/seal.py').read_text().replace('20261017-1340','20261017-1953')
+seal=seal.replace('len(ownrows.splitlines()) == 30','len(ownrows.splitlines()) == 48').replace('owned_ledger_rows=30','owned_ledger_rows=48')
+seal=seal.replace('Archive bounded consumer report and waiting proposal dispositions','Close V5-R387 exact host and preserve waiting strategy evidence')
+seal=seal.replace('ops: archive132758 report and preserve original waiting scopes','ops: close V5-R387 and archive1953 strategy evidence')
+start=seal.index("              host='One unchanged-source strategy batch:");end=seal.index("(p / 'commit-readback.json')",start)
+seal=seal[:start]+"              host='V5-R387 exact6f81a7e original191302 host0:531files5217passed2skipped834.88s,0504/0505 root CLI shipped. Same72e proposal implemented through an explicitly ops-authored actual deployment receipt and original unassigned_proof without altering original learner artifacts, dispatch lease or canonical failed history.194302 tenwaiting46metadata rows/22424 original envelopes/124 references and48 material receipts, no new source/test.',\n              wider_parents='One observed Silent A10 Akabeko/Skewer signature only, one independent run/two SL attempts; no whole-fight/natural benefit or other-role extrapolation. H0 six Bosses low and0332 root/wide goals open; first effective run unknown, no observer/model/game restart or other role ACK.')\n"+seal[end:]
+(p/'seal.py').write_text(seal)
+print(json.dumps(dict(exact_host_rc=0,shipped=2,original_same_id_implemented=1,strategy_waiting=10,total_ledger_rows=48)),flush=True)

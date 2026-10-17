@@ -1,0 +1,42 @@
+{
+  "schema": "learning-request-v1",
+  "id": "silent-0332",
+  "parent_request_id": "roy-20261016-global-build",
+  "authorized_by": "Roy",
+  "goal": "experience-live",
+  "character": "silent",
+  "original_batch": "20261016-183355-fix-batch",
+  "worktree": ".worktrees/codex-fix-silent-20261016-183355",
+  "thread_id": "01a14446-c89c-7223-b9ff-4ad093ccc130",
+  "learner_home": "/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/learner",
+  "original_log": {
+    "path": "learner/runs/20261016-183403-64766a9a-6fde-4c7f-b500-daf047c80fd1-fix-batch.jsonl",
+    "sha256": "b616ba657680f6173eb597c59e26db46461c86ecf4b6e25506db0e9177214642"
+  },
+  "revision": 2,
+  "authorization": "Roy 2026-10-16 19:16 CST 决定（经 Claude 转达）：针对 V5-S 上线后的连败，不做 A/B 对照实验。watcher 将 Silent P1（S_READINESS）与 P2（S_BUILD_RANK）退回 shadow，交原 ops 单独发布、编号、双通知与精确树宿主检查；之后沿已部署固定分段漏斗每 10 局观察。silent-0332 连续 Boss 资源记账缺陷的学习者修复链提到优先，按学习要求闭环；诊断后组 F49 入口 HP 中位数 6、SL 救回率 11/19→3/16 是排查信号，不构成根因或机制证明。其他运行安排不变，游戏知识仍由学习者从证据得出。",
+  "input": {
+    "path": "paper/materials/20261016-1916-ops/learner-input-r2.md",
+    "sha256": "42e1109c87911b5df200d332d1e9f9037e3c0770647395c45ba7c4a39d6ce0cf"
+  },
+  "requirements": [
+    "silent-0332-trigger-and-resource-boundaries",
+    "silent-0332-fixed-failure-and-repair",
+    "silent-0332-live-source-and-knowledge-consumer",
+    "silent-0332-objections-and-unresolved-scopes"
+  ],
+  "linked_proposal_ids": [
+    "silent-proposal-0b28f52e415d80d1",
+    "silent-proposal-ecbd4b68c5fad954",
+    "silent-proposal-5aa2672bd7cd1bf4",
+    "silent-proposal-f4e0f382dd79714b",
+    "silent-proposal-b02a70a29a4ff6b1",
+    "silent-proposal-0c0d4600bc7aa80b"
+  ],
+  "priority": "Roy-1916-next-available-existing-strategy-slot",
+  "priority_via_existing_reconcile_before_ordinary_proposals": true,
+  "linked_parent_requests": [
+    "roy-20261016-global-build"
+  ],
+  "watcher_owner": "01a13dcd-83d4-7c63-b233-f93cf878ecf4"
+}

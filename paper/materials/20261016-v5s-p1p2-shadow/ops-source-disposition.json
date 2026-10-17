@@ -1,0 +1,107 @@
+{
+  "schema": "v5s-p1p2-shadow-source-disposition-v1",
+  "at": "2026-10-16 20:05:43 CST",
+  "actor": "ops",
+  "parent": "roy-20261016-global-build",
+  "original_owner": "01a13dcd-83d4-7c63-b233-f93cf878ecf4",
+  "decision": "accepted unchanged four-leaf source with original full rc1 and environment-only failed-test supplement rc0 as source integration basis",
+  "accepted": true,
+  "source_commit_by_original_owner_authorized": true,
+  "source_commit": null,
+  "base": "5bda85450459a16912dec7882ccc3e480a06c23d",
+  "candidate_tree": "4db0775de294ed580b041f279689cb26827fb57b",
+  "leaves": [
+    {
+      "path": "agent/src/core/config.ts",
+      "bytes": 86277,
+      "sha256": "e0715d76fa13a32de1d0eddbf5ce452b9a11255d7b52882f38d794a3dc4a2ec3",
+      "pre_delivery_full_start_supplement_and_review_archive_equal": true
+    },
+    {
+      "path": "agent/tests/build-rank-integration.test.ts",
+      "bytes": 7713,
+      "sha256": "904ba4a85bdaa69f6c6d7c40968422cce757144a54340aaf1fac5bc11c9454c4",
+      "pre_delivery_full_start_supplement_and_review_archive_equal": true
+    },
+    {
+      "path": "agent/tests/build-rank.test.ts",
+      "bytes": 9193,
+      "sha256": "e44a98569f74f1a5fc05c2dc05e4177a7a9d15981cf4a8321b9013f9e68d3d19",
+      "pre_delivery_full_start_supplement_and_review_archive_equal": true
+    },
+    {
+      "path": "agent/tests/s-decision.test.ts",
+      "bytes": 4481,
+      "sha256": "cd9f0a5af27872b7903a17343ee7aa7850730da7fb23fbdf8224d7883d4be573",
+      "pre_delivery_full_start_supplement_and_review_archive_equal": true
+    }
+  ],
+  "patch_sha256": "005894528c83c8eaf7f3643ecbe1e65968dead85854762c2189aacc2be7cd2c4",
+  "checks": {
+    "tsc": {
+      "rc": 0,
+      "session": 62766,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "fixed": {
+      "rc": 0,
+      "session": 36267,
+      "files": 5,
+      "passed": 36,
+      "seconds": 24.82,
+      "log": "fixed-r2.log",
+      "log_sha256": "4fc9c23053f11b94e5b3b684404afb9713bba4fb4d939594878f65aba17a9a00"
+    },
+    "original_full": {
+      "start": "2026-10-16T11:21:53.574361+00:00",
+      "end": "2026-10-16T12:02:13.419611+00:00",
+      "command": "nice19 npx --no-install vitest run --maxWorkers=1",
+      "rc": 1,
+      "seconds": 2419.8453972400166,
+      "log_sha256": "945dcb9964b9de9865c8089b536bd56d8bcaaa263528afbfcfa6f5b109eee436"
+    },
+    "full_summary": {
+      "files": 499,
+      "passed_files": 498,
+      "failed_files": 1,
+      "passed_tests": 4976,
+      "failed_tests": 1,
+      "skipped_tests": 4,
+      "vitest_seconds": 2418.33
+    },
+    "supplement": {
+      "rc": 0,
+      "session": 52925,
+      "files": 1,
+      "tests": 1,
+      "captured_python_cases": 9,
+      "python_success_basis": "original wrapper assertion Ran9 and rc0 passed; no independent Python stdout invented",
+      "seconds": 5.79,
+      "log_sha256": "823217fcb0493ab8a5769f6905a7ec59f3425d9bc61f2fe3dbe56f239065c0f7"
+    },
+    "full_rc1_preserved": true,
+    "combined_evidence_is_not_a_whole_suite_rc0": true
+  },
+  "environment_failure": {
+    "test": "agent/tests/component-usage.test.ts",
+    "cause": "new worktree lacked existing ../data/logdb-venv/bin/python; original wrapper observed exit127 before Python suite or later Ran9 assertion could run",
+    "repair": "only link existing repository Python environment after original full end",
+    "original_test_assertions_and_20000ms_timeout_unchanged": true,
+    "python_case_count": 9,
+    "python_success_basis": "unchanged passing wrapper asserts exit0 and captured output Ran 9 tests; not a separately emitted Python log",
+    "no_dependency_install": true
+  },
+  "review_receipt": {
+    "path": "paper/materials/20261016-2003-ops/source-review-readback.json",
+    "sha256": "37eecf1732cc891be0ab6db7993c82b2049ce26dbd05d67b315310f5193c917c"
+  },
+  "next": "original owner commits only these four exact leaves and delivers source SHA; original ops then narrow-integrates main/live under existing live lock, verifies actual launcher/environment overrides, assigns distinct actual behavior release, appends post-publication dual rule notices, and requests one exact final-tree host check through the original channel",
+  "publication_started": false,
+  "release_id": null,
+  "no_repeat_unchanged_source_full": true,
+  "no_new_model_experiment_or_research": true,
+  "no_live_current_game_home_model_prompt_change": true,
+  "no_other_role_ACK": true,
+  "watcher_received": false,
+  "roy_ACK_claimed": false
+}

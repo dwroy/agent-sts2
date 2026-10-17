@@ -1,0 +1,128 @@
+{
+  "at": "2026-10-16 18:22:05 CST",
+  "source": "21a9c52484f04d510bd397959c958ec9767f1d2d",
+  "parent": "c75756fe60168c410f1eb4e611433176ed7ec194",
+  "source_tree": "35d6fcb967da4c0b2a83aae4f3d864181b01c26a",
+  "old_main": "be32e58f86041aa257d24764ec476e6171f386ff",
+  "main": "be509d964ae96cfd34eb166c35825cdaf731ed05",
+  "old_live": "a9e687d9f0acccccddbfa92895d7966b58900658",
+  "knowledge_refresh_commit": "5976cfacc8c60d42d9b8e42e3753d4dcccbdefa7",
+  "knowledge_refresh": [
+    {
+      "path": "knowledge/characters/silent/boss-damage.json",
+      "sha256": "cd6462a5cbd0d83fa4a6d2ecf815b31d77e5166c3508a8744c891defc9dd2095"
+    },
+    {
+      "path": "knowledge/characters/silent/construction-opportunities.json",
+      "sha256": "c56fc00813aa1822ab125eebb7204da8f303917b1f3aef1091773a89ef9ba0ab"
+    },
+    {
+      "path": "knowledge/characters/silent/fight-value-gates.json",
+      "sha256": "5281fae279c522cf901f56c22f40ffdd0bc3c3a3ce890a9c84e6c29c09391e37"
+    },
+    {
+      "path": "knowledge/characters/silent/fight-value.json",
+      "sha256": "545d2bfaf260ab328745ef78a0c73b4c09f7f7772693327c9135eba2e0154f35"
+    },
+    {
+      "path": "knowledge/characters/silent/monster-records.json",
+      "sha256": "23c9d589a82083435585e17b4ab894462ee6ab54d7e2368f3ec1e389e618a0e1"
+    },
+    {
+      "path": "knowledge/characters/silent/outcome-stats.json",
+      "sha256": "7af938bbe6f388786683dd878ed9b4c09025b87525c275790d48ced4b585172a"
+    },
+    {
+      "path": "knowledge/characters/silent/room-costs.json",
+      "sha256": "0ad295cb824b12f784ffe54974478ae2ea7b582429be942e78cc6ff2fab448e9"
+    },
+    {
+      "path": "knowledge/common/card-upgrades.json",
+      "sha256": "bf3c225c6456690b5a139f7e544143bb8219e5fc1ce2e974eee29c1fbcfd9147"
+    },
+    {
+      "path": "knowledge/common/monster-db.json",
+      "sha256": "efa7a42a14ccb41167a2f4c85d92cab5d83a7ac998a0c7039576d29ecbddab25"
+    },
+    {
+      "path": "knowledge/common/move-model.json",
+      "sha256": "5020ef3f100452c3e9b82f51a114e21b5d7c81b68d168ac8dd2d1ba3f7f71607"
+    }
+  ],
+  "actual_live": "c0cab0352b6c1a487e116d845350bf483dc60c9c",
+  "tree": "c02e2ffda79312e3b22b438b501c68b4d1882873",
+  "leaves": [
+    {
+      "path": "agent/tests/ops-stall-between-runs.test.ts",
+      "mode": "100644",
+      "sha256": "b94169b2e32042e4fe724129cb23e74a3a736db2aea4c3bfee36fb2009bc88a2"
+    },
+    {
+      "path": "ops/stall-check.sh",
+      "mode": "100755",
+      "sha256": "b07d14af42be12d77d4f20c49502a4740c9a760a9f531833dc794ee3e55a046f"
+    }
+  ],
+  "source_sandbox_full_exit": 1,
+  "source_host_supplement": {
+    "request": {
+      "at": "2026-10-16 18:17:32 CST",
+      "operator": "original main ops host, not learner sandbox",
+      "batch": "20261016-174303-fix-batch",
+      "base": "c75756fe60168c410f1eb4e611433176ed7ec194",
+      "staged_tree": "35d6fcb967da4c0b2a83aae4f3d864181b01c26a",
+      "files": {
+        "agent/tests/ops-stall-between-runs.test.ts": "b94169b2e32042e4fe724129cb23e74a3a736db2aea4c3bfee36fb2009bc88a2",
+        "ops/stall-check.sh": "b07d14af42be12d77d4f20c49502a4740c9a760a9f531833dc794ee3e55a046f"
+      },
+      "original_sandbox_full_exit": 1,
+      "original_failure": "global-build-health.test.ts spawnSync /usr/bin/python3 EPERM",
+      "source_sandbox_failure_preserved": true,
+      "unchanged_source_full_not_repeated": true
+    },
+    "checks": [
+      {
+        "command": [
+          "npx",
+          "tsc",
+          "-p",
+          "tsconfig.json",
+          "--noEmit"
+        ],
+        "pid": 3148279,
+        "birth_ticks": "103781186",
+        "rc": 0,
+        "log": "paper/materials/20261016-1815-ops/source-host-tsc.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "npx",
+          "vitest",
+          "run",
+          "tests/global-build-health.test.ts",
+          "tests/ops-stall-between-runs.test.ts",
+          "tests/ops-stall-recovery.test.ts",
+          "--maxWorkers=1"
+        ],
+        "pid": 3150444,
+        "birth_ticks": "103782407",
+        "rc": 0,
+        "log": "paper/materials/20261016-1815-ops/source-host-targeted.log",
+        "sha256": "71bd4b4c54e9bc981dc71ba7024af409e35cbf197eed095f7a86d9bb688d557a"
+      }
+    ],
+    "source_unchanged": true,
+    "original_sandbox_full_exit": 1,
+    "only_selected_host_tests": true,
+    "no_new_behavior_release": true,
+    "no_game_model_or_learner_invocation": true
+  },
+  "gitleaks": 0,
+  "no_new_behavior_release": true,
+  "game_code_config_knowledge_rules_unchanged": true,
+  "original_reports_and_failed_history_preserved": true,
+  "foreign_index_and_parallel_records_preserved": true,
+  "host": "pending original batch exact-tree full check",
+  "no_restart_or_account_home_model_prompt_change": true
+}

@@ -1,0 +1,36 @@
+{
+  "results": [
+    {
+      "name": "tsc",
+      "args": [
+        "npx",
+        "tsc",
+        "-p",
+        "tsconfig.json",
+        "--noEmit"
+      ],
+      "rc": 0,
+      "seconds": 2.0963759999722242,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "original-python-wrapper-and-unreached-paths",
+      "args": [
+        "npx",
+        "vitest",
+        "run",
+        "tests/global-build-health.test.ts",
+        "tests/paths.test.ts",
+        "--pool=forks",
+        "--maxWorkers=1"
+      ],
+      "rc": 0,
+      "seconds": 5.101872941013426,
+      "log_sha256": "9d0822708f5b89cefb0d75e6363838dd2ae2b8852019d3bd09a0f111c54f95d6"
+    }
+  ],
+  "source_tree": "b6b17fa10550fbd7d16ffe399a070248d7525589",
+  "source_unchanged": true,
+  "original_full_rc": 1,
+  "full_rerun": false
+}

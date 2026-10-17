@@ -1,0 +1,43 @@
+{
+  "at": "2026-10-17T10:23:04.662690+08:00",
+  "refs": {
+    "main": "65e6a9ef31a272fe04809f9ccf938f73dbfb11af",
+    "live": "1c8d6d2bd731514e5613ca63f46dc44fef2e59d5"
+  },
+  "source_base": "54e36d0830ab640130557b62a078b25954912ff4",
+  "overlap_since_base": [
+    {
+      "path": "agent/src/brain/types.ts",
+      "blobs": {
+        "base": "e4a0ba00db22c84c083558fb29f6701501a01a32",
+        "main": "e4a0ba00db22c84c083558fb29f6701501a01a32",
+        "live": "76b90c2565fc2234f10365c3d67bde93864500f9"
+      }
+    },
+    {
+      "path": "agent/src/reflex/combat-plan.ts",
+      "blobs": {
+        "base": "8be736e462223c10f5b91342c575a097f2cc1f71",
+        "main": "df3c4edd7cf3ae56a4ba31c365c0e956296bbe65",
+        "live": "df3c4edd7cf3ae56a4ba31c365c0e956296bbe65"
+      }
+    },
+    {
+      "path": "agent/src/reflex/rollout-live.ts",
+      "blobs": {
+        "base": "50b5fb892610b13cc10557f619477928cd6ee212",
+        "main": "50b5fb892610b13cc10557f619477928cd6ee212",
+        "live": "9c328dae1c2c9654643f174214dc35852de0ab1c"
+      }
+    },
+    {
+      "path": "agent/src/reflex/turn-solver.ts",
+      "blobs": {
+        "base": "c019f31a42a57e60db77afd417e05370a09cd2b6",
+        "main": "be98907716d3be8ef06aa3adebc83702e009e65f",
+        "live": "be98907716d3be8ef06aa3adebc83702e009e65f"
+      }
+    }
+  ],
+  "instruction": "Apply only H1 exact patch; preserve concurrent live changes and knowledge. Do not replace whole leaves from old source base or merge the whole branch. Original ops owns final merged tree checks."
+}

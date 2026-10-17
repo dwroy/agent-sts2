@@ -1,0 +1,66 @@
+{
+  "source": "ff58938f8b86cd4975bde47f8ac5088758ce8b78",
+  "main_before": "9f3d5745be89496398555a5a1eeda2abb995a438",
+  "main": "8fd18992dc6376a011ee27c780f02f3bbc8399b7",
+  "live": "b7cb191e2f7f9a7f0d85460fa8f2fc39a20a4ae5",
+  "live_tree": "3463f4e90d276f4d34dd44d8ae3c2869dccabb6c",
+  "narrow_paths": [
+    "ops/learning_requests.py",
+    "ops/tests/test_learning_requests.py",
+    "docs/learning-requests.md"
+  ],
+  "source_full_tsc": 0,
+  "source_full_vitest": 0,
+  "source_full_files": 533,
+  "source_full_passed": 5231,
+  "source_full_skipped": 2,
+  "merged_sandbox": 1,
+  "merged_sandbox_passed": 4410,
+  "merged_sandbox_failed": 1,
+  "merged_sandbox_failure": "unchanged target-options fixed numeric contract: Test timed out in 20000ms; observed27717ms, no assertion failure",
+  "merged_timeout_supplement": 0,
+  "supplements": [
+    {
+      "log": "merged-target-timeout-supplement.log",
+      "rc": 0,
+      "command": [
+        "npx",
+        "vitest",
+        "run",
+        "tests/target-options.test.ts",
+        "--pool=threads",
+        "--maxWorkers=1"
+      ]
+    },
+    {
+      "log": "merged-paths-supplement.log",
+      "rc": 0,
+      "command": [
+        "npx",
+        "vitest",
+        "run",
+        "tests/paths.test.ts",
+        "--pool=forks",
+        "--maxWorkers=1"
+      ]
+    }
+  ],
+  "same_exact_tree_recreated": true,
+  "timeout_samples_assertions_and_deadline_unchanged": true,
+  "deployment_accepted": true,
+  "scope": "operational account recovery only; source full0, merged full subset1 plus exact unchanged target/paths supplements0 retained separately",
+  "gitleaks": 0,
+  "no_gameplay_change": true,
+  "new_release_allocated": false,
+  "prior_main_restore_copies_five_lines_retained": true,
+  "original_merged_failure_and_rollback": {
+    "source": "ff58938f8b86cd4975bde47f8ac5088758ce8b78",
+    "merged": "bc59c5a027a7fc28b8aa717a96c8081b2afd3c42",
+    "tree": "3463f4e90d276f4d34dd44d8ae3c2869dccabb6c",
+    "sandbox_rc": 1,
+    "rollback": "a5b8631427c2427240a80967bd9cebf5b98e3d61",
+    "knowledge_preserved": []
+  },
+  "first_main_merge": "668126a5d81000a969d7aa5de79fb6c70b7c816f",
+  "coauthor_only_correction_same_tree": true
+}

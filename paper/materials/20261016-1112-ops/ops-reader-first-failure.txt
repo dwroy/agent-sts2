@@ -1,0 +1,12 @@
+2026-10-16 11:13:59 CST
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/ops/codex-ops/record-staging/20261016-1112/prepare.py", line 18, in <module>
+    source=json.loads((d/'source-audit.json').read_text());old_d=Path(source['prior']).parent;old_streams={x['stream']:(folder,x) for folder in ['evidence','evidence-extra'] for x in json.loads((old_d/folder/'evidence-manifest.json').read_text())};stream_proof=[]
+                                                                                                                                                                                                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 788, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 772, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-091304-s2/learner/runs/20261016-091314-3038fabf-057d-4ffa-8440-ced1808388f5-strategy-proposal/evidence-extra/evidence-manifest.json'

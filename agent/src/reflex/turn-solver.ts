@@ -1,3 +1,5 @@
+import { budgetedSolve } from "./pace-solver-cache.js";
+import { currentDecisionBudget } from "../core/decision-budget.js";
 /**
  * Turn-level combat search: every legal order of the cards in hand (energy permitting), simulated
  * to the end of the turn, then scored. This replaces the single-card lookahead that missed a
@@ -370,6 +372,8 @@ export interface PlayerSim {
   dexterityNow?: number;
   /** Silent A10 ordinary manual attacks only; counter read from the observed, consistent relic stack. */
   kunai?: { count: number };
+  /** Silent A10 observed Helical Dart scope; the entry amount is already in displayed Block. */
+  helicalDart?: { temporary: number };
   /** Takes 50% less from enemy attacks? (Intangible etc. — not modelled beyond this flag.) */
   intangible: boolean;
   /**
@@ -568,9 +572,11 @@ export interface PlayerSim {
   helmetBlock?: number;
   /**
    * Vigor N (VIGOR_POWER): the next Attack deals N more, once. The hand's damage has it taken off
-   * (stripVigor), and the solver adds it to the first Attack's first hit.
+   * (stripVigor), and the solver adds it to the first Attack's first hit unless a scoped observation below applies.
    */
   vigor?: number;
+  /** J2VR2DFJG8K4 Silent A10: active Akabeko; only the observed upgraded Skewer signature opts in. */
+  akabekoSkewer?: true;
   /**
    * Pen Nib held: the Attack plays it has counted (its stack mod PEN_NIB_EVERY). The play that brings the count to the
    * 10th deals double damage, every hit (the hand's shown damage has the doubling taken off: card-model stripPenNib);
@@ -908,6 +914,8 @@ export interface Outcome {
   vulnerableApplied: number;
   weakApplied: number;
   strengthGained: number;
+  /** Added Tainted before the enemy turn, only with an observed Vital Spark source; audit metadata, not a ranking axis. */
+  taintedGained?: number;
   cardsDrawn: number;
   unknownCards: string[];
   /** A verified ordinary Silent Apotheosis was actually played on this line. */
@@ -975,6 +983,8 @@ export interface Outcome {
   permafrostBlockLeft?: number;
   /** Dexterity established by observed Kunai triggers, retained by later turns of this fight. */
   kunaiDexterityGained?: number;
+  /** New Helical Dart Dexterity expires at this turn's end, separately from permanent gains. */
+  helicalDexterityGained?: number;
   /** Drinks in the line whose effect may outlast this turn (turnOnlyDrink): such a line is never "no effect". */
   lastingDrinks?: number;
   /**
@@ -1056,6 +1066,7 @@ interface Sim {
   /** Dexterity gained this turn (Speed Potion): added to every block card played after it. */
   tempDex: number;
   kunaiDexterity: number;
+  helicalDexterity: number;
   kunaiUnknown: boolean;
   /** Only Fasten gained within this line; existing Fasten is already in displayed Block. */
   fasten: number;
@@ -1879,6 +1890,15 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
     }
     if (card.type === "Attack") {
       attackRelics(next, player);
+      // T0 F48 T2/T4: one new Dexterity after an explicit Shiv, never retroactive Block.
+      if (player.helicalDart && card.cardId === "SHIV") {
+        if (card.observedHelicalShiv && plays === 1 && !automatic && next.enemies.length === 1 &&
+            !player.frail && !player.unmovableArmed && !player.shadowmeldActive && !next.shadowmeld &&
+            !player.kunai && !player.shuriken && !player.tender) {
+          next.tempDex += 1;
+          next.helicalDexterity += 1;
+        } else next.unknown = [...next.unknown, "螺线飞镖（自动、重放或组合触发未验证）"];
+      }
       // The gain comes after the Attack; existing Block and this card's own Block are never backfilled.
       if (player.kunai) {
         if (plays !== 1 || automatic) {
@@ -2033,7 +2053,9 @@ function play(sim: Sim, card: CardModel, target: number | null, player: PlayerSi
   if (card.type !== "Potion") for (const prior of strangled) {
     const enemy = next.enemies.find((entry) => entry.index === prior.index && entry.alive);
     if (!enemy) continue;
-    if (card.strangle !== undefined || plays !== 1 || automatic || card.upgraded || !["Attack", "Skill"].includes(card.type)) {
+    // LY83ZMTFVKJH A10 F21 T10, silent-0260/0261: upgraded Dagger Spray's two hits trigger one two-HP loss.
+    const observedUpgrade = card.observedStrangleFollowup === true && card.cardId === "DAGGER_SPRAY" && card.type === "Attack" && card.hits === 2;
+    if (card.strangle !== undefined || plays !== 1 || automatic || (card.upgraded && !observedUpgrade) || !["Attack", "Skill"].includes(card.type)) {
       enemy.strangle = null;
       next.unknown = [...next.unknown, "紧勒（后续牌型、升级、叠加、重放或自动出牌未验证）"];
     } else if (!prior.verified || !strangleLossVerified(enemy) || next.hp <= 0) {
@@ -2422,12 +2444,20 @@ function resolveEffects(next: Sim, card: CardModel, target: number | null, playe
     // the decision), Weak and Shrink as on the rest of it.
     const lineExhausts = next.exhaustedCount - (player.exhaustedThisTurn ? 1 : 0);
     if ((card.perExhaustDamage ?? 0) > 0 && lineExhausts > 0) perHit += ourAttackScaled((card.perExhaustDamage ?? 0) * lineExhausts, player.weak, shrunkHit ? shrinkNow : false);
-    // Vigor: spent by the first Attack, on its first hit (KFP1 F17 T1).
+    // Keep the legacy first-hit rule outside the observed Silent Skewer signature.
     let firstHit = perHit;
     if (card.type === "Attack" && next.vigor > 0) {
       if (!shrunkHit) firstHit += Math.floor(next.vigor * weakFactor);
       else if (shrunkHit.pre !== null && perHit !== 0 && card.special !== "body_slam") firstHit = ourAttackScaled(shrunkHit.pre + next.strength + bonus + next.vigor, player.weak, shrinkNow);
       else firstHit += ourAttackScaled(next.vigor, player.weak, shrinkNow);
+      // J2VR2DFJG8K4 F22 attempts 2/3 T1, silent-0504/0505: 19 x 2, not 19 + 11.
+      // Two SL attempts in one run verify only this unmodified, manually played two-energy combination.
+      if (player.akabekoSkewer && singleManualPlay && card.cardId === "SKEWER" && card.upgraded && card.xCost &&
+          card.target === "single" && card.special === "whirlwind" && card.damageBase === 11 &&
+          card.text.replace(/\s+/g, "") === "造成19点伤害X次。" && cost === 2 && hits === 2 && next.vigor === 8 &&
+          perHit === 11 && firstHit === 19 && !player.weak && !shrinkNow && (player.strengthNow ?? 0) === 0 &&
+          next.strength === 0 && next.gigantic === 0 && player.penNib === undefined &&
+          targetEnemy?.block === 0 && targetEnemy.vulnerable === 0 && !targetEnemy.intangible) perHit = firstHit;
       next.vigor = 0;
     }
     if (next.gigantic > 0 && card.type === "Attack") {
@@ -3768,6 +3798,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
       vulnerableApplied: sim.vulnerableApplied,
       weakApplied: sim.weakApplied,
       strengthGained: sim.permStrength,
+      ...(input.enemies.some((enemy) => enemy.hp > 0 && (enemy.vitalSpark ?? 0) > 0) ? { taintedGained: sim.tainted } : {}),
       cardsDrawn: sim.cardsDrawn,
       ...(sim.steps.some((step) => step.cardId.startsWith("POTION:CUNNING_POTION:")) ? {
         cunningShivsLeft: [...sim.hand, ...sim.held, ...sim.locked].filter((entry) =>
@@ -3807,6 +3838,7 @@ function evaluate(sim: Sim, input: SolverInput, weights: Weights): Plan {
       ...(input.player.tuningFork && input.player.tuningFork.every > 0 ? { tuningForkCount: (input.player.tuningFork.count + sim.relicSkills) % input.player.tuningFork.every } : {}),
       ...(input.player.permafrostBlock !== undefined ? { permafrostBlockLeft: sim.permafrostBlock } : {}),
       ...(sim.kunaiDexterity > 0 ? { kunaiDexterityGained: sim.kunaiDexterity } : {}),
+      ...(sim.helicalDexterity > 0 ? { helicalDexterityGained: sim.helicalDexterity } : {}),
       ...(sim.lastingDrinks > 0 ? { lastingDrinks: sim.lastingDrinks } : {}),
       ...(sim.potionCost > 0 ? { potionCost: sim.potionCost } : {}),
       ...(sim.potionHeal > 0 ? { potionHeal: sim.potionHeal } : {}),
@@ -4012,6 +4044,7 @@ function rootSim(input: SolverInput, weights: Weights): Sim {
     flat: 0,
     tempDex: 0,
     kunaiDexterity: 0,
+    helicalDexterity: 0,
     kunaiUnknown: false,
     fasten: 0,
     shadowmeld: false,
@@ -4129,6 +4162,11 @@ export function replaySteps(input: SolverInput, steps: Step[]): Plan | null {
 
 /** Returns every distinct end-of-turn outcome's best plan, best first. */
 export function solveTurn(input: SolverInput): SolveResult {
+  return budgetedSolve(input, () => solveTurnCurrent(input), (result) => solveTap.onSolve?.(input, result));
+}
+
+function solveTurnCurrent(input: SolverInput): SolveResult {
+  const pace = currentDecisionBudget();
   const maxNodes = input.maxNodes ?? 60_000;
   const weights = weightsFor(input);
   const root = rootSim(input, weights);
@@ -4183,7 +4221,8 @@ export function solveTurn(input: SolverInput): SolveResult {
       truncated = true;
       return;
     }
-    if (input.deadline !== undefined && nodes % 64 === 0 && (input.deadlineNow ?? Date.now)() > input.deadline) {
+    if ((nodes === 1 || nodes % 16 === 0) && pace?.remaining() === 0
+        || nodes % 64 === 0 && input.deadline !== undefined && (input.deadlineNow ?? Date.now)() > input.deadline) {
       truncated = true;
       timedOut = true;
       return;

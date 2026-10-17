@@ -1,0 +1,29 @@
+{
+  "at": "2026-10-16 13:36:17 CST",
+  "state": "source received; waiting for existing knowledge refresh completion",
+  "parent": "roy-20261016-global-build",
+  "source": "e9922a6008b35c3b4427c423830f015252a3bcde",
+  "source_parent": "655e1bb7967dcd9161eee96fe35cad2257e7af40",
+  "source_tree": "c19c9c92926dd14637e7a3d19444c504de7f83d4",
+  "source_receipt": {
+    "path": "paper/materials/20261016-global-build-g2/ops-source-received.json",
+    "sha256": "fa2f8ad24887957cf57f395757601aa03bea0e27b366e5a6d6d0a7ad0859bafd"
+  },
+  "actual_live_before": "1ddaba4bca8350969bb2e8dda1265095cc86b61d",
+  "immutable_resume": {
+    "path": "ops/codex-ops/record-staging/20261016-1328/publish-g2.py",
+    "sha256": "b89c1710ec1ab4a3b78152a9ead94c32ccd458a9c6d44387a5bf575d601fd5a5"
+  },
+  "next": "On the next existing scheduler event after knowledge refresh completes, run this exact original publisher once under ops/live-merge.lock; verify actual live/current knowledge again. Only after actual publication, use original075726 learner-recheck once for final new composition. Do not borrow cb2128 green, repeat source full, sleep/poll, start a new pipeline/model, or treat queued as live.",
+  "version_classification": "diagnostic shadow; verify no behavior consumption and retain R369 numbering; no number preallocated",
+  "attempt_history": [
+    {
+      "at": "2026-10-16 13:32:29 CST",
+      "result": "active live knowledge builders; exited before index/ref/source mutation"
+    },
+    {
+      "at": "2026-10-16 13:34:31 CST",
+      "result": "still active live knowledge builders after independent evidence processing; exited before mutation"
+    }
+  ]
+}

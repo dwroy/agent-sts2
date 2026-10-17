@@ -1,0 +1,72 @@
+{
+  "at": "2026-10-16T05:57:26.027644+00:00",
+  "parent": "roy-20261016-global-build",
+  "phase": "G3b",
+  "owner": "01a13dcd-83d4-7c63-b233-f93cf878ecf4",
+  "manifest_sha256": "8d44fbaa26a20b5f13e73f82e78f7c9a9cf51e1f750bb8b7eb55ff66c668a07c",
+  "learner_input_sha256": "13c75e410e0a563e5ab7318fffd3dc66f5ac2f06d07aa9c20e80457de376d608",
+  "assignment_native_sha256": "dc571524b7c16b36aa10e7380e950f86eb167c4d8c26049e83d72138d4dbd690",
+  "protocol_snapshot": {
+    "docs/v5-construction.md": {
+      "sha256": "4e5c333db358c2af8ddd0d20bcefe20f837c9b47883cf5536f24d1d1290899e7",
+      "bytes": 12586
+    },
+    "docs/v5-global-build-plan.md": {
+      "sha256": "8f3f5f4c2347125a6ac668c63ac3ea6ac18fee0efb559009aa0bb23f3514ba98",
+      "bytes": 25623
+    },
+    "eval/construction.py": {
+      "sha256": "3e4126cd5740d8f6668fe104d9c5ac9b8b1dab02b096a92f791ac397d99e51b3",
+      "bytes": 4508
+    },
+    "agent/src/construction/planner.ts": {
+      "sha256": "b6d053333612a79797550deb68e84a4b68cb660e75d7aba73555d7fa9714f2f5",
+      "bytes": 11802
+    },
+    "agent/src/construction/adapter.ts": {
+      "sha256": "14e7243741514aaa9d16009ceb583923ea4a9773e33310c2d7073ef4147fe70d",
+      "bytes": 11249
+    },
+    "agent/src/construction/data.ts": {
+      "sha256": "2010e856531dc5e0cb99119db6d80392523c10d41cd7d15df2e4a68e3f177c04",
+      "bytes": 2429
+    },
+    "agent/src/construction/types.ts": {
+      "sha256": "554781cfaf37c62dd2384e6d076de141f4199a9fb995e154af16efb4fcbc0291",
+      "bytes": 3035
+    },
+    "agent/src/sl/controller.ts": {
+      "sha256": "f8827b8d4c53d1139bbec174c0b13f19c99803b4dbd404310c2835a3d05c2ffc",
+      "bytes": 88780
+    },
+    "knowledge/characters/silent/construction-templates.json": {
+      "sha256": "fa2bbf98407f9898ee8fcbcd76d8de731a3a2228c23f8b01a63384b53e12b500",
+      "bytes": 10636
+    }
+  },
+  "gate": {
+    "independent_runs_min": 10,
+    "positive_and_negative_required": true,
+    "brier": "strictly less than within-group prevalence*(1-prevalence)",
+    "absolute_bias_max": 0.1,
+    "advisory_metric_only": "conditionalSignature",
+    "group": [
+      "character",
+      "core",
+      "ascension",
+      "metric",
+      "horizon",
+      "model",
+      "policy",
+      "template_sha256"
+    ]
+  },
+  "option_identity": "Only actual chosen option may have matched outcome; native evaluator deduplicates without option",
+  "unknowns": "Do not derive route/policy/SL/endpoint truth as watcher; original learner required",
+  "no_live_config_models_games_or_new_phases": true,
+  "revision": 2,
+  "supersedes": "preregistration.json (preserved)",
+  "freeze_at_unchanged": "2026-10-16T05:43:17.052214+00:00",
+  "gate_or_model_changed": false,
+  "scope_correction": "scope-correction.json"
+}

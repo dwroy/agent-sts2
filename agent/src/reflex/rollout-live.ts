@@ -1,3 +1,4 @@
+import { currentDecisionBudget } from "../core/decision-budget.js";
 /**
  * The 5-turn rollout (rollout.ts) on the live board, as FACTS for Jev's combat question (combat-plan.ts).
  *
@@ -321,6 +322,38 @@ export function enemyTable(id: string, asc: number, db: MonsterMoves, mm: MoveMo
 
 // ---------------------------------------------------------------- board
 
+/**
+ * ZZMYZ5UBCG72, Silent A2 F48 T2-T7: the held Paper Krane says 40%, and the already-Weak Amalgam
+ * shows 10x1 / 7x3 / 13x1 / 14x1 / 4x3 / 16x1 in these six contexts. Only these measured later-turn
+ * contexts are covered. New Weak applied during a solver line, other Strength, ascensions and monsters
+ * retain their existing paths; this is not a general Paper Krane or rounding model.
+ */
+export function withObservedSilentBossWeak(
+  table: EnemyTable,
+  id: string,
+  context: { character: string; asc: number; relics: readonly unknown[] },
+): EnemyTable {
+  if (context.character.toLowerCase() !== "silent" || context.asc !== 2 || id !== "TORCH_HEAD_AMALGAM") return table;
+  if (!context.relics.some((value) => {
+    const relic = value as { relic_id?: string; is_melted?: boolean } | null;
+    return relic?.relic_id === "PAPER_KRANE" && relic.is_melted === false;
+  })) return table;
+  const observed = [
+    { move: "TACKLE_2_MOVE", damage: 18, hits: 1, contexts: [[0, false]] },
+    { move: "BEAM_MOVE", damage: 8, hits: 3, contexts: [[0, true], [-3, true]] },
+    { move: "TACKLE_3_MOVE", damage: 14, hits: 1, contexts: [[1, true], [4, true]] },
+    { move: "TACKLE_4_MOVE", damage: 14, hits: 1, contexts: [[2, true]] },
+  ] as const;
+  const moves = { ...table.moves };
+  for (const row of observed) {
+    const move = moves[row.move];
+    // A refreshed table with different base values is a new, unvalidated object.
+    if (!move || move.shown || move.damage !== row.damage || move.hits !== row.hits || move.growth) continue;
+    moves[row.move] = { ...move, observedWeak: row.contexts.map(([strength, playerVulnerable]) => ({ strength, playerVulnerable, scale: 0.6 })) };
+  }
+  return { ...table, moves };
+}
+
 /** The observed living summon adds its first attack to next turn's threat, from the current ascension's DB. */
 export function summonThreatAt(enemyId: string, move: string, asc: number, present: readonly string[], vulnerable: boolean, db: MonsterMoves = monsterMoves(), mm: MoveModelData = moveModelData()): number {
   return (summonsAt(enemyId, move, asc, db) ?? []).filter((spawn) => !present.includes(spawn.id)).reduce((sum, spawn) => {
@@ -632,7 +665,7 @@ export function noEffectTwin(plan: Plan, plans: Plan[]): Plan | null {
       .map((step) => `${step.cardId}|${step.cardIndex}|${step.target ?? "-"}`)
       .join(">");
   // The drink's cost is not an effect: the outcome without it (potionCost) is what must be the same.
-  const turn = (line: Plan): string => JSON.stringify({ ...line.outcome, potionCost: undefined });
+  const turn = (line: Plan): string => JSON.stringify({ ...line.outcome, potionCost: undefined, taintedGained: undefined });
   return plans.find((other) => other !== plan && !drinks(other) && cards(other) === cards(plan) && turn(other) === turn(plan)) ?? null;
 }
 
@@ -791,7 +824,7 @@ export function boardRolloutInput(
   asc: number,
   db: MonsterMoves = monsterMoves(),
   mm: MoveModelData = moveModelData(),
-): Pick<RolloutInput, "solver" | "enemies" | "tables" | "statusCards" | "relicEnergy" | "relicBlock" | "spawns" | "summons" | "playerPowers" | "fumesPoisonBonus" | "observedGardenerSkittish" | "potions" | "onShuffle" | "passive"> & { handBase: (CardModel | null)[] } {
+): Pick<RolloutInput, "solver" | "enemies" | "tables" | "statusCards" | "relicEnergy" | "relicBlock" | "spawns" | "summons" | "playerPowers" | "fumesPoisonBonus" | "observedGardenerSkittish" | "observedSilentTestSubjectPhasePowers" | "potions" | "onShuffle" | "passive"> & { handBase: (CardModel | null)[] } {
   const combat = asRecord(state.raw["combat"]);
   const raw = asArray(combat["enemies"]).map(asRecord);
   const leaderAlive = raw.some((e) => e["is_alive"] !== false && !powersOf(e)["MINION_POWER"]);
@@ -845,7 +878,10 @@ export function boardRolloutInput(
   }
   for (const id of new Set([...enemies.map((e) => e.id), ...Object.values(spawns).flatMap((list) => list.map((spawn) => spawn.id)), ...Object.values(summons).flatMap((moves) => Object.values(moves).flatMap((list) => list.map((spawn) => spawn.id)))])) {
     const table = enemyTable(id, asc, db, mm);
-    if (table) tables[id] = table;
+    if (table) tables[id] = withObservedSilentBossWeak(table, id, {
+      character: str(asRecord(state.run?.raw)["character_id"]), asc,
+      relics: asArray(asRecord(state.run?.raw)["relics"]),
+    });
   }
   // The status cards the enemies' moves can add (and the stand-in for one the DB does not name).
   const statusIds = new Set<string>([UNKNOWN_STATUS, "DAZED", "WOUND", "WITHER"]);
@@ -860,6 +896,14 @@ export function boardRolloutInput(
   // Only the observed Silent Fumes trigger: no inferred bonus for direct poison cards or potions.
   const skull = str(asRecord(state.run?.raw)["character_id"]).toLowerCase() === "silent" &&
     asArray(asRecord(state.run?.raw)["relics"]).some((relic) => str(asRecord(relic)["relic_id"]) === "SNECKO_SKULL");
+  const testSubjectPhasePowers = str(asRecord(state.run?.raw)["character_id"]).toLowerCase() === "silent" && asc === 10 && raw.length === 1 &&
+    raw.some((enemy) => {
+      if (str(enemy["enemy_id"]) !== "TEST_SUBJECT") return false;
+      const powers = powersOf(enemy);
+      return powers["ADAPTABLE_POWER"] === 1 &&
+        ((enemy["max_hp"] === 111 && powers["ENRAGE_POWER"] === 3 && !(powers["PAINFUL_STABS_POWER"] ?? 0)) ||
+          (enemy["max_hp"] === 212 && powers["PAINFUL_STABS_POWER"] === 1 && !(powers["ENRAGE_POWER"] ?? 0)));
+    });
   return {
     solver,
     enemies,
@@ -874,6 +918,7 @@ export function boardRolloutInput(
     playerPowers: powersOf(asRecord(combat["player"])),
     ...(skull ? { fumesPoisonBonus: 1 } : {}),
     ...(str(asRecord(state.run?.raw)["character_id"]).toLowerCase() === "silent" && asc === 10 ? { observedGardenerSkittish: true } : {}),
+    ...(testSubjectPhasePowers ? { observedSilentTestSubjectPhasePowers: true } : {}),
     potions: asArray(asRecord(state.run?.raw)["potions"]).filter((p) => asRecord(p)["occupied"]).length,
     handBase: solverInput.hand.map((card) => (card.type === "Potion" ? null : baseByKey.get(cardKey(card)) ?? null)),
   };
@@ -893,7 +938,7 @@ export function liveRollout(args: LiveRolloutArgs): LiveRollout {
     const board = boardRolloutInput(state, knowledge, args.solver, meta.asc);
     const model = args.model !== undefined ? args.model : loadFightValueModel();
     const gates = args.gates !== undefined ? args.gates : loadFightValueGates();
-    const budgetMs = Math.max(0, (args.budgetMs ?? rolloutLiveOptions.budgetMs) - ROLLOUT_MARGIN_MS - (args.spentMs ?? 0) - elapsed());
+    const budgetMs = Math.max(0, Math.min(args.budgetMs ?? rolloutLiveOptions.budgetMs, currentDecisionBudget()?.remaining() ?? Infinity) - ROLLOUT_MARGIN_MS - (args.spentMs ?? 0) - elapsed());
     const { handBase, ...boardInput } = board;
     const input: RolloutInput = {
       ...boardInput,
@@ -999,7 +1044,7 @@ function rolloutRefs(input: RolloutInput): Plan[] {
 function rolloutMemoKey(input: RolloutInput): string | null {
   try {
     const { now: _now, budgetMs: _budget, ...options } = input.options ?? {};
-    return memoKey("rollout", { ...input, model: identityToken(input.model), gates: identityToken(input.gates), mm: identityToken(input.mm), options });
+    return memoKey(currentDecisionBudget() ? "human-pace-rollout-v1" : "rollout", { ...input, model: identityToken(input.model), gates: identityToken(input.gates), mm: identityToken(input.mm), options });
   } catch {
     return null;
   }
@@ -1015,7 +1060,7 @@ interface StoredRollout {
 function recallRollout(memo: ComputeMemo, key: string, input: RolloutInput, budgetMs: number): RolloutResult | null {
   try {
     const hit = memo.get<Omit<RolloutResult, "lines"> & { lines: (Omit<LineEstimate, "plan"> & { plan: number })[] }, StoredRollout>(key);
-    if (!hit || budgetMs < hit.meta.needMs) return null;
+    if (!hit || !currentDecisionBudget() && budgetMs < hit.meta.needMs) return null;
     const refs = rolloutRefs(input);
     if (hit.value.lines.some((line) => refs[line.plan] === undefined)) return null;
     memo.took();
@@ -1028,14 +1073,14 @@ function recallRollout(memo: ComputeMemo, key: string, input: RolloutInput, budg
 /** Keeps a result no clock cut (nothing degraded), its lines' plans by index into rolloutRefs. */
 function storeRollout(memo: ComputeMemo, key: string, input: RolloutInput, result: RolloutResult): void {
   try {
-    if (result.degraded.length > 0 || result.budgetNeedMs === undefined) return;
+    if (!currentDecisionBudget() && (result.degraded.length > 0 || result.budgetNeedMs === undefined)) return;
     const refs = rolloutRefs(input);
     const index = new Map<Plan, number>();
     refs.forEach((plan, i) => {
       if (!index.has(plan)) index.set(plan, i);
     });
     if (result.lines.some((line) => !index.has(line.plan))) return;
-    memo.set<StoredRollout>(key, { ...result, lines: result.lines.map((line) => ({ ...line, plan: index.get(line.plan)! })) }, { needMs: result.budgetNeedMs, ms: result.elapsedMs });
+    memo.set<StoredRollout>(key, { ...result, lines: result.lines.map((line) => ({ ...line, plan: index.get(line.plan)! })) }, { needMs: result.budgetNeedMs ?? 0, ms: result.elapsedMs });
   } catch {
     // not kept
   }

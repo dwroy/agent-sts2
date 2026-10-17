@@ -1,0 +1,63 @@
+{
+  "at": "2026-10-17 04:01:19 CST",
+  "batch": "20261017-014302-s2-strategy-proposal",
+  "original_full": {
+    "rc": 1,
+    "log": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261017-014302-s2-strategy-proposal.fallback-8db5f0479fd1577974272bb6086b5a8005cfc436.checks.log",
+    "merged": "52a1bfb17f6383617df5ce96102a7d881fe24626",
+    "tree": "8db5f0479fd1577974272bb6086b5a8005cfc436",
+    "commits": [
+      "66b05734c8ee8e632345fb5c1c3a672296ab7ad5"
+    ],
+    "ops_publication_proof": {
+      "at": "2026-10-17 03:29:47 CST",
+      "batch": "20261017-014302-s2-strategy-proposal",
+      "source": "66b05734c8ee8e632345fb5c1c3a672296ab7ad5",
+      "merged": "52a1bfb17f6383617df5ce96102a7d881fe24626",
+      "tree": "8db5f0479fd1577974272bb6086b5a8005cfc436",
+      "publication": "paper/materials/20261017-0210-ops/publication.json",
+      "publication_sha256": "b0cc276468ff90dbfe8b124c6ebe4a58ff75cccfa218cec8a9ad36b7099a066e",
+      "original_report_sha256": "a22bf5c1cbaf9465043a9ae8c02e43b60766308357e2106a98e43521657c095d",
+      "original_report_retained": true,
+      "original_report_has_no_committed_source": true,
+      "disposition": "Main ops committed original staged source after sandbox EPERM supplement; use actual publication proof, without changing original completion.",
+      "original_checks_and_live_locks": true,
+      "full_command": "export PATH=\"$HOME/.local/node/bin:$PATH\"; nice -n 19 npx tsc -p tsconfig.json --noEmit; a=$?; nice -n 19 npx vitest run --maxWorkers=2; b=$?; [ \"$a\" = 0 ] && [ \"$b\" = 0 ]",
+      "full_command_sha256": "896f046db998a1dfe91b22baa98cc341ed6a90cadb542495c08419fcc4040210",
+      "log": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261017-014302-s2-strategy-proposal.fallback-8db5f0479fd1577974272bb6086b5a8005cfc436.checks.log"
+    },
+    "started": "2026-10-17 03:29:47 CST",
+    "finished": "2026-10-17 03:57:50 CST",
+    "log_sha256": "ce897c2dc229164ad09569f2e36ddc6e09e49216a654c12ea0e1e2d107baebd1"
+  },
+  "coverage": {
+    "passed": [],
+    "failed": [
+      "tests/build-facts-audit.test.ts"
+    ],
+    "skipped": [],
+    "summary": {
+      "files": {
+        "failed": 1,
+        "passed": 505
+      },
+      "tests": {
+        "failed": 1,
+        "passed": 5026,
+        "skipped": 2
+      }
+    },
+    "failed_tests": {
+      "tests/build-facts-audit.test.ts": [
+        "V4 M2 audit: build questions carry facts, not code's scores selection/remove with the boss simulation: facts, not scores; every option still listed"
+      ]
+    }
+  },
+  "decision": "Retain the narrow published Gamble change while verifying only the original failing build audit case through the existing pinned learner-recheck continuation.",
+  "reason": "The unchanged pre-existing fixed selection/remove case ran61074ms with a60000ms simulation deadline and received no boss_sim field. This path does not exercise the changed combat-plan selector; actual cause remains unknown. Do not infer a product defect or deadline cause from timing alone.",
+  "scope": "Selected failed test and mandatory tsc; no complete rerun, changed assertion, timeout, fixture or production source.",
+  "original_full_rc": 1,
+  "independent_original_tsc_exit_not_persisted": true,
+  "no_rollback": true,
+  "no_game_model_or_simulation_experiment": true
+}

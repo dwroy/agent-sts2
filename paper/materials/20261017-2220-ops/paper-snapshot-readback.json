@@ -1,0 +1,187 @@
+{
+  "request": {
+    "at": "2026-10-17 22:21:18 CST",
+    "command": [
+      "nice",
+      "-n",
+      "19",
+      "python3",
+      "ops/paper_dataset.py",
+      "--no-raw"
+    ],
+    "pid": 1632712,
+    "birth": "113883775",
+    "calls": 1,
+    "raw_snapshot": false,
+    "previous_outputs_preserved": "ops/codex-ops/record-staging/20261017-2220/paper-before",
+    "actual_exit_code": 0
+  },
+  "generated_at": "2026-10-17T14:21:18.521Z",
+  "five_checks": {
+    "decisions attributed + unattributed == play records": true,
+    "decisions_by_label sum == attributed decisions": true,
+    "escalations rows == records with escalation": true,
+    "every runs.jsonl id present in runs.csv": true,
+    "commits == git rev-list --all --count": true
+  },
+  "source_cut_bytes": {
+    "decisions.jsonl": 2361796679,
+    "deepseek-reasoning.jsonl": 377746518,
+    "runs.jsonl": 362905,
+    "states.jsonl": 14080033679,
+    "fight-plans.jsonl": 2233957,
+    "run-plans.jsonl": 9073712,
+    "brain.jsonl": 774518003,
+    "sl-attempts.jsonl": 46304078,
+    "run-config.jsonl": 1992475
+  },
+  "row_counts": {
+    "runs.csv": 829,
+    "decisions_by_label.csv": 27683,
+    "escalations.csv": 3600,
+    "fight_plans.csv": 1461,
+    "commits.csv": 6854
+  },
+  "selected_run": {
+    "run_id": "U5W7NUE925NK",
+    "start_ts": "2026-10-17T12:12:00.978Z",
+    "end_ts": "2026-10-17T13:12:48.034Z",
+    "duration_min": "60.8",
+    "floor_max": "33",
+    "act_reached": "2",
+    "outcome": "defeat",
+    "victory": "0",
+    "outcome_source": "runs.jsonl",
+    "finished": "1",
+    "character": "SILENT",
+    "ascension": "10",
+    "code_version": "current",
+    "code_version_source": "runs.jsonl",
+    "code_version_console": "3d691cff9+dirty",
+    "code_versions_all": "3d691cff9+dirty",
+    "n_decisions": "742",
+    "n_shadow": "0",
+    "decider_inferred": "0",
+    "n_code": "335",
+    "n_jev": "177",
+    "n_deepseek": "0",
+    "n_claude": "0",
+    "n_code_fallback": "5",
+    "n_jev_plan": "188",
+    "n_deepseek_plan": "0",
+    "n_claude_plan": "0",
+    "jev_calls": "203",
+    "jev_in_tokens": "6595084",
+    "jev_out_tokens": "33436",
+    "jev_cost_usd": "0.278398",
+    "jev_latency_p50_ms": "559",
+    "ds_calls": "0",
+    "ds_in": "0",
+    "ds_cache_hit": "0",
+    "ds_out": "0",
+    "ds_reasoning": "0",
+    "ds_total_tokens": "0",
+    "ds_calls_no_token_split": "0",
+    "ds_cost_usd": "0",
+    "ds_latency_p50_s": "",
+    "ds_overrides": "0",
+    "fight_plans": "0",
+    "fight_plan_errors": "0",
+    "fight_plan_cost_usd": "0",
+    "fight_plan_latency_p50_s": "",
+    "claude_calls": "0",
+    "claude_latency_p50_s": "",
+    "hp_guard_count": "0",
+    "escalation_chain": "none",
+    "era": "deepseek_memory",
+    "learning_loop": "1",
+    "death_enemy": "知识恶魔",
+    "death_enemy_ids": "KNOWLEDGE_DEMON",
+    "final_hp": "0",
+    "max_hp": "70",
+    "bosses_seen": "VANTOM_BOSS KNOWLEDGE_DEMON_BOSS",
+    "has_postmortem": "1",
+    "postmortem_heading": "U5W7NUE925NK（A10，静默猎手，第33层，死于二幕boss知识恶魔 KNOWLEDGE_DEMON：六试均36/70血、槽0格挡药水进场；前五试T11／T7／T13／T14／T7判死读档，末试T13以4血23挡对27攻击归零，完整需损4、维持该末态存活至少差1血，结33毒后敌仍107/399血）",
+    "preloop_listed": "0",
+    "n_run_notes": "1",
+    "autoplay_finished_lines": "1",
+    "in_runs_jsonl": "1",
+    "brain_source": "{\"basis\": \"brain.jsonl accepted verdict; legacy answer != null, no error/problems; unique question_id+engine\", \"brain_rows\": 32, \"coverage\": \"missing_or_unresolved_logged_questions\", \"eligible\": false, \"embedded_answers\": {\"map/route\": 15, \"run-plan\": 4}, \"exclusion_reason\": \"unresolved_brain_questions\", \"failed_or_unaccepted_rows\": 3, \"first_success\": \"2026-10-17T12:12:00.971Z\", \"last_success\": \"2026-10-17T12:58:28.373Z\", \"policy\": \"codex-successful-brain-v1\", \"source\": \"unknown\", \"successful_answers\": {\"codex\": 29}, \"successful_by_label\": {\"event/act-plan\": {\"codex\": 1}, \"event/choose\": {\"codex\": 3}, \"event/plan\": {\"codex\": 2}, \"map/route-plan\": {\"codex\": 1}, \"rest/plan\": {\"codex\": 4}, \"reward/card\": {\"codex\": 11}, \"run-plan\": {\"codex\": 3}, \"selection/add\": {\"codex\": 1}, \"shop/plan\": {\"codex\": 3}}, \"unknown_successes\": 0, \"unresolved_questions\": 3}",
+    "first_attempt": "{\"death_floor\": 33, \"floor\": 33, \"passed_act1\": false, \"passed_act2\": false, \"reloads\": 0, \"sl_rows\": 8, \"victory\": false}",
+    "performance_policy": "codex-successful-brain-v1",
+    "performance_included": "0",
+    "performance_exclusion_reason": "unresolved_brain_questions"
+  },
+  "original_count_warnings": [
+    [
+      "KF9HMZKTFC3V",
+      879,
+      880
+    ]
+  ],
+  "changed_outputs": [
+    {
+      "path": "paper/data/README.md",
+      "bytes": 14189,
+      "sha256": "2da8800bb31f672ac1813fc45259131f5521ccab2d4857c8e2d6209c9d7412c6"
+    },
+    {
+      "path": "paper/data/commits.csv",
+      "bytes": 1031686,
+      "sha256": "fce97d9c1c39d8bf2c79f1ac06c3802a1795152f67e6ffe8794293b284be3f0f"
+    },
+    {
+      "path": "paper/data/cost-curve-silent.csv",
+      "bytes": 14854,
+      "sha256": "faf0865cb8279c51d26217338c1c39748d7a0ae663483aceaa0ec0a2fdd3b80a"
+    },
+    {
+      "path": "paper/data/cost-silent.csv",
+      "bytes": 913962,
+      "sha256": "a986c80a65734bdb2a200c88dd3791801b674a06d5cc344b515223eb59fbcfe6"
+    },
+    {
+      "path": "paper/data/cost-sources.json",
+      "bytes": 247910,
+      "sha256": "48ea09ac817b649dcdf7fadcab633d99ff470fce28da2f11390a6864c7904d2a"
+    },
+    {
+      "path": "paper/data/cost-unattributed.csv",
+      "bytes": 19387,
+      "sha256": "b3237457494a987ad2b8e70b88100bb617bf9d519bef7b640bd5150e2368eed5"
+    },
+    {
+      "path": "paper/data/decisions_by_label.csv",
+      "bytes": 1196273,
+      "sha256": "91ff6374fb8d502db4daae33f2e5e0a7c9ce9ad0c35b90b35edd33c3d2358be9"
+    },
+    {
+      "path": "paper/data/learning-curve-silent.csv",
+      "bytes": 71874,
+      "sha256": "410a6e0f13ce2ba486e89efa30256326976676df6968a061a867254bc76fa216"
+    },
+    {
+      "path": "paper/data/runs.csv",
+      "bytes": 1353775,
+      "sha256": "d31b42a659d7f6cdea55c51243ecda2cd510b3c3486f247893a07440083b621e"
+    },
+    {
+      "path": "paper/data/summary.json",
+      "bytes": 557850,
+      "sha256": "d9a54a862895dd16912dfadbeddafe27d7845e3627f07d93c6d867482b331d50"
+    },
+    {
+      "path": "paper/data/verification.json",
+      "bytes": 587,
+      "sha256": "af1739dc432454d1b29d0c72022f3f2a8d1bbe217cca043cabab57fdd79758fd"
+    },
+    {
+      "path": "paper/materials/silent/cost.md",
+      "bytes": 4200,
+      "sha256": "d888b9cc0083f57ef2213d905635b0136cf3bd0b73abc17aca00fbb9a5729fff"
+    }
+  ],
+  "raw_snapshot": false,
+  "frozen_before_after_bytes_preserved": true,
+  "costs_are_estimates_not_actual_bills": true
+}

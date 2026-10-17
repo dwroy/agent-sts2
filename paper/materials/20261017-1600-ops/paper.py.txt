@@ -1,0 +1,22 @@
+from pathlib import Path
+import json,subprocess,hashlib,os
+matches=[]
+for q in Path('/proc').iterdir():
+ if not q.name.isdigit(): continue
+ try: args=(q/'cmdline').read_bytes().split(b'\0')
+ except (OSError,PermissionError): continue
+ if any(x in [b'ops/paper_dataset.py',b'/home/dw/Projects/agent-sts2/ops/paper_dataset.py'] for x in args): matches.append(int(q.name))
+assert not matches, {'existing_paper_refresh_pids':matches}
+r=Path.cwd();p=r/'ops/codex-ops/record-staging/20261017-1600';pub=r/'paper/materials/20261017-1600-ops';sha=lambda b:hashlib.sha256(b).hexdigest();assert not (pub/'paper-dataset-request.json').exists();rows=[]
+for f in sorted((r/'paper/data').iterdir())+sorted((r/'paper/materials').glob('*/cost.md')):
+ if f.is_file() and '.before-' not in f.name:
+  raw=f.read_bytes();rel=str(f.relative_to(r));dest=p/'paper-before'/rel;dest.parent.mkdir(parents=True,exist_ok=True);dest.write_bytes(raw);rows.append({'path':rel,'bytes':len(raw),'sha256':sha(raw)})
+(p/'paper-before.json').write_text(json.dumps(rows,ensure_ascii=False,indent=2)+'\n');at=subprocess.check_output(['date','+%Y-%m-%d %H:%M:%S %Z'],text=True).strip();cmd=['nice','-n','19','python3','ops/paper_dataset.py','--no-raw']
+with (pub/'paper-dataset.log').open('wb') as log:proc=subprocess.Popen(cmd,cwd=r,stdout=log,stderr=subprocess.STDOUT,start_new_session=True)
+raw=Path(f'/proc/{proc.pid}/stat').read_text();q={'at':at,'command':cmd,'pid':proc.pid,'birth':raw[raw.rfind(')')+2:].split()[19],'calls':1,'raw_snapshot':False,'previous_outputs_preserved':str((p/'paper-before').relative_to(r))};(pub/'paper-dataset-request.json').write_text(json.dumps(q,ensure_ascii=False,indent=2)+'\n');print(json.dumps({'paper_pid':proc.pid,'calls':1,'stage':'actual generation started'}),flush=True);rc=proc.wait();q['actual_exit_code']=rc;(pub/'paper-dataset-result.json').write_text(json.dumps(q,ensure_ascii=False,indent=2)+'\n');print(json.dumps({'actual_exit_code':rc}),flush=True)
+
+outputs=[]
+for f in sorted((r/"paper/data").iterdir())+sorted((r/"paper/materials").glob("*/cost.md")):
+ if f.is_file() and '.before-' not in f.name:
+  raw=f.read_bytes();rel=str(f.relative_to(r));dest=p/"paper-after"/rel;dest.parent.mkdir(parents=True,exist_ok=True);dest.write_bytes(raw);outputs.append(dict(path=rel,bytes=len(raw),sha256=sha(raw)))
+(p/"paper-after.json").write_text(json.dumps(outputs,ensure_ascii=False,indent=2)+"\n")

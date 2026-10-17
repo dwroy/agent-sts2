@@ -29,6 +29,8 @@ import type { Plan } from "../reflex/turn-solver.js";
 import { knowledgeCharacter } from "../knowledge/files.js";
 import { silentBossCalibration } from "./boss-trust.js";
 import type { BossMarginTrace } from "./boss-margin.js";
+import { continuousBossResult, type ContinuousBossResult, type ContinuousSample } from "./continuous-boss-result.js";
+import { captureContinuationFailure, ContinuationSampleError } from "./continuation-failure.js";
 
 /** The most turns a sample plays (the start turn included): logged A7-A9 boss fights ran 2-24 turns (median 9). */
 export const BOSS_SIM_MAX_TURNS = 30;
@@ -123,10 +125,12 @@ export interface BossSimOptions {
 
 /** One sample of one line, played to the fight's end. */
 export interface FightSampleResult {
+  /** Attached only to an invalid first success, before its unchanged contract rejection. */
+  failureTrajectory?: import("../reflex/rollout.js").TurnRecord[];
   bossMargin?: BossMarginTrace;
   coreWindow?: import("./core-window.js").CoreWindowResult;
   resources?: { hp: number; revives: import("../reflex/turn-solver.js").Revive[]; drunkKeys: string[] };
-  sequence?: { firstWon: boolean; firstHp: number | null; firstPotions: string[]; secondBoss: string | null; firstTurns: number; secondWon: boolean | null; secondDied: boolean | null };
+  sequence?: ContinuousSample;
   won: boolean;
   died: boolean;
   /** Stopped at maxTurns (or the policy had no line) with the fight still on: neither won nor lost. */
@@ -176,6 +180,7 @@ export interface Dist {
 }
 
 export interface BossSimLineResult {
+  continuous?: ContinuousBossResult;
   sequence?: { firstWins: number; firstWinSecondDeaths: number; secondUnfinished: number };
   /** Index of the line in the lines given. */
   line: number;
@@ -295,6 +300,7 @@ function singleFightSample(input: RolloutInput, plan: Plan | null, seed: number,
   const enemyHpLeft = won || !last ? 0 : last.hpLeft ? Object.values(last.hpLeft).reduce((sum, hp) => sum + hp, 0) : last.snap.E.reduce((sum, e) => sum + (e[5] ? Math.max(0, e[2]) : 0), 0);
   return {
     won,
+    ...(input.continuation && won && (!last?.resources || last.resources.hp <= 0) ? { failureTrajectory: records } : {}),
     ...(bossReference ? { bossMargin: { reference: bossReference,
       outgoingHp: records.reduce((sum, r) => sum + (r.outgoingHpDamage ?? r.dmg), 0),
       receivedHp: records.every((r) => typeof r.receivedHpDamage === "number" && Number.isFinite(r.receivedHpDamage))
@@ -324,7 +330,7 @@ function singleFightSample(input: RolloutInput, plan: Plan | null, seed: number,
 }
 
 /** Transfer the first sample's resources; no fresh HP, spent potion, or spent revive is restored. */
-export function continuationInput(input: RolloutInput, first: FightSampleResult, template: RolloutInput, sample?: { seed: number; plan: Plan | null }): { input: RolloutInput; potions: string[]; openingHpLoss: number } {
+export function continuationInput(input: RolloutInput, first: FightSampleResult, template: RolloutInput, sample?: { seed: number; plan: Plan | null; maxTurns?: number; scripts?: boolean; order?: KillOrder | null }): { input: RolloutInput; potions: string[]; openingHpLoss: number } {
   if (!input.continuation || !first.won || !first.resources || first.resources.hp <= 0) {
     // Keep failed samples unavailable, but distinguish missing capture from a nonpositive winning state.
     // Put the branch and seed first: build-sim facts retain only the start of an error message.
@@ -335,7 +341,8 @@ export function continuationInput(input: RolloutInput, first: FightSampleResult,
       resources: first.resources ?? null,
       steps: sample?.plan?.steps.map((step) => ({ cardId: step.cardId, cardIndex: step.cardIndex, target: step.target ?? null })) ?? null,
     };
-    throw new Error(`missing successful first-fight resources: ${reason}; seed=${sample?.seed ?? "unknown"}; ${JSON.stringify(details)}`);
+    throw new ContinuationSampleError(`missing successful first-fight resources: ${reason}; seed=${sample?.seed ?? "unknown"}; ${JSON.stringify(details)}`,
+      captureContinuationFailure(reason, sample?.seed ?? null, { input, first, sample: sample ?? null }));
   }
   const used = new Set(first.resources.drunkKeys);
   let fairies = (input.solver.player.revives ?? []).filter((r) => r.source === "FAIRY_IN_A_BOTTLE").length
@@ -360,13 +367,15 @@ export function fightSample(input: RolloutInput, plan: Plan | null, seed: number
   const first = singleFightSample(input, plan, seed, maxTurns, scripts, order);
   const next = input.continuation;
   if (!next) return first;
-  const initial = { firstWon: first.won, firstHp: first.resources?.hp ?? null, firstPotions: [] as string[], secondBoss: null as string | null, firstTurns: first.turns, secondWon: null as boolean | null, secondDied: null as boolean | null };
+  const initial: ContinuousSample = { seed, firstWon: first.won, firstDied: first.died, firstCapped: first.capped, firstTimeUp: first.timeUp,
+    firstHp: first.resources?.hp ?? null, firstPotions: [], secondBoss: null, firstTurns: first.turns, secondWon: null, secondDied: null,
+    firstResources: null, secondEntry: null, openingHpLoss: null };
   if (!first.won) return { ...first, sequence: initial };
   const total = next.variants.reduce((s,v) => s + v.count, 0);
   if (total <= 0) throw new Error("empty second-boss distribution");
   let position = sampleSeed(seed, 0) / 0x100000000 * total;
   const variant = next.variants.find((v) => (position -= v.count) < 0) ?? next.variants.at(-1)!;
-  const transferred = continuationInput(input, first, variant.input, { seed, plan });
+  const transferred = continuationInput(input, first, variant.input, { seed, plan, maxTurns, scripts, order });
   const second = singleFightSample(transferred.input, null, sampleSeed(seed, 1), maxTurns, scripts, null);
   return { ...second,
     ...(input.captureBossMargin ? { bossMargin: undefined } : {}),
@@ -379,7 +388,10 @@ export function fightSample(input: RolloutInput, plan: Plan | null, seed: number
     powers: [...(first.powers ?? []), ...(second.powers ?? []).map(([t,id]): [number,string] => [t+first.turns,id])],
     drinks: [...(first.drinks ?? []), ...(second.drinks ?? []).map(([t,id]): [number,string] => [t+first.turns,id])],
     kills: [...(first.kills ?? []), ...(second.kills ?? []).map(([t,id,index]): [number,string,number] => [t+first.turns,id,index])],
-    sequence: { ...initial, firstPotions: transferred.potions, secondBoss: variant.boss, secondWon: second.won, secondDied: second.died },
+    sequence: { ...initial, firstPotions: transferred.potions, secondBoss: variant.boss, secondWon: second.won, secondDied: second.died,
+      firstResources: { hp: first.resources!.hp, revives: first.resources!.revives.slice(), potionSlots: transferred.potions.slice() },
+      secondEntry: { hp: transferred.input.solver.player.hp, revives: (transferred.input.solver.player.revives ?? []).slice(), potionSlots: transferred.potions.slice() },
+      openingHpLoss: transferred.openingHpLoss },
   };
 }
 
@@ -467,7 +479,7 @@ function perTurnOf(outcomes: FightSampleResult[]): BossSimLineResult["perTurn"] 
 }
 
 /** A line's numbers from its samples (by sample index). */
-export function summarizeLine(line: number, outcomes: FightSampleResult[]): BossSimLineResult {
+export function summarizeLine(line: number, outcomes: FightSampleResult[], expectedSamples = outcomes.length): BossSimLineResult {
   const won = outcomes.filter((o) => o.won);
   const dead = outcomes.filter((o) => o.died);
   const deathTurns: Record<number, number> = {};
@@ -475,8 +487,10 @@ export function summarizeLine(line: number, outcomes: FightSampleResult[]): Boss
   const potions: Record<string, number> = {};
   for (const o of outcomes) for (const id of new Set(o.drunk)) potions[id] = (potions[id] ?? 0) + 1;
   const unwon = outcomes.filter((o) => !o.won);
+  const continuous = continuousBossResult(outcomes, expectedSamples);
   return {
     line,
+    ...(continuous ? { continuous } : {}),
     ...(outcomes.some((o) => o.sequence) ? { sequence: {
       firstWins: outcomes.filter((o) => o.sequence?.firstWon).length,
       firstWinSecondDeaths: outcomes.filter((o) => o.sequence?.firstWon && o.sequence.secondDied).length,

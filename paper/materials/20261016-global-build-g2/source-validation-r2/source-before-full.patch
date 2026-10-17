@@ -1,0 +1,1206 @@
+diff --git a/agent/src/core/global-build-config.ts b/agent/src/core/global-build-config.ts
+new file mode 100644
+index 000000000..3b6b719bf
+--- /dev/null
++++ b/agent/src/core/global-build-config.ts
+@@ -0,0 +1,11 @@
++/** G2 starts in shadow; an on request cannot bypass its natural-run/report admission. */
++import { characterKey } from "../knowledge/files.js";
++
++export function globalBuildPolicy(character: string | null | undefined, env: NodeJS.ProcessEnv = process.env): {
++  mode: "off" | "shadow"; requested: "off" | "shadow" | "on"; admission: "pending_two_natural_shadow" | "not_applicable";
++} {
++  if (characterKey(character) !== "silent") return { mode: "off", requested: "off", admission: "not_applicable" };
++  const raw = env["GLOBAL_BUILD_EVAL"]?.trim().toLowerCase() ?? "shadow";
++  const requested = raw === "on" || raw === "shadow" ? raw : "off";
++  return { mode: requested === "off" ? "off" : "shadow", requested, admission: "pending_two_natural_shadow" };
++}
+diff --git a/agent/src/eye/run-config.ts b/agent/src/eye/run-config.ts
+index 1a42f183c..b7fd5839f 100644
+--- a/agent/src/eye/run-config.ts
++++ b/agent/src/eye/run-config.ts
+@@ -48,6 +48,7 @@ import { ascensionMode, resolveTargetAscension } from "../memory/ascension-targe
+ import { SILENT_DECK_CONSTRAINT, V5_DECK_POLICY } from "../memory/run-constraints.js";
+ import { constructionMode } from "../construction/adapter.js";
+ import { constructionEvaluationEnabled } from "../construction/consumer.js";
++import { globalBuildPolicy } from "../core/global-build-config.js";
+ 
+ /** The repository this module runs from (core/paths.ts PROJECT_ROOT: the checkout's root). */
+ export const REPO_ROOT = PROJECT_ROOT;
+@@ -175,6 +176,9 @@ export interface RunConfigRow {
+     s_combat_rank?: "on" | "off" | "shadow";
+     s_build_sort?: "off" | "shadow";
+     s_build_rank?: "off" | "shadow" | "on";
++    global_build_eval?: "off" | "shadow";
++    global_build_requested?: "off" | "shadow" | "on";
++    global_build_admission?: "pending_two_natural_shadow" | "not_applicable";
+     combat_deepseek: string;
+     /** THIEF_FACTS (docs/thief.md): the thieves' facts, escape and kill-line coverage on the combat question. */
+     thief_facts: boolean;
+@@ -486,6 +490,9 @@ export function runConfigRow(
+       s_readiness: sReadinessMode(run.character, env),
+       s_combat_rank: sCombatRankMode(run.character, env),
+       s_build_rank: sBuildRankMode(run.character, env),
++      global_build_eval: globalBuildPolicy(run.character, env).mode,
++      global_build_requested: globalBuildPolicy(run.character, env).requested,
++      global_build_admission: globalBuildPolicy(run.character, env).admission,
+       s_build_sort: sBuildRankMode(run.character, env) === "off" ? "off" as const : "shadow" as const,
+       sim_failure_exit: simFailurePolicy(run.character, env).enabled ? "on" as const : "off" as const,
+       sim_failure_retries: simFailurePolicy(run.character, env).retries,
+diff --git a/agent/src/memory/types.ts b/agent/src/memory/types.ts
+index 2fbd2c82c..ce7af59b2 100644
+--- a/agent/src/memory/types.ts
++++ b/agent/src/memory/types.ts
+@@ -168,6 +168,8 @@ export interface SlCompute {
+ 
+ export interface ScreenMemory {
+   screen: string;
++  /** Run-scoped G2 shadow observations; never inserted into a decision question before admission. */
++  globalBuildHistory?: import("../sim/global-build-observer.js").GlobalBuildHistory;
+   /** True once the shop inventory has been opened during this visit. */
+   shopOpened: boolean;
+   /** When combat was first seen with no living enemy (multi-phase boss between phases). */
+diff --git a/agent/src/sim/build-sim-facts.ts b/agent/src/sim/build-sim-facts.ts
+index 32e2e755c..e5c66dff0 100644
+--- a/agent/src/sim/build-sim-facts.ts
++++ b/agent/src/sim/build-sim-facts.ts
+@@ -50,6 +50,8 @@ import { BOSS_MARGIN_NOTE } from "./boss-margin.js";
+ import { sReadinessMode, simAdaptivePolicy, sBuildRankMode } from "../core/config.js";
+ import { BOSS_LINES_TIE_SE } from "./boss-lines.js";
+ import { readinessText } from "./boss-readiness.js";
++import { globalBuildFailure, globalBuildForB3 } from "./global-build-b3.js";
++import type { GlobalBossPool } from "./global-build-pool.js";
+ 
+ /** The deck-building questions that get the simulation. */
+ export const BUILD_SIM_LABELS = new Set([
+@@ -108,6 +110,8 @@ export interface BuildSimSetup {
+   /** The monster DB and move model (default the committed ones; tests give fixed ones). */
+   db?: MonsterDb;
+   mm?: MoveModelData;
++  /** Fixed callers must pair custom models with their own observed pool; no runtime data substitution. */
++  globalPool?: GlobalBossPool;
+ }
+ 
+ /** One option's simulation plan: its deck change, a per-card group (a removal, a smith), or why it is not simulated. */
+@@ -123,6 +127,14 @@ interface OptionPlan {
+   none?: string;
+ }
+ 
++function deckOptionsOf(plans: OptionPlan[]): DeckOption[] {
++  return plans.flatMap((plan): DeckOption[] => plan.group
++    ? plan.group.map((g) => ({ key: `${plan.key}|${g.key}`, change: g.mixture ? null : g.change, ...(g.mixture ? { mixture: g.mixture } : {}) }))
++    : plan.change !== undefined || plan.mixture
++      ? [{ key: plan.key, change: plan.change ?? null, ...(plan.mixture ? { mixture: plan.mixture } : {}) }]
++      : []);
++}
++
+ type SimOption = { key: string; intent: ActionRequest; summary: JsonValue };
+ 
+ const pct = (p: number) => `${Math.round(p * 100)}%`;
+@@ -511,12 +523,14 @@ export async function withBossSim(decision: Decision, env: DecisionEnv, setup: B
+   const requested = setup.samples ?? BUILD_SIM_SAMPLES;
+   const fail = (why: string, code = "simulation_error"): BossSimOutcome => {
+     const completion = attempt?.finish(sampled, requested, code);
++    const global = globalBuildFailure(env, required, "current_B3_failed");
+     return {
+       decision: { ...ask, state: { ...ask.state, facts: withSimFacts(facts, attempt?.degraded
+         ? `不完整（故障降级，n=${sampled}）：${why}；本题不给模拟数字，按现有其他证据继续决策`
+         : required ? `必需的boss评估未完成（${why}）；等待完整计算，不允许用空指标作选择`
+         : `boss 模拟没有结果（${why}）：act_boss_clock 仍是 boss 时钟的估计`, true) } },
+       record: { error: why, ms: Math.round(now() - started),
++        ...(global ? { global_build: global } : {}),
+         ...(required ? { completion: completion ? { ...completion } : { required: true, status: "pending", latencyTargetMs: setup.deadlineMs ?? BUILD_SIM_DEADLINE_MS } } : {}),
+         ...(diagnostics ? { diagnostics: { ...diagnostics, status: "failed", reason: code } } : {}) },
+     };
+@@ -528,12 +542,14 @@ export async function withBossSim(decision: Decision, env: DecisionEnv, setup: B
+     // next act's boss is not known before its act starts: no simulation. The clock stays (bossClockJson marks it stale).
+     if (actBossDefeated(state)) {
+       const phase = observedBossPhase(state);
++      const global = globalBuildFailure(env, required, "current_B3_skipped");
+       const note = phase
+         ? String(phase["note"])
+         : "本幕 boss 已经打完；下一幕的 boss 要到下一幕开始才知道，这道题不做 boss 模拟（act_boss_clock 也是刚打完的 boss）";
+       return {
+         decision: { ...ask, state: { ...ask.state, facts: withSimFacts(facts, note, true) } },
+-        record: { skipped: phase ? "first boss defeated; the second boss is not observed yet" : "act boss defeated; the next act's boss is not known yet", boss: bossKey(bossId), ms: Math.round(now() - started) },
++        record: { skipped: phase ? "first boss defeated; the second boss is not observed yet" : "act boss defeated; the next act's boss is not known yet", boss: bossKey(bossId), ms: Math.round(now() - started),
++          ...(global ? { global_build: global } : {}) },
+       };
+     }
+     const entry = routeEntry(env);
+@@ -553,11 +569,7 @@ export async function withBossSim(decision: Decision, env: DecisionEnv, setup: B
+       return continuation ? withDoubleBossStart(changed, knowledge, rebuilt, continuation, startOpts) : rebuilt;
+     };
+     const plans = planOptions(decision.label, spec.options!(), env, start, entry, rebuild);
+-    const deckOptions: DeckOption[] = [];
+-    for (const plan of plans) {
+-      if (plan.group) for (const g of plan.group) deckOptions.push({ key: `${plan.key}|${g.key}`, change: g.mixture ? null : g.change, ...(g.mixture ? { mixture: g.mixture } : {}) });
+-      else if (plan.change !== undefined || plan.mixture) deckOptions.push({ key: plan.key, change: plan.change ?? null, ...(plan.mixture ? { mixture: plan.mixture } : {}) });
+-    }
++    const deckOptions = deckOptionsOf(plans);
+     const budget = (setup.deadlineMs ?? BUILD_SIM_DEADLINE_MS) - (now() - started);
+     const readinessMode = sReadinessMode(str(asRecord(state.run?.raw)["character_id"]));
+     const rankingMode = sBuildRankMode(str(asRecord(state.run?.raw)["character_id"]));
+@@ -726,6 +738,29 @@ export async function withBossSim(decision: Decision, env: DecisionEnv, setup: B
+       record["continuous"] = toJsonValue({ base: b.continuous ?? null,
+         options: Object.fromEntries(result.options.map((sim) => [sim.key, sim.continuous ?? null])) });
+     }
++    const global = await globalBuildForB3({ env, required, degraded: attempt?.degraded === true,
++      label: ask.label, bossId, input: start.input, options: deckOptions, current: result,
++      keys: ["@current", ...plans.flatMap((plan) => plan.group ? plan.group.map((g) => `${plan.key}|${g.key}`) : [plan.key])],
++      setup, ...(wait ? { progress: wait.progress } : {}), makeComparison: (target) => {
++        const raw = structuredClone(state.raw);
++        const run = asRecord(raw["run"]);
++        run["boss_id"] = target.boss;
++        run["act_id"] = String(target.act - 1);
++        const futureState = parseGameState(raw);
++        const futureEnv = { ...env, state: futureState };
++        // A conditional snapshot of today's resources, never a forecast of future route entry or rewards.
++        const snapshotEntry = { project: (hp: number) => hp, source: "fixed current HP/resources; future entry unknown", planned: false };
++        const futureStart = syntheticBossStart(futureState, knowledge, target.boss, hpNow, startOpts);
++        const futureRebuild = (edit: (run: Record<string, unknown>) => void): RolloutInput => {
++          const edited = structuredClone(raw);
++          edit(asRecord(edited["run"]));
++          return syntheticBossStart(parseGameState(edited), knowledge, target.boss, hpNow, startOpts).input;
++        };
++        return { input: futureStart.input,
++          options: deckOptionsOf(planOptions(ask.label, spec.options!(), futureEnv, futureStart, snapshotEntry, futureRebuild)) };
++      } });
++    if (global) record["global_build"] = toJsonValue({ ...asRecord(global), b3_plus_shadow_wall_ms: Math.round(now() - started),
++      timing_basis: "boss_sim.ms is original current B3 only; global wall_ms is supplementary; combined await reported separately" });
+     return {
+       decision: {
+         ...ask,
+diff --git a/agent/src/sim/global-build-b3.ts b/agent/src/sim/global-build-b3.ts
+new file mode 100644
+index 000000000..19acf285b
+--- /dev/null
++++ b/agent/src/sim/global-build-b3.ts
+@@ -0,0 +1,77 @@
++/** Silent's supplementary G2 shadow path never changes the current B3 question or its completion gate. */
++import { globalBuildPolicy } from "../core/global-build-config.js";
++import { asRecord, str, toJsonValue, type JsonValue } from "../core/util/json.js";
++import type { DecisionEnv } from "../memory/types.js";
++import type { MonsterDb } from "../knowledge/monster-db.js";
++import type { MoveModelData, RolloutInput } from "../reflex/rollout.js";
++import { mapActOf } from "../hand/screens/route-plan.js";
++import { BUILD_SIM_CALIBRATION_SAMPLES, BUILD_SIM_SAMPLES, BUILD_SIM_SEED, compareOptions, type CompareResult, type DeckOption } from "./build-sim.js";
++import type { DeckSimRunner } from "./build-sim-pool.js";
++import { bossTrustReason } from "./boss-trust.js";
++import { bossKey } from "./boss-start.js";
++import { calibratedWinProb } from "./boss-sim.js";
++import { BOSS_LINES_TIE_SE } from "./boss-lines.js";
++import { simAdaptivePolicy } from "../core/config.js";
++import { observeGlobalBuild, type GlobalBuildMemory } from "./global-build-observer.js";
++import type { GlobalBossPool } from "./global-build-pool.js";
++import type { GlobalBossTarget } from "./global-build.js";
++
++export function globalBuildFailure(env: DecisionEnv, required: boolean, reason: string): JsonValue | null {
++  if (!required || globalBuildPolicy(str(asRecord(env.state.run?.raw)["character_id"])).mode === "off") return null;
++  return { schema: "global-build-v1", mode: "shadow", delivered: false, status: "unknown", primary: "paired_win_probability",
++    s_sort: false, reason, final_sequence: { status: "unknown", reason: "G1a_natural_consumer_pending" } };
++}
++
++export async function globalBuildForB3(args: {
++  env: DecisionEnv; required: boolean; degraded: boolean; label: string; bossId: string;
++  input: RolloutInput; options: DeckOption[]; keys: string[]; current: CompareResult;
++  setup: { runner: DeckSimRunner; samples?: number; seed?: number; now?: () => number;
++    db?: MonsterDb; mm?: MoveModelData; globalPool?: GlobalBossPool };
++  progress?: import("./computation-wait.js").SimProgress;
++  makeComparison: (target: GlobalBossTarget) => { input: RolloutInput; options: DeckOption[] };
++}): Promise<JsonValue | null> {
++  const { env, setup } = args;
++  const policy = globalBuildPolicy(str(asRecord(env.state.run?.raw)["character_id"]));
++  if (!args.required || policy.mode === "off") return null;
++  const adaptiveMode = simAdaptivePolicy("silent").mode;
++  const ascension = env.state.run?.ascension ?? 0;
++  try {
++    const observed = await observeGlobalBuild({ runner: setup.runner, memory: env.screenMemory as GlobalBuildMemory,
++      runId: str(env.state.raw["run_id"]), floor: env.state.run?.floor ?? null, label: args.label, ascension,
++      currentAct: mapActOf(env.state), currentBoss: bossKey(args.bossId), input: args.input,
++      options: args.options, keys: args.keys, current: args.current,
++      sampling: { requested: setup.samples ?? BUILD_SIM_SAMPLES, seed: setup.seed ?? BUILD_SIM_SEED, adaptiveMode },
++      visible: new Map([[mapActOf(env.state), bossKey(args.bossId)]]),
++      trustReason: (boss, act) => bossTrustReason(boss, "b3", ascension, act === mapActOf(env.state) ? env.state.run?.floor : undefined),
++      ...(setup.globalPool ? { pool: setup.globalPool } : {}), ...(setup.now ? { now: setup.now } : {}),
++      ...(args.degraded ? { unavailableReason: "current_C1_degraded_global_not_requested" }
++        : (setup.db || setup.mm) && !setup.globalPool ? { unavailableReason: "custom_inputs_need_matching_observed_silent_pool" } : {}),
++      evaluate: async (target, runner) => {
++        const next = args.makeComparison(target);
++        const result = await compareOptions(runner, next.input, next.options, {
++          samples: setup.samples ?? BUILD_SIM_SAMPLES, seed: setup.seed ?? BUILD_SIM_SEED,
++          quantitative: true, diagnostics: true, requireComplete: true,
++          ...(setup.now ? { now: setup.now } : {}), ...(args.progress ? { onProgress: args.progress } : {}),
++          // Only the new future-Boss lane is win-only; current B3's existing C2 policy is untouched.
++          ...(adaptiveMode !== "off" ? { adaptive: { mode: adaptiveMode, allowS: false } } : {}),
++          // This table supplies paired S diagnostics only. G2 never consumes its ordering.
++          buildRank: { sSort: "shadow", lowTrust: bossTrustReason(target.boss, "b3", ascension),
++            calibratedFloor: Math.round(calibratedWinProb(0, BUILD_SIM_CALIBRATION_SAMPLES, "pre", ascension) * 100) / 100,
++            tieSe: BOSS_LINES_TIE_SE },
++        });
++        if ([result.base, ...result.options].some((value) => {
++          const dpr = asRecord(asRecord(value.quantitative)["effective_damage_per_turn"]);
++          return typeof dpr["n"] !== "number" || dpr["n"] <= 0 || typeof dpr["mean"] !== "number" || !Number.isFinite(dpr["mean"]);
++        })) throw new Error("global_required_paired_DPR_missing");
++        return result;
++      },
++    });
++    return toJsonValue({ ...observed, requested_mode: policy.requested, admission: policy.admission,
++      future_entry_basis: "fixed_current_HP_deck_resources; future_route_rewards_and_actual_entry_unknown" });
++  } catch (error) {
++    // A supplementary observer failure cannot suppress a completed original B3 result.
++    return { schema: "global-build-v1", mode: "shadow", delivered: false, status: "unknown", primary: "paired_win_probability",
++      s_sort: false, reason: `global_observer_failed:${String(error instanceof Error ? error.message : error).slice(0, 300)}`,
++      final_sequence: { status: "unknown", reason: "G1a_natural_consumer_pending" } };
++  }
++}
+diff --git a/agent/src/sim/global-build-observer.ts b/agent/src/sim/global-build-observer.ts
+new file mode 100644
+index 000000000..7aa98e6e9
+--- /dev/null
++++ b/agent/src/sim/global-build-observer.ts
+@@ -0,0 +1,89 @@
++/** G2 owns no workers: its separate memo namespace delegates to the existing B3 runner. */
++import type { RolloutInput } from "../reflex/rollout.js";
++import type { CompareResult, DeckOption } from "./build-sim.js";
++import type { DeckSimRunner } from "./build-sim-pool.js";
++import { memoKey } from "./compute-memo.js";
++import { evaluateGlobalBuild, globalBossTargets, type GlobalBossTarget, type GlobalBuildResult } from "./global-build.js";
++import { loadGlobalBossPool, type GlobalBossPool } from "./global-build-pool.js";
++
++export interface GlobalBuildHistory {
++  runId: string;
++  points: { floor: number | null; label: string; input_key: string | null;
++    readiness: { act: number; boss: string; base: number | null; unknown: string | null }[];
++    summaries: GlobalBuildResult["summaries"] }[];
++}
++export interface GlobalBuildMemory {
++  globalBuildHistory?: GlobalBuildHistory;
++}
++const runners = new WeakMap<DeckSimRunner, DeckSimRunner>();
++const completed = new WeakMap<DeckSimRunner, { key: string; result: GlobalBuildResult }>();
++let observation = 0;
++
++export function globalBuildRunner(runner: DeckSimRunner): DeckSimRunner {
++  let proxy = runners.get(runner);
++  if (!proxy) {
++    // Preserve the current-Boss compareOptions cache without starting another pool or owning close().
++    proxy = { run: (request) => runner.run(request) };
++    runners.set(runner, proxy);
++  }
++  return proxy;
++}
++
++export function rememberGlobalBuild(memory: GlobalBuildMemory, runId: string, floor: number | null,
++  label: string, key: string | null, result: GlobalBuildResult): number {
++  if (memory.globalBuildHistory?.runId !== runId) memory.globalBuildHistory = { runId, points: [] };
++  const points = memory.globalBuildHistory.points, last = points.at(-1);
++  if (key && last?.input_key === key && last.floor === floor && last.label === label) return points.length - 1;
++  points.push(structuredClone({ floor, label, input_key: key, readiness: result.targets.map((target) => {
++    const base = target.rows.find((row) => row.key === "@current");
++    return { act: target.target.act, boss: target.target.boss, base: base?.base ?? null,
++      unknown: base?.unknown ?? target.target.unknown ?? (base ? null : "baseline_not_recorded") };
++  }), summaries: result.summaries }));
++  return points.length - 1;
++}
++
++/** A read-only accessor for later admitted plan consumers; shadow callers never put it in a question. */
++export function globalReadinessHistory(memory: GlobalBuildMemory, runId: string): GlobalBuildHistory["points"] {
++  return memory.globalBuildHistory?.runId === runId ? memory.globalBuildHistory.points : [];
++}
++
++export async function observeGlobalBuild(args: {
++  runner: DeckSimRunner; memory: GlobalBuildMemory; runId: string; floor: number | null; label: string;
++  ascension: number; currentAct: number; currentBoss: string; input: RolloutInput; options: DeckOption[];
++  sampling: { requested: number; seed: number; adaptiveMode: string };
++  keys: string[]; current: CompareResult; visible: ReadonlyMap<number, string>;
++  trustReason: (boss: string, act: number) => string | null; pool?: GlobalBossPool;
++  unavailableReason?: string; now?: () => number;
++  evaluate: (target: GlobalBossTarget, runner: DeckSimRunner) => Promise<CompareResult>;
++}): Promise<GlobalBuildResult & { observation_id: string; input_key: string | null; memo_hit: boolean; history_index: number; original_wall_ms: number }> {
++  if (!args.runId) throw new Error("global_run_identity_missing");
++  const now = args.now ?? (() => performance.now()), started = now();
++  let pool = args.pool, unavailable = args.unavailableReason;
++  if (!pool && !unavailable) {
++    try { pool = loadGlobalBossPool(args.ascension); }
++    catch (error) { unavailable = `observed_pool_unavailable:${String(error instanceof Error ? error.message : error).slice(0, 200)}`; }
++  }
++  if (pool && (pool.character !== "silent" || pool.ascension !== args.ascension)) {
++    pool = undefined;
++    unavailable = "observed_pool_character_or_ascension_mismatch";
++  }
++  pool ??= { character: "silent", ascension: args.ascension, stages: [], unknown: [{ boss: "unknown", reason: unavailable ?? "missing_pool" }],
++    source: { path: "unavailable", sha256: "unknown", generated: null }, unit: "observed_fight_records_including_retries" };
++  const trustReason = (boss: string, act: number) => unavailable ?? args.trustReason(boss, act);
++  const targets = globalBossTargets(pool, args.currentAct, args.visible, trustReason);
++  const key = memoKey("global-build-shadow-v1", { run: args.runId, floor: args.floor, label: args.label,
++    input: args.input, options: args.options, sampling: args.sampling,
++    current: { base: args.current.base, options: args.current.options, samples: args.current.samples,
++      requested: args.current.requested, timedOut: args.current.timedOut, adaptive: args.current.adaptive,
++      buildRanking: args.current.buildRanking }, pool, targets, keys: args.keys });
++  const cached = key ? completed.get(args.runner) : undefined;
++  const hit = !!cached && cached.key === key;
++  const result = hit ? structuredClone(cached.result) : await evaluateGlobalBuild({ pool, currentAct: args.currentAct,
++    visible: args.visible, currentBoss: args.currentBoss, current: args.current, keys: args.keys, trustReason, now,
++    evaluate: (target) => args.evaluate(target, globalBuildRunner(args.runner)) });
++  if (key && !hit && !unavailable && !result.targets.some((target) => target.rows.some((row) => row.unknown?.startsWith("global_computation_failed:"))))
++    completed.set(args.runner, { key, result: structuredClone(result) });
++  const index = rememberGlobalBuild(args.memory, args.runId, args.floor, args.label, key, result);
++  return { ...result, observation_id: `${process.pid}:g2:${++observation}`, input_key: key, memo_hit: hit, history_index: index,
++    original_wall_ms: result.wall_ms, wall_ms: Math.max(0, Math.round(now() - started)) };
++}
+diff --git a/agent/src/sim/global-build-pool.ts b/agent/src/sim/global-build-pool.ts
+new file mode 100644
+index 000000000..6bd6f8e3f
+--- /dev/null
++++ b/agent/src/sim/global-build-pool.ts
+@@ -0,0 +1,72 @@
++/** Character-scoped observed encounter frequencies; never a claim about the game's spawn distribution. */
++import { createHash } from "node:crypto";
++import { readFileSync } from "node:fs";
++import { asRecord } from "../core/util/json.js";
++import { KNOWLEDGE_DIR, knowledgeFile } from "../knowledge/files.js";
++
++export interface GlobalBossCandidate {
++  boss: string;
++  count: number;
++  frequency: number;
++  evidence: string[];
++}
++export interface GlobalBossPool {
++  character: "silent";
++  ascension: number;
++  stages: { act: number; candidates: GlobalBossCandidate[] }[];
++  unknown: { boss: string; reason: string }[];
++  source: { path: string; sha256: string; generated: unknown };
++  unit: "observed_fight_records_including_retries";
++}
++
++/** Acts come only from this character's linked encounter records, including compound encounters. */
++export function observedGlobalBossPool(value: unknown, ascension: number, source: GlobalBossPool["source"]): GlobalBossPool {
++  const raw = asRecord(value), meta = asRecord(raw["meta"]);
++  const result: GlobalBossPool = { character: "silent", ascension, stages: [], unknown: [], source,
++    unit: "observed_fight_records_including_retries" };
++  if (meta["character"] !== "silent") throw new Error("global Boss pool requires Silent's own records");
++  const stages = new Map<number, GlobalBossCandidate[]>();
++  for (const [boss, byAsc] of Object.entries(asRecord(raw["bosses"]))) {
++    const record = asRecord(asRecord(byAsc)[String(ascension)]);
++    const count = record["fights"];
++    if (!Number.isSafeInteger(count) || Number(count) <= 0) continue;
++    const linked = Object.entries(asRecord(record["encounters"]));
++    const acts = new Set<number>();
++    let valid = linked.length > 0, total = 0;
++    for (const [encounter, n] of linked) {
++      const entry = asRecord(asRecord(raw["encounters"])[encounter]);
++      const keys = Object.entries(asRecord(entry["acts"])).filter(([, seen]) => Number(seen) > 0).map(([act]) => Number(act));
++      if (keys.length !== 1 || !Number.isSafeInteger(keys[0]) || keys[0]! < 1
++          || !Number.isSafeInteger(n) || Number(n) <= 0 || !(Number(asRecord(entry["rooms"])["boss"]) > 0)) valid = false;
++      else acts.add(keys[0]!);
++      total += Number(n);
++    }
++    if (!valid || acts.size !== 1 || total !== count) {
++      result.unknown.push({ boss, reason: "own_encounter_act_or_count_not_fully_observed" });
++      continue;
++    }
++    const act = [...acts][0]!;
++    const candidates = stages.get(act) ?? [];
++    candidates.push({ boss, count: Number(count), frequency: 0,
++      evidence: [`bosses.${boss}.${ascension}`, ...linked.map(([key]) => `encounters.${key}.acts`)] });
++    stages.set(act, candidates);
++  }
++  result.stages = [...stages].sort(([a], [b]) => a - b).map(([act, candidates]) => {
++    const n = candidates.reduce((sum, candidate) => sum + candidate.count, 0);
++    return { act, candidates: candidates.sort((a, b) => a.boss.localeCompare(b.boss))
++      .map((candidate) => ({ ...candidate, frequency: candidate.count / n })) };
++  });
++  return result;
++}
++
++let cached: { path: string; ascension: number; pool: GlobalBossPool } | undefined;
++export function loadGlobalBossPool(ascension: number): GlobalBossPool {
++  const path = knowledgeFile(KNOWLEDGE_DIR, "monster-records.json", "silent");
++  if (cached?.path === path && cached.ascension === ascension) return cached.pool;
++  const bytes = readFileSync(path);
++  const raw = JSON.parse(bytes.toString()) as unknown;
++  const pool = observedGlobalBossPool(raw, ascension, { path,
++    sha256: createHash("sha256").update(bytes).digest("hex"), generated: asRecord(asRecord(raw)["meta"])["generated_from"] ?? null });
++  cached = { path, ascension, pool };
++  return pool;
++}
+diff --git a/agent/src/sim/global-build.ts b/agent/src/sim/global-build.ts
+new file mode 100644
+index 000000000..d15749f91
+--- /dev/null
++++ b/agent/src/sim/global-build.ts
+@@ -0,0 +1,175 @@
++/** G2 shadow aggregation: paired model predictions, explicit coverage and no S sort key. */
++import { asArray, asRecord, type JsonValue } from "../core/util/json.js";
++import type { CompareResult, OptionSim } from "./build-sim.js";
++import { completeAdaptiveBuild } from "./build-sim.js";
++import type { GlobalBossCandidate, GlobalBossPool } from "./global-build-pool.js";
++
++export interface GlobalBossTarget extends GlobalBossCandidate {
++  act: number;
++  source: "visible_actual_boss" | "observed_silent_pool";
++  unknown: string | null;
++}
++export interface GlobalOptionPrediction {
++  key: string;
++  base: number | null;
++  option: number | null;
++  delta_win: { mean: number; se: number } | null;
++  delta_s: { mean: number; se: number } | null;
++  samples: number | null;
++  unknown: string | null;
++}
++export interface GlobalBossPrediction {
++  target: GlobalBossTarget;
++  status: "computed" | "reused_current" | "unknown";
++  rows: GlobalOptionPrediction[];
++  wall_ms: number;
++  reported_sim_ms: number | null;
++  completion: JsonValue | null;
++  adaptive: JsonValue | null;
++  production_calibration: "unknown";
++}
++export interface GlobalBuildSummary {
++  key: string;
++  known_acts: number[];
++  unknown_acts: number[];
++  sum_delta_p_over_p: number | null;
++  conditional_snapshot_product: { base: number; option: number; delta: number } | null;
++  known_only: { sum_delta_p_over_p: number | null; snapshot_product: { base: number; option: number; delta: number } | null };
++  scope: "fixed_current_snapshot_not_run_win_probability";
++  reasons: string[];
++}
++export interface GlobalBuildResult {
++  schema: "global-build-v1";
++  mode: "shadow";
++  delivered: false;
++  status: "complete" | "partial" | "unknown";
++  primary: "paired_win_probability";
++  s_sort: false;
++  targets: GlobalBossPrediction[];
++  summaries: GlobalBuildSummary[];
++  final_sequence: { status: "unknown"; reason: "G1a_natural_consumer_pending" };
++  pool: GlobalBossPool;
++  wall_ms: number;
++  limits: string;
++}
++
++/** Actual visibility takes precedence. No Boss identity is inferred from its frequency. */
++export function globalBossTargets(pool: GlobalBossPool, currentAct: number, visible: ReadonlyMap<number, string>,
++  trustReason: (boss: string, act: number) => string | null): GlobalBossTarget[] {
++  const targets: GlobalBossTarget[] = [];
++  for (let act = currentAct; act <= 3; act++) {
++    const actual = visible.get(act);
++    const known = pool.stages.find((stage) => stage.act === act)?.candidates ?? [];
++    const candidates: GlobalBossCandidate[] = actual ? [{ boss: actual, count: 0, frequency: 1, evidence: ["actual_visible_run_state"] }] : [...known];
++    if (!candidates.length) candidates.push({ boss: "unknown", count: 0, frequency: 1, evidence: [] });
++    for (const candidate of candidates) targets.push({ ...candidate, act,
++      source: actual ? "visible_actual_boss" : "observed_silent_pool",
++      unknown: act === 3 ? "Act3_quality_gate_and_production_trust_unknown" : candidate.boss === "unknown"
++        ? "no_observed_silent_boss_pool" : !actual && pool.unknown.length ? "observed_pool_has_unassigned_boss_records"
++          : trustReason(candidate.boss, act) });
++  }
++  return targets;
++}
++
++function unknownRows(keys: readonly string[], reason: string): GlobalOptionPrediction[] {
++  return keys.map((key) => ({ key, base: null, option: null, delta_win: null, delta_s: null, samples: null, unknown: reason }));
++}
++
++function predictionRows(result: CompareResult, keys: readonly string[]): GlobalOptionPrediction[] {
++  const ranking = asRecord(result.buildRanking);
++  return keys.map((key) => {
++    const option: OptionSim | undefined = key === "@current" ? result.base : result.options.find((row) => row.key === key);
++    if (!option) return unknownRows([key], "offered_candidate_not_modeled")[0]!;
++    const n = Math.min(option.samples, option.pairedReference?.samples ?? result.base.samples);
++    // B3's paired reference belongs to this option's prefix, not the baseline's later samples.
++    const base = option.pairedReference?.rawWin ?? result.base.win;
++    const delta = option.diff ?? (option.win === result.base.win ? { raw: 0, se: 0 } : null);
++    // B3 rounds the paired difference to four decimals. Adding it to an exact prefix reference
++    // can move a legitimate 0/1 outside [0,1]; read this option's own recorded prefix mean instead.
++    const p = delta ? key === "@current" ? base : option.win : NaN;
++    if (n < 2 || !Number.isFinite(base) || !Number.isFinite(p) || !Number.isFinite(delta?.se) || base < 0 || base > 1 || p < -1e-9 || p > 1 + 1e-9)
++      return unknownRows([key], "paired_probability_or_reference_missing")[0]!;
++    const row = asArray(ranking["rows"]).map(asRecord).find((value) => value["key"] === key);
++    const margin = asRecord(row?.["delta_s"]);
++    const deltaS = row?.["s_eligible"] === true && typeof margin["mean"] === "number" && Number.isFinite(margin["mean"])
++      && typeof margin["se"] === "number" && Number.isFinite(margin["se"])
++      ? { mean: margin["mean"], se: margin["se"] } : null;
++    return { key, base, option: Math.max(0, Math.min(1, p)), delta_win: { mean: delta!.raw, se: delta!.se },
++      delta_s: deltaS, samples: n, unknown: null };
++  });
++}
++
++/** Unknown stages never become zero, and partial products are not labelled a whole-run prediction. */
++export function summarizeGlobalBuild(targets: readonly GlobalBossPrediction[], keys: readonly string[], acts: readonly number[]): GlobalBuildSummary[] {
++  return keys.map((key) => {
++    const knownActs: number[] = [], unknownActs: number[] = [], reasons: string[] = [];
++    let sum = 0, ratioKnown = true, pBase = 1, pOption = 1;
++    for (const act of acts) {
++      const stage = targets.filter((target) => target.target.act === act);
++      const rows = stage.map((target) => ({ target, row: target.rows.find((row) => row.key === key) }));
++      if (!rows.length || rows.some(({ row }) => !row || row.unknown || row.base === null || row.option === null)) {
++        unknownActs.push(act);
++        reasons.push(...rows.map(({ target, row }) => row?.unknown ?? target.target.unknown ?? "missing_candidate_or_stage"));
++        if (!rows.length) reasons.push("missing_stage");
++        continue;
++      }
++      const weight = rows.reduce((n, { target }) => n + target.target.frequency, 0);
++      if (!Number.isFinite(weight) || Math.abs(weight - 1) > 1e-9) {
++        unknownActs.push(act); reasons.push("incomplete_observed_pool_weight"); continue;
++      }
++      const base = rows.reduce((p, { target, row }) => p + target.target.frequency * row!.base!, 0);
++      const option = rows.reduce((p, { target, row }) => p + target.target.frequency * row!.option!, 0);
++      const delta = rows.reduce((p, { target, row }) => p + target.target.frequency * row!.delta_win!.mean, 0);
++      knownActs.push(act); pBase *= base; pOption *= option;
++      if (base > 0) sum += delta / base;
++      else { ratioKnown = false; reasons.push("zero_baseline_ratio_undefined"); }
++    }
++    const product = knownActs.length ? { base: pBase, option: pOption, delta: pOption - pBase } : null;
++    const knownSum = knownActs.length && ratioKnown ? sum : null;
++    return { key, known_acts: knownActs, unknown_acts: unknownActs,
++      sum_delta_p_over_p: unknownActs.length ? null : knownSum,
++      conditional_snapshot_product: unknownActs.length ? null : product,
++      known_only: { sum_delta_p_over_p: knownSum, snapshot_product: product },
++      scope: "fixed_current_snapshot_not_run_win_probability", reasons: [...new Set(reasons)] };
++  });
++}
++
++export async function evaluateGlobalBuild(args: {
++  pool: GlobalBossPool; currentAct: number; visible: ReadonlyMap<number, string>; keys: readonly string[];
++  currentBoss: string; current: CompareResult; trustReason: (boss: string, act: number) => string | null;
++  evaluate: (target: GlobalBossTarget) => Promise<CompareResult>; now?: () => number;
++}): Promise<GlobalBuildResult> {
++  if (!Number.isSafeInteger(args.currentAct) || args.currentAct < 1 || args.currentAct > 3)
++    throw new Error("remaining_act_structure_not_observed");
++  const now = args.now ?? (() => performance.now()), started = now();
++  const targets: GlobalBossPrediction[] = [];
++  for (const target of globalBossTargets(args.pool, args.currentAct, args.visible, args.trustReason)) {
++    const began = now();
++    if (target.unknown) {
++      targets.push({ target, status: "unknown", rows: unknownRows(args.keys, target.unknown), wall_ms: 0,
++        reported_sim_ms: null, completion: null, adaptive: null, production_calibration: "unknown" });
++      continue;
++    }
++    try {
++      const reused = target.act === args.currentAct && target.boss === args.currentBoss;
++      const result = reused ? args.current : await args.evaluate(target);
++      if (result.timedOut || result.samples < 1 || result.samples !== result.requested && !completeAdaptiveBuild(result))
++        throw new Error("global_required_computation_incomplete");
++      targets.push({ target, status: reused ? "reused_current" : "computed", rows: predictionRows(result, args.keys),
++        wall_ms: Math.max(0, Math.round(now() - began)), reported_sim_ms: result.elapsedMs,
++        completion: result.completion ? result.completion as unknown as JsonValue : null,
++        adaptive: result.adaptive ?? null, production_calibration: "unknown" });
++    } catch (error) {
++      const reason = `global_computation_failed:${String(error instanceof Error ? error.message : error).slice(0, 300)}`;
++      targets.push({ target, status: "unknown", rows: unknownRows(args.keys, reason), wall_ms: Math.max(0, Math.round(now() - began)),
++        reported_sim_ms: null, completion: null, adaptive: null, production_calibration: "unknown" });
++    }
++  }
++  const summaries = summarizeGlobalBuild(targets, args.keys, Array.from({ length: 4 - args.currentAct }, (_, i) => args.currentAct + i));
++  return { schema: "global-build-v1", mode: "shadow", delivered: false,
++    status: summaries.some((row) => row.known_acts.length) ? summaries.every((row) => !row.unknown_acts.length) ? "complete" : "partial" : "unknown",
++    primary: "paired_win_probability", s_sort: false, targets, summaries,
++    final_sequence: { status: "unknown", reason: "G1a_natural_consumer_pending" }, pool: args.pool,
++    wall_ms: Math.max(0, Math.round(now() - started)),
++    limits: "只读shadow：逐Boss同题同种子配对；S只记录，不作排序键。选项概率和配对差沿用B3四位小数记录，基准用该选项自身配对前缀，不通过取整差反推概率。后续幕固定当前牌组/资源，不预测沿途升级、回血或奖励；各幕快照概率乘积不是实际整局通关率。池权重来自本角色本进阶已观察战斗记录（含重试），不是游戏生成概率。第三幕质量闸/当前生产可信度及最终连战未知；不把缺口填0，不放宽既有校准门槛。" };
++}
+diff --git a/agent/tests/global-build-b3.test.ts b/agent/tests/global-build-b3.test.ts
+new file mode 100644
+index 000000000..bbdef1298
+--- /dev/null
++++ b/agent/tests/global-build-b3.test.ts
+@@ -0,0 +1,73 @@
++import { afterEach, expect, it, vi } from "vitest";
++import { globalBuildFailure, globalBuildForB3 } from "../src/sim/global-build-b3.js";
++import { board as inputBoard } from "./boss-sim-fixture.js";
++import { board, env, setupOneshotTests } from "./oneshot-support.js";
++import type { CompareResult, OptionSim } from "../src/sim/build-sim.js";
++import type { DeckSimRunner } from "../src/sim/build-sim-pool.js";
++import type { FightSampleResult } from "../src/sim/boss-sim.js";
++import type { GlobalBossPool } from "../src/sim/global-build-pool.js";
++
++vi.mock("../src/sim/boss-trust.js", async (original) => ({ ...await original<object>(), bossTrustReason: () => null }));
++setupOneshotTests();
++afterEach(() => vi.unstubAllEnvs());
++
++function request(character = "SILENT") {
++  const raw = board("xljq-f5-reward", "reward");
++  Object.assign(raw.run as object, { character_id: character, ascension: 10, act_id: "0" });
++  const environment = env(raw), input = inputBoard({ bossHp: 12 });
++  const pool: GlobalBossPool = { character: "silent", ascension: 10, stages: [1, 2, 3].map((act) => ({ act,
++    candidates: [{ boss: `B${act}`, count: 1, frequency: 1, evidence: ["fixed"] }] })),
++    unknown: [], source: { path: "fixed", sha256: "fixed", generated: null }, unit: "observed_fight_records_including_retries" };
++  const base: OptionSim = { key: "current", samples: 2, win: .5, winCal: .5, diff: null, bossLeft: 0,
++    hpLossMean: 1, hpLossWon: 1, turns: 1, deathTurn: null, order: null, hp: 10 };
++  const current: CompareResult = { base, options: [{ ...base, key: "skip" }], samples: 2, requested: 2,
++    timedOut: false, elapsedMs: 1, workers: 0, orders: 1, order: null };
++  const runner: DeckSimRunner = { run: vi.fn(async (request) => {
++    const from = request.range?.from ?? 0, to = request.range?.to ?? request.samples;
++    const reference = { bossHp: 12, myHp: input.solver.player.hp, enemyIds: ["ALGEBRA"], unknown: [] };
++    const sample: FightSampleResult = { won: true, died: false, capped: false, timeUp: false, turns: 1,
++      hpLoss: 1, revived: 0, drunk: [], enemyHpLeft: 0, lossByTurn: [1], dmgByTurn: [12], incomingByTurn: [1],
++      enemyLossByTurn: [12], policyTurns: 1, policyNodes: 0, bossMargin: { reference, outgoingHp: 12, receivedHp: 1 } };
++    return { outcomes: request.decks.map(() => request.orders.map(() => Array.from({ length: request.samples }, (_, i) => i >= from && i < to ? structuredClone(sample) : undefined))),
++      complete: Array.from({ length: to - from }, (_, i) => from + i), timedOut: false, elapsedMs: 1, workers: 0 };
++  }) };
++  return { env: environment, required: true, degraded: false, label: "reward/card", bossId: "B1", input,
++    options: [{ key: "skip", change: null }], keys: ["@current", "skip"], current,
++    setup: { runner, samples: 2, seed: 7, now: () => 0, globalPool: pool },
++    makeComparison: vi.fn(() => ({ input, options: [{ key: "skip", change: null }] })) };
++}
++
++it("delegates new future evaluations to the existing B3 runner and stores shadow readiness", async () => {
++  vi.stubEnv("GLOBAL_BUILD_EVAL", "shadow");
++  vi.stubEnv("SIM_ADAPTIVE", "on");
++  const args = request();
++  const value = await globalBuildForB3(args) as Record<string, unknown>;
++  expect(value).toMatchObject({ schema: "global-build-v1", mode: "shadow", delivered: false, status: "partial", s_sort: false });
++  expect(args.makeComparison).toHaveBeenCalledTimes(1);
++  expect(args.setup.runner.run).toHaveBeenCalled();
++  expect((value.targets as { target: { act: number }; status: string }[]).find((row) => row.target.act === 2)!.status).toBe("computed");
++  expect((args.env.screenMemory as object)).toHaveProperty("globalBuildHistory.points.0");
++});
++
++it("keeps off, other roles and historical callers free of added work or memory", async () => {
++  for (const args of [request("IRONCLAD"), { ...request(), required: false }]) {
++    expect(await globalBuildForB3(args)).toBeNull();
++    expect(args.makeComparison).not.toHaveBeenCalled();
++    expect(args.env.screenMemory).not.toHaveProperty("globalBuildHistory");
++  }
++  vi.stubEnv("GLOBAL_BUILD_EVAL", "off");
++  const args = request();
++  expect(await globalBuildForB3(args)).toBeNull();
++  expect(globalBuildFailure(args.env, true, "fixed")).toBeNull();
++});
++
++it("retains a future worker failure as unknown without replacing the completed current B3", async () => {
++  vi.stubEnv("GLOBAL_BUILD_EVAL", "shadow");
++  const args = request(), before = structuredClone(args.current);
++  vi.mocked(args.setup.runner.run).mockRejectedValue(new Error("fixed supplemental worker failure"));
++  const value = await globalBuildForB3(args) as Record<string, unknown>;
++  expect(args.current).toEqual(before);
++  expect(value).toMatchObject({ mode: "shadow", delivered: false, status: "partial" });
++  expect(JSON.stringify(value)).toContain("fixed supplemental worker failure");
++  expect(globalBuildFailure(args.env, true, "current_C1_failure")).toMatchObject({ status: "unknown", reason: "current_C1_failure" });
++});
+diff --git a/agent/tests/global-build-health.test.ts b/agent/tests/global-build-health.test.ts
+new file mode 100644
+index 000000000..b47554480
+--- /dev/null
++++ b/agent/tests/global-build-health.test.ts
+@@ -0,0 +1,8 @@
++import { execFileSync } from "node:child_process";
++import { fileURLToPath } from "node:url";
++import { expect, it } from "vitest";
++
++it("checks G2 shadow coverage, retained unknowns and real observation timing on fixed inputs", () => {
++  const result = execFileSync("/usr/bin/python3", ["-B", fileURLToPath(new URL("./global_build_health_test.py", import.meta.url))], { encoding: "utf8" });
++  expect(result).toBe("");
++});
+diff --git a/agent/tests/global-build-integration.test.ts b/agent/tests/global-build-integration.test.ts
+new file mode 100644
+index 000000000..fe1fc73ef
+--- /dev/null
++++ b/agent/tests/global-build-integration.test.ts
+@@ -0,0 +1,102 @@
++import { afterEach, beforeEach, expect, it, vi } from "vitest";
++import { withBossSim } from "../src/sim/build-sim-facts.js";
++import { asArray, asRecord } from "../src/core/util/json.js";
++import { board, decide, env, setupOneshotTests } from "./oneshot-support.js";
++import { FIXTURE_DB, FIXTURE_MM } from "./boss-sim-build-fixture.js";
++import type { DeckSimRunner } from "../src/sim/build-sim-pool.js";
++import type { FightSampleResult } from "../src/sim/boss-sim.js";
++import type { GlobalBossPool } from "../src/sim/global-build-pool.js";
++
++vi.mock("../src/sim/boss-trust.js", async (original) => ({ ...await original<object>(), bossTrustReason: () => null }));
++vi.mock("node:crypto", async (original) => ({ ...await original<object>(), randomUUID: () => "00000000-0000-4000-8000-000000000000" }));
++setupOneshotTests();
++beforeEach(() => vi.spyOn(performance, "now").mockReturnValue(0));
++afterEach(() => { vi.unstubAllEnvs(); vi.restoreAllMocks(); });
++
++// Existing fixed stand-ins and symbolic outcomes verify plumbing, not game knowledge or trust.
++const pool: GlobalBossPool = { character: "silent", ascension: 8, unknown: [],
++  source: { path: "fixed", sha256: "fixed", generated: null }, unit: "observed_fight_records_including_retries",
++  stages: ["SOUL_FYSH", "KAISER_CRAB", "THE_KIN"].map((boss, i) => ({ act: i + 1,
++    candidates: [{ boss, count: 1, frequency: 1, evidence: ["fixed"] }] })) };
++function runner(failure?: "current" | "future"): DeckSimRunner {
++  return { run: vi.fn(async (req) => {
++    if (failure === "current" || failure === "future" && req.base.solver.enemies.length > 1)
++      throw new Error("fixed worker failure");
++    const hp = req.base.solver.enemies.reduce((n, enemy) => n + enemy.hp, 0);
++    const sample: FightSampleResult = { won: true, died: false, capped: false, timeUp: false, turns: 1,
++      hpLoss: 1, revived: 0, drunk: [], enemyHpLeft: 0, lossByTurn: [1], dmgByTurn: [hp],
++      incomingByTurn: [1], enemyLossByTurn: [hp], policyTurns: 1, policyNodes: 1,
++      bossMargin: { reference: { myHp: req.base.solver.player.hp, bossHp: hp, enemyIds: ["FIXED"], unknown: [] }, outgoingHp: hp, receivedHp: 1 } };
++    const from = req.range?.from ?? 0, to = req.range?.to ?? req.samples;
++    return { outcomes: req.decks.map(() => req.orders.map(() => Array.from({ length: req.samples }, (_, i) =>
++      i >= from && i < to ? structuredClone(sample) : undefined))),
++      complete: Array.from({ length: to - from }, (_, i) => from + i), timedOut: false, elapsedMs: 0, workers: 0 };
++  }) };
++}
++async function question(mode: string, character = "SILENT", name = "xljq-f5-reward", key = "reward", matchingPool = true, failure?: "current" | "future") {
++  vi.stubEnv("GLOBAL_BUILD_EVAL", mode);
++  const raw = board(name, key);
++  // Build the archived fixture's own question before varying the adapter's declared role.
++  // Other-role checks cover B3/G2 isolation, not a new game or a cross-role planner run.
++  const original = decide(env(raw));
++  Object.assign(raw.run as object, { character_id: character, ascension: 8, act_id: "0", boss_id: "SOUL_FYSH_BOSS" });
++  const environment = { ...env(raw), requiredBossEvaluation: character === "SILENT" };
++  const worker = runner(failure);
++  const outcome = await withBossSim(original, environment, { runner: worker, samples: 2,
++    db: FIXTURE_DB, mm: FIXTURE_MM, now: () => 0, ...(matchingPool ? { globalPool: pool } : {}) });
++  return { ...outcome, worker, environment };
++}
++
++it.each([
++  ["xljq-f5-reward", "reward"], ["7b0d-f8-rest", "rest"], ["7b0d-f8-rest", "upgrade_select"],
++  ["u6ru-f22-shop", "open"], ["qug1-f22-shop-remove", "remove_select"],
++])("keeps the actual %s/%s question and current C1/C2/P2 facts identical to off", async (name, key) => {
++  const off = await question("off", "SILENT", name, key), shadow = await question("shadow", "SILENT", name, key);
++  expect(off.record).not.toHaveProperty("error");
++  expect(shadow.record).not.toHaveProperty("error");
++  expect(JSON.stringify(shadow.decision)).toBe(JSON.stringify(off.decision));
++  const { global_build: global, ...record } = asRecord(shadow.record);
++  expect(record).toEqual(off.record);
++  expect(global).toMatchObject({ mode: "shadow", delivered: false, primary: "paired_win_probability", s_sort: false });
++  const targets = asArray(asRecord(global).targets).map(asRecord);
++  expect(targets.find((row) => asRecord(row.target).act === 2)?.status).toBe("computed");
++  expect(targets.find((row) => asRecord(row.target).act === 3)?.status).toBe("unknown");
++  const currentKeys = Object.keys(asRecord(asRecord(shadow.record).options));
++  for (const target of targets) expect(asArray(target.rows).map((row) => asRecord(row).key)).toEqual(expect.arrayContaining(["@current", ...currentKeys]));
++  expect(shadow.environment.screenMemory.globalBuildHistory?.points).toHaveLength(1);
++});
++
++it.each(["IRONCLAD", "REGENT", "DEFECT", "NECROBINDER"])("preserves %s questions, records and worker calls exactly", async (character) => {
++  const off = await question("off", character), shadow = await question("shadow", character);
++  expect(JSON.stringify(shadow.decision)).toBe(JSON.stringify(off.decision));
++  expect(shadow.record).toEqual(off.record);
++  expect(JSON.stringify(vi.mocked(shadow.worker.run).mock.calls)).toBe(JSON.stringify(vi.mocked(off.worker.run).mock.calls));
++  expect(shadow.environment.screenMemory).not.toHaveProperty("globalBuildHistory");
++});
++
++it("does not read a runtime pool for custom fixed inputs without matching pool evidence", async () => {
++  const off = await question("off"), shadow = await question("shadow", "SILENT", "xljq-f5-reward", "reward", false);
++  expect(JSON.stringify(shadow.decision)).toBe(JSON.stringify(off.decision));
++  expect(JSON.stringify(vi.mocked(shadow.worker.run).mock.calls)).toBe(JSON.stringify(vi.mocked(off.worker.run).mock.calls));
++  expect(JSON.stringify(asRecord(shadow.record).global_build)).toContain("custom_inputs_need_matching_observed_silent_pool");
++});
++
++it("preserves the original pending C1 failure without attempting supplemental computation", async () => {
++  const off = await question("off", "SILENT", "xljq-f5-reward", "reward", true, "current");
++  const shadow = await question("shadow", "SILENT", "xljq-f5-reward", "reward", true, "current");
++  expect(JSON.stringify(shadow.decision)).toBe(JSON.stringify(off.decision));
++  const { global_build: global, ...record } = asRecord(shadow.record);
++  expect(record).toEqual(off.record);
++  expect(record).toHaveProperty("completion.status", "pending");
++  expect(global).toMatchObject({ status: "unknown", reason: "current_B3_failed", delivered: false });
++  expect(vi.mocked(shadow.worker.run).mock.calls.length).toBe(vi.mocked(off.worker.run).mock.calls.length);
++});
++
++it("retains a new future-lane failure in the log while delivering the original complete question", async () => {
++  const off = await question("off"), shadow = await question("shadow", "SILENT", "xljq-f5-reward", "reward", true, "future");
++  expect(JSON.stringify(shadow.decision)).toBe(JSON.stringify(off.decision));
++  const { global_build: global, ...record } = asRecord(shadow.record);
++  expect(record).toEqual(off.record);
++  expect(JSON.stringify(global)).toContain("global_computation_failed:fixed worker failure");
++  expect(record).toHaveProperty("completion.status", asRecord(asRecord(off.record).completion).status);
++});
+diff --git a/agent/tests/global-build-observer.test.ts b/agent/tests/global-build-observer.test.ts
+new file mode 100644
+index 000000000..028c7107c
+--- /dev/null
++++ b/agent/tests/global-build-observer.test.ts
+@@ -0,0 +1,73 @@
++import { expect, it, vi } from "vitest";
++import { globalBuildPolicy } from "../src/core/global-build-config.js";
++import { globalReadinessHistory, observeGlobalBuild, type GlobalBuildMemory } from "../src/sim/global-build-observer.js";
++import type { GlobalBossPool } from "../src/sim/global-build-pool.js";
++import type { CompareResult, OptionSim } from "../src/sim/build-sim.js";
++import type { GlobalBossTarget } from "../src/sim/global-build.js";
++import type { DeckSimRunner } from "../src/sim/build-sim-pool.js";
++import { board } from "./boss-sim-fixture.js";
++
++// Algebraic prediction records; these do not assert game mechanics or calibration.
++const base: OptionSim = { key: "current", samples: 100, win: .5, winCal: .5, diff: null,
++  bossLeft: 0, hpLossMean: 1, hpLossWon: 1, turns: 1, deathTurn: null, order: null, hp: 10 };
++const result = (): CompareResult => ({ base: structuredClone(base), options: [{ ...structuredClone(base), key: "skip" }],
++  samples: 100, requested: 100, timedOut: false, elapsedMs: 50, workers: 0, orders: 1, order: null });
++const pool: GlobalBossPool = { character: "silent", ascension: 10, unknown: [],
++  source: { path: "fixed", sha256: "fixed", generated: null }, unit: "observed_fight_records_including_retries",
++  stages: [1, 2, 3].map((act) => ({ act, candidates: [{ boss: `B${act}`, count: 1, frequency: 1, evidence: ["fixed"] }] })) };
++function request() {
++  const runner: DeckSimRunner = { run: vi.fn(async () => { throw new Error("test supplies comparison records, no worker"); }) };
++  const memory: GlobalBuildMemory = {};
++  return { runner, memory, runId: "fixed-global-run", floor: 2, label: "reward/card", ascension: 10,
++    currentAct: 1, currentBoss: "B1", input: board(), options: [{ key: "skip", change: null }],
++    sampling: { requested: 100, seed: 7, adaptiveMode: "on" }, keys: ["@current", "skip"], current: result(),
++    visible: new Map([[1, "B1"]]), trustReason: () => null, pool,
++    evaluate: vi.fn(async (_target: GlobalBossTarget, _runner: DeckSimRunner) => result()), now: () => 0 };
++}
++
++it("starts Silent in shadow and cannot turn an on request into a premature release", () => {
++  expect(globalBuildPolicy("SILENT", {})).toMatchObject({ mode: "shadow", requested: "shadow" });
++  expect(globalBuildPolicy("SILENT", { GLOBAL_BUILD_EVAL: "on" })).toMatchObject({ mode: "shadow", requested: "on", admission: "pending_two_natural_shadow" });
++  expect(globalBuildPolicy("SILENT", { GLOBAL_BUILD_EVAL: "off" }).mode).toBe("off");
++  for (const character of ["IRONCLAD", "REGENT", "DEFECT", "NECROBINDER", undefined])
++    expect(globalBuildPolicy(character, { GLOBAL_BUILD_EVAL: "on" })).toEqual({ mode: "off", requested: "off", admission: "not_applicable" });
++});
++
++it("reuses identical complete results despite memo timing fields, while a new seed invalidates the memo", async () => {
++  const args = request();
++  const first = await observeGlobalBuild(args);
++  const second = await observeGlobalBuild({ ...args, current: { ...args.current, elapsedMs: 0,
++    completion: { required: true, uniqueDecks: 1, originalDecks: 1, memoHit: true, originalComputeMs: 50 } } });
++  expect(first.memo_hit).toBe(false);
++  expect(second.memo_hit).toBe(true);
++  expect(args.evaluate).toHaveBeenCalledTimes(1);
++  expect(args.runner.run).not.toHaveBeenCalled();
++  expect(globalReadinessHistory(args.memory, args.runId)).toHaveLength(1);
++  await observeGlobalBuild({ ...args, sampling: { ...args.sampling, seed: 8 } });
++  expect(args.evaluate).toHaveBeenCalledTimes(2);
++  expect(globalReadinessHistory(args.memory, args.runId)).toHaveLength(2);
++});
++
++it("keeps the compact readiness history within one run and retains unknown Act3 entries", async () => {
++  const args = request();
++  await observeGlobalBuild(args);
++  expect(globalReadinessHistory(args.memory, args.runId)[0]!.readiness).toMatchObject([
++    { act: 1, boss: "B1", base: .5, unknown: null }, { act: 2, boss: "B2", base: .5, unknown: null },
++    { act: 3, boss: "B3", base: null, unknown: "Act3_quality_gate_and_production_trust_unknown" },
++  ]);
++  expect(globalReadinessHistory(args.memory, "another-run")).toEqual([]);
++  await observeGlobalBuild({ ...args, runId: "another-run", floor: 1 });
++  expect(globalReadinessHistory(args.memory, args.runId)).toEqual([]);
++  expect(globalReadinessHistory(args.memory, "another-run")).toHaveLength(1);
++});
++
++it("does not cache service failures or borrow a pool from another ascension", async () => {
++  const args = request();
++  args.evaluate.mockRejectedValue(new Error("fixed worker failure"));
++  await observeGlobalBuild(args);
++  await observeGlobalBuild(args);
++  expect(args.evaluate).toHaveBeenCalledTimes(2);
++  const value = await observeGlobalBuild({ ...request(), pool: { ...pool, ascension: 9 } });
++  expect(value.summaries.every((summary) => summary.known_acts.length === 0)).toBe(true);
++  expect(value.targets[0]!.rows[0]!.unknown).toBe("observed_pool_character_or_ascension_mismatch");
++});
+diff --git a/agent/tests/global-build.test.ts b/agent/tests/global-build.test.ts
+new file mode 100644
+index 000000000..aa1f224b1
+--- /dev/null
++++ b/agent/tests/global-build.test.ts
+@@ -0,0 +1,129 @@
++import { describe, expect, it, vi } from "vitest";
++import { evaluateGlobalBuild, globalBossTargets, type GlobalBossTarget } from "../src/sim/global-build.js";
++import { observedGlobalBossPool } from "../src/sim/global-build-pool.js";
++import type { CompareResult, OptionSim } from "../src/sim/build-sim.js";
++
++// Symbolic arithmetic and protocol fixtures only; no Boss mechanism or real outcome assertions.
++function records() {
++  return { meta: { character: "silent" }, bosses: {
++    A: { "10": { fights: 4, encounters: { A: 4 } } },
++    B: { "10": { fights: 2, encounters: { "B_PART+SIDE": 2 } } },
++    C: { "10": { fights: 6, encounters: { C: 6 } } },
++    D: { "10": { fights: 3, encounters: { D: 3 } } },
++  }, encounters: {
++    A: { rooms: { boss: 4 }, acts: { "1": 4 } },
++    "B_PART+SIDE": { rooms: { boss: 2 }, acts: { "2": 2 } },
++    C: { rooms: { boss: 6 }, acts: { "2": 6 } },
++    D: { rooms: { boss: 3 }, acts: { "3": 3 } },
++  } };
++}
++const source = { path: "fixed-silent-records", sha256: "fixed-input", generated: null };
++const pool = () => observedGlobalBossPool(records(), 10, source);
++function option(key: string, p: number, delta: number | null): OptionSim {
++  return { key, samples: 100, win: p, winCal: p, diff: delta === null ? null : {
++    raw: delta, se: .02, cal: delta, calSe: .02, hpLoss: 0, hpLossSe: 0, bossLeft: 0, bossLeftSe: 0,
++  }, bossLeft: 0, hpLossMean: 1, hpLossWon: 1, turns: 1, deathTurn: null, order: null, hp: 10 };
++}
++function result(base = .5, delta = .1): CompareResult {
++  return { base: option("current", base, null), options: [option("take", base + delta, delta), option("skip", base, null)],
++    buildRanking: { rows: [{ key: "take", delta_s: { mean: .2, se: .03 }, s_eligible: true }] },
++    samples: 100, requested: 100, timedOut: false, elapsedMs: 12, workers: 0, orders: 1, order: null };
++}
++const args = () => ({ pool: pool(), currentAct: 1, visible: new Map([[1, "A"]]), keys: ["@current", "take", "skip"],
++  currentBoss: "A", current: result(), trustReason: () => null, evaluate: async () => result(), now: () => 0 });
++
++describe("G2 observed Silent target identities", () => {
++  it("uses only the exact ascension's own linked encounter counts, including compound Bosses", () => {
++    const value = pool();
++    expect(value.stages[1]).toMatchObject({ act: 2, candidates: [{ boss: "B", count: 2, frequency: .25 }, { boss: "C", count: 6, frequency: .75 }] });
++    expect(value.stages[1]!.candidates[0]!.evidence).toContain("encounters.B_PART+SIDE.acts");
++    expect(value.unit).toBe("observed_fight_records_including_retries");
++    expect(observedGlobalBossPool(records(), 9, source).stages).toEqual([]);
++    expect(() => observedGlobalBossPool({ ...records(), meta: { character: "ironclad" } }, 10, source)).toThrow("Silent");
++  });
++  it("marks unassigned or partially linked observations unknown rather than normalizing away missing records", () => {
++    const input = records();
++    delete (input.encounters as Record<string, unknown>)["B_PART+SIDE"];
++    const value = observedGlobalBossPool(input, 10, source);
++    expect(value.unknown).toEqual([{ boss: "B", reason: "own_encounter_act_or_count_not_fully_observed" }]);
++    const targets = globalBossTargets(value, 1, new Map([[1, "A"]]), () => null);
++    expect(targets.find((row) => row.boss === "A")!.unknown).toBeNull();
++    expect(targets.find((row) => row.boss === "C")!.unknown).toBe("observed_pool_has_unassigned_boss_records");
++  });
++  it("prefers actual visible identity to its frequency pool and does not mutate an empty pool", () => {
++    const targets = globalBossTargets(pool(), 2, new Map([[2, "VISIBLE"]]), () => null);
++    expect(targets.filter((row) => row.act === 2)).toMatchObject([{ boss: "VISIBLE", frequency: 1, source: "visible_actual_boss" }]);
++    const value = pool(); value.stages = [];
++    globalBossTargets(value, 1, new Map(), () => null);
++    expect(value.stages).toEqual([]);
++  });
++});
++
++describe("G2 shadow paired probabilities and coverage", () => {
++  it("reuses current B3, serially evaluates future candidates, and leaves Act3/final unknown", async () => {
++    const evaluate = vi.fn(async (_target: GlobalBossTarget) => result());
++    const value = await evaluateGlobalBuild({ ...args(), evaluate });
++    expect(evaluate).toHaveBeenCalledTimes(2);
++    expect(evaluate.mock.calls.map((call) => call[0]?.boss)).toEqual(["B", "C"]);
++    expect(value.targets[0]).toMatchObject({ status: "reused_current", reported_sim_ms: 12, production_calibration: "unknown" });
++    expect(value.targets.find((row) => row.target.act === 3)).toMatchObject({ status: "unknown", rows: [
++      { base: null, option: null, delta_win: null, delta_s: null },
++      { base: null, option: null, delta_win: null, delta_s: null },
++      { base: null, option: null, delta_win: null, delta_s: null },
++    ] });
++    expect(value.final_sequence).toEqual({ status: "unknown", reason: "G1a_natural_consumer_pending" });
++    expect(value).toMatchObject({ mode: "shadow", delivered: false, s_sort: false, status: "partial" });
++    const take = value.summaries.find((row) => row.key === "take")!;
++    expect(take).toMatchObject({ known_acts: [1, 2], unknown_acts: [3], sum_delta_p_over_p: null, conditional_snapshot_product: null });
++    expect(take.known_only.sum_delta_p_over_p).toBeCloseTo(.4);
++    expect(take.known_only.snapshot_product!.base).toBeCloseTo(.25);
++    expect(take.known_only.snapshot_product!.option).toBeCloseTo(.36);
++    expect(value.targets[0]!.rows.find((row) => row.key === "take")!.delta_s).toEqual({ mean: .2, se: .03 });
++  });
++  it("keeps low-trust Bosses and unsupported offered candidates unknown with no extra computation", async () => {
++    const evaluate = vi.fn(async (_target: GlobalBossTarget) => result());
++    const value = await evaluateGlobalBuild({ ...args(), evaluate, keys: ["unsupported"], trustReason: (boss) => boss === "B" ? "quality_gate" : null });
++    expect(evaluate).toHaveBeenCalledTimes(1);
++    expect(value.targets.find((row) => row.target.boss === "B")!.rows[0]).toMatchObject({ unknown: "quality_gate", base: null, delta_s: null });
++    expect(value.summaries[0]).toMatchObject({ known_acts: [], unknown_acts: [1, 2, 3], sum_delta_p_over_p: null });
++  });
++  it("does not renormalize a partial future pool after failure and preserves the service failure", async () => {
++    const value = await evaluateGlobalBuild({ ...args(), evaluate: async (target) => {
++      if (target.boss === "B") throw new Error("fixed worker failure");
++      return result();
++    } });
++    expect(value.targets.find((row) => row.target.boss === "B")!.rows[0]!.unknown).toContain("fixed worker failure");
++    expect(value.summaries.find((row) => row.key === "take")!).toMatchObject({ known_acts: [1], unknown_acts: [2, 3] });
++  });
++  it("rejects incomplete fixed samples and a forged C2 status through the existing completion contract", async () => {
++    const value = await evaluateGlobalBuild({ ...args(), evaluate: async () => ({ ...result(), samples: 1, adaptive: { status: "complete_adaptive" } }) });
++    expect(value.targets.filter((row) => row.target.act === 2).every((row) => row.status === "unknown")).toBe(true);
++    expect(value.targets[1]!.rows[0]!.unknown).toContain("incomplete");
++  });
++  it("uses each option's paired reference instead of the baseline's later or unpaired samples", async () => {
++    const current = result(.8, .1);
++    current.options[0] = { ...current.options[0]!, win: .3, pairedReference: { samples: 100, rawWin: .2, calibratedWin: .2, bossLeft: 0 } };
++    const value = await evaluateGlobalBuild({ ...args(), current });
++    const row = value.targets[0]!.rows.find((row) => row.key === "take")!;
++    expect(row.base).toBe(.2);
++    expect(row.option).toBeCloseTo(.3);
++    expect(row.delta_win).toEqual({ mean: .1, se: .02 });
++  });
++  it("keeps real 0/1 prefix means known when B3's four-decimal delta cannot reconstruct them", async () => {
++    for (const [p, reference, delta] of [[1, 1 / 3, .6667], [0, 2 / 3, -.6667]]) {
++      const current = result(.8, delta);
++      current.options[0] = { ...current.options[0]!, win: p!, pairedReference: { samples: 100, rawWin: reference!, calibratedWin: reference!, bossLeft: 0 } };
++      const value = await evaluateGlobalBuild({ ...args(), current });
++      const row = value.targets[0]!.rows.find((row) => row.key === "take")!;
++      expect(row).toMatchObject({ option: p, base: reference, unknown: null });
++      expect(row.delta_win!.mean).toBe(delta);
++    }
++  });
++  it("keeps a zero baseline ratio undefined without inventing an epsilon", async () => {
++    const value = await evaluateGlobalBuild({ ...args(), current: result(0, .1) });
++    const summary = value.summaries.find((row) => row.key === "take")!;
++    expect(summary.known_only.sum_delta_p_over_p).toBeNull();
++    expect(summary.reasons).toContain("zero_baseline_ratio_undefined");
++    expect(summary.known_only.snapshot_product!.base).toBe(0);
++  });
++});
+diff --git a/agent/tests/global_build_health_test.py b/agent/tests/global_build_health_test.py
+new file mode 100644
+index 000000000..042de839a
+--- /dev/null
++++ b/agent/tests/global_build_health_test.py
+@@ -0,0 +1,50 @@
++import importlib.util
++from pathlib import Path
++import unittest
++
++spec = importlib.util.spec_from_file_location('global_build_health', Path(__file__).resolve().parents[2] / 'ops/global_build_health.py')
++h = importlib.util.module_from_spec(spec)
++spec.loader.exec_module(h)
++CONFIG = {'loop': {'global_build_eval': 'shadow'}}
++LABELS = {'reward/card'}
++
++
++def row(i, ms=10, **extra):
++    value = {'schema': 'global-build-v1', 'mode': 'shadow', 'delivered': False, 'primary': 'paired_win_probability',
++             's_sort': False, 'status': 'partial', 'observation_id': f'fixed:{i}', 'wall_ms': ms, 'memo_hit': False,
++             'targets': [{'status': 'unknown', 'rows': [{'unknown': 'Act3_quality_gate_and_production_trust_unknown'}]}], **extra}
++    return {'decision_id': str(i), 'label': 'reward/card', 'boss_sim': {'completion': {'required': True}, 'global_build': value}}
++
++
++class Health(unittest.TestCase):
++    def test_unknown_is_not_a_failure_or_zero_prediction(self):
++        value = h.global_build_health(CONFIG, [row(1)], LABELS)
++        self.assertEqual((value['covered'], value['partial'], value['service_failures']), (1, 1, 0))
++        self.assertEqual(value['unknown_reasons'], {'Act3_quality_gate_and_production_trust_unknown': 1})
++        self.assertFalse(value['alert'])
++
++    def test_duplicate_answers_are_not_new_computations_and_memo_is_separate(self):
++        first = row(1, 10)
++        copied = {**first, 'decision_id': 'copied'}
++        value = h.global_build_health(CONFIG, [first, copied, row(2, 30), row(3, 1, memo_hit=True)], LABELS)
++        self.assertEqual((value['expected'], value['covered'], value['observations'], value['memo_hits']), (4, 4, 3, 1))
++        self.assertEqual(value['computation_wall_ms'], {'n': 2, 'p50': 20.0, 'p90': 28.0, 'max': 30})
++        self.assertEqual(value['memo_wall_ms']['n'], 1)
++
++    def test_unintended_shadow_consumption_and_missing_coverage_alert(self):
++        self.assertTrue(h.global_build_health(CONFIG, [row(1, delivered=True)], LABELS)['alert'])
++        missing = [dict(row(i), boss_sim={'completion': {'required': True}}) for i in range(3)]
++        value = h.global_build_health(CONFIG, missing, LABELS)
++        self.assertEqual(value['missing'], 3)
++        self.assertTrue(value['alert'])
++        self.assertEqual(h.global_build_health({'loop': {'global_build_eval': 'off'}}, missing, LABELS)['expected'], 0)
++
++    def test_service_failures_stay_distinct_from_quality_gaps(self):
++        failed = [{'status': 'unknown', 'rows': [{'unknown': 'global_computation_failed:fixed worker'}]}]
++        value = h.global_build_health(CONFIG, [row(i, targets=failed) for i in range(3)], LABELS)
++        self.assertEqual(value['service_failures'], 3)
++        self.assertTrue(value['alert'])
++
++
++if __name__ == '__main__':
++    unittest.main()
+diff --git a/ops/global_build_health.py b/ops/global_build_health.py
+new file mode 100644
+index 000000000..c3a20a2d4
+--- /dev/null
++++ b/ops/global_build_health.py
+@@ -0,0 +1,89 @@
++"""G2 shadow coverage, actual observation timing and explicit unknowns; no admission writes."""
++from collections import Counter
++import math
++
++
++def obj(value):
++    return value if isinstance(value, dict) else {}
++
++
++def wall_stats(values):
++    values = sorted(v for v in values if isinstance(v, (int, float)) and not isinstance(v, bool) and math.isfinite(v) and v >= 0)
++    def q(p):
++        if not values:
++            return None
++        at = (len(values) - 1) * p
++        lo, hi = math.floor(at), math.ceil(at)
++        return values[lo] + (values[hi] - values[lo]) * (at - lo)
++    return {'n': len(values), 'p50': q(.5), 'p90': q(.9), 'max': max(values) if values else None}
++
++
++def global_build_health(config, records, labels, failure_streak=3):
++    mode = obj(config.get('loop')).get('global_build_eval', 'off')
++    counts = Counter(expected=0, covered=0, missing=0, invalid_shadow=0, observations=0, memo_hits=0,
++                     current_dependency_unknown=0, service_failures=0, partial=0, unknown=0)
++    reasons, seen_questions, seen_observations = Counter(), set(), set()
++    all_ms, compute_ms, memo_ms, future_ms, evidence = [], [], [], [], []
++    streak = longest = 0
++    for row in records:
++        if mode == 'off' or row.get('ts', '') < config.get('ts', '') or row.get('label') not in labels:
++            continue
++        sim = obj(row.get('boss_sim'))
++        completion = obj(sim.get('completion'))
++        if not completion.get('required'):
++            continue
++        identity = row.get('decision_id') or (row.get('ts'), row.get('label'))
++        if identity in seen_questions:
++            continue
++        seen_questions.add(identity)
++        counts['expected'] += 1
++        value = obj(sim.get('global_build'))
++        if value.get('schema') != 'global-build-v1':
++            counts['missing'] += 1
++            streak += 1
++            longest = max(longest, streak)
++            continue
++        streak = 0
++        counts['covered'] += 1
++        invalid = (mode == 'shadow' and (value.get('mode') != 'shadow' or value.get('delivered') is not False
++                                       or value.get('s_sort') is not False or value.get('primary') != 'paired_win_probability'))
++        counts['invalid_shadow'] += invalid
++        counts['partial'] += value.get('status') == 'partial'
++        counts['unknown'] += value.get('status') == 'unknown'
++        reason = value.get('reason')
++        if reason:
++            reasons[reason] += 1
++            counts['current_dependency_unknown'] += reason in ('current_B3_failed', 'current_B3_skipped')
++        observation = value.get('observation_id')
++        # Copied answers can carry the same result again; neither their time nor their worker errors are new work.
++        if observation and observation in seen_observations:
++            continue
++        if observation:
++            seen_observations.add(observation)
++            counts['observations'] += 1
++            memo = value.get('memo_hit') is True
++            counts['memo_hits'] += memo
++            all_ms.append(value.get('wall_ms'))
++            (memo_ms if memo else compute_ms).append(value.get('wall_ms'))
++        for target in value.get('targets') or []:
++            if not isinstance(target, dict):
++                continue
++            unknown = {r.get('unknown') for r in target.get('rows') or [] if isinstance(r, dict) and r.get('unknown')}
++            reasons.update(unknown)
++            failed = any(r.startswith('global_computation_failed:') for r in unknown)
++            if failed:
++                counts['service_failures'] += 1
++                evidence.append({'source': row.get('_source'), 'observation_id': observation, 'target': target})
++            if observation and not value.get('memo_hit') and target.get('status') == 'computed':
++                future_ms.append(target.get('wall_ms'))
++        if isinstance(reason, str) and reason.startswith('global_observer_failed:'):
++            counts['service_failures'] += 1
++            evidence.append({'source': row.get('_source'), 'reason': reason})
++    return {'mode': mode, **counts, 'unknown_reasons': dict(reasons), 'longest_missing_streak': longest,
++            'wall_ms': wall_stats(all_ms), 'computation_wall_ms': wall_stats(compute_ms),
++            'memo_wall_ms': wall_stats(memo_ms), 'future_target_wall_ms': wall_stats(future_ms),
++            'evidence': evidence, 'alert': longest >= failure_streak or counts['invalid_shadow'] > 0 or counts['service_failures'] >= failure_streak,
++            'admission': 'pending two complete natural shadow runs and real later-Boss comparison report; never auto-enable',
++            'limits': 'Declared Act3/final unknowns are coverage limitations, not zero predictions or service failures. '
++                      'Times are observed wall clocks with duplicate observation IDs excluded, not CPU time or a causal speedup. '
++                      'No calibration, whole-run win probability or role ACK inferred.'}
+diff --git a/ops/module_health.py b/ops/module_health.py
+index e729466d7..27ccb7a05 100644
+--- a/ops/module_health.py
++++ b/ops/module_health.py
+@@ -19,6 +19,7 @@ import tempfile
+ import sys
+ sys.path.insert(0, str(Path(__file__).resolve().parent))
+ from adaptive_health import adaptive_health
++from global_build_health import global_build_health
+ 
+ LABELS = {'reward/card', 'shop/buy', 'shop/plan', 'rest/choose', 'rest/plan',
+           'selection/upgrade', 'selection/remove', 'selection/transform', 'selection/add',
+@@ -431,6 +432,7 @@ def summarize(config, decisions, brains, coverage, plans=()):
+     adaptive = adaptive_health(config, unique_records)
+     s_combat = combat_s_ranking_health(config, unique_records)
+     build_ranking = build_ranking_health(config, unique_records, all_brains)
++    global_build = global_build_health(config, unique_records, LABELS, FAIL_STREAK)
+     return {'schema': 'module-health-v1', 'at': datetime.now(timezone.utc).isoformat(), 'run_id': rid,
+             'character': 'SILENT', 'architecture': 'V5', 'construction_mode': obj(config.get('construction')).get('mode'),
+             'simulation_enabled': enabled, 'coverage': coverage, 'complete': complete,
+@@ -445,7 +447,8 @@ def summarize(config, decisions, brains, coverage, plans=()):
+             'brain': {'observed_questions': len(brain_rows), 'questions_with_dpr': delivered,
+                       'accepted_with_dpr': sum(r.get('accepted') is True and dpr_count(r.get('options')) > 0 for r in brain_rows),
+                       'decision_use': 'unknown; delivery is not evidence of reasoning or a fixed DPR weight'},
+-            'alert': (enabled and longest >= FAIL_STREAK) or pipeline['alert'] or readiness['alert'] or s_combat['alert'] or build_ranking['alert'] or computation['alert'] or adaptive['alert'], 'failures': evidence, 'diagnostics': phases,
++            'global_build': global_build,
++            'alert': (enabled and longest >= FAIL_STREAK) or pipeline['alert'] or readiness['alert'] or s_combat['alert'] or build_ranking['alert'] or computation['alert'] or adaptive['alert'] or global_build['alert'], 'failures': evidence, 'diagnostics': phases,
+             'unsupported': unsupported,
+             'scope': 'Service availability only; sample threshold, simulator validity and game policy unchanged.'}
+ 

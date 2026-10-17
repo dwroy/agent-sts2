@@ -1,0 +1,41 @@
+from pathlib import Path
+import argparse, hashlib, os, shutil, sys, tarfile
+sys.dont_write_bytecode = True
+r = Path.cwd()
+sys.path.insert(0,str(r/'ops'))
+import learner_retention as retention
+parser=argparse.ArgumentParser()
+parser.add_argument('--manifest',required=True)
+args=parser.parse_args()
+retention.require_host_process_view()
+mp=retention.safe_path(r,args.manifest)
+assert mp.is_relative_to(r/'ops/codex-ops/retention/storage')
+m=retention.load(mp)
+assert m['root']==str(r)
+archive=retention.safe_path(r,m['archive'])
+assert retention.sha_file(archive)==m['archive_sha256']
+scratch=retention.safe_path(r,m['scratch'])
+assert scratch.is_relative_to(r/'learner/runs') or scratch.is_relative_to(r/'ops/codex-ops/record-staging')
+assert not retention.active_cwd(scratch)
+needed=0
+for item in m['files']:
+    f=retention.safe_path(r,item['path'])
+    assert f.is_relative_to(scratch) and not retention.secret_name(f)
+    if f.exists(): assert retention.sha_file(f)==item['sha256']
+    else: needed+=item['bytes']
+assert shutil.disk_usage(r).free>needed+1024**3
+with tarfile.open(archive,'r:gz') as tar:
+    members=tar.getmembers()
+    assert [x.name for x in members]==[x['path'] for x in m['files']] and all(x.isfile() for x in members)
+    for member,item in zip(members,m['files']):
+        f=retention.safe_path(r,item['path'])
+        if f.exists(): continue
+        f.parent.mkdir(parents=True,exist_ok=True)
+        temp=f.with_name(f.name+'.retention-restore')
+        h=hashlib.sha256()
+        with tar.extractfile(member) as source,temp.open('xb') as target:
+            for chunk in iter(lambda:source.read(1024*1024),b''): h.update(chunk);target.write(chunk)
+            target.flush();os.fsync(target.fileno())
+        assert h.hexdigest()==item['sha256']
+        temp.chmod(item['mode']);os.replace(temp,f)
+print('Restored verified process copies; task state unchanged.')

@@ -1,0 +1,116 @@
+from pathlib import Path
+import collections, hashlib, importlib.util, json, re, subprocess, sys, tarfile
+
+sys.dont_write_bytecode = True
+root = r = Path.cwd()
+p = r / 'ops/codex-ops/record-staging/20261017-0659'
+pub = r / 'paper/materials/20261017-0659-ops'
+sha = lambda raw: hashlib.sha256(raw).hexdigest()
+load = lambda f: json.loads(f.read_bytes())
+git = lambda *args: subprocess.check_output(['git', *args], stderr=subprocess.PIPE)
+bid = '20261017-051302-strategy-proposal'
+b = load(r / 'ops/codex-ops/learn.json')['batches'][bid]
+report = b['report']; s = Path(report['report']).parent; wt = Path(b['worktree'])
+source = 'c4d99c1be01c01359988afc2b85ecada99c9b133'; base = report['base']
+assert b['state'] == 'failed' and b['rc'] == 0 and b['merged'] is None and b['proposal_audit_errors'] == []
+assert git('-C', str(wt), 'rev-parse', 'HEAD').decode().strip() == source
+assert not git('-C', str(wt), 'status', '--porcelain', '--untracked-files=all').strip()
+assert report == load(s / 'final-report.json')
+exec((r / 'ops/codex-ops/record-staging/20261016-0557/readonly-runtime.py').read_text())
+out = r / 'ops/codex-ops/learner' / (bid + '.out')
+native = runtime(bid, report, out.read_text(), worktree=wt)
+commits = load(s / 'source-commits.json'); previous = base
+for item in commits.values():
+    assert item['parent'] == previous == git('rev-parse', item['commit'] + '^').decode().strip()
+    previous = item['commit']
+assert previous == source
+tree = git('rev-parse', source + '^{tree}').decode().strip()
+assert tree == (s / 'tested-tree-final.txt').read_text().strip()
+paths = git('diff', '--name-only', base, source).decode().splitlines()
+assert len(paths) == 10 and all(path.startswith(('agent/src/', 'agent/tests/')) for path in paths)
+files = {}
+for path in paths:
+    raw = git('show', source + ':' + path)
+    assert raw == (wt / path).read_bytes()
+    files[path] = sha(raw)
+for path, digest in load(s / 'source-sha256-final.json').items():
+    assert files[path] == digest
+assert (s / 'sandbox-4.exit').read_text().strip() == '0'
+assert all((s / name).read_text().strip() == '1' for name in ['sandbox-1.exit', 'sandbox-2.exit', 'sandbox-3.exit'])
+assert (s / 'final-fixed.exit').read_text().strip() == (s / 'gitleaks-final.exit').read_text().strip() == '0'
+assert '4256 passed' in (s / 'sandbox-4.log').read_text() and '1188.01s' in (s / 'sandbox-4.log').read_text()
+wrapper = load(p / 'source-host-wrapper.vitest.json')
+assert wrapper['success'] and wrapper['numPassedTests'] == 1 and wrapper['numFailedTests'] == 0
+assert (p / 'source-host-wrapper.rc').read_text().strip() == '0'
+assert 'Ran 4 tests' in (pub / 'source-host-wrapper.log').read_text()
+assert git('show', base + ':agent/tests/global-build-health.test.ts') == (wt / 'agent/tests/global-build-health.test.ts').read_bytes()
+frames = []
+for path in paths:
+    if not path.endswith('-evidence.json'): continue
+    for entry in json.loads((wt / path).read_bytes())['frames']:
+        original = Path(entry['source']); assert original.is_relative_to(r / 'logs')
+        with original.open('rb') as handle:
+            handle.seek(entry['offset']); raw = handle.read(entry['bytes'])
+        assert sha(raw) == entry['sha256'] and json.loads(raw) == entry['row']
+        frames.append({key: entry[key] for key in ['source','offset','bytes','sha256','line','run_id']})
+assert len(frames) == 15
+evidence = []
+for folder in ['evidence', 'evidence-counterexamples']:
+    for item in load(s / folder / 'evidence-manifest.json'):
+        f = s / folder / (item['stream'] + '.evidence.jsonl')
+        assert sha(f.read_bytes()) == item['output_sha256']
+        evidence.append(dict(folder=folder, **item))
+assert sum(sum(x['counts'].values()) for x in evidence) == 3243 + 2431
+proposals = load(s / 'queue-selected.json')
+assert len(proposals) == 10
+for entry in proposals:
+    assert sha(Path(entry['proposal']).read_bytes()) == entry['proposal_sha256']
+    assert sha((s / (entry['id'] + '.original.md')).read_bytes()) == entry['proposal_sha256']
+physical = (r / 'paper/materials/learning/ledger.jsonl').read_bytes()
+prefix = load(s / 'ledger-prefix-before.json')
+assert sha(physical[:prefix['size']]) == prefix['sha256']
+cli = load(s / 'ledger-verification.json'); requests = [json.loads(x) for x in (s / 'ledger-updates.jsonl').read_bytes().splitlines()]
+assert cli['cli_exit'] == 0 and cli['updates'] == 25 and len(cli['rows']) == len(requests) == 25
+own = []
+for entry, request in zip(cli['rows'], requests):
+    raw = physical[entry['offset']:entry['offset'] + entry['bytes']]; row = json.loads(raw)
+    assert sha(raw) == entry['sha256'] and all(row.get(k) == v for k,v in request.items())
+    assert set(row) <= {'op','id','ts','by','where','note'} and row['op'] == 'update'
+    own.append((entry['offset'], raw))
+owned = b''.join(raw for offset,raw in sorted(own)); (p / 'own-ledger-rows.jsonl').write_bytes(owned)
+spec = importlib.util.spec_from_file_location('ledger_guard', r / 'learner/ledger.py')
+ledger = importlib.util.module_from_spec(spec); spec.loader.exec_module(ledger)
+ids = {json.loads(x)['id'] for x in owned.splitlines()}
+def fold(raw):
+    return ledger.fold([(n,row) for n,line in enumerate(raw.splitlines(),1) if (row:=json.loads(line)).get('id') in ids])
+old_raw = git('show','HEAD:paper/materials/learning/ledger.jsonl'); old,new = fold(old_raw),fold(old_raw+owned)
+for ident in ids:
+    for key in ['character','kind','claim','first_run','asc','prior','prior_note','prior_runs','evidence','status','version','shipped_at','effect']:
+        assert old[ident].get(key) == new[ident].get(key), (ident,key)
+at = subprocess.check_output(['date','+%Y-%m-%d %H:%M:%S %Z']).decode().strip()
+info = dict(source=source, base=base, tree=tree, files=files, source_commits=commits)
+(pub / 'source-commit.json').write_text(json.dumps(info,indent=2)+'\n')
+record = dict(at=at,batch=bid,report=report,native=native,source_received=True,source=info,
+              original_full_failures=[1,1,1],final_source_sandbox_rc=0,final_source_sandbox_files=458,
+              final_source_sandbox_cases=4256,final_paths_cases=11,source_host_wrapper_cases=1,
+              source_host_wrapper_underlying_python_cases=4,source_host_wrapper_rc=0,
+              superseded_unfrozen_run_retained=load(s/'sandbox-3-superseded.json'),
+              original_failure_logs_preserved=True,formal_fixture_raw_frames=frames,evidence=evidence,
+              original_proposals_sha_verified=10,ledger_trace_rows=25,ledger_protected_fields_preserved=True,
+              original_other_role_fixture_exposure_deviation_retained=True,
+              no_source_full_repeat_no_new_game_knowledge_no_other_role_ack=True)
+(pub/'source-readback.json').write_text(json.dumps(record,ensure_ascii=False,indent=2)+'\n')
+(pub/'ops-source-disposition.json').write_text(json.dumps(dict(at=at,accepted=True,source=source,
+    rationale='Final frozen source original sandbox entry0 with one demonstrated EPERM wrapper excluded, same original wrapper host1case/Python4case0; retain prior EPERM1, timeout1 and unfrozen/superseded1, no full0 claim for those runs.',
+    exact_final_live_full_required=True,no_source_full_repeat_or_assertion_timeout_change=True),indent=2)+'\n')
+(r/'ops/codex-ops/pending-integrations'/f'{bid}.json').write_text(json.dumps(dict(at=at,batch=bid,source=source,
+    source_commit=source,source_parent=base,source_tree=tree,files=files,source_commits=commits,
+    owner_thread=native['thread'],worktree=str(wt),status='source received and accepted; lock narrow publication pending',
+    live=None,release_id=None,host_requested=False,no_other_role_ACK=True),indent=2)+'\n')
+archive = pub / 'original-source-materials.tar.gz'
+with tarfile.open(archive,'w:gz') as bundle:
+    for f in sorted([x for x in s.iterdir() if x.is_file()] + [out,out.with_suffix('.err')]):
+        if f.stat().st_size < 1800000: bundle.add(f,arcname=str(f.relative_to(r)),recursive=False)
+(pub/'source-archive.json').write_text(json.dumps(dict(path=str(archive.relative_to(r)),bytes=archive.stat().st_size,
+    sha256=sha(archive.read_bytes()),original_reports_and_native_events_retained=True),indent=2)+'\n')
+print(json.dumps(dict(source=source,leaves=10,frames=15,trace_rows=25,accepted=True)),flush=True)

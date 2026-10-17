@@ -1,0 +1,10 @@
+--- startup/agent/src/reflex/combat-plan.ts
++++ observed/agent/src/reflex/combat-plan.ts
+@@ -3866,6 +3866,7 @@
+             lines: [...shown, ...mcMedians],
+             requiredComplete: requiredBossComputation,
+             ...(env.simWait ? { simWait: env.simWait } : {}),
++            ...(env.simFailureDirectory ? { failureDirectory: env.simFailureDirectory } : {}),
+             turn: state.turn ?? null,
+             drinks: drinksPotion,
+             ...(slCompute ? { samples: slCompute.bossSimSamples } : {}),

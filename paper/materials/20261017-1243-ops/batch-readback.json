@@ -1,0 +1,212 @@
+[
+  {
+    "batch": "20261017-121302-fix-batch",
+    "base": "d05663b5ce6ef27475c84e3dfb0f3dcae55bee2c",
+    "worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261017-121302",
+    "scratch": "/home/dw/Projects/agent-sts2/learner/runs/20261017-121307-91cbf8ff-8fe7-4d2c-9fea-9b54b9edaf70-fix-batch",
+    "report": {
+      "task": "fix-batch",
+      "base": "d05663b5ce6ef27475c84e3dfb0f3dcae55bee2c",
+      "fixes": [],
+      "skipped": [
+        {
+          "item": "selection-hidden-daggers-conditional-followup-readback",
+          "reason": "原提案59b2e430bb7521d4明确交独立strategy-proposal；仍pending，本批未领取。"
+        },
+        {
+          "item": "出牌、药水、SL、终局、路线及角色机制条目",
+          "reason": "策略类，保留既有strategy-proposal链。"
+        },
+        {
+          "item": "silent-0332实际资源契约异常根因",
+          "reason": "证据不足，沿原专用owner接续。"
+        },
+        {
+          "item": "sandbox-glob-startup-race目录生命周期与磁盘压力宽项",
+          "reason": "证据不足；已有窄修复不能证明上游及整体容量根因解决。"
+        },
+        {
+          "item": "漏斗、资源价值、调度公平性及具名卡全入口宽项",
+          "reason": "独立架构、策略或归因任务，超出普通纯bug批次。"
+        },
+        {
+          "item": "core-build-notify-222802-rc2旧原生通知恢复",
+          "reason": "旧失败缺stderr，无法确认未送达，未重发。"
+        },
+        {
+          "item": "Codex缓存实测、DPR/B2性能及历史宿主超时根因",
+          "reason": "证据不足或独立性能任务。"
+        }
+      ],
+      "merged": null,
+      "tests": {
+        "tsc": 0,
+        "vitest": 0,
+        "cases": 82
+      },
+      "code_proposals": [],
+      "implementation_domains": [],
+      "report": "/home/dw/Projects/agent-sts2/learner/runs/20261017-121307-91cbf8ff-8fe7-4d2c-9fea-9b54b9edaf70-fix-batch/report.md"
+    },
+    "disposition": {
+      "kind": "no new source or commit; no integration required",
+      "canonical_state": "failed",
+      "target_files": 6,
+      "target_cases": 82,
+      "python_cases": 9,
+      "full_suite_run": false,
+      "already_fixed_ancestors": 35,
+      "skipped": [
+        {
+          "item": "selection-hidden-daggers-conditional-followup-readback",
+          "reason": "原提案59b2e430bb7521d4明确交独立strategy-proposal；仍pending，本批未领取。"
+        },
+        {
+          "item": "出牌、药水、SL、终局、路线及角色机制条目",
+          "reason": "策略类，保留既有strategy-proposal链。"
+        },
+        {
+          "item": "silent-0332实际资源契约异常根因",
+          "reason": "证据不足，沿原专用owner接续。"
+        },
+        {
+          "item": "sandbox-glob-startup-race目录生命周期与磁盘压力宽项",
+          "reason": "证据不足；已有窄修复不能证明上游及整体容量根因解决。"
+        },
+        {
+          "item": "漏斗、资源价值、调度公平性及具名卡全入口宽项",
+          "reason": "独立架构、策略或归因任务，超出普通纯bug批次。"
+        },
+        {
+          "item": "core-build-notify-222802-rc2旧原生通知恢复",
+          "reason": "旧失败缺stderr，无法确认未送达，未重发。"
+        },
+        {
+          "item": "Codex缓存实测、DPR/B2性能及历史宿主超时根因",
+          "reason": "证据不足或独立性能任务。"
+        }
+      ],
+      "canonical_failed_rc0_mergednull_preserved": true
+    },
+    "source_changed": false,
+    "new_merge_or_host_requested": false
+  },
+  {
+    "batch": "20261017-121302-strategy-proposal",
+    "base": "d05663b5ce6ef27475c84e3dfb0f3dcae55bee2c",
+    "worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-121302",
+    "scratch": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-121302/learner/runs/20261017-121306-9f8e3457-dd96-4984-96de-48610551155f-strategy-proposal",
+    "report": {
+      "task": "strategy-proposal",
+      "character": "silent",
+      "batch": "20261017-121302-strategy-proposal",
+      "base": "d05663b5ce6ef27475c84e3dfb0f3dcae55bee2c",
+      "runs": [
+        "751FN9QM9MHQ",
+        "KV0JHNJCKXLS",
+        "YQL8RZ8BWN1E",
+        "L9SGRBB5R698",
+        "PU80F84P6HPN",
+        "KEN58SH9SLZ6"
+      ],
+      "fixes": [],
+      "skipped": [],
+      "merged": null,
+      "tests": {
+        "tsc": null,
+        "vitest": null,
+        "cases": null
+      },
+      "code_proposals": [
+        "silent-proposal-366288801d9150d9",
+        "silent-proposal-85929bdfc8a3fc1b",
+        "silent-proposal-efd9f83ee9e1a6dc",
+        "silent-proposal-131042659448ae74",
+        "silent-proposal-990f054036609447",
+        "silent-proposal-e18d3f18e6cac2a0",
+        "silent-proposal-9733bb80f445aeae",
+        "silent-proposal-c51468c5e8ba6668",
+        "silent-proposal-86a7db08d1a31976",
+        "silent-proposal-e282a9131b99129a"
+      ],
+      "implementation_domains": [],
+      "proposal_results": [
+        {
+          "id": "silent-proposal-366288801d9150d9",
+          "state": "waiting",
+          "reason": "751 F17 T2/T7/T13端点已核；缺抽弃重问后完整候选的实际归属、逐来源结算及受控整战后继，不能拟合5/10血准入门槛。"
+        },
+        {
+          "id": "silent-proposal-85929bdfc8a3fc1b",
+          "state": "waiting",
+          "reason": "751 F13 T3用药与整战无药模型均损8；缺实际无药完整分支、留药后战对照及逐来源损血认证，不能确定持有价或改弃牌。"
+        },
+        {
+          "id": "silent-proposal-efd9f83ee9e1a6dc",
+          "state": "waiting",
+          "reason": "与366288共享751同一六试；缺完整执行归属、真实持牌成本、受控整战后继及独立新局验证，不能重复增加样本。"
+        },
+        {
+          "id": "silent-proposal-131042659448ae74",
+          "state": "waiting",
+          "reason": "局部敏捷、持牌失血、毒和荆棘事实已核；缺联合逐来源实际校准、完整候选归属及跨战用药对照，已有单项提示不能关闭整项。"
+        },
+        {
+          "id": "silent-proposal-990f054036609447",
+          "state": "waiting",
+          "reason": "KV F33第4/5试T5同零净损、净扣敌36/29、次轮毒20/13；缺毛伤与回血逐来源归属、受控整战比较及路线休息替代后继。"
+        },
+        {
+          "id": "silent-proposal-e18d3f18e6cac2a0",
+          "state": "waiting",
+          "reason": "巨兽占位血及YQL毒2→8而自爆仍41已核；缺改排序、提前喝、不喝和留药的受控完整后继，PU胜线未隔离这些因素。"
+        },
+        {
+          "id": "silent-proposal-9733bb80f445aeae",
+          "state": "waiting",
+          "reason": "与e18d3f18共享巨兽三局；阶段提示已有，缺阶段估值、参考路径排序与用药时点的受控整战比较，不能以PU过爆余2关闭整项。"
+        },
+        {
+          "id": "silent-proposal-c51468c5e8ba6668",
+          "state": "waiting",
+          "reason": "KEN七次饮药指令与逐槽耗药端点已核；缺随机选牌和重问后的完整收益归属、同题未饮用及留至Boss对照，不能拟合持有价。"
+        },
+        {
+          "id": "silent-proposal-86a7db08d1a31976",
+          "state": "waiting",
+          "reason": "KEN F17 T10多付6血仅多2伤、T5省2血但步法延至T9已核；缺逐来源兑现、完整候选认证、受控整战后继及独立验证。"
+        },
+        {
+          "id": "silent-proposal-e282a9131b99129a",
+          "state": "waiting",
+          "reason": "与86a7db08共享KEN同一六试；只有局部配对及已有预测，缺完整执行归属、受控整战后继和独立验证，保留现排序与护栏。"
+        }
+      ],
+      "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-121302/learner/runs/20261017-121306-9f8e3457-dd96-4984-96de-48610551155f-strategy-proposal/report.md"
+    },
+    "disposition": {
+      "kind": "unchanged ten proposal dispositions waiting",
+      "canonical_state": "done",
+      "material_checks": 49,
+      "artifacts_verified": 63,
+      "trace_rows": 16,
+      "trace_only_fields": [
+        "where",
+        "note"
+      ],
+      "old_prefix_bytes": 22586619,
+      "old_prefix_sha256": "b0d431ee1e2f199b2bb229146cc87a1b211a9f8677976f9850b6666b5e8688e7",
+      "run_identities": 6,
+      "source_audit_files": 12,
+      "production_tests": {
+        "tsc": null,
+        "vitest": null,
+        "cases": null
+      },
+      "no_simulator_or_model_rerun_by_ops": true,
+      "initial_failed_materials_and_corrected_originals_preserved": true
+    },
+    "source_changed": false,
+    "new_merge_or_host_requested": false
+  }
+]

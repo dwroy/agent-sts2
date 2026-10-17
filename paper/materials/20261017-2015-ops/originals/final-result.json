@@ -1,0 +1,271 @@
+{
+  "task": "fix-batch",
+  "status": "merged-live",
+  "base": "7498f94519191cfb79d16a25dbd85a2af610b9f5",
+  "fixes": [
+    {
+      "item": "Roy 已授权新功能：静默 boss 模拟校准",
+      "commit": "71ad52c19c884365ec42d3300bc1a3c7a035c7e0",
+      "test": "agent/tools/boss-sim/test_silent_calibration.py",
+      "fails_without_fix": true,
+      "fails_without_fix_evidence": "precision-without-change.log：旧模块误准入，固定边界夹具确实失败；新代码16项通过。",
+      "sources": [
+        "agent/tools/boss-sim/pinned_silent.py",
+        "agent/tools/boss-sim/refresh-silent.py",
+        "agent/tools/boss-sim/silent_calibration.py",
+        "agent/tools/boss-sim/calib.py",
+        "agent/tools/boss-sim/trust.py",
+        "agent/tools/boss-sim/test_silent_calibration.py"
+      ],
+      "ledger_id": "silent-0506"
+    }
+  ],
+  "skipped": [
+    {
+      "item": "A0–4/A5–9独立样本外可靠性",
+      "reason": "验证各0场，各距10场还差10；原切点和调参keys不移动。"
+    },
+    {
+      "item": "当前H0/H1有限前缀及F48→F49联合通关",
+      "reason": "本批仅验证固定已发布模型的单战结果。"
+    },
+    {
+      "item": "silent-0213与其他队列",
+      "reason": "按任务范围未处理。"
+    }
+  ],
+  "merged": "3d691cff96dedd19855b00f4e9d448c43fe1d219",
+  "publication": {
+    "source_commit": "71ad52c19c884365ec42d3300bc1a3c7a035c7e0",
+    "code_merge_commit": "40676b554916d88ea006a2e76cf03a9e3e106840",
+    "fixed_publication_tree": "24be6da5dcc38e9ff9145233b23a0fa475c5ff51",
+    "tested_combination_tree": "02b4d517383c5c4fd6f5eae6ddf3ea0a67b95a4e",
+    "metadata_only_after_test": [
+      "eval/versions.json",
+      "paper/materials/decision-log.md"
+    ],
+    "saved_live_refresh": "90fb21a23a9048c7266bc00ba9e4e47a7259572d",
+    "source_is_live_ancestor": true,
+    "registry_name": "S1.silent-boss-calibration-refresh-20261017-ccee3b62",
+    "release_id": null,
+    "release_id_status": "主ops统一核号；未自行分配"
+  },
+  "counts": {
+    "finished_silent_runs": 338,
+    "attempts": 1498,
+    "actual_completed_events": 615,
+    "usable_fights": 614,
+    "won": 449,
+    "died": 165,
+    "excluded": 884,
+    "exclusions": {
+      "SL predicted_death: censored, no actual win/loss; no observed completed outcome": 882,
+      "SL predicted_death: censored, no actual win/loss; no observed completed outcome; no turn-1 decision with drawn hand": 1,
+      "no turn-1 decision with drawn hand": 1
+    },
+    "new_validation": 26,
+    "frozen_tune": 107,
+    "validation": 507,
+    "successful_simulations_per_start": {
+      "tune": 106,
+      "validation": 505
+    }
+  },
+  "boss_table_note": "failed为空才可信；数量达标不能抵消质量失败。",
+  "boss_table": [
+    {
+      "boss": "AEONGLASS",
+      "n": 37,
+      "missing": 0,
+      "b2_failed": [
+        "brier",
+        "gap",
+        "leak"
+      ],
+      "b3_failed": [
+        "brier",
+        "gap",
+        "leak"
+      ]
+    },
+    {
+      "boss": "CEREMONIAL_BEAST",
+      "n": 41,
+      "missing": 0,
+      "b2_failed": [],
+      "b3_failed": []
+    },
+    {
+      "boss": "KAISER_CRAB",
+      "n": 50,
+      "missing": 0,
+      "b2_failed": [
+        "brier",
+        "leak"
+      ],
+      "b3_failed": [
+        "brier",
+        "leak"
+      ]
+    },
+    {
+      "boss": "KNOWLEDGE_DEMON",
+      "n": 47,
+      "missing": 0,
+      "b2_failed": [
+        "leak"
+      ],
+      "b3_failed": [
+        "leak"
+      ]
+    },
+    {
+      "boss": "LAGAVULIN_MATRIARCH",
+      "n": 43,
+      "missing": 0,
+      "b2_failed": [],
+      "b3_failed": []
+    },
+    {
+      "boss": "QUEEN",
+      "n": 34,
+      "missing": 0,
+      "b2_failed": [
+        "brier",
+        "gap"
+      ],
+      "b3_failed": [
+        "brier",
+        "gap"
+      ]
+    },
+    {
+      "boss": "SOUL_FYSH",
+      "n": 38,
+      "missing": 0,
+      "b2_failed": [],
+      "b3_failed": []
+    },
+    {
+      "boss": "TEST_SUBJECT",
+      "n": 31,
+      "missing": 0,
+      "b2_failed": [
+        "brier",
+        "leak"
+      ],
+      "b3_failed": [
+        "brier",
+        "leak"
+      ]
+    },
+    {
+      "boss": "THE_INSATIABLE",
+      "n": 49,
+      "missing": 0,
+      "b2_failed": [
+        "brier"
+      ],
+      "b3_failed": [
+        "brier",
+        "leak"
+      ]
+    },
+    {
+      "boss": "THE_KIN",
+      "n": 43,
+      "missing": 0,
+      "b2_failed": [],
+      "b3_failed": []
+    },
+    {
+      "boss": "VANTOM",
+      "n": 51,
+      "missing": 0,
+      "b2_failed": [],
+      "b3_failed": []
+    },
+    {
+      "boss": "WATERFALL_GIANT",
+      "n": 41,
+      "missing": 0,
+      "b2_failed": [],
+      "b3_failed": []
+    }
+  ],
+  "A10": {
+    "validation_n": 505,
+    "b2_brier": 0.1171,
+    "b3_brier": 0.1191,
+    "b2_gap": 0.036,
+    "b3_gap": 0.04,
+    "leak_ratios": [
+      1.327,
+      1.345
+    ],
+    "F49": {
+      "actual_fights": 34,
+      "validation_n": 32,
+      "missing": 0,
+      "brier": [
+        0.2023,
+        0.1807
+      ],
+      "gap": [
+        0.322,
+        0.279
+      ],
+      "leak_ratio": [
+        2.482,
+        2.597
+      ],
+      "status": "低信度：Brier、胜率差、打穿比失败"
+    },
+    "A9_estimate": "固定模型TEST_SUBJECT/BIG_POUNCE伤害45×1来自A9估值；其他48个有伤害定义来自A10。"
+  },
+  "periodic_refresh": {
+    "entry": "agent/tools/boss-sim/refresh-silent.py --previous <live>/knowledge/characters/silent/boss-trust.json",
+    "trigger": "升阶或新增20次实际胜/死boss事件；每小时:13/:43及学习完成事件检查",
+    "model": "7e1193cef9467416bc10c8e344a49f4fd98390c7",
+    "frozen_cutoff_utc": "2026-10-06T02:46:11.648000",
+    "contract": "自动恢复固定模型、核历史输入/控制结果、仅扩验证；重复输入跳过；原门槛按完整精度执行。"
+  },
+  "ledger": {
+    "id": "silent-0506",
+    "kind": "fight",
+    "status": "proposed",
+    "actual_live_and_consumer_trace_appended": true,
+    "shipped_owner": "主ops"
+  },
+  "code_proposals": [],
+  "implementation_domains": [],
+  "tests": {
+    "tsc": 0,
+    "vitest": 0,
+    "cases": 4410,
+    "source_cases": 4398,
+    "files": 480,
+    "python_fixed_cases": 16,
+    "python_exit": 0,
+    "gitleaks": 0,
+    "gitleaks_verified_exception": "/home/dw/Projects/agent-sts2/learner/runs/20261017-170120-62ee45ff-d6c7-407f-88be-efad3ce5199b-silent-boss-calibration/gitleaks-checksum-false-positive.json",
+    "actual_live_B2_B3_consumer_readback": 0,
+    "original_precision_without_change": 1,
+    "legacy_default_equivalence": "27统计块/26判定逐值相等",
+    "automatic_refresh": "614固定样本/1228合并行逐字节一致，重复执行幂等",
+    "outside_full_checks": "原调度器待补跑；未冒称通过",
+    "natural_game_adoption": "unknown"
+  },
+  "report": "/home/dw/Projects/agent-sts2/learner/runs/20261017-170120-62ee45ff-d6c7-407f-88be-efad3ce5199b-silent-boss-calibration/report.md",
+  "calibration_report": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/paper/materials/silent/boss-sim-calibration.md",
+  "artifact": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/experiments/boss-sim/silent/ccee3b625e95d6a275b5b58ad94739983ae208954dc66ba7fa03deb5b5b5e33b",
+  "all_batch_commits": [
+    "241b6af96c2253e2621c93e1aa1693023b4e755e",
+    "71ad52c19c884365ec42d3300bc1a3c7a035c7e0",
+    "90fb21a23a9048c7266bc00ba9e4e47a7259572d",
+    "40676b554916d88ea006a2e76cf03a9e3e106840",
+    "3d691cff96dedd19855b00f4e9d448c43fe1d219"
+  ],
+  "discarded_unpublished_scan_gate_candidate": "2ef0adead725b4c5b51b10275719949b7ed62d40",
+  "notifications": "根notes/for-roy.md与ops/inbox-dev.md已追加并读回验证。"
+}

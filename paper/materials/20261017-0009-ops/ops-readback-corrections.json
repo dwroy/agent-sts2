@@ -1,0 +1,35 @@
+{
+  "at": "2026-10-17 00:15:05 CST",
+  "original_ops_guard": "audit-v1.py line123 assumed current manifest leaves also equal earlier startup commit",
+  "actual_boundary": "Three observed leaves equal startup commit; combat-plan later adds env.simFailureDirectory forwarding. The manifest binds later5e70fa3dd, not original startupc783c6c dirty inputs.",
+  "initial_private_error_explanation": "Its name-only wording was premature; actual stored diff is one diagnostic wiring line, not a name change.",
+  "original_guard_error_not_a_learner_or_product_failure": true,
+  "source_comparisons": [
+    {
+      "path": "agent/src/reflex/combat-plan.ts",
+      "startup_commit_sha256": "07243eaa93ac19f563b7d9a484472002f16ad818217613e580975cb7b9f86630",
+      "later_observed_sha256": "33573bc1d7e25a87127f3cf9fe786118c43a9c512c0725121ae44885d130181c",
+      "same_bytes": false
+    },
+    {
+      "path": "agent/src/sl/explore.ts",
+      "startup_commit_sha256": "89875b8d7fa6470bf2fea69188c16125992f9736a6fa048123c26f7ae6c0d312",
+      "later_observed_sha256": "89875b8d7fa6470bf2fea69188c16125992f9736a6fa048123c26f7ae6c0d312",
+      "same_bytes": true
+    },
+    {
+      "path": "agent/src/sim/route-map.ts",
+      "startup_commit_sha256": "763b2ae1548d06871ee3c8926c464ec66a1d80ecd924df6f003b260e446b99e4",
+      "later_observed_sha256": "763b2ae1548d06871ee3c8926c464ec66a1d80ecd924df6f003b260e446b99e4",
+      "same_bytes": true
+    },
+    {
+      "path": "agent/src/hand/screens/rest.ts",
+      "startup_commit_sha256": "518aea18de27a60b39a1473ef0e89ba54da908b57aa085af6577e90643f1cd97",
+      "later_observed_sha256": "518aea18de27a60b39a1473ef0e89ba54da908b57aa085af6577e90643f1cd97",
+      "same_bytes": true
+    }
+  ],
+  "did_not_rewrite_original_source_manifest_or_run_config": true,
+  "full_dirty_startup_input_unknown": true
+}

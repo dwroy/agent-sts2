@@ -1,0 +1,1708 @@
+{
+  "batch": "20261017-201301-fix-batch",
+  "report": {
+    "task": "fix-batch",
+    "base": "c0a1108ed51fbf6e8c7fc5a2aa238d57cdd0366a",
+    "fixes": [],
+    "skipped": [
+      {
+        "item": "角色机制及出牌、药水、SL、终局、路线条目",
+        "reason": "策略类；沿既有独立strategy-proposal链处理，不重复派发。"
+      },
+      {
+        "item": "silent-0332资源契约根因",
+        "reason": "证据不足；沿原专用owner链，窄修不代表根因解决。"
+      },
+      {
+        "item": "sandbox目录生命周期与磁盘压力宽项",
+        "reason": "证据不足；目录删除归属与扫描时序未确定。"
+      },
+      {
+        "item": "arch任务、F33归因及调度公平性",
+        "reason": "独立架构或归因任务，超出普通纯bug批次。"
+      },
+      {
+        "item": "core-build-notify-222802-rc2历史通知恢复",
+        "reason": "缺历史stderr及送达证据，不重复发送。"
+      },
+      {
+        "item": "Codex缓存、DPR/B2性能及历史宿主超时根因",
+        "reason": "证据不足或独立性能调查；固定测试窄修已存在。"
+      }
+    ],
+    "merged": null,
+    "tests": {
+      "tsc": null,
+      "vitest": null,
+      "cases": 0
+    },
+    "code_proposals": [],
+    "implementation_domains": [],
+    "report": "/home/dw/Projects/agent-sts2/learner/runs/20261017-201307-2ca0c0c5-48a3-4d4a-8717-f1f9b09f8586-fix-batch/report.md"
+  },
+  "local_report": {
+    "task": "fix-batch",
+    "base": "c0a1108ed51fbf6e8c7fc5a2aa238d57cdd0366a",
+    "fixes": [],
+    "skipped": [
+      {
+        "item": "出牌、药水、SL、终局、路线及角色机制条目（含0256/0260/0263/0266/0308/0311/0317/0319/0320/0322/0324/0329/0334/0339/0344/0347/0349/0362/0365/0481/0487）",
+        "reason": "策略类；沿已有独立strategy-proposal链处理，不重复派发或加入开发者游戏知识。"
+      },
+      {
+        "item": "silent-0332实际nonpositive-hp资源契约根因",
+        "reason": "证据不足；沿原专用owner链。样本身份及诊断窄修不等于资源契约根因已修。"
+      },
+      {
+        "item": "sandbox-glob-startup-race目录生命周期与磁盘压力宽项",
+        "reason": "证据不足；窄启动恢复、租约保存及回收修复已存在，目录删除归属与上游扫描时序未确定。"
+      },
+      {
+        "item": "arch-funnel-guard / arch-learning-priority / arch-unified-resource-value / inv-f33-regression及调度公平性调查",
+        "reason": "独立架构、策略或归因任务，范围太大，超出本普通纯bug批次。"
+      },
+      {
+        "item": "core-build-notify-222802-rc2旧原生通知恢复",
+        "reason": "证据不足；历史stderr及送达证据缺失，不重发可能已经送达的通知。"
+      },
+      {
+        "item": "Codex缓存实测、DPR/B2性能及历史宿主超时根因",
+        "reason": "证据不足或独立性能调查；固定测试确定性子项已修，不代表自然性能根因已解决；本批不调用模型或网络。"
+      }
+    ],
+    "merged": null,
+    "tests": {
+      "tsc": null,
+      "vitest": null,
+      "cases": 0
+    },
+    "code_proposals": [],
+    "implementation_domains": [],
+    "report": "/home/dw/Projects/agent-sts2/learner/runs/20261017-201307-2ca0c0c5-48a3-4d4a-8717-f1f9b09f8586-fix-batch/report.md"
+  },
+  "only_skipped_wording_differs": true,
+  "original_canonical_state": "failed",
+  "original_rc": 0,
+  "original_merged": null,
+  "original_retry_at": 1792243288.1670763,
+  "native": {
+    "batch": "20261017-201301-fix-batch",
+    "thread": "01a149c7-d14c-7382-925b-c37932fa20a6",
+    "cwd": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261017-201301",
+    "event_log": "learner/runs/20261017-201307-2ca0c0c5-48a3-4d4a-8717-f1f9b09f8586-fix-batch.jsonl",
+    "registered_launch_batch": "20261017-201301-fix-batch",
+    "original_lease": "3bbe9d24dda69ad4f9fcabf91d153d0f9e9289344016bcf28d99e6781c2ab543",
+    "native_context": {
+      "source": "ops/codex-ops/accounts/codex1/learner/sessions/2026/10/17/rollout-2026-10-17T20-13-14-01a149c7-d14c-7382-925b-c37932fa20a6.jsonl",
+      "offset": 50304,
+      "bytes": 5152,
+      "sha256": "607e2eb902f75409c273852d15faaeadbce217705769d32c4218266ae1d4124c",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "sandbox": {
+        "type": "workspace-write",
+        "writable_roots": [
+          "/home/dw/Projects/agent-sts2",
+          "/home/dw/Projects/agent-sts2/.git",
+          "/home/dw/Projects/agent-sts2/.git/worktrees/codex-fix-silent-20261017-201301"
+        ],
+        "network_access": false,
+        "exclude_tmpdir_env_var": false,
+        "exclude_slash_tmp": false
+      },
+      "approval_policy": "never"
+    },
+    "native_user_input": {
+      "offset": 58299,
+      "bytes": 13081,
+      "sha256": "3c9f4588da51b99c7ab4eac61769047c6917828b022853b54c1b27a3dcd198da",
+      "input_sha256": "4cdcbcf9ca293f544f17fffc6a6907979e57759d687a47dbbf69bea51ae9d571"
+    },
+    "original_header_events": [
+      {
+        "offset": 0,
+        "bytes": 14892,
+        "sha256": "9116f827a1bfd0d3b069023b454196db0bceabe8ebace86adc89e4305c84708c",
+        "type": "learner_launch",
+        "attempt": null,
+        "code": null
+      },
+      {
+        "offset": 14892,
+        "bytes": 370,
+        "sha256": "0ce0cb0271009513cb5440bac9cc9abb547cf1f86e0afba34f6b2b577e544a52",
+        "type": "learner_startup_attempt",
+        "attempt": 1,
+        "code": null
+      },
+      {
+        "offset": 18275,
+        "bytes": 77,
+        "sha256": "f3461c75680741f5dfb3cf53b917a1f3b77179ee3bd1766a54a7611c4a4b8853",
+        "type": "thread.started",
+        "attempt": null,
+        "code": null
+      }
+    ],
+    "startup_attempts": 1,
+    "failed_startups_preserved": 0,
+    "no_model_or_manual_restart": true
+  },
+  "audit": {
+    "base": "c0a1108ed51fbf6e8c7fc5a2aa238d57cdd0366a",
+    "main": "c0a1108ed51fbf6e8c7fc5a2aa238d57cdd0366a",
+    "live": "3d691cff96dedd19855b00f4e9d448c43fe1d219",
+    "previous_base": "f8a724899be11fa19c4b835b7d391a5560866a79",
+    "previous_audit": "/home/dw/Projects/agent-sts2/learner/runs/20261017-194307-085eaaee-c882-4af9-a011-0e331c8b0003-fix-batch/source-audit.json",
+    "queue_sha256": "5d2af06b27e0a9a43ab85e7911056120251dc25efefdab01b2e1a04c40c0a9c7",
+    "previous_queue_sha256": "c50d1777739f2bdc59267b36e7171713bdd7d47ef9ca4155371abcf690636870",
+    "queue_only_added_existing_fix_acceptance": true,
+    "all_source_unchanged_since_previous": true,
+    "already_fixed": [
+      {
+        "item": "额度恢复基线与实际进阶通知",
+        "commit": "5b56a452bb9be14d620b368ec46974c1b57901ca",
+        "base_ancestor": true,
+        "main_ancestor": true,
+        "live_ancestor": true,
+        "commit_files": [
+          "README.md",
+          "agent/src/brain/engines/codex-usage.ts",
+          "agent/src/hand/loop.ts",
+          "agent/src/hand/screens/selection.ts",
+          "agent/src/memory/journal-replay.ts",
+          "agent/src/memory/types.ts",
+          "agent/src/reflex/card-model.ts",
+          "agent/src/reflex/combat-plan.ts",
+          "agent/src/reflex/continuation-value.ts",
+          "agent/src/reflex/rollout-live.ts",
+          "agent/src/reflex/rollout.ts",
+          "agent/src/reflex/silent-apotheosis.ts",
+          "agent/src/reflex/silent-skittish.ts",
+          "agent/src/reflex/turn-solver.ts",
+          "agent/src/sim/boss-sim.ts",
+          "agent/src/sim/boss-start.ts",
+          "agent/src/sim/build-sim-facts.ts",
+          "agent/src/sim/build-sim.ts",
+          "agent/src/sim/double-boss-start.ts",
+          "agent/src/sim/quantitative-calibration.ts",
+          "agent/src/sim/quantitative-facts.ts",
+          "agent/src/sim/quantitative-stats.ts",
+          "agent/src/sim/silent-opening.ts",
+          "agent/src/sl/attempts.ts",
+          "agent/src/sl/controller.ts",
+          "agent/src/sl/explore.ts",
+          "agent/tests/ascension-observed.test.ts",
+          "agent/tests/brain-codex-session.test.ts",
+          "agent/tests/brain-codex-usage.test.ts",
+          "agent/tests/codex-usage-recovery.test.ts",
+          "agent/tests/ops-codex.test.ts",
+          "agent/tests/ops-deferred.test.ts",
+          "agent/tests/quantitative.test.ts",
+          "agent/tests/silent-apotheosis-backflip-evidence.json",
+          "agent/tests/silent-apotheosis-backflip.test.ts",
+          "agent/tests/silent-apotheosis-footwork-evidence.json",
+          "agent/tests/silent-apotheosis-footwork.test.ts",
+          "agent/tests/silent-apotheosis-neutralize-evidence.json",
+          "agent/tests/silent-apotheosis-neutralize.test.ts",
+          "agent/tests/silent-apotheosis-poisoned-stab-evidence.json",
+          "agent/tests/silent-apotheosis-poisoned-stab.test.ts",
+          "agent/tests/silent-apotheosis-snakebite-evidence.json",
+          "agent/tests/silent-apotheosis-snakebite.test.ts",
+          "agent/tests/silent-apotheosis-survivor-evidence.json",
+          "agent/tests/silent-apotheosis-survivor.test.ts",
+          "agent/tests/silent-blade-dance-evidence.json",
+          "agent/tests/silent-blade-dance.test.ts",
+          "agent/tests/silent-build-win-ties.test.ts",
+          "agent/tests/silent-cunning-evidence.json",
+          "agent/tests/silent-cunning-state.json",
+          "agent/tests/silent-cunning.test.ts",
+          "agent/tests/silent-discard-plan-evidence.json",
+          "agent/tests/silent-discard-plan.test.ts",
+          "agent/tests/silent-gardener-skittish-evidence.json",
+          "agent/tests/silent-gardener-skittish.test.ts",
+          "agent/tests/silent-opening-evidence.json",
+          "agent/tests/silent-opening.test.ts",
+          "agent/tests/silent-phase-reference.test.ts",
+          "agent/tests/silent-reattach-evidence.json",
+          "agent/tests/silent-reattach-reset.test.ts",
+          "agent/tests/silent-shackling-weak-state.json",
+          "agent/tests/silent-shackling-weak.test.ts",
+          "agent/tests/silent-skittish-state.json",
+          "agent/tests/silent-skittish.test.ts",
+          "agent/tests/sl-giant-phase-data/yql-blast.json",
+          "agent/tests/sl-giant-phase.test.ts",
+          "agent/tools/quantitative.ts",
+          "docs/ops-assist.md",
+          "docs/quantitative-play.md",
+          "docs/v4-architecture.md",
+          "knowledge/characters/silent/boss-trust.json",
+          "knowledge/characters/silent/experience.json",
+          "ops/codex-ops-learn.py",
+          "ops/codex-ops.sh"
+        ]
+      },
+      {
+        "item": "核心通知stdout/stderr持久化（不等于旧原生通知已安全恢复）",
+        "commit": "5c92f2aaf0b758a1a5e7d591745694004664f83a",
+        "base_ancestor": true,
+        "main_ancestor": true,
+        "live_ancestor": true,
+        "commit_files": [
+          "agent/tests/core_build_jobs_test.py",
+          "ops/core_build_jobs.py"
+        ]
+      },
+      {
+        "item": "知识工作线程签名固定输入",
+        "commit": "8fbb441eb61eef226eb7366f9612003480c83988",
+        "base_ancestor": true,
+        "main_ancestor": true,
+        "live_ancestor": true,
+        "commit_files": [
+          "agent/tests/compute-memo-files.ts",
+          "agent/tests/compute-memo-worker.ts",
+          "agent/tests/compute-memo.test.ts"
+        ]
+      },
+      {
+        "item": "rollout最佳候选固定输入",
+        "commit": "bbc5b993a7524bbb8e80a975f204f8d193657b46",
+        "base_ancestor": true,
+        "main_ancestor": true,
+        "live_ancestor": true,
+        "commit_files": [
+          "agent/tests/rollout-best-added.test.ts",
+          "agent/tests/rollout-live.test.ts"
+        ]
+      },
+      {
+        "item": "空产出补链误派",
+        "commit": "84366ad06ee4f978394c1b9489a82c83ea12bd36",
+        "base_ancestor": true,
+        "main_ancestor": true,
+        "live_ancestor": true,
+        "commit_files": [
+          "agent/tests/blocked-experience-repair.test.ts",
+          "ops/proposal_dispatch.py"
+        ]
+      },
+      {
+        "item": "多角色药水表测试隔离",
+        "commit": "5ef3c4612bd2673c19968c5a2d24bf62af519ee1",
+        "base_ancestor": true,
+        "main_ancestor": true,
+        "live_ancestor": true,
+        "commit_files": [
+          "agent/tests/multi-character.test.ts"
+        ]
+      },
+      {
+        "item": "未派发提案结果登记",
+        "commit": "3a98e213a826e94f9708af4b1a265e1892659f4e",
+        "base_ancestor": true,
+        "main_ancestor": true,
+        "live_ancestor": true,
+        "commit_files": [
+          "agent/tests/unassigned-proposal-resolution.test.ts",
+          "ops/proposal_dispatch.py",
+          "ops/tests/test_unassigned_proposal_resolution.py"
+        ]
+      },
+      {
+        "item": "事件流同秒碰撞",
+        "commit": "b6ee3f8c29cc10d4652a67d14f0e0e394aa6ce6f",
+        "base_ancestor": true,
+        "main_ancestor": true,
+        "live_ancestor": true,
+        "commit_files": [
+          "agent/tests/learner-strategy-scratch.test.ts",
+          "agent/tests/learner.test.ts",
+          "agent/tests/learner_preserved_report_test.py",
+          "learner/lib/launcher.ts",
+          "ops/learner_checks.py"
+        ]
+      },
+      {
+        "item": "纸鹤夹具",
+        "commit": "befc39e5ca0105f8ff96d47f817df44f0b2760f1",
+        "base_ancestor": true,
+        "main_ancestor": true,
+        "live_ancestor": true,
+        "commit_files": [
+          "agent/tests/silent-paper-krane.test.ts"
+        ]
+      },
+      {
+        "item": "账本状态分叉前缀",
+        "commit": "dd478f0b3e5a0f234f082972d21b203dbf8229d7",
+        "base_ancestor": true,
+        "main_ancestor": true,
+        "live_ancestor": true,
+        "commit_files": [
+          "agent/tests/ledger-publication-baseline.test.ts",
+          "agent/tests/ledger_publication_baseline_test.py",
+          "learner/ledger.py"
+        ]
+      },
+      {
+        "item": "共享main启动冲突",
+        "commit": "22efae55484bc2bdcc54e847a8dc40bb4888c4e2",
+        "base_ancestor": true,
+        "main_ancestor": true,
+        "live_ancestor": true,
+        "commit_files": [
+          "agent/tests/learner-entry.test.ts",
+          "ops/codex-ops-learner.sh",
+          "ops/learner_entry.py",
+          "ops/tests/test_learner_entry.py",
+          "ops/tests/test_learner_launch_failures.py",
+          "ops/tests/test_strategy_implementation.py",
+          "ops/tests/test_strategy_implementation_continuation.py",
+          "ops/tests/test_strategy_research_scheduling.py"
+        ]
+      },
+      {
+        "item": "根事件通知路径",
+        "commit": "577f0bc424b7287910735cfdc86c253cc7ee8057",
+        "base_ancestor": true,
+        "main_ancestor": true,
+        "live_ancestor": true,
+        "commit_files": [
+          "agent/tests/feature-root-event-notice.test.ts",
+          "ops/learning_requests.py",
+          "ops/tests/test_feature_root_event_notice.py"
+        ]
+      },
+      {
+        "item": "global-build宿主loadavg",
+        "commit": "5bc8f025fe043cb8738cce57870354fa23fa84a1",
+        "base_ancestor": true,
+        "main_ancestor": true,
+        "live_ancestor": true,
+        "commit_files": [
+          "agent/tests/global-build-integration.test.ts"
+        ]
+      },
+      {
+        "item": "局间quiet误报",
+        "commit": "21a9c52484f04d510bd397959c958ec9767f1d2d",
+        "base_ancestor": true,
+        "main_ancestor": true,
+        "live_ancestor": true,
+        "commit_files": [
+          "agent/tests/ops-stall-between-runs.test.ts",
+          "ops/stall-check.sh"
+        ]
+      },
+      {
+        "item": "global-health异步测试",
+        "commit": "d27df54f0651c4af84c6c12ceceec82a016f1142",
+        "base_ancestor": true,
+        "main_ancestor": true,
+        "live_ancestor": true,
+        "commit_files": [
+          "agent/tests/global-build-health.test.ts"
+        ]
+      },
+      {
+        "item": "target-options此前两个标注回放的固定预算（默认路径已另修）",
+        "commit": "83a7f796c24eea8f16eb317bc70bfd832251ad27",
+        "base_ancestor": true,
+        "main_ancestor": true,
+        "live_ancestor": true,
+        "commit_files": [
+          "agent/tests/target-options.test.ts"
+        ]
+      },
+      {
+        "item": "retention数字UUID",
+        "commit": "d91236326bc1af7a5417ce016c1a182f8084e7a3",
+        "base_ancestor": true,
+        "main_ancestor": true,
+        "live_ancestor": true,
+        "commit_files": [
+          "agent/tests/learner-retention-uuid.test.ts",
+          "ops/learner_retention.py",
+          "ops/tests/test_learner_retention.py"
+        ]
+      },
+      {
+        "item": "retention旧根scratch",
+        "commit": "0699b05c436d3d51d00ee92f153d16d16e64bea4",
+        "base_ancestor": true,
+        "main_ancestor": true,
+        "live_ancestor": true,
+        "commit_files": [
+          "agent/tests/learner-retention-legacy.test.ts",
+          "ops/learner_retention.py",
+          "ops/tests/test_legacy_learner_retention.py"
+        ]
+      },
+      {
+        "item": "无COMBAT决策死亡漏记",
+        "commit": "3b48088dec5fc6eafe576a1296bbdadde43432ee",
+        "base_ancestor": true,
+        "main_ancestor": true,
+        "live_ancestor": true,
+        "commit_files": [
+          "agent/tests/report_death_fight_test.py",
+          "ops/report.py"
+        ]
+      },
+      {
+        "item": "broker请求写失败立即退出",
+        "commit": "eaa118c1d72f11b2b6b68c98c1d7bab10d138f5b",
+        "base_ancestor": true,
+        "main_ancestor": true,
+        "live_ancestor": true,
+        "commit_files": [
+          "agent/tests/broker-request-write.test.ts",
+          "ops/codex-ops-do.sh",
+          "ops/tests/test_broker_request_write.py"
+        ]
+      },
+      {
+        "item": "broker回执保留与队列错误隔离",
+        "commit": "6eb38508ceeb81d534159b3516458521ad09bbed",
+        "base_ancestor": true,
+        "main_ancestor": true,
+        "live_ancestor": true,
+        "commit_files": [
+          "agent/tests/broker-response-persistence.test.ts",
+          "ops/codex/broker.ts",
+          "ops/codex/main.ts"
+        ]
+      },
+      {
+        "item": "JSONL残尾边界恢复",
+        "commit": "3daf122a5168d1a8cb456aed1c926b2d1b6c4488",
+        "base_ancestor": true,
+        "main_ancestor": true,
+        "live_ancestor": true,
+        "commit_files": [
+          "agent/src/brain/engines/codex.ts",
+          "agent/src/brain/router.ts",
+          "agent/src/brain/wait.ts",
+          "agent/src/core/util/jsonl.ts",
+          "agent/src/eye/decision-log.ts",
+          "agent/src/eye/jev-prompt-log.ts",
+          "agent/src/eye/run-config.ts",
+          "agent/tests/jsonl-boundary-recovery.test.ts"
+        ]
+      },
+      {
+        "item": "宿主定向续验入口",
+        "commit": "24c2e3a75b5db6bac76d6c924f86b7fcd9438316",
+        "base_ancestor": true,
+        "main_ancestor": true,
+        "live_ancestor": true,
+        "commit_files": [
+          "agent/tests/learner-check-continuation.test.ts",
+          "docs/host-check-continuation.md",
+          "ops/codex-ops-actions.sh",
+          "ops/codex-ops-do.sh",
+          "ops/codex-ops-learn.py",
+          "ops/codex/lib.ts",
+          "ops/learner_check_continuation.py",
+          "ops/learner_checks.py",
+          "ops/tests/test_learner_check_continuation.py"
+        ]
+      },
+      {
+        "item": "会话启动租约保存屏障",
+        "commit": "798af209b9a268b7dafab1440150f1b39cd5595d",
+        "base_ancestor": true,
+        "main_ancestor": true,
+        "live_ancestor": true,
+        "commit_files": [
+          "agent/tests/learner-registration-barrier.test.ts",
+          "ops/codex-ops-learner.sh",
+          "ops/tests/test_learner_registration_barrier.py"
+        ]
+      },
+      {
+        "item": "prompt-dump倒序按偏移读取状态日志",
+        "commit": "6ee8e2a2c1edc31492962137b96af8c6e1d12093",
+        "base_ancestor": true,
+        "main_ancestor": true,
+        "live_ancestor": true,
+        "commit_files": [
+          "agent/tests/deepseek-prompt-dump.test.ts",
+          "agent/tools/deepseek-prompt-dump.ts"
+        ]
+      },
+      {
+        "item": "知识前缀房间回血说明角色中立",
+        "commit": "6d2de57ceae3def4caf073951ed9d2f9d1544cd7",
+        "base_ancestor": true,
+        "main_ancestor": true,
+        "live_ancestor": true,
+        "commit_files": [
+          "agent/src/knowledge/render/stats-text.ts",
+          "agent/tests/gkb-render.test.ts"
+        ]
+      },
+      {
+        "item": "fix-batch默认队列与live模板",
+        "commit": "5805dd187b7913a53b9e2645f40db1657eb5213c",
+        "base_ancestor": true,
+        "main_ancestor": true,
+        "live_ancestor": true,
+        "commit_files": [
+          "agent/tests/learner.test.ts",
+          "learner/tasks/fix-batch.md"
+        ]
+      },
+      {
+        "item": "experience-update使用live合入流程",
+        "commit": "16ebc4aecb12a1d4b2f34ee767bb2816a3a0b466",
+        "base_ancestor": true,
+        "main_ancestor": true,
+        "live_ancestor": true,
+        "commit_files": [
+          "agent/tests/learner-live-tasks.test.ts",
+          "agent/tests/learner.test.ts",
+          "learner/tasks/experience-update.md",
+          "learner/tasks/fix-batch.md"
+        ]
+      },
+      {
+        "item": "outcome-stats按mtime与大小重新加载",
+        "commit": "2650aed8baa84b8cf26e1e98b975582a6d5ab537",
+        "base_ancestor": true,
+        "main_ancestor": true,
+        "live_ancestor": true,
+        "commit_files": [
+          "agent/src/knowledge/experience.ts",
+          "agent/tests/outcome-stats-refresh.test.ts"
+        ]
+      },
+      {
+        "item": "021302宿主eval校准固定夹具超时（误遍历线上发布表）",
+        "commit": "d8748f2e70bfb2a91138ede0e1f6046927c116a4",
+        "base_ancestor": true,
+        "main_ancestor": true,
+        "live_ancestor": true,
+        "commit_files": [
+          "agent/tests/eval_calibration_test.py"
+        ]
+      },
+      {
+        "item": "021302宿主potions-jev-call全部局面扫描超时",
+        "commit": "c5fd30d8d369ea6c56bba2e4c3daa6e01e3bf420",
+        "base_ancestor": true,
+        "main_ancestor": true,
+        "live_ancestor": true,
+        "commit_files": [
+          "agent/tests/potions-jev-call.test.ts",
+          "agent/tests/rollout-clock-fixture.ts"
+        ]
+      },
+      {
+        "item": "infra-target-options-fixed-fixture-timeout（默认EZ2L路径）",
+        "commit": "c57105ca66bd75c6d6952772dcf712399eda828b",
+        "base_ancestor": true,
+        "main_ancestor": true,
+        "live_ancestor": true,
+        "commit_files": [
+          "agent/tests/target-options.test.ts"
+        ]
+      },
+      {
+        "item": "infra-test-rollout-ties-host-timeout-15000",
+        "commit": "da08fcead2025c293140f1ba103d8efdbd39a4c3",
+        "base_ancestor": true,
+        "main_ancestor": true,
+        "live_ancestor": true,
+        "commit_files": [
+          "agent/tests/rollout-ties-fixture.test.ts",
+          "agent/tests/rollout-ties.test.ts"
+        ]
+      },
+      {
+        "item": "infra-test-build-facts-selection-remove-latency",
+        "commit": "e2c1d8a2d29f1cbaf8e5620e4bb912d6f05965f0",
+        "base_ancestor": true,
+        "main_ancestor": true,
+        "live_ancestor": true,
+        "commit_files": [
+          "agent/tests/boss-sim-consumer-fixture.ts",
+          "agent/tests/build-facts-audit-fixture.test.ts",
+          "agent/tests/build-facts-audit.test.ts"
+        ]
+      },
+      {
+        "item": "h1-budget-completion-health-contract",
+        "commit": "c40e43fd25c200a01f4da94a4dac8db1b34664a8",
+        "base_ancestor": true,
+        "main_ancestor": true,
+        "live_ancestor": true,
+        "commit_files": [
+          "agent/src/sim/build-sim.ts",
+          "agent/src/sim/global-build-observer.ts",
+          "agent/src/sim/global-build.ts",
+          "agent/tests/adaptive_health_test.py",
+          "agent/tests/fixtures/h1-budget-completion.json",
+          "agent/tests/global-build-observer.test.ts",
+          "agent/tests/global-build.test.ts",
+          "agent/tests/global_build_health_test.py",
+          "agent/tests/human-pace-sampling.test.ts",
+          "ops/adaptive_health.py",
+          "ops/global_build_health.py"
+        ]
+      },
+      {
+        "item": "h1-strict-pick-deadline-stall",
+        "commit": "b3b9734d85defbdbd1b73ab85fab9ea2f636affd",
+        "base_ancestor": true,
+        "main_ancestor": true,
+        "live_ancestor": true,
+        "commit_files": [
+          "agent/src/hand/loop.ts",
+          "agent/src/hand/screens/pick.ts",
+          "agent/src/hand/screens/selection.ts",
+          "agent/src/memory/types.ts",
+          "agent/tests/human-pace-strict-pick-stall.json",
+          "agent/tests/human-pace-strict-pick-stall.test.ts"
+        ]
+      },
+      {
+        "item": "selection-hidden-daggers-conditional-followup-readback",
+        "commit": "a473263eb35ce5bea8e06f1ee94f4da1ba880bc3",
+        "base_ancestor": true,
+        "main_ancestor": true,
+        "live_ancestor": true,
+        "commit_files": [
+          "agent/src/hand/loop.ts",
+          "agent/src/hand/screens/selection.ts",
+          "agent/src/memory/types.ts",
+          "agent/src/reflex/combat-plan.ts",
+          "agent/tests/silent-hidden-daggers-selection-evidence.json",
+          "agent/tests/silent-hidden-daggers-selection.test.ts"
+        ]
+      },
+      {
+        "item": "silent-0338：末挡诊断漏列既有奥利哈钢",
+        "commit": "c1d84804956bedbd29a7f0e81294114e18415b9d",
+        "base_ancestor": true,
+        "main_ancestor": true,
+        "live_ancestor": true,
+        "commit_files": [
+          "agent/src/reflex/turn-solver.ts",
+          "agent/tests/end-turn-guard-sources.test.ts"
+        ]
+      },
+      {
+        "item": "silent-0272：商店移除预判误报不可选",
+        "commit": "db20ec3cc6cd0e47ac014d0c523dd4ed1c781d26",
+        "base_ancestor": true,
+        "main_ancestor": true,
+        "live_ancestor": true,
+        "commit_files": [
+          "agent/src/hand/screens/oneshot.ts",
+          "agent/src/hand/screens/selection.ts",
+          "agent/src/hand/screens/shop.ts",
+          "agent/src/memory/types.ts",
+          "agent/tests/shop-removal-preview.test.ts"
+        ]
+      },
+      {
+        "item": "silent-0367：构筑事实未传已用尾巴状态",
+        "commit": "5baf663d7e6678efa3690e5a48329c4f8baee109",
+        "base_ancestor": true,
+        "main_ancestor": true,
+        "live_ancestor": true,
+        "commit_files": [
+          "agent/src/brain/build-facts.ts",
+          "agent/src/hand/loop.ts",
+          "agent/src/memory/relic-resources.ts",
+          "agent/src/memory/run-brief.ts",
+          "agent/tests/silent-tail-resource-evidence.json",
+          "agent/tests/silent-tail-resource.test.ts"
+        ]
+      },
+      {
+        "item": "h1-b2-margin-sample-identity（已发布V5-R384）",
+        "commit": "660b194c950f017e356a4b3da952e127c7e5c768",
+        "base_ancestor": true,
+        "main_ancestor": true,
+        "live_ancestor": true,
+        "commit_files": [
+          "agent/src/sim/boss-lines.ts",
+          "agent/tests/human-pace-sampling.test.ts"
+        ]
+      },
+      {
+        "item": "silent-vigor-skewer-J2VR：赤牛活力与串刺两段伤害（J2VR2DFJG8K4 A10 F22第2/3试T1，silent-0504/0505，V5-R387）",
+        "commit": "d959e176af7338ea2bca6f4ff9a39673b80e5fdf",
+        "base_ancestor": true,
+        "main_ancestor": true,
+        "live_ancestor": true,
+        "commit_files": [
+          "agent/src/reflex/combat-plan.ts",
+          "agent/src/reflex/turn-solver.ts",
+          "agent/tests/silent-akabeko-skewer-evidence.json",
+          "agent/tests/silent-akabeko-skewer.test.ts"
+        ]
+      }
+    ],
+    "source_paths_checked": 181,
+    "source_blobs": {
+      "agent/src/brain/build-facts.ts": {
+        "blob": "0d3b910ca6ac718fdad6da0cd7c400bee9e89b1a",
+        "sha256": "9bb4d79e1117057e5bc1597bde1fbfb1d1bc1c9a5d9efadfc479f47ea2bb42da",
+        "live_blob": "08c0ca05e5d6411f9b9e8448be44236862078ee1"
+      },
+      "agent/src/brain/engines/codex-usage.ts": {
+        "blob": "a022acef45122b6e455903a82fa0254e0318daea",
+        "sha256": "f1c59ca0c8c85e7ba5c934a84a6ee9bb27a26cd8724452a8b954186925df95d6",
+        "live_blob": "3263f2121805cf8a103d2fa6ad0d077d340e255c"
+      },
+      "agent/src/brain/engines/codex.ts": {
+        "blob": "08a62ef91e19a90c3ac5fdee3943c576c156c82b",
+        "sha256": "dbd9d890def41f5903375f328279e46ee48661e84c9867a05cf9a4d76bc4672d",
+        "live_blob": "08a62ef91e19a90c3ac5fdee3943c576c156c82b"
+      },
+      "agent/src/brain/router.ts": {
+        "blob": "77a6775658168f2b9f39fb6ffb32a51c0de243f8",
+        "sha256": "5ddf70d623db2219d862c48eba95a0665517b882000fc211c66e683a19006118",
+        "live_blob": "77a6775658168f2b9f39fb6ffb32a51c0de243f8"
+      },
+      "agent/src/brain/wait.ts": {
+        "blob": "4c37bd38cd32a70eca446911367ccdfca75f46a4",
+        "sha256": "e5df1824e2000463ddfe6c78eebda8a5959148a275629fc6dc793c20490ff737",
+        "live_blob": "4c37bd38cd32a70eca446911367ccdfca75f46a4"
+      },
+      "agent/src/core/util/jsonl.ts": {
+        "blob": "d4c13928fbec29809180baf5dbabd4f80f7fc494",
+        "sha256": "06c006cf08cbe6dd74c210464e39b261b1b629d4dc879b144e88af341a7e22b7",
+        "live_blob": "d4c13928fbec29809180baf5dbabd4f80f7fc494"
+      },
+      "agent/src/eye/decision-log.ts": {
+        "blob": "af1ec3cf99e698191945c9c1b097fafff1beccd4",
+        "sha256": "b1ebc4bda2ad1bf7a3d8366c0bebe59f478b5d71767c593abc9561a43ff6e00b",
+        "live_blob": "af1ec3cf99e698191945c9c1b097fafff1beccd4"
+      },
+      "agent/src/eye/jev-prompt-log.ts": {
+        "blob": "f26e8ab8ddf5b63d75cd9be7a3d6f66fd9908118",
+        "sha256": "aad4cd15816d6184be381e3863ca297b165b6271793fbfb73fa4b8fb68995b4b",
+        "live_blob": "f26e8ab8ddf5b63d75cd9be7a3d6f66fd9908118"
+      },
+      "agent/src/eye/run-config.ts": {
+        "blob": "27c640b790796e7383287fcb4fe86a98bddfb047",
+        "sha256": "be2d7ffafd16b3eb4714688def2b3688a6afeba368c493218ae19a6067955f5b",
+        "live_blob": "27c640b790796e7383287fcb4fe86a98bddfb047"
+      },
+      "agent/src/hand/loop.ts": {
+        "blob": "bd71e2116b6e13efebcf1066eaf20a06190a9498",
+        "sha256": "46f13de264f312754c01634319966e9d2af622d9401cf56f825119db96144019",
+        "live_blob": "bd71e2116b6e13efebcf1066eaf20a06190a9498"
+      },
+      "agent/src/hand/screens/oneshot.ts": {
+        "blob": "b79727df60f4444c8c3107396fa597dbfa7eb6dc",
+        "sha256": "ded1688e33600aec4189ae1012aec5c3539e3e2ef0823be201089c9540f67313",
+        "live_blob": "91075cf3540418686e7136d61bd14ab874ea0c2c"
+      },
+      "agent/src/hand/screens/pick.ts": {
+        "blob": "61bda1f82ce9f5b6d3746ad446443027dec99945",
+        "sha256": "6eb173d6815105cd1b0a71b2825cc2877b0045431e759da47eb1794f739af549",
+        "live_blob": "61bda1f82ce9f5b6d3746ad446443027dec99945"
+      },
+      "agent/src/hand/screens/selection.ts": {
+        "blob": "904e9bb9ae5f2e8ff62dfca77c320ddb65637415",
+        "sha256": "c4432b5fdf8c352ad4d834a87340a3ee69d69606ea705420e4b113db4228c647",
+        "live_blob": "904e9bb9ae5f2e8ff62dfca77c320ddb65637415"
+      },
+      "agent/src/hand/screens/shop.ts": {
+        "blob": "898c35bc249b70896227c45dd45a0010674a9de3",
+        "sha256": "ae49d3f139434e8aab4352a8edb5b71bbd0e0e7019c9fc7d941d4aaaed324563",
+        "live_blob": "898c35bc249b70896227c45dd45a0010674a9de3"
+      },
+      "agent/src/knowledge/experience.ts": {
+        "blob": "e6f03aabbe01edd7fb665e6e20b451a706f53c29",
+        "sha256": "2b9fedb9ef907bc346519da202b9dbcecda6765f777b1f4557f9226be602e1dd",
+        "live_blob": "e6f03aabbe01edd7fb665e6e20b451a706f53c29"
+      },
+      "agent/src/knowledge/render/stats-text.ts": {
+        "blob": "4653d33ef6cff1a2a7b5a430007d0e19c04d394d",
+        "sha256": "91354ae54f8723be09ca95ac58a93a650affe8e4aef70dd34c4382ede24d208a",
+        "live_blob": "4653d33ef6cff1a2a7b5a430007d0e19c04d394d"
+      },
+      "agent/src/memory/journal-replay.ts": {
+        "blob": "b050f2500d31ab20a2f75d66a8432ebc81bd122b",
+        "sha256": "b2273f526812f13e4c1061a8636d3105102ccd8dd566a18177b44ea16f09d848",
+        "live_blob": "b050f2500d31ab20a2f75d66a8432ebc81bd122b"
+      },
+      "agent/src/memory/relic-resources.ts": {
+        "blob": "c48650d12b61459255b2b40725da647e885a671a",
+        "sha256": "b52ba3c484769c96ae8a33d736cecc817428ace6b80f5207469d78b4a66c2108",
+        "live_blob": "c48650d12b61459255b2b40725da647e885a671a"
+      },
+      "agent/src/memory/run-brief.ts": {
+        "blob": "0d83a8f5b54f9e8a9e4288b82ef38d061d0f1d47",
+        "sha256": "3eb7cda092b67ea178b2ffb4b5ff38478ae9d7d90d4a785b4f910ed3ae99d24a",
+        "live_blob": "0d83a8f5b54f9e8a9e4288b82ef38d061d0f1d47"
+      },
+      "agent/src/memory/types.ts": {
+        "blob": "b07be78154282ce650322d996b089c25a714c74d",
+        "sha256": "27a78bcf0a04355e2476cae4f1e271f2ce5eb22ed60015cb4c3c8f0f387ad227",
+        "live_blob": "b07be78154282ce650322d996b089c25a714c74d"
+      },
+      "agent/src/reflex/card-model.ts": {
+        "blob": "c76cf991fc0496c91d9d1bd5434d7765faa51ee7",
+        "sha256": "442ca2d50bc3d8fefe70b50a6451c0b746362312d7be4f1d47b94daa3cbdb64d",
+        "live_blob": "6fc002409bce2b7f599c8039db7aa1e5ce6881c3"
+      },
+      "agent/src/reflex/combat-plan.ts": {
+        "blob": "661e51d448af4ed0baa1112088e7a880ec452611",
+        "sha256": "d2ce972bcfcfe1f558a32b1212f506734feeaadb7da3a26230bf9568702c3106",
+        "live_blob": "661e51d448af4ed0baa1112088e7a880ec452611"
+      },
+      "agent/src/reflex/continuation-value.ts": {
+        "blob": "090d3e03c05b955a925dc5cc55cfc61fcbf64d07",
+        "sha256": "002277b50728ab8fd405799c0a3345e5dcb788ba8f37d5489b5fbcd9623029bb",
+        "live_blob": "090d3e03c05b955a925dc5cc55cfc61fcbf64d07"
+      },
+      "agent/src/reflex/rollout-live.ts": {
+        "blob": "db0827bd71e41f27fa9234b481ad2ee09d7dac94",
+        "sha256": "c125b13491e0b4dda85ff527f783e191e8ca2a32b0e66335d57cde4ed6b0ad68",
+        "live_blob": "fbe730bb6216ce5d1a851e4651969caed66fa0bf"
+      },
+      "agent/src/reflex/rollout.ts": {
+        "blob": "b3db153e92fb0844185f64d018b6ae27441d5dc2",
+        "sha256": "537dc002c630f9a95ea332b59296b15e561b0124d5caac40348dc85c5d47b0fc",
+        "live_blob": "b3db153e92fb0844185f64d018b6ae27441d5dc2"
+      },
+      "agent/src/reflex/silent-apotheosis.ts": {
+        "blob": "8d513bf482f236a89fc697dd2ae69944cdb65acc",
+        "sha256": "87db52f6ea630ea9e851469c6dcf713d2995a9528952629521750bb45092eb60",
+        "live_blob": "8d513bf482f236a89fc697dd2ae69944cdb65acc"
+      },
+      "agent/src/reflex/silent-skittish.ts": {
+        "blob": "ce67bd055256bf9af47f84962881ef53d9624283",
+        "sha256": "dbfa23ec61b30dff80b5f8158cf2f8c9da6ad8cb5e70334f9ab402689b491820",
+        "live_blob": "ce67bd055256bf9af47f84962881ef53d9624283"
+      },
+      "agent/src/reflex/silent-sl-resource-comparison.ts": {
+        "blob": "ce6e4de25ba5bc3c3340941c27ac7f8b2dd17a26",
+        "sha256": "75e3ca7380dab1f0c811b91df908eba08a46ae2810b1b983dd699eafef269ab0",
+        "live_blob": "ce6e4de25ba5bc3c3340941c27ac7f8b2dd17a26"
+      },
+      "agent/src/reflex/turn-solver.ts": {
+        "blob": "a7f520dc34357a1c0d13c31c5ad35c96b3f66882",
+        "sha256": "f9cc623485a3481db6b4cbe6d405a8d6f6677beb369309942598da3be685b808",
+        "live_blob": "a7f520dc34357a1c0d13c31c5ad35c96b3f66882"
+      },
+      "agent/src/sim/boss-lines.ts": {
+        "blob": "167033d099574c650f2817ab5b631d6f0f6d9d15",
+        "sha256": "bd3174609f2f71de360ea686a57659f9ba7a136b63bad6fbd9c69f05ff4ccdd4",
+        "live_blob": "167033d099574c650f2817ab5b631d6f0f6d9d15"
+      },
+      "agent/src/sim/boss-sim.ts": {
+        "blob": "d9fb928d6a8e9e6ef9ca0e586d025649dcc2aa5f",
+        "sha256": "f30a0c5bdd66d63b7ccd962947735ca2dfded2eaec76dd364f5e90fec0aafac6",
+        "live_blob": "d9fb928d6a8e9e6ef9ca0e586d025649dcc2aa5f"
+      },
+      "agent/src/sim/boss-start.ts": {
+        "blob": "352185272c4739d83b8f6160c11e1e0f580ad8a5",
+        "sha256": "01ef66ce210a3d022f1e28e34188b7005c7a88aa2b020e6f242f4030a95aee02",
+        "live_blob": "d106a30a2ca409c11e1623e4313cfbe39baa3810"
+      },
+      "agent/src/sim/build-sim-facts.ts": {
+        "blob": "c4c73c9c6c61656443d53c81241546d64191a805",
+        "sha256": "adddfd6b7f5be7cda29ce78480b8cab77bf5391f7ac5573de2483b17b51b9c49",
+        "live_blob": "c4c73c9c6c61656443d53c81241546d64191a805"
+      },
+      "agent/src/sim/build-sim.ts": {
+        "blob": "f627c81f7543b8354f02cb7b07ab21780700985f",
+        "sha256": "b95f81596b11bd7015b77ea08f2fd31b2e3d76d9ec24d5912d268147a9c2fd34",
+        "live_blob": "f627c81f7543b8354f02cb7b07ab21780700985f"
+      },
+      "agent/src/sim/double-boss-start.ts": {
+        "blob": "d0da5d2d8c51402d4e4c4c523fa54dafe6de88ec",
+        "sha256": "3241dedb92ff1ff9803df3786f15e65e669e7371756cca8668fb8c57771e97eb",
+        "live_blob": "d0da5d2d8c51402d4e4c4c523fa54dafe6de88ec"
+      },
+      "agent/src/sim/global-build-observer.ts": {
+        "blob": "355090060b78358973bfea928d671a17f78809f1",
+        "sha256": "02fd7bc8d58ef0a55baa6a1f46d8760d42fd410d1f21f55eb76621eb52e3994e",
+        "live_blob": "355090060b78358973bfea928d671a17f78809f1"
+      },
+      "agent/src/sim/global-build.ts": {
+        "blob": "9e666dd6edf08c1700cfb8cfe44b75fa3681daa8",
+        "sha256": "90150f4ccf3432b9045217fc47b4adef33279584de3baade64f94b0385922043",
+        "live_blob": "9e666dd6edf08c1700cfb8cfe44b75fa3681daa8"
+      },
+      "agent/src/sim/quantitative-calibration.ts": {
+        "blob": "625293998336b5772f3cb4a0bd88cc4c7121435c",
+        "sha256": "7edb1b8fa86b49f60ec2e1e4ddee1c6e065432d18ad8cf81461e97fc8242527f",
+        "live_blob": "625293998336b5772f3cb4a0bd88cc4c7121435c"
+      },
+      "agent/src/sim/quantitative-facts.ts": {
+        "blob": "0644cdc68490541d37595ffedbc64818fac5ddc2",
+        "sha256": "12b495e8c9922b9c4412ee0a86c5226383833896306c4a283bc6e00aa19845ba",
+        "live_blob": "0644cdc68490541d37595ffedbc64818fac5ddc2"
+      },
+      "agent/src/sim/quantitative-stats.ts": {
+        "blob": "57d3c8be7c03065e81d8233f56624349a4fc2707",
+        "sha256": "e33124df786f4060919d6713e494f9ce447b20c75113a573f7e549adf4e8a377",
+        "live_blob": "57d3c8be7c03065e81d8233f56624349a4fc2707"
+      },
+      "agent/src/sim/silent-opening.ts": {
+        "blob": "99218b8095e5bad7c6be8a726592cb038556aef9",
+        "sha256": "f3baa27bfac07d9f60995e37b7bbe31f7fa5baa63f18dd4fda3bc8d2c09bf502",
+        "live_blob": "99218b8095e5bad7c6be8a726592cb038556aef9"
+      },
+      "agent/src/sl/attempts.ts": {
+        "blob": "552a8adb0cc14b3ba81060399e3a5e317636e080",
+        "sha256": "f3f785f18c77ccc482a58b236d168780c8e010fb0bec12ec3e14ab61a8aca415",
+        "live_blob": "552a8adb0cc14b3ba81060399e3a5e317636e080"
+      },
+      "agent/src/sl/controller.ts": {
+        "blob": "c8b8f8bf8e0cd32d6a0413e4a30d6af389b92243",
+        "sha256": "f8827b8d4c53d1139bbec174c0b13f19c99803b4dbd404310c2835a3d05c2ffc",
+        "live_blob": "183c3fcb1471a01b8519a5781d4f2abb3227ace6"
+      },
+      "agent/src/sl/explore.ts": {
+        "blob": "72054748b603e960aaad29ce3e25537486fc6b5c",
+        "sha256": "2f37e85cc1c1c31e96a0d1b90db850893ec75b6cf5b4b84bf07bbb8de4e3ec43",
+        "live_blob": "ddaacde8ed9f73fd035c145f82ea99a51ed48172"
+      },
+      "agent/tests/adaptive_health_test.py": {
+        "blob": "931bfb860c44ff30ad5b4010bc64db87b0ec0d57",
+        "sha256": "6c1a065e51deeb076e29249b090bdaa5ac505e85000d42d73e0fa0302a5a8214",
+        "live_blob": "931bfb860c44ff30ad5b4010bc64db87b0ec0d57"
+      },
+      "agent/tests/ascension-observed.test.ts": {
+        "blob": "fd3a4802d5939852b19e8ced032c82158b093dfa",
+        "sha256": "9e3d7161f1a288983b9efa2bcc97dc0b24a4e248547645daa33967d82fceaf9e",
+        "live_blob": "fd3a4802d5939852b19e8ced032c82158b093dfa"
+      },
+      "agent/tests/blocked-experience-repair.test.ts": {
+        "blob": "7c4e5b81487fa0ce81ab862a0ffeeabc89f2b9e5",
+        "sha256": "8eb7e515c70cb8b4555eb4c5816fa13d98d98ac3ac097bb52aef149c9fa93ecd",
+        "live_blob": "7c4e5b81487fa0ce81ab862a0ffeeabc89f2b9e5"
+      },
+      "agent/tests/boss-sim-consumer-fixture.ts": {
+        "blob": "7bdb5c9ec60eca320dd60cf5d452d3549321f950",
+        "sha256": "9b76b0a356a63516f01b6a0d0d161487a0c8cfc29d19aa6a36ef90944f3707b6",
+        "live_blob": "7bdb5c9ec60eca320dd60cf5d452d3549321f950"
+      },
+      "agent/tests/brain-codex-session.test.ts": {
+        "blob": "f3112eafd13a1a3091a10aad2d791fd87f088682",
+        "sha256": "071d3559d3b67124cbcb2114bef49894a0fec347cbc47938e837cf742487e2da",
+        "live_blob": "f3112eafd13a1a3091a10aad2d791fd87f088682"
+      },
+      "agent/tests/brain-codex-usage.test.ts": {
+        "blob": "15dab15d0127b8b013f802c0c73c4a479eacf683",
+        "sha256": "bb6f20c22566bcc8c4aba152f8a37c0e5389dff632fbd2573b5fb66c179caac5",
+        "live_blob": "14c40d6cf24981329ab1cafe8ab9267714ea0616"
+      },
+      "agent/tests/broker-request-write.test.ts": {
+        "blob": "dec642833c26d4df088ddb35ef4d7e9640bdebf1",
+        "sha256": "16c276ce0f1edbbbd24efe403f5d126780f4e2f971f3cce129fcd963eb102752",
+        "live_blob": "dec642833c26d4df088ddb35ef4d7e9640bdebf1"
+      },
+      "agent/tests/broker-response-persistence.test.ts": {
+        "blob": "e931377343ad1ca2b8bc7014ae951a67c9a5ddc5",
+        "sha256": "e2ef26befe93ee58c205ba0144c4638f01195dc0c352a513e7cb618b4d2f1d04",
+        "live_blob": "e931377343ad1ca2b8bc7014ae951a67c9a5ddc5"
+      },
+      "agent/tests/build-facts-audit-fixture.test.ts": {
+        "blob": "b963fce357c910121f632904284475def4e0b12d",
+        "sha256": "a9a6e629064821a7255634468ee3edb2d1de6cc3ca71876d62157d6622bebe50",
+        "live_blob": "b963fce357c910121f632904284475def4e0b12d"
+      },
+      "agent/tests/build-facts-audit.test.ts": {
+        "blob": "4b350ec5a6503e2d30a3b0660cc3fb43e56fdd05",
+        "sha256": "48ff5c55cb9ac3f792fe0a85284d21d257e0aad686a0866f9733caaa2055a477",
+        "live_blob": "4b350ec5a6503e2d30a3b0660cc3fb43e56fdd05"
+      },
+      "agent/tests/codex-usage-recovery.test.ts": {
+        "blob": "5169dda9b3fc538b6427f193a17870d1f2b8f85f",
+        "sha256": "81424c655f0e92cb2ef11442115b0ab06fb5ffd20d7b42f162bb9356efd25323",
+        "live_blob": "5169dda9b3fc538b6427f193a17870d1f2b8f85f"
+      },
+      "agent/tests/compute-memo-files.ts": {
+        "blob": "2260834918e96bc798c7f823ab6dd22ef90194fe",
+        "sha256": "7694f4d5c57fb9cb114c621f8b30933813adcdb49d00fa43e6d35ad824b06817",
+        "live_blob": "2260834918e96bc798c7f823ab6dd22ef90194fe"
+      },
+      "agent/tests/compute-memo-worker.ts": {
+        "blob": "899be85357d9f2bbad09e98f64658919c06e1d55",
+        "sha256": "51e05d15207d7f8b2c51100d4c2bce677d281968b36e06460f18a483e7cdfd98",
+        "live_blob": "899be85357d9f2bbad09e98f64658919c06e1d55"
+      },
+      "agent/tests/compute-memo.test.ts": {
+        "blob": "597b10831fd45b03a3cb07966006fc330fbfca0f",
+        "sha256": "b776d493cc116f50b5f1809de7f2f22a2019a20bf617d38f4f0aa734c31e782b",
+        "live_blob": "597b10831fd45b03a3cb07966006fc330fbfca0f"
+      },
+      "agent/tests/core_build_jobs_test.py": {
+        "blob": "ba08abfa4918b4048cf22ee31bccf29884cb7d6d",
+        "sha256": "74bd1f1807f77cc03e7a78ecfdb66695bcec73aa09dc4be0ec0a391c8de6dc13",
+        "live_blob": "ba08abfa4918b4048cf22ee31bccf29884cb7d6d"
+      },
+      "agent/tests/deepseek-prompt-dump.test.ts": {
+        "blob": "c06686f83f731132d2370d072b04009269366924",
+        "sha256": "cb9348cc0400d941f68fb9fded18f94f559d41890a1b564d9df525213e1d7c72",
+        "live_blob": "c06686f83f731132d2370d072b04009269366924"
+      },
+      "agent/tests/end-turn-guard-sources.test.ts": {
+        "blob": "0efd9dd7bf1f7a11a3dc2d15ea9a2a09f32a1d62",
+        "sha256": "acad21a8a1b9ec02c266fa05ef39efebee1205ca3e0b83d12cf90942929ce102",
+        "live_blob": "0efd9dd7bf1f7a11a3dc2d15ea9a2a09f32a1d62"
+      },
+      "agent/tests/eval_calibration_test.py": {
+        "blob": "1dd6fa04bf7ee4e215f04d493a5a3eb4af0bfa4a",
+        "sha256": "a8396f045821ac1a965c94b10ce5b9500f97381cd9f134380bfb71df1040e92e",
+        "live_blob": "1dd6fa04bf7ee4e215f04d493a5a3eb4af0bfa4a"
+      },
+      "agent/tests/feature-root-event-notice.test.ts": {
+        "blob": "c46061c1a19b65d1df1a5081a7cd087f1cf84018",
+        "sha256": "73d7f2a918e5eb13958ff0daf90c9b164b17b69a752d2d04bf513ee2185259ff",
+        "live_blob": "c46061c1a19b65d1df1a5081a7cd087f1cf84018"
+      },
+      "agent/tests/fixtures/h1-budget-completion.json": {
+        "blob": "a557dff99ca01477d32b9dc2b6ad95fe1e940b68",
+        "sha256": "5a69eda1ec70c4c70bc3465d025c5ad87bffcb21ffeeff59e77aff8992255e8d",
+        "live_blob": "a557dff99ca01477d32b9dc2b6ad95fe1e940b68"
+      },
+      "agent/tests/gkb-render.test.ts": {
+        "blob": "32683477e9fe3e939217e5098a0ec4f575fa96b0",
+        "sha256": "87749ffb6fc3b3c8d1e29ed8690b8309d668b92d58d92446012574a7ad76e24e",
+        "live_blob": "32683477e9fe3e939217e5098a0ec4f575fa96b0"
+      },
+      "agent/tests/global-build-health.test.ts": {
+        "blob": "a903a8b804af1bcd609280205f6e539386c00cc2",
+        "sha256": "2e623fdc3d0ab0cb646591b21ed4a898167354e5e6091c470908c0ed5c28ce94",
+        "live_blob": "a903a8b804af1bcd609280205f6e539386c00cc2"
+      },
+      "agent/tests/global-build-integration.test.ts": {
+        "blob": "de985728ab2016445131bab254b7a21fddac8b41",
+        "sha256": "f173e3c8be375e89661d7fb089785c276d4642f74969feedf891127c3262d8c4",
+        "live_blob": "de985728ab2016445131bab254b7a21fddac8b41"
+      },
+      "agent/tests/global-build-observer.test.ts": {
+        "blob": "842f1db45620df356a82c5d42998d50b44b77d4c",
+        "sha256": "35d3d6492475d48af99cc5e8ba27da758d548ee6aa4535fb152491db9b930ed0",
+        "live_blob": "842f1db45620df356a82c5d42998d50b44b77d4c"
+      },
+      "agent/tests/global-build.test.ts": {
+        "blob": "707132b5fb3d6d4e6f9e5e10dba745b41bccf128",
+        "sha256": "70070aaf09dd968e14ca457716feb5b86e3bf9c243d7851120062143809d3622",
+        "live_blob": "707132b5fb3d6d4e6f9e5e10dba745b41bccf128"
+      },
+      "agent/tests/global_build_health_test.py": {
+        "blob": "03f2ac4d6a0d6f9da3c0f204e92558000c95072d",
+        "sha256": "ac6c1b1d51cd325a6de96e8a9fec76bcb782482a13f13d26d7624e8a8bf42b14",
+        "live_blob": "03f2ac4d6a0d6f9da3c0f204e92558000c95072d"
+      },
+      "agent/tests/human-pace-sampling.test.ts": {
+        "blob": "9c3dc77f194dce95980702489edc30140ca8f78f",
+        "sha256": "3e706eef6a94d6ce371c81083c1d796db93d17cc5175e0cdd904e26563451a6e",
+        "live_blob": "9c3dc77f194dce95980702489edc30140ca8f78f"
+      },
+      "agent/tests/human-pace-strict-pick-stall.json": {
+        "blob": "f33c517f0f769855e7653b002eeabdfecb0f73fa",
+        "sha256": "3b37a41948a7610f64ef7f2d1cf78302972be9186e6b289a6c393d428887d62a",
+        "live_blob": "f33c517f0f769855e7653b002eeabdfecb0f73fa"
+      },
+      "agent/tests/human-pace-strict-pick-stall.test.ts": {
+        "blob": "03182871afab79cd896a415731bda514081f6098",
+        "sha256": "52761794a5e7af88101543fcf68a4324feca2245be1bf94fb2558b9ded6f9215",
+        "live_blob": "03182871afab79cd896a415731bda514081f6098"
+      },
+      "agent/tests/jsonl-boundary-recovery.test.ts": {
+        "blob": "9f1ef0de779d50de1600e8b98025131bbf6c0f3e",
+        "sha256": "c3777e160afa8539009cbcf4bc4953c89eb6abb88a5319b8e7084a769bcf8f25",
+        "live_blob": "9f1ef0de779d50de1600e8b98025131bbf6c0f3e"
+      },
+      "agent/tests/learner-check-continuation.test.ts": {
+        "blob": "3c81170a0ac66424d1452f66f94145e0b8b531f9",
+        "sha256": "4ebd04ed99fd5ab21d7f0e5ce65814ff50c8006370bde5eb71a781074516d0de",
+        "live_blob": "3c81170a0ac66424d1452f66f94145e0b8b531f9"
+      },
+      "agent/tests/learner-entry.test.ts": {
+        "blob": "c64f76c4bd416a9b151f847fa5628ebf9467bff0",
+        "sha256": "4473a6e802730d1b543f4cd15d712d5d9d19c7bb984eceeca1121e1016d22629",
+        "live_blob": "c64f76c4bd416a9b151f847fa5628ebf9467bff0"
+      },
+      "agent/tests/learner-live-tasks.test.ts": {
+        "blob": "203d3f590c2128981d033487fa54f7932b23fbac",
+        "sha256": "c05b6811c30339a61526b6c084c8708bdf4261227162d5572f1de4b6a1fc90fc",
+        "live_blob": "203d3f590c2128981d033487fa54f7932b23fbac"
+      },
+      "agent/tests/learner-registration-barrier.test.ts": {
+        "blob": "9684124f0c14f39730b8828fad04b3a6f1f28cd9",
+        "sha256": "77c50c7534a720ae03c54fc5989ff2546c6ae83f63a7b3e602a91d4fbb8847ec",
+        "live_blob": "9684124f0c14f39730b8828fad04b3a6f1f28cd9"
+      },
+      "agent/tests/learner-retention-legacy.test.ts": {
+        "blob": "71b1ad1c9d1b38efd35c66c5f27d3a2bcaf54d13",
+        "sha256": "23dbe99f3cde7f5c0ad6eb8d25c0087dc67c4e65554ed809c5c507d90ab4b8c3",
+        "live_blob": "71b1ad1c9d1b38efd35c66c5f27d3a2bcaf54d13"
+      },
+      "agent/tests/learner-retention-uuid.test.ts": {
+        "blob": "40d7f77996fe007f5815237d7a3c0bf51a64e69c",
+        "sha256": "d41fb27abbd80f8fa1a2cd1343dd4327fcb102df8e30033436fa215c2172a78c",
+        "live_blob": "40d7f77996fe007f5815237d7a3c0bf51a64e69c"
+      },
+      "agent/tests/learner-strategy-scratch.test.ts": {
+        "blob": "ac96108b24412c3ba5887a58efb1c4605446601f",
+        "sha256": "7e7ae9556947ed6267692152ec0e5c7566c2a5e8f644dee41c74a96cdf7fbd85",
+        "live_blob": "ac96108b24412c3ba5887a58efb1c4605446601f"
+      },
+      "agent/tests/learner.test.ts": {
+        "blob": "df9d655dcb3e8aaa26b3ef5333ff2fe228eb7a41",
+        "sha256": "85f858c06553061018b96a8c12c8759806eaa8098acccde32b6ddeb0e22c4199",
+        "live_blob": "e91da5a17e30e1d83e0c4b4c747e01925c6e385a"
+      },
+      "agent/tests/learner_preserved_report_test.py": {
+        "blob": "4d4daf44dc2be94bf88eb14f0169e5b7dce1c98e",
+        "sha256": "c10a265a6fda3377bfc96336afe32495de144ae14a55759f55ec6d07be35fc60",
+        "live_blob": "4d4daf44dc2be94bf88eb14f0169e5b7dce1c98e"
+      },
+      "agent/tests/ledger-publication-baseline.test.ts": {
+        "blob": "e1b85ff2f39f5ff4bb4a899eb1b02e926c8602fd",
+        "sha256": "40ca0960b214c9ff3fd0415ac8cd9c9730d513df57726d0a4ddd6928d4f011fc",
+        "live_blob": "e1b85ff2f39f5ff4bb4a899eb1b02e926c8602fd"
+      },
+      "agent/tests/ledger_publication_baseline_test.py": {
+        "blob": "3ba7c28d1f23516c42f040eea4ffc5fd39a05de8",
+        "sha256": "1b3356feb984cbaeeb032382b275c3d9294e9f2eb1c485f6372dd9a917efcf69",
+        "live_blob": "3ba7c28d1f23516c42f040eea4ffc5fd39a05de8"
+      },
+      "agent/tests/multi-character.test.ts": {
+        "blob": "db756ec3cf96247d0326b1f4c6aa90c6a6bacbd8",
+        "sha256": "2625df3cd6e896e39bd31da6bf70ed445d51c6abdb2980515ea41a5fe0e9f310",
+        "live_blob": "db756ec3cf96247d0326b1f4c6aa90c6a6bacbd8"
+      },
+      "agent/tests/ops-codex.test.ts": {
+        "blob": "a1773a7c9aa52e46cf45546201138b30b2085117",
+        "sha256": "5ce8c2ba0bb3839ef28d0fc7cc5dc81a526e27d54dc26fe5130c196a7ae6cb7c",
+        "live_blob": "c16b897199034736281316c4f70a895cf37890b7"
+      },
+      "agent/tests/ops-deferred.test.ts": {
+        "blob": "efb0fb16233274ba46ff8fe085724b3276003cdb",
+        "sha256": "f57736987cc75f99727561f77e65fe6b32510afd572a1e8bdf5f31a2215a156d",
+        "live_blob": "efb0fb16233274ba46ff8fe085724b3276003cdb"
+      },
+      "agent/tests/ops-stall-between-runs.test.ts": {
+        "blob": "dada396445e7ee40c4ab9f463b23953059a440cf",
+        "sha256": "b94169b2e32042e4fe724129cb23e74a3a736db2aea4c3bfee36fb2009bc88a2",
+        "live_blob": "dada396445e7ee40c4ab9f463b23953059a440cf"
+      },
+      "agent/tests/outcome-stats-refresh.test.ts": {
+        "blob": "c8b82f269f6fc8e583800029e1711d4a9461e334",
+        "sha256": "d1bee61832ca0c893cb7d1c0ce340ea8e79fad6dba02825c2917e4f687800620",
+        "live_blob": "c8b82f269f6fc8e583800029e1711d4a9461e334"
+      },
+      "agent/tests/potions-jev-call.test.ts": {
+        "blob": "2140410b5c3139151c254a4324f8105dbe33911b",
+        "sha256": "a45b1fdabdc37de90e8073c77bd4a3da4b04ed887d5775a25a8b152484ef799b",
+        "live_blob": "5d9a6d40eb26d020a99cdc2abf3a8a6d2a3a5579"
+      },
+      "agent/tests/quantitative.test.ts": {
+        "blob": "61c8f7d0a6d0c3e1c5ddd73611cf0c030b12cf7f",
+        "sha256": "51394101f86fcb228348b4e84f0926a95d2e34c797de5eef7fe3b2251721bb90",
+        "live_blob": "61c8f7d0a6d0c3e1c5ddd73611cf0c030b12cf7f"
+      },
+      "agent/tests/report_death_fight_test.py": {
+        "blob": "e1486291c1753f94f8eda5e97ff7d204b9082c79",
+        "sha256": "db55c40e877700efbaeeff71767cdb8452ff1de221126f8e31e3dc562e65392d",
+        "live_blob": "e1486291c1753f94f8eda5e97ff7d204b9082c79"
+      },
+      "agent/tests/rollout-best-added.test.ts": {
+        "blob": "fe014f2ff79bfd1383b194547e99610098add57a",
+        "sha256": "085b6d3ac3a76eeafbb743e06fa4d1285d9c6beae695d4a49325fa12a01d9579",
+        "live_blob": "fe014f2ff79bfd1383b194547e99610098add57a"
+      },
+      "agent/tests/rollout-clock-fixture.ts": {
+        "blob": "410401a1b9ef183e6c0de860d012b06e8d13f816",
+        "sha256": "af6e0591539f4cc22ef555246adb6cb0a21a8c477e27e4fe7092dd2a19cc50d4",
+        "live_blob": "410401a1b9ef183e6c0de860d012b06e8d13f816"
+      },
+      "agent/tests/rollout-live.test.ts": {
+        "blob": "e04386253f686571a79e60f4c0e2b0af452ee4ef",
+        "sha256": "99b164b8797ac984e244cee4173ba62b1bd4a019a62b90ff6bba4cc423e058eb",
+        "live_blob": "e04386253f686571a79e60f4c0e2b0af452ee4ef"
+      },
+      "agent/tests/rollout-ties-fixture.test.ts": {
+        "blob": "a363dae115f1704a033ee0dc44f1dcc4aa9cc0e4",
+        "sha256": "58fd04605a621ec6556a089e0dc6ce64aea7df7f2ebe1d0bffa2fe6662f14b75",
+        "live_blob": "a363dae115f1704a033ee0dc44f1dcc4aa9cc0e4"
+      },
+      "agent/tests/rollout-ties.test.ts": {
+        "blob": "a4927aa84f30e56e2e022743af52e3944366ecc9",
+        "sha256": "fe6a8936fa45d5a23e08615612bd7d4a2eb3f9985f27bccaeb57ed6db0942fb7",
+        "live_blob": "5481a820d4fa9d0d8d2c5123f525561d97813192"
+      },
+      "agent/tests/shop-removal-preview.test.ts": {
+        "blob": "496d935515e1c0c53cbb5a9f0eaf45dff5fdc24a",
+        "sha256": "7faabd2ff2d4fe155d3e6387abd4d47efff7491f91d68556cf49b7f3d003bb91",
+        "live_blob": "496d935515e1c0c53cbb5a9f0eaf45dff5fdc24a"
+      },
+      "agent/tests/silent-akabeko-skewer-evidence.json": {
+        "blob": "b5fe686b43f0e5f1331b6023a45f42788675260c",
+        "sha256": "2bf6200a539dc4d86505601c83d28d45f14091b4e5ccf8dc085197cbbc08afec",
+        "live_blob": "b5fe686b43f0e5f1331b6023a45f42788675260c"
+      },
+      "agent/tests/silent-akabeko-skewer.test.ts": {
+        "blob": "9fbfdf75bd4736549d071b84dd5ceddd4672084d",
+        "sha256": "084f1dd9016740162499b1d42e4c8aee6506a7c18d49b1be36538851f9b8ddf7",
+        "live_blob": "9fbfdf75bd4736549d071b84dd5ceddd4672084d"
+      },
+      "agent/tests/silent-apotheosis-backflip-evidence.json": {
+        "blob": "3f30104f78333c860b6266dfb0b0a056f9dcaba3",
+        "sha256": "b3049234c3f15826086521baca96cbfd60dfb7c7bf53c07a50e8598694232ea5",
+        "live_blob": "3f30104f78333c860b6266dfb0b0a056f9dcaba3"
+      },
+      "agent/tests/silent-apotheosis-backflip.test.ts": {
+        "blob": "432cadeb4edd04df57465a558e457b4d26fe456d",
+        "sha256": "92b8265b3f0d52b73555224c976d58a5cb104d1e38064a566d3de76aaeb08500",
+        "live_blob": "432cadeb4edd04df57465a558e457b4d26fe456d"
+      },
+      "agent/tests/silent-apotheosis-footwork-evidence.json": {
+        "blob": "fb012a17216470c9050065825320cd7b8a1c88ee",
+        "sha256": "6a94369baed38189402ebe7703dbb56e93fa06fb45c8a2ba5ebef36841b5885d",
+        "live_blob": "fb012a17216470c9050065825320cd7b8a1c88ee"
+      },
+      "agent/tests/silent-apotheosis-footwork.test.ts": {
+        "blob": "27f34d7e4d3387cdd3bb626e4bed314d8860ebca",
+        "sha256": "db08046c20a523e9b59e3ccb7df3f20313a1bd111cde2d5ac2bdfebf985b5186",
+        "live_blob": "27f34d7e4d3387cdd3bb626e4bed314d8860ebca"
+      },
+      "agent/tests/silent-apotheosis-neutralize-evidence.json": {
+        "blob": "5bb8dad00ff3cb6186c7e27e99eb80478cad8ef2",
+        "sha256": "cf8398ada96db22b365bc1c2546dc81581daaa46fabde19ac18c171a5b23e7d1",
+        "live_blob": "5bb8dad00ff3cb6186c7e27e99eb80478cad8ef2"
+      },
+      "agent/tests/silent-apotheosis-neutralize.test.ts": {
+        "blob": "95e8b9594eb91d745127b1c71a19ece40e388a93",
+        "sha256": "9cc7983a595dec9df406dbb0d782045b3110c3aed7c819f3fab0b099a8496bb2",
+        "live_blob": "95e8b9594eb91d745127b1c71a19ece40e388a93"
+      },
+      "agent/tests/silent-apotheosis-poisoned-stab-evidence.json": {
+        "blob": "6f0a47e5e111ba2fea38bb2a4245d598eb4c7d72",
+        "sha256": "11a40365131a8bd1fee431750892af2f05423be4d19f43ef163d7a47dbc391c6",
+        "live_blob": "6f0a47e5e111ba2fea38bb2a4245d598eb4c7d72"
+      },
+      "agent/tests/silent-apotheosis-poisoned-stab.test.ts": {
+        "blob": "717de57c01ba222e3af7d6295620b7df2f99548f",
+        "sha256": "535d47a1325a3d7174799b54b5c436e51625a9cd4cd8d00046e8cb71c6c8dc50",
+        "live_blob": "717de57c01ba222e3af7d6295620b7df2f99548f"
+      },
+      "agent/tests/silent-apotheosis-snakebite-evidence.json": {
+        "blob": "21d9742382c3ec18fa91a3de7b882b66591f7276",
+        "sha256": "c92db4ed2ad4591d799a7ff351fe71126c639285bab004d0a169274f70c534d5",
+        "live_blob": "21d9742382c3ec18fa91a3de7b882b66591f7276"
+      },
+      "agent/tests/silent-apotheosis-snakebite.test.ts": {
+        "blob": "3c85ba6a320d4e6a612419d6c513e05aa4f3823e",
+        "sha256": "973b62b4b780a680bcaa1fc62f5fa28b2deb0c2725807b965a7e6d8dd1d357e6",
+        "live_blob": "3c85ba6a320d4e6a612419d6c513e05aa4f3823e"
+      },
+      "agent/tests/silent-apotheosis-survivor-evidence.json": {
+        "blob": "17a1dc631e26fcf6675ab017ab80054ae0efc97a",
+        "sha256": "73c01fc629e8585a06d942f89fa1bc2124d44c9f94d75a177b863b1a87ace5e3",
+        "live_blob": "17a1dc631e26fcf6675ab017ab80054ae0efc97a"
+      },
+      "agent/tests/silent-apotheosis-survivor.test.ts": {
+        "blob": "cd0cbddd06c6d288ce293ee69c6f412e7909a3af",
+        "sha256": "3e72b56eba8131fda73f38e18afb6aaebdcd8a12a2ebf340fe0b681d0fee809f",
+        "live_blob": "cd0cbddd06c6d288ce293ee69c6f412e7909a3af"
+      },
+      "agent/tests/silent-blade-dance-evidence.json": {
+        "blob": "72f27b06df8c184afe77144c5d9c9535d7f11506",
+        "sha256": "42ac6b17ccfaac91512e9e6efba9c9b54f8e12dbbcd06a45b69081089ab06a5f",
+        "live_blob": "72f27b06df8c184afe77144c5d9c9535d7f11506"
+      },
+      "agent/tests/silent-blade-dance.test.ts": {
+        "blob": "164022e2971c203c108aa96ff86c9c6fcdc2d0ba",
+        "sha256": "f2ca2656e86c15c346076884fa79dddeb9511da85bdd32d1324fdca8d5d0627c",
+        "live_blob": "164022e2971c203c108aa96ff86c9c6fcdc2d0ba"
+      },
+      "agent/tests/silent-build-win-ties.test.ts": {
+        "blob": "a2c79e4642be83da27a8206cc07c3018dec96bfd",
+        "sha256": "d25914ad4d83b3bd6f8009a296d440cb2ec03d845c3ea107c99c66deeec8237b",
+        "live_blob": "a2c79e4642be83da27a8206cc07c3018dec96bfd"
+      },
+      "agent/tests/silent-cunning-evidence.json": {
+        "blob": "5c4da678908a9498eb4c0a7b96f3acec7995d04a",
+        "sha256": "30791b4336e4db9e18c6edc2aacabcfd792dfdf03feb6df367386b0c5b071af6",
+        "live_blob": "5c4da678908a9498eb4c0a7b96f3acec7995d04a"
+      },
+      "agent/tests/silent-cunning-state.json": {
+        "blob": "9dacdc8dff05229f3e5e7635e778c6abad482ce9",
+        "sha256": "5cd68e85a52bafc825a26a2f5c9f7d5c975863850572b75bb74eb89b77567d06",
+        "live_blob": "9dacdc8dff05229f3e5e7635e778c6abad482ce9"
+      },
+      "agent/tests/silent-cunning.test.ts": {
+        "blob": "c0c27d19a7c1af7f65b075f077653cc68972041f",
+        "sha256": "41247716a0155c3e3b8cb013c432128db4aa0c6dff1324332e1698b1fafcf4e1",
+        "live_blob": "c0c27d19a7c1af7f65b075f077653cc68972041f"
+      },
+      "agent/tests/silent-discard-plan-evidence.json": {
+        "blob": "cd50f106e2cb5890fe30951b58073d8088add5a0",
+        "sha256": "47a58cd5722f58e503726478542966d78362d62230d9dee864d6850ce0a7b3da",
+        "live_blob": "cd50f106e2cb5890fe30951b58073d8088add5a0"
+      },
+      "agent/tests/silent-discard-plan.test.ts": {
+        "blob": "9bf23092a2c38e48493fcc42f205dc2ef693ace5",
+        "sha256": "81c578edd88a609257a3347023129ba33d48d4558cd48bf326b4cd11c6d6b587",
+        "live_blob": "9bf23092a2c38e48493fcc42f205dc2ef693ace5"
+      },
+      "agent/tests/silent-gardener-skittish-evidence.json": {
+        "blob": "268892b1f9d5e173ead3a7a39be25c739b26efbb",
+        "sha256": "7e3bbfa3122c116726bddff0c3c95c4735f9ab4aa3f9c7de069245b8e4548fd0",
+        "live_blob": "268892b1f9d5e173ead3a7a39be25c739b26efbb"
+      },
+      "agent/tests/silent-gardener-skittish.test.ts": {
+        "blob": "01dc42ae177bf1772aea201c10689d4f4719cdda",
+        "sha256": "11a7d5637b9b5ff84daf308c1f9ef56cb2a4647582d59f09ba5fc6ad7ae75b52",
+        "live_blob": "01dc42ae177bf1772aea201c10689d4f4719cdda"
+      },
+      "agent/tests/silent-hidden-daggers-selection-evidence.json": {
+        "blob": "36f09f473a22fc0c9bfd53c3101bdda86add975e",
+        "sha256": "067f71b789d50279e36b61abdb7d9b0ee919d918ff4112c7ac8f9aa26739ba45",
+        "live_blob": "36f09f473a22fc0c9bfd53c3101bdda86add975e"
+      },
+      "agent/tests/silent-hidden-daggers-selection.test.ts": {
+        "blob": "01b15b81a021a5699acada3054f536802f1cd031",
+        "sha256": "f008e8d70a696705d13988f337f7f8670214549d874d2c12731cae91195e8343",
+        "live_blob": "01b15b81a021a5699acada3054f536802f1cd031"
+      },
+      "agent/tests/silent-opening-evidence.json": {
+        "blob": "da7ac67c8525bebaeba573d3df9a4505296d54b0",
+        "sha256": "4ca857515f97351bb4105fec4c826bb75530802ad3c7f61c5a8aff34e0a9e1c1",
+        "live_blob": "da7ac67c8525bebaeba573d3df9a4505296d54b0"
+      },
+      "agent/tests/silent-opening.test.ts": {
+        "blob": "d9b8d68ef6c6e5fb55620b767de722c79d3ed56a",
+        "sha256": "a52584a2f61968f48af0791c9a330cfa2c0e75f558428e34d3c19abd469aa759",
+        "live_blob": "d9b8d68ef6c6e5fb55620b767de722c79d3ed56a"
+      },
+      "agent/tests/silent-paper-krane.test.ts": {
+        "blob": "1568c9d680ab79b28a76af493682fba9fcd8e1f3",
+        "sha256": "926b0de3eeee692493299a751fdadf75a334f96720bca76e02bd9fd179e4a836",
+        "live_blob": "1568c9d680ab79b28a76af493682fba9fcd8e1f3"
+      },
+      "agent/tests/silent-phase-reference.test.ts": {
+        "blob": "81b9ae886585ef8617c79d846d3474f39d13c152",
+        "sha256": "02778419a989b00199b0e80cfc1fbab2ebb0f7c0706bfc0afba93e02dab4abdf",
+        "live_blob": "81b9ae886585ef8617c79d846d3474f39d13c152"
+      },
+      "agent/tests/silent-reattach-evidence.json": {
+        "blob": "799a34e6fb682087505e95c6bdb3c598285bf412",
+        "sha256": "b06a7bcbdc0454646f3c70712db1825a78156fc3855007d7d63420d4f886e86f",
+        "live_blob": "799a34e6fb682087505e95c6bdb3c598285bf412"
+      },
+      "agent/tests/silent-reattach-reset.test.ts": {
+        "blob": "c67e57c49364139da711e7bf4b893682a26f5636",
+        "sha256": "aaca99713843826328995a91110fe255abfab6cb08a59e37c4ed17894e0a4a4f",
+        "live_blob": "c67e57c49364139da711e7bf4b893682a26f5636"
+      },
+      "agent/tests/silent-shackling-weak-state.json": {
+        "blob": "a3d1daff32ef6323cf9d9172de78d931c1902a28",
+        "sha256": "f1b8cf626c8eb5a934932fc45dbbf11b9db69c648694ed74cd9110c085b28c35",
+        "live_blob": "a3d1daff32ef6323cf9d9172de78d931c1902a28"
+      },
+      "agent/tests/silent-shackling-weak.test.ts": {
+        "blob": "392cb8b850562d1f07b69ea41fe9b33056fdbbae",
+        "sha256": "b5fb802b8a0f9a3e0b64859bc2dd4efb1b0a8f4eb8a4443ff4460331ba103f12",
+        "live_blob": "392cb8b850562d1f07b69ea41fe9b33056fdbbae"
+      },
+      "agent/tests/silent-skittish-state.json": {
+        "blob": "a7cb9711ff56d1e0758cd61dd4896b84bb20a1b7",
+        "sha256": "813e667b7ec3e4e17f792c8cec3b5a2cfd6bfa83627bc00520a93f8fdf8731be",
+        "live_blob": "a7cb9711ff56d1e0758cd61dd4896b84bb20a1b7"
+      },
+      "agent/tests/silent-skittish.test.ts": {
+        "blob": "730215bc6d0841e3bced1196ddf895318a50c213",
+        "sha256": "30f266f172120e58355566a7ba300edb34afbb9e511a82fd62982ea229499a87",
+        "live_blob": "730215bc6d0841e3bced1196ddf895318a50c213"
+      },
+      "agent/tests/silent-sl-resource-comparison.test.ts": {
+        "blob": "539c38c45d4a095e16d477d1789cdb4e60ace036",
+        "sha256": "056a0ffba60f75e146781acb0a622b598127c2c6a91df7f78cc673247dbe52a5",
+        "live_blob": "539c38c45d4a095e16d477d1789cdb4e60ace036"
+      },
+      "agent/tests/silent-sl-sandpit-state.json": {
+        "blob": "bb7b952c2da9dc9c55a8c518a642eac47dfa691e",
+        "sha256": "36ed43f5f25661429d6d58b23d0b0398dffd0fc902f2490c35ec19a20950f2c6",
+        "live_blob": "bb7b952c2da9dc9c55a8c518a642eac47dfa691e"
+      },
+      "agent/tests/silent-tail-resource-evidence.json": {
+        "blob": "b7b3c1e94fd030325233f96bdddee6527c2eb5bf",
+        "sha256": "8e79341423672d3d68dc3c2688bafc548fcbe3383934a8d978c24b1fd22a20ca",
+        "live_blob": "b7b3c1e94fd030325233f96bdddee6527c2eb5bf"
+      },
+      "agent/tests/silent-tail-resource.test.ts": {
+        "blob": "67da92eb996d7e0c8013f09b65bf02552c80a0b4",
+        "sha256": "6a7fe824babaf643c8c2eede1f9087de207e559a3ea2649b46c7b3cd2ff91dae",
+        "live_blob": "67da92eb996d7e0c8013f09b65bf02552c80a0b4"
+      },
+      "agent/tests/silent-test-subject-phase.test.ts": {
+        "blob": "748756b0e3d79e0f9ef1ff5e59da36a43bf1c8c7",
+        "sha256": "23a0ba5f479a5f1bcbae9a851a17295bb6e1e3b0148bfbf0d6cfe05082d9eb95",
+        "live_blob": "748756b0e3d79e0f9ef1ff5e59da36a43bf1c8c7"
+      },
+      "agent/tests/sl-giant-phase-data/yql-blast.json": {
+        "blob": "6522870ea3c06987bef4d0b1f91302a6fb135e3b",
+        "sha256": "4076c874378f42a27c2038dc16c65aef45bf3aabdd26bfd2df838106e8c77b94",
+        "live_blob": "6522870ea3c06987bef4d0b1f91302a6fb135e3b"
+      },
+      "agent/tests/sl-giant-phase.test.ts": {
+        "blob": "03e57f6c204970f5d1974114620a31abee4fe735",
+        "sha256": "e954b925c2ac29abc9c5614687ff5560414945c3cfee40077fcc36f4ba06f41c",
+        "live_blob": "03e57f6c204970f5d1974114620a31abee4fe735"
+      },
+      "agent/tests/target-options.test.ts": {
+        "blob": "866e5b109a2dbfbcd21ad8f8510983086903cfa5",
+        "sha256": "91a53e184797b70add5414775ff41c96ac7a866410b7c9e4b39e9fd723e009d1",
+        "live_blob": "4706d62f2fef6188ea28a3e4b8e17500ca366516"
+      },
+      "agent/tests/unassigned-proposal-resolution.test.ts": {
+        "blob": "928d6f64bf4f309abad0277ec862f123bfac3db2",
+        "sha256": "cc07a26a7f9f1925a13bf76fb4dab5bc95135b36fc7460b045b4a18c00616d07",
+        "live_blob": "928d6f64bf4f309abad0277ec862f123bfac3db2"
+      },
+      "agent/tools/deepseek-prompt-dump.ts": {
+        "blob": "bca63f8c74a91ca244052de918c59b9cd7577225",
+        "sha256": "65e3106447e5921f47de13e05747a168c1677f4dc92fe9543c5a2f89cef058f2",
+        "live_blob": "bca63f8c74a91ca244052de918c59b9cd7577225"
+      },
+      "agent/tools/quantitative.ts": {
+        "blob": "2f593f39e56bb799c0be4f8dc91a8df639f843bc",
+        "sha256": "60ce0518fd98afb343b3e78df2bb41e0918cbb536529dc248c1dc1af5584cda4",
+        "live_blob": "2f593f39e56bb799c0be4f8dc91a8df639f843bc"
+      },
+      "learner/ledger.py": {
+        "blob": "4c5e6dc0fea78dae8948e97b98a74af319a1303f",
+        "sha256": "3b3071078cfb5394fc9b14f32078e4c3a559255bf9efeacf6ed17e15092b2a61",
+        "live_blob": "4c5e6dc0fea78dae8948e97b98a74af319a1303f"
+      },
+      "learner/lib/launcher.ts": {
+        "blob": "32411d0cc2f13ae9ab0f3b52307c48f6e9275ced",
+        "sha256": "4085ab032a7e18210a4402cb3d06618eaea4dde2fc2777229ec0f68d5489cc77",
+        "live_blob": "fc5b97ed72fb3d958dd1e830de4d46022a300fe9"
+      },
+      "learner/tasks/experience-update.md": {
+        "blob": "19991b82d304d359782002eee6af62c07a0aab88",
+        "sha256": "95a40d4c47a28529ad422aab99def3eb6e671a5a5cb54e73926c173effacc122",
+        "live_blob": "069af45f4ea58501e4209d1002de158ac8fde3d2"
+      },
+      "learner/tasks/fix-batch.md": {
+        "blob": "0cf67273f73ad423f2bc527389d5fc9daed0c663",
+        "sha256": "5a7e4104dd66b5b609313206224f8d92c1883a2bda827715fa2369da2099e919",
+        "live_blob": "4e14a00b4e66834d17c5ecc5fbd4d5b1c6adf6d1"
+      },
+      "ops/adaptive_health.py": {
+        "blob": "d41f84aa65d5a852edbb683e4d91ccc2a00da4cb",
+        "sha256": "49dd06ac9ab1a8cc4e1ff0b3c44a2c6f9e1cf6d5976c506d4a276a8c2fb9fe43",
+        "live_blob": "d41f84aa65d5a852edbb683e4d91ccc2a00da4cb"
+      },
+      "ops/codex-ops-actions.sh": {
+        "blob": "4743f11ba1af0be3c3eeeb63483a018739c908ec",
+        "sha256": "a49d54356a4b94d764a4da62ac387d712464b1d3ca8d9942e3264728de2418e0",
+        "live_blob": "796812da783ac4de26df12a42fc6d2a0706e7ad3"
+      },
+      "ops/codex-ops-do.sh": {
+        "blob": "6223323b1fa4a5cfe98f8e3591b79bfa10255fe8",
+        "sha256": "fd675787d10607e8c301ddf0e01db4c2df45c4544f647a783a441cf975bf52ba",
+        "live_blob": "6223323b1fa4a5cfe98f8e3591b79bfa10255fe8"
+      },
+      "ops/codex-ops-learn.py": {
+        "blob": "a0e19a83ef9ef2ef72e339c5187e01119032e8df",
+        "sha256": "12b27ed00c6226bc99da4080a7cd1919e1bb07c8ecff617d1c3d3644cb6b32e9",
+        "live_blob": "a0e19a83ef9ef2ef72e339c5187e01119032e8df"
+      },
+      "ops/codex-ops-learner.sh": {
+        "blob": "7133d26b6c9141cd4462c3b7b992df92f7b1bf11",
+        "sha256": "88ffea70a4c3bbeaff46a1a82c87529e30b0a1e41faec00201ff7063f7a6ed70",
+        "live_blob": "7133d26b6c9141cd4462c3b7b992df92f7b1bf11"
+      },
+      "ops/codex-ops.sh": {
+        "blob": "58d5c9df2bad7e565fea4ff68351a3f2108a1fc5",
+        "sha256": "cab435ba62d94915b7cb2fdd5b949e1da12e8d3a0523c226e3722f08fb2fe51b",
+        "live_blob": "58d5c9df2bad7e565fea4ff68351a3f2108a1fc5"
+      },
+      "ops/codex/broker.ts": {
+        "blob": "087bad9c5b48b04ea66dbbbfc42edad77096e297",
+        "sha256": "fd1d28ea00f20d8bd3abec7ebdf7a4b58c332e6c4cfb18415ec8cc3e94c439b1",
+        "live_blob": "087bad9c5b48b04ea66dbbbfc42edad77096e297"
+      },
+      "ops/codex/lib.ts": {
+        "blob": "f7f81e71502e82f467d762093efd2bdcfd338016",
+        "sha256": "4df18b6f7256390702a620f022e37d647edac5a9d3ce164ff001b2bea791a2da",
+        "live_blob": "2b82072eca262dc3eb90b7fd5359531015702133"
+      },
+      "ops/codex/main.ts": {
+        "blob": "6d20921c15aae9ed972166082f50ab3ddf8e65de",
+        "sha256": "96c26c498c3b3e3e129dd53517e6392d4ec97da5ff101ed857a8dbe2a021e7aa",
+        "live_blob": "609730c9e9fbe5d25e757612c384a4fef45d832c"
+      },
+      "ops/core_build_jobs.py": {
+        "blob": "9e2df056d90b8a3dce8d1a06921a9062e2b66811",
+        "sha256": "8926c0b5e1315ae19d5cc5793c4447ad92c67799747caeaebbcb397261ff3169",
+        "live_blob": "9e2df056d90b8a3dce8d1a06921a9062e2b66811"
+      },
+      "ops/global_build_health.py": {
+        "blob": "4c9ba039678fb1256e7c24be2e1f122babddfcc6",
+        "sha256": "c156fae120daa48b455981d85c40a8fbc9d59061ff355a8b59fa36ce679f0983",
+        "live_blob": "4c9ba039678fb1256e7c24be2e1f122babddfcc6"
+      },
+      "ops/learner_check_continuation.py": {
+        "blob": "88e43d2464a958d7603c1f11e8276a5d5328fee8",
+        "sha256": "44437bdcc101eca58fd5e9635584d0d3318ca627d40fb392fc461de28838b062",
+        "live_blob": "88e43d2464a958d7603c1f11e8276a5d5328fee8"
+      },
+      "ops/learner_checks.py": {
+        "blob": "ab4a4dc5fca6681defb97e3eec8d8c466b7d962e",
+        "sha256": "f3e20b5e1b1f2731c67b9380b588fc928494206452dc857d950a01e346d1934c",
+        "live_blob": "ab4a4dc5fca6681defb97e3eec8d8c466b7d962e"
+      },
+      "ops/learner_entry.py": {
+        "blob": "03af75c5672f1613e8f3c6c2d06f19bc7b4da9aa",
+        "sha256": "a77f9f94d7137ef14e59326c568528618f1aa64f16b9d7fea8eca018f51a93ce",
+        "live_blob": "03af75c5672f1613e8f3c6c2d06f19bc7b4da9aa"
+      },
+      "ops/learner_retention.py": {
+        "blob": "b0fa42ecbdc78aef46e13756f7dca87f3d5a874a",
+        "sha256": "9fc297edc5b357068644ac357bae804f8a1ba6deae710f055bae5d53d730e649",
+        "live_blob": "1cafa44eb545eb5aaa61db6ecdf80582bbf9de1d"
+      },
+      "ops/learning_requests.py": {
+        "blob": "05c4ad5ef7b5251d345a7a759230de2787b669fa",
+        "sha256": "b8f99ae5bfe559b8cb849a2d6804809d127af256e80e08c289950d33df71e5bd",
+        "live_blob": "e3ed74830ebf7abe248382dafcee21773edce22d"
+      },
+      "ops/proposal_dispatch.py": {
+        "blob": "7a90d01fae435df9c4a7598e89b663cf529fae21",
+        "sha256": "cd2e599df3de5b9d4eafecab5537df686fb37bc05eed29260decd8f6f5e9227f",
+        "live_blob": "7a90d01fae435df9c4a7598e89b663cf529fae21"
+      },
+      "ops/report.py": {
+        "blob": "75a67bc63bdfc2efd12a1828f23a588f3eac05b2",
+        "sha256": "0a38fe3b3d4bea8b4a21a8c6a09d346f0e2eedb10dacbc2f1b278eeb608b5d0c",
+        "live_blob": "75a67bc63bdfc2efd12a1828f23a588f3eac05b2"
+      },
+      "ops/stall-check.sh": {
+        "blob": "10e07de65e188bc437d4629ad5edffc5e332eb51",
+        "sha256": "b07d14af42be12d77d4f20c49502a4740c9a760a9f531833dc794ee3e55a046f",
+        "live_blob": "10e07de65e188bc437d4629ad5edffc5e332eb51"
+      },
+      "ops/tests/test_broker_request_write.py": {
+        "blob": "b2a10895efed1dc508e4058c3b28d37117f11b35",
+        "sha256": "6d8a1ab13b2f92d852d931e7945b822c919b6adf344907682907955c705b01a7",
+        "live_blob": "b2a10895efed1dc508e4058c3b28d37117f11b35"
+      },
+      "ops/tests/test_feature_root_event_notice.py": {
+        "blob": "84d4d13700aed93d1ebafd7f3e7aaa3b29025045",
+        "sha256": "d394781b8ca316dd29cd1b3f79f27f147e02e30c8916313603c100ceb6e5d1ab",
+        "live_blob": "84d4d13700aed93d1ebafd7f3e7aaa3b29025045"
+      },
+      "ops/tests/test_learner_check_continuation.py": {
+        "blob": "40610139ac2369f9d12183ba9a8e031de6853df2",
+        "sha256": "faa3948536862de29d04e9ae5683f1c2eabe99d167d94879b9799d637646d27b",
+        "live_blob": "40610139ac2369f9d12183ba9a8e031de6853df2"
+      },
+      "ops/tests/test_learner_entry.py": {
+        "blob": "c2d75f67ad916d393dfa6979d7215ddcc208203a",
+        "sha256": "bde09b43b848ad52163fe2b03cb5f42a335e0e56466f0fd1338f9b25e43e30f4",
+        "live_blob": "c2d75f67ad916d393dfa6979d7215ddcc208203a"
+      },
+      "ops/tests/test_learner_launch_failures.py": {
+        "blob": "083f7a85a02fc3790357fd145b5f403fdd5b9b2b",
+        "sha256": "4e2f477760d1bf286a17aaea54ffb90e0e88dc2efd7e7cc063cd6015e30a838d",
+        "live_blob": "083f7a85a02fc3790357fd145b5f403fdd5b9b2b"
+      },
+      "ops/tests/test_learner_registration_barrier.py": {
+        "blob": "98580e9ada6d6b32bc1f82b0f3e48455e9df94de",
+        "sha256": "4791450ba8c485fe0c4ed5ddd97e542a623af721ce05264e1568e469867c0973",
+        "live_blob": "98580e9ada6d6b32bc1f82b0f3e48455e9df94de"
+      },
+      "ops/tests/test_learner_retention.py": {
+        "blob": "492c34792cc1a844f32e55e8c64fd6385dc74797",
+        "sha256": "683fc1a6813cddb3d94ff3680cfa1a191104ecd14b983da8b36b6816389ed315",
+        "live_blob": "492c34792cc1a844f32e55e8c64fd6385dc74797"
+      },
+      "ops/tests/test_legacy_learner_retention.py": {
+        "blob": "de14048e9b1ccef8fd5046617f0387197e4ff378",
+        "sha256": "5db0158bb9f618496f37eb10e23bbabfd44ae78b4f8afd7c0302a50ff688bc5a",
+        "live_blob": "de14048e9b1ccef8fd5046617f0387197e4ff378"
+      },
+      "ops/tests/test_strategy_implementation.py": {
+        "blob": "ceb4adcd5910d8ae46bcabe56c9ce5ebb24efc7a",
+        "sha256": "30a68c09eab55c1668659eea9bec51fc1c4c21fcfb8c47b9c4f5eed3c5dcdcdd",
+        "live_blob": "ceb4adcd5910d8ae46bcabe56c9ce5ebb24efc7a"
+      },
+      "ops/tests/test_strategy_implementation_continuation.py": {
+        "blob": "e768c81d8fc49c5d6bf8a4385769870ebe5402e1",
+        "sha256": "4232b3986082aebc7b8aeacf07e6dc9e61f8e49a39a29565a4e5676e6d40252e",
+        "live_blob": "e768c81d8fc49c5d6bf8a4385769870ebe5402e1"
+      },
+      "ops/tests/test_strategy_research_scheduling.py": {
+        "blob": "34b6cde378bcc44c53217ddb4a159754126b3f56",
+        "sha256": "cd166b224dd7a353638ee35072d87452cea9a8978ccb5c307e8892707c673fe5",
+        "live_blob": "34b6cde378bcc44c53217ddb4a159754126b3f56"
+      },
+      "ops/tests/test_unassigned_proposal_resolution.py": {
+        "blob": "91fbc6083eb55d60d6060994b57a6f60e649b4f7",
+        "sha256": "a7d41fdec7d17cf78ce22fb50efa0fbb64b01ae02ad481bd34c8b5cce4671b52",
+        "live_blob": "91fbc6083eb55d60d6060994b57a6f60e649b4f7"
+      }
+    },
+    "unchecked_items": 47,
+    "dirty_paths": [],
+    "existing_live_source_diff_count": 158,
+    "tests": {
+      "tsc": null,
+      "vitest": null,
+      "files": 0,
+      "cases": 0
+    },
+    "note": "本批未改源码、未提交、未合入；不借历史检查作为本批绿色结果，不关闭0332/自然效果/性能等宽父。"
+  },
+  "validation": {
+    "base": "c0a1108ed51fbf6e8c7fc5a2aa238d57cdd0366a",
+    "existing_fix_count": 42,
+    "all_fixed_commits_base_main_live_ancestors": true,
+    "source_paths_checked": 181,
+    "unchecked_items": 47,
+    "all_source_unchanged_since_previous": true,
+    "queue_only_added_existing_fix_acceptance": true,
+    "working_tree_clean": true,
+    "no_new_source_commit_or_live_merge": true,
+    "empty_fix_completion_gate": {
+      "source_matches_live": false,
+      "existing_source_diff_count": 158,
+      "passing_checks_reported": false,
+      "note": "未修改既有完成闸或为凑done合并无关差异；无本批测试/合入。"
+    },
+    "tests": {
+      "tsc": null,
+      "vitest": null,
+      "cases": 0
+    },
+    "report_sha256": "1ae1344af7d7848f2b610bc7ed7e928b703c569cb18dc3671acf6d9e7f279533",
+    "gitleaks_exit_code": 0,
+    "gitleaks_log_sha256": "c43c57bbf41b4a97238c59cf3abd576db8c496ece80cbf0e93920252feadc951"
+  },
+  "current_heads": {
+    "base": "c0a1108ed51fbf6e8c7fc5a2aa238d57cdd0366a",
+    "main": "76f3096dee54e6fcb41846da869d3dc285639449",
+    "live": "3d691cff96dedd19855b00f4e9d448c43fe1d219"
+  },
+  "source_paths_verified": 181,
+  "existing_fix_ancestors_verified": 42,
+  "original_queue_dispositions_verified": 47,
+  "original_proposal_history_rows_verified": 7,
+  "original_existing_source_differences": 158,
+  "source_tests_not_run": true,
+  "unchanged_source_and_no_new_commit": true,
+  "new_merge_blocker": false,
+  "original_canonical_history_and_completion_gate_unmodified": true
+}

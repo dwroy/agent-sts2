@@ -1,0 +1,117 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/global-build-g2-shadow-20261016/agent
+
+ ❯ tests/global-build-integration.test.ts (10 tests | 10 failed) 249ms
+   × keeps the actual xljq-f5-reward/reward question and current C1/C2/P2 facts identical to off 15ms
+   × keeps the actual 7b0d-f8-rest/rest question and current C1/C2/P2 facts identical to off 3ms
+   × keeps the actual 7b0d-f8-rest/upgrade_select question and current C1/C2/P2 facts identical to off 2ms
+   × keeps the actual u6ru-f22-shop/open question and current C1/C2/P2 facts identical to off 5ms
+   × keeps the actual qug1-f22-shop-remove/remove_select question and current C1/C2/P2 facts identical to off 2ms
+   × preserves IRONCLAD questions, records and worker calls exactly 210ms
+   × preserves REGENT questions, records and worker calls exactly 2ms
+   × preserves DEFECT questions, records and worker calls exactly 2ms
+   × preserves NECROBINDER questions, records and worker calls exactly 3ms
+   × does not read a runtime pool for custom fixed inputs without matching pool evidence 2ms
+....
+----------------------------------------------------------------------
+Ran 4 tests in 0.001s
+
+OK
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 10 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/global-build-integration.test.ts > keeps the actual xljq-f5-reward/reward question and current C1/C2/P2 facts identical to off
+ FAIL  tests/global-build-integration.test.ts > keeps the actual 7b0d-f8-rest/rest question and current C1/C2/P2 facts identical to off
+ FAIL  tests/global-build-integration.test.ts > keeps the actual 7b0d-f8-rest/upgrade_select question and current C1/C2/P2 facts identical to off
+ FAIL  tests/global-build-integration.test.ts > keeps the actual u6ru-f22-shop/open question and current C1/C2/P2 facts identical to off
+ FAIL  tests/global-build-integration.test.ts > keeps the actual qug1-f22-shop-remove/remove_select question and current C1/C2/P2 facts identical to off
+Error: expected a decision, got blocked: the run on screen is Silent (silent) but this process plays Ironclad (CHARACTER unset) and reads its knowledge: abandon or finish that run by hand, or set CHARACTER to it
+ ❯ Module.decide tests/oneshot-support.ts:67:42
+     65| export function decide(e: DecisionEnv): Decision {
+     66|   const outcome = planDecision(e);
+     67|   if (outcome.kind !== "decision") throw new Error(`expected a decisio…
+       |                                          ^
+     68|   return outcome.decision;
+     69| }
+ ❯ question tests/global-build-integration.test.ts:40:37
+ ❯ tests/global-build-integration.test.ts:49:21
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/10]⎯
+
+ FAIL  tests/global-build-integration.test.ts > preserves IRONCLAD questions, records and worker calls exactly
+AssertionError: expected { kind: 'ask', …(5) } to deeply equal { kind: 'ask', …(5) }
+
+Compared values have no visual difference.
+
+ ❯ tests/global-build-integration.test.ts:66:27
+     64| it.each(["IRONCLAD", "REGENT", "DEFECT", "NECROBINDER"])("preserves %s…
+     65|   const off = await question("off", character), shadow = await questio…
+     66|   expect(shadow.decision).toEqual(off.decision);
+       |                           ^
+     67|   expect(shadow.record).toEqual(off.record);
+     68|   expect(vi.mocked(shadow.worker.run).mock.calls).toEqual(vi.mocked(of…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/10]⎯
+
+ FAIL  tests/global-build-integration.test.ts > preserves REGENT questions, records and worker calls exactly
+Error: expected a decision, got blocked: the run on screen is Regent (regent) but this process plays Ironclad (CHARACTER unset) and reads its knowledge: abandon or finish that run by hand, or set CHARACTER to it
+ ❯ Module.decide tests/oneshot-support.ts:67:42
+     65| export function decide(e: DecisionEnv): Decision {
+     66|   const outcome = planDecision(e);
+     67|   if (outcome.kind !== "decision") throw new Error(`expected a decisio…
+       |                                          ^
+     68|   return outcome.decision;
+     69| }
+ ❯ question tests/global-build-integration.test.ts:40:37
+ ❯ tests/global-build-integration.test.ts:65:21
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/10]⎯
+
+ FAIL  tests/global-build-integration.test.ts > preserves DEFECT questions, records and worker calls exactly
+Error: expected a decision, got blocked: the run on screen is Defect (defect) but this process plays Ironclad (CHARACTER unset) and reads its knowledge: abandon or finish that run by hand, or set CHARACTER to it
+ ❯ Module.decide tests/oneshot-support.ts:67:42
+     65| export function decide(e: DecisionEnv): Decision {
+     66|   const outcome = planDecision(e);
+     67|   if (outcome.kind !== "decision") throw new Error(`expected a decisio…
+       |                                          ^
+     68|   return outcome.decision;
+     69| }
+ ❯ question tests/global-build-integration.test.ts:40:37
+ ❯ tests/global-build-integration.test.ts:65:21
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/10]⎯
+
+ FAIL  tests/global-build-integration.test.ts > preserves NECROBINDER questions, records and worker calls exactly
+Error: expected a decision, got blocked: the run on screen is Necrobinder (necrobinder) but this process plays Ironclad (CHARACTER unset) and reads its knowledge: abandon or finish that run by hand, or set CHARACTER to it
+ ❯ Module.decide tests/oneshot-support.ts:67:42
+     65| export function decide(e: DecisionEnv): Decision {
+     66|   const outcome = planDecision(e);
+     67|   if (outcome.kind !== "decision") throw new Error(`expected a decisio…
+       |                                          ^
+     68|   return outcome.decision;
+     69| }
+ ❯ question tests/global-build-integration.test.ts:40:37
+ ❯ tests/global-build-integration.test.ts:65:21
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/10]⎯
+
+ FAIL  tests/global-build-integration.test.ts > does not read a runtime pool for custom fixed inputs without matching pool evidence
+Error: expected a decision, got blocked: the run on screen is Silent (silent) but this process plays Ironclad (CHARACTER unset) and reads its knowledge: abandon or finish that run by hand, or set CHARACTER to it
+ ❯ Module.decide tests/oneshot-support.ts:67:42
+     65| export function decide(e: DecisionEnv): Decision {
+     66|   const outcome = planDecision(e);
+     67|   if (outcome.kind !== "decision") throw new Error(`expected a decisio…
+       |                                          ^
+     68|   return outcome.decision;
+     69| }
+ ❯ question tests/global-build-integration.test.ts:40:37
+ ❯ tests/global-build-integration.test.ts:73:21
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/10]⎯
+
+
+ Test Files  1 failed | 8 passed (9)
+      Tests  10 failed | 47 passed (57)
+   Start at  12:59:27
+   Duration  11.22s (transform 11.96s, setup 3.01s, import 14.25s, tests 3.04s, environment 2ms)
+

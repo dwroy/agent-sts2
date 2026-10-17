@@ -1,0 +1,626 @@
+diff --git a/agent/tests/global-build-funnel.test.ts b/agent/tests/global-build-funnel.test.ts
+new file mode 100644
+index 000000000..a8635bba3
+--- /dev/null
++++ b/agent/tests/global-build-funnel.test.ts
+@@ -0,0 +1,7 @@
++import { spawnSync } from "node:child_process";
++import { expect, it } from "vitest";
++
++it("keeps fixed ten-run boundaries, actual bosses, SL first attempts, unknowns and failed cadence archives distinct", () => {
++  const result = spawnSync("python3", ["-B", "tests/global_build_funnel_test.py"], { encoding: "utf8", timeout: 20_000 });
++  expect(result.status, result.stdout + result.stderr).toBe(0);
++});
+diff --git a/agent/tests/global_build_funnel_test.py b/agent/tests/global_build_funnel_test.py
+new file mode 100644
+index 000000000..f53bc298c
+--- /dev/null
++++ b/agent/tests/global_build_funnel_test.py
+@@ -0,0 +1,163 @@
++"""Fixed export/closure checks; no database, game, or model."""
++import importlib.util
++import json
++from pathlib import Path
++import sys
++import tempfile
++import unittest
++from unittest.mock import patch
++
++ROOT = Path(__file__).resolve().parents[2]
++sys.path.insert(0, str(ROOT / 'eval'))
++import global_build_funnel as funnel
++spec = importlib.util.spec_from_file_location('funnel_ops', ROOT / 'ops/global_build_funnel.py')
++ops = importlib.util.module_from_spec(spec)
++spec.loader.exec_module(ops)
++
++
++def run(i=1, **extra):
++    return {'run_id': str(i), 'character': 'SILENT', 'ascension': 10, 'finished': True,
++            'started': f'2026-10-12T00:{i:02d}:00', 'floor': 23, 'max_act': 2,
++            'victory': False, 'cfg_commit': 'v5', 'release': 'V5-R1', 's_phase': 'before',
++            'death_room': 'hallway', **extra}
++
++
++def fight(no, act, floor, encounter, result):
++    return {'run_id': '1', 'fight_no': no, 'act': act, 'floor': floor,
++            'encounter': encounter, 'room': 'boss', 'outcome': result}
++
++
++class FunnelTest(unittest.TestCase):
++    def test_fixed_ten_and_partial_tail_are_never_merged(self):
++        rows = [funnel.run_record(run(i), [], [], []) for i in range(1, 24)]
++        report = funnel.report(rows)
++        self.assertEqual([(b['first'], b['last'], b['complete']) for b in report['blocks_of_ten']],
++                         [(1, 10, True), (11, 20, True), (21, 23, False)])
++
++    def test_first_attempt_matches_existing_ops_snapshot_algorithm(self):
++        fs = [fight(1, 1, 16, 'A', 'won'), fight(2, 2, 31, 'B', 'won'), fight(3, 3, 48, 'C', 'won')]
++        sl = [{'floor': 31, 'encounter': 'B', 'attempt': 1, 'result': 'predicted_death', 'ts': '2026-10-12'},
++              {'floor': 31, 'encounter': 'B', 'attempt': 2, 'result': 'won', 'ts': '2026-10-13'}]
++        record = funnel.run_record(run(max_act=3, floor=49), fs, [{'act': 1, 'floor': 1}, {'act': 2, 'floor': 18}, {'act': 3, 'floor': 34}], sl)
++        self.assertEqual(record['first_attempt']['floor'], 31)
++        self.assertTrue(record['first_attempt']['passed_act1'])
++        self.assertFalse(record['first_attempt']['passed_act2'])
++        report = funnel.summarize([record])
++        self.assertEqual(report['first_attempt']['boss_pass_rates']['A2:B:F31']['passed'], 0)
++        self.assertNotIn('A3:C:F48', report['first_attempt']['boss_pass_rates'])
++        self.assertEqual(report['first_attempt']['act_road_reach_observed_boss']['3']['observed'], 0)
++
++    def test_two_final_bosses_and_retries_are_distinct_units(self):
++        fs = [fight(1, 3, 48, 'FIRST', 'won'), fight(2, 3, 49, 'SECOND', 'died'), fight(3, 3, 49, 'SECOND', 'won')]
++        sl = [{'floor': 49, 'encounter': 'SECOND', 'attempt': 1, 'result': 'predicted_death'},
++              {'floor': 49, 'encounter': 'SECOND', 'attempt': 2, 'result': 'won'}]
++        record = funnel.run_record(run(floor=49, max_act=3, victory=True), fs, [], sl)
++        self.assertEqual(len(record['bosses']), 2)
++        self.assertEqual(record['bosses'][1]['observed_fight_segments'], 2)
++        self.assertTrue(record['bosses'][1]['final'])
++        self.assertFalse(record['bosses'][1]['first_attempt'])
++
++    def test_unknowns_and_missing_first_retry_are_never_imputed(self):
++        self.assertEqual(funnel.boss_result([fight(1, 1, 17, 'X', None)], []), (None, None))
++        self.assertEqual(funnel.boss_result([fight(1, 1, 17, 'X', 'won')], [{'attempt': 2, 'result': 'won'}]), (True, None))
++        self.assertEqual(funnel.share([True, None, False]), {'observed': 3, 'known': 2, 'unknown': 1, 'passed': 1, 'rate': .5})
++
++    def test_road_death_after_sl_does_not_enter_later_first_attempt_act(self):
++        record = funnel.run_record(run(max_act=3, floor=40), [], [{'act': 1, 'floor': 1}, {'act': 2, 'floor': 18}, {'act': 3, 'floor': 34}],
++                                   [{'floor': 22, 'result': 'predicted_death'}])
++        roads = funnel.summarize([record])['first_attempt']['act_road_reach_observed_boss']
++        self.assertEqual(roads['2']['observed'], 1)
++        self.assertEqual(roads['3']['observed'], 0)
++
++    def test_missing_boss_room_is_progression_or_unknown_not_false_death(self):
++        record = funnel.run_record(run(death_room='unknown_room'), [], [{'act': 1, 'floor': 1}, {'act': 2, 'floor': 18}], [])
++        roads = funnel.summarize([record])['final']['act_road_reach_observed_boss']
++        self.assertEqual(roads['1']['passed'], 1)
++        self.assertEqual(roads['1']['reached_inferred_from_observed_progression'], 1)
++        self.assertEqual(roads['2']['unknown'], 1)
++        self.assertIsNone(roads['2']['rate'])
++
++    def test_post_boss_next_act_frame_does_not_survive_failed_first_attempt(self):
++        record = funnel.run_record(run(), [fight(1, 1, 17, 'A', 'won')], [{'act': 1, 'floor': 1}, {'act': 2, 'floor': 17}],
++                                   [{'floor': 17, 'encounter': 'A', 'attempt': 1, 'result': 'predicted_death'}])
++        roads = funnel.summarize([record])['first_attempt']['act_road_reach_observed_boss']
++        self.assertEqual(roads['2']['observed'], 0)
++
++    def test_explicit_cohort_exclusions_and_initial_code_boundary(self):
++        calls = []
++        def ancestry(base, commit):
++            calls.append((base, commit))
++            return base == funnel.V5_ROOT or commit == 'new'
++        selected, excluded = funnel.cohort([run(cfg_commit='old'), run(2, run_id='W1YY8PEWGUF9')],
++                                           [{'run_id': '1', 'off': 2, 'commit': 'new'}, {'run_id': '1', 'off': 1, 'commit': 'old'}], [], ancestry)
++        self.assertEqual(selected[0]['s_phase'], 'V5-S-before')
++        self.assertTrue(selected[0]['config_changed'])
++        self.assertEqual(excluded[0]['reason'], 'original_gap_exclusion')
++        self.assertEqual(selected[0]['cfg_commit'], 'old')
++
++    def test_timestamp_offsets_and_truncated_input(self):
++        self.assertEqual(funnel.stamp('2026-10-12T00:00:00'), funnel.stamp('2026-10-12T08:00:00+08:00'))
++        with tempfile.TemporaryDirectory() as temp:
++            path = Path(temp) / 'bad.json'
++            path.write_text(json.dumps({'columns': [], 'rows': [], 'row_count': 0, 'truncated': True}))
++            with self.assertRaises(ValueError):
++                funnel.exported(path)
++
++
++class CadenceTest(unittest.TestCase):
++    def test_interrupted_notice_repairs_without_duplicate_export_or_log(self):
++        data = funnel.report([funnel.run_record(run(i), [], [], []) for i in range(1, 11)])
++        def freeze(root, target):
++            (target / 'input-manifest.json').write_text('{}')
++        with tempfile.TemporaryDirectory() as temp, patch.object(ops, 'quick_cohort', return_value=dict.fromkeys(range(10))), patch.object(ops, 'freeze', side_effect=freeze) as exported, patch.object(ops.funnel, 'from_exports', return_value=data):
++            root = Path(temp)
++            with patch.object(ops, 'append_decision', side_effect=OSError('interrupted record')):
++                with self.assertRaisesRegex(OSError, 'interrupted record'):
++                    ops.run(root, 'silent')
++            state_path = root / 'ops/codex-ops/global-build-funnel/state.json'
++            self.assertFalse(json.loads(state_path.read_text())['decision_notified'])
++            self.assertEqual(ops.run(root, 'silent')['status'], 'waiting_for_ten')
++            self.assertTrue(json.loads(state_path.read_text())['decision_notified'])
++            state = json.loads(state_path.read_text())
++            state['decision_notified'] = False
++            state_path.write_text(json.dumps(state))
++            ops.run(root, 'silent')
++            exported.assert_called_once()
++            self.assertEqual((root / 'paper/materials/decision-log.md').read_text().count('G1c 每10完局漏斗归档'), 1)
++
++    def test_successful_archive_closes_each_ten_once_and_keeps_tail(self):
++        data = funnel.report([funnel.run_record(run(i), [], [], []) for i in range(1, 24)])
++        def freeze(root, target):
++            (target / 'input-manifest.json').write_text('{}')
++        with tempfile.TemporaryDirectory() as temp, patch.object(ops, 'quick_cohort', return_value=dict.fromkeys(range(23))), patch.object(ops, 'freeze', side_effect=freeze) as exported, patch.object(ops.funnel, 'from_exports', return_value=data):
++            root = Path(temp)
++            self.assertEqual(ops.run(root, 'silent')['status'], 'archived')
++            state = json.loads((root / 'ops/codex-ops/global-build-funnel/state.json').read_text())
++            self.assertEqual(state['last_completed_boundary'], 20)
++            saved = json.loads((root / state['archive'] / 'funnel.json').read_text())
++            self.assertEqual(saved['cadence_boundaries'], [10, 20])
++            self.assertEqual(saved['blocks_of_ten'][-1]['n'], 3)
++            self.assertEqual(ops.run(root, 'silent')['status'], 'waiting_for_ten')
++            exported.assert_called_once()
++            self.assertEqual((root / 'paper/materials/decision-log.md').read_text().count('G1c 每10完局漏斗归档'), 1)
++
++    def test_no_work_until_next_completed_ten(self):
++        self.assertIsNone(ops.next_boundary(19, 10))
++        self.assertEqual(ops.next_boundary(20, 10), 20)
++        self.assertIsNone(ops.next_boundary(23, 20))
++        with tempfile.TemporaryDirectory() as temp, patch.object(ops, 'quick_cohort', return_value={'one': {}}), patch.object(ops, 'freeze') as freeze:
++            self.assertEqual(ops.run(Path(temp), 'silent')['status'], 'waiting_for_ten')
++            freeze.assert_not_called()
++        self.assertEqual(ops.run(Path('/unused'), 'ironclad')['status'], 'other_character_unchanged')
++
++    def test_failed_export_preserves_retry_boundary(self):
++        with tempfile.TemporaryDirectory() as temp, patch.object(ops, 'quick_cohort', return_value=dict.fromkeys(range(10))), patch.object(ops, 'freeze', side_effect=ValueError('incomplete')):
++            root = Path(temp)
++            with self.assertRaisesRegex(ValueError, 'incomplete'):
++                ops.run(root, 'silent')
++            self.assertFalse((root / 'ops/codex-ops/global-build-funnel/state.json').exists())
++            self.assertEqual(len(list((root / 'paper/materials').glob('*incomplete*'))), 1)
++
++
++if __name__ == '__main__':
++    unittest.main()
+diff --git a/eval/global_build_funnel.py b/eval/global_build_funnel.py
+new file mode 100644
+index 000000000..b9eb60607
+--- /dev/null
++++ b/eval/global_build_funnel.py
+@@ -0,0 +1,244 @@
++#!/usr/bin/env python3
++"""Release and fixed-ten-run funnels from immutable logdb exports, without model calls."""
++import argparse
++import collections
++import datetime as dt
++import functools
++import json
++import subprocess
++import sys
++from pathlib import Path
++
++ROOT = Path(__file__).resolve().parents[1]
++sys.path.insert(0, str(ROOT / 'eval'))
++from metrics import boss_fights, first_attempt, passed_boss
++
++V5_ROOT = '4391d1d38bf658747c37ab1d56d53e648ae97167'
++S_PHASES = [('P2/C2-on', 'fad271855a515e229c7022f5049cc870f95a8d69'),
++            ('P1/P3-on', '67863fac6d97452a235cb11fb2bd10c749880a3f')]
++EXCLUDED = {'W1YY8PEWGUF9'}
++
++
++def exported(path):
++    data = json.loads(Path(path).read_text())
++    if data.get('error') or data.get('truncated') or len(data['rows']) != data['row_count']:
++        raise ValueError(f'incomplete export: {path}')
++    return [dict(zip(data['columns'], row)) for row in data['rows']]
++
++
++@functools.lru_cache(maxsize=None)
++def resolved(commit):
++    proc = subprocess.run(['git', '-C', str(ROOT), 'rev-parse', '--verify', f'{commit}^{{commit}}'],
++                          capture_output=True)
++    if proc.returncode:
++        raise ValueError(f'unresolvable commit {commit}: {proc.stderr.decode().strip()}')
++    return proc.stdout.decode().strip()
++
++
++@functools.lru_cache(maxsize=None)
++def ancestors(commit):
++    proc = subprocess.run(['git', '-C', str(ROOT), 'rev-list', resolved(commit)], capture_output=True)
++    if proc.returncode:
++        raise ValueError(f'cannot read ancestry {commit}')
++    return set(proc.stdout.decode().splitlines())
++
++
++def ancestor(base, commit):
++    return resolved(base) in ancestors(commit)
++
++
++def stamp(value):
++    result = dt.datetime.fromisoformat(value.replace('Z', '+00:00'))
++    return result.replace(tzinfo=dt.timezone.utc) if result.tzinfo is None else result
++
++
++def cohort(runs, configurations, versions, is_ancestor=ancestor):
++    cfg = collections.defaultdict(list)
++    for row in configurations:
++        cfg[row['run_id']].append(row)
++    selected, excluded = [], []
++    for row in runs:
++        rid = row['run_id']
++        if row.get('character') != 'SILENT' or row.get('ascension') != 10 or not row.get('finished'):
++            continue
++        configs = sorted(cfg[rid], key=lambda r: r.get('off', 0))
++        commit = row.get('cfg_commit') or (configs[0].get('commit') if configs else None)
++        reason = 'original_gap_exclusion' if rid in EXCLUDED else ('missing_initial_commit' if not commit else None)
++        if not reason and not is_ancestor(V5_ROOT, commit):
++            reason = 'before_V5'
++        if reason:
++            excluded.append({'run_id': rid, 'reason': reason})
++            continue
++        phase = next((name for name, base in S_PHASES if is_ancestor(base, commit)), 'V5-S-before')
++        releases = [v for v in versions if v.get('commit') and v.get('release_id') and is_ancestor(v['commit'], commit)]
++        release = releases[-1].get('release_id') if releases else 'unregistered'
++        snapshot = json.loads(configs[0].get('config') or '{}') if configs else {}
++        loop = snapshot.get('loop') or {}
++        selected.append({**row, 'cfg_commit': commit, 's_phase': phase, 'release': release,
++                         'config_changed': len({(r.get('commit'), r.get('config_sha')) for r in configs}) > 1,
++                         'configuration_offsets': [r.get('off') for r in configs],
++                         'initial_config_sha': configs[0].get('config_sha') if configs else None,
++                         'initial_switches': {k: loop.get(k) for k in ('s_combat_rank', 's_build_rank', 'sim_adaptive', 's_readiness', 'global_build_eval')},
++                         'source_identity_gate': 'descriptive gap cohort; native model/account not audited'})
++    selected.sort(key=lambda r: (stamp(r['started']), r['run_id']))
++    if len({r['run_id'] for r in selected}) != len(selected):
++        raise ValueError('duplicate finished run IDs')
++    return selected, excluded
++
++
++def group_rows(rows):
++    result = collections.defaultdict(list)
++    for row in rows:
++        result[row['run_id']].append(row)
++    return result
++
++
++def outcome(result):
++    return True if result == 'won' else False if result in ('died', 'predicted_death') else None
++
++
++def boss_result(fights, sl):
++    """One actual encounter, with retries collapsed; unknown is not a loss or a win."""
++    final = True if any(f.get('outcome') == 'won' for f in fights) else (
++        False if any(f.get('outcome') == 'died' for f in fights) else None)
++    opening = [r for r in sl if r.get('attempt') == 1]
++    if opening:
++        values = {outcome(r.get('result')) for r in opening}
++        first = next(iter(values)) if len(values) == 1 else None
++    else:
++        # Retry records without their first attempt cannot establish first-attempt success.
++        first = None if sl else outcome(fights[0].get('outcome'))
++    return final, first
++
++
++def run_record(run, fights, floors, sl):
++    sl = sorted(sl, key=lambda r: (r.get('ts') or '', r.get('off', 0)))
++    bosses = boss_fights(fights, run.get('max_act'), run.get('victory'))
++    passed = {act: passed_boss(act, run.get('max_act'), run.get('victory'), bosses) for act in (1, 2)}
++    first = first_attempt(sl, run['floor'], run['victory'], passed,
++                          {act: boss['floor'] for act, boss in bosses.items()})
++    by_encounter = collections.defaultdict(list)
++    for fight in sorted(fights, key=lambda f: f['fight_no']):
++        if fight.get('room') == 'boss':
++            by_encounter[(fight['act'], fight['floor'], fight['encounter'])].append(fight)
++    events = []
++    for (act, floor, encounter), attempts in by_encounter.items():
++        matching = [r for r in sl if r.get('floor') == floor and r.get('encounter') == encounter]
++        final_result, first_result = boss_result(attempts, matching)
++        events.append({'act': act, 'floor': floor, 'encounter': encounter, 'final': final_result,
++                       'first_attempt': first_result, 'observed_fight_segments': len(attempts),
++                       'first_ts': attempts[0].get('first_ts'), 'sl_offsets': [r.get('off') for r in matching]})
++    return {**run, 'first_attempt': first, 'bosses': events,
++            'entered_acts': sorted({f['act'] for f in floors if f.get('act') is not None}),
++            'act_entry_floors': {str(act): min(f['floor'] for f in floors if f.get('act') == act)
++                                 for act in {f['act'] for f in floors if f.get('act') is not None}},
++            'first_death_room': next((f.get('room') for f in fights if f.get('floor') == first['death_floor']), None)
++                                if first['death_floor'] is not None else run.get('death_room')}
++
++
++def share(values):
++    known = [v for v in values if v is not None]
++    wins = sum(known)
++    return {'observed': len(values), 'known': len(known), 'unknown': len(values) - len(known),
++            'passed': wins, 'rate': wins / len(known) if known else None}
++
++
++def summarize(rows):
++    result = {'n': len(rows), 'run_ids': [r['run_id'] for r in rows]}
++    for mode in ('final', 'first_attempt'):
++        floors = [r['floor'] if mode == 'final' else r['first_attempt']['floor'] for r in rows]
++        wins = [bool(r['victory']) if mode == 'final' else r['first_attempt']['victory'] for r in rows]
++        result[mode] = {'floor_milestones_proxy': {str(f): sum(v is not None and v >= f for v in floors)
++                       for f in (17, 18, 33, 34, 48, 49)}, 'victories': sum(wins),
++                       'mean_floor': sum(v for v in floors if v is not None) / len(floors) if floors and all(v is not None for v in floors) else None,
++                       'death_rooms': dict(collections.Counter((r.get('death_room') if mode == 'final' else r.get('first_death_room')) or 'unknown_room'
++                                            for r, win in zip(rows, wins) if not win))}
++        per_boss = collections.defaultdict(list)
++        for r in rows:
++            for boss in r['bosses']:
++                # A first-attempt run stops at its earliest predicted death, even if SL later reaches another boss.
++                if mode == 'first_attempt' and r['first_attempt']['death_floor'] is not None and boss['floor'] > r['first_attempt']['death_floor']:
++                    continue
++                per_boss[f"A{boss['act']}:{boss['encounter']}:F{boss['floor']}"] .append(boss[mode])
++        result[mode]['boss_pass_rates'] = {k: share(v) for k, v in sorted(per_boss.items())}
++        roads = {}
++        for act in sorted({a for r in rows for a in r['entered_acts']}):
++            entered = [r for r in rows if act in r['entered_acts'] and (mode == 'final' or
++                       r['first_attempt']['death_floor'] is None or (r['act_entry_floors'][str(act)] <= r['first_attempt']['death_floor'] and
++                       not any(b['act'] < act and b['floor'] >= r['first_attempt']['death_floor'] for b in r['bosses'])))]
++            reached = []
++            inferred = 0
++            for r in entered:
++                stop = r['first_attempt']['death_floor'] if mode == 'first_attempt' else None
++                observed = any(b['act'] == act and (stop is None or b['floor'] <= stop) for b in r['bosses'])
++                crossed = any(a > act and (stop is None or r['act_entry_floors'][str(a)] <= stop) for a in r['entered_acts'])
++                won_act = (r['victory'] if mode == 'final' else r['first_attempt']['victory']) and (r.get('max_act') or 0) >= act
++                death_room = r.get('death_room') if mode == 'final' else r.get('first_death_room')
++                reached.append(True if observed or crossed or won_act else False if death_room in ('hallway', 'elite', 'event', 'rest', 'shop') else None)
++                inferred += int(not observed and (crossed or won_act))
++            roads[str(act)] = share(reached)
++            roads[str(act)]['reached_inferred_from_observed_progression'] = inferred
++        result[mode]['act_road_reach_observed_boss'] = roads
++    return result
++
++
++def report(rows):
++    blocks = [{'first': i + 1, 'last': min(i + 10, len(rows)), 'complete': len(rows[i:i+10]) == 10,
++               **summarize(rows[i:i+10])} for i in range(0, len(rows), 10)]
++    groups = {}
++    for field in ('release', 's_phase'):
++        grouped = collections.defaultdict(list)
++        for row in rows:
++            grouped[row[field]].append(row)
++        groups[field] = {k: summarize(v) for k, v in grouped.items()}
++    return {'schema': 'global-build-funnel-v1', 'cohort': 'approved gap descriptive Silent A10 V5; not native-source admission',
++            'first_attempt_definition': 'eval.metrics.first_attempt / ops snapshot: earliest predicted_death stops run',
++            'boss_definition': 'actual boss room + exact encounter; retries collapsed; unknown retained',
++            'blocks_of_ten': blocks, 'segments': groups, 'total': summarize(rows), 'per_run': rows}
++
++
++def markdown(data):
++    out = ['# V5 固定分段漏斗', '', '描述性 gap 局集合；账号/原生模型门槛未在此验收。首试沿 ops 战绩快照；固定层仅为历史漏斗代理，各 Boss 率按实际战斗。未知不作零，路上到达可由实际跨幕记录推出，单独计数。', '']
++    groups = [('全部', data['total'])] + [(f"第{b['first']}–{b['last']}局" + ('' if b['complete'] else '（尾段待满）'), b) for b in data['blocks_of_ten']]
++    groups += [(f'{field}:{key}', value) for field, values in data['segments'].items() for key, value in values.items()]
++    for mode, label in [('final', '最终（含SL）'), ('first_attempt', '首试停止口径')]:
++        out += [f'## {label}', '', '| 分段 | n | ≥F17 | ≥F18 | ≥F33 | ≥F34 | ≥F48 | ≥F49 | 通关 | 均层 |',
++                '|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|']
++        for name, item in groups:
++            value = item[mode]
++            out.append(f"| {name} | {item['n']} | " + ' | '.join(str(value['floor_milestones_proxy'][str(f)]) for f in (17,18,33,34,48,49)) + f" | {value['victories']} | {value['mean_floor']} |")
++        out += ['', '| 实际Boss身份 | 已过/已知 | 未知 |', '|---|---:|---:|']
++        for key, value in data['total'][mode]['boss_pass_rates'].items():
++            out.append(f"| {key} | {value['passed']}/{value['known']} | {value['unknown']} |")
++        out += ['', '| 幕路上到达Boss | 到达/已知 | 未知 | 跨幕推得 |', '|---|---:|---:|---:|']
++        for key, value in data['total'][mode]['act_road_reach_observed_boss'].items():
++            out.append(f"| A{key} | {value['passed']}/{value['known']} | {value['unknown']} | {value['reached_inferred_from_observed_progression']} |")
++        out += ['', '死因房间：' + json.dumps(data['total'][mode]['death_rooms'], ensure_ascii=False), '']
++    out += ['分段逐Boss/路上指标、局身份、开局开关及配置混用见同名 JSON。', '']
++    return '\n'.join(out)
++
++
++def from_exports(directory, versions):
++    directory = Path(directory)
++    runs = exported(directory / 'runs-since-20261012.json')
++    configs = exported(directory / 'run_config.json')
++    selected, excluded = cohort(runs, configs, versions)
++    fights, floors, sl = [group_rows(exported(directory / f'{name}.json')) for name in ('fights', 'floors', 'sl_attempts')]
++    data = report([run_record(r, fights[r['run_id']], floors[r['run_id']], sl[r['run_id']]) for r in selected])
++    data['excluded'] = excluded
++    return data
++
++
++def main():
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument('--inputs', required=True)
++    parser.add_argument('--output', required=True)
++    args = parser.parse_args()
++    data = from_exports(args.inputs, json.loads((ROOT / 'eval/versions.json').read_text())['versions'])
++    output = Path(args.output)
++    output.with_suffix('.json').write_text(json.dumps(data, ensure_ascii=False, indent=1) + '\n')
++    output.with_suffix('.md').write_text(markdown(data))
++
++
++if __name__ == '__main__':
++    main()
+diff --git a/ops/global_build_funnel.py b/ops/global_build_funnel.py
+new file mode 100644
+index 000000000..93438627c
+--- /dev/null
++++ b/ops/global_build_funnel.py
+@@ -0,0 +1,161 @@
++#!/usr/bin/env python3
++"""Idempotent completed-run hook; archive every fixed ten V5 runs, without a timer or model."""
++import argparse
++import fcntl
++import hashlib
++import importlib.util
++import json
++import os
++from pathlib import Path
++import subprocess
++import sys
++import tempfile
++
++CODE_ROOT = Path(__file__).resolve().parents[1]
++spec = importlib.util.spec_from_file_location('funnel_eval', CODE_ROOT / 'eval/global_build_funnel.py')
++funnel = importlib.util.module_from_spec(spec)
++spec.loader.exec_module(funnel)
++
++
++def jsonl(path):
++    if not path.exists():
++        return []
++    result = []
++    with path.open('rb') as handle:
++        for raw in handle:
++            if not raw.endswith(b'\n'):
++                break
++            result.append(json.loads(raw))
++    return result
++
++
++def quick_cohort(root):
++    configs = {}
++    for row in jsonl(root / 'logs/run-config.jsonl'):
++        configs.setdefault(row.get('run_id'), row)
++    result = {}
++    for row in jsonl(root / 'logs/runs.jsonl'):
++        rid = row.get('run_id')
++        cfg = configs.get(rid, {})
++        commit = (cfg.get('code') or {}).get('commit')
++        if rid in funnel.EXCLUDED or cfg.get('character') != 'SILENT' or cfg.get('ascension') != 10 or not commit:
++            continue
++        if funnel.ancestor(funnel.V5_ROOT, commit):
++            result[rid] = row
++    return result
++
++
++def next_boundary(count, last):
++    """Never merge a partial tail, and never advance on a failed/incomplete archive."""
++    return (last + 10) if count >= last + 10 else None
++
++
++def write_json(path, value):
++    path.write_text(json.dumps(value, ensure_ascii=False, indent=1) + '\n')
++
++
++def store_state(state_file, value):
++    temporary = state_file.with_suffix('.tmp')
++    write_json(temporary, value)
++    os.replace(temporary, state_file)
++
++
++def append_decision(root, state):
++    """Repair an interrupted record step without re-exporting or duplicating a completed archive."""
++    archive = root / state['archive']
++    data = json.loads((archive / 'funnel.json').read_text())
++    marker = f"G1c-archive:{state['archive']}"
++    log = root / 'paper/materials/decision-log.md'
++    if log.exists() and marker in log.read_text():
++        return
++    date = subprocess.check_output(['date', '+%Y-%m-%d %H:%M:%S %Z'], text=True).strip()
++    line = f"\n- {date} watcher G1c 每10完局漏斗归档：Silent A10 V5描述性局集合到{state['last_completed_boundary']}局，新增边界{data['cadence_boundaries']}；含最终/ops首试、逐Boss、幕路上存活、死因及未知。证据 {state['archive']}/funnel.json；不声称原生来源门槛或因果收益。[{marker}]\n"
++    with log.open('a') as handle:
++        handle.write(line)
++
++
++def freeze(root, target):
++    sys.path.insert(0, str(CODE_ROOT / 'agent/tools/logdb'))
++    import query
++    import sync as logsync
++    db = str(root / 'data/logdb')
++    logsync.be_gentle()
++    logsync.sync(str(root / 'logs'), db, quiet=True, wait=False)
++    exports = {}
++    with logsync.read_lock(db, shared=True):
++        con = query.connect(db, threads=2)
++        manifest = (Path(db) / 'manifest.json').read_bytes()
++        (target / 'logdb-manifest.json').write_bytes(manifest)
++        for table, sql in [
++            ('runs-since-20261012', "SELECT r.*, c.commit AS cfg_commit FROM runs r LEFT JOIN (SELECT run_id,commit FROM run_config QUALIFY row_number() OVER (PARTITION BY run_id ORDER BY off)=1) c USING(run_id) WHERE r.character='SILENT' AND r.ascension=10 AND r.finished AND r.started >= TIMESTAMP '2026-10-12 00:00:00' ORDER BY r.started,r.run_id"),
++            ('run_config', "SELECT * FROM run_config WHERE character='SILENT' AND ascension=10 ORDER BY off"),
++            ('fights', "SELECT * FROM fights WHERE character='SILENT' AND ascension=10 AND first_ts >= TIMESTAMP '2026-10-12 00:00:00' ORDER BY run_id,fight_no"),
++            ('floors', "SELECT * FROM floors WHERE ascension=10 AND first_ts >= TIMESTAMP '2026-10-12 00:00:00' ORDER BY run_id,floor"),
++            ('sl_attempts', "SELECT * FROM sl_attempts WHERE ts >= TIMESTAMP '2026-10-12 00:00:00' ORDER BY run_id,ts,off")]:
++            value = query.run_query(con, sql, max_rows=1000000, timeout=60)
++            if value.get('error') or value.get('truncated'):
++                raise ValueError(f'incomplete {table} export')
++            path = target / f'{table}.json'
++            write_json(path, value)
++            exports[table] = {'sql': sql, 'sha256': hashlib.sha256(path.read_bytes()).hexdigest(), 'rows': value['row_count']}
++        con.close()
++    write_json(target / 'input-manifest.json', {'logdb_manifest_sha256': hashlib.sha256(manifest).hexdigest(), 'exports': exports})
++
++
++def run(root, character):
++    if character.lower() != 'silent':
++        return {'status': 'other_character_unchanged'}
++    state_dir = root / 'ops/codex-ops/global-build-funnel'
++    state_dir.mkdir(parents=True, exist_ok=True)
++    with (state_dir / 'cadence.lock').open('a') as lock:
++        try:
++            fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
++        except BlockingIOError:
++            return {'status': 'existing_worker_owns_cadence'}
++        state_file = state_dir / 'state.json'
++        state = json.loads(state_file.read_text()) if state_file.exists() else {'last_completed_boundary': 0}
++        if state.get('archive') and not state.get('decision_notified', False):
++            append_decision(root, state)
++            state['decision_notified'] = True
++            store_state(state_file, state)
++        last = state['last_completed_boundary']
++        quick = quick_cohort(root)
++        if next_boundary(len(quick), last) is None:
++            return {'status': 'waiting_for_ten', 'count': len(quick), 'last': last}
++        materials = root / 'paper/materials'
++        materials.mkdir(parents=True, exist_ok=True)
++        day = subprocess.check_output(['date', '+%Y%m%d-%H%M%S'], text=True).strip()
++        scratch = Path(tempfile.mkdtemp(prefix=f'{day}-global-build-g1c-incomplete-', dir=materials))
++        # Incomplete exports and failed archives remain as evidence, never successful cadence state.
++        freeze(root, scratch)
++        versions = json.loads((CODE_ROOT / 'eval/versions.json').read_text())['versions']
++        data = funnel.from_exports(scratch, versions)
++        complete = len(data['per_run']) // 10 * 10
++        if complete < last + 10:
++            write_json(scratch / 'waiting.json', {'status': 'database_not_yet_caught_up', 'quick_count': len(quick), 'exported': len(data['per_run'])})
++            return {'status': 'database_not_yet_caught_up', 'archive': str(scratch)}
++        archive = materials / f'{day}-global-build-g1c-through-{complete:06d}'
++        data['cadence_boundaries'] = list(range(last+10, complete+1, 10))
++        data['input_manifest_sha256'] = hashlib.sha256((scratch / 'input-manifest.json').read_bytes()).hexdigest()
++        write_json(scratch / 'funnel.json', data)
++        (scratch / 'funnel.md').write_text(funnel.markdown(data))
++        scratch.rename(archive)
++        new_state = {'last_completed_boundary': complete, 'archive': str(archive.relative_to(root)),
++                     'decision_notified': False, 'run_ids_through_boundary': [r['run_id'] for r in data['per_run'][:complete]]}
++        store_state(state_file, new_state)
++        append_decision(root, new_state)
++        new_state['decision_notified'] = True
++        store_state(state_file, new_state)
++        return {'status': 'archived', **new_state}
++
++
++def main():
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument('--root', default=str(CODE_ROOT))
++    parser.add_argument('--character', required=True)
++    args = parser.parse_args()
++    print(json.dumps(run(Path(args.root).resolve(), args.character), ensure_ascii=False))
++
++
++if __name__ == '__main__':
++    main()
+diff --git a/ops/report.py b/ops/report.py
+index fdb04ba00..75a67bc63 100644
+--- a/ops/report.py
++++ b/ops/report.py
+@@ -556,6 +556,17 @@ def boss_sim_check(character):
+             log.write(f"{type(error).__name__}: {error}\n")
+ 
+ 
++def global_build_funnel(character):
++    """The existing post-run event triggers a bounded offline archive; no timer or brain call."""
++    if not character or character.lower() != 'silent':
++        return
++    python = os.path.join(ROOT, 'data/logdb-venv/bin/python')
++    with open(os.path.join(ROOT, 'ops/global-build-funnel.log'), 'a') as log:
++        subprocess.Popen(['nice', '-n', '19', python, os.path.join(ROOT, 'ops/global_build_funnel.py'),
++                          '--root', ROOT, '--character', character],
++                         stdout=log, stderr=log, start_new_session=True)
++
++
+ if __name__ == "__main__":
+     if sys.argv[1:] == ["--selftest"]:
+         selftest()
+@@ -573,3 +584,4 @@ if __name__ == "__main__":
+     # This is synchronous dispatch only; the learner remains a tracked scheduler batch.
+     if run_char and any(row.get("run_id") == sys.argv[1] for row in load(RUNS)):
+         boss_sim_check(run_char)
++        global_build_funnel(run_char)

@@ -1,0 +1,182 @@
+from pathlib import Path
+import collections
+import hashlib
+import importlib.util
+import json
+import re
+import subprocess
+import sys
+import tarfile
+
+sys.dont_write_bytecode = True
+root = r = Path.cwd()
+p = r / 'ops/codex-ops/record-staging/20261017-0506'
+pub = r / 'paper/materials/20261017-0506-ops'
+pub.mkdir(exist_ok=False)
+sha = lambda raw: hashlib.sha256(raw).hexdigest()
+load = lambda path: json.loads(path.read_bytes())
+
+
+def git(*args):
+    return subprocess.check_output(['git', *args], stderr=subprocess.PIPE)
+
+
+def digest(path):
+    h = hashlib.sha256()
+    with path.open('rb') as source:
+        for raw in iter(lambda: source.read(1048576), b''):
+            h.update(raw)
+    return h.hexdigest()
+
+
+exec((r / 'ops/codex-ops/record-staging/20261016-0557/readonly-runtime.py').read_text())
+bid = '20261017-044302-strategy-proposal'
+b = load(r / 'ops/codex-ops/learn.json')['batches'][bid]
+report = b['report']
+s = Path(report['report']).parent
+wt = Path(b['worktree'])
+out = r / 'ops/codex-ops/learner' / (bid + '.out')
+assert b['state'] == 'done' and b['rc'] == 0 and b['merged'] is None
+assert b['proposal_audit_errors'] == []
+assert report == load(s / 'result.json')
+assert report['fixes'] == report['implementation_domains'] == []
+assert all(value is None for value in report['tests'].values())
+assert report['code_proposals'] == [x['id'] for x in report['proposal_results']] == b['proposal_ids']
+assert collections.Counter(x['state'] for x in report['proposal_results']) == {'waiting': 9, 'duplicate': 1}
+assert git('-C', str(wt), 'rev-parse', 'HEAD').decode().strip() == report['base']
+assert not git('-C', str(wt), 'status', '--porcelain', '--untracked-files=all').strip()
+native = runtime(bid, report, out.read_text(), worktree=wt)
+live = git('-C', '.worktrees/live', 'rev-parse', 'HEAD').decode().strip()
+proposals = load(s / 'assigned-proposals.json')
+assert [x['id'] for x in proposals] == b['proposal_ids']
+for proposal in proposals:
+    assert digest(Path(proposal['proposal'])) == proposal['proposal_sha256']
+    assert digest(s / (proposal['id'] + '.original.md')) == proposal['proposal_sha256']
+for result in report['proposal_results']:
+    if result['state'] == 'duplicate':
+        git('-C', '.worktrees/live', 'merge-base', '--is-ancestor', result['commit'], 'HEAD')
+
+manifest = load(s / 'artifact-manifest.json')['files']
+for entry in manifest:
+    file = s / entry['path']
+    assert file.stat().st_size == entry['bytes'] and digest(file) == entry['sha256'], entry['path']
+evidence = load(s / 'evidence/evidence-manifest.json')
+verified = load(s / 'evidence-verification.json')
+assert len(evidence) == 8 and verified['total'] == 4482
+for entry, check in zip(evidence, verified['streams']):
+    assert entry['stream'] == check['stream'] and entry['output_sha256'] == check['sha256']
+    assert digest(s / 'evidence' / (entry['stream'] + '.evidence.jsonl')) == entry['output_sha256']
+    assert sum(entry['counts'].values()) == check['verified']
+refs = load(s / 'fixed-frames.json')
+assert len(refs) == 33
+for ref in refs.values():
+    file = Path(ref['source'])
+    assert file.is_relative_to(r / 'logs')
+    with file.open('rb') as source:
+        source.seek(ref['offset'])
+        raw = source.read(ref['bytes'])
+    assert sha(raw) == ref['sha256'] and json.loads(raw) == ref['row']
+for run in report['runs']:
+    metadata = load(s / (run + '.metadata.json'))
+    assert len(metadata['runs']) == 1
+    row = metadata['runs'][0]
+    assert row['run_id'] == run and row['character'] == 'SILENT' and row['ascension'] == 10
+receipts = load(s / 'consumer-receipts.json')
+assert len(receipts) == 4 and all(x['exit_code'] == 0 for x in receipts)
+for entry in verified['inputs']:
+    assert digest(Path(entry['path'])) == entry['sha256']
+summary = load(s / 'consumer-summary.json')
+totals = {key: sum(x[key] for x in summary) for key in [
+    'segments', 'actions', 'turn_windows', 'turn_endpoints', 'unknown_turn_windows', 'full_candidates_certified']}
+assert totals == dict(segments=437, actions=2106, turn_windows=384, turn_endpoints=164,
+                     unknown_turn_windows=220, full_candidates_certified=0)
+fixed = load(s / 'fixed-verification.json')
+materials = load(s / 'material-checks.json')
+assert len(fixed['checks']) == 23 and len(materials['checks']) == 13
+source_audit = load(s / 'source-audit.json')
+assert source_audit['live_observed'] == live
+for entry in source_audit['files']:
+    path = entry['path']
+    left, right = (wt / path).read_bytes(), (r / '.worktrees/live' / path).read_bytes()
+    assert sha(left) == entry['sha256'] and sha(right) == entry['live_sha256']
+    assert right == git('show', live + ':' + path)
+    normalize = lambda raw: re.sub(rb'\b(?:Roy|Dai)\b', b'OWNER', raw)
+    assert normalize(left) == normalize(right)
+for entry in source_audit['commits']:
+    git('merge-base', '--is-ancestor', entry['commit'], report['base'])
+    git('merge-base', '--is-ancestor', entry['commit'], live)
+
+physical = (r / 'paper/materials/learning/ledger.jsonl').read_bytes()
+cli = load(s / 'ledger-receipt.json')
+requests = [json.loads(line) for line in (s / 'ledger-updates.jsonl').read_bytes().splitlines()]
+assert cli['exit_code'] == 0 and cli['updates'] == len(requests) == len(cli['our_rows']) == 19
+assert sha(physical[:cli['prefix_bytes']]) == cli['prefix_sha256']
+owned = []
+for entry, request in zip(cli['our_rows'], requests):
+    raw = physical[entry['offset']:entry['offset'] + entry['bytes']]
+    row = json.loads(raw)
+    assert sha(raw) == entry['sha256'] and row == entry['row']
+    assert all(row.get(key) == value for key, value in request.items())
+    assert set(row) <= {'op', 'id', 'ts', 'by', 'where', 'note'} and row['op'] == 'update'
+    assert set(row['where']) == {'proposal'}
+    owned.append((entry['offset'], raw))
+own = b''.join(raw for offset, raw in sorted(owned))
+assert len(own.splitlines()) == 19
+(p / 'own-ledger-rows.jsonl').write_bytes(own)
+spec = importlib.util.spec_from_file_location('ledger_guard', r / 'learner/ledger.py')
+ledger = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(ledger)
+ids = {json.loads(line)['id'] for line in own.splitlines()}
+
+
+def fold(raw):
+    return ledger.fold([(n, row) for n, line in enumerate(raw.splitlines(), 1)
+                        if (row := json.loads(line)).get('id') in ids])
+
+
+old_raw = git('show', 'HEAD:paper/materials/learning/ledger.jsonl')
+old, new = fold(old_raw), fold(old_raw + own)
+for ident in ids:
+    for key in ['character', 'kind', 'claim', 'first_run', 'asc', 'prior', 'prior_note',
+                'prior_runs', 'evidence', 'status', 'version', 'shipped_at', 'effect']:
+        assert old[ident].get(key) == new[ident].get(key), (ident, key)
+    for key in ['notes', 'history']:
+        assert new[ident].get(key, [])[:len(old[ident].get(key, []))] == old[ident].get(key, [])
+    for key, values in old[ident]['where'].items():
+        assert new[ident]['where'][key][:len(values)] == values
+
+archive_path = pub / (bid + '.materials.tar.gz')
+archive_manifest = []
+with tarfile.open(archive_path, 'w:gz') as archive:
+    for file in sorted([x for x in s.iterdir() if x.is_file()] + [out, out.with_suffix('.err')]):
+        if file.stat().st_size < 1500000:
+            path = str(file.relative_to(r))
+            archive.add(file, arcname=path, recursive=False)
+            archive_manifest.append(dict(path=path, bytes=file.stat().st_size, sha256=digest(file)))
+with tarfile.open(archive_path) as archive:
+    for member, entry in zip(archive.getmembers(), archive_manifest):
+        assert member.name == entry['path'] and sha(archive.extractfile(member).read()) == entry['sha256']
+at = subprocess.check_output(['date', '+%Y-%m-%d %H:%M:%S %Z']).decode().strip()
+record = dict(at=at, batch=bid, canonical_state='done', rc=0, merged=None, report=report,
+              no_change_dispositions=b['no_change_proposals'], native=native,
+              dispositions=dict(waiting=9, duplicate=1), original_proposals_sha_verified=10,
+              artifacts=manifest, artifact_count=len(manifest), archive=dict(path=str(archive_path.relative_to(r)),
+              sha256=digest(archive_path), original_members_sha_readback=archive_manifest),
+              evidence=evidence, selected_original_frames_verified=33,
+              all_frozen_artifact_hashes_verified=True, raw_stream_whole_reverification_not_repeated=True,
+              consumer_receipts=receipts, offline_consumer_totals=totals,
+              material_checks=13, fixed_local_checks=23, production_tests=None,
+              source=source_audit, cli=cli, owned_trace_rows=19,
+              protected_ledger_fields_and_prefixes_preserved=True,
+              no_new_scientific_disagreement_or_other_role_ack=True,
+              original_dirty_runtime_inputs_and_complete_candidates_unknown=True,
+              source_and_index_clean=True, no_source_commit_merge_release_or_test_requested=True,
+              no_paper_dataset_without_postmortem=True,
+              all_wider_parents_original_owners_and_current_game_unchanged=True)
+(pub / 'batch-readback.json').write_text(json.dumps(record, ensure_ascii=False, indent=2) + '\n')
+(pub / 'audit-script.py.txt').write_bytes(Path(__file__).read_bytes())
+(p / 'extra-owned-paths.json').write_text('[]\n')
+(p / 'paper-owned-manifest.json').write_text('[]\n')
+print(json.dumps(dict(batch=bid, waiting=9, duplicate=1, native_model_verified=True,
+                     artifacts_verified=len(manifest), own_trace_rows=19,
+                     no_source_or_merge=True, archive_bytes=archive_path.stat().st_size)), flush=True)

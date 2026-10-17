@@ -1,0 +1,90 @@
+{
+  "manifest_sha256": "83949d90babf2b6cb652cade859177e949cc8c295d95575f491e7d11e2486511",
+  "batch": "20261017-014302-s2-strategy-proposal",
+  "state": "completed",
+  "environment": "host",
+  "scope": "selected tests only",
+  "full_suite": false,
+  "live": {
+    "commit": "52a1bfb17f6383617df5ce96102a7d881fe24626",
+    "tree": "8db5f0479fd1577974272bb6086b5a8005cfc436"
+  },
+  "original": {
+    "merged": "52a1bfb17f6383617df5ce96102a7d881fe24626",
+    "tree": "8db5f0479fd1577974272bb6086b5a8005cfc436",
+    "log_sha256": "ce897c2dc229164ad09569f2e36ddc6e09e49216a654c12ea0e1e2d107baebd1",
+    "coverage": {
+      "passed": [],
+      "failed": [
+        "tests/build-facts-audit.test.ts"
+      ],
+      "skipped": [],
+      "summary": {
+        "files": {
+          "failed": 1,
+          "passed": 505
+        },
+        "tests": {
+          "failed": 1,
+          "passed": 5026,
+          "skipped": 2
+        }
+      },
+      "failed_tests": {
+        "tests/build-facts-audit.test.ts": [
+          "V4 M2 audit: build questions carry facts, not code's scores selection/remove with the boss simulation: facts, not scores; every option still listed"
+        ]
+      }
+    }
+  },
+  "original_log": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261017-014302-s2-strategy-proposal.fallback-8db5f0479fd1577974272bb6086b5a8005cfc436.checks.log",
+  "sources": [
+    "66b05734c8ee8e632345fb5c1c3a672296ab7ad5"
+  ],
+  "inputs": [
+    {
+      "path": "agent/tests/build-facts-audit.test.ts",
+      "source": "66b05734c8ee8e632345fb5c1c3a672296ab7ad5"
+    }
+  ],
+  "selection": [
+    {
+      "file": "tests/build-facts-audit.test.ts",
+      "tests": [
+        "V4 M2 audit: build questions carry facts, not code's scores selection/remove with the boss simulation: facts, not scores; every option still listed"
+      ],
+      "reason": "failed"
+    }
+  ],
+  "evidence": [
+    {
+      "path": "paper/materials/20261017-0400-ops/host-failure-disposition.json",
+      "sha256": "f234f8d5f621ecf432c91abfbe5e07c0d7b41c01f1e7218024b235608a970783"
+    }
+  ],
+  "results": [
+    {
+      "name": "tsc",
+      "rc": 0,
+      "process_rc": 0,
+      "status": "passed"
+    },
+    {
+      "name": "tests/build-facts-audit.test.ts",
+      "rc": 0,
+      "process_rc": 0,
+      "status": "passed",
+      "report_sha256": "52b4a99ca50b755e971e4b5b235036f1713954e081f692e00506ec700bfccd62",
+      "counts": {
+        "numTotalTests": 20,
+        "numPassedTests": 1,
+        "numFailedTests": 0,
+        "numPendingTests": 19
+      },
+      "report": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261017-014302-s2-strategy-proposal.supplement-83949d90babf2b6cb652cade859177e949cc8c295d95575f491e7d11e2486511.0.vitest.json"
+    }
+  ],
+  "rc": 0,
+  "log": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261017-014302-s2-strategy-proposal.supplement-83949d90babf2b6cb652cade859177e949cc8c295d95575f491e7d11e2486511.log",
+  "log_sha256": "0eb4d594e52b300f62b4747e1756b435d3ae4970e7a59a82527e249698ac5f72"
+}

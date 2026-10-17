@@ -1,0 +1,75 @@
+{
+  "notice_id": "2060ad7799c6b87969877aae",
+  "stages": {
+    "ops_forwarded": {
+      "receipt": {
+        "path": "/home/dw/Projects/agent-sts2/paper/materials/20261016-2125-ops/ops-forwarded-receipt.json",
+        "sha256": "445812c74a34d0dc2ba2723249a8e91ab1b5031928a1d0c936c5587dbd0740c7",
+        "at": 1792157305.4388278
+      },
+      "content": {
+        "notice_id": "2060ad7799c6b87969877aae",
+        "stage": "ops_forwarded",
+        "actor": "ops",
+        "status": "delivered",
+        "evidence": {
+          "path": "paper/materials/20261016-2125-ops/watcher-native-send.json",
+          "sha256": "3fee84f825351fbdba748b7acb4fcc5486b8eabec105c7beb0bc82ed5565b970"
+        }
+      }
+    },
+    "watcher_received": {
+      "receipt": {
+        "path": "/home/dw/Projects/agent-sts2/paper/materials/20261016-watcher-notice-2060ad7799c6b87969877aae/watcher_received.receipt.json",
+        "sha256": "c1e5b1bb689e4d117bc093826cc19054d1a9b096d7dee45162ffd4095244fc09",
+        "at": 1792157404.1224957
+      },
+      "content": {
+        "notice_id": "2060ad7799c6b87969877aae",
+        "stage": "watcher_received",
+        "actor": "watcher",
+        "status": "delivered",
+        "session_id": "01a13dcd-83d4-7c63-b233-f93cf878ecf4",
+        "evidence": {
+          "path": "paper/materials/20261016-watcher-notice-2060ad7799c6b87969877aae/actual-readback.json",
+          "sha256": "c3372af3d568a9eea4037d8f6d8f329bac7ca238138446124a56a7b554560ff6"
+        },
+        "native_binding": {
+          "path": "/home/dw/.codex1/sessions/2026/10/15/rollout-2026-10-15T12-24-01-01a13dcd-83d4-7c63-b233-f93cf878ecf4.jsonl",
+          "off": 40008290,
+          "len": 1539,
+          "sha256": "4dfc449ba705f22271700b73319b0d772a0202f651418bd451068409060c47ea"
+        },
+        "Roy_ACK": false
+      }
+    },
+    "roy_notified": {
+      "receipt": {
+        "path": "/home/dw/Projects/agent-sts2/paper/materials/20261016-watcher-notice-2060ad7799c6b87969877aae/roy_notified.receipt.json",
+        "sha256": "2b50085663a89ead047706501156d6afbcb6056b17ebb730586ae43741706244",
+        "at": 1792157404.3783271
+      },
+      "content": {
+        "notice_id": "2060ad7799c6b87969877aae",
+        "stage": "roy_notified",
+        "actor": "watcher",
+        "status": "delivered",
+        "session_id": "01a13dcd-83d4-7c63-b233-f93cf878ecf4",
+        "evidence": {
+          "path": "paper/materials/20261016-watcher-notice-2060ad7799c6b87969877aae/native-roy-notification.jsonl",
+          "sha256": "4dfc449ba705f22271700b73319b0d772a0202f651418bd451068409060c47ea"
+        },
+        "native_binding": {
+          "path": "/home/dw/.codex1/sessions/2026/10/15/rollout-2026-10-15T12-24-01-01a13dcd-83d4-7c63-b233-f93cf878ecf4.jsonl",
+          "off": 40008290,
+          "len": 1539,
+          "sha256": "4dfc449ba705f22271700b73319b0d772a0202f651418bd451068409060c47ea"
+        },
+        "Roy_ACK": false
+      }
+    }
+  },
+  "ops_did_not_register_watcher_stages": true,
+  "roy_ACK": false,
+  "parent_not_closed": true
+}

@@ -1,0 +1,31 @@
+from pathlib import Path
+import hashlib,json,subprocess
+r=Path.cwd();p=r/'ops/codex-ops/record-staging/20261017-1002';pub=r/'paper/materials/20261017-1002-ops'
+load=lambda f:json.loads(f.read_bytes());sha=lambda b:hashlib.sha256(b).hexdigest()
+def write(f,v):f.write_text(json.dumps(v,ensure_ascii=False,indent=2)+'\n')
+v=load(pub/'publication.json');source=v['source'];live=r/'.worktrees/live'
+for cwd in [r,live]:subprocess.run(['git','-C',str(cwd),'merge-base','--is-ancestor',source,'HEAD'],check=True)
+for leaf in v['leaves']:
+    cwd=r if leaf['lane']=='main' else live
+    assert sha((cwd/leaf['path']).read_bytes())==leaf['sha256']
+fixture=load(live/'agent/tests/silent-helical-dart-evidence.json');assert fixture['character'].lower()=='silent' and fixture['ascension']==10
+frames={x['line']:x['state'] for x in fixture['frames']};refs=[]
+for x in fixture['sources']:
+    path=Path(x['source']);assert path==r/'logs/states.jsonl'
+    with path.open('rb') as f:f.seek(x['offset']);raw=f.read(x['bytes'])
+    original=json.loads(raw)['state'];projected=frames[x['line']]
+    assert sha(raw)==x['sha256'] and {k:original[k] for k in projected}==projected
+    refs.append(x)
+write(pub/'published-fixed-evidence-binding.json',dict(source=source,fixture_sha256=sha((live/'agent/tests/silent-helical-dart-evidence.json').read_bytes()),references=refs,original_selected_top_level_fields_exactly_equal=True,projection_contract=fixture['projection'],initial_ops_whole_state_equality_check_rejected_projection_then_corrected=True,no_fixture_or_source_changed=True,ops_did_not_reinfer_game_mechanics=True))
+at=subprocess.check_output(['date','+%Y-%m-%d %H:%M:%S %Z'],text=True).strip();print(at,flush=True)
+notice=(f'\n- {at} [规则实际上线/{v["release_id"]}] 原学习者091302-s2 source {source} 已窄合main {v["main"]}/live {v["actual_live"]}，行为commit {v["behavior_commit"]}，最终tree {v["tree"]}；只7叶，保live10份知识刷新、历史署名与全部并行记录/index。原修复提案silent-proposal-9c3554ff02a3119c，账本silent-0293，实盘T0DGVABPV60U Silent A10 F48 T2/T4。\n'
+ '  旧规则：候选同线显式小刀后的螺线飞镖增敏未接入，现场该遗物临时敏捷在后轮rollout可能保留。新规则：仅学习者已核Silent A10单敌/有效遗物/普通显式SHIV或SHIV+范围，攻击后新增本回合敏捷，只供后继挡牌兑现；入口量与新增量按轮末撤回，永久敏捷另保。先挡后刀不倒补，自动/重放/多敌/未见组合不泛化，其他角色、未见进阶、胜率/HP/排序、SL药价、C1/C2不变。原证据已区分升级挡牌额外差值，不能将全部误差或整战胜负归该遗物。\n'
+ '  证据与验收：原source tsc0、sandbox463文件4275题0＋paths11题0（共4286）、固定7题0、撤补丁5败/2过与恢复7过、gitleaks0均保持，不重未变source full。预期改善已观察范围局部格挡与后轮属性预测，不宣称胜率提高或H0校准/0332根修复完成；最终新组合仅原091302-s2唯一宿主完整检查，当前pending，不借旧ac60或source绿。回退仅在当前上下文反向撤七叶并保知识/其他发布，实际回退另记行为号与双通知。\n'
+ '  已加载当前局不重启/热改；首个自然生效局尚无证明，不能以磁盘合并代运行采纳。H0/0332同最高优先及H1原watcher职责保持；本发布改变当前源指纹，H0旧冻结输入不热改，后续校准须按实际新对象分列，不以本局部修复冒Boss全可信。回执paper/materials/20261017-1002-ops/publication.json。\n')
+appends=load(p/'own-appends.json')
+for relative in ['ops/inbox-dev.md','notes/for-roy.md','paper/materials/decision-log.md','notes/ops-handoff.md']:
+    with (r/relative).open('ab') as f:f.write(notice.encode())
+    appends.append(dict(path=relative,text=notice))
+write(p/'own-appends.json',appends)
+for name in ['audit.py','publish.py','forward-h0.py','record-publication.py']:(pub/(name+'.txt')).write_bytes((p/name).read_bytes())
+print(json.dumps(dict(release=v['release_id'],root_dual_notice=True,actual_source_ancestry=True,fixed_original_frames=len(refs),host='not yet started')),flush=True)

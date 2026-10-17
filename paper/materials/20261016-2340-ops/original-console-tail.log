@@ -1,0 +1,260 @@
+thing legal yet)
+23:28:18 COMBAT          combat/plan-continue -> play_card (card_index=2, target_index=0) jev 0 ms | 0 in
+         continuing the Jev-chosen plan: 中和 -> 淤泥旋螺
+23:28:19 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+23:28:20 COMBAT          combat/plan          -> end_turn jev 0 ms | 0 in
+         code plan (dominates every other line): end turn; hp -0, dmg 0
+23:28:20 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+23:28:26 COMBAT          combat/plan-choice   -> play_card (card_index=0) conf 0.94 jev 583 ms | 5013 in
+         Jev chose plan 2/3 (防御, 防御, 防御) with confidence 0.94; code rank 2
+23:28:26 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+23:28:27 COMBAT          combat/plan-continue -> play_card (card_index=1) jev 0 ms | 0 in
+         continuing the Jev-chosen plan: 防御
+23:28:27 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+23:28:27 COMBAT          combat/plan-continue -> play_card (card_index=1) jev 0 ms | 0 in
+         continuing the Jev-chosen plan: 防御
+         completed: Action completed.
+         progress: 25 decisions | 6 Jev calls | 43,062 in / 356 out tokens | ≈ $0.0018 | 174.04 s
+23:28:28 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+23:28:29 COMBAT          combat/plan          -> end_turn jev 0 ms | 0 in
+         code plan (dominates every other line): end turn; hp -0, dmg 0
+23:28:29 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+23:28:33 COMBAT          combat/plan-choice   -> play_card (card_index=0) conf 0.92 jev 542 ms | 5100 in
+         Jev chose plan 2/3 (防御, 防御, 中和 -> 淤泥旋螺, 打击 -> 淤泥旋螺) with confidence 0.92; code rank 2
+23:28:33 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+23:28:34 COMBAT          combat/plan-continue -> play_card (card_index=0) jev 0 ms | 0 in
+         continuing the Jev-chosen plan: 防御
+23:28:34 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+23:28:35 COMBAT          combat/plan-continue -> play_card (card_index=0, target_index=0) jev 0 ms | 0 in
+         continuing the Jev-chosen plan: 中和 -> 淤泥旋螺
+23:28:35 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+23:28:36 COMBAT          combat/plan-continue -> play_card (card_index=0, target_index=0) jev 0 ms | 0 in
+         continuing the Jev-chosen plan: 打击 -> 淤泥旋螺
+23:28:36 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+23:28:38 COMBAT          combat/plan          -> end_turn jev 0 ms | 0 in
+         code plan (dominates every other line): end turn; hp -0, dmg 0
+23:28:38 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+23:28:43 COMBAT          combat/lethal        -> play_card (card_index=0, target_index=0) jev 0 ms | 0 in
+         lethal: 打击 -> 淤泥旋螺, 打击 -> 淤泥旋螺
+23:28:43 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+23:28:44 COMBAT          combat/plan-continue -> play_card (card_index=0, target_index=0) jev 0 ms | 0 in
+         continuing the code-chosen plan: 打击 -> 淤泥旋螺
+23:28:44 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+23:28:44 combat ended — total token usage: 33 decisions, 7 Jev calls, 48,162 in / 398 out tokens (≈ $0.0020)
+23:28:45 REWARD          reward/claim         -> claim_reward (option_index=0) jev 0 ms | 0 in
+         claiming Gold (7金币)
+23:28:45 REWARD          reward/claim         -> claim_reward (option_index=0) jev 0 ms | 0 in
+         claiming Card (将一张牌添加到你的牌组。)
+23:28:54 note boss sim on reward/card: 300 samples per option, 4736 ms
+23:28:56 note V5 construction shadow: predicted, evaluation=attached, probability=absent, 1299 ms
+23:28:56 note Codex decides reward/card (4 options, floor 2, run context 9433 chars)
+23:29:23 note Codex (27.1 s) reward/card: card0 — Poisoned Stab supplies needed early offense and sustained boss damage. Simulated DPR improves substantially; draw dilution and eventual core performance remain uncertain.
+23:29:23 REWARD          reward/card          -> choose_reward_card (option_index=0) jev 0 ms | 171663 in
+         Codex decided card0: Poisoned Stab supplies needed early offense and sustained boss damage. Simulated DPR improves substantially; draw dilution and eventual core performance remain uncertain. | Codex chose 带毒刺击 (Attack, 1E) (code's fallback order: 50, rank 1 of 4; not shown to Codex)
+23:29:23 REWARD          reward/proceed       -> collect_rewards_and_proceed jev 0 ms | 0 in
+         no rewards left to claim; advancing with collect_rewards_and_proceed
+23:29:25 MAP             map/route-follow     -> choose_map_node (option_index=1) jev 0 ms | 0 in
+         following the brain's route plan (floor 1): step 2/16 Monster at row 2, col 2; plan r1c2 普通战 → r2c2 普通战 → r3c1 普通战 → r4c0 普通战 → r5c0 问号 → r6c1 问号 → r7c1 问号 → r8c0 休息 → r9c1 宝箱 → r10c2 精英 → r11c3 普通战 → r12c3 休息 → r13c4 问号 → r14c5 商店 → r15c6 休息 → r16c3 Boss
+23:29:25 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+23:29:29 COMBAT          combat/plan-choice   -> play_card (card_index=0) conf 0.98 jev 555 ms | 9421 in
+         Jev chose plan 7/7 (防御, 打击 -> 噬尸蛞蝓 #1, 打击 -> 噬尸蛞蝓 #1, 中和 -> 噬尸蛞蝓 #2) with confidence 0.98; code rank - (rollout's best line, added)
+23:29:29 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+23:29:30 COMBAT          combat/plan-continue -> play_card (card_index=1, target_index=0) jev 0 ms | 0 in
+         continuing the Jev-chosen plan: 打击 -> 噬尸蛞蝓 #1
+23:29:30 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+23:29:31 COMBAT          combat/plan-continue -> play_card (card_index=2, target_index=0) jev 0 ms | 0 in
+         continuing the Jev-chosen plan: 打击 -> 噬尸蛞蝓 #1
+23:29:31 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+23:29:32 COMBAT          combat/plan-continue -> play_card (card_index=3, target_index=1) jev 0 ms | 0 in
+         continuing the Jev-chosen plan: 中和 -> 噬尸蛞蝓 #2
+23:29:32 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+23:29:33 COMBAT          combat/plan          -> end_turn jev 0 ms | 0 in
+         code plan (dominates every other line): end turn; hp -0, dmg 0
+23:29:33 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+23:29:39 COMBAT          combat/plan-choice   -> play_card (card_index=1, target_index=0) conf 0.99 jev 566 ms | 7373 in
+         Jev chose plan 1/5 (打击 -> 噬尸蛞蝓 #1, 带毒刺击 -> 噬尸蛞蝓 #1, 打击 -> 噬尸蛞蝓 #2) with confidence 0.99; code rank 1
+23:29:39 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+23:29:40 COMBAT          combat/plan-continue -> play_card (card_index=1, target_index=0) jev 0 ms | 0 in
+         continuing the Jev-chosen plan: 带毒刺击 -> 噬尸蛞蝓 #1
+23:29:41 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+23:29:41 COMBAT          combat/plan-continue -> play_card (card_index=1, target_index=1) jev 0 ms | 0 in
+         continuing the Jev-chosen plan: 打击 -> 噬尸蛞蝓 #2
+23:29:41 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+23:29:43 COMBAT          combat/plan          -> end_turn jev 0 ms | 0 in
+         code plan (dominates every other line): end turn; hp -0, dmg 3
+23:29:43 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+23:29:49 COMBAT          combat/plan-choice   -> play_card (card_index=0) conf 0.95 jev 608 ms | 8000 in
+         Jev chose plan 2/6 (防御, 防御, 生存者) with confidence 0.95; code rank 2
+23:29:49 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+23:29:49 COMBAT          combat/plan-continue -> play_card (card_index=0) jev 0 ms | 0 in
+         continuing the Jev-chosen plan: 防御
+23:29:50 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+23:29:51 note action came back pending; waited for the board to settle
+23:29:51 COMBAT          combat/plan-continue -> play_card (card_index=2) jev 0 ms | 0 in
+         continuing the Jev-chosen plan: 生存者
+         pending (unstable): Action queued but state is still transitioning.
+         progress: 50 decisions | 10 Jev calls | 72,956 in / 596 out tokens | ≈ $0.0031 | 257.33 s
+23:29:52 CARD_SELECTION  selection/choose     -> select_deck_card (option_index=1) conf 0.38 jev 320 ms | 2528 in
+         Jev chose 打击 with confidence 0.38
+23:29:53 COMBAT          combat/plan-choice   -> end_turn conf 0.89 jev 416 ms | 5123 in
+         Jev chose plan 3/3 (end turn) with confidence 0.89; code rank - (rollout's best line, added)
+23:29:53 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+23:29:58 COMBAT          combat/lethal        -> play_card (card_index=0, target_index=0) jev 0 ms | 0 in
+         lethal: 带毒刺击 -> 噬尸蛞蝓, 打击 -> 噬尸蛞蝓, 打击 -> 噬尸蛞蝓
+23:29:58 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+23:29:59 COMBAT          combat/plan-continue -> play_card (card_index=0, target_index=0) jev 0 ms | 0 in
+         continuing the code-chosen plan: 打击 -> 噬尸蛞蝓
+23:29:59 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+23:29:59 COMBAT          combat/plan-continue -> play_card (card_index=1, target_index=0) jev 0 ms | 0 in
+         continuing the code-chosen plan: 打击 -> 噬尸蛞蝓
+23:30:00 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+23:30:01 COMBAT          combat/lethal        -> end_turn jev 0 ms | 0 in
+         lethal: 
+23:30:01 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+23:30:02 combat ended — total token usage: 56 decisions, 12 Jev calls, 80,607 in / 672 out tokens (≈ $0.0034)
+23:30:02 REWARD          reward/claim         -> claim_reward (option_index=0) jev 0 ms | 0 in
+         claiming Gold (10金币)
+23:30:02 REWARD          reward/claim         -> claim_reward (option_index=0) jev 0 ms | 0 in
+         claiming Card (将一张牌添加到你的牌组。)
+23:30:15 note boss sim on reward/card: 300 samples per option, 6010 ms
+23:30:17 note V5 construction shadow: predicted, evaluation=attached, probability=absent, 1270 ms
+23:30:17 note Codex decides reward/card (4 options, floor 3, run context 9885 chars)
+23:30:47 note Codex (29.0 s) reward/card: card0 — Poisoned Stab enables Bubble Bubble’s sustained damage and substantially better simulated boss survival. Draw dilution remains uncertain; defense still needs strengthening.
+23:30:47 REWARD          reward/card          -> choose_reward_card (option_index=0) jev 0 ms | 172970 in
+         Codex decided card0: Poisoned Stab enables Bubble Bubble’s sustained damage and substantially better simulated boss survival. Draw dilution remains uncertain; defense still needs strengthening. | Codex chose 咕嘟冒泡 (Skill, 1E) (code's fallback order: 50, rank 2 of 4; not shown to Codex)
+23:30:47 REWARD          reward/proceed       -> collect_rewards_and_proceed jev 0 ms | 0 in
+         no rewards left to claim; advancing with collect_rewards_and_proceed
+23:30:49 MAP             map/route-follow     -> choose_map_node (option_index=0) jev 0 ms | 0 in
+         following the brain's route plan (floor 1): step 3/16 Monster at row 3, col 1; plan r1c2 普通战 → r2c2 普通战 → r3c1 普通战 → r4c0 普通战 → r5c0 问号 → r6c1 问号 → r7c1 问号 → r8c0 休息 → r9c1 宝箱 → r10c2 精英 → r11c3 普通战 → r12c3 休息 → r13c4 问号 → r14c5 商店 → r15c6 休息 → r16c3 Boss
+23:30:49 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+23:30:53 COMBAT          combat/plan-choice   -> play_card (card_index=0, target_index=1) conf 0.30 jev 554 ms | 7177 in
+         Jev chose plan 1/5 (打击 -> 蟾蜍蝌蚪 #2, 带毒刺击 -> 蟾蜍蝌蚪 #2, 咕嘟冒泡 -> 蟾蜍蝌蚪 #2) with confidence 0.30; code rank 1
+23:30:53 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+23:30:54 COMBAT          combat/plan-continue -> play_card (card_index=2, target_index=1) jev 0 ms | 0 in
+         continuing the Jev-chosen plan: 带毒刺击 -> 蟾蜍蝌蚪 #2
+23:30:54 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+23:30:55 COMBAT          combat/plan-continue -> play_card (card_index=1, target_index=1) jev 0 ms | 0 in
+         continuing the Jev-chosen plan: 咕嘟冒泡 -> 蟾蜍蝌蚪 #2
+23:30:55 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+23:30:56 COMBAT          combat/plan          -> end_turn jev 0 ms | 0 in
+         code plan (dominates every other line): end turn; hp -0, dmg 11
+23:30:56 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+23:31:01 COMBAT          combat/plan-choice   -> play_card (card_index=1, target_index=0) conf 0.92 jev 600 ms | 9966 in
+         Jev chose plan 4/8 (中和 -> 蟾蜍蝌蚪, 生存者) with confidence 0.92; code rank 4
+23:31:01 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+23:31:03 note action came back pending; waited for the board to settle
+23:31:03 COMBAT          combat/plan-continue -> play_card (card_index=3) jev 0 ms | 0 in
+         continuing the Jev-chosen plan: 生存者
+23:31:03 CARD_SELECTION  selection/choose     -> select_deck_card (option_index=0) conf 0.69 jev 310 ms | 3731 in
+         Jev chose 打击 with confidence 0.69
+23:31:05 COMBAT          combat/plan-choice   -> end_turn conf 0.89 jev 381 ms | 5978 in
+         Jev chose plan 3/4 (end turn) with confidence 0.89; code rank 3
+23:31:05 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+23:31:11 COMBAT          combat/plan          -> play_card (card_index=0) jev 0 ms | 0 in
+         code plan (dominates every other line): 防御, 防御, 中和 -> 蟾蜍蝌蚪; hp -0, dmg 3
+23:31:11 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+23:31:11 COMBAT          combat/plan-continue -> play_card (card_index=0) jev 0 ms | 0 in
+         continuing the code-chosen plan: 防御
+23:31:12 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+23:31:12 COMBAT          combat/plan-continue -> play_card (card_index=2, target_index=0) jev 0 ms | 0 in
+         continuing the code-chosen plan: 中和 -> 蟾蜍蝌蚪
+23:31:13 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+23:31:14 COMBAT          combat/plan          -> end_turn jev 0 ms | 0 in
+         code plan (dominates every other line): end turn; hp -0, dmg 0
+23:31:14 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+23:31:18 COMBAT          combat/plan-choice   -> play_card (card_index=1, target_index=0) conf 0.99 jev 547 ms | 5989 in
+         Jev chose plan 1/4 (打击 -> 蟾蜍蝌蚪, 打击 -> 蟾蜍蝌蚪) with confidence 0.99; code rank 1
+23:31:19 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+23:31:19 COMBAT          combat/plan-continue -> play_card (card_index=1, target_index=0) jev 0 ms | 0 in
+         continuing the Jev-chosen plan: 打击 -> 蟾蜍蝌蚪
+         completed: Action completed.
+         progress: 75 decisions | 17 Jev calls | 113,448 in / 954 out tokens | ≈ $0.0048 | 345.98 s
+23:31:19 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+23:31:21 COMBAT          combat/plan          -> end_turn jev 0 ms | 0 in
+         code plan (dominates every other line): end turn; hp -0, dmg 0
+23:31:21 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+23:31:25 COMBAT          combat/lethal        -> play_card (card_index=3, target_index=0) jev 0 ms | 0 in
+         lethal: 带毒刺击 -> 蟾蜍蝌蚪
+23:31:25 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+23:31:27 COMBAT          combat/lethal        -> end_turn jev 0 ms | 0 in
+         lethal: 
+23:31:27 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+23:31:28 combat ended — total token usage: 78 decisions, 17 Jev calls, 113,448 in / 954 out tokens (≈ $0.0048)
+23:31:28 REWARD          reward/claim         -> claim_reward (option_index=0) jev 0 ms | 0 in
+         claiming Gold (9金币)
+23:31:29 REWARD          reward/claim         -> claim_reward (option_index=0) jev 0 ms | 0 in
+         claiming Potion (敏捷药水)
+23:31:29 REWARD          reward/claim         -> claim_reward (option_index=0) jev 0 ms | 0 in
+         claiming Card (将一张牌添加到你的牌组。)
+23:32:01 note boss sim on reward/card: 800 samples per option, 13908 ms
+23:32:02 note V5 construction shadow: predicted, evaluation=attached, probability=absent, 1275 ms
+23:32:02 note Codex decides reward/card (4 options, floor 4, run context 9969 chars)
+23:32:44 note Codex (41.6 s) reward/card: card2 — Cloak lowers simulated HP loss despite reduced DPR; inexpensive defense supports existing poison. Draw dilution remains uncertain.
+23:32:44 REWARD          reward/card          -> choose_reward_card (option_index=2) jev 0 ms | 174288 in
+         Codex decided card2: Cloak lowers simulated HP loss despite reduced DPR; inexpensive defense supports existing poison. Draw dilution remains uncertain. | Codex chose 斗篷与匕首 (Skill, 1E) (code's fallback order: 50, rank 1 of 4; not shown to Codex)
+23:32:45 REWARD          reward/proceed       -> collect_rewards_and_proceed jev 0 ms | 0 in
+         no rewards left to claim; advancing with collect_rewards_and_proceed
+23:32:46 MAP             map/route-follow     -> choose_map_node (option_index=0) jev 0 ms | 0 in
+         following the brain's route plan (floor 1): step 4/16 Monster at row 4, col 0; plan r1c2 普通战 → r2c2 普通战 → r3c1 普通战 → r4c0 普通战 → r5c0 问号 → r6c1 问号 → r7c1 问号 → r8c0 休息 → r9c1 宝箱 → r10c2 精英 → r11c3 普通战 → r12c3 休息 → r13c4 问号 → r14c5 商店 → r15c6 休息 → r16c3 Boss
+23:32:46 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+23:32:51 COMBAT          combat/plan-choice   -> play_card (card_index=0, target_index=0) conf 0.93 jev 664 ms | 8287 in
+         Jev chose plan 6/6 (带毒刺击 -> 幽灵船, 打击 -> 幽灵船, 中和 -> 幽灵船) with confidence 0.93; code rank - (rollout's best line, added)
+23:32:51 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+23:32:52 COMBAT          combat/plan-continue -> play_card (card_index=2, target_index=0) jev 0 ms | 0 in
+         continuing the Jev-chosen plan: 打击 -> 幽灵船
+23:32:52 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+23:32:53 COMBAT          combat/plan-continue -> play_card (card_index=4, target_index=0) jev 0 ms | 0 in
+         continuing the Jev-chosen plan: 中和 -> 幽灵船
+23:32:53 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+23:32:55 COMBAT          combat/plan-choice   -> play_card (card_index=3, target_index=0) conf 0.90 jev 400 ms | 7215 in
+         Jev chose plan 1/5 (打击 -> 幽灵船) with confidence 0.90; code rank 1
+23:32:55 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+23:32:56 COMBAT          combat/plan          -> end_turn jev 0 ms | 0 in
+         code plan (dominates every other line): end turn; hp -0, dmg 3
+23:32:56 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+23:33:03 COMBAT          combat/plan-choice   -> play_card (card_index=0, target_index=0) conf 0.74 jev 576 ms | 12477 in
+         Jev chose plan 4/10 (打击 -> 幽灵船, 咕嘟冒泡 -> 幽灵船, 打击 -> 幽灵船, potion 格挡药水) with confidence 0.74; code rank 4
+23:33:04 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+23:33:04 COMBAT          combat/plan-continue -> play_card (card_index=0, target_index=0) jev 0 ms | 0 in
+         continuing the Jev-chosen plan: 咕嘟冒泡 -> 幽灵船
+23:33:05 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+23:33:05 COMBAT          combat/plan-continue -> play_card (card_index=1, target_index=0) jev 0 ms | 0 in
+         continuing the Jev-chosen plan: 打击 -> 幽灵船
+23:33:05 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+23:33:07 COMBAT          combat/plan-continue -> use_potion (option_index=0) jev 0 ms | 0 in
+         continuing the Jev-chosen plan: potion 格挡药水
+23:33:08 COMBAT          combat/plan          -> end_turn jev 0 ms | 0 in
+         code plan (dominates every other line): end turn; hp -2, dmg 11
+23:33:08 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+23:33:13 COMBAT          combat/plan-choice   -> play_card (card_index=1) conf 0.97 jev 542 ms | 5384 in
+         Jev chose plan 1/3 (防御, 斗篷与匕首, 防御, 小刀 -> 幽灵船) with confidence 0.97; code rank 1
+23:33:13 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+23:33:14 COMBAT          combat/plan-continue -> play_card (card_index=1) jev 0 ms | 0 in
+         continuing the Jev-chosen plan: 斗篷与匕首
+23:33:15 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+23:33:16 COMBAT          combat/plan-choice   -> play_card (card_index=1) conf 0.98 jev 451 ms | 5283 in
+         Jev chose plan 1/3 (防御, 小刀 -> 幽灵船) with confidence 0.98; code rank 1
+23:33:16 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+23:33:17 COMBAT          combat/plan-continue -> play_card (card_index=2, target_index=0) jev 0 ms | 0 in
+         continuing the Jev-chosen plan: 小刀 -> 幽灵船
+23:33:17 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+23:33:18 COMBAT          combat/plan          -> end_turn jev 0 ms | 0 in
+         code plan (dominates every other line): end turn; hp -0, dmg 10
+23:33:18 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+23:33:23 COMBAT          combat/lethal        -> play_card (card_index=0, target_index=0) jev 0 ms | 0 in
+         lethal: 中和 -> 幽灵船
+         completed: Action completed.
+         progress: 100 decisions | 22 Jev calls | 152,094 in / 1,261 out tokens | ≈ $0.0064 | 469.25 s
+23:33:23 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+23:33:24 COMBAT          combat/lethal        -> end_turn jev 0 ms | 0 in
+         lethal: 
+23:33:24 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+23:33:25 combat ended — total token usage: 101 decisions, 22 Jev calls, 152,094 in / 1,261 out tokens (≈ $0.0064)
+23:33:26 REWARD          reward/claim         -> claim_reward (option_index=0) jev 0 ms | 0 in
+         claiming Gold (8金币)
+23:33:26 REWARD          reward/claim         -> claim_reward (option_index=0) jev 0 ms | 0 in
+         claiming Card (将一张牌添加到你的牌组。)
+23:33:51 note boss sim on reward/card: 1000 samples per option, 12760 ms
+23:33:52 note V5 construction shadow: predicted, evaluation=attached, probability=absent, 1152 ms
+23:33:52 note Codex decides reward/card (4 options, floor 5, run context 9693 chars)
+fault: Codex wait fault could not be recorded (run CVJ4MLQF4CSY, question mvb4de8g-1248696-6): ENOSPC: no space left on device, write

@@ -1,0 +1,47 @@
+{
+  "at": "2026-10-17 21:26:06 CST",
+  "batch": "20261017-170116-fix-batch",
+  "live": {
+    "commit": "b23506b242de724d2ab9c066927ddb0d70d3f706",
+    "tree": "a63667ac37f20963d17dd34c52e7967bfd1c59de"
+  },
+  "original_full_rc": 1,
+  "original_full_log_sha256": "686222023bf87cf29417aabeaf7d7ebe181d929298d1cd8fecfc0262fdbb5c14",
+  "selected_host_rc": 0,
+  "tsc": 0,
+  "selection": [
+    {
+      "file": "tests/build-decider.test.ts",
+      "tests": [
+        "BUILD_DECIDER=deepseek in the loop card reward with keep (or no route): recorded in the card row only; the next map follows the plan"
+      ],
+      "reason": "failed"
+    },
+    {
+      "file": "tests/journal-replay.test.ts",
+      "tests": [
+        "the loop restarted mid-run after a game relaunch (a run_unknown main menu, then continue) the run memory is rebuilt, and a replay that finds nothing says so"
+      ],
+      "reason": "failed"
+    }
+  ],
+  "counts": [
+    {
+      "numTotalTests": 28,
+      "numPassedTests": 1,
+      "numFailedTests": 0,
+      "numPendingTests": 27
+    },
+    {
+      "numTotalTests": 10,
+      "numPassedTests": 1,
+      "numFailedTests": 0,
+      "numPendingTests": 9
+    }
+  ],
+  "selected_log_sha256": "e56b2afb2761ef83fdb8954ffc5e1dcc31d6ea65cfec37937c1340773ea3b1a7",
+  "receipt_sha256": "9e8fc79e954325cd34fa2d4f5753f51b9d9d443f7ce58262e99e5417f6884cab",
+  "disposition": "Accept the actual final-tree deployment with its full1 and unchanged two exact-case selected0, preserving all original failures/timeouts/coverage. This is a bounded ops engineering disposition, not a complete suite pass, root-cause diagnosis or scientific acceptance.",
+  "source_full_calibration_consumer_or_model_repeated": false,
+  "other_role_ACK": false
+}

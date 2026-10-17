@@ -1,0 +1,69 @@
+{
+  "at": "2026-10-16T08:56:47.880265+08:00",
+  "cwd": "/home/dw/Projects/agent-sts2/.worktrees/global-build-g1a-interface-20261016/agent",
+  "files": {
+    "agent/src/sim/continuous-boss-result.ts": "29ee6ece9d6d0b219a83d700ad320f4d4d1bcda5a7c9de040d096d6ba427ec79",
+    "agent/src/sim/boss-sim.ts": "e392cfd675fe877a359fed8d3d54fbe637fa7465471a8bb5e63d409863a4a663",
+    "agent/src/sim/build-sim.ts": "d62e466432b5c36e85313058ac862ffca92981f8529373cd31483bed4a99b407",
+    "agent/src/sim/build-sim-facts.ts": "c634b2229334feeb17f059a47d5aac8a6fd4abdd6e28e58aa5df6238e13b16e5",
+    "agent/src/sim/boss-lines.ts": "8e953ae7511e23bbe15c2035858c246e476110031a9d3a5c265d0952e2197be5",
+    "agent/tests/silent-double-boss.test.ts": "5d9a9523081870b699e94c8c1a408513a9c01916814edd7cb3681d8d505320e8"
+  },
+  "checks": [
+    {
+      "name": "tsc",
+      "command": [
+        "nice",
+        "-n",
+        "19",
+        "npx",
+        "tsc",
+        "-p",
+        "tsconfig.json",
+        "--noEmit"
+      ],
+      "rc": 0,
+      "elapsed_s": 1.1186558429617435,
+      "log": "paper/materials/20261016-global-build-g1a/interface-validation/tsc.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "focused",
+      "command": [
+        "nice",
+        "-n",
+        "19",
+        "npx",
+        "vitest",
+        "run",
+        "tests/silent-double-boss.test.ts",
+        "--pool=forks",
+        "--maxWorkers=1"
+      ],
+      "rc": 0,
+      "elapsed_s": 3.815353770973161,
+      "log": "paper/materials/20261016-global-build-g1a/interface-validation/focused.log",
+      "sha256": "815ab1aa72852f7e3df593e3a391df3d7d9235962ae230e38d07d0178dd5bdfa"
+    },
+    {
+      "name": "full",
+      "command": [
+        "nice",
+        "-n",
+        "19",
+        "npx",
+        "vitest",
+        "run",
+        "--pool=forks",
+        "--maxWorkers=1"
+      ],
+      "rc": 1,
+      "elapsed_s": 1387.3111639730632,
+      "log": "paper/materials/20261016-global-build-g1a/interface-validation/full.log",
+      "sha256": "afb230a41990117a627a01d254a07eaf0e6ec76778b44229e6a35ec1e29345ca"
+    }
+  ],
+  "model_calls": 0,
+  "game_actions": 0,
+  "source_unchanged": true
+}

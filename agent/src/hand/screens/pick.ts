@@ -162,7 +162,7 @@ export function buildPickDecision(params: PickDecisionParams): Decision {
     state: params.state,
     questions: { pick: choiceQ(params.instructions, criteria), ...optionQuestions(options), ...(params.extras ?? {}) },
     ...(params.escalateBelow === undefined ? {} : { escalate: { question: "pick", below: params.escalateBelow, why: params.label } }),
-    resolve(answers): ResolvedAction {
+    resolve(answers, context): ResolvedAction {
       const answer = answers["pick"];
       /**
        * An option whose answer takes more than its key (jev): its plan on Jev's extra answers, or on an escalated
@@ -185,6 +185,7 @@ export function buildPickDecision(params: PickDecisionParams): Decision {
 
       if (params.strictJev) {
         if (!answer || answer.type !== "choice") {
+          if (context?.budgetExpired) return fallback("human-pace deadline without a usable Jev answer", null);
           return {
             intent: null,
             rationale: "no usable answer from Jev (trust-jev: waiting to ask again instead of choosing in code)",
@@ -194,6 +195,7 @@ export function buildPickDecision(params: PickDecisionParams): Decision {
         }
         const trusted = byKey.get(answer.choice);
         if (!trusted) {
+          if (context?.budgetExpired) return fallback("human-pace deadline without a legal Jev choice", answer.confidence);
           return {
             intent: null,
             rationale: `Jev chose unknown option "${answer.choice}" (trust-jev: waiting to ask again instead of choosing in code)`,
@@ -203,6 +205,7 @@ export function buildPickDecision(params: PickDecisionParams): Decision {
         }
         const planned = jevPlan(trusted);
         if (planned && "invalid" in planned) {
+          if (context?.budgetExpired) return fallback(`human-pace deadline with an unusable Jev plan: ${planned.invalid}`, answer.confidence);
           return { intent: null, rationale: `Jev chose ${trusted.label ?? trusted.key}, but ${planned.invalid} (trust-jev: waiting to ask again)`, confidence: answer.confidence, fallback: false };
         }
         const apply = trusted.apply || planned?.apply ? (): void => (trusted.apply?.(), planned?.apply?.()) : undefined;

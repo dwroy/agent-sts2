@@ -1,0 +1,63 @@
+{
+  "at": "2026-10-17T10:56:19.353135+08:00",
+  "request": "roy-20261017-human-pace",
+  "task": "H1 natural acceptance",
+  "owner_session": "01a13dcd-83d4-7c63-b233-f93cf878ecf4",
+  "release": {
+    "at": "2026-10-17 10:50:56 CST",
+    "actual_live": "dbd41616420f62e6502e9cb6c5827e852a6b4949",
+    "tree": "d68e817428a59b28dfd53c3d9dfb34819f711e56",
+    "behavior_commit": "0e2f10cc7cc043035eafc1785667b630eb335a35",
+    "release_id": "V5-R380"
+  },
+  "release_cut_utc": "2026-10-17T02:50:56.000Z",
+  "files": [
+    {
+      "path": "logs/run-config.jsonl",
+      "bytes": 1928062,
+      "inode": 153607,
+      "sha256": "f3dd1751f45f0b6956c2a1133e8c80e93ccd7922c842a2159fddd07fc74a7222"
+    },
+    {
+      "path": "logs/runs.jsonl",
+      "bytes": 355966,
+      "inode": 58822,
+      "sha256": "a4d4d82814f548ed90485acae1e686b054f9cdb7a9c525c88f91392a164d675d"
+    }
+  ],
+  "baseline_run_ids": [
+    "YZWV37N2MU6N",
+    "N9GKED3PMEV3",
+    "CVJ4MLQF4CSY",
+    "DC32RW0A80V1",
+    "2Q6ZYZ6JHM0M"
+  ],
+  "baseline_rule": "last five finished Silent runs before actual publication timestamp; pre-release-started overlapping run separately excluded, not substituted into baseline",
+  "required_complete_natural_runs": 2,
+  "candidate_rule": "Silent play/auto, first-floor non-restart config, release behavior ancestor, actual human_pace-h1-v1 enabled; all later config segments audited",
+  "read_only": true,
+  "no_polling": "one inotify listener on run-config/runs append; no game queries or interval SQL",
+  "preparation_failure": "initial filter failed on historical character:null; frozen source files kept, null-safe filter only",
+  "additional_source_bounds": {
+    "logs/decisions.jsonl": {
+      "bytes": 2172022321,
+      "inode": 58857
+    },
+    "logs/states.jsonl": {
+      "bytes": 13823228863,
+      "inode": 58886
+    },
+    "logs/brain.jsonl": {
+      "bytes": 724791850,
+      "inode": 153608
+    },
+    "logs/codex-calls.jsonl": {
+      "bytes": 42567483,
+      "inode": 298602
+    },
+    "logs/sl-attempts.jsonl": {
+      "bytes": 44993904,
+      "inode": 2158
+    }
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "at": "2026-10-16T06:10:10.030549+00:00",
+  "parent": "e9922a6008b35c3b4427c423830f015252a3bcde",
+  "changed_paths": [
+    "agent/tests/global-build-integration.test.ts"
+  ],
+  "before_sha256": "9188dd9cac5e4b6d7d16f97d3dbd8564f4ac36cf2465382a0054f77edd19777a",
+  "after_sha256": "f173e3c8be375e89661d7fb089785c276d4642f74969feedf891127c3262d8c4",
+  "tsc": {
+    "command": "PATH=~/.local/node/bin:$PATH nice -n 19 npx tsc -p tsconfig.json --noEmit",
+    "exec_session": 31411,
+    "rc": 0,
+    "stdout": ""
+  },
+  "vitest": {
+    "command": "PATH=~/.local/node/bin:$PATH nice -n 19 npx vitest run tests/global-build-integration.test.ts --maxWorkers=1",
+    "exec_session": 4739,
+    "rc": 0,
+    "files": 1,
+    "passed": 12,
+    "duration_seconds": 16.68,
+    "log_sha256": "78f7e130a20733f0a24c427f5cbbbd30dce94e0dcf56936b8bce32986ed48d2d"
+  },
+  "all_original_test_body_and_assertions_unchanged": true,
+  "original_time_limits_unchanged": true,
+  "production_source_unchanged": true,
+  "no_unchanged_source_full_rerun": true,
+  "original_combined_host_full_rc1_preserved": true,
+  "validation_scope": "Original ops explicitly requested one-fixture input repair and fixed self-test, no unchanged source full; original131302 owns any new final composition host"
+}

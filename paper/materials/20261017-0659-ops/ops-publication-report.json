@@ -1,0 +1,131 @@
+{
+  "task": "strategy-proposal",
+  "character": "silent",
+  "batch": "20261017-051302-strategy-proposal",
+  "base": "e5fc1a2d90b67b2a0dff253e9b0ba89fd3310aea",
+  "runs": [
+    "M0GY0A4M2F7H",
+    "Z91JN3S3PQX2",
+    "LY83ZMTFVKJH"
+  ],
+  "fixes": [
+    {
+      "proposal_id": "silent-proposal-90a4a4981be3c760",
+      "commit": "3dbdc27becba54c8ca4fe722102b1c562794f48b",
+      "source_parent": "e5fc1a2d90b67b2a0dff253e9b0ba89fd3310aea"
+    },
+    {
+      "proposal_id": "silent-proposal-6330c4ade7528ec9",
+      "commit": "3dbdc27becba54c8ca4fe722102b1c562794f48b",
+      "source_parent": "e5fc1a2d90b67b2a0dff253e9b0ba89fd3310aea"
+    },
+    {
+      "proposal_id": "silent-proposal-04cbbf6b3a547aea",
+      "commit": "92fb9f15b24c9fc4f1bf31ca4cd3190a9cba7cdb",
+      "source_parent": "3dbdc27becba54c8ca4fe722102b1c562794f48b"
+    },
+    {
+      "proposal_id": "silent-proposal-c3ef922a9a5f8285",
+      "commit": "c4d99c1be01c01359988afc2b85ecada99c9b133",
+      "source_parent": "92fb9f15b24c9fc4f1bf31ca4cd3190a9cba7cdb"
+    }
+  ],
+  "skipped": [
+    "silent-proposal-2d711af284735508",
+    "silent-proposal-1de0737d94ac87f5",
+    "silent-proposal-16f7cf00059df9a0",
+    "silent-proposal-ab3bf902b22662f4",
+    "silent-proposal-089bd208926f8962",
+    "silent-proposal-9849e537607099bd"
+  ],
+  "merged": "c93e8dba0293f8496910ae7a7a33340228a8fb04",
+  "tests": {
+    "tsc": 0,
+    "vitest": 0,
+    "cases": 0
+  },
+  "code_proposals": [
+    "silent-proposal-2d711af284735508",
+    "silent-proposal-1de0737d94ac87f5",
+    "silent-proposal-90a4a4981be3c760",
+    "silent-proposal-16f7cf00059df9a0",
+    "silent-proposal-ab3bf902b22662f4",
+    "silent-proposal-6330c4ade7528ec9",
+    "silent-proposal-089bd208926f8962",
+    "silent-proposal-9849e537607099bd",
+    "silent-proposal-04cbbf6b3a547aea",
+    "silent-proposal-c3ef922a9a5f8285"
+  ],
+  "implementation_domains": [
+    "combat",
+    "sl",
+    "terminal",
+    "structure"
+  ],
+  "proposal_results": [
+    {
+      "id": "silent-proposal-2d711af284735508",
+      "state": "waiting",
+      "reason": "F17T9同底板替线实多扣6敌血、多损9自身血，但原/替完整后继未配对；末试T3药时点与牌序同时变化。已有候选/SL审计不能证明跨抽牌完整执行，缺可信整战配对，不改探索或HP门槛。"
+    },
+    {
+      "id": "silent-proposal-1de0737d94ac87f5",
+      "state": "waiting",
+      "reason": "F33T3已存在建滚石候选、随后另喝挡药；T5/T11护栏预计共省22血、少26伤，原线均未整场执行。缺支付能力后的受控抽牌/截止后继及整战比较，不能由T9启动较晚统一改setup/护栏。"
+    },
+    {
+      "id": "silent-proposal-90a4a4981be3c760",
+      "state": "implemented",
+      "reason": "ops verified original exact source as actual live ancestor in V5-R377 narrow publication; source failures and sandbox scope retained; final combined-tree host pending, no wider policy or win-effect claim.",
+      "commit": "3dbdc27becba54c8ca4fe722102b1c562794f48b"
+    },
+    {
+      "id": "silent-proposal-16f7cf00059df9a0",
+      "state": "waiting",
+      "reason": "F33T12毒0→6当步敌HP136不变、随后结6+5；M末试无色生成闪亮登场未打而后弃。缺生成药产物与后继执行的完整配对/分布、普通毒药及阻挡组合的统一消费者校准；保留饮后重算与未知退路，不拟喝留门槛。"
+    },
+    {
+      "id": "silent-proposal-ab3bf902b22662f4",
+      "state": "waiting",
+      "reason": "步法/尖啸/滚石/抱抱/余像在原帧可核，但复合提案要求支付、建立、轮初与后继来源联合核算。现有局部模型及审计不构成整组消费者通过；本局无提前能力的同盘受控整战后继，不拟永远先能力规则。"
+    },
+    {
+      "id": "silent-proposal-6330c4ade7528ec9",
+      "state": "implemented",
+      "reason": "ops verified original exact source as actual live ancestor in V5-R377 narrow publication; source failures and sandbox scope retained; final combined-tree host pending, no wider policy or win-effect claim.",
+      "commit": "3dbdc27becba54c8ca4fe722102b1c562794f48b"
+    },
+    {
+      "id": "silent-proposal-089bd208926f8962",
+      "state": "waiting",
+      "reason": "资源等式56−95+113−29+34=79与护栏预测22/26须分开；原线未整场执行、早期路线预测条件后来改变。已有护栏/路线审计不闭合能力支付、截止及条件营火的联合消费者配对，缺固定原/替线完整后继。"
+    },
+    {
+      "id": "silent-proposal-9849e537607099bd",
+      "state": "waiting",
+      "reason": "F12加2敏、F28加1能抽2且HP不变、F33施6毒均是局部观察；药效正确不证明新喝留/购买策略。缺三药与生成/重算路径的统一固定消费者对照及未观察药池边界，不新设药价/时点。"
+    },
+    {
+      "id": "silent-proposal-04cbbf6b3a547aea",
+      "state": "implemented",
+      "reason": "ops verified original exact source as actual live ancestor in V5-R377 narrow publication; source failures and sandbox scope retained; final combined-tree host pending, no wider policy or win-effect claim.",
+      "commit": "92fb9f15b24c9fc4f1bf31ca4cd3190a9cba7cdb"
+    },
+    {
+      "id": "silent-proposal-c3ef922a9a5f8285",
+      "state": "implemented",
+      "reason": "ops verified original exact source as actual live ancestor in V5-R377 narrow publication; source failures and sandbox scope retained; final combined-tree host pending, no wider policy or win-effect claim.",
+      "commit": "c4d99c1be01c01359988afc2b85ecada99c9b133"
+    }
+  ],
+  "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-051302/learner/runs/20261017-051311-348c0c33-dd1d-495a-bc7d-bb8a84d23288-strategy-proposal/ops-publication-report.md",
+  "status": "published by primary ops",
+  "producer": "primary_ops",
+  "version": "S1.observed-rod-strangle-thief1",
+  "release_id": "V5-R377",
+  "source_report_retained": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-051302/learner/runs/20261017-051311-348c0c33-dd1d-495a-bc7d-bb8a84d23288-strategy-proposal/report.md",
+  "source_report_sha256": "9ae64f51f7f267d14db6d23799848c86c2e66bd4fe09ad522bea8bfb8c6edf38",
+  "final_host": "one final combined live tree requested through original051302 channel; pending",
+  "final_combined_live": "c7eadf02a06985d9120b1a1c9a60847cccc1adaa",
+  "final_combined_tree": "401ad6f9da9bfacbc7dc7b391e870a022d14ff74"
+}

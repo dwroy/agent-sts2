@@ -1,0 +1,50 @@
+{
+  "at": "2026-10-17 16:54:13 CST",
+  "batch": "20261016-075726-strategy-proposal",
+  "source": "8165321296eeab263f8cfe0cc7dd08b30245bad2",
+  "actual_live": "3910f41b9c3784a70362f63aad5f0994794c68b7",
+  "tree": "77dd769fdc97a590946bc7d98c46e3cc1ef0b640",
+  "worker": {
+    "pid": 431877,
+    "birth_ticks": "111915588",
+    "lock_or_log_fds": [
+      "/home/dw/Projects/agent-sts2/ops/codex-ops/20261016-075726-strategy-proposal.checks.lock",
+      "/home/dw/Projects/agent-sts2/ops/live-merge.lock",
+      "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261016-075726-strategy-proposal.fallback-77dd769fdc97a590946bc7d98c46e3cc1ef0b640.checks.log"
+    ]
+  },
+  "request": {
+    "at": "2026-10-17 16:53:16 CST",
+    "batch": "20261016-075726-strategy-proposal",
+    "command": [
+      "nice",
+      "-n",
+      "19",
+      "bash",
+      "ops/codex-ops-actions.sh",
+      "learner-recheck",
+      "20261016-075726-strategy-proposal"
+    ],
+    "pid": 431877,
+    "birth_ticks": "111915588",
+    "actual_live": "3910f41b9c3784a70362f63aad5f0994794c68b7",
+    "tree": "77dd769fdc97a590946bc7d98c46e3cc1ef0b640",
+    "canonical_log": "ops/codex-ops/learner/20261016-075726-strategy-proposal.fallback-77dd769fdc97a590946bc7d98c46e3cc1ef0b640.checks.log",
+    "action_output": "ops/codex-ops/record-staging/20261017-1651/host-action.log",
+    "route": "Authorized primary host invokes the same existing allow-listed action and original batch lock, no additional test pipeline",
+    "action_script_sha256": "a49d54356a4b94d764a4da62ac387d712464b1d3ca8d9942e3264728de2418e0",
+    "actual_subprocess_started": true,
+    "full_result": null,
+    "original_source_full_not_repeated": true,
+    "no_other_role_ACK": true
+  },
+  "canonical_log": "ops/codex-ops/learner/20261016-075726-strategy-proposal.fallback-77dd769fdc97a590946bc7d98c46e3cc1ef0b640.checks.log",
+  "RUN_verified": true,
+  "full_result": null,
+  "exact_original_checks_and_live_locks_verified": true,
+  "old_original_batch_commits_are_not_new_source_proof": true,
+  "source_and12_leaves_verified_separately": true,
+  "R384_R385_host0_not_borrowed": true,
+  "source_full_not_repeated": true,
+  "no_other_role_ACK": true
+}

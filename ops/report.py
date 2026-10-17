@@ -556,6 +556,17 @@ def boss_sim_check(character):
             log.write(f"{type(error).__name__}: {error}\n")
 
 
+def global_build_funnel(character):
+    """The existing post-run event triggers a bounded offline archive; no timer or brain call."""
+    if not character or character.lower() != 'silent':
+        return
+    python = os.path.join(ROOT, 'data/logdb-venv/bin/python')
+    with open(os.path.join(ROOT, 'ops/global-build-funnel.log'), 'a') as log:
+        subprocess.Popen(['nice', '-n', '19', python, os.path.join(ROOT, 'ops/global_build_funnel.py'),
+                          '--root', ROOT, '--character', character],
+                         stdout=log, stderr=log, start_new_session=True)
+
+
 if __name__ == "__main__":
     if sys.argv[1:] == ["--selftest"]:
         selftest()
@@ -573,3 +584,4 @@ if __name__ == "__main__":
     # This is synchronous dispatch only; the learner remains a tracked scheduler batch.
     if run_char and any(row.get("run_id") == sys.argv[1] for row in load(RUNS)):
         boss_sim_check(run_char)
+        global_build_funnel(run_char)

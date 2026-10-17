@@ -1,0 +1,9 @@
+{
+  "at": "2026-10-16 23:18:16 CST",
+  "own_script_pid": 1237582,
+  "action": "SIGTERM only own ops finish process after already successful ledger and queue append",
+  "reason": "Repeatedly refolding the whole proposal queue inside a per-item verification loop was unnecessarily expensive. Resume reads queue once; no repeated ledger or queue write, no product/source change.",
+  "ledger_rows_preserved": 37,
+  "proposal_update_preserved": true,
+  "source_preflight_note": "Earlier about equality assertion was overly strict; actual immutable source adds only its own r1 provenance to the original about prefix; original script retained."
+}

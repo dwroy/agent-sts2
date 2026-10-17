@@ -1,0 +1,42 @@
+{
+  "at": "2026-10-17 21:03:04 CST",
+  "batch": "20261017-170116-fix-batch",
+  "original_tree": "24be6da5dcc38e9ff9145233b23a0fa475c5ff51",
+  "original_full_rc": 1,
+  "original_full_log_sha256": "8b5106c41d9f776b00a0b80df513cdea3ae3e1ca36cf6f194d378549d040491b",
+  "selected_host_rc": 0,
+  "tsc_rc": 0,
+  "selected_test": [
+    {
+      "file": "tests/loop.test.ts",
+      "tests": [
+        "runLoop does not re-ask Jev while the board is unchanged"
+      ],
+      "reason": "failed"
+    }
+  ],
+  "selected_counts": {
+    "numTotalTests": 21,
+    "numPassedTests": 1,
+    "numFailedTests": 0,
+    "numPendingTests": 20
+  },
+  "verified": [
+    {
+      "path": "ops/codex-ops/learner/20261017-170116-fix-batch.supplement-38fd61724df2deb63f7e6f67b29849a21dffa962fc0f7f4fe7ad8dabf6ea7764.json",
+      "sha256": "54e044565935d232b0bf84ddb66bd9e9c5425530709bde34135dcdcb748f31db"
+    },
+    {
+      "path": "ops/codex-ops/learner/20261017-170116-fix-batch.supplement-38fd61724df2deb63f7e6f67b29849a21dffa962fc0f7f4fe7ad8dabf6ea7764.log",
+      "sha256": "53523bcf71be5065a573c4875d1de1b3bccfd6812140b6643cb0905d57cd9e99"
+    },
+    {
+      "path": "ops/codex-ops/learner/20261017-170116-fix-batch.supplement-38fd61724df2deb63f7e6f67b29849a21dffa962fc0f7f4fe7ad8dabf6ea7764.0.vitest.json",
+      "sha256": "a2bc9c44dda5a911487e678c5ae2fe46c04deeccccf1a4050b3d88f1952cca42"
+    }
+  ],
+  "decision": "Accept unchanged original source plus bounded original full1 and exact failed-case supplement0 for original lock-gated narrow integration; do not relabel full1 or infer host-load causality. Final changed metadata/knowledge combination requires its own single original same-batch host full.",
+  "assertions_timeouts_and_source_unchanged": true,
+  "repeat_source_full_or_calibration_or_consumer": false,
+  "other_role_ACK": false
+}

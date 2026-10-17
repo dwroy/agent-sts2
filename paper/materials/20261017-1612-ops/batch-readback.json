@@ -1,0 +1,2020 @@
+{
+  "batch": "20261017-155957-fix-batch",
+  "report": {
+    "task": "fix-batch",
+    "base": "04c4ed556f0baac3bcbbb207f0f35ff0500c65c9",
+    "fixes": [],
+    "skipped": [
+      {
+        "item": "出牌、药水、SL、终局、路线及角色机制条目",
+        "reason": "策略类，已有独立 strategy-proposal 链"
+      },
+      {
+        "item": "silent-0332 资源契约根因",
+        "reason": "证据不足，保留原专用 owner"
+      },
+      {
+        "item": "目录生命周期与磁盘压力宽项",
+        "reason": "根因证据不足，已有窄修复不重复实施"
+      },
+      {
+        "item": "架构调整与调度公平性调查",
+        "reason": "独立任务，超出普通纯 bug 批次"
+      },
+      {
+        "item": "旧核心原生通知恢复",
+        "reason": "缺少 stderr 和送达证据，不重发"
+      },
+      {
+        "item": "Codex 缓存、DPR/B2 性能及历史宿主超时根因",
+        "reason": "证据不足或属于独立性能调查"
+      }
+    ],
+    "merged": null,
+    "tests": {
+      "tsc": null,
+      "vitest": null,
+      "cases": 0
+    },
+    "code_proposals": [],
+    "implementation_domains": [],
+    "report": "/home/dw/Projects/agent-sts2/learner/runs/20261017-160006-57b7ce99-dcb6-4595-94d2-18b8f2e4ec47-fix-batch/report.md"
+  },
+  "canonical_state": "failed",
+  "canonical_rc": 0,
+  "canonical_merged": null,
+  "original_audit": {
+    "base": "04c4ed556f0baac3bcbbb207f0f35ff0500c65c9",
+    "actual_main": "1fe97fe4d9fabd8fb204164ad5cb536c1b333260",
+    "actual_live": "19988d1118ca43c1409fe900fc8c94f9f6ac32cc",
+    "previous_audit_base": "91f222500fd3b23f981545ea14883524d80de394",
+    "changes_in_implementation_trees_since_previous_audit": [
+      "ops/inbox-dev.md"
+    ],
+    "queue_sha256": "82833ce7c9b615aac6d8f4a960ffb9e52b8f88999abd139394fd2bc3facf59c5",
+    "queue_delta": "queue-since-previous.diff",
+    "already_fixed": [
+      {
+        "item": "额度恢复基线与实际进阶通知",
+        "commit": "5b56a452bb9be14d620b368ec46974c1b57901ca",
+        "base_ancestor": true,
+        "main_ancestor": true,
+        "live_ancestor": true,
+        "source_paths": [
+          "agent/src/brain/engines/codex-usage.ts",
+          "agent/src/hand/loop.ts",
+          "agent/src/hand/screens/selection.ts",
+          "agent/src/memory/journal-replay.ts",
+          "agent/src/memory/types.ts",
+          "agent/src/reflex/card-model.ts",
+          "agent/src/reflex/combat-plan.ts",
+          "agent/src/reflex/continuation-value.ts",
+          "agent/src/reflex/rollout-live.ts",
+          "agent/src/reflex/rollout.ts",
+          "agent/src/reflex/silent-apotheosis.ts",
+          "agent/src/reflex/silent-skittish.ts",
+          "agent/src/reflex/turn-solver.ts",
+          "agent/src/sim/boss-sim.ts",
+          "agent/src/sim/boss-start.ts",
+          "agent/src/sim/build-sim-facts.ts",
+          "agent/src/sim/build-sim.ts",
+          "agent/src/sim/double-boss-start.ts",
+          "agent/src/sim/quantitative-calibration.ts",
+          "agent/src/sim/quantitative-facts.ts",
+          "agent/src/sim/quantitative-stats.ts",
+          "agent/src/sim/silent-opening.ts",
+          "agent/src/sl/attempts.ts",
+          "agent/src/sl/controller.ts",
+          "agent/src/sl/explore.ts",
+          "agent/tests/ascension-observed.test.ts",
+          "agent/tests/brain-codex-session.test.ts",
+          "agent/tests/brain-codex-usage.test.ts",
+          "agent/tests/codex-usage-recovery.test.ts",
+          "agent/tests/ops-codex.test.ts",
+          "agent/tests/ops-deferred.test.ts",
+          "agent/tests/quantitative.test.ts",
+          "agent/tests/silent-apotheosis-backflip-evidence.json",
+          "agent/tests/silent-apotheosis-backflip.test.ts",
+          "agent/tests/silent-apotheosis-footwork-evidence.json",
+          "agent/tests/silent-apotheosis-footwork.test.ts",
+          "agent/tests/silent-apotheosis-neutralize-evidence.json",
+          "agent/tests/silent-apotheosis-neutralize.test.ts",
+          "agent/tests/silent-apotheosis-poisoned-stab-evidence.json",
+          "agent/tests/silent-apotheosis-poisoned-stab.test.ts",
+          "agent/tests/silent-apotheosis-snakebite-evidence.json",
+          "agent/tests/silent-apotheosis-snakebite.test.ts",
+          "agent/tests/silent-apotheosis-survivor-evidence.json",
+          "agent/tests/silent-apotheosis-survivor.test.ts",
+          "agent/tests/silent-blade-dance-evidence.json",
+          "agent/tests/silent-blade-dance.test.ts",
+          "agent/tests/silent-build-win-ties.test.ts",
+          "agent/tests/silent-cunning-evidence.json",
+          "agent/tests/silent-cunning-state.json",
+          "agent/tests/silent-cunning.test.ts",
+          "agent/tests/silent-discard-plan-evidence.json",
+          "agent/tests/silent-discard-plan.test.ts",
+          "agent/tests/silent-gardener-skittish-evidence.json",
+          "agent/tests/silent-gardener-skittish.test.ts",
+          "agent/tests/silent-opening-evidence.json",
+          "agent/tests/silent-opening.test.ts",
+          "agent/tests/silent-phase-reference.test.ts",
+          "agent/tests/silent-reattach-evidence.json",
+          "agent/tests/silent-reattach-reset.test.ts",
+          "agent/tests/silent-shackling-weak-state.json",
+          "agent/tests/silent-shackling-weak.test.ts",
+          "agent/tests/silent-skittish-state.json",
+          "agent/tests/silent-skittish.test.ts",
+          "agent/tests/sl-giant-phase-data/yql-blast.json",
+          "agent/tests/sl-giant-phase.test.ts",
+          "agent/tools/quantitative.ts",
+          "ops/codex-ops-learn.py",
+          "ops/codex-ops.sh"
+        ],
+        "path_blob_at_base": {
+          "agent/src/brain/engines/codex-usage.ts": "a022acef45122b6e455903a82fa0254e0318daea",
+          "agent/src/hand/loop.ts": "31182e602ab5d95e599c518a431d6d79af85b354",
+          "agent/src/hand/screens/selection.ts": "904e9bb9ae5f2e8ff62dfca77c320ddb65637415",
+          "agent/src/memory/journal-replay.ts": "b050f2500d31ab20a2f75d66a8432ebc81bd122b",
+          "agent/src/memory/types.ts": "b07be78154282ce650322d996b089c25a714c74d",
+          "agent/src/reflex/card-model.ts": "c76cf991fc0496c91d9d1bd5434d7765faa51ee7",
+          "agent/src/reflex/combat-plan.ts": "a2e334c9ec2892326366052010fee1d7f8ef5bf2",
+          "agent/src/reflex/continuation-value.ts": "090d3e03c05b955a925dc5cc55cfc61fcbf64d07",
+          "agent/src/reflex/rollout-live.ts": "5b1b08666b06e186c53b211783ba49a3830470d1",
+          "agent/src/reflex/rollout.ts": "b2308b4c18f8799cf531969ebc75c81b0b5ff75b",
+          "agent/src/reflex/silent-apotheosis.ts": "8d513bf482f236a89fc697dd2ae69944cdb65acc",
+          "agent/src/reflex/silent-skittish.ts": "ce67bd055256bf9af47f84962881ef53d9624283",
+          "agent/src/reflex/turn-solver.ts": "efcb5d39e29641154f6fb4df395f77ba3d6bf843",
+          "agent/src/sim/boss-sim.ts": "d9fb928d6a8e9e6ef9ca0e586d025649dcc2aa5f",
+          "agent/src/sim/boss-start.ts": "352185272c4739d83b8f6160c11e1e0f580ad8a5",
+          "agent/src/sim/build-sim-facts.ts": "c4c73c9c6c61656443d53c81241546d64191a805",
+          "agent/src/sim/build-sim.ts": "f627c81f7543b8354f02cb7b07ab21780700985f",
+          "agent/src/sim/double-boss-start.ts": "d0da5d2d8c51402d4e4c4c523fa54dafe6de88ec",
+          "agent/src/sim/quantitative-calibration.ts": "625293998336b5772f3cb4a0bd88cc4c7121435c",
+          "agent/src/sim/quantitative-facts.ts": "0644cdc68490541d37595ffedbc64818fac5ddc2",
+          "agent/src/sim/quantitative-stats.ts": "57d3c8be7c03065e81d8233f56624349a4fc2707",
+          "agent/src/sim/silent-opening.ts": "99218b8095e5bad7c6be8a726592cb038556aef9",
+          "agent/src/sl/attempts.ts": "552a8adb0cc14b3ba81060399e3a5e317636e080",
+          "agent/src/sl/controller.ts": "c8b8f8bf8e0cd32d6a0413e4a30d6af389b92243",
+          "agent/src/sl/explore.ts": "72054748b603e960aaad29ce3e25537486fc6b5c",
+          "agent/tests/ascension-observed.test.ts": "fd3a4802d5939852b19e8ced032c82158b093dfa",
+          "agent/tests/brain-codex-session.test.ts": "f3112eafd13a1a3091a10aad2d791fd87f088682",
+          "agent/tests/brain-codex-usage.test.ts": "15dab15d0127b8b013f802c0c73c4a479eacf683",
+          "agent/tests/codex-usage-recovery.test.ts": "5169dda9b3fc538b6427f193a17870d1f2b8f85f",
+          "agent/tests/ops-codex.test.ts": "a1773a7c9aa52e46cf45546201138b30b2085117",
+          "agent/tests/ops-deferred.test.ts": "efb0fb16233274ba46ff8fe085724b3276003cdb",
+          "agent/tests/quantitative.test.ts": "61c8f7d0a6d0c3e1c5ddd73611cf0c030b12cf7f",
+          "agent/tests/silent-apotheosis-backflip-evidence.json": "3f30104f78333c860b6266dfb0b0a056f9dcaba3",
+          "agent/tests/silent-apotheosis-backflip.test.ts": "432cadeb4edd04df57465a558e457b4d26fe456d",
+          "agent/tests/silent-apotheosis-footwork-evidence.json": "fb012a17216470c9050065825320cd7b8a1c88ee",
+          "agent/tests/silent-apotheosis-footwork.test.ts": "27f34d7e4d3387cdd3bb626e4bed314d8860ebca",
+          "agent/tests/silent-apotheosis-neutralize-evidence.json": "5bb8dad00ff3cb6186c7e27e99eb80478cad8ef2",
+          "agent/tests/silent-apotheosis-neutralize.test.ts": "95e8b9594eb91d745127b1c71a19ece40e388a93",
+          "agent/tests/silent-apotheosis-poisoned-stab-evidence.json": "6f0a47e5e111ba2fea38bb2a4245d598eb4c7d72",
+          "agent/tests/silent-apotheosis-poisoned-stab.test.ts": "717de57c01ba222e3af7d6295620b7df2f99548f",
+          "agent/tests/silent-apotheosis-snakebite-evidence.json": "21d9742382c3ec18fa91a3de7b882b66591f7276",
+          "agent/tests/silent-apotheosis-snakebite.test.ts": "3c85ba6a320d4e6a612419d6c513e05aa4f3823e",
+          "agent/tests/silent-apotheosis-survivor-evidence.json": "17a1dc631e26fcf6675ab017ab80054ae0efc97a",
+          "agent/tests/silent-apotheosis-survivor.test.ts": "cd0cbddd06c6d288ce293ee69c6f412e7909a3af",
+          "agent/tests/silent-blade-dance-evidence.json": "72f27b06df8c184afe77144c5d9c9535d7f11506",
+          "agent/tests/silent-blade-dance.test.ts": "164022e2971c203c108aa96ff86c9c6fcdc2d0ba",
+          "agent/tests/silent-build-win-ties.test.ts": "a2c79e4642be83da27a8206cc07c3018dec96bfd",
+          "agent/tests/silent-cunning-evidence.json": "5c4da678908a9498eb4c0a7b96f3acec7995d04a",
+          "agent/tests/silent-cunning-state.json": "9dacdc8dff05229f3e5e7635e778c6abad482ce9",
+          "agent/tests/silent-cunning.test.ts": "c0c27d19a7c1af7f65b075f077653cc68972041f",
+          "agent/tests/silent-discard-plan-evidence.json": "cd50f106e2cb5890fe30951b58073d8088add5a0",
+          "agent/tests/silent-discard-plan.test.ts": "9bf23092a2c38e48493fcc42f205dc2ef693ace5",
+          "agent/tests/silent-gardener-skittish-evidence.json": "268892b1f9d5e173ead3a7a39be25c739b26efbb",
+          "agent/tests/silent-gardener-skittish.test.ts": "01dc42ae177bf1772aea201c10689d4f4719cdda",
+          "agent/tests/silent-opening-evidence.json": "da7ac67c8525bebaeba573d3df9a4505296d54b0",
+          "agent/tests/silent-opening.test.ts": "d9b8d68ef6c6e5fb55620b767de722c79d3ed56a",
+          "agent/tests/silent-phase-reference.test.ts": "81b9ae886585ef8617c79d846d3474f39d13c152",
+          "agent/tests/silent-reattach-evidence.json": "799a34e6fb682087505e95c6bdb3c598285bf412",
+          "agent/tests/silent-reattach-reset.test.ts": "c67e57c49364139da711e7bf4b893682a26f5636",
+          "agent/tests/silent-shackling-weak-state.json": "a3d1daff32ef6323cf9d9172de78d931c1902a28",
+          "agent/tests/silent-shackling-weak.test.ts": "392cb8b850562d1f07b69ea41fe9b33056fdbbae",
+          "agent/tests/silent-skittish-state.json": "a7cb9711ff56d1e0758cd61dd4896b84bb20a1b7",
+          "agent/tests/silent-skittish.test.ts": "730215bc6d0841e3bced1196ddf895318a50c213",
+          "agent/tests/sl-giant-phase-data/yql-blast.json": "6522870ea3c06987bef4d0b1f91302a6fb135e3b",
+          "agent/tests/sl-giant-phase.test.ts": "03e57f6c204970f5d1974114620a31abee4fe735",
+          "agent/tools/quantitative.ts": "2f593f39e56bb799c0be4f8dc91a8df639f843bc",
+          "ops/codex-ops-learn.py": "a0e19a83ef9ef2ef72e339c5187e01119032e8df",
+          "ops/codex-ops.sh": "58d5c9df2bad7e565fea4ff68351a3f2108a1fc5"
+        }
+      },
+      {
+        "item": "核心通知stdout/stderr持久化（不等于旧原生通知已安全恢复）",
+        "commit": "5c92f2aaf0b758a1a5e7d591745694004664f83a",
+        "base_ancestor": true,
+        "main_ancestor": true,
+        "live_ancestor": true,
+        "source_paths": [
+          "agent/tests/core_build_jobs_test.py",
+          "ops/core_build_jobs.py"
+        ],
+        "path_blob_at_base": {
+          "agent/tests/core_build_jobs_test.py": "ba08abfa4918b4048cf22ee31bccf29884cb7d6d",
+          "ops/core_build_jobs.py": "9e2df056d90b8a3dce8d1a06921a9062e2b66811"
+        }
+      },
+      {
+        "item": "知识工作线程签名固定输入",
+        "commit": "8fbb441eb61eef226eb7366f9612003480c83988",
+        "base_ancestor": true,
+        "main_ancestor": true,
+        "live_ancestor": true,
+        "source_paths": [
+          "agent/tests/compute-memo-files.ts",
+          "agent/tests/compute-memo-worker.ts",
+          "agent/tests/compute-memo.test.ts"
+        ],
+        "path_blob_at_base": {
+          "agent/tests/compute-memo-files.ts": "2260834918e96bc798c7f823ab6dd22ef90194fe",
+          "agent/tests/compute-memo-worker.ts": "899be85357d9f2bbad09e98f64658919c06e1d55",
+          "agent/tests/compute-memo.test.ts": "597b10831fd45b03a3cb07966006fc330fbfca0f"
+        }
+      },
+      {
+        "item": "rollout最佳候选固定输入",
+        "commit": "bbc5b993a7524bbb8e80a975f204f8d193657b46",
+        "base_ancestor": true,
+        "main_ancestor": true,
+        "live_ancestor": true,
+        "source_paths": [
+          "agent/tests/rollout-best-added.test.ts",
+          "agent/tests/rollout-live.test.ts"
+        ],
+        "path_blob_at_base": {
+          "agent/tests/rollout-best-added.test.ts": "fe014f2ff79bfd1383b194547e99610098add57a",
+          "agent/tests/rollout-live.test.ts": "e04386253f686571a79e60f4c0e2b0af452ee4ef"
+        }
+      },
+      {
+        "item": "空产出补链误派",
+        "commit": "84366ad06ee4f978394c1b9489a82c83ea12bd36",
+        "base_ancestor": true,
+        "main_ancestor": true,
+        "live_ancestor": true,
+        "source_paths": [
+          "agent/tests/blocked-experience-repair.test.ts",
+          "ops/proposal_dispatch.py"
+        ],
+        "path_blob_at_base": {
+          "agent/tests/blocked-experience-repair.test.ts": "7c4e5b81487fa0ce81ab862a0ffeeabc89f2b9e5",
+          "ops/proposal_dispatch.py": "7a90d01fae435df9c4a7598e89b663cf529fae21"
+        }
+      },
+      {
+        "item": "多角色药水表测试隔离",
+        "commit": "5ef3c4612bd2673c19968c5a2d24bf62af519ee1",
+        "base_ancestor": true,
+        "main_ancestor": true,
+        "live_ancestor": true,
+        "source_paths": [
+          "agent/tests/multi-character.test.ts"
+        ],
+        "path_blob_at_base": {
+          "agent/tests/multi-character.test.ts": "db756ec3cf96247d0326b1f4c6aa90c6a6bacbd8"
+        }
+      },
+      {
+        "item": "未派发提案结果登记",
+        "commit": "3a98e213a826e94f9708af4b1a265e1892659f4e",
+        "base_ancestor": true,
+        "main_ancestor": true,
+        "live_ancestor": true,
+        "source_paths": [
+          "agent/tests/unassigned-proposal-resolution.test.ts",
+          "ops/proposal_dispatch.py",
+          "ops/tests/test_unassigned_proposal_resolution.py"
+        ],
+        "path_blob_at_base": {
+          "agent/tests/unassigned-proposal-resolution.test.ts": "928d6f64bf4f309abad0277ec862f123bfac3db2",
+          "ops/proposal_dispatch.py": "7a90d01fae435df9c4a7598e89b663cf529fae21",
+          "ops/tests/test_unassigned_proposal_resolution.py": "91fbc6083eb55d60d6060994b57a6f60e649b4f7"
+        }
+      },
+      {
+        "item": "事件流同秒碰撞",
+        "commit": "b6ee3f8c29cc10d4652a67d14f0e0e394aa6ce6f",
+        "base_ancestor": true,
+        "main_ancestor": true,
+        "live_ancestor": true,
+        "source_paths": [
+          "agent/tests/learner-strategy-scratch.test.ts",
+          "agent/tests/learner.test.ts",
+          "agent/tests/learner_preserved_report_test.py",
+          "learner/lib/launcher.ts",
+          "ops/learner_checks.py"
+        ],
+        "path_blob_at_base": {
+          "agent/tests/learner-strategy-scratch.test.ts": "ac96108b24412c3ba5887a58efb1c4605446601f",
+          "agent/tests/learner.test.ts": "df9d655dcb3e8aaa26b3ef5333ff2fe228eb7a41",
+          "agent/tests/learner_preserved_report_test.py": "4d4daf44dc2be94bf88eb14f0169e5b7dce1c98e",
+          "learner/lib/launcher.ts": "32411d0cc2f13ae9ab0f3b52307c48f6e9275ced",
+          "ops/learner_checks.py": "ab4a4dc5fca6681defb97e3eec8d8c466b7d962e"
+        }
+      },
+      {
+        "item": "纸鹤夹具",
+        "commit": "befc39e5ca0105f8ff96d47f817df44f0b2760f1",
+        "base_ancestor": true,
+        "main_ancestor": true,
+        "live_ancestor": true,
+        "source_paths": [
+          "agent/tests/silent-paper-krane.test.ts"
+        ],
+        "path_blob_at_base": {
+          "agent/tests/silent-paper-krane.test.ts": "1568c9d680ab79b28a76af493682fba9fcd8e1f3"
+        }
+      },
+      {
+        "item": "账本状态分叉前缀",
+        "commit": "dd478f0b3e5a0f234f082972d21b203dbf8229d7",
+        "base_ancestor": true,
+        "main_ancestor": true,
+        "live_ancestor": true,
+        "source_paths": [
+          "agent/tests/ledger-publication-baseline.test.ts",
+          "agent/tests/ledger_publication_baseline_test.py",
+          "learner/ledger.py"
+        ],
+        "path_blob_at_base": {
+          "agent/tests/ledger-publication-baseline.test.ts": "e1b85ff2f39f5ff4bb4a899eb1b02e926c8602fd",
+          "agent/tests/ledger_publication_baseline_test.py": "3ba7c28d1f23516c42f040eea4ffc5fd39a05de8",
+          "learner/ledger.py": "4c5e6dc0fea78dae8948e97b98a74af319a1303f"
+        }
+      },
+      {
+        "item": "共享main启动冲突",
+        "commit": "22efae55484bc2bdcc54e847a8dc40bb4888c4e2",
+        "base_ancestor": true,
+        "main_ancestor": true,
+        "live_ancestor": true,
+        "source_paths": [
+          "agent/tests/learner-entry.test.ts",
+          "ops/codex-ops-learner.sh",
+          "ops/learner_entry.py",
+          "ops/tests/test_learner_entry.py",
+          "ops/tests/test_learner_launch_failures.py",
+          "ops/tests/test_strategy_implementation.py",
+          "ops/tests/test_strategy_implementation_continuation.py",
+          "ops/tests/test_strategy_research_scheduling.py"
+        ],
+        "path_blob_at_base": {
+          "agent/tests/learner-entry.test.ts": "c64f76c4bd416a9b151f847fa5628ebf9467bff0",
+          "ops/codex-ops-learner.sh": "7133d26b6c9141cd4462c3b7b992df92f7b1bf11",
+          "ops/learner_entry.py": "03af75c5672f1613e8f3c6c2d06f19bc7b4da9aa",
+          "ops/tests/test_learner_entry.py": "c2d75f67ad916d393dfa6979d7215ddcc208203a",
+          "ops/tests/test_learner_launch_failures.py": "083f7a85a02fc3790357fd145b5f403fdd5b9b2b",
+          "ops/tests/test_strategy_implementation.py": "ceb4adcd5910d8ae46bcabe56c9ce5ebb24efc7a",
+          "ops/tests/test_strategy_implementation_continuation.py": "e768c81d8fc49c5d6bf8a4385769870ebe5402e1",
+          "ops/tests/test_strategy_research_scheduling.py": "34b6cde378bcc44c53217ddb4a159754126b3f56"
+        }
+      },
+      {
+        "item": "根事件通知路径",
+        "commit": "577f0bc424b7287910735cfdc86c253cc7ee8057",
+        "base_ancestor": true,
+        "main_ancestor": true,
+        "live_ancestor": true,
+        "source_paths": [
+          "agent/tests/feature-root-event-notice.test.ts",
+          "ops/learning_requests.py",
+          "ops/tests/test_feature_root_event_notice.py"
+        ],
+        "path_blob_at_base": {
+          "agent/tests/feature-root-event-notice.test.ts": "c46061c1a19b65d1df1a5081a7cd087f1cf84018",
+          "ops/learning_requests.py": "05c4ad5ef7b5251d345a7a759230de2787b669fa",
+          "ops/tests/test_feature_root_event_notice.py": "84d4d13700aed93d1ebafd7f3e7aaa3b29025045"
+        }
+      },
+      {
+        "item": "global-build宿主loadavg",
+        "commit": "5bc8f025fe043cb8738cce57870354fa23fa84a1",
+        "base_ancestor": true,
+        "main_ancestor": true,
+        "live_ancestor": true,
+        "source_paths": [
+          "agent/tests/global-build-integration.test.ts"
+        ],
+        "path_blob_at_base": {
+          "agent/tests/global-build-integration.test.ts": "de985728ab2016445131bab254b7a21fddac8b41"
+        }
+      },
+      {
+        "item": "局间quiet误报",
+        "commit": "21a9c52484f04d510bd397959c958ec9767f1d2d",
+        "base_ancestor": true,
+        "main_ancestor": true,
+        "live_ancestor": true,
+        "source_paths": [
+          "agent/tests/ops-stall-between-runs.test.ts",
+          "ops/stall-check.sh"
+        ],
+        "path_blob_at_base": {
+          "agent/tests/ops-stall-between-runs.test.ts": "dada396445e7ee40c4ab9f463b23953059a440cf",
+          "ops/stall-check.sh": "10e07de65e188bc437d4629ad5edffc5e332eb51"
+        }
+      },
+      {
+        "item": "global-health异步测试",
+        "commit": "d27df54f0651c4af84c6c12ceceec82a016f1142",
+        "base_ancestor": true,
+        "main_ancestor": true,
+        "live_ancestor": true,
+        "source_paths": [
+          "agent/tests/global-build-health.test.ts"
+        ],
+        "path_blob_at_base": {
+          "agent/tests/global-build-health.test.ts": "a903a8b804af1bcd609280205f6e539386c00cc2"
+        }
+      },
+      {
+        "item": "target-options此前两个标注回放的固定预算（默认路径本批另补）",
+        "commit": "83a7f796c24eea8f16eb317bc70bfd832251ad27",
+        "base_ancestor": true,
+        "main_ancestor": true,
+        "live_ancestor": true,
+        "source_paths": [
+          "agent/tests/target-options.test.ts"
+        ],
+        "path_blob_at_base": {
+          "agent/tests/target-options.test.ts": "866e5b109a2dbfbcd21ad8f8510983086903cfa5"
+        }
+      },
+      {
+        "item": "retention数字UUID",
+        "commit": "d91236326bc1af7a5417ce016c1a182f8084e7a3",
+        "base_ancestor": true,
+        "main_ancestor": true,
+        "live_ancestor": true,
+        "source_paths": [
+          "agent/tests/learner-retention-uuid.test.ts",
+          "ops/learner_retention.py",
+          "ops/tests/test_learner_retention.py"
+        ],
+        "path_blob_at_base": {
+          "agent/tests/learner-retention-uuid.test.ts": "40d7f77996fe007f5815237d7a3c0bf51a64e69c",
+          "ops/learner_retention.py": "b0fa42ecbdc78aef46e13756f7dca87f3d5a874a",
+          "ops/tests/test_learner_retention.py": "492c34792cc1a844f32e55e8c64fd6385dc74797"
+        }
+      },
+      {
+        "item": "retention旧根scratch",
+        "commit": "0699b05c436d3d51d00ee92f153d16d16e64bea4",
+        "base_ancestor": true,
+        "main_ancestor": true,
+        "live_ancestor": true,
+        "source_paths": [
+          "agent/tests/learner-retention-legacy.test.ts",
+          "ops/learner_retention.py",
+          "ops/tests/test_legacy_learner_retention.py"
+        ],
+        "path_blob_at_base": {
+          "agent/tests/learner-retention-legacy.test.ts": "71b1ad1c9d1b38efd35c66c5f27d3a2bcaf54d13",
+          "ops/learner_retention.py": "b0fa42ecbdc78aef46e13756f7dca87f3d5a874a",
+          "ops/tests/test_legacy_learner_retention.py": "de14048e9b1ccef8fd5046617f0387197e4ff378"
+        }
+      },
+      {
+        "item": "无COMBAT决策死亡漏记",
+        "commit": "3b48088dec5fc6eafe576a1296bbdadde43432ee",
+        "base_ancestor": true,
+        "main_ancestor": true,
+        "live_ancestor": true,
+        "source_paths": [
+          "agent/tests/report_death_fight_test.py",
+          "ops/report.py"
+        ],
+        "path_blob_at_base": {
+          "agent/tests/report_death_fight_test.py": "e1486291c1753f94f8eda5e97ff7d204b9082c79",
+          "ops/report.py": "75a67bc63bdfc2efd12a1828f23a588f3eac05b2"
+        }
+      },
+      {
+        "item": "broker请求写失败立即退出",
+        "commit": "eaa118c1d72f11b2b6b68c98c1d7bab10d138f5b",
+        "base_ancestor": true,
+        "main_ancestor": true,
+        "live_ancestor": true,
+        "source_paths": [
+          "agent/tests/broker-request-write.test.ts",
+          "ops/codex-ops-do.sh",
+          "ops/tests/test_broker_request_write.py"
+        ],
+        "path_blob_at_base": {
+          "agent/tests/broker-request-write.test.ts": "dec642833c26d4df088ddb35ef4d7e9640bdebf1",
+          "ops/codex-ops-do.sh": "6223323b1fa4a5cfe98f8e3591b79bfa10255fe8",
+          "ops/tests/test_broker_request_write.py": "b2a10895efed1dc508e4058c3b28d37117f11b35"
+        }
+      },
+      {
+        "item": "broker回执保留与队列错误隔离",
+        "commit": "6eb38508ceeb81d534159b3516458521ad09bbed",
+        "base_ancestor": true,
+        "main_ancestor": true,
+        "live_ancestor": true,
+        "source_paths": [
+          "agent/tests/broker-response-persistence.test.ts",
+          "ops/codex/broker.ts",
+          "ops/codex/main.ts"
+        ],
+        "path_blob_at_base": {
+          "agent/tests/broker-response-persistence.test.ts": "e931377343ad1ca2b8bc7014ae951a67c9a5ddc5",
+          "ops/codex/broker.ts": "087bad9c5b48b04ea66dbbbfc42edad77096e297",
+          "ops/codex/main.ts": "6d20921c15aae9ed972166082f50ab3ddf8e65de"
+        }
+      },
+      {
+        "item": "JSONL残尾边界恢复",
+        "commit": "3daf122a5168d1a8cb456aed1c926b2d1b6c4488",
+        "base_ancestor": true,
+        "main_ancestor": true,
+        "live_ancestor": true,
+        "source_paths": [
+          "agent/src/brain/engines/codex.ts",
+          "agent/src/brain/router.ts",
+          "agent/src/brain/wait.ts",
+          "agent/src/core/util/jsonl.ts",
+          "agent/src/eye/decision-log.ts",
+          "agent/src/eye/jev-prompt-log.ts",
+          "agent/src/eye/run-config.ts",
+          "agent/tests/jsonl-boundary-recovery.test.ts"
+        ],
+        "path_blob_at_base": {
+          "agent/src/brain/engines/codex.ts": "08a62ef91e19a90c3ac5fdee3943c576c156c82b",
+          "agent/src/brain/router.ts": "77a6775658168f2b9f39fb6ffb32a51c0de243f8",
+          "agent/src/brain/wait.ts": "4c37bd38cd32a70eca446911367ccdfca75f46a4",
+          "agent/src/core/util/jsonl.ts": "d4c13928fbec29809180baf5dbabd4f80f7fc494",
+          "agent/src/eye/decision-log.ts": "af1ec3cf99e698191945c9c1b097fafff1beccd4",
+          "agent/src/eye/jev-prompt-log.ts": "f26e8ab8ddf5b63d75cd9be7a3d6f66fd9908118",
+          "agent/src/eye/run-config.ts": "13a43c8cc45bf9d07c94cc45b49cf31b35a61c8e",
+          "agent/tests/jsonl-boundary-recovery.test.ts": "9f1ef0de779d50de1600e8b98025131bbf6c0f3e"
+        }
+      },
+      {
+        "item": "宿主定向续验入口",
+        "commit": "24c2e3a75b5db6bac76d6c924f86b7fcd9438316",
+        "base_ancestor": true,
+        "main_ancestor": true,
+        "live_ancestor": true,
+        "source_paths": [
+          "agent/tests/learner-check-continuation.test.ts",
+          "ops/codex-ops-actions.sh",
+          "ops/codex-ops-do.sh",
+          "ops/codex-ops-learn.py",
+          "ops/codex/lib.ts",
+          "ops/learner_check_continuation.py",
+          "ops/learner_checks.py",
+          "ops/tests/test_learner_check_continuation.py"
+        ],
+        "path_blob_at_base": {
+          "agent/tests/learner-check-continuation.test.ts": "3c81170a0ac66424d1452f66f94145e0b8b531f9",
+          "ops/codex-ops-actions.sh": "4743f11ba1af0be3c3eeeb63483a018739c908ec",
+          "ops/codex-ops-do.sh": "6223323b1fa4a5cfe98f8e3591b79bfa10255fe8",
+          "ops/codex-ops-learn.py": "a0e19a83ef9ef2ef72e339c5187e01119032e8df",
+          "ops/codex/lib.ts": "f7f81e71502e82f467d762093efd2bdcfd338016",
+          "ops/learner_check_continuation.py": "88e43d2464a958d7603c1f11e8276a5d5328fee8",
+          "ops/learner_checks.py": "ab4a4dc5fca6681defb97e3eec8d8c466b7d962e",
+          "ops/tests/test_learner_check_continuation.py": "40610139ac2369f9d12183ba9a8e031de6853df2"
+        }
+      },
+      {
+        "item": "会话启动租约保存屏障",
+        "commit": "798af209b9a268b7dafab1440150f1b39cd5595d",
+        "base_ancestor": true,
+        "main_ancestor": true,
+        "live_ancestor": true,
+        "source_paths": [
+          "agent/tests/learner-registration-barrier.test.ts",
+          "ops/codex-ops-learner.sh",
+          "ops/tests/test_learner_registration_barrier.py"
+        ],
+        "path_blob_at_base": {
+          "agent/tests/learner-registration-barrier.test.ts": "9684124f0c14f39730b8828fad04b3a6f1f28cd9",
+          "ops/codex-ops-learner.sh": "7133d26b6c9141cd4462c3b7b992df92f7b1bf11",
+          "ops/tests/test_learner_registration_barrier.py": "98580e9ada6d6b32bc1f82b0f3e48455e9df94de"
+        }
+      },
+      {
+        "item": "prompt-dump倒序按偏移读取状态日志",
+        "commit": "6ee8e2a2c1edc31492962137b96af8c6e1d12093",
+        "base_ancestor": true,
+        "main_ancestor": true,
+        "live_ancestor": true,
+        "source_paths": [
+          "agent/tests/deepseek-prompt-dump.test.ts",
+          "agent/tools/deepseek-prompt-dump.ts"
+        ],
+        "path_blob_at_base": {
+          "agent/tests/deepseek-prompt-dump.test.ts": "c06686f83f731132d2370d072b04009269366924",
+          "agent/tools/deepseek-prompt-dump.ts": "bca63f8c74a91ca244052de918c59b9cd7577225"
+        }
+      },
+      {
+        "item": "知识前缀房间回血说明角色中立",
+        "commit": "6d2de57ceae3def4caf073951ed9d2f9d1544cd7",
+        "base_ancestor": true,
+        "main_ancestor": true,
+        "live_ancestor": true,
+        "source_paths": [
+          "agent/src/knowledge/render/stats-text.ts",
+          "agent/tests/gkb-render.test.ts"
+        ],
+        "path_blob_at_base": {
+          "agent/src/knowledge/render/stats-text.ts": "4653d33ef6cff1a2a7b5a430007d0e19c04d394d",
+          "agent/tests/gkb-render.test.ts": "32683477e9fe3e939217e5098a0ec4f575fa96b0"
+        }
+      },
+      {
+        "item": "fix-batch默认队列与live模板",
+        "commit": "5805dd187b7913a53b9e2645f40db1657eb5213c",
+        "base_ancestor": true,
+        "main_ancestor": true,
+        "live_ancestor": true,
+        "source_paths": [
+          "agent/tests/learner.test.ts"
+        ],
+        "path_blob_at_base": {
+          "agent/tests/learner.test.ts": "df9d655dcb3e8aaa26b3ef5333ff2fe228eb7a41"
+        }
+      },
+      {
+        "item": "experience-update使用live合入流程",
+        "commit": "16ebc4aecb12a1d4b2f34ee767bb2816a3a0b466",
+        "base_ancestor": true,
+        "main_ancestor": true,
+        "live_ancestor": true,
+        "source_paths": [
+          "agent/tests/learner-live-tasks.test.ts",
+          "agent/tests/learner.test.ts"
+        ],
+        "path_blob_at_base": {
+          "agent/tests/learner-live-tasks.test.ts": "203d3f590c2128981d033487fa54f7932b23fbac",
+          "agent/tests/learner.test.ts": "df9d655dcb3e8aaa26b3ef5333ff2fe228eb7a41"
+        }
+      },
+      {
+        "item": "outcome-stats按mtime与大小重新加载",
+        "commit": "2650aed8baa84b8cf26e1e98b975582a6d5ab537",
+        "base_ancestor": true,
+        "main_ancestor": true,
+        "live_ancestor": true,
+        "source_paths": [
+          "agent/src/knowledge/experience.ts",
+          "agent/tests/outcome-stats-refresh.test.ts"
+        ],
+        "path_blob_at_base": {
+          "agent/src/knowledge/experience.ts": "e6f03aabbe01edd7fb665e6e20b451a706f53c29",
+          "agent/tests/outcome-stats-refresh.test.ts": "c8b82f269f6fc8e583800029e1711d4a9461e334"
+        }
+      },
+      {
+        "item": "021302宿主eval校准固定夹具超时（误遍历线上发布表）",
+        "commit": "d8748f2e70bfb2a91138ede0e1f6046927c116a4",
+        "base_ancestor": true,
+        "main_ancestor": true,
+        "live_ancestor": true,
+        "source_paths": [
+          "agent/tests/eval_calibration_test.py"
+        ],
+        "path_blob_at_base": {
+          "agent/tests/eval_calibration_test.py": "1dd6fa04bf7ee4e215f04d493a5a3eb4af0bfa4a"
+        }
+      },
+      {
+        "item": "021302宿主potions-jev-call全部局面扫描超时",
+        "commit": "c5fd30d8d369ea6c56bba2e4c3daa6e01e3bf420",
+        "base_ancestor": true,
+        "main_ancestor": true,
+        "live_ancestor": true,
+        "source_paths": [
+          "agent/tests/potions-jev-call.test.ts",
+          "agent/tests/rollout-clock-fixture.ts"
+        ],
+        "path_blob_at_base": {
+          "agent/tests/potions-jev-call.test.ts": "2140410b5c3139151c254a4324f8105dbe33911b",
+          "agent/tests/rollout-clock-fixture.ts": "410401a1b9ef183e6c0de860d012b06e8d13f816"
+        }
+      },
+      {
+        "item": "infra-target-options-fixed-fixture-timeout（默认EZ2L路径）",
+        "commit": "c57105ca66bd75c6d6952772dcf712399eda828b",
+        "base_ancestor": true,
+        "main_ancestor": true,
+        "live_ancestor": true,
+        "source_paths": [
+          "agent/tests/target-options.test.ts"
+        ],
+        "path_blob_at_base": {
+          "agent/tests/target-options.test.ts": "866e5b109a2dbfbcd21ad8f8510983086903cfa5"
+        }
+      },
+      {
+        "item": "infra-test-rollout-ties-host-timeout-15000",
+        "commit": "da08fcead2025c293140f1ba103d8efdbd39a4c3",
+        "base_ancestor": true,
+        "main_ancestor": true,
+        "live_ancestor": true,
+        "source_paths": [
+          "agent/tests/rollout-ties-fixture.test.ts",
+          "agent/tests/rollout-ties.test.ts"
+        ],
+        "path_blob_at_base": {
+          "agent/tests/rollout-ties-fixture.test.ts": "a363dae115f1704a033ee0dc44f1dcc4aa9cc0e4",
+          "agent/tests/rollout-ties.test.ts": "a4927aa84f30e56e2e022743af52e3944366ecc9"
+        }
+      },
+      {
+        "item": "infra-test-build-facts-selection-remove-latency",
+        "commit": "e2c1d8a2d29f1cbaf8e5620e4bb912d6f05965f0",
+        "base_ancestor": true,
+        "main_ancestor": true,
+        "live_ancestor": true,
+        "source_paths": [
+          "agent/tests/boss-sim-consumer-fixture.ts",
+          "agent/tests/build-facts-audit-fixture.test.ts",
+          "agent/tests/build-facts-audit.test.ts"
+        ],
+        "path_blob_at_base": {
+          "agent/tests/boss-sim-consumer-fixture.ts": "7bdb5c9ec60eca320dd60cf5d452d3549321f950",
+          "agent/tests/build-facts-audit-fixture.test.ts": "b963fce357c910121f632904284475def4e0b12d",
+          "agent/tests/build-facts-audit.test.ts": "4b350ec5a6503e2d30a3b0660cc3fb43e56fdd05"
+        }
+      },
+      {
+        "item": "h1-budget-completion-health-contract",
+        "commit": "c40e43fd25c200a01f4da94a4dac8db1b34664a8",
+        "base_ancestor": true,
+        "main_ancestor": true,
+        "live_ancestor": true,
+        "source_paths": [
+          "agent/src/sim/build-sim.ts",
+          "agent/src/sim/global-build-observer.ts",
+          "agent/src/sim/global-build.ts",
+          "agent/tests/adaptive_health_test.py",
+          "agent/tests/fixtures/h1-budget-completion.json",
+          "agent/tests/global-build-observer.test.ts",
+          "agent/tests/global-build.test.ts",
+          "agent/tests/global_build_health_test.py",
+          "agent/tests/human-pace-sampling.test.ts",
+          "ops/adaptive_health.py",
+          "ops/global_build_health.py"
+        ],
+        "path_blob_at_base": {
+          "agent/src/sim/build-sim.ts": "f627c81f7543b8354f02cb7b07ab21780700985f",
+          "agent/src/sim/global-build-observer.ts": "355090060b78358973bfea928d671a17f78809f1",
+          "agent/src/sim/global-build.ts": "9e666dd6edf08c1700cfb8cfe44b75fa3681daa8",
+          "agent/tests/adaptive_health_test.py": "931bfb860c44ff30ad5b4010bc64db87b0ec0d57",
+          "agent/tests/fixtures/h1-budget-completion.json": "a557dff99ca01477d32b9dc2b6ad95fe1e940b68",
+          "agent/tests/global-build-observer.test.ts": "842f1db45620df356a82c5d42998d50b44b77d4c",
+          "agent/tests/global-build.test.ts": "707132b5fb3d6d4e6f9e5e10dba745b41bccf128",
+          "agent/tests/global_build_health_test.py": "03f2ac4d6a0d6f9da3c0f204e92558000c95072d",
+          "agent/tests/human-pace-sampling.test.ts": "d293f24d6d662e26a2407369e31e48b64c87521f",
+          "ops/adaptive_health.py": "d41f84aa65d5a852edbb683e4d91ccc2a00da4cb",
+          "ops/global_build_health.py": "4c9ba039678fb1256e7c24be2e1f122babddfcc6"
+        }
+      },
+      {
+        "item": "h1-strict-pick-deadline-stall",
+        "commit": "b3b9734d85defbdbd1b73ab85fab9ea2f636affd",
+        "base_ancestor": true,
+        "main_ancestor": true,
+        "live_ancestor": true,
+        "source_paths": [
+          "agent/src/hand/loop.ts",
+          "agent/src/hand/screens/pick.ts",
+          "agent/src/hand/screens/selection.ts",
+          "agent/src/memory/types.ts",
+          "agent/tests/human-pace-strict-pick-stall.json",
+          "agent/tests/human-pace-strict-pick-stall.test.ts"
+        ],
+        "path_blob_at_base": {
+          "agent/src/hand/loop.ts": "31182e602ab5d95e599c518a431d6d79af85b354",
+          "agent/src/hand/screens/pick.ts": "61bda1f82ce9f5b6d3746ad446443027dec99945",
+          "agent/src/hand/screens/selection.ts": "904e9bb9ae5f2e8ff62dfca77c320ddb65637415",
+          "agent/src/memory/types.ts": "b07be78154282ce650322d996b089c25a714c74d",
+          "agent/tests/human-pace-strict-pick-stall.json": "f33c517f0f769855e7653b002eeabdfecb0f73fa",
+          "agent/tests/human-pace-strict-pick-stall.test.ts": "03182871afab79cd896a415731bda514081f6098"
+        }
+      },
+      {
+        "item": "selection-hidden-daggers-conditional-followup-readback",
+        "commit": "a473263eb35ce5bea8e06f1ee94f4da1ba880bc3",
+        "base_ancestor": true,
+        "main_ancestor": true,
+        "live_ancestor": true,
+        "source_paths": [
+          "agent/src/hand/loop.ts",
+          "agent/src/hand/screens/selection.ts",
+          "agent/src/memory/types.ts",
+          "agent/src/reflex/combat-plan.ts",
+          "agent/tests/silent-hidden-daggers-selection-evidence.json",
+          "agent/tests/silent-hidden-daggers-selection.test.ts"
+        ],
+        "path_blob_at_base": {
+          "agent/src/hand/loop.ts": "31182e602ab5d95e599c518a431d6d79af85b354",
+          "agent/src/hand/screens/selection.ts": "904e9bb9ae5f2e8ff62dfca77c320ddb65637415",
+          "agent/src/memory/types.ts": "b07be78154282ce650322d996b089c25a714c74d",
+          "agent/src/reflex/combat-plan.ts": "a2e334c9ec2892326366052010fee1d7f8ef5bf2",
+          "agent/tests/silent-hidden-daggers-selection-evidence.json": "36f09f473a22fc0c9bfd53c3101bdda86add975e",
+          "agent/tests/silent-hidden-daggers-selection.test.ts": "01b15b81a021a5699acada3054f536802f1cd031"
+        }
+      },
+      {
+        "item": "silent-0338：末挡诊断漏列既有奥利哈钢",
+        "commit": "c1d84804956bedbd29a7f0e81294114e18415b9d",
+        "base_ancestor": true,
+        "main_ancestor": true,
+        "live_ancestor": true,
+        "source_paths": [
+          "agent/src/reflex/turn-solver.ts",
+          "agent/tests/end-turn-guard-sources.test.ts"
+        ],
+        "path_blob_at_base": {
+          "agent/src/reflex/turn-solver.ts": "efcb5d39e29641154f6fb4df395f77ba3d6bf843",
+          "agent/tests/end-turn-guard-sources.test.ts": "0efd9dd7bf1f7a11a3dc2d15ea9a2a09f32a1d62"
+        }
+      },
+      {
+        "item": "silent-0272：商店移除预判误报不可选",
+        "commit": "db20ec3cc6cd0e47ac014d0c523dd4ed1c781d26",
+        "base_ancestor": true,
+        "main_ancestor": true,
+        "live_ancestor": true,
+        "source_paths": [
+          "agent/src/hand/screens/oneshot.ts",
+          "agent/src/hand/screens/selection.ts",
+          "agent/src/hand/screens/shop.ts",
+          "agent/src/memory/types.ts",
+          "agent/tests/shop-removal-preview.test.ts"
+        ],
+        "path_blob_at_base": {
+          "agent/src/hand/screens/oneshot.ts": "b79727df60f4444c8c3107396fa597dbfa7eb6dc",
+          "agent/src/hand/screens/selection.ts": "904e9bb9ae5f2e8ff62dfca77c320ddb65637415",
+          "agent/src/hand/screens/shop.ts": "898c35bc249b70896227c45dd45a0010674a9de3",
+          "agent/src/memory/types.ts": "b07be78154282ce650322d996b089c25a714c74d",
+          "agent/tests/shop-removal-preview.test.ts": "496d935515e1c0c53cbb5a9f0eaf45dff5fdc24a"
+        }
+      },
+      {
+        "item": "silent-0367：构筑事实未传已用尾巴状态",
+        "commit": "5baf663d7e6678efa3690e5a48329c4f8baee109",
+        "base_ancestor": true,
+        "main_ancestor": true,
+        "live_ancestor": true,
+        "source_paths": [
+          "agent/src/brain/build-facts.ts",
+          "agent/src/hand/loop.ts",
+          "agent/src/memory/relic-resources.ts",
+          "agent/src/memory/run-brief.ts",
+          "agent/tests/silent-tail-resource-evidence.json",
+          "agent/tests/silent-tail-resource.test.ts"
+        ],
+        "path_blob_at_base": {
+          "agent/src/brain/build-facts.ts": "0d3b910ca6ac718fdad6da0cd7c400bee9e89b1a",
+          "agent/src/hand/loop.ts": "31182e602ab5d95e599c518a431d6d79af85b354",
+          "agent/src/memory/relic-resources.ts": "c48650d12b61459255b2b40725da647e885a671a",
+          "agent/src/memory/run-brief.ts": "0d83a8f5b54f9e8a9e4288b82ef38d061d0f1d47",
+          "agent/tests/silent-tail-resource-evidence.json": "b7b3c1e94fd030325233f96bdddee6527c2eb5bf",
+          "agent/tests/silent-tail-resource.test.ts": "67da92eb996d7e0c8013f09b65bf02552c80a0b4"
+        }
+      },
+      {
+        "item": "h1-b2-margin-sample-identity（本轮期间由原ops发布V5-R384，宿主检查待完成）",
+        "commit": "660b194c950f017e356a4b3da952e127c7e5c768",
+        "base_ancestor": true,
+        "main_ancestor": true,
+        "live_ancestor": true,
+        "source_paths": [
+          "agent/src/sim/boss-lines.ts",
+          "agent/tests/human-pace-sampling.test.ts"
+        ],
+        "path_blob_at_base": {
+          "agent/src/sim/boss-lines.ts": "167033d099574c650f2817ab5b631d6f0f6d9d15",
+          "agent/tests/human-pace-sampling.test.ts": "d293f24d6d662e26a2407369e31e48b64c87521f"
+        }
+      }
+    ]
+  },
+  "actual_ancestor_commits_verified": 41,
+  "two_source_leaf_sha_verified": true,
+  "source_worktree_clean": true,
+  "native": {
+    "batch": "20261017-155957-fix-batch",
+    "thread": "01a148e0-1c33-7c81-abb9-7807b120b497",
+    "cwd": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261017-155957",
+    "event_log": "learner/runs/20261017-160006-57b7ce99-dcb6-4595-94d2-18b8f2e4ec47-fix-batch.jsonl",
+    "registered_launch_batch": "20261017-155957-fix-batch",
+    "original_lease": "7c13f62659ea7181fa9fb6dec9f6c6e6c363f0851485c45eea60bf0edc6e7c8b",
+    "native_context": {
+      "source": "ops/codex-ops/accounts/codex1/learner/sessions/2026/10/17/rollout-2026-10-17T16-00-09-01a148e0-1c33-7c81-abb9-7807b120b497.jsonl",
+      "offset": 50305,
+      "bytes": 5152,
+      "sha256": "05a0a8e1e5e3c7e04b79a123839ec34ab9c5cbb920c11ae88feb260e69cc9905",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "sandbox": {
+        "type": "workspace-write",
+        "writable_roots": [
+          "/home/dw/Projects/agent-sts2",
+          "/home/dw/Projects/agent-sts2/.git",
+          "/home/dw/Projects/agent-sts2/.git/worktrees/codex-fix-silent-20261017-155957"
+        ],
+        "network_access": false,
+        "exclude_tmpdir_env_var": false,
+        "exclude_slash_tmp": false
+      },
+      "approval_policy": "never"
+    },
+    "native_user_input": {
+      "offset": 58300,
+      "bytes": 13081,
+      "sha256": "367366ff6fd8fcbfd23ca8c6d9926570c88939dc1077fb9207e5ff4c9732d1b8",
+      "input_sha256": "a7a8eb639740277a00fa86cf5eb431eda5f0afe8a683734606e9b723c1569e3e"
+    },
+    "original_header_events": [
+      {
+        "offset": 0,
+        "bytes": 14892,
+        "sha256": "9971a260efdc8eec78e0dc6ad28ed72825a61d50ba1bcf385647212fd5c4fa3d",
+        "type": "learner_launch",
+        "attempt": null,
+        "code": null
+      },
+      {
+        "offset": 14892,
+        "bytes": 369,
+        "sha256": "d34f2754e12078832f6f2268a6448304748dedf65a846b1077ac72a617960f4b",
+        "type": "learner_startup_attempt",
+        "attempt": 1,
+        "code": null
+      },
+      {
+        "offset": 18273,
+        "bytes": 77,
+        "sha256": "a75524d467f0c910b388fe50dd14dddb775bc5b8056672e39ab2aa75ea3d7331",
+        "type": "thread.started",
+        "attempt": null,
+        "code": null
+      }
+    ],
+    "startup_attempts": 1,
+    "failed_startups_preserved": 0,
+    "no_model_or_manual_restart": true
+  },
+  "queue_snapshot_hashes": {
+    "fix-queue-input.md": "82833ce7c9b615aac6d8f4a960ffb9e52b8f88999abd139394fd2bc3facf59c5"
+  },
+  "original_source_comparisons": {
+    "source_path_comparisons": [
+      {
+        "path": "agent/src/brain/build-facts.ts",
+        "previous_blob": "0d3b910ca6ac718fdad6da0cd7c400bee9e89b1a",
+        "base_blob": "0d3b910ca6ac718fdad6da0cd7c400bee9e89b1a",
+        "unchanged": true
+      },
+      {
+        "path": "agent/src/brain/engines/codex-usage.ts",
+        "previous_blob": "a022acef45122b6e455903a82fa0254e0318daea",
+        "base_blob": "a022acef45122b6e455903a82fa0254e0318daea",
+        "unchanged": true
+      },
+      {
+        "path": "agent/src/brain/engines/codex.ts",
+        "previous_blob": "08a62ef91e19a90c3ac5fdee3943c576c156c82b",
+        "base_blob": "08a62ef91e19a90c3ac5fdee3943c576c156c82b",
+        "unchanged": true
+      },
+      {
+        "path": "agent/src/brain/router.ts",
+        "previous_blob": "77a6775658168f2b9f39fb6ffb32a51c0de243f8",
+        "base_blob": "77a6775658168f2b9f39fb6ffb32a51c0de243f8",
+        "unchanged": true
+      },
+      {
+        "path": "agent/src/brain/wait.ts",
+        "previous_blob": "4c37bd38cd32a70eca446911367ccdfca75f46a4",
+        "base_blob": "4c37bd38cd32a70eca446911367ccdfca75f46a4",
+        "unchanged": true
+      },
+      {
+        "path": "agent/src/core/util/jsonl.ts",
+        "previous_blob": "d4c13928fbec29809180baf5dbabd4f80f7fc494",
+        "base_blob": "d4c13928fbec29809180baf5dbabd4f80f7fc494",
+        "unchanged": true
+      },
+      {
+        "path": "agent/src/eye/decision-log.ts",
+        "previous_blob": "af1ec3cf99e698191945c9c1b097fafff1beccd4",
+        "base_blob": "af1ec3cf99e698191945c9c1b097fafff1beccd4",
+        "unchanged": true
+      },
+      {
+        "path": "agent/src/eye/jev-prompt-log.ts",
+        "previous_blob": "f26e8ab8ddf5b63d75cd9be7a3d6f66fd9908118",
+        "base_blob": "f26e8ab8ddf5b63d75cd9be7a3d6f66fd9908118",
+        "unchanged": true
+      },
+      {
+        "path": "agent/src/eye/run-config.ts",
+        "previous_blob": "13a43c8cc45bf9d07c94cc45b49cf31b35a61c8e",
+        "base_blob": "13a43c8cc45bf9d07c94cc45b49cf31b35a61c8e",
+        "unchanged": true
+      },
+      {
+        "path": "agent/src/hand/loop.ts",
+        "previous_blob": "31182e602ab5d95e599c518a431d6d79af85b354",
+        "base_blob": "31182e602ab5d95e599c518a431d6d79af85b354",
+        "unchanged": true
+      },
+      {
+        "path": "agent/src/hand/screens/oneshot.ts",
+        "previous_blob": "b79727df60f4444c8c3107396fa597dbfa7eb6dc",
+        "base_blob": "b79727df60f4444c8c3107396fa597dbfa7eb6dc",
+        "unchanged": true
+      },
+      {
+        "path": "agent/src/hand/screens/pick.ts",
+        "previous_blob": "61bda1f82ce9f5b6d3746ad446443027dec99945",
+        "base_blob": "61bda1f82ce9f5b6d3746ad446443027dec99945",
+        "unchanged": true
+      },
+      {
+        "path": "agent/src/hand/screens/selection.ts",
+        "previous_blob": "904e9bb9ae5f2e8ff62dfca77c320ddb65637415",
+        "base_blob": "904e9bb9ae5f2e8ff62dfca77c320ddb65637415",
+        "unchanged": true
+      },
+      {
+        "path": "agent/src/hand/screens/shop.ts",
+        "previous_blob": "898c35bc249b70896227c45dd45a0010674a9de3",
+        "base_blob": "898c35bc249b70896227c45dd45a0010674a9de3",
+        "unchanged": true
+      },
+      {
+        "path": "agent/src/knowledge/experience.ts",
+        "previous_blob": "e6f03aabbe01edd7fb665e6e20b451a706f53c29",
+        "base_blob": "e6f03aabbe01edd7fb665e6e20b451a706f53c29",
+        "unchanged": true
+      },
+      {
+        "path": "agent/src/knowledge/render/stats-text.ts",
+        "previous_blob": "4653d33ef6cff1a2a7b5a430007d0e19c04d394d",
+        "base_blob": "4653d33ef6cff1a2a7b5a430007d0e19c04d394d",
+        "unchanged": true
+      },
+      {
+        "path": "agent/src/memory/journal-replay.ts",
+        "previous_blob": "b050f2500d31ab20a2f75d66a8432ebc81bd122b",
+        "base_blob": "b050f2500d31ab20a2f75d66a8432ebc81bd122b",
+        "unchanged": true
+      },
+      {
+        "path": "agent/src/memory/relic-resources.ts",
+        "previous_blob": "c48650d12b61459255b2b40725da647e885a671a",
+        "base_blob": "c48650d12b61459255b2b40725da647e885a671a",
+        "unchanged": true
+      },
+      {
+        "path": "agent/src/memory/run-brief.ts",
+        "previous_blob": "0d83a8f5b54f9e8a9e4288b82ef38d061d0f1d47",
+        "base_blob": "0d83a8f5b54f9e8a9e4288b82ef38d061d0f1d47",
+        "unchanged": true
+      },
+      {
+        "path": "agent/src/memory/types.ts",
+        "previous_blob": "b07be78154282ce650322d996b089c25a714c74d",
+        "base_blob": "b07be78154282ce650322d996b089c25a714c74d",
+        "unchanged": true
+      },
+      {
+        "path": "agent/src/reflex/card-model.ts",
+        "previous_blob": "c76cf991fc0496c91d9d1bd5434d7765faa51ee7",
+        "base_blob": "c76cf991fc0496c91d9d1bd5434d7765faa51ee7",
+        "unchanged": true
+      },
+      {
+        "path": "agent/src/reflex/combat-plan.ts",
+        "previous_blob": "a2e334c9ec2892326366052010fee1d7f8ef5bf2",
+        "base_blob": "a2e334c9ec2892326366052010fee1d7f8ef5bf2",
+        "unchanged": true
+      },
+      {
+        "path": "agent/src/reflex/continuation-value.ts",
+        "previous_blob": "090d3e03c05b955a925dc5cc55cfc61fcbf64d07",
+        "base_blob": "090d3e03c05b955a925dc5cc55cfc61fcbf64d07",
+        "unchanged": true
+      },
+      {
+        "path": "agent/src/reflex/rollout-live.ts",
+        "previous_blob": "5b1b08666b06e186c53b211783ba49a3830470d1",
+        "base_blob": "5b1b08666b06e186c53b211783ba49a3830470d1",
+        "unchanged": true
+      },
+      {
+        "path": "agent/src/reflex/rollout.ts",
+        "previous_blob": "b2308b4c18f8799cf531969ebc75c81b0b5ff75b",
+        "base_blob": "b2308b4c18f8799cf531969ebc75c81b0b5ff75b",
+        "unchanged": true
+      },
+      {
+        "path": "agent/src/reflex/silent-apotheosis.ts",
+        "previous_blob": "8d513bf482f236a89fc697dd2ae69944cdb65acc",
+        "base_blob": "8d513bf482f236a89fc697dd2ae69944cdb65acc",
+        "unchanged": true
+      },
+      {
+        "path": "agent/src/reflex/silent-skittish.ts",
+        "previous_blob": "ce67bd055256bf9af47f84962881ef53d9624283",
+        "base_blob": "ce67bd055256bf9af47f84962881ef53d9624283",
+        "unchanged": true
+      },
+      {
+        "path": "agent/src/reflex/turn-solver.ts",
+        "previous_blob": "efcb5d39e29641154f6fb4df395f77ba3d6bf843",
+        "base_blob": "efcb5d39e29641154f6fb4df395f77ba3d6bf843",
+        "unchanged": true
+      },
+      {
+        "path": "agent/src/sim/boss-lines.ts",
+        "previous_blob": "167033d099574c650f2817ab5b631d6f0f6d9d15",
+        "base_blob": "167033d099574c650f2817ab5b631d6f0f6d9d15",
+        "unchanged": true
+      },
+      {
+        "path": "agent/src/sim/boss-sim.ts",
+        "previous_blob": "d9fb928d6a8e9e6ef9ca0e586d025649dcc2aa5f",
+        "base_blob": "d9fb928d6a8e9e6ef9ca0e586d025649dcc2aa5f",
+        "unchanged": true
+      },
+      {
+        "path": "agent/src/sim/boss-start.ts",
+        "previous_blob": "352185272c4739d83b8f6160c11e1e0f580ad8a5",
+        "base_blob": "352185272c4739d83b8f6160c11e1e0f580ad8a5",
+        "unchanged": true
+      },
+      {
+        "path": "agent/src/sim/build-sim-facts.ts",
+        "previous_blob": "c4c73c9c6c61656443d53c81241546d64191a805",
+        "base_blob": "c4c73c9c6c61656443d53c81241546d64191a805",
+        "unchanged": true
+      },
+      {
+        "path": "agent/src/sim/build-sim.ts",
+        "previous_blob": "f627c81f7543b8354f02cb7b07ab21780700985f",
+        "base_blob": "f627c81f7543b8354f02cb7b07ab21780700985f",
+        "unchanged": true
+      },
+      {
+        "path": "agent/src/sim/double-boss-start.ts",
+        "previous_blob": "d0da5d2d8c51402d4e4c4c523fa54dafe6de88ec",
+        "base_blob": "d0da5d2d8c51402d4e4c4c523fa54dafe6de88ec",
+        "unchanged": true
+      },
+      {
+        "path": "agent/src/sim/global-build-observer.ts",
+        "previous_blob": "355090060b78358973bfea928d671a17f78809f1",
+        "base_blob": "355090060b78358973bfea928d671a17f78809f1",
+        "unchanged": true
+      },
+      {
+        "path": "agent/src/sim/global-build.ts",
+        "previous_blob": "9e666dd6edf08c1700cfb8cfe44b75fa3681daa8",
+        "base_blob": "9e666dd6edf08c1700cfb8cfe44b75fa3681daa8",
+        "unchanged": true
+      },
+      {
+        "path": "agent/src/sim/quantitative-calibration.ts",
+        "previous_blob": "625293998336b5772f3cb4a0bd88cc4c7121435c",
+        "base_blob": "625293998336b5772f3cb4a0bd88cc4c7121435c",
+        "unchanged": true
+      },
+      {
+        "path": "agent/src/sim/quantitative-facts.ts",
+        "previous_blob": "0644cdc68490541d37595ffedbc64818fac5ddc2",
+        "base_blob": "0644cdc68490541d37595ffedbc64818fac5ddc2",
+        "unchanged": true
+      },
+      {
+        "path": "agent/src/sim/quantitative-stats.ts",
+        "previous_blob": "57d3c8be7c03065e81d8233f56624349a4fc2707",
+        "base_blob": "57d3c8be7c03065e81d8233f56624349a4fc2707",
+        "unchanged": true
+      },
+      {
+        "path": "agent/src/sim/silent-opening.ts",
+        "previous_blob": "99218b8095e5bad7c6be8a726592cb038556aef9",
+        "base_blob": "99218b8095e5bad7c6be8a726592cb038556aef9",
+        "unchanged": true
+      },
+      {
+        "path": "agent/src/sl/attempts.ts",
+        "previous_blob": "552a8adb0cc14b3ba81060399e3a5e317636e080",
+        "base_blob": "552a8adb0cc14b3ba81060399e3a5e317636e080",
+        "unchanged": true
+      },
+      {
+        "path": "agent/src/sl/controller.ts",
+        "previous_blob": "c8b8f8bf8e0cd32d6a0413e4a30d6af389b92243",
+        "base_blob": "c8b8f8bf8e0cd32d6a0413e4a30d6af389b92243",
+        "unchanged": true
+      },
+      {
+        "path": "agent/src/sl/explore.ts",
+        "previous_blob": "72054748b603e960aaad29ce3e25537486fc6b5c",
+        "base_blob": "72054748b603e960aaad29ce3e25537486fc6b5c",
+        "unchanged": true
+      },
+      {
+        "path": "agent/tests/adaptive_health_test.py",
+        "previous_blob": "931bfb860c44ff30ad5b4010bc64db87b0ec0d57",
+        "base_blob": "931bfb860c44ff30ad5b4010bc64db87b0ec0d57",
+        "unchanged": true
+      },
+      {
+        "path": "agent/tests/ascension-observed.test.ts",
+        "previous_blob": "fd3a4802d5939852b19e8ced032c82158b093dfa",
+        "base_blob": "fd3a4802d5939852b19e8ced032c82158b093dfa",
+        "unchanged": true
+      },
+      {
+        "path": "agent/tests/blocked-experience-repair.test.ts",
+        "previous_blob": "7c4e5b81487fa0ce81ab862a0ffeeabc89f2b9e5",
+        "base_blob": "7c4e5b81487fa0ce81ab862a0ffeeabc89f2b9e5",
+        "unchanged": true
+      },
+      {
+        "path": "agent/tests/boss-sim-consumer-fixture.ts",
+        "previous_blob": "7bdb5c9ec60eca320dd60cf5d452d3549321f950",
+        "base_blob": "7bdb5c9ec60eca320dd60cf5d452d3549321f950",
+        "unchanged": true
+      },
+      {
+        "path": "agent/tests/brain-codex-session.test.ts",
+        "previous_blob": "f3112eafd13a1a3091a10aad2d791fd87f088682",
+        "base_blob": "f3112eafd13a1a3091a10aad2d791fd87f088682",
+        "unchanged": true
+      },
+      {
+        "path": "agent/tests/brain-codex-usage.test.ts",
+        "previous_blob": "15dab15d0127b8b013f802c0c73c4a479eacf683",
+        "base_blob": "15dab15d0127b8b013f802c0c73c4a479eacf683",
+        "unchanged": true
+      },
+      {
+        "path": "agent/tests/broker-request-write.test.ts",
+        "previous_blob": "dec642833c26d4df088ddb35ef4d7e9640bdebf1",
+        "base_blob": "dec642833c26d4df088ddb35ef4d7e9640bdebf1",
+        "unchanged": true
+      },
+      {
+        "path": "agent/tests/broker-response-persistence.test.ts",
+        "previous_blob": "e931377343ad1ca2b8bc7014ae951a67c9a5ddc5",
+        "base_blob": "e931377343ad1ca2b8bc7014ae951a67c9a5ddc5",
+        "unchanged": true
+      },
+      {
+        "path": "agent/tests/build-facts-audit-fixture.test.ts",
+        "previous_blob": "b963fce357c910121f632904284475def4e0b12d",
+        "base_blob": "b963fce357c910121f632904284475def4e0b12d",
+        "unchanged": true
+      },
+      {
+        "path": "agent/tests/build-facts-audit.test.ts",
+        "previous_blob": "4b350ec5a6503e2d30a3b0660cc3fb43e56fdd05",
+        "base_blob": "4b350ec5a6503e2d30a3b0660cc3fb43e56fdd05",
+        "unchanged": true
+      },
+      {
+        "path": "agent/tests/codex-usage-recovery.test.ts",
+        "previous_blob": "5169dda9b3fc538b6427f193a17870d1f2b8f85f",
+        "base_blob": "5169dda9b3fc538b6427f193a17870d1f2b8f85f",
+        "unchanged": true
+      },
+      {
+        "path": "agent/tests/compute-memo-files.ts",
+        "previous_blob": "2260834918e96bc798c7f823ab6dd22ef90194fe",
+        "base_blob": "2260834918e96bc798c7f823ab6dd22ef90194fe",
+        "unchanged": true
+      },
+      {
+        "path": "agent/tests/compute-memo-worker.ts",
+        "previous_blob": "899be85357d9f2bbad09e98f64658919c06e1d55",
+        "base_blob": "899be85357d9f2bbad09e98f64658919c06e1d55",
+        "unchanged": true
+      },
+      {
+        "path": "agent/tests/compute-memo.test.ts",
+        "previous_blob": "597b10831fd45b03a3cb07966006fc330fbfca0f",
+        "base_blob": "597b10831fd45b03a3cb07966006fc330fbfca0f",
+        "unchanged": true
+      },
+      {
+        "path": "agent/tests/core_build_jobs_test.py",
+        "previous_blob": "ba08abfa4918b4048cf22ee31bccf29884cb7d6d",
+        "base_blob": "ba08abfa4918b4048cf22ee31bccf29884cb7d6d",
+        "unchanged": true
+      },
+      {
+        "path": "agent/tests/deepseek-prompt-dump.test.ts",
+        "previous_blob": "c06686f83f731132d2370d072b04009269366924",
+        "base_blob": "c06686f83f731132d2370d072b04009269366924",
+        "unchanged": true
+      },
+      {
+        "path": "agent/tests/end-turn-guard-sources.test.ts",
+        "previous_blob": "0efd9dd7bf1f7a11a3dc2d15ea9a2a09f32a1d62",
+        "base_blob": "0efd9dd7bf1f7a11a3dc2d15ea9a2a09f32a1d62",
+        "unchanged": true
+      },
+      {
+        "path": "agent/tests/eval_calibration_test.py",
+        "previous_blob": "1dd6fa04bf7ee4e215f04d493a5a3eb4af0bfa4a",
+        "base_blob": "1dd6fa04bf7ee4e215f04d493a5a3eb4af0bfa4a",
+        "unchanged": true
+      },
+      {
+        "path": "agent/tests/feature-root-event-notice.test.ts",
+        "previous_blob": "c46061c1a19b65d1df1a5081a7cd087f1cf84018",
+        "base_blob": "c46061c1a19b65d1df1a5081a7cd087f1cf84018",
+        "unchanged": true
+      },
+      {
+        "path": "agent/tests/fixtures/h1-budget-completion.json",
+        "previous_blob": "a557dff99ca01477d32b9dc2b6ad95fe1e940b68",
+        "base_blob": "a557dff99ca01477d32b9dc2b6ad95fe1e940b68",
+        "unchanged": true
+      },
+      {
+        "path": "agent/tests/gkb-render.test.ts",
+        "previous_blob": "32683477e9fe3e939217e5098a0ec4f575fa96b0",
+        "base_blob": "32683477e9fe3e939217e5098a0ec4f575fa96b0",
+        "unchanged": true
+      },
+      {
+        "path": "agent/tests/global-build-health.test.ts",
+        "previous_blob": "a903a8b804af1bcd609280205f6e539386c00cc2",
+        "base_blob": "a903a8b804af1bcd609280205f6e539386c00cc2",
+        "unchanged": true
+      },
+      {
+        "path": "agent/tests/global-build-integration.test.ts",
+        "previous_blob": "de985728ab2016445131bab254b7a21fddac8b41",
+        "base_blob": "de985728ab2016445131bab254b7a21fddac8b41",
+        "unchanged": true
+      },
+      {
+        "path": "agent/tests/global-build-observer.test.ts",
+        "previous_blob": "842f1db45620df356a82c5d42998d50b44b77d4c",
+        "base_blob": "842f1db45620df356a82c5d42998d50b44b77d4c",
+        "unchanged": true
+      },
+      {
+        "path": "agent/tests/global-build.test.ts",
+        "previous_blob": "707132b5fb3d6d4e6f9e5e10dba745b41bccf128",
+        "base_blob": "707132b5fb3d6d4e6f9e5e10dba745b41bccf128",
+        "unchanged": true
+      },
+      {
+        "path": "agent/tests/global_build_health_test.py",
+        "previous_blob": "03f2ac4d6a0d6f9da3c0f204e92558000c95072d",
+        "base_blob": "03f2ac4d6a0d6f9da3c0f204e92558000c95072d",
+        "unchanged": true
+      },
+      {
+        "path": "agent/tests/human-pace-sampling.test.ts",
+        "previous_blob": "d293f24d6d662e26a2407369e31e48b64c87521f",
+        "base_blob": "d293f24d6d662e26a2407369e31e48b64c87521f",
+        "unchanged": true
+      },
+      {
+        "path": "agent/tests/human-pace-strict-pick-stall.json",
+        "previous_blob": "f33c517f0f769855e7653b002eeabdfecb0f73fa",
+        "base_blob": "f33c517f0f769855e7653b002eeabdfecb0f73fa",
+        "unchanged": true
+      },
+      {
+        "path": "agent/tests/human-pace-strict-pick-stall.test.ts",
+        "previous_blob": "03182871afab79cd896a415731bda514081f6098",
+        "base_blob": "03182871afab79cd896a415731bda514081f6098",
+        "unchanged": true
+      },
+      {
+        "path": "agent/tests/jsonl-boundary-recovery.test.ts",
+        "previous_blob": "9f1ef0de779d50de1600e8b98025131bbf6c0f3e",
+        "base_blob": "9f1ef0de779d50de1600e8b98025131bbf6c0f3e",
+        "unchanged": true
+      },
+      {
+        "path": "agent/tests/learner-check-continuation.test.ts",
+        "previous_blob": "3c81170a0ac66424d1452f66f94145e0b8b531f9",
+        "base_blob": "3c81170a0ac66424d1452f66f94145e0b8b531f9",
+        "unchanged": true
+      },
+      {
+        "path": "agent/tests/learner-entry.test.ts",
+        "previous_blob": "c64f76c4bd416a9b151f847fa5628ebf9467bff0",
+        "base_blob": "c64f76c4bd416a9b151f847fa5628ebf9467bff0",
+        "unchanged": true
+      },
+      {
+        "path": "agent/tests/learner-live-tasks.test.ts",
+        "previous_blob": "203d3f590c2128981d033487fa54f7932b23fbac",
+        "base_blob": "203d3f590c2128981d033487fa54f7932b23fbac",
+        "unchanged": true
+      },
+      {
+        "path": "agent/tests/learner-registration-barrier.test.ts",
+        "previous_blob": "9684124f0c14f39730b8828fad04b3a6f1f28cd9",
+        "base_blob": "9684124f0c14f39730b8828fad04b3a6f1f28cd9",
+        "unchanged": true
+      },
+      {
+        "path": "agent/tests/learner-retention-legacy.test.ts",
+        "previous_blob": "71b1ad1c9d1b38efd35c66c5f27d3a2bcaf54d13",
+        "base_blob": "71b1ad1c9d1b38efd35c66c5f27d3a2bcaf54d13",
+        "unchanged": true
+      },
+      {
+        "path": "agent/tests/learner-retention-uuid.test.ts",
+        "previous_blob": "40d7f77996fe007f5815237d7a3c0bf51a64e69c",
+        "base_blob": "40d7f77996fe007f5815237d7a3c0bf51a64e69c",
+        "unchanged": true
+      },
+      {
+        "path": "agent/tests/learner-strategy-scratch.test.ts",
+        "previous_blob": "ac96108b24412c3ba5887a58efb1c4605446601f",
+        "base_blob": "ac96108b24412c3ba5887a58efb1c4605446601f",
+        "unchanged": true
+      },
+      {
+        "path": "agent/tests/learner.test.ts",
+        "previous_blob": "df9d655dcb3e8aaa26b3ef5333ff2fe228eb7a41",
+        "base_blob": "df9d655dcb3e8aaa26b3ef5333ff2fe228eb7a41",
+        "unchanged": true
+      },
+      {
+        "path": "agent/tests/learner_preserved_report_test.py",
+        "previous_blob": "4d4daf44dc2be94bf88eb14f0169e5b7dce1c98e",
+        "base_blob": "4d4daf44dc2be94bf88eb14f0169e5b7dce1c98e",
+        "unchanged": true
+      },
+      {
+        "path": "agent/tests/ledger-publication-baseline.test.ts",
+        "previous_blob": "e1b85ff2f39f5ff4bb4a899eb1b02e926c8602fd",
+        "base_blob": "e1b85ff2f39f5ff4bb4a899eb1b02e926c8602fd",
+        "unchanged": true
+      },
+      {
+        "path": "agent/tests/ledger_publication_baseline_test.py",
+        "previous_blob": "3ba7c28d1f23516c42f040eea4ffc5fd39a05de8",
+        "base_blob": "3ba7c28d1f23516c42f040eea4ffc5fd39a05de8",
+        "unchanged": true
+      },
+      {
+        "path": "agent/tests/multi-character.test.ts",
+        "previous_blob": "db756ec3cf96247d0326b1f4c6aa90c6a6bacbd8",
+        "base_blob": "db756ec3cf96247d0326b1f4c6aa90c6a6bacbd8",
+        "unchanged": true
+      },
+      {
+        "path": "agent/tests/ops-codex.test.ts",
+        "previous_blob": "a1773a7c9aa52e46cf45546201138b30b2085117",
+        "base_blob": "a1773a7c9aa52e46cf45546201138b30b2085117",
+        "unchanged": true
+      },
+      {
+        "path": "agent/tests/ops-deferred.test.ts",
+        "previous_blob": "efb0fb16233274ba46ff8fe085724b3276003cdb",
+        "base_blob": "efb0fb16233274ba46ff8fe085724b3276003cdb",
+        "unchanged": true
+      },
+      {
+        "path": "agent/tests/ops-stall-between-runs.test.ts",
+        "previous_blob": "dada396445e7ee40c4ab9f463b23953059a440cf",
+        "base_blob": "dada396445e7ee40c4ab9f463b23953059a440cf",
+        "unchanged": true
+      },
+      {
+        "path": "agent/tests/outcome-stats-refresh.test.ts",
+        "previous_blob": "c8b82f269f6fc8e583800029e1711d4a9461e334",
+        "base_blob": "c8b82f269f6fc8e583800029e1711d4a9461e334",
+        "unchanged": true
+      },
+      {
+        "path": "agent/tests/potions-jev-call.test.ts",
+        "previous_blob": "2140410b5c3139151c254a4324f8105dbe33911b",
+        "base_blob": "2140410b5c3139151c254a4324f8105dbe33911b",
+        "unchanged": true
+      },
+      {
+        "path": "agent/tests/quantitative.test.ts",
+        "previous_blob": "61c8f7d0a6d0c3e1c5ddd73611cf0c030b12cf7f",
+        "base_blob": "61c8f7d0a6d0c3e1c5ddd73611cf0c030b12cf7f",
+        "unchanged": true
+      },
+      {
+        "path": "agent/tests/report_death_fight_test.py",
+        "previous_blob": "e1486291c1753f94f8eda5e97ff7d204b9082c79",
+        "base_blob": "e1486291c1753f94f8eda5e97ff7d204b9082c79",
+        "unchanged": true
+      },
+      {
+        "path": "agent/tests/rollout-best-added.test.ts",
+        "previous_blob": "fe014f2ff79bfd1383b194547e99610098add57a",
+        "base_blob": "fe014f2ff79bfd1383b194547e99610098add57a",
+        "unchanged": true
+      },
+      {
+        "path": "agent/tests/rollout-clock-fixture.ts",
+        "previous_blob": "410401a1b9ef183e6c0de860d012b06e8d13f816",
+        "base_blob": "410401a1b9ef183e6c0de860d012b06e8d13f816",
+        "unchanged": true
+      },
+      {
+        "path": "agent/tests/rollout-live.test.ts",
+        "previous_blob": "e04386253f686571a79e60f4c0e2b0af452ee4ef",
+        "base_blob": "e04386253f686571a79e60f4c0e2b0af452ee4ef",
+        "unchanged": true
+      },
+      {
+        "path": "agent/tests/rollout-ties-fixture.test.ts",
+        "previous_blob": "a363dae115f1704a033ee0dc44f1dcc4aa9cc0e4",
+        "base_blob": "a363dae115f1704a033ee0dc44f1dcc4aa9cc0e4",
+        "unchanged": true
+      },
+      {
+        "path": "agent/tests/rollout-ties.test.ts",
+        "previous_blob": "a4927aa84f30e56e2e022743af52e3944366ecc9",
+        "base_blob": "a4927aa84f30e56e2e022743af52e3944366ecc9",
+        "unchanged": true
+      },
+      {
+        "path": "agent/tests/shop-removal-preview.test.ts",
+        "previous_blob": "496d935515e1c0c53cbb5a9f0eaf45dff5fdc24a",
+        "base_blob": "496d935515e1c0c53cbb5a9f0eaf45dff5fdc24a",
+        "unchanged": true
+      },
+      {
+        "path": "agent/tests/silent-apotheosis-backflip-evidence.json",
+        "previous_blob": "3f30104f78333c860b6266dfb0b0a056f9dcaba3",
+        "base_blob": "3f30104f78333c860b6266dfb0b0a056f9dcaba3",
+        "unchanged": true
+      },
+      {
+        "path": "agent/tests/silent-apotheosis-backflip.test.ts",
+        "previous_blob": "432cadeb4edd04df57465a558e457b4d26fe456d",
+        "base_blob": "432cadeb4edd04df57465a558e457b4d26fe456d",
+        "unchanged": true
+      },
+      {
+        "path": "agent/tests/silent-apotheosis-footwork-evidence.json",
+        "previous_blob": "fb012a17216470c9050065825320cd7b8a1c88ee",
+        "base_blob": "fb012a17216470c9050065825320cd7b8a1c88ee",
+        "unchanged": true
+      },
+      {
+        "path": "agent/tests/silent-apotheosis-footwork.test.ts",
+        "previous_blob": "27f34d7e4d3387cdd3bb626e4bed314d8860ebca",
+        "base_blob": "27f34d7e4d3387cdd3bb626e4bed314d8860ebca",
+        "unchanged": true
+      },
+      {
+        "path": "agent/tests/silent-apotheosis-neutralize-evidence.json",
+        "previous_blob": "5bb8dad00ff3cb6186c7e27e99eb80478cad8ef2",
+        "base_blob": "5bb8dad00ff3cb6186c7e27e99eb80478cad8ef2",
+        "unchanged": true
+      },
+      {
+        "path": "agent/tests/silent-apotheosis-neutralize.test.ts",
+        "previous_blob": "95e8b9594eb91d745127b1c71a19ece40e388a93",
+        "base_blob": "95e8b9594eb91d745127b1c71a19ece40e388a93",
+        "unchanged": true
+      },
+      {
+        "path": "agent/tests/silent-apotheosis-poisoned-stab-evidence.json",
+        "previous_blob": "6f0a47e5e111ba2fea38bb2a4245d598eb4c7d72",
+        "base_blob": "6f0a47e5e111ba2fea38bb2a4245d598eb4c7d72",
+        "unchanged": true
+      },
+      {
+        "path": "agent/tests/silent-apotheosis-poisoned-stab.test.ts",
+        "previous_blob": "717de57c01ba222e3af7d6295620b7df2f99548f",
+        "base_blob": "717de57c01ba222e3af7d6295620b7df2f99548f",
+        "unchanged": true
+      },
+      {
+        "path": "agent/tests/silent-apotheosis-snakebite-evidence.json",
+        "previous_blob": "21d9742382c3ec18fa91a3de7b882b66591f7276",
+        "base_blob": "21d9742382c3ec18fa91a3de7b882b66591f7276",
+        "unchanged": true
+      },
+      {
+        "path": "agent/tests/silent-apotheosis-snakebite.test.ts",
+        "previous_blob": "3c85ba6a320d4e6a612419d6c513e05aa4f3823e",
+        "base_blob": "3c85ba6a320d4e6a612419d6c513e05aa4f3823e",
+        "unchanged": true
+      },
+      {
+        "path": "agent/tests/silent-apotheosis-survivor-evidence.json",
+        "previous_blob": "17a1dc631e26fcf6675ab017ab80054ae0efc97a",
+        "base_blob": "17a1dc631e26fcf6675ab017ab80054ae0efc97a",
+        "unchanged": true
+      },
+      {
+        "path": "agent/tests/silent-apotheosis-survivor.test.ts",
+        "previous_blob": "cd0cbddd06c6d288ce293ee69c6f412e7909a3af",
+        "base_blob": "cd0cbddd06c6d288ce293ee69c6f412e7909a3af",
+        "unchanged": true
+      },
+      {
+        "path": "agent/tests/silent-blade-dance-evidence.json",
+        "previous_blob": "72f27b06df8c184afe77144c5d9c9535d7f11506",
+        "base_blob": "72f27b06df8c184afe77144c5d9c9535d7f11506",
+        "unchanged": true
+      },
+      {
+        "path": "agent/tests/silent-blade-dance.test.ts",
+        "previous_blob": "164022e2971c203c108aa96ff86c9c6fcdc2d0ba",
+        "base_blob": "164022e2971c203c108aa96ff86c9c6fcdc2d0ba",
+        "unchanged": true
+      },
+      {
+        "path": "agent/tests/silent-build-win-ties.test.ts",
+        "previous_blob": "a2c79e4642be83da27a8206cc07c3018dec96bfd",
+        "base_blob": "a2c79e4642be83da27a8206cc07c3018dec96bfd",
+        "unchanged": true
+      },
+      {
+        "path": "agent/tests/silent-cunning-evidence.json",
+        "previous_blob": "5c4da678908a9498eb4c0a7b96f3acec7995d04a",
+        "base_blob": "5c4da678908a9498eb4c0a7b96f3acec7995d04a",
+        "unchanged": true
+      },
+      {
+        "path": "agent/tests/silent-cunning-state.json",
+        "previous_blob": "9dacdc8dff05229f3e5e7635e778c6abad482ce9",
+        "base_blob": "9dacdc8dff05229f3e5e7635e778c6abad482ce9",
+        "unchanged": true
+      },
+      {
+        "path": "agent/tests/silent-cunning.test.ts",
+        "previous_blob": "c0c27d19a7c1af7f65b075f077653cc68972041f",
+        "base_blob": "c0c27d19a7c1af7f65b075f077653cc68972041f",
+        "unchanged": true
+      },
+      {
+        "path": "agent/tests/silent-discard-plan-evidence.json",
+        "previous_blob": "cd50f106e2cb5890fe30951b58073d8088add5a0",
+        "base_blob": "cd50f106e2cb5890fe30951b58073d8088add5a0",
+        "unchanged": true
+      },
+      {
+        "path": "agent/tests/silent-discard-plan.test.ts",
+        "previous_blob": "9bf23092a2c38e48493fcc42f205dc2ef693ace5",
+        "base_blob": "9bf23092a2c38e48493fcc42f205dc2ef693ace5",
+        "unchanged": true
+      },
+      {
+        "path": "agent/tests/silent-gardener-skittish-evidence.json",
+        "previous_blob": "268892b1f9d5e173ead3a7a39be25c739b26efbb",
+        "base_blob": "268892b1f9d5e173ead3a7a39be25c739b26efbb",
+        "unchanged": true
+      },
+      {
+        "path": "agent/tests/silent-gardener-skittish.test.ts",
+        "previous_blob": "01dc42ae177bf1772aea201c10689d4f4719cdda",
+        "base_blob": "01dc42ae177bf1772aea201c10689d4f4719cdda",
+        "unchanged": true
+      },
+      {
+        "path": "agent/tests/silent-hidden-daggers-selection-evidence.json",
+        "previous_blob": "36f09f473a22fc0c9bfd53c3101bdda86add975e",
+        "base_blob": "36f09f473a22fc0c9bfd53c3101bdda86add975e",
+        "unchanged": true
+      },
+      {
+        "path": "agent/tests/silent-hidden-daggers-selection.test.ts",
+        "previous_blob": "01b15b81a021a5699acada3054f536802f1cd031",
+        "base_blob": "01b15b81a021a5699acada3054f536802f1cd031",
+        "unchanged": true
+      },
+      {
+        "path": "agent/tests/silent-opening-evidence.json",
+        "previous_blob": "da7ac67c8525bebaeba573d3df9a4505296d54b0",
+        "base_blob": "da7ac67c8525bebaeba573d3df9a4505296d54b0",
+        "unchanged": true
+      },
+      {
+        "path": "agent/tests/silent-opening.test.ts",
+        "previous_blob": "d9b8d68ef6c6e5fb55620b767de722c79d3ed56a",
+        "base_blob": "d9b8d68ef6c6e5fb55620b767de722c79d3ed56a",
+        "unchanged": true
+      },
+      {
+        "path": "agent/tests/silent-paper-krane.test.ts",
+        "previous_blob": "1568c9d680ab79b28a76af493682fba9fcd8e1f3",
+        "base_blob": "1568c9d680ab79b28a76af493682fba9fcd8e1f3",
+        "unchanged": true
+      },
+      {
+        "path": "agent/tests/silent-phase-reference.test.ts",
+        "previous_blob": "81b9ae886585ef8617c79d846d3474f39d13c152",
+        "base_blob": "81b9ae886585ef8617c79d846d3474f39d13c152",
+        "unchanged": true
+      },
+      {
+        "path": "agent/tests/silent-reattach-evidence.json",
+        "previous_blob": "799a34e6fb682087505e95c6bdb3c598285bf412",
+        "base_blob": "799a34e6fb682087505e95c6bdb3c598285bf412",
+        "unchanged": true
+      },
+      {
+        "path": "agent/tests/silent-reattach-reset.test.ts",
+        "previous_blob": "c67e57c49364139da711e7bf4b893682a26f5636",
+        "base_blob": "c67e57c49364139da711e7bf4b893682a26f5636",
+        "unchanged": true
+      },
+      {
+        "path": "agent/tests/silent-shackling-weak-state.json",
+        "previous_blob": "a3d1daff32ef6323cf9d9172de78d931c1902a28",
+        "base_blob": "a3d1daff32ef6323cf9d9172de78d931c1902a28",
+        "unchanged": true
+      },
+      {
+        "path": "agent/tests/silent-shackling-weak.test.ts",
+        "previous_blob": "392cb8b850562d1f07b69ea41fe9b33056fdbbae",
+        "base_blob": "392cb8b850562d1f07b69ea41fe9b33056fdbbae",
+        "unchanged": true
+      },
+      {
+        "path": "agent/tests/silent-skittish-state.json",
+        "previous_blob": "a7cb9711ff56d1e0758cd61dd4896b84bb20a1b7",
+        "base_blob": "a7cb9711ff56d1e0758cd61dd4896b84bb20a1b7",
+        "unchanged": true
+      },
+      {
+        "path": "agent/tests/silent-skittish.test.ts",
+        "previous_blob": "730215bc6d0841e3bced1196ddf895318a50c213",
+        "base_blob": "730215bc6d0841e3bced1196ddf895318a50c213",
+        "unchanged": true
+      },
+      {
+        "path": "agent/tests/silent-tail-resource-evidence.json",
+        "previous_blob": "b7b3c1e94fd030325233f96bdddee6527c2eb5bf",
+        "base_blob": "b7b3c1e94fd030325233f96bdddee6527c2eb5bf",
+        "unchanged": true
+      },
+      {
+        "path": "agent/tests/silent-tail-resource.test.ts",
+        "previous_blob": "67da92eb996d7e0c8013f09b65bf02552c80a0b4",
+        "base_blob": "67da92eb996d7e0c8013f09b65bf02552c80a0b4",
+        "unchanged": true
+      },
+      {
+        "path": "agent/tests/sl-giant-phase-data/yql-blast.json",
+        "previous_blob": "6522870ea3c06987bef4d0b1f91302a6fb135e3b",
+        "base_blob": "6522870ea3c06987bef4d0b1f91302a6fb135e3b",
+        "unchanged": true
+      },
+      {
+        "path": "agent/tests/sl-giant-phase.test.ts",
+        "previous_blob": "03e57f6c204970f5d1974114620a31abee4fe735",
+        "base_blob": "03e57f6c204970f5d1974114620a31abee4fe735",
+        "unchanged": true
+      },
+      {
+        "path": "agent/tests/target-options.test.ts",
+        "previous_blob": "866e5b109a2dbfbcd21ad8f8510983086903cfa5",
+        "base_blob": "866e5b109a2dbfbcd21ad8f8510983086903cfa5",
+        "unchanged": true
+      },
+      {
+        "path": "agent/tests/unassigned-proposal-resolution.test.ts",
+        "previous_blob": "928d6f64bf4f309abad0277ec862f123bfac3db2",
+        "base_blob": "928d6f64bf4f309abad0277ec862f123bfac3db2",
+        "unchanged": true
+      },
+      {
+        "path": "agent/tools/deepseek-prompt-dump.ts",
+        "previous_blob": "bca63f8c74a91ca244052de918c59b9cd7577225",
+        "base_blob": "bca63f8c74a91ca244052de918c59b9cd7577225",
+        "unchanged": true
+      },
+      {
+        "path": "agent/tools/quantitative.ts",
+        "previous_blob": "2f593f39e56bb799c0be4f8dc91a8df639f843bc",
+        "base_blob": "2f593f39e56bb799c0be4f8dc91a8df639f843bc",
+        "unchanged": true
+      },
+      {
+        "path": "learner/ledger.py",
+        "previous_blob": "4c5e6dc0fea78dae8948e97b98a74af319a1303f",
+        "base_blob": "4c5e6dc0fea78dae8948e97b98a74af319a1303f",
+        "unchanged": true
+      },
+      {
+        "path": "learner/lib/launcher.ts",
+        "previous_blob": "32411d0cc2f13ae9ab0f3b52307c48f6e9275ced",
+        "base_blob": "32411d0cc2f13ae9ab0f3b52307c48f6e9275ced",
+        "unchanged": true
+      },
+      {
+        "path": "ops/adaptive_health.py",
+        "previous_blob": "d41f84aa65d5a852edbb683e4d91ccc2a00da4cb",
+        "base_blob": "d41f84aa65d5a852edbb683e4d91ccc2a00da4cb",
+        "unchanged": true
+      },
+      {
+        "path": "ops/codex-ops-actions.sh",
+        "previous_blob": "4743f11ba1af0be3c3eeeb63483a018739c908ec",
+        "base_blob": "4743f11ba1af0be3c3eeeb63483a018739c908ec",
+        "unchanged": true
+      },
+      {
+        "path": "ops/codex-ops-do.sh",
+        "previous_blob": "6223323b1fa4a5cfe98f8e3591b79bfa10255fe8",
+        "base_blob": "6223323b1fa4a5cfe98f8e3591b79bfa10255fe8",
+        "unchanged": true
+      },
+      {
+        "path": "ops/codex-ops-learn.py",
+        "previous_blob": "a0e19a83ef9ef2ef72e339c5187e01119032e8df",
+        "base_blob": "a0e19a83ef9ef2ef72e339c5187e01119032e8df",
+        "unchanged": true
+      },
+      {
+        "path": "ops/codex-ops-learner.sh",
+        "previous_blob": "7133d26b6c9141cd4462c3b7b992df92f7b1bf11",
+        "base_blob": "7133d26b6c9141cd4462c3b7b992df92f7b1bf11",
+        "unchanged": true
+      },
+      {
+        "path": "ops/codex-ops.sh",
+        "previous_blob": "58d5c9df2bad7e565fea4ff68351a3f2108a1fc5",
+        "base_blob": "58d5c9df2bad7e565fea4ff68351a3f2108a1fc5",
+        "unchanged": true
+      },
+      {
+        "path": "ops/codex/broker.ts",
+        "previous_blob": "087bad9c5b48b04ea66dbbbfc42edad77096e297",
+        "base_blob": "087bad9c5b48b04ea66dbbbfc42edad77096e297",
+        "unchanged": true
+      },
+      {
+        "path": "ops/codex/lib.ts",
+        "previous_blob": "f7f81e71502e82f467d762093efd2bdcfd338016",
+        "base_blob": "f7f81e71502e82f467d762093efd2bdcfd338016",
+        "unchanged": true
+      },
+      {
+        "path": "ops/codex/main.ts",
+        "previous_blob": "6d20921c15aae9ed972166082f50ab3ddf8e65de",
+        "base_blob": "6d20921c15aae9ed972166082f50ab3ddf8e65de",
+        "unchanged": true
+      },
+      {
+        "path": "ops/core_build_jobs.py",
+        "previous_blob": "9e2df056d90b8a3dce8d1a06921a9062e2b66811",
+        "base_blob": "9e2df056d90b8a3dce8d1a06921a9062e2b66811",
+        "unchanged": true
+      },
+      {
+        "path": "ops/global_build_health.py",
+        "previous_blob": "4c9ba039678fb1256e7c24be2e1f122babddfcc6",
+        "base_blob": "4c9ba039678fb1256e7c24be2e1f122babddfcc6",
+        "unchanged": true
+      },
+      {
+        "path": "ops/learner_check_continuation.py",
+        "previous_blob": "88e43d2464a958d7603c1f11e8276a5d5328fee8",
+        "base_blob": "88e43d2464a958d7603c1f11e8276a5d5328fee8",
+        "unchanged": true
+      },
+      {
+        "path": "ops/learner_checks.py",
+        "previous_blob": "ab4a4dc5fca6681defb97e3eec8d8c466b7d962e",
+        "base_blob": "ab4a4dc5fca6681defb97e3eec8d8c466b7d962e",
+        "unchanged": true
+      },
+      {
+        "path": "ops/learner_entry.py",
+        "previous_blob": "03af75c5672f1613e8f3c6c2d06f19bc7b4da9aa",
+        "base_blob": "03af75c5672f1613e8f3c6c2d06f19bc7b4da9aa",
+        "unchanged": true
+      },
+      {
+        "path": "ops/learner_retention.py",
+        "previous_blob": "b0fa42ecbdc78aef46e13756f7dca87f3d5a874a",
+        "base_blob": "b0fa42ecbdc78aef46e13756f7dca87f3d5a874a",
+        "unchanged": true
+      },
+      {
+        "path": "ops/learning_requests.py",
+        "previous_blob": "05c4ad5ef7b5251d345a7a759230de2787b669fa",
+        "base_blob": "05c4ad5ef7b5251d345a7a759230de2787b669fa",
+        "unchanged": true
+      },
+      {
+        "path": "ops/proposal_dispatch.py",
+        "previous_blob": "7a90d01fae435df9c4a7598e89b663cf529fae21",
+        "base_blob": "7a90d01fae435df9c4a7598e89b663cf529fae21",
+        "unchanged": true
+      },
+      {
+        "path": "ops/report.py",
+        "previous_blob": "75a67bc63bdfc2efd12a1828f23a588f3eac05b2",
+        "base_blob": "75a67bc63bdfc2efd12a1828f23a588f3eac05b2",
+        "unchanged": true
+      },
+      {
+        "path": "ops/stall-check.sh",
+        "previous_blob": "10e07de65e188bc437d4629ad5edffc5e332eb51",
+        "base_blob": "10e07de65e188bc437d4629ad5edffc5e332eb51",
+        "unchanged": true
+      },
+      {
+        "path": "ops/tests/test_broker_request_write.py",
+        "previous_blob": "b2a10895efed1dc508e4058c3b28d37117f11b35",
+        "base_blob": "b2a10895efed1dc508e4058c3b28d37117f11b35",
+        "unchanged": true
+      },
+      {
+        "path": "ops/tests/test_feature_root_event_notice.py",
+        "previous_blob": "84d4d13700aed93d1ebafd7f3e7aaa3b29025045",
+        "base_blob": "84d4d13700aed93d1ebafd7f3e7aaa3b29025045",
+        "unchanged": true
+      },
+      {
+        "path": "ops/tests/test_learner_check_continuation.py",
+        "previous_blob": "40610139ac2369f9d12183ba9a8e031de6853df2",
+        "base_blob": "40610139ac2369f9d12183ba9a8e031de6853df2",
+        "unchanged": true
+      },
+      {
+        "path": "ops/tests/test_learner_entry.py",
+        "previous_blob": "c2d75f67ad916d393dfa6979d7215ddcc208203a",
+        "base_blob": "c2d75f67ad916d393dfa6979d7215ddcc208203a",
+        "unchanged": true
+      },
+      {
+        "path": "ops/tests/test_learner_launch_failures.py",
+        "previous_blob": "083f7a85a02fc3790357fd145b5f403fdd5b9b2b",
+        "base_blob": "083f7a85a02fc3790357fd145b5f403fdd5b9b2b",
+        "unchanged": true
+      },
+      {
+        "path": "ops/tests/test_learner_registration_barrier.py",
+        "previous_blob": "98580e9ada6d6b32bc1f82b0f3e48455e9df94de",
+        "base_blob": "98580e9ada6d6b32bc1f82b0f3e48455e9df94de",
+        "unchanged": true
+      },
+      {
+        "path": "ops/tests/test_learner_retention.py",
+        "previous_blob": "492c34792cc1a844f32e55e8c64fd6385dc74797",
+        "base_blob": "492c34792cc1a844f32e55e8c64fd6385dc74797",
+        "unchanged": true
+      },
+      {
+        "path": "ops/tests/test_legacy_learner_retention.py",
+        "previous_blob": "de14048e9b1ccef8fd5046617f0387197e4ff378",
+        "base_blob": "de14048e9b1ccef8fd5046617f0387197e4ff378",
+        "unchanged": true
+      },
+      {
+        "path": "ops/tests/test_strategy_implementation.py",
+        "previous_blob": "ceb4adcd5910d8ae46bcabe56c9ce5ebb24efc7a",
+        "base_blob": "ceb4adcd5910d8ae46bcabe56c9ce5ebb24efc7a",
+        "unchanged": true
+      },
+      {
+        "path": "ops/tests/test_strategy_implementation_continuation.py",
+        "previous_blob": "e768c81d8fc49c5d6bf8a4385769870ebe5402e1",
+        "base_blob": "e768c81d8fc49c5d6bf8a4385769870ebe5402e1",
+        "unchanged": true
+      },
+      {
+        "path": "ops/tests/test_strategy_research_scheduling.py",
+        "previous_blob": "34b6cde378bcc44c53217ddb4a159754126b3f56",
+        "base_blob": "34b6cde378bcc44c53217ddb4a159754126b3f56",
+        "unchanged": true
+      },
+      {
+        "path": "ops/tests/test_unassigned_proposal_resolution.py",
+        "previous_blob": "91fbc6083eb55d60d6060994b57a6f60e649b4f7",
+        "base_blob": "91fbc6083eb55d60d6060994b57a6f60e649b4f7",
+        "unchanged": true
+      }
+    ],
+    "worktree_status": "",
+    "no_new_source_changes": true,
+    "previous_queue_sha256": "82833ce7c9b615aac6d8f4a960ffb9e52b8f88999abd139394fd2bc3facf59c5",
+    "current_queue_sha256": "82833ce7c9b615aac6d8f4a960ffb9e52b8f88999abd139394fd2bc3facf59c5",
+    "tests_run_in_this_batch": false,
+    "no_op_merge_skipped": true
+  },
+  "no_new_source_or_merge_blocker": true,
+  "no_current_batch_product_test": true,
+  "no_original_failure_rewrite": true
+}

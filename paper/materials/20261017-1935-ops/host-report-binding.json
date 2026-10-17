@@ -1,0 +1,110 @@
+{
+  "batch": "20261017-191302-strategy-proposal",
+  "source": "d959e176af7338ea2bca6f4ff9a39673b80e5fdf",
+  "parent": "f39a1b8e9678fddee682dcb83b4b1e8675df352e",
+  "actual_live": "31db98183b162f9e2213884f6b8ab518fe6ff89b",
+  "tree": "6f81a7e61707c0f2b91647ed7963f04014fc31b3",
+  "original_out_path": "ops/codex-ops/learner/20261017-191302-strategy-proposal.out",
+  "original_out_sha256": "25f39ae17bd32b3644a209134e29e9c577ce22e44afcb3abd206aa75f69c9266",
+  "original_report": {
+    "task": "strategy-proposal",
+    "character": "silent",
+    "batch": "20261017-191302-strategy-proposal",
+    "base": "f39a1b8e9678fddee682dcb83b4b1e8675df352e",
+    "runs": [
+      "2Q6ZYZ6JHM0M",
+      "DC32RW0A80V1",
+      "JKDUL0AL0TW6",
+      "5H83F3J0XSTE",
+      "25MFNPAE37R2",
+      "2PQK67ULZY90",
+      "J2VR2DFJG8K4",
+      "S5GZG328S1LN",
+      "4JS3T2UNKPVM",
+      "WQB3YYNTRB2L"
+    ],
+    "fixes": [
+      "d959e176af7338ea2bca6f4ff9a39673b80e5fdf"
+    ],
+    "skipped": [
+      "live合并锁阻塞，待原运维接续合入与合后检查"
+    ],
+    "merged": null,
+    "tests": {
+      "tsc": 0,
+      "vitest": 0,
+      "cases": 4410
+    },
+    "code_proposals": [
+      "silent-proposal-72e0c8b41d2f5ab8"
+    ],
+    "implementation_domains": [
+      "combat"
+    ],
+    "proposal_results": [
+      {
+        "id": "silent-proposal-72e0c8b41d2f5ab8",
+        "state": "waiting",
+        "reason": "源码已提交并通过验证；两次取得live锁失败，第二次等待45秒仍exit75。源码尚非live祖先，缺实际合入与合后检查，不登记implemented或shipped。"
+      }
+    ],
+    "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-191302/learner/runs/20261017-191308-797aa220-0a71-43bb-bc28-f06932310608-strategy-proposal/report.md"
+  },
+  "normalized_operand": {
+    "task": "strategy-proposal",
+    "character": "silent",
+    "batch": "20261017-191302-strategy-proposal",
+    "base": "f39a1b8e9678fddee682dcb83b4b1e8675df352e",
+    "runs": [
+      "2Q6ZYZ6JHM0M",
+      "DC32RW0A80V1",
+      "JKDUL0AL0TW6",
+      "5H83F3J0XSTE",
+      "25MFNPAE37R2",
+      "2PQK67ULZY90",
+      "J2VR2DFJG8K4",
+      "S5GZG328S1LN",
+      "4JS3T2UNKPVM",
+      "WQB3YYNTRB2L"
+    ],
+    "fixes": [
+      {
+        "id": "silent-proposal-72e0c8b41d2f5ab8",
+        "commit": "d959e176af7338ea2bca6f4ff9a39673b80e5fdf",
+        "source_parent": "f39a1b8e9678fddee682dcb83b4b1e8675df352e",
+        "scope": "Original evidence-bounded Akabeko Skewer repair; shape normalization by ops, not a new learner report"
+      }
+    ],
+    "skipped": [
+      "live合并锁阻塞，待原运维接续合入与合后检查"
+    ],
+    "merged": null,
+    "tests": {
+      "tsc": 0,
+      "vitest": 0,
+      "cases": 4410
+    },
+    "code_proposals": [
+      "silent-proposal-72e0c8b41d2f5ab8"
+    ],
+    "implementation_domains": [
+      "combat"
+    ],
+    "proposal_results": [
+      {
+        "id": "silent-proposal-72e0c8b41d2f5ab8",
+        "state": "waiting",
+        "reason": "源码已提交并通过验证；两次取得live锁失败，第二次等待45秒仍exit75。源码尚非live祖先，缺实际合入与合后检查，不登记implemented或shipped。"
+      }
+    ],
+    "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-191302/learner/runs/20261017-191308-797aa220-0a71-43bb-bc28-f06932310608-strategy-proposal/report.md"
+  },
+  "full_check_command": "export PATH=\"$HOME/.local/node/bin:$PATH\"; nice -n 19 npx tsc -p tsconfig.json --noEmit; a=$?; nice -n 19 npx vitest run --maxWorkers=2; b=$?; [ \"$a\" = 0 ] && [ \"$b\" = 0 ]",
+  "original_checks_module_sha256": "f3e20b5e1b1f2731c67b9380b588fc928494206452dc857d950a01e346d1934c",
+  "standard_broker_action_rc": 2,
+  "reason": "Original fixes is one verified commit string; original cmd_recheck expects fix objects",
+  "original_report_canonical_state_and_product_files_unchanged": true,
+  "normalization_only_in_this_private_process": true,
+  "identical_source_identity_all_ancestry_and_exact_tree_guards_retained": true,
+  "no_new_test_pipeline": true
+}

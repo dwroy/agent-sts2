@@ -1,0 +1,41 @@
+[
+  {
+    "claim": "数量增加即可使Boss模型可信",
+    "finding": "三幕三个Boss数量已达标但质量闸失败；复用原THE_INSATIABLE新增样本后撤可信的反证。",
+    "evidence": [
+      "R366校准表",
+      "VNSXWCWXR3VW F33 attempt1 T1–7"
+    ],
+    "recommendation": "保持四闸，数量缺口与质量缺口分列，不承诺固定新增场数。",
+    "existing_entry_ids": [
+      "silent-0484",
+      "silent-0491"
+    ]
+  },
+  {
+    "claim": "将R366固定校准表用于当前生产可信度",
+    "finding": "原生产70项、本轮冻结生产71项输入指纹不同；没有生产模型重新校准证据。",
+    "evidence": [
+      "production-boundary.json",
+      "原R366 live-model-changes.json"
+    ],
+    "recommendation": "限定固定对象；当前生产可信度保持unknown，后续先冻结新对象。",
+    "existing_entry_ids": [
+      "silent-0491"
+    ]
+  },
+  {
+    "claim": "用旧double-boss曲线或平均出口HP表示联合胜率",
+    "finding": "旧四局0胜、8192模拟不是独立实战校准；六局存在开场资源变化，7S8已有后场SL胜。",
+    "evidence": [
+      "continuous-resource-contract.json",
+      "7S8HCC0M6G9W F48→49",
+      "64VJC5XT2AT2 F48→49"
+    ],
+    "recommendation": "使用实际端点和条件；联合率缺证保留unknown，通用接口交原watcher。",
+    "existing_entry_ids": [
+      "silent-double-boss-resource-handoff",
+      "silent-0228"
+    ]
+  }
+]

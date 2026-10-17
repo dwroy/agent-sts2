@@ -1,0 +1,51 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/codex-f48-joint-shadow-20261016/agent
+
+ ❯ tests/f48-joint-integration.test.ts (11 tests | 5 failed) 1259ms
+   × keeps the actual SILENT F48 B3 question and runner requests equivalent 613ms
+   × keeps the actual IRONCLAD F48 B3 question and runner requests equivalent 153ms
+   × keeps the actual REGENT F48 B3 question and runner requests equivalent 122ms
+   × keeps the actual DEFECT F48 B3 question and runner requests equivalent 114ms
+   × keeps the actual NECROBINDER F48 B3 question and runner requests equivalent 115ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/f48-joint-integration.test.ts > keeps the actual SILENT F48 B3 question and runner requests equivalent
+AssertionError: expected [ [ { …(9) } ] ] to deeply equal [ [ { …(9) } ] ]
+
+Compared values have no visual difference.
+
+ ❯ tests/f48-joint-integration.test.ts:75:105
+     73|   const actual = await question();
+     74|   expect(actual.record).not.toHaveProperty("error");
+     75|   expect(JSON.stringify(actual.decision)).toBe(JSON.stringify(baseline…
+       |                                                                                                         ^
+     76|   const { f48_joint_shadow: joint, ...record } = actual.record!;
+     77|   expect(record).toEqual(baseline.record);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  tests/f48-joint-integration.test.ts > keeps the actual IRONCLAD F48 B3 question and runner requests equivalent
+ FAIL  tests/f48-joint-integration.test.ts > keeps the actual REGENT F48 B3 question and runner requests equivalent
+ FAIL  tests/f48-joint-integration.test.ts > keeps the actual DEFECT F48 B3 question and runner requests equivalent
+ FAIL  tests/f48-joint-integration.test.ts > keeps the actual NECROBINDER F48 B3 question and runner requests equivalent
+AssertionError: expected [ [ { …(8) } ] ] to deeply equal [ [ { …(8) } ] ]
+
+Compared values have no visual difference.
+
+ ❯ tests/f48-joint-integration.test.ts:75:105
+     73|   const actual = await question();
+     74|   expect(actual.record).not.toHaveProperty("error");
+     75|   expect(JSON.stringify(actual.decision)).toBe(JSON.stringify(baseline…
+       |                                                                                                         ^
+     76|   const { f48_joint_shadow: joint, ...record } = actual.record!;
+     77|   expect(record).toEqual(baseline.record);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+
+ Test Files  1 failed | 1 passed (2)
+      Tests  5 failed | 22 passed (27)
+   Start at  22:29:00
+   Duration  18.28s (transform 18.65s, setup 5.22s, import 15.82s, tests 1.47s, environment 0ms)
+

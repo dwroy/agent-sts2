@@ -1,0 +1,83 @@
+{
+  "at": "2026-10-17 07:46:28 CST",
+  "batch": "20261017-051302-strategy-proposal",
+  "original_full_rc": 1,
+  "original_full_summary": {
+    "files_passed": 508,
+    "files_failed": 3,
+    "tests_passed": 5079,
+    "tests_failed": 3,
+    "tests_skipped": 2,
+    "duration_s": 1668.22
+  },
+  "original_full_log_sha256": "19182c210743b7a7c5212e14bf705ace3c4954e6a12ee47f9b62f355994d7f0c",
+  "supplement_manifest": "49830cc2c9bd5932c75c15c243b945f865485b5a364c9c99cf83d38fd863dc56",
+  "actual_selected_rc": 0,
+  "selected": [
+    {
+      "file": "tests/continuation-failure-b2-planner.test.ts",
+      "counts": {
+        "numTotalTests": 1,
+        "numPassedTests": 1,
+        "numFailedTests": 0,
+        "numPendingTests": 0
+      },
+      "elapsed_ms": null,
+      "assertions": [
+        {
+          "fullName": "actual B2 combat planner logs the separate reference but sends neither payload nor whole-fight numbers after zero-sample degradation",
+          "status": "passed",
+          "duration": 3389.361085
+        }
+      ],
+      "sha256": "723dca138c6db7d415dc51e5124437e50e44eca6eab465fb6a71e36b25632cbb"
+    },
+    {
+      "file": "tests/fix-queue-v4-shrink.test.ts",
+      "counts": {
+        "numTotalTests": 14,
+        "numPassedTests": 1,
+        "numFailedTests": 0,
+        "numPendingTests": 13
+      },
+      "elapsed_ms": null,
+      "assertions": [
+        {
+          "fullName": "6. the rollout's later turns: shrunk once while the beetle lives, not at all after it dies XC4T F9 T3: a later turn with the beetle alive is shrunk, its hand from the pile at base (unmarked): a Strike hits it for 4, not 2",
+          "status": "passed",
+          "duration": 2907.6664039999996
+        }
+      ],
+      "sha256": "9e7a2df3643379bbd562591358285e58e1ecce7113303d6051a122cc65f45639"
+    },
+    {
+      "file": "tests/oneshot-rest-event.test.ts",
+      "counts": {
+        "numTotalTests": 16,
+        "numPassedTests": 1,
+        "numFailedTests": 0,
+        "numPendingTests": 15
+      },
+      "elapsed_ms": null,
+      "assertions": [
+        {
+          "fullName": "rest and event plans in the loop rest: one DeepSeek call; the smith and the named card are two rows, the second a reused plan step",
+          "status": "passed",
+          "duration": 886.7425119999998
+        }
+      ],
+      "sha256": "fcbdedc3623f93c089cef8b4c180d6d2070b45f7dab04db1832cd7d6e99b6d5b"
+    }
+  ],
+  "tsc": 0,
+  "tree": "401ad6f9da9bfacbc7dc7b391e870a022d14ff74",
+  "live_commit": "c7eadf02a06985d9120b1a1c9a60847cccc1adaa",
+  "releases": [
+    "V5-R377",
+    "V5-R378"
+  ],
+  "disposition": "Accept unchanged exact tree with original full1 plus three original-case selected0; retain releases. No assertion regression established; timeout root cause remains unknown. No rollback, new source, altered fixture/deadline, repeat full suite or parent closure.",
+  "full_suite_passed": false,
+  "no_other_role_ACK": true,
+  "source_workspace_retirement_not_authorized_by_selected_tests": true
+}

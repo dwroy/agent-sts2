@@ -1,0 +1,130 @@
+from pathlib import Path
+import fcntl, hashlib, json, os, re, subprocess
+r = Path.cwd()
+exec((r / 'ops/codex-ops/record-staging/20261016-2003/publish.py').read_text().split('phase=r/')[0])
+p = r / 'ops/codex-ops/record-staging/20261017-1935'
+pub = r / 'paper/materials/20261017-1935-ops'
+load = lambda f: json.loads(f.read_bytes())
+def write(f, v): f.write_text(json.dumps(v, ensure_ascii=False, indent=2) + '\n')
+info = load(pub / 'source-commit.json')
+source, base = info['source'], info['base']
+paths = list(info['files'])
+assert len(paths) == 4 and load(pub / 'ops-source-disposition.json')['accepted']
+assert git('merge-base', '--is-ancestor', base, source) == b''
+assert git('rev-parse', source + '^{tree}').decode().strip() == info['tree']
+assert set(git('diff', '--name-only', base, source).decode().splitlines()) == set(paths)
+assert not (pub / 'publication.json').exists()
+def builder_active():
+    return subprocess.run(['pgrep', '-f', 'knowledge/builders/buil[d]-'], capture_output=True).returncode != 1
+with (r / 'ops/live-merge.lock').open('a') as lock:
+    try: fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+    except BlockingIOError:
+        write(pub / 'publication-lock-blocked.json', dict(source=source, source_received=True, publication_started=False, reason='original live lock busy; no polling'))
+        raise SystemExit(75)
+    at = subprocess.check_output(['date', '+%Y-%m-%d %H:%M:%S %Z'], text=True).strip()
+    assert not builder_active()
+    mh, lh = git('rev-parse', 'HEAD').decode().strip(), git('rev-parse', 'HEAD', cwd=live).decode().strip()
+    assert lh == '0b6f94e3a21537bec1d00829d7834c7134d2b064'
+    snapshots, indexes, datasets = {}, {}, {}
+    for cwd in [r, live]:
+        assert not git('ls-files', '-u', cwd=cwd).strip()
+        snapshots[str(cwd)] = git('ls-files', '--stage', '-z', cwd=cwd)
+        index = Path(git('rev-parse', '--git-path', 'index', cwd=cwd).decode().strip())
+        indexes[str(cwd)] = (index if index.is_absolute() else cwd / index).read_bytes()
+        for path in paths + ['eval/versions.json']:
+            assert blob('', path, cwd) == blob('HEAD', path, cwd)
+        raw = blob('HEAD', 'eval/versions.json', cwd)
+        assert (cwd / 'eval/versions.json').read_bytes() == raw
+        datasets[str(cwd)] = json.loads(raw)
+    releases = datasets[str(r)]['release_numbering']['releases']
+    assert releases == datasets[str(live)]['release_numbering']['releases']
+    nums = [int(re.fullmatch(r'V\d+-R(\d+)', x['release_id'])[1]) for x in releases]
+    assert nums == list(range(max(nums) + 1)) and max(nums) == 386
+    values, leaves = {}, []
+    for lane, cwd, head in [('main', r, mh), ('live', live, lh)]:
+        values[lane] = {}
+        for path in paths:
+            before, old, desired = blob(base, path), blob(head, path, cwd), blob(source, path)
+            assert sha(desired) == info['files'][path]
+            f = cwd / path
+            assert (f.read_bytes() if f.exists() else None) == old
+            if old == before:
+                merged = desired
+            else:
+                assert lane == 'live' and old.replace(b'Dai', b'Roy') == before.replace(b'Dai', b'Roy')
+                folder = p / 'merge-inputs' / path.replace('/', '__')
+                folder.mkdir(parents=True, exist_ok=True)
+                for key, raw in [('live', old), ('base', before), ('source', desired)]: (folder / key).write_bytes(raw)
+                check = subprocess.run(['git', 'merge-file', '--stdout', str(folder/'live'), str(folder/'base'), str(folder/'source')], capture_output=True)
+                assert check.returncode == 0
+                merged = check.stdout
+                assert merged.replace(b'Dai', b'Roy') == desired.replace(b'Dai', b'Roy')
+            values[lane][path] = merged
+            leaves.append(dict(lane=lane, path=path, sha256=sha(merged), source_sha256=sha(desired), historical_attribution_only=merged != desired))
+    refresh = {path: (live / path).read_bytes() for path in git('diff', '--name-only', 'HEAD', '--', 'knowledge', cwd=live).decode().splitlines()}
+    for lane, data in {**values, 'preserved-live-refresh': refresh}.items():
+        for path, raw in data.items():
+            f = p / 'composition-scan' / lane / path
+            f.parent.mkdir(parents=True, exist_ok=True)
+            f.write_bytes(raw)
+    with (pub / 'composition-gitleaks.log').open('wb') as out:
+        scan = subprocess.run(['nice', '-n', '19', 'gitleaks', 'dir', str(p / 'composition-scan'), '--redact', '--no-banner', '--report-format', 'json', '--report-path', str(p / 'composition-gitleaks.json')], stdout=out, stderr=subprocess.STDOUT, env={**os.environ, 'GOMAXPROCS': '1'})
+    assert scan.returncode == 0 and load(p / 'composition-gitleaks.json') == []
+    le = {**os.environ, 'GIT_INDEX_FILE': str(p / 'live.index')}
+    git('read-tree', lh, env=le, cwd=live)
+    for path, raw in refresh.items(): stage(path, raw, le, live)
+    rt = git('write-tree', env=le, cwd=live).decode().strip()
+    fresh = commit(rt, [lh], 'Preserve refreshed live knowledge before observed Akabeko Skewer publication', live) if refresh else lh
+    for path, raw in values['live'].items(): stage(path, raw, le, live)
+    bt = git('write-tree', env=le, cwd=live).decode().strip()
+    assert set(git('diff', '--name-only', rt, bt, cwd=live).decode().splitlines()) == set(paths)
+    behavior = commit(bt, [fresh, source], 'Publish observed Silent A10 observed Akabeko Skewer deadline facts', live)
+    rid, name = f'V5-R{max(nums)+1:03d}', 'S1.silent-akabeko-skewer1'
+    note = at + '; ' + 'Original191302 source d959e176af7338ea2bca6f4ff9a39673b80e5fdf, original silent-proposal-72e0c8b41d2f5ab8, ledger0504/0505; J2VR2DFJG8K4 Silent A10 F22 attempts2/3 T1, decisions422361/422362 and422375/422376, states436637-639 and436651-653. Old observed unmodified Akabeko/Vigor8/upgraded Skewer paid2 base11 shown19 predicted19+11=30; new only this matching Silent A10 not-molten relic, single-target manual two-hit/no-modifier signature uses19x2=38 and spends Vigor once. Silk43to5 and Rock48to10 are one independent run with two related SL attempts; all attempts lost. Other roles, ascensions, cards, X values, modifiers, prior/post attacks and whole-fight fields remain prior paths; no SL/potion/terminal policy change or full Boss calibration/natural win benefit. Source tsc0/sandbox481files4410passed0, fixed12pass, withdrawal5fail7pass/restored12pass, exact four SHAs restored and gitleaks0. Original lock75 attempts and malformed string-fixes report failed/rc0/mergednull retained. Four-leaf narrow main/live integration preserves concurrent source, knowledge, index, records and R384-R386. Actual final-tree host uses original191302 cmd_recheck and full command once, with receipt-bound string-commit shape normalization only; no product file or original report rewrite, no borrowed old green or repeated source full. Expected correct observed eight-damage undercount and remaining HP, potentially affect reference rank/guards/choices, no promised win improvement. Rollback inverse only four source/test leaves in current context preserving knowledge, logs and all other releases; an actual behavior reversal requires its own release. H0 six targets low trust,0332/wide resource goals remain open, no game restart/model/home/prompt changes. Evidence paper/materials/20261017-1935-ops/ and original source scratch.'
+    entry = dict(name=name, family='V5', character='SILENT', commit=behavior, release_id=rid, release_status='registered-primary-ops', source=note)
+    versions = {}
+    for key, data in datasets.items():
+        old = json.loads(json.dumps(data))
+        data['versions'].append(entry)
+        data['release_numbering']['releases'].append(dict(release_id=rid, commit=behavior, aliases=[name]))
+        assert data['versions'][:-1] == old['versions'] and data['release_numbering']['releases'][:-1] == old['release_numbering']['releases']
+        versions[key] = (json.dumps(data, ensure_ascii=False, indent=2) + '\n').encode()
+    stage('eval/versions.json', versions[str(live)], le, live)
+    ft = git('write-tree', env=le, cwd=live).decode().strip()
+    final = commit(ft, [behavior], f'Register observed Akabeko Skewer deadline as {rid}', live)
+    me = {**os.environ, 'GIT_INDEX_FILE': str(p / 'main.index')}
+    git('read-tree', mh, env=me)
+    for path, raw in values['main'].items(): stage(path, raw, me, r)
+    stage('eval/versions.json', versions[str(r)], me, r)
+    mt = git('write-tree', env=me).decode().strip()
+    main = commit(mt, [mh, source], f'Integrate original four-leaf Silent source and register {rid}', r)
+    rec = dict(at=at, batch='20261017-191302-strategy-proposal', source=source, source_parent=base, source_tree=info['tree'], old_main=mh, main=main, old_live=lh, knowledge_refresh_commit=fresh, knowledge_refresh=[dict(path=k, sha256=sha(v)) for k,v in refresh.items()], behavior_commit=behavior, actual_live=final, tree=ft, release_id=rid, name=name, leaves=leaves, source_full_rc=0, source_host_supplement_rc=None, host='pending original batch exact final-tree full', original_report_failed_rc0_retained=True, no_other_role_ACK=True, no_current_game_home_model_prompt_change=True)
+    write(p / 'intended-publication.json', rec)
+    preserved = []
+    for cwd, lane in [(r, 'main'), (live, 'live')]:
+        f = p / (lane + '-preserved.index')
+        f.write_bytes(indexes[str(cwd)])
+        env = {**os.environ, 'GIT_INDEX_FILE': str(f)}
+        for path, raw in {**values[lane], **(refresh if lane == 'live' else {})}.items(): stage(path, raw, env, cwd)
+        stage('eval/versions.json', versions[str(cwd)], env, cwd)
+        preserved.append((cwd, env))
+    locks = locks_for(preserved)
+    try:
+        assert git('rev-parse','HEAD').decode().strip()==mh and git('rev-parse','HEAD',cwd=live).decode().strip()==lh and not builder_active()
+        for cwd in [r, live]: assert git('ls-files','--stage','-z',cwd=cwd)==snapshots[str(cwd)]
+        for path, raw in refresh.items(): assert (live/path).read_bytes()==raw
+        git('update-ref','-m','ops: publish original observed Akabeko Skewer publication','HEAD',final,lh,cwd=live)
+        for path, raw in values['live'].items(): install(live,path,raw)
+        install(live,'eval/versions.json',versions[str(live)])
+        git('update-ref','-m','ops: narrow integrate observed Akabeko Skewer source','HEAD',main,mh)
+        for path, raw in values['main'].items(): install(r,path,raw)
+        install(r,'eval/versions.json',versions[str(r)])
+        for idx, lp in locks: os.replace(lp,idx)
+    finally:
+        for _, lp in locks:
+            if lp.exists(): lp.unlink()
+    for cwd in [r, live]: git('merge-base','--is-ancestor',source,'HEAD',cwd=cwd)
+    assert set(git('diff','--name-only',fresh,final,cwd=live).decode().splitlines())==set(paths)|{'eval/versions.json'}
+    write(pub/'publication.json',rec)
+    write(r/'ops/codex-ops/pending-integrations/20261017-191302-strategy-proposal.json',dict(**rec,status='source published; exact final host and ledger shipped closure pending',host_requested=False,ledger=['silent-0504','silent-0505'],root_0332_fixed=False))
+    print(json.dumps(dict(release=rid,main=main,live=final,tree=ft,knowledge_refresh=len(refresh))),flush=True)

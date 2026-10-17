@@ -19,6 +19,8 @@ import { resolveDamage } from "./damage.js";
 import { crabPoisonFacts } from "./silent-crab-potion.js";
 import { silentGiantPotionFacts } from "./silent-giant-potion.js";
 import { startTurnHpLossOf } from "./start-loss.js";
+import { revivesOf } from "./combat-plan.js";
+import { judgeCurrentEndTurn } from "../sl/judge.js";
 import type { Decision, DecisionEnv, ResolvedAction } from "../memory/types.js";
 import { asArray, asRecord, bool, num, numOrNull, str, type JsonValue } from "../core/util/json.js";
 
@@ -98,6 +100,21 @@ export function planCombat(env: DecisionEnv): Decision | null {
   const startTurnHpLoss = startTurnHpLossOf(state, inferno, mantle);
   const incoming = incomingOutcome.hpLoss + Math.max(0, heldDamage - incomingOutcome.blockAfter) + heldHpLoss + startTurnHpLoss;
   const endTurnWouldKill = bool(combat["end_turn_will_kill_player"]) || (playerHp !== null && incoming >= playerHp);
+  // 0YQJ9D1MC4NK A10 F33 T7, silent-0308: 40 HP after counted damage was still a Sandpit death.
+  // Project the existing conservative end-now judgment; do not change option scores or SL eligibility.
+  const sandpitDeadline = str(asRecord(state.run?.raw)["character_id"]).toUpperCase() === "SILENT"
+    && state.run?.ascension === 10
+    && asArray(combat["enemies"]).map(asRecord).some((enemy) => enemy["is_alive"] !== false
+      && enemy["enemy_id"] === "THE_INSATIABLE"
+      && asArray(enemy["powers"]).map(asRecord).some((power) => power["power_id"] === "SANDPIT_POWER" && power["amount"] === 1));
+  const endNow = sandpitDeadline ? judgeCurrentEndTurn(state, {
+    label: "combat/end_turn", knowledge,
+    revives: revivesOf(state, env.screenMemory, playerMaxHp ?? 0).map((revive) => revive.source),
+  }) : null;
+  const deadlineLethal = endNow?.certain === true;
+  const deadlineNote = endNow === null ? null : deadlineLethal
+    ? "静默A10已见沙坑1在敌方回合归零致死；可见伤害后剩血不代表能存活。此结论仅针对现在结束回合，其他出牌和药水仍可选择，不表示所有选择必死。"
+    : "沙坑1存在独立截止风险；当前保护或敌人提前死亡等条件未能排除，完整结束结局未知。可见伤害后剩血不代表能存活，其他出牌和药水仍可选择。";
   const hand = handViews({ raw: combat }, knowledge);
   // Foul Potion hurts us too: never offered here either (WY41 F48: drunk at 7 HP; 39J9 before that).
   // Foul Potion included (Roy 2026-09-28: Jev decides); these per-card options simulate no potion.
@@ -250,14 +267,18 @@ export function planCombat(env: DecisionEnv): Decision | null {
     summary: {
       action: "End the turn",
       incoming_damage: incoming,
-      hp_after_enemy_turn: playerHp === null ? null : playerHp - incoming,
+      hp_after_enemy_turn: endNow === null ? (playerHp === null ? null : playerHp - incoming) : deadlineLethal ? 0 : null,
+      ...(endNow === null ? {} : {
+        hp_after_counted_damage: playerHp === null ? null : playerHp - incoming,
+        sandpit_deadline: { count_now: 1, scope: "current_end_turn_only", certain: deadlineLethal, reason: endNow.reason },
+      }),
       block: playerBlock,
-      lethal: endTurnWouldKill,
-      note: endTurnWouldKill
+      lethal: deadlineLethal || endTurnWouldKill ? true : endNow === null ? false : null,
+      note: deadlineNote ?? (endTurnWouldKill
         ? "the mod reports that ending the turn now would kill the player"
         : incoming === 0
           ? "no incoming damage is visible"
-          : "the enemy turn will resolve",
+          : "the enemy turn will resolve"),
     },
     score: endTurnScore,
     isEndTurn: true,
@@ -293,8 +314,8 @@ export function planCombat(env: DecisionEnv): Decision | null {
       stars,
       enemies_alive: living.length,
       incoming_damage_if_turn_ends: incoming,
-      ending_turn_would_kill_me: endTurnWouldKill,
-      warning: endTurnWouldKill ? "the mod reports that ending the turn now would kill the player" : null,
+      ending_turn_would_kill_me: deadlineLethal || endTurnWouldKill ? true : endNow === null ? false : null,
+      warning: deadlineNote ?? (endTurnWouldKill ? "the mod reports that ending the turn now would kill the player" : null),
       cards_played_this_turn: num(player["cards_played_this_turn"]),
     },
     player: playerJson(player, knowledge),

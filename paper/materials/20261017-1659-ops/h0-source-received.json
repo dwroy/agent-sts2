@@ -1,0 +1,2803 @@
+{
+  "at": "2026-10-17 17:04:42 CST",
+  "request": "roy-20261017-human-pace-h0",
+  "revision": 1,
+  "batch": "20261017-130158-strategy-proposal",
+  "source": "e8e028720c150f8456789546e1a9f5da89e33686",
+  "source_commit": "e8e028720c150f8456789546e1a9f5da89e33686",
+  "source_parent": "8544db04cfd497fecfa9427c7c1c0c7362077cc3",
+  "source_tree": "7ee4afd06aaad6270abe3925fd9186038e722692",
+  "actual_behavior_commit": "29f146292892704f618cda8f4db733f21f9cdb1f",
+  "original_publication": "4e6afa0ff6d5177becd2ae2e191ed2f395b91ac8",
+  "fixed_release_tree": "ddbb47965df35cfc01392269fffe8829404909b1",
+  "current_live_at_readback": "3910f41b9c3784a70362f63aad5f0994794c68b7",
+  "code_paths": [
+    "agent/src/reflex/rollout.ts",
+    "agent/src/reflex/rollout-live.ts",
+    "agent/tests/silent-test-subject-phase.test.ts"
+  ],
+  "original_publication_record": {
+    "request_id": "roy-20261017-human-pace-h0",
+    "revision": 1,
+    "source": "e8e028720c150f8456789546e1a9f5da89e33686",
+    "attempt": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261017-human-pace-h0-r1/test-subject-phase-repair/live-publish-20261017-163827",
+    "merged": "29f146292892704f618cda8f4db733f21f9cdb1f",
+    "publication": "4e6afa0ff6d5177becd2ae2e191ed2f395b91ac8",
+    "release_id": null,
+    "scope": "H0 observed Test Subject phase-state repair and completed original fixed-split delta calibration; current H1/full production equivalence, joint/natural effects remain separate.",
+    "source_qualification": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261017-human-pace-h0-r1/test-subject-phase-repair/source-qualification.json",
+      "sha256": "4264af1f6af2440b4dc15874f3077f0bdb0810269f77cc42301336d1cf8a156d"
+    },
+    "model_sha256": "89717d20b44780c4bb3d2d4bd43acf9d83c4ff3081270113e805e45579a16e0b",
+    "owned_paths": [
+      "agent/src/reflex/rollout-live.ts",
+      "agent/src/reflex/rollout.ts",
+      "agent/tests/silent-test-subject-phase.test.ts",
+      "experiments/boss-sim/silent/dd647d2a907e448b08fd1c1b2c048742d19ee3fa47c7d3562370cc44fe272bc1/before-after.json",
+      "experiments/boss-sim/silent/dd647d2a907e448b08fd1c1b2c048742d19ee3fa47c7d3562370cc44fe272bc1/boss-trust-candidate.json",
+      "experiments/boss-sim/silent/dd647d2a907e448b08fd1c1b2c048742d19ee3fa47c7d3562370cc44fe272bc1/completed.json",
+      "experiments/boss-sim/silent/dd647d2a907e448b08fd1c1b2c048742d19ee3fa47c7d3562370cc44fe272bc1/execution.json",
+      "experiments/boss-sim/silent/dd647d2a907e448b08fd1c1b2c048742d19ee3fa47c7d3562370cc44fe272bc1/identity.json",
+      "experiments/boss-sim/silent/dd647d2a907e448b08fd1c1b2c048742d19ee3fa47c7d3562370cc44fe272bc1/model-provenance.json",
+      "experiments/boss-sim/silent/dd647d2a907e448b08fd1c1b2c048742d19ee3fa47c7d3562370cc44fe272bc1/repair-reuse-certificate.json",
+      "experiments/boss-sim/silent/dd647d2a907e448b08fd1c1b2c048742d19ee3fa47c7d3562370cc44fe272bc1/results.jsonl",
+      "experiments/boss-sim/silent/dd647d2a907e448b08fd1c1b2c048742d19ee3fa47c7d3562370cc44fe272bc1/split.json",
+      "experiments/boss-sim/silent/dd647d2a907e448b08fd1c1b2c048742d19ee3fa47c7d3562370cc44fe272bc1/tuning-fit.json",
+      "experiments/boss-sim/silent/dd647d2a907e448b08fd1c1b2c048742d19ee3fa47c7d3562370cc44fe272bc1/tuning-results.jsonl",
+      "experiments/boss-sim/silent/dd647d2a907e448b08fd1c1b2c048742d19ee3fa47c7d3562370cc44fe272bc1/turns-original.jsonl",
+      "experiments/boss-sim/silent/e1a81ed842710877cc41bc5dd5af3de05eba3b08e2fdcde47e7dd2656214289a/adapter-probe-output.json",
+      "experiments/boss-sim/silent/e1a81ed842710877cc41bc5dd5af3de05eba3b08e2fdcde47e7dd2656214289a/before-after.json",
+      "experiments/boss-sim/silent/e1a81ed842710877cc41bc5dd5af3de05eba3b08e2fdcde47e7dd2656214289a/boss-trust-candidate.json",
+      "experiments/boss-sim/silent/e1a81ed842710877cc41bc5dd5af3de05eba3b08e2fdcde47e7dd2656214289a/calibration-import-support.json",
+      "experiments/boss-sim/silent/e1a81ed842710877cc41bc5dd5af3de05eba3b08e2fdcde47e7dd2656214289a/calibration-import-support/characters.py",
+      "experiments/boss-sim/silent/e1a81ed842710877cc41bc5dd5af3de05eba3b08e2fdcde47e7dd2656214289a/compiled-manifest.json",
+      "experiments/boss-sim/silent/e1a81ed842710877cc41bc5dd5af3de05eba3b08e2fdcde47e7dd2656214289a/completed.json",
+      "experiments/boss-sim/silent/e1a81ed842710877cc41bc5dd5af3de05eba3b08e2fdcde47e7dd2656214289a/evidence.json",
+      "experiments/boss-sim/silent/e1a81ed842710877cc41bc5dd5af3de05eba3b08e2fdcde47e7dd2656214289a/f49-phase-evidence.json",
+      "experiments/boss-sim/silent/e1a81ed842710877cc41bc5dd5af3de05eba3b08e2fdcde47e7dd2656214289a/fit-freeze.json",
+      "experiments/boss-sim/silent/e1a81ed842710877cc41bc5dd5af3de05eba3b08e2fdcde47e7dd2656214289a/identity.json",
+      "experiments/boss-sim/silent/e1a81ed842710877cc41bc5dd5af3de05eba3b08e2fdcde47e7dd2656214289a/model-plan.json",
+      "experiments/boss-sim/silent/e1a81ed842710877cc41bc5dd5af3de05eba3b08e2fdcde47e7dd2656214289a/model-provenance.json",
+      "experiments/boss-sim/silent/e1a81ed842710877cc41bc5dd5af3de05eba3b08e2fdcde47e7dd2656214289a/observed-transition-probe-output.json",
+      "experiments/boss-sim/silent/e1a81ed842710877cc41bc5dd5af3de05eba3b08e2fdcde47e7dd2656214289a/phase-probe-output.json",
+      "experiments/boss-sim/silent/e1a81ed842710877cc41bc5dd5af3de05eba3b08e2fdcde47e7dd2656214289a/results.jsonl",
+      "experiments/boss-sim/silent/e1a81ed842710877cc41bc5dd5af3de05eba3b08e2fdcde47e7dd2656214289a/source-repair/rollout-live.ts",
+      "experiments/boss-sim/silent/e1a81ed842710877cc41bc5dd5af3de05eba3b08e2fdcde47e7dd2656214289a/source-repair/rollout.ts",
+      "experiments/boss-sim/silent/e1a81ed842710877cc41bc5dd5af3de05eba3b08e2fdcde47e7dd2656214289a/split.json",
+      "experiments/boss-sim/silent/e1a81ed842710877cc41bc5dd5af3de05eba3b08e2fdcde47e7dd2656214289a/tuning-fit.json",
+      "experiments/boss-sim/silent/e1a81ed842710877cc41bc5dd5af3de05eba3b08e2fdcde47e7dd2656214289a/tuning-results.jsonl",
+      "experiments/boss-sim/silent/e1a81ed842710877cc41bc5dd5af3de05eba3b08e2fdcde47e7dd2656214289a/turns-original.jsonl",
+      "knowledge/characters/silent/experience.json",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/baseline-validation/actual-runtime-readback.json",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/baseline-validation/command-0.json",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/baseline-validation/command-1.json",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/baseline-validation/command-2.json",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/baseline-validation/command-3.json",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/baseline-validation/current-production-observation-start.json",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/baseline-validation/exit-0.json",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/baseline-validation/exit-1.json",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/baseline-validation/exit-2.json",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/baseline-validation/exit-3.json",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/baseline-validation/finish-validation.py",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/baseline-validation/mechanism-boundaries.json",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/baseline-validation/native-turn-context.jsonl",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/baseline-validation/observed-sequence-summary.json",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/baseline-validation/observed-sequences.json",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/baseline-validation/original-handoff-integrity.json",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/baseline-validation/preflight.json",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/baseline-validation/progress.jsonl",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/baseline-validation/start-0.json",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/baseline-validation/start-1.json",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/baseline-validation/start-2.json",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/baseline-validation/start-3.json",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/baseline-validation/start-receipt.json",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/baseline-validation/test-subject-phase-power-plan.json",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/baseline-validation/validation-completed.json",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/baseline-validation/validation-read-guard-0.json",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/baseline-validation/validation-read-guard-1.json",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/baseline-validation/validation-read-guard-2.json",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/baseline-validation/validation-read-guard-3.json",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/baseline-validation/worker-0.log",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/baseline-validation/worker-1.log",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/baseline-validation/worker-2.log",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/baseline-validation/worker-3.log",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/adapter-command.json",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/adapter-exit.json",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/adapter-probe-output.json",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/adapter-probe.log",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/adapter-read-guard.json",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/calibration-completed.json",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/calibration-final-command.json",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/calibration-final-exit.json",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/calibration-final.log",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/calibration-import-support.json",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/calibration-source-equivalence.json",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/calibration.py.before-overlap.txt",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/candidate-experience-objects.json",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/check-experience-command.json",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/check-experience-stderr.log",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/check-experience.json",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/compile-command.json",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/compile-exit.json",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/compile-model.log",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/compiled-manifest.json",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/delivery-ledger.json",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/evidence.json",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/execution-checkpoint.json",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/experience-changes.json",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/experience.before.json",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/f49-addendum.md",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/f49-phase-evidence.json",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/f49-phase-frames.jsonl",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/fight-ledger-input.json",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/fight-ledger-receipt.json",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/fit-command.json",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/fit-first-exit.json",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/fit-freeze.json",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/fit-v2-command.json",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/fit-v2-exit.json",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/fit-v2.log",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/fit.log",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/isolated2-history-preserve.log",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/isolated2-history-restore.log",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/jev-sts2-settle-1792224581661-9e31c49d8d9ae.jev-prompts.jsonl",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/jev-sts2-settle-1792224581661-9e31c49d8d9ae.run-config.jsonl",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/jev-sts2-settle-1792224581661-9e31c49d8d9ae.states.jsonl",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/jev-sts2-settle-1792224581768-75c43d41c5717.jev-prompts.jsonl",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/jev-sts2-settle-1792224581768-75c43d41c5717.run-config.jsonl",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/jev-sts2-settle-1792224581768-75c43d41c5717.states.jsonl",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/jev-sts2-settle-1792225688257-20ede591e57d3.jev-prompts.jsonl",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/jev-sts2-settle-1792225688257-20ede591e57d3.run-config.jsonl",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/jev-sts2-settle-1792225688257-20ede591e57d3.states.jsonl",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/jev-sts2-settle-1792225688374-36a5c3930c806.jev-prompts.jsonl",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/jev-sts2-settle-1792225688374-36a5c3930c806.run-config.jsonl",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/jev-sts2-settle-1792225688374-36a5c3930c806.states.jsonl",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/ledger-f49-update.json",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/ledger-input.json",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/ledger-receipt.json",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/model-plan.json",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/negative-command.json",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/negative-exit.json",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/negative-read-guard.json",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/negative.log",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/observed-transition-command.json",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/observed-transition-exit.json",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/observed-transition-probe-output.json",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/observed-transition-probe.log",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/observed-transition-read-guard.json",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/overlap-scheduling-originals.json",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/package-report.log",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/phase-command.json",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/phase-exit.json",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/phase-experience-role-check.json",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/phase-probe-output.json",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/phase-probe.log",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/phase-read-guard.json",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/precompile-command.json",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/precompile-exit.json",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/precompile-receipt.json",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/preflight-current.json",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/prepare-delivery-command.json",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/prepare-delivery-exit.json",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/prepare-delivery.log",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/prepare-model-command.json",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/prepare-model-exit.json",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/prepare-model.log",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/prepare-model.py.before-overlap.txt",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/progress.jsonl",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/proposal-input.json",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/proposal-receipt.json",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/proposal.md",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/publish-model.json",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/publish.py.before-resource-isolation.txt",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/questions.json",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/raw-f49/64VJC5XT2AT2-F49-a6-T1-start-111.json",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/raw-f49/64VJC5XT2AT2-F49-a6-T5-start-212.json",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/raw-f49/833ZM0MJGWHC-F49-a6-T1-start-111.json",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/raw-f49/833ZM0MJGWHC-F49-a6-T5-start-212.json",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/raw-f49/LKC9YXKZWTKR-F49-a1-T1-start-111.json",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/raw-f49/LKC9YXKZWTKR-F49-a1-T6-start-212.json",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/raw-f49/LKC9YXKZWTKR-F49-a1-T9-start-313.json",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/raw-f49/Q10YYQ5DUPJA-F49-a6-T1-start-111.json",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/raw-f49/Q10YYQ5DUPJA-F49-a6-T2-start-212.json",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/raw-f49/ZVYUL2YP3518-F49-a6-T1-start-111.json",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/raw-f49/ZVYUL2YP3518-F49-a6-T6-start-212.json",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/silent-test-subject-phase.test.ts.txt",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/source-qualification-command.json",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/source-qualification-wrapper.log",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/source-qualification.json",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/source-sandbox-command.json",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/source-sandbox-isolated2.exit",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/source-sandbox-isolated2.log",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/source-sandbox-terminal.json",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/source-sandbox.exit",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/source-sandbox.log",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/source-snapshot-text-retention.json",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/source.patch",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/status.json",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/test-history-preserve-command.json",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/test-history-preserve-exit.json",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/test-history-preserve.log",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/test-history-restore.log",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/tune-0.log",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/tune-1.log",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/tune-command-0.json",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/tune-command-1.json",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/tune-exit-0.json",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/tune-exit-1.json",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/tune-key-0.json",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/tune-key-1.json",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/tune-keys.json",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/tune-read-guard-0.json",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/tune-read-guard-1.json",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/tuning-fit.json",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/tuning-results.jsonl",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/val-0.log",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/val-1.log",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/val-2.log",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/val-3.log",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/val-command-0.json",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/val-command-1.json",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/val-command-2.json",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/val-command-3.json",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/val-exit-0.json",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/val-exit-1.json",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/val-exit-2.json",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/val-exit-3.json",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/val-keys.json",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/val-read-guard-0.json",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/val-read-guard-1.json",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/val-read-guard-2.json",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/val-read-guard-3.json",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/verification-scheduling-addendum.md",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/verification-scheduling-addendum.md.before-overlap.txt",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/manifest.json",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/report.md",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/scripts/adapter-probe.mjs",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/scripts/calibration-import-support/characters.py",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/scripts/calibration.py",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/scripts/compile-model.mjs",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/scripts/complete.py",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/scripts/current-consumer.py",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/scripts/input-read-guard.mjs",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/scripts/observed-transition-probe.mjs",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/scripts/package-report.py",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/scripts/phase-probe.mjs",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/scripts/precompile-model.py",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/scripts/prepare-delivery.py",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/scripts/prepare-model.py",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/scripts/publish.py",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/scripts/qualify-source.py",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/scripts/record-live-source.py",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/scripts/run-consumer.py",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/validation/consumer-v2.mts",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/validation/input-read-guard.mjs",
+      "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/validation/run-consumer.py",
+      "paper/materials/decision-log.md"
+    ],
+    "initial_live": "158d91006fcf0de9d1c487af7777358bfc584a5e",
+    "refresh_process_scope": "Host PIDs invisible in learner namespace; use final Silent builder note and a stable knowledge window, not an invented host-exit claim.",
+    "refresh_check": {
+      "latest_end_epoch": 1792224936.275,
+      "final_note_mtime": 1792225827.5167527,
+      "stable_seconds": 30,
+      "host_exit_verified": false
+    },
+    "refresh_files": [
+      "knowledge/characters/silent/boss-damage.json",
+      "knowledge/characters/silent/construction-opportunities.json",
+      "knowledge/characters/silent/fight-value-gates.json",
+      "knowledge/characters/silent/fight-value.json",
+      "knowledge/characters/silent/monster-records.json",
+      "knowledge/characters/silent/outcome-stats.json",
+      "knowledge/characters/silent/room-costs.json",
+      "knowledge/common/card-upgrades.json",
+      "knowledge/common/monster-db.json",
+      "knowledge/common/move-model.json",
+      "notes/fight-value-backtest-silent.md",
+      "notes/monster-db-check.md"
+    ],
+    "refresh_sha256": {
+      "knowledge/characters/silent/boss-damage.json": "536ba5985a08ad488fbf7f7bdf22bcd3eb78815a43ff3b76420ce53b9e9bfa16",
+      "knowledge/characters/silent/construction-opportunities.json": "5b01a7cc80faab3986455897f01191fec1d4afdfe5c4076ccc7927809f6aaba9",
+      "knowledge/characters/silent/fight-value-gates.json": "d3f0703572b16f52940c09b378503e608b756f473f14f8aee9b30a26596a4adb",
+      "knowledge/characters/silent/fight-value.json": "eb5e4c9772da099544c2d26ea593a548aed72582f3f2834deb99f72078aaf574",
+      "knowledge/characters/silent/monster-records.json": "72143fe730a42ab0cf4f089c40b84c916ee12f2f29587411aa04a7e69a5daf8a",
+      "knowledge/characters/silent/outcome-stats.json": "f969565d7ece7731f31a601a51dd92767f52110a259d60ca44cf7627de8328ac",
+      "knowledge/characters/silent/room-costs.json": "be55128d3114d8365ee58b86a196e9a07bbfd231963737e5f74a38ed7e0b7d95",
+      "knowledge/common/card-upgrades.json": "df4915ba3fb9a9933488166705230b7360d98963adc42ec5698cb6510828b53a",
+      "knowledge/common/monster-db.json": "2a30d5d2ee9e03c12952453446991f676475ec2adaf0b7bdfe30bde22872e02c",
+      "knowledge/common/move-model.json": "2abe0edffa98c5e589b3b340109a75755540d1047ab436ec8c350112ce0c95cb",
+      "notes/fight-value-backtest-silent.md": "506b9ac46f37b54b897f306528ccaeab3c058ccacb31e1bfb03c05aec6335c03",
+      "notes/monster-db-check.md": "b4818ea4c30c4646347feae7cdee8f467e3e0bdebfafc079ea2a57a914d95855"
+    },
+    "refresh_commit": "a5481c36b8c5059add1beaa0329e1b511da6491b",
+    "before_code": "a5481c36b8c5059add1beaa0329e1b511da6491b",
+    "experience_owned_ids": [
+      "silent-test-subject-phase-reset",
+      "silent-g1a-aeonglass-calibration-boundary",
+      "silent-g1a-queen-calibration-boundary",
+      "silent-g1a-test-subject-calibration-boundary",
+      "silent-g1a-fixed-production-boundary",
+      "silent-h0-kaiser-crab-calibration-boundary",
+      "silent-h0-knowledge-demon-calibration-boundary",
+      "silent-h0-insatiable-calibration-boundary",
+      "silent-h0-end-turn-measurement-boundary"
+    ],
+    "experience_version": "2026-10-17.h0-r1-phase2",
+    "path_blobs": [
+      {
+        "path": "agent/src/reflex/rollout-live.ts",
+        "source_blob": "5c6ba95519c9b607ca2ecea7233e3c48842e4ae4",
+        "published_blob": "fbe730bb6216ce5d1a851e4651969caed66fa0bf",
+        "combined_with_parallel": true
+      },
+      {
+        "path": "agent/src/reflex/rollout.ts",
+        "source_blob": "7e6f84ccb06097d8f1679ec6ec2d4aaee83e96c2",
+        "published_blob": "b3db153e92fb0844185f64d018b6ae27441d5dc2",
+        "combined_with_parallel": true
+      },
+      {
+        "path": "agent/tests/silent-test-subject-phase.test.ts",
+        "source_blob": "748756b0e3d79e0f9ef1ff5e59da36a43bf1c8c7",
+        "published_blob": "748756b0e3d79e0f9ef1ff5e59da36a43bf1c8c7",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "experiments/boss-sim/silent/dd647d2a907e448b08fd1c1b2c048742d19ee3fa47c7d3562370cc44fe272bc1/before-after.json",
+        "source_blob": "bc38c1329f6bcfeaa4d10ea05395b7328a19b1ff",
+        "published_blob": "bc38c1329f6bcfeaa4d10ea05395b7328a19b1ff",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "experiments/boss-sim/silent/dd647d2a907e448b08fd1c1b2c048742d19ee3fa47c7d3562370cc44fe272bc1/boss-trust-candidate.json",
+        "source_blob": "d1bef716019ad50d237414af0209afa6e6e087a2",
+        "published_blob": "d1bef716019ad50d237414af0209afa6e6e087a2",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "experiments/boss-sim/silent/dd647d2a907e448b08fd1c1b2c048742d19ee3fa47c7d3562370cc44fe272bc1/completed.json",
+        "source_blob": "726dcd813c61496b8373360f7a728b8eeed4c6ca",
+        "published_blob": "726dcd813c61496b8373360f7a728b8eeed4c6ca",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "experiments/boss-sim/silent/dd647d2a907e448b08fd1c1b2c048742d19ee3fa47c7d3562370cc44fe272bc1/execution.json",
+        "source_blob": "d160fa46402d0f9a77f9626542acad49b049fffa",
+        "published_blob": "d160fa46402d0f9a77f9626542acad49b049fffa",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "experiments/boss-sim/silent/dd647d2a907e448b08fd1c1b2c048742d19ee3fa47c7d3562370cc44fe272bc1/identity.json",
+        "source_blob": "4184755954e40fa10f049a9a73a4729eb7d147af",
+        "published_blob": "4184755954e40fa10f049a9a73a4729eb7d147af",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "experiments/boss-sim/silent/dd647d2a907e448b08fd1c1b2c048742d19ee3fa47c7d3562370cc44fe272bc1/model-provenance.json",
+        "source_blob": "ab59a629ba42c8b220f3d6e52dbf0f787d3ba714",
+        "published_blob": "ab59a629ba42c8b220f3d6e52dbf0f787d3ba714",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "experiments/boss-sim/silent/dd647d2a907e448b08fd1c1b2c048742d19ee3fa47c7d3562370cc44fe272bc1/repair-reuse-certificate.json",
+        "source_blob": "fdd8e62d824e99b416a20578d1e3bd9faf5f5f92",
+        "published_blob": "fdd8e62d824e99b416a20578d1e3bd9faf5f5f92",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "experiments/boss-sim/silent/dd647d2a907e448b08fd1c1b2c048742d19ee3fa47c7d3562370cc44fe272bc1/results.jsonl",
+        "source_blob": "3a938cb966a9c6403f1fb8d93f92f84b5934da4f",
+        "published_blob": "3a938cb966a9c6403f1fb8d93f92f84b5934da4f",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "experiments/boss-sim/silent/dd647d2a907e448b08fd1c1b2c048742d19ee3fa47c7d3562370cc44fe272bc1/split.json",
+        "source_blob": "cb76c3749a49e992f86f10626909c3bb59ecd070",
+        "published_blob": "cb76c3749a49e992f86f10626909c3bb59ecd070",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "experiments/boss-sim/silent/dd647d2a907e448b08fd1c1b2c048742d19ee3fa47c7d3562370cc44fe272bc1/tuning-fit.json",
+        "source_blob": "9088532fce2fcef348b416ec21d6f9a54b0dac8d",
+        "published_blob": "9088532fce2fcef348b416ec21d6f9a54b0dac8d",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "experiments/boss-sim/silent/dd647d2a907e448b08fd1c1b2c048742d19ee3fa47c7d3562370cc44fe272bc1/tuning-results.jsonl",
+        "source_blob": "d3fc4be38bad7d022593d051be3897e9760e6113",
+        "published_blob": "d3fc4be38bad7d022593d051be3897e9760e6113",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "experiments/boss-sim/silent/dd647d2a907e448b08fd1c1b2c048742d19ee3fa47c7d3562370cc44fe272bc1/turns-original.jsonl",
+        "source_blob": "316654bb1ed380b7c03db8b12a22ac4fece3de72",
+        "published_blob": "316654bb1ed380b7c03db8b12a22ac4fece3de72",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "experiments/boss-sim/silent/e1a81ed842710877cc41bc5dd5af3de05eba3b08e2fdcde47e7dd2656214289a/adapter-probe-output.json",
+        "source_blob": "a02592ab2cfb1d03d24195f9ae731fe95c1146eb",
+        "published_blob": "a02592ab2cfb1d03d24195f9ae731fe95c1146eb",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "experiments/boss-sim/silent/e1a81ed842710877cc41bc5dd5af3de05eba3b08e2fdcde47e7dd2656214289a/before-after.json",
+        "source_blob": "ff27b71e407c1cd1f24dbec77fdc91b8118d109c",
+        "published_blob": "ff27b71e407c1cd1f24dbec77fdc91b8118d109c",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "experiments/boss-sim/silent/e1a81ed842710877cc41bc5dd5af3de05eba3b08e2fdcde47e7dd2656214289a/boss-trust-candidate.json",
+        "source_blob": "a699cdffd48a2570a29c0cbac6cda46e3e179d96",
+        "published_blob": "a699cdffd48a2570a29c0cbac6cda46e3e179d96",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "experiments/boss-sim/silent/e1a81ed842710877cc41bc5dd5af3de05eba3b08e2fdcde47e7dd2656214289a/calibration-import-support.json",
+        "source_blob": "e65d5699f8e1eaf6604d4a9d9e99bb2be2879d0c",
+        "published_blob": "e65d5699f8e1eaf6604d4a9d9e99bb2be2879d0c",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "experiments/boss-sim/silent/e1a81ed842710877cc41bc5dd5af3de05eba3b08e2fdcde47e7dd2656214289a/calibration-import-support/characters.py",
+        "source_blob": "9b737ee7f08a9b6ca24fa4055161a6bd06914710",
+        "published_blob": "9b737ee7f08a9b6ca24fa4055161a6bd06914710",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "experiments/boss-sim/silent/e1a81ed842710877cc41bc5dd5af3de05eba3b08e2fdcde47e7dd2656214289a/compiled-manifest.json",
+        "source_blob": "f16f18640b2e24014515757e1825cd646a821762",
+        "published_blob": "f16f18640b2e24014515757e1825cd646a821762",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "experiments/boss-sim/silent/e1a81ed842710877cc41bc5dd5af3de05eba3b08e2fdcde47e7dd2656214289a/completed.json",
+        "source_blob": "76a3c7ea8cc0843d8f11513ec5d45613856bdffc",
+        "published_blob": "76a3c7ea8cc0843d8f11513ec5d45613856bdffc",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "experiments/boss-sim/silent/e1a81ed842710877cc41bc5dd5af3de05eba3b08e2fdcde47e7dd2656214289a/evidence.json",
+        "source_blob": "01bcc191f7f83941f299054b2e94a9bf08820472",
+        "published_blob": "01bcc191f7f83941f299054b2e94a9bf08820472",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "experiments/boss-sim/silent/e1a81ed842710877cc41bc5dd5af3de05eba3b08e2fdcde47e7dd2656214289a/f49-phase-evidence.json",
+        "source_blob": "3d48b73d1de88495e1b05aa49f75c71fdcb6d1a0",
+        "published_blob": "3d48b73d1de88495e1b05aa49f75c71fdcb6d1a0",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "experiments/boss-sim/silent/e1a81ed842710877cc41bc5dd5af3de05eba3b08e2fdcde47e7dd2656214289a/fit-freeze.json",
+        "source_blob": "e337bccc3770fc4c1e615a24e241741dfe6f8c7f",
+        "published_blob": "e337bccc3770fc4c1e615a24e241741dfe6f8c7f",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "experiments/boss-sim/silent/e1a81ed842710877cc41bc5dd5af3de05eba3b08e2fdcde47e7dd2656214289a/identity.json",
+        "source_blob": "742ed060138db1af41a63fbb489b3db0b8b0e681",
+        "published_blob": "742ed060138db1af41a63fbb489b3db0b8b0e681",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "experiments/boss-sim/silent/e1a81ed842710877cc41bc5dd5af3de05eba3b08e2fdcde47e7dd2656214289a/model-plan.json",
+        "source_blob": "4a52fd1800f16453c89279d1a4589abbbcef1872",
+        "published_blob": "4a52fd1800f16453c89279d1a4589abbbcef1872",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "experiments/boss-sim/silent/e1a81ed842710877cc41bc5dd5af3de05eba3b08e2fdcde47e7dd2656214289a/model-provenance.json",
+        "source_blob": "abfb05612a130d3c322ae692a236522d638563bb",
+        "published_blob": "abfb05612a130d3c322ae692a236522d638563bb",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "experiments/boss-sim/silent/e1a81ed842710877cc41bc5dd5af3de05eba3b08e2fdcde47e7dd2656214289a/observed-transition-probe-output.json",
+        "source_blob": "00f7719f080d239febe0ea6b428732fd9439758c",
+        "published_blob": "00f7719f080d239febe0ea6b428732fd9439758c",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "experiments/boss-sim/silent/e1a81ed842710877cc41bc5dd5af3de05eba3b08e2fdcde47e7dd2656214289a/phase-probe-output.json",
+        "source_blob": "cca6ad5746592d2304b88dd05513e4133bc8d7eb",
+        "published_blob": "cca6ad5746592d2304b88dd05513e4133bc8d7eb",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "experiments/boss-sim/silent/e1a81ed842710877cc41bc5dd5af3de05eba3b08e2fdcde47e7dd2656214289a/results.jsonl",
+        "source_blob": "901db6bef14181e2198aa21fa60ca69f5e9ee021",
+        "published_blob": "901db6bef14181e2198aa21fa60ca69f5e9ee021",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "experiments/boss-sim/silent/e1a81ed842710877cc41bc5dd5af3de05eba3b08e2fdcde47e7dd2656214289a/source-repair/rollout-live.ts",
+        "source_blob": "5c6ba95519c9b607ca2ecea7233e3c48842e4ae4",
+        "published_blob": "5c6ba95519c9b607ca2ecea7233e3c48842e4ae4",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "experiments/boss-sim/silent/e1a81ed842710877cc41bc5dd5af3de05eba3b08e2fdcde47e7dd2656214289a/source-repair/rollout.ts",
+        "source_blob": "7e6f84ccb06097d8f1679ec6ec2d4aaee83e96c2",
+        "published_blob": "7e6f84ccb06097d8f1679ec6ec2d4aaee83e96c2",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "experiments/boss-sim/silent/e1a81ed842710877cc41bc5dd5af3de05eba3b08e2fdcde47e7dd2656214289a/split.json",
+        "source_blob": "cb76c3749a49e992f86f10626909c3bb59ecd070",
+        "published_blob": "cb76c3749a49e992f86f10626909c3bb59ecd070",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "experiments/boss-sim/silent/e1a81ed842710877cc41bc5dd5af3de05eba3b08e2fdcde47e7dd2656214289a/tuning-fit.json",
+        "source_blob": "a9da60eeb0352eb6af69bb2f67e18d3fca04bf7c",
+        "published_blob": "a9da60eeb0352eb6af69bb2f67e18d3fca04bf7c",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "experiments/boss-sim/silent/e1a81ed842710877cc41bc5dd5af3de05eba3b08e2fdcde47e7dd2656214289a/tuning-results.jsonl",
+        "source_blob": "84e3d69d0849feb9ac457f7205b162419b2c74ef",
+        "published_blob": "84e3d69d0849feb9ac457f7205b162419b2c74ef",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "experiments/boss-sim/silent/e1a81ed842710877cc41bc5dd5af3de05eba3b08e2fdcde47e7dd2656214289a/turns-original.jsonl",
+        "source_blob": "316654bb1ed380b7c03db8b12a22ac4fece3de72",
+        "published_blob": "316654bb1ed380b7c03db8b12a22ac4fece3de72",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "knowledge/characters/silent/experience.json",
+        "source_blob": "42a7b320f026a09f7a693416a728a1356d5631ee",
+        "published_blob": "42a7b320f026a09f7a693416a728a1356d5631ee",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/baseline-validation/actual-runtime-readback.json",
+        "source_blob": "b64daf971a53cd8f34312557f12c1aacd27a5258",
+        "published_blob": "b64daf971a53cd8f34312557f12c1aacd27a5258",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/baseline-validation/command-0.json",
+        "source_blob": "b8e790b594a1c6cf8ac54827203224b69ca44035",
+        "published_blob": "b8e790b594a1c6cf8ac54827203224b69ca44035",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/baseline-validation/command-1.json",
+        "source_blob": "e7a0ea17bcf168e6ba2f07c84653f55aeb3e8df2",
+        "published_blob": "e7a0ea17bcf168e6ba2f07c84653f55aeb3e8df2",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/baseline-validation/command-2.json",
+        "source_blob": "fb118ae0796a3543055b802253b84d159a5cdcef",
+        "published_blob": "fb118ae0796a3543055b802253b84d159a5cdcef",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/baseline-validation/command-3.json",
+        "source_blob": "50873b73991218a69a2d854f6c13b3f4b70cae73",
+        "published_blob": "50873b73991218a69a2d854f6c13b3f4b70cae73",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/baseline-validation/current-production-observation-start.json",
+        "source_blob": "12d2edf535544801e7de6955b64595ed89823fba",
+        "published_blob": "12d2edf535544801e7de6955b64595ed89823fba",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/baseline-validation/exit-0.json",
+        "source_blob": "ce507f9302035b07833cabe9ce9a676d431fc7e9",
+        "published_blob": "ce507f9302035b07833cabe9ce9a676d431fc7e9",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/baseline-validation/exit-1.json",
+        "source_blob": "a2dceb4d9b639de920202fd0ae24aaf33e03e38c",
+        "published_blob": "a2dceb4d9b639de920202fd0ae24aaf33e03e38c",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/baseline-validation/exit-2.json",
+        "source_blob": "a45874ca0dc4a05f73857d03d4a2d2425d5e46f5",
+        "published_blob": "a45874ca0dc4a05f73857d03d4a2d2425d5e46f5",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/baseline-validation/exit-3.json",
+        "source_blob": "35d5c99b7ab802c53f0899e1e4ff5dbab602010d",
+        "published_blob": "35d5c99b7ab802c53f0899e1e4ff5dbab602010d",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/baseline-validation/finish-validation.py",
+        "source_blob": "affca5be832ac840340ee5511b4ca39d88ec6109",
+        "published_blob": "affca5be832ac840340ee5511b4ca39d88ec6109",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/baseline-validation/mechanism-boundaries.json",
+        "source_blob": "db7307844823710e78d6cefaa0283f95cde01733",
+        "published_blob": "db7307844823710e78d6cefaa0283f95cde01733",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/baseline-validation/native-turn-context.jsonl",
+        "source_blob": "348bf45a0ac987a5b83382ec065e8a66de2d033f",
+        "published_blob": "348bf45a0ac987a5b83382ec065e8a66de2d033f",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/baseline-validation/observed-sequence-summary.json",
+        "source_blob": "ca6d49f5a1826979b2434f3057cf7297403cea3d",
+        "published_blob": "ca6d49f5a1826979b2434f3057cf7297403cea3d",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/baseline-validation/observed-sequences.json",
+        "source_blob": "6dc68377c71b5d224fceba214f82517f27c5c963",
+        "published_blob": "6dc68377c71b5d224fceba214f82517f27c5c963",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/baseline-validation/original-handoff-integrity.json",
+        "source_blob": "9237f85bb3b1b6d32697ab6446762da9c6ad84a9",
+        "published_blob": "9237f85bb3b1b6d32697ab6446762da9c6ad84a9",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/baseline-validation/preflight.json",
+        "source_blob": "b79dfc6e505840c2e96432138fa511cbae26fc4c",
+        "published_blob": "b79dfc6e505840c2e96432138fa511cbae26fc4c",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/baseline-validation/progress.jsonl",
+        "source_blob": "c368d59a23e2ce0cb1160c093c4d08c5ba934e93",
+        "published_blob": "c368d59a23e2ce0cb1160c093c4d08c5ba934e93",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/baseline-validation/start-0.json",
+        "source_blob": "12bbbd5dbbb734d0482cf61cf22fda0cc593a66e",
+        "published_blob": "12bbbd5dbbb734d0482cf61cf22fda0cc593a66e",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/baseline-validation/start-1.json",
+        "source_blob": "c7754b2f467e2ef80eeba942c56bfe0280ff36d6",
+        "published_blob": "c7754b2f467e2ef80eeba942c56bfe0280ff36d6",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/baseline-validation/start-2.json",
+        "source_blob": "8e8f21ab95517ea2b01cccc2c1110475db427795",
+        "published_blob": "8e8f21ab95517ea2b01cccc2c1110475db427795",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/baseline-validation/start-3.json",
+        "source_blob": "c8d27ea7462a8fefc793a3cff63263e7b673b713",
+        "published_blob": "c8d27ea7462a8fefc793a3cff63263e7b673b713",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/baseline-validation/start-receipt.json",
+        "source_blob": "3b0cbb2d68fb4deda394b7bb30a4c2caac0399ae",
+        "published_blob": "3b0cbb2d68fb4deda394b7bb30a4c2caac0399ae",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/baseline-validation/test-subject-phase-power-plan.json",
+        "source_blob": "f484acdb3e0d7a14d80bba0d117ff94a2237c4ae",
+        "published_blob": "f484acdb3e0d7a14d80bba0d117ff94a2237c4ae",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/baseline-validation/validation-completed.json",
+        "source_blob": "939002ff631361155632f23037885268308fc542",
+        "published_blob": "939002ff631361155632f23037885268308fc542",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/baseline-validation/validation-read-guard-0.json",
+        "source_blob": "dc87c6e57a10400dbb1308f80a9ecbf8b0c1ef47",
+        "published_blob": "dc87c6e57a10400dbb1308f80a9ecbf8b0c1ef47",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/baseline-validation/validation-read-guard-1.json",
+        "source_blob": "dc87c6e57a10400dbb1308f80a9ecbf8b0c1ef47",
+        "published_blob": "dc87c6e57a10400dbb1308f80a9ecbf8b0c1ef47",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/baseline-validation/validation-read-guard-2.json",
+        "source_blob": "dc87c6e57a10400dbb1308f80a9ecbf8b0c1ef47",
+        "published_blob": "dc87c6e57a10400dbb1308f80a9ecbf8b0c1ef47",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/baseline-validation/validation-read-guard-3.json",
+        "source_blob": "756c16412bd09ab513e1f1070d3b7ecbf5688196",
+        "published_blob": "756c16412bd09ab513e1f1070d3b7ecbf5688196",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/baseline-validation/worker-0.log",
+        "source_blob": "7af498625fa0734d3bd446ebdbdfce448e5dbd17",
+        "published_blob": "7af498625fa0734d3bd446ebdbdfce448e5dbd17",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/baseline-validation/worker-1.log",
+        "source_blob": "5a4856cdf5e49f453806baad6333b33405a0510d",
+        "published_blob": "5a4856cdf5e49f453806baad6333b33405a0510d",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/baseline-validation/worker-2.log",
+        "source_blob": "866d96d8449cd3f28fa597dd8c487142a7a072e5",
+        "published_blob": "866d96d8449cd3f28fa597dd8c487142a7a072e5",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/baseline-validation/worker-3.log",
+        "source_blob": "ddbbe04ce871dd644003d5ea6a3f0eee324f0bd1",
+        "published_blob": "ddbbe04ce871dd644003d5ea6a3f0eee324f0bd1",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/adapter-command.json",
+        "source_blob": "0e38af227dba594bea5fe657b86471c012c9fc15",
+        "published_blob": "0e38af227dba594bea5fe657b86471c012c9fc15",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/adapter-exit.json",
+        "source_blob": "119258018ac9a0349fdff51bf3fbbfe9a01c632f",
+        "published_blob": "119258018ac9a0349fdff51bf3fbbfe9a01c632f",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/adapter-probe-output.json",
+        "source_blob": "a02592ab2cfb1d03d24195f9ae731fe95c1146eb",
+        "published_blob": "a02592ab2cfb1d03d24195f9ae731fe95c1146eb",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/adapter-probe.log",
+        "source_blob": "c8285d8a38394d1903c2993ddc57458f2f712672",
+        "published_blob": "c8285d8a38394d1903c2993ddc57458f2f712672",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/adapter-read-guard.json",
+        "source_blob": "7f0abb19799157d4757432379734c0facd4388fe",
+        "published_blob": "7f0abb19799157d4757432379734c0facd4388fe",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/calibration-completed.json",
+        "source_blob": "6325b121515da2cb1bc35d17d5df16cb03168180",
+        "published_blob": "6325b121515da2cb1bc35d17d5df16cb03168180",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/calibration-final-command.json",
+        "source_blob": "64bb4b2924aa1306d48a9be2926672511c335d4b",
+        "published_blob": "64bb4b2924aa1306d48a9be2926672511c335d4b",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/calibration-final-exit.json",
+        "source_blob": "1c1ad5d88de22a7dfd7f5b6341974cce42210271",
+        "published_blob": "1c1ad5d88de22a7dfd7f5b6341974cce42210271",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/calibration-final.log",
+        "source_blob": "0651bf9706ae35248c68ff6424726c7bf4692af4",
+        "published_blob": "0651bf9706ae35248c68ff6424726c7bf4692af4",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/calibration-import-support.json",
+        "source_blob": "e65d5699f8e1eaf6604d4a9d9e99bb2be2879d0c",
+        "published_blob": "e65d5699f8e1eaf6604d4a9d9e99bb2be2879d0c",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/calibration-source-equivalence.json",
+        "source_blob": "6f26588e25fe36740b2faa734cfec9253110984d",
+        "published_blob": "6f26588e25fe36740b2faa734cfec9253110984d",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/calibration.py.before-overlap.txt",
+        "source_blob": "2145445e0792a3365466db157974200a0455616d",
+        "published_blob": "2145445e0792a3365466db157974200a0455616d",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/candidate-experience-objects.json",
+        "source_blob": "53e81d07e65824ae42be840663f1e14bfe0584bb",
+        "published_blob": "53e81d07e65824ae42be840663f1e14bfe0584bb",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/check-experience-command.json",
+        "source_blob": "6129fae9685d9f0fff8b41aaee73566ba4d72b67",
+        "published_blob": "6129fae9685d9f0fff8b41aaee73566ba4d72b67",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/check-experience-stderr.log",
+        "source_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+        "published_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/check-experience.json",
+        "source_blob": "05d623d3119e603de6e44a6fba0f074ce28309eb",
+        "published_blob": "05d623d3119e603de6e44a6fba0f074ce28309eb",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/compile-command.json",
+        "source_blob": "7a3254ffa2a59bc2be7dd9d8ee21196fb956523e",
+        "published_blob": "7a3254ffa2a59bc2be7dd9d8ee21196fb956523e",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/compile-exit.json",
+        "source_blob": "d5eabd261ae01966977b3440bb0df4c74c242af3",
+        "published_blob": "d5eabd261ae01966977b3440bb0df4c74c242af3",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/compile-model.log",
+        "source_blob": "22d0ea7c70f4afb369553f3a52937098876773a9",
+        "published_blob": "22d0ea7c70f4afb369553f3a52937098876773a9",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/compiled-manifest.json",
+        "source_blob": "f16f18640b2e24014515757e1825cd646a821762",
+        "published_blob": "f16f18640b2e24014515757e1825cd646a821762",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/delivery-ledger.json",
+        "source_blob": "6b9748dee4616705bedc26acf78eab3ac00f724f",
+        "published_blob": "6b9748dee4616705bedc26acf78eab3ac00f724f",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/evidence.json",
+        "source_blob": "01bcc191f7f83941f299054b2e94a9bf08820472",
+        "published_blob": "01bcc191f7f83941f299054b2e94a9bf08820472",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/execution-checkpoint.json",
+        "source_blob": "6350343e9edea31afdea77d0c1f4c11923f299fd",
+        "published_blob": "6350343e9edea31afdea77d0c1f4c11923f299fd",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/experience-changes.json",
+        "source_blob": "93e43e43b7c13fd622aa241041c31e7ec9608c0d",
+        "published_blob": "93e43e43b7c13fd622aa241041c31e7ec9608c0d",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/experience.before.json",
+        "source_blob": "fb419fbd06ae211c331f98d71346c0090e131fc0",
+        "published_blob": "fb419fbd06ae211c331f98d71346c0090e131fc0",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/f49-addendum.md",
+        "source_blob": "9cacce1896e2ffcbe0b05516ff99268f952c3bf5",
+        "published_blob": "9cacce1896e2ffcbe0b05516ff99268f952c3bf5",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/f49-phase-evidence.json",
+        "source_blob": "3d48b73d1de88495e1b05aa49f75c71fdcb6d1a0",
+        "published_blob": "3d48b73d1de88495e1b05aa49f75c71fdcb6d1a0",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/f49-phase-frames.jsonl",
+        "source_blob": "129786b034c7fa75ff9a825e954eafd89ffa76c0",
+        "published_blob": "129786b034c7fa75ff9a825e954eafd89ffa76c0",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/fight-ledger-input.json",
+        "source_blob": "6151aacfc8151db83fc46e7e9bf0512b39d2b4dd",
+        "published_blob": "6151aacfc8151db83fc46e7e9bf0512b39d2b4dd",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/fight-ledger-receipt.json",
+        "source_blob": "89cff768d82150010c44dbd92744c21525b9c377",
+        "published_blob": "89cff768d82150010c44dbd92744c21525b9c377",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/fit-command.json",
+        "source_blob": "401df12928c069276873e0dd0f8a8c400c952d55",
+        "published_blob": "401df12928c069276873e0dd0f8a8c400c952d55",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/fit-first-exit.json",
+        "source_blob": "a618548889a43e16d90060189f660fb615d0d9a6",
+        "published_blob": "a618548889a43e16d90060189f660fb615d0d9a6",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/fit-freeze.json",
+        "source_blob": "e337bccc3770fc4c1e615a24e241741dfe6f8c7f",
+        "published_blob": "e337bccc3770fc4c1e615a24e241741dfe6f8c7f",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/fit-v2-command.json",
+        "source_blob": "e0d980acc6b88125b4f9f7a1d8296a43693bc3b4",
+        "published_blob": "e0d980acc6b88125b4f9f7a1d8296a43693bc3b4",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/fit-v2-exit.json",
+        "source_blob": "9b4461957627fc2973e83cc17b30d2c0adc915c3",
+        "published_blob": "9b4461957627fc2973e83cc17b30d2c0adc915c3",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/fit-v2.log",
+        "source_blob": "b19a510687226daebe153586a68f7e082146975b",
+        "published_blob": "b19a510687226daebe153586a68f7e082146975b",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/fit.log",
+        "source_blob": "19f947564fd309d0f02d318571b321f1ed3ea897",
+        "published_blob": "19f947564fd309d0f02d318571b321f1ed3ea897",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/isolated2-history-preserve.log",
+        "source_blob": "cd792ca1ef116bb8087362fe69b245c26574c109",
+        "published_blob": "cd792ca1ef116bb8087362fe69b245c26574c109",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/isolated2-history-restore.log",
+        "source_blob": "e8e82e59d2907bdaee49a3ab83c0a656654190f8",
+        "published_blob": "e8e82e59d2907bdaee49a3ab83c0a656654190f8",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/jev-sts2-settle-1792224581661-9e31c49d8d9ae.jev-prompts.jsonl",
+        "source_blob": "27f2b4fb3524a956f6b4c35eed77bb6d68baed2e",
+        "published_blob": "27f2b4fb3524a956f6b4c35eed77bb6d68baed2e",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/jev-sts2-settle-1792224581661-9e31c49d8d9ae.run-config.jsonl",
+        "source_blob": "a0abfa3d20e0c349c068b5cd6c1ddde4bc87c39e",
+        "published_blob": "a0abfa3d20e0c349c068b5cd6c1ddde4bc87c39e",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/jev-sts2-settle-1792224581661-9e31c49d8d9ae.states.jsonl",
+        "source_blob": "cc3068fa8da6cf1e9b8ec7656ffbd1bb1d441dda",
+        "published_blob": "cc3068fa8da6cf1e9b8ec7656ffbd1bb1d441dda",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/jev-sts2-settle-1792224581768-75c43d41c5717.jev-prompts.jsonl",
+        "source_blob": "2b7211a924d3a08a13610436de8b3c536ba34af1",
+        "published_blob": "2b7211a924d3a08a13610436de8b3c536ba34af1",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/jev-sts2-settle-1792224581768-75c43d41c5717.run-config.jsonl",
+        "source_blob": "af62f60b2f47e4ec85890c5588b8d453057ca8d5",
+        "published_blob": "af62f60b2f47e4ec85890c5588b8d453057ca8d5",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/jev-sts2-settle-1792224581768-75c43d41c5717.states.jsonl",
+        "source_blob": "679f3472b01c1ff164fe7b32e2c7e7d00bd45aa4",
+        "published_blob": "679f3472b01c1ff164fe7b32e2c7e7d00bd45aa4",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/jev-sts2-settle-1792225688257-20ede591e57d3.jev-prompts.jsonl",
+        "source_blob": "a327924a0520d79421a46deb79631043d2350ad6",
+        "published_blob": "a327924a0520d79421a46deb79631043d2350ad6",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/jev-sts2-settle-1792225688257-20ede591e57d3.run-config.jsonl",
+        "source_blob": "f684f6ac3f8ba2dd549867ea7b8e9539476a8b22",
+        "published_blob": "f684f6ac3f8ba2dd549867ea7b8e9539476a8b22",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/jev-sts2-settle-1792225688257-20ede591e57d3.states.jsonl",
+        "source_blob": "6f4b89fc14bc23c57f490a4d00990a643a9db6a2",
+        "published_blob": "6f4b89fc14bc23c57f490a4d00990a643a9db6a2",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/jev-sts2-settle-1792225688374-36a5c3930c806.jev-prompts.jsonl",
+        "source_blob": "f1ada76eec24392438e53611e2413d06c1374e8f",
+        "published_blob": "f1ada76eec24392438e53611e2413d06c1374e8f",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/jev-sts2-settle-1792225688374-36a5c3930c806.run-config.jsonl",
+        "source_blob": "4177fb28406e6b165b4a7fb02fa505aa0f380d11",
+        "published_blob": "4177fb28406e6b165b4a7fb02fa505aa0f380d11",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/jev-sts2-settle-1792225688374-36a5c3930c806.states.jsonl",
+        "source_blob": "57ca2958b8e7ce1e99e16ebc2d29e01728909c97",
+        "published_blob": "57ca2958b8e7ce1e99e16ebc2d29e01728909c97",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/ledger-f49-update.json",
+        "source_blob": "1a2114d8056a433a24c0412b25f95bb86a3a1f71",
+        "published_blob": "1a2114d8056a433a24c0412b25f95bb86a3a1f71",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/ledger-input.json",
+        "source_blob": "d4e10de540911f8c488bf82523ba6a246585e854",
+        "published_blob": "d4e10de540911f8c488bf82523ba6a246585e854",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/ledger-receipt.json",
+        "source_blob": "314026d852e3d7cccf83155fc116678d5a2543bd",
+        "published_blob": "314026d852e3d7cccf83155fc116678d5a2543bd",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/model-plan.json",
+        "source_blob": "4a52fd1800f16453c89279d1a4589abbbcef1872",
+        "published_blob": "4a52fd1800f16453c89279d1a4589abbbcef1872",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/negative-command.json",
+        "source_blob": "9eed7c3f37d60e747ed68e10271df328ee05eea5",
+        "published_blob": "9eed7c3f37d60e747ed68e10271df328ee05eea5",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/negative-exit.json",
+        "source_blob": "f2d244b6847b6746aad54af3f167c9dfb37cdf5c",
+        "published_blob": "f2d244b6847b6746aad54af3f167c9dfb37cdf5c",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/negative-read-guard.json",
+        "source_blob": "34131783fe2136cec1cd724d267b9895c846bb80",
+        "published_blob": "34131783fe2136cec1cd724d267b9895c846bb80",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/negative.log",
+        "source_blob": "60d07f0784180fb9d25715d7740cdf516530f406",
+        "published_blob": "60d07f0784180fb9d25715d7740cdf516530f406",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/observed-transition-command.json",
+        "source_blob": "d27ceeb059984f13f66f73857f5de4f0f35f4d20",
+        "published_blob": "d27ceeb059984f13f66f73857f5de4f0f35f4d20",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/observed-transition-exit.json",
+        "source_blob": "eb36e3985f32ea14909f10a7aec3e3cd43304cfb",
+        "published_blob": "eb36e3985f32ea14909f10a7aec3e3cd43304cfb",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/observed-transition-probe-output.json",
+        "source_blob": "00f7719f080d239febe0ea6b428732fd9439758c",
+        "published_blob": "00f7719f080d239febe0ea6b428732fd9439758c",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/observed-transition-probe.log",
+        "source_blob": "3565410c72b90a8b50f588b5c318ba4d2399a32d",
+        "published_blob": "3565410c72b90a8b50f588b5c318ba4d2399a32d",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/observed-transition-read-guard.json",
+        "source_blob": "8839bdb02819c1d8f00118e78fe194ba01e80d98",
+        "published_blob": "8839bdb02819c1d8f00118e78fe194ba01e80d98",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/overlap-scheduling-originals.json",
+        "source_blob": "45d80fe810f9191339bf67f1babf03765b710c1d",
+        "published_blob": "45d80fe810f9191339bf67f1babf03765b710c1d",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/package-report.log",
+        "source_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+        "published_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/phase-command.json",
+        "source_blob": "70a64fb56e5a93c6928f2a4b44f4adbb3f0aea7a",
+        "published_blob": "70a64fb56e5a93c6928f2a4b44f4adbb3f0aea7a",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/phase-exit.json",
+        "source_blob": "02ec1f792a50fa3c97468386f653b378601b3a23",
+        "published_blob": "02ec1f792a50fa3c97468386f653b378601b3a23",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/phase-experience-role-check.json",
+        "source_blob": "7a4ecebe16b5a77a3e3ee26120f6df5f71b8e7f4",
+        "published_blob": "7a4ecebe16b5a77a3e3ee26120f6df5f71b8e7f4",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/phase-probe-output.json",
+        "source_blob": "cca6ad5746592d2304b88dd05513e4133bc8d7eb",
+        "published_blob": "cca6ad5746592d2304b88dd05513e4133bc8d7eb",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/phase-probe.log",
+        "source_blob": "ede618c15f8efe571060fc4de5100ea00da5a462",
+        "published_blob": "ede618c15f8efe571060fc4de5100ea00da5a462",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/phase-read-guard.json",
+        "source_blob": "214dc843b20d2fcfac03be9083f052402c39cb7c",
+        "published_blob": "214dc843b20d2fcfac03be9083f052402c39cb7c",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/precompile-command.json",
+        "source_blob": "62127dfbc65ecd3af0799c1b18f3fc96903942af",
+        "published_blob": "62127dfbc65ecd3af0799c1b18f3fc96903942af",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/precompile-exit.json",
+        "source_blob": "59b23f3023515210c8d4c0c12f6e1e9e2134d315",
+        "published_blob": "59b23f3023515210c8d4c0c12f6e1e9e2134d315",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/precompile-receipt.json",
+        "source_blob": "ae846f937dcc77209e3ed11ef75d7c4394aef67c",
+        "published_blob": "ae846f937dcc77209e3ed11ef75d7c4394aef67c",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/preflight-current.json",
+        "source_blob": "f695aebd6eabd8ef9037a0488bc3f63e6c34c778",
+        "published_blob": "f695aebd6eabd8ef9037a0488bc3f63e6c34c778",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/prepare-delivery-command.json",
+        "source_blob": "005742967551b6f682247fa084d0289c9577adf5",
+        "published_blob": "005742967551b6f682247fa084d0289c9577adf5",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/prepare-delivery-exit.json",
+        "source_blob": "df1be853a2956a7d83ee22806429e3355d8490cd",
+        "published_blob": "df1be853a2956a7d83ee22806429e3355d8490cd",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/prepare-delivery.log",
+        "source_blob": "e767f33d88fb23f2c9f60007f5fe80f798945cdf",
+        "published_blob": "e767f33d88fb23f2c9f60007f5fe80f798945cdf",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/prepare-model-command.json",
+        "source_blob": "9f6b18173cbcaadd3a7347fe92575ad1107a4ce7",
+        "published_blob": "9f6b18173cbcaadd3a7347fe92575ad1107a4ce7",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/prepare-model-exit.json",
+        "source_blob": "b29ac58b160805bd48fd4796116ac1e60c12fda6",
+        "published_blob": "b29ac58b160805bd48fd4796116ac1e60c12fda6",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/prepare-model.log",
+        "source_blob": "b79c585f276463e42b64ce6490704a6e033cee2e",
+        "published_blob": "b79c585f276463e42b64ce6490704a6e033cee2e",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/prepare-model.py.before-overlap.txt",
+        "source_blob": "a67af2849c528a5c1977ba733c67d29db0774470",
+        "published_blob": "a67af2849c528a5c1977ba733c67d29db0774470",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/progress.jsonl",
+        "source_blob": "33a836f01c71768b88d83ee0acb599b91dd8408a",
+        "published_blob": "33a836f01c71768b88d83ee0acb599b91dd8408a",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/proposal-input.json",
+        "source_blob": "da9949b655d6c2d63a7799548ef73567cbba1237",
+        "published_blob": "da9949b655d6c2d63a7799548ef73567cbba1237",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/proposal-receipt.json",
+        "source_blob": "552f8df4f433116791198184a286e62af4fa4f17",
+        "published_blob": "552f8df4f433116791198184a286e62af4fa4f17",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/proposal.md",
+        "source_blob": "aca2ddfe277eb98e396142f265a558f3210e7db1",
+        "published_blob": "aca2ddfe277eb98e396142f265a558f3210e7db1",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/publish-model.json",
+        "source_blob": "84e701d8e816ccaa1b710ab8f7a014b732030612",
+        "published_blob": "84e701d8e816ccaa1b710ab8f7a014b732030612",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/publish.py.before-resource-isolation.txt",
+        "source_blob": "7e07fd9aeb938b0ae82bfe4be0ff744cd1c165ae",
+        "published_blob": "7e07fd9aeb938b0ae82bfe4be0ff744cd1c165ae",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/questions.json",
+        "source_blob": "979e02bb4887d4d08a9011cd7b7a34c7cdac60b6",
+        "published_blob": "979e02bb4887d4d08a9011cd7b7a34c7cdac60b6",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/raw-f49/64VJC5XT2AT2-F49-a6-T1-start-111.json",
+        "source_blob": "58959e3fe79394825474bba452ad42fc440ee57d",
+        "published_blob": "58959e3fe79394825474bba452ad42fc440ee57d",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/raw-f49/64VJC5XT2AT2-F49-a6-T5-start-212.json",
+        "source_blob": "f2dea68d57b04847b55309021027beb1ade9ad6b",
+        "published_blob": "f2dea68d57b04847b55309021027beb1ade9ad6b",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/raw-f49/833ZM0MJGWHC-F49-a6-T1-start-111.json",
+        "source_blob": "c699b4edd8eb0b44cb039aae1b2aac87693c7006",
+        "published_blob": "c699b4edd8eb0b44cb039aae1b2aac87693c7006",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/raw-f49/833ZM0MJGWHC-F49-a6-T5-start-212.json",
+        "source_blob": "7e3d1cf7f7ae2d356bd3509593f16c3d52cfd148",
+        "published_blob": "7e3d1cf7f7ae2d356bd3509593f16c3d52cfd148",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/raw-f49/LKC9YXKZWTKR-F49-a1-T1-start-111.json",
+        "source_blob": "41ac9561c1ae54adda4a30a5b4066e78044ae444",
+        "published_blob": "41ac9561c1ae54adda4a30a5b4066e78044ae444",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/raw-f49/LKC9YXKZWTKR-F49-a1-T6-start-212.json",
+        "source_blob": "b42abef29dd0f0e120519ee3da59e4573138126e",
+        "published_blob": "b42abef29dd0f0e120519ee3da59e4573138126e",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/raw-f49/LKC9YXKZWTKR-F49-a1-T9-start-313.json",
+        "source_blob": "bcf51e7d0f071eaa7e3b151640b324df74a98f05",
+        "published_blob": "bcf51e7d0f071eaa7e3b151640b324df74a98f05",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/raw-f49/Q10YYQ5DUPJA-F49-a6-T1-start-111.json",
+        "source_blob": "bc08c9cbdd2c413f451846ff30ab825536edcd6a",
+        "published_blob": "bc08c9cbdd2c413f451846ff30ab825536edcd6a",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/raw-f49/Q10YYQ5DUPJA-F49-a6-T2-start-212.json",
+        "source_blob": "a38a8e094f3b781fda50fc79633c80c4e22c970f",
+        "published_blob": "a38a8e094f3b781fda50fc79633c80c4e22c970f",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/raw-f49/ZVYUL2YP3518-F49-a6-T1-start-111.json",
+        "source_blob": "72d534cf8e2b87076e274bb1655d6b52db18ada7",
+        "published_blob": "72d534cf8e2b87076e274bb1655d6b52db18ada7",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/raw-f49/ZVYUL2YP3518-F49-a6-T6-start-212.json",
+        "source_blob": "95798c1215f97650f2db1a8b13fe8fae680e9b8a",
+        "published_blob": "95798c1215f97650f2db1a8b13fe8fae680e9b8a",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/silent-test-subject-phase.test.ts.txt",
+        "source_blob": "748756b0e3d79e0f9ef1ff5e59da36a43bf1c8c7",
+        "published_blob": "748756b0e3d79e0f9ef1ff5e59da36a43bf1c8c7",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/source-qualification-command.json",
+        "source_blob": "5c5ff067a1680b1160309900c042b56cf22d7b6c",
+        "published_blob": "5c5ff067a1680b1160309900c042b56cf22d7b6c",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/source-qualification-wrapper.log",
+        "source_blob": "8530dc065e90c71429dbd4786405bdfbc4eb5aab",
+        "published_blob": "8530dc065e90c71429dbd4786405bdfbc4eb5aab",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/source-qualification.json",
+        "source_blob": "c5621b9225ce5b8974fb54079af565c131841eba",
+        "published_blob": "c5621b9225ce5b8974fb54079af565c131841eba",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/source-sandbox-command.json",
+        "source_blob": "6a2d30d6f0c4edf22fcdde36541d3f008501814a",
+        "published_blob": "6a2d30d6f0c4edf22fcdde36541d3f008501814a",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/source-sandbox-isolated2.exit",
+        "source_blob": "573541ac9702dd3969c9bc859d2b91ec1f7e6e56",
+        "published_blob": "573541ac9702dd3969c9bc859d2b91ec1f7e6e56",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/source-sandbox-isolated2.log",
+        "source_blob": "b41363112da3d67086ea0a58d32f8c0485ea02b6",
+        "published_blob": "b41363112da3d67086ea0a58d32f8c0485ea02b6",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/source-sandbox-terminal.json",
+        "source_blob": "1c3ea20b9fd3c4e6fffaf684531fdba92a8b3c15",
+        "published_blob": "1c3ea20b9fd3c4e6fffaf684531fdba92a8b3c15",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/source-sandbox.exit",
+        "source_blob": "d00491fd7e5bb6fa28c517a0bb32b8b506539d4d",
+        "published_blob": "d00491fd7e5bb6fa28c517a0bb32b8b506539d4d",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/source-sandbox.log",
+        "source_blob": "0b2b8946d45751ac079115e43a2322c9893199c5",
+        "published_blob": "0b2b8946d45751ac079115e43a2322c9893199c5",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/source-snapshot-text-retention.json",
+        "source_blob": "361597223db39912b18987c90a74496239535bf9",
+        "published_blob": "361597223db39912b18987c90a74496239535bf9",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/source.patch",
+        "source_blob": "5535e339bd9abf04144fcb45fd7e572ad09c311f",
+        "published_blob": "5535e339bd9abf04144fcb45fd7e572ad09c311f",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/status.json",
+        "source_blob": "1f07c76ee1da27a43932156a3ea4453395fdb25f",
+        "published_blob": "1f07c76ee1da27a43932156a3ea4453395fdb25f",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/test-history-preserve-command.json",
+        "source_blob": "1dcb3ff6ad014a7e5cc401bc1843221591dffae2",
+        "published_blob": "1dcb3ff6ad014a7e5cc401bc1843221591dffae2",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/test-history-preserve-exit.json",
+        "source_blob": "9ed0ba2df99fd8389c505303d8e2531abac0ab3c",
+        "published_blob": "9ed0ba2df99fd8389c505303d8e2531abac0ab3c",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/test-history-preserve.log",
+        "source_blob": "cd792ca1ef116bb8087362fe69b245c26574c109",
+        "published_blob": "cd792ca1ef116bb8087362fe69b245c26574c109",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/test-history-restore.log",
+        "source_blob": "e8e82e59d2907bdaee49a3ab83c0a656654190f8",
+        "published_blob": "e8e82e59d2907bdaee49a3ab83c0a656654190f8",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/tune-0.log",
+        "source_blob": "5eae24d2b2ceb2e53c8291bd895dd03e7b802400",
+        "published_blob": "5eae24d2b2ceb2e53c8291bd895dd03e7b802400",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/tune-1.log",
+        "source_blob": "9b4cdaa90f8f33cf1d8380dd5136037faa6ed81e",
+        "published_blob": "9b4cdaa90f8f33cf1d8380dd5136037faa6ed81e",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/tune-command-0.json",
+        "source_blob": "1d09f26cfbb19c0187d3705b29c1784178e51960",
+        "published_blob": "1d09f26cfbb19c0187d3705b29c1784178e51960",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/tune-command-1.json",
+        "source_blob": "c132de9d23c877adf1b059d40b984009e425c346",
+        "published_blob": "c132de9d23c877adf1b059d40b984009e425c346",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/tune-exit-0.json",
+        "source_blob": "2787354a46045bb6194fc96b59a72bc57aeaeab6",
+        "published_blob": "2787354a46045bb6194fc96b59a72bc57aeaeab6",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/tune-exit-1.json",
+        "source_blob": "fb2333f6e03363a9ef7a08df86939e08e765d2ce",
+        "published_blob": "fb2333f6e03363a9ef7a08df86939e08e765d2ce",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/tune-key-0.json",
+        "source_blob": "b47414c8d67b388cf60f3dda44f51151ca6ed152",
+        "published_blob": "b47414c8d67b388cf60f3dda44f51151ca6ed152",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/tune-key-1.json",
+        "source_blob": "550f6a55b749c879390776e2c19b392f9e51085a",
+        "published_blob": "550f6a55b749c879390776e2c19b392f9e51085a",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/tune-keys.json",
+        "source_blob": "d76cf82098bfaf2a69e96931afb18e822c8da710",
+        "published_blob": "d76cf82098bfaf2a69e96931afb18e822c8da710",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/tune-read-guard-0.json",
+        "source_blob": "83110cadcebc9cac3c3e98ef763db7e40b43fc89",
+        "published_blob": "83110cadcebc9cac3c3e98ef763db7e40b43fc89",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/tune-read-guard-1.json",
+        "source_blob": "83110cadcebc9cac3c3e98ef763db7e40b43fc89",
+        "published_blob": "83110cadcebc9cac3c3e98ef763db7e40b43fc89",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/tuning-fit.json",
+        "source_blob": "a9da60eeb0352eb6af69bb2f67e18d3fca04bf7c",
+        "published_blob": "a9da60eeb0352eb6af69bb2f67e18d3fca04bf7c",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/tuning-results.jsonl",
+        "source_blob": "84e3d69d0849feb9ac457f7205b162419b2c74ef",
+        "published_blob": "84e3d69d0849feb9ac457f7205b162419b2c74ef",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/val-0.log",
+        "source_blob": "710f90a6f8ff6935c07c3322eaf7cd6acf6fc34a",
+        "published_blob": "710f90a6f8ff6935c07c3322eaf7cd6acf6fc34a",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/val-1.log",
+        "source_blob": "523da905f157ca4bbcfb29acb382891e3cb78d22",
+        "published_blob": "523da905f157ca4bbcfb29acb382891e3cb78d22",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/val-2.log",
+        "source_blob": "b179c1f96c3b120fa389fcc92df635c75d3f0606",
+        "published_blob": "b179c1f96c3b120fa389fcc92df635c75d3f0606",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/val-3.log",
+        "source_blob": "c57e791d8da870baea378a914ee08fbea63f40ee",
+        "published_blob": "c57e791d8da870baea378a914ee08fbea63f40ee",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/val-command-0.json",
+        "source_blob": "a26c0400e838c1063eb1473cf71607ef21624f0b",
+        "published_blob": "a26c0400e838c1063eb1473cf71607ef21624f0b",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/val-command-1.json",
+        "source_blob": "1375dcef174494b82a95e4d15b607eeb2ce13fc4",
+        "published_blob": "1375dcef174494b82a95e4d15b607eeb2ce13fc4",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/val-command-2.json",
+        "source_blob": "aa204ccb2451844f24d0ddbf7b4f0825479d3f90",
+        "published_blob": "aa204ccb2451844f24d0ddbf7b4f0825479d3f90",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/val-command-3.json",
+        "source_blob": "ab8ba1ae3593bd282cd31b0ab4aaa9795c39a6a1",
+        "published_blob": "ab8ba1ae3593bd282cd31b0ab4aaa9795c39a6a1",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/val-exit-0.json",
+        "source_blob": "a3ffd6ec3dea592ca90d9ed7afdd5fe7625347df",
+        "published_blob": "a3ffd6ec3dea592ca90d9ed7afdd5fe7625347df",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/val-exit-1.json",
+        "source_blob": "2c0a55e5f71c7d9808d144db5419e47442967c80",
+        "published_blob": "2c0a55e5f71c7d9808d144db5419e47442967c80",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/val-exit-2.json",
+        "source_blob": "149cf995da9b3c1552a73ce5b85899bd2756b4d7",
+        "published_blob": "149cf995da9b3c1552a73ce5b85899bd2756b4d7",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/val-exit-3.json",
+        "source_blob": "b85f893c6e0997dfd9bb3f7db968f347e559e068",
+        "published_blob": "b85f893c6e0997dfd9bb3f7db968f347e559e068",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/val-keys.json",
+        "source_blob": "e73a45446a2754f87d64cc844de5fa9e9fd252d4",
+        "published_blob": "e73a45446a2754f87d64cc844de5fa9e9fd252d4",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/val-read-guard-0.json",
+        "source_blob": "83110cadcebc9cac3c3e98ef763db7e40b43fc89",
+        "published_blob": "83110cadcebc9cac3c3e98ef763db7e40b43fc89",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/val-read-guard-1.json",
+        "source_blob": "83110cadcebc9cac3c3e98ef763db7e40b43fc89",
+        "published_blob": "83110cadcebc9cac3c3e98ef763db7e40b43fc89",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/val-read-guard-2.json",
+        "source_blob": "83110cadcebc9cac3c3e98ef763db7e40b43fc89",
+        "published_blob": "83110cadcebc9cac3c3e98ef763db7e40b43fc89",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/val-read-guard-3.json",
+        "source_blob": "83110cadcebc9cac3c3e98ef763db7e40b43fc89",
+        "published_blob": "83110cadcebc9cac3c3e98ef763db7e40b43fc89",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/verification-scheduling-addendum.md",
+        "source_blob": "89a2ad8b3aba63cbc5f3abcd409fde89bb649745",
+        "published_blob": "89a2ad8b3aba63cbc5f3abcd409fde89bb649745",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/evidence/verification-scheduling-addendum.md.before-overlap.txt",
+        "source_blob": "90c6478df722a3ebe30125a05dc3922d96a8c661",
+        "published_blob": "90c6478df722a3ebe30125a05dc3922d96a8c661",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/manifest.json",
+        "source_blob": "a79aa42f35749dbe30ad6bc8de5ecb37529aa8d8",
+        "published_blob": "a79aa42f35749dbe30ad6bc8de5ecb37529aa8d8",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/report.md",
+        "source_blob": "5d68718d5c2e99e76aa393911563fdaeb7fb54c3",
+        "published_blob": "5d68718d5c2e99e76aa393911563fdaeb7fb54c3",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/scripts/adapter-probe.mjs",
+        "source_blob": "c66d399b513a3392963096429d4a768d8e75035f",
+        "published_blob": "c66d399b513a3392963096429d4a768d8e75035f",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/scripts/calibration-import-support/characters.py",
+        "source_blob": "9b737ee7f08a9b6ca24fa4055161a6bd06914710",
+        "published_blob": "9b737ee7f08a9b6ca24fa4055161a6bd06914710",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/scripts/calibration.py",
+        "source_blob": "0b7093214f2a847a9ee23ff191b9a475d7b679a6",
+        "published_blob": "0b7093214f2a847a9ee23ff191b9a475d7b679a6",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/scripts/compile-model.mjs",
+        "source_blob": "1deb71a14a7bd9033df95057c4249a796dfad9a5",
+        "published_blob": "1deb71a14a7bd9033df95057c4249a796dfad9a5",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/scripts/complete.py",
+        "source_blob": "dc3cc6cf8c50872230e355c6006f63798a14d323",
+        "published_blob": "dc3cc6cf8c50872230e355c6006f63798a14d323",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/scripts/current-consumer.py",
+        "source_blob": "65b9bf66d842adab2167840b8ed5dae6518ff3cc",
+        "published_blob": "65b9bf66d842adab2167840b8ed5dae6518ff3cc",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/scripts/input-read-guard.mjs",
+        "source_blob": "8a0e7f07df5e97d47d1419c13450a60f51a491c4",
+        "published_blob": "8a0e7f07df5e97d47d1419c13450a60f51a491c4",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/scripts/observed-transition-probe.mjs",
+        "source_blob": "7c8b10c348fb5e687bb07c89c7c9f30a6feccd25",
+        "published_blob": "7c8b10c348fb5e687bb07c89c7c9f30a6feccd25",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/scripts/package-report.py",
+        "source_blob": "ba4f98edd3308da4b804637efbfc10a5b6c4c685",
+        "published_blob": "ba4f98edd3308da4b804637efbfc10a5b6c4c685",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/scripts/phase-probe.mjs",
+        "source_blob": "33bcf97de5b2c0cb0c94600f44e87aa9a7fe9a2b",
+        "published_blob": "33bcf97de5b2c0cb0c94600f44e87aa9a7fe9a2b",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/scripts/precompile-model.py",
+        "source_blob": "5316cbaaf9809cbcefaf6f916f5340c42c8b0d84",
+        "published_blob": "5316cbaaf9809cbcefaf6f916f5340c42c8b0d84",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/scripts/prepare-delivery.py",
+        "source_blob": "eb921480b33395ac7a3dc5e39652e43628bd0755",
+        "published_blob": "eb921480b33395ac7a3dc5e39652e43628bd0755",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/scripts/prepare-model.py",
+        "source_blob": "d4a3ce89bcc666c4f81bd7da493a68c68053a66d",
+        "published_blob": "d4a3ce89bcc666c4f81bd7da493a68c68053a66d",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/scripts/publish.py",
+        "source_blob": "8f9a6661ddf02a8d05d69c15233d6c4d45d446c3",
+        "published_blob": "8f9a6661ddf02a8d05d69c15233d6c4d45d446c3",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/scripts/qualify-source.py",
+        "source_blob": "7b3604dd5306dc170f11bd69a3c3e36887b5a702",
+        "published_blob": "7b3604dd5306dc170f11bd69a3c3e36887b5a702",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/scripts/record-live-source.py",
+        "source_blob": "a20d879e6260f10993e92d1cc1a112009a2d7435",
+        "published_blob": "a20d879e6260f10993e92d1cc1a112009a2d7435",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/scripts/run-consumer.py",
+        "source_blob": "b8840d55f11af70ac1c4c5368620dc9fa1033ea1",
+        "published_blob": "b8840d55f11af70ac1c4c5368620dc9fa1033ea1",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/validation/consumer-v2.mts",
+        "source_blob": "c914b9c7ce31fc51e493f4c6f3e7f04b3a980156",
+        "published_blob": "c914b9c7ce31fc51e493f4c6f3e7f04b3a980156",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/validation/input-read-guard.mjs",
+        "source_blob": "8a0e7f07df5e97d47d1419c13450a60f51a491c4",
+        "published_blob": "8a0e7f07df5e97d47d1419c13450a60f51a491c4",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/20261017-human-pace-h0/test-subject-phase-repair/validation/run-consumer.py",
+        "source_blob": "b8840d55f11af70ac1c4c5368620dc9fa1033ea1",
+        "published_blob": "b8840d55f11af70ac1c4c5368620dc9fa1033ea1",
+        "combined_with_parallel": false
+      },
+      {
+        "path": "paper/materials/decision-log.md",
+        "source_blob": "39ffd6d37ec38bab55daa44cc396d872b1bf360a",
+        "published_blob": "53be88f04d553b953273db5db84d4c4301bb60df",
+        "combined_with_parallel": true
+      }
+    ],
+    "preflight_tree": "44315d66f8a95501e7b1bf09b451e4d47570e62b",
+    "model-boundary-at-merge": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261017-human-pace-h0-r1/test-subject-phase-repair/live-publish-20261017-163827/model-boundary-at-merge.json",
+      "sha256": "725e448d1101cc14ba5ffcb9b1cf2eccaf5a1a49f12f2caaae979148996a2585",
+      "different": 36
+    },
+    "live_test_started": "2026-10-17 16:39:19 CST",
+    "sandbox_workers": 2,
+    "live_sandbox_exit": 0,
+    "model-boundary-after-test": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261017-human-pace-h0-r1/test-subject-phase-repair/live-publish-20261017-163827/model-boundary-after-test.json",
+      "sha256": "e276ad4f6cf3210814086d897a4db4e284270b56b5e620538118df81f8a6841d",
+      "different": 36
+    },
+    "receipt_source": "7498f94519191cfb79d16a25dbd85a2af610b9f5",
+    "version": "S1.silent-h0-test-subject-phase1",
+    "fixed_release_tree": "ddbb47965df35cfc01392269fffe8829404909b1",
+    "consumer_receipt": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/paper/materials/20261017-human-pace-h0/test-subject-phase-repair/validation/consumer-receipt.json",
+      "sha256": "f24fa2762edc17e0fdd519dca40d22555364a2becf49e664e1eff619b0084600"
+    },
+    "experience_refs": [
+      {
+        "id": "silent-test-subject-phase-reset",
+        "sha256": "302681a7b9c08b9611d64a2b9b9dcf97028ffa83e9a0a260ab2af094d395ad93"
+      },
+      {
+        "id": "silent-paper-krane-weak-multihit",
+        "sha256": "781e5ba40ced47d730beaa10974a4ebf82a224f4b855924916888d4002d318e1"
+      },
+      {
+        "id": "silent-g1a-aeonglass-calibration-boundary",
+        "sha256": "96a7fa46daa2996269adb9bd227c737e9e42baa8becfea2fda88d52749062af3"
+      },
+      {
+        "id": "silent-g1a-queen-calibration-boundary",
+        "sha256": "45aa6e56856dcc17a183c027bf1d9b5559c5fb267f3d08a3037a1e91c7c1ef75"
+      },
+      {
+        "id": "silent-g1a-test-subject-calibration-boundary",
+        "sha256": "29f95bd0bc9cf1eb9e3a47471f0b06f8a28df23ed456d49a337a0b2d211bfc06"
+      },
+      {
+        "id": "silent-g1a-fixed-production-boundary",
+        "sha256": "d22d56933654e07f4592bf1692ecc7dbf4e7719255bc7e0807724ece4c2d1129"
+      },
+      {
+        "id": "silent-h0-kaiser-crab-calibration-boundary",
+        "sha256": "d5f2545241ca35aa55e6f2b870b52b3b7a0119f1bb42bf03db10dd203a97a881"
+      },
+      {
+        "id": "silent-h0-knowledge-demon-calibration-boundary",
+        "sha256": "d9f4fb0faf2a905219740f6821b973b1d2f74ec43ba78f9357b23b7ea1627203"
+      },
+      {
+        "id": "silent-h0-insatiable-calibration-boundary",
+        "sha256": "ce7670a006ce6f96048a999a9bc6ee716ec99685318c892f397e9d0a9ce0a959"
+      },
+      {
+        "id": "silent-h0-end-turn-measurement-boundary",
+        "sha256": "da7f1d10a754058a3f7076216c343b311468cd2522cadcf80e168c4651a8d147"
+      }
+    ],
+    "release_id_status": "Ops allocates after actual publication; no borrowed release number or shipped claim."
+  },
+  "source_qualification": {
+    "status": "passed",
+    "exit_code": 0,
+    "started": "2026-10-17T08:19:09.708768+00:00",
+    "ended": "2026-10-17T08:29:03.228482+00:00",
+    "argv": [
+      "nice",
+      "-n",
+      "19",
+      "bash",
+      "tools/test-sandbox.sh"
+    ],
+    "cwd": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/agent",
+    "workers": 2,
+    "other_owned_mc_processes": 0,
+    "log": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261017-human-pace-h0-r1/test-subject-phase-repair/source-sandbox-isolated2.log",
+      "sha256": "e8ab587ae03811e3590f5cd14a7a6a93afd0678f128dfe044ceca2188638b361"
+    },
+    "history_restore": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261017-human-pace-h0-r1/test-history-restored-h0-ts-phase-isolated2.json",
+      "sha256": "11e45398eef78a61aa31d200b9e4d584ef3b2df69181e0a4c2b81c9b60ecaccc"
+    },
+    "source_sha256": {
+      "agent/src/reflex/rollout.ts": "10fccd338ac3c5e6ae150aaf8a0362edf8ace0a5254cf11dece124acec8bd719",
+      "agent/src/reflex/rollout-live.ts": "a26f9a2eee3555fba1035af33f363cbafdccbc8f205f43384f18679430fe1ae4",
+      "agent/tests/silent-test-subject-phase.test.ts": "23a0ba5f479a5f1bcbae9a851a17295bb6e1e3b0148bfbf0d6cfe05082d9eb95"
+    },
+    "sources_unchanged": true,
+    "first_full": {
+      "exit_code": 1,
+      "log": {
+        "path": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261017-human-pace-h0-r1/test-subject-phase-repair/source-sandbox.log",
+        "sha256": "cb8d009280b446612f129ae831cda6e0b33161bc0c4c72d9213fb9599e6f06d0"
+      },
+      "scope": "Original full retained: scratch .ts evidence copies were scanned as incomplete modules; one unchanged Queen/Amalgam test timed out at its original 20000ms during three-MC overlap. Scratch copies now explicit text after completed calibration, canonical model .ts files unchanged."
+    },
+    "scope": "Same official full sandbox, assertions, time limits and exclusion list. Source bytes unchanged; final candidate experience data included. Only owned MC work has ended and official worker count is two. No borrowed old tree checks."
+  },
+  "original_tests": {
+    "source_sandbox": {
+      "exit": 0,
+      "includes_tsc": true,
+      "workers": 2,
+      "files": 465,
+      "tests": 4290,
+      "log": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261017-human-pace-h0-r1/test-subject-phase-repair/source-sandbox-isolated2.log",
+      "sha256": "e8ab587ae03811e3590f5cd14a7a6a93afd0678f128dfe044ceca2188638b361"
+    },
+    "first_source_full": {
+      "exit_code": 1,
+      "log": {
+        "path": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261017-human-pace-h0-r1/test-subject-phase-repair/source-sandbox.log",
+        "sha256": "cb8d009280b446612f129ae831cda6e0b33161bc0c4c72d9213fb9599e6f06d0"
+      },
+      "scope": "Original full retained: scratch .ts evidence copies were scanned as incomplete modules; one unchanged Queen/Amalgam test timed out at its original 20000ms during three-MC overlap. Scratch copies now explicit text after completed calibration, canonical model .ts files unchanged."
+    },
+    "actual_live_sandbox": {
+      "exit": 0,
+      "includes_tsc": true,
+      "workers": 2,
+      "commit": "29f146292892704f618cda8f4db733f21f9cdb1f",
+      "tree": "44315d66f8a95501e7b1bf09b451e4d47570e62b",
+      "files": 474,
+      "tests": 4374,
+      "log": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261017-human-pace-h0-r1/test-subject-phase-repair/live-publish-20261017-163827/live-sandbox.log",
+      "sha256": "8612f921a11936b190ff8a1b491066f78a627037aa537b04c5cf982b24089a27"
+    },
+    "negative_regression": {
+      "exit": 1,
+      "expected": "Old phase retains Enrage and creates false later-Skill Strength."
+    },
+    "phase_probe": {
+      "status": "passed",
+      "transitions": 2,
+      "isolation_groups": 7
+    },
+    "adapter_probe": {
+      "status": "passed",
+      "B2": true,
+      "B3": true,
+      "synthetic_role_variants": 3
+    },
+    "actual_transition_probe": {
+      "status": "passed",
+      "windows": 2,
+      "independent_tuning_runs": 1
+    },
+    "fixed_calibration": {
+      "tuning_keys": 107,
+      "validation_keys": 481,
+      "new_rows": 62,
+      "reused_rows": 1114,
+      "samples": 200,
+      "validation_fit": false,
+      "criteria_changed": false
+    },
+    "consumer": {
+      "passed_objects": 10,
+      "kind": "fixed-consumer",
+      "natural_effect": null
+    },
+    "external_full": "Pending original scheduler on this exact new publication tree; no borrowed release checks."
+  },
+  "original_report": {
+    "task": "strategy-proposal",
+    "character": "silent",
+    "base": "8544db04cfd497fecfa9427c7c1c0c7362077cc3",
+    "fixes": [
+      {
+        "item": "Roy 已授权 H0：静默实验体阶段能力状态修正及原固定切分增量校准",
+        "commit": "e8e028720c150f8456789546e1a9f5da89e33686",
+        "merged_commit": "29f146292892704f618cda8f4db733f21f9cdb1f",
+        "files": [
+          "agent/src/reflex/rollout.ts",
+          "agent/src/reflex/rollout-live.ts",
+          "agent/tests/silent-test-subject-phase.test.ts"
+        ],
+        "test": "旧编译负向回归失败；新编译阶段转换、角色隔离、两个实际调参窗口、B2/B3构造及完整沙箱检查通过。",
+        "fails_without_fix": true,
+        "ledger": [
+          "silent-0502",
+          "silent-0503"
+        ]
+      }
+    ],
+    "merged": "29f146292892704f618cda8f4db733f21f9cdb1f",
+    "publication": "4e6afa0ff6d5177becd2ae2e191ed2f395b91ac8",
+    "fixed_release_tree": "ddbb47965df35cfc01392269fffe8829404909b1",
+    "version": "S1.silent-h0-test-subject-phase1",
+    "experience_version": "2026-10-17.h0-r1-phase2",
+    "release_id": null,
+    "release_status": "已实际发布；正式release_id和新账本shipped由ops核录。",
+    "commits": {
+      "source": "e8e028720c150f8456789546e1a9f5da89e33686",
+      "refresh": "a5481c36b8c5059add1beaa0329e1b511da6491b",
+      "before_code": "a5481c36b8c5059add1beaa0329e1b511da6491b",
+      "merged": "29f146292892704f618cda8f4db733f21f9cdb1f",
+      "consumer_receipt_source": "7498f94519191cfb79d16a25dbd85a2af610b9f5",
+      "publication": "4e6afa0ff6d5177becd2ae2e191ed2f395b91ac8"
+    },
+    "tests": {
+      "source": {
+        "tsc": 0,
+        "sandbox_exit": 0,
+        "files": 465,
+        "passed": 4290
+      },
+      "live_combination": {
+        "tsc": 0,
+        "sandbox_exit": 0,
+        "files": 474,
+        "passed": 4374,
+        "commit": "29f146292892704f618cda8f4db733f21f9cdb1f",
+        "tree": "44315d66f8a95501e7b1bf09b451e4d47570e62b"
+      },
+      "retained_first_source_full": {
+        "exit": 1,
+        "failed": 2,
+        "reason": "源码证据副本被当作模块；旧用例超过原20秒。原日志保留。证据副本转为文本归档、模拟任务结束后，原完整检查重跑通过；未改断言、时限或排除表。"
+      },
+      "negative_regression": {
+        "exit": 1,
+        "expected": true
+      },
+      "fixed_consumer": {
+        "passed_objects": 10,
+        "status": "passed"
+      },
+      "gitleaks": 0,
+      "verify_experience": "passed",
+      "external_full": "交调度器检查本次固定发布树，未借用旧树检查。"
+    },
+    "code_proposals": [
+      "silent-proposal-2d57d88e790a9bf3",
+      "silent-proposal-ad89dfdb6bd0ff07",
+      "silent-proposal-7b0badc658e4fb1b"
+    ],
+    "implementation_domains": [
+      "combat",
+      "structure"
+    ],
+    "proposal_results": [
+      {
+        "id": "silent-proposal-2d57d88e790a9bf3",
+        "status": "implemented",
+        "commit": "e8e028720c150f8456789546e1a9f5da89e33686",
+        "reason": "源码已为live祖先；CLI以附implemented_commit的新内容身份追加，原队列和稿件保留。"
+      },
+      {
+        "id": "silent-proposal-ad89dfdb6bd0ff07",
+        "status": "implemented",
+        "commit": "e8e028720c150f8456789546e1a9f5da89e33686"
+      },
+      {
+        "id": "silent-proposal-7b0badc658e4fb1b",
+        "status": "waiting",
+        "reason": "固定验证已完成；更宽assay、量测时点、组合挡和完整长程资源尚未隔离，不冒称整项实现。"
+      }
+    ],
+    "ledger": {
+      "ids": [
+        "silent-0502",
+        "silent-0503"
+      ],
+      "status": "proposed",
+      "shipped_by_learner": false
+    },
+    "calibration": {
+      "model_sha256": "89717d20b44780c4bb3d2d4bd43acf9d83c4ff3081270113e805e45579a16e0b",
+      "artifact": "e1a81ed842710877cc41bc5dd5af3de05eba3b08e2fdcde47e7dd2656214289a",
+      "tune_keys": 107,
+      "validation_keys": 481,
+      "validation_success_per_start": 479,
+      "new_prediction_rows": 62,
+      "reused_prediction_rows": 1114,
+      "validation_fit": false,
+      "criteria_unchanged": true,
+      "criteria": {
+        "min_fights": 10,
+        "brier_ratio": 1.25,
+        "max_gap": 0.15,
+        "leak_range": [
+          0.7,
+          1.3
+        ],
+        "starts": {
+          "B2": "T1",
+          "B3": "pre"
+        }
+      },
+      "comparison_before": "完成的冻结v2对象86f9bd67；R366的107调参、460验证及70生产输入差另行保留。",
+      "production_trust_replaced": false,
+      "periodic_entry": "agent/tools/boss-sim/refresh-silent.py：既有升阶或新增20次结局事件触发；本轮未复派旧周期。"
+    },
+    "boss_trust": {
+      "TEST_SUBJECT": {
+        "independent_n": 29,
+        "candidate_n": 29,
+        "missing_simulations": 0,
+        "quantity_deficit": 0,
+        "quality_additional_samples": "unknown",
+        "trust": "low",
+        "B2": {
+          "Brier_before_after": [
+            0.1894,
+            0.1352
+          ],
+          "gap_before_after": [
+            0.159,
+            0.197
+          ],
+          "leak_before_after": [
+            3.721,
+            2.394
+          ],
+          "failed": [
+            "brier",
+            "gap",
+            "leak"
+          ]
+        },
+        "B3": {
+          "Brier_before_after": [
+            0.1821,
+            0.1306
+          ],
+          "gap_before_after": [
+            0.134,
+            0.157
+          ],
+          "leak_before_after": [
+            3.598,
+            2.322
+          ],
+          "failed": [
+            "gap",
+            "leak"
+          ]
+        }
+      },
+      "AEONGLASS": {
+        "independent_n": 35,
+        "candidate_n": 35,
+        "missing_simulations": 0,
+        "quantity_deficit": 0,
+        "quality_additional_samples": "unknown",
+        "trust": "low",
+        "B2": {
+          "Brier_before_after": [
+            0.179,
+            0.1731
+          ],
+          "gap_before_after": [
+            0.167,
+            0.159
+          ],
+          "leak_before_after": [
+            4.078,
+            4.078
+          ],
+          "failed": [
+            "brier",
+            "gap",
+            "leak"
+          ]
+        },
+        "B3": {
+          "Brier_before_after": [
+            0.1895,
+            0.1841
+          ],
+          "gap_before_after": [
+            0.184,
+            0.177
+          ],
+          "leak_before_after": [
+            4.204,
+            4.204
+          ],
+          "failed": [
+            "brier",
+            "gap",
+            "leak"
+          ]
+        }
+      },
+      "QUEEN": {
+        "independent_n": 31,
+        "candidate_n": 32,
+        "missing_simulations": 1,
+        "quantity_deficit": 0,
+        "quality_additional_samples": "unknown",
+        "trust": "low",
+        "B2": {
+          "Brier_before_after": [
+            0.2252,
+            0.2186
+          ],
+          "gap_before_after": [
+            0.297,
+            0.289
+          ],
+          "leak_before_after": [
+            1.065,
+            1.065
+          ],
+          "failed": [
+            "brier",
+            "gap"
+          ]
+        },
+        "B3": {
+          "Brier_before_after": [
+            0.2265,
+            0.2204
+          ],
+          "gap_before_after": [
+            0.279,
+            0.27
+          ],
+          "leak_before_after": [
+            1.176,
+            1.176
+          ],
+          "failed": [
+            "brier",
+            "gap"
+          ]
+        }
+      },
+      "KAISER_CRAB": {
+        "independent_n": 46,
+        "candidate_n": 46,
+        "missing_simulations": 0,
+        "quantity_deficit": 0,
+        "quality_additional_samples": "unknown",
+        "trust": "low",
+        "B2": {
+          "Brier_before_after": [
+            0.1583,
+            0.1556
+          ],
+          "gap_before_after": [
+            0.068,
+            0.06
+          ],
+          "leak_before_after": [
+            1.321,
+            1.321
+          ],
+          "failed": [
+            "brier",
+            "leak"
+          ]
+        },
+        "B3": {
+          "Brier_before_after": [
+            0.1803,
+            0.1791
+          ],
+          "gap_before_after": [
+            0.087,
+            0.08
+          ],
+          "leak_before_after": [
+            1.345,
+            1.345
+          ],
+          "failed": [
+            "brier",
+            "leak"
+          ]
+        }
+      },
+      "KNOWLEDGE_DEMON": {
+        "independent_n": 45,
+        "candidate_n": 46,
+        "missing_simulations": 1,
+        "quantity_deficit": 0,
+        "quality_additional_samples": "unknown",
+        "trust": "low",
+        "B2": {
+          "Brier_before_after": [
+            0.0752,
+            0.0735
+          ],
+          "gap_before_after": [
+            -0.011,
+            -0.012
+          ],
+          "leak_before_after": [
+            1.378,
+            1.378
+          ],
+          "failed": [
+            "leak"
+          ]
+        },
+        "B3": {
+          "Brier_before_after": [
+            0.0675,
+            0.0651
+          ],
+          "gap_before_after": [
+            0.01,
+            0.01
+          ],
+          "leak_before_after": [
+            1.414,
+            1.414
+          ],
+          "failed": [
+            "leak"
+          ]
+        }
+      },
+      "THE_INSATIABLE": {
+        "independent_n": 46,
+        "candidate_n": 46,
+        "missing_simulations": 0,
+        "quantity_deficit": 0,
+        "quality_additional_samples": "unknown",
+        "trust": "low",
+        "B2": {
+          "Brier_before_after": [
+            0.1396,
+            0.1367
+          ],
+          "gap_before_after": [
+            0.061,
+            0.055
+          ],
+          "leak_before_after": [
+            1.32,
+            1.32
+          ],
+          "failed": [
+            "brier",
+            "leak"
+          ]
+        },
+        "B3": {
+          "Brier_before_after": [
+            0.1478,
+            0.1456
+          ],
+          "gap_before_after": [
+            0.062,
+            0.056
+          ],
+          "leak_before_after": [
+            1.364,
+            1.364
+          ],
+          "failed": [
+            "brier",
+            "leak"
+          ]
+        }
+      }
+    },
+    "A10_residuals": {
+      "B2": {
+        "n": 479,
+        "gap": 0.05,
+        "Brier": 0.1039,
+        "leak_ratio": 1.265
+      },
+      "B3": {
+        "n": 479,
+        "gap": 0.057,
+        "Brier": 0.1079,
+        "leak_ratio": 1.278
+      },
+      "A0–4_validation_n": 0,
+      "A5–9_validation_n": 0
+    },
+    "F49": {
+      "B2": {
+        "n": 31,
+        "Brier": 0.1687,
+        "gap": 0.287,
+        "leak_ratio": 2.527
+      },
+      "B3": {
+        "n": 31,
+        "Brier": 0.1617,
+        "gap": 0.269,
+        "leak_ratio": 2.487
+      },
+      "trust": "low",
+      "joint_probability": null
+    },
+    "report": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261017-human-pace-h0-r1/test-subject-phase-repair/final-report.md",
+    "calibration_report": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/paper/materials/20261017-human-pace-h0/test-subject-phase-repair/report.md",
+    "learning_result": {
+      "request_id": "roy-20261017-human-pace-h0",
+      "revision": 1,
+      "input_sha256": "982c4264158fe5426423cf02477f22822d1a2b5e8bff058c7575a52bd6f7da54",
+      "outcome": "complete",
+      "coverage": {
+        "h0-target-boss-mechanism-evidence": [
+          {
+            "id": "silent-g1a-test-subject-calibration-boundary",
+            "sha256": "29f95bd0bc9cf1eb9e3a47471f0b06f8a28df23ed456d49a337a0b2d211bfc06"
+          },
+          {
+            "id": "silent-g1a-aeonglass-calibration-boundary",
+            "sha256": "96a7fa46daa2996269adb9bd227c737e9e42baa8becfea2fda88d52749062af3"
+          },
+          {
+            "id": "silent-g1a-queen-calibration-boundary",
+            "sha256": "45aa6e56856dcc17a183c027bf1d9b5559c5fb267f3d08a3037a1e91c7c1ef75"
+          },
+          {
+            "id": "silent-h0-kaiser-crab-calibration-boundary",
+            "sha256": "d5f2545241ca35aa55e6f2b870b52b3b7a0119f1bb42bf03db10dd203a97a881"
+          },
+          {
+            "id": "silent-h0-knowledge-demon-calibration-boundary",
+            "sha256": "d9f4fb0faf2a905219740f6821b973b1d2f74ec43ba78f9357b23b7ea1627203"
+          },
+          {
+            "id": "silent-h0-insatiable-calibration-boundary",
+            "sha256": "ce7670a006ce6f96048a999a9bc6ee716ec99685318c892f397e9d0a9ce0a959"
+          },
+          {
+            "id": "silent-test-subject-phase-reset",
+            "sha256": "302681a7b9c08b9611d64a2b9b9dcf97028ffa83e9a0a260ab2af094d395ad93"
+          }
+        ],
+        "h0-frozen-inputs-and-residual-diagnosis": [
+          {
+            "id": "silent-g1a-fixed-production-boundary",
+            "sha256": "d22d56933654e07f4592bf1692ecc7dbf4e7719255bc7e0807724ece4c2d1129"
+          },
+          {
+            "id": "silent-h0-end-turn-measurement-boundary",
+            "sha256": "da7f1d10a754058a3f7076216c343b311468cd2522cadcf80e168c4651a8d147"
+          }
+        ],
+        "h0-evidence-backed-model-repair": [
+          {
+            "id": "silent-test-subject-phase-reset",
+            "sha256": "302681a7b9c08b9611d64a2b9b9dcf97028ffa83e9a0a260ab2af094d395ad93"
+          }
+        ],
+        "h0-fixed-split-recalibration-and-gates": [
+          {
+            "id": "silent-g1a-fixed-production-boundary",
+            "sha256": "d22d56933654e07f4592bf1692ecc7dbf4e7719255bc7e0807724ece4c2d1129"
+          },
+          {
+            "id": "silent-g1a-test-subject-calibration-boundary",
+            "sha256": "29f95bd0bc9cf1eb9e3a47471f0b06f8a28df23ed456d49a337a0b2d211bfc06"
+          },
+          {
+            "id": "silent-g1a-aeonglass-calibration-boundary",
+            "sha256": "96a7fa46daa2996269adb9bd227c737e9e42baa8becfea2fda88d52749062af3"
+          },
+          {
+            "id": "silent-g1a-queen-calibration-boundary",
+            "sha256": "45aa6e56856dcc17a183c027bf1d9b5559c5fb267f3d08a3037a1e91c7c1ef75"
+          },
+          {
+            "id": "silent-h0-kaiser-crab-calibration-boundary",
+            "sha256": "d5f2545241ca35aa55e6f2b870b52b3b7a0119f1bb42bf03db10dd203a97a881"
+          },
+          {
+            "id": "silent-h0-knowledge-demon-calibration-boundary",
+            "sha256": "d9f4fb0faf2a905219740f6821b973b1d2f74ec43ba78f9357b23b7ea1627203"
+          },
+          {
+            "id": "silent-h0-insatiable-calibration-boundary",
+            "sha256": "ce7670a006ce6f96048a999a9bc6ee716ec99685318c892f397e9d0a9ce0a959"
+          }
+        ],
+        "h0-live-experience-source-consumer": [
+          {
+            "id": "silent-test-subject-phase-reset",
+            "sha256": "302681a7b9c08b9611d64a2b9b9dcf97028ffa83e9a0a260ab2af094d395ad93"
+          },
+          {
+            "id": "silent-paper-krane-weak-multihit",
+            "sha256": "781e5ba40ced47d730beaa10974a4ebf82a224f4b855924916888d4002d318e1"
+          },
+          {
+            "id": "silent-g1a-aeonglass-calibration-boundary",
+            "sha256": "96a7fa46daa2996269adb9bd227c737e9e42baa8becfea2fda88d52749062af3"
+          },
+          {
+            "id": "silent-g1a-queen-calibration-boundary",
+            "sha256": "45aa6e56856dcc17a183c027bf1d9b5559c5fb267f3d08a3037a1e91c7c1ef75"
+          },
+          {
+            "id": "silent-g1a-test-subject-calibration-boundary",
+            "sha256": "29f95bd0bc9cf1eb9e3a47471f0b06f8a28df23ed456d49a337a0b2d211bfc06"
+          },
+          {
+            "id": "silent-g1a-fixed-production-boundary",
+            "sha256": "d22d56933654e07f4592bf1692ecc7dbf4e7719255bc7e0807724ece4c2d1129"
+          },
+          {
+            "id": "silent-h0-kaiser-crab-calibration-boundary",
+            "sha256": "d5f2545241ca35aa55e6f2b870b52b3b7a0119f1bb42bf03db10dd203a97a881"
+          },
+          {
+            "id": "silent-h0-knowledge-demon-calibration-boundary",
+            "sha256": "d9f4fb0faf2a905219740f6821b973b1d2f74ec43ba78f9357b23b7ea1627203"
+          },
+          {
+            "id": "silent-h0-insatiable-calibration-boundary",
+            "sha256": "ce7670a006ce6f96048a999a9bc6ee716ec99685318c892f397e9d0a9ce0a959"
+          },
+          {
+            "id": "silent-h0-end-turn-measurement-boundary",
+            "sha256": "da7f1d10a754058a3f7076216c343b311468cd2522cadcf80e168c4651a8d147"
+          }
+        ],
+        "h0-limitations-and-objections": [
+          {
+            "id": "silent-g1a-fixed-production-boundary",
+            "sha256": "d22d56933654e07f4592bf1692ecc7dbf4e7719255bc7e0807724ece4c2d1129"
+          },
+          {
+            "id": "silent-h0-end-turn-measurement-boundary",
+            "sha256": "da7f1d10a754058a3f7076216c343b311468cd2522cadcf80e168c4651a8d147"
+          },
+          {
+            "id": "silent-test-subject-phase-reset",
+            "sha256": "302681a7b9c08b9611d64a2b9b9dcf97028ffa83e9a0a260ab2af094d395ad93"
+          }
+        ]
+      },
+      "consumer_receipt": {
+        "path": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/paper/materials/20261017-human-pace-h0/test-subject-phase-repair/validation/consumer-receipt.json",
+        "sha256": "f24fa2762edc17e0fdd519dca40d22555364a2becf49e664e1eff619b0084600"
+      },
+      "questions": [
+        {
+          "claim": "六目标旧校准高leak/失败项可定位为敌方某招伤害倍率错误。",
+          "finding": "该假设尚未普遍成立。24选定战203个严格命令窗口中179可回放、178净掉血相符；24 no solve未知。17窗口的旧last已在掉血之后，旧leak分母少计。净损仍混合持牌、回合末/回合初效果，不能替代纯敌伤结算。整战策略/抽牌轨迹尚未隔离。",
+          "evidence": [
+            "TXZ6RVMQA09D A10 F48 attempt3 T2: 56→50，旧last50而leak0",
+            "diagnosis.json",
+            "end-turn-windows.json",
+            "window-replay-merged.json",
+            "window-sources.json"
+          ],
+          "recommendation": "保留原阈值和低可信；修后481验证及原leak口径分列，量测时点/纯敌伤assay另由原任务处理，不以换标签通过闸门。",
+          "existing_entry_ids": [
+            "silent-g1a-fixed-production-boundary",
+            "silent-g1a-aeonglass-calibration-boundary",
+            "silent-h0-end-turn-measurement-boundary"
+          ]
+        },
+        {
+          "claim": "旧经验silent-paper-krane-weak-multihit已被后续回合敌伤模型完整消费。",
+          "finding": "ZZMYZ5UBCG72 A2四招六上下文的9个意图端点显示不一致：已有虚弱后续模型仍乘0.75，实盘文本40%及意图支持这些上下文乘0.6。仍只有1独立局，不支持扩到A10、新施虚弱或任意力量/怪物。",
+          "evidence": [
+            "ZZMYZ5UBCG72 A2 F48 attempt1 T2–T7",
+            "repair-probe-v2-output.json",
+            "adapter-probe-v4-output.json",
+            "source-boundary-v2-equivalence.json"
+          ],
+          "recommendation": "仅上线角色/进阶/有效遗物/原基数命中数及六上下文均匹配的窄修，保留旧经验n=1与低置信；未观察范围沿旧路。",
+          "existing_entry_ids": [
+            "silent-paper-krane-weak-multihit"
+          ]
+        },
+        {
+          "claim": "UJ0K3G10609Y残差足以证明双尾挡或silent-0332根因已解决。",
+          "finding": "唯一净损差为A10 F48第6试T2实损5、模拟11；6差兼容披风搭扣/奥利哈钢组合挡，但该窗口没有分离触发顺序、完整资源封套和其他条件，不能证明因果或声称0332修复。",
+          "evidence": [
+            "UJ0K3G10609Y A10 F48 attempt6 T2",
+            "diagnosis.json:first_same_window_net_divergence",
+            "windows/UJ0K3G10609Y-F48-a6-T2-pre.json",
+            "windows/UJ0K3G10609Y-F48-a6-T2-next.json"
+          ],
+          "recommendation": "给原0332 owner精确源偏移，保持unknown与原失败历史；本H0不改turn-solver/SL/药水或通用连战接口。",
+          "existing_entry_ids": [
+            "silent-g1a-test-subject-calibration-boundary",
+            "silent-h0-end-turn-measurement-boundary"
+          ]
+        },
+        {
+          "claim": "已有silent-test-subject-phase-reset的换相能力事实已被后续整场模型完整消费。",
+          "finding": "事实本身得到原帧支持，但冻结model86f9bd67和当前live的enemyDown仍继承第一相base.enrage/旧woundsPerHit，后续solver会继续使用。A10三局111→212后激怒消失并出现痛苦刺击1；其中两局212→313后痛苦刺击消失。源码缺口可以定位为阶段状态输入不一致，不由高leak比例反推倍率；完整Wound入堆/长程资源和自然效果仍未验证。",
+          "evidence": [
+            "JMH5C51RLN4E A10 F48 attempt5 T4→T5/T7→T8",
+            "UJ0K3G10609Y A10 F48 attempt6 T5→T6",
+            "YZWV37N2MU6N A10 F48 attempt1 T5→T6/T8→T9",
+            "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261017-human-pace-h0-r1/test-subject-phase-repair/evidence.json",
+            "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261017-human-pace-h0-r1/validation-phase-2/test-subject-phase-power-plan.json"
+          ],
+          "recommendation": "仅修已见SILENT A10 HP/能力签名的whole-fight状态转移，保其他角色/阶/短rollout/未知形状原路；固定回归和角色隔离通过后，仅重算2调参/29验证且冻结新训练Platt、保原四闸，按实际结果保低可信与限制。旧阶段事实和原shipped历史保留，不关闭0332或宽父。",
+          "existing_entry_ids": [
+            "silent-test-subject-phase-reset",
+            "silent-g1a-test-subject-calibration-boundary",
+            "silent-g1a-fixed-production-boundary"
+          ]
+        }
+      ]
+    },
+    "verification": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261017-human-pace-h0-r1/test-subject-phase-repair/ops-experience-verification.json",
+      "sha256": "1fc8be95d41a4031bb021788e67a6086a34e938294928cdefa99943c05823e7a"
+    },
+    "current_live_guard": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261017-human-pace-h0-r1/test-subject-phase-repair/final-current-live-guard.json",
+      "sha256": "970d0b73d9d3e416ea062978f095d78b26cc02252260c4d054488e59a02502d3"
+    },
+    "limits": [
+      "六个目标全部保持低可信，质量缺口不能用数量达标抵消。",
+      "固定full对象的校准不认证当前H1有限前缀、刷新输入或后续H2树。",
+      "固定消费者仅证明可读取，不证明自然采用、胜率提升或F49联合率。",
+      "不关闭silent-0332、H1或human-pace宽父；不代ops、watcher或Roy的ACK。"
+    ],
+    "full_delivery": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261017-human-pace-h0-r1/test-subject-phase-repair/delivery.json",
+      "sha256": "0225287f32598ad06394e419f9efc22005fa0dc4e056e31e33bf22f392caff3c"
+    }
+  },
+  "consumer_receipt": {
+    "path": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/paper/materials/20261017-human-pace-h0/test-subject-phase-repair/validation/consumer-receipt.json",
+    "sha256": "f24fa2762edc17e0fdd519dca40d22555364a2becf49e664e1eff619b0084600"
+  },
+  "consumer_entries_verified": 10,
+  "original_experience_verifier": {
+    "status": "passed",
+    "function": "ops/learning_requests.py:verify_experience",
+    "verifier_sha256": "b8f99ae5bfe559b8cb849a2d6804809d127af256e80e08c289950d33df71e5bd",
+    "registered_request": {
+      "path": "/home/dw/Projects/agent-sts2/notes/learning-requests/roy-20261017-human-pace-h0.json",
+      "sha256": "d3da188a5151a8dc57274ad4d48431b1253ccc677406a48f005bdb38ecef0680"
+    },
+    "report": {
+      "path": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261017-human-pace-h0-r1/test-subject-phase-repair/completion.json",
+      "sha256": "8ca27334448bac4f5bb6231f10ad660e9dee178a6e3339cca08d4041ea7592e8"
+    },
+    "request_id": "roy-20261017-human-pace-h0",
+    "revision": 1,
+    "input_sha256": "982c4264158fe5426423cf02477f22822d1a2b5e8bff058c7575a52bd6f7da54",
+    "live_head": "3910f41b9c3784a70362f63aad5f0994794c68b7",
+    "at": "2026-10-17T08:53:32.428276+00:00",
+    "scope": "Actual read-only verifier execution; no registry/state/ACK edits, no shipped claim."
+  },
+  "original_current_live_guard": {
+    "at": "2026-10-17T08:55:51.962555+00:00",
+    "current_live_head": "3910f41b9c3784a70362f63aad5f0994794c68b7",
+    "current_live_subject": "Integrate Silent H2 observer-only shadow in live",
+    "fixed_h0_publication": "4e6afa0ff6d5177becd2ae2e191ed2f395b91ac8",
+    "fixed_h0_release_tree": "ddbb47965df35cfc01392269fffe8829404909b1",
+    "experience_version": "2026-10-17.h0-r1-phase2",
+    "actual_production_consumer_sources_unchanged": [
+      {
+        "path": "agent/src/knowledge/files.ts",
+        "sha256": "96742c6793c6d988444a0b60c74a8e57370c75e95b9f27a4a42fd854d8eeae6d"
+      },
+      {
+        "path": "agent/src/knowledge/experience.ts",
+        "sha256": "2b9fedb9ef907bc346519da202b9dbcecda6765f777b1f4557f9226be602e1dd"
+      },
+      {
+        "path": "agent/src/knowledge/render/data.ts",
+        "sha256": "e08e480b4d4bb51f0fdbe65f557f47b5057302bf4cc2078f9c591b69c466a171"
+      },
+      {
+        "path": "agent/src/knowledge/render/experience-text.ts",
+        "sha256": "10a074dba702f77edc563c7405b815777583ed630826c10993de130368586a56"
+      }
+    ],
+    "new_consumer_execution": false,
+    "scope": "Later owner merged H2 observer-only shadow after the tested H0 publication. H0 did not implement, enable or certify H2; its tests refer only to the recorded H0 code/test/publication trees. Actual reader source and owned experience objects remain identical, so the real receipt is reused."
+  },
+  "notice_readbacks": [
+    {
+      "id": "b8f6f1193c543ae377f87ea7",
+      "original_notice": {
+        "id": "b8f6f1193c543ae377f87ea7",
+        "kind": "disagreement",
+        "request_id": "roy-20261017-human-pace-h0",
+        "message": "[{\"claim\": \"六目标旧校准高leak/失败项可定位为敌方某招伤害倍率错误。\", \"finding\": \"该假设尚未普遍成立。24选定战203个严格命令窗口中179可回放、178净掉血相符；24 no solve未知。17窗口的旧last已在掉血之后，旧leak分母少计。净损仍混合持牌、回合末/回合初效果，不能替代纯敌伤结算。整战策略/抽牌轨迹尚未隔离。\", \"evidence\": [\"TXZ6RVMQA09D A10 F48 attempt3 T2: 56→50，旧last50而leak0\", \"diagnosis.json\", \"end-turn-windows.json\", \"window-replay-merged.json\", \"window-sources.json\"], \"recommendation\": \"保留原阈值和低可信；修后481验证及原leak口径分列，量测时点/纯敌伤assay另由原任务处理，不以换标签通过闸门。\", \"existing_entry_ids\": [\"silent-g1a-fixed-production-boundary\", \"silent-g1a-aeonglass-calibration-boundary\", \"silent-h0-end-turn-measurement-boundary\"]}, {\"claim\": \"旧经验silent-paper-krane-weak-multihit已被后续回合敌伤模型完整消费。\", \"finding\": \"ZZMYZ5UBCG72 A2四招六上下文的9个意图端点显示不一致：已有虚弱后续模型仍乘0.75，实盘文本40%及意图支持这些上下文乘0.6。仍只有1独立局，不支持扩到A10、新施虚弱或任意力量/怪物。\", \"evidence\": [\"ZZMYZ5UBCG72 A2 F48 attempt1 T2–T7\", \"repair-probe-v2-output.json\", \"adapter-probe-v4-output.json\", \"source-boundary-v2-equivalence.json\"], \"recommendation\": \"仅上线角色/进阶/有效遗物/原基数命中数及六上下文均匹配的窄修，保留旧经验n=1与低置信；未观察范围沿旧路。\", \"existing_entry_ids\": [\"silent-paper-krane-weak-multihit\"]}, {\"claim\": \"UJ0K3G10609Y残差足以证明双尾挡或silent-0332根因已解决。\", \"finding\": \"唯一净损差为A10 F48第6试T2实损5、模拟11；6差兼容披风搭扣/奥利哈钢组合挡，但该窗口没有分离触发顺序、完整资源封套和其他条件，不能证明因果或声称0332修复。\", \"evidence\": [\"UJ0K3G10609Y A10 F48 attempt6 T2\", \"diagnosis.json:first_same_window_net_divergence\", \"windows/UJ0K3G10609Y-F48-a6-T2-pre.json\", \"windows/UJ0K3G10609Y-F48-a6-T2-next.json\"], \"recommendation\": \"给原0332 owner精确源偏移，保持unknown与原失败历史；本H0不改turn-solver/SL/药水或通用连战接口。\", \"existing_entry_ids\": [\"silent-g1a-test-subject-calibration-boundary\", \"silent-h0-end-turn-measurement-boundary\"]}, {\"claim\": \"已有silent-test-subject-phase-reset的换相能力事实已被后续整场模型完整消费。\", \"finding\": \"事实本身得到原帧支持，但冻结model86f9bd67和当前live的enemyDown仍继承第一相base.enrage/旧woundsPerHit，后续solver会继续使用。A10三局111→212后激怒消失并出现痛苦刺击1；其中两局212→313后痛苦刺击消失。源码缺口可以定位为阶段状态输入不一致，不由高leak比例反推倍率；完整Wound入堆/长程资源和自然效果仍未验证。\", \"evidence\": [\"JMH5C51RLN4E A10 F48 attempt5 T4→T5/T7→T8\", \"UJ0K3G10609Y A10 F48 attempt6 T5→T6\", \"YZWV37N2MU6N A10 F48 attempt1 T5→T6/T8→T9\", \"/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261017-human-pace-h0-r1/test-subject-phase-repair/evidence.json\", \"/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/learner/runs/20261017-human-pace-h0-r1/validation-phase-2/test-subject-phase-power-plan.json\"], \"recommendation\": \"仅修已见SILENT A10 HP/能力签名的whole-fight状态转移，保其他角色/阶/短rollout/未知形状原路；固定回归和角色隔离通过后，仅重算2调参/29验证且冻结新训练Platt、保原四闸，按实际结果保低可信与限制。旧阶段事实和原shipped历史保留，不关闭0332或宽父。\", \"existing_entry_ids\": [\"silent-test-subject-phase-reset\", \"silent-g1a-test-subject-calibration-boundary\", \"silent-g1a-fixed-production-boundary\"]}]",
+        "request_sha256": "d3da188a5151a8dc57274ad4d48431b1253ccc677406a48f005bdb38ecef0680",
+        "created_at": 1792227598.337955,
+        "route": [
+          "learner",
+          "ops",
+          "watcher",
+          "Roy"
+        ],
+        "ops_forwarded": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/learning-notices/receipts/b8f6f1193c543ae377f87ea7.ops-forwarded.json",
+          "sha256": "bee8e12574ec4d90f18b98c9abbb0756efdc36d83737ea04b728683914e7dae1",
+          "at": 1792227598.3455436
+        },
+        "watcher_received": {
+          "path": "/home/dw/Projects/agent-sts2/paper/materials/20261017-watcher-h0-phase-notices/b8f6f1193c543ae377f87ea7.watcher_received.receipt.json",
+          "sha256": "26eeb1153596b493f7df3089ae131c09c2d719b1011023266050a9fd3cc2634b",
+          "at": 1792227747.5713573
+        },
+        "roy_notified": {
+          "path": "/home/dw/Projects/agent-sts2/paper/materials/20261017-watcher-h0-phase-notices/b8f6f1193c543ae377f87ea7.roy_notified.receipt.json",
+          "sha256": "6cdb9b178fa9da606c57a43f07b1c1dc277ae9349966cb48aae3979890b6f3d9",
+          "at": 1792227747.8622332
+        },
+        "last_queued_at": 1792227598.3460386,
+        "last_queue": "/home/dw/Projects/agent-sts2/ops/codex-ops/queue/1792227598345955176-learning-attention.md"
+      },
+      "original_ops_receipt": {
+        "notice_id": "b8f6f1193c543ae377f87ea7",
+        "stage": "ops_forwarded",
+        "actor": "ops",
+        "status": "delivered",
+        "evidence": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/learning-notices/receipts/b8f6f1193c543ae377f87ea7.inbox.json",
+          "sha256": "ab6ccec051fd43dc5a5580025961c6da4a653b6b536a7df29e37f98e0b0f81cc"
+        }
+      },
+      "argv": [
+        "python3",
+        "ops/learning_requests.py",
+        "ack",
+        "--notice",
+        "b8f6f1193c543ae377f87ea7",
+        "--stage",
+        "ops_forwarded",
+        "--receipt",
+        "/home/dw/Projects/agent-sts2/ops/codex-ops/learning-notices/receipts/b8f6f1193c543ae377f87ea7.ops-forwarded.json"
+      ],
+      "rc": 0,
+      "stdout": "",
+      "stderr": "",
+      "other_role_ACK_written": false
+    },
+    {
+      "id": "6d9b0bbd33d8f9cb84780471",
+      "original_notice": {
+        "id": "6d9b0bbd33d8f9cb84780471",
+        "kind": "awaiting_delivery",
+        "request_id": "roy-20261017-human-pace-h0",
+        "message": "经验已核live及消费者读取，待ops→watcher→Roy交付回执；ops核批20261017-130158-strategy-proposal的源码测试/提案/版本台账并沿learner-recheck补宿主检查",
+        "request_sha256": "d3da188a5151a8dc57274ad4d48431b1253ccc677406a48f005bdb38ecef0680",
+        "created_at": 1792227598.3463087,
+        "route": [
+          "learner",
+          "ops",
+          "watcher",
+          "Roy"
+        ],
+        "ops_forwarded": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/learning-notices/receipts/6d9b0bbd33d8f9cb84780471.ops-forwarded.json",
+          "sha256": "6bdf447c6ce7a5ca78afbf2ad60459d1858490c18460703094c103415ce1cb86",
+          "at": 1792227598.3511264
+        },
+        "watcher_received": {
+          "path": "/home/dw/Projects/agent-sts2/paper/materials/20261017-watcher-h0-phase-notices/6d9b0bbd33d8f9cb84780471.watcher_received.receipt.json",
+          "sha256": "272322af663dfe7be3cda8b7e9d8ea5460508c4755f55e3d2722bb15e594f840",
+          "at": 1792227748.1836324
+        },
+        "roy_notified": {
+          "path": "/home/dw/Projects/agent-sts2/paper/materials/20261017-watcher-h0-phase-notices/6d9b0bbd33d8f9cb84780471.roy_notified.receipt.json",
+          "sha256": "3d10f3f04e2d9922da3b9a5f29f5b43589e08dd07b0c873be632648069ae0b10",
+          "at": 1792227748.4732287
+        },
+        "last_queued_at": 1792227598.351661,
+        "last_queue": "/home/dw/Projects/agent-sts2/ops/codex-ops/queue/1792227598351489434-learning-attention.md"
+      },
+      "original_ops_receipt": {
+        "notice_id": "6d9b0bbd33d8f9cb84780471",
+        "stage": "ops_forwarded",
+        "actor": "ops",
+        "status": "delivered",
+        "evidence": {
+          "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/learning-notices/receipts/6d9b0bbd33d8f9cb84780471.inbox.json",
+          "sha256": "89cbfcbd0d6e236642d517f15be8152e83434a41a9807db78dba0bcc0372b5bd"
+        }
+      },
+      "argv": [
+        "python3",
+        "ops/learning_requests.py",
+        "ack",
+        "--notice",
+        "6d9b0bbd33d8f9cb84780471",
+        "--stage",
+        "ops_forwarded",
+        "--receipt",
+        "/home/dw/Projects/agent-sts2/ops/codex-ops/learning-notices/receipts/6d9b0bbd33d8f9cb84780471.ops-forwarded.json"
+      ],
+      "rc": 0,
+      "stdout": "",
+      "stderr": "",
+      "other_role_ACK_written": false
+    }
+  ],
+  "canonical_244_source_published_blobs_verified": true,
+  "composed3_production_blobs_match_current_live": true,
+  "source_full_repeated": false,
+  "consumer_or_calibration_rerun": false,
+  "all_six_targets_remain_low_trust": true,
+  "root0332_fixed": false,
+  "no_other_role_ACK": true
+}

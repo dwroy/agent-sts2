@@ -1,0 +1,452 @@
+{
+  "at": "2026-10-17 21:05:11 CST",
+  "batch": "20261017-170116-fix-batch",
+  "task": "silent-boss-calibration",
+  "source": "71ad52c19c884365ec42d3300bc1a3c7a035c7e0",
+  "source_parent": "241b6af96c2253e2621c93e1aa1693023b4e755e",
+  "actual_behavior_commit": "40676b554916d88ea006a2e76cf03a9e3e106840",
+  "old_main": "874ac8dbdac7df1e04d51b2df511182f72553a3c",
+  "main": "027554df09d85e8ce174f22bb9a73db410ed9eb1",
+  "old_live": "3d691cff96dedd19855b00f4e9d448c43fe1d219",
+  "actual_live": "b23506b242de724d2ab9c066927ddb0d70d3f706",
+  "tree": "a63667ac37f20963d17dd34c52e7967bfd1c59de",
+  "release_id": "V5-R388",
+  "name": "S1.silent-boss-calibration-refresh-20261017-ccee3b62",
+  "late_registration_of_already_live_behavior": true,
+  "original_publication": "3d691cff96dedd19855b00f4e9d448c43fe1d219",
+  "original_fixed_release_tree": "24be6da5dcc38e9ff9145233b23a0fa475c5ff51",
+  "original_entry_preserved": {
+    "name": "S1.silent-boss-calibration-refresh-20261017-ccee3b62",
+    "family": "V5",
+    "character": "SILENT",
+    "commit": "40676b554916d88ea006a2e76cf03a9e3e106840",
+    "release_status": "pending-primary-ops-number",
+    "source": "2026-10-17 20:03:10 CST; Roy-authorized periodic Silent calibration, source 71ad52c19c884365ec42d3300bc1a3c7a035c7e0, silent-0506 proposed. Frozen published model 7e1193c, tune107/validation507, new26 actual outcomes;200 samples/full-row seeds, gates unchanged. Updated consumer limitations; no current H0/H1 prefix or natural improvement certification. Official release_id and shipped registration by ops. Report paper/materials/silent/boss-sim-calibration.md; rollback only the Silent boss-trust file from 90fb21a23a9048c7266bc00ba9e4e47a7259572d preserving other refreshes."
+  },
+  "leaves": [
+    {
+      "path": "agent/tools/boss-sim/calib.py",
+      "source_blob": "0cb5e151af656ffe692bbed7f0fdcac88b6740fb",
+      "source_sha256": "d21f51f2177bd37894723eb7adda4655b2bb6efe372605315adb46b2df855202",
+      "main_sha256": "d21f51f2177bd37894723eb7adda4655b2bb6efe372605315adb46b2df855202",
+      "live_sha256": "d21f51f2177bd37894723eb7adda4655b2bb6efe372605315adb46b2df855202",
+      "historical_attribution_only": false
+    },
+    {
+      "path": "agent/tools/boss-sim/pinned_silent.py",
+      "source_blob": "23cef01035584ebf03e452240fd7deb41d5aa59a",
+      "source_sha256": "ce4b5cd2078b7ed4f20ac6f34b2460be97d4532d4a18c67fd4e557b405693f6d",
+      "main_sha256": "ce4b5cd2078b7ed4f20ac6f34b2460be97d4532d4a18c67fd4e557b405693f6d",
+      "live_sha256": "ce4b5cd2078b7ed4f20ac6f34b2460be97d4532d4a18c67fd4e557b405693f6d",
+      "historical_attribution_only": false
+    },
+    {
+      "path": "agent/tools/boss-sim/refresh-silent.py",
+      "source_blob": "d2bab8e4473bc11bbd47ed91621c2b69b0d7bbc3",
+      "source_sha256": "ca5bee34c3a7d27136b361be007099e6b8cd5e9a77faa22d2cb2a70c2d780c02",
+      "main_sha256": "ca5bee34c3a7d27136b361be007099e6b8cd5e9a77faa22d2cb2a70c2d780c02",
+      "live_sha256": "ca5bee34c3a7d27136b361be007099e6b8cd5e9a77faa22d2cb2a70c2d780c02",
+      "historical_attribution_only": false
+    },
+    {
+      "path": "agent/tools/boss-sim/silent_calibration.py",
+      "source_blob": "9ed5a4570011395c21072a2a03201eea959021fa",
+      "source_sha256": "22adf92bc63b7327eeeafe7f415f6031864b87f9d14cf3c190bcb463b9378b40",
+      "main_sha256": "22adf92bc63b7327eeeafe7f415f6031864b87f9d14cf3c190bcb463b9378b40",
+      "live_sha256": "22adf92bc63b7327eeeafe7f415f6031864b87f9d14cf3c190bcb463b9378b40",
+      "historical_attribution_only": false
+    },
+    {
+      "path": "agent/tools/boss-sim/test_silent_calibration.py",
+      "source_blob": "72f5d8d5d916f0c3ce895fd1197c0a732902394b",
+      "source_sha256": "ebe7a68ed1dfce228e4d02df6bee6508b7d2ad2ad78075836d166c4c933dcc3a",
+      "main_sha256": "ebe7a68ed1dfce228e4d02df6bee6508b7d2ad2ad78075836d166c4c933dcc3a",
+      "live_sha256": "ebe7a68ed1dfce228e4d02df6bee6508b7d2ad2ad78075836d166c4c933dcc3a",
+      "historical_attribution_only": false
+    },
+    {
+      "path": "agent/tools/boss-sim/trust.py",
+      "source_blob": "8b81621295fb5fff1de960b475e9e72f8d8c08b1",
+      "source_sha256": "06281378f8adfd793f3f8245538906d6f6a071bd13d33ca69edb6d419505ebc2",
+      "main_sha256": "06281378f8adfd793f3f8245538906d6f6a071bd13d33ca69edb6d419505ebc2",
+      "live_sha256": "06281378f8adfd793f3f8245538906d6f6a071bd13d33ca69edb6d419505ebc2",
+      "historical_attribution_only": false
+    },
+    {
+      "path": "docs/boss-sim.md",
+      "source_blob": "7686f91ad6ab2c04fa871a9b065566612e9755ad",
+      "source_sha256": "bf626a95dff4ce682e31224c63d31180d1b37b3b928853538065875d9dd9289f",
+      "main_sha256": "bf626a95dff4ce682e31224c63d31180d1b37b3b928853538065875d9dd9289f",
+      "live_sha256": "d92da1bc4b117278bb4d29c6202781f53007a14ae519a5f918e9d24a3b98738a",
+      "historical_attribution_only": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/ccee3b625e95d6a275b5b58ad94739983ae208954dc66ba7fa03deb5b5b5e33b/audit-runtime-sources.py",
+      "source_blob": "27df63eca5c0e464632555b1445c74882afbfe79",
+      "source_sha256": "52a53e74c170c930c4b6bdba84273a69537aa32f45c510dba83072f95b85b1bc",
+      "main_sha256": "52a53e74c170c930c4b6bdba84273a69537aa32f45c510dba83072f95b85b1bc",
+      "live_sha256": "52a53e74c170c930c4b6bdba84273a69537aa32f45c510dba83072f95b85b1bc",
+      "historical_attribution_only": false
+    },
+    {
+      "path": "experiments/boss-sim/silent/ccee3b625e95d6a275b5b58ad94739983ae208954dc66ba7fa03deb5b5b5e33b/boss-trust.json",
+      "source_blob": "3f72f2892cc20cbd9fa31786b690620197415a12",
+      "source_sha256": "74b6060523f67ba620a434e45a6ad29e3945b7248926e313788610fbe82dc2a5",
+      "main_sha256": "74b6060523f67ba620a434e45a6ad29e3945b7248926e313788610fbe82dc2a5",
+      "live_sha256": "74b6060523f67ba620a434e45a6ad29e3945b7248926e313788610fbe82dc2a5",
+      "historical_attribution_only": false
+    },
+    {
+      "path": "experiments/boss-sim/silent/ccee3b625e95d6a275b5b58ad94739983ae208954dc66ba7fa03deb5b5b5e33b/compile-published-replay.mjs",
+      "source_blob": "8aef97d869b713499f333af3d1dfe8c10e6a1dd2",
+      "source_sha256": "09e9df4aac7be69ab61905764ada208cbc193f374be78832e5398e615baa3dff",
+      "main_sha256": "09e9df4aac7be69ab61905764ada208cbc193f374be78832e5398e615baa3dff",
+      "live_sha256": "09e9df4aac7be69ab61905764ada208cbc193f374be78832e5398e615baa3dff",
+      "historical_attribution_only": false
+    },
+    {
+      "path": "experiments/boss-sim/silent/ccee3b625e95d6a275b5b58ad94739983ae208954dc66ba7fa03deb5b5b5e33b/compiled-backtest.mjs",
+      "source_blob": "3907af99f0cae83947b99593249c3ca6834945b4",
+      "source_sha256": "43fc3612b7d0c478bdcc34ae8f05883116f997f6f456a8995993e56dedc194ef",
+      "main_sha256": "43fc3612b7d0c478bdcc34ae8f05883116f997f6f456a8995993e56dedc194ef",
+      "live_sha256": "43fc3612b7d0c478bdcc34ae8f05883116f997f6f456a8995993e56dedc194ef",
+      "historical_attribution_only": false
+    },
+    {
+      "path": "experiments/boss-sim/silent/ccee3b625e95d6a275b5b58ad94739983ae208954dc66ba7fa03deb5b5b5e33b/compiled-metafile.json",
+      "source_blob": "395aae11bdd3ae753b0dcba49c66e7bd649f4291",
+      "source_sha256": "b6cb76fe4fb6140ab950dd977bfa6823f5f4fdf7af38e176bad1a808c0ad4263",
+      "main_sha256": "b6cb76fe4fb6140ab950dd977bfa6823f5f4fdf7af38e176bad1a808c0ad4263",
+      "live_sha256": "b6cb76fe4fb6140ab950dd977bfa6823f5f4fdf7af38e176bad1a808c0ad4263",
+      "historical_attribution_only": false
+    },
+    {
+      "path": "experiments/boss-sim/silent/ccee3b625e95d6a275b5b58ad94739983ae208954dc66ba7fa03deb5b5b5e33b/compiler.json",
+      "source_blob": "cfb89398940807dba4918fa11d5a376cb2d3ed53",
+      "source_sha256": "5e2689a18f342192e4a85c89405a0e96b3c4d8b4f9d2ee2c39dbd5f22e5b31f2",
+      "main_sha256": "5e2689a18f342192e4a85c89405a0e96b3c4d8b4f9d2ee2c39dbd5f22e5b31f2",
+      "live_sha256": "5e2689a18f342192e4a85c89405a0e96b3c4d8b4f9d2ee2c39dbd5f22e5b31f2",
+      "historical_attribution_only": false
+    },
+    {
+      "path": "experiments/boss-sim/silent/ccee3b625e95d6a275b5b58ad94739983ae208954dc66ba7fa03deb5b5b5e33b/completed.json",
+      "source_blob": "397124953aafbe71fcabfe8349be8c6b75911b54",
+      "source_sha256": "279311a3f3f3d47ab33699fd5873cc8b41f1627ab8acedcfdbbba562ce940932",
+      "main_sha256": "279311a3f3f3d47ab33699fd5873cc8b41f1627ab8acedcfdbbba562ce940932",
+      "live_sha256": "279311a3f3f3d47ab33699fd5873cc8b41f1627ab8acedcfdbbba562ce940932",
+      "historical_attribution_only": false
+    },
+    {
+      "path": "experiments/boss-sim/silent/ccee3b625e95d6a275b5b58ad94739983ae208954dc66ba7fa03deb5b5b5e33b/dataset-delta.json",
+      "source_blob": "99719f9ac5e85906da08b24c99fb82410e0b12bc",
+      "source_sha256": "0d50359300f573501fc377634698021d54909abd298892c4afacb85372888b53",
+      "main_sha256": "0d50359300f573501fc377634698021d54909abd298892c4afacb85372888b53",
+      "live_sha256": "0d50359300f573501fc377634698021d54909abd298892c4afacb85372888b53",
+      "historical_attribution_only": false
+    },
+    {
+      "path": "experiments/boss-sim/silent/ccee3b625e95d6a275b5b58ad94739983ae208954dc66ba7fa03deb5b5b5e33b/dependency-inputs.json",
+      "source_blob": "42cad80d40bc8f4c57ecec692a8103ed1f46f07a",
+      "source_sha256": "900beda1a3868f3269706413de4a15810bd597151bc0035349475ba672c921fa",
+      "main_sha256": "900beda1a3868f3269706413de4a15810bd597151bc0035349475ba672c921fa",
+      "live_sha256": "900beda1a3868f3269706413de4a15810bd597151bc0035349475ba672c921fa",
+      "historical_attribution_only": false
+    },
+    {
+      "path": "experiments/boss-sim/silent/ccee3b625e95d6a275b5b58ad94739983ae208954dc66ba7fa03deb5b5b5e33b/extraction.json",
+      "source_blob": "ee4e621839a1b8d0232409b7743011f1de6e9ba6",
+      "source_sha256": "5c8f8935de0008cbd8b2cd380114ad1defec61d27639c8fcf282d727cd0dc505",
+      "main_sha256": "5c8f8935de0008cbd8b2cd380114ad1defec61d27639c8fcf282d727cd0dc505",
+      "live_sha256": "5c8f8935de0008cbd8b2cd380114ad1defec61d27639c8fcf282d727cd0dc505",
+      "historical_attribution_only": false
+    },
+    {
+      "path": "experiments/boss-sim/silent/ccee3b625e95d6a275b5b58ad94739983ae208954dc66ba7fa03deb5b5b5e33b/fights.jsonl",
+      "source_blob": "3015337479b2d1f26ace3f4e95675cbf1dea2b40",
+      "source_sha256": "4f2697dc22f10550d7efa4b25829d3e07d388297a46a53e2e262f5a1d8b76c7c",
+      "main_sha256": "4f2697dc22f10550d7efa4b25829d3e07d388297a46a53e2e262f5a1d8b76c7c",
+      "live_sha256": "4f2697dc22f10550d7efa4b25829d3e07d388297a46a53e2e262f5a1d8b76c7c",
+      "historical_attribution_only": false
+    },
+    {
+      "path": "experiments/boss-sim/silent/ccee3b625e95d6a275b5b58ad94739983ae208954dc66ba7fa03deb5b5b5e33b/finalize-published-refresh-exact.py",
+      "source_blob": "da0fe07ebc808b5f2384cfdb9c76e686ea087139",
+      "source_sha256": "342830e8e81087645ffdfa92629731c52d40f6442383944ec4cfb9e7a07d3d79",
+      "main_sha256": "342830e8e81087645ffdfa92629731c52d40f6442383944ec4cfb9e7a07d3d79",
+      "live_sha256": "342830e8e81087645ffdfa92629731c52d40f6442383944ec4cfb9e7a07d3d79",
+      "historical_attribution_only": false
+    },
+    {
+      "path": "experiments/boss-sim/silent/ccee3b625e95d6a275b5b58ad94739983ae208954dc66ba7fa03deb5b5b5e33b/frozen-game-data.json",
+      "source_blob": "62fa3ce7f1f3f44e7cd397b17485fb09518fd0cd",
+      "source_sha256": "8973610b44d41683ecc414299006df99decaf82e9017b9bf4ebb89c216268a69",
+      "main_sha256": "8973610b44d41683ecc414299006df99decaf82e9017b9bf4ebb89c216268a69",
+      "live_sha256": "8973610b44d41683ecc414299006df99decaf82e9017b9bf4ebb89c216268a69",
+      "historical_attribution_only": false
+    },
+    {
+      "path": "experiments/boss-sim/silent/ccee3b625e95d6a275b5b58ad94739983ae208954dc66ba7fa03deb5b5b5e33b/precision-admission.patch",
+      "source_blob": "75565104ffba87bb0fd74dfee84b79dc3ea1f41c",
+      "source_sha256": "7408b63de52d455331bd80cbf3010ba7d526a16142a3f67009c78e4559f657cf",
+      "main_sha256": "7408b63de52d455331bd80cbf3010ba7d526a16142a3f67009c78e4559f657cf",
+      "live_sha256": "7408b63de52d455331bd80cbf3010ba7d526a16142a3f67009c78e4559f657cf",
+      "historical_attribution_only": false
+    },
+    {
+      "path": "experiments/boss-sim/silent/ccee3b625e95d6a275b5b58ad94739983ae208954dc66ba7fa03deb5b5b5e33b/previous-boss-trust.json",
+      "source_blob": "9bc47eb69713eefd28aaa4160a77be0be1c20822",
+      "source_sha256": "8afbe6dbbf68f2a7ca73a7d0d43fa702b1061ba16fa10db1a10fb3f8d0e502c5",
+      "main_sha256": "8afbe6dbbf68f2a7ca73a7d0d43fa702b1061ba16fa10db1a10fb3f8d0e502c5",
+      "live_sha256": "8afbe6dbbf68f2a7ca73a7d0d43fa702b1061ba16fa10db1a10fb3f8d0e502c5",
+      "historical_attribution_only": false
+    },
+    {
+      "path": "experiments/boss-sim/silent/ccee3b625e95d6a275b5b58ad94739983ae208954dc66ba7fa03deb5b5b5e33b/previous-report.md",
+      "source_blob": "72c7721fffe24d1a3ae12c3b48d9e6ba0743ce49",
+      "source_sha256": "6ebd065a938c0b3bedbfa5fb4e46796b4c88b4df6bc026d18c102d4356c770ab",
+      "main_sha256": "6ebd065a938c0b3bedbfa5fb4e46796b4c88b4df6bc026d18c102d4356c770ab",
+      "live_sha256": "6ebd065a938c0b3bedbfa5fb4e46796b4c88b4df6bc026d18c102d4356c770ab",
+      "historical_attribution_only": false
+    },
+    {
+      "path": "experiments/boss-sim/silent/ccee3b625e95d6a275b5b58ad94739983ae208954dc66ba7fa03deb5b5b5e33b/provenance.json",
+      "source_blob": "9560a89025897f7d2e893c72bc25c8ac8212e881",
+      "source_sha256": "aebf07420a8d21ace730446449f4377463caacadceeae80a5901aa3987d27a6b",
+      "main_sha256": "aebf07420a8d21ace730446449f4377463caacadceeae80a5901aa3987d27a6b",
+      "live_sha256": "aebf07420a8d21ace730446449f4377463caacadceeae80a5901aa3987d27a6b",
+      "historical_attribution_only": false
+    },
+    {
+      "path": "experiments/boss-sim/silent/ccee3b625e95d6a275b5b58ad94739983ae208954dc66ba7fa03deb5b5b5e33b/published-consumer-change.json",
+      "source_blob": "b9de7b131b07c1c1c148982b0b696ebbfeaf3168",
+      "source_sha256": "42752baae94411583966a303b7f90857bf122c4bb78ab839c874d42e2e654bf9",
+      "main_sha256": "42752baae94411583966a303b7f90857bf122c4bb78ab839c874d42e2e654bf9",
+      "live_sha256": "42752baae94411583966a303b7f90857bf122c4bb78ab839c874d42e2e654bf9",
+      "historical_attribution_only": false
+    },
+    {
+      "path": "experiments/boss-sim/silent/ccee3b625e95d6a275b5b58ad94739983ae208954dc66ba7fa03deb5b5b5e33b/published-corrected-opening-keys.json",
+      "source_blob": "75b8a9b016a3b65a34c19987147de09271cdeedd",
+      "source_sha256": "8d070f8cd80071d215c60fd2d5b31b166323e57ed7b53ccfa3da158407ca9193",
+      "main_sha256": "8d070f8cd80071d215c60fd2d5b31b166323e57ed7b53ccfa3da158407ca9193",
+      "live_sha256": "8d070f8cd80071d215c60fd2d5b31b166323e57ed7b53ccfa3da158407ca9193",
+      "historical_attribution_only": false
+    },
+    {
+      "path": "experiments/boss-sim/silent/ccee3b625e95d6a275b5b58ad94739983ae208954dc66ba7fa03deb5b5b5e33b/published-input-integrity.json",
+      "source_blob": "fc61d4658bdfef53357747f6cb2dcc20f67df81e",
+      "source_sha256": "b349e7b18a4aedcfb705a359081adcbdb7860c867340497d86c8b21cce19b502",
+      "main_sha256": "b349e7b18a4aedcfb705a359081adcbdb7860c867340497d86c8b21cce19b502",
+      "live_sha256": "b349e7b18a4aedcfb705a359081adcbdb7860c867340497d86c8b21cce19b502",
+      "historical_attribution_only": false
+    },
+    {
+      "path": "experiments/boss-sim/silent/ccee3b625e95d6a275b5b58ad94739983ae208954dc66ba7fa03deb5b5b5e33b/published-input-scope.json",
+      "source_blob": "28982544a86d228d38522686bc2cee6f2a4d309f",
+      "source_sha256": "212f22dc6652f75ced1158a8632d2ad856eca5514c4a02fcbdc69ba6baa433d3",
+      "main_sha256": "212f22dc6652f75ced1158a8632d2ad856eca5514c4a02fcbdc69ba6baa433d3",
+      "live_sha256": "212f22dc6652f75ced1158a8632d2ad856eca5514c4a02fcbdc69ba6baa433d3",
+      "historical_attribution_only": false
+    },
+    {
+      "path": "experiments/boss-sim/silent/ccee3b625e95d6a275b5b58ad94739983ae208954dc66ba7fa03deb5b5b5e33b/published-model-input-audit.json",
+      "source_blob": "37c6405cf073cd56312bbab8323b24d5bb2b54cd",
+      "source_sha256": "05e03074b8570077d6e8f9b73a41c8eb9b7e4bd786ee403f7c70d3572385223a",
+      "main_sha256": "05e03074b8570077d6e8f9b73a41c8eb9b7e4bd786ee403f7c70d3572385223a",
+      "live_sha256": "05e03074b8570077d6e8f9b73a41c8eb9b7e4bd786ee403f7c70d3572385223a",
+      "historical_attribution_only": false
+    },
+    {
+      "path": "experiments/boss-sim/silent/ccee3b625e95d6a275b5b58ad94739983ae208954dc66ba7fa03deb5b5b5e33b/published-opening-audit.json",
+      "source_blob": "e66ac369f2443712d1043886719187740062a358",
+      "source_sha256": "431290a8005bcc2bacf48d157ea9018bfdee5d5abb74353bde387a4c7adadb8d",
+      "main_sha256": "431290a8005bcc2bacf48d157ea9018bfdee5d5abb74353bde387a4c7adadb8d",
+      "live_sha256": "431290a8005bcc2bacf48d157ea9018bfdee5d5abb74353bde387a4c7adadb8d",
+      "historical_attribution_only": false
+    },
+    {
+      "path": "experiments/boss-sim/silent/ccee3b625e95d6a275b5b58ad94739983ae208954dc66ba7fa03deb5b5b5e33b/published-reuse-audit.json",
+      "source_blob": "586014ea75a3767c7a145a448c8e1d542c82d850",
+      "source_sha256": "a7058334d92a4836e6167f7239a86ff2d1f30bf02cb4c0cdaafc614805191a51",
+      "main_sha256": "a7058334d92a4836e6167f7239a86ff2d1f30bf02cb4c0cdaafc614805191a51",
+      "live_sha256": "a7058334d92a4836e6167f7239a86ff2d1f30bf02cb4c0cdaafc614805191a51",
+      "historical_attribution_only": false
+    },
+    {
+      "path": "experiments/boss-sim/silent/ccee3b625e95d6a275b5b58ad94739983ae208954dc66ba7fa03deb5b5b5e33b/published-reuse-plan.json",
+      "source_blob": "edd8fecd4f547d84804ba1e0168c3650f3f4e68f",
+      "source_sha256": "c52c601d903b314b03fff55dd14e1e423e5154d4701c9a8fd2d851540d32f3e9",
+      "main_sha256": "c52c601d903b314b03fff55dd14e1e423e5154d4701c9a8fd2d851540d32f3e9",
+      "live_sha256": "c52c601d903b314b03fff55dd14e1e423e5154d4701c9a8fd2d851540d32f3e9",
+      "historical_attribution_only": false
+    },
+    {
+      "path": "experiments/boss-sim/silent/ccee3b625e95d6a275b5b58ad94739983ae208954dc66ba7fa03deb5b5b5e33b/published-thread-exits.json",
+      "source_blob": "06b90f53b262492eebc1b937d3b23da27785ef43",
+      "source_sha256": "48ffafb355dc84dbb3353f74ffa1d0f24b4fbea591cfd6e0194de9d7b3d65e2a",
+      "main_sha256": "48ffafb355dc84dbb3353f74ffa1d0f24b4fbea591cfd6e0194de9d7b3d65e2a",
+      "live_sha256": "48ffafb355dc84dbb3353f74ffa1d0f24b4fbea591cfd6e0194de9d7b3d65e2a",
+      "historical_attribution_only": false
+    },
+    {
+      "path": "experiments/boss-sim/silent/ccee3b625e95d6a275b5b58ad94739983ae208954dc66ba7fa03deb5b5b5e33b/published-thread-start.json",
+      "source_blob": "943148562998d1c0b9f0e9a95ab2da3fff70b666",
+      "source_sha256": "e5303eabd2485728a39d34177cf400e62c0c97ce22b4ef665ab5152d650000b5",
+      "main_sha256": "e5303eabd2485728a39d34177cf400e62c0c97ce22b4ef665ab5152d650000b5",
+      "live_sha256": "e5303eabd2485728a39d34177cf400e62c0c97ce22b4ef665ab5152d650000b5",
+      "historical_attribution_only": false
+    },
+    {
+      "path": "experiments/boss-sim/silent/ccee3b625e95d6a275b5b58ad94739983ae208954dc66ba7fa03deb5b5b5e33b/report.md",
+      "source_blob": "7aa80368d7d7ba4d6d55dd006410a01601b4ab6e",
+      "source_sha256": "e081448b043df1d5d753050c93c1cb6adac2183bb93cf8fc8f3ccfee5c3fd5b4",
+      "main_sha256": "e081448b043df1d5d753050c93c1cb6adac2183bb93cf8fc8f3ccfee5c3fd5b4",
+      "live_sha256": "e081448b043df1d5d753050c93c1cb6adac2183bb93cf8fc8f3ccfee5c3fd5b4",
+      "historical_attribution_only": false
+    },
+    {
+      "path": "experiments/boss-sim/silent/ccee3b625e95d6a275b5b58ad94739983ae208954dc66ba7fa03deb5b5b5e33b/restore-published-model.py",
+      "source_blob": "2d4941c0a0c16e86b8d85e550d1c20e459636bfc",
+      "source_sha256": "4c6e7c8ca97b5c9cfd4e2f5371fdbaf6140daa366d03191399284d038a2450ac",
+      "main_sha256": "4c6e7c8ca97b5c9cfd4e2f5371fdbaf6140daa366d03191399284d038a2450ac",
+      "live_sha256": "4c6e7c8ca97b5c9cfd4e2f5371fdbaf6140daa366d03191399284d038a2450ac",
+      "historical_attribution_only": false
+    },
+    {
+      "path": "experiments/boss-sim/silent/ccee3b625e95d6a275b5b58ad94739983ae208954dc66ba7fa03deb5b5b5e33b/results.jsonl",
+      "source_blob": "735c485335f6b3910dc5bd84d20b0439bf653ed4",
+      "source_sha256": "b16bc64eb4a16c1f54f0219a864f5b8342640c09f1b758ec8ddc4191098396d9",
+      "main_sha256": "b16bc64eb4a16c1f54f0219a864f5b8342640c09f1b758ec8ddc4191098396d9",
+      "live_sha256": "b16bc64eb4a16c1f54f0219a864f5b8342640c09f1b758ec8ddc4191098396d9",
+      "historical_attribution_only": false
+    },
+    {
+      "path": "experiments/boss-sim/silent/ccee3b625e95d6a275b5b58ad94739983ae208954dc66ba7fa03deb5b5b5e33b/run-published-threads.mjs",
+      "source_blob": "502969bad9e2318cf34bfd11cef2fe41ff4bbd7f",
+      "source_sha256": "d79dea6c704c8e5acf97328686f07e254a43f8093c832fb3ea8e27f6d5c8f100",
+      "main_sha256": "d79dea6c704c8e5acf97328686f07e254a43f8093c832fb3ea8e27f6d5c8f100",
+      "live_sha256": "d79dea6c704c8e5acf97328686f07e254a43f8093c832fb3ea8e27f6d5c8f100",
+      "historical_attribution_only": false
+    },
+    {
+      "path": "experiments/boss-sim/silent/ccee3b625e95d6a275b5b58ad94739983ae208954dc66ba7fa03deb5b5b5e33b/runs-snapshot.jsonl",
+      "source_blob": "b3db2d7789a15696694eed9aaadf623dcbbcbdd5",
+      "source_sha256": "95f7b56d8060ec1c7e1ad65c486e6a3118645fb417cc25ebc89c121ee5d6b9d9",
+      "main_sha256": "95f7b56d8060ec1c7e1ad65c486e6a3118645fb417cc25ebc89c121ee5d6b9d9",
+      "live_sha256": "95f7b56d8060ec1c7e1ad65c486e6a3118645fb417cc25ebc89c121ee5d6b9d9",
+      "historical_attribution_only": false
+    },
+    {
+      "path": "experiments/boss-sim/silent/ccee3b625e95d6a275b5b58ad94739983ae208954dc66ba7fa03deb5b5b5e33b/runtime-source-audit.json",
+      "source_blob": "b643aae17423f6b4c8c1aa5c50997bddf32af1e8",
+      "source_sha256": "6ecabe8a0abd7bd4d9cdea864348c78974b85705cc9c427aca066a84bc73d5df",
+      "main_sha256": "6ecabe8a0abd7bd4d9cdea864348c78974b85705cc9c427aca066a84bc73d5df",
+      "live_sha256": "6ecabe8a0abd7bd4d9cdea864348c78974b85705cc9c427aca066a84bc73d5df",
+      "historical_attribution_only": false
+    },
+    {
+      "path": "experiments/boss-sim/silent/ccee3b625e95d6a275b5b58ad94739983ae208954dc66ba7fa03deb5b5b5e33b/sl-snapshot.jsonl",
+      "source_blob": "2f0fe79a108c0d63797b59fd3712ece6cccdce62",
+      "source_sha256": "aeb13289b0a6d8f6bd4338ce4b109875b1bf0216b205a810e3f4f1cd85ab5946",
+      "main_sha256": "aeb13289b0a6d8f6bd4338ce4b109875b1bf0216b205a810e3f4f1cd85ab5946",
+      "live_sha256": "aeb13289b0a6d8f6bd4338ce4b109875b1bf0216b205a810e3f4f1cd85ab5946",
+      "historical_attribution_only": false
+    },
+    {
+      "path": "experiments/boss-sim/silent/ccee3b625e95d6a275b5b58ad94739983ae208954dc66ba7fa03deb5b5b5e33b/sources.jsonl",
+      "source_blob": "3ee19dad7fa6f4f393db5ba533a31fa1c6347fbe",
+      "source_sha256": "5dd365c1dbdc7e2ad179155fedb8093d3f5bc2ed92a6114ba4fa3ab0c6e18fce",
+      "main_sha256": "5dd365c1dbdc7e2ad179155fedb8093d3f5bc2ed92a6114ba4fa3ab0c6e18fce",
+      "live_sha256": "5dd365c1dbdc7e2ad179155fedb8093d3f5bc2ed92a6114ba4fa3ab0c6e18fce",
+      "historical_attribution_only": false
+    },
+    {
+      "path": "experiments/boss-sim/silent/ccee3b625e95d6a275b5b58ad94739983ae208954dc66ba7fa03deb5b5b5e33b/split.json",
+      "source_blob": "217d2afc58d9401b9fa27451ab3dfcd8eb6259f0",
+      "source_sha256": "87dad8e47aebab668d126644dc19d3d354f471f52ef406ca44e1b4ad96a691f5",
+      "main_sha256": "87dad8e47aebab668d126644dc19d3d354f471f52ef406ca44e1b4ad96a691f5",
+      "live_sha256": "87dad8e47aebab668d126644dc19d3d354f471f52ef406ca44e1b4ad96a691f5",
+      "historical_attribution_only": false
+    },
+    {
+      "path": "experiments/boss-sim/silent/ccee3b625e95d6a275b5b58ad94739983ae208954dc66ba7fa03deb5b5b5e33b/turns.jsonl",
+      "source_blob": "e1d47c78b4c15753bf0d2787c4a65ba6a8cc575a",
+      "source_sha256": "361e54982191c9d863a23a2e2fac8d0f67b2c24f9870b650c842457f8672bc73",
+      "main_sha256": "361e54982191c9d863a23a2e2fac8d0f67b2c24f9870b650c842457f8672bc73",
+      "live_sha256": "361e54982191c9d863a23a2e2fac8d0f67b2c24f9870b650c842457f8672bc73",
+      "historical_attribution_only": false
+    },
+    {
+      "path": "knowledge/characters/silent/boss-trust.json",
+      "source_blob": "3f72f2892cc20cbd9fa31786b690620197415a12",
+      "source_sha256": "74b6060523f67ba620a434e45a6ad29e3945b7248926e313788610fbe82dc2a5",
+      "main_sha256": "74b6060523f67ba620a434e45a6ad29e3945b7248926e313788610fbe82dc2a5",
+      "live_sha256": "74b6060523f67ba620a434e45a6ad29e3945b7248926e313788610fbe82dc2a5",
+      "historical_attribution_only": false
+    },
+    {
+      "path": "paper/materials/silent/boss-sim-calibration.md",
+      "source_blob": "7aa80368d7d7ba4d6d55dd006410a01601b4ab6e",
+      "source_sha256": "e081448b043df1d5d753050c93c1cb6adac2183bb93cf8fc8f3ccfee5c3fd5b4",
+      "main_sha256": "e081448b043df1d5d753050c93c1cb6adac2183bb93cf8fc8f3ccfee5c3fd5b4",
+      "live_sha256": "e081448b043df1d5d753050c93c1cb6adac2183bb93cf8fc8f3ccfee5c3fd5b4",
+      "historical_attribution_only": false
+    }
+  ],
+  "refreshed_files": [
+    {
+      "path": "knowledge/characters/silent/boss-damage.json",
+      "sha256": "bc7829d1da192e2dea195a68b4532cb82ea2c85f0624fc31b04b8119b6df2955"
+    },
+    {
+      "path": "knowledge/characters/silent/construction-opportunities.json",
+      "sha256": "1409c18dcc62ea9f64d37716c5bf284831a3083d2e5ae8c2d0305dd8644a5146"
+    },
+    {
+      "path": "knowledge/characters/silent/fight-value-gates.json",
+      "sha256": "7bb8d17f2ef201be2057a8e71559db00e6e4935818a8e0a84008156083acc0e2"
+    },
+    {
+      "path": "knowledge/characters/silent/fight-value.json",
+      "sha256": "2448cdf3bbffc9aba4df773ca3a699e0498e5b933c39e5e03556c95de6b24e28"
+    },
+    {
+      "path": "knowledge/characters/silent/monster-records.json",
+      "sha256": "a720d770c2a700fb7fd592df850af83b15861e6c81e5bfaa278db2785c16aa7d"
+    },
+    {
+      "path": "knowledge/characters/silent/outcome-stats.json",
+      "sha256": "c7ede5034dc6bfbe8f63e4daf44f75dca8ec1c4910a8fe6c8b702b420606300d"
+    },
+    {
+      "path": "knowledge/characters/silent/room-costs.json",
+      "sha256": "6a7d441f2bca711aafa14b930e2a08118ba777cb6fddca55f594e1c10a6c86c9"
+    },
+    {
+      "path": "knowledge/common/card-upgrades.json",
+      "sha256": "7f0436fa08f77a249de437381deeb2a371d5c30af8e1261345e959196bbf359b"
+    },
+    {
+      "path": "knowledge/common/monster-db.json",
+      "sha256": "6219f5d84d9f1a1e71ee6ea5f628fd9c3094dd938ff1b05680314325b42ac018"
+    },
+    {
+      "path": "knowledge/common/move-model.json",
+      "sha256": "77025ff1bbfd88475ba1a5630dff32f1701ad1fce478a7fe24323d52b743821c"
+    }
+  ],
+  "knowledge_refresh_commit": "e4930ae4a3fb7d80107d5d326d652cc42cf95404",
+  "composition_gitleaks_qualified_rc": 0,
+  "no_new_live_production_code": true,
+  "all_other_release_history_preserved": true,
+  "original_host_full_rc": 1,
+  "original_selected_host_rc": 0,
+  "host": "pending one same-batch final-tree host full",
+  "source_full_or_calibration_or_consumer_repeated": false,
+  "current_game_restarted": false,
+  "six_targets_trusted": false,
+  "f49_trusted": false,
+  "root0332_fixed": false,
+  "first_effective_run": null,
+  "other_role_ACK": false
+}

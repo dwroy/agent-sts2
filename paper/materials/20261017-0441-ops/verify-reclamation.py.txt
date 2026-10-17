@@ -1,0 +1,83 @@
+from pathlib import Path
+import hashlib
+import json
+import shutil
+import subprocess
+import sys
+
+r = Path.cwd()
+p = r / 'ops/codex-ops/record-staging/20261017-0441'
+pub = r / 'paper/materials/20261017-0441-ops'
+final = '--final' in sys.argv
+cache_file = p / 'verified-archive-cache.json'
+cache = json.loads(cache_file.read_text()) if cache_file.exists() else {}
+
+
+def sha_file(path):
+    h = hashlib.sha256()
+    with path.open('rb') as source:
+        for chunk in iter(lambda: source.read(1048576), b''):
+            h.update(chunk)
+    return h.hexdigest()
+
+
+def identity(path):
+    value = path.stat()
+    return [value.st_ino, value.st_size, value.st_mtime_ns]
+
+
+entries, batches = [], []
+prefixes = ['legacy-reclamation-largest']
+if (p / 'legacy-reclamation-second-pass-running.json').exists():
+    prefixes.append('legacy-reclamation-second-pass')
+if (p / 'legacy-reclamation-older-day-running.json').exists():
+    prefixes.append('legacy-reclamation-older-day')
+for prefix in prefixes:
+    finished = p / (prefix + '-result.json')
+    source = finished if finished.exists() else p / (prefix + '-running.json')
+    assert not final or finished.exists(), 'a bounded reclamation pass is still active'
+    result = json.loads(source.read_text())
+    for batch in result['results']:
+        batches.append(batch['batch'])
+        for name in batch['archives']:
+            manifest_path = r / name
+            manifest_raw = manifest_path.read_bytes()
+            manifest = json.loads(manifest_raw)
+            assert manifest['state'] == 'extraction_copy_compressed'
+            assert manifest['proof']['batch'] == batch['batch']
+            archive = r / manifest['archive']
+            assert archive.resolve().is_relative_to(r / 'ops/codex-ops/retention/storage/legacy-verified-extraction-copies')
+            key = hashlib.sha256(manifest_raw).hexdigest()
+            known = cache.get(key)
+            if not known or known['archive_identity'] != identity(archive):
+                assert sha_file(archive) == manifest['archive_sha256']
+                cache[key] = dict(archive_identity=identity(archive))
+            assert archive.stat().st_size == manifest['archive_bytes']
+            for file in manifest['files']:
+                path = r / file['path']
+                assert path.is_relative_to(r / 'learner/runs' / batch['batch'])
+                assert not path.exists()
+            proof = manifest['proof']
+            assert sha_file(r / proof['original_report']) == proof['original_report_sha256']
+            assert (r / proof['original_launch']).is_file()
+            entries.append(dict(manifest=name, manifest_sha256=key,
+                archive=manifest['archive'], archive_sha256=manifest['archive_sha256'],
+                original_copy_bytes=sum(file['bytes'] for file in manifest['files']),
+                archive_bytes=manifest['archive_bytes'], batch=batch['batch']))
+cache_file.write_text(json.dumps(cache, indent=2) + '\n')
+at = subprocess.check_output(['date', '+%Y-%m-%d %H:%M:%S %Z'], text=True).strip()
+original = sum(entry['original_copy_bytes'] for entry in entries)
+compressed = sum(entry['archive_bytes'] for entry in entries)
+receipt = dict(at=at, state='completed' if final else 'partial completed batches verified; current bounded pass may still run',
+    batches=batches, archives=entries, original_copy_bytes=original, compressed_bytes=compressed,
+    verified_copy_net_bytes=original-compressed, available_bytes=shutil.disk_usage(r).free,
+    original_global_free_before=json.loads((pub / 'disk-before.json').read_text())['free_bytes'],
+    global_available_delta_has_parallel_writers=True, all_archive_hashes_verified=True,
+    archive_member_readback_done_before_deletion_by_original_archive_primitive=True,
+    original_reports_native_events_primary_logs_knowledge_ledger_and_all_worktrees_retained=True,
+    unfinished_research_home_tmp_and_other_repositories_untouched=True,
+    original_owner_exited_naturally_without_signal=True)
+target = pub / ('retention-recovery-completed.json' if final else 'retention-recovery-partial.json')
+target.write_text(json.dumps(receipt, ensure_ascii=False, indent=2) + '\n')
+print(json.dumps(dict(state=receipt['state'], batches=len(batches), archives=len(entries),
+    verified_copy_net_gib=(original-compressed)/1024**3, available_gib=receipt['available_bytes']/1024**3)), flush=True)

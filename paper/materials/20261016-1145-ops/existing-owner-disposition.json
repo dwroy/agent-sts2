@@ -1,0 +1,130 @@
+{
+  "at": "2026-10-16 11:50:14 CST",
+  "existing_item": "silent-0332",
+  "existing_proposal": "silent-proposal-5aa2672bd7cd1bf4",
+  "existing_registration": [
+    {
+      "source": {
+        "offset": 1320473,
+        "length": 664,
+        "sha256": "77d048b40229df257ce3dd157a4b8a4a5682b742120dd08420a832fb19843c1a"
+      },
+      "record": {
+        "op": "add",
+        "id": "silent-proposal-5aa2672bd7cd1bf4",
+        "ts": "2026-10-11T21:32:33+08:00",
+        "character": "silent",
+        "ledger": [
+          "silent-0332"
+        ],
+        "runs": [
+          "64VJC5XT2AT2"
+        ],
+        "source_task": "postmortem",
+        "target_task": "strategy-proposal",
+        "domains": [
+          "structure"
+        ],
+        "summary": "64VJC5XT2AT2 F47再次出现首战资源契约异常；沿0332复用诊断并等待固定触发样本",
+        "proposal": "/home/dw/Projects/agent-sts2/learner/runs/20261011-211302-postmortem/proposal-continuation-repeat.md",
+        "rule_changes": false,
+        "authorization": "Roy-2026-10-07-learning",
+        "proposal_sha256": "fef7286be60c5baa9aef77e2b732823e9d8570b4b33d4a3451b5489724c53169",
+        "state": "pending"
+      }
+    }
+  ],
+  "original_regular_fix": {
+    "batch": "20261016-111303-fix-batch",
+    "fields": {
+      "task": "fix-batch",
+      "character": "silent",
+      "state": "failed",
+      "pid": 3010071,
+      "worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261016-111303",
+      "reason": "tick",
+      "finished": "2026-10-16 11:20",
+      "rc": 0,
+      "merged": null,
+      "retry_at": 1792124447.3733008,
+      "scheduler_dedup_sha256": "ca358b91ac3eb49dba17e75d1f2b1dbef5bb15134c87e70abe57a54cc06c415b"
+    },
+    "original_report": {
+      "path": "ops/codex-ops/learner/20261016-111303-fix-batch.out",
+      "bytes": 5175,
+      "sha256": "bd97165ac5cef8e1e06115d704f9032732e0db60d91322f70266c5dfdb5c0e59"
+    }
+  },
+  "scheduler_snapshot": {
+    "path": "ops/codex-ops/learn.json",
+    "bytes": 6538923,
+    "sha256": "15da41b3f83765d1b1e95193bf29456aac7ad989f843a3d424b39c243c4144e8"
+  },
+  "scheduler_snapshot_max_bytes": 6538923,
+  "active_batches": {
+    "20261016-114302-strategy-proposal": {
+      "task": "strategy-proposal",
+      "character": "silent",
+      "key": "code-proposals:silent-proposal-03754e1265894000,silent-proposal-ab055ef7dfbb44e5,silent-proposal-0129c465c6f5bd79,silent-proposal-abe9d5d0be109a9f,silent-proposal-f16527e59b5cc1e0,silent-proposal-7a8e9ccb7e646538,silent-proposal-cd9f76184de6e29a,silent-proposal-292f6731bdb9b669,silent-proposal-0802f69b28d25079,silent-proposal-763a4b9d9f17b815:320",
+      "pid": 3282199,
+      "state": "running",
+      "worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-114302"
+    },
+    "20261016-114302-s2-strategy-proposal": {
+      "task": "strategy-proposal",
+      "character": "silent",
+      "key": "code-proposals:silent-proposal-19a5cff2094e2d8f,silent-proposal-3540bf4360bf80af,silent-proposal-0ea5c0b9c030fdd6,silent-proposal-f915ec544ab94b6e,silent-proposal-8fb51933639faf90,silent-proposal-b3bc0eb09211af6c,silent-proposal-fdc3a505fe5e1a55,silent-proposal-5a95725089f53cd8,silent-proposal-51fa8bc34774f72d,silent-proposal-29b7b36dffbcb017:320",
+      "pid": 3282338,
+      "state": "running",
+      "worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-114302-s2"
+    }
+  },
+  "actual_ownership": "Original Silent regular fix queue / proposal chain retained; latest ordinary fix completed with unknown mechanism, no active duplicate proposal found at this snapshot.",
+  "action": "Append this recurrence to the existing queue for later frozen input; do not hot-edit running batch input or spawn another learner.",
+  "registration_and_batch_states_changed": false,
+  "disposition": "F40 protective exit and completed action verified. F42 remains pending at the single bounded continuation cut. Original positive-HP resource contract and 300-sample minimum remain unchanged; root cause unresolved.",
+  "routine_watcher_or_roy_notification": "not sent, per this module-health event",
+  "broad_parents": "remain open",
+  "production_source_knowledge_versions_unchanged": true,
+  "config": {
+    "run_id": "TCDUBRWMEMNA",
+    "ts": "2026-10-16T02:28:39.521Z",
+    "process": {
+      "pid": 2518740,
+      "started": "2026-10-16T02:28:31.364Z"
+    },
+    "code": {
+      "commit": "0e7998bfa8df267dcf8835a57949bdb982c9feb0",
+      "code": "0e7998b+dirty",
+      "dirty": true,
+      "dirty_files": [
+        "knowledge/characters/silent/boss-damage.json",
+        "knowledge/characters/silent/construction-opportunities.json",
+        "knowledge/characters/silent/fight-value-gates.json",
+        "knowledge/characters/silent/fight-value.json",
+        "knowledge/characters/silent/monster-records.json",
+        "knowledge/characters/silent/outcome-stats.json",
+        "knowledge/characters/silent/room-costs.json",
+        "knowledge/common/card-upgrades.json",
+        "knowledge/common/monster-db.json",
+        "knowledge/common/move-model.json",
+        "notes/fight-value-backtest-silent.md",
+        "notes/monster-db-check.md"
+      ],
+      "branch": "live",
+      "worktree": "live"
+    },
+    "brain_engine": "codex",
+    "brain_model": "gpt-6.1-sol",
+    "brain_effort": "xhigh",
+    "loop": {
+      "s_readiness": "on",
+      "s_combat_rank": "on",
+      "s_build_rank": "on",
+      "sim_failure_exit": "on",
+      "sim_failure_retries": 2,
+      "sim_adaptive": "on",
+      "sim_adaptive_admission": "accepted"
+    }
+  }
+}

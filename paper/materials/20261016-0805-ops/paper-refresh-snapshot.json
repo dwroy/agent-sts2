@@ -1,0 +1,232 @@
+{
+  "at": "2026-10-16 08:20:06 CST",
+  "command": "nice -n19 python3 ops/paper_dataset.py --no-raw",
+  "exit": 0,
+  "once_only": true,
+  "original_log": {
+    "path": "paper/materials/20261016-0805-ops/paper-dataset.log",
+    "bytes": 956,
+    "sha256": "55812f0a136fbef73a9ec2df602ec6b2f70f1138e04c5813777c539c8a512942"
+  },
+  "summary_source_checks_passed": true,
+  "summary_fields": {
+    "generated_at": "2026-10-16T00:09:39.869Z",
+    "source_cut_bytes": {
+      "decisions.jsonl": 1833641822,
+      "deepseek-reasoning.jsonl": 377746518,
+      "runs.jsonl": 344463,
+      "states.jsonl": 13395382509,
+      "fight-plans.jsonl": 2233957,
+      "run-plans.jsonl": 8415333,
+      "brain.jsonl": 648706001,
+      "sl-attempts.jsonl": 42618427,
+      "run-config.jsonl": 1834513
+    },
+    "runs_total": 803,
+    "runs_finished": 801,
+    "runs_in_runs_jsonl": 798,
+    "source_checks_passed": true,
+    "decisions": {
+      "play_total": 408028,
+      "attributed_to_runs": 404885,
+      "unattributed_menu_timeline": 3143,
+      "shadow": 20,
+      "by_layer": {
+        "code": 209871,
+        "jev": 81960,
+        "deepseek": 12400,
+        "claude": 186,
+        "code-fallback": 1729,
+        "jev-plan": 82978,
+        "deepseek-plan": 847,
+        "claude-plan": 73
+      },
+      "decider_inferred": 342
+    }
+  },
+  "outputs": [
+    {
+      "path": "paper/data/cost-unattributed.csv",
+      "bytes": 19120,
+      "sha256": "230859e77fdad1adc7e575deea785a5b7a2e365e0fac3992f7ce2a683995bb00"
+    },
+    {
+      "path": "paper/data/learning-curve-silent.csv",
+      "bytes": 66722,
+      "sha256": "6153ecedca8ce150571d0047a904d0badbefa8ad65853bab2e5a87657bede2d8"
+    },
+    {
+      "path": "paper/data/verification.json",
+      "bytes": 587,
+      "sha256": "a5e2a7810643b1c8cc6a73a8735e170c2ec9a0ec31e227f521e76fe5d8d96463"
+    },
+    {
+      "path": "paper/data/runs.csv",
+      "bytes": 1308254,
+      "sha256": "1c8f02da0ef25e5af3ecbe8c42b6ef44b6814fc86478490f137c88a2c757973a"
+    },
+    {
+      "path": "paper/data/decisions_by_label.csv",
+      "bytes": 1157471,
+      "sha256": "439ba7f8ce6bf6314040a84feac4c70f8b5f8b48d684320ea11287ff3d22bd2a"
+    },
+    {
+      "path": "paper/data/README.md",
+      "bytes": 14189,
+      "sha256": "2d22a12de64705cde32d912eaa1e34e5644009cfee010e0dcb9a3e44216a29c6"
+    },
+    {
+      "path": "paper/data/commits.csv",
+      "bytes": 961210,
+      "sha256": "d5057b791e3e3ab156d456d13edf81b19914fa699c9a4315034b528641ffcb9b"
+    },
+    {
+      "path": "paper/data/cost-silent.csv",
+      "bytes": 598796,
+      "sha256": "7de0ef3760a3b9e1981ef6acd27845eec66d81949cbd3ec1fe03fbf2469ceb6c"
+    },
+    {
+      "path": "paper/data/cost-sources.json",
+      "bytes": 202010,
+      "sha256": "6d8d7de95e5e876893483ced1dea5eb1884428e2dccb08782e218cf0f94b534b"
+    },
+    {
+      "path": "paper/data/summary.json",
+      "bytes": 517266,
+      "sha256": "868c7eb53c1a50f5f09caf3853ad2a2765849e46f8f4f0c654416eaeb741719a"
+    },
+    {
+      "path": "paper/data/cost-curve-silent.csv",
+      "bytes": 14327,
+      "sha256": "b88759dd93f4bb22a7c32fa143eb4b83a27089656161b9407969cb326668f406"
+    },
+    {
+      "path": "paper/materials/silent/cost.md",
+      "bytes": 4194,
+      "sha256": "5f3eb873cd3137df523d6fa5312dc1245123e7146b4d92f81b8769bd46a97e9c"
+    }
+  ],
+  "before": [
+    {
+      "path": "paper/data/escalations.csv",
+      "bytes": 1267694,
+      "sha256": "2d573d6ed9324f67b8a2a9b22688bc29cefd740ac7e544bc282be8bd9060d0a3"
+    },
+    {
+      "path": "paper/data/metrics.md",
+      "bytes": 1028,
+      "sha256": "577f8903f048d6b1d4a00a5335c4d93a654be38913ba43f7145bf5f1ecf04513"
+    },
+    {
+      "path": "paper/data/cost-unattributed.csv",
+      "bytes": 18784,
+      "sha256": "06719d92e7180c3d6f831f9333ff2c7af4a83a2dc698d15417a5ca91b4b6d11c"
+    },
+    {
+      "path": "paper/data/cost-ironclad.csv",
+      "bytes": 75880,
+      "sha256": "ccb2cb28bc601daee28fe2219cee06004f858d4595ee89b9484e90a4a0f0c3ee"
+    },
+    {
+      "path": "paper/data/learning-curve-silent.csv",
+      "bytes": 66497,
+      "sha256": "d0ef097fc455f1cfafb98b970f5aeb35c890813030c0849a82275f1281cf7fc7"
+    },
+    {
+      "path": "paper/data/verification.json",
+      "bytes": 587,
+      "sha256": "4c21e44efe1d68a787aedfd10f5c347b83cd584fae7759ccce56b8f48aa27bb4"
+    },
+    {
+      "path": "paper/data/runs.csv",
+      "bytes": 1306387,
+      "sha256": "e4e790140e5aa446e202b49e94e03f563c604a85d9fa97ca8533788b5b2b5f00"
+    },
+    {
+      "path": "paper/data/decisions_by_label.csv",
+      "bytes": 1155622,
+      "sha256": "a651393148d89a3274328440fb30926ee0fe77f158d8e17b070dcd671260e2f5"
+    },
+    {
+      "path": "paper/data/fight_plans.csv",
+      "bytes": 714774,
+      "sha256": "ddc5f40a447c1f035a7a2478f766a1513ee442631855646490243cc7b78889c4"
+    },
+    {
+      "path": "paper/data/README.md",
+      "bytes": 14189,
+      "sha256": "5155a90edccf041538b26d6d41684786cd3ae7b9cf419e68e66b32815663088a"
+    },
+    {
+      "path": "paper/data/commits.csv",
+      "bytes": 956826,
+      "sha256": "950bc55abd15ef76381d52ebd402bb12f0cc1950746bb29d059500b4e588bea4"
+    },
+    {
+      "path": "paper/data/learning-curve-ironclad.csv",
+      "bytes": 103370,
+      "sha256": "45405e24c8358a99d977c28852cf3e705fddc4f1923f9a7b16ff727a849b082b"
+    },
+    {
+      "path": "paper/data/cost-silent.csv",
+      "bytes": 593346,
+      "sha256": "7245327f35aa5c4afeebc733b8307ec03fdc8690c867cea1806f1e4daf944c97"
+    },
+    {
+      "path": "paper/data/cost-sources.json",
+      "bytes": 201301,
+      "sha256": "040252f352358b3e207e754ecf2374a417744f8470eaa822099a8520013d5683"
+    },
+    {
+      "path": "paper/data/cost-none.csv",
+      "bytes": 318,
+      "sha256": "5a93e8a3c93c034e1e5498ea0700e7b19ffe6dd8185d6705d729bccae6fbc766"
+    },
+    {
+      "path": "paper/data/cost-curve-ironclad.csv",
+      "bytes": 13168,
+      "sha256": "ce8d7daa03144a79b41c3690b7dfb32ac82b3057afefc8b4d7cb10b48bd82993"
+    },
+    {
+      "path": "paper/data/summary.json",
+      "bytes": 514768,
+      "sha256": "748efb5de659ca8a84502b7a17eab4a75122556c2586cbfd1cad0ceb5b586877"
+    },
+    {
+      "path": "paper/data/cost-curve-silent.csv",
+      "bytes": 14318,
+      "sha256": "98f1677149a44726bd475f4f5de95e800f83ea4ae8d329bc4e34d2f7120fb390"
+    },
+    {
+      "path": "paper/materials/silent/cost.md",
+      "bytes": 4194,
+      "sha256": "c4aa1768433a359ed923ba0d34ce2103a12a3ced109e82482d53cba8f51f6a1e"
+    }
+  ],
+  "before_bytes_preserved_under": "ops/codex-ops/record-staging/20261016-0805/paper-before",
+  "no_raw_snapshot": true,
+  "verification": {
+    "checks": {
+      "decisions attributed + unattributed == play records": true,
+      "decisions_by_label sum == attributed decisions": true,
+      "escalations rows == records with escalation": true,
+      "every runs.jsonl id present in runs.csv": true,
+      "commits == git rev-list --all --count": true,
+      "runs.jsonl decision-count mismatches": [
+        [
+          "KF9HMZKTFC3V",
+          879,
+          880
+        ]
+      ]
+    },
+    "row_counts": {
+      "runs.csv": 803,
+      "decisions_by_label.csv": 26785,
+      "escalations.csv": 3600,
+      "fight_plans.csv": 1461,
+      "commits.csv": 6382
+    }
+  },
+  "decision_count_mismatch": "KF9HMZKTFC3V logged879 versus dataset880; original reported discrepancy retained, not silently normalized"
+}

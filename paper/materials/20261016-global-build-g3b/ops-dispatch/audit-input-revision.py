@@ -1,0 +1,121 @@
+"""Check a frozen input superset; derive no game outcomes or calibration labels."""
+from pathlib import Path
+from collections import Counter
+import gzip
+import hashlib
+import json
+import subprocess
+
+root = Path(__file__).resolve().parents[4]
+phase = Path(__file__).resolve().parent.parent
+out = phase / 'ops-dispatch'
+sha = lambda raw: hashlib.sha256(raw).hexdigest()
+
+
+def reference(path):
+    raw = path.read_bytes()
+    return dict(path=str(path.relative_to(root)), bytes=len(raw), sha256=sha(raw))
+
+
+def write(path, value):
+    path.write_text(json.dumps(value, ensure_ascii=False, indent=2) + '\n')
+
+
+def main():
+    at = subprocess.check_output(['date', '+%Y-%m-%d %H:%M:%S %Z'], text=True).strip()
+    input_ref = reference(phase / 'learner-input-r2.md')
+    manifest_ref = reference(phase / 'inputs-r2/manifest.json')
+    assert input_ref['sha256'] == '13c75e410e0a563e5ab7318fffd3dc66f5ac2f06d07aa9c20e80457de376d608'
+    assert manifest_ref['sha256'] == '8d44fbaa26a20b5f13e73f82e78f7c9a9cf51e1f750bb8b7eb55ff66c668a07c'
+    old = json.loads((phase / 'inputs/manifest.json').read_bytes())
+    new = json.loads((phase / 'inputs-r2/manifest.json').read_bytes())
+    assert new['source_bounds'] == old['source_bounds'] and new['at'] == old['at']
+    assert new['supersedes_sha256'] == reference(phase / 'inputs/manifest.json')['sha256']
+    checked = []
+    for name, item in new['artifacts'].items():
+        actual = reference(phase / 'inputs-r2' / name)
+        assert all(actual[key] == item[key] for key in ['bytes', 'sha256'])
+        checked.append(actual)
+    before = {item['off']: item for item in old['raw_construction_record_index']}
+    after = {item['off']: item for item in new['raw_construction_record_index']}
+    assert len(before) == 1371 and len(after) == 1584
+    assert all(after[off] == item for off, item in before.items())
+    added = {off: item for off, item in after.items() if off not in before}
+    assert len(added) == 213 and max(added) < min(before)
+    with (root / 'logs/decisions.jsonl').open('rb') as original:
+        for item in added.values():
+            assert item['off'] + item['len'] <= new['source_bounds']['decisions']['complete_prefix_bytes']
+            original.seek(item['off'])
+            assert sha(original.read(item['len'])) == item['sha256']
+    remaining = Counter()
+    with gzip.open(phase / 'inputs/predictions.jsonl.gz', 'rb') as stream:
+        for line in stream:
+            remaining[sha(line)] += 1
+    assert sum(remaining.values()) == 145264
+    identical = 0
+    extras = 0
+    rows_by_anchor = Counter()
+    groups = Counter()
+    for line in gzip.open(phase / 'inputs-r2/predictions.jsonl.gz', 'rb'):
+        item = json.loads(line)
+        off = item['source']['off']
+        assert item['source'] == after[off]
+        if off in before:
+            digest = sha(line)
+            assert remaining[digest] > 0, 'Original expanded row changed or duplicated'
+            remaining[digest] -= 1
+            identical += 1
+        else:
+            prediction = item['prediction']
+            missing = ['model', 'policy', 'template_sha256', 'as_of']
+            assert all(prediction.get(key) is None for key in missing)
+            assert set(missing).issubset(item['preparation_gaps']) and item.get('outcome') is None
+            rows_by_anchor[off] += 1
+            groups[(prediction['core'], prediction['ascension'], prediction['metric'], prediction['horizon'])] += 1
+            extras += 1
+    assert identical == 145264 and extras == 22688 and sum(remaining.values()) == 0
+    anchors = []
+    for line in gzip.open(phase / 'inputs-r2/construction-records.jsonl.gz', 'rb'):
+        item = json.loads(line)
+        off = item['_source']['off']
+        if off not in added:
+            continue
+        assert item['_source'] == added[off]
+        anchors.append(dict(source=item['_source'], run=item['run_id'], logged_at=item['ts'],
+            logged_status=item['construction']['status'], disposition='missing_binding',
+            reason='Supplementary prefix has no native prospective binding; no game outcome inferred',
+            expanded_rows=rows_by_anchor[off], required_binding_fields=['model', 'policy', 'template_sha256', 'as_of'],
+            outcome=None, actual_policy=None, actual_endpoint=None))
+    assert len(anchors) == 213 and len({item['source']['off'] for item in anchors}) == 213
+    prefix_runs = set(item['run'] for item in anchors)
+    added_runs = prefix_runs - set(old['selected_runs'])
+    assert len(added_runs) == 6
+    assert set(new['selected_runs']) == set(old['selected_runs']) | added_runs
+    addendum = dict(at=at, schema='prospective-input-scope-addendum-v1', revision=2,
+        manifest=manifest_ref, contract=input_ref, r1_manifest=reference(phase/'inputs/manifest.json'),
+        unchanged_original_anchors=1371, unchanged_expanded_prediction_rows=identical,
+        added_anchors=213, added_runs=6, prefix_unique_runs=len(prefix_runs),
+        prefix_runs=sorted(prefix_runs), newly_added_runs=sorted(added_runs), added_expanded_rows=extras,
+        added_rows_with_complete_prospective_binding=0, new_game_outcome_labels=0,
+        new_eligible_prediction_rows=0, original_r1_results_reusable_without_rechecking=True,
+        zero_row_anchors_preserve_original_status_and_do_not_invent_predictions=True,
+        full_coverage_status='Original owner r1 evidence results pending; this addendum covers only missing-binding prefix metadata',
+        added_anchor_exclusions=anchors,
+        expanded_row_groups=[dict(core=k[0],ascension=k[1],metric=k[2],horizon=k[3],rows=v,disposition='missing_binding')
+                             for k,v in sorted(groups.items())],
+        no_pass_file_calibration_publication_or_live_change=True,
+        deterministic_command=['nice','-n','19','python3','-B',str(Path(__file__).relative_to(root))])
+    write(out / 'r2-prefix-coverage-addendum.json', addendum)
+    write(out / 'r2-input-readback.json', dict(at=at,contract=input_ref,manifest=manifest_ref,
+        artifacts=checked,same_original_source_bounds=True,original_1371_anchor_records_exact=True,
+        new_213_original_rows_SHA_verified=True,original_145264_expanded_rows_byte_identical=True,
+        added_22688_expanded_rows_missing_binding_only=True,
+        scope_addendum=reference(out/'r2-prefix-coverage-addendum.json'),
+        watcher_superset_receipt=reference(phase/'r2-superset-check.json'),
+        no_new_learner_or_game_fact_derived=True))
+    print(json.dumps(dict(rc=0,old_rows=identical,new_missing_binding_rows=extras,added_anchors=213,
+                         new_admissible_rows=0,same_source_bounds=True,no_game_outcomes_derived=True)))
+
+
+if __name__ == '__main__':
+    main()

@@ -202,6 +202,10 @@ export function planSelection(env: DecisionEnv): Decision | null {
   const plannedIds = new Set(isExhaust ? (env.screenMemory.planBeforeSelection ?? []).map((step) => `${step.cardId}${step.upgraded ? "+" : ""}`) : []);
   const source = env.screenMemory.cardSource;
   const sandpitFacts = sandpitDiscardFacts(state, source?.action === "play_card" && source.id === "PREPARED" &&
+    source.turn === state.turn && source.fight === facingFightOf(state),
+    source?.action === "play_card" && source.id === "SURVIVOR" &&
+    source.turn === state.turn && source.fight === facingFightOf(state),
+    source?.action === "play_card" && source.id === "DAGGER_THROW" &&
     source.turn === state.turn && source.fight === facingFightOf(state));
   const discardFacts = survivorDiscardFacts(state, source?.action === "play_card" && source.id === "SURVIVOR" &&
     source.turn === state.turn && source.fight === facingFightOf(state));
@@ -350,8 +354,8 @@ export function planSelection(env: DecisionEnv): Decision | null {
     const decision = buildPickDecision(params);
     if (discardPlan && decision.kind === "ask") {
       const resolve = decision.resolve;
-      decision.resolve = (answers) => {
-        const result = resolve(answers);
+      decision.resolve = (answers, context) => {
+        const result = resolve(answers, context);
         const picked = candidates.find((card) => numOrNull(card["index"]) === result.intent?.option_index);
         if (result.intent?.action === "select_deck_card" && picked && discardPlan.removes(picked) === true) {
           result.rationale += "; 此弃牌会移除原计划后继；原整条预测失效，返回战斗后按真实手牌重算";
@@ -389,6 +393,46 @@ function discardPlanFacts(env: DecisionEnv, cards: Record<string, unknown>[]): {
 } {
   const memo = env.screenMemory.pausedCombatPlan ?? env.screenMemory.combatPlan;
   if (!memo || memo.turn !== env.state.turn) {
+    const after = env.screenMemory.plannedAfter;
+    const reference = after?.discardReference;
+    const source = env.screenMemory.cardSource;
+    if (after?.turn === env.state.turn && reference?.fight === facingFightOf(env.state) && reference.actionDecisionId &&
+      source?.fight === reference.fight && source.turn === env.state.turn && source.action === "play_card" && source.id === "HIDDEN_DAGGERS" &&
+      asArray(asRecord(env.state.raw["combat"])["enemies"]).filter((enemy) => asRecord(enemy)["is_alive"] !== false).length === 1) {
+      const matches = (step: (typeof reference.held)[number], card: Record<string, unknown>) =>
+        step.cardId === str(card["card_id"]) && step.upgraded === bool(card["upgraded"]) &&
+        (step.cost === undefined || step.cost === numOrNull(card["energy_cost"]));
+      const missing = (pool: Record<string, unknown>[]) => {
+        const left = [...pool];
+        return reference.held.filter((step) => {
+          const at = left.findIndex((card) => matches(step, card));
+          if (at < 0) return true;
+          left.splice(at, 1);
+          return false;
+        });
+      };
+      const absent = missing(cards);
+      const available = [...cards];
+      const present = new Set<(typeof after.steps)[number]>();
+      for (const step of [...after.steps].sort((a, b) => Number(b.cost !== undefined) - Number(a.cost !== undefined))) {
+        const at = available.findIndex((card) => matches(step, card));
+        if (at >= 0) { present.add(step); available.splice(at, 1); }
+      }
+      return {
+        context: {
+          status: !reference.prediction || !reference.originDecisionId ? "unknown" : absent.length ? "invalidated" : "conditional",
+          source_decision_id: reference.originDecisionId ?? null, boundary_decision_id: reference.actionDecisionId,
+          remaining: after.steps.map((step) => ({ card_id: step.cardId, name: step.name, upgraded: step.upgraded,
+            target: step.targetName, present_in_current_choices: present.has(step),
+            observed_before_boundary: reference.held.includes(step) })),
+          missing_observed_continuation: absent.map((step) => step.cardId),
+          assumed_discards: reference.assumedDiscards,
+          original_full_plan_prediction: reference.prediction,
+          basis: "原方案的条件预测；已在手的后继与尚未出现的牌分列，不把生成牌当成当前手牌。弃掉所需副本后原预测失效；所有合法选择保持，返回战斗按真实手牌重新规划，不恢复旧索引动作。",
+        },
+        removes: (card) => missing(cards.filter((entry) => entry !== card)).length > absent.length,
+      };
+    }
     return { context: { status: "unknown", reason: "没有本回合可核对的已选方案" }, removes: () => null };
   }
   const steps = memo.remaining.filter((step) => !step.cardId.startsWith("POTION:"));
@@ -427,7 +471,7 @@ export const freeOfferOptions: { enabled: boolean } = { enabled: true };
  * Notes the potion drunk or the card played (each use_potion / play_card sent in combat; loop.ts after the dispatch): the
  * source of the card choice it may open (freeOfferSource). Other actions (the choice's own picks) leave it.
  */
-export function noteCardSource(memory: DecisionEnv["screenMemory"], state: GameState, intent: ActionRequest | null | undefined): void {
+export function noteCardSource(memory: DecisionEnv["screenMemory"], state: GameState, intent: ActionRequest | null | undefined, decisionId?: string): void {
   if (!state.in_combat || !intent) return;
   const action = intent.action;
   if (action !== "use_potion" && action !== "play_card") return;
@@ -437,6 +481,17 @@ export function noteCardSource(memory: DecisionEnv["screenMemory"], state: GameS
       : asArray(asRecord(state.raw["combat"])["hand"]).map(asRecord).find((card) => numOrNull(card["index"]) === intent.card_index);
   const id = str(entry?.[action === "use_potion" ? "potion_id" : "card_id"]);
   memory.cardSource = { fight: facingFightOf(state), turn: state.turn ?? null, action, id };
+  if (decisionId && memory.combatPlan?.selectionReference) memory.combatPlan.selectionDecisionId ??= decisionId;
+  const after = memory.plannedAfter;
+  const reference = after?.discardReference;
+  if (reference) {
+    if (action === "play_card" && id === "HIDDEN_DAGGERS" && !bool(entry?.["upgraded"]) &&
+      reference.cardIndex === intent.card_index && reference.fight === facingFightOf(state) && after!.turn === state.turn) {
+      reference.actionDecisionId = decisionId;
+      // A continued line with unknown original provenance must not borrow this later action's identity.
+      if (reference.originDecisionId === undefined) reference.originDecisionId = decisionId;
+    } else delete after!.discardReference;
+  }
 }
 
 /**

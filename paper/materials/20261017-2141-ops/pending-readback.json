@@ -1,0 +1,31 @@
+{
+  "at": "2026-10-17 21:44:58 CST",
+  "batch": "20261017-211302-fix-batch",
+  "source": "0b1807b159a1e3d7fc09aad541ea6f97be627a91",
+  "source_commit": "0b1807b159a1e3d7fc09aad541ea6f97be627a91",
+  "source_parent": "ee90797b418e628fcda95dd759e692ccfbac9145",
+  "source_tree": "bfddb6e2260eb6b435b18cf0cc2e202cbc803150",
+  "source_received": true,
+  "source_receipt": "paper/materials/20261017-2141-ops/source-received.json",
+  "paths": [
+    "agent/src/sim/global-build-b3.ts",
+    "agent/src/sim/global-build-observer.ts",
+    "agent/src/sim/global-build.ts",
+    "agent/tests/global-build-b3.test.ts",
+    "agent/tests/global-build-observer.test.ts",
+    "agent/tests/global-build.test.ts"
+  ],
+  "classification": "pure G2 shadow diagnostics",
+  "behavior_number_required": false,
+  "release_id": null,
+  "previous_latest_release_id": "V5-R388",
+  "source_sync_complete": false,
+  "host_started": false,
+  "host_complete": false,
+  "status": "Exact tested source received; original live lock was held by retention PID1469852, narrow publication deferred without polling",
+  "next_step": "Next original ops scheduler wake: acquire original live lock and honor builder gate; invoke this pending six-leaf publisher only if source not already integrated. Preserve current knowledge/index/versions and original history conflicts. After actual narrow integration, same211302 learner-recheck exactly once for actual tree; no source full/model/restart or behavior number.",
+  "last_gate_receipt": "paper/materials/20261017-2141-ops/observed-live-lock-owner.json",
+  "publisher": "ops/codex-ops/record-staging/20261017-2141/publish.py",
+  "host_launcher": "ops/codex-ops/record-staging/20261017-2141/start-host.py",
+  "recovery_contract": "paper/materials/20261017-2141-ops/continuation-contract.md"
+}

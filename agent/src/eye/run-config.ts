@@ -1,3 +1,5 @@
+import { HUMAN_PACE_BUDGETS } from "../core/decision-budget.js";
+import { humanPaceH2Policy } from "../core/human-pace-shadow-config.js";
 /**
  * The configuration each run was played with (V4 M4, docs/eval.md §2 and §8): one JSONL row per run in
  * logs/run-config.jsonl (RUN_CONFIG_LOG; "off" writes nothing), written when the loop first sees a new run id.
@@ -38,7 +40,7 @@ import type { UsageStatus } from "../brain/engines/codex-usage.js";
 import { estimateTokens, prefixSizeWarning } from "../brain/knowledge.js";
 import type { EngineName } from "../brain/types.js";
 import type { AppConfig } from "../core/config.js";
-import { CODEX_CONTEXT_WINDOW, CODEX_AUTO_COMPACT_TOKENS, DEFAULT_CLAUDE_MODEL, sReadinessMode, simFailurePolicy, simAdaptivePolicy, sCombatRankEnabled, sBuildRankMode } from "../core/config.js";
+import { CODEX_CONTEXT_WINDOW, CODEX_AUTO_COMPACT_TOKENS, DEFAULT_CLAUDE_MODEL, sReadinessMode, simFailurePolicy, simAdaptivePolicy, sCombatRankMode, sBuildRankMode } from "../core/config.js";
 import { isMenuRunId } from "../memory/journal-replay.js";
 import { str, type JsonValue } from "../core/util/json.js";
 import { resolveJevPromptLog } from "./jev-prompt-log.js";
@@ -48,6 +50,7 @@ import { ascensionMode, resolveTargetAscension } from "../memory/ascension-targe
 import { SILENT_DECK_CONSTRAINT, V5_DECK_POLICY } from "../memory/run-constraints.js";
 import { constructionMode } from "../construction/adapter.js";
 import { constructionEvaluationEnabled } from "../construction/consumer.js";
+import { globalBuildPolicy } from "../core/global-build-config.js";
 
 /** The repository this module runs from (core/paths.ts PROJECT_ROOT: the checkout's root). */
 export const REPO_ROOT = PROJECT_ROOT;
@@ -138,6 +141,9 @@ export interface RunConfigRow {
       max_answer_blanks: number | null;
     };
   };
+  human_pace?: { schema: string; budgets: typeof HUMAN_PACE_BUDGETS; model_effort: string; required_full_replaced: boolean };
+  human_pace_h2?: { schema: string; mode: string; requested: string; delivered: false;
+    direction_budget_ms: number; card_budget_ms: number; jev_budget_ms: number; actual_selector: string };
   knowledge: {
     prefix: "off" | "full";
     /** The ascension the prompt was rendered for (the run's). */
@@ -172,8 +178,12 @@ export interface RunConfigRow {
     sim_adaptive?: string;
     sim_adaptive_requested?: string;
     sim_adaptive_admission?: string;
-    s_combat_rank?: "on" | "off";
+    s_combat_rank?: "on" | "off" | "shadow";
+    s_build_sort?: "off" | "shadow";
     s_build_rank?: "off" | "shadow" | "on";
+    global_build_eval?: "off" | "shadow";
+    global_build_requested?: "off" | "shadow" | "on";
+    global_build_admission?: "pending_two_natural_shadow" | "not_applicable";
     combat_deepseek: string;
     /** THIEF_FACTS (docs/thief.md): the thieves' facts, escape and kill-line coverage on the combat question. */
     thief_facts: boolean;
@@ -476,6 +486,11 @@ export function runConfigRow(
       strict: config.strictJev,
       prompt_log: resolveJevPromptLog(config.log),
     },
+    ...(characterKey(run.character) === "silent" ? { human_pace: { schema: "human-pace-h1-v1", budgets: HUMAN_PACE_BUDGETS, model_effort: "xhigh", required_full_replaced: true } } : {}),
+    ...(humanPaceH2Policy(characterKey(run.character), env).mode !== "off" ? { human_pace_h2: {
+      schema: "human-pace-h2-shadow-v1", mode: "shadow", requested: humanPaceH2Policy(characterKey(run.character), env).requested,
+      delivered: false as const, direction_budget_ms: 60000, card_budget_ms: 5000, jev_budget_ms: 1000,
+      actual_selector: "existing_brain_and_gates_unchanged" } } : {}),
     loop: {
       mode: opts.mode,
       combat_planner: config.combatPlanner,
@@ -483,8 +498,12 @@ export function runConfigRow(
       build_oneshot: config.buildOneshot,
       boss_sim_build: characterKey(run.character) === "silent" ? "on" : config.bossSimBuild,
       s_readiness: sReadinessMode(run.character, env),
-      s_combat_rank: sCombatRankEnabled(run.character, env) ? "on" as const : "off" as const,
+      s_combat_rank: sCombatRankMode(run.character, env),
       s_build_rank: sBuildRankMode(run.character, env),
+      global_build_eval: globalBuildPolicy(run.character, env).mode,
+      global_build_requested: globalBuildPolicy(run.character, env).requested,
+      global_build_admission: globalBuildPolicy(run.character, env).admission,
+      s_build_sort: sBuildRankMode(run.character, env) === "off" ? "off" as const : "shadow" as const,
       sim_failure_exit: simFailurePolicy(run.character, env).enabled ? "on" as const : "off" as const,
       sim_failure_retries: simFailurePolicy(run.character, env).retries,
       sim_adaptive: simAdaptivePolicy(run.character, env).mode,

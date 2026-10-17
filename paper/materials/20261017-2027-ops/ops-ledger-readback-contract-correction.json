@@ -1,0 +1,12 @@
+{
+  "initial_ops_helper_exit": 1,
+  "phase": "read-only ledger receipt contract verification",
+  "field": "concurrent_rows_preserved",
+  "actual_original_value": 0,
+  "actual_original_type": "integer count",
+  "initial_error": "Treated the count as a required true boolean.",
+  "original_writer_checked": "Original link-ledger.py defines len(tail.splitlines()) minus len(own). Zero means no concurrent rows in that original append interval.",
+  "corrected_check": "Require a nonnegative integer, verify old prefix SHA and each of26 exact own trace-only rows independently.",
+  "original_receipt_or_product_or_canonical_state_modified": false,
+  "product_test_or_learner_failure": false
+}

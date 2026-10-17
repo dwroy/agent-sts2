@@ -1,0 +1,36 @@
+{
+  "at": "2026-10-17T08:21:35.957088+08:00",
+  "session": "01a13dcd-83d4-7c63-b233-f93cf878ecf4",
+  "parent": "roy-20261016-global-build",
+  "base": "f2534f90f846e80521779fe3da38d184fd24eb32",
+  "worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-f48-shadow-pause-20261017",
+  "source_leaves": {
+    "agent/src/sim/f48-joint-shadow.ts": "68e8e4575433bf3ff8ed692d3904d937e624afd40815bd0d3bfdf61e39c11ac9",
+    "agent/tests/f48-joint-integration.test.ts": "9619064da078c47f054da8a0b982d831e0872f95e25d9f848ec1297123e31690"
+  },
+  "logs": {
+    "decisions.jsonl": {
+      "size": 2130918368,
+      "mtime_ns": 1792196304299226721
+    },
+    "states.jsonl": {
+      "size": 13756554711,
+      "mtime_ns": 1792196304299226721
+    },
+    "run-config.jsonl": {
+      "size": 1916880,
+      "mtime_ns": 1792191491531664323
+    }
+  },
+  "source_full": {
+    "session_id": 83565,
+    "command": "SANDBOX_WORKERS=4 nice -n 19 bash tools/test-sandbox.sh",
+    "state": "running"
+  },
+  "scope": "read-only frozen historical offsets and a default-off pure diagnostic gate; no simulation or gameplay changes",
+  "staged_tree": "67e7a5d5b75345fcd3408fdc23ab3ce82f43ae28",
+  "read_only_queries": {
+    "decision-index.json": "SELECT run_id,off,len,ts,floor,turn,label,latency_plan_ms,latency_jev_ms,latency_action_ms,rollout_ms FROM decisions WHERE run_id IN ('CVJ4MLQF4CSY','N9GKED3PMEV3') AND floor=48 ORDER BY ts",
+    "noncombat-index.json": "SELECT run_id,off,len,ts,floor,label FROM decisions WHERE run_id IN ('CVJ4MLQF4CSY','N9GKED3PMEV3') AND floor<>48 AND label NOT LIKE 'combat/%' ORDER BY ts"
+  }
+}

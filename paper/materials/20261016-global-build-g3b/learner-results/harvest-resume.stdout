@@ -1,0 +1,2 @@
+{"name": "brain", "query": "SELECT DISTINCT off,len FROM read_parquet(?) WHERE run_id IN (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) AND off>=0 AND off+len<=? AND src='brain' ORDER BY off", "parquet": "/home/dw/Projects/agent-sts2/data/logdb/llm_calls_raw/*.parquet", "prefix_bytes": 666360899, "indexed_rows": 1481, "raw_bytes": 184435174}
+brain done 1481 compressed 46786076

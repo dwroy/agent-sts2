@@ -1,0 +1,34 @@
+...E................
+======================================================================
+ERROR: test_snapshot_preserves_main_workers_and_excludes_only_proven_ops_and_instance (ops.tests.test_llm_switch_scope.ScopeTest.test_snapshot_preserves_main_workers_and_excludes_only_proven_ops_and_instance)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/llm-switch-scope-20261017/ops/tests/test_llm_switch_scope.py", line 69, in test_snapshot_preserves_main_workers_and_excludes_only_proven_ops_and_instance
+    result=switch.snapshot({"source":{"session":"source-session","learner_home":"/old/learner","brain_home":"/old/brain"},"target":{"handoff":"handoff.md"}})
+  File "/home/dw/Projects/agent-sts2/.worktrees/llm-switch-scope-20261017/ops/llm_switch.py", line 114, in snapshot
+    owner = instance_root(environment) or private_instance_cwd(entry / "cwd")
+                                          ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/.worktrees/llm-switch-scope-20261017/ops/llm_switch.py", line 67, in private_instance_cwd
+    cwd = Path(cwd).resolve()
+          ~~~~^^^^^
+  File "/usr/lib/python3.14/unittest/mock.py", line 1176, in __call__
+    return self._mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/unittest/mock.py", line 1180, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/unittest/mock.py", line 1247, in _execute_mock_call
+    result = effect(*args, **kwargs)
+  File "/home/dw/Projects/agent-sts2/.worktrees/llm-switch-scope-20261017/ops/tests/test_llm_switch_scope.py", line 64, in paths
+    def paths(value): return ProcRoot() if str(value)=="/proc" else original(value)
+                                                                    ~~~~~~~~^^^^^^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 149, in __init__
+    raise TypeError(
+    ...<2 lines>...
+        f"not {type(path).__name__!r}")
+TypeError: argument should be a str or an os.PathLike object where __fspath__ returns a str, not 'Proc'
+
+----------------------------------------------------------------------
+Ran 20 tests in 0.417s
+
+FAILED (errors=1)

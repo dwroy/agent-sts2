@@ -1,0 +1,35 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/agent
+
+ ❯ tests/rollout.test.ts (86 tests | 1 failed) 18695ms
+     × reaches decision code only through rollout-live.ts, and that only from the combat question's facts 82ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/rollout.test.ts > rollout (offline) > reaches decision code only through rollout-live.ts, and that only from the combat question's facts
+AssertionError: expected [ 'src/reflex/rollout-live.ts', …(1) ] to deeply equal [ 'src/reflex/rollout-live.ts' ]
+
+- Expected
++ Received
+
+  [
+    "src/reflex/rollout-live.ts",
++   "src/reflex/silent-boss-weak.ts",
+  ]
+
+ ❯ tests/rollout.test.ts:434:81
+    432|     // B3 builds its synthetic boss start with the live planner's boar…
+    433|     // build-sim-facts (the deck-building questions' facts) and its wo…
+    434|     expect(importers("rollout").filter((path) => !path.startsWith("src…
+       |                                                                                 ^
+    435|     expect(importers("rollout-live").filter((path) => !path.startsWith…
+    436|     expect(importers("(sim/)?boss-sim").filter((path) => !path.startsW…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 462 passed (463)
+      Tests  1 failed | 4275 passed (4276)
+   Start at  11:23:36
+   Duration  1487.25s (transform 21.04s, setup 32.78s, import 95.53s, tests 1271.90s, environment 61ms)
+

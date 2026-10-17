@@ -1,0 +1,594 @@
+{
+  "batches": [
+    {
+      "batch": "20261017-224301",
+      "canonical_state": "done",
+      "canonical_rc": 0,
+      "canonical_merged": null,
+      "report": {
+        "task": "postmortem",
+        "appended": [
+          "75DAD6GBWEU1"
+        ],
+        "skipped": [],
+        "bugs": [],
+        "ledger": {
+          "added": [],
+          "updated": [
+            "silent-0020",
+            "silent-0125",
+            "silent-0418",
+            "silent-0005",
+            "silent-0027",
+            "silent-0038",
+            "silent-0045",
+            "silent-0083",
+            "silent-0221",
+            "silent-0025"
+          ],
+          "repeats": [],
+          "check": 0
+        },
+        "code_proposals": [
+          "silent-proposal-1cfc1137fed5082a",
+          "silent-proposal-e6b7e2ce74da3eb1"
+        ],
+        "implementation_domains": [
+          "combat",
+          "potion",
+          "sl",
+          "structure"
+        ],
+        "report": "/home/dw/Projects/agent-sts2/learner/runs/20261017-224308-af3027f7-ff14-44e0-b1d5-29e67bbef129-postmortem/report.md"
+      },
+      "native": {
+        "batch": "20261017-224301",
+        "thread": "01a14a51-22c8-7402-8b09-d18fdc153f9d",
+        "cwd": "/home/dw/Projects/agent-sts2",
+        "event_log": "learner/runs/20261017-224308-af3027f7-ff14-44e0-b1d5-29e67bbef129-postmortem.jsonl",
+        "registered_launch_batch": "20261017-224301",
+        "original_lease": "066fdce7cba952263d2d8ea5740dd6188ddb485a2fe948d6879dce361580dc40",
+        "native_context": {
+          "source": "ops/codex-ops/accounts/codex1/learner/sessions/2026/10/17/rollout-2026-10-17T22-43-13-01a14a51-22c8-7402-8b09-d18fdc153f9d.jsonl",
+          "offset": 49293,
+          "bytes": 4654,
+          "sha256": "5932449d21d5a36c2a5a506f79ac5902ba1e558d5b7ce1d92760d759b9ea2aa2",
+          "model": "gpt-6.1-sol",
+          "effort": "xhigh",
+          "sandbox": {
+            "type": "workspace-write",
+            "writable_roots": [
+              "/home/dw/Projects/agent-sts2/.git"
+            ],
+            "network_access": false,
+            "exclude_tmpdir_env_var": false,
+            "exclude_slash_tmp": false
+          },
+          "approval_policy": "never"
+        },
+        "native_user_input": {
+          "offset": 56530,
+          "bytes": 15345,
+          "sha256": "d047717b7124621631eab0f80d1825bf95f45e808057b8320153e75ff3fe52d5",
+          "input_sha256": "7bfbc4529fb9b045bc506b17d82626f02513848824adea218505aedb65704064"
+        },
+        "original_header_events": [
+          {
+            "offset": 0,
+            "bytes": 16866,
+            "sha256": "4d5a8b41c500df4fc18e8c583c0d4c6200e3e8d383bcb4a8cd54b4c736f53cad",
+            "type": "learner_launch",
+            "attempt": null,
+            "code": null
+          },
+          {
+            "offset": 16866,
+            "bytes": 360,
+            "sha256": "cfec5101c6f1c1317d3273fc17d40a80b68c84c95f4beceb7bfc9dc7b25a807d",
+            "type": "learner_startup_attempt",
+            "attempt": 1,
+            "code": null
+          },
+          {
+            "offset": 20238,
+            "bytes": 77,
+            "sha256": "2bef37ed6fbbfc0bcb3e7e9a2b09f173dc675d54876d5352abed8b42c39bb263",
+            "type": "thread.started",
+            "attempt": null,
+            "code": null
+          }
+        ],
+        "startup_attempts": 1,
+        "failed_startups_preserved": 0,
+        "no_model_or_manual_restart": true
+      },
+      "artifact_checks": [],
+      "raw_checks": [
+        {
+          "projected": "learner/runs/20261017-224308-af3027f7-ff14-44e0-b1d5-29e67bbef129-postmortem/human-pace-shadow.jsonl",
+          "rows": 41
+        },
+        {
+          "projected": "learner/runs/20261017-224308-af3027f7-ff14-44e0-b1d5-29e67bbef129-postmortem/run-plans.jsonl",
+          "rows": 10
+        },
+        {
+          "projected": "learner/runs/20261017-224308-af3027f7-ff14-44e0-b1d5-29e67bbef129-postmortem/run-config.jsonl",
+          "rows": 1
+        },
+        {
+          "projected": "learner/runs/20261017-224308-af3027f7-ff14-44e0-b1d5-29e67bbef129-postmortem/brain.jsonl",
+          "rows": 40
+        },
+        {
+          "projected": "learner/runs/20261017-224308-af3027f7-ff14-44e0-b1d5-29e67bbef129-postmortem/states.jsonl",
+          "rows": 711
+        },
+        {
+          "projected": "learner/runs/20261017-224308-af3027f7-ff14-44e0-b1d5-29e67bbef129-postmortem/runs.jsonl",
+          "rows": 1
+        },
+        {
+          "projected": "learner/runs/20261017-224308-af3027f7-ff14-44e0-b1d5-29e67bbef129-postmortem/sl-attempts.jsonl",
+          "rows": 9
+        },
+        {
+          "projected": "learner/runs/20261017-224308-af3027f7-ff14-44e0-b1d5-29e67bbef129-postmortem/decisions.jsonl",
+          "rows": 679
+        }
+      ],
+      "ledger_rows": [
+        {
+          "offset": 23486048,
+          "bytes": 670,
+          "sha256": "5ab9aa33054ad95857572478324f07fd515c098e1f64480164cd12577dcc3cb9",
+          "row": {
+            "op": "update",
+            "id": "silent-0020",
+            "ts": "2026-10-17T22:57:26+08:00",
+            "by": "learner:postmortem",
+            "evidence": [
+              {
+                "run": "75DAD6GBWEU1",
+                "floor": 35,
+                "note": "三条经验第一条：F33首试53→2后跨幕2→56；F35胜战耗34到22，F36第二试胜战再耗18、上限70→62，F37仅4/62入场。F32营火7→28与缩放仪28→53分源；未来营火未到，无替线受控胜负。",
+                "role": "support"
+              }
+            ],
+            "where": {
+              "lessons": [
+                "75DAD6GBWEU1"
+              ]
+            },
+            "note": "本局只追加支持证据；保留旧claim、first_run、prior、status与version，不登记重复错误或实现上线。来源任务20261017-224308-af3027f7-ff14-44e0-b1d5-29e67bbef129-postmortem。"
+          }
+        },
+        {
+          "offset": 23486718,
+          "bytes": 799,
+          "sha256": "6496773839fa2743438a668474ef4384518ee5691c2bdce5649ab24874809c1d",
+          "row": {
+            "op": "update",
+            "id": "silent-0125",
+            "ts": "2026-10-17T22:57:26+08:00",
+            "by": "learner:postmortem",
+            "evidence": [
+              {
+                "run": "75DAD6GBWEU1",
+                "floor": 33,
+                "turn": 6,
+                "note": "三条经验第二条：HP护栏唯一一次，双蛇咬候选损18/伤48换挡牌逃离候选损0/伤12，预测省18少36伤、无永久力量差。原线五轮结束2/8、死亡6/8；替线结束0/8、死亡6/8。实际挡牌后重问蛇咬小刀，零损推进37且T9赢；非完整同线或原条目全败重犯。d426141—145/s440715—720。",
+                "role": "support"
+              }
+            ],
+            "where": {
+              "lessons": [
+                "75DAD6GBWEU1"
+              ]
+            },
+            "note": "本局只追加支持证据；保留旧claim、first_run、prior、status与version，不登记重复错误或实现上线。来源任务20261017-224308-af3027f7-ff14-44e0-b1d5-29e67bbef129-postmortem。"
+          }
+        },
+        {
+          "offset": 23487517,
+          "bytes": 755,
+          "sha256": "302141f9bdaa5c88aabb2240661ce865dc1fd31b119063514c992b9a31130959",
+          "row": {
+            "op": "update",
+            "id": "silent-0418",
+            "ts": "2026-10-17T22:57:26+08:00",
+            "by": "learner:postmortem",
+            "evidence": [
+              {
+                "run": "75DAD6GBWEU1",
+                "floor": 37,
+                "turn": 1,
+                "note": "三条经验第三条：第3试d426268原答/journal拳击但SL候选方柱，肾上腺素后d426269又回拳击；末试d426287—288最终扫腿蛇咬切割落到方柱。F29T1弃后继尖啸并重问，F36第二试T1弃究极防御并改防御+。130/135原答最优标记不等完整实际最优线。",
+                "role": "support"
+              }
+            ],
+            "where": {
+              "lessons": [
+                "75DAD6GBWEU1"
+              ]
+            },
+            "note": "本局只追加支持证据；保留旧claim、first_run、prior、status与version，不登记重复错误或实现上线。来源任务20261017-224308-af3027f7-ff14-44e0-b1d5-29e67bbef129-postmortem。"
+          }
+        },
+        {
+          "offset": 23488272,
+          "bytes": 583,
+          "sha256": "17eb28abf2273ec71dde2fe4816a3fcb74bb7b98fa3634c6c8f0de2d53098be8",
+          "row": {
+            "op": "update",
+            "id": "silent-0005",
+            "ts": "2026-10-17T22:57:26+08:00",
+            "by": "learner:postmortem",
+            "evidence": [
+              {
+                "run": "75DAD6GBWEU1",
+                "floor": 33,
+                "turn": 6,
+                "note": "灵动步法T1建立2敏捷；T6防御+给10、斗篷给8，合18，比基础8+6多4，实挡18攻击、32HP不变。s440715—720。",
+                "role": "support"
+              }
+            ],
+            "where": {
+              "lessons": [
+                "75DAD6GBWEU1"
+              ]
+            },
+            "note": "本局只追加支持证据；保留旧claim、first_run、prior、status与version，不登记重复错误或实现上线。来源任务20261017-224308-af3027f7-ff14-44e0-b1d5-29e67bbef129-postmortem。"
+          }
+        },
+        {
+          "offset": 23488855,
+          "bytes": 704,
+          "sha256": "3bc13240b0c05a489e87465634cb76932d9853b53f145b023c6405161204f86b",
+          "row": {
+            "op": "update",
+            "id": "silent-0027",
+            "ts": "2026-10-17T22:57:26+08:00",
+            "by": "learner:postmortem",
+            "evidence": [
+              {
+                "run": "75DAD6GBWEU1",
+                "floor": 33,
+                "turn": 6,
+                "note": "T3触媒+建立2层；T5毒雾+建立3层，T6末10毒三结27，再加招架盾6使敌尾帧228→次轮195。T9轮初57敌HP/22毒后奖励，实际净清57，过杀内部帧未知，不按理论63冒实际。s440700/440714/440719—720/440730—731。",
+                "role": "support"
+              }
+            ],
+            "where": {
+              "lessons": [
+                "75DAD6GBWEU1"
+              ]
+            },
+            "note": "本局只追加支持证据；保留旧claim、first_run、prior、status与version，不登记重复错误或实现上线。来源任务20261017-224308-af3027f7-ff14-44e0-b1d5-29e67bbef129-postmortem。"
+          }
+        },
+        {
+          "offset": 23489559,
+          "bytes": 573,
+          "sha256": "f8f53ff2a867c1be67916f2df40d21d660b914dd004e91ed1e16a944ba1f39db",
+          "row": {
+            "op": "update",
+            "id": "silent-0038",
+            "ts": "2026-10-17T22:57:26+08:00",
+            "by": "learner:postmortem",
+            "evidence": [
+              {
+                "run": "75DAD6GBWEU1",
+                "floor": 37,
+                "turn": 3,
+                "note": "钗末试每轮初7挡；T3脆弱下防御3、斗篷4，合14对40攻击，2HP死亡，三敌剩31/40/70。s440878—884。",
+                "role": "support"
+              }
+            ],
+            "where": {
+              "lessons": [
+                "75DAD6GBWEU1"
+              ]
+            },
+            "note": "本局只追加支持证据；保留旧claim、first_run、prior、status与version，不登记重复错误或实现上线。来源任务20261017-224308-af3027f7-ff14-44e0-b1d5-29e67bbef129-postmortem。"
+          }
+        },
+        {
+          "offset": 23490132,
+          "bytes": 612,
+          "sha256": "f7b7db228ff366a2f6a47428cfa4691209b78e90881ced2b486a2f9522788a9c",
+          "row": {
+            "op": "update",
+            "id": "silent-0045",
+            "ts": "2026-10-17T22:57:26+08:00",
+            "by": "learner:postmortem",
+            "evidence": [
+              {
+                "run": "75DAD6GBWEU1",
+                "floor": 33,
+                "turn": 2,
+                "note": "能力药水T1选择速行者并建立SPEEDSTER_POWER2；T2后空翻抽两牌敌328→324、加7挡，随后小刀324→320分账。d426110—114/s440691—694。",
+                "role": "support"
+              }
+            ],
+            "where": {
+              "lessons": [
+                "75DAD6GBWEU1"
+              ]
+            },
+            "note": "本局只追加支持证据；保留旧claim、first_run、prior、status与version，不登记重复错误或实现上线。来源任务20261017-224308-af3027f7-ff14-44e0-b1d5-29e67bbef129-postmortem。"
+          }
+        },
+        {
+          "offset": 23490744,
+          "bytes": 635,
+          "sha256": "79ec509bbb7a6b3c0db75a4abb6646819b32706db66e41e2ce90789922517396",
+          "row": {
+            "op": "update",
+            "id": "silent-0083",
+            "ts": "2026-10-17T22:57:26+08:00",
+            "by": "learner:postmortem",
+            "evidence": [
+              {
+                "run": "75DAD6GBWEU1",
+                "floor": 35,
+                "turn": 3,
+                "note": "雕刻师仪式9，T3尖啸后暂3力量仍18攻击；T4/5/6力18/27/36、攻33/42/51。T3—5净损11/7/16，T6毒清15敌HP获胜到22，临时减力未停止成长。s440751—768。",
+                "role": "support"
+              }
+            ],
+            "where": {
+              "lessons": [
+                "75DAD6GBWEU1"
+              ]
+            },
+            "note": "本局只追加支持证据；保留旧claim、first_run、prior、status与version，不登记重复错误或实现上线。来源任务20261017-224308-af3027f7-ff14-44e0-b1d5-29e67bbef129-postmortem。"
+          }
+        },
+        {
+          "offset": 23491379,
+          "bytes": 625,
+          "sha256": "ecf6b64b956e1d784525957eb7fe6887187cf8b8452bd6a61db123ee943a929d",
+          "row": {
+            "op": "update",
+            "id": "silent-0221",
+            "ts": "2026-10-17T22:57:26+08:00",
+            "by": "learner:postmortem",
+            "evidence": [
+              {
+                "run": "75DAD6GBWEU1",
+                "floor": 36,
+                "turn": 3,
+                "note": "卷轴第二试22/70→4/62胜；轮界上限70→68→64→62、HP22→20→10→4，纸伤难愈2，少8上限与18净损分账，逐击缺帧不补击数。s440784—811。",
+                "role": "support"
+              }
+            ],
+            "where": {
+              "lessons": [
+                "75DAD6GBWEU1"
+              ]
+            },
+            "note": "本局只追加支持证据；保留旧claim、first_run、prior、status与version，不登记重复错误或实现上线。来源任务20261017-224308-af3027f7-ff14-44e0-b1d5-29e67bbef129-postmortem。"
+          }
+        },
+        {
+          "offset": 23492004,
+          "bytes": 710,
+          "sha256": "9d74e77e5dd864fca81ffe24f756186ad4816694a757b9be3e8b147db483ca5b",
+          "row": {
+            "op": "update",
+            "id": "silent-0025",
+            "ts": "2026-10-17T22:57:26+08:00",
+            "by": "learner:postmortem",
+            "evidence": [
+              {
+                "run": "75DAD6GBWEU1",
+                "floor": 37,
+                "turn": 2,
+                "note": "末试T1扫腿耗方柱#1制品1而不建虚弱，蛇咬再加7毒；T2中和耗拳击制品，随后尖啸令其−6力/方柱#1−4力，#2制品挡减力而仍2力。T2总攻14对12挡损2，T3负力消失、方柱各4力，40攻击致死。s440869—878。",
+                "role": "support"
+              }
+            ],
+            "where": {
+              "lessons": [
+                "75DAD6GBWEU1"
+              ]
+            },
+            "note": "本局只追加支持证据；保留旧claim、first_run、prior、status与version，不登记重复错误或实现上线。来源任务20261017-224308-af3027f7-ff14-44e0-b1d5-29e67bbef129-postmortem。"
+          }
+        },
+        {
+          "offset": 23492714,
+          "bytes": 367,
+          "sha256": "3d4b66ae6899bedcac5b4ba26c258305a54d05bd8460d082ad65af587905b89c",
+          "row": {
+            "op": "update",
+            "id": "silent-0125",
+            "ts": "2026-10-17T22:58:47+08:00",
+            "by": "learner:postmortem",
+            "where": {
+              "proposal": [
+                "/home/dw/Projects/agent-sts2/learner/runs/20261017-224308-af3027f7-ff14-44e0-b1d5-29e67bbef129-postmortem/proposal-combat-sl.md"
+              ]
+            },
+            "note": "代码提案 silent-proposal-1cfc1137fed5082a → task=strategy-proposal；Roy-2026-10-07-learning"
+          }
+        },
+        {
+          "offset": 23493081,
+          "bytes": 367,
+          "sha256": "37155a7f9d64d79fc7732f779c352f74df73eac3a70d7424937cd31ea0ab4fa8",
+          "row": {
+            "op": "update",
+            "id": "silent-0418",
+            "ts": "2026-10-17T22:58:47+08:00",
+            "by": "learner:postmortem",
+            "where": {
+              "proposal": [
+                "/home/dw/Projects/agent-sts2/learner/runs/20261017-224308-af3027f7-ff14-44e0-b1d5-29e67bbef129-postmortem/proposal-combat-sl.md"
+              ]
+            },
+            "note": "代码提案 silent-proposal-1cfc1137fed5082a → task=strategy-proposal；Roy-2026-10-07-learning"
+          }
+        },
+        {
+          "offset": 23493448,
+          "bytes": 367,
+          "sha256": "1e32504f787904432e205fbcd2afd34cd817665085b6976b91481ac3a603d843",
+          "row": {
+            "op": "update",
+            "id": "silent-0005",
+            "ts": "2026-10-17T22:58:47+08:00",
+            "by": "learner:postmortem",
+            "where": {
+              "proposal": [
+                "/home/dw/Projects/agent-sts2/learner/runs/20261017-224308-af3027f7-ff14-44e0-b1d5-29e67bbef129-postmortem/proposal-combat-sl.md"
+              ]
+            },
+            "note": "代码提案 silent-proposal-1cfc1137fed5082a → task=strategy-proposal；Roy-2026-10-07-learning"
+          }
+        },
+        {
+          "offset": 23493815,
+          "bytes": 367,
+          "sha256": "f080810bb4e527dd985d4b0491aae78968436701d73ea3708133f9ebe03dff8e",
+          "row": {
+            "op": "update",
+            "id": "silent-0027",
+            "ts": "2026-10-17T22:58:47+08:00",
+            "by": "learner:postmortem",
+            "where": {
+              "proposal": [
+                "/home/dw/Projects/agent-sts2/learner/runs/20261017-224308-af3027f7-ff14-44e0-b1d5-29e67bbef129-postmortem/proposal-combat-sl.md"
+              ]
+            },
+            "note": "代码提案 silent-proposal-1cfc1137fed5082a → task=strategy-proposal；Roy-2026-10-07-learning"
+          }
+        },
+        {
+          "offset": 23494182,
+          "bytes": 367,
+          "sha256": "ad5bfc8334b2097e90e57705e9eeae89d104d02a6639b27ab9ffa2878d322bae",
+          "row": {
+            "op": "update",
+            "id": "silent-0038",
+            "ts": "2026-10-17T22:58:47+08:00",
+            "by": "learner:postmortem",
+            "where": {
+              "proposal": [
+                "/home/dw/Projects/agent-sts2/learner/runs/20261017-224308-af3027f7-ff14-44e0-b1d5-29e67bbef129-postmortem/proposal-combat-sl.md"
+              ]
+            },
+            "note": "代码提案 silent-proposal-1cfc1137fed5082a → task=strategy-proposal；Roy-2026-10-07-learning"
+          }
+        },
+        {
+          "offset": 23494549,
+          "bytes": 367,
+          "sha256": "f6be9ee30fff884caa1a78a9e1f8d5b7641835e015416413562e14992a444d3a",
+          "row": {
+            "op": "update",
+            "id": "silent-0045",
+            "ts": "2026-10-17T22:58:47+08:00",
+            "by": "learner:postmortem",
+            "where": {
+              "proposal": [
+                "/home/dw/Projects/agent-sts2/learner/runs/20261017-224308-af3027f7-ff14-44e0-b1d5-29e67bbef129-postmortem/proposal-combat-sl.md"
+              ]
+            },
+            "note": "代码提案 silent-proposal-1cfc1137fed5082a → task=strategy-proposal；Roy-2026-10-07-learning"
+          }
+        },
+        {
+          "offset": 23494916,
+          "bytes": 367,
+          "sha256": "fe08d54f52fe0ba6fa70acf12ff5f5cf4a5e703bb1d69473d6aa611c638938cc",
+          "row": {
+            "op": "update",
+            "id": "silent-0025",
+            "ts": "2026-10-17T22:58:47+08:00",
+            "by": "learner:postmortem",
+            "where": {
+              "proposal": [
+                "/home/dw/Projects/agent-sts2/learner/runs/20261017-224308-af3027f7-ff14-44e0-b1d5-29e67bbef129-postmortem/proposal-combat-sl.md"
+              ]
+            },
+            "note": "代码提案 silent-proposal-1cfc1137fed5082a → task=strategy-proposal；Roy-2026-10-07-learning"
+          }
+        },
+        {
+          "offset": 23495283,
+          "bytes": 367,
+          "sha256": "9cabee8c9bafb8b563e55aba82fdd2f037536e888625c680eac5a55fa7c0fbad",
+          "row": {
+            "op": "update",
+            "id": "silent-0020",
+            "ts": "2026-10-17T22:59:05+08:00",
+            "by": "learner:postmortem",
+            "where": {
+              "proposal": [
+                "/home/dw/Projects/agent-sts2/learner/runs/20261017-224308-af3027f7-ff14-44e0-b1d5-29e67bbef129-postmortem/proposal-resources.md"
+              ]
+            },
+            "note": "代码提案 silent-proposal-e6b7e2ce74da3eb1 → task=strategy-proposal；Roy-2026-10-07-learning"
+          }
+        },
+        {
+          "offset": 23495650,
+          "bytes": 367,
+          "sha256": "728c6e6fc7d91615bcac3b51c20ebbef3ef00fda909c65ad36ad296a11aa6f26",
+          "row": {
+            "op": "update",
+            "id": "silent-0083",
+            "ts": "2026-10-17T22:59:05+08:00",
+            "by": "learner:postmortem",
+            "where": {
+              "proposal": [
+                "/home/dw/Projects/agent-sts2/learner/runs/20261017-224308-af3027f7-ff14-44e0-b1d5-29e67bbef129-postmortem/proposal-resources.md"
+              ]
+            },
+            "note": "代码提案 silent-proposal-e6b7e2ce74da3eb1 → task=strategy-proposal；Roy-2026-10-07-learning"
+          }
+        },
+        {
+          "offset": 23496017,
+          "bytes": 367,
+          "sha256": "9ae9a0cfc26b2882521b26a18160acfeca42f8dfda8cf3b6269dfc58975709eb",
+          "row": {
+            "op": "update",
+            "id": "silent-0221",
+            "ts": "2026-10-17T22:59:05+08:00",
+            "by": "learner:postmortem",
+            "where": {
+              "proposal": [
+                "/home/dw/Projects/agent-sts2/learner/runs/20261017-224308-af3027f7-ff14-44e0-b1d5-29e67bbef129-postmortem/proposal-resources.md"
+              ]
+            },
+            "note": "代码提案 silent-proposal-e6b7e2ce74da3eb1 → task=strategy-proposal；Roy-2026-10-07-learning"
+          }
+        },
+        {
+          "offset": 23496384,
+          "bytes": 367,
+          "sha256": "a94238f8a805ac53ac8c06c1b461f598289c12f03f910437ff8102da10a67b8a",
+          "row": {
+            "op": "update",
+            "id": "silent-0038",
+            "ts": "2026-10-17T22:59:05+08:00",
+            "by": "learner:postmortem",
+            "where": {
+              "proposal": [
+                "/home/dw/Projects/agent-sts2/learner/runs/20261017-224308-af3027f7-ff14-44e0-b1d5-29e67bbef129-postmortem/proposal-resources.md"
+              ]
+            },
+            "note": "代码提案 silent-proposal-e6b7e2ce74da3eb1 → task=strategy-proposal；Roy-2026-10-07-learning"
+          }
+        }
+      ],
+      "proposal_dispositions": [],
+      "no_ops_model_simulation_consumer_or_source_test": true
+    }
+  ],
+  "unique_original_log_references_verified": 1492,
+  "original_failure_history_and_scopes_retained": true
+}

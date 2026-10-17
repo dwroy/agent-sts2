@@ -1,0 +1,221 @@
+s":400}
+12:02:06 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+12:02:07 note H1 idle preparation: {"status":"prepared","basis":"exact_observed_input_only","nodes":20,"partial":false,"reused":false,"budget_ms":400}
+12:02:08 COMBAT          combat/least-loss    -> play_card (card_index=1, target_index=0) jev 0 ms | 0 in
+         every simulated line dies; playing the one that keeps the most HP (-27): 咕嘟冒泡 -> 实验体 #C93, 逃脱计划, 必备工具
+12:02:08 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+12:02:08 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+12:02:08 COMBAT          combat/plan-continue -> play_card (card_index=1) jev 0 ms | 0 in
+         continuing the code-chosen plan: 逃脱计划
+12:02:09 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+12:02:09 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+12:02:10 COMBAT          combat/least-loss    -> play_card (card_index=1) jev 0 ms | 0 in
+         every simulated line dies; playing the one that keeps the most HP (-31): 必备工具, 匕首雨
+12:02:10 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+12:02:10 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+12:02:11 COMBAT          combat/plan-continue -> play_card (card_index=2) jev 0 ms | 0 in
+         continuing the code-chosen plan: 匕首雨
+12:02:11 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+12:02:11 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+12:02:12 note SL: certain death foreseen at F48 T5 attempt 1/6 (rules: nothing left to play or drink; 44 incoming vs 13 HP + 0 block + 0 end-of-turn block); reloading the fight: save_and_quit, then continue_run
+12:02:13 note SL: save_and_quit -> completed (Action completed.)
+12:02:17 note SL: continue_run -> completed (Action completed.)
+12:02:19 note SL: attempt 2 knows the first 38 draws of the fight (attempt 1)
+12:02:19 note SL: attempt 2 deviates if it is still on attempt 1's path from T1 (where attempt 1 lost the most HP: T1 26.2, T2 22.4, T3 10.8, T4 21.5, T5 13) to T5
+12:02:19 note SL: back in the fight at F48 T1 (8 s); attempt 2/6 begins, Jev is told how the earlier attempt(s) went
+12:02:19 COMBAT          combat/least-loss    -> end_turn jev 0 ms | 0 in
+         every simulated line dies; playing the one that keeps the most HP (-31): end turn
+12:02:19 note H1 idle preparation: {"status":"prepared","basis":"exact_observed_input_only","nodes":480,"partial":false,"reused":false,"budget_ms":400}
+12:02:19 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+12:02:20 note H1 idle preparation: {"status":"prepared","basis":"exact_observed_input_only","nodes":480,"partial":false,"reused":true,"budget_ms":400}
+12:02:29 note SL: explored at F48 T1 attempt 2/6 (T1, attempt 2 still on attempt 1's path (from T1, where attempt 1 lost the most HP)): 神气制胜, potion 毒药水 -> 实验体 #C93, potion 易伤药水 -> 实验体 #C93, 投掷匕首 -> 实验体 #C93, 打击+ -> 实验体 #C93 instead of 神气制胜, 防御, potion 毒药水 -> 实验体 #C93, potion 易伤药水 -> 实验体 #C93, 投掷匕首 -> 实验体 #C93, 打击+ -> 实验体 #C93 (the best untried line by the question's ranking, among those the rollout does not see dying more often)
+12:02:29 COMBAT          combat/plan-choice   -> play_card (card_index=0) conf 0.88 jev 684 ms | 21874 in
+         Jev chose plan 2/10 (神气制胜, 防御, potion 毒药水 -> 实验体 #C93, potion 易伤药水 -> 实验体 #C93, 投掷匕首 -> 实验体 #C93, 打击+ -> 实验体 #C93) with confidence 0.88; code rank 2; SL explore (T1, attempt 2 still on attempt 1's path (from T1, where attempt 1 lost the most HP)): playing 神气制胜, potion 毒药水 -> 实验体 #C93, potion 易伤药水 -> 实验体 #C93, 投掷匕首 -> 实验体 #C93, 打击+ -> 实验体 #C93 instead of 神气制胜, 防御, potion 毒药水 -> 实验体 #C93, potion 易伤药水 -> 实验体 #C93, 投掷匕首 -> 实验体 #C93, 打击+ -> 实验体 #C93, played on this board in attempt 1 (the best untried line by the question's ranking, among those the rollout does not see dying more often)
+12:02:29 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+12:02:29 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+12:02:31 COMBAT          combat/plan-continue -> use_potion (target_index=0, option_index=0) jev 0 ms | 0 in
+         continuing the Jev-chosen plan: potion 毒药水 -> 实验体 #C93
+12:02:31 COMBAT          combat/plan-continue -> use_potion (target_index=0, option_index=1) jev 0 ms | 0 in
+         continuing the Jev-chosen plan: potion 易伤药水 -> 实验体 #C93
+12:02:32 note action came back pending; waited for the board to settle
+12:02:32 COMBAT          combat/plan-continue -> play_card (card_index=3, target_index=0) jev 0 ms | 0 in
+         continuing the Jev-chosen plan: 投掷匕首 -> 实验体 #C93
+12:02:34 CARD_SELECTION  selection/choose     -> select_deck_card (option_index=4) conf 0.48 jev 458 ms | 3275 in
+         Jev chose 打击+ with confidence 0.48; 此弃牌会移除原计划后继；原整条预测失效，返回战斗后按真实手牌重算
+12:02:35 note action came back pending; waited for the board to settle
+12:02:35 COMBAT          combat/plan-choice   -> play_card (card_index=1) conf 0.78 jev 466 ms | 11871 in
+         Jev chose plan 7/8 (早有准备, 群蛇形态, 预判, 防御, 偏折) with confidence 0.78; code rank 7
+12:02:37 CARD_SELECTION  selection/choose     -> select_deck_card (option_index=4) conf 0.46 jev 305 ms | 3031 in
+         Jev chose 群蛇形态 with confidence 0.46
+12:02:38 COMBAT          combat/plan-choice   -> end_turn fallback no-jev jev 0 ms | 0 in
+         no usable answer from Jev; using the code-best plan
+         completed: Action completed.
+         progress: 699 decisions | 145 Jev calls | 1,135,538 in / 8,652 out tokens | ≈ $0.0477 | 3721.57 s
+12:02:38 note H1 idle preparation: {"status":"unknown","reason":"decision_budget_exhausted"}
+12:02:38 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+12:02:38 note H1 idle preparation: {"status":"unknown","reason":"decision_budget_exhausted"}
+12:02:39 note H1 idle preparation: {"status":"unknown","reason":"decision_budget_exhausted"}
+12:02:39 note H1 idle preparation: {"status":"unknown","reason":"decision_budget_exhausted"}
+12:02:40 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+12:02:40 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+12:02:41 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+12:02:41 note H1 idle preparation: {"status":"prepared","basis":"exact_observed_input_only","nodes":24,"partial":false,"reused":false,"budget_ms":400}
+12:02:45 COMBAT          combat/plan-choice   -> play_card (card_index=0) conf 0.78 jev 684 ms | 20320 in
+         Jev chose plan 8/10 (战略大师, 突然一拳 -> 实验体 #C93, 投掷匕首 -> 实验体 #C93, 偏折, 致命毒药 -> 实验体 #C93) with confidence 0.78; code rank 8
+12:02:45 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+12:02:45 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+12:02:48 COMBAT          combat/plan-choice   -> play_card (card_index=2, target_index=0) conf 0.72 jev 534 ms | 20218 in
+         Jev chose plan 8/10 (突然一拳 -> 实验体 #C93, 投掷匕首 -> 实验体 #C93, 偏折, 致命毒药 -> 实验体 #C93) with confidence 0.72; code rank 8
+12:02:48 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+12:02:48 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+12:02:49 note action came back pending; waited for the board to settle
+12:02:49 COMBAT          combat/plan-continue -> play_card (card_index=2, target_index=0) jev 0 ms | 0 in
+         continuing the Jev-chosen plan: 投掷匕首 -> 实验体 #C93
+12:02:50 CARD_SELECTION  selection/choose     -> select_deck_card (option_index=1) conf 0.27 jev 349 ms | 3344 in
+         Jev chose 打击 with confidence 0.27
+12:02:52 COMBAT          combat/plan-choice   -> play_card (card_index=1) conf 0.69 jev 412 ms | 12616 in
+         Jev chose plan 5/5 (偏折, 致命毒药 -> 实验体 #C93) with confidence 0.69; code rank 5
+12:02:53 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+12:02:53 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+12:02:55 COMBAT          combat/plan-continue -> play_card (card_index=1, target_index=0) jev 0 ms | 0 in
+         continuing the Jev-chosen plan: 致命毒药 -> 实验体 #C93
+12:02:55 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+12:02:55 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+12:02:56 COMBAT          combat/plan          -> end_turn jev 0 ms | 0 in
+         code plan (only line): end turn; hp -13, dmg 10
+12:02:56 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+12:02:56 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+12:02:57 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+12:02:57 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+12:02:58 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+12:02:58 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+12:02:58 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+12:02:59 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+12:02:59 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+12:03:00 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+12:03:00 note H1 idle preparation: {"status":"prepared","basis":"exact_observed_input_only","nodes":26,"partial":false,"reused":false,"budget_ms":400}
+12:03:01 note SL: ending the turn may be lethal (F48 T3 attempt 2/6), not certain: 5 playable card(s) and 0 potion(s) left
+12:03:01 COMBAT          combat/end_turn      -> end_turn jev 0 ms | 0 in
+         every line dies: ending the turn with no card played for Pael's Eye's extra turn
+12:03:02 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+12:03:02 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+12:03:02 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+12:03:02 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+12:03:03 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+12:03:03 note H1 idle preparation: {"status":"prepared","basis":"exact_observed_input_only","nodes":80,"partial":false,"reused":false,"budget_ms":400}
+12:03:05 COMBAT          combat/plan          -> play_card (card_index=0) jev 0 ms | 0 in
+         code plan (only distinct line): 毒雾, 万向斩 -> 实验体 #C93, 刀刃之舞, 小刀 -> 实验体 #C93, 小刀 -> 实验体 #C93, 小刀 -> 实验体 #C93; hp -0, dmg 37
+12:03:05 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+12:03:05 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+12:03:05 COMBAT          combat/plan-continue -> play_card (card_index=1, target_index=0) jev 0 ms | 0 in
+         continuing the code-chosen plan: 万向斩 -> 实验体 #C93
+12:03:06 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+12:03:06 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+12:03:07 COMBAT          combat/plan-continue -> play_card (card_index=2) jev 0 ms | 0 in
+         continuing the code-chosen plan: 刀刃之舞
+12:03:07 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+12:03:07 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+12:03:08 COMBAT          combat/plan          -> play_card (card_index=2, target_index=0) jev 0 ms | 0 in
+         code plan (only line): 小刀 -> 实验体 #C93, 小刀 -> 实验体 #C93, 小刀 -> 实验体 #C93; hp -0, dmg 24
+12:03:08 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+12:03:08 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+12:03:10 COMBAT          combat/plan-continue -> play_card (card_index=2, target_index=0) jev 0 ms | 0 in
+         continuing the code-chosen plan: 小刀 -> 实验体 #C93
+12:03:10 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+12:03:10 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+12:03:10 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+12:03:11 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+12:03:11 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+12:03:12 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+12:03:12 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+12:03:13 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+12:03:13 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+12:03:14 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+12:03:14 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+12:03:14 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+12:03:16 COMBAT          combat/end_turn      -> end_turn jev 0 ms | 0 in
+         no living enemy but combat continues (boss phase change): ending the turn
+12:03:16 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+12:03:16 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+12:03:16 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+12:03:17 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+12:03:17 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+12:03:17 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+12:03:18 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+12:03:18 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+12:03:19 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+12:03:19 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+12:03:20 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+12:03:20 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+12:03:21 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+12:03:21 note H1 idle preparation: {"status":"prepared","basis":"exact_observed_input_only","nodes":20,"partial":false,"reused":false,"budget_ms":400}
+12:03:23 COMBAT          combat/plan-choice   -> play_card (card_index=0) conf 0.91 jev 587 ms | 9785 in
+         Jev chose plan 2/3 (尖啸, 带毒刺击 -> 实验体 #C93, 带毒刺击+ -> 实验体 #C93) with confidence 0.91; code rank 2
+12:03:23 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+12:03:23 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+12:03:24 COMBAT          combat/plan-continue -> play_card (card_index=0, target_index=0) jev 0 ms | 0 in
+         continuing the Jev-chosen plan: 带毒刺击 -> 实验体 #C93
+12:03:24 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+12:03:24 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+12:03:25 COMBAT          combat/plan-continue -> play_card (card_index=0, target_index=0) jev 0 ms | 0 in
+         continuing the Jev-chosen plan: 带毒刺击+ -> 实验体 #C93
+12:03:25 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+12:03:25 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+12:03:27 COMBAT          combat/plan          -> end_turn jev 0 ms | 0 in
+         code plan (only line): end turn; hp -15, dmg 9
+12:03:27 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+12:03:27 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+12:03:27 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+12:03:28 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+12:03:28 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+12:03:28 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+12:03:29 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+12:03:29 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+12:03:30 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+12:03:30 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+12:03:31 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+12:03:31 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+12:03:32 note H1 idle preparation: {"status":"prepared","basis":"exact_observed_input_only","nodes":32,"partial":false,"reused":false,"budget_ms":400}
+12:03:33 COMBAT          combat/least-loss    -> play_card (card_index=1, target_index=0) jev 0 ms | 0 in
+         every simulated line dies; playing the one that keeps the most HP (-33): 咕嘟冒泡 -> 实验体 #C93, 逃脱计划, 必备工具, 匕首雨
+12:03:33 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+12:03:33 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+12:03:33 COMBAT          combat/plan-continue -> play_card (card_index=1) jev 0 ms | 0 in
+         continuing the code-chosen plan: 逃脱计划
+12:03:34 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+12:03:34 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+12:03:35 COMBAT          combat/least-loss    -> play_card (card_index=4, target_index=0) jev 0 ms | 0 in
+         every simulated line dies; playing the one that keeps the most HP (-6): 扫腿+ -> 实验体 #C93
+12:03:35 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+12:03:35 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+12:03:35 note SL: certain death foreseen at F48 T5 attempt 2/6 (rules: nothing left to play or drink; 32 incoming vs 7 HP + 19 block + 0 end-of-turn block); reloading the fight: save_and_quit, then continue_run
+12:03:37 note SL: save_and_quit -> completed (Action completed.)
+12:03:40 note SL: continue_run -> completed (Action completed.)
+12:03:43 note SL: attempt 3 knows the first 39 draws of the fight (attempt 1, 2)
+12:03:43 note SL: attempt 3 deviates at T4, the latest question before attempt 2's death on T5: not 尖啸, 带毒刺击 -> 实验体 #C93, 带毒刺击+ -> 实验体 #C93 again there; 1 turn through it not again (2 lines shown there never played on that board; where the failed attempts lost their HP: T4 weighs 20 (15 lost on it on average, the later turns' losses at 0.5 a turn), the most of the turns deviated at the fewest times (none); every line loses in every sample here (the rollout's horizon: it does not order the turns); the other turns: T1 30 (deviated at 1), T2 20; attempt 2's path, the failed attempt that lived longest (attempt 2 T5 (enemy HP 176), attempt 1 T5 (enemy HP 176)))
+12:03:43 note SL: back in the fight at F48 T1 (8 s); attempt 3/6 begins, Jev is told how the earlier attempt(s) went
+12:03:43 COMBAT          combat/least-loss    -> end_turn jev 0 ms | 0 in
+         every simulated line dies; playing the one that keeps the most HP (-6): end turn
+12:03:44 note H1 idle preparation: {"status":"prepared","basis":"exact_observed_input_only","nodes":480,"partial":false,"reused":false,"budget_ms":400}
+12:03:44 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+12:03:44 note H1 idle preparation: {"status":"prepared","basis":"exact_observed_input_only","nodes":480,"partial":false,"reused":true,"budget_ms":400}
+12:03:53 COMBAT          combat/plan-choice   -> play_card (card_index=0) conf 0.84 jev 680 ms | 22392 in
+         Jev chose plan 2/10 (神气制胜, 防御, potion 毒药水 -> 实验体 #C93, potion 易伤药水 -> 实验体 #C93, 投掷匕首 -> 实验体 #C93, 打击+ -> 实验体 #C93) with confidence 0.84; code rank 2; SL explore: replaying attempt 2's 神气制胜, potion 毒药水 -> 实验体 #C93, potion 易伤药水 -> 实验体 #C93, 投掷匕首 -> 实验体 #C93, 打击+ -> 实验体 #C93 instead of 神气制胜, 防御, potion 毒药水 -> 实验体 #C93, potion 易伤药水 -> 实验体 #C93, 投掷匕首 -> 实验体 #C93, 打击+ -> 实验体 #C93 before T4
+12:03:53 note H1 idle preparation: {"status":"unknown","reason":"next_solver_input_not_observed_or_not_ready","budget_ms":400}
+12:03:53 wait COMBAT: waiting on COMBAT (transition, animation, or nothing legal yet)
+12:03:55 COMBAT          combat/plan-continue -> use_potion (target_index=0, option_index=0) jev 0 ms | 0 in
+         continuing the Jev-chosen plan: potion 毒药水 -> 实验体 #C93
+12:03:56 COMBAT          combat/plan-continue -> use_potion (target_index=0, option_index=1) jev 0 ms | 0 in
+         continuing the Jev-chosen plan: potion 易伤药水 -> 实验体 #C93
+         completed: Action completed.
+         progress: 723 decisions | 151 Jev calls | 1,224,213 in / 9,115 out tokens | ≈ $0.0514 | 3799.24 s
+12:03:57 note action came back pending; waited for the board to settle
+12:03:57 COMBAT          combat/plan-continue -> play_card (card_index=3, target_index=0) jev 0 ms | 0 in
+         continuing the Jev-chosen plan: 投掷匕首 -> 实验体 #C93
+12:03:58 CARD_SELECTION  selection/choose     -> select_deck_card (option_index=4) conf 0.47 jev 454 ms | 3275 in
+         Jev chose 打击+ with confidence 0.47; 此弃牌会移除原计划后继；原整条预测失效，返回战斗后按真实手牌重算
+12:03:59 note action came back pending; waited for the board to settle
+12:03:59 COMBAT          combat/plan-choice   -> play_card (card_index=1) conf 0.81 jev 404 ms | 12431 in
+         Jev chose plan 7/8 (早有准备, 群蛇形态, 预判, 防御, 偏折) with confidence 0.81; code rank 7
+12:04:00 wait CARD_SELECTION: no usable answer from Jev (trust-jev: waiting to ask again instead of choosing in code)
+12:04:10 note stuck for 25 polls on CARD_SELECTION (available actions: save_and_quit, select_deck_card) — no usable answer from Jev (trust-jev: waiting to ask again instead of choosing in code)

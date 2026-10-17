@@ -1,8 +1,10 @@
+import { currentDecisionBudget, shadowBudgetAvailable, budgetUnknown } from "../core/decision-budget.js";
 import { isAdaptiveComplete } from "./adaptive-sampler.js";
 import { completeAdaptiveBuild } from "./build-sim.js";
 import { beginComputation, type SimAttempt } from "./computation-failure.js";
 import { memoKey } from "./compute-memo.js";
 import { availableParallelism, loadavg } from "node:os";
+import { f48JointScope, f48JointShadow } from "./f48-joint-shadow.js";
 /**
  * B3 (Roy 2026-09-30): a deck-building question's options, each with the act boss fought to the end in simulation with
  * the deck (and HP) that option leaves. Added to DeepSeek's question after the screen builds it (the loop awaits it;
@@ -50,6 +52,10 @@ import { BOSS_MARGIN_NOTE } from "./boss-margin.js";
 import { sReadinessMode, simAdaptivePolicy, sBuildRankMode } from "../core/config.js";
 import { BOSS_LINES_TIE_SE } from "./boss-lines.js";
 import { readinessText } from "./boss-readiness.js";
+import { globalBuildFailure, globalBuildForB3 } from "./global-build-b3.js";
+import type { GlobalBossPool } from "./global-build-pool.js";
+import { continuationFailureOf, preserveContinuationFailure } from "./continuation-failure.js";
+import { fingerprint } from "../hand/act/gate.js";
 
 /** The deck-building questions that get the simulation. */
 export const BUILD_SIM_LABELS = new Set([
@@ -73,6 +79,7 @@ export function bossEvaluationPending(decision: Decision, state: GameState, reco
   if (value["skipped"] && actBossDefeated(state)) return null;
   const completion = asRecord(value["completion"]);
   if (completion["status"] === "degraded") return null;
+  if (currentDecisionBudget() && ["complete_budget", "partial"].includes(String(completion["status"])) && completion["failure"] === false) return null;
   if (completion["status"] === "complete_adaptive" && value["timed_out"] !== true
       && isAdaptiveComplete(value["adaptive"], "b3", Number(value["requested"]), new Map([
         ["@current", Number(asRecord(value["base"])["samples"])],
@@ -99,6 +106,8 @@ export const BOSS_SIM_NOTE =
   "method and its limits; it replaces the act boss clock.";
 
 export interface BuildSimSetup {
+  /** The live controller's log directory; offline callers leave failure persistence unconfigured. */
+  failureDirectory?: string;
   runner: DeckSimRunner;
   samples?: number;
   seed?: number;
@@ -108,6 +117,8 @@ export interface BuildSimSetup {
   /** The monster DB and move model (default the committed ones; tests give fixed ones). */
   db?: MonsterDb;
   mm?: MoveModelData;
+  /** Fixed callers must pair custom models with their own observed pool; no runtime data substitution. */
+  globalPool?: GlobalBossPool;
 }
 
 /** One option's simulation plan: its deck change, a per-card group (a removal, a smith), or why it is not simulated. */
@@ -121,6 +132,14 @@ interface OptionPlan {
   group?: { key: string; name: string; verb: string; change: Partial<RolloutInput>; mixture?: Partial<RolloutInput>[] }[];
   note?: string;
   none?: string;
+}
+
+function deckOptionsOf(plans: OptionPlan[]): DeckOption[] {
+  return plans.flatMap((plan): DeckOption[] => plan.group
+    ? plan.group.map((g) => ({ key: `${plan.key}|${g.key}`, change: g.mixture ? null : g.change, ...(g.mixture ? { mixture: g.mixture } : {}) }))
+    : plan.change !== undefined || plan.mixture
+      ? [{ key: plan.key, change: plan.change ?? null, ...(plan.mixture ? { mixture: plan.mixture } : {}) }]
+      : []);
 }
 
 type SimOption = { key: string; intent: ActionRequest; summary: JsonValue };
@@ -423,9 +442,10 @@ function knownRelic(id: string): boolean {
 
 /** The line of one option. */
 function simLine(head: string, base: OptionSim, sim: OptionSim, samples: number, lowWin: boolean): string {
+  if (currentDecisionBudget() && sim.samples < 2) return `${head}限时估计${pct(sim.winCal)}，n=${sim.samples}，误差unknown；未完整`;
   // The current deck mostly loses: the boss's HP left (0 in a won sample) still tells the options apart.
   const left = lowWin ? `；boss 平均剩血 ${Math.round(sim.bossLeft)}${sim.diff ? `（当前牌组 ${Math.round(sim.pairedReference?.bossLeft ?? base.bossLeft)}，${signed(sim.diff.bossLeft / 100)} ± ${one(sim.diff.bossLeftSe)}）` : ""}` : "";
-  const sampling = sim.sampling ? `；${sim.sampling.stop === "eliminated" ? "提前淘汰" : sim.sampling.stop === "leader" ? "领先停止" : "达到上限"}，n=${sim.samples}；差值对同前缀基准` : "";
+  const sampling = sim.sampling ? `；${sim.sampling.stop === "eliminated" ? "提前淘汰" : sim.sampling.stop === "leader" ? "领先停止" : sim.sampling.stop === "budget" ? "预算截止" : "达到上限"}，n=${sim.samples}；差值对同前缀基准` : "";
   const tail = `赢局掉血中位 ${sim.hpLossWon ?? "—"}，约 ${sim.turns ?? "—"} 回合${left}（${sim.sampling ? sim.samples : samples} 次模拟，校准后${lowWin ? "；当前牌组胜率很低，胜率的差信息少" : ""}${sampling}）`;
   if (!sim.diff) return `${head}不改变牌组：胜率 ${pct(base.winCal)}，${tail}`;
   const hp = sim.hp !== base.hp ? `（进场 ${sim.hp} 血）` : "";
@@ -435,6 +455,7 @@ function simLine(head: string, base: OptionSim, sim: OptionSim, samples: number,
 /** A per-card line (a removal, a smith): shorter, the head is on the option. */
 function cardLine(verb: string, name: string, sim: OptionSim, lowWin: boolean): string {
   const left = lowWin && sim.diff ? `，boss 平均剩血 ${Math.round(sim.bossLeft)}（${signed(sim.diff.bossLeft / 100)} ± ${one(sim.diff.bossLeftSe)}）` : "";
+  if (currentDecisionBudget() && sim.samples < 2) return `${verb} ${name}：限时估计${pct(sim.winCal)}，n=${sim.samples}，误差unknown；未完整`;
   return `${verb} ${name}：${pct(sim.winCal)}（${sim.diff ? `${signed(sim.diff.cal)} ± ${one(sim.diff.calSe * 100)}` : "±0"}），赢局掉血中位 ${sim.hpLossWon ?? "—"}${left}${sim.sampling ? `；${sim.sampling.stop === "eliminated" ? "提前淘汰" : "完成"} n=${sim.samples}，同前缀配对` : ""}`;
 }
 
@@ -508,32 +529,45 @@ export async function withBossSim(decision: Decision, env: DecisionEnv, setup: B
   let attempt: SimAttempt | undefined;
   let wait: ReturnType<NonNullable<DecisionEnv["simWait"]>["start"]> | undefined;
   let sampled = 0;
-  const requested = setup.samples ?? BUILD_SIM_SAMPLES;
+  const pace = currentDecisionBudget();
+  let requested = setup.samples ?? BUILD_SIM_SAMPLES;
+  const jointScope = f48JointScope(state);
   const fail = (why: string, code = "simulation_error"): BossSimOutcome => {
-    const completion = attempt?.finish(sampled, requested, code);
+    if (required && !attempt) attempt = beginComputation(env.screenMemory, state, ask.label, memoKey("b3-preparation-failure", { raw: state.raw, label: ask.label }));
+    const budgetStop = !!pace && ["zero_paired_samples", "below_minimum_samples", "incomplete_required_samples", "decision_budget_exhausted"].includes(code);
+    const completion = budgetStop ? attempt?.finishBudget(sampled, requested, true) : attempt?.finish(sampled, requested, code);
+    const global = globalBuildFailure(env, required, "current_B3_failed");
     return {
       decision: { ...ask, state: { ...ask.state, facts: withSimFacts(facts, attempt?.degraded
         ? `不完整（故障降级，n=${sampled}）：${why}；本题不给模拟数字，按现有其他证据继续决策`
+        : pace ? `限时boss评估unknown（${why}）；按当前已有证据继续，不能当必死或资源结论`
         : required ? `必需的boss评估未完成（${why}）；等待完整计算，不允许用空指标作选择`
         : `boss 模拟没有结果（${why}）：act_boss_clock 仍是 boss 时钟的估计`, true) } },
       record: { error: why, ms: Math.round(now() - started),
+        ...(jointScope ? { f48_joint_shadow: toJsonValue(f48JointShadow(jointScope, [], undefined, { reason: why })) } : {}),
+        ...(global ? { global_build: global } : {}),
         ...(required ? { completion: completion ? { ...completion } : { required: true, status: "pending", latencyTargetMs: setup.deadlineMs ?? BUILD_SIM_DEADLINE_MS } } : {}),
         ...(diagnostics ? { diagnostics: { ...diagnostics, status: "failed", reason: code } } : {}) },
     };
   };
   try {
+    if (pace?.remaining() === 0) return fail("计算预算耗尽；样本和误差unknown", "decision_budget_exhausted");
     if (!bossId) return fail("不知道本幕 boss", "unknown_boss");
     // Right after the boss fight boss_id is still the boss just killed (fix-queue-v4: the card reward after every act
     // boss was simulated against it, 7PWU4CD3QCP3 F17 and 5DFX/VNKN/THR/GBBB F17; the brain quoted those deltas), and the
     // next act's boss is not known before its act starts: no simulation. The clock stays (bossClockJson marks it stale).
     if (actBossDefeated(state)) {
       const phase = observedBossPhase(state);
+      const global = globalBuildFailure(env, required, "current_B3_skipped");
       const note = phase
         ? String(phase["note"])
         : "本幕 boss 已经打完；下一幕的 boss 要到下一幕开始才知道，这道题不做 boss 模拟（act_boss_clock 也是刚打完的 boss）";
       return {
         decision: { ...ask, state: { ...ask.state, facts: withSimFacts(facts, note, true) } },
-        record: { skipped: phase ? "first boss defeated; the second boss is not observed yet" : "act boss defeated; the next act's boss is not known yet", boss: bossKey(bossId), ms: Math.round(now() - started) },
+        record: { skipped: phase ? "first boss defeated; the second boss is not observed yet" : "act boss defeated; the next act's boss is not known yet", boss: bossKey(bossId), ms: Math.round(now() - started),
+          ...(jointScope ? { f48_joint_shadow: toJsonValue(f48JointShadow(jointScope, [], undefined,
+            { reason: "first_boss_defeated; no_new_simulation" })) } : {}),
+          ...(global ? { global_build: global } : {}) },
       };
     }
     const entry = routeEntry(env);
@@ -543,6 +577,7 @@ export async function withBossSim(decision: Decision, env: DecisionEnv, setup: B
     const entryHp = Math.max(1, Math.round(projected));
     const start = syntheticBossStart(state, knowledge, bossId, entryHp, { ...(setup.db ? { db: setup.db } : {}), ...(setup.mm ? { mm: setup.mm } : {}) });
     const continuation = doubleBossPreparation(state);
+    if (pace && (continuation || bossTrustReason(bossKey(bossId), "b3", state.run?.ascension, state.run?.floor))) requested = Math.min(requested, 200);
     const startOpts = { ...(setup.db ? { db: setup.db } : {}), ...(setup.mm ? { mm: setup.mm } : {}) };
     if (continuation) start.input = withDoubleBossStart(state, knowledge, start.input, continuation, startOpts);
     const rebuild = (edit: (run: Record<string, unknown>) => void): RolloutInput => {
@@ -553,11 +588,7 @@ export async function withBossSim(decision: Decision, env: DecisionEnv, setup: B
       return continuation ? withDoubleBossStart(changed, knowledge, rebuilt, continuation, startOpts) : rebuilt;
     };
     const plans = planOptions(decision.label, spec.options!(), env, start, entry, rebuild);
-    const deckOptions: DeckOption[] = [];
-    for (const plan of plans) {
-      if (plan.group) for (const g of plan.group) deckOptions.push({ key: `${plan.key}|${g.key}`, change: g.mixture ? null : g.change, ...(g.mixture ? { mixture: g.mixture } : {}) });
-      else if (plan.change !== undefined || plan.mixture) deckOptions.push({ key: plan.key, change: plan.change ?? null, ...(plan.mixture ? { mixture: plan.mixture } : {}) });
-    }
+    const deckOptions = deckOptionsOf(plans);
     const budget = (setup.deadlineMs ?? BUILD_SIM_DEADLINE_MS) - (now() - started);
     const readinessMode = sReadinessMode(str(asRecord(state.run?.raw)["character_id"]));
     const rankingMode = sBuildRankMode(str(asRecord(state.run?.raw)["character_id"]));
@@ -569,8 +600,9 @@ export async function withBossSim(decision: Decision, env: DecisionEnv, setup: B
       wait = env.simWait?.start({ run: str(state.raw["run_id"]), floor: state.run?.floor ?? null, label: ask.label });
     }
     const adaptive = required && !attempt?.degraded && adaptiveMode !== "off";
-    const result: CompareResult = await compareOptions(setup.runner, start.input, deckOptions, { samples: setup.samples ?? BUILD_SIM_SAMPLES, seed: setup.seed ?? BUILD_SIM_SEED, deadlineMs: Math.max(0, budget), ...(setup.now ? { now: setup.now } : {}), ...(diagnosticEnabled ? { quantitative: true, diagnostics: true } : {}), ...(required && !attempt?.degraded ? { requireComplete: true } : {}), ...(wait ? { onProgress: wait.progress } : {}), ...(adaptive ? { adaptive: { mode: adaptiveMode as "shadow" | "on", allowS: !continuation && !bossTrustReason(bossKey(bossId), "b3", state.run?.ascension, state.run?.floor) } } : {}), ...(readinessMode !== "off" ? { readiness: true } : {}),
-      ...(rankingMode !== "off" ? { buildRank: { lowTrust: continuation?.limitation ?? bossTrustReason(bossKey(bossId), "b3", state.run?.ascension, state.run?.floor), calibratedFloor: calibratedFloor(state.run?.ascension ?? 0), tieSe: BOSS_LINES_TIE_SE } } : {}) });
+    const result: CompareResult = await compareOptions(setup.runner, start.input, deckOptions, { samples: requested, seed: setup.seed ?? BUILD_SIM_SEED, deadlineMs: Math.max(0, budget), ...(setup.now ? { now: setup.now } : {}), ...(diagnosticEnabled ? { quantitative: true, diagnostics: true } : {}), ...(required && !attempt?.degraded ? { requireComplete: true } : {}), ...(wait ? { onProgress: wait.progress } : {}), ...(adaptive ? { adaptive: { mode: adaptiveMode as "shadow" | "on", allowS: !continuation && !bossTrustReason(bossKey(bossId), "b3", state.run?.ascension, state.run?.floor) } } : {}), ...(readinessMode !== "off" ? { readiness: true, readinessShadow: readinessMode === "shadow" } : {}),
+      ...(jointScope ? { f48JointScope: jointScope } : {}),
+      ...(rankingMode !== "off" ? { buildRankShadow: rankingMode === "shadow", buildRank: { lowTrust: continuation?.limitation ?? bossTrustReason(bossKey(bossId), "b3", state.run?.ascension, state.run?.floor), calibratedFloor: calibratedFloor(state.run?.ascension ?? 0), tieSe: BOSS_LINES_TIE_SE, sSort: "shadow" } } : {}) });
     const adaptiveComplete = completeAdaptiveBuild(result);
     sampled = result.samples;
     if (diagnostics) diagnostics = { ...diagnostics, ...result.diagnostics, boss: bossKey(bossId),
@@ -580,9 +612,9 @@ export async function withBossSim(decision: Decision, env: DecisionEnv, setup: B
     // Too few samples to tell the options apart (Roy 2026-10-02): R6V3 F22 n=24 and 5DFX F27-F29 n=24 put "+11.6" style
     // deltas in front of the brain, which quoted them. Cut short by the clock under BUILD_SIM_MIN_SHOWN (or under what was
     // asked for, when less), no numbers, as a failed simulation.
-    const minShown = attempt?.degraded ? BUILD_SIM_MIN_SHOWN : Math.min(BUILD_SIM_MIN_SHOWN, result.requested);
+    const minShown = pace ? 1 : attempt?.degraded ? BUILD_SIM_MIN_SHOWN : Math.min(BUILD_SIM_MIN_SHOWN, result.requested);
     if (result.samples < minShown) return fail(`只跑完 ${result.samples} 次模拟（不足 ${minShown} 次），选项之间的差噪声太大，不给数字`, "below_minimum_samples");
-    if (required && !attempt?.degraded && (result.timedOut || (result.samples !== result.requested && !adaptiveComplete))) return fail("必需的配对样本尚未全部完成", "incomplete_required_samples");
+    if (required && !pace && !attempt?.degraded && (result.timedOut || (result.samples !== result.requested && !adaptiveComplete))) return fail("必需的配对样本尚未全部完成", "incomplete_required_samples");
     if (required && !attempt?.degraded && [result.base, ...result.options].some((sim) => {
       const dpr = asRecord(asRecord(sim.quantitative)["effective_damage_per_turn"]);
       return typeof dpr["n"] !== "number" || dpr["n"] <= 0 || typeof dpr["mean"] !== "number" || !Number.isFinite(dpr["mean"]);
@@ -675,7 +707,7 @@ export async function withBossSim(decision: Decision, env: DecisionEnv, setup: B
       boss: `${boss}：${start.boss.parts.map((p) => `${p.name} ${p.hp} 血`).join("、")}${start.boss.exact ? "" : `（A${state.run?.ascension ?? "?"} 没有这个 boss 的日志：数值取最近的 A${start.boss.asc}，伤害、增益和格挡按实测的进阶变化估算）`}`,
       entry_hp: `${start.entryHp}/${start.maxHp}：${entry.source}${projected < 1 ? "（中位投影在 boss 前血量耗尽，按 1 血算）" : ""}`,
       current_deck: `胜率 ${pct(b.winCal)}（校准后；原始 ${pct(b.win)}），赢局掉血中位 ${b.hpLossWon ?? "—"}，赢局约 ${b.turns ?? "—"} 回合${b.deathTurn !== null ? `，输的样本中位死在第 ${b.deathTurn} 回合` : ""}`,
-      samples: adaptiveComplete ? `按需采样：基准n=${result.base.samples}，候选各用自身n，差值仅用共同种子前缀；上限${result.requested}；用时 ${(ms / 1000).toFixed(1)} 秒` : `每个选项 ${result.samples} 次${result.samples < result.requested ? `（目标 ${result.requested}，到时间只跑完这些）` : ""}；所有选项同一组随机种子，按样本配对比较；用时 ${(ms / 1000).toFixed(1)} 秒`,
+      samples: pace ? `限时${result.timedOut ? "未完整" : "完成"}：基准n=${b.samples}，原始胜率MC95%区间${asArray(asRecord(b.quantitative)["raw_win_mc_interval95"]).length ? asArray(asRecord(b.quantitative)["raw_win_mc_interval95"]).map((x) => Math.round(Number(x) * 100)).join("–") + "%" : "unknown"}（不含模型偏差）；候选各用实际n/共同前缀，目标${result.requested}；误差为配对标准误，n<2时unknown；${low ? "低可信、未完整；" : ""}用时 ${(ms / 1000).toFixed(1)} 秒` : adaptiveComplete ? `按需采样：基准n=${result.base.samples}，候选各用自身n，差值仅用共同种子前缀；上限${result.requested}；用时 ${(ms / 1000).toFixed(1)} 秒` : `每个选项 ${result.samples} 次${result.samples < result.requested ? `（目标 ${result.requested}，到时间只跑完这些）` : ""}；所有选项同一组随机种子，按样本配对比较；用时 ${(ms / 1000).toFixed(1)} 秒`,
       method:
         "整场模拟（docs/boss-sim.md）：boss 的血量、首招、开场能力和出招按怪物库和出招模型（本进阶），我方按现在的牌组、遗物和药水，每个样本洗牌后由求解器逐回合出牌，打到一方死亡；" +
         "胜率经日志 boss 战验证集校准；选项的差 = 两个校准胜率之差，± 是配对标准误（差在两个标准误以内，模拟分不出高低）",
@@ -688,8 +720,9 @@ export async function withBossSim(decision: Decision, env: DecisionEnv, setup: B
       ...(lowWin ? { low_win_rate: `当前牌组在模拟里多半打不过（原始胜率 ${pct(b.win)}，校准后的数不会低于 ${(calibratedFloor(state.run?.ascension ?? 0) * 100).toFixed(1)}%，0 胜的读数）：胜率的差信息少，各选项另给 boss 平均剩血（赢的样本算 0）和它的配对差；离 boss 还远时现在的牌组和到 boss 时的牌组差得多` } : {}),
     };
     if (attempt?.degraded) simFacts["completion"] = `不完整（故障降级，n=${result.samples}）`;
-    const completion = attempt?.finish(result.samples, result.requested, undefined, adaptiveComplete);
+    const completion = pace ? attempt?.finishBudget(result.samples, result.requested, result.timedOut || result.samples < result.requested && !adaptiveComplete) : attempt?.finish(result.samples, result.requested, undefined, adaptiveComplete);
     const record: Record<string, JsonValue> = {
+      ...(result.f48JointShadow ? { f48_joint_shadow: toJsonValue(result.f48JointShadow) } : {}),
       ...(result.buildRanking ? { build_ranking: toJsonValue({ ...ranking, mode: rankingMode, delivered: rankingOn, candidates: candidateIdentity }) } : {}),
       ...(result.adaptive ? { adaptive: result.adaptive } : {}),
       ...(readiness ? { readiness: toJsonValue({ ...readiness, mode: readinessMode, ms: result.readinessMs ?? null,
@@ -710,8 +743,8 @@ export async function withBossSim(decision: Decision, env: DecisionEnv, setup: B
       orders: result.orders,
       sim_ms: result.elapsedMs,
       ms,
-      base: { ...(adaptiveComplete ? { samples: b.samples } : {}), win: b.win, win_cal: b.winCal, hp_loss_won: b.hpLossWon, turns: b.turns, boss_left: b.bossLeft },
-      options: Object.fromEntries(result.options.map((sim) => [sim.key, { ...(adaptiveComplete ? { samples: sim.samples, sampling: toJsonValue(sim.sampling), paired_reference: toJsonValue(sim.pairedReference) } : {}), win: sim.win, win_cal: sim.winCal, diff_cal: sim.diff?.cal ?? 0, se_cal: sim.diff?.calSe ?? 0, diff_raw: sim.diff?.raw ?? 0, se_raw: sim.diff?.se ?? 0, hp_loss_won: sim.hpLossWon, turns: sim.turns, hp: sim.hp, boss_left: sim.bossLeft, boss_left_diff: sim.diff?.bossLeft ?? 0, boss_left_se: sim.diff?.bossLeftSe ?? 0 }])),
+      base: { ...(adaptiveComplete || pace ? { samples: b.samples } : {}), win: b.win, win_cal: b.winCal, hp_loss_won: b.hpLossWon, turns: b.turns, boss_left: b.bossLeft },
+      options: Object.fromEntries(result.options.map((sim) => [sim.key, { ...(adaptiveComplete || pace ? { samples: sim.samples, sampling: toJsonValue(sim.sampling), paired_reference: toJsonValue(sim.pairedReference) } : {}), win: sim.win, win_cal: sim.winCal, diff_cal: sim.diff?.cal ?? 0, se_cal: pace && sim.samples < 2 ? null : sim.diff?.calSe ?? 0, diff_raw: sim.diff?.raw ?? 0, se_raw: pace && sim.samples < 2 ? null : sim.diff?.se ?? 0, hp_loss_won: sim.hpLossWon, turns: sim.turns, hp: sim.hp, boss_left: sim.bossLeft, boss_left_diff: sim.diff?.bossLeft ?? 0, boss_left_se: pace && sim.samples < 2 ? null : sim.diff?.bossLeftSe ?? 0 }])),
       not_simulated: Object.fromEntries(plans.filter((p) => p.none).map((p) => [p.key, p.none!])),
     };
     if (continuation) {
@@ -723,7 +756,32 @@ export async function withBossSim(decision: Decision, env: DecisionEnv, setup: B
       if (lowWin) simFacts["low_win_rate"] = "连续两战原始通关率低；未使用单场胜率校准下限，不能据此证明必死。";
       record["objective"] = "F48_F49_continuous";
       record["calibration"] = "none";
+      record["continuous"] = toJsonValue({ base: b.continuous ?? null,
+        options: Object.fromEntries(result.options.map((sim) => [sim.key, sim.continuous ?? null])) });
     }
+    const global = !shadowBudgetAvailable("G2_global_shadow") ? budgetUnknown("G2_global_shadow") : await globalBuildForB3({ env, required, degraded: attempt?.degraded === true,
+      label: ask.label, bossId, input: start.input, options: deckOptions, current: result,
+      keys: ["@current", ...plans.flatMap((plan) => plan.group ? plan.group.map((g) => `${plan.key}|${g.key}`) : [plan.key])],
+      setup, ...(wait ? { progress: wait.progress } : {}), makeComparison: (target) => {
+        const raw = structuredClone(state.raw);
+        const run = asRecord(raw["run"]);
+        run["boss_id"] = target.boss;
+        run["act_id"] = String(target.act - 1);
+        const futureState = parseGameState(raw);
+        const futureEnv = { ...env, state: futureState };
+        // A conditional snapshot of today's resources, never a forecast of future route entry or rewards.
+        const snapshotEntry = { project: (hp: number) => hp, source: "fixed current HP/resources; future entry unknown", planned: false };
+        const futureStart = syntheticBossStart(futureState, knowledge, target.boss, hpNow, startOpts);
+        const futureRebuild = (edit: (run: Record<string, unknown>) => void): RolloutInput => {
+          const edited = structuredClone(raw);
+          edit(asRecord(edited["run"]));
+          return syntheticBossStart(parseGameState(edited), knowledge, target.boss, hpNow, startOpts).input;
+        };
+        return { input: futureStart.input,
+          options: deckOptionsOf(planOptions(ask.label, spec.options!(), futureEnv, futureStart, snapshotEntry, futureRebuild)) };
+      } });
+    if (global) record["global_build"] = toJsonValue({ ...asRecord(global), b3_plus_shadow_wall_ms: Math.round(now() - started),
+      timing_basis: "boss_sim.ms is original current B3 only; global wall_ms is supplementary; combined await reported separately" });
     return {
       decision: {
         ...ask,
@@ -735,7 +793,21 @@ export async function withBossSim(decision: Decision, env: DecisionEnv, setup: B
       record,
     };
   } catch (error) {
-    return fail(`出错：${String(error instanceof Error ? error.message : error).slice(0, 160)}`);
+    const failed = fail(`出错：${String(error instanceof Error ? error.message : error).slice(0, 160)}`);
+    const failure = continuationFailureOf(error);
+    if (failure && str(state.run?.raw["character_id"]).toLowerCase() === "silent" && failed.record) {
+      const completion = asRecord(failed.record["completion"]);
+      const board = fingerprint(state);
+      failed.record["resource_failure"] = preserveContinuationFailure(failure, {
+        run: str(state.raw["run_id"]), character: "silent", floor: state.run?.floor ?? null,
+        turn: state.turn, label: ask.label, fingerprint: board,
+        question_key: str(completion["key"]) || memoKey("continuation-question", { board, label: ask.label, question }),
+        state: toJsonValue(state.raw), question: toJsonValue(question), completion: toJsonValue(completion),
+      }, setup.failureDirectory);
+      if (jointScope) failed.record["f48_joint_shadow"] = toJsonValue(f48JointShadow(jointScope, [], undefined,
+        { reason: `resource_contract_failure:${failure.reason}`, reference: failed.record["resource_failure"] }));
+    }
+    return failed;
   } finally {
     wait?.finish();
   }

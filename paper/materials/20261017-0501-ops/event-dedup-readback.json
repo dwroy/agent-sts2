@@ -1,0 +1,61 @@
+{
+  "at": "2026-10-17 05:03:40 CST",
+  "event": "2026-10-17 05:01 CST learner-checks",
+  "batch": "20261017-021302-strategy-proposal",
+  "handling": "Duplicate completion event; existing disposition retained",
+  "readback_base_commit": "a983c9ac4116deb9398e61020ebedeb7a418bb5d",
+  "receipt_path": "ops/codex-ops/learner/20261017-021302-strategy-proposal.supplement-44189163928f354d2b50e2061ddd50ecb5fb7c1c950f7a289adb255774d88390.json",
+  "receipt_sha256": "74fb00c5e839efea09853cdad5ecfab7393b794426520408bc40a0a46ba1c102",
+  "already_committed_closure": "paper/materials/20261017-0441-ops/host-checks-closure.json",
+  "closure_sha256": "3a4fe836473d13f4ff869f9cb9d88d8185e0daab8489c370b940a73228ec1dc4",
+  "receipt_exactly_matches_committed_closure": true,
+  "original_complete_rc": 1,
+  "supplement_rc": 1,
+  "full_suite": false,
+  "live": {
+    "commit": "f1a334a372c9ea63fdfda78378a83f36b317d42b",
+    "tree": "67da9b35e5f7693768b45ca03da05470f4f9bfb1"
+  },
+  "selected_results": [
+    {
+      "name": "tsc",
+      "rc": 0,
+      "status": "passed"
+    },
+    {
+      "name": "tests/eval.test.ts",
+      "rc": 1,
+      "status": "failed"
+    },
+    {
+      "name": "tests/ops-herdr.test.ts",
+      "rc": 0,
+      "status": "passed"
+    },
+    {
+      "name": "tests/potions-jev-call.test.ts",
+      "rc": 1,
+      "status": "failed"
+    }
+  ],
+  "original_log_sha256": "79342e67d2ec67a6f5e90ab6fec7b70a3db3f8940d55bf235c3e113c89684e77",
+  "supplement_log_sha256_verified": "29851c458f51cb1ba5906e53416712f9b585e0ddfc13aee9d54ad6595dae4f0f",
+  "selected_report_sha256_verified": true,
+  "decision": "Retain R376. Herdr case passed once; eval172327.606ms and potion64944.527ms cases still time out. No assertion regression was demonstrated, but those whole-case validations remain incomplete. Do not repeat either failed case or the already passed Herdr case without new evidence or a fix.",
+  "existing_followup": {
+    "path": "ops/codex-ops/pending-integrations/20261017-021302-host-timeout-followup.json",
+    "state": "pending existing ordinary fix slot",
+    "previously_recorded_owner": {
+      "batch": "20261017-034302-fix-batch",
+      "worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261017-034302",
+      "pid": 1997625,
+      "state": "running"
+    },
+    "owner_state_not_refreshed_this_event": true
+  },
+  "new_tests_or_learner_dispatches": 0,
+  "new_ledger_rows": 0,
+  "new_release": false,
+  "original_failures_canonical_state_and_wider_parents_unchanged": true,
+  "no_other_role_ack": true
+}

@@ -1,3 +1,7 @@
+import { prepareObservedCandidates } from "./pace-precompute.js";
+import { HumanPaceShadow } from "../sim/human-pace-observer.js";
+import { setPaceSolverScope } from "../reflex/pace-solver-cache.js";
+import { currentDecisionBudget, withDecisionBudget, enterDecisionBudget, DecisionBudgetLedger, DecisionBudgetExpired, outsideDecisionBudget, shadowBudgetAvailable, withShadowDecisionBudget, measureDecisionBudgetStage, budgetUnknown, type BudgetKind } from "../core/decision-budget.js";
 /**
  * The decision loop (PLAN.md §7).
  *
@@ -265,6 +269,11 @@ function noteForAction(state: GameState, resolved: ResolvedAction, label: string
 }
 
 export async function runLoop(options: LoopOptions): Promise<LoopStats> {
+  return withDecisionBudget(undefined, () => runLoopWithBudgets(options));
+}
+
+async function runLoopWithBudgets(options: LoopOptions): Promise<LoopStats> {
+  const paceLedger = new DecisionBudgetLedger();
   const { config, mode, client, knowledge } = options;
   // PASSIVE_PIECES as configured (.env read after the modules loaded: their process.env default may predate it).
   passivePiecesOptions.enabled = config.passivePieces;
@@ -285,7 +294,12 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
   const maxDecisions = options.maxDecisions ?? 2_000;
   const maxRuns = options.maxRuns ?? 1;
   const maxMinutes = options.maxMinutes ?? 60;
-  const log = createDecisionLog(config.log.decisionLog);
+  const rawLog = createDecisionLog(config.log.decisionLog);
+  const humanPaceShadow = new HumanPaceShadow(config.log.decisionLog);
+  const log = { path: rawLog.path, close: () => rawLog.close(), write(row: DecisionRecord) {
+    const budget = currentDecisionBudget(); budget?.pause();
+    rawLog.write(budget ? { ...row, time_budget: budget.record() } : row);
+  } };
   const statesPath = stateLogPath(config.log.decisionLog);
   const stateLog = createStateLog(statesPath);
   // Every request to Jev, verbatim (V4 M3): joins the decision rows by decision_id.
@@ -509,6 +523,8 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
   });
 
   for (;;) {
+    currentDecisionBudget()?.pause();
+    enterDecisionBudget(undefined);
     const budget = budgetReason();
     if (budget) {
       stop(budget);
@@ -517,7 +533,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
 
     let state: GameState;
     try {
-      state = await client.state();
+      state = await outsideDecisionBudget(() => client.state());
     } catch (error) {
       const failure = classifyFailure(error);
       stats.errors += 1;
@@ -725,6 +741,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
     const env: DecisionEnv = {
       requiredBossEvaluation: str(asRecord(state.run?.raw)["character_id"]).toLowerCase() === "silent",
       simWait: fileSimWait(join(dirname(config.log.decisionLog), "sim-wait.json"), (message) => onEvent({ type: "note", message })),
+      simFailureDirectory: join(dirname(config.log.decisionLog), "sim-failures"),
       state,
       knowledge,
       brief,
@@ -755,6 +772,14 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
       // Who made a one-shot plan, as its steps' decider (below) and their rationales name it.
       planMaker: (ref, label) => deciderLabel(planDeciders.get(ref) ?? (brain ? brain.engineFor(label) : "deepseek")),
     };
+    if (str(asRecord(state.run?.raw)["character_id"]).toLowerCase() === "silent") {
+      const combat = asRecord(state.raw["combat"]);
+      const fight = fightKind(combat, env);
+      const kind: BudgetKind = state.in_combat ? slEnv ? "retry" : fight === "boss" ? "boss" : fight === "elite" ? "elite" : "ordinary" : "routine";
+      const key = state.in_combat ? `${runId}:${state.run?.floor}:${state.turn}:${slEnv?.attempt ?? 1}` : `${runId}:${observedFp}`;
+      setPaceSolverScope(`${runId}:${state.run?.floor}:${config.cardConditions}:${config.passivePieces}:${config.mechRules}:${config.mechMoveRules}:${config.mechDeathMove}`);
+      enterDecisionBudget(paceLedger.open(key, kind));
+    }
     // FIGHT_PLAN=v1: DeepSeek plans an elite/boss fight once, before its first decision.
     // RUN_PLAN=v1: DeepSeek's run strategy, renewed at the map screen when a checkpoint is due.
     if (!planned && config.runPlan === "v1" && !state.in_combat && state.screen === "MAP") {
@@ -832,6 +857,8 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
     plannerFailures = 0;
 
     if (planned.kind === "wait") {
+      const prepared = prepareObservedCandidates(env, pollIntervalMs);
+      if (prepared) onEvent({ type: "note", message: `H1 idle preparation: ${JSON.stringify(prepared)}` });
       if (screenMemory.bossEvaluationWait && screenMemory.bossEvaluationRecord) {
         const row: DecisionRecord = {
           ts: new Date().toISOString(), mode, screen: state.screen, session: `${state.session.mode}/${state.session.phase}`,
@@ -879,6 +906,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
     const codeBaseline = gateCodeBaseline && decision.kind === "ask";
     if (codeBaseline && decision.kind === "ask" && decision.deepseek) decision = decision.deepseek.baseline;
     const decisionId = randomUUID();
+    const humanPaceCardInput = humanPaceShadow.capture(decision, env);
     let resolved: ResolvedAction;
     let jevLatency = 0;
     let deepseekLatency = 0;
@@ -891,6 +919,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
     /** DeepSeek answered but the answer was unusable (not a transport failure): a one-shot question then goes step by step. */
     let deepseekAnswerUnusable: string | null = null;
     let deepseekAsked: Record<string, JsonValue> | undefined;
+    let budgetFallback = false;
     let deepseekFallback: string | undefined;
     /** What DeepSeek said before its answer failed (reason, reasoning conclusion): passed on to Jev. */
     let deepseekNote: Record<string, string> | undefined;
@@ -902,6 +931,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
     let runPlanRide: { trigger: RunPlanTrigger } | null = null;
     let runPlanRideLog: JsonValue | undefined;
     if (decision.kind === "ask" && decision.deepseek && !codeBaseline) {
+      currentDecisionBudget()?.promoteBrain();
       const spec = decision.deepseek;
       let question = decision.questions[spec.question];
       const memoKey = `${stateFingerprint}|${decision.label}|${JSON.stringify(decision.state)}|${JSON.stringify(question ?? null)}`;
@@ -913,7 +943,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
         // The board may have moved while planning: never pay ~10 s for a position that no longer exists.
         let stale = false;
         try {
-          stale = fingerprint(await client.state()) !== stateFingerprint;
+          stale = fingerprint(await outsideDecisionBudget(() => client.state())) !== stateFingerprint;
         } catch {
           // let the ask go ahead; the dispatch re-read catches a broken mod
         }
@@ -925,7 +955,8 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
         }
         // B3 (BOSS_SIM_BUILD=on): each option of a deck-building question with the act boss simulated on its deck.
         if (options.buildSim) {
-          const simmed = await withBossSim(decision, env, options.buildSim);
+          const simmed = await measureDecisionBudgetStage("B3_current", () => withBossSim(decision, env, { ...options.buildSim!,
+            failureDirectory: join(dirname(config.log.decisionLog), "sim-failures") }));
           if (simmed.record) {
             decision = simmed.decision;
             question = decision.kind === "ask" ? decision.questions[spec.question] : question;
@@ -956,7 +987,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
         if (env.requiredBossEvaluation && bossSimRecord && !asRecord(bossSimRecord)["skipped"]) {
           // Complete computation may outlive the old latency target. Re-read before spending a model call.
           let changed = true;
-          try { changed = fingerprint(await client.state()) !== stateFingerprint; } catch { /* retry without dispatch */ }
+          try { changed = fingerprint(await outsideDecisionBudget(() => client.state())) !== stateFingerprint; } catch { /* retry without dispatch */ }
           if (changed) {
             stats.staleSkips += 1;
             onEvent({ type: "note", message: "state changed or unavailable after required boss evaluation; re-planning" });
@@ -966,13 +997,13 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
         }
         // V5 runs through the actual consumer in shadow mode before its predictions may guide choices.
         try {
-          const construction = withConstruction(decision, env, { simulation: {
+          const construction = withShadowDecisionBudget("construction_shadow", () => !shadowBudgetAvailable("construction_shadow") ? { decision, record: budgetUnknown("construction_shadow") as Record<string, JsonValue> } : withConstruction(decision, env, { simulation: {
             run: str(state.raw["run_id"]), floor: state.run?.floor ?? 0, label: decision.label,
             minimumShown: BUILD_SIM_MIN_SHOWN,
             record: asRecord(bossSimRecord) as Record<string, JsonValue>,
-          } });
+          } }));
           const probabilityAttached = construction.decision !== decision;
-          decision = withConstructionEvaluation(construction.decision, env, construction.record);
+          decision = withShadowDecisionBudget("construction_evaluation_shadow", () => shadowBudgetAvailable("construction_evaluation_shadow") ? withConstructionEvaluation(construction.decision, env, construction.record) : construction.decision);
           if (construction.record) bossSimRecord = { ...asRecord(bossSimRecord), construction: { ...construction.record,
             evaluation_delivery: decision !== construction.decision ? "attached" : "not_attached",
             probability_delivery: probabilityAttached ? "attached" : "not_attached",
@@ -1188,7 +1219,8 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
             if (!accept(answer, null)) deepseekFailed = true;
           }
         } catch (error) {
-          if (brain?.router.codexOnly) {
+          if (error instanceof DecisionBudgetExpired) { budgetFallback = true; currentDecisionBudget()?.useFallback("L2_deadline_existing_L1"); }
+          if (brain?.router.codexOnly && !budgetFallback) {
             if (isBrainBlocked(error)) throw error;
             brainFault(brain, decision.label, runId, `Brain decision resolution failed: ${error instanceof Error ? error.message : String(error)}`, error);
           }
@@ -1237,7 +1269,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
         const spent = `(${stats.deepseekCalls}/${config.deepseek?.maxCalls ?? 0})`;
         onEvent({ type: "note", message: `${engine === "deepseek" ? `DeepSeek budget used up ${spent}` : `${engineLabel(engine)} call budget used up, and DeepSeek's as its fallback ${spent}`}; ${decision.label} goes to Jev/code` });
       }
-      if (!deepseekResolved && brain?.router.codexOnly) {
+      if (!deepseekResolved && brain?.router.codexOnly && !budgetFallback) {
         const reason = `Codex brain decision did not resolve on ${decision.label}: ${deepseekAnswerUnusable ?? "no usable brain question"}`;
         brain.router.wait.finish("fault", { label: decision.label, runId, questionId: decisionId, system: "", question: "", payload: {}, spec: { label: decision.label, kind: "plan", schema: {}, validate: () => [] } }, reason);
         throw new BrainBlockedError("fault", reason);
@@ -1313,10 +1345,11 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
       resolved = { intent: decision.intent, rationale: decision.rationale, confidence: null, fallback: false, ...(decision.apply ? { apply: decision.apply } : {}), ...(decision.log ? { log: decision.log } : {}), ...(decision.journal ? { journal: decision.journal } : {}) };
       // A step of a DeepSeek one-shot plan, played by code: DeepSeek's decision, no call made (reused).
       if (decision.plan) deepseekRecord = { by: "deepseek", direct: true, reused: true, plan_ref: decision.plan.ref, plan_step: decision.plan.step, choice: decision.plan.choice };
-    } else if (!jev || codeBaseline) {
+    } else if (!jev || codeBaseline || currentDecisionBudget()?.remaining() === 0) {
       // No-Jev mode, or a board the gate kept refusing: the resolver sees an empty answer set and takes its
       // deterministic path.
-      resolved = decision.resolve({});
+      resolved = decision.resolve({}, currentDecisionBudget()?.remaining() === 0 ? { budgetExpired: true } : undefined);
+      if (currentDecisionBudget()?.remaining() === 0) { currentDecisionBudget()?.useFallback("deadline_current_code_candidate"); resolved = { ...resolved, fallback: true }; }
       if (codeBaseline) resolved = { ...resolved, fallback: true, rationale: `code baseline after ${gateRejections} gate refusals on this board: ${resolved.rationale}` };
     } else {
       if (stats.jevCalls >= config.budgets.maxRequests) {
@@ -1339,7 +1372,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
         // The board may have moved while we were planning. Re-read before spending a call on a
         // position that no longer exists.
         try {
-          const fresh = await client.state();
+          const fresh = await outsideDecisionBudget(() => client.state());
           if (fingerprint(fresh) !== stateFingerprint) {
             stats.staleSkips += 1;
             onEvent({
@@ -1494,6 +1527,10 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
           }
         }
       } catch (error) {
+        if (error instanceof DecisionBudgetExpired) {
+          currentDecisionBudget()?.useFallback("Jev_deadline_current_candidate");
+          resolved = { ...decision.resolve(firstAnswers, { budgetExpired: true }), fallback: true };
+        } else {
         if (isBrainBlocked(error)) throw error;
         const failure = classifyFailure(error);
         stats.errors += 1;
@@ -1506,6 +1543,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
         await sleep(pollIntervalMs);
         continue;
       }
+        }
       // Memoise the finished resolution (including any shortlist re-ask that ran above).
       answerMemo = { key: memoKey, resolved, answers: firstAnswers };
       }
@@ -1525,6 +1563,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
     // step keeps the card, enemy and potion its line chose), checked here and again on the state it is sent to
     // (act/identity.ts). A memo's answer keeps the identity of the board it was given on.
     resolved.intent = withExpect(state, resolved.intent);
+    currentDecisionBudget()?.pause();
     let gated = gate(state, resolved.intent);
     if (endTurnInstead && resolved.intent.action !== "end_turn") {
       // The same illegal play kept coming back (a card whose cost rose above our energy, 2026-09-25:
@@ -1732,6 +1771,8 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
       logRouteChange(record.ts, "shadow (not dispatched)");
       logState(state, stateFingerprint, record.ts);
       onEvent({ type: "decision", record, totals: totals() });
+      if (!options.signal?.aborted) await humanPaceShadow.observe(env, record, screenMemory.runPlan,
+        humanPaceCardInput, options.buildSim, jev);
       await sleep(pollIntervalMs);
       continue;
     }
@@ -1761,7 +1802,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
     // Re-read before touching the game: actions are not idempotent (PLAN.md §8.1).
     let fresh: GameState;
     try {
-      fresh = await client.state();
+      fresh = await outsideDecisionBudget(() => client.state());
     } catch (error) {
       onEvent({ type: "note", message: `pre-dispatch state re-read failed: ${classifyFailure(error).detail}` });
       logUndispatched(`pre-dispatch state re-read failed: ${classifyFailure(error).detail}`.slice(0, 300), "state_read_failed");
@@ -1873,7 +1914,7 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
     // Lizard Tail: a fight won before our next turn after this end of turn was won in the enemy turn.
     noteLizardTailEndTurn(screenMemory, state, resolved.intent);
     // The potion or card a card choice that follows comes from (its offer may be free this turn).
-    noteCardSource(screenMemory, state, resolved.intent);
+    noteCardSource(screenMemory, state, resolved.intent, decisionId);
     // A combat action went out on this turn: its later actions are not held for the turn-start settle.
     noteTurnActed(screenMemory, state, resolved.intent);
     // Closing an inspection overlay leaves the underlying decision unexecuted (7PWU F47).
@@ -1917,6 +1958,8 @@ export async function runLoop(options: LoopOptions): Promise<LoopStats> {
     logRouteChange(record.ts, "route plan changed (no game action)");
     logState(state, stateFingerprint, record.ts);
     onEvent({ type: "decision", record, totals: totals() });
+    if (!options.signal?.aborted) await humanPaceShadow.observe(env, record, screenMemory.runPlan,
+      humanPaceCardInput, options.buildSim, jev);
     await sleep(60);
   }
 
@@ -2091,7 +2134,8 @@ async function ensureFightPlan(
     onEvent({ type: "note", message: `fight plan (${memoryChars(memory)} context chars, ${(meta.latencyMs / 1000).toFixed(0)} s): ${plan.approach}; setup ${plan.setup.join(", ") || "-"}; kill first ${plan.focus ?? "-"}; ${plan.summary}` });
   } catch (error) {
     if (isBrainBlocked(error)) throw error;
-    if (deepseek instanceof Brain && deepseek.router.codexOnly) brainFault(deepseek, "fight-plan", runId, `Fight-plan resolution failed: ${error instanceof Error ? error.message : String(error)}`, error);
+    if (error instanceof DecisionBudgetExpired) currentDecisionBudget()?.useFallback("fight_plan_deadline_existing_L1");
+    if (!(error instanceof DecisionBudgetExpired) && deepseek instanceof Brain && deepseek.router.codexOnly) brainFault(deepseek, "fight-plan", runId, `Fight-plan resolution failed: ${error instanceof Error ? error.message : String(error)}`, error);
     screenMemory.fightPlanFailed = fight;
     const message = error instanceof Error ? error.message : String(error);
     // An unparseable reply was still paid for: its usage and raw reply are logged with the error.
@@ -2161,7 +2205,8 @@ async function ensureRunPlan(
     onEvent({ type: "note", message: `run plan (${memoryChars(memory)} context chars, ${(meta.latencyMs / 1000).toFixed(0)} s, ${trigger}): ${plan.archetype}; want ${plan.want.join(", ") || "-"}; elites ${plan.elites}; rest ${plan.rest}` });
   } catch (error) {
     if (isBrainBlocked(error)) throw error;
-    if (deepseek instanceof Brain && deepseek.router.codexOnly) brainFault(deepseek, "run-plan", runId, `Run-plan resolution failed: ${error instanceof Error ? error.message : String(error)}`, error);
+    if (error instanceof DecisionBudgetExpired) currentDecisionBudget()?.useFallback("run_plan_deadline_existing_L1");
+    if (!(error instanceof DecisionBudgetExpired) && deepseek instanceof Brain && deepseek.router.codexOnly) brainFault(deepseek, "run-plan", runId, `Run-plan resolution failed: ${error instanceof Error ? error.message : String(error)}`, error);
     screenMemory.runPlanFailed = failKey;
     const message = error instanceof Error ? error.message : String(error);
     if (error instanceof DeepSeekAnswerError) count(error.meta.inputTokens + error.meta.outputTokens, (error.meta as BrainMetaUsage).brain);

@@ -1,0 +1,821 @@
+{
+  "batches": [
+    {
+      "batch": "20261017-230028-s2-strategy-proposal",
+      "canonical_state": "done",
+      "canonical_rc": 0,
+      "canonical_merged": null,
+      "report": {
+        "task": "strategy-proposal",
+        "character": "silent",
+        "batch": "20261017-230028-s2-strategy-proposal",
+        "base": "eb6b1bb19cd5fee0f89e0e2519b84ba5364cc8c3",
+        "runs": [
+          "KEN58SH9SLZ6",
+          "TXZ6RVMQA09D",
+          "WQZVENQ7DTRP",
+          "02HB4L0C3C67",
+          "4D4J8USKCPAV",
+          "F4QKG4J1AJJZ",
+          "JLN5SK17W4FQ",
+          "LS8035TB32P3",
+          "NB8KCF6HRGVF",
+          "S9UZAK0JP0C0"
+        ],
+        "fixes": [],
+        "skipped": [],
+        "merged": null,
+        "tests": {
+          "tsc": null,
+          "vitest": null,
+          "cases": null
+        },
+        "code_proposals": [
+          "silent-proposal-08eaa60bcc449852",
+          "silent-proposal-92920295a648b540",
+          "silent-proposal-a327449c331efbc1",
+          "silent-proposal-a099e89437e942bb",
+          "silent-proposal-47910f82a1fdd98f",
+          "silent-proposal-f1374df72d8e6a25",
+          "silent-proposal-38a49e6c97f31eea",
+          "silent-proposal-ef0e38a5dbd3bc07",
+          "silent-proposal-7f820c02d39bfaea",
+          "silent-proposal-04b6b430759815ed"
+        ],
+        "implementation_domains": [],
+        "proposal_results": [
+          {
+            "id": "silent-proposal-08eaa60bcc449852",
+            "state": "waiting",
+            "reason": "七次实际饮用与真实回复已核；缺同入口、牌组及后续动作下不用、早用或留药到Boss的成对整战结果，不能校准持药价。"
+          },
+          {
+            "id": "silent-proposal-92920295a648b540",
+            "state": "waiting",
+            "reason": "TXZ替线少损3血也少伤9，首胜4血后开场死亡；缺保持后续抽序、生成、选择及药栏的两战对照。"
+          },
+          {
+            "id": "silent-proposal-a327449c331efbc1",
+            "state": "waiting",
+            "reason": "沙坑差额诊断已核为live祖先；缺血量、毒与沙坑双边界的受控整战后继和独立验证，不能拟合排序阈值。"
+          },
+          {
+            "id": "silent-proposal-a099e89437e942bb",
+            "state": "waiting",
+            "reason": "九局42饮容量已核且生成容量已有实现；缺计划妥当保留、跨抽牌重问、SL恢复及穿插用药完整候选到执行的联合验证。"
+          },
+          {
+            "id": "silent-proposal-47910f82a1fdd98f",
+            "state": "waiting",
+            "reason": "限定开场失血和连战资源传递已有实现；缺未知回血/复活组合时序、留药及SL成对后继和两战联合校准。"
+          },
+          {
+            "id": "silent-proposal-f1374df72d8e6a25",
+            "state": "waiting",
+            "reason": "缺隔离机制误差后同入口同预算的不用、早用、留药整战及下一战成对结果，不能由局部候选推导药价或终局权重。"
+          },
+          {
+            "id": "silent-proposal-38a49e6c97f31eea",
+            "state": "waiting",
+            "reason": "普通紧勒及磨蚀出牌属性已有子实现；缺弃磨蚀、常驻/临时增益、再生/自动触发与SL恢复的联合消费者和完整后继验证。"
+          },
+          {
+            "id": "silent-proposal-ef0e38a5dbd3bc07",
+            "state": "waiting",
+            "reason": "缺另一营火动作、事件/路线和用药时点的受控完整结果；条件变化及敌人、构筑混杂不能支持路线或终局参数拟合。"
+          },
+          {
+            "id": "silent-proposal-7f820c02d39bfaea",
+            "state": "waiting",
+            "reason": "NHA两线实损1/7及跨轮净扣8/24已核；缺同预算饱和排序校准、跨弃牌完整执行归属和成对整战后继，不能据同局六败确定SL门槛。"
+          },
+          {
+            "id": "silent-proposal-04b6b430759815ed",
+            "state": "waiting",
+            "reason": "蟹朝向和普通精确切击已有受限实现；油灯首次消费跨动作、新战/SL恢复仍缺联合输入与消费者，未覆盖X值、升级、叠层和能力完整后继。"
+          }
+        ],
+        "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-230028-s2/learner/runs/20261017-230034-62723a14-7bc8-40eb-82c1-14da3edbe02c-strategy-proposal/report.md"
+      },
+      "native": {
+        "batch": "20261017-230028-s2-strategy-proposal",
+        "thread": "01a14a61-1128-7d40-8e98-591d19b37d3b",
+        "cwd": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-230028-s2",
+        "event_log": "learner/runs/20261017-230034-62723a14-7bc8-40eb-82c1-14da3edbe02c-strategy-proposal.jsonl",
+        "registered_launch_batch": "20261017-230028-s2-strategy-proposal",
+        "original_lease": "ee5680d3a35667b8da542f1e83e230a03f01ec7d2eb63b4e46009b1889c4eb15",
+        "native_context": {
+          "source": "ops/codex-ops/accounts/codex1/learner/sessions/2026/10/17/rollout-2026-10-17T23-00-37-01a14a61-1128-7d40-8e98-591d19b37d3b.jsonl",
+          "offset": 50425,
+          "bytes": 5200,
+          "sha256": "e943089fa6038a6a427d26afcc48f9df9aa378b73826884dd6d1d05fe23f1a7a",
+          "model": "gpt-6.1-sol",
+          "effort": "xhigh",
+          "sandbox": {
+            "type": "workspace-write",
+            "writable_roots": [
+              "/home/dw/Projects/agent-sts2",
+              "/home/dw/Projects/agent-sts2/.git",
+              "/home/dw/Projects/agent-sts2/.git/worktrees/codex-strategy-silent-20261017-230028-s2"
+            ],
+            "network_access": false,
+            "exclude_tmpdir_env_var": false,
+            "exclude_slash_tmp": false
+          },
+          "approval_policy": "never"
+        },
+        "native_user_input": {
+          "offset": 58500,
+          "bytes": 21571,
+          "sha256": "271e882227b14f68a3ee9e4adac64cd955cf4a3aaa73c6f44e599a9410e83da8",
+          "input_sha256": "fc0963dadfe9b3a5c5741c9232894a623a448f9c4d452f759d344c69729c0efb"
+        },
+        "original_header_events": [
+          {
+            "offset": 0,
+            "bytes": 23653,
+            "sha256": "af422f90331f8f001ffe6f73f47214c698fec4a4681db1d052bcb9d6a94f0b85",
+            "type": "learner_launch",
+            "attempt": null,
+            "code": null
+          },
+          {
+            "offset": 23653,
+            "bytes": 381,
+            "sha256": "fa65727f1ca349ae122a0d1da5af84973343d4d05c0d18e17350e65b4f400798",
+            "type": "learner_startup_attempt",
+            "attempt": 1,
+            "code": null
+          },
+          {
+            "offset": 27046,
+            "bytes": 77,
+            "sha256": "6c763e705a9ece9da2951ab8fd5148416bdd5a4284c612af2e8595ec137019b5",
+            "type": "thread.started",
+            "attempt": null,
+            "code": null
+          }
+        ],
+        "startup_attempts": 1,
+        "failed_startups_preserved": 0,
+        "no_model_or_manual_restart": true
+      },
+      "artifact_checks": [],
+      "raw_checks": [
+        {
+          "projected": ".worktrees/codex-strategy-silent-20261017-230028-s2/learner/runs/20261017-230034-62723a14-7bc8-40eb-82c1-14da3edbe02c-strategy-proposal/evidence/sl-attempts.evidence.jsonl",
+          "rows": 78
+        },
+        {
+          "projected": ".worktrees/codex-strategy-silent-20261017-230028-s2/learner/runs/20261017-230034-62723a14-7bc8-40eb-82c1-14da3edbe02c-strategy-proposal/evidence/runs.evidence.jsonl",
+          "rows": 15
+        },
+        {
+          "projected": ".worktrees/codex-strategy-silent-20261017-230028-s2/learner/runs/20261017-230034-62723a14-7bc8-40eb-82c1-14da3edbe02c-strategy-proposal/evidence/brain.evidence.jsonl",
+          "rows": 481
+        },
+        {
+          "projected": ".worktrees/codex-strategy-silent-20261017-230028-s2/learner/runs/20261017-230034-62723a14-7bc8-40eb-82c1-14da3edbe02c-strategy-proposal/evidence/run-plans.evidence.jsonl",
+          "rows": 77
+        },
+        {
+          "projected": ".worktrees/codex-strategy-silent-20261017-230028-s2/learner/runs/20261017-230034-62723a14-7bc8-40eb-82c1-14da3edbe02c-strategy-proposal/evidence/decisions.evidence.jsonl",
+          "rows": 9448
+        },
+        {
+          "projected": ".worktrees/codex-strategy-silent-20261017-230028-s2/learner/runs/20261017-230034-62723a14-7bc8-40eb-82c1-14da3edbe02c-strategy-proposal/evidence/run-config.evidence.jsonl",
+          "rows": 15
+        },
+        {
+          "projected": ".worktrees/codex-strategy-silent-20261017-230028-s2/learner/runs/20261017-230034-62723a14-7bc8-40eb-82c1-14da3edbe02c-strategy-proposal/evidence/states.evidence.jsonl",
+          "rows": 9815
+        }
+      ],
+      "ledger_rows": [
+        {
+          "offset": 23496751,
+          "bytes": 947,
+          "sha256": "041286e796c8a6a6e458c9b85a4750c8cb395d5fe831a98c6b903371c6715e8f",
+          "row": {
+            "op": "update",
+            "id": "silent-0005",
+            "ts": "2026-10-17T23:18:14+08:00",
+            "by": "learner:strategy-proposal",
+            "where": {
+              "proposal": [
+                "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-230028-s2/learner/runs/20261017-230034-62723a14-7bc8-40eb-82c1-14da3edbe02c-strategy-proposal/proposal.md",
+                "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-230028-s2/learner/runs/20261017-230034-62723a14-7bc8-40eb-82c1-14da3edbe02c-strategy-proposal/report.md"
+              ]
+            },
+            "note": "20261017-230028-s2-strategy-proposal：仅复核已领取原提案silent-proposal-04b6b430759815ed，处置均waiting；十五局八流19929原行逐offset/bytes/SHA/显式身份核回，16材料检查满足；实际live祖先只覆盖子项，完整缺数据见本批proposal.md/report.md。本行只追加追溯，不新增claim/evidence/支持反例计数，不改变首证/prior/status/version/effect；无源码实现、合入或shipped。"
+          }
+        },
+        {
+          "offset": 23497698,
+          "bytes": 980,
+          "sha256": "14e1dfd52646707a3497c6c5614f4372b550e75d170afb8ab7825c33ed6d2116",
+          "row": {
+            "op": "update",
+            "id": "silent-0006",
+            "ts": "2026-10-17T23:18:14+08:00",
+            "by": "learner:strategy-proposal",
+            "where": {
+              "proposal": [
+                "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-230028-s2/learner/runs/20261017-230034-62723a14-7bc8-40eb-82c1-14da3edbe02c-strategy-proposal/proposal.md",
+                "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-230028-s2/learner/runs/20261017-230034-62723a14-7bc8-40eb-82c1-14da3edbe02c-strategy-proposal/report.md"
+              ]
+            },
+            "note": "20261017-230028-s2-strategy-proposal：仅复核已领取原提案silent-proposal-38a49e6c97f31eea,silent-proposal-04b6b430759815ed，处置均waiting；十五局八流19929原行逐offset/bytes/SHA/显式身份核回，16材料检查满足；实际live祖先只覆盖子项，完整缺数据见本批proposal.md/report.md。本行只追加追溯，不新增claim/evidence/支持反例计数，不改变首证/prior/status/version/effect；无源码实现、合入或shipped。"
+          }
+        },
+        {
+          "offset": 23498678,
+          "bytes": 980,
+          "sha256": "73af0e96fd8c9c76aa72392eff927b70126b1c04bf8057f547d2959e727bfd60",
+          "row": {
+            "op": "update",
+            "id": "silent-0011",
+            "ts": "2026-10-17T23:18:14+08:00",
+            "by": "learner:strategy-proposal",
+            "where": {
+              "proposal": [
+                "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-230028-s2/learner/runs/20261017-230034-62723a14-7bc8-40eb-82c1-14da3edbe02c-strategy-proposal/proposal.md",
+                "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-230028-s2/learner/runs/20261017-230034-62723a14-7bc8-40eb-82c1-14da3edbe02c-strategy-proposal/report.md"
+              ]
+            },
+            "note": "20261017-230028-s2-strategy-proposal：仅复核已领取原提案silent-proposal-38a49e6c97f31eea,silent-proposal-04b6b430759815ed，处置均waiting；十五局八流19929原行逐offset/bytes/SHA/显式身份核回，16材料检查满足；实际live祖先只覆盖子项，完整缺数据见本批proposal.md/report.md。本行只追加追溯，不新增claim/evidence/支持反例计数，不改变首证/prior/status/version/effect；无源码实现、合入或shipped。"
+          }
+        },
+        {
+          "offset": 23499658,
+          "bytes": 947,
+          "sha256": "864a772664147a7dbbe635673d03d61e5d9713703ba9d2282f04ee86a11b0c4b",
+          "row": {
+            "op": "update",
+            "id": "silent-0013",
+            "ts": "2026-10-17T23:18:14+08:00",
+            "by": "learner:strategy-proposal",
+            "where": {
+              "proposal": [
+                "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-230028-s2/learner/runs/20261017-230034-62723a14-7bc8-40eb-82c1-14da3edbe02c-strategy-proposal/proposal.md",
+                "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-230028-s2/learner/runs/20261017-230034-62723a14-7bc8-40eb-82c1-14da3edbe02c-strategy-proposal/report.md"
+              ]
+            },
+            "note": "20261017-230028-s2-strategy-proposal：仅复核已领取原提案silent-proposal-04b6b430759815ed，处置均waiting；十五局八流19929原行逐offset/bytes/SHA/显式身份核回，16材料检查满足；实际live祖先只覆盖子项，完整缺数据见本批proposal.md/report.md。本行只追加追溯，不新增claim/evidence/支持反例计数，不改变首证/prior/status/version/effect；无源码实现、合入或shipped。"
+          }
+        },
+        {
+          "offset": 23500605,
+          "bytes": 980,
+          "sha256": "6a8fe3e39dc3d237394fc4f055b599d81ad58e412e8c38957b13721561dd1378",
+          "row": {
+            "op": "update",
+            "id": "silent-0018",
+            "ts": "2026-10-17T23:18:14+08:00",
+            "by": "learner:strategy-proposal",
+            "where": {
+              "proposal": [
+                "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-230028-s2/learner/runs/20261017-230034-62723a14-7bc8-40eb-82c1-14da3edbe02c-strategy-proposal/proposal.md",
+                "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-230028-s2/learner/runs/20261017-230034-62723a14-7bc8-40eb-82c1-14da3edbe02c-strategy-proposal/report.md"
+              ]
+            },
+            "note": "20261017-230028-s2-strategy-proposal：仅复核已领取原提案silent-proposal-a327449c331efbc1,silent-proposal-47910f82a1fdd98f，处置均waiting；十五局八流19929原行逐offset/bytes/SHA/显式身份核回，16材料检查满足；实际live祖先只覆盖子项，完整缺数据见本批proposal.md/report.md。本行只追加追溯，不新增claim/evidence/支持反例计数，不改变首证/prior/status/version/effect；无源码实现、合入或shipped。"
+          }
+        },
+        {
+          "offset": 23501585,
+          "bytes": 1046,
+          "sha256": "e8b6126a845ab9521e163716fb67e27dfa569df8e514be81cea9af87aedc19f9",
+          "row": {
+            "op": "update",
+            "id": "silent-0019",
+            "ts": "2026-10-17T23:18:14+08:00",
+            "by": "learner:strategy-proposal",
+            "where": {
+              "proposal": [
+                "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-230028-s2/learner/runs/20261017-230034-62723a14-7bc8-40eb-82c1-14da3edbe02c-strategy-proposal/proposal.md",
+                "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-230028-s2/learner/runs/20261017-230034-62723a14-7bc8-40eb-82c1-14da3edbe02c-strategy-proposal/report.md"
+              ]
+            },
+            "note": "20261017-230028-s2-strategy-proposal：仅复核已领取原提案silent-proposal-08eaa60bcc449852,silent-proposal-47910f82a1fdd98f,silent-proposal-f1374df72d8e6a25,silent-proposal-ef0e38a5dbd3bc07，处置均waiting；十五局八流19929原行逐offset/bytes/SHA/显式身份核回，16材料检查满足；实际live祖先只覆盖子项，完整缺数据见本批proposal.md/report.md。本行只追加追溯，不新增claim/evidence/支持反例计数，不改变首证/prior/status/version/effect；无源码实现、合入或shipped。"
+          }
+        },
+        {
+          "offset": 23502631,
+          "bytes": 1046,
+          "sha256": "e78e52982d42cb0fd5c2d86cf51346521bc49effb7845edae69c85a17f50df46",
+          "row": {
+            "op": "update",
+            "id": "silent-0020",
+            "ts": "2026-10-17T23:18:14+08:00",
+            "by": "learner:strategy-proposal",
+            "where": {
+              "proposal": [
+                "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-230028-s2/learner/runs/20261017-230034-62723a14-7bc8-40eb-82c1-14da3edbe02c-strategy-proposal/proposal.md",
+                "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-230028-s2/learner/runs/20261017-230034-62723a14-7bc8-40eb-82c1-14da3edbe02c-strategy-proposal/report.md"
+              ]
+            },
+            "note": "20261017-230028-s2-strategy-proposal：仅复核已领取原提案silent-proposal-08eaa60bcc449852,silent-proposal-47910f82a1fdd98f,silent-proposal-f1374df72d8e6a25,silent-proposal-ef0e38a5dbd3bc07，处置均waiting；十五局八流19929原行逐offset/bytes/SHA/显式身份核回，16材料检查满足；实际live祖先只覆盖子项，完整缺数据见本批proposal.md/report.md。本行只追加追溯，不新增claim/evidence/支持反例计数，不改变首证/prior/status/version/effect；无源码实现、合入或shipped。"
+          }
+        },
+        {
+          "offset": 23503677,
+          "bytes": 1013,
+          "sha256": "a174021d3ed7e902937b219272d910f9122d1099e29e9bc975ddac373be59388",
+          "row": {
+            "op": "update",
+            "id": "silent-0021",
+            "ts": "2026-10-17T23:18:14+08:00",
+            "by": "learner:strategy-proposal",
+            "where": {
+              "proposal": [
+                "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-230028-s2/learner/runs/20261017-230034-62723a14-7bc8-40eb-82c1-14da3edbe02c-strategy-proposal/proposal.md",
+                "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-230028-s2/learner/runs/20261017-230034-62723a14-7bc8-40eb-82c1-14da3edbe02c-strategy-proposal/report.md"
+              ]
+            },
+            "note": "20261017-230028-s2-strategy-proposal：仅复核已领取原提案silent-proposal-47910f82a1fdd98f,silent-proposal-ef0e38a5dbd3bc07,silent-proposal-04b6b430759815ed，处置均waiting；十五局八流19929原行逐offset/bytes/SHA/显式身份核回，16材料检查满足；实际live祖先只覆盖子项，完整缺数据见本批proposal.md/report.md。本行只追加追溯，不新增claim/evidence/支持反例计数，不改变首证/prior/status/version/effect；无源码实现、合入或shipped。"
+          }
+        },
+        {
+          "offset": 23504690,
+          "bytes": 980,
+          "sha256": "a70167f42682f74aaff9226275cdc9b6d6d98aa5bbdf674c1c04ef8749c6780e",
+          "row": {
+            "op": "update",
+            "id": "silent-0025",
+            "ts": "2026-10-17T23:18:14+08:00",
+            "by": "learner:strategy-proposal",
+            "where": {
+              "proposal": [
+                "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-230028-s2/learner/runs/20261017-230034-62723a14-7bc8-40eb-82c1-14da3edbe02c-strategy-proposal/proposal.md",
+                "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-230028-s2/learner/runs/20261017-230034-62723a14-7bc8-40eb-82c1-14da3edbe02c-strategy-proposal/report.md"
+              ]
+            },
+            "note": "20261017-230028-s2-strategy-proposal：仅复核已领取原提案silent-proposal-47910f82a1fdd98f,silent-proposal-38a49e6c97f31eea，处置均waiting；十五局八流19929原行逐offset/bytes/SHA/显式身份核回，16材料检查满足；实际live祖先只覆盖子项，完整缺数据见本批proposal.md/report.md。本行只追加追溯，不新增claim/evidence/支持反例计数，不改变首证/prior/status/version/effect；无源码实现、合入或shipped。"
+          }
+        },
+        {
+          "offset": 23505670,
+          "bytes": 947,
+          "sha256": "e0f230453b62f9700f168956e8ada2989ea28bc470fc4dea4a067a2297b93da5",
+          "row": {
+            "op": "update",
+            "id": "silent-0030",
+            "ts": "2026-10-17T23:18:14+08:00",
+            "by": "learner:strategy-proposal",
+            "where": {
+              "proposal": [
+                "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-230028-s2/learner/runs/20261017-230034-62723a14-7bc8-40eb-82c1-14da3edbe02c-strategy-proposal/proposal.md",
+                "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-230028-s2/learner/runs/20261017-230034-62723a14-7bc8-40eb-82c1-14da3edbe02c-strategy-proposal/report.md"
+              ]
+            },
+            "note": "20261017-230028-s2-strategy-proposal：仅复核已领取原提案silent-proposal-a099e89437e942bb，处置均waiting；十五局八流19929原行逐offset/bytes/SHA/显式身份核回，16材料检查满足；实际live祖先只覆盖子项，完整缺数据见本批proposal.md/report.md。本行只追加追溯，不新增claim/evidence/支持反例计数，不改变首证/prior/status/version/effect；无源码实现、合入或shipped。"
+          }
+        },
+        {
+          "offset": 23506617,
+          "bytes": 947,
+          "sha256": "3e35318e61fd853a0acd7a8ba37b01673a0f287dbe4c2f45ed64726638e31278",
+          "row": {
+            "op": "update",
+            "id": "silent-0044",
+            "ts": "2026-10-17T23:18:14+08:00",
+            "by": "learner:strategy-proposal",
+            "where": {
+              "proposal": [
+                "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-230028-s2/learner/runs/20261017-230034-62723a14-7bc8-40eb-82c1-14da3edbe02c-strategy-proposal/proposal.md",
+                "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-230028-s2/learner/runs/20261017-230034-62723a14-7bc8-40eb-82c1-14da3edbe02c-strategy-proposal/report.md"
+              ]
+            },
+            "note": "20261017-230028-s2-strategy-proposal：仅复核已领取原提案silent-proposal-38a49e6c97f31eea，处置均waiting；十五局八流19929原行逐offset/bytes/SHA/显式身份核回，16材料检查满足；实际live祖先只覆盖子项，完整缺数据见本批proposal.md/report.md。本行只追加追溯，不新增claim/evidence/支持反例计数，不改变首证/prior/status/version/effect；无源码实现、合入或shipped。"
+          }
+        },
+        {
+          "offset": 23507564,
+          "bytes": 980,
+          "sha256": "a3b7a7ab64e67ceecd6a4123ecb614e9c76432ef80fdf1d15e71bb6ea9cb6345",
+          "row": {
+            "op": "update",
+            "id": "silent-0050",
+            "ts": "2026-10-17T23:18:14+08:00",
+            "by": "learner:strategy-proposal",
+            "where": {
+              "proposal": [
+                "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-230028-s2/learner/runs/20261017-230034-62723a14-7bc8-40eb-82c1-14da3edbe02c-strategy-proposal/proposal.md",
+                "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-230028-s2/learner/runs/20261017-230034-62723a14-7bc8-40eb-82c1-14da3edbe02c-strategy-proposal/report.md"
+              ]
+            },
+            "note": "20261017-230028-s2-strategy-proposal：仅复核已领取原提案silent-proposal-f1374df72d8e6a25,silent-proposal-38a49e6c97f31eea，处置均waiting；十五局八流19929原行逐offset/bytes/SHA/显式身份核回，16材料检查满足；实际live祖先只覆盖子项，完整缺数据见本批proposal.md/report.md。本行只追加追溯，不新增claim/evidence/支持反例计数，不改变首证/prior/status/version/effect；无源码实现、合入或shipped。"
+          }
+        },
+        {
+          "offset": 23508544,
+          "bytes": 947,
+          "sha256": "d04634e01f2430e1b9b90f01b3392ae305dce9207fc4fa0c2c64060a6767d093",
+          "row": {
+            "op": "update",
+            "id": "silent-0053",
+            "ts": "2026-10-17T23:18:14+08:00",
+            "by": "learner:strategy-proposal",
+            "where": {
+              "proposal": [
+                "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-230028-s2/learner/runs/20261017-230034-62723a14-7bc8-40eb-82c1-14da3edbe02c-strategy-proposal/proposal.md",
+                "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-230028-s2/learner/runs/20261017-230034-62723a14-7bc8-40eb-82c1-14da3edbe02c-strategy-proposal/report.md"
+              ]
+            },
+            "note": "20261017-230028-s2-strategy-proposal：仅复核已领取原提案silent-proposal-04b6b430759815ed，处置均waiting；十五局八流19929原行逐offset/bytes/SHA/显式身份核回，16材料检查满足；实际live祖先只覆盖子项，完整缺数据见本批proposal.md/report.md。本行只追加追溯，不新增claim/evidence/支持反例计数，不改变首证/prior/status/version/effect；无源码实现、合入或shipped。"
+          }
+        },
+        {
+          "offset": 23509491,
+          "bytes": 947,
+          "sha256": "cc311b56e337288a1d19baf50844572d1c35323f131f2d5af47257ccd0904b3f",
+          "row": {
+            "op": "update",
+            "id": "silent-0064",
+            "ts": "2026-10-17T23:18:14+08:00",
+            "by": "learner:strategy-proposal",
+            "where": {
+              "proposal": [
+                "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-230028-s2/learner/runs/20261017-230034-62723a14-7bc8-40eb-82c1-14da3edbe02c-strategy-proposal/proposal.md",
+                "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-230028-s2/learner/runs/20261017-230034-62723a14-7bc8-40eb-82c1-14da3edbe02c-strategy-proposal/report.md"
+              ]
+            },
+            "note": "20261017-230028-s2-strategy-proposal：仅复核已领取原提案silent-proposal-38a49e6c97f31eea，处置均waiting；十五局八流19929原行逐offset/bytes/SHA/显式身份核回，16材料检查满足；实际live祖先只覆盖子项，完整缺数据见本批proposal.md/report.md。本行只追加追溯，不新增claim/evidence/支持反例计数，不改变首证/prior/status/version/effect；无源码实现、合入或shipped。"
+          }
+        },
+        {
+          "offset": 23510438,
+          "bytes": 947,
+          "sha256": "21457d563c09aabf66faf08e0f41ae2ccf5840a13b2133d9e911d178bba6a227",
+          "row": {
+            "op": "update",
+            "id": "silent-0065",
+            "ts": "2026-10-17T23:18:14+08:00",
+            "by": "learner:strategy-proposal",
+            "where": {
+              "proposal": [
+                "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-230028-s2/learner/runs/20261017-230034-62723a14-7bc8-40eb-82c1-14da3edbe02c-strategy-proposal/proposal.md",
+                "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-230028-s2/learner/runs/20261017-230034-62723a14-7bc8-40eb-82c1-14da3edbe02c-strategy-proposal/report.md"
+              ]
+            },
+            "note": "20261017-230028-s2-strategy-proposal：仅复核已领取原提案silent-proposal-04b6b430759815ed，处置均waiting；十五局八流19929原行逐offset/bytes/SHA/显式身份核回，16材料检查满足；实际live祖先只覆盖子项，完整缺数据见本批proposal.md/report.md。本行只追加追溯，不新增claim/evidence/支持反例计数，不改变首证/prior/status/version/effect；无源码实现、合入或shipped。"
+          }
+        },
+        {
+          "offset": 23511385,
+          "bytes": 1046,
+          "sha256": "babb112acf45b97b16151fd9f42b71f8c6b0adb97b2b5b8edc960e0b2cc33e17",
+          "row": {
+            "op": "update",
+            "id": "silent-0079",
+            "ts": "2026-10-17T23:18:14+08:00",
+            "by": "learner:strategy-proposal",
+            "where": {
+              "proposal": [
+                "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-230028-s2/learner/runs/20261017-230034-62723a14-7bc8-40eb-82c1-14da3edbe02c-strategy-proposal/proposal.md",
+                "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-230028-s2/learner/runs/20261017-230034-62723a14-7bc8-40eb-82c1-14da3edbe02c-strategy-proposal/report.md"
+              ]
+            },
+            "note": "20261017-230028-s2-strategy-proposal：仅复核已领取原提案silent-proposal-a327449c331efbc1,silent-proposal-47910f82a1fdd98f,silent-proposal-7f820c02d39bfaea,silent-proposal-04b6b430759815ed，处置均waiting；十五局八流19929原行逐offset/bytes/SHA/显式身份核回，16材料检查满足；实际live祖先只覆盖子项，完整缺数据见本批proposal.md/report.md。本行只追加追溯，不新增claim/evidence/支持反例计数，不改变首证/prior/status/version/effect；无源码实现、合入或shipped。"
+          }
+        },
+        {
+          "offset": 23512431,
+          "bytes": 980,
+          "sha256": "2d56274258fb609d631b873d4f4cdad9ee37d1b3e24687edc6a481181f3ade19",
+          "row": {
+            "op": "update",
+            "id": "silent-0133",
+            "ts": "2026-10-17T23:18:14+08:00",
+            "by": "learner:strategy-proposal",
+            "where": {
+              "proposal": [
+                "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-230028-s2/learner/runs/20261017-230034-62723a14-7bc8-40eb-82c1-14da3edbe02c-strategy-proposal/proposal.md",
+                "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-230028-s2/learner/runs/20261017-230034-62723a14-7bc8-40eb-82c1-14da3edbe02c-strategy-proposal/report.md"
+              ]
+            },
+            "note": "20261017-230028-s2-strategy-proposal：仅复核已领取原提案silent-proposal-38a49e6c97f31eea,silent-proposal-04b6b430759815ed，处置均waiting；十五局八流19929原行逐offset/bytes/SHA/显式身份核回，16材料检查满足；实际live祖先只覆盖子项，完整缺数据见本批proposal.md/report.md。本行只追加追溯，不新增claim/evidence/支持反例计数，不改变首证/prior/status/version/effect；无源码实现、合入或shipped。"
+          }
+        },
+        {
+          "offset": 23513411,
+          "bytes": 947,
+          "sha256": "cfa902c8d2bc4a97d0f670958ff8a475c37c803a80fcca902cc86cbd44388cf0",
+          "row": {
+            "op": "update",
+            "id": "silent-0162",
+            "ts": "2026-10-17T23:18:14+08:00",
+            "by": "learner:strategy-proposal",
+            "where": {
+              "proposal": [
+                "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-230028-s2/learner/runs/20261017-230034-62723a14-7bc8-40eb-82c1-14da3edbe02c-strategy-proposal/proposal.md",
+                "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-230028-s2/learner/runs/20261017-230034-62723a14-7bc8-40eb-82c1-14da3edbe02c-strategy-proposal/report.md"
+              ]
+            },
+            "note": "20261017-230028-s2-strategy-proposal：仅复核已领取原提案silent-proposal-04b6b430759815ed，处置均waiting；十五局八流19929原行逐offset/bytes/SHA/显式身份核回，16材料检查满足；实际live祖先只覆盖子项，完整缺数据见本批proposal.md/report.md。本行只追加追溯，不新增claim/evidence/支持反例计数，不改变首证/prior/status/version/effect；无源码实现、合入或shipped。"
+          }
+        },
+        {
+          "offset": 23514358,
+          "bytes": 947,
+          "sha256": "17913ea7bc665d8318f7a0775d296e207cb13a8552713e89a80cc5768c336702",
+          "row": {
+            "op": "update",
+            "id": "silent-0169",
+            "ts": "2026-10-17T23:18:14+08:00",
+            "by": "learner:strategy-proposal",
+            "where": {
+              "proposal": [
+                "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-230028-s2/learner/runs/20261017-230034-62723a14-7bc8-40eb-82c1-14da3edbe02c-strategy-proposal/proposal.md",
+                "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-230028-s2/learner/runs/20261017-230034-62723a14-7bc8-40eb-82c1-14da3edbe02c-strategy-proposal/report.md"
+              ]
+            },
+            "note": "20261017-230028-s2-strategy-proposal：仅复核已领取原提案silent-proposal-04b6b430759815ed，处置均waiting；十五局八流19929原行逐offset/bytes/SHA/显式身份核回，16材料检查满足；实际live祖先只覆盖子项，完整缺数据见本批proposal.md/report.md。本行只追加追溯，不新增claim/evidence/支持反例计数，不改变首证/prior/status/version/effect；无源码实现、合入或shipped。"
+          }
+        },
+        {
+          "offset": 23515305,
+          "bytes": 947,
+          "sha256": "9715c5200198399ed2de128b08d688aed54d422eb0a62827392f26d550ff82cf",
+          "row": {
+            "op": "update",
+            "id": "silent-0189",
+            "ts": "2026-10-17T23:18:14+08:00",
+            "by": "learner:strategy-proposal",
+            "where": {
+              "proposal": [
+                "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-230028-s2/learner/runs/20261017-230034-62723a14-7bc8-40eb-82c1-14da3edbe02c-strategy-proposal/proposal.md",
+                "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-230028-s2/learner/runs/20261017-230034-62723a14-7bc8-40eb-82c1-14da3edbe02c-strategy-proposal/report.md"
+              ]
+            },
+            "note": "20261017-230028-s2-strategy-proposal：仅复核已领取原提案silent-proposal-04b6b430759815ed，处置均waiting；十五局八流19929原行逐offset/bytes/SHA/显式身份核回，16材料检查满足；实际live祖先只覆盖子项，完整缺数据见本批proposal.md/report.md。本行只追加追溯，不新增claim/evidence/支持反例计数，不改变首证/prior/status/version/effect；无源码实现、合入或shipped。"
+          }
+        },
+        {
+          "offset": 23516252,
+          "bytes": 947,
+          "sha256": "6dfffb753eb02b64bdb6b97e0dd631fb36df250373072aedbfc0fee276c269ec",
+          "row": {
+            "op": "update",
+            "id": "silent-0198",
+            "ts": "2026-10-17T23:18:14+08:00",
+            "by": "learner:strategy-proposal",
+            "where": {
+              "proposal": [
+                "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-230028-s2/learner/runs/20261017-230034-62723a14-7bc8-40eb-82c1-14da3edbe02c-strategy-proposal/proposal.md",
+                "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-230028-s2/learner/runs/20261017-230034-62723a14-7bc8-40eb-82c1-14da3edbe02c-strategy-proposal/report.md"
+              ]
+            },
+            "note": "20261017-230028-s2-strategy-proposal：仅复核已领取原提案silent-proposal-47910f82a1fdd98f，处置均waiting；十五局八流19929原行逐offset/bytes/SHA/显式身份核回，16材料检查满足；实际live祖先只覆盖子项，完整缺数据见本批proposal.md/report.md。本行只追加追溯，不新增claim/evidence/支持反例计数，不改变首证/prior/status/version/effect；无源码实现、合入或shipped。"
+          }
+        },
+        {
+          "offset": 23517199,
+          "bytes": 980,
+          "sha256": "d5eb4ee3e68847e44cc49a1625dedaa9dbd778471881b6893dcaab73d497275b",
+          "row": {
+            "op": "update",
+            "id": "silent-0228",
+            "ts": "2026-10-17T23:18:14+08:00",
+            "by": "learner:strategy-proposal",
+            "where": {
+              "proposal": [
+                "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-230028-s2/learner/runs/20261017-230034-62723a14-7bc8-40eb-82c1-14da3edbe02c-strategy-proposal/proposal.md",
+                "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-230028-s2/learner/runs/20261017-230034-62723a14-7bc8-40eb-82c1-14da3edbe02c-strategy-proposal/report.md"
+              ]
+            },
+            "note": "20261017-230028-s2-strategy-proposal：仅复核已领取原提案silent-proposal-92920295a648b540,silent-proposal-47910f82a1fdd98f，处置均waiting；十五局八流19929原行逐offset/bytes/SHA/显式身份核回，16材料检查满足；实际live祖先只覆盖子项，完整缺数据见本批proposal.md/report.md。本行只追加追溯，不新增claim/evidence/支持反例计数，不改变首证/prior/status/version/effect；无源码实现、合入或shipped。"
+          }
+        },
+        {
+          "offset": 23518179,
+          "bytes": 980,
+          "sha256": "f48bd78e7c410c0e96e151c866657d38344c63d56f5da4709a680d9c545fdff2",
+          "row": {
+            "op": "update",
+            "id": "silent-0253",
+            "ts": "2026-10-17T23:18:14+08:00",
+            "by": "learner:strategy-proposal",
+            "where": {
+              "proposal": [
+                "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-230028-s2/learner/runs/20261017-230034-62723a14-7bc8-40eb-82c1-14da3edbe02c-strategy-proposal/proposal.md",
+                "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-230028-s2/learner/runs/20261017-230034-62723a14-7bc8-40eb-82c1-14da3edbe02c-strategy-proposal/report.md"
+              ]
+            },
+            "note": "20261017-230028-s2-strategy-proposal：仅复核已领取原提案silent-proposal-f1374df72d8e6a25,silent-proposal-38a49e6c97f31eea，处置均waiting；十五局八流19929原行逐offset/bytes/SHA/显式身份核回，16材料检查满足；实际live祖先只覆盖子项，完整缺数据见本批proposal.md/report.md。本行只追加追溯，不新增claim/evidence/支持反例计数，不改变首证/prior/status/version/effect；无源码实现、合入或shipped。"
+          }
+        },
+        {
+          "offset": 23519159,
+          "bytes": 980,
+          "sha256": "8027e854e06b5b7a5fc466139d284d713f7e7bcf18e6d1901c7ebac699522c4c",
+          "row": {
+            "op": "update",
+            "id": "silent-0255",
+            "ts": "2026-10-17T23:18:14+08:00",
+            "by": "learner:strategy-proposal",
+            "where": {
+              "proposal": [
+                "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-230028-s2/learner/runs/20261017-230034-62723a14-7bc8-40eb-82c1-14da3edbe02c-strategy-proposal/proposal.md",
+                "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-230028-s2/learner/runs/20261017-230034-62723a14-7bc8-40eb-82c1-14da3edbe02c-strategy-proposal/report.md"
+              ]
+            },
+            "note": "20261017-230028-s2-strategy-proposal：仅复核已领取原提案silent-proposal-92920295a648b540,silent-proposal-47910f82a1fdd98f，处置均waiting；十五局八流19929原行逐offset/bytes/SHA/显式身份核回，16材料检查满足；实际live祖先只覆盖子项，完整缺数据见本批proposal.md/report.md。本行只追加追溯，不新增claim/evidence/支持反例计数，不改变首证/prior/status/version/effect；无源码实现、合入或shipped。"
+          }
+        },
+        {
+          "offset": 23520139,
+          "bytes": 947,
+          "sha256": "acb60fbbfd88821a57f843f26a1fe1f342d537edb5a2020783b12117b0b23485",
+          "row": {
+            "op": "update",
+            "id": "silent-0257",
+            "ts": "2026-10-17T23:18:14+08:00",
+            "by": "learner:strategy-proposal",
+            "where": {
+              "proposal": [
+                "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-230028-s2/learner/runs/20261017-230034-62723a14-7bc8-40eb-82c1-14da3edbe02c-strategy-proposal/proposal.md",
+                "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-230028-s2/learner/runs/20261017-230034-62723a14-7bc8-40eb-82c1-14da3edbe02c-strategy-proposal/report.md"
+              ]
+            },
+            "note": "20261017-230028-s2-strategy-proposal：仅复核已领取原提案silent-proposal-a099e89437e942bb，处置均waiting；十五局八流19929原行逐offset/bytes/SHA/显式身份核回，16材料检查满足；实际live祖先只覆盖子项，完整缺数据见本批proposal.md/report.md。本行只追加追溯，不新增claim/evidence/支持反例计数，不改变首证/prior/status/version/effect；无源码实现、合入或shipped。"
+          }
+        },
+        {
+          "offset": 23521086,
+          "bytes": 947,
+          "sha256": "143d00e33ce50fba9f3cba9217fde770d30b9b9cdd2a9a717e9f9a892cd73ef9",
+          "row": {
+            "op": "update",
+            "id": "silent-0258",
+            "ts": "2026-10-17T23:18:14+08:00",
+            "by": "learner:strategy-proposal",
+            "where": {
+              "proposal": [
+                "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-230028-s2/learner/runs/20261017-230034-62723a14-7bc8-40eb-82c1-14da3edbe02c-strategy-proposal/proposal.md",
+                "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-230028-s2/learner/runs/20261017-230034-62723a14-7bc8-40eb-82c1-14da3edbe02c-strategy-proposal/report.md"
+              ]
+            },
+            "note": "20261017-230028-s2-strategy-proposal：仅复核已领取原提案silent-proposal-a099e89437e942bb，处置均waiting；十五局八流19929原行逐offset/bytes/SHA/显式身份核回，16材料检查满足；实际live祖先只覆盖子项，完整缺数据见本批proposal.md/report.md。本行只追加追溯，不新增claim/evidence/支持反例计数，不改变首证/prior/status/version/effect；无源码实现、合入或shipped。"
+          }
+        },
+        {
+          "offset": 23522033,
+          "bytes": 947,
+          "sha256": "d1f40556941f98dfea56a749908309da871115a2b28577a39cfaa7894bc19129",
+          "row": {
+            "op": "update",
+            "id": "silent-0259",
+            "ts": "2026-10-17T23:18:14+08:00",
+            "by": "learner:strategy-proposal",
+            "where": {
+              "proposal": [
+                "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-230028-s2/learner/runs/20261017-230034-62723a14-7bc8-40eb-82c1-14da3edbe02c-strategy-proposal/proposal.md",
+                "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-230028-s2/learner/runs/20261017-230034-62723a14-7bc8-40eb-82c1-14da3edbe02c-strategy-proposal/report.md"
+              ]
+            },
+            "note": "20261017-230028-s2-strategy-proposal：仅复核已领取原提案silent-proposal-38a49e6c97f31eea，处置均waiting；十五局八流19929原行逐offset/bytes/SHA/显式身份核回，16材料检查满足；实际live祖先只覆盖子项，完整缺数据见本批proposal.md/report.md。本行只追加追溯，不新增claim/evidence/支持反例计数，不改变首证/prior/status/version/effect；无源码实现、合入或shipped。"
+          }
+        },
+        {
+          "offset": 23522980,
+          "bytes": 947,
+          "sha256": "b17b937801ad48ca719a4f2d9abd487f65b8168dce9da9c6d02125f84fa7f943",
+          "row": {
+            "op": "update",
+            "id": "silent-0261",
+            "ts": "2026-10-17T23:18:14+08:00",
+            "by": "learner:strategy-proposal",
+            "where": {
+              "proposal": [
+                "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-230028-s2/learner/runs/20261017-230034-62723a14-7bc8-40eb-82c1-14da3edbe02c-strategy-proposal/proposal.md",
+                "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-230028-s2/learner/runs/20261017-230034-62723a14-7bc8-40eb-82c1-14da3edbe02c-strategy-proposal/report.md"
+              ]
+            },
+            "note": "20261017-230028-s2-strategy-proposal：仅复核已领取原提案silent-proposal-38a49e6c97f31eea，处置均waiting；十五局八流19929原行逐offset/bytes/SHA/显式身份核回，16材料检查满足；实际live祖先只覆盖子项，完整缺数据见本批proposal.md/report.md。本行只追加追溯，不新增claim/evidence/支持反例计数，不改变首证/prior/status/version/effect；无源码实现、合入或shipped。"
+          }
+        },
+        {
+          "offset": 23523927,
+          "bytes": 947,
+          "sha256": "6a3c168915e2773e197cb3ba0169a1f97bc64d108c16302d93adfd1d4f97f7f7",
+          "row": {
+            "op": "update",
+            "id": "silent-0262",
+            "ts": "2026-10-17T23:18:14+08:00",
+            "by": "learner:strategy-proposal",
+            "where": {
+              "proposal": [
+                "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-230028-s2/learner/runs/20261017-230034-62723a14-7bc8-40eb-82c1-14da3edbe02c-strategy-proposal/proposal.md",
+                "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-230028-s2/learner/runs/20261017-230034-62723a14-7bc8-40eb-82c1-14da3edbe02c-strategy-proposal/report.md"
+              ]
+            },
+            "note": "20261017-230028-s2-strategy-proposal：仅复核已领取原提案silent-proposal-38a49e6c97f31eea，处置均waiting；十五局八流19929原行逐offset/bytes/SHA/显式身份核回，16材料检查满足；实际live祖先只覆盖子项，完整缺数据见本批proposal.md/report.md。本行只追加追溯，不新增claim/evidence/支持反例计数，不改变首证/prior/status/version/effect；无源码实现、合入或shipped。"
+          }
+        },
+        {
+          "offset": 23524874,
+          "bytes": 947,
+          "sha256": "83a537e9c49b3a4bb44469d53ecee1512bfbfefc2abdb7ecccf7e4274d12a40d",
+          "row": {
+            "op": "update",
+            "id": "silent-0264",
+            "ts": "2026-10-17T23:18:14+08:00",
+            "by": "learner:strategy-proposal",
+            "where": {
+              "proposal": [
+                "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-230028-s2/learner/runs/20261017-230034-62723a14-7bc8-40eb-82c1-14da3edbe02c-strategy-proposal/proposal.md",
+                "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-230028-s2/learner/runs/20261017-230034-62723a14-7bc8-40eb-82c1-14da3edbe02c-strategy-proposal/report.md"
+              ]
+            },
+            "note": "20261017-230028-s2-strategy-proposal：仅复核已领取原提案silent-proposal-04b6b430759815ed，处置均waiting；十五局八流19929原行逐offset/bytes/SHA/显式身份核回，16材料检查满足；实际live祖先只覆盖子项，完整缺数据见本批proposal.md/report.md。本行只追加追溯，不新增claim/evidence/支持反例计数，不改变首证/prior/status/version/effect；无源码实现、合入或shipped。"
+          }
+        },
+        {
+          "offset": 23525821,
+          "bytes": 947,
+          "sha256": "0ed81ba3dfa86170c3b9b77c588c3c93bd78a7fcfbbc8338631a0dd6ca322699",
+          "row": {
+            "op": "update",
+            "id": "silent-0265",
+            "ts": "2026-10-17T23:18:14+08:00",
+            "by": "learner:strategy-proposal",
+            "where": {
+              "proposal": [
+                "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-230028-s2/learner/runs/20261017-230034-62723a14-7bc8-40eb-82c1-14da3edbe02c-strategy-proposal/proposal.md",
+                "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-230028-s2/learner/runs/20261017-230034-62723a14-7bc8-40eb-82c1-14da3edbe02c-strategy-proposal/report.md"
+              ]
+            },
+            "note": "20261017-230028-s2-strategy-proposal：仅复核已领取原提案silent-proposal-04b6b430759815ed，处置均waiting；十五局八流19929原行逐offset/bytes/SHA/显式身份核回，16材料检查满足；实际live祖先只覆盖子项，完整缺数据见本批proposal.md/report.md。本行只追加追溯，不新增claim/evidence/支持反例计数，不改变首证/prior/status/version/effect；无源码实现、合入或shipped。"
+          }
+        }
+      ],
+      "proposal_dispositions": [
+        {
+          "id": "silent-proposal-08eaa60bcc449852",
+          "offset": 4398973,
+          "bytes": 683,
+          "sha256": "c76dedc6db30de5165172c42cd6eef0bec7d3acad42e3a7fd79ac9013225a417"
+        },
+        {
+          "id": "silent-proposal-92920295a648b540",
+          "offset": 4399656,
+          "bytes": 649,
+          "sha256": "a77304d8a385d439407eec415554cd02ed727d43affbd3c5cdfd5f47e285ff9e"
+        },
+        {
+          "id": "silent-proposal-a327449c331efbc1",
+          "offset": 4400305,
+          "bytes": 662,
+          "sha256": "556761f2e382adadd65f6221bc941d1a50d8e81d9950144cf47eeaedcb5dfcb5"
+        },
+        {
+          "id": "silent-proposal-a099e89437e942bb",
+          "offset": 4400967,
+          "bytes": 680,
+          "sha256": "10060159eb2d09461c8b568d505a6e12950af9588db0c952215bb724396fabc5"
+        },
+        {
+          "id": "silent-proposal-47910f82a1fdd98f",
+          "offset": 4401647,
+          "bytes": 661,
+          "sha256": "8df991116fc9f07920701d3fa3e37c30304eba4fbe130c9643f591bc6bbfd354"
+        },
+        {
+          "id": "silent-proposal-f1374df72d8e6a25",
+          "offset": 4402308,
+          "bytes": 676,
+          "sha256": "89dc22ccc3b4192d827c1056218b7fb2493b4e2f9c48dbd8cbb1073bf54285db"
+        },
+        {
+          "id": "silent-proposal-38a49e6c97f31eea",
+          "offset": 4402984,
+          "bytes": 683,
+          "sha256": "17e35f859f9a8abced94bce29a73d4eb3e3128f3172ce9ba6f7c0e7d9783869e"
+        },
+        {
+          "id": "silent-proposal-ef0e38a5dbd3bc07",
+          "offset": 4403667,
+          "bytes": 677,
+          "sha256": "9727fe78e5c063ebdb0841ddee86e6bc8e13dc7e3543cbac78cb2136ac1689f8"
+        },
+        {
+          "id": "silent-proposal-7f820c02d39bfaea",
+          "offset": 4404344,
+          "bytes": 691,
+          "sha256": "e24ff2ddc7b5821a8d329873598a7070be4a571f02b34ba1d92cb38b3bd8d592"
+        },
+        {
+          "id": "silent-proposal-04b6b430759815ed",
+          "offset": 4405035,
+          "bytes": 707,
+          "sha256": "0f22286a9dc8b8b1576efb26e92ce39e534dcb36c97ee7fd8c84f61ea2eb0e4a"
+        }
+      ],
+      "no_ops_model_simulation_consumer_or_source_test": true
+    }
+  ],
+  "unique_original_log_references_verified": 19929,
+  "original_failure_history_and_scopes_retained": true
+}

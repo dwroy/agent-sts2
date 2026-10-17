@@ -1,0 +1,54 @@
+from pathlib import Path
+import importlib.util, json, os, shutil, subprocess, sys
+sys.dont_write_bytecode = True
+r = Path.cwd()
+p = r / 'ops/codex-ops/record-staging/20261017-0313'
+sys.path.insert(0, str(r / 'ops'))
+import learner_retention as retention
+import worktree_retention as workspaces
+retention.require_host_process_view()
+rows = json.loads((p / 'duplicate-scan-candidates.json').read_text())
+result = dict(at=retention.stamp(), free_before=shutil.disk_usage(r).free, results=[], retained=[])
+for row in rows:
+    if len(result['results']) >= 4:
+        break
+    folder = r / row['dir']
+    if not folder.exists():
+        continue
+    try:
+        record = retention.load(folder.parent / 'commit-readback.json')
+        assert record['commit'] == row['commit'] and record['gitleaks'] == 0
+        assert retention.load(folder.parent / 'records-gitleaks.json') == []
+        assert retention.ancestor(r, row['commit'])
+        assert not workspaces.active(folder, ignore_pid=os.getpid())
+        files = retention.files_under(r, folder)
+        assert files and folder.name == 'record-scan'
+        assert 'record-scan' in (folder.parent / 'seal.py').read_text()
+        base = r / 'ops/codex-ops/retention/storage/completed-ops-scan-copies' / folder.parent.name
+        proof = dict(kind='completed-ops-secret-scan-process-copy', commit=row['commit'],
+            commit_readback=str((folder.parent/'commit-readback.json').relative_to(r)),
+            commit_readback_sha256=retention.sha_file(folder.parent/'commit-readback.json'),
+            original_records_in_git_and_original_inputs_retained=True,
+            no_worktree_or_learner_scratch_originals_selected=True, no_task_state_changed=True)
+        manifest, manifest_path = retention.archive(r, base, folder, files, proof)
+        assert not workspaces.active(folder, ignore_pid=os.getpid())
+        for entry in manifest['files']:
+            f = retention.safe_path(r, entry['path'])
+            assert f.is_relative_to(folder) and retention.sha_file(f) == entry['sha256']
+        for entry in manifest['files']:
+            retention.safe_path(r, entry['path']).unlink()
+        for directory in sorted([x for x in folder.rglob('*') if x.is_dir()], key=lambda x:len(x.parts), reverse=True):
+            directory.rmdir()
+        folder.rmdir()
+        manifest.update(state='process_copies_compressed', reclaimed_at=retention.stamp(),
+            original_records_and_source_archives_retained=True)
+        retention.atomic(manifest_path, manifest)
+        result['results'].append(dict(folder=row['dir'], input_bytes=sum(x['bytes'] for x in manifest['files']),
+            archive_bytes=manifest['archive_bytes'], manifest=str(manifest_path.relative_to(r))))
+    except (AssertionError, ValueError, OSError, subprocess.SubprocessError) as error:
+        result['retained'].append(dict(folder=row['dir'], reason=str(error)))
+result.update(free_after=shutil.disk_usage(r).free, at_finished=retention.stamp())
+result['available_bytes_delta'] = result['free_after'] - result['free_before']
+destination = p / ('scan-reclamation-' + str(len(list(p.glob('scan-reclamation-*.json')))+1) + '.json')
+retention.atomic(destination, result)
+print(json.dumps(result, ensure_ascii=False), flush=True)

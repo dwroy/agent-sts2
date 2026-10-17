@@ -1,0 +1,48 @@
+{
+  "at": "2026-10-16T06:32:15.604054+00:00",
+  "command": [
+    "nice",
+    "-n",
+    "19",
+    "data/logdb-venv/bin/python",
+    "agent/tools/logdb/query.py",
+    "--no-sync",
+    "--json",
+    "--max-rows",
+    "5",
+    "SELECT typeof(ts) AS ts_type, current_setting('TimeZone') AS session_timezone, min(off) FILTER (WHERE ts >= TIMESTAMP '2026-10-13 11:11:41') AS utc_naive_start, min(off) FILTER (WHERE ts >= TIMESTAMPTZ '2026-10-13 11:11:41+00') AS mixed_type_start FROM decisions WHERE off < 1892101838 GROUP BY ALL"
+  ],
+  "rc": 0,
+  "stdout": {
+    "columns": [
+      "ts_type",
+      "session_timezone",
+      "utc_naive_start",
+      "mixed_type_start"
+    ],
+    "types": [
+      "VARCHAR",
+      "VARCHAR",
+      "BIGINT",
+      "BIGINT"
+    ],
+    "rows": [
+      [
+        "TIMESTAMP",
+        "Asia/Shanghai",
+        1222381317,
+        1283926113
+      ]
+    ],
+    "row_count": 1,
+    "truncated": false,
+    "ms": 24
+  },
+  "stderr": "",
+  "diagnosis": "Watcher initial query mixed UTC-naive TIMESTAMP ts with TIMESTAMPTZ literal under Asia/Shanghai; implicit cast shifted filtering by 8h. The no-sync index itself is not proved incomplete. R2 raw JSONL coverage remains valid and unchanged.",
+  "responsibility": "Watcher input-preparation query type error, not a newly established production/logdb bug",
+  "schema_source": "agent/tools/logdb/extract.py:44",
+  "schema_source_sha256": "57fd2d330e4c5ac9d5b284bb4addda240eab246d15abf9ba48e7a5e1b4304545",
+  "original_sql_scope_and_r1_inputs_preserved": true,
+  "r2_forecasts_gate_or_actual_labels_changed": false
+}

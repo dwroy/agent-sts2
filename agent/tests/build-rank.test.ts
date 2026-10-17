@@ -19,14 +19,28 @@ function option(key: string, rows: FightSampleResult[]): OptionSim {
   return { key, samples: rows.length, win, winCal: win, diff: null, bossLeft: 0, hpLossMean: 0, hpLossWon: null,
     turns: 5, deathTurn: null, order: null, hp: 50 };
 }
-function rank(base: FightSampleResult[], variants: Record<string, FightSampleResult[]>, lowTrust: string | null = null) {
+function rank(base: FightSampleResult[], variants: Record<string, FightSampleResult[]>, lowTrust: string | null = null, sSort?: "on" | "shadow") {
   return buildRank(option("base", base), Object.entries(variants).map(([key, rows]) => ({ ...option(key, rows),
     diff: { raw: 0, se: 0, cal: 0, calSe: 0, bossLeft: 0, bossLeftSe: 0, hpLossSe: 0,
       hpLoss: rows.reduce((sum, row) => sum + row.hpLoss, 0) / rows.length - base.reduce((sum, row) => sum + row.hpLoss, 0) / base.length } })),
-    { base, options: new Map(Object.entries(variants)) }, { tieSe: 2, calibratedFloor: .05, lowTrust, calibrate: (p) => p });
+    { base, options: new Map(Object.entries(variants)) }, { tieSe: 2, calibratedFloor: .05, lowTrust, calibrate: (p) => p, ...(sSort ? { sSort } : {}) });
 }
 
 describe("P2 paired construction ranking", () => {
+  it("keeps S calculations and counterfactual groups in shadow without using S for production groups", () => {
+    const result = rank(samples(0, 20), { worse: samples(0, 10), better: samples(0, 80), same: samples(0, 20) }, null, "shadow");
+    expect(result.best_group).toEqual(["worse", "better", "same"]);
+    expect(result.no_difference).toEqual(["worse", "better", "same"]);
+    expect(result.comparisons.every((row) => row.metric === "win")).toBe(true);
+    expect(result.rows.find((row) => row.key === "better")!.delta_s!.mean).toBeCloseTo(.12);
+    expect(result.shadow_s_ranking!.best_group).toEqual(["better"]);
+    expect(result.shadow_s_ranking!.comparisons.some((row) => row.metric === "S")).toBe(true);
+  });
+  it("retains win ordering and the existing HP tie key in S shadow", () => {
+    expect(rank(samples(100, 100, 98), { stable: samples(100, 100, 98), volatile: samples(70, 99, 0) }, null, "shadow").best_group).toEqual(["stable"]);
+    const result = rank(samples(100), { slow: samples(100, 100, 40), preserved: samples(100, 100, 20) }, null, "shadow");
+    expect(result.best_group).toEqual(["preserved"]);
+  });
   it("groups improvements, unchanged options and regressions against the same base", () => {
     const result = rank(samples(50), { better: samples(90), same: samples(50), worse: samples(10) });
     expect(result.best_group).toEqual(["better"]);
@@ -76,7 +90,7 @@ describe("P2 paired construction ranking", () => {
   });
   it("requires actual paired samples and isolates other roles", () => {
     expect(() => rank(samples(100), { short: samples(100).slice(1) })).toThrow("paired");
-    expect(sBuildRankMode("SILENT", {})).toBe("on");
+    expect(sBuildRankMode("SILENT", {})).toBe("shadow");
     expect(sBuildRankMode("SILENT", { S_BUILD_RANK: "shadow" })).toBe("shadow");
     expect(sBuildRankMode("SILENT", { S_BUILD_RANK: "off" })).toBe("off");
     expect(sBuildRankMode("SILENT", { S_BUILD_RANK: "on" })).toBe("on");

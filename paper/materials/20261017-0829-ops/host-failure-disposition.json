@@ -1,0 +1,62 @@
+{
+  "at": "2026-10-17 08:35:32 CST",
+  "batch": "20261017-034302-fix-batch",
+  "original_outer_rc": 124,
+  "original_full_rc": 1,
+  "live": "08e9a15b79882302eb7bfe38e7ddddc2e40b2dbd",
+  "tree": "ac60f339b13dfd5a6ca71efbe8c8d5ec3b80a462",
+  "original_log": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261017-034302-fix-batch.fallback-ac60f339b13dfd5a6ca71efbe8c8d5ec3b80a462.checks.log",
+  "original_log_sha256": "676a783f3800910b9331d18bbe4d92b1875e83e00e843acf40c91ae9f8df1810",
+  "coverage": {
+    "passed": [],
+    "failed": [
+      "tests/batch-i.test.ts",
+      "tests/brain-codex.test.ts",
+      "tests/learner-check-continuation.test.ts",
+      "tests/silent-apotheosis-reference.test.ts"
+    ],
+    "skipped": [],
+    "summary": {
+      "files": {
+        "failed": 4,
+        "passed": 509
+      },
+      "tests": {
+        "failed": 7,
+        "passed": 5077,
+        "skipped": 2
+      }
+    },
+    "failed_tests": {
+      "tests/batch-i.test.ts": [
+        "2. Red Skull (+3 Strength at or below half HP) and Self-Forming Clay (3 block next turn per HP loss) in the solver and the rollout (VTREB5A9XWS7 F33, V6TW9MJ385P2 F33) logged boards: the relics reach the solver (VTRE F33 T5 at 46/80: Offering then Strike gets Red Skull's 3; V6TW F33 T2: Clay's owed 3)"
+      ],
+      "tests/brain-codex.test.ts": [
+        "codex runs watched: retries, stalls, timeouts and their trace a retry notice is not a failure: the answer after it is taken, and the trace keeps the notice",
+        "codex runs watched: retries, stalls, timeouts and their trace after the first token, a stream silent for BRAIN_CODEX_STALL_MS is killed and asked once more; the second run's answer is taken",
+        "codex runs watched: retries, stalls, timeouts and their trace stalled twice: the question fails as a timeout and the fallback answers it",
+        "codex runs watched: retries, stalls, timeouts and their trace the router's timeout leaves the evidence: what the stream had sent, and its stderr with credentials masked"
+      ],
+      "tests/learner-check-continuation.test.ts": [
+        "retains long parameterized failure names in an exact bounded host supplement"
+      ],
+      "tests/silent-apotheosis-reference.test.ts": [
+        "bounds F45's real potion forecast work with 0 ms host pauses"
+      ]
+    }
+  },
+  "observed_failures": [
+    "batch-i logged-board original30s timeout",
+    "brain-codex retry notice original15s timeout",
+    "brain-codex stall strings expect first token0s but record2s/1s",
+    "brain-codex router aborted before start instead of after under original1.5s cancellation",
+    "learner-check-continuation fixed Python wrapper spawnSync8s ETIMEDOUT",
+    "silent-apotheosis-reference parameter0ms original15s timeout"
+  ],
+  "decision": "Retain the four already published offline tool/test repairs; rerun only these seven original failed cases with existing fixed assertions/deadlines through original pinned learner-recheck continuation. No production regression established; timing root cause remains unknown.",
+  "independent_original_tsc_exit_not_persisted": true,
+  "original_test_limits_inputs_and_assertions_unchanged": true,
+  "no_repeat_full_or_source_or_rollback": true,
+  "full1_not_replaced_by_selected_result": true,
+  "current_DC32_not_restarted_and_F48_slow_compute_not_stall": true
+}

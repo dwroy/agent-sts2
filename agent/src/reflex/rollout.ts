@@ -485,6 +485,8 @@ export interface EnemyMove {
    * average over the logged facings, which the whole fight must not scale by the back attack's 1.5 again.
    */
   faceDamage?: number;
+  /** Exact character/ascension contexts attached by the board adapter from actual Silent evidence. */
+  observedWeak?: { strength: number; playerVulnerable: boolean; scale: 0.6 }[];
   /** Whole fights only (B4): the Sandpit count the move starts on its user (the Insatiable's Liquify Ground: 4). */
   sandpit?: number;
   /**
@@ -632,6 +634,8 @@ export interface RolloutInput {
   captureResources?: boolean;
   /** Silent A10 CA5KE8GFJ9X2 F9 T2-T4: the observed Gardener's Skittish returns on later turns. */
   observedGardenerSkittish?: boolean;
+  /** Observed Silent A10 Test Subject phase power sets; whole-fight scripts only. */
+  observedSilentTestSubjectPhasePowers?: boolean;
   /** Fresh second-fight starts from observed identities, weighted without revealing this run's future boss. */
   continuation?: {
     variants: { boss: string; count: number; input: RolloutInput }[];
@@ -1349,6 +1353,8 @@ interface Piles {
 
 /** One sample's trajectory: per simulated turn, the HP lost that turn and the end-of-our-turn snapshot. */
 export interface TurnRecord {
+  /** Only continuous-fight diagnostics consume this; never used by the policy or the result's score. */
+  resourceAudit?: { startHp: number; steps: Plan["steps"]; outcome: Plan["outcome"]; wonBeforeResources: boolean; hpAfterResources: number };
   receivedHpDamage?: number | null;
   /** Same-window HP removed, including applied retaliation and a terminal start-of-turn carry. */
   outgoingHpDamage?: number;
@@ -1387,7 +1393,10 @@ export interface TurnRecord {
 
 function moveAttack(enemy: SimEnemy, table: EnemyTable | undefined, move: string | null, playerVulnerable: boolean, fight: { fullFight: boolean; faced: boolean } = { fullFight: false, faced: false }): { damage: number; hits: number }[] {
   const m = move && table ? table.moves[move] : undefined;
-  const scale = (enemy.weak > 0 ? 0.75 : 1) * (enemy.shrink > 0 ? SHRINK_DAMAGE_FACTOR : 1) * (playerVulnerable ? 1.5 : 1);
+  const measured = enemy.vigor === 0 && enemy.shrink === 0
+    ? m?.observedWeak?.find((point) => point.strength === enemy.strength && point.playerVulnerable === playerVulnerable)?.scale
+    : undefined;
+  const scale = (enemy.weak > 0 ? measured ?? 0.75 : 1) * (enemy.shrink > 0 ? SHRINK_DAMAGE_FACTOR : 1) * (playerVulnerable ? 1.5 : 1);
   if (!m) return enemy.shown.map((a) => ({ damage: Math.floor((a.damage / (enemy.shownScale ?? 1)) * scale), hits: a.hits }));
   if (m.damage <= 0) return [];
   // A whole fight's growing move (Multi Claw): a hit more for each earlier use in this phase; the Pressure Gun's hit grows.
@@ -1730,6 +1739,13 @@ function enemyDown(e: SimEnemy, turn: number, input: RolloutInput, enemies: SimE
     // once and the fight "ended"; phase 2 had 212 and a phase 3 followed).
     const later = e.phasesLeft ?? laterPhaseHps(e.maxHp, input.meta.asc);
     const next = later[0] ?? e.maxHp;
+    // JMH5 F48 T4->T5 / T7->T8, UJ0K T5->T6 and YZWV T5->T6 / T8->T9:
+    // the next phase replaces Enrage with Painful Stabs, then drops Painful Stabs.
+    // Only the observed Silent A10 HP/power signatures enter this whole-fight correction.
+    const observedPhasePowers = fullFight && input.observedSilentTestSubjectPhasePowers === true &&
+      input.meta.asc === 10 && e.id === "TEST_SUBJECT" &&
+      ((e.maxHp === 111 && next === 212 && e.base.enrage === 3 && (e.base.woundsPerHit ?? 0) === 0) ||
+        (e.maxHp === 212 && next === 313 && e.base.enrage === 0 && e.base.woundsPerHit === 1));
     e.phasesLeft = later.slice(1);
     e.hp = next;
     e.maxHp = next;
@@ -1750,6 +1766,11 @@ function enemyDown(e: SimEnemy, turn: number, input: RolloutInput, enemies: SimE
       }
     }
     e.base = { ...e.base, hp: next, maxHp: next, revives: e.phasesLeft.length > 0 };
+    if (observedPhasePowers) {
+      const { ENRAGE_POWER: _enrage, PAINFUL_STABS_POWER: _stabs, ...powers } = e.powers;
+      e.powers = { ...powers, ...(next === 212 ? { PAINFUL_STABS_POWER: 1 } : {}) };
+      e.base = { ...e.base, enrage: 0, woundsPerHit: next === 212 ? 1 : 0 };
+    }
     // A whole fight: the next phase's own moves, from its first (Multi Claw at phase 2, Lacerate at phase 3).
     const phases = PHASE_MOVES[e.id];
     if (fullFight && phases) {
@@ -2199,6 +2220,11 @@ function applyPlan(
     player.dexterity += o.kunaiDexterityGained;
     playerPowers["DEXTERITY_POWER"] = (playerPowers["DEXTERITY_POWER"] ?? 0) + o.kunaiDexterityGained;
   }
+  if (o.helicalDexterityGained) {
+    player.dexterity += o.helicalDexterityGained;
+    player.tempDexterity += o.helicalDexterityGained;
+    playerPowers["HELICAL_DART_POWER"] = (playerPowers["HELICAL_DART_POWER"] ?? 0) + o.helicalDexterityGained;
+  }
   player.freeAttacks = o.freeAttacksLeft ?? 0;
   if (player.penNib !== undefined) player.penNib = (player.penNib + (o.attackPlays ?? 0)) % PEN_NIB_EVERY;
   if (o.tuningForkCount !== undefined) player.tuningForkCount = o.tuningForkCount;
@@ -2308,11 +2334,13 @@ function applyPlan(
   player.tempStrength = 0;
   player.tempDexterity = 0;
   delete playerPowers["ANTICIPATE_POWER"];
+  if (input.solver.player.helicalDart) delete playerPowers["HELICAL_DART_POWER"];
   // The observed Shadow Step bonus starts after this turn and lasts through the next one only.
   player.doubleDamage = player.doubleDamageNext;
   player.doubleDamageNext = false;
   const allDown = () => enemies.every((e) => !e.alive || e.base.illusion === true || (e.base.minion === true && enemies.some((x) => !x.base.minion && !x.alive)));
   let won = o.winsFight || allDown();
+  const wonBeforeResources = won;
   // The enemy turn: HP from the outcome; enemies gain their move's Strength and Block, debuffs wear off, next move.
   // A revive the line spent (Fairy in a Bottle, Lizard Tail): we go on at its HP, and it is gone for the sample
   // (a Fairy leaves the belt).
@@ -2548,6 +2576,8 @@ function applyPlan(
   const gone = input.escapes ? enemies.filter((e) => e.gone).map((e) => e.index) : [];
   return {
     loss: startHp - player.hp + (o.revived?.reviveHp ?? 0),
+    ...(fullFight && input.continuation ? { resourceAudit: { startHp, steps: plan.steps, outcome: o,
+      wonBeforeResources, hpAfterResources: player.hp } } : {}),
     ...(input.captureResources || input.continuation || input.solver.continuationValue ? { resources: { hp: player.hp, revives: player.revives.slice(), drunkKeys: plan.steps.filter(isPotion).map((step) => step.cardId) } } : {}),
     enemyPart: o.incomingAfterBlock,
     ...(input.captureBossMargin ? { receivedHpDamage: o.receivedHpDamage ?? null,
@@ -2706,7 +2736,7 @@ function simulate(
     constrict: input.playerPowers["CONSTRICT_POWER"] ?? 0,
     // Tender's -1 a card played so far this turn is temporary too (logged Strength 6, 5, 4, 3 over a turn, 6 again next).
     tempStrength: sumOf(input.playerPowers, TEMP_STRENGTH_POWERS) - (base.tender ?? 0) * (s.cardsPlayedThisTurn ?? 0),
-    tempDexterity: sumOf(input.playerPowers, TEMP_DEXTERITY_POWERS) - (base.tender ?? 0) * (s.cardsPlayedThisTurn ?? 0),
+    tempDexterity: sumOf(input.playerPowers, TEMP_DEXTERITY_POWERS) + (base.helicalDart?.temporary ?? 0) - (base.tender ?? 0) * (s.cardsPlayedThisTurn ?? 0),
     tender: input.playerPowers["TENDER_POWER"] ?? base.tender ?? 0,
     smoggy: (input.playerPowers["SMOGGY_POWER"] ?? 0) > 0,
     tangledNext: 0,
@@ -3037,6 +3067,7 @@ function simulate(
       // Shuriken: a new turn, the count starts again (the Strength it gave is in player.strength already).
       ...(base.shuriken ? { shuriken: { ...base.shuriken, count: 0 } } : {}),
       ...(base.kunai ? { kunai: { count: 0 } } : {}),
+      ...(base.helicalDart ? { helicalDart: { temporary: 0 } } : {}),
       // Music Box: a new turn, its first Attack card makes a copy again.
       ...(base.musicBox ? { musicBox: { count: 0 } } : {}),
       // Throwing Axe: the fight's first card was the decision turn's.

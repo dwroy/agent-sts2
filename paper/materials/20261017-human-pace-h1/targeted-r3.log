@@ -1,0 +1,158 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/human-pace-h1-20261017/agent
+
+(node:3168731) PromiseRejectionHandledWarning: Promise rejection was handled asynchronously (rejection id: 3)
+(Use `node --trace-warnings ...` to show where the warning was created)
+stderr | tests/computation-failure-loop.test.ts > dispatches exactly once after two required runner failures and a failed degraded attempt
+H1_C1_DEBUG {"called":1,"payload":{"run_brief":{"character":"铁甲战士","act":"1","floor":5,"hp":"54/91 (59%)","gold":114,"ascension":9,"deck":"12 cards | 7 attacks / 4 skills / 0 powers | 1 curses/statuses | avg cost 0.92","relics":["燃烧之血","营养牡蛎"],"relic_effects":["燃烧之血: 在战斗结束时，回复6点生命。","营养牡蛎: 拾起时，将你的最大生命值提升?(数值未知)。"],"potions":[],"notes":[],"relic_effects_note":"?(数值未知) marks a value the mod does not expose; the effect text around it is accurate"},"deck_stats":"12 cards | 7 attacks / 4 skills / 0 powers | 1 curses/statuses | avg cost 0.92","deck":"打击 (Attack, 1E): 造成6点伤害。\n打击 (Attack, 1E): 造成6点伤害。\n打击 (Attack, 1E): 造成6点伤害。\n打击 (Attack, 1E): 造成6点伤害。\n防御 (Skill, 1E): 获得5点格挡。\n防御 (Skill, 1E): 获得5点格挡。\n防御 (Skill, 1E): 获得5点格挡。\n防御 (Skill, 1E): 获得5点格挡。\n痛击 (Attack, 2E): 造成8点伤害。 给予2层易伤。\n进阶之灾 (Curse, -1E): 不能被打出。 虚无。 永恒。\n双重打击 (Attack, 1E): 造成5点伤害两次。\n剑柄打击 (Attack, 1E): 造成9点伤害。 抽1张牌。","facts":{"act":1,"floor":5,"floors_to_act_boss":12,"ascension":9,"hp":"54/91 (59%)","gold":114,"act_boss":"SOUL_FYSH_BOSS","deck_size":12,"deck_profile":"12 张 (攻击 7/技能 4/能力 0/诅咒或状态 1) | 升级 0 | 平均费用 0.92 | 力量来源 无（牌面或遗物文字写明获得持续的力量）","deck":["4x STRIKE_IRONCLAD 打击 (Attack, 1 energy): 造成6点伤害。","4x DEFEND_IRONCLAD 防御 (Skill, 1 energy): 获得5点格挡。","BASH 痛击 (Attack, 2 energy): 造成8点伤害。 给予2层易伤。","ASCENDERS_BANE 进阶之灾 (Curse, -1 energy): 不能被打出。 虚无。 永恒。","TWIN_STRIKE 双重打击 (Attack, 1 energy): 造成5点伤害两次。","POMMEL_STRIKE 剑柄打击 (Attack, 1 energy): 造成9点伤害。 抽1张牌。"],"relics":["燃烧之血: 在战斗结束时，回复6点生命。","营养牡蛎: 拾起时，将你的最大生命值提升?(数值未知)。"],"potions":[],"potion_slots":"0/2 used","act_boss_clock":{"boss":"SOUL_FYSH","boss_hp":70,"boss_hp_note":"数据库本体血量；不含回血或格挡，未观测时未知。各敌人的进阶与样本见 boss_enemies。","boss_hp_parts":["SOUL_FYSH"],"boss_enemies":[{"enemy":"SOUL_FYSH","hp":70,"hp_samples":10,"hp_from_ascension":8,"hp_estimated":true,"attacks":[{"move":"BITE_MOVE","per_hit":9,"hits":1,"basis":"base","samples":10,"from_ascension":8,"estimated":true,"scaled_through_ascension":8}]}],"boss_enemy_note":"攻击是当前进阶的数据库参考，base 为基础伤害，shown 为含当时增减益的现场伤害；借用其他进阶时标 estimated。不是逐回合预测或玩家掉血；击杀顺序、回血、格挡及构筑取舍仍由大脑结合本角色经验判断。","deck_damage_per_turn_estimate":null,"hp_loss_per_turn":null,"survivable_turns":null,"gap_per_turn":null,"estimate_note":"尚无 silent 的 boss 时钟校准；构筑输出、掉血和存活回合未知。"},"act_boss_sim":"不完整（故障降级，n=0）：出错：the planner built no board for the synthetic boss frame；本题不给模拟数字，按现有其他证据继续决策","your_run_plan":null,"run_constraints":{"id":"roy-20261013-v5-no-deck-cap","max_permanent_cards":null,"activation":"V5: Roy removed the fixed permanent deck-size limit","requirement":"V5没有固定牌数上限。按核心兑现、稀释、伤害/回合、升级替代及过渡存活权衡拿牌、跳牌和删牌；牌数不是目标，也不因达到30张而禁止获取。"},"unknown_value_note":"?(数值未知) marks a number the mod does not expose; the text around it is accurate","outcome_stats_basis":"outcome_stats / card_outcome_stats / option_outcome_stats = A9 数据：src/knowledge/outcome-stats.json（日志自动统计，tools/build-outcome-stats.py，生成于 2026-10-10T08:30:30，A9 共 3 局；每个进阶分开统计）；没有记录的写「无数据」。口径：n = 局数（n<5 标「少」）；过本幕boss = 这些局里打过「做这个选择时所在那一幕」boss 的比例；均终层 = 这些局的平均最终层数。卡牌「拿了」= 这一幕里牌组多了这张牌（奖励、商店、事件都算），「给了没拿」= 这一幕的卡牌奖励里给过、这一幕没拿；遗物 = 这一幕获得；事件选项 = 选了这个选项（到下一层第一次决策时的平均 HP/上限/金币变化）；休息点 = 按到达时的 HP 档。观察数据：混有「在什么局面下做这个选择」的因素，不是因果。基线（A9 全部 3 局）：到达第1幕的局过第1幕boss 100% (n=3)，到达第2幕的局过第2幕boss 67% (n=3)，到达第3幕的局过第3幕boss 50% (n=2)。A9 的一行不足5局、而 A8 的同一行够5局时，后面括号里另附那一行，标明进阶（另算，不与 A9 的合并）；A8 基线（全部 1 局）：到达第1幕的局过第1幕boss 100% (n=1)，到达第2幕的局过第2幕boss 100% (n=1)，到达第3幕的局过第3幕boss 100% (n=1)。","construction_evaluation":{"schema":"construction-evaluation-v1","character":"silent","run":"XLJQ6FPQAU7N","floor":5,"label":"reward/card","coreCatalog":[],"simulationStatus":"unavailable","boss":null,"simulationSamples":null,"simulationError":"出错：the planner built no board for the synthetic boss frame","options":{"current":{"inventory":{"cards":12,"upgraded":0,"gold":114,"hp":54,"maxHp":91},"inventoryDelta":{"cards":0,"upgraded":0,"gold":0,"hp":0,"maxHp":0},"unavailableReason":"本题该候选没有通过原模拟样本门槛的结果","fight":null},"card0":{"inventory":{"cards":13,"upgraded":0,"gold":114,"hp":54,"maxHp":91},"inventoryDelta":{"cards":1,"upgraded":0,"gold":0,"hp":0,"maxHp":0},"unavailableReason":"本题该候选没有通过原模拟样本门槛的结果","fight":null},"card1":{"inventory":{"cards":13,"upgraded":0,"gold":114,"hp":54,"maxHp":91},"inventoryDelta":{"cards":1,"upgraded":0,"gold":0,"hp":0,"maxHp":0},"unavailableReason":"本题该候选没有通过原模拟样本门槛的结果","fight":null},"card2":{"inventory":{"cards":13,"upgraded":0,"gold":114,"hp":54,"maxHp":91},"inventoryDelta":{"cards":1,"upgraded":0,"gold":0,"hp":0,"maxHp":0},"unavailableReason":"本题该候选没有通过原模拟样本门槛的结果","fight":null},"skip":{"inventory":{"cards":12,"upgraded":0,"gold":114,"hp":54,"maxHp":91},"inventoryDelta":{"cards":0,"upgraded":0,"gold":0,"hp":0,"maxHp":0},"unavailableReason":"本题该候选没有通过原模拟样本门槛的结果","fight":null}},"limits":"复用本题既有boss条件模拟，不新增整战或未来路线模拟；升级、拿牌、删牌的战斗差与组件集齐率分列。DPR按完整战斗含准备轮统计，配对差保留未匹配分母；模型偏差、未建机制和完整核心资格不因采样通过而消失。"}}}}
+
+ ❯ tests/computation-failure-loop.test.ts (1 test | 1 failed) 604ms
+   × dispatches exactly once after two required runner failures and a failed degraded attempt 602ms
+ ❯ tests/human-pace-sampling.test.ts (5 tests | 4 failed) 392ms
+   × B2 retains only completed paired prefixes on a mid-C2 deadline and reuses the first attempt with no extra work 106ms
+   × the live B3 adapter releases normal partials, leaves n<2 uncertainty unknown, and preserves C1 for an actual worker fault 13ms
+   × caps low-trust B2 sampling within the same budget and labels it without changing death/potion rules 169ms
+   × skips F48, P1/P2, G2 and S shadow extensions after expiry while preserving the partial primary computation 16ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/computation-failure-loop.test.ts > dispatches exactly once after two required runner failures and a failed degraded attempt
+BrainBlockedError: Codex brain program failure on reward/card: expected 1 to be 3 // Object.is equality
+ ❯ BrainRouter.decideCodex src/brain/router.ts:497:17
+    495|           this.wait.finish("fault", req, message(error).slice(0, 300));
+    496|           this.write("codex", req, null, error, undefined, this.spent(…
+    497|           throw new BrainBlockedError("fault", `Codex brain program fa…
+       |                 ^
+    498|         }
+    499|         this.wait.pause(req, `${kind}: ${message(error).slice(0, 300)}…
+ ❯ withinDecisionBudget src/core/decision-budget.ts:81:20
+ ❯ Brain.decide src/brain/brain.ts:310:14
+ ❯ Brain.choose src/brain/brain.ts:383:20
+ ❯ runLoopWithBudgets src/hand/loop.ts:1205:28
+
+Caused by: AssertionError: expected 1 to be 3 // Object.is equality
+
+- Expected
++ Received
+
+- 3
++ 1
+
+ ❯ Object.decide tests/computation-failure-loop.test.ts:35:20
+ ❯ BrainRouter.call src/brain/router.ts:642:49
+ ❯ BrainRouter.attempt src/brain/router.ts:557:30
+ ❯ BrainRouter.decideCodex src/brain/router.ts:474:35
+ ❯ BrainRouter.decide src/brain/router.ts:398:37
+ ❯ src/brain/router.ts:393:64
+ ❯ withinDecisionBudget src/core/decision-budget.ts:81:40
+ ❯ BrainRouter.decide src/brain/router.ts:393:14
+ ❯ Brain.decide src/brain/brain.ts:310:32
+ ❯ Brain.choose src/brain/brain.ts:383:31
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  tests/human-pace-sampling.test.ts > B2 retains only completed paired prefixes on a mid-C2 deadline and reuses the first attempt with no extra work
+AssertionError: expected "run" to be called 2 times, but got 1 times
+ ❯ tests/human-pace-sampling.test.ts:75:16
+     73|   const changed = { ...args, solver: { ...args.solver, player: { ...ar…
+     74|   withDecisionBudget(new DecisionBudget("changed", "boss", () => 0), (…
+     75|   expect(pool).toHaveBeenCalledTimes(2);
+       |                ^
+     76| });
+     77|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+ FAIL  tests/human-pace-sampling.test.ts > the live B3 adapter releases normal partials, leaves n<2 uncertainty unknown, and preserves C1 for an actual worker fault
+Error: expected a decision, got blocked: the run on screen is Silent (silent) but this process plays Ironclad (CHARACTER unset) and reads its knowledge: abandon or finish that run by hand, or set CHARACTER to it
+ ❯ Module.decide tests/oneshot-support.ts:67:42
+     65| export function decide(e: DecisionEnv): Decision {
+     66|   const outcome = planDecision(e);
+     67|   if (outcome.kind !== "decision") throw new Error(`expected a decisio…
+       |                                          ^
+     68|   return outcome.decision;
+     69| }
+ ❯ tests/human-pace-sampling.test.ts:92:65
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯
+
+ FAIL  tests/human-pace-sampling.test.ts > caps low-trust B2 sampling within the same budget and labels it without changing death/potion rules
+AssertionError: expected 1000 to be 200 // Object.is equality
+
+- Expected
++ Received
+
+- 200
++ 1000
+
+ ❯ tests/human-pace-sampling.test.ts:113:35
+    111|   }));
+    112|   const result = withDecisionBudget(new DecisionBudget("low-trust", "b…
+    113|   expect(pool.mock.calls[0]?.[2]).toBe(200);
+       |                                   ^
+    114|   expect(result).toMatchObject({ available: true, completion: { status…
+    115|   if (result.available) expect([...result.byPlan.values()][0]?.text).t…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/5]⎯
+
+ FAIL  tests/human-pace-sampling.test.ts > skips F48, P1/P2, G2 and S shadow extensions after expiry while preserving the partial primary computation
+Error: expected a decision, got blocked: the run on screen is Silent (silent) but this process plays Ironclad (CHARACTER unset) and reads its knowledge: abandon or finish that run by hand, or set CHARACTER to it
+ ❯ Module.decide tests/oneshot-support.ts:67:42
+     65| export function decide(e: DecisionEnv): Decision {
+     66|   const outcome = planDecision(e);
+     67|   if (outcome.kind !== "decision") throw new Error(`expected a decisio…
+       |                                          ^
+     68|   return outcome.decision;
+     69| }
+ ❯ tests/human-pace-sampling.test.ts:123:69
+ ❯ Module.withDecisionBudget src/core/decision-budget.ts:41:103
+ ❯ tests/human-pace-sampling.test.ts:123:24
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/5]⎯
+
+⎯⎯⎯⎯⎯⎯ Unhandled Errors ⎯⎯⎯⎯⎯⎯
+
+Vitest caught 1 unhandled error during the test run.
+This might cause false positive tests. Resolve unhandled errors to make sure your tests are not affected.
+
+⎯⎯⎯⎯ Unhandled Rejection ⎯⎯⎯⎯⎯
+BrainBlockedError: Codex brain program failure on reward/card: expected 1 to be 3 // Object.is equality
+ ❯ BrainRouter.decideCodex src/brain/router.ts:497:17
+    495|           this.wait.finish("fault", req, message(error).slice(0, 300));
+    496|           this.write("codex", req, null, error, undefined, this.spent(…
+    497|           throw new BrainBlockedError("fault", `Codex brain program fa…
+       |                 ^
+    498|         }
+    499|         this.wait.pause(req, `${kind}: ${message(error).slice(0, 300)}…
+ ❯ withinDecisionBudget src/core/decision-budget.ts:81:20
+ ❯ Brain.decide src/brain/brain.ts:310:14
+ ❯ Brain.choose src/brain/brain.ts:383:20
+ ❯ runLoopWithBudgets src/hand/loop.ts:1205:28
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { state: 'fault' }
+This error originated in "tests/computation-failure-loop.test.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The latest test that might've caused the error is "dispatches exactly once after two required runner failures and a failed degraded attempt". It might mean one of the following:
+- The error was thrown, while Vitest was running this test.
+- If the error occurred after the test had been completed, this was the last documented test before it was thrown.
+Caused by: AssertionError: expected 1 to be 3 // Object.is equality
+ ❯ Object.decide tests/computation-failure-loop.test.ts:35:20
+ ❯ BrainRouter.call src/brain/router.ts:642:49
+ ❯ BrainRouter.attempt src/brain/router.ts:557:30
+ ❯ BrainRouter.decideCodex src/brain/router.ts:474:35
+ ❯ BrainRouter.decide src/brain/router.ts:398:37
+ ❯ src/brain/router.ts:393:64
+ ❯ withinDecisionBudget src/core/decision-budget.ts:81:40
+ ❯ BrainRouter.decide src/brain/router.ts:393:14
+ ❯ Brain.decide src/brain/brain.ts:310:32
+ ❯ Brain.choose src/brain/brain.ts:383:31
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+
+
+ Test Files  2 failed (2)
+      Tests  5 failed | 1 passed (6)
+     Errors  1 error
+   Start at  10:13:12
+   Duration  27.90s (transform 36.69s, setup 4.08s, import 50.08s, tests 996ms, environment 0ms)
+

@@ -1,0 +1,185 @@
+{
+  "at": "2026-10-17 21:44:58 CST",
+  "batch": "20261017-211302-fix-batch",
+  "source": "0b1807b159a1e3d7fc09aad541ea6f97be627a91",
+  "base": "ee90797b418e628fcda95dd759e692ccfbac9145",
+  "tree": "bfddb6e2260eb6b435b18cf0cc2e202cbc803150",
+  "paths": [
+    {
+      "path": "agent/src/sim/global-build-b3.ts",
+      "sha256": "3c3a7821648c1c48f4e076add83fbfeca22fb6944c2e92a4000be49c01166eb2",
+      "source_blob": "5cc178f7788d1e0c7944b88572cf072c9bbab85c"
+    },
+    {
+      "path": "agent/src/sim/global-build-observer.ts",
+      "sha256": "ecce02a61eebb79e46e95e6f5ea818227afb72072bd585e72fcb784aef85fbc4",
+      "source_blob": "1389b0d51638520541c5a1813d40517ecc3e0612"
+    },
+    {
+      "path": "agent/src/sim/global-build.ts",
+      "sha256": "4daa2d07465bef20e759a28281194131a06cce43e9be606a43b1186bc7c0019b",
+      "source_blob": "7b52523a3a7152e8c8a7920110cd842e814c2ff3"
+    },
+    {
+      "path": "agent/tests/global-build-b3.test.ts",
+      "sha256": "6575a792d9f7aded835d6f1ce62f7c7555d0cb44400aeb95c51ef904cbbde8ce",
+      "source_blob": "2eb3ff6490acfc3b4899da683799161724e1fc28"
+    },
+    {
+      "path": "agent/tests/global-build-observer.test.ts",
+      "sha256": "e9c80da81ed22c150fef13625aaf82a1b1ce9d17dea2947acfdafbd97a6a852d",
+      "source_blob": "fc7b23ef1f735a73c713c0031fb3468e89e0ff41"
+    },
+    {
+      "path": "agent/tests/global-build.test.ts",
+      "sha256": "2a936ef4a754d5574998c9e1ff3add0bc9a05ae3a770cd5199d84e0041e2c741",
+      "source_blob": "08976607629e565954e53d70cbf4900b93a4154c"
+    }
+  ],
+  "source_tests": {
+    "tsc": 0,
+    "vitest": 0,
+    "files": 481,
+    "cases": 4417
+  },
+  "source_full_log_sha256": "afdc181e8834354ea5b38dc4f78a0fc46e6ac779aaca55b11718b42c7ff67cd0",
+  "without_fix": {
+    "rc": 1,
+    "failed": 3,
+    "passed": 27
+  },
+  "restored_related": {
+    "rc": 0,
+    "files": 6,
+    "passed": 55
+  },
+  "source_gitleaks": 0,
+  "original_canonical_state": "failed",
+  "original_canonical_rc": 0,
+  "original_merged": null,
+  "original_live_refresh": "72ce99f6ddc37bfe30af8082b0f8f32027ec95d0",
+  "original31_history_conflicts": [
+    "CONFLICT (modify/delete): docs/human-pace-plan.md deleted in 72ce99f6ddc37bfe30af8082b0f8f32027ec95d0 and modified in 0b1807b159a1e3d7fc09aad541ea6f97be627a91.  Version 0b1807b159a1e3d7fc09aad541ea6f97be627a91 of docs/human-pace-plan.md left in tree.",
+    "CONFLICT (content): Merge conflict in notes/fix-queue-v4.md",
+    "CONFLICT (content): Merge conflict in notes/for-roy.md",
+    "CONFLICT (content): Merge conflict in notes/lessons.md",
+    "CONFLICT (content): Merge conflict in notes/ops-handoff.md",
+    "CONFLICT (content): Merge conflict in ops/inbox-dev.md",
+    "CONFLICT (content): Merge conflict in paper/data/README.md",
+    "CONFLICT (content): Merge conflict in paper/data/commits.csv",
+    "CONFLICT (content): Merge conflict in paper/data/cost-curve-silent.csv",
+    "CONFLICT (content): Merge conflict in paper/data/cost-silent.csv",
+    "CONFLICT (content): Merge conflict in paper/data/cost-sources.json",
+    "CONFLICT (content): Merge conflict in paper/data/cost-unattributed.csv",
+    "CONFLICT (content): Merge conflict in paper/data/decisions_by_label.csv",
+    "CONFLICT (content): Merge conflict in paper/data/learning-curve-silent.csv",
+    "CONFLICT (content): Merge conflict in paper/data/runs.csv",
+    "CONFLICT (content): Merge conflict in paper/data/summary.json",
+    "CONFLICT (content): Merge conflict in paper/data/verification.json",
+    "CONFLICT (modify/delete): paper/materials/20261017-human-pace-control/checkpoint.json deleted in 72ce99f6ddc37bfe30af8082b0f8f32027ec95d0 and modified in 0b1807b159a1e3d7fc09aad541ea6f97be627a91.  Version 0b1807b159a1e3d7fc09aad541ea6f97be627a91 of paper/materials/20261017-human-pace-control/checkpoint.json left in tree.",
+    "CONFLICT (modify/delete): paper/materials/20261017-human-pace-control/requirements.json deleted in 72ce99f6ddc37bfe30af8082b0f8f32027ec95d0 and modified in 0b1807b159a1e3d7fc09aad541ea6f97be627a91.  Version 0b1807b159a1e3d7fc09aad541ea6f97be627a91 of paper/materials/20261017-human-pace-control/requirements.json left in tree.",
+    "CONFLICT (modify/delete): paper/materials/20261017-human-pace-h2/checkpoint.json deleted in 72ce99f6ddc37bfe30af8082b0f8f32027ec95d0 and modified in 0b1807b159a1e3d7fc09aad541ea6f97be627a91.  Version 0b1807b159a1e3d7fc09aad541ea6f97be627a91 of paper/materials/20261017-human-pace-h2/checkpoint.json left in tree.",
+    "CONFLICT (modify/delete): paper/materials/20261017-human-pace-h2/natural/analyze.py deleted in 72ce99f6ddc37bfe30af8082b0f8f32027ec95d0 and modified in 0b1807b159a1e3d7fc09aad541ea6f97be627a91.  Version 0b1807b159a1e3d7fc09aad541ea6f97be627a91 of paper/materials/20261017-human-pace-h2/natural/analyze.py left in tree.",
+    "CONFLICT (modify/delete): paper/materials/20261017-human-pace-h2/natural/audit-analysis.py deleted in 72ce99f6ddc37bfe30af8082b0f8f32027ec95d0 and modified in 0b1807b159a1e3d7fc09aad541ea6f97be627a91.  Version 0b1807b159a1e3d7fc09aad541ea6f97be627a91 of paper/materials/20261017-human-pace-h2/natural/audit-analysis.py left in tree.",
+    "CONFLICT (modify/delete): paper/materials/20261017-human-pace-h2/natural/baseline-boss30-by-floor.json deleted in 72ce99f6ddc37bfe30af8082b0f8f32027ec95d0 and modified in 0b1807b159a1e3d7fc09aad541ea6f97be627a91.  Version 0b1807b159a1e3d7fc09aad541ea6f97be627a91 of paper/materials/20261017-human-pace-h2/natural/baseline-boss30-by-floor.json left in tree.",
+    "CONFLICT (modify/delete): paper/materials/20261017-human-pace-h2/natural/baseline-boss30.py deleted in 72ce99f6ddc37bfe30af8082b0f8f32027ec95d0 and modified in 0b1807b159a1e3d7fc09aad541ea6f97be627a91.  Version 0b1807b159a1e3d7fc09aad541ea6f97be627a91 of paper/materials/20261017-human-pace-h2/natural/baseline-boss30.py left in tree.",
+    "CONFLICT (modify/delete): paper/materials/20261017-human-pace-h2/natural/checkpoint.json deleted in 72ce99f6ddc37bfe30af8082b0f8f32027ec95d0 and modified in 0b1807b159a1e3d7fc09aad541ea6f97be627a91.  Version 0b1807b159a1e3d7fc09aad541ea6f97be627a91 of paper/materials/20261017-human-pace-h2/natural/checkpoint.json left in tree.",
+    "CONFLICT (modify/delete): paper/materials/20261017-human-pace-h2/natural/render-report.py deleted in 72ce99f6ddc37bfe30af8082b0f8f32027ec95d0 and modified in 0b1807b159a1e3d7fc09aad541ea6f97be627a91.  Version 0b1807b159a1e3d7fc09aad541ea6f97be627a91 of paper/materials/20261017-human-pace-h2/natural/render-report.py left in tree.",
+    "CONFLICT (modify/delete): paper/materials/20261017-human-pace-h2/natural/requirements.json deleted in 72ce99f6ddc37bfe30af8082b0f8f32027ec95d0 and modified in 0b1807b159a1e3d7fc09aad541ea6f97be627a91.  Version 0b1807b159a1e3d7fc09aad541ea6f97be627a91 of paper/materials/20261017-human-pace-h2/natural/requirements.json left in tree.",
+    "CONFLICT (content): Merge conflict in paper/materials/decision-log.md",
+    "CONFLICT (modify/delete): paper/materials/learning/code-proposals.jsonl deleted in 72ce99f6ddc37bfe30af8082b0f8f32027ec95d0 and modified in 0b1807b159a1e3d7fc09aad541ea6f97be627a91.  Version 0b1807b159a1e3d7fc09aad541ea6f97be627a91 of paper/materials/learning/code-proposals.jsonl left in tree.",
+    "CONFLICT (content): Merge conflict in paper/materials/learning/ledger.jsonl",
+    "CONFLICT (content): Merge conflict in paper/materials/silent/cost.md"
+  ],
+  "existing42_ancestors_and181_blobs_verified": true,
+  "unchecked_items": 49,
+  "native": {
+    "batch": "20261017-211302-fix-batch",
+    "thread": "01a149fe-c821-7150-895b-b4beb9fb024e",
+    "cwd": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261017-211302",
+    "event_log": "learner/runs/20261017-211309-108f9305-9c58-46ce-b592-fccf83549908-fix-batch.jsonl",
+    "registered_launch_batch": "20261017-211302-fix-batch",
+    "original_lease": "3de9f029ae821d3b1a4fc9e0e938b675f7f4b711b7c509dc39f753317adf670a",
+    "native_context": {
+      "source": "ops/codex-ops/accounts/codex1/learner/sessions/2026/10/17/rollout-2026-10-17T21-13-16-01a149fe-c821-7150-895b-b4beb9fb024e.jsonl",
+      "offset": 50305,
+      "bytes": 5152,
+      "sha256": "4d72ac06388b3beeaf570cb908022b8b3dfe2f4e83132ade5a73b18e4c7ddb21",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "sandbox": {
+        "type": "workspace-write",
+        "writable_roots": [
+          "/home/dw/Projects/agent-sts2",
+          "/home/dw/Projects/agent-sts2/.git",
+          "/home/dw/Projects/agent-sts2/.git/worktrees/codex-fix-silent-20261017-211302"
+        ],
+        "network_access": false,
+        "exclude_tmpdir_env_var": false,
+        "exclude_slash_tmp": false
+      },
+      "approval_policy": "never"
+    },
+    "native_user_input": {
+      "offset": 58300,
+      "bytes": 13080,
+      "sha256": "e44131bb69fccb65ac103dfa0c58f00404ae802fc79862054f0af6dc2fefee36",
+      "input_sha256": "852058dde5af0999eab2c023d7a3882f805e7c2ef478a099280e4915a480f3bd"
+    },
+    "original_header_events": [
+      {
+        "offset": 0,
+        "bytes": 14892,
+        "sha256": "25ebb31304d189b7b040b48693d60f42feeec633fe306bc4b61f7b146dcd10c7",
+        "type": "learner_launch",
+        "attempt": null,
+        "code": null
+      },
+      {
+        "offset": 14892,
+        "bytes": 370,
+        "sha256": "238d88c753fa144e95885e6cb976dbfa06db0f3613a9614ef3fa24afc1f5b06d",
+        "type": "learner_startup_attempt",
+        "attempt": 1,
+        "code": null
+      },
+      {
+        "offset": 18275,
+        "bytes": 77,
+        "sha256": "45d0eb5989aa41afa61e15cc8772c7f0fb1f20acef436e7d2e2052b1acea6c68",
+        "type": "thread.started",
+        "attempt": null,
+        "code": null
+      }
+    ],
+    "startup_attempts": 1,
+    "failed_startups_preserved": 0,
+    "no_model_or_manual_restart": true
+  },
+  "original_run_refs": [
+    {
+      "offset": 2328074186,
+      "length": 595743,
+      "sha256": "62cc3a27fad48dfb64c167a37c5e770efec2462688edd768d98c4c45e499979c"
+    },
+    {
+      "offset": 2331350116,
+      "length": 186679,
+      "sha256": "09d4bb9e12546a0bea6f3d63b6fd7adf14e88a181183f2037a76a261fdf73b98"
+    },
+    {
+      "offset": 2331541029,
+      "length": 469407,
+      "sha256": "14f3a4ee9f43b7421579009f5c764b3122c21e6aaaf7869da0d35c96764a4762"
+    },
+    {
+      "offset": 2328669929,
+      "length": 678096,
+      "sha256": "9f78b013c4c56281bdc7432a9b033bdde7ac2de9507d0b3e66c5c7880b27afd4"
+    }
+  ],
+  "classification": "G2 shadow diagnostic/provenance/cache observation fix; no action/rank/budget/threshold/SL/potion or other-role policy change, no behavior release number",
+  "source_full_not_repeated": true,
+  "actual_main_live_integration": false,
+  "other_role_ACK": false
+}

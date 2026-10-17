@@ -1,3 +1,4 @@
+import { currentDecisionBudget } from "../core/decision-budget.js";
 /**
  * Whole boss fights for many decks at once, with a deadline (milestone B3, docs/boss-sim.md §11): a deck-building
  * question compares every option's deck (and HP) against the current one on the same seeds, within its time budget.
@@ -19,6 +20,7 @@ import type { KillOrder, RolloutInput } from "../reflex/rollout.js";
 import { BOSS_SIM_MAX_TURNS, BOSS_SIM_MAX_WORKERS, defaultWorkers, fightSample, sampleSeed, slimInput, type FightSampleResult } from "./boss-sim.js";
 import { claimSimCores, leaveSimCores } from "./sim-pools.js";
 import { sampleSchedule, type SampleRange } from "./sample-range.js";
+import { ContinuationSampleError, type ContinuationFailure } from "./continuation-failure.js";
 
 /** Samples per task (one deck, one order): small enough that a deadline is kept to ~0.1 s. */
 export const BUILD_SIM_BLOCK = 8;
@@ -166,7 +168,7 @@ export type BuildWorkerRequest =
   | { type: "batch"; batch: number; base: RolloutInput; decks: Partial<RolloutInput>[]; orders: (KillOrder | null)[]; maxTurns: number; scripts: boolean; cancelled?: SharedArrayBuffer; streamResults?: boolean }
   | { type: "run"; batch: number; tasks: Task[] }
   | { type: "drop"; batch: number };
-export type BuildWorkerReply = { batch: number; results: [deck: number, order: number, sample: number, result: FightSampleResult][]; partial?: boolean } | { batch: number; error: string };
+export type BuildWorkerReply = { batch: number; results: [deck: number, order: number, sample: number, result: FightSampleResult][]; partial?: boolean } | { batch: number; error: string; continuationFailure?: ContinuationFailure };
 
 /**
  * Worker threads for deck runs. Keep one for the whole game run (its workers start on the first deck-building question)
@@ -282,7 +284,9 @@ export class BuildSimPool implements DeckSimRunner {
         const message = (reply: BuildWorkerReply) => {
           if (reply.batch !== batch || finished) return;
           if ("error" in reply) {
-            finish(new Error(`build-sim worker: ${reply.error}`));
+            finish(reply.continuationFailure
+              ? new ContinuationSampleError(`build-sim worker: ${reply.error}`, reply.continuationFailure)
+              : new Error(`build-sim worker: ${reply.error}`));
             return;
           }
           diagnostics.firstReplyMs ??= Math.round(performance.now() - diagnosticStart);
@@ -320,6 +324,7 @@ export class BuildSimPool implements DeckSimRunner {
       if (req.progressTimeoutMs !== undefined) await this.close();
       throw error;
     });
+    if (timedOut && currentDecisionBudget()) void this.close();
     return { outcomes, complete: completeSamples(req, outcomes), timedOut, elapsedMs: Math.round(now() - started), workers: used.length, ...(req.diagnostics ? { diagnostics } : {}) };
   }
 

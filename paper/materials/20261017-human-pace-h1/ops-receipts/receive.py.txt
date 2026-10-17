@@ -1,0 +1,74 @@
+from pathlib import Path
+import hashlib, json, subprocess
+
+r = Path.cwd(); p = r / 'ops/codex-ops/record-staging/20261017-human-pace-h1'
+phase = r / 'paper/materials/20261017-human-pace-h1'; pub = phase / 'ops-receipts'
+pub.mkdir(exist_ok=True)
+load = lambda f: json.loads(f.read_bytes())
+sha = lambda raw: hashlib.sha256(raw).hexdigest()
+def git(*args): return subprocess.check_output(['git', *args], stderr=subprocess.PIPE)
+def write(f, value): f.write_text(json.dumps(value, ensure_ascii=False, indent=2) + '\n')
+request = load(phase / 'ops-publication-request.json')
+m = load(phase / 'source-manifest.json'); check = load(phase / 'verification.json')
+source = request['source_commit']; base = request['source_parent']; tree = request['source_tree']
+assert source == m['source_commit'] == '7af803c06e82e2aafe6a595fab7a23e0f3f44fb3'
+assert base == m['base'] == m['source_parent'] == '54e36d0830ab640130557b62a078b25954912ff4'
+assert tree == m['source_tree'] == m['staged_tree'] == '42b64e288ab34b51bfa1a4f15f8c6abd731fd139'
+assert git('rev-parse', source + '^').decode().strip() == base
+assert git('rev-parse', source + '^{tree}').decode().strip() == tree
+paths = [v['path'] for v in m['files']]
+assert len(paths) == len(set(paths)) == 28
+assert set(git('diff', '--name-only', base, source).decode().splitlines()) == set(paths)
+wt = r / '.worktrees/human-pace-h1-20261017'
+assert (wt / '.git').is_file() and git('-C', str(wt), 'rev-parse', '--show-toplevel').decode().strip() == str(wt)
+assert git('-C', str(wt), 'rev-parse', 'HEAD').decode().strip() == source
+assert not git('-C', str(wt), 'status', '--porcelain', '--untracked-files=no').strip()
+for item in m['files']:
+    raw = git('show', source + ':' + item['path'])
+    assert len(raw) == item['bytes'] and sha(raw) == item['sha256']
+    assert (wt / item['path']).read_bytes() == raw
+    assert git('ls-tree', source, '--', item['path']).decode().startswith('100644 blob ')
+patch = (phase / 'source-staged.patch').read_bytes()
+assert sha(patch) == m['patch_sha256']
+assert patch == git('diff', '--binary', base, source)
+assert sha((phase / 'source-manifest.json').read_bytes()) == request['source_manifest_sha256']
+assert check['source_full_r1']['exit_code'] == 143 and check['source_full_r1']['preserved']
+full = check['source_full_r2']
+assert full == request['source_verification']
+assert full['exit_code'] == full['tsc_exit'] == 0
+assert full['vitest_main_files'] == 467 and full['total_tests'] == 4296 and full['worker_limit'] == 1 and full['nice'] == 19
+assert full['log_sha256'] == sha((phase / full['log']).read_bytes())
+assert load(phase / 'source-sandbox-full-r2-exit.json')['exit_code'] == 0
+assert check['gitleaks_source_exit'] == 0 and load(phase / 'gitleaks-source.json') == []
+for item in check['checks']:
+    f = r / item['path']; raw = f.read_bytes()
+    assert len(raw) == item['bytes'] and sha(raw) == item['sha256']
+frozen = load(phase / 'source-before-full-r2.json')
+write(pub / 'ops-original-full-input-readback.json', frozen)
+for key, val in frozen.items():
+    if key in ['files', 'paths']:
+        print('original frozen file schema', type(val).__name__, flush=True)
+at = subprocess.check_output(['date', '+%Y-%m-%d %H:%M:%S %Z'], text=True).strip()
+print(at, flush=True)
+receipt = dict(at=at, received_by='original ops', request=request['request'], phase='H1',
+    owner='watcher-codex1', owner_thread='01a13dcd-83d4-7c63-b233-f93cf878ecf4', source=source,
+    source_parent=base, source_tree=tree, exact_source_files=m['files'], patch_sha256=sha(patch),
+    source_entry=full, original_interruption_retained=True, new_source_full_run=False,
+    source_gitleaks=0, staged_and_worktree_source_equal=True, source_received=True,
+    published=False, release_id=None, final_tree_host=None, natural_acceptance=False,
+    no_other_role_ACK=True, no_current_game_home_model_prompt_env_change=True)
+write(pub / 'ops-source-received.json', receipt)
+write(phase / 'ops-source-received.json', receipt)
+write(pub / 'ops-source-disposition.json', dict(at=at, accepted=True, source=source, tree=tree,
+    basis='Original exact unchanged source tsc0, sandbox467files4285 plus original paths11 entry0 and source gitleaks0; prior143 and all earlier failures retained.',
+    acceptance_is_not_extra_review_gate=True, requires_current_live_lock_narrow_patch=True,
+    requires_distinct_behavior_release_and_root_dual_notice=True,
+    unique_host_batch='20261016-075726-strategy-proposal', source_green_is_not_final_host_green=True,
+    no_repeat_source_full=True, natural_two_runs_pending_separate_assignment=True))
+pending = r / 'ops/codex-ops/pending-integrations/20261017-human-pace-h1.json'
+assert not pending.exists()
+write(pending, dict(**receipt, status='Exact source actually received; awaiting existing live-lock narrow integration',
+    source_commit=source, unique_host_batch='20261016-075726-strategy-proposal', host_requested=False,
+    no_new_research_or_learner=True, restore_script='ops/codex-ops/record-staging/20261017-human-pace-h1/publish.py',
+    restore_rule='Inspect actual source/main/live receipt and lock; never rerun after publication receipt exists. No whole-tree reset or current-game restart.'))
+print(json.dumps(dict(received=source, tree=tree, leaves=28, source_tests=4296, source_full_rc=0)), flush=True)

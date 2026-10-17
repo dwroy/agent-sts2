@@ -66,6 +66,8 @@ export interface CardModel {
   preciseCutSevenHand?: boolean;
   /** Q6/Y6, silent-0260/0261: ordinary Strangle establishes the observed two-stack turn power. */
   strangle?: number;
+  /** LY83 A10 F21 T10: this upgraded follow-up has an observed ordinary Strangle trigger. */
+  observedStrangleFollowup?: true;
   /** MAUL's observed Increase: every copy gains this much damage after this play (silent-0056/0058). */
   maulIncrease?: number;
   /** Observed Shadowmeld (both versions): later card Block in this turn is doubled. */
@@ -91,6 +93,8 @@ export interface CardModel {
   blockFromPoison?: boolean;
   /** K2JAGKVJAWZJ A10 F46 T1: only the observed upgraded zero-poison play is known. */
   observedZeroPoisonMirage?: boolean;
+  /** Silent A10 plain/upgraded unmodified Shiv preview observed with Helical Dart. */
+  observedHelicalShiv?: boolean;
   /** Block before player modifiers, from the observed enchanted/base dynamic value. */
   blockBase?: number;
   /** Debuffs applied to the target (or every enemy for `all`). */
@@ -1242,6 +1246,8 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
   }
 
   const model: CardModel = {
+    ...(character.toLowerCase() === "silent" && ascension === 10 && cardId === "DAGGER_SPRAY" &&
+      bool(card["upgraded"]) ? { observedStrangleFollowup: true as const } : {}),
     index,
     key: `c${index}`,
     cardId,
@@ -1296,6 +1302,12 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
       ? { dodgeRollNextBlock: true } : {}),
     ...(mirage ? { blockFromPoison: true } : {}),
     ...(zeroPoisonMirage ? { observedZeroPoisonMirage: true } : {}),
+    ...(character.toLowerCase() === "silent" && ascension === 10 && cardId === "SHIV" && type === "Attack" &&
+      card["target_type"] === "AnyEnemy" && requiresTarget && card["energy_cost"] === 0 && card["star_cost"] === 0 &&
+      !bool(card["costs_x"]) && !bool(card["star_costs_x"]) && card["enchantment"] == null &&
+      dyn(card, "Damage") === (bool(card["upgraded"]) ? 6 : 4) &&
+      renderedText.replace(/\s+/g, "") === `造成${bool(card["upgraded"]) ? 6 : 4}点伤害。消耗。`
+      ? { observedHelicalShiv: true } : {}),
     ...(serpentMirageReplay ? { serpentMirageReplay: true as const } : {}),
     ...(!madExpertise && !madSapping && dynBase(card, "Block", true) !== null ? { blockBase: dynBase(card, "Block", true)! } : {}),
     vulnerable,

@@ -1,0 +1,616 @@
+{
+  "batch": "20261016-211301",
+  "report": {
+    "task": "postmortem",
+    "appended": [
+      "YZWV37N2MU6N"
+    ],
+    "skipped": [],
+    "bugs": [],
+    "ledger": {
+      "added": [],
+      "updated": [
+        "silent-0228",
+        "silent-0009",
+        "silent-0079"
+      ],
+      "repeats": [
+        "silent-0079"
+      ],
+      "check": 0
+    },
+    "code_proposals": [
+      "silent-proposal-7d48d56859225d08",
+      "silent-proposal-c66e1363fa30cd9c",
+      "silent-proposal-b43bdec69b2747bc"
+    ],
+    "implementation_domains": [
+      "combat",
+      "potion",
+      "sl",
+      "terminal"
+    ],
+    "report": "/home/dw/Projects/agent-sts2/learner/runs/20261016-211305-54ab85c5-143a-47b9-8efa-d3889a11080d-postmortem/report.md"
+  },
+  "native": {
+    "batch": "20261016-211301",
+    "thread": "01a144d8-4bb4-7222-a064-71e367313892",
+    "cwd": "/home/dw/Projects/agent-sts2",
+    "event_log": "learner/runs/20261016-211305-54ab85c5-143a-47b9-8efa-d3889a11080d-postmortem.jsonl",
+    "registered_launch_batch": "20261016-211301",
+    "original_lease": "22ff0df59b409820bad092084fe5a8180ea32fe99fc4cb80beaa316ae86012de",
+    "native_context": {
+      "source": "ops/codex-ops/accounts/codex1/learner/sessions/2026/10/16/rollout-2026-10-16T21-13-08-01a144d8-4bb4-7222-a064-71e367313892.jsonl",
+      "offset": 49154,
+      "bytes": 4620,
+      "sha256": "efe37bd7e99b183749331064085618c6f67f27e94e6542bb587615f843a090a4",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "sandbox": {
+        "type": "workspace-write",
+        "writable_roots": [
+          "/home/dw/Projects/agent-sts2/.git"
+        ],
+        "network_access": false,
+        "exclude_tmpdir_env_var": false,
+        "exclude_slash_tmp": false
+      },
+      "approval_policy": "never"
+    },
+    "native_user_input": {
+      "offset": 53774,
+      "bytes": 15345,
+      "sha256": "6068edb9d175ce4bc4a0cc9724abd051b229a68ccb6c45c90609da4c6f2b94f4",
+      "input_sha256": "8c5eae13aaf5220e0d59ed9db6f0ad4965edbd1c7170bfe16c43227e03dea7a6"
+    },
+    "original_header_events": [
+      {
+        "offset": 0,
+        "bytes": 16866,
+        "sha256": "9e2a679067058fdbe8171b728dffca7cd7aaed7895a992a8500fd2bc00cec82c",
+        "type": "learner_launch",
+        "attempt": null,
+        "code": null
+      },
+      {
+        "offset": 16866,
+        "bytes": 359,
+        "sha256": "2f8458dee470a6680dcfcc84d1d05cd66aeaeab53758f9dcb9d4c92ee57c2e5b",
+        "type": "learner_startup_attempt",
+        "attempt": 1,
+        "code": null
+      },
+      {
+        "offset": 20237,
+        "bytes": 77,
+        "sha256": "69c450c3f8b5fb45fae8924aeec9a012c98f11da365da55b413268a2854bb814",
+        "type": "thread.started",
+        "attempt": null,
+        "code": null
+      }
+    ],
+    "startup_attempts": 1,
+    "failed_startups_preserved": 0,
+    "no_model_or_manual_restart": true
+  },
+  "original_audit": {
+    "live_reference_commit": "c783c6c83d09e669f49518a4536ae5bc3766c2a2",
+    "startup_commit": "a14ebd0592f0cba9f7d3053eb5809754dd78ee2d",
+    "runs_code": "current",
+    "section_sha256": "22d3ece81f7d57f05a88e4da60d4f2ea71fb078298405cbdefcf47e98375cb95",
+    "ledger_immutable_fields_preserved": true,
+    "proposal_states": {
+      "silent-proposal-7d48d56859225d08": "pending",
+      "silent-proposal-c66e1363fa30cd9c": "pending",
+      "silent-proposal-b43bdec69b2747bc": "pending"
+    },
+    "input_sha256": {
+      "decisions.jsonl": "545c7333f098cdf14f35e4be6349199e74fdeb71f99746dd858880f79f6d2832",
+      "states.jsonl": "fa44d9ac9461e6495969e9405dda22b8af5ff809fcb7121a80bbee4ac4b2f388",
+      "sl-attempts.jsonl": "e226f74c3d32e026b38e0b6fcc86f0d2e3b0a0c1ec5844e72f12e79650a13b79",
+      "brain.jsonl": "53251348d3402bd1da676efcb15bfb262fb007fff2a381a146f7402f36766f88",
+      "run-plans.jsonl": "5dbf4e5446f78d494075250c443c5234a7ece0044ebea2167b1206828568a1a6",
+      "run-config.jsonl": "0bbe40c77f2d6806a4b06f0355bb62b112e2c0a7e6c0fa26fd479b8b0ea44154"
+    }
+  },
+  "material_verification": {
+    "checks": [
+      "21场胜战＋6次终战尝试",
+      "所有战斗入口均T1",
+      "所有战斗最大血70",
+      "F48入口67、退出27、净损40",
+      "六次F49入口52空药",
+      "六试截断／死亡回合",
+      "第2试未建立毒雾",
+      "重试T1末25挡",
+      "第3试未建立毒雾",
+      "重试T1末25挡",
+      "第4试未建立毒雾",
+      "重试T1末25挡",
+      "第5试未建立毒雾",
+      "重试T1末25挡",
+      "第6试未建立毒雾",
+      "重试T1末25挡",
+      "末试T9结算前20挡",
+      "末试T9来袭45",
+      "终帧HP0",
+      "终帧聚合体117、女王342",
+      "第3试T9为12挡对27",
+      "第3／6试T9可见hand相同",
+      "第3／6试T9可见player相同",
+      "第3／6试T9可见enemies相同",
+      "大脑输入10148004",
+      "大脑缓存5546368",
+      "HP护栏2次",
+      "毒药水动作引用d414732",
+      "3条经验＋1条记录"
+    ],
+    "count": 29,
+    "section_sha256": "22d3ece81f7d57f05a88e4da60d4f2ea71fb078298405cbdefcf47e98375cb95"
+  },
+  "stream_counts": {
+    "decisions.jsonl": 1010,
+    "states.jsonl": 1037,
+    "sl-attempts.jsonl": 9,
+    "brain.jsonl": 51,
+    "run-plans.jsonl": 10,
+    "run-config.jsonl": 1
+  },
+  "input_hashes_verified": true,
+  "selected_extraction_identity_verified": true,
+  "raw_offsets_not_provided_not_fabricated": true,
+  "lesson_bytes": 25274,
+  "lesson_sha256": "22d3ece81f7d57f05a88e4da60d4f2ea71fb078298405cbdefcf47e98375cb95",
+  "physical_prefix_and_exact_section_verified": true,
+  "old_git_lines_preserved_as_multiset": true,
+  "ledger_rows": [
+    {
+      "offset": 21416474,
+      "bytes": 478,
+      "sha256": "3b14d02286f2906f0651b8b93a4ca603715d2422dfdaa63cce2c8b28f6e8e799",
+      "row": {
+        "op": "update",
+        "id": "silent-0228",
+        "ts": "2026-10-16T21:30:56+08:00",
+        "by": "learner:postmortem",
+        "evidence": [
+          {
+            "run": "YZWV37N2MU6N",
+            "floor": 48,
+            "turn": 14,
+            "note": "F44至F46胜战后57→53→47→42；F47锻触媒，缩放仪使F48入口67，两药T1实饮，首试14轮胜剩27空药；F49再补25至52，六试失败。已明确双王，仅补实际接续资源证据，不重复记作漏认第二战。",
+            "role": "support"
+          }
+        ],
+        "where": {
+          "lessons": [
+            "YZWV37N2MU6N"
+          ]
+        }
+      }
+    },
+    {
+      "offset": 21416952,
+      "bytes": 367,
+      "sha256": "7aff982b7abd065e34b3ecad607a556e983146fcb8c467ecacd83be937e40ac9",
+      "row": {
+        "op": "update",
+        "id": "silent-0228",
+        "ts": "2026-10-16T21:30:57+08:00",
+        "by": "learner:postmortem",
+        "where": {
+          "proposal": [
+            "/home/dw/Projects/agent-sts2/learner/runs/20261016-211305-54ab85c5-143a-47b9-8efa-d3889a11080d-postmortem/proposal-resources.md"
+          ]
+        },
+        "note": "代码提案 silent-proposal-7d48d56859225d08 → task=strategy-proposal；Roy-2026-10-07-learning"
+      }
+    },
+    {
+      "offset": 21417319,
+      "bytes": 466,
+      "sha256": "6088e6ddb96d9809267e57a5cc8c9d0641b88c440e9f1165ed00df2736e55fe1",
+      "row": {
+        "op": "update",
+        "id": "silent-0009",
+        "ts": "2026-10-16T21:30:58+08:00",
+        "by": "learner:postmortem",
+        "evidence": [
+          {
+            "run": "YZWV37N2MU6N",
+            "floor": 49,
+            "turn": 1,
+            "note": "F48已建毒雾6／触媒4／敏捷5／荆棘8未继承F49。首试T1建毒雾损17，后五试改手上技法损7、少10，但未建毒雾，女王T5到T9行动前停357；不是又空打咕嘟冒泡，无早毒必胜反事实。",
+            "role": "support"
+          }
+        ],
+        "where": {
+          "lessons": [
+            "YZWV37N2MU6N"
+          ]
+        }
+      }
+    },
+    {
+      "offset": 21417785,
+      "bytes": 365,
+      "sha256": "fff57e0b0938d677b7a55e6f4620189c35e3b0f2082c6ce5aa5f8092f85775be",
+      "row": {
+        "op": "update",
+        "id": "silent-0009",
+        "ts": "2026-10-16T21:30:59+08:00",
+        "by": "learner:postmortem",
+        "where": {
+          "proposal": [
+            "/home/dw/Projects/agent-sts2/learner/runs/20261016-211305-54ab85c5-143a-47b9-8efa-d3889a11080d-postmortem/proposal-startup.md"
+          ]
+        },
+        "note": "代码提案 silent-proposal-c66e1363fa30cd9c → task=strategy-proposal；Roy-2026-10-07-learning"
+      }
+    },
+    {
+      "offset": 21418150,
+      "bytes": 497,
+      "sha256": "37efa89338e8ff0612f9f20ce3b336060317423f048bc0966fb86efdcd7ae0d7",
+      "row": {
+        "op": "update",
+        "id": "silent-0079",
+        "ts": "2026-10-16T21:30:59+08:00",
+        "by": "learner:postmortem",
+        "evidence": [
+          {
+            "run": "YZWV37N2MU6N",
+            "floor": 49,
+            "turn": 9,
+            "note": "第3与6试T9同可见手牌／7HP／7挡／3能量；SL把Jev尖啸换后空翻，均24/24模拟死亡，完整需损15→25。实到12挡对27与20挡对45，多8挡／多18威胁；药瓶同落3／6毒，第3试截断、第6试实死，无原线可赢证据。",
+            "role": "repeat"
+          }
+        ],
+        "where": {
+          "lessons": [
+            "YZWV37N2MU6N"
+          ]
+        }
+      }
+    },
+    {
+      "offset": 21418647,
+      "bytes": 360,
+      "sha256": "222e9dd000be218532bf514fe8d73fbb4daa2e93a82931af58f54bf60bb8c009",
+      "row": {
+        "op": "update",
+        "id": "silent-0079",
+        "ts": "2026-10-16T21:31:01+08:00",
+        "by": "learner:postmortem",
+        "where": {
+          "proposal": [
+            "/home/dw/Projects/agent-sts2/learner/runs/20261016-211305-54ab85c5-143a-47b9-8efa-d3889a11080d-postmortem/proposal-sl.md"
+          ]
+        },
+        "note": "代码提案 silent-proposal-b43bdec69b2747bc → task=strategy-proposal；Roy-2026-10-07-learning"
+      }
+    }
+  ],
+  "registered_proposals": [
+    {
+      "offset": 3835915,
+      "bytes": 797,
+      "sha256": "403abfab0ff8216bd1c516407948caf42fd598b7f98dc1021f48555192cc82cb",
+      "row": {
+        "op": "add",
+        "id": "silent-proposal-7d48d56859225d08",
+        "ts": "2026-10-16T21:30:57+08:00",
+        "character": "silent",
+        "ledger": [
+          "silent-0228"
+        ],
+        "runs": [
+          "YZWV37N2MU6N"
+        ],
+        "source_task": "postmortem",
+        "target_task": "strategy-proposal",
+        "domains": [
+          "terminal",
+          "potion"
+        ],
+        "summary": "F44至F46胜战后57→53→47→42；F47锻触媒，缩放仪使F48入口67，两药T1实饮，首试14轮胜剩27空药；F49再补25至52，六试失败。已明确双王，仅补实际接续资源证据，不重复记作漏认第二战。",
+        "proposal": "/home/dw/Projects/agent-sts2/learner/runs/20261016-211305-54ab85c5-143a-47b9-8efa-d3889a11080d-postmortem/proposal-resources.md",
+        "rule_changes": false,
+        "proposal_sha256": "eb769621ef2be250ac47c140815f035887dd94f442e69e5e40ab6aaafa89a286",
+        "state": "pending"
+      }
+    },
+    {
+      "offset": 3836712,
+      "bytes": 772,
+      "sha256": "c864016e0bcf310c59849ee549b9256e9adf541b2b79ed51791ef599bf4a3410",
+      "row": {
+        "op": "add",
+        "id": "silent-proposal-c66e1363fa30cd9c",
+        "ts": "2026-10-16T21:30:59+08:00",
+        "character": "silent",
+        "ledger": [
+          "silent-0009"
+        ],
+        "runs": [
+          "YZWV37N2MU6N"
+        ],
+        "source_task": "postmortem",
+        "target_task": "strategy-proposal",
+        "domains": [
+          "combat"
+        ],
+        "summary": "F48已建毒雾6／触媒4／敏捷5／荆棘8未继承F49。首试T1建毒雾损17，后五试改手上技法损7、少10，但未建毒雾，女王T5到T9行动前停357；不是又空打咕嘟冒泡，无早毒必胜反事实。",
+        "proposal": "/home/dw/Projects/agent-sts2/learner/runs/20261016-211305-54ab85c5-143a-47b9-8efa-d3889a11080d-postmortem/proposal-startup.md",
+        "rule_changes": false,
+        "proposal_sha256": "5a9025bf156aa882f11525a56864c1877077b17c4e26bc8d5ec3e9ad1f421758",
+        "state": "pending"
+      }
+    },
+    {
+      "offset": 3837484,
+      "bytes": 848,
+      "sha256": "a4f7d687487cb49f7411b7db09e8cbb2e3d5538245b93379f5544fcfacc134cb",
+      "row": {
+        "op": "add",
+        "id": "silent-proposal-b43bdec69b2747bc",
+        "ts": "2026-10-16T21:31:01+08:00",
+        "character": "silent",
+        "ledger": [
+          "silent-0079"
+        ],
+        "runs": [
+          "YZWV37N2MU6N"
+        ],
+        "source_task": "postmortem",
+        "target_task": "strategy-proposal",
+        "domains": [
+          "combat",
+          "sl"
+        ],
+        "summary": "第3与6试T9同可见手牌／7HP／7挡／3能量；SL把Jev尖啸换后空翻，均24/24模拟死亡，完整需损15→25。实到12挡对27与20挡对45，多8挡／多18威胁；药瓶同落3／6毒，第3试截断、第6试实死，无原线可赢证据。",
+        "proposal": "/home/dw/Projects/agent-sts2/learner/runs/20261016-211305-54ab85c5-143a-47b9-8efa-d3889a11080d-postmortem/proposal-sl.md",
+        "rule_changes": true,
+        "authorization": "Roy-2026-10-07-learning",
+        "proposal_sha256": "7684ad1f6f2a8d87049f4bcc27a0c315d3c31aada3b583da08d71d9b208f41bd",
+        "state": "pending"
+      }
+    }
+  ],
+  "new_bugs": [],
+  "ledger_check_output": "/home/dw/Projects/agent-sts2/paper/materials/learning/ledger.jsonl: 497 item(s), 0 problem(s)\n",
+  "original_materials": [
+    {
+      "path": "learner/runs/20261016-211305-54ab85c5-143a-47b9-8efa-d3889a11080d-postmortem/analyze.py",
+      "bytes": 2255,
+      "sha256": "9bfeb3f90cd52645351ef75318f52a275779053bd588b608c6c2a56570c8b782"
+    },
+    {
+      "path": "learner/runs/20261016-211305-54ab85c5-143a-47b9-8efa-d3889a11080d-postmortem/append-before.json",
+      "bytes": 103,
+      "sha256": "a382c82c5ad6d9258189290681f2a45a5bec6bf4c0c84866a3028255a8035aeb"
+    },
+    {
+      "path": "learner/runs/20261016-211305-54ab85c5-143a-47b9-8efa-d3889a11080d-postmortem/append-section.sh",
+      "bytes": 25339,
+      "sha256": "32356c56bed469f0e41a03bc2a88b074c1f4baa107d33c8fea337bba9e283a05"
+    },
+    {
+      "path": "learner/runs/20261016-211305-54ab85c5-143a-47b9-8efa-d3889a11080d-postmortem/audit-final.json",
+      "bytes": 1043,
+      "sha256": "859ea4b3976e45e57a4a1484411def5153d356afe699a39e55b4c70f96dadd84"
+    },
+    {
+      "path": "learner/runs/20261016-211305-54ab85c5-143a-47b9-8efa-d3889a11080d-postmortem/combat-details.txt",
+      "bytes": 390574,
+      "sha256": "3b92a627f2182de7ea47fb25d8b825544b3a2d4a66cf923f10b6d105823c85a6"
+    },
+    {
+      "path": "learner/runs/20261016-211305-54ab85c5-143a-47b9-8efa-d3889a11080d-postmortem/deepseek-reasoning.jsonl",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "learner/runs/20261016-211305-54ab85c5-143a-47b9-8efa-d3889a11080d-postmortem/extract.py",
+      "bytes": 823,
+      "sha256": "3cd501237f912dbd2bf0a1848589c31ce7c74f9c82150b63efbdbb206194eed8"
+    },
+    {
+      "path": "learner/runs/20261016-211305-54ab85c5-143a-47b9-8efa-d3889a11080d-postmortem/extraction-notes.md",
+      "bytes": 418,
+      "sha256": "02b0d613fbbac852dee44bb1d47746615e9af2fe8ec248d2ed0c6eeb0474bf6b"
+    },
+    {
+      "path": "learner/runs/20261016-211305-54ab85c5-143a-47b9-8efa-d3889a11080d-postmortem/ledger-check.txt",
+      "bytes": 94,
+      "sha256": "45bc32ad8d0bda0b2cd9e586a2483d7a002b8055e5e794fa649bccf887a37266"
+    },
+    {
+      "path": "learner/runs/20261016-211305-54ab85c5-143a-47b9-8efa-d3889a11080d-postmortem/ledger-find-run.txt",
+      "bytes": 1207,
+      "sha256": "f6ac24511a987d1a0e1753afdb32f4d8f118c018d3d14eeaa9f755ee7a824862"
+    },
+    {
+      "path": "learner/runs/20261016-211305-54ab85c5-143a-47b9-8efa-d3889a11080d-postmortem/ledger-resources-receipt.json",
+      "bytes": 12,
+      "sha256": "ba60d4934846f2833b0d5e8374ab3c319ebc2291c2a51203459be8594083ffa3"
+    },
+    {
+      "path": "learner/runs/20261016-211305-54ab85c5-143a-47b9-8efa-d3889a11080d-postmortem/ledger-resources.json",
+      "bytes": 501,
+      "sha256": "5ec0ce6453982f704a3a13981130faed3030fddf5d46756710a6f3b4a624e091"
+    },
+    {
+      "path": "learner/runs/20261016-211305-54ab85c5-143a-47b9-8efa-d3889a11080d-postmortem/ledger-sl-receipt.json",
+      "bytes": 12,
+      "sha256": "c603dd022615c3981a029265a088357ed0d59f462673ca4405ed27a1e901932f"
+    },
+    {
+      "path": "learner/runs/20261016-211305-54ab85c5-143a-47b9-8efa-d3889a11080d-postmortem/ledger-sl.json",
+      "bytes": 520,
+      "sha256": "0bd957d5c79fe7597a3033cb8319c565c353c5f083afd13428542564eb1cb9e5"
+    },
+    {
+      "path": "learner/runs/20261016-211305-54ab85c5-143a-47b9-8efa-d3889a11080d-postmortem/ledger-startup-receipt.json",
+      "bytes": 12,
+      "sha256": "95022c34794a30dca5288aab83b93ccdfe13ac63d16f1f6e89adbfc1ca7c3343"
+    },
+    {
+      "path": "learner/runs/20261016-211305-54ab85c5-143a-47b9-8efa-d3889a11080d-postmortem/ledger-startup.json",
+      "bytes": 489,
+      "sha256": "10c2cc89db4fc3f7eae196205c4c57764f44deef76d15f0f94588322410933a7"
+    },
+    {
+      "path": "learner/runs/20261016-211305-54ab85c5-143a-47b9-8efa-d3889a11080d-postmortem/live-reference.diff",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "learner/runs/20261016-211305-54ab85c5-143a-47b9-8efa-d3889a11080d-postmortem/metrics.json",
+      "bytes": 3292,
+      "sha256": "770cfe6e775f9f123fcb5cd0ca28200b7c20967b0c8c9de36c30279eca02718b"
+    },
+    {
+      "path": "learner/runs/20261016-211305-54ab85c5-143a-47b9-8efa-d3889a11080d-postmortem/metrics.py",
+      "bytes": 3393,
+      "sha256": "52bef7b664e3117e46397adc26bf06b1199300f46d454d40a215baa49d0f7107"
+    },
+    {
+      "path": "learner/runs/20261016-211305-54ab85c5-143a-47b9-8efa-d3889a11080d-postmortem/metrics.txt",
+      "bytes": 35161,
+      "sha256": "0d86dafde7353849c1d71d278319be4e8e31a27ed4069f2fdb540c4a992325ab"
+    },
+    {
+      "path": "learner/runs/20261016-211305-54ab85c5-143a-47b9-8efa-d3889a11080d-postmortem/noncombat.txt",
+      "bytes": 19882,
+      "sha256": "0bed65ab77451d755ae2d68a6b942ca358ef27853e56dcabc6883b01f26e9925"
+    },
+    {
+      "path": "learner/runs/20261016-211305-54ab85c5-143a-47b9-8efa-d3889a11080d-postmortem/proposal-resources-receipt.json",
+      "bytes": 33,
+      "sha256": "a0f1f622588c607c7b7b4f34a12239181f2ef881a45a31666555765034f72835"
+    },
+    {
+      "path": "learner/runs/20261016-211305-54ab85c5-143a-47b9-8efa-d3889a11080d-postmortem/proposal-resources.json",
+      "bytes": 648,
+      "sha256": "b91f56ea11023ee001883dae868dac048f961c90db765bd59643f6b413086f19"
+    },
+    {
+      "path": "learner/runs/20261016-211305-54ab85c5-143a-47b9-8efa-d3889a11080d-postmortem/proposal-resources.md",
+      "bytes": 2629,
+      "sha256": "eb769621ef2be250ac47c140815f035887dd94f442e69e5e40ab6aaafa89a286"
+    },
+    {
+      "path": "learner/runs/20261016-211305-54ab85c5-143a-47b9-8efa-d3889a11080d-postmortem/proposal-sl-receipt.json",
+      "bytes": 33,
+      "sha256": "b89e6ffde41e8254c2a1b171e4b91d86b5df3fe62b7f57252427e6eeba7a2aea"
+    },
+    {
+      "path": "learner/runs/20261016-211305-54ab85c5-143a-47b9-8efa-d3889a11080d-postmortem/proposal-sl.json",
+      "bytes": 701,
+      "sha256": "4355d363bc3f12111bb9c036cb572ad4a9c655fdf2905f875e26c115cbcca7da"
+    },
+    {
+      "path": "learner/runs/20261016-211305-54ab85c5-143a-47b9-8efa-d3889a11080d-postmortem/proposal-sl.md",
+      "bytes": 2890,
+      "sha256": "7684ad1f6f2a8d87049f4bcc27a0c315d3c31aada3b583da08d71d9b208f41bd"
+    },
+    {
+      "path": "learner/runs/20261016-211305-54ab85c5-143a-47b9-8efa-d3889a11080d-postmortem/proposal-startup-receipt.json",
+      "bytes": 33,
+      "sha256": "32d49610ebe158b448963d15e535d3bf0de4a1688f2d401229abf3a0ee3297ee"
+    },
+    {
+      "path": "learner/runs/20261016-211305-54ab85c5-143a-47b9-8efa-d3889a11080d-postmortem/proposal-startup.json",
+      "bytes": 619,
+      "sha256": "1705b64d7db8b0a27201eb2e62e4aae479919aaa08fe2a91ea9b0dee5a51c57d"
+    },
+    {
+      "path": "learner/runs/20261016-211305-54ab85c5-143a-47b9-8efa-d3889a11080d-postmortem/proposal-startup.md",
+      "bytes": 2372,
+      "sha256": "5a9025bf156aa882f11525a56864c1877077b17c4e26bc8d5ec3e9ad1f421758"
+    },
+    {
+      "path": "learner/runs/20261016-211305-54ab85c5-143a-47b9-8efa-d3889a11080d-postmortem/render-final.txt",
+      "bytes": 3423,
+      "sha256": "f8aafa6485782743488dfacc826c514519e18843c67280dc271187fbc66edce4"
+    },
+    {
+      "path": "learner/runs/20261016-211305-54ab85c5-143a-47b9-8efa-d3889a11080d-postmortem/render.py",
+      "bytes": 4985,
+      "sha256": "9037eaacf3298e23cc6d3b9d6a6848add739440f70d881443aa78a800936166f"
+    },
+    {
+      "path": "learner/runs/20261016-211305-54ab85c5-143a-47b9-8efa-d3889a11080d-postmortem/report.md",
+      "bytes": 1686,
+      "sha256": "e181b8b4c05b71a04a70a5a2ed00d0f44ef95c97cb20ce2c99c3dab02ef3e95b"
+    },
+    {
+      "path": "learner/runs/20261016-211305-54ab85c5-143a-47b9-8efa-d3889a11080d-postmortem/resource-changes.txt",
+      "bytes": 12507,
+      "sha256": "f0a26325df937ec1db40c5e3bc793f2e156ca7a3d22b3c16044e99257ebdf671"
+    },
+    {
+      "path": "learner/runs/20261016-211305-54ab85c5-143a-47b9-8efa-d3889a11080d-postmortem/result.json",
+      "bytes": 644,
+      "sha256": "e3ee8079ef2f4a8a1ffafc524c5009926aa0eb8b49f5b50632e3465083437460"
+    },
+    {
+      "path": "learner/runs/20261016-211305-54ab85c5-143a-47b9-8efa-d3889a11080d-postmortem/run-config.jsonl",
+      "bytes": 5916,
+      "sha256": "0bbe40c77f2d6806a4b06f0355bb62b112e2c0a7e6c0fa26fd479b8b0ea44154"
+    },
+    {
+      "path": "learner/runs/20261016-211305-54ab85c5-143a-47b9-8efa-d3889a11080d-postmortem/run-plans.jsonl",
+      "bytes": 27648,
+      "sha256": "5dbf4e5446f78d494075250c443c5234a7ece0044ebea2167b1206828568a1a6"
+    },
+    {
+      "path": "learner/runs/20261016-211305-54ab85c5-143a-47b9-8efa-d3889a11080d-postmortem/section-draft-before-final-check.md",
+      "bytes": 25264,
+      "sha256": "5223c6c974d44e879d30f121b179e3636bf83e072e7d768606a52c5a5f688ca8"
+    },
+    {
+      "path": "learner/runs/20261016-211305-54ab85c5-143a-47b9-8efa-d3889a11080d-postmortem/section-draft.md",
+      "bytes": 25274,
+      "sha256": "22d3ece81f7d57f05a88e4da60d4f2ea71fb078298405cbdefcf47e98375cb95"
+    },
+    {
+      "path": "learner/runs/20261016-211305-54ab85c5-143a-47b9-8efa-d3889a11080d-postmortem/section-template.md",
+      "bytes": 17591,
+      "sha256": "7f37ef51cf1a3366e935206b465e918cbe96b476749e1290803a741516647a24"
+    },
+    {
+      "path": "learner/runs/20261016-211305-54ab85c5-143a-47b9-8efa-d3889a11080d-postmortem/sl-attempts.jsonl",
+      "bytes": 199414,
+      "sha256": "e226f74c3d32e026b38e0b6fcc86f0d2e3b0a0c1ec5844e72f12e79650a13b79"
+    },
+    {
+      "path": "learner/runs/20261016-211305-54ab85c5-143a-47b9-8efa-d3889a11080d-postmortem/states_extract.py",
+      "bytes": 1129,
+      "sha256": "a743d41ee918e982c539a8d2d093a69d63ea4d34719921f52c7fa0d07cd8daf8"
+    },
+    {
+      "path": "learner/runs/20261016-211305-54ab85c5-143a-47b9-8efa-d3889a11080d-postmortem/verification.json",
+      "bytes": 998,
+      "sha256": "3c25374a2a6625753da237aae9a10142c8b78a0df21313755386544ccd8da783"
+    },
+    {
+      "path": "learner/runs/20261016-211305-54ab85c5-143a-47b9-8efa-d3889a11080d-postmortem/verify.py",
+      "bytes": 2689,
+      "sha256": "6dba75c5ede80567428068cd7228027b87082d645a455107a9a0e4f62480709d"
+    },
+    {
+      "path": "ops/codex-ops/learner/20261016-211301.err",
+      "bytes": 9033,
+      "sha256": "52f000ce9ad1c7a58e101e9d3c9df63be85ceeff3f5c7301d6306a5213ad5b0a"
+    },
+    {
+      "path": "ops/codex-ops/learner/20261016-211301.out",
+      "bytes": 2521,
+      "sha256": "977271bc237f3780323ae3a90585520b17ae7183e3d3fb9656e7048e9ae23616"
+    }
+  ],
+  "source_tests_not_run": true,
+  "complete_dirty_knowledge_unknown": true
+}

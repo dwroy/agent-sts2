@@ -1,0 +1,16 @@
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/ops/codex-ops/record-staging/20261017-1953/close-r387.py", line 24, in <module>
+    git('merge-base','--is-ancestor',ref,'HEAD',cwd=cwd)
+    ~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dw/Projects/agent-sts2/ops/codex-ops/record-staging/20261017-1953/close-r387.py", line 8, in git
+    def git(*args,cwd=r):return subprocess.check_output(['git','-C',str(cwd),*args],stderr=subprocess.PIPE)
+                                ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/subprocess.py", line 473, in check_output
+    return run(*popenargs, stdout=PIPE, timeout=timeout, check=True,
+           ~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+               **kwargs).stdout
+               ^^^^^^^^^
+  File "/usr/lib/python3.14/subprocess.py", line 578, in run
+    raise CalledProcessError(retcode, process.args,
+                             output=stdout, stderr=stderr)
+subprocess.CalledProcessError: Command '['git', '-C', '/home/dw/Projects/agent-sts2', 'merge-base', '--is-ancestor', '6fca201ea4d7f6aaba322a58eab79c22d7d71d88', 'HEAD']' returned non-zero exit status 1.

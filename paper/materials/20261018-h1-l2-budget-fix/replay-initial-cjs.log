@@ -1,0 +1,20 @@
+node:internal/modules/run_main:123
+    triggerUncaughtException(
+    ^
+
+Error: Transform failed with 1 error:
+/home/dw/Projects/agent-sts2/.worktrees/h1-l2-budget-fix-20261018/paper/materials/20261018-h1-l2-budget-fix/replay-budget.ts:40:0: ERROR: Top-level await is currently not supported with the "cjs" output format
+    at failureErrorWithLog (/home/dw/Projects/agent-sts2/agent/node_modules/esbuild/lib/main.js:1752:15)
+    at /home/dw/Projects/agent-sts2/agent/node_modules/esbuild/lib/main.js:1019:50
+    at responseCallbacks.<computed> (/home/dw/Projects/agent-sts2/agent/node_modules/esbuild/lib/main.js:886:9)
+    at handleIncomingPacket (/home/dw/Projects/agent-sts2/agent/node_modules/esbuild/lib/main.js:941:12)
+    at Socket.readFromStdout (/home/dw/Projects/agent-sts2/agent/node_modules/esbuild/lib/main.js:864:7)
+    at Socket.emit (node:events:519:28)
+    at addChunk (node:internal/streams/readable:561:12)
+    at readableAddChunkPushByteMode (node:internal/streams/readable:512:3)
+    at Readable.push (node:internal/streams/readable:392:5)
+    at Pipe.onStreamRead (node:internal/stream_base_commons:189:23) {
+  name: 'TransformError'
+}
+
+Node.js v22.23.3

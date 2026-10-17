@@ -1,0 +1,193 @@
+{
+  "scope": "two previously accepted full H1 natural runs, Boss30; frozen before new H2 outcomes; not causal policy-fixed comparison",
+  "runs": {
+    "25MFNPAE37R2": {
+      "code": {
+        "commit": "6fbbd82abd6d407dbaf93f82639b7f927efa54a0",
+        "code": "6fbbd82+dirty",
+        "dirty": true,
+        "dirty_files": [
+          "knowledge/characters/silent/boss-damage.json",
+          "knowledge/characters/silent/construction-opportunities.json",
+          "knowledge/characters/silent/monster-records.json",
+          "knowledge/characters/silent/outcome-stats.json",
+          "knowledge/characters/silent/room-costs.json",
+          "knowledge/common/card-upgrades.json",
+          "knowledge/common/monster-db.json",
+          "knowledge/common/move-model.json",
+          "notes/monster-db-check.md"
+        ],
+        "branch": "live",
+        "worktree": "live"
+      },
+      "Boss_first_attempt_B2": {
+        "rows": 25,
+        "status_counts": {
+          "complete_budget": 24,
+          "partial": 1
+        },
+        "budgeted_rows": 25,
+        "budget_truncated_rows": 1,
+        "budget_truncated_unique_attempt_ids": 1,
+        "budget_truncated_fraction": 0.04,
+        "budget_truncated_fraction_all_output_rows": 0.04,
+        "timed_out_rows": 1,
+        "actual_samples": {
+          "n": 25,
+          "p50": 200,
+          "p90": 200.0,
+          "max": 600,
+          "sum": 5681
+        },
+        "sample_histogram": {
+          "600": 2,
+          "200": 22,
+          "81": 1
+        },
+        "candidate_samples": {
+          "n": 106,
+          "p50": 200.0,
+          "p90": 200.0,
+          "max": 600,
+          "sum": 23167
+        },
+        "paired_samples": {
+          "n": 106,
+          "p50": 200.0,
+          "p90": 200.0,
+          "max": 600,
+          "sum": 23167
+        },
+        "requested_samples": {
+          "n": 25,
+          "p50": 200,
+          "p90": 600.0,
+          "max": 600,
+          "sum": 7800
+        },
+        "low_trust_rows": 18,
+        "wall_ms": {
+          "n": 25,
+          "p50": 1137,
+          "p90": 5428.4000000000015,
+          "max": 18763,
+          "sum": 70261
+        },
+        "memo_hit_rows": 0,
+        "limits": "rows may reuse a cached completion; C2 complete_adaptive/complete_budget is not deadline truncation. Low-trust sample cap alone is not a timeout."
+      },
+      "first_attempt_Boss_decisions": 96,
+      "known_comparison_limit": "25MF/2PQK Boss30;2PQK had a known C1 sample-ID episode fixed later byR384; H0 and knowledge also change"
+    },
+    "2PQK67ULZY90": {
+      "code": {
+        "commit": "5782a41c4b1db735e3eba8e769e0ad52c356f136",
+        "code": "5782a41+dirty",
+        "dirty": true,
+        "dirty_files": [
+          "knowledge/characters/silent/boss-damage.json",
+          "knowledge/characters/silent/construction-opportunities.json",
+          "knowledge/characters/silent/monster-records.json",
+          "knowledge/characters/silent/outcome-stats.json",
+          "knowledge/characters/silent/room-costs.json",
+          "knowledge/common/card-upgrades.json",
+          "knowledge/common/monster-db.json",
+          "knowledge/common/move-model.json",
+          "notes/fight-value-backtest-silent.md",
+          "notes/monster-db-check.md"
+        ],
+        "branch": "live",
+        "worktree": "live"
+      },
+      "Boss_first_attempt_B2": {
+        "rows": 21,
+        "status_counts": {
+          "complete_budget": 15,
+          "partial": 3,
+          "pending": 2,
+          "degraded": 1
+        },
+        "budgeted_rows": 19,
+        "budget_truncated_rows": 3,
+        "budget_truncated_unique_attempt_ids": 3,
+        "budget_truncated_fraction": 0.15789473684210525,
+        "budget_truncated_fraction_all_output_rows": 0.14285714285714285,
+        "timed_out_rows": 2,
+        "actual_samples": {
+          "n": 21,
+          "p50": 200,
+          "p90": 300.0,
+          "max": 600,
+          "sum": 4182
+        },
+        "sample_histogram": {
+          "300": 2,
+          "200": 14,
+          "600": 1,
+          "89": 1,
+          "93": 1,
+          "0": 2
+        },
+        "candidate_samples": {
+          "n": 69,
+          "p50": 200,
+          "p90": 300.0,
+          "max": 600,
+          "sum": 14620
+        },
+        "paired_samples": {
+          "n": 69,
+          "p50": 200,
+          "p90": 300.0,
+          "max": 600,
+          "sum": 14620
+        },
+        "requested_samples": {
+          "n": 17,
+          "p50": 600,
+          "p90": 600.0,
+          "max": 600,
+          "sum": 10200
+        },
+        "low_trust_rows": 0,
+        "wall_ms": {
+          "n": 21,
+          "p50": 2211,
+          "p90": 27276.0,
+          "max": 28059,
+          "sum": 121468
+        },
+        "memo_hit_rows": 0,
+        "limits": "rows may reuse a cached completion; C2 complete_adaptive/complete_budget is not deadline truncation. Low-trust sample cap alone is not a timeout."
+      },
+      "first_attempt_Boss_decisions": 78,
+      "known_comparison_limit": "25MF/2PQK Boss30;2PQK had a known C1 sample-ID episode fixed later byR384; H0 and knowledge also change"
+    }
+  },
+  "inputs": [
+    {
+      "path": "paper/materials/20261017-human-pace-h1/natural/inputs-25MFNPAE37R2/decisions.jsonl.gz",
+      "sha256": "abe2e8da4d3d01111bcae337bed8474fb3eb9a8147d7f678f00989e2900da6e7"
+    },
+    {
+      "path": "paper/materials/20261017-human-pace-h1/natural/inputs-25MFNPAE37R2/sl-attempts.jsonl.gz",
+      "sha256": "ab8dc8bd1c5143e4df7c1052b5f8ec4676d0d407ff1ee28015dd22109aec05bc"
+    },
+    {
+      "path": "paper/materials/20261017-human-pace-h1/natural/inputs-25MFNPAE37R2/run-config.jsonl.gz",
+      "sha256": "5927e5732c496e56eda483d156612a3d5ce4375107e4d63430b71afd798dbf4b"
+    },
+    {
+      "path": "paper/materials/20261017-human-pace-h1/natural/inputs-2PQK67ULZY90/decisions.jsonl.gz",
+      "sha256": "b6dfcc8c9f24a80ed40ee87efde9fb2cd8d1498bd6921cf4e1c99596e7282fe0"
+    },
+    {
+      "path": "paper/materials/20261017-human-pace-h1/natural/inputs-2PQK67ULZY90/sl-attempts.jsonl.gz",
+      "sha256": "0de448e4b101d65231ce168235db332a6d6917cb51a1cda1cd83e0e482d6cfeb"
+    },
+    {
+      "path": "paper/materials/20261017-human-pace-h1/natural/inputs-2PQK67ULZY90/run-config.jsonl.gz",
+      "sha256": "3308918ec473f6fb72fc1cca058ffd85e448046923c6780c3c43ac4e6387a218"
+    }
+  ]
+}

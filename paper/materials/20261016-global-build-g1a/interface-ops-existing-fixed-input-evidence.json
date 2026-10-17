@@ -1,0 +1,47 @@
+{
+  "at": "2026-10-16 10:04:57 CST",
+  "actor": "ops",
+  "checked_code": "0e7998bfa8df267dcf8835a57949bdb982c9feb0",
+  "tree": "815582403e14d7c501724fc5d8ee416b82beb3bf",
+  "existing_source_artifacts": {
+    "ops/learner_checks.py": {
+      "checked_commit": "0e7998bfa8df267dcf8835a57949bdb982c9feb0",
+      "sha256": "f3e20b5e1b1f2731c67b9380b588fc928494206452dc857d950a01e346d1934c",
+      "bytes": 18178
+    },
+    "agent/tests/silent-double-boss.test.ts": {
+      "checked_commit": "0e7998bfa8df267dcf8835a57949bdb982c9feb0",
+      "sha256": "5d9a9523081870b699e94c8c1a408513a9c01916814edd7cb3681d8d505320e8",
+      "bytes": 13830
+    },
+    "agent/tests/boss-sim-fixture.ts": {
+      "checked_commit": "0e7998bfa8df267dcf8835a57949bdb982c9feb0",
+      "sha256": "2319717f19a10b023da81422b4463967d7ed84b377296db529ded56dfa796c84",
+      "bytes": 4715
+    },
+    "agent/tests/boss-sim-build-fixture.ts": {
+      "checked_commit": "0e7998bfa8df267dcf8835a57949bdb982c9feb0",
+      "sha256": "344cf1f17f02dc2e3ad5e20f58014ceda83b493175c2be2ad1090604dc57a223",
+      "bytes": 3721
+    }
+  },
+  "existing_original_host_test_line": [
+    {
+      "path": "ops/codex-ops/learner/20261016-075726-strategy-proposal.fallback-815582403e14d7c501724fc5d8ee416b82beb3bf.checks.log",
+      "offset": 71345,
+      "bytes": 111,
+      "sha256": "80bc4300be5b6203280ea79a2df120d70a53628a2cffd0e9d7f132cf03086137",
+      "text": "\u001b[32m✓\u001b[39m tests/silent-double-boss.test.ts \u001b[2m(\u001b[22m\u001b[2m12 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[33m 397\u001b[2mms\u001b[22m\u001b[39m"
+    }
+  ],
+  "source_parameter_evidence": [
+    "sequence() constructs explicit synthetic boards, fixed hand/piles/seed and continuation inputs",
+    "board() supplies a literal BOSS table, mm={}, model=null and gates=null",
+    "Other construction tests reference FIXTURE_DB/FIXTURE_MM from the committed test fixture"
+  ],
+  "executor_evidence": "Original runner pins HEAD/tree then runs tsc and vitest with cwd=live/agent. This path does not create an immutable copy of all generated knowledge or record per-file read times.",
+  "scope": "Existing source and original log readback only, no test or probe executed; explicit fixed parameters in selected tests do not prove all491 files avoided generated knowledge reads",
+  "actual_test_file_read_bytes_or_times": "unknown",
+  "FD8_dirty_full_tree_checked": false,
+  "production_recalibration": false
+}

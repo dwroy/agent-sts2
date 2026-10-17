@@ -1,0 +1,1612 @@
+{
+  "at": "2026-10-16 20:26:52 CST",
+  "batch": "20261016-180157-fix-batch",
+  "canonical": {
+    "task": "fix-batch",
+    "learner_task": "silent-boss-calibration",
+    "state": "done",
+    "rc": 0,
+    "merged": "8b65dafb808eb54e965fc1c6c613462fad82306c",
+    "feature_request": "silent-calibration-07aa1edd6a01a56d8fc5441f",
+    "worktree": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration",
+    "proposal_audit_errors": [],
+    "checks_pending": true
+  },
+  "native": {
+    "batch": "20261016-180157-fix-batch",
+    "thread": "01a14429-5b6e-7730-8830-39814b94c30f",
+    "cwd": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration",
+    "event_log": "learner/runs/20261016-180201-fb9c9de6-185b-47f2-998c-d8342e03e3c0-silent-boss-calibration.jsonl",
+    "registered_launch_batch": "20261016-180157-fix-batch",
+    "original_lease": "2b721d69760a56bf9e96693d41444aa04d9b59f7f799aec5ad987ef210be5803",
+    "native_context": {
+      "source": "ops/codex-ops/accounts/codex1/learner/sessions/2026/10/16/rollout-2026-10-16T18-02-03-01a14429-5b6e-7730-8830-39814b94c30f.jsonl",
+      "offset": 50056,
+      "bytes": 5064,
+      "sha256": "90995c2edcfbbe8eb4908603b5739d1136eea6758085d9ab961c52c3e18d457c",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "sandbox": {
+        "type": "workspace-write",
+        "writable_roots": [
+          "/home/dw/Projects/agent-sts2",
+          "/home/dw/Projects/agent-sts2/.git",
+          "/home/dw/Projects/agent-sts2/.git/worktrees/silent-boss-calibration"
+        ],
+        "network_access": false,
+        "exclude_tmpdir_env_var": false,
+        "exclude_slash_tmp": false
+      },
+      "approval_policy": "never"
+    },
+    "native_user_input": {
+      "offset": 55120,
+      "bytes": 11431,
+      "sha256": "4adfea2bf60e27cc7b1b739849b71df693da2c21322248032840cbc568e16682",
+      "input_sha256": "29c2f2f6f9246de79bac26842bb6d78b41d5fe35c8fe2c79849accd9133a1d64"
+    },
+    "original_header_events": [
+      {
+        "offset": 0,
+        "bytes": 13142,
+        "sha256": "978e9f4f9e22e756c9051074bf207a374cfb8d55eb36070594457098266acb24",
+        "type": "learner_launch",
+        "attempt": null,
+        "code": null
+      },
+      {
+        "offset": 13142,
+        "bytes": 370,
+        "sha256": "e5817329c1f66df58c8e75a27633b499e3f8ca8ca128eaae66e39fe118ac1342",
+        "type": "learner_startup_attempt",
+        "attempt": 1,
+        "code": null
+      },
+      {
+        "offset": 16524,
+        "bytes": 77,
+        "sha256": "4b61c5184df8aa572727de89a068e2a7ea7b03024bf7316238c2c2e882714a9d",
+        "type": "thread.started",
+        "attempt": null,
+        "code": null
+      }
+    ],
+    "startup_attempts": 1,
+    "failed_startups_preserved": 0,
+    "no_model_or_manual_restart": true
+  },
+  "full_report": {
+    "task": "fix-batch",
+    "base": "fa48e9f1cca4c6ee030df58f842c2ce39f055acd",
+    "fixes": [
+      {
+        "item": "Roy 已授权新功能：静默 boss 模拟校准",
+        "commit": "f2617b958e425817ca079ff25a5e95484b5096ba",
+        "nature": "授权新功能的定期数据校准刷新",
+        "test": "原test-sandbox脚本及明确的沙箱限制；固定Python夹具；实际B2/B3数据消费者",
+        "fails_without_fix": false,
+        "fails_without_fix_note": "本批为新功能数据刷新，无bug撤码对照；旧表不含本批新增验证。",
+        "ledger": [
+          "silent-0497"
+        ]
+      }
+    ],
+    "skipped": [
+      {
+        "item": "SL predicted_death",
+        "count": 836,
+        "reason": "截断样本保留来源，不计入实际胜负拟合"
+      },
+      {
+        "item": "A0–4/A5–9独立验证",
+        "missing_each": 10,
+        "reason": "固定切分下独立验证均0，保留调参残差"
+      }
+    ],
+    "merged": "8b65dafb808eb54e965fc1c6c613462fad82306c",
+    "publication": "3f81fcbbdd04a57a38c17c2dcb8cb200ad7bb938",
+    "fixed_release_tree": "8ecee7cbe5526f10f90ccbe4a65f517707d5ee03",
+    "tested_live_tree": "de775cd9d5b5383983eaf1dbd34a245e38d8188a",
+    "version": "S1.boss-calibration21",
+    "release_id": null,
+    "release_id_status": "ops核实际提交后统一分配",
+    "tests": {
+      "main_full_unchanged_code": {
+        "files": 445,
+        "cases": 4162,
+        "tsc": 0,
+        "vitest": 0
+      },
+      "source_scope": "Focused calibration fixtures after data refresh; runtime code unchanged from the preceding full suite.",
+      "tsc": 0,
+      "vitest": 0,
+      "files": 7,
+      "cases": 27,
+      "suite_files": [
+        3,
+        4
+      ],
+      "suite_cases": [
+        8,
+        19
+      ],
+      "workers": 1,
+      "source_log_sha256": "c086a4e82f2396599ab67d83f9fa4d252fa72034c0626a63b01e067318cf5dca",
+      "additional_cli_exclusions": [
+        "tests/global-build-health.test.ts",
+        "tests/global-build-funnel.test.ts"
+      ],
+      "direct_python_wrapper_equivalents": {
+        "global_build_health_test.py": {
+          "exit": 0,
+          "stdout_empty": true
+        },
+        "global_build_funnel_test.py": {
+          "exit": 0,
+          "stdout_empty": true
+        }
+      },
+      "standard_attempts": {
+        "merge-main-sandbox": 130,
+        "main-sandbox": 130,
+        "observed_failure": "spawnSync /usr/bin/python3 EPERM; Python child succeeded"
+      },
+      "python_calibration": 12,
+      "python_automation": 57,
+      "python_dispatch": 48,
+      "candidate_consumer_checks": 28,
+      "full_external_checks": "pending original scheduler; standard sandbox attempts are not reported as passed",
+      "live": {
+        "tsc": 0,
+        "vitest": 0,
+        "files": 445,
+        "cases": 4166,
+        "additional_cli_exclusions": [
+          "tests/global-build-health.test.ts",
+          "tests/global-build-funnel.test.ts"
+        ]
+      },
+      "external_full": "pending original scheduler"
+    },
+    "code_proposals": [],
+    "implementation_domains": [],
+    "boss_trust": {
+      "KAISER_CRAB": {
+        "b2": {
+          "n": 46,
+          "missing": 0,
+          "brier": 0.1595,
+          "mean_pred": 0.695,
+          "actual_win": 0.63,
+          "failed": [
+            "brier",
+            "leak"
+          ],
+          "leak_ratio": 1.308,
+          "trusted": false
+        },
+        "b3": {
+          "n": 46,
+          "missing": 0,
+          "brier": 0.1848,
+          "mean_pred": 0.71,
+          "actual_win": 0.63,
+          "failed": [
+            "brier",
+            "leak"
+          ],
+          "leak_ratio": 1.327,
+          "trusted": false
+        }
+      },
+      "THE_KIN": {
+        "b2": {
+          "n": 42,
+          "missing": 0,
+          "brier": 0.069,
+          "mean_pred": 0.838,
+          "actual_win": 0.881,
+          "failed": [],
+          "leak_ratio": 1.194,
+          "trusted": true
+        },
+        "b3": {
+          "n": 42,
+          "missing": 0,
+          "brier": 0.0757,
+          "mean_pred": 0.851,
+          "actual_win": 0.881,
+          "failed": [],
+          "leak_ratio": 1.171,
+          "trusted": true
+        }
+      },
+      "QUEEN": {
+        "b2": {
+          "n": 31,
+          "missing": 0,
+          "brier": 0.2294,
+          "mean_pred": 0.719,
+          "actual_win": 0.419,
+          "failed": [
+            "brier",
+            "gap"
+          ],
+          "leak_ratio": 1.048,
+          "trusted": false
+        },
+        "b3": {
+          "n": 31,
+          "missing": 0,
+          "brier": 0.2183,
+          "mean_pred": 0.689,
+          "actual_win": 0.419,
+          "failed": [
+            "brier",
+            "gap"
+          ],
+          "leak_ratio": 1.165,
+          "trusted": false
+        }
+      },
+      "AEONGLASS": {
+        "b2": {
+          "n": 35,
+          "missing": 0,
+          "brier": 0.1879,
+          "mean_pred": 0.692,
+          "actual_win": 0.514,
+          "failed": [
+            "brier",
+            "gap",
+            "leak"
+          ],
+          "leak_ratio": 3.979,
+          "trusted": false
+        },
+        "b3": {
+          "n": 35,
+          "missing": 0,
+          "brier": 0.2001,
+          "mean_pred": 0.693,
+          "actual_win": 0.514,
+          "failed": [
+            "brier",
+            "gap",
+            "leak"
+          ],
+          "leak_ratio": 4.078,
+          "trusted": false
+        }
+      },
+      "CEREMONIAL_BEAST": {
+        "b2": {
+          "n": 40,
+          "missing": 0,
+          "brier": 0.0606,
+          "mean_pred": 0.773,
+          "actual_win": 0.775,
+          "failed": [],
+          "leak_ratio": 1.155,
+          "trusted": true
+        },
+        "b3": {
+          "n": 40,
+          "missing": 0,
+          "brier": 0.0534,
+          "mean_pred": 0.785,
+          "actual_win": 0.775,
+          "failed": [],
+          "leak_ratio": 1.176,
+          "trusted": true
+        }
+      },
+      "KNOWLEDGE_DEMON": {
+        "b2": {
+          "n": 45,
+          "missing": 0,
+          "brier": 0.1022,
+          "mean_pred": 0.746,
+          "actual_win": 0.844,
+          "failed": [
+            "leak"
+          ],
+          "leak_ratio": 1.337,
+          "trusted": false
+        },
+        "b3": {
+          "n": 45,
+          "missing": 0,
+          "brier": 0.0898,
+          "mean_pred": 0.757,
+          "actual_win": 0.844,
+          "failed": [
+            "leak"
+          ],
+          "leak_ratio": 1.375,
+          "trusted": false
+        }
+      },
+      "LAGAVULIN_MATRIARCH": {
+        "b2": {
+          "n": 40,
+          "missing": 0,
+          "brier": 0.0612,
+          "mean_pred": 0.843,
+          "actual_win": 0.85,
+          "failed": [],
+          "leak_ratio": 0.961,
+          "trusted": true
+        },
+        "b3": {
+          "n": 40,
+          "missing": 0,
+          "brier": 0.0592,
+          "mean_pred": 0.835,
+          "actual_win": 0.85,
+          "failed": [],
+          "leak_ratio": 1.011,
+          "trusted": true
+        }
+      },
+      "SOUL_FYSH": {
+        "b2": {
+          "n": 37,
+          "missing": 0,
+          "brier": 0.0339,
+          "mean_pred": 0.934,
+          "actual_win": 0.919,
+          "failed": [],
+          "leak_ratio": 0.846,
+          "trusted": true
+        },
+        "b3": {
+          "n": 37,
+          "missing": 0,
+          "brier": 0.0365,
+          "mean_pred": 0.943,
+          "actual_win": 0.919,
+          "failed": [],
+          "leak_ratio": 0.856,
+          "trusted": true
+        }
+      },
+      "TEST_SUBJECT": {
+        "b2": {
+          "n": 29,
+          "missing": 0,
+          "brier": 0.1849,
+          "mean_pred": 0.351,
+          "actual_win": 0.207,
+          "failed": [
+            "brier",
+            "leak"
+          ],
+          "leak_ratio": 3.669,
+          "trusted": false
+        },
+        "b3": {
+          "n": 29,
+          "missing": 0,
+          "brier": 0.1771,
+          "mean_pred": 0.321,
+          "actual_win": 0.207,
+          "failed": [
+            "brier",
+            "leak"
+          ],
+          "leak_ratio": 3.538,
+          "trusted": false
+        }
+      },
+      "THE_INSATIABLE": {
+        "b2": {
+          "n": 46,
+          "missing": 0,
+          "brier": 0.1381,
+          "mean_pred": 0.706,
+          "actual_win": 0.674,
+          "failed": [
+            "leak"
+          ],
+          "leak_ratio": 1.303,
+          "trusted": false
+        },
+        "b3": {
+          "n": 46,
+          "missing": 0,
+          "brier": 0.1609,
+          "mean_pred": 0.706,
+          "actual_win": 0.674,
+          "failed": [
+            "brier",
+            "leak"
+          ],
+          "leak_ratio": 1.348,
+          "trusted": false
+        }
+      },
+      "VANTOM": {
+        "b2": {
+          "n": 48,
+          "missing": 0,
+          "brier": 0.0567,
+          "mean_pred": 0.901,
+          "actual_win": 0.938,
+          "failed": [],
+          "leak_ratio": 0.947,
+          "trusted": true
+        },
+        "b3": {
+          "n": 48,
+          "missing": 0,
+          "brier": 0.0519,
+          "mean_pred": 0.906,
+          "actual_win": 0.938,
+          "failed": [],
+          "leak_ratio": 0.934,
+          "trusted": true
+        }
+      },
+      "WATERFALL_GIANT": {
+        "b2": {
+          "n": 40,
+          "missing": 0,
+          "brier": 0.1137,
+          "mean_pred": 0.839,
+          "actual_win": 0.8,
+          "failed": [],
+          "leak_ratio": 0.926,
+          "trusted": true
+        },
+        "b3": {
+          "n": 40,
+          "missing": 0,
+          "brier": 0.1135,
+          "mean_pred": 0.856,
+          "actual_win": 0.8,
+          "failed": [],
+          "leak_ratio": 0.898,
+          "trusted": true
+        }
+      }
+    },
+    "a10_residuals": {
+      "t1": {
+        "n": 479,
+        "gap": 0.03700000000000003,
+        "brier": 0.112,
+        "mean_pred": 0.764,
+        "actual_win": 0.727,
+        "leak_ratio": 1.319
+      },
+      "pre": {
+        "n": 479,
+        "gap": 0.040000000000000036,
+        "brier": 0.1146,
+        "mean_pred": 0.767,
+        "actual_win": 0.727,
+        "leak_ratio": 1.336
+      }
+    },
+    "f49": {
+      "t1": {
+        "n": 31,
+        "actual_win": 0.161,
+        "mean_pred": 0.464,
+        "brier": 0.1821,
+        "auc": 0.835,
+        "const_brier": 0.1353,
+        "buckets": [
+          {
+            "bucket": "0–20%",
+            "n": 0,
+            "pred": null,
+            "actual": null
+          },
+          {
+            "bucket": "20–40%",
+            "n": 22,
+            "pred": 0.351,
+            "actual": 0.045
+          },
+          {
+            "bucket": "40–60%",
+            "n": 2,
+            "pred": 0.504,
+            "actual": 0.0
+          },
+          {
+            "bucket": "60–80%",
+            "n": 2,
+            "pred": 0.654,
+            "actual": 0.5
+          },
+          {
+            "bucket": "80–100%",
+            "n": 5,
+            "pred": 0.869,
+            "actual": 0.6
+          }
+        ],
+        "worst_bucket_n20": 0.306,
+        "won_loss_err": {
+          "n": 4,
+          "median": 12.5,
+          "mean": 21.1,
+          "mae": 26.4,
+          "p10": -10.5,
+          "p90": 70,
+          "within5": 0.0
+        },
+        "leak": {
+          "n": 82,
+          "sim_enemy": 9.4,
+          "actual_enemy": 3.48,
+          "enemy_ratio": 2.704,
+          "sim_loss": 8.96,
+          "actual_loss": 4.1,
+          "loss_ratio": 2.186
+        }
+      },
+      "pre": {
+        "n": 31,
+        "actual_win": 0.161,
+        "mean_pred": 0.421,
+        "brier": 0.1622,
+        "auc": 0.838,
+        "const_brier": 0.1353,
+        "buckets": [
+          {
+            "bucket": "0–20%",
+            "n": 0,
+            "pred": null,
+            "actual": null
+          },
+          {
+            "bucket": "20–40%",
+            "n": 24,
+            "pred": 0.321,
+            "actual": 0.042
+          },
+          {
+            "bucket": "40–60%",
+            "n": 2,
+            "pred": 0.489,
+            "actual": 0.5
+          },
+          {
+            "bucket": "60–80%",
+            "n": 0,
+            "pred": null,
+            "actual": null
+          },
+          {
+            "bucket": "80–100%",
+            "n": 5,
+            "pred": 0.872,
+            "actual": 0.6
+          }
+        ],
+        "worst_bucket_n20": 0.279,
+        "won_loss_err": {
+          "n": 4,
+          "median": 5.0,
+          "mean": 18.5,
+          "mae": 22.0,
+          "p10": -7,
+          "p90": 71,
+          "within5": 0.25
+        },
+        "leak": {
+          "n": 85,
+          "sim_enemy": 9.93,
+          "actual_enemy": 3.53,
+          "enemy_ratio": 2.814,
+          "sim_loss": 9.58,
+          "actual_loss": 4.13,
+          "loss_ratio": 2.32
+        }
+      }
+    },
+    "refresh": {
+      "entry": "agent/tools/boss-sim/refresh-silent.py",
+      "trigger": "升阶或20次新实际结局；每小时:13/:43及完成事件",
+      "new_validation_fights": 21,
+      "tune": 107,
+      "val": 481,
+      "artifact": "995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b"
+    },
+    "commits": {
+      "main_merge": "098e5a7de1aaf06ad0671121b671a0558c04e289",
+      "source": "f2617b958e425817ca079ff25a5e95484b5096ba",
+      "initial_live": "25796e5b5eb721173f697680a143199019446c8a",
+      "refresh_commit": "cd769b1b197d569a8fc3eec307e32b1c619a89c1",
+      "before_code": "cd769b1b197d569a8fc3eec307e32b1c619a89c1",
+      "merged": "8b65dafb808eb54e965fc1c6c613462fad82306c",
+      "publication": "3f81fcbbdd04a57a38c17c2dcb8cb200ad7bb938"
+    },
+    "failed_publication_attempts": [
+      {
+        "failed_merge": "a14ebd0592f0cba9f7d3053eb5809754dd78ee2d",
+        "failed_tree": "e2a3f428a95ae1b46c78f7a5fb6da705c48c1e09",
+        "current_head": "25796e5b5eb721173f697680a143199019446c8a",
+        "before_code": "25796e5b5eb721173f697680a143199019446c8a",
+        "original_trust_and_report_restored": true,
+        "source_kept": "f2617b958e425817ca079ff25a5e95484b5096ba",
+        "failure": "only potions-jev-call fixed fixture timed out at original 60000ms; no assertion failure reported",
+        "passed_cases": 4154,
+        "failed_cases": 1,
+        "skipped_cases": 0,
+        "log_sha256": "f1b329e795e9b764af4993cb35be12a4201f8b547e90b341499f4c5eef15b48a",
+        "cases_summary": "Tests  1 failed | 4154 passed (4155)",
+        "correction": "Skipped count read from the actual suite summary; initial assumed value retained in rollback-readback.first.json."
+      }
+    ],
+    "isolated_original_case": {
+      "exit": 0,
+      "original_timeout_ms": 60000,
+      "passed_ms": 36568
+    },
+    "publication_attempt_dir": "/home/dw/Projects/agent-sts2/learner/runs/20261016-180201-fb9c9de6-185b-47f2-998c-d8342e03e3c0-silent-boss-calibration/retry2",
+    "ledger": [
+      "silent-0497"
+    ],
+    "deployment_readback": {
+      "source": "f2617b958e425817ca079ff25a5e95484b5096ba",
+      "merged": "8b65dafb808eb54e965fc1c6c613462fad82306c",
+      "publication": "3f81fcbbdd04a57a38c17c2dcb8cb200ad7bb938",
+      "publication_tree": "8ecee7cbe5526f10f90ccbe4a65f517707d5ee03",
+      "source_paths_exact": 116,
+      "all_other_git_blobs_preserved": true,
+      "source_actual_live_ancestor": true,
+      "pinned_model_inputs_different_in_publication": 71,
+      "current_production_model_recalibrated": false,
+      "working_refresh_scope": {
+        "notes/monster-db-check.md": "0c664fccfffdb651ca730f1ea5209aea035abdea1a2ca14e8b017de3ced3cb49"
+      },
+      "scope": "Exact Git publication and consumer source/data; natural-game adoption and benefit remain unclaimed."
+    },
+    "gitleaks": {
+      "merge-main": 0,
+      "source": 0,
+      "refresh": 0,
+      "merge": 0,
+      "publication": 0
+    },
+    "blocked": null,
+    "calibration_report": "paper/materials/silent/boss-sim-calibration.md",
+    "report": "/home/dw/Projects/agent-sts2/learner/runs/20261016-180201-fb9c9de6-185b-47f2-998c-d8342e03e3c0-silent-boss-calibration/report.md",
+    "calibration_method_commit": "7e1193cef9467416bc10c8e344a49f4fd98390c7",
+    "current_production_model_recalibrated": false,
+    "notification": {
+      "date": "2026-10-16 20:12:58 CST",
+      "receipts": [
+        {
+          "path": "/home/dw/Projects/agent-sts2/notes/for-roy.md",
+          "offset": 1040898,
+          "length": 2225,
+          "sha256": "51ba2f2a81ac6bea576136c98e338adc3a176acbe538267c31f5db3e4bdeefd2",
+          "status": "appended"
+        },
+        {
+          "path": "/home/dw/Projects/agent-sts2/ops/inbox-dev.md",
+          "offset": 1309751,
+          "length": 2225,
+          "sha256": "51ba2f2a81ac6bea576136c98e338adc3a176acbe538267c31f5db3e4bdeefd2",
+          "status": "appended"
+        }
+      ],
+      "scope": "Actual inbox append/readback only; no watcher or Roy ACK."
+    }
+  },
+  "source": "f2617b958e425817ca079ff25a5e95484b5096ba",
+  "actual_live_ancestor": true,
+  "current_main": "6328d352f2a2f961b2e77c111f41aa832441b6ee",
+  "current_live": "3f81fcbbdd04a57a38c17c2dcb8cb200ad7bb938",
+  "source_paths_exact": 116,
+  "source_leaves": [
+    {
+      "path": "knowledge/characters/silent/boss-trust.json",
+      "bytes": 96864,
+      "sha256": "8afbe6dbbf68f2a7ca73a7d0d43fa702b1061ba16fa10db1a10fb3f8d0e502c5",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "paper/materials/silent/boss-sim-calibration.md",
+      "bytes": 209739,
+      "sha256": "6ebd065a938c0b3bedbfa5fb4e46796b4c88b4df6bc026d18c102d4356c770ab",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/audit-sources.py",
+      "bytes": 4062,
+      "sha256": "8c1cd9d1a5a9ac550462f4578e6c4caf40649f61e8803198150217e1745ed22e",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/audit-versions.py",
+      "bytes": 2183,
+      "sha256": "82f3c7e4fdc16af38f1ff17940b081bc80e6e0bde170ee5182f26eed1bc29da7",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/backfill-frozen.py",
+      "bytes": 2667,
+      "sha256": "b3facff564e2592e1c5f9279f37ebc2c5dbe67ac29bfdaf0623146ecf2259399",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/backfill.exit",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/backfill.log",
+      "bytes": 618,
+      "sha256": "90285e5dca934769e0fd002d636fcf13a3260151f368582d22ad82366c70bfc8",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/boss-input-audit.log",
+      "bytes": 67,
+      "sha256": "bc967e1aea29e05121f0620f783845eb81de9912d7c8c1f0d4a4c3347ab12749",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/boss-trust-table.json",
+      "bytes": 4684,
+      "sha256": "8b69569dd5c96a85aa4f45d0a339b7c12cf27495ac976f15cdadb4ee76183236",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/boss-trust.json",
+      "bytes": 96864,
+      "sha256": "8afbe6dbbf68f2a7ca73a7d0d43fa702b1061ba16fa10db1a10fb3f8d0e502c5",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/cadence-snapshot.json",
+      "bytes": 30638,
+      "sha256": "3d8a4e3a35aa4c6ac460a669d2f38e3087c9e5391a83b55626b49cfb410bcd81",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/calibration-finish.exit",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/calibration-finish.log",
+      "bytes": 1352,
+      "sha256": "a2db865f6c34407f292002d7261e3e9a00ffd2179b984552f4c7d26f85b4f433",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/candidate-consumer-read.json",
+      "bytes": 3685,
+      "sha256": "37cc6f38a19d5985f9c6fec53c6664bab294b8911e6c435639c4afdf27b711b8",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/candidate-consumer.exit",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/candidate-consumer.log",
+      "bytes": 106,
+      "sha256": "1afdfeafd85fd4301a5fb7dc9c5118cf99d0fc35b7f7724d18eebf28f1fe0b2d",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/completed.json",
+      "bytes": 10939,
+      "sha256": "4fccb509379518c105da7ece9598cac565baa84844dd31bf104a57cfb5b4ae51",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/control-replay-comparison.json",
+      "bytes": 385,
+      "sha256": "39de6d1cdb89446acb27ed1917c2998db3aef75b8272879d1bd1e361e2c542bf",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/extract.exit",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/extract.log",
+      "bytes": 10107,
+      "sha256": "9eca655ff238744e4ddeccc604963726acab84b0d5d56971a1d8db66c675ea89",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/extraction.json",
+      "bytes": 12849,
+      "sha256": "d5e14705e25950aa8fbd63e9a6ac4c897a46481665c05afd2ab3ff47b5bc349f",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/fight-code-provenance.json",
+      "bytes": 1716855,
+      "sha256": "d63df67e242a0abde869d63b28097c274b94dcdc72138e8eba93f3fbc476d4dc",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/fights.jsonl",
+      "bytes": 25264166,
+      "sha256": "5281c6381320e734cc558b3b93ce97032b09748f01ab185cd41bd354d2659a6e",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/finalize-publication.py",
+      "bytes": 8903,
+      "sha256": "5bf5be8d80446ff5f3ad99bd2147154e1271ced8161a869f1f4c23c7be25fd1d",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/finish.py",
+      "bytes": 7092,
+      "sha256": "77442844863fd168c2a0f301f46b2703d62bafe02e9a87a27717d4ffe746cd13",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/first-hit-identifiers.json",
+      "bytes": 2750,
+      "sha256": "2e90db9897913b1125070c09832a74d422b577cf867480b4b3a09bb60c286964",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/fixed-model-code-vs-source.patch",
+      "bytes": 684606,
+      "sha256": "e534cb8c318249866d11d71a01cc87c14cabdbd25351931f38c910e3dd9588d7",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/generated-report.md",
+      "bytes": 205582,
+      "sha256": "99b11f3bd62058206dede4280103e613537c11ba8b8151cb21c009e76074a222",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/global_build_funnel_test.py.stderr",
+      "bytes": 112,
+      "sha256": "6b80f1f7116fee7db8b792cc8801e6602ae419af1c2d8fa423134d3232861b75",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/global_build_funnel_test.py.stdout",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/global_build_health_test.py.stderr",
+      "bytes": 102,
+      "sha256": "feabb4add9e2ca3374e538560634d1ec97dc4f4ce89aab12f3d726e36ea9b2f6",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/global_build_health_test.py.stdout",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/historical-copy-preservation.json",
+      "bytes": 179617,
+      "sha256": "14ff0256de465f4b9e428e7f1889ef6f0e617d3d7ed5ab4094a76ade5562ee57",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/historical-copy-restored.json",
+      "bytes": 315,
+      "sha256": "0c2df8da03538947aaeeb3d7239d3c200a91c1a8522a84ae9e198b4bc5d5e263",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/idempotency-audit.json",
+      "bytes": 280,
+      "sha256": "f4671373190fc8397aaeee6b610874030fcd8434bbdf1b1180f4d88f58767fc3",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/import-preflight.exit",
+      "bytes": 2,
+      "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/import-preflight.log",
+      "bytes": 8978,
+      "sha256": "f3086270517f95a73a0d196c44b5cffa06fe7e0f9886a82cb64bbb621a831217",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/index-lag-recovery.json",
+      "bytes": 660,
+      "sha256": "affe715b05296603056a0e10a409c20c6fb57ff4b7867d7fd76a82c8fb0c1c17",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/initial-extraction.json",
+      "bytes": 12977,
+      "sha256": "c7886a2660a12b4a9f4f5258f7296356126741bf0dcd53f1c9a0997e64341241",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/initial-fight-code-provenance.json",
+      "bytes": 1710051,
+      "sha256": "25c9327806ea03eaba251e98f46fdd15dd02dd2b0a06e25bd8a1a42f33eec512",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/initial-missing-indexed-frames.json",
+      "bytes": 1540,
+      "sha256": "e02fb3f2bc28ffcc25a3002e424ed5615bace692104fc0980c73e3a71f99c288",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/initial-source-audit-summary.json",
+      "bytes": 323,
+      "sha256": "5ee9bd5a033f13ab6ad6ea475cfc4741288b37b9a50c427e7d0c742d72e55b2f",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/initial-version-audit-summary.json",
+      "bytes": 3898,
+      "sha256": "330289acf15bb7666ff4511d38f6084079aff53ed505f62ea8828aeb1ae05a39",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/input-audit-summary.json",
+      "bytes": 1110,
+      "sha256": "67f44d7e6e15f3f0933cb7aef4a52aafde9951b3f05ad6f2aeb972b17a71a409",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/ledger-add.log",
+      "bytes": 12,
+      "sha256": "bafc40e734f0b0d660a046c69fe4f8271d14b04e36cbd0371e0d1907a74afafe",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/ledger-item.json",
+      "bytes": 5979,
+      "sha256": "c3aef9601eb442393413a20df36da22e93f8e9ef8a3250338ad8d3aa5fc17233",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/main-merge-conflict-resolution.json",
+      "bytes": 772,
+      "sha256": "6b236d204489471d1ece7387bded4e40617f2aaa102372c7f129b9225d1a6e78",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/main-sandbox.exit",
+      "bytes": 4,
+      "sha256": "f5bde7eb9f6c71611dc5726e8aca3eb4eba3e386da49e0a4ed5c295a90a73a0d",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/main-sandbox.log",
+      "bytes": 593,
+      "sha256": "7eb6ef2bc46c11b5a7ac6499b928c18caec3b675f0e835b7363287879eb28fdd",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/main-supported-sandbox.exit",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/main-supported-sandbox.log",
+      "bytes": 660699,
+      "sha256": "d2b4fb889793a37448f85cac35652545dfb07f41cf3d6db22bcf2c7ae1f52488",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/merge-main-inputs.json",
+      "bytes": 183,
+      "sha256": "a8d6bca68e7794d4d767fbc75d5710c84f5c4b6f78a3556a996d2a1b7b9a44b2",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/merge-main-sandbox.exit",
+      "bytes": 4,
+      "sha256": "f5bde7eb9f6c71611dc5726e8aca3eb4eba3e386da49e0a4ed5c295a90a73a0d",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/merge-main-sandbox.log",
+      "bytes": 86,
+      "sha256": "5675ba064c37b03154e29505a5f5ac607af000373f7c17f6e7965ab3769c07f7",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/missing-indexed-frames.json",
+      "bytes": 3,
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/model-changes.json",
+      "bytes": 21713,
+      "sha256": "350dc90015f49a646669f8221cc3050f7e5a646231292ba514f7cd90e28d279b",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/model-input-audit.json",
+      "bytes": 69192,
+      "sha256": "05e03074b8570077d6e8f9b73a41c8eb9b7e4bd786ee403f7c70d3572385223a",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/model-restoration.json",
+      "bytes": 47823,
+      "sha256": "5bf59915f7cdb89ae5b72b81bbde973e9afbbd03017ed4d42d3d5c6f3bec7065",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/new-outcome-integrity.json",
+      "bytes": 8131,
+      "sha256": "ce5bb773ebd5b67b5d2b6b3cefffec562fcc4b13a56163c8aac6fbff056513ce",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/notify.py",
+      "bytes": 4444,
+      "sha256": "ec7589d813b2f16e6630d3d75fd0ee3634855781a0bd77350618982bba883747",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/opening-audit.json",
+      "bytes": 224727,
+      "sha256": "fe1d8221ef533023a2276a34ba0746c49046d7e4b3700b6b5ceadefa2ecf3f97",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/opening-source-integrity.json",
+      "bytes": 277729,
+      "sha256": "7f98cd91037d3d5e3f9d0ee7a277c5500e303a059105077d6a56a0ab05794b9e",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/package.py",
+      "bytes": 6687,
+      "sha256": "470f57f26d7ebf1d65a68088c5ba63e58cfacdf0dbb1e2686b5c85b72a759cf7",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/pinned-input-integrity.json",
+      "bytes": 27832,
+      "sha256": "c751f1b46ff41120b8dbd904f0a5da148e96083521bd30fca079b0e8a7f1e2fb",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/prepare-data.py",
+      "bytes": 2197,
+      "sha256": "e78e9613237eb52a5f6d7e8781e5b38dc15e6572d261087b2bab9a25e7cd55a6",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/preserve-history.py",
+      "bytes": 2622,
+      "sha256": "6f1c1f46a8a3dab8320b6930702c30f2c8d855c8d1275d655c9ac1fc02df1dc5",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/previous-report.md",
+      "bytes": 203577,
+      "sha256": "521ccd61c0cc64738003b94bcaff3b06d65b4d12a18fd44233323066f145f38b",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/previous-trust.json",
+      "bytes": 95139,
+      "sha256": "8861873eb161d86520e46a2227ac324732a31d7b35b9cd15944a3d008bcbbeca",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/provenance.json",
+      "bytes": 28137,
+      "sha256": "9ff2e18a46992d9a6d9225498d8013e28db81615b22a57d09a85a96bf2340c7d",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/publish.py",
+      "bytes": 11150,
+      "sha256": "1af6b01beabd8f7bfa4a5684c26c89d1eb0c6ef57ba65a8106dcd369c5210db5",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/python-automation.exit",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/python-automation.log",
+      "bytes": 21990,
+      "sha256": "8cccb77a9684a2ac9943c6169499a94c5118f9f3af1320fc4f0c071ab9d3f52a",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/python-dispatch.exit",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/python-dispatch.log",
+      "bytes": 8855,
+      "sha256": "56ad68f575a24a6a6cdd4ba57830c283e84c53424a3f4a79324dfd486fccbe22",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/python-fixtures.exit",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/python-fixtures.log",
+      "bytes": 3729,
+      "sha256": "0a8d39ceb3eff2f062c0b1422d0751c3c3dfc11c80259d503a85dfd1fdfb4a9e",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/read-consumer.mts",
+      "bytes": 2004,
+      "sha256": "3e65073e2de53141c588463d04f8517fdd5f32c8a7639a53c6933434335201a1",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/refresh-command.json",
+      "bytes": 1403,
+      "sha256": "de786be444bd5fecb4b1b4b107cb4a495dec3ca759057ac49a653f0960f80cc5",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/refresh.exit",
+      "bytes": 4,
+      "sha256": "f5bde7eb9f6c71611dc5726e8aca3eb4eba3e386da49e0a4ed5c295a90a73a0d",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/refresh.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/replay-checkpoint.json",
+      "bytes": 233,
+      "sha256": "38a6607621a5c3d1d77b0150ad99b5dd27337577a5603de6e39ac1504114ea32",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/replay-identifiers.json",
+      "bytes": 783,
+      "sha256": "125bbaefa5f9a8a024af00d01e859189738cb94775584e1e2d2047f7457420e0",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/replay-resume-pre.exit",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/replay-resume.exit",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/replay-resume.log",
+      "bytes": 388,
+      "sha256": "b47c762d3413815341af3d24c61b60f61f5fe2cef84900f3ccf66216e830f824",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/replay.exit",
+      "bytes": 4,
+      "sha256": "f5bde7eb9f6c71611dc5726e8aca3eb4eba3e386da49e0a4ed5c295a90a73a0d",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/replay.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/report-final.py",
+      "bytes": 8399,
+      "sha256": "a3219b02971c1d85a30a37dabf5dd040f2381d3ff48452ea612ff1bc3afe5da4",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/report.draft.md",
+      "bytes": 2078,
+      "sha256": "8d8bef218ce95dd0d954a84957d594dc390abcf576c19233fbacd647e0438f06",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/report.md",
+      "bytes": 209739,
+      "sha256": "6ebd065a938c0b3bedbfa5fb4e46796b4c88b4df6bc026d18c102d4356c770ab",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/restore-model.log",
+      "bytes": 216,
+      "sha256": "926b6466dbb17fcf8d9a6bccf381f4d5a0f07065bc15eb1e2977964f807231db",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/restore-model.py",
+      "bytes": 1812,
+      "sha256": "4c6e7c8ca97b5c9cfd4e2f5371fdbaf6140daa366d03191399284d038a2450ac",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/results.jsonl",
+      "bytes": 5208354,
+      "sha256": "ac6a93085cb46f148cc482bd7ca1a5401bfa0a9202acfe41156d5f215bd83829",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/resume-all-identifiers.json",
+      "bytes": 275,
+      "sha256": "b1373cb10dbd0470a784cd8a2d2ab3967b2213aafe63bb0beca4fd7bbc3a0842",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/resume-identifiers.json",
+      "bytes": 275,
+      "sha256": "9f8e178600e34105e6746834c951c13526532c96872a58bc1c29afec6f355910",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/resume-pre-identifiers.json",
+      "bytes": 37,
+      "sha256": "389ad8235b633b13ff4d48ae1498cc74b537beff6cbedf8bf575128f7514ef82",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/reuse-audit.json",
+      "bytes": 632,
+      "sha256": "3971922df68c011d1c86be15341d5014cc5628ce4eb0bc41b5d73161d46f6e75",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/runs-snapshot.jsonl",
+      "bytes": 158164,
+      "sha256": "92bcf77c87edc137910a5e1d8a7f651ce5eae94823bc25df3e69566f0718244a",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/runtime-code-unchanged.json",
+      "bytes": 191,
+      "sha256": "99d2ade21184c0c80b4955b8f0fd58ab79fc0b6a40621cddd06e997892dc0cde",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/sandbox-limits.md",
+      "bytes": 692,
+      "sha256": "5eff54ebefeb0cbb882382ca8c14518585d7256dd6c26f2676bd38c692e41db4",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/sandbox-python-wrapper-equivalents.json",
+      "bytes": 151,
+      "sha256": "f2e650730d77439429ecf3437625e38a61474b99a3796735f0adcaff748ecadd",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/setup.py",
+      "bytes": 2043,
+      "sha256": "79b0544112b96725dbf5eb15217e30c56970499fcf55f4b88bab8a81fb093c25",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/sl-snapshot.jsonl",
+      "bytes": 36007081,
+      "sha256": "e5c9421dba36328eee5ec46bc0c7ea862bf33416a094bb18d3e4ae286ba28e00",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/source-audit-summary.json",
+      "bytes": 323,
+      "sha256": "982581bca3b745cb4c0947516879a01f7b71ea666927e542d204693197da201b",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/source-sandbox.exit",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/source-sandbox.log",
+      "bytes": 4405,
+      "sha256": "c086a4e82f2396599ab67d83f9fa4d252fa72034c0626a63b01e067318cf5dca",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/sources.jsonl",
+      "bytes": 1285919,
+      "sha256": "cf38e8afd051adb39c2734312ad0db5a0fedd67ec154fe37b5df3f636e73074b",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/split.json",
+      "bytes": 20509,
+      "sha256": "8c50bf5e28adcb09cdfe458ee0957dff0393333f31946b73a44025fa408ce5c0",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/summarize.log",
+      "bytes": 2570,
+      "sha256": "c333e99778b7bb089dae25ec664f4c82e253fb30fbc691eb5ad0315cb0691fd2",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/summarize.py",
+      "bytes": 6933,
+      "sha256": "96d010b085bf12b4b214d13f57dc464c483908b50881452267919e10eedc005f",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/summary.json",
+      "bytes": 3252,
+      "sha256": "93f5bc7fbd92b4aaa8a069dadf0ce389e6675cf21e7327a909a0bdc0a2ebd39f",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/tests-summary.json",
+      "bytes": 1133,
+      "sha256": "2612c5063fac74e3eb583a67276f7c20586b0fea4370f0b3819f1aab445f5213",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/trust-changes.json",
+      "bytes": 91,
+      "sha256": "7e4b5603c1c91df39d962d73b19fd799fd8fc4eab3c5a562c3f34d1dd45ac3d6",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/turns.jsonl",
+      "bytes": 164858,
+      "sha256": "3580ee65f6f9a4dac6cff2c3ecc3de7b7f9f394c125a49198e11c97220cf25d9",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/verify-publication.py",
+      "bytes": 2694,
+      "sha256": "b989f72471894df9d6ddfdf5927f3073241558b558a488257c0a763c59e45ff2",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    },
+    {
+      "path": "experiments/boss-sim/silent/995fbdbd421116fc5aff5c375c35623cb939dcdb1f72a5877b6c03b8e91f3a7b/version-audit-summary.json",
+      "bytes": 3836,
+      "sha256": "6dd053bd650aa7731bd34c9291667d74931edcbd2f5a034e329adcfd2e19f756",
+      "main_blob_is_source_parent": true,
+      "main_physical_safe_for_narrow_sync": true
+    }
+  ],
+  "production_source_unchanged": true,
+  "metadata_delta": [
+    "eval/versions.json",
+    "paper/materials/decision-log.md"
+  ],
+  "source_tests": {
+    "main_full_unchanged_code": {
+      "files": 445,
+      "cases": 4162,
+      "tsc": 0,
+      "vitest": 0
+    },
+    "source_scope": "Focused calibration fixtures after data refresh; runtime code unchanged from the preceding full suite.",
+    "tsc": 0,
+    "vitest": 0,
+    "files": 7,
+    "cases": 27,
+    "suite_files": [
+      3,
+      4
+    ],
+    "suite_cases": [
+      8,
+      19
+    ],
+    "workers": 1,
+    "source_log_sha256": "c086a4e82f2396599ab67d83f9fa4d252fa72034c0626a63b01e067318cf5dca",
+    "additional_cli_exclusions": [
+      "tests/global-build-health.test.ts",
+      "tests/global-build-funnel.test.ts"
+    ],
+    "direct_python_wrapper_equivalents": {
+      "global_build_health_test.py": {
+        "exit": 0,
+        "stdout_empty": true
+      },
+      "global_build_funnel_test.py": {
+        "exit": 0,
+        "stdout_empty": true
+      }
+    },
+    "standard_attempts": {
+      "merge-main-sandbox": 130,
+      "main-sandbox": 130,
+      "observed_failure": "spawnSync /usr/bin/python3 EPERM; Python child succeeded"
+    },
+    "python_calibration": 12,
+    "python_automation": 57,
+    "python_dispatch": 48,
+    "candidate_consumer_checks": 28,
+    "full_external_checks": "pending original scheduler; standard sandbox attempts are not reported as passed"
+  },
+  "candidate_live_consumer_results_equal": true,
+  "candidate_live_consumer_checks": 28,
+  "trust_membership_changes": {
+    "b2": {
+      "added": [],
+      "removed": []
+    },
+    "b3": {
+      "added": [],
+      "removed": []
+    }
+  },
+  "original_notifications_verified": 2,
+  "original_learner_rows": 3,
+  "host": {
+    "batch": "20261016-180157-fix-batch",
+    "worker_pid": 248914,
+    "birth": "104514051",
+    "ppid": "2960955",
+    "cwd": "/home/dw/Projects/agent-sts2",
+    "actual_live_lock_held": true,
+    "tree": "8ecee7cbe5526f10f90ccbe4a65f517707d5ee03",
+    "log": "ops/codex-ops/learner/20261016-180157-fix-batch.fallback-8ecee7cbe5526f10f90ccbe4a65f517707d5ee03.checks.log",
+    "observed_bytes": 14373,
+    "observed_sha256": "fce6317bf73fb0eb40f77edfc210bee455652891e4bbe681843d92c09f8ee314",
+    "result": "pending original scheduler learner-checks event",
+    "checks_pending": true,
+    "new_request_sent": false
+  },
+  "main_integration_pending": true,
+  "formal_release_id": null,
+  "no_duplicate_host_request": true,
+  "limits": [
+    "Only frozen model7e1193/107 tuning/481 validation is calibrated; current production differs by71 inputs, not recalibrated.",
+    "Original source standard130/EPERM, first live full1 timeout and rollback preserved; supported sandbox results are not full external success.",
+    "21 new actual outcomes in12 runs include SL attempts; do not label21 independent games. F49n31 low trust and no joint calibrated rate.",
+    "No new scientific contradiction or trust-membership reversal; original statuses and wide parents retained. No watcher/Roy ACK or natural adoption/benefit."
+  ]
+}

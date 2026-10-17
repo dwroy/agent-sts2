@@ -1,0 +1,3639 @@
+{
+  "at": "2026-10-16 15:50:35 CST",
+  "batch": "20261016-154302-fix-batch",
+  "canonical": {
+    "task": "fix-batch",
+    "character": "silent",
+    "runs": [],
+    "scheduler_dedup_identity": "42180a8b542af9d2adce2814b0d4f74bfbab48588f63907a96d8ef63ecb1d71c",
+    "pid": 1519143,
+    "state": "failed",
+    "reason": "tick",
+    "worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261016-154302",
+    "proposal_policy": "Roy-2026-10-07-learning",
+    "pane": "wJ:p175",
+    "finished": "2026-10-16 15:49",
+    "rc": 0,
+    "merged": null,
+    "proposal_audit_errors": [],
+    "report": {
+      "task": "fix-batch",
+      "base": "fd5c6845272371d8f488ae4195c18d9a6dadca99",
+      "fixes": [],
+      "skipped": [
+        {
+          "item": "silent-0271：毒必胜提前返回遗漏保血候选",
+          "reason": "策略类/沿原独立提案，宽父保持"
+        },
+        {
+          "item": "silent-0279：SL抽序升级改标",
+          "reason": "策略类/沿原独立提案，宽父保持"
+        },
+        {
+          "item": "silent-0308：沙坑截止结束题面",
+          "reason": "策略类/沿原独立提案，宽父保持"
+        },
+        {
+          "item": "silent-0311：库存恢复血量预算",
+          "reason": "策略类/沿原独立提案，宽父保持"
+        },
+        {
+          "item": "silent-0320：同线新建UNMOVABLE",
+          "reason": "策略类/沿原独立提案，宽父保持"
+        },
+        {
+          "item": "silent-0322：升级神化同线升级",
+          "reason": "策略类/沿原独立提案，宽父保持"
+        },
+        {
+          "item": "silent-0329：饮药临时力量接线",
+          "reason": "策略类/沿原独立提案，宽父保持"
+        },
+        {
+          "item": "arch-funnel-guard",
+          "reason": "太大/独立架构或归因任务，普通纯bug批不混入；沿原owner继续。"
+        },
+        {
+          "item": "arch-learning-priority",
+          "reason": "太大/独立架构或归因任务，普通纯bug批不混入；沿原owner继续。"
+        },
+        {
+          "item": "arch-unified-resource-value",
+          "reason": "太大/独立架构或归因任务，普通纯bug批不混入；沿原owner继续。"
+        },
+        {
+          "item": "inv-f33-regression",
+          "reason": "太大/独立架构或归因任务，普通纯bug批不混入；沿原owner继续。"
+        },
+        {
+          "item": "silent-0332：成功首战接续nonpositive-hp",
+          "reason": "证据不足：重读TCDUBRWMEMNA F40/seed76490739三段原字节并核SHA；完整resources/steps仍截断、根因未知，沿原5aa2672/0c0d链，保正HP/300样本契约。"
+        },
+        {
+          "item": "silent-0334：升级隐秘匕首模型",
+          "reason": "策略类/沿原独立提案，宽父保持"
+        },
+        {
+          "item": "silent-0339：尾巴误核销",
+          "reason": "策略类/沿原独立提案，宽父保持"
+        },
+        {
+          "item": "silent-0344：坚韧之环延迟格挡",
+          "reason": "策略类/沿原独立提案，宽父保持"
+        },
+        {
+          "item": "silent-0347：组装师攻击召唤",
+          "reason": "策略类/沿原独立提案，宽父保持"
+        },
+        {
+          "item": "silent-0349：已有虚弱后的减力",
+          "reason": "策略类/沿原独立提案，宽父保持"
+        },
+        {
+          "item": "core-build-notify-222802-rc2：历史发送事实",
+          "reason": "证据不足：后续诊断已修，原历史发送事实未知"
+        },
+        {
+          "item": "silent-0362：背向攻击减力倍率",
+          "reason": "策略类/沿原独立提案，宽父保持"
+        },
+        {
+          "item": "silent-0365：未建模药水目标可达性",
+          "reason": "策略类：当前targets.slice(0, 2)仍在；新增4Z2GCLA4DU52 F24证据及3adbcaf2f490177f已沿原70c22e94eda8f8a9策略链，不重复实现或派发。"
+        },
+        {
+          "item": "框架外层时限与分段续验收尾",
+          "reason": "太大/独立框架：精确续验入口已实现，宿主收尾范围继续"
+        },
+        {
+          "item": "调度公平性核查",
+          "reason": "证据不足：未证明永久饥饿，沿原框架核查"
+        },
+        {
+          "item": "silent-0481：技能药水生命周期措辞",
+          "reason": "策略类/题面知识：当前生命周期措辞仍在；沿既有686d4e759478eebb及本局c89465046641d6ed独立提案，未补游戏规则。"
+        },
+        {
+          "item": "silent-0487：MAD_SCIENCE三段攻击模型",
+          "reason": "策略类：MAD_SCIENCE三段攻击模型；沿原silent-proposal-0a0b31e284e6793e独立策略链，不重复派发。"
+        },
+        {
+          "item": "codex大脑缓存命中偏低",
+          "reason": "证据不足：缺当前同题受控请求对比，本离线任务不调用真实LLM或网络。"
+        },
+        {
+          "item": "sandbox-glob-startup-race：上游目录生命周期及其他租约拒绝原因",
+          "reason": "证据不足：798af209注册保存屏障已是main/live祖先；上游目录删除者及完整生命周期仍未知。"
+        },
+        {
+          "item": "named-card-facts-transport：事件入口之外范围",
+          "reason": "太大/独立功能：42c920f34事件入口已实现，其余沿原架构owner。"
+        },
+        {
+          "item": "boss模拟样本性能及v5-dpr-health宽范围",
+          "reason": "太大/独立专项：保留原冻结输入、样本/预算和验收链，不以定向回归代替校准。"
+        },
+        {
+          "item": "rest-timeout-accepted-route-not-committed / silent-0446",
+          "reason": "策略类/结构：沿原silent-proposal-2d3aa8dfb27dbe3f，不无条件提交未确认动作。"
+        },
+        {
+          "item": "silent-0469：纸鹤其他未知组合/整战收益",
+          "reason": "策略类：本基线已含8d386fc76的已观察聚合体子项，不能关闭更宽组合/整战范围。"
+        }
+      ],
+      "merged": null,
+      "tests": {
+        "tsc": null,
+        "vitest": null,
+        "cases": 0
+      },
+      "code_proposals": [],
+      "implementation_domains": [],
+      "report": "/home/dw/Projects/agent-sts2/learner/runs/20261016-154312-54a4e33d-2e76-4882-8af2-6b9f30d7e2f2-fix-batch/report.md"
+    },
+    "retry_at": 1792140551.7396493
+  },
+  "native": {
+    "batch": "20261016-154302-fix-batch",
+    "thread": "01a143aa-5f0e-7dd2-bae1-ad27551853c6",
+    "cwd": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261016-154302",
+    "event_log": "learner/runs/20261016-154312-54a4e33d-2e76-4882-8af2-6b9f30d7e2f2-fix-batch.jsonl",
+    "registered_launch_batch": "20261016-154302-fix-batch",
+    "original_lease": "0458612065ddaf7e31e98d6118bd3522add466cb4b9aa8f2fe91c9b28d7ab98c",
+    "native_context": {
+      "source": "ops/codex-ops/accounts/codex1/learner/sessions/2026/10/16/rollout-2026-10-16T15-43-21-01a143aa-5f0e-7dd2-bae1-ad27551853c6.jsonl",
+      "offset": 50167,
+      "bytes": 5118,
+      "sha256": "4119f75f273d672d4b78666aa79efa3ab5d8db4a4db9ad20439881e25a455765",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "sandbox": {
+        "type": "workspace-write",
+        "writable_roots": [
+          "/home/dw/Projects/agent-sts2",
+          "/home/dw/Projects/agent-sts2/.git",
+          "/home/dw/Projects/agent-sts2/.git/worktrees/codex-fix-silent-20261016-154302"
+        ],
+        "network_access": false,
+        "exclude_tmpdir_env_var": false,
+        "exclude_slash_tmp": false
+      },
+      "approval_policy": "never"
+    },
+    "native_user_input": {
+      "offset": 55285,
+      "bytes": 13081,
+      "sha256": "ed2d48f43a11ea153ed41c18479583d9bc2ed178a1ffd0e80e7ab2ce1ea53017",
+      "input_sha256": "c4d10eeb4f38349616d6a6be9b28c19948e296def4031b931ae8fda415ec5dc3"
+    },
+    "original_header_events": [
+      {
+        "offset": 0,
+        "bytes": 14892,
+        "sha256": "c4b7f73134cdfade286f9b92125f1e385aabe4c3c75abe75d085edfa7a9b11f0",
+        "type": "learner_launch",
+        "attempt": null,
+        "code": null
+      },
+      {
+        "offset": 14892,
+        "bytes": 370,
+        "sha256": "9fff179ba4202316fd76414ccaff45d9ad5488af45bdaf8b9b65494fbf3a6162",
+        "type": "learner_startup_attempt",
+        "attempt": 1,
+        "code": null
+      },
+      {
+        "offset": 18273,
+        "bytes": 77,
+        "sha256": "c0caf53f3b3b72ed5a671563c4196bd4731af01cd7cb3ce4ce235765303e6b8d",
+        "type": "thread.started",
+        "attempt": null,
+        "code": null
+      }
+    ],
+    "startup_attempts": 1,
+    "failed_startups_preserved": 0,
+    "no_model_or_manual_restart": true
+  },
+  "original_audit": {
+    "base": "fd5c6845272371d8f488ae4195c18d9a6dadca99",
+    "live_read_only_snapshot": "a9e687d9f0acccccddbfa92895d7966b58900658",
+    "prior_audit": "/home/dw/Projects/agent-sts2/learner/runs/20261016-150319-b6580fc8-b38c-4e7e-a297-452202ce02e2-fix-batch/audit.json",
+    "prior_audit_sha256": "1b72ad115a66a88ddb9f4da732cc207566d89190cfa4b0038072567142931d0e",
+    "queue_sha256": "92a85e0e14ad5e33bbe6b351740f681075576a1252c029771a85727c39faf40e",
+    "queue_lines": 1365,
+    "unchecked_entries": [
+      {
+        "line": 784,
+        "item": "- [ ] **silent-0254：无出牌决策的死亡战斗漏记，death_fight误用上一胜战**。学习者定位ops/report.py:130以COMBAT决策开窗口，:337/:380取fights[-1]归因。静默A10 TXZ6RVMQA09D：runs.jsonl:587及自动局报误写F48 AEONGLASS，states:281563是F48胜后奖励4/62；281565—281566为F49 TEST_SUBJECT #C65开场4→0、敌111/111；本场0出牌/0COMBAT决策，只有275405 GAME_OVER finalize，22攻击未执行。证据和原始报告见learner/runs/20261007-214301-postmortem/bug-death-fight.md及本轮归档。"
+      },
+      {
+        "line": 789,
+        "item": "- [ ] **silent-0256：狡诈药水确定生成未建模，容量及出刀顺序未参与方案比较**。学习者定位agent/src/reflex/card-model.ts:1556—1558，POTION_EFFECTS缺CUNNING_POTION导致modelPotion返回null；combat-plan.ts:3159排除模型、:3844仅直接饮用。较早首证SADL3CGYTGSR A7 F8 T1手3→6实添3升级刀，NB8KCF6HRGVF F31 T5手5→8实添3刀；WQZVENQ7DTRP A10 F33 T11第5次手8→10→10→10添2/0/0、第6次手5→8→10→10添3/2/0。按原学习者cunning-model-proposal.md/json补固定药水模型及可观察容量，验证顺序和未知边界；仅是模型缺口，正常对局已结束，不按卡死修游戏，不声称补模必能赢整场。0257容量机制及a327449c331efbc1 SL血价边界由独立策略链处理，不由运维补玩法。保留首证A7/prior=no与旧日志，原证据见learner/runs/20261007-221303-postmortem及本轮归档。已有4111ed10f08739cb提案由调度器续办，不重复派发。"
+      },
+      {
+        "line": 793,
+        "item": "- [ ] **silent-0260：普通紧勒后续逐牌失血漏模**。学习者定位agent/src/reflex/card-model.ts:1043、combat-plan.ts:745、turn-solver.ts:2252，缺普通STRANGLE效果/真实STRANGLE_POWER读取/卡牌完成触发接线。Q6M2Y34MWKRE A10 F8 T4同完整三牌预测19、实际23、玩家损1相同；首证Y6GM2CHWJBEY A0 F4 T1预测27、实际29。按原proposal-strangle-bug.md/json补固定证据模型，核真实中途接续、技能选择完成及轮末消失；保留未观察升级/叠加/重放/其他角色边界，不凭模型漏4断言导致本局死亡或修后必胜。正常完局，无阻塞，沿既有silent-proposal-1b9e29122364fa68自动策略链处理，不重复派发。0261机制与0259再生/0262蛞蝓机制交学习者，运维不补游戏知识；原证据learner/runs/20261007-224302-postmortem及本轮归档。"
+      },
+      {
+        "line": 797,
+        "item": "- [ ] **silent-0263：已有虚弱的意图转向后少算1伤**。学习者定位agent/src/reflex/turn-solver.ts:2493/2546/2585；NHA2KW0RB7VP A10 F33 T2碾碎爪相同力量−2/虚弱1/同招转向后显示1→2，首战防御＋冲刺15挡预测损6、实际损7，第2次16挡预测5、实际6。保留ledger-input-rounding-bug.json、proposal-back-attack-rounding.md及六个同局固定转换；六次不当六局，原运行dirty树未存不以当前树冒充。按原提案先核底值和取整接线，底值不可追溯则明示未精确/保留waiting，不全局floor改ceil或凭显示值猜公式。末次38攻/6挡死亡预测正确，不把1点差额归为整局死因。正常完局，普通非阻塞队列，沿既有silent-proposal-cfecb5580938873d自动策略链，不重复派发。0264朝向机制、0265油灯机制及SL/精准切割提案由学习者处理，运维不补知识；原证据learner/runs/20261007-234302-postmortem和本轮归档。"
+      },
+      {
+        "line": 801,
+        "item": "- [ ] **silent-0266：SL已尝试键排序整轮牌，丢失投斧首牌身份**。学习者定位agent/src/sl/explore.ts:357规范排序、:390相等判重及combat-plan.ts:2151—2152保存候选/续步身份。证据G33HU22H2543/SILENT A10 F48 T1、decisions277909/277954/278032、sl-attempts995/996/998：余像+先打与闪亮登场+先打被保存为同一canon，第四次已试集合仍排除该键，六次未实际先余像。保留canon-collision.json、raw-verification.json和proposal-sl-first-card.md/json；旧对局710dc4dc+dirty树未存，当前0d6c1a82仅定位，不冒称对局源码。正常完局，普通非阻塞队列，沿既有silent-proposal-9b4049b484730143自动策略链，先核共享租约/源码避免重复派发或实现。按原提案限定已观察的首牌未消费条件，统一候选/实际前缀/续步/饮药/tried.cards/规范及宽松判重，保留数量和目标；固定红绿及角色等价后自测实际合live再CLI登记。六次为同一局，缺余像先打整场实盘或胜局，不改变首牌偏好/HP护栏，不承诺修后通关，不把本项当整局死因；打法/机制由学习者闭环，运维不补知识。原证据learner/runs/20261008-004302-postmortem及本轮归档。"
+      },
+      {
+        "line": 810,
+        "item": "- [ ] 学习者复盘 XTSV1U9JD34T／SILENT A10 F48 T8：decision280547直接end_turn；states286893—286896中32HP／0挡、5能量与手持凋萎，胜前实际受9伤后23HP进入F49。定位turn-solver.ts:3764在evaluate.winsFight立即返回，combat-plan.ts:3293/3296选首个无药必胜候选；已有连战估值无法比较未生成的防御候选。正常完局，交普通非阻塞修复链。"
+      },
+      {
+        "line": 817,
+        "item": "- [ ] 学习者复盘9Z9H2EXKLF3T／静默A10 F37：decisions281240/281241将REGRET悔恨写进not_on_selection_screen，大脑据此改删STRIKE_SILENT；states287619牌组索引33、287620实际移除页25项且悔恨位于索引0，281242选索引1后287621仍留悔恨。oneshot.ts:212/217按原牌组顺序截取前25份，shop.ts:520输出不可选事实、:357拒绝该目标。正常完局，交普通非阻塞队列。"
+      },
+      {
+        "line": 831,
+        "item": "- [ ] 学习者复盘GXNKW8X1XYJP／静默A10 F45 T2→T3：sl-attempts1053—1056将原抽牌堆BLADE_DANCE、ACCELERANT、OUTBREAK、SUCKER_PUNCH列为inserted，旧升级键未入手离堆，已知前缀截到19/18/19/18；states290201→290206及290214核战内改标／出口恢复，瞬时完整中间帧未记录。当前draws.ts:568/569整堆作差、:602/:657/:674归新牌／离堆；行号取复盘只读live，运行b1714285+dirty完整源码未保存。正常完局，交普通非阻塞队列，未证明影响胜负。"
+      },
+      {
+        "line": 900,
+        "item": "- [ ] **非阻塞系统／测试缺口，根因未核定**：批次20261008-144109-experience-update固定发布2b1a5f6d491f826ea1bac28f707716d109fb3e65/树bd8c1560dab59b4e07d1693b44bfcd7b6ddcb0d7完整tsc0/vitest1；301文件3428例通过、1文件1例失败、2跳过。`agent/tests/rollout-live.test.ts:132:28` 的 `addedSomewhere` 预期true实得false（未展示的rollout最佳线路应被补入题面）。原日志/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261008-144109-experience-update.fallback-bd8c1560dab59b4e07d1693b44bfcd7b6ddcb0d7.checks.log，SHA256=c75b7f764d641ca8ebe3c3f3291f12c6723175b0a2769fcb570008145d0c725d，15:46:39开始652.42秒，原字节归档paper/materials/silent/20261008-1558-exp100-checks/full-check-original.txt。"
+      },
+      {
+        "line": 912,
+        "item": "- [ ] **silent-0308**：仅转录学习者原回报，`agent/src/reflex/combat.ts:98/:250—252` 的单动作结束题面只合mod致死标志与攻击HP损失，漏接已有沙坑截止事实；`combat-plan.ts:1946`无可打逃离时亦未接入。CNKR125PFHJ5/SILENT A10 F33T6，d296795—296798四次end_turn均lethal=false，末题27血9挡、攻击损15后预测余12；s304228→304229玩家27→0、敌217血33毒→121血30毒，沙坑1后归零。T5整回合题面已有截止风险，本局正常结束，非卡死；只读定位433144fb的combat.ts blob与开局c70efc8c相同，完整dirty运行树未记录，不冒称恢复整棵运行源码。"
+      },
+      {
+        "line": 918,
+        "item": "- [ ] **silent-0311**：仅转录学习者回报，`agent/src/reflex/rollout.ts:1690—1691` 恢复时仍令HP等于旧maxHp、只减库存，`:3196`按库存乘旧maxHp计剩余需求。R3AJCGQGGMR4/SILENT A10 F45T2/T6，s306415→306416、s306438→306439实见77→90→99，三台完整本体预算266、旧口径231，末场正常结束，非卡死。只读定位为live9949a5de；运行11d759cf+dirty，完整dirty源码未记录，不冒称还原运行树。"
+      },
+      {
+        "line": 923,
+        "item": "- [ ] **silent-0317**：仅转录学习者回报，`agent/src/reflex/card-model.ts:920` 将 calculatedGamble 限于未升级牌，`:1108` 未为升级分支写入 discardsHand/drawDiscardedHand，`turn-solver.ts:1676` 因而保留已弃旧手牌。HEMND3SMQYB8/A10/F48T3 d301206、F49末试T1 d301332—301335（s308992→308993弃7抽7）后缀无法执行，实际执行器重读新手牌另选；原局正常结束，非阻塞。首证R0HEV5E3QT6G/A0/F25T3 d209753—209757、s213813→213814；UACFSW4VDDLD/F48T2为学习者历史repeat。保持原prior=no/首证/observed。普通版0081已修、0300抽牌入口漏认drawDiscardedHand为另外旧条目，本升级分支单列。"
+      },
+      {
+        "line": 929,
+        "item": "- [ ] **silent-0319**：仅转录学习者回报，`agent/src/reflex/card-model.ts:938/:942` 蛇咬模型仍限未升级且PoisonPower=7，升级版10毒列未建模。P2M3DFJ4DEZ3/A10/F49末试T3 d302596、s310380→310381实毒2→12且132血即刻不变；首证VN7RQJMJEFMX/A6/F17T3 d220682、s225086→225087实毒6→16。普通版0219已修，本升级分支单列，保持首证VN7/prior=no/observed。该轮后续中和被弃另属0268，15预测与21实净清的混合差不全归漏毒。沿 `silent-proposal-cbf5f609bb228ee5`（0319/0220）自动链，由学习者按原提案固定帧实现、自测、合入；已核静默A6/A10与现场10毒文本匹配范围，其他输入保持原边界，不改毒即时结算或SL/药水规则，不承诺整场转胜。"
+      },
+      {
+        "line": 930,
+        "item": "- [ ] **silent-0320**：仅转录学习者回报，`agent/src/reflex/card-model.ts:471` 未输出本线新建普通UNMOVABLE事件，`turn-solver.ts:1977/:1978` 只消费输入player.unmovableArmed，能力前缀后的首卡格挡没有翻倍。P2M3DFJ4DEZ3/A10/F48第二试T7 d302145、s309858—309861完整三牌预计14挡/损39，实新建1层后防御28挡、63→38损25；第六试前缀d302398再次14预测/28实挡，后续另加动作不能混成同线反例。首证本局/prior=unknown/observed保持；已建能力重读能算对不等于新建接线覆盖。沿 `silent-proposal-689c132e17b5c70f`（0320/0321/0005）自动链核验、实现、自测合入；可靠核对本轮首卡消费状态，不以block=0推断未消费，不倒补旧格挡、不重复倍算，未知重复建立/其他来源/跨角色边界保持，不承诺修后通关。"
+      },
+      {
+        "line": 935,
+        "item": "- [ ] **silent-0322**：仅转录学习者回报，`agent/src/reflex/card-model.ts:1144/:1146` APOTHEOSIS仍限未升级2费，已升级1费神化未接同线升级。PBUBM0LRTEDD/A10/F49第6次T1 d303529、s311342—311347完整神化+／暗影／步法／后空翻候选报14挡、实22挡，独立少报8挡；预测损11与实损1还含攻击预算差，不全归单因。普通神化0237／S1.apotheosis1已修分账，0322首证本局/A10/prior unknown/observed及0323机制原记录保持。沿 `silent-proposal-53b3db220508b3d9` 自动strategy-proposal链，学习者核对已见1费、固有升级全部牌、消耗模板并复用普通传播，自测合入；已升级牌不重复提升，保持当前技能触发敌力血价，未知费用修改、附魔、重放、其他角色及未观察进阶保持原范围。缺修后整场胜负对照，不承诺转胜，运维不实现机制。"
+      },
+      {
+        "line": 940,
+        "item": "- [ ] **silent-0324**：转录学习者原回报，`agent/src/reflex/card-model.ts:929/:1104/:1109` 普通 BLADE_DANCE 的 Cards=3 被读为即时抽3，未接生成3张SHIV。FU8ZUQHBHNV9/A10/F8T3 d303671饮技能药水、d303672取牌，s311492显示0费且playable=true，d303673代码结束；T4 s311495→311496实付1能量添三张0费4伤小刀，311496→311499各扣4。首证按原台账为 C48LLXBGKXQ9/A0/F2T1 d205321候选抽3，F6T3 d205402/s209322→209323实际添三刀，prior no/observed保持；不是上线后repeat。本局正常阵亡，非阻塞，追加普通队列。"
+      },
+      {
+        "line": 945,
+        "item": "- [ ] **silent-0329**：转录学习者回报，`agent/src/reflex/turn-solver.ts:2330/:2332—2333`饮药分支未接爬行动物饰品所得3临时力量；定位另见`card-model.ts:1279`、`combat-plan.ts:2502`。0DJ6GFZZ0TG9/SILENT A10 F33T2 d305532、s313545→313548及T4 d305541、s313554→313560为学习者证据。T4原同线预测106伤、实净扣136，30差未全部隔离，不声明导致局败或修后必胜。首证本局/prior unknown/observed保持；更早CSBR5CRDWQNB在0063只核机制，旧同线预测预算未核。"
+      },
+      {
+        "line": 952,
+        "item": "- [ ] **arch-funnel-guard**：每次改变对局行为的上线后，按 eval/versions.json 版本自动比较本角色当前进阶的逐级转化率（第一幕路上 / F17 boss / 第二幕路上 / F33 boss / 第三幕路上 / F48 / F49；分母为上一级到达数）。任何一级相对上线前出现统计上可信的下降（方法由实现者定，须处理小样本噪声），自动立案交学习者归因；查不清时按回退流程回退该版本并通知 Roy（for-roy.md + inbox-dev.md）。验收只看目标关的做法改为同时看全漏斗。"
+      },
+      {
+        "line": 953,
+        "item": "- [ ] **arch-learning-priority**：学习者派题（strategy-proposal、B4/B5 之外的打法学习）按\"该级损失的期望胜局\"排序（整局胜率 = 各级转化率之积，提高前面某级会给后面所有级带来更多局数）。排序依据和每轮选中的级写进台账，供论文核对。"
+      },
+      {
+        "line": 954,
+        "item": "- [ ] **arch-unified-resource-value**：血量和药水的持有价值改为统一模型，输入为到下一次回血/休息前剩余战斗数、下一个休息点、敌人强度等通用量；双 boss（S1.double-boss1）应成为该模型的一个特例而不是独立规则。只针对单个 boss 的规则必须声明作用范围，并给出对其他各级转化率中性的证据。迁移时保证现有行为在已验证场景下等价或有证据更好；铁甲战士保持等价。"
+      },
+      {
+        "line": 955,
+        "item": "- [ ] **inv-f33-regression**：归因调查（先做）——F33 boss 胜率下降、第二幕死亡增加是否与 S1.double-boss1 及后续 F48/F49 相关版本有关。对比上线前后在第一、二幕战斗中的用药率、进 F33 时的血量和药水数、死于 F33 时未用药水，按版本分组，结论写证据局号；不足以下结论就写明。结果写 notes/for-roy.md 通知 Roy。"
+      },
+      {
+        "line": 959,
+        "item": "- [ ] **silent-0332**：转录学习者原回报，VAC6Z1PZ1QJG/A10/F47休息题d309293，`agent/src/sim/boss-sim.ts:311`的`continuationInput`抛出`missing successful first-fight resources`；成功首战样本进入接续时未满足正HP资源契约，单样本异常传播使整题没有可用选项模拟数字（调用路径:334/:340）。缺触发样本，资源缺失与非正HP分支尚未隔离，具体机制根因未知；不根据契约错误猜改游戏规则。首证本局/prior unknown/observed保持。实际丢毒药、42→67并补两药后，对局继续至F48正常阵亡，无卡死；按非阻塞结构bug追加普通队列。"
+      },
+      {
+        "line": 964,
+        "item": "- [ ] 非阻塞：学习者报告升级 HIDDEN_DAGGERS 仍将弃二误作抽二，未覆盖弃牌/生成小刀分支；当前 live `agent/src/reflex/card-model.ts:921/929/1109`、`turn-solver.ts:1312` 只覆盖普通版。证据 ENKYQMS9W4ZD A6 F19T2、XZUJR08FW801 A10 F29T1，账本 silent-0334，原代码提案 `silent-proposal-6a5c67f606bd5af7` 已登记，沿调度器自动策略链实现并验收。旧普通版 silent-0153/S1.fix26 的关闭记录保留；不据此承诺修正能赢整场，不重复派发。原回报 `learner/runs/20261009-104301-postmortem/report.md`。"
+      },
+      {
+        "line": 968,
+        "item": "- [ ] **silent-0338**：仅转录学习者回报，静默A10/F49女王战致死差异注记漏列求解器已计入的奥利哈钢回合末挡。末试T2 d313188/d313190预测损10，却写no end-of-turn block；s321678/s321683为11血0挡对16攻击，s321684实1血；T4 sl1362末试判官明确19 incoming vs 1 HP + 0 block + 6 end-of-turn block。只读定位 `agent/src/reflex/turn-solver.ts:2975` 数值已计入、`:3083` endTurnGuards来源表遗漏，`combat-plan.ts:2010`因此错误解释攻击差。首证本局/prior unknown/observed保持；对局正常结束，诊断问题非阻塞，不将阵亡归因此项。"
+      },
+      {
+        "line": 980,
+        "item": "- [ ] **silent-0339**：转录学习者原回报，静默A10/F42卷轴T4毒杀后三敌退场且22/77血未降，控制台却记录蜥蜴尾巴已触发；`agent/src/reflex/combat-plan.ts:5004` 将假设复活余血20与实血22容差匹配，`:5054` 战胜入口核销，`:4915` 后续不计复活。F49第3至5次T3末18血7挡对46被判死读档，s323750/323769/323788与末次s323807 fingerprint相同，末次s323808实际到43/87；反证当轮必死，不证明修后整场能赢。原运行源码57b661f07+dirty、相关源码与学习者只读live相等，dirty知识快照未完整保留。首证本局/prior unknown/observed保持；本局正常结束，非卡死。"
+      },
+      {
+        "line": 992,
+        "item": "- [ ] **silent-0344，坚韧之环延迟格挡未接入推演**：仅转录学习者，证据 N8A2W8LH39N0 A10 F12 T7—T9。原定位 `agent/src/reflex/card-model.ts:852`（已读即时挡）、`agent/src/reflex/rollout.ts:1948`、`:2599`、`:1764`（两次轮初持续挡缺接线）。学习者原回报“坚韧之环即时格挡已读取，但后两次轮初格挡未接入持续推演；另见rollout.ts:1948、2599、1764。”；完整复盘/缺证限制与提案 `silent-proposal-8e17a61707d2ca02` 见 `learner/runs/20261009-194302-postmortem/proposal-toric.md`，另关联 silent-0289／silent-0345。非卡死/崩溃/非法动作，交原学习者策略链；运维不补游戏机制、参数或实现，不据此断言该局能转胜，完整 dirty 运行源码未复原与未知升级/重放范围保持。不重派、不标已修或 shipped。"
+      },
+      {
+        "line": 1001,
+        "item": "- [ ] **silent-0347**：证据局 54G5683J0E5S；定位 `agent/src/reflex/rollout-live.ts:831`；学习者原回报“组装师攻击召唤未接入五回合推演；活体召唤只读ILLUSION_MOVE”。完整证据、反例与未知范围见 `learner/runs/20261009-204303-postmortem/report.md`，原提案 silent-proposal-43156dee9f23ae43。不是卡死、崩溃或非法动作，交原学习者提案链；不由运维补机制或实现，不据此宣称该局能赢，不重派或标 shipped。"
+      },
+      {
+        "line": 1005,
+        "item": "- [ ] **silent-0349**：证据局 9663Y88TYK73；定位 `agent/src/reflex/turn-solver.ts:2684`；学习者原回报“已有虚弱后临时减力直接减显示攻击，末次尖啸方案报损3，实际需损5并死亡。”。完整证据、反例与未知范围见 `learner/runs/20261009-211302-postmortem/report.md`，原提案 silent-proposal-bb7597d8a1fe63ff。不是卡死、崩溃或非法动作，交原学习者提案链；不由运维补机制或实现，不据此宣称该局能赢，不重派或标 shipped。"
+      },
+      {
+        "line": 1009,
+        "item": "- [ ] **core-build-notify-222802-rc2**：父请求 roy-20261009-historical-core-builds；现有broker `core-build-notify 20261009-222802-fix-batch` 返回failed/rc2，报告身份实质验收及双收件箱已完成。原去重回执 `ops/codex-ops/core-notifications/e31642e05c34a680bb55838cefa71f98cfff06a420b1541652a3d40fc78c15ae.json` 无stderr，具体herdr失败原因未知；请既有修复链核查失败日志/原生命令与幂等恢复，保留首次失败与同请求+批+SHA身份，确认未发送后方可安全恢复，禁止重复派学习或将失败当成功。本轮不改源码，独立证据 `paper/materials/silent/20261009-2335-events/core-builds/native-notification-receipt.json`。"
+      },
+      {
+        "line": 1020,
+        "item": "- [ ] **silent-0362**：仅转录学习者回报，证据 08A0GEAL8KQ5 / SILENT A10；定位 `agent/src/reflex/turn-solver.ts:2684`。静默A10双蟹两部件存活时，同线尖啸减力没有乘上已经存在的后方攻击倍率。08A0GEAL8KQ5末试T4火箭无虚弱、玩家无易伤、朝向不变，力量3→−3使背向激光57→48，实际减少9；当前live turn-solver.ts:2684仅按玩家易伤放大力量变化，算57−6=51，多报3。least-loss预计余血−20对应22−(51−9)，实际静态需损39、余血应−17，仍会死亡。只定位这笔减力传播，不混入既有虚弱或转向取整缺口，也不保证修后转胜。 原证据定位：F33T4：第6试d325594报预计剩HP−20；s334601→334602火箭力量3→−3、激光57→48，s334603为22血9挡；s334604玩家0、敌102/181。当前live agent/src/reflex/turn-solver.ts:2684—2685仅处理Vulnerable倍率。 原首证08A0GEAL8KQ5、prior=unknown、observed保持。原提案 `silent-proposal-0031b60b7dade5cf` 已经CLI登记，沿既有 strategy-proposal 链；完整证据/反例/范围见 `learner/runs/20261010-024302-postmortem/back-attack-proposal.md`（SHA256=bb19bdf4ee08c102e881e4aa936bf9f9dd00d715a62d65506ff019b6ba54df53）。原报告 `learner/runs/20261010-024302-postmortem/report.md`（SHA256=0fdf044079ff2e576da33f64f4b1a7d74b6587806258e43e57f023b40bf92b15）。局已正常结束，非卡死；不重复派发、不由运维补机制、不标implemented/shipped、不据此宣称能赢整局。"
+      },
+      {
+        "line": 1022,
+        "item": "- [ ] **silent-0365**：仅转录学习者回报，证据 X4M1GPAJGAB9 / SILENT A10；定位 `agent/src/reflex/combat-plan.ts:3839`。整回合题把未建模定向药水合法目标截成前两个；本局产卵虫在槽3时，毒药水可指向[0,1,2,3]却只展示槽0和1，丢失母体和第三爪牙选择。应保证合法目标可达并一致处理题目容量；这不证明早喝或改目标能赢。当前只读live combat-plan.ts:3722、3839定位。 原证据定位：F23T2：s338673合法目标[0,1,2,3]；d329458仅p0→e0/e1，母体槽3漏掉。；F23T3：s338680与d329464重复同一覆盖缺口；T4 s338684与d329468同样。；F23T5：母体改槽1后单动作d329478实际饮药，毒21→27且90HP不变，不当反事实胜局。 原首证X4M1GPAJGAB9、prior=unknown、observed保持。原提案 `silent-proposal-70c22e94eda8f8a9` 已经CLI登记，沿既有 strategy-proposal 链；完整证据/反例/范围见 `learner/runs/20261010-101302-postmortem/proposal-potion-targets.md`（SHA256=6fa5340f70b8f3594e35a11a1f106e5046e9b8e295e790687a255fbb1dac2395）。原报告 `learner/runs/20261010-101302-postmortem/report.md`（SHA256=aa653a2086af29deaae74fb1a0df140a70f7f2956082bda38d9ac7ad5478b38a）。局已正常结束，非卡死；不重复派发、不由运维补机制、不标implemented/shipped、不据此宣称能赢整局。"
+      },
+      {
+        "line": 1024,
+        "item": "- [ ] **silent-0367**：仅转录学习者回报，证据 5BU7ZE1PWLSX / SILENT A10；定位 `agent/src/brain/build-facts.ts:26`。静默A10蜥蜴尾巴在仪式兽战已实际触发并被代码记为已用，大脑后续事实与摘要却只展示持有遗物及一次性效果，未传递消耗状态，休息理由继续声称保留尾巴。应把同局核实的已用状态及来源传到构筑／路线／休息事实；不修改复活触发条件，也不能据此认定回血决定或整场死亡由错误措辞造成。 原证据定位：F17T4：s338941→338942血14/77→38/77；下一T5控制台:715明确记不再计入本局复活，说明现有跟踪已识别。；F28：d329862／b10913仍以保存尾巴作为回血理由；事实、run_brief与notes没有已用字段，实际选择回血到57。；F32：d329923／b10918仍说保留尾巴；当前live agent/src/brain/build-facts.ts:26只映射原始遗物文本，run-brief.ts:57同样缺消耗状态；实际回血到26后六次双蟹无复活。 原首证5BU7ZE1PWLSX、prior=unknown、observed保持。原提案 `silent-proposal-196013f88a9d7c1c` 已经CLI登记，沿既有 strategy-proposal 链；完整证据/反例/范围见 `learner/runs/20261010-111303-postmortem/proposal-tail-state.md`（SHA256=034f2dc81622aeb1d51672d008bf76c3f115667137388e0a618b3a5e45530a06）。原报告 `learner/runs/20261010-111303-postmortem/report.md`（SHA256=a24013ab4e46759e156e491ef50a7102389b9a5a27a02f9ba441ef143b8001ba）。局已正常结束，非卡死；不重复派发、不由运维补机制、不标implemented/shipped、不据此宣称能赢整局。"
+      },
+      {
+        "line": 1029,
+        "item": "- [ ] **codex-usage-credit-baseline-recovery**：证据SPC7NVA5K4RL F36，旧进程1009746，agent/src/brain/engines/codex-usage.ts:472/584。恢复后的account/rateLimits/read显示promax、weekly已用1%、ordinaryUsageAllowed=true、credits0，但进程内topBalance416.75189未换基线，recover仍报告credits正在花费并无限等待；只能经授权重启控制进程恢复，不能推断真实扣款。请既有修复链依据额度窗口/账户响应定义安全恢复条件并加固定回归，保留credits保护、登录/额度复检、原题暂停及无替代引擎；不得以无条件清基线绕过真实消耗。已用现有入口恢复同存档，持久代码修复尚未实施。证据paper/materials/silent/20261011-spc-f36-quota-resume/closure.json，原失败及新成功分留。"
+      },
+      {
+        "line": 1034,
+        "item": "- [ ] ascension-up 把目标进阶当实玩级别：LWQYSREHMMJ7 的 run-config:330 同时记录 ascension=10/target_ascension=11，runs:694结局A10；其前SILENT选角帧 max_ascension=10/can_increase=false。ops/codex-ops-learn.py:200–224优先target_ascension生成“这一局打A11”，同一值经ascension_audit.observe造成silent:A11 queued/attempts0；agent/src/eye/run-config.ts:316没有选角max，实际hand/screens/misc.ts:153传入max钳制。应区分请求目标与实际观察进阶，以实际值生成升阶通知/结构审计，保留原错误事件与请求历史，不把目标11当新等级证据，不改变游戏设定、知识、现有对局或人工标审计done。固定输入应覆盖target11/actual10/max10不升阶及真实actual升级才通知。"
+      },
+      {
+        "line": 1040,
+        "item": "- [ ] 框架/测试收尾：175450的merge-live.py在1200秒外层时限切断尾部paths后，已完成268文件2703例的原件仍自动整套重跑；独立paths11例补验已过，共269文件2714例，却继续长期持live-merge.lock，181302已测修复排队。重跑非零还会自动reset --merge，不能仅终止其子进程。需由框架拥有者核对现有runner/合后验收入口，保留分段已过覆盖与精确代码树、仅续失败/未运行项，显式区分时限/沙箱限制/真实失败，提供经身份校验且不触发误回退的既有所有者收尾方式；不改游戏知识/断言/预算，不手改原失败回执。证据paper/materials/20261011-1852-ops/core-check-closeout/receipt.json。"
+      },
+      {
+        "line": 1041,
+        "item": "- [ ] 调度公平性核查：watcher19:13冻结registry739项、pending587/waiting100/implemented38/duplicate14；可评估677项中首pending第80位。现有插入序waiting重评可能挤压新项，尚非永久饥饿证明；按真实dispatch/seen_runs/完成局时间核查后交获准框架迭代，不由本轮更改并发、队列状态或任务。原件paper/materials/20261011-ops-health-recovery/queue-observation-1913.json。"
+      },
+      {
+        "line": 1110,
+        "item": "- [ ] **非对局阻塞，通用验证负载/确定性待诊断**：agent/tests/eval.test.ts:26 原120000ms用例、agent/tests/silent-apotheosis-reference.test.ts:114 原15000ms用例在010547完整宿主检查超时；实际live3f7eba0ef0c8f29bc2fbf21c8fb81d7a3cac55ee/tree36d1032b0cd248b0dac9c6d0c25a1b049db8012e，tsc通过、392文件4216项通过、2超时、2跳过。原源dcfff63e只改silent经验数据；超时本身不证明机制回归或主机负载根因。ops选择保留V4-R314并沿普通fix链有界诊断，原完整失败不关闭。证据批而非新增游戏失败局；原日志/覆盖paper/materials/20261013-0201-ops/full-checks-failure.json。"
+      },
+      {
+        "line": 1294,
+        "item": "- [ ] **silent-0481**：转录原学习者纯bug回报，`agent/src/hand/screens/selection.ts:311/:333` 把技能药水生成牌的“本回合免费”写成“只在本回合存在”（This card is only for this turn）。Y2K25VFDU95P/A10/F9T3 d392030 三选均0费、实选触不可及；T5 s404267重抽显示2费，T3 s404256–404259实际0费消费窗口与后续出现分列。首证回溯C48LLXBGKXQ9 F6T1 d205391；原提案 `silent-proposal-686d4e759478eebb` 已交自动链，限定已观察药水来源，未知组合/永久构筑归属及收益不补造。区别已修silent-0324刀舞模型，不重复派同题，不由ops添加游戏规则。"
+      },
+      {
+        "line": 1304,
+        "item": "- [ ] **infra-target-options-fixed-fixture-timeout**：原014302-s2/R349实际tree4ba23b20完整宿主，`tests/target-options.test.ts` 的唯一EZ2L F48 T2 Queen/Torch标注候选题在原30s超时；同树正式d032f27e限定该精确题、原预算/断言下1过21未选。两旧paper-krane 15s问题仍沿既有infra-paper-krane-recorded-line-timeout，不另开同题。原full rc1/4742过2skip与3失败保留，定向3过不是全套绿，未定位数值回归或CPU单因。沿原普通固定夹具成本/performance fix链下一安全批处理，保冻结数据和生产求解/候选/药水/1000样本/原权限；不要加时限、skip、弱断言或改游戏权重，不热改当前owner输入/新派游戏研究/重启对局。证据paper/materials/20261015-0422-ops/kunai-host-failure-decision.json、kunai-three-case-supplement.json。"
+      },
+      {
+        "line": 1308,
+        "item": "- [ ] **infra-ledger-status-prefix-git-divergence**（2026-10-15 05:28:18 CST，非阻塞纯数据/发布一致性）：044302普通策略原31条CLI中四条显式重复proposed；0030/0087/0279与Git相同，0094原物理前缀及学习者before快照为proposed，Git已shipped，原status来源末行20261010第159批。当前机械原行若直接纳入Git会把已交付0094降级。已保原50行/原claim/首证/先验/版本/出处，不改物理原件；仅该冲突行逐SHA另存审计，canonical纳入49原行+一次ops纯追溯CLI不设status，保Git shipped及本批报告链接。需原普通ledger/publisher owner核物理前缀、分批暂存/合并顺序和真实交付链，提供固定夹具；不要因dirty前缀或整套源码测试绿自动重新shipped/改shipped_at、游戏机制或全角色状态，勿重写旧行/假造角色ACK。证据paper/materials/20261015-0513-ops/original-repeated-status-baselines.json、canonical-trace-registration-readback.json。"
+      },
+      {
+        "line": 1322,
+        "item": "- [ ] **infra-learner-launch-shared-main-config-race**（2026-10-15 10:00:38 CST，非游戏阻塞纯运维）：原094301主/s2策略批两份stdout空、stderr同报共享main agent/src/core/config.ts:21:0 Unexpected \"<<\"，原P2 main-conflicts快照同位置为<<<<<<< HEAD；当前已提交config静态transform0/无冲突标记，原live P1/P3完整23501树tsc/vitest0，不能把启动失败当生产源码/账号/额度或提案缺失。失败时完整main字节未独立冻结，跨进程读取与集成窗口的具体时序仍需固定夹具核。请原普通launcher/集成纯fix链隔离稳定启动入口或在原已登记任务/租约下有界恢复共享主树暂态解析，保留原输入/线程/工作树/权限和失败，不争用或打断live全检锁、不扩大沙箱/改账号模型、绕过凭据预检或另派同提案研究。两个原batch failed/rc1/mergednull、20原ID及10:43原有界重试保持，不人工重派。证据paper/materials/20261015-0955-ops/two-strategy-startup-failures.json、shared-main-launch-conflict-readback.json及原main冲突快照；本项只登记基础设施缺口，不改机制/学习先验。"
+      },
+      {
+        "line": 1344,
+        "item": "- [ ] **silent-0487：非阻塞三段攻击模型缺口，仅转录学习者证据**。JWK2C8LE4SFV SILENT A10 F48首试T5及末试T8，疯狂科学MAD_SCIENCE现场Damage12/当前13、ViolenceHits3、1力量；d403288/d403579均预计13伤，s416380→416381敌201→162、s416671→416672敌104→65，两次单动作均39，少报26。学习者定位只读livecfa1c0be agent/src/reflex/card-model.ts:905只取CalculatedHits/Repeat并回退1，:906只认两次文字；按原silent-proposal-0a0b31e284e6793e独立策略链核固定模板命中次数与未知边界，不由运维修游戏模型。关联机制silent-0488与休眠Block旧缺陷0394分账；0394三段变体及0179士兵2敏捷/勒紧组合复现分别沿原a43b16ebc696514d/ad6953c6c875117d，不把旧已修窄范围标回退/重开或降级shipped。修正后整战胜负未知，不把模型少报等同实际少打。原件learner/runs/20261016-014305-f051c87e-146b-4aa7-86d4-288461b9f317-postmortem/；不另派重复任务。 2026-10-16 02:05:15 CST"
+      }
+    ],
+    "unchecked_original_texts_unchanged": true,
+    "queue_dispositions": [
+      {
+        "line": 784,
+        "item": "- [ ] **silent-0254：无出牌决策的死亡战斗漏记，death_fight误用上一胜战**。学习者定位ops/report.py:130以COMBAT决策开窗口，:337/:380取fights[-1]归因。静默A10 TXZ6RVMQA09D：runs.jsonl:587及自动局报误写F48 AEONGLASS，states:281563是F48胜后奖励4/62；281565—281566为F49 TEST_SUBJECT #C65开场4→0、敌111/111；本场0出牌/0COMBAT决策，只有275405 GAME_OVER finalize，22攻击未执行。证据和原始报告见learner/runs/20261007-214301-postmortem/bug-death-fight.md及本轮归档。",
+        "disposition": "已修或已覆盖窄子项；不关闭更宽父项",
+        "commit": "3b48088dec5fc6eafe576a1296bbdadde43432ee",
+        "same_original_text_as_prior": true,
+        "verification": "本轮逐SHA核相关源码/测试等同前批，并重新核对已有修复的base/live祖先；复用同字节既有分析，未运行测试。"
+      },
+      {
+        "line": 789,
+        "item": "- [ ] **silent-0256：狡诈药水确定生成未建模，容量及出刀顺序未参与方案比较**。学习者定位agent/src/reflex/card-model.ts:1556—1558，POTION_EFFECTS缺CUNNING_POTION导致modelPotion返回null；combat-plan.ts:3159排除模型、:3844仅直接饮用。较早首证SADL3CGYTGSR A7 F8 T1手3→6实添3升级刀，NB8KCF6HRGVF F31 T5手5→8实添3刀；WQZVENQ7DTRP A10 F33 T11第5次手8→10→10→10添2/0/0、第6次手5→8→10→10添3/2/0。按原学习者cunning-model-proposal.md/json补固定药水模型及可观察容量，验证顺序和未知边界；仅是模型缺口，正常对局已结束，不按卡死修游戏，不声称补模必能赢整场。0257容量机制及a327449c331efbc1 SL血价边界由独立策略链处理，不由运维补玩法。保留首证A7/prior=no与旧日志，原证据见learner/runs/20261007-221303-postmortem及本轮归档。已有4111ed10f08739cb提案由调度器续办，不重复派发。",
+        "disposition": "已修或已覆盖窄子项；不关闭更宽父项",
+        "commit": "6403fdcdadc803a092beb5165a068e22bf51c412",
+        "same_original_text_as_prior": true,
+        "verification": "本轮逐SHA核相关源码/测试等同前批，并重新核对已有修复的base/live祖先；复用同字节既有分析，未运行测试。"
+      },
+      {
+        "line": 793,
+        "item": "- [ ] **silent-0260：普通紧勒后续逐牌失血漏模**。学习者定位agent/src/reflex/card-model.ts:1043、combat-plan.ts:745、turn-solver.ts:2252，缺普通STRANGLE效果/真实STRANGLE_POWER读取/卡牌完成触发接线。Q6M2Y34MWKRE A10 F8 T4同完整三牌预测19、实际23、玩家损1相同；首证Y6GM2CHWJBEY A0 F4 T1预测27、实际29。按原proposal-strangle-bug.md/json补固定证据模型，核真实中途接续、技能选择完成及轮末消失；保留未观察升级/叠加/重放/其他角色边界，不凭模型漏4断言导致本局死亡或修后必胜。正常完局，无阻塞，沿既有silent-proposal-1b9e29122364fa68自动策略链处理，不重复派发。0261机制与0259再生/0262蛞蝓机制交学习者，运维不补游戏知识；原证据learner/runs/20261007-224302-postmortem及本轮归档。",
+        "disposition": "已修或已覆盖窄子项；不关闭更宽父项",
+        "commit": "5c7105ff0294466da8319f2934beda05c6040794",
+        "same_original_text_as_prior": true,
+        "verification": "本轮逐SHA核相关源码/测试等同前批，并重新核对已有修复的base/live祖先；复用同字节既有分析，未运行测试。"
+      },
+      {
+        "line": 797,
+        "item": "- [ ] **silent-0263：已有虚弱的意图转向后少算1伤**。学习者定位agent/src/reflex/turn-solver.ts:2493/2546/2585；NHA2KW0RB7VP A10 F33 T2碾碎爪相同力量−2/虚弱1/同招转向后显示1→2，首战防御＋冲刺15挡预测损6、实际损7，第2次16挡预测5、实际6。保留ledger-input-rounding-bug.json、proposal-back-attack-rounding.md及六个同局固定转换；六次不当六局，原运行dirty树未存不以当前树冒充。按原提案先核底值和取整接线，底值不可追溯则明示未精确/保留waiting，不全局floor改ceil或凭显示值猜公式。末次38攻/6挡死亡预测正确，不把1点差额归为整局死因。正常完局，普通非阻塞队列，沿既有silent-proposal-cfecb5580938873d自动策略链，不重复派发。0264朝向机制、0265油灯机制及SL/精准切割提案由学习者处理，运维不补知识；原证据learner/runs/20261007-234302-postmortem和本轮归档。",
+        "disposition": "已修或已覆盖窄子项；不关闭更宽父项",
+        "commit": "ec29ea34b919344b707e57ba472ea210f9c39d62",
+        "same_original_text_as_prior": true,
+        "verification": "本轮逐SHA核相关源码/测试等同前批，并重新核对已有修复的base/live祖先；复用同字节既有分析，未运行测试。"
+      },
+      {
+        "line": 801,
+        "item": "- [ ] **silent-0266：SL已尝试键排序整轮牌，丢失投斧首牌身份**。学习者定位agent/src/sl/explore.ts:357规范排序、:390相等判重及combat-plan.ts:2151—2152保存候选/续步身份。证据G33HU22H2543/SILENT A10 F48 T1、decisions277909/277954/278032、sl-attempts995/996/998：余像+先打与闪亮登场+先打被保存为同一canon，第四次已试集合仍排除该键，六次未实际先余像。保留canon-collision.json、raw-verification.json和proposal-sl-first-card.md/json；旧对局710dc4dc+dirty树未存，当前0d6c1a82仅定位，不冒称对局源码。正常完局，普通非阻塞队列，沿既有silent-proposal-9b4049b484730143自动策略链，先核共享租约/源码避免重复派发或实现。按原提案限定已观察的首牌未消费条件，统一候选/实际前缀/续步/饮药/tried.cards/规范及宽松判重，保留数量和目标；固定红绿及角色等价后自测实际合live再CLI登记。六次为同一局，缺余像先打整场实盘或胜局，不改变首牌偏好/HP护栏，不承诺修后通关，不把本项当整局死因；打法/机制由学习者闭环，运维不补知识。原证据learner/runs/20261008-004302-postmortem及本轮归档。",
+        "disposition": "已修或已覆盖窄子项；不关闭更宽父项",
+        "commit": "e784dd9f043bf87c29109573f48975f9903280d3",
+        "same_original_text_as_prior": true,
+        "verification": "本轮逐SHA核相关源码/测试等同前批，并重新核对已有修复的base/live祖先；复用同字节既有分析，未运行测试。"
+      },
+      {
+        "line": 810,
+        "item": "- [ ] 学习者复盘 XTSV1U9JD34T／SILENT A10 F48 T8：decision280547直接end_turn；states286893—286896中32HP／0挡、5能量与手持凋萎，胜前实际受9伤后23HP进入F49。定位turn-solver.ts:3764在evaluate.winsFight立即返回，combat-plan.ts:3293/3296选首个无药必胜候选；已有连战估值无法比较未生成的防御候选。正常完局，交普通非阻塞修复链。",
+        "disposition": "策略类/沿原独立提案，宽父保持",
+        "same_original_text_as_prior": true,
+        "verification": "本轮逐SHA核相关源码/测试等同前批，并重新核对已有修复的base/live祖先；复用同字节既有分析，未运行测试。"
+      },
+      {
+        "line": 817,
+        "item": "- [ ] 学习者复盘9Z9H2EXKLF3T／静默A10 F37：decisions281240/281241将REGRET悔恨写进not_on_selection_screen，大脑据此改删STRIKE_SILENT；states287619牌组索引33、287620实际移除页25项且悔恨位于索引0，281242选索引1后287621仍留悔恨。oneshot.ts:212/217按原牌组顺序截取前25份，shop.ts:520输出不可选事实、:357拒绝该目标。正常完局，交普通非阻塞队列。",
+        "disposition": "已修：移除预览核对实际选牌页",
+        "commit": "db20ec3cc6cd0e47ac014d0c523dd4ed1c781d26",
+        "same_original_text_as_prior": true,
+        "verification": "本轮逐SHA核相关源码/测试等同前批，并重新核对已有修复的base/live祖先；复用同字节既有分析，未运行测试。"
+      },
+      {
+        "line": 831,
+        "item": "- [ ] 学习者复盘GXNKW8X1XYJP／静默A10 F45 T2→T3：sl-attempts1053—1056将原抽牌堆BLADE_DANCE、ACCELERANT、OUTBREAK、SUCKER_PUNCH列为inserted，旧升级键未入手离堆，已知前缀截到19/18/19/18；states290201→290206及290214核战内改标／出口恢复，瞬时完整中间帧未记录。当前draws.ts:568/569整堆作差、:602/:657/:674归新牌／离堆；行号取复盘只读live，运行b1714285+dirty完整源码未保存。正常完局，交普通非阻塞队列，未证明影响胜负。",
+        "disposition": "策略类/沿原独立提案，宽父保持",
+        "same_original_text_as_prior": true,
+        "verification": "本轮逐SHA核相关源码/测试等同前批，并重新核对已有修复的base/live祖先；复用同字节既有分析，未运行测试。"
+      },
+      {
+        "line": 900,
+        "item": "- [ ] **非阻塞系统／测试缺口，根因未核定**：批次20261008-144109-experience-update固定发布2b1a5f6d491f826ea1bac28f707716d109fb3e65/树bd8c1560dab59b4e07d1693b44bfcd7b6ddcb0d7完整tsc0/vitest1；301文件3428例通过、1文件1例失败、2跳过。`agent/tests/rollout-live.test.ts:132:28` 的 `addedSomewhere` 预期true实得false（未展示的rollout最佳线路应被补入题面）。原日志/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261008-144109-experience-update.fallback-bd8c1560dab59b4e07d1693b44bfcd7b6ddcb0d7.checks.log，SHA256=c75b7f764d641ca8ebe3c3f3291f12c6723175b0a2769fcb570008145d0c725d，15:46:39开始652.42秒，原字节归档paper/materials/silent/20261008-1558-exp100-checks/full-check-original.txt。",
+        "disposition": "已修：rollout最佳线固定夹具确定性",
+        "commit": "bbc5b993a7524bbb8e80a975f204f8d193657b46",
+        "same_original_text_as_prior": true,
+        "verification": "本轮逐SHA核相关源码/测试等同前批，并重新核对已有修复的base/live祖先；复用同字节既有分析，未运行测试。"
+      },
+      {
+        "line": 912,
+        "item": "- [ ] **silent-0308**：仅转录学习者原回报，`agent/src/reflex/combat.ts:98/:250—252` 的单动作结束题面只合mod致死标志与攻击HP损失，漏接已有沙坑截止事实；`combat-plan.ts:1946`无可打逃离时亦未接入。CNKR125PFHJ5/SILENT A10 F33T6，d296795—296798四次end_turn均lethal=false，末题27血9挡、攻击损15后预测余12；s304228→304229玩家27→0、敌217血33毒→121血30毒，沙坑1后归零。T5整回合题面已有截止风险，本局正常结束，非卡死；只读定位433144fb的combat.ts blob与开局c70efc8c相同，完整dirty运行树未记录，不冒称恢复整棵运行源码。",
+        "disposition": "策略类/沿原独立提案，宽父保持",
+        "same_original_text_as_prior": true,
+        "verification": "本轮逐SHA核相关源码/测试等同前批，并重新核对已有修复的base/live祖先；复用同字节既有分析，未运行测试。"
+      },
+      {
+        "line": 918,
+        "item": "- [ ] **silent-0311**：仅转录学习者回报，`agent/src/reflex/rollout.ts:1690—1691` 恢复时仍令HP等于旧maxHp、只减库存，`:3196`按库存乘旧maxHp计剩余需求。R3AJCGQGGMR4/SILENT A10 F45T2/T6，s306415→306416、s306438→306439实见77→90→99，三台完整本体预算266、旧口径231，末场正常结束，非卡死。只读定位为live9949a5de；运行11d759cf+dirty，完整dirty源码未记录，不冒称还原运行树。",
+        "disposition": "策略类/沿原独立提案，宽父保持",
+        "same_original_text_as_prior": true,
+        "verification": "本轮逐SHA核相关源码/测试等同前批，并重新核对已有修复的base/live祖先；复用同字节既有分析，未运行测试。"
+      },
+      {
+        "line": 923,
+        "item": "- [ ] **silent-0317**：仅转录学习者回报，`agent/src/reflex/card-model.ts:920` 将 calculatedGamble 限于未升级牌，`:1108` 未为升级分支写入 discardsHand/drawDiscardedHand，`turn-solver.ts:1676` 因而保留已弃旧手牌。HEMND3SMQYB8/A10/F48T3 d301206、F49末试T1 d301332—301335（s308992→308993弃7抽7）后缀无法执行，实际执行器重读新手牌另选；原局正常结束，非阻塞。首证R0HEV5E3QT6G/A0/F25T3 d209753—209757、s213813→213814；UACFSW4VDDLD/F48T2为学习者历史repeat。保持原prior=no/首证/observed。普通版0081已修、0300抽牌入口漏认drawDiscardedHand为另外旧条目，本升级分支单列。",
+        "disposition": "已覆盖已观察A10升级手牌模板子项；其他输入沿原策略链",
+        "commit": "b49112dbc106e315bd7156361d290fc4c73d29e2",
+        "scope": "card-model.ts的upgradedGamble与discardsHand/drawDiscardedHand；固定AYTX5H4H69E3 F45 T1，不声称已复原旧HEM完整dirty树",
+        "same_original_text_as_prior": true,
+        "verification": "本轮逐SHA核相关源码/测试等同前批，并重新核对已有修复的base/live祖先；复用同字节既有分析，未运行测试。"
+      },
+      {
+        "line": 929,
+        "item": "- [ ] **silent-0319**：仅转录学习者回报，`agent/src/reflex/card-model.ts:938/:942` 蛇咬模型仍限未升级且PoisonPower=7，升级版10毒列未建模。P2M3DFJ4DEZ3/A10/F49末试T3 d302596、s310380→310381实毒2→12且132血即刻不变；首证VN7RQJMJEFMX/A6/F17T3 d220682、s225086→225087实毒6→16。普通版0219已修，本升级分支单列，保持首证VN7/prior=no/observed。该轮后续中和被弃另属0268，15预测与21实净清的混合差不全归漏毒。沿 `silent-proposal-cbf5f609bb228ee5`（0319/0220）自动链，由学习者按原提案固定帧实现、自测、合入；已核静默A6/A10与现场10毒文本匹配范围，其他输入保持原边界，不改毒即时结算或SL/药水规则，不承诺整场转胜。",
+        "disposition": "已覆盖已观察A10两费十毒模板子项；A6及未知组合保持原边界",
+        "commit": "5b56a452bb9be14d620b368ec46974c1b57901ca",
+        "scope": "card-model.ts的upgradedSnakebite；固定VLZ6CCT8AQ0A A10 F43 T1/T5为预览配对，不将未施放升级牌当实际伤害；原e27dbda源码经5b56a452实际集成，e27本身不是base/live祖先",
+        "same_original_text_as_prior": true,
+        "verification": "本轮逐SHA核相关源码/测试等同前批，并重新核对已有修复的base/live祖先；复用同字节既有分析，未运行测试。"
+      },
+      {
+        "line": 930,
+        "item": "- [ ] **silent-0320**：仅转录学习者回报，`agent/src/reflex/card-model.ts:471` 未输出本线新建普通UNMOVABLE事件，`turn-solver.ts:1977/:1978` 只消费输入player.unmovableArmed，能力前缀后的首卡格挡没有翻倍。P2M3DFJ4DEZ3/A10/F48第二试T7 d302145、s309858—309861完整三牌预计14挡/损39，实新建1层后防御28挡、63→38损25；第六试前缀d302398再次14预测/28实挡，后续另加动作不能混成同线反例。首证本局/prior=unknown/observed保持；已建能力重读能算对不等于新建接线覆盖。沿 `silent-proposal-689c132e17b5c70f`（0320/0321/0005）自动链核验、实现、自测合入；可靠核对本轮首卡消费状态，不以block=0推断未消费，不倒补旧格挡、不重复倍算，未知重复建立/其他来源/跨角色边界保持，不承诺修后通关。",
+        "disposition": "策略类/沿原独立提案，宽父保持",
+        "same_original_text_as_prior": true,
+        "verification": "本轮逐SHA核相关源码/测试等同前批，并重新核对已有修复的base/live祖先；复用同字节既有分析，未运行测试。"
+      },
+      {
+        "line": 935,
+        "item": "- [ ] **silent-0322**：仅转录学习者回报，`agent/src/reflex/card-model.ts:1144/:1146` APOTHEOSIS仍限未升级2费，已升级1费神化未接同线升级。PBUBM0LRTEDD/A10/F49第6次T1 d303529、s311342—311347完整神化+／暗影／步法／后空翻候选报14挡、实22挡，独立少报8挡；预测损11与实损1还含攻击预算差，不全归单因。普通神化0237／S1.apotheosis1已修分账，0322首证本局/A10/prior unknown/observed及0323机制原记录保持。沿 `silent-proposal-53b3db220508b3d9` 自动strategy-proposal链，学习者核对已见1费、固有升级全部牌、消耗模板并复用普通传播，自测合入；已升级牌不重复提升，保持当前技能触发敌力血价，未知费用修改、附魔、重放、其他角色及未观察进阶保持原范围。缺修后整场胜负对照，不承诺转胜，运维不实现机制。",
+        "disposition": "策略类/沿原独立提案，宽父保持",
+        "same_original_text_as_prior": true,
+        "verification": "本轮逐SHA核相关源码/测试等同前批，并重新核对已有修复的base/live祖先；复用同字节既有分析，未运行测试。"
+      },
+      {
+        "line": 940,
+        "item": "- [ ] **silent-0324**：转录学习者原回报，`agent/src/reflex/card-model.ts:929/:1104/:1109` 普通 BLADE_DANCE 的 Cards=3 被读为即时抽3，未接生成3张SHIV。FU8ZUQHBHNV9/A10/F8T3 d303671饮技能药水、d303672取牌，s311492显示0费且playable=true，d303673代码结束；T4 s311495→311496实付1能量添三张0费4伤小刀，311496→311499各扣4。首证按原台账为 C48LLXBGKXQ9/A0/F2T1 d205321候选抽3，F6T3 d205402/s209322→209323实际添三刀，prior no/observed保持；不是上线后repeat。本局正常阵亡，非阻塞，追加普通队列。",
+        "disposition": "已修或已覆盖窄子项；不关闭更宽父项",
+        "commit": "66c22ba7d87b8748690a4183fff838acd346bd3e",
+        "same_original_text_as_prior": true,
+        "verification": "本轮逐SHA核相关源码/测试等同前批，并重新核对已有修复的base/live祖先；复用同字节既有分析，未运行测试。"
+      },
+      {
+        "line": 945,
+        "item": "- [ ] **silent-0329**：转录学习者回报，`agent/src/reflex/turn-solver.ts:2330/:2332—2333`饮药分支未接爬行动物饰品所得3临时力量；定位另见`card-model.ts:1279`、`combat-plan.ts:2502`。0DJ6GFZZ0TG9/SILENT A10 F33T2 d305532、s313545→313548及T4 d305541、s313554→313560为学习者证据。T4原同线预测106伤、实净扣136，30差未全部隔离，不声明导致局败或修后必胜。首证本局/prior unknown/observed保持；更早CSBR5CRDWQNB在0063只核机制，旧同线预测预算未核。",
+        "disposition": "策略类/沿原独立提案，宽父保持",
+        "same_original_text_as_prior": true,
+        "verification": "本轮逐SHA核相关源码/测试等同前批，并重新核对已有修复的base/live祖先；复用同字节既有分析，未运行测试。"
+      },
+      {
+        "line": 952,
+        "item": "- [ ] **arch-funnel-guard**：每次改变对局行为的上线后，按 eval/versions.json 版本自动比较本角色当前进阶的逐级转化率（第一幕路上 / F17 boss / 第二幕路上 / F33 boss / 第三幕路上 / F48 / F49；分母为上一级到达数）。任何一级相对上线前出现统计上可信的下降（方法由实现者定，须处理小样本噪声），自动立案交学习者归因；查不清时按回退流程回退该版本并通知 Roy（for-roy.md + inbox-dev.md）。验收只看目标关的做法改为同时看全漏斗。",
+        "disposition": "策略类/沿原独立提案，宽父保持",
+        "same_original_text_as_prior": true,
+        "verification": "本轮逐SHA核相关源码/测试等同前批，并重新核对已有修复的base/live祖先；复用同字节既有分析，未运行测试。"
+      },
+      {
+        "line": 953,
+        "item": "- [ ] **arch-learning-priority**：学习者派题（strategy-proposal、B4/B5 之外的打法学习）按\"该级损失的期望胜局\"排序（整局胜率 = 各级转化率之积，提高前面某级会给后面所有级带来更多局数）。排序依据和每轮选中的级写进台账，供论文核对。",
+        "disposition": "策略类/沿原独立提案，宽父保持",
+        "same_original_text_as_prior": true,
+        "verification": "本轮逐SHA核相关源码/测试等同前批，并重新核对已有修复的base/live祖先；复用同字节既有分析，未运行测试。"
+      },
+      {
+        "line": 954,
+        "item": "- [ ] **arch-unified-resource-value**：血量和药水的持有价值改为统一模型，输入为到下一次回血/休息前剩余战斗数、下一个休息点、敌人强度等通用量；双 boss（S1.double-boss1）应成为该模型的一个特例而不是独立规则。只针对单个 boss 的规则必须声明作用范围，并给出对其他各级转化率中性的证据。迁移时保证现有行为在已验证场景下等价或有证据更好；铁甲战士保持等价。",
+        "disposition": "策略类/沿原独立提案，宽父保持",
+        "same_original_text_as_prior": true,
+        "verification": "本轮逐SHA核相关源码/测试等同前批，并重新核对已有修复的base/live祖先；复用同字节既有分析，未运行测试。"
+      },
+      {
+        "line": 955,
+        "item": "- [ ] **inv-f33-regression**：归因调查（先做）——F33 boss 胜率下降、第二幕死亡增加是否与 S1.double-boss1 及后续 F48/F49 相关版本有关。对比上线前后在第一、二幕战斗中的用药率、进 F33 时的血量和药水数、死于 F33 时未用药水，按版本分组，结论写证据局号；不足以下结论就写明。结果写 notes/for-roy.md 通知 Roy。",
+        "disposition": "策略类/沿原独立提案，宽父保持",
+        "same_original_text_as_prior": true,
+        "verification": "本轮逐SHA核相关源码/测试等同前批，并重新核对已有修复的base/live祖先；复用同字节既有分析，未运行测试。"
+      },
+      {
+        "line": 959,
+        "item": "- [ ] **silent-0332**：转录学习者原回报，VAC6Z1PZ1QJG/A10/F47休息题d309293，`agent/src/sim/boss-sim.ts:311`的`continuationInput`抛出`missing successful first-fight resources`；成功首战样本进入接续时未满足正HP资源契约，单样本异常传播使整题没有可用选项模拟数字（调用路径:334/:340）。缺触发样本，资源缺失与非正HP分支尚未隔离，具体机制根因未知；不根据契约错误猜改游戏规则。首证本局/prior unknown/observed保持。实际丢毒药、42→67并补两药后，对局继续至F48正常阵亡，无卡死；按非阻塞结构bug追加普通队列。",
+        "disposition": "证据不足：契约分支可定位，资源/steps尾部及机制根因仍未知",
+        "same_original_text_as_prior": true,
+        "verification": "本轮逐SHA核相关源码/测试等同前批，并重新核对已有修复的base/live祖先；复用同字节既有分析，未运行测试。"
+      },
+      {
+        "line": 964,
+        "item": "- [ ] 非阻塞：学习者报告升级 HIDDEN_DAGGERS 仍将弃二误作抽二，未覆盖弃牌/生成小刀分支；当前 live `agent/src/reflex/card-model.ts:921/929/1109`、`turn-solver.ts:1312` 只覆盖普通版。证据 ENKYQMS9W4ZD A6 F19T2、XZUJR08FW801 A10 F29T1，账本 silent-0334，原代码提案 `silent-proposal-6a5c67f606bd5af7` 已登记，沿调度器自动策略链实现并验收。旧普通版 silent-0153/S1.fix26 的关闭记录保留；不据此承诺修正能赢整场，不重复派发。原回报 `learner/runs/20261009-104301-postmortem/report.md`。",
+        "disposition": "策略类/沿原独立提案，宽父保持",
+        "same_original_text_as_prior": true,
+        "verification": "本轮逐SHA核相关源码/测试等同前批，并重新核对已有修复的base/live祖先；复用同字节既有分析，未运行测试。"
+      },
+      {
+        "line": 968,
+        "item": "- [ ] **silent-0338**：仅转录学习者回报，静默A10/F49女王战致死差异注记漏列求解器已计入的奥利哈钢回合末挡。末试T2 d313188/d313190预测损10，却写no end-of-turn block；s321678/s321683为11血0挡对16攻击，s321684实1血；T4 sl1362末试判官明确19 incoming vs 1 HP + 0 block + 6 end-of-turn block。只读定位 `agent/src/reflex/turn-solver.ts:2975` 数值已计入、`:3083` endTurnGuards来源表遗漏，`combat-plan.ts:2010`因此错误解释攻击差。首证本局/prior unknown/observed保持；对局正常结束，诊断问题非阻塞，不将阵亡归因此项。",
+        "disposition": "已修或已覆盖窄子项；不关闭更宽父项",
+        "commit": "c1d84804956bedbd29a7f0e81294114e18415b9d",
+        "same_original_text_as_prior": true,
+        "verification": "本轮逐SHA核相关源码/测试等同前批，并重新核对已有修复的base/live祖先；复用同字节既有分析，未运行测试。"
+      },
+      {
+        "line": 980,
+        "item": "- [ ] **silent-0339**：转录学习者原回报，静默A10/F42卷轴T4毒杀后三敌退场且22/77血未降，控制台却记录蜥蜴尾巴已触发；`agent/src/reflex/combat-plan.ts:5004` 将假设复活余血20与实血22容差匹配，`:5054` 战胜入口核销，`:4915` 后续不计复活。F49第3至5次T3末18血7挡对46被判死读档，s323750/323769/323788与末次s323807 fingerprint相同，末次s323808实际到43/87；反证当轮必死，不证明修后整场能赢。原运行源码57b661f07+dirty、相关源码与学习者只读live相等，dirty知识快照未完整保留。首证本局/prior unknown/observed保持；本局正常结束，非卡死。",
+        "disposition": "策略类/沿原独立提案，宽父保持",
+        "same_original_text_as_prior": true,
+        "verification": "本轮逐SHA核相关源码/测试等同前批，并重新核对已有修复的base/live祖先；复用同字节既有分析，未运行测试。"
+      },
+      {
+        "line": 992,
+        "item": "- [ ] **silent-0344，坚韧之环延迟格挡未接入推演**：仅转录学习者，证据 N8A2W8LH39N0 A10 F12 T7—T9。原定位 `agent/src/reflex/card-model.ts:852`（已读即时挡）、`agent/src/reflex/rollout.ts:1948`、`:2599`、`:1764`（两次轮初持续挡缺接线）。学习者原回报“坚韧之环即时格挡已读取，但后两次轮初格挡未接入持续推演；另见rollout.ts:1948、2599、1764。”；完整复盘/缺证限制与提案 `silent-proposal-8e17a61707d2ca02` 见 `learner/runs/20261009-194302-postmortem/proposal-toric.md`，另关联 silent-0289／silent-0345。非卡死/崩溃/非法动作，交原学习者策略链；运维不补游戏机制、参数或实现，不据此断言该局能转胜，完整 dirty 运行源码未复原与未知升级/重放范围保持。不重派、不标已修或 shipped。",
+        "disposition": "策略类/沿原独立提案，宽父保持",
+        "same_original_text_as_prior": true,
+        "verification": "本轮逐SHA核相关源码/测试等同前批，并重新核对已有修复的base/live祖先；复用同字节既有分析，未运行测试。"
+      },
+      {
+        "line": 1001,
+        "item": "- [ ] **silent-0347**：证据局 54G5683J0E5S；定位 `agent/src/reflex/rollout-live.ts:831`；学习者原回报“组装师攻击召唤未接入五回合推演；活体召唤只读ILLUSION_MOVE”。完整证据、反例与未知范围见 `learner/runs/20261009-204303-postmortem/report.md`，原提案 silent-proposal-43156dee9f23ae43。不是卡死、崩溃或非法动作，交原学习者提案链；不由运维补机制或实现，不据此宣称该局能赢，不重派或标 shipped。",
+        "disposition": "策略类/沿原独立提案，宽父保持",
+        "same_original_text_as_prior": true,
+        "verification": "本轮逐SHA核相关源码/测试等同前批，并重新核对已有修复的base/live祖先；复用同字节既有分析，未运行测试。"
+      },
+      {
+        "line": 1005,
+        "item": "- [ ] **silent-0349**：证据局 9663Y88TYK73；定位 `agent/src/reflex/turn-solver.ts:2684`；学习者原回报“已有虚弱后临时减力直接减显示攻击，末次尖啸方案报损3，实际需损5并死亡。”。完整证据、反例与未知范围见 `learner/runs/20261009-211302-postmortem/report.md`，原提案 silent-proposal-bb7597d8a1fe63ff。不是卡死、崩溃或非法动作，交原学习者提案链；不由运维补机制或实现，不据此宣称该局能赢，不重派或标 shipped。",
+        "disposition": "策略类/沿原独立提案，宽父保持",
+        "same_original_text_as_prior": true,
+        "verification": "本轮逐SHA核相关源码/测试等同前批，并重新核对已有修复的base/live祖先；复用同字节既有分析，未运行测试。"
+      },
+      {
+        "line": 1009,
+        "item": "- [ ] **core-build-notify-222802-rc2**：父请求 roy-20261009-historical-core-builds；现有broker `core-build-notify 20261009-222802-fix-batch` 返回failed/rc2，报告身份实质验收及双收件箱已完成。原去重回执 `ops/codex-ops/core-notifications/e31642e05c34a680bb55838cefa71f98cfff06a420b1541652a3d40fc78c15ae.json` 无stderr，具体herdr失败原因未知；请既有修复链核查失败日志/原生命令与幂等恢复，保留首次失败与同请求+批+SHA身份，确认未发送后方可安全恢复，禁止重复派学习或将失败当成功。本轮不改源码，独立证据 `paper/materials/silent/20261009-2335-events/core-builds/native-notification-receipt.json`。",
+        "disposition": "证据不足：后续诊断已修，原历史发送事实未知",
+        "same_original_text_as_prior": true,
+        "verification": "本轮逐SHA核相关源码/测试等同前批，并重新核对已有修复的base/live祖先；复用同字节既有分析，未运行测试。"
+      },
+      {
+        "line": 1020,
+        "item": "- [ ] **silent-0362**：仅转录学习者回报，证据 08A0GEAL8KQ5 / SILENT A10；定位 `agent/src/reflex/turn-solver.ts:2684`。静默A10双蟹两部件存活时，同线尖啸减力没有乘上已经存在的后方攻击倍率。08A0GEAL8KQ5末试T4火箭无虚弱、玩家无易伤、朝向不变，力量3→−3使背向激光57→48，实际减少9；当前live turn-solver.ts:2684仅按玩家易伤放大力量变化，算57−6=51，多报3。least-loss预计余血−20对应22−(51−9)，实际静态需损39、余血应−17，仍会死亡。只定位这笔减力传播，不混入既有虚弱或转向取整缺口，也不保证修后转胜。 原证据定位：F33T4：第6试d325594报预计剩HP−20；s334601→334602火箭力量3→−3、激光57→48，s334603为22血9挡；s334604玩家0、敌102/181。当前live agent/src/reflex/turn-solver.ts:2684—2685仅处理Vulnerable倍率。 原首证08A0GEAL8KQ5、prior=unknown、observed保持。原提案 `silent-proposal-0031b60b7dade5cf` 已经CLI登记，沿既有 strategy-proposal 链；完整证据/反例/范围见 `learner/runs/20261010-024302-postmortem/back-attack-proposal.md`（SHA256=bb19bdf4ee08c102e881e4aa936bf9f9dd00d715a62d65506ff019b6ba54df53）。原报告 `learner/runs/20261010-024302-postmortem/report.md`（SHA256=0fdf044079ff2e576da33f64f4b1a7d74b6587806258e43e57f023b40bf92b15）。局已正常结束，非卡死；不重复派发、不由运维补机制、不标implemented/shipped、不据此宣称能赢整局。",
+        "disposition": "策略类/沿原独立提案，宽父保持",
+        "same_original_text_as_prior": true,
+        "verification": "本轮逐SHA核相关源码/测试等同前批，并重新核对已有修复的base/live祖先；复用同字节既有分析，未运行测试。"
+      },
+      {
+        "line": 1022,
+        "item": "- [ ] **silent-0365**：仅转录学习者回报，证据 X4M1GPAJGAB9 / SILENT A10；定位 `agent/src/reflex/combat-plan.ts:3839`。整回合题把未建模定向药水合法目标截成前两个；本局产卵虫在槽3时，毒药水可指向[0,1,2,3]却只展示槽0和1，丢失母体和第三爪牙选择。应保证合法目标可达并一致处理题目容量；这不证明早喝或改目标能赢。当前只读live combat-plan.ts:3722、3839定位。 原证据定位：F23T2：s338673合法目标[0,1,2,3]；d329458仅p0→e0/e1，母体槽3漏掉。；F23T3：s338680与d329464重复同一覆盖缺口；T4 s338684与d329468同样。；F23T5：母体改槽1后单动作d329478实际饮药，毒21→27且90HP不变，不当反事实胜局。 原首证X4M1GPAJGAB9、prior=unknown、observed保持。原提案 `silent-proposal-70c22e94eda8f8a9` 已经CLI登记，沿既有 strategy-proposal 链；完整证据/反例/范围见 `learner/runs/20261010-101302-postmortem/proposal-potion-targets.md`（SHA256=6fa5340f70b8f3594e35a11a1f106e5046e9b8e295e790687a255fbb1dac2395）。原报告 `learner/runs/20261010-101302-postmortem/report.md`（SHA256=aa653a2086af29deaae74fb1a0df140a70f7f2956082bda38d9ac7ad5478b38a）。局已正常结束，非卡死；不重复派发、不由运维补机制、不标implemented/shipped、不据此宣称能赢整局。",
+        "disposition": "策略类/沿原独立提案，宽父保持",
+        "same_original_text_as_prior": true,
+        "verification": "本轮逐SHA核相关源码/测试等同前批，并重新核对已有修复的base/live祖先；复用同字节既有分析，未运行测试。"
+      },
+      {
+        "line": 1024,
+        "item": "- [ ] **silent-0367**：仅转录学习者回报，证据 5BU7ZE1PWLSX / SILENT A10；定位 `agent/src/brain/build-facts.ts:26`。静默A10蜥蜴尾巴在仪式兽战已实际触发并被代码记为已用，大脑后续事实与摘要却只展示持有遗物及一次性效果，未传递消耗状态，休息理由继续声称保留尾巴。应把同局核实的已用状态及来源传到构筑／路线／休息事实；不修改复活触发条件，也不能据此认定回血决定或整场死亡由错误措辞造成。 原证据定位：F17T4：s338941→338942血14/77→38/77；下一T5控制台:715明确记不再计入本局复活，说明现有跟踪已识别。；F28：d329862／b10913仍以保存尾巴作为回血理由；事实、run_brief与notes没有已用字段，实际选择回血到57。；F32：d329923／b10918仍说保留尾巴；当前live agent/src/brain/build-facts.ts:26只映射原始遗物文本，run-brief.ts:57同样缺消耗状态；实际回血到26后六次双蟹无复活。 原首证5BU7ZE1PWLSX、prior=unknown、observed保持。原提案 `silent-proposal-196013f88a9d7c1c` 已经CLI登记，沿既有 strategy-proposal 链；完整证据/反例/范围见 `learner/runs/20261010-111303-postmortem/proposal-tail-state.md`（SHA256=034f2dc81622aeb1d51672d008bf76c3f115667137388e0a618b3a5e45530a06）。原报告 `learner/runs/20261010-111303-postmortem/report.md`（SHA256=a24013ab4e46759e156e491ef50a7102389b9a5a27a02f9ba441ef143b8001ba）。局已正常结束，非卡死；不重复派发、不由运维补机制、不标implemented/shipped、不据此宣称能赢整局。",
+        "disposition": "已修或已覆盖窄子项；不关闭更宽父项",
+        "commit": "5baf663d7e6678efa3690e5a48329c4f8baee109",
+        "same_original_text_as_prior": true,
+        "verification": "本轮逐SHA核相关源码/测试等同前批，并重新核对已有修复的base/live祖先；复用同字节既有分析，未运行测试。"
+      },
+      {
+        "line": 1029,
+        "item": "- [ ] **codex-usage-credit-baseline-recovery**：证据SPC7NVA5K4RL F36，旧进程1009746，agent/src/brain/engines/codex-usage.ts:472/584。恢复后的account/rateLimits/read显示promax、weekly已用1%、ordinaryUsageAllowed=true、credits0，但进程内topBalance416.75189未换基线，recover仍报告credits正在花费并无限等待；只能经授权重启控制进程恢复，不能推断真实扣款。请既有修复链依据额度窗口/账户响应定义安全恢复条件并加固定回归，保留credits保护、登录/额度复检、原题暂停及无替代引擎；不得以无条件清基线绕过真实消耗。已用现有入口恢复同存档，持久代码修复尚未实施。证据paper/materials/silent/20261011-spc-f36-quota-resume/closure.json，原失败及新成功分留。",
+        "disposition": "已修或已覆盖窄子项；不关闭更宽父项",
+        "commit": "5b56a452bb9be14d620b368ec46974c1b57901ca",
+        "same_original_text_as_prior": true,
+        "verification": "本轮逐SHA核相关源码/测试等同前批，并重新核对已有修复的base/live祖先；复用同字节既有分析，未运行测试。"
+      },
+      {
+        "line": 1034,
+        "item": "- [ ] ascension-up 把目标进阶当实玩级别：LWQYSREHMMJ7 的 run-config:330 同时记录 ascension=10/target_ascension=11，runs:694结局A10；其前SILENT选角帧 max_ascension=10/can_increase=false。ops/codex-ops-learn.py:200–224优先target_ascension生成“这一局打A11”，同一值经ascension_audit.observe造成silent:A11 queued/attempts0；agent/src/eye/run-config.ts:316没有选角max，实际hand/screens/misc.ts:153传入max钳制。应区分请求目标与实际观察进阶，以实际值生成升阶通知/结构审计，保留原错误事件与请求历史，不把目标11当新等级证据，不改变游戏设定、知识、现有对局或人工标审计done。固定输入应覆盖target11/actual10/max10不升阶及真实actual升级才通知。",
+        "disposition": "已修：目标/实际进阶分开",
+        "commit": "8045d9fbf0a12523b1dbe39bbed8af06c7497b09",
+        "same_original_text_as_prior": true,
+        "verification": "本轮逐SHA核相关源码/测试等同前批，并重新核对已有修复的base/live祖先；复用同字节既有分析，未运行测试。"
+      },
+      {
+        "line": 1040,
+        "item": "- [ ] 框架/测试收尾：175450的merge-live.py在1200秒外层时限切断尾部paths后，已完成268文件2703例的原件仍自动整套重跑；独立paths11例补验已过，共269文件2714例，却继续长期持live-merge.lock，181302已测修复排队。重跑非零还会自动reset --merge，不能仅终止其子进程。需由框架拥有者核对现有runner/合后验收入口，保留分段已过覆盖与精确代码树、仅续失败/未运行项，显式区分时限/沙箱限制/真实失败，提供经身份校验且不触发误回退的既有所有者收尾方式；不改游戏知识/断言/预算，不手改原失败回执。证据paper/materials/20261011-1852-ops/core-check-closeout/receipt.json。",
+        "disposition": "太大/独立框架：精确续验入口已实现，宿主收尾范围继续",
+        "same_original_text_as_prior": true,
+        "verification": "本轮逐SHA核相关源码/测试等同前批，并重新核对已有修复的base/live祖先；复用同字节既有分析，未运行测试。"
+      },
+      {
+        "line": 1041,
+        "item": "- [ ] 调度公平性核查：watcher19:13冻结registry739项、pending587/waiting100/implemented38/duplicate14；可评估677项中首pending第80位。现有插入序waiting重评可能挤压新项，尚非永久饥饿证明；按真实dispatch/seen_runs/完成局时间核查后交获准框架迭代，不由本轮更改并发、队列状态或任务。原件paper/materials/20261011-ops-health-recovery/queue-observation-1913.json。",
+        "disposition": "证据不足：未证明永久饥饿，沿原框架核查",
+        "same_original_text_as_prior": true,
+        "verification": "本轮逐SHA核相关源码/测试等同前批，并重新核对已有修复的base/live祖先；复用同字节既有分析，未运行测试。"
+      },
+      {
+        "line": 1110,
+        "item": "- [ ] **非对局阻塞，通用验证负载/确定性待诊断**：agent/tests/eval.test.ts:26 原120000ms用例、agent/tests/silent-apotheosis-reference.test.ts:114 原15000ms用例在010547完整宿主检查超时；实际live3f7eba0ef0c8f29bc2fbf21c8fb81d7a3cac55ee/tree36d1032b0cd248b0dac9c6d0c25a1b049db8012e，tsc通过、392文件4216项通过、2超时、2跳过。原源dcfff63e只改silent经验数据；超时本身不证明机制回归或主机负载根因。ops选择保留V4-R314并沿普通fix链有界诊断，原完整失败不关闭。证据批而非新增游戏失败局；原日志/覆盖paper/materials/20261013-0201-ops/full-checks-failure.json。",
+        "disposition": "已修：eval/Apotheosis固定输入及有界夹具",
+        "commits": [
+          "d9881ba593b0b8d701ebbe1c95626c0ebdd554c7",
+          "9e8c93555131c3347f9e809d9722a848a75c2692"
+        ],
+        "same_original_text_as_prior": true,
+        "verification": "本轮逐SHA核相关源码/测试等同前批，并重新核对已有修复的base/live祖先；复用同字节既有分析，未运行测试。"
+      },
+      {
+        "line": 1294,
+        "item": "- [ ] **silent-0481**：转录原学习者纯bug回报，`agent/src/hand/screens/selection.ts:311/:333` 把技能药水生成牌的“本回合免费”写成“只在本回合存在”（This card is only for this turn）。Y2K25VFDU95P/A10/F9T3 d392030 三选均0费、实选触不可及；T5 s404267重抽显示2费，T3 s404256–404259实际0费消费窗口与后续出现分列。首证回溯C48LLXBGKXQ9 F6T1 d205391；原提案 `silent-proposal-686d4e759478eebb` 已交自动链，限定已观察药水来源，未知组合/永久构筑归属及收益不补造。区别已修silent-0324刀舞模型，不重复派同题，不由ops添加游戏规则。",
+        "disposition": "策略类/题面知识：技能药水生命周期措辞仍在，沿 silent-proposal-686d4e759478eebb；刀舞窄修复不覆盖本项",
+        "prior_scratch_inventory_correction": "前批报告正文已正确列为未修，但其附件误关联刀舞提交；本附件按当前源码更正，不回写历史",
+        "same_original_text_as_prior": true,
+        "verification": "本轮逐SHA核相关源码/测试等同前批，并重新核对已有修复的base/live祖先；复用同字节既有分析，未运行测试。"
+      },
+      {
+        "line": 1304,
+        "item": "- [ ] **infra-target-options-fixed-fixture-timeout**：原014302-s2/R349实际tree4ba23b20完整宿主，`tests/target-options.test.ts` 的唯一EZ2L F48 T2 Queen/Torch标注候选题在原30s超时；同树正式d032f27e限定该精确题、原预算/断言下1过21未选。两旧paper-krane 15s问题仍沿既有infra-paper-krane-recorded-line-timeout，不另开同题。原full rc1/4742过2skip与3失败保留，定向3过不是全套绿，未定位数值回归或CPU单因。沿原普通固定夹具成本/performance fix链下一安全批处理，保冻结数据和生产求解/候选/药水/1000样本/原权限；不要加时限、skip、弱断言或改游戏权重，不热改当前owner输入/新派游戏研究/重启对局。证据paper/materials/20261015-0422-ops/kunai-host-failure-decision.json、kunai-three-case-supplement.json。",
+        "disposition": "已修或已覆盖窄子项；不关闭更宽父项",
+        "commit": "bae9c45ccffefb284a1c6634526c8768a9f5f7a8",
+        "same_original_text_as_prior": true,
+        "verification": "本轮逐SHA核相关源码/测试等同前批，并重新核对已有修复的base/live祖先；复用同字节既有分析，未运行测试。"
+      },
+      {
+        "line": 1308,
+        "item": "- [ ] **infra-ledger-status-prefix-git-divergence**（2026-10-15 05:28:18 CST，非阻塞纯数据/发布一致性）：044302普通策略原31条CLI中四条显式重复proposed；0030/0087/0279与Git相同，0094原物理前缀及学习者before快照为proposed，Git已shipped，原status来源末行20261010第159批。当前机械原行若直接纳入Git会把已交付0094降级。已保原50行/原claim/首证/先验/版本/出处，不改物理原件；仅该冲突行逐SHA另存审计，canonical纳入49原行+一次ops纯追溯CLI不设status，保Git shipped及本批报告链接。需原普通ledger/publisher owner核物理前缀、分批暂存/合并顺序和真实交付链，提供固定夹具；不要因dirty前缀或整套源码测试绿自动重新shipped/改shipped_at、游戏机制或全角色状态，勿重写旧行/假造角色ACK。证据paper/materials/20261015-0513-ops/original-repeated-status-baselines.json、canonical-trace-registration-readback.json。",
+        "disposition": "已修或已覆盖窄子项；不关闭更宽父项",
+        "commit": "dd478f0b3e5a0f234f082972d21b203dbf8229d7",
+        "same_original_text_as_prior": true,
+        "verification": "本轮逐SHA核相关源码/测试等同前批，并重新核对已有修复的base/live祖先；复用同字节既有分析，未运行测试。"
+      },
+      {
+        "line": 1322,
+        "item": "- [ ] **infra-learner-launch-shared-main-config-race**（2026-10-15 10:00:38 CST，非游戏阻塞纯运维）：原094301主/s2策略批两份stdout空、stderr同报共享main agent/src/core/config.ts:21:0 Unexpected \"<<\"，原P2 main-conflicts快照同位置为<<<<<<< HEAD；当前已提交config静态transform0/无冲突标记，原live P1/P3完整23501树tsc/vitest0，不能把启动失败当生产源码/账号/额度或提案缺失。失败时完整main字节未独立冻结，跨进程读取与集成窗口的具体时序仍需固定夹具核。请原普通launcher/集成纯fix链隔离稳定启动入口或在原已登记任务/租约下有界恢复共享主树暂态解析，保留原输入/线程/工作树/权限和失败，不争用或打断live全检锁、不扩大沙箱/改账号模型、绕过凭据预检或另派同提案研究。两个原batch failed/rc1/mergednull、20原ID及10:43原有界重试保持，不人工重派。证据paper/materials/20261015-0955-ops/two-strategy-startup-failures.json、shared-main-launch-conflict-readback.json及原main冲突快照；本项只登记基础设施缺口，不改机制/学习先验。",
+        "disposition": "已修或已覆盖窄子项；不关闭更宽父项",
+        "commit": "22efae55484bc2bdcc54e847a8dc40bb4888c4e2",
+        "same_original_text_as_prior": true,
+        "verification": "本轮逐SHA核相关源码/测试等同前批，并重新核对已有修复的base/live祖先；复用同字节既有分析，未运行测试。"
+      },
+      {
+        "line": 1344,
+        "item": "- [ ] **silent-0487：非阻塞三段攻击模型缺口，仅转录学习者证据**。JWK2C8LE4SFV SILENT A10 F48首试T5及末试T8，疯狂科学MAD_SCIENCE现场Damage12/当前13、ViolenceHits3、1力量；d403288/d403579均预计13伤，s416380→416381敌201→162、s416671→416672敌104→65，两次单动作均39，少报26。学习者定位只读livecfa1c0be agent/src/reflex/card-model.ts:905只取CalculatedHits/Repeat并回退1，:906只认两次文字；按原silent-proposal-0a0b31e284e6793e独立策略链核固定模板命中次数与未知边界，不由运维修游戏模型。关联机制silent-0488与休眠Block旧缺陷0394分账；0394三段变体及0179士兵2敏捷/勒紧组合复现分别沿原a43b16ebc696514d/ad6953c6c875117d，不把旧已修窄范围标回退/重开或降级shipped。修正后整战胜负未知，不把模型少报等同实际少打。原件learner/runs/20261016-014305-f051c87e-146b-4aa7-86d4-288461b9f317-postmortem/；不另派重复任务。 2026-10-16 02:05:15 CST",
+        "disposition": "策略类：MAD_SCIENCE三段攻击模型；沿原silent-proposal-0a0b31e284e6793e独立策略链，不重复派发。",
+        "same_original_text_as_prior": true,
+        "verification": "本轮逐SHA核相关源码/测试等同前批，并重新核对已有修复的base/live祖先；复用同字节既有分析，未运行测试。"
+      }
+    ],
+    "current_files": [
+      {
+        "path": "agent/src/brain/brain.ts",
+        "sha256": "d88e56c4109a0af70a3ace619aeb176b1e69ef77bcc9bc1d5b4a68c01f872145",
+        "prior_sha256": "d88e56c4109a0af70a3ace619aeb176b1e69ef77bcc9bc1d5b4a68c01f872145",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/src/brain/build-facts.ts",
+        "sha256": "9bb4d79e1117057e5bc1597bde1fbfb1d1bc1c9a5d9efadfc479f47ea2bb42da",
+        "prior_sha256": "9bb4d79e1117057e5bc1597bde1fbfb1d1bc1c9a5d9efadfc479f47ea2bb42da",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/src/brain/engines/claude.ts",
+        "sha256": "2498e39adae1cbf1091749131599356db4d385199047a91708861e3955889b37",
+        "prior_sha256": "2498e39adae1cbf1091749131599356db4d385199047a91708861e3955889b37",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/src/brain/engines/codex-session.ts",
+        "sha256": "6e72622f1b1a1874e501738297bb7731b79f3db5e8a68fb79696377bc4f58e58",
+        "prior_sha256": "6e72622f1b1a1874e501738297bb7731b79f3db5e8a68fb79696377bc4f58e58",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/src/brain/engines/codex-usage.ts",
+        "sha256": "f1c59ca0c8c85e7ba5c934a84a6ee9bb27a26cd8724452a8b954186925df95d6",
+        "prior_sha256": "f1c59ca0c8c85e7ba5c934a84a6ee9bb27a26cd8724452a8b954186925df95d6",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/src/brain/engines/codex.ts",
+        "sha256": "dbd9d890def41f5903375f328279e46ee48661e84c9867a05cf9a4d76bc4672d",
+        "prior_sha256": "dbd9d890def41f5903375f328279e46ee48661e84c9867a05cf9a4d76bc4672d",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/src/brain/llm/deepseek-message.ts",
+        "sha256": "f181f17865669cbe306e1fd1b918bd60bc822c3130643dde5646be3a2a4b9338",
+        "prior_sha256": "f181f17865669cbe306e1fd1b918bd60bc822c3130643dde5646be3a2a4b9338",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/src/brain/llm/deepseek.ts",
+        "sha256": "5383f58035d06faedfc26beb1ad217c675eebaaa86bb55ab869d1c0b6b51cef9",
+        "prior_sha256": "5383f58035d06faedfc26beb1ad217c675eebaaa86bb55ab869d1c0b6b51cef9",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/src/brain/router.ts",
+        "sha256": "32ea6ea4ce9f5baf795e640f430f917d9ebfd856668e00aed2aeaac70c865080",
+        "prior_sha256": "32ea6ea4ce9f5baf795e640f430f917d9ebfd856668e00aed2aeaac70c865080",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/src/brain/types.ts",
+        "sha256": "7a02faf206e775c3c7a91f83f21d6017da1374e0ae80837f01e05149887710f8",
+        "prior_sha256": "7a02faf206e775c3c7a91f83f21d6017da1374e0ae80837f01e05149887710f8",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/src/brain/wait.ts",
+        "sha256": "4d6c50b6be4310f3e5652b848e647b3f8a46ad7c9087a0d51c643752f9d03094",
+        "prior_sha256": "4d6c50b6be4310f3e5652b848e647b3f8a46ad7c9087a0d51c643752f9d03094",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/src/core/config.ts",
+        "sha256": "95987ec4c3247e719a1d5c30efabd5a53338581456d71824d21b9ae8d9014348",
+        "prior_sha256": "95987ec4c3247e719a1d5c30efabd5a53338581456d71824d21b9ae8d9014348",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/src/core/util/jsonl.ts",
+        "sha256": "06c006cf08cbe6dd74c210464e39b261b1b629d4dc879b144e88af341a7e22b7",
+        "prior_sha256": "06c006cf08cbe6dd74c210464e39b261b1b629d4dc879b144e88af341a7e22b7",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/src/eye/decision-log.ts",
+        "sha256": "77ade396fb4493a8b765ce51569f619980c759203990335ede97964834406e31",
+        "prior_sha256": "77ade396fb4493a8b765ce51569f619980c759203990335ede97964834406e31",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/src/eye/jev-prompt-log.ts",
+        "sha256": "aad4cd15816d6184be381e3863ca297b165b6271793fbfb73fa4b8fb68995b4b",
+        "prior_sha256": "aad4cd15816d6184be381e3863ca297b165b6271793fbfb73fa4b8fb68995b4b",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/src/eye/run-config.ts",
+        "sha256": "d6bfff09f34b91968a9e53c9a1cd0d7ded814a67ae59412b607bec33b31fead1",
+        "prior_sha256": "d6bfff09f34b91968a9e53c9a1cd0d7ded814a67ae59412b607bec33b31fead1",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/src/hand/loop.ts",
+        "sha256": "98c1560fb63a5dac2aafc6ed58e65514c4d190f755fe2c4b3e43c1bc78238077",
+        "prior_sha256": "98c1560fb63a5dac2aafc6ed58e65514c4d190f755fe2c4b3e43c1bc78238077",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/src/hand/screens/act-start.ts",
+        "sha256": "baa7e82973fb29a687036ae24f39fc301e0627f3d4fda01b7d27ffb9282ffff7",
+        "prior_sha256": "baa7e82973fb29a687036ae24f39fc301e0627f3d4fda01b7d27ffb9282ffff7",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/src/hand/screens/card-value.ts",
+        "sha256": "3d4a4413e05d549a774a2e6dbaf09474a398c03617b527932d4392860e202339",
+        "prior_sha256": "3d4a4413e05d549a774a2e6dbaf09474a398c03617b527932d4392860e202339",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/src/hand/screens/event.ts",
+        "sha256": "cdace480a2b002dd85f31d604c4f54c1785d8a75f229b452d40e7dc02dea200c",
+        "prior_sha256": "cdace480a2b002dd85f31d604c4f54c1785d8a75f229b452d40e7dc02dea200c",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/src/hand/screens/map.ts",
+        "sha256": "0aa4eefd41574d9609bea4501bfd3206608ed3a37fcc4b4d3730857afd857e87",
+        "prior_sha256": "0aa4eefd41574d9609bea4501bfd3206608ed3a37fcc4b4d3730857afd857e87",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/src/hand/screens/misc.ts",
+        "sha256": "6f99b70fb712bd587ce2870379ecd8e6f203715f2e57b580b004aaf0b446161c",
+        "prior_sha256": "6f99b70fb712bd587ce2870379ecd8e6f203715f2e57b580b004aaf0b446161c",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/src/hand/screens/oneshot.ts",
+        "sha256": "ded1688e33600aec4189ae1012aec5c3539e3e2ef0823be201089c9540f67313",
+        "prior_sha256": "ded1688e33600aec4189ae1012aec5c3539e3e2ef0823be201089c9540f67313",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/src/hand/screens/potion-discard.ts",
+        "sha256": "29958988e190b46c66389a03fad69506b584b9b02c2a6d8698edd6b48eda0baf",
+        "prior_sha256": "29958988e190b46c66389a03fad69506b584b9b02c2a6d8698edd6b48eda0baf",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/src/hand/screens/route-review.ts",
+        "sha256": "6fab3006552c8cd3507d7bcf509ba7fbe10f906aceae4939db3714b5966dc2ba",
+        "prior_sha256": "6fab3006552c8cd3507d7bcf509ba7fbe10f906aceae4939db3714b5966dc2ba",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/src/hand/screens/selection.ts",
+        "sha256": "22a6189aa879f51793e7bfcc3a18c983b77be5ea2d804049d5c3ad36e006bc60",
+        "prior_sha256": "22a6189aa879f51793e7bfcc3a18c983b77be5ea2d804049d5c3ad36e006bc60",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/src/hand/screens/shop.ts",
+        "sha256": "ae49d3f139434e8aab4352a8edb5b71bbd0e0e7019c9fc7d941d4aaaed324563",
+        "prior_sha256": "ae49d3f139434e8aab4352a8edb5b71bbd0e0e7019c9fc7d941d4aaaed324563",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/src/knowledge/card-references.ts",
+        "sha256": "255afc71c93d950a306500d715edd786f97d330026a2da2600dc83afd16481f0",
+        "prior_sha256": "255afc71c93d950a306500d715edd786f97d330026a2da2600dc83afd16481f0",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/src/knowledge/index.ts",
+        "sha256": "4f79e78beb3d40fd992683ee02be2f3c20649dc0e366e7a7ec2fd4a43aca0712",
+        "prior_sha256": "4f79e78beb3d40fd992683ee02be2f3c20649dc0e366e7a7ec2fd4a43aca0712",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/src/knowledge/mechanics.ts",
+        "sha256": "d42a3d9af46240dc51cfa1ce12d87e8442aadc30ee8d9897c72e27c69ba178ad",
+        "prior_sha256": "d42a3d9af46240dc51cfa1ce12d87e8442aadc30ee8d9897c72e27c69ba178ad",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/src/knowledge/move-model.ts",
+        "sha256": "70ee94a9d8053aa78d4f5ebd6bc50fa288dc8130c0fb30d9e62a207df7ccb150",
+        "prior_sha256": "70ee94a9d8053aa78d4f5ebd6bc50fa288dc8130c0fb30d9e62a207df7ccb150",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/src/knowledge/outcome-facts.ts",
+        "sha256": "36bf89741e60c253f0d85bbb54a403eb22dc15a40b8c50587fcb63ea23c72480",
+        "prior_sha256": "36bf89741e60c253f0d85bbb54a403eb22dc15a40b8c50587fcb63ea23c72480",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/src/knowledge/outcome-tables.ts",
+        "sha256": "8937c21bc6fb878812a372a6c40d2491c23f5918d0726510ea1127d03bcf6a72",
+        "prior_sha256": "8937c21bc6fb878812a372a6c40d2491c23f5918d0726510ea1127d03bcf6a72",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/src/knowledge/potion-equivalents.ts",
+        "sha256": "890f578ac93e32e614202180d8f84c3d9ed6897052427d4be36ad1b6da7498e1",
+        "prior_sha256": "890f578ac93e32e614202180d8f84c3d9ed6897052427d4be36ad1b6da7498e1",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/src/knowledge/relic-values.ts",
+        "sha256": "f994ac46e6148ee39dfe6708cdbfab11820d8ae19803fc7308df2857e01aa858",
+        "prior_sha256": "f994ac46e6148ee39dfe6708cdbfab11820d8ae19803fc7308df2857e01aa858",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/src/knowledge/render/potion-text.ts",
+        "sha256": "d12274f3dea30eff947404e0b6da980bec5dea2608b69338a92cde1d15403846",
+        "prior_sha256": "d12274f3dea30eff947404e0b6da980bec5dea2608b69338a92cde1d15403846",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/src/memory/ascension-target.ts",
+        "sha256": "a799f4a050fe2911f3b8378e6bdc6860be6e676b340a9e402c045de041bbe589",
+        "prior_sha256": "a799f4a050fe2911f3b8378e6bdc6860be6e676b340a9e402c045de041bbe589",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/src/memory/fight-plan.ts",
+        "sha256": "fc0bfb1dca63c5496ffd667a71422e0709427549d34aa23c6b91f418ef7cba59",
+        "prior_sha256": "fc0bfb1dca63c5496ffd667a71422e0709427549d34aa23c6b91f418ef7cba59",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/src/memory/journal-replay.ts",
+        "sha256": "b2273f526812f13e4c1061a8636d3105102ccd8dd566a18177b44ea16f09d848",
+        "prior_sha256": "b2273f526812f13e4c1061a8636d3105102ccd8dd566a18177b44ea16f09d848",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/src/memory/relic-resources.ts",
+        "sha256": "b52ba3c484769c96ae8a33d736cecc817428ace6b80f5207469d78b4a66c2108",
+        "prior_sha256": "b52ba3c484769c96ae8a33d736cecc817428ace6b80f5207469d78b4a66c2108",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/src/memory/run-brief.ts",
+        "sha256": "3eb7cda092b67ea178b2ffb4b5ff38478ae9d7d90d4a785b4f910ed3ae99d24a",
+        "prior_sha256": "3eb7cda092b67ea178b2ffb4b5ff38478ae9d7d90d4a785b4f910ed3ae99d24a",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/src/memory/run-journal.ts",
+        "sha256": "406f5737dc5340ae115328919cb60eab8dee5a686b573cf69ff7409df80ca6ee",
+        "prior_sha256": "406f5737dc5340ae115328919cb60eab8dee5a686b573cf69ff7409df80ca6ee",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/src/memory/run-plan-merge.ts",
+        "sha256": "1afb0e5424e9d7d2d98309252b85231c91fa977de9ac79c30eb5531541ed4606",
+        "prior_sha256": "1afb0e5424e9d7d2d98309252b85231c91fa977de9ac79c30eb5531541ed4606",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/src/memory/run-plan.ts",
+        "sha256": "7551d239b782a0427b48d13377ba05fc0abcf6b8df2d0430112140b59c4d296a",
+        "prior_sha256": "7551d239b782a0427b48d13377ba05fc0abcf6b8df2d0430112140b59c4d296a",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/src/memory/types.ts",
+        "sha256": "1b11c7b631dadea408db53b22c08d1619ef0588eff120d5e609f8279325e63bf",
+        "prior_sha256": "1b11c7b631dadea408db53b22c08d1619ef0588eff120d5e609f8279325e63bf",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/src/reflex/card-model.ts",
+        "sha256": "287115627e5bc3f93da8283620a9b255df880286d4e8e1408009d9f8c87a45c7",
+        "prior_sha256": "287115627e5bc3f93da8283620a9b255df880286d4e8e1408009d9f8c87a45c7",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/src/reflex/combat-plan.ts",
+        "sha256": "07243eaa93ac19f563b7d9a484472002f16ad818217613e580975cb7b9f86630",
+        "prior_sha256": "07243eaa93ac19f563b7d9a484472002f16ad818217613e580975cb7b9f86630",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/src/reflex/combat.ts",
+        "sha256": "5d09542041103769ec9fe96788a77684cbac72028883b173b59c90c586281953",
+        "prior_sha256": "5d09542041103769ec9fe96788a77684cbac72028883b173b59c90c586281953",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/src/reflex/continuation-value.ts",
+        "sha256": "002277b50728ab8fd405799c0a3345e5dcb788ba8f37d5489b5fbcd9623029bb",
+        "prior_sha256": "002277b50728ab8fd405799c0a3345e5dcb788ba8f37d5489b5fbcd9623029bb",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/src/reflex/jev-experience.ts",
+        "sha256": "629a3ad6240568962b3b1d4aea1db7088fae947229e0d7caf1aa804a5e92c103",
+        "prior_sha256": "629a3ad6240568962b3b1d4aea1db7088fae947229e0d7caf1aa804a5e92c103",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/src/reflex/passive-pieces.ts",
+        "sha256": "545c917baa6193678160f8f37ef93d5676d68af75e72fef061c235625a31b90e",
+        "prior_sha256": "545c917baa6193678160f8f37ef93d5676d68af75e72fef061c235625a31b90e",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/src/reflex/potion-cost.ts",
+        "sha256": "b0a952df65e6af5ddd99742b9894367dff086052ef810865e85fe73c0c06c0b2",
+        "prior_sha256": "b0a952df65e6af5ddd99742b9894367dff086052ef810865e85fe73c0c06c0b2",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/src/reflex/potion-mc.ts",
+        "sha256": "01679317c4d7203c1577700bda51bdd107844464652cefe8696423291a3224fe",
+        "prior_sha256": "01679317c4d7203c1577700bda51bdd107844464652cefe8696423291a3224fe",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/src/reflex/rollout-live.ts",
+        "sha256": "30ff27d414592f8e111be4a709a6c7595165f1e4d0684d72bb8c5d9bf933d978",
+        "prior_sha256": "30ff27d414592f8e111be4a709a6c7595165f1e4d0684d72bb8c5d9bf933d978",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/src/reflex/rollout.ts",
+        "sha256": "7a41b69fbdd3d2b37eec3d390405772983952d33f870d5d401a983835435397d",
+        "prior_sha256": "7a41b69fbdd3d2b37eec3d390405772983952d33f870d5d401a983835435397d",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/src/reflex/silent-apotheosis.ts",
+        "sha256": "87db52f6ea630ea9e851469c6dcf713d2995a9528952629521750bb45092eb60",
+        "prior_sha256": "87db52f6ea630ea9e851469c6dcf713d2995a9528952629521750bb45092eb60",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/src/reflex/silent-crusher-facing.ts",
+        "sha256": "78a90e120c688a8bae4ed80077ef12a862efa29b1d423160cca4cf72a13eed8e",
+        "prior_sha256": "78a90e120c688a8bae4ed80077ef12a862efa29b1d423160cca4cf72a13eed8e",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/src/reflex/silent-skittish.ts",
+        "sha256": "dbfa23ec61b30dff80b5f8158cf2f8c9da6ad8cb5e70334f9ab402689b491820",
+        "prior_sha256": "dbfa23ec61b30dff80b5f8158cf2f8c9da6ad8cb5e70334f9ab402689b491820",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/src/reflex/thief.ts",
+        "sha256": "b69f736e468222bb19e0f5ecc83b11a1e435ced7538a1dd687f3347107840de1",
+        "prior_sha256": "b69f736e468222bb19e0f5ecc83b11a1e435ced7538a1dd687f3347107840de1",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/src/reflex/turn-solver.ts",
+        "sha256": "0421e85f36d00b067e0787e9ff5fb6f70d18f3597d73f0fd2ffb34388274cde2",
+        "prior_sha256": "0421e85f36d00b067e0787e9ff5fb6f70d18f3597d73f0fd2ffb34388274cde2",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/src/sim/boss-clock.ts",
+        "sha256": "6af7417bf31e80b617157d40de79fcbea14761c6443e06c10430444b7503325a",
+        "prior_sha256": "6af7417bf31e80b617157d40de79fcbea14761c6443e06c10430444b7503325a",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/src/sim/boss-lines.ts",
+        "sha256": "e3d9a70923c1c7829962adbee7d44050d1a9e1ff550f1988a86784aec2250e9c",
+        "prior_sha256": "e3d9a70923c1c7829962adbee7d44050d1a9e1ff550f1988a86784aec2250e9c",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/src/sim/boss-sim.ts",
+        "sha256": "e392cfd675fe877a359fed8d3d54fbe637fa7465471a8bb5e63d409863a4a663",
+        "prior_sha256": "e392cfd675fe877a359fed8d3d54fbe637fa7465471a8bb5e63d409863a4a663",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/src/sim/boss-start.ts",
+        "sha256": "01ef66ce210a3d022f1e28e34188b7005c7a88aa2b020e6f242f4030a95aee02",
+        "prior_sha256": "01ef66ce210a3d022f1e28e34188b7005c7a88aa2b020e6f242f4030a95aee02",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/src/sim/build-sim-facts.ts",
+        "sha256": "ceda348dc59dad6c8d61de1a5a35e0bac02bdc4aa4df5659a8a4dc3d9d9a1c8c",
+        "prior_sha256": "ceda348dc59dad6c8d61de1a5a35e0bac02bdc4aa4df5659a8a4dc3d9d9a1c8c",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/src/sim/build-sim.ts",
+        "sha256": "c6f744c5e511d631c70b22ffeefdb3ee211a35c71199b335b885735f81073576",
+        "prior_sha256": "c6f744c5e511d631c70b22ffeefdb3ee211a35c71199b335b885735f81073576",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/src/sim/double-boss-start.ts",
+        "sha256": "3241dedb92ff1ff9803df3786f15e65e669e7371756cca8668fb8c57771e97eb",
+        "prior_sha256": "3241dedb92ff1ff9803df3786f15e65e669e7371756cca8668fb8c57771e97eb",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/src/sim/quantitative-calibration.ts",
+        "sha256": "7edb1b8fa86b49f60ec2e1e4ddee1c6e065432d18ad8cf81461e97fc8242527f",
+        "prior_sha256": "7edb1b8fa86b49f60ec2e1e4ddee1c6e065432d18ad8cf81461e97fc8242527f",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/src/sim/quantitative-facts.ts",
+        "sha256": "12b495e8c9922b9c4412ee0a86c5226383833896306c4a283bc6e00aa19845ba",
+        "prior_sha256": "12b495e8c9922b9c4412ee0a86c5226383833896306c4a283bc6e00aa19845ba",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/src/sim/quantitative-stats.ts",
+        "sha256": "e33124df786f4060919d6713e494f9ce447b20c75113a573f7e549adf4e8a377",
+        "prior_sha256": "e33124df786f4060919d6713e494f9ce447b20c75113a573f7e549adf4e8a377",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/src/sim/route-map.ts",
+        "sha256": "d1276a6f965311333f2500f1ee3a1777bbca31a54ead40da265292f2c23186f6",
+        "prior_sha256": "d1276a6f965311333f2500f1ee3a1777bbca31a54ead40da265292f2c23186f6",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/src/sim/silent-opening.ts",
+        "sha256": "f3baa27bfac07d9f60995e37b7bbe31f7fa5baa63f18dd4fda3bc8d2c09bf502",
+        "prior_sha256": "f3baa27bfac07d9f60995e37b7bbe31f7fa5baa63f18dd4fda3bc8d2c09bf502",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/src/sim/thief-card-hp.ts",
+        "sha256": "d488669fe6428d077594d2a8ca5dcffbcdce990a14a8280e4d85feedab7f593f",
+        "prior_sha256": "d488669fe6428d077594d2a8ca5dcffbcdce990a14a8280e4d85feedab7f593f",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/src/sim/thief-card-value.ts",
+        "sha256": "c0588618ea2e6ae8c6ebb73e23c7b0d1f8ddfaf6c9d56b76a3bbc98fd8f50aeb",
+        "prior_sha256": "c0588618ea2e6ae8c6ebb73e23c7b0d1f8ddfaf6c9d56b76a3bbc98fd8f50aeb",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/src/sl/attempts.ts",
+        "sha256": "f3f785f18c77ccc482a58b236d168780c8e010fb0bec12ec3e14ab61a8aca415",
+        "prior_sha256": "f3f785f18c77ccc482a58b236d168780c8e010fb0bec12ec3e14ab61a8aca415",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/src/sl/controller.ts",
+        "sha256": "f8827b8d4c53d1139bbec174c0b13f19c99803b4dbd404310c2835a3d05c2ffc",
+        "prior_sha256": "f8827b8d4c53d1139bbec174c0b13f19c99803b4dbd404310c2835a3d05c2ffc",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/src/sl/draws.ts",
+        "sha256": "7a739333ce420fd61200b08491810c5287b09a699ba23bc3c3bc69daaf0b56e7",
+        "prior_sha256": "7a739333ce420fd61200b08491810c5287b09a699ba23bc3c3bc69daaf0b56e7",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/src/sl/elites.ts",
+        "sha256": "d2e285246431860f966a0e1b0841006122041d2acbc1d32ddb72f19e70e9850e",
+        "prior_sha256": "d2e285246431860f966a0e1b0841006122041d2acbc1d32ddb72f19e70e9850e",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/src/sl/explore.ts",
+        "sha256": "2f37e85cc1c1c31e96a0d1b90db850893ec75b6cf5b4b84bf07bbb8de4e3ec43",
+        "prior_sha256": "2f37e85cc1c1c31e96a0d1b90db850893ec75b6cf5b4b84bf07bbb8de4e3ec43",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/src/sl/judge.ts",
+        "sha256": "82e14372b7022ec2e1d75e09602f6d41f07293e7fc75f0c8aa16ff8462aef4b6",
+        "prior_sha256": "82e14372b7022ec2e1d75e09602f6d41f07293e7fc75f0c8aa16ff8462aef4b6",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/src/sl/random-target.ts",
+        "sha256": "7bae6d0830a8fef4d2fb1dfa1d659a2ee8603bf3847e13f4b3e23cccf310d757",
+        "prior_sha256": "7bae6d0830a8fef4d2fb1dfa1d659a2ee8603bf3847e13f4b3e23cccf310d757",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/src/sl/reload.ts",
+        "sha256": "02da7188eb3b446b458998dd54a6d2bf3c38e98eab14040e25d7ddb567323517",
+        "prior_sha256": "02da7188eb3b446b458998dd54a6d2bf3c38e98eab14040e25d7ddb567323517",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/act-route-candidates.test.ts",
+        "sha256": "4ca82aaf493d9add0a36a55c46592333a4308948dd6c908aeceae488ec7b6e21",
+        "prior_sha256": "4ca82aaf493d9add0a36a55c46592333a4308948dd6c908aeceae488ec7b6e21",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/apotheosis-potion-fixture.ts",
+        "sha256": "ae66d3e16ac401bf631c532292d4a00e1af0c7cfb3bec6f6ba2760e67f3a0f7c",
+        "prior_sha256": "ae66d3e16ac401bf631c532292d4a00e1af0c7cfb3bec6f6ba2760e67f3a0f7c",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/asc-band-facts.test.ts",
+        "sha256": "3c35572122e9d52d186ea9a2fc6200d01f119f6f5d1472efa0ad313a97636e7a",
+        "prior_sha256": "3c35572122e9d52d186ea9a2fc6200d01f119f6f5d1472efa0ad313a97636e7a",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/ascension-observed.test.ts",
+        "sha256": "9e3d7161f1a288983b9efa2bcc97dc0b24a4e248547645daa33967d82fceaf9e",
+        "prior_sha256": "9e3d7161f1a288983b9efa2bcc97dc0b24a4e248547645daa33967d82fceaf9e",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/autoplay-marker-failure.test.ts",
+        "sha256": "d5f2dee41cd6ad85f5d9161e9c63665f2428d013f9dcd18e0aa09d8805d91686",
+        "prior_sha256": "d5f2dee41cd6ad85f5d9161e9c63665f2428d013f9dcd18e0aa09d8805d91686",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/autoplay_reload_test.py",
+        "sha256": "07c8ca3903f8364afe2103aaf547f2495426065c9f999ab8fd05fb77a4d7f3f6",
+        "prior_sha256": "07c8ca3903f8364afe2103aaf547f2495426065c9f999ab8fd05fb77a4d7f3f6",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/batch-c-illusion-fixture.ts",
+        "sha256": "de1b8f41373513da756ca93a2ca6557925f093ae984bae3440daba48cd354306",
+        "prior_sha256": "de1b8f41373513da756ca93a2ca6557925f093ae984bae3440daba48cd354306",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/batch-c-illusion.test.ts",
+        "sha256": "e148b117748a9017740f427c9fc3909a72ff16e2336e5153eb56733c7921365b",
+        "prior_sha256": "e148b117748a9017740f427c9fc3909a72ff16e2336e5153eb56733c7921365b",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/batch-c.test.ts",
+        "sha256": "9f69160e634c7157edabba53346d5939bc294b6b1cb2574493c7c82695b4f4f2",
+        "prior_sha256": "9f69160e634c7157edabba53346d5939bc294b6b1cb2574493c7c82695b4f4f2",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/batch-f.test.ts",
+        "sha256": "bce56ae953a3668b624c4718216d56174fc6b701ac027f5acf7cb0a9780d10b1",
+        "prior_sha256": "bce56ae953a3668b624c4718216d56174fc6b701ac027f5acf7cb0a9780d10b1",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/batch-j.test.ts",
+        "sha256": "acd0badb6ad74d1a7db1dd325b037c258565cec12d8892bc794aabaa5809a333",
+        "prior_sha256": "acd0badb6ad74d1a7db1dd325b037c258565cec12d8892bc794aabaa5809a333",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/batch-k.test.ts",
+        "sha256": "3f386c8c80b0cb91378496a9082b5782b87c97afa4cf99e98fdb1bd77d8dbfbd",
+        "prior_sha256": "3f386c8c80b0cb91378496a9082b5782b87c97afa4cf99e98fdb1bd77d8dbfbd",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/blocked-experience-repair.test.ts",
+        "sha256": "8eb7e515c70cb8b4555eb4c5816fa13d98d98ac3ac097bb52aef149c9fa93ecd",
+        "prior_sha256": "8eb7e515c70cb8b4555eb4c5816fa13d98d98ac3ac097bb52aef149c9fa93ecd",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/boss-lines-planner.test.ts",
+        "sha256": "1910890fa3b5356a790202bd8b189790b7ab01eebd3a833d194a85878df024ff",
+        "prior_sha256": "1910890fa3b5356a790202bd8b189790b7ab01eebd3a833d194a85878df024ff",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/boss-sim-build.test.ts",
+        "sha256": "e8214403e2dd11f295686fcded63e0b899bbf38742975f6844e94614f53d2435",
+        "prior_sha256": "e8214403e2dd11f295686fcded63e0b899bbf38742975f6844e94614f53d2435",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/boss-sim-home.test.ts",
+        "sha256": "c0beccd389be9878236c4d988d6a5c5d02692912f5ab48fb8686e6765f3b3d58",
+        "prior_sha256": "c0beccd389be9878236c4d988d6a5c5d02692912f5ab48fb8686e6765f3b3d58",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/boss-sim-notice-registration.test.ts",
+        "sha256": "6df302326efcb8d296c441413261ec22be7bfd92476f0b9d2d7afb68c9926e2f",
+        "prior_sha256": "6df302326efcb8d296c441413261ec22be7bfd92476f0b9d2d7afb68c9926e2f",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/brain-codex-session.test.ts",
+        "sha256": "071d3559d3b67124cbcb2114bef49894a0fec347cbc47938e837cf742487e2da",
+        "prior_sha256": "071d3559d3b67124cbcb2114bef49894a0fec347cbc47938e837cf742487e2da",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/brain-codex-usage-contract.test.ts",
+        "sha256": "4cec4085c563c4ad9f5a4baa6c16485816c9020dcbf19cc23809013a839465de",
+        "prior_sha256": "4cec4085c563c4ad9f5a4baa6c16485816c9020dcbf19cc23809013a839465de",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/brain-codex-usage.test.ts",
+        "sha256": "bb6f20c22566bcc8c4aba152f8a37c0e5389dff632fbd2573b5fb66c179caac5",
+        "prior_sha256": "bb6f20c22566bcc8c4aba152f8a37c0e5389dff632fbd2573b5fb66c179caac5",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/broker-response-persistence.test.ts",
+        "sha256": "e2ef26befe93ee58c205ba0144c4638f01195dc0c352a513e7cb618b4d2f1d04",
+        "prior_sha256": "e2ef26befe93ee58c205ba0144c4638f01195dc0c352a513e7cb618b4d2f1d04",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/build-decider.test.ts",
+        "sha256": "b41686d009437601ec4054483fcec82931d5dfd1177b398570fa3dec8ed83929",
+        "prior_sha256": "b41686d009437601ec4054483fcec82931d5dfd1177b398570fa3dec8ed83929",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/codex-usage-recovery.test.ts",
+        "sha256": "81424c655f0e92cb2ef11442115b0ab06fb5ffd20d7b42f162bb9356efd25323",
+        "prior_sha256": "81424c655f0e92cb2ef11442115b0ab06fb5ffd20d7b42f162bb9356efd25323",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/combat-jev.test.ts",
+        "sha256": "02e2d769ad3f5c9b992debb58fb49ce5df3c980e6dd1dc698bf320afcb4092ab",
+        "prior_sha256": "02e2d769ad3f5c9b992debb58fb49ce5df3c980e6dd1dc698bf320afcb4092ab",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/compute-memo-files.ts",
+        "sha256": "7694f4d5c57fb9cb114c621f8b30933813adcdb49d00fa43e6d35ad824b06817",
+        "prior_sha256": "7694f4d5c57fb9cb114c621f8b30933813adcdb49d00fa43e6d35ad824b06817",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/compute-memo-worker.ts",
+        "sha256": "51e05d15207d7f8b2c51100d4c2bce677d281968b36e06460f18a483e7cdfd98",
+        "prior_sha256": "51e05d15207d7f8b2c51100d4c2bce677d281968b36e06460f18a483e7cdfd98",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/compute-memo.test.ts",
+        "sha256": "b776d493cc116f50b5f1809de7f2f22a2019a20bf617d38f4f0aa734c31e782b",
+        "prior_sha256": "b776d493cc116f50b5f1809de7f2f22a2019a20bf617d38f4f0aa734c31e782b",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/core_build_jobs_test.py",
+        "sha256": "74bd1f1807f77cc03e7a78ecfdb66695bcec73aa09dc4be0ec0a391c8de6dc13",
+        "prior_sha256": "74bd1f1807f77cc03e7a78ecfdb66695bcec73aa09dc4be0ec0a391c8de6dc13",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/cost-accounting.test.ts",
+        "sha256": "f24b1ee653345ef4ccefcbfdd3caa7f59bb70e29f6de1adc88997719dd35c4a2",
+        "prior_sha256": "f24b1ee653345ef4ccefcbfdd3caa7f59bb70e29f6de1adc88997719dd35c4a2",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/cost_accounting_test.py",
+        "sha256": "265364a1598a500d669b8b4c98dc32b479bfda88459ed5fc63087a87b19e7784",
+        "prior_sha256": "265364a1598a500d669b8b4c98dc32b479bfda88459ed5fc63087a87b19e7784",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/death-move-data/pinned-knowledge.json",
+        "sha256": "6eb05fbf0e79a2f077d97e4fa2d5b8ed29423c48d192acb73418f491042987b6",
+        "prior_sha256": "6eb05fbf0e79a2f077d97e4fa2d5b8ed29423c48d192acb73418f491042987b6",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/death-move-planner.test.ts",
+        "sha256": "c2165d26b51ce731d2f0be3f983155b1e5ede459f8f341f6b9a19a421fd47c13",
+        "prior_sha256": "c2165d26b51ce731d2f0be3f983155b1e5ede459f8f341f6b9a19a421fd47c13",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/deepseek-cache-layout.test.ts",
+        "sha256": "8c0dbb63abf605dfb54e2eb25675abfbb09d6b3e1294823e7cee46b8d8a1653e",
+        "prior_sha256": "8c0dbb63abf605dfb54e2eb25675abfbb09d6b3e1294823e7cee46b8d8a1653e",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/deepseek-prompt-dump.test.ts",
+        "sha256": "cb9348cc0400d941f68fb9fded18f94f559d41890a1b564d9df525213e1d7c72",
+        "prior_sha256": "cb9348cc0400d941f68fb9fded18f94f559d41890a1b564d9df525213e1d7c72",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/end-turn-guard-sources.test.ts",
+        "sha256": "acad21a8a1b9ec02c266fa05ef39efebee1205ca3e0b83d12cf90942929ce102",
+        "prior_sha256": "acad21a8a1b9ec02c266fa05ef39efebee1205ca3e0b83d12cf90942929ce102",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/eval-data/versions.json",
+        "sha256": "5d2f2a00a1901b1f4046d63a56a250cd848c3015c284d946745bdbe162a4cb2c",
+        "prior_sha256": "5d2f2a00a1901b1f4046d63a56a250cd848c3015c284d946745bdbe162a4cb2c",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/eval.test.ts",
+        "sha256": "c42f629fdfc22dd1d0da3abd4ad6a6b0bc65270649364cabb33513a5f5cece01",
+        "prior_sha256": "c42f629fdfc22dd1d0da3abd4ad6a6b0bc65270649364cabb33513a5f5cece01",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/eval_metrics_test.py",
+        "sha256": "0677cf1e75dc42f3046d67d43f90df656d4d1f2e1ba90efbae1e54e4ac4d8868",
+        "prior_sha256": "0677cf1e75dc42f3046d67d43f90df656d4d1f2e1ba90efbae1e54e4ac4d8868",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/event-settle.test.ts",
+        "sha256": "e6dfa4ccca433ac6cddd97b08b6da541866e8a06edb55d869f4d7fc0b4e3dfdc",
+        "prior_sha256": "e6dfa4ccca433ac6cddd97b08b6da541866e8a06edb55d869f4d7fc0b4e3dfdc",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/experience.test.ts",
+        "sha256": "7a4ab4c3bbfe2bf8522a49444ce4c9026c2dffa41c3aff0021553d42ff9dcebc",
+        "prior_sha256": "7a4ab4c3bbfe2bf8522a49444ce4c9026c2dffa41c3aff0021553d42ff9dcebc",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/extract-evidence.test.ts",
+        "sha256": "b96ae7b459565e0d86d96f521b458cb726de52f0035d9b7af7f8442ce0f685a9",
+        "prior_sha256": "b96ae7b459565e0d86d96f521b458cb726de52f0035d9b7af7f8442ce0f685a9",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/extract_evidence_test.py",
+        "sha256": "fe842da3201887b0f090b9dc577b57044635d8cf1c13aad9ec942001b04d24c5",
+        "prior_sha256": "fe842da3201887b0f090b9dc577b57044635d8cf1c13aad9ec942001b04d24c5",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/feature-notice-ack.test.ts",
+        "sha256": "0472b42348a629b13a0b3f543a4d16b6bee3772ea5e733923c51b18e9c86feb0",
+        "prior_sha256": "0472b42348a629b13a0b3f543a4d16b6bee3772ea5e733923c51b18e9c86feb0",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/feature-notice-registration.test.ts",
+        "sha256": "2cc468f4f6e4871dded9e218b4ea1b3e6e5c0ad8c13b846780d1c5019411aba2",
+        "prior_sha256": "2cc468f4f6e4871dded9e218b4ea1b3e6e5c0ad8c13b846780d1c5019411aba2",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/fight-plan.test.ts",
+        "sha256": "b0972599daf29e46378f76eca533f00020ef466d9d27f7265c72e64b9a0c6a02",
+        "prior_sha256": "b0972599daf29e46378f76eca533f00020ef466d9d27f7265c72e64b9a0c6a02",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/fix-queue-v4-fix3.test.ts",
+        "sha256": "3b279f408e0ce8fe07d91f4a3fcd9fb2723aa58ee1a5c977d2ac65a361ad243d",
+        "prior_sha256": "3b279f408e0ce8fe07d91f4a3fcd9fb2723aa58ee1a5c977d2ac65a361ad243d",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/git_push_main_test.py",
+        "sha256": "fdb24b3ff52b220f0c369fddcb1cac67a8adadaf287c3e9796f58bf1b942d649",
+        "prior_sha256": "fdb24b3ff52b220f0c369fddcb1cac67a8adadaf287c3e9796f58bf1b942d649",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/historical-knowledge-fs.ts",
+        "sha256": "ba2d336bbaaa5e938b6174448a59e2de8e7bce445dec16fb3ba8b0ad5cc2bccf",
+        "prior_sha256": "ba2d336bbaaa5e938b6174448a59e2de8e7bce445dec16fb3ba8b0ad5cc2bccf",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/historical-run-constraints-fixture.ts",
+        "sha256": "107d2c38fab61576322fc855b612caeb7809798e292e83d27aee9123163d87f2",
+        "prior_sha256": "107d2c38fab61576322fc855b612caeb7809798e292e83d27aee9123163d87f2",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/historical-run-constraints.test.ts",
+        "sha256": "1e806c350f5c270352e3b474616ad65f8160c766244297406693fa5e30118292",
+        "prior_sha256": "1e806c350f5c270352e3b474616ad65f8160c766244297406693fa5e30118292",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/inferno-planner-data/pinned-knowledge.json",
+        "sha256": "be2e4983e5b5783925e7370d6d4b2af1a7724aeeb92d9187eea11c03936263fb",
+        "prior_sha256": "be2e4983e5b5783925e7370d6d4b2af1a7724aeeb92d9187eea11c03936263fb",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/inferno-planner.test.ts",
+        "sha256": "9eac9db4ae58e46ee72bd1d9f359e1e4bfdae616fd041c4ddf06ac640e65e678",
+        "prior_sha256": "9eac9db4ae58e46ee72bd1d9f359e1e4bfdae616fd041c4ddf06ac640e65e678",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/jsonl-boundary-recovery.test.ts",
+        "sha256": "c3777e160afa8539009cbcf4bc4953c89eb6abb88a5319b8e7084a769bcf8f25",
+        "prior_sha256": "c3777e160afa8539009cbcf4bc4953c89eb6abb88a5319b8e7084a769bcf8f25",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/knowledge-check-a8w-builder.test.ts",
+        "sha256": "2ade3ca449a95698eed0e446fa81b5e4db39c536cf09a764c8fdad5e077db785",
+        "prior_sha256": "2ade3ca449a95698eed0e446fa81b5e4db39c536cf09a764c8fdad5e077db785",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/knowledge-check-a8w-cards.test.ts",
+        "sha256": "b0a4e2ba25b8a784f9e3b91efabdab0c932e2949f39d9f21ceb639aa3a76a537",
+        "prior_sha256": "b0a4e2ba25b8a784f9e3b91efabdab0c932e2949f39d9f21ceb639aa3a76a537",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/knowledge-check-a8w-experience.test.ts",
+        "sha256": "69977705a3aa81dd3a6a4705c4867de2d8bfc97942384021f00fa8691235237c",
+        "prior_sha256": "69977705a3aa81dd3a6a4705c4867de2d8bfc97942384021f00fa8691235237c",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/knowledge-check-a8w-facts.test.ts",
+        "sha256": "0304e933c876f4488239e20e3131091499d07defd2b6f656ecf1a82f31cf5218",
+        "prior_sha256": "0304e933c876f4488239e20e3131091499d07defd2b6f656ecf1a82f31cf5218",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/knowledge-check-a8w-guides.test.ts",
+        "sha256": "dc0b4365d1127b722dadcbf94140e9c3fd64b692134e4f7532adf9ed5c38adfd",
+        "prior_sha256": "dc0b4365d1127b722dadcbf94140e9c3fd64b692134e4f7532adf9ed5c38adfd",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/knowledge-check-cards.test.ts",
+        "sha256": "e6b83055da77c05f5613c42b059d77d0ca2a92a5f527779c9cba70ecd2cf4481",
+        "prior_sha256": "e6b83055da77c05f5613c42b059d77d0ca2a92a5f527779c9cba70ecd2cf4481",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/knowledge-check-facts.test.ts",
+        "sha256": "57fd456517fb1bf633b0d3c9715e75fa575b9d921f4415b46f25081f6e013e12",
+        "prior_sha256": "57fd456517fb1bf633b0d3c9715e75fa575b9d921f4415b46f25081f6e013e12",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/knowledge-check-guides.test.ts",
+        "sha256": "6a8bad1a8ceb9961ac2ee5760e5f714b11419c4fc9d1c9088372fd17a57671e5",
+        "prior_sha256": "6a8bad1a8ceb9961ac2ee5760e5f714b11419c4fc9d1c9088372fd17a57671e5",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/learner-check-continuation.test.ts",
+        "sha256": "4ebd04ed99fd5ab21d7f0e5ce65814ff50c8006370bde5eb71a781074516d0de",
+        "prior_sha256": "4ebd04ed99fd5ab21d7f0e5ce65814ff50c8006370bde5eb71a781074516d0de",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/learner-check-locks.test.ts",
+        "sha256": "63936be2b820137ad804ebeff2e6207803c2958a9d9ded41c6994238d5a72479",
+        "prior_sha256": "63936be2b820137ad804ebeff2e6207803c2958a9d9ded41c6994238d5a72479",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/learner-entry.test.ts",
+        "sha256": "4473a6e802730d1b543f4cd15d712d5d9d19c7bb984eceeca1121e1016d22629",
+        "prior_sha256": "4473a6e802730d1b543f4cd15d712d5d9d19c7bb984eceeca1121e1016d22629",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/learner-fallback-checks.test.ts",
+        "sha256": "074dab4c5ff0025b6540cdee1a52962fbecd62bb24f98c658b42f20782d22528",
+        "prior_sha256": "074dab4c5ff0025b6540cdee1a52962fbecd62bb24f98c658b42f20782d22528",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/learner-learning-flow.test.ts",
+        "sha256": "bb05b0482fed735df02d1d7a096cfdcdde7df7a9ee13cc281b00e446a01ad551",
+        "prior_sha256": "bb05b0482fed735df02d1d7a096cfdcdde7df7a9ee13cc281b00e446a01ad551",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/learner-preserved-report.test.ts",
+        "sha256": "1680d9a5e35ca355fe94e5a6ceb6058a5409257a2cc6dcca337bf3dc77bda3d0",
+        "prior_sha256": "1680d9a5e35ca355fe94e5a6ceb6058a5409257a2cc6dcca337bf3dc77bda3d0",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/learner-raw-report.test.ts",
+        "sha256": "57ebd835bd72b56cf9880faeeaa6a3194358c2871babfa41e4f1b79797752a9c",
+        "prior_sha256": "57ebd835bd72b56cf9880faeeaa6a3194358c2871babfa41e4f1b79797752a9c",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/learner-registration-barrier.test.ts",
+        "sha256": "77c50c7534a720ae03c54fc5989ff2546c6ae83f63a7b3e602a91d4fbb8847ec",
+        "prior_sha256": "77c50c7534a720ae03c54fc5989ff2546c6ae83f63a7b3e602a91d4fbb8847ec",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/learner-self-check.test.ts",
+        "sha256": "a8fe96774b0689748340942c5e2863ceaad0e56e3aca3d83782eca083b01ee65",
+        "prior_sha256": "a8fe96774b0689748340942c5e2863ceaad0e56e3aca3d83782eca083b01ee65",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/learner-startup-recovery.test.ts",
+        "sha256": "745cb120861a4d4003b84a693543ca49f3b0fafddc408a67e9cffef0ddf94761",
+        "prior_sha256": "745cb120861a4d4003b84a693543ca49f3b0fafddc408a67e9cffef0ddf94761",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/learner-strategy-scratch.test.ts",
+        "sha256": "7e7ae9556947ed6267692152ec0e5c7566c2a5e8f644dee41c74a96cdf7fbd85",
+        "prior_sha256": "7e7ae9556947ed6267692152ec0e5c7566c2a5e8f644dee41c74a96cdf7fbd85",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/learner-strategy.test.ts",
+        "sha256": "902ac516134c414036d41e5bf993dc665fdd437962f67a80a8f04493ce8ecc7f",
+        "prior_sha256": "902ac516134c414036d41e5bf993dc665fdd437962f67a80a8f04493ce8ecc7f",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/learner.test.ts",
+        "sha256": "85f858c06553061018b96a8c12c8759806eaa8098acccde32b6ddeb0e22c4199",
+        "prior_sha256": "85f858c06553061018b96a8c12c8759806eaa8098acccde32b6ddeb0e22c4199",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/learner_preserved_report_test.py",
+        "sha256": "c10a265a6fda3377bfc96336afe32495de144ae14a55759f55ec6d07be35fc60",
+        "prior_sha256": "c10a265a6fda3377bfc96336afe32495de144ae14a55759f55ec6d07be35fc60",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/learning-ledger-metadata.test.ts",
+        "sha256": "18dfb45a7e14c8138dba864faa589ee0f0daf950a651b52fc84d3c2bf2efc0d3",
+        "prior_sha256": "18dfb45a7e14c8138dba864faa589ee0f0daf950a651b52fc84d3c2bf2efc0d3",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/learning-roles.test.ts",
+        "sha256": "756e7a0bca4081675509345c776cfc8c8e007081048f3b43c1395431b68eecb5",
+        "prior_sha256": "756e7a0bca4081675509345c776cfc8c8e007081048f3b43c1395431b68eecb5",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/learning_ledger_test.py",
+        "sha256": "0692a2d43223805ddbf4f1fba660c78fe537a96367a8020192e2f006443e97b7",
+        "prior_sha256": "0692a2d43223805ddbf4f1fba660c78fe537a96367a8020192e2f006443e97b7",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/ledger-publication-baseline.test.ts",
+        "sha256": "40ca0960b214c9ff3fd0415ac8cd9c9730d513df57726d0a4ddd6928d4f011fc",
+        "prior_sha256": "40ca0960b214c9ff3fd0415ac8cd9c9730d513df57726d0a4ddd6928d4f011fc",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/ledger-repeats.test.ts",
+        "sha256": "fa9d7ac44ab790cadcedaeff1302e82a89de594ea63e3d78c62f240a9b931deb",
+        "prior_sha256": "fa9d7ac44ab790cadcedaeff1302e82a89de594ea63e3d78c62f240a9b931deb",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/ledger_publication_baseline_test.py",
+        "sha256": "1b3356feb984cbaeeb032382b275c3d9294e9f2eb1c485f6372dd9a917efcf69",
+        "prior_sha256": "1b3356feb984cbaeeb032382b275c3d9294e9f2eb1c485f6372dd9a917efcf69",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/ledger_repeats_test.py",
+        "sha256": "050b467bdda07f50a732388adb17f13da6f0722847b0c0ea41bbb9be12407ac8",
+        "prior_sha256": "050b467bdda07f50a732388adb17f13da6f0722847b0c0ea41bbb9be12407ac8",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/legacy-brain-notes.test.ts",
+        "sha256": "985365c091a37f71e5568bc4446d1aaf9f47545e61689c87d53b1a3b2a856755",
+        "prior_sha256": "985365c091a37f71e5568bc4446d1aaf9f47545e61689c87d53b1a3b2a856755",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/legacy-brain.ts",
+        "sha256": "e33223e12f87c0dc2c786d2b1d8b960e022b33e834a27e5709ffab33f4bc6e78",
+        "prior_sha256": "e33223e12f87c0dc2c786d2b1d8b960e022b33e834a27e5709ffab33f4bc6e78",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/legacy-continuation-notice-ack.test.ts",
+        "sha256": "f0b52d4ab2a78b96d9a1aded79e98913ba43fbad4330d8fdceec58d3d8fdfea8",
+        "prior_sha256": "f0b52d4ab2a78b96d9a1aded79e98913ba43fbad4330d8fdceec58d3d8fdfea8",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/logged-states/batch-n/boss-clock-self-damage.json",
+        "sha256": "9cbc58de041e1b97051b1ad2702e71b25c97b9194ad9ff980eff4ac29a13b186",
+        "prior_sha256": "9cbc58de041e1b97051b1ad2702e71b25c97b9194ad9ff980eff4ac29a13b186",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/loop-time-cap-fixture.ts",
+        "sha256": "1416a73e33940df425ed570791642f050fc3e7b8d95dbbd0d23fd58ef6e5860f",
+        "prior_sha256": "1416a73e33940df425ed570791642f050fc3e7b8d95dbbd0d23fd58ef6e5860f",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/loop-time-cap.test.ts",
+        "sha256": "2f3f160f4e962f134ab58e929da1a1a6926f82a67d69347e6e0b1abb7effce1d",
+        "prior_sha256": "2f3f160f4e962f134ab58e929da1a1a6926f82a67d69347e6e0b1abb7effce1d",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/loop.test.ts",
+        "sha256": "9bd8c779ad48211de280c9dbf4425123520e7a736e1461134ede82f386242bdf",
+        "prior_sha256": "9bd8c779ad48211de280c9dbf4425123520e7a736e1461134ede82f386242bdf",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/mech-move-data/pinned-knowledge.json",
+        "sha256": "478b59a7dc5c7cc0f598efacae7194ae863174ce08274560a8562352f6773ad5",
+        "prior_sha256": "478b59a7dc5c7cc0f598efacae7194ae863174ce08274560a8562352f6773ad5",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/mech-move-planner.test.ts",
+        "sha256": "0ae207c2784fd275b5f0e90201fb1968c70487edd6b917776daf62a758de7da6",
+        "prior_sha256": "0ae207c2784fd275b5f0e90201fb1968c70487edd6b917776daf62a758de7da6",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/mech-rules-planner.test.ts",
+        "sha256": "572f966034729977c54c1359e686e1e5d67b2404d8f078b3df9988ea4f3295f7",
+        "prior_sha256": "572f966034729977c54c1359e686e1e5d67b2404d8f078b3df9988ea4f3295f7",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/module-health.test.ts",
+        "sha256": "ad8ef72591a720884030099f7bdd78c79c7be9175cb593c5488c01a79ec473d2",
+        "prior_sha256": "ad8ef72591a720884030099f7bdd78c79c7be9175cb593c5488c01a79ec473d2",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/module_health_test.py",
+        "sha256": "ac03070c51242c7f35a89e72b22e0d1509fd0489c9203f90f5a7cdee80f4baac",
+        "prior_sha256": "ac03070c51242c7f35a89e72b22e0d1509fd0489c9203f90f5a7cdee80f4baac",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/move-model-damage.test.ts",
+        "sha256": "a6f53151b69bfe0f7b350adf1f024e03a69a60b523243bd7a437d245fb388ae3",
+        "prior_sha256": "a6f53151b69bfe0f7b350adf1f024e03a69a60b523243bd7a437d245fb388ae3",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/named-card-facts-fixture.json",
+        "sha256": "21e2752de137546b7cae6db5804e4564fd415bc5f8d5fce9cb6fc293b4b1ac86",
+        "prior_sha256": "21e2752de137546b7cae6db5804e4564fd415bc5f8d5fce9cb6fc293b4b1ac86",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/named-card-facts.test.ts",
+        "sha256": "da12f99f5a1e5737f359397dea5f911ceb957f05e2d386353fa2d4deb25359b4",
+        "prior_sha256": "da12f99f5a1e5737f359397dea5f911ceb957f05e2d386353fa2d4deb25359b4",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/oneshot-act-start.test.ts",
+        "sha256": "64d3832227425a34bdd573e54df06d19f3cf9cd3e3410b86bdcc01076c563ab3",
+        "prior_sha256": "64d3832227425a34bdd573e54df06d19f3cf9cd3e3410b86bdcc01076c563ab3",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/oneshot-rest-event.test.ts",
+        "sha256": "04359b37cbcd14ba47a8300a331f653873b78b489ce1db90f75ba6040138f5a3",
+        "prior_sha256": "04359b37cbcd14ba47a8300a331f653873b78b489ce1db90f75ba6040138f5a3",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/oneshot-shop.test.ts",
+        "sha256": "bd615e51deeda29da1a7437b9461bd511537fa1f4892589175660113ad28bb75",
+        "prior_sha256": "bd615e51deeda29da1a7437b9461bd511537fa1f4892589175660113ad28bb75",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/ops-autoplay-reload.test.ts",
+        "sha256": "edc89958a7eef3cb1e17d3b9d05ca8c97942034487f0c534cd5418fac9e2c041",
+        "prior_sha256": "edc89958a7eef3cb1e17d3b9d05ca8c97942034487f0c534cd5418fac9e2c041",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/ops-codex.test.ts",
+        "sha256": "5ce8c2ba0bb3839ef28d0fc7cc5dc81a526e27d54dc26fe5130c196a7ae6cb7c",
+        "prior_sha256": "5ce8c2ba0bb3839ef28d0fc7cc5dc81a526e27d54dc26fe5130c196a7ae6cb7c",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/ops-deferred.test.ts",
+        "sha256": "f57736987cc75f99727561f77e65fe6b32510afd572a1e8bdf5f31a2215a156d",
+        "prior_sha256": "f57736987cc75f99727561f77e65fe6b32510afd572a1e8bdf5f31a2215a156d",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/ops-stall-recovery.test.ts",
+        "sha256": "50206efff84c87e6a9591be65fc2622c43f89f2d25aaedeca2499501d3470fc4",
+        "prior_sha256": "50206efff84c87e6a9591be65fc2622c43f89f2d25aaedeca2499501d3470fc4",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/ordinary-notice-ack.test.ts",
+        "sha256": "5b04743e6ad7db59bccf5f1f48f62e5345517f7097912190fa5f7a1a658f8c93",
+        "prior_sha256": "5b04743e6ad7db59bccf5f1f48f62e5345517f7097912190fa5f7a1a658f8c93",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/outcome-asc.test.ts",
+        "sha256": "f04c17d5cd8cce73ea08bdc2ea4378cbf30c2526fbb654477cd40829a2010763",
+        "prior_sha256": "f04c17d5cd8cce73ea08bdc2ea4378cbf30c2526fbb654477cd40829a2010763",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/paper-dataset-git.test.ts",
+        "sha256": "86b63b7258cb3a431af18930638270326493213e87fbd1483b19edf19360c415",
+        "prior_sha256": "86b63b7258cb3a431af18930638270326493213e87fbd1483b19edf19360c415",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/passive-pieces-planner.test.ts",
+        "sha256": "aed4a47d24280a2b1e694eb4094f4298e2edff8c4bd71b24e036c3f17195d311",
+        "prior_sha256": "aed4a47d24280a2b1e694eb4094f4298e2edff8c4bd71b24e036c3f17195d311",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/pinned-shared-experience.test.ts",
+        "sha256": "f2a2705a03d55c340475ce7ef1f80fde9f28c84635b6f2c0ffa7678e15e4681a",
+        "prior_sha256": "f2a2705a03d55c340475ce7ef1f80fde9f28c84635b6f2c0ffa7678e15e4681a",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/postmortem-failure-audit.test.ts",
+        "sha256": "8add185603fe71574ef1aa785cb9e8e2c335d444e389d603332a69dbdcb60512",
+        "prior_sha256": "8add185603fe71574ef1aa785cb9e8e2c335d444e389d603332a69dbdcb60512",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/potion-cost-knowledge.json",
+        "sha256": "67d0f32d646f00e00066730ce729abece095c73a98e0364de93245e3a4f06d88",
+        "prior_sha256": "67d0f32d646f00e00066730ce729abece095c73a98e0364de93245e3a4f06d88",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/potion-cost.test.ts",
+        "sha256": "2f3b8a81f57b5aa7c95b8f2a3f4b64923a2a8c1af136a73874a4be667871ad2c",
+        "prior_sha256": "2f3b8a81f57b5aa7c95b8f2a3f4b64923a2a8c1af136a73874a4be667871ad2c",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/potion-equivalents.test.ts",
+        "sha256": "77765179c312c8371beeeb4d00e263a0646ea7499a0f9d02c077110663452f37",
+        "prior_sha256": "77765179c312c8371beeeb4d00e263a0646ea7499a0f9d02c077110663452f37",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/potion-mc.test.ts",
+        "sha256": "3c890059781a89bacfa2c17c13cf7d2aea5664e6d614f9436b81d47ff9998437",
+        "prior_sha256": "3c890059781a89bacfa2c17c13cf7d2aea5664e6d614f9436b81d47ff9998437",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/potions-jev-call.test.ts",
+        "sha256": "ee193ba59f5a9ad3126e4c9ef1617b3f1133a093ea2b7ec13785181236d9f56b",
+        "prior_sha256": "ee193ba59f5a9ad3126e4c9ef1617b3f1133a093ea2b7ec13785181236d9f56b",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/prior-delivery-proofs.test.ts",
+        "sha256": "1a8a9b2e224ab6ca7efeb9f969b638a44e8919126d5df7b3bf8489268215761a",
+        "prior_sha256": "1a8a9b2e224ab6ca7efeb9f969b638a44e8919126d5df7b3bf8489268215761a",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/python-cache-retention.test.ts",
+        "sha256": "da8140c060e3145c7e76c6cb23c1d0fa1c1cda6f6de78da7c0c1d09fb4ba5061",
+        "prior_sha256": "da8140c060e3145c7e76c6cb23c1d0fa1c1cda6f6de78da7c0c1d09fb4ba5061",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/quantitative.test.ts",
+        "sha256": "51394101f86fcb228348b4e84f0926a95d2e34c797de5eef7fe3b2251721bb90",
+        "prior_sha256": "51394101f86fcb228348b4e84f0926a95d2e34c797de5eef7fe3b2251721bb90",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/report-plan-costs.test.ts",
+        "sha256": "312463e6fc3ccd6793c550cb8e44633191e1a825fc2339830a55a547e46c95d4",
+        "prior_sha256": "312463e6fc3ccd6793c550cb8e44633191e1a825fc2339830a55a547e46c95d4",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/report_death_fight_test.py",
+        "sha256": "db55c40e877700efbaeeff71767cdb8452ff1de221126f8e31e3dc562e65392d",
+        "prior_sha256": "db55c40e877700efbaeeff71767cdb8452ff1de221126f8e31e3dc562e65392d",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/report_plan_costs_test.py",
+        "sha256": "2e5ba81188e6276a8bdbb55f86c171c9e861eb359fa15c98130e5d27bd0afc05",
+        "prior_sha256": "2e5ba81188e6276a8bdbb55f86c171c9e861eb359fa15c98130e5d27bd0afc05",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/rest-pantograph.test.ts",
+        "sha256": "5a37dec839d1db3622c7bb92e5ba6e1138e3e7d21eb663843615a5d715f76a0a",
+        "prior_sha256": "5a37dec839d1db3622c7bb92e5ba6e1138e3e7d21eb663843615a5d715f76a0a",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/rollout-best-added.test.ts",
+        "sha256": "085b6d3ac3a76eeafbb743e06fa4d1285d9c6beae695d4a49325fa12a01d9579",
+        "prior_sha256": "085b6d3ac3a76eeafbb743e06fa4d1285d9c6beae695d4a49325fa12a01d9579",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/rollout-live.test.ts",
+        "sha256": "99b164b8797ac984e244cee4173ba62b1bd4a019a62b90ff6bba4cc423e058eb",
+        "prior_sha256": "99b164b8797ac984e244cee4173ba62b1bd4a019a62b90ff6bba4cc423e058eb",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/rollout-ties.test.ts",
+        "sha256": "f8856944fbca6a822ab3294040a287767cee95706d3da8be5c264d1a30dd9d12",
+        "prior_sha256": "f8856944fbca6a822ab3294040a287767cee95706d3da8be5c264d1a30dd9d12",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/rollout.test.ts",
+        "sha256": "070bc3b5cff6f3e9edb4651e973fe821efcd59b5de0f8fbcc76e2c4e36e2b7b8",
+        "prior_sha256": "070bc3b5cff6f3e9edb4651e973fe821efcd59b5de0f8fbcc76e2c4e36e2b7b8",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/route-chain.test.ts",
+        "sha256": "ec049a903063bbb07136e96ae1b3b41a09a39c2f2e8759132b9e7074d25a0874",
+        "prior_sha256": "ec049a903063bbb07136e96ae1b3b41a09a39c2f2e8759132b9e7074d25a0874",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/route-next-rest.test.ts",
+        "sha256": "f6fe9d63d1bf63ff54d498b6a50cbf27c8c7cca1ec9c8d8dff28ba4f4e51945a",
+        "prior_sha256": "f6fe9d63d1bf63ff54d498b6a50cbf27c8c7cca1ec9c8d8dff28ba4f4e51945a",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/route-review.test.ts",
+        "sha256": "a73843acca42179e913f83b5410eb24eb5deeb351574d152c3e67db640028a73",
+        "prior_sha256": "a73843acca42179e913f83b5410eb24eb5deeb351574d152c3e67db640028a73",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/run-plan-merge.test.ts",
+        "sha256": "0af746854cb98b8739eb2a56bb924b9be720d9bcf6ee6cac768e19d76d2e6e49",
+        "prior_sha256": "0af746854cb98b8739eb2a56bb924b9be720d9bcf6ee6cac768e19d76d2e6e49",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/screens.test.ts",
+        "sha256": "7a387f2eb44dc7a74cbba97b6268658e4727d00dcd264bb9517b60a9ec9fe0c5",
+        "prior_sha256": "7a387f2eb44dc7a74cbba97b6268658e4727d00dcd264bb9517b60a9ec9fe0c5",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/shop-removal-preview.test.ts",
+        "sha256": "7faabd2ff2d4fe155d3e6387abd4d47efff7491f91d68556cf49b7f3d003bb91",
+        "prior_sha256": "7faabd2ff2d4fe155d3e6387abd4d47efff7491f91d68556cf49b7f3d003bb91",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/silent-apotheosis-backflip-evidence.json",
+        "sha256": "b3049234c3f15826086521baca96cbfd60dfb7c7bf53c07a50e8598694232ea5",
+        "prior_sha256": "b3049234c3f15826086521baca96cbfd60dfb7c7bf53c07a50e8598694232ea5",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/silent-apotheosis-backflip.test.ts",
+        "sha256": "92b8265b3f0d52b73555224c976d58a5cb104d1e38064a566d3de76aaeb08500",
+        "prior_sha256": "92b8265b3f0d52b73555224c976d58a5cb104d1e38064a566d3de76aaeb08500",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/silent-apotheosis-footwork-evidence.json",
+        "sha256": "6a94369baed38189402ebe7703dbb56e93fa06fb45c8a2ba5ebef36841b5885d",
+        "prior_sha256": "6a94369baed38189402ebe7703dbb56e93fa06fb45c8a2ba5ebef36841b5885d",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/silent-apotheosis-footwork.test.ts",
+        "sha256": "db08046c20a523e9b59e3ccb7df3f20313a1bd111cde2d5ac2bdfebf985b5186",
+        "prior_sha256": "db08046c20a523e9b59e3ccb7df3f20313a1bd111cde2d5ac2bdfebf985b5186",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/silent-apotheosis-neutralize-evidence.json",
+        "sha256": "cf8398ada96db22b365bc1c2546dc81581daaa46fabde19ac18c171a5b23e7d1",
+        "prior_sha256": "cf8398ada96db22b365bc1c2546dc81581daaa46fabde19ac18c171a5b23e7d1",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/silent-apotheosis-neutralize.test.ts",
+        "sha256": "9cc7983a595dec9df406dbb0d782045b3110c3aed7c819f3fab0b099a8496bb2",
+        "prior_sha256": "9cc7983a595dec9df406dbb0d782045b3110c3aed7c819f3fab0b099a8496bb2",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/silent-apotheosis-poisoned-stab-evidence.json",
+        "sha256": "11a40365131a8bd1fee431750892af2f05423be4d19f43ef163d7a47dbc391c6",
+        "prior_sha256": "11a40365131a8bd1fee431750892af2f05423be4d19f43ef163d7a47dbc391c6",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/silent-apotheosis-poisoned-stab.test.ts",
+        "sha256": "535d47a1325a3d7174799b54b5c436e51625a9cd4cd8d00046e8cb71c6c8dc50",
+        "prior_sha256": "535d47a1325a3d7174799b54b5c436e51625a9cd4cd8d00046e8cb71c6c8dc50",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/silent-apotheosis-reference.test.ts",
+        "sha256": "65ac405d749b4cf6adb4798c37b4b00ff426ba1e2bb8220dc5f536d0110a7070",
+        "prior_sha256": "65ac405d749b4cf6adb4798c37b4b00ff426ba1e2bb8220dc5f536d0110a7070",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/silent-apotheosis-snakebite-evidence.json",
+        "sha256": "c92db4ed2ad4591d799a7ff351fe71126c639285bab004d0a169274f70c534d5",
+        "prior_sha256": "c92db4ed2ad4591d799a7ff351fe71126c639285bab004d0a169274f70c534d5",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/silent-apotheosis-snakebite.test.ts",
+        "sha256": "973b62b4b780a680bcaa1fc62f5fa28b2deb0c2725807b965a7e6d8dd1d357e6",
+        "prior_sha256": "973b62b4b780a680bcaa1fc62f5fa28b2deb0c2725807b965a7e6d8dd1d357e6",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/silent-apotheosis-survivor-evidence.json",
+        "sha256": "73c01fc629e8585a06d942f89fa1bc2124d44c9f94d75a177b863b1a87ace5e3",
+        "prior_sha256": "73c01fc629e8585a06d942f89fa1bc2124d44c9f94d75a177b863b1a87ace5e3",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/silent-apotheosis-survivor.test.ts",
+        "sha256": "3e72b56eba8131fda73f38e18afb6aaebdcd8a12a2ebf340fe0b681d0fee809f",
+        "prior_sha256": "3e72b56eba8131fda73f38e18afb6aaebdcd8a12a2ebf340fe0b681d0fee809f",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/silent-axe-identity-state.json",
+        "sha256": "c8039b89f6bd1be83098ecbd8a73b5469e1753de372adffb0635984572d35164",
+        "prior_sha256": "c8039b89f6bd1be83098ecbd8a73b5469e1753de372adffb0635984572d35164",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/silent-axe-identity.test.ts",
+        "sha256": "b346f9fb0bffed8359d03ddf90ee5d67b43ab5b03448001d044f9817d4981ae9",
+        "prior_sha256": "b346f9fb0bffed8359d03ddf90ee5d67b43ab5b03448001d044f9817d4981ae9",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/silent-blade-dance-evidence.json",
+        "sha256": "42ac6b17ccfaac91512e9e6efba9c9b54f8e12dbbcd06a45b69081089ab06a5f",
+        "prior_sha256": "42ac6b17ccfaac91512e9e6efba9c9b54f8e12dbbcd06a45b69081089ab06a5f",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/silent-blade-dance.test.ts",
+        "sha256": "f2ca2656e86c15c346076884fa79dddeb9511da85bdd32d1324fdca8d5d0627c",
+        "prior_sha256": "f2ca2656e86c15c346076884fa79dddeb9511da85bdd32d1324fdca8d5d0627c",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/silent-build-win-ties.test.ts",
+        "sha256": "d25914ad4d83b3bd6f8009a296d440cb2ec03d845c3ea107c99c66deeec8237b",
+        "prior_sha256": "d25914ad4d83b3bd6f8009a296d440cb2ec03d845c3ea107c99c66deeec8237b",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/silent-bullet-time.test.ts",
+        "sha256": "8171e871fc39c919d10a052ca6aec520d085384c72def5d88c163a776f4d56e9",
+        "prior_sha256": "8171e871fc39c919d10a052ca6aec520d085384c72def5d88c163a776f4d56e9",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/silent-crusher-facing-evidence.json",
+        "sha256": "4c318b5b45262c253af462a7a38aefa61b8fe5b8a9a1f25c333e4c24af1c5532",
+        "prior_sha256": "4c318b5b45262c253af462a7a38aefa61b8fe5b8a9a1f25c333e4c24af1c5532",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/silent-crusher-facing.test.ts",
+        "sha256": "36a79c9ad761b0f70ecb9145f48028feac833fb410cb7a8f11606cc8b7d3d2c2",
+        "prior_sha256": "36a79c9ad761b0f70ecb9145f48028feac833fb410cb7a8f11606cc8b7d3d2c2",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/silent-cunning-evidence.json",
+        "sha256": "30791b4336e4db9e18c6edc2aacabcfd792dfdf03feb6df367386b0c5b071af6",
+        "prior_sha256": "30791b4336e4db9e18c6edc2aacabcfd792dfdf03feb6df367386b0c5b071af6",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/silent-cunning-state.json",
+        "sha256": "5cd68e85a52bafc825a26a2f5c9f7d5c975863850572b75bb74eb89b77567d06",
+        "prior_sha256": "5cd68e85a52bafc825a26a2f5c9f7d5c975863850572b75bb74eb89b77567d06",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/silent-cunning.test.ts",
+        "sha256": "41247716a0155c3e3b8cb013c432128db4aa0c6dff1324332e1698b1fafcf4e1",
+        "prior_sha256": "41247716a0155c3e3b8cb013c432128db4aa0c6dff1324332e1698b1fafcf4e1",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/silent-discard-plan-evidence.json",
+        "sha256": "47a58cd5722f58e503726478542966d78362d62230d9dee864d6850ce0a7b3da",
+        "prior_sha256": "47a58cd5722f58e503726478542966d78362d62230d9dee864d6850ce0a7b3da",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/silent-discard-plan.test.ts",
+        "sha256": "81c578edd88a609257a3347023129ba33d48d4558cd48bf326b4cd11c6d6b587",
+        "prior_sha256": "81c578edd88a609257a3347023129ba33d48d4558cd48bf326b4cd11c6d6b587",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/silent-dodge-roll.test.ts",
+        "sha256": "76291684f7555a6e48940147d6842a445ba4cadd4695e5949f4e936fab07f07a",
+        "prior_sha256": "76291684f7555a6e48940147d6842a445ba4cadd4695e5949f4e936fab07f07a",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/silent-gardener-skittish-evidence.json",
+        "sha256": "7e3bbfa3122c116726bddff0c3c95c4735f9ab4aa3f9c7de069245b8e4548fd0",
+        "prior_sha256": "7e3bbfa3122c116726bddff0c3c95c4735f9ab4aa3f9c7de069245b8e4548fd0",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/silent-gardener-skittish.test.ts",
+        "sha256": "11a7d5637b9b5ff84daf308c1f9ef56cb2a4647582d59f09ba5fc6ad7ae75b52",
+        "prior_sha256": "11a7d5637b9b5ff84daf308c1f9ef56cb2a4647582d59f09ba5fc6ad7ae75b52",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/silent-hidden-daggers-evidence.json",
+        "sha256": "8153e2758829734b02d6e3c7ad9d44ae00b3d7bcf98ddc6d5e048c2f4243d511",
+        "prior_sha256": "8153e2758829734b02d6e3c7ad9d44ae00b3d7bcf98ddc6d5e048c2f4243d511",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/silent-hidden-daggers.test.ts",
+        "sha256": "56930f71af4f67812a6e1b108b966b8465c28888fd0055acdade03790949d02b",
+        "prior_sha256": "56930f71af4f67812a6e1b108b966b8465c28888fd0055acdade03790949d02b",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/silent-kusarigama.test.ts",
+        "sha256": "a71ecf510bb10ef5a628c3a11c16ee6175fde83bb17ec2d8ba8af4e86bf0a5fc",
+        "prior_sha256": "a71ecf510bb10ef5a628c3a11c16ee6175fde83bb17ec2d8ba8af4e86bf0a5fc",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/silent-opening-evidence.json",
+        "sha256": "4ca857515f97351bb4105fec4c826bb75530802ad3c7f61c5a8aff34e0a9e1c1",
+        "prior_sha256": "4ca857515f97351bb4105fec4c826bb75530802ad3c7f61c5a8aff34e0a9e1c1",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/silent-opening.test.ts",
+        "sha256": "a52584a2f61968f48af0791c9a330cfa2c0e75f558428e34d3c19abd469aa759",
+        "prior_sha256": "a52584a2f61968f48af0791c9a330cfa2c0e75f558428e34d3c19abd469aa759",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/silent-paper-krane.test.ts",
+        "sha256": "926b0de3eeee692493299a751fdadf75a334f96720bca76e02bd9fd179e4a836",
+        "prior_sha256": "926b0de3eeee692493299a751fdadf75a334f96720bca76e02bd9fd179e4a836",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/silent-phase-reference.test.ts",
+        "sha256": "02778419a989b00199b0e80cfc1fbab2ebb0f7c0706bfc0afba93e02dab4abdf",
+        "prior_sha256": "02778419a989b00199b0e80cfc1fbab2ebb0f7c0706bfc0afba93e02dab4abdf",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/silent-potion-reference.test.ts",
+        "sha256": "19d118fddedfebdbf3cc68eeb9218d90d748d44fbb62eec1373b18115b0df7c1",
+        "prior_sha256": "19d118fddedfebdbf3cc68eeb9218d90d748d44fbb62eec1373b18115b0df7c1",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/silent-reattach-evidence.json",
+        "sha256": "b06a7bcbdc0454646f3c70712db1825a78156fc3855007d7d63420d4f886e86f",
+        "prior_sha256": "b06a7bcbdc0454646f3c70712db1825a78156fc3855007d7d63420d4f886e86f",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/silent-reattach-reset.test.ts",
+        "sha256": "aaca99713843826328995a91110fe255abfab6cb08a59e37c4ed17894e0a4a4f",
+        "prior_sha256": "aaca99713843826328995a91110fe255abfab6cb08a59e37c4ed17894e0a4a4f",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/silent-route-relic.test.ts",
+        "sha256": "5d69af75f76255cbdc45c4bcb356ab51dcee9bbe14ce5a14603bcbf70bca4e8d",
+        "prior_sha256": "5d69af75f76255cbdc45c4bcb356ab51dcee9bbe14ce5a14603bcbf70bca4e8d",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/silent-selection-audit.test.ts",
+        "sha256": "9d613f09cbdebd9653d0b98fc14ca54bd52983cc8295faa756bb9a59a50acd3f",
+        "prior_sha256": "9d613f09cbdebd9653d0b98fc14ca54bd52983cc8295faa756bb9a59a50acd3f",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/silent-serpent-form.test.ts",
+        "sha256": "53d82a5ad5afb0a9147e6c52b4fd3cc88810bc0f8a88d4251b6916327e82622a",
+        "prior_sha256": "53d82a5ad5afb0a9147e6c52b4fd3cc88810bc0f8a88d4251b6916327e82622a",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/silent-shackling-weak-state.json",
+        "sha256": "f1b8cf626c8eb5a934932fc45dbbf11b9db69c648694ed74cd9110c085b28c35",
+        "prior_sha256": "f1b8cf626c8eb5a934932fc45dbbf11b9db69c648694ed74cd9110c085b28c35",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/silent-shackling-weak.test.ts",
+        "sha256": "b5fb802b8a0f9a3e0b64859bc2dd4efb1b0a8f4eb8a4443ff4460331ba103f12",
+        "prior_sha256": "b5fb802b8a0f9a3e0b64859bc2dd4efb1b0a8f4eb8a4443ff4460331ba103f12",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/silent-skittish-state.json",
+        "sha256": "813e667b7ec3e4e17f792c8cec3b5a2cfd6bfa83627bc00520a93f8fdf8731be",
+        "prior_sha256": "813e667b7ec3e4e17f792c8cec3b5a2cfd6bfa83627bc00520a93f8fdf8731be",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/silent-skittish.test.ts",
+        "sha256": "30f266f172120e58355566a7ba300edb34afbb9e511a82fd62982ea229499a87",
+        "prior_sha256": "30f266f172120e58355566a7ba300edb34afbb9e511a82fd62982ea229499a87",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/silent-sloth-replay.test.ts",
+        "sha256": "e247cff6ae9b3bb930857d94120af8b3a435ec987cf3782acffe79817caed0db",
+        "prior_sha256": "e247cff6ae9b3bb930857d94120af8b3a435ec987cf3782acffe79817caed0db",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/silent-strangle-evidence.json",
+        "sha256": "3c34d48d7f7c8468c1eef5f7c01c5ec61a65f09e192c98621f80166779d76afb",
+        "prior_sha256": "3c34d48d7f7c8468c1eef5f7c01c5ec61a65f09e192c98621f80166779d76afb",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/silent-strangle.test.ts",
+        "sha256": "48271a9e67b6f2dda6f2c8462f1684035a5d695be9ac099a8e9f3d50539bbe9c",
+        "prior_sha256": "48271a9e67b6f2dda6f2c8462f1684035a5d695be9ac099a8e9f3d50539bbe9c",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/silent-tail-resource-evidence.json",
+        "sha256": "8e79341423672d3d68dc3c2688bafc548fcbe3383934a8d978c24b1fd22a20ca",
+        "prior_sha256": "8e79341423672d3d68dc3c2688bafc548fcbe3383934a8d978c24b1fd22a20ca",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/silent-tail-resource.test.ts",
+        "sha256": "6a7fe824babaf643c8c2eede1f9087de207e559a3ea2649b46c7b3cd2ff91dae",
+        "prior_sha256": "6a7fe824babaf643c8c2eede1f9087de207e559a3ea2649b46c7b3cd2ff91dae",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/sl-any-draw-data/pinned-knowledge.json",
+        "sha256": "2ede636d3a496e5d9c625f67554c18af7f88a7dc8b3af8964e8f40a4ea08429e",
+        "prior_sha256": "2ede636d3a496e5d9c625f67554c18af7f88a7dc8b3af8964e8f40a4ea08429e",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/sl-any-draw.test.ts",
+        "sha256": "9ad6e4f96165389b8f3f488ffb73e586e9507e59c66c390532a9b9d7ccaf9a67",
+        "prior_sha256": "9ad6e4f96165389b8f3f488ffb73e586e9507e59c66c390532a9b9d7ccaf9a67",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/sl-early-data/pinned-knowledge.json",
+        "sha256": "4d71e9c5a62d04dfe3838e5abca63491b9927a8133176f3c7aceb402c06abff2",
+        "prior_sha256": "4d71e9c5a62d04dfe3838e5abca63491b9927a8133176f3c7aceb402c06abff2",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/sl-early-planner.test.ts",
+        "sha256": "0d42a8fc4491fc560271c97ffa808e065de86956fe74da287f7f7ae99a760b54",
+        "prior_sha256": "0d42a8fc4491fc560271c97ffa808e065de86956fe74da287f7f7ae99a760b54",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/sl-early.test.ts",
+        "sha256": "ca419360b67dadaf0253f62370d1998045e7d0cc4abce2586e70c293b7ef9379",
+        "prior_sha256": "ca419360b67dadaf0253f62370d1998045e7d0cc4abce2586e70c293b7ef9379",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/sl-explore-b2.test.ts",
+        "sha256": "a339b790c264bc64bc55d8257b1cf86df9f1131ad4400e7988ce95ff7968e572",
+        "prior_sha256": "a339b790c264bc64bc55d8257b1cf86df9f1131ad4400e7988ce95ff7968e572",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/sl-explore-canon-data/pinned-knowledge.json",
+        "sha256": "e0e7c2d87d13e7b0362026e6d11d832a422fad97b7d6fbd744322cb2225192cc",
+        "prior_sha256": "e0e7c2d87d13e7b0362026e6d11d832a422fad97b7d6fbd744322cb2225192cc",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/sl-explore-canon.test.ts",
+        "sha256": "1fbe3ff596d909dd9d090959de979b3a431dad5f1416e8b4d3f81a6df5ab977c",
+        "prior_sha256": "1fbe3ff596d909dd9d090959de979b3a431dad5f1416e8b4d3f81a6df5ab977c",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/sl-explore-gaps-data/pinned-knowledge.json",
+        "sha256": "119ddb5792c80596d2d8a4b5bcf158c1eda8c11a69e840b8e3b3cbb6a2919be9",
+        "prior_sha256": "119ddb5792c80596d2d8a4b5bcf158c1eda8c11a69e840b8e3b3cbb6a2919be9",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/sl-explore-gaps.test.ts",
+        "sha256": "2ab342d2609ceac95a11949607fc734fdc88fc9cd916d5bdb34e6f166f1a3a98",
+        "prior_sha256": "2ab342d2609ceac95a11949607fc734fdc88fc9cd916d5bdb34e6f166f1a3a98",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/sl-explore-potion-data/pinned-knowledge.json",
+        "sha256": "dbe149bb8c2414c79e10eebdd0677540a7332587c7d3b972e6ae65653073a3fc",
+        "prior_sha256": "dbe149bb8c2414c79e10eebdd0677540a7332587c7d3b972e6ae65653073a3fc",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/sl-explore-potion.test.ts",
+        "sha256": "f06499611488a42be1a89099884670ae31ac1df4fd418b1c8327284ec6f694e4",
+        "prior_sha256": "f06499611488a42be1a89099884670ae31ac1df4fd418b1c8327284ec6f694e4",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/sl-explore-whole-data/pinned-knowledge.json",
+        "sha256": "7a850ee01c031ce0bde55f04db08b3625227355ff087d9a8670845244aba23f3",
+        "prior_sha256": "7a850ee01c031ce0bde55f04db08b3625227355ff087d9a8670845244aba23f3",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/sl-explore-whole.test.ts",
+        "sha256": "34c0c4c3a1cc9fbf31de451f581554920465a827821093a9388cd6f56f485459",
+        "prior_sha256": "34c0c4c3a1cc9fbf31de451f581554920465a827821093a9388cd6f56f485459",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/sl-explore.test.ts",
+        "sha256": "60e20ebe35c79dc74f31cad1e968f411a8c03fdaf40a497ef1db56139c0a6883",
+        "prior_sha256": "60e20ebe35c79dc74f31cad1e968f411a8c03fdaf40a497ef1db56139c0a6883",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/sl-giant-phase-data/yql-blast.json",
+        "sha256": "4076c874378f42a27c2038dc16c65aef45bf3aabdd26bfd2df838106e8c77b94",
+        "prior_sha256": "4076c874378f42a27c2038dc16c65aef45bf3aabdd26bfd2df838106e8c77b94",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/sl-giant-phase.test.ts",
+        "sha256": "e954b925c2ac29abc9c5614687ff5560414945c3cfee40077fcc36f4ba06f41c",
+        "prior_sha256": "e954b925c2ac29abc9c5614687ff5560414945c3cfee40077fcc36f4ba06f41c",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/sl-replay-data/pinned-knowledge.json",
+        "sha256": "a23947af8a27e19fbfc1fc581e08e937790718d4e1d36f462d3fe9fa0cbf990f",
+        "prior_sha256": "a23947af8a27e19fbfc1fc581e08e937790718d4e1d36f462d3fe9fa0cbf990f",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/sl-replay-plays.test.ts",
+        "sha256": "4a57ffece34f5a2a808895fa601ed27bf768cc6d976e830beca194e43d21802f",
+        "prior_sha256": "4a57ffece34f5a2a808895fa601ed27bf768cc6d976e830beca194e43d21802f",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/sl-retry-data/pinned-knowledge.json",
+        "sha256": "32536358601e941f74d751bb0d89f96dfe9d2f6319985cdd98684b65398abd26",
+        "prior_sha256": "32536358601e941f74d751bb0d89f96dfe9d2f6319985cdd98684b65398abd26",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/sl-retry-planner.test.ts",
+        "sha256": "3e21cfa444a1c1654051b8d840b30901232bbe4550b2eb207e4e077484614c27",
+        "prior_sha256": "3e21cfa444a1c1654051b8d840b30901232bbe4550b2eb207e4e077484614c27",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/sl.test.ts",
+        "sha256": "8429e2f1b7102fc9434b31731fef605d0e621ee4cdefdde06e25cec6c7f9b5b2",
+        "prior_sha256": "8429e2f1b7102fc9434b31731fef605d0e621ee4cdefdde06e25cec6c7f9b5b2",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/stall-subprocess-fixture.ts",
+        "sha256": "7401d1e4c888ed01438902194adeafb003ae0ef635b936fa7c09942c9f109f35",
+        "prior_sha256": "7401d1e4c888ed01438902194adeafb003ae0ef635b936fa7c09942c9f109f35",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/strategy-implementation-continuation.test.ts",
+        "sha256": "d8401e337fbf6334890f46a0a9cbde9001ab5378df1dd04a1b978b8e933fdf16",
+        "prior_sha256": "d8401e337fbf6334890f46a0a9cbde9001ab5378df1dd04a1b978b8e933fdf16",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/strategy-implementation.test.ts",
+        "sha256": "b0aa2c0bab6428c0a4de47eb6af2f4c5ac72859eb78c0a5899f37f7438973e4d",
+        "prior_sha256": "b0aa2c0bab6428c0a4de47eb6af2f4c5ac72859eb78c0a5899f37f7438973e4d",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/subscription-usage.test.ts",
+        "sha256": "7c195332f5ca4c768774ffe453e233c64fae95d4ccac6a3e2f229c67dfecc57f",
+        "prior_sha256": "7c195332f5ca4c768774ffe453e233c64fae95d4ccac6a3e2f229c67dfecc57f",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/target-option-fixture.ts",
+        "sha256": "99f95ac50a4191c8154d9fc80b0b032c7077f6bd586dc3f9ccdc9d203ce5a3e7",
+        "prior_sha256": "99f95ac50a4191c8154d9fc80b0b032c7077f6bd586dc3f9ccdc9d203ce5a3e7",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/target-options.test.ts",
+        "sha256": "848a2680045d161e17db437cd082b55be27eebcf4604321ffdac6014c2b228dc",
+        "prior_sha256": "848a2680045d161e17db437cd082b55be27eebcf4604321ffdac6014c2b228dc",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/template-target-data/pinned-knowledge.json",
+        "sha256": "ffbd72e2ddcde9d9758f5a2e5f3af18c65a245ed42196c5c0f4fa8134b243c03",
+        "prior_sha256": "ffbd72e2ddcde9d9758f5a2e5f3af18c65a245ed42196c5c0f4fa8134b243c03",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/template-target.test.ts",
+        "sha256": "1d6cbc98338930bb7945b3ea8e4003c796c0c034264d2ec5cfd9e4a634ad1bdc",
+        "prior_sha256": "1d6cbc98338930bb7945b3ea8e4003c796c0c034264d2ec5cfd9e4a634ad1bdc",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/test-blocks.test.ts",
+        "sha256": "dae8e2154f93462a7bd1fcca29fa0f5a546050b80b56d0291b312fc18e202adc",
+        "prior_sha256": "dae8e2154f93462a7bd1fcca29fa0f5a546050b80b56d0291b312fc18e202adc",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/thief-card-value.test.ts",
+        "sha256": "74d761cae2a2b45562ab19c14393dcf333215ecaa6bb53b6acac33a91b9a9a3e",
+        "prior_sha256": "74d761cae2a2b45562ab19c14393dcf333215ecaa6bb53b6acac33a91b9a9a3e",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/thief-cost.test.ts",
+        "sha256": "4ecc03c40c9fee278b320ec1eb22d484c966e8a23ef750e39fa8e59a7da45dd8",
+        "prior_sha256": "4ecc03c40c9fee278b320ec1eb22d484c966e8a23ef750e39fa8e59a7da45dd8",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/thief.test.ts",
+        "sha256": "f02c867de4b253908d13a66ed6e5f3560a7707d1db4955d592b12ca75aa0d4ad",
+        "prior_sha256": "f02c867de4b253908d13a66ed6e5f3560a7707d1db4955d592b12ca75aa0d4ad",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/turn-solver.test.ts",
+        "sha256": "1ac8c000f7fb17ecd99a524bdfad1bdb9bd372daf171ea8ed5c7ab939ded18ee",
+        "prior_sha256": "1ac8c000f7fb17ecd99a524bdfad1bdb9bd372daf171ea8ed5c7ab939ded18ee",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/unassigned-proposal-resolution.test.ts",
+        "sha256": "cc07a26a7f9f1925a13bf76fb4dab5bc95135b36fc7460b045b4a18c00616d07",
+        "prior_sha256": "cc07a26a7f9f1925a13bf76fb4dab5bc95135b36fc7460b045b4a18c00616d07",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/v1mf-bugfix.test.ts",
+        "sha256": "be15fd06db4cefa8e7404bbaf1245d310b15768fb1fc29369bfaf913bb683b7a",
+        "prior_sha256": "be15fd06db4cefa8e7404bbaf1245d310b15768fb1fc29369bfaf913bb683b7a",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/worktree-storage.test.ts",
+        "sha256": "362b42e856d62d0d8e879db0d58f8516aa0fc5833ded1aeecab22f4ff56cf670",
+        "prior_sha256": "362b42e856d62d0d8e879db0d58f8516aa0fc5833ded1aeecab22f4ff56cf670",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tools/act-route-candidates-replay.ts",
+        "sha256": "98d9392b7b3d81a3c609e82fafc3121440809f995fa424b8c45c0c9531e06bee",
+        "prior_sha256": "98d9392b7b3d81a3c609e82fafc3121440809f995fa424b8c45c0c9531e06bee",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tools/deepseek-prompt-dump.ts",
+        "sha256": "65e3106447e5921f47de13e05747a168c1677f4dc92fe9543c5a2f89cef058f2",
+        "prior_sha256": "65e3106447e5921f47de13e05747a168c1677f4dc92fe9543c5a2f89cef058f2",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tools/potion-cost-replay.ts",
+        "sha256": "1ce8b3aa2058951060603280f9435d77faea2406d00c0529e363785f49f81f9c",
+        "prior_sha256": "1ce8b3aa2058951060603280f9435d77faea2406d00c0529e363785f49f81f9c",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tools/potion-drink-audit.py",
+        "sha256": "e0b305de800354f89c0f63ed735bc5eadb6b9c97c6649e4105f844fe7efff215",
+        "prior_sha256": "e0b305de800354f89c0f63ed735bc5eadb6b9c97c6649e4105f844fe7efff215",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tools/quantitative.ts",
+        "sha256": "60ce0518fd98afb343b3e78df2bb41e0918cbb536529dc248c1dc1af5584cda4",
+        "prior_sha256": "60ce0518fd98afb343b3e78df2bb41e0918cbb536529dc248c1dc1af5584cda4",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tools/route-review-next-rest-replay.ts",
+        "sha256": "2ce1701b03e1f6af8d04ef8f87bdd663b8dfe193609c8339abaca34c4a78b33f",
+        "prior_sha256": "2ce1701b03e1f6af8d04ef8f87bdd663b8dfe193609c8339abaca34c4a78b33f",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tools/test-blocks.ts",
+        "sha256": "861fde6a55a43de7e183455a3a34e048eb107b485f67e1cffb4d3c7bdf332aa3",
+        "prior_sha256": "861fde6a55a43de7e183455a3a34e048eb107b485f67e1cffb4d3c7bdf332aa3",
+        "same_as_prior": true
+      },
+      {
+        "path": "eval/learning-curve.py",
+        "sha256": "ab689118cd2da6aab80c6c5486d75affb8d57c6f501470a8d145f0785ab3f6c4",
+        "prior_sha256": "ab689118cd2da6aab80c6c5486d75affb8d57c6f501470a8d145f0785ab3f6c4",
+        "same_as_prior": true
+      },
+      {
+        "path": "eval/route-projection-split.py",
+        "sha256": "c514a38da283f024a01a741763792bf84413f9db162d61166542a4b8a2db246c",
+        "prior_sha256": "c514a38da283f024a01a741763792bf84413f9db162d61166542a4b8a2db246c",
+        "same_as_prior": true
+      },
+      {
+        "path": "eval/versions.json",
+        "sha256": "4d216d51ea50bc5015f38aa7094ceaa3fb09309e0a4364b81c96c73e92317b06",
+        "prior_sha256": "4d216d51ea50bc5015f38aa7094ceaa3fb09309e0a4364b81c96c73e92317b06",
+        "same_as_prior": true
+      },
+      {
+        "path": "knowledge/builders/build-monster-db.py",
+        "sha256": "456da212086938f5b88a9e326f7a21e8f31276e86a2fb7e1977c0c8d3cccb0a1",
+        "prior_sha256": "456da212086938f5b88a9e326f7a21e8f31276e86a2fb7e1977c0c8d3cccb0a1",
+        "same_as_prior": true
+      },
+      {
+        "path": "knowledge/builders/build-outcome-stats.py",
+        "sha256": "696a9bb922ee4aaa319e792dad8bf0ae1fb918d511f1aa641f5954a465f4dc82",
+        "prior_sha256": "696a9bb922ee4aaa319e792dad8bf0ae1fb918d511f1aa641f5954a465f4dc82",
+        "same_as_prior": true
+      },
+      {
+        "path": "knowledge/builders/build-potion-equivalents.py",
+        "sha256": "aee19714cfbf7aef09ae5db2cddb7ea234247839b68efe4779df866ec1a14ecb",
+        "prior_sha256": "aee19714cfbf7aef09ae5db2cddb7ea234247839b68efe4779df866ec1a14ecb",
+        "same_as_prior": true
+      },
+      {
+        "path": "knowledge/builders/characters.py",
+        "sha256": "b3b99b9bf00c4562b77e922b2894b1c8faf4c3e545ec3cb0c742083b7dc0eec9",
+        "prior_sha256": "b3b99b9bf00c4562b77e922b2894b1c8faf4c3e545ec3cb0c742083b7dc0eec9",
+        "same_as_prior": true
+      },
+      {
+        "path": "knowledge/builders/refresh-potion-equivalents.sh",
+        "sha256": "b54b6823d8e8e841fd58bcd0b72d7b1ae1923e52e99093c0d8e48c30a38b29f4",
+        "prior_sha256": "b54b6823d8e8e841fd58bcd0b72d7b1ae1923e52e99093c0d8e48c30a38b29f4",
+        "same_as_prior": true
+      },
+      {
+        "path": "learner/extract_evidence.py",
+        "sha256": "2b85739aa2fa7dd8beb6361fad6b8b035c337273b17ea4e73d4fee9b07d165e5",
+        "prior_sha256": "2b85739aa2fa7dd8beb6361fad6b8b035c337273b17ea4e73d4fee9b07d165e5",
+        "same_as_prior": true
+      },
+      {
+        "path": "learner/ledger.py",
+        "sha256": "3b3071078cfb5394fc9b14f32078e4c3a559255bf9efeacf6ed17e15092b2a61",
+        "prior_sha256": "3b3071078cfb5394fc9b14f32078e4c3a559255bf9efeacf6ed17e15092b2a61",
+        "same_as_prior": true
+      },
+      {
+        "path": "learner/lib/engines.ts",
+        "sha256": "992a437c58cf8744d9278d979382348ce7b05ef36b32a979d2cda2af3323ac53",
+        "prior_sha256": "992a437c58cf8744d9278d979382348ce7b05ef36b32a979d2cda2af3323ac53",
+        "same_as_prior": true
+      },
+      {
+        "path": "learner/lib/launcher.ts",
+        "sha256": "4085ab032a7e18210a4402cb3d06618eaea4dde2fc2777229ec0f68d5489cc77",
+        "prior_sha256": "4085ab032a7e18210a4402cb3d06618eaea4dde2fc2777229ec0f68d5489cc77",
+        "same_as_prior": true
+      },
+      {
+        "path": "learner/lib/runs.ts",
+        "sha256": "6fa762577ba08928bfe5a25648fbae0a8c0f381286ca196860ea8e11f85cec55",
+        "prior_sha256": "6fa762577ba08928bfe5a25648fbae0a8c0f381286ca196860ea8e11f85cec55",
+        "same_as_prior": true
+      },
+      {
+        "path": "learner/lib/startup-recovery.ts",
+        "sha256": "b42dfc3d7f2f5ea9dd11a3aa7b5eca2ee30d62a68fbd6bdc52bb95e710e11262",
+        "prior_sha256": "b42dfc3d7f2f5ea9dd11a3aa7b5eca2ee30d62a68fbd6bdc52bb95e710e11262",
+        "same_as_prior": true
+      },
+      {
+        "path": "learner/lib/task.ts",
+        "sha256": "67fd672fa535f7217596df524069211732b52197b2d7f09dd60590aef895e083",
+        "prior_sha256": "67fd672fa535f7217596df524069211732b52197b2d7f09dd60590aef895e083",
+        "same_as_prior": true
+      },
+      {
+        "path": "ops/auto-relaunch.sh",
+        "sha256": "5d8f0488b70e02931e0fb8abe8d01830112aed9eaa9e855266f63e925fe9e534",
+        "prior_sha256": "5d8f0488b70e02931e0fb8abe8d01830112aed9eaa9e855266f63e925fe9e534",
+        "same_as_prior": true
+      },
+      {
+        "path": "ops/autoplay-reload.py",
+        "sha256": "6ca325632a9ccd1064f64954fcd93811263086671815a79a13be241c4fa6181a",
+        "prior_sha256": "6ca325632a9ccd1064f64954fcd93811263086671815a79a13be241c4fa6181a",
+        "same_as_prior": true
+      },
+      {
+        "path": "ops/autoplay.sh",
+        "sha256": "9ee74d36c5a9d4446906afea3049edfd8da05bdf082258dafffc73cd3c47794a",
+        "prior_sha256": "9ee74d36c5a9d4446906afea3049edfd8da05bdf082258dafffc73cd3c47794a",
+        "same_as_prior": true
+      },
+      {
+        "path": "ops/brain-latency.py",
+        "sha256": "2454cd8a408f5a401594112dc3d198c07b81b3038639c0ec8cc64bf85edb2e38",
+        "prior_sha256": "2454cd8a408f5a401594112dc3d198c07b81b3038639c0ec8cc64bf85edb2e38",
+        "same_as_prior": true
+      },
+      {
+        "path": "ops/codex-ops-actions.sh",
+        "sha256": "a49d54356a4b94d764a4da62ac387d712464b1d3ca8d9942e3264728de2418e0",
+        "prior_sha256": "a49d54356a4b94d764a4da62ac387d712464b1d3ca8d9942e3264728de2418e0",
+        "same_as_prior": true
+      },
+      {
+        "path": "ops/codex-ops-do.sh",
+        "sha256": "fd675787d10607e8c301ddf0e01db4c2df45c4544f647a783a441cf975bf52ba",
+        "prior_sha256": "fd675787d10607e8c301ddf0e01db4c2df45c4544f647a783a441cf975bf52ba",
+        "same_as_prior": true
+      },
+      {
+        "path": "ops/codex-ops-learn.py",
+        "sha256": "12b27ed00c6226bc99da4080a7cd1919e1bb07c8ecff617d1c3d3644cb6b32e9",
+        "prior_sha256": "12b27ed00c6226bc99da4080a7cd1919e1bb07c8ecff617d1c3d3644cb6b32e9",
+        "same_as_prior": true
+      },
+      {
+        "path": "ops/codex-ops-learner.sh",
+        "sha256": "88ffea70a4c3bbeaff46a1a82c87529e30b0a1e41faec00201ff7063f7a6ed70",
+        "prior_sha256": "88ffea70a4c3bbeaff46a1a82c87529e30b0a1e41faec00201ff7063f7a6ed70",
+        "same_as_prior": true
+      },
+      {
+        "path": "ops/codex-ops.sh",
+        "sha256": "cab435ba62d94915b7cb2fdd5b949e1da12e8d3a0523c226e3722f08fb2fe51b",
+        "prior_sha256": "cab435ba62d94915b7cb2fdd5b949e1da12e8d3a0523c226e3722f08fb2fe51b",
+        "same_as_prior": true
+      },
+      {
+        "path": "ops/codex/broker.ts",
+        "sha256": "fd1d28ea00f20d8bd3abec7ebdf7a4b58c332e6c4cfb18415ec8cc3e94c439b1",
+        "prior_sha256": "fd1d28ea00f20d8bd3abec7ebdf7a4b58c332e6c4cfb18415ec8cc3e94c439b1",
+        "same_as_prior": true
+      },
+      {
+        "path": "ops/codex/lib.ts",
+        "sha256": "4df18b6f7256390702a620f022e37d647edac5a9d3ce164ff001b2bea791a2da",
+        "prior_sha256": "4df18b6f7256390702a620f022e37d647edac5a9d3ce164ff001b2bea791a2da",
+        "same_as_prior": true
+      },
+      {
+        "path": "ops/codex/main.ts",
+        "sha256": "96c26c498c3b3e3e129dd53517e6392d4ec97da5ff101ed857a8dbe2a021e7aa",
+        "prior_sha256": "96c26c498c3b3e3e129dd53517e6392d4ec97da5ff101ed857a8dbe2a021e7aa",
+        "same_as_prior": true
+      },
+      {
+        "path": "ops/core_build_jobs.py",
+        "sha256": "8926c0b5e1315ae19d5cc5793c4447ad92c67799747caeaebbcb397261ff3169",
+        "prior_sha256": "8926c0b5e1315ae19d5cc5793c4447ad92c67799747caeaebbcb397261ff3169",
+        "same_as_prior": true
+      },
+      {
+        "path": "ops/disk_capacity.py",
+        "sha256": "6a9d349a5214ce75c9c39e253d6e4607d60c042c8be5028060561e90a4f24a1e",
+        "prior_sha256": "6a9d349a5214ce75c9c39e253d6e4607d60c042c8be5028060561e90a4f24a1e",
+        "same_as_prior": true
+      },
+      {
+        "path": "ops/experience-pending.py",
+        "sha256": "8a44e4c765b9d1eb63dd8523c8e5cb5bbe6040d9394802062b1e58160459acc3",
+        "prior_sha256": "8a44e4c765b9d1eb63dd8523c8e5cb5bbe6040d9394802062b1e58160459acc3",
+        "same_as_prior": true
+      },
+      {
+        "path": "ops/git-push-main.py",
+        "sha256": "2c8d9faa7ee32bd9339a5f36013f87be9458c17c57ef8a7c62e9b9683e6320aa",
+        "prior_sha256": "2c8d9faa7ee32bd9339a5f36013f87be9458c17c57ef8a7c62e9b9683e6320aa",
+        "same_as_prior": true
+      },
+      {
+        "path": "ops/learner_check_continuation.py",
+        "sha256": "44437bdcc101eca58fd5e9635584d0d3318ca627d40fb392fc461de28838b062",
+        "prior_sha256": "44437bdcc101eca58fd5e9635584d0d3318ca627d40fb392fc461de28838b062",
+        "same_as_prior": true
+      },
+      {
+        "path": "ops/learner_checks.py",
+        "sha256": "f3e20b5e1b1f2731c67b9380b588fc928494206452dc857d950a01e346d1934c",
+        "prior_sha256": "f3e20b5e1b1f2731c67b9380b588fc928494206452dc857d950a01e346d1934c",
+        "same_as_prior": true
+      },
+      {
+        "path": "ops/learner_entry.py",
+        "sha256": "a77f9f94d7137ef14e59326c568528618f1aa64f16b9d7fea8eca018f51a93ce",
+        "prior_sha256": "a77f9f94d7137ef14e59326c568528618f1aa64f16b9d7fea8eca018f51a93ce",
+        "same_as_prior": true
+      },
+      {
+        "path": "ops/learner_jobs.py",
+        "sha256": "6011e4d84f580824ec60b4e0bb9a2c1f8379037961722b532b3754d8922211b1",
+        "prior_sha256": "6011e4d84f580824ec60b4e0bb9a2c1f8379037961722b532b3754d8922211b1",
+        "same_as_prior": true
+      },
+      {
+        "path": "ops/learner_retention.py",
+        "sha256": "48074acdf21af72a048959e7c6becbedb90316ecc00b3d2768ba529dff066603",
+        "prior_sha256": "48074acdf21af72a048959e7c6becbedb90316ecc00b3d2768ba529dff066603",
+        "same_as_prior": true
+      },
+      {
+        "path": "ops/learning_requests.py",
+        "sha256": "b8f99ae5bfe559b8cb849a2d6804809d127af256e80e08c289950d33df71e5bd",
+        "prior_sha256": "b8f99ae5bfe559b8cb849a2d6804809d127af256e80e08c289950d33df71e5bd",
+        "same_as_prior": true
+      },
+      {
+        "path": "ops/module_health.py",
+        "sha256": "8832bc5128509407a96f8169d14e1ca3ff6febf3cb56a5971e03933e3d18ce07",
+        "prior_sha256": "8832bc5128509407a96f8169d14e1ca3ff6febf3cb56a5971e03933e3d18ce07",
+        "same_as_prior": true
+      },
+      {
+        "path": "ops/paper_dataset.py",
+        "sha256": "a96ca456a1ee5bb62846ae04f41f18d5ebd6463dc03fe0580dbb177933dbae5d",
+        "prior_sha256": "a96ca456a1ee5bb62846ae04f41f18d5ebd6463dc03fe0580dbb177933dbae5d",
+        "same_as_prior": true
+      },
+      {
+        "path": "ops/proposal_dispatch.py",
+        "sha256": "cd2e599df3de5b9d4eafecab5537df686fb37bc05eed29260decd8f6f5e9227f",
+        "prior_sha256": "cd2e599df3de5b9d4eafecab5537df686fb37bc05eed29260decd8f6f5e9227f",
+        "same_as_prior": true
+      },
+      {
+        "path": "ops/report.py",
+        "sha256": "0a38fe3b3d4bea8b4a21a8c6a09d346f0e2eedb10dacbc2f1b278eeb608b5d0c",
+        "prior_sha256": "0a38fe3b3d4bea8b4a21a8c6a09d346f0e2eedb10dacbc2f1b278eeb608b5d0c",
+        "same_as_prior": true
+      },
+      {
+        "path": "ops/run.sh",
+        "sha256": "73ea2514537cb00e942616aae43b63fa17aeea818dd72da03eb95a8ba692a230",
+        "prior_sha256": "73ea2514537cb00e942616aae43b63fa17aeea818dd72da03eb95a8ba692a230",
+        "same_as_prior": true
+      },
+      {
+        "path": "ops/stall-check.sh",
+        "sha256": "bf2d46a70f2ac31981e055461d48422397c877b96a8d49d8002a3786064b5209",
+        "prior_sha256": "bf2d46a70f2ac31981e055461d48422397c877b96a8d49d8002a3786064b5209",
+        "same_as_prior": true
+      },
+      {
+        "path": "ops/stop-after-a8.sh",
+        "sha256": "06a5ec4f5de5c114bb4e012c45dc06d1ec87ed4454ee4b8a40cce7ba3f997e8a",
+        "prior_sha256": "06a5ec4f5de5c114bb4e012c45dc06d1ec87ed4454ee4b8a40cce7ba3f997e8a",
+        "same_as_prior": true
+      },
+      {
+        "path": "ops/stop-after.sh",
+        "sha256": "34f8b01106e5e655cabdff8c147ce934c6b4885530886d3ddf23260371f081c6",
+        "prior_sha256": "34f8b01106e5e655cabdff8c147ce934c6b4885530886d3ddf23260371f081c6",
+        "same_as_prior": true
+      },
+      {
+        "path": "ops/strategy_implementation_continuation.py",
+        "sha256": "af23002c2770137cda21ac074a9e4eef8542119c41c57b2c096fa7dc5a11bf9b",
+        "prior_sha256": "af23002c2770137cda21ac074a9e4eef8542119c41c57b2c096fa7dc5a11bf9b",
+        "same_as_prior": true
+      },
+      {
+        "path": "ops/strategy_implementation_jobs.py",
+        "sha256": "e0c81019dc540f760a6787de6cf30688d6e98d89550ccf1a3792926ecad92a69",
+        "prior_sha256": "e0c81019dc540f760a6787de6cf30688d6e98d89550ccf1a3792926ecad92a69",
+        "same_as_prior": true
+      },
+      {
+        "path": "ops/tests/test_autoplay_marker_failure.py",
+        "sha256": "37f3aa5472c516090896041f40b308ea96b1fcf5618126db771eb13310ec0dda",
+        "prior_sha256": "37f3aa5472c516090896041f40b308ea96b1fcf5618126db771eb13310ec0dda",
+        "same_as_prior": true
+      },
+      {
+        "path": "ops/tests/test_boss_sim_home.py",
+        "sha256": "06f305164fba1d53fa091d87b514e57221db93358781fe2a6e99b8494fe9e250",
+        "prior_sha256": "06f305164fba1d53fa091d87b514e57221db93358781fe2a6e99b8494fe9e250",
+        "same_as_prior": true
+      },
+      {
+        "path": "ops/tests/test_boss_sim_notice_registration.py",
+        "sha256": "d021f3d0f6487de5e1c754a32f592217301c3da45f315d2be1e959e190a61af8",
+        "prior_sha256": "d021f3d0f6487de5e1c754a32f592217301c3da45f315d2be1e959e190a61af8",
+        "same_as_prior": true
+      },
+      {
+        "path": "ops/tests/test_feature_notice_ack.py",
+        "sha256": "77a1825b28ed726d7a7a4d765a50b75e4e61cf29d85339993922da628c2387db",
+        "prior_sha256": "77a1825b28ed726d7a7a4d765a50b75e4e61cf29d85339993922da628c2387db",
+        "same_as_prior": true
+      },
+      {
+        "path": "ops/tests/test_feature_notice_registration.py",
+        "sha256": "9f5e554b2c28b480ec4e05bd15f003efbd930515987e24319f052133538e50df",
+        "prior_sha256": "9f5e554b2c28b480ec4e05bd15f003efbd930515987e24319f052133538e50df",
+        "same_as_prior": true
+      },
+      {
+        "path": "ops/tests/test_learner_check_continuation.py",
+        "sha256": "faa3948536862de29d04e9ae5683f1c2eabe99d167d94879b9799d637646d27b",
+        "prior_sha256": "faa3948536862de29d04e9ae5683f1c2eabe99d167d94879b9799d637646d27b",
+        "same_as_prior": true
+      },
+      {
+        "path": "ops/tests/test_learner_entry.py",
+        "sha256": "bde09b43b848ad52163fe2b03cb5f42a335e0e56466f0fd1338f9b25e43e30f4",
+        "prior_sha256": "bde09b43b848ad52163fe2b03cb5f42a335e0e56466f0fd1338f9b25e43e30f4",
+        "same_as_prior": true
+      },
+      {
+        "path": "ops/tests/test_learner_launch_failures.py",
+        "sha256": "4e2f477760d1bf286a17aaea54ffb90e0e88dc2efd7e7cc063cd6015e30a838d",
+        "prior_sha256": "4e2f477760d1bf286a17aaea54ffb90e0e88dc2efd7e7cc063cd6015e30a838d",
+        "same_as_prior": true
+      },
+      {
+        "path": "ops/tests/test_learner_registration_barrier.py",
+        "sha256": "4791450ba8c485fe0c4ed5ddd97e542a623af721ce05264e1568e469867c0973",
+        "prior_sha256": "4791450ba8c485fe0c4ed5ddd97e542a623af721ce05264e1568e469867c0973",
+        "same_as_prior": true
+      },
+      {
+        "path": "ops/tests/test_legacy_continuation_notice_ack.py",
+        "sha256": "c9f001d6aaa2e8322f5f9be3925b664ee454ecaf8dc258f9054492ace165ed69",
+        "prior_sha256": "c9f001d6aaa2e8322f5f9be3925b664ee454ecaf8dc258f9054492ace165ed69",
+        "same_as_prior": true
+      },
+      {
+        "path": "ops/tests/test_ordinary_notice_ack.py",
+        "sha256": "1c6fb2fb08f5cea54babc05f472a611dd3bbdd2c3f2b651e46282f056739f6df",
+        "prior_sha256": "1c6fb2fb08f5cea54babc05f472a611dd3bbdd2c3f2b651e46282f056739f6df",
+        "same_as_prior": true
+      },
+      {
+        "path": "ops/tests/test_paper_dataset_git.py",
+        "sha256": "75ada3412cd1293d6ff8275b7bc2b37d531b3980c56cfc3fcbe1ad8d8a963078",
+        "prior_sha256": "75ada3412cd1293d6ff8275b7bc2b37d531b3980c56cfc3fcbe1ad8d8a963078",
+        "same_as_prior": true
+      },
+      {
+        "path": "ops/tests/test_postmortem_completion.py",
+        "sha256": "485849a4202ff652a1af7e516edcc829fe8ce82cb73f384736e0b27e45d5515b",
+        "prior_sha256": "485849a4202ff652a1af7e516edcc829fe8ce82cb73f384736e0b27e45d5515b",
+        "same_as_prior": true
+      },
+      {
+        "path": "ops/tests/test_prior_delivery_proofs.py",
+        "sha256": "356b2fc4dfc037670fff4742546313fdb8883d0aa485bcf1a9b4d83bfaae1071",
+        "prior_sha256": "356b2fc4dfc037670fff4742546313fdb8883d0aa485bcf1a9b4d83bfaae1071",
+        "same_as_prior": true
+      },
+      {
+        "path": "ops/tests/test_python_cache_retention.py",
+        "sha256": "f6623ec445fcbe1cdc1146bfd59ac6949851bb772d44d7959ce5b93d2a3f6724",
+        "prior_sha256": "f6623ec445fcbe1cdc1146bfd59ac6949851bb772d44d7959ce5b93d2a3f6724",
+        "same_as_prior": true
+      },
+      {
+        "path": "ops/tests/test_strategy_implementation.py",
+        "sha256": "30a68c09eab55c1668659eea9bec51fc1c4c21fcfb8c47b9c4f5eed3c5dcdcdd",
+        "prior_sha256": "30a68c09eab55c1668659eea9bec51fc1c4c21fcfb8c47b9c4f5eed3c5dcdcdd",
+        "same_as_prior": true
+      },
+      {
+        "path": "ops/tests/test_strategy_implementation_continuation.py",
+        "sha256": "4232b3986082aebc7b8aeacf07e6dc9e61f8e49a39a29565a4e5676e6d40252e",
+        "prior_sha256": "4232b3986082aebc7b8aeacf07e6dc9e61f8e49a39a29565a4e5676e6d40252e",
+        "same_as_prior": true
+      },
+      {
+        "path": "ops/tests/test_strategy_research_scheduling.py",
+        "sha256": "cd166b224dd7a353638ee35072d87452cea9a8978ccb5c307e8892707c673fe5",
+        "prior_sha256": "cd166b224dd7a353638ee35072d87452cea9a8978ccb5c307e8892707c673fe5",
+        "same_as_prior": true
+      },
+      {
+        "path": "ops/tests/test_unassigned_proposal_resolution.py",
+        "sha256": "a7d41fdec7d17cf78ce22fb50efa0fbb64b01ae02ad481bd34c8b5cce4671b52",
+        "prior_sha256": "a7d41fdec7d17cf78ce22fb50efa0fbb64b01ae02ad481bd34c8b5cce4671b52",
+        "same_as_prior": true
+      },
+      {
+        "path": "ops/tests/test_worktree_retention.py",
+        "sha256": "7ccd5508a65cbe7db8760845f26713257c6a070bea849840384f04e98f32619d",
+        "prior_sha256": "7ccd5508a65cbe7db8760845f26713257c6a070bea849840384f04e98f32619d",
+        "same_as_prior": true
+      },
+      {
+        "path": "ops/tests/test_worktree_storage.py",
+        "sha256": "91f765d586c1bf10048f43e66a77a91a82c0fef9c7f7c91f9e54df9575f33a6d",
+        "prior_sha256": "91f765d586c1bf10048f43e66a77a91a82c0fef9c7f7c91f9e54df9575f33a6d",
+        "same_as_prior": true
+      },
+      {
+        "path": "ops/worktree_checkout.py",
+        "sha256": "0b6ef908dc63f5c9984132a46c4738a4b63b9d585e0d294354d508b1083a0b30",
+        "prior_sha256": "0b6ef908dc63f5c9984132a46c4738a4b63b9d585e0d294354d508b1083a0b30",
+        "same_as_prior": true
+      },
+      {
+        "path": "ops/worktree_retention.py",
+        "sha256": "70b91a2797f6724956c137fb3ef2e7c02f9d6b3feaf4a8355d9d4be332456fea",
+        "prior_sha256": "70b91a2797f6724956c137fb3ef2e7c02f9d6b3feaf4a8355d9d4be332456fea",
+        "same_as_prior": true
+      },
+      {
+        "path": "ops/worktree_storage.py",
+        "sha256": "06e32c2c67c5c1cc727aeaa836ea4cc9b11387a050a8404534e84d5306194c22",
+        "prior_sha256": "06e32c2c67c5c1cc727aeaa836ea4cc9b11387a050a8404534e84d5306194c22",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/tests/global-build-integration.test.ts",
+        "sha256": "f173e3c8be375e89661d7fb089785c276d4642f74969feedf891127c3262d8c4",
+        "prior_sha256": "f173e3c8be375e89661d7fb089785c276d4642f74969feedf891127c3262d8c4",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/src/sim/global-build.ts",
+        "sha256": "18e44d9858849400101d9a6b1f36626e9ea041f9c3529c5b561f0db77049c860",
+        "prior_sha256": "18e44d9858849400101d9a6b1f36626e9ea041f9c3529c5b561f0db77049c860",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/src/sim/global-build-b3.ts",
+        "sha256": "112ddbaa7687117d9708e93409b7c5e89319505c60bf77e7085c8fa20c4cd96a",
+        "prior_sha256": "112ddbaa7687117d9708e93409b7c5e89319505c60bf77e7085c8fa20c4cd96a",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/src/sim/global-build-observer.ts",
+        "sha256": "768b9f48b7306acf91caf37b75f2c2d94fbfba91ab594097d7fd935e7f0c6e09",
+        "prior_sha256": "768b9f48b7306acf91caf37b75f2c2d94fbfba91ab594097d7fd935e7f0c6e09",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/src/sim/global-build-pool.ts",
+        "sha256": "3dd2396d59189bb246de8073c6a09091c3b5405495da8dc0c71d822caa48b349",
+        "prior_sha256": "3dd2396d59189bb246de8073c6a09091c3b5405495da8dc0c71d822caa48b349",
+        "same_as_prior": true
+      },
+      {
+        "path": "agent/src/core/global-build-config.ts",
+        "sha256": "89c0a8bfe54d7ed867a5210e265b482b1117d0edb959e02eeb27ce7c43252b3c",
+        "prior_sha256": "89c0a8bfe54d7ed867a5210e265b482b1117d0edb959e02eeb27ce7c43252b3c",
+        "same_as_prior": true
+      },
+      {
+        "path": "ops/global_build_health.py",
+        "sha256": "a3b060c1fd5d4d6df7dfdf066f6617a5b7a20200428e4223d7e294b25453f8c1",
+        "prior_sha256": "a3b060c1fd5d4d6df7dfdf066f6617a5b7a20200428e4223d7e294b25453f8c1",
+        "same_as_prior": true
+      }
+    ],
+    "existing_fixes": [
+      {
+        "item": "silent-0254：无动作死亡战斗归因",
+        "commit": "3b48088dec5fc6eafe576a1296bbdadde43432ee",
+        "ancestor_in_base": true,
+        "ancestor_in_live": true
+      },
+      {
+        "item": "codex-usage-credit-baseline-recovery：额度窗口恢复基线",
+        "commit": "5b56a452bb9be14d620b368ec46974c1b57901ca",
+        "ancestor_in_base": true,
+        "ancestor_in_live": true
+      },
+      {
+        "item": "ascension-up：请求进阶误报为实际进阶",
+        "commit": "8045d9fbf0a12523b1dbe39bbed8af06c7497b09",
+        "ancestor_in_base": true,
+        "ancestor_in_live": true
+      },
+      {
+        "item": "infra-target-options-fixed-fixture-timeout",
+        "commit": "bae9c45ccffefb284a1c6634526c8768a9f5f7a8",
+        "ancestor_in_base": true,
+        "ancestor_in_live": true
+      },
+      {
+        "item": "infra-ledger-status-prefix-git-divergence",
+        "commit": "dd478f0b3e5a0f234f082972d21b203dbf8229d7",
+        "ancestor_in_base": true,
+        "ancestor_in_live": true
+      },
+      {
+        "item": "infra-legacy-continuation-notice-ack-identity",
+        "commit": "368fccabd42eb72ffcea9a2fe6cbbb7c149326be",
+        "ancestor_in_base": true,
+        "ancestor_in_live": true
+      },
+      {
+        "item": "infra-paper-krane-recorded-line-timeout",
+        "commit": "befc39e5ca0105f8ff96d47f817df44f0b2760f1",
+        "ancestor_in_base": true,
+        "ancestor_in_live": true
+      },
+      {
+        "item": "infra-learner-event-log-second-collision",
+        "commit": "b6ee3f8c29cc10d4652a67d14f0e0e394aa6ce6f",
+        "ancestor_in_base": true,
+        "ancestor_in_live": true
+      },
+      {
+        "item": "strategy-proposal：报告 scratch 归属",
+        "commit": "5f04139cefe5c651dd5bf62f7e164014dbf5f23b",
+        "ancestor_in_base": true,
+        "ancestor_in_live": true
+      },
+      {
+        "item": "silent-0459：独立 run-plan 请求成本漏计",
+        "commit": "799a5cd0caf9329b43c32376079218a9bd0c3e9e",
+        "ancestor_in_base": true,
+        "ancestor_in_live": true
+      },
+      {
+        "item": "run-plan 证据提取未识别 run 字段",
+        "commit": "78e9b05929366d097a728761d693d790ff16ac87",
+        "ancestor_in_base": true,
+        "ancestor_in_live": true
+      },
+      {
+        "item": "postmortem-capacity-failure-proposal-repair-20261013",
+        "commit": "3fdcd77927f01b35c20c6c5c1fcfd790676032d2",
+        "ancestor_in_base": true,
+        "ancestor_in_live": true
+      },
+      {
+        "item": "blocked-experience-proposal-repair-dispatch",
+        "commit": "84366ad06ee4f978394c1b9489a82c83ea12bd36",
+        "ancestor_in_base": true,
+        "ancestor_in_live": true
+      },
+      {
+        "item": "learning-notice-ordinary-ack-registry-20261013：普通 ACK",
+        "commit": "672e198a4730012330f599068a0ef1efadb02002",
+        "ancestor_in_base": true,
+        "ancestor_in_live": true
+      },
+      {
+        "item": "learning-notice-ordinary-ack-registry-20261013：前阶段回执校验",
+        "commit": "1594def2e1b65b665d3b345f31444194eb4d09e6",
+        "ancestor_in_base": true,
+        "ancestor_in_live": true
+      },
+      {
+        "item": "learning-notice-ordinary-ack-registry-20261013：第二策略槽批号",
+        "commit": "15eb85e2934e428c5e299fc4a1aba456d92fd685",
+        "ancestor_in_base": true,
+        "ancestor_in_live": true
+      },
+      {
+        "item": "feature 通知来源身份校验",
+        "commit": "38b2f572d90b3b97a23f9eae983f583287492f9a",
+        "ancestor_in_base": true,
+        "ancestor_in_live": true
+      },
+      {
+        "item": "feature/B4 通知来源桥接",
+        "commit": "1dd4d434aef67f1d065dbdba23a875ae82741a88",
+        "ancestor_in_base": true,
+        "ancestor_in_live": true
+      },
+      {
+        "item": "batch-f：包装/参数化测试超时静态解析",
+        "commit": "56c256dad0d33b231b82b53113d3bdd84f9bfa20",
+        "ancestor_in_base": true,
+        "ancestor_in_live": true
+      },
+      {
+        "item": "unassigned-strategy-proposal-resolution",
+        "commit": "3a98e213a826e94f9708af4b1a265e1892659f4e",
+        "ancestor_in_base": true,
+        "ancestor_in_live": true
+      },
+      {
+        "item": "host-fixed-test-timeouts-010547：eval 固定历史输入",
+        "commit": "d9881ba593b0b8d701ebbe1c95626c0ebdd554c7",
+        "ancestor_in_base": true,
+        "ancestor_in_live": true
+      },
+      {
+        "item": "host-fixed-test-timeouts-010547：Apotheosis 有界夹具",
+        "commit": "9e8c93555131c3347f9e809d9722a848a75c2692",
+        "ancestor_in_base": true,
+        "ancestor_in_live": true
+      },
+      {
+        "item": "compute-memo-worker-data-signature",
+        "commit": "8fbb441eb61eef226eb7366f9612003480c83988",
+        "ancestor_in_base": true,
+        "ancestor_in_live": true
+      },
+      {
+        "item": "rollout-live-best-test-determinism",
+        "commit": "bbc5b993a7524bbb8e80a975f204f8d193657b46",
+        "ancestor_in_base": true,
+        "ancestor_in_live": true
+      },
+      {
+        "item": "host-targeted-check-continuation：已过覆盖的精确续验入口",
+        "commit": "24c2e3a75b5db6bac76d6c924f86b7fcd9438316",
+        "ancestor_in_base": true,
+        "ancestor_in_live": true
+      },
+      {
+        "item": "sandbox-glob-startup-race：会话前有界恢复",
+        "commit": "bc2c40e313cc36682196277c53c50e30744b88c5",
+        "ancestor_in_base": true,
+        "ancestor_in_live": true
+      },
+      {
+        "item": "sandbox-glob-startup-race：复盘租约绑定",
+        "commit": "d9983263ffecea1bed4e29d65e7f854a3d2e33d7",
+        "ancestor_in_base": true,
+        "ancestor_in_live": true
+      },
+      {
+        "item": "core-cycle-implementation-binding-entry",
+        "commit": "fc95760d4ff8a9cbd45577efdd79b1215bd2cb92",
+        "ancestor_in_base": true,
+        "ancestor_in_live": true
+      },
+      {
+        "item": "ops-20261012-quantitative-continuation",
+        "commit": "b408252f87a77ee5389c4d90e52a9831c0873348",
+        "ancestor_in_base": true,
+        "ancestor_in_live": true
+      },
+      {
+        "item": "named-card-facts-transport：已批准的事件入口子项",
+        "commit": "42c920f34d9dc1c783ce894659849ab37ed6fd1b",
+        "ancestor_in_base": true,
+        "ancestor_in_live": true
+      },
+      {
+        "item": "core-build-notify-222802-rc2：保留原生失败诊断子项",
+        "commit": "5c92f2aaf0b758a1a5e7d591745694004664f83a",
+        "ancestor_in_base": true,
+        "ancestor_in_live": true
+      },
+      {
+        "item": "paper-dataset-git-consistency-race",
+        "commit": "16bfe0bd6ecaa91d04a91c01edc94cecc781f71f",
+        "ancestor_in_base": true,
+        "ancestor_in_live": true
+      },
+      {
+        "item": "boss-sim-codex-home-preflight",
+        "commit": "5921f8cd045853182c867a6430e75c3fcde00a87",
+        "ancestor_in_base": true,
+        "ancestor_in_live": true
+      },
+      {
+        "item": "shared-experience-fixed-filesystem-snapshot-20261013",
+        "commit": "8390c62d76fc8c7d7b6b7292121a621f4666d39c",
+        "ancestor_in_base": true,
+        "ancestor_in_live": true
+      },
+      {
+        "item": "silent-deck-cap-consumer-fixture-isolation-20261013（原 c0999eaa 补丁的实际重放集成）",
+        "commit": "ec8c578b66bf5498372f1b779ae58a766dff8112",
+        "ancestor_in_base": true,
+        "ancestor_in_live": true
+      },
+      {
+        "item": "ops-stall-recovery-test-subprocess-timeout：首项异步夹具",
+        "commit": "95e7f050ef2abe5c85a0367555392652ad73fbfe",
+        "ancestor_in_base": true,
+        "ancestor_in_live": true
+      },
+      {
+        "item": "ops-stall-recovery-test-subprocess-timeout：固定失败诊断",
+        "commit": "9b6459fd99f26b17689134e33aa85d6190e71d7d",
+        "ancestor_in_base": true,
+        "ancestor_in_live": true
+      },
+      {
+        "item": "batch-c-fixed-fixture-timeout",
+        "commit": "5dd8a20c9d2dd4ed43120b1684e5577b993ac2ff",
+        "ancestor_in_base": true,
+        "ancestor_in_live": true
+      },
+      {
+        "item": "晚写复盘误计为上线后重犯",
+        "commit": "2610945b6a2f9ea02cf3a7cd4b5980d24814ac39",
+        "ancestor_in_base": true,
+        "ancestor_in_live": true
+      },
+      {
+        "item": "学习账本 first_run/asc/prior_note 追加更正",
+        "commit": "87c89b7aea90c7275e0fbb04b1e4148a4209630c",
+        "ancestor_in_base": true,
+        "ancestor_in_live": true
+      },
+      {
+        "item": "subscription-usage：未设置 TMPDIR",
+        "commit": "6bfbe3d2e2aa6e5e8c1969d5ee1cca08671ae02a",
+        "ancestor_in_base": true,
+        "ancestor_in_live": true
+      },
+      {
+        "item": "deepseek-prompt-dump：状态日志反向流式扫描",
+        "commit": "6ee8e2a2c1edc31492962137b96af8c6e1d12093",
+        "ancestor_in_base": true,
+        "ancestor_in_live": true
+      },
+      {
+        "item": "固定药水测试隔离",
+        "commit": "e78352f784d39cf25671446348daaada6ef2060b",
+        "ancestor_in_base": true,
+        "ancestor_in_live": true
+      },
+      {
+        "item": "单次 mod 超时 stall 误报",
+        "commit": "a4f4ec868d122dc92af510862c6240cf2eaff2b6",
+        "ancestor_in_base": true,
+        "ancestor_in_live": true
+      },
+      {
+        "item": "学习状态锁被完整检查阻塞",
+        "commit": "233ede56047274ba53a4e1191a245fac816c37a8",
+        "ancestor_in_base": true,
+        "ancestor_in_live": true
+      },
+      {
+        "item": "学习者受阻后兜底完整检查入口",
+        "commit": "f670884a188a047bbd3f7f007c260ade62fae36a",
+        "ancestor_in_base": true,
+        "ancestor_in_live": true
+      },
+      {
+        "item": "策略任务及自动派发入口",
+        "commit": "afd652a3f75df6e7403439f01c565220327884da",
+        "ancestor_in_base": true,
+        "ancestor_in_live": true
+      },
+      {
+        "item": "旧事件选项重复问大脑",
+        "commit": "25ce09bee5576b1adff8baf196fbe8b197a5ef11",
+        "ancestor_in_base": true,
+        "ancestor_in_live": true
+      },
+      {
+        "item": "silent-0153：普通隐秘匕首生成分支",
+        "commit": "b7f081fcc26da4506cb775739bb118cb6cbe4ecc",
+        "ancestor_in_base": true,
+        "ancestor_in_live": true
+      },
+      {
+        "item": "silent-0256：已观察的狡诈药水容量子项（实际源码提交）",
+        "commit": "6403fdcdadc803a092beb5165a068e22bf51c412",
+        "ancestor_in_base": true,
+        "ancestor_in_live": true
+      },
+      {
+        "item": "silent-0260：普通紧勒逐牌失血",
+        "commit": "5c7105ff0294466da8319f2934beda05c6040794",
+        "ancestor_in_base": true,
+        "ancestor_in_live": true
+      },
+      {
+        "item": "silent-0263：已观察的碾碎爪转向取整子项",
+        "commit": "ec29ea34b919344b707e57ba472ea210f9c39d62",
+        "ancestor_in_base": true,
+        "ancestor_in_live": true
+      },
+      {
+        "item": "silent-0266：SL 首牌身份",
+        "commit": "e784dd9f043bf87c29109573f48975f9903280d3",
+        "ancestor_in_base": true,
+        "ancestor_in_live": true
+      },
+      {
+        "item": "silent-0272：商店移除预览与真实选牌页核对",
+        "commit": "db20ec3cc6cd0e47ac014d0c523dd4ed1c781d26",
+        "ancestor_in_base": true,
+        "ancestor_in_live": true
+      },
+      {
+        "item": "silent-0324：普通刀舞生成小刀",
+        "commit": "66c22ba7d87b8748690a4183fff838acd346bd3e",
+        "ancestor_in_base": true,
+        "ancestor_in_live": true
+      },
+      {
+        "item": "silent-0338：回合末防御事实来源注记",
+        "commit": "c1d84804956bedbd29a7f0e81294114e18415b9d",
+        "ancestor_in_base": true,
+        "ancestor_in_live": true
+      },
+      {
+        "item": "silent-0367：已用蜥蜴尾巴事实接线",
+        "commit": "5baf663d7e6678efa3690e5a48329c4f8baee109",
+        "ancestor_in_base": true,
+        "ancestor_in_live": true
+      },
+      {
+        "item": "infra-learner-launch-shared-main-config-race",
+        "commit": "22efae55484bc2bdcc54e847a8dc40bb4888c4e2",
+        "ancestor_in_base": true,
+        "ancestor_in_live": true
+      },
+      {
+        "item": "host-loop-time-cap-wall-clock-061301：固定时间夹具",
+        "commit": "b3c6dd700b00d0d8b17d5d2efe6fe9aa353618fa",
+        "ancestor_in_base": true,
+        "ancestor_in_live": true
+      },
+      {
+        "item": "host-loop-time-cap-wall-clock-061301：续验拒绝诊断",
+        "commit": "63f656fb07a21a7496353234269901a832eae497",
+        "ancestor_in_base": true,
+        "ancestor_in_live": true
+      },
+      {
+        "item": "ops-worktree-history-disk-pressure：broker容量/回执失败隔离",
+        "commit": "a136ddc4b5b0a8696f10b2fae3073322d57e724c",
+        "ancestor_in_base": true,
+        "ancestor_in_live": true
+      },
+      {
+        "item": "ops-worktree-history-disk-pressure：无终态标记退出",
+        "commit": "db072ddab47ba94efb46dce2913927f936ecb97e",
+        "ancestor_in_base": true,
+        "ancestor_in_live": true
+      },
+      {
+        "item": "ops-worktree-history-disk-pressure：JSONL追加边界",
+        "commit": "9b07240b18f862efdbe630889ade04e8976eaace",
+        "ancestor_in_base": true,
+        "ancestor_in_live": true
+      },
+      {
+        "item": "ops-worktree-history-disk-pressure：历史副本/按需恢复",
+        "commit": "c7a6efb1e15ed6c5f31a35ae3ee9833863340393",
+        "ancestor_in_base": true,
+        "ancestor_in_live": true
+      },
+      {
+        "item": "tracked-source Python缓存回收认定",
+        "commit": "1e8af775f6b90f100f20ff7c4a08dfddaba893a9",
+        "ancestor_in_base": true,
+        "ancestor_in_live": true
+      },
+      {
+        "item": "完成报告裸JSON兼容",
+        "commit": "6f86ff6b6b971fb38b96308ebdd34dec574e5b13",
+        "ancestor_in_base": true,
+        "ancestor_in_live": true
+      },
+      {
+        "item": "autoplay安全热交接动作",
+        "commit": "71b835a3150704548fab2ad46e74bde240ccf1f9",
+        "ancestor_in_base": true,
+        "ancestor_in_live": true
+      },
+      {
+        "item": "历史测试入口漏传日志回调",
+        "commit": "ccd8bb8e017da9c30b408138d04e6d2bc985836d",
+        "ancestor_in_base": true,
+        "ancestor_in_live": true
+      },
+      {
+        "item": "额度警告固定测试契约",
+        "commit": "1cf0490492bd8a430b85f95f3fdee91eba251191",
+        "ancestor_in_base": true,
+        "ancestor_in_live": true
+      },
+      {
+        "item": "有限结束报告与补验交接",
+        "commit": "2c4ce406c9ae598835f22292e52cfd936ac10b14",
+        "ancestor_in_base": true,
+        "ancestor_in_live": true
+      },
+      {
+        "item": "host-checks-broker-push-registration",
+        "commit": "c519952b31e3a0bb3acdd2115883ae8671b8a090",
+        "ancestor_in_base": true,
+        "ancestor_in_live": true
+      },
+      {
+        "item": "host-checks-session-exit-fixture",
+        "commit": "874ae603b3927173f805e0b2fe789330bab710c7",
+        "ancestor_in_base": true,
+        "ancestor_in_live": true
+      },
+      {
+        "item": "v5-dpr-health：明确不支持的候选被误计为DPR交付失败（仅分类子项）",
+        "commit": "9e6dd82a34fb8c14e012be68fd0b632544f1459f",
+        "ancestor_in_base": true,
+        "ancestor_in_live": true
+      },
+      {
+        "item": "sandbox-glob-startup-race：父注册事务保存屏障",
+        "commit": "798af209b9a268b7dafab1440150f1b39cd5595d",
+        "ancestor_in_base": true,
+        "ancestor_in_live": true
+      },
+      {
+        "item": "silent-0469：已观察聚合体纸鹤组合子项",
+        "commit": "8d386fc7668820c2fc387d966f9d94bdcab189fb",
+        "ancestor_in_base": true,
+        "ancestor_in_live": true
+      },
+      {
+        "item": "silent-0317：已观察A10升级计算下注子项",
+        "commit": "b49112dbc106e315bd7156361d290fc4c73d29e2",
+        "ancestor_in_base": true,
+        "ancestor_in_live": true
+      },
+      {
+        "item": "silent-0319：已观察A10两费十毒预览子项",
+        "commit": "5b56a452bb9be14d620b368ec46974c1b57901ca",
+        "ancestor_in_base": true,
+        "ancestor_in_live": true
+      },
+      {
+        "item": "infra-feature-root-event-notice-path",
+        "commit": "577f0bc424b7287910735cfdc86c253cc7ee8057",
+        "ancestor_in_base": true,
+        "ancestor_in_live": true
+      },
+      {
+        "item": "silent-route-projection-provenance 诊断子项",
+        "commit": "7c43bbbb98f58ff3bfe9a68a04d8539ebb187d6a",
+        "ancestor_in_base": true,
+        "ancestor_in_live": true
+      },
+      {
+        "item": "infra-global-build-fixed-loadavg-input",
+        "commit": "5bc8f025fe043cb8738cce57870354fa23fa84a1",
+        "ancestor_in_base": true,
+        "ancestor_in_live": true
+      }
+    ],
+    "new_fixes": [],
+    "focused_source_review": [
+      {
+        "path": "agent/src/brain/engines/codex-usage.ts",
+        "sha256": "f1c59ca0c8c85e7ba5c934a84a6ee9bb27a26cd8724452a8b954186925df95d6"
+      },
+      {
+        "path": "agent/src/sim/boss-sim.ts",
+        "sha256": "e392cfd675fe877a359fed8d3d54fbe637fa7465471a8bb5e63d409863a4a663"
+      },
+      {
+        "path": "agent/src/reflex/combat-plan.ts",
+        "sha256": "07243eaa93ac19f563b7d9a484472002f16ad818217613e580975cb7b9f86630"
+      },
+      {
+        "path": "agent/src/hand/screens/selection.ts",
+        "sha256": "22a6189aa879f51793e7bfcc3a18c983b77be5ea2d804049d5c3ad36e006bc60"
+      },
+      {
+        "path": "agent/tests/global-build-integration.test.ts",
+        "sha256": "f173e3c8be375e89661d7fb089785c276d4642f74969feedf891127c3262d8c4"
+      },
+      {
+        "path": "agent/tests/target-options.test.ts",
+        "sha256": "848a2680045d161e17db437cd082b55be27eebcf4604321ffdac6014c2b228dc"
+      },
+      {
+        "path": "ops/learning_requests.py",
+        "sha256": "b8f99ae5bfe559b8cb849a2d6804809d127af256e80e08c289950d33df71e5bd"
+      },
+      {
+        "path": "ops/codex-ops-learn.py",
+        "sha256": "12b27ed00c6226bc99da4080a7cd1919e1bb07c8ecff617d1c3d3644cb6b32e9"
+      },
+      {
+        "path": "learner/ledger.py",
+        "sha256": "3b3071078cfb5394fc9b14f32078e4c3a559255bf9efeacf6ed17e15092b2a61"
+      },
+      {
+        "path": "learner/lib/startup-recovery.ts",
+        "sha256": "b42dfc3d7f2f5ea9dd11a3aa7b5eca2ee30d62a68fbd6bdc52bb95e710e11262"
+      }
+    ],
+    "queue_new_material": "仅追加silent-0365在4Z2GCLA4DU52/A10/F24的复现及原策略提案3adbcaf2f490177f；无新纯bug，不重复登记/派发。",
+    "evidence_0332": {
+      "path": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+      "rows": [
+        {
+          "offset": 1884827880,
+          "bytes": 12331,
+          "sha256": "17b1efea0d46f76f2b213c0da6274cdf07792476095ce90d57fc3116c735785d",
+          "run": "TCDUBRWMEMNA",
+          "floor": 40,
+          "turn": null,
+          "error": "出错：build-sim worker: Error: missing successful first-fight resources: nonpositive-hp; seed=76490739; {\"won\":true,\"died\":false,\"turns\":12,\"captureResources\":true,\"c",
+          "seed": 76490739,
+          "sha256_rechecked": true,
+          "valid_json": true
+        },
+        {
+          "offset": 1884840211,
+          "bytes": 12353,
+          "sha256": "f12a7ec925e907d2cdec86c47ec5ded9b8cff7cfe2230910a915feebb362e170",
+          "run": "TCDUBRWMEMNA",
+          "floor": 40,
+          "turn": null,
+          "error": "出错：build-sim worker: Error: missing successful first-fight resources: nonpositive-hp; seed=76490739; {\"won\":true,\"died\":false,\"turns\":12,\"captureResources\":true,\"c",
+          "seed": 76490739,
+          "sha256_rechecked": true,
+          "valid_json": true
+        },
+        {
+          "offset": 1884852564,
+          "bytes": 124632,
+          "sha256": "96f08cadfdfcdc0314d968ff2c1419d58d4d0f0e1d5eff0a0b3bf56f501ea25a",
+          "run": "TCDUBRWMEMNA",
+          "floor": 40,
+          "turn": null,
+          "error": "只跑完 14 次模拟（不足 300 次），选项之间的差噪声太大，不给数字",
+          "seed": 76490739,
+          "sha256_rechecked": true,
+          "valid_json": true
+        }
+      ],
+      "limitation": "本轮重新读取固定偏移三段日志并核SHA/JSON；错误只保留前缀，完整resources/steps仍缺。正HP/300样本契约保持，沿原5aa2672/0c0d提案，不重复派发。"
+    },
+    "source_review": "388文件与前批逐SHA相同，重点只读复核额度恢复、通知身份、启动恢复、账本状态、目标夹具、loadavg固定输入及0332/0365/0481当前代码。",
+    "actual_merge_performed_by_this_task": false,
+    "ledger_and_proposals": "无新增源码或游戏结论，未追加账本/提案；沿原独立策略链，不标shipped。",
+    "live_operations": "仅只读核HEAD/祖先；无合并、知识提交、版本或上线记录。",
+    "tests": {
+      "tsc": null,
+      "vitest": null,
+      "cases": 0,
+      "files": 0,
+      "reason": "本批源码/测试未改，无提交/合入；未重复同字节旧测试，退出码为null，不借旧绿。"
+    },
+    "final_head": "fd5c6845272371d8f488ae4195c18d9a6dadca99",
+    "final_status_clean": true,
+    "final_queue_sha_matches": true,
+    "report_sha256": "9289924704a8f8bd22d4b788196336cf730d88b5c9ea5eb11d40ed8dbd899c58"
+  },
+  "source_file_SHA_verified": 388,
+  "existing_fix_ancestries_verified": 80,
+  "no_new_source_commit_or_merge_block": true,
+  "production_tests_not_run": true,
+  "no_new_host_or_model_or_paper_request": true,
+  "old_0332_and_0365_and_wider_parents_remain_open": true,
+  "live_unchanged": "a9e687d9f0acccccddbfa92895d7966b58900658"
+}

@@ -1,0 +1,22 @@
+{
+  "at": "2026-10-16 18:24:00 CST",
+  "batch": "20261016-174303-fix-batch",
+  "source": "21a9c52484f04d510bd397959c958ec9767f1d2d",
+  "merged": "c0cab0352b6c1a487e116d845350bf483dc60c9c",
+  "tree": "c02e2ffda79312e3b22b438b501c68b4d1882873",
+  "publication": "paper/materials/20261016-1815-ops/publication.json",
+  "publication_sha256": "ce1629d25b2f39eb8c362b3a035761b2aa6d796019aa5fedde9437d41c436388",
+  "original_report_sha256": "06697213a76b20501497c280bf1be059c007b60e7c18476b9fd001ea76db0973",
+  "original_report_retained": true,
+  "original_report_has_no_committed_source": true,
+  "disposition": "Main ops committed original staged source after sandbox EPERM supplement; use actual publication proof, without changing original completion.",
+  "original_checks_and_live_locks": true,
+  "full_command": "export PATH=\"$HOME/.local/node/bin:$PATH\"; nice -n 19 npx tsc -p tsconfig.json --noEmit; a=$?; nice -n 19 npx vitest run --maxWorkers=2; b=$?; [ \"$a\" = 0 ] && [ \"$b\" = 0 ]",
+  "full_command_sha256": "896f046db998a1dfe91b22baa98cc341ed6a90cadb542495c08419fcc4040210",
+  "log": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261016-174303-fix-batch.fallback-c02e2ffda79312e3b22b438b501c68b4d1882873.checks.log",
+  "executor_pid": 3226501,
+  "command_pid": 3226509,
+  "birth_ticks": "103820020",
+  "state": "running",
+  "test_result": "pending; startup is not completion"
+}

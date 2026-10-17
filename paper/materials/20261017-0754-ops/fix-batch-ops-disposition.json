@@ -1,0 +1,1025 @@
+{
+  "batch": "20261017-034302-fix-batch",
+  "actual_source_report": {
+    "task": "fix-batch",
+    "base": "cb03ffed4d53f75c6d88be341fb8550933ad85de",
+    "fixes": [
+      {
+        "item": "沙箱自测入口：global-build-health 同步 Python 调用误报 EPERM",
+        "commit": "d27df54f0651c4af84c6c12ceceec82a016f1142",
+        "test": "agent/tests/global-build-health.test.ts",
+        "fails_without_fix": true
+      },
+      {
+        "item": "infra-target-options 后续：EZ2L选线及方案文本题仍使用无限测试预算",
+        "commit": "83a7f796c24eea8f16eb317bc70bfd832251ad27",
+        "test": "agent/tests/target-options.test.ts",
+        "fails_without_fix": true
+      },
+      {
+        "item": "retention 合法数字 UUID scratch 归属误拒收",
+        "commit": "d91236326bc1af7a5417ce016c1a182f8084e7a3",
+        "test": "agent/tests/learner-retention-uuid.test.ts",
+        "fails_without_fix": true
+      },
+      {
+        "item": "retention 旧 experience-update 根目录产物归属误拒收",
+        "commit": "0699b05c436d3d51d00ee92f153d16d16e64bea4",
+        "test": "agent/tests/learner-retention-legacy.test.ts",
+        "fails_without_fix": true
+      }
+    ],
+    "skipped": [
+      {
+        "item": "silent-0271：毒必胜提前返回遗漏保血候选",
+        "reason": "策略类；沿原独立提案，不在纯bug批改排序。"
+      },
+      {
+        "item": "silent-0279：SL抽序升级改标",
+        "reason": "策略类；沿原独立提案，缺完整中间帧。"
+      },
+      {
+        "item": "silent-0308：单动作沙坑截止题面",
+        "reason": "策略类；当前漏接仍在，沿原0ff91bb5da98a252/3707a98930a03d83链，不重复派发。"
+      },
+      {
+        "item": "silent-0311：库存恢复血量预算",
+        "reason": "策略类；沿原独立提案，保留已观察与未知恢复规则边界。"
+      },
+      {
+        "item": "silent-0320：同线新建UNMOVABLE",
+        "reason": "策略类；沿原689c132e17b5c70f实现链。"
+      },
+      {
+        "item": "silent-0322：升级神化同线升级",
+        "reason": "策略类；沿原53b3db220508b3d9实现链。"
+      },
+      {
+        "item": "silent-0329：饮药临时力量接线",
+        "reason": "策略类；沿原角色证据及独立提案链。"
+      },
+      {
+        "item": "arch-funnel-guard",
+        "reason": "太大；独立架构功能，不混入普通纯bug批。"
+      },
+      {
+        "item": "arch-learning-priority",
+        "reason": "太大；独立架构功能，不混入普通纯bug批。"
+      },
+      {
+        "item": "arch-unified-resource-value",
+        "reason": "太大；独立资源模型功能，不混入普通纯bug批。"
+      },
+      {
+        "item": "inv-f33-regression",
+        "reason": "太大；独立归因调查，保留原owner。"
+      },
+      {
+        "item": "silent-0332：成功首战接续nonpositive-hp",
+        "reason": "证据不足；已有诊断封套不等于游戏机制根因修复，沿既有5aa2672bd7cd1bf4及原owner，不重复派发。"
+      },
+      {
+        "item": "silent-0334：升级隐秘匕首模型",
+        "reason": "策略类；沿原6a5c67f606bd5af7实现链。"
+      },
+      {
+        "item": "silent-0339：尾巴误核销",
+        "reason": "策略类；沿原独立提案，不凭近似血量补复活规则。"
+      },
+      {
+        "item": "silent-0344：坚韧之环延迟格挡",
+        "reason": "策略类；沿原8e17a61707d2ca02实现链。"
+      },
+      {
+        "item": "silent-0347：组装师攻击召唤",
+        "reason": "策略类；沿原43156dee9f23ae43实现链。"
+      },
+      {
+        "item": "silent-0349：已有虚弱后的减力",
+        "reason": "策略类；沿原bb7597d8a1fe63ff实现链。"
+      },
+      {
+        "item": "core-build-notify-222802-rc2：历史发送事实",
+        "reason": "证据不足；后续失败诊断已修，旧历史发送事实仍未知，不冒认成功或重复发送。"
+      },
+      {
+        "item": "silent-0362：背向攻击减力倍率",
+        "reason": "策略类；沿原独立角色证据提案链。"
+      },
+      {
+        "item": "silent-0365：未建模药水目标可达性",
+        "reason": "策略类；当前targets.slice(0, 2)仍在，原70c22e94eda8f8a9/3adbcaf2f490177f已登记独立实现链。"
+      },
+      {
+        "item": "框架外层时限与分段续验收尾",
+        "reason": "太大；精确续验入口已实现，框架所有者收尾仍沿原链。"
+      },
+      {
+        "item": "调度公平性核查",
+        "reason": "证据不足；原观察未证明永久饥饿，沿原框架核查。"
+      },
+      {
+        "item": "silent-0481：技能药水生命周期措辞",
+        "reason": "策略类/题面知识；当前措辞仍在，沿686d4e759478eebb/c89465046641d6ed，不自行补生命周期规则。"
+      },
+      {
+        "item": "silent-0487：MAD_SCIENCE三段攻击模型",
+        "reason": "策略类；沿原0a0b31e284e6793e实现链。"
+      },
+      {
+        "item": "codex大脑缓存命中偏低",
+        "reason": "证据不足；缺当前同题受控请求对比，本任务不调用真实LLM或网络。"
+      },
+      {
+        "item": "sandbox-glob-startup-race：上游目录生命周期及其他租约拒绝原因",
+        "reason": "证据不足；现有注册屏障已经上线，上游目录扫描及生命周期仍未闭合。本轮另见临时目录消失导致工具启动失败，保留原错与重试，不改外部CLI或权限。"
+      },
+      {
+        "item": "named-card-facts-transport：事件入口之外范围",
+        "reason": "太大；事件入口已修，其余独立功能沿原owner。"
+      },
+      {
+        "item": "boss模拟样本性能及v5-dpr-health宽范围",
+        "reason": "太大；独立专项，保留冻结输入、预算、样本及原验收链。"
+      },
+      {
+        "item": "rest-timeout-accepted-route-not-committed / silent-0446",
+        "reason": "策略类/结构；沿原2d3aa8dfb27dbe3f，不提交未确认动作。"
+      },
+      {
+        "item": "silent-0469：纸鹤其他未知组合/整战收益",
+        "reason": "策略类；已观察聚合体窄子项已修，更宽组合与整战收益未闭合。"
+      },
+      {
+        "item": "silent-0496：取牌页零选确认及Cards误作抽牌",
+        "reason": "策略类；原0cd2f0dfbc4a0805/0496/0418已登记，当前入口仍在，不重复派普通fix。"
+      },
+      {
+        "item": "silent-0461：脆弱4挡斗篷生成条件",
+        "reason": "策略类；普通6挡窄子项不覆盖本条件，沿f4eb0efba2594252/7338be2498f3ae60，不将未实际施放候选当机制实证。"
+      },
+      {
+        "item": "infra-test-rollout-ties-host-timeout-15000",
+        "reason": "证据不足；本轮首套仅global-health入口及shrink旧夹具失败，此项没有复现历史15秒超时；保持原断言、时限和旧失败。"
+      },
+      {
+        "item": "ops-worktree-history-disk-pressure-20261013其余宽范围",
+        "reason": "证据不足；本批仅修合法UUID及旧experience产物归属两个窄子项。实际磁盘容量波动、其他保留现场和未归属材料仍沿原运维链，未运行生产回收、未关闭宽父。"
+      },
+      {
+        "item": "infra-test-build-facts-selection-remove-latency（开工后队列新增）",
+        "reason": "证据不足；原014302-s2固定四样本题仅首次60秒超时，原断言/时限补验47.187秒通过，未定位产品因果。保原输入及现有普通槽，不削样本或加时限。"
+      },
+      {
+        "item": "021302宿主超时与磁盘压力补证（开工后队列新增两条）",
+        "reason": "证据不足；Herdr原题补验已过；eval校准与logged boards仍仅超时，原04:52条目明确由下一普通槽接续，不热改本034302批输入。保留原full1/supplement1及原磁盘守卫，不重复派发。"
+      }
+    ],
+    "merged": null,
+    "tests": {
+      "tsc": 0,
+      "vitest": 0,
+      "cases": 4224
+    },
+    "code_proposals": [],
+    "implementation_domains": [],
+    "report": "/home/dw/Projects/agent-sts2/learner/runs/20261017-034313-0d9b49c3-e9b6-42b0-aa5b-60523062286c-fix-batch/report.md"
+  },
+  "original_canonical_snapshot": {
+    "state": "failed",
+    "rc": 124,
+    "merged": null,
+    "report": {},
+    "completion_failure": {
+      "reason": "learner exited without a completion report",
+      "rc": 124,
+      "stderr": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261017-034302-fix-batch.err"
+    },
+    "retry_at": 1792197802.430727
+  },
+  "original_outer_timeout_minutes": 240,
+  "original_outer_timeout_pid": 1998811,
+  "original_launcher_summary_exit0_not_success_proof": true,
+  "runtime": {
+    "batch": "20261017-034302-fix-batch",
+    "thread": "01a1463d-9170-73f0-a2a6-bc0309d1778a",
+    "cwd": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261017-034302",
+    "event_log": "learner/runs/20261017-034313-0d9b49c3-e9b6-42b0-aa5b-60523062286c-fix-batch.jsonl",
+    "registered_launch_batch": "20261017-034302-fix-batch",
+    "original_lease": "53991a690ddb51f110529cab7c02f015482bed9faf4d0f225b4dbc2375e54676",
+    "native_context": {
+      "source": "ops/codex-ops/accounts/codex1/learner/sessions/2026/10/17/rollout-2026-10-17T03-43-22-01a1463d-9170-73f0-a2a6-bc0309d1778a.jsonl",
+      "offset": 50302,
+      "bytes": 5118,
+      "sha256": "6d04979e5e77ec07201aed0f7dca3bbd975d0708936cc520550d359eb3052405",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "sandbox": {
+        "type": "workspace-write",
+        "writable_roots": [
+          "/home/dw/Projects/agent-sts2",
+          "/home/dw/Projects/agent-sts2/.git",
+          "/home/dw/Projects/agent-sts2/.git/worktrees/codex-fix-silent-20261017-034302"
+        ],
+        "network_access": false,
+        "exclude_tmpdir_env_var": false,
+        "exclude_slash_tmp": false
+      },
+      "approval_policy": "never"
+    },
+    "native_user_input": {
+      "offset": 55420,
+      "bytes": 13081,
+      "sha256": "9e5d8c5e0410b72febd65dcd1f4c968cca7d212c0a9aa0f5a4040f6e7d8ba385",
+      "input_sha256": "6560b5143c4d253a8ecbfa2a0722cd6bbf78f347285b887bba72a3e602d4ebf4"
+    },
+    "original_header_events": [
+      {
+        "offset": 0,
+        "bytes": 14892,
+        "sha256": "8a15d7985ccca69a4d928d800c7431fdb03c3e4c6322e732641386d8bef39bb5",
+        "type": "learner_launch",
+        "attempt": null,
+        "code": null
+      },
+      {
+        "offset": 14892,
+        "bytes": 370,
+        "sha256": "fa1d083acff3425ae3933cf69c6795ccfe74c16925a87159b2ad27a25667062e",
+        "type": "learner_startup_attempt",
+        "attempt": 1,
+        "code": null
+      },
+      {
+        "offset": 18275,
+        "bytes": 77,
+        "sha256": "abc867a6f7226b84f714fdc95296e33d84f6d069ff0904cfc1d000af1581ce6c",
+        "type": "thread.started",
+        "attempt": null,
+        "code": null
+      }
+    ],
+    "startup_attempts": 1,
+    "failed_startups_preserved": 0,
+    "no_model_or_manual_restart": true
+  },
+  "original_files": [
+    {
+      "path": "learner/runs/20261017-034313-0d9b49c3-e9b6-42b0-aa5b-60523062286c-fix-batch/prior-skip-dispositions.json",
+      "bytes": 5332,
+      "sha256": "5cb21656f042dd8937cababb4876dcec1b740ce3edcb0694739dd14e8026cfd3"
+    },
+    {
+      "path": "learner/runs/20261017-034313-0d9b49c3-e9b6-42b0-aa5b-60523062286c-fix-batch/finish-legacy-after-fixture.sh",
+      "bytes": 3009,
+      "sha256": "bd09ea535e7c0853486849545d8a47be7477e7b2c130968600d593bd8d51151a"
+    },
+    {
+      "path": "learner/runs/20261017-034313-0d9b49c3-e9b6-42b0-aa5b-60523062286c-fix-batch/legacy-sandbox.exit",
+      "bytes": 2,
+      "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865"
+    },
+    {
+      "path": "learner/runs/20261017-034313-0d9b49c3-e9b6-42b0-aa5b-60523062286c-fix-batch/legacy-without-fix.log",
+      "bytes": 16719,
+      "sha256": "2defb975edbb809fafabd2bbdf85b4ded8bd6e4f9b000596befb2883696d9236"
+    },
+    {
+      "path": "learner/runs/20261017-034313-0d9b49c3-e9b6-42b0-aa5b-60523062286c-fix-batch/report-validation-pending.md",
+      "bytes": 32387,
+      "sha256": "65fac89e7c6e3e781be15fd0e66f031b3c14582c49362b3f1497f7641d7d4e47"
+    },
+    {
+      "path": "learner/runs/20261017-034313-0d9b49c3-e9b6-42b0-aa5b-60523062286c-fix-batch/retry-legacy-timeout.sh",
+      "bytes": 1451,
+      "sha256": "a48f328fb2fa5ed4d369bb36e32d23f043c532e736081faad0c7c984ee5b0137"
+    },
+    {
+      "path": "learner/runs/20261017-034313-0d9b49c3-e9b6-42b0-aa5b-60523062286c-fix-batch/legacy-pending-all.patch",
+      "bytes": 19734,
+      "sha256": "12e704998adc1d06d66e7541a850cb37c0080c0bd524fd44b6c4cc7268284e33"
+    },
+    {
+      "path": "learner/runs/20261017-034313-0d9b49c3-e9b6-42b0-aa5b-60523062286c-fix-batch/result-validation-pending.json",
+      "bytes": 8152,
+      "sha256": "7324e9180663404020573f9d11dee8b79c9568fc672d6130a26cf4ca69743610"
+    },
+    {
+      "path": "learner/runs/20261017-034313-0d9b49c3-e9b6-42b0-aa5b-60523062286c-fix-batch/result.json",
+      "bytes": 7912,
+      "sha256": "b06f8c75db171bb6a0223ea62fb00ea3fbcd50131a598dabc3f97b70caafad9b"
+    },
+    {
+      "path": "learner/runs/20261017-034313-0d9b49c3-e9b6-42b0-aa5b-60523062286c-fix-batch/live-lock-attempt.log",
+      "bytes": 2023,
+      "sha256": "46a62d2028296e7def09ec6ba01a6d42f28df9f01a93ffbb125c780a15d8377d"
+    },
+    {
+      "path": "learner/runs/20261017-034313-0d9b49c3-e9b6-42b0-aa5b-60523062286c-fix-batch/legacy-shrink-rerun.exit",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "learner/runs/20261017-034313-0d9b49c3-e9b6-42b0-aa5b-60523062286c-fix-batch/prepare-legacy-patch.py",
+      "bytes": 2393,
+      "sha256": "a1c07350cf1afafa8e970fba77408ca0d98fbd743a6bdfd1f7d44ab644d27faa"
+    },
+    {
+      "path": "learner/runs/20261017-034313-0d9b49c3-e9b6-42b0-aa5b-60523062286c-fix-batch/report-capacity-pending.md",
+      "bytes": 31038,
+      "sha256": "f4becf47ce2c596b57e0353d7a2df8ba784fee0408e2ba3573d2f9d085f36fd0"
+    },
+    {
+      "path": "learner/runs/20261017-034313-0d9b49c3-e9b6-42b0-aa5b-60523062286c-fix-batch/source-since-prior.patch",
+      "bytes": 367988,
+      "sha256": "e5887b7450af190afbcbd34d5ffde35dd89098a2e2565ad3144fed80a5a01e06"
+    },
+    {
+      "path": "learner/runs/20261017-034313-0d9b49c3-e9b6-42b0-aa5b-60523062286c-fix-batch/ledger-retention-final.json",
+      "bytes": 12,
+      "sha256": "4cdbf419496dfe432d908e2789d855cc0e4bf7500a28f262f1a64f970cbc745d"
+    },
+    {
+      "path": "learner/runs/20261017-034313-0d9b49c3-e9b6-42b0-aa5b-60523062286c-fix-batch/live-sandbox.log",
+      "bytes": 67,
+      "sha256": "206bb1334fc905a29c9d845090272e7767b924d8cb7f2a307f33a42e183ebee0"
+    },
+    {
+      "path": "learner/runs/20261017-034313-0d9b49c3-e9b6-42b0-aa5b-60523062286c-fix-batch/legacy-sandbox-r2.log",
+      "bytes": 2260,
+      "sha256": "614a2fcdee9413361e87464ab8d788523b22e1a685856db1b7b121dfdad44a12"
+    },
+    {
+      "path": "learner/runs/20261017-034313-0d9b49c3-e9b6-42b0-aa5b-60523062286c-fix-batch/legacy-sandbox.log",
+      "bytes": 11029,
+      "sha256": "88bd6777ce7aa036967e90b317a7f33be35c4686dd60f0d46734e1efc5097e3f"
+    },
+    {
+      "path": "learner/runs/20261017-034313-0d9b49c3-e9b6-42b0-aa5b-60523062286c-fix-batch/uuid-original-name-probe.json",
+      "bytes": 1621,
+      "sha256": "1212a52064a095d6cedbdf59f5e78bb50dd52f805fd413faff5f26ba2816fe6d"
+    },
+    {
+      "path": "learner/runs/20261017-034313-0d9b49c3-e9b6-42b0-aa5b-60523062286c-fix-batch/queue-inventory.json",
+      "bytes": 440251,
+      "sha256": "81ac0a4d74bd8b106d3eccb5d6d5b6578b3c184cf51939c053acc318b5043cd1"
+    },
+    {
+      "path": "learner/runs/20261017-034313-0d9b49c3-e9b6-42b0-aa5b-60523062286c-fix-batch/global-health-fixed.log",
+      "bytes": 264,
+      "sha256": "9cd640e9d0b186d90cd269eb08ff77b7fc2371891606c50b6cb8fccf2cb8a832"
+    },
+    {
+      "path": "learner/runs/20261017-034313-0d9b49c3-e9b6-42b0-aa5b-60523062286c-fix-batch/wrapper-failed-cases-rerun.log",
+      "bytes": 273,
+      "sha256": "ec41ce4429d12a7356ca91c442b6646385d52e586e4ad2a0db1c4773c344528e"
+    },
+    {
+      "path": "learner/runs/20261017-034313-0d9b49c3-e9b6-42b0-aa5b-60523062286c-fix-batch/live-partial-locked-preflight.json",
+      "bytes": 3058,
+      "sha256": "b94d25ed78909bb365020b24f02c924f7d86c324b1180c0e02f02e657bdad402"
+    },
+    {
+      "path": "learner/runs/20261017-034313-0d9b49c3-e9b6-42b0-aa5b-60523062286c-fix-batch/live-partial-lock-attempt.log",
+      "bytes": 2862,
+      "sha256": "a226284d630583ea5a779ae7fe88a35b0b0c285c67a3f8a154972686b0fc1364"
+    },
+    {
+      "path": "learner/runs/20261017-034313-0d9b49c3-e9b6-42b0-aa5b-60523062286c-fix-batch/legacy-sandbox-r2.exit",
+      "bytes": 2,
+      "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865"
+    },
+    {
+      "path": "learner/runs/20261017-034313-0d9b49c3-e9b6-42b0-aa5b-60523062286c-fix-batch/queue-final-delta.json",
+      "bytes": 157,
+      "sha256": "a0f1db422c8717da5217206dc4c646cb6b25a3b50d83d4bb66765682bcf85a87"
+    },
+    {
+      "path": "learner/runs/20261017-034313-0d9b49c3-e9b6-42b0-aa5b-60523062286c-fix-batch/shrink-original-timeout-rerun.exit",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "learner/runs/20261017-034313-0d9b49c3-e9b6-42b0-aa5b-60523062286c-fix-batch/live-locked-preflight.json",
+      "bytes": 2171,
+      "sha256": "c7619d5d921e6fbaeed2e08d0e37aa18ecc73e81f6c62735527bc868a33c553b"
+    },
+    {
+      "path": "learner/runs/20261017-034313-0d9b49c3-e9b6-42b0-aa5b-60523062286c-fix-batch/shrink-original-timeout-rerun.log",
+      "bytes": 280,
+      "sha256": "678836dbef4b8e1228513ae24211592883ebd0326c4a300d6a7097ff48f6292c"
+    },
+    {
+      "path": "learner/runs/20261017-034313-0d9b49c3-e9b6-42b0-aa5b-60523062286c-fix-batch/uuid-sandbox.log",
+      "bytes": 2226,
+      "sha256": "64402d3cae508f18f1cb0fc5fd1773ce53a009eacc8c5ed8c7588122d4d40dc0"
+    },
+    {
+      "path": "learner/runs/20261017-034313-0d9b49c3-e9b6-42b0-aa5b-60523062286c-fix-batch/result-capacity-pending.json",
+      "bytes": 7792,
+      "sha256": "64206a45e41b627cdff65bb1965b118ed5ded5b826d9e1c02b3c1d916a5f07fd"
+    },
+    {
+      "path": "learner/runs/20261017-034313-0d9b49c3-e9b6-42b0-aa5b-60523062286c-fix-batch/target-fixture.patch",
+      "bytes": 1257,
+      "sha256": "5f4e2c6369b64015cb3555e37f9b4f98e23042b6b73a2625ce37685e2f229b21"
+    },
+    {
+      "path": "learner/runs/20261017-034313-0d9b49c3-e9b6-42b0-aa5b-60523062286c-fix-batch/legacy-prototype-r3-tests.log",
+      "bytes": 7273,
+      "sha256": "0af46ec554ba51843856395a7e0bdc4de5dc6a2a686662c3d0fbf06173848f78"
+    },
+    {
+      "path": "learner/runs/20261017-034313-0d9b49c3-e9b6-42b0-aa5b-60523062286c-fix-batch/report.md",
+      "bytes": 31556,
+      "sha256": "798a53ed05b6c5f269c2b5e6659e52ba5ca2ca528304308eb28f88ca54cdd1e2"
+    },
+    {
+      "path": "learner/runs/20261017-034313-0d9b49c3-e9b6-42b0-aa5b-60523062286c-fix-batch/ledger-target-fixture-final.json",
+      "bytes": 12,
+      "sha256": "4cdbf419496dfe432d908e2789d855cc0e4bf7500a28f262f1a64f970cbc745d"
+    },
+    {
+      "path": "learner/runs/20261017-034313-0d9b49c3-e9b6-42b0-aa5b-60523062286c-fix-batch/legacy-implementation-before-footer.patch",
+      "bytes": 7646,
+      "sha256": "99fa120341ab6040f8bb0fb860962de936aae5d06fcfbb0cddc97a23af31bf81"
+    },
+    {
+      "path": "learner/runs/20261017-034313-0d9b49c3-e9b6-42b0-aa5b-60523062286c-fix-batch/legacy-prototype-final-tests.log",
+      "bytes": 7356,
+      "sha256": "94d730067b2495410219184a03b8269176bcf69d698610507ecfb7bf75e6bd06"
+    },
+    {
+      "path": "learner/runs/20261017-034313-0d9b49c3-e9b6-42b0-aa5b-60523062286c-fix-batch/target-fixture-without-fix.log",
+      "bytes": 1342,
+      "sha256": "850bb7373f8a340f85add03f2254ce6ac2f08380856bd65e2a526ef58624c44c"
+    },
+    {
+      "path": "learner/runs/20261017-034313-0d9b49c3-e9b6-42b0-aa5b-60523062286c-fix-batch/live-lock-attempt.exit",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "learner/runs/20261017-034313-0d9b49c3-e9b6-42b0-aa5b-60523062286c-fix-batch/wrapper-sandbox.exit",
+      "bytes": 2,
+      "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865"
+    },
+    {
+      "path": "learner/runs/20261017-034313-0d9b49c3-e9b6-42b0-aa5b-60523062286c-fix-batch/finish-legacy-default.sh",
+      "bytes": 2930,
+      "sha256": "ce8f106a0d12ff4ee1a168e4971619c8bb56d7302683acbbecdfb8b2a225eb2e"
+    },
+    {
+      "path": "learner/runs/20261017-034313-0d9b49c3-e9b6-42b0-aa5b-60523062286c-fix-batch/live-baseline-merge-preflight.log",
+      "bytes": 2015,
+      "sha256": "2937866639727eb37f2f001ad405a35bead8277a42ad38f8616f537cf64090aa"
+    },
+    {
+      "path": "learner/runs/20261017-034313-0d9b49c3-e9b6-42b0-aa5b-60523062286c-fix-batch/legacy-original-binding-probe-r2.json",
+      "bytes": 6555,
+      "sha256": "ec73269266432c25944779ba484790a2c28841d70baf6766d43542222ab60f7a"
+    },
+    {
+      "path": "learner/runs/20261017-034313-0d9b49c3-e9b6-42b0-aa5b-60523062286c-fix-batch/target-fixture-sandbox.log",
+      "bytes": 551,
+      "sha256": "19328ac3509fe33f2a32927fff363745f7f2e289ea634c3aeb7e92958c862226"
+    },
+    {
+      "path": "learner/runs/20261017-034313-0d9b49c3-e9b6-42b0-aa5b-60523062286c-fix-batch/write-report.py",
+      "bytes": 12713,
+      "sha256": "410d54d938c7a99fc0058244eeb187f06f0f4af114d0309c9daa836c7dddb587"
+    },
+    {
+      "path": "learner/runs/20261017-034313-0d9b49c3-e9b6-42b0-aa5b-60523062286c-fix-batch/legacy-shrink-rerun.log",
+      "bytes": 280,
+      "sha256": "753b2cfdc9f174e184a0e516ae42a54facf88416b78b37a4d306b05ff7f3f107"
+    },
+    {
+      "path": "learner/runs/20261017-034313-0d9b49c3-e9b6-42b0-aa5b-60523062286c-fix-batch/uuid-without-fix.log",
+      "bytes": 4585,
+      "sha256": "15ab881b85f4710fd703faa155125e70b432381d4d22019dc23ae6bb7d69c0f6"
+    },
+    {
+      "path": "learner/runs/20261017-034313-0d9b49c3-e9b6-42b0-aa5b-60523062286c-fix-batch/legacy-tests-final-draft.py",
+      "bytes": 9408,
+      "sha256": "5db0158bb9f618496f37eb10e23bbabfd44ae78b4f8afd7c0302a50ff688bc5a"
+    },
+    {
+      "path": "learner/runs/20261017-034313-0d9b49c3-e9b6-42b0-aa5b-60523062286c-fix-batch/global-health-wrapper.patch",
+      "bytes": 1622,
+      "sha256": "168492ffcf0c28cf2de9f36a91c3f7a95e982aa1a29ad88528203a3ba30c7571"
+    },
+    {
+      "path": "learner/runs/20261017-034313-0d9b49c3-e9b6-42b0-aa5b-60523062286c-fix-batch/uuid-r3-failed-cases-rerun.log",
+      "bytes": 270,
+      "sha256": "aa9bbd022cb4c365cf730a66ce47c88645fd275c9e08aeb65181e98c7e32d6d3"
+    },
+    {
+      "path": "learner/runs/20261017-034313-0d9b49c3-e9b6-42b0-aa5b-60523062286c-fix-batch/live-locked-merge-preflight.log",
+      "bytes": 41,
+      "sha256": "182edaf17f1f8dcab0bfd4581cfec7aae65713e28a0bbd8a8b924a1ab9c543c0"
+    },
+    {
+      "path": "learner/runs/20261017-034313-0d9b49c3-e9b6-42b0-aa5b-60523062286c-fix-batch/live-baseline-merge-preflight.exit",
+      "bytes": 2,
+      "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865"
+    },
+    {
+      "path": "learner/runs/20261017-034313-0d9b49c3-e9b6-42b0-aa5b-60523062286c-fix-batch/automation-state.json",
+      "bytes": 4441,
+      "sha256": "6fded6db8792eff4b5df73d2a85fb4574dd5778436d34ba77d917e0306bf8d76"
+    },
+    {
+      "path": "learner/runs/20261017-034313-0d9b49c3-e9b6-42b0-aa5b-60523062286c-fix-batch/finish-uuid-two-workers.sh",
+      "bytes": 1348,
+      "sha256": "0ed7feff18aff835dba3a357c7fdd2d25cf54020b2135c711e6d84f0f089a692"
+    },
+    {
+      "path": "learner/runs/20261017-034313-0d9b49c3-e9b6-42b0-aa5b-60523062286c-fix-batch/legacy-implementation.patch",
+      "bytes": 7822,
+      "sha256": "98305b33189c014f3f178a51d97814a19281874b0a79cd5f6fba19ca0ebcc645"
+    },
+    {
+      "path": "learner/runs/20261017-034313-0d9b49c3-e9b6-42b0-aa5b-60523062286c-fix-batch/live-partial-lock-attempt.exit",
+      "bytes": 2,
+      "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865"
+    },
+    {
+      "path": "learner/runs/20261017-034313-0d9b49c3-e9b6-42b0-aa5b-60523062286c-fix-batch/legacy-restored.log",
+      "bytes": 264,
+      "sha256": "4e6dfe3367ee1ca3d0135860de73061b2958574ece30f114f5c1acb954f32616"
+    },
+    {
+      "path": "learner/runs/20261017-034313-0d9b49c3-e9b6-42b0-aa5b-60523062286c-fix-batch/live-lock-attempt-path-format-error.exit",
+      "bytes": 2,
+      "sha256": "53c234e5e8472b6ac51c1ae1cab3fe06fad053beb8ebfd8977b010655bfdd3c3"
+    },
+    {
+      "path": "learner/runs/20261017-034313-0d9b49c3-e9b6-42b0-aa5b-60523062286c-fix-batch/queue-audit.json",
+      "bytes": 138930,
+      "sha256": "d8d01f9835106377c22182d3dd49624eae8fc9a338fe1a2ab64d4ddd7d99c650"
+    },
+    {
+      "path": "learner/runs/20261017-034313-0d9b49c3-e9b6-42b0-aa5b-60523062286c-fix-batch/legacy-prototype-r2-tests.log",
+      "bytes": 5838,
+      "sha256": "f974ea4b22f8322b27bc7facd12bda433d9a36ca350491a5838485ad04e557b1"
+    },
+    {
+      "path": "learner/runs/20261017-034313-0d9b49c3-e9b6-42b0-aa5b-60523062286c-fix-batch/finish-report.sh",
+      "bytes": 1132,
+      "sha256": "e1819db63c8e8b5263b4c148373daaee09676abe8baf7791a0abf6f3e033856c"
+    },
+    {
+      "path": "learner/runs/20261017-034313-0d9b49c3-e9b6-42b0-aa5b-60523062286c-fix-batch/global-health-without-fix.log",
+      "bytes": 1144,
+      "sha256": "8578b112b02c7816e227a69d6651c661653de9c261817f3c7731d4210f0ea5bd"
+    },
+    {
+      "path": "learner/runs/20261017-034313-0d9b49c3-e9b6-42b0-aa5b-60523062286c-fix-batch/wrapper-sandbox-r2.exit",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "learner/runs/20261017-034313-0d9b49c3-e9b6-42b0-aa5b-60523062286c-fix-batch/legacy-tests-draft.py",
+      "bytes": 9408,
+      "sha256": "5db0158bb9f618496f37eb10e23bbabfd44ae78b4f8afd7c0302a50ff688bc5a"
+    },
+    {
+      "path": "learner/runs/20261017-034313-0d9b49c3-e9b6-42b0-aa5b-60523062286c-fix-batch/uuid-sandbox-r4.log",
+      "bytes": 554,
+      "sha256": "d5b124ab4f37368a5b14efa12e0fd316b3caa59d28fcaf11931bd32f9f495b6f"
+    },
+    {
+      "path": "learner/runs/20261017-034313-0d9b49c3-e9b6-42b0-aa5b-60523062286c-fix-batch/retry-legacy-after-capacity.sh",
+      "bytes": 1499,
+      "sha256": "334befd9e908ef286272f282f6fcd622620f3982f3436fa1422d447d01c1936a"
+    },
+    {
+      "path": "learner/runs/20261017-034313-0d9b49c3-e9b6-42b0-aa5b-60523062286c-fix-batch/baseline-source-audit.json",
+      "bytes": 95375,
+      "sha256": "5706c48d713ceeaf31ad85d905d84e57fedd99eb6d7fb12f8221798ac5704492"
+    },
+    {
+      "path": "learner/runs/20261017-034313-0d9b49c3-e9b6-42b0-aa5b-60523062286c-fix-batch/legacy-helper-draft.py",
+      "bytes": 4180,
+      "sha256": "60d905eae537f130e04e05574124fafac498b4a0cfa8e084c8dc8d057866b95b"
+    },
+    {
+      "path": "learner/runs/20261017-034313-0d9b49c3-e9b6-42b0-aa5b-60523062286c-fix-batch/finish-legacy.sh",
+      "bytes": 2937,
+      "sha256": "57462b86380f01954be65e83772652f3862a99d2d6b2a7f54c36d1281da6f334"
+    },
+    {
+      "path": "learner/runs/20261017-034313-0d9b49c3-e9b6-42b0-aa5b-60523062286c-fix-batch/target-fixture-gitleaks.log",
+      "bytes": 107,
+      "sha256": "6b06152424c1a23e3cbec25e5626f92c02b250cf2975cfae6e6523e5286ac7f1"
+    },
+    {
+      "path": "learner/runs/20261017-034313-0d9b49c3-e9b6-42b0-aa5b-60523062286c-fix-batch/live-merge-result.json",
+      "bytes": 370,
+      "sha256": "f8bafcc11ebf02cbaa584bbf99a4e7e21de29fbd9a75baf3752ea13f2c91658b"
+    },
+    {
+      "path": "learner/runs/20261017-034313-0d9b49c3-e9b6-42b0-aa5b-60523062286c-fix-batch/legacy-prototype-tests.log",
+      "bytes": 4882,
+      "sha256": "f6684f7e2b52aa8aa7205b55b342aedb319c599a0bce9913200bfed2e7f23309"
+    },
+    {
+      "path": "learner/runs/20261017-034313-0d9b49c3-e9b6-42b0-aa5b-60523062286c-fix-batch/uuid-sandbox-r2.exit",
+      "bytes": 2,
+      "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865"
+    },
+    {
+      "path": "learner/runs/20261017-034313-0d9b49c3-e9b6-42b0-aa5b-60523062286c-fix-batch/original-batch-binding.json",
+      "bytes": 155,
+      "sha256": "e003d26048d619d5b60a7e090db5203ff6a8847e25bd724fe4126912b311e5f0"
+    },
+    {
+      "path": "learner/runs/20261017-034313-0d9b49c3-e9b6-42b0-aa5b-60523062286c-fix-batch/uuid-restored.log",
+      "bytes": 264,
+      "sha256": "1e61acb9b08fb94118f1217fadc4ae3211e878f974559e8172b537177d3020a2"
+    },
+    {
+      "path": "learner/runs/20261017-034313-0d9b49c3-e9b6-42b0-aa5b-60523062286c-fix-batch/legacy-source.patch",
+      "bytes": 8234,
+      "sha256": "5bea3b52ecbf1fcfde482f2f60962abf59e0ced848d4143ae2be39239d537348"
+    },
+    {
+      "path": "learner/runs/20261017-034313-0d9b49c3-e9b6-42b0-aa5b-60523062286c-fix-batch/queue-latest-delta.json",
+      "bytes": 2538,
+      "sha256": "86cc7dc6e55f64f2f3c856f125481b7cfadbe2f6633eba544ec6b048b1b1f24b"
+    },
+    {
+      "path": "learner/runs/20261017-034313-0d9b49c3-e9b6-42b0-aa5b-60523062286c-fix-batch/source-all.patch",
+      "bytes": 27384,
+      "sha256": "6a0fff4da5254a78ca7c21f660539f8201a532f06e94ff39a13e943ab67895b8"
+    },
+    {
+      "path": "learner/runs/20261017-034313-0d9b49c3-e9b6-42b0-aa5b-60523062286c-fix-batch/legacy-sandbox-r3.log",
+      "bytes": 552,
+      "sha256": "76ed0deba1741b93cbb56620d892aa530737a744795489a46770bdf2bac76f54"
+    },
+    {
+      "path": "learner/runs/20261017-034313-0d9b49c3-e9b6-42b0-aa5b-60523062286c-fix-batch/legacy-original-binding-probe.json",
+      "bytes": 6571,
+      "sha256": "0948d64421864ea9f919a08eeff31d9bf877593c55850b02d9fbdf5dd3273e4c"
+    },
+    {
+      "path": "learner/runs/20261017-034313-0d9b49c3-e9b6-42b0-aa5b-60523062286c-fix-batch/live-preflight.py",
+      "bytes": 3493,
+      "sha256": "6ae15d2fa92e0bd23d3914d84d207b6f5d095e67f84d4bb65e4c9c874a930e5d"
+    },
+    {
+      "path": "learner/runs/20261017-034313-0d9b49c3-e9b6-42b0-aa5b-60523062286c-fix-batch/live-partial-lock-attempt-status-format-error.exit",
+      "bytes": 2,
+      "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865"
+    },
+    {
+      "path": "learner/runs/20261017-034313-0d9b49c3-e9b6-42b0-aa5b-60523062286c-fix-batch/live-lock-attempt-path-format-error.log",
+      "bytes": 188,
+      "sha256": "0911ce6f098e8a19665a2a53452973f67e07ef9ff40681cd0a207e04d22f8a9c"
+    },
+    {
+      "path": "learner/runs/20261017-034313-0d9b49c3-e9b6-42b0-aa5b-60523062286c-fix-batch/reviewed-skip-dispositions.json",
+      "bytes": 5291,
+      "sha256": "b9fb83a2575179d2f5a8f4f8b305c5ac681d5283fd43e042223eb1f96ee68914"
+    },
+    {
+      "path": "learner/runs/20261017-034313-0d9b49c3-e9b6-42b0-aa5b-60523062286c-fix-batch/uuid-sandbox-r3.log",
+      "bytes": 5031,
+      "sha256": "c87e8cc7ee91d163c01485935f125c91f8ebb81d109a9a71fa5eabe79dfd44fc"
+    },
+    {
+      "path": "learner/runs/20261017-034313-0d9b49c3-e9b6-42b0-aa5b-60523062286c-fix-batch/legacy-capacity-rerun.log",
+      "bytes": 10994,
+      "sha256": "eb67ab09aec46c6b1650252cd9a4a578c1499d622b90d83db649280a755e045b"
+    },
+    {
+      "path": "learner/runs/20261017-034313-0d9b49c3-e9b6-42b0-aa5b-60523062286c-fix-batch/uuid-gitleaks.log",
+      "bytes": 106,
+      "sha256": "fb9c5b1d283fd1ded97c049322ef8cdde794f732687e8bce2f3814835367ebfd"
+    },
+    {
+      "path": "learner/runs/20261017-034313-0d9b49c3-e9b6-42b0-aa5b-60523062286c-fix-batch/uuid-sandbox-r3.exit",
+      "bytes": 2,
+      "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865"
+    },
+    {
+      "path": "learner/runs/20261017-034313-0d9b49c3-e9b6-42b0-aa5b-60523062286c-fix-batch/wrapper-gitleaks.log",
+      "bytes": 107,
+      "sha256": "37c0c3fa6032eb83dad6e2f92b429138f347f97771d7d5bec4964225fd64119a"
+    },
+    {
+      "path": "learner/runs/20261017-034313-0d9b49c3-e9b6-42b0-aa5b-60523062286c-fix-batch/validation-validation-pending.json",
+      "bytes": 4760,
+      "sha256": "be8d57553737408690eac80e35323bb15d5da8ed4ebc9021f64571a99f482194"
+    },
+    {
+      "path": "learner/runs/20261017-034313-0d9b49c3-e9b6-42b0-aa5b-60523062286c-fix-batch/uuid-restored-r3.log",
+      "bytes": 264,
+      "sha256": "e11bcf2f971c79abb5ca4c6e52b77dc273c5c75c3b32d390f0572111ffcbc3bb"
+    },
+    {
+      "path": "learner/runs/20261017-034313-0d9b49c3-e9b6-42b0-aa5b-60523062286c-fix-batch/live-merge.log",
+      "bytes": 793,
+      "sha256": "88d230e5a05f343aaa5e6875f499958b4e939c5d76e4ca0863e7f1609cba23ef"
+    },
+    {
+      "path": "learner/runs/20261017-034313-0d9b49c3-e9b6-42b0-aa5b-60523062286c-fix-batch/finish-legacy-two-workers.sh",
+      "bytes": 3010,
+      "sha256": "180cf1516c8ce5c85484bd7917a3c614b4398a283652ef76196b5dcfd96155cf"
+    },
+    {
+      "path": "learner/runs/20261017-034313-0d9b49c3-e9b6-42b0-aa5b-60523062286c-fix-batch/legacy-gitleaks.log",
+      "bytes": 108,
+      "sha256": "48ad94a95aa1297d5bfbf87624d184e54b0674adb8c54d029d34281be0bf78f2"
+    },
+    {
+      "path": "learner/runs/20261017-034313-0d9b49c3-e9b6-42b0-aa5b-60523062286c-fix-batch/ledger-global-health-final.json",
+      "bytes": 981,
+      "sha256": "73ec24a5342c99763cf6ba24bd3f2c0866a37d91624e2e52afdf478db17607b2"
+    },
+    {
+      "path": "learner/runs/20261017-034313-0d9b49c3-e9b6-42b0-aa5b-60523062286c-fix-batch/live-finish.py",
+      "bytes": 3126,
+      "sha256": "0110c91617f08bd89747fd366599f0bf6e91fc007e92d87f63bbdf05c4e260d7"
+    },
+    {
+      "path": "learner/runs/20261017-034313-0d9b49c3-e9b6-42b0-aa5b-60523062286c-fix-batch/validation.json",
+      "bytes": 4326,
+      "sha256": "dbc04f3fc9751e0acd6005a11ea3be950bb66da92f61aad95aad91490c8a86e1"
+    },
+    {
+      "path": "learner/runs/20261017-034313-0d9b49c3-e9b6-42b0-aa5b-60523062286c-fix-batch/finish-target-and-uuid.sh",
+      "bytes": 3669,
+      "sha256": "677f99e6eb94eb38756b3c91199b5109d3a39bcb0b41d327da4f2b7154a4e695"
+    },
+    {
+      "path": "learner/runs/20261017-034313-0d9b49c3-e9b6-42b0-aa5b-60523062286c-fix-batch/uuid-fixed.log",
+      "bytes": 264,
+      "sha256": "f130c160bda9a6802910e758a7c34434e9073b693a5cc553d59136d0c7908daa"
+    },
+    {
+      "path": "learner/runs/20261017-034313-0d9b49c3-e9b6-42b0-aa5b-60523062286c-fix-batch/tool-startup-incidents.json",
+      "bytes": 857,
+      "sha256": "e474d656a846ce54abe529841ec8a387fef05aa46466899b019ebc7132c6074a"
+    },
+    {
+      "path": "learner/runs/20261017-034313-0d9b49c3-e9b6-42b0-aa5b-60523062286c-fix-batch/legacy-helper-final-draft.py",
+      "bytes": 4180,
+      "sha256": "60d905eae537f130e04e05574124fafac498b4a0cfa8e084c8dc8d057866b95b"
+    },
+    {
+      "path": "learner/runs/20261017-034313-0d9b49c3-e9b6-42b0-aa5b-60523062286c-fix-batch/wrapper-sandbox.log",
+      "bytes": 20657,
+      "sha256": "dd588db072ea307d5be7fcd9f47e2f8ef06b4c58f293ee562b4090c65388d824"
+    },
+    {
+      "path": "learner/runs/20261017-034313-0d9b49c3-e9b6-42b0-aa5b-60523062286c-fix-batch/target-fixture-sandbox.exit",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "learner/runs/20261017-034313-0d9b49c3-e9b6-42b0-aa5b-60523062286c-fix-batch/uuid-sandbox-r4.exit",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "learner/runs/20261017-034313-0d9b49c3-e9b6-42b0-aa5b-60523062286c-fix-batch/live-merge-worker.sh",
+      "bytes": 1912,
+      "sha256": "069c8f35d99f3b782fd943a229ab7487e2253eb75fbd162d3487815380a4277e"
+    },
+    {
+      "path": "learner/runs/20261017-034313-0d9b49c3-e9b6-42b0-aa5b-60523062286c-fix-batch/uuid-without-fix-wrong-cwd.log",
+      "bytes": 1285,
+      "sha256": "7f8c34a53ec59d3d94b613656e789377fbeaa7001b322c30bd243e3369a57aef"
+    },
+    {
+      "path": "learner/runs/20261017-034313-0d9b49c3-e9b6-42b0-aa5b-60523062286c-fix-batch/uuid-source.patch",
+      "bytes": 625,
+      "sha256": "d6fd6dedfc3a6415ed91f8af765b419e1b8b96c2799dea35b20f4e09c8f7dba4"
+    },
+    {
+      "path": "learner/runs/20261017-034313-0d9b49c3-e9b6-42b0-aa5b-60523062286c-fix-batch/legacy-capacity-rerun.exit",
+      "bytes": 2,
+      "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865"
+    },
+    {
+      "path": "learner/runs/20261017-034313-0d9b49c3-e9b6-42b0-aa5b-60523062286c-fix-batch/legacy-capacity-wait.exit",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "learner/runs/20261017-034313-0d9b49c3-e9b6-42b0-aa5b-60523062286c-fix-batch/live-immediate-preflight.log",
+      "bytes": 41,
+      "sha256": "182edaf17f1f8dcab0bfd4581cfec7aae65713e28a0bbd8a8b924a1ab9c543c0"
+    },
+    {
+      "path": "learner/runs/20261017-034313-0d9b49c3-e9b6-42b0-aa5b-60523062286c-fix-batch/validation-capacity-pending.json",
+      "bytes": 4760,
+      "sha256": "b43c786daba3b8e2d31d79e9bedc1ffa14b2220bd7a46fb1c1b3329fe012b61e"
+    },
+    {
+      "path": "learner/runs/20261017-034313-0d9b49c3-e9b6-42b0-aa5b-60523062286c-fix-batch/uuid-sandbox-r2.log",
+      "bytes": 1231,
+      "sha256": "a0f7f2d08e4b9fd9c4fc8bf227f3ea752153045a92679ed29098a4c01e3b6c08"
+    },
+    {
+      "path": "learner/runs/20261017-034313-0d9b49c3-e9b6-42b0-aa5b-60523062286c-fix-batch/legacy-fixed.log",
+      "bytes": 264,
+      "sha256": "200e2272dc736b1add07759bb1f6e0e228d8b025ea16198576a08525a73e97b3"
+    },
+    {
+      "path": "learner/runs/20261017-034313-0d9b49c3-e9b6-42b0-aa5b-60523062286c-fix-batch/live-partial-locked-merge-preflight.log",
+      "bytes": 2365,
+      "sha256": "bac7bcae5291768e1bb3bcce805ca0fe8253c6558f282f00f2bb14fc394d9bc9"
+    },
+    {
+      "path": "learner/runs/20261017-034313-0d9b49c3-e9b6-42b0-aa5b-60523062286c-fix-batch/wrapper-sandbox-r2.log",
+      "bytes": 556,
+      "sha256": "cf18c5c5d8a1b2317fd43d2a7cfa14a5fcc99328dbe472bbaa059f5902a6c75a"
+    },
+    {
+      "path": "learner/runs/20261017-034313-0d9b49c3-e9b6-42b0-aa5b-60523062286c-fix-batch/global-health-original.log",
+      "bytes": 1144,
+      "sha256": "9eaa998d51ed76fd60328f312788c973416e887789fe6299b19b6e519b662d7a"
+    },
+    {
+      "path": "learner/runs/20261017-034313-0d9b49c3-e9b6-42b0-aa5b-60523062286c-fix-batch/target-fixture-fixed.log",
+      "bytes": 280,
+      "sha256": "ad73c17285fc7200b228fc84a497882a3f37e736cef7a09a98239e81ec343ad0"
+    },
+    {
+      "path": "learner/runs/20261017-034313-0d9b49c3-e9b6-42b0-aa5b-60523062286c-fix-batch/target-fixture-restored.log",
+      "bytes": 280,
+      "sha256": "cd77af1bab2cc74498c7b441d24bdcf7c39fd64d2c70acbdf9277e049b94eb5e"
+    },
+    {
+      "path": "learner/runs/20261017-034313-0d9b49c3-e9b6-42b0-aa5b-60523062286c-fix-batch/progress.md",
+      "bytes": 2633,
+      "sha256": "053199e14f718c5e1b4e21f8d31cdd6ee41f12eece006788639929ae55cce0e5"
+    },
+    {
+      "path": "learner/runs/20261017-034313-0d9b49c3-e9b6-42b0-aa5b-60523062286c-fix-batch/uuid-sandbox.exit",
+      "bytes": 2,
+      "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865"
+    },
+    {
+      "path": "learner/runs/20261017-034313-0d9b49c3-e9b6-42b0-aa5b-60523062286c-fix-batch/live-partial-lock-attempt-status-format-error.log",
+      "bytes": 612,
+      "sha256": "61bfbe1fccdf521dfb3b228898a954eb8f7f8c79277218780c5080e648844a8b"
+    },
+    {
+      "path": "learner/runs/20261017-034313-0d9b49c3-e9b6-42b0-aa5b-60523062286c-fix-batch/legacy-sandbox-r3.exit",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    }
+  ],
+  "original_interrupted_live_log_sha256": "206bb1334fc905a29c9d845090272e7767b924d8cb7f2a307f33a42e183ebee0",
+  "original_live_check_has_no_exit_or_summary": true,
+  "publication": {
+    "at": "2026-10-17 07:58:19 CST",
+    "batch": "20261017-034302-fix-batch",
+    "source": "0699b05c436d3d51d00ee92f153d16d16e64bea4",
+    "base": "cb03ffed4d53f75c6d88be341fb8550933ad85de",
+    "sources": [
+      "d27df54f0651c4af84c6c12ceceec82a016f1142",
+      "83a7f796c24eea8f16eb317bc70bfd832251ad27",
+      "d91236326bc1af7a5417ce016c1a182f8084e7a3",
+      "0699b05c436d3d51d00ee92f153d16d16e64bea4"
+    ],
+    "old_main": "b16b850feb8dbff047c51af3916e33f62e68f4ed",
+    "main": "2fc6274897cb5934f7382ddd71fbb425ad425d99",
+    "actual_live": "08e9a15b79882302eb7bfe38e7ddddc2e40b2dbd",
+    "tree": "ac60f339b13dfd5a6ca71efbe8c8d5ec3b80a462",
+    "leaves": [
+      {
+        "path": "agent/tests/global-build-health.test.ts",
+        "sha256": "2e623fdc3d0ab0cb646591b21ed4a898167354e5e6091c470908c0ed5c28ce94",
+        "main_base_verified": true,
+        "live_sha256": "2e623fdc3d0ab0cb646591b21ed4a898167354e5e6091c470908c0ed5c28ce94",
+        "actual_live_exact_source": true,
+        "existing_live_context_retained": false
+      },
+      {
+        "path": "agent/tests/learner-retention-legacy.test.ts",
+        "sha256": "23dbe99f3cde7f5c0ad6eb8d25c0087dc67c4e65554ed809c5c507d90ab4b8c3",
+        "main_base_verified": true,
+        "live_sha256": "23dbe99f3cde7f5c0ad6eb8d25c0087dc67c4e65554ed809c5c507d90ab4b8c3",
+        "actual_live_exact_source": true,
+        "existing_live_context_retained": false
+      },
+      {
+        "path": "agent/tests/learner-retention-uuid.test.ts",
+        "sha256": "d41fb27abbd80f8fa1a2cd1343dd4327fcb102df8e30033436fa215c2172a78c",
+        "main_base_verified": true,
+        "live_sha256": "d41fb27abbd80f8fa1a2cd1343dd4327fcb102df8e30033436fa215c2172a78c",
+        "actual_live_exact_source": true,
+        "existing_live_context_retained": false
+      },
+      {
+        "path": "agent/tests/target-options.test.ts",
+        "sha256": "2e3eb1c460ddf34a48e7d51fc3949e49a20c7cfabee4653eb8d6a3484e3836b9",
+        "main_base_verified": true,
+        "live_sha256": "6139d68e9bc5dd2cf0282711705c997ffe21ebf929ae98fc807b3f994ee474ea",
+        "actual_live_exact_source": false,
+        "existing_live_context_retained": true
+      },
+      {
+        "path": "ops/learner_retention.py",
+        "sha256": "9fc297edc5b357068644ac357bae804f8a1ba6deae710f055bae5d53d730e649",
+        "main_base_verified": true,
+        "live_sha256": "fe19a27b2a930befb594f715a78c6de78f11deb4a6674653290f0047b980646b",
+        "actual_live_exact_source": false,
+        "existing_live_context_retained": true
+      },
+      {
+        "path": "ops/tests/test_learner_retention.py",
+        "sha256": "683fc1a6813cddb3d94ff3680cfa1a191104ecd14b983da8b36b6816389ed315",
+        "main_base_verified": true,
+        "live_sha256": "683fc1a6813cddb3d94ff3680cfa1a191104ecd14b983da8b36b6816389ed315",
+        "actual_live_exact_source": true,
+        "existing_live_context_retained": false
+      },
+      {
+        "path": "ops/tests/test_legacy_learner_retention.py",
+        "sha256": "5db0158bb9f618496f37eb10e23bbabfd44ae78b4f8afd7c0302a50ff688bc5a",
+        "main_base_verified": true,
+        "live_sha256": "5db0158bb9f618496f37eb10e23bbabfd44ae78b4f8afd7c0302a50ff688bc5a",
+        "actual_live_exact_source": true,
+        "existing_live_context_retained": false
+      }
+    ],
+    "source_full_checks": [
+      {
+        "log": "learner/runs/20261017-034313-0d9b49c3-e9b6-42b0-aa5b-60523062286c-fix-batch/wrapper-sandbox-r2.log",
+        "sha256": "cf18c5c5d8a1b2317fd43d2a7cfa14a5fcc99328dbe472bbaa059f5902a6c75a",
+        "exit_code": 0
+      },
+      {
+        "log": "learner/runs/20261017-034313-0d9b49c3-e9b6-42b0-aa5b-60523062286c-fix-batch/target-fixture-sandbox.log",
+        "sha256": "19328ac3509fe33f2a32927fff363745f7f2e289ea634c3aeb7e92958c862226",
+        "exit_code": 0
+      },
+      {
+        "log": "learner/runs/20261017-034313-0d9b49c3-e9b6-42b0-aa5b-60523062286c-fix-batch/uuid-sandbox-r4.log",
+        "sha256": "d5b124ab4f37368a5b14efa12e0fd316b3caa59d28fcaf11931bd32f9f495b6f",
+        "exit_code": 0
+      },
+      {
+        "log": "learner/runs/20261017-034313-0d9b49c3-e9b6-42b0-aa5b-60523062286c-fix-batch/legacy-sandbox-r3.log",
+        "sha256": "76ed0deba1741b93cbb56620d892aa530737a744795489a46770bdf2bac76f54",
+        "exit_code": 0
+      }
+    ],
+    "source_full_rc": 0,
+    "original_outer_rc": 124,
+    "original_canonical_failed_null_retained": true,
+    "original_live_sandbox_interrupted_without_exit_or_summary": true,
+    "no_new_source_full": true,
+    "live_not_mutated_by_ops": true,
+    "host": "pending original batch fallback full on exact live tree",
+    "release_id": null,
+    "classification": "offline infrastructure and fixed-test transport fixtures; no gameplay/knowledge/mode/version change",
+    "foreign_main_index_and_records_preserved": true,
+    "other_role_ACK": false
+  },
+  "actual_new_host_started": {
+    "at": "2026-10-17 07:59:50 CST",
+    "batch": "20261017-034302-fix-batch",
+    "source": "0699b05c436d3d51d00ee92f153d16d16e64bea4",
+    "merged": "08e9a15b79882302eb7bfe38e7ddddc2e40b2dbd",
+    "tree": "ac60f339b13dfd5a6ca71efbe8c8d5ec3b80a462",
+    "publication": "paper/materials/20261017-0754-ops/publication.json",
+    "publication_sha256": "e16dc494dcd718a7fbc21cecced37e0921ab602285b904a694476e58d3a0b60f",
+    "original_report_sha256": "8f7410338df8163c828e9c439f18d9fa6ede7de2ae4cca8c48f7f8d950392fc0",
+    "original_report_retained": true,
+    "original_report_missing_due_to_outer_timeout": true,
+    "original_outer_rc": 124,
+    "original_stderr_sha256": "b278f510d0fb74d88581cc6d8a3ca022c3d5baa6a66f108f9d5c45fc33ea3ccb",
+    "source_commits": [
+      "d27df54f0651c4af84c6c12ceceec82a016f1142",
+      "83a7f796c24eea8f16eb317bc70bfd832251ad27",
+      "d91236326bc1af7a5417ce016c1a182f8084e7a3",
+      "0699b05c436d3d51d00ee92f153d16d16e64bea4"
+    ],
+    "interrupted_original_live_log_sha256": "206bb1334fc905a29c9d845090272e7767b924d8cb7f2a307f33a42e183ebee0",
+    "disposition": "Learner committed four tested tool repairs and merged live before outer240min timeout124. Original live sandbox has no exit/summary and no active process. Ops integrated seven exact source leaves to main; use actual publication proof for one final combined host check, preserving failed124/no-report/null and all interrupted logs.",
+    "original_checks_and_live_locks": true,
+    "full_command": "export PATH=\"$HOME/.local/node/bin:$PATH\"; nice -n 19 npx tsc -p tsconfig.json --noEmit; a=$?; nice -n 19 npx vitest run --maxWorkers=2; b=$?; [ \"$a\" = 0 ] && [ \"$b\" = 0 ]",
+    "full_command_sha256": "896f046db998a1dfe91b22baa98cc341ed6a90cadb542495c08419fcc4040210",
+    "log": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261017-034302-fix-batch.fallback-ac60f339b13dfd5a6ca71efbe8c8d5ec3b80a462.checks.log",
+    "executor_pid": 2859442,
+    "command_pid": 2859455,
+    "birth_ticks": "108715069",
+    "state": "running",
+    "test_result": "pending; startup is not completion"
+  },
+  "actual_host_process_birth_verified": true,
+  "original_report_and_failed_history_not_rewritten": true,
+  "only_offline_tools_and_test_fixtures": true,
+  "retention_wide_problem_not_closed": true,
+  "root0332_not_fixed": true,
+  "no_new_behavior_release": true,
+  "no_new_learner_or_source_full": true
+}

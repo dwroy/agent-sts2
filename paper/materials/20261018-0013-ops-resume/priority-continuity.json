@@ -1,0 +1,55 @@
+{
+  "at": "2026-10-18 00:45:39 CST",
+  "priority": [
+    "roy-20261017-human-pace-h0",
+    "silent-0332"
+  ],
+  "requests": [
+    {
+      "id": "roy-20261017-human-pace-h0",
+      "revision": 3,
+      "state": "pending",
+      "request_sha256": "68aa75e2428212061fd269cc26a45f15ba44b16907336ddb124092108b9946a4",
+      "input": {
+        "path": "paper/materials/20261017-2328-ops/H0-input-r2.md",
+        "sha256": "1e1c259a15f1824119d0009747a89a60f60171705cb051b6c627597804bceea7"
+      },
+      "original_revision": 2,
+      "original_frozen_copy": {
+        "path": "paper/materials/20261018-0013-ops-resume/original-requests/roy-20261017-human-pace-h0-r2.json",
+        "sha256": "0ce561cf539b67ea2a5ba051ea7aabc3a9539e671ad600336f90f5e88ba979e5"
+      },
+      "new_batch": null,
+      "new_thread": null,
+      "first_reply": null
+    },
+    {
+      "id": "silent-0332",
+      "revision": 4,
+      "state": "pending",
+      "request_sha256": "5b5153e917c156cf42ca7f533ff56938cce19d669e5d468ddd21f748bd506cdc",
+      "input": {
+        "path": "paper/materials/20261016-2029-ops/learner-input-r3.md",
+        "sha256": "551dc2ee758367dbe1d3087352b1267083ec18ca4e946d469c193fc695f7ffa2"
+      },
+      "original_revision": 3,
+      "original_frozen_copy": {
+        "path": "paper/materials/20261018-0013-ops-resume/original-requests/silent-0332-r3.json",
+        "sha256": "ee77376d07d0cec3b0a8ea3f144ae26891afe4029ad3521a35226d5d656a98cc"
+      },
+      "new_batch": null,
+      "new_thread": null,
+      "first_reply": null
+    }
+  ],
+  "support_request": "roy-20261017-human-pace-support-mapping",
+  "support_condition": "H0 and0332 really start in original two slots, then first of their slots releases; ops recover support r1 with fresh account-only revision then original reconcile",
+  "next_ops_events": [
+    "strategy-done",
+    "learning-attention",
+    "learner-done",
+    "manual"
+  ],
+  "startup_readback": "For actual new batch, inspect its .err launcher path, thread.started, first item.completed agent_message, and codex3 learner native session_meta/turn_context; append actual batch/thread/first reply to ops/inbox-dev.md. Do not use prior-batch aliases or claim queued is dispatched.",
+  "status": "awaiting original occupied slots; no poller or extra models"
+}

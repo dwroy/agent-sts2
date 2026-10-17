@@ -1,0 +1,12 @@
+from pathlib import Path
+import json,os,shutil,subprocess
+r=Path.cwd();p=r/'ops/codex-ops/record-staging/20261017-0441';rows=json.loads((p/'idle-published-git-cache-candidates.json').read_text());results=[]
+for row in rows[:4]:
+ before=shutil.disk_usage(r).free
+ command=['nice','-n','19','python3','ops/worktree_storage.py','thin','--workspace',row['workspace'],'--apply']
+ result=subprocess.run(command,cwd=r,capture_output=True)
+ try:value=json.loads(result.stdout)
+ except ValueError:value={'unparsed_stdout_bytes':len(result.stdout),'stderr':result.stderr.decode(errors='replace')}
+ results.append(dict(candidate=row,rc=result.returncode,result=value,root_available_delta=shutil.disk_usage(r).free-before))
+ (p/'git-cache-thinning-result.json').write_text(json.dumps(dict(results=results),ensure_ascii=False,indent=2)+'\n')
+ print(json.dumps(dict(workspace=row['workspace'],rc=result.returncode,result=value),ensure_ascii=False),flush=True)

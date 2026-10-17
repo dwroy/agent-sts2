@@ -1,0 +1,31 @@
+{
+  "at": "2026-10-17 07:59:50 CST",
+  "batch": "20261017-034302-fix-batch",
+  "source": "0699b05c436d3d51d00ee92f153d16d16e64bea4",
+  "merged": "08e9a15b79882302eb7bfe38e7ddddc2e40b2dbd",
+  "tree": "ac60f339b13dfd5a6ca71efbe8c8d5ec3b80a462",
+  "publication": "paper/materials/20261017-0754-ops/publication.json",
+  "publication_sha256": "e16dc494dcd718a7fbc21cecced37e0921ab602285b904a694476e58d3a0b60f",
+  "original_report_sha256": "8f7410338df8163c828e9c439f18d9fa6ede7de2ae4cca8c48f7f8d950392fc0",
+  "original_report_retained": true,
+  "original_report_missing_due_to_outer_timeout": true,
+  "original_outer_rc": 124,
+  "original_stderr_sha256": "b278f510d0fb74d88581cc6d8a3ca022c3d5baa6a66f108f9d5c45fc33ea3ccb",
+  "source_commits": [
+    "d27df54f0651c4af84c6c12ceceec82a016f1142",
+    "83a7f796c24eea8f16eb317bc70bfd832251ad27",
+    "d91236326bc1af7a5417ce016c1a182f8084e7a3",
+    "0699b05c436d3d51d00ee92f153d16d16e64bea4"
+  ],
+  "interrupted_original_live_log_sha256": "206bb1334fc905a29c9d845090272e7767b924d8cb7f2a307f33a42e183ebee0",
+  "disposition": "Learner committed four tested tool repairs and merged live before outer240min timeout124. Original live sandbox has no exit/summary and no active process. Ops integrated seven exact source leaves to main; use actual publication proof for one final combined host check, preserving failed124/no-report/null and all interrupted logs.",
+  "original_checks_and_live_locks": true,
+  "full_command": "export PATH=\"$HOME/.local/node/bin:$PATH\"; nice -n 19 npx tsc -p tsconfig.json --noEmit; a=$?; nice -n 19 npx vitest run --maxWorkers=2; b=$?; [ \"$a\" = 0 ] && [ \"$b\" = 0 ]",
+  "full_command_sha256": "896f046db998a1dfe91b22baa98cc341ed6a90cadb542495c08419fcc4040210",
+  "log": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261017-034302-fix-batch.fallback-ac60f339b13dfd5a6ca71efbe8c8d5ec3b80a462.checks.log",
+  "executor_pid": 2859442,
+  "command_pid": 2859455,
+  "birth_ticks": "108715069",
+  "state": "running",
+  "test_result": "pending; startup is not completion"
+}

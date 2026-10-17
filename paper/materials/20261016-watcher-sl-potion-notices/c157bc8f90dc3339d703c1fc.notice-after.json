@@ -1,0 +1,31 @@
+{
+  "id": "c157bc8f90dc3339d703c1fc",
+  "kind": "disagreement",
+  "request_id": "roy-20261016-sl-potion-retry",
+  "message": "[{\"claim\": \"将原药名+回合变化率19/58→7/56及F49 2/17→0/20解释为没有改变真实用药时点或可换药探索减少（待检验解释，非Roy规则）。\", \"finding\": \"该粗事件口径不足判断。VNS F49六试均T1肌肉/T2速度，但速度前动作4/3/1/1/2/1，首试0能旧挡10不补，其他试有真实格挡后继；后段F49二十重试中十次来自9KP/RQ空药入口，其余十次也仅两个run/floor。不能把二十个相关尝试当独立可换药机会，更不能由此归因救回下降。\", \"evidence\": [{\"runs\": [\"VNSXWCWXR3VW\", \"RQCHNN0W72KF\", \"9KP5S3317EEL\", \"TCDUBRWMEMNA\"], \"floor\": 49, \"material\": {\"path\": \".worktrees/codex-strategy-silent-20261016-214302/learner/runs/20261016-214316-da6093a8-8cdb-4e1a-a90a-266ad732d7d1-strategy-proposal/sl-potion-retry-r1/potion-actions-and-slots.json\", \"sha256\": \"f50a7b2ed2151d0adeb85c45b8d1ab987ca094cd9a996e224b8a1946b7bb1978\"}, \"sl_material\": {\"path\": \".worktrees/codex-strategy-silent-20261016-214302/learner/runs/20261016-214316-da6093a8-8cdb-4e1a-a90a-266ad732d7d1-strategy-proposal/sl-potion-retry-r1/selected-sl-observations.json\", \"sha256\": \"67acdb058c9fb497e12920568d9472959972d022c0c88243d7bfcc73db701838\"}, \"csv_projection\": {\"path\": \".worktrees/codex-strategy-silent-20261016-214302/learner/runs/20261016-214316-da6093a8-8cdb-4e1a-a90a-266ad732d7d1-strategy-proposal/sl-potion-retry-r1/csv-derived-counts.json\", \"sha256\": \"9540720dadda058d77e4db69f63d249a1d57a57fe4f500424a6ab1d7a4b43e38\"}}], \"existing_entry_ids\": [\"silent-speed-potion-temporary-dexterity\", \"silent-double-boss-resource-handoff\"], \"recommendation\": \"保留原粗计数并追加有药/合法时点/同轮牌药前后和SL恢复的限定，原四宽提案继续waiting；缺同入口同后继早/晚/留药整战对照，不能改药价、必死或SL闸。请ops将本异议原文交原watcher→Roy，各自登记实际回执。\"}, {\"claim\": \"冻结F48→F49报告例局称VNS六试都使用相同T1肌肉/速度药水事件。\", \"finding\": \"原CSV、六条SL摘要及十二个实际饮药动作均为肌肉T1、速度T2；报告两药同T1是笔误。未推翻现有速度药临时敏捷/不补旧挡知识。\", \"evidence\": [{\"run_id\": \"VNSXWCWXR3VW\", \"floor\": 49, \"attempts\": [1, 2, 3, 4, 5, 6], \"turn\": 2, \"material\": {\"path\": \".worktrees/codex-strategy-silent-20261016-214302/learner/runs/20261016-214316-da6093a8-8cdb-4e1a-a90a-266ad732d7d1-strategy-proposal/sl-potion-retry-r1/potion-actions-and-slots.json\", \"sha256\": \"f50a7b2ed2151d0adeb85c45b8d1ab987ca094cd9a996e224b8a1946b7bb1978\"}, \"raw_example\": {\"path\": \"logs/decisions.jsonl\", \"offset\": 1658235625, \"bytes\": 1906, \"sha256\": \"d458472593b4a58f1a124da4667283a6a601b1cba3e177fd4b5378316d222bff\"}}], \"existing_entry_ids\": [\"silent-speed-potion-temporary-dexterity\"], \"recommendation\": \"保留原冻结稿和输入SHA，请原watcher追加T1/T2勘误及同轮时点限制；不静默覆盖旧报告、改变粗计数或把勘误当玩法修复。\"}]",
+  "request_sha256": "b453bb3f8f9e6a34175aa3cbc9582c22cf89d96ad9f4bd223791c332d5e17ccf",
+  "created_at": 1792162564.511921,
+  "route": [
+    "learner",
+    "ops",
+    "watcher",
+    "Roy"
+  ],
+  "ops_forwarded": {
+    "path": "/home/dw/Projects/agent-sts2/paper/materials/20261016-2304-ops/c157bc8f90dc3339d703c1fc.ops-forwarded-receipt.json",
+    "sha256": "3b3e767ff7b59c77ac00ac3a32f13cbb4a0987fda4468fc12b2a0bbc44f5fb88",
+    "at": 1792163243.4072747
+  },
+  "watcher_received": {
+    "path": "/home/dw/Projects/agent-sts2/paper/materials/20261016-watcher-sl-potion-notices/c157bc8f90dc3339d703c1fc.watcher_received.receipt.json",
+    "sha256": "ea70dc6d92bd03a784541dd60801b99a9c030c65f1e64e918e1bc094957282ec",
+    "at": 1792163369.9297647
+  },
+  "roy_notified": {
+    "path": "/home/dw/Projects/agent-sts2/paper/materials/20261016-watcher-sl-potion-notices/c157bc8f90dc3339d703c1fc.roy_notified.receipt.json",
+    "sha256": "7731865740f4b808feebd34a5898585d4759e9080c7920e5f27418b610992f3d",
+    "at": 1792163370.3125966
+  },
+  "last_queued_at": 1792162564.5282984,
+  "last_queue": "/home/dw/Projects/agent-sts2/ops/codex-ops/queue/1792162564528159991-learning-attention.md"
+}

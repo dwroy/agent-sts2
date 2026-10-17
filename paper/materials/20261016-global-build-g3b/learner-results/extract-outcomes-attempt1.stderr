@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261012-024317/learner/runs/20261016-135541-9b95a56c-ddfa-4e65-b94d-cbe7a5f57947-strategy-proposal/learner-results/extract_outcomes.py", line 260, in <module>
+    else:compressed.write(enc({'source_off':off,'option':item['option'],'core':p['core'],'metric':p['metric'],'disposition':disposition,'reason':reason}));other_rows+=1
+         ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/gzip.py", line 321, in write
+    return self._buffer.write(data)
+           ~~~~~~~~~~~~~~~~~~^^^^^^
+TypeError: a bytes-like object is required, not 'str'

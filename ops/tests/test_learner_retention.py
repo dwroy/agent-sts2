@@ -90,6 +90,44 @@ class LearnerRetention(unittest.TestCase):
         self.assertEqual(self.git('-C', str(self.tree), 'rev-parse', 'HEAD').strip(), self.head)
         self.assertEqual(self.run_cleanup()['state'], 'already_reclaimed')
 
+    def uuid_scratch(self):
+        scratch = self.scratch.with_name('20261013-010001-01e4191f-d865-4ede-96cc-6135ca85542b-fix-batch')
+        self.scratch.rename(scratch)
+        self.original_stream.rename(scratch.with_name(scratch.name + '.jsonl'))
+        self.scratch = scratch
+        self.original_stream = scratch.with_name(scratch.name + '.jsonl')
+        self.report['report'] = str(scratch / 'report.md')
+        self.save()
+
+    def test_numeric_uuid_scratch_reclaims_and_restores_verified_bytes(self):
+        self.uuid_scratch()
+        self.assertEqual(self.run_cleanup()['state'], 'reclaimed')
+        self.assertTrue((self.scratch / 'report.md').exists())
+        self.assertTrue(self.original_stream.exists())
+        retention.restore(self.root, self.directory, self.bid)
+        self.assertEqual((self.scratch / 'raw-states.jsonl').read_bytes(), self.raw)
+        for name in ['20261013-010001-123-fix-batch',
+                     '20261013-010001-01e4191f-d865-4ede-96cc-6135ca85542b',
+                     '20261013-010001-01e4191f-d865-4ede-96cc-6135ca85542x-fix-batch']:
+            self.assertIsNone(retention.SCRATCH.fullmatch(name))
+
+    def test_numeric_uuid_keeps_publication_active_owner_and_path_guards(self):
+        self.uuid_scratch()
+        self.report['commit'] = 'a' * 40
+        self.save()
+        with self.assertRaisesRegex(ValueError, 'not published'):
+            self.run_cleanup()
+        self.report['commit'] = self.head
+        self.save()
+        with patch.object(retention, 'active_cwd', return_value=True):
+            with self.assertRaisesRegex(ValueError, 'active process'):
+                self.run_cleanup()
+        self.report['report'] = str(self.root / 'learner/runs' / self.scratch.name / 'report.md')
+        self.save()
+        with self.assertRaisesRegex(ValueError, 'scratch ownership'):
+            self.run_cleanup()
+        self.assertEqual((self.scratch / 'raw-states.jsonl').read_bytes(), self.raw)
+
     def test_unpublished_source_or_incomplete_check_is_retained(self):
         self.log.write_text('Test running; truncated output')
         with self.assertRaisesRegex(ValueError, 'completion summary'):

@@ -1,0 +1,66 @@
+## 修 bug 回报
+
+- 合并基线：main → `2bfc03ceab52faac7aecb14ef4e781bba6f62345`
+- 修复（每条一行）：无新增。42 个未勾选条目已核对；没有本批修复，撤修复验证不适用。
+- 已被别人修掉的：79 项已有修复均已核实为当前分支及 live 祖先，逐条提交号见[完整报告](/home/dw/Projects/agent-sts2/learner/runs/20261016-134311-98279e41-85a2-46d1-a10e-d3f1f88f619d-fix-batch/report.md)。
+- 没修的：`silent-0332` — 证据不足；原错误尾部截断，缺完整 resources/steps，保留原契约并沿既有提案继续。
+- 没修的：其余策略、独立架构及历史归因范围 — 共 30 项处置范围已逐条写入报告及下方 JSON，不重复派发。
+- 测试：tsc 退出码 0；定向 vitest 2 文件 / 10 用例 / 退出码 0，无重跑。未运行完整沙箱套件；无源码改动、无提交。产物 gitleaks 退出码 0。
+- 合入：未合入（无新增提交）；工作区干净，队列及账本未改。
+- 需要 Roy 定的事：无。
+
+```json
+{
+  "task": "fix-batch",
+  "base": "2bfc03ceab52faac7aecb14ef4e781bba6f62345",
+  "fixes": [],
+  "skipped": [
+    {"item": "silent-0271：毒必胜提前返回遗漏保血候选", "reason": "策略类，沿原独立提案"},
+    {"item": "silent-0279：SL抽序升级改标", "reason": "策略类，沿原独立提案"},
+    {"item": "silent-0308：沙坑截止结束题面", "reason": "策略类，沿原独立提案"},
+    {"item": "silent-0311：库存恢复血量预算", "reason": "策略类，沿原独立提案"},
+    {"item": "silent-0320：同线新建UNMOVABLE", "reason": "策略类，沿原独立提案"},
+    {"item": "silent-0322：升级神化同线升级", "reason": "策略类，沿原独立提案"},
+    {"item": "silent-0329：饮药临时力量接线", "reason": "策略类，沿原独立提案"},
+    {"item": "arch-funnel-guard", "reason": "独立架构任务，沿原owner"},
+    {"item": "arch-learning-priority", "reason": "独立架构任务，沿原owner"},
+    {"item": "arch-unified-resource-value", "reason": "独立架构任务，沿原owner"},
+    {"item": "inv-f33-regression", "reason": "独立归因任务，沿原owner"},
+    {"item": "silent-0332：成功首战接续nonpositive-hp", "reason": "证据不足：完整资源、steps及机制根因未知；沿silent-proposal-5aa2672bd7cd1bf4"},
+    {"item": "silent-0334：升级隐秘匕首模型", "reason": "策略类，沿原独立提案"},
+    {"item": "silent-0339：尾巴误核销", "reason": "策略类，沿原独立提案"},
+    {"item": "silent-0344：坚韧之环延迟格挡", "reason": "策略类，沿原独立提案"},
+    {"item": "silent-0347：组装师攻击召唤", "reason": "策略类，沿原独立提案"},
+    {"item": "silent-0349：已有虚弱后的减力", "reason": "策略类，沿原独立提案"},
+    {"item": "core-build-notify-222802-rc2：历史发送事实", "reason": "证据不足：诊断子项已修，历史发送事实未知"},
+    {"item": "silent-0362：背向攻击减力倍率", "reason": "策略类，沿原独立提案"},
+    {"item": "silent-0365：未建模药水目标可达性", "reason": "策略类，沿原独立提案"},
+    {"item": "框架外层时限与分段续验收尾", "reason": "独立框架范围；精确续验入口已实现"},
+    {"item": "调度公平性核查", "reason": "证据不足：未证明永久饥饿"},
+    {"item": "silent-0481：技能药水生命周期措辞", "reason": "题面知识，沿silent-proposal-686d4e759478eebb"},
+    {"item": "silent-0487：MAD_SCIENCE三段攻击模型", "reason": "策略类，沿silent-proposal-0a0b31e284e6793e"},
+    {"item": "codex大脑缓存命中偏低", "reason": "证据不足：缺当前同题受控请求对比，本任务不调用真实LLM或网络"},
+    {"item": "sandbox-glob-startup-race：上游目录生命周期及其他租约拒绝原因", "reason": "注册保存屏障已修；目录删除者及完整生命周期仍未知"},
+    {"item": "named-card-facts-transport：事件入口之外范围", "reason": "独立功能；事件入口已实现，其余沿原owner"},
+    {"item": "boss模拟样本性能及v5-dpr-health宽范围", "reason": "独立专项，保留原样本、预算及校准验收链"},
+    {"item": "rest-timeout-accepted-route-not-committed / silent-0446", "reason": "策略及结构范围，沿silent-proposal-2d3aa8dfb27dbe3f"},
+    {"item": "silent-0469：纸鹤其他未知组合及整战收益", "reason": "已观察聚合体子项已实现，更宽组合及整战范围仍待策略证据"}
+  ],
+  "merged": null,
+  "tests": {"tsc": 0, "vitest": 0, "cases": 10},
+  "code_proposals": [],
+  "implementation_domains": [],
+  "report": "/home/dw/Projects/agent-sts2/learner/runs/20261016-134311-98279e41-85a2-46d1-a10e-d3f1f88f619d-fix-batch/report.md"
+}
+```
+
+== 学习者 codex / fix-batch ==
+状态：success；退出码 0
+模型：gpt-6.1-sol；会话：01a1433c-7ac1-7861-b715-c41d806163e2
+轮数：1；工具调用：command_execution×46
+token：输入 141.0k、输出 12.6k（其中推理 3862）、cache 读 1899.5k、cache 写 0（命中 93.1%）
+成本：未提供
+耗时：343.4 s（墙钟）
+时间：首个事件 10.9 s、模型首个输出 15.8 s、首次工具 18.0 s、末次工具结束 307.4 s；工具内共 101.1 s，其余（模型生成、推理、网络）231.4 s
+codex 会话记录：AGENTS.md 已加载（/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261016-134302）；模型的工具调用 exec×21；/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/learner/sessions/2026/10/16/rollout-2026-10-16T13-43-19-01a1433c-7ac1-7861-b715-c41d806163e2.jsonl
+日志：/home/dw/Projects/agent-sts2/learner/runs/20261016-134311-98279e41-85a2-46d1-a10e-d3f1f88f619d-fix-batch.jsonl

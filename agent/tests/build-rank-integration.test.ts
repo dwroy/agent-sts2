@@ -6,6 +6,8 @@ import type { DeckSimRunner } from "../src/sim/build-sim-pool.js";
 import type { FightSampleResult } from "../src/sim/boss-sim.js";
 import { FIXTURE_DB, FIXTURE_MM } from "./boss-sim-build-fixture.js";
 import { board, decide, env, setupOneshotTests } from "./oneshot-support.js";
+import { pickSpec, stableSchema } from "../src/brain/specs.js";
+import { simAdaptivePolicy, simFailurePolicy, sCombatRankMode } from "../src/core/config.js";
 import { asArray, asRecord } from "../src/core/util/json.js";
 
 vi.mock("../src/sim/boss-trust.js", async (original) => ({ ...await original<object>(), bossTrustReason: () => null }));
@@ -21,9 +23,9 @@ const runner: DeckSimRunner = { async run(req) {
   return { outcomes: req.decks.map(() => req.orders.map(() => Array.from({ length: req.samples }, () => structuredClone(sample)))),
     complete: Array.from({ length: req.samples }, (_, i) => i), timedOut: false, elapsedMs: 0, workers: 0 };
 } };
-async function question(mode: string, character = "SILENT", name = "xljq-f5-reward", key = "reward") {
+async function question(mode: string | undefined, character = "SILENT", name = "xljq-f5-reward", key = "reward") {
   vi.stubEnv("S_BUILD_RANK", mode);
-  vi.stubEnv("S_READINESS", "off");
+  vi.stubEnv("S_READINESS", mode === undefined ? undefined : "off");
   const raw = board(name, key), before = decide(env(raw));
   (raw.run as Record<string, unknown>).character_id = character;
   return withBossSim(before, { ...env(raw), requiredBossEvaluation: character === "SILENT" },
@@ -52,6 +54,7 @@ it("on merges S into one ranking table and retains all legal options", async () 
     }
   }
   expect(on.record?.build_ranking).toMatchObject({ mode: "on", delivered: true });
+  expect(on.record?.build_ranking).toMatchObject({ s_sort: "shadow", shadow_s_ranking: { best_group: expect.any(Array) } });
 });
 it("keeps Ironclad's complete original question and record identical", async () => {
   const off = await question("off", "IRONCLAD"), on = await question("on", "IRONCLAD");
@@ -86,4 +89,36 @@ it.each([
   expect(options.length).toBeGreaterThan(0);
   expect(asArray(ranking.rows).map((row) => asRecord(row).key).sort()).toEqual([...options].sort());
   expect(asArray(ranking.candidates).map((row) => asRecord(row).key).sort()).toEqual([...options].sort());
+});
+
+
+it("defaults Silent P1/P2 to shadow, retaining diagnostics without ranking-driven reason validation", async () => {
+  const off = await question("off"), shadow = await question(undefined);
+  expect(shadow.record).not.toHaveProperty("error");
+  expect(JSON.stringify(shadow.decision)).toBe(JSON.stringify(off.decision));
+  expect(shadow.record?.readiness).toMatchObject({ schema: "boss-readiness-v1", mode: "shadow", delivered: false, samples: 2 });
+  expect(shadow.record?.build_ranking).toMatchObject({ schema: "build-ranking-v1", status: "produced", mode: "shadow", delivered: false,
+    s_sort: "shadow", shadow_s_ranking: { best_group: expect.any(Array) } });
+  if (shadow.decision.kind !== "ask") throw new Error("missing real question");
+  const facts = asRecord(shadow.decision.state.facts);
+  expect(facts).not.toHaveProperty("boss_readiness");
+  expect(facts).not.toHaveProperty("build_ranking");
+  const options = Object.fromEntries(Object.keys(asRecord(shadow.record?.options)).map((key) => [key, "fixed option"]));
+  const best = asArray(asRecord(shadow.record?.build_ranking).best_group);
+  const spec = pickSpec("reward/card", options, shadow.decision.state);
+  expect(stableSchema(spec).properties).not.toHaveProperty("ranking_override_reason");
+  // Validate every legal choice, including any shadow counterfactual deviation.
+  for (const choice of Object.keys(options)) {
+    expect(spec.validate({ choice, reason: "fixed fixture" })).toEqual([]);
+  }
+  expect(best.length).toBeGreaterThan(0);
+  expect(simAdaptivePolicy("SILENT", {})).toMatchObject({ mode: "on", admission: "accepted" });
+  expect(simFailurePolicy("SILENT", {})).toEqual({ enabled: true, retries: 2 });
+  expect(sCombatRankMode("SILENT", {})).toBe("shadow");
+});
+
+it("keeps other roles' default questions and diagnostic records equivalent to off", async () => {
+  const off = await question("off", "IRONCLAD"), defaults = await question(undefined, "IRONCLAD");
+  expect(JSON.stringify(defaults.decision)).toBe(JSON.stringify(off.decision));
+  expect(defaults.record).toEqual(off.record);
 });

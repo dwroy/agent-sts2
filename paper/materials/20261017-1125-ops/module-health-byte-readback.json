@@ -1,0 +1,3194 @@
+{
+  "at": "2026-10-17 11:28:13 CST",
+  "run_id": "5H83F3J0XSTE",
+  "alert_reference": {
+    "path": "ops/codex-ops/module-health/5H83F3J0XSTE-alert.json",
+    "sha256": "a37b89e10717a76a56a8e606e0c2c2032c719bc1fa44807eb2890580d054df95"
+  },
+  "original_frozen_source_segments": [
+    {
+      "stream": "decisions",
+      "path": "logs/decisions.jsonl",
+      "start": 2146057348,
+      "end": 2179610011,
+      "bytes": 33552663,
+      "sha256": "5b692c4dc9086c3da63b39d5c50809d12e952a9e87be4602f8a8e544a0c6abf4",
+      "parsed_rows": 1384,
+      "malformed": 0,
+      "frozen_original_bounds": true
+    },
+    {
+      "stream": "brain",
+      "path": "logs/brain.jsonl",
+      "start": 693846873,
+      "end": 727358278,
+      "bytes": 33511405,
+      "sha256": "e2b3049357e33bc7e8cf4b912e9ac64a6483eab82a5f1b13e90d5e0caa92c9f6",
+      "parsed_rows": 213,
+      "malformed": 1,
+      "frozen_original_bounds": true
+    },
+    {
+      "stream": "plans",
+      "path": "logs/run-plans.jsonl",
+      "start": 4618376,
+      "end": 8810921,
+      "bytes": 4192545,
+      "sha256": "1d1f5ccb4609f1cbc85dee76d34c9c2f8bbfb81854cf830f80764fa266c8e965",
+      "parsed_rows": 2025,
+      "malformed": 0,
+      "frozen_original_bounds": true
+    },
+    {
+      "stream": "config",
+      "path": "logs/run-config.jsonl",
+      "start": 0,
+      "end": 1933815,
+      "bytes": 1933815,
+      "sha256": "55f18ac0357b0afd84c5d98c02be9956ae745793e512662a390df98bfe1619e7",
+      "parsed_rows": 463,
+      "malformed": 0,
+      "frozen_original_bounds": true
+    }
+  ],
+  "original_summary_recomputed_byte_bound_counts_equal": true,
+  "alert_summary": {
+    "schema": "module-health-v1",
+    "at": "2026-10-17T03:25:02.865246+00:00",
+    "run_id": "5H83F3J0XSTE",
+    "character": "SILENT",
+    "architecture": "V5",
+    "construction_mode": "shadow",
+    "simulation_enabled": true,
+    "coverage": {
+      "decisions_complete": true,
+      "decisions": {
+        "path": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+        "start": 2146057348,
+        "end": 2179610011,
+        "complete": false,
+        "malformed": 0,
+        "first_ts": "2026-10-17T01:17:21.789Z"
+      },
+      "brain": {
+        "path": "/home/dw/Projects/agent-sts2/logs/brain.jsonl",
+        "start": 693846873,
+        "end": 727358278,
+        "complete": false,
+        "malformed": 1,
+        "first_ts": "2026-10-16T12:15:02.085Z"
+      },
+      "plans": {
+        "path": "/home/dw/Projects/agent-sts2/logs/run-plans.jsonl",
+        "start": 4618376,
+        "end": 8810921,
+        "complete": false,
+        "malformed": 0,
+        "first_ts": "2026-10-03T23:52:21.221Z"
+      },
+      "config": {
+        "path": "/home/dw/Projects/agent-sts2/logs/run-config.jsonl",
+        "start": 0,
+        "end": 1933815,
+        "complete": true,
+        "malformed": 0,
+        "first_ts": "2026-09-30T00:10:45.685Z"
+      }
+    },
+    "complete": true,
+    "construction": {
+      "missing_route": 4,
+      "predicted": 16
+    },
+    "construction_pipeline": {
+      "enabled": true,
+      "evaluation_expected": 20,
+      "evaluation_attached": 20,
+      "evaluation_missing": 0,
+      "brain_evaluation": 20,
+      "accepted_evaluation": 20,
+      "accepted_choice_with_evaluation": 19,
+      "plan_due": 5,
+      "accepted_structured_plan": 5,
+      "missing_structured_plan": 0,
+      "saved_structured_plan": 5,
+      "plan_readback": 18,
+      "checkpoint_review_due": 2,
+      "probability_delivered": 0,
+      "admission": {
+        "missing_or_mismatched_prospective_calibration": 16
+      },
+      "evidence": [],
+      "alert": false,
+      "limits": "Payload delivery, accepted output and saved/read-back plans are distinct observations, not causal win-rate evidence. Missing calibration is pending, not a service failure."
+    },
+    "s_readiness": {
+      "mode": "shadow",
+      "expected": 17,
+      "produced": 17,
+      "missing": 0,
+      "eligible": 15,
+      "low_trust": 0,
+      "sign_rejected": 2,
+      "brain_delivered": 0,
+      "brain_accepted": 0,
+      "ms_max": 8.078064000001177,
+      "longest_missing_streak": 0,
+      "alert": false,
+      "limits": "Shadow is not brain delivery. Low trust and failed sign audit suppress facts without changing mandatory computation or old ranking."
+    },
+    "s_combat_rank": {
+      "mode": "shadow",
+      "expected": 4,
+      "produced": 4,
+      "used": 0,
+      "fallback": 0,
+      "missing": 0,
+      "shadow_produced": 4,
+      "shadow_invalid": 0,
+      "fallback_reasons": {},
+      "longest_missing_streak": 0,
+      "alert": false,
+      "limits": "S tie ranking is conditional on paired samples, sign audit and existing model trust; not game calibration or causal benefit."
+    },
+    "build_ranking": {
+      "mode": "shadow",
+      "expected": 17,
+      "produced": 17,
+      "missing": 0,
+      "brain_delivered": 0,
+      "brain_accepted": 0,
+      "choices": 17,
+      "overrides": 5,
+      "reasons_present": 0,
+      "missing_reasons": 5,
+      "target_pending": 0,
+      "longest_missing_streak": 0,
+      "alert": false,
+      "limits": "Shadow choices do not require override reasons. Pending card targets and first shop actions do not certify complete plans or causal benefit."
+    },
+    "computation": {
+      "attempts": 21,
+      "failures": 0,
+      "degraded": 0,
+      "evidence": [],
+      "alert": false,
+      "scope": "B2/B3 computation service failures; degradation permits continuation, not fault resolution."
+    },
+    "adaptive": {
+      "mode": "on",
+      "observed": 20,
+      "produced": 16,
+      "errors": 4,
+      "evaluable": 0,
+      "matched": 0,
+      "unknown": 0,
+      "complete_adaptive": 16,
+      "production_evaluable": 0,
+      "production_matched": 0,
+      "agreement": null,
+      "production_agreement": null,
+      "saved_fraction": {
+        "p50": null,
+        "p90": null
+      },
+      "mismatches": [],
+      "actual_saved_fraction": {
+        "p50": 0.66125,
+        "p90": 0.7
+      },
+      "candidate_samples": [
+        300,
+        300,
+        1000,
+        1000,
+        300,
+        300,
+        1000,
+        300,
+        300,
+        700,
+        700,
+        700,
+        300,
+        300,
+        300,
+        300,
+        300,
+        300,
+        300,
+        300,
+        300,
+        300,
+        400,
+        300,
+        300,
+        400,
+        400,
+        1000,
+        1000,
+        1000,
+        1000,
+        1000,
+        500,
+        500,
+        300,
+        300,
+        300,
+        300,
+        300,
+        300,
+        500,
+        300,
+        300,
+        300,
+        300,
+        300,
+        300,
+        1000,
+        1000,
+        300,
+        1000,
+        1000,
+        1000,
+        1000,
+        1000,
+        1000,
+        1000,
+        1000,
+        500,
+        500,
+        300,
+        300,
+        300,
+        300,
+        300,
+        500,
+        300,
+        300,
+        300,
+        300,
+        300,
+        300,
+        300,
+        300,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        200,
+        300,
+        300,
+        200
+      ],
+      "candidate_rounds": [
+        1,
+        1,
+        8,
+        8,
+        1,
+        1,
+        8,
+        1,
+        1,
+        5,
+        5,
+        5,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        2,
+        1,
+        1,
+        2,
+        2,
+        8,
+        8,
+        8,
+        8,
+        8,
+        3,
+        3,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        3,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        8,
+        8,
+        1,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        3,
+        3,
+        1,
+        1,
+        1,
+        1,
+        1,
+        3,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        2,
+        2,
+        1
+      ],
+      "stop_counts": {
+        "leader": 20,
+        "max": 17,
+        "eliminated": 54
+      },
+      "alert": true,
+      "admission_state": "accepted",
+      "admission": "accepted source; runtime mode=on; never auto-enable",
+      "limits": "Shadow estimates and actual on-mode sample work are separate. On-mode cannot observe full-run agreement; no elapsed-time saving or game benefit inferred."
+    },
+    "b3": {
+      "attempts": 17,
+      "skipped": 1,
+      "produced_dpr": 16,
+      "coverage": 0.9411764705882353,
+      "failures": {},
+      "unsupported": 1,
+      "applicable_attempts": 16,
+      "unsupported_only": 1,
+      "candidates": {
+        "observed": 103,
+        "unsupported": 9,
+        "with_dpr": 94,
+        "missing_dpr": 0
+      },
+      "applicable_coverage": 1.0,
+      "longest_failure_streak": 0,
+      "trailing_failure_streak": 0,
+      "paired_samples_min": 103,
+      "ms_max": 11876
+    },
+    "brain": {
+      "observed_questions": 18,
+      "questions_with_dpr": 16,
+      "accepted_with_dpr": 16,
+      "decision_use": "unknown; delivery is not evidence of reasoning or a fixed DPR weight"
+    },
+    "global_build": {
+      "mode": "shadow",
+      "expected": 17,
+      "covered": 17,
+      "missing": 0,
+      "invalid_shadow": 0,
+      "observations": 17,
+      "memo_hits": 0,
+      "current_dependency_unknown": 0,
+      "service_failures": 4,
+      "partial": 13,
+      "unknown": 4,
+      "unknown_reasons": {
+        "offered_candidate_not_modeled": 11,
+        "验证集 21 场（战前起点）：校准 Brier 0.182，高于整体 0.120 的 1.25 倍 0.151": 15,
+        "Act3_quality_gate_and_production_trust_unknown": 51,
+        "global_computation_failed:global_required_computation_incomplete": 4
+      },
+      "longest_missing_streak": 0,
+      "wall_ms": {
+        "n": 17,
+        "p50": 5753.0,
+        "p90": 19482.600000000002,
+        "max": 21128
+      },
+      "computation_wall_ms": {
+        "n": 17,
+        "p50": 5753.0,
+        "p90": 19482.600000000002,
+        "max": 21128
+      },
+      "memo_wall_ms": {
+        "n": 0,
+        "p50": null,
+        "p90": null,
+        "max": null
+      },
+      "future_target_wall_ms": {
+        "n": 30,
+        "p50": 3572.0,
+        "p90": 9892.700000000003,
+        "max": 13457
+      },
+      "evidence": [
+        {
+          "source": {
+            "offset": 2173795818,
+            "length": 636898,
+            "sha256": "2b5001167caae9d909ff41560ba1908ce6bd108d5278c44c2bc19d78c8a7bd45"
+          },
+          "observation_id": "3319441:g2:8",
+          "target": {
+            "target": {
+              "boss": "SOUL_FYSH",
+              "count": 0,
+              "frequency": 1,
+              "evidence": [
+                "actual_visible_run_state"
+              ],
+              "act": 1,
+              "source": "visible_actual_boss",
+              "unknown": null
+            },
+            "status": "unknown",
+            "rows": [
+              {
+                "key": "@current",
+                "base": null,
+                "option": null,
+                "delta_win": null,
+                "delta_s": null,
+                "samples": null,
+                "unknown": "global_computation_failed:global_required_computation_incomplete"
+              },
+              {
+                "key": "o0",
+                "base": null,
+                "option": null,
+                "delta_win": null,
+                "delta_s": null,
+                "samples": null,
+                "unknown": "global_computation_failed:global_required_computation_incomplete"
+              },
+              {
+                "key": "o1:c0",
+                "base": null,
+                "option": null,
+                "delta_win": null,
+                "delta_s": null,
+                "samples": null,
+                "unknown": "global_computation_failed:global_required_computation_incomplete"
+              },
+              {
+                "key": "o1:c5",
+                "base": null,
+                "option": null,
+                "delta_win": null,
+                "delta_s": null,
+                "samples": null,
+                "unknown": "global_computation_failed:global_required_computation_incomplete"
+              },
+              {
+                "key": "o1:c10",
+                "base": null,
+                "option": null,
+                "delta_win": null,
+                "delta_s": null,
+                "samples": null,
+                "unknown": "global_computation_failed:global_required_computation_incomplete"
+              },
+              {
+                "key": "o1:c11",
+                "base": null,
+                "option": null,
+                "delta_win": null,
+                "delta_s": null,
+                "samples": null,
+                "unknown": "global_computation_failed:global_required_computation_incomplete"
+              },
+              {
+                "key": "o1:c13",
+                "base": null,
+                "option": null,
+                "delta_win": null,
+                "delta_s": null,
+                "samples": null,
+                "unknown": "global_computation_failed:global_required_computation_incomplete"
+              },
+              {
+                "key": "o1:c14",
+                "base": null,
+                "option": null,
+                "delta_win": null,
+                "delta_s": null,
+                "samples": null,
+                "unknown": "global_computation_failed:global_required_computation_incomplete"
+              },
+              {
+                "key": "o1:c15",
+                "base": null,
+                "option": null,
+                "delta_win": null,
+                "delta_s": null,
+                "samples": null,
+                "unknown": "global_computation_failed:global_required_computation_incomplete"
+              },
+              {
+                "key": "o1:c16",
+                "base": null,
+                "option": null,
+                "delta_win": null,
+                "delta_s": null,
+                "samples": null,
+                "unknown": "global_computation_failed:global_required_computation_incomplete"
+              },
+              {
+                "key": "o1:c17",
+                "base": null,
+                "option": null,
+                "delta_win": null,
+                "delta_s": null,
+                "samples": null,
+                "unknown": "global_computation_failed:global_required_computation_incomplete"
+              },
+              {
+                "key": "o1:c18",
+                "base": null,
+                "option": null,
+                "delta_win": null,
+                "delta_s": null,
+                "samples": null,
+                "unknown": "global_computation_failed:global_required_computation_incomplete"
+              },
+              {
+                "key": "o1:c19",
+                "base": null,
+                "option": null,
+                "delta_win": null,
+                "delta_s": null,
+                "samples": null,
+                "unknown": "global_computation_failed:global_required_computation_incomplete"
+              }
+            ],
+            "wall_ms": 0,
+            "reported_sim_ms": null,
+            "completion": null,
+            "adaptive": null,
+            "production_calibration": "unknown"
+          }
+        },
+        {
+          "source": {
+            "offset": 2175035064,
+            "length": 956890,
+            "sha256": "1667eacc5a61ba0eb194ba5a0e888cbc4151520b68fa320a143334867224ee6b"
+          },
+          "observation_id": "3319441:g2:11",
+          "target": {
+            "target": {
+              "boss": "SOUL_FYSH",
+              "count": 0,
+              "frequency": 1,
+              "evidence": [
+                "actual_visible_run_state"
+              ],
+              "act": 1,
+              "source": "visible_actual_boss",
+              "unknown": null
+            },
+            "status": "unknown",
+            "rows": [
+              {
+                "key": "@current",
+                "base": null,
+                "option": null,
+                "delta_win": null,
+                "delta_s": null,
+                "samples": null,
+                "unknown": "global_computation_failed:global_required_computation_incomplete"
+              },
+              {
+                "key": "buy_relic0",
+                "base": null,
+                "option": null,
+                "delta_win": null,
+                "delta_s": null,
+                "samples": null,
+                "unknown": "global_computation_failed:global_required_computation_incomplete"
+              },
+              {
+                "key": "buy_relic1",
+                "base": null,
+                "option": null,
+                "delta_win": null,
+                "delta_s": null,
+                "samples": null,
+                "unknown": "global_computation_failed:global_required_computation_incomplete"
+              },
+              {
+                "key": "buy_relic2",
+                "base": null,
+                "option": null,
+                "delta_win": null,
+                "delta_s": null,
+                "samples": null,
+                "unknown": "global_computation_failed:global_required_computation_incomplete"
+              },
+              {
+                "key": "buy_card0",
+                "base": null,
+                "option": null,
+                "delta_win": null,
+                "delta_s": null,
+                "samples": null,
+                "unknown": "global_computation_failed:global_required_computation_incomplete"
+              },
+              {
+                "key": "buy_card1",
+                "base": null,
+                "option": null,
+                "delta_win": null,
+                "delta_s": null,
+                "samples": null,
+                "unknown": "global_computation_failed:global_required_computation_incomplete"
+              },
+              {
+                "key": "buy_card2",
+                "base": null,
+                "option": null,
+                "delta_win": null,
+                "delta_s": null,
+                "samples": null,
+                "unknown": "global_computation_failed:global_required_computation_incomplete"
+              },
+              {
+                "key": "buy_card3",
+                "base": null,
+                "option": null,
+                "delta_win": null,
+                "delta_s": null,
+                "samples": null,
+                "unknown": "global_computation_failed:global_required_computation_incomplete"
+              },
+              {
+                "key": "buy_card4",
+                "base": null,
+                "option": null,
+                "delta_win": null,
+                "delta_s": null,
+                "samples": null,
+                "unknown": "global_computation_failed:global_required_computation_incomplete"
+              },
+              {
+                "key": "buy_card5",
+                "base": null,
+                "option": null,
+                "delta_win": null,
+                "delta_s": null,
+                "samples": null,
+                "unknown": "global_computation_failed:global_required_computation_incomplete"
+              },
+              {
+                "key": "buy_card6",
+                "base": null,
+                "option": null,
+                "delta_win": null,
+                "delta_s": null,
+                "samples": null,
+                "unknown": "global_computation_failed:global_required_computation_incomplete"
+              },
+              {
+                "key": "buy_potion0",
+                "base": null,
+                "option": null,
+                "delta_win": null,
+                "delta_s": null,
+                "samples": null,
+                "unknown": "global_computation_failed:global_required_computation_incomplete"
+              },
+              {
+                "key": "buy_potion1",
+                "base": null,
+                "option": null,
+                "delta_win": null,
+                "delta_s": null,
+                "samples": null,
+                "unknown": "global_computation_failed:global_required_computation_incomplete"
+              },
+              {
+                "key": "buy_potion2",
+                "base": null,
+                "option": null,
+                "delta_win": null,
+                "delta_s": null,
+                "samples": null,
+                "unknown": "global_computation_failed:global_required_computation_incomplete"
+              },
+              {
+                "key": "remove|c0",
+                "base": null,
+                "option": null,
+                "delta_win": null,
+                "delta_s": null,
+                "samples": null,
+                "unknown": "global_computation_failed:global_required_computation_incomplete"
+              },
+              {
+                "key": "remove|c5",
+                "base": null,
+                "option": null,
+                "delta_win": null,
+                "delta_s": null,
+                "samples": null,
+                "unknown": "global_computation_failed:global_required_computation_incomplete"
+              },
+              {
+                "key": "remove|c10",
+                "base": null,
+                "option": null,
+                "delta_win": null,
+                "delta_s": null,
+                "samples": null,
+                "unknown": "global_computation_failed:global_required_computation_incomplete"
+              },
+              {
+                "key": "remove|c11",
+                "base": null,
+                "option": null,
+                "delta_win": null,
+                "delta_s": null,
+                "samples": null,
+                "unknown": "global_computation_failed:global_required_computation_incomplete"
+              },
+              {
+                "key": "remove|c13",
+                "base": null,
+                "option": null,
+                "delta_win": null,
+                "delta_s": null,
+                "samples": null,
+                "unknown": "global_computation_failed:global_required_computation_incomplete"
+              },
+              {
+                "key": "remove|c14",
+                "base": null,
+                "option": null,
+                "delta_win": null,
+                "delta_s": null,
+                "samples": null,
+                "unknown": "global_computation_failed:global_required_computation_incomplete"
+              },
+              {
+                "key": "remove|c15",
+                "base": null,
+                "option": null,
+                "delta_win": null,
+                "delta_s": null,
+                "samples": null,
+                "unknown": "global_computation_failed:global_required_computation_incomplete"
+              },
+              {
+                "key": "remove|c16",
+                "base": null,
+                "option": null,
+                "delta_win": null,
+                "delta_s": null,
+                "samples": null,
+                "unknown": "global_computation_failed:global_required_computation_incomplete"
+              },
+              {
+                "key": "remove|c17",
+                "base": null,
+                "option": null,
+                "delta_win": null,
+                "delta_s": null,
+                "samples": null,
+                "unknown": "global_computation_failed:global_required_computation_incomplete"
+              },
+              {
+                "key": "remove|c18",
+                "base": null,
+                "option": null,
+                "delta_win": null,
+                "delta_s": null,
+                "samples": null,
+                "unknown": "global_computation_failed:global_required_computation_incomplete"
+              },
+              {
+                "key": "remove|c19",
+                "base": null,
+                "option": null,
+                "delta_win": null,
+                "delta_s": null,
+                "samples": null,
+                "unknown": "global_computation_failed:global_required_computation_incomplete"
+              },
+              {
+                "key": "remove|c21",
+                "base": null,
+                "option": null,
+                "delta_win": null,
+                "delta_s": null,
+                "samples": null,
+                "unknown": "global_computation_failed:global_required_computation_incomplete"
+              },
+              {
+                "key": "remove|c22",
+                "base": null,
+                "option": null,
+                "delta_win": null,
+                "delta_s": null,
+                "samples": null,
+                "unknown": "global_computation_failed:global_required_computation_incomplete"
+              },
+              {
+                "key": "leave",
+                "base": null,
+                "option": null,
+                "delta_win": null,
+                "delta_s": null,
+                "samples": null,
+                "unknown": "global_computation_failed:global_required_computation_incomplete"
+              }
+            ],
+            "wall_ms": 0,
+            "reported_sim_ms": null,
+            "completion": null,
+            "adaptive": null,
+            "production_calibration": "unknown"
+          }
+        },
+        {
+          "source": {
+            "offset": 2178956986,
+            "length": 226286,
+            "sha256": "a45cac384c71e65bd08fbf675e1e01156eda8fed7dd01912c408da42e17b4ba3"
+          },
+          "observation_id": "3319441:g2:16",
+          "target": {
+            "target": {
+              "boss": "KAISER_CRAB",
+              "count": 0,
+              "frequency": 1,
+              "evidence": [
+                "actual_visible_run_state"
+              ],
+              "act": 2,
+              "source": "visible_actual_boss",
+              "unknown": null
+            },
+            "status": "unknown",
+            "rows": [
+              {
+                "key": "@current",
+                "base": null,
+                "option": null,
+                "delta_win": null,
+                "delta_s": null,
+                "samples": null,
+                "unknown": "global_computation_failed:global_required_computation_incomplete"
+              },
+              {
+                "key": "card0",
+                "base": null,
+                "option": null,
+                "delta_win": null,
+                "delta_s": null,
+                "samples": null,
+                "unknown": "global_computation_failed:global_required_computation_incomplete"
+              },
+              {
+                "key": "card1",
+                "base": null,
+                "option": null,
+                "delta_win": null,
+                "delta_s": null,
+                "samples": null,
+                "unknown": "global_computation_failed:global_required_computation_incomplete"
+              },
+              {
+                "key": "card2",
+                "base": null,
+                "option": null,
+                "delta_win": null,
+                "delta_s": null,
+                "samples": null,
+                "unknown": "global_computation_failed:global_required_computation_incomplete"
+              },
+              {
+                "key": "card3",
+                "base": null,
+                "option": null,
+                "delta_win": null,
+                "delta_s": null,
+                "samples": null,
+                "unknown": "global_computation_failed:global_required_computation_incomplete"
+              },
+              {
+                "key": "skip",
+                "base": null,
+                "option": null,
+                "delta_win": null,
+                "delta_s": null,
+                "samples": null,
+                "unknown": "global_computation_failed:global_required_computation_incomplete"
+              }
+            ],
+            "wall_ms": 0,
+            "reported_sim_ms": null,
+            "completion": null,
+            "adaptive": null,
+            "production_calibration": "unknown"
+          }
+        },
+        {
+          "source": {
+            "offset": 2179363533,
+            "length": 241912,
+            "sha256": "c814b7b2669147bf8c033c109df54d0f0e04840d15c03de3650f3afb7a59d298"
+          },
+          "observation_id": "3319441:g2:17",
+          "target": {
+            "target": {
+              "boss": "KAISER_CRAB",
+              "count": 0,
+              "frequency": 1,
+              "evidence": [
+                "actual_visible_run_state"
+              ],
+              "act": 2,
+              "source": "visible_actual_boss",
+              "unknown": null
+            },
+            "status": "unknown",
+            "rows": [
+              {
+                "key": "@current",
+                "base": null,
+                "option": null,
+                "delta_win": null,
+                "delta_s": null,
+                "samples": null,
+                "unknown": "global_computation_failed:global_required_computation_incomplete"
+              },
+              {
+                "key": "card0",
+                "base": null,
+                "option": null,
+                "delta_win": null,
+                "delta_s": null,
+                "samples": null,
+                "unknown": "global_computation_failed:global_required_computation_incomplete"
+              },
+              {
+                "key": "card1",
+                "base": null,
+                "option": null,
+                "delta_win": null,
+                "delta_s": null,
+                "samples": null,
+                "unknown": "global_computation_failed:global_required_computation_incomplete"
+              },
+              {
+                "key": "card2",
+                "base": null,
+                "option": null,
+                "delta_win": null,
+                "delta_s": null,
+                "samples": null,
+                "unknown": "global_computation_failed:global_required_computation_incomplete"
+              },
+              {
+                "key": "skip",
+                "base": null,
+                "option": null,
+                "delta_win": null,
+                "delta_s": null,
+                "samples": null,
+                "unknown": "global_computation_failed:global_required_computation_incomplete"
+              }
+            ],
+            "wall_ms": 0,
+            "reported_sim_ms": null,
+            "completion": null,
+            "adaptive": null,
+            "production_calibration": "unknown"
+          }
+        }
+      ],
+      "alert": true,
+      "admission": "pending two complete natural shadow runs and real later-Boss comparison report; never auto-enable",
+      "limits": "Declared Act3/final unknowns are coverage limitations, not zero predictions or service failures. Times are observed wall clocks with duplicate observation IDs excluded, not CPU time or a causal speedup. No calibration, whole-run win probability or role ACK inferred."
+    },
+    "alert": true,
+    "failures": [],
+    "diagnostics": [
+      {
+        "ts": "2026-10-17T03:01:48.873Z",
+        "schema": "build-sim-health-v1",
+        "status": "produced",
+        "availableCpus": 32,
+        "loadAverage": [
+          12.42,
+          16.16,
+          19.48
+        ],
+        "decks": 2,
+        "options": 1,
+        "deckCards": 13,
+        "deadlineMs": 10859.273344000001,
+        "orderSearch": null,
+        "comparison": {
+          "samples": 300,
+          "elapsedMs": 2525,
+          "timedOut": false,
+          "workers": 24,
+          "deadlineMs": 10858.800138999999,
+          "pool": {
+            "queueMs": 0,
+            "coldStart": true,
+            "preparationMs": 34,
+            "firstReplyMs": 685,
+            "chunksPlanned": 76,
+            "chunksDispatched": 76,
+            "chunksCompleted": 76,
+            "outcomesCompleted": 600
+          }
+        },
+        "boss": "SOUL_FYSH",
+        "samples": 300,
+        "requested": 1000,
+        "minimumShown": 300,
+        "timedOut": false,
+        "simMs": 2609,
+        "workers": 24
+      },
+      {
+        "ts": "2026-10-17T03:03:57.991Z",
+        "schema": "build-sim-health-v1",
+        "status": "produced",
+        "availableCpus": 32,
+        "loadAverage": [
+          16.63,
+          18,
+          19.81
+        ],
+        "decks": 4,
+        "options": 4,
+        "deckCards": 16,
+        "deadlineMs": 10988.770026999991,
+        "orderSearch": null,
+        "comparison": {
+          "samples": 1000,
+          "elapsedMs": 8634,
+          "timedOut": false,
+          "workers": 24,
+          "deadlineMs": 10988.698482000007,
+          "pool": {
+            "queueMs": 1,
+            "coldStart": false,
+            "preparationMs": 3,
+            "firstReplyMs": 64,
+            "chunksPlanned": 334,
+            "chunksDispatched": 334,
+            "chunksCompleted": 334,
+            "outcomesCompleted": 2600
+          }
+        },
+        "boss": "SOUL_FYSH",
+        "samples": 1000,
+        "requested": 1000,
+        "minimumShown": 300,
+        "timedOut": false,
+        "simMs": 8950,
+        "workers": 24
+      },
+      {
+        "ts": "2026-10-17T03:04:21.020Z",
+        "schema": "build-sim-health-v1",
+        "status": "produced",
+        "availableCpus": 32,
+        "loadAverage": [
+          19.77,
+          18.98,
+          20.08
+        ],
+        "decks": 1,
+        "options": 1,
+        "deckCards": 17,
+        "deadlineMs": 10983.093927999987,
+        "orderSearch": null,
+        "comparison": {
+          "samples": 300,
+          "elapsedMs": 1100,
+          "timedOut": false,
+          "workers": 24,
+          "deadlineMs": 10983.004075000004,
+          "pool": {
+            "queueMs": 0,
+            "coldStart": false,
+            "preparationMs": 0,
+            "firstReplyMs": 64,
+            "chunksPlanned": 38,
+            "chunksDispatched": 38,
+            "chunksCompleted": 38,
+            "outcomesCompleted": 300
+          }
+        },
+        "boss": "SOUL_FYSH",
+        "samples": 300,
+        "requested": 1000,
+        "minimumShown": 300,
+        "timedOut": false,
+        "simMs": 1131,
+        "workers": 24
+      },
+      {
+        "ts": "2026-10-17T03:04:51.791Z",
+        "schema": "build-sim-health-v1",
+        "status": "produced",
+        "availableCpus": 32,
+        "loadAverage": [
+          22.39,
+          19.75,
+          20.31
+        ],
+        "decks": 2,
+        "options": 2,
+        "deckCards": 18,
+        "deadlineMs": 10984.569048000005,
+        "orderSearch": null,
+        "comparison": {
+          "samples": 700,
+          "elapsedMs": 4552,
+          "timedOut": false,
+          "workers": 24,
+          "deadlineMs": 10984.501143000001,
+          "pool": {
+            "queueMs": 0,
+            "coldStart": false,
+            "preparationMs": 0,
+            "firstReplyMs": 47,
+            "chunksPlanned": 180,
+            "chunksDispatched": 180,
+            "chunksCompleted": 180,
+            "outcomesCompleted": 1400
+          }
+        },
+        "boss": "SOUL_FYSH",
+        "samples": 700,
+        "requested": 1000,
+        "minimumShown": 300,
+        "timedOut": false,
+        "simMs": 4690,
+        "workers": 24
+      },
+      {
+        "ts": "2026-10-17T03:05:57.374Z",
+        "schema": "build-sim-health-v1",
+        "status": "produced",
+        "availableCpus": 32,
+        "loadAverage": [
+          21.41,
+          20.13,
+          20.41
+        ],
+        "decks": 4,
+        "options": 4,
+        "deckCards": 18,
+        "deadlineMs": 10981.422194999992,
+        "orderSearch": null,
+        "comparison": {
+          "samples": 300,
+          "elapsedMs": 3647,
+          "timedOut": false,
+          "workers": 24,
+          "deadlineMs": 10981.391086999967,
+          "pool": {
+            "queueMs": 0,
+            "coldStart": false,
+            "preparationMs": 0,
+            "firstReplyMs": 65,
+            "chunksPlanned": 152,
+            "chunksDispatched": 152,
+            "chunksCompleted": 152,
+            "outcomesCompleted": 1200
+          }
+        },
+        "boss": "SOUL_FYSH",
+        "samples": 300,
+        "requested": 1000,
+        "minimumShown": 300,
+        "timedOut": false,
+        "simMs": 3779,
+        "workers": 24
+      },
+      {
+        "ts": "2026-10-17T03:07:05.316Z",
+        "schema": "build-sim-health-v1",
+        "status": "produced",
+        "availableCpus": 32,
+        "loadAverage": [
+          15.8,
+          19.01,
+          20.03
+        ],
+        "decks": 4,
+        "options": 4,
+        "deckCards": 19,
+        "deadlineMs": 10993.923773000017,
+        "orderSearch": null,
+        "comparison": {
+          "samples": 300,
+          "elapsedMs": 2783,
+          "timedOut": false,
+          "workers": 24,
+          "deadlineMs": 10993.898005000025,
+          "pool": {
+            "queueMs": 0,
+            "coldStart": false,
+            "preparationMs": 0,
+            "firstReplyMs": 39,
+            "chunksPlanned": 152,
+            "chunksDispatched": 152,
+            "chunksCompleted": 152,
+            "outcomesCompleted": 1200
+          }
+        },
+        "boss": "SOUL_FYSH",
+        "samples": 300,
+        "requested": 1000,
+        "minimumShown": 300,
+        "timedOut": false,
+        "simMs": 2889,
+        "workers": 24
+      },
+      {
+        "ts": "2026-10-17T03:08:41.073Z",
+        "schema": "build-sim-health-v1",
+        "status": "produced",
+        "availableCpus": 32,
+        "loadAverage": [
+          14.54,
+          18.32,
+          19.74
+        ],
+        "decks": 4,
+        "options": 4,
+        "deckCards": 20,
+        "deadlineMs": 10989.41344600002,
+        "orderSearch": null,
+        "comparison": {
+          "samples": 400,
+          "elapsedMs": 3190,
+          "timedOut": false,
+          "workers": 24,
+          "deadlineMs": 10989.389428000024,
+          "pool": {
+            "queueMs": 0,
+            "coldStart": false,
+            "preparationMs": 0,
+            "firstReplyMs": 34,
+            "chunksPlanned": 178,
+            "chunksDispatched": 178,
+            "chunksCompleted": 178,
+            "outcomesCompleted": 1400
+          }
+        },
+        "boss": "SOUL_FYSH",
+        "samples": 400,
+        "requested": 1000,
+        "minimumShown": 300,
+        "timedOut": false,
+        "simMs": 3332,
+        "workers": 24
+      },
+      {
+        "ts": "2026-10-17T03:09:31.915Z",
+        "schema": "build-sim-health-v1",
+        "status": "produced",
+        "availableCpus": 32,
+        "loadAverage": [
+          15.12,
+          18.28,
+          19.66
+        ],
+        "decks": 13,
+        "options": 12,
+        "deckCards": 21,
+        "deadlineMs": 10990.137805000006,
+        "orderSearch": null,
+        "comparison": {
+          "samples": 838,
+          "elapsedMs": 10931,
+          "timedOut": true,
+          "workers": 24,
+          "deadlineMs": 10990.10013799998,
+          "pool": {
+            "queueMs": 0,
+            "coldStart": false,
+            "preparationMs": 0,
+            "firstReplyMs": 28,
+            "chunksPlanned": 949,
+            "chunksDispatched": 932,
+            "chunksCompleted": 908,
+            "outcomesCompleted": 7178
+          }
+        },
+        "boss": "SOUL_FYSH",
+        "samples": 838,
+        "requested": 1000,
+        "minimumShown": 300,
+        "timedOut": true,
+        "simMs": 11760,
+        "workers": 24
+      },
+      {
+        "ts": "2026-10-17T03:11:41.568Z",
+        "schema": "build-sim-health-v1",
+        "status": "produced",
+        "availableCpus": 32,
+        "loadAverage": [
+          9.8,
+          15.76,
+          18.6
+        ],
+        "decks": 4,
+        "options": 4,
+        "deckCards": 21,
+        "deadlineMs": 10991.267341000028,
+        "orderSearch": null,
+        "comparison": {
+          "samples": 1000,
+          "elapsedMs": 9017,
+          "timedOut": false,
+          "workers": 24,
+          "deadlineMs": 10991.242193000042,
+          "pool": {
+            "queueMs": 0,
+            "coldStart": false,
+            "preparationMs": 3,
+            "firstReplyMs": 51,
+            "chunksPlanned": 516,
+            "chunksDispatched": 516,
+            "chunksCompleted": 516,
+            "outcomesCompleted": 4000
+          }
+        },
+        "boss": "SOUL_FYSH",
+        "samples": 1000,
+        "requested": 1000,
+        "minimumShown": 300,
+        "timedOut": false,
+        "simMs": 9385,
+        "workers": 24
+      },
+      {
+        "ts": "2026-10-17T03:12:30.741Z",
+        "schema": "build-sim-health-v1",
+        "status": "produced",
+        "availableCpus": 32,
+        "loadAverage": [
+          9.99,
+          15.34,
+          18.38
+        ],
+        "decks": 1,
+        "options": 0,
+        "deckCards": 22,
+        "deadlineMs": 10993.905691999942,
+        "orderSearch": null,
+        "comparison": {
+          "samples": 1000,
+          "elapsedMs": 1838,
+          "timedOut": false,
+          "workers": 24,
+          "deadlineMs": 10993.890722999931,
+          "pool": {
+            "queueMs": 0,
+            "coldStart": false,
+            "preparationMs": 0,
+            "firstReplyMs": 29,
+            "chunksPlanned": 125,
+            "chunksDispatched": 125,
+            "chunksCompleted": 125,
+            "outcomesCompleted": 1000
+          }
+        },
+        "boss": "SOUL_FYSH",
+        "samples": 1000,
+        "requested": 1000,
+        "minimumShown": 300,
+        "timedOut": false,
+        "simMs": 1896,
+        "workers": 24
+      },
+      {
+        "ts": "2026-10-17T03:13:46.598Z",
+        "schema": "build-sim-health-v1",
+        "status": "produced",
+        "availableCpus": 32,
+        "loadAverage": [
+          9.84,
+          14.65,
+          18.01
+        ],
+        "decks": 23,
+        "options": 23,
+        "deckCards": 23,
+        "deadlineMs": 10954.792968999944,
+        "orderSearch": null,
+        "comparison": {
+          "samples": 260,
+          "elapsedMs": 10960,
+          "timedOut": true,
+          "workers": 24,
+          "deadlineMs": 10954.751021999866,
+          "pool": {
+            "queueMs": 0,
+            "coldStart": false,
+            "preparationMs": 2,
+            "firstReplyMs": 31,
+            "chunksPlanned": 874,
+            "chunksDispatched": 784,
+            "chunksCompleted": 761,
+            "outcomesCompleted": 6179
+          }
+        },
+        "boss": "SOUL_FYSH",
+        "samples": 260,
+        "requested": 1000,
+        "minimumShown": 300,
+        "timedOut": true,
+        "simMs": 11801,
+        "workers": 24
+      },
+      {
+        "ts": "2026-10-17T03:15:04.446Z",
+        "schema": "build-sim-health-v1",
+        "status": "produced",
+        "availableCpus": 32,
+        "loadAverage": [
+          38.26,
+          23.02,
+          20.69
+        ],
+        "decks": 15,
+        "options": 14,
+        "deckCards": 23,
+        "deadlineMs": 10970.698621000047,
+        "orderSearch": null,
+        "comparison": {
+          "samples": 500,
+          "elapsedMs": 10097,
+          "timedOut": false,
+          "workers": 24,
+          "deadlineMs": 10970.647735000122,
+          "pool": {
+            "queueMs": 0,
+            "coldStart": false,
+            "preparationMs": 1,
+            "firstReplyMs": 36,
+            "chunksPlanned": 648,
+            "chunksDispatched": 648,
+            "chunksCompleted": 648,
+            "outcomesCompleted": 5100
+          }
+        },
+        "boss": "SOUL_FYSH",
+        "samples": 500,
+        "requested": 1000,
+        "minimumShown": 300,
+        "timedOut": false,
+        "simMs": 10692,
+        "workers": 24
+      },
+      {
+        "ts": "2026-10-17T03:16:40.229Z",
+        "schema": "build-sim-health-v1",
+        "status": "produced",
+        "availableCpus": 32,
+        "loadAverage": [
+          26.72,
+          27.54,
+          22.96
+        ],
+        "decks": 4,
+        "options": 4,
+        "deckCards": 23,
+        "deadlineMs": 10985.285578999901,
+        "orderSearch": null,
+        "comparison": {
+          "samples": 1000,
+          "elapsedMs": 7329,
+          "timedOut": false,
+          "workers": 24,
+          "deadlineMs": 10985.260519999894,
+          "pool": {
+            "queueMs": 0,
+            "coldStart": false,
+            "preparationMs": 0,
+            "firstReplyMs": 41,
+            "chunksPlanned": 425,
+            "chunksDispatched": 425,
+            "chunksCompleted": 425,
+            "outcomesCompleted": 3300
+          }
+        },
+        "boss": "SOUL_FYSH",
+        "samples": 1000,
+        "requested": 1000,
+        "minimumShown": 300,
+        "timedOut": false,
+        "simMs": 7612,
+        "workers": 24
+      },
+      {
+        "ts": "2026-10-17T03:17:47.471Z",
+        "schema": "build-sim-health-v1",
+        "status": "produced",
+        "availableCpus": 32,
+        "loadAverage": [
+          26.57,
+          27.99,
+          23.51
+        ],
+        "decks": 5,
+        "options": 5,
+        "deckCards": 24,
+        "deadlineMs": 10987.790470000007,
+        "orderSearch": null,
+        "comparison": {
+          "samples": 1000,
+          "elapsedMs": 8013,
+          "timedOut": false,
+          "workers": 24,
+          "deadlineMs": 10987.759751999984,
+          "pool": {
+            "queueMs": 0,
+            "coldStart": false,
+            "preparationMs": 0,
+            "firstReplyMs": 32,
+            "chunksPlanned": 645,
+            "chunksDispatched": 645,
+            "chunksCompleted": 645,
+            "outcomesCompleted": 5000
+          }
+        },
+        "boss": "SOUL_FYSH",
+        "samples": 1000,
+        "requested": 1000,
+        "minimumShown": 300,
+        "timedOut": false,
+        "simMs": 8491,
+        "workers": 24
+      },
+      {
+        "ts": "2026-10-17T03:18:29.417Z",
+        "schema": "build-sim-health-v1",
+        "status": "produced",
+        "availableCpus": 32,
+        "loadAverage": [
+          37.2,
+          30.89,
+          24.7
+        ],
+        "decks": 16,
+        "options": 15,
+        "deckCards": 25,
+        "deadlineMs": 10984.98453700007,
+        "orderSearch": null,
+        "comparison": {
+          "samples": 500,
+          "elapsedMs": 7042,
+          "timedOut": false,
+          "workers": 24,
+          "deadlineMs": 10984.93524999998,
+          "pool": {
+            "queueMs": 0,
+            "coldStart": false,
+            "preparationMs": 0,
+            "firstReplyMs": 28,
+            "chunksPlanned": 686,
+            "chunksDispatched": 686,
+            "chunksCompleted": 686,
+            "outcomesCompleted": 5400
+          }
+        },
+        "boss": "SOUL_FYSH",
+        "samples": 500,
+        "requested": 1000,
+        "minimumShown": 300,
+        "timedOut": false,
+        "simMs": 7395,
+        "workers": 24
+      },
+      {
+        "ts": "2026-10-17T03:23:04.399Z",
+        "schema": "build-sim-health-v1",
+        "status": "produced",
+        "availableCpus": 32,
+        "loadAverage": [
+          13.03,
+          21.88,
+          22.71
+        ],
+        "decks": 5,
+        "options": 5,
+        "deckCards": 26,
+        "deadlineMs": 10952.343325000023,
+        "orderSearch": {
+          "samples": 46,
+          "elapsedMs": 2739,
+          "timedOut": true,
+          "workers": 24,
+          "deadlineMs": 2738.085831250006,
+          "pool": {
+            "queueMs": 0,
+            "coldStart": true,
+            "preparationMs": 14,
+            "firstReplyMs": 594,
+            "chunksPlanned": 39,
+            "chunksDispatched": 29,
+            "chunksCompleted": 5,
+            "outcomesCompleted": 147
+          },
+          "status": "measured",
+          "basis": "completed_paired_samples"
+        },
+        "comparison": {
+          "samples": 103,
+          "elapsedMs": 8213,
+          "timedOut": true,
+          "workers": 24,
+          "deadlineMs": 8211.532410999993,
+          "pool": {
+            "queueMs": 0,
+            "coldStart": true,
+            "preparationMs": 174,
+            "firstReplyMs": 932,
+            "chunksPlanned": 190,
+            "chunksDispatched": 88,
+            "chunksCompleted": 64,
+            "outcomesCompleted": 569
+          }
+        },
+        "boss": "KAISER_CRAB",
+        "samples": 103,
+        "requested": 1000,
+        "minimumShown": 300,
+        "timedOut": true,
+        "simMs": 11003,
+        "workers": 24
+      },
+      {
+        "ts": "2026-10-17T03:24:39.376Z",
+        "schema": "build-sim-health-v1",
+        "status": "produced",
+        "availableCpus": 32,
+        "loadAverage": [
+          11.43,
+          19.5,
+          21.83
+        ],
+        "decks": 4,
+        "options": 4,
+        "deckCards": 27,
+        "deadlineMs": 10981.66911600018,
+        "orderSearch": {
+          "samples": 100,
+          "elapsedMs": 2386,
+          "timedOut": false,
+          "workers": 24,
+          "deadlineMs": 2745.417279000045,
+          "pool": {
+            "queueMs": 0,
+            "coldStart": true,
+            "preparationMs": 12,
+            "firstReplyMs": 590,
+            "chunksPlanned": 39,
+            "chunksDispatched": 39,
+            "chunksCompleted": 39,
+            "outcomesCompleted": 300
+          },
+          "status": "measured",
+          "basis": "completed_paired_samples"
+        },
+        "comparison": {
+          "samples": 504,
+          "elapsedMs": 8583,
+          "timedOut": true,
+          "workers": 24,
+          "deadlineMs": 8594.269026000053,
+          "pool": {
+            "queueMs": 0,
+            "coldStart": false,
+            "preparationMs": 0,
+            "firstReplyMs": 87,
+            "chunksPlanned": 230,
+            "chunksDispatched": 230,
+            "chunksCompleted": 206,
+            "outcomesCompleted": 1742
+          }
+        },
+        "boss": "KAISER_CRAB",
+        "samples": 504,
+        "requested": 1000,
+        "minimumShown": 300,
+        "timedOut": true,
+        "simMs": 11237,
+        "workers": 24
+      }
+    ],
+    "unsupported": [
+      {
+        "ts": "2026-10-17T03:12:30.741Z",
+        "decision": "8e9bce4d-8640-46a8-9867-aa963a067a26",
+        "floor": 11,
+        "label": "event/choose",
+        "source": {
+          "offset": 2174960970,
+          "length": 65549,
+          "sha256": "d68c81547963d8eeacfe26b8bdc4156bf61cdea53900f03424a5124911237222"
+        },
+        "not_simulated": {
+          "o0": "这个选项的效果没有换算成牌组或血量的变化：不模拟",
+          "o1": "这个选项的效果没有换算成牌组或血量的变化：不模拟"
+        }
+      }
+    ],
+    "scope": "Service availability only; sample threshold, simulator validity and game policy unchanged.",
+    "queue_name": "1792207502865245952-module-health.md"
+  },
+  "cases": [
+    {
+      "floor": 8,
+      "label": "rest/plan",
+      "ts": "2026-10-17T03:09:31.915Z",
+      "decision_id": "d9d657c0-e995-4f29-8947-59d0a1822d50",
+      "source": {
+        "offset": 2173795818,
+        "length": 636898,
+        "sha256": "2b5001167caae9d909ff41560ba1908ce6bd108d5278c44c2bc19d78c8a7bd45"
+      },
+      "comparison_samples": 838,
+      "requested": 1000,
+      "minimumShown": 300,
+      "completion": {
+        "required": true,
+        "uniqueDecks": 13,
+        "originalDecks": 13,
+        "memoHit": false,
+        "status": "partial",
+        "attempt_id": "6d88846f-84ab-41df-9ec5-a9ad334ddea5",
+        "attempts": 1,
+        "reasons": [],
+        "samples": 838,
+        "requested": 1000,
+        "failure": false,
+        "key": "sim-failure-v1:91a685c5c4cb956d1bd6f1b20f6c556ead83fbfdde61980d20ba6812b11107ec",
+        "budgeted": true,
+        "latencyTargetMs": 11000,
+        "latencyTargetExceeded": true
+      },
+      "adaptive_status": "partial",
+      "adaptive_candidates": [
+        {
+          "key": "@current",
+          "samples": 838,
+          "rounds": 7,
+          "stop": "budget",
+          "baseline": true
+        },
+        {
+          "key": "o0",
+          "samples": 838,
+          "rounds": 7,
+          "stop": "budget",
+          "baseline": false
+        },
+        {
+          "key": "o1:c0",
+          "samples": 300,
+          "rounds": 1,
+          "stop": "eliminated",
+          "baseline": false
+        },
+        {
+          "key": "o1:c5",
+          "samples": 300,
+          "rounds": 1,
+          "stop": "eliminated",
+          "baseline": false
+        },
+        {
+          "key": "o1:c10",
+          "samples": 838,
+          "rounds": 7,
+          "stop": "budget",
+          "baseline": false
+        },
+        {
+          "key": "o1:c11",
+          "samples": 300,
+          "rounds": 1,
+          "stop": "eliminated",
+          "baseline": false
+        },
+        {
+          "key": "o1:c13",
+          "samples": 300,
+          "rounds": 1,
+          "stop": "eliminated",
+          "baseline": false
+        },
+        {
+          "key": "o1:c14",
+          "samples": 838,
+          "rounds": 7,
+          "stop": "budget",
+          "baseline": false
+        },
+        {
+          "key": "o1:c15",
+          "samples": 500,
+          "rounds": 3,
+          "stop": "eliminated",
+          "baseline": false
+        },
+        {
+          "key": "o1:c16",
+          "samples": 838,
+          "rounds": 7,
+          "stop": "budget",
+          "baseline": false
+        },
+        {
+          "key": "o1:c17",
+          "samples": 300,
+          "rounds": 1,
+          "stop": "eliminated",
+          "baseline": false
+        },
+        {
+          "key": "o1:c18",
+          "samples": 400,
+          "rounds": 2,
+          "stop": "eliminated",
+          "baseline": false
+        },
+        {
+          "key": "o1:c19",
+          "samples": 500,
+          "rounds": 3,
+          "stop": "eliminated",
+          "baseline": false
+        }
+      ],
+      "actual_diagnostics": {
+        "schema": "build-sim-health-v1",
+        "status": "produced",
+        "availableCpus": 32,
+        "loadAverage": [
+          15.12,
+          18.28,
+          19.66
+        ],
+        "decks": 13,
+        "options": 12,
+        "deckCards": 21,
+        "deadlineMs": 10990.137805000006,
+        "orderSearch": null,
+        "comparison": {
+          "samples": 838,
+          "elapsedMs": 10931,
+          "timedOut": true,
+          "workers": 24,
+          "deadlineMs": 10990.10013799998,
+          "pool": {
+            "queueMs": 0,
+            "coldStart": false,
+            "preparationMs": 0,
+            "firstReplyMs": 28,
+            "chunksPlanned": 949,
+            "chunksDispatched": 932,
+            "chunksCompleted": 908,
+            "outcomesCompleted": 7178
+          }
+        },
+        "boss": "SOUL_FYSH",
+        "samples": 838,
+        "requested": 1000,
+        "minimumShown": 300,
+        "timedOut": true,
+        "simMs": 11760,
+        "workers": 24
+      },
+      "actual_sim_ms": 11793,
+      "actual_time_budget": {
+        "schema": "decision-budget-v1",
+        "kind": "brain",
+        "key": "5H83F3J0XSTE:{\"actions\":[\"save_and_quit\",\"choose_rest_option\"],\"combat\":false,\"enemies\":\"\",\"event\":\"\",\"gold\":145,\"hand\":\"\",\"hp\":42,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"0:0:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"\",\"rewards\":\"\",\"run\":\"5H83F3J0XSTE\",\"screen\":\"REST\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":null}",
+        "budget_ms": 90000,
+        "entry_budget_ms": 4999.9963299999945,
+        "actual_ms": 48775,
+        "turn_actual_ms": 48775,
+        "timed_out": false,
+        "fallback": null,
+        "shadow_unknown": [],
+        "stages": [
+          {
+            "stage": "L2_brain",
+            "budget_ms": 62159.88991900004,
+            "actual_ms": 20933,
+            "timed_out": false
+          }
+        ],
+        "animation_time_included": false
+      },
+      "global_failure": {
+        "source": {
+          "offset": 2173795818,
+          "length": 636898,
+          "sha256": "2b5001167caae9d909ff41560ba1908ce6bd108d5278c44c2bc19d78c8a7bd45"
+        },
+        "observation_id": "3319441:g2:8",
+        "target": {
+          "target": {
+            "boss": "SOUL_FYSH",
+            "count": 0,
+            "frequency": 1,
+            "evidence": [
+              "actual_visible_run_state"
+            ],
+            "act": 1,
+            "source": "visible_actual_boss",
+            "unknown": null
+          },
+          "status": "unknown",
+          "rows": [
+            {
+              "key": "@current",
+              "base": null,
+              "option": null,
+              "delta_win": null,
+              "delta_s": null,
+              "samples": null,
+              "unknown": "global_computation_failed:global_required_computation_incomplete"
+            },
+            {
+              "key": "o0",
+              "base": null,
+              "option": null,
+              "delta_win": null,
+              "delta_s": null,
+              "samples": null,
+              "unknown": "global_computation_failed:global_required_computation_incomplete"
+            },
+            {
+              "key": "o1:c0",
+              "base": null,
+              "option": null,
+              "delta_win": null,
+              "delta_s": null,
+              "samples": null,
+              "unknown": "global_computation_failed:global_required_computation_incomplete"
+            },
+            {
+              "key": "o1:c5",
+              "base": null,
+              "option": null,
+              "delta_win": null,
+              "delta_s": null,
+              "samples": null,
+              "unknown": "global_computation_failed:global_required_computation_incomplete"
+            },
+            {
+              "key": "o1:c10",
+              "base": null,
+              "option": null,
+              "delta_win": null,
+              "delta_s": null,
+              "samples": null,
+              "unknown": "global_computation_failed:global_required_computation_incomplete"
+            },
+            {
+              "key": "o1:c11",
+              "base": null,
+              "option": null,
+              "delta_win": null,
+              "delta_s": null,
+              "samples": null,
+              "unknown": "global_computation_failed:global_required_computation_incomplete"
+            },
+            {
+              "key": "o1:c13",
+              "base": null,
+              "option": null,
+              "delta_win": null,
+              "delta_s": null,
+              "samples": null,
+              "unknown": "global_computation_failed:global_required_computation_incomplete"
+            },
+            {
+              "key": "o1:c14",
+              "base": null,
+              "option": null,
+              "delta_win": null,
+              "delta_s": null,
+              "samples": null,
+              "unknown": "global_computation_failed:global_required_computation_incomplete"
+            },
+            {
+              "key": "o1:c15",
+              "base": null,
+              "option": null,
+              "delta_win": null,
+              "delta_s": null,
+              "samples": null,
+              "unknown": "global_computation_failed:global_required_computation_incomplete"
+            },
+            {
+              "key": "o1:c16",
+              "base": null,
+              "option": null,
+              "delta_win": null,
+              "delta_s": null,
+              "samples": null,
+              "unknown": "global_computation_failed:global_required_computation_incomplete"
+            },
+            {
+              "key": "o1:c17",
+              "base": null,
+              "option": null,
+              "delta_win": null,
+              "delta_s": null,
+              "samples": null,
+              "unknown": "global_computation_failed:global_required_computation_incomplete"
+            },
+            {
+              "key": "o1:c18",
+              "base": null,
+              "option": null,
+              "delta_win": null,
+              "delta_s": null,
+              "samples": null,
+              "unknown": "global_computation_failed:global_required_computation_incomplete"
+            },
+            {
+              "key": "o1:c19",
+              "base": null,
+              "option": null,
+              "delta_win": null,
+              "delta_s": null,
+              "samples": null,
+              "unknown": "global_computation_failed:global_required_computation_incomplete"
+            }
+          ],
+          "wall_ms": 0,
+          "reported_sim_ms": null,
+          "completion": null,
+          "adaptive": null,
+          "production_calibration": "unknown"
+        }
+      },
+      "request_ids": [],
+      "result": "completed: Action completed."
+    },
+    {
+      "floor": 12,
+      "label": "shop/plan",
+      "ts": "2026-10-17T03:13:46.598Z",
+      "decision_id": "b8dd26ea-671c-4d52-a077-0494552ebfbd",
+      "source": {
+        "offset": 2175035064,
+        "length": 956890,
+        "sha256": "1667eacc5a61ba0eb194ba5a0e888cbc4151520b68fa320a143334867224ee6b"
+      },
+      "comparison_samples": 260,
+      "requested": 1000,
+      "minimumShown": 300,
+      "completion": {
+        "required": true,
+        "uniqueDecks": 23,
+        "originalDecks": 23,
+        "memoHit": false,
+        "status": "partial",
+        "attempt_id": "40653255-c895-4dbb-ab58-9d632f035610",
+        "attempts": 1,
+        "reasons": [],
+        "samples": 260,
+        "requested": 1000,
+        "failure": false,
+        "key": "sim-failure-v1:a3e81775e53bd3b4d1f3643263ef5ee8ba5f52f36d1a442a783d03c612d00ada",
+        "budgeted": true,
+        "latencyTargetMs": 11000,
+        "latencyTargetExceeded": true
+      },
+      "adaptive_status": "partial",
+      "adaptive_candidates": [
+        {
+          "key": "@current",
+          "samples": 260,
+          "rounds": 1,
+          "stop": "budget",
+          "baseline": true
+        },
+        {
+          "key": "buy_card0",
+          "samples": 260,
+          "rounds": 1,
+          "stop": "budget",
+          "baseline": false
+        },
+        {
+          "key": "buy_card1",
+          "samples": 260,
+          "rounds": 1,
+          "stop": "budget",
+          "baseline": false
+        },
+        {
+          "key": "buy_card2",
+          "samples": 260,
+          "rounds": 1,
+          "stop": "budget",
+          "baseline": false
+        },
+        {
+          "key": "buy_card3",
+          "samples": 260,
+          "rounds": 1,
+          "stop": "budget",
+          "baseline": false
+        },
+        {
+          "key": "buy_card4",
+          "samples": 260,
+          "rounds": 1,
+          "stop": "budget",
+          "baseline": false
+        },
+        {
+          "key": "buy_card5",
+          "samples": 260,
+          "rounds": 1,
+          "stop": "budget",
+          "baseline": false
+        },
+        {
+          "key": "buy_card6",
+          "samples": 260,
+          "rounds": 1,
+          "stop": "budget",
+          "baseline": false
+        },
+        {
+          "key": "buy_potion0",
+          "samples": 260,
+          "rounds": 1,
+          "stop": "budget",
+          "baseline": false
+        },
+        {
+          "key": "buy_potion1",
+          "samples": 260,
+          "rounds": 1,
+          "stop": "budget",
+          "baseline": false
+        },
+        {
+          "key": "remove|c0",
+          "samples": 260,
+          "rounds": 1,
+          "stop": "budget",
+          "baseline": false
+        },
+        {
+          "key": "remove|c5",
+          "samples": 260,
+          "rounds": 1,
+          "stop": "budget",
+          "baseline": false
+        },
+        {
+          "key": "remove|c10",
+          "samples": 260,
+          "rounds": 1,
+          "stop": "budget",
+          "baseline": false
+        },
+        {
+          "key": "remove|c11",
+          "samples": 260,
+          "rounds": 1,
+          "stop": "budget",
+          "baseline": false
+        },
+        {
+          "key": "remove|c13",
+          "samples": 260,
+          "rounds": 1,
+          "stop": "budget",
+          "baseline": false
+        },
+        {
+          "key": "remove|c14",
+          "samples": 260,
+          "rounds": 1,
+          "stop": "budget",
+          "baseline": false
+        },
+        {
+          "key": "remove|c15",
+          "samples": 260,
+          "rounds": 1,
+          "stop": "budget",
+          "baseline": false
+        },
+        {
+          "key": "remove|c16",
+          "samples": 260,
+          "rounds": 1,
+          "stop": "budget",
+          "baseline": false
+        },
+        {
+          "key": "remove|c17",
+          "samples": 260,
+          "rounds": 1,
+          "stop": "budget",
+          "baseline": false
+        },
+        {
+          "key": "remove|c18",
+          "samples": 260,
+          "rounds": 1,
+          "stop": "budget",
+          "baseline": false
+        },
+        {
+          "key": "remove|c19",
+          "samples": 260,
+          "rounds": 1,
+          "stop": "budget",
+          "baseline": false
+        },
+        {
+          "key": "remove|c21",
+          "samples": 260,
+          "rounds": 1,
+          "stop": "budget",
+          "baseline": false
+        },
+        {
+          "key": "remove|c22",
+          "samples": 260,
+          "rounds": 1,
+          "stop": "budget",
+          "baseline": false
+        },
+        {
+          "key": "leave",
+          "samples": 260,
+          "rounds": 1,
+          "stop": "budget",
+          "baseline": false
+        }
+      ],
+      "actual_diagnostics": {
+        "schema": "build-sim-health-v1",
+        "status": "produced",
+        "availableCpus": 32,
+        "loadAverage": [
+          9.84,
+          14.65,
+          18.01
+        ],
+        "decks": 23,
+        "options": 23,
+        "deckCards": 23,
+        "deadlineMs": 10954.792968999944,
+        "orderSearch": null,
+        "comparison": {
+          "samples": 260,
+          "elapsedMs": 10960,
+          "timedOut": true,
+          "workers": 24,
+          "deadlineMs": 10954.751021999866,
+          "pool": {
+            "queueMs": 0,
+            "coldStart": false,
+            "preparationMs": 2,
+            "firstReplyMs": 31,
+            "chunksPlanned": 874,
+            "chunksDispatched": 784,
+            "chunksCompleted": 761,
+            "outcomesCompleted": 6179
+          }
+        },
+        "boss": "SOUL_FYSH",
+        "samples": 260,
+        "requested": 1000,
+        "minimumShown": 300,
+        "timedOut": true,
+        "simMs": 11801,
+        "workers": 24
+      },
+      "actual_sim_ms": 11876,
+      "actual_time_budget": {
+        "schema": "decision-budget-v1",
+        "kind": "brain",
+        "key": "5H83F3J0XSTE:{\"actions\":[\"save_and_quit\",\"close_shop_inventory\",\"buy_card\",\"buy_relic\",\"buy_potion\",\"remove_card_at_shop\"],\"combat\":false,\"enemies\":\"\",\"event\":\"\",\"gold\":204,\"hand\":\"\",\"hp\":26,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":false,\"player\":\"0:0:0\",\"potions\":\":false:false|:false:false\",\"powers\":\"\",\"rewards\":\"\",\"run\":\"5H83F3J0XSTE\",\"screen\":\"SHOP\",\"selection\":\"null:false\",\"shopOpen\":true,\"shopStock\":\"0:true|1:true|2:true|3:true|4:true|5:true|6:true\",\"turn\":null}",
+        "budget_ms": 90000,
+        "entry_budget_ms": 4999.995149999973,
+        "actual_ms": 72964,
+        "turn_actual_ms": 72964,
+        "timed_out": false,
+        "fallback": null,
+        "shadow_unknown": [],
+        "stages": [
+          {
+            "stage": "L2_brain",
+            "budget_ms": 50105.73230699997,
+            "actual_ms": 33069,
+            "timed_out": false
+          }
+        ],
+        "animation_time_included": false
+      },
+      "global_failure": {
+        "source": {
+          "offset": 2175035064,
+          "length": 956890,
+          "sha256": "1667eacc5a61ba0eb194ba5a0e888cbc4151520b68fa320a143334867224ee6b"
+        },
+        "observation_id": "3319441:g2:11",
+        "target": {
+          "target": {
+            "boss": "SOUL_FYSH",
+            "count": 0,
+            "frequency": 1,
+            "evidence": [
+              "actual_visible_run_state"
+            ],
+            "act": 1,
+            "source": "visible_actual_boss",
+            "unknown": null
+          },
+          "status": "unknown",
+          "rows": [
+            {
+              "key": "@current",
+              "base": null,
+              "option": null,
+              "delta_win": null,
+              "delta_s": null,
+              "samples": null,
+              "unknown": "global_computation_failed:global_required_computation_incomplete"
+            },
+            {
+              "key": "buy_relic0",
+              "base": null,
+              "option": null,
+              "delta_win": null,
+              "delta_s": null,
+              "samples": null,
+              "unknown": "global_computation_failed:global_required_computation_incomplete"
+            },
+            {
+              "key": "buy_relic1",
+              "base": null,
+              "option": null,
+              "delta_win": null,
+              "delta_s": null,
+              "samples": null,
+              "unknown": "global_computation_failed:global_required_computation_incomplete"
+            },
+            {
+              "key": "buy_relic2",
+              "base": null,
+              "option": null,
+              "delta_win": null,
+              "delta_s": null,
+              "samples": null,
+              "unknown": "global_computation_failed:global_required_computation_incomplete"
+            },
+            {
+              "key": "buy_card0",
+              "base": null,
+              "option": null,
+              "delta_win": null,
+              "delta_s": null,
+              "samples": null,
+              "unknown": "global_computation_failed:global_required_computation_incomplete"
+            },
+            {
+              "key": "buy_card1",
+              "base": null,
+              "option": null,
+              "delta_win": null,
+              "delta_s": null,
+              "samples": null,
+              "unknown": "global_computation_failed:global_required_computation_incomplete"
+            },
+            {
+              "key": "buy_card2",
+              "base": null,
+              "option": null,
+              "delta_win": null,
+              "delta_s": null,
+              "samples": null,
+              "unknown": "global_computation_failed:global_required_computation_incomplete"
+            },
+            {
+              "key": "buy_card3",
+              "base": null,
+              "option": null,
+              "delta_win": null,
+              "delta_s": null,
+              "samples": null,
+              "unknown": "global_computation_failed:global_required_computation_incomplete"
+            },
+            {
+              "key": "buy_card4",
+              "base": null,
+              "option": null,
+              "delta_win": null,
+              "delta_s": null,
+              "samples": null,
+              "unknown": "global_computation_failed:global_required_computation_incomplete"
+            },
+            {
+              "key": "buy_card5",
+              "base": null,
+              "option": null,
+              "delta_win": null,
+              "delta_s": null,
+              "samples": null,
+              "unknown": "global_computation_failed:global_required_computation_incomplete"
+            },
+            {
+              "key": "buy_card6",
+              "base": null,
+              "option": null,
+              "delta_win": null,
+              "delta_s": null,
+              "samples": null,
+              "unknown": "global_computation_failed:global_required_computation_incomplete"
+            },
+            {
+              "key": "buy_potion0",
+              "base": null,
+              "option": null,
+              "delta_win": null,
+              "delta_s": null,
+              "samples": null,
+              "unknown": "global_computation_failed:global_required_computation_incomplete"
+            },
+            {
+              "key": "buy_potion1",
+              "base": null,
+              "option": null,
+              "delta_win": null,
+              "delta_s": null,
+              "samples": null,
+              "unknown": "global_computation_failed:global_required_computation_incomplete"
+            },
+            {
+              "key": "buy_potion2",
+              "base": null,
+              "option": null,
+              "delta_win": null,
+              "delta_s": null,
+              "samples": null,
+              "unknown": "global_computation_failed:global_required_computation_incomplete"
+            },
+            {
+              "key": "remove|c0",
+              "base": null,
+              "option": null,
+              "delta_win": null,
+              "delta_s": null,
+              "samples": null,
+              "unknown": "global_computation_failed:global_required_computation_incomplete"
+            },
+            {
+              "key": "remove|c5",
+              "base": null,
+              "option": null,
+              "delta_win": null,
+              "delta_s": null,
+              "samples": null,
+              "unknown": "global_computation_failed:global_required_computation_incomplete"
+            },
+            {
+              "key": "remove|c10",
+              "base": null,
+              "option": null,
+              "delta_win": null,
+              "delta_s": null,
+              "samples": null,
+              "unknown": "global_computation_failed:global_required_computation_incomplete"
+            },
+            {
+              "key": "remove|c11",
+              "base": null,
+              "option": null,
+              "delta_win": null,
+              "delta_s": null,
+              "samples": null,
+              "unknown": "global_computation_failed:global_required_computation_incomplete"
+            },
+            {
+              "key": "remove|c13",
+              "base": null,
+              "option": null,
+              "delta_win": null,
+              "delta_s": null,
+              "samples": null,
+              "unknown": "global_computation_failed:global_required_computation_incomplete"
+            },
+            {
+              "key": "remove|c14",
+              "base": null,
+              "option": null,
+              "delta_win": null,
+              "delta_s": null,
+              "samples": null,
+              "unknown": "global_computation_failed:global_required_computation_incomplete"
+            },
+            {
+              "key": "remove|c15",
+              "base": null,
+              "option": null,
+              "delta_win": null,
+              "delta_s": null,
+              "samples": null,
+              "unknown": "global_computation_failed:global_required_computation_incomplete"
+            },
+            {
+              "key": "remove|c16",
+              "base": null,
+              "option": null,
+              "delta_win": null,
+              "delta_s": null,
+              "samples": null,
+              "unknown": "global_computation_failed:global_required_computation_incomplete"
+            },
+            {
+              "key": "remove|c17",
+              "base": null,
+              "option": null,
+              "delta_win": null,
+              "delta_s": null,
+              "samples": null,
+              "unknown": "global_computation_failed:global_required_computation_incomplete"
+            },
+            {
+              "key": "remove|c18",
+              "base": null,
+              "option": null,
+              "delta_win": null,
+              "delta_s": null,
+              "samples": null,
+              "unknown": "global_computation_failed:global_required_computation_incomplete"
+            },
+            {
+              "key": "remove|c19",
+              "base": null,
+              "option": null,
+              "delta_win": null,
+              "delta_s": null,
+              "samples": null,
+              "unknown": "global_computation_failed:global_required_computation_incomplete"
+            },
+            {
+              "key": "remove|c21",
+              "base": null,
+              "option": null,
+              "delta_win": null,
+              "delta_s": null,
+              "samples": null,
+              "unknown": "global_computation_failed:global_required_computation_incomplete"
+            },
+            {
+              "key": "remove|c22",
+              "base": null,
+              "option": null,
+              "delta_win": null,
+              "delta_s": null,
+              "samples": null,
+              "unknown": "global_computation_failed:global_required_computation_incomplete"
+            },
+            {
+              "key": "leave",
+              "base": null,
+              "option": null,
+              "delta_win": null,
+              "delta_s": null,
+              "samples": null,
+              "unknown": "global_computation_failed:global_required_computation_incomplete"
+            }
+          ],
+          "wall_ms": 0,
+          "reported_sim_ms": null,
+          "completion": null,
+          "adaptive": null,
+          "production_calibration": "unknown"
+        }
+      },
+      "request_ids": [],
+      "result": "completed: Action completed."
+    },
+    {
+      "floor": 19,
+      "label": "reward/card",
+      "ts": "2026-10-17T03:23:04.399Z",
+      "decision_id": "96a05bf0-7a6a-4e01-9afe-f6e984bdec8c",
+      "source": {
+        "offset": 2178956986,
+        "length": 226286,
+        "sha256": "a45cac384c71e65bd08fbf675e1e01156eda8fed7dd01912c408da42e17b4ba3"
+      },
+      "comparison_samples": 103,
+      "requested": 1000,
+      "minimumShown": 300,
+      "completion": {
+        "required": true,
+        "uniqueDecks": 5,
+        "originalDecks": 5,
+        "memoHit": false,
+        "status": "partial",
+        "attempt_id": "ba8c4964-4c32-4f6e-bec5-fc1f1c59684a",
+        "attempts": 1,
+        "reasons": [],
+        "samples": 103,
+        "requested": 1000,
+        "failure": false,
+        "key": "sim-failure-v1:123e13da14a8efc1411ae30e4bea35c159d2b4df7f984aa60afa29864ff520a3",
+        "budgeted": true,
+        "latencyTargetMs": 11000,
+        "latencyTargetExceeded": true
+      },
+      "adaptive_status": "partial",
+      "adaptive_candidates": [
+        {
+          "key": "@current",
+          "samples": 103,
+          "rounds": 1,
+          "stop": "budget",
+          "baseline": true
+        },
+        {
+          "key": "card0",
+          "samples": 103,
+          "rounds": 1,
+          "stop": "budget",
+          "baseline": false
+        },
+        {
+          "key": "card1",
+          "samples": 103,
+          "rounds": 1,
+          "stop": "budget",
+          "baseline": false
+        },
+        {
+          "key": "card2",
+          "samples": 103,
+          "rounds": 1,
+          "stop": "budget",
+          "baseline": false
+        },
+        {
+          "key": "card3",
+          "samples": 103,
+          "rounds": 1,
+          "stop": "budget",
+          "baseline": false
+        },
+        {
+          "key": "skip",
+          "samples": 103,
+          "rounds": 1,
+          "stop": "budget",
+          "baseline": false
+        }
+      ],
+      "actual_diagnostics": {
+        "schema": "build-sim-health-v1",
+        "status": "produced",
+        "availableCpus": 32,
+        "loadAverage": [
+          13.03,
+          21.88,
+          22.71
+        ],
+        "decks": 5,
+        "options": 5,
+        "deckCards": 26,
+        "deadlineMs": 10952.343325000023,
+        "orderSearch": {
+          "samples": 46,
+          "elapsedMs": 2739,
+          "timedOut": true,
+          "workers": 24,
+          "deadlineMs": 2738.085831250006,
+          "pool": {
+            "queueMs": 0,
+            "coldStart": true,
+            "preparationMs": 14,
+            "firstReplyMs": 594,
+            "chunksPlanned": 39,
+            "chunksDispatched": 29,
+            "chunksCompleted": 5,
+            "outcomesCompleted": 147
+          },
+          "status": "measured",
+          "basis": "completed_paired_samples"
+        },
+        "comparison": {
+          "samples": 103,
+          "elapsedMs": 8213,
+          "timedOut": true,
+          "workers": 24,
+          "deadlineMs": 8211.532410999993,
+          "pool": {
+            "queueMs": 0,
+            "coldStart": true,
+            "preparationMs": 174,
+            "firstReplyMs": 932,
+            "chunksPlanned": 190,
+            "chunksDispatched": 88,
+            "chunksCompleted": 64,
+            "outcomesCompleted": 569
+          }
+        },
+        "boss": "KAISER_CRAB",
+        "samples": 103,
+        "requested": 1000,
+        "minimumShown": 300,
+        "timedOut": true,
+        "simMs": 11003,
+        "workers": 24
+      },
+      "actual_sim_ms": 11060,
+      "actual_time_budget": {
+        "schema": "decision-budget-v1",
+        "kind": "brain",
+        "key": "5H83F3J0XSTE:{\"actions\":[\"save_and_quit\",\"resolve_rewards\",\"collect_rewards_and_proceed\",\"choose_reward_card\",\"skip_reward_cards\"],\"combat\":false,\"enemies\":\"\",\"event\":\"\",\"gold\":142,\"hand\":\"\",\"hp\":57,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":true,\"player\":\"1:0:0\",\"potions\":\"VULNERABLE_POTION:true:false|REGEN_POTION:true:false\",\"powers\":\"\",\"rewards\":\"\",\"run\":\"5H83F3J0XSTE\",\"screen\":\"REWARD\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":3}",
+        "budget_ms": 90000,
+        "entry_budget_ms": 4999.995620000176,
+        "actual_ms": 37915,
+        "turn_actual_ms": 37915,
+        "timed_out": false,
+        "fallback": null,
+        "shadow_unknown": [],
+        "stages": [
+          {
+            "stage": "L2_brain",
+            "budget_ms": 74488.35944000003,
+            "actual_ms": 22403,
+            "timed_out": false
+          }
+        ],
+        "animation_time_included": false
+      },
+      "global_failure": {
+        "source": {
+          "offset": 2178956986,
+          "length": 226286,
+          "sha256": "a45cac384c71e65bd08fbf675e1e01156eda8fed7dd01912c408da42e17b4ba3"
+        },
+        "observation_id": "3319441:g2:16",
+        "target": {
+          "target": {
+            "boss": "KAISER_CRAB",
+            "count": 0,
+            "frequency": 1,
+            "evidence": [
+              "actual_visible_run_state"
+            ],
+            "act": 2,
+            "source": "visible_actual_boss",
+            "unknown": null
+          },
+          "status": "unknown",
+          "rows": [
+            {
+              "key": "@current",
+              "base": null,
+              "option": null,
+              "delta_win": null,
+              "delta_s": null,
+              "samples": null,
+              "unknown": "global_computation_failed:global_required_computation_incomplete"
+            },
+            {
+              "key": "card0",
+              "base": null,
+              "option": null,
+              "delta_win": null,
+              "delta_s": null,
+              "samples": null,
+              "unknown": "global_computation_failed:global_required_computation_incomplete"
+            },
+            {
+              "key": "card1",
+              "base": null,
+              "option": null,
+              "delta_win": null,
+              "delta_s": null,
+              "samples": null,
+              "unknown": "global_computation_failed:global_required_computation_incomplete"
+            },
+            {
+              "key": "card2",
+              "base": null,
+              "option": null,
+              "delta_win": null,
+              "delta_s": null,
+              "samples": null,
+              "unknown": "global_computation_failed:global_required_computation_incomplete"
+            },
+            {
+              "key": "card3",
+              "base": null,
+              "option": null,
+              "delta_win": null,
+              "delta_s": null,
+              "samples": null,
+              "unknown": "global_computation_failed:global_required_computation_incomplete"
+            },
+            {
+              "key": "skip",
+              "base": null,
+              "option": null,
+              "delta_win": null,
+              "delta_s": null,
+              "samples": null,
+              "unknown": "global_computation_failed:global_required_computation_incomplete"
+            }
+          ],
+          "wall_ms": 0,
+          "reported_sim_ms": null,
+          "completion": null,
+          "adaptive": null,
+          "production_calibration": "unknown"
+        }
+      },
+      "request_ids": [],
+      "result": "completed: Action completed."
+    },
+    {
+      "floor": 20,
+      "label": "reward/card",
+      "ts": "2026-10-17T03:24:39.376Z",
+      "decision_id": "6f871d4a-ab8e-4bbf-9e46-4229d18e96b6",
+      "source": {
+        "offset": 2179363533,
+        "length": 241912,
+        "sha256": "c814b7b2669147bf8c033c109df54d0f0e04840d15c03de3650f3afb7a59d298"
+      },
+      "comparison_samples": 504,
+      "requested": 1000,
+      "minimumShown": 300,
+      "completion": {
+        "required": true,
+        "uniqueDecks": 4,
+        "originalDecks": 4,
+        "memoHit": false,
+        "status": "partial",
+        "attempt_id": "65e8e387-423d-4acb-9233-590815ccd53d",
+        "attempts": 1,
+        "reasons": [],
+        "samples": 504,
+        "requested": 1000,
+        "failure": false,
+        "key": "sim-failure-v1:e7e1ee9ffa622283e16b016d67b3c1e34c4592d02185da19ff5480f1fe4a62c2",
+        "budgeted": true,
+        "latencyTargetMs": 11000,
+        "latencyTargetExceeded": true
+      },
+      "adaptive_status": "partial",
+      "adaptive_candidates": [
+        {
+          "key": "@current",
+          "samples": 504,
+          "rounds": 4,
+          "stop": "budget",
+          "baseline": true
+        },
+        {
+          "key": "card0",
+          "samples": 504,
+          "rounds": 4,
+          "stop": "budget",
+          "baseline": false
+        },
+        {
+          "key": "card1",
+          "samples": 300,
+          "rounds": 1,
+          "stop": "eliminated",
+          "baseline": false
+        },
+        {
+          "key": "card2",
+          "samples": 300,
+          "rounds": 1,
+          "stop": "eliminated",
+          "baseline": false
+        },
+        {
+          "key": "skip",
+          "samples": 504,
+          "rounds": 4,
+          "stop": "budget",
+          "baseline": false
+        }
+      ],
+      "actual_diagnostics": {
+        "schema": "build-sim-health-v1",
+        "status": "produced",
+        "availableCpus": 32,
+        "loadAverage": [
+          11.43,
+          19.5,
+          21.83
+        ],
+        "decks": 4,
+        "options": 4,
+        "deckCards": 27,
+        "deadlineMs": 10981.66911600018,
+        "orderSearch": {
+          "samples": 100,
+          "elapsedMs": 2386,
+          "timedOut": false,
+          "workers": 24,
+          "deadlineMs": 2745.417279000045,
+          "pool": {
+            "queueMs": 0,
+            "coldStart": true,
+            "preparationMs": 12,
+            "firstReplyMs": 590,
+            "chunksPlanned": 39,
+            "chunksDispatched": 39,
+            "chunksCompleted": 39,
+            "outcomesCompleted": 300
+          },
+          "status": "measured",
+          "basis": "completed_paired_samples"
+        },
+        "comparison": {
+          "samples": 504,
+          "elapsedMs": 8583,
+          "timedOut": true,
+          "workers": 24,
+          "deadlineMs": 8594.269026000053,
+          "pool": {
+            "queueMs": 0,
+            "coldStart": false,
+            "preparationMs": 0,
+            "firstReplyMs": 87,
+            "chunksPlanned": 230,
+            "chunksDispatched": 230,
+            "chunksCompleted": 206,
+            "outcomesCompleted": 1742
+          }
+        },
+        "boss": "KAISER_CRAB",
+        "samples": 504,
+        "requested": 1000,
+        "minimumShown": 300,
+        "timedOut": true,
+        "simMs": 11237,
+        "workers": 24
+      },
+      "actual_sim_ms": 11262,
+      "actual_time_budget": {
+        "schema": "decision-budget-v1",
+        "kind": "brain",
+        "key": "5H83F3J0XSTE:{\"actions\":[\"save_and_quit\",\"resolve_rewards\",\"collect_rewards_and_proceed\",\"choose_reward_card\",\"skip_reward_cards\"],\"combat\":false,\"enemies\":\"\",\"event\":\"\",\"gold\":155,\"hand\":\"\",\"hp\":33,\"maxHp\":70,\"nodes\":\"\",\"pendingCard\":true,\"player\":\"3:0:0\",\"potions\":\":false:false|REGEN_POTION:true:false\",\"powers\":\"\",\"rewards\":\"\",\"run\":\"5H83F3J0XSTE\",\"screen\":\"REWARD\",\"selection\":\"null:false\",\"shopOpen\":false,\"shopStock\":\"\",\"turn\":5}",
+        "budget_ms": 90000,
+        "entry_budget_ms": 4999.996170999948,
+        "actual_ms": 41041,
+        "turn_actual_ms": 41041,
+        "timed_out": false,
+        "fallback": null,
+        "shadow_unknown": [],
+        "stages": [
+          {
+            "stage": "L2_brain",
+            "budget_ms": 75858.99594799988,
+            "actual_ms": 26899,
+            "timed_out": false
+          }
+        ],
+        "animation_time_included": false
+      },
+      "global_failure": {
+        "source": {
+          "offset": 2179363533,
+          "length": 241912,
+          "sha256": "c814b7b2669147bf8c033c109df54d0f0e04840d15c03de3650f3afb7a59d298"
+        },
+        "observation_id": "3319441:g2:17",
+        "target": {
+          "target": {
+            "boss": "KAISER_CRAB",
+            "count": 0,
+            "frequency": 1,
+            "evidence": [
+              "actual_visible_run_state"
+            ],
+            "act": 2,
+            "source": "visible_actual_boss",
+            "unknown": null
+          },
+          "status": "unknown",
+          "rows": [
+            {
+              "key": "@current",
+              "base": null,
+              "option": null,
+              "delta_win": null,
+              "delta_s": null,
+              "samples": null,
+              "unknown": "global_computation_failed:global_required_computation_incomplete"
+            },
+            {
+              "key": "card0",
+              "base": null,
+              "option": null,
+              "delta_win": null,
+              "delta_s": null,
+              "samples": null,
+              "unknown": "global_computation_failed:global_required_computation_incomplete"
+            },
+            {
+              "key": "card1",
+              "base": null,
+              "option": null,
+              "delta_win": null,
+              "delta_s": null,
+              "samples": null,
+              "unknown": "global_computation_failed:global_required_computation_incomplete"
+            },
+            {
+              "key": "card2",
+              "base": null,
+              "option": null,
+              "delta_win": null,
+              "delta_s": null,
+              "samples": null,
+              "unknown": "global_computation_failed:global_required_computation_incomplete"
+            },
+            {
+              "key": "skip",
+              "base": null,
+              "option": null,
+              "delta_win": null,
+              "delta_s": null,
+              "samples": null,
+              "unknown": "global_computation_failed:global_required_computation_incomplete"
+            }
+          ],
+          "wall_ms": 0,
+          "reported_sim_ms": null,
+          "completion": null,
+          "adaptive": null,
+          "production_calibration": "unknown"
+        }
+      },
+      "request_ids": [],
+      "result": "completed: Action completed."
+    }
+  ],
+  "original_alert_not_rewritten_or_cleared": true,
+  "diagnosis": "H1 normal budget-partial completion is rejected by old C2 health status and G2 full-result guard; a nonblocking engineering protocol mismatch, not evidence of new worker/C1/resource failure.",
+  "existing_owner_chain": {
+    "H1_original_owner": "01a13dcd-83d4-7c63-b233-f93cf878ecf4",
+    "H1_worktree": ".worktrees/human-pace-h1-20261017",
+    "H1_natural_acceptance_existing_assignment": {
+      "state": "active",
+      "path": "paper/materials/20261017-human-pace-h1/natural",
+      "listener_pid": 3307923,
+      "listener_session": 77455,
+      "accepted_complete": 0
+    },
+    "H1_control_reference": {
+      "path": "paper/materials/20261017-human-pace-control/checkpoint.json",
+      "sha256": "677599ffaa4e8849326878d2f833494fc925c42cfa21f0ed906e79c8e5ef4fb4"
+    },
+    "original_module_health_parent": "v5-dpr-health-20261013",
+    "actual_existing_ordinary_fix": {
+      "batch": "20261017-081302-fix-batch",
+      "state": "running",
+      "pid": 2871628,
+      "worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261017-081302",
+      "task": "existing test/fixture fixes; no task hot-edit"
+    },
+    "H0": {
+      "batch": "20261017-095852-strategy-proposal",
+      "state": "running",
+      "revision": 1
+    },
+    "silent0332": {
+      "batch": "20261016-203731-strategy-proposal",
+      "state": "blocked",
+      "revision": 3
+    },
+    "new_registration_is_not_role_receipt_or_task_dispatch": true,
+    "current_owner_inputs_threads_or_slots_changed": false,
+    "no_new_observer_or_model": true
+  },
+  "current_heads": {
+    "main": "a7082731a849abf2db5055d7fa82236200f3819d",
+    "live": "7907ca1af8f88d2adbe6b137ff8b6b8ceb082a23"
+  },
+  "versions_sha256_by_checkout": {
+    "/home/dw/Projects/agent-sts2": "c74c87298eefdf2ca948a8bad6a4de6f693719d733cbeb9cecf0a7da7efdb0ae",
+    "/home/dw/Projects/agent-sts2/.worktrees/live": "ed762622dd283116d32fdb134340d0bc686e14a6367b959a9b191696597fac1c"
+  },
+  "no_300_threshold_target_or_budget_change": true,
+  "no_game_restart_or_model_api": true,
+  "pure_readonly_receipt_recomputation_not_simulation_or_production_test": true,
+  "no_routine_watcher_or_Roy_message": true,
+  "no_other_role_ACK": true,
+  "no_H0_0332_or_natural_acceptance_completion_claim": true
+}

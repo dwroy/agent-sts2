@@ -1,0 +1,31 @@
+from pathlib import Path
+import hashlib, json, subprocess
+
+r = Path.cwd(); p = r / 'ops/codex-ops/record-staging/20261017-human-pace-h1'
+phase = r / 'paper/materials/20261017-human-pace-h1'; pub = phase / 'ops-receipts'
+load = lambda f: json.loads(f.read_bytes())
+def write(f, value): f.write_text(json.dumps(value, ensure_ascii=False, indent=2) + '\n')
+v = load(pub / 'ops-publication.json'); live = r / '.worktrees/live'
+for cwd in [r, live]:
+    subprocess.run(['git', '-C', str(cwd), 'merge-base', '--is-ancestor', v['source'], 'HEAD'], check=True)
+for leaf in v['leaves']:
+    cwd = r if leaf['lane'] == 'main' else live
+    assert hashlib.sha256((cwd / leaf['path']).read_bytes()).hexdigest() == leaf['composed_sha256']
+at = subprocess.check_output(['date', '+%Y-%m-%d %H:%M:%S %Z'], text=True).strip()
+print(at, flush=True)
+notice = (f'\n- {at} [规则实际上线/{v["release_id"]}：Roy09:49 human-pace/H1] 原watcher精确source {v["source"]}（parent{v["source_parent"]}、tree{v["source_tree"]}）已持原live锁以补丁窄合main {v["main"]}/live {v["actual_live"]}，行为commit {v["behavior_commit"]}，最终组合tree {v["tree"]}。28叶，保R379和并行源码、历史署名/知识/记录/普通index；两main及四live重叠按原patch三方合并，不整分支或全叶覆盖。V6仍待Roy决定，本次沿V5统一序号登记。\n'
+ '  旧规则：R341必需完整B2/B3在完整/合格C2前缀前等待，同题大脑额度/故障等待可无限延续，shadow无共同硬截止，首试未普遍填充重试memo。新规则：仅Silent共享计算预算，普通/精英/Boss回合10/15/30秒、SL精确复用已有结果+10秒、常规L1 5秒、L2累计90秒/xhigh；动作/动画和状态运输不计我方计算。B2/B3有限预算交真实共同种子前缀、实际n、MC95/配对SE及partial/complete_budget，n<2误差unknown；低可信目标最多200且受更早截止，明确低可信未完整，complete_budget不等于旧全量或模型可信。正常截止用已有L1兜底，不当C1故障/完整必死证明；实际C1故障出口、C2完整批次淘汰、合法执行闸、SL/药水及其他角色保持。已有观察输入的空档预计算及首试/SL精确缓存可复用，未知未来unknown；P1/P2/S及G2仍shadow，所有shadow服从剩余预算，过期unknown。\n'
+ '  依据与检查：Roy2026-10-17 09:49原授权、docs/human-pace-plan.md第2/3节及批准commit54e36d083，这是工程时间参数，不新增游戏机制/数值知识。原source tsc0、sandbox467文件4285题＋paths11题共4296、全入口0及gitleaks0；首轮主动中断143和全部早期失败原件保留。28SHA从最终源full前至提交相同，本ops未重源full。最终新组合仅原075726 learner-recheck唯一宿主通道，结果待真实回执，不借d24/R379或源绿。\n'
+ '  预期与边界：限制重复计算和最坏等待，记录截断精度/兜底代价；协作检查/调度序列化及进程清理宽限仍可能产生可观测超限，不能据固定测试宣称自然45–60分钟或胜率维持。2局自然验收、延迟p50/p90/max和G1c漏斗待Claude另派；H2以后、L2软调用次数上限未实现，不开观察器/研究/新模型。H0/0332仍同最高优先、科学/根缺陷和宽父不关；H0原r1冻结对象不热改，新生产指纹需后续分列。\n'
+ '  回退：原ops持live锁，在当时上下文仅逆向本H1补丁，保R379、并行知识/源码/历史记录和版本顺序；真实行为回退另记发布号和双通知，不整树回旧base、不带撤回0e4f。当前已加载对局不重启/热改，账号/home/模型/prompt/env均不改；首个实际生效自然局尚未知，须后续原run-config证明，磁盘合并不等于已采用。阶段源交付/发布不等于H1自然门槛完成，不代Roy或其他角色ACK。回执paper/materials/20261017-human-pace-h1/ops-receipts/ops-publication.json。\n')
+assert not (p / 'own-appends.json').exists()
+appends = []
+for relative in ['ops/inbox-dev.md', 'notes/for-roy.md', 'paper/materials/decision-log.md', 'notes/ops-handoff.md']:
+    with (r / relative).open('ab') as stream: stream.write(notice.encode())
+    appends.append(dict(path=relative, text=notice))
+write(p / 'own-appends.json', appends)
+write(pub / 'ops-root-dual-notice.json', dict(at=at, release_id=v['release_id'],
+      actual_notice_sha256=hashlib.sha256(notice.encode()).hexdigest(),
+      actual_paths=[x['path'] for x in appends], written_after_actual_publication=True,
+      no_other_role_ACK=True, first_effective_natural_run=None))
+print(json.dumps(dict(release=v['release_id'], dual_notice_written=True, host='pending')), flush=True)

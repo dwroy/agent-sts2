@@ -1,0 +1,99 @@
+{
+  "at": "2026-10-16 22:28:14 CST",
+  "request_id": "roy-20261016-sl-potion-retry",
+  "revision": 1,
+  "request_sha256": "b453bb3f8f9e6a34175aa3cbc9582c22cf89d96ad9f4bd223791c332d5e17ccf",
+  "input": {
+    "path": "paper/materials/20261016-2219-ops/sl-potion-learner-input.md",
+    "bytes": 3315,
+    "sha256": "ab37a615be5f146a61c9c4943db0fba9596d8d15325da27102d43f64d6f3bee1"
+  },
+  "input_manifest": {
+    "path": "paper/materials/20261016-2219-ops/sl-potion-input-manifest.json",
+    "bytes": 3005,
+    "sha256": "3f006f6af62dcaca1ec34d6b1eb5273e7c62c50344c2bb74202ffd23dc39a777"
+  },
+  "original_batch": "20261016-214302-strategy-proposal",
+  "original_thread": "01a144f3-f753-7881-afd9-9567174ea8e3",
+  "original_worktree": ".worktrees/codex-strategy-silent-20261016-214302",
+  "original_home": "/home/dw/Projects/agent-sts2/ops/codex-ops/accounts/codex1/learner",
+  "original_native_model": "gpt-6.1-sol",
+  "original_native_effort": "xhigh",
+  "original_native_sandbox": "workspace-write; network_access=false",
+  "original_runtime_proof": "paper/materials/20261016-2206-ops/batch-readback.json",
+  "active_strategy_slots_before": [
+    {
+      "batch": "20261016-221302-strategy-proposal",
+      "pid": 988469,
+      "task": "strategy-proposal",
+      "worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-221302",
+      "proposal_ids": [
+        "silent-proposal-03754e1265894000",
+        "silent-proposal-ab055ef7dfbb44e5",
+        "silent-proposal-0129c465c6f5bd79",
+        "silent-proposal-abe9d5d0be109a9f",
+        "silent-proposal-f16527e59b5cc1e0",
+        "silent-proposal-7a8e9ccb7e646538",
+        "silent-proposal-cd9f76184de6e29a",
+        "silent-proposal-292f6731bdb9b669",
+        "silent-proposal-0802f69b28d25079",
+        "silent-proposal-763a4b9d9f17b815"
+      ],
+      "learning_request": null
+    }
+  ],
+  "strategy_slot_limit": 2,
+  "actual_reconcile_result": [
+    "20261016-222815-strategy-proposal",
+    1057680
+  ],
+  "registration": {
+    "id": "roy-20261016-sl-potion-retry",
+    "state": "running",
+    "attempts": [
+      "20261016-222815-strategy-proposal"
+    ],
+    "pending_since": 1792160895.2988074,
+    "request_sha256": "b453bb3f8f9e6a34175aa3cbc9582c22cf89d96ad9f4bd223791c332d5e17ccf",
+    "revision": 1,
+    "request_path": "/home/dw/Projects/agent-sts2/notes/learning-requests/roy-20261016-sl-potion-retry.json",
+    "batch": "20261016-222815-strategy-proposal",
+    "started_at": 1792160896.7375925
+  },
+  "actual_batch": {
+    "task": "strategy-proposal",
+    "character": "silent",
+    "runs": [
+      "KEN58SH9SLZ6",
+      "TXZ6RVMQA09D",
+      "WQZVENQ7DTRP",
+      "02HB4L0C3C67",
+      "4D4J8USKCPAV",
+      "F4QKG4J1AJJZ",
+      "JLN5SK17W4FQ",
+      "LS8035TB32P3",
+      "NB8KCF6HRGVF",
+      "S9UZAK0JP0C0"
+    ],
+    "key": "learning:roy-20261016-sl-potion-retry",
+    "state": "running",
+    "pid": 1057680,
+    "pane": "wJ:p18F",
+    "worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-214302",
+    "learning_request": "roy-20261016-sl-potion-retry",
+    "learning_revision": 1,
+    "learning_input": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261016-222815-strategy-proposal.learning-input.json",
+    "learning_input_sha256": "b453bb3f8f9e6a34175aa3cbc9582c22cf89d96ad9f4bd223791c332d5e17ccf",
+    "learning_request_sha256": "b453bb3f8f9e6a34175aa3cbc9582c22cf89d96ad9f4bd223791c332d5e17ccf",
+    "proposal_policy": "Roy-2026-10-07-learning"
+  },
+  "real_current_learner_received": true,
+  "first_same_thread_native_reply": "Actual original-thread learner_resume_ack plus first model reply and matching native input verified",
+  "pending_reason": null,
+  "original_reports_batches_inputs_and_0332_priority_preserved": true,
+  "new_research_session_or_extra_slot": false,
+  "route": "Existing learning scheduler completion/tick resumes original owner; no new observer or timer",
+  "other_role_ACK": false,
+  "current_model_receipt": "paper/materials/20261016-2219-ops/sl-potion-native-received.json",
+  "slot_transition": "At initial inspection both slots busy; by registration one original slot finished, so existing two-slot guard admitted continuation"
+}

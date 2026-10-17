@@ -1,0 +1,68 @@
+{
+  "at": "2026-10-17T17:13:28.000998+08:00",
+  "run_id": "4JS3T2UNKPVM",
+  "original_startup": "2026-10-17T09:12:14.167Z",
+  "startup_source": {
+    "path": "logs/run-config.jsonl",
+    "off": 1962296,
+    "len": 5992,
+    "sha256": "21dbf9f37b2a6a593c508b289df9b488ff1ee75a7e8fe27c0c1e9459bf76ce04"
+  },
+  "code": {
+    "commit": "3910f41b9c3784a70362f63aad5f0994794c68b7",
+    "code": "3910f41+dirty",
+    "dirty": true,
+    "dirty_files": [
+      "knowledge/characters/silent/boss-damage.json",
+      "knowledge/characters/silent/construction-opportunities.json",
+      "knowledge/characters/silent/monster-records.json",
+      "knowledge/characters/silent/outcome-stats.json",
+      "knowledge/characters/silent/room-costs.json",
+      "knowledge/common/card-upgrades.json",
+      "knowledge/common/monster-db.json",
+      "knowledge/common/move-model.json",
+      "notes/monster-db-check.md"
+    ],
+    "branch": "live",
+    "worktree": "live"
+  },
+  "human_pace": {
+    "schema": "human-pace-h1-v1",
+    "budgets": {
+      "ordinary": 10000,
+      "elite": 15000,
+      "boss": 60000,
+      "retry": 10000,
+      "routine": 5000,
+      "brain": 90000,
+      "direction": 60000
+    },
+    "model_effort": "xhigh",
+    "required_full_replaced": true
+  },
+  "human_pace_h2": {
+    "schema": "human-pace-h2-shadow-v1",
+    "mode": "shadow",
+    "requested": "shadow",
+    "delivered": false,
+    "direction_budget_ms": 60000,
+    "card_budget_ms": 5000,
+    "jev_budget_ms": 1000,
+    "actual_selector": "existing_brain_and_gates_unchanged"
+  },
+  "brain_engine": "codex",
+  "brain_models": {
+    "codex": {
+      "model": "gpt-6.1-sol",
+      "model_by_prefix": {},
+      "timeout_ms": 600000,
+      "effort": "xhigh",
+      "reask": null,
+      "tools": false,
+      "max_calls": null
+    }
+  },
+  "candidate_not_complete": true,
+  "natural_complete_n": 0,
+  "scope": "actual original startup whitelist, not per-decision proof or whole dirty-tree host certification"
+}

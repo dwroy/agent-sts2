@@ -1,0 +1,91 @@
+from pathlib import Path
+import copy,fcntl,hashlib,importlib.util,json,os,re,subprocess,sys
+
+r=Path.cwd();p=r/'ops/codex-ops/record-staging/20261017-1953';pub=r/'paper/materials/20261017-1953-ops';pub.mkdir(parents=True,exist_ok=True)
+load=lambda f:json.loads(f.read_bytes())
+sha=lambda raw:hashlib.sha256(raw).hexdigest()
+def write(f,v):f.write_text(json.dumps(v,ensure_ascii=False,indent=2)+'\n')
+def git(*args,cwd=r):return subprocess.check_output(['git','-C',str(cwd),*args],stderr=subprocess.PIPE)
+assert not (pub/'r387-ledger-shipped.json').exists()
+pending_path=r/'ops/codex-ops/pending-integrations/20261017-191302-strategy-proposal.json';pending=load(pending_path)
+reg=load(r/'paper/materials/20261017-1935-ops/publication.json');bid=reg['batch'];b=load(r/'ops/codex-ops/learn.json')['batches'][bid]
+check=next(x for x in b['fallback_checks'] if x['tree']==reg['tree'])
+assert check['rc']==0 and check['merged']==reg['actual_live']=='31db98183b162f9e2213884f6b8ab518fe6ff89b'
+assert check['tree']=='6f81a7e61707c0f2b91647ed7963f04014fc31b3' and git('rev-parse',check['merged']+'^{tree}').decode().strip()==check['tree']
+assert b['state']=='failed' and b['rc']==0 and b['merged'] is None and b['proposal_audit_errors']==[]
+raw=Path(check['log']).read_bytes();plain=re.sub(r'\x1b\[[0-9;]*m','',raw.decode())
+for text in ['531 passed (531)','5217 passed | 2 skipped (5219)','834.88s','19:39:09']:assert text in plain
+binding=load(r/'paper/materials/20261017-1935-ops/host-report-binding.json')
+assert sha((r/binding['original_out_path']).read_bytes())==binding['original_out_sha256']
+assert load(r/'paper/materials/20261017-1935-ops/host-adapter-terminal.json')['rc']==0
+assert binding['source']==reg['source'] and binding['normalized_operand']['fixes'][0]['commit']==reg['source']
+for cwd in [r,r/'.worktrees/live']:
+    for ref in [reg['source'],'0e4fe4df89a06682468e0e4716c12126e76369d5','e8e028720c150f8456789546e1a9f5da89e33686']:
+        git('merge-base','--is-ancestor',ref,'HEAD',cwd=cwd)
+    if cwd==r/'.worktrees/live':git('merge-base','--is-ancestor',reg['behavior_commit'],'HEAD',cwd=cwd)
+    versions=json.loads(git('show','HEAD:eval/versions.json',cwd=cwd));entry=next(x for x in versions['versions'] if x['name']==reg['name'])
+    assert entry['release_id']=='V5-R387' and entry['commit']==reg['behavior_commit']
+for leaf in reg['leaves']:
+    ref=reg['main'] if leaf['lane']=='main' else check['merged']
+    assert sha(git('show',ref+':'+leaf['path']))==leaf['sha256']==leaf['source_sha256']
+at=subprocess.check_output(['date','+%Y-%m-%d %H:%M:%S %Z'],text=True).strip()
+terminal=dict(at=at,batch=bid,canonical_check=check,source=reg['source'],behavior_commit=reg['behavior_commit'],actual_live=check['merged'],tree=check['tree'],
+    release_id='V5-R387',name=reg['name'],tsc=0,vitest=0,files=531,passed=5217,skipped=2,duration_seconds=834.88,start_local='19:39:09',
+    log_sha256=sha(raw),log_bytes=len(raw),original_out_SHA_unchanged=True,original_failed_rc0_mergednull_preserved=True,
+    original_check_command_with_receipt_bound_shape_adapter=True,source_full_not_repeated=True,first_effective_run=None,
+    independent_runs=1,related_SL_attempts=2,whole_fight_calibration_or_natural_benefit_proven=False,root0332_fixed=False,other_role_ACK=False)
+write(pub/'r387-host-terminal.json',terminal);(pub/'r387-host-terminal.log').write_bytes(raw)
+spec=importlib.util.spec_from_file_location('original_ledger',r/'learner/ledger.py');ledger=importlib.util.module_from_spec(spec);spec.loader.exec_module(ledger)
+before=ledger.fold(ledger.read_rows());saved={ident:copy.deepcopy(before[ident]) for ident in ['silent-0504','silent-0505']}
+assert all(x['status']=='proposed' for x in saved.values())
+prefix=(r/'paper/materials/learning/ledger.jsonl').read_bytes()
+changes=[dict(id=ident,by='ops:codex',status='shipped',version=reg['name'],where=dict(commits=[reg['source'],reg['behavior_commit'],reg['main'],check['merged']],changelog=[str(pub/'r387-host-terminal.json'),str(r/'paper/materials/20261017-1935-ops/publication.json')]),
+    note='V5-R387 exact engineering delivery: source d959e176 and four production/test leaves match actual main/live ancestors; original exact6f81a7e host tsc0/Vitest531files5217passed2skipped834.88s. Original source481/4410, fixed12, withdrawal5fail7pass/restored12, and protocol/string-fix refusal2 remain separate. Only observed Silent A10 not-molten Akabeko8 Vigor/upgraded Skewer paid2 base11/shown19 unmodified manual two-hit30to38; one run/two related failed SL attempts, no whole-fight calibration, independent-sample increase, natural or win benefit. Other roles/unmatched conditions/SL/potion policies unchanged. H0 six-target trust and0332 root/wide goals remain open.') for ident in saved]
+stdin='\n'.join(json.dumps(x,ensure_ascii=False) for x in changes)+'\n';(p/'ship-input.jsonl').write_text(stdin)
+cp=subprocess.run(['nice','-n','19','python3','learner/ledger.py','update'],input=stdin,text=True,capture_output=True)
+(pub/'ship-cli.stdout').write_text(cp.stdout);(pub/'ship-cli.stderr').write_text(cp.stderr);assert cp.returncode==0
+physical=(r/'paper/materials/learning/ledger.jsonl').read_bytes();assert physical.startswith(prefix)
+owned=[];offsets=[];offset=len(prefix)
+for raw in physical[len(prefix):].splitlines(keepends=True):
+    row=json.loads(raw)
+    if row.get('id') in saved and row.get('by')=='ops:codex' and row.get('version')==reg['name'] and row.get('status')=='shipped':
+        owned.append(raw);offsets.append(dict(offset=offset,bytes=len(raw),sha256=sha(raw),row=row))
+    offset+=len(raw)
+assert len(owned)==2
+after=ledger.fold(ledger.read_rows())
+for ident,old in saved.items():
+    new=after[ident];assert new['status']=='shipped' and new['version']==reg['name']
+    for key in ['character','claim','first_run','asc','prior','prior_note','prior_runs','evidence','effect']:assert old.get(key)==new.get(key),(ident,key)
+(p/'ship-owned-rows.jsonl').write_bytes(b''.join(owned))
+write(pub/'r387-ledger-shipped.json',dict(at=at,exit_code=0,name=reg['name'],release_id='V5-R387',own_rows=offsets,prefix_bytes=len(prefix),prefix_sha256=sha(prefix),protected_fields_and_evidence_preserved=True))
+# This is an ops-authored deployment receipt, separate from every original learner artifact.
+resolution_path=Path(b['report']['report']).with_name('ops-actual-publication-V5-R387.md');assert not resolution_path.exists()
+ops_report={**b['report'],'actor':'ops:codex','report_kind':'actual-deployment-receipt-not-learner-completion',
+    'original_report':b['report']['report'],'original_out':binding['original_out_path'],'original_out_sha256':binding['original_out_sha256'],
+    'report':str(resolution_path),'fixes':[dict(proposal_id='silent-proposal-72e0c8b41d2f5ab8',commit=reg['source'])],
+    'merged':check['merged'],'proposal_results':[dict(id='silent-proposal-72e0c8b41d2f5ab8',state='implemented',commit=reg['source'],reason='Ops independently verified original source d959e176 actual main/live ancestry, four exact leaf SHA, V5-R387 official publication and exact final-tree full0; original learner waiting/failed report kept separately. Only its evidence-bounded source repair is implemented, no broader calibration or natural benefit.')],
+    'ops_exact_host':terminal,'original_source_tests':b['report']['tests']}
+text='# Ops actual deployment receipt: V5-R387\n\nThis records ops integration and exact host acceptance. The original learner report, output, waiting disposition and failed/rc0/mergednull history remain unchanged. Game evidence and the narrow repair come only from the original learner. No new research, task, model, proposal identity or dispatch lease.\n\n```json\n'+json.dumps(ops_report,ensure_ascii=False,indent=2)+'\n```\n'
+resolution_path.write_text(text);(pub/'ops-actual-publication-V5-R387.md').write_text(text)
+sys.path.insert(0,str(r/'ops'));import proposal_dispatch
+q=r/'paper/materials/learning/code-proposals.jsonl';queue_before=q.read_bytes()
+with (r/'ops/codex-ops/learn.lock').open('a') as lock:
+    fcntl.flock(lock,fcntl.LOCK_EX)
+    current=load(r/'ops/codex-ops/learn.json')['batches'][bid]
+    assert current['report']==b['report'] and current['state']=='failed' and current['rc']==0 and current['merged'] is None
+    proposal_dispatch.resolve(ops_report,current,str(r),str(r/'ops'))
+queue_after=q.read_bytes();assert queue_after.startswith(queue_before)
+queue_owned=[raw for raw in queue_after[len(queue_before):].splitlines(keepends=True) if json.loads(raw).get('resolution_report')==str(resolution_path)]
+assert len(queue_owned)==1;row=json.loads(queue_owned[0]);assert row['id']=='silent-proposal-72e0c8b41d2f5ab8' and row['state']=='implemented' and row['commit']==reg['source']
+assert 'batch' not in row and 'seen_runs' not in row
+write(p/'resolution-appends.json',[dict(path='paper/materials/learning/code-proposals.jsonl',text=queue_owned[0].decode())])
+write(pub/'original-proposal-resolution.json',dict(at=at,original_id_preserved=True,no_new_parent_or_dispatch_lease=True,original_resolver_used=True,
+    ops_receipt_path=str(resolution_path),ops_receipt_sha256=sha(resolution_path.read_bytes()),original_learner_reports_not_modified=True,
+    resolution_row=row,prefix_bytes=len(queue_before),prefix_sha256=sha(queue_before)))
+cp=subprocess.run(['nice','-n','19','python3','learner/ledger.py','check'],capture_output=True,text=True);(pub/'ledger-check.log').write_text(cp.stdout+cp.stderr);assert cp.returncode==0
+pending.update(status='V5-R387 exact host and bounded original source engineering delivery closed',host_complete=True,host_rc=0,host_terminal_receipt=str((pub/'r387-host-terminal.json').relative_to(r)),
+    ledger_shipped=True,ledger_shipped_receipt=str((pub/'r387-ledger-shipped.json').relative_to(r)),original_proposal_implemented=True,
+    original_proposal_resolution_receipt=str((pub/'original-proposal-resolution.json').relative_to(r)),first_effective_run=None,
+    next_step='No repeated source/full/consumer, no model or observer; original canonical failed history retained. Observe only separately authorized natural runs; no whole-fight trust or0332 root closure.')
+write(pending_path,pending);write(pub/'pending-after.json',pending)
+print(json.dumps(dict(host_rc=0,files=531,passed=5217,skipped=2,ledger_shipped=2,original_proposal_implemented=1)),flush=True)

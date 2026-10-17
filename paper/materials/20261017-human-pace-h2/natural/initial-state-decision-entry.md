@@ -1,0 +1,1 @@
+- 2026-10-17T17:06:35.760595+08:00 watcher/codex1按Claude同父明确指派接续H2 shadow三自然局只读验收：最低实际启动代码3910f41及后继、H2 shadow/Boss60/F1自然启动；当前S5GZG328S1LN以158d910/R385启动无H2，明确排除。原单次inotify PID458217/birth111965040/session40720已armed，0/3，收到3合格终局退出，不做分钟对局/DB轮询、重启、模型或模拟。前置原数据下界/统计口径/脚本及requirements/checkpoint在paper/materials/20261017-human-pace-h2/natural/；宿主仍原ops独占闭环，H2 on/移交/H3+未开始。

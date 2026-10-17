@@ -1,0 +1,15 @@
+{
+  "at": "2026-10-16T09:17:06.223650+08:00",
+  "original_gitleaks_rc": 1,
+  "original_report": "technical-closure-gitleaks.json",
+  "fingerprint": ":generic-api-key:115",
+  "stdin_sha256": "8ed2b6f3fd9bf739f853a1fb12ee9e5e73fa9a690758952bf9be6cdfefdf67da",
+  "matched_source": "learner-technical-closure-r1.tar.gz:protected-artifacts-before.json:30",
+  "source_field": "/home/dw/Projects/agent-sts2/paper/materials/20261016-global-build-g1a/ops-recovery/secret-scan-receipt.json",
+  "matched_value_is_actual_referenced_file_sha256": true,
+  "referenced_file_sha256": "0b6efde874bbdd86b3fa888b2bffbe898b6e05b8353332badd6eeed7e8c50eb9",
+  "reason": "generic-api-key matched the JSON field path secret-scan-receipt.json followed by its verified SHA256; this is an artifact digest, not a credential",
+  "ignore": "technical-closure-gitleaks.ignore",
+  "reviewed_rc": 0,
+  "scope": "exact single fingerprint only; no rule, credential, source or report modification"
+}

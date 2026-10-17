@@ -1,0 +1,26 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/global-build-g1a-interface-20261016/agent
+
+ ❯ tests/brain-codex.test.ts (31 tests | 1 failed) 16399ms
+     × the router's timeout leaves the evidence: what the stream had sent, and its stderr with credentials masked 1555ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/brain-codex.test.ts > codex runs watched: retries, stalls, timeouts and their trace > the router's timeout leaves the evidence: what the stream had sent, and its stderr with credentials masked
+AssertionError: expected 356 to be greater than or equal to 500
+ ❯ tests/brain-codex.test.ts:396:32
+    394|     expect(row!["events"].map((event: any) => event.type)).toEqual(["t…
+    395|     // Aborted at 1.5 s; under load the fake process starts late, so t…
+    396|     expect(row!["max_gap_ms"]).toBeGreaterThanOrEqual(500);
+       |                                ^
+    397|     expect(row!["stderr_tail"]).toContain("retrying");
+    398|     expect(row!["stderr_tail"]).not.toContain(jwt);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 490 passed (491)
+      Tests  1 failed | 4927 passed | 2 skipped (4930)
+   Start at  08:56:53
+   Duration  1386.49s (transform 17.55s, setup 36.02s, import 99.64s, tests 1171.10s, environment 61ms)
+

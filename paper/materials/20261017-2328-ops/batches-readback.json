@@ -1,0 +1,411 @@
+{
+  "batches": [
+    {
+      "batch": "20261017-231301",
+      "canonical_state": "done",
+      "canonical_rc": 0,
+      "canonical_merged": null,
+      "report": {
+        "task": "postmortem",
+        "appended": [
+          "U1JMSKC80LQE"
+        ],
+        "skipped": [],
+        "bugs": [],
+        "ledger": {
+          "added": [],
+          "updated": [
+            "silent-0019",
+            "silent-0079",
+            "silent-0385",
+            "silent-0083",
+            "silent-0170",
+            "silent-0007",
+            "silent-0231"
+          ],
+          "repeats": [],
+          "check": 0
+        },
+        "code_proposals": [
+          "silent-proposal-f65a1342259d798a",
+          "silent-proposal-27b7729ab6aaac4d"
+        ],
+        "implementation_domains": [
+          "combat",
+          "structure"
+        ],
+        "report": "/home/dw/Projects/agent-sts2/learner/runs/20261017-231310-51474383-40e9-4e80-abc7-f00ec08b283e-postmortem/report.md"
+      },
+      "native": {
+        "batch": "20261017-231301",
+        "thread": "01a14a6c-9953-7091-9e23-411d75c5cc85",
+        "cwd": "/home/dw/Projects/agent-sts2",
+        "event_log": "learner/runs/20261017-231310-51474383-40e9-4e80-abc7-f00ec08b283e-postmortem.jsonl",
+        "registered_launch_batch": "20261017-231301",
+        "original_lease": "19c0598b54c5207fe8c478dda6ba2530a8ab096bfcb3fd4f3b143938f32e500d",
+        "native_context": {
+          "source": "ops/codex-ops/accounts/codex1/learner/sessions/2026/10/17/rollout-2026-10-17T23-13-13-01a14a6c-9953-7091-9e23-411d75c5cc85.jsonl",
+          "offset": 49293,
+          "bytes": 4654,
+          "sha256": "d190227bdb86bfff2622d24308d3efaed763e4f0c3b971601c34db10573e3de2",
+          "model": "gpt-6.1-sol",
+          "effort": "xhigh",
+          "sandbox": {
+            "type": "workspace-write",
+            "writable_roots": [
+              "/home/dw/Projects/agent-sts2/.git"
+            ],
+            "network_access": false,
+            "exclude_tmpdir_env_var": false,
+            "exclude_slash_tmp": false
+          },
+          "approval_policy": "never"
+        },
+        "native_user_input": {
+          "offset": 56530,
+          "bytes": 15344,
+          "sha256": "9ea08966afa980f8be0144cacfff4996a995cbda1ead98cf52851327ac4001f4",
+          "input_sha256": "3332f9d32207177054db6fc356fe3a41d3de4c0889fdc9a435c7f30d51c19d7f"
+        },
+        "original_header_events": [
+          {
+            "offset": 0,
+            "bytes": 16866,
+            "sha256": "4f2f8370762b17c1a5826a8c4655af99adcc7c84a7462786d4cad88211cfed7e",
+            "type": "learner_launch",
+            "attempt": null,
+            "code": null
+          },
+          {
+            "offset": 16866,
+            "bytes": 360,
+            "sha256": "d2540dd64007e843e11cacddd3c3f6c4611b02d17aac6543bb9610f5686e6d88",
+            "type": "learner_startup_attempt",
+            "attempt": 1,
+            "code": null
+          },
+          {
+            "offset": 19804,
+            "bytes": 77,
+            "sha256": "f0a3a7f2299bd395bc8ec882e6d7b220e0f68f8526f093cfb4cc5db855d77495",
+            "type": "thread.started",
+            "attempt": null,
+            "code": null
+          }
+        ],
+        "startup_attempts": 1,
+        "failed_startups_preserved": 0,
+        "no_model_or_manual_restart": true
+      },
+      "artifact_checks": [],
+      "raw_checks": [],
+      "ledger_rows": [
+        {
+          "offset": 23546133,
+          "bytes": 533,
+          "sha256": "7952333b6a4584c947b329370797154c94ebba81e3e8afe42f68271d6ae81739",
+          "row": {
+            "op": "update",
+            "id": "silent-0019",
+            "ts": "2026-10-17T23:25:45+08:00",
+            "by": "learner:postmortem",
+            "evidence": [
+              {
+                "run": "U1JMSKC80LQE",
+                "floor": 6,
+                "turn": 1,
+                "role": "support",
+                "note": "五连普通战在F7首火前，前四胜入口／出口56→47→41→30→29，累计净损27；F6初始预测44、F3改线后35，实到29且空药，F7未到。s440891—441022，d426310/426367；不把未来营火当已得恢复，无另一开局路线胜负对照，不登记可避免重犯。"
+              }
+            ],
+            "where": {
+              "lessons": [
+                "U1JMSKC80LQE"
+              ]
+            }
+          }
+        },
+        {
+          "offset": 23546666,
+          "bytes": 890,
+          "sha256": "76e03ca6d470a1f25e4cdb32d3b2b5443c04f97f43a8a09aca3cf5d9a444a5bf",
+          "row": {
+            "op": "update",
+            "id": "silent-0079",
+            "ts": "2026-10-17T23:25:45+08:00",
+            "by": "learner:postmortem",
+            "evidence": [
+              {
+                "run": "U1JMSKC80LQE",
+                "floor": 6,
+                "turn": 4,
+                "role": "support",
+                "note": "d426419原状态潮湿47血、15攻、玩家23血；选打击+／冲刺预测19伤10挡损5，s441004→441007实际敌28、玩家18。未打防御／冲刺候选10伤15挡损0；两线五轮各8样本均1赢7死、约13%，微差-57.4/-57.5不证明整战优势。终局T7敌余4、5血5挡对虚弱24攻死亡；缺受控替线，不登记repeat。"
+              },
+              {
+                "run": "U1JMSKC80LQE",
+                "floor": 4,
+                "turn": 1,
+                "role": "support",
+                "note": "唯一HP护栏d426370将Jev三打击18伤损13替为两防御打击6伤损3，预计省10血少12伤；替线实际6伤损3。原线未实打，整场实际净损11，不能称实际省10或判护栏胜因。s440952—440964。"
+              }
+            ],
+            "where": {
+              "lessons": [
+                "U1JMSKC80LQE"
+              ]
+            }
+          }
+        },
+        {
+          "offset": 23547556,
+          "bytes": 633,
+          "sha256": "0be09e8041c0273304bcfd460346882b6792b3f824a3f7e256bd3b5071107191",
+          "row": {
+            "op": "update",
+            "id": "silent-0385",
+            "ts": "2026-10-17T23:25:45+08:00",
+            "by": "learner:postmortem",
+            "evidence": [
+              {
+                "run": "U1JMSKC80LQE",
+                "floor": 6,
+                "turn": 5,
+                "role": "support",
+                "note": "F2首药瓶在F4/F5实建9毒并获胜；F5奖励brain15994预算耗尽无答，d426404代码按旧wanted拿第二BOUNCING_FLASK。F6T3/T5双瓶到手均未施放，T7仍未打，本场毒伤0；T5单防御药瓶候选损16/结毒9且8样本全死，实选两防御打击损11/伤6。s441001—441022；拥有与施放分账，无拿跳第二瓶或早毒的完整胜线，不登记可避免重犯。"
+              }
+            ],
+            "where": {
+              "lessons": [
+                "U1JMSKC80LQE"
+              ]
+            }
+          }
+        },
+        {
+          "offset": 23548189,
+          "bytes": 608,
+          "sha256": "66192ab09ec46ad7ad5f7435bd7100c600bc5a5abe7e6f1c93d958f63001460b",
+          "row": {
+            "op": "update",
+            "id": "silent-0083",
+            "ts": "2026-10-17T23:25:45+08:00",
+            "by": "learner:postmortem",
+            "evidence": [
+              {
+                "run": "U1JMSKC80LQE",
+                "floor": 6,
+                "turn": 7,
+                "role": "support",
+                "note": "同类仪式成长的不同敌人观察：钙化T2仪式2、T3力量2/攻击13；潮湿T2仪式6，T3—T7力量6/12/18/24/30，攻击9/15/21/27/33。中和使T6的27→20、T7的33→24，未停止成长；末5血5挡不足24而死。s440996—441022。保留原雕刻师claim与身份，不把9仪式直接推广成邪教徒参数，不由此证明改击杀顺序可赢。"
+              }
+            ],
+            "where": {
+              "lessons": [
+                "U1JMSKC80LQE"
+              ]
+            }
+          }
+        },
+        {
+          "offset": 23548797,
+          "bytes": 498,
+          "sha256": "54ec8f9ac3c590fb1b821b7387dbc7311da01731a94b599c9bfb4af13b093bdd",
+          "row": {
+            "op": "update",
+            "id": "silent-0170",
+            "ts": "2026-10-17T23:25:45+08:00",
+            "by": "learner:postmortem",
+            "evidence": [
+              {
+                "run": "U1JMSKC80LQE",
+                "floor": 4,
+                "turn": 4,
+                "role": "support",
+                "note": "F1取FISHING_ROD，第三场普通战F4结束s440963→440964仅一张STRIKE_SILENT普通→升级，HP保持30，后空翻/药瓶仍普通。F5T1与F6T1/T4实用升级打击；未到第六场胜利或营火，升级不当HP补充，无其他遗物/路线对照。"
+              }
+            ],
+            "where": {
+              "lessons": [
+                "U1JMSKC80LQE"
+              ]
+            }
+          }
+        },
+        {
+          "offset": 23549295,
+          "bytes": 532,
+          "sha256": "6a76290288fca4078c0898801fc02b14c63dd9f0d82e23ce1dd2018d2ea02eb4",
+          "row": {
+            "op": "update",
+            "id": "silent-0007",
+            "ts": "2026-10-17T23:25:45+08:00",
+            "by": "learner:postmortem",
+            "evidence": [
+              {
+                "run": "U1JMSKC80LQE",
+                "floor": 4,
+                "turn": 2,
+                "role": "support",
+                "note": "单敌SEAPUNK上BOUNCING_FLASK建9毒，F4T2/T3/T4结算实扣9/8/5，最后敌5血7毒按剩血截断，共22毒伤；F5T2同牌给SEWER_CLAM9毒，后续实扣9/8/7/5共29，最后5血6毒只扣5。s440958—440964/440977—440986；F6两瓶均未施放，毒伤0，不预支持有牌的输出。"
+              }
+            ],
+            "where": {
+              "lessons": [
+                "U1JMSKC80LQE"
+              ]
+            }
+          }
+        },
+        {
+          "offset": 23549827,
+          "bytes": 549,
+          "sha256": "5570c764701445a495ea668d94b8a107163580a357affb84c05e15ec50d6de94",
+          "row": {
+            "op": "update",
+            "id": "silent-0231",
+            "ts": "2026-10-17T23:25:45+08:00",
+            "by": "learner:postmortem",
+            "evidence": [
+              {
+                "run": "U1JMSKC80LQE",
+                "floor": 5,
+                "turn": 3,
+                "role": "support",
+                "note": "SEWER_CLAM两次加压后力量0→4→8，喷水11→15→19；T3中和令15→11，未停止成长。T1—T5可操作轮初覆甲与挡9/9/8/7/6；s440972/440976/440978/440982/440984。T5已结毒收尾未受19攻，净HP30→29只实损1；不从本场补完整覆甲减层条件，不把支持观察记repeat。"
+              }
+            ],
+            "where": {
+              "lessons": [
+                "U1JMSKC80LQE"
+              ]
+            }
+          }
+        },
+        {
+          "offset": 23553924,
+          "bytes": 364,
+          "sha256": "06b0c818215ea75d303214770b81594f541c3e0fa613a04785d54853829973bc",
+          "row": {
+            "op": "update",
+            "id": "silent-0079",
+            "ts": "2026-10-17T23:27:03+08:00",
+            "by": "learner:postmortem",
+            "where": {
+              "proposal": [
+                "/home/dw/Projects/agent-sts2/learner/runs/20261017-231310-51474383-40e9-4e80-abc7-f00ec08b283e-postmortem/combat-proposal.md"
+              ]
+            },
+            "note": "代码提案 silent-proposal-f65a1342259d798a → task=strategy-proposal；Roy-2026-10-07-learning"
+          }
+        },
+        {
+          "offset": 23554288,
+          "bytes": 364,
+          "sha256": "318ac82071b392c9632bb8e5a54312b89815200dd33272723858252a823af20a",
+          "row": {
+            "op": "update",
+            "id": "silent-0083",
+            "ts": "2026-10-17T23:27:03+08:00",
+            "by": "learner:postmortem",
+            "where": {
+              "proposal": [
+                "/home/dw/Projects/agent-sts2/learner/runs/20261017-231310-51474383-40e9-4e80-abc7-f00ec08b283e-postmortem/combat-proposal.md"
+              ]
+            },
+            "note": "代码提案 silent-proposal-f65a1342259d798a → task=strategy-proposal；Roy-2026-10-07-learning"
+          }
+        },
+        {
+          "offset": 23554652,
+          "bytes": 370,
+          "sha256": "5bf1377a68d9fe1261507b47c6e0fc0b184a7a3bdce9a0c344af413cb33b1e0f",
+          "row": {
+            "op": "update",
+            "id": "silent-0019",
+            "ts": "2026-10-17T23:27:05+08:00",
+            "by": "learner:postmortem",
+            "where": {
+              "proposal": [
+                "/home/dw/Projects/agent-sts2/learner/runs/20261017-231310-51474383-40e9-4e80-abc7-f00ec08b283e-postmortem/construction-proposal.md"
+              ]
+            },
+            "note": "代码提案 silent-proposal-27b7729ab6aaac4d → task=strategy-proposal；Roy-2026-10-07-learning"
+          }
+        },
+        {
+          "offset": 23555022,
+          "bytes": 370,
+          "sha256": "73ef3757131a3a8c14fb91c1cf19410fb8eaadf08b6eddad94406b3d8da5f8d1",
+          "row": {
+            "op": "update",
+            "id": "silent-0385",
+            "ts": "2026-10-17T23:27:05+08:00",
+            "by": "learner:postmortem",
+            "where": {
+              "proposal": [
+                "/home/dw/Projects/agent-sts2/learner/runs/20261017-231310-51474383-40e9-4e80-abc7-f00ec08b283e-postmortem/construction-proposal.md"
+              ]
+            },
+            "note": "代码提案 silent-proposal-27b7729ab6aaac4d → task=strategy-proposal；Roy-2026-10-07-learning"
+          }
+        },
+        {
+          "offset": 23555392,
+          "bytes": 370,
+          "sha256": "f4c5a056ecec0a57466cbd68cfd39144bc1c3815b3ffb0359dd13b4fa5b5c921",
+          "row": {
+            "op": "update",
+            "id": "silent-0170",
+            "ts": "2026-10-17T23:27:05+08:00",
+            "by": "learner:postmortem",
+            "where": {
+              "proposal": [
+                "/home/dw/Projects/agent-sts2/learner/runs/20261017-231310-51474383-40e9-4e80-abc7-f00ec08b283e-postmortem/construction-proposal.md"
+              ]
+            },
+            "note": "代码提案 silent-proposal-27b7729ab6aaac4d → task=strategy-proposal；Roy-2026-10-07-learning"
+          }
+        },
+        {
+          "offset": 23555762,
+          "bytes": 370,
+          "sha256": "448bb38e48cc6140ecc3f7d8bef5bb249960bec1f7f674559022d00bc504e83f",
+          "row": {
+            "op": "update",
+            "id": "silent-0007",
+            "ts": "2026-10-17T23:27:05+08:00",
+            "by": "learner:postmortem",
+            "where": {
+              "proposal": [
+                "/home/dw/Projects/agent-sts2/learner/runs/20261017-231310-51474383-40e9-4e80-abc7-f00ec08b283e-postmortem/construction-proposal.md"
+              ]
+            },
+            "note": "代码提案 silent-proposal-27b7729ab6aaac4d → task=strategy-proposal；Roy-2026-10-07-learning"
+          }
+        },
+        {
+          "offset": 23556132,
+          "bytes": 370,
+          "sha256": "ec0f4be2690ff2af7e5639790d7f6fefb6008de7a4a37d5dbeb0757abfaeec7d",
+          "row": {
+            "op": "update",
+            "id": "silent-0231",
+            "ts": "2026-10-17T23:27:05+08:00",
+            "by": "learner:postmortem",
+            "where": {
+              "proposal": [
+                "/home/dw/Projects/agent-sts2/learner/runs/20261017-231310-51474383-40e9-4e80-abc7-f00ec08b283e-postmortem/construction-proposal.md"
+              ]
+            },
+            "note": "代码提案 silent-proposal-27b7729ab6aaac4d → task=strategy-proposal；Roy-2026-10-07-learning"
+          }
+        }
+      ],
+      "proposal_dispositions": [],
+      "no_ops_model_simulation_consumer_or_source_test": true
+    }
+  ],
+  "unique_original_log_references_verified": 0,
+  "original_failure_history_and_scopes_retained": true
+}

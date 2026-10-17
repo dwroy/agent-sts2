@@ -1,0 +1,37 @@
+{
+  "at": "2026-10-16T12:27:32.049060+08:00",
+  "worktree": "/home/dw/Projects/agent-sts2/.worktrees/global-build-s-shadow-20261016",
+  "nice": 19,
+  "max_workers": 2,
+  "checks": [
+    {
+      "argv": [
+        "npx",
+        "tsc",
+        "-p",
+        "tsconfig.json",
+        "--noEmit"
+      ],
+      "rc": 0,
+      "seconds": 15.84,
+      "log": "paper/materials/20261016-global-build-g1b/s-shadow/fixed-r2/check-0.log"
+    },
+    {
+      "argv": [
+        "npx",
+        "vitest",
+        "run",
+        "--maxWorkers=2",
+        "tests/build-rank.test.ts",
+        "tests/s-combat-rank.test.ts",
+        "tests/build-rank-integration.test.ts",
+        "tests/required-boss-lines.test.ts",
+        "tests/module-health.test.ts",
+        "tests/run-config.test.ts"
+      ],
+      "rc": 0,
+      "seconds": 27.72,
+      "log": "paper/materials/20261016-global-build-g1b/s-shadow/fixed-r2/check-1.log"
+    }
+  ]
+}

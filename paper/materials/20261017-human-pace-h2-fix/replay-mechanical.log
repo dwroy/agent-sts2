@@ -1,0 +1,19 @@
+node:internal/crypto/hash:140
+    throw new ERR_INVALID_ARG_TYPE(
+          ^
+
+TypeError [ERR_INVALID_ARG_TYPE]: The "data" argument must be of type string or an instance of Buffer, TypedArray, or DataView. Received undefined
+    at Hash.update (node:internal/crypto/hash:140:11)
+    at <anonymous> (/home/dw/Projects/agent-sts2/paper/materials/20261017-human-pace-h2-fix/replay.ts:14:59)
+    at Array.map (<anonymous>)
+    at <anonymous> (/home/dw/Projects/agent-sts2/paper/materials/20261017-human-pace-h2-fix/replay.ts:14:30)
+    at Object.<anonymous> (/home/dw/Projects/agent-sts2/paper/materials/20261017-human-pace-h2-fix/replay.ts:60:63)
+    at Module._compile (node:internal/modules/cjs/loader:1781:14)
+    at Object.transformer (/home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/register-OY9cqBEN.cjs:9:3619)
+    at Module.load (node:internal/modules/cjs/loader:1505:32)
+    at Function._load (node:internal/modules/cjs/loader:1309:12)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:254:19) {
+  code: 'ERR_INVALID_ARG_TYPE'
+}
+
+Node.js v22.23.3

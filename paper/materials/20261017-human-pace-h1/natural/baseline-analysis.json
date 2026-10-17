@@ -1,0 +1,2595 @@
+{
+  "schema": "human-pace-natural-analysis-v1",
+  "inputs": [
+    "baseline-r2"
+  ],
+  "baseline_run_ids": [
+    "YZWV37N2MU6N",
+    "N9GKED3PMEV3",
+    "CVJ4MLQF4CSY",
+    "DC32RW0A80V1",
+    "2Q6ZYZ6JHM0M"
+  ],
+  "quantiles": "linear p90 interpolation over (n-1); p50 median; milliseconds",
+  "run_duration": "earliest logged run frame/startup-config to original terminal timestamp, includes game/SL/waits; no menu gap between runs",
+  "comparison_latency": "sum(pre,planner,plan,jev,deepseek) per decision; excludes action; same field definition before/after. Actual H1 budget fields separately reported, never backfilled into baseline",
+  "runs": {
+    "2Q6ZYZ6JHM0M": {
+      "run_id": "2Q6ZYZ6JHM0M",
+      "startup_ts": "2026-10-17T01:36:23.637Z",
+      "first_raw_frame": "2026-10-17T01:37:17.226Z",
+      "ended": "2026-10-17T01:47:33.841Z",
+      "duration_minutes": 11.170066666666665,
+      "over_90_minutes": false,
+      "victory": false,
+      "end_floor": 8,
+      "decision_count": 158,
+      "terminal_decision_count": 158,
+      "decision_count_matches": true,
+      "first_logged_floor": 1,
+      "config_segments": [
+        {
+          "ts": "2026-10-17T01:36:23.637Z",
+          "code": {
+            "commit": "99737be9fdb9c2ea92089d768947c49b49b62382",
+            "code": "99737be+dirty",
+            "dirty": true,
+            "dirty_files": [
+              "knowledge/characters/silent/boss-damage.json",
+              "knowledge/characters/silent/construction-opportunities.json",
+              "knowledge/characters/silent/monster-records.json",
+              "knowledge/characters/silent/outcome-stats.json",
+              "knowledge/characters/silent/room-costs.json",
+              "knowledge/common/card-upgrades.json",
+              "knowledge/common/monster-db.json",
+              "knowledge/common/move-model.json",
+              "notes/fight-value-backtest-silent.md",
+              "notes/monster-db-check.md"
+            ],
+            "branch": "live",
+            "worktree": "live"
+          },
+          "human_pace": null,
+          "restart": false,
+          "source": {
+            "path": "logs/run-config.jsonl",
+            "off": 1916880,
+            "len": 5542,
+            "sha256": "e9b0b30e84cc271af0d82be47bb09c202a9fa65fb0827cd43d280676590adb7d"
+          }
+        }
+      ],
+      "decision_compute_proxy_ms": {
+        "ordinary": {
+          "n": 117,
+          "p50": 3,
+          "p90": 693.4000000000001,
+          "max": 1939,
+          "sum": 18155
+        },
+        "elite": {
+          "n": 0,
+          "p50": null,
+          "p90": null,
+          "max": null,
+          "sum": 0
+        },
+        "boss": {
+          "n": 0,
+          "p50": null,
+          "p90": null,
+          "max": null,
+          "sum": 0
+        },
+        "retry": {
+          "n": 0,
+          "p50": null,
+          "p90": null,
+          "max": null,
+          "sum": 0
+        },
+        "routine": {
+          "n": 41,
+          "p50": 2,
+          "p90": 48692.0,
+          "max": 92048,
+          "sum": 414025
+        }
+      },
+      "turn_compute_proxy_ms": {
+        "ordinary": {
+          "n": 27,
+          "p50": 649.0,
+          "p90": 1167.0000000000002,
+          "max": 2954.0,
+          "sum": 18155.0
+        },
+        "elite": {
+          "n": 0,
+          "p50": null,
+          "p90": null,
+          "max": null,
+          "sum": 0
+        },
+        "boss": {
+          "n": 0,
+          "p50": null,
+          "p90": null,
+          "max": null,
+          "sum": 0
+        },
+        "retry": {
+          "n": 0,
+          "p50": null,
+          "p90": null,
+          "max": null,
+          "sum": 0
+        }
+      },
+      "decision_budget_actual_ms": {
+        "ordinary": {
+          "n": 0,
+          "p50": null,
+          "p90": null,
+          "max": null,
+          "sum": 0
+        },
+        "elite": {
+          "n": 0,
+          "p50": null,
+          "p90": null,
+          "max": null,
+          "sum": 0
+        },
+        "boss": {
+          "n": 0,
+          "p50": null,
+          "p90": null,
+          "max": null,
+          "sum": 0
+        },
+        "retry": {
+          "n": 0,
+          "p50": null,
+          "p90": null,
+          "max": null,
+          "sum": 0
+        },
+        "routine": {
+          "n": 0,
+          "p50": null,
+          "p90": null,
+          "max": null,
+          "sum": 0
+        }
+      },
+      "turn_budget_actual_ms": {
+        "ordinary": {
+          "n": 0,
+          "p50": null,
+          "p90": null,
+          "max": null,
+          "sum": 0
+        },
+        "elite": {
+          "n": 0,
+          "p50": null,
+          "p90": null,
+          "max": null,
+          "sum": 0
+        },
+        "boss": {
+          "n": 0,
+          "p50": null,
+          "p90": null,
+          "max": null,
+          "sum": 0
+        },
+        "retry": {
+          "n": 0,
+          "p50": null,
+          "p90": null,
+          "max": null,
+          "sum": 0
+        },
+        "routine": {
+          "n": 0,
+          "p50": null,
+          "p90": null,
+          "max": null,
+          "sum": 0
+        }
+      },
+      "budget_entries": 0,
+      "missing_budget_entries": 158,
+      "overbudget_entries": null,
+      "overbudget_distinct_keys": null,
+      "budget_fallbacks": null,
+      "stage_timeout_counts": {},
+      "all_decision_fallbacks": 0,
+      "L2": {
+        "brain_logged_questions": 8,
+        "brain_rows": 8,
+        "brain_latency_ms": {
+          "n": 8,
+          "p50": 27981.5,
+          "p90": 40895.5,
+          "max": 46618,
+          "sum": 215139
+        },
+        "native_call_rows": 8,
+        "native_unique_thread_turns": 8,
+        "native_call_latency_ms": {
+          "n": 8,
+          "p50": 27981.5,
+          "p90": 40895.5,
+          "max": 46618,
+          "sum": 215139
+        },
+        "over_90000_ms_native_rows": 0,
+        "model_effort": {
+          "gpt-6.1-sol/xhigh": 8
+        },
+        "outcomes": {
+          "answered": 8
+        }
+      },
+      "B2": {
+        "rows": 0,
+        "status_counts": {},
+        "budgeted_rows": 0,
+        "budget_truncated_rows": 0,
+        "budget_truncated_unique_attempt_ids": 0,
+        "budget_truncated_fraction": null,
+        "timed_out_rows": 0,
+        "actual_samples": {
+          "n": 0,
+          "p50": null,
+          "p90": null,
+          "max": null,
+          "sum": 0
+        },
+        "sample_histogram": {},
+        "candidate_samples": {
+          "n": 0,
+          "p50": null,
+          "p90": null,
+          "max": null,
+          "sum": 0
+        },
+        "paired_samples": {
+          "n": 0,
+          "p50": null,
+          "p90": null,
+          "max": null,
+          "sum": 0
+        },
+        "requested_samples": {
+          "n": 0,
+          "p50": null,
+          "p90": null,
+          "max": null,
+          "sum": 0
+        },
+        "low_trust_rows": 0,
+        "wall_ms": {
+          "n": 0,
+          "p50": null,
+          "p90": null,
+          "max": null,
+          "sum": 0
+        },
+        "memo_hit_rows": 0,
+        "limits": "rows may reuse a cached completion; C2 complete_adaptive/complete_budget is not deadline truncation. Low-trust sample cap alone is not a timeout."
+      },
+      "B3": {
+        "rows": 7,
+        "status_counts": {
+          "complete_adaptive": 6,
+          "complete": 1
+        },
+        "budgeted_rows": 0,
+        "budget_truncated_rows": 0,
+        "budget_truncated_unique_attempt_ids": 0,
+        "budget_truncated_fraction": null,
+        "timed_out_rows": 0,
+        "actual_samples": {
+          "n": 7,
+          "p50": 300,
+          "p90": 1000.0,
+          "max": 1000,
+          "sum": 3500
+        },
+        "sample_histogram": {
+          "300": 5,
+          "1000": 2
+        },
+        "candidate_samples": {
+          "n": 26,
+          "p50": 300.0,
+          "p90": 300.0,
+          "max": 1000,
+          "sum": 9200
+        },
+        "paired_samples": {
+          "n": 0,
+          "p50": null,
+          "p90": null,
+          "max": null,
+          "sum": 0
+        },
+        "requested_samples": {
+          "n": 7,
+          "p50": 1000,
+          "p90": 1000.0,
+          "max": 1000,
+          "sum": 7000
+        },
+        "low_trust_rows": 0,
+        "wall_ms": {
+          "n": 7,
+          "p50": 11282,
+          "p90": 47310.40000000001,
+          "max": 59182,
+          "sum": 155124
+        },
+        "memo_hit_rows": 0,
+        "limits": "rows may reuse a cached completion; C2 complete_adaptive/complete_budget is not deadline truncation. Low-trust sample cap alone is not a timeout."
+      },
+      "funnel": {
+        "final_floor": 8,
+        "first_attempt_stop_floor": 8,
+        "first_attempt_victory": false,
+        "entered_acts": [
+          1
+        ],
+        "bosses": [],
+        "limits": "first-attempt funnel stops at first logged predicted/actual death; later SL Bosses are excluded from that funnel"
+      },
+      "attribution": {
+        "compute_proxy_minutes": 7.203,
+        "action_dispatch_minutes": 1.2418,
+        "B2_minutes": 0.0,
+        "B3_minutes": 2.5854,
+        "brain_logged_minutes": 3.58565,
+        "inter_decision_gaps_over_60s": [],
+        "limits": "components overlap: brain/run-plan can live inside pre, B2/B3 inside planner. Do not sum attribution components. No retrospective IO or outage attribution from current host measurements."
+      }
+    },
+    "CVJ4MLQF4CSY": {
+      "run_id": "CVJ4MLQF4CSY",
+      "startup_ts": "2026-10-16T15:25:44.698Z",
+      "first_raw_frame": "2026-10-16T15:26:50.261Z",
+      "ended": "2026-10-16T22:49:02.884Z",
+      "duration_minutes": 443.30310000000003,
+      "over_90_minutes": true,
+      "victory": false,
+      "end_floor": 48,
+      "decision_count": 918,
+      "terminal_decision_count": 918,
+      "decision_count_matches": true,
+      "first_logged_floor": 1,
+      "config_segments": [
+        {
+          "ts": "2026-10-16T15:25:44.698Z",
+          "code": {
+            "commit": "5e70fa3dd1c5f8f1e5b00b9ac70083a68d93b922",
+            "code": "5e70fa3+dirty",
+            "dirty": true,
+            "dirty_files": [
+              "knowledge/characters/silent/boss-damage.json",
+              "knowledge/characters/silent/construction-opportunities.json",
+              "knowledge/characters/silent/monster-records.json",
+              "knowledge/characters/silent/outcome-stats.json",
+              "knowledge/characters/silent/room-costs.json",
+              "knowledge/common/card-upgrades.json",
+              "knowledge/common/monster-db.json",
+              "knowledge/common/move-model.json",
+              "notes/fight-value-backtest-silent.md",
+              "notes/monster-db-check.md"
+            ],
+            "branch": "live",
+            "worktree": "live"
+          },
+          "human_pace": null,
+          "restart": false,
+          "source": {
+            "path": "logs/run-config.jsonl",
+            "off": 1900688,
+            "len": 5542,
+            "sha256": "5f565ae29e05f0817c6972214fea386f7038a7ce96159992195e74b03ad3957c"
+          }
+        },
+        {
+          "ts": "2026-10-16T20:13:45.626Z",
+          "code": {
+            "commit": "f1a334a372c9ea63fdfda78378a83f36b317d42b",
+            "code": "f1a334a+dirty",
+            "dirty": true,
+            "dirty_files": [
+              "notes/fight-value-backtest-silent.md",
+              "notes/monster-db-check.md"
+            ],
+            "branch": "live",
+            "worktree": "live"
+          },
+          "human_pace": null,
+          "restart": true,
+          "source": {
+            "path": "logs/run-config.jsonl",
+            "off": 1906230,
+            "len": 5177,
+            "sha256": "a2bfc45a06a407208cbb1672e78bc58b7d7dcc738fd65d4cf98bd3235d80598b"
+          }
+        }
+      ],
+      "decision_compute_proxy_ms": {
+        "ordinary": {
+          "n": 310,
+          "p50": 3.0,
+          "p90": 1514.4,
+          "max": 11197,
+          "sum": 134619
+        },
+        "elite": {
+          "n": 29,
+          "p50": 3,
+          "p90": 1023.5999999999999,
+          "max": 1610,
+          "sum": 6713
+        },
+        "boss": {
+          "n": 136,
+          "p50": 4.0,
+          "p90": 18434.0,
+          "max": 375540,
+          "sum": 1714895
+        },
+        "retry": {
+          "n": 199,
+          "p50": 6,
+          "p90": 292118.0000000002,
+          "max": 939721,
+          "sum": 17708973
+        },
+        "routine": {
+          "n": 244,
+          "p50": 2.0,
+          "p90": 62619.30000000001,
+          "max": 651578,
+          "sum": 4806183
+        }
+      },
+      "turn_compute_proxy_ms": {
+        "ordinary": {
+          "n": 66,
+          "p50": 1159.5,
+          "p90": 5620.0,
+          "max": 17053.0,
+          "sum": 134619.0
+        },
+        "elite": {
+          "n": 6,
+          "p50": 1223.0,
+          "p90": 1631.0,
+          "max": 1638.0,
+          "sum": 6713.0
+        },
+        "boss": {
+          "n": 31,
+          "p50": 4254.0,
+          "p90": 135324.0,
+          "max": 575046.0,
+          "sum": 1714895.0
+        },
+        "retry": {
+          "n": 43,
+          "p50": 311922.0,
+          "p90": 914145.0000000003,
+          "max": 1411403.0,
+          "sum": 17708973.0
+        }
+      },
+      "decision_budget_actual_ms": {
+        "ordinary": {
+          "n": 0,
+          "p50": null,
+          "p90": null,
+          "max": null,
+          "sum": 0
+        },
+        "elite": {
+          "n": 0,
+          "p50": null,
+          "p90": null,
+          "max": null,
+          "sum": 0
+        },
+        "boss": {
+          "n": 0,
+          "p50": null,
+          "p90": null,
+          "max": null,
+          "sum": 0
+        },
+        "retry": {
+          "n": 0,
+          "p50": null,
+          "p90": null,
+          "max": null,
+          "sum": 0
+        },
+        "routine": {
+          "n": 0,
+          "p50": null,
+          "p90": null,
+          "max": null,
+          "sum": 0
+        }
+      },
+      "turn_budget_actual_ms": {
+        "ordinary": {
+          "n": 0,
+          "p50": null,
+          "p90": null,
+          "max": null,
+          "sum": 0
+        },
+        "elite": {
+          "n": 0,
+          "p50": null,
+          "p90": null,
+          "max": null,
+          "sum": 0
+        },
+        "boss": {
+          "n": 0,
+          "p50": null,
+          "p90": null,
+          "max": null,
+          "sum": 0
+        },
+        "retry": {
+          "n": 0,
+          "p50": null,
+          "p90": null,
+          "max": null,
+          "sum": 0
+        },
+        "routine": {
+          "n": 0,
+          "p50": null,
+          "p90": null,
+          "max": null,
+          "sum": 0
+        }
+      },
+      "budget_entries": 0,
+      "missing_budget_entries": 918,
+      "overbudget_entries": null,
+      "overbudget_distinct_keys": null,
+      "budget_fallbacks": null,
+      "stage_timeout_counts": {},
+      "all_decision_fallbacks": 0,
+      "L2": {
+        "brain_logged_questions": 48,
+        "brain_rows": 48,
+        "brain_latency_ms": {
+          "n": 48,
+          "p50": 34866.5,
+          "p90": 70226.6,
+          "max": 82858,
+          "sum": 1861626
+        },
+        "native_call_rows": 48,
+        "native_unique_thread_turns": 48,
+        "native_call_latency_ms": {
+          "n": 48,
+          "p50": 34866.5,
+          "p90": 70226.6,
+          "max": 82858,
+          "sum": 1861626
+        },
+        "over_90000_ms_native_rows": 0,
+        "model_effort": {
+          "gpt-6.1-sol/xhigh": 48
+        },
+        "outcomes": {
+          "answered": 48
+        }
+      },
+      "B2": {
+        "rows": 105,
+        "status_counts": {
+          "complete_adaptive": 105
+        },
+        "budgeted_rows": 0,
+        "budget_truncated_rows": 0,
+        "budget_truncated_unique_attempt_ids": 0,
+        "budget_truncated_fraction": null,
+        "timed_out_rows": 0,
+        "actual_samples": {
+          "n": 105,
+          "p50": 1200,
+          "p90": 1200.0,
+          "max": 1200,
+          "sum": 96600
+        },
+        "sample_histogram": {
+          "200": 13,
+          "600": 26,
+          "400": 1,
+          "1200": 65
+        },
+        "candidate_samples": {
+          "n": 593,
+          "p50": 1200,
+          "p90": 1200.0,
+          "max": 1200,
+          "sum": 571600
+        },
+        "paired_samples": {
+          "n": 593,
+          "p50": 1200,
+          "p90": 1200.0,
+          "max": 1200,
+          "sum": 571600
+        },
+        "requested_samples": {
+          "n": 105,
+          "p50": 1200,
+          "p90": 1200.0,
+          "max": 1200,
+          "sum": 102000
+        },
+        "low_trust_rows": 92,
+        "wall_ms": {
+          "n": 105,
+          "p50": 105017,
+          "p90": 551875.6000000001,
+          "max": 923853,
+          "sum": 18719255
+        },
+        "memo_hit_rows": 0,
+        "limits": "rows may reuse a cached completion; C2 complete_adaptive/complete_budget is not deadline truncation. Low-trust sample cap alone is not a timeout."
+      },
+      "B3": {
+        "rows": 41,
+        "status_counts": {
+          "complete_adaptive": 39,
+          "complete": 2
+        },
+        "budgeted_rows": 0,
+        "budget_truncated_rows": 0,
+        "budget_truncated_unique_attempt_ids": 0,
+        "budget_truncated_fraction": null,
+        "timed_out_rows": 0,
+        "actual_samples": {
+          "n": 41,
+          "p50": 1000,
+          "p90": 1000.0,
+          "max": 1000,
+          "sum": 29500
+        },
+        "sample_histogram": {
+          "300": 13,
+          "800": 3,
+          "1000": 22,
+          "400": 3
+        },
+        "candidate_samples": {
+          "n": 291,
+          "p50": 300,
+          "p90": 1000.0,
+          "max": 1000,
+          "sum": 155500
+        },
+        "paired_samples": {
+          "n": 0,
+          "p50": null,
+          "p90": null,
+          "max": null,
+          "sum": 0
+        },
+        "requested_samples": {
+          "n": 41,
+          "p50": 1000,
+          "p90": 1000.0,
+          "max": 1000,
+          "sum": 41000
+        },
+        "low_trust_rows": 10,
+        "wall_ms": {
+          "n": 41,
+          "p50": 13908,
+          "p90": 151758.0,
+          "max": 581982,
+          "sum": 2588407
+        },
+        "memo_hit_rows": 0,
+        "limits": "rows may reuse a cached completion; C2 complete_adaptive/complete_budget is not deadline truncation. Low-trust sample cap alone is not a timeout."
+      },
+      "funnel": {
+        "final_floor": 48,
+        "first_attempt_stop_floor": 48,
+        "first_attempt_victory": false,
+        "entered_acts": [
+          1,
+          2,
+          3
+        ],
+        "bosses": [
+          {
+            "floor": 17,
+            "encounter": "WATERFALL_GIANT",
+            "final_pass": true,
+            "first_attempt_pass": true,
+            "reachable_in_first_attempt_funnel": true,
+            "attempts": 1,
+            "source_refs": [
+              {
+                "path": "logs/sl-attempts.jsonl",
+                "off": 44282117,
+                "len": 21003,
+                "sha256": "307b849e396d5fe9b2de1492ac416cc9a3c96f95fa4e152ee1d8e7002b18dadd"
+              }
+            ]
+          },
+          {
+            "floor": 33,
+            "encounter": "KNOWLEDGE_DEMON",
+            "final_pass": true,
+            "first_attempt_pass": true,
+            "reachable_in_first_attempt_funnel": true,
+            "attempts": 1,
+            "source_refs": [
+              {
+                "path": "logs/sl-attempts.jsonl",
+                "off": 44303120,
+                "len": 30109,
+                "sha256": "35ac7497a9045811402a8d1d2d1889e4131641f17ef9126906b81feb877ad71c"
+              }
+            ]
+          },
+          {
+            "floor": 48,
+            "encounter": "QUEEN+TORCH_HEAD_AMALGAM",
+            "final_pass": false,
+            "first_attempt_pass": false,
+            "reachable_in_first_attempt_funnel": true,
+            "attempts": 6,
+            "source_refs": [
+              {
+                "path": "logs/sl-attempts.jsonl",
+                "off": 44333229,
+                "len": 37695,
+                "sha256": "2ce5ce8dc047b57ce6f00a647457792f2fc98b7501af112d021fba32aa723eb1"
+              },
+              {
+                "path": "logs/sl-attempts.jsonl",
+                "off": 44370924,
+                "len": 29908,
+                "sha256": "3aa456a08d410f6c2e08e896c356dc9fa513b8731fcc3d3a2f22796e9f3a2af1"
+              },
+              {
+                "path": "logs/sl-attempts.jsonl",
+                "off": 44400832,
+                "len": 35711,
+                "sha256": "a0d34511cabc96987fd4d77432e3828674c4512c508694a1761a805e6d727ddd"
+              },
+              {
+                "path": "logs/sl-attempts.jsonl",
+                "off": 44436543,
+                "len": 23640,
+                "sha256": "639748764e042b9d8d27d288f58966846930611ff79bafe58ef8c1957d2bbb02"
+              },
+              {
+                "path": "logs/sl-attempts.jsonl",
+                "off": 44460183,
+                "len": 41059,
+                "sha256": "edff2d97477eb2cf1bd39444a353555c061e414d1313bb81d7cab68b5c2932c3"
+              },
+              {
+                "path": "logs/sl-attempts.jsonl",
+                "off": 44501242,
+                "len": 26591,
+                "sha256": "20cbdba985d1874c83f4174c75cafed4e1f6c531bd1e697c2f671e70307b51ea"
+              }
+            ]
+          }
+        ],
+        "limits": "first-attempt funnel stops at first logged predicted/actual death; later SL Bosses are excluded from that funnel"
+      },
+      "attribution": {
+        "compute_proxy_minutes": 406.18971666666664,
+        "action_dispatch_minutes": 8.09475,
+        "B2_minutes": 311.98758333333336,
+        "B3_minutes": 43.140116666666664,
+        "brain_logged_minutes": 31.0271,
+        "inter_decision_gaps_over_60s": [
+          {
+            "ms": 568230.0,
+            "previous": {
+              "path": "logs/decisions.jsonl",
+              "off": 2083718184,
+              "len": 1364,
+              "sha256": "9ebb4ecfe970d92b1ae9402c4c39b5de6f5c8653352814fb36fe52774ba1b294"
+            },
+            "next": {
+              "path": "logs/decisions.jsonl",
+              "off": 2083719548,
+              "len": 254060,
+              "sha256": "a90da1b78e52e1e1ff4e0c00bbe6d120a5aed5c527e884677838ebab1f701198"
+            },
+            "floor": 5,
+            "label": "reward/card",
+            "cause": "unattributed inter-decision gap; may include transport, animation, SL or interruption"
+          }
+        ],
+        "limits": "components overlap: brain/run-plan can live inside pre, B2/B3 inside planner. Do not sum attribution components. No retrospective IO or outage attribution from current host measurements."
+      }
+    },
+    "DC32RW0A80V1": {
+      "run_id": "DC32RW0A80V1",
+      "startup_ts": "2026-10-16T22:58:07.181Z",
+      "first_raw_frame": "2026-10-16T22:58:58.382Z",
+      "ended": "2026-10-17T01:28:26.359Z",
+      "duration_minutes": 150.31963333333334,
+      "over_90_minutes": true,
+      "victory": false,
+      "end_floor": 48,
+      "decision_count": 1216,
+      "terminal_decision_count": 1216,
+      "decision_count_matches": true,
+      "first_logged_floor": 1,
+      "config_segments": [
+        {
+          "ts": "2026-10-16T22:58:07.181Z",
+          "code": {
+            "commit": "51511b28e8fa085adbd30f232e625ebee058fe59",
+            "code": "51511b2+dirty",
+            "dirty": true,
+            "dirty_files": [
+              "knowledge/characters/silent/boss-damage.json",
+              "knowledge/characters/silent/construction-opportunities.json",
+              "knowledge/characters/silent/outcome-stats.json",
+              "knowledge/characters/silent/potion-equivalents.json",
+              "knowledge/characters/silent/room-costs.json",
+              "knowledge/common/card-upgrades.json",
+              "notes/fight-value-backtest-silent.md",
+              "notes/monster-db-check.md"
+            ],
+            "branch": "live",
+            "worktree": "live"
+          },
+          "human_pace": null,
+          "restart": false,
+          "source": {
+            "path": "logs/run-config.jsonl",
+            "off": 1911407,
+            "len": 5473,
+            "sha256": "8bb1e7722cd5f93986879b64b7381f46b04d105ab6e5d9e35b9c8698fc3feba8"
+          }
+        }
+      ],
+      "decision_compute_proxy_ms": {
+        "ordinary": {
+          "n": 436,
+          "p50": 5.0,
+          "p90": 1462.0,
+          "max": 7883,
+          "sum": 192368
+        },
+        "elite": {
+          "n": 52,
+          "p50": 4.0,
+          "p90": 1185.4999999999998,
+          "max": 2064,
+          "sum": 16681
+        },
+        "boss": {
+          "n": 147,
+          "p50": 5,
+          "p90": 28936.800000000017,
+          "max": 157373,
+          "sum": 1595742
+        },
+        "retry": {
+          "n": 326,
+          "p50": 6.0,
+          "p90": 10754.5,
+          "max": 197160,
+          "sum": 1897308
+        },
+        "routine": {
+          "n": 255,
+          "p50": 2,
+          "p90": 53204.99999999996,
+          "max": 142838,
+          "sum": 3069436
+        }
+      },
+      "turn_compute_proxy_ms": {
+        "ordinary": {
+          "n": 101,
+          "p50": 1807.0,
+          "p90": 3491.0,
+          "max": 9716.0,
+          "sum": 192368.0
+        },
+        "elite": {
+          "n": 10,
+          "p50": 1759.0,
+          "p90": 3149.7999999999997,
+          "max": 3913.0,
+          "sum": 16681.0
+        },
+        "boss": {
+          "n": 29,
+          "p50": 15572.0,
+          "p90": 129804.59999999995,
+          "max": 501972.0,
+          "sum": 1595742.0
+        },
+        "retry": {
+          "n": 61,
+          "p50": 12764.0,
+          "p90": 70108.0,
+          "max": 460033.0,
+          "sum": 1897308.0
+        }
+      },
+      "decision_budget_actual_ms": {
+        "ordinary": {
+          "n": 0,
+          "p50": null,
+          "p90": null,
+          "max": null,
+          "sum": 0
+        },
+        "elite": {
+          "n": 0,
+          "p50": null,
+          "p90": null,
+          "max": null,
+          "sum": 0
+        },
+        "boss": {
+          "n": 0,
+          "p50": null,
+          "p90": null,
+          "max": null,
+          "sum": 0
+        },
+        "retry": {
+          "n": 0,
+          "p50": null,
+          "p90": null,
+          "max": null,
+          "sum": 0
+        },
+        "routine": {
+          "n": 0,
+          "p50": null,
+          "p90": null,
+          "max": null,
+          "sum": 0
+        }
+      },
+      "turn_budget_actual_ms": {
+        "ordinary": {
+          "n": 0,
+          "p50": null,
+          "p90": null,
+          "max": null,
+          "sum": 0
+        },
+        "elite": {
+          "n": 0,
+          "p50": null,
+          "p90": null,
+          "max": null,
+          "sum": 0
+        },
+        "boss": {
+          "n": 0,
+          "p50": null,
+          "p90": null,
+          "max": null,
+          "sum": 0
+        },
+        "retry": {
+          "n": 0,
+          "p50": null,
+          "p90": null,
+          "max": null,
+          "sum": 0
+        },
+        "routine": {
+          "n": 0,
+          "p50": null,
+          "p90": null,
+          "max": null,
+          "sum": 0
+        }
+      },
+      "budget_entries": 0,
+      "missing_budget_entries": 1216,
+      "overbudget_entries": null,
+      "overbudget_distinct_keys": null,
+      "budget_fallbacks": null,
+      "stage_timeout_counts": {},
+      "all_decision_fallbacks": 0,
+      "L2": {
+        "brain_logged_questions": 49,
+        "brain_rows": 49,
+        "brain_latency_ms": {
+          "n": 49,
+          "p50": 25568,
+          "p90": 56401.00000000001,
+          "max": 68794,
+          "sum": 1468502
+        },
+        "native_call_rows": 49,
+        "native_unique_thread_turns": 49,
+        "native_call_latency_ms": {
+          "n": 49,
+          "p50": 25568,
+          "p90": 56401.00000000001,
+          "max": 68794,
+          "sum": 1468502
+        },
+        "over_90000_ms_native_rows": 0,
+        "model_effort": {
+          "gpt-6.1-sol/xhigh": 49
+        },
+        "outcomes": {
+          "answered": 49
+        }
+      },
+      "B2": {
+        "rows": 126,
+        "status_counts": {
+          "complete_adaptive": 126
+        },
+        "budgeted_rows": 0,
+        "budget_truncated_rows": 0,
+        "budget_truncated_unique_attempt_ids": 0,
+        "budget_truncated_fraction": null,
+        "timed_out_rows": 0,
+        "actual_samples": {
+          "n": 126,
+          "p50": 900.0,
+          "p90": 1200.0,
+          "max": 1200,
+          "sum": 95700
+        },
+        "sample_histogram": {
+          "600": 16,
+          "300": 6,
+          "200": 39,
+          "400": 1,
+          "500": 1,
+          "1200": 63
+        },
+        "candidate_samples": {
+          "n": 626,
+          "p50": 600.0,
+          "p90": 1200.0,
+          "max": 1200,
+          "sum": 461400
+        },
+        "paired_samples": {
+          "n": 626,
+          "p50": 600.0,
+          "p90": 1200.0,
+          "max": 1200,
+          "sum": 457700
+        },
+        "requested_samples": {
+          "n": 126,
+          "p50": 1200.0,
+          "p90": 1200.0,
+          "max": 1200,
+          "sum": 125400
+        },
+        "low_trust_rows": 69,
+        "wall_ms": {
+          "n": 126,
+          "p50": 7445.0,
+          "p90": 84574.0,
+          "max": 182246,
+          "sum": 3098614
+        },
+        "memo_hit_rows": 0,
+        "limits": "rows may reuse a cached completion; C2 complete_adaptive/complete_budget is not deadline truncation. Low-trust sample cap alone is not a timeout."
+      },
+      "B3": {
+        "rows": 40,
+        "status_counts": {
+          "complete": 3,
+          "complete_adaptive": 37
+        },
+        "budgeted_rows": 0,
+        "budget_truncated_rows": 0,
+        "budget_truncated_unique_attempt_ids": 0,
+        "budget_truncated_fraction": null,
+        "timed_out_rows": 0,
+        "actual_samples": {
+          "n": 40,
+          "p50": 300.0,
+          "p90": 1000.0,
+          "max": 1000,
+          "sum": 22500
+        },
+        "sample_histogram": {
+          "1000": 14,
+          "500": 2,
+          "300": 23,
+          "600": 1
+        },
+        "candidate_samples": {
+          "n": 362,
+          "p50": 300.0,
+          "p90": 500.0,
+          "max": 1000,
+          "sum": 131400
+        },
+        "paired_samples": {
+          "n": 0,
+          "p50": null,
+          "p90": null,
+          "max": null,
+          "sum": 0
+        },
+        "requested_samples": {
+          "n": 40,
+          "p50": 1000.0,
+          "p90": 1000.0,
+          "max": 1000,
+          "sum": 40000
+        },
+        "low_trust_rows": 12,
+        "wall_ms": {
+          "n": 40,
+          "p50": 20786.0,
+          "p90": 61421.20000000001,
+          "max": 96975,
+          "sum": 1166187
+        },
+        "memo_hit_rows": 0,
+        "limits": "rows may reuse a cached completion; C2 complete_adaptive/complete_budget is not deadline truncation. Low-trust sample cap alone is not a timeout."
+      },
+      "funnel": {
+        "final_floor": 48,
+        "first_attempt_stop_floor": 33,
+        "first_attempt_victory": false,
+        "entered_acts": [
+          1,
+          2,
+          3
+        ],
+        "bosses": [
+          {
+            "floor": 17,
+            "encounter": "KIN_FOLLOWER+KIN_FOLLOWER+KIN_PRIEST",
+            "final_pass": true,
+            "first_attempt_pass": true,
+            "reachable_in_first_attempt_funnel": true,
+            "attempts": 1,
+            "source_refs": [
+              {
+                "path": "logs/sl-attempts.jsonl",
+                "off": 44527833,
+                "len": 44057,
+                "sha256": "b522fa60612faaf9b9b1dfcf7c8d476230566af3ed539535cb142992e1941ebc"
+              }
+            ]
+          },
+          {
+            "floor": 33,
+            "encounter": "CRUSHER+ROCKET",
+            "final_pass": true,
+            "first_attempt_pass": false,
+            "reachable_in_first_attempt_funnel": true,
+            "attempts": 2,
+            "source_refs": [
+              {
+                "path": "logs/sl-attempts.jsonl",
+                "off": 44571890,
+                "len": 52071,
+                "sha256": "a73f81775f37e75f1f1681b7128314b8537e05816efe48d967de88704625622e"
+              },
+              {
+                "path": "logs/sl-attempts.jsonl",
+                "off": 44623961,
+                "len": 67746,
+                "sha256": "0c5d20c750e9b1ca74d4456d2b81bd2907aa28d340389a2317104cbd01147855"
+              }
+            ]
+          },
+          {
+            "floor": 48,
+            "encounter": "AEONGLASS",
+            "final_pass": false,
+            "first_attempt_pass": false,
+            "reachable_in_first_attempt_funnel": false,
+            "attempts": 6,
+            "source_refs": [
+              {
+                "path": "logs/sl-attempts.jsonl",
+                "off": 44691707,
+                "len": 16733,
+                "sha256": "28ee0715f92a873a6fea1e8610e4c4ee59a53df34767d853f3847cc92bd24858"
+              },
+              {
+                "path": "logs/sl-attempts.jsonl",
+                "off": 44708440,
+                "len": 28852,
+                "sha256": "5495d9f53e76cc12d4b95019844cd08d18c0809245a78f6758370a32a368ae72"
+              },
+              {
+                "path": "logs/sl-attempts.jsonl",
+                "off": 44737292,
+                "len": 28301,
+                "sha256": "725c299a2944ecf691152ab9b4dfbaa8a0dfdaa42cafa2d080ec0ba0f20b4d7d"
+              },
+              {
+                "path": "logs/sl-attempts.jsonl",
+                "off": 44765593,
+                "len": 18469,
+                "sha256": "cc003797397d6dbdb46d96887aed950faa767c6a1e7ed3e6f8360db12ff0f00c"
+              },
+              {
+                "path": "logs/sl-attempts.jsonl",
+                "off": 44784062,
+                "len": 29129,
+                "sha256": "3ec6eba4c16a74d4ec80443cf082ac7b3aca204dd6933a58bfb7491700328156"
+              },
+              {
+                "path": "logs/sl-attempts.jsonl",
+                "off": 44813191,
+                "len": 29453,
+                "sha256": "2ff14accf22fc4707defd9d24bd5fc38b25e2ea248fb8e64a9f1e0b3460932b3"
+              }
+            ]
+          }
+        ],
+        "limits": "first-attempt funnel stops at first logged predicted/actual death; later SL Bosses are excluded from that funnel"
+      },
+      "attribution": {
+        "compute_proxy_minutes": 112.85891666666667,
+        "action_dispatch_minutes": 12.049483333333333,
+        "B2_minutes": 51.643566666666665,
+        "B3_minutes": 19.43645,
+        "brain_logged_minutes": 24.475033333333332,
+        "inter_decision_gaps_over_60s": [],
+        "limits": "components overlap: brain/run-plan can live inside pre, B2/B3 inside planner. Do not sum attribution components. No retrospective IO or outage attribution from current host measurements."
+      }
+    },
+    "JKDUL0AL0TW6": {
+      "run_id": "JKDUL0AL0TW6",
+      "startup_ts": "2026-10-17T01:55:26.306Z",
+      "first_raw_frame": "2026-10-17T01:56:17.796Z",
+      "ended": "2026-10-17T02:51:27.269Z",
+      "duration_minutes": 56.01605,
+      "over_90_minutes": false,
+      "victory": false,
+      "end_floor": 33,
+      "decision_count": 750,
+      "terminal_decision_count": 750,
+      "decision_count_matches": true,
+      "first_logged_floor": 1,
+      "config_segments": [
+        {
+          "ts": "2026-10-17T01:55:26.306Z",
+          "code": {
+            "commit": "99737be9fdb9c2ea92089d768947c49b49b62382",
+            "code": "99737be+dirty",
+            "dirty": true,
+            "dirty_files": [
+              "knowledge/characters/silent/boss-damage.json",
+              "knowledge/characters/silent/construction-opportunities.json",
+              "knowledge/characters/silent/fight-value-gates.json",
+              "knowledge/characters/silent/fight-value.json",
+              "knowledge/characters/silent/monster-records.json",
+              "knowledge/characters/silent/outcome-stats.json",
+              "knowledge/characters/silent/room-costs.json",
+              "knowledge/common/card-upgrades.json",
+              "knowledge/common/monster-db.json",
+              "knowledge/common/move-model.json",
+              "notes/fight-value-backtest-silent.md",
+              "notes/monster-db-check.md"
+            ],
+            "branch": "live",
+            "worktree": "live"
+          },
+          "human_pace": null,
+          "restart": false,
+          "source": {
+            "path": "logs/run-config.jsonl",
+            "off": 1922422,
+            "len": 5640,
+            "sha256": "90a8a22f7c05000fda7e8f6d73a13d0839b561c66f9b5ef8d9889a1958265d0b"
+          }
+        }
+      ],
+      "decision_compute_proxy_ms": {
+        "ordinary": {
+          "n": 227,
+          "p50": 6,
+          "p90": 1745.2000000000003,
+          "max": 5120,
+          "sum": 99464
+        },
+        "elite": {
+          "n": 58,
+          "p50": 4.0,
+          "p90": 1511.4000000000005,
+          "max": 2208,
+          "sum": 20157
+        },
+        "boss": {
+          "n": 69,
+          "p50": 5,
+          "p90": 1691.6000000000008,
+          "max": 10729,
+          "sum": 40918
+        },
+        "retry": {
+          "n": 201,
+          "p50": 6,
+          "p90": 1230.0,
+          "max": 8526,
+          "sum": 81628
+        },
+        "routine": {
+          "n": 195,
+          "p50": 3,
+          "p90": 35310.79999999999,
+          "max": 142255,
+          "sum": 1621517
+        }
+      },
+      "turn_compute_proxy_ms": {
+        "ordinary": {
+          "n": 53,
+          "p50": 991.0,
+          "p90": 4735.600000000001,
+          "max": 9143.0,
+          "sum": 99464.0
+        },
+        "elite": {
+          "n": 15,
+          "p50": 1622.0,
+          "p90": 2491.7999999999997,
+          "max": 4377.0,
+          "sum": 20157.0
+        },
+        "boss": {
+          "n": 14,
+          "p50": 1527.5,
+          "p90": 5885.700000000001,
+          "max": 15923.0,
+          "sum": 40918.0
+        },
+        "retry": {
+          "n": 49,
+          "p50": 1009.0,
+          "p90": 3926.4000000000024,
+          "max": 14981.0,
+          "sum": 81628.0
+        }
+      },
+      "decision_budget_actual_ms": {
+        "ordinary": {
+          "n": 0,
+          "p50": null,
+          "p90": null,
+          "max": null,
+          "sum": 0
+        },
+        "elite": {
+          "n": 0,
+          "p50": null,
+          "p90": null,
+          "max": null,
+          "sum": 0
+        },
+        "boss": {
+          "n": 0,
+          "p50": null,
+          "p90": null,
+          "max": null,
+          "sum": 0
+        },
+        "retry": {
+          "n": 0,
+          "p50": null,
+          "p90": null,
+          "max": null,
+          "sum": 0
+        },
+        "routine": {
+          "n": 0,
+          "p50": null,
+          "p90": null,
+          "max": null,
+          "sum": 0
+        }
+      },
+      "turn_budget_actual_ms": {
+        "ordinary": {
+          "n": 0,
+          "p50": null,
+          "p90": null,
+          "max": null,
+          "sum": 0
+        },
+        "elite": {
+          "n": 0,
+          "p50": null,
+          "p90": null,
+          "max": null,
+          "sum": 0
+        },
+        "boss": {
+          "n": 0,
+          "p50": null,
+          "p90": null,
+          "max": null,
+          "sum": 0
+        },
+        "retry": {
+          "n": 0,
+          "p50": null,
+          "p90": null,
+          "max": null,
+          "sum": 0
+        },
+        "routine": {
+          "n": 0,
+          "p50": null,
+          "p90": null,
+          "max": null,
+          "sum": 0
+        }
+      },
+      "budget_entries": 0,
+      "missing_budget_entries": 750,
+      "overbudget_entries": null,
+      "overbudget_distinct_keys": null,
+      "budget_fallbacks": null,
+      "stage_timeout_counts": {},
+      "all_decision_fallbacks": 0,
+      "L2": {
+        "brain_logged_questions": 34,
+        "brain_rows": 34,
+        "brain_latency_ms": {
+          "n": 34,
+          "p50": 19873.5,
+          "p90": 60825.7,
+          "max": 129347,
+          "sum": 1038786
+        },
+        "native_call_rows": 35,
+        "native_unique_thread_turns": 35,
+        "native_call_latency_ms": {
+          "n": 35,
+          "p50": 19962,
+          "p90": 64928.200000000004,
+          "max": 129347,
+          "sum": 1104569
+        },
+        "over_90000_ms_native_rows": 1,
+        "model_effort": {
+          "gpt-6.1-sol/xhigh": 35
+        },
+        "outcomes": {
+          "answered": 34,
+          "stalled": 1
+        }
+      },
+      "B2": {
+        "rows": 61,
+        "status_counts": {
+          "complete_adaptive": 61
+        },
+        "budgeted_rows": 0,
+        "budget_truncated_rows": 0,
+        "budget_truncated_unique_attempt_ids": 0,
+        "budget_truncated_fraction": null,
+        "timed_out_rows": 0,
+        "actual_samples": {
+          "n": 61,
+          "p50": 200,
+          "p90": 500.0,
+          "max": 1200,
+          "sum": 17000
+        },
+        "sample_histogram": {
+          "300": 7,
+          "500": 1,
+          "600": 2,
+          "200": 47,
+          "1200": 2,
+          "700": 2
+        },
+        "candidate_samples": {
+          "n": 166,
+          "p50": 200.0,
+          "p90": 700.0,
+          "max": 1200,
+          "sum": 58900
+        },
+        "paired_samples": {
+          "n": 166,
+          "p50": 200.0,
+          "p90": 600.0,
+          "max": 1200,
+          "sum": 48900
+        },
+        "requested_samples": {
+          "n": 61,
+          "p50": 1200,
+          "p90": 1200.0,
+          "max": 1200,
+          "sum": 65400
+        },
+        "low_trust_rows": 0,
+        "wall_ms": {
+          "n": 61,
+          "p50": 252,
+          "p90": 2783.0,
+          "max": 8807,
+          "sum": 55071
+        },
+        "memo_hit_rows": 0,
+        "limits": "rows may reuse a cached completion; C2 complete_adaptive/complete_budget is not deadline truncation. Low-trust sample cap alone is not a timeout."
+      },
+      "B3": {
+        "rows": 30,
+        "status_counts": {
+          "complete": 1,
+          "complete_adaptive": 29
+        },
+        "budgeted_rows": 0,
+        "budget_truncated_rows": 0,
+        "budget_truncated_unique_attempt_ids": 0,
+        "budget_truncated_fraction": null,
+        "timed_out_rows": 0,
+        "actual_samples": {
+          "n": 30,
+          "p50": 650.0,
+          "p90": 1000.0,
+          "max": 1000,
+          "sum": 20100
+        },
+        "sample_histogram": {
+          "1000": 14,
+          "300": 11,
+          "400": 1,
+          "700": 1,
+          "500": 1,
+          "600": 2
+        },
+        "candidate_samples": {
+          "n": 255,
+          "p50": 300,
+          "p90": 1000.0,
+          "max": 1000,
+          "sum": 113200
+        },
+        "paired_samples": {
+          "n": 0,
+          "p50": null,
+          "p90": null,
+          "max": null,
+          "sum": 0
+        },
+        "requested_samples": {
+          "n": 30,
+          "p50": 1000.0,
+          "p90": 1000.0,
+          "max": 1000,
+          "sum": 30000
+        },
+        "low_trust_rows": 0,
+        "wall_ms": {
+          "n": 30,
+          "p50": 7188.5,
+          "p90": 14853.700000000003,
+          "max": 19951,
+          "sum": 238981
+        },
+        "memo_hit_rows": 0,
+        "limits": "rows may reuse a cached completion; C2 complete_adaptive/complete_budget is not deadline truncation. Low-trust sample cap alone is not a timeout."
+      },
+      "funnel": {
+        "final_floor": 33,
+        "first_attempt_stop_floor": 17,
+        "first_attempt_victory": false,
+        "entered_acts": [
+          1,
+          2
+        ],
+        "bosses": [
+          {
+            "floor": 17,
+            "encounter": "VANTOM",
+            "final_pass": true,
+            "first_attempt_pass": false,
+            "reachable_in_first_attempt_funnel": true,
+            "attempts": 3,
+            "source_refs": [
+              {
+                "path": "logs/sl-attempts.jsonl",
+                "off": 44842644,
+                "len": 16908,
+                "sha256": "0ccb5f6d64ea4e1d697932426f5e5349dbeeb5f7bdee371be55a64f8dee50546"
+              },
+              {
+                "path": "logs/sl-attempts.jsonl",
+                "off": 44859552,
+                "len": 15041,
+                "sha256": "beb35de246099d1a0340bfe3551567fc744d4e546ec22087f1e5c04fbbab5a4a"
+              },
+              {
+                "path": "logs/sl-attempts.jsonl",
+                "off": 44874593,
+                "len": 20203,
+                "sha256": "2fbaa25ab76a572402e6e5f8cbc4e48c01cec5d199066fd9861bc9935c02fc67"
+              }
+            ]
+          },
+          {
+            "floor": 33,
+            "encounter": "KNOWLEDGE_DEMON",
+            "final_pass": false,
+            "first_attempt_pass": false,
+            "reachable_in_first_attempt_funnel": false,
+            "attempts": 6,
+            "source_refs": [
+              {
+                "path": "logs/sl-attempts.jsonl",
+                "off": 44915253,
+                "len": 13449,
+                "sha256": "22bc82bcd5b90c4fbd004a7c6ee84bfcfd6599e06ea3b5a4f4aa7f8af2ea63b6"
+              },
+              {
+                "path": "logs/sl-attempts.jsonl",
+                "off": 44928702,
+                "len": 14436,
+                "sha256": "a932c2b3f96ae5d9765027cbc02a08b28ebe98b660aec9c2922c656f171a4e7b"
+              },
+              {
+                "path": "logs/sl-attempts.jsonl",
+                "off": 44943138,
+                "len": 11728,
+                "sha256": "7acf13c4076b592bdc6ef0fc58e2f927df7cf3a8923e070c768f742f375325c1"
+              },
+              {
+                "path": "logs/sl-attempts.jsonl",
+                "off": 44954866,
+                "len": 14622,
+                "sha256": "018c6edfda5a71901f597ac484cefd7a936f8528868069e7518127f67047313d"
+              },
+              {
+                "path": "logs/sl-attempts.jsonl",
+                "off": 44969488,
+                "len": 12024,
+                "sha256": "38c328bc94d3c5316b78bf345e9aaf676a334bb77f9ba58975a4c4f96bee7523"
+              },
+              {
+                "path": "logs/sl-attempts.jsonl",
+                "off": 44981512,
+                "len": 12392,
+                "sha256": "44aff42ff1f3e397f4fc2ebd8860e6099d2b95165ce4f9ef5c4427f64976dddf"
+              }
+            ]
+          }
+        ],
+        "limits": "first-attempt funnel stops at first logged predicted/actual death; later SL Bosses are excluded from that funnel"
+      },
+      "attribution": {
+        "compute_proxy_minutes": 31.0614,
+        "action_dispatch_minutes": 8.532483333333333,
+        "B2_minutes": 0.91785,
+        "B3_minutes": 3.983016666666667,
+        "brain_logged_minutes": 17.3131,
+        "inter_decision_gaps_over_60s": [],
+        "limits": "components overlap: brain/run-plan can live inside pre, B2/B3 inside planner. Do not sum attribution components. No retrospective IO or outage attribution from current host measurements."
+      }
+    },
+    "N9GKED3PMEV3": {
+      "run_id": "N9GKED3PMEV3",
+      "startup_ts": "2026-10-16T12:59:52.809Z",
+      "first_raw_frame": "2026-10-16T13:01:02.480Z",
+      "ended": "2026-10-16T15:18:33.955Z",
+      "duration_minutes": 138.68576666666667,
+      "over_90_minutes": true,
+      "victory": false,
+      "end_floor": 48,
+      "decision_count": 1187,
+      "terminal_decision_count": 1187,
+      "decision_count_matches": true,
+      "first_logged_floor": 1,
+      "config_segments": [
+        {
+          "ts": "2026-10-16T12:59:52.809Z",
+          "code": {
+            "commit": "c783c6c83d09e669f49518a4536ae5bc3766c2a2",
+            "code": "c783c6c+dirty",
+            "dirty": true,
+            "dirty_files": [
+              "knowledge/characters/silent/boss-damage.json",
+              "knowledge/characters/silent/construction-opportunities.json",
+              "knowledge/characters/silent/monster-records.json",
+              "knowledge/characters/silent/outcome-stats.json",
+              "knowledge/characters/silent/room-costs.json",
+              "knowledge/common/card-upgrades.json",
+              "knowledge/common/monster-db.json",
+              "knowledge/common/move-model.json",
+              "notes/monster-db-check.md"
+            ],
+            "branch": "live",
+            "worktree": "live"
+          },
+          "human_pace": null,
+          "restart": false,
+          "source": {
+            "path": "logs/run-config.jsonl",
+            "off": 1895188,
+            "len": 5500,
+            "sha256": "3f8944acaf2fc5637d6cfbdf294072befccc27e5b9949d7bb195e98ddcc5c174"
+          }
+        }
+      ],
+      "decision_compute_proxy_ms": {
+        "ordinary": {
+          "n": 453,
+          "p50": 4,
+          "p90": 1361.8000000000002,
+          "max": 3145,
+          "sum": 182491
+        },
+        "elite": {
+          "n": 35,
+          "p50": 3,
+          "p90": 847.6,
+          "max": 1621,
+          "sum": 10743
+        },
+        "boss": {
+          "n": 180,
+          "p50": 8.0,
+          "p90": 11266.099999999999,
+          "max": 194927,
+          "sum": 2016337
+        },
+        "retry": {
+          "n": 273,
+          "p50": 4,
+          "p90": 6269.0,
+          "max": 14999,
+          "sum": 486017
+        },
+        "routine": {
+          "n": 246,
+          "p50": 2.0,
+          "p90": 62004.0,
+          "max": 383418,
+          "sum": 3582565
+        }
+      },
+      "turn_compute_proxy_ms": {
+        "ordinary": {
+          "n": 96,
+          "p50": 1695.0,
+          "p90": 3620.0,
+          "max": 8538.0,
+          "sum": 182491.0
+        },
+        "elite": {
+          "n": 6,
+          "p50": 1822.0,
+          "p90": 2848.5,
+          "max": 3220.0,
+          "sum": 10743.0
+        },
+        "boss": {
+          "n": 34,
+          "p50": 5421.0,
+          "p90": 242490.19999999995,
+          "max": 428532.0,
+          "sum": 2016337.0
+        },
+        "retry": {
+          "n": 50,
+          "p50": 7130.0,
+          "p90": 24036.100000000002,
+          "max": 31039.0,
+          "sum": 486017.0
+        }
+      },
+      "decision_budget_actual_ms": {
+        "ordinary": {
+          "n": 0,
+          "p50": null,
+          "p90": null,
+          "max": null,
+          "sum": 0
+        },
+        "elite": {
+          "n": 0,
+          "p50": null,
+          "p90": null,
+          "max": null,
+          "sum": 0
+        },
+        "boss": {
+          "n": 0,
+          "p50": null,
+          "p90": null,
+          "max": null,
+          "sum": 0
+        },
+        "retry": {
+          "n": 0,
+          "p50": null,
+          "p90": null,
+          "max": null,
+          "sum": 0
+        },
+        "routine": {
+          "n": 0,
+          "p50": null,
+          "p90": null,
+          "max": null,
+          "sum": 0
+        }
+      },
+      "turn_budget_actual_ms": {
+        "ordinary": {
+          "n": 0,
+          "p50": null,
+          "p90": null,
+          "max": null,
+          "sum": 0
+        },
+        "elite": {
+          "n": 0,
+          "p50": null,
+          "p90": null,
+          "max": null,
+          "sum": 0
+        },
+        "boss": {
+          "n": 0,
+          "p50": null,
+          "p90": null,
+          "max": null,
+          "sum": 0
+        },
+        "retry": {
+          "n": 0,
+          "p50": null,
+          "p90": null,
+          "max": null,
+          "sum": 0
+        },
+        "routine": {
+          "n": 0,
+          "p50": null,
+          "p90": null,
+          "max": null,
+          "sum": 0
+        }
+      },
+      "budget_entries": 0,
+      "missing_budget_entries": 1187,
+      "overbudget_entries": null,
+      "overbudget_distinct_keys": null,
+      "budget_fallbacks": null,
+      "stage_timeout_counts": {},
+      "all_decision_fallbacks": 0,
+      "L2": {
+        "brain_logged_questions": 47,
+        "brain_rows": 47,
+        "brain_latency_ms": {
+          "n": 47,
+          "p50": 26399,
+          "p90": 83263.8,
+          "max": 201536,
+          "sum": 1975775
+        },
+        "native_call_rows": 49,
+        "native_unique_thread_turns": 49,
+        "native_call_latency_ms": {
+          "n": 49,
+          "p50": 26816,
+          "p90": 86921.60000000003,
+          "max": 201536,
+          "sum": 2144373
+        },
+        "over_90000_ms_native_rows": 5,
+        "model_effort": {
+          "gpt-6.1-sol/xhigh": 49
+        },
+        "outcomes": {
+          "answered": 47,
+          "stalled": 2
+        }
+      },
+      "B2": {
+        "rows": 171,
+        "status_counts": {
+          "complete_adaptive": 171
+        },
+        "budgeted_rows": 0,
+        "budget_truncated_rows": 0,
+        "budget_truncated_unique_attempt_ids": 0,
+        "budget_truncated_fraction": null,
+        "timed_out_rows": 0,
+        "actual_samples": {
+          "n": 171,
+          "p50": 600,
+          "p90": 1200.0,
+          "max": 1200,
+          "sum": 107800
+        },
+        "sample_histogram": {
+          "600": 24,
+          "200": 74,
+          "500": 3,
+          "300": 5,
+          "1200": 62,
+          "400": 3
+        },
+        "candidate_samples": {
+          "n": 466,
+          "p50": 600.0,
+          "p90": 1200.0,
+          "max": 1200,
+          "sum": 334100
+        },
+        "paired_samples": {
+          "n": 466,
+          "p50": 600.0,
+          "p90": 1200.0,
+          "max": 1200,
+          "sum": 334100
+        },
+        "requested_samples": {
+          "n": 171,
+          "p50": 1200,
+          "p90": 1200.0,
+          "max": 1200,
+          "sum": 158400
+        },
+        "low_trust_rows": 71,
+        "wall_ms": {
+          "n": 171,
+          "p50": 3396,
+          "p90": 12700.0,
+          "max": 192865,
+          "sum": 2278655
+        },
+        "memo_hit_rows": 0,
+        "limits": "rows may reuse a cached completion; C2 complete_adaptive/complete_budget is not deadline truncation. Low-trust sample cap alone is not a timeout."
+      },
+      "B3": {
+        "rows": 40,
+        "status_counts": {
+          "complete": 3,
+          "complete_adaptive": 37
+        },
+        "budgeted_rows": 0,
+        "budget_truncated_rows": 0,
+        "budget_truncated_unique_attempt_ids": 0,
+        "budget_truncated_fraction": null,
+        "timed_out_rows": 0,
+        "actual_samples": {
+          "n": 40,
+          "p50": 1000.0,
+          "p90": 1000.0,
+          "max": 1000,
+          "sum": 27400
+        },
+        "sample_histogram": {
+          "1000": 21,
+          "300": 16,
+          "400": 2,
+          "800": 1
+        },
+        "candidate_samples": {
+          "n": 291,
+          "p50": 300,
+          "p90": 1000.0,
+          "max": 1000,
+          "sum": 150900
+        },
+        "paired_samples": {
+          "n": 0,
+          "p50": null,
+          "p90": null,
+          "max": null,
+          "sum": 0
+        },
+        "requested_samples": {
+          "n": 40,
+          "p50": 1000.0,
+          "p90": 1000.0,
+          "max": 1000,
+          "sum": 40000
+        },
+        "low_trust_rows": 12,
+        "wall_ms": {
+          "n": 40,
+          "p50": 15417.0,
+          "p90": 66874.8,
+          "max": 180091,
+          "sum": 1258102
+        },
+        "memo_hit_rows": 0,
+        "limits": "rows may reuse a cached completion; C2 complete_adaptive/complete_budget is not deadline truncation. Low-trust sample cap alone is not a timeout."
+      },
+      "funnel": {
+        "final_floor": 48,
+        "first_attempt_stop_floor": 17,
+        "first_attempt_victory": false,
+        "entered_acts": [
+          1,
+          2,
+          3
+        ],
+        "bosses": [
+          {
+            "floor": 17,
+            "encounter": "VANTOM",
+            "final_pass": true,
+            "first_attempt_pass": false,
+            "reachable_in_first_attempt_funnel": true,
+            "attempts": 2,
+            "source_refs": [
+              {
+                "path": "logs/sl-attempts.jsonl",
+                "off": 44055511,
+                "len": 24734,
+                "sha256": "0568393262e03dd5ca19b55c13959169dc0639ad8c86ae290ecf1db74c1c533e"
+              },
+              {
+                "path": "logs/sl-attempts.jsonl",
+                "off": 44080245,
+                "len": 31212,
+                "sha256": "38fcbec18379ae2e849d3c427aa016e91ab138e9845c61eaa197e64ae6341285"
+              }
+            ]
+          },
+          {
+            "floor": 33,
+            "encounter": "CRUSHER+ROCKET",
+            "final_pass": true,
+            "first_attempt_pass": true,
+            "reachable_in_first_attempt_funnel": false,
+            "attempts": 1,
+            "source_refs": [
+              {
+                "path": "logs/sl-attempts.jsonl",
+                "off": 44111457,
+                "len": 67328,
+                "sha256": "782d350951f3a19450fec8727746d92d94cc293583b84ec2fb380125d14d497b"
+              }
+            ]
+          },
+          {
+            "floor": 48,
+            "encounter": "AEONGLASS",
+            "final_pass": false,
+            "first_attempt_pass": false,
+            "reachable_in_first_attempt_funnel": false,
+            "attempts": 6,
+            "source_refs": [
+              {
+                "path": "logs/sl-attempts.jsonl",
+                "off": 44178785,
+                "len": 13850,
+                "sha256": "bd718c671f92c03b401406bdaac74c8ddef4814af946dcdee7d6b6bfb2fc1481"
+              },
+              {
+                "path": "logs/sl-attempts.jsonl",
+                "off": 44192635,
+                "len": 17171,
+                "sha256": "ed48d90ab0540d82e49d77b88ac9e70f54e272b92e07148b3fad7883a8ed8888"
+              },
+              {
+                "path": "logs/sl-attempts.jsonl",
+                "off": 44209806,
+                "len": 16905,
+                "sha256": "20dd5f6f7c75120996a934ac0b0be14b85e594edaca10971c35eb9f6b27f665a"
+              },
+              {
+                "path": "logs/sl-attempts.jsonl",
+                "off": 44226711,
+                "len": 18572,
+                "sha256": "ba075e2c376f2ae376d03f44458ce031fce4bafb36d8cf0559c0030a93d10633"
+              },
+              {
+                "path": "logs/sl-attempts.jsonl",
+                "off": 44245283,
+                "len": 17775,
+                "sha256": "d1d3aa5e716dffe41266c610f45d4655691953dbc92ff7e1f54142298d10c4c5"
+              },
+              {
+                "path": "logs/sl-attempts.jsonl",
+                "off": 44263058,
+                "len": 19059,
+                "sha256": "e977ca51b7e85883c298a7549365d23956d8c97c0efd546f560d1e5625bf5cfe"
+              }
+            ]
+          }
+        ],
+        "limits": "first-attempt funnel stops at first logged predicted/actual death; later SL Bosses are excluded from that funnel"
+      },
+      "attribution": {
+        "compute_proxy_minutes": 104.63588333333334,
+        "action_dispatch_minutes": 10.193266666666666,
+        "B2_minutes": 37.977583333333335,
+        "B3_minutes": 20.968366666666668,
+        "brain_logged_minutes": 32.92958333333333,
+        "inter_decision_gaps_over_60s": [],
+        "limits": "components overlap: brain/run-plan can live inside pre, B2/B3 inside planner. Do not sum attribution components. No retrospective IO or outage attribution from current host measurements."
+      }
+    },
+    "YZWV37N2MU6N": {
+      "run_id": "YZWV37N2MU6N",
+      "startup_ts": "2026-10-16T11:11:13.280Z",
+      "first_raw_frame": "2026-10-16T11:12:21.901Z",
+      "ended": "2026-10-16T12:48:37.886Z",
+      "duration_minutes": 97.4101,
+      "over_90_minutes": true,
+      "victory": false,
+      "end_floor": 49,
+      "decision_count": 1010,
+      "terminal_decision_count": 1010,
+      "decision_count_matches": true,
+      "first_logged_floor": 1,
+      "config_segments": [
+        {
+          "ts": "2026-10-16T11:11:13.280Z",
+          "code": {
+            "commit": "a14ebd0592f0cba9f7d3053eb5809754dd78ee2d",
+            "code": "a14ebd0+dirty",
+            "dirty": true,
+            "dirty_files": [
+              "knowledge/characters/silent/boss-damage.json",
+              "knowledge/characters/silent/construction-opportunities.json",
+              "knowledge/characters/silent/monster-records.json",
+              "knowledge/characters/silent/outcome-stats.json",
+              "knowledge/characters/silent/room-costs.json",
+              "knowledge/common/card-upgrades.json",
+              "knowledge/common/monster-db.json",
+              "knowledge/common/move-model.json",
+              "notes/monster-db-check.md"
+            ],
+            "branch": "live",
+            "worktree": "live"
+          },
+          "human_pace": null,
+          "restart": false,
+          "source": {
+            "path": "logs/run-config.jsonl",
+            "off": 1889695,
+            "len": 5493,
+            "sha256": "02def0befa9da36e76ad8bce0badb3d50dfd184a489ab9d0678d8f0777a6454f"
+          }
+        }
+      ],
+      "decision_compute_proxy_ms": {
+        "ordinary": {
+          "n": 327,
+          "p50": 7,
+          "p90": 1475.0000000000005,
+          "max": 3091,
+          "sum": 131487
+        },
+        "elite": {
+          "n": 48,
+          "p50": 7.0,
+          "p90": 1490.5,
+          "max": 2279,
+          "sum": 18172
+        },
+        "boss": {
+          "n": 181,
+          "p50": 7,
+          "p90": 5744.0,
+          "max": 42937,
+          "sum": 374823
+        },
+        "retry": {
+          "n": 180,
+          "p50": 7.0,
+          "p90": 2262.9999999999695,
+          "max": 61538,
+          "sum": 676288
+        },
+        "routine": {
+          "n": 274,
+          "p50": 3.0,
+          "p90": 50039.60000000002,
+          "max": 160852,
+          "sum": 2808587
+        }
+      },
+      "turn_compute_proxy_ms": {
+        "ordinary": {
+          "n": 78,
+          "p50": 1643.5,
+          "p90": 3529.599999999999,
+          "max": 7131.0,
+          "sum": 131487.0
+        },
+        "elite": {
+          "n": 11,
+          "p50": 1528.0,
+          "p90": 2762.0,
+          "max": 3357.0,
+          "sum": 18172.0
+        },
+        "boss": {
+          "n": 35,
+          "p50": 3754.0,
+          "p90": 28627.400000000005,
+          "max": 98832.0,
+          "sum": 374823.0
+        },
+        "retry": {
+          "n": 42,
+          "p50": 1405.5,
+          "p90": 58764.299999999996,
+          "max": 92716.0,
+          "sum": 676288.0
+        }
+      },
+      "decision_budget_actual_ms": {
+        "ordinary": {
+          "n": 0,
+          "p50": null,
+          "p90": null,
+          "max": null,
+          "sum": 0
+        },
+        "elite": {
+          "n": 0,
+          "p50": null,
+          "p90": null,
+          "max": null,
+          "sum": 0
+        },
+        "boss": {
+          "n": 0,
+          "p50": null,
+          "p90": null,
+          "max": null,
+          "sum": 0
+        },
+        "retry": {
+          "n": 0,
+          "p50": null,
+          "p90": null,
+          "max": null,
+          "sum": 0
+        },
+        "routine": {
+          "n": 0,
+          "p50": null,
+          "p90": null,
+          "max": null,
+          "sum": 0
+        }
+      },
+      "turn_budget_actual_ms": {
+        "ordinary": {
+          "n": 0,
+          "p50": null,
+          "p90": null,
+          "max": null,
+          "sum": 0
+        },
+        "elite": {
+          "n": 0,
+          "p50": null,
+          "p90": null,
+          "max": null,
+          "sum": 0
+        },
+        "boss": {
+          "n": 0,
+          "p50": null,
+          "p90": null,
+          "max": null,
+          "sum": 0
+        },
+        "retry": {
+          "n": 0,
+          "p50": null,
+          "p90": null,
+          "max": null,
+          "sum": 0
+        },
+        "routine": {
+          "n": 0,
+          "p50": null,
+          "p90": null,
+          "max": null,
+          "sum": 0
+        }
+      },
+      "budget_entries": 0,
+      "missing_budget_entries": 1010,
+      "overbudget_entries": null,
+      "overbudget_distinct_keys": null,
+      "budget_fallbacks": null,
+      "stage_timeout_counts": {},
+      "all_decision_fallbacks": 0,
+      "L2": {
+        "brain_logged_questions": 51,
+        "brain_rows": 51,
+        "brain_latency_ms": {
+          "n": 51,
+          "p50": 23555,
+          "p90": 58228.0,
+          "max": 92819,
+          "sum": 1687744
+        },
+        "native_call_rows": 51,
+        "native_unique_thread_turns": 51,
+        "native_call_latency_ms": {
+          "n": 51,
+          "p50": 23555,
+          "p90": 58228.0,
+          "max": 92819,
+          "sum": 1687744
+        },
+        "over_90000_ms_native_rows": 1,
+        "model_effort": {
+          "gpt-6.1-sol/xhigh": 51
+        },
+        "outcomes": {
+          "answered": 51
+        }
+      },
+      "B2": {
+        "rows": 78,
+        "status_counts": {
+          "complete_adaptive": 78
+        },
+        "budgeted_rows": 0,
+        "budget_truncated_rows": 0,
+        "budget_truncated_unique_attempt_ids": 0,
+        "budget_truncated_fraction": null,
+        "timed_out_rows": 0,
+        "actual_samples": {
+          "n": 78,
+          "p50": 700.0,
+          "p90": 1200.0,
+          "max": 1200,
+          "sum": 61500
+        },
+        "sample_histogram": {
+          "200": 20,
+          "600": 14,
+          "500": 2,
+          "1200": 37,
+          "900": 1,
+          "700": 4
+        },
+        "candidate_samples": {
+          "n": 380,
+          "p50": 1200.0,
+          "p90": 1200.0,
+          "max": 1200,
+          "sum": 330100
+        },
+        "paired_samples": {
+          "n": 380,
+          "p50": 1200.0,
+          "p90": 1200.0,
+          "max": 1200,
+          "sum": 329700
+        },
+        "requested_samples": {
+          "n": 78,
+          "p50": 1200.0,
+          "p90": 1200.0,
+          "max": 1200,
+          "sum": 75600
+        },
+        "low_trust_rows": 71,
+        "wall_ms": {
+          "n": 78,
+          "p50": 1400.5,
+          "p90": 41427.1,
+          "max": 56302,
+          "sum": 849841
+        },
+        "memo_hit_rows": 0,
+        "limits": "rows may reuse a cached completion; C2 complete_adaptive/complete_budget is not deadline truncation. Low-trust sample cap alone is not a timeout."
+      },
+      "B3": {
+        "rows": 42,
+        "status_counts": {
+          "complete_adaptive": 40,
+          "complete": 2
+        },
+        "budgeted_rows": 0,
+        "budget_truncated_rows": 0,
+        "budget_truncated_unique_attempt_ids": 0,
+        "budget_truncated_fraction": null,
+        "timed_out_rows": 0,
+        "actual_samples": {
+          "n": 42,
+          "p50": 1000.0,
+          "p90": 1000.0,
+          "max": 1000,
+          "sum": 33500
+        },
+        "sample_histogram": {
+          "300": 11,
+          "1000": 28,
+          "600": 1,
+          "900": 1,
+          "700": 1
+        },
+        "candidate_samples": {
+          "n": 385,
+          "p50": 300,
+          "p90": 1000.0,
+          "max": 1000,
+          "sum": 191500
+        },
+        "paired_samples": {
+          "n": 0,
+          "p50": null,
+          "p90": null,
+          "max": null,
+          "sum": 0
+        },
+        "requested_samples": {
+          "n": 42,
+          "p50": 1000.0,
+          "p90": 1000.0,
+          "max": 1000,
+          "sum": 42000
+        },
+        "low_trust_rows": 13,
+        "wall_ms": {
+          "n": 42,
+          "p50": 11901.5,
+          "p90": 29581.799999999996,
+          "max": 43847,
+          "sum": 595320
+        },
+        "memo_hit_rows": 0,
+        "limits": "rows may reuse a cached completion; C2 complete_adaptive/complete_budget is not deadline truncation. Low-trust sample cap alone is not a timeout."
+      },
+      "funnel": {
+        "final_floor": 49,
+        "first_attempt_stop_floor": 49,
+        "first_attempt_victory": false,
+        "entered_acts": [
+          1,
+          2,
+          3
+        ],
+        "bosses": [
+          {
+            "floor": 17,
+            "encounter": "VANTOM",
+            "final_pass": true,
+            "first_attempt_pass": true,
+            "reachable_in_first_attempt_funnel": true,
+            "attempts": 1,
+            "source_refs": [
+              {
+                "path": "logs/sl-attempts.jsonl",
+                "off": 43865613,
+                "len": 14293,
+                "sha256": "0a55aedada276fb574260bfde36226cc594489af42d55a105c514509360ab8e3"
+              }
+            ]
+          },
+          {
+            "floor": 33,
+            "encounter": "THE_INSATIABLE",
+            "final_pass": true,
+            "first_attempt_pass": true,
+            "reachable_in_first_attempt_funnel": true,
+            "attempts": 1,
+            "source_refs": [
+              {
+                "path": "logs/sl-attempts.jsonl",
+                "off": 43879906,
+                "len": 16282,
+                "sha256": "8555b3869723041c6d90d666b6f8c02af85e6e2b1bce26c8e2da3e818e5ad324"
+              }
+            ]
+          },
+          {
+            "floor": 48,
+            "encounter": "TEST_SUBJECT",
+            "final_pass": true,
+            "first_attempt_pass": true,
+            "reachable_in_first_attempt_funnel": true,
+            "attempts": 1,
+            "source_refs": [
+              {
+                "path": "logs/sl-attempts.jsonl",
+                "off": 43896188,
+                "len": 30951,
+                "sha256": "15fd03ee02e9fb2d2093666b6595919596c389a31fbddff718dcd36201edd1b3"
+              }
+            ]
+          },
+          {
+            "floor": 49,
+            "encounter": "QUEEN+TORCH_HEAD_AMALGAM",
+            "final_pass": false,
+            "first_attempt_pass": false,
+            "reachable_in_first_attempt_funnel": true,
+            "attempts": 6,
+            "source_refs": [
+              {
+                "path": "logs/sl-attempts.jsonl",
+                "off": 43927139,
+                "len": 10582,
+                "sha256": "04e83fa78b97e2e2c5fb403bdd2f48c1e5a051f357acd7fd42202b06d5dac2e9"
+              },
+              {
+                "path": "logs/sl-attempts.jsonl",
+                "off": 43937721,
+                "len": 18820,
+                "sha256": "9cc222db07a73be68d93a752795f785862f6033eb8fb21738ba3e5512d1b9000"
+              },
+              {
+                "path": "logs/sl-attempts.jsonl",
+                "off": 43956541,
+                "len": 25043,
+                "sha256": "f2e07d3ccdf1b5881c793d1fee355bf887409cb237fa2c1dd6889c7b6e020660"
+              },
+              {
+                "path": "logs/sl-attempts.jsonl",
+                "off": 43981584,
+                "len": 22056,
+                "sha256": "9e639cb298b4b20c9d99c5a4416211f58baa6d857ad2827cd6f4666ec571c565"
+              },
+              {
+                "path": "logs/sl-attempts.jsonl",
+                "off": 44003640,
+                "len": 25058,
+                "sha256": "8aac9635e7f299fc30edf3aad59d20b298f3387dcd3be24988331f271bfc2d9e"
+              },
+              {
+                "path": "logs/sl-attempts.jsonl",
+                "off": 44028698,
+                "len": 26813,
+                "sha256": "656da211fb8d4db5935bd7ce096a6ad65685a85926fbc66c9388da97706cfd30"
+              }
+            ]
+          }
+        ],
+        "limits": "first-attempt funnel stops at first logged predicted/actual death; later SL Bosses are excluded from that funnel"
+      },
+      "attribution": {
+        "compute_proxy_minutes": 66.82261666666666,
+        "action_dispatch_minutes": 9.372983333333334,
+        "B2_minutes": 14.164016666666667,
+        "B3_minutes": 9.922,
+        "brain_logged_minutes": 28.129066666666667,
+        "inter_decision_gaps_over_60s": [],
+        "limits": "components overlap: brain/run-plan can live inside pre, B2/B3 inside planner. Do not sum attribution components. No retrospective IO or outage attribution from current host measurements."
+      }
+    }
+  }
+}

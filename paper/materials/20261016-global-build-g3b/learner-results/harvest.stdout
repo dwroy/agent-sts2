@@ -1,0 +1,14 @@
+{"name": "states", "query": "SELECT DISTINCT off,len FROM read_parquet(?) WHERE run_id IN (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) AND off>=0 AND off+len<=? ORDER BY off", "parquet": "/home/dw/Projects/agent-sts2/data/logdb/frames/*.parquet", "prefix_bytes": 13511578288, "indexed_rows": 29165, "raw_bytes": 1024281504}
+states 5000
+states 10000
+states 15000
+states 20000
+states 25000
+states done 29165 compressed 128644018
+{"name": "decisions", "query": "SELECT DISTINCT off,len FROM read_parquet(?) WHERE run_id IN (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) AND off>=0 AND off+len<=? ORDER BY off", "parquet": "/home/dw/Projects/agent-sts2/data/logdb/decisions/*.parquet", "prefix_bytes": 1892101838, "indexed_rows": 27328, "raw_bytes": 608963696}
+decisions 5000
+decisions 10000
+decisions 15000
+decisions 20000
+decisions 25000
+decisions done 27328 compressed 108952234

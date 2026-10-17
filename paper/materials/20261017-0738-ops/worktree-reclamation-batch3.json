@@ -1,0 +1,322 @@
+{
+  "at": "2026-10-17 07:52:26 CST",
+  "free_before": 154561523712,
+  "batch_limit": 1,
+  "guard": "Age >=24h, original owner_guard/active/clean/source/publication/archive SHA and lock checks; no bypass",
+  "results": [
+    {
+      "workspace": "learner-astra-xhigh-20261010",
+      "source": "57a4c35a78a0eaf2ad5e0aeadea76d3703b38b69",
+      "age_seconds": 185253.64281463623,
+      "source_ancestors_in_both": true,
+      "original_owner_refs_absent": true,
+      "unique_bytes": 0,
+      "unique_files": 0,
+      "calls": [
+        {
+          "command": [
+            "nice",
+            "-n",
+            "19",
+            "python3",
+            "ops/worktree_retention.py",
+            "complete",
+            "--root",
+            "/home/dw/Projects/agent-sts2",
+            "--workspace",
+            "learner-astra-xhigh-20261010",
+            "--source",
+            "57a4c35a78a0eaf2ad5e0aeadea76d3703b38b69",
+            "--main-commit",
+            "7edafb8f5c0fc8235a13566b0eddca5af7355fa1",
+            "--live-commit",
+            "57a4c35a78a0eaf2ad5e0aeadea76d3703b38b69"
+          ],
+          "rc": 0,
+          "output": "paper/materials/20261017-0738-ops/learner-astra-xhigh-20261010.retry1.0.cli.json",
+          "sha256": "0abcb9af776c48301c31fd7268fe0f4102ae7b8dc5acb4d7eab598d020290329"
+        },
+        {
+          "command": [
+            "nice",
+            "-n",
+            "19",
+            "python3",
+            "ops/worktree_retention.py",
+            "sweep",
+            "--root",
+            "/home/dw/Projects/agent-sts2",
+            "--workspace",
+            "learner-astra-xhigh-20261010",
+            "--apply",
+            "--limit",
+            "1"
+          ],
+          "rc": 0,
+          "output": "paper/materials/20261017-0738-ops/learner-astra-xhigh-20261010.retry1.1.cli.json",
+          "sha256": "44617d64f21718e029abebc378f5b5f7652ca974a023e226ca990772a311e5e8"
+        }
+      ],
+      "state": "reclaimed",
+      "manifest": "ops/codex-ops/retention/worktree-archives/learner-astra-xhigh-20261010.manifest.json",
+      "manifest_sha256": "cb5d72c8bf3b75e01b29612237b3b56af876cca975c139eb2b0317893c2d8ec5",
+      "available_bytes_delta": 93671424,
+      "archive_sha256": "d297bc98a6be6a2519c0f9ebcd03dc1e7e2b4f01d621c591bbb8b8e2e6189ff3",
+      "sha_readback_verified": true,
+      "branch_preserved": true,
+      "original_logs_reports_kept": true
+    },
+    {
+      "workspace": "learning-continuity-20261012",
+      "source": "bb25df38fe110eb70268c00aa5414da69aa9afe2",
+      "age_seconds": 184945.0600681305,
+      "source_ancestors_in_both": true,
+      "original_owner_refs_absent": true,
+      "unique_bytes": 141581,
+      "unique_files": 29,
+      "calls": [
+        {
+          "command": [
+            "nice",
+            "-n",
+            "19",
+            "python3",
+            "ops/worktree_retention.py",
+            "complete",
+            "--root",
+            "/home/dw/Projects/agent-sts2",
+            "--workspace",
+            "learning-continuity-20261012",
+            "--source",
+            "bb25df38fe110eb70268c00aa5414da69aa9afe2",
+            "--main-commit",
+            "5a120bddf9e4af217a45306b2a5c30f9427f16a5",
+            "--live-commit",
+            "1b6441ff14e76779eb0db60598858c712e6a2f40"
+          ],
+          "rc": 0,
+          "output": "paper/materials/20261017-0738-ops/learning-continuity-20261012.retry1.0.cli.json",
+          "sha256": "c59e01776da37ea3aa8be4271eed3b3e5d6a0782210c555f68f65860c9c884db"
+        },
+        {
+          "command": [
+            "nice",
+            "-n",
+            "19",
+            "python3",
+            "ops/worktree_retention.py",
+            "sweep",
+            "--root",
+            "/home/dw/Projects/agent-sts2",
+            "--workspace",
+            "learning-continuity-20261012",
+            "--apply",
+            "--limit",
+            "1"
+          ],
+          "rc": 0,
+          "output": "paper/materials/20261017-0738-ops/learning-continuity-20261012.retry1.1.cli.json",
+          "sha256": "623744a9efb1fc3325c908c13fda53b4fba62563313acb43e407d969dfb247a4"
+        }
+      ],
+      "state": "reclaimed",
+      "manifest": "ops/codex-ops/retention/worktree-archives/learning-continuity-20261012.manifest.json",
+      "manifest_sha256": "a9bd8b8607d6ed5d3efb481d3c7227ae7edd12f313956d7a47856f7a52ffa0a9",
+      "available_bytes_delta": 116383744,
+      "archive_sha256": "64d19cebd605b179ac1dc83f3b1c5220e56d762fccc6db933f7295f6231af59d",
+      "sha_readback_verified": true,
+      "branch_preserved": true,
+      "original_logs_reports_kept": true
+    },
+    {
+      "workspace": "release-numbering-20261012",
+      "source": "cc10a335b6d34235894d8cfddbf547af7c47a870",
+      "age_seconds": 182208.72737145424,
+      "source_ancestors_in_both": true,
+      "original_owner_refs_absent": true,
+      "unique_bytes": 81,
+      "unique_files": 1,
+      "calls": [
+        {
+          "command": [
+            "nice",
+            "-n",
+            "19",
+            "python3",
+            "ops/worktree_retention.py",
+            "complete",
+            "--root",
+            "/home/dw/Projects/agent-sts2",
+            "--workspace",
+            "release-numbering-20261012",
+            "--source",
+            "cc10a335b6d34235894d8cfddbf547af7c47a870",
+            "--main-commit",
+            "2c0277fa818bb29f19a153c39fe52020c0217b71",
+            "--live-commit",
+            "c6ac75226dc8222a980bcf2f7db8ce39db338eee"
+          ],
+          "rc": 0,
+          "output": "paper/materials/20261017-0738-ops/release-numbering-20261012.retry1.0.cli.json",
+          "sha256": "95da926f4d09a0f4cfd9356d6dfeff10bb009dbe4c85613ca4309eb73ec65016"
+        },
+        {
+          "command": [
+            "nice",
+            "-n",
+            "19",
+            "python3",
+            "ops/worktree_retention.py",
+            "sweep",
+            "--root",
+            "/home/dw/Projects/agent-sts2",
+            "--workspace",
+            "release-numbering-20261012",
+            "--apply",
+            "--limit",
+            "1"
+          ],
+          "rc": 0,
+          "output": "paper/materials/20261017-0738-ops/release-numbering-20261012.retry1.1.cli.json",
+          "sha256": "52dddac0b7f8ab90ba362ae94a965cfd3d68d86d3fbc178d2365a0d17e0b8009"
+        }
+      ],
+      "state": "reclaimed",
+      "manifest": "ops/codex-ops/retention/worktree-archives/release-numbering-20261012.manifest.json",
+      "manifest_sha256": "9b2991d1f3237b9e7a75f8ddef3bac363f9ef69d2d2e03894227f06803fd8ae6",
+      "available_bytes_delta": 116707328,
+      "archive_sha256": "694e3dd2eabb0d5d686c3a85e3988dd02c7b1918dd000a76dc20bc897e84a607",
+      "sha_readback_verified": true,
+      "branch_preserved": true,
+      "original_logs_reports_kept": true
+    },
+    {
+      "workspace": "report-run-recovery-20261012",
+      "source": "02725b673b336acc7b2e91bc596fd591ad1de6db",
+      "age_seconds": 182206.80390048027,
+      "source_ancestors_in_both": true,
+      "original_owner_refs_absent": true,
+      "unique_bytes": 0,
+      "unique_files": 0,
+      "calls": [
+        {
+          "command": [
+            "nice",
+            "-n",
+            "19",
+            "python3",
+            "ops/worktree_retention.py",
+            "complete",
+            "--root",
+            "/home/dw/Projects/agent-sts2",
+            "--workspace",
+            "report-run-recovery-20261012",
+            "--source",
+            "02725b673b336acc7b2e91bc596fd591ad1de6db",
+            "--main-commit",
+            "34fa1d2053dfc404e902d2f58dd0ee4dbb6933a0",
+            "--live-commit",
+            "e5d0913aecc0af50986de75784943e82df5495d2"
+          ],
+          "rc": 0,
+          "output": "paper/materials/20261017-0738-ops/report-run-recovery-20261012.retry1.0.cli.json",
+          "sha256": "41ac2d335aa561a4ecffeadd9cac0ccd02c682343b14b3be16759eb6d38c3a5f"
+        },
+        {
+          "command": [
+            "nice",
+            "-n",
+            "19",
+            "python3",
+            "ops/worktree_retention.py",
+            "sweep",
+            "--root",
+            "/home/dw/Projects/agent-sts2",
+            "--workspace",
+            "report-run-recovery-20261012",
+            "--apply",
+            "--limit",
+            "1"
+          ],
+          "rc": 0,
+          "output": "paper/materials/20261017-0738-ops/report-run-recovery-20261012.retry1.1.cli.json",
+          "sha256": "1072279b7296e90dc24868d4aed415b81358b32fcaf29a346dc888d23690b9fc"
+        }
+      ],
+      "state": "reclaimed",
+      "manifest": "ops/codex-ops/retention/worktree-archives/report-run-recovery-20261012.manifest.json",
+      "manifest_sha256": "cac6d99e64aa8f6bd7a1ab3907df174ec962b02bf7885478785e686b194e1e7d",
+      "available_bytes_delta": 106434560,
+      "archive_sha256": "27fd45d86d53adea9806f51597e78b8beaed7b4dc3c20fb677d04188494b1c6e",
+      "sha_readback_verified": true,
+      "branch_preserved": true,
+      "original_logs_reports_kept": true
+    },
+    {
+      "workspace": "switch-followup-20261012",
+      "source": "4fef181d5768bb8c9127af72fa19659d9874e66c",
+      "age_seconds": 180475.57694530487,
+      "source_ancestors_in_both": true,
+      "original_owner_refs_absent": true,
+      "unique_bytes": 0,
+      "unique_files": 0,
+      "calls": [
+        {
+          "command": [
+            "nice",
+            "-n",
+            "19",
+            "python3",
+            "ops/worktree_retention.py",
+            "complete",
+            "--root",
+            "/home/dw/Projects/agent-sts2",
+            "--workspace",
+            "switch-followup-20261012",
+            "--source",
+            "4fef181d5768bb8c9127af72fa19659d9874e66c",
+            "--main-commit",
+            "cbaab8984cc568017dd4ba667086c5d834ae6b9e",
+            "--live-commit",
+            "b475be859500665d7d7b3c099b2a3d6c608c273d"
+          ],
+          "rc": 0,
+          "output": "paper/materials/20261017-0738-ops/switch-followup-20261012.retry1.0.cli.json",
+          "sha256": "bffa5ee73b25ff1840eb659f89c7d6c311a447e3053ed025b63ce006d2bcae34"
+        },
+        {
+          "command": [
+            "nice",
+            "-n",
+            "19",
+            "python3",
+            "ops/worktree_retention.py",
+            "sweep",
+            "--root",
+            "/home/dw/Projects/agent-sts2",
+            "--workspace",
+            "switch-followup-20261012",
+            "--apply",
+            "--limit",
+            "1"
+          ],
+          "rc": 0,
+          "output": "paper/materials/20261017-0738-ops/switch-followup-20261012.retry1.1.cli.json",
+          "sha256": "aa7a84381d01abea7da5489bfbb6bf0384602d8319bf5beb9d1bb28315475bf6"
+        }
+      ],
+      "state": "reclaimed",
+      "manifest": "ops/codex-ops/retention/worktree-archives/switch-followup-20261012.manifest.json",
+      "manifest_sha256": "6133f5ab62dd7d1086e686033992dc56b15b0c8b88032fe21c05b0ed3b8ce6df",
+      "available_bytes_delta": 106483712,
+      "archive_sha256": "2c0eb19ef1ae3cc1c5fec90723754053cf76de944cff1623bbf4b727d2523a27",
+      "sha_readback_verified": true,
+      "branch_preserved": true,
+      "original_logs_reports_kept": true
+    }
+  ],
+  "finished_at": "2026-10-17 07:52:38 CST",
+  "free_after": 155099611136,
+  "reclaimed": 5,
+  "reported_reclaimed_delta": 539680768
+}

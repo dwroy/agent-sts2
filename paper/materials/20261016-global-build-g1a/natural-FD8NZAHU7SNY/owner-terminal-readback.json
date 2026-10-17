@@ -1,0 +1,75 @@
+{
+  "at": "2026-10-16T12:47:13.331032+08:00",
+  "actor": "watcher",
+  "parent": "roy-20261016-global-build",
+  "run_id": "FD8NZAHU7SNY",
+  "terminal": {
+    "floor": 27,
+    "victory": false,
+    "ended": "2026-10-16T02:21:01.823Z",
+    "enemy": "ENTOMANCER"
+  },
+  "raw_decision_coverage": 393,
+  "logged_brain_rows": 28,
+  "physical_native_requests": 28,
+  "every_logged_physical_native": "gpt-6.1-sol/xhigh, answered; same original controller2036739 and verified immutable codex1 home/auth metadata",
+  "native_account_candidate_read_back": true,
+  "continuous_summaries": 0,
+  "positive_resource_transfers": 0,
+  "G1a_natural_consumer_accepted": false,
+  "reason": "run ended before any continuous consumer; no summary-only or other-run substitution",
+  "health": {
+    "P2": {
+      "mode": "on",
+      "expected": 24,
+      "produced": 24,
+      "missing": 0,
+      "brain_delivered": 22,
+      "brain_accepted": 22,
+      "choices": 24,
+      "overrides": 3,
+      "reasons_present": 3,
+      "missing_reasons": 0,
+      "target_pending": 0,
+      "longest_missing_streak": 0,
+      "alert": false,
+      "limits": "Shadow choices do not require override reasons. Pending card targets and first shop actions do not certify complete plans or causal benefit."
+    },
+    "C2": {
+      "mode": "on",
+      "observed": 32,
+      "complete_adaptive": 32,
+      "errors": 0,
+      "alert": false
+    },
+    "C1": {
+      "attempts": 34,
+      "failures": 0,
+      "degraded": 0,
+      "evidence": [],
+      "alert": false,
+      "scope": "B2/B3 computation service failures; degradation permits continuation, not fault resolution."
+    }
+  },
+  "reported_wall_ms": {
+    "b2": {
+      "n": 10,
+      "p50": 3490.0,
+      "p90": 8793.2,
+      "max": 9101
+    },
+    "b3": {
+      "n": 24,
+      "p50": 10815.0,
+      "p90": 34054.1,
+      "max": 61537
+    }
+  },
+  "timing_scope": "Question wall-time logs, independent completion attempt IDs; no CPU-time saving or new-interface latency gain claim",
+  "source_manifest": {
+    "path": "paper/materials/20261016-global-build-g1a/natural-FD8NZAHU7SNY/audit-r1/raw-window-manifest.json",
+    "sha256": "3816328580cc4960cf7c32db939b600cbd88c79ccbc2d9084e2da166f87fca77"
+  },
+  "limits": "28 logged physical requests are not35 independent decisions: terminal decider counts may include reused answers, not reclassified here. No continuous gate or complete G1a acceptance. Runtime generated knowledge/input coverage and calibration unknown boundaries remain separate from canonical815582 host0.",
+  "other_role_ACK": false
+}
