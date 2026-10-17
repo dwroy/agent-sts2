@@ -1,0 +1,12 @@
+{
+  "at": "2026-10-18 06:13:23 CST",
+  "issue": "Record-only helper inherited a three-name include list that re-added a deliberately excluded asynchronous request log. Current wake failed on its absent file before Git staging or commit.",
+  "original_helper_sha256": "ce188cf8af68bd336e69fc29bb69ed1e77b166db0ed782b02ea606fda3eef2c5",
+  "fixed_helper_sha256": "75fa9505ddbe1e746ee038c5e66f1533fe43c28a6cb7773078df006527c03c07",
+  "fix": "Use the exact two stable gitleaks receipt files; asynchronous request output stays excluded.",
+  "current_failure_was_before_git_stage_or_commit": true,
+  "previous0543_committed_request_log_bytes": 0,
+  "previous_actual_full_log_separate_and_now_frozen": true,
+  "previous_empty_request_log_not_test_acceptance": true,
+  "no_production_source_or_tests_changed": true
+}

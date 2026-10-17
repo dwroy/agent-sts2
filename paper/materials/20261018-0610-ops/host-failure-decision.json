@@ -1,0 +1,99 @@
+{
+  "at": "2026-10-18 06:11:48 CST",
+  "original_check": {
+    "rc": 1,
+    "log": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261018-052912-fix-batch.fallback-a406c0fa6d35f720696c4e29c5617367da042287.checks.log",
+    "merged": "0bfadd7aa3dd650ac9a1678d139607e6f095b224",
+    "tree": "a406c0fa6d35f720696c4e29c5617367da042287",
+    "commits": [
+      "a6913706952661afe1de38f290cd9434cbb91621"
+    ],
+    "log_sha256": "9cb6458ef0b04a792fddc3729265706b6bf019b1994cc4e60d88695438216274",
+    "coverage": {
+      "passed": [],
+      "failed": [
+        "tests/build-decider.test.ts",
+        "tests/global-build-integration.test.ts",
+        "tests/journal-replay.test.ts",
+        "tests/learner-retention.test.ts",
+        "tests/route-review.test.ts"
+      ],
+      "skipped": [],
+      "summary": {
+        "files": {
+          "failed": 5,
+          "passed": 536
+        },
+        "tests": {
+          "failed": 5,
+          "passed": 5250,
+          "skipped": 2
+        }
+      },
+      "failed_tests": {
+        "tests/build-decider.test.ts": [
+          "DeepSeek answer unusable: recover the choice from its reasoning before Jev (WXMB F11) an unknown option and a reasoning that settles on nothing: Jev decides, shown DeepSeek's reason"
+        ],
+        "tests/global-build-integration.test.ts": [
+          "keeps the actual u6ru-f22-shop/open question and current C1/C2/P2 facts identical to off"
+        ],
+        "tests/journal-replay.test.ts": [
+          "the loop restarted mid-run after a game relaunch (a run_unknown main menu, then continue) the run memory is rebuilt, and a replay that finds nothing says so"
+        ],
+        "tests/learner-retention.test.ts": [
+          "reclaims only settled learner copies with verified archival and safe restoration"
+        ],
+        "tests/route-review.test.ts": [
+          "rest site route review in the loop an illegal route-plan answer is re-asked once with its errors; the corrected route is followed"
+        ]
+      }
+    }
+  },
+  "fixed_inputs": [
+    {
+      "path": "agent/tests/build-decider.test.ts",
+      "line": 670,
+      "sha256": "ea02960feaf6f6b97806255ad8492a8c5f9585740f224a89cc0d57e5c76a3e11",
+      "blob": "56991bbe862c18f10b8e7c441d17be96eb935f5d"
+    },
+    {
+      "path": "agent/tests/global-build-integration.test.ts",
+      "line": 55,
+      "sha256": "f173e3c8be375e89661d7fb089785c276d4642f74969feedf891127c3262d8c4",
+      "blob": "de985728ab2016445131bab254b7a21fddac8b41"
+    },
+    {
+      "path": "agent/tests/journal-replay.test.ts",
+      "line": 335,
+      "sha256": "19579f44a2fcdd3ddc5514d2b0bda1e6cdbe396ee1a0f2dbe827656d8e3bb41c",
+      "blob": "13b916157f393a336f32117298f8a3c25065bf05"
+    },
+    {
+      "path": "agent/tests/learner-retention.test.ts",
+      "line": 9,
+      "sha256": "6043f7da1df45db8492850cf0814dbf5bacff68242d1107d6b1c613edaa217ca",
+      "blob": "66607711d9acaa0cbf6fd3b286489698f6231958"
+    },
+    {
+      "path": "agent/tests/route-review.test.ts",
+      "line": 512,
+      "sha256": "4b41e246ceaaeba9f8605b558197041c12d7a877bf2113d9204cda6124cf1939",
+      "blob": "d21243e27163b32b7d94e97494150c47d908489e"
+    }
+  ],
+  "decision": "preserve live and knowledge; add the five observed deadline/child-process failures to the existing ordinary fixture repair queue; run one exact-name supplement on the original host channel",
+  "reason": "Four cases hit unchanged 15000ms Vitest deadlines. The retention wrapper reported child status null under its existing 30000ms limit, with unclosed-file ResourceWarnings in stderr; the warnings do not establish the timeout cause. No numeric gameplay assertion mismatch is reported; product/load/root causality is unproved. The previously failed max-gap case is absent from this failure list, which does not make the entire suite green.",
+  "active_original_fix_owners": [],
+  "new_model_not_dispatched": true,
+  "no_hot_edit_to_active_owner_input": true,
+  "original_all_five_failures_preserved": true,
+  "original_76fe29_full1_preserved": true,
+  "source_native_cli_catalog_probe1_preserved": true,
+  "source_full_not_repeated": true,
+  "no_deadline_or_assertion_change": true,
+  "source_or_knowledge_modified": false,
+  "new_release": false,
+  "new_shipped": false,
+  "source_worktree_complete": false,
+  "parents_closed": false
+}

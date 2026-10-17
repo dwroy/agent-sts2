@@ -1,0 +1,123 @@
+{
+  "schema": 1,
+  "batch": "20261018-052912-fix-batch",
+  "task": "fix-batch",
+  "worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261018-052912",
+  "original": {
+    "merged": "0bfadd7aa3dd650ac9a1678d139607e6f095b224",
+    "tree": "a406c0fa6d35f720696c4e29c5617367da042287",
+    "log_sha256": "9cb6458ef0b04a792fddc3729265706b6bf019b1994cc4e60d88695438216274",
+    "coverage": {
+      "passed": [],
+      "failed": [
+        "tests/build-decider.test.ts",
+        "tests/global-build-integration.test.ts",
+        "tests/journal-replay.test.ts",
+        "tests/learner-retention.test.ts",
+        "tests/route-review.test.ts"
+      ],
+      "skipped": [],
+      "summary": {
+        "files": {
+          "failed": 5,
+          "passed": 536
+        },
+        "tests": {
+          "failed": 5,
+          "passed": 5250,
+          "skipped": 2
+        }
+      },
+      "failed_tests": {
+        "tests/build-decider.test.ts": [
+          "DeepSeek answer unusable: recover the choice from its reasoning before Jev (WXMB F11) an unknown option and a reasoning that settles on nothing: Jev decides, shown DeepSeek's reason"
+        ],
+        "tests/global-build-integration.test.ts": [
+          "keeps the actual u6ru-f22-shop/open question and current C1/C2/P2 facts identical to off"
+        ],
+        "tests/journal-replay.test.ts": [
+          "the loop restarted mid-run after a game relaunch (a run_unknown main menu, then continue) the run memory is rebuilt, and a replay that finds nothing says so"
+        ],
+        "tests/learner-retention.test.ts": [
+          "reclaims only settled learner copies with verified archival and safe restoration"
+        ],
+        "tests/route-review.test.ts": [
+          "rest site route review in the loop an illegal route-plan answer is re-asked once with its errors; the corrected route is followed"
+        ]
+      }
+    }
+  },
+  "live": {
+    "commit": "0bfadd7aa3dd650ac9a1678d139607e6f095b224",
+    "tree": "a406c0fa6d35f720696c4e29c5617367da042287"
+  },
+  "sources": [
+    "a6913706952661afe1de38f290cd9434cbb91621",
+    "0bfadd7aa3dd650ac9a1678d139607e6f095b224"
+  ],
+  "inputs": [
+    {
+      "path": "agent/tests/build-decider.test.ts",
+      "source": "0bfadd7aa3dd650ac9a1678d139607e6f095b224"
+    },
+    {
+      "path": "agent/tests/global-build-integration.test.ts",
+      "source": "0bfadd7aa3dd650ac9a1678d139607e6f095b224"
+    },
+    {
+      "path": "agent/tests/journal-replay.test.ts",
+      "source": "0bfadd7aa3dd650ac9a1678d139607e6f095b224"
+    },
+    {
+      "path": "agent/tests/learner-retention.test.ts",
+      "source": "0bfadd7aa3dd650ac9a1678d139607e6f095b224"
+    },
+    {
+      "path": "agent/tests/route-review.test.ts",
+      "source": "0bfadd7aa3dd650ac9a1678d139607e6f095b224"
+    }
+  ],
+  "selection": [
+    {
+      "file": "tests/build-decider.test.ts",
+      "tests": [
+        "DeepSeek answer unusable: recover the choice from its reasoning before Jev (WXMB F11) an unknown option and a reasoning that settles on nothing: Jev decides, shown DeepSeek's reason"
+      ],
+      "reason": "failed"
+    },
+    {
+      "file": "tests/global-build-integration.test.ts",
+      "tests": [
+        "keeps the actual u6ru-f22-shop/open question and current C1/C2/P2 facts identical to off"
+      ],
+      "reason": "failed"
+    },
+    {
+      "file": "tests/journal-replay.test.ts",
+      "tests": [
+        "the loop restarted mid-run after a game relaunch (a run_unknown main menu, then continue) the run memory is rebuilt, and a replay that finds nothing says so"
+      ],
+      "reason": "failed"
+    },
+    {
+      "file": "tests/learner-retention.test.ts",
+      "tests": [
+        "reclaims only settled learner copies with verified archival and safe restoration"
+      ],
+      "reason": "failed"
+    },
+    {
+      "file": "tests/route-review.test.ts",
+      "tests": [
+        "rest site route review in the loop an illegal route-plan answer is re-asked once with its errors; the corrected route is followed"
+      ],
+      "reason": "failed"
+    }
+  ],
+  "receipts": [
+    {
+      "path": "paper/materials/20261018-0610-ops/host-failure-decision.json",
+      "sha256": "9880e100925eb527292f3e1e5331158c412f0efc6bea382b80384a11e9493fe6"
+    }
+  ]
+}

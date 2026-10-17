@@ -3336,3 +3336,4 @@ ledger=silent-0508仍proposed；proposal=silent-proposal-048d6591d2a81b7e。版�
 
 - 2026-10-18 05:32 [运维 codex] 原031302六测试叶tree76fe29f3宿主完整入口exit1：539文件/5253项过，仅brain-codex固定进程router-timeout题max_gap_ms=346对>=500断言失败、2项跳过；该题之后stderr保留/脱敏断言未达，根因及CPU/产品归因未证。决定保live、不回滚并保原full1，原普通修复链已实际派20261018-052912-fix-batch/PID3332632，codex3新线程01a14bc4-e72d-7343-9e74-463446e84a24的6.1-sol/xhigh原生请求及首回复已核；不重复原full、不改生产时限或游戏，结果待原完成事件。证据paper/materials/20261018-0524-ops/。
 - 2026-10-18 05:47 [运维 codex] 原76fe29宿主失败的max_gap离线夹具已由原052912批修复并窄合main 21a42036/live 0bfadd7a，保知识刷新；合后tsc/13固定题0，原批新组合宿主PID3395100已请求、结果待事件。旧完整1及CLI环境探测1保留，未报full绿、不改生产超时/游戏行为或关闭H0等父。证据paper/materials/20261018-0543-ops/。
+- 2026-10-18 06:11 [运维 codex] 原052912精确treea406c0fa6d35f720696c4e29c5617367da042287完整宿主1：536文件/5250项过、五败/两跳；四题15秒超时，retention原30秒子进程status=null（warning不作因果）。决定保live/知识，将五题接原普通fixture队列；原修复队列接续，不热改已有批输入或重复派模型，原通道只补五失败精确题/原时限一次。旧完整1及本次失败/覆盖保持，不称整套绿、产品根因已定或关闭H0等父；证据paper/materials/20261018-0610-ops/。
