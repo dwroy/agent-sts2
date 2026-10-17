@@ -1,0 +1,170 @@
+{
+  "generated_at": "2026-10-17T17:32:51.150Z",
+  "source_cut_bytes": {
+    "decisions.jsonl": 2390345157,
+    "deepseek-reasoning.jsonl": 377746518,
+    "runs.jsonl": 365752,
+    "states.jsonl": 14119685366,
+    "fight-plans.jsonl": 2233957,
+    "run-plans.jsonl": 9114634,
+    "brain.jsonl": 782671589,
+    "sl-attempts.jsonl": 46486435,
+    "run-config.jsonl": 2016198
+  },
+  "checks": {
+    "decisions attributed + unattributed == play records": true,
+    "decisions_by_label sum == attributed decisions": true,
+    "escalations rows == records with escalation": true,
+    "every runs.jsonl id present in runs.csv": true,
+    "commits == git rev-list --all --count": true
+  },
+  "counts": {
+    "runs.csv": 833,
+    "decisions_by_label.csv": 27793,
+    "escalations.csv": 3600,
+    "fight_plans.csv": 1461,
+    "commits.csv": 6893
+  },
+  "selected_run": {
+    "run_id": "J5E7A3MS9NSH",
+    "start_ts": "2026-10-17T16:15:56.595Z",
+    "end_ts": "2026-10-17T16:59:52.285Z",
+    "duration_min": "43.9",
+    "floor_max": "23",
+    "act_reached": "2",
+    "outcome": "defeat",
+    "victory": "0",
+    "outcome_source": "runs.jsonl",
+    "finished": "1",
+    "character": "SILENT",
+    "ascension": "10",
+    "code_version": "current",
+    "code_version_source": "runs.jsonl",
+    "code_version_console": "017453260+dirty",
+    "code_versions_all": "017453260+dirty",
+    "n_decisions": "402",
+    "n_shadow": "0",
+    "decider_inferred": "0",
+    "n_code": "181",
+    "n_jev": "97",
+    "n_deepseek": "0",
+    "n_claude": "0",
+    "n_code_fallback": "6",
+    "n_jev_plan": "82",
+    "n_deepseek_plan": "0",
+    "n_claude_plan": "0",
+    "jev_calls": "123",
+    "jev_in_tokens": "5375639",
+    "jev_out_tokens": "30460",
+    "jev_cost_usd": "0.227056",
+    "jev_latency_p50_ms": "540",
+    "ds_calls": "0",
+    "ds_in": "0",
+    "ds_cache_hit": "0",
+    "ds_out": "0",
+    "ds_reasoning": "0",
+    "ds_total_tokens": "0",
+    "ds_calls_no_token_split": "0",
+    "ds_cost_usd": "0",
+    "ds_latency_p50_s": "",
+    "ds_overrides": "0",
+    "fight_plans": "0",
+    "fight_plan_errors": "0",
+    "fight_plan_cost_usd": "0",
+    "fight_plan_latency_p50_s": "",
+    "claude_calls": "0",
+    "claude_latency_p50_s": "",
+    "hp_guard_count": "0",
+    "escalation_chain": "none",
+    "era": "deepseek_memory",
+    "learning_loop": "1",
+    "death_enemy": "寄生惧魔/胧光怪",
+    "death_enemy_ids": "PARAFRIGHT/THE_OBSCURA",
+    "final_hp": "0",
+    "max_hp": "70",
+    "bosses_seen": "SOUL_FYSH_BOSS KNOWLEDGE_DEMON_BOSS",
+    "has_postmortem": "1",
+    "postmortem_heading": "J5E7A3MS9NSH（A10，静默猎手，第23层，死于寄生惧魔 PARAFRIGHT／胧光怪 THE_OBSCURA：四试均6/70血带迅捷药水进场，前三试T2／T5／T5判死读档；末试T5以5血10挡对20＋10＝30攻击阵亡，完整需损20、保持该末态存活至少差16血，结12毒后主怪仍44/129血）",
+    "preloop_listed": "0",
+    "n_run_notes": "1",
+    "autoplay_finished_lines": "1",
+    "in_runs_jsonl": "1",
+    "brain_source": "{\"basis\": \"brain.jsonl accepted verdict; legacy answer != null, no error/problems; unique question_id+engine\", \"brain_rows\": 32, \"coverage\": \"missing_or_unresolved_logged_questions\", \"eligible\": false, \"embedded_answers\": {\"map/route\": 19, \"run-plan\": 4}, \"exclusion_reason\": \"unresolved_brain_questions\", \"failed_or_unaccepted_rows\": 4, \"first_success\": \"2026-10-17T16:15:56.589Z\", \"last_success\": \"2026-10-17T16:55:34.209Z\", \"policy\": \"codex-successful-brain-v1\", \"source\": \"unknown\", \"successful_answers\": {\"codex\": 28}, \"successful_by_label\": {\"event/act-plan\": {\"codex\": 1}, \"event/choose\": {\"codex\": 11}, \"map/route-plan\": {\"codex\": 1}, \"rest/plan\": {\"codex\": 1}, \"reward/card\": {\"codex\": 8}, \"run-plan\": {\"codex\": 2}, \"selection/add\": {\"codex\": 2}, \"shop/plan\": {\"codex\": 2}}, \"unknown_successes\": 0, \"unresolved_questions\": 4}",
+    "first_attempt": "{\"death_floor\": 23, \"floor\": 23, \"passed_act1\": false, \"passed_act2\": false, \"reloads\": 0, \"sl_rows\": 5, \"victory\": false}",
+    "performance_policy": "codex-successful-brain-v1",
+    "performance_included": "0",
+    "performance_exclusion_reason": "unresolved_brain_questions"
+  },
+  "changed_outputs": [
+    {
+      "path": "paper/data/README.md",
+      "bytes": 14189,
+      "sha256": "ca447c28b04933b8c14efbcbe455f9710666bafb6fe365e6b570b457075e7df7"
+    },
+    {
+      "path": "paper/data/commits.csv",
+      "bytes": 1037632,
+      "sha256": "6065fe45654fc2620adaf33954c6010b7c66dd0e2b3a3cbf69e0954f3929cda9"
+    },
+    {
+      "path": "paper/data/cost-curve-silent.csv",
+      "bytes": 14916,
+      "sha256": "1ee2b12c21859fd8d93a32450dab4dcdcb32514b40578c61fa76eb117cb09ba5"
+    },
+    {
+      "path": "paper/data/cost-silent.csv",
+      "bytes": 934804,
+      "sha256": "aca01087bbb5b5b6a29a97173e355e0bb7cadddf3c8016ab2f68f2048e283284"
+    },
+    {
+      "path": "paper/data/cost-sources.json",
+      "bytes": 250568,
+      "sha256": "014ff4862ad70f9558c5e60c92793e973bc2702b1fbaf6f183afca91dfe70733"
+    },
+    {
+      "path": "paper/data/cost-unattributed.csv",
+      "bytes": 19687,
+      "sha256": "beb7201bc24f684ffc522dc5f354ad397266d3c7725f4bc7d0faad2c4458005a"
+    },
+    {
+      "path": "paper/data/decisions_by_label.csv",
+      "bytes": 1200999,
+      "sha256": "7c2e8b24fbafa130a7fb2091deee965acd2978b1737d1e4d8e24270c68abd1ca"
+    },
+    {
+      "path": "paper/data/learning-curve-silent.csv",
+      "bytes": 72723,
+      "sha256": "fc1d0fed43e70b416f453a1135b44bcf995bcf423e77486ad759d8f8c01498a9"
+    },
+    {
+      "path": "paper/data/runs.csv",
+      "bytes": 1360504,
+      "sha256": "471ee3719cd144d7e41c97c42642755a85d7c68ca457017cb8cc177febae44d5"
+    },
+    {
+      "path": "paper/data/summary.json",
+      "bytes": 561826,
+      "sha256": "5cc16f31ff95d75e966414961aa74e817455e5a558768378fc86f1ecf50f9d82"
+    },
+    {
+      "path": "paper/data/verification.json",
+      "bytes": 587,
+      "sha256": "1db302aaf3ecd7778b80802cf752e9d9293a909b2ff2989b1032ad020add8c41"
+    },
+    {
+      "path": "paper/materials/silent/cost.md",
+      "bytes": 4200,
+      "sha256": "9910ef34609292a31d4bce65225727f51b0277b71ccbbba6bbb1119dec29670b"
+    }
+  ],
+  "actual_exit_code": 0,
+  "raw_snapshot": false,
+  "count_warnings": [
+    [
+      "KF9HMZKTFC3V",
+      879,
+      880
+    ]
+  ],
+  "cost_is_estimate_not_bill": true
+}
