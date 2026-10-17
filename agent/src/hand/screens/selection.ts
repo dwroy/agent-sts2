@@ -354,8 +354,8 @@ export function planSelection(env: DecisionEnv): Decision | null {
     const decision = buildPickDecision(params);
     if (discardPlan && decision.kind === "ask") {
       const resolve = decision.resolve;
-      decision.resolve = (answers) => {
-        const result = resolve(answers);
+      decision.resolve = (answers, context) => {
+        const result = resolve(answers, context);
         const picked = candidates.find((card) => numOrNull(card["index"]) === result.intent?.option_index);
         if (result.intent?.action === "select_deck_card" && picked && discardPlan.removes(picked) === true) {
           result.rationale += "; 此弃牌会移除原计划后继；原整条预测失效，返回战斗后按真实手牌重算";
