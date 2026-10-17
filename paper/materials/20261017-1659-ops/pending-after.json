@@ -1,0 +1,101 @@
+{
+  "request": "roy-20261017-human-pace-h0",
+  "revision": 1,
+  "batch": "20261017-130158-strategy-proposal",
+  "source": "e8e028720c150f8456789546e1a9f5da89e33686",
+  "source_commit": "e8e028720c150f8456789546e1a9f5da89e33686",
+  "source_parent": "8544db04cfd497fecfa9427c7c1c0c7362077cc3",
+  "source_tree": "7ee4afd06aaad6270abe3925fd9186038e722692",
+  "code_paths": [
+    "agent/src/reflex/rollout.ts",
+    "agent/src/reflex/rollout-live.ts",
+    "agent/tests/silent-test-subject-phase.test.ts"
+  ],
+  "actual_behavior_commit": "29f146292892704f618cda8f4db733f21f9cdb1f",
+  "original_publication": "4e6afa0ff6d5177becd2ae2e191ed2f395b91ac8",
+  "fixed_release_tree": "ddbb47965df35cfc01392269fffe8829404909b1",
+  "received_at": "2026-10-17 17:04:42 CST",
+  "source_receipt": "paper/materials/20261017-1659-ops/h0-source-received.json",
+  "state": "Original H2 exact-tree075726 host holds live publication lock; no parallel full, lock steal or version mutation",
+  "official_numbering_complete": false,
+  "release_id": null,
+  "original_version_name": "S1.silent-h0-test-subject-phase1",
+  "host_batch": "20261017-130158-strategy-proposal",
+  "host_started": false,
+  "host_complete": false,
+  "ledger_shipped": false,
+  "ledger_ids": [
+    "silent-0502",
+    "silent-0503"
+  ],
+  "experience_owned_ids": [
+    "silent-test-subject-phase-reset",
+    "silent-g1a-aeonglass-calibration-boundary",
+    "silent-g1a-queen-calibration-boundary",
+    "silent-g1a-test-subject-calibration-boundary",
+    "silent-g1a-fixed-production-boundary",
+    "silent-h0-kaiser-crab-calibration-boundary",
+    "silent-h0-knowledge-demon-calibration-boundary",
+    "silent-h0-insatiable-calibration-boundary",
+    "silent-h0-end-turn-measurement-boundary"
+  ],
+  "consumer_entries": [
+    {
+      "id": "silent-test-subject-phase-reset",
+      "sha256": "302681a7b9c08b9611d64a2b9b9dcf97028ffa83e9a0a260ab2af094d395ad93"
+    },
+    {
+      "id": "silent-paper-krane-weak-multihit",
+      "sha256": "781e5ba40ced47d730beaa10974a4ebf82a224f4b855924916888d4002d318e1"
+    },
+    {
+      "id": "silent-g1a-aeonglass-calibration-boundary",
+      "sha256": "96a7fa46daa2996269adb9bd227c737e9e42baa8becfea2fda88d52749062af3"
+    },
+    {
+      "id": "silent-g1a-queen-calibration-boundary",
+      "sha256": "45aa6e56856dcc17a183c027bf1d9b5559c5fb267f3d08a3037a1e91c7c1ef75"
+    },
+    {
+      "id": "silent-g1a-test-subject-calibration-boundary",
+      "sha256": "29f95bd0bc9cf1eb9e3a47471f0b06f8a28df23ed456d49a337a0b2d211bfc06"
+    },
+    {
+      "id": "silent-g1a-fixed-production-boundary",
+      "sha256": "d22d56933654e07f4592bf1692ecc7dbf4e7719255bc7e0807724ece4c2d1129"
+    },
+    {
+      "id": "silent-h0-kaiser-crab-calibration-boundary",
+      "sha256": "d5f2545241ca35aa55e6f2b870b52b3b7a0119f1bb42bf03db10dd203a97a881"
+    },
+    {
+      "id": "silent-h0-knowledge-demon-calibration-boundary",
+      "sha256": "d9f4fb0faf2a905219740f6821b973b1d2f74ec43ba78f9357b23b7ea1627203"
+    },
+    {
+      "id": "silent-h0-insatiable-calibration-boundary",
+      "sha256": "ce7670a006ce6f96048a999a9bc6ee716ec99685318c892f397e9d0a9ce0a959"
+    },
+    {
+      "id": "silent-h0-end-turn-measurement-boundary",
+      "sha256": "da7f1d10a754058a3f7076216c343b311468cd2522cadcf80e168c4651a8d147"
+    }
+  ],
+  "watcher_transport": "paper/materials/20261017-1659-ops/watcher-transport.json",
+  "host_predecessor_pending": "ops/codex-ops/pending-integrations/20261017-human-pace-h2-shadow.json",
+  "recovery_plan": "paper/materials/20261017-1659-ops/recovery-plan.json",
+  "no_other_role_ACK": true,
+  "last_blocked": {
+    "at": "2026-10-17 17:04:42 CST",
+    "source": "e8e028720c150f8456789546e1a9f5da89e33686",
+    "actual_behavior_commit": "29f146292892704f618cda8f4db733f21f9cdb1f",
+    "official_numbering_complete": false,
+    "release_id": null,
+    "lock_rows": [
+      "232: FLOCK  ADVISORY  WRITE 431877 08:30:372157 0 EOF"
+    ],
+    "gate": "Original H2 exact-tree075726 host holds live publication lock; no parallel full, lock steal or version mutation",
+    "source_delivery_recorded_before_gate": true,
+    "main_live_source_versions_untouched_by_this_attempt": true
+  }
+}
