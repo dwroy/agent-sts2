@@ -1,0 +1,196 @@
+{
+  "at": "2026-10-18 07:55:10 CST",
+  "original_result": {
+    "at": "2026-10-18 07:30:48 CST",
+    "command": [
+      "nice",
+      "-n",
+      "19",
+      "python3",
+      "ops/paper_dataset.py",
+      "--no-raw"
+    ],
+    "pid": 3794834,
+    "birth": "117179220",
+    "calls": 1,
+    "raw_snapshot": false,
+    "previous_outputs_preserved": "ops/codex-ops/record-staging/20261018-0730/paper-before",
+    "actual_exit_code": 0
+  },
+  "original_log_sha256": "6980d37a070b6bf32baf4cce7950d9a6e74ee79bd9397be7058fb2785eb0dde8",
+  "generated_at": "2026-10-17T23:30:50.400Z",
+  "source_cut_bytes": {
+    "decisions.jsonl": 2456670303,
+    "deepseek-reasoning.jsonl": 377746518,
+    "runs.jsonl": 369847,
+    "states.jsonl": 14213776046,
+    "fight-plans.jsonl": 2233957,
+    "run-plans.jsonl": 9221207,
+    "brain.jsonl": 798079976,
+    "sl-attempts.jsonl": 47192674,
+    "run-config.jsonl": 2062799
+  },
+  "source_checks": {
+    "decisions attributed + unattributed == play records": true,
+    "decisions_by_label sum == attributed decisions": true,
+    "escalations rows == records with escalation": true,
+    "every runs.jsonl id present in runs.csv": true,
+    "commits == git rev-list --all --count": true
+  },
+  "row_counts": {
+    "runs.csv": 840,
+    "decisions_by_label.csv": 28012,
+    "escalations.csv": 3600,
+    "fight_plans.csv": 1461,
+    "commits.csv": 6974
+  },
+  "runs": 840,
+  "selected_run": {
+    "run_id": "DGLWTQGRAT1T",
+    "start_ts": "2026-10-17T22:29:40.529Z",
+    "end_ts": "2026-10-17T23:07:08.362Z",
+    "duration_min": "37.5",
+    "floor_max": "23",
+    "act_reached": "2",
+    "outcome": "defeat",
+    "victory": "0",
+    "outcome_source": "runs.jsonl",
+    "finished": "1",
+    "character": "SILENT",
+    "ascension": "10",
+    "code_version": "current",
+    "code_version_source": "runs.jsonl",
+    "code_version_console": "0bfadd7aa+dirty",
+    "code_versions_all": "0bfadd7aa+dirty",
+    "n_decisions": "393",
+    "n_shadow": "0",
+    "decider_inferred": "0",
+    "n_code": "212",
+    "n_jev": "76",
+    "n_deepseek": "0",
+    "n_claude": "0",
+    "n_code_fallback": "0",
+    "n_jev_plan": "78",
+    "n_deepseek_plan": "0",
+    "n_claude_plan": "0",
+    "jev_calls": "98",
+    "jev_in_tokens": "4898128",
+    "jev_out_tokens": "36772",
+    "jev_cost_usd": "0.207266",
+    "jev_latency_p50_ms": "527.0",
+    "ds_calls": "0",
+    "ds_in": "0",
+    "ds_cache_hit": "0",
+    "ds_out": "0",
+    "ds_reasoning": "0",
+    "ds_total_tokens": "0",
+    "ds_calls_no_token_split": "0",
+    "ds_cost_usd": "0",
+    "ds_latency_p50_s": "",
+    "ds_overrides": "0",
+    "fight_plans": "0",
+    "fight_plan_errors": "0",
+    "fight_plan_cost_usd": "0",
+    "fight_plan_latency_p50_s": "",
+    "claude_calls": "0",
+    "claude_latency_p50_s": "",
+    "hp_guard_count": "0",
+    "escalation_chain": "none",
+    "era": "deepseek_memory",
+    "learning_loop": "1",
+    "death_enemy": "虱虫之祖",
+    "death_enemy_ids": "LOUSE_PROGENITOR",
+    "final_hp": "0",
+    "max_hp": "70",
+    "bosses_seen": "VANTOM_BOSS THE_INSATIABLE_BOSS",
+    "has_postmortem": "1",
+    "postmortem_heading": "DGLWTQGRAT1T（A10，静默猎手，第23层，死于问号战虱虫之祖 LOUSE_PROGENITOR：四试均6/70血、空药进场，前三试T3判死读档；末试T3以6血15挡对23猛扑阵亡，完整需损8、维持该末态存活至少差3血，结3＋2毒后敌仍104/139血）",
+    "preloop_listed": "0",
+    "n_run_notes": "1",
+    "autoplay_finished_lines": "1",
+    "in_runs_jsonl": "1",
+    "brain_source": "{\"basis\": \"brain.jsonl accepted verdict; legacy answer != null, no error/problems; unique question_id+engine\", \"brain_rows\": 22, \"coverage\": \"all_logged_questions_resolved\", \"eligible\": true, \"embedded_answers\": {\"map/route\": 16, \"run-plan\": 7}, \"exclusion_reason\": null, \"failed_or_unaccepted_rows\": 0, \"first_success\": \"2026-10-17T22:29:40.520Z\", \"last_success\": \"2026-10-17T23:05:01.882Z\", \"policy\": \"codex-successful-brain-v1\", \"source\": \"codex\", \"successful_answers\": {\"codex\": 22}, \"successful_by_label\": {\"event/act-plan\": {\"codex\": 1}, \"event/choose\": {\"codex\": 3}, \"event/plan\": {\"codex\": 1}, \"map/route-plan\": {\"codex\": 1}, \"rest/plan\": {\"codex\": 3}, \"reward/card\": {\"codex\": 12}, \"shop/plan\": {\"codex\": 1}}, \"unknown_successes\": 0, \"unresolved_questions\": 0}",
+    "first_attempt": "{\"death_floor\": 23, \"floor\": 23, \"passed_act1\": false, \"passed_act2\": false, \"reloads\": 0, \"sl_rows\": 5, \"victory\": false}",
+    "performance_policy": "codex-successful-brain-v1",
+    "performance_included": "1",
+    "performance_exclusion_reason": ""
+  },
+  "changed_outputs": [
+    {
+      "path": "paper/data/README.md",
+      "bytes": 14189,
+      "sha256": "2a02989d562ed79371b955b75d5afa0cad83bb0cebf0c4f755e0ef3e743a8bc5"
+    },
+    {
+      "path": "paper/data/commits.csv",
+      "bytes": 1049638,
+      "sha256": "5c2f8b6a1e2e2c65a159f63870412eb528d10993ee5daa87bccfd745a024a97a"
+    },
+    {
+      "path": "paper/data/cost-curve-silent.csv",
+      "bytes": 15041,
+      "sha256": "329c91034713d5f4224e63235f0f7d87983b79c9f6a525fbc4bec191f51dec48"
+    },
+    {
+      "path": "paper/data/cost-silent.csv",
+      "bytes": 973810,
+      "sha256": "9642bf89b8887d8f4ba99d84e1c944d7c0e1c16b7e702f8835f81e89a2eabbec"
+    },
+    {
+      "path": "paper/data/cost-sources.json",
+      "bytes": 258386,
+      "sha256": "bcfff48fc24308bc5e43ac86ab14384c2f6a6e43a7fa40aa611fa0fa3d485ee0"
+    },
+    {
+      "path": "paper/data/cost-unattributed.csv",
+      "bytes": 20335,
+      "sha256": "44f6c015e06e5a60147f1268d1935c1302d1686db97cf5bd059bafa7dc8f40b1"
+    },
+    {
+      "path": "paper/data/decisions_by_label.csv",
+      "bytes": 1210472,
+      "sha256": "ca1752e47a06ca5ce17bfac7353c51ff9c5553af0a5dd4b7d3c62d0d98764b69"
+    },
+    {
+      "path": "paper/data/learning-curve-silent.csv",
+      "bytes": 73999,
+      "sha256": "dad391dfc2ff46c39a32e910fe7321332a6b92d55ab1ce42c32e92cad1cde5d3"
+    },
+    {
+      "path": "paper/data/runs.csv",
+      "bytes": 1372386,
+      "sha256": "e14b4f550cd78e116143bf4c79159da142e62e3e2e2db20e2883fba49c6ad8e4"
+    },
+    {
+      "path": "paper/data/summary.json",
+      "bytes": 568250,
+      "sha256": "0c5afce57dcb3df6f5836f81880350ab28d14400ef13f7997d76496ca7ccbadf"
+    },
+    {
+      "path": "paper/data/verification.json",
+      "bytes": 587,
+      "sha256": "cd12f8d1b2734c37ad9bf416237b9826da616b460751c444da94cfd2ebf1e7b0"
+    },
+    {
+      "path": "paper/materials/silent/cost.md",
+      "bytes": 4200,
+      "sha256": "06fa26f9589e030ceb07928c0552ddff0fcf69541bc220e199261c6845d79c8e"
+    }
+  ],
+  "actual_exit_code": 0,
+  "new_export_calls_this_wake": 0,
+  "same_original_finite_job": true,
+  "original_0730_postmortem_not_reappended": true,
+  "original_key_pattern_scan_clean": true,
+  "cost_is_estimate_not_bill": true,
+  "component_costs_keep_own_cuts_and_estimates": true,
+  "count_warnings": [
+    [
+      "KF9HMZKTFC3V",
+      879,
+      880
+    ]
+  ],
+  "daily_session_findings_not_reclassified": true,
+  "old_failure_history_not_rewritten": true
+}
