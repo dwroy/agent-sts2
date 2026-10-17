@@ -1,0 +1,1039 @@
+diff --git a/agent/src/core/human-pace-shadow-config.ts b/agent/src/core/human-pace-shadow-config.ts
+new file mode 100644
+index 000000000..b13225e0a
+--- /dev/null
++++ b/agent/src/core/human-pace-shadow-config.ts
+@@ -0,0 +1,6 @@
++/** H2 is an observer; an on request cannot activate a decision path. */
++export function humanPaceH2Policy(character: string | null, env = process.env) {
++  const requested = env["HUMAN_PACE_H2"] ?? "shadow";
++  return { mode: character?.toLowerCase() === "silent" && requested !== "off" ? "shadow" as const : "off" as const,
++    requested, delivered: false as const, execution: "shadow_jev_card" as const };
++}
+diff --git a/agent/src/eye/run-config.ts b/agent/src/eye/run-config.ts
+index 13a43c8cc..27c640b79 100644
+--- a/agent/src/eye/run-config.ts
++++ b/agent/src/eye/run-config.ts
+@@ -1,4 +1,5 @@
+ import { HUMAN_PACE_BUDGETS } from "../core/decision-budget.js";
++import { humanPaceH2Policy } from "../core/human-pace-shadow-config.js";
+ /**
+  * The configuration each run was played with (V4 M4, docs/eval.md §2 and §8): one JSONL row per run in
+  * logs/run-config.jsonl (RUN_CONFIG_LOG; "off" writes nothing), written when the loop first sees a new run id.
+@@ -141,6 +142,8 @@ export interface RunConfigRow {
+     };
+   };
+   human_pace?: { schema: string; budgets: typeof HUMAN_PACE_BUDGETS; model_effort: string; required_full_replaced: boolean };
++  human_pace_h2?: { schema: string; mode: string; requested: string; delivered: false;
++    direction_budget_ms: number; card_budget_ms: number; jev_budget_ms: number; actual_selector: string };
+   knowledge: {
+     prefix: "off" | "full";
+     /** The ascension the prompt was rendered for (the run's). */
+@@ -484,6 +487,10 @@ export function runConfigRow(
+       prompt_log: resolveJevPromptLog(config.log),
+     },
+     ...(characterKey(run.character) === "silent" ? { human_pace: { schema: "human-pace-h1-v1", budgets: HUMAN_PACE_BUDGETS, model_effort: "xhigh", required_full_replaced: true } } : {}),
++    ...(humanPaceH2Policy(characterKey(run.character), env).mode !== "off" ? { human_pace_h2: {
++      schema: "human-pace-h2-shadow-v1", mode: "shadow", requested: humanPaceH2Policy(characterKey(run.character), env).requested,
++      delivered: false as const, direction_budget_ms: 60000, card_budget_ms: 5000, jev_budget_ms: 1000,
++      actual_selector: "existing_brain_and_gates_unchanged" } } : {}),
+     loop: {
+       mode: opts.mode,
+       combat_planner: config.combatPlanner,
+diff --git a/agent/src/hand/loop.ts b/agent/src/hand/loop.ts
+index 31182e602..bd71e2116 100644
+--- a/agent/src/hand/loop.ts
++++ b/agent/src/hand/loop.ts
+@@ -1,4 +1,5 @@
+ import { prepareObservedCandidates } from "./pace-precompute.js";
++import { HumanPaceShadow } from "../sim/human-pace-observer.js";
+ import { setPaceSolverScope } from "../reflex/pace-solver-cache.js";
+ import { currentDecisionBudget, withDecisionBudget, enterDecisionBudget, DecisionBudgetLedger, DecisionBudgetExpired, outsideDecisionBudget, shadowBudgetAvailable, budgetUnknown, type BudgetKind } from "../core/decision-budget.js";
+ /**
+@@ -294,6 +295,7 @@ async function runLoopWithBudgets(options: LoopOptions): Promise<LoopStats> {
+   const maxRuns = options.maxRuns ?? 1;
+   const maxMinutes = options.maxMinutes ?? 60;
+   const rawLog = createDecisionLog(config.log.decisionLog);
++  const humanPaceShadow = new HumanPaceShadow(config.log.decisionLog);
+   const log = { path: rawLog.path, close: () => rawLog.close(), write(row: DecisionRecord) {
+     const budget = currentDecisionBudget(); budget?.pause();
+     rawLog.write(budget ? { ...row, time_budget: budget.record() } : row);
+@@ -904,6 +906,7 @@ async function runLoopWithBudgets(options: LoopOptions): Promise<LoopStats> {
+     const codeBaseline = gateCodeBaseline && decision.kind === "ask";
+     if (codeBaseline && decision.kind === "ask" && decision.deepseek) decision = decision.deepseek.baseline;
+     const decisionId = randomUUID();
++    const humanPaceCardInput = humanPaceShadow.capture(decision, env);
+     let resolved: ResolvedAction;
+     let jevLatency = 0;
+     let deepseekLatency = 0;
+@@ -1768,6 +1771,8 @@ async function runLoopWithBudgets(options: LoopOptions): Promise<LoopStats> {
+       logRouteChange(record.ts, "shadow (not dispatched)");
+       logState(state, stateFingerprint, record.ts);
+       onEvent({ type: "decision", record, totals: totals() });
++      if (!options.signal?.aborted) await humanPaceShadow.observe(env, record, screenMemory.runPlan,
++        humanPaceCardInput, options.buildSim, jev);
+       await sleep(pollIntervalMs);
+       continue;
+     }
+@@ -1953,6 +1958,8 @@ async function runLoopWithBudgets(options: LoopOptions): Promise<LoopStats> {
+     logRouteChange(record.ts, "route plan changed (no game action)");
+     logState(state, stateFingerprint, record.ts);
+     onEvent({ type: "decision", record, totals: totals() });
++    if (!options.signal?.aborted) await humanPaceShadow.observe(env, record, screenMemory.runPlan,
++      humanPaceCardInput, options.buildSim, jev);
+     await sleep(60);
+   }
+ 
+diff --git a/agent/src/sim/human-pace-card-shadow.ts b/agent/src/sim/human-pace-card-shadow.ts
+new file mode 100644
+index 000000000..e6d29fe46
+--- /dev/null
++++ b/agent/src/sim/human-pace-card-shadow.ts
+@@ -0,0 +1,171 @@
++/** Five-second card facts and a separate one-second Jev observation. No dispatch capability. */
++import { DecisionBudget, withDecisionBudget, withinDecisionBudget } from "../core/decision-budget.js";
++import { asArray, asRecord, str, type JsonValue } from "../core/util/json.js";
++import { constructionOptions, constructionState } from "../construction/adapter.js";
++import type { CoreTemplate, BuildState } from "../construction/types.js";
++import { missingRequirements } from "../construction/planner.js";
++import type { AskDecision, DecisionEnv } from "../memory/types.js";
++import type { RunPlan } from "../memory/run-plan.js";
++import type { JevClient } from "../reflex/jev/client.js";
++import { choiceQ, type QuestionSet } from "../reflex/jev/questions.js";
++import { compareOptions, BUILD_SIM_SEED, BUILD_SIM_SAMPLES } from "./build-sim.js";
++import type { BuildSimSetup } from "./build-sim-facts.js";
++import { globalBossTargets, type GlobalBossTarget } from "./global-build.js";
++import type { GlobalBossPool } from "./global-build-pool.js";
++import { bossTrustReason } from "./boss-trust.js";
++import { directionStart, humanPaceShadowRunner, validDirectionInventory } from "./human-pace-comparison.js";
++import { simAdaptivePolicy } from "../core/config.js";
++import { BOSS_LINES_TIE_SE } from "./boss-lines.js";
++import { createHash } from "node:crypto";
++
++export interface CardShadowInput {
++  options: { key: string; id: string | null; state: BuildState | null }[]; current: BuildState; priorPlan: RunPlan | null;
++}
++export function captureCardShadow(decision: AskDecision, env: DecisionEnv): CardShadowInput {
++  const current = constructionState(env), offers = asArray(asRecord(env.state.raw["reward"])["card_options"]).map(asRecord);
++  const listed = decision.deepseek?.options?.() ?? [];
++  return { current, priorPlan: env.screenMemory.runPlan?.runId === str(env.state.raw["run_id"]) ? structuredClone(env.screenMemory.runPlan) : null,
++    options: constructionOptions(decision, env, current).map((option) => {
++    const intent = listed.find((row) => row.key === option.key)?.intent;
++    const card = intent?.action === "choose_reward_card" ? offers.find((row, i) => (row["index"] ?? i) === intent.option_index) : undefined;
++    return { ...option, id: card ? str(card["card_id"]) : null };
++  }) };
++}
++export interface ShadowDifference { mean: number; se: number }
++export interface CardTargetPrediction {
++  target: GlobalBossTarget; rows: { key: string; delta_win: ShadowDifference | null; delta_s: ShadowDifference | null;
++    samples: number | null; unknown: string | null }[]; source: "same_question_G2_cache" | "budgeted_B3" | "unknown";
++}
++function delta(value: unknown): ShadowDifference | null {
++  const raw = asRecord(value), mean = raw["mean"], se = raw["se"] ?? raw["meanSe"];
++  return typeof mean === "number" && Number.isFinite(mean) && typeof se === "number" && Number.isFinite(se) && se >= 0 ? { mean, se } : null;
++}
++function unknownTarget(target: GlobalBossTarget, keys: readonly string[], reason: string): CardTargetPrediction {
++  return { target, source: "unknown", rows: keys.map((key) => ({ key, delta_win: null, delta_s: null, samples: null, unknown: reason })) };
++}
++function aggregate(targets: readonly CardTargetPrediction[], key: string, metric: "delta_win" | "delta_s") {
++  const rows = targets.map((target) => ({ weight: target.target.frequency, row: target.rows.find((row) => row.key === key) }));
++  if (!rows.length || Math.abs(rows.reduce((sum, row) => sum + row.weight, 0) - 1) > 1e-9
++    || rows.some(({ row }) => !row || row.unknown || !row[metric])) return null;
++  // The same seeds can correlate Boss estimates. This is an upper bound, not independent errors in quadrature.
++  return { mean: rows.reduce((sum, { row, weight }) => sum + weight * row![metric]!.mean, 0),
++    se: rows.reduce((sum, { row, weight }) => sum + Math.abs(weight) * row![metric]!.se, 0),
++    error_scope: "conservative_MC_standard_error_bound_excludes_model_error" };
++}
++
++export async function evaluateCardShadow(args: {
++  input: CardShadowInput; env: DecisionEnv; cores: readonly CoreTemplate[]; plan: RunPlan | null;
++  pool: GlobalBossPool; originalB3: unknown; setup: BuildSimSetup | null; now?: () => number;
++}) {
++  const { input, env } = args, keys = input.options.map((row) => row.key), ascension = env.state.run?.ascension ?? 0;
++  const budget = new DecisionBudget("H2_card", "routine", args.now, 5000);
++  return withDecisionBudget(budget, async () => {
++    const targets = globalBossTargets(args.pool, 2, new Map(), (boss) => bossTrustReason(boss, "b3", ascension)).map((target) =>
++      args.pool.character !== "silent" || args.pool.ascension !== ascension ? { ...target, unknown: "observed_pool_role_or_ascension_mismatch" } : target);
++    const predictions: CardTargetPrediction[] = [];
++    const b3 = asRecord(args.originalB3), cached = asArray(asRecord(b3["global_build"])["targets"]).map(asRecord);
++    for (const target of targets) {
++      if (target.unknown) { predictions.push(unknownTarget(target, keys, target.unknown)); continue; }
++      const existing = cached.find((row) => asRecord(row["target"])["boss"] === target.boss && asRecord(row["target"])["act"] === target.act);
++      const cachedRows = asArray(existing?.["rows"]).map(asRecord);
++      if (existing && ["computed", "reused_current", "budgeted_partial"].includes(str(existing["status"]))
++        && keys.every((key) => cachedRows.some((row) => row["key"] === key))) {
++        predictions.push({ target, source: "same_question_G2_cache", rows: keys.map((key) => {
++          const row = cachedRows.find((row) => row["key"] === key)!;
++          const validResources = validDirectionInventory(input.current) && validDirectionInventory(input.options.find((option) => option.key === key)?.state ?? null);
++          const sufficient = validResources && typeof row["samples"] === "number" && row["samples"] >= 2 && delta(row["delta_win"]) !== null;
++          return { key, delta_win: sufficient ? delta(row["delta_win"]) : null, delta_s: sufficient ? delta(row["delta_s"]) : null,
++            samples: typeof row["samples"] === "number" ? row["samples"] : null,
++            unknown: !validResources ? "option_resource_contract_unknown" : typeof row["unknown"] === "string" ? row["unknown"] : sufficient ? null : "paired_delta_or_samples_missing" };
++        }) }); continue;
++      }
++      if (!args.setup || budget.remaining() <= 1000 || !validDirectionInventory(input.current) || input.options.some((row) => !validDirectionInventory(row.state))) {
++        predictions.push(unknownTarget(target, keys, !validDirectionInventory(input.current) || input.options.some((row) => !validDirectionInventory(row.state))
++          ? "option_resource_contract_unknown" : !args.setup ? "shared_runner_unavailable" : "card_budget_exhausted")); continue;
++      }
++      try {
++        const setup = args.setup;
++        const result = await withinDecisionBudget("H2_card_comparison", async () => {
++          const base = directionStart(env, input.current, target, setup);
++          const options = input.options.map((row) => ({ key: row.key, change: directionStart(env, row.state!, target, setup) }));
++          const mode = simAdaptivePolicy("silent").mode;
++          return compareOptions(humanPaceShadowRunner(setup.runner), base, options, { samples: setup.samples ?? BUILD_SIM_SAMPLES,
++            seed: setup.seed ?? BUILD_SIM_SEED, deadlineMs: Math.max(0, budget.remaining() - 1000), requireComplete: true, quantitative: true,
++            ...(mode !== "off" ? { adaptive: { mode, allowS: false } } : {}), ...(setup.now ? { now: setup.now } : {}) });
++        });
++        predictions.push({ target, source: "budgeted_B3", rows: keys.map((key) => {
++          const row = result.options.find((row) => row.key === key), margin = asRecord(asRecord(row?.quantitative)["boss_relative_margin"]);
++          const difference = asRecord(asRecord(margin["paired"])["difference"]);
++          return { key, delta_win: row?.samples && row.samples >= 2 && row.diff ? { mean: row.diff.raw, se: row.diff.se } : null,
++            delta_s: margin["rankingEligible"] === true ? delta(difference) : null, samples: row?.samples ?? null,
++            unknown: result.timedOut ? "budgeted_model_prefix" : !row || row.samples < 2 ? "no_paired_model_samples" : null };
++        }) });
++      } catch (error) { predictions.push(unknownTarget(target, keys, `card_computation_unknown:${String(error instanceof Error ? error.message : error).slice(0, 140)}`)); }
++    }
++    budget.pause();
++    const primary = args.plan?.construction?.primary ?? "uncommitted", currentCore = args.cores.find((core) => core.id === primary);
++    const belongs = (core: CoreTemplate, id: string) => core.requirements.some((r) => r.any.some((c) => c.kind === "card" && c.id === id));
++    const nextOptions = asRecord(b3["options"]), degraded = ["pending", "degraded"].includes(str(asRecord(b3["completion"])["status"]));
++    const rows = input.options.map((option) => {
++      const matching = option.id ? args.cores.filter((core) => belongs(core, option.id!)).map((core) => core.id) : [];
++      const next = asRecord(nextOptions[option.key]), n = next["samples"] ?? b3["samples"];
++      const resourcesKnown = validDirectionInventory(input.current) && validDirectionInventory(option.state);
++      const nextDelta = resourcesKnown && !degraded && typeof n === "number" && n >= 2 ? delta({ mean: next["diff_raw"], se: next["se_raw"] }) : null;
++      const targetDelta = aggregate(predictions.filter((row) => row.target.act === 2), option.key, "delta_win");
++      const targetS = aggregate(predictions.filter((row) => row.target.act === 2), option.key, "delta_s");
++      const covered = option.id === null || !!args.plan && (args.plan.want.includes(option.id) || args.plan.avoid.includes(option.id)
++        || !!currentCore && belongs(currentCore, option.id));
++      return { key: option.key, card: option.id, core_component: option.id === null ? false : currentCore ? belongs(currentCore, option.id) : null,
++        support_component: null, support_reason: "learner_templates_have_no_separate_support_mapping", template_membership: matching,
++        target_delta_win: targetDelta, target_delta_S: targetS, next_boss_delta_win: nextDelta,
++        next_boss_trust: bossTrustReason(str(b3["boss"]), "b3", ascension),
++        dilution: { deck_before: input.current.cards.length, deck_after: option.state?.cards.length ?? null,
++          added_slot_fraction: !resourcesKnown ? null : option.state!.cards.length > input.current.cards.length ? (option.state!.cards.length - input.current.cards.length) / option.state!.cards.length : 0,
++          functional_draw_or_damage_effect: "unknown" },
++        wake: { uncovered_by_plan: covered ? false : args.plan ? true : null,
++          another_core_component: matching.filter((id) => id !== primary),
++          possible_direction_change: option.id && matching.some((id) => id !== primary) && targetDelta
++            ? targetDelta.mean > BOSS_LINES_TIE_SE * targetDelta.se : null,
++          limits: "只记录反事实叫醒条件；目标差的MC显著性不证明另一方向整体更优。" } };
++    });
++    const comparable = rows.length > 0 && rows.every((row) => row.target_delta_win !== null);
++    const ordered = comparable ? [...rows].sort((a, b) => b.target_delta_win!.mean - a.target_delta_win!.mean) : [];
++    const moduleFirst = ordered[0]?.key ?? (keys.includes("skip") ? "skip" : keys[0] ?? null);
++    return { schema: "human-pace-card-facts-v1", mode: "shadow", delivered: false, primary, missing: currentCore
++      ? missingRequirements(input.current, currentCore) : [],
++      prior_plan_sha256: createHash("sha256").update(JSON.stringify(input.priorPlan)).digest("hex"),
++      module_first: moduleFirst, module_first_basis: comparable ? "raw_Act2_weighted_win_S_excluded" : "unknown_estimates_stable_shadow_fallback",
++      rows, predictions, budget_ms: 5000, time_budget: budget.record(), target_basis: "Act2_until_H0_H3_admission; Act3_and_joint_unknown",
++      limits: "反事实只读；目标组按本角色观察记录加权（含重试），非生成概率。S不参与排序；组件标签仅沿学习者模板，支撑件定义未给则unknown。新增槽比例不是实际抽牌/稀释因果。候选差只对当前完整资源快照有效，不预测实际整局结果。" };
++  });
++}
++
++export async function askCardShadow(facts: Awaited<ReturnType<typeof evaluateCardShadow>>, jev: Pick<JevClient, "ask"> | null,
++  actual: string | null, now = () => performance.now()) {
++  const started = now(), budget = new DecisionBudget("H2_jev_card", "routine", now, 1000);
++  const state = { direction: facts.primary, missing: facts.missing, facts: facts.rows.map((row) => ({
++    key: row.key, card: row.card, core: row.core_component, support: row.support_component,
++    target_win_delta: row.target_delta_win, target_S_delta_record_only: row.target_delta_S,
++    next_boss_win_delta: row.next_boss_delta_win, next_boss_trust: row.next_boss_trust ? "low_trust" : "table_pass_only_production_trust_unknown", dilution: row.dilution })),
++    unknown: "Unknown is missing evidence, never zero. No card means skip; keep the current deck.",
++    limits: "Raw simulation and MC errors exclude model error. S is diagnostic only; do not rank by S." };
++  const questions: QuestionSet = { card: choiceQ("Choose one offered card or skip for the stated direction. Use only supplied facts; do not calculate or infer missing scores. This is shadow: the brain still makes the real choice.",
++    Object.fromEntries(facts.rows.map((row) => [row.key, row.card ?? "Skip: add no card."]))) };
++  let choice = facts.module_first, failure: string | null = jev ? null : "Jev_unavailable", meta: JsonValue | null = null;
++  await withDecisionBudget(budget, async () => {
++    if (!jev) return;
++    try {
++      const response = await withinDecisionBudget("H2_Jev_shadow", () => jev.ask(state, questions, 1000));
++      const answer = response.answers["card"];
++      if (answer?.type !== "choice" || !facts.rows.some((row) => row.key === answer.choice)) throw new Error("invalid_or_unoffered_shadow_choice");
++      choice = answer.choice;
++      meta = { model: response.model, request_id: response.requestId, input_tokens: response.inputTokens, output_tokens: response.outputTokens };
++    } catch (error) { failure = String(error instanceof Error ? error.message : error).slice(0, 180); }
++  });
++  budget.pause();
++  return { schema: "human-pace-jev-card-shadow-v1", mode: "shadow", delivered: false, state, questions,
++    module_first: facts.module_first, actual_brain_choice: actual, jev_choice: choice, fallback: failure,
++    agreement: actual === null || choice === null ? null : actual === choice,
++    module_agreement: actual === null || facts.module_first === null ? null : actual === facts.module_first,
++    latency_ms: Math.max(0, Math.round(now() - started)), budget_ms: 1000, time_budget: budget.record(), meta };
++}
+diff --git a/agent/src/sim/human-pace-comparison.ts b/agent/src/sim/human-pace-comparison.ts
+new file mode 100644
+index 000000000..3f79d8650
+--- /dev/null
++++ b/agent/src/sim/human-pace-comparison.ts
+@@ -0,0 +1,98 @@
++/** H2 reuses the existing B3 runner and start adapters, never another pool or game model. */
++import { asArray, asRecord, str } from "../core/util/json.js";
++import type { DecisionBudget } from "../core/decision-budget.js";
++import type { BuildState } from "../construction/types.js";
++import type { DecisionEnv } from "../memory/types.js";
++import { parseGameState } from "../hand/mod/schema.js";
++import { doubleBossFor } from "../knowledge/double-boss.js";
++import { cardUpgrade } from "../knowledge/card-upgrades.js";
++import { simAdaptivePolicy } from "../core/config.js";
++import { syntheticBossStart } from "./boss-start.js";
++import { withDoubleBossStart } from "./double-boss-start.js";
++import { compareOptions, BUILD_SIM_SEED, BUILD_SIM_SAMPLES, type CompareResult } from "./build-sim.js";
++import type { BuildSimSetup } from "./build-sim-facts.js";
++import type { GlobalBossTarget } from "./global-build.js";
++import type { DirectionMetric, DirectionVariant } from "./human-pace-direction.js";
++import type { DeckSimRunner } from "./build-sim-pool.js";
++
++const observers = new WeakMap<DeckSimRunner, DeckSimRunner>();
++/** Separate compareOptions memo namespace, same underlying workers and queue. */
++export function humanPaceShadowRunner(runner: DeckSimRunner): DeckSimRunner {
++  let proxy = observers.get(runner);
++  if (!proxy) { proxy = { run: (request) => runner.run(request) }; observers.set(runner, proxy); }
++  return proxy;
++}
++
++export function directionMetric(result: CompareResult, key: string): DirectionMetric {
++  const row = key === "@current" ? result.base : result.options.find((r) => r.key === key);
++  if (!row || row.samples < 2) return { status: "unknown", reason: "no_paired_model_samples", win: null, win_se: null, s: null, samples: row?.samples ?? 0, requested: result.requested };
++  const margin = asRecord(asRecord(row.quantitative)["boss_relative_margin"]), score = asRecord(margin["score"]);
++  const s = margin["rankingEligible"] === true && typeof score["mean"] === "number" && typeof score["meanSe"] === "number"
++    ? { mean: score["mean"], se: score["meanSe"] } : null;
++  return { status: result.timedOut ? "partial" : "computed", reason: result.timedOut ? "budgeted_model_prefix" : null,
++    win: row.win, win_se: Math.sqrt(row.win * (1 - row.win) / row.samples), s, samples: row.samples,
++    requested: result.requested, ...(row.continuous ? { continuous: row.continuous } : {}) };
++}
++
++/** Only already modelled components can be added to a hypothetical raw inventory. */
++export function validDirectionInventory(state: BuildState | null): state is BuildState {
++  return !!state && [state.hp, state.maxHp].every(Number.isFinite) && state.hp > 0 && state.maxHp >= state.hp
++    && (state.cap === null || state.cards.length <= state.cap);
++}
++export function directionStart(env: DecisionEnv, state: BuildState, target: GlobalBossTarget, setup: BuildSimSetup) {
++  if (!validDirectionInventory(state)) throw new Error("invalid_inventory_resource_contract");
++  const raw = structuredClone(env.state.raw), run = asRecord(raw["run"]);
++  const original = asArray(asRecord(env.state.run?.raw)["deck"]).map(asRecord), remaining = [...original];
++  run["deck"] = state.cards.map((card, index) => {
++    const at = remaining.findIndex((own) => str(own["card_id"]) === card.id && (own["upgraded"] === true) === card.upgraded);
++    if (at >= 0) return { ...remaining.splice(at, 1)[0], index };
++    if (!env.knowledge.card(card.id) || card.upgraded && !cardUpgrade(card.id)) throw new Error("unmodelled_core_component");
++    return { card_id: card.id, upgraded: card.upgraded, index };
++  });
++  const relics = asArray(run["relics"]).map(asRecord);
++  run["relics"] = state.relics.map((id) => relics.find((r) => r["relic_id"] === id)
++    ?? { relic_id: id, stack: null, is_melted: false });
++  run["current_hp"] = state.hp; run["max_hp"] = state.maxHp;
++  run["act_id"] = String(target.act - 1); run["boss_id"] = `${target.boss}_BOSS`;
++  const projected = parseGameState(raw);
++  const start = syntheticBossStart(projected, env.knowledge, `${target.boss}_BOSS`, state.hp, setup);
++  if (start.relics.unmodelled.length) throw new Error("hypothetical_inventory_has_unmodelled_relics");
++  return target.act === 3 ? withDoubleBossStart(projected, env.knowledge, start.input, doubleBossFor(projected), setup) : start.input;
++}
++
++export async function compareDirection(env: DecisionEnv, current: BuildState, target: GlobalBossTarget,
++  variant: DirectionVariant, budget: DecisionBudget, setup: BuildSimSetup): Promise<DirectionMetric> {
++  const base = directionStart(env, current, target, setup), changed = directionStart(env, variant.state, target, setup);
++  const adaptive = simAdaptivePolicy("silent").mode;
++  const result = await compareOptions(humanPaceShadowRunner(setup.runner), base, [{ key: variant.key, change: changed }], {
++    samples: setup.samples ?? BUILD_SIM_SAMPLES, seed: setup.seed ?? BUILD_SIM_SEED,
++    deadlineMs: Math.max(0, budget.remaining() - 1000), requireComplete: true, quantitative: true,
++    ...(adaptive !== "off" ? { adaptive: { mode: adaptive, allowS: false } } : {}),
++    ...(setup.now ? { now: setup.now } : {}),
++  });
++  return directionMetric(result, variant.key);
++}
++
++/** One sample-major comparison per target spreads its share of60s across all directions. */
++export async function compareDirectionBatch(env: DecisionEnv, current: BuildState, target: GlobalBossTarget,
++  variants: readonly DirectionVariant[], budget: DecisionBudget, cap: number, setup: BuildSimSetup): Promise<ReadonlyMap<string, DirectionMetric>> {
++  const started = budget.now(), base = directionStart(env, current, target, setup);
++  const rows = new Map<string, DirectionMetric>(), options = [];
++  for (const variant of variants) {
++    if (budget.remaining() <= 1000 || budget.now() - started >= cap - 1000) {
++      rows.set(variant.key, { status: "unknown", reason: "direction_budget_exhausted_preparing_inventory", win: null, win_se: null, s: null, samples: 0, requested: 0 }); continue;
++    }
++    try { options.push({ key: variant.key, change: directionStart(env, variant.state, target, setup) }); }
++    catch { rows.set(variant.key, { status: "unknown", reason: "unmodelled_core_or_resource_contract", win: null, win_se: null, s: null, samples: 0, requested: 0 }); }
++  }
++  if (!options.length) return rows;
++  const mode = simAdaptivePolicy("silent").mode;
++  const result = await compareOptions(humanPaceShadowRunner(setup.runner), base, options, {
++    samples: setup.samples ?? BUILD_SIM_SAMPLES, seed: setup.seed ?? BUILD_SIM_SEED,
++    deadlineMs: Math.max(0, Math.min(budget.remaining(), cap - (budget.now() - started)) - 1000),
++    requireComplete: true, quantitative: true, ...(mode !== "off" ? { adaptive: { mode, allowS: false } } : {}),
++    ...(setup.now ? { now: setup.now } : {}),
++  });
++  for (const option of options) rows.set(option.key, directionMetric(result, option.key));
++  return rows;
++}
+diff --git a/agent/src/sim/human-pace-direction.ts b/agent/src/sim/human-pace-direction.ts
+new file mode 100644
+index 000000000..9bca9e158
+--- /dev/null
++++ b/agent/src/sim/human-pace-direction.ts
+@@ -0,0 +1,140 @@
++/** H2 counterfactual inventories, not a completion policy or a qualification of a core. */
++import { DecisionBudget, HUMAN_PACE_BUDGETS, withDecisionBudget, withinDecisionBudget } from "../core/decision-budget.js";
++import { applyBuildAction, missingRequirements } from "../construction/planner.js";
++import type { BuildState, Component, CoreTemplate } from "../construction/types.js";
++import { continuousBossResult, type ContinuousBossResult } from "./continuous-boss-result.js";
++import { globalBossTargets, type GlobalBossTarget } from "./global-build.js";
++import type { GlobalBossPool } from "./global-build-pool.js";
++
++export interface DirectionVariant { key: string; state: BuildState; added: Component[] }
++export interface DirectionInventory {
++  id: string; candidate: boolean; evidence: CoreTemplate["evidence"] | null; limits: string[];
++  missing: { id: string; count: number }[]; variants: DirectionVariant[]; unknown: string | null;
++}
++/** Enumerate alternatives, without treating the first component as a learned preference. */
++export function directionInventories(state: BuildState, cores: readonly CoreTemplate[], ascension: number,
++  remaining = () => Infinity, maximum = 32): DirectionInventory[] {
++  const result: DirectionInventory[] = [{ id: "uncommitted", candidate: true, evidence: null, limits: [], missing: [],
++    variants: [{ key: "uncommitted:0", state: structuredClone(state), added: [] }], unknown: null }];
++  for (const core of cores.filter((c) => c.character === "silent" && c.ascensions.includes(ascension))) {
++    let frontier: DirectionVariant[] = [{ key: "", state: structuredClone(state), added: [] }];
++    const complete = new Map<string, DirectionVariant>();
++    let reason: string | null = null, steps = 0;
++    while (frontier.length) {
++      if (remaining() <= 0) { reason = "direction_budget_exhausted"; break; }
++      if (++steps > 512) { reason = "component_expansion_bound"; break; }
++      const variant = frontier.shift()!, missing = missingRequirements(variant.state, core);
++      if (!missing.length) {
++        const key = inventoryKey(variant.state);
++        if (!complete.has(key)) complete.set(key, variant);
++        continue;
++      }
++      const need = missing[0]!, requirement = core.requirements.find((r) => r.id === need.id)!;
++      for (const component of requirement.any) {
++        const next = component.kind === "card" ? applyBuildAction(variant.state,
++          { kind: "add", card: { id: component.id, upgraded: component.upgraded === true }, price: 0 })
++          : applyBuildAction(variant.state, { kind: "relic", id: component.id, price: 0 });
++        if (!next || (missingRequirements(next, core).find((r) => r.id === need.id)?.count ?? 0) >= need.count) continue;
++        const key = inventoryKey(next);
++        if (!complete.has(key) && !frontier.some((v) => inventoryKey(v.state) === key))
++          frontier.push({ key: "", state: next, added: [...variant.added, { ...component }] });
++      }
++      if (frontier.length + complete.size > maximum) {
++        reason = "component_alternatives_exceed_bound"; frontier = frontier.slice(0, Math.max(0, maximum - complete.size));
++      }
++    }
++    result.push({ id: core.id, candidate: core.status !== "validated", evidence: structuredClone(core.evidence), limits: [...core.limits],
++      missing: missingRequirements(state, core), variants: [...complete.values()].map((v, i) => ({ ...v, key: `${core.id}:${i}` })),
++      unknown: reason ?? (!complete.size ? "component_resource_contract_or_requirements_unresolved" : null) });
++  }
++  return result;
++}
++function inventoryKey(state: BuildState): string {
++  return JSON.stringify([state.cards.map((c) => `${c.id}:${c.upgraded}`).sort(), [...state.relics].sort()]);
++}
++
++export interface DirectionMetric {
++  status: "computed" | "partial" | "unknown"; reason: string | null;
++  win: number | null; win_se: number | null; s: { mean: number; se: number } | null;
++  samples: number; requested: number; continuous?: ContinuousBossResult;
++}
++export type DirectionEvaluator = (target: GlobalBossTarget, variant: DirectionVariant,
++  budget: DecisionBudget) => Promise<DirectionMetric>;
++export interface DirectionPrediction { variant: string; target: GlobalBossTarget; result: DirectionMetric }
++const unknownMetric = (reason: string): DirectionMetric => ({ status: "unknown", reason, win: null, win_se: null, s: null, samples: 0, requested: 0 });
++
++/** Aggregate Boss weights within one target group; never multiply fights or invent a prior over cores. */
++export function summarizeDirection(rows: readonly DirectionPrediction[], variants: readonly DirectionVariant[], inventoryUnknown: string | null) {
++  return variants.map((variant) => {
++    const selected = rows.filter((row) => row.variant === variant.key);
++    const reasons = [...new Set([...(inventoryUnknown ? [inventoryUnknown] : []),
++      ...selected.flatMap((row) => row.result.status !== "computed" || row.result.reason ? [row.result.reason ?? "incomplete_model_result"] : [])])];
++    const weight = selected.reduce((n, row) => n + row.target.frequency, 0);
++    if (!selected.length || Math.abs(weight - 1) > 1e-9) reasons.push("incomplete_observed_target_weights");
++    const known = !reasons.length && selected.every((row) => row.result.win !== null);
++    const sKnown = known && selected.every((row) => row.result.s !== null);
++    return { variant: variant.key, win: known ? selected.reduce((p, row) => p + row.target.frequency * row.result.win!, 0) : null,
++      S: sKnown ? selected.reduce((s, row) => s + row.target.frequency * row.result.s!.mean, 0) : null,
++      unknown: reasons, scope: "observed_weighted_fixed_inventory_raw_simulation" };
++  });
++}
++
++/** The production G2 quality gate is authoritative, including its explicit Act3 objection. */
++export async function evaluateDirections(args: {
++  state: BuildState; cores: readonly CoreTemplate[]; ascension: number; pool: GlobalBossPool;
++  evaluate: DirectionEvaluator; now?: () => number;
++  evaluateBatch?: (target: GlobalBossTarget, variants: readonly DirectionVariant[], budget: DecisionBudget,
++    cap: number) => Promise<ReadonlyMap<string, DirectionMetric>>;
++  /** Fixed tests inject synthetic targets. Production callers must use G2's targets. */
++  targets?: readonly GlobalBossTarget[];
++}) {
++  const budget = new DecisionBudget("H2_direction", "direction", args.now);
++  return withDecisionBudget(budget, async () => {
++    const inventories = directionInventories(args.state, args.cores, args.ascension, () => budget.remaining());
++    const targets = (args.targets ?? globalBossTargets(args.pool, 2, new Map(), () => null)).map((target) =>
++      args.pool.character !== "silent" || args.pool.ascension !== args.ascension ? { ...target, unknown: "observed_pool_role_or_ascension_mismatch" } : target);
++    const rows: DirectionPrediction[] = [];
++    const batched = new Map<GlobalBossTarget, ReadonlyMap<string, DirectionMetric>>();
++    if (args.evaluateBatch) {
++      const known = targets.filter((target) => !target.unknown), variants = inventories.flatMap((row) => row.variants);
++      for (const [index, target] of known.entries()) {
++        if (budget.remaining() <= 1000) break;
++        const cap = budget.remaining() / (known.length - index);
++        try {
++          batched.set(target, await withinDecisionBudget("H2_direction_target_batch",
++            () => args.evaluateBatch!(target, variants, budget, cap), cap));
++        } catch (error) { batched.set(target, new Map(variants.map((v) => [v.key,
++          unknownMetric(`direction_batch_unknown:${String(error instanceof Error ? error.message : error).slice(0, 160)}`)]))); }
++      }
++    }
++    for (const inventory of inventories) for (const variant of inventory.variants) for (const target of targets) {
++      const existing = batched.get(target)?.get(variant.key);
++      const reason = target.unknown ?? (!existing && budget.remaining() <= 1000 ? "direction_budget_exhausted" : null);
++      let result = reason ? unknownMetric(reason) : existing ?? (args.evaluateBatch ? unknownMetric("batch_variant_unavailable") : null);
++      if (!result) {
++        try {
++          result = await withinDecisionBudget("H2_direction_comparison", () => args.evaluate(target, variant, budget));
++          if (budget.remaining() <= 0) result = unknownMetric("direction_budget_exhausted_late_result");
++        } catch (error) { result = unknownMetric(`direction_computation_failed:${String(error instanceof Error ? error.message : error).slice(0, 160)}`); }
++      }
++      if (result.status === "computed" && (result.samples < 2 || !Number.isSafeInteger(result.samples)
++        || !Number.isFinite(result.win) || result.win === null || result.win < 0 || result.win > 1
++        || result.win_se === null || !Number.isFinite(result.win_se) || result.win_se < 0
++        || result.s !== null && (!Number.isFinite(result.s.mean) || !Number.isFinite(result.s.se) || result.s.se < 0)))
++        result = unknownMetric("invalid_model_result");
++      rows.push({ variant: variant.key, target, result });
++    }
++    budget.pause();
++    const emptySequence = continuousBossResult([], 0, true)!;
++    return { schema: "human-pace-direction-v1", mode: "shadow", delivered: false, s_sort: false,
++      budget_ms: HUMAN_PACE_BUDGETS.direction, time_budget: budget.record(),
++      inventories: inventories.map(({ variants, ...inventory }) => ({ ...inventory,
++        variants: variants.map(({ key, added, state }) => ({ key, added, cards: state.cards.length, relics: state.relics.length,
++          inventory_requirements_satisfied: true, functional_core: "unknown", actual_casts: "unknown", actual_run_outcome: "unknown" })),
++        summaries: [2, 3].map((act) => ({ act, rows: summarizeDirection(rows.filter((row) => row.target.act === act), variants, inventory.unknown) })) })), predictions: rows,
++      final_sequence: { status: "unknown", reason: "G1a_natural_consumer_and_production_calibration_pending",
++        result: emptySequence, S: null },
++      pool: args.pool,
++      limits: "学习者模板的条件组件假设，不预测获得政策或概率，不授予核心资格。any组件分别列出，无方向先验，不选定最佳方向。目标权重为本角色已观察战斗记录（含SL），不是生成概率或独立局分布。第三幕/最终连战质量与生产可信度未知时不补数字、不启动worker；不乘单战率。持有、模拟施放、存活及实际整局结果分列；S只记录。" };
++  });
++}
+diff --git a/agent/src/sim/human-pace-observer.ts b/agent/src/sim/human-pace-observer.ts
+new file mode 100644
+index 000000000..baf52be6e
+--- /dev/null
++++ b/agent/src/sim/human-pace-observer.ts
+@@ -0,0 +1,112 @@
++/** Private H2 sidecar. Never enters ScreenMemory, model prompts, ranking or dispatch. */
++import { mkdirSync } from "node:fs";
++import { appendJsonLine } from "../core/util/jsonl.js";
++import { dirname, join } from "node:path";
++import { humanPaceH2Policy } from "../core/human-pace-shadow-config.js";
++import { asRecord, str } from "../core/util/json.js";
++import { loadConstructionData } from "../construction/data.js";
++import { constructionState } from "../construction/adapter.js";
++import type { Decision, DecisionEnv } from "../memory/types.js";
++import { actOf, hpFraction, RUN_PLAN_HP_DROP, RUN_PLAN_LOW_HP, RUN_PLAN_REVIEW_FLOORS, type RunPlan } from "../memory/run-plan.js";
++import type { DecisionRecord } from "../eye/decision-log.js";
++import type { BuildSimSetup } from "./build-sim-facts.js";
++import { evaluateDirections } from "./human-pace-direction.js";
++import { compareDirection, compareDirectionBatch } from "./human-pace-comparison.js";
++import { loadGlobalBossPool } from "./global-build-pool.js";
++import type { GlobalBossPool } from "./global-build-pool.js";
++import { bossTrustReason } from "./boss-trust.js";
++import { globalBossTargets } from "./global-build.js";
++import { askCardShadow, captureCardShadow, evaluateCardShadow, type CardShadowInput } from "./human-pace-card-shadow.js";
++import type { JevClient } from "../reflex/jev/client.js";
++
++export function structuredActPlan(plan: RunPlan) {
++  return { schema: "human-pace-act-plan-v1", source: "existing_accepted_brain_run_plan", delivered: false,
++    run: plan.runId, act: plan.act, floor: plan.floor, trigger: plan.trigger,
++    direction: plan.construction?.primary ?? "uncommitted", archetype: plan.archetype,
++    alternatives: plan.construction?.alternatives ?? null,
++    take_priority: [...plan.want], avoid: [...plan.avoid], remove: [...plan.remove],
++    rest_and_upgrade: plan.rest, route_preference: { elites: plan.elites }, boss_preparation: plan.bossPrep,
++    wake: { checkpoint: plan.construction?.checkpoint ?? null, pivot_if: plan.construction?.pivot_if ?? null },
++    reason: plan.construction?.reason ?? null, summary: plan.summary,
++    limits: "既有大脑已接受计划的只读投影；缺少结构化方向/叫醒条件时unknown。不新增提示或调用，不冒称大脑已经读取H2分数。" };
++}
++
++export class HumanPaceShadow {
++  readonly path: string;
++  private planKey = "";
++  private checkpoint: { run: string; act: number; floor: number; hp: number } | null = null;
++  private previous: Awaited<ReturnType<typeof evaluateDirections>> | null = null;
++  constructor(decisionLog: string, private readonly write?: (row: unknown) => void) {
++    this.path = join(dirname(decisionLog), "human-pace-shadow.jsonl");
++    this.disabled = decisionLog === "off";
++  }
++  private readonly disabled: boolean;
++  private enabled(env: DecisionEnv): boolean {
++    return !this.disabled && humanPaceH2Policy(str(asRecord(env.state.run?.raw)["character_id"])).mode === "shadow";
++  }
++  private append(row: unknown): void {
++    try {
++      if (this.write) this.write(row);
++      else { mkdirSync(dirname(this.path), { recursive: true }); appendJsonLine(this.path, row); }
++    } catch { /* An observer/log failure must never reject a real decision. */ }
++  }
++  capture(decision: Decision, env: DecisionEnv): CardShadowInput | null {
++    if (!this.enabled(env) || decision.kind !== "ask" || decision.label !== "reward/card") return null;
++    try { return captureCardShadow(decision, env); } catch { return null; }
++  }
++  async observe(env: DecisionEnv, record: DecisionRecord, plan: RunPlan | null | undefined,
++    input: CardShadowInput | null, setup: BuildSimSetup | null | undefined, jev: Pick<JevClient, "ask"> | null): Promise<void> {
++    if (!this.enabled(env)) return;
++    const run = str(env.state.raw["run_id"]), act = actOf(env.state), floor = env.state.run?.floor;
++    if (!run || floor == null || floor < 1) return;
++    const base = { ts: record.ts, run, act, floor, decision_id: record.decision_id ?? null, fingerprint: record.fingerprint,
++      schema: "human-pace-h2-shadow-v1", mode: "shadow", delivered: false, actual_decision_unchanged: true };
++    try {
++      if (this.checkpoint?.run !== run) { this.previous = null; this.checkpoint = null; this.planKey = ""; }
++      const accepted = plan?.runId === run ? plan : null;
++      const planKey = accepted ? JSON.stringify(accepted) : "";
++      if (accepted && planKey !== this.planKey) { this.append({ ...base, act_plan: structuredActPlan(accepted) }); this.planKey = planKey; }
++      const data = loadConstructionData("silent"), ascension = env.state.run?.ascension ?? 0;
++      const cores = data?.templates.filter((core) => core.ascensions.includes(ascension)) ?? [];
++      let pool: GlobalBossPool;
++      try { pool = setup?.globalPool ?? loadGlobalBossPool(ascension); }
++      catch { pool = { character: "silent", ascension, stages: [], unknown: [{ boss: "unknown", reason: "observed_pool_unavailable" }],
++        source: { path: "unavailable", sha256: "unknown", generated: null }, unit: "observed_fight_records_including_retries" }; }
++      if (input?.options.length) {
++        const facts = await evaluateCardShadow({ input, env, cores, plan: input.priorPlan, pool, originalB3: record.boss_sim,
++          setup: (setup?.db || setup?.mm) && !setup.globalPool ? null : setup ?? null });
++        const intent = asRecord(record.chosen);
++        const key = intent["action"] === "skip_reward_cards" ? "skip" : intent["action"] === "choose_reward_card" ? `card${intent["option_index"]}` : null;
++        const actual = input.options.some((row) => row.key === key) ? key : null;
++        const judgment = await askCardShadow(facts, jev, actual);
++        this.append({ ...base, actual_decider: record.decider ?? null, card_facts: facts, jev_shadow: judgment });
++      } else if (record.label === "reward/card") {
++        this.append({ ...base, card_facts: { status: "unknown", reason: "offered_candidate_capture_unavailable" } });
++      }
++      // Combat entries are not direction checkpoints, even when a pending plan update is old.
++      if (env.state.in_combat) return;
++      const last = this.checkpoint, hp = hpFraction(env.state);
++      const reason = !last ? "start" : act !== last.act ? "act" : last.hp - hp >= RUN_PLAN_HP_DROP
++        || hp < RUN_PLAN_LOW_HP && last.hp >= RUN_PLAN_LOW_HP ? "hp_drop" : floor - last.floor >= RUN_PLAN_REVIEW_FLOORS
++        || accepted?.construction && floor > last.floor && floor >= accepted.construction.checkpoint ? "review" : null;
++      if (!reason) return;
++      this.checkpoint = { run, act, floor, hp };
++      const targets = globalBossTargets(pool, 2, new Map(), (boss) => bossTrustReason(boss, "b3", ascension));
++      if (!data || !setup || (setup.db || setup.mm) && !setup.globalPool) {
++        this.append({ ...base, direction: { status: "unknown", reason: !data ? "learner_templates_unavailable" : "matching_shared_runner_or_pool_unavailable",
++          checkpoint: reason, previous: this.previous ? { stale: true, result: this.previous } : null } }); return;
++      }
++      const initial = constructionState(env);
++      const result = await evaluateDirections({ state: initial, cores, ascension, pool, targets,
++        evaluate: (target, variant, budget) => compareDirection(env, initial, target, variant, budget, setup),
++        evaluateBatch: (target, variants, budget, cap) => compareDirectionBatch(env, initial, target, variants, budget, cap, setup) });
++      const expired = result.time_budget.timed_out || result.predictions.some((row) => row.result.status === "partial" || row.result.reason?.includes("budget_exhausted"));
++      this.append({ ...base, direction: { ...result, checkpoint: reason, data_signature: data.signature,
++        target_basis: "Act2_fixed_snapshot_benchmark_until_H0_H3; Act3_and_joint_unknown",
++        previous: expired && this.previous ? { stale: true, result: this.previous } : null } });
++      if (!expired) this.previous = result;
++    } catch (error) {
++      this.append({ ...base, status: "unknown", reason: `H2_observer_failed:${String(error instanceof Error ? error.message : error).slice(0, 200)}` });
++    }
++  }
++}
+diff --git a/agent/tests/human-pace-card-shadow.test.ts b/agent/tests/human-pace-card-shadow.test.ts
+new file mode 100644
+index 000000000..efd02f84e
+--- /dev/null
++++ b/agent/tests/human-pace-card-shadow.test.ts
+@@ -0,0 +1,114 @@
++/** Fixed card offers, paired caches and an in-memory Jev; no network/model calls. */
++import { afterEach, expect, it, vi } from "vitest";
++import { askCardShadow, captureCardShadow, evaluateCardShadow } from "../src/sim/human-pace-card-shadow.js";
++import { board, env, decide, ask } from "./oneshot-support.js";
++import type { GlobalBossPool } from "../src/sim/global-build-pool.js";
++import type { CoreTemplate } from "../src/construction/types.js";
++import type { JevAskResult, JevClient } from "../src/reflex/jev/client.js";
++import { DecisionBudget, currentDecisionBudget, withDecisionBudget } from "../src/core/decision-budget.js";
++import * as comparisons from "../src/sim/human-pace-comparison.js";
++import { slimInput } from "../src/sim/boss-sim.js";
++import { board as fightBoard } from "./boss-sim-fixture.js";
++import type { DeckSimRunner } from "../src/sim/build-sim-pool.js";
++import { setKnowledgeCharacter } from "../src/knowledge/files.js";
++vi.mock("../src/sim/boss-trust.js", async (original) => ({ ...await original<object>(), bossTrustReason: () => null }));
++afterEach(() => { vi.restoreAllMocks(); vi.useRealTimers(); vi.unstubAllEnvs(); setKnowledgeCharacter(null); });
++const pool: GlobalBossPool = { character: "silent", ascension: 10, unknown: [], unit: "observed_fight_records_including_retries",
++  source: { path: "fixed", sha256: "a".repeat(64), generated: null }, stages: [2, 3].map((act) => ({ act,
++    candidates: [{ boss: "FIXED", count: 1, frequency: 1, evidence: ["FIXTURE"] }] })) };
++function fixture() {
++  setKnowledgeCharacter("silent"); vi.stubEnv("CHARACTER", "silent");
++  const raw = board("xljq-f5-reward", "reward"); Object.assign(raw.run as object, { character_id: "SILENT", ascension: 10 });
++  const environment = env(raw), decision = ask(decide(environment)), input = captureCardShadow(decision, environment);
++  const core: CoreTemplate = { id: "P", name: "fixed", character: "silent", ascensions: [10], status: "candidate",
++    requirements: [{ id: "fixed", any: [{ kind: "card", id: input.options[0]!.id! }], count: 1 }],
++    evidence: { runs: ["FIXTURE"], source: "fixed", sha256: "a".repeat(64) }, limits: [] };
++  const cache = { global_build: { targets: [{ target: { act: 2, boss: "FIXED" }, status: "computed",
++    rows: input.options.map((row, i) => ({ key: row.key, delta_win: { mean: row.key === "skip" ? 0 : i === 0 ? 0.2 : 0.1, se: 0.01 },
++      delta_s: { mean: i === 0 ? -100 : 100, se: 1 }, samples: 200, unknown: null })) }] } };
++  return { environment, decision, input, core, cache };
++}
++async function facts() {
++  const f = fixture();
++  return evaluateCardShadow({ input: f.input, env: f.environment, cores: [f.core], plan: null, pool, originalB3: f.cache, setup: null });
++}
++
++it("reuses only this question's paired cache, uses win rather than S, and records dilution as inventory only", async () => {
++  const f = fixture(), before = JSON.stringify(f.environment.state.raw);
++  const result = await evaluateCardShadow({ input: f.input, env: f.environment, cores: [f.core], plan: null, pool, originalB3: f.cache, setup: null });
++  expect(result.module_first).toBe(f.input.options[0]?.key);
++  expect(result.rows[0]).toMatchObject({ target_delta_win: { mean: 0.2 }, target_delta_S: { mean: -100 }, support_component: null,
++    dilution: { deck_after: f.input.current.cards.length + 1, functional_draw_or_damage_effect: "unknown" } });
++  expect(result.predictions[0]?.source).toBe("same_question_G2_cache");
++  expect(result.predictions[1]?.rows.every((row) => row.unknown === "Act3_quality_gate_and_production_trust_unknown")).toBe(true);
++  expect(result.rows.find((r) => r.key === "skip")?.dilution.added_slot_fraction).toBe(0);
++  expect(JSON.stringify(f.environment.state.raw)).toBe(before);
++  expect(result).toMatchObject({ delivered: false, budget_ms: 5000 });
++});
++
++it("does not manufacture support membership or a preferred core when the plan is uncommitted", async () => {
++  const result = await facts();
++  expect(result.primary).toBe("uncommitted");
++  expect(result.rows[0]?.core_component).toBeNull();
++  expect(result.rows[0]?.template_membership).toContain("P");
++  expect(result.rows[0]?.wake).toMatchObject({ uncovered_by_plan: null, possible_direction_change: true });
++});
++
++it("keeps unknown scores null, and identifies its stable skip fallback as lacking a known comparison", async () => {
++  const f = fixture();
++  const result = await evaluateCardShadow({ input: f.input, env: f.environment, cores: [], plan: null, pool, originalB3: {}, setup: null });
++  expect(result.module_first).toBe("skip"); expect(result.module_first_basis).toContain("unknown");
++  expect(result.rows.every((row) => row.target_delta_win === null && row.target_delta_S === null)).toBe(true);
++});
++
++it.each(["option", "entry"])("does not borrow cached scores or fill zero dilution for an invalid %s resource contract", async (kind) => {
++  const f = fixture(), first = f.input.options[0]!;
++  const originalB3 = { ...f.cache, options: { [first.key]: { samples: 200, diff_raw: 0.9, se_raw: 0.1 } } };
++  const valid = await evaluateCardShadow({ input: f.input, env: f.environment, cores: [], plan: null, pool, originalB3, setup: null });
++  expect(valid.rows[0]?.next_boss_delta_win).toEqual({ mean: 0.9, se: 0.1 });
++  if (kind === "option") first.state = null;
++  else f.input.current.hp = 0;
++  const result = await evaluateCardShadow({ input: f.input, env: f.environment, cores: [], plan: null, pool, originalB3, setup: null });
++  expect(result.rows[0]).toMatchObject({ target_delta_win: null, target_delta_S: null, next_boss_delta_win: null,
++    dilution: { added_slot_fraction: null } });
++  expect(result.predictions[0]?.rows[0]?.unknown).toBe("option_resource_contract_unknown");
++  if (kind === "option") expect(result.rows.find((r) => r.key === "skip")?.dilution.added_slot_fraction).toBe(0);
++});
++
++it("bounds the actual shared B3 request by5s and records a hanging result as unknown", async () => {
++  vi.useFakeTimers();
++  vi.spyOn(comparisons, "directionStart").mockReturnValue(slimInput(fightBoard({ bossHp: 12 })));
++  const f = fixture(), run = vi.fn<DeckSimRunner["run"]>(async () => new Promise<never>(() => {}));
++  const pending = evaluateCardShadow({ input: f.input, env: f.environment, cores: [], plan: null, pool, originalB3: {},
++    setup: { runner: { run }, samples: 2 }, now: () => Date.now() });
++  await vi.advanceTimersByTimeAsync(5001);
++  const result = await pending;
++  expect(run).toHaveBeenCalledTimes(1);
++  expect(run.mock.calls[0]?.[0]).toMatchObject({ deadlineMs: expect.any(Number) });
++  expect(result.time_budget.timed_out).toBe(true);
++  expect(result.rows.every((row) => row.target_delta_win === null)).toBe(true);
++});
++
++function response(choice: string): JevAskResult {
++  return { model: "fixed", answers: { card: { type: "choice", choice, probabilities: {}, confidence: 1, raw: {} } },
++    latencyMs: 1, inputTokens: 1, outputTokens: 1, requestId: "FIXED" };
++}
++it("asks one short English facts-only shadow question and keeps its choice separate from the brain", async () => {
++  const f = await facts(), ask = vi.fn<JevClient["ask"]>(async () => response("skip"));
++  const result = await askCardShadow(f, { ask }, f.module_first);
++  expect(ask).toHaveBeenCalledTimes(1);
++  expect(ask.mock.calls[0]?.[1]).toHaveProperty("card.instructions", expect.stringContaining("do not calculate"));
++  expect(result).toMatchObject({ delivered: false, jev_choice: "skip", module_first: f.module_first, actual_brain_choice: f.module_first, agreement: false });
++});
++
++it.each(["throw", "invalid", "timeout"])("falls back only in the shadow record after Jev %s, without re-asks", async (kind) => {
++  vi.useFakeTimers(); const f = await facts();
++  const ask = vi.fn(async () => { if (kind === "throw") throw new Error("fixed");
++    if (kind === "timeout") return new Promise<JevAskResult>(() => {}); return response("not-offered"); });
++  const parent = new DecisionBudget("real", "brain", () => Date.now()); parent.pause();
++  const pending = withDecisionBudget(parent, () => askCardShadow(f, { ask }, "skip", () => Date.now()));
++  await vi.advanceTimersByTimeAsync(1001);
++  const result = await pending;
++  expect(result.jev_choice).toBe(f.module_first); expect(result.fallback).toBeTruthy(); expect(ask).toHaveBeenCalledTimes(1);
++  expect(parent.elapsed()).toBe(0); expect(currentDecisionBudget()).toBeUndefined();
++});
+diff --git a/agent/tests/human-pace-comparison.test.ts b/agent/tests/human-pace-comparison.test.ts
+new file mode 100644
+index 000000000..2a77e0156
+--- /dev/null
++++ b/agent/tests/human-pace-comparison.test.ts
+@@ -0,0 +1,45 @@
++/** Existing start and B3 comparison adapters, using only fixed symbolic outcomes. */
++import { afterEach, expect, it, vi } from "vitest";
++import { compareDirection, directionStart, humanPaceShadowRunner } from "../src/sim/human-pace-comparison.js";
++import { DecisionBudget, withDecisionBudget } from "../src/core/decision-budget.js";
++import { constructionState } from "../src/construction/adapter.js";
++import { board, env } from "./oneshot-support.js";
++import { FIXTURE_DB, FIXTURE_MM } from "./boss-sim-build-fixture.js";
++import { setKnowledgeCharacter } from "../src/knowledge/files.js";
++import type { DeckSimRunner } from "../src/sim/build-sim-pool.js";
++import type { FightSampleResult } from "../src/sim/boss-sim.js";
++import type { GlobalBossTarget } from "../src/sim/global-build.js";
++afterEach(() => { vi.unstubAllEnvs(); setKnowledgeCharacter(null); });
++const target: GlobalBossTarget = { boss: "SOUL_FYSH", act: 2, frequency: 1, count: 1, evidence: ["FIXTURE"], source: "observed_silent_pool", unknown: null };
++function fixture() {
++  setKnowledgeCharacter("silent"); vi.stubEnv("SIM_ADAPTIVE", "off");
++  const raw = board("xljq-f5-reward", "reward"); Object.assign(raw.run as object, { character_id: "SILENT", relics: [] });
++  const environment = env(raw), current = constructionState(environment);
++  return { environment, current };
++}
++it("reuses the existing runner with a separate memo namespace and records win and S from the original paired samples", async () => {
++  const { environment, current } = fixture(), before = JSON.stringify(environment.state.raw);
++  const changed = structuredClone(current); changed.cards.push({ ...changed.cards[0]! });
++  const run = vi.fn<DeckSimRunner["run"]>(async (req) => {
++    const hp = req.base.solver.enemies.reduce((n, enemy) => n + enemy.hp, 0);
++    const sample: FightSampleResult = { won: true, died: false, capped: false, timeUp: false, turns: 1,
++      hpLoss: 1, revived: 0, drunk: [], enemyHpLeft: 0, lossByTurn: [1], dmgByTurn: [hp], incomingByTurn: [1], enemyLossByTurn: [hp],
++      policyTurns: 1, policyNodes: 1, bossMargin: { reference: { myHp: req.base.solver.player.hp, bossHp: hp, enemyIds: ["FIXED"], unknown: [] }, outgoingHp: hp, receivedHp: 1 } };
++    return { outcomes: req.decks.map(() => req.orders.map(() => Array.from({ length: req.samples }, () => structuredClone(sample)))),
++      complete: Array.from({ length: req.samples }, (_, i) => i), timedOut: false, elapsedMs: 0, workers: 0 };
++  });
++  const runner = { run }, budget = new DecisionBudget("fixed", "direction", () => 0);
++  const result = await withDecisionBudget(budget, () => compareDirection(environment, current, target,
++    { key: "added", state: changed, added: [{ kind: "card", id: changed.cards[0]!.id }] }, budget,
++    { runner, samples: 2, now: () => 0, db: FIXTURE_DB, mm: FIXTURE_MM }));
++  expect(result).toMatchObject({ status: "computed", win: 1, samples: 2, s: { mean: expect.any(Number) } });
++  expect(run).toHaveBeenCalledTimes(1); expect(run.mock.calls[0]?.[0].deadlineMs).toBeLessThanOrEqual(59000);
++  expect(humanPaceShadowRunner(runner)).toBe(humanPaceShadowRunner(runner));
++  expect(humanPaceShadowRunner(runner)).not.toBe(runner); expect(humanPaceShadowRunner(runner)).not.toHaveProperty("close");
++  expect(JSON.stringify(environment.state.raw)).toBe(before);
++});
++it("refuses invalid resource contracts and unknown components rather than filling model values", () => {
++  const { environment, current } = fixture(), setup = { runner: { run: vi.fn() }, db: FIXTURE_DB, mm: FIXTURE_MM };
++  expect(() => directionStart(environment, { ...current, hp: 0 }, target, setup)).toThrow("invalid_inventory_resource_contract");
++  expect(() => directionStart(environment, { ...current, cards: [...current.cards, { id: "NOT_A_MODEL", upgraded: false }] }, target, setup)).toThrow("unmodelled_core_component");
++});
+diff --git a/agent/tests/human-pace-direction.test.ts b/agent/tests/human-pace-direction.test.ts
+new file mode 100644
+index 000000000..f1e32aff2
+--- /dev/null
++++ b/agent/tests/human-pace-direction.test.ts
+@@ -0,0 +1,89 @@
++/** Symbolic inventories and fixed clocks test architecture, not game mechanics. */
++import { afterEach, expect, it, vi } from "vitest";
++import { directionInventories, evaluateDirections } from "../src/sim/human-pace-direction.js";
++import type { BuildState, CoreTemplate } from "../src/construction/types.js";
++import type { GlobalBossPool } from "../src/sim/global-build-pool.js";
++import { DecisionBudget, currentDecisionBudget, withDecisionBudget } from "../src/core/decision-budget.js";
++import { humanPaceH2Policy } from "../src/core/human-pace-shadow-config.js";
++import { structuredActPlan } from "../src/sim/human-pace-observer.js";
++import type { RunPlan } from "../src/memory/run-plan.js";
++
++export const state: BuildState = { cards: [{ id: "A", upgraded: false }], relics: [], hp: 10, maxHp: 10, gold: 0, floor: 1, cap: null };
++export const core: CoreTemplate = { id: "FIXED", name: "fixed", character: "silent", ascensions: [10], status: "candidate",
++  requirements: [{ id: "pair", any: [{ kind: "card", id: "A" }, { kind: "card", id: "B" }, { kind: "card", id: "C" }], count: 2, distinct: true }],
++  evidence: { runs: ["FIXTURE"], source: "fixed", sha256: "a".repeat(64) }, limits: ["symbolic fixture only"] };
++export const pool: GlobalBossPool = { character: "silent", ascension: 10, unknown: [], unit: "observed_fight_records_including_retries",
++  source: { path: "fixed", sha256: "b".repeat(64), generated: "fixed" }, stages: [2, 3].map((act) => ({ act,
++    candidates: [{ boss: `FIXED_${act}`, count: 1, frequency: 1, evidence: ["FIXTURE"] }] })) };
++afterEach(() => { vi.useRealTimers(); vi.unstubAllEnvs(); });
++
++it("enumerates distinct alternatives without choosing a card or calling ownership a functional core", async () => {
++  const before = structuredClone(state), variants = directionInventories(state, [core], 10);
++  expect(variants[1]?.missing).toEqual([{ id: "pair", count: 1 }]);
++  expect(variants[1]?.variants.map((v) => v.added[0]?.id).sort()).toEqual(["B", "C"]);
++  expect(state).toEqual(before);
++  expect(directionInventories({ ...state, cap: 1 }, [core], 10)[1]).toMatchObject({ variants: [], unknown: "component_resource_contract_or_requirements_unresolved" });
++  expect(directionInventories(state, [core], 10, () => Infinity, 1)[1]?.unknown).toBe("component_alternatives_exceed_bound");
++  expect(directionInventories(state, [core], 9)).toHaveLength(1);
++});
++
++it("keeps G2's Act3 objection and G1a continuous unknown, with no worker on rejected targets", async () => {
++  const evaluate = vi.fn(async () => ({ status: "computed" as const, reason: null, win: 0.75, win_se: 0.1, s: { mean: 7, se: 1 }, samples: 4, requested: 4 }));
++  const result = await evaluateDirections({ state, cores: [core], ascension: 10, pool, evaluate });
++  expect(evaluate).toHaveBeenCalledTimes(3);
++  expect(result.predictions.filter((r) => r.target.act === 3).every((r) => r.result.win === null && r.result.s === null)).toBe(true);
++  expect(result.final_sequence.result).toMatchObject({ schema: "continuous-boss-result-v1", joint: { value: null }, S: { status: "unknown" } });
++  expect(result).toMatchObject({ delivered: false, s_sort: false, budget_ms: 60000 });
++  expect(result.inventories[1]?.variants[0]).toMatchObject({ actual_casts: "unknown", functional_core: "unknown", actual_run_outcome: "unknown" });
++  expect(result.inventories[1]?.summaries[0]?.rows[0]).toMatchObject({ win: 0.75, S: 7 });
++  expect(result.pool.unit).toBe("observed_fight_records_including_retries");
++});
++
++it("uses a separate60s deadline, rejects late estimates, and does not charge the paused foreground", async () => {
++  let time = 0;
++  const parent = new DecisionBudget("real", "brain", () => time); time = 50; parent.pause();
++  await withDecisionBudget(parent, async () => {
++    const result = await evaluateDirections({ state, cores: [], ascension: 10, pool, now: () => time,
++      evaluate: async () => { expect(currentDecisionBudget()?.kind).toBe("direction"); time += 60001;
++        return { status: "computed", reason: null, win: 1, win_se: 0, s: null, samples: 2, requested: 2 }; } });
++    expect(result.predictions[0]?.result).toMatchObject({ status: "unknown", win: null });
++    expect(result.time_budget.timed_out).toBe(true);
++    expect(currentDecisionBudget()).toBe(parent);
++  });
++  expect(parent.elapsed()).toBe(50);
++});
++
++it("hard stops a hanging direction callback under the same60s budget", async () => {
++  vi.useFakeTimers();
++  const pending = evaluateDirections({ state, cores: [], ascension: 10, pool, now: () => Date.now(), evaluate: async () => new Promise(() => {}) });
++  await vi.advanceTimersByTimeAsync(60001);
++  const result = await pending;
++  expect(result.time_budget.timed_out).toBe(true);
++  expect(result.predictions[0]?.result).toMatchObject({ win: null, status: "unknown" });
++});
++
++it("batches all directions per target and shares the60s budget across observed Bosses", async () => {
++  let time = 0;
++  const targets = ["X", "Y"].map((boss) => ({ boss, act: 2, count: 1, frequency: 0.5, evidence: ["FIXTURE"],
++    source: "observed_silent_pool" as const, unknown: null }));
++  const batch = vi.fn<NonNullable<Parameters<typeof evaluateDirections>[0]["evaluateBatch"]>>(async (_target, variants, _budget, cap: number) => {
++    expect(variants).toHaveLength(3); expect(cap).toBe(30000); time += 30000;
++    return new Map(variants.map((v: { key: string }) => [v.key, { status: "computed" as const, reason: null,
++      win: 0.5, win_se: 0.1, s: null, samples: 2, requested: 2 }]));
++  });
++  const evaluate = vi.fn();
++  const result = await evaluateDirections({ state, cores: [core], ascension: 10, pool, targets, now: () => time, evaluate, evaluateBatch: batch });
++  expect(batch).toHaveBeenCalledTimes(2); expect(evaluate).not.toHaveBeenCalled();
++  // Returning exactly at the hard deadline is a late result, never a fresh estimate.
++  expect(result.time_budget.timed_out).toBe(true);
++  expect(result.predictions.filter((row) => row.target.boss === "X").every((row) => row.result.win === 0.5)).toBe(true);
++  expect(result.predictions.filter((row) => row.target.boss === "Y").every((row) => row.result.win === null)).toBe(true);
++});
++
++it("projects only an already accepted plan, leaving unprovided directions and wake fields unknown", () => {
++  const plan: RunPlan = { runId: "FIXED", act: 1, floor: 1, hpPct: 1, trigger: "start", archetype: "fixed",
++    want: ["A"], avoid: ["B"], remove: [], blockTarget: null, elites: "normal", rest: "auto", bossPrep: "fixed", summary: "fixed" };
++  expect(structuredActPlan(plan)).toMatchObject({ direction: "uncommitted", wake: { checkpoint: null, pivot_if: null }, take_priority: ["A"] });
++  expect(humanPaceH2Policy("SILENT", { HUMAN_PACE_H2: "on" })).toMatchObject({ mode: "shadow", delivered: false });
++  for (const role of [null, "ironclad", "regent", "defect", "necrobinder"]) expect(humanPaceH2Policy(role).mode).toBe("off");
++});
+diff --git a/agent/tests/human-pace-shadow-loop.test.ts b/agent/tests/human-pace-shadow-loop.test.ts
+new file mode 100644
+index 000000000..6240769dc
+--- /dev/null
++++ b/agent/tests/human-pace-shadow-loop.test.ts
+@@ -0,0 +1,82 @@
++/** Production-loop equivalence, with fixed engines/mod and the original shared runner. */
++import { mkdtempSync, readFileSync, existsSync, rmSync } from "node:fs";
++import { tmpdir } from "node:os";
++import { join } from "node:path";
++import { afterEach, expect, it, vi } from "vitest";
++import { Brain } from "../src/brain/brain.js";
++import { BrainRouter } from "../src/brain/router.js";
++import { loadConfig } from "../src/core/config.js";
++import { runLoop } from "../src/hand/loop.js";
++import { ModClient } from "../src/hand/mod/client.js";
++import { setKnowledgeCharacter } from "../src/knowledge/files.js";
++import { board } from "./oneshot-support.js";
++import { loggedKnowledge } from "./logged.js";
++import { envelope } from "./support.js";
++import { FIXTURE_DB, FIXTURE_MM } from "./boss-sim-build-fixture.js";
++import { fightSample, slimInput } from "../src/sim/boss-sim.js";
++import { board as fightBoard } from "./boss-sim-fixture.js";
++import { setMonsterDbForTests } from "../src/knowledge/monster-db.js";
++import { mainMenuPayload } from "./scenarios.js";
++import type { JevClient } from "../src/reflex/jev/client.js";
++import type { GlobalBossPool } from "../src/sim/global-build-pool.js";
++vi.mock("node:os", async (original) => ({ ...await original<object>(), loadavg: (): [number, number, number] => [1, 1, 1] }));
++afterEach(() => { vi.unstubAllEnvs(); vi.restoreAllMocks(); setKnowledgeCharacter(null); setMonsterDbForTests(null); });
++
++async function playFixture(mode: string, character: string) {
++  const dir = mkdtempSync(join(tmpdir(), "h2-loop-fixed-"));
++  const raw = board("xljq-f5-reward", "reward"); (raw.run as any).character_id = character.toUpperCase();
++  let current = raw, jevCalls = 0, workers = 0;
++  const requests: unknown[] = [], actions: unknown[] = [];
++  setKnowledgeCharacter(character); setMonsterDbForTests(FIXTURE_DB);
++  vi.stubEnv("HUMAN_PACE_H2", mode); vi.stubEnv("CONSTRUCTION_MODE", "off");
++  vi.spyOn(performance, "now").mockReturnValue(0);
++  const cfg = loadConfig({ CHARACTER: character, BRAIN_LOG: "off", RUN_PLAN: "off", FIGHT_PLAN: "off", BUILD_ONESHOT: "off" });
++  cfg.log.decisionLog = join(dir, "decisions.jsonl"); cfg.runPlanLog = join(dir, "run-plans.jsonl"); cfg.fightPlanLog = join(dir, "fight-plans.jsonl");
++  const router = new BrainRouter({ config: cfg.brain, codexOnly: true, engine: () => ({ name: "codex", model: "fixed", decide: async (req) => {
++    requests.push(structuredClone({ payload: req.payload, question: req.question, options: req.options, effort: req.effort }));
++    return { engine: "codex", model: "fixed", answer: { choice: Object.keys(req.options ?? {})[0], reason: "fixed" },
++      problems: [], attempts: 1, latencyMs: 1, usage: { inputTokens: 1, outputTokens: 1 }, toolCalls: [] };
++  } }) });
++  const client = new ModClient({ baseUrl: "http://fixture.invalid", fetchImpl: (async (url, options) => {
++    if (String(url).endsWith("/state")) return Response.json(envelope(current));
++    const intent = JSON.parse(String(options?.body)); actions.push(intent); current = mainMenuPayload();
++    return Response.json(envelope({ action: intent.action, status: "completed", stable: true, message: "fixed", state: current }));
++  }) as typeof fetch });
++  const sample = fightSample(slimInput(fightBoard({ bossHp: 12 })), null, 7);
++  const pool: GlobalBossPool = { character: "silent", ascension: Number((raw.run as any).ascension), unknown: [],
++    source: { path: "fixed", sha256: "a".repeat(64), generated: null }, unit: "observed_fight_records_including_retries",
++    stages: [{ act: 3, candidates: [{ boss: "THE_KIN", count: 1, frequency: 1, evidence: ["FIXTURE"] }] }] };
++  const jev = { ask: vi.fn(async () => {
++    jevCalls++;
++    expect(actions).toHaveLength(1); // Shadow happens only after the actual gated action and log.
++    expect(readFileSync(cfg.log.decisionLog, "utf8")).toContain("completed:");
++    return { model: "fixed", answers: { card: { type: "choice", choice: "skip", probabilities: {}, confidence: 1, raw: {} } },
++      inputTokens: 1, outputTokens: 1, latencyMs: 1, requestId: "FIXED" };
++  }) } as unknown as JevClient;
++  try {
++    const result = await runLoop({ config: cfg, mode: "play", client, jev, brain: new Brain(router, { systemPrompt: "fixed" }),
++      buildSim: { db: FIXTURE_DB, mm: FIXTURE_MM, globalPool: pool, samples: 2, now: () => 0, runner: { run: async (r) => {
++        workers++; return { outcomes: r.decks.map(() => r.orders.map(() => Array.from({ length: r.samples }, () => sample))),
++          complete: Array.from({ length: r.samples }, (_, i) => i), timedOut: false, elapsedMs: 0, workers: 0 };
++      } } }, knowledge: loggedKnowledge, maxDecisions: 1, maxMinutes: 3, pollIntervalMs: 1, restoreRun: false });
++    expect(result.acts).toBe(1);
++    const records = readFileSync(cfg.log.decisionLog, "utf8").trim().split("\n").map((s) => JSON.parse(s));
++    const sidecar = join(dir, "human-pace-shadow.jsonl");
++    return { requests, actions, jevCalls, workers, records, sidecar: existsSync(sidecar) ? readFileSync(sidecar, "utf8").trim().split("\n").map((s) => JSON.parse(s)) : [] };
++  } finally { rmSync(dir, { recursive: true, force: true }); }
++}
++
++it.each(["silent", "ironclad"])("keeps %s actual questions, choices, gates and worker requests equal with shadow enabled", async (character) => {
++  const off = await playFixture("off", character), shadow = await playFixture("shadow", character);
++  expect(shadow.requests).toEqual(off.requests);
++  expect(shadow.actions).toEqual(off.actions); expect(shadow.workers).toBe(off.workers);
++  expect(shadow.requests).toHaveLength(1); expect(shadow.actions).toHaveLength(1);
++  expect(shadow.records.map((r) => ({ questions: r.questions, chosen: r.chosen, result: r.result })))
++    .toEqual(off.records.map((r) => ({ questions: r.questions, chosen: r.chosen, result: r.result })));
++  expect(off.sidecar).toHaveLength(0);
++  if (character === "silent") {
++    expect(shadow.jevCalls).toBe(1);
++    expect(shadow.sidecar.find((r) => r.jev_shadow)?.jev_shadow).toMatchObject({ jev_choice: "skip", delivered: false });
++    expect(shadow.sidecar.find((r) => r.direction)?.direction).toMatchObject({ delivered: false, s_sort: false });
++  } else { expect(shadow.sidecar).toHaveLength(0); expect(shadow.jevCalls).toBe(0); }
++});
+diff --git a/agent/tests/human-pace-shadow-observer.test.ts b/agent/tests/human-pace-shadow-observer.test.ts
+new file mode 100644
+index 000000000..9bf2d508b
+--- /dev/null
++++ b/agent/tests/human-pace-shadow-observer.test.ts
+@@ -0,0 +1,48 @@
++import { afterEach, expect, it, vi } from "vitest";
++import { HumanPaceShadow } from "../src/sim/human-pace-observer.js";
++import { board, env, decide } from "./oneshot-support.js";
++import { setKnowledgeCharacter } from "../src/knowledge/files.js";
++import type { RunPlan } from "../src/memory/run-plan.js";
++import type { DecisionRecord } from "../src/eye/decision-log.js";
++afterEach(() => { vi.unstubAllEnvs(); setKnowledgeCharacter(null); });
++function fixture() {
++  setKnowledgeCharacter("silent"); vi.stubEnv("CHARACTER", "silent"); vi.stubEnv("HUMAN_PACE_H2", "shadow");
++  const raw = board("xljq-f5-reward", "reward"); Object.assign(raw.run as object, { character_id: "SILENT", ascension: 10 });
++  const environment = env(raw), plan: RunPlan = { runId: String(raw.run_id), act: 1, floor: 1, hpPct: 1, trigger: "start",
++    archetype: "old", want: [], avoid: [], remove: [], blockTarget: null, elites: "normal", rest: "auto", bossPrep: "fixed", summary: "old",
++    construction: { primary: "P", alternatives: [], checkpoint: 9, reason: "fixed", pivot_if: "fixed old condition" } };
++  environment.screenMemory.runPlan = plan;
++  return { environment, plan, decision: decide(environment) };
++}
++const record = { ts: "fixed", decision_id: "fixed", fingerprint: "fixed", label: "reward/card", decider: "codex",
++  chosen: { action: "skip_reward_cards" }, deepseek: { choice: "skip" } } as unknown as DecisionRecord;
++
++it("freezes the prior plan before the real answer, without exposing that answer to shadow Jev", async () => {
++  const f = fixture(), rows: any[] = [], observer = new HumanPaceShadow("fixed/decisions.jsonl", (row) => rows.push(row));
++  const captured = observer.capture(f.decision, f.environment);
++  expect(captured?.priorPlan?.construction?.primary).toBe("P");
++  f.environment.screenMemory.runPlan!.construction!.primary = "D";
++  const ask = vi.fn(async (state: any) => {
++    expect(state.direction).toBe("P"); expect(state).not.toHaveProperty("actual_brain_choice");
++    return { model: "fixed", answers: { card: { type: "choice" as const, choice: "skip", probabilities: {}, confidence: 1, raw: {} } },
++      latencyMs: 1, inputTokens: 1, outputTokens: 1, requestId: "fixed" };
++  });
++  await observer.observe(f.environment, record, f.environment.screenMemory.runPlan, captured, null, { ask });
++  expect(ask).toHaveBeenCalledTimes(1);
++  expect(rows.find((r) => r.act_plan)?.act_plan.direction).toBe("D");
++  expect(rows.find((r) => r.card_facts)?.card_facts.primary).toBe("P");
++  expect(rows.find((r) => r.jev_shadow)?.jev_shadow).toMatchObject({ actual_brain_choice: "skip", jev_choice: "skip", agreement: true });
++  expect(f.environment.screenMemory).not.toHaveProperty("humanPaceShadow");
++});
++
++it("does not propagate observer log failures or observe other roles", async () => {
++  const f = fixture(), write = vi.fn(() => { throw new Error("fixed disk error"); });
++  const observer = new HumanPaceShadow("fixed/decisions.jsonl", write);
++  await expect(observer.observe(f.environment, record, null, null, null, null)).resolves.toBeUndefined();
++  expect(write).toHaveBeenCalled();
++  (f.environment.state.run!.raw as any).character_id = "IRONCLAD";
++  const calls = write.mock.calls.length;
++  expect(observer.capture(f.decision, f.environment)).toBeNull();
++  await observer.observe(f.environment, record, null, null, null, null);
++  expect(write).toHaveBeenCalledTimes(calls);
++});

@@ -209,3 +209,17 @@ Claude已单独指派两局自然验收。R380实际live `dbd41616420f62e6502e9c
 H2独立WT human-pace-h2-shadow-20261017按新规格1fe97fe4d实现：方向检查点60秒、当前题拿牌事实5秒、英文事实Jev shadow1秒和叫醒条件shadow；原实际大脑题面/选择/执行闸保持。原15:58暂停的代码L1执行器未实现，后由Jev shadow替代。当前大脑回答前冻结旧计划及候选，原动作/记录之后才用独立预算跑旁路；同一B3池、独立memo，不增加池/worker，S不排序。H0/H3前第二幕仅为固定快照模型基准；第三幕/最终连战质量与联合S继续unknown，不乘独立单战率。学习者模板没有独立支撑件定义时unknown，不由开发补游戏知识。既有整幕计划仅结构投影，未给字段unknown。12叶冻结，tsc0、7固定文件37项0、gitleaks0，新组合唯一完整入口在跑；未提交或合H2，待真实终局再交原ops。
 
 25MF已逐原始行SHA核：33组不同拿牌候选在25层，8层各两组，先拿后牌组数＋1；原生33独立问题，32 answered/1 aborted，重问0。不是同层重复调用。材料/脚本/截点、三项报告与requirements/checkpoint在paper/materials/20261017-human-pace-h2/；当前控制档同步，不改H1两自然局原历史。交源后停止，不开始实际Jev决定、H2自然、H3+或其他阶段。
+
+
+## 12. H2新规格最终源码交付（2026-10-17T16:52:16.094495+08:00）
+
+本轮三项源码/工程职责交付：Boss60实际V5-R385/158d910/be645精确host0，524文件5178过2跳，原log71df41ea…已核；F33原660b实际R384/19988/03415精确host0，524文件5178过2跳。H2 source `8165321296eeab263f8cfe0cc7dd08b30245bad2`/tree `f291db9b4b935743170e1ec889b3aab6595d441c`、parent48bf4c3a1，12叶，最终源码入口tsc0/vitest0、479文件4395项0、8固定文件125项0/gitleaks0。两份早期新树中止143分别是架构目录守卫失败、只读复核发现资源未知行可借缓存/填0后取代，均无整套通过声明；原日志和SHA保留。最终r3含sim observer目录接线、擦除型mock泛型及无效资源缓存/稀释unknown修复，原rollout守卫/所有旧断言时限保持。新增test类型错误0，整体test-tsc既有红输出与独立原基线逐字节相同。
+
+方向60秒、拿牌事实5秒、英文Jev shadow1秒，真实选择仍大脑，计算新增开销与Jev调用明确记录，不声称已提速或减少L2。原动作/日志完成后使用当题冻结快照旁路计算，旧计划在当前答案之前冻结，防止答案泄漏；同一B3池、独立memo、C2保留，无新池/worker。H0/H3前仅第二幕raw快照基准，第三幕/最终连战及生产可信度未知；S只记不排序，模板未定义支撑件则unknown，无效资源不借数或填0，组件持有/功能/存活/整局结果分列。25MF33不同候选/25层/0重问核查已单列。
+
+精确源已沿原ops wJ:p5运输，标准实收/窄集成/编号判定与必要通知/新精确组合host由原ops单线完成，状态见阶段ops回执，不把运输或本源绿充发布/宿主绿。本人交源和最终记录后停止，未开始自然观察、实际Jev接管、H3+或任何新goal。完成报告/requirements/checkpoint在paper/materials/20261017-human-pace-h2/。
+
+
+- 2026-10-17T16:55:32.145203+08:00 watcher/codex1本人读回H2正式实收与窄发布：source816532129/12叶均为实际main7e8b58/live3910f41/tree77dd769源祖先及逐SHA相同，纯shadow诊断不增号/保持R385，两边versions旧SHA保持。原075726精确host已RUN/PID431877、终局pending归原ops，不借最终source479/4395绿或R384/R385宿主绿；本轮三项及25MF33题核查交付完成后停止，无自然/on/H3+或新goal，H0/0332和宽父保持。证据paper/materials/20261017-human-pace-h2/watcher-h2-ops-readback.json。
+
+最终集成/检查启动正式原件paper/materials/20261017-1651-ops/，watcher本人读回及本轮completion/requirements/checkpoint已同步。仅最后精确宿主终局由原ops事件收尾，watcher结束当前指派；不以工程交付宣布H2科学/自然/实际接管通过。

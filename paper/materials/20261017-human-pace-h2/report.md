@@ -6,7 +6,7 @@
 
 source `48bf4c3a1962acebe4bcb47fb541b80900613404`，独立WT `human-pace-boss60-20261017`。只把Silent Boss首试预算30秒改60秒；主循环的Silent角色闸不变，同回合重问共享预算，SL仍复用首试＋10秒，普通/精英/常规/L2/方向档位、其他角色、C1/C2、SL/药水规则保持。只3叶，两个测试叶同步固定钟与59秒worker请求上限（预留原1秒）；未改500/1500等历史时限或删除断言。
 
-一次新组合源码沙箱入口tsc0，474文件4373项过（主473/4362＋paths11），固定3文件19项0，gitleaks0。16:15交原ops运输后，本人已逐源祖先/3实际SHA/正式回执/根双通知原字节核回：实际V5-R385，live158d91006fcf0de9d1c487af7777358bfc584a5e/treebe6451a2b751647e5ae04beec0a35b1eee4e08ba；精确宿主已原075726唯一通道RUN，终局pending，不借源码绿。详见 `boss60/source-handoff.json`、`verification.json` 和完整原log。
+一次新组合源码沙箱入口tsc0，474文件4373项过（主473/4362＋paths11），固定3文件19项0，gitleaks0。16:15交原ops运输后，本人已逐源祖先/3实际SHA/正式回执/根双通知原字节核回：实际V5-R385，live158d91006fcf0de9d1c487af7777358bfc584a5e/treebe6451a2b751647e5ae04beec0a35b1eee4e08ba；精确宿主已沿原075726唯一通道实际tsc0/vitest0，524文件5178过2跳，原logSHA71df41ea…已本人核回；canonical旧commits列表不作源证明，源祖先/3SHA已独立核，不借源码绿。详见 `boss60/source-handoff.json`、`verification.json` 和完整原log。
 
 ## 2. F33采样身份错误
 
@@ -16,7 +16,7 @@ source `48bf4c3a1962acebe4bcb47fb541b80900613404`，独立WT `human-pace-boss60-
 
 ## 3. H2新规格：仅shadow
 
-独立WT `human-pace-h2-shadow-20261017`，已合入上述已检Boss60 source，原660保持真实祖先。12个源码/固定测试叶冻结，tsc0，最终7文件37项0，gitleaks0；唯一新组合完整入口正在运行，尚未据此宣称可合入。当前源与tree冻结见阶段checks。
+独立WT `human-pace-h2-shadow-20261017`，已合入上述已检Boss60 source，原660保持真实祖先。12个源码/固定测试叶冻结。首轮完整入口观察到observer放置目录违反架构守卫，已停止自有失败检查（实际143/整套未完成）；迁到sim/后保留原守卫，随后只读复核又发现未知资源行可能借缓存/填0；r2在真实完成前被取代（143，不称全检失败或通过）。修后生产tsc0、8文件125项0、新夹具类型错误0、gitleaks0，r3最终新组合实际源码入口tsc0/vitest0，479文件4395项过（主478/4384＋paths11），660.14秒；最终125项固定题0、gitleaks0，新增test类型错误0且整体既有红输出与原基线逐字节相同。精确source `8165321296eeab263f8cfe0cc7dd08b30245bad2`/tree `f291db9b4b935743170e1ec889b3aab6595d441c` 已交原ops，接收/集成/精确组合host按实际回执单列，不把运输当实收或发布。三份新树、原失败/取代记录及新tree/SHA冻结见阶段checks和source-check-failure-disposition.json。
 
 - 方向检查点：幕开始、已有8层/掉血复查及结构计划checkpoint；60秒总预算，按Boss给剩余预算分份，每个Boss把全部方向变体放在同一原B3 sample-major比较，保C2。枚举学习者模板要求的条件补件与未定方向；any分支没有学习者先验，分别记录，不任挑一张代表方向。32变体/512展开工程界限外明确unknown。不赋予完整核心资格，不运行新模型、池或worker。
 - H0/H3前：第二幕是固定资源快照的模型基准，按本角色观察战斗记录（含SL）加权；不是生成概率/独立局频率。第三幕质量闸和最终连战仍unknown；复用G1a `continuous-boss-result-v1`，不乘单战率，不填联合S。当前生产校准未知单列，不因MC完成而可信。
@@ -34,3 +34,6 @@ source `48bf4c3a1962acebe4bcb47fb541b80900613404`，独立WT `human-pace-boss60-
 ## 停止边界
 
 完成本轮源码交付后停。实际Jev决定拿/跳、H2移交/自然验收、H3及其他阶段均待Claude另派；没有启动观察器。原ops负责串行集成、必要编号、实际规则根双通知及精确组合宿主，不把source/运输当发布或任何角色ACK。H0、0332及宽父不借此完成。
+
+
+最终原ops实收/实际集成读回（2026-10-17T16:55:32.145203+08:00）：source816532129由本人逐12SHA/祖先/原正式回执核同，实际main7e8b58d04956c6be82604c360e3d6bec6e7660e9/live3910f41b9c3784a70362f63aad5f0994794c68b7/tree77dd769fdc97a590946bc7d98c46e3cc1ef0b640。ops按日志诊断部署不加行为号，R385及两边versions原SHA保持；新增有界计算/Jev成本已实际通知。原075726唯一精确组合host已RUN/PID431877，结果pending，由原ops事件闭环，不借source或R384/R385旧绿。本轮源码、实现与交付职责完成，停止，不等待或启动自然/实际Jev接管/H3+。本人读回见watcher-h2-ops-readback.json，不代Roy ACK。

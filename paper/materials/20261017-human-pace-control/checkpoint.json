@@ -4,15 +4,15 @@
   "owner_session": "01a13dcd-83d4-7c63-b233-f93cf878ecf4",
   "original_owner": "01a13dcd-83d4-7c63-b233-f93cf878ecf4",
   "account": "codex1",
-  "at": "2026-10-17T16:17:30.139564+08:00",
-  "phase": "Boss60 source delivered, F33 original R384 published; H2 authorized new Jev shadow source full running",
+  "at": "2026-10-17T16:55:32.145203+08:00",
+  "phase": "H2 shadow implementation/deployment delivered; watcher stopped",
   "worktree": ".worktrees/human-pace-h1-20261017",
   "base": "54e36d0830ab640130557b62a078b25954912ff4",
   "source": "7af803c06e82e2aafe6a595fab7a23e0f3f44fb3",
   "published": true,
   "native_model": "gpt-6.1-sol/xhigh; no model/account/home/prompt changes",
   "H1_evidence": "paper/materials/20261017-human-pace-h1",
-  "next": "Complete H2 source check, hand exact source to original ops, report and stop. No actual Jev handoff, natural monitoring, H3+ or goal.",
+  "next": "Await new Claude assignment. H2 exact live host remains original ops; no natural or actual Jev handoff/H3+ starts.",
   "goal_status": "cancelled; do not create a goal",
   "H0": {
     "status": "running",
@@ -315,9 +315,68 @@
     "F33_original_source": "660b194c950f017e356a4b3da952e127c7e5c768",
     "F33_release": "V5-R384",
     "H2_worktree": ".worktrees/human-pace-h2-shadow-20261017",
-    "H2_state": "7 fixed suites37 passed/tsc0; final source full running",
-    "check_session": 84475,
+    "H2_state": "source and actual shadow deployment delivered; stop",
+    "check_session": null,
     "actual_brain_selector_unchanged": true,
-    "Jev_card_shadow_only": true
+    "Jev_card_shadow_only": true,
+    "budget60_release": "V5-R385",
+    "budget60_live": "158d91006fcf0de9d1c487af7777358bfc584a5e",
+    "prior_check": {
+      "session": 84475,
+      "exit": 143,
+      "reason": "known architecture guard failure, incomplete full retained"
+    },
+    "prior_checks_retained": [
+      84475,
+      22368
+    ],
+    "budget60_host": {
+      "at": "2026-10-17T16:43:58.020254+08:00",
+      "receipt": "paper/materials/20261017-human-pace-h2/boss60/ops-host-terminal.json",
+      "receipt_sha256": "252d2025b9328fdc0a4d6b2e99afbb41e1c84a96e579fc0731703698640f2344",
+      "tree": "be6451a2b751647e5ae04beec0a35b1eee4e08ba",
+      "tsc": 0,
+      "vitest": 0,
+      "files": 524,
+      "passed": 5178,
+      "skipped": 2,
+      "log_sha256": "71df41ea6b1c3af387df5d8e139137688a8fb4f5ffbb7e3e498f713cb3ad38b6",
+      "source_verified_by_ancestry_and_three_blobs_not_canonical_old_commit_list": true
+    },
+    "H2_source": "8165321296eeab263f8cfe0cc7dd08b30245bad2",
+    "source_tree": "f291db9b4b935743170e1ec889b3aab6595d441c",
+    "checks": "479files4395cases/tsc0/entry0;fixed125;gitleaks0",
+    "H2_ops_received": true,
+    "H2_publication": {
+      "at": "2026-10-17T16:55:32.145203+08:00",
+      "role": "watcher/codex1",
+      "source": "8165321296eeab263f8cfe0cc7dd08b30245bad2",
+      "receipt": "paper/materials/20261017-1651-ops/ops-source-received.json",
+      "receipt_sha256": "fc8599d7e0f6989416cc159eac9340e0df569290366de31388f3f8d846ff1607",
+      "publication": "paper/materials/20261017-1651-ops/ops-publication.json",
+      "publication_sha256": "fc1c74a76926f1c7a7a1bb43620eb6b29d0bdff07078b79ff78a430bac1475f6",
+      "main": "7e8b58d04956c6be82604c360e3d6bec6e7660e9",
+      "actual_live": "3910f41b9c3784a70362f63aad5f0994794c68b7",
+      "tree": "77dd769fdc97a590946bc7d98c46e3cc1ef0b640",
+      "12_actual_main_and_live_source_SHA_verified": true,
+      "source_actual_ancestor_both": true,
+      "new_behavior_release": false,
+      "latest_behavior_release": "V5-R385",
+      "versions_unchanged_SHA_verified_both": true,
+      "host_start_receipt": "paper/materials/20261017-1651-ops/host-running-readback.json",
+      "host": "RUN original075726 exact tree, result pending; no source/R384/R385 green borrowed",
+      "host_worker": {
+        "pid": 431877,
+        "birth_ticks": "111915588",
+        "lock_or_log_fds": [
+          "/home/dw/Projects/agent-sts2/ops/codex-ops/20261016-075726-strategy-proposal.checks.lock",
+          "/home/dw/Projects/agent-sts2/ops/live-merge.lock",
+          "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261016-075726-strategy-proposal.fallback-77dd769fdc97a590946bc7d98c46e3cc1ef0b640.checks.log"
+        ]
+      },
+      "owner_source_delivery_complete": true,
+      "natural_or_on_accepted": false,
+      "no_Roy_ACK": true
+    }
   }
 }
