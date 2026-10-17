@@ -1,0 +1,202 @@
+{
+  "at": "2026-10-18 04:49:22 CST",
+  "batch": "20261018-034302-fix-batch",
+  "source": "2d87f503ab1edcec75a016d490974bd6c1bb54f1",
+  "first_commit": "60616b3363596a47ac114584951d08655e135ced",
+  "base": "16b25669a34ec0af96ed0d4ae5cb5f0d43e8b0f5",
+  "paths": [
+    {
+      "path": "agent/tests/brain-codex-stall-fixture.test.ts",
+      "sha256": "ef9f24b71edeeee6db73324ccaf0481d083cb0e8589bd6420007f3f6b799c953"
+    },
+    {
+      "path": "agent/tests/brain-codex.test.ts",
+      "sha256": "dbdf982c1f30b3670092d1861c32a756e40156e16041ffb7a1c4ba48b43203b1"
+    },
+    {
+      "path": "agent/tests/rollout-facts-fixture.ts",
+      "sha256": "8c4ff5aedc7ce087e4c90a475ffeeb2cd0050f8b74a8994bda6652d9e18eafe0"
+    },
+    {
+      "path": "agent/tests/rollout-full-facts.test.ts",
+      "sha256": "1aa369a67d173517a3b81a5f8f39a9d6cd24990a663b0410404517b6a604a684"
+    },
+    {
+      "path": "agent/tests/rollout-live.test.ts",
+      "sha256": "4d9521c495ef2399fc659b59949660b7e6878f6132009e8eda3086ca92d850d0"
+    }
+  ],
+  "source_sandbox_rc": 0,
+  "source_files": 489,
+  "source_cases": 4450,
+  "native": {
+    "batch": "20261018-034302-fix-batch",
+    "thread": "01a14b63-cc0d-7e22-87b8-ae2b287553d8",
+    "cwd": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261018-034302",
+    "event_log": "learner/runs/20261018-034309-9576ede5-e595-4669-84d9-fd0933556706-fix-batch.jsonl",
+    "registered_launch_batch": "20261018-034302-fix-batch",
+    "original_lease": "dddf8ee29d4bc5823aca9855001974efcfd4c3ad53d1b8569e8190011b0bda52",
+    "native_context": {
+      "source": "ops/codex-ops/accounts/codex3/learner/sessions/2026/10/18/rollout-2026-10-18T03-43-13-01a14b63-cc0d-7e22-87b8-ae2b287553d8.jsonl",
+      "offset": 50303,
+      "bytes": 5152,
+      "sha256": "c7e5c5a5dac12cc38a0a7d7d3d6713274afbf150d71b663a0c786a348078c942",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "sandbox": {
+        "type": "workspace-write",
+        "writable_roots": [
+          "/home/dw/Projects/agent-sts2",
+          "/home/dw/Projects/agent-sts2/.git",
+          "/home/dw/Projects/agent-sts2/.git/worktrees/codex-fix-silent-20261018-034302"
+        ],
+        "network_access": false,
+        "exclude_tmpdir_env_var": false,
+        "exclude_slash_tmp": false
+      },
+      "approval_policy": "never"
+    },
+    "native_user_input": {
+      "offset": 58298,
+      "bytes": 13081,
+      "sha256": "8ed8a59f5760bd4bce88c8a83fe91ef66cb79703bdf4bdd6005cd34c54cee7f5",
+      "input_sha256": "543264aee424dc00bd51bdeb861408ebda468a9c60d86fc378794f48b719ad86"
+    },
+    "original_header_events": [
+      {
+        "offset": 0,
+        "bytes": 14892,
+        "sha256": "604716d11758b2dca108ac3f609195afbe96d41961318cdf4228f46d66136baa",
+        "type": "learner_launch",
+        "attempt": null,
+        "code": null
+      },
+      {
+        "offset": 14892,
+        "bytes": 370,
+        "sha256": "0469f4cf73e9e7891783e84ee17edc7100ca90f740c927a3b100a2f9ac077f8f",
+        "type": "learner_startup_attempt",
+        "attempt": 1,
+        "code": null
+      },
+      {
+        "offset": 18275,
+        "bytes": 77,
+        "sha256": "2f891e07b3a2f0e7664027edef8fa1c52e6436b044555bf443fac9627c55b24d",
+        "type": "thread.started",
+        "attempt": null,
+        "code": null
+      }
+    ],
+    "startup_attempts": 1,
+    "failed_startups_preserved": 0,
+    "no_model_or_manual_restart": true
+  },
+  "original_report": {
+    "task": "fix-batch",
+    "base": "16b25669a34ec0af96ed0d4ae5cb5f0d43e8b0f5",
+    "fixes": [
+      {
+        "item": "infra-h0-414-host-fixed-test-stability-20261018：Codex stall测试错误假定0秒启动",
+        "commit": "60616b3363596a47ac114584951d08655e135ced",
+        "test": "agent/tests/brain-codex-stall-fixture.test.ts",
+        "fails_without_fix": true
+      },
+      {
+        "item": "infra-h0-414-host-fixed-test-stability-20261018：rollout完整事实格式用例重复执行未来回合求解",
+        "commit": "2d87f503ab1edcec75a016d490974bd6c1bb54f1",
+        "test": "agent/tests/rollout-full-facts.test.ts",
+        "fails_without_fix": true
+      }
+    ],
+    "skipped": [
+      {
+        "item": "出牌、药水、SL、终局、路线及角色机制条目（0256/0260/0263/0266/0308/0311/0317/0319/0320/0322/0324/0329/0334/0339/0344/0347/0349/0362/0365/0481/0487，另含XTSV1U9JD34T终局与GXNKW8X1XYJP抽牌身份）",
+        "reason": "策略类；沿已有独立strategy-proposal链处理，不重复派发或补入开发者游戏知识。"
+      },
+      {
+        "item": "silent-0339续证：BXU0CKWKH2RU尾巴误核销",
+        "reason": "策略类；已有58ab473f6c814061/c232010cd405fe44原提案链，保留当前行为和原证据。"
+      },
+      {
+        "item": "silent-0332 nonpositive-hp实际资源契约根因",
+        "reason": "证据不足；原专用owner链仍未闭环，诊断及样本身份窄修不等于根因修复。"
+      },
+      {
+        "item": "U5W7NUE925NK F15/F16两次原G2缺DPR告警的完整根因",
+        "reason": "证据不足；原未来样本数组及配对DPR分母未保存，仅修有固定复现的严格零前缀边界，不将其冒作两次实盘根因。"
+      },
+      {
+        "item": "sandbox-glob-startup-race目录生命周期与磁盘压力宽项",
+        "reason": "证据不足；已有启动恢复/租约/回收窄修，目录删除归属与上游时序未确定。"
+      },
+      {
+        "item": "arch-funnel-guard / arch-learning-priority / arch-unified-resource-value / inv-f33-regression及调度公平性调查",
+        "reason": "独立架构、策略或归因任务，范围太大，超出普通纯bug批次。"
+      },
+      {
+        "item": "core-build-notify-222802-rc2旧原生通知恢复",
+        "reason": "证据不足；stderr持久化已修，旧送达状态未证，不重发可能已送达的通知。"
+      },
+      {
+        "item": "Codex缓存实测、DPR/B2性能及历史宿主超时根因",
+        "reason": "证据不足或独立性能调查；固定测试确定性子项已修，不代表自然性能根因已解决。"
+      },
+      {
+        "item": "原20261018-011241报告的recheck接续",
+        "reason": "证据不足：固定原报告的9ae48941源码不是所报dddad5d67发布提交祖先；六叶相同不代替祖先证明。原报告/状态/recheck2保留，未重复075726已验宿主，格式修复不冒称原批full0。"
+      },
+      {
+        "item": "ops-learner-recheck-report-fixes-shape-20261018补证：窄cherry-pick提案验收",
+        "reason": "太大：原Markdown没有机器JSON、原输出缺runs/base；独立原注册/原报告/六叶源码及发布/真实宿主回执协议超出本批格式修复。不造祖先、不改原报告/提案ID/seen_runs/租约或ACK，保留pending。"
+      }
+    ],
+    "merged": null,
+    "tests": {
+      "tsc": 0,
+      "vitest": 0,
+      "files": 489,
+      "cases": 4450
+    },
+    "code_proposals": [],
+    "implementation_domains": [],
+    "report": "/home/dw/Projects/agent-sts2/learner/runs/20261018-034309-9576ede5-e595-4669-84d9-fd0933556706-fix-batch/report.md"
+  },
+  "exit_receipts": {
+    "brain-final-targeted.exit": 0,
+    "rollout-without-fix.exit": 1,
+    "rollout-restored-r2.exit": 0,
+    "brain-restored.exit": 0,
+    "rollout-restored.exit": 1,
+    "rollout-sandbox.exit": 0,
+    "brain-without-fix.exit": 1,
+    "live-merge.exit": 3,
+    "rollout-staged-gitleaks.exit": 0,
+    "brain-sandbox.exit": 0,
+    "brain-gitleaks.exit": 0,
+    "rollout-fixed-targeted.exit": 0
+  },
+  "archived_files": 73,
+  "source_full_not_repeated": true,
+  "initial_draft_failures_and_limited_proofs_preserved": true,
+  "earlier_pending_batch": "20261018-031302-fix-batch",
+  "earlier_source": "2ca4eb3aad3c9c0f33027e4e217c4820a210c2a2",
+  "same_queue_item": true,
+  "overlapping_source_leaves": [
+    {
+      "path": "agent/tests/brain-codex.test.ts",
+      "earlier_source_sha256": "a4f07155acbf8eff48bdeae8c9594738dba3df465c7428fc5f06a693ed8ca0b3",
+      "later_source_sha256": "dbdf982c1f30b3670092d1861c32a756e40156e16041ffb7a1c4ba48b43203b1"
+    },
+    {
+      "path": "agent/tests/rollout-live.test.ts",
+      "earlier_source_sha256": "90d717dc6e0b65f62c44c06ea715151a061b35aa77617b0adfe8194915dc4da1",
+      "later_source_sha256": "4d9521c495ef2399fc659b59949660b7e6878f6132009e8eda3086ca92d850d0"
+    }
+  ],
+  "source_byte_equivalence_or_actual_coverage_not_claimed": true,
+  "original_canonical_failed_rc0_preserved": true,
+  "published": false,
+  "new_gameplay_release": false,
+  "new_ledger_shipped": false
+}

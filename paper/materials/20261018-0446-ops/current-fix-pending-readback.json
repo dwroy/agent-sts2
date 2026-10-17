@@ -1,0 +1,70 @@
+{
+  "at": "2026-10-18 04:51:17 CST",
+  "batch": "20261018-034302-fix-batch",
+  "source": "2d87f503ab1edcec75a016d490974bd6c1bb54f1",
+  "source_first_commit": "60616b3363596a47ac114584951d08655e135ced",
+  "source_base": "16b25669a34ec0af96ed0d4ae5cb5f0d43e8b0f5",
+  "source_worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261018-034302",
+  "source_qualified": true,
+  "source_sandbox_rc": 0,
+  "source_files": 489,
+  "source_cases": 4450,
+  "paths": [
+    {
+      "path": "agent/tests/brain-codex-stall-fixture.test.ts",
+      "sha256": "ef9f24b71edeeee6db73324ccaf0481d083cb0e8589bd6420007f3f6b799c953"
+    },
+    {
+      "path": "agent/tests/brain-codex.test.ts",
+      "sha256": "dbdf982c1f30b3670092d1861c32a756e40156e16041ffb7a1c4ba48b43203b1"
+    },
+    {
+      "path": "agent/tests/rollout-facts-fixture.ts",
+      "sha256": "8c4ff5aedc7ce087e4c90a475ffeeb2cd0050f8b74a8994bda6652d9e18eafe0"
+    },
+    {
+      "path": "agent/tests/rollout-full-facts.test.ts",
+      "sha256": "1aa369a67d173517a3b81a5f8f39a9d6cd24990a663b0410404517b6a604a684"
+    },
+    {
+      "path": "agent/tests/rollout-live.test.ts",
+      "sha256": "4d9521c495ef2399fc659b59949660b7e6878f6132009e8eda3086ca92d850d0"
+    }
+  ],
+  "published": false,
+  "main": null,
+  "actual_live": null,
+  "source_worktree_complete": false,
+  "source_full_not_repeated": true,
+  "original_canonical_failed_rc0_preserved": true,
+  "actual_learner_stop": "historical merge-tree conflicts; live knowledge refresh ee57b0c8 preserved",
+  "actual_learner_merge_exit": 3,
+  "prior_pending_batch": "20261018-031302-fix-batch",
+  "prior_source": "2ca4eb3aad3c9c0f33027e4e217c4820a210c2a2",
+  "overlap_with_prior": [
+    {
+      "path": "agent/tests/brain-codex.test.ts",
+      "earlier_source_sha256": "a4f07155acbf8eff48bdeae8c9594738dba3df465c7428fc5f06a693ed8ca0b3",
+      "later_source_sha256": "dbdf982c1f30b3670092d1861c32a756e40156e16041ffb7a1c4ba48b43203b1"
+    },
+    {
+      "path": "agent/tests/rollout-live.test.ts",
+      "earlier_source_sha256": "90d717dc6e0b65f62c44c06ea715151a061b35aa77617b0adfe8194915dc4da1",
+      "later_source_sha256": "4d9521c495ef2399fc659b59949660b7e6878f6132009e8eda3086ca92d850d0"
+    }
+  ],
+  "same_original_queue_item": true,
+  "source_byte_equivalence_or_duplicate_completion_not_claimed": true,
+  "ops_publication_attempt_for_this_new_variant": false,
+  "earlier_chain_publication_attempt": {
+    "at": "2026-10-18 04:47:00 CST",
+    "rc": 75,
+    "reason": "original report/builder still active",
+    "pids": [
+      3107604
+    ],
+    "source_or_live_mutated": false
+  },
+  "evidence": "paper/materials/20261018-0446-ops/",
+  "next": "Keep both self-tested source variants and original reports. Continue the previously registered 031302 integration under the original live lock after report/builder guard clears; never apply both conflicting original-test replacements blindly. This later variant is an unmerged alternative for the same queue item, not shipped/duplicate/ancestor-proven. Preserve exact leaf scopes, independent negative controls and original 18/20 historical conflicts. Any actual integration must retain parallel knowledge/Queen releases, pass selected original sandbox entry and one exact-combination original host check. Do not rerun unchanged source full or spawn a transport/review model; do not rewrite either original failed rc0 completion, old414 full1 or scientific parent scope."
+}
