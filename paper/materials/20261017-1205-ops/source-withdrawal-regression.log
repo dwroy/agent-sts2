@@ -1,0 +1,62 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/ops-h1-strict-pick-stall-20261017/agent
+
+ ❯ tests/human-pace-strict-pick-stall.test.ts (3 tests | 3 failed) 154ms
+   × dispatches one legal selection through both gates when the budget expires before request 126ms
+   × dispatches one legal selection through both gates when the budget expires during request 21ms
+   × keeps ordinary strict waits and accepted low-confidence answers; only explicit expiry uses the existing candidate 5ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/human-pace-strict-pick-stall.test.ts > dispatches one legal selection through both gates when the budget expires before request
+ FAIL  tests/human-pace-strict-pick-stall.test.ts > dispatches one legal selection through both gates when the budget expires during request
+AssertionError: expected +0 to be 1 // Object.is equality
+
+- Expected
++ Received
+
+- 1
++ 0
+
+ ❯ tests/human-pace-strict-pick-stall.test.ts:47:25
+     45|       jevRetryDelaysMs: [], signal: controller.signal,
+     46|       onEvent: (event) => { if (event.type === "wait") controller.abor…
+     47|     expect(result.acts).toBe(1); expect(actions).toHaveLength(1);
+       |                         ^
+     48|     expect(actions[0]).toMatchObject({ action: "select_deck_card" });
+     49|     expect(asks).toBe(when === "before request" ? 0 : 1);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  tests/human-pace-strict-pick-stall.test.ts > keeps ordinary strict waits and accepted low-confidence answers; only explicit expiry uses the existing candidate
+AssertionError: expected { intent: null, …(3) } to match object { fallback: true, intent: { …(1) } }
+(2 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "fallback": true,
+-   "intent": {
+-     "option_index": 1,
+-   },
++   "fallback": false,
++   "intent": null,
+  }
+
+ ❯ tests/human-pace-strict-pick-stall.test.ts:62:57
+     60|   if (decision.kind !== "ask") throw new Error("expected a strict ques…
+     61|   expect(decision.resolve({}).intent).toBeNull();
+     62|   expect(decision.resolve({}, { budgetExpired: true })).toMatchObject(…
+       |                                                         ^
+     63|   const accepted = { pick: { type: "choice" as const, choice: "a", con…
+     64|   expect(decision.resolve(accepted, { budgetExpired: true })).toEqual(…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  3 failed (3)
+   Start at  12:13:02
+   Duration  3.59s (transform 2.82s, setup 463ms, import 2.85s, tests 154ms, environment 0ms)
+

@@ -1,0 +1,80 @@
+{
+  "at": "2026-10-17 12:38:46 CST",
+  "status": "Same saved run resumed by original autoplay; new runtime code and actual selection action received",
+  "run": "5H83F3J0XSTE",
+  "release_id": "V5-R382",
+  "actual_live": "6fbbd82abd6d407dbaf93f82639b7f927efa54a0",
+  "runtime_restart": true,
+  "config_ref": {
+    "path": "logs/run-config.jsonl",
+    "offset": 1933815,
+    "bytes": 5359,
+    "sha256": "4275d8103871da1628c2442b5d7547f3eb1d4fcd9b5e74ba3cc1a4931e42f081"
+  },
+  "unchanged_runtime_config_sha": false,
+  "parsed_brain_sl_config_unchanged": true,
+  "processes": [
+    {
+      "pid": 3646137,
+      "birth_ticks": "110386736",
+      "args": [
+        "node",
+        "/home/dw/Projects/agent-sts2/.worktrees/live/agent/node_modules/.bin/tsx",
+        "src/index.ts",
+        "play",
+        "--max-runs",
+        "1",
+        "--max-minutes",
+        "240"
+      ],
+      "state": "S"
+    },
+    {
+      "pid": 3646148,
+      "birth_ticks": "110386741",
+      "args": [
+        "/home/dw/.local/node/bin/node",
+        "--require",
+        "/home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/preflight.cjs",
+        "--import",
+        "file:///home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/loader.mjs",
+        "src/index.ts",
+        "play",
+        "--max-runs",
+        "1",
+        "--max-minutes",
+        "240"
+      ],
+      "state": "S"
+    }
+  ],
+  "first_action_ref": {
+    "path": "logs/decisions.jsonl",
+    "offset": 2199663114,
+    "bytes": 3113,
+    "sha256": "382a99381ef079898098a532d86c210963f50b2cd2d866a64bda09db8be857ee"
+  },
+  "first_action": {
+    "ts": "2026-10-17T04:38:37.927Z",
+    "screen": "CARD_SELECTION",
+    "floor": 48,
+    "turn": 1,
+    "label": "selection/choose",
+    "action": {
+      "action": "select_deck_card",
+      "option_index": 4
+    },
+    "result": "completed: Action completed.",
+    "fallback": false
+  },
+  "recovery_complete": true,
+  "natural_acceptance": false,
+  "game_process_restarted": false,
+  "manual_game_action_sent": false,
+  "no_other_role_ACK": true,
+  "runtime_identity_boundary": "config_sha includes code.code in eye/run-config.ts identity; changed on intentional source restart. Brain/SL parsed configuration is equal. Original H0 knowledge version/prefix changed; no assertion of entire knowledge input immutability or new calibration.",
+  "knowledge_experience_versions": [
+    "2026-10-16.4",
+    "2026-10-17.h0-r1"
+  ]
+}
