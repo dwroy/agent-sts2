@@ -100,6 +100,40 @@ describe("G2 shadow paired probabilities and coverage", () => {
     expect(value.targets.filter((row) => row.target.act === 2).every((row) => row.status === "unknown")).toBe(true);
     expect(value.targets[1]!.rows[0]!.unknown).toContain("incomplete");
   });
+  // 5H83F3J0XSTE F8/F12/F19/F20: 838/260/103/504 actual pairs, all budgeted partials.
+  it.each([838, 260, 103, 504, 1, 0])("preserves a budgeted %i-pair prefix as incomplete shadow data, not a service failure", async (samples) => {
+    const current = result();
+    Object.assign(current, { samples, requested: 1000, timedOut: true,
+      completion: { required: true, uniqueDecks: 3, originalDecks: 3, memoHit: false,
+        budgeted: true, failure: false, status: "partial", samples, requested: 1000 },
+      adaptive: { mode: "on", status: "partial" } });
+    for (const option of [current.base, ...current.options]) option.samples = samples;
+    const value = await evaluateGlobalBuild({ ...args(), current, evaluate: async () => structuredClone(current) });
+    expect(value.status).toBe("partial");
+    expect(value.targets[0]).toMatchObject({ status: "budgeted_partial", reused_current: true,
+      completion: current.completion, adaptive: current.adaptive, reported_sim_ms: 12 });
+    expect(value.targets[1]).toMatchObject({ status: "budgeted_partial", reused_current: false });
+    const row = value.targets[0]!.rows.find((row) => row.key === "take")!;
+    expect(row.samples).toBe(samples);
+    if (samples >= 2) expect(row).toMatchObject({ base: .5, option: .6, delta_win: { mean: .1, se: .02 }, unknown: "budgeted_prefix_incomplete" });
+    else expect(row).toMatchObject({ base: null, option: null, delta_win: null, unknown: "paired_probability_or_reference_missing" });
+    expect(value.summaries[0]).toMatchObject({ known_acts: [], unknown_acts: [1, 2, 3],
+      sum_delta_p_over_p: null, conditional_snapshot_product: null });
+    expect(JSON.stringify(value)).not.toContain("global_computation_failed:");
+    expect(value).toMatchObject({ delivered: false, s_sort: false, final_sequence: { status: "unknown" } });
+  });
+  it("requires explicit matching budget completion and keeps non-budget or failed partials as errors", async () => {
+    for (const patch of [{ budgeted: false }, { failure: true }, { failure: undefined }, { required: false },
+      { status: "degraded" }, { status: "pending" }, { samples: 261 }, { requested: 999 }]) {
+      const current = result();
+      Object.assign(current, { samples: 260, requested: 1000, timedOut: true,
+        completion: { required: true, uniqueDecks: 3, originalDecks: 3, memoHit: false,
+          budgeted: true, failure: false, status: "partial", samples: 260, requested: 1000, ...patch } });
+      const value = await evaluateGlobalBuild({ ...args(), current });
+      expect(value.targets[0]!.status, JSON.stringify(patch)).toBe("unknown");
+      expect(value.targets[0]!.rows[0]!.unknown).toBe("global_computation_failed:global_required_computation_incomplete");
+    }
+  });
   it("uses each option's paired reference instead of the baseline's later or unpaired samples", async () => {
     const current = result(.8, .1);
     current.options[0] = { ...current.options[0]!, win: .3, pairedReference: { samples: 100, rawWin: .2, calibratedWin: .2, bossLeft: 0 } };
