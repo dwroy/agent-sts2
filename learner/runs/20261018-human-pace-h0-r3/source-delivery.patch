@@ -1,0 +1,325 @@
+diff --git a/agent/src/reflex/rollout-live.ts b/agent/src/reflex/rollout-live.ts
+index db0827bd7..89c82ac3c 100644
+--- a/agent/src/reflex/rollout-live.ts
++++ b/agent/src/reflex/rollout-live.ts
+@@ -824,7 +824,7 @@ export function boardRolloutInput(
+   asc: number,
+   db: MonsterMoves = monsterMoves(),
+   mm: MoveModelData = moveModelData(),
+-): Pick<RolloutInput, "solver" | "enemies" | "tables" | "statusCards" | "relicEnergy" | "relicBlock" | "spawns" | "summons" | "playerPowers" | "fumesPoisonBonus" | "observedGardenerSkittish" | "observedSilentTestSubjectPhasePowers" | "potions" | "onShuffle" | "passive"> & { handBase: (CardModel | null)[] } {
++): Pick<RolloutInput, "solver" | "enemies" | "tables" | "statusCards" | "relicEnergy" | "relicBlock" | "spawns" | "summons" | "playerPowers" | "fumesPoisonBonus" | "observedGardenerSkittish" | "observedSilentTestSubjectPhasePowers" | "observedSilentAeonglassIntensity" | "potions" | "onShuffle" | "passive"> & { handBase: (CardModel | null)[] } {
+   const combat = asRecord(state.raw["combat"]);
+   const raw = asArray(combat["enemies"]).map(asRecord);
+   const leaderAlive = raw.some((e) => e["is_alive"] !== false && !powersOf(e)["MINION_POWER"]);
+@@ -904,6 +904,8 @@ export function boardRolloutInput(
+         ((enemy["max_hp"] === 111 && powers["ENRAGE_POWER"] === 3 && !(powers["PAINFUL_STABS_POWER"] ?? 0)) ||
+           (enemy["max_hp"] === 212 && powers["PAINFUL_STABS_POWER"] === 1 && !(powers["ENRAGE_POWER"] ?? 0)));
+     });
++  const aeonglassIntensity = str(asRecord(state.run?.raw)["character_id"]).toLowerCase() === "silent" && asc === 10 && raw.length === 1 &&
++    raw.some(enemy => str(enemy["enemy_id"]) === "AEONGLASS" && enemy["max_hp"] === 535 && powersOf(enemy)["WITHERING_PRESENCE_POWER"] === 6);
+   return {
+     solver,
+     enemies,
+@@ -919,6 +921,7 @@ export function boardRolloutInput(
+     ...(skull ? { fumesPoisonBonus: 1 } : {}),
+     ...(str(asRecord(state.run?.raw)["character_id"]).toLowerCase() === "silent" && asc === 10 ? { observedGardenerSkittish: true } : {}),
+     ...(testSubjectPhasePowers ? { observedSilentTestSubjectPhasePowers: true } : {}),
++    ...(aeonglassIntensity ? { observedSilentAeonglassIntensity: true } : {}),
+     potions: asArray(asRecord(state.run?.raw)["potions"]).filter((p) => asRecord(p)["occupied"]).length,
+     handBase: solverInput.hand.map((card) => (card.type === "Potion" ? null : baseByKey.get(cardKey(card)) ?? null)),
+   };
+diff --git a/agent/src/reflex/rollout.ts b/agent/src/reflex/rollout.ts
+index b3db153e9..36ba7a5cc 100644
+--- a/agent/src/reflex/rollout.ts
++++ b/agent/src/reflex/rollout.ts
+@@ -636,6 +636,8 @@ export interface RolloutInput {
+   observedGardenerSkittish?: boolean;
+   /** Observed Silent A10 Test Subject phase power sets; whole-fight scripts only. */
+   observedSilentTestSubjectPhasePowers?: boolean;
++  /** Observed Silent A10 Aeonglass Intensity buff turns; whole-fight scripts only. */
++  observedSilentAeonglassIntensity?: boolean;
+   /** Fresh second-fight starts from observed identities, weighted without revealing this run's future boss. */
+   continuation?: {
+     variants: { boss: string; count: number; input: RolloutInput }[];
+@@ -1503,6 +1505,11 @@ export const PHASE_MOVES: Record<string, readonly (readonly string[])[]> = {
+ /** Moves that gain a hit each use (Multi Claw: logged 10x3, 10x4, … 10x7 in one phase 2): the move and its enemy. */
+ export const GROWING_HITS: Record<string, string> = { TEST_SUBJECT: "MULTI_CLAW_MOVE" };
+ 
++// Silent A10 command windows: T3/T6/T9/T12 gained 4/5/6/7 Strength (36/30/13/2 clean windows).
++// 25226ZFLNR1J, UMVLWER4CD98 and RMNXHZKV716Y anchor the frozen H0/r3 evidence.
++// Later buff turns have no verified transition here and retain the existing table value.
++const OBSERVED_SILENT_AEONGLASS_STRENGTH: Readonly<Record<number, number>> = { 3: 4, 6: 5, 9: 6, 12: 7 };
++
+ /**
+  * The Knowledge Demon's Curse of Knowledge: 3 uses a fight (logged on turns 1, 5 and 9 only, 132 uses in 52 fights; after
+  * the third, Ponder is followed by Slap: turns 13, 16). The move model's Ponder -> Curse 91% gave long fights a 4th and
+@@ -2396,7 +2403,11 @@ function applyPlan(
+         // An attack spends the Vigor it had (its hits carried it); the move's own Vigor is for the next one.
+         if (e.base.attacks.some((attack) => attack.damage * attack.hits > 0)) e.vigor = 0;
+         e.vigor += m?.vigor ?? 0;
+-        e.strength += m?.strength ?? 0;
++        const observedIntensity = fullFight && input.observedSilentAeonglassIntensity === true && input.meta.asc === 10 &&
++          e.id === "AEONGLASS" && e.maxHp === 535 && e.powers["WITHERING_PRESENCE_POWER"] === 6 &&
++          e.move === "INCREASING_INTENSITY_MOVE" && m?.strength === 4
++          ? OBSERVED_SILENT_AEONGLASS_STRENGTH[(input.solver.turn ?? input.meta.t) + turn] : undefined;
++        e.strength += observedIntensity ?? m?.strength ?? 0;
+         // Ritual, Territorial, High Voltage: Strength at the end of its turn (Cultists' T2 loss was short
+         // 1.3 a turn, Byrdonis 2); a Ritual this move gives starts on its next turn (Incantation gains none).
+         e.strength += e.growth;
+diff --git a/agent/tests/silent-aeonglass-intensity.test.ts b/agent/tests/silent-aeonglass-intensity.test.ts
+new file mode 100644
+index 000000000..68d1767de
+--- /dev/null
++++ b/agent/tests/silent-aeonglass-intensity.test.ts
+@@ -0,0 +1,48 @@
++import { describe, expect, it } from "vitest";
++import { simulateFight, type RolloutInput } from "../src/reflex/rollout.js";
++import { solveTurn } from "../src/reflex/turn-solver.js";
++import { board } from "./boss-sim-fixture.js";
++
++// Command-fingerprint windows: 25226ZFLNR1J T3/T6, UMVLWER4CD98 T9,
++// RMNXHZKV716Y T12; original offsets and SHA in H0/r3 intensity-evidence.json.
++// Empty piles isolate the enemy buff; they are synthetic test controls.
++function transition(turn: number, enabled = true, asc = 10, scripts = true, strength = 4, id = "AEONGLASS") {
++  const input = board({ playerHp: 500, bossHp: 535, tables: {
++    [id]: {
++      moves: { INCREASING_INTENSITY_MOVE: { damage: 0, hits: 0, strength, block: 0 },
++        EBB_MOVE: { damage: 26, hits: 1, strength: 0, block: 0 } },
++      next: { INCREASING_INTENSITY_MOVE: { EBB_MOVE: 1 }, EBB_MOVE: { EBB_MOVE: 1 } },
++    },
++  } });
++  input.meta = { ...input.meta, t: turn, asc, enc: id };
++  (input as RolloutInput & { observedSilentAeonglassIntensity?: boolean }).observedSilentAeonglassIntensity = enabled;
++  input.solver = { ...input.solver, turn, hand: [],
++    player: { ...input.solver.player, hp: 500, maxHp: 500 },
++    enemies: [{ ...input.solver.enemies[0]!, attacks: [], hp: 535, maxHp: 535 }] };
++  input.enemies = [{ index: 0, id, move: "INCREASING_INTENSITY_MOVE", strength: 4,
++    powers: { WITHERING_PRESENCE_POWER: 6 } }];
++  input.piles = { draw: [], discard: [], handBase: [] };
++  const noAction = solveTurn(input.solver).plans.find(plan => plan.steps.length === 0)!;
++  return simulateFight(input, noAction, 2, 7, scripts).records;
++}
++
++describe("observed Silent A10 Aeonglass Intensity", () => {
++  it("carries each measured buff into the next turn's attack", () => {
++    for (const [turn, gain] of [[3, 4], [6, 5], [9, 6], [12, 7]]) {
++      const next = transition(turn!).at(-1)!;
++      expect(next.snap.E[0]![9]["STRENGTH_POWER"]).toBe(4 + gain!);
++      expect(next.enemyPart).toBe(26 + 4 + gain!);
++    }
++  });
++
++  it("keeps the observed scope separate from short rollouts and other ascensions", () => {
++    for (const asc of [0, 2, 9]) expect(transition(6, true, asc)).toEqual(transition(6, false, asc));
++    expect(transition(6, true, 10, false)).toEqual(transition(6, false, 10, false));
++    expect(transition(6, true, 10, true, 5)).toEqual(transition(6, false, 10, true, 5));
++    expect(transition(6, true, 10, true, 4, "OTHER")).toEqual(transition(6, false, 10, true, 4, "OTHER"));
++  });
++
++  it("does not extrapolate into unobserved buff turns", () => {
++    for (const turn of [2, 5, 15, 18]) expect(transition(turn)).toEqual(transition(turn, false));
++  });
++});
+diff --git a/knowledge/characters/silent/experience.json b/knowledge/characters/silent/experience.json
+index 42a7b320f..da6c4e513 100644
+--- a/knowledge/characters/silent/experience.json
++++ b/knowledge/characters/silent/experience.json
+@@ -1,5 +1,5 @@
+ {
+-  "version": "2026-10-17.h0-r1-phase2",
++  "version": "2026-10-18.h0-r3-intensity1",
+   "_about": "静默猎手第190次增量；0C3AR6J0Z8LD为silent/A10。旧245局同口径复算后增至246局；截至2026-10-12T11:24:36.626Z，全引擎观察不当纯Codex爬塔成绩。新增1、更新15（均加证据）、退役0；保留原证据、反例与冻结专题边界。沙漏五次判死截断及一次实死，同盘局部省血不证整战胜利，毒未结不记实伤。只更新经验；源码经独立strategy-proposal，离线渲染不等真实采用。；原owner接续roy-20261012-concrete-core-decklists/r2：复用已冻结两胜局和8臂512个条件样本，5条去重追加限定结论；未增删条目、不改原冻结分母，模型偏差和自然采用未验证。；第196次增量：3WWHBRG66B7F、7LXWF33J5SAD为silent/A10；保留live五条并行限定及前批未合入产出，旧252局同口径复算后254局。压短8条单局重复叙述，新增终点推进观察/招架盾，支持数不等整战因果；独立策略提案，不改打法源码。；第201次增量：VGNDNGPFYRE3为silent/A10，旧260局重算一致后261局，事件/胜战/营火血价和实际建立分账；新增0、更新17、退役0，保留并行经验及冻结专题。离线渲染不等自然采用，源码由独立strategy-proposal实施。；roy-20261016-sl-potion-retry/r1：复用49局/98场/212尝试冻结输入，仅核六局F48/F49争点；新增SL用药机会限定1、速度药经验增VNS1局。修正VNS药时为肌肉T1/速度T2，同轮牌药前后有差；空药栏不作可换药分母。不拟药价/门槛，不认换药因果，0332及其他宽父保持。",
+   "entries": [
+     {
+@@ -8205,7 +8205,7 @@
+         10,
+         10
+       ],
+-      "lesson": "限定：R366固定7e1193模型验证34场/34局，数量距10场差0，仍低可信。B2/B3 Brier为0.1898/0.2029（整体1.25倍上限0.1385/0.1414），预测减实际胜率+0.173/+0.175（限±0.15），被打穿血比3.957/4.038（限0.7–1.3）；失败分别为brier、gap、leak/brier、gap、leak。数量达标不抵消质量失败，无法保证再加固定几场就通过。样本仅真实结局，首试/SL分列，截断不算负局；只评价单战，F49或连战须另核。该表107调参/460验证、固定切点；原生产有70输入SHA差，不证明当前模型或当前构筑S可信。 H0/r1完成限定：新固定模型89717d20b447、原107调参/481验证，B2/T1有效35独立局/源35（模拟缺0，距10缺0）；Brier修前0.179→0.1731，预测/实际0.673/0.514（差+0.159），leak修前4.078→4.078，失败brier,gap,leak；B3/pre有效35独立局/源35（模拟缺0，距10缺0）；Brier修前0.1895→0.1841，预测/实际0.691/0.514（差+0.177），leak修前4.204→4.204，失败brier,gap,leak。本阶段未隔离新的A10招式/阶段因果缺口；不得从高leak或单轮净HP相符推定完整模型正确。原四闸、胜败/缺失与leak口径不变，质量还需多少局未知。该full对象与旧7e1193及当前H1有限前缀/刷新输入分列；固定候选过闸不等于当前生产认证，生产trust未由本表替换，F49联合/自然效果仍未知。",
++      "lesson": "限定：R366固定7e1193模型验证34场/34局，数量距10场差0，仍低可信。B2/B3 Brier为0.1898/0.2029（整体1.25倍上限0.1385/0.1414），预测减实际胜率+0.173/+0.175（限±0.15），被打穿血比3.957/4.038（限0.7–1.3）；失败分别为brier、gap、leak/brier、gap、leak。数量达标不抵消质量失败，无法保证再加固定几场就通过。样本仅真实结局，首试/SL分列，截断不算负局；只评价单战，F49或连战须另核。该表107调参/460验证、固定切点；原生产有70输入SHA差，不证明当前模型或当前构筑S可信。 H0/r1完成限定：新固定模型89717d20b447、原107调参/481验证，B2/T1有效35独立局/源35（模拟缺0，距10缺0）；Brier修前0.179→0.1731，预测/实际0.673/0.514（差+0.159），leak修前4.078→4.078，失败brier,gap,leak；B3/pre有效35独立局/源35（模拟缺0，距10缺0）；Brier修前0.1895→0.1841，预测/实际0.691/0.514（差+0.177），leak修前4.204→4.204，失败brier,gap,leak。本阶段未隔离新的A10招式/阶段因果缺口；不得从高leak或单轮净HP相符推定完整模型正确。原四闸、胜败/缺失与leak口径不变，质量还需多少局未知。该full对象与旧7e1193及当前H1有限前缀/刷新输入分列；固定候选过闸不等于当前生产认证，生产trust未由本表替换，F49联合/自然效果仍未知。 H0/r3限定：固定新对象765690dcf638（承接89717d20b447），原107调参/481验证、Platt方法、200样本/原行seed及四闸不变；t1有效35独立局，Brier 0.1731→0.1794，预测/实际0.654/0.514，穿透比4.078→4.125，失败brier,leak；pre有效35独立局，Brier 0.1841→0.1855，预测/实际0.668/0.514，穿透比4.204→4.252，失败brier,gap,leak。新增已就绪原命令证据支持T3/6/9/12加4/5/6/7力量窄修，但本固定样本Brier与穿透比点估计反而变差，不把机制修正冒称可信度改善。数量达标不能消除质量失败；当前H1有限前缀/刷新输入与此full研究对象分列，生产trust不由本表替换，F49联合与自然效果未知。",
+       "evidence": [
+         "0B2567HG3T4D",
+         "0C3AR6J0Z8LD",
+@@ -8247,7 +8247,7 @@
+       "n_support": 36,
+       "n_contradict": 0,
+       "confidence": "low",
+-      "last_seen": "2026-10-17",
++      "last_seen": "2026-10-18",
+       "status": "active"
+     },
+     {
+@@ -8258,7 +8258,7 @@
+         10,
+         10
+       ],
+-      "lesson": "限定：R366固定7e1193模型验证29场/29局，数量距10场差0，仍低可信。B2/B3 Brier为0.241/0.229（整体1.25倍上限0.1385/0.1414），预测减实际胜率+0.309/+0.282（限±0.15），被打穿血比1.019/1.119（限0.7–1.3）；失败分别为brier、gap/brier、gap。数量达标不抵消质量失败，无法保证再加固定几场就通过。样本仅真实结局，首试/SL分列，截断不算负局；只评价单战，F49或连战须另核。该表107调参/460验证、固定切点；原生产有70输入SHA差，不证明当前模型或当前构筑S可信。 H0/r1完成限定：新固定模型89717d20b447、原107调参/481验证，B2/T1有效31独立局/源32（模拟缺1，距10缺0）；Brier修前0.2252→0.2186，预测/实际0.708/0.419（差+0.289），leak修前1.065→1.065，失败brier,gap；B3/pre有效31独立局/源32（模拟缺1，距10缺0）；Brier修前0.2265→0.2204，预测/实际0.689/0.419（差+0.270），leak修前1.176→1.176，失败brier,gap。本阶段未隔离新的A10招式/阶段因果缺口；不得从高leak或单轮净HP相符推定完整模型正确。原纸鹤窄修仍只A2/1独立局，不充A10女王已修。原四闸、胜败/缺失与leak口径不变，质量还需多少局未知。该full对象与旧7e1193及当前H1有限前缀/刷新输入分列；固定候选过闸不等于当前生产认证，生产trust未由本表替换，F49联合/自然效果仍未知。",
++      "lesson": "限定：R366固定7e1193模型验证29场/29局，数量距10场差0，仍低可信。B2/B3 Brier为0.241/0.229（整体1.25倍上限0.1385/0.1414），预测减实际胜率+0.309/+0.282（限±0.15），被打穿血比1.019/1.119（限0.7–1.3）；失败分别为brier、gap/brier、gap。数量达标不抵消质量失败，无法保证再加固定几场就通过。样本仅真实结局，首试/SL分列，截断不算负局；只评价单战，F49或连战须另核。该表107调参/460验证、固定切点；原生产有70输入SHA差，不证明当前模型或当前构筑S可信。 H0/r1完成限定：新固定模型89717d20b447、原107调参/481验证，B2/T1有效31独立局/源32（模拟缺1，距10缺0）；Brier修前0.2252→0.2186，预测/实际0.708/0.419（差+0.289），leak修前1.065→1.065，失败brier,gap；B3/pre有效31独立局/源32（模拟缺1，距10缺0）；Brier修前0.2265→0.2204，预测/实际0.689/0.419（差+0.270），leak修前1.176→1.176，失败brier,gap。本阶段未隔离新的A10招式/阶段因果缺口；不得从高leak或单轮净HP相符推定完整模型正确。原纸鹤窄修仍只A2/1独立局，不充A10女王已修。原四闸、胜败/缺失与leak口径不变，质量还需多少局未知。该full对象与旧7e1193及当前H1有限前缀/刷新输入分列；固定候选过闸不等于当前生产认证，生产trust未由本表替换，F49联合/自然效果仍未知。 H0/r3限定：固定新对象765690dcf638（承接89717d20b447），原107调参/481验证、Platt方法、200样本/原行seed及四闸不变；t1有效31独立局，Brier 0.2186→0.2186，预测/实际0.708/0.419，穿透比1.065→1.065，失败brier,gap；pre有效31独立局，Brier 0.2204→0.2204，预测/实际0.689/0.419，穿透比1.176→1.176，失败brier,gap。新后继字段初筛22可比窗中13处聚合体力量少1（4局：A2三窗/A10十窗），均为已就绪端点；盟友加力路径待逐actor隔离，不改A10倍率，纸鹤A2窄修不扩阶。数量达标不能消除质量失败；当前H1有限前缀/刷新输入与此full研究对象分列，生产trust不由本表替换，F49联合与自然效果未知。",
+       "evidence": [
+         "1269Y20SKHUM",
+         "16UDD0430SXT",
+@@ -8297,7 +8297,7 @@
+       "n_support": 33,
+       "n_contradict": 0,
+       "confidence": "low",
+-      "last_seen": "2026-10-17",
++      "last_seen": "2026-10-18",
+       "status": "active"
+     },
+     {
+@@ -8308,7 +8308,7 @@
+         10,
+         10
+       ],
+-      "lesson": "限定：R366固定7e1193模型验证27场/27局，数量距10场差0，仍低可信。B2/B3 Brier为0.1784/0.1693（整体1.25倍上限0.1385/0.1414），预测减实际胜率+0.166/+0.136（限±0.15），被打穿血比3.603/3.469（限0.7–1.3）；失败分别为brier、gap、leak/brier、leak。数量达标不抵消质量失败，无法保证再加固定几场就通过。样本仅真实结局，首试/SL分列，截断不算负局；只评价单战，F49或连战须另核。该表107调参/460验证、固定切点；原生产有70输入SHA差，不证明当前模型或当前构筑S可信。 H0/r1完成限定：新固定模型89717d20b447、原107调参/481验证，B2/T1有效29独立局/源29（模拟缺0，距10缺0）；Brier修前0.1894→0.1352，预测/实际0.404/0.207（差+0.197），leak修前3.721→2.394，失败brier,gap,leak；B3/pre有效29独立局/源29（模拟缺0，距10缺0）；Brier修前0.1821→0.1306，预测/实际0.364/0.207（差+0.157），leak修前3.598→2.322，失败gap,leak。实验体换相静态激怒/痛苦刺击残留已定位并只在已见Silent A10单目标111→212→313签名的whole-fight修正；核心两次换相证据JMH调参局，F48三局与F49五局第一换相/一局第三相另核。原四闸、胜败/缺失与leak口径不变，质量还需多少局未知。该full对象与旧7e1193及当前H1有限前缀/刷新输入分列；固定候选过闸不等于当前生产认证，生产trust未由本表替换，F49联合/自然效果仍未知。",
++      "lesson": "限定：R366固定7e1193模型验证27场/27局，数量距10场差0，仍低可信。B2/B3 Brier为0.1784/0.1693（整体1.25倍上限0.1385/0.1414），预测减实际胜率+0.166/+0.136（限±0.15），被打穿血比3.603/3.469（限0.7–1.3）；失败分别为brier、gap、leak/brier、leak。数量达标不抵消质量失败，无法保证再加固定几场就通过。样本仅真实结局，首试/SL分列，截断不算负局；只评价单战，F49或连战须另核。该表107调参/460验证、固定切点；原生产有70输入SHA差，不证明当前模型或当前构筑S可信。 H0/r1完成限定：新固定模型89717d20b447、原107调参/481验证，B2/T1有效29独立局/源29（模拟缺0，距10缺0）；Brier修前0.1894→0.1352，预测/实际0.404/0.207（差+0.197），leak修前3.721→2.394，失败brier,gap,leak；B3/pre有效29独立局/源29（模拟缺0，距10缺0）；Brier修前0.1821→0.1306，预测/实际0.364/0.207（差+0.157），leak修前3.598→2.322，失败gap,leak。实验体换相静态激怒/痛苦刺击残留已定位并只在已见Silent A10单目标111→212→313签名的whole-fight修正；核心两次换相证据JMH调参局，F48三局与F49五局第一换相/一局第三相另核。原四闸、胜败/缺失与leak口径不变，质量还需多少局未知。该full对象与旧7e1193及当前H1有限前缀/刷新输入分列；固定候选过闸不等于当前生产认证，生产trust未由本表替换，F49联合/自然效果仍未知。 H0/r3限定：固定新对象765690dcf638（承接89717d20b447），原107调参/481验证、Platt方法、200样本/原行seed及四闸不变；t1有效29独立局，Brier 0.1352→0.1352，预测/实际0.404/0.207，穿透比2.394→2.394，失败brier,gap,leak；pre有效29独立局，Brier 0.1306→0.1306，预测/实际0.364/0.207，穿透比2.322→2.322，失败gap,leak。本次后继字段初筛2处差的下一帧仍在选牌/未结算，不能据此另改换相；R386阶段能力窄修保持。数量达标不能消除质量失败；当前H1有限前缀/刷新输入与此full研究对象分列，生产trust不由本表替换，F49联合与自然效果未知。",
+       "evidence": [
+         "64VJC5XT2AT2",
+         "833ZM0MJGWHC",
+@@ -8345,7 +8345,7 @@
+       "n_support": 31,
+       "n_contradict": 0,
+       "confidence": "low",
+-      "last_seen": "2026-10-17",
++      "last_seen": "2026-10-18",
+       "status": "active"
+     },
+     {
+@@ -8355,7 +8355,7 @@
+         10,
+         10
+       ],
+-      "lesson": "限定：R366仅校准固定7e1193模型，107调参/460验证（有效458），原发布有70输入SHA不同；文件差不是可转移校准的证明。A10 B2/B3预测偏差+0.035/+0.039、被打穿血比1.313/1.329；F49单列29例，偏差+0.300/+0.256、血比2.681/2.774，均低可信。A0–4/A5–9验证各0，不跨进阶借信度。THE_INSATIABLE B2从43例血比1.296到44例1.316而撤可信，数量增加不能保证通过。首王胜不是整局胜，平均出口HP与四局double-boss曲线不等联合胜率；当前生产及两场联合率未知，不补零，不据此设必死/SL或药水保血阈值。 H0/r1完整固定校准：原不可变86f9bd67完成481keys×T1/pre共962条验证后，基于真实阶段能力缺口建立新source/data指纹；只重新计算2调参/29验证共62条，557个谓词外keys/1114条预测有源码与实际编译隔离证明后复用，未重跑旧107或旧7e1193全量。原107/481切点/keys/200样本/588原行seed/Platt方法和四闸不动；新训练Platt在29验证前冻结。t1 A10有效479、预测差+0.050、Brier0.1039、leak1.265；pre A10有效479、预测差+0.057、Brier0.1079、leak1.278。A0–4/A5–9验证各0，组内样本外残差无法估计（逐boss总体原四闸保持）；F49单战指标另表，联合率unknown，不用平均HP补。原R366的107/460/70差、校准21的107/481/73旧输入差、当前H1/刷新叶逐SHA边界均保留，不把逐叶观测冒原子运行树。当前有限前缀/其他生产输入、完整Wound资源、自然效果/0332及宽父未由本full对象认证；生产trust未替换。",
++      "lesson": "限定：R366仅校准固定7e1193模型，107调参/460验证（有效458），原发布有70输入SHA不同；文件差不是可转移校准的证明。A10 B2/B3预测偏差+0.035/+0.039、被打穿血比1.313/1.329；F49单列29例，偏差+0.300/+0.256、血比2.681/2.774，均低可信。A0–4/A5–9验证各0，不跨进阶借信度。THE_INSATIABLE B2从43例血比1.296到44例1.316而撤可信，数量增加不能保证通过。首王胜不是整局胜，平均出口HP与四局double-boss曲线不等联合胜率；当前生产及两场联合率未知，不补零，不据此设必死/SL或药水保血阈值。 H0/r1完整固定校准：原不可变86f9bd67完成481keys×T1/pre共962条验证后，基于真实阶段能力缺口建立新source/data指纹；只重新计算2调参/29验证共62条，557个谓词外keys/1114条预测有源码与实际编译隔离证明后复用，未重跑旧107或旧7e1193全量。原107/481切点/keys/200样本/588原行seed/Platt方法和四闸不动；新训练Platt在29验证前冻结。t1 A10有效479、预测差+0.050、Brier0.1039、leak1.265；pre A10有效479、预测差+0.057、Brier0.1079、leak1.278。A0–4/A5–9验证各0，组内样本外残差无法估计（逐boss总体原四闸保持）；F49单战指标另表，联合率unknown，不用平均HP补。原R366的107/460/70差、校准21的107/481/73旧输入差、当前H1/刷新叶逐SHA边界均保留，不把逐叶观测冒原子运行树。当前有限前缀/其他生产输入、完整Wound资源、自然效果/0332及宽父未由本full对象认证；生产trust未替换。 H0/r3：在完成的89717d20b447固定对象上只叠沙漏已见回合加力窄修，276输入/241编译模块，239编译模块不变；只重算2调参key/35验证key共74行，551key/1102行复用。新模型765690dcf638仍按原107/481、200样本、588原行种子、整体Platt与四闸，验证不拟合，原6个no-solve行完全保留。Platt与上一阶段相同，整体Brier t1/pre为0.1044/0.108；六目标仍低可信。机制发现读过原验证时期帧，这轮是固定切分修前/后比较，不是全新未见机制验证。该full研究对象不能认证当前H1有限前缀和刷新数据，生产trust保持，F49联合/自然/0332/宽父未关闭。",
+       "evidence": [
+         "01H1533KSS5C",
+         "08A0GEAL8KQ5",
+@@ -8611,7 +8611,7 @@
+       "n_support": 250,
+       "n_contradict": 0,
+       "confidence": "low",
+-      "last_seen": "2026-10-17",
++      "last_seen": "2026-10-18",
+       "status": "active"
+     },
+     {
+@@ -8677,7 +8677,7 @@
+         10,
+         10
+       ],
+-      "lesson": "H0/r1完成限定：新固定模型89717d20b447、原107调参/481验证，B2/T1有效46独立局/源46（模拟缺0，距10缺0）；Brier修前0.1583→0.1556，预测/实际0.69/0.63（差+0.060），leak修前1.321→1.321，失败brier,leak；B3/pre有效46独立局/源46（模拟缺0，距10缺0）；Brier修前0.1803→0.1791，预测/实际0.71/0.63（差+0.080），leak修前1.345→1.345，失败brier,leak。本阶段未隔离新的A10招式/阶段因果缺口；不得从高leak或单轮净HP相符推定完整模型正确。原四闸、胜败/缺失与leak口径不变，质量还需多少局未知。该full对象与旧7e1193及当前H1有限前缀/刷新输入分列；固定候选过闸不等于当前生产认证，生产trust未由本表替换，F49联合/自然效果仍未知。",
++      "lesson": "H0/r1完成限定：新固定模型89717d20b447、原107调参/481验证，B2/T1有效46独立局/源46（模拟缺0，距10缺0）；Brier修前0.1583→0.1556，预测/实际0.69/0.63（差+0.060），leak修前1.321→1.321，失败brier,leak；B3/pre有效46独立局/源46（模拟缺0，距10缺0）；Brier修前0.1803→0.1791，预测/实际0.71/0.63（差+0.080），leak修前1.345→1.345，失败brier,leak。本阶段未隔离新的A10招式/阶段因果缺口；不得从高leak或单轮净HP相符推定完整模型正确。原四闸、胜败/缺失与leak口径不变，质量还需多少局未知。该full对象与旧7e1193及当前H1有限前缀/刷新输入分列；固定候选过闸不等于当前生产认证，生产trust未由本表替换，F49联合/自然效果仍未知。 H0/r3限定：固定新对象765690dcf638（承接89717d20b447），原107调参/481验证、Platt方法、200样本/原行seed及四闸不变；t1有效46独立局，Brier 0.1556→0.1556，预测/实际0.69/0.63，穿透比1.321→1.321，失败brier,leak；pre有效46独立局，Brier 0.1791→0.1791，预测/实际0.71/0.63，穿透比1.345→1.345，失败brier,leak。新后继字段初筛36可比窗中2处力量高6（A0/A10各1窗），均已就绪；须分离当前/后继招式及能力推进，不由差额直接改倍率。数量达标不能消除质量失败；当前H1有限前缀/刷新输入与此full研究对象分列，生产trust不由本表替换，F49联合与自然效果未知。",
+       "evidence": [
+         "08A0GEAL8KQ5",
+         "0DJ6GFZZ0TG9",
+@@ -8731,7 +8731,7 @@
+       "n_support": 48,
+       "n_contradict": 0,
+       "confidence": "low",
+-      "last_seen": "2026-10-17",
++      "last_seen": "2026-10-18",
+       "status": "active"
+     },
+     {
+@@ -8742,7 +8742,7 @@
+         10,
+         10
+       ],
+-      "lesson": "H0/r1完成限定：新固定模型89717d20b447、原107调参/481验证，B2/T1有效45独立局/源46（模拟缺1，距10缺0）；Brier修前0.0752→0.0735，预测/实际0.832/0.844（差-0.012），leak修前1.378→1.378，失败leak；B3/pre有效45独立局/源46（模拟缺1，距10缺0）；Brier修前0.0675→0.0651，预测/实际0.854/0.844（差+0.010），leak修前1.414→1.414，失败leak。本阶段未隔离新的A10招式/阶段因果缺口；不得从高leak或单轮净HP相符推定完整模型正确。原四闸、胜败/缺失与leak口径不变，质量还需多少局未知。该full对象与旧7e1193及当前H1有限前缀/刷新输入分列；固定候选过闸不等于当前生产认证，生产trust未由本表替换，F49联合/自然效果仍未知。",
++      "lesson": "H0/r1完成限定：新固定模型89717d20b447、原107调参/481验证，B2/T1有效45独立局/源46（模拟缺1，距10缺0）；Brier修前0.0752→0.0735，预测/实际0.832/0.844（差-0.012），leak修前1.378→1.378，失败leak；B3/pre有效45独立局/源46（模拟缺1，距10缺0）；Brier修前0.0675→0.0651，预测/实际0.854/0.844（差+0.010），leak修前1.414→1.414，失败leak。本阶段未隔离新的A10招式/阶段因果缺口；不得从高leak或单轮净HP相符推定完整模型正确。原四闸、胜败/缺失与leak口径不变，质量还需多少局未知。该full对象与旧7e1193及当前H1有限前缀/刷新输入分列；固定候选过闸不等于当前生产认证，生产trust未由本表替换，F49联合/自然效果仍未知。 H0/r3限定：固定新对象765690dcf638（承接89717d20b447），原107调参/481验证、Platt方法、200样本/原行seed及四闸不变；t1有效45独立局，Brier 0.0735→0.0735，预测/实际0.832/0.844，穿透比1.378→1.378，失败leak；pre有效45独立局，Brier 0.0651→0.0651，预测/实际0.854/0.844，穿透比1.414→1.414，失败leak。本次26可比窗的所选四个后继字段未见差，11个无解保持未知；诅咒/状态牌堆、抽牌策略及全资源轨迹仍未获证。数量达标不能消除质量失败；当前H1有限前缀/刷新输入与此full研究对象分列，生产trust不由本表替换，F49联合与自然效果未知。",
+       "evidence": [
+         "0B2567HG3T4D",
+         "0C3AR6J0Z8LD",
+@@ -8796,7 +8796,7 @@
+       "n_support": 48,
+       "n_contradict": 0,
+       "confidence": "low",
+-      "last_seen": "2026-10-17",
++      "last_seen": "2026-10-18",
+       "status": "active"
+     },
+     {
+@@ -8807,7 +8807,7 @@
+         10,
+         10
+       ],
+-      "lesson": "H0/r1完成限定：新固定模型89717d20b447、原107调参/481验证，B2/T1有效46独立局/源46（模拟缺0，距10缺0）；Brier修前0.1396→0.1367，预测/实际0.729/0.674（差+0.055），leak修前1.32→1.32，失败brier,leak；B3/pre有效46独立局/源46（模拟缺0，距10缺0）；Brier修前0.1478→0.1456，预测/实际0.73/0.674（差+0.056），leak修前1.364→1.364，失败brier,leak。本阶段未隔离新的A10招式/阶段因果缺口；不得从高leak或单轮净HP相符推定完整模型正确。原四闸、胜败/缺失与leak口径不变，质量还需多少局未知。该full对象与旧7e1193及当前H1有限前缀/刷新输入分列；固定候选过闸不等于当前生产认证，生产trust未由本表替换，F49联合/自然效果仍未知。",
++      "lesson": "H0/r1完成限定：新固定模型89717d20b447、原107调参/481验证，B2/T1有效46独立局/源46（模拟缺0，距10缺0）；Brier修前0.1396→0.1367，预测/实际0.729/0.674（差+0.055），leak修前1.32→1.32，失败brier,leak；B3/pre有效46独立局/源46（模拟缺0，距10缺0）；Brier修前0.1478→0.1456，预测/实际0.73/0.674（差+0.056），leak修前1.364→1.364，失败brier,leak。本阶段未隔离新的A10招式/阶段因果缺口；不得从高leak或单轮净HP相符推定完整模型正确。原四闸、胜败/缺失与leak口径不变，质量还需多少局未知。该full对象与旧7e1193及当前H1有限前缀/刷新输入分列；固定候选过闸不等于当前生产认证，生产trust未由本表替换，F49联合/自然效果仍未知。 H0/r3限定：固定新对象765690dcf638（承接89717d20b447），原107调参/481验证、Platt方法、200样本/原行seed及四闸不变；t1有效46独立局，Brier 0.1367→0.1367，预测/实际0.729/0.674，穿透比1.32→1.32，失败brier,leak；pre有效46独立局，Brier 0.1456→0.1456，预测/实际0.73/0.674，穿透比1.364→1.364，失败brier,leak。本次27可比窗的所选四个后继字段未见差，1个无解保持未知；沙坑/状态牌堆与抽牌/策略/资源轨迹仍待核。数量达标不能消除质量失败；当前H1有限前缀/刷新输入与此full研究对象分列，生产trust不由本表替换，F49联合与自然效果未知。",
+       "evidence": [
+         "0YQJ9D1MC4NK",
+         "16UDD0430SXT",
+@@ -8861,7 +8861,7 @@
+       "n_support": 48,
+       "n_contradict": 0,
+       "confidence": "low",
+-      "last_seen": "2026-10-17",
++      "last_seen": "2026-10-18",
+       "status": "active"
+     },
+     {
+@@ -8871,7 +8871,7 @@
+         0,
+         10
+       ],
+-      "lesson": "H0限定：高整战模拟/日志穿透比是诊断线索，不直接证明招式倍率错误。24选定战203个原指纹结束回合窗口中，17个旧末帧已掉血（沙漏8、女王6、知识恶魔3），会少计旧leak；其他三Boss这批未见此现象。179可重放中178净掉血一致，24 no solve保持未知。TXZ6RVMQA09D F48第3试T2实56→50而旧leak0；UJ0K3G10609Y A10 F48第6试T2实损5/模拟11，斗篷扣/奥利哈钢尾挡及钨棍结算仅与差额相容，缺中间帧归因，不认定0332根因。净损还含持牌/回复/复活，不能直接替纯敌伤；原四闸、胜败标签和切分未改，不把局部相符或均值HP当整战/联合可信率。 H0后继核查：同24战203窗口中262个有后继敌帧的招式转移在原表内，另帝王蟹2处缺后继；不是阶段概率/资源等价证明。实验体跨相静态能力残留说明：每轮从真实帧重建的单轮净血可相符，仍会漏掉从前相推进后的字段错误。新窄修只处理有源的阶段字段，旧17时点问题/24 no solve及0332资源缺口保持原限制；不换标签过闸。",
++      "lesson": "H0限定：高整战模拟/日志穿透比是诊断线索，不直接证明招式倍率错误。24选定战203个原指纹结束回合窗口中，17个旧末帧已掉血（沙漏8、女王6、知识恶魔3），会少计旧leak；其他三Boss这批未见此现象。179可重放中178净掉血一致，24 no solve保持未知。TXZ6RVMQA09D F48第3试T2实56→50而旧leak0；UJ0K3G10609Y A10 F48第6试T2实损5/模拟11，斗篷扣/奥利哈钢尾挡及钨棍结算仅与差额相容，缺中间帧归因，不认定0332根因。净损还含持牌/回复/复活，不能直接替纯敌伤；原四闸、胜败标签和切分未改，不把局部相符或均值HP当整战/联合可信率。 H0后继核查：同24战203窗口中262个有后继敌帧的招式转移在原表内，另帝王蟹2处缺后继；不是阶段概率/资源等价证明。实验体跨相静态能力残留说明：每轮从真实帧重建的单轮净血可相符，仍会漏掉从前相推进后的字段错误。新窄修只处理有源的阶段字段，旧17时点问题/24 no solve及0332资源缺口保持原限制；不换标签过闸。 H0/r3新增端点反证：仅去掉临时力量恢复不等于下一帧已就绪。沙漏82命令窗中81无该混杂，但只有67窗/31局同时已就绪，T3/6/9/12的30/25/10/2窗仍增4/5/6/7；其余14未就绪及1临时恢复混杂保留。实际控制probe 76可比（62已就绪）/5无解，后继禁牌控制不冒原策略。另五目标172窗中149可比/23无解；实验体两处字段差的下一帧均选牌中，当前不支持新换相缺陷。女王13窗/帝王蟹2窗的已就绪力量差仍是待因果隔离候选；知识恶魔与无厌沙虫局部字段相符不证明整战正确。修正已证状态后沙漏固定Brier/穿透比变差，也不能将指标差直接等同物理规则错误；不换净损为敌伤，不加独立校准n或降低门槛。",
+       "evidence": [
+         "CVJ4MLQF4CSY",
+         "DC32RW0A80V1",
+@@ -8881,7 +8881,55 @@
+       "n_support": 4,
+       "n_contradict": 0,
+       "confidence": "med",
+-      "last_seen": "2026-10-17",
++      "last_seen": "2026-10-18",
++      "status": "active"
++    },
++    {
++      "id": "silent-aeonglass-intensity-observed-turns",
++      "scope": "boss:AEONGLASS",
++      "name": "沙漏已见加力状态与校准反例",
++      "asc": [
++        10,
++        10
++      ],
++      "lesson": "Silent A10原命令已就绪窗/无临时力量恢复：67窗31局，T3/T6/T9/T12的30/25/10/2窗分别增4/5/6/7力量；旧整场模型每次固定加4。仅单沙漏535HP、凋萎存在6、原表力量4及上述绝对回合支持窄修；其他阶/角色、短rollout、未知签名和T15+保持原路。原82窗含14个未就绪及1个恢复混杂，不把它们冒称已就绪；76个可比固定控制probe含62个已就绪，另5无解保留。原107调参/481验证的200样本增量重校准不支持“状态修正即质量改善”：35个独立验证局，t1 Brier 0.1731→0.1794、穿透比4.078→4.125，预测0.654/实际0.514，虽胜率差入±0.15，仍失败brier/leak；pre Brier 0.1841→0.1855、穿透比4.204→4.252，预测0.668/实际0.514，仍失败brier/gap/leak。故保低可信；高穿透比未被此项消除，也不能据此反推某个伤害倍率。此为固定full对象765690dcf638，不认证当前H1部分采样/刷新输入、自然采用/胜率改善或0332根修复。",
++      "evidence": [
++        "0B2567HG3T4D",
++        "0C3AR6J0Z8LD",
++        "1GN7WFBWC2E3",
++        "25226ZFLNR1J",
++        "49HL2N70CHMU",
++        "53NU9DWSTG9H",
++        "64VJC5XT2AT2",
++        "833ZM0MJGWHC",
++        "9GTFF6DC500L",
++        "9Z9H2EXKLF3T",
++        "D9XJAX5KCSU2",
++        "DC32RW0A80V1",
++        "DPYF2BAA3DKT",
++        "HEMND3SMQYB8",
++        "HNX4A2WBC34W",
++        "HSX4HYATB4E2",
++        "JBX9JLH46KVN",
++        "KF9HMZKTFC3V",
++        "LKC9YXKZWTKR",
++        "NBJBVSBNPYQB",
++        "P2M3DFJ4DEZ3",
++        "PD9AYQVMLQW6",
++        "RMNXHZKV716Y",
++        "TCDUBRWMEMNA",
++        "TXZ6RVMQA09D",
++        "UMVLWER4CD98",
++        "UPAB38G2PA02",
++        "VNSXWCWXR3VW",
++        "WA7FRJ7UABCV",
++        "X06YT1507E5M",
++        "XTSV1U9JD34T"
++      ],
++      "n_support": 31,
++      "n_contradict": 0,
++      "confidence": "med",
++      "last_seen": "2026-10-18",
+       "status": "active"
+     }
+   ]

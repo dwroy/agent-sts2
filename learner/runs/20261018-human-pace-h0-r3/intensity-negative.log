@@ -1,0 +1,33 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration/agent
+
+ ❯ tests/silent-aeonglass-intensity.test.ts (3 tests | 1 failed) 71ms
+     × carries each measured buff into the next turn's attack 26ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/silent-aeonglass-intensity.test.ts > observed Silent A10 Aeonglass Intensity > carries each measured buff into the next turn's attack
+AssertionError: expected 8 to be 9 // Object.is equality
+
+- Expected
++ Received
+
+- 9
++ 8
+
+ ❯ tests/silent-aeonglass-intensity.test.ts:33:52
+     31|     for (const [turn, gain] of [[3, 4], [6, 5], [9, 6], [12, 7]]) {
+     32|       const next = transition(turn!).at(-1)!;
+     33|       expect(next.snap.E[0]![9]["STRENGTH_POWER"]).toBe(4 + gain!);
+       |                                                    ^
+     34|       expect(next.enemyPart).toBe(26 + 4 + gain!);
+     35|     }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 2 passed (3)
+   Start at  01:02:51
+   Duration  1.08s (transform 755ms, setup 438ms, import 429ms, tests 71ms, environment 0ms)
+
