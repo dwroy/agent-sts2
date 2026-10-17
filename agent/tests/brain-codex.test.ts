@@ -24,7 +24,7 @@ import { buildRouteMap, routeView } from "../src/sim/route-map.js";
 import { input as routeInput } from "./route-fixture.js";
 import { DeepSeekClient, type DeepSeekAnswer } from "../src/brain/llm/deepseek.js";
 import type { JsonValue } from "../src/core/util/json.js";
-import { expectCodexStall } from "./codex-stall-fixture.js";
+import { expectCodexAbortGap, expectCodexStall } from "./codex-stall-fixture.js";
 import type { CodexTraceRow } from "../src/brain/engines/codex.js";
 
 const dir = mkdtempSync(join(tmpdir(), "fake-codex-"));
@@ -396,8 +396,8 @@ describe("codex runs watched: retries, stalls, timeouts and their trace", () => 
     const [row] = trace();
     expect(row).toMatchObject({ outcome: "aborted", thread_id: "t-stall", stall_ms: 120_000, first_token_ms: null });
     expect(row!["events"].map((event: any) => event.type)).toEqual(["thread.started", "turn.started"]);
-    // Aborted at 1.5 s; under load the fake process starts late, so the silence before the abort can fall under 1 s.
-    expect(row!["max_gap_ms"]).toBeGreaterThanOrEqual(500);
+    // The 1.5 s outer deadline includes preparation; validate the recorded run's exact silences.
+    expectCodexAbortGap({ ms: row!["ms"], events: row!["events"], max_gap_ms: row!["max_gap_ms"] });
     expect(row!["stderr_tail"]).toContain("retrying");
     expect(row!["stderr_tail"]).not.toContain(jwt);
     expect(row!["stderr_tail"]).not.toContain("abc123secret");
