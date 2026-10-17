@@ -2510,3 +2510,18 @@ selector于2026-10-15 13:15:58 CST从/home/dw/.codex-brain原子改为/home/dw/P
   原学习者full三方预检31处历史记录冲突后停止，已保存知识72ce99f6ddc37bfe30af8082b0f8f32027ec95d0，原canonical failed/rc0/mergednull与全部原报告/初始审计错误保留。ops已先注册同源同批pending及具体六叶窄合脚本，再尝试原live锁，**真实非阻塞门禁rc75，所见holder为原learner_retention.py PID1469852/birth113644344**；没有抢锁/停别人进程、改main/live源或versions、启动新宿主/派模型，也不sleep/轮询等待。只是实收，不冒已部署或完整交付。
   同一pending ops/codex-ops/pending-integrations/20261017-211302-fix-batch.json已绑定精确源/六SHA/原source绿/31冲突、门禁及恢复合同：下一原ops调度wake查真实祖先后，守原live锁/builder门禁执行2141/publish.py，仅窄合六叶并保当前知识/源码/记录/署名/index及两边versions；已被他人实际合入则先核回不重复。实际合入后date根双收件/decision记录实际commit/tree及纯诊断性质/预期/六叶回退；再以原2141/start-host.py沿原211302 allow-listed learner-recheck发一次实际新树宿主，结果只等原终局事件，不借源绿/旧树绿或改原失败历史。共享原WT在未合入前不回收。
   无匹配bug-infra账本，未由ops新造游戏经验/版本/shipped；策略条目和0339原58ab/c232链、0332根资源/性能与架构宽项继续各原owner。最初本ops只读runtime辅助缺re导入的NameError1已保存、更正0，不是产品或学习者失败；22份自测/源/冲突/原报告小原件已压缩逐SHA读回，原进程副本/日志/知识留原处。本轮只自有实收/门禁/具体恢复证据和根记录经gitleaks私有index提交，保并行物理材料/普通index，不改当前局/home账号模型prompt、扩学习者权限或代其他角色ACK；结束本轮。证据paper/materials/20261017-2141-ops/。
+
+## 2026-10-17 22:06:52 CST 运维实收/部署：原211302六叶G2诊断修复与214302策略回报
+
+原211302-fix的精确source `0b1807b159a1e3d7fc09aad541ea6f97be627a91` 已在原live锁内窄合：main `179ed1c628ad25c8cafecae60222b8edf1eafdf2`，实际live `deb9135b8c8e63080beae091b959a04738c64587`，树 `42a4f769d550046ed378750ce2c3429e6a9b7556`。仅三个G2生产叶及三个固定测试叶；既有知识刷新72ce99、其他源码/历史署名/记录/普通index与两边versions各自字节保持。本修复是shadow诊断/观测缓存修正，不新增行为号，最近行为发布仍V5-R388；这不是将本修复登记成R388的新行为。
+
+- 旧：G2自身预算到期被归为计算失败，跳过目标可能缓存为已观察；全零H1前缀可能落入缺DPR错误。新：仅typed G2_global_shadow到期保expected unknown、不缓存为完整观察；仅严格匹配计数/完成状态的零样本前缀保持partial及概率/DPR unknown。真实worker异常、其他阶段到期、坏completion和非空缺DPR继续失败，不降低300门槛或补假值。
+- 依据：原U5W7NUE925NK四条决策offset/len/SHA、原精确六叶与完整源码入口tsc0/sandbox481文件4417项0、撤修3败/恢复相关55过已在2141实收。原31项历史记录冲突及canonical failed/rc0/mergednull保留；这次actual publication是独立补证，不改写学习者完成历史。没有匹配bug-infra账本，未造新经验或shipped。
+- 预期：减少预算跳过和空前缀的诊断误报，允许后续有预算时重试原shadow观察；不主张对局胜率或计算提速。G2仍shadow/delivered=false；实际题面/选择/排序、预算/C1C2/SL药水及其他角色规则不变。F15/F16原未来数组与配对分母仍缺，0332根资源缺陷及宽父保持未知。
+- 回退：仅按本次publication.json六叶在当前树反向窄撤，保留其他源码、知识刷新、记录、index与既有版本；不得用整分支覆盖。当前局未重启或热改，首个实际自然消费局尚未核，不填生效局。
+
+沿原211302 allow-listed learner-recheck 已唯一启动该真实新组合宿主全检，worker PID1552208/birth113777923/nice19，精确树日志已出现Vitest RUN；完整结果pending，等待原learner-checks终局。原source full0与本host pending分列，不借源绿/旧树绿，不重跑未变源full、消费者/模型或当前对局。
+
+本轮214302-strategy-proposal done/rc0/mergednull/audit空，十原提案继续waiting，无源码/合入/版本或生产测试；68产物及八流6995唯一原行逐SHA核回，六局均Silent A10，131状态窗只作定位。16源码base/live核同（13同/3仅原署名差）、六窄祖先和19冻结经验条目核回，既有八组材料数字检查不冒生产测试或完整校准。26根CLI只补where/note追溯，原字节前缀SHA及claim/evidence/首证/prior/status/version保持，账本check0；十调度waiting处置与43小原件压缩逐SHA读回。没有新的确定源码缺陷或明确异议转达请求；此前4fc通知三角色真实交付链已另闭环，不重发。六Boss/F49低可信、完整候选/整战配对与0332宽父不关闭。仅提交自有记录/26追溯/十处置，不刷新无新复盘的paper数据、不扩权限或代其他角色ACK。
+
+证据：paper/materials/20261017-2200-ops/；原源实收/实际发布：paper/materials/20261017-2141-ops/。
