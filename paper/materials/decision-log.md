@@ -4285,3 +4285,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-17 19:42:06 CST 运维codex：1935原沙坑21c86bb树宿主完整530/5205过2跳0闭环；190142十策略waiting、191302赤牛串刺源d959e17锁内四叶发布V5-R387/live31db98183b162f9e2213884f6b8ab518fe6ff89b/tree6f81a7e61707c0f2b91647ed7963f04014fc31b3并根规则双通知，原cmd_recheck仅SHA绑定格式接续，唯一精确宿主pending。原失败/四CLI行/宽父和普通index保留，不重源full或当前局。证据paper/materials/20261017-1935-ops/。
 
 - 2026-10-17 19:53:06 CST 运维codex：194302-fix-batch无新增源码或合入阻塞，42已有修复祖先/181路径核回，原failed0null与152既有差异/空tests保持；未新增合入/号/测试或重启现局。证据paper/materials/20261017-1950-ops/。
+
+- 2026-10-17 19:59:17 CST 运维codex：V5-R387原191302精确6f81a7e树完整宿主531/5217过2跳0，两账本CLI shipped、原72e同ID经ops独立部署回执及原unassigned证明implemented；原failed0null/learner原件不改。194302十策略waiting及46追溯核回，无重测/paper/模型或现局改动，保宽父/普通index。证据paper/materials/20261017-1953-ops/。
