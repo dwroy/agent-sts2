@@ -1,0 +1,153 @@
+from pathlib import Path
+import hashlib, json, subprocess, tarfile
+
+r = Path.cwd(); p = r / 'ops/codex-ops/record-staging/20261017-1325'
+pub = r / 'paper/materials/20261017-1325-ops'
+p.mkdir(parents=True, exist_ok=True); pub.mkdir(exist_ok=True)
+load = lambda f: json.loads(f.read_bytes())
+sha = lambda raw: hashlib.sha256(raw).hexdigest()
+def write(f, v): f.write_text(json.dumps(v, ensure_ascii=False, indent=2) + '\n')
+def git(*a, cwd=r): return subprocess.check_output(['git', '-C', str(cwd), *a], stderr=subprocess.PIPE)
+def fingerprint(f):
+    h = hashlib.sha256()
+    with f.open('rb') as stream:
+        for chunk in iter(lambda: stream.read(1024 * 1024), b''): h.update(chunk)
+    return h.hexdigest()
+
+assert not (pub / 'ops-closure.json').exists()
+bid = '20261017-131302-strategy-proposal'
+state = load(r / 'ops/codex-ops/learn.json'); b = state['batches'][bid]; report = b['report']
+scratch = Path(report['report']).parent; wt = Path(b['worktree'])
+assert b['state'] == 'done' and b['rc'] == 0 and b.get('merged') is None
+assert b['proposal_audit_errors'] == [] and report['fixes'] == []
+assert report['implementation_domains'] == [] and all(v is None for v in report['tests'].values())
+assert len(report['proposal_results']) == 10 and all(x['state'] == 'waiting' for x in report['proposal_results'])
+final = load(scratch / 'completion-verification.json')
+assert final['base'] == report['base'] and final['worktree_clean']
+assert final['source_diff_bytes'] == 0 and final['staged_diff_bytes'] == 0
+assert final['ledger_own_rows_verified'] == 26 and final['all_waiting']
+assert final['tests'] == report['tests'] and final['gitleaks_exit_codes'] == [0, 0, 0, 0]
+if (wt / '.git').is_file():
+    assert git('rev-parse', 'HEAD', cwd=wt).decode().strip() == report['base']
+    assert not git('status', '--porcelain', '--untracked-files=all', cwd=wt).strip()
+    lifecycle = dict(current_git_checkout=True, actual_head=report['base'], clean=True)
+else:
+    assert [x.name for x in wt.iterdir()] == ['learner']
+    lifecycle = dict(current_git_checkout=False, original_learner_scratch_retained=True,
+       completed_checkout_reclaimed_by_original_retention=True,
+       retention_request=load(r / 'ops/codex-ops/retention/requests' / (bid + '.json')),
+       original_final_validation=final, no_restore_or_delete_by_ops=True)
+
+artifacts = load(scratch / 'artifact-manifest.json')
+for ref in artifacts:
+    f = scratch / ref['path']
+    assert f.resolve().is_relative_to(scratch.resolve())
+    assert f.stat().st_size == ref['bytes'] and fingerprint(f) == ref['sha256'], ref['path']
+material = load(scratch / 'material-checks.json')
+assert material['passed'] == 90 and len(material['checks']) == 90
+assert all(x['passed'] for x in material['checks'])
+assert load(scratch / 'evidence-verification.json')['verified_envelopes'] == 6995
+identities = load(scratch / 'runs-verified.json')
+assert len(identities) == 6
+identity_rows = identities if isinstance(identities, list) else list(identities.values())
+assert all(x['character'] == 'SILENT' and x['ascension'] == 10 for x in identity_rows)
+source = load(scratch / 'source-snapshot.json')
+assert source['base'] == report['base'] and len(source['files']) == 15
+for row in source['files']:
+    for key, ref in [('sha256', source['base']), ('prior_sha256', source['prior_base']), ('live_sha256', source['live'])]:
+        assert sha(git('show', ref + ':' + row['path'])) == row[key]
+ancestors = load(scratch / 'existing-live-ancestors.json')
+assert ancestors['base'] == report['base'] and ancestors['live'] == source['live']
+assert len(ancestors['commits']) == 11
+for row in ancestors['commits']:
+    for ref in [report['base'], source['live']]: git('merge-base', '--is-ancestor', row['commit'], ref)
+consumer = load(scratch / 'consumer-reuse-verification.json')
+assert len(consumer['results']) == 9
+reuse_proofs = []
+for result in consumer['results']:
+    for ref in result['artifacts']:
+        f = Path(ref['path']); assert f.resolve().is_relative_to(r)
+        assert fingerprint(f) == ref['sha256']
+        reuse_proofs.append(dict(path=str(f), sha256=ref['sha256'], bytes=f.stat().st_size))
+
+ledger = (r / 'paper/materials/learning/ledger.jsonl').read_bytes()
+prefix = load(scratch / 'ledger-prefix-before-cli.json')
+assert sha(ledger[:prefix['source_size']]) == prefix['sha256']
+ledger_audit = load(scratch / 'ledger-append-verification.json')
+assert ledger_audit['cli_exit_code'] == 0 and ledger_audit['verified_own_rows'] == 26
+assert ledger_audit['pre_cli_prefix_unchanged'] and ledger_audit['initial_prefix_unchanged']
+owned = []
+for ref in ledger_audit['rows']:
+    raw = ledger[ref['offset']:ref['offset'] + ref['bytes']]
+    assert sha(raw) == ref['sha256'] and json.loads(raw) == ref['row']
+    row = ref['row']
+    assert row['op'] == 'update' and row['by'] == 'learner:strategy-proposal'
+    assert set(row) <= {'op', 'id', 'ts', 'by', 'where', 'note'}
+    assert all(str(scratch) in path for path in row['where']['proposal'])
+    owned.append(raw)
+assert len(owned) == 26
+(p / 'own-ledger-rows.jsonl').write_bytes(b''.join(owned))
+
+appends = []; resolutions = []; offset = 0
+for line in (r / 'paper/materials/learning/code-proposals.jsonl').read_bytes().splitlines(keepends=True):
+    row = json.loads(line)
+    if row.get('batch') == b['key']:
+        expected = next(x for x in report['proposal_results'] if x['id'] == row['id'])
+        assert row['op'] == 'update' and row['state'] == expected['state'] == 'waiting'
+        assert row['reason'] == expected['reason'] and row['commit'] is None
+        appends.append(dict(path='paper/materials/learning/code-proposals.jsonl', text=line.decode()))
+        resolutions.append(dict(id=row['id'], dispatch_key=row['batch'], offset=offset,
+                                bytes=len(line), sha256=sha(line)))
+    offset += len(line)
+assert len(resolutions) == 10 and {x['id'] for x in resolutions} == set(b['proposal_ids'])
+
+archive = {f for f in scratch.rglob('*') if f.is_file() and f.stat().st_size < 800000
+           and f.suffix in ['.json', '.jsonl', '.md', '.py', '.txt', '.patch', '.log', '.stdout', '.stderr', '.exit']}
+archive.update(r / 'ops/codex-ops/learner' / (bid + '.' + suffix) for suffix in ['out', 'err'])
+manifest = []
+with tarfile.open(pub / 'original-small-reports.tar.gz', 'w:gz', compresslevel=6) as tar:
+    for f in sorted(archive):
+        raw = f.read_bytes(); name = str(f.relative_to(r)); tar.add(f, arcname=name, recursive=False)
+        manifest.append(dict(path=name, bytes=len(raw), sha256=sha(raw)))
+with tarfile.open(pub / 'original-small-reports.tar.gz') as tar:
+    for ref in manifest: assert sha(tar.extractfile(ref['path']).read()) == ref['sha256']
+write(pub / 'original-small-reports-manifest.json', dict(files=manifest,
+      archive_sha256=fingerprint(pub / 'original-small-reports.tar.gz'),
+      actual_readback_verified=True, originals_deleted=False,
+      original_large_evidence_and_ledger_snapshots_retained=True))
+write(pub / 'batch-readback.json', dict(batch=bid, report=report, canonical_state=b['state'],
+      final_validation=final, worktree_lifecycle=lifecycle, artifacts_verified=len(artifacts),
+      material_checks=90, previously_verified_envelopes=6995, identity_count=6,
+      source_snapshot=source, source_ancestors_verified=ancestors,
+      original_consumer_reuse_fingerprints=reuse_proofs, ledger_prefix=prefix,
+      trace_rows=26, resolutions=resolutions, source_or_new_test_or_consumer_run_by_ops=False))
+
+at = subprocess.check_output(['date', '+%Y-%m-%d %H:%M:%S %Z'], text=True).strip()
+print(at, flush=True)
+h0 = state['learning_requests']['roy-20261017-human-pace-h0']
+text = (f'\n- {at} 运维codex处理1325原131302-strategy-proposal：engine0/canonical done、mergednull/proposal audit空；实际base fe8b000d766058c687c3ca022333b9feb254cdcf、tracked/index源码差0、工作树干净，fixes=[]/implementation_domains=[]/生产tests三项null。十项逐条waiting和原调度resolution按dispatch key/ID/理由/offset/len/SHA核同，无新源码/参数、合入、版本/号、上线声明或补测试。本次只提交自有原件/记录与26原追溯行、10原resolution，保普通index和并行H0/知识/记录。\n'
+ f'  机械实收：六局Silent A10、原6995封套读回结果、90材料核验、68产物原SHA核，原15叶base/旧base/live快照逐SHA及11窄源码祖先验证。原九份完整/有界消费者成功和失败原件指纹读回，三份完整输入因五行缺decision_id拒收的历史保留；有界输入只删五行不是完整覆盖，更不从476候选actual_full_candidate_result=null推导从未执行/整战收益。ops未重新跑原消费者/模拟/原帧或改ID/验收条件，H1工程预算发布不作本提案收益证明。无新科学异议/反证，不重复发旧通知或代任何角色ACK。\n'
+ f'  26条CLI现成where/note追溯按物理offset/len/SHA核回；旧{prefix["source_size"]}字节前缀SHA {prefix["sha256"]}保持，不新增claim/support/repeat/evidence、首证/进阶/prior/status/version/shipped/effect，旧shipped不降级。归档{len(manifest)}份小原报告/提案/脚本/失败/回执/out/err，压缩包逐文件SHA实读0；大原证据/账本前后快照与原日志保原路径，原retention登记继续走原门禁，未手删。原探索路径不存在错误及旧消费者拒收均保留，不误报产品新bug或完整校准通过。\n'
+ f'  H0仍沿原130158/thread/r1续跑（本次调度state={h0["state"]}，原首回复回执见1300目录），本wake未再派发/重算107/源full或改变当前H0任务。481验证及六目标质量闸/0332根修复/H1自然验收/所有宽父保持原未完成边界，不起新研究/监听/阶段。无learner-done，不重paper_dataset；零game API/重启/现局/home/账号/模型/prompt/env改动，结束不sleep或轮询等新事件。证据paper/materials/20261017-1325-ops/。\n')
+for path in ['ops/inbox-dev.md', 'notes/for-roy.md', 'paper/materials/decision-log.md', 'notes/ops-handoff.md']:
+    with (r / path).open('ab') as f: f.write(text.encode())
+    appends.append(dict(path=path, text=text))
+write(p / 'own-appends.json', appends)
+write(p / 'extra-owned-paths.json', [])
+write(p / 'paper-owned-manifest.json', [])
+write(pub / 'ops-closure.json', dict(at=at, events=1, batch=bid, waiting=10,
+      trace_only_ledger_rows=26, original_resolution_rows=10, archived_files=len(manifest),
+      source_changed=False, new_merge_version_tests_shipped=False,
+      new_consumer_simulation_model_or_game_action=False,
+      H0_original_batch=h0.get('batch'), H0_current_scheduler_state=h0['state'],
+      parent_closure_or_other_role_ACK=False))
+(pub / 'record.py.txt').write_bytes(Path(__file__).read_bytes())
+seal = (r / 'ops/codex-ops/record-staging/20261017-1300/seal.py').read_text()
+seal = seal.replace('20261017-1300', '20261017-1325').replace('== 78', '== 26').replace('owned_ledger_rows=78', 'owned_ledger_rows=26')
+seal = seal.replace('Record two waiting strategy reports and original H0 continuation', 'Record unchanged-source strategy report and original trace links')
+seal = seal.replace('ops: archive two waiting proposal batches and resume original H0 slot', 'ops: archive131302 unchanged-source strategy and waiting dispositions')
+seal = seal.replace('Two ordinary unchanged-source strategy batches:20waiting,78 original trace-only ledger rows,20 mechanical queue resolutions.101 original small artifacts archived/read back. Freed original slots reused for one approved H0 same-thread/revision continuation through existing reconcile. Original failed history retained; no source/test/game action or broader task.',
+    'One unchanged-source strategy batch:10waiting,26 original trace-only ledger rows,10 mechanical queue resolutions. Original artifacts and consumer rejection history preserved; no new source/test/consumer/simulation/model/game action. H0 existing130158 continuation and wider gaps remain separate.')
+(p / 'seal.py').write_text(seal)
+print(json.dumps(dict(waiting=10, trace_rows=26, artifact_manifest_files=len(artifacts),
+      archived_files=len(manifest), new_code_or_tests=False)), flush=True)
