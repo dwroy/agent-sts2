@@ -13,3 +13,7 @@
 H0 notice `36fcbd1a06d722f1a1e9a8c7` 已本人读取首次模型前ENOENT失败与原线程恢复回执，已在本原生会话告知，正式两watcher阶段CLI0及原生字节存于 `h0-notice-36fcbd1a/`。旧失败保持，科学结果仍归原ops/owner交付，不代Roy ACK。
 
 原ops原生终端已观察到对精确source/base的git diff和原宿主通道状态读取，原始输出及SHA另存 `watcher-ops-native-readback.*`。这是watcher本人的只读观察，不能代填ops正式实收/发布回执或Roy ACK；后续仍以原角色实际证据为准。
+
+## 2026-10-17T10:51:26.530580+08:00 原 ops 正式实收已本人读回
+
+原 ops `ops-source-received.json` 在 2026-10-17 10:49:39 CST 明确 `source_received=true`，本人逐28叶 path/bytes/SHA、源tree/parent、patch及4296题终局logSHA读回一致，见 `watcher-ops-formal-receipt-readback.json`。该正式实收仍明确 published=false、release_id/final_tree_host=null、natural_acceptance=false；不替其后续实际发布结果或Roy ACK。watcher本轮源码任务到此完成并停止。

@@ -1,7 +1,7 @@
 {
   "id": "H1",
   "owner": "watcher-codex1",
-  "state": "source_sent_pending_actual_ops_receipt_release_host",
+  "state": "source_task_complete_original_ops_formally_received",
   "requirements": [
     "budget_and_fallback_telemetry",
     "finite_B2_B3_actual_prefixes_SE",
@@ -79,7 +79,7 @@
       "limits": "fixed production-loop scope/equivalence only, not a natural-run result"
     },
     "fixed_tests_and_exact_ops_release": {
-      "state": "source_entry0; actual release and host pending",
+      "state": "source_entry0 and original_ops_received; publication/exact host pending original chain",
       "evidence": [
         "source-before-full-r2.json",
         "source-sandbox-full-r2.log",
@@ -94,5 +94,9 @@
       "owner": "await Claude subsequent assignment; not started by source task"
     }
   },
-  "source_commit": "7af803c06e82e2aafe6a595fab7a23e0f3f44fb3"
+  "source_commit": "7af803c06e82e2aafe6a595fab7a23e0f3f44fb3",
+  "ops_received": {
+    "path": "paper/materials/20261017-human-pace-h1/ops-source-received.json",
+    "sha256": "41eabf79ef01bbe97bbb8e403659b9ddc22d0aee89f2d14a545d2e94e0e8090e"
+  }
 }
