@@ -27,7 +27,8 @@ def live_dir(root):
 
 def read_report(path):
     try:
-        text = open(path, encoding="utf8").read()
+        with open(path, encoding="utf8") as handle:
+            text = handle.read()
     except OSError:
         return {}
     for block in reversed(re.findall(r"```json\s*([\s\S]*?)```", text)):
