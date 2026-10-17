@@ -11,6 +11,7 @@ import { slimInput } from "../src/sim/boss-sim.js";
 import { board as fightBoard } from "./boss-sim-fixture.js";
 import type { DeckSimRunner } from "../src/sim/build-sim-pool.js";
 import { setKnowledgeCharacter } from "../src/knowledge/files.js";
+import { supportCoreDigest, type ConstructionSupport } from "../src/construction/support.js";
 vi.mock("../src/sim/boss-trust.js", async (original) => ({ ...await original<object>(), bossTrustReason: () => null }));
 afterEach(() => { vi.restoreAllMocks(); vi.useRealTimers(); vi.unstubAllEnvs(); setKnowledgeCharacter(null); });
 const pool: GlobalBossPool = { character: "silent", ascension: 10, unknown: [], unit: "observed_fight_records_including_retries",
@@ -32,6 +33,32 @@ async function facts() {
   const f = fixture();
   return evaluateCardShadow({ input: f.input, env: f.environment, cores: [f.core], plan: null, pool, originalB3: f.cache, setup: null });
 }
+
+it("passes bounded support evidence to shadow Jev without changing core requirements or ranking", async () => {
+  const f = fixture(), candidate = f.input.options.find((row) => row.id && row.id !== f.input.options[0]!.id)!;
+  expect(candidate).toBeDefined(); candidate.upgraded = false;
+  const supportData: ConstructionSupport = { schema: "construction-support-v1", character: "silent", version: "fixed",
+    entries: [{ id: "fixed-observation", core: f.core.id, core_sha256: supportCoreDigest(f.core),
+      component: { kind: "card", id: candidate.id!, upgraded: false }, ascensions: [10], confidence: "low",
+      effect: "fixed local effect", conditions: "local only; net benefit unknown", necessary: null, substitutes: null,
+      upgrade_comparison: null, experience: ["fixed-experience"], evidence: [{ run: "AAAAAAAAAAAA", ascension: 10,
+        floor: 48, attempt: 1, turn: 3, outcome: "died", outcome_turn: 8,
+        sources: [1, 2].map((offset) => ({ path: "fixed.jsonl", offset, bytes: 1, sha256: "a".repeat(64) })) }] }] };
+  const plan = { construction: { primary: "P" } } as Parameters<typeof evaluateCardShadow>[0]["plan"];
+  const args = { input: f.input, env: f.environment, cores: [f.core], plan, pool, originalB3: f.cache, setup: null };
+  const before = JSON.stringify({ input: f.input, core: f.core }), baseline = await evaluateCardShadow({ ...args, supportData: null });
+  const result = await evaluateCardShadow({ ...args, supportData });
+  expect(result.rows.find((r) => r.key === candidate.key)).toMatchObject({ core_component: false, support_component: true,
+    support_observations: [{ confidence: "low", necessary: null }] });
+  expect(result.module_first).toBe(baseline.module_first); expect(result.module_order).toEqual(baseline.module_order);
+  expect(JSON.stringify({ input: f.input, core: f.core })).toBe(before);
+  const ask = vi.fn<JevClient["ask"]>(async () => response("skip"));
+  const observed = await askCardShadow(result, { ask }, result.module_first);
+  expect(observed.state.facts.find((r) => r.key === candidate.key)).toMatchObject({ support: true,
+    support_observations: [{ id: "fixed-observation", effect: "fixed local effect", necessary: null,
+      evidence: [{ outcome: "died" }] }] });
+  expect(observed.delivered).toBe(false); expect(ask).toHaveBeenCalledTimes(1);
+});
 
 it("reuses only this question's paired cache, uses win rather than S, and records dilution as inventory only", async () => {
   const f = fixture(), before = JSON.stringify(f.environment.state.raw);
