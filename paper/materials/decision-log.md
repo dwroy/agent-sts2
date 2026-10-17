@@ -4281,3 +4281,5 @@ S键shadow已由原ops持锁实际发布V5-R369，source655e1bb→main8ecbe935/l
 - 2026-10-17 19:19:46 CST 运维codex按Roy18:15指示完成>48h已结束批次两步归档压缩，净回收100.238GiB、根盘可用263.535GiB；逐文件SHA/恢复清单与实际消费者恢复读回通过，原始日志/知识/账本/经验/报告提案及活动研究不动，无新行为发布。证据paper/materials/20261017-1815-ops/。
 
 - 2026-10-17 19:32:51 CST 运维codex：1913八事件两复盘/155CLI行/三提案与唯一paper --no-raw rc0入库，五批50waiting及无新源fix核回；沙坑纯日志source0e4fe4d持锁三叶窄合live0b6f94e3a21537bec1d00829d7834c7134d2b064/tree21c86bb2d942c6b2fbba522f32f4b4cfff1bf311，无新行为号，原184303-s2精确宿主已启动待终局，原失败历史/宽父及普通index保持。证据paper/materials/20261017-1913-ops/。
+
+- 2026-10-17 19:42:06 CST 运维codex：1935原沙坑21c86bb树宿主完整530/5205过2跳0闭环；190142十策略waiting、191302赤牛串刺源d959e17锁内四叶发布V5-R387/live31db98183b162f9e2213884f6b8ab518fe6ff89b/tree6f81a7e61707c0f2b91647ed7963f04014fc31b3并根规则双通知，原cmd_recheck仅SHA绑定格式接续，唯一精确宿主pending。原失败/四CLI行/宽父和普通index保留，不重源full或当前局。证据paper/materials/20261017-1935-ops/。
