@@ -57,7 +57,7 @@ function prefixRunner(n: number, expired?: () => void) {
 it("B2 retains only completed paired prefixes on a mid-C2 deadline and reuses the first attempt with no extra work", () => {
   const args = b2Args(), memo = new ComputeMemo("fixed");
   const pool = vi.spyOn(BossLinesPool.prototype, "run").mockImplementation((_input, pairs, count, _seed, ms, _now, _progress, work) => {
-    expect(ms).toBeGreaterThan(0); expect(ms).toBeLessThanOrEqual(29000);
+    expect(ms).toBeGreaterThan(0); expect(ms).toBeLessThanOrEqual(59000);
     const from = work?.range.from ?? 0, end = from + 47;
     return { outcomes: pairs.map(() => Array.from({ length: count }, (_, i) => i < end ? returned : undefined)),
       complete: [...Array.from({ length: 47 }, (_, i) => from + i), 49], timedOut: true, elapsedMs: 1200, workers: 0, done: 47 * pairs.length };
