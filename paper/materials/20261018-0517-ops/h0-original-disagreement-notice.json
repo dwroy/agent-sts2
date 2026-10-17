@@ -1,0 +1,23 @@
+{
+  "id": "c21633a403f51f663ca1db99",
+  "kind": "disagreement",
+  "request_id": "roy-20261017-human-pace-h0",
+  "message": "[{\"claim\": \"旧模型遗漏女王 Burn Bright 的盟友加力路径，原13处差尚未隔离。\", \"finding\": \"121个就绪存活窗口、29局支持聚合体净增1力量；修正仅覆盖已见Silent A10双敌签名。\", \"evidence\": [\"ZVYUL2YP3518 F48 T3–T8、5X2GHKJ89PN1 T3–T5、CVJ4MLQF4CSY T6\", \"learner/runs/20261018-human-pace-h0-r3-followup/actor-transitions.json\", \"learner/runs/20261018-human-pace-h0-r3-followup/actor-probe-output.json\"], \"recommendation\": \"保留已上线窄修及适用边界，不扩其他进阶或纸鹤A2范围。\", \"existing_entry_ids\": [\"silent-g1a-queen-calibration-boundary\", \"silent-queen-burn-bright-ally-strength\"]}, {\"claim\": \"旧r3初筛中的Crab两处+6和TestSubject两处换相差可能是机制缺口。\", \"finding\": \"旧快照多推进了下一玩家回合末的毒结算；正确首命令后端点中，原状态已与实盘相符。\", \"evidence\": [\"T082DRCUHRRD Crab T8 / TestSubject T8、9TG1RP5LFAAK Crab T6、YZWV37N2MU6N TestSubject T4\", \"learner/runs/20261018-human-pace-h0-r3-followup/phase-probe-output.json\", \"learner/runs/20261018-human-pace-h0-r3-followup/other-first-command-fields-post-hooks.json\"], \"recommendation\": \"不据此减力量6或另改换相；保R386，保留旧差额与更正证据。\", \"existing_entry_ids\": [\"silent-h0-kaiser-crab-calibration-boundary\", \"silent-g1a-test-subject-calibration-boundary\", \"silent-h0-end-turn-measurement-boundary\"]}, {\"claim\": \"本轮初筛把首个ready/settled后继当作轮初钩子已结束。\", \"finding\": \"YZWV T14首ready仍为117HP/毒9；实际选牌后、首出牌前变为114HP/毒15，与模型一致。\", \"evidence\": [\"YZWV37N2MU6N F48 T13→T14\", \"learner/runs/20261018-human-pace-h0-r3-followup/subject-t14-hook-sequence.json\", \"learner/runs/20261018-human-pace-h0-r3-followup/subject-t14-post-hooks-probe.json\"], \"recommendation\": \"按真实钩子、选择及首玩家动作顺序核端点，不把3HP差归为伤害倍率错误。\", \"existing_entry_ids\": [\"silent-h0-end-turn-measurement-boundary\"]}, {\"claim\": \"本轮排查假设：T14端点问题可能也使冻结T1选错题面；此假设不是Roy结论。\", \"finding\": \"295个目标T1均与首实际战斗动作指纹帧相符，不支持该推广。\", \"evidence\": [\"TCDUBRWMEMNA F48 attempt5完整state相同；其余294同原字节\", \"learner/runs/20261018-human-pace-h0-r3-followup/frozen-t1-first-action-audit-compact.json\"], \"recommendation\": \"保原冻结输入、切分、标签和缓存；继续核未来抽牌、策略及资源契约。\", \"existing_entry_ids\": [\"silent-g1a-fixed-production-boundary\"]}, {\"claim\": \"旧女王边界的Brier为0.2186/0.2204，穿透比1.065/1.176；新修需原闸重验。\", \"finding\": \"修后Brier降为0.1644/0.1874，穿透比升至1.319/1.460；六目标仍未全部过闸。\", \"evidence\": [\"原固定31个独立女王验证局，未知行未删除\", \"learner/runs/20261018-human-pace-h0-r3-followup/before-after.json\", \"learner/runs/20261018-human-pace-h0-r3-followup/calibration-slices.json\"], \"recommendation\": \"保低可信和原四闸，不以状态修正、增加样本或调阈值冒充可信度修复。\", \"existing_entry_ids\": [\"silent-g1a-queen-calibration-boundary\", \"silent-queen-burn-bright-ally-strength\"]}]",
+  "request_sha256": "68aa75e2428212061fd269cc26a45f15ba44b16907336ddb124092108b9946a4",
+  "created_at": 1792271947.0926213,
+  "route": [
+    "learner",
+    "ops",
+    "watcher",
+    "Roy"
+  ],
+  "ops_forwarded": {
+    "path": "/home/dw/Projects/agent-sts2/ops/codex-ops/learning-notices/receipts/c21633a403f51f663ca1db99.ops-forwarded.json",
+    "sha256": "ed067407f761d7307d0905d888ce5213c916b8a2094c8445ffe9e7177b6670cf",
+    "at": 1792271947.0988324
+  },
+  "watcher_received": false,
+  "roy_notified": false,
+  "last_queued_at": 1792271947.0992122,
+  "last_queue": "/home/dw/Projects/agent-sts2/ops/codex-ops/queue/1792271947099089114-learning-attention.md"
+}
