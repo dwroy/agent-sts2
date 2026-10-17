@@ -149,6 +149,23 @@ def timing(rows, field, default_limit):
             "missing_budget_rows": len(rows) - len(budgets)}
 
 
+def unique_b2(rows):
+    jobs, missing = {}, 0
+    for row in rows:
+        sim = row.get("boss_sim")
+        if not isinstance(sim, dict): continue
+        completion = sim.get("completion") or {}
+        key = completion.get("attempt_id")
+        if not key:
+            missing += 1
+            key = f"unidentified_row:{row['_source']['off']}"
+        if key not in jobs or (sim.get("samples") or 0) >= (jobs[key].get("boss_sim", {}).get("samples") or 0):
+            jobs[key] = row
+    return {"deduplicated_completion_rows": h1.simulation(list(jobs.values()), "B2"),
+            "rows_without_attempt_id": missing,
+            "limits": "Identical completion attempt_id counted once at greatest logged sample count. Missing IDs remain separate unknown jobs; no invented matches."}
+
+
 def direction_analysis(rows):
     coverage, reasons, checkpoints = defaultdict(Counter), Counter(), []
     distinct = {}
@@ -254,22 +271,33 @@ def main():
         ds = [r["direction"] for r in directions if r["run_id"] == run]
         card_time, jev_time, dir_time = timing(rs, "card_time_budget", 5000), timing(rs, "jev_time_budget", 1000), timing(ds, "time_budget", 60000)
         jev_tokens = [r["jev_meta"] for r in rs if isinstance(r["jev_meta"], dict)]
+        usage_known = [m for m in jev_tokens if numeric(m.get("input_tokens")) and m["input_tokens"] > 0]
         success_tokens = sum(m.get("input_tokens", 0) or 0 for m in jev_tokens)
         boss_ds = [d for d in streams["decisions"] if d["run_id"] == run and (d.get("sl_attempt") or 1) == 1
-                   and d.get("screen") == "COMBAT" and (d.get("time_budget") or {}).get("kind") == "boss"]
+                   and d.get("screen") == "COMBAT" and d.get("floor") in {b["floor"] for b in info["funnel"]["bosses"]}]
         per_run[run] = {"pacing": info, "card_agreements": card_agreements(rs),
                         "time": {"card_module": card_time, "Jev": jev_time, "direction_module": dir_time,
                                  "Jev_latency_ms": stats(r.get("jev_latency_ms") for r in rs),
                                  "recorded_increment_ms": sum(t["actual_ms"]["sum"] for t in (card_time, jev_time, dir_time)),
                                  "limits": "sum disjoint H2 outer budgets only; unmeasured overhead and counterfactual net slowdown unknown"},
-                        "cost": {"Jev_shadow_observations": len(rs), "successful_usage_records": len(jev_tokens),
+                        "cost": {"Jev_shadow_observations": len(rs), "successful_response_metadata_records": len(jev_tokens),
+                                 "successful_usage_records": len(usage_known),
+                                 "successful_metadata_with_zero_or_missing_input_usage": len(jev_tokens) - len(usage_known),
                                  "input_tokens_recorded": success_tokens,
                                  "output_tokens_recorded": sum(m.get("output_tokens", 0) or 0 for m in jev_tokens),
                                  "fallback_without_usage_records": sum(r["jev_fallback"] is not None and not r["jev_meta"] for r in rs),
                                  "request_ids": [m.get("request_id") for m in jev_tokens],
                                  "estimated_USD_recorded_input_only": success_tokens / 1_000_000 * .042,
+                                 "actual_billed_total_USD": None,
                                  "rate_scope": "frozen repository pricing.ts $0.042/MTok input, output free; estimate not bill or current external quote; failed request usage unknown"},
                         "Boss_first_attempt_B2": h1.simulation(boss_ds, "B2"),
+                        "Boss_first_attempt_B2_unique": unique_b2(boss_ds),
+                        "Boss_first_attempt_B2_by_floor": {str(f): h1.simulation([d for d in boss_ds if d["floor"] == f], "B2")
+                            for f in sorted({d["floor"] for d in boss_ds})},
+                        "accepted_plan_coverage_by_entered_act": [{"act": act,
+                            "original_plan_updates": sum(p["run_id"] == run and (p.get("plan") or {}).get("act") == act for p in streams["run-plans"]),
+                            "sidecar_plan_projections": sum(s["run_id"] == run and isinstance(s.get("act_plan"), dict) and s["act_plan"].get("act") == act for s in streams["human-pace-shadow"])}
+                            for act in info["funnel"]["entered_acts"]],
                         "wake": {"any_direction_change_questions": sum(r["wake_any_direction_change"] for r in rs),
                                  "any_uncovered_questions": sum(r["wake_any_uncovered"] for r in rs),
                                  "either_condition_questions": sum(r["wake_any_direction_change"] or r["wake_any_uncovered"] for r in rs),
@@ -283,6 +311,8 @@ def main():
               "plans": plan_analysis(streams["run-plans"], streams["human-pace-shadow"]),
               "wake_questions": [r for r in cards if r["wake_any_direction_change"] or r["wake_any_uncovered"]],
               "definitions": "analysis-definitions.md frozen before any admitted startup",
+              "tools": [{"path": str(p.relative_to(ROOT)), "sha256": hashlib.sha256(p.read_bytes()).hexdigest()}
+                        for p in (Path(__file__), H1 / "analyze.py")],
               "no_causal_or_mechanism_claim": True}
     (HERE / "analysis-final.json").write_text(json.dumps(output, ensure_ascii=False, indent=2) + "\n")
     fields = ["run_id", "floor", "act", "decision_id", "actual_decider", "brain_actual", "jev_success_choice", "jev_fallback",
