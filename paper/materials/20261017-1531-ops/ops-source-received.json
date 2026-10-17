@@ -1,0 +1,229 @@
+{
+  "at": "2026-10-17 15:33:24 CST",
+  "batch": "20261017-151301-fix-batch",
+  "source": "660b194c950f017e356a4b3da952e127c7e5c768",
+  "source_commit": "660b194c950f017e356a4b3da952e127c7e5c768",
+  "source_parent": "5bd559de30f6a23739f3748426ab5be2321ecd0c",
+  "source_tree": "a3a172184c4cdbd18493665b99a15e4bb2b30342",
+  "paths": [
+    "agent/src/sim/boss-lines.ts",
+    "agent/tests/human-pace-sampling.test.ts"
+  ],
+  "source_sha256": {
+    "agent/src/sim/boss-lines.ts": "bd3174609f2f71de360ea686a57659f9ba7a136b63bad6fbd9c69f05ff4ccdd4",
+    "agent/tests/human-pace-sampling.test.ts": "eb4793d2a725988ff4516fa36c04e6c9b9738c992d23f98fcc8aaf95c643d076"
+  },
+  "patch_sha256": "0e5adc006ac53682583d06b07b252f451262ca3acc5f6320bd7170cacf37a272",
+  "classification": "Pure engineering B2 sample identity repair changing required-computation service behavior; independently numbered V5 behavior release.",
+  "accepted_for_narrow_integration": true,
+  "checks": {
+    "original_validation": {
+      "base": "5bd559de30f6a23739f3748426ab5be2321ecd0c",
+      "source": "660b194c950f017e356a4b3da952e127c7e5c768",
+      "source_worktree_clean": true,
+      "source_sandbox": {
+        "exit": 0,
+        "tsc": 0,
+        "vitest": 0,
+        "files": 474,
+        "cases": 4373,
+        "segments": [
+          {
+            "files": 473,
+            "cases": 4362
+          },
+          {
+            "files": 1,
+            "cases": 11
+          }
+        ]
+      },
+      "negative_control": {
+        "only_source_stashed": "agent/src/sim/boss-lines.ts",
+        "exit": 1,
+        "failed": 1,
+        "passed": 11,
+        "total": 12
+      },
+      "restored": {
+        "exit": 0,
+        "files": 1,
+        "cases": 12
+      },
+      "reruns_due_to_timeouts": [],
+      "live": {
+        "lock": "/home/dw/Projects/agent-sts2/ops/live-merge.lock",
+        "preflight_exit": 42,
+        "merge_tree_exit": 1,
+        "refresh_commit": "7b61eaa636148221cbfc166067662e481ac7e0a7",
+        "conflicts": [
+          "CONFLICT (modify/delete): docs/human-pace-plan.md deleted in HEAD and modified in codex-fix-silent-20261017-151301.  Version codex-fix-silent-20261017-151301 of docs/human-pace-plan.md left in tree.",
+          "CONFLICT (content): Merge conflict in notes/fix-queue-v4.md",
+          "CONFLICT (content): Merge conflict in notes/for-roy.md",
+          "CONFLICT (content): Merge conflict in notes/lessons.md",
+          "CONFLICT (content): Merge conflict in notes/ops-handoff.md",
+          "CONFLICT (content): Merge conflict in ops/inbox-dev.md",
+          "CONFLICT (content): Merge conflict in paper/data/README.md",
+          "CONFLICT (content): Merge conflict in paper/data/commits.csv",
+          "CONFLICT (content): Merge conflict in paper/data/cost-curve-silent.csv",
+          "CONFLICT (content): Merge conflict in paper/data/cost-silent.csv",
+          "CONFLICT (content): Merge conflict in paper/data/cost-sources.json",
+          "CONFLICT (content): Merge conflict in paper/data/cost-unattributed.csv",
+          "CONFLICT (content): Merge conflict in paper/data/decisions_by_label.csv",
+          "CONFLICT (content): Merge conflict in paper/data/learning-curve-silent.csv",
+          "CONFLICT (content): Merge conflict in paper/data/runs.csv",
+          "CONFLICT (content): Merge conflict in paper/data/summary.json",
+          "CONFLICT (content): Merge conflict in paper/data/verification.json",
+          "CONFLICT (modify/delete): paper/materials/20261017-human-pace-control/checkpoint.json deleted in HEAD and modified in codex-fix-silent-20261017-151301.  Version codex-fix-silent-20261017-151301 of paper/materials/20261017-human-pace-control/checkpoint.json left in tree.",
+          "CONFLICT (modify/delete): paper/materials/20261017-human-pace-h1/checkpoint.json deleted in HEAD and modified in codex-fix-silent-20261017-151301.  Version codex-fix-silent-20261017-151301 of paper/materials/20261017-human-pace-h1/checkpoint.json left in tree.",
+          "CONFLICT (modify/delete): paper/materials/20261017-human-pace-h1/natural/checkpoint.json deleted in HEAD and modified in codex-fix-silent-20261017-151301.  Version codex-fix-silent-20261017-151301 of paper/materials/20261017-human-pace-h1/natural/checkpoint.json left in tree.",
+          "CONFLICT (modify/delete): paper/materials/20261017-human-pace-h1/natural/report.md deleted in HEAD and modified in codex-fix-silent-20261017-151301.  Version codex-fix-silent-20261017-151301 of paper/materials/20261017-human-pace-h1/natural/report.md left in tree.",
+          "CONFLICT (content): Merge conflict in paper/materials/decision-log.md",
+          "CONFLICT (modify/delete): paper/materials/learning/code-proposals.jsonl deleted in HEAD and modified in codex-fix-silent-20261017-151301.  Version codex-fix-silent-20261017-151301 of paper/materials/learning/code-proposals.jsonl left in tree.",
+          "CONFLICT (content): Merge conflict in paper/materials/learning/ledger.jsonl",
+          "CONFLICT (content): Merge conflict in paper/materials/silent/cost.md"
+        ],
+        "merged": null,
+        "source_merged": false,
+        "post_merge_tests": null,
+        "release_id": null
+      },
+      "ledger": {
+        "bug_infra_matches": 0,
+        "appends": 0,
+        "shipped": false
+      },
+      "secret_scans": {
+        "source_patch": 0,
+        "refresh_patch": 0
+      },
+      "limits": [
+        "Original failure rows omit both sample arrays; fixed results reproduce the caller path, not the complete dirty runtime.",
+        "The production edit changes only independent reference IDs for unequal prefixes; no sample allocation, ordering, S use, thresholds, budget, potion or SL policy change.",
+        "Ironclad does not enable quantitativeEnabled/captureBossMargin; equal-length and completed-adaptive paths preserve their existing identity behavior."
+      ]
+    },
+    "source_full_log_sha256": "f668b316fb3d748632f8336317a7234371d754ec170d7842105d8dfa322fd49b",
+    "source_full_repeated": false,
+    "prior_original_failure_cases": 3,
+    "prior_fixes_verified_ancestors": 40
+  },
+  "canonical_state": "failed",
+  "canonical_rc": 0,
+  "canonical_merged": null,
+  "native": {
+    "batch": "20261017-151301-fix-batch",
+    "thread": "01a148b5-15b3-7912-ac88-06134ccda35c",
+    "cwd": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261017-151301",
+    "event_log": "learner/runs/20261017-151306-e74fd652-df89-413a-9647-2736a8aeed79-fix-batch.jsonl",
+    "registered_launch_batch": "20261017-151301-fix-batch",
+    "original_lease": "b248c33009bf7480c767b3aeb136c3758e044072f791af4fc4f3b87cd7a57168",
+    "native_context": {
+      "source": "ops/codex-ops/accounts/codex1/learner/sessions/2026/10/17/rollout-2026-10-17T15-13-09-01a148b5-15b3-7912-ac88-06134ccda35c.jsonl",
+      "offset": 50305,
+      "bytes": 5152,
+      "sha256": "6c0a7db9e6b663cc47ff9deec3ff8c3b67c22dfb7052ae024985f14ff392a25c",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "sandbox": {
+        "type": "workspace-write",
+        "writable_roots": [
+          "/home/dw/Projects/agent-sts2",
+          "/home/dw/Projects/agent-sts2/.git",
+          "/home/dw/Projects/agent-sts2/.git/worktrees/codex-fix-silent-20261017-151301"
+        ],
+        "network_access": false,
+        "exclude_tmpdir_env_var": false,
+        "exclude_slash_tmp": false
+      },
+      "approval_policy": "never"
+    },
+    "native_user_input": {
+      "offset": 58300,
+      "bytes": 13081,
+      "sha256": "0401b7385827e2e02e348d389656a61488f2ee65a7aed83a52e37bab11ff3fe7",
+      "input_sha256": "413acdf2bca2b5fd0b8462083dd2d02e54bc8b3ca472ccb46db14bc2f481130e"
+    },
+    "original_header_events": [
+      {
+        "offset": 0,
+        "bytes": 14892,
+        "sha256": "2956e7ba7226b8a7720f03a5c24b38f5a59bee41d4e8104a88264724e889600a",
+        "type": "learner_launch",
+        "attempt": null,
+        "code": null
+      },
+      {
+        "offset": 14892,
+        "bytes": 367,
+        "sha256": "4b9db2b222bff178eb68d9db5c20571b8c0d7b852733158798c0316f7d339e12",
+        "type": "learner_startup_attempt",
+        "attempt": 1,
+        "code": null
+      },
+      {
+        "offset": 18271,
+        "bytes": 77,
+        "sha256": "42b6d46a355df2f214eb91fc2ff7c718f5b611d98d51fedb79db621b163320ff",
+        "type": "thread.started",
+        "attempt": null,
+        "code": null
+      }
+    ],
+    "startup_attempts": 1,
+    "failed_startups_preserved": 0,
+    "no_model_or_manual_restart": true
+  },
+  "observed_live": "7b61eaa636148221cbfc166067662e481ac7e0a7",
+  "original_knowledge_refresh": "7b61eaa636148221cbfc166067662e481ac7e0a7",
+  "report": {
+    "task": "fix-batch",
+    "base": "5bd559de30f6a23739f3748426ab5be2321ecd0c",
+    "fixes": [
+      {
+        "item": "h1-b2-margin-sample-identity：B2后续批次到期时参考前缀ID长度错误",
+        "commit": "660b194c950f017e356a4b3da952e127c7e5c768",
+        "test": "agent/tests/human-pace-sampling.test.ts",
+        "fails_without_fix": true
+      }
+    ],
+    "skipped": [
+      {
+        "item": "出牌、药水、SL、终局、路线及角色机制条目",
+        "reason": "策略类；保留既有独立strategy-proposal链。"
+      },
+      {
+        "item": "silent-0332资源契约根因",
+        "reason": "证据不足；沿原专用owner继续。"
+      },
+      {
+        "item": "目录生命周期与磁盘压力宽项",
+        "reason": "证据不足；现有窄修不代表根因解决。"
+      },
+      {
+        "item": "架构、调度公平性与归因调查",
+        "reason": "独立任务，超出普通纯bug批次。"
+      },
+      {
+        "item": "core-build-notify-222802-rc2旧通知恢复",
+        "reason": "证据不足；不能确认未送达，未重发。"
+      },
+      {
+        "item": "Codex缓存、DPR/B2性能及历史宿主超时根因",
+        "reason": "证据不足或独立性能调查。"
+      }
+    ],
+    "merged": null,
+    "tests": {
+      "tsc": 0,
+      "vitest": 0,
+      "cases": 4373
+    },
+    "code_proposals": [],
+    "implementation_domains": [],
+    "report": "/home/dw/Projects/agent-sts2/learner/runs/20261017-151306-e74fd652-df89-413a-9647-2736a8aeed79-fix-batch/report.md"
+  },
+  "original_sample_arrays_missing": true,
+  "limits": "Fixed abstract outcomes reproduce this caller path; missing original sample arrays and exact dirty runtime remain unknown. No claim of 0332 root repair, new game knowledge, trust calibration, B2 performance fix or natural acceptance.",
+  "no_other_role_ACK": true
+}
