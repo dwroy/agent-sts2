@@ -1,0 +1,389 @@
+{
+  "at": "2026-10-17 14:29:19 CST",
+  "batch": "20261017-141302",
+  "run": "25MFNPAE37R2",
+  "canonical": {
+    "runs": [
+      "25MFNPAE37R2"
+    ],
+    "pid": 4052594,
+    "started": "2026-10-17 14:13",
+    "state": "done",
+    "reason": "tick",
+    "character": "silent",
+    "proposal_policy": "Roy-2026-10-07-learning",
+    "pane": "wJ:p1AD",
+    "rc": 0,
+    "finished": "2026-10-17 14:27",
+    "done": [
+      "25MFNPAE37R2"
+    ],
+    "missing": [],
+    "proposal_audit_errors": [],
+    "proposal_audit_skipped": false
+  },
+  "report": {
+    "task": "postmortem",
+    "appended": [
+      "25MFNPAE37R2"
+    ],
+    "skipped": [],
+    "bugs": [],
+    "ledger": {
+      "added": [],
+      "updated": [
+        "silent-0020",
+        "silent-0385",
+        "silent-0418"
+      ],
+      "repeats": [],
+      "check": 0
+    },
+    "code_proposals": [
+      "silent-proposal-20332373fe0ab68b"
+    ],
+    "implementation_domains": [
+      "combat",
+      "potion"
+    ],
+    "report": "/home/dw/Projects/agent-sts2/learner/runs/20261017-141308-8e3eb449-8ec0-4a5f-a32c-8831022e42fe-postmortem/report.md"
+  },
+  "runtime": {
+    "batch": "20261017-141302",
+    "thread": "01a1487e-3108-7113-957a-4261f55a799f",
+    "cwd": "/home/dw/Projects/agent-sts2",
+    "event_log": "learner/runs/20261017-141308-8e3eb449-8ec0-4a5f-a32c-8831022e42fe-postmortem.jsonl",
+    "registered_launch_batch": "20261017-141302",
+    "original_lease": "6d7a92ca6695951a47cb9349b4eaf7abe2587daa2447209f3960f70a3e1e3a4a",
+    "native_context": {
+      "source": "ops/codex-ops/accounts/codex1/learner/sessions/2026/10/17/rollout-2026-10-17T14-13-12-01a1487e-3108-7113-957a-4261f55a799f.jsonl",
+      "offset": 49292,
+      "bytes": 4654,
+      "sha256": "83d8a624f98e5eb962b802abbcfdc62a286cc35098e1c81e5a4ab248dcf5c8ed",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "sandbox": {
+        "type": "workspace-write",
+        "writable_roots": [
+          "/home/dw/Projects/agent-sts2/.git"
+        ],
+        "network_access": false,
+        "exclude_tmpdir_env_var": false,
+        "exclude_slash_tmp": false
+      },
+      "approval_policy": "never"
+    },
+    "native_user_input": {
+      "offset": 56529,
+      "bytes": 15345,
+      "sha256": "426a341751a0f2210f7d6bca0f965d3dfcecc27fa2db9ee836b2e374b111228b",
+      "input_sha256": "af52015fb8f523e96fe839600b2f973772b81ad31216dafd28370083ccdc8042"
+    },
+    "original_header_events": [
+      {
+        "offset": 0,
+        "bytes": 16866,
+        "sha256": "149091333325aca77b6b878114ed6aae400bd18aedaa021f4d121d5e5cdfc2a6",
+        "type": "learner_launch",
+        "attempt": null,
+        "code": null
+      },
+      {
+        "offset": 16866,
+        "bytes": 360,
+        "sha256": "28c350a30a9b5e5f9ac8f6c1ce16858291eb6b79e64337665d14bce6fae00634",
+        "type": "learner_startup_attempt",
+        "attempt": 1,
+        "code": null
+      },
+      {
+        "offset": 20238,
+        "bytes": 77,
+        "sha256": "51ad75dcc8360442d852175ff72f33ef4184fe868ea14521b2aca7cb6a7a6044",
+        "type": "thread.started",
+        "attempt": null,
+        "code": null
+      }
+    ],
+    "startup_attempts": 1,
+    "failed_startups_preserved": 0,
+    "no_model_or_manual_restart": true
+  },
+  "new_pure_bugs": [],
+  "original_lesson_prefix": {
+    "bytes": 9481165,
+    "sha256": "b4ffb5647676d3e5f408a714e5603c3841f1b8614f4f08ff83ede34be831f01d"
+  },
+  "lesson_append_bytes": 24860,
+  "lesson_append_sha256": "ba17d81c79a8baf7155e9bc297433addf732cbbb9cf3210465924e041f0d0d2a",
+  "derived_evidence_fingerprints": [
+    {
+      "path": "learner/runs/20261017-141308-8e3eb449-8ec0-4a5f-a32c-8831022e42fe-postmortem/decisions.jsonl",
+      "bytes": 29494162,
+      "sha256": "59697ffb84590d55db87c12aa427764c57b6ffb0d98a73b923251475832b1e01",
+      "original_reference_count": 1006,
+      "reference_sha256": "318ab27a489e4e9081c67cfaf4e1e623354110592057d996ee10c9ee39d89c77",
+      "raw_offset_sha_verified": true
+    },
+    {
+      "path": "learner/runs/20261017-141308-8e3eb449-8ec0-4a5f-a32c-8831022e42fe-postmortem/states.jsonl",
+      "bytes": 40634012,
+      "sha256": "f40dbcf0cada041bd6875572b1baaf03d8f1669c57243651d579c75dca75acf9",
+      "original_reference_count": 1056,
+      "reference_sha256": "33f969b4f49c6d9e79092cc4a963a5e852d5453b8271047deaab1b9d424852ac",
+      "raw_offset_sha_verified": true
+    },
+    {
+      "path": "learner/runs/20261017-141308-8e3eb449-8ec0-4a5f-a32c-8831022e42fe-postmortem/brain.jsonl",
+      "bytes": 8194890,
+      "sha256": "7556c5653a0d67dd3c6b97a3c65dbd7ff29bd2d2df3a6f25110ad0a754e2b977",
+      "original_reference_count": 58,
+      "reference_sha256": "17b28ac8c461dde676ca9d60ac5d9c8835fdbba7b1de5bdb5259db41b818feb1",
+      "raw_offset_sha_verified": true
+    },
+    {
+      "path": "learner/runs/20261017-141308-8e3eb449-8ec0-4a5f-a32c-8831022e42fe-postmortem/run-plans.jsonl",
+      "bytes": 50433,
+      "sha256": "f28fba2d8f7fe3a148e7c8dfc1151aedbfb683aa674aeccbfc024780a27569eb",
+      "original_reference_count": 16,
+      "reference_sha256": "b2b604462bb29e80049c2f4dad4023f8f9d6e6134782b87776c505ae76e624d6",
+      "raw_offset_sha_verified": true
+    },
+    {
+      "path": "learner/runs/20261017-141308-8e3eb449-8ec0-4a5f-a32c-8831022e42fe-postmortem/run-config.jsonl",
+      "bytes": 6231,
+      "sha256": "717cd3e7fd2b4348d5900737791e4f86a67967e814df4d4825faaec7132ae133",
+      "original_reference_count": 1,
+      "reference_sha256": "99f98d6715c901431caaf62d42ca1f4fa2dc64d76d3c3f0ac75b1da431b7fb70",
+      "raw_offset_sha_verified": true
+    },
+    {
+      "path": "learner/runs/20261017-141308-8e3eb449-8ec0-4a5f-a32c-8831022e42fe-postmortem/sl-attempts.jsonl",
+      "bytes": 159913,
+      "sha256": "994f0dd861cf5cb5ebc4c96ba58f6c9761d2b6143971dbb310f9f03b5137abe2",
+      "original_reference_count": 10,
+      "reference_sha256": "154c660d8a39549b393d7410211f3700667da30e45276792de009078e40839c3",
+      "raw_offset_sha_verified": true
+    }
+  ],
+  "raw_offset_sha_integrity_verified": 2147,
+  "no_game_analysis_or_solver_consumer_rerun_by_ops": true,
+  "original_ledger_rows": [
+    {
+      "offset": 22756877,
+      "bytes": 654,
+      "sha256": "faa2fa6c604dd888845caefe82b49c9a55c5a72dfdbf041b4018c1f52916374f",
+      "row": {
+        "op": "update",
+        "id": "silent-0020",
+        "ts": "2026-10-17T14:25:09+08:00",
+        "by": "learner:postmortem",
+        "evidence": [
+          {
+            "run": "25MFNPAE37R2",
+            "floor": 47,
+            "note": "A10全局10次休息各回21共210；F42回到55后四场均赢但55→53→40→12→5，F47只回到26，六次女王T4未过。逐场资源含药槽/时间/退出缺帧见复盘及25MFNPAE37R2-resources.json；未执行休息/锻造/留药反事实，不作老错重犯。",
+            "role": "support"
+          }
+        ],
+        "where": {
+          "lessons": [
+            "25MFNPAE37R2"
+          ]
+        },
+        "note": "来源任务20261017-141308-8e3eb449-8ec0-4a5f-a32c-8831022e42fe-postmortem；只补支持证据，保留旧claim/首证/prior/状态/版本。"
+      }
+    },
+    {
+      "offset": 22757531,
+      "bytes": 739,
+      "sha256": "c82efc50dd41cd8c0c9b5abc464e517b1cbdfa4027fee6b9f2471daa13b5468c",
+      "row": {
+        "op": "update",
+        "id": "silent-0385",
+        "ts": "2026-10-17T14:25:09+08:00",
+        "by": "learner:postmortem",
+        "evidence": [
+          {
+            "run": "25MFNPAE37R2",
+            "floor": 48,
+            "turn": 3,
+            "note": "最终40永久牌含双FOOTWORK、ACCELERANT、SERPENT_FORM；女王六试均到T4，步法敏捷及群蛇均未建立，触媒五试T3建立、一试未建。末试T3触媒下5+4及17+16毒实结42，T4迷雾后13+37仍留两敌156/285，7HP+4末挡不能承19攻。六SL同一局，无强制先能力的胜线对照，不推最优牌数或组件收益。",
+            "role": "support"
+          }
+        ],
+        "where": {
+          "lessons": [
+            "25MFNPAE37R2"
+          ]
+        },
+        "note": "来源本批postmortem；持有/到手/施放/结算分账的条件支持，非已证明旧错误重犯，不改状态或历史分母。"
+      }
+    },
+    {
+      "offset": 22758270,
+      "bytes": 1040,
+      "sha256": "7ac61827a9ce5fd43cefdf35e24fd7ec88811f5e680783cb6b871cd2ebd2cca9",
+      "row": {
+        "op": "update",
+        "id": "silent-0418",
+        "ts": "2026-10-17T14:25:09+08:00",
+        "by": "learner:postmortem",
+        "evidence": [
+          {
+            "run": "25MFNPAE37R2",
+            "floor": 28,
+            "turn": 6,
+            "note": "d420602护栏把两毒预计损12/伤35替为一毒损7/伤25；四步后d420606重问实打第二毒，s434812→434818实41→29、敌90→55，不能报护栏已省5。F45T6另一护栏则实损0/推进41，原线未实打。",
+            "role": "support"
+          },
+          {
+            "run": "25MFNPAE37R2",
+            "floor": 48,
+            "turn": 1,
+            "note": "末试d421128原答含尖啸及双毒，SL先变单毒；防御/偏折/暴露后d421131无药预算兜底，d421134弃尖啸，实无尖啸无药、损1/伤12。原答预测损0/伤27不当完整实线，也不把超时按现行规则退出认新bug；d421136完整T2预计伤63/损16，实伤63/损14保残差。",
+            "role": "support"
+          }
+        ],
+        "where": {
+          "lessons": [
+            "25MFNPAE37R2"
+          ]
+        },
+        "note": "来源本批postmortem；原答/支配/护栏/SL/重问/确定性出口与实际后继分账，缺反事实维持原规则，不改claim、prior、首证或shipped状态。"
+      }
+    },
+    {
+      "offset": 22759310,
+      "bytes": 376,
+      "sha256": "47405a4464d1593a992c629b950448f4e879aae56316e8ca6748c5e12f5f2828",
+      "row": {
+        "op": "update",
+        "id": "silent-0020",
+        "ts": "2026-10-17T14:25:52+08:00",
+        "by": "learner:postmortem",
+        "where": {
+          "proposal": [
+            "/home/dw/Projects/agent-sts2/learner/runs/20261017-141308-8e3eb449-8ec0-4a5f-a32c-8831022e42fe-postmortem/combat-realization-proposal.md"
+          ]
+        },
+        "note": "代码提案 silent-proposal-20332373fe0ab68b → task=strategy-proposal；Roy-2026-10-07-learning"
+      }
+    },
+    {
+      "offset": 22759686,
+      "bytes": 376,
+      "sha256": "6cf18be56be13001475b1cc068f994c9ff147c63d9aecb94776b1e3fcfd929e9",
+      "row": {
+        "op": "update",
+        "id": "silent-0385",
+        "ts": "2026-10-17T14:25:52+08:00",
+        "by": "learner:postmortem",
+        "where": {
+          "proposal": [
+            "/home/dw/Projects/agent-sts2/learner/runs/20261017-141308-8e3eb449-8ec0-4a5f-a32c-8831022e42fe-postmortem/combat-realization-proposal.md"
+          ]
+        },
+        "note": "代码提案 silent-proposal-20332373fe0ab68b → task=strategy-proposal；Roy-2026-10-07-learning"
+      }
+    },
+    {
+      "offset": 22760062,
+      "bytes": 376,
+      "sha256": "51c722e54cd8a937a91e49d983f18e10048421faaabf41120ca631846600e91c",
+      "row": {
+        "op": "update",
+        "id": "silent-0418",
+        "ts": "2026-10-17T14:25:52+08:00",
+        "by": "learner:postmortem",
+        "where": {
+          "proposal": [
+            "/home/dw/Projects/agent-sts2/learner/runs/20261017-141308-8e3eb449-8ec0-4a5f-a32c-8831022e42fe-postmortem/combat-realization-proposal.md"
+          ]
+        },
+        "note": "代码提案 silent-proposal-20332373fe0ab68b → task=strategy-proposal；Roy-2026-10-07-learning"
+      }
+    }
+  ],
+  "original_ledger_new_support": [
+    {
+      "id": "silent-0385",
+      "new_evidence": [
+        {
+          "run": "25MFNPAE37R2",
+          "floor": 48,
+          "turn": 3,
+          "note": "最终40永久牌含双FOOTWORK、ACCELERANT、SERPENT_FORM；女王六试均到T4，步法敏捷及群蛇均未建立，触媒五试T3建立、一试未建。末试T3触媒下5+4及17+16毒实结42，T4迷雾后13+37仍留两敌156/285，7HP+4末挡不能承19攻。六SL同一局，无强制先能力的胜线对照，不推最优牌数或组件收益。",
+          "role": "support",
+          "added": "2026-10-17T14:25:09+08:00"
+        }
+      ]
+    },
+    {
+      "id": "silent-0020",
+      "new_evidence": [
+        {
+          "run": "25MFNPAE37R2",
+          "floor": 47,
+          "note": "A10全局10次休息各回21共210；F42回到55后四场均赢但55→53→40→12→5，F47只回到26，六次女王T4未过。逐场资源含药槽/时间/退出缺帧见复盘及25MFNPAE37R2-resources.json；未执行休息/锻造/留药反事实，不作老错重犯。",
+          "role": "support",
+          "added": "2026-10-17T14:25:09+08:00"
+        }
+      ]
+    },
+    {
+      "id": "silent-0418",
+      "new_evidence": [
+        {
+          "run": "25MFNPAE37R2",
+          "floor": 28,
+          "turn": 6,
+          "note": "d420602护栏把两毒预计损12/伤35替为一毒损7/伤25；四步后d420606重问实打第二毒，s434812→434818实41→29、敌90→55，不能报护栏已省5。F45T6另一护栏则实损0/推进41，原线未实打。",
+          "role": "support",
+          "added": "2026-10-17T14:25:09+08:00"
+        },
+        {
+          "run": "25MFNPAE37R2",
+          "floor": 48,
+          "turn": 1,
+          "note": "末试d421128原答含尖啸及双毒，SL先变单毒；防御/偏折/暴露后d421131无药预算兜底，d421134弃尖啸，实无尖啸无药、损1/伤12。原答预测损0/伤27不当完整实线，也不把超时按现行规则退出认新bug；d421136完整T2预计伤63/损16，实伤63/损14保残差。",
+          "role": "support",
+          "added": "2026-10-17T14:25:09+08:00"
+        }
+      ]
+    }
+  ],
+  "protected_fields_and_old_evidence_preserved": true,
+  "original_proposal_add": {
+    "op": "add",
+    "id": "silent-proposal-20332373fe0ab68b",
+    "ts": "2026-10-17T14:25:52+08:00",
+    "character": "silent",
+    "ledger": [
+      "silent-0020",
+      "silent-0385",
+      "silent-0418"
+    ],
+    "runs": [
+      "25MFNPAE37R2"
+    ],
+    "source_task": "postmortem",
+    "target_task": "strategy-proposal",
+    "domains": [
+      "combat",
+      "potion"
+    ],
+    "summary": "核对女王T1前缀后预算出口、F28护栏重问补毒与F45完整改线的真实兑现；先验证既有消费者，缺反事实不改出牌/饮药规则。",
+    "proposal": "/home/dw/Projects/agent-sts2/learner/runs/20261017-141308-8e3eb449-8ec0-4a5f-a32c-8831022e42fe-postmortem/combat-realization-proposal.md",
+    "rule_changes": false,
+    "authorization": "Roy-2026-10-07-learning",
+    "proposal_sha256": "da15f378417cf9d42b83a29cd0d3b317ca7f7a6053bf51af44e214ab8158a542",
+    "state": "pending"
+  },
+  "no_new_dispatch_by_ops": true,
+  "original_tool_assertion_correction": "首次校验脚本断言误用了末试last战斗帧7HP，而非exit GAME_OVER帧0HP，触发AssertionError；该工具错误保留。正文和资源表已经使用exit／SL前last分账，未改旧文或复盘数字。后续改脚本后重新校验。\n",
+  "original_ledger_check": "/home/dw/Projects/agent-sts2/paper/materials/learning/ledger.jsonl: 502 item(s), 0 problem(s)\n",
+  "new_live_experience_or_game_behavior_not_claimed": true,
+  "complete_dirty_runtime_missing_and_scientific_gaps_preserved": true,
+  "R383_first_effective_run_not_claimed": true
+}

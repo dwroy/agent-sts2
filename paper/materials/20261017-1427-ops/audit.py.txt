@@ -1,0 +1,69 @@
+from pathlib import Path
+import collections,copy,hashlib,importlib.util,json,re,subprocess,tarfile
+r=root=Path.cwd();p=r/'ops/codex-ops/record-staging/20261017-1427';pub=r/'paper/materials/20261017-1427-ops';load=lambda f:json.loads(f.read_bytes());sha=lambda b:hashlib.sha256(b).hexdigest()
+def write(f,v):f.write_text(json.dumps(v,ensure_ascii=False,indent=2)+'\n')
+bid='20261017-141302';run='25MFNPAE37R2';state=load(r/'ops/codex-ops/learn.json');b=state['batches'][bid];out=r/'ops/codex-ops/learner'/(bid+'.out');report=json.loads(re.findall(r'```json\s*([\s\S]*?)```',out.read_text())[-1]);s=Path(report['report']).parent
+assert b['state']=='done' and b['rc']==0 and b['done']==[run] and b['missing']==[]
+assert b['proposal_audit_errors']==[] and b['proposal_audit_skipped'] is False
+assert report==load(s/'report.json') and report['appended']==[run] and report['bugs']==[]
+assert report['ledger']['added']==report['ledger']['repeats']==[] and report['ledger']['check']==0
+assert set(report['ledger']['updated'])=={'silent-0020','silent-0385','silent-0418'}
+exec((r/'ops/codex-ops/record-staging/20261016-0557/readonly-runtime.py').read_text());native=runtime(bid,report,out.read_text())
+prefix=load(s/'lessons-before.json');assert prefix==load(s/'append-boundary.json');chunk=(s/'section.md').read_bytes();lessons=(r/'notes/lessons.md').read_bytes()
+assert sha(lessons[:prefix['bytes']])==prefix['sha256']
+assert lessons[prefix['bytes']:prefix['bytes']+len(chunk)]==chunk and lessons.count(chunk)==1
+assert len(chunk)==24860 and lessons.count(b'\n## '+run.encode()+b'\xef\xbc\x88')==1
+# Verify byte identity and provenance only; do not rerun the learner's game analysis.
+counts={'decisions':1006,'states':1056,'brain':58,'run-plans':16,'run-config':1,'sl-attempts':10};bindings=[]
+for name,count in counts.items():
+ ref_file=s/(name+'-references.jsonl');refs=[json.loads(x) for x in ref_file.read_bytes().splitlines()];assert len(refs)==count
+ projected=s/(name+'.jsonl');assert sum(1 for _ in projected.open('rb'))==count
+ with (r/'logs'/(name+'.jsonl')).open('rb') as rawfile:
+  for x in refs:
+   assert x['source']=='logs/'+name+'.jsonl'
+   rawfile.seek(x['offset']);raw=rawfile.read(x['bytes']);assert len(raw)==x['bytes'] and sha(raw)==x['sha256']
+ bindings.append(dict(path=str(projected.relative_to(r)),bytes=projected.stat().st_size,sha256=sha(projected.read_bytes()),original_reference_count=count,reference_sha256=sha(ref_file.read_bytes()),raw_offset_sha_verified=True))
+assert sum(counts.values())==2147
+physical=(r/'paper/materials/learning/ledger.jsonl').read_bytes();ids=set(report['ledger']['updated']);rows=[];owned=[];offset=0
+for raw in physical.splitlines(keepends=True):
+ x=json.loads(raw)
+ if x.get('id') in ids and x.get('by')=='learner:postmortem' and (str(s).encode() in raw or run.encode() in raw):
+  assert x['op']=='update' and set(x)<={'op','id','ts','by','evidence','where','note'}
+  rows.append(dict(offset=offset,bytes=len(raw),sha256=sha(raw),row=x));owned.append(raw)
+ offset+=len(raw)
+assert len(rows)==6 and sum('evidence' in x['row'] for x in rows)==3
+spec=importlib.util.spec_from_file_location('original_ledger',r/'learner/ledger.py');ledger=importlib.util.module_from_spec(spec);spec.loader.exec_module(ledger)
+old=[(i,json.loads(raw)) for i,raw in enumerate(physical[:rows[0]['offset']].splitlines(),1) if json.loads(raw).get('id') in ids];folded=ledger.fold(old);saved=copy.deepcopy(folded)
+for x in rows:ledger.apply(folded,x['row'])
+evidence=[]
+for ident in ids:
+ original=load(s/(ident+'.json'))
+ if isinstance(original,list):assert len(original)==1;original=original[0]
+ for field in ['character','claim','first_run','asc','prior','prior_note','prior_runs','status','version','shipped_at','effect']:
+  assert saved[ident].get(field)==folded[ident].get(field)==original.get(field),(ident,field)
+ before=saved[ident]['evidence'];after=folded[ident]['evidence'];assert after[:len(before)]==before
+ extra=after[len(before):];assert len(extra)==(2 if ident=='silent-0418' else 1) and all(x['run']==run and x['role']=='support' for x in extra);evidence.append(dict(id=ident,new_evidence=extra))
+(p/'own-ledger-rows.jsonl').write_bytes(b''.join(owned));appends=[dict(path='notes/lessons.md',text=chunk.decode())];proposal_rows=[]
+for raw in (r/'paper/materials/learning/code-proposals.jsonl').read_bytes().splitlines(keepends=True):
+ x=json.loads(raw)
+ if x.get('id') not in report['code_proposals']:continue
+ assert x['op']=='add' and x['state']=='pending' and x['character']=='silent' and x['source_task']=='postmortem' and x['target_task']=='strategy-proposal'
+ assert x['runs']==[run] and x['rule_changes'] is False and set(x['domains'])=={'combat','potion'}
+ assert sha(Path(x['proposal']).read_bytes())==x['proposal_sha256']=='da15f378417cf9d42b83a29cd0d3b317ca7f7a6053bf51af44e214ab8158a542'
+ proposal_rows.append(x);appends.append(dict(path='paper/materials/learning/code-proposals.jsonl',text=raw.decode()))
+assert len(proposal_rows)==1 and proposal_rows==load(s/'proposal-cli-readback.json')
+assert '502 item(s), 0 problem(s)' in (s/'ledger-check.txt').read_text()
+files={out,out.with_suffix('.err')}
+for f in s.iterdir():
+ if f.is_file() and f.stat().st_size<800000 and f.suffix in ['.md','.json','.py','.txt','.sh','.exit']:files.add(f)
+manifest=[]
+with tarfile.open(pub/'original-small-reports.tar.gz','w:gz',compresslevel=6) as archive:
+ for f in sorted(files):
+  raw=f.read_bytes();name=str(f.relative_to(r));archive.add(f,arcname=name,recursive=False);manifest.append(dict(path=name,bytes=len(raw),sha256=sha(raw)))
+with tarfile.open(pub/'original-small-reports.tar.gz') as archive:
+ for x in manifest:assert sha(archive.extractfile(x['path']).read())==x['sha256']
+at=subprocess.check_output(['date','+%Y-%m-%d %H:%M:%S %Z'],text=True).strip();print(at,flush=True)
+write(pub/'original-small-reports-manifest.json',dict(files=manifest,archive_sha256=sha((pub/'original-small-reports.tar.gz').read_bytes()),actual_readback_verified=True,originals_deleted=False,large_originals_retained=True))
+write(pub/'postmortem-readback.json',dict(at=at,batch=bid,run=run,canonical=b,report=report,runtime=native,new_pure_bugs=[],original_lesson_prefix=prefix,lesson_append_bytes=len(chunk),lesson_append_sha256=sha(chunk),derived_evidence_fingerprints=bindings,raw_offset_sha_integrity_verified=2147,no_game_analysis_or_solver_consumer_rerun_by_ops=True,original_ledger_rows=rows,original_ledger_new_support=evidence,protected_fields_and_old_evidence_preserved=True,original_proposal_add=proposal_rows[0],no_new_dispatch_by_ops=True,original_tool_assertion_correction=(s/'validation-notes.txt').read_text(),original_ledger_check=(s/'ledger-check.txt').read_text(),new_live_experience_or_game_behavior_not_claimed=True,complete_dirty_runtime_missing_and_scientific_gaps_preserved=True,R383_first_effective_run_not_claimed=True))
+write(p/'lesson-appends.json',appends);write(p/'extra-owned-paths.json',[])
+print(json.dumps(dict(postmortem=run,original_ledger_rows=6,new_support_rows=3,new_support_endpoints=4,new_pure_bugs=0,original_proposal_pending=1,archived_files=len(manifest))))
