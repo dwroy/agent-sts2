@@ -880,7 +880,9 @@ export function bossLineSim(args: BossLineSimArgs): BossLineSim {
       const vsBest = rank.vsBest[i] ?? null;
       const winTied = rank.winTied[i] ?? false;
       const reference = run.lines[rank.best >= 0 ? rank.best : 0]!;
-      const margin = input.captureBossMargin && shadowBudgetAvailable("b2_margin_shadow") ? summarizeBossMargin(line.outcomes, reference.outcomes, line.outcomes.map((_, at) => at), ...(adaptiveComplete ? [reference.outcomes.map((_, at) => at)] : [])) : null;
+      // A budget cut after elimination also leaves unequal, independently identified seed prefixes.
+      const explicitReference = adaptiveComplete || line.outcomes.length !== reference.outcomes.length;
+      const margin = input.captureBossMargin && shadowBudgetAvailable("b2_margin_shadow") ? summarizeBossMargin(line.outcomes, reference.outcomes, line.outcomes.map((_, at) => at), ...(explicitReference ? [reference.outcomes.map((_, at) => at)] : [])) : null;
       byPlan.set(args.lines[i]!, { result: line, calibrated, vsBest, winTied,
         ...(margin ? { bossMargin: { ...margin, rankingEligible: margin.rankingEligible && !lowTrust && (!sPolicy || auditSigns(line.outcomes).rankingEligible) } } : {}),
         text: (pace ? `限时${run.timedOut ? "未完整" : "完成"}；n=${line.samples}/${run.requested}，原始胜率MC95%区间${interval ? interval.map(pct).join("–") + "%" : "unknown"}（不含模型偏差）；${lowTrust ? "低可信、未完整；" : ""}${line.samples < 2 ? "误差unknown；" : "误差见±配对标准误；"}` : "") + (attempt?.degraded ? `不完整（故障降级，n=${run.samples}）；` : "") + lineSimText(line, calibrated, rank.best === i ? null : vsBest, run, turnNow, { best: rank.best === i, winTied, lowTrust }) });
