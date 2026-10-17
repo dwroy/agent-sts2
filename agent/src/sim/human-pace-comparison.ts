@@ -23,15 +23,15 @@ export function humanPaceShadowRunner(runner: DeckSimRunner): DeckSimRunner {
   return proxy;
 }
 
-export function directionMetric(result: CompareResult, key: string): DirectionMetric {
+export function directionMetric(result: CompareResult, key: string, modelLimits: readonly string[] = []): DirectionMetric {
   const row = key === "@current" ? result.base : result.options.find((r) => r.key === key);
   if (!row || row.samples < 2) return { status: "unknown", reason: "no_paired_model_samples", win: null, win_se: null, s: null, samples: row?.samples ?? 0, requested: result.requested };
   const margin = asRecord(asRecord(row.quantitative)["boss_relative_margin"]), score = asRecord(margin["score"]);
-  const s = margin["rankingEligible"] === true && typeof score["mean"] === "number" && typeof score["meanSe"] === "number"
+  const s = !modelLimits.length && margin["rankingEligible"] === true && typeof score["mean"] === "number" && typeof score["meanSe"] === "number"
     ? { mean: score["mean"], se: score["meanSe"] } : null;
   return { status: result.timedOut ? "partial" : "computed", reason: result.timedOut ? "budgeted_model_prefix" : null,
     win: row.win, win_se: Math.sqrt(row.win * (1 - row.win) / row.samples), s, samples: row.samples,
-    requested: result.requested, ...(row.continuous ? { continuous: row.continuous } : {}) };
+    requested: result.requested, model_limits: [...new Set(modelLimits)], ...(row.continuous ? { continuous: row.continuous } : {}) };
 }
 
 /** Only already modelled components can be added to a hypothetical raw inventory. */
@@ -39,7 +39,8 @@ export function validDirectionInventory(state: BuildState | null): state is Buil
   return !!state && [state.hp, state.maxHp].every(Number.isFinite) && state.hp > 0 && state.maxHp >= state.hp
     && (state.cap === null || state.cards.length <= state.cap);
 }
-export function directionStart(env: DecisionEnv, state: BuildState, target: GlobalBossTarget, setup: BuildSimSetup) {
+export function directionStart(env: DecisionEnv, state: BuildState, target: GlobalBossTarget, setup: BuildSimSetup,
+  modelLimits?: string[]) {
   if (!validDirectionInventory(state)) throw new Error("invalid_inventory_resource_contract");
   const raw = structuredClone(env.state.raw), run = asRecord(raw["run"]);
   const original = asArray(asRecord(env.state.run?.raw)["deck"]).map(asRecord), remaining = [...original];
@@ -56,13 +57,23 @@ export function directionStart(env: DecisionEnv, state: BuildState, target: Glob
   run["act_id"] = String(target.act - 1); run["boss_id"] = `${target.boss}_BOSS`;
   const projected = parseGameState(raw);
   const start = syntheticBossStart(projected, env.knowledge, `${target.boss}_BOSS`, state.hp, setup);
-  if (start.relics.unmodelled.length) throw new Error("hypothetical_inventory_has_unmodelled_relics");
+  if (start.relics.unmodelled.length) {
+    // A labelled Act2 benchmark may reuse the existing partial model for unchanged held relics.
+    // This never asserts that omitted relic effects cancel, and never admits hypothetical unknown relics.
+    const held = asArray(asRecord(env.state.run?.raw)["relics"]).map((r) => str(asRecord(r)["relic_id"])).sort();
+    const unchanged = JSON.stringify(held) === JSON.stringify([...state.relics].sort());
+    if (!modelLimits || target.act !== 2 || str(run["character_id"]).toLowerCase() !== "silent" || !unchanged)
+      throw new Error("hypothetical_inventory_has_unmodelled_relics");
+    modelLimits.push("partial_model_benchmark_shared_held_relics_not_modelled;effects_do_not_assume_cancellation",
+      ...start.relics.unmodelled.map((name) => `unmodelled_held_relic:${name}`));
+  }
   return target.act === 3 ? withDoubleBossStart(projected, env.knowledge, start.input, doubleBossFor(projected), setup) : start.input;
 }
 
 export async function compareDirection(env: DecisionEnv, current: BuildState, target: GlobalBossTarget,
   variant: DirectionVariant, budget: DecisionBudget, setup: BuildSimSetup): Promise<DirectionMetric> {
-  const base = directionStart(env, current, target, setup), changed = directionStart(env, variant.state, target, setup);
+  const modelLimits: string[] = [];
+  const base = directionStart(env, current, target, setup, modelLimits), changed = directionStart(env, variant.state, target, setup, modelLimits);
   const adaptive = simAdaptivePolicy("silent").mode;
   const result = await compareOptions(humanPaceShadowRunner(setup.runner), base, [{ key: variant.key, change: changed }], {
     samples: setup.samples ?? BUILD_SIM_SAMPLES, seed: setup.seed ?? BUILD_SIM_SEED,
@@ -70,19 +81,20 @@ export async function compareDirection(env: DecisionEnv, current: BuildState, ta
     ...(adaptive !== "off" ? { adaptive: { mode: adaptive, allowS: false } } : {}),
     ...(setup.now ? { now: setup.now } : {}),
   });
-  return directionMetric(result, variant.key);
+  return directionMetric(result, variant.key, modelLimits);
 }
 
 /** One sample-major comparison per target spreads its share of60s across all directions. */
 export async function compareDirectionBatch(env: DecisionEnv, current: BuildState, target: GlobalBossTarget,
   variants: readonly DirectionVariant[], budget: DecisionBudget, cap: number, setup: BuildSimSetup): Promise<ReadonlyMap<string, DirectionMetric>> {
-  const started = budget.now(), base = directionStart(env, current, target, setup);
+  const modelLimits: string[] = [];
+  const started = budget.now(), base = directionStart(env, current, target, setup, modelLimits);
   const rows = new Map<string, DirectionMetric>(), options = [];
   for (const variant of variants) {
     if (budget.remaining() <= 1000 || budget.now() - started >= cap - 1000) {
       rows.set(variant.key, { status: "unknown", reason: "direction_budget_exhausted_preparing_inventory", win: null, win_se: null, s: null, samples: 0, requested: 0 }); continue;
     }
-    try { options.push({ key: variant.key, change: directionStart(env, variant.state, target, setup) }); }
+    try { options.push({ key: variant.key, change: directionStart(env, variant.state, target, setup, modelLimits) }); }
     catch { rows.set(variant.key, { status: "unknown", reason: "unmodelled_core_or_resource_contract", win: null, win_se: null, s: null, samples: 0, requested: 0 }); }
   }
   if (!options.length) return rows;
@@ -93,6 +105,6 @@ export async function compareDirectionBatch(env: DecisionEnv, current: BuildStat
     requireComplete: true, quantitative: true, ...(mode !== "off" ? { adaptive: { mode, allowS: false } } : {}),
     ...(setup.now ? { now: setup.now } : {}),
   });
-  for (const option of options) rows.set(option.key, directionMetric(result, option.key));
+  for (const option of options) rows.set(option.key, directionMetric(result, option.key, modelLimits));
   return rows;
 }
