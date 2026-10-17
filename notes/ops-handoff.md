@@ -2375,3 +2375,7 @@ R389原精确8ba5f0a7宿主533/5234过2跳、tsc0/vitest0，logSHA及8叶固定�
 
 ### 2026-10-18 01:44:02 CST J5E复盘记录收尾
 0132单复盘已核done0/无纯bug，J5E A10/F23败；869原引用/13资源窗26端点/38小原件及两次原勘误保留，10旧经验支持、20根CLI/两pending提案仅原字节入记录，未加游戏知识或上线。唯一paper截点2026-10-17T17:32:51.150Z实际0，本局has_postmortem1、五检查/keyscan通过；冻结变化输出及原来源限度在paper/materials/20261018-0132-ops/。0332既有capture目录本次仍不存在，沿原完局/复盘等正常事件取得首份完整原封套后续办，不以有限缺证关闭根要求或重启模型/局/模拟/监听；同原因不重复转达。H0/支撑映射在途及父要求不因本复盘关闭，R389源WT accepted登记已另完成，不重复full/编号/complete。
+
+### 2026-10-18 01:57:29 CST 0145截止空答阻塞恢复与待验收
+实际0NMF36KX3F7Y F17/T3卡在通用combat resolver丢budgetExpired；source 0218061b77036147bca9e83c1f066c24888f7ecf（step HEAD）只三叶，V5-R390/live 729d475251ef7badc592f32c0211bca14d02ba49/tree 772c50f82a7a3cfb431e236b464bc32bdfb7f020，源码tsc/原沙箱4438项0、merged原入口定向23项0；修前三项红保留，未新增游戏知识。原broker play-stop0停[2280361, 2280372]，已发原play-stop0；单次回读尚未足以确认接续，不等待/轮询，留待后续正常事件核实；现场回读screen=COMBAT/floor=17/turn=3，autoplay2027082/游戏34676不换，未改配置/跨号resume。
+原075726完整宿主PID2463137实际在途，结果不是绿；看后续learner-checks对应精确tree后沿原retention登记step，pending文件ops/codex-ops/pending-integrations/20261018-strict-combat-deadline-recovery.json。若full失败按原机制修或回退此窄三叶，不借旧绿或重未变源full，不删除自己仍在工作的WT。并行支撑映射source已在live而其完成事件/经验shipped/父验收未在本stall处理，原记录和11知识刷新已保；它的后续登记必须据原科学回报核，不当本修复交付。H0/0332/support/human-pace/main-push父仍开，0332仍等原自然完整封套，不开模型/局/模拟/监听或主动轮询。

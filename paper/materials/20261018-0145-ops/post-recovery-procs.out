@@ -1,0 +1,14 @@
+2027082 bash /home/dw/Projects/agent-sts2/ops/autoplay.sh --tail-console
+2215382 node /home/dw/Projects/agent-sts2/agent/node_modules/.bin/tsx /home/dw/Projects/agent-sts2/learner/run.ts --engine codex --task /home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261018-005332-strategy-proposal
+2215393 /home/dw/.local/node/bin/node --require /home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/preflight.cjs --import file:///home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/loader.mjs /home/dw/Projects
+2423327 node /home/dw/Projects/agent-sts2/ops/../agent/node_modules/.bin/tsx /home/dw/Projects/agent-sts2/ops/codex/main.ts wake
+2423339 /home/dw/.local/node/bin/node --require /home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/preflight.cjs --import file:///home/dw/Projects/agent-sts2/agent/node_modules/tsx/dist/loader.mjs /home/dw/Projects
+autoplay.pid: 2027082
+herdr panes:
+label                                         pane     alive  busy  foreground
+autoplay-log                                  wJ:pCY   yes    yes   2027082:bash 2027101:tail 2464486:npm
+learner-20261013-100759-fix-batch             wJ:pT7   no     no    
+learner-20261013-100759-s2-strategy-proposal  wJ:pT6   no     no    
+learner-20261013-100759-strategy-proposal     wJ:pT5   no     no    
+learner-20261018-005332-strategy-proposal     wJ:p1CC  yes    yes   2215278:bash 2215280:python3 2215382:node 2215393:node
+ops                                           wJ:p5    yes    yes   2025737:node 2025744:codex 2025864:powershell.exe
