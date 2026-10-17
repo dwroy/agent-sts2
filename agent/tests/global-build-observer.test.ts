@@ -6,6 +6,7 @@ import type { CompareResult, OptionSim } from "../src/sim/build-sim.js";
 import type { GlobalBossTarget } from "../src/sim/global-build.js";
 import type { DeckSimRunner } from "../src/sim/build-sim-pool.js";
 import { board } from "./boss-sim-fixture.js";
+import { DecisionBudgetExpired } from "../src/core/decision-budget.js";
 
 // Algebraic prediction records; these do not assert game mechanics or calibration.
 const base: OptionSim = { key: "current", samples: 100, win: .5, winCal: .5, diff: null,
@@ -70,6 +71,19 @@ it("does not cache service failures or borrow a pool from another ascension", as
   const value = await observeGlobalBuild({ ...request(), pool: { ...pool, ascension: 9 } });
   expect(value.summaries.every((summary) => summary.known_acts.length === 0)).toBe(true);
   expect(value.targets[0]!.rows[0]!.unknown).toBe("observed_pool_character_or_ascension_mismatch");
+});
+
+it("does not memoize a skipped G2 target as a completed observation after the budget is renewed", async () => {
+  const args = request();
+  args.evaluate.mockRejectedValueOnce(new DecisionBudgetExpired("G2_global_shadow"));
+  const first = await observeGlobalBuild(args);
+  expect(first.targets[1]!.rows[0]!.unknown).toBe("decision_budget_exhausted:G2_global_shadow");
+  const recovered = await observeGlobalBuild(args);
+  expect(recovered.memo_hit).toBe(false);
+  expect(recovered.targets[1]!.status).toBe("computed");
+  expect((await observeGlobalBuild(args)).memo_hit).toBe(true);
+  expect(args.evaluate).toHaveBeenCalledTimes(2);
+  expect(args.runner.run).not.toHaveBeenCalled();
 });
 
 // H1 prefixes must never mask a later non-budget or failed completion with identical numeric data.

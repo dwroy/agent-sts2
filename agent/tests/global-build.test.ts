@@ -2,6 +2,7 @@ import { describe, expect, it, vi } from "vitest";
 import { evaluateGlobalBuild, globalBossTargets, type GlobalBossTarget } from "../src/sim/global-build.js";
 import { observedGlobalBossPool } from "../src/sim/global-build-pool.js";
 import type { CompareResult, OptionSim } from "../src/sim/build-sim.js";
+import { DecisionBudgetExpired } from "../src/core/decision-budget.js";
 
 // Symbolic arithmetic and protocol fixtures only; no Boss mechanism or real outcome assertions.
 function records() {
@@ -60,6 +61,23 @@ describe("G2 observed Silent target identities", () => {
 });
 
 describe("G2 shadow paired probabilities and coverage", () => {
+  // U5W7NUE925NK F11 shop/buy: the next target starts after the H1 allowance is exhausted.
+  it("keeps a typed G2 deadline unknown while retaining worker errors and unrelated deadline errors", async () => {
+    for (const error of [new DecisionBudgetExpired("G2_global_shadow"),
+      new Error("human-pace budget exhausted: G2_global_shadow"), new DecisionBudgetExpired("other_stage")]) {
+      const value = await evaluateGlobalBuild({ ...args(), evaluate: async () => { throw error; } });
+      const future = value.targets.filter((row) => row.target.act === 2);
+      const expected = error instanceof DecisionBudgetExpired && error.stage === "G2_global_shadow"
+        ? "decision_budget_exhausted:G2_global_shadow" : `global_computation_failed:${error.message}`;
+      expect(future.every((row) => row.status === "unknown" && row.completion === null && row.adaptive === null)).toBe(true);
+      expect(future.flatMap((row) => row.rows).every((row) => row.unknown === expected
+        && row.samples === null && row.base === null && row.option === null && row.delta_s === null)).toBe(true);
+      expect(value.targets[0]!.status).toBe("reused_current");
+      expect(value.summaries[0]).toMatchObject({ known_acts: [1], unknown_acts: [2, 3], conditional_snapshot_product: null });
+      expect(value).toMatchObject({ mode: "shadow", delivered: false, s_sort: false });
+    }
+  });
+
   it("reuses current B3, serially evaluates future candidates, and leaves Act3/final unknown", async () => {
     const evaluate = vi.fn(async (_target: GlobalBossTarget) => result());
     const value = await evaluateGlobalBuild({ ...args(), evaluate });

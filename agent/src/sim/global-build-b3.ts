@@ -15,7 +15,7 @@ import { BOSS_LINES_TIE_SE } from "./boss-lines.js";
 import { simAdaptivePolicy } from "../core/config.js";
 import { observeGlobalBuild, type GlobalBuildMemory } from "./global-build-observer.js";
 import type { GlobalBossPool } from "./global-build-pool.js";
-import type { GlobalBossTarget } from "./global-build.js";
+import { isBudgetedGlobalPrefix, type GlobalBossTarget } from "./global-build.js";
 
 export function globalBuildFailure(env: DecisionEnv, required: boolean, reason: string): JsonValue | null {
   if (!required || globalBuildPolicy(str(asRecord(env.state.run?.raw)["character_id"])).mode === "off") return null;
@@ -62,7 +62,14 @@ export async function globalBuildForB3(args: {
             calibratedFloor: Math.round(calibratedWinProb(0, BUILD_SIM_CALIBRATION_SAMPLES, "pre", ascension) * 100) / 100,
             tieSe: BOSS_LINES_TIE_SE },
         });
-        if ([result.base, ...result.options].some((value) => {
+        const values = [result.base, ...result.options];
+        // An explicitly empty H1 prefix has no DPR estimate. Do not fill it or bypass nonempty/malformed metrics.
+        const emptyBudgetPrefix = isBudgetedGlobalPrefix(result) && result.samples === 0 && values.every((value) => {
+          const quantitative = asRecord(value.quantitative);
+          const dpr = asRecord(quantitative["effective_damage_per_turn"]);
+          return value.samples === 0 && quantitative["samples"] === 0 && dpr["n"] === 0 && dpr["mean"] === null;
+        });
+        if (!emptyBudgetPrefix && values.some((value) => {
           const dpr = asRecord(asRecord(value.quantitative)["effective_damage_per_turn"]);
           return typeof dpr["n"] !== "number" || dpr["n"] <= 0 || typeof dpr["mean"] !== "number" || !Number.isFinite(dpr["mean"]);
         })) throw new Error("global_required_paired_DPR_missing");
