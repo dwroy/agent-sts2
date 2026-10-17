@@ -1,8 +1,8 @@
 {
-  "at": "2026-10-17T11:01:49.117907+08:00",
+  "at": "2026-10-17T12:35:47.821601+08:00",
   "request": "roy-20261017-human-pace",
   "owner_session": "01a13dcd-83d4-7c63-b233-f93cf878ecf4",
-  "state": "waiting natural terminals",
+  "state": "blocked_0_of_2_complete_natural_runs",
   "first_qualified_candidate": "5H83F3J0XSTE",
   "completed": [],
   "needed": 2,
@@ -10,10 +10,53 @@
     "pid": 3307923,
     "birth": "109774449",
     "exec_session": 77455,
-    "event_relay_session": 92638,
-    "one_shot_lock": "listener.once"
+    "event_relay_session": null,
+    "one_shot_lock": "listener.once",
+    "event_relay_state": "stopped display-only tail, exit143; relay-stop.json",
+    "original_inotify_state": "retained, not restarted or signalled"
   },
   "baseline": "baseline-r2/manifest.json",
   "analysis": "baseline-analysis.json",
-  "next": "Wait on existing listener only; freeze run after its terminal; no new stage or game action"
+  "next": "Claude must separately assign minimal deadline fallback repair; original ops decides controlled run recovery. No implementation/restart authorized by read-only task.",
+  "prepared_scripts": [
+    "wait-two-natural.py",
+    "freeze-inputs.py",
+    "analyze.py",
+    "render-report.py",
+    "verify-projections.py"
+  ],
+  "records_commit": "f6f33b988",
+  "instructions": "Do not restart listener; once lock and existing PID/session remain authoritative. Use existing event relay92638; no timer SQL/game polling. Final freeze new runs with --new-only, verify raw byte ranges, then analysis/report; read original ops exact host closure only.",
+  "exact_host_readback": {
+    "checked_live": "dbd41616420f62e6502e9cb6c5827e852a6b4949",
+    "tree": "d68e817428a59b28dfd53c3d9dfb34819f711e56",
+    "tsc_rc": 0,
+    "vitest_rc": 0,
+    "files": 519,
+    "tests": 5108,
+    "skipped": 2,
+    "evidence": "paper/materials/20261017-human-pace-h1/natural/host-readback.json",
+    "natural_acceptance_inferred": false
+  },
+  "architecture_decision": {
+    "Roy_at": "2026-10-17 11:37 CST",
+    "via": "Claude native user message",
+    "decision": "human pace and global construction direction remain V5; keep V5 release numbering",
+    "commit": "a49d8c435",
+    "personally_checked_two_line_plan_diff": true,
+    "uncommitted_continuation_preserved": true,
+    "natural_task_unchanged": true
+  },
+  "accepted_complete_runs": 0,
+  "blocker": {
+    "state": "blocked_0_of_2_complete_natural_runs",
+    "accepted_complete_runs": 0,
+    "partial_run": "5H83F3J0XSTE",
+    "observed_at": "2026-10-17T12:31:34.803789+08:00",
+    "elapsed_at_observation_minutes": 90.76086315,
+    "stuck_since": "2026-10-17T04:04:00.039Z",
+    "cause": "H1 deadline resolves empty answers through strictJev selection parser -> null intent -> exhausted same-turn budget -> no re-ask and no progress",
+    "report": "paper/materials/20261017-human-pace-h1/natural/report.md",
+    "need": "Claude must separately assign minimal deadline fallback repair; original ops decides controlled run recovery. No implementation/restart authorized by read-only task."
+  }
 }

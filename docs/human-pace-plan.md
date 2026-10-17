@@ -174,3 +174,11 @@ Silent 的预算按第 2 节初值接入主循环、Jev、大脑、求解器和 
 source `7af803c06e82e2aafe6a595fab7a23e0f3f44fb3`（28叶/tree `42b64e288ab34b51bfa1a4f15f8c6abd731fd139`）源码沙箱入口tsc0、467文件4285题＋paths11题共4296过，gitleaks0；原ops `wJ:p5` 运输成功，接收/发布/独立编号/双通知/精确live组合宿主待原链本人回执。材料 `paper/materials/20261017-human-pace-h1/completion.md`。只结本轮实现交源，2自然局与H2+不开始。
 
 H1原ops正式实收 2026-10-17 10:49:39 CST 已由原watcher逐28SHA/源tree/patch/full终局SHA读回，见阶段 `watcher-ops-formal-receipt-readback.json`。本轮源码任务完成，发布/编号/双通知/精确宿主沿原ops事件闭环，后续自然验收待Claude另派。
+
+### 2026-10-17T11:11:30.865866+08:00 H1 自然验收接续
+
+Claude已单独指派两局自然验收。R380实际live `dbd41616420f62e6502e9cb6c5827e852a6b4949`/tree `d68e817428a59b28dfd53c3d9dfb34819f711e56`发布已读回；原075726唯一宿主结果由ops闭环，watcher不重复检查。`JKDUL0AL0TW6`仍99737旧版，排除；11:00:49/F1自然启动的`5H83F3J0XSTE`原run-config明确启用`human-pace-h1-v1`，作为首候选而非已验收。一次性inotify局末监听PID3307923/birth109774449，收到两局终局后退出，无分钟查询/对局动作/模型调用。冻结截点、前五完局数据、延迟/预算/B2B3样本/L2/G1c统计及后续终局材料放`paper/materials/20261017-human-pace-h1/natural/`。验收完成后停止，H2+仍未派。
+
+### 2026-10-17T12:35:47.821601+08:00 H1自然验收实际阻塞（0/2）
+
+首个R380自然局5H83F3J0XSTE在F48第3试进入CARD_SELECTION后耗尽Jev预算；空答案经strict解析得到null intent，既无动作又无重问预算，真实控制台自12:04:10已报卡住。12:31:34一次性90分钟节点核回后冻结原源码/失败prompt/console与729条预算决策，尚无终局，第二局未启动。见`paper/materials/20261017-human-pace-h1/natural/report.md`、requirements/checkpoint。本轮只读，未实现修复/重启/新阶段；两自然局及G1c效果未验收，原listener保留，需Claude单独指派超时出口最小修复并由原ops决定受控恢复后再继续。原R380精确宿主0仅工程检查，不冲销本实际缺陷；计划仍V5。

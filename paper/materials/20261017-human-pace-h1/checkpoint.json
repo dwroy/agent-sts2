@@ -4,15 +4,15 @@
   "owner_session": "01a13dcd-83d4-7c63-b233-f93cf878ecf4",
   "original_owner": "01a13dcd-83d4-7c63-b233-f93cf878ecf4",
   "account": "codex1",
-  "at": "2026-10-17T11:00:41.242818+08:00",
-  "phase": "natural acceptance assigned; blocking event listener active",
+  "at": "2026-10-17T12:35:47.821601+08:00",
+  "phase": "H1 natural acceptance blocked by verified strict selection deadline wait; 0/2",
   "worktree": ".worktrees/human-pace-h1-20261017",
   "base": "54e36d0830ab640130557b62a078b25954912ff4",
   "source": "7af803c06e82e2aafe6a595fab7a23e0f3f44fb3",
   "published": true,
   "native_model": "gpt-6.1-sol/xhigh; no model/account/home/prompt changes",
   "H1_evidence": "paper/materials/20261017-human-pace-h1",
-  "next": "Stop. Original ops owns actual serial narrow publication/number/dual notification/exact final-tree host.2 natural acceptance runs and H2+ await Claude assignment.",
+  "next": "Claude must separately assign minimal deadline fallback repair; original ops decides controlled run recovery. No implementation/restart authorized by read-only task.",
   "goal_status": "cancelled; do not create a goal",
   "H0": {
     "status": "running",
@@ -23,21 +23,15 @@
     "science_result": "pending"
   },
   "natural_acceptance": {
-    "state": "active_waiting_two_terminal_events",
-    "owner_session": "01a13dcd-83d4-7c63-b233-f93cf878ecf4",
-    "evidence": "paper/materials/20261017-human-pace-h1/natural",
-    "listener_pid": 3307923,
-    "listener_session": 77455,
-    "completed_runs": 0,
-    "excluded_overlap": "JKDUL0AL0TW6",
-    "baseline_run_ids": [
-      "YZWV37N2MU6N",
-      "N9GKED3PMEV3",
-      "CVJ4MLQF4CSY",
-      "DC32RW0A80V1",
-      "2Q6ZYZ6JHM0M"
-    ],
-    "scope": "read-only natural H1 acceptance; no H2+ or live changes"
+    "state": "blocked_0_of_2_complete_natural_runs",
+    "accepted_complete_runs": 0,
+    "partial_run": "5H83F3J0XSTE",
+    "observed_at": "2026-10-17T12:31:34.803789+08:00",
+    "elapsed_at_observation_minutes": 90.76086315,
+    "stuck_since": "2026-10-17T04:04:00.039Z",
+    "cause": "H1 deadline resolves empty answers through strictJev selection parser -> null intent -> exhausted same-turn budget -> no re-ask and no progress",
+    "report": "paper/materials/20261017-human-pace-h1/natural/report.md",
+    "need": "Claude must separately assign minimal deadline fallback repair; original ops decides controlled run recovery. No implementation/restart authorized by read-only task."
   },
   "source_staged_tree": "42b64e288ab34b51bfa1a4f15f8c6abd731fd139",
   "active_check": null,
@@ -71,5 +65,16 @@
   },
   "publication_status": "last received source receipt explicitly not yet published; original ops owns later event",
   "release_id": "V5-R380",
-  "actual_live": "dbd41616420f62e6502e9cb6c5827e852a6b4949"
+  "actual_live": "dbd41616420f62e6502e9cb6c5827e852a6b4949",
+  "exact_host_readback": {
+    "checked_live": "dbd41616420f62e6502e9cb6c5827e852a6b4949",
+    "tree": "d68e817428a59b28dfd53c3d9dfb34819f711e56",
+    "tsc_rc": 0,
+    "vitest_rc": 0,
+    "files": 519,
+    "tests": 5108,
+    "skipped": 2,
+    "evidence": "paper/materials/20261017-human-pace-h1/natural/host-readback.json",
+    "natural_acceptance_inferred": false
+  }
 }

@@ -2,7 +2,7 @@
   "request": "roy-20261017-human-pace",
   "phase": "H1 natural acceptance",
   "owner_session": "01a13dcd-83d4-7c63-b233-f93cf878ecf4",
-  "state": "waiting two complete R380 natural runs",
+  "state": "blocked_0_of_2_complete_natural_runs",
   "requirements": [
     "original run-config admission, pre-release running game excluded",
     "two complete natural runs, one inotify listener, no polling/restart",
@@ -17,5 +17,16 @@
     "wait-two-natural.py",
     "freeze-inputs.py",
     "analyze.py"
-  ]
+  ],
+  "result": {
+    "state": "blocked_0_of_2_complete_natural_runs",
+    "accepted_complete_runs": 0,
+    "partial_run": "5H83F3J0XSTE",
+    "observed_at": "2026-10-17T12:31:34.803789+08:00",
+    "elapsed_at_observation_minutes": 90.76086315,
+    "stuck_since": "2026-10-17T04:04:00.039Z",
+    "cause": "H1 deadline resolves empty answers through strictJev selection parser -> null intent -> exhausted same-turn budget -> no re-ask and no progress",
+    "report": "paper/materials/20261017-human-pace-h1/natural/report.md",
+    "need": "Claude must separately assign minimal deadline fallback repair; original ops decides controlled run recovery. No implementation/restart authorized by read-only task."
+  }
 }

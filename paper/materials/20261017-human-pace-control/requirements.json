@@ -44,6 +44,16 @@
       "state": "not_assigned"
     }
   ],
-  "natural_acceptance": "2 complete natural runs and G1c funnel required by plan; not started in this source-delivery task",
+  "natural_acceptance": {
+    "state": "blocked_0_of_2_complete_natural_runs",
+    "accepted_complete_runs": 0,
+    "partial_run": "5H83F3J0XSTE",
+    "observed_at": "2026-10-17T12:31:34.803789+08:00",
+    "elapsed_at_observation_minutes": 90.76086315,
+    "stuck_since": "2026-10-17T04:04:00.039Z",
+    "cause": "H1 deadline resolves empty answers through strictJev selection parser -> null intent -> exhausted same-turn budget -> no re-ask and no progress",
+    "report": "paper/materials/20261017-human-pace-h1/natural/report.md",
+    "need": "Claude must separately assign minimal deadline fallback repair; original ops decides controlled run recovery. No implementation/restart authorized by read-only task."
+  },
   "goal_status": "no Codex goal; explicit Claude assignments only"
 }

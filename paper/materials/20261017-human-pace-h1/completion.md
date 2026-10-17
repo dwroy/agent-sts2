@@ -17,3 +17,8 @@ H0 notice `36fcbd1a06d722f1a1e9a8c7` 已本人读取首次模型前ENOENT失败�
 ## 2026-10-17T10:51:26.530580+08:00 原 ops 正式实收已本人读回
 
 原 ops `ops-source-received.json` 在 2026-10-17 10:49:39 CST 明确 `source_received=true`，本人逐28叶 path/bytes/SHA、源tree/parent、patch及4296题终局logSHA读回一致，见 `watcher-ops-formal-receipt-readback.json`。该正式实收仍明确 published=false、release_id/final_tree_host=null、natural_acceptance=false；不替其后续实际发布结果或Roy ACK。watcher本轮源码任务到此完成并停止。
+
+
+- 2026-10-17T12:35:47.821601+08:00 原watcher H1自然验收在首个真实R380局5H83F3J0XSTE阻塞，0/2完整终局。12:31:34单次>90分钟核回：最后决策12:03:59/F48第3试T1，12:04:00 selection/choose的Jev在剩余357ms时明确human-pace budget exhausted；R380空答案超时兜底与strictJev返回null intent冲突，同回合预算耗尽后无法再问，12:04:10原console已报stuck25polls，至节点27.58分钟无进展。原controller与inotify listener存活，不是丢局末；未改线上/重启/模型/模拟。729已落决策729预算字段，50原生Sol6.1/xhigh；未落选择题超时不能藏在已落行指标中。F17/F33首试过，F48最终unknown，G1c第59启动候选未完，不称59完成或2/2。原ops R380精确d68e817宿主0/519files5108过2跳已读回且日志SHA核，仅工程绿。报告与冻结引用paper/materials/20261017-human-pace-h1/natural/report.md；需Claude另派同H1最小确定性超时出口修复及原ops决定受控恢复，原监听保留，不创建任务/学习者/goal或推进H2+。Roy11:37/a49d8c435仍V5决定已核。
+
+此为后续自然验收阻塞接续，不改前述源码任务交付/历史检查；自然2/2仍未完成。

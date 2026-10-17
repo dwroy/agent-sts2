@@ -39,6 +39,7 @@ def main():
               [["前5" if rid in base else "R380", rid, f"{runs[rid]['duration_minutes']:.2f}", f"F{runs[rid]['end_floor']} {'胜' if runs[rid]['victory'] else '败'}", runs[rid]["decision_count"],
                 f"{runs[rid]['L2']['questions_including_failed_traces']}/{runs[rid]['L2']['native_call_rows']}", "是" if runs[rid]["over_90_minutes"] else "否"] for rid in base + post]), "",
         f"总用时中位数：发布前五局 {statistics.median(runs[r]['duration_minutes'] for r in base):.2f} 分钟；R380 两局 {statistics.median(runs[r]['duration_minutes'] for r in post):.2f} 分钟。", "",
+        "边界补充：JKDUL0AL0TW6 是发布前启动、发布31秒后结束的旧版局，另有56.02分钟/F33败的原件；未充H1验收，也未偷换上述冻结基线。若以首个H1启动之前最近五个旧版终局为敏感性窗口，则加入JK、移出YZW；所有六局原始投影均保留，可复算。", "",
         "逐决策可比计算延迟：n / p50 / p90 / 最大，单位秒。定义为 latency_ms 的 pre+planner+plan+jev+deepseek，排除 action；这些字段可能含预算暂停的传输，不能当精确 H1 预算时间。L2 单独列，不与计算项再相加。", "",
         table(["局", "普通", "精英", "Boss首试", "SL重试", "L2整题"],
               [[rid] + [latency(runs[rid]["decision_compute_proxy_ms"][k]) for k in ("ordinary", "elite", "boss", "retry")]
@@ -57,9 +58,9 @@ def main():
                 samples(runs[rid][lane]["actual_samples"]), samples(runs[rid][lane]["candidate_samples"]), str(runs[rid][lane]["status_counts"])] for rid in base + post for lane in ("B2", "B3")]), "",
         "样本统计的单位为样本，不是秒；完整直方图、paired 样本数和 requested 分布在 analysis.json。", "",
         "G1c 沿原 Silent A10/V5 描述性口径。第59/60局的实际排序以下方已终局集合为准；既有50局归档不借作本次证据，60局自动归档由原 ops 钩子处理，不由 watcher 重跑。首试在首次预测/实际死亡处停止，含SL最终结果单列。", "",
-        table(["局", "G1c完成序号", "固定10局段", "最终层", "首试停止层", "Boss 首试/最终"],
+        table(["局", "G1c完成序号", "固定10局段", "最终层", "首试停止层", "Boss局部首试/最终（*为首试漏斗未到）"],
               [[rid, prefix_n+i+1, f"{(prefix_n+i)//10*10+1}–{(prefix_n+i)//10*10+10}", runs[rid]["end_floor"], runs[rid]["funnel"]["first_attempt_stop_floor"],
-                "; ".join(f"F{b['floor']} {b['encounter']} {b['first_attempt_pass']}/{b['final_pass']}" for b in runs[rid]["funnel"]["bosses"]) or "未到Boss"] for i, rid in enumerate(post)]), ""]
+                "; ".join(f"F{b['floor']} {b['encounter']} {b['first_attempt_pass']}/{b['final_pass']}{'*' if not b['reachable_in_first_attempt_funnel'] else ''}" for b in runs[rid]["funnel"]["bosses"]) or "未到Boss"] for i, rid in enumerate(post)]), ""]
     for rid in post:
         r = runs[rid]
         lines += [f"{rid}：预算兜底 {r['budget_fallbacks']}；stage 超时 {r['stage_timeout_counts']}；预算缺行 {r['missing_budget_entries']}。", ""]
