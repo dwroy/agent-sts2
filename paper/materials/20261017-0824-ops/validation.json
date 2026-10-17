@@ -1,0 +1,29 @@
+{
+  "at": "2026-10-17T08:22:48.458135+08:00",
+  "worktree": ".worktrees/codex-f48-shadow-pause-20261017",
+  "base": "f2534f90f846e80521779fe3da38d184fd24eb32",
+  "staged_tree": "67e7a5d5b75345fcd3408fdc23ab3ce82f43ae28",
+  "leaves": 2,
+  "tsc": {
+    "exit_code": 0,
+    "log": "tsc-r2.log"
+  },
+  "fixed": {
+    "exit_code": 0,
+    "files": 2,
+    "tests": 34,
+    "seconds": 15.1,
+    "log": "fixed-r2.log"
+  },
+  "gitleaks_source": 0,
+  "full": {
+    "state": "running",
+    "session_id": 83565,
+    "log": "source-full.log"
+  },
+  "initial_tooling_failures": {
+    "tsc.log": "new worktree lacked node_modules; npx resolved unrelated tsc package; rc1, no production type result",
+    "fixed.log": "new worktree lacked node_modules; npx attempted vitest resolution, stopped exact owned PID2899645 before tests; not a test result",
+    "correction": "linked repository existing node_modules and used npm_config_offline=true; no npm install or dependency change"
+  }
+}

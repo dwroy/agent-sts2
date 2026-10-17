@@ -1,0 +1,209 @@
+{
+  "at": "2026-10-17 08:25:13 CST",
+  "parent": "roy-20261016-global-build",
+  "original_owner": "01a13dcd-83d4-7c63-b233-f93cf878ecf4",
+  "task": "original urgent F48 health continuation, no new stage",
+  "actual_report_and_patch_read": true,
+  "frozen_original_materials": [
+    {
+      "source": "paper/materials/20261017-f48-shadow-slowdown/report.md",
+      "copy": "paper/materials/20261017-0824-ops/report.md",
+      "bytes": 7015,
+      "sha256": "1f3cd199f5a48bacd770404a5eb797c2826116fed17498a44d05a58e1adbd5ec"
+    },
+    {
+      "source": "paper/materials/20261017-f48-shadow-slowdown/summary.json",
+      "copy": "paper/materials/20261017-0824-ops/summary.json",
+      "bytes": 7529,
+      "sha256": "834f734bb1601f49d712f9b47efff8282fb068ed2664432bd371577db417008a"
+    },
+    {
+      "source": "paper/materials/20261017-f48-shadow-slowdown/summary-r2.json",
+      "copy": "paper/materials/20261017-0824-ops/summary-r2.json",
+      "bytes": 7529,
+      "sha256": "834f734bb1601f49d712f9b47efff8282fb068ed2664432bd371577db417008a"
+    },
+    {
+      "source": "paper/materials/20261017-f48-shadow-slowdown/restart-segments.json",
+      "copy": "paper/materials/20261017-0824-ops/restart-segments.json",
+      "bytes": 357,
+      "sha256": "1c531dba68ec0c1a3ec815777874d659805c94d973a953ace85e2597bee70fac"
+    },
+    {
+      "source": "paper/materials/20261017-f48-shadow-slowdown/input-and-source-manifest.json",
+      "copy": "paper/materials/20261017-0824-ops/input-and-source-manifest.json",
+      "bytes": 1601,
+      "sha256": "de460452e3d113706e3b98ab935fbf4a28db8470a95003208625210c622186f1"
+    },
+    {
+      "source": "paper/materials/20261017-f48-shadow-slowdown/validation.json",
+      "copy": "paper/materials/20261017-0824-ops/validation.json",
+      "bytes": 969,
+      "sha256": "67620b2bafb087a087f4a6d2fc9fac80090c3ac8549bd51bf21e896c07f9d887"
+    },
+    {
+      "source": "paper/materials/20261017-f48-shadow-slowdown/source.patch",
+      "copy": "paper/materials/20261017-0824-ops/source.patch",
+      "bytes": 4215,
+      "sha256": "bcbdcb7cd5509a31678e8040e1d0290e4f65f3c0269ef9d00f46be1ff4df7759"
+    },
+    {
+      "source": "paper/materials/20261017-f48-shadow-slowdown/checkpoint.json",
+      "copy": "paper/materials/20261017-0824-ops/checkpoint.json",
+      "bytes": 2106,
+      "sha256": "c390500e17db819e18c0f9a1b76121f44d2f930c32112acd886d299ec08d9517"
+    },
+    {
+      "source": "paper/materials/20261017-f48-shadow-slowdown/fixed-r2.log",
+      "copy": "paper/materials/20261017-0824-ops/fixed-r2.log",
+      "bytes": 269,
+      "sha256": "a3d02bcb20aa1f148e53dcd3ac0e8bcfc811621b4ae52c53e6ae1087a8720b33"
+    },
+    {
+      "source": "paper/materials/20261017-f48-shadow-slowdown/tsc-r2.log",
+      "copy": "paper/materials/20261017-0824-ops/tsc-r2.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "paper/materials/20261017-f48-shadow-slowdown/gitleaks-source.json",
+      "copy": "paper/materials/20261017-0824-ops/gitleaks-source.json",
+      "bytes": 3,
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    }
+  ],
+  "source_base": "f2534f90f846e80521779fe3da38d184fd24eb32",
+  "staged_tree": "67e7a5d5b75345fcd3408fdc23ab3ce82f43ae28",
+  "patch_sha256": "bcbdcb7cd5509a31678e8040e1d0290e4f65f3c0269ef9d00f46be1ff4df7759",
+  "leaves": [
+    {
+      "path": "agent/src/sim/f48-joint-shadow.ts",
+      "source_sha256": "68e8e4575433bf3ff8ed692d3904d937e624afd40815bd0d3bfdf61e39c11ac9",
+      "base_sha256": "bc541fa7b7c992f053d6e5cce7aa3b8586a58d18c4cd0994e195709279915463",
+      "current_main_equals_base": true,
+      "current_live_equals_base": true
+    },
+    {
+      "path": "agent/tests/f48-joint-integration.test.ts",
+      "source_sha256": "9619064da078c47f054da8a0b982d831e0872f95e25d9f848ec1297123e31690",
+      "base_sha256": "e42ef26cfc02da7faeca1cbb2aba2f85607a21e4d7584f6415b6ab7f34c2bdd5",
+      "current_main_equals_base": true,
+      "current_live_equals_base": true
+    }
+  ],
+  "source_committed": false,
+  "checks_observed": {
+    "at": "2026-10-17T08:22:48.458135+08:00",
+    "worktree": ".worktrees/codex-f48-shadow-pause-20261017",
+    "base": "f2534f90f846e80521779fe3da38d184fd24eb32",
+    "staged_tree": "67e7a5d5b75345fcd3408fdc23ab3ce82f43ae28",
+    "leaves": 2,
+    "tsc": {
+      "exit_code": 0,
+      "log": "tsc-r2.log"
+    },
+    "fixed": {
+      "exit_code": 0,
+      "files": 2,
+      "tests": 34,
+      "seconds": 15.1,
+      "log": "fixed-r2.log"
+    },
+    "gitleaks_source": 0,
+    "full": {
+      "state": "running",
+      "session_id": 83565,
+      "log": "source-full.log"
+    },
+    "initial_tooling_failures": {
+      "tsc.log": "new worktree lacked node_modules; npx resolved unrelated tsc package; rc1, no production type result",
+      "fixed.log": "new worktree lacked node_modules; npx attempted vitest resolution, stopped exact owned PID2899645 before tests; not a test result",
+      "correction": "linked repository existing node_modules and used npm_config_offline=true; no npm install or dependency change"
+    }
+  },
+  "full_source_result": "pending original session83565, no repeat",
+  "historical_config_refs": [
+    {
+      "run_id": "N9GKED3PMEV3",
+      "ts_UTC": "2026-10-16T12:59:52.809000",
+      "offset": 1895188,
+      "bytes": 5500,
+      "sha256": "3f8944acaf2fc5637d6cfbdf294072befccc27e5b9949d7bb195e98ddcc5c174",
+      "reported_code": "c783c6c+dirty",
+      "reported_floor": 1,
+      "reported_restart": false,
+      "actual_code_field_paths": [
+        ".code.code"
+      ],
+      "restart_floor_code_read_back": true
+    },
+    {
+      "run_id": "CVJ4MLQF4CSY",
+      "ts_UTC": "2026-10-16T15:25:44.698000",
+      "offset": 1900688,
+      "bytes": 5542,
+      "sha256": "5f565ae29e05f0817c6972214fea386f7038a7ce96159992195e74b03ad3957c",
+      "reported_code": "5e70fa3+dirty",
+      "reported_floor": 1,
+      "reported_restart": false,
+      "actual_code_field_paths": [
+        ".code.code"
+      ],
+      "restart_floor_code_read_back": true
+    },
+    {
+      "run_id": "CVJ4MLQF4CSY",
+      "ts_UTC": "2026-10-16T20:13:45.626000",
+      "offset": 1906230,
+      "bytes": 5177,
+      "sha256": "a2bfc45a06a407208cbb1672e78bc58b7d7dcc738fd65d4cf98bd3235d80598b",
+      "reported_code": "f1a334a+dirty",
+      "reported_floor": 48,
+      "reported_restart": true,
+      "actual_code_field_paths": [
+        ".code.code"
+      ],
+      "restart_floor_code_read_back": true
+    },
+    {
+      "run_id": "DC32RW0A80V1",
+      "ts_UTC": "2026-10-16T22:58:07.181000",
+      "offset": 1911407,
+      "bytes": 5473,
+      "sha256": "8bb1e7722cd5f93986879b64b7381f46b04d105ab6e5d9e35b9c8698fc3feba8",
+      "reported_code": "51511b2+dirty",
+      "reported_floor": 1,
+      "reported_restart": false,
+      "actual_code_field_paths": [
+        ".code.code"
+      ],
+      "restart_floor_code_read_back": true
+    }
+  ],
+  "restart_timing_segments": {
+    "CVJ4_before_0413_restart": {
+      "b2_questions": 43,
+      "b2_ms": 9951479,
+      "work": 837300,
+      "first_b2_ms": 372101,
+      "first_b2_ts": "2026-10-16T17:22:34.629000"
+    },
+    "CVJ4_after_0413_restart": {
+      "b2_questions": 36,
+      "b2_ms": 8698639,
+      "work": 738000,
+      "first_b2_ms": 232027,
+      "first_b2_ts": "2026-10-16T20:17:54.781000"
+    }
+  },
+  "boundaries": [
+    "CVJ4 has an actual F48 restart at04:13:45 CST to f1a334a+dirty; do not call its whole run one version or a clean tree.",
+    "First B2 question at01:22:34.629 CST was already372101ms, before restart; do not attribute onset only to restart.",
+    "other_ms34.456s covers all other planning, not independently measured joint aggregation; IO wait/cost decomposition remains unknown.",
+    "Default-off joint diagnostics gate does not change B2/B3 workers, budgets, C2, ranking, SL/potion rules and does not fix identified B2 runtime cost.",
+    "Source full still running and no exact commit delivered; no integration or host requested for this uncommitted candidate.",
+    "Do not restart DC32; disk publication cannot change its loaded modules. Later actual process/config readback needed for default-off adoption."
+  ],
+  "no_new_test_model_simulation_or_research": true,
+  "no_other_role_ACK": true
+}

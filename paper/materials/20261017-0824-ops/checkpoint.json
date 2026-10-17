@@ -1,0 +1,47 @@
+{
+  "schema": "f48-shadow-slowdown-checkpoint-v1",
+  "parent": "roy-20261016-global-build",
+  "owner_session": "01a13dcd-83d4-7c63-b233-f93cf878ecf4",
+  "account": "codex1",
+  "goal_status": "cancelled; explicit assignment only",
+  "at": "2026-10-17T08:22:48.458135+08:00",
+  "phase": "diagnosis complete; default-off source full running",
+  "source": {
+    "worktree": ".worktrees/codex-f48-shadow-pause-20261017",
+    "base": "f2534f90f846e80521779fe3da38d184fd24eb32",
+    "staged_tree": "67e7a5d5b75345fcd3408fdc23ab3ce82f43ae28",
+    "leaves": 2,
+    "tsc": {
+      "exit_code": 0,
+      "log": "tsc-r2.log"
+    },
+    "fixed": {
+      "exit_code": 0,
+      "files": 2,
+      "tests": 34,
+      "seconds": 15.1,
+      "log": "fixed-r2.log"
+    },
+    "gitleaks_source": 0,
+    "full": {
+      "state": "running",
+      "session_id": 83565,
+      "log": "source-full.log"
+    },
+    "initial_tooling_failures": {
+      "tsc.log": "new worktree lacked node_modules; npx resolved unrelated tsc package; rc1, no production type result",
+      "fixed.log": "new worktree lacked node_modules; npx attempted vitest resolution, stopped exact owned PID2899645 before tests; not a test result",
+      "correction": "linked repository existing node_modules and used npm_config_offline=true; no npm install or dependency change"
+    }
+  },
+  "conclusion": "B2 existing computation dominates; joint aggregation not cause of the 20x run-level difference",
+  "actual_historical_io_wait": "unknown",
+  "ops_target": "wJ:p5",
+  "source_transported": false,
+  "published": false,
+  "exact_host_checked": false,
+  "natural_observation_started": false,
+  "next": "After source checks, commit exact two leaves and hand original ops; report and stop. B2 budget/policy changes require a further decision.",
+  "ops_pre_source_native_response": "2026-10-17 08:24 readback: original ops explicitly read report/two-leaf patch; await full result and exact commit; do not restart DC32 or claim logger as B2 speed fix.",
+  "pause_runtime_boundary": "next loaded process only; existing DC32 module unchanged; no restart requested"
+}
