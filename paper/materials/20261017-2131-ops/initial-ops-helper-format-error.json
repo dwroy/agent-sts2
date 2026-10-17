@@ -1,0 +1,11 @@
+{
+  "at": "2026-10-17 21:37:36 CST",
+  "observed_helper_exit": 1,
+  "observed_error": "KeyError: 'character'",
+  "input": "run-identities.json entries are source_line/SHA/row envelopes",
+  "cause": "Ops helper initially treated each envelope as the run object",
+  "correction": "Preserve envelope and read its row field; original data unchanged",
+  "corrected_readback_rc": 0,
+  "product_or_learner_failure": false,
+  "source_ledger_and_knowledge_mutation_by_failed_helper": false
+}
