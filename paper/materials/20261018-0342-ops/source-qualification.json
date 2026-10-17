@@ -1,0 +1,225 @@
+{
+  "at": "2026-10-18 03:44:19 CST",
+  "batch": "20261018-031302-fix-batch",
+  "source": "2ca4eb3aad3c9c0f33027e4e217c4820a210c2a2",
+  "first_commit": "edbbbd6ccffa40decdb6487411d80e3f688f0907",
+  "parent": "3e7f8d904a167541f07e15472572a23208fb7720",
+  "source_worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261018-031302",
+  "paths": [
+    {
+      "path": "agent/tests/brain-codex.test.ts",
+      "sha256": "a4f07155acbf8eff48bdeae8c9594738dba3df465c7428fc5f06a693ed8ca0b3"
+    },
+    {
+      "path": "agent/tests/codex-stall-fixture.test.ts",
+      "sha256": "4b58364b4c13a1c8c62f1b4ff61644d472d653005b61e6c94fb9b69e26fb28f0"
+    },
+    {
+      "path": "agent/tests/codex-stall-fixture.ts",
+      "sha256": "7e4133f1f61b1ad9ee95b1a0bdc906b1a096f7313670b840e12284085f1c8fc3"
+    },
+    {
+      "path": "agent/tests/full-rollout-facts-fixture.test.ts",
+      "sha256": "87f3f4a8a949c9499642f97aa3a5ca402e226b3765e9cb6047f07a7f97a79eeb"
+    },
+    {
+      "path": "agent/tests/full-rollout-facts-fixture.ts",
+      "sha256": "afea1ff9da9081d0d9578ef074b9b3bf298fb783dfa23e08c3ff2cbff30876b1"
+    },
+    {
+      "path": "agent/tests/rollout-live.test.ts",
+      "sha256": "90d717dc6e0b65f62c44c06ea715151a061b35aa77617b0adfe8194915dc4da1"
+    }
+  ],
+  "fixed_input_files": {
+    "agent/tests/brain-codex.test.ts": "a4f07155acbf8eff48bdeae8c9594738dba3df465c7428fc5f06a693ed8ca0b3",
+    "agent/tests/codex-stall-fixture.ts": "7e4133f1f61b1ad9ee95b1a0bdc906b1a096f7313670b840e12284085f1c8fc3",
+    "agent/tests/codex-stall-fixture.test.ts": "4b58364b4c13a1c8c62f1b4ff61644d472d653005b61e6c94fb9b69e26fb28f0",
+    "agent/tests/rollout-live.test.ts": "90d717dc6e0b65f62c44c06ea715151a061b35aa77617b0adfe8194915dc4da1",
+    "agent/tests/full-rollout-facts-fixture.ts": "afea1ff9da9081d0d9578ef074b9b3bf298fb783dfa23e08c3ff2cbff30876b1",
+    "agent/tests/full-rollout-facts-fixture.test.ts": "87f3f4a8a949c9499642f97aa3a5ca402e226b3765e9cb6047f07a7f97a79eeb",
+    "agent/tests/logged-states/g8yy-f30-t3.json": "8c70a6f8176b3ce64f28efc8c0fe81d0ee8bd41964237b92fa4b19c8c57c5822",
+    "agent/tests/logged-states/game-data.json": "49cd18394fcd3f00f85ff02f949361fe2ba5c074cc48ef026c64fd12ac9d682f",
+    "agent/tests/boss-lines-data/pinned-knowledge.json": "ae931e4a962dcf3307d31b2ef8333359bf58bbf16d8cbc9a098c924202bd1d06"
+  },
+  "source_sandbox_rc": 0,
+  "source_files": 489,
+  "source_cases": 4446,
+  "source_full_not_repeated": true,
+  "source_ablation_rc": [
+    1,
+    1
+  ],
+  "source_restored_rc": [
+    0,
+    0
+  ],
+  "native": {
+    "batch": "20261018-031302-fix-batch",
+    "thread": "01a14b48-50e4-7761-b246-a5fc94d47e4f",
+    "cwd": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261018-031302",
+    "event_log": "learner/runs/20261018-031307-81166ee3-073a-48f2-971c-48933da4aa72-fix-batch.jsonl",
+    "registered_launch_batch": "20261018-031302-fix-batch",
+    "original_lease": "3240da6854a1da61d28ac38f2234796963b03fa17f8b01a6aeaa5761c028d951",
+    "native_context": {
+      "source": "ops/codex-ops/accounts/codex3/learner/sessions/2026/10/18/rollout-2026-10-18T03-13-12-01a14b48-50e4-7761-b246-a5fc94d47e4f.jsonl",
+      "offset": 50304,
+      "bytes": 5152,
+      "sha256": "4831b4d437edffe417133b6fdcda4815f313e4ff1b1736956bf5ebc51267b086",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "sandbox": {
+        "type": "workspace-write",
+        "writable_roots": [
+          "/home/dw/Projects/agent-sts2",
+          "/home/dw/Projects/agent-sts2/.git",
+          "/home/dw/Projects/agent-sts2/.git/worktrees/codex-fix-silent-20261018-031302"
+        ],
+        "network_access": false,
+        "exclude_tmpdir_env_var": false,
+        "exclude_slash_tmp": false
+      },
+      "approval_policy": "never"
+    },
+    "native_user_input": {
+      "offset": 58299,
+      "bytes": 13081,
+      "sha256": "ebc7e8c05f95719cadef61bce9fbc8f5aa87993e69a9ad82a805ecd834210757",
+      "input_sha256": "a9fbb2a5ae32f47ef0e58dd19ec117f94d0a07c70825b5476654771d26fedf8f"
+    },
+    "original_header_events": [
+      {
+        "offset": 0,
+        "bytes": 14892,
+        "sha256": "c1b5d3c46861c7e617462bc949cb581e006c7bfb2b2b33eb643ba1f2ac2a0d45",
+        "type": "learner_launch",
+        "attempt": null,
+        "code": null
+      },
+      {
+        "offset": 14892,
+        "bytes": 370,
+        "sha256": "62f1ba88694f6671161baa17307c86c9b94e688156f6ffcba6e92ace9f62c353",
+        "type": "learner_startup_attempt",
+        "attempt": 1,
+        "code": null
+      },
+      {
+        "offset": 18274,
+        "bytes": 77,
+        "sha256": "f9846a765bffebd5a02d1c1b1534a7ea92be010f531f0bd7d21cdd0ed7b6fdbc",
+        "type": "thread.started",
+        "attempt": null,
+        "code": null
+      }
+    ],
+    "startup_attempts": 1,
+    "failed_startups_preserved": 0,
+    "no_model_or_manual_restart": true
+  },
+  "original_report": {
+    "task": "fix-batch",
+    "base": "3e7f8d904a167541f07e15472572a23208fb7720",
+    "fixes": [
+      {
+        "item": "infra-h0-414-host-fixed-test-stability-20261018：Codex stall时间断言",
+        "commit": "edbbbd6ccffa40decdb6487411d80e3f688f0907",
+        "test": "agent/tests/codex-stall-fixture.test.ts",
+        "fails_without_fix": true
+      },
+      {
+        "item": "infra-h0-414-host-fixed-test-stability-20261018：rollout完整事实格式夹具",
+        "commit": "2ca4eb3aad3c9c0f33027e4e217c4820a210c2a2",
+        "test": "agent/tests/full-rollout-facts-fixture.test.ts",
+        "fails_without_fix": true
+      }
+    ],
+    "skipped": [
+      {
+        "item": "出牌、药水、SL、终局、路线及角色机制条目",
+        "reason": "策略类；沿已有独立strategy-proposal链处理。"
+      },
+      {
+        "item": "silent-0339尾巴误核销续证",
+        "reason": "策略类；保留已有提案和当前行为。"
+      },
+      {
+        "item": "silent-0332 nonpositive-hp资源契约根因",
+        "reason": "证据不足；诊断窄修不等于根因修复。"
+      },
+      {
+        "item": "U5W7NUE925NK F15/F16原G2缺DPR告警根因",
+        "reason": "证据不足；原样本数组及配对分母未保存。"
+      },
+      {
+        "item": "sandbox-glob-startup-race目录生命周期与磁盘压力宽项",
+        "reason": "证据不足；删除归属与上游时序未确定。"
+      },
+      {
+        "item": "架构调整、F33归因及调度公平性调查",
+        "reason": "太大；属于独立架构、策略或归因任务。"
+      },
+      {
+        "item": "core-build-notify-222802-rc2旧通知恢复",
+        "reason": "证据不足；旧送达状态未证。"
+      },
+      {
+        "item": "Codex缓存、DPR/B2性能及历史宿主超时根因",
+        "reason": "证据不足或独立性能调查。"
+      },
+      {
+        "item": "原20261018-011241报告recheck接续",
+        "reason": "原源码不是所报发布提交祖先；保留原报告和失败。"
+      },
+      {
+        "item": "窄cherry-pick提案验收",
+        "reason": "太大；需要独立回执协议，不能伪造祖先或补填原报告身份。"
+      },
+      {
+        "item": "infra-h0-414-host-fixed-test-stability-20261018生产性能及原full1归因",
+        "reason": "证据不足；本批仅修固定测试，不据此推断产品或CPU因果。"
+      }
+    ],
+    "merged": null,
+    "tests": {
+      "tsc": 0,
+      "vitest": 0,
+      "files": 489,
+      "cases": 4446
+    },
+    "code_proposals": [],
+    "implementation_domains": [],
+    "report": "/home/dw/Projects/agent-sts2/learner/runs/20261018-031307-81166ee3-073a-48f2-971c-48933da4aa72-fix-batch/report.md"
+  },
+  "original_final_verification": {
+    "source_head": "2ca4eb3aad3c9c0f33027e4e217c4820a210c2a2",
+    "source_status": "",
+    "live_before_refresh": "f7abb0e13d3ee0943637be2146ca52ee25486289",
+    "live_before_merge": "f7abb0e13d3ee0943637be2146ca52ee25486289",
+    "live_observed": "f7abb0e13d3ee0943637be2146ca52ee25486289",
+    "conflicts": 20,
+    "merge_exit": 1,
+    "tests": {
+      "tsc": 0,
+      "vitest": 0,
+      "files": 489,
+      "cases": 4446
+    },
+    "report_sha256": "9adc184cf82adf61977fe621fa173b5b59cfdc336f728202101906e09a6b933b",
+    "ledger_updates": 0,
+    "code_proposals": [],
+    "implementation_domains": [],
+    "gitleaks": {
+      "codex": 0,
+      "rollout": 0
+    }
+  },
+  "archived_files": 59,
+  "original_20_history_conflicts_preserved": true,
+  "stale_test_status_running_preserved": true,
+  "source_process_restriction_and_initial_wrong_cwd_failures_preserved": true,
+  "new_release": false,
+  "new_shipped": false,
+  "production_source_changed": false,
+  "test_source_changed": true
+}
