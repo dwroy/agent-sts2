@@ -1,0 +1,522 @@
+{
+  "at": "2026-10-17 11:42:09 CST",
+  "batch": "20261017-081302-fix-batch",
+  "canonical_state": "done",
+  "rc": 0,
+  "report": {
+    "task": "fix-batch",
+    "base": "ac451784ffebed27097bf261bbfaa5ee69c5d4d5",
+    "fixes": [
+      {
+        "item": "021302宿主eval校准固定夹具超时（误遍历线上发布表）",
+        "commit": "d8748f2e70bfb2a91138ede0e1f6046927c116a4",
+        "test": "agent/tests/eval_calibration_test.py",
+        "fails_without_fix": true
+      },
+      {
+        "item": "021302宿主potions-jev-call全部局面扫描超时",
+        "commit": "c5fd30d8d369ea6c56bba2e4c3daa6e01e3bf420",
+        "test": "agent/tests/potions-jev-call.test.ts",
+        "fails_without_fix": true
+      },
+      {
+        "item": "infra-target-options-fixed-fixture-timeout（默认EZ2L路径）",
+        "commit": "c57105ca66bd75c6d6952772dcf712399eda828b",
+        "test": "agent/tests/target-options.test.ts",
+        "fails_without_fix": true
+      },
+      {
+        "item": "infra-test-rollout-ties-host-timeout-15000",
+        "commit": "da08fcead2025c293140f1ba103d8efdbd39a4c3",
+        "test": "agent/tests/rollout-ties-fixture.test.ts",
+        "fails_without_fix": true
+      },
+      {
+        "item": "infra-test-build-facts-selection-remove-latency",
+        "commit": "e2c1d8a2d29f1cbaf8e5620e4bb912d6f05965f0",
+        "test": "agent/tests/build-facts-audit-fixture.test.ts",
+        "fails_without_fix": true
+      }
+    ],
+    "skipped": [
+      {
+        "item": "sandbox-glob-startup-race目录生命周期与磁盘压力宽项",
+        "reason": "证据不足；既有租约和retention窄项修复不代表上游根因解决，沿原链保留。"
+      },
+      {
+        "item": "selection-hidden-daggers-conditional-followup-readback（运行期间新增）",
+        "reason": "已有独立提案silent-proposal-59b2e430bb7521d4，仍pending，按第1.4节沿原策略链处理。"
+      },
+      {
+        "item": "出牌、药水、SL、终局、路线及角色机制条目（含silent-0308/0365/0481/0487/0496）",
+        "reason": "策略类，沿既有strategy-proposal链。"
+      },
+      {
+        "item": "silent-0332实际nonpositive-hp资源契约根因",
+        "reason": "证据不足；合成测试回执不代表实际根因已修。"
+      },
+      {
+        "item": "arch-funnel-guard/arch-learning-priority/arch-unified-resource-value/inv-f33-regression及调度公平性调查",
+        "reason": "独立策略、架构及归因任务，沿原任务。"
+      },
+      {
+        "item": "core-build-notify-222802-rc2原生通知恢复",
+        "reason": "旧回执缺stderr，无法确认未送达；未重发通知。"
+      },
+      {
+        "item": "codex缓存实测、DPR性能及历史宿主超时根因",
+        "reason": "证据不足或独立性能调查，未以夹具修复冒称产品根因闭环。"
+      }
+    ],
+    "merged": "f88c3ccde0fdb5019b117da9d8421e5c04d95518",
+    "tests": {
+      "tsc": 0,
+      "vitest": 0,
+      "cases": 4330
+    },
+    "code_proposals": [],
+    "implementation_domains": [],
+    "report": "/home/dw/Projects/agent-sts2/learner/runs/20261017-081308-9b5ca07b-0cbe-42a7-8b04-51e29c76de5e-fix-batch/report.md"
+  },
+  "native": {
+    "batch": "20261017-081302-fix-batch",
+    "thread": "01a14734-967e-7403-9886-e745c5ac951f",
+    "cwd": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261017-081302",
+    "event_log": "learner/runs/20261017-081308-9b5ca07b-0cbe-42a7-8b04-51e29c76de5e-fix-batch.jsonl",
+    "registered_launch_batch": "20261017-081302-fix-batch",
+    "original_lease": "271be27a83fc2e91dd63638bb05598817ce0e0a18ddbc89eaef33fee4af6bc20",
+    "native_context": {
+      "source": "ops/codex-ops/accounts/codex1/learner/sessions/2026/10/17/rollout-2026-10-17T08-13-11-01a14734-967e-7403-9886-e745c5ac951f.jsonl",
+      "offset": 50304,
+      "bytes": 5152,
+      "sha256": "d0711bd4a25f8ae4860325133bffa73eca4a3fb1488608c32df6530ef31c9011",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "sandbox": {
+        "type": "workspace-write",
+        "writable_roots": [
+          "/home/dw/Projects/agent-sts2",
+          "/home/dw/Projects/agent-sts2/.git",
+          "/home/dw/Projects/agent-sts2/.git/worktrees/codex-fix-silent-20261017-081302"
+        ],
+        "network_access": false,
+        "exclude_tmpdir_env_var": false,
+        "exclude_slash_tmp": false
+      },
+      "approval_policy": "never"
+    },
+    "native_user_input": {
+      "offset": 58299,
+      "bytes": 13081,
+      "sha256": "6babbaeeed04ee3cce325fc34e8f30ae5a9fc16184cfb50b961d81939d3133da",
+      "input_sha256": "3878cec8c7d368590cf39f558a2ebc0e5dab9e8ff2d1efd5ce94638530e87b0b"
+    },
+    "original_header_events": [
+      {
+        "offset": 0,
+        "bytes": 14892,
+        "sha256": "448f03f1a39a239740a5d4ea2463946f1ff85ff3d4d3d6e02f8730b7d00da89d",
+        "type": "learner_launch",
+        "attempt": null,
+        "code": null
+      },
+      {
+        "offset": 14892,
+        "bytes": 370,
+        "sha256": "22df99749da023af586dcbbf6a5afe1ba2569bba946cbb96b1d4e5bb980daf58",
+        "type": "learner_startup_attempt",
+        "attempt": 1,
+        "code": null
+      },
+      {
+        "offset": 18274,
+        "bytes": 77,
+        "sha256": "c1f7ae2f9ed49c1f2e042baddbe5fa42074fa0353755e206a91a6fa92e979dc8",
+        "type": "thread.started",
+        "attempt": null,
+        "code": null
+      }
+    ],
+    "startup_attempts": 1,
+    "failed_startups_preserved": 0,
+    "no_model_or_manual_restart": true
+  },
+  "original_publication": {
+    "source": "e2c1d8a2d29f1cbaf8e5620e4bb912d6f05965f0",
+    "source_branch": "codex-fix-silent-20261017-081302",
+    "base": "ac451784ffebed27097bf261bbfaa5ee69c5d4d5",
+    "merged": "f88c3ccde0fdb5019b117da9d8421e5c04d95518",
+    "initial_live": "dbd41616420f62e6502e9cb6c5827e852a6b4949",
+    "dirty_before": "M knowledge/characters/silent/boss-damage.json\n M knowledge/characters/silent/construction-opportunities.json\n M knowledge/characters/silent/fight-value-gates.json\n M knowledge/characters/silent/monster-records.json\n M knowledge/characters/silent/outcome-stats.json\n M knowledge/characters/silent/room-costs.json\n M knowledge/common/card-upgrades.json\n M knowledge/common/monster-db.json\n M knowledge/common/move-model.json\n M notes/fight-value-backtest-silent.md\n M notes/monster-db-check.md",
+    "refresh_commit": "cbad065cd0fcc75c0db7b683fa6b225b4a842870",
+    "live_before": "cbad065cd0fcc75c0db7b683fa6b225b4a842870",
+    "refresh_paths": [
+      "knowledge/characters/silent/boss-damage.json",
+      "knowledge/characters/silent/construction-opportunities.json",
+      "knowledge/characters/silent/fight-value-gates.json",
+      "knowledge/characters/silent/monster-records.json",
+      "knowledge/characters/silent/outcome-stats.json",
+      "knowledge/characters/silent/room-costs.json",
+      "knowledge/common/card-upgrades.json",
+      "knowledge/common/monster-db.json",
+      "knowledge/common/move-model.json"
+    ],
+    "overlap_with_own_fixes": [],
+    "preview_exit": 0,
+    "conflicts": [],
+    "live_after": "f88c3ccde0fdb5019b117da9d8421e5c04d95518",
+    "dirty_after": "M knowledge/characters/silent/fight-value.json\n M notes/fight-value-backtest-silent.md\n M notes/monster-db-check.md",
+    "state": "merged",
+    "lock_acquired": true,
+    "merge_exit": 0,
+    "live_merge": "7907ca1af8f88d2adbe6b137ff8b6b8ceb082a23",
+    "live_tests_exit": 0,
+    "dirty_data_changed_during_checks": true,
+    "live_tsc": 0,
+    "live_vitest": 0,
+    "live_files": 470,
+    "live_cases": 4330
+  },
+  "validation_summary": [
+    {
+      "item": "021302宿主eval校准固定夹具超时（误遍历线上发布表）",
+      "commit": "d8748f2e70bfb2a91138ede0e1f6046927c116a4",
+      "log": "fix1-sandbox.log",
+      "tsc": 0,
+      "vitest": 0,
+      "files": {
+        "passed": 463,
+        "failed": 0,
+        "skipped": 0
+      },
+      "cases": {
+        "passed": 4279,
+        "failed": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "item": "021302宿主potions-jev-call全部局面扫描超时",
+      "commit": "c5fd30d8d369ea6c56bba2e4c3daa6e01e3bf420",
+      "log": "fix4-sandbox-retry1.log",
+      "tsc": 0,
+      "vitest": 0,
+      "files": {
+        "passed": 463,
+        "failed": 0,
+        "skipped": 0
+      },
+      "cases": {
+        "passed": 4280,
+        "failed": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "item": "infra-target-options-fixed-fixture-timeout（默认EZ2L路径）",
+      "commit": "c57105ca66bd75c6d6952772dcf712399eda828b",
+      "log": "fix5-sandbox.log",
+      "tsc": 0,
+      "vitest": 0,
+      "files": {
+        "passed": 463,
+        "failed": 0,
+        "skipped": 0
+      },
+      "cases": {
+        "passed": 4281,
+        "failed": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "item": "infra-test-rollout-ties-host-timeout-15000",
+      "commit": "da08fcead2025c293140f1ba103d8efdbd39a4c3",
+      "log": "fix2-sandbox.log",
+      "tsc": 0,
+      "vitest": 0,
+      "files": {
+        "passed": 464,
+        "failed": 0,
+        "skipped": 0
+      },
+      "cases": {
+        "passed": 4287,
+        "failed": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "item": "infra-test-build-facts-selection-remove-latency",
+      "commit": "e2c1d8a2d29f1cbaf8e5620e4bb912d6f05965f0",
+      "log": "fix3-sandbox.log",
+      "tsc": 0,
+      "vitest": 0,
+      "files": {
+        "passed": 465,
+        "failed": 0,
+        "skipped": 0
+      },
+      "cases": {
+        "passed": 4308,
+        "failed": 0,
+        "skipped": 0
+      }
+    }
+  ],
+  "source_scope": {
+    "before": "cbad065cd0fcc75c0db7b683fa6b225b4a842870",
+    "merge": "7907ca1af8f88d2adbe6b137ff8b6b8ceb082a23",
+    "changed_paths": [
+      "agent/tests/boss-sim-consumer-fixture.ts",
+      "agent/tests/build-facts-audit-fixture.test.ts",
+      "agent/tests/build-facts-audit.test.ts",
+      "agent/tests/eval_calibration_test.py",
+      "agent/tests/potions-jev-call.test.ts",
+      "agent/tests/rollout-clock-fixture.ts",
+      "agent/tests/rollout-ties-fixture.test.ts",
+      "agent/tests/rollout-ties.test.ts",
+      "agent/tests/target-options.test.ts"
+    ],
+    "all_five_source_commits_are_ancestors": true,
+    "production_and_knowledge_trees_match_refresh_commit": true,
+    "refresh_overlap_with_fix_paths": [],
+    "checks_pending": true
+  },
+  "final_manifest": {
+    "base": "ac451784ffebed27097bf261bbfaa5ee69c5d4d5",
+    "source": "e2c1d8a2d29f1cbaf8e5620e4bb912d6f05965f0",
+    "tree": "7d4451c1ba66e48e97586bd75c3587e9537c6a39",
+    "files": [
+      "agent/tests/boss-sim-consumer-fixture.ts",
+      "agent/tests/build-facts-audit-fixture.test.ts",
+      "agent/tests/build-facts-audit.test.ts",
+      "agent/tests/eval_calibration_test.py",
+      "agent/tests/potions-jev-call.test.ts",
+      "agent/tests/rollout-clock-fixture.ts",
+      "agent/tests/rollout-ties-fixture.test.ts",
+      "agent/tests/rollout-ties.test.ts",
+      "agent/tests/target-options.test.ts"
+    ],
+    "gitleaks": 0,
+    "status": ""
+  },
+  "fixture_composition": [
+    {
+      "path": "agent/tests/boss-sim-consumer-fixture.ts",
+      "source_sha256": "9b76b0a356a63516f01b6a0d0d161487a0c8cfc29d19aa6a36ef90944f3707b6",
+      "live_sha256": "9b76b0a356a63516f01b6a0d0d161487a0c8cfc29d19aa6a36ef90944f3707b6",
+      "exact_equal": true,
+      "only_existing_standalone_Roy_Dai_attribution_difference": false
+    },
+    {
+      "path": "agent/tests/build-facts-audit-fixture.test.ts",
+      "source_sha256": "a9a6e629064821a7255634468ee3edb2d1de6cc3ca71876d62157d6622bebe50",
+      "live_sha256": "a9a6e629064821a7255634468ee3edb2d1de6cc3ca71876d62157d6622bebe50",
+      "exact_equal": true,
+      "only_existing_standalone_Roy_Dai_attribution_difference": false
+    },
+    {
+      "path": "agent/tests/build-facts-audit.test.ts",
+      "source_sha256": "48ff5c55cb9ac3f792fe0a85284d21d257e0aad686a0866f9733caaa2055a477",
+      "live_sha256": "48ff5c55cb9ac3f792fe0a85284d21d257e0aad686a0866f9733caaa2055a477",
+      "exact_equal": true,
+      "only_existing_standalone_Roy_Dai_attribution_difference": false
+    },
+    {
+      "path": "agent/tests/eval_calibration_test.py",
+      "source_sha256": "a8396f045821ac1a965c94b10ce5b9500f97381cd9f134380bfb71df1040e92e",
+      "live_sha256": "a8396f045821ac1a965c94b10ce5b9500f97381cd9f134380bfb71df1040e92e",
+      "exact_equal": true,
+      "only_existing_standalone_Roy_Dai_attribution_difference": false
+    },
+    {
+      "path": "agent/tests/potions-jev-call.test.ts",
+      "source_sha256": "a45b1fdabdc37de90e8073c77bd4a3da4b04ed887d5775a25a8b152484ef799b",
+      "live_sha256": "0c7168d2868d53779bc2e23b788a9c4c23e312ca6c025f18c6b40263185026f7",
+      "exact_equal": false,
+      "only_existing_standalone_Roy_Dai_attribution_difference": true
+    },
+    {
+      "path": "agent/tests/rollout-clock-fixture.ts",
+      "source_sha256": "af6e0591539f4cc22ef555246adb6cb0a21a8c477e27e4fe7092dd2a19cc50d4",
+      "live_sha256": "af6e0591539f4cc22ef555246adb6cb0a21a8c477e27e4fe7092dd2a19cc50d4",
+      "exact_equal": true,
+      "only_existing_standalone_Roy_Dai_attribution_difference": false
+    },
+    {
+      "path": "agent/tests/rollout-ties-fixture.test.ts",
+      "source_sha256": "58fd04605a621ec6556a089e0dc6ce64aea7df7f2ebe1d0bffa2fe6662f14b75",
+      "live_sha256": "58fd04605a621ec6556a089e0dc6ce64aea7df7f2ebe1d0bffa2fe6662f14b75",
+      "exact_equal": true,
+      "only_existing_standalone_Roy_Dai_attribution_difference": false
+    },
+    {
+      "path": "agent/tests/rollout-ties.test.ts",
+      "source_sha256": "fe6a8936fa45d5a23e08615612bd7d4a2eb3f9985f27bccaeb57ed6db0942fb7",
+      "live_sha256": "0e9c6ebe9a84933cd959456f23c5c341d859ebc401011a9d320fc11df9e52fe7",
+      "exact_equal": false,
+      "only_existing_standalone_Roy_Dai_attribution_difference": true
+    },
+    {
+      "path": "agent/tests/target-options.test.ts",
+      "source_sha256": "91a53e184797b70add5414775ff41c96ac7a866410b7c9e4b39e9fd723e009d1",
+      "live_sha256": "8737a400c7e09bccacdaae4938c0d230de7d59a8d210359639ad3953c33921af",
+      "exact_equal": false,
+      "only_existing_standalone_Roy_Dai_attribution_difference": true
+    }
+  ],
+  "all_five_sources_live_ancestors": true,
+  "main_ancestry": {
+    "d8748f2e70bfb2a91138ede0e1f6046927c116a4": false,
+    "c5fd30d8d369ea6c56bba2e4c3daa6e01e3bf420": false,
+    "c57105ca66bd75c6d6952772dcf712399eda828b": false,
+    "da08fcead2025c293140f1ba103d8efdbd39a4c3": false,
+    "e2c1d8a2d29f1cbaf8e5620e4bb912d6f05965f0": false
+  },
+  "main_narrow_source_sync_pending": {
+    "batch": "20261017-081302-fix-batch",
+    "source": "e2c1d8a2d29f1cbaf8e5620e4bb912d6f05965f0",
+    "source_parent": "ac451784ffebed27097bf261bbfaa5ee69c5d4d5",
+    "source_tree": "7d4451c1ba66e48e97586bd75c3587e9537c6a39",
+    "actual_live": "f88c3ccde0fdb5019b117da9d8421e5c04d95518",
+    "tree": "b27c11c4d768fb6daebebf7572649608fe695711",
+    "test_paths": [
+      "agent/tests/boss-sim-consumer-fixture.ts",
+      "agent/tests/build-facts-audit-fixture.test.ts",
+      "agent/tests/build-facts-audit.test.ts",
+      "agent/tests/eval_calibration_test.py",
+      "agent/tests/potions-jev-call.test.ts",
+      "agent/tests/rollout-clock-fixture.ts",
+      "agent/tests/rollout-ties-fixture.test.ts",
+      "agent/tests/rollout-ties.test.ts",
+      "agent/tests/target-options.test.ts"
+    ],
+    "all_sources_live_ancestors": true,
+    "main_ancestry": {
+      "d8748f2e70bfb2a91138ede0e1f6046927c116a4": false,
+      "c5fd30d8d369ea6c56bba2e4c3daa6e01e3bf420": false,
+      "c57105ca66bd75c6d6952772dcf712399eda828b": false,
+      "da08fcead2025c293140f1ba103d8efdbd39a4c3": false,
+      "e2c1d8a2d29f1cbaf8e5620e4bb912d6f05965f0": false
+    },
+    "fixture_composition": [
+      {
+        "path": "agent/tests/boss-sim-consumer-fixture.ts",
+        "source_sha256": "9b76b0a356a63516f01b6a0d0d161487a0c8cfc29d19aa6a36ef90944f3707b6",
+        "live_sha256": "9b76b0a356a63516f01b6a0d0d161487a0c8cfc29d19aa6a36ef90944f3707b6",
+        "exact_equal": true,
+        "only_existing_standalone_Roy_Dai_attribution_difference": false
+      },
+      {
+        "path": "agent/tests/build-facts-audit-fixture.test.ts",
+        "source_sha256": "a9a6e629064821a7255634468ee3edb2d1de6cc3ca71876d62157d6622bebe50",
+        "live_sha256": "a9a6e629064821a7255634468ee3edb2d1de6cc3ca71876d62157d6622bebe50",
+        "exact_equal": true,
+        "only_existing_standalone_Roy_Dai_attribution_difference": false
+      },
+      {
+        "path": "agent/tests/build-facts-audit.test.ts",
+        "source_sha256": "48ff5c55cb9ac3f792fe0a85284d21d257e0aad686a0866f9733caaa2055a477",
+        "live_sha256": "48ff5c55cb9ac3f792fe0a85284d21d257e0aad686a0866f9733caaa2055a477",
+        "exact_equal": true,
+        "only_existing_standalone_Roy_Dai_attribution_difference": false
+      },
+      {
+        "path": "agent/tests/eval_calibration_test.py",
+        "source_sha256": "a8396f045821ac1a965c94b10ce5b9500f97381cd9f134380bfb71df1040e92e",
+        "live_sha256": "a8396f045821ac1a965c94b10ce5b9500f97381cd9f134380bfb71df1040e92e",
+        "exact_equal": true,
+        "only_existing_standalone_Roy_Dai_attribution_difference": false
+      },
+      {
+        "path": "agent/tests/potions-jev-call.test.ts",
+        "source_sha256": "a45b1fdabdc37de90e8073c77bd4a3da4b04ed887d5775a25a8b152484ef799b",
+        "live_sha256": "0c7168d2868d53779bc2e23b788a9c4c23e312ca6c025f18c6b40263185026f7",
+        "exact_equal": false,
+        "only_existing_standalone_Roy_Dai_attribution_difference": true
+      },
+      {
+        "path": "agent/tests/rollout-clock-fixture.ts",
+        "source_sha256": "af6e0591539f4cc22ef555246adb6cb0a21a8c477e27e4fe7092dd2a19cc50d4",
+        "live_sha256": "af6e0591539f4cc22ef555246adb6cb0a21a8c477e27e4fe7092dd2a19cc50d4",
+        "exact_equal": true,
+        "only_existing_standalone_Roy_Dai_attribution_difference": false
+      },
+      {
+        "path": "agent/tests/rollout-ties-fixture.test.ts",
+        "source_sha256": "58fd04605a621ec6556a089e0dc6ce64aea7df7f2ebe1d0bffa2fe6662f14b75",
+        "live_sha256": "58fd04605a621ec6556a089e0dc6ce64aea7df7f2ebe1d0bffa2fe6662f14b75",
+        "exact_equal": true,
+        "only_existing_standalone_Roy_Dai_attribution_difference": false
+      },
+      {
+        "path": "agent/tests/rollout-ties.test.ts",
+        "source_sha256": "fe6a8936fa45d5a23e08615612bd7d4a2eb3f9985f27bccaeb57ed6db0942fb7",
+        "live_sha256": "0e9c6ebe9a84933cd959456f23c5c341d859ebc401011a9d320fc11df9e52fe7",
+        "exact_equal": false,
+        "only_existing_standalone_Roy_Dai_attribution_difference": true
+      },
+      {
+        "path": "agent/tests/target-options.test.ts",
+        "source_sha256": "91a53e184797b70add5414775ff41c96ac7a866410b7c9e4b39e9fd723e009d1",
+        "live_sha256": "8737a400c7e09bccacdaae4938c0d230de7d59a8d210359639ad3953c33921af",
+        "exact_equal": false,
+        "only_existing_standalone_Roy_Dai_attribution_difference": true
+      }
+    ],
+    "source_received": true,
+    "status": "Live already integrated; original final host owns live lock, main-only narrow source sync pending its completion event",
+    "source_patch": "learner/runs/20261017-081308-9b5ca07b-0cbe-42a7-8b04-51e29c76de5e-fix-batch/final-source.patch",
+    "source_patch_sha256": "17ce30bf7e29f1372a5a1d26fdb02cf2389237bae725d472ea9165e18986a8f2",
+    "first_main_ancestry_guard_rejected_before_any_record_or_source_mutation": true,
+    "current_main": "a49d8c43561bdefa2fcf74092ad721e0a835fb5c",
+    "next_trigger": "Original081302 learner-checks completion; acquire the same live lock, apply only nine test fixture leaves to main preserving foreign source/data/index; never merge live again or allocate a behavior number.",
+    "duplicate_host_or_source_full_requested": false,
+    "host": {
+      "batch": "20261017-081302-fix-batch",
+      "pid": 3406299,
+      "birth_ticks": "109987638",
+      "actual_live": "f88c3ccde0fdb5019b117da9d8421e5c04d95518",
+      "tree": "b27c11c4d768fb6daebebf7572649608fe695711",
+      "locks": [
+        "/home/dw/Projects/agent-sts2/ops/codex-ops/20261017-081302-fix-batch.checks.lock",
+        "/home/dw/Projects/agent-sts2/ops/live-merge.lock"
+      ],
+      "log": "ops/codex-ops/learner/20261017-081302-fix-batch.fallback-b27c11c4d768fb6daebebf7572649608fe695711.checks.log",
+      "prefix_bytes": 33554,
+      "prefix_sha256": "004d54b1d92f7903c5302d9dafdb8ab7a13be8041c327d1e577984f4b07fdb7c",
+      "state": "Original scheduler host RUN, not a completed full pass",
+      "rc": null,
+      "ops_requested_duplicate": false
+    }
+  },
+  "only_nine_test_fixture_leaves_no_behavior_release": true,
+  "source_sandbox_files": 465,
+  "source_sandbox_cases": 4308,
+  "live_sandbox_files": 470,
+  "live_sandbox_cases": 4330,
+  "python_fixed_cases": 22,
+  "original_ablation_failures_and_restored_logs_archived": true,
+  "mutable_knowledge_changed_during_source_owner_live_checks": true,
+  "scheduler_exact_full_host": {
+    "batch": "20261017-081302-fix-batch",
+    "pid": 3406299,
+    "birth_ticks": "109987638",
+    "actual_live": "f88c3ccde0fdb5019b117da9d8421e5c04d95518",
+    "tree": "b27c11c4d768fb6daebebf7572649608fe695711",
+    "locks": [
+      "/home/dw/Projects/agent-sts2/ops/codex-ops/20261017-081302-fix-batch.checks.lock",
+      "/home/dw/Projects/agent-sts2/ops/live-merge.lock"
+    ],
+    "log": "ops/codex-ops/learner/20261017-081302-fix-batch.fallback-b27c11c4d768fb6daebebf7572649608fe695711.checks.log",
+    "prefix_bytes": 33554,
+    "prefix_sha256": "004d54b1d92f7903c5302d9dafdb8ab7a13be8041c327d1e577984f4b07fdb7c",
+    "state": "Original scheduler host RUN, not a completed full pass",
+    "rc": null,
+    "ops_requested_duplicate": false
+  },
+  "root_0332_or_H1_health_issue_fixed": false,
+  "no_new_source_or_host_check_or_merge_invoked": true,
+  "no_current_game_or_other_role_ACK": true
+}

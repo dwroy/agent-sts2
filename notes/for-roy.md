@@ -2231,3 +2231,5 @@ selector于2026-10-15 13:15:58 CST从/home/dw/.codex-brain原子改为/home/dw/P
   回退：原ops持live锁，在当时上下文仅逆向本H1补丁，保R379、并行知识/源码/历史记录和版本顺序；真实行为回退另记发布号和双通知，不整树回旧base、不带撤回0e4f。当前已加载对局不重启/热改，账号/home/模型/prompt/env均不改；首个实际生效自然局尚未知，须后续原run-config证明，磁盘合并不等于已采用。阶段源交付/发布不等于H1自然门槛完成，不代Roy或其他角色ACK。回执paper/materials/20261017-human-pace-h1/ops-receipts/ops-publication.json。
 
 - 2026-10-17 11:12:58 CST H1/V5-R380精确宿主验收通过：treed68e817428a59b28dfd53c3d9dfb34819f711e56、tsc0＋完整Vitest519文件5108过2跳/919.81s，原log SHA9d4ec8c223d152031f7f3a75292a2243b784cbd58089a663d6302e587adee20d。首实际生效局5H83F3J0XSTE于11:00:49.152 CST启动（dbd4161+dirty，仅生成知识/notes），原run-config的H1配置及决策time_budget已按原字节核；这是运行切换点，不是2局自然质量/速度验收。当前live随后已有081302夹具/知识新组合，不把本通过结论借给该新树；H0/0332科学根缺陷和自然门槛保持，不重检查/派模型或重启现局。回执paper/materials/20261017-human-pace-h1/ops-receipts/host-completion-20261017-1110/host-acceptance.json。
+
+- 2026-10-17 11:42:09 CST 原ops实际读回Roy11:37经Claude决定及commita49d8c43561bdefa2fcf74092ad721e0a835fb5c：human-pace仍属V5，现V5-R380及历史编号/版本顺序保持；仅两行已定文档核验，不带入watcher工作区未提交接续记录，不代Roy ACK。回执paper/materials/20261017-1132-ops/roy-V5-generation-decision-readback.json。
