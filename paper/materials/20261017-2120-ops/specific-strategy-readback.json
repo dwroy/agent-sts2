@@ -1,0 +1,62 @@
+{
+  "batch": "20261017-201301-s2-strategy-proposal",
+  "completion": {
+    "base": "c0a1108ed51fbf6e8c7fc5a2aa238d57cdd0366a",
+    "git_status": "",
+    "source_and_knowledge_diff_empty": true,
+    "proposal_results": 10,
+    "all_waiting": true,
+    "evidence_rows": 8274,
+    "ledger_cli_exit_code": 0,
+    "tests": {
+      "tsc": null,
+      "vitest": null,
+      "cases": null
+    },
+    "merged": null,
+    "gitleaks_exit_code": 0
+  },
+  "ledger_integrity": {
+    "root_prefix_preserved": true,
+    "prefix": {
+      "bytes": 23207287,
+      "sha256": "56c8821b4e8dbc95d58c2e1cbffd1f35bba6a31e0cfd8ef96df1b279d8254c20"
+    },
+    "linked_entries": 30,
+    "protected_field_changes_after_cli": [],
+    "cli_exit_code": 0,
+    "parallel_changes_before_cli": [
+      {
+        "id": "silent-0023",
+        "initial_evidence_count": 59,
+        "before_cli_evidence_count": 60,
+        "after_cli_evidence_count": 60
+      },
+      {
+        "id": "silent-0125",
+        "initial_evidence_count": 303,
+        "before_cli_evidence_count": 304,
+        "after_cli_evidence_count": 304
+      }
+    ],
+    "parallel_writers": [
+      {
+        "id": "silent-0125",
+        "ts": "2026-10-17T20:34:21+08:00",
+        "by": "learner:postmortem"
+      },
+      {
+        "id": "silent-0023",
+        "ts": "2026-10-17T20:34:21+08:00",
+        "by": "learner:postmortem"
+      }
+    ]
+  },
+  "ledger_rows_trace_only": 30,
+  "source_paths_SHA_and_blob_verified": 14,
+  "original_source_ancestor_booleans_verified": 5,
+  "four_paired_turn_windows_are_not_independent_fights": true,
+  "six_runs_character_and_asc_verified": true,
+  "original_invalid_lines_and_report_build_failures_retained": true,
+  "no_ops_product_tests_or_consumers_or_calibration_or_models": true
+}
