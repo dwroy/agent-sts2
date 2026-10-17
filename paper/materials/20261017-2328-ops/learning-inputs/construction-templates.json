@@ -1,0 +1,409 @@
+{
+  "schema": "construction-templates-v1",
+  "source_algorithm_sha256": "5e99a5d48c3a1c74dac93d34220fdcfc1aa145414b54760b3b2c401bc75afcb7",
+  "templates": [
+    {
+      "id": "P",
+      "name": "施毒触媒与持续防御",
+      "character": "silent",
+      "ascensions": [
+        10
+      ],
+      "status": "candidate",
+      "requirements": [
+        {
+          "id": "poison",
+          "any": [
+            {
+              "id": "BOUNCING_FLASK",
+              "kind": "card"
+            },
+            {
+              "id": "CORROSIVE_WAVE",
+              "kind": "card"
+            },
+            {
+              "id": "DEADLY_POISON",
+              "kind": "card"
+            },
+            {
+              "id": "ENVENOM",
+              "kind": "card"
+            },
+            {
+              "id": "NOXIOUS_FUMES",
+              "kind": "card"
+            },
+            {
+              "id": "OUTBREAK",
+              "kind": "card"
+            },
+            {
+              "id": "POISONED_STAB",
+              "kind": "card"
+            }
+          ],
+          "count": 1,
+          "distinct": false
+        },
+        {
+          "id": "accelerant",
+          "any": [
+            {
+              "id": "ACCELERANT",
+              "kind": "card"
+            }
+          ],
+          "count": 1,
+          "distinct": false
+        },
+        {
+          "id": "defense",
+          "any": [
+            {
+              "id": "AFTERIMAGE",
+              "kind": "card"
+            },
+            {
+              "id": "FOOTWORK",
+              "kind": "card"
+            },
+            {
+              "id": "MIRAGE",
+              "kind": "card"
+            }
+          ],
+          "count": 1,
+          "distinct": false
+        }
+      ],
+      "evidence": {
+        "runs": [
+          "T082DRCUHRRD",
+          "ZZMYZ5UBCG72",
+          "LLYSRQQ35AVW",
+          "HNX4A2WBC34W"
+        ],
+        "source": "paper/materials/silent/20261009-2335-events/core-builds/construction-templates.json",
+        "sha256": "948788b8df20a090688d7d253b067fb6946ea44d409875214d5c46d29688752b"
+      },
+      "limits": [
+        "机械转换原学习者共现签名；不是最小充分核心或稳定胜率模板。",
+        "跨boss有局部实际通过；整套通杀未验证",
+        "若没有实毒/不能付启动费用/当前已记录存活窗口内没有启动记录，保留为未成型目标或暂停该收益估值；不按未知阈值自动弃牌。阶段清毒、制品拦毒时重新核当前毒，不继承旧阶段进度。"
+      ]
+    },
+    {
+      "id": "D",
+      "name": "叠敏捷多挡与持续输出",
+      "character": "silent",
+      "ascensions": [
+        10
+      ],
+      "status": "candidate",
+      "requirements": [
+        {
+          "id": "dexterity",
+          "any": [
+            {
+              "id": "FOOTWORK",
+              "kind": "card"
+            }
+          ],
+          "count": 2,
+          "distinct": false
+        },
+        {
+          "id": "block",
+          "any": [
+            {
+              "id": "BACKFLIP",
+              "kind": "card"
+            },
+            {
+              "id": "DASH",
+              "kind": "card"
+            },
+            {
+              "id": "LEG_SWEEP",
+              "kind": "card"
+            }
+          ],
+          "count": 1,
+          "distinct": false
+        },
+        {
+          "id": "output",
+          "any": [
+            {
+              "id": "BOLAS",
+              "kind": "card"
+            },
+            {
+              "id": "BOUNCING_FLASK",
+              "kind": "card"
+            },
+            {
+              "id": "CORROSIVE_WAVE",
+              "kind": "card"
+            },
+            {
+              "id": "DEADLY_POISON",
+              "kind": "card"
+            },
+            {
+              "id": "ENVENOM",
+              "kind": "card"
+            },
+            {
+              "id": "MAUL",
+              "kind": "card"
+            },
+            {
+              "id": "NOXIOUS_FUMES",
+              "kind": "card"
+            },
+            {
+              "id": "OUTBREAK",
+              "kind": "card"
+            },
+            {
+              "id": "POISONED_STAB",
+              "kind": "card"
+            },
+            {
+              "id": "SPEEDSTER",
+              "kind": "card"
+            }
+          ],
+          "count": 1,
+          "distinct": false
+        }
+      ],
+      "evidence": {
+        "runs": [
+          "1HC609GTLGN3",
+          "K3676LU8B0UH",
+          "4Y94N8RDPGPM",
+          "25226ZFLNR1J"
+        ],
+        "source": "paper/materials/silent/20261009-2335-events/core-builds/construction-templates.json",
+        "sha256": "948788b8df20a090688d7d253b067fb6946ea44d409875214d5c46d29688752b"
+      },
+      "limits": [
+        "机械转换原学习者共现签名；不是最小充分核心或稳定胜率模板。",
+        "跨boss有局部实际通过；整套通杀未验证",
+        "当前不能打后续挡、能力费用挤掉本轮生存或输出始终没有兑现记录时，标出缺口并暂停完整套牌标签；负敏捷、脆弱、能力加费以现场重核。没有证据设自动删除/换流派阈值。"
+      ]
+    },
+    {
+      "id": "S",
+      "name": "小刀供给增益与逐牌防御",
+      "character": "silent",
+      "ascensions": [
+        10
+      ],
+      "status": "candidate",
+      "requirements": [
+        {
+          "id": "supply",
+          "any": [
+            {
+              "id": "BLADE_DANCE",
+              "kind": "card"
+            },
+            {
+              "id": "CLOAK_AND_DAGGER",
+              "kind": "card"
+            },
+            {
+              "id": "FAN_OF_KNIVES",
+              "kind": "card"
+            },
+            {
+              "id": "HIDDEN_DAGGERS",
+              "kind": "card"
+            },
+            {
+              "id": "INFINITE_BLADES",
+              "kind": "card"
+            },
+            {
+              "id": "LEADING_STRIKE",
+              "kind": "card"
+            }
+          ],
+          "count": 1,
+          "distinct": false
+        },
+        {
+          "id": "gain",
+          "any": [
+            {
+              "id": "ACCURACY",
+              "kind": "card"
+            },
+            {
+              "id": "PHANTOM_BLADES",
+              "kind": "card"
+            },
+            {
+              "id": "HELICAL_DART",
+              "kind": "relic"
+            },
+            {
+              "id": "KUNAI",
+              "kind": "relic"
+            },
+            {
+              "id": "SHURIKEN",
+              "kind": "relic"
+            }
+          ],
+          "count": 1,
+          "distinct": false
+        },
+        {
+          "id": "defense",
+          "any": [
+            {
+              "id": "AFTERIMAGE",
+              "kind": "card"
+            },
+            {
+              "id": "FOOTWORK",
+              "kind": "card"
+            },
+            {
+              "id": "DAUGHTER_OF_THE_WIND",
+              "kind": "relic"
+            },
+            {
+              "id": "HELICAL_DART",
+              "kind": "relic"
+            },
+            {
+              "id": "KUNAI",
+              "kind": "relic"
+            }
+          ],
+          "count": 1,
+          "distinct": false
+        }
+      ],
+      "evidence": {
+        "runs": [
+          "KAY522KT5NXR",
+          "CSBR5CRDWQNB",
+          "2SU6XN2AEJRD",
+          "YF0LXT1QSTGG"
+        ],
+        "source": "paper/materials/silent/20261009-2335-events/core-builds/construction-templates.json",
+        "sha256": "948788b8df20a090688d7d253b067fb6946ea44d409875214d5c46d29688752b"
+      },
+      "limits": [
+        "机械转换原学习者共现签名；不是最小充分核心或稳定胜率模板。",
+        "跨boss有局部实际通过；整套通杀未验证",
+        "敌限伤/滑溜、能力没建立、手位不足或后续格挡没兑现时暂停该分支的未实现收益；CSBR双蟹六败、YF实验体六败保留反例，不设已证明可通杀的路线。"
+      ]
+    },
+    {
+      "id": "R",
+      "name": "抽弃循环与遗物攻防收益",
+      "character": "silent",
+      "ascensions": [
+        10
+      ],
+      "status": "candidate",
+      "requirements": [
+        {
+          "id": "discard",
+          "any": [
+            {
+              "id": "ACROBATICS",
+              "kind": "card"
+            },
+            {
+              "id": "CALCULATED_GAMBLE",
+              "kind": "card"
+            },
+            {
+              "id": "DAGGER_THROW",
+              "kind": "card"
+            },
+            {
+              "id": "HAND_TRICK",
+              "kind": "card"
+            },
+            {
+              "id": "PREPARED",
+              "kind": "card"
+            },
+            {
+              "id": "SURVIVOR",
+              "kind": "card"
+            },
+            {
+              "id": "TOOLS_OF_THE_TRADE",
+              "kind": "card"
+            }
+          ],
+          "count": 2,
+          "distinct": true
+        },
+        {
+          "id": "key-discard",
+          "any": [
+            {
+              "id": "ACROBATICS",
+              "kind": "card"
+            },
+            {
+              "id": "CALCULATED_GAMBLE",
+              "kind": "card"
+            },
+            {
+              "id": "HAND_TRICK",
+              "kind": "card"
+            },
+            {
+              "id": "TOOLS_OF_THE_TRADE",
+              "kind": "card"
+            }
+          ],
+          "count": 1,
+          "distinct": false
+        },
+        {
+          "id": "relic",
+          "any": [
+            {
+              "id": "TINGSHA",
+              "kind": "relic"
+            },
+            {
+              "id": "TOUGH_BANDAGES",
+              "kind": "relic"
+            }
+          ],
+          "count": 1,
+          "distinct": false
+        }
+      ],
+      "evidence": {
+        "runs": [
+          "1LMBFGSMCWKU",
+          "25226ZFLNR1J",
+          "L704TLETMZBM"
+        ],
+        "source": "paper/materials/silent/20261009-2335-events/core-builds/construction-templates.json",
+        "sha256": "948788b8df20a090688d7d253b067fb6946ea44d409875214d5c46d29688752b"
+      },
+      "limits": [
+        "机械转换原学习者共现签名；不是最小充分核心或稳定胜率模板。",
+        "遗物组件局部验证；整套跨boss重复性不足",
+        "收益遗物缺失、实际弃牌/抽入牌未发生或防御缺口尚在时暂停完整循环估值；L704三败证明组件收益不足以保证胜利，没有证据规定自动弃牌顺序。"
+      ]
+    }
+  ]
+}
