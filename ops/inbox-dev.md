@@ -2854,3 +2854,5 @@ selector于2026-10-15 13:15:58 CST从/home/dw/.codex-brain原子改为/home/dw/P
 - 2026-10-17 11:55:06 CST 原111302两局复盘已核：DC32RW0A80V1（A10/F48）、JKDUL0AL0TW6（A10/F33），无新纯bug；两份原pending策略提案沿既有队列，不重派。12原账本行和两节复盘/4214原引用归档，旧DC32 exit3失败保留。唯一paper_dataset --no-raw实际exit0、五一致性/keyscan CLEAN，两局has_postmortem均1；未改源码/live/现局，沿V5-R380，H0/0332及H1自然/其他宽父保持。回执paper/materials/20261017-1142-ops/。
 
 - 2026-10-17 11:59:28 CST 081302精确b27宿主tsc0、521文件5137项过2跳；五项测试夹具修复已沿原锁窄同步main81fd9f3e9a9cd1809992f786cf8a8d61809e8dbb（仅九测试叶），原待办完成，live/现局未改、V5-R380不新增号。当前知识刷新53f2217c另列输入边界，旧b27绿不借当前知识全树。113243十提案保持waiting、30原追溯归档；0332根缺口/H1健康协议及其他宽父继续原链。回执paper/materials/20261017-1155-ops/。
+
+- 2026-10-17 12:04:45 CST 原113243 fix合入受21历史记录冲突阻塞，ops已将sourcec40e43fd25c200a01f4da94a4dac8db1b34664a8的11叶窄合main469cde072bd6bf581ade6563ffbf6d67cae3324c/livefd3f1a223d2515b5d458c9eb334f83b38045f4a3，保并行知识/记录/index。H1预算partial健康/G2协议及缓存身份已修，采样/300门槛/决策不改、V5-R380不新号；旧告警和canonical failed/rc0/mergednull保留。源tsc0/469文件4311题0、29定向过；精确新treee5dec40a64950bfd7c3746c388b2250c3b10bfe0原唯一宿主PID3528049实际RUN，终局待原事件，0332/H0和自然父闸不关。回执paper/materials/20261017-1159-ops/。
