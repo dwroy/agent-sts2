@@ -8,7 +8,23 @@ import { readdirSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
-import { afterEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+
+// Replay fixed snapshots only; daily model refreshes must not change fixture work or outcomes.
+vi.mock("../src/knowledge/files.js", async (importOriginal) => {
+  const original = await importOriginal<typeof import("../src/knowledge/files.js")>();
+  const { fileURLToPath } = await import("node:url");
+  return {
+    ...original,
+    knowledgeFile: (dir: string, name: string, character?: string) => {
+      if (dir !== original.KNOWLEDGE_DIR) return original.knowledgeFile(dir, name, character);
+      if (["monster-db.json", "monster-records.json", "move-model.json", "card-upgrades.json"].includes(name)) {
+        return fileURLToPath(new URL(`./fixed-common/${name}`, import.meta.url));
+      }
+      return original.knowledgeFile(fileURLToPath(new URL("./gkb-data/knowledge", import.meta.url)), name, character);
+    },
+  };
+});
 
 import { loadConfig } from "../src/core/config.js";
 import { wireIntent } from "../src/hand/act/identity.js";
@@ -19,11 +35,21 @@ import { dryFirst, MAX_OPTIONS, planCombatTurn, potionLethalLines, potionLethalN
 import { POTION_WORTH_KEY, potionWorthSource } from "../src/knowledge/potion-equivalents.js";
 import { rolloutLiveOptions } from "../src/reflex/rollout-live.js";
 import { dominates, solveTap, type Plan, type SolverInput } from "../src/reflex/turn-solver.js";
+import { MC_BUDGET_MS, MC_SAMPLES, potionMcOptions } from "../src/reflex/potion-mc.js";
+import { KNOWLEDGE_DIR, knowledgeFile } from "../src/knowledge/files.js";
+import { ROLLOUT_BUDGET_MS } from "../src/reflex/rollout-live.js";
+import { withRolloutRankingFixture } from "./rollout-clock-fixture.js";
 import { logged, loggedEnv } from "./logged.js";
 import { combatPayload, testKnowledge } from "./scenarios.js";
 
 const config = loadConfig({} as NodeJS.ProcessEnv);
 type Raw = Record<string, unknown>;
+const FIXED_KNOWLEDGE = join(dirname(fileURLToPath(import.meta.url)), "gkb-data", "knowledge");
+const originalPotionDir = potionWorthSource.dir;
+
+beforeEach(() => {
+  potionWorthSource.dir = FIXED_KNOWLEDGE;
+});
 
 function env(raw: Raw, overrides: Partial<DecisionEnv> = {}): DecisionEnv {
   const state: GameState = parseGameState(raw);
@@ -66,6 +92,7 @@ const autoLine = (e: DecisionEnv, decision: Decision | null): string =>
 
 afterEach(() => {
   solveTap.onSolve = null;
+  potionWorthSource.dir = originalPotionDir;
 });
 
 describe("no potion score penalty", () => {
@@ -135,6 +162,12 @@ describe("every held modelled potion is offered", () => {
   });
 });
 
+/** Replay the whole logged inventory with real solves and repeatable forecast work. */
+function planLoggedPotionBoard(e: DecisionEnv): Decision | null {
+  // Auto-act legality uses the real turn solve; future forecast work need not fill its whole horizon.
+  return withRolloutRankingFixture(() => planCombatTurn(e), 50);
+}
+
 describe("code's own auto-acts never drink while a potion-free line survives", () => {
   it("synthetic boards: no auto-drink on a survivable turn; the no-answer fallback is potion-free", () => {
     for (const hp of [12, 20, 40, 80]) {
@@ -195,7 +228,7 @@ describe("code's own auto-acts never drink while a potion-free line survives", (
         plans = result.plans;
       };
       const e = loggedEnv(logged(name));
-      const decision = planCombatTurn(e);
+      const decision = planLoggedPotionBoard(e);
       solveTap.onSolve = null;
       if (decision?.kind !== "act") continue;
       const drinks = /use_potion|POTION:/.test(autoLine(e, decision));
@@ -207,6 +240,61 @@ describe("code's own auto-acts never drink while a potion-free line survives", (
     }
     expect(checked).toBeGreaterThanOrEqual(0);
   }, 60_000);
+
+  it("logged potion replays keep real solver inputs and repeatable forecast budgets across host pauses", () => {
+    expect(potionWorthSource.dir).toBe(FIXED_KNOWLEDGE);
+    for (const name of ["monster-db.json", "monster-records.json", "move-model.json", "fight-value.json", "fight-value-gates.json"]) {
+      expect(knowledgeFile(KNOWLEDGE_DIR, name)).toContain(`${join("agent", "tests")}/`);
+    }
+    const previous = { rolloutNow: rolloutLiveOptions.now, rolloutBudget: rolloutLiveOptions.budgetMs,
+      potionNow: potionMcOptions.now, potionBudget: potionMcOptions.budgetMs, samples: potionMcOptions.samples };
+    const decisions: string[] = [];
+    try {
+      for (const pause of [0, 10_000]) {
+        const hostClock = () => pause;
+        rolloutLiveOptions.now = hostClock;
+        potionMcOptions.now = hostClock;
+        let solves = 0;
+        let observedWorkStep: number | null = null;
+        solveTap.onSolve = (input) => {
+          solves += 1;
+          // Forecast fixtures replace host time, retaining the real hand, belt and production limits.
+          expect(rolloutLiveOptions.now).not.toBe(hostClock);
+          expect(potionMcOptions.now).not.toBe(hostClock);
+          if (solves === 1) {
+            const first = rolloutLiveOptions.now!();
+            observedWorkStep = rolloutLiveOptions.now!() - first;
+          }
+          expect(rolloutLiveOptions.budgetMs).toBe(ROLLOUT_BUDGET_MS);
+          expect(potionMcOptions.budgetMs).toBe(MC_BUDGET_MS);
+          expect(potionMcOptions.samples).toBe(MC_SAMPLES);
+          expect(input.hand.filter((card) => card.type === "Potion").map((card) => card.cardId))
+            .toEqual(expect.arrayContaining([expect.stringContaining("FIRE_POTION"), expect.stringContaining("BLOCK_POTION")]));
+        };
+        const e = env(twoPotions(55, 8));
+        const decision = planLoggedPotionBoard(e);
+        // Assert outside the planner, whose error recovery may catch hook exceptions.
+        expect(observedWorkStep).toBe(50);
+        expect(solves).toBeGreaterThan(0);
+        expect(decision?.kind).toBe("ask");
+        decisions.push(JSON.stringify(plansOf(decision)));
+        expect(rolloutLiveOptions.now).toBe(hostClock);
+        expect(potionMcOptions.now).toBe(hostClock);
+        solveTap.onSolve = () => { throw new Error("fixed planner failure"); };
+        expect(() => planLoggedPotionBoard(env(twoPotions()))).toThrow("fixed planner failure");
+        expect(rolloutLiveOptions.now).toBe(hostClock);
+        expect(potionMcOptions.now).toBe(hostClock);
+      }
+      expect(decisions[1]).toBe(decisions[0]);
+    } finally {
+      solveTap.onSolve = null;
+      rolloutLiveOptions.now = previous.rolloutNow;
+      rolloutLiveOptions.budgetMs = previous.rolloutBudget;
+      potionMcOptions.now = previous.potionNow;
+      potionMcOptions.budgetMs = previous.potionBudget;
+      potionMcOptions.samples = previous.samples;
+    }
+  });
 });
 
 describe("potion_context on the combat question", () => {
