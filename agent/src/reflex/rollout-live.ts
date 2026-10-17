@@ -824,7 +824,7 @@ export function boardRolloutInput(
   asc: number,
   db: MonsterMoves = monsterMoves(),
   mm: MoveModelData = moveModelData(),
-): Pick<RolloutInput, "solver" | "enemies" | "tables" | "statusCards" | "relicEnergy" | "relicBlock" | "spawns" | "summons" | "playerPowers" | "fumesPoisonBonus" | "observedGardenerSkittish" | "observedSilentTestSubjectPhasePowers" | "observedSilentAeonglassIntensity" | "potions" | "onShuffle" | "passive"> & { handBase: (CardModel | null)[] } {
+): Pick<RolloutInput, "solver" | "enemies" | "tables" | "statusCards" | "relicEnergy" | "relicBlock" | "spawns" | "summons" | "playerPowers" | "fumesPoisonBonus" | "observedGardenerSkittish" | "observedSilentTestSubjectPhasePowers" | "observedSilentAeonglassIntensity" | "observedSilentQueenAllyStrength" | "potions" | "onShuffle" | "passive"> & { handBase: (CardModel | null)[] } {
   const combat = asRecord(state.raw["combat"]);
   const raw = asArray(combat["enemies"]).map(asRecord);
   const leaderAlive = raw.some((e) => e["is_alive"] !== false && !powersOf(e)["MINION_POWER"]);
@@ -906,6 +906,9 @@ export function boardRolloutInput(
     });
   const aeonglassIntensity = str(asRecord(state.run?.raw)["character_id"]).toLowerCase() === "silent" && asc === 10 && raw.length === 1 &&
     raw.some(enemy => str(enemy["enemy_id"]) === "AEONGLASS" && enemy["max_hp"] === 535 && powersOf(enemy)["WITHERING_PRESENCE_POWER"] === 6);
+  const queenAllyStrength = str(asRecord(state.run?.raw)["character_id"]).toLowerCase() === "silent" && asc === 10 && raw.length === 2 &&
+    raw.some(enemy => enemy["is_alive"] === true && str(enemy["enemy_id"]) === "QUEEN" && enemy["max_hp"] === 419) &&
+    raw.some(enemy => enemy["is_alive"] === true && str(enemy["enemy_id"]) === "TORCH_HEAD_AMALGAM" && enemy["max_hp"] === 211 && powersOf(enemy)["MINION_POWER"] === 1);
   return {
     solver,
     enemies,
@@ -922,6 +925,7 @@ export function boardRolloutInput(
     ...(str(asRecord(state.run?.raw)["character_id"]).toLowerCase() === "silent" && asc === 10 ? { observedGardenerSkittish: true } : {}),
     ...(testSubjectPhasePowers ? { observedSilentTestSubjectPhasePowers: true } : {}),
     ...(aeonglassIntensity ? { observedSilentAeonglassIntensity: true } : {}),
+    ...(queenAllyStrength ? { observedSilentQueenAllyStrength: true } : {}),
     potions: asArray(asRecord(state.run?.raw)["potions"]).filter((p) => asRecord(p)["occupied"]).length,
     handBase: solverInput.hand.map((card) => (card.type === "Potion" ? null : baseByKey.get(cardKey(card)) ?? null)),
   };

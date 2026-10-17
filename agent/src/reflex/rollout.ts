@@ -638,6 +638,8 @@ export interface RolloutInput {
   observedSilentTestSubjectPhasePowers?: boolean;
   /** Observed Silent A10 Aeonglass Intensity buff turns; whole-fight scripts only. */
   observedSilentAeonglassIntensity?: boolean;
+  /** Observed Silent A10 Queen/Amalgam ally Strength; whole-fight scripts only. */
+  observedSilentQueenAllyStrength?: boolean;
   /** Fresh second-fight starts from observed identities, weighted without revealing this run's future boss. */
   continuation?: {
     variants: { boss: string; count: number; input: RolloutInput }[];
@@ -2408,6 +2410,13 @@ function applyPlan(
           e.move === "INCREASING_INTENSITY_MOVE" && m?.strength === 4
           ? OBSERVED_SILENT_AEONGLASS_STRENGTH[(input.solver.turn ?? input.meta.t) + turn] : undefined;
         e.strength += observedIntensity ?? m?.strength ?? 0;
+        // 121 ready windows / 29 Silent A10 runs: Burn Bright adds one to the living Amalgam,
+        // separately from temporary Strength restoration (H0/r3 actor-transitions.json).
+        if (fullFight && input.observedSilentQueenAllyStrength === true && input.meta.asc === 10 &&
+          e.id === "QUEEN" && e.maxHp === 419 && e.move === "BURN_BRIGHT_FOR_ME_MOVE" && m?.strength === 0) {
+          for (const ally of enemies) if (ally.alive && ally.id === "TORCH_HEAD_AMALGAM" && ally.maxHp === 211 &&
+            ally.powers["MINION_POWER"] === 1) ally.strength += 1;
+        }
         // Ritual, Territorial, High Voltage: Strength at the end of its turn (Cultists' T2 loss was short
         // 1.3 a turn, Byrdonis 2); a Ritual this move gives starts on its next turn (Incantation gains none).
         e.strength += e.growth;
