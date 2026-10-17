@@ -2832,3 +2832,5 @@ selector于2026-10-15 13:15:58 CST从/home/dw/.codex-brain原子改为/home/dw/P
 - 2026-10-17 10:26:18 CST V5-R379宿主验收已通过：原091302-s2精确treed24cc99e30c745fb76b5b142b388419277fa9dfe，tsc0＋完整Vitest514文件5091过2跳/1110.78s，原完整log SHA90a5ec8eeac8895efd4b530db29906835c975c51cdb19b0c4b4f88a6ffec6c83；发布/0293 shipped/9c355 implemented及原host待办闭环，不重测/重新编号。原failed-rc0-null、撤补丁反证及原始材料保持，首自然生效局/真实收益仍无证明。原H0旧36fc三阶段真实回执已核齐，仅通知去重，不关闭H0/0332或代ACK；H1仍原watcher源检查/未发布边界。回执paper/materials/20261017-1024-ops/host-acceptance.json。
 
 - 2026-10-17 10:30:42 CST 原101303策略批已读回：十项waiting、无源码/知识提交或合入阻塞；30行账本追溯中6行还显式重写相同proposed，已核物理/提交前态均同值，状态及保护字段保持；56产物与46小原件已核归档。19项材料核验不当生产测试，原初稿/错误及纠正均保留；不新增版本、测试、派发或科学通知，live/V5-R379及当前局保持。回执paper/materials/20261017-1027-ops/strategy-readback.json。
+
+- 2026-10-17 10:43:25 CST 2Q6ZYZ6JHM0M复盘闭环已核：A10/F8败局，8行原账本与复盘/2提案归档。新增非阻塞纯bug“隐秘匕首双弃题未读已保存条件后继”已进fix-queue并关联原59b2提案去重，未派重复学习/卡死修复。唯一paper_dataset --no-raw实际exit0、五一致性/keyscan CLEAN，本局has_postmortem1；未新增源码、测试或发布，V5-R379/当前局保持。回执paper/materials/20261017-1031-ops/。
