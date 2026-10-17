@@ -1,0 +1,100 @@
+{
+  "at": "2026-10-18 03:33:00 CST",
+  "batch": "20261018-021301-fix-batch",
+  "source": "4c16dab0457a61e22ef06b27e367d146cb99bab3",
+  "source_parent": "9ed8ac27c45992bf48e6526c38bd77c8bbfa8132",
+  "source_workspace": "codex-fix-silent-20261018-021301",
+  "source_worktree": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261018-021301",
+  "source_head": "4c16dab0457a61e22ef06b27e367d146cb99bab3",
+  "paths": [
+    {
+      "path": "agent/tests/learner-report-fixes-shape.test.ts",
+      "blob": "bf414387c6ee46db8e0368852d59f063585b5a53",
+      "sha256": "6e46a0a801d731401b411bfe5674fd327205a0bf20671068543ce3bc4ea6d65e"
+    },
+    {
+      "path": "ops/learner_checks.py",
+      "blob": "b6b1bab5c6348898787b1ca74ec7836d189728a5",
+      "sha256": "cbdea748ca8796d53df48ec616850c4c522fdd0ee3cfaeac0383f8be92fb633b"
+    },
+    {
+      "path": "ops/tests/test_learner_report_fixes_shape.py",
+      "blob": "00bdc1555e38a91c1cffdad3b28f331c201d5b6b",
+      "sha256": "f4ebe4913cde0de98452020f7f60c44ccff970f2b2419e2094838bc7f163cc81"
+    }
+  ],
+  "published": true,
+  "main": "3e7f8d904a167541f07e15472572a23208fb7720",
+  "actual_live": "f7abb0e13d3ee0943637be2146ca52ee25486289",
+  "intended_tree": "2671b608a2f181f41e2c31bf9d2d00c429b85a69",
+  "source_sandbox_rc": 0,
+  "source_full_not_repeated": true,
+  "merged_selected_entry_rc": 0,
+  "host": {
+    "at": "2026-10-18 03:12:28 CST",
+    "batch": "20261018-021301-fix-batch",
+    "command": [
+      "nice",
+      "-n",
+      "19",
+      "bash",
+      "ops/codex-ops-actions.sh",
+      "learner-recheck",
+      "20261018-021301-fix-batch"
+    ],
+    "pid": 2757761,
+    "birth": "115629109",
+    "actual_subprocess_started": true,
+    "intended_live": "f7abb0e13d3ee0943637be2146ca52ee25486289",
+    "intended_tree": "2671b608a2f181f41e2c31bf9d2d00c429b85a69",
+    "actual_checked_tree": "2671b608a2f181f41e2c31bf9d2d00c429b85a69",
+    "full_result": 0,
+    "source_full_not_repeated": true,
+    "original_completion_failed_rc0_not_rewritten": true,
+    "expected_log": "ops/codex-ops/learner/20261018-021301-fix-batch.fallback-2671b608a2f181f41e2c31bf9d2d00c429b85a69.checks.log",
+    "route": "one original fix-batch learner-recheck action; future event owns terminal result",
+    "acceptance_receipt": "paper/materials/20261018-0329-ops/fix-host-acceptance.json",
+    "log_sha256": "646a0c9c4f6c43b0e26439c168014a2dbae168ead19a3d50774a3929729fbc12",
+    "files_passed": 537,
+    "tests_passed": 5249,
+    "tests_skipped": 2
+  },
+  "host_complete": true,
+  "source_worktree_complete": false,
+  "original_state_failed_rc0_preserved": true,
+  "gameplay_version_unchanged": true,
+  "ledger_entry_required": false,
+  "broader_support_protocol_pending": true,
+  "next": "Original format-only source is accepted by the exact published-tree full host check. Retention registration alone is pending after one busy-lock rc1; at a later normal event retry the same original complete command once. No retry loop, direct deletion, new game/model or duplicate source/full check. The separate cherry-pick publication proof protocol, original 011241 recheck2/report and proposal pending remain unchanged.",
+  "retention": {
+    "at": "2026-10-18 03:29:53 CST",
+    "command": [
+      "nice",
+      "-n",
+      "19",
+      "python3",
+      "ops/worktree_retention.py",
+      "complete",
+      "--root",
+      "/home/dw/Projects/agent-sts2",
+      "--state-dir",
+      "/home/dw/Projects/agent-sts2/ops/codex-ops",
+      "--workspace",
+      "codex-fix-silent-20261018-021301",
+      "--source",
+      "4c16dab0457a61e22ef06b27e367d146cb99bab3",
+      "--main-commit",
+      "3e7f8d904a167541f07e15472572a23208fb7720",
+      "--live-commit",
+      "f7abb0e13d3ee0943637be2146ca52ee25486289"
+    ],
+    "rc": 1,
+    "attempts_this_wake": 1,
+    "stdout_sha256": "dde7f2fad740afd369bf8bd3f678b57e8db0cc62c96a6c17f02a91ec8aee43e0",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "accepted": false,
+    "actual_deletion_not_claimed": true,
+    "if_busy_next_normal_event_only": true
+  },
+  "host_acceptance": "paper/materials/20261018-0329-ops/fix-host-acceptance.json"
+}

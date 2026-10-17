@@ -1,0 +1,170 @@
+{
+  "generated_at": "2026-10-17T19:29:33.075Z",
+  "source_cut_bytes": {
+    "decisions.jsonl": 2411145581,
+    "deepseek-reasoning.jsonl": 377746518,
+    "runs.jsonl": 366990,
+    "states.jsonl": 14147670526,
+    "fight-plans.jsonl": 2233957,
+    "run-plans.jsonl": 9148735,
+    "brain.jsonl": 788184248,
+    "sl-attempts.jsonl": 46628974,
+    "run-config.jsonl": 2033483
+  },
+  "checks": {
+    "decisions attributed + unattributed == play records": true,
+    "decisions_by_label sum == attributed decisions": true,
+    "escalations rows == records with escalation": true,
+    "every runs.jsonl id present in runs.csv": true,
+    "commits == git rev-list --all --count": true
+  },
+  "counts": {
+    "runs.csv": 835,
+    "decisions_by_label.csv": 27867,
+    "escalations.csv": 3600,
+    "fight_plans.csv": 1461,
+    "commits.csv": 6927
+  },
+  "selected_run": {
+    "run_id": "559UJVNHZ5NM",
+    "start_ts": "2026-10-17T18:13:14.945Z",
+    "end_ts": "2026-10-17T18:53:20.669Z",
+    "duration_min": "40.1",
+    "floor_max": "24",
+    "act_reached": "2",
+    "outcome": "defeat",
+    "victory": "0",
+    "outcome_source": "runs.jsonl",
+    "finished": "1",
+    "character": "SILENT",
+    "ascension": "10",
+    "code_version": "current",
+    "code_version_source": "runs.jsonl",
+    "code_version_console": "729d47525+dirty",
+    "code_versions_all": "729d47525+dirty",
+    "n_decisions": "423",
+    "n_shadow": "0",
+    "decider_inferred": "0",
+    "n_code": "197",
+    "n_jev": "102",
+    "n_deepseek": "0",
+    "n_claude": "0",
+    "n_code_fallback": "0",
+    "n_jev_plan": "87",
+    "n_deepseek_plan": "0",
+    "n_claude_plan": "0",
+    "jev_calls": "125",
+    "jev_in_tokens": "4844980",
+    "jev_out_tokens": "41329",
+    "jev_cost_usd": "0.205225",
+    "jev_latency_p50_ms": "457.5",
+    "ds_calls": "0",
+    "ds_in": "0",
+    "ds_cache_hit": "0",
+    "ds_out": "0",
+    "ds_reasoning": "0",
+    "ds_total_tokens": "0",
+    "ds_calls_no_token_split": "0",
+    "ds_cost_usd": "0",
+    "ds_latency_p50_s": "",
+    "ds_overrides": "0",
+    "fight_plans": "0",
+    "fight_plan_errors": "0",
+    "fight_plan_cost_usd": "0",
+    "fight_plan_latency_p50_s": "",
+    "claude_calls": "0",
+    "claude_latency_p50_s": "",
+    "hp_guard_count": "0",
+    "escalation_chain": "none",
+    "era": "deepseek_memory",
+    "learning_loop": "1",
+    "death_enemy": "啃咬机",
+    "death_enemy_ids": "CHOMPER",
+    "final_hp": "0",
+    "max_hp": "77",
+    "bosses_seen": "CEREMONIAL_BEAST_BOSS KAISER_CRAB_BOSS",
+    "has_postmortem": "1",
+    "postmortem_heading": "559UJVNHZ5NM（A10，静默猎手，第24层，死于双啃咬机 CHOMPER：四试均4/77血、槽0能力药水和槽1毒药水进场，前三试T1判死读档；末试T1以4血10挡面对9×2＝18攻击阵亡，完整需损8、存活至少差5血；判死前两敌仍20/67与48/66血）",
+    "preloop_listed": "0",
+    "n_run_notes": "1",
+    "autoplay_finished_lines": "1",
+    "in_runs_jsonl": "1",
+    "brain_source": "{\"basis\": \"brain.jsonl accepted verdict; legacy answer != null, no error/problems; unique question_id+engine\", \"brain_rows\": 23, \"coverage\": \"all_logged_questions_resolved\", \"eligible\": true, \"embedded_answers\": {\"map/route\": 15, \"run-plan\": 6}, \"exclusion_reason\": null, \"failed_or_unaccepted_rows\": 0, \"first_success\": \"2026-10-17T18:13:14.922Z\", \"last_success\": \"2026-10-17T18:51:59.570Z\", \"policy\": \"codex-successful-brain-v1\", \"source\": \"codex\", \"successful_answers\": {\"codex\": 23}, \"successful_by_label\": {\"event/act-plan\": {\"codex\": 1}, \"event/choose\": {\"codex\": 2}, \"event/plan\": {\"codex\": 2}, \"map/route-plan\": {\"codex\": 1}, \"rest/plan\": {\"codex\": 3}, \"reward/card\": {\"codex\": 12}, \"shop/plan\": {\"codex\": 2}}, \"unknown_successes\": 0, \"unresolved_questions\": 0}",
+    "first_attempt": "{\"death_floor\": 24, \"floor\": 24, \"passed_act1\": false, \"passed_act2\": false, \"reloads\": 0, \"sl_rows\": 5, \"victory\": false}",
+    "performance_policy": "codex-successful-brain-v1",
+    "performance_included": "1",
+    "performance_exclusion_reason": ""
+  },
+  "changed_outputs": [
+    {
+      "path": "paper/data/README.md",
+      "bytes": 14189,
+      "sha256": "7fb99dbffa0682acc1047d5c41ec4f5d4eb0c1f982cddefbbaa70a531e52dd75"
+    },
+    {
+      "path": "paper/data/commits.csv",
+      "bytes": 1042755,
+      "sha256": "c2bd2cf5ba604c629a9a5711388ff9854d1c47a52f8400be7062f301cb1cba3f"
+    },
+    {
+      "path": "paper/data/cost-curve-silent.csv",
+      "bytes": 14947,
+      "sha256": "f26216e8812cf560306471895e16ed74354c5942e784c1574a6ce0e8475bd067"
+    },
+    {
+      "path": "paper/data/cost-silent.csv",
+      "bytes": 945183,
+      "sha256": "7b68777b0d064f2d9522ca0b4cb9f24800110544272cba24e94661ec7a5c2dd3"
+    },
+    {
+      "path": "paper/data/cost-sources.json",
+      "bytes": 251962,
+      "sha256": "1cec3563cc04e6d6539cb10d2e5bb0c78263401ef15b2d6bb52192e1f2090eb1"
+    },
+    {
+      "path": "paper/data/cost-unattributed.csv",
+      "bytes": 20359,
+      "sha256": "9020c4a1ab5af93b2068bc96c0fde12d6826daec3735e329c9ac9888dd32511d"
+    },
+    {
+      "path": "paper/data/decisions_by_label.csv",
+      "bytes": 1204192,
+      "sha256": "29a7e0f1bf7d2e9004a65df1ebbc6381d876241166bda4b62fae5df71fdfe011"
+    },
+    {
+      "path": "paper/data/learning-curve-silent.csv",
+      "bytes": 73139,
+      "sha256": "af98dfc4b25d0e28de22872dbf7557cfb912489975967d561147c9e2a577bfce"
+    },
+    {
+      "path": "paper/data/runs.csv",
+      "bytes": 1363986,
+      "sha256": "6d385aef73543129446d9201413cbbe235c400bfc125c5b75807281565c550eb"
+    },
+    {
+      "path": "paper/data/summary.json",
+      "bytes": 563604,
+      "sha256": "308f018beb132850f8ef2cf074915a54cb9afc2925ecbb80e2b3d99539f59b9d"
+    },
+    {
+      "path": "paper/data/verification.json",
+      "bytes": 587,
+      "sha256": "ea5f7144c16c197854ebfa977af9141cae6c2908dd23be2b7338d5b88b6e1057"
+    },
+    {
+      "path": "paper/materials/silent/cost.md",
+      "bytes": 4200,
+      "sha256": "7c5c35dd47decf9adf97d6761a448850546f0f28044f34a358e6e94a6722a034"
+    }
+  ],
+  "actual_exit_code": 0,
+  "raw_snapshot": false,
+  "count_warnings": [
+    [
+      "KF9HMZKTFC3V",
+      879,
+      880
+    ]
+  ],
+  "cost_is_estimate_not_bill": true
+}
