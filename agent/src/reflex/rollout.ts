@@ -634,6 +634,8 @@ export interface RolloutInput {
   captureResources?: boolean;
   /** Silent A10 CA5KE8GFJ9X2 F9 T2-T4: the observed Gardener's Skittish returns on later turns. */
   observedGardenerSkittish?: boolean;
+  /** Observed Silent A10 Test Subject phase power sets; whole-fight scripts only. */
+  observedSilentTestSubjectPhasePowers?: boolean;
   /** Fresh second-fight starts from observed identities, weighted without revealing this run's future boss. */
   continuation?: {
     variants: { boss: string; count: number; input: RolloutInput }[];
@@ -1737,6 +1739,13 @@ function enemyDown(e: SimEnemy, turn: number, input: RolloutInput, enemies: SimE
     // once and the fight "ended"; phase 2 had 212 and a phase 3 followed).
     const later = e.phasesLeft ?? laterPhaseHps(e.maxHp, input.meta.asc);
     const next = later[0] ?? e.maxHp;
+    // JMH5 F48 T4->T5 / T7->T8, UJ0K T5->T6 and YZWV T5->T6 / T8->T9:
+    // the next phase replaces Enrage with Painful Stabs, then drops Painful Stabs.
+    // Only the observed Silent A10 HP/power signatures enter this whole-fight correction.
+    const observedPhasePowers = fullFight && input.observedSilentTestSubjectPhasePowers === true &&
+      input.meta.asc === 10 && e.id === "TEST_SUBJECT" &&
+      ((e.maxHp === 111 && next === 212 && e.base.enrage === 3 && (e.base.woundsPerHit ?? 0) === 0) ||
+        (e.maxHp === 212 && next === 313 && e.base.enrage === 0 && e.base.woundsPerHit === 1));
     e.phasesLeft = later.slice(1);
     e.hp = next;
     e.maxHp = next;
@@ -1757,6 +1766,11 @@ function enemyDown(e: SimEnemy, turn: number, input: RolloutInput, enemies: SimE
       }
     }
     e.base = { ...e.base, hp: next, maxHp: next, revives: e.phasesLeft.length > 0 };
+    if (observedPhasePowers) {
+      const { ENRAGE_POWER: _enrage, PAINFUL_STABS_POWER: _stabs, ...powers } = e.powers;
+      e.powers = { ...powers, ...(next === 212 ? { PAINFUL_STABS_POWER: 1 } : {}) };
+      e.base = { ...e.base, enrage: 0, woundsPerHit: next === 212 ? 1 : 0 };
+    }
     // A whole fight: the next phase's own moves, from its first (Multi Claw at phase 2, Lacerate at phase 3).
     const phases = PHASE_MOVES[e.id];
     if (fullFight && phases) {

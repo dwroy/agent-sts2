@@ -824,7 +824,7 @@ export function boardRolloutInput(
   asc: number,
   db: MonsterMoves = monsterMoves(),
   mm: MoveModelData = moveModelData(),
-): Pick<RolloutInput, "solver" | "enemies" | "tables" | "statusCards" | "relicEnergy" | "relicBlock" | "spawns" | "summons" | "playerPowers" | "fumesPoisonBonus" | "observedGardenerSkittish" | "potions" | "onShuffle" | "passive"> & { handBase: (CardModel | null)[] } {
+): Pick<RolloutInput, "solver" | "enemies" | "tables" | "statusCards" | "relicEnergy" | "relicBlock" | "spawns" | "summons" | "playerPowers" | "fumesPoisonBonus" | "observedGardenerSkittish" | "observedSilentTestSubjectPhasePowers" | "potions" | "onShuffle" | "passive"> & { handBase: (CardModel | null)[] } {
   const combat = asRecord(state.raw["combat"]);
   const raw = asArray(combat["enemies"]).map(asRecord);
   const leaderAlive = raw.some((e) => e["is_alive"] !== false && !powersOf(e)["MINION_POWER"]);
@@ -896,6 +896,14 @@ export function boardRolloutInput(
   // Only the observed Silent Fumes trigger: no inferred bonus for direct poison cards or potions.
   const skull = str(asRecord(state.run?.raw)["character_id"]).toLowerCase() === "silent" &&
     asArray(asRecord(state.run?.raw)["relics"]).some((relic) => str(asRecord(relic)["relic_id"]) === "SNECKO_SKULL");
+  const testSubjectPhasePowers = str(asRecord(state.run?.raw)["character_id"]).toLowerCase() === "silent" && asc === 10 && raw.length === 1 &&
+    raw.some((enemy) => {
+      if (str(enemy["enemy_id"]) !== "TEST_SUBJECT") return false;
+      const powers = powersOf(enemy);
+      return powers["ADAPTABLE_POWER"] === 1 &&
+        ((enemy["max_hp"] === 111 && powers["ENRAGE_POWER"] === 3 && !(powers["PAINFUL_STABS_POWER"] ?? 0)) ||
+          (enemy["max_hp"] === 212 && powers["PAINFUL_STABS_POWER"] === 1 && !(powers["ENRAGE_POWER"] ?? 0)));
+    });
   return {
     solver,
     enemies,
@@ -910,6 +918,7 @@ export function boardRolloutInput(
     playerPowers: powersOf(asRecord(combat["player"])),
     ...(skull ? { fumesPoisonBonus: 1 } : {}),
     ...(str(asRecord(state.run?.raw)["character_id"]).toLowerCase() === "silent" && asc === 10 ? { observedGardenerSkittish: true } : {}),
+    ...(testSubjectPhasePowers ? { observedSilentTestSubjectPhasePowers: true } : {}),
     potions: asArray(asRecord(state.run?.raw)["potions"]).filter((p) => asRecord(p)["occupied"]).length,
     handBase: solverInput.hand.map((card) => (card.type === "Potion" ? null : baseByKey.get(cardKey(card)) ?? null)),
   };
