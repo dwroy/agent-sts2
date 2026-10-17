@@ -21,11 +21,11 @@ import { parseGameState } from "../src/hand/mod/schema.js";
 import { createScreenMemory, type Decision, type DecisionEnv, type ScreenMemory } from "../src/memory/types.js";
 import { DEEPSEEK_DECIDES_NOTE } from "../src/hand/screens/pick.js";
 import { withBossSim } from "../src/sim/build-sim-facts.js";
-import { SerialDeckRunner } from "../src/sim/build-sim-pool.js";
 import { rememberMap } from "../src/hand/screens/rest.js";
 import type { JsonValue } from "../src/core/util/json.js";
 import { ask, board, decide, env, setupOneshotTests, type Raw } from "./oneshot-support.js";
 import { FIXTURE_DB, FIXTURE_MM } from "./boss-sim-build-fixture.js";
+import { FixedDeckRunner } from "./boss-sim-consumer-fixture.js";
 import { baseState, chestPayload } from "./scenarios.js";
 
 setupOneshotTests();
@@ -250,8 +250,8 @@ describe("V4 M2 audit: build questions carry facts, not code's scores", () => {
     expectNoScores(capstones);
   });
 
-  // B3 (BOSS_SIM_BUILD=on): the act boss simulated for each option is a fact too: the same audit on the questions with
-  // it (a fixed monster DB and move model, a few samples; tests/boss-sim-build.test.ts has the rest).
+  // Audit the real option preparation and rendering with fixed receipts. Whole-fight sampling and deadlines have
+  // their own tests in boss-sim-build.test.ts; a consumer audit must not depend on finishing them under host load.
   it.each([
     ["reward/card", "xljq-f5-reward", "reward"],
     ["shop/plan", "u6ru-f22-shop", "open"],
@@ -262,7 +262,11 @@ describe("V4 M2 audit: build questions carry facts, not code's scores", () => {
     try {
       const e = env(board(file, key));
       const before = decide(e);
-      const { decision } = await withBossSim(before, e, { runner: new SerialDeckRunner(), samples: 4, deadlineMs: 60_000, db: FIXTURE_DB, mm: FIXTURE_MM });
+      const runner = new FixedDeckRunner();
+      const { decision, record } = await withBossSim(before, e, { runner, samples: 4, deadlineMs: 60_000, db: FIXTURE_DB, mm: FIXTURE_MM });
+      expect(record).toMatchObject({ samples: 4, timed_out: false });
+      expect(runner.requests.length).toBeGreaterThan(0);
+      expect(runner.requests.every((request) => request.samples === 4)).toBe(true);
       const view = audit(decision);
       expect(view.label).toBe(label);
       expect(Object.keys(view.options)).toEqual(Object.keys(audit(before).options));
