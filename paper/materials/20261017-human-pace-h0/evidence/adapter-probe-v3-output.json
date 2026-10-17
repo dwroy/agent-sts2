@@ -1,0 +1,189 @@
+{
+  "status": "passed",
+  "source": {
+    "file": "/home/dw/Projects/agent-sts2/logs/states.jsonl",
+    "first_off": 6575079429,
+    "last_off": 6576833958,
+    "frames": 36,
+    "last_logged_hp": 39,
+    "t1_off": 6575123933,
+    "t1_len": 52508,
+    "t1_sha256": "1e5c73642fe5fe464f3a4cec686b040cb77ea53352f92e9d26fd399909c2ee72"
+  },
+  "key": "ZZMYZ5UBCG72:48:1:6575079429",
+  "provenance": [
+    {
+      "id": "TORCH_HEAD_AMALGAM",
+      "hp": 199,
+      "hpAsc": "2",
+      "openingAsc": 2,
+      "exactOpening": true,
+      "hit": {
+        "perHit": 26,
+        "hits": 1,
+        "estimated": false,
+        "from": 2,
+        "ratio": 1
+      },
+      "shown": 26
+    },
+    {
+      "id": "QUEEN",
+      "hp": 400,
+      "hpAsc": "2",
+      "openingAsc": 2,
+      "exactOpening": true,
+      "hit": null,
+      "shown": 0
+    }
+  ],
+  "b2_start": "Original fixed calibration T1 drawn-hand state and original boss DB normalization",
+  "b3_start": "pre/redeal with actual entry HP",
+  "b2_tables": {
+    "BEAM_MOVE": {
+      "damage": 8,
+      "hits": 3,
+      "strength": 0,
+      "block": 0,
+      "observedWeak": [
+        {
+          "strength": 0,
+          "playerVulnerable": true,
+          "scale": 0.6
+        },
+        {
+          "strength": -3,
+          "playerVulnerable": true,
+          "scale": 0.6
+        }
+      ]
+    },
+    "STRONG_TACKLE_MOVE": {
+      "damage": 26,
+      "hits": 1,
+      "strength": 0,
+      "block": 0
+    },
+    "TACKLE_2_MOVE": {
+      "damage": 18,
+      "hits": 1,
+      "strength": 0,
+      "block": 0,
+      "observedWeak": [
+        {
+          "strength": 0,
+          "playerVulnerable": false,
+          "scale": 0.6
+        }
+      ]
+    },
+    "TACKLE_3_MOVE": {
+      "damage": 14,
+      "hits": 1,
+      "strength": 0,
+      "block": 0,
+      "observedWeak": [
+        {
+          "strength": 1,
+          "playerVulnerable": true,
+          "scale": 0.6
+        },
+        {
+          "strength": 4,
+          "playerVulnerable": true,
+          "scale": 0.6
+        }
+      ]
+    },
+    "TACKLE_4_MOVE": {
+      "damage": 14,
+      "hits": 1,
+      "strength": 0,
+      "block": 0,
+      "observedWeak": [
+        {
+          "strength": 2,
+          "playerVulnerable": true,
+          "scale": 0.6
+        }
+      ]
+    }
+  },
+  "b3_tables": {
+    "BEAM_MOVE": {
+      "damage": 8,
+      "hits": 3,
+      "strength": 0,
+      "block": 0,
+      "observedWeak": [
+        {
+          "strength": 0,
+          "playerVulnerable": true,
+          "scale": 0.6
+        },
+        {
+          "strength": -3,
+          "playerVulnerable": true,
+          "scale": 0.6
+        }
+      ]
+    },
+    "STRONG_TACKLE_MOVE": {
+      "damage": 26,
+      "hits": 1,
+      "strength": 0,
+      "block": 0
+    },
+    "TACKLE_2_MOVE": {
+      "damage": 18,
+      "hits": 1,
+      "strength": 0,
+      "block": 0,
+      "observedWeak": [
+        {
+          "strength": 0,
+          "playerVulnerable": false,
+          "scale": 0.6
+        }
+      ]
+    },
+    "TACKLE_3_MOVE": {
+      "damage": 14,
+      "hits": 1,
+      "strength": 0,
+      "block": 0,
+      "observedWeak": [
+        {
+          "strength": 1,
+          "playerVulnerable": true,
+          "scale": 0.6
+        },
+        {
+          "strength": 4,
+          "playerVulnerable": true,
+          "scale": 0.6
+        }
+      ]
+    },
+    "TACKLE_4_MOVE": {
+      "damage": 14,
+      "hits": 1,
+      "strength": 0,
+      "block": 0,
+      "observedWeak": [
+        {
+          "strength": 2,
+          "playerVulnerable": true,
+          "scale": 0.6
+        }
+      ]
+    }
+  },
+  "expected": {
+    "TACKLE_2_MOVE": 1,
+    "BEAM_MOVE": 2,
+    "TACKLE_3_MOVE": 2,
+    "TACKLE_4_MOVE": 1
+  },
+  "scope": "Production board adapter and original B3 redeal only; diagnostic construction suppresses unrelated rollout facts, no game/model/API or natural-outcome claim. First no-hand room-entry and incorrect helper-import probe failures preserved."
+}

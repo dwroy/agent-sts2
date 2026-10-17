@@ -1,0 +1,48 @@
+[
+  {
+    "claim": "六目标旧校准高leak/失败项可定位为敌方某招伤害倍率错误。",
+    "finding": "该假设尚未普遍成立。24选定战203个严格命令窗口中179可回放、178净掉血相符；24 no solve未知。17窗口的旧last已在掉血之后，旧leak分母少计。净损仍混合持牌、回合末/回合初效果，不能替代纯敌伤结算。整战策略/抽牌轨迹尚未隔离。",
+    "evidence": [
+      "TXZ6RVMQA09D A10 F48 attempt3 T2: 56→50，旧last50而leak0",
+      "diagnosis.json",
+      "end-turn-windows.json",
+      "window-replay-merged.json",
+      "window-sources.json"
+    ],
+    "recommendation": "保留原阈值和低可信；修后481验证及原leak口径分列，量测时点/纯敌伤assay另由原任务处理，不以换标签通过闸门。",
+    "existing_entry_ids": [
+      "silent-g1a-fixed-production-boundary",
+      "silent-g1a-aeonglass-calibration-boundary",
+      "silent-h0-end-turn-measurement-boundary"
+    ]
+  },
+  {
+    "claim": "旧经验silent-paper-krane-weak-multihit已被后续回合敌伤模型完整消费。",
+    "finding": "ZZMYZ5UBCG72 A2四招六上下文的9个意图端点显示不一致：已有虚弱后续模型仍乘0.75，实盘文本40%及意图支持这些上下文乘0.6。仍只有1独立局，不支持扩到A10、新施虚弱或任意力量/怪物。",
+    "evidence": [
+      "ZZMYZ5UBCG72 A2 F48 attempt1 T2–T7",
+      "repair-probe-v2-output.json",
+      "adapter-probe-v4-output.json",
+      "source-boundary-v2-equivalence.json"
+    ],
+    "recommendation": "仅上线角色/进阶/有效遗物/原基数命中数及六上下文均匹配的窄修，保留旧经验n=1与低置信；未观察范围沿旧路。",
+    "existing_entry_ids": [
+      "silent-paper-krane-weak-multihit"
+    ]
+  },
+  {
+    "claim": "UJ0K3G10609Y残差足以证明双尾挡或silent-0332根因已解决。",
+    "finding": "唯一净损差为A10 F48第6试T2实损5、模拟11；6差兼容披风搭扣/奥利哈钢组合挡，但该窗口没有分离触发顺序、完整资源封套和其他条件，不能证明因果或声称0332修复。",
+    "evidence": [
+      "UJ0K3G10609Y A10 F48 attempt6 T2",
+      "diagnosis.json:first_same_window_net_divergence",
+      "windows/UJ0K3G10609Y-F48-a6-T2-pre.json",
+      "windows/UJ0K3G10609Y-F48-a6-T2-next.json"
+    ],
+    "recommendation": "给原0332 owner精确源偏移，保持unknown与原失败历史；本H0不改turn-solver/SL/药水或通用连战接口。",
+    "existing_entry_ids": [
+      "silent-g1a-test-subject-calibration-boundary",
+      "silent-h0-end-turn-measurement-boundary"
+    ]
+  }
+]

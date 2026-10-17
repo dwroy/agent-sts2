@@ -485,6 +485,8 @@ export interface EnemyMove {
    * average over the logged facings, which the whole fight must not scale by the back attack's 1.5 again.
    */
   faceDamage?: number;
+  /** Exact character/ascension contexts attached by the board adapter from actual Silent evidence. */
+  observedWeak?: { strength: number; playerVulnerable: boolean; scale: 0.6 }[];
   /** Whole fights only (B4): the Sandpit count the move starts on its user (the Insatiable's Liquify Ground: 4). */
   sandpit?: number;
   /**
@@ -1389,7 +1391,10 @@ export interface TurnRecord {
 
 function moveAttack(enemy: SimEnemy, table: EnemyTable | undefined, move: string | null, playerVulnerable: boolean, fight: { fullFight: boolean; faced: boolean } = { fullFight: false, faced: false }): { damage: number; hits: number }[] {
   const m = move && table ? table.moves[move] : undefined;
-  const scale = (enemy.weak > 0 ? 0.75 : 1) * (enemy.shrink > 0 ? SHRINK_DAMAGE_FACTOR : 1) * (playerVulnerable ? 1.5 : 1);
+  const measured = enemy.vigor === 0 && enemy.shrink === 0
+    ? m?.observedWeak?.find((point) => point.strength === enemy.strength && point.playerVulnerable === playerVulnerable)?.scale
+    : undefined;
+  const scale = (enemy.weak > 0 ? measured ?? 0.75 : 1) * (enemy.shrink > 0 ? SHRINK_DAMAGE_FACTOR : 1) * (playerVulnerable ? 1.5 : 1);
   if (!m) return enemy.shown.map((a) => ({ damage: Math.floor((a.damage / (enemy.shownScale ?? 1)) * scale), hits: a.hits }));
   if (m.damage <= 0) return [];
   // A whole fight's growing move (Multi Claw): a hit more for each earlier use in this phase; the Pressure Gun's hit grows.
