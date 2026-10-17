@@ -1,0 +1,2906 @@
+{
+  "batch": "20261017-084302-s2-strategy-proposal",
+  "canonical_state": "done",
+  "rc": 0,
+  "merged": null,
+  "original_report": {
+    "task": "strategy-proposal",
+    "character": "silent",
+    "batch": "20261017-084302-s2-strategy-proposal",
+    "base": "dee5dd9ed2e2d8af33f956bcb196e70a151a3a32",
+    "runs": [
+      "2PVLGRBGUX9S",
+      "DPYF2BAA3DKT",
+      "GXNKW8X1XYJP",
+      "UMVLWER4CD98",
+      "VLZ6CCT8AQ0A",
+      "VN7RQJMJEFMX",
+      "YF0LXT1QSTGG",
+      "ZE8F192FKX24",
+      "PD9AYQVMLQW6",
+      "L2TSFU62Z57Z"
+    ],
+    "fixes": [],
+    "skipped": [],
+    "merged": null,
+    "tests": {
+      "tsc": null,
+      "vitest": null,
+      "cases": null
+    },
+    "code_proposals": [
+      "silent-proposal-2631859b524e0652",
+      "silent-proposal-b13fda1dfeb37927",
+      "silent-proposal-d7b8d36cf3d0303d",
+      "silent-proposal-c873d6543c414f92",
+      "silent-proposal-dfbf51502f30c9b1",
+      "silent-proposal-c2888032d1337388",
+      "silent-proposal-042ee2299084b528",
+      "silent-proposal-8cd3db3bad5f34f1",
+      "silent-proposal-43fe170707574455",
+      "silent-proposal-3f5a665dca133a8c"
+    ],
+    "implementation_domains": [],
+    "proposal_results": [
+      {
+        "id": "silent-proposal-2631859b524e0652",
+        "state": "waiting",
+        "reason": "缺纯改标、多副本与真实插牌/洗牌的消歧负例，以及known-draw消费者完整验证；总数守恒不能证明抽序。"
+      },
+      {
+        "id": "silent-proposal-b13fda1dfeb37927",
+        "state": "waiting",
+        "reason": "缺复活瞬时逐击入伤、前三试退出帧、逐药槽来源及替路线或提前用药的完整后继。"
+      },
+      {
+        "id": "silent-proposal-d7b8d36cf3d0303d",
+        "state": "waiting",
+        "reason": "普通生存者单弃已有live实现；新增凋萎实体、弃牌完成时点与终局消费者的联合校准余项仍未完成，不能关闭整项。"
+      },
+      {
+        "id": "silent-proposal-c873d6543c414f92",
+        "state": "waiting",
+        "reason": "已有部分预测阶段字段；旧日志缺跨重问父子身份及饮药、自动消耗、SL恢复的完整归属，消费者不认证完整候选。"
+      },
+      {
+        "id": "silent-proposal-dfbf51502f30c9b1",
+        "state": "waiting",
+        "reason": "缺侧步完整后继和同预算候选对照；七伤线五轮死亡14/24、结束11/24，不能据即时伤害改变全败排序。"
+      },
+      {
+        "id": "silent-proposal-c2888032d1337388",
+        "state": "waiting",
+        "reason": "缺十五机制逐入口至联合生产消费者的校准；覆甲减层、力量对滚石及换战能力边界尚未隔离。"
+      },
+      {
+        "id": "silent-proposal-042ee2299084b528",
+        "state": "waiting",
+        "reason": "same_sample资源诊断已有实现；真实次战开场、奖励转移及路线/休息消费者联合校准仍缺。"
+      },
+      {
+        "id": "silent-proposal-8cd3db3bad5f34f1",
+        "state": "waiting",
+        "reason": "缺原线与改线的完整执行认证及同入口、同预算整战后继；观察端点不能填充原候选因果结果。"
+      },
+      {
+        "id": "silent-proposal-43fe170707574455",
+        "state": "waiting",
+        "reason": "当前总敌血和暂减力快照已有实现；缺稳定敌实例、精确退场边界及构筑能力实得和兑现链。"
+      },
+      {
+        "id": "silent-proposal-3f5a665dca133a8c",
+        "state": "waiting",
+        "reason": "三次护栏局部端点可核；缺跨重问完整归属及原线、替线同预算整战后继，不能把候选省血记作整场收益。"
+      }
+    ],
+    "report": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-084302-s2/learner/runs/20261017-084311-84d2a3c7-2bc7-4149-9e58-efbee8e0d219-strategy-proposal/report.md"
+  },
+  "runtime": {
+    "batch": "20261017-084302-s2-strategy-proposal",
+    "thread": "01a14750-1e89-7d00-8437-0ce066f4b217",
+    "cwd": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-084302-s2",
+    "event_log": "learner/runs/20261017-084311-84d2a3c7-2bc7-4149-9e58-efbee8e0d219-strategy-proposal.jsonl",
+    "registered_launch_batch": "20261017-084302-s2-strategy-proposal",
+    "original_lease": "dacdb6e846e97f45a582e9cc2ef299a5e7f3342cf2b2fad1a9593f1ee94878de",
+    "native_context": {
+      "source": "ops/codex-ops/accounts/codex1/learner/sessions/2026/10/17/rollout-2026-10-17T08-43-15-01a14750-1e89-7d00-8437-0ce066f4b217.jsonl",
+      "offset": 50424,
+      "bytes": 5200,
+      "sha256": "afca033781fa7e8fdaa4fd5496414dc9c730d1a4a558032881bbd081bdbf5d4b",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "sandbox": {
+        "type": "workspace-write",
+        "writable_roots": [
+          "/home/dw/Projects/agent-sts2",
+          "/home/dw/Projects/agent-sts2/.git",
+          "/home/dw/Projects/agent-sts2/.git/worktrees/codex-strategy-silent-20261017-084302-s2"
+        ],
+        "network_access": false,
+        "exclude_tmpdir_env_var": false,
+        "exclude_slash_tmp": false
+      },
+      "approval_policy": "never"
+    },
+    "native_user_input": {
+      "offset": 58499,
+      "bytes": 21571,
+      "sha256": "c7bc5ac2a2ee811ecd81469c38a5cc5bbf5b486f3ed96a393af322febe69f365",
+      "input_sha256": "a64f35c5704970319b2daf1adeda162236e33820db772cf9d790300ba1fc434f"
+    },
+    "original_header_events": [
+      {
+        "offset": 0,
+        "bytes": 23653,
+        "sha256": "c9d4bddba0b67bb5da3f4b3fd5414b449519da945fd413240158d0b00a0520fc",
+        "type": "learner_launch",
+        "attempt": null,
+        "code": null
+      },
+      {
+        "offset": 23653,
+        "bytes": 381,
+        "sha256": "71a056bd4e28580bec56abe4ffb8fbfc4d0880ee7ae5cbf8367da37d895e4a49",
+        "type": "learner_startup_attempt",
+        "attempt": 1,
+        "code": null
+      },
+      {
+        "offset": 26612,
+        "bytes": 77,
+        "sha256": "40026d73d36aa7265951bb36c66128c7f6830be93b5966d31923ec0efeca8cf2",
+        "type": "thread.started",
+        "attempt": null,
+        "code": null
+      }
+    ],
+    "startup_attempts": 1,
+    "failed_startups_preserved": 0,
+    "no_model_or_manual_restart": true
+  },
+  "original_final_readback": {
+    "base": "dee5dd9ed2e2d8af33f956bcb196e70a151a3a32",
+    "head": "dee5dd9ed2e2d8af33f956bcb196e70a151a3a32",
+    "status_porcelain": "",
+    "source_and_knowledge_diff_bytes": 0,
+    "index_diff_bytes": 0,
+    "ignored_scratch": true,
+    "fixes": [],
+    "merged": null,
+    "production_tests": {
+      "tsc": null,
+      "vitest": null,
+      "cases": null
+    },
+    "proposal_results": 10,
+    "ledger_cli_exit_code": 0,
+    "ledger_entries": 29,
+    "original_ledger_reference_rows_verified": 13253,
+    "no_source_commit": true,
+    "live_snapshot": "99737be9fdb9c2ea92089d768947c49b49b62382"
+  },
+  "checkout_already_automatically_reclaimed": false,
+  "verified_artifacts": [
+    {
+      "path": "GX-inserted-audit.json",
+      "bytes": 1966,
+      "sha256": "093760eb593c7f2cab2f401b78e9b817bffe4907c7c480199cef00233f881516"
+    },
+    {
+      "path": "GX-inserted-audit.json.initial-turn-assumption.txt",
+      "bytes": 3,
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    {
+      "path": "L2-T6-candidates.json",
+      "bytes": 2471,
+      "sha256": "fbfcebe011effa3ffb6523ba5318eb8a91c36945a0a085b21efb490b0eff7b6f"
+    },
+    {
+      "path": "additional-material-checks.json",
+      "bytes": 4475,
+      "sha256": "93c15ef9eabe32f81f7993e982f93c4320a5e1f6139dd241998d250767a165cd"
+    },
+    {
+      "path": "additional-material-checks.json.initial-turn-assumption.txt",
+      "bytes": 4448,
+      "sha256": "5ff52e8ad329852d61e9404594bb86db4ce0d0ccd12e946b3dd09f0a0e53d4dc"
+    },
+    {
+      "path": "additional-materials.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "additional-materials.stderr.log.initial-turn-assumption.txt",
+      "bytes": 358,
+      "sha256": "f52a36cddddb61c1b6a301bfe87e87a31fdb54608f4df995e61661940e77a2f6"
+    },
+    {
+      "path": "additional-materials.stdout.json",
+      "bytes": 42,
+      "sha256": "e7a64868b81957ed242f86bbaef5df962de063152fc89e7bbb66e7c5b9a48a6a"
+    },
+    {
+      "path": "additional-materials.stdout.json.initial-turn-assumption.txt",
+      "bytes": 82,
+      "sha256": "abd60d295a1523bb7ac397d1eb51b55e5881e037538ea55c7bbdbb09c83deb52"
+    },
+    {
+      "path": "additional_materials.py",
+      "bytes": 3998,
+      "sha256": "0588b1086fed71dddbdd17f966a3d0cee7f2062833997024932561fef6256c53"
+    },
+    {
+      "path": "additional_materials.py.initial-turn-assumption.txt",
+      "bytes": 3811,
+      "sha256": "d677d6a11a45ff557263d4bccc1893a42ebeddfe0376a95025709bf4fe901a6e"
+    },
+    {
+      "path": "agent_src_reflex_card-model.ts.live-diff.patch",
+      "bytes": 1627,
+      "sha256": "482dbb16f27492a959d9f702b3729d7e2135c091bac477cbd5ddf55441686e01"
+    },
+    {
+      "path": "agent_src_reflex_card-model.ts.old-diff.patch",
+      "bytes": 1108,
+      "sha256": "574e543891327922e18f2a5df46d5bd218b21219366b22c982d18bbb8a6da163"
+    },
+    {
+      "path": "agent_src_reflex_combat-plan.ts.old-diff.patch",
+      "bytes": 6789,
+      "sha256": "d8d498a605b2179fbf320d1a58ac656b9d5fe9738f4359f92df531a5785d06e2"
+    },
+    {
+      "path": "agent_src_reflex_turn-solver.ts.old-diff.patch",
+      "bytes": 1247,
+      "sha256": "c484378eab75db86ea9eaca89715998d594a4b17073d840446963c782c0986f8"
+    },
+    {
+      "path": "agent_src_sl_draws.ts.live-diff.patch",
+      "bytes": 2114,
+      "sha256": "b85a8f61a2564335142bbff9d16f7deeb3c51a5b2cdaf887a47dd54a449fbcec"
+    },
+    {
+      "path": "ancestor-checks.json",
+      "bytes": 1588,
+      "sha256": "7287a9ef6ea3cc2ef7619f2952e4f6fea1f30f9787380034211210a5d2c0fc18"
+    },
+    {
+      "path": "assigned-proposals.json",
+      "bytes": 28523,
+      "sha256": "646daeec6ab95d5c144c2cc2ea29d81f1a2df40d7e17c2d82054e1e7c9e9c2fc"
+    },
+    {
+      "path": "audit_materials.py",
+      "bytes": 8678,
+      "sha256": "e1d581a2117b7bc1ffc3eabf8e8602e0ffc7fd97596e3d56c59960512be5f3a0"
+    },
+    {
+      "path": "consumer-readback-counts.json",
+      "bytes": 1404,
+      "sha256": "adc7aa6e3f6915d39e7d882a5be7ebe7d5142a9b2196810e659952afe3a5d6c9"
+    },
+    {
+      "path": "consumer-reuse.json",
+      "bytes": 7280,
+      "sha256": "9a3446dd0c85b36888a2857b4c6990f8f441833887bfd22733d9e4c67071dd83"
+    },
+    {
+      "path": "dampen-version-frames.json",
+      "bytes": 282834,
+      "sha256": "3d1c7630a6f1755b993f983a38f704ab5de16bac27228467fb454ccefc843ead"
+    },
+    {
+      "path": "diagnostic-notes.md",
+      "bytes": 2105,
+      "sha256": "783215e8066dbe6c220623b9bd66c17877c9f10ca4e2f4d05c007a23c33dfbad"
+    },
+    {
+      "path": "evidence/brain.evidence.jsonl",
+      "bytes": 35870160,
+      "sha256": "1315d07f3db1860405b03f7132ef1f17410161f1d90a05d6d32189303e919257"
+    },
+    {
+      "path": "evidence/decisions.evidence.jsonl",
+      "bytes": 72026924,
+      "sha256": "2db44998ed5549a6996a3fd8e8278f919672e4bf75318e7a3c6680a9d598d69d"
+    },
+    {
+      "path": "evidence/evidence-manifest.json",
+      "bytes": 6334,
+      "sha256": "6a24387e7963c7e0e5911994cb31eb64b31f40f665269d8b7f664fcc3544d82f"
+    },
+    {
+      "path": "evidence/fight-plans.evidence.jsonl",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "evidence/run-config.evidence.jsonl",
+      "bytes": 113324,
+      "sha256": "258bbbb24b0e8a120b58898434f300342107db195457c8b09b0ca55819975a43"
+    },
+    {
+      "path": "evidence/run-plans.evidence.jsonl",
+      "bytes": 335153,
+      "sha256": "01e0a07535e53a9e2dc1ddd7eae6647016e53dc56771191bb65f123887890262"
+    },
+    {
+      "path": "evidence/runs.evidence.jsonl",
+      "bytes": 14383,
+      "sha256": "378c494e6a935968956b3c7a7d1bec853d311934de4dc5b2aeb09073b7042c55"
+    },
+    {
+      "path": "evidence/sl-attempts.evidence.jsonl",
+      "bytes": 3745950,
+      "sha256": "25004ed88920ab2aade349379919905f4229befb78a7e498c20cb9a94f959ace"
+    },
+    {
+      "path": "evidence/states.evidence.jsonl",
+      "bytes": 752589810,
+      "sha256": "c84954e00bf42d1223dd276735133c40b400af8d61e43486da744bddd27bed23"
+    },
+    {
+      "path": "evidence-comparison.json",
+      "bytes": 1326,
+      "sha256": "0b05efe3232360d142155910f09863b8d569d5c73d5369954372b0beb84d7ea1"
+    },
+    {
+      "path": "evidence-runs.txt",
+      "bytes": 286,
+      "sha256": "6abde67eeaf332fb923ac011bb9d8fd7e14cff2559766e014ba6d7ead38b61e1"
+    },
+    {
+      "path": "extraction-execution.json",
+      "bytes": 1069,
+      "sha256": "29fa8833e7234a5e9aeee0c0f56bf7b2c55e5c89be40981c62d31d888df656af"
+    },
+    {
+      "path": "final-readback.json",
+      "bytes": 568,
+      "sha256": "12ef1397bbfc383faf657fc680d3aab88c38732575219b05c75ba9313d5769b7"
+    },
+    {
+      "path": "floor-resource-edges.json",
+      "bytes": 1250749,
+      "sha256": "440b8b1d4e5834710dcf1e623d239a25896326216d40fd9272c5240b923cf5d9"
+    },
+    {
+      "path": "index.diff.patch",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "initial-inline-readback-error.txt",
+      "bytes": 138,
+      "sha256": "b9ed181c745bee702221cc519e32c28ee199ceea1601aea317b31009265d7023"
+    },
+    {
+      "path": "initial-report-generation-error.txt",
+      "bytes": 158,
+      "sha256": "aa3b551295f9c0416f8e62727549bbf148c15e03d063e78cf5386c8e2bd66831"
+    },
+    {
+      "path": "keydecisions.json",
+      "bytes": 183771,
+      "sha256": "8b58ba7064a047fb789c84123a6ccaec646fab39add697ff9186174288e40e84"
+    },
+    {
+      "path": "keyframes.json",
+      "bytes": 70078,
+      "sha256": "988c44bb66c2b9b66ec671624755a3ab28bcbe58e0b03a5f090059b7b2b29c2b"
+    },
+    {
+      "path": "ledger-before-update.json",
+      "bytes": 9754408,
+      "sha256": "77c806a0199f24f562b3ad31a6240439097e37ba941b15306c0d1e7a19e0dfc3"
+    },
+    {
+      "path": "ledger-before.json",
+      "bytes": 9738574,
+      "sha256": "7241ceb241b9c9842cfab1a95c426cf2d6fec17000e9b00f7891513faeb47523"
+    },
+    {
+      "path": "ledger-fold.initial.json",
+      "bytes": 8454305,
+      "sha256": "a1e9f06124dbae18e6111f96abd1fbaa0805df6564a66326e6d1dd475adbafab"
+    },
+    {
+      "path": "ledger-prefix-at-update.json",
+      "bytes": 192,
+      "sha256": "4faaff1a8ad9d5c753147ce24b10e8e56f90f6afe032e487fd190608d6d9b140"
+    },
+    {
+      "path": "ledger-prefix-before.json",
+      "bytes": 209,
+      "sha256": "65e67234589f7dc8f9541086e80b644722d4d427d84605b1aac94d8c7342b627"
+    },
+    {
+      "path": "ledger-references.initial.json",
+      "bytes": 23308248,
+      "sha256": "668689fc207170f20b3b0abf5954f6528d0f71e688ab22ab38ade517c9fd5082"
+    },
+    {
+      "path": "ledger-references.json",
+      "bytes": 14811384,
+      "sha256": "a27e150fb6e175a1c37e0f4db7b90c51a5d2d1f0efce84760ec72dc28fed7d61"
+    },
+    {
+      "path": "ledger-update-input.json",
+      "bytes": 25649,
+      "sha256": "13ab3359bb91d02b49725ddedea2cb127d63eae44852e4ea143c926d0125bac3"
+    },
+    {
+      "path": "ledger-update-receipt.json",
+      "bytes": 38,
+      "sha256": "51fda84d76f5c741cb7fe8b81f1bc77dad13e9513ac2a33cc43ae5c8522a863a"
+    },
+    {
+      "path": "ledger-update-verification.json",
+      "bytes": 36715,
+      "sha256": "0602b46a635ea63f8c9a8883d38b0c794aee6dc15c7b5d646c4064a0c1a3f394"
+    },
+    {
+      "path": "ledger-update.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "ledger-update.stdout.log",
+      "bytes": 348,
+      "sha256": "9aee652efcc04878438d2131e663b96860e0f76e5dabd0ec535da179c54b024f"
+    },
+    {
+      "path": "material-audit.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "material-audit.stdout.json",
+      "bytes": 159,
+      "sha256": "08a6d09322d1fc9a281235acfff168f57f2e90f1a2482fe84165369c406bb7eb"
+    },
+    {
+      "path": "material-checks.json",
+      "bytes": 1624,
+      "sha256": "02c2c0f09baa5f37ce64c1e3b32b89e685ed5ffc3dc069a7c0897d7d53829b30"
+    },
+    {
+      "path": "old-runplans-cutoff/evidence-manifest.json",
+      "bytes": 779,
+      "sha256": "586f6222c4d76f4f65b9486fd1675bd79f8f9e37b1ba1595ee711745a7a726a4"
+    },
+    {
+      "path": "old-runplans-cutoff/run-plans.evidence.jsonl",
+      "bytes": 335153,
+      "sha256": "01e0a07535e53a9e2dc1ddd7eae6647016e53dc56771191bb65f123887890262"
+    },
+    {
+      "path": "old-runplans-cutoff-check.json",
+      "bytes": 98,
+      "sha256": "18d94e3b390c91af33a0c16422da497096ca43279bc550292fe79a9a16c3d11f"
+    },
+    {
+      "path": "original-markdown-verification.json",
+      "bytes": 2752,
+      "sha256": "65e6c4c19c9e2cde886fd545d609d571406c54286f414299675f669e723fecd8"
+    },
+    {
+      "path": "original-proposals/silent-proposal-042ee2299084b528.md",
+      "bytes": 3466,
+      "sha256": "696540b4102ca32821760af92fca2f6ec189f83b8f80e7de4bf175bb2f7d2039"
+    },
+    {
+      "path": "original-proposals/silent-proposal-2631859b524e0652.md",
+      "bytes": 2957,
+      "sha256": "3bd609ffdd19ea3102ba54d0d9cc52d0c59953dba5ad70fe1036f2e7570c482d"
+    },
+    {
+      "path": "original-proposals/silent-proposal-3f5a665dca133a8c.md",
+      "bytes": 3759,
+      "sha256": "223f0fdd623ff185e4b476a528e5a70a3ce5e99d5733ae5354139ffcd9ac5523"
+    },
+    {
+      "path": "original-proposals/silent-proposal-43fe170707574455.md",
+      "bytes": 3648,
+      "sha256": "6998cd559e0899056005231af7bbadd3d271513733f6ca28a5f65638e9a9f122"
+    },
+    {
+      "path": "original-proposals/silent-proposal-8cd3db3bad5f34f1.md",
+      "bytes": 3541,
+      "sha256": "370e09576ca99e86a3a141546425e28111d2160606576aa6a4c3820cf404bfda"
+    },
+    {
+      "path": "original-proposals/silent-proposal-b13fda1dfeb37927.md",
+      "bytes": 3067,
+      "sha256": "04c480d08ee3896bc39bf68b6cec7a06bfc86829401ca776030a9b823c4984da"
+    },
+    {
+      "path": "original-proposals/silent-proposal-c2888032d1337388.md",
+      "bytes": 3883,
+      "sha256": "4f60d9af2120759b9d20815cdc88450bfe5410c216bd24e834280f120742bd5c"
+    },
+    {
+      "path": "original-proposals/silent-proposal-c873d6543c414f92.md",
+      "bytes": 3056,
+      "sha256": "6b1f8de019e4e4af3ed55d07c0b8d7ecc2902637e244b866f7c320cfa42e1a0d"
+    },
+    {
+      "path": "original-proposals/silent-proposal-d7b8d36cf3d0303d.md",
+      "bytes": 3592,
+      "sha256": "5a1880920741718dd2508044d240ac63c67569f881689efb85ca286b4bc27909"
+    },
+    {
+      "path": "original-proposals/silent-proposal-dfbf51502f30c9b1.md",
+      "bytes": 3649,
+      "sha256": "b05bf09cf80e5f6d21801f79db38f3853f5af4a466bb256ca139299045556282"
+    },
+    {
+      "path": "proposal-results.json",
+      "bytes": 3040,
+      "sha256": "5356f1218d8208cf01b430c0ba437ccb5ad2dab2985573a707a9d55d9a9dcf98"
+    },
+    {
+      "path": "proposal.md",
+      "bytes": 17517,
+      "sha256": "349072848bcc08b0fcec487c9f21ef2c88c04429192e21e76f887095cdcaa3d2"
+    },
+    {
+      "path": "provenance-verification.json",
+      "bytes": 6148,
+      "sha256": "0e402508e4d2fc7d7466d1856b5728bde931407b68254debbaeaf97b63e57566"
+    },
+    {
+      "path": "record_ledger.py",
+      "bytes": 4254,
+      "sha256": "197413baa77364ada7911d9d95d3b1ced997adbc83463324401dd12fa2e0397d"
+    },
+    {
+      "path": "report.md",
+      "bytes": 5960,
+      "sha256": "fe2d96b4c14bca27d442560ec2ffc5cea81dfeaccaed3dda6b9b230aae0a240e"
+    },
+    {
+      "path": "result.json",
+      "bytes": 4316,
+      "sha256": "fc48a9ba20b4d6bbaf034099f1faaedc11279624192780898d818f17fc71b291"
+    },
+    {
+      "path": "reuse-verification.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "reuse-verification.stdout.json",
+      "bytes": 266,
+      "sha256": "24cde366f5e8bee16c7846d980f4188b8001645dfecd9bd87798c8ffc7cc713b"
+    },
+    {
+      "path": "sl-selected.json",
+      "bytes": 1131838,
+      "sha256": "92502c09bc55034671b8a2fbb8884785bb0cbfadc9185f8bd7d3620186ec8414"
+    },
+    {
+      "path": "source-readback.json",
+      "bytes": 9911,
+      "sha256": "6964c29d61b85a48abb763a2dd12e6a8d3ea2ea1759188599fb2ea5f093bdb2d"
+    },
+    {
+      "path": "verified-runs.json",
+      "bytes": 18128,
+      "sha256": "f780002c41728f0108512376f6c37d430d725f38f641a97e26e82175168c671b"
+    },
+    {
+      "path": "verify_reuse.py",
+      "bytes": 5587,
+      "sha256": "ce0f19f33928515ec300b7df5d9ae5b8ed85e110c35f467e7403ca8f2d269270"
+    },
+    {
+      "path": "working-tree.diff.patch",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "write_report.py",
+      "bytes": 18784,
+      "sha256": "62c007061fb470dccc2ed06b3e129ce732023b9845f4145a6e509d71ec1c7738"
+    }
+  ],
+  "source": {
+    "base": "dee5dd9ed2e2d8af33f956bcb196e70a151a3a32",
+    "old_base": "345ef7a7099618af52a27a9ed5ffce6f9d6728dc",
+    "live": "99737be9fdb9c2ea92089d768947c49b49b62382",
+    "files": [
+      {
+        "path": "agent/src/reflex/card-model.ts",
+        "sha256": "b94e5748ec3f5792120408dd06f6c8e2d00516bd0a05ce1a70882c4c7419fc75",
+        "old_sha256": "287115627e5bc3f93da8283620a9b255df880286d4e8e1408009d9f8c87a45c7",
+        "same_old": false,
+        "live_head_sha256": "c77e7e63c6d33896f50cb2986a3f4941ea46b1d15afcb2ce98e151c9cfc6be38",
+        "live_working_sha256": "c77e7e63c6d33896f50cb2986a3f4941ea46b1d15afcb2ce98e151c9cfc6be38",
+        "same_live_head": false,
+        "same_live_working": false
+      },
+      {
+        "path": "agent/src/reflex/turn-solver.ts",
+        "sha256": "86403224078a7e9d8402c2a487424548923ad7abbd4c65a8544e5be538857a09",
+        "old_sha256": "0421e85f36d00b067e0787e9ff5fb6f70d18f3597d73f0fd2ffb34388274cde2",
+        "same_old": false,
+        "live_head_sha256": "86403224078a7e9d8402c2a487424548923ad7abbd4c65a8544e5be538857a09",
+        "live_working_sha256": "86403224078a7e9d8402c2a487424548923ad7abbd4c65a8544e5be538857a09",
+        "same_live_head": true,
+        "same_live_working": true
+      },
+      {
+        "path": "agent/src/reflex/combat-plan.ts",
+        "sha256": "c63343769d53e1244f9efec4d247bb78c62ed54e6b16f79e4645196f71e2ba18",
+        "old_sha256": "33573bc1d7e25a87127f3cf9fe786118c43a9c512c0725121ae44885d130181c",
+        "same_old": false,
+        "live_head_sha256": "c63343769d53e1244f9efec4d247bb78c62ed54e6b16f79e4645196f71e2ba18",
+        "live_working_sha256": "c63343769d53e1244f9efec4d247bb78c62ed54e6b16f79e4645196f71e2ba18",
+        "same_live_head": true,
+        "same_live_working": true
+      },
+      {
+        "path": "agent/src/reflex/silent-selection-audit.ts",
+        "sha256": "2de2533b477546682ef601d0613bd1adb805e03b894f64347475bfa4e222e4db",
+        "old_sha256": "2de2533b477546682ef601d0613bd1adb805e03b894f64347475bfa4e222e4db",
+        "same_old": true,
+        "live_head_sha256": "2de2533b477546682ef601d0613bd1adb805e03b894f64347475bfa4e222e4db",
+        "live_working_sha256": "2de2533b477546682ef601d0613bd1adb805e03b894f64347475bfa4e222e4db",
+        "same_live_head": true,
+        "same_live_working": true
+      },
+      {
+        "path": "agent/src/reflex/silent-hp-guard-audit.ts",
+        "sha256": "183a1c996ce965e05dc5735dc0f3b4f2e2ff65442c7e6779290716b0cd4bf858",
+        "old_sha256": "183a1c996ce965e05dc5735dc0f3b4f2e2ff65442c7e6779290716b0cd4bf858",
+        "same_old": true,
+        "live_head_sha256": "183a1c996ce965e05dc5735dc0f3b4f2e2ff65442c7e6779290716b0cd4bf858",
+        "live_working_sha256": "183a1c996ce965e05dc5735dc0f3b4f2e2ff65442c7e6779290716b0cd4bf858",
+        "same_live_head": true,
+        "same_live_working": true
+      },
+      {
+        "path": "agent/src/reflex/silent-kin-progress.ts",
+        "sha256": "a73c8cd3f1d5953e12f1167f328962fc1a738467411ac27cb5a5bbaaac33edc4",
+        "old_sha256": "a73c8cd3f1d5953e12f1167f328962fc1a738467411ac27cb5a5bbaaac33edc4",
+        "same_old": true,
+        "live_head_sha256": "a73c8cd3f1d5953e12f1167f328962fc1a738467411ac27cb5a5bbaaac33edc4",
+        "live_working_sha256": "a73c8cd3f1d5953e12f1167f328962fc1a738467411ac27cb5a5bbaaac33edc4",
+        "same_live_head": true,
+        "same_live_working": true
+      },
+      {
+        "path": "agent/src/sl/draws.ts",
+        "sha256": "7a739333ce420fd61200b08491810c5287b09a699ba23bc3c3bc69daaf0b56e7",
+        "old_sha256": "7a739333ce420fd61200b08491810c5287b09a699ba23bc3c3bc69daaf0b56e7",
+        "same_old": true,
+        "live_head_sha256": "757b57ea5e8d130e2204280cc4c5322e7a273cda4e5abca47f03b567b63c3a79",
+        "live_working_sha256": "757b57ea5e8d130e2204280cc4c5322e7a273cda4e5abca47f03b567b63c3a79",
+        "same_live_head": false,
+        "same_live_working": false
+      },
+      {
+        "path": "agent/src/sim/boss-sim.ts",
+        "sha256": "f30a0c5bdd66d63b7ccd962947735ca2dfded2eaec76dd364f5e90fec0aafac6",
+        "old_sha256": "f30a0c5bdd66d63b7ccd962947735ca2dfded2eaec76dd364f5e90fec0aafac6",
+        "same_old": true,
+        "live_head_sha256": "f30a0c5bdd66d63b7ccd962947735ca2dfded2eaec76dd364f5e90fec0aafac6",
+        "live_working_sha256": "f30a0c5bdd66d63b7ccd962947735ca2dfded2eaec76dd364f5e90fec0aafac6",
+        "same_live_head": true,
+        "same_live_working": true
+      },
+      {
+        "path": "agent/src/sim/build-sim.ts",
+        "sha256": "d408296646bc8e6e0a95bb2602c489e364e8d2d9686736e9e0455a6fb405d389",
+        "old_sha256": "d408296646bc8e6e0a95bb2602c489e364e8d2d9686736e9e0455a6fb405d389",
+        "same_old": true,
+        "live_head_sha256": "d408296646bc8e6e0a95bb2602c489e364e8d2d9686736e9e0455a6fb405d389",
+        "live_working_sha256": "d408296646bc8e6e0a95bb2602c489e364e8d2d9686736e9e0455a6fb405d389",
+        "same_live_head": true,
+        "same_live_working": true
+      },
+      {
+        "path": "agent/src/sim/continuous-boss-result.ts",
+        "sha256": "29ee6ece9d6d0b219a83d700ad320f4d4d1bcda5a7c9de040d096d6ba427ec79",
+        "old_sha256": "29ee6ece9d6d0b219a83d700ad320f4d4d1bcda5a7c9de040d096d6ba427ec79",
+        "same_old": true,
+        "live_head_sha256": "29ee6ece9d6d0b219a83d700ad320f4d4d1bcda5a7c9de040d096d6ba427ec79",
+        "live_working_sha256": "29ee6ece9d6d0b219a83d700ad320f4d4d1bcda5a7c9de040d096d6ba427ec79",
+        "same_live_head": true,
+        "same_live_working": true
+      },
+      {
+        "path": "agent/src/reflex/rollout.ts",
+        "sha256": "f845fbe3666c7bb52701367e1f02984f8774937c63c24307c814539670dcd86c",
+        "old_sha256": "f845fbe3666c7bb52701367e1f02984f8774937c63c24307c814539670dcd86c",
+        "same_old": true,
+        "live_head_sha256": "f845fbe3666c7bb52701367e1f02984f8774937c63c24307c814539670dcd86c",
+        "live_working_sha256": "f845fbe3666c7bb52701367e1f02984f8774937c63c24307c814539670dcd86c",
+        "same_live_head": true,
+        "same_live_working": true
+      },
+      {
+        "path": "agent/src/reflex/silent-held-loss.ts",
+        "sha256": "c60884d37a5386e21ea357cb6b0942bcc3c098366167dcde4506ae79541e9022",
+        "old_sha256": "c60884d37a5386e21ea357cb6b0942bcc3c098366167dcde4506ae79541e9022",
+        "same_old": true,
+        "live_head_sha256": "c60884d37a5386e21ea357cb6b0942bcc3c098366167dcde4506ae79541e9022",
+        "live_working_sha256": "c60884d37a5386e21ea357cb6b0942bcc3c098366167dcde4506ae79541e9022",
+        "same_live_head": true,
+        "same_live_working": true
+      },
+      {
+        "path": "learner/audit-selection.ts",
+        "sha256": "f24ca05a02f19ecad35109c76e09405a5baca29e51df66c41e3ad77252ba25bb",
+        "old_sha256": "f24ca05a02f19ecad35109c76e09405a5baca29e51df66c41e3ad77252ba25bb",
+        "same_old": true,
+        "live_head_sha256": "f24ca05a02f19ecad35109c76e09405a5baca29e51df66c41e3ad77252ba25bb",
+        "live_working_sha256": "f24ca05a02f19ecad35109c76e09405a5baca29e51df66c41e3ad77252ba25bb",
+        "same_live_head": true,
+        "same_live_working": true
+      },
+      {
+        "path": "learner/lib/selection-execution.ts",
+        "sha256": "4ef06b464b5e645aea8eec3be78ef7bb3d0030b38de590cc11d84f8e76d80c5a",
+        "old_sha256": "4ef06b464b5e645aea8eec3be78ef7bb3d0030b38de590cc11d84f8e76d80c5a",
+        "same_old": true,
+        "live_head_sha256": "4ef06b464b5e645aea8eec3be78ef7bb3d0030b38de590cc11d84f8e76d80c5a",
+        "live_working_sha256": "4ef06b464b5e645aea8eec3be78ef7bb3d0030b38de590cc11d84f8e76d80c5a",
+        "same_live_head": true,
+        "same_live_working": true
+      },
+      {
+        "path": "learner/lib/selection-observation.ts",
+        "sha256": "458c52b56d5582078243207364f413e308c3f71717379edcfcc8a126ee1df259",
+        "old_sha256": "458c52b56d5582078243207364f413e308c3f71717379edcfcc8a126ee1df259",
+        "same_old": true,
+        "live_head_sha256": "458c52b56d5582078243207364f413e308c3f71717379edcfcc8a126ee1df259",
+        "live_working_sha256": "458c52b56d5582078243207364f413e308c3f71717379edcfcc8a126ee1df259",
+        "same_live_head": true,
+        "same_live_working": true
+      },
+      {
+        "path": "learner/lib/selection-terminal.ts",
+        "sha256": "f559992c66f7fe490587b4f4306ddac0ce9ecffd2bc47b292923d51f1e9a6421",
+        "old_sha256": "f559992c66f7fe490587b4f4306ddac0ce9ecffd2bc47b292923d51f1e9a6421",
+        "same_old": true,
+        "live_head_sha256": "f559992c66f7fe490587b4f4306ddac0ce9ecffd2bc47b292923d51f1e9a6421",
+        "live_working_sha256": "f559992c66f7fe490587b4f4306ddac0ce9ecffd2bc47b292923d51f1e9a6421",
+        "same_live_head": true,
+        "same_live_working": true
+      },
+      {
+        "path": "learner/lib/selection-turn.ts",
+        "sha256": "038f6ec416103ef5ce75136a7d8a09f40b1a1ac341356d7cfa9b5b6e4300b703",
+        "old_sha256": "038f6ec416103ef5ce75136a7d8a09f40b1a1ac341356d7cfa9b5b6e4300b703",
+        "same_old": true,
+        "live_head_sha256": "038f6ec416103ef5ce75136a7d8a09f40b1a1ac341356d7cfa9b5b6e4300b703",
+        "live_working_sha256": "038f6ec416103ef5ce75136a7d8a09f40b1a1ac341356d7cfa9b5b6e4300b703",
+        "same_live_head": true,
+        "same_live_working": true
+      },
+      {
+        "path": "learner/resource_chain.py",
+        "sha256": "d79792aae54fc2664dbdcd87405b3c3d9a8585c7d41a6d5ef7436585d81a9299",
+        "old_sha256": "d79792aae54fc2664dbdcd87405b3c3d9a8585c7d41a6d5ef7436585d81a9299",
+        "same_old": true,
+        "live_head_sha256": "d79792aae54fc2664dbdcd87405b3c3d9a8585c7d41a6d5ef7436585d81a9299",
+        "live_working_sha256": "d79792aae54fc2664dbdcd87405b3c3d9a8585c7d41a6d5ef7436585d81a9299",
+        "same_live_head": true,
+        "same_live_working": true
+      },
+      {
+        "path": "learner/extract_evidence.py",
+        "sha256": "2b85739aa2fa7dd8beb6361fad6b8b035c337273b17ea4e73d4fee9b07d165e5",
+        "old_sha256": "2b85739aa2fa7dd8beb6361fad6b8b035c337273b17ea4e73d4fee9b07d165e5",
+        "same_old": true,
+        "live_head_sha256": "2b85739aa2fa7dd8beb6361fad6b8b035c337273b17ea4e73d4fee9b07d165e5",
+        "live_working_sha256": "2b85739aa2fa7dd8beb6361fad6b8b035c337273b17ea4e73d4fee9b07d165e5",
+        "same_live_head": true,
+        "same_live_working": true
+      }
+    ]
+  },
+  "existing_source_ancestors": [
+    {
+      "commit": "bf423c173d3be348a4ad714e1d26516df619ff41",
+      "subject": "Consume observed Silent Survivor discards without Tough Bandages",
+      "base_ancestor": true,
+      "live_ancestor": true
+    },
+    {
+      "commit": "f1542578594462e9f9f4e175488795fc480a8a13",
+      "subject": "Log Silent A10 HP guard candidate predictions",
+      "base_ancestor": true,
+      "live_ancestor": true
+    },
+    {
+      "commit": "d1713559f2d237a04b681ec6497ce0c8798ae0f0",
+      "subject": "Expose observed Silent Kin combat progress to Jev",
+      "base_ancestor": true,
+      "live_ancestor": true
+    },
+    {
+      "commit": "bca06096b08b1e9bf0e11fda3e1f87fe4d83ec07",
+      "subject": "Record raw continuous boss stages and per-sample resource diagnostics",
+      "base_ancestor": true,
+      "live_ancestor": true
+    },
+    {
+      "commit": "66283dd9982bdd7f480da7a4d9bfefea0572a9ac",
+      "subject": "Sync repaired legacy learning and continuation adapter to main",
+      "base_ancestor": true,
+      "live_ancestor": true
+    },
+    {
+      "commit": "9d8278702dbc581b5015ba7ec9a70dc0fb94cccb",
+      "subject": "Sync tested held-loss candidate facts from live",
+      "base_ancestor": true,
+      "live_ancestor": true
+    },
+    {
+      "commit": "a32050fbce4c2863f640468c2dbf378fc9157074",
+      "subject": "Integrate checked offline Silent potion observation tool",
+      "base_ancestor": true,
+      "live_ancestor": true
+    },
+    {
+      "commit": "e75438488df159b2e8e9d3458cf219b39aadd933",
+      "subject": "Apply tested offline observed-turn audit and explicit unsupported-DPR diagnostics",
+      "base_ancestor": true,
+      "live_ancestor": true
+    }
+  ],
+  "original_verified_runs": [
+    {
+      "source": "/home/dw/Projects/agent-sts2/logs/runs.jsonl",
+      "line": 491,
+      "offset": 196891,
+      "bytes": 417,
+      "sha256": "b46949cb7d8592f6dc73e36889fdd51a17ca084428b09d2e5b1dc3ac0b83294b",
+      "row": {
+        "run_id": "K3676LU8B0UH",
+        "ended": "2026-10-04T22:02:02.516Z",
+        "victory": true,
+        "floor": 48,
+        "character": "SILENT",
+        "ascension": 1,
+        "code": "ccf1fcde+dirty",
+        "decisions": 805,
+        "jev_calls": 174,
+        "deepseek_calls": 48,
+        "claude_calls": 0,
+        "tokens": 710084,
+        "ds_tokens_in": 3046209,
+        "ds_tokens_out": 39592,
+        "ds_cache_hit": 538624,
+        "deciders": {
+          "codex": 69,
+          "code": 394,
+          "jev": 174,
+          "jev-plan": 168
+        },
+        "death_fight": null
+      }
+    },
+    {
+      "source": "/home/dw/Projects/agent-sts2/logs/runs.jsonl",
+      "line": 499,
+      "offset": 200303,
+      "bytes": 412,
+      "sha256": "e06e06bfbd0369e97c18dcf4b68b7f6f14d2ec247d062cdc30ba5ee9d6c5a0bd",
+      "row": {
+        "run_id": "ZE8F192FKX24",
+        "ended": "2026-10-05T04:22:55.359Z",
+        "victory": true,
+        "floor": 48,
+        "character": "SILENT",
+        "ascension": 5,
+        "code": "452f7bc7+dirty",
+        "decisions": 741,
+        "jev_calls": 203,
+        "deepseek_calls": 46,
+        "claude_calls": 0,
+        "tokens": 764990,
+        "ds_tokens_in": 3706121,
+        "ds_tokens_out": 13019,
+        "ds_cache_hit": 0,
+        "deciders": {
+          "codex": 79,
+          "code": 288,
+          "jev": 203,
+          "jev-plan": 171
+        },
+        "death_fight": null
+      }
+    },
+    {
+      "source": "/home/dw/Projects/agent-sts2/logs/runs.jsonl",
+      "line": 501,
+      "offset": 201137,
+      "bytes": 461,
+      "sha256": "2d8569cbae17bc5e97042a6cdeaa84d31776f6e9b4ccd594f4303317ffacb04d",
+      "row": {
+        "run_id": "UACFSW4VDDLD",
+        "ended": "2026-10-05T05:37:19.751Z",
+        "victory": false,
+        "floor": 48,
+        "character": "SILENT",
+        "ascension": 6,
+        "code": "103fd5ff+dirty",
+        "decisions": 1202,
+        "jev_calls": 193,
+        "deepseek_calls": 50,
+        "claude_calls": 0,
+        "tokens": 1015749,
+        "ds_tokens_in": 4337998,
+        "ds_tokens_out": 41721,
+        "ds_cache_hit": 460032,
+        "deciders": {
+          "codex": 73,
+          "code": 729,
+          "jev": 193,
+          "jev-plan": 204,
+          "deepseek (for codex)": 3
+        },
+        "death_fight": [
+          "实验体 #C55"
+        ]
+      }
+    },
+    {
+      "source": "/home/dw/Projects/agent-sts2/logs/runs.jsonl",
+      "line": 502,
+      "offset": 201598,
+      "bytes": 462,
+      "sha256": "00b409b01ec1567c9dc7001626d946aba3af1b9d15a547aded98de69c8f13942",
+      "row": {
+        "run_id": "VN7RQJMJEFMX",
+        "ended": "2026-10-05T06:19:37.568Z",
+        "victory": false,
+        "floor": 42,
+        "character": "SILENT",
+        "ascension": 6,
+        "code": "42ac6c1d+dirty",
+        "decisions": 739,
+        "jev_calls": 153,
+        "deepseek_calls": 41,
+        "claude_calls": 0,
+        "tokens": 633159,
+        "ds_tokens_in": 3552146,
+        "ds_tokens_out": 12396,
+        "ds_cache_hit": 384640,
+        "deciders": {
+          "codex": 58,
+          "code": 348,
+          "jev": 153,
+          "jev-plan": 180
+        },
+        "death_fight": [
+          "幽灵骑士",
+          "连枷骑士",
+          "魔法骑士"
+        ]
+      }
+    },
+    {
+      "source": "/home/dw/Projects/agent-sts2/logs/runs.jsonl",
+      "line": 507,
+      "offset": 203836,
+      "bytes": 434,
+      "sha256": "7d85b0be4666ba367c31ae1d7a29ca0cc7b5d1b841b700a70b0ada74db39b9ac",
+      "row": {
+        "run_id": "2L1BNN9ZJEFU",
+        "ended": "2026-10-05T09:27:49.539Z",
+        "victory": false,
+        "floor": 48,
+        "character": "SILENT",
+        "ascension": 6,
+        "code": "7c7f22e3+dirty",
+        "decisions": 1130,
+        "jev_calls": 240,
+        "deepseek_calls": 45,
+        "claude_calls": 0,
+        "tokens": 1184161,
+        "ds_tokens_in": 4281629,
+        "ds_tokens_out": 12854,
+        "ds_cache_hit": 169728,
+        "deciders": {
+          "codex": 61,
+          "code": 546,
+          "jev": 240,
+          "jev-plan": 283
+        },
+        "death_fight": [
+          "实验体 #C56"
+        ]
+      }
+    },
+    {
+      "source": "/home/dw/Projects/agent-sts2/logs/runs.jsonl",
+      "line": 510,
+      "offset": 205153,
+      "bytes": 417,
+      "sha256": "1345d2edaae74c3d08f242e9f9835581b0299d3550f2f8ba43b7a8d245f27b55",
+      "row": {
+        "run_id": "2SU6XN2AEJRD",
+        "ended": "2026-10-05T12:15:46.209Z",
+        "victory": true,
+        "floor": 48,
+        "character": "SILENT",
+        "ascension": 6,
+        "code": "2ec81b9f+dirty",
+        "decisions": 798,
+        "jev_calls": 208,
+        "deepseek_calls": 57,
+        "claude_calls": 0,
+        "tokens": 889036,
+        "ds_tokens_in": 5673192,
+        "ds_tokens_out": 16572,
+        "ds_cache_hit": 355712,
+        "deciders": {
+          "codex": 70,
+          "code": 316,
+          "jev": 208,
+          "jev-plan": 204
+        },
+        "death_fight": null
+      }
+    },
+    {
+      "source": "/home/dw/Projects/agent-sts2/logs/runs.jsonl",
+      "line": 516,
+      "offset": 207767,
+      "bytes": 432,
+      "sha256": "c753a559638adfef564be9d55dcd31ab028c82c91fb6a76561dfd82454cced93",
+      "row": {
+        "run_id": "2PVLGRBGUX9S",
+        "ended": "2026-10-05T17:15:46.950Z",
+        "victory": false,
+        "floor": 48,
+        "character": "SILENT",
+        "ascension": 7,
+        "code": "9988ca8b+dirty",
+        "decisions": 1189,
+        "jev_calls": 255,
+        "deepseek_calls": 47,
+        "claude_calls": 0,
+        "tokens": 1893132,
+        "ds_tokens_in": 5322469,
+        "ds_tokens_out": 12377,
+        "ds_cache_hit": 206080,
+        "deciders": {
+          "codex": 62,
+          "code": 533,
+          "jev": 255,
+          "jev-plan": 339
+        },
+        "death_fight": [
+          "永世沙漏"
+        ]
+      }
+    },
+    {
+      "source": "/home/dw/Projects/agent-sts2/logs/runs.jsonl",
+      "line": 518,
+      "offset": 208616,
+      "bytes": 416,
+      "sha256": "f128d8e8afc1e7f4feabe4c07c7b32747a2f6f667dfbd5a14c47f98994b288c1",
+      "row": {
+        "run_id": "LLYSRQQ35AVW",
+        "ended": "2026-10-05T18:42:21.464Z",
+        "victory": true,
+        "floor": 48,
+        "character": "SILENT",
+        "ascension": 8,
+        "code": "bf63ab40+dirty",
+        "decisions": 651,
+        "jev_calls": 104,
+        "deepseek_calls": 52,
+        "claude_calls": 0,
+        "tokens": 528124,
+        "ds_tokens_in": 5558582,
+        "ds_tokens_out": 13469,
+        "ds_cache_hit": 97920,
+        "deciders": {
+          "codex": 72,
+          "code": 316,
+          "jev": 104,
+          "jev-plan": 159
+        },
+        "death_fight": null
+      }
+    },
+    {
+      "source": "/home/dw/Projects/agent-sts2/logs/runs.jsonl",
+      "line": 526,
+      "offset": 212042,
+      "bytes": 448,
+      "sha256": "25eaac2c244084963cee036d990e2410ac675a0bb915adffaf3060053f0b46e7",
+      "row": {
+        "run_id": "9TG1RP5LFAAK",
+        "ended": "2026-10-06T00:47:20.020Z",
+        "victory": false,
+        "floor": 49,
+        "character": "SILENT",
+        "ascension": 10,
+        "code": "141df614+dirty",
+        "decisions": 903,
+        "jev_calls": 286,
+        "deepseek_calls": 46,
+        "claude_calls": 0,
+        "tokens": 1513400,
+        "ds_tokens_in": 5913929,
+        "ds_tokens_out": 13211,
+        "ds_cache_hit": 117120,
+        "deciders": {
+          "codex": 83,
+          "code": 298,
+          "jev": 286,
+          "jev-plan": 236
+        },
+        "death_fight": [
+          "女王",
+          "火炬头聚合体"
+        ]
+      }
+    },
+    {
+      "source": "/home/dw/Projects/agent-sts2/logs/runs.jsonl",
+      "line": 542,
+      "offset": 219161,
+      "bytes": 449,
+      "sha256": "b214fb8f4b43ccfe0e453b3eea0aad8e85c822d3afa67d2e67e6d91d20de5465",
+      "row": {
+        "run_id": "5X2GHKJ89PN1",
+        "ended": "2026-10-06T11:09:49.062Z",
+        "victory": false,
+        "floor": 48,
+        "character": "SILENT",
+        "ascension": 10,
+        "code": "3599ab0a+dirty",
+        "decisions": 929,
+        "jev_calls": 332,
+        "deepseek_calls": 49,
+        "claude_calls": 0,
+        "tokens": 2029331,
+        "ds_tokens_in": 6271565,
+        "ds_tokens_out": 18819,
+        "ds_cache_hit": 3925376,
+        "deciders": {
+          "codex": 74,
+          "code": 322,
+          "jev": 332,
+          "jev-plan": 201
+        },
+        "death_fight": [
+          "女王",
+          "火炬头聚合体"
+        ]
+      }
+    },
+    {
+      "source": "/home/dw/Projects/agent-sts2/logs/runs.jsonl",
+      "line": 550,
+      "offset": 222753,
+      "bytes": 433,
+      "sha256": "3c49f0a64231e095e5a4c89235cfa210386a7e0ab2d8ff0b3a7e93b4ca6a1c3a",
+      "row": {
+        "run_id": "DPYF2BAA3DKT",
+        "ended": "2026-10-06T17:12:21.945Z",
+        "victory": false,
+        "floor": 48,
+        "character": "SILENT",
+        "ascension": 10,
+        "code": "ad01f74a+dirty",
+        "decisions": 964,
+        "jev_calls": 209,
+        "deepseek_calls": 47,
+        "claude_calls": 0,
+        "tokens": 1018116,
+        "ds_tokens_in": 6071508,
+        "ds_tokens_out": 12585,
+        "ds_cache_hit": 4326528,
+        "deciders": {
+          "codex": 65,
+          "code": 436,
+          "jev": 209,
+          "jev-plan": 254
+        },
+        "death_fight": [
+          "永世沙漏"
+        ]
+      }
+    },
+    {
+      "source": "/home/dw/Projects/agent-sts2/logs/runs.jsonl",
+      "line": 553,
+      "offset": 224089,
+      "bytes": 434,
+      "sha256": "34e31f92fa0819f4d8ec917475b24c63c725ec42404cfe1c427e7c32942b589a",
+      "row": {
+        "run_id": "UMVLWER4CD98",
+        "ended": "2026-10-06T19:08:26.667Z",
+        "victory": false,
+        "floor": 48,
+        "character": "SILENT",
+        "ascension": 10,
+        "code": "ebd920b4+dirty",
+        "decisions": 1165,
+        "jev_calls": 266,
+        "deepseek_calls": 50,
+        "claude_calls": 0,
+        "tokens": 1435720,
+        "ds_tokens_in": 6420388,
+        "ds_tokens_out": 13098,
+        "ds_cache_hit": 3846272,
+        "deciders": {
+          "codex": 67,
+          "code": 517,
+          "jev": 266,
+          "jev-plan": 315
+        },
+        "death_fight": [
+          "永世沙漏"
+        ]
+      }
+    },
+    {
+      "source": "/home/dw/Projects/agent-sts2/logs/runs.jsonl",
+      "line": 557,
+      "offset": 225813,
+      "bytes": 431,
+      "sha256": "fed3cbbb3a7bcd807ac1531833466c2a22a5fe08a17890965b569d74f8899a00",
+      "row": {
+        "run_id": "QNTW139MGECA",
+        "ended": "2026-10-06T21:03:12.594Z",
+        "victory": false,
+        "floor": 28,
+        "character": "SILENT",
+        "ascension": 10,
+        "code": "98d2d508+dirty",
+        "decisions": 476,
+        "jev_calls": 146,
+        "deepseek_calls": 32,
+        "claude_calls": 0,
+        "tokens": 472179,
+        "ds_tokens_in": 3934086,
+        "ds_tokens_out": 7390,
+        "ds_cache_hit": 2690048,
+        "deciders": {
+          "codex": 39,
+          "code": 182,
+          "jev": 146,
+          "jev-plan": 109
+        },
+        "death_fight": [
+          "感染棱柱"
+        ]
+      }
+    },
+    {
+      "source": "/home/dw/Projects/agent-sts2/logs/runs.jsonl",
+      "line": 569,
+      "offset": 231042,
+      "bytes": 435,
+      "sha256": "1e9ab88c6c10706b33cb4dd26a2abe44c4ea335119c44a0f4b0555e91a54cc47",
+      "row": {
+        "run_id": "TDLBRNA0R05B",
+        "ended": "2026-10-07T02:44:08.070Z",
+        "victory": false,
+        "floor": 49,
+        "character": "SILENT",
+        "ascension": 10,
+        "code": "dc899f95+dirty",
+        "decisions": 947,
+        "jev_calls": 287,
+        "deepseek_calls": 47,
+        "claude_calls": 0,
+        "tokens": 1621675,
+        "ds_tokens_in": 5870509,
+        "ds_tokens_out": 14734,
+        "ds_cache_hit": 4065024,
+        "deciders": {
+          "codex": 70,
+          "code": 352,
+          "jev": 287,
+          "jev-plan": 238
+        },
+        "death_fight": [
+          "实验体 #C64"
+        ]
+      }
+    },
+    {
+      "source": "/home/dw/Projects/agent-sts2/logs/runs.jsonl",
+      "line": 576,
+      "offset": 234110,
+      "bytes": 429,
+      "sha256": "56e5240f4d3fc0a8c3b510aaa48fc43205e74733289c3ed1b3cad0a003dfcadb",
+      "row": {
+        "run_id": "61E2QS63Y9WU",
+        "ended": "2026-10-07T05:43:43.383Z",
+        "victory": false,
+        "floor": 28,
+        "character": "SILENT",
+        "ascension": 10,
+        "code": "03d50f0b+dirty",
+        "decisions": 443,
+        "jev_calls": 70,
+        "deepseek_calls": 27,
+        "claude_calls": 0,
+        "tokens": 320159,
+        "ds_tokens_in": 3334336,
+        "ds_tokens_out": 6681,
+        "ds_cache_hit": 2140416,
+        "deciders": {
+          "codex": 39,
+          "code": 219,
+          "jev": 70,
+          "jev-plan": 115
+        },
+        "death_fight": [
+          "猎人杀手"
+        ]
+      }
+    },
+    {
+      "source": "/home/dw/Projects/agent-sts2/logs/runs.jsonl",
+      "line": 579,
+      "offset": 235458,
+      "bytes": 464,
+      "sha256": "d6f32c13b13dc0239fb5b8de5f2ce0863ea896e6e039ebc14bbd5c56a61be2f8",
+      "row": {
+        "run_id": "VLZ6CCT8AQ0A",
+        "ended": "2026-10-07T07:38:37.200Z",
+        "victory": false,
+        "floor": 45,
+        "character": "SILENT",
+        "ascension": 10,
+        "code": "ac321b1f+dirty",
+        "decisions": 699,
+        "jev_calls": 136,
+        "deepseek_calls": 46,
+        "claude_calls": 0,
+        "tokens": 568038,
+        "ds_tokens_in": 5762675,
+        "ds_tokens_out": 11776,
+        "ds_cache_hit": 3605632,
+        "deciders": {
+          "codex": 53,
+          "code": 339,
+          "jev": 136,
+          "jev-plan": 171
+        },
+        "death_fight": [
+          "幽灵骑士",
+          "连枷骑士",
+          "魔法骑士"
+        ]
+      }
+    },
+    {
+      "source": "/home/dw/Projects/agent-sts2/logs/runs.jsonl",
+      "line": 581,
+      "offset": 236353,
+      "bytes": 436,
+      "sha256": "38abe2b510dae93cadeebe7eb436b75d5bd27386907a95e50dd1ba27aee11c2d",
+      "row": {
+        "run_id": "YF0LXT1QSTGG",
+        "ended": "2026-10-07T09:15:57.174Z",
+        "victory": false,
+        "floor": 48,
+        "character": "SILENT",
+        "ascension": 10,
+        "code": "91c1db90+dirty",
+        "decisions": 1065,
+        "jev_calls": 269,
+        "deepseek_calls": 47,
+        "claude_calls": 0,
+        "tokens": 1128548,
+        "ds_tokens_in": 5935629,
+        "ds_tokens_out": 12025,
+        "ds_cache_hit": 4196352,
+        "deciders": {
+          "codex": 61,
+          "code": 447,
+          "jev": 269,
+          "jev-plan": 288
+        },
+        "death_fight": [
+          "实验体 #C64"
+        ]
+      }
+    },
+    {
+      "source": "/home/dw/Projects/agent-sts2/logs/runs.jsonl",
+      "line": 592,
+      "offset": 241112,
+      "bytes": 448,
+      "sha256": "ef102494a27bf60a281801a71330fa083da84be1a9b7e968098281224ab5a54f",
+      "row": {
+        "run_id": "G33HU22H2543",
+        "ended": "2026-10-07T16:20:52.860Z",
+        "victory": false,
+        "floor": 48,
+        "character": "SILENT",
+        "ascension": 10,
+        "code": "710dc4dc+dirty",
+        "decisions": 850,
+        "jev_calls": 143,
+        "deepseek_calls": 45,
+        "claude_calls": 0,
+        "tokens": 874279,
+        "ds_tokens_in": 5733297,
+        "ds_tokens_out": 10728,
+        "ds_cache_hit": 2990592,
+        "deciders": {
+          "codex": 69,
+          "code": 431,
+          "jev": 143,
+          "jev-plan": 207
+        },
+        "death_fight": [
+          "女王",
+          "火炬头聚合体"
+        ]
+      }
+    },
+    {
+      "source": "/home/dw/Projects/agent-sts2/logs/runs.jsonl",
+      "line": 601,
+      "offset": 245123,
+      "bytes": 464,
+      "sha256": "b40ef1fc205142261d325359d6bbe2cd57f78fb539845b2d26f11c5a638d467a",
+      "row": {
+        "run_id": "GXNKW8X1XYJP",
+        "ended": "2026-10-07T22:15:02.084Z",
+        "victory": false,
+        "floor": 45,
+        "character": "SILENT",
+        "ascension": 10,
+        "code": "b1714285+dirty",
+        "decisions": 649,
+        "jev_calls": 158,
+        "deepseek_calls": 48,
+        "claude_calls": 0,
+        "tokens": 829718,
+        "ds_tokens_in": 6462568,
+        "ds_tokens_out": 15599,
+        "ds_cache_hit": 3903232,
+        "deciders": {
+          "codex": 72,
+          "code": 270,
+          "jev": 158,
+          "jev-plan": 149
+        },
+        "death_fight": [
+          "幽灵骑士",
+          "连枷骑士",
+          "魔法骑士"
+        ]
+      }
+    },
+    {
+      "source": "/home/dw/Projects/agent-sts2/logs/runs.jsonl",
+      "line": 602,
+      "offset": 245587,
+      "bytes": 433,
+      "sha256": "09acaf1f6b53f48cad3c7585f362eb231939c655b6d32b60e4ff8fdc60a8592d",
+      "row": {
+        "run_id": "PD9AYQVMLQW6",
+        "ended": "2026-10-07T23:10:58.949Z",
+        "victory": false,
+        "floor": 49,
+        "character": "SILENT",
+        "ascension": 10,
+        "code": "7f6d5b4b+dirty",
+        "decisions": 1017,
+        "jev_calls": 182,
+        "deepseek_calls": 54,
+        "claude_calls": 0,
+        "tokens": 978155,
+        "ds_tokens_in": 7196250,
+        "ds_tokens_out": 13968,
+        "ds_cache_hit": 5163776,
+        "deciders": {
+          "codex": 73,
+          "code": 539,
+          "jev": 182,
+          "jev-plan": 223
+        },
+        "death_fight": [
+          "永世沙漏"
+        ]
+      }
+    },
+    {
+      "source": "/home/dw/Projects/agent-sts2/logs/runs.jsonl",
+      "line": 603,
+      "offset": 246020,
+      "bytes": 428,
+      "sha256": "90d80b2f4cac85d6886247eede83849208bfb57d39dac827720b6ade4d272114",
+      "row": {
+        "run_id": "L2TSFU62Z57Z",
+        "ended": "2026-10-07T23:39:42.212Z",
+        "victory": false,
+        "floor": 17,
+        "character": "SILENT",
+        "ascension": 10,
+        "code": "c1dd721f+dirty",
+        "decisions": 442,
+        "jev_calls": 102,
+        "deepseek_calls": 17,
+        "claude_calls": 0,
+        "tokens": 708192,
+        "ds_tokens_in": 2223513,
+        "ds_tokens_out": 5244,
+        "ds_cache_hit": 1329152,
+        "deciders": {
+          "codex": 24,
+          "code": 179,
+          "jev": 102,
+          "jev-plan": 137
+        },
+        "death_fight": [
+          "仪式兽"
+        ]
+      }
+    },
+    {
+      "source": "/home/dw/Projects/agent-sts2/logs/runs.jsonl",
+      "line": 604,
+      "offset": 246448,
+      "bytes": 448,
+      "sha256": "8262ff0707f42f2f58e01482f64f3116c42b787b032fc36e351c0f2bb266c1bd",
+      "row": {
+        "run_id": "ZTRGYYMLR8SC",
+        "ended": "2026-10-08T00:21:56.238Z",
+        "victory": false,
+        "floor": 17,
+        "character": "SILENT",
+        "ascension": 10,
+        "code": "aa1e2136+dirty",
+        "decisions": 594,
+        "jev_calls": 158,
+        "deepseek_calls": 16,
+        "claude_calls": 0,
+        "tokens": 1157755,
+        "ds_tokens_in": 2081146,
+        "ds_tokens_out": 4414,
+        "ds_cache_hit": 1087488,
+        "deciders": {
+          "codex": 23,
+          "code": 246,
+          "jev": 158,
+          "jev-plan": 167
+        },
+        "death_fight": [
+          "同族信徒",
+          "同族神官"
+        ]
+      }
+    }
+  ],
+  "level_counts": {
+    "1": 1,
+    "5": 1,
+    "6": 4,
+    "7": 1,
+    "8": 1,
+    "10": 14
+  },
+  "provenance": [
+    {
+      "folder": "evidence",
+      "stream": "states",
+      "source_size": 13760121633,
+      "verified_lines": 19036,
+      "counts": {
+        "K3676LU8B0UH": 830,
+        "ZE8F192FKX24": 771,
+        "UACFSW4VDDLD": 1236,
+        "VN7RQJMJEFMX": 764,
+        "2L1BNN9ZJEFU": 1176,
+        "2SU6XN2AEJRD": 818,
+        "2PVLGRBGUX9S": 1226,
+        "LLYSRQQ35AVW": 679,
+        "9TG1RP5LFAAK": 923,
+        "5X2GHKJ89PN1": 948,
+        "DPYF2BAA3DKT": 991,
+        "UMVLWER4CD98": 1202,
+        "QNTW139MGECA": 487,
+        "TDLBRNA0R05B": 972,
+        "61E2QS63Y9WU": 462,
+        "VLZ6CCT8AQ0A": 729,
+        "YF0LXT1QSTGG": 1091,
+        "G33HU22H2543": 879,
+        "GXNKW8X1XYJP": 673,
+        "PD9AYQVMLQW6": 1125,
+        "L2TSFU62Z57Z": 447,
+        "ZTRGYYMLR8SC": 607
+      },
+      "output_sha256": "c84954e00bf42d1223dd276735133c40b400af8d61e43486da744bddd27bed23",
+      "offset_bytes_sha_json_identity": true
+    },
+    {
+      "folder": "evidence",
+      "stream": "decisions",
+      "source_size": 2133061132,
+      "verified_lines": 18398,
+      "counts": {
+        "K3676LU8B0UH": 805,
+        "ZE8F192FKX24": 741,
+        "UACFSW4VDDLD": 1202,
+        "VN7RQJMJEFMX": 739,
+        "2L1BNN9ZJEFU": 1130,
+        "2SU6XN2AEJRD": 798,
+        "2PVLGRBGUX9S": 1189,
+        "LLYSRQQ35AVW": 651,
+        "9TG1RP5LFAAK": 903,
+        "5X2GHKJ89PN1": 929,
+        "DPYF2BAA3DKT": 964,
+        "UMVLWER4CD98": 1165,
+        "QNTW139MGECA": 476,
+        "TDLBRNA0R05B": 947,
+        "61E2QS63Y9WU": 443,
+        "VLZ6CCT8AQ0A": 699,
+        "YF0LXT1QSTGG": 1065,
+        "G33HU22H2543": 850,
+        "GXNKW8X1XYJP": 649,
+        "PD9AYQVMLQW6": 1017,
+        "L2TSFU62Z57Z": 442,
+        "ZTRGYYMLR8SC": 594
+      },
+      "output_sha256": "2db44998ed5549a6996a3fd8e8278f919672e4bf75318e7a3c6680a9d598d69d",
+      "offset_bytes_sha_json_identity": true
+    },
+    {
+      "folder": "evidence",
+      "stream": "sl-attempts",
+      "source_size": 44691707,
+      "verified_lines": 161,
+      "counts": {
+        "K3676LU8B0UH": 4,
+        "ZE8F192FKX24": 5,
+        "UACFSW4VDDLD": 13,
+        "VN7RQJMJEFMX": 2,
+        "2L1BNN9ZJEFU": 8,
+        "2SU6XN2AEJRD": 4,
+        "2PVLGRBGUX9S": 9,
+        "LLYSRQQ35AVW": 3,
+        "9TG1RP5LFAAK": 11,
+        "5X2GHKJ89PN1": 11,
+        "DPYF2BAA3DKT": 9,
+        "UMVLWER4CD98": 9,
+        "QNTW139MGECA": 1,
+        "TDLBRNA0R05B": 14,
+        "61E2QS63Y9WU": 7,
+        "VLZ6CCT8AQ0A": 2,
+        "YF0LXT1QSTGG": 11,
+        "G33HU22H2543": 8,
+        "GXNKW8X1XYJP": 7,
+        "PD9AYQVMLQW6": 11,
+        "L2TSFU62Z57Z": 6,
+        "ZTRGYYMLR8SC": 6
+      },
+      "output_sha256": "25004ed88920ab2aade349379919905f4229befb78a7e498c20cb9a94f959ace",
+      "offset_bytes_sha_json_identity": true
+    },
+    {
+      "folder": "evidence",
+      "stream": "run-config",
+      "source_size": 1916880,
+      "verified_lines": 22,
+      "counts": {
+        "K3676LU8B0UH": 1,
+        "ZE8F192FKX24": 1,
+        "UACFSW4VDDLD": 1,
+        "VN7RQJMJEFMX": 1,
+        "2L1BNN9ZJEFU": 1,
+        "2SU6XN2AEJRD": 1,
+        "2PVLGRBGUX9S": 1,
+        "LLYSRQQ35AVW": 1,
+        "9TG1RP5LFAAK": 1,
+        "5X2GHKJ89PN1": 1,
+        "DPYF2BAA3DKT": 1,
+        "UMVLWER4CD98": 1,
+        "QNTW139MGECA": 1,
+        "TDLBRNA0R05B": 1,
+        "61E2QS63Y9WU": 1,
+        "VLZ6CCT8AQ0A": 1,
+        "YF0LXT1QSTGG": 1,
+        "G33HU22H2543": 1,
+        "GXNKW8X1XYJP": 1,
+        "PD9AYQVMLQW6": 1,
+        "L2TSFU62Z57Z": 1,
+        "ZTRGYYMLR8SC": 1
+      },
+      "output_sha256": "258bbbb24b0e8a120b58898434f300342107db195457c8b09b0ca55819975a43",
+      "offset_bytes_sha_json_identity": true
+    },
+    {
+      "folder": "evidence",
+      "stream": "run-plans",
+      "source_size": 8756282,
+      "verified_lines": 154,
+      "counts": {
+        "K3676LU8B0UH": 7,
+        "ZE8F192FKX24": 6,
+        "UACFSW4VDDLD": 7,
+        "VN7RQJMJEFMX": 7,
+        "2L1BNN9ZJEFU": 7,
+        "2SU6XN2AEJRD": 9,
+        "2PVLGRBGUX9S": 7,
+        "LLYSRQQ35AVW": 9,
+        "9TG1RP5LFAAK": 9,
+        "5X2GHKJ89PN1": 8,
+        "DPYF2BAA3DKT": 6,
+        "UMVLWER4CD98": 9,
+        "QNTW139MGECA": 6,
+        "TDLBRNA0R05B": 9,
+        "61E2QS63Y9WU": 4,
+        "VLZ6CCT8AQ0A": 8,
+        "YF0LXT1QSTGG": 7,
+        "G33HU22H2543": 6,
+        "GXNKW8X1XYJP": 10,
+        "PD9AYQVMLQW6": 8,
+        "L2TSFU62Z57Z": 2,
+        "ZTRGYYMLR8SC": 3
+      },
+      "output_sha256": "01e0a07535e53a9e2dc1ddd7eae6647016e53dc56771191bb65f123887890262",
+      "offset_bytes_sha_json_identity": true
+    },
+    {
+      "folder": "evidence",
+      "stream": "brain",
+      "source_size": 714738855,
+      "verified_lines": 966,
+      "counts": {
+        "K3676LU8B0UH": 48,
+        "ZE8F192FKX24": 46,
+        "UACFSW4VDDLD": 50,
+        "VN7RQJMJEFMX": 41,
+        "2L1BNN9ZJEFU": 45,
+        "2SU6XN2AEJRD": 58,
+        "2PVLGRBGUX9S": 48,
+        "LLYSRQQ35AVW": 54,
+        "9TG1RP5LFAAK": 47,
+        "5X2GHKJ89PN1": 49,
+        "DPYF2BAA3DKT": 47,
+        "UMVLWER4CD98": 50,
+        "QNTW139MGECA": 33,
+        "TDLBRNA0R05B": 49,
+        "61E2QS63Y9WU": 27,
+        "VLZ6CCT8AQ0A": 46,
+        "YF0LXT1QSTGG": 47,
+        "G33HU22H2543": 45,
+        "GXNKW8X1XYJP": 48,
+        "PD9AYQVMLQW6": 55,
+        "L2TSFU62Z57Z": 17,
+        "ZTRGYYMLR8SC": 16
+      },
+      "output_sha256": "1315d07f3db1860405b03f7132ef1f17410161f1d90a05d6d32189303e919257",
+      "offset_bytes_sha_json_identity": true
+    },
+    {
+      "folder": "evidence",
+      "stream": "runs",
+      "source_size": 354231,
+      "verified_lines": 22,
+      "counts": {
+        "K3676LU8B0UH": 1,
+        "ZE8F192FKX24": 1,
+        "UACFSW4VDDLD": 1,
+        "VN7RQJMJEFMX": 1,
+        "2L1BNN9ZJEFU": 1,
+        "2SU6XN2AEJRD": 1,
+        "2PVLGRBGUX9S": 1,
+        "LLYSRQQ35AVW": 1,
+        "9TG1RP5LFAAK": 1,
+        "5X2GHKJ89PN1": 1,
+        "DPYF2BAA3DKT": 1,
+        "UMVLWER4CD98": 1,
+        "QNTW139MGECA": 1,
+        "TDLBRNA0R05B": 1,
+        "61E2QS63Y9WU": 1,
+        "VLZ6CCT8AQ0A": 1,
+        "YF0LXT1QSTGG": 1,
+        "G33HU22H2543": 1,
+        "GXNKW8X1XYJP": 1,
+        "PD9AYQVMLQW6": 1,
+        "L2TSFU62Z57Z": 1,
+        "ZTRGYYMLR8SC": 1
+      },
+      "output_sha256": "378c494e6a935968956b3c7a7d1bec853d311934de4dc5b2aeb09073b7042c55",
+      "offset_bytes_sha_json_identity": true
+    },
+    {
+      "folder": "evidence",
+      "stream": "fight-plans",
+      "source_size": 2233957,
+      "verified_lines": 0,
+      "counts": {},
+      "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "offset_bytes_sha_json_identity": true
+    }
+  ],
+  "original_material_checks": {
+    "checks": [
+      {
+        "name": "PD9初始3血8挡两张凋萎",
+        "passed": true
+      },
+      {
+        "name": "PD9防御后18挡且门槛新增凋萎",
+        "passed": true
+      },
+      {
+        "name": "PD9生存者选择中31挡三凋萎",
+        "passed": true
+      },
+      {
+        "name": "PD9完成弃牌后32挡两凋萎",
+        "passed": true
+      },
+      {
+        "name": "PD9真实攻击23且3血实死",
+        "passed": true
+      },
+      {
+        "name": "PD9真实毒结算250到244",
+        "passed": true
+      },
+      {
+        "name": "PD9算术总损15不冒称实际多损12",
+        "passed": true
+      },
+      {
+        "name": "L2阈值前168血8力量",
+        "passed": true
+      },
+      {
+        "name": "L2阈值后159血已清力量和横冲直撞",
+        "passed": true
+      },
+      {
+        "name": "L2末T8一层昏眩",
+        "passed": true
+      },
+      {
+        "name": "L2末T8实扣16",
+        "passed": true
+      },
+      {
+        "name": "L2末T8四张牌被hook阻止",
+        "passed": true
+      },
+      {
+        "name": "L2末17血0挡对17攻击实死",
+        "passed": true
+      },
+      {
+        "name": "ZTR初始324总血含125信徒血",
+        "passed": true
+      },
+      {
+        "name": "ZTR退场前index0仍有1HP",
+        "passed": true
+      },
+      {
+        "name": "ZTR退场后index0变为37HP63上限",
+        "passed": true
+      },
+      {
+        "name": "PD9首王58到10",
+        "passed": true
+      },
+      {
+        "name": "PD9次王入口10无跨幕回复",
+        "passed": true
+      },
+      {
+        "name": "L2F14赢战44到24",
+        "passed": true
+      }
+    ],
+    "passed": 19,
+    "total": 19,
+    "production_tests": false
+  },
+  "corrected_additional_material_checks": {
+    "checks": [
+      {
+        "name": "L2 T6同题plan1即时7伤零损",
+        "passed": true
+      },
+      {
+        "name": "L2 T6三候选整场各1200样本无赢样本",
+        "passed": true
+      },
+      {
+        "name": "L2 T6攻击线五轮14/24死而结束11/24",
+        "passed": true
+      },
+      {
+        "name": "L2 T6侧步仍未建模",
+        "passed": true
+      },
+      {
+        "name": "L2 T6实际回答结束0.94",
+        "passed": true
+      },
+      {
+        "name": "L2九条护栏原文均存在",
+        "passed": true
+      },
+      {
+        "name": "L2四条T2护栏被SL覆盖",
+        "passed": true
+      },
+      {
+        "name": "ZTR三次护栏原文分列25至20/15至12/2至0",
+        "passed": true
+      },
+      {
+        "name": "ZTR后两次预算已24且容许0",
+        "passed": true
+      },
+      {
+        "name": "GX F45四个SL inserted的原字段turn=2、clean分别19/18/19/18",
+        "passed": true
+      }
+    ],
+    "passed": 10,
+    "total": 10,
+    "references": [
+      {
+        "source": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+        "line": 284918,
+        "offset": 736846146,
+        "bytes": 10100,
+        "sha256": "0771ee22adc3e0bcc0e5e80247a4fe311900db621c14138df461c6466d1dff66",
+        "run_id": "L2TSFU62Z57Z"
+      },
+      {
+        "source": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+        "line": 284967,
+        "offset": 737075531,
+        "bytes": 11326,
+        "sha256": "2495fd5f7cd48e47655b25ce5d75fddf51da01d44efd369ce64dbe7a900f8841",
+        "run_id": "L2TSFU62Z57Z"
+      },
+      {
+        "source": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+        "line": 284971,
+        "offset": 737091137,
+        "bytes": 14118,
+        "sha256": "4ad450d65eb11940179c0729afdba94e5283083ffb90fbcd3befa6d606655942",
+        "run_id": "L2TSFU62Z57Z"
+      },
+      {
+        "source": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+        "line": 285020,
+        "offset": 737312267,
+        "bytes": 10590,
+        "sha256": "19eebea428881584025c68c15184cbb149640c3a1fa18d07686864d323629a8f",
+        "run_id": "L2TSFU62Z57Z"
+      },
+      {
+        "source": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+        "line": 285024,
+        "offset": 737327137,
+        "bytes": 14315,
+        "sha256": "212f7eb42ad14bb8d65878cc2cc24a6d504dd271c746d422a4f206b539dbdff4",
+        "run_id": "L2TSFU62Z57Z"
+      },
+      {
+        "source": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+        "line": 285073,
+        "offset": 737556738,
+        "bytes": 10587,
+        "sha256": "1bb277349f709ed3c0b0b79e6930dd7f59f6f53d4bd696e19b94663124cd6434",
+        "run_id": "L2TSFU62Z57Z"
+      },
+      {
+        "source": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+        "line": 285077,
+        "offset": 737571605,
+        "bytes": 14316,
+        "sha256": "6aaa7a2e19c9a2b7c0da819ab824eec3d166222d8cf6f463e9304cb45d2c1f01",
+        "run_id": "L2TSFU62Z57Z"
+      },
+      {
+        "source": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+        "line": 285126,
+        "offset": 737768667,
+        "bytes": 10587,
+        "sha256": "75c0c17c0d27e4e36f34358105bea300945ed727edf9e4dae6dc6e7b7bd943db",
+        "run_id": "L2TSFU62Z57Z"
+      },
+      {
+        "source": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+        "line": 285130,
+        "offset": 737783534,
+        "bytes": 14317,
+        "sha256": "fed0f29cc079bdfdcf270ce006036d71a1a3e9b8e6bb2c4d994f1e8b55495c15",
+        "run_id": "L2TSFU62Z57Z"
+      },
+      {
+        "source": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+        "line": 285148,
+        "offset": 737863584,
+        "bytes": 8021,
+        "sha256": "5813faac927b3a7792b5be631115707b87c38760c836e879c0ad0574ecf0ae38",
+        "run_id": "L2TSFU62Z57Z"
+      },
+      {
+        "source": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+        "line": 285301,
+        "offset": 738318563,
+        "bytes": 5852,
+        "sha256": "b5320c7c30f6f7d089c739d759d2e0918eb3aaa5bb093f280d5a11211baafe3d",
+        "run_id": "ZTRGYYMLR8SC"
+      },
+      {
+        "source": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+        "line": 285405,
+        "offset": 738767502,
+        "bytes": 6201,
+        "sha256": "c9366c58427ae55584629cc9e3b7511ae29e2e7a1b1a84e44fd382acfcbf0119",
+        "run_id": "ZTRGYYMLR8SC"
+      },
+      {
+        "source": "/home/dw/Projects/agent-sts2/logs/decisions.jsonl",
+        "line": 285745,
+        "offset": 740085990,
+        "bytes": 5259,
+        "sha256": "a0e0c31860409097705827d45130a755f6113665203e349cc77194192ab727f7",
+        "run_id": "ZTRGYYMLR8SC"
+      }
+    ],
+    "production_tests": false
+  },
+  "ops_bounded_raw_refs_verified": 79,
+  "ops_full_raw_replay": false,
+  "existing_consumer_reuse": {
+    "source_receipt": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-004303-s2/learner/runs/20261017-004316-d4513542-99d9-4a69-99a7-da1bd74324a2-strategy-proposal/consumer-reuse.json",
+    "dependency_closure": [
+      {
+        "path": "learner/audit-selection.ts",
+        "sha256": "f24ca05a02f19ecad35109c76e09405a5baca29e51df66c41e3ad77252ba25bb",
+        "old_sha256": "f24ca05a02f19ecad35109c76e09405a5baca29e51df66c41e3ad77252ba25bb",
+        "same_old": true
+      },
+      {
+        "path": "learner/lib/selection-execution.ts",
+        "sha256": "4ef06b464b5e645aea8eec3be78ef7bb3d0030b38de590cc11d84f8e76d80c5a",
+        "old_sha256": "4ef06b464b5e645aea8eec3be78ef7bb3d0030b38de590cc11d84f8e76d80c5a",
+        "same_old": true
+      },
+      {
+        "path": "learner/lib/selection-turn.ts",
+        "sha256": "038f6ec416103ef5ce75136a7d8a09f40b1a1ac341356d7cfa9b5b6e4300b703",
+        "old_sha256": "038f6ec416103ef5ce75136a7d8a09f40b1a1ac341356d7cfa9b5b6e4300b703",
+        "same_old": true
+      },
+      {
+        "path": "agent/src/core/util/json.ts",
+        "sha256": "da294432a452d1d300715f7942a871704de28080f5cf4c167236c47982ebf452",
+        "old_sha256": "da294432a452d1d300715f7942a871704de28080f5cf4c167236c47982ebf452",
+        "same_old": true
+      },
+      {
+        "path": "learner/lib/selection-terminal.ts",
+        "sha256": "f559992c66f7fe490587b4f4306ddac0ce9ecffd2bc47b292923d51f1e9a6421",
+        "old_sha256": "f559992c66f7fe490587b4f4306ddac0ce9ecffd2bc47b292923d51f1e9a6421",
+        "same_old": true
+      },
+      {
+        "path": "learner/lib/selection-observation.ts",
+        "sha256": "458c52b56d5582078243207364f413e308c3f71717379edcfcc8a126ee1df259",
+        "old_sha256": "458c52b56d5582078243207364f413e308c3f71717379edcfcc8a126ee1df259",
+        "same_old": true
+      }
+    ],
+    "verified_artifacts": [
+      {
+        "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-224302/learner/runs/20261016-224310-737fc1c6-61fd-46d4-8d7a-52cd494c7db1-strategy-proposal/consumer-GXNKW8X1XYJP.input.json",
+        "sha256": "c6cd3fadd1f5cf2633fe3af95f10513f6d6801c7164391331dd0b73ab82c22eb",
+        "bytes": 49288674,
+        "verified": true
+      },
+      {
+        "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-224302/learner/runs/20261016-224310-737fc1c6-61fd-46d4-8d7a-52cd494c7db1-strategy-proposal/consumer-GXNKW8X1XYJP.output.json",
+        "sha256": "8bf2950dd13e63c2862e106d90bec861f5ada1939a86fbe6a49f0ad146505e75",
+        "bytes": 10968122,
+        "verified": true
+      },
+      {
+        "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-224302/learner/runs/20261016-224310-737fc1c6-61fd-46d4-8d7a-52cd494c7db1-strategy-proposal/consumer-GXNKW8X1XYJP.stderr.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0,
+        "verified": true
+      },
+      {
+        "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-224302/learner/runs/20261016-224310-737fc1c6-61fd-46d4-8d7a-52cd494c7db1-strategy-proposal/consumer-PD9AYQVMLQW6.input.json",
+        "sha256": "53a7e76292a54614fd57703b3d63367695b7dbc19fd02887c57edf8c1766be83",
+        "bytes": 97612731,
+        "verified": true
+      },
+      {
+        "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-224302/learner/runs/20261016-224310-737fc1c6-61fd-46d4-8d7a-52cd494c7db1-strategy-proposal/consumer-PD9AYQVMLQW6.output.json",
+        "sha256": "6dd1997c8f5198f24c7b8bda5c5ebe41350facf0f25a5a5baf83a8c3e7ab96c2",
+        "bytes": 21005441,
+        "verified": true
+      },
+      {
+        "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-224302/learner/runs/20261016-224310-737fc1c6-61fd-46d4-8d7a-52cd494c7db1-strategy-proposal/consumer-PD9AYQVMLQW6.stderr.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0,
+        "verified": true
+      },
+      {
+        "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-224302/learner/runs/20261016-224310-737fc1c6-61fd-46d4-8d7a-52cd494c7db1-strategy-proposal/consumer-L2TSFU62Z57Z.input.json",
+        "sha256": "e93e24dd21f1f820f21301536f64f736e7cbc994f3db3346ce7d6bdd78bd84a1",
+        "bytes": 27920211,
+        "verified": true
+      },
+      {
+        "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-224302/learner/runs/20261016-224310-737fc1c6-61fd-46d4-8d7a-52cd494c7db1-strategy-proposal/consumer-L2TSFU62Z57Z.output.json",
+        "sha256": "7ac3bb0cac2a4473ed9d8717a22ef2e186d5188c0663c134b53dad61b5a342aa",
+        "bytes": 9925781,
+        "verified": true
+      },
+      {
+        "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-224302/learner/runs/20261016-224310-737fc1c6-61fd-46d4-8d7a-52cd494c7db1-strategy-proposal/consumer-L2TSFU62Z57Z.stderr.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0,
+        "verified": true
+      },
+      {
+        "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-224302/learner/runs/20261016-224310-737fc1c6-61fd-46d4-8d7a-52cd494c7db1-strategy-proposal/consumer-ZTRGYYMLR8SC.input.json",
+        "sha256": "0c4604a26f6f3f76519731f1678910c4a89d3d217136369387775b071ca392a9",
+        "bytes": 37963057,
+        "verified": true
+      },
+      {
+        "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-224302/learner/runs/20261016-224310-737fc1c6-61fd-46d4-8d7a-52cd494c7db1-strategy-proposal/consumer-ZTRGYYMLR8SC.output.json",
+        "sha256": "a2390f12308ca0a44d999c7c4d09cd59c6dbf9bc7a3620dc1fb26ea9b4887a7f",
+        "bytes": 15273708,
+        "verified": true
+      },
+      {
+        "path": "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261016-224302/learner/runs/20261016-224310-737fc1c6-61fd-46d4-8d7a-52cd494c7db1-strategy-proposal/consumer-ZTRGYYMLR8SC.stderr.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0,
+        "verified": true
+      }
+    ],
+    "input_rows_bound_to_current_evidence": 5548,
+    "runs": [
+      {
+        "run_id": "GXNKW8X1XYJP",
+        "segments": 116,
+        "observed_actions": 646,
+        "turn_windows": 103,
+        "turn_statuses": {
+          "unknown": 83,
+          "observed_turn_endpoints": 20
+        },
+        "certified_full_candidates": 0
+      },
+      {
+        "run_id": "PD9AYQVMLQW6",
+        "segments": 149,
+        "observed_actions": 1015,
+        "turn_windows": 168,
+        "turn_statuses": {
+          "unknown": 99,
+          "observed_turn_endpoints": 69
+        },
+        "certified_full_candidates": 0
+      },
+      {
+        "run_id": "L2TSFU62Z57Z",
+        "segments": 93,
+        "observed_actions": 441,
+        "turn_windows": 83,
+        "turn_statuses": {
+          "unknown": 32,
+          "observed_turn_endpoints": 51
+        },
+        "certified_full_candidates": 0
+      },
+      {
+        "run_id": "ZTRGYYMLR8SC",
+        "segments": 130,
+        "observed_actions": 594,
+        "turn_windows": 108,
+        "turn_statuses": {
+          "unknown": 39,
+          "observed_turn_endpoints": 69
+        },
+        "certified_full_candidates": 0
+      }
+    ],
+    "scope": "只读复用旧离线产物；本批没有执行消费者、模型或模拟，不计生产测试。"
+  },
+  "new_consumer_executions": 0,
+  "consumer_readback_counts": {
+    "runs": [
+      {
+        "run_id": "GXNKW8X1XYJP",
+        "segments": 116,
+        "observed_actions": 646,
+        "turn_windows": 103,
+        "turn_statuses": {
+          "unknown": 83,
+          "observed_turn_endpoints": 20
+        },
+        "certified_full_candidates": 0
+      },
+      {
+        "run_id": "PD9AYQVMLQW6",
+        "segments": 149,
+        "observed_actions": 1015,
+        "turn_windows": 168,
+        "turn_statuses": {
+          "unknown": 99,
+          "observed_turn_endpoints": 69
+        },
+        "certified_full_candidates": 0
+      },
+      {
+        "run_id": "L2TSFU62Z57Z",
+        "segments": 93,
+        "observed_actions": 441,
+        "turn_windows": 83,
+        "turn_statuses": {
+          "unknown": 32,
+          "observed_turn_endpoints": 51
+        },
+        "certified_full_candidates": 0
+      },
+      {
+        "run_id": "ZTRGYYMLR8SC",
+        "segments": 130,
+        "observed_actions": 594,
+        "turn_windows": 108,
+        "turn_statuses": {
+          "unknown": 39,
+          "observed_turn_endpoints": 69
+        },
+        "certified_full_candidates": 0
+      }
+    ],
+    "total": {
+      "segments": 488,
+      "observed_actions": 2696,
+      "turn_windows": 462,
+      "certified_full_candidates": 0,
+      "observed_turn_endpoints": 209,
+      "unknown_turn_windows": 253
+    },
+    "limitation": "完整候选结果的null来自原消费者契约，不解释为实盘未执行候选；不能将观察端点当原候选因果收益。"
+  },
+  "original_ledger_update_verification": {
+    "cli_exit_code": 0,
+    "entries": 29,
+    "protected_fields": [
+      "claim",
+      "character",
+      "kind",
+      "first_run",
+      "asc",
+      "prior",
+      "prior_note",
+      "prior_runs",
+      "evidence",
+      "status",
+      "version",
+      "shipped_at",
+      "effect"
+    ],
+    "protected_fields_equal": true,
+    "original_physical_prefix_unchanged": true,
+    "history_notes_where_prefix_unchanged": true,
+    "physical_append_rows": [
+      {
+        "source": "/home/dw/Projects/agent-sts2/paper/materials/learning/ledger.jsonl",
+        "line": 29204,
+        "offset": 22343901,
+        "bytes": 890,
+        "sha256": "0e6aa75e2ab91ad8819076e504c63f89e30e3afba23159e5c00af3cfd1a0dfa9",
+        "row": {
+          "op": "update",
+          "id": "silent-0005",
+          "ts": "2026-10-17T08:57:04+08:00",
+          "by": "learner:strategy-proposal",
+          "where": {
+            "proposal": [
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-084302-s2/learner/runs/20261017-084311-84d2a3c7-2bc7-4149-9e58-efbee8e0d219-strategy-proposal/proposal.md",
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-084302-s2/learner/runs/20261017-084311-84d2a3c7-2bc7-4149-9e58-efbee8e0d219-strategy-proposal/report.md"
+            ]
+          },
+          "note": "20261017-084302-s2-strategy-proposal：仅复核原证据与源码/消费者边界，关联silent-proposal-c873d6543c414f92,silent-proposal-c2888032d1337388；本批各项waiting、fixes=[]、merged=null，tests均null。八流选中内容与旧同范围证据一致，不增加独立局、support/repeat或原规则。具体缺项见本批proposal.md；不改原状态/版本/shipped。"
+        }
+      },
+      {
+        "source": "/home/dw/Projects/agent-sts2/paper/materials/learning/ledger.jsonl",
+        "line": 29205,
+        "offset": 22344791,
+        "bytes": 857,
+        "sha256": "4453e87d271b40a1ee65d466501dc3a6dca4502fd112af98099d03e6eba34aa6",
+        "row": {
+          "op": "update",
+          "id": "silent-0006",
+          "ts": "2026-10-17T08:57:04+08:00",
+          "by": "learner:strategy-proposal",
+          "where": {
+            "proposal": [
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-084302-s2/learner/runs/20261017-084311-84d2a3c7-2bc7-4149-9e58-efbee8e0d219-strategy-proposal/proposal.md",
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-084302-s2/learner/runs/20261017-084311-84d2a3c7-2bc7-4149-9e58-efbee8e0d219-strategy-proposal/report.md"
+            ]
+          },
+          "note": "20261017-084302-s2-strategy-proposal：仅复核原证据与源码/消费者边界，关联silent-proposal-c2888032d1337388；本批各项waiting、fixes=[]、merged=null，tests均null。八流选中内容与旧同范围证据一致，不增加独立局、support/repeat或原规则。具体缺项见本批proposal.md；不改原状态/版本/shipped。"
+        }
+      },
+      {
+        "source": "/home/dw/Projects/agent-sts2/paper/materials/learning/ledger.jsonl",
+        "line": 29206,
+        "offset": 22345648,
+        "bytes": 857,
+        "sha256": "e1366aba6e9c5d50d3b8e51b4d996aed5ea89f67d351d129777e3bd95183a22c",
+        "row": {
+          "op": "update",
+          "id": "silent-0011",
+          "ts": "2026-10-17T08:57:04+08:00",
+          "by": "learner:strategy-proposal",
+          "where": {
+            "proposal": [
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-084302-s2/learner/runs/20261017-084311-84d2a3c7-2bc7-4149-9e58-efbee8e0d219-strategy-proposal/proposal.md",
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-084302-s2/learner/runs/20261017-084311-84d2a3c7-2bc7-4149-9e58-efbee8e0d219-strategy-proposal/report.md"
+            ]
+          },
+          "note": "20261017-084302-s2-strategy-proposal：仅复核原证据与源码/消费者边界，关联silent-proposal-c2888032d1337388；本批各项waiting、fixes=[]、merged=null，tests均null。八流选中内容与旧同范围证据一致，不增加独立局、support/repeat或原规则。具体缺项见本批proposal.md；不改原状态/版本/shipped。"
+        }
+      },
+      {
+        "source": "/home/dw/Projects/agent-sts2/paper/materials/learning/ledger.jsonl",
+        "line": 29207,
+        "offset": 22346505,
+        "bytes": 857,
+        "sha256": "8309ad98396659ee5d6d060725d4202c1d706918c15eebbd578658f4dea96529",
+        "row": {
+          "op": "update",
+          "id": "silent-0012",
+          "ts": "2026-10-17T08:57:04+08:00",
+          "by": "learner:strategy-proposal",
+          "where": {
+            "proposal": [
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-084302-s2/learner/runs/20261017-084311-84d2a3c7-2bc7-4149-9e58-efbee8e0d219-strategy-proposal/proposal.md",
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-084302-s2/learner/runs/20261017-084311-84d2a3c7-2bc7-4149-9e58-efbee8e0d219-strategy-proposal/report.md"
+            ]
+          },
+          "note": "20261017-084302-s2-strategy-proposal：仅复核原证据与源码/消费者边界，关联silent-proposal-43fe170707574455；本批各项waiting、fixes=[]、merged=null，tests均null。八流选中内容与旧同范围证据一致，不增加独立局、support/repeat或原规则。具体缺项见本批proposal.md；不改原状态/版本/shipped。"
+        }
+      },
+      {
+        "source": "/home/dw/Projects/agent-sts2/paper/materials/learning/ledger.jsonl",
+        "line": 29208,
+        "offset": 22347362,
+        "bytes": 857,
+        "sha256": "f4ab7bb617f88389299a3fc9f06d2adbb1769bc87a912ea1a9ea368acc1c58b3",
+        "row": {
+          "op": "update",
+          "id": "silent-0016",
+          "ts": "2026-10-17T08:57:04+08:00",
+          "by": "learner:strategy-proposal",
+          "where": {
+            "proposal": [
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-084302-s2/learner/runs/20261017-084311-84d2a3c7-2bc7-4149-9e58-efbee8e0d219-strategy-proposal/proposal.md",
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-084302-s2/learner/runs/20261017-084311-84d2a3c7-2bc7-4149-9e58-efbee8e0d219-strategy-proposal/report.md"
+            ]
+          },
+          "note": "20261017-084302-s2-strategy-proposal：仅复核原证据与源码/消费者边界，关联silent-proposal-c2888032d1337388；本批各项waiting、fixes=[]、merged=null，tests均null。八流选中内容与旧同范围证据一致，不增加独立局、support/repeat或原规则。具体缺项见本批proposal.md；不改原状态/版本/shipped。"
+        }
+      },
+      {
+        "source": "/home/dw/Projects/agent-sts2/paper/materials/learning/ledger.jsonl",
+        "line": 29209,
+        "offset": 22348219,
+        "bytes": 890,
+        "sha256": "c809761c5badd3dedd65f92225e37a147eac4805888fd08ea7929c153224ee53",
+        "row": {
+          "op": "update",
+          "id": "silent-0019",
+          "ts": "2026-10-17T08:57:04+08:00",
+          "by": "learner:strategy-proposal",
+          "where": {
+            "proposal": [
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-084302-s2/learner/runs/20261017-084311-84d2a3c7-2bc7-4149-9e58-efbee8e0d219-strategy-proposal/proposal.md",
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-084302-s2/learner/runs/20261017-084311-84d2a3c7-2bc7-4149-9e58-efbee8e0d219-strategy-proposal/report.md"
+            ]
+          },
+          "note": "20261017-084302-s2-strategy-proposal：仅复核原证据与源码/消费者边界，关联silent-proposal-b13fda1dfeb37927,silent-proposal-042ee2299084b528；本批各项waiting、fixes=[]、merged=null，tests均null。八流选中内容与旧同范围证据一致，不增加独立局、support/repeat或原规则。具体缺项见本批proposal.md；不改原状态/版本/shipped。"
+        }
+      },
+      {
+        "source": "/home/dw/Projects/agent-sts2/paper/materials/learning/ledger.jsonl",
+        "line": 29210,
+        "offset": 22349109,
+        "bytes": 923,
+        "sha256": "e6af16bcecc1000b95f21249cc56d19ea6c7d1768dafafba794c9eecff757260",
+        "row": {
+          "op": "update",
+          "id": "silent-0020",
+          "ts": "2026-10-17T08:57:04+08:00",
+          "by": "learner:strategy-proposal",
+          "where": {
+            "proposal": [
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-084302-s2/learner/runs/20261017-084311-84d2a3c7-2bc7-4149-9e58-efbee8e0d219-strategy-proposal/proposal.md",
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-084302-s2/learner/runs/20261017-084311-84d2a3c7-2bc7-4149-9e58-efbee8e0d219-strategy-proposal/report.md"
+            ]
+          },
+          "note": "20261017-084302-s2-strategy-proposal：仅复核原证据与源码/消费者边界，关联silent-proposal-b13fda1dfeb37927,silent-proposal-dfbf51502f30c9b1,silent-proposal-042ee2299084b528；本批各项waiting、fixes=[]、merged=null，tests均null。八流选中内容与旧同范围证据一致，不增加独立局、support/repeat或原规则。具体缺项见本批proposal.md；不改原状态/版本/shipped。"
+        }
+      },
+      {
+        "source": "/home/dw/Projects/agent-sts2/paper/materials/learning/ledger.jsonl",
+        "line": 29211,
+        "offset": 22350032,
+        "bytes": 956,
+        "sha256": "26e3e0c8a9d38c85a53860aa485667f726d19e88b853c329bd0434eac48f4b8a",
+        "row": {
+          "op": "update",
+          "id": "silent-0021",
+          "ts": "2026-10-17T08:57:04+08:00",
+          "by": "learner:strategy-proposal",
+          "where": {
+            "proposal": [
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-084302-s2/learner/runs/20261017-084311-84d2a3c7-2bc7-4149-9e58-efbee8e0d219-strategy-proposal/proposal.md",
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-084302-s2/learner/runs/20261017-084311-84d2a3c7-2bc7-4149-9e58-efbee8e0d219-strategy-proposal/report.md"
+            ]
+          },
+          "note": "20261017-084302-s2-strategy-proposal：仅复核原证据与源码/消费者边界，关联silent-proposal-dfbf51502f30c9b1,silent-proposal-042ee2299084b528,silent-proposal-8cd3db3bad5f34f1,silent-proposal-43fe170707574455；本批各项waiting、fixes=[]、merged=null，tests均null。八流选中内容与旧同范围证据一致，不增加独立局、support/repeat或原规则。具体缺项见本批proposal.md；不改原状态/版本/shipped。"
+        }
+      },
+      {
+        "source": "/home/dw/Projects/agent-sts2/paper/materials/learning/ledger.jsonl",
+        "line": 29212,
+        "offset": 22350988,
+        "bytes": 857,
+        "sha256": "3663828f84fb6d4e4a1951454c948624b47d2d94f0c1712071827c7f96129022",
+        "row": {
+          "op": "update",
+          "id": "silent-0023",
+          "ts": "2026-10-17T08:57:04+08:00",
+          "by": "learner:strategy-proposal",
+          "where": {
+            "proposal": [
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-084302-s2/learner/runs/20261017-084311-84d2a3c7-2bc7-4149-9e58-efbee8e0d219-strategy-proposal/proposal.md",
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-084302-s2/learner/runs/20261017-084311-84d2a3c7-2bc7-4149-9e58-efbee8e0d219-strategy-proposal/report.md"
+            ]
+          },
+          "note": "20261017-084302-s2-strategy-proposal：仅复核原证据与源码/消费者边界，关联silent-proposal-c2888032d1337388；本批各项waiting、fixes=[]、merged=null，tests均null。八流选中内容与旧同范围证据一致，不增加独立局、support/repeat或原规则。具体缺项见本批proposal.md；不改原状态/版本/shipped。"
+        }
+      },
+      {
+        "source": "/home/dw/Projects/agent-sts2/paper/materials/learning/ledger.jsonl",
+        "line": 29213,
+        "offset": 22351845,
+        "bytes": 857,
+        "sha256": "8690010e646797d2b472ef97717b599be70c7d704a0ee9bef652007eb5d239a0",
+        "row": {
+          "op": "update",
+          "id": "silent-0024",
+          "ts": "2026-10-17T08:57:04+08:00",
+          "by": "learner:strategy-proposal",
+          "where": {
+            "proposal": [
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-084302-s2/learner/runs/20261017-084311-84d2a3c7-2bc7-4149-9e58-efbee8e0d219-strategy-proposal/proposal.md",
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-084302-s2/learner/runs/20261017-084311-84d2a3c7-2bc7-4149-9e58-efbee8e0d219-strategy-proposal/report.md"
+            ]
+          },
+          "note": "20261017-084302-s2-strategy-proposal：仅复核原证据与源码/消费者边界，关联silent-proposal-c2888032d1337388；本批各项waiting、fixes=[]、merged=null，tests均null。八流选中内容与旧同范围证据一致，不增加独立局、support/repeat或原规则。具体缺项见本批proposal.md；不改原状态/版本/shipped。"
+        }
+      },
+      {
+        "source": "/home/dw/Projects/agent-sts2/paper/materials/learning/ledger.jsonl",
+        "line": 29214,
+        "offset": 22352702,
+        "bytes": 857,
+        "sha256": "37badcdf73300e6ab1d4a27e2a5a2160a2a4bf44edd67010c7242390b8d556c3",
+        "row": {
+          "op": "update",
+          "id": "silent-0027",
+          "ts": "2026-10-17T08:57:04+08:00",
+          "by": "learner:strategy-proposal",
+          "where": {
+            "proposal": [
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-084302-s2/learner/runs/20261017-084311-84d2a3c7-2bc7-4149-9e58-efbee8e0d219-strategy-proposal/proposal.md",
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-084302-s2/learner/runs/20261017-084311-84d2a3c7-2bc7-4149-9e58-efbee8e0d219-strategy-proposal/report.md"
+            ]
+          },
+          "note": "20261017-084302-s2-strategy-proposal：仅复核原证据与源码/消费者边界，关联silent-proposal-c2888032d1337388；本批各项waiting、fixes=[]、merged=null，tests均null。八流选中内容与旧同范围证据一致，不增加独立局、support/repeat或原规则。具体缺项见本批proposal.md；不改原状态/版本/shipped。"
+        }
+      },
+      {
+        "source": "/home/dw/Projects/agent-sts2/paper/materials/learning/ledger.jsonl",
+        "line": 29215,
+        "offset": 22353559,
+        "bytes": 857,
+        "sha256": "cea842105f42f0e62a1b7096d4bdcacca73705344c720b5a3335f268087e65b4",
+        "row": {
+          "op": "update",
+          "id": "silent-0044",
+          "ts": "2026-10-17T08:57:04+08:00",
+          "by": "learner:strategy-proposal",
+          "where": {
+            "proposal": [
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-084302-s2/learner/runs/20261017-084311-84d2a3c7-2bc7-4149-9e58-efbee8e0d219-strategy-proposal/proposal.md",
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-084302-s2/learner/runs/20261017-084311-84d2a3c7-2bc7-4149-9e58-efbee8e0d219-strategy-proposal/report.md"
+            ]
+          },
+          "note": "20261017-084302-s2-strategy-proposal：仅复核原证据与源码/消费者边界，关联silent-proposal-c873d6543c414f92；本批各项waiting、fixes=[]、merged=null，tests均null。八流选中内容与旧同范围证据一致，不增加独立局、support/repeat或原规则。具体缺项见本批proposal.md；不改原状态/版本/shipped。"
+        }
+      },
+      {
+        "source": "/home/dw/Projects/agent-sts2/paper/materials/learning/ledger.jsonl",
+        "line": 29216,
+        "offset": 22354416,
+        "bytes": 857,
+        "sha256": "d8f4cfbf458eedd6b4c324956c5ccc06913d0f16f6ff9113610283592648ea2f",
+        "row": {
+          "op": "update",
+          "id": "silent-0046",
+          "ts": "2026-10-17T08:57:04+08:00",
+          "by": "learner:strategy-proposal",
+          "where": {
+            "proposal": [
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-084302-s2/learner/runs/20261017-084311-84d2a3c7-2bc7-4149-9e58-efbee8e0d219-strategy-proposal/proposal.md",
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-084302-s2/learner/runs/20261017-084311-84d2a3c7-2bc7-4149-9e58-efbee8e0d219-strategy-proposal/report.md"
+            ]
+          },
+          "note": "20261017-084302-s2-strategy-proposal：仅复核原证据与源码/消费者边界，关联silent-proposal-43fe170707574455；本批各项waiting、fixes=[]、merged=null，tests均null。八流选中内容与旧同范围证据一致，不增加独立局、support/repeat或原规则。具体缺项见本批proposal.md；不改原状态/版本/shipped。"
+        }
+      },
+      {
+        "source": "/home/dw/Projects/agent-sts2/paper/materials/learning/ledger.jsonl",
+        "line": 29217,
+        "offset": 22355273,
+        "bytes": 890,
+        "sha256": "4e9b3a1d248b13bba7cf18784eb01aa23d0c58bc6a2b7cb85b72788771a11301",
+        "row": {
+          "op": "update",
+          "id": "silent-0049",
+          "ts": "2026-10-17T08:57:04+08:00",
+          "by": "learner:strategy-proposal",
+          "where": {
+            "proposal": [
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-084302-s2/learner/runs/20261017-084311-84d2a3c7-2bc7-4149-9e58-efbee8e0d219-strategy-proposal/proposal.md",
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-084302-s2/learner/runs/20261017-084311-84d2a3c7-2bc7-4149-9e58-efbee8e0d219-strategy-proposal/report.md"
+            ]
+          },
+          "note": "20261017-084302-s2-strategy-proposal：仅复核原证据与源码/消费者边界，关联silent-proposal-dfbf51502f30c9b1,silent-proposal-c2888032d1337388；本批各项waiting、fixes=[]、merged=null，tests均null。八流选中内容与旧同范围证据一致，不增加独立局、support/repeat或原规则。具体缺项见本批proposal.md；不改原状态/版本/shipped。"
+        }
+      },
+      {
+        "source": "/home/dw/Projects/agent-sts2/paper/materials/learning/ledger.jsonl",
+        "line": 29218,
+        "offset": 22356163,
+        "bytes": 857,
+        "sha256": "f0775b958ed5a7ec0e8913c6f9f12dd0591520e1cd767f6d28a47628ebb4b37b",
+        "row": {
+          "op": "update",
+          "id": "silent-0079",
+          "ts": "2026-10-17T08:57:04+08:00",
+          "by": "learner:strategy-proposal",
+          "where": {
+            "proposal": [
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-084302-s2/learner/runs/20261017-084311-84d2a3c7-2bc7-4149-9e58-efbee8e0d219-strategy-proposal/proposal.md",
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-084302-s2/learner/runs/20261017-084311-84d2a3c7-2bc7-4149-9e58-efbee8e0d219-strategy-proposal/report.md"
+            ]
+          },
+          "note": "20261017-084302-s2-strategy-proposal：仅复核原证据与源码/消费者边界，关联silent-proposal-b13fda1dfeb37927；本批各项waiting、fixes=[]、merged=null，tests均null。八流选中内容与旧同范围证据一致，不增加独立局、support/repeat或原规则。具体缺项见本批proposal.md；不改原状态/版本/shipped。"
+        }
+      },
+      {
+        "source": "/home/dw/Projects/agent-sts2/paper/materials/learning/ledger.jsonl",
+        "line": 29219,
+        "offset": 22357020,
+        "bytes": 857,
+        "sha256": "6bf8f116708adab3a517eab4257c9445709c9ee3191d68947cc6da273a1249cc",
+        "row": {
+          "op": "update",
+          "id": "silent-0083",
+          "ts": "2026-10-17T08:57:04+08:00",
+          "by": "learner:strategy-proposal",
+          "where": {
+            "proposal": [
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-084302-s2/learner/runs/20261017-084311-84d2a3c7-2bc7-4149-9e58-efbee8e0d219-strategy-proposal/proposal.md",
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-084302-s2/learner/runs/20261017-084311-84d2a3c7-2bc7-4149-9e58-efbee8e0d219-strategy-proposal/report.md"
+            ]
+          },
+          "note": "20261017-084302-s2-strategy-proposal：仅复核原证据与源码/消费者边界，关联silent-proposal-c2888032d1337388；本批各项waiting、fixes=[]、merged=null，tests均null。八流选中内容与旧同范围证据一致，不增加独立局、support/repeat或原规则。具体缺项见本批proposal.md；不改原状态/版本/shipped。"
+        }
+      },
+      {
+        "source": "/home/dw/Projects/agent-sts2/paper/materials/learning/ledger.jsonl",
+        "line": 29220,
+        "offset": 22357877,
+        "bytes": 857,
+        "sha256": "214f5a3a6d70ae9c6883afa96842636c71e1b12e90011c6a9c3f8b585e80a463",
+        "row": {
+          "op": "update",
+          "id": "silent-0090",
+          "ts": "2026-10-17T08:57:04+08:00",
+          "by": "learner:strategy-proposal",
+          "where": {
+            "proposal": [
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-084302-s2/learner/runs/20261017-084311-84d2a3c7-2bc7-4149-9e58-efbee8e0d219-strategy-proposal/proposal.md",
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-084302-s2/learner/runs/20261017-084311-84d2a3c7-2bc7-4149-9e58-efbee8e0d219-strategy-proposal/report.md"
+            ]
+          },
+          "note": "20261017-084302-s2-strategy-proposal：仅复核原证据与源码/消费者边界，关联silent-proposal-042ee2299084b528；本批各项waiting、fixes=[]、merged=null，tests均null。八流选中内容与旧同范围证据一致，不增加独立局、support/repeat或原规则。具体缺项见本批proposal.md；不改原状态/版本/shipped。"
+        }
+      },
+      {
+        "source": "/home/dw/Projects/agent-sts2/paper/materials/learning/ledger.jsonl",
+        "line": 29221,
+        "offset": 22358734,
+        "bytes": 857,
+        "sha256": "e999bf4496790fbdd1fc44bc10ab3bd01c456b755db83af78d15bdaf537cf0a2",
+        "row": {
+          "op": "update",
+          "id": "silent-0094",
+          "ts": "2026-10-17T08:57:04+08:00",
+          "by": "learner:strategy-proposal",
+          "where": {
+            "proposal": [
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-084302-s2/learner/runs/20261017-084311-84d2a3c7-2bc7-4149-9e58-efbee8e0d219-strategy-proposal/proposal.md",
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-084302-s2/learner/runs/20261017-084311-84d2a3c7-2bc7-4149-9e58-efbee8e0d219-strategy-proposal/report.md"
+            ]
+          },
+          "note": "20261017-084302-s2-strategy-proposal：仅复核原证据与源码/消费者边界，关联silent-proposal-c2888032d1337388；本批各项waiting、fixes=[]、merged=null，tests均null。八流选中内容与旧同范围证据一致，不增加独立局、support/repeat或原规则。具体缺项见本批proposal.md；不改原状态/版本/shipped。"
+        }
+      },
+      {
+        "source": "/home/dw/Projects/agent-sts2/paper/materials/learning/ledger.jsonl",
+        "line": 29222,
+        "offset": 22359591,
+        "bytes": 890,
+        "sha256": "8a932aba5ece6ee7b2f001cd9a3dd4dd45c5e118b0f6f8dcab35bd835012ec34",
+        "row": {
+          "op": "update",
+          "id": "silent-0125",
+          "ts": "2026-10-17T08:57:04+08:00",
+          "by": "learner:strategy-proposal",
+          "where": {
+            "proposal": [
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-084302-s2/learner/runs/20261017-084311-84d2a3c7-2bc7-4149-9e58-efbee8e0d219-strategy-proposal/proposal.md",
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-084302-s2/learner/runs/20261017-084311-84d2a3c7-2bc7-4149-9e58-efbee8e0d219-strategy-proposal/report.md"
+            ]
+          },
+          "note": "20261017-084302-s2-strategy-proposal：仅复核原证据与源码/消费者边界，关联silent-proposal-c873d6543c414f92,silent-proposal-3f5a665dca133a8c；本批各项waiting、fixes=[]、merged=null，tests均null。八流选中内容与旧同范围证据一致，不增加独立局、support/repeat或原规则。具体缺项见本批proposal.md；不改原状态/版本/shipped。"
+        }
+      },
+      {
+        "source": "/home/dw/Projects/agent-sts2/paper/materials/learning/ledger.jsonl",
+        "line": 29223,
+        "offset": 22360481,
+        "bytes": 923,
+        "sha256": "5ba8ba5723db181b3be42a2cd2a28a6b97209ccef1b0684f2782e2bd0597c668",
+        "row": {
+          "op": "update",
+          "id": "silent-0133",
+          "ts": "2026-10-17T08:57:04+08:00",
+          "by": "learner:strategy-proposal",
+          "where": {
+            "proposal": [
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-084302-s2/learner/runs/20261017-084311-84d2a3c7-2bc7-4149-9e58-efbee8e0d219-strategy-proposal/proposal.md",
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-084302-s2/learner/runs/20261017-084311-84d2a3c7-2bc7-4149-9e58-efbee8e0d219-strategy-proposal/report.md"
+            ]
+          },
+          "note": "20261017-084302-s2-strategy-proposal：仅复核原证据与源码/消费者边界，关联silent-proposal-dfbf51502f30c9b1,silent-proposal-c2888032d1337388,silent-proposal-8cd3db3bad5f34f1；本批各项waiting、fixes=[]、merged=null，tests均null。八流选中内容与旧同范围证据一致，不增加独立局、support/repeat或原规则。具体缺项见本批proposal.md；不改原状态/版本/shipped。"
+        }
+      },
+      {
+        "source": "/home/dw/Projects/agent-sts2/paper/materials/learning/ledger.jsonl",
+        "line": 29224,
+        "offset": 22361404,
+        "bytes": 923,
+        "sha256": "a44a4298a23158d35c3a24e8843a98b2cbe2eddfd277239f36d92c8317dba525",
+        "row": {
+          "op": "update",
+          "id": "silent-0222",
+          "ts": "2026-10-17T08:57:04+08:00",
+          "by": "learner:strategy-proposal",
+          "where": {
+            "proposal": [
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-084302-s2/learner/runs/20261017-084311-84d2a3c7-2bc7-4149-9e58-efbee8e0d219-strategy-proposal/proposal.md",
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-084302-s2/learner/runs/20261017-084311-84d2a3c7-2bc7-4149-9e58-efbee8e0d219-strategy-proposal/report.md"
+            ]
+          },
+          "note": "20261017-084302-s2-strategy-proposal：仅复核原证据与源码/消费者边界，关联silent-proposal-dfbf51502f30c9b1,silent-proposal-c2888032d1337388,silent-proposal-8cd3db3bad5f34f1；本批各项waiting、fixes=[]、merged=null，tests均null。八流选中内容与旧同范围证据一致，不增加独立局、support/repeat或原规则。具体缺项见本批proposal.md；不改原状态/版本/shipped。"
+        }
+      },
+      {
+        "source": "/home/dw/Projects/agent-sts2/paper/materials/learning/ledger.jsonl",
+        "line": 29225,
+        "offset": 22362327,
+        "bytes": 890,
+        "sha256": "e52240ba31c4fc680f0f12f695f6e2b93afcdf70912888e8ac921203862809a1",
+        "row": {
+          "op": "update",
+          "id": "silent-0228",
+          "ts": "2026-10-17T08:57:04+08:00",
+          "by": "learner:strategy-proposal",
+          "where": {
+            "proposal": [
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-084302-s2/learner/runs/20261017-084311-84d2a3c7-2bc7-4149-9e58-efbee8e0d219-strategy-proposal/proposal.md",
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-084302-s2/learner/runs/20261017-084311-84d2a3c7-2bc7-4149-9e58-efbee8e0d219-strategy-proposal/report.md"
+            ]
+          },
+          "note": "20261017-084302-s2-strategy-proposal：仅复核原证据与源码/消费者边界，关联silent-proposal-042ee2299084b528,silent-proposal-8cd3db3bad5f34f1；本批各项waiting、fixes=[]、merged=null，tests均null。八流选中内容与旧同范围证据一致，不增加独立局、support/repeat或原规则。具体缺项见本批proposal.md；不改原状态/版本/shipped。"
+        }
+      },
+      {
+        "source": "/home/dw/Projects/agent-sts2/paper/materials/learning/ledger.jsonl",
+        "line": 29226,
+        "offset": 22363217,
+        "bytes": 890,
+        "sha256": "f9a86ae3136ff708a2d76ec68ecd2769df498ec116453a624ed78a68a041b1b3",
+        "row": {
+          "op": "update",
+          "id": "silent-0239",
+          "ts": "2026-10-17T08:57:04+08:00",
+          "by": "learner:strategy-proposal",
+          "where": {
+            "proposal": [
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-084302-s2/learner/runs/20261017-084311-84d2a3c7-2bc7-4149-9e58-efbee8e0d219-strategy-proposal/proposal.md",
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-084302-s2/learner/runs/20261017-084311-84d2a3c7-2bc7-4149-9e58-efbee8e0d219-strategy-proposal/report.md"
+            ]
+          },
+          "note": "20261017-084302-s2-strategy-proposal：仅复核原证据与源码/消费者边界，关联silent-proposal-042ee2299084b528,silent-proposal-8cd3db3bad5f34f1；本批各项waiting、fixes=[]、merged=null，tests均null。八流选中内容与旧同范围证据一致，不增加独立局、support/repeat或原规则。具体缺项见本批proposal.md；不改原状态/版本/shipped。"
+        }
+      },
+      {
+        "source": "/home/dw/Projects/agent-sts2/paper/materials/learning/ledger.jsonl",
+        "line": 29227,
+        "offset": 22364107,
+        "bytes": 890,
+        "sha256": "9f6da693339bf0457526a35d170f4cf7b728f1e1490b4f749a798b151951294e",
+        "row": {
+          "op": "update",
+          "id": "silent-0243",
+          "ts": "2026-10-17T08:57:04+08:00",
+          "by": "learner:strategy-proposal",
+          "where": {
+            "proposal": [
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-084302-s2/learner/runs/20261017-084311-84d2a3c7-2bc7-4149-9e58-efbee8e0d219-strategy-proposal/proposal.md",
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-084302-s2/learner/runs/20261017-084311-84d2a3c7-2bc7-4149-9e58-efbee8e0d219-strategy-proposal/report.md"
+            ]
+          },
+          "note": "20261017-084302-s2-strategy-proposal：仅复核原证据与源码/消费者边界，关联silent-proposal-b13fda1dfeb37927,silent-proposal-042ee2299084b528；本批各项waiting、fixes=[]、merged=null，tests均null。八流选中内容与旧同范围证据一致，不增加独立局、support/repeat或原规则。具体缺项见本批proposal.md；不改原状态/版本/shipped。"
+        }
+      },
+      {
+        "source": "/home/dw/Projects/agent-sts2/paper/materials/learning/ledger.jsonl",
+        "line": 29228,
+        "offset": 22364997,
+        "bytes": 890,
+        "sha256": "27c6779ffaa195a2efb3f476cab91afa4f46ad77017b674192cb6e8efe93a388",
+        "row": {
+          "op": "update",
+          "id": "silent-0253",
+          "ts": "2026-10-17T08:57:04+08:00",
+          "by": "learner:strategy-proposal",
+          "where": {
+            "proposal": [
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-084302-s2/learner/runs/20261017-084311-84d2a3c7-2bc7-4149-9e58-efbee8e0d219-strategy-proposal/proposal.md",
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-084302-s2/learner/runs/20261017-084311-84d2a3c7-2bc7-4149-9e58-efbee8e0d219-strategy-proposal/report.md"
+            ]
+          },
+          "note": "20261017-084302-s2-strategy-proposal：仅复核原证据与源码/消费者边界，关联silent-proposal-c873d6543c414f92,silent-proposal-c2888032d1337388；本批各项waiting、fixes=[]、merged=null，tests均null。八流选中内容与旧同范围证据一致，不增加独立局、support/repeat或原规则。具体缺项见本批proposal.md；不改原状态/版本/shipped。"
+        }
+      },
+      {
+        "source": "/home/dw/Projects/agent-sts2/paper/materials/learning/ledger.jsonl",
+        "line": 29229,
+        "offset": 22365887,
+        "bytes": 857,
+        "sha256": "670703fd3c2181af5fab2e5f2797778240c3c9d554517bab69c0f3f28763f9ee",
+        "row": {
+          "op": "update",
+          "id": "silent-0268",
+          "ts": "2026-10-17T08:57:04+08:00",
+          "by": "learner:strategy-proposal",
+          "where": {
+            "proposal": [
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-084302-s2/learner/runs/20261017-084311-84d2a3c7-2bc7-4149-9e58-efbee8e0d219-strategy-proposal/proposal.md",
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-084302-s2/learner/runs/20261017-084311-84d2a3c7-2bc7-4149-9e58-efbee8e0d219-strategy-proposal/report.md"
+            ]
+          },
+          "note": "20261017-084302-s2-strategy-proposal：仅复核原证据与源码/消费者边界，关联silent-proposal-d7b8d36cf3d0303d；本批各项waiting、fixes=[]、merged=null，tests均null。八流选中内容与旧同范围证据一致，不增加独立局、support/repeat或原规则。具体缺项见本批proposal.md；不改原状态/版本/shipped。"
+        }
+      },
+      {
+        "source": "/home/dw/Projects/agent-sts2/paper/materials/learning/ledger.jsonl",
+        "line": 29230,
+        "offset": 22366744,
+        "bytes": 857,
+        "sha256": "1851249a7918bc01fa91c4fc511b39eb9b49a2e140de3d644899e9cf3e50207f",
+        "row": {
+          "op": "update",
+          "id": "silent-0276",
+          "ts": "2026-10-17T08:57:04+08:00",
+          "by": "learner:strategy-proposal",
+          "where": {
+            "proposal": [
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-084302-s2/learner/runs/20261017-084311-84d2a3c7-2bc7-4149-9e58-efbee8e0d219-strategy-proposal/proposal.md",
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-084302-s2/learner/runs/20261017-084311-84d2a3c7-2bc7-4149-9e58-efbee8e0d219-strategy-proposal/report.md"
+            ]
+          },
+          "note": "20261017-084302-s2-strategy-proposal：仅复核原证据与源码/消费者边界，关联silent-proposal-c2888032d1337388；本批各项waiting、fixes=[]、merged=null，tests均null。八流选中内容与旧同范围证据一致，不增加独立局、support/repeat或原规则。具体缺项见本批proposal.md；不改原状态/版本/shipped。"
+        }
+      },
+      {
+        "source": "/home/dw/Projects/agent-sts2/paper/materials/learning/ledger.jsonl",
+        "line": 29231,
+        "offset": 22367601,
+        "bytes": 857,
+        "sha256": "1c6bc7b948aa818f38fa826b8a1cba0c15b1799304d374ce1a3c0c43195b1048",
+        "row": {
+          "op": "update",
+          "id": "silent-0280",
+          "ts": "2026-10-17T08:57:04+08:00",
+          "by": "learner:strategy-proposal",
+          "where": {
+            "proposal": [
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-084302-s2/learner/runs/20261017-084311-84d2a3c7-2bc7-4149-9e58-efbee8e0d219-strategy-proposal/proposal.md",
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-084302-s2/learner/runs/20261017-084311-84d2a3c7-2bc7-4149-9e58-efbee8e0d219-strategy-proposal/report.md"
+            ]
+          },
+          "note": "20261017-084302-s2-strategy-proposal：仅复核原证据与源码/消费者边界，关联silent-proposal-2631859b524e0652；本批各项waiting、fixes=[]、merged=null，tests均null。八流选中内容与旧同范围证据一致，不增加独立局、support/repeat或原规则。具体缺项见本批proposal.md；不改原状态/版本/shipped。"
+        }
+      },
+      {
+        "source": "/home/dw/Projects/agent-sts2/paper/materials/learning/ledger.jsonl",
+        "line": 29232,
+        "offset": 22368458,
+        "bytes": 857,
+        "sha256": "5dfd8c60f9f4907e68aa7b29c9014f495948ea4f899451b12ceb3bddabf1306b",
+        "row": {
+          "op": "update",
+          "id": "silent-0282",
+          "ts": "2026-10-17T08:57:04+08:00",
+          "by": "learner:strategy-proposal",
+          "where": {
+            "proposal": [
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-084302-s2/learner/runs/20261017-084311-84d2a3c7-2bc7-4149-9e58-efbee8e0d219-strategy-proposal/proposal.md",
+              "/home/dw/Projects/agent-sts2/.worktrees/codex-strategy-silent-20261017-084302-s2/learner/runs/20261017-084311-84d2a3c7-2bc7-4149-9e58-efbee8e0d219-strategy-proposal/report.md"
+            ]
+          },
+          "note": "20261017-084302-s2-strategy-proposal：仅复核原证据与源码/消费者边界，关联silent-proposal-c2888032d1337388；本批各项waiting、fixes=[]、merged=null，tests均null。八流选中内容与旧同范围证据一致，不增加独立局、support/repeat或原规则。具体缺项见本批proposal.md；不改原状态/版本/shipped。"
+        }
+      }
+    ]
+  },
+  "ledger_prefix_at_update": {
+    "source": "/home/dw/Projects/agent-sts2/paper/materials/learning/ledger.jsonl",
+    "source_size": 22343901,
+    "sha256": "c16e0fe54b1c6198b27ffe70640c969d2568cfafb3870163c9629e2a40fee680"
+  },
+  "original_13253_ledger_references_not_replayed": true,
+  "no_source_knowledge_commit_or_merge_block": true,
+  "production_tests_not_run_and_not_needed": true,
+  "paper_refresh": false,
+  "no_new_scientific_disagreement_reported": true,
+  "all_wider_parents_open": true,
+  "no_new_learner_model_simulation_or_other_role_ACK": true
+}
