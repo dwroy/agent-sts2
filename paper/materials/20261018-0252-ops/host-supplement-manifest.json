@@ -1,0 +1,79 @@
+{
+  "schema": 1,
+  "batch": "20261016-075726-strategy-proposal",
+  "task": "strategy-proposal",
+  "worktree": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration",
+  "original": {
+    "merged": "523fbcd34667a531e40e58aae877062fc3d9b99e",
+    "tree": "414ea8b173ca04165fc84193f9828e4b136a17e9",
+    "log_sha256": "d70b7619c8e35e140b324120c5244a00c513e0395472d1619b254d423bfb7ab1",
+    "coverage": {
+      "passed": [],
+      "failed": [
+        "tests/brain-codex.test.ts",
+        "tests/rollout-live.test.ts"
+      ],
+      "skipped": [],
+      "summary": {
+        "files": {
+          "failed": 2,
+          "passed": 534
+        },
+        "tests": {
+          "failed": 2,
+          "passed": 5246,
+          "skipped": 2
+        }
+      },
+      "failed_tests": {
+        "tests/brain-codex.test.ts": [
+          "codex runs watched: retries, stalls, timeouts and their trace stalled twice: the question fails as a timeout and the fallback answers it"
+        ],
+        "tests/rollout-live.test.ts": [
+          "rollout facts on Jev's combat question every option of a logged board carries the rollout and history facts; the decision log gets the rollout"
+        ]
+      }
+    }
+  },
+  "live": {
+    "commit": "523fbcd34667a531e40e58aae877062fc3d9b99e",
+    "tree": "414ea8b173ca04165fc84193f9828e4b136a17e9"
+  },
+  "sources": [
+    "28161b2d2a31e95587999fc6e5028acd727cecb2",
+    "b2bdb0b1dbc7ec9a39909595238b00efbb718321",
+    "523fbcd34667a531e40e58aae877062fc3d9b99e"
+  ],
+  "inputs": [
+    {
+      "path": "agent/tests/brain-codex.test.ts",
+      "source": "523fbcd34667a531e40e58aae877062fc3d9b99e"
+    },
+    {
+      "path": "agent/tests/rollout-live.test.ts",
+      "source": "523fbcd34667a531e40e58aae877062fc3d9b99e"
+    }
+  ],
+  "selection": [
+    {
+      "file": "tests/brain-codex.test.ts",
+      "tests": [
+        "codex runs watched: retries, stalls, timeouts and their trace stalled twice: the question fails as a timeout and the fallback answers it"
+      ],
+      "reason": "failed"
+    },
+    {
+      "file": "tests/rollout-live.test.ts",
+      "tests": [
+        "rollout facts on Jev's combat question every option of a logged board carries the rollout and history facts; the decision log gets the rollout"
+      ],
+      "reason": "failed"
+    }
+  ],
+  "receipts": [
+    {
+      "path": "paper/materials/20261018-0252-ops/host-failure-decision.json",
+      "sha256": "dac44666d1260cdc19ecc1d0c9e5fa9256d7e9987bc45f2963f5adc500e24444"
+    }
+  ]
+}

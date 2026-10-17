@@ -1,0 +1,53 @@
+
+ RUN  v4.1.11 /home/dw/Projects/agent-sts2/.worktrees/live/agent
+
+ ❯ tests/rollout-live.test.ts (139 tests | 1 failed) 193673ms
+     × every option of a logged board carries the rollout and history facts; the decision log gets the rollout 45935ms
+ ❯ tests/brain-codex.test.ts (31 tests | 1 failed) 14009ms
+     × stalled twice: the question fails as a timeout and the fallback answers it 3665ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/brain-codex.test.ts > codex runs watched: retries, stalls, timeouts and their trace > stalled twice: the question fails as a timeout and the fallback answers it
+AssertionError: expected { choice: 'a', …(5) } to match object { choice: 'a', brain: { …(2) } }
+(9 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+    "brain": {
+      "engine": "deepseek",
+      "fell_back_from": {
+        "engine": "codex",
+-       "error": StringMatching /^codex stalled \[timeout\]: no stream event for 1 s after the first token at 0 s \(last: turn\.started at 0 s\) \(2 run\(s\)\)/,
++       "error": "codex stalled [timeout]: no stream event for 1 s after the first token at 1 s (last: turn.started at 1 s) (2 run(s))",
+      },
+    },
+    "choice": "a",
+  }
+
+ ❯ tests/brain-codex.test.ts:371:20
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/rollout-live.test.ts > rollout facts on Jev's combat question > every option of a logged board carries the rollout and history facts; the decision log gets the rollout
+Error: Test timed out in 30000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/rollout-live.test.ts:57:3
+     55|
+     56| describe("rollout facts on Jev's combat question", () => {
+     57|   it("every option of a logged board carries the rollout and history f…
+       |   ^
+     58|     // The format at full size (5 x 8): no time budget (the kill order…
+     59|     rolloutLiveOptions.budgetMs = 1e9;
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  2 failed | 534 passed (536)
+      Tests  2 failed | 5246 passed | 2 skipped (5250)
+   Start at  02:31:16
+   Duration  1037.08s (transform 28.92s, setup 37.34s, import 128.17s, tests 1821.38s, environment 61ms)
+
