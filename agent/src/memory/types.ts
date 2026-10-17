@@ -549,7 +549,8 @@ export interface AskDecision {
   /** The narrow, English payload sent as `state` (PLAN.md §5.1). */
   state: Record<string, JsonValue>;
   questions: QuestionSet;
-  resolve(answers: AnswerSet): ResolvedAction;
+  /** Explicit H1 expiry may use an existing candidate; ordinary strict waits stay unchanged. */
+  resolve(answers: AnswerSet, context?: { budgetExpired?: boolean }): ResolvedAction;
   /**
    * Phase 2: when Jev's answer to `question` is below `below` confidence, the loop may ask DeepSeek
    * the same question (same state, same option keys) and resolve with its choice instead.
