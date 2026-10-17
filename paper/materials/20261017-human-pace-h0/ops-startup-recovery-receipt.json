@@ -1,0 +1,102 @@
+{
+  "at": "2026-10-17 09:58:51 CST",
+  "actor": "original ops",
+  "request_id": "roy-20261017-human-pace-h0",
+  "revision": 1,
+  "failed_batch": "20261017-095740-strategy-proposal",
+  "original_state": {
+    "task": "strategy-proposal",
+    "character": "silent",
+    "runs": [],
+    "key": "learning:roy-20261017-human-pace-h0",
+    "state": "failed",
+    "pid": 3136738,
+    "pane": "wJ:p19S",
+    "worktree": "/home/dw/Projects/agent-sts2/.worktrees/silent-boss-calibration",
+    "learning_request": "roy-20261017-human-pace-h0",
+    "learning_revision": 1,
+    "learning_input": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261017-095740-strategy-proposal.learning-input.json",
+    "learning_input_sha256": "d3da188a5151a8dc57274ad4d48431b1253ccc677406a48f005bdb38ecef0680",
+    "learning_request_sha256": "d3da188a5151a8dc57274ad4d48431b1253ccc677406a48f005bdb38ecef0680",
+    "proposal_policy": "Roy-2026-10-07-learning",
+    "consumed": false,
+    "consumption_receipt": null,
+    "finished": "2026-10-17T09:58:02.330861",
+    "rc": 1,
+    "report": {}
+  },
+  "original_request_state": {
+    "id": "roy-20261017-human-pace-h0",
+    "state": "blocked",
+    "attempts": [
+      "20261017-095740-strategy-proposal"
+    ],
+    "pending_since": 1792202261.0738604,
+    "request_sha256": "d3da188a5151a8dc57274ad4d48431b1253ccc677406a48f005bdb38ecef0680",
+    "revision": 1,
+    "request_path": "/home/dw/Projects/agent-sts2/notes/learning-requests/roy-20261017-human-pace-h0.json",
+    "batch": "20261017-095740-strategy-proposal",
+    "started_at": 1792202261.348166,
+    "reason": "学习者exit 1；沿原thread核查恢复，保留原失败",
+    "notices": [
+      "36fcbd1a06d722f1a1e9a8c7"
+    ]
+  },
+  "original_events": {
+    "path": "learner/runs/20261017-095741-079a8a34-007d-4708-b223-bf02b2492aae-20261017-095740-strategy-proposal.task.jsonl",
+    "sha256": "9fe9c49f079849b5a5f782348ecf529fa079caf9248260ff4a6f942b34756b41"
+  },
+  "startup_errors": [
+    {
+      "type": "learner_stderr",
+      "attempt": 1,
+      "t_ms": 17938,
+      "text": "2026-10-17T01:58:02.180876Z ERROR codex_core::session: Failed to create session: failed to load AGENTS.md instructions for environment `local`: fs sandbox helper failed with status exit status: 1: error building bubblewrap command: Fatal error: ripgrep unreadable glob scan failed for /home/dw: rg: /home/dw/Projects/agent-sts2/learner/runs/20261017-081308-9b5ca07b-0cbe-42a7-8b04-51e29c76de5e-fix-batch/tmprwp5t1ru/paper: No such file or directory (os error 2)"
+    },
+    {
+      "type": "learner_stderr",
+      "attempt": 1,
+      "t_ms": 17944,
+      "text": "Error: thread/resume: thread/resume failed: error resuming thread: failed to load AGENTS.md instructions for environment `local`: fs sandbox helper failed with status exit status: 1: error building bubblewrap command: Fatal error: ripgrep unreadable glob scan failed for /home/dw: rg: /home/dw/Projects/agent-sts2/learner/runs/20261017-081308-9b5ca07b-0cbe-42a7-8b04-51e29c76de5e-fix-batch/tmprwp5t1ru/paper: No such file or directory (os error 2) (code -32603)"
+    }
+  ],
+  "summary": {
+    "type": "learner_summary",
+    "ts": "2026-10-17T01:58:02.204Z",
+    "exit_code": 1,
+    "signal": null,
+    "timed_out": false,
+    "cancelled": false,
+    "wall_ms": 17961,
+    "summary": {
+      "engine": "codex",
+      "toolCalls": {},
+      "tokens": {
+        "input": 0,
+        "output": 0,
+        "cacheRead": 0,
+        "cacheCreation": 0,
+        "reasoning": 0
+      },
+      "isError": false,
+      "permissionDenials": [],
+      "mcpServers": [],
+      "errors": [],
+      "retries": [],
+      "warnings": [],
+      "timing": {
+        "toolMs": 0,
+        "timeline": []
+      },
+      "model": "gpt-6.1-sol"
+    }
+  },
+  "no_thread_started": true,
+  "no_first_real_reply": true,
+  "no_model_completion": true,
+  "actual_model_start_metadata": "native startup telemetry gpt-6.1-sol/xhigh/workspace-write/never; /models200 only, not a model completion",
+  "decision": "Accept one bounded original-thread retry under docs/learning-requests.md after stopped child, same request revision/input and original isolation/lease; no account/permission/deny change, no reset of failed batch. If retry fails, preserve blocked and report developer.",
+  "allowed_additional_attempts": 1,
+  "no_0332_priority_conflict_observed": true,
+  "no_other_role_ACK": true
+}
