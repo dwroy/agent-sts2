@@ -1,3 +1,4 @@
+import { currentDecisionBudget, shadowBudgetAvailable, DecisionBudgetExpired } from "../core/decision-budget.js";
 /** Log-only summaries of existing continuous samples. Never schedules or scores a fight. */
 import { createHash } from "node:crypto";
 import { serialize } from "node:v8";
@@ -59,6 +60,7 @@ function same(a: unknown, b: unknown): boolean { return digest(a) === digest(b);
 
 /** Invalid resources never acquire a numeric probability or an invented fresh resource state. */
 function sampleStatus(o: FightSampleResult): { reason: string | null; joint: number | null } {
+  if (currentDecisionBudget()?.remaining() === 0) throw new DecisionBudgetExpired("F48_joint_shadow");
   const s = o.sequence;
   if (!s) return { reason: "missing_continuous_sample", joint: null };
   if (!Number.isInteger(s.seed) || s.seed! < 0 || s.seed! > 0xffffffff) return { reason: "missing_sample_seed", joint: null };
@@ -103,6 +105,7 @@ export function f48JointShadow(scope: F48JointScope | undefined, candidates: F48
     runtime_binding: "enclosing_run_config_and_decision_record; no retrospective_identity_fill",
     actual_run_result: "unknown" };
   try {
+    if (!shadowBudgetAvailable("F48_joint_shadow")) return { ...header, status: "unknown", reason: "decision_budget_exhausted", candidates: [], continuous: null };
     if (failure || !input?.continuation || !candidates.length) return { ...header, status: "unknown",
       reason: failure?.reason ?? "existing_continuous_computation_unavailable", candidates: [],
       failure: failure ?? null, paired_comparison: null, continuous: null };
@@ -178,7 +181,8 @@ export function f48JointShadow(scope: F48JointScope | undefined, candidates: F48
     return { ...header, status: records.every((r) => r.status === "produced" && r.paired_comparison.status === "produced") ? "produced" : "unknown",
       input_sha256: inputHash, variant_distribution_sha256: digest(input.continuation.variants.map((v) => ({ boss: v.boss, count: v.count }))),
       source: input.continuation.source, limitations: input.continuation.limitation, candidates: records, failure: null };
-  } catch {
-    return { ...header, status: "unknown", reason: "shadow_aggregation_failed", candidates: [], continuous: null, paired_comparison: null };
+  } catch (error) {
+    if (error instanceof DecisionBudgetExpired) currentDecisionBudget()?.skip("F48_joint_shadow");
+    return { ...header, status: "unknown", reason: error instanceof DecisionBudgetExpired ? "decision_budget_exhausted" : "shadow_aggregation_failed", candidates: [], continuous: null, paired_comparison: null };
   }
 }

@@ -1,3 +1,4 @@
+import { currentDecisionBudget, withinDecisionBudget, DecisionBudgetExpired } from "../core/decision-budget.js";
 /**
  * Production createRouter selects the Codex-only path: outages wait on the same question and faults propagate.
  * The configurable fallback path below remains for historical engine adapters and fixed regression fixtures.
@@ -386,6 +387,12 @@ export class BrainRouter {
    * an answer failure as the engine threw it.
    */
   async decide(request: BrainRequest): Promise<BrainAnswer> {
+    const pace = currentDecisionBudget();
+    if (pace && !request.budgetSignal) {
+      pace.promoteBrain();
+      return withinDecisionBudget("L2_brain", (signal) => this.decide({ ...request, budgetSignal: signal, effort: "xhigh", timeoutMs: Math.max(1, pace.remaining(90_000)) }), 90_000);
+    }
+    if (request.budgetSignal?.aborted) throw new DecisionBudgetExpired(request.label);
     request.questionId ??= this.nextQuestionId();
     const req = request;
     if (this.codexOnly) return this.decideCodex(req);
@@ -472,6 +479,11 @@ export class BrainRouter {
         if (retrying) this.wait.finish("resumed");
         return result;
       } catch (error) {
+        if (error instanceof DecisionBudgetExpired || req.budgetSignal?.aborted) {
+          this.write("codex", req, null, new DecisionBudgetExpired(req.label), undefined, this.spent(error, began));
+          this.wait.finish("budget", req, "H1 hard deadline; existing L1 fallback");
+          throw new DecisionBudgetExpired(req.label);
+        }
         if (error instanceof BrainBlockedError) {
           this.wait.finish(error.state, req, error.message);
           throw error;
@@ -495,6 +507,10 @@ export class BrainRouter {
         if (Number.isFinite(cooldown) && cooldown > 0 && !resting) this.resting.set("codex", { until: this.now() + cooldown, reason: message(error), kind });
         try { await this.wait.retry(Math.max(cooldown, resting ? resting.until - this.now() : 0)); }
         catch (cancelled) {
+          if (cancelled instanceof DecisionBudgetExpired || req.budgetSignal?.aborted) {
+            this.wait.finish("budget", req, "H1 hard deadline during outage wait; existing L1 fallback");
+            throw new DecisionBudgetExpired(req.label);
+          }
           const state = cancelled instanceof BrainBlockedError ? cancelled.state : "fault";
           this.wait.finish(state, req, message(cancelled));
           throw cancelled instanceof BrainBlockedError ? cancelled : new BrainBlockedError("fault", "Codex retry timer failed", cancelled);
@@ -596,15 +612,18 @@ export class BrainRouter {
       this.deps.fallbackBudget.spend(engine.name);
     }
     this.calls.set(engine.name, this.callsMade(engine.name) + 1);
-    const ms = req.timeoutMs ?? this.deps.config.engines[engine.name].timeoutMs;
+    const pace = currentDecisionBudget();
+    const ms = pace ? Math.min(req.timeoutMs ?? Infinity, pace.remaining()) : req.timeoutMs ?? this.deps.config.engines[engine.name].timeoutMs;
+    if (pace && (ms ?? 0) <= 0) throw new DecisionBudgetExpired(req.label);
     if (!ms && !this.codexOnly) return engine.decide(req);
     const controller = new AbortController();
     const outer = this.codexOnly ? this.wait.signal : undefined;
-    let rejectCancel: ((error: BrainBlockedError) => void) | undefined;
+    let rejectCancel: ((error: BrainBlockedError | DecisionBudgetExpired) => void) | undefined;
     const cancellation = new Promise<never>((_, reject) => { rejectCancel = reject; });
-    const cancel = (): void => { controller.abort(); rejectCancel?.(new BrainBlockedError("cancelled", "Codex brain call cancelled")); };
+    const cancel = (): void => { controller.abort(); rejectCancel?.(req.budgetSignal?.aborted ? new DecisionBudgetExpired(req.label) : new BrainBlockedError("cancelled", "Codex brain call cancelled")); };
     outer?.addEventListener("abort", cancel, { once: true });
-    if (outer?.aborted) cancel();
+    req.budgetSignal?.addEventListener("abort", cancel, { once: true });
+    if (outer?.aborted || req.budgetSignal?.aborted) cancel();
     let timer: NodeJS.Timeout | undefined;
     const stopPoll = this.codexOnly ? setInterval(() => {
       try { this.wait.check(); }
@@ -632,6 +651,7 @@ export class BrainRouter {
       clearTimeout(timer);
       clearInterval(stopPoll);
       outer?.removeEventListener("abort", cancel);
+      req.budgetSignal?.removeEventListener("abort", cancel);
     }
   }
 

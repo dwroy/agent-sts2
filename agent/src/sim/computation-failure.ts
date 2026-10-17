@@ -7,9 +7,10 @@ import type { ScreenMemory } from "../memory/types.js";
 import { memoKey } from "./compute-memo.js";
 
 export interface SimCompletion {
+  budgeted?: true;
   required: true;
   attempt_id: string;
-  status: "complete" | "complete_adaptive" | "pending" | "degraded";
+  status: "complete" | "complete_adaptive" | "complete_budget" | "partial" | "pending" | "degraded";
   attempts: number;
   reasons: string[];
   samples: number;
@@ -40,5 +41,9 @@ export class SimAttempt {
     this.memory.simFailure = reason && this.key ? { key: this.key, count: attempts, reasons } : undefined;
     return { required: true, attempt_id: this.id, status: this.degraded ? "degraded" : reason ? "pending" : adaptive ? "complete_adaptive" : "complete",
       attempts, reasons, samples, requested, failure: reason !== undefined, key: this.key };
+  }
+  /** A normal deadline is not a C1 engine fault and does not increment the failure streak. */
+  finishBudget(samples: number, requested: number, partial: boolean): SimCompletion {
+    return { ...this.finish(samples, requested), budgeted: true, status: this.degraded ? "degraded" : partial ? "partial" : "complete_budget" };
   }
 }

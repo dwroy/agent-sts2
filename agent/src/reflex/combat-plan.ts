@@ -1,3 +1,5 @@
+import { PreparedSolverDone } from "./pace-solver-cache.js";
+import { currentDecisionBudget } from "../core/decision-budget.js";
 import { completeAdaptiveLines } from "../sim/boss-lines.js";
 /**
  * Combat, turn-planned (phase 2). Division of labour:
@@ -2328,7 +2330,8 @@ export function withSlRetryFallback<T>(env: DecisionEnv, plan: (env: DecisionEnv
   if (!sl || (sl.knownDraws === undefined && sl.compute === undefined)) return plan(env);
   try {
     return plan(env);
-  } catch {
+  } catch (error) {
+    if (error instanceof PreparedSolverDone) throw error;
     const { knownDraws: _known, compute: _compute, ...plain } = sl;
     return plan({ ...env, sl: plain });
   }
@@ -2836,19 +2839,22 @@ export function withMechFallback<T>(env: DecisionEnv, plan: (env: DecisionEnv) =
   if (env.mechRules === false) return plan(env);
   try {
     return plan(env);
-  } catch {
+  } catch (error) {
+    if (error instanceof PreparedSolverDone) throw error;
     // MECH_DEATH_MOVE on: first without the death rules (the other learned rules kept).
     if (env.mechDeathMove !== false) {
       try {
         return plan({ ...env, mechDeathMove: false });
-      } catch {
+      } catch (error) {
+    if (error instanceof PreparedSolverDone) throw error;
         // as with the move rules off too, below
       }
     }
     if (env.mechMoveRules !== false) {
       try {
         return plan({ ...env, mechMoveRules: false, mechDeathMove: false });
-      } catch {
+      } catch (error) {
+    if (error instanceof PreparedSolverDone) throw error;
         // as with both off, below
       }
     }
@@ -3340,6 +3346,11 @@ function planTurn(env: DecisionEnv): Decision | null {
     });
   const best = solved.plans[0];
   if (!best) return planCombatPerCard(env);
+  if (currentDecisionBudget() && solved.timedOut && best.outcome.dies) {
+    // A deadline is no proof that every legal continuation dies. Keep the existing per-card/SL gates.
+    currentDecisionBudget()!.useFallback("partial_solver_existing_card_layer_no_death_proof");
+    return planCombatPerCard(env);
+  }
 
   const endNow = solved.plans.find((plan) => plan.steps.length === 0);
   const modSaysLethal = bool(combat["end_turn_will_kill_player"]);
@@ -3760,8 +3771,8 @@ function planTurn(env: DecisionEnv): Decision | null {
   const costsOn = potionCostOptions.enabled && potionsAll.length > 0;
   // The SL retry compute memo (src/sim/compute-memo.ts): a retried fight's rollouts and B2 runs on a board an earlier
   // attempt planned come back from it, the same numbers; any other fight has none.
-  const computeMemo: ComputeMemo | null = env.sl ? computeMemoFor(`${String(state.raw["run_id"] ?? "")}:${fightKey(state)}`) : null;
-  if (!env.sl) dropComputeMemo();
+  const computeMemo: ComputeMemo | null = env.sl || currentDecisionBudget() ? computeMemoFor(`${String(state.raw["run_id"] ?? "")}:${fightKey(state)}`) : null;
+  if (!env.sl && !currentDecisionBudget()) dropComputeMemo();
   const noPotionBase = costsOn && kind !== "boss" && allDie === null ? options.find((plan) => !drinksPotion(plan)) : undefined;
   const noPotionCopy: Plan | undefined = noPotionBase ? { ...noPotionBase } : undefined;
   const runRollout = (escapes: boolean): LiveRollout | null =>
@@ -3880,7 +3891,7 @@ function planTurn(env: DecisionEnv): Decision | null {
         : { available: false, reason: "no draw/discard piles in the state", ms: 0 }
       : null;
   if (requiredBossComputation && bossSim) env.screenMemory.bossEvaluationRecord = simLog(bossSim, () => null);
-  if (requiredBossComputation && bossSim?.completion?.status !== "degraded" && (!bossSim?.available || bossSim.run.timedOut || (bossSim.run.samples !== bossSim.run.requested && !(bossSim.completion?.status === "complete_adaptive" && completeAdaptiveLines(bossSim.run))))) {
+  if (requiredBossComputation && (!currentDecisionBudget() || bossSim?.completion?.status === "pending") && bossSim?.completion?.status !== "degraded" && (!bossSim?.available || bossSim.run.timedOut || (bossSim.run.samples !== bossSim.run.requested && !(bossSim.completion?.status === "complete_adaptive" && completeAdaptiveLines(bossSim.run))))) {
     env.screenMemory.bossEvaluationWait = `required boss evaluation pending: ${bossSim && !bossSim.available ? bossSim.reason : "complete paired samples unavailable"}`;
     return null;
   }
@@ -4747,9 +4758,9 @@ export function runRandomPotions(sources: PotionMcSource[], solver: SolverInput 
   const out: PotionMc[] = [];
   let spent = 0;
   // SL_RETRY_COMPUTE: a retried fight's budget and samples (potionMcOptions' otherwise).
-  const total = opts.budgetMs ?? potionMcOptions.budgetMs;
+  const total = Math.min(opts.budgetMs ?? potionMcOptions.budgetMs, currentDecisionBudget()?.remaining() ?? Infinity);
   sources.forEach((source, index) => {
-    const budget = Math.max(0, (total - spent) / (sources.length - index));
+    const budget = Math.max(0, Math.min((total - spent) / (sources.length - index), currentDecisionBudget()?.remaining() ?? Infinity));
     const mc = opts.samples !== undefined ? runPotionMc(dry, source, dryBest, seedOf(`${boardKey}:${source.potionId}:${source.slot}`), budget, opts.samples) : runPotionMc(dry, source, dryBest, seedOf(`${boardKey}:${source.potionId}:${source.slot}`), budget);
     spent += mc.ms;
     out.push(mc);

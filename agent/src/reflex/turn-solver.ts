@@ -1,3 +1,5 @@
+import { budgetedSolve } from "./pace-solver-cache.js";
+import { currentDecisionBudget } from "../core/decision-budget.js";
 /**
  * Turn-level combat search: every legal order of the cards in hand (energy permitting), simulated
  * to the end of the turn, then scored. This replaces the single-card lookahead that missed a
@@ -4134,6 +4136,11 @@ export function replaySteps(input: SolverInput, steps: Step[]): Plan | null {
 
 /** Returns every distinct end-of-turn outcome's best plan, best first. */
 export function solveTurn(input: SolverInput): SolveResult {
+  return budgetedSolve(input, () => solveTurnCurrent(input), (result) => solveTap.onSolve?.(input, result));
+}
+
+function solveTurnCurrent(input: SolverInput): SolveResult {
+  const pace = currentDecisionBudget();
   const maxNodes = input.maxNodes ?? 60_000;
   const weights = weightsFor(input);
   const root = rootSim(input, weights);
@@ -4188,7 +4195,8 @@ export function solveTurn(input: SolverInput): SolveResult {
       truncated = true;
       return;
     }
-    if (input.deadline !== undefined && nodes % 64 === 0 && (input.deadlineNow ?? Date.now)() > input.deadline) {
+    if ((nodes === 1 || nodes % 16 === 0) && pace?.remaining() === 0
+        || nodes % 64 === 0 && input.deadline !== undefined && (input.deadlineNow ?? Date.now)() > input.deadline) {
       truncated = true;
       timedOut = true;
       return;

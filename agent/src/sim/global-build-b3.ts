@@ -1,3 +1,4 @@
+import { currentDecisionBudget, shadowBudgetAvailable, DecisionBudgetExpired } from "../core/decision-budget.js";
 /** Silent's supplementary G2 shadow path never changes the current B3 question or its completion gate. */
 import { globalBuildPolicy } from "../core/global-build-config.js";
 import { asRecord, str, toJsonValue, type JsonValue } from "../core/util/json.js";
@@ -47,10 +48,12 @@ export async function globalBuildForB3(args: {
       ...(args.degraded ? { unavailableReason: "current_C1_degraded_global_not_requested" }
         : (setup.db || setup.mm) && !setup.globalPool ? { unavailableReason: "custom_inputs_need_matching_observed_silent_pool" } : {}),
       evaluate: async (target, runner) => {
+        if (!shadowBudgetAvailable("G2_global_shadow")) throw new DecisionBudgetExpired("G2_global_shadow");
         const next = args.makeComparison(target);
         const result = await compareOptions(runner, next.input, next.options, {
           samples: setup.samples ?? BUILD_SIM_SAMPLES, seed: setup.seed ?? BUILD_SIM_SEED,
           quantitative: true, diagnostics: true, requireComplete: true,
+          ...(currentDecisionBudget() ? { deadlineMs: Math.max(0, currentDecisionBudget()!.remaining() - 1000) } : {}),
           ...(setup.now ? { now: setup.now } : {}), ...(args.progress ? { onProgress: args.progress } : {}),
           // Only the new future-Boss lane is win-only; current B3's existing C2 policy is untouched.
           ...(adaptiveMode !== "off" ? { adaptive: { mode: adaptiveMode, allowS: false } } : {}),

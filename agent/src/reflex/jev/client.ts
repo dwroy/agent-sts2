@@ -1,3 +1,4 @@
+import { currentDecisionBudget, withinDecisionBudget, DecisionBudgetExpired } from "../../core/decision-budget.js";
 /**
  * Thin wrapper around `@typesafe-ai/sdk` (PLAN.md §2.2).
  *
@@ -127,13 +128,14 @@ export async function withJevRetry<T>(fn: () => Promise<T>, options: JevRetryOpt
   const delays = options.delaysMs ?? JEV_RETRY_DELAYS_MS;
   const sleep = options.sleep ?? ((ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms)));
   for (let attempt = 0; ; attempt += 1) {
+    if (currentDecisionBudget()?.remaining() === 0) throw new DecisionBudgetExpired("Jev_retry");
     try {
       return await fn();
     } catch (error) {
       const delayMs = delays[attempt];
       if (delayMs === undefined || !isTransientJevError(error)) throw error;
       options.onRetry?.({ attempt: attempt + 1, of: delays.length, delayMs, error: classifyJevError(error) });
-      await sleep(delayMs);
+      await withinDecisionBudget("Jev_retry_wait", () => sleep(delayMs));
     }
   }
 }
@@ -221,6 +223,11 @@ export class JevClient {
    * alter what we send (and the exact request body is what gets written to the decision log).
    */
   async ask(state: unknown, questions: QuestionSet, timeoutMs?: number): Promise<JevAskResult> {
+    const pace = currentDecisionBudget();
+    return withinDecisionBudget("Jev", (signal) => this.askBounded(state, questions, pace ? Math.max(1, pace.remaining(timeoutMs)) : timeoutMs, signal));
+  }
+
+  private async askBounded(state: unknown, questions: QuestionSet, timeoutMs?: number, signal?: AbortSignal): Promise<JevAskResult> {
     interface RawResult {
       answers?: unknown;
       model?: string;
@@ -230,12 +237,12 @@ export class JevClient {
     // not both await the parsed result and read the body, so everything comes from this one promise.
     const call = this.client.systemOne.bind(this.client) as unknown as (
       request: { model?: string; state: unknown; questions: QuestionSet },
-      options?: { timeout?: number },
+      options?: { timeout?: number; signal?: AbortSignal },
     ) => { withResponse(): Promise<{ data: RawResult; requestId?: string }> };
 
     const started = Date.now();
     const { data: result, requestId } = await this.call(() =>
-      call({ model: this.model, state, questions }, timeoutMs === undefined ? {} : { timeout: timeoutMs }).withResponse(),
+      call({ model: this.model, state, questions }, { ...(timeoutMs === undefined ? {} : { timeout: timeoutMs }), ...(signal ? { signal } : {}) }).withResponse(),
     );
     const usage = readTokens(result.usage);
     return {
