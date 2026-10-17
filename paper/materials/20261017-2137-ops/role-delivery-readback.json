@@ -1,0 +1,171 @@
+{
+  "at": "2026-10-17 21:39:23 CST",
+  "notice_id": "4fc1006000c71a8e0eed8b1c",
+  "notification_only": true,
+  "registered_learning_request": false,
+  "source_batch": "20261017-211302-s2-strategy-proposal",
+  "original_proposal_id": "silent-proposal-3f82387e2e179703",
+  "stages": {
+    "ops_forwarded": {
+      "pointer": {
+        "path": "/home/dw/Projects/agent-sts2/paper/materials/20261017-2131-ops/ops-forwarded.json",
+        "sha256": "8708a9b049c176ae4eacf1ee743a32662af0bb992c04736a8a299aca06c5a9b9",
+        "at": 1792244082.9833813
+      },
+      "receipt": {
+        "notice_id": "4fc1006000c71a8e0eed8b1c",
+        "stage": "ops_forwarded",
+        "actor": "ops",
+        "status": "delivered",
+        "evidence": {
+          "path": "paper/materials/20261017-2131-ops/watcher-transport.json",
+          "sha256": "58d81b85672bcdb0d4b4006060c75e200a53d3844bcbb6c22e4e64bc36f3dad2"
+        }
+      },
+      "evidence_bytes": 646,
+      "existing_role_only": true
+    },
+    "watcher_received": {
+      "pointer": {
+        "path": "/home/dw/Projects/agent-sts2/paper/materials/20261017-watcher-notice-4fc1006000c71a8e0eed8b1c/watcher_received.receipt.json",
+        "sha256": "fb8ddb2f425f31223d5399f84b258d9429cb1d79f44739bc74078586cebbbe80",
+        "at": 1792244257.1589239
+      },
+      "receipt": {
+        "notice_id": "4fc1006000c71a8e0eed8b1c",
+        "stage": "watcher_received",
+        "actor": "watcher",
+        "status": "delivered",
+        "evidence": {
+          "path": "paper/materials/20261017-watcher-notice-4fc1006000c71a8e0eed8b1c/watcher-readback.json",
+          "sha256": "d8bfe52b6ec5c29085bb5af5e5055f2d812cca0547b5690f0262f93b281d5f82"
+        }
+      },
+      "evidence_bytes": 6062,
+      "existing_role_only": true
+    },
+    "roy_notified": {
+      "pointer": {
+        "path": "/home/dw/Projects/agent-sts2/paper/materials/20261017-watcher-notice-4fc1006000c71a8e0eed8b1c/roy_notified.receipt.json",
+        "sha256": "efb78fd2e29c4e71f9f93aa5944c321fc59c07801ce292c533f6624df3845b47",
+        "at": 1792244257.6869872
+      },
+      "receipt": {
+        "notice_id": "4fc1006000c71a8e0eed8b1c",
+        "stage": "roy_notified",
+        "actor": "watcher",
+        "status": "delivered",
+        "evidence": {
+          "path": "paper/materials/20261017-watcher-notice-4fc1006000c71a8e0eed8b1c/native-watcher-notification.jsonl",
+          "sha256": "31762c3b8875abd946fcc69be8d2b31f8722cb854d6843a7e414b034938a8a4f"
+        }
+      },
+      "evidence_bytes": 1203,
+      "existing_role_only": true
+    }
+  },
+  "watcher_own_two_cli": [
+    {
+      "command": [
+        "python3",
+        "ops/learning_requests.py",
+        "ack",
+        "--notice",
+        "4fc1006000c71a8e0eed8b1c",
+        "--stage",
+        "watcher_received",
+        "--receipt",
+        "paper/materials/20261017-watcher-notice-4fc1006000c71a8e0eed8b1c/watcher_received.receipt.json"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "python3",
+        "ops/learning_requests.py",
+        "ack",
+        "--notice",
+        "4fc1006000c71a8e0eed8b1c",
+        "--stage",
+        "roy_notified",
+        "--receipt",
+        "paper/materials/20261017-watcher-notice-4fc1006000c71a8e0eed8b1c/roy_notified.receipt.json"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    }
+  ],
+  "native_origin": {
+    "path": "/home/dw/.codex1/sessions/2026/10/15/rollout-2026-10-15T12-24-01-01a13dcd-83d4-7c63-b233-f93cf878ecf4.jsonl",
+    "off": 66357887,
+    "len": 1203,
+    "sha256": "31762c3b8875abd946fcc69be8d2b31f8722cb854d6843a7e414b034938a8a4f",
+    "project_copy": "paper/materials/20261017-watcher-notice-4fc1006000c71a8e0eed8b1c/native-watcher-notification.jsonl",
+    "native_timestamp": "2026-10-17T13:36:43.808Z",
+    "notice_id": "4fc1006000c71a8e0eed8b1c",
+    "actor": "watcher",
+    "Roy_ACK": false
+  },
+  "native_original_offset_bytes_SHA_matches": true,
+  "native_reply_user_visible": true,
+  "original_actual_ops_transport_verified": true,
+  "source_snapshots": [
+    {
+      "source": "paper/materials/20261017-2131-ops/ops-forwarded.json",
+      "copy": "paper/materials/20261017-2137-ops/ops_forwarded-ops-forwarded.json",
+      "sha256": "8708a9b049c176ae4eacf1ee743a32662af0bb992c04736a8a299aca06c5a9b9"
+    },
+    {
+      "source": "paper/materials/20261017-2131-ops/watcher-transport.json",
+      "copy": "paper/materials/20261017-2137-ops/ops_forwarded-watcher-transport.json",
+      "sha256": "58d81b85672bcdb0d4b4006060c75e200a53d3844bcbb6c22e4e64bc36f3dad2"
+    },
+    {
+      "source": "paper/materials/20261017-watcher-notice-4fc1006000c71a8e0eed8b1c/watcher_received.receipt.json",
+      "copy": "paper/materials/20261017-2137-ops/watcher_received-watcher_received.receipt.json",
+      "sha256": "fb8ddb2f425f31223d5399f84b258d9429cb1d79f44739bc74078586cebbbe80"
+    },
+    {
+      "source": "paper/materials/20261017-watcher-notice-4fc1006000c71a8e0eed8b1c/watcher-readback.json",
+      "copy": "paper/materials/20261017-2137-ops/watcher_received-watcher-readback.json",
+      "sha256": "d8bfe52b6ec5c29085bb5af5e5055f2d812cca0547b5690f0262f93b281d5f82"
+    },
+    {
+      "source": "paper/materials/20261017-watcher-notice-4fc1006000c71a8e0eed8b1c/roy_notified.receipt.json",
+      "copy": "paper/materials/20261017-2137-ops/roy_notified-roy_notified.receipt.json",
+      "sha256": "efb78fd2e29c4e71f9f93aa5944c321fc59c07801ce292c533f6624df3845b47"
+    },
+    {
+      "source": "paper/materials/20261017-watcher-notice-4fc1006000c71a8e0eed8b1c/native-watcher-notification.jsonl",
+      "copy": "paper/materials/20261017-2137-ops/roy_notified-native-watcher-notification.jsonl",
+      "sha256": "31762c3b8875abd946fcc69be8d2b31f8722cb854d6843a7e414b034938a8a4f"
+    },
+    {
+      "source": "paper/materials/20261017-watcher-notice-4fc1006000c71a8e0eed8b1c/native-binding.json",
+      "copy": "paper/materials/20261017-2137-ops/original-watcher-native-binding.json",
+      "sha256": "0fb366014ef997eb208751554cf57b6d905a39d65eb19fe5e5a8b823d9caf0c0"
+    },
+    {
+      "source": "paper/materials/20261017-watcher-notice-4fc1006000c71a8e0eed8b1c/formal-readback.json",
+      "copy": "paper/materials/20261017-2137-ops/original-watcher-formal-readback.json",
+      "sha256": "5dd8279a16a8ad996705411fdfa2342b1c019beaca44c8e0bd7a172a6255fefd"
+    },
+    {
+      "source": "paper/materials/20261017-watcher-notice-4fc1006000c71a8e0eed8b1c/watcher_received.cli.json",
+      "copy": "paper/materials/20261017-2137-ops/original-watcher-watcher_received.cli.json",
+      "sha256": "2253a7877168fda3d2abf67b9ad9e1a85d7b928caed505e30f967da4bc48832f"
+    },
+    {
+      "source": "paper/materials/20261017-watcher-notice-4fc1006000c71a8e0eed8b1c/roy_notified.cli.json",
+      "copy": "paper/materials/20261017-2137-ops/original-watcher-roy_notified.cli.json",
+      "sha256": "c06798b3c651930f2a28cbc245176de9282a2f184bda66ca42f8f0f3cdcbd8f8"
+    }
+  ],
+  "existing_source_and_notice_binding_validated_without_ACK_mutation": true,
+  "no_repeated_notification_ACK_model_research_or_game_action": true,
+  "wide_proposals_remain_waiting": true,
+  "Roy_ACK": false
+}
