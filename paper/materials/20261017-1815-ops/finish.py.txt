@@ -1,0 +1,94 @@
+from pathlib import Path
+import gzip, hashlib, inspect, json, shutil, subprocess, sys
+sys.dont_write_bytecode = True
+r = Path.cwd(); p = r / 'ops/codex-ops/record-staging/20261017-1815'; pub = r / 'paper/materials/20261017-1815-ops'
+sys.path.insert(0, str(r / 'ops'))
+import learner_retention as retention
+load = lambda f: json.loads(f.read_bytes())
+sha = lambda raw: hashlib.sha256(raw).hexdigest()
+def write(f, value): retention.atomic(f, value)
+assert not (p / 'own-appends.json').exists()
+completed = load(pub / 'completed.json')
+phases = [load(pub / ('step' + str(stage) + '-result.json')) for stage in [1, 2]]
+consumer = load(pub / 'consumer-restore-readback.json')
+current_restore = load(pub / 'restore-current-verification.json')
+assert current_restore['existing_temporary_file_refused_and_preserved']
+assert current_restore['positive_restore_exit'] == current_restore['actual_consumer_exit'] == 0
+assert consumer['restore_rc'] == consumer['before']['rc'] == consumer['after']['rc'] == 0
+assert consumer['exact_input_and_actual_consumer_output_SHA_equal']
+assert consumer['before']['output_sha256'] == consumer['after']['output_sha256']
+assert completed['actual_consumer_restore_verified']
+archives = {}; manifests = []; restored_later = []
+for phase in phases:
+    assert phase['original_payloads_archived_SHA_verified_before_unlink']
+    assert len(phase['compressed']) == phase['files']
+    for item in phase['compressed']:
+        mp = retention.safe_path(r, item['manifest']); raw = mp.read_bytes(); m = json.loads(raw)
+        assert m['schema'] == 'learner-retention-v1' and m['root'] == str(r) and m['state'] == 'process_copy_compressed'
+        assert m['proof']['batch'] == item['batch'] and m['proof']['stage'] == phase['stage']
+        assert m['source_sha_verified'] and m['archive_payload_readback_verified']
+        record = m['files'][0]
+        assert record['path'] == item['path'] and record['sha256'] == item['payload_sha256']
+        scratch = retention.safe_path(r, m['scratch']); original = retention.safe_path(r, record['path'])
+        assert original.is_relative_to(scratch) and original.suffix in ['.json', '.jsonl']
+        assert not original.is_relative_to(r / 'logs') and not retention.secret_name(original)
+        if original.exists():
+            assert retention.sha_file(original) == record['sha256']
+            restored_later.append(record['path'])
+        archive = retention.safe_path(r, m['archive'])
+        assert archive.is_relative_to(r / 'ops/codex-ops/retention/storage')
+        if str(archive) not in archives:
+            assert archive.stat().st_size == m['archive_bytes'] and retention.sha_file(archive) == m['archive_sha256']
+            archives[str(archive)] = m['archive_sha256']
+        assert archives[str(archive)] == m['archive_sha256']
+        manifests.append(dict(path=record['path'], batch=item['batch'], stage=phase['stage'], manifest=item['manifest'],
+            manifest_sha256=sha(raw), archive=m['archive'], archive_sha256=m['archive_sha256'],
+            payload_sha256=record['sha256'], original_bytes=record['bytes']))
+assert len(manifests) == completed['archived_files']
+write(pub / 'verified-manifest-index.json', dict(files=manifests, archive_hashes_verified=len(archives),
+    payload_readback_done_before_each_removal_by_established_primitive_or_verified_identical_payload=True,
+    unchanged_archive_identity_cache_used_only_with_matching_source_SHA=True, restored_after_compression=restored_later))
+plan_raw = (p / 'frozen-plan.json').read_bytes()
+with (pub / 'frozen-plan.json.gz').open('wb') as file:
+    with gzip.GzipFile(filename='', mode='wb', fileobj=file, compresslevel=6, mtime=0) as packed: packed.write(plan_raw)
+assert gzip.decompress((pub / 'frozen-plan.json.gz').read_bytes()) == plan_raw
+primitive = inspect.getsource(retention.archive)
+binding = load(pub / 'archive-primitive-binding.json')
+assert sha(primitive.encode()) == binding['original_source_sha256']
+(pub / 'archive-primitive-original.py.txt').write_text(primitive)
+for name in ['plan.py', 'freeze.py', 'compress.py', 'restore-compressed-copies.py', 'verify-restore-current.py', 'finish.py']:
+    target = pub / (name + '.txt')
+    if target.exists(): assert target.read_bytes() == (p / name).read_bytes()
+    else: target.write_bytes((p / name).read_bytes())
+at = subprocess.check_output(['date', '+%Y-%m-%d %H:%M:%S %Z'], text=True).strip()
+available = shutil.disk_usage(r).free
+net = sum(x['verified_net_reclaimed_bytes'] for x in phases)
+rows = '\n'.join(f"| {x['stage']} | {x['files']} | {x['batches']} | {x['verified_net_reclaimed_bytes']/1024**3:.3f} | {x['available_after']/1024**3:.3f} | {len(x['retained'])} |" for x in phases)
+readme = f'''已按 Roy 2026-10-17 18:15 授权完成两步单线程压缩。实际执行使用 nice19、ionice idle；每个文件在原 retention 锁内归档、SHA/解压读回、重新核对 owner/文件身份，再删除过程副本。不是工作树删除或任务验收，不改运行中的对局、学习者、模型或账号配置。\n\n| 步骤 | 文件数 | 批次 | 归档净回收 GiB | 完成时根盘可用 GiB | 保留文件 |\n|---|---:|---:|---:|---:|---:|\n{rows}\n\n合计净回收 {net/1024**3:.3f} GiB，{at} 根盘可用 {available/1024**3:.3f} GiB。净回收按被删副本原占块减新增归档及清单占块计算；df 变化同时包含原调度器和其他正常写入。第一步为原提取/审计输入副本；第二步为同一冻结候选范围的其他大 JSON/JSONL。完成时间超过48小时、原派活/报告绑定、宿主活动视图、Git跟踪状态与研究门禁都核过；exp额外核原已入库源码和完整宿主0。未满足门禁的条目原样保留，见冻结计划及各步retained。\n\n新归档为gzip6。相同SHA/长度的载荷复用经过完整成员读回的原归档；每个目标仍有独立原路径、模式、SHA及恢复清单，不改原归档字节。所有大型归档与逐文件manifest都留在ops/codex-ops/retention/storage/，不进Git；此目录只保存索引、回执及精确脚本。\n\n恢复时在项目根目录查 verified-manifest-index.json 中 path 对应的 manifest，再执行：\n\n```bash\nnice -n 19 python3 paper/materials/20261017-1815-ops/restore-compressed-copies.py.txt --manifest <索引中的manifest项目内路径>\n```\n\n恢复支持根 learner/runs、各工作树 learner/runs（包括只剩learner的目录）和exp已入库历史。它校验归档SHA、单个普通成员及目标SHA，拒绝软链接、变动过的已有文件与越界路径，恢复原字节/模式；不更改任务、线程、账本或版本。实际原CA5审计输入已通过这个脚本恢复到原路径，随后原learner/audit-selection.ts消费者退出0，输出SHA与压缩前完全一致，才放行第二步。消费者输入随后重新收纳，原始输入SHA与读回结果见consumer-restore-readback.json。\n\n根logs、knowledge、真实账本/经验、原生事件流、out/err/log、报告md与提案不在删除集合；未完成研究、当前进程引用、近48小时或绑定不明的批次保留。逐文件清单和压缩数据均可恢复，不据此声明宽学习请求完成。\n'''
+(pub / 'README.md').write_text(readme)
+write(pub / 'final-verification.json', dict(at=at, total_net_reclaimed_bytes=net, available_bytes=available,
+    stage_results=[{k:v for k,v in x.items() if k not in ['compressed','retained']} for x in phases],
+    manifest_files_verified=len(manifests), unique_archive_hashes_verified=len(archives), consumer_restore_verified=True,
+    frozen_plan_sha256=sha(plan_raw), restored_later=restored_later, primary_data_untouched=True,
+    no_product_code_tests_version_model_or_game_change=True, no_other_role_ACK=True))
+appends = load(p / 'step1-appends.json') + load(p / 'step2-appends.json')
+message = f"\n- {at} 运维codex完成18:15两步扩展压缩：第一步净回收{phases[0]['verified_net_reclaimed_bytes']/1024**3:.3f}GiB、第二步{phases[1]['verified_net_reclaimed_bytes']/1024**3:.3f}GiB，合计{net/1024**3:.3f}GiB；当前根盘可用{available/1024**3:.3f}GiB。{len(manifests)}份副本的独立恢复清单与{len(archives)}个实际归档SHA已最终核回，原路径恢复及真实消费者输出SHA一致后才进入第二步。每步实际释放/df余量已分别落双收件；大归档留忽略目录，精确恢复脚本和索引见paper/materials/20261017-1815-ops/README.md。保原日志/知识/真实账本经验/报告提案、原生流、任务状态及未完成/活动/近48h数据；不改当前局、模型或权限。只自有回执/脚本冻结文本与根追加经gitleaks私有index提交，保并行文件和普通index。\n"
+for name in ['ops/inbox-dev.md','notes/for-roy.md','notes/ops-handoff.md']:
+    with (r / name).open('a') as stream: stream.write(message)
+    appends.append(dict(path=name,text=message))
+decision = f"\n- {at} 运维codex按Roy18:15指示完成>48h已结束批次两步归档压缩，净回收{net/1024**3:.3f}GiB、根盘可用{available/1024**3:.3f}GiB；逐文件SHA/恢复清单与实际消费者恢复读回通过，原始日志/知识/账本/经验/报告提案及活动研究不动，无新行为发布。证据paper/materials/20261017-1815-ops/。\n"
+with (r/'paper/materials/decision-log.md').open('a') as stream: stream.write(decision)
+appends.append(dict(path='paper/materials/decision-log.md',text=decision))
+write(p/'own-appends.json',appends);write(p/'paper-owned-manifest.json',[]);write(p/'extra-owned-paths.json',[])
+(p/'own-ledger-rows.jsonl').write_bytes(b'')
+seal=(r/'ops/codex-ops/record-staging/20261017-1340/seal.py').read_text().replace('20261017-1340','20261017-1815')
+seal=seal.replace('len(ownrows.splitlines()) == 30','len(ownrows.splitlines()) == 0').replace('owned_ledger_rows=30','owned_ledger_rows=0')
+seal=seal.replace('import tarfile','import tarfile\nimport gzip')
+position=seal.index('for i, entry in enumerate(appends):')
+seal=seal[:position]+"for path in owned:\n    if path.endswith('.json.gz'):\n        f=scan/path; f.with_suffix('.unpacked.json').write_bytes(gzip.decompress(f.read_bytes()))\n"+seal[position:]
+seal=seal.replace('Archive bounded consumer report and waiting proposal dispositions','Record verified two-stage compression and consumer restoration')
+seal=seal.replace('ops: archive132758 report and preserve original waiting scopes','ops: record verified1815 compression recovery')
+start=seal.index("              host='One unchanged-source strategy batch:");end=seal.index("(p / 'commit-readback.json')",start)
+seal=seal[:start]+"              host='Roy-authorized >48h completed-batch process copies archived and SHA/readback verified before removal, two sequential steps. Real original-path restore and existing consumer exact output SHA validated before step2. All bulk archives remain outside Git; root and worktree scratch restore supported.',\n              wider_parents='Original logs, knowledge, actual ledger/experience, reports/proposals, native streams and task/thread status retained. Active/unfinished/young/unbound scopes excluded. No new gameplay release, model or other role ACK; normal index and concurrent records preserved.')\n"+seal[end:]
+(p/'seal.py').write_text(seal)
+print(json.dumps(dict(verified_files=len(manifests), archive_hashes=len(archives), net_GiB=net/1024**3, available_GiB=available/1024**3)),flush=True)

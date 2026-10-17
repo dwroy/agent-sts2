@@ -1,0 +1,142 @@
+from pathlib import Path
+import collections, datetime as dt, fcntl, hashlib, importlib.util, json, os, re, sys
+
+sys.dont_write_bytecode = True
+r = Path.cwd(); p = r / 'ops/codex-ops/record-staging/20261017-1815'; p.mkdir(parents=True, exist_ok=True)
+pub = r / 'paper/materials/20261017-1815-ops'; pub.mkdir(exist_ok=True)
+sys.path.insert(0, str(r / 'ops'))
+import learner_retention as retention
+retention.require_host_process_view()
+state = retention.load(r / 'ops/codex-ops/learn.json')
+now = dt.datetime.now().astimezone(); cutoff = now - dt.timedelta(hours=48)
+sha = lambda raw: hashlib.sha256(raw).hexdigest()
+def time_value(value):
+    if not value: raise ValueError('missing completion time')
+    v = dt.datetime.fromisoformat(value)
+    return v.replace(tzinfo=now.tzinfo) if v.tzinfo is None else v
+def inside(path, parent): return path == parent or parent in path.parents
+def safe(path): return retention.safe_path(r, path)
+
+# Read only process references; never read environments or report command arguments.
+active_cwds, active_args, active_files = [], [], set()
+for proc in Path('/proc').iterdir():
+    if not proc.name.isdigit() or int(proc.name) == os.getpid(): continue
+    try:
+        cwd = (proc / 'cwd').resolve()
+        if inside(cwd, r): active_cwds.append(str(cwd))
+        active_args.extend(a for a in (proc / 'cmdline').read_bytes().split(b'\0') if str(r).encode() in a)
+        for fd in (proc / 'fd').iterdir():
+            try: target = os.readlink(fd)
+            except OSError: continue
+            if target.startswith(str(r) + '/') and '/learner/runs/' in target: active_files.add(target)
+    except OSError: pass
+def active(scratch):
+    text = str(scratch)
+    return (any(x == text or x.startswith(text + '/') for x in active_cwds)
+            or any(text.encode() in x for x in active_args)
+            or any(x == text or x.startswith(text + '/') for x in active_files))
+
+report_map = {}; reports = {}
+for bid, b in state['batches'].items():
+    rep = b.get('report')
+    if not isinstance(rep, dict):
+        out = r / 'ops/codex-ops/learner' / (bid + '.out')
+        try: rep = retention.read_report(str(out)) if out.is_file() and out.stat().st_size < 3 * 1024**2 else None
+        except (OSError, ValueError): rep = None
+    if isinstance(rep, dict):
+        reports[bid] = rep
+        if isinstance(rep.get('report'), str): report_map[str(Path(rep['report']).parent)] = bid
+request_bids = set()
+for item in state.get('learning_requests', {}).values():
+    for k in ['original_batch', 'batch', 'verified_batch']:
+        if isinstance(item.get(k), str): request_bids.add(item[k])
+    request_bids.update(x for x in item.get('attempts', []) if isinstance(x, str))
+roots = [r / 'learner/runs']
+roots.extend(tree / 'learner/runs' for tree in (r / '.worktrees').iterdir()
+             if tree.is_dir() and not tree.is_symlink() and tree.name not in ['live', 'regent-climb']
+             and (tree / 'learner/runs').is_dir() and not (tree / 'learner/runs').is_symlink())
+roots = sorted(set(roots))
+rejected = []; admitted = []; groups = {}; candidate_count = 0
+for runroot in roots:
+    for scratch in sorted(runroot.iterdir()):
+        if scratch.is_symlink() or not scratch.is_dir(): continue
+        if not re.match(r'^20\d{6}-\d{6}', scratch.name): continue
+        event = scratch.with_suffix('.jsonl'); launch = None; launch_sha = None
+        if event.is_file() and not event.is_symlink():
+            try:
+                with event.open('rb') as f: raw = f.readline(131073)
+                if len(raw) <= 131072:
+                    v = json.loads(raw)
+                    if v.get('type') == 'learner_launch': launch = v; launch_sha = sha(raw)
+            except (OSError, ValueError): pass
+        params = (launch or {}).get('params', {})
+        bid = params.get('batch') or report_map.get(str(scratch))
+        if bid not in state['batches']:
+            # Old experience tasks used the batch ID itself as the root scratch.
+            bid = scratch.name if scratch.name in state['batches'] else None
+        reason = None; b = state['batches'].get(bid, {}); rep = reports.get(bid, {})
+        try:
+            if not bid: raise ValueError('unbound original batch')
+            if b.get('state') not in ['done', 'failed'] or b.get('rc') != 0: raise ValueError('not a successful ended batch')
+            if b.get('state') == 'failed' and not rep: raise ValueError('failed batch lacks a complete engine0 report')
+            ended = time_value(b.get('finished'))
+            if ended > cutoff: raise ValueError('completed within48h')
+            if any(b.get(k) for k in ['learning_request', 'research_request', 'implementation_request', 'feature_request', 'boss_sim', 'checks_pending', 'proposal_repair_needed', 'proposal_audit_errors']):
+                raise ValueError('research/request/verification retained')
+            if bid in request_bids: raise ValueError('original continuation batch retained')
+            if b.get('missing'): raise ValueError('incomplete run report')
+            safe(scratch)
+            if active(scratch): raise ValueError('active process reference retained')
+            if launch:
+                if params.get('scratch') != str(scratch) or params.get('project_root') != str(r): raise ValueError('original launch scratch/root mismatch')
+                if launch.get('task') != b.get('task', 'postmortem'): raise ValueError('original task mismatch')
+            elif str(scratch) not in report_map: raise ValueError('no original launch/report binding')
+            is_exp = inside(scratch, r / '.worktrees/exp') or (launch or {}).get('cwd') == str(r / '.worktrees/exp')
+            ingestion = None
+            if is_exp:
+                check = retention.successful_checks(b)
+                sources = ([rep['commit']] if rep.get('commit') else []) + [x.get('commit') for x in rep.get('fixes', []) if isinstance(x, dict)]
+                if not sources or not check or not retention.check_log_completed(r, check): raise ValueError('exp lacks published source/full0')
+                if not all(retention.ancestor(r, v) and retention.ancestor(r / '.worktrees/live', v) for v in sources): raise ValueError('exp source not main/live')
+                exp = retention.checked_experience(str(r / '.worktrees/live'), check.get('merged'), b.get('character'))
+                if not exp or not b.get('runs') or not set(b['runs']) <= retention.evidence_runs(exp): raise ValueError('exp runs not ingested into tested live experience')
+                ingestion = dict(sources=sources, full_check=check, experience_version=exp['version'], runs=b['runs'])
+        except (ValueError, KeyError, OSError, TypeError) as error: reason = str(error)
+        if reason:
+            rejected.append(dict(scratch=str(scratch.relative_to(r)), batch=bid, reason=reason)); continue
+        selected = []
+        for parent, dirs, names in os.walk(scratch, followlinks=False):
+            dirs[:] = [n for n in dirs if not n.startswith('.') and n not in ['node_modules', 'logs', 'data', 'knowledge', '__pycache__', 'sessions', 'paper', 'notes', 'ops', 'agent', 'src', 'tests']
+                       and not (Path(parent) / n).is_symlink()]
+            for name in names:
+                f = Path(parent) / name
+                if f.is_symlink() or f.suffix not in ['.json', '.jsonl'] or retention.secret_name(f): continue
+                # Preserve primary reports, proposals, knowledge, ledgers and launcher/native streams.
+                if name in ['report.json', 'result.json', 'experience.json', 'shared-experience.json', 'ledger.jsonl'] or name.startswith('proposal') or 'manifest' in name.lower(): continue
+                if any(word in name.lower() for word in ['native', 'session', 'event-stream', 'codex', 'engine-log']): continue
+                st = f.stat()
+                if st.st_size <= 1024**2 or st.st_nlink != 1 or st.st_blocks == 0: continue
+                if st.st_mtime > cutoff.timestamp(): continue
+                if str(f) in active_files: continue
+                is_extract = (name.endswith('.states.jsonl') or name.endswith('.evidence.jsonl')
+                    or name in ['states.jsonl', 'decisions.jsonl', 'brain.jsonl', 'sl-attempts.jsonl', 'run-plans.jsonl', 'run-config.jsonl', 'runs.jsonl', 'fight-plans.jsonl']
+                    or (f.suffix == '.json' and 'input' in name.lower()))
+                record = dict(path=str(f.relative_to(r)), bytes=st.st_size, allocated_bytes=st.st_blocks * 512,
+                    inode=st.st_ino, device=st.st_dev, mtime_ns=st.st_mtime_ns, stage=1 if is_extract else 2)
+                selected.append(record)
+        if selected:
+            group = dict(batch=bid, scratch=str(scratch.relative_to(r)), finished=b['finished'], completed_before=str(cutoff),
+                task=b.get('task', 'postmortem'), character=b.get('character'), worktree=b.get('worktree'),
+                original_launch=str(event.relative_to(r)) if launch else None, original_launch_header_sha256=launch_sha,
+                report=rep.get('report'), original_task_state_unchanged=True, exp_ingestion=ingestion, files=selected)
+            admitted.append(group)
+            for item in selected: groups.setdefault(str(item['stage']), []).append(item)
+summary = dict(at=now.isoformat(), cutoff_48h=cutoff.isoformat(), source='actual canonical batch completion and original launch/report binding',
+    roots_scanned=len(roots), admitted_scratch_count=len(admitted), rejected_scratch_count=len(rejected),
+    rejected_reasons=dict(collections.Counter(x['reason'] for x in rejected)),
+    stages={stage:dict(files=len(items), bytes=sum(x['bytes'] for x in items), allocated_bytes=sum(x['allocated_bytes'] for x in items),
+                       GiB=sum(x['bytes'] for x in items) / 1024**3) for stage,items in groups.items()},
+    primary_logs_knowledge_ledger_reports_proposals_untouched=True, no_mutation=True)
+retention.atomic(p / 'plan.json', dict(summary=summary, batches=admitted, retained=rejected))
+retention.atomic(pub / 'initial-plan-summary.json', summary)
+print(json.dumps(summary, ensure_ascii=False), flush=True)
