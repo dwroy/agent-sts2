@@ -1,7 +1,7 @@
 /** H1: Silent computation time, excluding action/animation waits. No game-value rules live here. */
 import { AsyncLocalStorage } from "node:async_hooks";
 
-export const HUMAN_PACE_BUDGETS = Object.freeze({ ordinary: 10_000, elite: 15_000, boss: 30_000,
+export const HUMAN_PACE_BUDGETS = Object.freeze({ ordinary: 10_000, elite: 15_000, boss: 60_000,
   retry: 10_000, routine: 5_000, brain: 90_000, direction: 60_000 });
 export type BudgetKind = keyof typeof HUMAN_PACE_BUDGETS;
 export class DecisionBudgetExpired extends Error {
