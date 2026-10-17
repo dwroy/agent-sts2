@@ -93,6 +93,8 @@ export interface CardModel {
   blockFromPoison?: boolean;
   /** K2JAGKVJAWZJ A10 F46 T1: only the observed upgraded zero-poison play is known. */
   observedZeroPoisonMirage?: boolean;
+  /** Silent A10 plain/upgraded unmodified Shiv preview observed with Helical Dart. */
+  observedHelicalShiv?: boolean;
   /** Block before player modifiers, from the observed enchanted/base dynamic value. */
   blockBase?: number;
   /** Debuffs applied to the target (or every enemy for `all`). */
@@ -1300,6 +1302,12 @@ export function modelHandCard(entry: unknown, fallbackIndex: number, knowledge: 
       ? { dodgeRollNextBlock: true } : {}),
     ...(mirage ? { blockFromPoison: true } : {}),
     ...(zeroPoisonMirage ? { observedZeroPoisonMirage: true } : {}),
+    ...(character.toLowerCase() === "silent" && ascension === 10 && cardId === "SHIV" && type === "Attack" &&
+      card["target_type"] === "AnyEnemy" && requiresTarget && card["energy_cost"] === 0 && card["star_cost"] === 0 &&
+      !bool(card["costs_x"]) && !bool(card["star_costs_x"]) && card["enchantment"] == null &&
+      dyn(card, "Damage") === (bool(card["upgraded"]) ? 6 : 4) &&
+      renderedText.replace(/\s+/g, "") === `造成${bool(card["upgraded"]) ? 6 : 4}点伤害。消耗。`
+      ? { observedHelicalShiv: true } : {}),
     ...(serpentMirageReplay ? { serpentMirageReplay: true as const } : {}),
     ...(!madExpertise && !madSapping && dynBase(card, "Block", true) !== null ? { blockBase: dynBase(card, "Block", true)! } : {}),
     vulnerable,
