@@ -18,14 +18,6 @@ schema=`learning-request-v1`；authorized_by=`Roy`；goal=`experience-live`；id
 
 现有learn tick调用`ops/learning_requests.py`，共用两个策略槽、learn.lock及原工作树租约，无新增定时器。继续使用learner/run.ts的引擎/密钥隔离预检及项目账号；续跑仅增加明确的resume thread。
 
-授权换号事务已经`complete`、目标隔离home已选定后，ops可执行显式账号接续：
-
-```bash
-python3 ops/learning_requests.py recover-account --request <原要求ID> --receipt <项目内恢复说明JSON>
-```
-
-恢复说明含`request_id`、`transaction`、`original_request_sha256`及具体`reason`。入口核真实完成事务、来源/目标账号和原要求，冻结旧注册字节，只提高原要求revision并追加账号接续出处；原thread、WT、输入和失败历史保持。原调度器仍沿同一要求及两个策略槽派发，首批在新账号创建新线程；只有实际launcher首回复与目标home内原生UUID/模型核回，才登记账号消费并在后续使用该新线程。没有首回复的保留为阻塞；已预留的新线程启动不会自动重复。读取报告、排队和启动成功均不等于学习完成；不复制加密session，不跨号resume，不改变学习者沙箱。
-
 ## 异议和交付通知
 
 学习者questions逐项写原观点、不同结论、证据、影响的经验ID、建议下一步。反证可以入库为否定或限定经验；证据不足不能硬写正确。足够证据的授权修正可继续，其通知不得省略。
