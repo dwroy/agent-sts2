@@ -22,6 +22,8 @@ export interface F48JointCandidate {
 type RecordValue = Record<string, unknown>;
 
 export function f48JointScope(state: GameState): F48JointScope | undefined {
+  // Paused by default for the system-health investigation; never changes existing B2/B3 computation.
+  if (process.env["F48_JOINT_SHADOW"] !== "shadow") return undefined;
   const character = String(state.run?.raw["character_id"] ?? "").toLowerCase();
   return character === "silent" && state.run?.floor === 48
     ? { character, floor: 48, ascension: state.run.ascension ?? null } : undefined;
