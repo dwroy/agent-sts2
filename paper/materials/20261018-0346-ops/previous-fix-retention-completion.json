@@ -1,0 +1,28 @@
+{
+  "at": "2026-10-18 03:47:02 CST",
+  "command": [
+    "nice",
+    "-n",
+    "19",
+    "python3",
+    "ops/worktree_retention.py",
+    "complete",
+    "--root",
+    "/home/dw/Projects/agent-sts2",
+    "--state-dir",
+    "/home/dw/Projects/agent-sts2/ops/codex-ops",
+    "--workspace",
+    "codex-fix-silent-20261018-021301",
+    "--source",
+    "4c16dab0457a61e22ef06b27e367d146cb99bab3",
+    "--main-commit",
+    "3e7f8d904a167541f07e15472572a23208fb7720",
+    "--live-commit",
+    "f7abb0e13d3ee0943637be2146ca52ee25486289"
+  ],
+  "rc": 0,
+  "attempts_this_wake": 1,
+  "stdout": "{\"schema\": \"workspace-lifecycle-v1\", \"root\": \"/home/dw/Projects/agent-sts2\", \"worktree\": \"/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261018-021301\", \"state\": \"accepted\", \"at\": \"2026-10-18T03:47:03+08:00\", \"acceptance\": {\"source\": \"4c16dab0457a61e22ef06b27e367d146cb99bab3\", \"base\": \"9ed8ac27c45992bf48e6526c38bd77c8bbfa8132\", \"main_commit\": \"3e7f8d904a167541f07e15472572a23208fb7720\", \"live_commit\": \"f7abb0e13d3ee0943637be2146ca52ee25486289\", \"verified_source_paths\": [\"agent/tests/learner-report-fixes-shape.test.ts\", \"ops/learner_checks.py\", \"ops/tests/test_learner_report_fixes_shape.py\"], \"scope\": \"workspace-only; no parent request or gameplay claim closed\", \"allocation_receipt\": \"ops/codex-ops/retention/allocations/codex-fix-silent-20261018-021301.json\", \"allocation_sha256\": \"f62c3e8658a906344997c690a771040b7a03f4353a3544e7478d31382cf1c7b6\"}}\n",
+  "stderr": "",
+  "actual_deletion_not_claimed": true
+}
