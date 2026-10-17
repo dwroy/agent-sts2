@@ -1,0 +1,7 @@
+{
+  "initial_ops_helper_exit": 1,
+  "phase": "read-only previous queue snapshot verification",
+  "reason": "The current batch uses fix-queue-snapshot.md; the prior original batch uses fix-queue-v4.snapshot.md.",
+  "correction": "Read the exact retained prior filename and verify its original previous_queue_sha256; do not rename or rewrite either original snapshot.",
+  "product_or_learner_or_canonical_result_changed": false
+}
