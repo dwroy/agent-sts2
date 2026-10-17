@@ -1,0 +1,43 @@
+from pathlib import Path
+import hashlib, json, os, signal, subprocess
+
+r = Path.cwd(); pub = r / 'paper/materials/20261017-human-pace-h1/ops-receipts'
+load = lambda f: json.loads(f.read_bytes())
+def write(f, v): f.write_text(json.dumps(v, ensure_ascii=False, indent=2) + '\n')
+request = load(pub / 'ops-host-request.json')
+assert not (pub / 'ops-host-direct-handoff.json').exists()
+pid = request['request_pid']; proc = Path('/proc') / str(pid)
+assert os.readlink(proc / 'cwd') == str(r)
+assert (proc / 'cmdline').read_bytes().split(b'\0')[:4] == [b'bash', b'ops/codex-ops-do.sh', b'learner-recheck', request['batch'].encode()]
+own = []
+for f in (r / 'ops/codex-ops/broker').glob('*.req'):
+    v = load(f)
+    if v == dict(action='learner-recheck', args=[request['batch']]) and f.stem.endswith('-' + str(pid)):
+        own.append(f)
+assert len(own) == 1
+f = own[0]
+assert not f.with_suffix('.run').exists() and not f.with_suffix('.res').exists()
+withdrawn = f.with_suffix('.cancelled-before-dispatch')
+assert not withdrawn.exists()
+# This competes atomically with the original broker's .req -> .run claim.
+# A lost claim must stop here, never start a second host runner.
+os.rename(f, withdrawn)
+assert not f.with_suffix('.run').exists() and not f.with_suffix('.res').exists()
+os.kill(pid, signal.SIGTERM)
+at = subprocess.check_output(['date', '+%Y-%m-%d %H:%M:%S %Z'], text=True).strip()
+argv = ['nice', '-n', '19', 'bash', 'ops/codex-ops-actions.sh', 'learner-recheck', request['batch']]
+with (pub / 'ops-host-direct.log').open('xb') as out:
+    child = subprocess.Popen(argv, cwd=r, stdout=out, stderr=subprocess.STDOUT,
+                             stdin=subprocess.DEVNULL, start_new_session=True)
+rec = dict(at=at, original_request=request, unclaimed_broker_request=str(withdrawn.relative_to(r)),
+    original_request_sha256=hashlib.sha256(withdrawn.read_bytes()).hexdigest(),
+    atomic_broker_claim_withdrawal_succeeded=True, original_request_process_stopped_by_exact_pid=pid,
+    runner_pid=child.pid, argv=argv, status='Existing allow-listed action called directly on authorized host; actual start separately verified',
+    batch=request['batch'], expected_live=request['live'], expected_tree=request['tree'],
+    same_existing_action_checks_lock_and_live_lock_and_canonical_event=True,
+    no_new_pipeline_or_source_full=True, no_learner_permissions_expanded=True, host_rc=None)
+write(pub / 'ops-host-direct-handoff.json', rec)
+pending = r / 'ops/codex-ops/pending-integrations/20261017-human-pace-h1.json'
+v = load(pending); v.update(host_direct_handoff=rec, status='Published; unclaimed broker request withdrawn atomically, original action host start pending verification')
+write(pending, v)
+print(json.dumps(dict(at=at, runner_pid=child.pid, same_original_action=True, unclaimed_request_withdrawn=True)), flush=True)

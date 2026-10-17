@@ -1,0 +1,109 @@
+from pathlib import Path
+import hashlib, json, os, subprocess, sys, tarfile
+
+r = Path.cwd(); p = r / 'ops/codex-ops/record-staging/20261017-human-pace-h1'
+phase = r / 'paper/materials/20261017-human-pace-h1'; pub = phase / 'ops-receipts'
+live = r / '.worktrees/live'
+load = lambda f: json.loads(f.read_bytes())
+sha = lambda raw: hashlib.sha256(raw).hexdigest()
+def write(f, v): f.write_text(json.dumps(v, ensure_ascii=False, indent=2) + '\n')
+v = load(pub / 'ops-publication.json'); bid = v['host_batch']
+handoff = load(pub / 'ops-host-direct-handoff.json'); pid = handoff['runner_pid']
+proc = Path('/proc') / str(pid); stat = (proc / 'stat').read_text().split(') ', 1)[1].split()
+assert (proc / 'cmdline').read_bytes().split(b'\0')[:4] == [b'python3', str(r / 'ops/codex-ops-learn.py').encode(), b'recheck', b'--batch']
+fds = []
+for fd in (proc / 'fd').iterdir():
+    try: target = os.readlink(fd)
+    except FileNotFoundError: continue
+    if target in [str(r / 'ops/live-merge.lock'), str(r / 'ops/codex-ops' / (bid + '.checks.lock'))]:
+        fds.append(dict(fd=fd.name, target=target))
+assert {x['target'] for x in fds} == {str(r / 'ops/live-merge.lock'), str(r / 'ops/codex-ops' / (bid + '.checks.lock'))}
+head, tree = subprocess.check_output(['git', '-C', str(live), 'rev-parse', 'HEAD', 'HEAD^{tree}'], text=True).splitlines()
+assert head == v['actual_live'] and tree == v['tree']
+for leaf in v['leaves']:
+    cwd = r if leaf['lane'] == 'main' else live
+    assert sha((cwd / leaf['path']).read_bytes()) == leaf['composed_sha256']
+sys.path.insert(0, str(r / 'ops')); import learner_checks
+assert not subprocess.check_output(['git', '-C', str(live), 'diff', '--name-only', 'HEAD', '--', *learner_checks.SOURCE_PATHS]).strip()
+log = r / 'ops/codex-ops/learner' / f'{bid}.fallback-{tree}.checks.log'
+raw = log.read_bytes(); assert b' RUN ' in raw
+knowledge = []
+for item in subprocess.check_output(['git', '-C', str(live), 'ls-files', '-z', '--', 'knowledge/characters/silent', 'knowledge/common']).decode().split('\0'):
+    if not item: continue
+    f = live / item
+    if not f.is_file(): continue
+    kb = f.read_bytes(); st = f.stat()
+    knowledge.append(dict(path=item, bytes=len(kb), sha256=sha(kb), mtime_ns=st.st_mtime_ns, ctime_ns=st.st_ctime_ns))
+at = subprocess.check_output(['date', '+%Y-%m-%d %H:%M:%S %Z'], text=True).strip()
+print(at, flush=True)
+host = dict(at=at, batch=bid, pid=pid, birth_ticks=stat[19], actual_live=head, tree=tree,
+    lock_fds=fds, status='Original exact final-tree full host RUN; result pending original learner-checks event',
+    log=str(log.relative_to(r)), observed_log_prefix_bytes=len(raw), observed_log_prefix_sha256=sha(raw),
+    actual_FULL_CHECK_COMMAND=learner_checks.FULL_CHECK_COMMAND, original_action_direct_handoff=handoff,
+    checks_rc=None, source_full_not_repeated=True, old_green_not_borrowed=True,
+    checked_executable_physical_paths_equal_pinned_HEAD_at_readback=True,
+    knowledge_observations=knowledge, knowledge_observation_is_not_full_run_immutable_input_proof=True,
+    no_model_or_game_invocation=True, no_learner_permissions_expanded=True)
+write(pub / 'ops-host-full-started.json', host)
+pending_path = r / 'ops/codex-ops/pending-integrations/20261017-human-pace-h1.json'
+pending = load(pending_path)
+pending.update(status='V5-R380 published and rule dual notice written; exact final host RUN on original075726',
+    host_requested=True, host_started=True, host_pid=pid, host_birth_ticks=stat[19], host_expected_tree=tree,
+    host_log=str(log.relative_to(r)), host_rc=None, host_complete=False,
+    natural_first_effective_run=None, natural_acceptance=False, source_worktree_completion_not_parent_completion=True)
+write(pending_path, pending)
+small = []
+for f in phase.iterdir():
+    if not f.is_file() or f.name in ['ops-publication.json', 'ops-source-received.json']: continue
+    if f.suffix in ['.json', '.md', '.txt', '.patch', '.log'] and f.stat().st_size < 800000:
+        small.append(f)
+manifest = []
+with tarfile.open(pub / 'ops-original-source-reports.tar.gz', 'w:gz', compresslevel=6) as archive:
+    for f in sorted(small):
+        raw = f.read_bytes(); name = str(f.relative_to(r))
+        archive.add(f, arcname=name, recursive=False)
+        manifest.append(dict(path=name, bytes=len(raw), sha256=sha(raw)))
+with tarfile.open(pub / 'ops-original-source-reports.tar.gz') as archive:
+    for item in manifest: assert sha(archive.extractfile(item['path']).read()) == item['sha256']
+write(pub / 'ops-original-source-reports-manifest.json', dict(at=at, files=manifest,
+    archive_sha256=sha((pub / 'ops-original-source-reports.tar.gz').read_bytes()), readback_verified=True,
+    original_failures_and_interruption_retained=True, originals_deleted=False))
+for name in ['receive.py', 'publish.py', 'notice.py', 'start-host.py', 'host-handoff.py', 'finish.py']:
+    (pub / (name + '.txt')).write_bytes((p / name).read_bytes())
+summary = dict(at=at, request='roy-20261017-human-pace', phase='H1', source=v['source'],
+    source_tree=v['source_tree'], release_id=v['release_id'], main=v['main'], live=head, tree=tree,
+    leaves=28, source_tests=4296, source_full_rc=0, prior_source_interrupted143_retained=True,
+    initial_main_record_CAS_guard_before_install_retained=True,
+    exact_patch_three_way_composition=True, overlapping_main=2, overlapping_live=4,
+    prior_R379_and_other_sources_history_knowledge_and_normal_index_preserved=True,
+    root_dual_notice=load(pub / 'ops-root-dual-notice.json'), host=host,
+    H0_original_frozen_revision_and_thread_unchanged=True, silent0332_root_defect_open=True,
+    H2_plus_unassigned=True, natural_two_run_acceptance_not_started=True,
+    first_effective_natural_run=None, no_current_run_restart_or_hot_change=True,
+    no_account_home_model_prompt_env_change=True, no_other_role_ACK=True,
+    no_new_learning_or_model_simulation=True, original_knowledge_gate_unchanged=True,
+    parent_completed=False, paper_refresh=False)
+write(pub / 'ops-closure.json', summary)
+extra = (f'\n- {at} [H1实收/发布/唯一宿主启动] 原精确source7af803c06e82e2aafe6a595fab7a23e0f3f44fb3、tree42b64e288ab34b51bfa1a4f15f8c6abd731fd139及28SHA/patch本人核；原最终tsc0/sandbox467文件4285题＋paths11共4296、gitleaks0，full前后SHA一致，原143与全部早期失败保留，不重源full。实际已窄发布{v["release_id"]}，main{v["main"]}/live{head}/tree{tree}，原source为main/live祖先；四live、两main并行重叠以同patch三方合并，保R379、知识/历史署名/记录和普通index。首组合因watcher并行文档交付4df11545推进main，最终CAS在任何ref/物理安装前拦下并留原件；按新HEAD重组同源成功，非源码失败/回滚/新源测试。\n'
+ f'  根旧新/依据/预期/回退规则通知已date后双写；统一V5-R380不冒V6批准。原075726唯一宿主动作已实际RUN，PID{pid}/birth{stat[19]}同时持原checks及live锁，最终tree{tree}日志已见Vitest RUN；完整结果仍null，待原learner-checks，不借源绿或d24/R379绿。首次broker请求一直未被领取，已以req→cancelled原子竞争成功撤回并仅终止本ops精确请求PID3299167，再在已授权宿主直接调用同一原allow-listed action，沿原checks锁/完整命令/canonical事件，不新建管线、重复full或扩大任何学习者权限；原未派发送不冒实际启动。\n'
+ f'  {len(manifest)}小原件归档SHA读回，原源码/测试/143/错误日志不删。17份当前知识文件及physical输入只作逐叶观察，不把固定源SHA或RUN冒整段数据不可变/生产重校准。首实际生效局未知，当前已加载对局不重启/热改/home账号模型prompt/env不动；预算和2局自然延迟/漏斗验收待另派，不做观察器/H2+。H0原095852/thread/r1与0332双最高优先和根缺陷/宽父继续，36fc三角色已齐不重复通知/代ACK；H1更改新生产源指纹，H0冻结对象仍原样分列。仅本发布与ops原件/双通知入库，无learner-done不刷论文。回执paper/materials/20261017-human-pace-h1/ops-receipts/ops-closure.json。\n')
+brief = (f'\n- {at} H1已实收并发布{v["release_id"]}，source7af803c06e/live{head}/tree{tree}；根规则双通知已写。唯一原075726精确宿主PID{pid}已实际RUN，结果pending；收到终局事件后另写验收结果。首个实际生效局未知，后续由原run-config证明，当前局未重启/热改。H0/0332优先及所有科学/自然门槛保持，不重派模型、源full或新增观察。回执paper/materials/20261017-human-pace-h1/ops-receipts/ops-closure.json。\n')
+appends = load(p / 'own-appends.json')
+for path, chunk in [('paper/materials/decision-log.md', extra), ('notes/ops-handoff.md', extra), ('ops/inbox-dev.md', brief)]:
+    with (r / path).open('ab') as out: out.write(chunk.encode())
+    appends.append(dict(path=path, text=chunk))
+write(p / 'own-appends.json', appends)
+(p / 'own-ledger-rows.jsonl').write_bytes(b'')
+write(p / 'paper-owned-manifest.json', [])
+write(p / 'extra-owned-paths.json', [str((phase / name).relative_to(r)) for name in ['ops-source-received.json', 'ops-publication.json']])
+seal = (r / 'ops/codex-ops/record-staging/20261017-1044/seal.py').read_text()
+seal = seal.replace('20261017-1044', '20261017-human-pace-h1')
+assert "pub = r / 'paper/materials/20261017-human-pace-h1-ops'" in seal
+seal = seal.replace("pub = r / 'paper/materials/20261017-human-pace-h1-ops'", "pub = r / 'paper/materials/20261017-human-pace-h1/ops-receipts'")
+seal = seal.replace('== 16\n\nscan =', '== 0\n\nscan =').replace('owned_ledger_rows=16,', 'owned_ledger_rows=0,')
+seal = seal.replace("['records-gitleaks.log', 'secret-scan-receipt.json']}", "['records-gitleaks.log', 'secret-scan-receipt.json', 'ops-host-broker.log', 'ops-host-direct.log']}")
+seal = seal.replace('Archive unchanged strategy dispositions and original trace rows', 'Record V5-R380 H1 publication and exact final host start')
+seal = seal.replace('ops: record102830 waiting strategy and original trace rows', 'ops: record H1 V5-R380 publication and original exact-tree host start')
+seal = seal.replace("host='Report-only strategy done0; ten waiting, source/tests/merged null, no publication or test. Existing R379 full0 and all original parent scopes preserved.'", "host='H1 V5-R380 exact final tree d68e8174 original075726 full host RUN; rc pending scheduler event, no source full repeated or green borrowed.'")
+(p / 'seal.py').write_text(seal)
+print(json.dumps(dict(release=v['release_id'], host_pid=pid, host='RUN', archived=len(manifest), first_effective_natural_run=None)), flush=True)
