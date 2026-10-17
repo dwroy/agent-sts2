@@ -2828,3 +2828,5 @@ selector于2026-10-15 13:15:58 CST从/home/dw/.codex-brain原子改为/home/dw/P
   已加载当前局不重启/热改；首个自然生效局尚无证明，不能以磁盘合并代运行采纳。H0/0332同最高优先及H1原watcher职责保持；本发布改变当前源指纹，H0旧冻结输入不热改，后续校准须按实际新对象分列，不以本局部修复冒Boss全可信。回执paper/materials/20261017-1002-ops/publication.json。
 
 - 2026-10-17 10:07:50 CST 1002事件收尾：b831螺线飞镖原自测源已实际窄发布V5-R379，7叶/10知识刷新保留、根规则双通知及0293 shipped/9c355 implemented已完成。精确最终treed24cc99e30c745fb76b5b142b388419277fa9dfe仅原091302-s2宿主PID3154750 RUN，待结果事件，不称全套0；首自然生效局未知。094303十提案继续waiting、无源码；H0旧36fc失败已恢复，原095852/thread/r1实际首回复保持，已向原watcher真实发送并ops_forwarded CLI0，不重复派发/代其他角色ACK。无learner-done不刷论文，不重源full或重启当前局；H0/0332/H1边界保持。回执paper/materials/20261017-1002-ops/ops-closure.json。
+
+- 2026-10-17 10:26:18 CST V5-R379宿主验收已通过：原091302-s2精确treed24cc99e30c745fb76b5b142b388419277fa9dfe，tsc0＋完整Vitest514文件5091过2跳/1110.78s，原完整log SHA90a5ec8eeac8895efd4b530db29906835c975c51cdb19b0c4b4f88a6ffec6c83；发布/0293 shipped/9c355 implemented及原host待办闭环，不重测/重新编号。原failed-rc0-null、撤补丁反证及原始材料保持，首自然生效局/真实收益仍无证明。原H0旧36fc三阶段真实回执已核齐，仅通知去重，不关闭H0/0332或代ACK；H1仍原watcher源检查/未发布边界。回执paper/materials/20261017-1024-ops/host-acceptance.json。
