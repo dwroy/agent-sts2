@@ -1,0 +1,189 @@
+{
+  "generated_at": "2026-10-17T21:00:00.437Z",
+  "source_cut_bytes": {
+    "decisions.jsonl": 2428562799,
+    "deepseek-reasoning.jsonl": 377746518,
+    "runs.jsonl": 368320,
+    "states.jsonl": 14172684945,
+    "fight-plans.jsonl": 2233957,
+    "run-plans.jsonl": 9170508,
+    "brain.jsonl": 791910845,
+    "sl-attempts.jsonl": 46775066,
+    "run-config.jsonl": 2045000
+  },
+  "checks": {
+    "decisions attributed + unattributed == play records": true,
+    "decisions_by_label sum == attributed decisions": true,
+    "escalations rows == records with escalation": true,
+    "every runs.jsonl id present in runs.csv": true,
+    "commits == git rev-list --all --count": true
+  },
+  "counts": {
+    "runs.csv": 837,
+    "decisions_by_label.csv": 27926,
+    "escalations.csv": 3600,
+    "fight_plans.csv": 1461,
+    "commits.csv": 6947
+  },
+  "selected_run": {
+    "run_id": "9W38TRGPJW9Q",
+    "start_ts": "2026-10-17T19:50:37.661Z",
+    "end_ts": "2026-10-17T20:34:50.392Z",
+    "duration_min": "44.2",
+    "floor_max": "17",
+    "act_reached": "1",
+    "outcome": "defeat",
+    "victory": "0",
+    "outcome_source": "runs.jsonl",
+    "finished": "1",
+    "character": "SILENT",
+    "ascension": "10",
+    "code_version": "current",
+    "code_version_source": "runs.jsonl",
+    "code_version_console": "f7abb0e13+dirty",
+    "code_versions_all": "f7abb0e13+dirty",
+    "n_decisions": "510",
+    "n_shadow": "0",
+    "decider_inferred": "0",
+    "n_code": "248",
+    "n_jev": "85",
+    "n_deepseek": "0",
+    "n_claude": "0",
+    "n_code_fallback": "40",
+    "n_jev_plan": "117",
+    "n_deepseek_plan": "0",
+    "n_claude_plan": "0",
+    "jev_calls": "101",
+    "jev_in_tokens": "3583933",
+    "jev_out_tokens": "19695",
+    "jev_cost_usd": "0.151352",
+    "jev_latency_p50_ms": "557",
+    "ds_calls": "0",
+    "ds_in": "0",
+    "ds_cache_hit": "0",
+    "ds_out": "0",
+    "ds_reasoning": "0",
+    "ds_total_tokens": "0",
+    "ds_calls_no_token_split": "0",
+    "ds_cost_usd": "0",
+    "ds_latency_p50_s": "",
+    "ds_overrides": "0",
+    "fight_plans": "0",
+    "fight_plan_errors": "0",
+    "fight_plan_cost_usd": "0",
+    "fight_plan_latency_p50_s": "",
+    "claude_calls": "0",
+    "claude_latency_p50_s": "",
+    "hp_guard_count": "0",
+    "escalation_chain": "none",
+    "era": "deepseek_memory",
+    "learning_loop": "1",
+    "death_enemy": "同族信徒/同族神官",
+    "death_enemy_ids": "KIN_FOLLOWER/KIN_PRIEST",
+    "final_hp": "0",
+    "max_hp": "70",
+    "bosses_seen": "THE_KIN_BOSS",
+    "has_postmortem": "1",
+    "postmortem_heading": "9W38TRGPJW9Q（A10，静默猎手，第17层，死于一幕boss同族信徒 KIN_FOLLOWER／同族神官 KIN_PRIEST：六次55/70血双药进场，末次T11以3血5挡对神官6×3＝18攻击阵亡，完整需损13、存活差11血；8毒结算后神官仍57/199血）",
+    "preloop_listed": "0",
+    "n_run_notes": "1",
+    "autoplay_finished_lines": "1",
+    "in_runs_jsonl": "1",
+    "brain_source": "{\"basis\": \"brain.jsonl accepted verdict; legacy answer != null, no error/problems; unique question_id+engine\", \"brain_rows\": 17, \"coverage\": \"all_logged_questions_resolved\", \"eligible\": true, \"embedded_answers\": {\"map/route\": 10, \"run-plan\": 3}, \"exclusion_reason\": null, \"failed_or_unaccepted_rows\": 0, \"first_success\": \"2026-10-17T19:50:37.654Z\", \"last_success\": \"2026-10-17T20:14:29.659Z\", \"policy\": \"codex-successful-brain-v1\", \"source\": \"codex\", \"successful_answers\": {\"codex\": 17}, \"successful_by_label\": {\"event/choose\": {\"codex\": 1}, \"event/plan\": {\"codex\": 1}, \"map/route-plan\": {\"codex\": 1}, \"rest/plan\": {\"codex\": 3}, \"reward/card\": {\"codex\": 8}, \"run-plan\": {\"codex\": 1}, \"selection/choose\": {\"codex\": 1}, \"shop/plan\": {\"codex\": 1}}, \"unknown_successes\": 0, \"unresolved_questions\": 0}",
+    "first_attempt": "{\"death_floor\": 17, \"floor\": 17, \"passed_act1\": false, \"passed_act2\": false, \"reloads\": 0, \"sl_rows\": 6, \"victory\": false}",
+    "performance_policy": "codex-successful-brain-v1",
+    "performance_included": "1",
+    "performance_exclusion_reason": ""
+  },
+  "changed_outputs": [
+    {
+      "path": "paper/data/README.md",
+      "bytes": 14189,
+      "sha256": "56dbc344d70e1c6db36ae90ae2fcbc9437aaf1859756c9799e19d20684315c45"
+    },
+    {
+      "path": "paper/data/commits.csv",
+      "bytes": 1045722,
+      "sha256": "4bb79935cdbf3d04202d9e7a71d7003d284fc7ab4535070f3a3e8153966edbcd"
+    },
+    {
+      "path": "paper/data/cost-curve-silent.csv",
+      "bytes": 14985,
+      "sha256": "757f043b0c2caf7ac670d2a27aad527b11de4f828734c5fd0be0d085373e5d91"
+    },
+    {
+      "path": "paper/data/cost-silent.csv",
+      "bytes": 955319,
+      "sha256": "f7865254daf475341621da46735464f9327c764c9ce212a145629d83ca8fcb72"
+    },
+    {
+      "path": "paper/data/cost-sources.json",
+      "bytes": 256166,
+      "sha256": "9417489ee99f56ab9d498c4d277a5775b37a1cca10b83ec4f7bbce4d3b8e72ed"
+    },
+    {
+      "path": "paper/data/cost-unattributed.csv",
+      "bytes": 20335,
+      "sha256": "259835edd9d275f4e1474a1cdafe0b7d55c12530a25306acdc60f472bdf25113"
+    },
+    {
+      "path": "paper/data/decisions_by_label.csv",
+      "bytes": 1206723,
+      "sha256": "f8cc32cfa1c1531bea115709d9473ed33da681e18c69c10398fb9cbe6ff319c3"
+    },
+    {
+      "path": "paper/data/learning-curve-silent.csv",
+      "bytes": 73463,
+      "sha256": "bf3313ade466274cf23f27a792640567377dc41394b4fbf46ec050da8ef8e1de"
+    },
+    {
+      "path": "paper/data/runs.csv",
+      "bytes": 1367399,
+      "sha256": "d07ede2f1db1bede9c36dd489c247cc88a15a0b12c777fe9b64469090fe6adc3"
+    },
+    {
+      "path": "paper/data/summary.json",
+      "bytes": 565177,
+      "sha256": "f0792a5b8b36ba7089534d2983d0fee73e68ebe18b31eb8fd99c01e8eef5540b"
+    },
+    {
+      "path": "paper/data/verification.json",
+      "bytes": 587,
+      "sha256": "0acacc80e034df6ab768b391a8b0eaf28a01611b6998943ea386db4f89d6b361"
+    },
+    {
+      "path": "paper/materials/ironclad/cost.md",
+      "bytes": 2748,
+      "sha256": "5917959593bdd6cd2f7e4ea165b0b5f54b071d0d296f805b8ff0d969147d7601"
+    },
+    {
+      "path": "paper/materials/none/cost.md",
+      "bytes": 2010,
+      "sha256": "afd96b857a4ead93b2cf9ded85c81dc9b6f942c735b553cfa3dcb45da0b88021"
+    },
+    {
+      "path": "paper/materials/silent/cost.md",
+      "bytes": 4200,
+      "sha256": "15ae7a2eb3e67d3975eee8ec8c32d6dbac5e21bcdb9a0234a04c819a959d6593"
+    },
+    {
+      "path": "paper/materials/unattributed/cost.md",
+      "bytes": 2018,
+      "sha256": "5a7a25f3565b606aa6e55702b329b3b81ce831bc6ce4e615b83594b68ceae887"
+    }
+  ],
+  "actual_exit_code": 0,
+  "raw_snapshot": false,
+  "source_cut_matches_this_single_request": true,
+  "key_pattern_scan_clean": true,
+  "count_warnings": [
+    [
+      "KF9HMZKTFC3V",
+      879,
+      880
+    ]
+  ],
+  "cost_is_estimate_not_bill": true,
+  "component_costs_keep_own_cuts_and_estimates": true,
+  "old_paper_failure_not_rewritten": true
+}

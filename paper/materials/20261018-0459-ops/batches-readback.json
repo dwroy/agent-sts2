@@ -1,0 +1,508 @@
+[
+  {
+    "batch": "20261018-044301",
+    "canonical_state": "done",
+    "canonical_rc": 0,
+    "report": {
+      "task": "postmortem",
+      "appended": [
+        "9W38TRGPJW9Q"
+      ],
+      "skipped": [],
+      "bugs": [
+        {
+          "run": "9W38TRGPJW9Q",
+          "where": "agent/src/reflex/card-model.ts:1041",
+          "what": "脆弱4挡普通斗篷仍误算抽牌；silent-0461旧项，fix-queue-v4已有。",
+          "new": false
+        }
+      ],
+      "ledger": {
+        "added": [
+          "silent-0511",
+          "silent-0512"
+        ],
+        "updated": [
+          "silent-0020",
+          "silent-0461",
+          "silent-0011",
+          "silent-0012",
+          "silent-0307",
+          "silent-0462"
+        ],
+        "repeats": [
+          "silent-0461"
+        ],
+        "check": 0
+      },
+      "code_proposals": [
+        "silent-proposal-c734f60b55906bae",
+        "silent-proposal-c440ae480782dca0"
+      ],
+      "implementation_domains": [
+        "combat",
+        "potion"
+      ],
+      "report": "/home/dw/Projects/agent-sts2/learner/runs/20261018-044306-5172f7fb-b565-4bce-9014-b2718d90ba25-postmortem/report.md"
+    },
+    "native": {
+      "batch": "20261018-044301",
+      "thread": "01a14b9a-b7b6-7de1-9075-3668e28a2334",
+      "cwd": "/home/dw/Projects/agent-sts2",
+      "event_log": "learner/runs/20261018-044306-5172f7fb-b565-4bce-9014-b2718d90ba25-postmortem.jsonl",
+      "registered_launch_batch": "20261018-044301",
+      "original_lease": "54ac1f69a13b111f802013b3192e90478ac9f47d38636400740c652568e038ff",
+      "native_context": {
+        "source": "ops/codex-ops/accounts/codex3/learner/sessions/2026/10/18/rollout-2026-10-18T04-43-13-01a14b9a-b7b6-7de1-9075-3668e28a2334.jsonl",
+        "offset": 49293,
+        "bytes": 4654,
+        "sha256": "d19b0f40690bf918fb7257495c5e45cce0d70f7d0aee676115b1edcaeadd05fa",
+        "model": "gpt-6.1-sol",
+        "effort": "xhigh",
+        "sandbox": {
+          "type": "workspace-write",
+          "writable_roots": [
+            "/home/dw/Projects/agent-sts2/.git"
+          ],
+          "network_access": false,
+          "exclude_tmpdir_env_var": false,
+          "exclude_slash_tmp": false
+        },
+        "approval_policy": "never"
+      },
+      "native_user_input": {
+        "offset": 56530,
+        "bytes": 15345,
+        "sha256": "34d31c263ee8768af630653752da89d14b97019afde03424290deec7dba17f12",
+        "input_sha256": "ec638dd7582f787b1b419d091f5b23576957206c570a3cc9a7f4ecc539cd8981"
+      },
+      "original_header_events": [
+        {
+          "offset": 0,
+          "bytes": 16866,
+          "sha256": "96238d340991cd035d1c6090776c865d4dc5e126efe26492a21592189d6eec23",
+          "type": "learner_launch",
+          "attempt": null,
+          "code": null
+        },
+        {
+          "offset": 16866,
+          "bytes": 360,
+          "sha256": "c2dcc42dea2d8df7ea800c587f5aa2e2440a694d7e4248cb1e4364bbe270400a",
+          "type": "learner_startup_attempt",
+          "attempt": 1,
+          "code": null
+        },
+        {
+          "offset": 20239,
+          "bytes": 77,
+          "sha256": "d410e7059c574ed0f466dfcf2940c109e62f62464a7ee390c03b5015612d0f33",
+          "type": "thread.started",
+          "attempt": null,
+          "code": null
+        }
+      ],
+      "startup_attempts": 1,
+      "failed_startups_preserved": 0,
+      "no_model_or_manual_restart": true
+    },
+    "source_files": {
+      "live_commit": "ee57b0c8aa773a7303d404eb98f8a1a03a5c66b8",
+      "files": [
+        {
+          "path": "agent/src/reflex/card-model.ts",
+          "sha256": "c6ee633f5e7e2b2e6569dc678e7e48972edb22211a0ed92c0266381b4b6449d0"
+        },
+        {
+          "path": "agent/src/reflex/turn-solver.ts",
+          "sha256": "f9cc623485a3481db6b4cbe6d405a8d6f6677beb369309942598da3be685b808"
+        },
+        {
+          "path": "agent/src/reflex/combat.ts",
+          "sha256": "847f6b60a546e6569c142c8cc75fe4062232a646d1bd9891c5a672e48f73499a"
+        },
+        {
+          "path": "agent/src/reflex/combat-plan.ts",
+          "sha256": "d2ce972bcfcfe1f558a32b1212f506734feeaadb7da3a26230bf9568702c3106"
+        }
+      ],
+      "lessons_before": {
+        "bytes": 9775378,
+        "sha256": "b03ab94b489d207a1522757e3726b1a28951f0f9fcdd27e075bffef36d8e4333"
+      }
+    },
+    "source_stream_counts": {
+      "runs": 1,
+      "decisions": 510,
+      "states": 526,
+      "run-plans": 4,
+      "run-config": 1,
+      "brain": 17,
+      "sl-attempts": 6
+    },
+    "original_ledger_rows": [
+      {
+        "offset": 23921950,
+        "bytes": 1271,
+        "sha256": "23b818eb7d77b77b688bd05eeec0bfd5e20dd75b5df09d14736f31b50f9e757c",
+        "row": {
+          "op": "add",
+          "id": "silent-0511",
+          "ts": "2026-10-18T04:54:47+08:00",
+          "character": "silent",
+          "by": "learner:postmortem",
+          "kind": "potion",
+          "claim": "9W38TRGPJW9Q A10同族第二次T6在全部攻击已打完、能量0时由截止兜底喝超巨化，实建1层但没有后续攻击，3血7挡对12攻击随后判死读档，未兑现增伤。末次T2有能量和匕首雨时同药实际被攻击消费；只记录这两种真实消费窗口，不推出一律早喝或改时点整战能赢。",
+          "evidence": [
+            {
+              "run": "9W38TRGPJW9Q",
+              "floor": 17,
+              "turn": 6,
+              "role": "support",
+              "note": "第2次d428988，s443670→443671：巨药离槽、GIGANTIFICATION_POWER1，0能量，剩一张不可付费防御；敌22/177及玩家3血7挡未变，随后sl2485判死。第6次T2 d429132后匕首雨消费增益作同局限制对照。"
+            }
+          ],
+          "first_run": "9W38TRGPJW9Q",
+          "prior": "unknown",
+          "prior_runs": [
+            "MEXYTC0Z2MQQ"
+          ],
+          "prior_note": "检索超巨化/GIGANTIFICATION_POTION/空饮及全部更早静默相关复盘；MEXYTC0Z2MQQ有先耗光能量再生成X牌的不同窗口，未找到本次0能量无攻击、饮超巨化后立即判死的同条件已核实证，不能判断学习前一直做对或做错。",
+          "status": "observed",
+          "where": {
+            "lessons": [
+              "9W38TRGPJW9Q"
+            ]
+          },
+          "asc": 10
+        }
+      },
+      {
+        "offset": 23923221,
+        "bytes": 1248,
+        "sha256": "af3c66facac2a4abacfed5d5900f33d974e9bb7f7fb13d32859982ebfff9112f",
+        "row": {
+          "op": "add",
+          "id": "silent-0512",
+          "ts": "2026-10-18T04:54:47+08:00",
+          "character": "silent",
+          "by": "learner:postmortem",
+          "kind": "mechanic",
+          "claim": "9W38TRGPJW9Q A10末试同族T2，超巨化1层使普通匕首雨牌面由每段4变12、仍两段；无玩家力量/虚弱及敌格挡时，实际两名留场敌各扣24，随后增益消失，玩家血挡不变。第三名23血信徒退场缺独立0血帧，血池净减71不填毛伤72；只验证此普通牌、多目标窗口，不推其他牌/升级/整战胜因。",
+          "evidence": [
+            {
+              "run": "9W38TRGPJW9Q",
+              "floor": 17,
+              "turn": 2,
+              "role": "support",
+              "note": "第6次d429132→429133，s443818→443819牌面4×2→12×2且建GIGANTIFICATION_POWER1；s443819→443820两留场敌62→38、193→169，增益消失、玩家46血6挡不变；23血敌退场缺归零帧。"
+            }
+          ],
+          "first_run": "9W38TRGPJW9Q",
+          "prior": "unknown",
+          "prior_runs": [
+            "MEXYTC0Z2MQQ"
+          ],
+          "prior_note": "旧0448和MEXYTC0Z2MQQ只核单敌免费连射组合；更早静默复盘中的其他超巨化使用记录未给出本次普通匕首雨两名存活目标各24的同条件配对帧，因此不把已有单敌机制当作多目标数值先验做对。",
+          "status": "observed",
+          "where": {
+            "lessons": [
+              "9W38TRGPJW9Q"
+            ]
+          },
+          "asc": 10
+        }
+      },
+      {
+        "offset": 23924469,
+        "bytes": 647,
+        "sha256": "70a39e8dcd188cd8f6b85a2db2c1bb5a21fa75d8648c751186b05da402145a4a",
+        "row": {
+          "op": "update",
+          "id": "silent-0020",
+          "ts": "2026-10-18T04:54:47+08:00",
+          "by": "learner:postmortem",
+          "evidence": [
+            {
+              "run": "9W38TRGPJW9Q",
+              "floor": 16,
+              "turn": null,
+              "role": "support",
+              "note": "三营火分别38→59、38→59、34→55，F16小邮箱实际补能量/超巨化；F15赢战34→34且耗格挡药，六次55入口仍失败。仅支持回血增加真实缓冲但非胜利保证，不标回血决定错误。"
+            }
+          ],
+          "where": {
+            "lessons": [
+              "9W38TRGPJW9Q"
+            ]
+          },
+          "note": "来源任务20261018-044306-5172f7fb-b565-4bce-9014-b2718d90ba25-postmortem；只追加亲核同角色证据及复盘去处，保留原claim/首证/prior/status/version。"
+        }
+      },
+      {
+        "offset": 23925116,
+        "bytes": 655,
+        "sha256": "4f99f32d55cb41b5548fda56f74bf3a363f98a043dcef866f052b2bc7d4e0cdd",
+        "row": {
+          "op": "update",
+          "id": "silent-0461",
+          "ts": "2026-10-18T04:54:47+08:00",
+          "by": "learner:postmortem",
+          "evidence": [
+            {
+              "run": "9W38TRGPJW9Q",
+              "floor": 17,
+              "turn": 10,
+              "role": "repeat",
+              "note": "首试d428949单斗篷预测抽1，s443630→443631脆弱下Block6/4/6实得4挡、生1刀且无额外抽牌；末试d429164后空翻2+斗篷1误记抽3。普通6挡窄修外复现；fix-queue-v4:1224/1375已有，宽项proposed不改。"
+            }
+          ],
+          "where": {
+            "lessons": [
+              "9W38TRGPJW9Q"
+            ]
+          },
+          "note": "来源任务20261018-044306-5172f7fb-b565-4bce-9014-b2718d90ba25-postmortem；只追加亲核同角色证据及复盘去处，保留原claim/首证/prior/status/version。"
+        }
+      },
+      {
+        "offset": 23925771,
+        "bytes": 526,
+        "sha256": "7dc55368477ac95110bccdae701897668653563906f7f88d699bbbf5d34fe3e4",
+        "row": {
+          "op": "update",
+          "id": "silent-0011",
+          "ts": "2026-10-18T04:54:47+08:00",
+          "by": "learner:postmortem",
+          "evidence": [
+            {
+              "run": "9W38TRGPJW9Q",
+              "floor": 17,
+              "turn": 4,
+              "role": "support",
+              "note": "末试T4实建毒雾2，T5—T11神官依次实际结2/3/4/5/6/7/8毒，合35；死亡帧剩7毒不预支。"
+            }
+          ],
+          "where": {
+            "lessons": [
+              "9W38TRGPJW9Q"
+            ]
+          },
+          "note": "来源任务20261018-044306-5172f7fb-b565-4bce-9014-b2718d90ba25-postmortem；只追加亲核同角色证据及复盘去处，保留原claim/首证/prior/status/version。"
+        }
+      },
+      {
+        "offset": 23926297,
+        "bytes": 580,
+        "sha256": "c8f117ff5dcd72ca0a226c67fa232178c919dcdefcadcc90f48fa50da723a342",
+        "row": {
+          "op": "update",
+          "id": "silent-0012",
+          "ts": "2026-10-18T04:54:47+08:00",
+          "by": "learner:postmortem",
+          "evidence": [
+            {
+              "run": "9W38TRGPJW9Q",
+              "floor": 17,
+              "turn": 11,
+              "role": "support",
+              "note": "末试T3零力量光束3×3，T7力量3时6×3，T11力量6且虚弱2仍6×3；末3血5挡实际死亡。T9尖啸把6力降0，15→9攻击，T10力量恢复6。"
+            }
+          ],
+          "where": {
+            "lessons": [
+              "9W38TRGPJW9Q"
+            ]
+          },
+          "note": "来源任务20261018-044306-5172f7fb-b565-4bce-9014-b2718d90ba25-postmortem；只追加亲核同角色证据及复盘去处，保留原claim/首证/prior/status/version。"
+        }
+      },
+      {
+        "offset": 23926877,
+        "bytes": 578,
+        "sha256": "78daf96dd87c81001799214d1a174ae0664398c954e17025283fb92b767ef28d",
+        "row": {
+          "op": "update",
+          "id": "silent-0307",
+          "ts": "2026-10-18T04:54:47+08:00",
+          "by": "learner:postmortem",
+          "evidence": [
+            {
+              "run": "9W38TRGPJW9Q",
+              "floor": 13,
+              "turn": 3,
+              "role": "support",
+              "note": "s443529旧日雕像苏醒后力量10、斩击25；本轮玩家有2力量，直接扣43+结毒3、零挡仍59→34损25；不把玩家增伤当减少敌攻击。"
+            }
+          ],
+          "where": {
+            "lessons": [
+              "9W38TRGPJW9Q"
+            ]
+          },
+          "note": "来源任务20261018-044306-5172f7fb-b565-4bce-9014-b2718d90ba25-postmortem；只追加亲核同角色证据及复盘去处，保留原claim/首证/prior/status/version。"
+        }
+      },
+      {
+        "offset": 23927455,
+        "bytes": 564,
+        "sha256": "fa52df0d58648ee7ba22da652f08c9361cfed406f033da1aaf595185668d44cf",
+        "row": {
+          "op": "update",
+          "id": "silent-0462",
+          "ts": "2026-10-18T04:54:47+08:00",
+          "by": "learner:postmortem",
+          "evidence": [
+            {
+              "run": "9W38TRGPJW9Q",
+              "floor": 17,
+              "turn": 10,
+              "role": "support",
+              "note": "首试s443630→443631普通斗篷基础6/现场4挡，实付1能增挡4，只生一张SHIV，其他三张手牌保持；生成与抽牌分账。"
+            }
+          ],
+          "where": {
+            "lessons": [
+              "9W38TRGPJW9Q"
+            ]
+          },
+          "note": "来源任务20261018-044306-5172f7fb-b565-4bce-9014-b2718d90ba25-postmortem；只追加亲核同角色证据及复盘去处，保留原claim/首证/prior/status/version。"
+        }
+      },
+      {
+        "offset": 23928019,
+        "bytes": 371,
+        "sha256": "f1801c51e1ef255ff9e62a3fe336af2838f2ced32a8259ea37e3ea738bdb75aa",
+        "row": {
+          "op": "update",
+          "id": "silent-0511",
+          "ts": "2026-10-18T04:55:48+08:00",
+          "by": "learner:postmortem",
+          "where": {
+            "proposal": [
+              "/home/dw/Projects/agent-sts2/learner/runs/20261018-044306-5172f7fb-b565-4bce-9014-b2718d90ba25-postmortem/proposal-potion-window.md"
+            ]
+          },
+          "note": "代码提案 silent-proposal-c734f60b55906bae → task=strategy-proposal；Roy-2026-10-07-learning"
+        }
+      },
+      {
+        "offset": 23928390,
+        "bytes": 371,
+        "sha256": "bf6e0c87f2e5a08a31875b3b26928adf3ed2cb076bc183815e086f1f880afda7",
+        "row": {
+          "op": "update",
+          "id": "silent-0512",
+          "ts": "2026-10-18T04:55:48+08:00",
+          "by": "learner:postmortem",
+          "where": {
+            "proposal": [
+              "/home/dw/Projects/agent-sts2/learner/runs/20261018-044306-5172f7fb-b565-4bce-9014-b2718d90ba25-postmortem/proposal-potion-window.md"
+            ]
+          },
+          "note": "代码提案 silent-proposal-c734f60b55906bae → task=strategy-proposal；Roy-2026-10-07-learning"
+        }
+      },
+      {
+        "offset": 23928761,
+        "bytes": 369,
+        "sha256": "d1725110481ade09c19caff90cc7076dc157984ad83fe16ee545acbba8acf59c",
+        "row": {
+          "op": "update",
+          "id": "silent-0461",
+          "ts": "2026-10-18T04:55:49+08:00",
+          "by": "learner:postmortem",
+          "where": {
+            "proposal": [
+              "/home/dw/Projects/agent-sts2/learner/runs/20261018-044306-5172f7fb-b565-4bce-9014-b2718d90ba25-postmortem/proposal-cloak-frail.md"
+            ]
+          },
+          "note": "代码提案 silent-proposal-c440ae480782dca0 → task=strategy-proposal；Roy-2026-10-07-learning"
+        }
+      },
+      {
+        "offset": 23929130,
+        "bytes": 369,
+        "sha256": "46016b691ba8ca0ac982c96ee3c905cce3bc60c046ac3c48847767980b036ffd",
+        "row": {
+          "op": "update",
+          "id": "silent-0462",
+          "ts": "2026-10-18T04:55:49+08:00",
+          "by": "learner:postmortem",
+          "where": {
+            "proposal": [
+              "/home/dw/Projects/agent-sts2/learner/runs/20261018-044306-5172f7fb-b565-4bce-9014-b2718d90ba25-postmortem/proposal-cloak-frail.md"
+            ]
+          },
+          "note": "代码提案 silent-proposal-c440ae480782dca0 → task=strategy-proposal；Roy-2026-10-07-learning"
+        }
+      }
+    ],
+    "original_queue_rows": [
+      {
+        "offset": 4501930,
+        "bytes": 794,
+        "sha256": "77d993e61df831ae0a924f7703a08c9c3cec03819f39b11113b6826d19b9d3b9",
+        "row": {
+          "op": "add",
+          "id": "silent-proposal-c734f60b55906bae",
+          "ts": "2026-10-18T04:55:48+08:00",
+          "character": "silent",
+          "ledger": [
+            "silent-0511",
+            "silent-0512"
+          ],
+          "runs": [
+            "9W38TRGPJW9Q"
+          ],
+          "source_task": "postmortem",
+          "target_task": "strategy-proposal",
+          "domains": [
+            "combat",
+            "potion"
+          ],
+          "summary": "9W38TRGPJW9Q A10超巨化在0能量无攻击末轮未消费，以及有能量匕首雨多目标已兑现的真实消费审计；缺改时点整战配对，先不拟早喝阈值。",
+          "proposal": "/home/dw/Projects/agent-sts2/learner/runs/20261018-044306-5172f7fb-b565-4bce-9014-b2718d90ba25-postmortem/proposal-potion-window.md",
+          "rule_changes": true,
+          "authorization": "Roy-2026-10-07-learning",
+          "proposal_sha256": "c3dfdf98ac077749429e22ddd32942095060940611e731b7984d14b67ca77e2e",
+          "state": "pending"
+        }
+      },
+      {
+        "offset": 4502724,
+        "bytes": 763,
+        "sha256": "a2d951049a0fb5b01a1d30ad56965ade64b494fce89172557dce4aed25d5c598",
+        "row": {
+          "op": "add",
+          "id": "silent-proposal-c440ae480782dca0",
+          "ts": "2026-10-18T04:55:49+08:00",
+          "character": "silent",
+          "ledger": [
+            "silent-0461",
+            "silent-0462"
+          ],
+          "runs": [
+            "9W38TRGPJW9Q"
+          ],
+          "source_task": "postmortem",
+          "target_task": "strategy-proposal",
+          "domains": [
+            "combat"
+          ],
+          "summary": "补9W38TRGPJW9Q首试F17T10实际施放4挡斗篷只生一刀、未抽牌；沿0461旧链有界修复脆弱修饰不命中6挡窄模板的Cards→draw回退。",
+          "proposal": "/home/dw/Projects/agent-sts2/learner/runs/20261018-044306-5172f7fb-b565-4bce-9014-b2718d90ba25-postmortem/proposal-cloak-frail.md",
+          "rule_changes": false,
+          "authorization": "Roy-2026-10-07-learning",
+          "proposal_sha256": "0e83c68895dffa5b053b9efb53428be5b4c0518d9e69afdb67128e6c3b12d646",
+          "state": "pending"
+        }
+      }
+    ],
+    "postmortem_chunk_sha256": "fa773cd8d6039648f17424d06445be5705963422e382e5ac3d3162f61b4f7026",
+    "new_pure_bug": false,
+    "old_bug_already_queued": "silent-0461",
+    "existing_0332_capture_available": false,
+    "no_model_game_simulation_or_observer": true
+  }
+]
