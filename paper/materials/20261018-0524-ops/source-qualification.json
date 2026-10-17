@@ -1,0 +1,264 @@
+{
+  "at": "2026-10-18 05:27:37 CST",
+  "batch": "20261018-045726-fix-batch",
+  "source": "dee6386621e8122d123a3cd0017c3e4c199f524e",
+  "first_commit": "dee6386621e8122d123a3cd0017c3e4c199f524e",
+  "parent": "738433d865d943e80b7726588fa2bbeb3a1980da",
+  "base": "738433d865d943e80b7726588fa2bbeb3a1980da",
+  "paths": [
+    {
+      "path": ".gitignore",
+      "sha256": "f2c92140ec4040bdc2b3b06409f463b4670986b6befdc72d45f1a5618590fbef"
+    },
+    {
+      "path": "agent/tests/paper-dataset-publication.test.ts",
+      "sha256": "2e3ac502898988042516f4293f428bf9c480ea3c5bca7ae7233deffb9aca0142"
+    },
+    {
+      "path": "ops/paper_dataset.py",
+      "sha256": "b815619f0870cdfa73f2be861b94db49b62a30d9198d4d09e2ba58a5ab6c9d7b"
+    },
+    {
+      "path": "ops/tests/test_paper_dataset_publication.py",
+      "sha256": "c2afbd88edf487bcf40dc363e702d60142988520a33323ca6aac49a795a574b9"
+    }
+  ],
+  "source_sandbox_rc": 0,
+  "source_files": 490,
+  "source_cases": 4447,
+  "fixed_python_cases": 8,
+  "native": {
+    "batch": "20261018-045726-fix-batch",
+    "thread": "01a14ba8-100a-70c1-9405-5f18299baf7c",
+    "cwd": "/home/dw/Projects/agent-sts2/.worktrees/codex-fix-silent-20261018-045726",
+    "event_log": "learner/runs/20261018-045738-b4a2af94-a06a-4d73-8871-692fb30fbed2-fix-batch.jsonl",
+    "registered_launch_batch": "20261018-045726-fix-batch",
+    "original_lease": "7cb147bcb5180b9dfc1cf7f15f380305224978e0911a60c36295e1acc05c1bc3",
+    "native_context": {
+      "source": "ops/codex-ops/accounts/codex3/learner/sessions/2026/10/18/rollout-2026-10-18T04-57-47-01a14ba8-100a-70c1-9405-5f18299baf7c.jsonl",
+      "offset": 50305,
+      "bytes": 5152,
+      "sha256": "9b04c901297a2c2ef4b6f620f219511b5677ac4d6b2a8294e2f607afe98fa8bd",
+      "model": "gpt-6.1-sol",
+      "effort": "xhigh",
+      "sandbox": {
+        "type": "workspace-write",
+        "writable_roots": [
+          "/home/dw/Projects/agent-sts2",
+          "/home/dw/Projects/agent-sts2/.git",
+          "/home/dw/Projects/agent-sts2/.git/worktrees/codex-fix-silent-20261018-045726"
+        ],
+        "network_access": false,
+        "exclude_tmpdir_env_var": false,
+        "exclude_slash_tmp": false
+      },
+      "approval_policy": "never"
+    },
+    "native_user_input": {
+      "offset": 58300,
+      "bytes": 13081,
+      "sha256": "a42ede8ecc6bb76bb36623ee8dfbb870d86cd2fcb1e8e12c687d35c9084630d7",
+      "input_sha256": "f62d2f31d1b94d3362f3dafb1cbd32da3da4730a10f840c6b79076017b7abda9"
+    },
+    "original_header_events": [
+      {
+        "offset": 0,
+        "bytes": 14892,
+        "sha256": "815db4df9b25a5525120b4f1f0b9775ef2b0c56751008c75a02592bfcce74afd",
+        "type": "learner_launch",
+        "attempt": null,
+        "code": null
+      },
+      {
+        "offset": 14892,
+        "bytes": 370,
+        "sha256": "251d495ad856ced2601d864ee69add72829de05384d49f17c0dace6967bb8418",
+        "type": "learner_startup_attempt",
+        "attempt": 1,
+        "code": null
+      },
+      {
+        "offset": 18275,
+        "bytes": 77,
+        "sha256": "ac81c4c4391066f0fe9d76f37a56f54d47dc8e6b77538be10b8b0866354177bd",
+        "type": "thread.started",
+        "attempt": null,
+        "code": null
+      }
+    ],
+    "startup_attempts": 1,
+    "failed_startups_preserved": 0,
+    "no_model_or_manual_restart": true
+  },
+  "original_report": {
+    "task": "fix-batch",
+    "base": "738433d865d943e80b7726588fa2bbeb3a1980da",
+    "fixes": [
+      {
+        "item": "infra-paper-dataset-concurrent-gzip-keyscan-20261018：并发导出/扫描及半成品归档",
+        "commit": "dee6386621e8122d123a3cd0017c3e4c199f524e",
+        "test": "agent/tests/paper-dataset-publication.test.ts",
+        "fails_without_fix": true
+      }
+    ],
+    "skipped": [
+      {
+        "item": "出牌、药水、SL、终局、路线及角色机制条目（0256/0260/0263/0266/0308/0311/0317/0319/0320/0322/0324/0329/0334/0339/0344/0347/0349/0362/0365/0481/0487，另含XTSV1U9JD34T终局与GXNKW8X1XYJP抽牌身份）",
+        "reason": "策略类；沿已有独立strategy-proposal链处理，不重复派发或补入开发者游戏知识。"
+      },
+      {
+        "item": "silent-0339续证：BXU0CKWKH2RU尾巴误核销",
+        "reason": "策略类；已有58ab473f6c814061/c232010cd405fe44原提案链，保留当前行为和原证据。"
+      },
+      {
+        "item": "silent-0332 nonpositive-hp实际资源契约根因",
+        "reason": "证据不足；原专用owner链仍未闭环，诊断及样本身份窄修不等于根因修复。"
+      },
+      {
+        "item": "U5W7NUE925NK F15/F16两次原G2缺DPR告警的完整根因",
+        "reason": "证据不足；原未来样本数组及配对DPR分母未保存，仅修有固定复现的严格零前缀边界，不将其冒作两次实盘根因。"
+      },
+      {
+        "item": "sandbox-glob-startup-race目录生命周期与磁盘压力宽项",
+        "reason": "证据不足；已有启动恢复/租约/回收窄修，目录删除归属与上游时序未确定。"
+      },
+      {
+        "item": "arch-funnel-guard / arch-learning-priority / arch-unified-resource-value / inv-f33-regression及调度公平性调查",
+        "reason": "独立架构、策略或归因任务，范围太大，超出普通纯bug批次。"
+      },
+      {
+        "item": "core-build-notify-222802-rc2旧原生通知恢复",
+        "reason": "证据不足；stderr持久化已修，旧送达状态未证，不重发可能已送达的通知。"
+      },
+      {
+        "item": "Codex缓存实测、DPR/B2性能及历史宿主超时根因",
+        "reason": "证据不足或独立性能调查；固定测试确定性子项已修，不代表自然性能根因已解决。"
+      },
+      {
+        "item": "原20261018-011241报告的recheck接续",
+        "reason": "证据不足：固定原报告的9ae48941源码不是所报dddad5d67发布提交祖先；六叶相同不代替祖先证明。原报告/状态/recheck2保留，未重复075726已验宿主，格式修复不冒称原批full0。"
+      },
+      {
+        "item": "ops-learner-recheck-report-fixes-shape-20261018补证：窄cherry-pick提案验收",
+        "reason": "太大：原Markdown没有机器JSON、原输出缺runs/base；独立原注册/原报告/六叶源码及发布/真实宿主回执协议超出本批格式修复。不造祖先、不改原报告/提案ID/seen_runs/租约或ACK，保留pending。"
+      },
+      {
+        "item": "infra-h0-414-host-fixed-test-stability-20261018 的生产性能及原full1归因",
+        "reason": "证据不足；已合入的固定测试修复不证明CPU或产品性能根因已解决，保留原失败历史。"
+      },
+      {
+        "item": "silent-0461：9W38TRGPJW9Q F17T10普通斗篷及0511/0512药水窗口补证",
+        "reason": "策略类；任务运行期间05:16:47追加的旧项证据，沿既有f4eb/7338、c440ae480782dca0和c734f60b55906bae独立策略链，不重复实现或添加机制。"
+      }
+    ],
+    "merged": null,
+    "tests": {
+      "tsc": 0,
+      "vitest": 0,
+      "files": 490,
+      "cases": 4447
+    },
+    "code_proposals": [],
+    "implementation_domains": [],
+    "report": "/home/dw/Projects/agent-sts2/learner/runs/20261018-045738-b4a2af94-a06a-4d73-8871-692fb30fbed2-fix-batch/report.md"
+  },
+  "verification": {
+    "source": "ops/paper_dataset.py",
+    "evidence_run": "U6JELGQTBMHN",
+    "floor": 28,
+    "turn": null,
+    "scope": "离线论文导出与凭据扫描，不改变对局行为；原失败未命名归档，不能把观察到的states写者断言为确切失败文件。",
+    "ledger_matches": [],
+    "evidence_files": [
+      {
+        "path": "/home/dw/Projects/agent-sts2/paper/materials/20261018-0358-ops/paper-keyscan-failure-investigation.json",
+        "sha256": "5836f9a9454a0488f7d10f5100c420805c43e6bc62e335bbd1ad21c2908e2dda"
+      },
+      {
+        "path": "/home/dw/Projects/agent-sts2/paper/materials/20261018-0358-ops/paper-keyscan-fixed-fixture.json",
+        "sha256": "7f0670d9d87e6e78e5f6845c55838134c57c64cf3e22fa1581ea62e120b77f4e"
+      }
+    ],
+    "negative_control": {
+      "log": "publication-negative.log",
+      "vitest_exit": 1,
+      "python_cases": 8,
+      "python_failures": 4,
+      "python_errors": 5,
+      "source_temporarily_restored_from": "738433d865d943e80b7726588fa2bbeb3a1980da:ops/paper_dataset.py",
+      "fixed_source_restored": true
+    },
+    "positive_control": {
+      "log": "publication-restored.log",
+      "vitest_exit": 0,
+      "python_cases": 8,
+      "python_exit": 0
+    },
+    "final_addition": "新增zlib损坏流负对照，publication-final-python.log为8测试通过；全套入口会再次执行最终夹具。",
+    "source_commit": "dee6386621e8122d123a3cd0017c3e4c199f524e",
+    "final_negative_control": {
+      "log": "publication-final-negative.log",
+      "vitest_exit": 1,
+      "python_cases": 8,
+      "python_failures": 4,
+      "python_errors": 6
+    },
+    "final_restored_control": {
+      "log": "publication-final-restored.log",
+      "vitest_exit": 0,
+      "python_cases": 8,
+      "python_exit": 0
+    },
+    "sandbox": {
+      "tsc": 0,
+      "vitest": 0,
+      "files": 490,
+      "cases": 4447
+    },
+    "gitleaks_exit": 0,
+    "live_before": "58eaab9e8062c466efff21cbc1cd18662d75896b",
+    "integration_exit": 77,
+    "merge_preflight_exit": 1,
+    "conflicts": [
+      "CONFLICT (content): Merge conflict in notes/fix-queue-v4.md",
+      "CONFLICT (content): Merge conflict in notes/lessons.md",
+      "CONFLICT (content): Merge conflict in notes/ops-handoff.md",
+      "CONFLICT (content): Merge conflict in paper/data/README.md",
+      "CONFLICT (content): Merge conflict in paper/data/commits.csv",
+      "CONFLICT (content): Merge conflict in paper/data/cost-curve-silent.csv",
+      "CONFLICT (content): Merge conflict in paper/data/cost-silent.csv",
+      "CONFLICT (content): Merge conflict in paper/data/cost-sources.json",
+      "CONFLICT (content): Merge conflict in paper/data/cost-unattributed.csv",
+      "CONFLICT (content): Merge conflict in paper/data/decisions_by_label.csv",
+      "CONFLICT (content): Merge conflict in paper/data/learning-curve-silent.csv",
+      "CONFLICT (content): Merge conflict in paper/data/runs.csv",
+      "CONFLICT (content): Merge conflict in paper/data/summary.json",
+      "CONFLICT (content): Merge conflict in paper/data/verification.json",
+      "CONFLICT (content): Merge conflict in paper/materials/decision-log.md",
+      "CONFLICT (modify/delete): paper/materials/learning/code-proposals.jsonl deleted in HEAD and modified in codex-fix-silent-20261018-045726.  Version codex-fix-silent-20261018-045726 of paper/materials/learning/code-proposals.jsonl left in tree.",
+      "CONFLICT (content): Merge conflict in paper/materials/learning/ledger.jsonl",
+      "CONFLICT (content): Merge conflict in paper/materials/silent/cost.md"
+    ],
+    "knowledge_overlap": [],
+    "live_refresh_commit": null,
+    "live_source_merge": false,
+    "post_merge_tests_run": false,
+    "new_release": null,
+    "ledger_updated": false,
+    "queue_final_audit": {
+      "initial_audit_sha256": "4e096589d0c82b731a4bf7f3e29c73970efd7860e69929a6e8cf6267b0a1be8f",
+      "final_sha256": "114fc59b7404ceaa4772b4bc08510ea4bef8faf884ddc1e7581b22ec596eee4b",
+      "final_lines": 1460,
+      "change": "新增05:16:47 silent-0461/9W38TRGPJW9Q旧策略项补证，另有两处空行移动；无新纯工具bug。",
+      "disposition": "已有f4eb/7338与c440ae480782dca0策略链，不重复派发，不在普通fix中加游戏规则。"
+    }
+  },
+  "archived_files": 42,
+  "source_full_not_repeated": true,
+  "original_canonical_failed_rc0_preserved": true,
+  "published": false,
+  "executable_leaves": 3,
+  "gitignore_leaf": 1,
+  "new_gameplay_release": false,
+  "new_ledger_shipped": false
+}

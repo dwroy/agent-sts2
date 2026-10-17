@@ -1,0 +1,48 @@
+{
+  "at": "2026-10-18 05:28:54 CST",
+  "original_check": {
+    "rc": 1,
+    "log": "/home/dw/Projects/agent-sts2/ops/codex-ops/learner/20261018-031302-fix-batch.fallback-76fe29f38929f2d4ac899079a08c10cb53156d3e.checks.log",
+    "merged": "58eaab9e8062c466efff21cbc1cd18662d75896b",
+    "tree": "76fe29f38929f2d4ac899079a08c10cb53156d3e",
+    "commits": [
+      "edbbbd6ccffa40decdb6487411d80e3f688f0907",
+      "2ca4eb3aad3c9c0f33027e4e217c4820a210c2a2"
+    ],
+    "log_sha256": "9298d0f170306b7175ccaf0162ae59ecb85f245704c12612bb5a50c579642867",
+    "coverage": {
+      "passed": [],
+      "failed": [
+        "tests/brain-codex.test.ts"
+      ],
+      "skipped": [],
+      "summary": {
+        "files": {
+          "failed": 1,
+          "passed": 539
+        },
+        "tests": {
+          "failed": 1,
+          "passed": 5253,
+          "skipped": 2
+        }
+      },
+      "failed_tests": {
+        "tests/brain-codex.test.ts": [
+          "codex runs watched: retries, stalls, timeouts and their trace the router's timeout leaves the evidence: what the stream had sent, and its stderr with credentials masked"
+        ]
+      }
+    }
+  },
+  "decision": "preserve live, route this newly observed fixed-process timing assertion failure to the original ordinary fixture repair queue; no unchanged full rerun or rollback",
+  "reason": "Only max_gap_ms=346 versus the fixed >=500 assertion failed at brain-codex.test.ts:400. No game/model numeric assertion regression is reported; timing/product/load causality remains unproved. This test stopped before its later stderr-retention and credential-masking assertions, so those assertions are not accepted from this failed case.",
+  "failure_test": "codex runs watched: retries, stalls, timeouts and their trace the router's timeout leaves the evidence: what the stream had sent, and its stderr with credentials masked",
+  "source_input_sha256": "a4f07155acbf8eff48bdeae8c9594738dba3df465c7428fc5f06a693ed8ca0b3",
+  "active_fix_owners": [],
+  "source_or_production_timeout_assertion_changed": false,
+  "original_full_failure_preserved": true,
+  "unchanged_source_full_not_repeated": true,
+  "no_scoped_supplement_requested": true,
+  "no_new_release_or_shipped": true,
+  "parents_closed": false
+}

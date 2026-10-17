@@ -1,0 +1,54 @@
+{
+  "at": "2026-10-18 05:28:54 CST",
+  "batch": "20261018-045726-fix-batch",
+  "source": "dee6386621e8122d123a3cd0017c3e4c199f524e",
+  "source_parent": "738433d865d943e80b7726588fa2bbeb3a1980da",
+  "paths": [
+    {
+      "path": ".gitignore",
+      "sha256": "f2c92140ec4040bdc2b3b06409f463b4670986b6befdc72d45f1a5618590fbef"
+    },
+    {
+      "path": "agent/tests/paper-dataset-publication.test.ts",
+      "sha256": "2e3ac502898988042516f4293f428bf9c480ea3c5bca7ae7233deffb9aca0142"
+    },
+    {
+      "path": "ops/paper_dataset.py",
+      "sha256": "b815619f0870cdfa73f2be861b94db49b62a30d9198d4d09e2ba58a5ab6c9d7b"
+    },
+    {
+      "path": "ops/tests/test_paper_dataset_publication.py",
+      "sha256": "c2afbd88edf487bcf40dc363e702d60142988520a33323ca6aac49a795a574b9"
+    }
+  ],
+  "source_qualified": true,
+  "source_sandbox_rc": 0,
+  "source_files": 490,
+  "source_cases": 4447,
+  "fixed_python_cases": 8,
+  "source_full_not_repeated": true,
+  "published": false,
+  "main": null,
+  "actual_live": null,
+  "publication_attempts_this_wake": 1,
+  "publication_blocker": {
+    "at": "2026-10-18 05:27:52 CST",
+    "rc": 75,
+    "reason": "original report/builder still active",
+    "pids": [
+      3321532,
+      3322878,
+      3322879
+    ],
+    "source_or_live_mutated": false
+  },
+  "merged_checks_rc": null,
+  "host_requested": false,
+  "source_worktree_complete": false,
+  "original_canonical_failed_rc0_preserved": true,
+  "production_gameplay_changed": false,
+  "new_gameplay_release": false,
+  "new_ledger_shipped": false,
+  "evidence": "paper/materials/20261018-0524-ops/",
+  "next": "At a later normal event, once the original report/builders and live lock allow, narrow-integrate only the qualified four leaves (three executable source/test files and the dataset-lock gitignore line) from dee638, preserving current knowledge, source and records. Use the prepared publisher once, then original sandbox targeted paper test and a single new exact-combination host through original 20261018-045726-fix-batch. Do not rerun unchanged source full, the whole paper dataset, or original 031302 full; do not modify original failed reports or close broader parents."
+}
