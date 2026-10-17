@@ -1,0 +1,32 @@
+{
+  "at": "2026-10-18 04:16:08 CST",
+  "original_daily_log_observations": [
+    {
+      "path": "ops/codex-ops/snapshots/20261018-040702-3022073.log",
+      "bytes": 1028,
+      "last_safe_markers": [
+        "== 2026-10-18 04:07:02 paper_dataset.py",
+        "OK   decisions attributed + unattributed == play records",
+        "OK   decisions_by_label sum == attributed decisions",
+        "OK   escalations rows == records with escalation",
+        "OK   every runs.jsonl id present in runs.csv",
+        "OK   commits == git rev-list --all --count",
+        "rows: runs 836, decisions_by_label 27896, escalations 3600, commits 6931",
+        "gzip decisions.jsonl ...",
+        "gzip deepseek-reasoning.jsonl ...",
+        "gzip runs.jsonl ...",
+        "gzip states.jsonl ...",
+        "gzip fight-plans.jsonl ...",
+        "gzip run-plans.jsonl ...",
+        "gzip brain.jsonl ...",
+        "gzip sl-attempts.jsonl ...",
+        "gzip run-config.jsonl ..."
+      ],
+      "dataset_keyscan_clean": false
+    }
+  ],
+  "original_daily_process": "3022085 python3               09:06 RN",
+  "original_daily_terminal_receipt_available": false,
+  "new_dataset_calls": 0,
+  "no_wait_or_raw_writer_mutation": true
+}
