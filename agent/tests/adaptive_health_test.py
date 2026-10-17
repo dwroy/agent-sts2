@@ -1,3 +1,5 @@
+import copy
+import json
 import importlib.util
 from pathlib import Path
 import unittest
@@ -21,6 +23,36 @@ class AdaptiveHealth(unittest.TestCase):
         self.assertEqual(value['stop_counts'], {'leader': 1, 'eliminated': 1})
         self.assertEqual(value['admission_state'], 'accepted')
         self.assertNotIn('pending', value['admission'])
+
+    def test_h1_budget_prefixes_are_unknown_without_fabricating_completion_or_errors(self):
+        fixture = json.loads((Path(__file__).parent / 'fixtures/h1-budget-completion.json').read_text())
+        rows = fixture['cases']
+        value = h.adaptive_health({'loop': {'sim_adaptive': 'on'}}, rows + rows)
+        self.assertEqual((value['observed'], value['produced'], value['budgeted_partial'], value['errors']), (4, 4, 4, 0))
+        self.assertEqual((value['complete_adaptive'], value['evaluable'], value['unknown']), (0, 0, 4))
+        self.assertIsNone(value['agreement'])
+        self.assertIsNone(value['actual_saved_fraction']['p50'])
+        self.assertEqual(value['candidate_samples'], [c['samples'] for r in rows for c in r['boss_sim']['adaptive']['candidates']])
+        self.assertFalse(value['alert'])
+        self.assertIn('budget', value['stop_counts'])
+        for patch in ({'budgeted': False}, {'failure': True}, {'failure': None}, {'status': 'pending'}, {'required': False}):
+            with self.subTest(patch=patch):
+                bad = copy.deepcopy(rows)
+                for row in bad:
+                    row['boss_sim']['completion'].update(patch)
+                rejected = h.adaptive_health({'loop': {'sim_adaptive': 'on'}}, bad)
+                self.assertEqual((rejected['errors'], rejected['budgeted_partial']), (4, 0))
+                self.assertTrue(rejected['alert'])
+        for key in ('worker', 'resource', 'C1'):
+            bad = copy.deepcopy(rows)
+            for row in bad:
+                row['boss_sim']['error'] = key
+            self.assertEqual(h.adaptive_health({}, bad)['errors'], 4)
+        for invalid in (-1, True, '838'):
+            bad = copy.deepcopy(rows)
+            for row in bad:
+                row['boss_sim']['adaptive']['candidates'][0]['samples'] = invalid
+            self.assertEqual(h.adaptive_health({}, bad)['errors'], 4)
 
     def test_admitted_source_rollback_stays_shadow(self):
         value = h.adaptive_health({'loop': {'sim_adaptive': 'shadow', 'sim_adaptive_admission': 'accepted'}}, [])

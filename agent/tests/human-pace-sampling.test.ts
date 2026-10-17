@@ -83,7 +83,8 @@ it("B3 passes finite total deadlines, keeps real candidate counts, and does not 
   const opts = { samples: 1000, requireComplete: true, quantitative: true, adaptive: { mode: "on" as const, allowS: true }, deadlineMs: 11000 };
   const first = await withDecisionBudget(new DecisionBudget("first", "brain", () => 0), () => compareOptions(runner, input, options, opts));
   expect(calls).toHaveLength(1); expect(calls[0]?.deadlineMs).toBe(11000); expect(calls[0]?.progressTimeoutMs).toBeUndefined();
-  expect(first).toMatchObject({ samples: 47, timedOut: true, adaptive: { status: "partial", rounds: [] } });
+  expect(first).toMatchObject({ samples: 47, timedOut: true, adaptive: { status: "partial", rounds: [] },
+    completion: { required: true, budgeted: true, status: "partial", failure: false, samples: 47, requested: 1000 } });
   expect(first.options.every((o) => o.samples === 47 && o.pairedReference?.samples === 47)).toBe(true);
   const reused = await withDecisionBudget(new DecisionBudget("retry", "retry", () => 0), () => compareOptions(runner, input, options, opts));
   expect(reused.completion?.memoHit).toBe(true); expect(calls).toHaveLength(1);

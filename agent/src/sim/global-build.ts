@@ -20,7 +20,8 @@ export interface GlobalOptionPrediction {
 }
 export interface GlobalBossPrediction {
   target: GlobalBossTarget;
-  status: "computed" | "reused_current" | "unknown";
+  status: "computed" | "reused_current" | "budgeted_partial" | "unknown";
+  reused_current?: boolean;
   rows: GlobalOptionPrediction[];
   wall_ms: number;
   reported_sim_ms: number | null;
@@ -153,6 +154,25 @@ export async function evaluateGlobalBuild(args: {
     try {
       const reused = target.act === args.currentAct && target.boss === args.currentBoss;
       const result = reused ? args.current : await args.evaluate(target);
+      const completion = result.completion;
+      // H1 prefixes remain unknown for G2's full-result aggregation, without inventing a worker failure.
+      const budgetedPartial = completion?.required === true && completion.budgeted === true
+        && completion.failure === false && completion.status === "partial"
+        && completion.samples === result.samples && completion.requested === result.requested
+        && Number.isSafeInteger(result.samples) && result.samples >= 0
+        && Number.isSafeInteger(result.requested) && result.requested > 0 && result.samples <= result.requested
+        && (result.timedOut || result.samples < result.requested);
+      if (budgetedPartial) {
+        const rows = predictionRows(result, args.keys).map((row) => {
+          const option = row.key === "@current" ? result.base : result.options.find((option) => option.key === row.key);
+          return { ...row, samples: option ? Math.min(option.samples, option.pairedReference?.samples ?? result.base.samples) : null,
+            unknown: row.unknown ?? "budgeted_prefix_incomplete" };
+        });
+        targets.push({ target, status: "budgeted_partial", reused_current: reused, rows,
+          wall_ms: Math.max(0, Math.round(now() - began)), reported_sim_ms: result.elapsedMs,
+          completion: completion as unknown as JsonValue, adaptive: result.adaptive ?? null, production_calibration: "unknown" });
+        continue;
+      }
       if (result.timedOut || result.samples < 1 || result.samples !== result.requested && !completeAdaptiveBuild(result))
         throw new Error("global_required_computation_incomplete");
       targets.push({ target, status: reused ? "reused_current" : "computed", rows: predictionRows(result, args.keys),
@@ -167,7 +187,7 @@ export async function evaluateGlobalBuild(args: {
   }
   const summaries = summarizeGlobalBuild(targets, args.keys, Array.from({ length: 4 - args.currentAct }, (_, i) => args.currentAct + i));
   return { schema: "global-build-v1", mode: "shadow", delivered: false,
-    status: summaries.some((row) => row.known_acts.length) ? summaries.every((row) => !row.unknown_acts.length) ? "complete" : "partial" : "unknown",
+    status: summaries.some((row) => row.known_acts.length) ? summaries.every((row) => !row.unknown_acts.length) ? "complete" : "partial" : targets.some((target) => target.status === "budgeted_partial") ? "partial" : "unknown",
     primary: "paired_win_probability", s_sort: false, targets, summaries,
     final_sequence: { status: "unknown", reason: "G1a_natural_consumer_pending" }, pool: args.pool,
     wall_ms: Math.max(0, Math.round(now() - started)),

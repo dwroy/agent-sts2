@@ -21,7 +21,7 @@ def wall_stats(values):
 def global_build_health(config, records, labels, failure_streak=3):
     mode = obj(config.get('loop')).get('global_build_eval', 'off')
     counts = Counter(expected=0, covered=0, missing=0, invalid_shadow=0, observations=0, memo_hits=0,
-                     current_dependency_unknown=0, service_failures=0, partial=0, unknown=0)
+                     current_dependency_unknown=0, service_failures=0, partial=0, unknown=0, budgeted_partial=0)
     reasons, seen_questions, seen_observations = Counter(), set(), set()
     all_ms, compute_ms, memo_ms, future_ms, evidence = [], [], [], [], []
     streak = longest = 0
@@ -68,13 +68,15 @@ def global_build_health(config, records, labels, failure_streak=3):
         for target in value.get('targets') or []:
             if not isinstance(target, dict):
                 continue
+            counts['budgeted_partial'] += target.get('status') == 'budgeted_partial'
             unknown = {r.get('unknown') for r in target.get('rows') or [] if isinstance(r, dict) and r.get('unknown')}
             reasons.update(unknown)
             failed = any(r.startswith('global_computation_failed:') for r in unknown)
             if failed:
                 counts['service_failures'] += 1
                 evidence.append({'source': row.get('_source'), 'observation_id': observation, 'target': target})
-            if observation and not value.get('memo_hit') and target.get('status') == 'computed':
+            if observation and not value.get('memo_hit') and (target.get('status') == 'computed' or
+                    target.get('status') == 'budgeted_partial' and target.get('reused_current') is False):
                 future_ms.append(target.get('wall_ms'))
         if isinstance(reason, str) and reason.startswith('global_observer_failed:'):
             counts['service_failures'] += 1
