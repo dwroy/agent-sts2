@@ -1,0 +1,141 @@
+{
+  "at": "2026-10-18 06:20:49 CST",
+  "batch": "20261018-052912-fix-batch",
+  "source": "a6913706952661afe1de38f290cd9434cbb91621",
+  "live": {
+    "commit": "0bfadd7aa3dd650ac9a1678d139607e6f095b224",
+    "tree": "a406c0fa6d35f720696c4e29c5617367da042287"
+  },
+  "original_full_rc": 1,
+  "original_full_coverage": {
+    "passed": [],
+    "failed": [
+      "tests/build-decider.test.ts",
+      "tests/global-build-integration.test.ts",
+      "tests/journal-replay.test.ts",
+      "tests/learner-retention.test.ts",
+      "tests/route-review.test.ts"
+    ],
+    "skipped": [],
+    "summary": {
+      "files": {
+        "failed": 5,
+        "passed": 536
+      },
+      "tests": {
+        "failed": 5,
+        "passed": 5250,
+        "skipped": 2
+      }
+    },
+    "failed_tests": {
+      "tests/build-decider.test.ts": [
+        "DeepSeek answer unusable: recover the choice from its reasoning before Jev (WXMB F11) an unknown option and a reasoning that settles on nothing: Jev decides, shown DeepSeek's reason"
+      ],
+      "tests/global-build-integration.test.ts": [
+        "keeps the actual u6ru-f22-shop/open question and current C1/C2/P2 facts identical to off"
+      ],
+      "tests/journal-replay.test.ts": [
+        "the loop restarted mid-run after a game relaunch (a run_unknown main menu, then continue) the run memory is rebuilt, and a replay that finds nothing says so"
+      ],
+      "tests/learner-retention.test.ts": [
+        "reclaims only settled learner copies with verified archival and safe restoration"
+      ],
+      "tests/route-review.test.ts": [
+        "rest site route review in the loop an illegal route-plan answer is re-asked once with its errors; the corrected route is followed"
+      ]
+    }
+  },
+  "original_full_log_sha256": "9cb6458ef0b04a792fddc3729265706b6bf019b1994cc4e60d88695438216274",
+  "supplement_rc": 0,
+  "supplement_manifest_sha256": "3c59588c88f63e3ae592b4db98ad86e176cb67e4b698a6e3a076fa2fdbff259b",
+  "supplement_receipt_sha256": "72fd7ae68362a130aa6dea97631df399a5108299826230a3383fe71c233f7b25",
+  "tsc_rc": 0,
+  "executed": [
+    {
+      "file": "tests/build-decider.test.ts",
+      "full_name": "DeepSeek answer unusable: recover the choice from its reasoning before Jev (WXMB F11) an unknown option and a reasoning that settles on nothing: Jev decides, shown DeepSeek's reason",
+      "duration_ms": 618.8691269999999,
+      "other_cases_not_rerun": 27
+    },
+    {
+      "file": "tests/global-build-integration.test.ts",
+      "full_name": "keeps the actual u6ru-f22-shop/open question and current C1/C2/P2 facts identical to off",
+      "duration_ms": 1450.980822,
+      "other_cases_not_rerun": 11
+    },
+    {
+      "file": "tests/journal-replay.test.ts",
+      "full_name": "the loop restarted mid-run after a game relaunch (a run_unknown main menu, then continue) the run memory is rebuilt, and a replay that finds nothing says so",
+      "duration_ms": 2592.794423,
+      "other_cases_not_rerun": 9
+    },
+    {
+      "file": "tests/learner-retention.test.ts",
+      "full_name": "reclaims only settled learner copies with verified archival and safe restoration",
+      "duration_ms": 4707.953557999999,
+      "other_cases_not_rerun": 0
+    },
+    {
+      "file": "tests/route-review.test.ts",
+      "full_name": "rest site route review in the loop an illegal route-plan answer is re-asked once with its errors; the corrected route is followed",
+      "duration_ms": 1041.160237,
+      "other_cases_not_rerun": 26
+    }
+  ],
+  "selected_cases": 5,
+  "other_cases_not_rerun": 73,
+  "full_suite_pass": false,
+  "old_full_failure_retained": true,
+  "source_full_not_repeated": true,
+  "deadline_assertions_unchanged": true,
+  "product_or_CPU_root_cause_not_established": true,
+  "archive_files": [
+    {
+      "path": "ops/codex-ops/learner/20261018-052912-fix-batch.continuation-3c59588c88f63e3ae592b4db98ad86e176cb67e4b698a6e3a076fa2fdbff259b.json",
+      "bytes": 4261,
+      "sha256": "3c59588c88f63e3ae592b4db98ad86e176cb67e4b698a6e3a076fa2fdbff259b"
+    },
+    {
+      "path": "ops/codex-ops/learner/20261018-052912-fix-batch.fallback-a406c0fa6d35f720696c4e29c5617367da042287.checks.log",
+      "bytes": 12313,
+      "sha256": "9cb6458ef0b04a792fddc3729265706b6bf019b1994cc4e60d88695438216274"
+    },
+    {
+      "path": "ops/codex-ops/learner/20261018-052912-fix-batch.supplement-3c59588c88f63e3ae592b4db98ad86e176cb67e4b698a6e3a076fa2fdbff259b.0.vitest.json",
+      "bytes": 12548,
+      "sha256": "6176d9d9e1e9d23eb754025cce53ccec74baf38e5ead3f8f36734f8e31f5499d"
+    },
+    {
+      "path": "ops/codex-ops/learner/20261018-052912-fix-batch.supplement-3c59588c88f63e3ae592b4db98ad86e176cb67e4b698a6e3a076fa2fdbff259b.1.vitest.json",
+      "bytes": 3945,
+      "sha256": "15ef8991d33331e6931c105eeffe152c80efe7a7162795fe0f1df6d52bbb08b1"
+    },
+    {
+      "path": "ops/codex-ops/learner/20261018-052912-fix-batch.supplement-3c59588c88f63e3ae592b4db98ad86e176cb67e4b698a6e3a076fa2fdbff259b.2.vitest.json",
+      "bytes": 4512,
+      "sha256": "81dcbb7cebe745c2417912cc08eada09a6c7789e0f160df17a0c624fda3de33c"
+    },
+    {
+      "path": "ops/codex-ops/learner/20261018-052912-fix-batch.supplement-3c59588c88f63e3ae592b4db98ad86e176cb67e4b698a6e3a076fa2fdbff259b.3.vitest.json",
+      "bytes": 977,
+      "sha256": "fda5b4c08b5fa8dd3573344cf871fee78b75cd61c97f07a2271ea2a43c2344b1"
+    },
+    {
+      "path": "ops/codex-ops/learner/20261018-052912-fix-batch.supplement-3c59588c88f63e3ae592b4db98ad86e176cb67e4b698a6e3a076fa2fdbff259b.4.vitest.json",
+      "bytes": 13139,
+      "sha256": "a34daca2dd69cf316ffa2d883a61e9cb22a7f8d7593cfad6094c6a1c772f9be3"
+    },
+    {
+      "path": "ops/codex-ops/learner/20261018-052912-fix-batch.supplement-3c59588c88f63e3ae592b4db98ad86e176cb67e4b698a6e3a076fa2fdbff259b.json",
+      "bytes": 7589,
+      "sha256": "72fd7ae68362a130aa6dea97631df399a5108299826230a3383fe71c233f7b25"
+    },
+    {
+      "path": "ops/codex-ops/learner/20261018-052912-fix-batch.supplement-3c59588c88f63e3ae592b4db98ad86e176cb67e4b698a6e3a076fa2fdbff259b.log",
+      "bytes": 3078,
+      "sha256": "cfd84336f19a257b2e2522372118ac34605624e1e92311d3996639bd9973a45d"
+    }
+  ],
+  "archive_sha256": "6063484d9d6d282af5e010303e9733ae6103ffe110019a01c54f53429566b999"
+}
