@@ -10,24 +10,44 @@ import { describe, expect, it, vi } from "vitest";
 import type { AnswerSet } from "../src/reflex/jev/answers.js";
 import type { AskDecision } from "../src/memory/types.js";
 import type { LineEstimate } from "../src/reflex/rollout.js";
+import type { LiveRollout } from "../src/reflex/rollout-live.js";
 import type { Plan } from "../src/reflex/turn-solver.js";
 import { logged, loggedEnv } from "./logged.js";
 
-/** The live rollout, with its first two shown lines forced into a tie (the fixture: the labels, not the numbers). */
+/** Fixed rollout output for the label consumer; simulation accuracy is tested separately. */
 const forceTie = { on: false };
 vi.mock("../src/reflex/rollout-live.js", async (importOriginal) => {
   const original = await importOriginal<typeof import("../src/reflex/rollout-live.js")>();
   return {
     ...original,
     liveRollout: (args: Parameters<typeof original.liveRollout>[0]) => {
-      const r = original.liveRollout(args);
-      if (!forceTie.on || !r.available) return r;
-      return { ...r, best: null, tied: args.shown.slice(0, 2), saturated: false };
+      if (!forceTie.on) return original.liveRollout(args);
+      const lines: LineEstimate[] = args.shown.map((plan, index) => ({
+        plan, order: null, orders: [], tags: [], score: plan.score, currentValue: 0,
+        oneTurn: { hpLoss: 0, winProb: 0, turns: 1, modelValue: null, value: 0 },
+        hpLoss: index < 2 ? 10 : 12, value: index < 2 ? -30 : -32,
+        enemyHpLeft: 40, leaderHpLeft: null, turnsSurvived: 5, turnsToWin: null,
+        deaths: 0, turnsToDeath: null, winProb: 0.5, wins: 0, horizon: 5, samples: 8,
+        perTurn: [], valueModelTerminal: null, modelForecast: { oneTurn: null, rollout: null },
+        basis: { rolloutSamples: 8, horizon: 5, modelN: 0, w: 0, segment: "none", gateN: 0 },
+      }));
+      return {
+        available: true, best: null, tied: args.shown.slice(0, 2), saturated: false,
+        result: { lines, orders: [], horizon: 5, samples: 8, elapsedMs: 0, degraded: [],
+          policyTurns: 0, policyMs: 0, policyNodes: 0 },
+        byPlan: new Map(lines.map((entry) => [entry.plan, entry])),
+        meta: { act: 2, t: 3, asc: 8, kind: "hallway", enc: "fixed-label-fixture",
+          deck: { n: 0, atk: 0, skl: 0, pow: 0, junk: 0, dmg: 0, blk: 0, up: 0 }, relics: 0, max_en: 3 },
+        gate: { segment: "none", w: 0, n: 0, advantage: 0, ci: [null, null] },
+        encounterN: 0, minRows: 30, potionsHeld: false, potionCostsHeld: false,
+        revives: [], lossCap: args.solver.player.hp, ordersDropped: 0, noPotion: null,
+        spentMs: 0, elapsedMs: 0,
+      } satisfies LiveRollout;
     },
   };
 });
 
-const { pickRolloutBest, rolloutTies, sameShownResult, rolloutLiveOptions } = await import("../src/reflex/rollout-live.js");
+const { pickRolloutBest, rolloutTies, sameShownResult } = await import("../src/reflex/rollout-live.js");
 const { planCombatTurn } = await import("../src/reflex/combat-plan.js");
 const { potionMcOptions } = await import("../src/reflex/potion-mc.js");
 
@@ -86,7 +106,6 @@ describe("tied options on Jev's question (a logged board, the rollout's tie forc
   it("both tagged rollout_tied naming the other, neither rollout_best, the log names them, choosing either counts as the best", () => {
     forceTie.on = true;
     potionMcOptions.now = () => 0;
-    rolloutLiveOptions.budgetMs = 1e9;
     try {
       const decision = planCombatTurn(loggedEnv(logged("g8yy-f30-t3"), { jevContext: "v1" })) as AskDecision;
       expect(decision.kind).toBe("ask");
@@ -108,7 +127,6 @@ describe("tied options on Jev's question (a logged board, the rollout's tie forc
     } finally {
       forceTie.on = false;
       potionMcOptions.now = null;
-      rolloutLiveOptions.budgetMs = 1500;
     }
   });
 });

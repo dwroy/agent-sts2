@@ -57,8 +57,10 @@ const LESSONS: ExperienceEntry[] = [
 
 /** The EZ2L F48 T2 board, with the run plan DeepSeek had made (F44) in the memory (logged() leaves it out). */
 function ez2l(opts: { budgetMs?: number; target?: boolean } = {}): Decision | null {
+  // Default replays use the same bounded work clock as the explicit target-label cases.
+  if (opts.budgetMs === undefined) return withTargetOptionFixture((budgetMs) => ez2l({ ...opts, budgetMs }));
   targetOptions.enabled = opts.target ?? true;
-  rolloutLiveOptions.budgetMs = opts.budgetMs ?? 1e9;
+  rolloutLiveOptions.budgetMs = opts.budgetMs;
   potionMcOptions.now = () => 0;
   const env = loggedEnv(logged("ez2l-f48-t2"), { jevContext: "v1" });
   env.screenMemory.runPlan = (JSON.parse(readFileSync(join(DIR, "ez2l-f48-t2.json"), "utf8")) as { runPlan: RunPlan }).runPlan;
@@ -161,7 +163,8 @@ describe("per-target options (EZ2L F48 T2: Queen + Torch Head Amalgam)", () => {
   });
 
   it("rolls every shown line out under both kill orders, the Amalgam first among them, and reports and logs them", () => {
-    const decision = ez2l() as AskDecision;
+    // This numeric contract requires all eight samples; keep its original replay budget explicit.
+    const decision = ez2l({ budgetMs: 1e9 }) as AskDecision;
     const criteria = criteriaOf(decision);
     for (const key of planKeys(criteria)) {
       const f = facts(criteria, key);
@@ -188,6 +191,38 @@ describe("per-target options (EZ2L F48 T2: Queen + Torch Head Amalgam)", () => {
     const chosen = String(resolved.log!["chosen_order"]);
     expect(chosen).toMatch(new RegExp(`^(${AMALGAM} > ${QUEEN}|${QUEEN} > ${AMALGAM})$`));
     expect(String(facts(criteria, bestKey)["rollout_kill_order"]).startsWith(chosen)).toBe(true);
+  });
+
+  it("bounds default EZ2L calls and restores forecast clocks when the real solver fails", () => {
+    const before = { now: rolloutLiveOptions.now, budget: rolloutLiveOptions.budgetMs,
+      potionNow: potionMcOptions.now, tap: solveTap.onSolve };
+    try {
+      for (const pause of [0, 10_000]) {
+        const hostClock = () => pause;
+        rolloutLiveOptions.now = hostClock;
+        potionMcOptions.now = hostClock;
+        const observed: { budget: number; step: number | null; cards: number }[] = [];
+        solveTap.onSolve = (input) => {
+          const now = rolloutLiveOptions.now;
+          const first = now?.();
+          const second = now?.();
+          observed.push({ budget: rolloutLiveOptions.budgetMs,
+            step: first !== undefined && second !== undefined ? second - first : null, cards: input.hand.length });
+          throw new Error("fixed default planner failure");
+        };
+        expect(() => ez2l()).toThrow("fixed default planner failure");
+        expect(observed.length).toBeGreaterThan(0);
+        for (const entry of observed) { expect(entry).toMatchObject({ budget: ROLLOUT_BUDGET_MS, step: 3 }); expect(entry.cards).toBeGreaterThan(0); }
+        expect(rolloutLiveOptions.budgetMs).toBe(before.budget);
+        expect(rolloutLiveOptions.now).toBe(hostClock);
+        expect(potionMcOptions.now).toBe(hostClock);
+      }
+    } finally {
+      rolloutLiveOptions.now = before.now;
+      rolloutLiveOptions.budgetMs = before.budget;
+      potionMcOptions.now = before.potionNow;
+      solveTap.onSolve = before.tap;
+    }
   });
 
   it("is deterministic: the same board gives the same options and the same kill-order numbers", () => {
