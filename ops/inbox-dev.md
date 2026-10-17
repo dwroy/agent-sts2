@@ -2834,3 +2834,5 @@ selector于2026-10-15 13:15:58 CST从/home/dw/.codex-brain原子改为/home/dw/P
 - 2026-10-17 10:30:42 CST 原101303策略批已读回：十项waiting、无源码/知识提交或合入阻塞；30行账本追溯中6行还显式重写相同proposed，已核物理/提交前态均同值，状态及保护字段保持；56产物与46小原件已核归档。19项材料核验不当生产测试，原初稿/错误及纠正均保留；不新增版本、测试、派发或科学通知，live/V5-R379及当前局保持。回执paper/materials/20261017-1027-ops/strategy-readback.json。
 
 - 2026-10-17 10:43:25 CST 2Q6ZYZ6JHM0M复盘闭环已核：A10/F8败局，8行原账本与复盘/2提案归档。新增非阻塞纯bug“隐秘匕首双弃题未读已保存条件后继”已进fix-queue并关联原59b2提案去重，未派重复学习/卡死修复。唯一paper_dataset --no-raw实际exit0、五一致性/keyscan CLEAN，本局has_postmortem1；未新增源码、测试或发布，V5-R379/当前局保持。回执paper/materials/20261017-1031-ops/。
+
+- 2026-10-17 10:47:35 CST 原102830策略批已实际读回：十项因完整候选归属/逐来源结算/受控后继缺口保留waiting，无源码提交或合入阻塞；16行原CLI追溯及52产物已核，40小原件SHA归档。72项为材料核验，不是生产测试；不新编号、补测或派发，live/V5-R379及当前局保持。回执paper/materials/20261017-1044-ops/strategy-readback.json。
