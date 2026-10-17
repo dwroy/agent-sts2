@@ -1,0 +1,82 @@
+{
+  "at": "2026-10-17T11:01:49.117907+08:00",
+  "run_id": "5H83F3J0XSTE",
+  "status": "qualifying startup candidate; full natural terminal audit pending",
+  "original_config": {
+    "path": "logs/run-config.jsonl",
+    "offset": 1928062,
+    "bytes": 5753,
+    "sha256": "8e0e14de5eb546b3a7d1b44d62b7044fc84bd184885455d5889b57af8d84d963"
+  },
+  "config_sha256": "8e0e14de5eb546b3a7d1b44d62b7044fc84bd184885455d5889b57af8d84d963",
+  "ts": "2026-10-17T03:00:49.152Z",
+  "floor": 1,
+  "restart": false,
+  "process": {
+    "pid": 3319441,
+    "started": "2026-10-17T03:00:39.166Z"
+  },
+  "code": {
+    "commit": "dbd41616420f62e6502e9cb6c5827e852a6b4949",
+    "code": "dbd4161+dirty",
+    "dirty": true,
+    "dirty_files": [
+      "knowledge/characters/silent/boss-damage.json",
+      "knowledge/characters/silent/construction-opportunities.json",
+      "knowledge/characters/silent/monster-records.json",
+      "knowledge/characters/silent/outcome-stats.json",
+      "knowledge/characters/silent/room-costs.json",
+      "knowledge/common/card-upgrades.json",
+      "knowledge/common/monster-db.json",
+      "knowledge/common/move-model.json",
+      "notes/fight-value-backtest-silent.md",
+      "notes/monster-db-check.md"
+    ],
+    "branch": "live",
+    "worktree": "live"
+  },
+  "human_pace": {
+    "schema": "human-pace-h1-v1",
+    "budgets": {
+      "ordinary": 10000,
+      "elite": 15000,
+      "boss": 30000,
+      "retry": 10000,
+      "routine": 5000,
+      "brain": 90000,
+      "direction": 60000
+    },
+    "model_effort": "xhigh",
+    "required_full_replaced": true
+  },
+  "loop_switches": {
+    "mode": "play",
+    "run_start": "auto",
+    "s_readiness": "shadow",
+    "s_build_rank": "shadow",
+    "s_combat_rank": "shadow",
+    "s_build_sort": "shadow",
+    "sim_failure_exit": "on",
+    "sim_adaptive": "on",
+    "global_build_eval": "shadow",
+    "boss_sim_completion": "required-full-paired-v1"
+  },
+  "configured_brain": {
+    "engine": "codex",
+    "engines": {
+      "codex": {
+        "model": "gpt-6.1-sol",
+        "model_by_prefix": {},
+        "timeout_ms": 600000,
+        "effort": "xhigh",
+        "reask": null,
+        "tools": false,
+        "max_calls": null
+      }
+    }
+  },
+  "legacy_metadata_label": "loop.boss_sim_completion still says required-full-paired-v1; actual H1 policy is explicitly human_pace.required_full_replaced=true; runtime decision completions audited at terminal, no label-only adoption claim",
+  "full_dirty_input_checked_or_recalibrated": false,
+  "terminal_complete": false,
+  "no_restart_or_live_changes_by_watcher": true
+}

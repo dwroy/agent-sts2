@@ -1,0 +1,20 @@
+{"stream": "run-config", "rows": {"YZWV37N2MU6N": 1, "N9GKED3PMEV3": 1, "CVJ4MLQF4CSY": 2, "DC32RW0A80V1": 1, "2Q6ZYZ6JHM0M": 1, "JKDUL0AL0TW6": 1}}
+{"stream": "runs", "rows": {"YZWV37N2MU6N": 1, "N9GKED3PMEV3": 1, "CVJ4MLQF4CSY": 1, "DC32RW0A80V1": 1, "2Q6ZYZ6JHM0M": 1, "JKDUL0AL0TW6": 1}}
+{"stream": "decisions", "rows": {"YZWV37N2MU6N": 1010, "N9GKED3PMEV3": 1187, "CVJ4MLQF4CSY": 918, "DC32RW0A80V1": 1216, "2Q6ZYZ6JHM0M": 158, "JKDUL0AL0TW6": 750}}
+{"stream": "states", "rows": {"YZWV37N2MU6N": 1037, "N9GKED3PMEV3": 1300, "CVJ4MLQF4CSY": 1056, "DC32RW0A80V1": 1340, "2Q6ZYZ6JHM0M": 163, "JKDUL0AL0TW6": 782}}
+Traceback (most recent call last):
+  File "/home/dw/Projects/agent-sts2/paper/materials/20261017-human-pace-h1/natural/freeze-inputs.py", line 101, in <module>
+    main()
+    ~~~~^^
+  File "/home/dw/Projects/agent-sts2/paper/materials/20261017-human-pace-h1/natural/freeze-inputs.py", line 83, in main
+    row = json.loads(raw)
+  File "/usr/lib/python3.14/json/__init__.py", line 352, in loads
+    return _default_decoder.decode(s)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^
+  File "/usr/lib/python3.14/json/decoder.py", line 345, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/json/decoder.py", line 361, in raw_decode
+    obj, end = self.scan_once(s, idx)
+               ~~~~~~~~~~~~~~^^^^^^^^
+json.decoder.JSONDecodeError: Invalid control character at: line 1 column 1322 (char 1321)

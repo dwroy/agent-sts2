@@ -1,0 +1,21 @@
+{
+  "request": "roy-20261017-human-pace",
+  "phase": "H1 natural acceptance",
+  "owner_session": "01a13dcd-83d4-7c63-b233-f93cf878ecf4",
+  "state": "waiting two complete R380 natural runs",
+  "requirements": [
+    "original run-config admission, pre-release running game excluded",
+    "two complete natural runs, one inotify listener, no polling/restart",
+    "duration, per-kind p50/p90/max, budget/fallback/B2/B3 samples/L2 calls",
+    "compare five finished pre-release runs, G1c funnel/Boss outcomes",
+    "separate >90min or stuck reasons",
+    "read original ops exact host closure, no duplicate checks",
+    "report then stop, no next stage"
+  ],
+  "baseline_cut": "data-cut.json",
+  "scripts": [
+    "wait-two-natural.py",
+    "freeze-inputs.py",
+    "analyze.py"
+  ]
+}
