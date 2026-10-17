@@ -18,8 +18,11 @@ import { bossTrustReason } from "./boss-trust.js";
 import { globalBossTargets } from "./global-build.js";
 import { askCardShadow, captureCardShadow, evaluateCardShadow, type CardShadowInput } from "./human-pace-card-shadow.js";
 import type { JevClient } from "../reflex/jev/client.js";
+import { projectActPlan } from "./human-pace-plan-shadow.js";
+import type { CoreTemplate } from "../construction/types.js";
+import type { Knowledge } from "../knowledge/index.js";
 
-export function structuredActPlan(plan: RunPlan) {
+export function structuredActPlan(plan: RunPlan, cores: readonly CoreTemplate[] = [], knowledge?: Knowledge) {
   return { schema: "human-pace-act-plan-v1", source: "existing_accepted_brain_run_plan", delivered: false,
     run: plan.runId, act: plan.act, floor: plan.floor, trigger: plan.trigger,
     direction: plan.construction?.primary ?? "uncommitted", archetype: plan.archetype,
@@ -28,6 +31,7 @@ export function structuredActPlan(plan: RunPlan) {
     rest_and_upgrade: plan.rest, route_preference: { elites: plan.elites }, boss_preparation: plan.bossPrep,
     wake: { checkpoint: plan.construction?.checkpoint ?? null, pivot_if: plan.construction?.pivot_if ?? null },
     reason: plan.construction?.reason ?? null, summary: plan.summary,
+    concrete: projectActPlan(plan, cores, knowledge),
     limits: "既有大脑已接受计划的只读投影；缺少结构化方向/叫醒条件时unknown。不新增提示或调用，不冒称大脑已经读取H2分数。" };
 }
 
@@ -65,9 +69,9 @@ export class HumanPaceShadow {
       if (this.checkpoint?.run !== run) { this.previous = null; this.checkpoint = null; this.planKey = ""; }
       const accepted = plan?.runId === run ? plan : null;
       const planKey = accepted ? JSON.stringify(accepted) : "";
-      if (accepted && planKey !== this.planKey) { this.append({ ...base, act_plan: structuredActPlan(accepted) }); this.planKey = planKey; }
       const data = loadConstructionData("silent"), ascension = env.state.run?.ascension ?? 0;
       const cores = data?.templates.filter((core) => core.ascensions.includes(ascension)) ?? [];
+      if (accepted && planKey !== this.planKey) { this.append({ ...base, act_plan: structuredActPlan(accepted, cores, env.knowledge) }); this.planKey = planKey; }
       let pool: GlobalBossPool;
       try { pool = setup?.globalPool ?? loadGlobalBossPool(ascension); }
       catch { pool = { character: "silent", ascension, stages: [], unknown: [{ boss: "unknown", reason: "observed_pool_unavailable" }],

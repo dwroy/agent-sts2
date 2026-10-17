@@ -51,13 +51,13 @@ it("does not manufacture support membership or a preferred core when the plan is
   expect(result.primary).toBe("uncommitted");
   expect(result.rows[0]?.core_component).toBeNull();
   expect(result.rows[0]?.template_membership).toContain("P");
-  expect(result.rows[0]?.wake).toMatchObject({ uncovered_by_plan: null, possible_direction_change: true });
+  expect(result.rows[0]?.wake).toMatchObject({ uncovered_by_plan: null, possible_direction_change: null, initial_direction_needed: true });
 });
 
-it("keeps unknown scores null, and identifies its stable skip fallback as lacking a known comparison", async () => {
+it("keeps unknown scores null and defers to the brain instead of silently preferring skip", async () => {
   const f = fixture();
   const result = await evaluateCardShadow({ input: f.input, env: f.environment, cores: [], plan: null, pool, originalB3: {}, setup: null });
-  expect(result.module_first).toBe("skip"); expect(result.module_first_basis).toContain("unknown");
+  expect(result.module_first).toBeNull(); expect(result.module_first_basis).toBe("defer_to_brain");
   expect(result.rows.every((row) => row.target_delta_win === null && row.target_delta_S === null)).toBe(true);
 });
 
