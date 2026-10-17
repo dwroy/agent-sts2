@@ -258,3 +258,10 @@ F48→F49离线报告/设计main10e5e3e10已交，原统计与未知边界保持
 ### 2026-10-16 22:46:31 CST F48联合shadow源交付停点
 
 实现七叶source7ca593f9e/tree473039a3c，详见20261016-f48-joint-shadow/completion.md。tsc0/63固定0、唯一源full1仅旧fake learner paneCount题，原题1过26未选与未到paths11项补验0；原ops实际原生接受未变组合证据后提交并交精确source。全部失败、原时限和断言保留，不重未变整套或冒全套0。实际新source接收/main-live窄集成/按性质核号/精确组合host由原ops接续，不把运输当实收或旧树绿借新树。只日志，无额外模拟/worker；资源/配对不足及F49科学边界unknown，其他角色固定题等价。当前watcher限定源交付完成后停，根0332及自然门槛不关；自然验收仍待根修复验收通过后Claude另派，没有新Roy设计待决。
+
+
+## 2026-10-17 接续：紧急 F48 健康诊断与日志暂停
+
+Claude原父项限定指派已完成诊断与源交付，不是新阶段。CVJ4 F48的主要耗时为原B2 worker：310.84分钟，对照N9GK6.16分钟；实际工作量6.89倍、每结果墙钟成本7.33倍。7ca新增联合日志汇总位于原B2计时之后，其所在全部other_ms仅34.456秒。历史IO等待unknown；两局都原有F48→F49连续模拟，不能混同日志汇总。完整冻结索引、复现、重启及负载边界见paper/materials/20261017-f48-shadow-slowdown/report.md。
+
+按“联合shadow先停用”仅交默认off的两叶source0e4f7687c02a19bb9167b6aef59e7799b309f17c；生产tsc0/固定34项0，唯一源full1的旧P3限时与缺WT既有venv各原题补验0、未到paths11项0，原ops正式接受未变源组合证据后提交并运输。发布/编号分类及精确组合host仍原ops串行闭环，旧full1不改。磁盘发布不热改当前DC32；暂停日志不是B2提速修复。本轮不改B2预算/候选、C1/C2、SL用药或题面，不启自然观察/其他阶段；需Roy/Claude另行决定真正B2工作量策略。watcher到此停止。

@@ -1,0 +1,42 @@
+{
+  "schema": "f48-shadow-slowdown-requirements-v1",
+  "parent": "roy-20261016-global-build",
+  "owner_session": "01a13dcd-83d4-7c63-b233-f93cf878ecf4",
+  "at": "2026-10-17T08:38:07.560309+08:00",
+  "scope": "urgent CVJ4 vs N9GK log-only attribution; default-off joint diagnostics; original ops integration; stop before natural acceptance",
+  "requirements": [
+    {
+      "id": "D1",
+      "requirement": "Original F48 decision timing, B2, joint and B3/G2 attribution",
+      "state": "passed",
+      "evidence": [
+        "summary.json",
+        "console-progress-evidence.json",
+        "report.md"
+      ]
+    },
+    {
+      "id": "D2",
+      "requirement": "Historical load/IO boundaries, F5 ENOSPC separated",
+      "state": "passed; IO wait unknown",
+      "evidence": [
+        "summary.json",
+        "report.md"
+      ]
+    },
+    {
+      "id": "P1",
+      "requirement": "Default-off only, fixed B2/B3 question/request and other-role equivalence",
+      "state": "fixed34/tsc0; original full1 + unchanged supplements0 accepted by original ops",
+      "evidence": [
+        "source.patch",
+        "validation.json"
+      ]
+    },
+    {
+      "id": "P2",
+      "requirement": "Exact tested source sent to original ops; no game restart or natural observation",
+      "state": "exact source committed and actually transported to original ops; deployment/host are original ops follow-up"
+    }
+  ]
+}
