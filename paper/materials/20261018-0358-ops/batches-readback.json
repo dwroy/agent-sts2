@@ -1,0 +1,425 @@
+[
+  {
+    "batch": "20261018-034302",
+    "canonical_state": "done",
+    "canonical_rc": 0,
+    "report": {
+      "task": "postmortem",
+      "appended": [
+        "U6JELGQTBMHN"
+      ],
+      "skipped": [],
+      "bugs": [
+        {
+          "run": "U6JELGQTBMHN",
+          "where": "agent/src/reflex/combat-plan.ts:4024",
+          "what": "整回合题截掉毒药水第三合法目标；旧silent-0365重现，fix-queue未找到收录",
+          "new": false
+        }
+      ],
+      "ledger": {
+        "added": [],
+        "updated": [
+          "silent-0020",
+          "silent-0064",
+          "silent-0365",
+          "silent-0005",
+          "silent-0204",
+          "silent-0278"
+        ],
+        "repeats": [
+          "silent-0365"
+        ],
+        "check": 0
+      },
+      "code_proposals": [
+        "silent-proposal-8f513d07c26e29bb",
+        "silent-proposal-e9e0fb4426ef5a35"
+      ],
+      "implementation_domains": [
+        "combat",
+        "potion"
+      ],
+      "report": "/home/dw/Projects/agent-sts2/learner/runs/20261018-034307-92e6ea6b-ca4b-454c-a186-aea2f448b58f-postmortem/report.md"
+    },
+    "native": {
+      "batch": "20261018-034302",
+      "thread": "01a14b63-bfc7-7153-8d0c-3c5ca471d7fa",
+      "cwd": "/home/dw/Projects/agent-sts2",
+      "event_log": "learner/runs/20261018-034307-92e6ea6b-ca4b-454c-a186-aea2f448b58f-postmortem.jsonl",
+      "registered_launch_batch": "20261018-034302",
+      "original_lease": "251b0c5389bfa0479c813180b66b3064f168b1678d97dfebc76a929d76b17eea",
+      "native_context": {
+        "source": "ops/codex-ops/accounts/codex3/learner/sessions/2026/10/18/rollout-2026-10-18T03-43-10-01a14b63-bfc7-7153-8d0c-3c5ca471d7fa.jsonl",
+        "offset": 49293,
+        "bytes": 4654,
+        "sha256": "e9c0d7bfca114b985da328f5f12d01edaffe8ac3610b93557ce5554080a1f9c7",
+        "model": "gpt-6.1-sol",
+        "effort": "xhigh",
+        "sandbox": {
+          "type": "workspace-write",
+          "writable_roots": [
+            "/home/dw/Projects/agent-sts2/.git"
+          ],
+          "network_access": false,
+          "exclude_tmpdir_env_var": false,
+          "exclude_slash_tmp": false
+        },
+        "approval_policy": "never"
+      },
+      "native_user_input": {
+        "offset": 56530,
+        "bytes": 15344,
+        "sha256": "16bafe8e4e7ef400a6392e1f2caa6c1fa7bb812e803fc511226c39577822f88b",
+        "input_sha256": "da4775c706e9dd0c26bee22ebf7a6af85fb3090c4609d1fd40967f9eda3a2efe"
+      },
+      "original_header_events": [
+        {
+          "offset": 0,
+          "bytes": 16866,
+          "sha256": "a826adbec38a346757a1f0103ed1f0fa1b2f04c7955cf2b23ecd671e3e920d83",
+          "type": "learner_launch",
+          "attempt": null,
+          "code": null
+        },
+        {
+          "offset": 16866,
+          "bytes": 360,
+          "sha256": "b5b7cd50a5068283f43cdbd8b47594d3014f51e4d636223f8fdbb4e6804e1c3a",
+          "type": "learner_startup_attempt",
+          "attempt": 1,
+          "code": null
+        },
+        {
+          "offset": 20238,
+          "bytes": 77,
+          "sha256": "a540e2ea6d9059a9c98037941bf65c9e696b8e5079005084fba53406a646bf0b",
+          "type": "thread.started",
+          "attempt": null,
+          "code": null
+        }
+      ],
+      "startup_attempts": 1,
+      "failed_startups_preserved": 0,
+      "no_model_or_manual_restart": true
+    },
+    "source_files": [
+      {
+        "path": "agent/src/reflex/combat-plan.ts",
+        "observed_live": "f7abb0e13d3ee0943637be2146ca52ee25486289",
+        "run_commit": "090b64ebfb29cb5ca48392ae91e2d5543964855f",
+        "sha256": "d2ce972bcfcfe1f558a32b1212f506734feeaadb7da3a26230bf9568702c3106",
+        "same_as_run_commit": true,
+        "working_diff_bytes": 0
+      },
+      {
+        "path": "agent/src/reflex/rollout-live.ts",
+        "observed_live": "f7abb0e13d3ee0943637be2146ca52ee25486289",
+        "run_commit": "090b64ebfb29cb5ca48392ae91e2d5543964855f",
+        "sha256": "c6222dda4aad21f2805d9e8d259f49169ca6b20a719e7e9f7df07890db4e835f",
+        "same_as_run_commit": true,
+        "working_diff_bytes": 0
+      },
+      {
+        "path": "agent/src/reflex/turn-solver.ts",
+        "observed_live": "f7abb0e13d3ee0943637be2146ca52ee25486289",
+        "run_commit": "090b64ebfb29cb5ca48392ae91e2d5543964855f",
+        "sha256": "f9cc623485a3481db6b4cbe6d405a8d6f6677beb369309942598da3be685b808",
+        "same_as_run_commit": true,
+        "working_diff_bytes": 0
+      }
+    ],
+    "source_stream_counts": {
+      "runs": 1,
+      "decisions": 453,
+      "states": 472,
+      "run-plans": 6,
+      "run-config": 1,
+      "brain": 29,
+      "sl-attempts": 1
+    },
+    "original_ledger_rows": [
+      {
+        "offset": 23869374,
+        "bytes": 413,
+        "sha256": "03a69ab2bd4bf8706193df2f6d4d3d412674e7931fa11d02e2a8377b4055bf46",
+        "row": {
+          "op": "update",
+          "id": "silent-0020",
+          "ts": "2026-10-18T03:54:39+08:00",
+          "by": "learner:postmortem",
+          "evidence": [
+            {
+              "run": "U6JELGQTBMHN",
+              "floor": 27,
+              "note": "F19/F20胜战均0净损，F22/F23胜战净损7/16，F24事件66→48；F25锻造不回血，F27 HEAL48/97→82/102后F28仍败。恢复缓冲及资源链的支持，非忘记回血重犯。",
+              "role": "support"
+            }
+          ],
+          "where": {
+            "lessons": [
+              "U6JELGQTBMHN"
+            ]
+          }
+        }
+      },
+      {
+        "offset": 23869787,
+        "bytes": 482,
+        "sha256": "e8a5c363dac4b633eb65474c0d916cdf729e7fb4176232bd45fc6d36b11c7902",
+        "row": {
+          "op": "update",
+          "id": "silent-0064",
+          "ts": "2026-10-18T03:54:39+08:00",
+          "by": "learner:postmortem",
+          "evidence": [
+            {
+              "run": "U6JELGQTBMHN",
+              "floor": 28,
+              "note": "T4末中段4血结5毒归零，T6接续25且旧毒及2力量消失；T5末前段被6毒清零、T7恢复25。初始150、接续新增50、实际扣敌164、末剩36。未验证另一击杀顺序；当前rollout-live已有暂死段重建，不认0273重犯。",
+              "role": "support"
+            }
+          ],
+          "where": {
+            "lessons": [
+              "U6JELGQTBMHN"
+            ]
+          }
+        }
+      },
+      {
+        "offset": 23870269,
+        "bytes": 526,
+        "sha256": "446c381db2d74f42694d0f207b465f4a2f191a2dd554a133eccfd8b922feab10",
+        "row": {
+          "op": "update",
+          "id": "silent-0365",
+          "ts": "2026-10-18T03:54:40+08:00",
+          "by": "learner:postmortem",
+          "evidence": [
+            {
+              "run": "U6JELGQTBMHN",
+              "floor": 28,
+              "turn": 1,
+              "note": "T1 s443295及T7 s443324槽1毒药合法目标[0,1,2]；整回合d428625等只展示e0/e1，漏后段。当前live combat-plan.ts:3887容量min(2)及:4024 targets.slice(0,2)。T7单动作能选第三目标；最终向中段喝，6毒结算后仍败。旧根因复现，不声称补全即赢。",
+              "role": "repeat"
+            }
+          ],
+          "where": {
+            "lessons": [
+              "U6JELGQTBMHN"
+            ]
+          }
+        }
+      },
+      {
+        "offset": 23870795,
+        "bytes": 380,
+        "sha256": "cf0b6ce57ed8c535d209d8874e21b15b0697bcee8462bec3b3a6e0cead8e73b4",
+        "row": {
+          "op": "update",
+          "id": "silent-0005",
+          "ts": "2026-10-18T03:54:41+08:00",
+          "by": "learner:postmortem",
+          "evidence": [
+            {
+              "run": "U6JELGQTBMHN",
+              "floor": 28,
+              "turn": 5,
+              "note": "T5步法+建3敏后防御8、斗篷9合17；T6防御8+扫腿+17合25，比基础5+14多6，仍对中12+后14损1。敏捷由后续挡牌兑现。",
+              "role": "support"
+            }
+          ],
+          "where": {
+            "lessons": [
+              "U6JELGQTBMHN"
+            ]
+          }
+        }
+      },
+      {
+        "offset": 23871175,
+        "bytes": 392,
+        "sha256": "29505b8bd93d0954a05bd729bdd368a14f87c885b6c7879a03334dc2e2f7c1d9",
+        "row": {
+          "op": "update",
+          "id": "silent-0204",
+          "ts": "2026-10-18T03:54:41+08:00",
+          "by": "learner:postmortem",
+          "evidence": [
+            {
+              "run": "U6JELGQTBMHN",
+              "floor": 27,
+              "note": "F7/F11/F16/F27四次HEAL分别22/70→48/75、38/82→67/87、56/92→88/97、48/97→82/102，基础HEAL21/24/27/29外各补5现血及5上限；F25 SMITH保持48/97。",
+              "role": "support"
+            }
+          ],
+          "where": {
+            "lessons": [
+              "U6JELGQTBMHN"
+            ]
+          }
+        }
+      },
+      {
+        "offset": 23871567,
+        "bytes": 448,
+        "sha256": "9d134cfa96a6ed6384eb26fc88c71c145f4b5bd1a43da86102fe40f9f9fa79ff",
+        "row": {
+          "op": "update",
+          "id": "silent-0278",
+          "ts": "2026-10-18T03:54:42+08:00",
+          "by": "learner:postmortem",
+          "evidence": [
+            {
+              "run": "U6JELGQTBMHN",
+              "floor": 28,
+              "turn": 7,
+              "note": "T7 d428658/s443328→443329槽1毒药朝中段饮用，毒0→6、敌19血不变；结束后s443330敌13血/5残毒，仍有两次9攻击致死。无触媒、无制品/头骨加量，药水施毒与结伤分账。",
+              "role": "support"
+            }
+          ],
+          "where": {
+            "lessons": [
+              "U6JELGQTBMHN"
+            ]
+          }
+        }
+      },
+      {
+        "offset": 23872015,
+        "bytes": 373,
+        "sha256": "8b37b861460648bd388f711f8a5e6f41dec4492cc00f8e76a0934dfe522a01f5",
+        "row": {
+          "op": "update",
+          "id": "silent-0064",
+          "ts": "2026-10-18T03:55:41+08:00",
+          "by": "learner:postmortem",
+          "where": {
+            "proposal": [
+              "/home/dw/Projects/agent-sts2/learner/runs/20261018-034307-92e6ea6b-ca4b-454c-a186-aea2f448b58f-postmortem/proposal-combat-reattach.md"
+            ]
+          },
+          "note": "代码提案 silent-proposal-8f513d07c26e29bb → task=strategy-proposal；Roy-2026-10-07-learning"
+        }
+      },
+      {
+        "offset": 23872388,
+        "bytes": 373,
+        "sha256": "4fdc3405c28eee0c7d23bf2f88e3ffbf23be8243c8398e7ffdf2db8e09008347",
+        "row": {
+          "op": "update",
+          "id": "silent-0005",
+          "ts": "2026-10-18T03:55:41+08:00",
+          "by": "learner:postmortem",
+          "where": {
+            "proposal": [
+              "/home/dw/Projects/agent-sts2/learner/runs/20261018-034307-92e6ea6b-ca4b-454c-a186-aea2f448b58f-postmortem/proposal-combat-reattach.md"
+            ]
+          },
+          "note": "代码提案 silent-proposal-8f513d07c26e29bb → task=strategy-proposal；Roy-2026-10-07-learning"
+        }
+      },
+      {
+        "offset": 23872761,
+        "bytes": 372,
+        "sha256": "ab79f6288928952da9ae991b8adbbf6dd909e92af7d481c7e08de84eedd169ad",
+        "row": {
+          "op": "update",
+          "id": "silent-0365",
+          "ts": "2026-10-18T03:55:43+08:00",
+          "by": "learner:postmortem",
+          "where": {
+            "proposal": [
+              "/home/dw/Projects/agent-sts2/learner/runs/20261018-034307-92e6ea6b-ca4b-454c-a186-aea2f448b58f-postmortem/proposal-potion-targets.md"
+            ]
+          },
+          "note": "代码提案 silent-proposal-e9e0fb4426ef5a35 → task=strategy-proposal；Roy-2026-10-07-learning"
+        }
+      },
+      {
+        "offset": 23873133,
+        "bytes": 372,
+        "sha256": "54c602c613d0ce54eb7969df179dbc908742d212b322e5b4896c5e6bca6d37a2",
+        "row": {
+          "op": "update",
+          "id": "silent-0278",
+          "ts": "2026-10-18T03:55:43+08:00",
+          "by": "learner:postmortem",
+          "where": {
+            "proposal": [
+              "/home/dw/Projects/agent-sts2/learner/runs/20261018-034307-92e6ea6b-ca4b-454c-a186-aea2f448b58f-postmortem/proposal-potion-targets.md"
+            ]
+          },
+          "note": "代码提案 silent-proposal-e9e0fb4426ef5a35 → task=strategy-proposal；Roy-2026-10-07-learning"
+        }
+      }
+    ],
+    "original_queue_rows": [
+      {
+        "offset": 4485318,
+        "bytes": 731,
+        "sha256": "4c6f455c0a61f6caddd736bebee0997392493e0b4fec941c7dcdcc235378e00e",
+        "row": {
+          "op": "add",
+          "id": "silent-proposal-8f513d07c26e29bb",
+          "ts": "2026-10-18T03:55:41+08:00",
+          "character": "silent",
+          "ledger": [
+            "silent-0064",
+            "silent-0005"
+          ],
+          "runs": [
+            "U6JELGQTBMHN"
+          ],
+          "source_task": "postmortem",
+          "target_task": "strategy-proposal",
+          "domains": [
+            "combat"
+          ],
+          "summary": "核对接续增加的清场需求、敏捷兑现与生成后重问；现有暂死重建不判重犯，缺对照维持现状",
+          "proposal": "/home/dw/Projects/agent-sts2/learner/runs/20261018-034307-92e6ea6b-ca4b-454c-a186-aea2f448b58f-postmortem/proposal-combat-reattach.md",
+          "rule_changes": false,
+          "authorization": "Roy-2026-10-07-learning",
+          "proposal_sha256": "c5eede4a866d932b809384108be43ad09e2021d6a49d10acf266f05fbe8ddf5c",
+          "state": "pending"
+        }
+      },
+      {
+        "offset": 4486049,
+        "bytes": 743,
+        "sha256": "ee3a20308d236519fe77b126359fd01af031fe3e204ee7bcb0a726c8c9f889dc",
+        "row": {
+          "op": "add",
+          "id": "silent-proposal-e9e0fb4426ef5a35",
+          "ts": "2026-10-18T03:55:43+08:00",
+          "character": "silent",
+          "ledger": [
+            "silent-0365",
+            "silent-0278"
+          ],
+          "runs": [
+            "U6JELGQTBMHN"
+          ],
+          "source_task": "postmortem",
+          "target_task": "strategy-proposal",
+          "domains": [
+            "combat",
+            "potion"
+          ],
+          "summary": "补全整回合题未建模定向药水的第三合法目标，并使容量计算一致；不由晚喝死局认定早喝必胜",
+          "proposal": "/home/dw/Projects/agent-sts2/learner/runs/20261018-034307-92e6ea6b-ca4b-454c-a186-aea2f448b58f-postmortem/proposal-potion-targets.md",
+          "rule_changes": false,
+          "authorization": "Roy-2026-10-07-learning",
+          "proposal_sha256": "7a410a39d9e0f5f64b4196183ee0b6ce450c90e5ea657314db4974ecc147bd1b",
+          "state": "pending"
+        }
+      }
+    ],
+    "postmortem_chunk_sha256": "b40c3ba33155ed3a709fc5918e1101f8c228fad4c1a7cb713bc0e89e56ec5f1f",
+    "new_pure_bug": false,
+    "old_bug_already_queued": "silent-0365",
+    "existing_0332_capture_available": false,
+    "no_model_game_simulation_or_observer": true
+  }
+]
