@@ -28,6 +28,8 @@ def main():
         rows = [d for d in streams["decisions"] if d.get("screen") == "COMBAT" and d.get("floor") in floors
                 and (d.get("sl_attempt") or 1) == 1]
         result["runs"][run] = {"code": streams["run-config"][0]["code"],
+                              "all_B2": h1.simulation(streams["decisions"], "B2"),
+                              "SL_retry_B2": h1.simulation([d for d in streams["decisions"] if (d.get("sl_attempt") or 1) > 1], "B2"),
                               "Boss_first_attempt_B2": h1.simulation(rows, "B2"),
                               "by_Boss_floor": {str(f): h1.simulation([d for d in rows if d["floor"] == f], "B2") for f in sorted(floors)},
                               "first_attempt_Boss_decisions": len(rows),

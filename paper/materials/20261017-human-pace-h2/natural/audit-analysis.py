@@ -75,6 +75,12 @@ def main():
     assert not result["duplicate_card_sidecars"], "duplicate observations must be resolved rather than counted twice"
     provenance = json.loads((HERE / "inputs-final/provenance-verification.json").read_bytes())
     assert provenance["all_original_row_SHA_verified"] and provenance["all_projections_recomputed_equal"]
+    original_plans = read("run-plans")
+    accepted_plans = [p for p in original_plans if isinstance(p.get("plan"), dict)]
+    assert result["plans"]["original_accepted_plan_updates"] == len(accepted_plans)
+    assert len(result["plans"]["failed_or_unaccepted_plan_rows"]) + len(accepted_plans) == len(original_plans)
+    request_ids = [r["jev_meta"].get("request_id") for r in result["card_questions"] if r["jev_meta"]]
+    assert len(request_ids) == len(set(request_ids)) and all(request_ids), "Jev request identity not unique"
     output = {"at": datetime.now().astimezone().isoformat(), "all_mechanical_checks_passed": True,
               "admission": checks, "partition_denominators": n,
               "missing_sidecar_not_hidden": result["missing_card_sidecar"],

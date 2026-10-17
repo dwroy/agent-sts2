@@ -223,3 +223,15 @@ H2独立WT human-pace-h2-shadow-20261017按新规格1fe97fe4d实现：方向检�
 - 2026-10-17T16:55:32.145203+08:00 watcher/codex1本人读回H2正式实收与窄发布：source816532129/12叶均为实际main7e8b58/live3910f41/tree77dd769源祖先及逐SHA相同，纯shadow诊断不增号/保持R385，两边versions旧SHA保持。原075726精确host已RUN/PID431877、终局pending归原ops，不借最终source479/4395绿或R384/R385宿主绿；本轮三项及25MF33题核查交付完成后停止，无自然/on/H3+或新goal，H0/0332和宽父保持。证据paper/materials/20261017-human-pace-h2/watcher-h2-ops-readback.json。
 
 最终集成/检查启动正式原件paper/materials/20261017-1651-ops/，watcher本人读回及本轮completion/requirements/checkpoint已同步。仅最后精确宿主终局由原ops事件收尾，watcher结束当前指派；不以工程交付宣布H2科学/自然/实际接管通过。
+
+
+## 13. H2 shadow三自然局只读验收接续（2026-10-17T17:06:35.760595+08:00）
+
+Claude已明确指派：等3局从开局实际加载3910f41或后继且H2 shadow/Boss60的完整Silent自然局，按拿/跳过、胜率比较难度、实际unknown、三个两两一致率、逐题分歧及真实后继Boss、叫醒条件、方向/计划覆盖、增量耗时成本和B2样本截断给报告。原S5以158d910/F1启动无H2排除；单次inotify监听PID458217/birth111965040/session40720只等原日志事件，不按分钟查询或重启。材料在`paper/materials/20261017-human-pace-h2/natural/`，口径在首合格启动前冻结。未获得新终局时不填统计结果，三局完成交报告后停止，Jev实际接管及H3+待另派。
+
+
+## 14. H2三自然观察报告交付（2026-10-17T20:16:30.647321+08:00）
+
+- 2026-10-17T20:16:30.647321+08:00 watcher/codex1完成Claude原H2三自然只读观察：4JS3/WQB3/BXU0原run-config3910/6f2/6f2及终局完整，30.109/32.255/91.689分、F22/F24/F48败，原单次listener458217退出0。42题Jev成功、与大脑18/37一致（拿11/28、跳7/9），4fallback/1code分列；目标比较42/42 unknown、模块全为skip工程兜底，计划外叫醒42/42，原计划完整19/23/投影23，1超时无plan单列。H2增量工作6.549/6.682/12.279秒无超预算；BXU51L2/两Boss各6试，不归因H2慢。首试B2截断0/47对旧4/44、SL10s仍截，Boss/知识/R384混杂不称因果收益。4451原引用SHA及投影核回、解压输入gitleaks0、原精确77dd宿主0已读；不建议任何题转Jev on，不开后续阶段，H0/0332/宽父保持，交报告后停止。证据paper/materials/20261017-human-pace-h2/natural/。
+
+观察报告完成不等于on准入。原始输出/投影、unknown/工程兜底与数值模块分别列；未新增游戏机制或取消闸门。建议Claude/Roy先决定真实inventory数值覆盖与计划外叫醒范围，再明确指派；本watcher已停止，不自动启用Jev或H3/H4。

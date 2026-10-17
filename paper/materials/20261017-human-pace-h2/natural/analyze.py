@@ -92,6 +92,7 @@ def make_card(d, side, run_info):
             "actual_action": actual, "brain_actual": actual if is_brain else None,
             "brain_take_skip": ("skip" if actual == "skip" else "take") if actual is not None and is_brain else "not_accepted_brain",
             "jev_success": successful_jev, "jev_success_choice": jev.get("jev_choice") if successful_jev else None,
+            "jev_ask_attempted": any(s.get("stage") == "H2_Jev_shadow" for s in (jev.get("time_budget") or {}).get("stages", [])),
             "jev_recorded_choice_including_fallback": jev.get("jev_choice"), "jev_fallback": jev.get("fallback"),
             "module_first": facts.get("module_first"), "module_first_basis": facts.get("module_first_basis"),
             "numerical_module_first": facts.get("module_first") if numerical else None,
@@ -112,7 +113,7 @@ def make_card(d, side, run_info):
 
 
 def card_agreements(rows):
-    output = {"all": {}, "by_brain_take_skip": {}, "by_difficulty": {}, "by_take_skip_and_difficulty": {}}
+    output = {"all": {}, "by_brain_take_skip": {}, "by_jev_take_skip": {}, "by_difficulty": {}, "by_take_skip_and_difficulty": {}}
     def one(rs):
         return {"questions": len(rs), "accepted_brain": sum(r["brain_actual"] is not None for r in rs),
                 "jev_success": sum(r["jev_success"] for r in rs),
@@ -123,6 +124,9 @@ def card_agreements(rows):
                 "jev_success_vs_numerical_module": agreement(rs, "jev_success_choice", "numerical_module_first"),
                 "jev_recorded_including_fallback_vs_actual": agreement(rs, "jev_recorded_choice_including_fallback", "actual_action")}
     output["all"] = one(rows)
+    for choice in ("take", "skip"):
+        output["by_jev_take_skip"][choice] = one([r for r in rows if r["jev_success_choice"] is not None
+            and (r["jev_success_choice"] == "skip") == (choice == "skip")])
     for key, field in (("by_brain_take_skip", "brain_take_skip"), ("by_difficulty", "difficulty")):
         for value in sorted({r[field] for r in rows}): output[key][value] = one([r for r in rows if r[field] == value])
     for take in ("take", "skip", "not_accepted_brain"):
@@ -175,7 +179,8 @@ def direction_analysis(rows):
         checkpoints.append({"run_id": row["run_id"], "act": act, "floor": row.get("floor"),
                             "decision_id": row.get("decision_id"), "checkpoint": direction.get("checkpoint"),
                             "time_budget": direction.get("time_budget"), "status": direction.get("status"),
-                            "reason": direction.get("reason"), "source": row["_source"]})
+                            "reason": direction.get("reason"), "source": row["_source"],
+                            "decision_context": row.get("decision_context")})
         if not direction.get("predictions"):
             reasons[direction.get("reason", "direction_predictions_missing")] += 1
         for pred in direction.get("predictions", []):
@@ -200,16 +205,31 @@ def direction_analysis(rows):
         target_units[key]["all_variants_known" if all(known) else "some_or_all_variants_unknown"] += 1
     return {"checkpoints": checkpoints, "variant_target_coverage": {k: dict(v) for k, v in coverage.items()},
             "checkpoint_boss_coverage": {k: dict(v) for k, v in target_units.items()},
+            "checkpoint_counts_by_current_act": dict(Counter(str(r.get("act")) for r in rows)),
+            "checkpoints_without_target_output": sum(not r["direction"].get("predictions") for r in rows),
+            "final_sequence_coverage": {k: dict(v) for k, v in coverage.items() if k.endswith("target_final_sequence")},
             "unknown_reasons": dict(reasons),
             "functional_core_and_casts": "inventory requirements/added components logged only; actual casts, qualification and joint outcome not certified"}
 
 
 def plan_analysis(plans, sides):
+    all_rows = plans
+    failed = [p for p in plans if not isinstance(p.get("plan"), dict)]
+    plans = [p for p in plans if isinstance(p.get("plan"), dict)]
     projections = [r for r in sides if isinstance(r.get("act_plan"), dict)]
     plan_fields = ("direction", "take_priority", "avoid", "rest_and_upgrade", "route_preference", "wake")
     records = []
     for row in plans:
         p = row.get("plan") or {}
+        raw = row.get("raw") or {}
+        raw_construction = raw.get("construction") if isinstance(raw.get("construction"), dict) else {}
+        raw_flags = {"direction": isinstance(raw_construction.get("primary"), str) and bool(raw_construction["primary"]),
+                     "alternatives": isinstance(raw_construction.get("alternatives"), list),
+                     "take_priority": isinstance(raw.get("want"), list), "avoid": isinstance(raw.get("avoid"), list),
+                     "rest_and_upgrade": raw.get("rest") in ("auto", "heal", "smith"),
+                     "route_preference": raw.get("elites") in ("seek", "normal", "avoid"),
+                     "wake_checkpoint": numeric(raw_construction.get("checkpoint")),
+                     "wake_pivot_if": isinstance(raw_construction.get("pivot_if"), str) and bool(raw_construction["pivot_if"].strip())}
         matches = [s for s in projections if s["run_id"] == row["run_id"]
                    and s["act_plan"].get("act") == p.get("act")
                    and s["act_plan"].get("floor") == p.get("floor")
@@ -226,14 +246,18 @@ def plan_analysis(plans, sides):
                    "wake_pivot_if_nonempty": bool(wake.get("pivot_if"))}
         records.append({"run_id": row["run_id"], "act": p.get("act"), "floor": row.get("floor"), "trigger": row.get("trigger"),
                         "projection_matches": len(matches), "structure_fields_present": all(k in shadow for k in plan_fields),
+                        "raw_output_field_flags": raw_flags, "raw_output_complete": all(raw_flags.values()),
                         "content_flags": content, "all_content_flags": all(content.values()),
                         "plan_source": row["_source"], "shadow_sources": [s["_source"] for s in matches]})
     groups = defaultdict(list)
     for row in records: groups[f"act{row.get('act')}"] .append(row)
-    return {"original_accepted_plan_updates": len(plans), "sidecar_plan_projections": len(projections),
+    return {"original_plan_log_rows": len(all_rows), "failed_or_unaccepted_plan_rows": failed,
+            "original_accepted_plan_updates": len(plans), "sidecar_plan_projections": len(projections),
             "records": records, "by_act": {k: {"original_updates": len(rs),
                 "projection_coverage": proportion(sum(bool(r["projection_matches"]) for r in rs), len(rs)),
                 "structure_complete": proportion(sum(r["structure_fields_present"] for r in rs), len(rs)),
+                "raw_output_complete": proportion(sum(r["raw_output_complete"] for r in rs), len(rs)),
+                "raw_output_field_counts": dict(Counter(key for r in rs for key,value in r["raw_output_field_flags"].items() if value)),
                 "content_complete": proportion(sum(r["all_content_flags"] for r in rs), len(rs)),
                 "field_content_counts": dict(Counter(key for r in rs for key, value in r["content_flags"].items() if value))}
                 for k, rs in groups.items()},
@@ -261,7 +285,13 @@ def main():
         if len(matches) > 1: duplicate.append({"decision": d["_source"], "shadows": [s["_source"] for s in matches]})
         if not matches: missing.append({"run": d["run_id"], "decision_id": d.get("decision_id"), "source": d["_source"]})
         cards.append(make_card(d, matches[0] if matches else {}, infos[d["run_id"]]))
-    directions = [r for r in streams["human-pace-shadow"] if isinstance(r.get("direction"), dict)]
+    decision_lookup = {(d["run_id"], d.get("decision_id")): d for d in streams["decisions"]}
+    directions = [{**r, "decision_context": {k: decision_lookup.get((r["run_id"], r.get("decision_id")), {}).get(k)
+                    for k in ("screen", "label")}}
+                  for r in streams["human-pace-shadow"] if isinstance(r.get("direction"), dict)]
+    terminal_directions = [r for r in directions if r["decision_context"].get("screen") == "GAME_OVER"
+                           or r["decision_context"].get("label") == "run/finalize"]
+    before_terminal_directions = [r for r in directions if r not in terminal_directions]
     divergence = [r for r in cards if r["brain_actual"] is not None and
                   (r["jev_success_choice"] is not None and r["jev_success_choice"] != r["brain_actual"]
                    or r["module_first"] is not None and r["module_first"] != r["brain_actual"])]
@@ -273,14 +303,30 @@ def main():
         jev_tokens = [r["jev_meta"] for r in rs if isinstance(r["jev_meta"], dict)]
         usage_known = [m for m in jev_tokens if numeric(m.get("input_tokens")) and m["input_tokens"] > 0]
         success_tokens = sum(m.get("input_tokens", 0) or 0 for m in jev_tokens)
+        run_decisions = [d for d in streams["decisions"] if d["run_id"] == run]
+        phase_ms = Counter()
+        for d in run_decisions:
+            for key, value in (d.get("latency_ms") or {}).items():
+                if numeric(value): phase_ms[key] += value
+        boss_attempts = [s for s in streams["sl-attempts"] if s["run_id"] == run and s.get("fight_kind") == "boss"]
+        boss_attempt_wall = []
+        for s in boss_attempts:
+            elapsed = (h1.stamp(s["ended_at"]) - h1.stamp(s["started_at"])).total_seconds() / 60 if s.get("started_at") and s.get("ended_at") else None
+            boss_attempt_wall.append({"floor": s.get("floor"), "encounter": s.get("encounter"), "attempt": s.get("attempt"),
+                                      "result": s.get("result"), "wall_minutes": elapsed, "source": s["_source"]})
         boss_ds = [d for d in streams["decisions"] if d["run_id"] == run and (d.get("sl_attempt") or 1) == 1
                    and d.get("screen") == "COMBAT" and d.get("floor") in {b["floor"] for b in info["funnel"]["bosses"]}]
         per_run[run] = {"pacing": info, "card_agreements": card_agreements(rs),
+                        "timing_attribution": {"phase_latency_ms": dict(phase_ms), "Boss_attempt_wall": boss_attempt_wall,
+                            "limits": "Individual latency fields and Boss wall spans are descriptive; do not add nested brain/B2/B3 to phase totals or assume no overlap."},
                         "time": {"card_module": card_time, "Jev": jev_time, "direction_module": dir_time,
-                                 "Jev_latency_ms": stats(r.get("jev_latency_ms") for r in rs),
+                                 "Jev_latency_ms": stats(r.get("jev_latency_ms") for r in rs if r["jev_ask_attempted"]),
+                                 "Jev_observation_latency_ms_including_no_client": stats(r.get("jev_latency_ms") for r in rs),
                                  "recorded_increment_ms": sum(t["actual_ms"]["sum"] for t in (card_time, jev_time, dir_time)),
                                  "limits": "sum disjoint H2 outer budgets only; unmeasured overhead and counterfactual net slowdown unknown"},
                         "cost": {"Jev_shadow_observations": len(rs), "successful_response_metadata_records": len(jev_tokens),
+                                 "outer_Jev_ask_attempts": sum(r["jev_ask_attempted"] for r in rs),
+                                 "HTTP_attempt_count_including_SDK_retries": None,
                                  "successful_usage_records": len(usage_known),
                                  "successful_metadata_with_zero_or_missing_input_usage": len(jev_tokens) - len(usage_known),
                                  "input_tokens_recorded": success_tokens,
@@ -291,6 +337,7 @@ def main():
                                  "actual_billed_total_USD": None,
                                  "rate_scope": "frozen repository pricing.ts $0.042/MTok input, output free; estimate not bill or current external quote; failed request usage unknown"},
                         "Boss_first_attempt_B2": h1.simulation(boss_ds, "B2"),
+                        "SL_retry_B2": h1.simulation([d for d in run_decisions if (d.get("sl_attempt") or 1) > 1], "B2"),
                         "Boss_first_attempt_B2_unique": unique_b2(boss_ds),
                         "Boss_first_attempt_B2_by_floor": {str(f): h1.simulation([d for d in boss_ds if d["floor"] == f], "B2")
                             for f in sorted({d["floor"] for d in boss_ds})},
@@ -308,6 +355,8 @@ def main():
               "disagreements": divergence, "missing_card_sidecar": missing, "duplicate_card_sidecars": duplicate,
               "shadow_errors": [r for r in streams["human-pace-shadow"] if r.get("status") == "unknown"],
               "direction": direction_analysis(directions),
+              "direction_before_terminal": direction_analysis(before_terminal_directions),
+              "direction_game_over_only": direction_analysis(terminal_directions),
               "plans": plan_analysis(streams["run-plans"], streams["human-pace-shadow"]),
               "wake_questions": [r for r in cards if r["wake_any_direction_change"] or r["wake_any_uncovered"]],
               "definitions": "analysis-definitions.md frozen before any admitted startup",

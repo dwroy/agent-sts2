@@ -18,6 +18,10 @@ def rate(value):
     return f"{value['agree']}/{value['n']} ({value['fraction']:.1%})" if value["n"] else "0/0（无可估计分母）"
 
 
+def coverage(n, total):
+    return f"{n}/{total} ({n/total:.1%})" if total else "0/0（不可估计）"
+
+
 def summary(value):
     return "/".join(f"{value[k]:.1f}" if value.get(k) is not None else "unknown" for k in ("p50", "p90", "max"))
 
@@ -26,6 +30,22 @@ def boss_text(b):
     if not b: return "无更后Boss原结局，未到达或未记录"
     flag = lambda x: "过" if x is True else "未过" if x is False else "unknown"
     return f"F{b['floor']} {b['encounter']}；首试{flag(b['first_attempt_pass'])}/含SL{flag(b['final_pass'])}"
+
+
+def choice_label(row, key):
+    if key is None: return "unknown"
+    if key == "skip": return "skip"
+    card = next((r.get("card") for r in row.get("offers_and_facts") or [] if r.get("key") == key), None)
+    return f"{key}:{card or 'card_ID_unknown'}"
+
+
+def disagreement_kind(row):
+    labels = []
+    if row["jev_success_choice"] is not None and row["jev_success_choice"] != row["brain_actual"]:
+        labels.append("Jev成功≠大脑")
+    if row["module_first"] is not None and row["module_first"] != row["brain_actual"]:
+        labels.append("数值模块≠大脑" if row["numerical_module_first"] is not None else "模块工程兜底≠大脑")
+    return ";".join(labels)
 
 
 def main():
@@ -73,31 +93,37 @@ def main():
                      str((r["wake_selected_direction_change"],r["wake_selected_uncovered"])),
                      ";".join(str((w["key"],w.get("card"),w.get("possible_direction_change"),w.get("uncovered_by_plan"))) for w in r["wakes"]
                               if w.get("possible_direction_change") is True or w.get("uncovered_by_plan") is True)] for r in data["wake_questions"]]), "",
-             "触发未执行叫醒；null并非false。另一方向关键件的当前牌差不是另一完整方向更好的证明。", "",
+             "触发未执行叫醒；null并非false。本批转方向数值比较42/42题不可评估，表中0触发不能解释成已经证明无需转向。另一方向关键件的当前牌差不是另一完整方向更好的证明。", "",
              "## 3. 方向与整幕计划覆盖", "",
-             table(["当前幕/目标幕", "variant×target输出", "完整已知", "partial/unknown", "有胜率数值", "有S数值"],
-                   [[k, v.get("variant_target_rows",0), v.get("known",0), v.get("unknown_or_partial",0), v.get("numeric_win_present",0),v.get("numeric_S_present",0)]
-                    for k,v in data["direction"]["variant_target_coverage"].items()]), "",
+             table(["当前幕/目标幕", "variant×target输出", "完整已知比例", "partial/unknown比例", "有胜率数值", "有S数值"],
+                   [[k, v.get("variant_target_rows",0), coverage(v.get("known",0),v.get("variant_target_rows",0)),
+                     coverage(v.get("unknown_or_partial",0),v.get("variant_target_rows",0)), v.get("numeric_win_present",0),v.get("numeric_S_present",0)]
+                    for k,v in data["direction"]["variant_target_coverage"].items() if not k.endswith("target_final_sequence")]), "",
              table(["当前幕/目标幕", "不重复checkpoint×Boss", "全部variant已知", "部分或全部unknown"],
                    [[k,v["unique_checkpoint_boss_units"],v.get("all_variants_known",0),v.get("some_or_all_variants_unknown",0)]
                     for k,v in data["direction"]["checkpoint_boss_coverage"].items()]), "",
              f"方向unknown原因：`{json.dumps(data['direction']['unknown_reasons'],ensure_ascii=False)}`。stale上次结果不充本次覆盖。第三幕质量闸、最终连战联合率及生产校准未知保持，不补零。",
-             "", table(["幕", "原接受计划更新", "投影覆盖", "结构字段完整", "各字段有效内容均具备"],
-                   [[k,v["original_updates"],rate(v["projection_coverage"]),rate(v["structure_complete"]),rate(v["content_complete"])]
+             f"各当前幕checkpoint数量：`{json.dumps(data['direction']['checkpoint_counts_by_current_act'],ensure_ascii=False)}`；{data['direction']['checkpoints_without_target_output']}次未输出目标列表，目标覆盖分母不能回填。最终联合对象状态计数：`{json.dumps(data['direction']['final_sequence_coverage'],ensure_ascii=False)}`。未到达的幕没有自然覆盖证据，不写100%。",
+             "", table(["幕", "原接受计划更新", "原始模型字段完整", "投影覆盖", "投影结构完整", "投影内容均非空/有效"],
+                   [[k,v["original_updates"],rate(v["raw_output_complete"]),rate(v["projection_coverage"]),rate(v["structure_complete"]),rate(v["content_complete"])]
                     for k,v in data["plans"]["by_act"].items()]), "",
              table(["局", "已进入幕", "该幕原计划更新", "该幕H2投影"],
                    [[run,p["act"],p["original_plan_updates"],p["sidecar_plan_projections"]] for run,r in data["runs"].items()
                     for p in r["accepted_plan_coverage_by_entered_act"]]), "",
-             "结构字段出现、内容非空与计划质量分开。空avoid可能是有意选择；未定方向合法但不冒具体方向。逐更新匹配与缺checkpoint/pivot_if等在analysis-final的plans。持有组件（真实清单或假设添加）、实际施放、存活、整局结果彼此分开；日志中的inventory满足不算合格核心。", "",
+             "原始输出按run-plans.raw核字段，不把normalize或H2投影补的默认值算模型已输出。结构字段出现、内容非空与计划质量分开；空want/avoid/alternatives数组是已输出，内容表另标非空。未定方向合法但不冒具体方向。逐更新匹配与原始字段/缺checkpoint/pivot_if等在analysis-final的plans。持有组件（真实清单或假设添加）、实际施放、存活、整局结果彼此分开；日志中的inventory满足不算合格核心。", "",
              "## 4. 新增耗时、预算与成本", "",
-             table(["局", "模块", "计时n", "p50/p90/max 毫秒", "记录合计秒", "timed_out", "墙钟超预算"],
-                   [[run,name,t["calls_with_budget"],summary(t["actual_ms"]),f"{t['actual_ms']['sum']/1000:.3f}",t["timed_out_flag"],t["wall_over_limit"]]
+             table(["局", "模块", "计时n", "计时缺失", "p50/p90/max 毫秒", "记录合计秒", "timed_out", "墙钟超预算"],
+                   [[run,name,t["calls_with_budget"],t["missing_budget_rows"],summary(t["actual_ms"]),f"{t['actual_ms']['sum']/1000:.3f}",t["timed_out_flag"],t["wall_over_limit"]]
                     for run,r in data["runs"].items() for name,t in r["time"].items() if isinstance(t,dict) and "calls_with_budget" in t]), "",
-             table(["局", "记录增量分钟", "Jev观测题", "成功usage", "输入/输出tokens", "已记录输入估计USD", "失败usage未知"],
-                   [[run,f"{r['time']['recorded_increment_ms']/60000:.4f}",r["cost"]["Jev_shadow_observations"],r["cost"]["successful_usage_records"],
+             table(["局", "记录增量分钟", "Jev观测题/外层ask", "成功usage", "输入/输出tokens", "已记录输入估计USD", "失败usage未知"],
+                   [[run,f"{r['time']['recorded_increment_ms']/60000:.4f}",str((r["cost"]["Jev_shadow_observations"],r["cost"]["outer_Jev_ask_attempts"])),r["cost"]["successful_usage_records"],
                      str((r["cost"]["input_tokens_recorded"],r["cost"]["output_tokens_recorded"])),f"{r['cost']['estimated_USD_recorded_input_only']:.8f}",r["cost"]["fallback_without_usage_records"]]
                     for run,r in data["runs"].items()]), "",
              "预算为方向60s、拿牌事实5s、Jev独立1s。每个outer budget只加一次，不叠加stages。未记录读盘/日志/调度开销unknown，这不是因果净慢多少。Jev单次latency与request_id、模型及tokens见逐题原件；失败请求未返回usage不填0。价格是冻结仓库pricing.ts的$0.042/百万输入、输出免费估计，不是账单或外部当前价格核实。", "",
+             table(["局", "实际外层Jev ask耗时 p50/p90/max毫秒", "ask次数"],
+                   [[run,summary(r["time"]["Jev_latency_ms"]),r["cost"]["outer_Jev_ask_attempts"]] for run,r in data["runs"].items()]),
+             "外层ask以原H2_Jev_shadow stage为证；无client或预算先已耗尽不充API调用。SDK内部HTTP重试次数没有完整记录，保持unknown。",
+             f"此外有 {len(data['shadow_errors'])} 条observer级unknown/error；这些不被无声排除，详见原引用。成功metadata若输入usage为0或缺失，也单列未知用量而不认证真实零成本。", "",
              "## 5. 对局、Boss与R385采样变化", "",
              table(["局", "分钟", "超过90分钟", "Boss真实结果"],
                    [[run,f"{r['pacing']['duration_minutes']:.3f}",r["pacing"]["over_90_minutes"],
@@ -117,13 +143,21 @@ def main():
              "本次只给移交候选，不执行。优先看完整胜率比较、明显领先、Jev真实成功、原计划覆盖且不触发转向的常规拿/跳题；仍需检查这批真实分母和逐题分歧，不能凭总体一致率移交unknown或超时兜底题。接近题、可能转方向、计划外、资源/目标未知的题继续保留大脑。若本批没有完整比较或成功Jev覆盖，就没有数据支持将任何题型正式交给Jev。",
              "", "只有3个独立局的后继Boss结果；它们不能证明拿牌判断正确或胜率收益。后续范围与准入标准由Claude/Roy另派，本线程不启用on、不改预算、不开展H3/H4或新研究。", "",
              "## 复现", "",
-             "原单次监听已在three-terminal-event所记终局退出。冻结一次后，用nice19单进程依次运行`verify-inputs.py`、`analyze.py`、`audit-analysis.py`、`render-report.py`；所有输入在同目录，不查询线上。不得对已有inputs-final再执行覆盖式freeze，历史与失败另存。", ""]
+             "原单次监听已终局退出0，不再启动。评分用本目录冻结投影，历史对照复用H1冻结目录，路径/SHA在baseline清单；字节溯源校验另只读原logs的指定范围。用nice19单进程依次运行verify-inputs.py、baseline-boss30.py、analyze.py、audit-analysis.py、render-review.py、render-report.py，不运行游戏/模型/模拟。原始流缺失时不能冒原字节复核成功；只评分可直接使用已核冻结投影。不得再覆盖inputs-final或重复启动监听，历史与失败另存。", ""]
+    review = (HERE / "owner-review.md").read_text()
+    lines[2:2] = [review, ""]
     (HERE / "report.md").write_text("\n".join(lines))
     disagreements = ["# H2逐题分歧与真实后继", "", "包括成功Jev或模块记录与大脑不同的题；模块工程fallback与数值第一名逐项标明。没有受控替代选择，不写反事实胜负。", ""]
-    disagreements.append(table(["局/题", "层", "大脑", "Jev成功", "Jev失败/兜底", "模块/依据", "比较难度", "实际后继Boss"],
-                              [[r["run_id"]+"/"+str(r["decision_id"]),r["floor"],r["brain_actual"],r["jev_success_choice"],r["jev_fallback"],
-                                str((r["module_first"],r["module_first_basis"])),r["difficulty"],boss_text(r["next_observed_boss"])] for r in data["disagreements"]]))
+    disagreements.append(table(["局/题", "层", "分歧类型", "大脑", "Jev成功", "Jev失败/兜底", "模块/依据", "比较难度", "实际后继Boss"],
+                              [[r["run_id"]+"/"+str(r["decision_id"]),r["floor"],disagreement_kind(r),choice_label(r,r["brain_actual"]),
+                                choice_label(r,r["jev_success_choice"]),r["jev_fallback"] or "无（真实成功）",
+                                str((choice_label(r,r["module_first"]),r["module_first_basis"])),r["difficulty"],boss_text(r["next_observed_boss"])] for r in data["disagreements"]]))
     disagreements += ["", "每题候选牌ID、数值、unknown、叫醒标记和原决策/sidecar/Boss源offset/len/SHA在`analysis-final.json:disagreements`；可由`per-question.csv`的decision_id定位。"]
+    disagreements += ["", "## 实际由代码或兜底选择的5题（不混入成功大脑分母）", "",
+        table(["局/题", "层", "实际decider", "实际动作", "Jev成功答案"],
+              [[r["run_id"]+"/"+str(r["decision_id"]),r["floor"],r["actual_decider"],
+                choice_label(r,r["actual_action"]),choice_label(r,r["jev_success_choice"])]
+               for r in data["card_questions"] if r["brain_actual"] is None])]
     (HERE / "disagreements.md").write_text("\n".join(disagreements) + "\n")
     print(json.dumps({"report": "report.md", "disagreements": len(data["disagreements"]), "owner_review_required": True}))
 
